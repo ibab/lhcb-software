@@ -54,22 +54,22 @@ class HCMonitorBase : public GaudiTupleAlg {
   std::vector<unsigned int> m_spareChannelsF2;
 
   /// Calibration Constants Map
-  std::map< std::string, std::vector< float> > m_thetas;
-  std::map< std::string, std::vector< float> > m_x0;
-  std::map< std::string, std::vector< float> > m_y0;
-  
-  std::vector< float > m_thetaConfig;
-  std::vector< float > m_x0Config;
-  std::vector< float > m_y0Config;
-  std::vector< std::string > m_channelsCalibConfig;
+  std::map<std::string, std::vector<float> > m_thetas;
+  std::map<std::string, std::vector<float> > m_x0;
+  std::map<std::string, std::vector<float> > m_y0;
+
+  std::vector<float> m_thetaConfig;
+  std::vector<float> m_x0Config;
+  std::vector<float> m_y0Config;
+  std::vector<std::string> m_channelsCalibConfig;
 
   /// Channel from string
-  std::map< std::string, unsigned int > m_channelsFromName;
-  std::map< std::string, unsigned int >  m_masksFromName;
-  std::map< std::string, unsigned int >  m_refChannelsFromName;
+  std::map<std::string, unsigned int> m_channelsFromName;
+  std::map<std::string, unsigned int> m_masksFromName;
+  std::map<std::string, unsigned int> m_refChannelsFromName;
 
   /// List of stations
-  std::vector< std::string > m_stations;
+  std::vector<std::string> m_stations;
 
   /// Random number generator
   Rndm::Numbers m_uniform;
@@ -87,11 +87,11 @@ class HCMonitorBase : public GaudiTupleAlg {
   /// Highest BX ID to be included in the plots.
   unsigned int m_bxMax;
 
-  /// Randomise a given ADC value or add a correction term. 
+  /// Randomise a given ADC value or add a correction term.
   double fadc(const unsigned int adc);
   /// Scale histograms (in case of variable binning).
   void scale(AIDA::IHistogram1D* h);
   /// Establish the station and quadrant numbers for each channel.
-  float correctChannel( std::string channel , unsigned int adc, unsigned int adc_ref, unsigned int parity);
+  float correctChannel(std::string channel, unsigned int adc,
+                       unsigned int adc_ref, unsigned int parity);
 };
-

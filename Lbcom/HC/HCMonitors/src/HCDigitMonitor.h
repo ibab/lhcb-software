@@ -70,7 +70,6 @@ class HCDigitMonitor : public HCMonitorBase {
   std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrantNoBeam;
   std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrantBeam;
 
-
   /// ADC distributions of all channels
   std::vector<AIDA::IHistogram1D*> m_hAdcBCor;
   std::vector<AIDA::IHistogram1D*> m_hAdcFCor;
@@ -110,7 +109,6 @@ class HCDigitMonitor : public HCMonitorBase {
   std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrantOddCor;
   std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrantNoBeamCor;
   std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrantBeamCor;
-
 };
 
 #endif

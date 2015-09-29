@@ -11,8 +11,7 @@
 // Standard constructor
 //=============================================================================
 HCMonitorBase::HCMonitorBase(const std::string& name, ISvcLocator* pSvcLocator)
-    : GaudiTupleAlg(name, pSvcLocator),
-      m_odin(NULL) {
+    : GaudiTupleAlg(name, pSvcLocator), m_odin(NULL) {
 
   // Mapping which will then go in the condDB
   declareProperty("CrateB", m_crateB = 0);
@@ -23,7 +22,6 @@ HCMonitorBase::HCMonitorBase(const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("MasksB2", m_masksB2);
   declareProperty("MasksF1", m_masksF1);
   declareProperty("MasksF2", m_masksF2);
-
 
   declareProperty("ChannelsB0", m_channelsB0);
   declareProperty("ChannelsB1", m_channelsB1);
@@ -42,12 +40,11 @@ HCMonitorBase::HCMonitorBase(const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("X0", m_x0Config);
   declareProperty("Y0", m_y0Config);
 
-
-  // Real monitoring staff
+  // Real monitoring options
   declareProperty("VariableBins", m_variableBins = false);
   declareProperty("RandomiseADC", m_randomiseAdc = true);
   declareProperty("MinBX", m_bxMin = 0);
-  declareProperty("MaxBX", m_bxMax = 10000); 
+  declareProperty("MaxBX", m_bxMax = 10000);
 }
 
 //=============================================================================
@@ -75,51 +72,66 @@ StatusCode HCMonitorBase::initialize() {
   m_edges.clear();
   while (adc < 1024) {
     m_edges.push_back(adc - 0.5);
-    if (adc == 128) step = 2;
-    else if (adc == 256) step = 8;
-    else if (adc == 512) step = 16; 
+    if (adc == 128)
+      step = 2;
+    else if (adc == 256)
+      step = 8;
+    else if (adc == 512)
+      step = 16;
     m_adcCorrection[adc] = 0.5 * (step - 1.);
     m_adcStep[adc] = step;
-    adc += step;   
-  } 
+    adc += step;
+  }
   m_edges.push_back(1023.5);
   // Setup the mapping.
-  for (unsigned int i = 0; i < m_channelsB0.size(); ++i){
-    m_masksFromName["B0"+std::to_string(i)] = m_masksB0[i];
-    m_channelsFromName["B0"+std::to_string(i)] = (m_crateB << 6) | m_channelsB0[i];
-    m_refChannelsFromName["B0"+std::to_string(i)] = (m_crateB << 6) | m_spareChannelsB0[i];
+  for (unsigned int i = 0; i < m_channelsB0.size(); ++i) {
+    m_masksFromName["B0" + std::to_string(i)] = m_masksB0[i];
+    m_channelsFromName["B0" + std::to_string(i)] =
+        (m_crateB << 6) | m_channelsB0[i];
+    m_refChannelsFromName["B0" + std::to_string(i)] =
+        (m_crateB << 6) | m_spareChannelsB0[i];
   }
-  for (unsigned int i = 0; i < m_channelsB1.size(); ++i){
-    m_masksFromName["B1"+std::to_string(i)] = m_masksB1[i];
-    m_channelsFromName["B1"+std::to_string(i)] = (m_crateB << 6) | m_channelsB1[i];
-    m_refChannelsFromName["B1"+std::to_string(i)] = (m_crateB << 6) | m_spareChannelsB1[i];
+  for (unsigned int i = 0; i < m_channelsB1.size(); ++i) {
+    m_masksFromName["B1" + std::to_string(i)] = m_masksB1[i];
+    m_channelsFromName["B1" + std::to_string(i)] =
+        (m_crateB << 6) | m_channelsB1[i];
+    m_refChannelsFromName["B1" + std::to_string(i)] =
+        (m_crateB << 6) | m_spareChannelsB1[i];
   }
-  for (unsigned int i = 0; i < m_channelsB2.size(); ++i){
-    m_masksFromName["B2"+std::to_string(i)] = m_masksB2[i];
-    m_channelsFromName["B2"+std::to_string(i)] = (m_crateB << 6) | m_channelsB2[i];
-    m_refChannelsFromName["B2"+std::to_string(i)] = (m_crateB << 6) | m_spareChannelsB2[i];
+  for (unsigned int i = 0; i < m_channelsB2.size(); ++i) {
+    m_masksFromName["B2" + std::to_string(i)] = m_masksB2[i];
+    m_channelsFromName["B2" + std::to_string(i)] =
+        (m_crateB << 6) | m_channelsB2[i];
+    m_refChannelsFromName["B2" + std::to_string(i)] =
+        (m_crateB << 6) | m_spareChannelsB2[i];
   }
-  for (unsigned int i = 0; i < m_channelsF1.size(); ++i){
-    m_masksFromName["F1"+std::to_string(i)] = m_masksF1[i];
-    m_channelsFromName["F1"+std::to_string(i)] = (m_crateF << 6) | m_channelsF1[i];
-    m_refChannelsFromName["F1"+std::to_string(i)] = (m_crateF << 6) | m_spareChannelsF1[i];
+  for (unsigned int i = 0; i < m_channelsF1.size(); ++i) {
+    m_masksFromName["F1" + std::to_string(i)] = m_masksF1[i];
+    m_channelsFromName["F1" + std::to_string(i)] =
+        (m_crateF << 6) | m_channelsF1[i];
+    m_refChannelsFromName["F1" + std::to_string(i)] =
+        (m_crateF << 6) | m_spareChannelsF1[i];
   }
-  for (unsigned int i = 0; i < m_channelsF2.size(); ++i){
-    m_masksFromName["F2"+std::to_string(i)] = m_masksF2[i];
-    m_channelsFromName["F2"+std::to_string(i)] = (m_crateF << 6) | m_channelsF2[i];
-    m_refChannelsFromName["F2"+std::to_string(i)] = (m_crateF << 6) | m_spareChannelsF2[i];
+  for (unsigned int i = 0; i < m_channelsF2.size(); ++i) {
+    m_masksFromName["F2" + std::to_string(i)] = m_masksF2[i];
+    m_channelsFromName["F2" + std::to_string(i)] =
+        (m_crateF << 6) | m_channelsF2[i];
+    m_refChannelsFromName["F2" + std::to_string(i)] =
+        (m_crateF << 6) | m_spareChannelsF2[i];
   }
 
-  for (unsigned int i = 0; i < m_channelsCalibConfig.size() ; ++i){
-    std::vector< float > tmpVect;
-    m_thetas[m_channelsCalibConfig[i]]= {m_thetaConfig[2*i],m_thetaConfig[2*i+1]};
-    m_x0[m_channelsCalibConfig[i]]= {m_x0Config[2*i],m_x0Config[2*i+1]};
-    m_y0[m_channelsCalibConfig[i]]= {m_y0Config[2*i],m_y0Config[2*i+1]};
+  for (unsigned int i = 0; i < m_channelsCalibConfig.size(); ++i) {
+    std::vector<float> tmpVect;
+    m_thetas[m_channelsCalibConfig[i]] = {m_thetaConfig[2 * i],
+                                          m_thetaConfig[2 * i + 1]};
+    m_x0[m_channelsCalibConfig[i]] = {m_x0Config[2 * i], m_x0Config[2 * i + 1]};
+    m_y0[m_channelsCalibConfig[i]] = {m_y0Config[2 * i], m_y0Config[2 * i + 1]};
   }
 
   // Setup the random number generator.
   if (!m_uniform.initialize(randSvc(), Rndm::Flat(0., 1.))) {
-    return Error("Unable to initialize random number generator.", StatusCode::FAILURE);
+    return Error("Unable to initialize random number generator.",
+                 StatusCode::FAILURE);
   }
   return StatusCode::SUCCESS;
 }
@@ -150,6 +162,9 @@ void HCMonitorBase::scale(AIDA::IHistogram1D* h) {
 //=============================================================================
 // Setup channel map for a given station.
 //=============================================================================
-float HCMonitorBase::correctChannel( std::string channel , unsigned int adc, unsigned int adc_ref, unsigned int parity) {
-  return adc-(adc_ref-m_x0[channel][parity])*tan( m_thetas[channel][parity] )-m_y0[channel][parity];
+float HCMonitorBase::correctChannel(std::string channel, unsigned int adc,
+                                    unsigned int adc_ref, unsigned int parity) {
+  return adc -
+         (adc_ref - m_x0[channel][parity]) * tan(m_thetas[channel][parity]) -
+         m_y0[channel][parity];
 }

@@ -19,10 +19,11 @@ DECLARE_ALGORITHM_FACTORY(HCPedestalCorrection)
 //=============================================================================
 // Standard constructor
 //=============================================================================
-HCPedestalCorrection::HCPedestalCorrection(const std::string& name, 
+HCPedestalCorrection::HCPedestalCorrection(const std::string& name,
                                            ISvcLocator* pSvcLocator)
     : HCMonitorBase(name, pSvcLocator) {
-  declareProperty("DigitLocation", m_digitLocation = LHCb::HCDigitLocation::Default);
+  declareProperty("DigitLocation",
+                  m_digitLocation = LHCb::HCDigitLocation::Default);
 }
 
 //=============================================================================
@@ -40,20 +41,30 @@ StatusCode HCPedestalCorrection::initialize() {
   if (sc.isFailure()) return sc;
   // Setup the histograms.
   std::vector<std::string> parity = {"Odd", "Even"};
-  for(std::map< std::string , unsigned int>::iterator it = m_channelsFromName.begin(); it != m_channelsFromName.end(); ++it) {
-      for (unsigned int p = 0 ; p < 2 ; ++p ){
-	std::string station = it->first;
-	station.erase(2,1);
-	std::string quad = it->first;
-	quad.erase(0,2);
-	const std::string name = "Correlation/" +station+ "/" + quad+  "/" + parity[p];
-	m_hCorrelation[it->first+parity[p]]=book2D(name, quad,   50.,300.,50,15.,200.,50);
-	setAxisLabels(m_hCorrelation[it->first+parity[p]], it->first+"ADC ref "+parity[p], 
-		      "ADC "+it->first+" "+parity[p]);
-	std::string titleS = it->first+parity[p]+"_gaus2dfit";
-	char * cstr = new char [titleS.length()+1];
-	std::strcpy (cstr, titleS.c_str());
-	m_fit[it->first+parity[p]]= new TF2(cstr,"[0]*exp(-(cos([3])*cos([3])/(2*[4]*[4])+sin([3])*sin([3])/(2*[5]*[5]))*(x-[1])*(x-[1])-2*(-sin(2*[3])/(4*[4]*[4])+sin(2*[3])/(4*[5]*[5]))*(x-[1])*(y-[2])-(sin([3])*sin([3])/(2*[4]*[4])+cos([3])*cos([3])/(2*[5]*[5]))*(y-[2])*(y-[2]))");
+  for (std::map<std::string, unsigned int>::iterator it =
+           m_channelsFromName.begin();
+       it != m_channelsFromName.end(); ++it) {
+    for (unsigned int p = 0; p < 2; ++p) {
+      std::string station = it->first;
+      station.erase(2, 1);
+      std::string quad = it->first;
+      quad.erase(0, 2);
+      const std::string name =
+          "Correlation/" + station + "/" + quad + "/" + parity[p];
+      m_hCorrelation[it->first + parity[p]] =
+          book2D(name, quad, 50., 300., 50, 15., 200., 50);
+      setAxisLabels(m_hCorrelation[it->first + parity[p]],
+                    it->first + "ADC ref " + parity[p],
+                    "ADC " + it->first + " " + parity[p]);
+      std::string titleS = it->first + parity[p] + "_gaus2dfit";
+      char* cstr = new char[titleS.length() + 1];
+      std::strcpy(cstr, titleS.c_str());
+      m_fit[it->first + parity[p]] = new TF2(
+          cstr,
+          "[0]*exp(-(cos([3])*cos([3])/(2*[4]*[4])+sin([3])*sin([3])/"
+          "(2*[5]*[5]))*(x-[1])*(x-[1])-2*(-sin(2*[3])/(4*[4]*[4])+sin(2*[3])/"
+          "(4*[5]*[5]))*(x-[1])*(y-[2])-(sin([3])*sin([3])/"
+          "(2*[4]*[4])+cos([3])*cos([3])/(2*[5]*[5]))*(y-[2])*(y-[2]))");
     }
   }
   return StatusCode::SUCCESS;
@@ -63,13 +74,13 @@ StatusCode HCPedestalCorrection::initialize() {
 // Main execution
 //=============================================================================
 StatusCode HCPedestalCorrection::execute() {
-  const LHCb::ODIN* odin = getIfExists<LHCb::ODIN> (LHCb::ODINLocation::Default);
+  const LHCb::ODIN* odin = getIfExists<LHCb::ODIN>(LHCb::ODINLocation::Default);
   if (!odin) {
     return Error("Cannot retrieve ODIN.", StatusCode::SUCCESS);
   }
-  if (msgLevel(MSG::DEBUG)) { 
-    debug() << "Run " << odin->runNumber() 
-            << ", Event " << odin->eventNumber() << endmsg;
+  if (msgLevel(MSG::DEBUG)) {
+    debug() << "Run " << odin->runNumber() << ", Event " << odin->eventNumber()
+            << endmsg;
   }
   const unsigned int bxID = odin->bunchId();
 
@@ -80,11 +91,14 @@ StatusCode HCPedestalCorrection::execute() {
   }
   std::vector<std::string> parity = {"Odd", "Even"};
   // Loop over the digits.
-  for(std::map< std::string , unsigned int>::iterator it = m_channelsFromName.begin(); it != m_channelsFromName.end(); ++it) {
+  for (std::map<std::string, unsigned int>::iterator it =
+           m_channelsFromName.begin();
+       it != m_channelsFromName.end(); ++it) {
     unsigned int adc = digits->object(LHCb::HCCellID(it->second))->adc();
     std::string chName = it->first;
-    unsigned int adc_ref = digits->object(LHCb::HCCellID(m_refChannelsFromName[chName]))->adc();
-    m_hCorrelation[chName+parity[bxID%2]]->fill(adc_ref,adc);
+    unsigned int adc_ref =
+        digits->object(LHCb::HCCellID(m_refChannelsFromName[chName]))->adc();
+    m_hCorrelation[chName + parity[bxID % 2]]->fill(adc_ref, adc);
   }
   return StatusCode::SUCCESS;
 }
@@ -98,42 +112,45 @@ StatusCode HCPedestalCorrection::finalize() {
 
   std::vector<std::string> stations = {"B0", "B1", "B2", "F1", "F2"};
   std::vector<std::string> parity = {"Odd", "Even"};
-      
-  for(std::map< std::string , unsigned int>::iterator it = m_channelsFromName.begin(); it != m_channelsFromName.end(); ++it) {
+
+  for(std::map< std::string , unsigned int>::iterator it =
+  m_channelsFromName.begin(); it != m_channelsFromName.end(); ++it) {
       for (unsigned int p = 0 ; p < 2 ; ++p ){
-	TH2D* profile = Gaudi::Utils::Aida2ROOT::aida2root(m_hCorrelation[it->first+parity[p]]);
-	std::string  index = it->first+parity[p];
-	double rmsX = profile->GetRMS(1);
-	double rmsY = profile->GetRMS(2);
-	double  theta = atan(rmsY/rmsX);
-	int N = profile->GetEntries();
-	m_fit[index]->SetParameter(0,N);
-	double meanX = profile->GetMean(1);
-	double meanY = profile->GetMean(2);
-	m_fit[index]->SetParameter(1,meanX);
-	m_fit[index]->SetParameter(2,meanY);
-	m_fit[index]->SetParameter(3,theta);
-	m_fit[index]->SetParLimits(3,0.5,1.5);
-	m_fit[index]->SetParameter(4,5);
-	m_fit[index]->SetParameter(5,20);
-	m_fit[index]->SetParLimits(4,2.,15.);
-	m_fit[index]->SetParLimits(5,10.,60.);
-	m_fit[index]->SetContour(5);
-	m_fit[index]->SetNpy(300);
-	m_fit[index]->SetNpx(300);
-	std::string titleS = stations[i]+ std::to_string(j)+ parity[p]+"_gaus2dfit";
-	char * cstr = new char [titleS.length()+1];
-	std::strcpy (cstr, titleS.c_str());
-	profile->Fit(cstr,"QS");
-	theta=m_fit[index]->GetParameter(3);
-	double x0=m_fit[index]->GetParameter(1);
-	double y0=m_fit[index]->GetParameter(2);
-	rmsX=m_fit[index]->GetParameter(4);
-	rmsY=m_fit[index]->GetParameter(5);
-	always()<<stations[i]+ std::to_string(j)+ parity[p]<<" "<<theta<<" "<<x0<<" "<<y0<<endreq;
+        TH2D* profile =
+  Gaudi::Utils::Aida2ROOT::aida2root(m_hCorrelation[it->first+parity[p]]);
+        std::string  index = it->first+parity[p];
+        double rmsX = profile->GetRMS(1);
+        double rmsY = profile->GetRMS(2);
+        double  theta = atan(rmsY/rmsX);
+        int N = profile->GetEntries();
+        m_fit[index]->SetParameter(0,N);
+        double meanX = profile->GetMean(1);
+        double meanY = profile->GetMean(2);
+        m_fit[index]->SetParameter(1,meanX);
+        m_fit[index]->SetParameter(2,meanY);
+        m_fit[index]->SetParameter(3,theta);
+        m_fit[index]->SetParLimits(3,0.5,1.5);
+        m_fit[index]->SetParameter(4,5);
+        m_fit[index]->SetParameter(5,20);
+        m_fit[index]->SetParLimits(4,2.,15.);
+        m_fit[index]->SetParLimits(5,10.,60.);
+        m_fit[index]->SetContour(5);
+        m_fit[index]->SetNpy(300);
+        m_fit[index]->SetNpx(300);
+        std::string titleS = stations[i]+ std::to_string(j)+
+  parity[p]+"_gaus2dfit";
+        char * cstr = new char [titleS.length()+1];
+        std::strcpy (cstr, titleS.c_str());
+        profile->Fit(cstr,"QS");
+        theta=m_fit[index]->GetParameter(3);
+        double x0=m_fit[index]->GetParameter(1);
+        double y0=m_fit[index]->GetParameter(2);
+        rmsX=m_fit[index]->GetParameter(4);
+        rmsY=m_fit[index]->GetParameter(5);
+        always()<<stations[i]+ std::to_string(j)+ parity[p]<<" "<<theta<<"
+  "<<x0<<" "<<y0<<endreq;
       }
     }
-    }  */   
+    }  */
   return HCMonitorBase::finalize();
 }
-
