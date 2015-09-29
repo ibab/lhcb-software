@@ -78,6 +78,7 @@ class FitAmpPairList
   virtual double integral() const;
   virtual double variance() const;
   virtual double sumOfVariances() const;
+  virtual std::complex<double> ComplexSum() const;
   virtual void Gradient(MINT::MinuitParameterSet* mps, Double_t* grad);
   virtual void GradientForLasso(MINT::MinuitParameterSet* mps, Double_t* grad);
     
@@ -99,6 +100,8 @@ class FitAmpPairList
   virtual double getFractionChi2() const;
   
   virtual DalitzHistoSet histoSet() const;
+  virtual DalitzHistoSet un_normalised_histoSetRe() const;
+  virtual DalitzHistoSet un_normalised_histoSetIm() const;
   void saveEachAmpsHistograms(const std::string& prefix) const;
   std::vector<DalitzHistoSet> GetEachAmpsHistograms();
 

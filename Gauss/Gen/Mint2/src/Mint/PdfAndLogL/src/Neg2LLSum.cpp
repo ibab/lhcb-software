@@ -62,6 +62,51 @@ Neg2LLSum::Neg2LLSum(IMinimisable* ll_1, IMinimisable* ll_2
   add(ll_1); add(ll_2); add(ll_3); add(ll_4); add(ll_5); add(ll_6);
 }
 
+Neg2LLSum::Neg2LLSum(IMinimisable* ll_1, IMinimisable* ll_2
+		     , IMinimisable* ll_3, IMinimisable* ll_4
+		     , IMinimisable* ll_5, IMinimisable* ll_6
+		     , IMinimisable* ll_7
+		     , MinuitParameterSet* mps)
+  : Minimisable(mps)
+{
+  add(ll_1); add(ll_2); add(ll_3); add(ll_4); add(ll_5); add(ll_6);
+  add(ll_7);
+}
+Neg2LLSum::Neg2LLSum(IMinimisable* ll_1, IMinimisable* ll_2
+		     , IMinimisable* ll_3, IMinimisable* ll_4
+		     , IMinimisable* ll_5, IMinimisable* ll_6
+		     , IMinimisable* ll_7, IMinimisable* ll_8
+		     , MinuitParameterSet* mps)
+  : Minimisable(mps)
+{
+  add(ll_1); add(ll_2); add(ll_3); add(ll_4); add(ll_5); add(ll_6);
+  add(ll_7); add(ll_8);
+}
+
+Neg2LLSum::Neg2LLSum(IMinimisable* ll_1, IMinimisable* ll_2
+		     , IMinimisable* ll_3, IMinimisable* ll_4
+		     , IMinimisable* ll_5, IMinimisable* ll_6
+		     , IMinimisable* ll_7, IMinimisable* ll_8
+		     , IMinimisable* ll_9
+		     , MinuitParameterSet* mps)
+  : Minimisable(mps)
+{
+  add(ll_1); add(ll_2); add(ll_3); add(ll_4); add(ll_5); add(ll_6);
+  add(ll_7); add(ll_8); add(ll_9);
+}
+
+Neg2LLSum::Neg2LLSum(IMinimisable* ll_1, IMinimisable* ll_2
+		     , IMinimisable* ll_3, IMinimisable* ll_4
+		     , IMinimisable* ll_5, IMinimisable* ll_6
+		     , IMinimisable* ll_7, IMinimisable* ll_8
+		     , IMinimisable* ll_9, IMinimisable* ll_10
+		     , MinuitParameterSet* mps)
+  : Minimisable(mps)
+{
+  add(ll_1); add(ll_2); add(ll_3); add(ll_4); add(ll_5); add(ll_6);
+  add(ll_7); add(ll_8); add(ll_9); add(ll_10);
+}
+
 Neg2LLSum::Neg2LLSum(const Neg2LLSum& other)
   : IMinimisable()
   , Minimisable(other)

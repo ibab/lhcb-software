@@ -144,7 +144,9 @@ class FitAmpPair : public MINT::FitParDependent{
 
   std::complex<double> lastEntry() const;
 
-  DalitzHistoSet histoSet() const;
+  DalitzHistoSet histoSetRe() const; // these two are...
+  DalitzHistoSet histoSetIm() const; // ... not usually used...
+  inline DalitzHistoSet histoSet() const{return histoSetRe();} // ..this is.
 
   FitAmplitude& fitAmp1(){
     if(0 == _fitA1){

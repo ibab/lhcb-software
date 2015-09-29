@@ -5,9 +5,9 @@ RandomSeed   5
 "Phases given in"       "degrees"
 "Event Pattern"         411 321 -321 211
 
-"Nevents"               100000
+"Nevents"               2000000
 
-"IntegPrecision"        10.0e-3
+"IntegPrecision"        1.0e-3
 "IntegMethod"           "efficient"
 
 IntegratorEventFile     "SignalIntegrationEventsD2KKpi.root"

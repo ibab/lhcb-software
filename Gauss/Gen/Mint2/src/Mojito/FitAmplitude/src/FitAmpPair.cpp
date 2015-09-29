@@ -517,7 +517,13 @@ void FitAmpPair::endIntegration(){
 bool FitAmpPair::acceptEvents() const{
   return _beingIntegrated;
 }
+/* now inline:
 DalitzHistoSet FitAmpPair::histoSet() const{
+  return histoSetRe();
+}
+*/
+
+DalitzHistoSet FitAmpPair::histoSetRe() const{
   bool dbThis=false;
   if(dbThis){
     cout << " FitAmpPair::histograms, for pair "
@@ -535,6 +541,28 @@ DalitzHistoSet FitAmpPair::histoSet() const{
 	  oneOrTwo() * 
 	  (fitParValue().real() * histosRe() 
 	   - fitParValue().imag() * histosIm())
+	   )/_weightSum;// / ((double)_Nevents);
+
+  //  total /= (double)_Nevents;
+}
+DalitzHistoSet FitAmpPair::histoSetIm() const{
+  // needed by Lauren's code, only
+  bool dbThis=false;
+  if(dbThis){
+    cout << " FitAmpPair::histograms, for pair "
+	 << fitAmp1().name() << " / " << fitAmp2().name()
+	 << endl;
+    cout << " r " << fitParValue().real() << ", " 
+	 << histosRe().begin()->second.histo()->Integral()
+	 << " i " << fitParValue().imag() << ", " 
+	 << histosIm().begin()->second.histo()->Integral()
+	 << endl;
+  }
+  
+  return ( // this calculates a DalitzHistoSet:
+	  oneOrTwo() * 
+	  (fitParValue().real() * histosIm() 
+	   + fitParValue().imag() * histosRe())
 	   )/_weightSum;// / ((double)_Nevents);
 
   //  total /= (double)_Nevents;

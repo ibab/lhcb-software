@@ -152,6 +152,10 @@ double IntegCalculator::variance() const{
   return withEff().variance();
 }
 
+std::complex<double> IntegCalculator::ComplexSum()const{
+  return withEff().ComplexSum();
+}
+
 bool IntegCalculator::makeAndStoreFractions(Minimiser* mini){
   bool dbThis=true;
   if(dbThis){
@@ -169,6 +173,12 @@ double IntegCalculator::getFractionChi2() const{
 
 DalitzHistoSet IntegCalculator::histoSet() const{
   return withEff().histoSet();
+}
+DalitzHistoSet IntegCalculator::un_normalised_histoSetRe() const{
+  return withEff().un_normalised_histoSetRe();
+}
+DalitzHistoSet IntegCalculator::un_normalised_histoSetIm() const{
+  return withEff().un_normalised_histoSetIm();
 }
 void IntegCalculator::saveEachAmpsHistograms(const std::string& prefix) const{
   if(_onlyOneFitAmpPairList) return withEff().saveEachAmpsHistograms(prefix);

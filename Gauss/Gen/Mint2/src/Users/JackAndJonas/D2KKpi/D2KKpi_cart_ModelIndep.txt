@@ -7,13 +7,13 @@ RandomSeed   5
 
 "Nevents"               100000
 
-"IntegPrecision"        5.0e-3
+"IntegPrecision"        2.0e-3
 "IntegMethod"           "efficient"
 
 IntegratorEventFile     "SignalIntegrationEventsD2KKpi.root"
 IntegratorInputFile     "sgIntegratorKKpi"
 
-InputFileName KKpi100k.root
+InputFileName KKpi2M.root
 
 doScan			0
 
@@ -48,9 +48,11 @@ useAnalyticGradient        1
 "D+->phi(1680)0(->K+,K-),pi+_Im"                             0	-4.035565	0.1	0.0	0.0
 *
 *
-*
-TopHatsLimits  401002 649558 898114 1.14667e+06 1.39523e+06 1.64378e+06 1.89234e+06
-**
+** 10
+**TopHatsLimits  401002 649558 898114 1.14667e+06 1.39523e+06 1.64378e+06 1.89234e+06
+** 20
+TopHatsLimits 401002 475569 550136 624702 699269 773836 848403 922970 997537 1.0721e+06 1.14667e+06 1.22124e+06 1.2958e+06 1.37037e+06 1.44494e+06 1.5195e+06 1.59407e+06 1.66864e+06 1.7432e+06 1.81777e+06 1.89234e+06
+** 40
 **TopHatsLimits 401002 438285 475569 512852 550136 587419 624702 661986 699269 736553 773836 811120 848403 885686 922970 960253 997537 1.03482e+06 1.0721e+06 1.10939e+06 1.14667e+06 1.18395e+06 1.22124e+06 1.25852e+06 1.2958e+06 1.33309e+06 1.37037e+06 1.40765e+06 1.44494e+06 1.48222e+06 1.5195e+06 1.55679e+06 1.59407e+06 1.63135e+06 1.66864e+06 1.70592e+06 1.7432e+06 1.78049e+06 1.81777e+06 1.85506e+06 1.89234e+06
 **
 "TopHatsD+->NonResS0(->K-,pi+),K+_1_Re"                 	 0	1.0	0.2	0.0	0.0
@@ -70,5 +72,107 @@ TopHatsLimits  401002 649558 898114 1.14667e+06 1.39523e+06 1.64378e+06 1.89234e
 
 "TopHatsD+->NonResS0(->K-,pi+),K+_6_Re"                 	 0	1.0	0.2	0.0	0.0
 "TopHatsD+->NonResS0(->K-,pi+),K+_6_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_7_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_7_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_8_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_8_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_9_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_9_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_10_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_10_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_11_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_11_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_12_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_12_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_13_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_13_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_14_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_14_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_15_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_15_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_16_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_16_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_17_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_17_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_18_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_18_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_19_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_19_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_20_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_20_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_21_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_21_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_22_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_22_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_23_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_23_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_24_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_24_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_25_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_25_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_26_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_26_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_27_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_27_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_28_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_28_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_29_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_29_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_30_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_30_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_31_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_31_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_32_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_32_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_33_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_33_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_34_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_34_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_35_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_35_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_36_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_36_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_37_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_37_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_38_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_38_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_39_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_39_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_40_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_40_Im"               	 	 0	1.0	0.2	0.0	0.0
 
 **

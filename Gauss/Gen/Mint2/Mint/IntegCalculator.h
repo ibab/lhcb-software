@@ -61,6 +61,9 @@ class IntegCalculator : public virtual IIntegrationCalculator{
   virtual int numEvents()   const;
   virtual double integral() const;
   virtual double variance() const;
+
+  virtual std::complex<double> ComplexSum() const;
+
   virtual void Gradient(MINT::MinuitParameterSet* mps, Double_t* grad){
         withEff().Gradient(mps,grad);
   }
@@ -80,6 +83,8 @@ class IntegCalculator : public virtual IIntegrationCalculator{
   virtual double getFractionChi2() const;
 
   virtual DalitzHistoSet histoSet() const;
+  virtual DalitzHistoSet un_normalised_histoSetRe() const;
+  virtual DalitzHistoSet un_normalised_histoSetIm() const;
   virtual void saveEachAmpsHistograms(const std::string& prefix) const;
   virtual std::vector<DalitzHistoSet> GetEachAmpsHistograms();
 

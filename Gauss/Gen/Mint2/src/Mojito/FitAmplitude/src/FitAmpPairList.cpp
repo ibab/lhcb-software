@@ -209,6 +209,14 @@ double FitAmpPairList::integral() const{
   }
   return sum;
 }
+std::complex<double> FitAmpPairList::ComplexSum() const{ //laurenPsuedo
+  bool dbThis = false;
+  std::complex<double> sum = 0;
+  for(unsigned int i=0; i< this->size(); i++){
+    sum += (*this)[i].complexVal();
+  }
+  return sum;
+}
 
 void FitAmpPairList::Gradient(MinuitParameterSet* mps, Double_t* grad){
     
@@ -418,14 +426,20 @@ void FitAmpPairList::unsetEfficiency(){
   _efficiency=counted_ptr<IReturnRealForEvent<IDalitzEvent> >(0);
 }
 DalitzHistoSet FitAmpPairList::histoSet() const{
+  return un_normalised_histoSetRe()/integral();
+}
+DalitzHistoSet FitAmpPairList::un_normalised_histoSetRe() const{
   DalitzHistoSet sum;
   for(unsigned int i=0; i< this->size(); i++){
-    sum += (*this)[i].histoSet();
+    sum += (*this)[i].histoSetRe();
   }
-  sum /= integral();
-  //  if(_Nevents > 0) sum /= (double) _Nevents;
-  // above two lines normalise this to 1.
-
+  return sum;
+}
+DalitzHistoSet FitAmpPairList::un_normalised_histoSetIm() const{
+  DalitzHistoSet sum;
+  for(unsigned int i=0; i< this->size(); i++){
+    sum += (*this)[i].histoSetIm();
+  }
   return sum;
 }
 
