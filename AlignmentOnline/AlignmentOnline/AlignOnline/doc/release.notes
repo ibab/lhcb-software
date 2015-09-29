@@ -3,6 +3,10 @@ Package: AlignOnline
 Package Coordinator: Maurizio Martinelli
 Purpose: Code for running and testing Alignment in the online environment
 
+! 2015-09-29 - Giulio Dujany
+ - Various changes in check conditions
+ - Added function in options Velo to select events selected as beamgas by trigger
+
 ! 2015-08-23 - Giulio Dujany
  - Fixed bug in chech conditions online offline: 
    before if no hlt2 conditions run was marked as good

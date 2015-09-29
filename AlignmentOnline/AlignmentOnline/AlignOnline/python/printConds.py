@@ -61,6 +61,12 @@ if arguments.online:
                  "LHCBCOND" : HLT2Params.CondDBTag,
                  "ONLINE"   : 'fake'}
     cdb.Online = True
+else:
+    cdb.UseOracle = True
+    cdb.Online = True
+    cdb.IgnoreHeartBeat = True
+    cdb.EnableRunStampCheck = False
+
 
 from Configurables import DumpConditions, GaudiSequencer
 dumpSeq = GaudiSequencer("DumpSequence", Members = [DumpConditions()])

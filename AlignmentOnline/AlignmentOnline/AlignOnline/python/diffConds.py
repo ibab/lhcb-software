@@ -18,7 +18,7 @@ def findStartTime(run):
     
     startTime = db.getrun(run)[0]['startTime']
         
-    return int(time.mktime(time.strptime(startTime,'%Y-%m-%d %H:%M:%S.0000')))*10**9
+    return (int(time.mktime(time.strptime(startTime,'%Y-%m-%d %H:%M:%S.0000')))+2)*10**9
 
 
 def parseConditions(inFile_name):
