@@ -8,6 +8,7 @@
 #include "Kernel/DaVinciAlgorithm.h"
 #include "Kernel/IRelatedInfoTool.h"
 #include "Relations/Relations.h"
+#include "LoKi/ChildSelector.h"
 
 // boost
 #include "boost/algorithm/string.hpp"
@@ -40,21 +41,23 @@ public:
 
 private:
 
-  void fill(const LHCb::Particle* top, LHCb::Particle* c, const int level, const std::string &top_location);
+  void fill(const LHCb::Particle* top, const LHCb::Particle* c, const std::string &top_location);
 
 private:
 
   std::string m_toolName;
   IRelatedInfoTool* m_tool;
-  int m_maxLevel;
 
-  typedef std::map<std::string, std::vector<std::string> > InfoMap;
-  InfoMap m_infoLocations;
+  typedef std::map<std::string, std::string> InfoMap;
+  InfoMap m_daughterInfo;
+
+  std::string m_topInfo; 
+
+  typedef std::map<std::string, LoKi::Child::Selector*> SelectorMap; 
+  SelectorMap m_childSelectors; 
 
   typedef std::map<std::string, ParticleInfoRelation> RelationLocationMap;
   mutable RelationLocationMap m_relMap;
-
-  std::map<std::string, unsigned int> m_locationCounter; 
 
 };
 

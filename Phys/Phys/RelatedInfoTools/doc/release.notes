@@ -4,6 +4,18 @@
 ! Purpose     : Related Info Tools
 !-----------------------------------------------------------------------------
 
+! 2015-09-29 - Anton Poluektov 
+ - New configuration option for AddRelatedInfo. Instead of 'Locations' and 'RecursionLevel', 
+   it takes the 'DaughterLocations' dictionary in the form 
+   {
+     'LoKi daughter selection string' : 'RelatedInfo TES location'
+   }
+   e.g. 
+   {
+     'D0 -> ^K- pi+' : 'RelInfoKaon', 
+     'D0 -> K- ^pi+' : 'RelInfoPion'
+   }
+
 !========================= RelatedInfoTools v1r2 2015-08-18 =========================
 
 ! 2015-08-12 - Gerhard Raven
