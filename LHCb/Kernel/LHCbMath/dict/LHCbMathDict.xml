@@ -270,6 +270,9 @@
   
   <class name = "Gaudi::Math::Chi2Fit"   />
 
+
+  <function name = "Gaudi::Math::combine" />
+
   <class name = "Gaudi::Math::Chi2Solution<4,2,double>"         />
   <class name = "Gaudi::Math::Chi2Solution<4,2,double>::CMTRX2" />
   <class name = "Gaudi::Math::Chi2Solution<6,2,double>"         />

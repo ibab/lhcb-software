@@ -25,7 +25,8 @@ namespace Gaudi
   {
     // ========================================================================
     /** @class SVectorWithError
-     *  Simple class with represent SVectro with associated covariance matrix
+     *  Simple class with represent SVector with 
+     *  the associated covariance matrix
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      */
     template <unsigned int N, typename SCALAR=double>

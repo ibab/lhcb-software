@@ -38,6 +38,7 @@
 #include "LHCbMath/Choose.h"
 #include "LHCbMath/MoreFunctions.h"
 #include "LHCbMath/Binomial.h"
+#include "LHCbMath/Combine.h"
 // ============================================================================
 /** @file LHCbMathDict.h
  *

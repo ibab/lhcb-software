@@ -102,7 +102,7 @@ std   = cpp.std
 ## ROOT::Math namespace
 _RM = ROOT.ROOT.Math
 
-
+## Geomemtry vectors 
 Gaudi.XYZPoint            = _RM.PositionVector3D     ('ROOT::Math::Cartesian3D<double>,ROOT::Math::DefaultCoordinateSystemTag')
 Gaudi.XYZVector           = _RM.DisplacementVector3D ('ROOT::Math::Cartesian3D<double>,ROOT::Math::DefaultCoordinateSystemTag')
 Gaudi.LorentzVector       = _RM.LorentzVector        ('ROOT::Math::PxPyPzE4D<double>')
@@ -130,7 +130,8 @@ def _vector_ ( i , typ = 'double' ) :
     >>>  vct  = V3 ()
 
     """
-    return _RM.SVector ( typ , i )
+    v = _RM.SVector ( typ , i )
+    return deco_vector ( v ) 
 
 # =============================================================================
 ## try to pickup the matrix
@@ -141,9 +142,11 @@ def _matrix_ ( i , j , typ = 'double' ) :
 
     >>>  M3x4   = Gaudi.Math.Matrix(3,4)
     >>>  matrix = M3x4 ()
-
+    
     """
-    return _RM.SMatrix ( "%s,%d,%d" % ( typ , i , j ) )
+    m = _RM.SMatrix ( "%s,%d,%d" % ( typ , i , j ) )
+    return deco_matrix( m )  
+
 
 # =============================================================================
 ## try to pickup the symmeric matrix
@@ -156,7 +159,8 @@ def _sym_matrix_ ( i , typ = 'double' ) :
     >>>  matrix = SymM3 ()
 
     """
-    return _RM.SMatrix('%s,%d,%d,ROOT::Math::MatRepSym<%s,%d>' %  ( typ , i , i , typ , i ) )
+    m = _RM.SMatrix('%s,%d,%d,ROOT::Math::MatRepSym<%s,%d>' %  ( typ , i , i , typ , i ) )
+    return deco_symmatrix  ( m ) 
 
 Gaudi.Vector         =     _vector_
 Gaudi.Math.Vector    =     _vector_
@@ -164,62 +168,6 @@ Gaudi.Matrix         =     _matrix_
 Gaudi.Math.Matrix    =     _matrix_
 Gaudi.SymMatrix      = _sym_matrix_
 Gaudi.Math.SymMatrix = _sym_matrix_
-
-Gaudi.Vector2             = Gaudi.Vector(2)
-Gaudi.Vector3             = Gaudi.Vector(3)
-Gaudi.Vector4             = Gaudi.Vector(4)
-Gaudi.Vector5             = Gaudi.Vector(5)
-Gaudi.Vector6             = Gaudi.Vector(6)
-Gaudi.Vector8             = Gaudi.Vector(8)
-
-Gaudi.Math.Vector2        = Gaudi.Vector2
-Gaudi.Math.Vector3        = Gaudi.Vector3
-Gaudi.Math.Vector4        = Gaudi.Vector4
-Gaudi.Math.Vector5        = Gaudi.Vector5
-Gaudi.Math.Vector8        = Gaudi.Vector8
-
-Gaudi.SymMatrix2x2        = Gaudi.SymMatrix(2)
-Gaudi.SymMatrix3x3        = Gaudi.SymMatrix(3)
-Gaudi.SymMatrix4x4        = Gaudi.SymMatrix(4)
-Gaudi.SymMatrix5x5        = Gaudi.SymMatrix(5)
-Gaudi.SymMatrix6x6        = Gaudi.SymMatrix(6)
-## LHCb::Particle
-Gaudi.SymMatrix7x7        = Gaudi.SymMatrix(7)
-## Gaudi::Math::ParticleParams
-Gaudi.SymMatrix8x8        = Gaudi.SymMatrix(8)
-## LHCb:TwoProngVertex
-Gaudi.SymMatrix9x9        = Gaudi.SymMatrix(9)
-
-
-Gaudi.Math.SymMatrix2x2   = Gaudi.SymMatrix2x2
-Gaudi.Math.SymMatrix3x3   = Gaudi.SymMatrix3x3
-Gaudi.Math.SymMatrix4x4   = Gaudi.SymMatrix4x4
-Gaudi.Math.SymMatrix5x5   = Gaudi.SymMatrix5x5
-Gaudi.Math.SymMatrix6x6   = Gaudi.SymMatrix6x6
-Gaudi.Math.SymMatrix7x7   = Gaudi.SymMatrix7x7
-Gaudi.Math.SymMatrix8x8   = Gaudi.SymMatrix8x8
-Gaudi.Math.SymMatrix9x9   = Gaudi.SymMatrix9x9
-
-#
-# specific matrices for 'tracks'
-#
-
-Gaudi.Matrix5x5             = Gaudi.Matrix(5,5)
-Gaudi.TrackMatrix           = Gaudi.Matrix5x5
-Gaudi.Math.Matrix5x5        = Gaudi.Matrix5x5
-Gaudi.Math.TrackMatrix      = Gaudi.TrackMatrix
-
-Gaudi.TrackSymMatrix        = Gaudi.SymMatrix5x5
-Gaudi.Math.TrackSymMatrix   = Gaudi.TrackSymMatrix
-
-Gaudi.TrackVector           = Gaudi.Vector5
-Gaudi.Math.TrackVector      = Gaudi.TrackVector
-
-#
-# matrix from LHCb::Particle
-#
-Gaudi.Matrix4x3             = Gaudi.Matrix(4,3)
-Gaudi.Math.Matrix4x3        = Gaudi.Matrix4x3
 
 ## Gaudi::Math
 Gaudi.Math.XYZLine           = cpp.Gaudi.Math.Line(Gaudi.XYZPoint,Gaudi.XYZVector)
@@ -454,13 +402,10 @@ def _lav_pow_ ( self , e ) :
     if 2 != e : return NotImplemented
     return self*self
 
-for t in ( Gaudi.Vector2 ,
-           Gaudi.Vector3 ,
-           Gaudi.Vector4 ,
-           Gaudi.Vector5 ,
-           Gaudi.Vector6 ,
-           Gaudi.Vector8 ) :
-    #
+
+## decorate vector 
+def deco_vector ( t ) :
+
     if not hasattr ( t , '__iadd__' ) : t. __iadd__ = _lad_iadd_
     if not hasattr ( t , '__isub__' ) : t. __isub__ = _lad_isub_
     if not hasattr ( t , '__imul__' ) : t. __iadd__ = _lad_idiv_
@@ -475,8 +420,32 @@ for t in ( Gaudi.Vector2 ,
     t. __radd__ = lambda s,o : s+o
     t. __rmul__ = lambda s,o : s+o
     t. __rsub__ = _lav_rsub_ 
-          
+
+    return t
+
+    
+for t in ( Gaudi.Vector2 ,
+           Gaudi.Vector3 ,
+           Gaudi.Vector4 ,
+           Gaudi.Vector5 ,
+           Gaudi.Vector6 ,
+           Gaudi.Vector8 ) : deco_vector ( t ) 
+    #
            
+
+Gaudi.Vector2             = Gaudi.Vector(2)
+Gaudi.Vector3             = Gaudi.Vector(3)
+Gaudi.Vector4             = Gaudi.Vector(4)
+Gaudi.Vector5             = Gaudi.Vector(5)
+Gaudi.Vector6             = Gaudi.Vector(6)
+Gaudi.Vector8             = Gaudi.Vector(8)
+
+Gaudi.Math.Vector2        = Gaudi.Vector2
+Gaudi.Math.Vector3        = Gaudi.Vector3
+Gaudi.Math.Vector4        = Gaudi.Vector4
+Gaudi.Math.Vector5        = Gaudi.Vector5
+Gaudi.Math.Vector8        = Gaudi.Vector8
+
 
 ## ============================================================================
 ## some useful decoration:
@@ -891,13 +860,160 @@ def _m_corr_ ( self ) :
     return _c
 
 
-for m in ( Gaudi.Matrix5x5      ,
-           Gaudi.TrackMatrix    ,
-           Gaudi.Matrix4x3      ) :
+def _m_get_ ( o , i , j ) :
+
+    try :
+        return o ( i , j )
+    except :
+        pass
+    
+    try :
+        return o [ i , j ]
+    except :
+        pass
+
+    return o [ i ][ j ]
+    
+    
+# =============================================================================
+## add some matrix-like object to the matrix
+#  @code
+#  m = ...
+#  o = ...
+#  m.add_to  ( o ) 
+#  @endcode
+def _mg_increment_ ( m , o ) : 
+    """ Add some ``matrix-like'' object to the matrix
+    >>> m = ...
+    >>> o = ...
+    >>> m.increment  ( o ) 
+    """
+    for i in range ( m.kRows ) :
+        for j in range ( m.kCols ) :
+            m[i,j] = m(i,j) + _m_get_ ( o , i , j )
+                    
+    return m
+
+# =============================================================================
+## add some matrix-like object to the matrix
+#  @code
+#  m = ...
+#  o = ...
+#  m.add_to  ( o ) 
+#  @endcode
+def _ms_increment_ ( m , o ) : 
+    """ Add some ``matrix-like'' object to the matrix
+    >>> m = ...
+    >>> o = ...
+    >>> m.increment  ( o ) 
+    """
+    for i in range ( m.kRows ) :
+        for j in range ( i , m.kCols ) :
+            m[i,j] = m(i,j) + 0.5 * ( _m_get_ ( o , i , j ) + _m_get_ ( o , j , i ) )  
+                    
+    return m
+
+# =============================================================================
+## construct ``similarity'' with ``vector-like'' object
+#  @code
+#  m = ...
+#  v = ...
+#  m.sim ( v )
+def  _ms_sim_ ( m , v ) :
+    """ construct ``similaroty'' with ``vector-like'' object
+    >>> m = ...
+    >>> v = ...
+    >>> m.sim ( v )
+    """
+    sim = 0.0
+    for i in range(m.kRows) :
+        for j in range(m.kCols) :
+            sim += v[i]*m(i,j)*v[j] 
+    return sim 
+            
+        
+##  decorate the matrix  type 
+def deco_matrix ( m  ) :
     if not hasattr ( m , '_new_str_' ) :
         m. _new_str_ = _mg_str_
         m. __repr__  = _mg_str_
         m. __str__   = _mg_str_
+    if not hasattr ( m , '_increment_' ) :
+        m._increment_   = _mg_increment_
+        m.increment     = _mg_increment_
+        
+    return m
+
+##  decorate the symmetrix matrix  type 
+def deco_symmatrix ( m ) :
+    
+    if not hasattr ( m , 'correlations' ) :
+        m.correlations = _m_corr_
+
+    if not hasattr ( m , '_new_str_' ) :
+        m. _new_str_ = _ms_str_
+        m. __repr__  = _ms_str_
+        m. __str__   = _ms_str_
+
+    if not hasattr ( m , '_increment_' ) :
+        m._increment_   = _ms_increment_
+        m.increment     = _ms_increment_
+
+    if not hasattr ( m , '_sim_' ) :
+        m._sim_   = _ms_sim_
+        m.sim     = _ms_sim_
+
+    return m
+
+
+Gaudi.SymMatrix2x2        = Gaudi.SymMatrix(2)
+Gaudi.SymMatrix3x3        = Gaudi.SymMatrix(3)
+Gaudi.SymMatrix4x4        = Gaudi.SymMatrix(4)
+Gaudi.SymMatrix5x5        = Gaudi.SymMatrix(5)
+Gaudi.SymMatrix6x6        = Gaudi.SymMatrix(6)
+## LHCb::Particle
+Gaudi.SymMatrix7x7        = Gaudi.SymMatrix(7)
+## Gaudi::Math::ParticleParams
+Gaudi.SymMatrix8x8        = Gaudi.SymMatrix(8)
+## LHCb:TwoProngVertex
+Gaudi.SymMatrix9x9        = Gaudi.SymMatrix(9)
+
+
+Gaudi.Math.SymMatrix2x2   = Gaudi.SymMatrix2x2
+Gaudi.Math.SymMatrix3x3   = Gaudi.SymMatrix3x3
+Gaudi.Math.SymMatrix4x4   = Gaudi.SymMatrix4x4
+Gaudi.Math.SymMatrix5x5   = Gaudi.SymMatrix5x5
+Gaudi.Math.SymMatrix6x6   = Gaudi.SymMatrix6x6
+Gaudi.Math.SymMatrix7x7   = Gaudi.SymMatrix7x7
+Gaudi.Math.SymMatrix8x8   = Gaudi.SymMatrix8x8
+Gaudi.Math.SymMatrix9x9   = Gaudi.SymMatrix9x9
+
+#
+# specific matrices for 'tracks'
+#
+
+Gaudi.Matrix5x5             = Gaudi.Matrix(5,5)
+Gaudi.TrackMatrix           = Gaudi.Matrix5x5
+Gaudi.Math.Matrix5x5        = Gaudi.Matrix5x5
+Gaudi.Math.TrackMatrix      = Gaudi.TrackMatrix
+
+Gaudi.TrackSymMatrix        = Gaudi.SymMatrix5x5
+Gaudi.Math.TrackSymMatrix   = Gaudi.TrackSymMatrix
+
+Gaudi.TrackVector           = Gaudi.Vector5
+Gaudi.Math.TrackVector      = Gaudi.TrackVector
+
+#
+# matrix from LHCb::Particle
+#
+Gaudi.Matrix4x3             = Gaudi.Matrix(4,3)
+Gaudi.Math.Matrix4x3        = Gaudi.Matrix4x3
+
+
+
+for m in ( Gaudi.Matrix5x5      ,
+           Gaudi.TrackMatrix    ,
+           Gaudi.Matrix4x3      ) : deco_matrix ( m )
 
 for m in ( Gaudi.SymMatrix2x2   ,
            Gaudi.SymMatrix3x3   ,
@@ -907,16 +1023,7 @@ for m in ( Gaudi.SymMatrix2x2   ,
            Gaudi.SymMatrix7x7   ,
            Gaudi.SymMatrix8x8   ,
            Gaudi.SymMatrix9x9   ,
-           Gaudi.TrackSymMatrix ) :
-
-    if not hasattr ( m , 'correlations' ) :
-        m.correlations = _m_corr_
-
-    if not hasattr ( m , '_new_str_' ) :
-        m. _new_str_ = _ms_str_
-        m. __repr__  = _ms_str_
-        m. __str__   = _ms_str_
-
+           Gaudi.TrackSymMatrix ) : deco_symmatrix ( m ) 
 
 # =============================================================================
 ## Self-printout of 3D-plane
