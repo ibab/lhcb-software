@@ -43,6 +43,7 @@ FitAmpPairList::FitAmpPairList(const FitAmpPairList& other)
   , _sumsq(other._sumsq)
   , _psSum(other._psSum)
   , _psSumSq(other._psSumSq)
+  , _slow(other._slow)
   , _cov(other._cov, this)
   , _efficiency(other._efficiency)
 {
