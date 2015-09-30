@@ -91,6 +91,15 @@ class SMOGLines(Hlt2LinesConfigurableUser) :
         'Mass_M_MIN'               :  2211.0 * MeV,
         'Mass_M_MAX'               :  2543.0 * MeV,
         },
+      'B2PiMu' : {
+          'TisTosSpec'             : "Hlt1SMOGSingleTrackDecision%TOS",
+          'AM_MIN'                 : 0 * MeV,
+          'AM_MAX'                 : 1000.0 * GeV,
+          'ASUMPT_MIN'             : 4.0 * GeV,
+          'VCHI2PDOF_MAX'          : 30.0,
+          'Mass_M_MIN'             : 0 * MeV,
+          'Mass_M_MAX'             : 1000.0 * GeV
+        },
       }
 
   def stages(self, nickname = ""):
@@ -106,12 +115,14 @@ class SMOGLines(Hlt2LinesConfigurableUser) :
     from Stages import DpToKmPipPip
     from Stages import DspToKmKpPim
     from Stages import LcpToKmPpPip
+    from Stages import B2PiMu
 
     self._stages = {
         'SMOGDpm2KPiPi'       : [MassFilter('Dpm2KPiPi', nickname='Dpm2HHH', inputs=[DpToKmPipPip], shared=True)],
         'SMOGDs2KKPi'         : [MassFilter('Ds2KKPi',   nickname='Ds2HHH',  inputs=[DspToKmKpPim], shared=True)],
         'SMOGLc2KPPi'         : [MassFilter('Lc2KPPi',   nickname='Lc2HHH',  inputs=[LcpToKmPpPip], shared=True)],
-        'SMOGD02KPi'          : [MassFilter('D02KPi',    nickname='D02HH',   inputs=[D02KPi],       shared=True)]
+        'SMOGD02KPi'          : [MassFilter('D02KPi',    nickname='D02HH',   inputs=[D02KPi],       shared=True)],
+        'SMOGB2PiMu'          : [MassFilter('B2PiMu',    nickname='B2PiMu',  inputs=[B2PiMu],       shared=True)],
         }
 
     if nickname:

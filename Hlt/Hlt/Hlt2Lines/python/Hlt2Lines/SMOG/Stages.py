@@ -65,6 +65,7 @@ class InParticleFilter(Hlt2ParticleFilter) : # {
 ## ------------------------------------------------------------------------- ##
 from Inputs import Hlt2LoosePions, Hlt2LooseKaons, Hlt2LooseProtons
 from Inputs import Hlt2NoPIDsPions, Hlt2NoPIDsKaons, Hlt2NoPIDsProtons
+from Inputs import Hlt2Muons
 ## ------------------------------------------------------------------------- ##
 class TighterProtonFilter(Hlt2ParticleFilter):
     def __init__(self, name, inputs, nickname = None , shared = True  ):
@@ -216,6 +217,24 @@ class HHHCombiner(Hlt2Combiner) : # {
     # }
 # }
 
+## ========================================================================= ##
+## Pi Mu Combiner
+## ========================================================================= ##
+
+# ------------------------------------------------------------------------- ##
+class PiMuCombiner(Hlt2Combiner):
+    def __init__(self, name, decay, inputs, nickname = None) : # {
+        cc =    ("(in_range( %(AM_MIN)s, AM, %(AM_MAX)s ))" +
+                 " & ((APT1+APT2) > %(ASUMPT_MIN)s )" )
+        mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)")
+
+        nickname = name if nickname == None else nickname
+        
+        Hlt2Combiner.__init__(self, "SMOG" + name, decay, inputs,
+                              nickname = nickname, dependencies = [TrackGEC('TrackGEC')],
+                              shared = True, tistos = 'TisTosSpec',
+                              CombinationCut = cc, MotherCut = mc, Preambulo = [])
+
 
 ## Shared instances of HHHCombiner
 ## ------------------------------------------------------------------------- ##
@@ -240,4 +259,8 @@ D02KPi = HHCombiner('D02KPi'
         , inputs = [ SharedDpmChild_K, SharedDpmChild_pi ]
         , nickname = 'D02HH',shared=True ) ## 'D02HH' defined in Lines.py
 
+B2PiMu = PiMuCombiner('B2PiMu'
+        , decay = "[B0 -> pi+ mu-]cc"
+        , inputs = [ Hlt2LoosePions, Hlt2Muons ]
+        , nickname = 'B2PiMu' ) ## 'B2PiMu' defined in Lines.py
 

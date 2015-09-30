@@ -9,6 +9,9 @@
 !----------------------------------------------------------------------------
 
 ! 2015-09-30 - Matthew Kenzie
+ - SMOG: Added a PiMu combiner for the SMOG lines
+
+! 2015-09-30 - Matthew Kenzie
  - SMOG: rename ProtonSMOG to SMOG
 
 ! 2015-09-27 - Matthew Kenzie
