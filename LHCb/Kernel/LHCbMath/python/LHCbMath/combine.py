@@ -139,7 +139,7 @@ if '__main__' == __name__ :
     from LHCbMath.Types import Gaudi
     VE = Gaudi.Math.ValueWithError
 
-    print 'Exmaple frmo Avery '
+    print 'Example from Avery '
     
     x = VE ( 0.95 , 0.08**2 )
     y = VE ( 1.08 , 0.08**2 )
@@ -179,7 +179,6 @@ if '__main__' == __name__ :
     
     print 'CORRELATED  : ' , c2.combiner.result(), c2.errComponents() 
     print 'UNCORRELATED: ' , c1.combiner.result(), c1.errComponents()
-    
     
     
     

@@ -40,9 +40,9 @@ namespace  Gaudi
     {
     public:
       // ============================================================================
-      typedef  ROOT::Math::SVector<T,D>                                 Data        ;
-      typedef  ROOT::Math::SMatrix<T,D,D,ROOT::Math::MatRepSym<T,D> >   Covariance  ;
-      typedef  std::vector<Covariance>                                  Covariances ;
+      typedef  ROOT::Math::SVector<T,D>                                 Data          ;
+      typedef  ROOT::Math::SMatrix<T,D,D,ROOT::Math::MatRepSym<T,D> >   Covariance    ;
+      typedef  Gaudi::Math::SVectorWithError<D,T>                       DataWithError ;
       // ============================================================================
     public:
       // =======================================================================
@@ -52,46 +52,113 @@ namespace  Gaudi
         : m_data ( data ) 
         , m_cov2 ( cov2 ) 
         , m_w    () 
-        , m_one  () 
-      {
-        Gaudi::Math::setToScalar ( m_one , 1.0 ) ;
-        m_w = this->weights() ;
-      }
-
+      { m_w = this->getWeights() ; }
+      // ======================================================================
+      // constructor from the vector of data and cov matrices 
+      Combine ( const Data&       data , 
+                const Covariance& cov1 , 
+                const Covariance& cov2 )
+        : m_data ( data ) 
+        , m_cov2 ( cov1 + cov2  ) 
+        , m_w    () 
+      { m_w = this->getWeights() ; }
+      // ======================================================================
+      // constructor from the vector of data and cov matrices 
+      Combine ( const Data&       data , 
+                const Covariance& cov1 , 
+                const Covariance& cov2 ,
+                const Covariance& cov3 )
+        : m_data ( data ) 
+        , m_cov2 ( cov1 + cov2 + cov3 ) 
+        , m_w    () 
+      { m_w = this->getWeights() ; }
+      // ======================================================================
+      // constructor from the vector of data and cov matrix 
+      Combine ( const Covariance& cov2 , 
+                const Data&       data )
+        : m_data ( data ) 
+        , m_cov2 ( cov2 ) 
+        , m_w    () 
+      { m_w = this->getWeights() ; }
+      // ======================================================================
+      // constructor from the data
+      Combine ( const DataWithError& data ) 
+        : m_data ( data.value() ) 
+        , m_cov2 ( data.cov2 () ) 
+        , m_w    () 
+      { m_w = this->getWeights() ; }
       // ======================================================================
     public:
       // ======================================================================
       /// calculate weights
-      Data weights() const 
+      Data getWeights() const 
       {
         // the inverse covariance matrix 
         Covariance vxi ;
-        const int ifail = Gaudi::Math::inverse ( m_cov2 , vxi ) ;
-        if ( ifail ) {  /* do somehting and regularize it later */ }
+        if ( Gaudi::Math::inverse ( m_cov2 , vxi ) ) 
+        { 
+          /* try to regularize the matrix */
+          const double tr    = std::abs ( Gaudi::Math::trace           ( m_cov2 ) ) / D     ;
+          const double mnd   = std::abs ( Gaudi::Math::min_diagonal    ( m_cov2 ) )         ;
+          const double mxd   = std::abs ( Gaudi::Math::max_diagonal    ( m_cov2 ) ) / D     ;
+          const double mnad  = std::abs ( Gaudi::Math::minabs_diagonal ( m_cov2 ) )         ;
+          const double mxad  = std::abs ( Gaudi::Math::maxabs_diagonal ( m_cov2 ) ) / D     ;
+          const double mn    = std::abs ( Gaudi::Math::min_element     ( m_cov2 ) ) / D / D ;
+          const double mx    = std::abs ( Gaudi::Math::max_element     ( m_cov2 ) ) / D / D ;
+          const double mna   = std::abs ( Gaudi::Math::minabs_element  ( m_cov2 ) ) / D / D ;
+          const double mxa   = std::abs ( Gaudi::Math::maxabs_element  ( m_cov2 ) ) / D / D ;
+          //
+          double small = 1.e-4 * mxa ;
+          //
+          if ( 0 < tr   )  {  small = std::min ( small , 1.e-3 * tr   ) ; }
+          if ( 0 < mnd  )  {  small = std::min ( small , 1.e-3 * mnd  ) ; }
+          if ( 0 < mxd  )  {  small = std::min ( small , 1.e-3 * mxd  ) ; }
+          if ( 0 < mnad )  {  small = std::min ( small , 1.e-3 * mnad ) ; }
+          if ( 0 < mxad )  {  small = std::min ( small , 1.e-3 * mxad ) ; }
+          if ( 0 < mn   )  {  small = std::min ( small , 1.e-3 * mn   ) ; }
+          if ( 0 < mx   )  {  small = std::min ( small , 1.e-3 * mx   ) ; }
+          if ( 0 < mna  )  {  small = std::min ( small , 1.e-3 * mna  ) ; }
+          if ( 0 < mxa  )  {  small = std::min ( small , 1.e-3 * mxa  ) ; }
+          //
+          Covariance fixed ( m_cov2 ) ;
+          for ( unsigned int i = 0 ; i < D ; ++i ) { fixed ( i, i ) += small ; }
+          Gaudi::Math::inverse ( fixed , vxi ) ;
+        }
         //
-        return ( vxi * m_one ) / ROOT::Math::Similarity( vxi , m_one ) ;
+        const Data& vone = this->units() ;
+        return ( vxi * vone ) / ROOT::Math::Similarity( vxi , vone ) ;
       }
       /// the main method:  get a combined value using the calculated weights
       Gaudi::Math::ValueWithError result () const 
       { 
-        const double r  = ROOT::Math::Dot ( m_data , m_w  ) ;
+        const double r  = ROOT::Math::Dot        ( m_data , m_w ) ;
         const double e2 = ROOT::Math::Similarity ( m_cov2 , m_w ) ;
         return Gaudi::Math::ValueWithError ( r , e2 ) ;
+      }
+      /// get the calculated weights
+      const Data& weights() const { return m_w ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// get vector of units 
+      const Data& units () const 
+      {
+        static Data s_units ;
+        if ( 1 != s_units[0] ) { Gaudi::Math::setToScalar ( s_units , T(1) ) ; }
+        return s_units ;
       }
       // ======================================================================
     private:
       // ======================================================================
       /// input data vector 
-      Data        m_data  ;                     // input data vector 
+      Data        m_data  ;            // input data vector 
       /// the overall covariance matrix 
-      mutable Covariance  m_cov2  ;            // the overall covariance matrix
+      Covariance  m_cov2  ;            // the overall covariance matrix
       // ======================================================================
     private:
       // ======================================================================
       /// weights 
       Data m_w            ; // weights 
-      /// helper vector of 
-      Data m_one          ;
       // ======================================================================
     } ;  
     // ========================================================================
@@ -118,63 +185,6 @@ namespace  Gaudi
     combine  ( const double               x   , 
                const double               y   , 
                const Gaudi::SymMatrix2x2& cov ) ;
-    // ========================================================================
-    /** combine three measurements
-     *  with covarinace matrix <code>cov</code>
-     *  @param x (INPUT) the first  measurement 
-     *  @param y (INPUT) the second measurement 
-     *  @param z (INPUT) the second measurement 
-     *  @param cov2 (INPUT) covariance matrix 
-     *  @return combined result
-     *  @author  Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date 2015-09-28
-     */
-    GAUDI_API 
-    Gaudi::Math::ValueWithError 
-    combine  ( const double               x   , 
-               const double               y   , 
-               const double               z   , 
-               const Gaudi::SymMatrix3x3& cov ) ;
-    // ========================================================================
-    /** combine four measurements
-     *  with covarinace matrix <code>cov</code>
-     *  @param x1 (INPUT) the first  measurement 
-     *  @param x2 (INPUT) the second measurement 
-     *  @param x3 (INPUT) the second measurement 
-     *  @param x4 (INPUT) the second measurement 
-     *  @param cov2 (INPUT) covariance matrix 
-     *  @return combined result
-     *  @author  Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date 2015-09-28
-     */
-    GAUDI_API 
-    Gaudi::Math::ValueWithError 
-    combine  ( const double               x1  , 
-               const double               x2  , 
-               const double               x3  , 
-               const double               x4  , 
-               const Gaudi::SymMatrix4x4& cov ) ;
-    // ========================================================================
-    /** combine five measurements
-     *  with covarinace matrix <code>cov</code>
-     *  @param x1 (INPUT) the first  measurement 
-     *  @param x2 (INPUT) the second measurement 
-     *  @param x3 (INPUT) the second measurement 
-     *  @param x4 (INPUT) the second measurement 
-     *  @param x5 (INPUT) the second measurement 
-     *  @param cov2 (INPUT) covariance matrix 
-     *  @return combined result
-     *  @author  Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date 2015-09-28
-     */
-    GAUDI_API 
-    Gaudi::Math::ValueWithError 
-    combine  ( const double               x1  , 
-               const double               x2  , 
-               const double               x3  , 
-               const double               x4  , 
-               const double               x5  , 
-               const Gaudi::SymMatrix5x5& cov ) ;
     // ========================================================================
     /** combine two measurements <code>x1</code> and <code>x2</code>
      *  using correlation coefficient <code>rho</code>:  \f$-1\le\rho\le1\f$

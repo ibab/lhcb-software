@@ -6,6 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-09-30 - Vanya Belyaev
+ - add qmtest for Combine-utility 
+
+
 ! 2015-09-28 - 
  - add hypot fnucution 
 
