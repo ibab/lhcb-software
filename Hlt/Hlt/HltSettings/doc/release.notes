@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-09-30 - Matthew Kenzie
+ - Added Calib lines to SMOG thresholds for protonArgon
+
+! 2015-09-30 - Matthew Kenzie
  - Added a thresholds file for protonArgon running: protonArgon_2015.py
 
 !========================= HltSettings v7r3 2015-09-22 =========================

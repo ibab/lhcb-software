@@ -1,3 +1,31 @@
+from GaudiKernel.SystemOfUnits import GeV, MeV, mm
+import importlib
+
+def __get_conf__(folder, suffix):
+    conf = folder + suffix
+    module = importlib.import_module("HltSettings.{0}.{1}".format(folder, conf))
+    return getattr(module, conf)()
+
+def __update_conf__( current, extra ) :
+    for (conf,d) in extra.iteritems() :
+        if conf not in current :
+            current[conf] = d
+            continue
+        cur = current[conf]
+        for (k,v) in d.iteritems() :
+            if k not in cur :
+                cur[k] = v
+                continue
+            if cur[k] == v : continue
+            print 'Warning: potential collision detected: %s -- %s' % (conf,k)
+            print 'current: %s' % cur[k]
+            print 'request: %s' % v
+            if type(cur[k])==dict :
+                cur[k].update( v )
+            else :
+                cur[k] = v
+            print 'result: %s' % cur[k]
+
 class protonArgon_2015:
     """
     Settings for proton argon 2015 data taking
@@ -17,14 +45,8 @@ class protonArgon_2015:
              self.ActiveHlt2Lines() != ref.ActiveHlt2Lines(self) ) :
             raise RuntimeError('Must update HltType when modifying ActiveHlt.Lines()')
 
-    def __init__(self) :
-        self.NanoBanks = [
-            'ODIN', 'HltLumiSummary', 'HltRoutingBits', 'DAQ', 'Velo',
-            'L0DU', 'HltDecReports', 'HC',
-        ]
-
     def L0TCK(self) :
-        return '0x014F'
+        return '0x024F'
 
     def HltType(self) :
         self.verifyType( protonArgon_2015 )
@@ -35,11 +57,7 @@ class protonArgon_2015:
         lines = [
             # General lines
             'Hlt1Lumi',
-            'Hlt1L0CALO', 'Hlt1VeloClosingMicroBias',
-            # Beam-gas lines
-            'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2', 
-            'Hlt1BeamGasCrossingForcedReco', 'Hlt1BeamGasCrossingForcedRecoFullZ',
-            # proton Neon lines:
+            # proton Argon lines:
             'Hlt1MBMicroBiasVelo',  ## Beam1 Micro Bias, prescaled to get 200 M events
             'Hlt1DiMuonHighMass' ,  ## di-muon: active on beam1 beam2 and collisions
             'Hlt1MBNoBias' , ## A little bit of complete no bias on beam gas
@@ -50,17 +68,41 @@ class protonArgon_2015:
             'Hlt1SMOGKKPi',
             'Hlt1SMOGpKPi',
             'Hlt1SMOGGeneric',
-            'Hlt1SMOGSingleTrack'
+            'Hlt1SMOGSingleTrack',
+            # Calib lines
+            'Hlt1CalibHighPTLowMultTrks',
+            'Hlt1CalibRICHMirrorRICH1',
+            'Hlt1CalibRICHMirrorRICH2',
+            'Hlt1CalibTrackingKK',
+            'Hlt1CalibTrackingKPi',
+            'Hlt1CalibTrackingKPiDetached',
+            'Hlt1CalibTrackingPiPi',
+            'Hlt1CalibMuonAlignJpsi' 
         ]
         return lines
 
     def ActiveHlt2Lines(self) :
         """Return a list of active Hlt2 Lines."""
-        return ['Hlt2PassThrough', 'Hlt2Lumi', 'Hlt2Transparent', 'Hlt2SMOGPhysics', 
-        'Hlt2SMOGD02KPi',
-        'Hlt2SMOGDpm2KPiPi',
-        'Hlt2SMOGDs2KKPi',
-        'Hlt2SMOGLc2KPPi']
+        lines = [
+            'Hlt2PassThrough', 
+            'Hlt2Lumi', 
+            'Hlt2Transparent', 
+            'Hlt2SMOGD02KPi',
+            'Hlt2SMOGDpm2KPiPi',
+            'Hlt2SMOGDs2KKPi',
+            'Hlt2SMOGLc2KPPi',
+            'Hlt2SMOGB2PiMu',
+        ]
+
+        # TrackEffDiMuon Calib lines
+        conf = __get_conf__("TrackEffDiMuon", "_25ns_August2015")
+        lines.extend(conf.ActiveHlt2Lines())
+
+        # PID Calib lines
+        conf = __get_conf__("PID","_25ns_August2015")
+        lines.extend(conf.ActiveHlt2Lines())
+
+        return lines
 
     def Thresholds(self) :
         """Return a dictionary of cuts."""
@@ -229,7 +271,27 @@ class protonArgon_2015:
                                  'AM_MAX'                   :  2553 * MeV,
                                  'Mass_M_MIN'               :  2211.0 * MeV,
                                  'Mass_M_MAX'               :  2543.0 * MeV,
-                                }
+                                },
+                 'B2PiMu' :     {
+                                 'TisTosSpec'             : "Hlt1SMOGSingleTrackDecision%TOS",
+                                 'AM_MIN'                 : 0 * MeV,
+                                 'AM_MAX'                 : 1000.0 * GeV,
+                                 'ASUMPT_MIN'             : 4.0 * GeV,
+                                 'VCHI2PDOF_MAX'          : 30.0,
+                                 'Mass_M_MIN'             : 0 * MeV,
+                                 'Mass_M_MAX'             : 1000.0 * GeV
+                                },
             }
         })
+        
+        # TrackEffDiMuon Calib thresholds
+        conf = __get_conf__("TrackEffDiMuon", "_25ns_August2015")
+        __update_conf__(thresholds, conf.Thresholds())
+
+        # PID Calib thresholds
+        conf = __get_conf__("PID","_25ns_August2015")
+        __update_conf__(thresholds, conf.Thresholds())
+
         return thresholds
+
+
