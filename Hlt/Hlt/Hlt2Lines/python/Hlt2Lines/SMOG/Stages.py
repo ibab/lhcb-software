@@ -22,7 +22,7 @@ class TrackGEC(Hlt2VoidFilter):
         from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking as Hlt2LongTracking
         tracks = Hlt2LongTracking().hlt2PrepareTracks()
         code = ("CONTAINS('%s')" % tracks.outputSelection()) + " < %(NTRACK_MAX)s"
-        Hlt2VoidFilter.__init__(self, 'ProtonSMOG' + name, code, [tracks], shared = True, nickname = 'TrackGEC')
+        Hlt2VoidFilter.__init__(self, 'SMOG' + name, code, [tracks], shared = True, nickname = 'TrackGEC')
 
 
 ## ========================================================================= ##
@@ -73,31 +73,31 @@ class TighterProtonFilter(Hlt2ParticleFilter):
         momentum_cut = "( P > %(P_MIN)s )"
         cut = pidp_cut + " & " + deltaPID_cut + " & " + momentum_cut
         nickname = name if nickname == None else nickname
-        name     = name if not shared       else 'ProtonSMOG%sTighterProton' % name
+        name     = name if not shared       else 'SMOG%sTighterProton' % name
         Hlt2ParticleFilter.__init__(self, name, cut, inputs,
                                     nickname = nickname , shared = shared )
 
 ##  --------------
 
 ## Shared instances of DetachedInParticleFilter
-## Names of shared particles  begin with ProtonSMOG to avoid name conflicts
+## Names of shared particles  begin with SMOG to avoid name conflicts
 ##   with other subdirectories.
 ## These are all associated with specific combiners and should perhaps be
 ##   defined closer to that context.
 ## ------------------------------------------------------------------------- ##
-SharedDpmChild_pi = InParticleFilter( 'ProtonSMOGSharedDpmChild_pi', 
+SharedDpmChild_pi = InParticleFilter( 'SMOGSharedDpmChild_pi', 
                                                       [Hlt2LoosePions], 'PIDK', True )
-SharedDpmChild_Tightpi = InParticleFilter( 'ProtonSMOGSharedDpmChild_Tightpi', 
+SharedDpmChild_Tightpi = InParticleFilter( 'SMOGSharedDpmChild_Tightpi', 
                                                            [Hlt2LoosePions], 'PIDK', True )
-SharedDpmChild_K = InParticleFilter( 'ProtonSMOGSharedDpmChild_K',
+SharedDpmChild_K = InParticleFilter( 'SMOGSharedDpmChild_K',
                                                      [Hlt2LooseKaons], 'PIDK' )
-SharedDpmChild_TightK = InParticleFilter( 'ProtonSMOGSharedDpmChild_TightK',
+SharedDpmChild_TightK = InParticleFilter( 'SMOGSharedDpmChild_TightK',
                                                      [Hlt2LooseKaons], 'PIDK' )
-SharedLcChild_pi = InParticleFilter('ProtonSMOGSharedLcChild_pi',
+SharedLcChild_pi = InParticleFilter('SMOGSharedLcChild_pi',
                                                     [Hlt2LoosePions], 'PIDK', True )
-SharedLcChild_K = InParticleFilter( 'ProtonSMOGSharedLcChild_K',
+SharedLcChild_K = InParticleFilter( 'SMOGSharedLcChild_K',
                                                     [Hlt2LooseKaons], 'PIDK' )
-SharedLcChild_p = InParticleFilter('ProtonSMOGSharedLcChild_p',
+SharedLcChild_p = InParticleFilter('SMOGSharedLcChild_p',
                                                    [Hlt2LooseProtons], 'PIDp' )
 SharedTighterLcChild_p = TighterProtonFilter('SharedLcChild',
                                inputs = [SharedLcChild_p], 
@@ -113,7 +113,7 @@ class MassFilter(Hlt2ParticleFilter):
     def __init__(self, name, inputs, nickname = None, shared = False, reFitPVs=False ):
         cut = "in_range( %(Mass_M_MIN)s , M , %(Mass_M_MAX)s )"
         nickname = name if nickname == None else nickname
-        name     = name if not shared       else 'ProtonSMOG%sMass' % name
+        name     = name if not shared       else 'SMOG%sMass' % name
         Hlt2ParticleFilter.__init__(self, name, cut, inputs,
                                     nickname = nickname , shared = shared )
 
@@ -159,7 +159,7 @@ class HHCombiner(Hlt2Combiner) : # {
 
         parentcuts = "(VFASPF(VCHI2PDOF) < %(D0_VCHI2PDOF_MAX)s)" 
 
-        name = name if not shared else 'ProtonSMOG' + name
+        name = name if not shared else 'SMOG' + name
         Hlt2Combiner.__init__( self, name, decay, inputs,
                                dependencies = [TrackGEC('TrackGEC')],
                                tistos = 'TisTosSpec',
@@ -209,7 +209,7 @@ class HHHCombiner(Hlt2Combiner) : # {
 
         nickname = name if nickname == None else nickname
         
-        Hlt2Combiner.__init__(self, "ProtonSMOG" + name, decay, inputs,
+        Hlt2Combiner.__init__(self, "SMOG" + name, decay, inputs,
                               nickname = nickname, dependencies = [TrackGEC('TrackGEC')],
                               shared = True, tistos = 'TisTosSpec', DaughtersCuts = dc,
                               CombinationCut = cc, MotherCut = mc, Preambulo = [])

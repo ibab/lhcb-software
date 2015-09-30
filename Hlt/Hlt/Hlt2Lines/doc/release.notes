@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-09-30 - Matthew Kenzie
+ - SMOG: rename ProtonSMOG to SMOG
+
 ! 2015-09-27 - Matthew Kenzie
  - ProtonSMOG: new folder added for some exlusive SMOG lines
 

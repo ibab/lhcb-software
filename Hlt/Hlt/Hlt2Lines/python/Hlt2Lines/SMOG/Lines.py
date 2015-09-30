@@ -1,7 +1,7 @@
 from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 
-class ProtonSMOGLines(Hlt2LinesConfigurableUser) :
+class SMOGLines(Hlt2LinesConfigurableUser) :
   __slots__ =  { '_stages' : {},
       'Prescale' : {},
       'Postscale': {},
@@ -10,31 +10,31 @@ class ProtonSMOGLines(Hlt2LinesConfigurableUser) :
                      'Trk_ALL_P_MIN'            :  1000 * MeV,
                      'VCHI2PDOF_MAX'            :  10.0,
                 },  
-      'ProtonSMOGSharedDpmChild_K' : {
+      'SMOGSharedDpmChild_K' : {
                'PID_LIM'                  :  5,  
                'Trk_ALL_PT_MIN'           :  200 * MeV
         },
-      'ProtonSMOGSharedDpmChild_pi' : {
+      'SMOGSharedDpmChild_pi' : {
                'PID_LIM'                  :  5,  
                'Trk_ALL_PT_MIN'           :  200 * MeV
         },
-      'ProtonSMOGSharedDpmChild_TightK' : {
+      'SMOGSharedDpmChild_TightK' : {
                'PID_LIM'                  :  7,  
                'Trk_ALL_PT_MIN'           :  250 * MeV
         },
-      'ProtonSMOGSharedDpmChild_Tightpi' : {
+      'SMOGSharedDpmChild_Tightpi' : {
                'PID_LIM'                  :  7,  
                'Trk_ALL_PT_MIN'           :  250 * MeV
         },
-      'ProtonSMOGSharedLcChild_pi' : {
+      'SMOGSharedLcChild_pi' : {
                'PID_LIM'                  :  5,  
                'Trk_ALL_PT_MIN'           :  200 * MeV
         },
-      'ProtonSMOGSharedLcChild_K'  : {
+      'SMOGSharedLcChild_K'  : {
                'PID_LIM'                  :  5,  
                'Trk_ALL_PT_MIN'           :  200 * MeV
         },
-      'ProtonSMOGSharedLcChild_p'  : {
+      'SMOGSharedLcChild_p'  : {
                'PID_LIM'                  :  5,  
                'Trk_ALL_PT_MIN'           :  200 * MeV
         },
@@ -108,10 +108,10 @@ class ProtonSMOGLines(Hlt2LinesConfigurableUser) :
     from Stages import LcpToKmPpPip
 
     self._stages = {
-        'ProtonSMOGDpm2KPiPi'       : [MassFilter('Dpm2KPiPi', nickname='Dpm2HHH', inputs=[DpToKmPipPip], shared=True)],
-        'ProtonSMOGDs2KKPi'         : [MassFilter('Ds2KKPi',   nickname='Ds2HHH',  inputs=[DspToKmKpPim], shared=True)],
-        'ProtonSMOGLc2KPPi'         : [MassFilter('Lc2KPPi',   nickname='Lc2HHH',  inputs=[LcpToKmPpPip], shared=True)],
-        'ProtonSMOGD02KPi'          : [MassFilter('D02KPi',    nickname='D02HH',   inputs=[D02KPi],       shared=True)]
+        'SMOGDpm2KPiPi'       : [MassFilter('Dpm2KPiPi', nickname='Dpm2HHH', inputs=[DpToKmPipPip], shared=True)],
+        'SMOGDs2KKPi'         : [MassFilter('Ds2KKPi',   nickname='Ds2HHH',  inputs=[DspToKmKpPim], shared=True)],
+        'SMOGLc2KPPi'         : [MassFilter('Lc2KPPi',   nickname='Lc2HHH',  inputs=[LcpToKmPpPip], shared=True)],
+        'SMOGD02KPi'          : [MassFilter('D02KPi',    nickname='D02HH',   inputs=[D02KPi],       shared=True)]
         }
 
     if nickname:
