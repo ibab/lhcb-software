@@ -46,6 +46,8 @@ namespace FiniteStateMachine   {
     DimSlave& addFmcArgs(const std::string& args);
     /// Start slave process
     virtual ErrCond start();
+    /// Kill slave process
+    virtual ErrCond kill();
     /// Force slave killing
     virtual ErrCond forceKill();
     /// Handle timeout on unload transition according to timer ID
