@@ -103,7 +103,7 @@ if options.RunBrunel:
         print "No Brunel environment is setup"
         sys.exit(1)
     version = os.environ["BRUNELROOT"].split('/')[-3].split('_')[1]
-    scriptLocation = os.environ["User_release_area"]+'/Brunel_'+version+'/scripts/'+options.BrunelScriptName
+    scriptLocation = os.environ["User_release_area"]+'/Brunel_'+version+'/HC/HCMonitors/scripts/'+options.BrunelScriptName
     typeAnalysis = options.analysisType
     if options.analysisType == 'ApplyCommonMode':
         typeAnalysis = 'NTuple'

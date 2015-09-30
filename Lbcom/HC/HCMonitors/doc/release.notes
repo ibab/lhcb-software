@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring of Herschel data
 !-----------------------------------------------------------------------------
 
+! 2015-09-30 - Victor Coco
+ - analyseHRC.py : change the access to brunelHRC.py
+
 ! 2015-09-28 - Victor Coco
  - HCMonitorBase: change the way mapping is handeled and add correction factors 
    for the channels
