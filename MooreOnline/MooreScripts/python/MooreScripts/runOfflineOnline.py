@@ -83,13 +83,6 @@ def configure(**kwargs) :
     if 'InitialTCK' in user_package.MooreOptions:
         moore.setProp('InitialTCK', user_package.MooreOptions['InitialTCK'])
 
-    ### Process priority
-    nice = mooreOnline.getProp("Priority")[mooreOnline.HltLevel] - os.nice(0)
-    if nice < 0:
-        print "# WARNING: nice of %s requested, this cannot work, setting it to 0." % nice
-        nice = 0
-    os.nice(nice)
-        
     if input_type == 'MEP' and 'Hlt1' in mooreOnline.HltLevel:
         mooreOnline.REQ1 = "EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0"
     elif input_type == 'MDF' and 'Hlt1' in mooreOnline.HltLevel:
