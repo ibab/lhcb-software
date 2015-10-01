@@ -319,7 +319,28 @@ namespace Gaudi
       /// get maximal value of the function on (xmin,xmax) interval 
       double fun_max       () const { return m_bspline.fun_max () ; }
       // ======================================================================
-    public:
+      /// positive      function ?
+      bool    positive     () const { return m_bspline.positive()    ; }
+      /// negative      function ?
+      bool   negative      () const { return false ; }      
+      /// non-positive  function ?
+      bool   nonpositive   () const { return false ; }      
+      /// non-negative  function ?
+      bool   nonnegative   () const { return true  ; }
+      ///  keep sign at [xmin,xmax] ? 
+      bool   keepsign      () const { return true ; }
+      ///  has roots at [xmin,xmax] ? 
+      bool   hasroots      () const { return !positive () ; }
+      /// is it a decreasing function?
+      bool   decreasing    () const { return m_bspline.decreasing () ; }
+      /// is it a increasing function?
+      bool   increasing    () const { return m_bspline.decreasing () ; }
+      /// is it a monothonical function?
+      bool   monothonic    () const { return increasing() || decreasing() ; }
+      /// is it a constant function?
+      bool   constant      () const { return m_bspline.constant  () ; }
+      // ======================================================================
+     public:
       // ======================================================================
       /// get the parameter sphere 
       const Gaudi::Math::NSphere& sphere  () const { return m_sphere  ; }
@@ -329,10 +350,9 @@ namespace Gaudi
     public:
       // ======================================================================
       /// get the integral between xmin and xmax
-      double  integral   () const { return 1 ; } 
+      double  integral   () const ; 
       /// get the integral between low and high 
-      double  integral   ( const double low , const double high ) const 
-      { return m_bspline.integral   ( low , high ) ; }
+      double  integral   ( const double low , const double high ) const ;
       /// get the derivative at point "x" 
       double  derivative ( const double x   ) const 
       { return m_bspline.derivative ( x          ) ; }
@@ -411,7 +431,9 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
+      /// convex  function ? 
       bool convex    () const { return m_convex    ; }
+      /// concave function ? 
       bool concave   () const { return  !convex () ; }
       // ======================================================================
     protected:
@@ -492,8 +514,9 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
-      bool increasing() const { return m_increasing    ; }
-      bool decreasing() const { return  !increasing () ; }
+      bool increasing () const { return m_increasing    ; }
+      bool decreasing () const { return  !increasing () ; }
+      bool monothonic () const { return true ; }
       // ======================================================================
     protected:
       // ======================================================================

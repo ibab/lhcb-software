@@ -87,6 +87,46 @@ print 'UNCORRELATED: ' , c1.combiner.result(), c1.errComponents()
 
 print '*'*120
 
+print 'sigma_eff(Y+D)'
+
+s_YD0_7    = VE ( 19.4 , 2.6**2 )
+s_YDp_7    = VE ( 15.2 , 3.6**2 )
+
+## c = 0.76 
+## c = 0.60 ## correlation 
+
+## syst7      = Gaudi.Math.SymMatrix2x2()
+## syst7[0,0] =   1.3**2
+## syst7[1,1] =   1.5**2
+## syst7[0,1] = c*1.3*1.5
+
+## s_YD0_8    = VE ( 17.2 , 1.9**2 )
+## s_YDp_8    = VE ( 22.3 , 4.4**2 )
+
+## syst8      = Gaudi.Math.SymMatrix2x2()
+## syst8[0,0] =   1.2**2
+## syst8[1,1] =   2.2**2
+## syst8[0,1] = c*1.2*2.2
+
+## systA      =  Gaudi.Math.SymMatrix4x4()
+## systA[0,0] = 1.2**2
+## systA[1,1] = 2.2**2
+## systA[2,2] = 1.3**2
+## systA[3,3] = 1.5**2
+
+## systA[0,1] = c   *1.3*1.5
+## systA[0,2] =      1.3*1.2
+## systA[2,3] = c   *1.2*2.2
+## systA[1,3] =      1.5*2.2
+
+
+## c7 = Combine( [ s_YD0_7 , s_YDp_7 ] , syst7 )
+## c8 = Combine( [ s_YD0_8 , s_YDp_8 ] , syst8 )
+## cA = Combine( [ s_YD0_7 , s_YDp_7 ] + [ s_YD0_8 , s_YDp_8 ] , systA )
+
+## print ' -   7TeV: ' , c7.result(), c7.errComponents() 
+## print ' -   8TeV: ' , c8.result(), c8.errComponents() 
+## print ' - 7&8TeV: ' , cA.result(), cA.errComponents() 
 
 # =============================================================================
 # The END 

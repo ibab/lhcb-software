@@ -6,6 +6,11 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-10-01 - Vanya Belyaev
+ - Bernstein&B-spline:
+   1) speedup integration 
+   2) add more classification functions 
+
 ! 2015-09-30 - Vanya Belyaev
  - add qmtest for Combine-utility 
 

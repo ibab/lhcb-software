@@ -381,17 +381,29 @@ namespace Gaudi
     public:
       // ======================================================================
       /// get minimal value of the function on (xmin,xmax) interval 
-      double fun_min () const { return m_bernstein.fun_min () ; }
+      double fun_min   () const { return m_bernstein.fun_min   () ; }
       /// get maximal value of the function on (xmin,xmax) interval 
-      double fun_max () const { return m_bernstein.fun_max () ; }
+      double fun_max   () const { return m_bernstein.fun_max   () ; }
+      // ======================================================================
+      bool positive    () const { return m_bernstein.positive () ; }
+      bool hasroots    () const { return !positive() ; }
+      //
+      bool   negative  () const { return false ; }
+      bool nonegative  () const { return true  ; }
+      bool nonpositive () const { return false ; }
+      bool keepsign    () const { return true  ; }
+      //
+      bool decreasing  () const { return m_bernstein.decreasing()     ; }
+      bool increasing  () const { return m_bernstein.increasing()     ; }
+      bool monothonic  () const { return increasing() || decreasing() ; }
+      bool constant    () const { return m_bernstein.constant()       ; }
       // ======================================================================
     public:
       // ======================================================================
       /// get the integral between xmin and xmax
-      double integral   () const { return m_bernstein.integral() ; }
+      double integral   () const ;
       /// get the integral between low and high 
-      double integral   ( const double low , const double high ) const 
-      { return m_bernstein.integral ( low , high )  ; }
+      double integral   ( const double low , const double high ) const ;
       /// get the derivative 
       double derivative ( const double x ) const 
       { return m_bernstein.derivative ( x ) ; }
@@ -469,9 +481,11 @@ namespace Gaudi
     public:
       // ======================================================================
       /// increasing ? 
-      bool   increasing () const { return  m_increasing    ; }
+      bool increasing () const { return  m_increasing  ; }
       /// decreasing ? 
-      bool   decreasing () const { return   !increasing () ; }
+      bool decreasing () const { return !increasing () ; }
+      /// monothonic 
+      bool monothonic () const { return  true  ; }
       // ======================================================================
     protected:
       // ======================================================================

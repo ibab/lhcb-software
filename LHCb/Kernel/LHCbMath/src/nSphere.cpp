@@ -191,6 +191,9 @@ Gaudi::Math::NSphere::operator=(       Gaudi::Math::NSphere&& right )
 // ============================================================================
 void Gaudi::Math::NSphere::swap ( Gaudi::Math::NSphere& right )  // swap two spheres 
 {
+  //
+  if ( &right == this ) { return ; }
+  //
   std::swap ( m_rotated , right.m_rotated ) ;
   std::swap ( m_delta   , right.m_delta   ) ;
   std::swap ( m_phases  , right.m_phases  ) ;

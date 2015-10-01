@@ -832,6 +832,23 @@ bool Gaudi::Math::PositiveSpline::setPar
   return updateCoefficients () ;
 }
 // ============================================================================
+// get the integral between xmin and xmax
+// ============================================================================
+double  Gaudi::Math::PositiveSpline::integral   () const { return 1 ; }
+// ============================================================================
+// get the integral between low and high 
+// ============================================================================
+double  Gaudi::Math::PositiveSpline::integral   
+( const double low  , 
+  const double high ) const 
+{ 
+  return 
+    s_equal ( low  , xmin() ) && s_equal ( high , xmax() ) ? 1 :
+    m_bspline.integral   ( low , high ) ; 
+}
+// ============================================================================
+
+
 // ============================================================================
 // MONOTONIC SPLINE 
 // ============================================================================

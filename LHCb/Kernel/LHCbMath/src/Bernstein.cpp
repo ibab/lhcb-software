@@ -19,7 +19,7 @@
 #include "LHCbMath/MoreFunctions.h"
 // ============================================================================
 /** @file 
- *  Implementation file for functions, related to BErnstein's polynomnials 
+ *  Implementation file for functions, related to Bernstein's polynomnials 
  *
  *  @see http://en.wikipedia.org/wiki/Bernstein_polynomial
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -140,8 +140,6 @@ Gaudi::Math::Bernstein::operator=(       Gaudi::Math::Bernstein&& right )
   return *this ;
 }
 // ============================================================================
-
-// ============================================================================
 // get minimal value of the function on (xmin,xmax) interval 
 // ============================================================================
 double Gaudi::Math::Bernstein::fun_min () const 
@@ -261,6 +259,8 @@ double Gaudi::Math::Bernstein::integral ( const double low  ,
   else if ( low  >  high                     ) { return -1*integral ( high   , low    ) ; }
   else if ( high <= xmin () || low >= xmax() ) { return  0 ; }
   else if ( s_vzero ( m_pars )               ) { return  0 ; }  
+  else if ( s_equal ( low  , m_xmin ) && 
+            s_equal ( high , m_xmax )        ) { return integral () ; }          
   //
   const double xlow  = std::max ( low  , m_xmin ) ;
   const double xhigh = std::min ( high , m_xmax ) ;
@@ -930,9 +930,20 @@ Gaudi::Math::Positive::operator=(      Gaudi::Math::Positive&& right )
   m_sphere    = std::move ( right.m_sphere    ) ;
   return *this ;
 }
-
-
-
+// =============================================================================
+// get the integral between xmin and xmax
+// =============================================================================
+double Gaudi::Math::Positive::integral () const { return 1 ; } 
+// =============================================================================
+// get the integral between low and high 
+// =============================================================================
+double Gaudi::Math::Positive::integral
+( const double low , const double high ) const 
+{ 
+  return 
+    s_equal ( low  , xmin() ) && s_equal ( high , xmax() ) ? 1 :
+    m_bernstein.integral ( low , high )  ; 
+}
 // ============================================================================
 // constructor from the order
 // ============================================================================

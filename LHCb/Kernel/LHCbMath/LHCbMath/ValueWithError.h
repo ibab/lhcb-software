@@ -360,11 +360,6 @@ namespace Gaudi
       ( std::ostream& s , const ValueWithError& v ) 
     { return v.fillStream ( s ) ; }
     // ========================================================================
-    /// evaluate the mean of a and b 
-    inline ValueWithError mean
-    ( const ValueWithError& a , 
-      const ValueWithError& b ) { return a.mean ( b ) ; }
-    // ========================================================================
     /// evaluate chi2 
     inline double chi2
     ( const ValueWithError& a , 
@@ -377,6 +372,22 @@ namespace Gaudi
     inline double chi2
     ( const double          b ,
       const ValueWithError& a ) { return a.chi2 ( b ) ; }
+    // ========================================================================
+    /// evaluate the mean of a and b 
+    inline ValueWithError mean
+    ( const ValueWithError& a , 
+      const ValueWithError& b ) { return a.mean ( b ) ; }
+    // =======================================================================
+    /** evaluate the mean of a and b 
+     *  taking into account correlation coefficient <code>rho</code>
+     *  @param a (INPUT) the first argument 
+     *  @param b (INPUT) the second argument 
+     *  @param rho (INPUT) correlation coefficient \f$-1\le\rhi\le 1\f$
+     */
+    GAUDI_API ValueWithError mean
+    ( const ValueWithError& a   , 
+      const ValueWithError& b   , 
+      const double          rho ) ; 
     // ========================================================================
     /** get Kullback-Liebler divergency 
      *  return the divergency for valid arguments, -1 otherwise

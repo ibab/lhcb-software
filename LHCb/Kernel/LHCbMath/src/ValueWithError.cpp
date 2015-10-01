@@ -23,6 +23,7 @@
 #include "LHCbMath/Power.h"
 #include "LHCbMath/LHCbMath.h"
 #include "LHCbMath/Clenshaw.h"
+#include "LHCbMath/Combine.h"
 // ============================================================================
 // Boost
 // ============================================================================
@@ -801,6 +802,19 @@ bool Gaudi::Math::natural_entry
     && ( _equal ( v.value() , v.cov2() ) ||
          ( _zero ( v.value() ) && _equal ( 1 , v.cov2() ) ) ) ;
 }
+// ============================================================================
+/*  evaluate the mean of a and b 
+ *  taking into account correlation coefficient <code>rho</code>
+ *  @param a (INPUT) the first argument 
+ *  @param b (INPUT) the second argument 
+ *  @param rho (INPUT) correlation coefficient \f$-1\le\rhi\le 1\f$
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::mean
+( const Gaudi::Math::ValueWithError& a   , 
+  const Gaudi::Math::ValueWithError& b   , 
+  const double                       rho ) { return combine ( a , b , rho ) ; }
 // ============================================================================
 /*  evaluate abs(a)
  *  @param a (INPUT) the value
