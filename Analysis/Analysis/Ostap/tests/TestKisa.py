@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id:$ 
+# $Id$ 
 # =============================================================================
 ## @file TestKisa.py
 #
@@ -10,9 +10,9 @@
 #  @author Vanya BELYAEV Ivan.Belyaeve@itep.ru
 #  @date 2015-05-17
 # 
-#                    $Revision: 185786 $
-#  Last modification $Date: 2015-03-23 11:11:57 +0100 (Mon, 23 Mar 2015) $
-#                 by $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """
 Test for parallel data processing 

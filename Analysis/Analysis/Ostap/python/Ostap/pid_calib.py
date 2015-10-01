@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id:$
+# $Id$
 # =============================================================================
 ## @file
 #  An example of simple script to run PIDCalib machinery
@@ -14,9 +14,9 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-05-10
 #  
-#                    $Revision: 174877 $
-#  Last modification $Date: 2014-07-13 14:11:41 +0200 (Sun, 13 Jul 2014) $
-#  by                $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#  by                $Author$
 # =============================================================================
 """ An example of simple script to run PIDCalib machinery
 
@@ -25,7 +25,7 @@
     Use '-h' option to know more 
 """
 # =============================================================================
-__version__ = "$Revision: $"
+__version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-06-07"
 __all__     = ()

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id:$
+# $Id$
 # =============================================================================
 ## @file EOS.py 
 #  (rather ugly) ``Globbing'' utility for EOS
@@ -11,16 +11,16 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2015-08-15
 #
-#                    $Revision: 193591 $
-#  Last modification $Date: 2015-08-12 15:10:32 +0200 (Wed, 12 Aug 2015) $
-#  by                $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#  by                $Author$
 # =============================================================================
 """ (rather ugly) ``Globbing'' utility for EOS
 - it goes through cretaion of fuse mount point
 - it require proper EOS&Co installation
 """
 # =============================================================================
-__version__ = "$Revision: 193591 $"
+__version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2015-08-15"
 __all__     = ( 'EOS',)

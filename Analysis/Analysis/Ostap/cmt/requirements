@@ -1,11 +1,11 @@
-#$Id: requirements 169772 2014-03-07 11:24:06Z ibelyaev $
+#$Id$
 # =============================================================================
 # Created   : 2014-03-10
 # Maintainer: Vanya BELYAEV 
 # ============================================================================= 
-#                   $Revision:$
-# Last modification $Date:$
-#                by $Author:$
+#                   $Revision$
+# Last modification $Date$
+#                by $Author$
 # =============================================================================
 package       Ostap
 version       v1r9

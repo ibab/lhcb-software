@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id:$
+# $Id$
 # =============================================================================
 ## @file
 #  Module with helper functions to convert objects into HepDATA format
@@ -15,9 +15,9 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 #  
-#                    $Revision: 175248 $
-#  Last modification $Date: 2014-07-19 15:56:55 +0200 (Sat, 19 Jul 2014) $
-#  by                $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#  by                $Author$
 # =============================================================================
 """ Helper functions to convert the objects into HepDATA format
 Supported types: 
@@ -26,7 +26,7 @@ Supported types:
 - TGraphAsymmErrors
 """
 # =============================================================================
-__version__ = "$Revision: 175248 $"
+__version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-06-07"
 __all__     = () 

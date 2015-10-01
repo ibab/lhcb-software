@@ -76,10 +76,10 @@ def _tf2_ ( self , *args ) :
     >>> fun.Draw() 
     """
     ##
-    if not hasattr ( self , '_wo2' ) : self._wo1 = _WO2_ ( self )
-    if not self._wo2                 : self._wo1 = _WO2_ ( self )
+    if not hasattr ( self , '_wo2' ) : self._wo2 = _WO2_ ( self )
+    if not self._wo2                 : self._wo2 = _WO2_ ( self )
     ## 
-    _wo = self._wo1 
+    _wo = self._wo2
     fun = ROOT.TF2 ( funID ()  , _wo , *args )
     fun.SetNpx ( 100 ) 
     fun.SetNpy ( 100 ) 
@@ -370,16 +370,17 @@ Gaudi.Math.CosineSum   .__repr__ = lambda s : _f_print_ ( s , 'CosineSum'    )
 ## decorate 2D-models/functions 
 # =============================================================================
 Gaudi = cpp.Gaudi 
-for model in ( Gaudi.Math.Spline2D      ,
-               Gaudi.Math.Spline2DSym   , 
-               Gaudi.Math.Bernstein2D   ,
-               Gaudi.Math.Positive2D    ,
-               Gaudi.Math.Positive2DSym ,
-               Gaudi.Math.PS2DPol       ,
-               Gaudi.Math.PS2DPolSym    ,
-               Gaudi.Math.ExpoPS2DPol   ,
-               Gaudi.Math.Expo2DPol     ,
-               Gaudi.Math.Expo2DPolSym  ) :
+for model in ( Gaudi.Math.Spline2D       ,
+               Gaudi.Math.Spline2DSym    , 
+               Gaudi.Math.Bernstein2D    ,
+               Gaudi.Math.Positive2D     ,
+               Gaudi.Math.Bernstein2DSym ,
+               Gaudi.Math.Positive2DSym  ,
+               Gaudi.Math.PS2DPol        ,
+               Gaudi.Math.PS2DPolSym     ,
+               Gaudi.Math.ExpoPS2DPol    ,
+               Gaudi.Math.Expo2DPol      ,
+               Gaudi.Math.Expo2DPolSym   ) :
     
     model . tf2 = _tf2_ 
     model.sp_integrate = sp_integrate_2D
@@ -452,8 +453,51 @@ for pdf in ( Analysis.Models.Poly2DPositive     ,
     
     pdf.sp_integrate = sp_integrate_2D_
 
+    
+# =============================================================================
+## set parameter for polynomial/spline functions
+#  @code
+#  fun = ...
+#  fun[1] = 10.0
+#  @endcode 
+def _p_set_par_ ( o , index , value ) :
+    """Set parameter for polynomial/spline function
+    >>> fun = ...
+    >>> fun[1] = 10.0
+    """
+    r = o.setPar ( index , value )
+    return r 
 
+# =============================================================================
+## get parameter from polynomial/spline functions
+#  @code
+#  fun = ...
+#  print fun[1]
+#  @endcode 
+def _p_get_par_ ( o , index , value ) :
+    """Get parameter from polynomial/spline function
+    >>> fun = ...
+    >>> print fun[1]
+    """
+    return o.getPar ( index , value )
 
+for f in ( Gaudi.Math.Positive       ,
+           Gaudi.Math.Bernstein2D    ,
+           Gaudi.Math.Positive2D     ,
+           Gaudi.Math.Bernstein2DSym ,
+           Gaudi.Math.Positive2DSym  ,
+           ##
+           Gaudi.Math.BSpline        ,
+           Gaudi.Math.PositiveSpline ,
+           Gaudi.Math.Spline2D       ,
+           Gaudi.Math.Spline2DSym    ,
+           ## 
+           Gaudi.Math.PolySum        ) :
+
+    f.__setitem__ = _p_set_par_
+    f.__getitem__ = _p_get_par_
+
+    
 # =============================================================================
 ## add complex amplitudes 
 # =============================================================================

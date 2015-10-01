@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id:$ 
+# $Id$ 
 # =============================================================================
 ## @file TestHFit.py
 #
@@ -10,9 +10,9 @@
 #  @author Vanya BELYAEV Ivan.Belyaeve@itep.ru
 #  @date 2014-05-11
 # 
-#                    $Revision: 186004 $
-#  Last modification $Date: 2015-03-28 17:36:07 +0100 (Sat, 28 Mar 2015) $
-#                 by $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """Tests for fits of histograms 
 """

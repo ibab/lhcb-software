@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id:$ 
+# $Id$ 
 # =============================================================================
 ## @file TestHepData.py
 #
@@ -10,9 +10,9 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2014-05-11
 # 
-#                    $Revision: 193299 $
-#  Last modification $Date: 2015-08-06 14:06:19 +0200 (Thu, 06 Aug 2015) $
-#                 by $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """ Tests conversion to HepDATA format
 """
