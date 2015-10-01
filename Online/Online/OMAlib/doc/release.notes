@@ -2,6 +2,15 @@
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
 
+! 2015-10-01 - Giacomo Graziani (with help of Markus Frank)
+ - split library into a linker library and component library to avoid conflicts on component names
+ - remove infinite loop in analysis task initialization, and related option StopAlgSequence: now a GaudiOnline
+   Runable called LazyRunable can be used, who correctly inits algorithms and doesn't use CPU in search of input events
+ - update option files accordingly
+ - update DumpOMAAlarms tool to inform ECS about manually deleted alarms when analysis task is not running
+ - avoid crash from DIM conflict when trying to run an analysis task already running (error message instead)
+ - minor fix to OMAMsgInterface (pad colors)
+
 ! ======== v4r5 ===============
 ! 2015-04-07 - Maurizio Martinelli
  - Tagged	as v4r5 since previous tags were not documented

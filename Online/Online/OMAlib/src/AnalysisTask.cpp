@@ -41,7 +41,6 @@ AnalysisTask::AnalysisTask( const std::string& name,
   declareProperty ( "HistDBMsgPersistency", m_logToHistDB = true);
   declareProperty ( "PublishDIMmessages", m_doPublish = true);
   declareProperty ( "ForceOnlineEnv", m_forceOnlineEnv = false); // enable online tools (DIM, status checks) also in offline mode 
-  declareProperty ( "StopAlgSequence", m_stayHere = true);
   declareProperty ( "ChangeHistPadColors", m_padcolors = false);
   declareProperty ( "CheckDetectorStatus", m_checkStatus = true);
   //
@@ -76,7 +75,11 @@ StatusCode AnalysisTask::initialize() {
     m_checkStatus = false;
   }
   else { // online mode
-    startMessagePublishing();
+    bool dimOK=startMessagePublishing();
+    if (!dimOK) {
+      error() <<"An analysis task with the same name is already running!!!"<<endmsg;
+      return StatusCode::FAILURE;
+    }
   }
 
   // use HistDB if requested
@@ -145,15 +148,7 @@ StatusCode AnalysisTask::initialize() {
       info()<< "listening to latest saveset for task "<<*iF << endmsg;
       m_saveset.push_back( new SavesetFinder(this, *iF, m_partition) );
     }
-
-    if (m_stayHere) {
-      // stay here until killed
-      while (1) {
-        sleep(99999);
-      }
-    }
   }
-
   return StatusCode::SUCCESS;
 }
 

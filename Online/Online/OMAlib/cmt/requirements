@@ -3,31 +3,34 @@
 # Maintainer : Giacomo Graziani 
 # =============================================================================
 package          OMAlib
-version          v4r5
+version          v5r0
 
 branches src cmt doc OMAlib
-
-
 
 use   ROOT             v*       LCG_Interfaces
 use   Boost            v*       LCG_Interfaces
 
 use   OnlineHistDB     v*       Online
 use   GaudiAlg         v*
+use   GaudiKernel   v*
 use   DIM              v*  	Online
 use   Trending         v*       Online
 #
 apply_pattern install_more_includes more=OMAlib
+apply_pattern install_python_modules
 #
-
+#============== Linker libraries =====================================
 library OMAlib  $(OMALIBROOT)/src/*.cpp  $(OMALIBROOT)/algorithms/*.cpp
 apply_pattern linker_library  library=OMAlib
-apply_pattern generate_componentslist library=OMAlib
-
 macro_append OMAlib_shlibflags " -lHist  -lGraf -lRIO -lMathCore " WIN32 " libHist.lib libGraf.lib libRIO.lib libMathCore.lib"
 
-#macro_remove Boost_linkopts " $(Boost_linkopts_regex) $(Boost_linkopts_thread) -lboost_filesystem-gcc-mt " 
+# ==================== component libraries ==================================
+library OMAlibComp $(OMALIBROOT)/components/*.cpp
+apply_pattern component_library library=OMAlibComp
+apply_pattern generate_componentslist library=OMAlibComp
+macro_append  OMAlibComp_dependencies  " OMAlib "
 
+# ==================== applications ===================
 application  Saveset2HistDB ../main/Saveset2HistDB.cpp
 macro_append Saveset2HistDB_dependencies " OMAlib "
 application  DumpOMAlarms ../main/DumpOMAlarms.cpp
@@ -37,7 +40,7 @@ macro_append DumpOMAlarms_dependencies " OMAlib "
 
 
 private
-use   GaudiOnline      v*       Online -no_auto_imports
+use   GaudiOnline      v*       Online
 use   Gaudi            v*              -no_auto_imports
 
 

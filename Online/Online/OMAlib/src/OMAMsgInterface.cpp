@@ -6,6 +6,7 @@
 #include "OMAlib/OMAMsgInterface.h"
 #include "GaudiKernel/MsgStream.h"
 #include <dis.hxx>
+#include <dic.hxx>
 //-----------------------------------------------------------------------------
 // Implementation file for class : OMAMsgInterface
 // 2008-02-29 : Giacomo Graziani
@@ -89,15 +90,22 @@ void OMAMsgInterface::closeLog() {
   }
 }
 
-void OMAMsgInterface:: startMessagePublishing() {
+bool OMAMsgInterface:: startMessagePublishing() {
   if(m_doPublish) {
     std::string ServerName="OMA/"+m_anaTaskname;
     std::string svcName=ServerName+"/MESSAGES";
-    char initVal[5]="";
+    char initVal[OnlineHistDBEnv_constants::VSIZE_MESSAGE]="";
+
+    DimBrowser dbr;
+    if(dbr.getServices(svcName.c_str())) {
+      // service is already running, stop here
+      return false;
+    }
     m_dimSvc = new DimService(svcName.c_str(),initVal);    
     DimServer::start(ServerName.c_str());
     sleep(1);
   }
+  return true;
 }
 
 // connect messages to current HistDB session and resync (alarms could have been modified by Presenter/user code)
@@ -149,7 +157,7 @@ void OMAMsgInterface::refreshMessageList(std::string& TaskName) {
           (*iM)->disable();
           if (m_histDB) {
             if (m_histDB->canwrite() && m_logToHistDB) {
-              (*iM)->store();
+              (*iM)->store(m_padcolors);
               m_histDB->commit();
             }
           }

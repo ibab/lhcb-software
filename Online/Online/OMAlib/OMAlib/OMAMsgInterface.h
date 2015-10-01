@@ -55,11 +55,13 @@ public:
   void sendwarning( const char* wmessage);
   /// send info  to MsgService
   void sendinfo( const char* wmessage);
+  bool startMessagePublishing();
+  void publishMessage(OMAMessage* &msg);
+  void unpublishMessage(OMAMessage* &msg);
 protected:
   void checkWritePermissions();
   void openLog();
   void closeLog();
-  void startMessagePublishing();
   void loadMessages();
   void updateMessages();
   void setMsgStream(MsgStream* ms) { m_outs=ms;}  
@@ -80,8 +82,6 @@ private:
                 OMAMessage::OMAMsgLevel level);
   bool raiseAlarm(OMAMessage& message);
   bool lowerAlarm(OMAMessage& message, bool exte=false, bool removed=false);
-  void publishMessage(OMAMessage* &msg);
-  void unpublishMessage(OMAMessage* &msg);
   void updateDIMservice(std::string svcString);
   MsgStream* m_outs;
   std::vector<OMAMessage*> m_MessageStore;

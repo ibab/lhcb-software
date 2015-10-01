@@ -15,9 +15,11 @@ gaudi_add_library(OMAlib src/*.cpp algorithms/*.cpp
                   PUBLIC_HEADERS OMAlib
                   INCLUDE_DIRS ROOT
                   LINK_LIBRARIES ROOT GaudiAlgLib OnlineHistDB dim)
+gaudi_add_module(OMAlibComp components/*.cpp
+                 LINK_LIBRARIES OMAlib)
 
-message(WARNING "library containing plugins!!!")
-gaudi_generate_componentslist(OMAlib)
+gaudi_install_python_modules()
+
 
 gaudi_add_executable(Saveset2HistDB main/Saveset2HistDB.cpp
                      LINK_LIBRARIES OMAlib)

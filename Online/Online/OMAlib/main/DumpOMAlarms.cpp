@@ -8,7 +8,8 @@
 
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OnlineHistDB/OMAMessage.h"
-
+#include "OMAlib/OMAMsgInterface.h"
+#include <dis.hxx>
 using namespace std;
 
 std::string AnaTask = "any";
@@ -16,8 +17,8 @@ std::string System = "any";
 int Anaid = -1;
 int Msgid = -1;
 std::string DB = OnlineHistDBEnv_constants::DB;
-std::string DBuser = "HIST_READER";
-std::string DBpw = "READER";
+std::string DBuser = OnlineHistDBEnv_constants::ACCOUNT;
+std::string DBpw = OnlineHistDBEnv_constants::PASSWORD;
 bool clear=false;
 bool AllAlarms=false;
 
@@ -57,7 +58,7 @@ int main(int narg,char **argv ) {
     cin >> DBpw;
     cout<<endl;
 #else
-    char* pass =getpass("Enter the HIST_WRITER password for clearing alarms:");   
+    char* pass =getpass("Enter the HIST_WRITER password for disabling alarms:");   
     DBpw=pass;
 #endif
   }
@@ -109,22 +110,30 @@ int main(int narg,char **argv ) {
 
   if (clear && nFltMsg ) {
     std::string answer;
-    cout << "Are you sure you want to clear these alarms? (Y/N)";
+    cout << "Are you sure you want to disable these alarms? (Y/N)";
     cin >> answer;
     int nClrMsg=0;
     if (answer == "Y") {
       for (iM=fltMessages.begin(); iM != fltMessages.end(); iM++) {
         OMAMessage* message = *iM;
-        cout << "removing message "<< message->id() <<endl;
+        cout << "disabling message "<< message->id() <<endl;
         nClrMsg++;
-        message->remove();
+        message->disable();
+        message->store(true);
+        // inform ECS in case analysis task is not running
+        OMAMsgInterface* msgIntface= new OMAMsgInterface(HistDB, "DBDrivenAnalysisTask");
+        if(msgIntface->startMessagePublishing()) { // when true, DIM service for alarm communication is not already being used
+          msgIntface->unpublishMessage(message);
+          sleep(1000);
+        }
         delete message;
       }
-      cout << nClrMsg << " messages have been cleared"<<endl;
+
+      cout << nClrMsg << " messages have been disabled (kept in archive in non-active state)"<<endl;
       HistDB->commit();
     }
     else {
-      cout << "******  warning: Messages NOT cleared (to clear them, answer 'Y' next time) *********** " <<endl;
+      cout << "******  warning: Messages NOT disabled (to disable them, answer 'Y' next time) *********** " <<endl;
     }
   }
   else {
@@ -172,7 +181,7 @@ void usage()
   cout << "DumpOMAlarms <options>" <<endl;
   cout << "   where options are:" <<endl;
   cout << "      -t  <AnalysisTaskName> \t to filter by analysys task name (default is 'any') " <<endl;
-  cout << "      -c          \t\t to clear the filtered alarms " <<endl;
+  cout << "      -c          \t\t to disable the filtered alarms " <<endl;
   cout << "      -a          \t\t to show also archived (inactive) messages " <<endl;
   cout << "      -m  <mID>   \t\t filter messages by message ID" <<endl;
   cout << "      -i  <anaID> \t\t filter messages by analysis ID" <<endl;

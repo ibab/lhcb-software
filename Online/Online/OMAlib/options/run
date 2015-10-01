@@ -1,1 +1,1 @@
-$GAUDIROOT/$CMTCONFIG/Gaudi.exe $OMALIBROOT/options/AutoAnalysis.opts
+gaudirun.py   $OMALIBROOT/options/ExampleAnalysisTask.opts

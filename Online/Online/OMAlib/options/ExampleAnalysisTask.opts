@@ -1,0 +1,46 @@
+
+// example for running task offline (input from files)
+
+// for using Monitoring Service 
+//ApplicationMgr.ExtSvc += { "MonitorSvc" };
+//ApplicationMgr.DLLs += {"Gaucho"};
+
+
+ApplicationMgr.EvtSel = "NONE";
+// use of LazyRunable is mandatory
+ApplicationMgr.Runable = "LHCb::LazyRunable/LazyRunable";
+ApplicationMgr.TopAlg = { "ExampleAnalysisTask"};
+
+ExampleAnalysisTask.OutputLevel = 3;
+ExampleAnalysisTask.useHistDB   = true;
+ExampleAnalysisTask.Partition = "LHCb"; 
+ExampleAnalysisTask.InputTasks = {"any"};
+
+// optional log file for alarms
+ExampleAnalysisTask.TextLog = "/tmp/mylog.txt";
+
+
+// for testing offline on existing savesets, uncomment the following:
+ApplicationMgr.EvtMax = 0;
+ExampleAnalysisTask.InputFiles   = {
+ "/afs/cern.ch/user/g/ggiacomo/public/Histograms/Savesets/MuonDAQMon-20081126T193149-EOR.root"
+};
+
+// uncomment for using db mirror (read only)
+//ExampleAnalysisTask.HistDB      = "LHCBR_HIST";
+
+// uncomment for using test offline DB
+//ExampleAnalysisTask.HistDB      = "devdb10";
+//ExampleAnalysisTask.HistDBuser  = "lhcb_mon_giacomo";
+//ExampleAnalysisTask.HistDBpw    = "password";
+ExampleAnalysisTask.RICHclustersDir = "~/omaTest";
+ExampleAnalysisTask.ChangeHistPadColors =false;
+
+
+// uncomment for changing the reference path
+//ExampleAnalysisTask.HistRefRoot = "/afs/cern.ch/user/g/ggiacomo/public/Histograms/Reference";
+
+
+
+
+

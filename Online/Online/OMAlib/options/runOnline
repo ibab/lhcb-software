@@ -1,11 +1,12 @@
 # use the following if your analysis  publishes histograms 
+# DIM_DNS_NODE should be set to mona08
 echo "DIM_DNS_NODE set to " $DIM_DNS_NODE
 
-
-$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe \
-$GAUDIONLINEROOT/$CMTCONFIG/libGaudiOnline.so GaudiOnline \
--runable=LHCb::OnlineRunable \
--options=AutoAnalysis.opts \
-msgsvc=MessageSvc \
--auto 
+${GAUDIONLINEROOT}/../../InstallArea/${CMTCONFIG}/bin/GaudiOnlineExe.exe \
+                ${GAUDIONLINEROOT}/../../InstallArea/${CMTCONFIG}/lib/libGaudiOnline.so OnlineTask \
+                -msgsvc=MessageSvc \
+                -tasktype=LHCb::Class1Task  \
+                -main=/group/online/HistTools/init/Main.opts \
+                -options=DBDrivenAnalysisTask.opts \
+                -auto
 

@@ -1,16 +1,20 @@
 
+// example of online analysys task
+
 
 // for using Monitoring Service 
 //ApplicationMgr.ExtSvc += { "MonitorSvc" };
 //ApplicationMgr.DLLs += {"Gaucho"};
 
 
-ApplicationMgr.TopAlg = { "DBDrivenAnalysisTask"};
 ApplicationMgr.EvtSel = "NONE";
+// use of LazyRunable is mandatory
+ApplicationMgr.Runable = "LHCb::LazyRunable/LazyRunable";
+ApplicationMgr.TopAlg = { "DBDrivenAnalysisTask/DBDrivenAnalysisTask"};
 
 DBDrivenAnalysisTask.OutputLevel = 3;
 DBDrivenAnalysisTask.useHistDB   = true;
-DBDrivenAnalysisTask.Partition = "LHCb";
+DBDrivenAnalysisTask.Partition = "Test"; // you probably want "LHCb" here
 DBDrivenAnalysisTask.InputTasks = {"any"};
 
 // optional log file for alarms
@@ -37,8 +41,6 @@ DBDrivenAnalysisTask.ChangeHistPadColors =false;
 // uncomment for changing the reference path
 //DBDrivenAnalysisTask.HistRefRoot = "/afs/cern.ch/user/g/ggiacomo/public/Histograms/Reference";
 
-// switch off saving of alarms to HistDB
-DBDrivenAnalysisTask.HistDBMsgPersistency = false;
 
 
 
