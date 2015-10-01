@@ -1370,6 +1370,11 @@ double Gaudi::Math::Spline2D::integral
   else if ( xhigh < xmin () || yhigh < ymin () ) { return 0 ; }
   else if ( xlow  > xmax () || ylow  > ymax () ) { return 0 ; }
   else if ( s_equal ( xlow , xhigh ) || s_equal ( ylow , yhigh ) ) { return 0 ; }
+  //
+  else if ( s_equal ( xlow  , xmin() ) &&  
+            s_equal ( xhigh , xmax() ) &&  
+            s_equal ( ylow  , ymin() ) &&  
+            s_equal ( yhigh , ymax() ) ) { return integral() ; }
   // adjust 
   else if ( xlow  < xmin () ) { return integral ( xmin() , xhigh   , ylow   , yhigh  ) ; }
   else if ( xhigh > xmax () ) { return integral ( xlow   , xmax () , ylow   , yhigh  ) ; }
@@ -1456,9 +1461,11 @@ double Gaudi::Math::Spline2D::integrateY
 {
   //
   if      ( x < xmin() || x > xmax()           ) { return 0 ; }
+  else if ( s_equal ( ylow  , ymin() ) && 
+            s_equal ( yhigh , ymax() ) ) { return integrateY ( x ) ; }
   else if ( yhigh <  ylow ) { return - integrateY ( x , yhigh , ylow ) ; }
   else if ( s_equal ( ylow , yhigh )           ) { return 0 ; }
-  else if ( yhigh <= ymin() ||  ylow > ymax()  ) { return 0 ; }
+  else if ( yhigh <  ymin() ||  ylow >  ymax() ) { return 0 ; }
   else if ( ylow  <  ymin() ) { return integrateY ( x , ymin() , yhigh  ) ; }
   else if ( yhigh >  ymax() ) { return integrateY ( x , ylow   , ymax() ) ; }
   //
@@ -1529,7 +1536,7 @@ double Gaudi::Math::Spline2D::integrateY
   return result * ( m_xspline.order() + 1 ) * ( m_yspline.order() + 1 ) ;
 }
 // ============================================================================
-/*  get the integral over Y  for given Y
+/*  get the integral over Y  for given C
  *  @param y  (INPUT) y-value 
  *  @param xlow  low  eadge in x 
  *  @param xhigh high edge in x 
@@ -1541,6 +1548,8 @@ double Gaudi::Math::Spline2D::integrateX
 {
   //
   if      ( y < ymin() || y > ymax()           ) { return 0 ; }
+  else if ( s_equal ( xlow  , xmin() ) && 
+            s_equal ( xhigh , xmax() ) ) { return integrateX ( y ) ; }
   else if ( xhigh <  xlow ) { return - integrateX ( y , xhigh , xlow ) ; }
   else if ( s_equal ( xlow , xhigh )           ) { return 0 ; }
   else if ( xhigh <= xmin() ||  xlow > xmax()  ) { return 0 ; }
@@ -1613,6 +1622,131 @@ double Gaudi::Math::Spline2D::integrateX
   //
   return result * ( m_xspline.order() + 1 ) * ( m_yspline.order() + 1 ) ;
 }
+// ============================================================================
+/*  get the integral over 2D-region 
+ *  \f[ x_{min}<x<x_{max}, y_{min}<y<y_{max}\f] 
+ *  @param xlow  low  edge in x 
+ *  @param xhigh high edge in x 
+ *  @param ylow  low  edge in y 
+ *  @param yhigh high edge in y 
+ */
+// ============================================================================
+double Gaudi::Math::Spline2D::integral   () const { return 1 ; }
+// ============================================================================
+/*  get the integral over X  for given Y
+ *  @param x  (INPUT) x-value 
+ */  
+// ============================================================================
+double Gaudi::Math::Spline2D::integrateY 
+( const double x ) const 
+{
+  //
+  if      ( x < xmin() || x > xmax()           ) { return 0 ; }
+  //
+  const double xarg =  
+    !s_equal ( x     , xmax ()) ? x :
+    0 <= xmax ()                ? 
+    Gaudi::Math::next_double ( xmax() , -s_ulps ) :
+    Gaudi::Math::next_double ( xmax() ,  s_ulps ) ;
+  //
+  // fill x-cache 
+  for ( unsigned short ix = 0 ; ix < m_xcache.size() ; ++ix )
+  {
+    m_xspline.setPar ( ix , 1.0 ) ;
+    //
+    double resx  = m_xspline ( xarg ) ;
+    if ( 0 < resx ) 
+    {
+      const double ti  = knot ( m_xspline.knots() , ix                         ) ;
+      const double tip = knot ( m_xspline.knots() , ix + m_xspline.order() + 1 ) ;
+      resx /= ( tip - ti ) ; 
+    }
+    //
+    m_xcache[ix] = resx ;
+    //
+    m_xspline.setPar ( ix , 0.0 ) ;
+  }
+  //
+  // fill y-cache 
+  //
+  std::fill ( m_ycache.begin() , m_ycache.end() , 1 ) ;
+  //
+  double         result = 0 ;
+  for ( unsigned short ix = 0 ; ix < m_xcache.size() ; ++ix ) 
+  {
+    const double vx   = m_xcache[ix] ;
+    if ( s_zero ( vx ) ) { continue ; }       // CONTINUE 
+    //
+    for ( unsigned short iy = 0 ; iy < m_ycache.size() ; ++iy ) 
+    {
+      const double vy = m_ycache[iy] ;
+      if ( s_zero ( vy ) ) { continue ; }     // CONTINUE 
+      //
+      const unsigned k = ix * m_ycache.size () + iy ;
+      result += m_sphere.x2 ( k ) * vx * vy ;
+    }
+  }
+  //
+  return result * ( m_xspline.order() + 1 ) ;
+}
+// ============================================================================
+/*  get the integral over X  for given Y
+ *  @param y  (INPUT) y-value 
+ */  
+// ============================================================================
+double Gaudi::Math::Spline2D::integrateX
+( const double y    ) const 
+{
+  //
+  if      ( y < ymin() || y > ymax()           ) { return 0 ; }
+  //
+  const double yarg =  
+    !s_equal ( y     , ymax ()) ? y     :
+    0 <= ymax ()                ? 
+    Gaudi::Math::next_double ( ymax() , -s_ulps ) :
+    Gaudi::Math::next_double ( ymax() ,  s_ulps ) ;
+  //
+  // fill x-cache 
+  std::fill ( m_xcache.begin() , m_xcache.end() , 1 ) ;
+  //
+  // fill y-cache 
+  for ( unsigned short iy = 0 ; iy < m_ycache.size() ; ++iy )
+  {
+    m_yspline.setPar ( iy , 1.0 ) ;
+    //
+    double resy  = m_yspline( yarg ) ;
+    if ( 0 < resy ) 
+    {
+      const double ti  = knot ( m_yspline.knots() , iy                         ) ;
+      const double tip = knot ( m_yspline.knots() , iy + m_yspline.order() + 1 ) ;
+      resy /= ( tip - ti ) ; 
+    }
+    //
+    m_ycache[iy] = resy ;
+    //
+    m_yspline.setPar ( iy , 0.0 ) ;
+  }
+  //
+  double         result = 0 ;
+  for ( unsigned short ix = 0 ; ix < m_xcache.size() ; ++ix ) 
+  {
+    const double vx   = m_xcache[ix] ;
+    if ( s_zero ( vx ) ) { continue ; }       // CONTINUE 
+    //
+    for ( unsigned short iy = 0 ; iy < m_ycache.size() ; ++iy ) 
+    {
+      const double vy = m_ycache[iy] ;
+      if ( s_zero ( vy ) ) { continue ; }     // CONTINUE 
+      //
+      const unsigned k = ix * m_ycache.size () + iy ;
+      result += m_sphere.x2 ( k ) * vx * vy ;
+    }
+  }
+  //
+  return result * ( m_yspline.order() + 1 ) ;
+}
+// ============================================================================
+
 // ============================================================================
 // symmetric  2D-spline 
 // ============================================================================
@@ -1866,9 +2000,80 @@ double Gaudi::Math::Spline2DSym::integrateX
 ( const double y    , 
   const double xlow , const double xhigh ) const 
 { return integrateY ( y , xlow , xhigh ) ; }
+// ============================================================================
+//  get the integral over 2D-region 
+// ============================================================================
+double Gaudi::Math::Spline2DSym::integral () const { return 1 ; }
+// ============================================================================
 
 
-
+// ============================================================================
+/*  get the integral over Y  for given X
+ *  @param x  (INPUT) x-value 
+ */  
+// ============================================================================
+double Gaudi::Math::Spline2DSym::integrateY 
+( const double x ) const 
+{
+  //
+  if      ( x < xmin() || x > xmax()           ) { return 0 ; }
+  //
+  const double xarg =  
+    !s_equal ( x     , xmax ()) ? x :
+    0 <= xmax ()                ? 
+    Gaudi::Math::next_double ( xmax() , -s_ulps ) :
+    Gaudi::Math::next_double ( xmax() ,  s_ulps ) ;
+  //
+  // fill x&y-caches 
+  for ( unsigned short i = 0 ; i < m_xcache.size() ; ++i )
+  {
+    m_spline.setPar ( i , 1.0 ) ;
+    //
+    double resx  = m_spline          (        xarg ) ;
+    if ( 0 < resx ) 
+    {
+      const double ti  = knot ( m_spline.knots() , i                        ) ;
+      const double tip = knot ( m_spline.knots() , i + m_spline.order() + 1 ) ;
+      if ( 0 < resx ) { resx /= ( tip - ti ) ; }
+    }
+    //
+    m_xcache[i] = resx ;
+    m_ycache[i] = 1    ;
+    //
+    m_spline.setPar ( i , 0.0 ) ;
+  }
+  //
+  //
+  double         result = 0 ;
+  for ( unsigned short ix = 0 ; ix < m_xcache.size() ; ++ix ) 
+  {
+    const double vx   = m_xcache[ix] ;
+    if ( s_zero ( vx ) ) { continue ; }       // CONTINUE 
+    //
+    for ( unsigned short iy = 0 ; iy < m_ycache.size() ; ++iy ) 
+    {
+      const double vy = m_ycache[iy] ;
+      if ( s_zero ( vy ) ) { continue ; }     // CONTINUE 
+      //
+      const unsigned int k = 
+        ( ix < iy ) ? ( iy * ( iy + 1 ) / 2 + ix ) : ( ix * ( ix + 1 ) / 2 + iy ) ;
+      //
+      result += ( ix == iy ) ? 
+        m_sphere.x2 ( k ) * vx * vy       : 
+        m_sphere.x2 ( k ) * vx * vy * 0.5 ;
+    }
+  }
+  //
+  return result * ( m_spline.order() + 1 ) ;
+}
+// ============================================================================
+/*  get the integral over X  for given Y
+ *  @param x  (INPUT) x-value 
+ */  
+// ============================================================================
+double Gaudi::Math::Spline2DSym::integrateX ( const double y ) const 
+{ return integrateY ( y ) ; }
+// ============================================================================
 
 
 

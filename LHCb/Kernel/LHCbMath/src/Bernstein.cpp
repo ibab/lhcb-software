@@ -221,7 +221,6 @@ bool Gaudi::Math::Bernstein::constant () const
 // ============================================================================
 double Gaudi::Math::Bernstein::integral () const
 {
-  //
   return
     ( m_xmax - m_xmin ) *
     std::accumulate ( m_pars.begin() , m_pars.end() , 0.0 ) / npars() ;
@@ -319,7 +318,7 @@ double Gaudi::Math::Bernstein::operator () ( const double x ) const
   // treat the trivial cases
   //
   if      ( m_pars.empty()                             ) { return 0 ; }
-  //  neeed for the proper integration with an exponential 
+  //  needed for the proper integration with an exponential 
   else if ( s_equal ( x , m_xmin )                     ) { return m_pars [0]    ; }
   else if ( s_equal ( x , m_xmax )                     ) { return m_pars.back() ; }
   else if ( x < m_xmin || x > m_xmax                   ) { return 0 ; }
@@ -1306,11 +1305,31 @@ double Gaudi::Math::Bernstein2D::operator () ( const double x ,
   return result * ( scalex * scaley ) ;
 }
 // ============================================================================
+/** get the integral over 2D-region 
+ *  \f[  x_min < x < x_max, y_min< y< y_max\f] 
+ */
+// ============================================================================
+double Gaudi::Math::Bernstein2D::integral() const 
+{ return std::accumulate ( m_pars.begin() , m_pars.end() , 0.0 ) ; }
+// ============================================================================
+/* get the integral over 2D-region 
+ *  \f[ \int_{x_low}^{x_high}\int_{y_low}^{y_high} \mathcal{B}(x,y) \mathrm{d}x\mathrm{d}y\f] 
+ *  @param xlow  low  edge in x 
+ *  @param xhigh high edge in x 
+ *  @param ylow  low  edge in y 
+ *  @param yhigh high edge in y 
+ */
+// ============================================================================
 double Gaudi::Math::Bernstein2D::integral 
 ( const double xlow , const double xhigh , 
   const double ylow , const double yhigh ) const 
 {
   if      ( s_equal ( xlow , xhigh ) || s_equal ( ylow  , yhigh ) ) { return 0 ; }
+  //
+  else if ( s_equal ( xlow  , m_xmin ) && 
+            s_equal ( xhigh , m_xmax ) && 
+            s_equal ( ylow  , m_ymin ) && 
+            s_equal ( yhigh , m_ymax )  )  { return integral () ; }
   //
   else if ( xlow  > xhigh ) { return -1*integral ( xhigh , xlow  , ylow  , yhigh ) ; }
   else if ( ylow  > yhigh ) { return -1*integral ( xlow  , xhigh , yhigh , ylow  ) ; }
@@ -1348,6 +1367,13 @@ double Gaudi::Math::Bernstein2D::integral
   return result * ( scalex * scaley ) ;
 }
 // ============================================================================
+/*  integral over x-dimension 
+ *  \f[ \int_{y_low}^{y_high} \mathcal{B}(x,y) \mathrm{d}y\f] 
+ *  @param x     variable 
+ *  @param ylow  low  edge in y 
+ *  @param yhigh high edge in y 
+ */
+// ============================================================================
 double Gaudi::Math::Bernstein2D::integrateX 
 ( const double y    , 
   const double xlow , const double xhigh ) const 
@@ -1355,7 +1381,9 @@ double Gaudi::Math::Bernstein2D::integrateX
   if      ( s_equal ( xlow , xhigh ) ) { return 0 ; }
   else if ( xlow  > xhigh  ) { return -1*integrateX ( y , xhigh , xlow ) ; }
   else if ( xhigh <= xmin () || xlow >= xmax() ) { return 0 ; }
-  else if ( y     <= ymin () || y    >= ymax() ) { return 0 ; }
+  else if ( y     <  ymin () || y    >  ymax() ) { return 0 ; }
+  else if ( s_equal ( xlow  , m_xmin ) && 
+            s_equal ( xhigh , m_xmax )         ) { return integrateX ( y ) ; }
   //
   const double  x_low  = std::max ( xmin() , xlow  ) ;
   const double  x_high = std::min ( xmax() , xhigh ) ;
@@ -1383,14 +1411,23 @@ double Gaudi::Math::Bernstein2D::integrateX
   return result * ( scalex * scaley ) ;
 }
 // ============================================================================
+/** integral over x-dimension 
+ *  \f[ \int_{x_low}^{x_high} \mathcal{B}(x,y) \mathrm{d}x\f] 
+ *  @param y     variable 
+ *  @param xlow  low  edge in x 
+ *  @param xhigh high edge in x 
+ */
+// ============================================================================
 double Gaudi::Math::Bernstein2D::integrateY 
 ( const double x    , 
   const double ylow , const double yhigh ) const 
 {
   if      ( s_equal ( ylow  , yhigh ) ) { return 0 ; }
   else if ( ylow  >  yhigh ) { return -1*integrateY ( x , yhigh , ylow  ) ; }
-  else if ( x     <= xmin () || x    >= xmax() ) { return 0 ; }
+  else if ( x     <  xmin () || x    >  xmax() ) { return 0 ; }
   else if ( yhigh <= ymin () || ylow >= ymax() ) { return 0 ; }
+  else if ( s_equal ( ylow  , m_ymin ) && 
+            s_equal ( yhigh , m_ymax )         ) { return integrateY ( x ) ; }
   //
   const double  y_low  = std::max ( ymin() , ylow  ) ;
   const double  y_high = std::min ( ymax() , yhigh ) ;
@@ -1416,6 +1453,65 @@ double Gaudi::Math::Bernstein2D::integrateY
   const double scaley = ( m_ny + 1 ) / ( ymax() - ymin() ) ;
   //
   return result * ( scalex * scaley ) ;
+}
+// ============================================================================
+/*  integral over x-dimension 
+ *  \f[ \int_{y_{min}}^{y_{max}} \mathcal{B}(x,y) \mathrm{d}y\f] 
+ *  @param x     variable 
+ */
+// ============================================================================
+double Gaudi::Math::Bernstein2D::integrateX ( const double y ) const 
+{
+  if ( y < ymin () || y > ymax() ) { return 0 ; }
+  //
+  std::vector<double> fy ( m_ny + 1 , 0 ) ;
+  for ( unsigned short i = 0 ; i <= m_ny ; ++i ) 
+  { fy[i] = m_by[i] ( y ) ; }
+  //
+  const std::vector<double> fx ( m_nx + 1 , 1 ) ;
+  //
+  double result = 0 ;
+  for  ( unsigned short ix = 0 ; ix <= m_nx ; ++ix ) 
+  {
+    for  ( unsigned short iy = 0 ; iy <= m_ny ; ++iy ) 
+    { result += par ( ix , iy ) * fx[ix] * fy[iy] ; }
+    //
+  }
+  //
+  // const double scalex = ( m_nx + 1 ) / ( xmax() - xmin() ) ;
+  const double scaley = ( m_ny + 1 ) / ( ymax() - ymin() ) ;
+  //
+  return result * scaley  ;
+}
+// ============================================================================
+/** integral over x-dimension 
+ *  \f[ \int_{x_{min}}^{x_{max}} \mathcal{B}(x,y) \mathrm{d}x\f] 
+ *  @param y     variable 
+ */
+// ============================================================================
+double Gaudi::Math::Bernstein2D::integrateY 
+( const double x ) const 
+{
+  if ( x < xmin () || x > xmax() ) { return 0 ; }
+  //
+  const std::vector<double> fy ( m_ny + 1 , 1.0 ) ;
+  //
+  std::vector<double> fx ( m_nx + 1 , 0 ) ;
+  for  ( unsigned short i = 0 ; i <= m_nx ; ++i ) 
+  { fx[i] = m_bx[i] ( x ) ; }
+  //
+  double result = 0 ;
+  for  ( unsigned short ix = 0 ; ix <= m_nx ; ++ix ) 
+  {
+    for  ( unsigned short iy = 0 ; iy <= m_ny ; ++iy ) 
+    { result += par ( ix , iy ) * fx[ix] * fy[iy] ; }
+    //
+  }
+  //
+  const double scalex = ( m_nx + 1 ) / ( xmax() - xmin() ) ;
+  // const double scaley = ( m_ny + 1 ) / ( ymax() - ymin() ) ;
+  //
+  return result * scalex ; // * scaley ) ;
 }
 // ============================================================================
 // set (l,m)-parameter
@@ -1517,6 +1613,15 @@ double Gaudi::Math::Bernstein2DSym::operator ()
   return result * ( scale * scale ) ;
 }
 // ============================================================================
+/* get the integral over 2D-region 
+ *  \f[ \int_{x_{low}}^{x_{high}}\int_{y_{low}}^{y_{high}} 
+ *  \mathcal{B}(x,y) \mathrm{d}x\mathrm{d}y\f] 
+ *  @param xlow  low  edge in x 
+ *  @param xhigh high edge in x 
+ *  @param ylow  low  edge in y 
+ *  @param yhigh high edge in y 
+ */
+// ============================================================================
 double Gaudi::Math::Bernstein2DSym::integral 
 ( const double xlow , const double xhigh ,
   const double ylow , const double yhigh ) const 
@@ -1556,10 +1661,24 @@ double Gaudi::Math::Bernstein2DSym::integral
   return result * ( scale * scale ) ;
 }
 // ============================================================================
+/*  integral over x-dimension 
+ *  \f[ \int_{x_{low}}^{x_{high}} \mathcal{B}(x,y) \mathrm{d}x\f] 
+ *  @param x     variable 
+ *  @param xlow  low  edge in x 
+ *  @param xhigh high edge in x 
+ */
+// ============================================================================
 double Gaudi::Math::Bernstein2DSym::integrateX 
 ( const double y    ,  
   const double xlow , const double xhigh ) const 
 { return integrateY ( y , xlow , xhigh ) ; }
+// ============================================================================
+/*  integral over y-dimension 
+ *  \f[ \int_{y_{low}}^{x_{high}} \mathcal{B}(x,y) \mathrm{d}y\f] 
+ *  @param y     variable 
+ *  @param xlow  low  edge in x 
+ *  @param xhigh high edge in x 
+ */
 // ============================================================================
 double Gaudi::Math::Bernstein2DSym::integrateY
 ( const double x    ,
@@ -1570,6 +1689,8 @@ double Gaudi::Math::Bernstein2DSym::integrateY
   else if ( ylow  > yhigh ) { return -integrateY ( x , yhigh , ylow  ) ; }
   else if ( x     <  xmin () || x    >  xmax() ) { return 0 ; }
   else if ( yhigh <  ymin () || ylow >  ymax() ) { return 0 ; }
+  else if ( s_equal ( ylow  , ymin () ) && 
+            s_equal ( yhigh , ymax () )  ) { return integrateY ( x ) ; }
   //
   const double  y_low  = std::max ( ymin() , ylow  ) ;
   const double  y_high = std::min ( ymax() , yhigh ) ;
@@ -1596,6 +1717,50 @@ double Gaudi::Math::Bernstein2DSym::integrateY
   //
   const double scale = ( m_n + 1 ) / ( xmax() - xmin() ) ;
   return result * ( scale * scale ) ;
+}
+// ============================================================================
+/* get the integral over 2D-region 
+ *  \f[ \int_{x_{min}}^{x_{max}}\int_{y_{min}}^{y_{max}} 
+ *  \mathcal{B}(x,y) \mathrm{d}x\mathrm{d}y\f] 
+ */
+// ============================================================================
+double  Gaudi::Math::Bernstein2DSym::integral   () const 
+{ return std::accumulate ( m_pars.begin() , m_pars.end() , 0.0 ) ; }
+// ============================================================================
+/* integral over x-dimension 
+ *  \f[ \int_{x_{min}}^{x_{max}} \mathcal{B}(x,y) \mathrm{d}x\f] 
+ *  @param x     variable 
+ */
+// ============================================================================
+double Gaudi::Math::Bernstein2DSym::integrateX ( const double y ) const 
+{ return integrateY ( y ) ; }
+// ============================================================================
+/*  integral over y-dimension 
+ *  \f[ \int_{y_{min}}^{x_{max}} \mathcal{B}(x,y) \mathrm{d}y\f] 
+ *  @param y     variable 
+ */
+// ============================================================================
+double Gaudi::Math::Bernstein2DSym::integrateY ( const double x ) const 
+{
+  //
+  if ( x     <  xmin () || x    >  xmax() ) { return 0 ; }
+  //
+  std::vector<double> fx ( m_n + 1 , 0 ) ;
+  for  ( unsigned short i = 0 ; i <= m_n ; ++i ) { fx[i] = m_b[i] ( x ) ; }
+  //
+  double       result = 0 ;
+  for  ( unsigned short ix = 0 ; ix <= m_n ; ++ix ) 
+  {
+    for  ( unsigned short iy = 0 ; iy <= m_n ; ++iy ) 
+    { 
+      result += ( ix == iy ) ? 
+        par ( ix , iy ) * fx[ix]       : 
+        par ( ix , iy ) * fx[ix] * 0.5 ;
+    }
+  }
+  //
+  const double scale = ( m_n + 1 ) / ( xmax() - xmin() ) ;
+  return result * scale  ;
 }
 // ============================================================================
 // set (k)-parameter
@@ -1695,6 +1860,37 @@ bool Gaudi::Math::Positive2D::updateBernstein ()
 // ============================================================================
 double Gaudi::Math::Positive2D::par ( const unsigned int k ) const 
 { return m_sphere.phase ( k ) ; }
+// ============================================================================
+/*  get the integral over 2D-region           
+ *  \f[ \int_{x_{min}}^{x_{max}}\int_{y_{min}}^{y_{max}} 
+ *        \mathcal{B}(x,y) \mathrm{d}x\mathrm{d}y\f] 
+ */
+// ============================================================================
+double  Gaudi::Math::Positive2D::integral   () const { return 1 ; }
+// ============================================================================
+/* get the integral over 2D-region 
+ *  \f[ \int_{x_low}^{x_high}\int_{y_low}^{y_high} \mathcal{B}(x,y) \mathrm{d}x\mathrm{d}y\f] 
+ *  @param xlow  low  edge in x 
+ *  @param xhigh high edge in x 
+ *  @param ylow  low  edge in y 
+ *  @param yhigh high edge in y 
+ */
+// ============================================================================
+double Gaudi::Math::Positive2D::integral   
+( const double xlow , const double xhigh , 
+  const double ylow , const double yhigh ) const 
+{ 
+  return
+    s_equal ( xlow  , xmin() ) && 
+    s_equal ( xhigh , xmax() ) && 
+    s_equal ( ylow  , ymin() ) && 
+    s_equal ( yhigh , ymax() )  ?  1.0 :
+    m_bernstein.integral ( xlow , xhigh , ylow , yhigh ) ; 
+}
+// ============================================================================
+
+
+
 
 // ============================================================================
 // constructor from the order
@@ -1745,6 +1941,36 @@ bool Gaudi::Math::Positive2DSym::updateBernstein ()
 double Gaudi::Math::Positive2DSym::par ( const unsigned int  k ) const 
 { return m_sphere.phase ( k ) ; }
 // ============================================================================
+/*  get the integral over 2D-region 
+ *  \f[ \int_{x_{min}}^{x_{max}}\int_{y_{min}}^{y_{max}} 
+ *   \mathcal{B}(x,y) \mathrm{d}x\mathrm{d}y \f] 
+ */
+// ============================================================================
+double  Gaudi::Math::Positive2DSym::integral   () const { return 1 ; }
+// ============================================================================
+/*  get the integral over 2D-region 
+ *  \f[ \int_{x_low}^{x_high}\int_{y_low}^{y_high} 
+ *   \mathcal{B}(x,y) \mathrm{d}x\mathrm{d}y \f] 
+ *  @param xlow  low  edge in x 
+ *  @param xhigh high edge in x 
+ *  @param ylow  low  edge in y 
+ *  @param yhigh high edge in y 
+ */
+// ============================================================================
+double Gaudi::Math::Positive2DSym::integral
+( const double xlow , const double xhigh , 
+  const double ylow , const double yhigh ) const
+{
+  return 
+    s_equal ( xlow  , xmin () ) &&
+    s_equal ( xhigh , xmax () ) &&
+    s_equal ( ylow  , ymin () ) &&
+    s_equal ( yhigh , ymax () ) ?  1.0 :
+    m_bernstein.integral ( xlow , xhigh , ylow , yhigh ) ; 
+}
+// ============================================================================
+
+
 
 
 // ============================================================================

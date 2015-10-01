@@ -711,7 +711,7 @@ namespace Gaudi
       double ty ( const double y ) const
       { return  ( y - ymin () ) / ( ymax () - ymin () )      ; }
       // ======================================================================
-    public:
+    public: // general integration 
       // ======================================================================
       /** get the integral over 2D-region 
        *  \f[ \int_{x_low}^{x_high}\int_{y_low}^{y_high} \mathcal{B}(x,y) \mathrm{d}x\mathrm{d}y\f] 
@@ -723,15 +723,15 @@ namespace Gaudi
       double integral   ( const double xlow , const double xhigh , 
                           const double ylow , const double yhigh ) const ;
       /** integral over x-dimension 
-       *  \f[ \int_{y_low}^{y_high} \mathcal{B}(x,y) \mathrm{d}y\f] 
+       *  \f[ \int_{x_{low}}^{x_{high}} \mathcal{B}(x,y) \mathrm{d}x\f] 
        *  @param x     variable 
        *  @param ylow  low  edge in y 
        *  @param yhigh high edge in y 
        */
       double integrateX ( const double y    , 
                           const double xlow , const double xhigh ) const ;
-      /** integral over x-dimension 
-       *  \f[ \int_{x_low}^{x_high} \mathcal{B}(x,y) \mathrm{d}x\f] 
+      /** integral over y-dimension 
+       *  \f[ \int_{y_{low}}^{y_{high}} \mathcal{B}(x,y) \mathrm{d}y\f] 
        *  @param y     variable 
        *  @param xlow  low  edge in x 
        *  @param xhigh high edge in x 
@@ -739,6 +739,23 @@ namespace Gaudi
       double integrateY ( const double x    , 
                           const double ylow , const double yhigh ) const ;
       // ======================================================================
+    public: // special cases
+      // ======================================================================
+      /** get the integral over 2D-region 
+       *  \f[  x_min < x < x_max, y_min< y< y_max\f] 
+       */
+      double integral   () const ;
+      /** integral over x-dimension
+       *  \f[ \int_{x_{min}}^{x_{max}} \mathcal{B}(x,y) \mathrm{d}x\f] 
+       *  @param x     variable 
+       */
+      double integrateX ( const double y    ) const ;
+      /** integral over y-dimension 
+       *  \f[ \int_{y_{min}}^{y_{max}} \mathcal{B}(x,y) \mathrm{d}y\f] 
+       *  @param y     variable 
+       */
+      double integrateY ( const double x    ) const ;
+      // ======================================================================      
     public: // few helper functions to expose internals 
       // ======================================================================
       /// evaluate the basic polynomials 
@@ -848,26 +865,49 @@ namespace Gaudi
        *  @param yhigh high edge in y 
        */
       double integral   ( const double xlow , const double xhigh , 
-                          const double ylow , const double yhigh ) const 
-      { return m_bernstein.integral ( xlow , xhigh , ylow , yhigh ) ; }
+                          const double ylow , const double yhigh ) const ;
       /** integral over x-dimension 
-       *  \f[ \int_{y_low}^{y_high} \mathcal{B}(x,y) \mathrm{d}y\f] 
+       *  \f[ \int_{x_{low}}^{x_{high}} \mathcal{B}(x,y) \mathrm{d}x\f] 
        *  @param x     variable 
-       *  @param ylow  low  edge in y 
-       *  @param yhigh high edge in y 
+       *  @param xlow  low  edge in x 
+       *  @param xhigh high edge in x 
        */
       double integrateX ( const double y    , 
                           const double xlow , const double xhigh ) const 
       { return m_bernstein.integrateX ( y , xlow , xhigh ) ; }
-      /** integral over x-dimension 
-       *  \f[ \int_{x_low}^{x_high} \mathcal{B}(x,y) \mathrm{d}x\f] 
-       *  @param y     variable 
-       *  @param xlow  low  edge in x 
-       *  @param xhigh high edge in x 
+      /** integral over y-dimension 
+       *  \f[ \int_{y_{low}}^{y_{high}} \mathcal{B}(x,y) \mathrm{d}y\f] 
+       *  @param x     variable 
+       *  @param ylow  low  edge in x 
+       *  @param yhigh high edge in x 
        */
       double integrateY ( const double x    , 
                           const double ylow , const double yhigh ) const 
       { return m_bernstein.integrateY ( x , ylow , yhigh ) ; }
+      // ======================================================================
+    public: // specific 
+      // ======================================================================
+      /** get the integral over 2D-region           
+       *  \f[ \int_{x_{min}}^{x_{max}}\int_{y_{min}}^{y_{max}} 
+       *        \mathcal{B}(x,y) \mathrm{d}x\mathrm{d}y\f] 
+       */
+      double integral   () const ;
+      /** integral over x-dimension 
+       *  \f[ \int_{x_{min}}^{x_{max}} \mathcal{B}(x,y) \mathrm{d}x\f] 
+       *  @param x     variable 
+       *  @param xlow  low  edge in x 
+       *  @param xhigh high edge in x 
+       */
+      double integrateX ( const double y    ) const 
+      { return m_bernstein.integrateX ( y ) ; }
+      /** integral over y-dimension 
+       *  \f[ \int_{y_{min}}^{y_{max}} \mathcal{B}(x,y) \mathrm{d}y\f] 
+       *  @param x     variable 
+       *  @param ylow  low  edge in x 
+       *  @param yhigh high edge in x 
+       */
+      double integrateY ( const double x    ) const 
+      { return m_bernstein.integrateY ( x ) ; }
       // ======================================================================
     public: // ingeredients 
       // =====================================================================
@@ -972,10 +1012,10 @@ namespace Gaudi
       double ty ( const double y ) const
       { return  ( y - ymin () ) / ( ymax () - ymin () ) ; }
       // ======================================================================
-    public:
+    public: // generic integrals 
       // ======================================================================
       /** get the integral over 2D-region 
-       *  \f[ \int_{x_low}^{x_high}\int_{y_low}^{y_high} 
+       *  \f[ \int_{x_{low}}^{x_{high}}\int_{y_{low}}^{y_{high}} 
        *  \mathcal{B}(x,y) \mathrm{d}x\mathrm{d}y\f] 
        *  @param xlow  low  edge in x 
        *  @param xhigh high edge in x 
@@ -985,21 +1025,39 @@ namespace Gaudi
       double integral   ( const double xlow , const double xhigh , 
                           const double ylow , const double yhigh ) const ;
       /** integral over x-dimension 
-       *  \f[ \int_{y_low}^{y_high} \mathcal{B}(x,y) \mathrm{d}y\f] 
+       *  \f[ \int_{x_{low}}^{x_{high}} \mathcal{B}(x,y) \mathrm{d}x\f] 
        *  @param x     variable 
-       *  @param ylow  low  edge in y 
-       *  @param yhigh high edge in y 
+       *  @param xlow  low  edge in x 
+       *  @param xhigh high edge in x 
        */
       double integrateX ( const double y    , 
                           const double xlow , const double xhigh ) const ;
-      /** integral over x-dimension 
-       *  \f[ \int_{x_low}^{x_high} \mathcal{B}(x,y) \mathrm{d}x\f] 
+      /** integral over y-dimension 
+       *  \f[ \int_{y_{low}}^{x_{high}} \mathcal{B}(x,y) \mathrm{d}y\f] 
        *  @param y     variable 
        *  @param xlow  low  edge in x 
        *  @param xhigh high edge in x 
        */
       double integrateY ( const double x    , 
                           const double ylow , const double yhigh ) const ;
+      // ======================================================================
+    public: // specific integrals 
+      // ======================================================================
+      /** get the integral over 2D-region 
+       *  \f[ \int_{x_{min}}^{x_{max}}\int_{y_{min}}^{y_{max}} 
+       *  \mathcal{B}(x,y) \mathrm{d}x\mathrm{d}y\f] 
+       */
+      double integral   () const ;
+      /** integral over x-dimension 
+       *  \f[ \int_{x_{min}}^{x_{max}} \mathcal{B}(x,y) \mathrm{d}x\f] 
+       *  @param x     variable 
+       */
+      double integrateX ( const double y ) const ;
+      /** integral over y-dimension 
+       *  \f[ \int_{y_{min}}^{x_{max}} \mathcal{B}(x,y) \mathrm{d}y\f] 
+       *  @param y     variable 
+       */
+      double integrateY ( const double x ) const ;
       // ======================================================================
     public: // few helper functions to expose internals 
       // ======================================================================
@@ -1022,7 +1080,7 @@ namespace Gaudi
       // ======================================================================
     private:
       // ======================================================================
-      ///  vectors of basic  Bernetin polynomials 
+      ///  vectors of basic  Bernstein polynomials 
       typedef std::vector<Bernstein>  VB ;
       ///  vector  of basic  Bernetin polynomials 
       VB m_b  ; //  vector  of basic  Bernstein polynomials 
@@ -1092,8 +1150,7 @@ namespace Gaudi
        *  @param yhigh high edge in y 
        */
       double integral   ( const double xlow , const double xhigh , 
-                          const double ylow , const double yhigh ) const 
-      { return m_bernstein.integral ( xlow , xhigh , ylow , yhigh ) ; }
+                          const double ylow , const double yhigh ) const ;
       // ======================================================================
       /** integral over x-dimension 
        *  \f[ \int_{y_low}^{y_high} \mathcal{B}(x,y) \mathrm{d}y\f] 
@@ -1114,6 +1171,26 @@ namespace Gaudi
       double integrateY ( const double x    , 
                           const double ylow , const double yhigh ) const 
       { return m_bernstein.integrateY ( x , ylow , yhigh ) ; }
+      // ======================================================================
+    public: // specific 
+      // ======================================================================
+      /** get the integral over 2D-region 
+       *  \f[ \int_{x_{min}}^{x_{max}}\int_{y_{min}}^{y_{max}} 
+       *   \mathcal{B}(x,y) \mathrm{d}x\mathrm{d}y \f] 
+       */
+      double integral   () const ; 
+      /** integral over x-dimension 
+       *  \f[ \int_{x_{min}}^{x_{max}} \mathcal{B}(x,y) \mathrm{d}x\f] 
+       *  @param x     variable 
+       */
+      double integrateX ( const double y ) const 
+      { return m_bernstein.integrateX ( y ) ; }
+      /** integral over y-dimension 
+       *  \f[ \int_{y_{min}}^{y_{max}} \mathcal{B}(x,y) \mathrm{d}y\f] 
+       *  @param y     variable 
+       */
+      double integrateY ( const double x ) const 
+      { return m_bernstein.integrateY ( x ) ; }
       // ======================================================================
     public:
       // ======================================================================

@@ -663,7 +663,7 @@ namespace Gaudi
       double         xinner () const { return m_xspline.inner () ; }
       double         yinner () const { return m_yspline.inner () ; }
       // ======================================================================
-    public:
+    public: // generic integrals 
       // ======================================================================
       /** get the integral over 2D-region 
        *  @param xlow  low  edge in x 
@@ -690,7 +690,30 @@ namespace Gaudi
         ( const double x    , 
           const double ylow , const double yhigh ) const ;
       // ======================================================================
-    public: // ingeredients 
+    public: // specific integrals 
+      // ======================================================================
+      /** get the integral over 2D-region 
+       *  \f[ x_{min}<x<x_{max}, y_{min}<y<y_{max}\f] 
+       *  @param xlow  low  edge in x 
+       *  @param xhigh high edge in x 
+       *  @param ylow  low  edge in y 
+       *  @param yhigh high edge in y 
+       */
+      double integral   () const ; 
+      /** get the integral over X  for given Y
+       *  @param y  (INPU) y-value 
+       *  @param xlow  low  edge in x 
+       *  @param xhigh high edge in x 
+       */  
+      double integrateX ( const double y ) const ;
+      /** get the integral over Y  for given X
+       *  @param x  (INPU) y-value 
+       *  @param ylow  low  edge in y 
+       *  @param yhigh high edge in y 
+       */  
+      double integrateY ( const double x ) const ;
+      // ======================================================================
+    public: // ingredients 
       // =====================================================================
       // get x-spline 
       const  Gaudi::Math::BSpline& xspline () const { return m_xspline ; }
@@ -705,14 +728,14 @@ namespace Gaudi
       /// Y-spline 
       mutable Gaudi::Math::BSpline m_yspline ; // y-spline 
       /// parameter sphere 
-      Gaudi::Math::NSphere m_sphere  ; // parameyter sphere
+      Gaudi::Math::NSphere m_sphere  ; // parameter sphere
       // ======================================================================
     private:
       // ======================================================================
       mutable   std::vector<double>  m_xcache ; // x-cache 
       mutable   std::vector<double>  m_ycache ; // y-cache
       // ======================================================================
-    }; 
+    };
     // =========================================================================
     /** @class Spline2DSym
      *  Non-negative symmetric spline in 2D 
@@ -759,7 +782,7 @@ namespace Gaudi
       double         xinner () const { return m_spline.inner () ; }
       double         yinner () const { return xinner () ; }
       // ======================================================================
-    public: // integration 
+    public: // generic integration 
       // ======================================================================
       /** get the integral over 2D-region 
        *  @param xlow  low  edge in x 
@@ -785,6 +808,21 @@ namespace Gaudi
       double integrateY 
         ( const double x    , 
           const double ylow , const double yhigh ) const ;
+      // ======================================================================
+    public: // specific integration 
+      // ======================================================================
+      /** get the integral over 2D-region 
+       *  \f[ x_{min}< x < x_{max}, y_{min}<y<y_{max}\f]
+       */
+      double integral   () const ; 
+      /** get the integral over X  for given Y
+       *  @param y  (INPU) y-value 
+       */  
+      double integrateX ( const double y ) const ;
+      /** get the integral over Y  for given X
+       *  @param x  (INPU) y-value 
+       */  
+      double integrateY ( const double x ) const ;
       // ======================================================================
     public: // ingeredients 
       // =====================================================================

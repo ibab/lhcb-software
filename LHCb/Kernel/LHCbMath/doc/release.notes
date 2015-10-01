@@ -7,6 +7,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-10-01 - Vanya Belyaev
+ - speedup interration of 2D polynomials and splines 
+
+! 2015-10-01 - Vanya Belyaev
  - Bernstein&B-spline:
    1) speedup integration 
    2) add more classification functions 
