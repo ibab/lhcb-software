@@ -126,6 +126,9 @@ if __name__ == '__main__':
 
     from diffConds import diffOnlineOffline
     print toAnalise
+
+    if len(toAnalise) > 5:
+        sendEmail(333, str(len(toAnalise))+' runs still to analise, please check if something is wrong', receivers = ['gdujany@cern.ch'])
     
     
     for run in toAnalise:

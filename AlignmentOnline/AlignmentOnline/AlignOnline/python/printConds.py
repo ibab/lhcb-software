@@ -62,13 +62,29 @@ if arguments.online:
                  "ONLINE"   : 'fake'}
     cdb.Online = True
 else:
-    cdb.UseOracle = True
-    cdb.Online = True
-    cdb.IgnoreHeartBeat = True
-    cdb.EnableRunStampCheck = False
+    cdb.EnableRunStampCheck = False 
+    #cdb.IgnoreHeartBeat = True
+
+    useNewFeature = False
+    if useNewFeature:
+        # new feature Liang
+        cdb.UseOracle = True
+        cdb.Online = True
+    else:
+        # Marco's workaround
+        from Gaudi.Configuration import appendPostConfigAction
+        from Configurables import CondDBDispatcherSvc, CondDBAccessSvc
+        
+        def oracle_online():
+            oo = CondDBAccessSvc('ONLINE_ORACLE')
+            oo.ConnectionString = 'CondDBOnline/ONLINE'
+            CondDBDispatcherSvc('MainCondDBReader').Alternatives['/Conditions/Online'] = oo
+            
+        appendPostConfigAction(oracle_online)
+        os.environ['CORAL_DBLOOKUP_PATH'] = os.environ['CORAL_AUTH_PATH'] = '/group/online/condb_viewer'
 
 
-from Configurables import DumpConditions, GaudiSequencer
+    from Configurables import DumpConditions, GaudiSequencer
 dumpSeq = GaudiSequencer("DumpSequence", Members = [DumpConditions()])
 ApplicationMgr().TopAlg = [dumpSeq]
 ApplicationMgr().ExtSvc += ["IncidentSvc"]
