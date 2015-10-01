@@ -1,4 +1,4 @@
-// $Id:$ 
+// $Id$ 
 // ============================================================================
 #ifndef ANALYSIS_STATVAR_H
 #define ANALYSIS_STATVAR_H 1
@@ -39,9 +39,9 @@ namespace Analysis
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date   2013-10-13
    * 
-   *                    $Revision:$
-   *  Last modification $Date:$
-   *                 by $Author:$
+   *                    $Revision$
+   *  Last modification $Date$
+   *                 by $Author$
    */
   class GAUDI_API StatVar 
   {

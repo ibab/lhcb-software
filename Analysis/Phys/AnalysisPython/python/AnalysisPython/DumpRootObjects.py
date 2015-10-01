@@ -1,7 +1,7 @@
 #!/usr/bin/env python 
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id:$ 
+# $Id$ 
 # =============================================================================
 ## @file DumpRootObjects.py
 #
@@ -27,9 +27,9 @@
 #  @date   2010-09-12
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #
-#                    $Revision: 165594 $
-#  Last modification $Date: 2013-12-03 14:20:35 +0100 (Tue, 03 Dec 2013) $
-#                 by $Author: albarano $ 
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$ 
 # =============================================================================
 """
 Dump important ROOT objects to ROOT file
@@ -48,14 +48,14 @@ By usage of this code one clearly states the disagreement
 with the smear campaign of Dr.O.Callot et al.: 
    ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-                    $Revision: 165594 $
-  Last modification $Date: 2013-12-03 14:20:35 +0100 (Tue, 03 Dec 2013) $
-                 by $Author: albarano $  
+                    $Revision$
+  Last modification $Date$
+                 by $Author$  
                  """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2012-03-16"
-__version__ = '$Revision: 165594 $'
+__version__ = '$Revision$'
 __all__     = (
     'dumpToFile' ,
     'readFile'   , 

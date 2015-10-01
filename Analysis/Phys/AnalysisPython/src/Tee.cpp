@@ -1,4 +1,4 @@
-// $Id:$
+// $Id$
 // ============================================================================
 // Include 
 // ============================================================================
@@ -18,9 +18,9 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  @date 2013-07-07
  *
- *  Version           $Revision:$
- *  Last Modification $Date:$
- *                 by $Author:$ 
+ *  Version           $Revision$
+ *  Last Modification $Date$
+ *                 by $Author$ 
  */
 // ============================================================================
 namespace std 
