@@ -1,4 +1,4 @@
-// $Id:$ 
+// $Id$ 
 // ============================================================================
 #ifndef LHCBMATH_MOREFUNCTIONS_H 
 #define LHCBMATH_MOREFUNCTIONS_H 1

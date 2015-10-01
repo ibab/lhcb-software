@@ -1,4 +1,4 @@
-// $Id:$
+// $Id$
 // ============================================================================
 #ifndef LHCBMATH_NSPHERE_H 
 #define LHCBMATH_NSPHERE_H 1

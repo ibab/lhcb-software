@@ -1,4 +1,4 @@
-// $Id:$
+// $Id$
 // ============================================================================
 #ifndef LHCBMATH_BINOMIAL_H 
 #define LHCBMATH_BINOMIAL_H 1

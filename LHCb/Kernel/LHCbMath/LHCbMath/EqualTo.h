@@ -1,4 +1,4 @@
-// $Id: $
+// $Id$
 // ============================================================================
 #ifndef LHCBMATH_EQUALTO_H 
 #define LHCBMATH_EQUALTO_H 1

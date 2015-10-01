@@ -1,4 +1,4 @@
-// $Id:$ 
+// $Id$ 
 // ============================================================================
 #ifndef LHCBMATH_NSTATENTITY_H 
 #define LHCBMATH_NSTATENTITY_H 1

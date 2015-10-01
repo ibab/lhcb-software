@@ -1,21 +1,21 @@
 #!/usr/bin/env python
 # # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id:$
+# $Id$
 # =============================================================================
 ## @file
 #  Test some polinomial functionality 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2015-02-10
 #  
-#                    $Revision: 183195 $
-#  Last modification $Date: 2015-01-24 14:25:18 +0100 (Sat, 24 Jan 2015) $
-#  by                $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#  by                $Author$
 # =============================================================================
 """ Test some polinomial functionality 
 """
 # =============================================================================
-__version__ = "$Revision: 183195 $"
+__version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2015-02-10"
 # =============================================================================

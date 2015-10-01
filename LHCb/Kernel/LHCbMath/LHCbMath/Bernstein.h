@@ -1,4 +1,4 @@
-// $Id:$ 
+// $Id$ 
 // ============================================================================
 #ifndef LHCBMATH_BERNSTEIN_H 
 #define LHCBMATH_BERNSTEIN_H 1
@@ -27,8 +27,8 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  @date 2010-04-19
  *
- *                    $Revision: 181005 $
- *  Last modification $Date: 2014-12-02 14:39:03 +0100 (Tue, 02 Dec 2014) $
+ *                    $Revision$
+ *  Last modification $Date$
  *                 by $author$
  */
 // ============================================================================

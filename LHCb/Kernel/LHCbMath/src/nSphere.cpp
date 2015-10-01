@@ -1,4 +1,4 @@
-// $Id:$
+// $Id$
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -23,9 +23,9 @@
  *  @author Vanya BELYAEV Ivan/Belyaev@itep.ru
  *  @date 2014-01-21 
  *  
- *  Version           $Revision:$
- *  Last modification $Date:$
- *                 by $Author:$
+ *  Version           $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ============================================================================
 namespace 

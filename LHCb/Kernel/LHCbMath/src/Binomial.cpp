@@ -24,9 +24,9 @@
  *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
  *  @date 2015-09-17
  *
- *  Version           $Revision:$
- *  Last modification $Date:$
- *                 by $Author:$
+ *  Version           $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ============================================================================
 namespace

@@ -49,8 +49,8 @@ namespace Genfun
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  @date 2013-03-15
  *
- *                    $Revision: 150522 $
- *  Last modification $Date: 2013-01-05 09:38:49 +0100 (Sat, 05 Jan 2013) $
+ *                    $Revision$
+ *  Last modification $Date$
  *                 by $author$
  */
 // ============================================================================

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id:$
+# $Id$
 # =============================================================================
 ## @file  LHCbMath/combine.py
 #  Few helper utilities for combining correlated measurements
@@ -12,9 +12,9 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2015-09-28
 #  
-#                    $Revision: 193473 $
-#  Last modification $Date: 2015-08-09 16:20:28 +0300 (Sun, 09 Aug 2015) $
-#  by                $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#  by                $Author$
 # =============================================================================
 """ Few helper utilities for combining correlated measurements
 - see P.Avery ``Combining measurements with correlated errors'', CBX 95 55
@@ -23,7 +23,7 @@
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2015-09-29"
-__version__ = "$Revision: 195053 $"
+__version__ = "$Revision$"
 # =============================================================================
 __all__     = (
     'Combine',

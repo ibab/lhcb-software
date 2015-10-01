@@ -1,4 +1,4 @@
-//  $Id:$ 
+//  $Id$ 
 // ============================================================================
 #ifndef LHCBMATH_COMBINE_H 
 #define LHCBMATH_COMBINE_H 1

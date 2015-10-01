@@ -1,4 +1,4 @@
-// $Id: $
+// $Id$
 // ============================================================================
 #ifndef LHCBMATH_GSL_UTILS_H 
 #define LHCBMATH_GSL_UTILS_H 1

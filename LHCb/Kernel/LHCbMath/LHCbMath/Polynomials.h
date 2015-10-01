@@ -1,4 +1,4 @@
-// $Id:$
+// $Id$
 // ============================================================================
 #ifndef LHCBMATH_POLYNOMIALS_H 
 #define LHCBMATH_POLYNOMIALS_H 1
@@ -21,8 +21,8 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  @date 2010-04-19
  *
- *                    $Revision: 184160 $
- *  Last modification $Date: 2015-02-21 17:19:02 +0100 (Sat, 21 Feb 2015) $
+ *                    $Revision$
+ *  Last modification $Date$
  *                 by $author$
  */
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: $
+// $Id$
 // ============================================================================
 #ifndef LHCBMATH_CHI2SOLUTION_H 
 #define LHCBMATH_CHI2SOLUTION_H 1

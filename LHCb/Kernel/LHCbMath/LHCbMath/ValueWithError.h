@@ -20,8 +20,13 @@
 /** @file 
  *  Collection fo useful objects with associated "covarinaces".
  *  The concept has been stollen from Wouter Hulsbergen's lines 
- *  @author Vanya BELYAEV Ivane.BElyaev@nikhef.nl
- *  @date 20090603
+ *
+ *  @author Vanya BELYAEV Ivane.BElyaev@itep.ru
+ *  @date 2009-06-03
+ *
+ *  Version           $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 namespace Gaudi
 {

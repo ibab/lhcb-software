@@ -1,4 +1,4 @@
-// $Id:$ 
+// $Id$ 
 // ============================================================================
 #ifndef ANALYSIS_WSTATENTITY_H 
 #define ANALYSIS_WSTATENTITY_H 1

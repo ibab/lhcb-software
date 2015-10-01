@@ -1,4 +1,4 @@
-// $Id:$ 
+// $Id$ 
 // ============================================================================
 #ifndef LHCBMATH_CLENSHAW_H 
 #define LHCBMATH_CLENSHAW_H 1
@@ -19,9 +19,9 @@ namespace Gaudi
     /** Namespace with collection of Clenshaw summation algorithms 
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2015-08-06
-     *  Version           $Revision:$
-     *  Last modification $Date:$
-     *                 by $Author:$
+     *  Version           $Revision$
+     *  Last modification $Date$
+     *                 by $Author$
      */
     namespace Clenshaw
     {
