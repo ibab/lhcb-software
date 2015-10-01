@@ -4,6 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2015-10-01 - John Back
+  - Updated EvtSVPHelAmp and added new EvtSVPHelCPMix model from Clara Remon,
+    implementing the complete mixing phenomenology of Bs to vector gamma decays.
+  - Resolved some compiler warnings, and removed obsolete Windows #pragma usage.
+
 ! 2015-09-23 - Michal Kreps
   - Reimplement real Spence function in C++ and remove EvtLi2Spence.F.
 

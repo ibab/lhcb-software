@@ -103,8 +103,8 @@ void EvtBcTMuNu::initProbMax() {
 void EvtBcTMuNu::PrintMaxProbs()
 {
   EvtId BcID = EvtPDL::getId("B_c+");
-  EvtId JpsiID = EvtPDL::getId("J/psi(1S)");
-  EvtId PsiID = EvtPDL::getId("psi(2S)");
+  //EvtId JpsiID = EvtPDL::getId("J/psi(1S)");
+  //EvtId PsiID = EvtPDL::getId("psi(2S)");
   EvtId Chic2ID = EvtPDL::getId("chi_c2");
   EvtId MuID = EvtPDL::getId("mu+");
   EvtId TauID = EvtPDL::getId("tau+");

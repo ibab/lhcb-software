@@ -20,11 +20,6 @@
 //     hadronic current, or other way of putting that in
 //----------------------------------------------------------------------------------
 
-#ifdef WIN32
-#pragma warning( disable : 4786 )
-// Disable anoying warning about symbol size
-#endif
-
 #include "EvtGenModels/EvtLb2Lll.hh"
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtDiracParticle.hh"

@@ -10,11 +10,13 @@
 //
 // Module: EvtGen/EvtSVPHelAmp.hh
 //
-// Description:
+// Description: Routine to decay scalar -> vector + photon
+//              by specifying the helicity amplitudes
 //
 // Modification history:
 //
-//    DJL/RYD     August 11, 1998         Module created
+//    DJL/RYD                                    August 11, 1998         Module created
+//    Clara Remon (Clara.Remon@ific.uv.es)       September 24, 2015      Function SVPHel created
 //
 //------------------------------------------------------------------------
 
@@ -23,14 +25,16 @@
 
 #include "EvtGenBase/EvtDecayAmp.hh"
 
-class EvtParticle;
-
-//Class to handle decays of the form SCALAR ->VECTOR PHOTON
-//where the helicity amplitudes must be specified.  The
-//first and third arguements are the magnetudes of the H+
-//and H- helicity amplitudes respectively.  The second and
+//Class to handle decays of the form SCALAR -> VECTOR PHOTON
+//where the helicity amplitudes must be specified. The
+//first and third arguments are the magnitudes of the H+
+//and H- helicity amplitudes respectively. The second and
 //fourth arguements are the phases.
 //Calls EvtSVPHel.
+
+class EvtParticle;
+class EvtAmp;
+class EvtId;
 
 class EvtSVPHelAmp:public  EvtDecayAmp  {
 
@@ -44,8 +48,13 @@ public:
 
   void init();
   void initProbMax();
-  void decay(EvtParticle *p); 
 
+  void decay(EvtParticle *p); 
+  
+  static void SVPHel(EvtParticle *parent, EvtAmp& amp, EvtId n_v1, EvtId n_ph,
+		     const EvtComplex& hp, const EvtComplex& hm);
+
+  
 };
 
 #endif

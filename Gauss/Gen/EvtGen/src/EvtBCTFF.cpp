@@ -48,8 +48,8 @@ void EvtBCTFF::getscalarff(EvtId, EvtId, double, double,
 
 }
 
-void EvtBCTFF::getvectorff(EvtId,EvtId, double t, double,
-                           double *a1f, double *a2f, double *vf, double *a0f ) {
+void EvtBCTFF::getvectorff(EvtId,EvtId, double, double,
+                           double *, double *, double *, double *) {
 
   report(ERROR,"EvtGen") << "Not implemented :getvectorff in EvtBCTFF.\n";  
   ::abort();
@@ -72,7 +72,8 @@ void EvtBCTFF::gettensorff(EvtId /*p*/, EvtId /*d*/, double t, double /*mass*/,
 
   if (idTensor == EvtPDL::getId("chi_c2").getId() ) { // Bc -> chi_c1
     if (whichfit == 3) { // FF from Wang et al 10.1103/PhysRevD.79.114018
-      double Mbc = 6.277, Mchi = 3.51066; // Experimental values
+      double Mbc = 6.277; // Experimental value
+      //double Mchi = 3.51066; // Experimental value
       double ratio = q2 / (Mbc*Mbc);
       
       double hf_0 = 0.022;

@@ -53,7 +53,8 @@ void EvtBCSFF::getscalarff(EvtId /*p*/, EvtId /*d*/, double t, double /*mass*/,
 
   if (idScalar == EvtPDL::getId("chi_c0").getId() ) { // Bc -> chi_c0
     if (whichfit == 3) { // FF from Wang et al 10.1103/PhysRevD.79.114018
-      double Mbc = 6.277, Mchi = 3.41475; // Experimental values
+      double Mbc = 6.277; // Experimental value
+      //double Mchi = 3.41475; // Experimental value
       double ratio = q2 / (Mbc*Mbc);
       
       double fpf_0 = 0.47;
@@ -86,7 +87,7 @@ void EvtBCSFF::getvectorff(EvtId, EvtId, double, double,
 
 }
 
-void EvtBCSFF::gettensorff(EvtId /*p*/, EvtId /*d*/, double t, double /*mass*/,
+void EvtBCSFF::gettensorff(EvtId /*p*/, EvtId /*d*/, double /*t*/, double /*mass*/,
                               double*, double*, double*, double*) {
   
 
