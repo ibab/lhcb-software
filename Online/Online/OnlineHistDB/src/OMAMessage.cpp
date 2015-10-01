@@ -203,15 +203,7 @@ void OMAMessage::store(bool changePadColor) {
   // flag histograms with alarms using pad color
   if(!m_histo_null && m_dbsession) {
     if (m_active && m_level > INFO) {
-      if(changePadColor) {
-        OnlineHistogram* histo = m_dbsession->getHistogram(m_histo);
-        if (histo) {
-          OMAMsgColor color = (m_level == ALARM) ?  ALARMCOLOR : WARNINGCOLOR;
-          int icolor = (int) color;
-          histo->setDisplayOption("PADCOLOR", &icolor);
-          histo->saveHistDisplayOptions();
-        }
-      }
+      if(changePadColor) setPadColor();
     }
     else {
       unsetPadColor();
@@ -236,6 +228,18 @@ void OMAMessage::remove() {
     releaseOCIStatement(stmt);
   }
   unsetPadColor();
+}
+
+void OMAMessage::setPadColor() {
+  if(!m_histo_null && m_dbsession) {
+    OnlineHistogram* histo = m_dbsession->getHistogram(m_histo);
+    if (histo) {
+      OMAMsgColor color = (m_level == ALARM) ?  ALARMCOLOR : WARNINGCOLOR;
+      int icolor = (int) color;
+      histo->setDisplayOption("PADCOLOR", &icolor);
+      histo->saveHistDisplayOptions();
+    }
+  }
 }
 
 void OMAMessage::unsetPadColor() {

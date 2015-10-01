@@ -119,6 +119,7 @@ public:
 private:
   char* time2human(int time);
   bool getAnaComment(int& anaID);
+  void setPadColor();
   void unsetPadColor();
   OnlineHistDB* m_dbsession;
   int m_ID;

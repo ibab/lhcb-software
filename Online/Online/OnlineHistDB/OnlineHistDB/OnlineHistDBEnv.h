@@ -19,7 +19,7 @@ class OnlineHistogramStorage;
 class OnlinePageStorage;
 
 namespace OnlineHistDBEnv_constants {
-  static const std::string DB="HISTDB";
+  static const std::string DB="lhcbonr_hist";
   static const std::string ACCOUNT="HIST_READER";
   static const std::string PASSWORD="r3aDerDB";
   static const unsigned int DBschema = 16;

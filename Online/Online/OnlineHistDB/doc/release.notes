@@ -6,6 +6,11 @@
 ! or using makedoc script in this folder
 !
 
+! 2015-09-30 - GG
+- change default server name (to reflect change at the pit)
+
+!========================= v8r2 ========================= 
+
 ! 2014-01-07 - Marco Clemencic
  - Added CMakeLists.txt.
 
