@@ -40,6 +40,8 @@ DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,FIDManipAlg)
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,FmcMessageSvc)
 #include "GaudiOnline/HLTMonWriterSvc.h"
 DECLARE_NAMESPACE_SERVICE_FACTORY(MonWriter,HLTMonWriterSvc)
+#include "GaudiOnline/LazyRunable.h"
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,LazyRunable)
 #include "GaudiOnline/MDFReceiver.h"
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MDFReceiver)
 #include "GaudiOnline/MDFSender.h"

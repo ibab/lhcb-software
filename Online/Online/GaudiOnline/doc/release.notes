@@ -1,6 +1,9 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+! 2015-09-30 - Giacomo Graziani
+- add a LazyRunable doing nothing for tasks which just need to wait and don't expect input events
+
 ! 2014-09-09 - Marco Clemencic
  - Minor fix to CMake configuration.
 
