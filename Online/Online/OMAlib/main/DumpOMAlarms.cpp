@@ -5,6 +5,7 @@
 #endif
 #include <map>
 #include <cstdlib>
+//    #include <stdlib.h>
 
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OnlineHistDB/OMAMessage.h"
@@ -51,6 +52,16 @@ int main(int narg,char **argv ) {
     iarg++;
   }
   
+  if(clear) {
+    std::string dimDNS=getenv("DIM_DNS_NODE");
+    if (dimDNS != "mona08") {
+      cout << "can't remove any alarm without checking the Alarm screen" <<endl;
+      cout << "please change your DIM_DNS_NODE to mona08"<<endl;
+      return 0;
+    }
+
+  }
+
   if(clear && DBuser == "HIST_READER") {
     DBuser ="HIST_WRITER";
 #ifdef _WIN32
@@ -121,10 +132,14 @@ int main(int narg,char **argv ) {
         message->disable();
         message->store(true);
         // inform ECS in case analysis task is not running
-        OMAMsgInterface* msgIntface= new OMAMsgInterface(HistDB, "DBDrivenAnalysisTask");
+        OMAMsgInterface* msgIntface= new OMAMsgInterface(HistDB, "DBDrivenAnalysisTask/LHCb");
         if(msgIntface->startMessagePublishing()) { // when true, DIM service for alarm communication is not already being used
+          cout << "telling ECS to clear alarm "<< message->id() <<endl;
           msgIntface->unpublishMessage(message);
-          sleep(1000);
+          sleep(2);
+        }
+        else {
+          cout << "Analysis task is running and will clear alarm from ECS screen  when the first analysis on a physics saveset will be performed"<<endl;
         }
         delete message;
       }
