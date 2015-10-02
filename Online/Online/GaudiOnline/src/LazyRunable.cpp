@@ -53,4 +53,3 @@ StatusCode LHCb::LazyRunable::stopRun()    {
   return StatusCode::SUCCESS;
 }
 
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,LazyRunable)
