@@ -694,12 +694,16 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
     if ( msgLevel(MSG::DEBUG) ){
       for(unsigned int i=0;i<totalIDs.size();i++){ debug()<<i<<"\t"<<totalIDs[i].detectorType()<<"\t"<<totalIDs[i].lhcbID()<<endmsg; }
     }
+
+    // Only want to do this for charged particles, not neutral ones
     part->setProto( proto );
-    proto->setMuonPID( muon );
-    proto->setRichPID( rich );
-    proto->setTrack( track );
-    muon->setIDTrack( track );
-    rich->setTrack( track );
+    if(track->states().size()>0){
+      proto->setMuonPID( muon );
+      proto->setRichPID( rich );
+      proto->setTrack( track );
+      muon->setIDTrack( track );
+      rich->setTrack( track );
+    }
     if ( msgLevel(MSG::DEBUG) ) debug() << "Pieces tied together" << endmsg;
     // If proto combined DLLs not set, set them to the RICH ones
     if(proto->info( LHCb::ProtoParticle::CombDLLe,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::CombDLLe,rich->particleDeltaLL(Rich::ParticleIDType::Electron));

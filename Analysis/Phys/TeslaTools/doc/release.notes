@@ -3,6 +3,9 @@
 ! Responsible : Sean Benson
 !=============================================================================
 
+! 2015-10-2 - Sean Benson
+ - Fixes for neutral truth association
+
 !========================= TeslaTools v1r15 2015-09-23 =======================
 
 ! 2015-09-21 - Lucio Anderlini

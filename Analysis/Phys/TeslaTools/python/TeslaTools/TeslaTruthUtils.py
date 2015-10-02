@@ -42,22 +42,29 @@ def associateSequence(prefix,debug):
     seq.Members += [assoctr,assocpp]
     return seq
 
-def makeTruth(input,rel,toollist):
+def makeTruth(input,rels,toollist):
     from Configurables import TupleToolMCTruth, DaVinciSmartAssociator, P2MCPFromProtoP
     from Configurables import MCMatchObjP2MCRelator, TupleToolMCBackgroundInfo, BackgroundCategory
     MCTruth = TupleToolMCTruth() 
     MCTruth.ToolList = toollist
+    
+    #MCTruth.OutputLevel = 1
+    
     input.addTool(MCTruth )
-    rellocations=[ rel ]
     input.TupleToolMCTruth.addTool(DaVinciSmartAssociator)   
+    input.TupleToolMCTruth.DaVinciSmartAssociator.RedoNeutral=False 
     input.TupleToolMCTruth.DaVinciSmartAssociator.addTool(P2MCPFromProtoP)   
-    input.TupleToolMCTruth.DaVinciSmartAssociator.P2MCPFromProtoP.Locations = [rel]
+    input.TupleToolMCTruth.DaVinciSmartAssociator.P2MCPFromProtoP.Locations = rels
+    input.TupleToolMCTruth.addTool(MCMatchObjP2MCRelator)
+    input.TupleToolMCTruth.MCMatchObjP2MCRelator.RelTableLocations = rels
+    
     input.TupleToolMCTruth.DaVinciSmartAssociator.addTool(BackgroundCategory)   
     input.TupleToolMCTruth.DaVinciSmartAssociator.BackgroundCategory.addTool(P2MCPFromProtoP)
-    input.TupleToolMCTruth.DaVinciSmartAssociator.BackgroundCategory.P2MCPFromProtoP.Locations = [rel]
-    input.TupleToolMCTruth.addTool(MCMatchObjP2MCRelator)
-    input.TupleToolMCTruth.MCMatchObjP2MCRelator.RelTableLocations = [rel]
+    input.TupleToolMCTruth.DaVinciSmartAssociator.BackgroundCategory.vetoNeutralRedo=True
+    input.TupleToolMCTruth.DaVinciSmartAssociator.BackgroundCategory.P2MCPFromProtoP.Locations = rels
+    
     input.addTool(TupleToolMCBackgroundInfo)
     input.TupleToolMCBackgroundInfo.addTool(BackgroundCategory)
+    input.TupleToolMCBackgroundInfo.BackgroundCategory.vetoNeutralRedo=True
     input.TupleToolMCBackgroundInfo.BackgroundCategory.addTool(P2MCPFromProtoP)
-    input.TupleToolMCBackgroundInfo.BackgroundCategory.P2MCPFromProtoP.Locations=rellocations  
+    input.TupleToolMCBackgroundInfo.BackgroundCategory.P2MCPFromProtoP.Locations= rels
