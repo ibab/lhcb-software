@@ -70,6 +70,6 @@ else {
   
   echo "</form>";
 }
-echo "<br> <a href='../Task.php?task=${task}> Back to Task Record ${task} </a><br>";
+echo "<br> <a href='../Task.php?task=${task}'> Back to Task Record ${task} </a><br>";
 
 ?>

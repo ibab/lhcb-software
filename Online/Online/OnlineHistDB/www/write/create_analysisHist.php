@@ -75,7 +75,7 @@ if (!$r)
   echo "<font color=red> <B>Got errors from create_AnalysisHist.php </B></font><br>Writing aborted<br>Check that your input Histograms exist and that the histogram name is not already in use<br>\n";
 else {
   echo "Analysis Histogram created successfully<br>";
-  echo "<a href=../Histogram.php?hid=".$h["HID"]."> Go to its record </a>";
+  echo "<a href='../Histogram.php?hid=".$h["HID"].'"> Go to its record </a>";
 }
 ocifreestatement($stid);
 ocilogoff($conn);

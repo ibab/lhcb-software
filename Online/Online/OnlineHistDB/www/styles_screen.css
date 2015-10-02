@@ -1,6 +1,15 @@
+
+
+
+input[type=submit] {padding:5px 15px; background:#ccc; 
+cursor:pointer;
+-webkit-border-radius: 5px;
+border-radius: 5px; font-size: 16pt;	font-weight: bold;
+color:blue;}
+
 body {
 	font-family: Comic Sans MS,Verdana, Arial, Helvetica, sans-serif;
-	font-size: 10pt ;
+	font-size: 12pt ;
 	background-color: #E1E1E1;
 	margin-left: 10px;
 	margin-top: 10px;
@@ -227,7 +236,8 @@ a.home{
 
 /* the cell that contains the input (textbox, textarea, etc) in the form */
 .td_input_form{
-	vertical-align: top;
+    vertical-align: top;
+    color:red;
 }
 
 /* the cell that contains the hint in the form */

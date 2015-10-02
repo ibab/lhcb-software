@@ -21,20 +21,21 @@ function showhisto_display($hid,$doid,$instance)
     echo "<table align=right> <tr><td align=right>";
     if ($doid) {
       $act= $canwrite ? 'See/Update' : 'See';
-      echo "Using Special Display Options for this Histogram in this page<br>";
+      echo "Using Histogram Display Options specific to this page<br>";
       if($canwrite) {
 	echo "<center><a class='submit' href='write/delete_opt.php?doid=${doid}&hid=${hid}&name=".
-	  toGet($histo["NAME"])."&page=".toGet(${page})."'>  Delete Special Options </a></center><br>\n";
+	  toGet($histo["NAME"])."&page=".toGet(${page})."'>  Delete Specific Options </a></center><br>\n";
       }
     }
     else {
-      $act= $canwrite ? 'Specify' : 0;
-      echo "Using Histogram Default Display Options<br>";
+      $act= $canwrite ? 'Define' : 0;
+      $actd= $canwrite ? 'See/Update' : 'See';
+      echo "Using Histogram Default Display Options. <a href=Histogram.php?hid=${hid}>$actd them</a> , or<br>";
     }
     if ($act) {
       $type=$histo["HSTYPE"];
       $getp=toGet($page);
-      echo "<a href=shisto_display.php?doid=${doid}&hid=${hid}&page=${getp}&instance=${instance}&type=${type}>$act special Display Options for Histogram in this page </a>\n";
+      echo "<a href=shisto_display.php?doid=${doid}&hid=${hid}&page=${getp}&instance=${instance}&type=${type}>$act specific Display Options for this Histogram on this page </a>\n";
     }
     echo "</table>";
   }
@@ -61,7 +62,7 @@ function page_form($page,$mode) {
   if ($page=="new__") {
     echo "Folder <select name='FOLDER'>\n";
     
-    $stid = OCIParse($conn,"SELECT PAGEFOLDERNAME FROM PAGEFOLDER");
+    $stid = OCIParse($conn,"SELECT PAGEFOLDERNAME FROM PAGEFOLDER order by PAGEFOLDERNAME");
     OCIExecute($stid);
     while (OCIFetchInto($stid, $pagef, OCI_ASSOC )) 
       printf("<option class='normal' %s> %s </option>\n",($_POST["FOLDER"] == $pagef["PAGEFOLDERNAME"]) ? "selected" : "",

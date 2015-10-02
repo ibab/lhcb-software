@@ -47,7 +47,7 @@ else {
   echo "<input align=right type='submit' name='Delete_Histo' value='Confirm'>\n";
   echo "</form>\n";
 
-  echo "<hr><br> <a href='../Histogram.php?".strtolower($_POST["htype"])."=${id}> Back to Histogram $id </a><br>";
+  echo "<hr><br> <a href='../Histogram.php?".strtolower($_POST["htype"])."=${id}'> Back to Histogram $id </a><br>";
  }
 ocilogoff($conn);
 ?>

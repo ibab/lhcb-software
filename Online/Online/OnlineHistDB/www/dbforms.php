@@ -171,7 +171,7 @@ function histo_header($id,$htype,$mode)
 
   if( $canwrite) {
     $action= ($mode == "display") ? "Update header" : "Confirm";
-    echo "<table align=right><tr><td> <input align=right type='submit' name='Update_header' value='${action}'></td></tr></table>";
+    echo "<table><tr><td> <input align=right type='submit' name='Update_header' value='${action}'></td></tr></table>";
   }
   echo "</form><br>\n";
 
@@ -243,6 +243,12 @@ function histo_display($id,$htype,$mode)
   $cw_ro=  ($canwrite ? "" : "READONLY");
   $script=$_SERVER["PHP_SELF"];
   $setlist=0;
+
+  
+  if($htype == 'SHID'){
+    $_POST["PAGE"]=$histo["PAGE"];
+    $_POST["INSTANCE"]=$histo["INSTANCE"];
+  }
   if($mode == "displaylist") {
     $mode = "display";
     $setlist=1;
@@ -268,17 +274,19 @@ function histo_display($id,$htype,$mode)
     }
     else if($htype == 'SHID'){
       $MYDISPLAY=$histo["DISPLAY"];
-      $_POST["PAGE"]=$histo["PAGE"];
-      $_POST["INSTANCE"]=$histo["INSTANCE"];
     }
     get_displayoptions($MYDISPLAY);
     get_fitoptions($MYDISPLAY);
   }
+  
+  if ($mode == "update" && $htype == "SHID") 
+    $script='write/histo_display.php';
+
   echo "<form action='${script}' method='POST'>\n"; 
   if ($mode == "update") {
     echo " Defining Display Options for Histogram ID <span class=normal>$id</span>";
     if ($htype == "SHID") 
-      echo " in page ".$_POST["PAGE"];
+      echo " on page ".$_POST["PAGE"];
     echo "<br>\n";
     if($htype == "HID") {
      $hsid=HistoSet($id);
@@ -505,11 +513,11 @@ function histo_display($id,$htype,$mode)
 
   if( $canwrite) {
     $action= ($mode == "display" && $htype != "SHID") ? "Update Display Options" : "Confirm";
-    echo "<table align=right><tr><td> <input align=right type='submit' name='Update_display' value='${action}'>";
+    echo "<br><table><tr><td> <input align=right type='submit' name='Update_display' value='${action}'>";
     if ($mode == "display") {
-      echo "<td align='right'> <input type='submit' name='Remove_DO' value='Remove Display Options'>\n";
+      echo "<td> <input align='right' type='submit' name='Remove_DO' value='Remove Display Options'>\n";
     }
-    echo "</tr></table>";
+    echo "</tr></table><br>";
   }
   echo "</form>";
   
@@ -615,7 +623,7 @@ function histo_labels($id,$htype,$mode)
   
   if( $canwrite) {
     $action= ($mode == "display") ? "Update Bin Labels" : "Confirm";
-    echo "<table align=right><tr><td> <input align=right type='submit' name='Update_labels' value='${action}'></tr></table>";
+    echo "<table><tr><td> <input align=right type='submit' name='Update_labels' value='${action}'></tr></table>";
   }
   echo "</form>";
   
@@ -1016,7 +1024,7 @@ function histo_analysis($id,$htype,$mode) {
     if ($canwrite) {
       echo "<table align='center'><tr>";
       $disabled = ($mode == "display" && $_POST["a${ia}_alg"] == "Fit" && $htype == "HSID" && $_POST["NHS"]>1 ) ? "disabled" : "";
-      echo "<td> <input $disabled type='submit' name='Update_analysis' value='${action}'>\n";
+      echo "<td> <input $disabled  type='submit' name='Update_analysis' value='${action}'>\n";
       if ($mode=='display' && $showpars) {
 	$maction= $_POST["a${ia}_mask"] ? "Unmask" : "Mask";
 	echo "<td> <input type='submit' name='SetMask_Analysis' value='${maction}'>\n";
@@ -1098,7 +1106,7 @@ function task_form($taskname,$mode)
 
    if( $canwrite) {
     $action= ($mode == "display") ? "Update Task record" : "Confirm";
-    echo "<table align=right><tr><td> <input align=center type='submit' name='Update_task' value='${action}'></tr></table>";
+    echo "<table><tr><td> <input align=center type='submit' name='Update_task' value='${action}'></tr></table>";
   }
   echo "</form>";
 

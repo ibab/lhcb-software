@@ -14,7 +14,7 @@ $instance=$_GET["instance"];
 <LINK REL=STYLESHEET TYPE="text/css" HREF="styles_screen.css">
  </HEAD>
 <body>
-<H2 ALIGN="CENTER"><?php echo $act ?> Default Display Options for histogram <?php echo $hid ?> <br>in Page <?php echo $page ?></H2><hr>
+<H2 ALIGN="CENTER"><?php echo $act ?> Default Display Options for histogram <?php echo $hid ?> <br>on Page <?php echo $page ?></H2><hr>
 
 <?php
 if (!$doid) {
@@ -25,12 +25,11 @@ if (!$doid) {
 $histo["NHS"]=1; $histo["DISPLAY"]=$doid;$histo["PAGE"]=$page;
 $histo["HSTYPE"]=$type;
 $histo["INSTANCE"]=$instance;
-//echo "instance is $instance\n";
 
-histo_display($hid,"SHID","display");
+histo_display($hid,"SHID",$doid ? "display" : "update");
 
 ocilogoff($conn);
-echo "<p><a href='Viewpage.php?page=${page}'> Back to Page Record $page </a><br>";
+echo "<hr><p><a href='Viewpage.php?page=${page}'> Back to Page Record $page </a><br>";
 ?>
 
 </body>

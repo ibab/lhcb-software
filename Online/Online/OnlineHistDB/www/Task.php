@@ -1,3 +1,8 @@
+<HTML>
+ <HEAD>
+<LINK REL=STYLESHEET TYPE="text/css" HREF="styles_screen.css">
+ </HEAD>
+<body>
 <?
 include 'util.php';
 include 'dbforms.php';
@@ -22,3 +27,6 @@ else {
   echo "No task specified";
 }
 ?>
+
+</body>
+</html>

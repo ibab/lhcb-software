@@ -56,6 +56,6 @@ else {
 }
 
 ocilogoff($conn);
-echo "<br> <a href='../Task.php?task=${taskname}> Back to Task Record ${taskname} </a><br>";
+echo "<br> <a href='../Task.php?task=${taskname}'> Back to Task Record ${taskname} </a><br>";
 
 ?>

@@ -128,7 +128,7 @@ if (array_key_exists("Remove_DO",$_POST)) {
  }
 
 ocilogoff($conn);
-echo "<p><a href='../Histogram.php?".hidtype($_POST["htype"])."=${id}'> Back to Histogram Record $id </a></p>";
+echo "<hr><p><a href='../Histogram.php?".hidtype($_POST["htype"])."=${id}'> Back to Histogram Record $id </a></p>";
 
 if ($page) {
   $getp=toGet($page);

@@ -52,7 +52,7 @@ else {
 }
 
 ocilogoff($conn);
-echo "<br> <a href='../Histogram.php?".strtolower($_POST["htype"])."=${id}> Back to Histogram $id </a><br>";
+echo "<br> <a href='../Histogram.php?".strtolower($_POST["htype"])."=${id}'> Back to Histogram $id </a><br>";
 ?>
 
 </body>
