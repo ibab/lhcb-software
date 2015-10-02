@@ -3,10 +3,10 @@
 
 # Residuals
 OTResidual	-0.01	0.01	0.2	0.35
-ITResidual	-0.01	0.01	0.07	0.09
-TTResidual	-0.01	0.01	0.07	0.09
-VeloPhiResidual	-0.01	0.01	0.010	0.012
-VeloRResidual	-0.01	0.01	0.010	0.012
+ITResidual	-0.01	0.01	0.01	0.09
+TTResidual	-0.01	0.01	0.01	0.09
+VeloPhiResidual	-0.01	0.01	0.008	0.012
+VeloRResidual	-0.01	0.01	0.008	0.012
 
 # Residual Pulls
 OTresidualPull	-0.01	0.01	0.95	1.01
@@ -16,61 +16,8 @@ VeloPhiresidualPull	-0.01	0.01	0.99	1.01
 VeloRresidualPull	-0.01	0.01	0.95	1.10
 
 # Hit Resolution in Overlap regions
-ITASideTrack/IT1ASideBox/hitres  -0.2  0.2  0.1  0.2
-ITASideTrack/IT1BottomBox/hitres	-0.2	0.2	0.1	0.2
-ITASideTrack/IT1TopBox/hitres	-0.2	0.2	0.1	0.2
-ITASideTrack/IT2ASideBox/hitres  -0.2  0.2  0.1  0.2
-ITASideTrack/IT2BottomBox/hitres	-0.2	0.2	0.1	0.2
-ITASideTrack/IT2TopBox/hitres	-0.2	0.2	0.1	0.2
-ITASideTrack/IT3ASideBox/hitres  -0.2  0.2  0.1  0.2
-ITASideTrack/IT3BottomBox/hitres	-0.2	0.2	0.1	0.2
-ITASideTrack/IT3TopBox/hitres	-0.2	0.2	0.1	0.2
-ITBottomTrack/IT1ASideBox/hitres	-0.2	0.2	0.1	0.2
-ITBottomTrack/IT1BottomBox/hitres  -0.2   0.2  0.1  0.2
-ITBottomTrack/IT1CSideBox/hitres	-0.2	0.2	0.1	0.2
-ITBottomTrack/IT2ASideBox/hitres	-0.2	0.2	0.1	0.2
-ITBottomTrack/IT2BottomBox/hitres  -0.2  0.2  0.1 0.2
-ITBottomTrack/IT2CSideBox/hitres	-0.2	0.2	0.1	0.2
-ITBottomTrack/IT3ASideBox/hitres	-0.2	0.2	0.1	0.2
-ITBottomTrack/IT3BottomBox/hitres  -0.2  0.2  0.1  0.2
-ITBottomTrack/IT3CSideBox/hitres	-0.2	0.2	0.1	0.2
-ITCSideTrack/IT1CSideBox/hitres  -0.2  0.2  0.1 0.2
-ITCSideTrack/IT1BottomBox/hitres	-0.2	0.2	0.1	0.2
-ITCSideTrack/IT1TopBox/hitres	-0.2	0.2	0.1	0.2
-ITCSideTrack/IT2CSideBox/hitres  -0.2  0.2  0.1  0.2
-ITCSideTrack/IT2BottomBox/hitres	-0.2	0.2	0.1	0.2
-ITCSideTrack/IT2TopBox/hitres	-0.2	0.2	0.1	0.2
-ITCSideTrack/IT3CSideBox/hitres  -0.2  0.2  0.1  0.2
-ITCSideTrack/IT3BottomBox/hitres	-0.2	0.2	0.1	0.2
-ITCSideTrack/IT3TopBox/hitres	-0.2	0.2	0.1	0.2
-ITTopTrack/IT1ASideBox/hitres	-0.2	0.2	0.1	0.2
-ITTopTrack/IT1CSideBox/hitres	-0.2	0.2	0.1	0.2
-ITTopTrack/IT1TopBox/hitres  -0.2  0.2  0.1 0.2
-ITTopTrack/IT2ASideBox/hitres	-0.2	0.2	0.1	0.2
-ITTopTrack/IT2CSideBox/hitres	-0.2	0.2	0.1	0.2
-ITTopTrack/IT2TopBox/hitres  -0.2  0.2  0.1  0.2
-ITTopTrack/IT3ASideBox/hitres	-0.2	0.2	0.1	0.2
-ITTopTrack/IT3CSideBox/hitres	-0.2	0.2	0.1	0.2
-ITTopTrack/IT3TopBox/hitres  -0.2  0.2  0.1  0.2
-OTASideTrack/IT1ASideBox/hitres  -0.2  0.2  0.1  0.2
-OTASideTrack/IT1BottomBox/hitres -0.2  0.2  0.1  0.2
-OTASideTrack/IT1TopBox/hitres    -0.2  0.2  0.1  0.2
-OTASideTrack/IT2ASideBox/hitres  -0.2  0.2  0.1  0.2
-OTASideTrack/IT2BottomBox/hitres -0.2  0.2  0.1  0.2
-OTASideTrack/IT2TopBox/hitres    -0.2  0.2  0.1  0.2
-OTASideTrack/IT3ASideBox/hitres  -0.2  0.2  0.1  0.2
-OTASideTrack/IT3BottomBox/hitres -0.2  0.2  0.1  0.2
-OTASideTrack/IT3TopBox/hitres    -0.2  0.2  0.1  0.2
-OTCSideTrack/IT1CSideBox/hitres  -0.2  0.2  0.1  0.2
-OTCSideTrack/IT1BottomBox/hitres -0.2  0.2  0.1  0.2
-OTCSideTrack/IT1TopBox/hitres    -0.2  0.2  0.1  0.2
-OTCSideTrack/IT2CSideBox/hitres  -0.2  0.2  0.1  0.2
-OTCSideTrack/IT2BottomBox/hitres -0.2  0.2  0.1  0.2
-OTCSideTrack/IT2TopBox/hitres    -0.2  0.2  0.1  0.2
-OTCSideTrack/IT3CSideBox/hitres  -0.2  0.2  0.1  0.2
-OTCSideTrack/IT3BottomBox/hitres -0.2  0.2  0.1  0.2
-OTCSideTrack/IT3TopBox/hitres    -0.2  0.2  0.1  0.2
-
+IT.*Track/IT.*Box/hitres  -0.1  0.1  0.01  0.1
+OT.*Track/IT.*Box/hitres  -0.1  0.1  0.01  0.1
 
 # IT overlap residuals
 ASide/OverlapResidual	-0.2	0.2	0.1	0.2

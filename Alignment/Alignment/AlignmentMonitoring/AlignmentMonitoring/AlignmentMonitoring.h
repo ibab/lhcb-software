@@ -18,6 +18,8 @@ namespace Alignment
   {
     typedef enum WarningLevel
     {
+      FAILED=-1,
+      UNCHECKED=0,
       OK=1,
       WARNING=2,
       SEVERE=3
@@ -49,6 +51,7 @@ namespace Alignment
       // Fitters
       //  TFitResult GaussFit(TH1* h);
       void LoadGausFitReferences(const char* fName="");
+      std::vector<double> GetReference(const char* hname);
       void PrintWarnings();
       WarningLevel CheckFitPar(double x, double xerr, double xmin, double xmax);
       WarningLevel CheckFitPar(double x, double xmin, double xmax);

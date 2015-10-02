@@ -9,12 +9,15 @@
 #include "TFitResultPtr.h"
 #include "TH1.h"
 #include "TH2.h"
+#include "TMath.h"
+#include "TMinuit.h"
 #include "TStyle.h"
 #include "TROOT.h"
 #include "TText.h"
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp> 
+#include "boost/regex.hpp"
 // USR
 //#include "AlignmentMonitoring/Utilities.h"
 
@@ -57,6 +60,43 @@ AlignmentMonitoring::Run()
   PrintWarnings();
 }
 
+std::vector<double>
+AlignmentMonitoring::GetReference(const char* hname)
+{
+  std::vector<double> refs;
+  const std::string s(hname);
+  // first look for exact name
+  for (auto rng : m_mapGausFitReference) {
+    if (rng.first == hname) {
+      refs = rng.second;
+	if (m_verbose) {
+	  std::cout<< "reference: "<< hname << " \tfound: " << rng.first << " (" ;
+	  for (auto ival : rng.second) std::cout << ival << ",";
+	  std::cout<< ")\n";
+	}
+    }
+  }
+  if (refs.size() < 1) // if not found, look for regular expression
+    for (auto rng : m_mapGausFitReference) {
+      boost::regex rgx(rng.first);
+      if (boost::regex_search(s.begin(), s.end(), rgx)) {
+	refs = rng.second;
+	if (m_verbose) {
+	  std::cout<< "reference: "<< hname << " \tfound: " << rng.first << " (" ;
+	  for (auto ival : rng.second) std::cout << ival << ",";
+	  std::cout<< ")\n";
+	}
+	break;
+      }
+    }
+  // still not found
+  if (refs.size() < 1) {
+    std::cout << "References for histogram " << hname << " not found. Returning empty vector.";
+    refs = {};
+  }
+  return refs;
+}
+
 void AlignmentMonitoring::CheckResiduals(){
 
   std::map<std::string,TH1*> resHists;
@@ -87,10 +127,9 @@ void AlignmentMonitoring::CheckResiduals(){
     if(!h.second->GetEntries()) continue;
     fitres = h.second->Fit("gaus",m_verbose ? "S" : "SQ");
     if(fitres->Chi2()<1e-6 or fitres->Ndf()==0) continue;
-    WarningLevel wl_mean  = CheckFitPar(fitres->Parameter(1),fitres->ParError(1),
-                                       m_mapGausFitReference[h.first][0], m_mapGausFitReference[h.first][1]);
-    WarningLevel wl_width = CheckFitPar(fitres->Parameter(2),fitres->ParError(2),
-                                        m_mapGausFitReference[h.first][2], m_mapGausFitReference[h.first][3]);
+    std::vector<double> refs = GetReference(h.first.c_str());
+    WarningLevel wl_mean  = CheckFitPar(fitres->Parameter(1),fitres->ParError(1), refs[0], refs[1]);
+    WarningLevel wl_width = CheckFitPar(fitres->Parameter(2),fitres->ParError(2), refs[2], refs[3]);
     m_mapWarnings[h.first]= wl_mean > wl_width ? wl_mean : wl_width;
   }
   if(m_verbose) m_pages["Residuals"]->Print( (m_outputDirectory+"/"+"Residuals.pdf").c_str() );
@@ -128,12 +167,9 @@ void AlignmentMonitoring::CheckITOverlapResiduals(){
     if( !h.second->GetEntries() ) continue;
     fitres = h.second->Fit("gaus", m_verbose ? "S":"SQ");
     if(fitres->Chi2()<1e-6 or fitres->Ndf()==0) continue;
-    WarningLevel wl_mean = CheckFitPar(fitres->Parameter(1),fitres->ParError(1),
-                                       m_mapGausFitReference[h.first][0],
-                                       m_mapGausFitReference[h.first][1]);
-    WarningLevel wl_width= CheckFitPar(fitres->Parameter(2),fitres->ParError(2),
-                                       m_mapGausFitReference[h.first][2],
-                                       m_mapGausFitReference[h.first][3]);
+    std::vector<double> refs = GetReference(h.first.c_str());
+    WarningLevel wl_mean = CheckFitPar(fitres->Parameter(1),fitres->ParError(1), refs[0], refs[1]);
+    WarningLevel wl_width= CheckFitPar(fitres->Parameter(2),fitres->ParError(2), refs[2], refs[3]);
     m_mapWarnings[h.first] = wl_mean > wl_width ? wl_mean : wl_width;
   }
   if(m_verbose) m_pages["ITOverlapResiduals"]->Print( (m_outputDirectory+"/"+"ITOverlapResiduals.pdf").c_str() );
@@ -169,9 +205,8 @@ void AlignmentMonitoring::CheckVeloTMatchKickPosition(){
       fitres = h.second->Fit("pol0",m_verbose ? "S" : "SQ");
       if(fitres->Chi2()<1e-6 or fitres->Ndf()==0) continue;
       double chi2dof = fitres->Chi2()/fitres->Ndf();
-      m_mapWarnings[h.first] = CheckFitPar(chi2dof,
-                                       m_mapGausFitReference[h.first][0],
-                                       m_mapGausFitReference[h.first][1]);
+      std::vector<double> refs = GetReference(h.first.c_str());
+      m_mapWarnings[h.first] = CheckFitPar(chi2dof, refs[0], refs[1]);
     }else{
       TF1 *ovf = new TF1("ovf","[0]*(exp(-0.5*((x-[1])/[2])**2)+[4]*exp(-0.5*((x-[1])/[3])**2))+[5]",-20,20);
       ovf->SetParName(0,"Constant");
@@ -186,9 +221,8 @@ void AlignmentMonitoring::CheckVeloTMatchKickPosition(){
       ovf->SetParName(5,"B");
       fitres = h.second->Fit(ovf,m_verbose ? "S" : "SQ"); // need to modify this
       if(fitres->Chi2()<1e-6 or fitres->Ndf()==0) continue;
-      WarningLevel wl_mean = CheckFitPar(fitres->Parameter(1),fitres->ParError(1),
-                                       m_mapGausFitReference[h.first][0]-m_mapGausFitReference[h.first][1],
-                                       m_mapGausFitReference[h.first][0]+m_mapGausFitReference[h.first][1]);
+      std::vector<double> refs = GetReference(h.first.c_str());
+      WarningLevel wl_mean = CheckFitPar(fitres->Parameter(1),fitres->ParError(1), refs[0]-refs[1], refs[0]+refs[1]);
       double sigma1 = fitres->Parameter(2);
       double sigma2 = fitres->Parameter(3);
       double   frac = fitres->Parameter(4);
@@ -196,9 +230,7 @@ void AlignmentMonitoring::CheckVeloTMatchKickPosition(){
       double ssigma2 = fitres->ParError(3);
       double sigma = sigma1*frac+sigma2*(1-frac);
       double ssigma= sqrt(ssigma1*ssigma1*frac*frac+ssigma2*ssigma2*(1-frac)*(1-frac));
-      WarningLevel wl_width= CheckFitPar(sigma,ssigma,
-                                       m_mapGausFitReference[h.first][2],
-                                       m_mapGausFitReference[h.first][3]);
+      WarningLevel wl_width= CheckFitPar(sigma,ssigma,refs[2],refs[3]);
       m_mapWarnings[h.first] = wl_mean > wl_width ? wl_mean : wl_width;
     }
   }
@@ -249,18 +281,14 @@ void AlignmentMonitoring::CheckVeloTTandTMatchCurvature(){
       fitres = h.second->Fit("pol0",m_verbose ? "S" : "SQ");
       if(fitres->Chi2()<1e-6 or fitres->Ndf()==0) continue;
       double chi2dof = fitres->Chi2()/fitres->Ndf();
-      m_mapWarnings[h.first] = CheckFitPar(chi2dof,
-                                       m_mapGausFitReference[h.first][0],
-                                       m_mapGausFitReference[h.first][1]);
+      std::vector<double> refs = GetReference(h.first.c_str());
+      m_mapWarnings[h.first] = CheckFitPar(chi2dof,refs[0],refs[1]);
     }else{
       fitres = h.second->Fit(model,m_verbose ? "S" : "SQ"); // need to modify this
       if(fitres->Chi2()<1e-6 or fitres->Ndf()==0) continue;
-      WarningLevel wl_mean = CheckFitPar(fitres->Parameter(1),fitres->ParError(1),
-                                         m_mapGausFitReference[h.first][0]-m_mapGausFitReference[h.first][1],
-                                         m_mapGausFitReference[h.first][0]+m_mapGausFitReference[h.first][1]);
-      WarningLevel wl_width= CheckFitPar(fitres->Parameter(2),fitres->ParError(2),
-                                         m_mapGausFitReference[h.first][2]-m_mapGausFitReference[h.first][3],
-                                         m_mapGausFitReference[h.first][2]+m_mapGausFitReference[h.first][3]);
+      std::vector<double> refs = GetReference(h.first.c_str());
+      WarningLevel wl_mean = CheckFitPar(fitres->Parameter(1),fitres->ParError(1), refs[0]-refs[1], refs[0]+refs[1]);
+      WarningLevel wl_width= CheckFitPar(fitres->Parameter(2),fitres->ParError(2), refs[2]-refs[3], refs[2]+refs[3]);
       m_mapWarnings[h.first] = wl_mean > wl_width ? wl_mean : wl_width;
     }
   }
@@ -327,18 +355,14 @@ void AlignmentMonitoring::CheckVeloTTandTMatch(){
       fitres = h.second->Fit("pol0", m_verbose?"S":"SQ");
       if(fitres->Chi2()<1e-6 or fitres->Ndf()==0) continue;
       double chi2dof = fitres->Chi2()/fitres->Ndf();
-      m_mapWarnings[h.first] = CheckFitPar(chi2dof,
-                                       m_mapGausFitReference[h.first][0],
-                                       m_mapGausFitReference[h.first][1]);
+      std::vector<double> refs = GetReference(h.first.c_str());
+      m_mapWarnings[h.first] = CheckFitPar(chi2dof,refs[0],refs[1]);
     }else{
       fitres = h.second->Fit(model,m_verbose ? "S" : "SQ"); // need to modify this
       if(fitres->Chi2()<1e-6 or fitres->Ndf()==0) continue;
-      WarningLevel wl_mean = CheckFitPar(fitres->Parameter(1),fitres->ParError(1),
-                                         m_mapGausFitReference[h.first][0],
-                                         m_mapGausFitReference[h.first][1]);
-      WarningLevel wl_width= CheckFitPar(fitres->Parameter(2),fitres->ParError(2),
-                                         m_mapGausFitReference[h.first][2],
-                                         m_mapGausFitReference[h.first][3]);
+      std::vector<double> refs = GetReference(h.first.c_str());
+      WarningLevel wl_mean = CheckFitPar(fitres->Parameter(1),fitres->ParError(1),refs[0],refs[1]);
+      WarningLevel wl_width= CheckFitPar(fitres->Parameter(2),fitres->ParError(2),refs[2],refs[3]);
       m_mapWarnings[h.first] = wl_mean > wl_width ? wl_mean : wl_width;
     }
   }
@@ -377,12 +401,9 @@ void AlignmentMonitoring::CheckTTResidualsInOverlapRegion(){
     if(!h.second->GetEntries()) continue;
     fitres = h.second->Fit("gaus", m_verbose ? "S":"SQ");
     if(fitres->Chi2()<1e-6 or fitres->Ndf()==0) continue;
-    WarningLevel wl_mean = CheckFitPar(fitres->Parameter(1),fitres->ParError(1),
-                                       m_mapGausFitReference[h.first][0],
-                                       m_mapGausFitReference[h.first][1]);
-    WarningLevel wl_width= CheckFitPar(fitres->Parameter(2),fitres->ParError(2),
-                                       m_mapGausFitReference[h.first][2],
-                                       m_mapGausFitReference[h.first][3]);
+    std::vector<double> refs = GetReference(h.first.c_str());
+    WarningLevel wl_mean = CheckFitPar(fitres->Parameter(1),fitres->ParError(1),refs[0],refs[1]);
+    WarningLevel wl_width= CheckFitPar(fitres->Parameter(2),fitres->ParError(2),refs[2],refs[3]);
     m_mapWarnings[h.first] = wl_mean > wl_width ? wl_mean : wl_width;
   }
   if(m_verbose) m_pages["TTResidualsInOverlapRegion"]->Print( (m_outputDirectory+"/"+"TTResidualsInOverlapRegion.pdf").c_str() );
@@ -420,12 +441,9 @@ void AlignmentMonitoring::CheckTTOverlapResiduals(){
     if( !h.second->GetEntries() ) continue;
     fitres = h.second->Fit("gaus", m_verbose ? "S":"SQ");
     if(fitres->Chi2()<1e-6 or fitres->Ndf()==0) continue;
-    WarningLevel wl_mean = CheckFitPar(fitres->Parameter(1),fitres->ParError(1),
-                                       m_mapGausFitReference[h.first][0],
-                                       m_mapGausFitReference[h.first][1]);
-    WarningLevel wl_width= CheckFitPar(fitres->Parameter(2),fitres->ParError(2),
-                                       m_mapGausFitReference[h.first][2],
-                                       m_mapGausFitReference[h.first][3]);
+    std::vector<double> refs = GetReference(h.first.c_str());
+    WarningLevel wl_mean = CheckFitPar(fitres->Parameter(1),fitres->ParError(1),refs[0],refs[1]);
+    WarningLevel wl_width= CheckFitPar(fitres->Parameter(2),fitres->ParError(2),refs[2],refs[3]);
     m_mapWarnings[h.first] = wl_mean > wl_width ? wl_mean : wl_width;
   }
   if(m_verbose) m_pages["TTOverlapResiduals"]->Print((m_outputDirectory+"/"+"TTOverlapResiduals.pdf").c_str());
@@ -480,17 +498,30 @@ void AlignmentMonitoring::CheckITOverlaps(){
   ovf->SetParameter(3,0);
   for (auto h:ovHists) {
     if (m_verbose) std::cout << h.first << ":\n";
-    if( m_mapWarnings.find(h.first)==m_mapWarnings.end() ) m_mapWarnings[h.first] = WarningLevel::SEVERE; 
+    if( m_mapWarnings.find(h.first)==m_mapWarnings.end() ) m_mapWarnings[h.first] = WarningLevel::UNCHECKED; 
     m_insertOrder.push_back(h.first); 
-    if( !h.second->GetEntries() ) continue;
+    if( !h.second->GetEntries() ) { std::cout << "Skipping " << h.first << ": empty histogram!\n"; continue; }
     ovf->SetParameter(0,h.second->GetEntries());
     if(h.first.find("OT")!=std::string::npos) ovf->SetParameter(2,0.25);
     fitres = h.second->Fit(ovf,m_verbose ? "S" : "SQ"); // need to modify this
-    if(fitres->IsEmpty()) continue;
-    if(fitres->Chi2()<1e-6 or fitres->Ndf()==0) continue;
-    WarningLevel wl_mean = CheckFitPar(fitres->Parameter(1),fitres->ParError(1), m_mapGausFitReference[h.first][0], m_mapGausFitReference[h.first][1]);
-    WarningLevel wl_width = CheckFitPar(fitres->Parameter(2),fitres->ParError(2), m_mapGausFitReference[h.first][2], m_mapGausFitReference[h.first][3]);
+    if(fitres->IsEmpty()) { std::cout << "Skipping " << h.first << ": empty fit results\n"; continue; }
+    if(fitres->Chi2()<1e-6 || fitres->Ndf()==0)  { std::cout << "Skipping " << h.first << ": too small chi2\n"; continue; }
+    if(!fitres->Status() && fitres->CovMatrixStatus() != 3) {// dont check parameters when the fit failed
+      m_mapWarnings[h.first] = WarningLevel::FAILED; 
+      continue;
+    }
+    m_mapWarnings[h.first] = WarningLevel::SEVERE; 
+    std::vector<double> refs = GetReference(h.first.c_str());
+    WarningLevel wl_mean = CheckFitPar(fitres->Parameter(1),fitres->ParError(1), refs[0], refs[1]);
+    WarningLevel wl_width = CheckFitPar(fitres->Parameter(2),fitres->ParError(2), refs[2], refs[3]);
     m_mapWarnings[h.first] = wl_mean > wl_width ? wl_mean : wl_width;
+    // check whether the fit is relevant
+    if (m_verbose) {
+      double ns = fitres->Parameter(0) * TMath::Sqrt( 2. * TMath::Pi() ) * fitres->Parameter(2);
+      double nb = fitres->Parameter(3) * h.second->Integral();
+      std::cout << "ns = " << ns << "\tnb = " << nb << "\tf = " << ns/nb << std::endl;
+      std::cout << "fit status = " << fitres->Status() << "\t cov = "<< fitres->CovMatrixStatus()  << std::endl;
+    }
   }
   if (m_verbose) {
     for (auto trk: tracks)
@@ -521,11 +552,11 @@ void AlignmentMonitoring::CheckITOverlaps(){
   gStyle->SetOptStat(0); 
   gStyle->SetOptFit(0); 
   gROOT->ForceStyle(); 
-  Int_t colors[] = {0, 3, 5, 2}; // #colors >= #levels - 1
+  Int_t colors[] = {6, 0, 3, 5, 2}; // #colors >= #levels - 1
   gStyle->SetPalette((sizeof(colors)/sizeof(Int_t)), colors);
-  Double_t levels[] = {0, 1, 2, 3};
+  Double_t levels[] = {-1, 0, 1, 2, 3};
   int i = 1;
-  std::map<int,std::string> warnings({{0,R"()"}, {1,R"(OK)"}, {2,R"(WARNING)"}, {3,R"(SEVERE)"} });
+  std::map<int,std::string> warnings({{-1,R"(FAILED)"}, {0,R"()"}, {1,R"(OK)"}, {2,R"(WARNING)"}, {3,R"(SEVERE)"} });
   TText *text = new TText();
   text->SetTextSize(0.035);
   text->SetTextAngle(0);
@@ -585,14 +616,11 @@ void AlignmentMonitoring::CheckD0(){
     if( h.first=="massPositiveY" || h.first=="massNegativeY" ){
       mass_diff[h.first] = fitres;
     }else{
-      WarningLevel wl_mean = CheckFitPar(fitres->Parameter(1),fitres->ParError(1),
-                                     m_mapGausFitReference[h.first][0]-m_mapGausFitReference[h.first][1],
-                                     m_mapGausFitReference[h.first][0]+m_mapGausFitReference[h.first][1]);
+      std::vector<double> refs = GetReference(h.first.c_str());
+      WarningLevel wl_mean = CheckFitPar(fitres->Parameter(1),fitres->ParError(1),refs[0]-refs[1],refs[0]+refs[1]);
       m_mapWarnings[h.first] = wl_mean;
       if( h.first.find("pull")!=string::npos ){
-        WarningLevel wl_width= CheckFitPar(fitres->Parameter(2),fitres->ParError(2),
-                                     m_mapGausFitReference[h.first][2]-m_mapGausFitReference[h.first][3],
-                                     m_mapGausFitReference[h.first][2]+m_mapGausFitReference[h.first][3]);
+        WarningLevel wl_width= CheckFitPar(fitres->Parameter(2),fitres->ParError(2),refs[2]-refs[3],refs[2]+refs[3]);
         m_mapWarnings[h.first] = wl_mean > wl_width ? wl_mean : wl_width;
       }
     }//else
@@ -600,10 +628,9 @@ void AlignmentMonitoring::CheckD0(){
   m_mapWarnings["D0MassDifference"] = WarningLevel::SEVERE; 
   m_insertOrder.push_back("D0MassDifference"); 
   double deltaM = mass_diff["massPositiveY"]->Parameter(1) - mass_diff["massNegativeY"]->Parameter(1);
-  double sigmaDM= std::sqrt(mass_diff["massPositiveY"]->Parameter(2)*mass_diff["massPositiveY"]->Parameter(2)+mass_diff["massNegativeY"]->Parameter(2)*mass_diff["massNegativeY"]->Parameter(2)); 
-  WarningLevel wl_mean = CheckFitPar(deltaM, sigmaDM,
-                                   m_mapGausFitReference["D0MassDifference"][0]-m_mapGausFitReference["D0MassDifference"][1],
-                                   m_mapGausFitReference["D0MassDifference"][0]+m_mapGausFitReference["D0MassDifference"][1]);
+  double sigmaDM= std::sqrt(mass_diff["massPositiveY"]->Parameter(2)*mass_diff["massPositiveY"]->Parameter(2)+mass_diff["massNegativeY"]->Parameter(2)*mass_diff["massNegativeY"]->Parameter(2));
+  std::vector<double> refs = GetReference("D0MassDifference"); 
+  WarningLevel wl_mean = CheckFitPar(deltaM, sigmaDM,refs[0]-refs[1],refs[0]+refs[1]);
   m_mapWarnings["D0MassDifference"] = wl_mean;
   if(m_verbose) m_pages["AlignD02KPiMonitor"]->Print( (m_outputDirectory+"/"+"AlignD02KPiMonitor.pdf").c_str() );
   return;
@@ -619,6 +646,8 @@ AlignmentMonitoring::PrintWarnings()
     if(value==WarningLevel::OK) warning_string = "\033[1;32m OK \033[0m";
     else if(value==WarningLevel::WARNING) warning_string = "\033[1;33m WARNING \033[0m";
     else if(value==WarningLevel::SEVERE) warning_string = "\033[1;31m SEVERE \033[0m";
+    else if(value==WarningLevel::UNCHECKED) warning_string = "\033[1;36m UNCHECKED \033[0m";
+    else if(value==WarningLevel::FAILED) warning_string = "\033[1;35m FAILED \033[0m";
     else warning_string = "NOT EXIST";
     std::cout << name << ": " << warning_string << std::endl;
 
