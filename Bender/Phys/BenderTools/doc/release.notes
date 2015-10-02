@@ -5,6 +5,10 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2015-10-02 - Vanya Belyaev
+ - Fill&TisTos: 
+   avoid double finalization 
+
 ! 2015-09-02 - Vanya Belyaev
  - fix bug in FakeH.py 
 

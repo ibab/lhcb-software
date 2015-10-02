@@ -729,6 +729,7 @@ def tistos_finalize ( self , triggers = None ) :
     """    
     ## finalize only initialized stuff: 
     if not self.tistos_initialized : return SUCCESS
+    if     self.tistos_finalized   : return SUCCESS
     
     if not triggers and hasattr ( self , 'triggers' ) : triggers = self.triggers
 
@@ -754,6 +755,7 @@ def tistos_finalize ( self , triggers = None ) :
         if not parts :
             self.Warning ( 'No PARTICLES are defined for Tis/Tos' , SUCCESS )
 
+    self.tistos_finalized  = True 
     return SUCCESS 
 
 # =============================================================================
@@ -908,6 +910,7 @@ LoKi.Algo.tistos_initialize  = tistos_initialize
 LoKi.Algo.tistos_finalize    = tistos_finalize
 ## class attribute 
 LoKi.Algo.tistos_initialized = False ## class attribute 
+LoKi.Algo.tistos_finalized   = False ## class attribute 
 # =============================================================================
 # make report 
 # =============================================================================

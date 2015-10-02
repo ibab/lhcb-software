@@ -156,6 +156,9 @@ def fill_finalize   ( self ) :
     """
     Finalie the internal machinery 
     """
+    if not self.fill_initialized : return SUCCESS
+    if     self.fill_finalized   : return SUCCESS
+    
     del self._pions           # = None 
     del self._kaons           # = None 
     del self._protons         # = None 
@@ -214,6 +217,8 @@ def fill_finalize   ( self ) :
     #
     del self._delta_m2        # = None
     del self._masses          # = None 
+    #
+    self.fill_finalized = True
     #
     return SUCCESS 
 
@@ -808,6 +813,7 @@ LoKi.Algo.fill_finalize    = fill_finalize
 
 ## class attribute 
 LoKi.Algo.fill_initialized = False ## class attribute 
+LoKi.Algo.fill_finalized   = False ## class attribute 
 
 # =============================================================================
 ## insert "fill" finalization into the global finalization
