@@ -140,7 +140,10 @@ void HltL0GlobalMonitor::monitorL0DU( const LHCb::L0DUReport* l0du )
         for ( const auto& i : channels ) {
             auto id = i.second->id();
             labels.emplace_back( id, i.first );
-            m_l0Counters[id] = &(counter(string{"L0:"} + i.first));
+            auto counterName = string{"L0:"} + i.first;
+            auto count = &counter(counterName);
+            declareInfo( string{"COUNTER_TO_RATE["} + counterName + string{"]"}, *count, counterName );
+            m_l0Counters[id] = count;
         }
         labels.emplace_back( m_nboflabels, "B1gas * ODIN BE" );
         labels.emplace_back( m_nboflabels, "B2gas * ODIN EB" );

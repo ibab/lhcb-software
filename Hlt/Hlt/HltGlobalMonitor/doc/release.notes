@@ -5,6 +5,9 @@
 !Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
+! 2015-10-20 - Matthew Kenzie
+ - Fix counters for the L0 channels (fix in declareInfo() )
+
 ! 2015-09-09 - Roel Aaij
  - Add counters for all the L0 channels, to be used to create rate plots in the
    presenter.
