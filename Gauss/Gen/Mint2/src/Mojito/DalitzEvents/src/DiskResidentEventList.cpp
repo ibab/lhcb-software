@@ -211,16 +211,36 @@ DiskResidentEventList::~DiskResidentEventList(){
 }
 
 bool DiskResidentEventList::openFile(){
+  bool dbThis=true;
+  if(dbThis){
+    cout << "Hello from DiskResidentEventList::openFile()" << endl;
+    cout << " calling: TFile(" 
+	 << _fname << ", " << _opt << ", " << _fname << ")"
+	 << endl;
+  }
   if(0 == _f) _f = new TFile(_fname.c_str(), _opt.c_str(), _fname.c_str());
+  if(dbThis){
+    cout << " got _f = " << _f << endl;
+    cout << " _f->ls() " << endl;
+    _f->ls();
+    cout << "?" << endl;
+  }
+  
   if(0 == _f) return makeNewFile();
   if(_f->IsZombie()) return makeNewFile();
   if(! _f->IsOpen()) return makeNewFile();
-  if(! _f->IsWritable()) return makeNewFile();
+  if(! _f->IsWritable()) {
+    //return makeNewFile();
+    cout << "Warning in DiskResidentEventList: file "
+	 << _fname << " not writable!"
+	 << endl;
+  }
+
 //  if (1 ==1) return makeNewFile();
   return true;
 }
 bool DiskResidentEventList::fromFile(){
-  bool dbThis=false;
+  bool dbThis=true;
   if(dbThis) cout << "DiskResidentEventList::fromFile() called" << endl;
   if(0 == _f) makeNewFile();
   if(_f->IsZombie()){
@@ -229,8 +249,12 @@ bool DiskResidentEventList::fromFile(){
     makeNewFile();
   }
   if(dbThis) cout << " opened file" << endl;
+  if(dbThis) _f->ls(); cout << " that's in it" << endl;
   _f->cd();
-  if(dbThis) cout << " cd'ed to file " << endl;
+  if(dbThis){
+    cout << " cd'ed to file " << endl;
+    cout << " now calling " <<  "_f->Get(" << cName() << ")" << endl;
+  }
   _ntp = (TNtupleD*) _f->Get(cName().c_str());
   if(dbThis) cout << " got ntuple : " << _ntp << endl;
   if(0 == _ntp){

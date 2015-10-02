@@ -5,27 +5,35 @@
 using namespace std;
 using namespace MINT;
 
-FromFileGenerator::FromFileGenerator(const std::string& fname)
+FromFileGenerator::FromFileGenerator(const std::string& fname
+				     , const std::string& ntpName)
   : BaseGenerator()
   , _opt("READ")
-  , _dL(fname,1,"DalitzEventList")
+  , _dL(fname,1,ntpName)
   , _listExhausted(false)
   , _listIndex(0)
   , _gen(0)
 {
-	  std::cout << "Got Intergrator events " << _dL.size() << std::endl;
+  cout << "FromFileGenerator::FromFileGenerator(" << fname << ")" << endl;
+  std::cout << "Got Intergrator events " << _dL.size() << std::endl;
 }
 FromFileGenerator::FromFileGenerator(const std::string& fname
 				     , IEventGenerator<IDalitzEvent>* 
-				                    addThisWhenFileEmpty
-				     , const std::string& opt)
+				     addThisWhenFileEmpty
+				     , const std::string& opt
+				     , const std::string& ntpName
+				     )
   : BaseGenerator()
   , _opt(  ("" != opt ? opt : ( 0 == addThisWhenFileEmpty ? "READ" : "UPDATE") ) ) 
-  , _dL(fname, 1, "DalitzEventList", _opt)
+  , _dL(fname, 1, ntpName, _opt)
   , _listExhausted(false)
   , _listIndex(0)
   , _gen(addThisWhenFileEmpty)
 {
+  cout << " FromFileGenerator::FromFileGenerator(" << fname
+       << ", " << addThisWhenFileEmpty
+       << ", " << opt << ")" << endl;
+
   std::cout << "Got Intergrator events " << _dL.size() << std::endl;
 }
 

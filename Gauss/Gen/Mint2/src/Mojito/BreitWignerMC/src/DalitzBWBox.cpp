@@ -161,7 +161,7 @@ counted_ptr<DalitzEvent> DalitzBWBox::makeEventForOwner(int& nTries){
 }
 
 counted_ptr<DalitzEvent> DalitzBWBox::tryNewEvent(){
-  bool dbThis = false;
+  bool dbThis=false;
   counted_ptr<DalitzEvent> evt( area().tryEventForOwner() );
   if(dbThis && 0 != evt) {
     cout << " DalitzBWBox::tryNewEvent() got event with weight " 

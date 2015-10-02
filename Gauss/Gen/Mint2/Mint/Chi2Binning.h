@@ -5,6 +5,7 @@
 #include "Mint/Chi2BoxSet.h"
 #include "Mint/IFastAmplitudeIntegrable.h"
 
+#include "Mint/IMinimalEventList.h"
 #include "Mint/IEventList.h"
 #include "Mint/IDalitzEvent.h"
 #include "Mint/DalitzEvent.h"
@@ -33,22 +34,22 @@ class Chi2Binning{
 
   void setHistoColours();
 
-  Chi2BoxSet splitBoxes(MINT::IEventList<DalitzEvent>* events // for backward
+  Chi2BoxSet splitBoxes(MINT::IMinimalEventList<DalitzEvent>* events // for backward
 			, int maxPerBin          // compatibility
 			) const;  // will be removed in future.
-  Chi2BoxSet splitBoxes(MINT::IEventList<DalitzEvent>& events
+  Chi2BoxSet splitBoxes(MINT::IMinimalEventList<DalitzEvent>& events
 			 , int maxPerBin
 			 ) const;
   int mergeBoxes(Chi2BoxSet& boxes, int minPerBin);
 
   void resetEventCounts();
-  void fillData(MINT::IEventList<DalitzEvent>& data);
-  void fillData(MINT::IEventList<DalitzEvent>* dataPtr){ 
+  void fillData(MINT::IMinimalEventList<DalitzEvent>& data);
+  void fillData(MINT::IMinimalEventList<DalitzEvent>* dataPtr){ 
       // for backward compatibility
     if(0 != dataPtr) fillData(*dataPtr);// will be removed in future
   }
-  void fillMC(MINT::IEventList<DalitzEvent>& mc, IDalitzPdf* pdf);
-  void fillMC(MINT::IEventList<DalitzEvent>* mcPtr, IDalitzPdf* pdf){
+  void fillMC(MINT::IMinimalEventList<DalitzEvent>& mc, IDalitzPdf* pdf);
+  void fillMC(MINT::IMinimalEventList<DalitzEvent>* mcPtr, IDalitzPdf* pdf){
     if(0 != mcPtr) fillMC(*mcPtr, pdf);
   }
   double normFactor() const;
@@ -56,13 +57,13 @@ class Chi2Binning{
   void sortByChi2();
  public:
   Chi2Binning();
-  int createBinning(MINT::IEventList<DalitzEvent>* events
+  int createBinning(MINT::IMinimalEventList<DalitzEvent>* events
 		    , int minPerBin = 10
 		    , int maxPerBin = 100
 		    );
 
-  double setEventsAndPdf(MINT::IEventList<DalitzEvent>* data
-			 , MINT::IEventList<DalitzEvent>* mc
+  double setEventsAndPdf(MINT::IMinimalEventList<DalitzEvent>* data
+			 , MINT::IMinimalEventList<DalitzEvent>* mc
 			 , IDalitzPdf* pdf
 			 , IFastAmplitudeIntegrable* fas=0// usually FitAmpSum*
 			 );

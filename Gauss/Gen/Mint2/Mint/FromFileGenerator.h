@@ -27,11 +27,13 @@ class FromFileGenerator
 
   virtual MINT::counted_ptr<IDalitzEvent> newEventFromGenerator();
  public:
-  FromFileGenerator(const std::string& fname = "integrationEvents.root");
+  FromFileGenerator(const std::string& fname = "integrationEvents.root"
+		    , const std::string& ntpName = "DalitzEventList");
 
   FromFileGenerator(const std::string& fname
 		    , MINT::IEventGenerator<IDalitzEvent>* addThisWhenFileEmpty
 		    , const std::string& opt=""
+		    , const std::string& ntpName = "DalitzEventList"
 		    );
   // option "" defaults to "UPDATE" if addThisWhenFileEmpty != 0 and
   // "READ" otherwise (this sets the option with which the root file

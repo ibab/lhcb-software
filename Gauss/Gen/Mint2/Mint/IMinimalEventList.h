@@ -7,6 +7,12 @@
 
 /*
    looks like array
+   Covers both, IEventList and DiskResidentEventList
+   Inefficient in so far as getEvent passes copies, not reference
+   but that's the price to pay for allowing DiskResidentEventList 
+   (as well as IEventList, which can pass references).
+   So only use when you really need this flexibility.
+   For time-critical loops, insist on IEventList where possible.
 */
 
 namespace MINT{
