@@ -130,6 +130,7 @@ private:
   double m_lowMassCut ; /// cut applied to low-mass background
   double m_override; //see .cpp file for explanation
   double m_caloWeight;
+  bool m_vetoN;
   double m_minWeight; //dummy sorting variable
   double m_rescut; //A cut on the minimum lifetime for a mother not to be
   //considered a short-lived resonance

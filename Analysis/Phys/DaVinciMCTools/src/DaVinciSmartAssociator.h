@@ -63,7 +63,7 @@ private:
   IBackgroundCategory* m_bkg; //for composites
   ICalo2MCTool* m_calo2MC; // for neutral calorimetric
   double m_caloWeight;
-
+  bool m_redoNeutral;
 };
 
 #endif // DAVINCISMARTASSOCIATOR_H

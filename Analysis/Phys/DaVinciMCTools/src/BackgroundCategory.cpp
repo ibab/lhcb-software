@@ -57,6 +57,7 @@ BackgroundCategory::BackgroundCategory( const std::string& type,
   declareProperty("Calo2MCWeight", m_caloWeight=0.5); // equivalent of m_ovverride for neutral calorimetric objects
   declareProperty("ResonanceCut", m_rescut = 10.e-6);
   declareProperty("MCminWeight", m_minWeight = 0.);
+  declareProperty("vetoNeutralRedo", m_vetoN = false);
   declareProperty("IgnoreQuarks",m_ignoreQuarks = true);  
 }
 
@@ -1312,7 +1313,7 @@ BackgroundCategory::associate_particles_in_decay(const ParticleVector & particle
                                           << endmsg;
 
     // ======  pure neutral calorimetric *basic* particle : gamma & pi0-merged (pi0-resolved is treated as a composite particle)
-    if( (*iP)->isBasicParticle() && m_calo2MC->isPureNeutralCalo( *iP ) ){
+    if( (*iP)->isBasicParticle() && m_calo2MC->isPureNeutralCalo( *iP ) && !m_vetoN){
       if(NULL == m_calo2MC)
         Exception("Something failed when making the calo->MC associators. Bye!");
       // associating neutral is done here :
@@ -1347,7 +1348,7 @@ BackgroundCategory::associate_particles_in_decay(const ParticleVector & particle
                                             << endmsg;
 
       // ===== gamma->ee
-      if ( (*iP)->particleID().pid() == 22 ) {
+      if ( (*iP)->particleID().pid() == 22 && !m_vetoN) {
         const LHCb::MCParticle* mm = this->origin(*iP);
         if(mm)mcPartRange.push_back( MCAssociation(mm,1.) );
         associating_a_neutral = true;

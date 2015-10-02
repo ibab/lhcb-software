@@ -30,6 +30,7 @@ DaVinciSmartAssociator::DaVinciSmartAssociator( const std::string& type,
     m_calo2MC             ( NULL )
 {
   declareProperty("Calo2MCWeight",m_caloWeight=0.5);
+  declareProperty("RedoNeutral",m_redoNeutral=true);
 }
 
 //=============================================================================
@@ -59,7 +60,7 @@ DaVinciSmartAssociator::relatedMCPsImpl(const LHCb::Particle* particle,
 
   // Now we get the association result based on the particle type
 
-  if ( m_calo2MC->isPureNeutralCalo( particle ) )
+  if ( m_calo2MC->isPureNeutralCalo( particle ) && m_redoNeutral)
   {
     // pure neutral calo object (stable like gamma/mergedPi0 or composite like eta/resolvedPi0/Ks->pi0pi0/...)
     if (msgLevel(MSG::VERBOSE)) verbose() << "Associating a calorimetric particle with pid = "

@@ -4,6 +4,9 @@
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+! 2015-10-2 - Sean Benson
+ - Additional properties for reuse of neutral PP2MC tables created in Turbo.
+
 !========================= DaVinciMCTools v10r12 2015-02-26 =====================
 
 ! 2015-02-17 - V. Gligorov
