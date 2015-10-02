@@ -18,6 +18,7 @@
 #include "Mint/counted_ptr.h"
 #include "Mint/DalitzEvent.h"
 #include "Mint/IDalitzEvent.h"
+#include "Mint/MinimalEventList.h"
 #include "Mint/DiskResidentEventList.h"
 #include "Mint/DalitzEventList.h"
 #include "Mint/DalitzEventPattern.h"
@@ -154,7 +155,7 @@ public:
   void weightVarName(std::string weightName);
 
   MINT::counted_ptr<DalitzEvent> readEntry(unsigned int entry);
-  bool readit(DiskResidentEventList* listPtr, int nEvents=-1, double scale = 1.0);
+  bool readit(MinimalEventList<DalitzEvent>* listPtr, int nEvents=-1, double scale = 1.0);
   //
   bool testEventPattern();
   bool passETAcut(unsigned int entry);

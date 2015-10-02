@@ -122,13 +122,15 @@ void DalitzPdfBaseFastInteg::parametersChanged(){
 }
 
 DalitzPdfBaseFastInteg::DalitzPdfBaseFastInteg(const DalitzEventPattern& pat
-					       , IEventGenerator<IDalitzEvent>*
-						   generator
-					        , IFastAmplitudeIntegrable* amps
-						, double prec
+                                               , IEventGenerator<IDalitzEvent>*
+                                               generator
+                                               , IFastAmplitudeIntegrable* amps
+                                               , double prec
+                                               , MINT::MinuitParameterSet* mps
+
 						)
   : PdfBase<IDalitzEvent>()
-  , _mps(0)
+  , _mps(mps)
   , _pat(pat)
   , _norm(-1)
   , _precision(prec)

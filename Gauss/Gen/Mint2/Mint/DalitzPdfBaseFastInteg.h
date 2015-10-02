@@ -94,10 +94,11 @@ class DalitzPdfBaseFastInteg
 
  public:
   DalitzPdfBaseFastInteg(const DalitzEventPattern& pat
-			 , MINT::IEventGenerator<IDalitzEvent>* generator
-			 , IFastAmplitudeIntegrable* amps
-			 , double precision = 1.e-3
-			 );
+                         , MINT::IEventGenerator<IDalitzEvent>* generator
+                         , IFastAmplitudeIntegrable* amps
+                         , double precision = 1.e-3
+                         , MINT::MinuitParameterSet* mps=0
+                         );
 
   DalitzPdfBaseFastInteg( const DalitzEventPattern& pat
 			  , MINT::IEventGenerator<IDalitzEvent>* generator=0

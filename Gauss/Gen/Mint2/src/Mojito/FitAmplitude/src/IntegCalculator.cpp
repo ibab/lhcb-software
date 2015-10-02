@@ -256,7 +256,7 @@ bool IntegCalculator::save(const std::string& dirname) const{
   return sc;
 }
 bool IntegCalculator::retrieve(const std::string& commaSeparatedList){
-  bool dbThis=true;
+  bool dbThis=false;
   bool sc=true;
   std::stringstream is(commaSeparatedList);
   std::string dirname;
