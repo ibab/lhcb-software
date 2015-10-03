@@ -60,8 +60,9 @@ class protonArgon_2015:
             # proton Argon lines:
             'Hlt1MBMicroBiasVelo',  ## Beam1 Micro Bias, prescaled to get 200 M events
             'Hlt1DiMuonHighMass' ,  ## di-muon: active on beam1 beam2 and collisions
-            'Hlt1MBNoBias' , ## A little bit of complete no bias on beam gas
             'Hlt1MBNoBiasLeadingCrossing', ## and on collisions
+            'Hlt1L0B1gas',
+            'Hlt1L0B2gas',
             # SMOG Lines:
             'Hlt1SMOGKPi',
             'Hlt1SMOGKPiPi',
@@ -113,6 +114,7 @@ class protonArgon_2015:
         from Hlt1Lines.Hlt1BeamGasLines        import Hlt1BeamGasLinesConf
         from Hlt1Lines.Hlt1MuonLines           import Hlt1MuonLinesConf
         from Hlt1Lines.Hlt1SMOGLines           import Hlt1SMOGLinesConf
+        from Hlt1Lines.Hlt1CalibTrackingLines  import Hlt1CalibTrackingLinesConf
 
         thresholds = {
             Hlt1L0LinesConf : {
@@ -143,9 +145,20 @@ class protonArgon_2015:
                                       'DiMuonHighMass_TrChi2'    :    3,
                                       'DiMuonHighMass_M'         : 2700,
                                       'DiMuonHighMass_GEC'       : 'Loose' ,
-                                      'L0Channels'               : {
-            'DiMuonHighMass'   : ( 'Muon', ),
-            }
+                                      'CalibMuonAlignJpsi_ParticlePT'             : 800,     # MeV
+                                      'CalibMuonAlignJpsi_ParticleP'              : 6000,    # MeV
+                                      'CalibMuonAlignJpsi_TrackCHI2DOF'           : 2,       # dimensionless
+                                      'CalibMuonAlignJpsi_CombMaxDaughtPT'        : 800,     # MeV
+                                      'CalibMuonAlignJpsi_CombAPT'                : 1500,    # MeV
+                                      'CalibMuonAlignJpsi_CombDOCA'               : 0.2,     # mm
+                                      'CalibMuonAlignJpsi_CombVCHI2DOF'           : 10,     # dimensionless
+                                      'CalibMuonAlignJpsi_CombVCHI2DOFLoose'      : 10,      # dimensionless
+                                      'CalibMuonAlignJpsi_CombDIRA'               : 0.9,     # dimensionless
+                                      'CalibMuonAlignJpsi_CombTAU'                : 0.,     # ps
+                                      'CalibMuonAlignJpsi_JpsiMassWinLoose'         : 150,     # MeV
+                                      'CalibMuonAlignJpsi_JpsiMassWin'              : 100,     # MeV
+                                      'L0Channels'               : {'DiMuonHighMass'     : ( 'Muon', ),
+                                                                    'CalibMuonAlignJpsi' : ( 'Muon' )}
                                       },
             Hlt1BeamGasLinesConf : {
             # Global behaviour settings
@@ -206,7 +219,74 @@ class protonArgon_2015:
                     ,'GenericMassMin'         : 0       # MeV
                     ,'GenericMaxDaughtPT'     : 800     # MeV
                     ,'SingleTrackPT'          : 800    # MeV
-                   }
+                    ,'l0'                     : "L0_CHANNEL('B1gas')"
+                    ,'odin'                   : "(ODIN_BXTYP == LHCb.ODIN.Beam1) | jbit(ODIN_EVTTYP,2)"
+                   } ,
+               Hlt1CalibRICHMirrorLinesConf : {
+                     'Prescale' : {
+                        'Hlt1CalibHighPTLowMultTrks' : 0.0001,
+                        'Hlt1CalibRICHMirrorRICH1'   : 0.281,
+                        'Hlt1CalibRICHMirrorRICH2'   : 1.0
+                        },
+                     'DoTiming'   : False,
+                     'R2L_PT'     : 500.   * MeV,
+                     'R2L_P'      : 40000. * MeV,
+                     'R2L_MinETA' : 2.59,
+                     'R2L_MaxETA' : 2.97,
+                     'R2L_Phis'   : [ ( -2.69, -2.29 ), ( -0.85, -0.45 ), ( 0.45, 0.85 ), ( 2.29, 2.69 ) ],
+                     'R2L_TrChi2' : 2.,
+                     'R2L_MinTr'  : 0.5,
+                     'R2L_GEC'    : 'Loose',
+                     'R1L_PT'     : 500.   * MeV,
+                     'R1L_P'      : 10000. * MeV,
+                     'R1L_MinETA' : 1.6,
+                     'R1L_MaxETA' : 2.04,
+                     'R1L_Phis'   : [ ( -2.65, -2.30 ), ( -0.80, -0.50 ), ( 0.50, 0.80 ), ( 2.30, 2.65 ) ],
+                     'R1L_TrChi2' : 2.,
+                     'R1L_MinTr'  : 0.5,
+                     'R1L_GEC'    : 'Loose',
+                     'LM_PT'      : 500.   * MeV,
+                     'LM_P'       : 1000.  * MeV,
+                     'LM_TrChi2'  : 2.,
+                     'LM_MinTr'   : 1,
+                     'LM_MaxTr'   : 40,
+                     'LM_GEC'     : 'Loose'
+                     },
+
+             Hlt1CalibTrackingLinesConf :  { 'ParticlePT'            : 600     # MeV
+                                            ,'ParticleP'             : 4000    # MeV
+                                            ,'TrackCHI2DOF'          : 2       # dimensionless
+                                            ,'CombMaxDaughtPT'       : 900     # MeV 900
+                                            ,'CombAPT'               : 1800    # MeV 1200
+                                            ,'CombDOCA'              : 0.1     # mm
+                                            ,'CombVCHI2DOF'          : 10      # dimensionless
+                                            ,'CombVCHI2DOFLoose'     : 15      # dimensionless
+                                            ,'CombDIRA'              : 0.99    # dimensionless
+                                            ,'CombTAU'               : 0.25    # ps
+                                            ,'D0MassWinLoose'        : 100     # MeV
+                                            ,'D0MassWin'             : 60      # MeV
+                                            ,'B0MassWinLoose'        : 200     # MeV
+                                            ,'B0MassWin'             : 150     # MeV
+                                            ,'D0DetachedDaughtsIPCHI2': 9      # dimensionless
+                                            ,'D0DetachedIPCHI2'       : 9      # dimensionless
+                                            ,'BsPhiGammaMassMinLoose': 3350    # MeV
+                                            ,'BsPhiGammaMassMaxLoose': 6900    # MeV
+                                            ,'BsPhiGammaMassMin'     : 3850    # MeV
+                                            ,'BsPhiGammaMassMax'     : 6400    # MeV
+                                            ,'PhiMassWinLoose'       : 50      # MeV
+                                            ,'PhiMassWin'            : 30      # MeV
+                                            ,'PhiMassWinTight'       : 20      # MeV
+                                            ,'PhiPT'                 : 1800    # MeV
+                                            ,'PhiPTLoose'            : 800     # MeV
+                                            ,'PhiSumPT'              : 3000    # MeV
+                                            ,'PhiIPCHI2'             : 16      # dimensionless
+                                            ,'B0SUMPT'               : 4000    # MeV
+                                            ,'B0PT'                  : 1000    # MeV
+                                            ,'GAMMA_PT_MIN'          : 2000    # MeV
+                                            ,'Velo_Qcut'             : 999     # OFF
+                                            ,'TrNTHits'              : 0       # OFF
+                                            ,'ValidateTT'            : False
+                                           }
             }
             
         # HLT2 PassThrough
