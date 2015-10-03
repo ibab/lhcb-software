@@ -1015,8 +1015,21 @@ bool Gaudi::Math::Monothonic::updateBernstein ()
   return update ;
 }
 // ============================================================================
-
-
+// get the minimal value of function 
+// ============================================================================
+double Gaudi::Math::Monothonic::fun_min () const
+{
+  const std::vector<double>& ps = m_.bernstein.pars() ;
+  return  std::min( ps.front() , ps.back() ) ;
+}
+// ============================================================================
+// get the maximal value of function 
+// ============================================================================
+double Gaudi::Math::Monothonic::fun_min () const
+{
+  const std::vector<double>& ps = m_.bernstein.pars() ;
+  return  std::max( ps.front() , ps.back() ) ;
+}
 // ============================================================================
 // constructor from the order
 // ============================================================================

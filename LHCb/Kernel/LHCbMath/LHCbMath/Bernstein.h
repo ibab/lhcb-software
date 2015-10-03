@@ -462,6 +462,13 @@ namespace Gaudi
       /// monothonic 
       bool monothonic () const { return  true  ; }
       // ======================================================================
+    public:
+      // ======================================================================
+      /// get the minimal value of function 
+      double fun_min () const ; // get the minimal value of function 
+      /// get the maximal value of function 
+      double fun_max () const ; // get the maximal value of function
+      // ======================================================================
     protected:
       // ======================================================================
       /// update bernstein coefficients
