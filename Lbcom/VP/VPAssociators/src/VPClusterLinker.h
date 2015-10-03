@@ -2,6 +2,9 @@
 #define VPCLUSTERLINKER_H 1
 // Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+// LHCb
+// Event/DigiEvent
+#include "Event/VPCluster.h"
 
 /** @class VPClusterLinker VPClusterLinker.h
  * This algorithm creates association tables between the VP clusters
@@ -23,10 +26,15 @@ public:
 
 private:
 
+  bool m_linkParticles;
+  bool m_linkHits;
+
   std::string m_clusterLocation;
   std::string m_inputLocation;
-  std::string m_hitLinkLocation;
-  std::string m_particleLinkLocation;
+  std::string m_outputLocation;
+
+  bool linkHits(const LHCb::VPClusters* clusters);
+  bool linkParticles(const LHCb::VPClusters* clusters);
 
 };
 
