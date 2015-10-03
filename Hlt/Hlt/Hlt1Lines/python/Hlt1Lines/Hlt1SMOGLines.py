@@ -32,6 +32,8 @@ class Hlt1SMOGLinesConf( HltLinesConfigurableUser ) :
                 ,'GenericMassMin'         : 1000    # MeV
                 ,'GenericMaxDaughtPT'     : 800     # MeV
                 ,'SingleTrackPT'          : 800    # MeV
+                ,'l0'                     : 'L0_ALL'
+                ,'odin'                   : '(ODIN_BXTYP == LHCb.ODIN.Beam1)'
       }
 
   def KPi_Unit( self, props ) :
@@ -264,7 +266,7 @@ class Hlt1SMOGLinesConf( HltLinesConfigurableUser ) :
 
     return hlt1SMOGLine_SingleTrackUnit
   
-  def build_line(self, name, algos, l0):
+  def build_line(self, name, algos):
 
     from HltLine.HltLine import Hlt1Line
 
@@ -272,8 +274,8 @@ class Hlt1SMOGLinesConf( HltLinesConfigurableUser ) :
           name ,
           prescale = self.prescale ,
           postscale = self.postscale ,
-          L0DU = l0 ,
-          ODIN = '(ODIN_BXTYP == LHCb.ODIN.Beam1)',
+          L0DU = self.getProp('l0') ,
+          ODIN = self.getProp('odin'), #'(ODIN_BXTYP == LHCb.ODIN.Beam1) | jbit( ODIN_EVTTYP,2 )',
           algos = algos
           )
 
@@ -333,6 +335,5 @@ class Hlt1SMOGLinesConf( HltLinesConfigurableUser ) :
                }
 
     for line, algos in to_build.iteritems():
-      l0 = "L0_ALL"
-      self.build_line( line, algos, l0 )
+      self.build_line( line, algos )
 
