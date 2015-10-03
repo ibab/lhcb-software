@@ -40,8 +40,7 @@ logger.debug ( 'Some parameterization utilities for Histo objects')
 # =============================================================================
 ## helper function to catch xmin/xmax from histogram/function 
 def _get_xminmax_ ( func , xmin , xmax , name = 'get_xminmax') :
-    """
-    Helper function to catch xmin/xmax from histogram/function 
+    """ Helper function to catch xmin/xmax from histogram/function 
     """
     ## xmin 
     if not isinstance ( xmin , ( int , long , float ) ) :
@@ -82,9 +81,8 @@ def _get_xminmax_ ( func , xmin , xmax , name = 'get_xminmax') :
 #  It is not very CPU efficient (scipy is used for integration), but stable enough...
 #  @date 2015-07-26
 def legendre_sum ( func , N , xmin , xmax , **kwargs ) :
-    """
-    Make a function representation in terms of Legendre polynomials
-    It is not very CPU efficient (scipy is used for integration), but stable enough...
+    """ Make a function representation in terms of Legendre polynomials
+    [It is not very CPU efficient (scipy is used for integration), but stable enough...]
     >>> func = lambda x : x * x
     >>> lsum = legendre_sum ( func , 4 , -1 , 1 )
     >>> print lsum.pars()
@@ -107,14 +105,22 @@ def legendre_sum ( func , N , xmin , xmax , **kwargs ) :
     tx    = lambda x : lsum.t ( x )
 
     idx   = 1.0 / ( xmax - xmin ) ## scale factor 
+
+
     from scipy import integrate
+    import warnings
+    
     args  = {}
     for n in range ( N + 1 ) :
         
         li     = L_ ( n ) 
         fun_n  = lambda x : func ( x ) * li ( tx ( x ) )
-        if kwargs : args   = deepcopy ( kwargs ) 
-        c_n    = integrate.quad ( fun_n , xmin , xmax , **args )[0] * ( 2 * n + 1 ) * idx
+        if kwargs : args = deepcopy ( kwargs )
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            c_n    = integrate.quad ( fun_n , xmin , xmax , **args )[0] * ( 2 * n + 1 ) * idx
+            
         lsum.setPar ( n , c_n ) 
         
     return lsum
@@ -129,8 +135,7 @@ def legendre_sum ( func , N , xmin , xmax , **kwargs ) :
 #  @author Vanya Belyaev Ivan.Belyaev@itep.ru
 #  @date 2015-07-26
 def chebyshev_sum ( func , N , xmin , xmax ) :
-    """
-    make a function representation in terms of Chebyshev polynomials
+    """Make a function representation in terms of Chebyshev polynomials
     >>> func = lambda x : x * x
     >>> csum = chebyshev_sum ( func , 4 , -1 , 1 )
     >>> print csum.pars()
@@ -180,8 +185,7 @@ def chebyshev_sum ( func , N , xmin , xmax ) :
 #  @author Vanya Belyaev Ivan.Belyaev@itep.ru
 #  @date 2015-07-26
 def fourier_sum ( func , N , xmin , xmax , fejer = False ) :
-    """
-    Make a function/histiogram representation in terms of Fourier series
+    """Make a function/histiogram representation in terms of Fourier series
     >>> func = lambda x : x * x
     >>> fsum = fourier_sum ( func , 4 , -1 , 1 )
     >>> print fsum
@@ -230,7 +234,6 @@ def fourier_sum ( func , N , xmin , xmax , fejer = False ) :
         else          :
             fsum.setA ( i , -a[i-1] )
             fsum.setB ( i ,  b[i-1] )
-
     
     return fsum
 
@@ -244,8 +247,7 @@ def fourier_sum ( func , N , xmin , xmax , fejer = False ) :
 #  @author Vanya Belyaev Ivan.Belyaev@itep.ru
 #  @date 2015-07-26
 def cosine_sum ( func , N , xmin , xmax , fejer = False ) :
-    """
-    Make a function/histiogram representation in terms of Fourier series
+    """Make a function/histiogram representation in terms of Fourier series
     >>> func = lambda x : x * x
     >>> fsum = fourier_sum ( func , 4 , -1 , 1 )
     >>> print fsum
@@ -284,8 +286,7 @@ def cosine_sum ( func , N , xmin , xmax , fejer = False ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2014-05-09
 class H_fit(object) :
-    """
-    Simple function to fit/represent the histogram with sum of
+    """Simple helper function to fit/represent the histogram with sum of
     bernstein/b-spline/legendre/chebyshev, etc functions 
     """
     def __init__ ( self ,  hfit ) :
@@ -325,8 +326,8 @@ class H_fit(object) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2014-05-09
 class H_Nfit (object) :
-    """
-    Simple function to fit/represent the histogram with sum of bernstein positive polynominals
+    """ Simple helper function to fit/represent the histogram with
+    the sum of bernstein positive polynominals
     """
     def __init__ ( self , hfit ) :
         self._hfit = hfit
@@ -430,8 +431,7 @@ def _h1_param_sum_ ( h1             ,
 # =============================================================================
 ## represent 1D-histo as Bernstein polynomial
 def _h1_bernstein_ ( h1 , degree , interpolate = True , opts = 'SQ0' ) :
-    """
-    Represent histo as Bernstein polynomial
+    """Represent histo as Bernstein polynomial
     
     >>> h = ... # the historgam
     >>> b = h.bernstein ( 5 )  ## make a fit... 
@@ -466,8 +466,7 @@ def _h1_bernstein_ ( h1 , degree , interpolate = True , opts = 'SQ0' ) :
 # =============================================================================
 ## represent 1D-histo as Chebyshev polynomial
 def _h1_chebyshev_ ( h1 , degree , interpolate = True , opts = 'SQ0I' ) :
-    """
-    Represent histo as Bernstein polynomial
+    """Represent histo as Chebyshev sum 
     
     >>> h = ... # the historgam
     >>> b = h.bernstein ( 5 )  ## make a fit... 
@@ -494,8 +493,7 @@ def _h1_chebyshev_ ( h1 , degree , interpolate = True , opts = 'SQ0I' ) :
 # =============================================================================
 ## represent 1D-histo as Legendre polynomial
 def _h1_legendre_ ( h1 , degree , interpolate = True , opts = 'SQ0' ) :
-    """
-    Represent histo as Legendre polynomial
+    """Represent histo as Legendre sum 
     
     >>> h = ... # the historgam
     >>> r = h.legendre ( 5 )  ## make a fit...
@@ -525,7 +523,7 @@ def _h1_legendre_ ( h1 , degree , interpolate = True , opts = 'SQ0' ) :
     func   = legendre_sum   ( h1 , degree , mn , mx  ,
                               epsabs = 1.e-4 * sw    ,
                               epsrel = 1.e-3         ,
-                              limit  = 2 * h1.bins() ) 
+                              limit  = 3 * h1.bins() ) 
     ## fit it!
     return _h1_param_sum_ ( h1 , func , H_fit , opts )  
 
@@ -533,8 +531,7 @@ def _h1_legendre_ ( h1 , degree , interpolate = True , opts = 'SQ0' ) :
 # =============================================================================
 ## represent 1D-histo as Fourier polynomial
 def _h1_fourier_ ( h1 , degree , fejer = False , opts = 'SQ0I' ) :
-    """
-    Represent histo as Bernstein polynomial
+    """Represent histo as Fourier sum 
     
     >>> h = ... # the historgam
     >>> b = h.fouriner ( 3 )  ## make a fit... 
@@ -562,8 +559,7 @@ def _h1_fourier_ ( h1 , degree , fejer = False , opts = 'SQ0I' ) :
 # =============================================================================
 ## represent 1D-histo as cosine Fourier polynomial
 def _h1_cosine_ ( h1 , degree , fejer = False , opts = 'SQ0I' ) :
-    """
-    Represent histo as Bernstein polynomial
+    """Represent histo as Cosine Fourier sum 
     
     >>> h = ... # the historgam
     >>> b = h.cosine ( 3 )  ## make a fit... 
@@ -591,15 +587,13 @@ def _h1_cosine_ ( h1 , degree , fejer = False , opts = 'SQ0I' ) :
 # =============================================================================
 ## represent 1D-histo as plain vanilla polynomial
 def _h1_polinomial_ ( h1 , degree , interpolate = True , opts = 'SQ0' ) :
-    """
-    Represent histo as plain vanilla polynomial
-    
+    """Represent histo as plain vanilla polynomial    
     >>> h = ... # the historgam
+    
     >>> b = h.polinomial ( 5 )  ## make a fit... 
-
     >>> tfun       = r[0]  ## get TH1 object
     >>> tfun.Draw()
-
+    
     Underlying C++ object:
     >>> fun        = b[2]
     >>> print fun.pars() 
@@ -620,14 +614,10 @@ def _h1_polinomial_ ( h1 , degree , interpolate = True , opts = 'SQ0' ) :
 # =============================================================================
 ## represent 1D-histo as B-spline
 def _h1_bspline_ ( h1 , degree = 3 , knots = 3 , opts = 'SQ0' ) :
-    """
-    Represent histo as B-spline polynomial
-    
+    """Represent histo as B-spline polynomial    
     >>> h = ... # the historgam
     >>> b1 = h.bSpline ( degree = 3 , innerknots = 3  )
-    >>> b2 = h.bSpline ( degree = 3 , innerknots = [ 0.1 , 0.2, 0.8, 0.9 ]  )
-    
-    
+    >>> b2 = h.bSpline ( degree = 3 , innerknots = [ 0.1 , 0.2, 0.8, 0.9 ]  )    
     """
     mn,mx = h1.xminmax ()
     #
@@ -647,8 +637,7 @@ def _h1_bspline_ ( h1 , degree = 3 , knots = 3 , opts = 'SQ0' ) :
 # =============================================================================
 ## represent 1D-histo as POSITIVE bernstein polynomial
 def _h1_positive_ ( h1 , N , opts = 'SQ0' ) :
-    """
-    Represent histo as Positive Bernstein polynomial
+    """Represent histo as Positive Bernstein polynomial
     
     >>> h = ... # the historgam
     >>> b = h.positive ( 5 )
@@ -663,8 +652,7 @@ def _h1_positive_ ( h1 , N , opts = 'SQ0' ) :
 # =============================================================================
 ## represent 1D-histo as MONOTHONIC bernstein polynomial
 def _h1_monothonic_ ( h1 , N , increasing = True , opts = 'SQ0' ) :
-    """
-    Represent histo as Monothonic Bernstein polynomial
+    """Represent histo as Monothonic Bernstein polynomial
     
     >>> h = ... # the historgam
     >>> b = h.monothonic ( 5 , increasing = True )
@@ -679,12 +667,9 @@ def _h1_monothonic_ ( h1 , N , increasing = True , opts = 'SQ0' ) :
 # =============================================================================
 ## represent 1D-histo as MONOTHONIC CONVEX/CONCAVE bernstein polynomial
 def _h1_convex_ ( h1 , N , increasing = True , convex = True , opts = 'SQ0' ) :
-    """
-    Represent histo as Monothonic Convex/Concave  Bernstein polynomial
-    
+    """Represent histo as Monothonic Convex/Concave  Bernstein polynomial
     >>> h = ... # the historgam
-    >>> b = h.convex ( 5 , increasing = True , convex = False )
-    
+    >>> b = h.convex ( 5 , increasing = True , convex = False )    
     """
     mn,mx = h1.xminmax ()
     func  = cpp.Gaudi.Math.Convex ( N , mn , mx , increasing , convex )
@@ -692,12 +677,36 @@ def _h1_convex_ ( h1 , N , increasing = True , convex = True , opts = 'SQ0' ) :
     return _h1_param_sum_ ( h1 , func , H_Nfit , opts ) 
 
 
+# =============================================================================
+## represent 1D-histo as CONVEX bernstein polynomial
+def _h1_convexpoly_ ( h1 , N , opts = 'SQ0' ) :
+    """Represent histo as Convex Bernstein polynomial
+    >>> h = ... # the historgam
+    >>> b = h.convexpoly ( 5 )    
+    """
+    mn,mx = h1.xminmax ()
+    func  = cpp.Gaudi.Math.ConvexOnly ( N , mn , mx , True )
+    # 
+    return _h1_param_sum_ ( h1 , func , H_Nfit , opts ) 
+
+# =============================================================================
+## represent 1D-histo as CONCAVE bernstein polynomial
+def _h1_concavepoly_ ( h1 , N , opts = 'SQ0' ) :
+    """Represent histo as Concave  Bernstein polynomial
+    
+    >>> h = ... # the historgam
+    >>> b = h.concavepoly ( 5 )
+    
+    """
+    mn,mx = h1.xminmax ()
+    func  = cpp.Gaudi.Math.ConvexOnly ( N , mn , mx , False )
+    # 
+    return _h1_param_sum_ ( h1 , func , H_Nfit , opts ) 
 
 # =============================================================================
 ## represent 1D-histo as positive B-spline
 def _h1_pspline_ ( h1 , degree = 3 , knots = 3 , opts = 'SQ0I' ) :
-    """
-    Represent histo as positive B-spline 
+    """Represent histo as positive B-spline 
     
     >>> h = ... # the historgam
     >>> b1 = h.pSpline ( degree = 3 , knots = 3  )
@@ -720,8 +729,7 @@ def _h1_pspline_ ( h1 , degree = 3 , knots = 3 , opts = 'SQ0I' ) :
 # =============================================================================
 ## represent 1D-histo as positive monothonic spline
 def _h1_mspline_ ( h1 , degree = 3 , knots = 3 , increasing = True , opts = 'SQ0I' ) :
-    """
-    Represent histo as positive monothonic  spline 
+    """Represent histo as positive monothonic  spline 
     
     >>> h = ... # the historgam
     >>> b1 = h.mSpline ( degree = 3 , knots = 3  , increasing = True  )
@@ -748,8 +756,7 @@ def _h1_cspline_ ( h1 , degree = 3   , knots = 3 ,
                    increasing = True ,
                    convex     = True , 
                    opts       = 'SQ0I' ) :
-    """
-    Represent histo as positive monothonic convex/concave spline  
+    """Represent histo as positive monothonic convex/concave spline  
     
     >>> h = ... # the historgam
     >>> b1 = h.cSpline ( degree = 3 , knots = 3  , increasing = True , convex = False )
@@ -771,19 +778,21 @@ def _h1_cspline_ ( h1 , degree = 3   , knots = 3 ,
 
 
 for t in ( ROOT.TH1D , ROOT.TH1F ) :
-    t.bernstein  = _h1_bernstein_
-    t.chebyshev  = _h1_chebyshev_
-    t.legendre   = _h1_legendre_
-    t.fourier    = _h1_fourier_
-    t.cosine     = _h1_cosine_
-    t.polynomial = _h1_polinomial_
-    t.positive   = _h1_positive_
-    t.monothonic = _h1_monothonic_
-    t.convex     = _h1_convex_
-    t.bSpline    = _h1_bspline_
-    t.pSpline    = _h1_pspline_
-    t.mSpline    = _h1_mspline_
-    t.cSpline    = _h1_cspline_
+    t.bernstein   = _h1_bernstein_
+    t.chebyshev   = _h1_chebyshev_
+    t.legendre    = _h1_legendre_
+    t.fourier     = _h1_fourier_
+    t.cosine      = _h1_cosine_
+    t.polynomial  = _h1_polinomial_
+    t.positive    = _h1_positive_
+    t.monothonic  = _h1_monothonic_
+    t.convex      = _h1_convex_
+    t.convexpoly  = _h1_convexpoly_
+    t.concavepoly = _h1_concavepoly_
+    t.bSpline     = _h1_bspline_
+    t.pSpline     = _h1_pspline_
+    t.mSpline     = _h1_mspline_
+    t.cSpline     = _h1_cspline_
 
 
 ## create function object 
@@ -829,8 +838,7 @@ cpp.Gaudi.Math.ConvexSpline     .funobj = _funobjN_
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 class H1Func(object) :
-    """
-    Helper class to wrap 1D-histogram as function
+    """Helper class to wrap 1D-histogram as function
 
     >>> histo =
     >>> func  = H1Func ( histo )
@@ -896,9 +904,8 @@ class H1Func(object) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-03-27
 class H1Spline(object) :
-    """
-    Helper class to Wrap 1D-histogram as function/spline
-
+    """Helper class to Wrap 1D-histogram as function/spline
+    
     >>> histo =
     >>> func  = H1Spline ( histo )
     >>> tf1   = ROOT.TF1('f1', func , low , high , 1 )
@@ -993,8 +1000,7 @@ class H2Func(object) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_as_fun_ ( self , func = lambda s : s.value () ) :
-    """
-    construct the function from the histogram
+    """Construct the function from the histogram
     """
     return H1Func ( self , func )
 
@@ -1003,8 +1009,7 @@ def _h1_as_fun_ ( self , func = lambda s : s.value () ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-03-27
 def _h1_as_spline_ ( self , func = lambda s : s.value () , *args ) :
-    """
-    construct the function/spline from the histogram 
+    """Construct the function/spline from the histogram 
     """
     return H1Spline ( self , func , *args )
 
@@ -1013,8 +1018,7 @@ def _h1_as_spline_ ( self , func = lambda s : s.value () , *args ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h2_as_fun_ ( self , func = lambda s : s.value () ) :
-    """
-    construct the function from the histogram 
+    """Construct the function from the histogram 
     """
     return H2Func ( self , func )
 # =============================================================================
@@ -1022,8 +1026,7 @@ def _h2_as_fun_ ( self , func = lambda s : s.value () ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_as_tf1_ ( self , func = lambda s : s.value () , spline = False , *args ) :
-    """
-    Construct the function from the 1D-histogram
+    """Construct the function from the 1D-histogram
 
     >>> histo = ...
     >>> fun1  = histo.asTF1 ( spline = False )
@@ -1064,8 +1067,7 @@ def _h1_integral_ ( histo , xlow , xhigh ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h2_as_tf2_ ( self , func = lambda s : s.value () ) :
-    """
-    Construct the function from the histogram
+    """Construct the function from the histogram
 
     >>> fun = h2.asFunc()
     
@@ -1133,9 +1135,7 @@ ROOT.TH2D . integral = _h2_integral_
 
 # ============================================================================
 def _h1_data_ ( h ) :
-    """
-    Get histogram/graph as vector of pairs (x,y)
-    
+    """Get histogram/graph as vector of pairs (x,y)
     >>> histo = ...
     >>> data  = histo.data() 
     """
@@ -1164,8 +1164,7 @@ def _1d_spline_ ( self                                      ,
                   null  = True                              ,
                   scale = 1                                 ,
                   shift = 0                                 ) :
-    """
-    Create spline object for the histogram:
+    """Create spline object for the histogram:
 
     >>> histo = ...
     >>> spline = histo.spline ()
@@ -1188,8 +1187,7 @@ def _1d_spline_err_ ( self                                      ,
                       null  = True                              ,
                       scale = 1                                 ,
                       shift = 0                                 ) :
-    """
-    Create spline object for the histogram:
+    """Create spline object for the histogram:
 
     >>> histo  = ...
     >>> spline = histo.splineErr ()
@@ -1251,8 +1249,7 @@ def _h_Fit_ ( self                              ,
               draw = False                      ,
               interpolate = True                ,
               selector    = lambda i,x,y : True ) :
-    """
-    (Chi_2)-fit the histogram with the set of ``components''
+    """(Chi_2)-fit the histogram with the set of ``components''
     
     The ``components'' could be histograms, functions and other
     callable object :
@@ -1323,6 +1320,8 @@ ROOT.TH1D. hFit = _h_Fit_
 # =============================================================================
 ## parameterize positive histogram with certain PDF
 def _h1_pdf_ ( h1 , pdf_type , pars , *args, **kwargs ) :
+    """Parameterize positive histogram with certain PDF
+    """
     ##
     mn,mx = h1.minmax()
     if mn.value() < 0 or mx.value() <= 0 :
@@ -1353,8 +1352,7 @@ def _h1_pdf_ ( h1 , pdf_type , pars , *args, **kwargs ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2015-07-26
 def _h1_pdf_positive_ ( h1 , degree , *args , **kwargs ) :
-    """
-    Parameterize/fit histogram with the positive polynomial
+    """Parameterize/fit histogram with the positive polynomial
     >>> h1 = ...
     >>> results = h1.pdf_positive ( 3 )
     >>> results = h1.pdf_positive ( 3 , draw = 3 , silent = True )
@@ -1378,8 +1376,7 @@ def _h1_pdf_positive_ ( h1 , degree , *args , **kwargs ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2015-07-26
 def _h1_pdf_monothonic_ ( h1 , degree , increasing , *args , **kwargs ) :
-    """
-    :arameterize/fit histogram with the monothonic positive polynomial
+    """Parameterize/fit histogram with the monothonic positive polynomial
     >>> h1 = ...
     >>> results = h1.pdf_monothonic ( 3 , increasing = True )
     >>> results = h1.pdf_monothonic ( 3 , increasing = True , draw = 3 , silent = True )
@@ -1403,8 +1400,7 @@ def _h1_pdf_monothonic_ ( h1 , degree , increasing , *args , **kwargs ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2015-07-26
 def _h1_pdf_increasing_ ( h1 , degree , *args , **kwargs ) :
-    """
-    :arameterize/fit histogram with the monothonic positive polynomial
+    """Parameterize/fit histogram with the monothonic positive polynomial
     >>> h1 = ...
     >>> results = h1.pdf_increasing ( 3 )
     >>> results = h1.pdf_increasing ( 3 , draw = True , silent = True )
@@ -1427,8 +1423,7 @@ def _h1_pdf_increasing_ ( h1 , degree , *args , **kwargs ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2015-07-26
 def _h1_pdf_decreasing_ ( h1 , degree , *args , **kwargs ) :
-    """
-    Parameterize/fit histogram with the monothonic positive polynomial
+    """Parameterize/fit histogram with the monothonic positive polynomial
     >>> h1 = ...
     >>> results = h1.pdf_decreasing ( 3 )
     >>> results = h1.pdf_decreasing ( 3 , draw = True , silent = True )
@@ -1451,8 +1446,7 @@ def _h1_pdf_decreasing_ ( h1 , degree , *args , **kwargs ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2015-07-26
 def _h1_pdf_convex_ ( h1 , degree , increasing , *args , **kwargs ) :
-    """
-    Parameterize/fit histogram with convex polynomial
+    """Parameterize/fit histogram with convex polynomial
     >>> h1 = ...
     >>> results = h1.pdf_convex ( 3 , increasing = True )
     >>> results = h1.pdf_convex ( 3 , increasing = True , draw = True , silent = True )
@@ -1476,8 +1470,7 @@ def _h1_pdf_convex_ ( h1 , degree , increasing , *args , **kwargs ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2015-07-26
 def _h1_pdf_convex_increasing_ ( h1 , degree , *args , **kwargs ) :
-    """
-    Parameterize/fit histogram with convex increasing polynomial
+    """Parameterize/fit histogram with convex increasing polynomial
     >>> h1 = ...
     >>> results = h1.pdf_convex_increasing ( 3 ,)
     >>> results = h1.pdf_convex_increasing ( 3 , draw = True , silent = True )
@@ -1500,8 +1493,7 @@ def _h1_pdf_convex_increasing_ ( h1 , degree , *args , **kwargs ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2015-07-26
 def _h1_pdf_convex_decreasing_ ( h1 , degree , *args , **kwargs ) :
-    """
-    Parameterize/fit histogram with convex decreasing polynomial
+    """Parameterize/fit histogram with convex decreasing polynomial
     >>> h1 = ...
     >>> results = h1.pdf_convex_decreasing ( 3 ,)
     >>> results = h1.pdf_convex_decreasing ( 3 , draw = True , silent = True )
@@ -1524,8 +1516,7 @@ def _h1_pdf_convex_decreasing_ ( h1 , degree , *args , **kwargs ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2015-07-26
 def _h1_pdf_concave_ ( h1 , degree , increasing , *args , **kwargs ) :
-    """
-    Parameterize/fit histogram with concave polynomial
+    """Parameterize/fit histogram with concave polynomial
     >>> h1 = ...
     >>> results = h1.pdf_concave ( 3 , increasing = True )
     >>> results = h1.pdf_concave ( 3 , increasing = True , draw = True , silent = True )
@@ -1549,8 +1540,7 @@ def _h1_pdf_concave_ ( h1 , degree , increasing , *args , **kwargs ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2015-07-26
 def _h1_pdf_concave_increasing_ ( h1 , degree , *args , **kwargs ) :
-    """
-    Parameterize/fit histogram with concave increasing polynomial
+    """Parameterize/fit histogram with concave increasing polynomial
     >>> h1 = ...
     >>> results = h1.pdf_concave_increasing ( 3 )
     >>> results = h1.pdf_concave_increasing ( 3 , draw = True , silent = True )
@@ -1573,8 +1563,7 @@ def _h1_pdf_concave_increasing_ ( h1 , degree , *args , **kwargs ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2015-07-26
 def _h1_pdf_concave_decreasing_ ( h1 , degree , *args , **kwargs ) :
-    """
-    Parameterize/fit histogram with concave decreasing polynomial
+    """Parameterize/fit histogram with concave decreasing polynomial
     >>> h1 = ...
     >>> results = h1.pdf_concave_decreasing ( 3 )
     >>> results = h1.pdf_concave_decreasing ( 3 , draw = True , silent = True )
@@ -1583,6 +1572,55 @@ def _h1_pdf_concave_decreasing_ ( h1 , degree , *args , **kwargs ) :
     >>> print results[2] ## underlying parameterization 
     """
     return _h1_pdf_concave_ ( h1 , degree , False , *args , **kwargs )
+
+# =============================================================================
+## parameterize/fit histogram with the convex polynomial
+#  @code
+#  h1 = ...
+#  results = h1.pdf_convexpoly ( 3 )
+#  results = h1.pdf_convexpoly ( 3 , draw = True , silent = True )
+#  print results[0]
+#  pdf = results[2]
+#  print results[3]
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-07-26
+def _h1_pdf_convexpoly_ ( h1 , degree , *args , **kwargs ) :
+    """Parameterize/fit histogram with convex polynomial
+    >>> h1 = ...
+    >>> results = h1.pdf_convexpoly ( 3 )
+    >>> results = h1.pdf_convexpoly ( 3 , draw = True , silent = True )
+    >>> print results[0] ## fit results 
+    >>> pdf = results[1] ## get PDF 
+    >>> print results[2] ## underlying parameterization 
+    """
+    from Ostap.FitBkgModels import ConvexOnly_pdf
+    return _h1_pdf_ ( h1 , ConvexOnly_pdf , (degree,True) , *args , **kwargs )
+
+# =============================================================================
+## parameterize/fit histogram with the concave polynomial
+#  @code
+#  h1 = ...
+#  results = h1.pdf_concavepoly ( 3 )
+#  results = h1.pdf_concavepoly ( 3 , draw = True , silent = True )
+#  print results[0]
+#  pdf = results[2]
+#  print results[3]
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-07-26
+def _h1_pdf_concavepoly_ ( h1 , degree , *args , **kwargs ) :
+    """Parameterize/fit histogram with convex polynomial
+    >>> h1 = ...
+    >>> results = h1.pdf_concavepoly ( 3 )
+    >>> results = h1.pdf_concavepoly ( 3 , draw = True , silent = True )
+    >>> print results[0] ## fit results 
+    >>> pdf = results[1] ## get PDF 
+    >>> print results[2] ## underlying parameterization 
+    """
+    from Ostap.FitBkgModels import ConvexOnly_pdf
+    return _h1_pdf_ ( h1 , ConvexOnly_pdf , (degree,False) , *args , **kwargs )
+
 
 # =============================================================================
 
@@ -1597,7 +1635,8 @@ for t in ( ROOT.TH1D , ROOT.TH1F ) :
     t.pdf_concave            = _h1_pdf_concave_
     t.pdf_concave_increasing = _h1_pdf_concave_increasing_
     t.pdf_concave_decreasing = _h1_pdf_concave_decreasing_
-
+    t.pdf_convexpoly         = _h1_pdf_convexpoly_
+    t.pdf_concavepoly        = _h1_pdf_concavepoly_
 
 # =============================================================================
 ## parameterize/fit histogram with the positive  b-spline 
@@ -1612,8 +1651,7 @@ for t in ( ROOT.TH1D , ROOT.TH1F ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2015-07-26
 def _h1_pdf_pspline_ ( h1 , spline , *args , **kwargs ) :
-    """
-    Parameterize/fit histogram with positive b-spline 
+    """Parameterize/fit histogram with positive b-spline 
     >>> h1 = ...
     >>> results = h1.pdf_pSpline ( spline = (3,2) )
     >>> results = h1.pdf_pSpline ( (3,2) , draw = True , silent = True )
@@ -1644,8 +1682,7 @@ def _h1_pdf_pspline_ ( h1 , spline , *args , **kwargs ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2015-07-26
 def _h1_pdf_mspline_ ( h1 , spline , *args , **kwargs ) :
-    """
-    Parameterize/fit histogram with monothonic positive b-spline 
+    """Parameterize/fit histogram with monothonic positive b-spline 
     >>> h1 = ...
     >>> results = h1.pdf_mSpline ( spline = (3,2,True) )
     >>> results = h1.pdf_mSpline ( (3,2,True) , draw = True , silent = True )
@@ -1675,8 +1712,7 @@ def _h1_pdf_mspline_ ( h1 , spline , *args , **kwargs ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2015-07-26
 def _h1_pdf_cspline_ ( h1 , spline , *args , **kwargs ) :
-    """
-    Parameterize/fit histogram with convex/concave montonic positive b-spline 
+    """Parameterize/fit histogram with convex/concave montonic positive b-spline 
     >>> h1 = ...
     >>> results = h1.pdf_cSpline ( spline = (3,2,True,True) )
     >>> results = h1.pdf_cSpline ( (3,2,True,True), draw = True , silent = True )
@@ -1712,8 +1748,7 @@ for t in ( ROOT.TH1D , ROOT.TH1F ) :
 #  It is not very CPU efficient (scipy is used for integration), but stable enough...
 #  @date 2015-07-26
 def _h1_legendre_sum_ ( h1 , N , **kwargs ) :
-    """
-    Make a histogram representation in terms of Legendre polynomials
+    """Make a histogram representation in terms of Legendre polynomials
     >>> histo  = ...
     >>> lsum   = histo.legendre_sum ( 4 )
     >>> print lsum
@@ -1736,8 +1771,7 @@ def _h1_legendre_sum_ ( h1 , N , **kwargs ) :
 #  It is not very CPU efficient (scipy is used for integration), but stable enough...
 #  @date 2015-07-26
 def _h1_chebyshev_sum_ ( h1 , N , **kwargs ) :
-    """
-    Make a histogram representation in terms of Chebyshev polynomials
+    """Make a histogram representation in terms of Chebyshev polynomials
     >>> histo  = ...
     >>> csum   = histo.chebyshev_sum ( 4 )
     >>> print csum
@@ -1758,8 +1792,7 @@ def _h1_chebyshev_sum_ ( h1 , N , **kwargs ) :
 #  @author Vanya Belyaev Ivan.Belyaev@itep.ru
 #  @date 2015-07-26
 def _h1_fourier_sum_ ( h1 , N , fejer = False , **kwargs ) :
-    """
-    Make a histogram representation in terms of Fourier serie
+    """Make a histogram representation in terms of Fourier serie
     >>> histo  = ...
     >>> fsum   = histo.fourier_sum ( 4 )
     >>> print fsum
@@ -1780,8 +1813,7 @@ def _h1_fourier_sum_ ( h1 , N , fejer = False , **kwargs ) :
 #  @author Vanya Belyaev Ivan.Belyaev@itep.ru
 #  @date 2015-07-26
 def _h1_cosine_sum_ ( h1 , N , fejer = False , **kwargs ) :
-    """
-    Make a histogram representation in terms of cosine Fourier serie
+    """Make a histogram representation in terms of cosine Fourier serie
     >>> histo  = ...
     >>> csum   = histo.cosine_sum ( 4 )
     >>> print csum
@@ -1806,8 +1838,7 @@ for h in ( ROOT.TH1F , ROOT.TH1D ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2012-09-28
 def _f_fit_ ( func , histo , *args ) :
-    """
-    Fit histogram (Actially delegate to TH1::Fit method)
+    """Fit histogram (Actially delegate to TH1::Fit method)
     
     >>> func  = ...
     >>> histo = ...
@@ -1830,8 +1861,7 @@ ROOT.TH1 . fit      = ROOT.TH1.Fit
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _fit_repr_ ( self ) :
-    """
-    Representaion of TFitResult object
+    """Representaion of TFitResult object
     """
     _r  = ''
     _r += "\n Status      = %s "    %   self.Status ()
@@ -1849,8 +1879,7 @@ def _fit_repr_ ( self ) :
 # =============================================================================
 ## get number of parameters 
 def _fit_len_ ( r ) :
-    """
-    Get number of parameters 
+    """Get number of parameters 
     """
     return len ( r.Parameters() ) 
 
@@ -1859,8 +1888,7 @@ def _fit_len_ ( r ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _fit_iter_ ( r ) :
-    """
-    Iterator over fit-result object 
+    """Iterator over fit-result object
     """
     l = len( r )
     i = 0
@@ -1872,13 +1900,12 @@ def _fit_iter_ ( r ) :
 ## get parameter number
 #  @code
 #  r    = h1.Fit( ... )
-#  name = r.GetParNumber ( 1 ) 
+#  name = r.GetParNumber ( 'mass' ) 
 #  @endcode
 def _fit_parnum_ ( self , par ) : 
-    """
-    Get parameter number:
+    """Get parameter number:
     >>> r    = h1.Fit( ... )
-    >>> name = r.GetParNumber ( 1 ) 
+    >>> name = r.GetParNumber ( 'mass' ) 
     """ 
     if isinstance ( par , ( int , long ) ) :
         if 0<= par< len ( self ) : return int( par )   ## RETURN 
@@ -1896,14 +1923,13 @@ def _fit_parnum_ ( self , par ) :
 ## check parameter
 #  @code
 #  r = h1.Fit(....) ##
-#  if i   in r :   ...  ## check parameter by index  
+#  if  i  in r :   ...  ## check parameter by index  
 #  if 'm' in r :   ...  ## check parameter by name  
 #  @endcode
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2015-07-12
 def _fit_contains_ ( self , par ) :
-    """
-    Check parameter
+    """Check parameter
     >>> r = h1.Fit(....) ##
     >>> if i   in r :   ...  ## check parameter by index  
     >>> if 'm' in r :   ...  ## check parameter by name  
@@ -1916,8 +1942,7 @@ def _fit_contains_ ( self , par ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _fit_getitem_ ( self , par ) :
-    """
-    Getitem for fit-result-object            
+    """Getitem for fit-result-object            
     """
     ## convert parameter into integer 
     ipar = _fit_parnum_ ( par )
@@ -1932,9 +1957,7 @@ def _fit_getitem_ ( self , par ) :
 # =============================================================================
 ## Get correlation coefficient for parameters 'i' and 'j'
 def _fit_cor_ ( self , i , j ) :
-    """
-    Get correlation coefficient for parameters 'i' and 'j'
-
+    """Get correlation coefficient for parameters 'i' and 'j'
     >>> r = ...
     >>> print r.cor(1,2)
     """
@@ -1955,9 +1978,7 @@ def _fit_cor_ ( self , i , j ) :
 # =============================================================================
 ## Get correlation matrix 
 def _fit_corm_ ( self , root = False ) :
-    """
-    Get correlation matrix 
-
+    """Get correlation matrix 
     >>> r = ...
     >>> print r.corMtrx ()
     """
@@ -2016,7 +2037,7 @@ ROOT.TFitResultPtr.GetParNumber = _fit_parnum_
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2015-07-13
 def _tf1_contains_ ( func , par ) :
-    """
+    """Check existence parameter for the function
     >>> fun = ...         ## function
     >>> if i   in fun : ... ## check if i   is valid parameter number 
     >>> if 'm' in fun : ... ## check if 'm' is valid parameter name  
@@ -2038,8 +2059,7 @@ def _tf1_contains_ ( func , par ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2015-07-13
 def _tf1_fix_ ( func , par , value = None ) :
-    """
-    Fix parameter for TF1
+    """Fix parameter for TF1
     >>> fun =  ...   ## function 
     >>> fun.fix(1,0) ## fix parameter #1 at 0 
     >>> fun.fix(2)   ## fix parameter #2 at current value 
@@ -2062,8 +2082,7 @@ def _tf1_fix_ ( func , par , value = None ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _tf1_release_ ( func , par ) :
-    """
-    Release parameter for TF1
+    """Release parameter for TF1
     >>> fun =  ...       ## function
     >>> fun.release(1)   ## release parameter #1 
     >>> fun.release('m') ## release parameter 'm'
@@ -2084,8 +2103,7 @@ def _tf1_release_ ( func , par ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _tf1_par_ ( func , par ) :
-    """
-    Get parameter from TF1
+    """Get parameter from TF1
     >>> fun =  ...        ## function 
     >>> p2 = fun.par(2)   ## get parameter #2 
     >>> pm = fun.par('m') ## get parameter 'm'
@@ -2108,8 +2126,7 @@ def _tf1_par_ ( func , par ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _tf1_setpar_ ( func , par , value ) :
-    """
-    Set parameter of TF1 
+    """Set parameter of TF1 
     >>> fun =  ...          ## function 
     >>> fun.setPar(1,1)     ## set parameter #1 to be 1 
     >>> fun.setPar('m',2)   ## set parameter 'm' to be 2
@@ -2129,8 +2146,7 @@ def _tf1_setpar_ ( func , par , value ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _tf1_iter_ ( func ) :
-    """
-    Primitive iteration over parameters 
+    """Primitive iteration over parameters 
     >>> fun =  ...        ## function 
     >>> for p in fun: print fun(p)
     """
@@ -2149,8 +2165,7 @@ def _tf1_iter_ ( func ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _tf1_getattr_ ( func , par ) :
-    """
-    Det parameter as attribute
+    """Get parameter as attribute
     >>> fun =  ...   ## function
     >>> pm  = fun.m  ## get parameter 'm'
     """
