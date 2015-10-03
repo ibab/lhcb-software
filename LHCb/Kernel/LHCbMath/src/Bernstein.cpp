@@ -140,48 +140,6 @@ Gaudi::Math::Bernstein::operator=(       Gaudi::Math::Bernstein&& right )
   return *this ;
 }
 // ============================================================================
-// get minimal value of the function on (xmin,xmax) interval 
-// ============================================================================
-double Gaudi::Math::Bernstein::fun_min () const 
-{ return *std::min_element ( m_pars.begin () , m_pars.end () ) ; }
-// ============================================================================
-// get maximal value of the function on (xmin,xmax) interval 
-// ============================================================================
-double Gaudi::Math::Bernstein::fun_max () const       
-{ return *std::max_element ( m_pars.begin () , m_pars.end () ) ; }
-// ============================================================================
-// positive      function ?
-// ============================================================================
-bool Gaudi::Math::Bernstein::positive      () const 
-{ 
-  const double v = fun_min () ;
-  return  0 < v && !s_zero ( v ) ; 
-}
-// ============================================================================
-// negative      function ?
-// ============================================================================
-bool Gaudi::Math::Bernstein::negative      () const 
-{ 
-  const double v = fun_max () ;
-  return  0 > v && !s_zero ( v ) ; 
-}
-// ============================================================================
-// non-positive      function ?
-// ============================================================================
-bool Gaudi::Math::Bernstein::nonpositive   () const 
-{ 
-  const double v = fun_max () ;
-  return  0 >= v || s_zero ( v ) ; 
-}
-// ============================================================================
-// non-negative      function ?
-// ============================================================================
-bool Gaudi::Math::Bernstein::nonnegative   () const 
-{ 
-  const double v = fun_min () ;
-  return  0 <= v || s_zero ( v ) ; 
-}
-// ============================================================================
 // is it a increasing function?
 // ============================================================================
 bool Gaudi::Math::Bernstein::increasing   () const 
@@ -403,6 +361,41 @@ Gaudi::Math::Bernstein::elevate ( const unsigned short r ) const
       if ( s_zero ( cj ) ) { continue ; }
       //
       nc[k] +=  c_nk ( r , k - j ) * c_nk ( n , j ) / c_nk ( n+r , k ) * cj ;
+    }
+  }
+  return Bernstein ( nc.begin() , nc.end  () , xmin() , xmax() ) ;
+}
+// ============================================================================
+/*  reduce it
+ *  represent as Bernstein polynomial of order N0r 
+ *  @param r  INPUT increase of degree 
+ *  @return new polynomial of order N-r 
+ */
+// ============================================================================
+Gaudi::Math::Bernstein
+Gaudi::Math::Bernstein::reduce ( const unsigned short r ) const 
+{
+  // no need in reducing
+  if ( 0 == r ){ return *this ; }
+  //
+  const unsigned short n    = degree () ;
+  const unsigned short newd = r < n ?  n - r : 0 ;
+  const unsigned short newr = n - newd ;
+  //
+  std::vector<long double>    nc ( newd + 1 ) ; // new coefficients 
+  const std::vector<double>&  oc =  pars  ()  ; // old coefficients 
+  //
+  for ( unsigned short k = 0 ; k < nc.size() ; ++k ) 
+  {
+    for ( unsigned short j = 0 ; j <= k ; ++j ) 
+    {
+      const long double  cj = oc[j] ;
+      if ( s_zero ( cj ) ) { continue ; }
+      //
+      nc[k] +=  
+        ( 0 == ( k - j) %2 ? 1 : -1 ) 
+        * c_nk ( k - j + newr - 1 , newr - 1 ) * c_nk ( n , j ) 
+        / c_nk ( n - newr , k ) * cj ;
     }
   }
   return Bernstein ( nc.begin() , nc.end  () , xmin() , xmax() ) ;
@@ -1003,7 +996,7 @@ bool Gaudi::Math::Monothonic::updateBernstein ()
   // get sphere coefficients 
   std::vector<double> v ( m_sphere.nX() ) ;
   for ( unsigned short ix = 0 ; ix < m_sphere.nX() ; ++ix ) 
-  { v[ix] = m_sphere.x2 ( ix ) ; }
+  { v[ix] = m_sphere.x2 ( ix ) * ( ix + 1 ) ; }
   //
   // integrate them and to get new coefficients
   if   ( m_increasing ) { std::partial_sum ( v. begin() , v. end() ,  v. begin() ) ; }
@@ -1094,31 +1087,56 @@ bool Gaudi::Math::Convex::updateBernstein ()
   //
   // get sphere coefficients 
   //
-  std::vector<double> v ( m_sphere.nX() ) ;
-  for ( unsigned short ix = 0 ; ix < m_sphere.nX() ; ++ix ) 
+  std::vector<double>  v ( m_sphere.nX() ) ;
+  const unsigned short vs = v.size()    ;
+  //
+  const std::array<double,2> a = { { m_sphere.x2(0) , m_sphere.x2(1) } };
+  for ( unsigned short ix = 2 ; ix < vs ; ++ix ) 
   { v[ix] = m_sphere.x2 ( ix ) ; }
   //
-  // integrate them and to get new coefficients
-  if   ( m_convex == m_increasing ) 
-  { std::partial_sum ( v. begin() , v. end() ,  v. begin() ) ; }
-  else  
-  { std::partial_sum ( v.rbegin() , v.rend() ,  v.rbegin() ) ; }
+  // integrate them twice and to get new coefficients
+  std::partial_sum ( v.  begin() + 2 , v.  end()     ,  v.  begin() + 2 ) ; 
+  std::partial_sum ( v.  begin() + 2 , v.  end()     ,  v.  begin() + 2 ) ; 
   //
-  // integrate them and to get new coefficients
-  if   ( m_increasing ) { std::partial_sum ( v. begin() , v. end() ,  v. begin() ) ; }
-  else                  { std::partial_sum ( v.rbegin() , v.rend() ,  v.rbegin() ) ; }
+  if ( !m_convex ) 
+  {
+    const  double last = v.back() ;
+    for ( unsigned short k = 0 ; k < vs; ++k) 
+    { 
+      v[k] = last  - v[k] ; 
+      if ( 0 != v[k] && s_zero ( v[k] ) ) {  v[k] = 0 ; }
+    }
+  }
+  //
+  if ( m_increasing != m_convex )
+  { std::reverse ( v.begin() , v.end() ) ; }
+  //
+  // add a positive linear function 
+  //
+  const unsigned short d = degree() ;
+  for ( unsigned short k = 0 ; k < vs ; ++k ) 
+  {
+    const double r1 =  double(k) / d ;
+    //
+    v[k] +=  
+      m_increasing ?  
+      a[0] +       r1   * a[1] :
+      a[0] + ( 1 - r1 ) * a[1] ;
+    //
+    if ( 0 != v[k] && s_zero ( v[k] ) ) {  v[k] = 0 ; }
+  }
   //
   const double isum = m_bernstein.npars() 
     / std::accumulate ( v.begin() , v.end() , 0.0 ) 
     / ( m_bernstein.xmax() -  m_bernstein.xmin () ) ;
   //
-  for ( unsigned short ix = 0 ; ix < m_sphere.nX() ; ++ix ) 
+  for ( unsigned short ix = 0 ; ix < vs ; ++ix ) 
   { 
     const bool updated = m_bernstein.setPar ( ix , v [ix] * isum ) ; 
     update = updated || update ;
   }
   //
-  return update ;
+  return update ;  
 }
 // ============================================================================
 
@@ -1134,7 +1152,7 @@ Gaudi::Math::ConvexOnly::ConvexOnly
   const double              xmax   , 
   const bool                convex ) 
   : Gaudi::Math::Positive ( N , xmin , xmax )  
-  , m_convex          ( convex      )  
+  , m_convex          ( convex )  
 {
   updateBernstein () ;
 }
@@ -1155,10 +1173,10 @@ Gaudi::Math::ConvexOnly::ConvexOnly
 // constructor from the spline 
 // ============================================================================
 Gaudi::Math::ConvexOnly::ConvexOnly 
-( const Gaudi::Math::Positive& spline   ,
-  const bool                 convex ) 
-  : Gaudi::Math::Positive ( spline      )  
-  , m_convex          ( convex      )  
+( const Gaudi::Math::Positive& poly   ,
+  const bool                   convex ) 
+  : Gaudi::Math::Positive ( poly   )  
+  , m_convex              ( convex )  
 {
   updateBernstein () ;
 }
@@ -1192,37 +1210,77 @@ bool Gaudi::Math::ConvexOnly::updateBernstein ()
   //
   // get parameters from the sphere:
   //
-  const std::array<double,2> a = { { m_sphere.x2(0) , m_sphere.x2(1) } };
-  for ( unsigned short ix = 2 ; ix < vs ; ++ix ) 
-  { v[ix] = m_sphere.x2 ( ix ) * ix ; }
-  //
-  // integrate them twice and to get new coefficients
-  std::partial_sum ( v. begin() + 2 , v. end() ,  v. begin() + 2 ) ; 
-  std::partial_sum ( v. begin() + 2 , v. end() ,  v. begin() + 2 ) ; 
-  //
-  if ( !m_convex )
+  if ( !m_convex ) 
   {
-    const  double last = v.back() ;
-    for ( unsigned short k = 0 ; k < vs; ++k) 
-    { 
-      v[k] = last  - v[k] ; 
+    std::array<double,2> a = { { m_sphere.x2(0) , m_sphere.x2(1) } };
+    for ( unsigned short ix = 2 ; ix < vs ; ++ix ) 
+    { v[ix] = m_sphere.x2 ( ix ) ; }
+    //
+    // integrate them twice and to get new coefficients
+    std::partial_sum ( v.  begin() + 2 , v.  end()     ,  v.  begin() + 2 ) ; 
+    std::partial_sum ( v.  begin() + 2 , v.  end()     ,  v.  begin() + 2 ) ; 
+    //
+    {
+      const  double last = v.back() ;
+      for ( unsigned short k = 0 ; k < vs; ++k) 
+      { 
+        v[k] = last  - v[k] ; 
+        if ( 0 != v[k] && s_zero ( v[k] ) ) {  v[k] = 0 ; }
+      }
+    }
+    //
+    // subtract the linear component and 
+    // add positive linear function
+    //
+    const double v1 = a[0] - v.front() ;
+    const double v2 = a[1] - v.back()  ;
+    const unsigned int   d = degree() ;
+    for ( unsigned short k = 0 ; k < vs ; ++k ) 
+    {
+      const double r1 =  double(k)  / d ;
+      v[k] +=  ( 1 - r1 ) * v1  + r1 * v2 ;
       if ( 0 != v[k] && s_zero ( v[k] ) ) {  v[k] = 0 ; }
     }
   }
-  //
-  const unsigned short d = degree() ;
-  for ( unsigned short k = 0 ; k < vs ; ++k ) 
-  {
-    const double r1 =  double(k) / d ;
-    v[k] +=  r1 * a[0] + ( 1 - r1 ) * a[1] ;
-    if ( 0 != v[k] && s_zero ( v[k] ) ) {  v[k] = 0 ; }
+  else 
+  { 
+    std::array<double,3> a = { { m_sphere.x2(0) , 
+                                 m_sphere.x2(1) , 
+                                 m_sphere.x2(2) } };
+    for ( unsigned short ix = 3 ; ix < vs ; ++ix ) 
+    { v[ix] = m_sphere.x2 ( ix ) ; }
+    // integrate them twice and to get new coefficients
+    std::partial_sum ( v.  begin() + 3 , v.  end()     ,  v.  begin() + 3 ) ; 
+    std::partial_sum ( v.  begin() + 3 , v.  end()     ,  v.  begin() + 3 ) ; 
+    //    
+    const double a0 = a[0] ;
+    const double a2 = a[2] ;
+    const double a1_min = -1*std::sqrt ( a0 * a2 ) ;
+    const double a1_max = 0.5 * ( a0 + a2 ) ;
+    //
+    const double a1 = a1_min + a[1] * ( a1_max - a1_min ) ;
+    //
+    const double c0 = a0         ;
+    const double c1 = 2*(a1-a0)  ;
+    const double c2 = a0+a2-2*a1 ; 
+    //
+    const unsigned int   d = degree() ;
+    for ( unsigned short k = 0 ; k < vs ; ++k ) 
+    {
+      double vv = c0 ;
+      const double r1 =  double(k) / d ;
+      if ( 0 != k ) { vv += r1 * c1 ; }
+      if ( 1 <  k ) { vv += r1 * ( k - 1 ) * c2 / ( d - 1 ) ; }
+      v[k] +=  vv ;
+      if ( 0 != v[k] && s_zero ( v[k] ) ) {  v[k] = 0 ; }
+    }
   }
   //
   const double isum = m_bernstein.npars() 
     / std::accumulate ( v.begin() , v.end() , 0.0 ) 
     / ( m_bernstein.xmax() -  m_bernstein.xmin () ) ;
   //
-  for ( unsigned short ix = 0 ; ix < m_sphere.nX() ; ++ix ) 
+  for ( unsigned short ix = 0 ; ix < vs ; ++ix ) 
   { 
     const bool updated = m_bernstein.setPar ( ix , v [ix] * isum ) ; 
     update = updated || update ;

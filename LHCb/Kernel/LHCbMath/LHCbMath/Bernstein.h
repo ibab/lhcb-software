@@ -136,25 +136,6 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
-      /// get minimal value of the function on (xmin,xmax) interval 
-      double fun_min       () const ;
-      /// get maximal value of the function on (xmin,xmax) interval 
-      double fun_max       () const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// positive      function ?
-      bool   positive      () const ;
-      /// negative      function ?
-      bool   negative      () const ; 
-      /// non-positive  function ?
-      bool   nonpositive   () const ; 
-      /// non-negative  function ?
-      bool   nonnegative   () const ; 
-      ///  has roots at [xmin,xmax] ? 
-      bool   hasroots      () const { return   !positive () &&   !negative () ; }
-      ///  keep sign at [xmin,xmax] ? 
-      bool   keepsign      () const { return nonpositive () || nonnegative () ; }
       /// is it a decreasing function?
       bool   decreasing    () const ;
       /// is it a increasing function?
@@ -195,6 +176,13 @@ namespace Gaudi
        *  @return new polynomial of order N+r 
        */
       Bernstein elevate ( const unsigned short r ) const ;
+      // ======================================================================
+      /** reduce it:
+       *  represent as Bernstein polynomial of order N-r 
+       *  @param r  INPUT decrease of degree 
+       *  @return new polynomial of order N-r 
+       */
+      Bernstein reduce  ( const unsigned short r ) const ;
       // ======================================================================
     public:
       // ======================================================================
@@ -379,19 +367,6 @@ namespace Gaudi
       double t ( const double x ) const { return m_bernstein. t ( x )  ; }
       // ======================================================================
     public:
-      // ======================================================================
-      /// get minimal value of the function on (xmin,xmax) interval 
-      double fun_min   () const { return m_bernstein.fun_min   () ; }
-      /// get maximal value of the function on (xmin,xmax) interval 
-      double fun_max   () const { return m_bernstein.fun_max   () ; }
-      // ======================================================================
-      bool positive    () const { return m_bernstein.positive () ; }
-      bool hasroots    () const { return !positive() ; }
-      //
-      bool   negative  () const { return false ; }
-      bool nonegative  () const { return true  ; }
-      bool nonpositive () const { return false ; }
-      bool keepsign    () const { return true  ; }
       //
       bool decreasing  () const { return m_bernstein.decreasing()     ; }
       bool increasing  () const { return m_bernstein.increasing()     ; }

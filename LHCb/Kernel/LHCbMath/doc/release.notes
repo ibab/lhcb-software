@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-10-03 - Vanya Belyaev
+ - fix Convex&ConvexOnly 
+
 ! 2015-10-01 - Vanya Belyaev
  - speedup interration of 2D polynomials and splines 
 
