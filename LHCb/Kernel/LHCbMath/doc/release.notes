@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-10-04 - Vanya Belyaev
+ - improve convex&convex only splines 
+
 ! 2015-10-03 - Vanya Belyaev
  - fix Convex&ConvexOnly 
 
