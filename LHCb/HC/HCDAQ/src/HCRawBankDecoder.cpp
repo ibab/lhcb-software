@@ -28,7 +28,7 @@ DECLARE_ALGORITHM_FACTORY(HCRawBankDecoder)
 HCRawBankDecoder::HCRawBankDecoder(const std::string& name,
                                    ISvcLocator* pSvcLocator)
     : Decoder::HistoAlgBase(name, pSvcLocator),
-      m_digits(NULL), m_l0digits(NULL), m_odin(NULL) {
+      m_digits(NULL), m_l0digits(NULL) {
 
   declareProperty("DigitLocation", 
                   m_digitLocation = LHCb::HCDigitLocation::Default);
@@ -58,9 +58,6 @@ StatusCode HCRawBankDecoder::initialize() {
 
   StatusCode sc = Decoder::HistoAlgBase::initialize();
   if (sc.isFailure()) return sc;
-
-  // Get ODIN.
-  m_odin = tool<IEventTimeDecoder>("OdinTimeDecoder", "OdinDecoder", this);
 
   // Book histograms.
   for (unsigned int i = 0; i < 2; ++i) {
@@ -155,7 +152,6 @@ StatusCode HCRawBankDecoder::execute() {
   if (m_skipErrorBanks) return StatusCode::SUCCESS;
 
   // Get event information from ODIN.
-  m_odin->getTime();
   const LHCb::ODIN* odin = getIfExists<LHCb::ODIN>(LHCb::ODINLocation::Default);
   if (!odin) {
     return Error("Cannot retrieve ODIN", StatusCode::SUCCESS);

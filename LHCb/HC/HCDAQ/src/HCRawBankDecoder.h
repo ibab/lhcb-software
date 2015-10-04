@@ -5,9 +5,6 @@
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
 
-// Gaudi
-#include "GaudiKernel/IEventTimeDecoder.h"
-
 // LHCb
 #include "DAQKernel/DecoderHistoAlgBase.h"
 
@@ -49,9 +46,6 @@ class HCRawBankDecoder : public Decoder::HistoAlgBase {
   IHistogram2D* m_hLinkErrors;
   IHistogram2D* m_hTell1Errors;
   std::vector<IHistogram1D*> m_hBxDiff;
-
-  /// ODIN
-  IEventTimeDecoder* m_odin;
 
   bool decode(LHCb::RawBank* bank);
   bool decodeErrorBank(LHCb::RawBank* bank, const int bxid);
