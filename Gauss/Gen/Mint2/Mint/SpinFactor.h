@@ -9,6 +9,7 @@
 #include "Mint/CachedByEvent.h"
 #include "Mint/FitParDependent.h"
 #include "Mint/CachedByEvent.h"
+#include "Mint/NamedParameter.h"
 
 #include <string>
 #include <iostream>
@@ -20,6 +21,7 @@ class SpinFactor
 , public MINT::FitParDependent
 , virtual public ISpinFactor{
  protected:
+  MINT::NamedParameter<int> _useZemachTensors;
   AssociatingDecayTree _associatingDecayTree;
   int _nFinal;
   std::vector<MINT::const_counted_ptr<AssociatedDecayTree> > fsPS; // final state PseudoScalars.
@@ -58,6 +60,7 @@ class SpinFactor
     , _associatingDecayTree(decay)
     , _nFinal(nFinal)
     , fsPS(nFinal, (MINT::const_counted_ptr<AssociatedDecayTree>) 0)
+    , _useZemachTensors("useZemachTensors",0)
     {}
   
   SpinFactor(const SpinFactor& other) // just create a new one
@@ -67,6 +70,7 @@ class SpinFactor
     , _associatingDecayTree(other._associatingDecayTree)
     , _nFinal(other._nFinal)
     , fsPS(other._nFinal, (MINT::const_counted_ptr<AssociatedDecayTree>) 0)
+    , _useZemachTensors("useZemachTensors",0)
     {}
   virtual void printYourself(std::ostream& os=std::cout) const=0;
   virtual void printParsing(std::ostream& os=std::cout) const;

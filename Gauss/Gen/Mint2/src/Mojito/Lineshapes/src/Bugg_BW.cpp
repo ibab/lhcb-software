@@ -20,7 +20,7 @@ std::complex<double> Bugg_BW::BreitWigner(){
     complex<double> den = M() * M() - s 
     - g_1_square(s) * (s - sA() * _m_pi * _m_pi)/(M() * M() - sA() * _m_pi * _m_pi)*z(s)- complex<double>(0,1) * M() * Gamma_tot(s);    
     
-    return num/den;
+    return 1./den;
 }
 
 double Bugg_BW::Gamma_2pi(double s){

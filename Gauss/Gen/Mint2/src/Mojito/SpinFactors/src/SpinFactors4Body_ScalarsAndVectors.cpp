@@ -175,6 +175,16 @@ double SF_DtoPP0_PtoVP1_VtoP2P3::getVal(IDalitzEvent& evt){
 
   double MassV = mRes(V, evt);
   
+    if (_useZemachTensors) {
+        double MP = mRes(P, evt);
+        TLorentzVector pP= pV + p(1, evt);
+        TLorentzVector qP= pV - p(1, evt);
+
+        ZTspin1 LP(qP,pP,MP);
+        ZTspin1 LV(qV,pV,MassV);
+        return (LP.Dot(LV))/(GeV*GeV);
+    }   
+    
   return (p(1, evt).Dot(qV)
 	  -    p(1, evt).Dot(pV) * pV.Dot(qV) / (MassV*MassV))
     /(GeV*GeV)
@@ -274,8 +284,16 @@ double SF_DtoAP0_AtoVP1_VtoP2P3::getVal(IDalitzEvent& evt){
 
   if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
 
-  TLorentzVector pV = p(2, evt) + p(3, evt);
-
+   TLorentzVector pV = p(2, evt) + p(3, evt);  
+   TLorentzVector qV = p(2, evt) - p(3, evt);
+   TLorentzVector pA = p(1, evt) + p(2, evt) + p(3, evt);
+   TLorentzVector p0 = p(0, evt);
+   TLorentzVector pD = p(0, evt) + pA ;
+   TLorentzVector qD = pA - p(0, evt) ;    
+    
+   double MA    = mRes(A, evt);
+   double MassV = mRes(V, evt);   
+    
   if(debugThis){
     for(int i=0; i<4; i++){
       cout << " numbered by SF: p(" << i << ") " << p(i, evt) << endl;
@@ -286,12 +304,17 @@ double SF_DtoAP0_AtoVP1_VtoP2P3::getVal(IDalitzEvent& evt){
     }
     cout << "got pV " << pV << endl;
   }
-  TLorentzVector qV = p(2, evt) - p(3, evt);
-  TLorentzVector pA = p(1, evt) + p(2, evt) + p(3, evt);
-  TLorentzVector p0 = p(0, evt);
+  
+  if(_useZemachTensors){  
+      ZTspin1 LB(qD,pD,pD.M());
+      ZTspin1 LV(qV,pV,MassV);
+      SpinSumV PA(pA,MA);  
+      
+      TLorentzVector tmp= PA.Dot(LV);
+      return (LB.Dot(tmp))/(GeV*GeV);
+  }
+    
 
-  double MA    = mRes(A, evt);
-  double MassV = mRes(V, evt);
   
   return (p(0, evt).Dot(qV)
 	  -    p0.Dot(pA) * pA.Dot(qV) / (MA*MA)
@@ -385,9 +408,19 @@ double SF_DtoAP0_AtoSP1_StoP2P3::getVal(IDalitzEvent& evt){
 
   TLorentzVector pA =  p1 + p2  + p3;
   TLorentzVector qA = (p2 + p3) - p1;
-
+    
+  TLorentzVector pD = pA + p0;  
+  TLorentzVector qD = pA - p0;
+    
   double MA = mRes(A, evt);
   
+  if(_useZemachTensors){
+      ZTspin1 LD(qD,pD,pD.M());
+      ZTspin1 LA(qA,pA,MA);
+      return (LD.Dot(LA))/(GeV*GeV);
+  }  
+    
+    
   return (p0.Dot(qA)
 	  -    p0.Dot(pA) * pA.Dot(qA) / (MA*MA)
 	  )    
@@ -567,6 +600,17 @@ double SF_DtoV1V2_V1toP0P1_V1toP2P3_P::getVal(IDalitzEvent& evt){
   
   TLorentzVector pD = pV1 + pV2;
   TLorentzVector qD = pV1 - pV2;
+    
+  if (_useZemachTensors) {
+      double MV1 = mRes(V1, evt);
+      double MV2 = mRes(V2, evt);
+      
+      ZTspin1 LD(qD,pD,pD.M());
+      ZTspin1 LV1(qV1,pV1,MV1);
+      ZTspin1 LV2(qV2,pV2,MV2);
+      
+      return LeviCivita(pD,LD,LV1,LV2)/(GeV*GeV*GeV*GeV);
+  }  
   
   /*
   double sum=0;
@@ -622,6 +666,19 @@ double SF_DtoV1V2_V1toP0P1_V1toP2P3_D::getVal(IDalitzEvent& evt){
   
   double MV1 = mRes(V1, evt);
   double MV2 = mRes(V2, evt);
+    
+    
+  if (_useZemachTensors) {
+        TLorentzVector pD = pV1 + pV2;
+        TLorentzVector qD = pV1 - pV2;
+        double mD = pD.M();
+        
+        ZTspin1 tV1(qV1, pV1, MV1);
+        ZTspin1 tV2(qV2, pV2, MV2);
+        ZTspin2 tD(qD, pD, mD);
+        
+        return tV1.Contract(tD.Contract(tV2))/(GeV*GeV*GeV*GeV);
+  }  
   
   double returnVal = 
          (  qV1.Dot(pV2) - qV1.Dot(pV1) * pV1.Dot(pV2)/(MV1*MV1)
@@ -835,6 +892,14 @@ double SF_DtoVS_VtoP0P1_StoP2P3::getVal(IDalitzEvent& evt){
     TLorentzVector qV = p(0, evt) - p(1, evt);
 
     double MassV = mRes(V, evt);
+    
+    if(_useZemachTensors){
+        TLorentzVector pD= pV + pS;
+        TLorentzVector qD= pV - pS;
+        ZTspin1 LD(qD,pD,pD.M());
+        ZTspin1 LV(qV,pV,MassV);
+        return (LD.Dot(LV))/(GeV*GeV);
+    }
 
     return (pS.Dot(qV)
 	    -    pS.Dot(pV) * pV.Dot(qV) / (MassV*MassV)
@@ -995,12 +1060,32 @@ double SF_DtoV1P0_V1toV2P1_V2toP2P3::getVal(IDalitzEvent& evt){
  if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
 
  TLorentzVector pV1 = p(1, evt) + p(2, evt) + p(3, evt);
+ TLorentzVector pV2 = p(2, evt) + p(3, evt);
  TLorentzVector pP1 = p(0, evt);
 
  TLorentzVector qV1 = (p(2, evt) + p(3, evt)) - p(1, evt);
  TLorentzVector qV2 = p(2, evt) - p(3, evt);
 
  double units = GeV*GeV*GeV*GeV;
+    
+    if (_useZemachTensors) {
+        double MV1 = mRes(V1, evt);
+        double MV2 = mRes(V2, evt);
+        
+        TLorentzVector pD = pV1 + p(0, evt);
+        TLorentzVector qD = pV1 - p(0, evt);
+        
+        ZTspin1 LD(qD,pD,pD.M());
+        ZTspin1 LV1(qV1,pV1,MV1);
+        ZTspin1 LV2(qV2,pV2,MV2);
+        SpinSumV PV1(pV1,MV1);
+        
+        TLorentzVector tmp = PV1.Dot(LD);
+        if(tmp == TLorentzVector(0,0,0,0)) return 0.;
+        return LeviCivita(tmp,LV1,LV2,pV1)/units;
+    }   
+    
+    
  return LeviCivita(pV1, qV1, pP1, qV2)/units;
 }
 
@@ -1034,6 +1119,8 @@ double SF_DtoAP0_AtoVP1Dwave_VtoP2P3::getVal(IDalitzEvent& evt){
   TLorentzVector pA = p(1, evt) + p(2, evt) + p(3, evt);
   TLorentzVector qA = p(1, evt) - (p(2, evt) + p(3, evt));
 
+  TLorentzVector pD = p(0, evt) + pA;  
+  TLorentzVector qD = pA - p(0, evt);  
 
   double MA = mRes(A, evt);
   double MV = mRes(V, evt);
@@ -1043,6 +1130,19 @@ double SF_DtoAP0_AtoVP1Dwave_VtoP2P3::getVal(IDalitzEvent& evt){
 
   double units = GeV*GeV*GeV*GeV;
 
+  if(_useZemachTensors){  
+        ZTspin1 LD(qD,pD,pD.M());
+        ZTspin1 LV(qV,pV,MV);
+        ZTspin2 LA(qA,pA,MA); 
+        TLorentzVector tmp= LA.Contract(LV);
+      
+        //ZTspin1 LA1(qA,pA,MA); 
+        //SpinSumV PA(pA,MA); 
+        //return LD.Dot(LA1)*(LA1.Dot(LV)) + 1./3. * LD.Dot(PA.Dot(LV)) * LA1.Dot(LA1);
+      
+        return (LD.Dot(tmp))/units;
+   }  
+    
   return p(0, evt).Dot(tA) * tV.Dot(pA) / units;
 }
 void SF_DtoAP0_AtoVP1Dwave_VtoP2P3::printYourself(ostream& os) const{
