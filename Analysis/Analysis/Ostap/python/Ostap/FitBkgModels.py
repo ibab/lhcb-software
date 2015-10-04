@@ -32,7 +32,7 @@ __all__     = (
     'PSpline_pdf'     , ## positive            spline 
     'MSpline_pdf'     , ## positive monothonic spline 
     'CSpline_pdf'     , ## positive monothonic convex or concave spline 
-    'CoSpline_pdf'    , ## positive convex or concave spline 
+    'CPSpline_pdf'    , ## positive convex or concave spline 
     ##
     'PS2_pdf'         , ## 2-body phase space (no parameters)
     'PSLeft_pdf'      , ## Low  edge of N-body phase space 
@@ -669,13 +669,13 @@ models.append ( CSpline_pdf )
 
 
 # =============================================================================
-## @class  CoSpline_pdf
+## @class  CPSpline_pdf
 #  The special spline for non-negative convex/concave function
 #  @see Analysis::Models::ConvexOnlySpline 
 #  @see Gaudi::Math::ConvexOnlySpline 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
-class CoSpline_pdf(PDF) :
+class CPSpline_pdf(PDF) :
     """
     A positive convex/concave spline
 
@@ -693,7 +693,7 @@ class CoSpline_pdf(PDF) :
     >>> knots.push_back ( ... )
     >>> spline = Gaudi.Math.ConvexonlySpline( knots , order, True )
 
-    >>> bkg = CoSpline_pdf ( 'Spline' , mass , spline ) 
+    >>> bkg = CPSpline_pdf ( 'Spline' , mass , spline ) 
     
     """
     ## constructor
@@ -717,7 +717,7 @@ class CoSpline_pdf(PDF) :
             self.spline              , 
             self.phi_list            )
 
-models.append ( CoSpline_pdf ) 
+models.append ( CPSpline_pdf ) 
 
 # =============================================================================
 ## @class  PS2_pdf

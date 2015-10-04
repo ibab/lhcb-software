@@ -387,7 +387,8 @@ def _h1_param_sum_ ( h1             ,
             bfit.fun.SetParameter ( i + 1 , 0  )
             bfit.fun.SetParLimits ( i + 1 , -0.6 * pi  , 1.1 * pi ) 
             
-    if 0 > opts.upper().find('S') : opts += 'S '
+    if not opts                   : opts  = 'S'
+    if 0 > opts.upper().find('S') : opts += 'S'
 
     fun = bfit.fun
 
@@ -408,7 +409,7 @@ def _h1_param_sum_ ( h1             ,
                 fun.SetParameter ( i + 1 , 0  )
             r = fun.Fit(h1,opts)
             fun.ReleaseParameter( 0)
-        r = fun.Fit(h1,opts)
+        r = fun.Fit( h1 , opts )
             
     if 0 != r.Status() :
         logger.warning ( 'Fit status is  %d [%s]' % ( r.Status() , type(b).__name__ ) )
@@ -420,7 +421,7 @@ def _h1_param_sum_ ( h1             ,
             for i in range( 0 , b.npars() ) :
                 fun.SetParameter ( i + 1 , 0  )
             r = fun.Fit(h1,opts)
-            fun.ReleaseParameter( 0)
+            fun.ReleaseParameter( 0 )
         r = fun.Fit ( h1 , opts )
         if 0 != r.Status() :
             logger.error ('Fit status is  %d [%s]' % ( r.Status() , type(b).__name__ ) )
@@ -777,27 +778,84 @@ def _h1_cspline_ ( h1 , degree = 3   , knots = 3 ,
     return _h1_param_sum_ ( h1 , func , H_Nfit , opts ) 
 
 
+# =============================================================================
+## represent 1D-histo as positive convex spline
+def _h1_convexspline_ ( h1 , degree = 3   , knots = 3 ,
+                        opts       = 'SQ0I' ) :
+    """Represent histo as positive convex spline  
+    
+    >>> h = ... # the historgam
+    >>> b1 = h.convexSpline ( degree = 3 , knots = 3 )
+    >>> b2 = h.convexSpline ( degree = 3 , knots = [ 0.1 , 0.2, 0.8, 0.9 ]  )
+    
+    """
+    mn,mx = h1.xminmax ()
+    #
+    from Ostap.PyRoUts import funID
+    if isinstance ( knots , ( int , long ) ) :
+        func = cpp.Gaudi.Math.ConvexOnlySpline ( mn , mx , knots , degree , True )
+    else :
+        from LHCbMath.Types import doubles
+        _knots = doubles ( mn , mx ) 
+        for k in knots : _knots.push_back( k )
+        func   = cpp.Gaudi.Math.ConvexOnlySpline ( _knots , order , True )
+        
+    return _h1_param_sum_ ( h1 , func , H_Nfit , opts ) 
+
+# =============================================================================
+## represent 1D-histo as positive concave spline
+def _h1_concavespline_ ( h1 , degree = 3   , knots = 3 ,
+                        opts       = 'SQ0I' ) :
+    """Represent histo as positive convcave spline  
+    
+    >>> h = ... # the historgam
+    >>> b1 = h.concaveSpline ( degree = 3 , knots = 3 )
+    >>> b2 = h.concaveSpline ( degree = 3 , knots = [ 0.1 , 0.2, 0.8, 0.9 ]  )
+    
+    """
+    mn,mx = h1.xminmax ()
+    #
+    from Ostap.PyRoUts import funID
+    if isinstance ( knots , ( int , long ) ) :
+        func = cpp.Gaudi.Math.ConvexOnlySpline ( mn , mx , knots , degree , False )
+    else :
+        from LHCbMath.Types import doubles
+        _knots = doubles ( mn , mx ) 
+        for k in knots : _knots.push_back( k )
+        func   = cpp.Gaudi.Math.ConvexOnlySpline ( _knots , order , False )
+        
+    return _h1_param_sum_ ( h1 , func , H_Nfit , opts ) 
+
+# =============================================================================
+
+
+# =============================================================================
+## decorate histograms 
 for t in ( ROOT.TH1D , ROOT.TH1F ) :
-    t.bernstein   = _h1_bernstein_
-    t.chebyshev   = _h1_chebyshev_
-    t.legendre    = _h1_legendre_
-    t.fourier     = _h1_fourier_
-    t.cosine      = _h1_cosine_
-    t.polynomial  = _h1_polinomial_
-    t.positive    = _h1_positive_
-    t.monothonic  = _h1_monothonic_
-    t.convex      = _h1_convex_
-    t.convexpoly  = _h1_convexpoly_
-    t.concavepoly = _h1_concavepoly_
-    t.bSpline     = _h1_bspline_
-    t.pSpline     = _h1_pspline_
-    t.mSpline     = _h1_mspline_
-    t.cSpline     = _h1_cspline_
+    t.bernstein      = _h1_bernstein_
+    t.chebyshev      = _h1_chebyshev_
+    t.legendre       = _h1_legendre_
+    t.fourier        = _h1_fourier_
+    t.cosine         = _h1_cosine_
+    t.polynomial     = _h1_polinomial_
+    t.positive       = _h1_positive_
+    t.monothonic     = _h1_monothonic_
+    t.convex         = _h1_convex_
+    t.convexpoly     = _h1_convexpoly_
+    t.concavepoly    = _h1_concavepoly_
+    t.bSpline        = _h1_bspline_
+    t.pSpline        = _h1_pspline_
+    t.mSpline        = _h1_mspline_
+    t.cSpline        = _h1_cspline_
+    t.convexSpline   = _h1_convexspline_ 
+    t.concaveSpline  = _h1_concavespline_ 
+    t.convexspline   = _h1_convexspline_ 
+    t.concavespline  = _h1_concavespline_ 
 
 
 ## create function object 
 def  _funobj0_ ( self ) :
-    """
+    """Create function object 
     """
     if hasattr ( self , '_bfit' ) : return self._bfit
     self._bfit = H_fit( self )
@@ -805,7 +863,7 @@ def  _funobj0_ ( self ) :
 
 ## create function object 
 def  _funobjN_ ( self ) :
-    """
+    """Create function object 
     """
     if hasattr ( self , '_bfit' ) : return self._bfit
     self._bfit = H_Nfit( self )
@@ -813,23 +871,23 @@ def  _funobjN_ ( self ) :
 
 ## draw spline object
 def _sp_draw_   ( self , opts = '' ) :
-    """
-    Draw spline object 
+    """Draw spline object 
     """
     bf = self.funobj () 
     return bf.fun.Draw( opts ) 
     
-cpp.Gaudi.Math.Bernstein        .funobj = _funobj0_
-cpp.Gaudi.Math.ChebyshevSum     .funobj = _funobj0_
-cpp.Gaudi.Math.LegendreSum      .funobj = _funobj0_
-cpp.Gaudi.Math.FourierSum       .funobj = _funobj0_
-cpp.Gaudi.Math.CosineSum        .funobj = _funobj0_
-cpp.Gaudi.Math.Polynomial       .funobj = _funobj0_
-cpp.Gaudi.Math.BSpline          .funobj = _funobj0_
-cpp.Gaudi.Math.Positive         .funobj = _funobjN_
-cpp.Gaudi.Math.PositiveSpline   .funobj = _funobjN_
-cpp.Gaudi.Math.MonothonicSpline .funobj = _funobjN_
-cpp.Gaudi.Math.ConvexSpline     .funobj = _funobjN_
+cpp.Gaudi.Math.Bernstein         .funobj = _funobj0_
+cpp.Gaudi.Math.ChebyshevSum      .funobj = _funobj0_
+cpp.Gaudi.Math.LegendreSum       .funobj = _funobj0_
+cpp.Gaudi.Math.FourierSum        .funobj = _funobj0_
+cpp.Gaudi.Math.CosineSum         .funobj = _funobj0_
+cpp.Gaudi.Math.Polynomial        .funobj = _funobj0_
+cpp.Gaudi.Math.BSpline           .funobj = _funobj0_
+cpp.Gaudi.Math.Positive          .funobj = _funobjN_
+cpp.Gaudi.Math.PositiveSpline    .funobj = _funobjN_
+cpp.Gaudi.Math.MonothonicSpline  .funobj = _funobjN_
+cpp.Gaudi.Math.ConvexSpline      .funobj = _funobjN_
+cpp.Gaudi.Math.ConvexOnlySpline  .funobj = _funobjN_
 
 # =============================================================================
 ## helper class to wrap 1D-histogram as function
@@ -1621,7 +1679,6 @@ def _h1_pdf_concavepoly_ ( h1 , degree , *args , **kwargs ) :
     from Ostap.FitBkgModels import ConvexOnly_pdf
     return _h1_pdf_ ( h1 , ConvexOnly_pdf , (degree,False) , *args , **kwargs )
 
-
 # =============================================================================
 
 for t in ( ROOT.TH1D , ROOT.TH1F ) :
@@ -1730,11 +1787,76 @@ def _h1_pdf_cspline_ ( h1 , spline , *args , **kwargs ) :
     return _h1_pdf_ ( h1 , CSpline_pdf , ( spline , ) , *args , **kwargs )
 
 
+# =============================================================================
+## parameterize/fit histogram with the positive  convex b-spline 
+#  @code
+#  h1 = ...
+#  results = h1.pdf_convexSpline ( spline = ( 3 , 2 )  ) ## order=3, inner knots=2
+#  results = h1.pdf_convexSpline ( ( 3 , 2 ) ,  draw = True , silent = True )
+#  print results[0]
+#  pdf = results[2]
+#  print results[3]
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-07-26
+def _h1_pdf_convexSpline_ ( h1 , spline , *args , **kwargs ) :
+    """Parameterize/fit histogram with convex positive b-spline 
+    >>> h1 = ...
+    >>> results = h1.pdf_convexSpline ( spline = (3,2) )
+    >>> results = h1.pdf_convexSpline ( ( 3 , 2 ), draw = True , silent = True )
+    >>> print results[0] ## fit results 
+    >>> pdf = results[1] ## get PDF 
+    >>> print results[2] ## underlying parameterization 
+    """
+    #
+    if isinstance ( spline , ( tuple , list ) ) : 
+        ## create the spline with uniform binning 
+        CS     = cpp.Gaudi.Math.ConvexOnlySpline
+        spline = CS ( h1.xmin() , h1.xmax() , spline[1] , spline[0] , True )
+        #
+    from Ostap.FitBkgModels import CPSpline_pdf
+    return _h1_pdf_ ( h1 , CPSpline_pdf , ( spline , ) , *args , **kwargs )
 
+
+# =============================================================================
+## parameterize/fit histogram with the positive  concave b-spline 
+#  @code
+#  h1 = ...
+#  results = h1.pdf_concaveSpline ( spline = ( 3 , 2 )  ) ## order=3, inner knots=2
+#  results = h1.pdf_concaveSpline ( ( 3 , 2 ) ,  draw = True , silent = True )
+#  print results[0]
+#  pdf = results[2]
+#  print results[3]
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-07-26
+def _h1_pdf_concaveSpline_ ( h1 , spline , *args , **kwargs ) :
+    """Parameterize/fit histogram with positive concave b-spline 
+    >>> h1 = ...
+    >>> results = h1.pdf_concaveSpline ( spline =  ( 3 , 2 ) )
+    >>> results = h1.pdf_concaveSpline ( ( 3 , 2 ), draw = True , silent = True )
+    >>> print results[0] ## fit results 
+    >>> pdf = results[1] ## get PDF 
+    >>> print results[2] ## underlying parameterization 
+    """
+    #
+    if isinstance ( spline , ( tuple , list ) ) : 
+        ## create the spline with uniform binning 
+        CS     = cpp.Gaudi.Math.ConvexOnlySpline
+        spline = CS ( h1.xmin() , h1.xmax() , spline[1] , spline[0] , False )
+        #
+    from Ostap.FitBkgModels import CPSpline_pdf
+    return _h1_pdf_ ( h1 , CPSpline_pdf , ( spline , ) , *args , **kwargs )
+
+
+
+## decorate !
 for t in ( ROOT.TH1D , ROOT.TH1F ) :
-    t.pdf_pSpline = _h1_pdf_pspline_
-    t.pdf_mSpline = _h1_pdf_mspline_
-    t.pdf_cSpline = _h1_pdf_cspline_
+    t.pdf_pSpline       = _h1_pdf_pspline_
+    t.pdf_mSpline       = _h1_pdf_mspline_
+    t.pdf_cSpline       = _h1_pdf_cspline_
+    t.pdf_convexSpline  = _h1_pdf_convexSpline_
+    t.pdf_concaveSpline = _h1_pdf_concaveSpline_
 
 
 # =============================================================================

@@ -468,8 +468,7 @@ def _p_set_par_ ( o , index , value ) :
     >>> fun = ...
     >>> fun[1] = 10.0
     """
-    r = o.setPar ( index , value )
-    return r 
+    return o.setPar ( index , value )
 
 # =============================================================================
 ## get parameter from polynomial/spline functions
@@ -477,12 +476,12 @@ def _p_set_par_ ( o , index , value ) :
 #  fun = ...
 #  print fun[1]
 #  @endcode 
-def _p_get_par_ ( o , index , value ) :
+def _p_get_par_ ( o , index ) :
     """Get parameter from polynomial/spline function
     >>> fun = ...
     >>> print fun[1]
     """
-    return o.getPar ( index , value )
+    return o.par ( index )
 
 for f in ( Gaudi.Math.Positive       ,
            Gaudi.Math.Bernstein2D    ,
