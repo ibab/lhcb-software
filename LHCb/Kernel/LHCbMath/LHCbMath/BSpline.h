@@ -42,24 +42,26 @@ namespace Gaudi
       // ======================================================================
       /** constructor from the list of knots and the order 
        *  vector of parameters will be calculated automatically 
-       *  @param points non-empty vector of poinst/knots 
+       *  @param knots  non-empty vector of poinst/knots 
        *  @param order  the order of splines 
-       *  - vector of points is not requires to be ordered 
+       *  - vector of knots is not required to be ordered 
        *  - duplicated knots will be ignored
        *  - min/max value will be used as interval boundaries 
+       *  - extra knots will added at the end of interval 
        */
-      BSpline ( const std::vector<double>& points    ,
+      BSpline ( const std::vector<double>& knots     ,
                 const unsigned short       order = 3 ) ;
       // ======================================================================
       /** Constructor from the list of knots and list of parameters 
        *  The spline order will be calculated automatically 
-       *  @param points non-empty vector of poinst/knots 
+       *  @param knots  non-empty vector of poinst/knots 
        *  @param pars   non-empty vector of parameters 
-       *  - vector of points is not requires to be ordered 
-       *  - duplicated knots will be ignored
+       *  - vector of knots  is not required to be ordered 
        *  - min/max value will be used as interval boundaries 
+       *  - duplicated knots will be ignored
+       *  - extra knots will added at the end of interval 
        */
-      BSpline ( const std::vector<double>& points    ,
+      BSpline ( const std::vector<double>& knots     ,
                 const std::vector<double>& pars      ) ;
       // ======================================================================
       /** Constructor for uniform binning 
@@ -71,8 +73,13 @@ namespace Gaudi
       BSpline ( const double         xmin   = 0 ,  
                 const double         xmax   = 1 , 
                 const unsigned short inner  = 3 ,   // number of inner points 
-                const unsigned short order  = 3 ) ; 
+                const unsigned short order  = 3 ) ;   
       // ======================================================================
+      /// copy constructor 
+      BSpline ( const BSpline& ) = default ;
+      /// move constructor 
+      BSpline (       BSpline&& right ) ;
+      // ======================================================================      
     public:
       // ======================================================================
       /// get the value
@@ -133,25 +140,6 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
-      /// get minimal value of the function on (xmin,xmax) interval 
-      double fun_min       () const ;
-      /// get maximal value of the function on (xmin,xmax) interval 
-      double fun_max       () const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// positive      function ?
-      bool   positive      () const ;
-      /// negative      function ?
-      bool   negative      () const ; 
-      /// non-positive  function ?
-      bool   nonpositive   () const ; 
-      /// non-negative  function ?
-      bool   nonnegative   () const ; 
-      ///  has roots at [xmin,xmax] ? 
-      bool   hasroots      () const { return   !positive () &&   !negative () ; }
-      ///  keep sign at [xmin,xmax] ? 
-      bool   keepsign      () const { return nonpositive () || nonnegative () ; }
       /// is it a decreasing function?
       bool   decreasing    () const ;
       /// is it a increasing function?
@@ -190,7 +178,7 @@ namespace Gaudi
       /// get the underlying spline 
       const Gaudi::Math::BSpline& bspline () const { return *this ; }
       // ======================================================================
-    public: // simple  manipulations with bernstein polynoms 
+    public: // simple  manipulations with  B-splines  
       // ======================================================================
       /// simple  manipulations with spline: scale it! 
       BSpline& operator *= ( const double a ) ;     // scale it! 
@@ -200,6 +188,13 @@ namespace Gaudi
       BSpline& operator += ( const double a ) ;     // shift it! 
       /// simple  manipulations with spline: shift it! 
       BSpline& operator -= ( const double a ) ;     // shift it! 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// assignement      operator 
+      BSpline& operator=( const BSpline& ) = default ; 
+      /// assignement move operator 
+      BSpline& operator=(       BSpline&& right ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -314,23 +309,6 @@ namespace Gaudi
       // ======================================================================
     public:    public:
       // ======================================================================
-      /// get minimal value of the function on (xmin,xmax) interval 
-      double fun_min       () const { return m_bspline.fun_min () ; }
-      /// get maximal value of the function on (xmin,xmax) interval 
-      double fun_max       () const { return m_bspline.fun_max () ; }
-      // ======================================================================
-      /// positive      function ?
-      bool    positive     () const { return m_bspline.positive()    ; }
-      /// negative      function ?
-      bool   negative      () const { return false ; }      
-      /// non-positive  function ?
-      bool   nonpositive   () const { return false ; }      
-      /// non-negative  function ?
-      bool   nonnegative   () const { return true  ; }
-      ///  keep sign at [xmin,xmax] ? 
-      bool   keepsign      () const { return true ; }
-      ///  has roots at [xmin,xmax] ? 
-      bool   hasroots      () const { return !positive () ; }
       /// is it a decreasing function?
       bool   decreasing    () const { return m_bspline.decreasing () ; }
       /// is it a increasing function?

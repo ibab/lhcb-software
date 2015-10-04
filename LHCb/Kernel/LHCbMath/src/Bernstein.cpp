@@ -1225,7 +1225,7 @@ bool Gaudi::Math::ConvexOnly::updateBernstein ()
   //
   if ( !m_convex ) 
   {
-    std::array<double,2> a = { { m_sphere.x2(0) , m_sphere.x2(1) } };
+    const std::array<double,2> a = { { m_sphere.x2(0) , m_sphere.x2(1) } };
     for ( unsigned short ix = 2 ; ix < vs ; ++ix ) 
     { v[ix] = m_sphere.x2 ( ix ) ; }
     //

@@ -219,13 +219,21 @@ namespace
 // ============================================================================
 // The  Basic spline 
 // ============================================================================
-// constructor from the list of knots and the order 
+/** constructor from the list of knots and the order 
+ *  vector of parameters will be calculated automatically 
+ *  @param knots  non-empty vector of poinst/knots 
+ *  @param order  the order of splines 
+ *  - vector of points is not requires to be ordered 
+ *  - duplicated knots will be ignored
+ *  - min/max value will be used as interval boundaries 
+ *  - extra knots will added at the end of interval 
+ */
 // ============================================================================
 Gaudi::Math::BSpline::BSpline 
-( const std::vector<double>& points ,
+( const std::vector<double>& knots  ,
   const unsigned short       order  ) 
   : std::unary_function<double,double>() 
-  , m_knots   ( points ) 
+  , m_knots   ( knots  ) 
   , m_pars    () 
   , m_order   ( order  ) 
   , m_inner   ( 0      )  
@@ -243,8 +251,6 @@ Gaudi::Math::BSpline::BSpline
   //
   if ( m_knots.size () < 2 ) { throw GaudiException 
       ("Vector of knots is too short", "Gaudi::Math::BSpline" , StatusCode(810) ) ; } 
-  if ( 0 == m_order        ) { throw GaudiException
-      ("Invalid spline order"        , "Gaudi::Math::BSpline" , StatusCode(811) ) ; } 
   //
   m_inner = m_knots.size   () - 2 ;
   // specify vector of parameters 
@@ -267,12 +273,22 @@ Gaudi::Math::BSpline::BSpline
   m_knots_i.back  () = m_xmax ;
 }
 // ======================================================================
+/*  Constructor from the list of knots and list of parameters 
+ *  The spline order will be calculated automatically 
+ *  @param knots  non-empty vector of poinst/knots 
+ *  @param pars   non-empty vector of parameters 
+ *  - vector of points is not requires to be ordered 
+ *  - min/max value will be used as interval boundaries 
+ *  - duplicated knots will be ignored
+ *  - extra knots will added at the end of interval 
+ */
+// ======================================================================
 Gaudi::Math::BSpline::BSpline 
-( const std::vector<double>& points ,
+( const std::vector<double>& knots  ,
   const std::vector<double>& pars   ) 
   : std::unary_function<double,double>() 
     //
-  , m_knots ( points ) 
+  , m_knots ( knots  ) 
   , m_pars  ( pars   ) 
   , m_order ( 1      ) 
   , m_inner ( 0      )  
@@ -288,7 +304,7 @@ Gaudi::Math::BSpline::BSpline
   //
   if      ( m_knots.size()     <  2              ) { throw GaudiException
       ("Vector of knots is too short", "Gaudi::Math::BSpline" , StatusCode(812) ) ; } 
-  else if ( m_pars .size() + 1 <= m_knots.size() ) { throw GaudiException
+  else if ( m_pars .size() + 1 <  m_knots.size() ) { throw GaudiException
       ("Vector of pars  is too short", "Gaudi::Math::BSpline" , StatusCode(813) ) ; }
   //
   m_inner = m_knots.size () - 2 ;
@@ -311,7 +327,12 @@ Gaudi::Math::BSpline::BSpline
   m_knots_i.back  () = m_xmax ;
 }
 // ============================================================================
-// constructor from uniform binning 
+/* Constructor for uniform binning 
+ *  @param xmin   low  edge of spline interval 
+ *  @param xmax   high edge of spline interval 
+ *  @param inner  number of inner points in   (xmin,xmax) interval
+ *  @param order  the degree of spline 
+ */
 // ============================================================================
 Gaudi::Math::BSpline::BSpline
 ( const double         xmin    ,  
@@ -347,46 +368,39 @@ Gaudi::Math::BSpline::BSpline
   m_knots_i.back  () = m_xmax ;
 }
 // ============================================================================
-// get minimal value of the function on (xmin,xmax) interval 
+// move constructor 
 // ============================================================================
-double Gaudi::Math::BSpline::fun_min       () const 
-{ return *std::min_element( m_pars.begin() , m_pars.end() ) ; }
+Gaudi::Math::BSpline::BSpline( Gaudi::Math::BSpline&&  right ) 
+  : std::unary_function<double,double>( std::move ( right ) ) 
+  , m_knots   ( std::move ( right.m_knots   ) ) 
+  , m_pars    ( std::move ( right.m_pars    ) ) 
+  , m_order   ( std::move ( right.m_order   ) ) 
+  , m_inner   ( std::move ( right.m_inner   ) ) 
+  , m_xmin    ( std::move ( right.m_xmin    ) ) 
+  , m_xmax    ( std::move ( right.m_xmax    ) ) 
+  , m_jlast   ( std::move ( right.m_jlast   ) ) 
+  , m_pars_i  ( std::move ( right.m_pars_i  ) )  
+  , m_knots_i ( std::move ( right.m_knots_i ) )  
+{}
 // ============================================================================
-// get maximal value of the function on (xmin,xmax) interval 
+/// assignement move operator 
 // ============================================================================
-double Gaudi::Math::BSpline::fun_max       () const 
-{ return *std::max_element( m_pars.begin() , m_pars.end() ) ; }
-// ============================================================================
-// positive      function ?
-// ============================================================================
-bool Gaudi::Math::BSpline::positive      () const 
-{ 
-  const double v = fun_min () ;
-  return  0 < v && !s_zero ( v ) ; 
-}
-// ============================================================================
-// negative      function ?
-// ============================================================================
-bool Gaudi::Math::BSpline::negative      () const 
-{ 
-  const double v = fun_max () ;
-  return  0 > v && !s_zero ( v ) ; 
-}
-// ============================================================================
-// non-positive      function ?
-// ============================================================================
-bool Gaudi::Math::BSpline::nonpositive   () const 
-{ 
-  const double v = fun_max () ;
-  return  0 >= v || s_zero ( v ) ; 
-}
-// ============================================================================
-// non-negative      function ?
-// ============================================================================
-bool Gaudi::Math::BSpline::nonnegative   () const 
-{ 
-  const double v = fun_min () ;
-  return  0 <= v || s_zero ( v ) ; 
+Gaudi::Math::BSpline& Gaudi::Math::BSpline::operator=
+(       Gaudi::Math::BSpline&& right ) 
+{
+  if ( &right == this ) { return *this ; }
+  //
+  m_knots   = std::move ( right.m_knots   ) ;
+  m_pars    = std::move ( right.m_pars    ) ;
+  m_order   = std::move ( right.m_order   ) ;
+  m_inner   = std::move ( right.m_inner   ) ;
+  m_xmin    = std::move ( right.m_xmin    ) ;
+  m_xmax    = std::move ( right.m_xmax    ) ;
+  m_jlast   = std::move ( right.m_jlast   ) ;
+  m_pars_i  = std::move ( right.m_pars_i  ) ;
+  m_knots_i = std::move ( right.m_knots_i ) ;
+  //
+  return *this ;
 }
 // ============================================================================
 // is it a increasing function?
@@ -423,7 +437,6 @@ bool Gaudi::Math::BSpline::constant () const
   //
   return true ;
 }
-
 // ============================================================================
 // simple  manipulations with bernstein polynoms: scale it! 
 // ============================================================================
@@ -539,13 +552,20 @@ double Gaudi::Math::BSpline::ispline ( const          short i ,
 // ============================================================================
 double Gaudi::Math::BSpline::operator () ( const double x ) const
 {
-  if  ( x < m_xmin || x > m_xmax ) { return 0 ; }             // RETURN
+  if      ( x < m_xmin || x > m_xmax ) { return 0 ; }             // RETURN
   //
-  const double arg =  
-    !s_equal ( x , m_xmax ) ? x :
-    0 <= m_xmax             ? 
-    Gaudi::Math::next_double ( m_xmax , -s_ulps ) :
-    Gaudi::Math::next_double ( m_xmax ,  s_ulps ) ;
+  // endpoints 
+  //
+  if      ( s_equal ( x , m_xmin ) ) { return m_pars.front () ; }
+  else if ( s_equal ( x , m_xmax ) ) { return m_pars.back  () ; }
+  //
+  // const double arg =  
+  //   !s_equal ( x , m_xmax ) ? x :
+  //   0 <= m_xmax             ? 
+  //   Gaudi::Math::next_double ( m_xmax , -s_ulps ) :
+  //   Gaudi::Math::next_double ( m_xmax ,  s_ulps ) ;
+  //
+  const double arg = x ;
   //
   // find the proper "j"
   //
@@ -730,10 +750,12 @@ Gaudi::Math::PositiveSpline::PositiveSpline
   , m_bspline ( points , order ) 
   , m_sphere  ( 1 ) 
 {
-  if ( m_bspline.npars() < 2 ) { throw GaudiException 
-      ( "Vector of knots is too short", "Gaudi::Math::PositiveSpline" , StatusCode(810) ) ; } 
-  m_sphere = Gaudi::Math::NSphere( m_bspline.npars() - 1 , true ) ;  
   //
+  if ( 2 > m_bspline.npars() ) { throw GaudiException
+      ( "At least two spline parameters are required" , 
+        "Gaudi::Math::PositiveSpline"                 , StatusCode(814,true) ) ; }
+  //
+  m_sphere = Gaudi::Math::NSphere( m_bspline.npars() - 1 , true ) ;  
   updateCoefficients () ;
 }
 // ============================================================================
@@ -753,6 +775,12 @@ Gaudi::Math::PositiveSpline::PositiveSpline
   , m_bspline ( points , std::vector<double>( pars.size() + 1 , 0 )  ) 
   , m_sphere  ( pars   , true  ) 
 {
+  //
+  if ( 2 > m_bspline.npars() ) { throw GaudiException
+      ( "At least two spline parameters are required" , 
+        "Gaudi::Math::PositiveSpline"                 , StatusCode(814,true) ) ; }
+  //
+  m_sphere = Gaudi::Math::NSphere( m_bspline.npars() - 1 , true ) ;  
   updateCoefficients () ;
 }
 // ============================================================================
@@ -772,10 +800,12 @@ Gaudi::Math::PositiveSpline::PositiveSpline
   , m_bspline ( xmin , xmax , inner , order ) 
   , m_sphere  ( 1 , false ) 
 {
-  if ( m_bspline.npars() < 2 ) { throw GaudiException 
-      ( "Vector of knots is too short", "Gaudi::Math::PositiveSpline" , StatusCode(810) ) ; } 
-  m_sphere = Gaudi::Math::NSphere( m_bspline.npars() - 1 , true ) ;  
   //
+  if ( 2 > m_bspline.npars() ) { throw GaudiException
+      ( "At least two spline parameters are required" , 
+        "Gaudi::Math::PositiveSpline"                 , StatusCode(814,true) ) ; }
+  //
+  m_sphere = Gaudi::Math::NSphere( m_bspline.npars() - 1 , true ) ;  
   updateCoefficients() ;
 }
 // ============================================================================
@@ -787,10 +817,12 @@ Gaudi::Math::PositiveSpline::PositiveSpline
   , m_bspline ( spline    ) 
   , m_sphere  ( 1 , false ) 
 {
-  if ( m_bspline.npars() < 2 ) { throw GaudiException 
-      ( "Vector of knots is too short", "Gaudi::Math::PositiveSpline" , StatusCode(810) ) ; } 
-  m_sphere = Gaudi::Math::NSphere( m_bspline.npars() - 1 , true ) ;  
   //
+  if ( 2 > m_bspline.npars() ) { throw GaudiException
+      ( "At least two spline parameters are required" , 
+        "Gaudi::Math::PositiveSpline"                 , StatusCode(814,true) ) ; }
+  //
+  m_sphere = Gaudi::Math::NSphere( m_bspline.npars() - 1 , true ) ;  
   updateCoefficients() ;
 }
 // ============================================================================
@@ -984,6 +1016,9 @@ Gaudi::Math::ConvexOnlySpline::ConvexOnlySpline
   : Gaudi::Math::PositiveSpline ( points , order ) 
   , m_convex                    ( convex ) 
 {
+  if ( 2 > this->order() ) { throw GaudiException
+      ( "Degree of spline must be at least 2" , 
+        "Gaudi::Math::ConvexOnlySpline"       , StatusCode(815,true) ) ; }
   updateCoefficients () ;
 }
 // ============================================================================
@@ -1003,6 +1038,9 @@ Gaudi::Math::ConvexOnlySpline::ConvexOnlySpline
   : Gaudi::Math::PositiveSpline ( points , pars ) 
   , m_convex                    ( convex    ) 
 {
+  if ( 2 > order() ) { throw GaudiException
+      ( "Degree of spline must be at least 2" , 
+        "Gaudi::Math::ConvexOnlySpline"       , StatusCode(815,true) ) ; }
   updateCoefficients () ;
 }
 // ============================================================================
@@ -1014,14 +1052,17 @@ Gaudi::Math::ConvexOnlySpline::ConvexOnlySpline
  */
 // ============================================================================
 Gaudi::Math::ConvexOnlySpline::ConvexOnlySpline
-( const double         xmin       ,  
-  const double         xmax       , 
-  const unsigned short inner      ,   // number of inner points 
-  const unsigned short order      , 
+( const double         xmin      ,  
+  const double         xmax      , 
+  const unsigned short inner     ,   // number of inner points 
+  const unsigned short order     , 
   const bool           convex    ) 
-  : Gaudi::Math::PositiveSpline ( xmin , xmax  , inner ,order ) 
+  : Gaudi::Math::PositiveSpline ( xmin , xmax  , inner , order ) 
   , m_convex                    ( convex    ) 
 {
+  if ( this->order() < 2 ) { throw GaudiException
+      ( "Degree of spline must be at least 2" , 
+        "Gaudi::Math::ConvexOnlySpline"       , StatusCode(815,true) ) ; }
   updateCoefficients () ;
 }
 // ============================================================================
@@ -1033,6 +1074,9 @@ Gaudi::Math::ConvexOnlySpline::ConvexOnlySpline
   : Gaudi::Math::PositiveSpline ( spline        ) 
   , m_convex                    ( convex    ) 
 {
+  if ( 2 > order() ) { throw GaudiException
+      ( "Degree of spline must be at least 2" , 
+        "Gaudi::Math::ConvexOnlySpline"       , StatusCode(815,true) ) ; }
   updateCoefficients () ;
 }
 // ============================================================================
@@ -1044,6 +1088,9 @@ Gaudi::Math::ConvexOnlySpline::ConvexOnlySpline
   : Gaudi::Math::PositiveSpline ( spline        ) 
   , m_convex                    ( convex    ) 
 {
+  if ( 2 > order() ) { throw GaudiException
+      ( "Degree of spline must be at least 2" , 
+        "Gaudi::Math::ConvexOnlySpline"       , StatusCode(815,true) ) ; }
   updateCoefficients () ;
 }
 // ============================================================================
@@ -1061,39 +1108,71 @@ bool Gaudi::Math::ConvexOnlySpline::updateCoefficients  ()
   bool   update = false ;
   //
   // get sphere coefficients 
-  std::vector<double> v ( m_sphere.nX() ) ;
-  for ( unsigned short ix = 0 ; ix < m_sphere.nX() ; ++ix ) 
-  { v[ix] = m_sphere.x2 ( ix ) * ( ix  + 1 )  ; }
+  std::vector<double>  v ( m_sphere.nX() ) ;
+  const unsigned short vs = v.size()     ;
+  const unsigned short o  = order() ;  
   //
-  const double a0 = v[0] ;
-  const double a1 = v[1] ;
-  //
-  v[0] = 0 ;
-  v[1] = 0 ;
-  //
-  // integrate them and to get new coefficients
-  std::partial_sum ( v.  begin() + 2 , v.  end() , v.  begin() + 2 ) ; 
   if ( !m_convex ) 
   {
+    const std::array<double,2> a = { { m_sphere.x2(0) , m_sphere.x2(1) } };
+    for ( unsigned short ix = 2 ; ix < vs ; ++ix ) { v[ix] = m_sphere.x2 ( ix ) ; }
+    //
+    // integrate them and to get new coefficients
+    std::partial_sum ( v.  begin() + 2 , v.  end() , v.  begin() + 2 ) ; 
+    //
+    for ( unsigned int i = 1 ; i < v.size()  ; ++i ) 
+    { v[i] = v[i-1] + v[i] * ( knot_i (  i + o  + 1 ) - knot_i ( i )  ) / o ; }
+    //
     const double last = v.back() ;
-    for ( unsigned int i = 0 ; i < v.size() ; ++i ) { v[i] = last - v[i] ;}
+    for ( unsigned int i = 0 ; i < v.size() ; ++i ) { v[i] = last - v[i] ; }
+    //
+    const double v1 = a[0] - v.front() ;
+    const double v2 = a[1] - v.back()  ;
+    //
+    for ( unsigned int j = 0 ; j < v.size()  ; ++j ) 
+    { 
+      double vj = 0 ;
+      for ( unsigned short i = j + 1 ; i < j + o + 1 ; ++i ) { vj += knot_i ( i ) ; }
+      v[j] += v1 + vj * ( v2 - v1 ) / o ;
+    }
   }
-  //
-  const unsigned short o = order() ;
-  for ( unsigned int i = 1 ; i < v.size()  ; ++i ) 
-  { v[i] = v[i-1] + v[i] * ( knot_i (  i + o  + 1 ) - knot_i ( i )  ) / o ; }
-  //
-  // add a (positive) linear function a0 + (a1-a0)*x
-  //
-  std::vector<double> v2 ( m_sphere.nX() , a1 - a0 ) ;
-  const double alpha = a1 - a0 ;
-  double asum         = 0       ;
-  for ( unsigned int i = 0 ; i < v2.size()  ; ++i ) 
+  else 
   {
-    v[i]  += asum  + a0 ;
-    asum  += alpha *  ( knot_i (  i + o  + 1 ) - knot_i ( i )  ) / o ;
+    const std::array<double,3> a = { { m_sphere.x2(0) , 
+                                       m_sphere.x2(1) , 
+                                       m_sphere.x2(2) } };
+    for ( unsigned short ix = 3 ; ix < vs ; ++ix ) { v[ix] = m_sphere.x2 ( ix ) ; }
+    // integrate them and to get new coefficients
+    std::partial_sum ( v.  begin() + 3 , v.  end() , v.  begin() + 3 ) ; 
+    //
+    for ( unsigned int i = 3 ; i < v.size()  ; ++i ) 
+    { v[i] = v[i-1] + v[i] * ( knot_i (  i + o  + 1 ) - knot_i ( i )  ) / o ; }
+    //
+    const double a0 = a[0] ;
+    const double a2 = a[2] ;
+    const double a1_min = -1*std::sqrt ( a0 * a2 ) ;
+    const double a1_max = 0.5 * ( a0 + a2 ) ;
+    //
+    const double a1 = a1_min + a[1] * ( a1_max - a1_min ) ;
+    //
+    const double c0 = a0         ;
+    const double c1 = 2*(a1-a0)  ;
+    const double c2 = a0+a2-2*a1 ; 
+    //
+    for ( unsigned int j = 0 ; j < v.size()  ; ++j ) 
+    { 
+      double v1 = 0 ;
+      for ( unsigned short   i = j + 1 ; i < j + o + 1 ; ++i ) { v1 += knot_i ( i ) ; }
+      double v2 = 0 ;
+      for ( unsigned short   i = j + 1 ; i < j + o     ; ++i ) 
+      { for ( unsigned short k = i + 1 ; k < j + o + 1 ; ++k ) 
+        { v2 += knot_i ( i ) * knot_i ( k ) ; } }
+      v[j] += c0 + c1 * v1 / o + 2 * c2 * v2  / ( o * ( o - 1 ) ) ;
+    }
   }
-  //  
+  //
+  // normalize it! 
+  //
   const double isum = 1.0 / 
     _spline_integral_ ( v , m_bspline.knots() , m_bspline.order() ) ;
   //
@@ -1127,6 +1206,9 @@ Gaudi::Math::ConvexSpline::ConvexSpline
   : Gaudi::Math::MonothonicSpline ( points , order , increasing ) 
   , m_convex                      ( convex ) 
 {
+  if ( 2 > this->order() ) { throw GaudiException
+      ( "Degree of spline must be at least 2" , 
+        "Gaudi::Math::ConvexSpline"           , StatusCode(816,true) ) ; }
   updateCoefficients () ;
 }
 // ============================================================================
@@ -1147,6 +1229,9 @@ Gaudi::Math::ConvexSpline::ConvexSpline
   : Gaudi::Math::MonothonicSpline ( points , pars , increasing ) 
   , m_convex                      ( convex ) 
 {
+  if ( 2 > order() ) { throw GaudiException
+      ( "Degree of spline must be at least 2" , 
+        "Gaudi::Math::ConvexSpline"           , StatusCode(816,true) ) ; }
   updateCoefficients () ;
 }
 // ============================================================================
@@ -1167,6 +1252,9 @@ Gaudi::Math::ConvexSpline::ConvexSpline
   : Gaudi::Math::MonothonicSpline ( xmin , xmax , inner , order , increasing ) 
   , m_convex                      ( convex ) 
 {
+  if ( 2 > this->order() ) { throw GaudiException
+      ( "Degree of spline must be at least 2" , 
+        "Gaudi::Math::ConvexSpline"           , StatusCode(816,true) ) ; }
   updateCoefficients () ;
 }
 // ============================================================================
@@ -1179,6 +1267,9 @@ Gaudi::Math::ConvexSpline::ConvexSpline
   : Gaudi::Math::MonothonicSpline ( spline , increasing ) 
   , m_convex                      ( convex ) 
 {
+  if ( 2 > order() ) { throw GaudiException
+      ( "Degree of spline must be at least 2" , 
+        "Gaudi::Math::ConvexSpline"           , StatusCode(816,true) ) ; }
   updateCoefficients () ;
 }
 // ============================================================================
@@ -1191,6 +1282,9 @@ Gaudi::Math::ConvexSpline::ConvexSpline
   : Gaudi::Math::MonothonicSpline ( spline , increasing ) 
   , m_convex                      ( convex ) 
 {
+  if ( 2 > order() ) { throw GaudiException
+      ( "Degree of spline must be at least 2" , 
+        "Gaudi::Math::ConvexSpline"           , StatusCode(816,true) ) ; }
   updateCoefficients () ;
 }
 // ============================================================================
@@ -1202,6 +1296,9 @@ Gaudi::Math::ConvexSpline::ConvexSpline
   : Gaudi::Math::MonothonicSpline ( spline ) 
   , m_convex                      ( convex ) 
 {
+  if ( 2 > order() ) { throw GaudiException
+      ( "Degree of spline must be at least 2" , 
+        "Gaudi::Math::ConvexSpline"           , StatusCode(816,true) ) ; }
   updateCoefficients () ;
 }
 // ============================================================================
@@ -1213,8 +1310,6 @@ Gaudi::Math::ConvexSpline::~ConvexSpline(){}
 // ============================================================================
 bool Gaudi::Math::ConvexSpline::updateCoefficients  () 
 {
-  //
-  if  ( order() < 2 ) { return Gaudi::Math::MonothonicSpline::updateCoefficients() ; }
   //
   bool   update = false ;
   //
