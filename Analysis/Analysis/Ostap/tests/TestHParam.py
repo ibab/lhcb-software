@@ -257,21 +257,21 @@ with timing ( 'convex/concaveSpline-PDF' ) :
     rc6p = h6.pdf_concaveSpline  ( ( 2 , 1 ) , silent = True , density=False )
 
 
-## #
-## ## another splines 
-## #
+#
+## another splines 
+#
 
-## templ = ROOT.TH1F( hID() , 'histogram(expo)' , 12 , 0 , 10 )  
-## h1c   = h1.rebinNumbers ( templ )
-## h2c   = h2.rebinNumbers ( templ )
-## h3c   = h3.rebinNumbers ( templ )
-## h4c   = h4.rebinNumbers ( templ )
+templ = ROOT.TH1F( hID() , 'histogram(expo)' , 12 , 0 , 10 )  
+h1c   = h1.rebinNumbers ( templ )
+h2c   = h2.rebinNumbers ( templ )
+h3c   = h3.rebinNumbers ( templ )
+h4c   = h4.rebinNumbers ( templ )
 
 
-## sp1 = h1c.asSpline()
-## sp2 = h2c.asSpline()
-## sp3 = h3c.asSpline()
-## sp4 = h4c.asSpline()
+sp1 = h1c.asSpline()
+sp2 = h2c.asSpline()
+sp3 = h3c.asSpline()
+sp4 = h4c.asSpline()
 
 
 # =============================================================================
