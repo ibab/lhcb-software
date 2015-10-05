@@ -1,7 +1,10 @@
 ! $Id: release.notes,v 1.122 2010-09-01 14:54:00 odescham Exp $ 
 ! Package     : ParticleMaker
-! Responsible : Chris Jones, Olivier Deschamps
+! Responsible : DaVinci coordinator
 !==============================================================================
+
+!======================= ParticleMaker v6r16 2015-10-05 =======================
+
 ! 2015-08-27 - Gerhard Raven
  - replace GaudiUtils::HashMap with sorted std::vector
 
