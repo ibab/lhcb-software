@@ -5,6 +5,9 @@
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+! 2015-10-5 - Sean Benson
+ - Save all digits for CaloClusters in Turbo lines.
+
 !========================= HltRawData v5r9 2015-07-26 =========================
 
 ! 2015-07-26 - Roel Aaij

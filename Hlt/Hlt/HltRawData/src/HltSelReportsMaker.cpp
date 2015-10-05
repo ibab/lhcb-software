@@ -923,7 +923,17 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::CaloCluster
   hos->setSummarizedObjectCLID( object.clID() );
   hos->setSummarizedObject(&object);
   hos->setNumericalInfo(infoToSave( *hos ));
-  hos->setLhcbIDs( std::vector<LHCbID> { { object.seed() } } );
+  
+  // Save cluster LHCbIDs (all if Turbo)
+  std::vector<LHCbID> vec_IDs;
+  vec_IDs.push_back(object.seed());
+  if(m_Turbo){
+    for( auto e : object.entries() ){
+      if(e.digit().target()->cellID()==object.seed()) debug() << "Ignoring seed ID, already saved" << endmsg;
+      else vec_IDs.push_back(e.digit().target()->cellID());
+    }
+  }
+  hos->setLhcbIDs( vec_IDs );
   m_objectSummaries->push_back(hos.release());
   return m_objectSummaries->back();
 }
