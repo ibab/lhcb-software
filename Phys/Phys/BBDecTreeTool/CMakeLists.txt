@@ -1,7 +1,7 @@
 ################################################################################
 # Package: BBDecTreeTool
 ################################################################################
-gaudi_subdir(BBDecTreeTool v1r7)
+gaudi_subdir(BBDecTreeTool v1r8)
 
 gaudi_depends_on_subdirs(GaudiAlg
                          GaudiKernel
