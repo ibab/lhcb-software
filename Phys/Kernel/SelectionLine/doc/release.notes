@@ -4,6 +4,10 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Infrastructure for HLT and stripping 'lines'
 ! -----------------------------------------------------------------------------
+
+
+!======================= SelectionLine v1r6 2015-10-05 ========================
+
 ! 2015-08-30 - Gerhard Raven
  - replace endreq with endmsg
 
