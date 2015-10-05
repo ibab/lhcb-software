@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-10-05 - Matthew Kenzie
+ - Bug fix to protonArgon_2015 threshold settings
+
 ! 2015-10-03 - Matthew Kenzie
  - Added L0 and ODIN requirements for SMOG running
 

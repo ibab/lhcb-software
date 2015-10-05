@@ -61,8 +61,8 @@ class protonArgon_2015:
             'Hlt1MBMicroBiasVelo',  ## Beam1 Micro Bias, prescaled to get 200 M events
             'Hlt1DiMuonHighMass' ,  ## di-muon: active on beam1 beam2 and collisions
             'Hlt1MBNoBiasLeadingCrossing', ## and on collisions
-            'Hlt1L0B1gas',
-            'Hlt1L0B2gas',
+            #'Hlt1L0B1gas',
+            #'Hlt1L0B2gas',
             # SMOG Lines:
             'Hlt1SMOGKPi',
             'Hlt1SMOGKPiPi',
@@ -115,6 +115,8 @@ class protonArgon_2015:
         from Hlt1Lines.Hlt1MuonLines           import Hlt1MuonLinesConf
         from Hlt1Lines.Hlt1SMOGLines           import Hlt1SMOGLinesConf
         from Hlt1Lines.Hlt1CalibTrackingLines  import Hlt1CalibTrackingLinesConf
+        from Hlt1Lines.Hlt1CalibRICHMirrorLines import Hlt1CalibRICHMirrorLinesConf
+        from GaudiKernel.SystemOfUnits         import MeV, GeV, mm
 
         thresholds = {
             Hlt1L0LinesConf : {
