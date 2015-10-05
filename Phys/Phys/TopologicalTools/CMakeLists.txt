@@ -1,7 +1,7 @@
 ################################################################################
 # Package: TopologicalTools
 ################################################################################
-gaudi_subdir(TopologicalTools v1r0)
+gaudi_subdir(TopologicalTools v1r1)
 
 gaudi_depends_on_subdirs(Phys/DaVinciKernel
                          Event/HltEvent)
