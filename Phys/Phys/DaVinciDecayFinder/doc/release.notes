@@ -3,10 +3,13 @@
 ! Responsible : DV Maintainer
 ! Purpose     : Depreciated Decay Finder
 !-----------------------------------------------------------------------------
+
+!==================== DaVinciDecayFinder v1r2 2015-10-05 =====================
+
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
-!========================= DaVinciDecayFinder v1r0 2014-09-30 =========================
+!==================== DaVinciDecayFinder v1r0 2014-09-30 =====================
 
 ! 2014-08-05 - Chris Jones
  - First version. Move DecayFinder to its own package (effectively depreciated).
