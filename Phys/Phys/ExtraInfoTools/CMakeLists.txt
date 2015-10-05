@@ -1,7 +1,7 @@
 ################################################################################
 # Package: ExtraInfoTools
 ################################################################################
-gaudi_subdir(ExtraInfoTools v1r0)
+gaudi_subdir(ExtraInfoTools v1r1)
 
 gaudi_depends_on_subdirs(Phys/DaVinciKernel)
 

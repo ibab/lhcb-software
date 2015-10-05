@@ -3,7 +3,7 @@
 # Maintainer : Anton Poluektov anton.poluektov@cern.ch
 #============================================================================
 package           ExtraInfoTools
-version           v1r0
+version           v1r1
 
 #============================================================================
 # Structure, i.e. directories to process. 
