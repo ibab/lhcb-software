@@ -84,6 +84,23 @@ def RecoUpgradeTracking(exclude=[]):
             from Configurables import PrPixelTracking, PrPixelStoreClusters
             veloSeq.Members += [ PrPixelTracking(), PrPixelStoreClusters() ]
 
+    if "Upstream" in trackTypes:
+        upSeq = GaudiSequencer("TrUpSeq")
+        GaudiSequencer("RecoTrSeq").Members += [ upSeq ]
+        if "UT" in subDets:
+            from Configurables import PrVeloUT
+            prVeloUT = PrVeloUT()
+            from Configurables import TrackMasterFitter
+            prVeloUT.addTool(TrackMasterFitter,"Fitter")
+            prVeloUT.Fitter.MeasProvider.IgnoreVelo = True
+            prVeloUT.Fitter.MeasProvider.IgnoreVP = True
+            prVeloUT.Fitter.MeasProvider.IgnoreTT = True
+            prVeloUT.Fitter.MeasProvider.IgnoreIT = True
+            prVeloUT.Fitter.MeasProvider.IgnoreOT = True
+            prVeloUT.Fitter.MeasProvider.IgnoreUT = False
+            if ("VP" in subDets):
+                prVeloUT.Fitter.MeasProvider.IgnoreVP = False
+            upSeq.Members += [ PrVeloUT() ]
 
     if "Forward" in trackTypes:
         forwardSeq = GaudiSequencer("TrForwardSeq")
@@ -99,24 +116,7 @@ def RecoUpgradeTracking(exclude=[]):
             #seedingSeq.Members += [ PrSeedingAlgorithm() ]
             from Configurables import PrSeedingXLayers
             seedingSeq.Members += [PrSeedingXLayers()]
-    if "Upstream" in trackTypes:
-        upSeq = GaudiSequencer("TrUpSeq")
-        GaudiSequencer("RecoTrSeq").Members += [ upSeq ]
-        if "UT" in subDets:
-            from Configurables import PrVeloUT
-            prVeloUT = PrVeloUT()
-            from Configurables import TrackMasterFitter
-            prVeloUT.addTool(TrackMasterFitter,"Fitter")
-            prVeloUT.Fitter.MeasProvider.IgnoreVelo = True
-            prVeloUT.Fitter.MeasProvider.IgnoreVP = True
-            prVeloUT.Fitter.MeasProvider.IgnoreTT = True
-            prVeloUT.Fitter.MeasProvider.IgnoreIT = True
-            prVeloUT.Fitter.MeasProvider.IgnoreOT = True
-            
-            prVeloUT.Fitter.MeasProvider.IgnoreUT = False
-            if ("VP" in subDets):
-                prVeloUT.Fitter.MeasProvider.IgnoreVP = False
-            upSeq.Members += [ PrVeloUT() ]
+   
             
 
     if "Match" in trackTypes:
