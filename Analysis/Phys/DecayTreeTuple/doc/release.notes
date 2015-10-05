@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2015-10-05 - Pieter David
+ - add TupleToolBeamSpot, an event tupletool which fills the beamspot x and y
+   position
+
 ! 2015-10-05 - Gerhard Raven
  - fix out-of-bounds error in TupleToolCaloDigits
  - replace endreq with endmsg
