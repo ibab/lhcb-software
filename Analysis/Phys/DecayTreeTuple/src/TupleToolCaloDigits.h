@@ -29,9 +29,9 @@ public:
                 const std::string& name,
                 const IInterface* parent);
 
-  virtual ~TupleToolCaloDigits( ){}; ///< Destructor
+  ~TupleToolCaloDigits( ) override = default; ///< Destructor
 
-  StatusCode fill( Tuples::Tuple& );
+  StatusCode fill( Tuples::Tuple& ) override;
 
 private :
   std::string m_DigitLocation = LHCb::CaloDigitLocation::Spd;
@@ -43,13 +43,12 @@ private :
   std::vector<unsigned char> m_area;
   std::vector<unsigned char> m_row;
   std::vector<unsigned char> m_column;
-  bool m_auto_configure = false;
-  
   std::vector<float>  m_xs; 
   std::vector<float>  m_ys; 
   std::vector<float>  m_zs; 
   std::vector<float>  m_es;
   
-  unsigned long m_maxSize;
+  unsigned long m_maxSize = 4096;
+  bool m_auto_configure = false;
 };
 #endif // 
