@@ -3,6 +3,9 @@
 ! package manager: Maurizio Martinelli
 !------------------------------------------------------------------------------
 
+! 2015-10-05 - Giulio Dujany
+ - Adding script to monitor VELO online alignment
+
 ! 2015-10-02 - Maurizio Martinelli
  - Added a few modifications to AlignmentMonitoring  
 
