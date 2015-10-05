@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-10-05 - Vanya Belyaev
+
+ - StrippingPromptCharm:        
+   release chi2_IP cut for Lambda_c->pKpi and Lambda_c->pKK to 400
+   
 ! 2015-09-28 - Marco Gersabeck
  - Changed StrippingDstarD2KShh.py to CharmCompleteEvent
 

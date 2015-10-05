@@ -257,6 +257,7 @@ _default_configuration_ = {
     "ctau_16  = BPVLTIME (  16 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<16
     "ctau_25  = BPVLTIME (  25 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<25
     "ctau_100 = BPVLTIME ( 100 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<100
+    "ctau_400 = BPVLTIME ( 400 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<400
     "ctau_no  = BPVLTIME (     ) * c_light "  , ## no embedded cut for chi2(lifetimeFit)
     # dimuons:
     "psi           =   ADAMASS ('J/psi(1S)') < 150 * MeV"  ,
@@ -1222,9 +1223,12 @@ class StrippingPromptCharmConf(LineBuilder) :
     # =============================================================================
     # Lambda_c,Xi_c -> ( pKpi ) 
     # =============================================================================
+    ## selection of "prompt" Lambda_c with very loose IP-cut
+    #  @attention: very loose chi2(IP) cuts here:  chi2(IP)<400
     def LamC ( self ) :
         """
         Lambda_c,Xi_c -> ( pKpi )  selection
+        Attention: very loose chi2(IP) cuts here:  chi2(IP)<400
         """ 
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
         #
@@ -1234,10 +1238,12 @@ class StrippingPromptCharmConf(LineBuilder) :
             ## inputs 
             [ self.preLamC() ] ,
             ##
-            Code = " ( PT > %s ) & ( ctau > 0.1 * mm ) " % self['pT(Lc+)']
+            Code = """
+            ( PT       > %s       ) &
+            ( ctau_400 > 0.1 * mm )
+            """ % self['pT(Lc+)']
             )
-
-
+    
     # =============================================================================
     # preselection of Xi_c0/Omegac -> ( pKKpi )   NO POINTING HERE! Marco Pappagallo
     # =============================================================================
@@ -1396,7 +1402,7 @@ class StrippingPromptCharmConf(LineBuilder) :
             ( PT      > %s                          ) &
             ( ( ADMASS ( 'Lambda_c+' ) < 55 * MeV ) 
             | ( ADMASS ( 'Xi_c+'     ) < 55 * MeV ) ) &
-            ( ctau  > 0.1 * mm              )  
+            ( ctau_400  > 0.1 * mm                  )  
             """ % self [ 'pT(Lc+)']
             )
 
