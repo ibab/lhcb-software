@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DaVinciNeutralTools
 ################################################################################
-gaudi_subdir(DaVinciNeutralTools v1r0)
+gaudi_subdir(DaVinciNeutralTools v1r1)
 
 gaudi_depends_on_subdirs(Phys/DaVinciKernel)
 
