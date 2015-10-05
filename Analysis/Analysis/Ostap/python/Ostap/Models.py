@@ -494,10 +494,13 @@ for f in ( Gaudi.Math.Positive       ,
            Gaudi.Math.Spline2D       ,
            Gaudi.Math.Spline2DSym    ,
            ## 
-           Gaudi.Math.PolySum        ) :
+           Gaudi.Math.PolySum        ,
+           ## 
+           Gaudi.Math.NSphere        ) :
 
     f.__setitem__ = _p_set_par_
     f.__getitem__ = _p_get_par_
+    f.__len__     = lambda s : s.npars() 
 
     
 # =============================================================================

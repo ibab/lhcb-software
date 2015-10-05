@@ -385,7 +385,7 @@ def _h1_param_sum_ ( h1             ,
         from math import pi 
         for i in range( 0, b.npars() ) :
             bfit.fun.SetParameter ( i + 1 , 0  )
-            bfit.fun.SetParLimits ( i + 1 , -0.6 * pi  , 1.1 * pi ) 
+            bfit.fun.SetParLimits ( i + 1 , -1.75 * pi  , 1.75 * pi ) 
             
     if not opts                   : opts  = 'S'
     if 0 > opts.upper().find('S') : opts += 'S'
