@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2015-10-05 - John Back
+  - Fixed accessed uninitialised memory in EvtPDL.cpp:213.
+
 ! 2015-10-01 - John Back
   - Updated EvtSVPHelAmp and added new EvtSVPHelCPMix model from Clara Remon,
     implementing the complete mixing phenomenology of Bs to vector gamma decays.

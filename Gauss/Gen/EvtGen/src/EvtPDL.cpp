@@ -210,7 +210,12 @@ void EvtPDL::aliasChgConj(EvtId a,EvtId abar){
 }
 
 EvtId EvtPDL::chargeConj(EvtId id){
-  EvtId idchg=partlist()[id.getAlias()].getIdChgConj();
+//  EvtId idchg=partlist()[id.getAlias()].getIdChgConj();
+  int index=id.getAlias();
+  EvtId idchg;
+  if (index>-1) {
+    idchg=partlist()[id.getAlias()].getIdChgConj();
+  }
 
   if (idchg!=EvtId(-1,-1)) return idchg;
 
