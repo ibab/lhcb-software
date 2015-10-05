@@ -3,7 +3,7 @@
 # Maintainer : DV Maintainer
 #============================================================================
 package           ParticleCombiners
-version           v1r3
+version           v1r4
 
 #============================================================================
 # Structure, i.e. directories to process. 
