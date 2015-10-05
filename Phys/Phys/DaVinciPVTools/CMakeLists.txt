@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DaVinciPVTools
 ################################################################################
-gaudi_subdir(DaVinciPVTools v1r1)
+gaudi_subdir(DaVinciPVTools v1r2)
 
 gaudi_depends_on_subdirs(Phys/DaVinciKernel
                          Event/MicroDst)
