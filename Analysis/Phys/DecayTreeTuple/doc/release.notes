@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2015-10-05 - Gerhard Raven
+ - fix out-of-bounds error in TupleToolCaloDigits
+ - replace endreq with endmsg
+
 !======================= DecayTreeTuple v5r2 2015-08-06 =====================
 
 ! 2015-07-27 - Marco Pappagallo

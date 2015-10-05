@@ -100,8 +100,8 @@ TupleToolTagging::TupleToolTagging( const std::string& type,
 StatusCode TupleToolTagging::initialize() {
   if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
   if( msgLevel( MSG::DEBUG ) ){
-    if( m_useFTonDST ) debug() << " Going to write Tagging informations written on DST " << endreq;
-    else debug() << " Going to rerun FT !!!! (Ignore informations written on DST) " << endreq;
+    if( m_useFTonDST ) debug() << " Going to write Tagging informations written on DST " << endmsg;
+    else debug() << " Going to rerun FT !!!! (Ignore informations written on DST) " << endmsg;
   }
   
   m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc(), this ) ;
@@ -206,7 +206,7 @@ StatusCode TupleToolTagging::fill( const Particle* mother
 
   if( msgLevel( MSG::DEBUG ) ){
     debug() << " Going to Save Tagging information for B candidate "
-            << endreq;
+            << endmsg;
   }
 
   FlavourTag theTag;
@@ -388,7 +388,7 @@ StatusCode TupleToolTagging::fill( const Particle* mother
 
   if( msgLevel( MSG::DEBUG ) ){
     debug() << "Tagging summary: decision: " << dec
-            << ", omega=" << omega << endreq;
+            << ", omega=" << omega << endmsg;
   }
 
   return StatusCode(test);

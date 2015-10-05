@@ -32,24 +32,23 @@ public:
   virtual ~TupleToolCaloDigits( ){}; ///< Destructor
 
   StatusCode fill( Tuples::Tuple& );
-  StatusCode initialize( );
 
 private :
   std::string m_DigitLocation = LHCb::CaloDigitLocation::Spd;
   std::string m_CaloName = "Spd";
   std::string m_CaloLocation = DeCalorimeterLocation::Spd ;
    
-  unsigned int * m_index;
-  unsigned char * m_calo;
-  unsigned char * m_area;
-  unsigned char * m_row;
-  unsigned char * m_column;
+  std::vector<int>  m_index;
+  std::vector<char>  m_calo;
+  std::vector<unsigned char> m_area;
+  std::vector<unsigned char> m_row;
+  std::vector<unsigned char> m_column;
   bool m_auto_configure = false;
   
-  float * m_xs; 
-  float * m_ys; 
-  float * m_zs; 
-  float * m_es;
+  std::vector<float>  m_xs; 
+  std::vector<float>  m_ys; 
+  std::vector<float>  m_zs; 
+  std::vector<float>  m_es;
   
   unsigned long m_maxSize;
 };

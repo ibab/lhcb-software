@@ -72,103 +72,49 @@ TupleToolCaloDigits::TupleToolCaloDigits( const std::string& type,
 }
 //=============================================================================
 
-StatusCode TupleToolCaloDigits::initialize()
-{
-  const StatusCode sc = TupleToolBase::initialize(); 
- 
-  debug() << "Reserving buffers for " <<  m_maxSize << " digits." << endmsg;
-  m_index =  new unsigned int[m_maxSize];
-  
-  m_calo =   new unsigned char[m_maxSize];
-  m_area =   new unsigned char[m_maxSize];
-  m_row =    new unsigned char[m_maxSize];
-  m_column = new unsigned char[m_maxSize];
-  
-  m_es =     new float[m_maxSize];
-  m_xs =     new float[m_maxSize];
-  m_ys =     new float[m_maxSize];
-  m_zs =     new float[m_maxSize];
-      
-  return sc ;
-}
-
-//=============================================================================
 
 StatusCode TupleToolCaloDigits::fill( Tuples::Tuple& tuple )
 {
   const std::string prefix=fullName();
   bool test = true;
   LHCb::CaloDigits * digits = getIfExists<LHCb::CaloDigits>(m_DigitLocation);
-  unsigned long n = 0;
-  if (!digits)
-    return true;
-  n= digits->size();
-  /*
-  if (m_maxSize<n) // increase buffers
-    {
-      if (m_maxSize) // no "new" on Constructor
-	{
-	  delete m_index;
-	  delete m_calo;
-	  delete m_area;
-	  delete m_row;
-	  delete m_column;
-	  delete m_es;
-	  delete m_xs;
-	  delete m_ys;
-	}
+  if (!digits) return true;
+  DeCalorimeter* calo = getDet<DeCalorimeter>( m_CaloLocation );    
+  for( const auto& digit : *digits ) {
+      const LHCb::CaloCellID cellID = digit->cellID();
+      m_index.push_back( cellID.index() );
+      m_calo.push_back( cellID.calo() );
+      m_area.push_back( cellID.area() );
+      m_row.push_back( cellID.row() );
+      m_column.push_back( cellID.col() );
 
-      m_maxSize = n+4096; // avoid increasing too often
-      debug() << "increase buffers to " <<  m_maxSize << endmsg;
-      m_index =  new unsigned int[m_maxSize];
-
-      m_calo =   new unsigned char[m_maxSize];
-      m_area =   new unsigned char[m_maxSize];
-      m_row =    new unsigned char[m_maxSize];
-      m_column = new unsigned char[m_maxSize];
-
-      m_es =     new float[m_maxSize];
-      m_xs =     new float[m_maxSize];
-      m_ys =     new float[m_maxSize];
+      auto p = calo->cellCenter(cellID);
+      m_xs.push_back(p.X());
+      m_ys.push_back(p.Y());
+      m_zs.push_back(p.Z());
+      m_es.push_back( digit->e() );
       
-      //  m_CaloName = (*digits->begin())->cellID().caloName();
-      }*/
-  unsigned long i = 0;
-  for( LHCb::CaloDigits::const_iterator digit = digits->begin();
-       digit!=digits->end();++digit)
-    {
-      const LHCb::CaloCellID cellID = (*digit)->cellID();
-      m_index[i] = cellID.index();
-      m_calo[i]  = cellID.calo() ;
-      m_area[i]  = cellID.area();
-      m_row[i]   = cellID.row();
-      m_column[i]= cellID.col();
-
-      DeCalorimeter* m_calo = getDet<DeCalorimeter>( m_CaloLocation );    
-      m_xs[i] = m_calo->cellCenter(cellID).X();
-      m_ys[i] = m_calo->cellCenter(cellID).Y();
-      m_zs[i] = m_calo->cellCenter(cellID).Z();
-      
-      m_es[i] = (*digit)->e();
-      i++;
-      
-      if ( msgLevel(MSG::DEBUG) ) debug() << cellID.toString() << " has an energy of " << m_es[i] << " \n";
-    }
-  if ( msgLevel(MSG::DEBUG) ) debug() << " saved " << i <<" digits to n tuple "+m_CaloName + "Digit." << endmsg;
-  if (n>m_maxSize)
-    {
-      n=m_maxSize;
-      warning() << "Limited output to " << m_maxSize << " digits." << endmsg;
-    }
-  tuple->farray( m_extraName + m_CaloName + "DigitIndex"  ,m_index, m_index+n, m_extraName + m_CaloName + "DigitNi",m_maxSize);
-  tuple->farray( m_extraName + m_CaloName + "DigitCalo"   ,m_calo,  m_calo+n,  m_extraName + m_CaloName + "DigitNc",m_maxSize);
-  tuple->farray( m_extraName + m_CaloName + "DigitArea"   ,m_area,  m_area+n,  m_extraName + m_CaloName + "DigitNa",m_maxSize);
-  tuple->farray( m_extraName + m_CaloName + "DigitRow"    ,m_row,   m_row+n,   m_extraName + m_CaloName + "DigitNr",m_maxSize);
-  tuple->farray( m_extraName + m_CaloName + "DigitColumn" ,m_column,m_column+n,m_extraName + m_CaloName + "DigitNco",m_maxSize);
-  tuple->farray( m_extraName + m_CaloName + "Digit_X"     ,m_xs,    m_xs+n,    m_extraName + m_CaloName + "DigitNx",m_maxSize);
-  tuple->farray( m_extraName + m_CaloName + "Digit_Y"     ,m_ys,    m_ys+n,    m_extraName + m_CaloName + "DigitNy",m_maxSize);    
-  tuple->farray( m_extraName + m_CaloName + "Digit_Z"     ,m_zs,    m_zs+n,    m_extraName + m_CaloName + "DigitNz",m_maxSize);    
-  tuple->farray( m_extraName + m_CaloName + "DigitEnergy" ,m_es,    m_es+n,    m_extraName + m_CaloName + "DigitNe",m_maxSize);
+      if ( msgLevel(MSG::DEBUG) ) debug() << cellID.toString() << " has an energy of " << m_es.back() << " \n";
+  }
+  if ( msgLevel(MSG::DEBUG) ) debug() << " saved " << m_index.size() <<" digits to n tuple "+m_CaloName + "Digit." << endmsg;
+  tuple->farray( m_extraName + m_CaloName + "DigitIndex"  ,std::begin(m_index), std::end(m_index), m_extraName + m_CaloName + "DigitNi",m_maxSize);
+  m_index.clear();
+  tuple->farray( m_extraName + m_CaloName + "DigitCalo"   ,std::begin(m_calo),  std::end(m_calo),  m_extraName + m_CaloName + "DigitNc",m_maxSize);
+  m_calo.clear();
+  tuple->farray( m_extraName + m_CaloName + "DigitArea"   ,std::begin(m_area),  std::end(m_area),  m_extraName + m_CaloName + "DigitNa",m_maxSize);
+  m_area.clear();
+  tuple->farray( m_extraName + m_CaloName + "DigitRow"    ,std::begin(m_row),   std::end(m_row),   m_extraName + m_CaloName + "DigitNr",m_maxSize);
+  m_row.clear();
+  tuple->farray( m_extraName + m_CaloName + "DigitColumn" ,std::begin(m_column),std::end(m_column),m_extraName + m_CaloName + "DigitNco",m_maxSize);
+  m_column.clear();
+  tuple->farray( m_extraName + m_CaloName + "Digit_X"     ,std::begin(m_xs),    std::end(m_xs),    m_extraName + m_CaloName + "DigitNx",m_maxSize);
+  m_xs.clear();
+  tuple->farray( m_extraName + m_CaloName + "Digit_Y"     ,std::begin(m_ys),    std::end(m_ys),    m_extraName + m_CaloName + "DigitNy",m_maxSize);    
+  m_ys.clear();
+  tuple->farray( m_extraName + m_CaloName + "Digit_Z"     ,std::begin(m_zs),    std::end(m_zs),    m_extraName + m_CaloName + "DigitNz",m_maxSize);    
+  m_zs.clear();
+  tuple->farray( m_extraName + m_CaloName + "DigitEnergy" ,std::begin(m_es),    std::end(m_es),    m_extraName + m_CaloName + "DigitNe",m_maxSize);
+  m_es.clear();
 
   return StatusCode(test);
 }
