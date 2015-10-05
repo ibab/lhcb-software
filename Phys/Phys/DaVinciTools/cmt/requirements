@@ -1,8 +1,8 @@
 # Created    : 05/02/2002
-# Maintainer : P. Koppenburg, J. Palacios
+# Maintainer : DaVinci coordinator
 
 package           DaVinciTools
-version           v24r3
+version           v24r4
 
 # Structure, i.e. directories to process. 
 #============================================================================

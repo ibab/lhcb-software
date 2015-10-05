@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DaVinciTools
 ################################################################################
-gaudi_subdir(DaVinciTools v24r3)
+gaudi_subdir(DaVinciTools v24r4)
 
 gaudi_depends_on_subdirs(Phys/DaVinciKernel
                          Phys/LoKiCore)
