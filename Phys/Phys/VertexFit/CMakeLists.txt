@@ -1,7 +1,7 @@
 ################################################################################
 # Package: VertexFit
 ################################################################################
-gaudi_subdir(VertexFit v6r21)
+gaudi_subdir(VertexFit v6r22)
 
 gaudi_depends_on_subdirs(GaudiAlg
                          Kernel/LHCbMath

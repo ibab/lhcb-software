@@ -1,11 +1,11 @@
 #$Id: requirements,v 1.69 2010-08-04 13:01:37 jpalac Exp $
 #============================================================================
 # Created    : 23/08/2004
-# Maintainer : P. Koppenburg, Yuehong Xie, J. Palacios
+# Maintainer : Yuehong Xie
 #
 #============================================================================
 package           VertexFit
-version           v6r21
+version           v6r22
 
 # Structure, i.e. directories to process. 
 #============================================================================
