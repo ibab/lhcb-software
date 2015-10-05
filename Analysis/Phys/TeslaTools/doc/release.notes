@@ -3,6 +3,9 @@
 ! Responsible : Sean Benson
 !=============================================================================
 
+! 2015-10-5 - Sean Benson
+ - Support multiple CALO digits being saved.
+
 ! 2015-10-2 - Sean Benson
  - Fixes for neutral truth association
 

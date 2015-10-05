@@ -659,10 +659,17 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
             // Need to make new CaloCluster and seed Digit
             LHCb::CaloCluster* calo = new LHCb::CaloCluster();
             
-            // reports save seed LHCbID so only need the first one
             std::vector<LHCb::LHCbID> ids = ObjBasic->lhcbIDs();
+            // reports save seed LHCbID as the first one
             LHCb::CaloCellID cellID = (*(ids.begin())).caloID();
-            LHCb::CaloDigit* digit = DigitSearchRaw(cellID);
+            
+            // make digits from our LHCb IDs
+            std::vector<LHCb::CaloDigit*> digits;
+            for( auto id : ids ){
+              LHCb::CaloCellID i_cellID = id.caloID();
+              LHCb::CaloDigit* i_digit = DigitSearchRaw(i_cellID);
+              if(i_digit) digits.push_back(i_digit);
+            }
             
             const LHCb::HltObjectSummary::Info Calo_info = ObjBasic->numericalInfo();
             // What keys are present:
@@ -673,14 +680,17 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
             }
             m_conv->CaloClusterObjectFromSummary(&Calo_info,calo,turbo);
             calo->setSeed(cellID);
-            if( digit ){
+            
+            std::vector<LHCb::CaloClusterEntry> entries;
+            for( auto digit : digits ){
               if ( msgLevel(MSG::DEBUG) ) debug() << "Digit found to adding to cluster" << endmsg;
               LHCb::CaloClusterEntry entry;
               entry.setStatus( LHCb::CaloDigitStatus::UseForEnergy );
               entry.setDigit(digit);
-              calo->setEntries(std::vector<LHCb::CaloClusterEntry> { {entry} });
-              calo_vector->push_back(calo);
+              entries.push_back(entry);
             }
+            calo->setEntries(entries);
+            calo_vector->push_back(calo);
             
             break;
           }
