@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import os, re, time, subprocess, shlex
+import os, sys, re, time, subprocess, shlex
 
 AligWork_dir = '/group/online/AligWork'
 Moni_dir = '/group/online/AligWork/MoniPlots'
@@ -9,6 +9,7 @@ activity = 'Velo'
 minAlign = 7 #0 #164237
 oldtime = 0
 
+this_file_dir = os.path.dirname(os.path.realpath(__file__))
 
 def getAlignsAnalised():
     alignsDir = os.path.join(Moni_dir, activity)
@@ -60,13 +61,19 @@ if __name__ == '__main__':
         if hasNewAlignment(activity):            
             toAnalise = getAligns2Analise(activity, minAlign)
             print printTime(), 'Alignments, runs to analise:', toAnalise
+            sys.stdout.flush()
             for alignVersion, run in toAnalise:
                 print printTime(), 'Analising run {0}, alignment v{1} '.format(run ,alignVersion)
-                command = './moniPlots.py -r {0} -o {1}'.format(run, os.path.join(Moni_dir, '{0}/v{1}.pdf'.format(activity, alignVersion)))
+                sys.stdout.flush()
+                command = '{0} -r {1} -o {2}'.format(
+                    os.path.join(this_file_dir, 'moniPlots.py'), 
+                    run, 
+                    os.path.join(Moni_dir, '{0}/v{1}.pdf'.format(activity, alignVersion)))
                 cmd = shlex.split(command)
                 FNULL = open(os.devnull, 'w')
                 subprocess.call(cmd, stdout=FNULL, stderr=subprocess.STDOUT)
             print printTime(), 'Done for now'
-
+            sys.stdout.flush()
+            
     time.sleep(5)
         
