@@ -160,7 +160,7 @@ class protonArgon_2015:
                                       'CalibMuonAlignJpsi_JpsiMassWinLoose'         : 150,     # MeV
                                       'CalibMuonAlignJpsi_JpsiMassWin'              : 100,     # MeV
                                       'L0Channels'               : {'DiMuonHighMass'     : ( 'Muon', ),
-                                                                    'CalibMuonAlignJpsi' : ( 'Muon' )}
+                                                                    'CalibMuonAlignJpsi' : ( 'Muon', )}
                                       },
             Hlt1BeamGasLinesConf : {
             # Global behaviour settings
