@@ -3,6 +3,10 @@
 ! package manager: Pieter David
 !------------------------------------------------------------------------------
 
+! 2015-10-05 - Giulio Dujany
+  - updated /AlignmentOutputParser/AlignOutput.py with a regex
+           
+
 ! 2015-08-13 - Zhirui Xu
  - added example to compare tracker alignment results for consecutive fills examples/plotAlignlog.py
  - updated scripts (author: Giulio Dujany)

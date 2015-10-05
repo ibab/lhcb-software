@@ -397,10 +397,12 @@ class AlignOutput:
         '''
         Parse the most important dofs
         '''
-        words = line.split('\n')[0].split(' ')
-        dof = Dof(words[3], words[4].split('=')[-1], float(words[6]), float(words[8]), float(words[10]))
+        import re
+        words = re.findall('(.*) (.*?) dof=(.*?) (.*?)chi2= (.*?) delta= (.*?) \+/- (.*?)$', line)[0]
+        dof = Dof(words[1], words[2], float(words[4]), float(words[5]), float(words[6]))
         self.AlignIterations[self.index].MostImpDofs += [dof]
         return
+       
     # Parse Canonical Constraints
     def ParseCanonicalConstraints(self, line):
         '''
