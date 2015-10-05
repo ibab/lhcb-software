@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HighPtJets
 ################################################################################
-gaudi_subdir(HighPtJets v1r8p1)
+gaudi_subdir(HighPtJets v1r9)
 
 gaudi_depends_on_subdirs(Event/MCEvent
                          Phys/DaVinciKernel

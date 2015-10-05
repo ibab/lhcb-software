@@ -2,6 +2,9 @@
 ! Package     : Phys/HighPtJets
 ! Responsible : Marcin Kucharczyk
 !-----------------------------------------------------------------------------
+
+!======================== HighPtJets v1r9 2015-10-05 =========================
+
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
