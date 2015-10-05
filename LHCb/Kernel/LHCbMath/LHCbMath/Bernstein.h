@@ -54,7 +54,9 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
-      /// helper structure to denote the basic Bernstein polynomials B(k,N)
+      /** helper structure to denote the basic Bernstein polynomials B(k,N)
+       *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+       */
       class GAUDI_API Basic 
       {
       public:
@@ -311,14 +313,18 @@ namespace Gaudi
     public:
       // ======================================================================
       /// constructor from the order
-      Positive ( const unsigned short       N     =  1 ,
-                 const double               xmin  =  0 ,
-                 const double               xmax  =  1 ) ;
+      Positive ( const unsigned short        N     =  1 ,
+                 const double                xmin  =  0 ,
+                 const double                xmax  =  1 ) ;
       // ======================================================================
       /// constructor from N phases
-      Positive ( const std::vector<double>& pars       ,
-                 const double               xmin  =  0 ,
-                 const double               xmax  =  1 ) ;
+      Positive ( const std::vector<double>&  phases     ,
+                 const double                xmin  =  0 ,
+                 const double                xmax  =  1 ) ;
+      /// constructor from the sphere with coefficients  
+      Positive ( const Gaudi::Math::NSphere& sphere    , 
+                 const double                xmin = 0  , 
+                 const double                xmax = 0  ) ;
       // ======================================================================
       /// copy 
       Positive ( const Positive&  right ) ;

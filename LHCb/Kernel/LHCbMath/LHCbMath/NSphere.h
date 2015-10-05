@@ -28,19 +28,31 @@ namespace Gaudi
     {
     public: 
       // ======================================================================
+      /** Standard constructor for rotated sphere 
+       *  @param nPhases  dimensionality of N-sphere 
+       */
+      NSphere ( const unsigned short       nPhases = 1 ) ;
+      // =======================================================================
       /** Standard constructor
        *  @param nPhases  dimensionality of N-sphere 
-       *  @param bias     use the rotated sphere? 
+       *  @param rotate   rotate it 
        */
-      NSphere ( const unsigned short nPhases = 1    ,
-                const bool           rotated = true ) ;
+      NSphere ( const unsigned short       nPhases     ,
+                const unsigned short       rotated     ) ;
       // =======================================================================
       /** Standard constructor
        *  @param nPhases  dimensionality of N-sphere 
        *  @param bias     use the rotated sphere? 
        */
-      NSphere ( const std::vector<double>& phases         ,
-                const bool                 rotated = true ) ;
+      NSphere ( const std::vector<double>& phases      ,
+                const unsigned short       rotated     ) ;
+      // =======================================================================
+      /** Standard constructor
+       *  @param nPhases  dimensionality of N-sphere 
+       *  @param bias     use the rotated sphere? 
+       */
+      NSphere ( const std::vector<double>& phases      ) ;
+      // =======================================================================
       /// copy
       NSphere ( const NSphere&  right ) ;
       /// move
@@ -50,9 +62,9 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
-      unsigned int nX      () const { return nPhi() + 1       ; } 
-      unsigned int nPhi    () const { return m_sin_phi.size() ; } 
-      bool         rotated () const { return m_rotated        ; }
+      unsigned int   nX      () const { return nPhi() + 1       ; } 
+      unsigned int   nPhi    () const { return m_sin_phi.size() ; } 
+      unsigned short rotated () const { return m_rotated        ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -80,8 +92,6 @@ namespace Gaudi
       { return phase ( index ) ; }
       /// get all phases 
       const std::vector<double>& phases  () const { return m_phases  ; }
-      /// get all phases 
-      const std::vector<double>& pars    () const { return phases()  ; }
       // get all   sines 
       const std::vector<double>& sines   () const { return m_sin_phi ; }
       // get all cosines 
@@ -94,11 +104,33 @@ namespace Gaudi
       /** set new value for phi(i)      
        *  @param index (input) the index (0 <= index < nPhi)
        *  @param valeu new value to be set 
-       *  @return true is new valeu is really set 
+       *  @return true is new value is really set 
        */
       bool setPhase   ( const unsigned short index , 
                         const double         value ) ;
       // ======================================================================
+    public: // "par"-like interface
+      // ======================================================================
+      /// number of phases 
+      unsigned short             npars   () const { return nPhi()    ; }
+      /// get all phases 
+      const std::vector<double>& pars    () const { return phases()  ; }
+      /** set new value for phi(i)      
+       *  @param index (input) the index (0 <= index < nPhi)
+       *  @param valeu new value to be set 
+       *  @return true is new value is really set 
+       */
+      bool setPar     ( const unsigned short index , 
+                        const double         value ) 
+      { return setPhase ( index , value ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      ///  sphere "size" 
+      unsigned int size () const { return nPhi () ; } // sphere size 
+      ///  sphere dimension  
+      unsigned int dim  () const { return nPhi () ; } // sphere dimension 
+      // ======================================================================      
     public:
       // ======================================================================
       /// get biases to equalize the data 
@@ -120,7 +152,7 @@ namespace Gaudi
     private:
       // ======================================================================
       /// bias to equalize the x_i 
-      bool                m_rotated ; // rotated sphere ?
+      unsigned short      m_rotated ; // rotated sphere ?
       /// the phase biases for rotated sphere 
       std::vector<double> m_delta   ; // the phase biases for rotated sphere 
       /// the phases  
@@ -142,20 +174,22 @@ namespace Gaudi
 // get x_i coefficient:               0 <= i < nX  
 // ============================================================================
 inline double Gaudi::Math::NSphere::x 
-( const unsigned short index ) const 
+( const unsigned short indx ) const 
 {
-  if      ( nX () <= index ) { return 0                ; } // invalid 
-  else if ( nX () == 1     ) { return 1                ; } // trivial 
-  else if ( 0     == index ) { return m_cos_phi[index] ; } // x_0 
+  //
+  const unsigned int nx = nX() ;
+  if      ( nx <= indx       ) { return 0                ; } // invalid 
+  else if ( nx  == 1         ) { return 1                ; } // trivial
+  else if ( nx  == 1u + indx ) { return m_cos_phi[0]     ; } // trivial
+  //
+  const unsigned int index = nX() - indx - 1 ;
   //
   // get index as phi 
   //
   double xi = 1.0 ;
   for  ( unsigned short j = 0 ; j < index ; ++j ) { xi *= m_sin_phi[j] ; }
   //
-  if   ( index != nPhi ()  ) { xi *= m_cos_phi[index] ; }
-  //
-  return xi ;  
+  return index == nPhi() ? xi : xi * m_cos_phi[index] ;
 }
 // ============================================================================
 // get x_i coefficient squared        0 <= i < nX 

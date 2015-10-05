@@ -748,14 +748,14 @@ Gaudi::Math::PositiveSpline::PositiveSpline
   const unsigned short       order  ) 
   : std::unary_function<double,double> () 
   , m_bspline ( points , order ) 
-  , m_sphere  ( 1 ) 
+  , m_sphere  ( 1 , 3 ) 
 {
   //
   if ( 2 > m_bspline.npars() ) { throw GaudiException
       ( "At least two spline parameters are required" , 
         "Gaudi::Math::PositiveSpline"                 , StatusCode(814,true) ) ; }
   //
-  m_sphere = Gaudi::Math::NSphere( m_bspline.npars() - 1 , true ) ;  
+  m_sphere = Gaudi::Math::NSphere( m_bspline.npars() - 1 , 3 ) ;  
   updateCoefficients () ;
 }
 // ============================================================================
@@ -773,7 +773,7 @@ Gaudi::Math::PositiveSpline::PositiveSpline
   const std::vector<double>& pars      ) 
   : std::unary_function<double,double> () 
   , m_bspline ( points , std::vector<double>( pars.size() + 1 , 0 )  ) 
-  , m_sphere  ( pars   , true  ) 
+  , m_sphere  ( pars   , 3 ) 
 {
   //
   if ( 2 > m_bspline.npars() ) { throw GaudiException
@@ -798,14 +798,14 @@ Gaudi::Math::PositiveSpline::PositiveSpline
   const unsigned short order ) 
   : std::unary_function<double,double> ()
   , m_bspline ( xmin , xmax , inner , order ) 
-  , m_sphere  ( 1 , false ) 
+  , m_sphere  ( 1 , 3 ) 
 {
   //
   if ( 2 > m_bspline.npars() ) { throw GaudiException
       ( "At least two spline parameters are required" , 
         "Gaudi::Math::PositiveSpline"                 , StatusCode(814,true) ) ; }
   //
-  m_sphere = Gaudi::Math::NSphere( m_bspline.npars() - 1 , true ) ;  
+  m_sphere = Gaudi::Math::NSphere( m_bspline.npars() - 1 , 3 ) ;  
   updateCoefficients() ;
 }
 // ============================================================================
@@ -814,15 +814,15 @@ Gaudi::Math::PositiveSpline::PositiveSpline
 Gaudi::Math::PositiveSpline::PositiveSpline 
 ( const Gaudi::Math::BSpline& spline ) 
   : std::unary_function<double,double> ()
-  , m_bspline ( spline    ) 
-  , m_sphere  ( 1 , false ) 
+  , m_bspline ( spline ) 
+  , m_sphere  ( 1 , 3  ) 
 {
   //
   if ( 2 > m_bspline.npars() ) { throw GaudiException
       ( "At least two spline parameters are required" , 
         "Gaudi::Math::PositiveSpline"                 , StatusCode(814,true) ) ; }
   //
-  m_sphere = Gaudi::Math::NSphere( m_bspline.npars() - 1 , true ) ;  
+  m_sphere = Gaudi::Math::NSphere( m_bspline.npars() - 1 , 3 ) ;  
   updateCoefficients() ;
 }
 // ============================================================================

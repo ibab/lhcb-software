@@ -829,27 +829,35 @@ Gaudi::Math::Positive::Positive
   const double              xmax )
   : std::unary_function<double,double> ()
   , m_bernstein ( N , xmin , xmax )
-  , m_sphere    ( N ) 
+  , m_sphere    ( N , 3 ) 
 {
   updateBernstein () ;
 }
 // ============================================================================
-// constructor from the order
+// constructor from the list of phases 
 // ============================================================================
 Gaudi::Math::Positive::Positive
 ( const std::vector<double>& pars ,
   const double               xmin ,
   const double               xmax )
   : std::unary_function<double,double> ()
-//
-  , m_bernstein ( pars.size () , xmin , xmax )
-  , m_sphere    ( pars.size () ) 
+  , m_bernstein ( pars.size() , xmin , xmax )
+  , m_sphere    ( pars , 3 ) 
 {
   updateBernstein () ;
-  //
-  // if ( m_bernstein.npars() != m_sphere.nX() ) 
-  // { std::cerr << " MISMATCH-(1)-!!! " << std::endl ; }
-  //
+}
+// ============================================================================
+// constructor from the sphere with coefficients  
+// ============================================================================
+Gaudi::Math::Positive::Positive
+( const Gaudi::Math::NSphere& sphere , 
+  const double                xmin   , 
+  const double                xmax   )
+  : std::unary_function<double,double> ()
+  , m_bernstein ( sphere.dim() , xmin , xmax )
+  , m_sphere    ( sphere ) 
+{
+  updateBernstein () ;
 }
 // ============================================================================
 // copy 
@@ -887,14 +895,82 @@ bool Gaudi::Math::Positive::setPar ( const unsigned short k , const double value
 // =============================================================================
 bool Gaudi::Math::Positive::updateBernstein ()
 {
-  //
+  ///
   bool         update = false ;
-  const double norm   = m_bernstein.npars() / 
+  /// degree 
+  const unsigned short o = degree() ;
+  //
+  const double   norm    = m_bernstein.npars() / 
     ( m_bernstein.xmax() -  m_bernstein.xmin () ) ;
+  //
+  // few simple cases 
+  //
+  if       ( 0 == o ) { return m_bernstein.setPar( 0 , norm ) ; }
+  else if  ( 1 == o )  
+  {
+    const bool updated0 = m_bernstein.setPar ( 0 , m_sphere.x2(0) * norm ) ;
+    update              = updated0 || update ;
+    const bool updated1 = m_bernstein.setPar ( 1 , m_sphere.x2(1) * norm ) ;
+    update              = updated1 || update ;
+    //
+    return update ;
+  }
+  //
+  // get the parameters of "global" parabola 
+  //
+  const double a0     = m_sphere.x2 ( 0 ) ;
+  const double a1_    = m_sphere.x2 ( 1 ) ;
+  const double a2     = m_sphere.x2 ( 2 ) ;
+  //
+  const double a1_min = - std::sqrt ( a0 * a2 ) ; //
+  const double a1     = a1_min + a1_ ;            // positivity constraint 
+  //
+  // simple parabola (probably the most common case in practice) 
+  //
+  if ( 2 == o ) 
+  {
+    const double norm2  = norm / ( a0 + a1 + a2 ) ;
+    //
+    const bool updated0 = m_bernstein.setPar ( 0 , a0 * norm2 ) ;
+    update              = updated0 || update ;
+    const bool updated1 = m_bernstein.setPar ( 1 , a1 * norm2 ) ;
+    update              = updated1 || update ;
+    const bool updated2 = m_bernstein.setPar ( 2 , a2 * norm2 ) ;
+    update              = updated2 || update ;
+    //
+    return update ;
+  }
+  //
+  // generic case 
+  //
+  // get the coefficients from the sphere 
+  // this actually represent the positive polynomial with 
+  //   - f  (0)=0 
+  //   - f' (0)=0  
+  //   - f''(0)=0 
+  std::vector<double> v ( m_sphere.nX() ) ;
+  const unsigned short vs = v.size() ;
+  for ( unsigned short ix = 3 ; ix < vs ; ++ix ) { v[ix] = m_sphere.x2 ( ix ) ; }
+  //
+  const double c0 = a0         ;
+  const double c1 = 2*(a1-a0)  ;
+  const double c2 = a0+a2-2*a1 ; 
+  //
+  for ( unsigned short k = 0 ; k < vs ; ++k ) 
+  {
+    double vv = c0 ;
+    const double r1 =  double(k) / o ;
+    if ( 0 != k ) { vv += r1             * c1             ; }
+    if ( 1 <  k ) { vv += r1 * ( k - 1 ) * c2 / ( o - 1 ) ; }
+    v[k] +=  vv ;
+    if ( 0 != v[k] && s_zero ( v[k] ) ) {  v[k] = 0 ; }
+  }
+  //
+  const double isum = norm / std::accumulate ( v.begin() , v.end() , 0.0 ) ;
   //
   for ( unsigned short ix = 0 ; ix < m_sphere.nX() ; ++ix ) 
   {
-    const bool updated = m_bernstein.setPar ( ix , m_sphere.x2 ( ix ) * norm ) ;
+    const bool updated = m_bernstein.setPar ( ix , v[ix] * isum ) ;
     update = updated || update ;
   }
   //
@@ -1040,7 +1116,7 @@ Gaudi::Math::Convex::Convex
   const bool                increasing ,
   const bool                convex     ) 
   : Gaudi::Math::Monothonic ( N , xmin, xmax , increasing ) 
-  , m_convex                ( convex     )  
+  , m_convex                ( convex )  
 {
   updateBernstein () ;
 }
