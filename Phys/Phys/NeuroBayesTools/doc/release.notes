@@ -4,6 +4,9 @@
 ! Purpose     : Collection of Tools for identifying various decays using
 !               the NeuroBayes neural network package
 !-----------------------------------------------------------------------------
+
+!===================== NeuroBayesTools v1r4 2015-10-05 =======================
+
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
