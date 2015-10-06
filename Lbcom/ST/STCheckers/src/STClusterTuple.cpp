@@ -222,7 +222,7 @@ StatusCode STClusterTuple::execute() {
               mothID.push_back(aHit->mcParticle()->mother()->particleID().pid());
             }
             else mothID.push_back(-1.0);
-            vertexType.push_back((int)aHit->mcParticle()->originVertex()->type());
+            vertexType.push_back(getVertexType(aHit));
             isLinked.push_back(1);
 
             //MCHits debugging
@@ -342,4 +342,45 @@ StatusCode STClusterTuple::finalize() {
 
   return ST::TupleAlgBase::finalize();  // must be called after all other actions
 }
+
+//============================================================================== 
+// Get MCVertex origin info.
+// The MCVertexType enumerator doesn't contain numbers for all the types,
+// so some of the numbers here are just arbitrarily assigned (the code itself is
+// the reference)
+//==============================================================================
+
+unsigned int STClusterTuple::getVertexType(const MCHit *aHit)
+{
+  const MCVertex::MCVertexType origin = aHit->mcParticle()->originVertex()->type();
+  
+  if(origin == MCVertex::Unknown)                      return 0;
+  else if(origin == MCVertex::ppCollision)             return 1;
+  else if(origin == MCVertex::DecayVertex)             return 2;
+  else if(origin == MCVertex::OscillatedAndDecay)      return 3;
+  else if(origin == MCVertex::StringFragmentation)     return 4;
+  else if(origin == MCVertex::Bremsstrahlung)          return 5;
+  else if(origin == MCVertex::PairProduction)          return 6;
+  else if(origin == MCVertex::Compton)                 return 7;
+  else if(origin == MCVertex::DeltaRay)                return 8;
+  else if(origin == MCVertex::PhotoElectric)           return 9;
+  else if(origin == MCVertex::Annihilation)            return 10;
+  else if(origin == MCVertex::RICHPhotoElectric)       return 11;
+  else if(origin == MCVertex::Cerenkov)                return 12;
+  else if(origin == MCVertex::RichHpdBackScat)         return 13;
+  else if(origin == MCVertex::GenericInteraction)      return 14;
+  else if(origin == MCVertex::MuonBackgroundFlat)      return 15;
+  else if(origin == MCVertex::MuonBackgroundSpillover) return 16;
+  else if(origin == MCVertex::KinematicLimit)          return 17;
+  else if(origin == MCVertex::HadronicInteraction)     return 100;
+  else if(origin == MCVertex::LHCHalo)                 return 200;
+  else if(origin == MCVertex::MuonBackground)          return 300;
+  else if(origin == MCVertex::WorldLimit)              return 400;
+  else
+  {
+    error() << "MCVertex type unknown!" << endmsg;
+    exit(-1);
+  }
+}
+
 

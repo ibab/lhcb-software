@@ -33,22 +33,22 @@ public:
 
 private:
 
+  unsigned int getVertexType(const LHCb::MCHit *aHit);  ///< MCVertex information
+
   //Associator table
-  typedef LinkerTool<LHCb::STCluster, LHCb::MCHit> AsctTool;
-  typedef AsctTool::DirectType Table;
-  typedef Table::Range Range;
-  typedef Table::iterator iterator;
+  typedef LinkerTool<LHCb::STCluster, LHCb::MCHit> AsctTool; ///< Linker tool
+  typedef AsctTool::DirectType Table; ///< Direct STCluster/MCHit
+  typedef Table::Range Range; ///< Range table
+  typedef Table::iterator iterator; ///< Table iterator
   
-  unsigned int m_nEvent;
-  unsigned int m_nMax;
+  unsigned int m_nEvent; ///< Number of events
+  unsigned int m_nMax; ///< Maximum number of clusters per array
 
-  std::string m_asctLocation;
-  std::string m_clusterLocation;
-  std::string m_hitLocation;
+  std::string m_asctLocation; ///< Associator table location
+  std::string m_clusterLocation; ///< STClusters location
+  std::string m_hitLocation;  ///< MCHits location
 
-  bool m_MonteCarlo;
-
-  //int getSpill(const LHCb::STCluster *aCluster);
+  bool m_MonteCarlo; ///< Dump Monte Carlo information in the tuple
   
 };
 
