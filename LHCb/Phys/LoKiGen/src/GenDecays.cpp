@@ -714,6 +714,8 @@ bool Decays::Trees::GenOptional::p_match
   // (1) get the proper decay sections:
   Decays::GenSections sections ;
   makeSections ( good , alg() , sections ) ;
+  // create local constainer for permutations 
+  TreeList opt ( m_optional ) ;
   // (2) loop over all sections
   for (  Decays::GenSections::iterator isect = sections.begin() ; 
          sections.end() != isect ; ++isect )
@@ -738,7 +740,10 @@ bool Decays::Trees::GenOptional::p_match
         // the temporary iterator 
         Decays::GenSection::iterator aux = isect->begin() + nChildren () ;
         // create the local container for permutations 
-        TreeList opt ( m_optional ) ;
+        // TreeList opt ( m_optional ) ;
+        std::for_each ( opt.begin () , 
+                        opt.end   () , 
+                        std::mem_fun_ref(&TreeList::_Tree_::reset) ) ;
         std::stable_sort ( opt.begin () , opt.end() ) ; // sort it!!!
         // start all possible permutations of the optional stuff 
         do  
@@ -1076,6 +1081,8 @@ bool Decays::Trees::GenPhotosOptional::p_match
   // (1) get the proper decay sections:
   Decays::GenSections sections ;
   makeSections ( p , alg() , sections ) ;
+  // create the local container for permutations
+  TreeList opt ( optBegin() , optEnd() ) ;
   // (2) loop over all sections
   for (  Decays::GenSections::iterator isect = sections.begin() ; 
          sections.end() != isect ; ++isect )
@@ -1101,7 +1108,10 @@ bool Decays::Trees::GenPhotosOptional::p_match
         // nothing to match? 
         if ( aux == isect->end() ) { return true ; } // RETURN
         // create the local container for permutations 
-        TreeList opt ( optBegin() , optEnd() ) ;
+        // TreeList opt ( optBegin() , optEnd() ) ;
+        std::for_each ( opt.begin () , 
+                        opt.end   () , 
+                        std::mem_fun_ref(&TreeList::_Tree_::reset) ) ;
         std::stable_sort ( opt.begin () , opt.end() ) ; // sort it!!!
         // make the nesessary permutations 
         do 
