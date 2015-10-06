@@ -590,6 +590,8 @@ bool Decays::Trees::Optional::p_match
   // (1) get the proper decay sections:
   Decays::Sections sections ;
   makeSections ( p , alg() , sections ) ;
+  // create local list   
+  TreeList opt ( m_optional ) ;
   // (2) loop over all sections
   for (  Decays::Sections::iterator isect = sections.begin() ; 
          sections.end() != isect ; ++isect )
@@ -614,7 +616,10 @@ bool Decays::Trees::Optional::p_match
         // the temporary iterator 
         Decays::Section::iterator aux = isect->begin() + nChildren () ;
         // create the local container for permutations 
-        TreeList opt ( m_optional ) ;
+        // TreeList opt ( m_optional ) ;
+        std::for_each ( opt.begin () , 
+                        opt.end   () , 
+                        std::mem_fun_ref(&TreeList::_Tree_::reset) ) ;
         std::stable_sort ( opt.begin () , opt.end() ) ; // sort it!!!
         // start all possible permutations of the optional stuff 
         do  

@@ -4,8 +4,16 @@
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2015-10-06 - Vanya Belyaev
+  - attempt to speedup decay tree matchers ( aka "descriptors")
+    with optional particles " {} " 
+
+
+
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
+
 
 
 !========================== LoKiPhys v11r3 2015-07-23 =========================
