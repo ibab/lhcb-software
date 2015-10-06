@@ -421,7 +421,6 @@ Decays::Trees::MCInclusive::MCInclusive
 {}
 // ============================================================================
 
-
 // ============================================================================
 // MANDATORY: check the validity of the tree 
 // ============================================================================
@@ -665,6 +664,8 @@ bool Decays::Trees::MCOptional::p_match
   Decays::MCSections sections ;
   makeSections ( p , alg() , decayOnly() , sections ) ;
   // (2) loop over all sections
+  // copy list of optional component.
+  TreeList opt ( m_optional ) ;
   for (  Decays::MCSections::iterator isect = sections.begin() ; 
          sections.end() != isect ; ++isect )
   {
@@ -688,7 +689,10 @@ bool Decays::Trees::MCOptional::p_match
         // the temporary iterator 
         Decays::MCSection::iterator aux = isect->begin() + nChildren() ;
         // create the local container for permutations 
-        TreeList opt ( m_optional ) ;
+        // TreeList opt ( m_optional ) ;
+        std::for_each ( opt.begin () , 
+                        opt.end   () , 
+                        std::mem_fun_ref(&TreeList::_Tree_::reset) ) ;
         std::stable_sort ( opt.begin () , opt.end() ) ; // sort it!!!
         // start all possible permutations of the optional stuff 
         do // start all possible permutations of the optional stuff 
@@ -756,9 +760,6 @@ void Decays::Trees::MCOptional::setOptional
   for ( std::vector<LHCb::ParticleID>::const_iterator item = optional.begin() ;
         optional.end() != item ; ++item ) { addOptional( *item ) ; }
 }
-
-
-
 
 // ============================================================================
 // PHOTOS 
@@ -1095,6 +1096,8 @@ bool Decays::Trees::PhotosOptional::p_match
   Decays::MCSections sections ;
   makeSections ( p , alg() , decayOnly() , sections ) ;
   // (2) loop over all sections
+  // local list of optional stuff 
+  TreeList opt ( optBegin() , optEnd() ) ;
   for (  Decays::MCSections::iterator isect = sections.begin() ; 
          sections.end() != isect ; ++isect )
   {
@@ -1119,7 +1122,10 @@ bool Decays::Trees::PhotosOptional::p_match
         // nothing to match? 
         if ( aux == isect->end() ) { return true ; } // RETURN
         // create the local container for permutations 
-        TreeList opt ( optBegin() , optEnd() ) ;
+        // TreeList opt ( optBegin() , optEnd() ) ;
+        std::for_each ( opt.begin () , 
+                        opt.end   () , 
+                        std::mem_fun_ref(&TreeList::_Tree_::reset) ) ;
         std::stable_sort ( opt.begin () , opt.end() ) ; // sort it!!!
         // make the nesessary permutations 
         do 
