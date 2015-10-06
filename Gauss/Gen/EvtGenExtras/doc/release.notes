@@ -4,6 +4,15 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+! 2015-10-06 - Nikolai Nikitin
+ - Added new model BUTOMMMN for the rare leptonic B-decays Bu -> Mu Mu Nu_{Mu} Mu.
+   Listing of the new files:
+      EvtB2MuMuMuNu.cpp
+      EvtB2MuMuMuNuAmp.cpp
+      EvtB2MuMuMuNu.hh
+      EvtB2MuMuMuNuAmp.hh.
+   File EvtModelRegExtras.cpp has been changed.
+
 !======================= EvtGenExtras v3r11 2014-12-16 =======================
 ! 2014-12-12 - Nikolai Nikitin
  - Added new model BSTOGLLISRFSR for rare radiative leptonic B-decays

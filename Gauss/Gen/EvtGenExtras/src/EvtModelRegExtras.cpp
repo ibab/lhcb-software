@@ -8,6 +8,7 @@
 #include "EvtGenModels/EvtbsToLLLL.hh"
 #include "EvtGenModels/EvtbTosllMSExt.hh"
 #include "EvtGenModels/EvtbsToLLLLHyperCP.hh"
+#include "EvtGenModels/EvtB2MuMuMuNu.hh"
 #include "EvtGenModels/EvtFlatSqDalitz.hh"
 #include "EvtGenModels/EvtBcVHad.hh"
 #include "EvtGenModels/EvtPhspFlatLifetime.hh"
@@ -27,6 +28,7 @@ std::auto_ptr<const EvtModelList> EvtModelRegExtras::getModels(){
         models -> push_back( new EvtbsToLLLL() );
         models -> push_back( new EvtbTosllMSExt() );
         models -> push_back( new EvtbsToLLLLHyperCP() );
+        models -> push_back( new EvtB2MuMuMuNu() );        
 	models -> push_back( new EvtFlatSqDalitz() );
 	models -> push_back( new EvtBcVHad() );
 	models -> push_back( new EvtPhspFlatLifetime() ) ;
