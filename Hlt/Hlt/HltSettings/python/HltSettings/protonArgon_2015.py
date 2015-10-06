@@ -371,7 +371,7 @@ class protonArgon_2015:
         __update_conf__(thresholds, conf.Thresholds())
 
         # PID Calib thresholds
-        conf = __get_conf__("PID","_25ns_August2015")
+        conf = __get_conf__("PID","_protonArgon_2015")
         __update_conf__(thresholds, conf.Thresholds())
 
         return thresholds

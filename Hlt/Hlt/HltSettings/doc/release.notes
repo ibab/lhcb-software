@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-10-05 - Matthew Kenzie
+ - Remove dependence of Hlt2PID lines on non-existent L0 for pAr
+
+! 2015-10-05 - Matthew Kenzie
  - And another bug fix to protonArgon_2015
 
 ! 2015-10-05 - Matthew Kenzie
