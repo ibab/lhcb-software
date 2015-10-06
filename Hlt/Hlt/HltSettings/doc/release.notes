@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-10-06 - Patrick Robbe
+ - Fix the protonArgon_2015 configuration
+
 ! 2015-10-05 - Matthew Kenzie
  - Remove dependence of Hlt2PID lines on non-existent L0 for pAr
 

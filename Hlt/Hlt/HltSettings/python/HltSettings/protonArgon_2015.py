@@ -29,7 +29,6 @@ def __update_conf__( current, extra ) :
 class protonArgon_2015:
     """
     Settings for proton argon 2015 data taking
-    Include the lines for BGI in parallel
 
     @author M. Kenzie + P. Robbe 
     @date 2015-09-30
@@ -46,7 +45,7 @@ class protonArgon_2015:
             raise RuntimeError('Must update HltType when modifying ActiveHlt.Lines()')
 
     def L0TCK(self) :
-        return '0x024F'
+        return '0x024E'
 
     def HltType(self) :
         self.verifyType( protonArgon_2015 )
@@ -57,12 +56,13 @@ class protonArgon_2015:
         lines = [
             # General lines
             'Hlt1Lumi',
+            'Hlt1VeloClosingMicroBias',
             # proton Argon lines:
             'Hlt1MBMicroBiasVelo',  ## Beam1 Micro Bias, prescaled to get 200 M events
             'Hlt1DiMuonHighMass' ,  ## di-muon: active on beam1 beam2 and collisions
             'Hlt1MBNoBiasLeadingCrossing', ## and on collisions
-            #'Hlt1L0B1gas',
-            #'Hlt1L0B2gas',
+            'Hlt1L0B1gas',
+            'Hlt1L0B2gas',
             # SMOG Lines:
             'Hlt1SMOGKPi',
             'Hlt1SMOGKPiPi',
@@ -121,12 +121,14 @@ class protonArgon_2015:
         thresholds = {
             Hlt1L0LinesConf : {
             'Prescale' : {
-            'Hlt1L0CALO' : 1.,
-            },
+               'Hlt1L0B1gas' : 1.,
+               'Hlt1L0B2gas' : 1.
+               },
             'Postscale' : {
-            'Hlt1L0CALO' : 'RATE(25)',
-            },
-            'L0Channels' : [ 'CALO' ],
+               'Hlt1L0B1gas' : 'RATE(50)',
+               'Hlt1L0B2gas' : 'RATE(50)'
+               },
+            'L0Channels' : [ 'B1gas' , 'B2gas' ],
             },
             Hlt1LumiLinesConf : {
             'Prescale'   : { 'Hlt1Lumi' :  1. },
@@ -134,11 +136,14 @@ class protonArgon_2015:
             },
             Hlt1MBLinesConf : {
             'MicroBiasOdin': '(ODIN_BXTYP == LHCb.ODIN.Beam1)',
-            'NoBiasOdin': 'jbit( ODIN_EVTTYP,5 ) | jbit( ODIN_EVTTYP,4)' ,
+            ## 'NoBiasOdin': 'jbit( ODIN_EVTTYP,5 ) | jbit( ODIN_EVTTYP,4)' ,
             'NoBiasLeadingCrossingOdin': 'jbit( ODIN_EVTTYP,2 )' ,
-            'Prescale' : { 'Hlt1MBNoBias'                       : 0.00013,
-                           'Hlt1MBNoBiasLeadingCrossing'        : 0.00075,
-                           'Hlt1MBMicroBiasVelo'                : 0.1 }
+            'Prescale' : { ## 'Hlt1MBNoBias'                       : 1.,
+              'Hlt1MBNoBiasLeadingCrossing'        : 1.,
+              'Hlt1MBMicroBiasVelo'                : 1. },
+            'Postscale' : {
+            'Hlt1MBNoBiasLeadingCrossing' : 'RATE(50)',
+            }
             },
             Hlt1MuonLinesConf :     { 'DiMuonHighMass_VxDOCA'    :  0.2,
                                       'DiMuonHighMass_VxChi2'    :   25,
@@ -162,100 +167,54 @@ class protonArgon_2015:
                                       'L0Channels'               : {'DiMuonHighMass'     : ( 'Muon', ),
                                                                     'CalibMuonAlignJpsi' : ( 'Muon', )}
                                       },
-            Hlt1BeamGasLinesConf : {
-            # Global behaviour settings
-            'TrackingConf'          : 'FastVelo',
-            ### 'FitTracks'             : True,
-            'PVFitter'              : 'LSAdaptPV3DFitter',
-            'PVSeeding'             : 'PVSeed3DTool',
-            'SplitVertices'         : True,
-            'CreateGlobalSelection' : False,
-            'Turbo'                 : False,
-            'FullZVetoLumiTriggers' : False,
-            'UseGEC'                : 'None',
-
-            ##         # Minimum number of tracks for the produced vertices (#tr/vtx > X)
-            'VertexMinNTracks' : 9,
-            'FullZVertexMinNTracks' : 27,
-
-            ##         # Luminous region exclusion range
-            'BGVtxExclRangeMin' :  -250.,
-            'BGVtxExclRangeMax' :   250.,
-
-        ## ##         # Take any L0 channel
-            'L0Filter' : {
-            'Beam1'       : None,
-            'Beam2'       : None,
-            'BB'          : None,
-            },
-
-        ##     ##         # No L0 rate limiters, prescales or postscales for calibration!
-            'L0RateLimit' : {
-            'Beam1'           : None,
-            'Beam2'           : None,
-            'ForcedReco'      : None,
-            'ForcedRecoFullZ' : None,
-            },
-            'Prescale' : {
-            'Hlt1BeamGasBeam1'                   : 1.,
-            'Hlt1BeamGasBeam2'                   : 1.,
-            'Hlt1BeamGasCrossingForcedReco'      : 1.,
-            'Hlt1BeamGasCrossingForcedRecoFullZ' : 1.,
-            },
-            'Postscale' : {
-            'Hlt1BeamGasBeam1'                   : 1.,
-            'Hlt1BeamGasBeam2'                   : 1.,
-            'Hlt1BeamGasCrossingForcedReco'      : 1.,
-            'Hlt1BeamGasCrossingForcedRecoFullZ' : 1.,
-            },
-            },
-             Hlt1SMOGLinesConf :  { 'ParticlePT'            : 500     # MeV
-                    ,'ParticleP'              : 3000    # MeV
-                    ,'TrackCHI2DOF'           : 4       # dimensionless
-                    ,'CombMaxDaughtPT'        : 500     # MeV
-                    ,'CombDOCA'               : 1.0     # mm
-                    ,'CombVCHI2DOF'           : 25      # dimensionless
-                    ,'MassWinLoose'           : 250     # MeV
-                    ,'MassWin'                : 150     # MeV
-                    ,'GenericMassMinLoose'    : 0       # MeV
-                    ,'GenericMassMin'         : 0       # MeV
-                    ,'GenericMaxDaughtPT'     : 800     # MeV
-                    ,'SingleTrackPT'          : 800    # MeV
-                    ,'l0'                     : "L0_CHANNEL('B1gas')"
-                    ,'odin'                   : "(ODIN_BXTYP == LHCb.ODIN.Beam1) | jbit(ODIN_EVTTYP,2)"
-                   } ,
-               Hlt1CalibRICHMirrorLinesConf : {
-                     'Prescale' : {
-                        'Hlt1CalibHighPTLowMultTrks' : 0.0001,
-                        'Hlt1CalibRICHMirrorRICH1'   : 0.281,
-                        'Hlt1CalibRICHMirrorRICH2'   : 1.0
-                        },
-                     'DoTiming'   : False,
-                     'R2L_PT'     : 500.   * MeV,
-                     'R2L_P'      : 40000. * MeV,
-                     'R2L_MinETA' : 2.59,
-                     'R2L_MaxETA' : 2.97,
-                     'R2L_Phis'   : [ ( -2.69, -2.29 ), ( -0.85, -0.45 ), ( 0.45, 0.85 ), ( 2.29, 2.69 ) ],
-                     'R2L_TrChi2' : 2.,
-                     'R2L_MinTr'  : 0.5,
-                     'R2L_GEC'    : 'Loose',
-                     'R1L_PT'     : 500.   * MeV,
-                     'R1L_P'      : 10000. * MeV,
-                     'R1L_MinETA' : 1.6,
-                     'R1L_MaxETA' : 2.04,
-                     'R1L_Phis'   : [ ( -2.65, -2.30 ), ( -0.80, -0.50 ), ( 0.50, 0.80 ), ( 2.30, 2.65 ) ],
-                     'R1L_TrChi2' : 2.,
-                     'R1L_MinTr'  : 0.5,
-                     'R1L_GEC'    : 'Loose',
-                     'LM_PT'      : 500.   * MeV,
-                     'LM_P'       : 1000.  * MeV,
-                     'LM_TrChi2'  : 2.,
-                     'LM_MinTr'   : 1,
-                     'LM_MaxTr'   : 40,
-                     'LM_GEC'     : 'Loose'
-                     },
-
-             Hlt1CalibTrackingLinesConf :  { 'ParticlePT'            : 600     # MeV
+            
+            Hlt1SMOGLinesConf :  { 'ParticlePT'            : 500     # MeV
+                                   ,'ParticleP'              : 3000    # MeV
+                                   ,'TrackCHI2DOF'           : 4       # dimensionless
+                                   ,'CombMaxDaughtPT'        : 500     # MeV
+                                   ,'CombDOCA'               : 1.0     # mm
+                                   ,'CombVCHI2DOF'           : 25      # dimensionless
+                                   ,'MassWinLoose'           : 250     # MeV
+                                   ,'MassWin'                : 150     # MeV
+                                   ,'GenericMassMinLoose'    : 0       # MeV
+                                   ,'GenericMassMin'         : 0       # MeV
+                                   ,'GenericMaxDaughtPT'     : 800     # MeV
+                                   ,'SingleTrackPT'          : 800    # MeV
+                                   ## ,'l0'                     : "L0_CHANNEL('B1gas')"
+                                   ,'odin'                   : "(ODIN_BXTYP == LHCb.ODIN.Beam1) | (ODIN_BXTYP == LHCb.ODIN.Beam2) | ((ODIN_BXTYP == LHCb.ODIN.BeamCrossing) & jbit(ODIN_EVTTYP,2))"
+                                   } ,
+            Hlt1CalibRICHMirrorLinesConf : {
+                'Prescale' : {
+                'Hlt1CalibHighPTLowMultTrks' : 0.0001,
+                'Hlt1CalibRICHMirrorRICH1'   : 0.281,
+                'Hlt1CalibRICHMirrorRICH2'   : 1.0
+                },
+                'DoTiming'   : False,
+                'R2L_PT'     : 500.   * MeV,
+                'R2L_P'      : 40000. * MeV,
+                'R2L_MinETA' : 2.59,
+                'R2L_MaxETA' : 2.97,
+                'R2L_Phis'   : [ ( -2.69, -2.29 ), ( -0.85, -0.45 ), ( 0.45, 0.85 ), ( 2.29, 2.69 ) ],
+                'R2L_TrChi2' : 2.,
+                'R2L_MinTr'  : 0.5,
+                'R2L_GEC'    : 'Loose',
+                'R1L_PT'     : 500.   * MeV,
+                'R1L_P'      : 10000. * MeV,
+                'R1L_MinETA' : 1.6,
+                'R1L_MaxETA' : 2.04,
+                'R1L_Phis'   : [ ( -2.65, -2.30 ), ( -0.80, -0.50 ), ( 0.50, 0.80 ), ( 2.30, 2.65 ) ],
+                'R1L_TrChi2' : 2.,
+                'R1L_MinTr'  : 0.5,
+                'R1L_GEC'    : 'Loose',
+                'LM_PT'      : 500.   * MeV,
+                'LM_P'       : 1000.  * MeV,
+                'LM_TrChi2'  : 2.,
+                'LM_MinTr'   : 1,
+                'LM_MaxTr'   : 40,
+                'LM_GEC'     : 'Loose'
+                },
+            
+            Hlt1CalibTrackingLinesConf :  { 'ParticlePT'            : 600     # MeV
                                             ,'ParticleP'             : 4000    # MeV
                                             ,'TrackCHI2DOF'          : 2       # dimensionless
                                             ,'CombMaxDaughtPT'       : 900     # MeV 900
@@ -297,7 +256,7 @@ class protonArgon_2015:
             CommissioningLines : {
                 'Prescale'  : { 'Hlt2PassThrough' : 1 },
                 'Postscale' : { 'Hlt2ErrorEvent'  : 'RATE(0.01)' },
-                'SMOGPhysics' : { 'HLT1' : "HLT_PASS('Hlt1DiMuonHighMassDecision') | HLT_PASS('Hlt1MBMicroBiasVeloDecision') | HLT_PASS('Hlt1MBNoBiasDecision') | HLT_PASS('Hlt1MBNoBiasLeadingCrossingDecision')" }
+                'PassThrough' : { 'HLT1' : "HLT_PASS('Hlt1DiMuonHighMassDecision') | HLT_PASS('Hlt1MB.*Decision') | HLT_PASS('Hlt1L0B.*gasDecision')" }
             }
         })
         from GaudiKernel.SystemOfUnits import GeV, MeV, mm 
