@@ -6,5 +6,5 @@ find_package(GaudiProject)
 #---------------------------------------------------------------
 
 # Declare project name and version
-gaudi_project(Hlt v24r1
+gaudi_project(Hlt v24r2
               USE Phys v20r1)
