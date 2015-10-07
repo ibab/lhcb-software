@@ -3,6 +3,10 @@
 ! Responsible : Chris Jones
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
+
+! 2015-10-07 - Chris Jones
+ - Small CPU improvement to RichCKthetaBandsPhotonPredictor
+
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 

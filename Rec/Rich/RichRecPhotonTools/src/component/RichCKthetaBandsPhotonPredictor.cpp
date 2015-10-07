@@ -107,12 +107,15 @@ CKthetaBandsPhotonPredictor::photonPossible( LHCb::RichRecSegment * segment,
   // Default to not selected
   bool OK = false;
 
+  // cache reference to track segment (avoids mulitple obj pointer lookup checks).
+  const auto & tkSeg = segment->trackSegment();
+
   // Are they in the same Rich detector ?
-  if ( segment->trackSegment().rich() == pixel->detector() )
+  if ( tkSeg.rich() == pixel->detector() )
   {
 
     // which radiator
-    const Rich::RadiatorType rad = segment->trackSegment().radiator();
+    const Rich::RadiatorType rad = tkSeg.radiator();
 
     // Central region cut
     // Most useful for aerogel since true photons tend to be in the outer regions of
@@ -134,7 +137,7 @@ CKthetaBandsPhotonPredictor::photonPossible( LHCb::RichRecSegment * segment,
 
       // Pixel position, in local HPD coords corrected for average radiator distortion
       const Gaudi::XYZPoint & pixP
-        = pixel->radCorrLocalPositions().position(segment->trackSegment().radiator());
+        = pixel->radCorrLocalPositions().position(tkSeg.radiator());
 
       // segment position ray traced to HPD panel, in local HPD coords
       const Gaudi::XYZPoint & segP = segment->pdPanelHitPointLocal();
