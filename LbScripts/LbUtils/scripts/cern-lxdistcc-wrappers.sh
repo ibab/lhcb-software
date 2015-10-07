@@ -60,7 +60,7 @@ setup_clang() {
         case ${_clang_version} in
           3.2) setup_gcc 4.6.3 ;;
           3.3|3.4) setup_gcc 4.8.1 ;;
-          *) setup_gcc 4.8.1 ;;
+          *) setup_gcc 4.9.3 ;;
         esac
 
         set_prefix llvm ${_clang_version}
@@ -99,7 +99,6 @@ case ${_self} in
                 exit 100
                 ;;
 esac
-
 exec ${_bin}/${_self} "$@"
 
 # End of file.
