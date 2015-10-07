@@ -568,7 +568,7 @@ class StrippingLine(object):
                 toolNum += 1
 
                 if 'Locations' in itool.keys() or 'RecursionLevel' in itool.keys() : 
-                    raise Exception("\n Old-style syntax for RelatedInfoTools is specified. Use \'DaughterLocations\' dictionary instead!\n")
+                    raise Exception("\n"+self.name()+": Old-style syntax for RelatedInfoTools is specified. Use \'DaughterLocations\' dictionary instead!\n")
 
                 from Configurables import AddRelatedInfo
                 output_basename = self.outputLocation().split("/")[-2]
@@ -583,7 +583,7 @@ class StrippingLine(object):
                 if 'Location' in itool.keys() :
                     relatedInfoAlg.Location = itool['Location']
                 if 'DaughterLocations' not in itool.keys() and 'Location' not in itool.keys() :
-                    raise Exception('\n Neither "Location" nor "DaughterLocations" are defined in RelatedInfo dictionary')
+                    raise Exception('\n'+self.name()+': Neither "Location" nor "DaughterLocations" are defined in RelatedInfo dictionary')
 
                 toolType = itool["Type"]
 

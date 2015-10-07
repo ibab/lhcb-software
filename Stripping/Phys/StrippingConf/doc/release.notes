@@ -4,6 +4,9 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2015-09-29 - Andrea Contu
+ - Adding print of the line number in RelatedInfo exceptions
+
 ! 2015-09-29 - Anton Poluektov 
  - Change daughter configuration syntax in RelatedInfoTools option of StrippingLine. 
    Instead of 'Locations' and 'RecursionLevel', a single dictionary must be provided with the 
