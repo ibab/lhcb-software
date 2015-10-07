@@ -3,6 +3,8 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes to reference to reflect change in order of upgrade tracking sequence
+
 - Changes to references to reflect introduction of counters in PatAddTTCoord
 
 - Changes to references to reflect changes since v48r2
