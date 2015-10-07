@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 #======================================================================================
 """ Owned by the QEE group, this is a set of Hlt2Lines for a range of analysis. All of
 these are either single or di- lepton lines, enabling a very varied physics
@@ -10,7 +10,7 @@ __author__  = "Karlis Dreimanis k.dreimanis@liverpool.ac.uk"
 __date__    = "2015-07-20"
 #======================================================================================
 
-from GaudiKernel.SystemOfUnits import GeV, MeV, mm 
+from GaudiKernel.SystemOfUnits import GeV, MeV, mm
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 class EWLines(Hlt2LinesConfigurableUser) :
 
@@ -35,23 +35,23 @@ class EWLines(Hlt2LinesConfigurableUser) :
                  #=====DiMuon=====
                  'DiMuonZ' :                 {'MinMass'        : 40000 * MeV,
                                               'Pt'             :     0 * MeV},
-                 
+
                  'DiMuonDY1' :               {'MinMass'        :  2500 * MeV,
                                               'MinExcMass'     :  3000 * MeV,
                                               'MaxExcMass'     :  3200 * MeV,
                                               'MuPt'           :   800 * MeV,
                                               'Pt'             :     0 * MeV,
                                               'TkChi2'         :    10},
-                 
+
                  'DiMuonDY2' :               {'MinMass'        :  5000 * MeV,
                                               'MuPt'           :  1000 * MeV,
                                               'Pt'             :     0 * MeV,
                                               'TkChi2'         :    10},
-                 
+
                  'DiMuonDY3' :               {'MinMass'        : 10000 * MeV,
                                               'MuPt'           :     0 * MeV,
                                               'TkChi2'         :    10},
-                 
+
                  'DiMuonDY4' :               {'MinMass'        : 20000 * MeV,
                                               'MuPt'           :     0 * MeV,
                                               'TkChi2'         :    10},
@@ -60,7 +60,7 @@ class EWLines(Hlt2LinesConfigurableUser) :
                                               'TkChi2'         :    10},
 
                  'SingleMuonHighPt' :        {'Pt'             : 10000 * MeV},
-                 
+
                  'SingleMuonVHighPt' :       {'Pt'             : 12500 * MeV},
                  #=====DiElectron=====
                  'DiElectronDY' :            {'L0Req'          : "L0_CHANNEL('Electron')",
@@ -97,7 +97,7 @@ class EWLines(Hlt2LinesConfigurableUser) :
                                               'PrsMin'         :    50,
                                               'EcalMin'        :   0.1,
                                               'HcalMax'        :  0.05},
-                 
+
                  'SingleElectronLowPt' :     {'L0Req'          : "L0_CHANNEL('Electron')",
                                               'Hlt1Req'        : "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')",
                                               'Pt'             :  4800 * MeV,
@@ -114,7 +114,7 @@ class EWLines(Hlt2LinesConfigurableUser) :
                                               'EcalMin'        :   0.1,
                                               'HcalMax'        :  0.05,
                                               'TkChi2'         :    20},
-                 
+
                  'SingleElectronVHighPt'   : {'L0Req'          : "L0_CHANNEL('Electron')",
                                               'Hlt1Req'        : "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')",
                                               'Pt'             : 15000 * MeV,
@@ -152,7 +152,7 @@ class EWLines(Hlt2LinesConfigurableUser) :
                  'SingleTauHighPt2Prong' :   {'PT'             :    15 * GeV},
                  'SingleTauHighPt3Prong' :   {'PT'             :    12 * GeV}
 
-                 }                               
+                 }
 
     def __apply_configuration__(self) :
         from Stages import (DiMuonZFilter,DiMuonDY1Filter,DiMuonDY2Filter,DiMuonDY3Filter,DiMuonDY4Filter,
@@ -184,10 +184,10 @@ class EWLines(Hlt2LinesConfigurableUser) :
                   'SingleElectronVHighPt'   : [SingleElectronVHighPtFilter('SingleElectronVHighPt')],
                   'SingleTauHighPt3Prong'   : [singletaus_3prong],
                   'SingleTauHighPt2Prong'   : [singletaus_2prong]}
-        
+
         from HltLine.HltLine import Hlt2Line
         from HltLine.HltDecodeRaw import DecodeL0CALO
-        for (nickname, algos) in self.algorithms(stages).iteritems():
+        for (nickname, algos) in self.algorithms(stages):
             cuts = self.getProp(nickname)
             linename = 'EW' + nickname
             Hlt2Line(linename, prescale = self.prescale,L0DU = cuts.get('L0Req', None), HLT1 = cuts.get('Hlt1Req', None), algos = algos, postscale = self.postscale)

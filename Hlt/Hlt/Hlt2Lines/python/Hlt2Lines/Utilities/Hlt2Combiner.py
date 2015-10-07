@@ -44,24 +44,24 @@ class Hlt2Combiner(Hlt2TisTosStage):
                              ('nickname', self._nickname())):
             args[arg] = kwargs.pop(arg, default)
         args.update(kwargs)
-        
+
         return Hlt2Combiner(**args)
 
     def _makeMember(self, stages, cuts, args):
         ## Return what we create directly and add what we depend on to stages.
         from HltLine.HltLine import Hlt2Member
-        decays = [self.__decay] if type(self.__decay) == str else self.__decay            
+        decays = [self.__decay] if type(self.__decay) == str else self.__decay
         inputs = self.inputStages(stages, cuts)
         return Hlt2Member(self.__combiner, self._name() + 'Combiner', shared = self._shared(),
                           DecayDescriptors = decays, Inputs = inputs, **args)
-                                     
+
     def stage(self, stages, cuts):
         key = self._hashCuts(cuts)
         if key in self.__cache:
             cached = self.__cache[key]
             stages += cached[1]
             return cached[0]
-        
+
         ## Copy args and substitute cut values
         args = deepcopy(self.__kwargs)
         localCuts = self._localCuts(cuts)
@@ -70,12 +70,12 @@ class Hlt2Combiner(Hlt2TisTosStage):
                 args[k] = {l : w % localCuts for l, w in v.iteritems()}
             else:
                 args[k] = v % localCuts
-    
+
         if 'Preambulo' in args:
             args['Preambulo'] = [p % localCuts for p in args['Preambulo']]
-                
+
+        ## Return combiner if no tistos is required
         if not self._tistos():
-            ## Return combiner if no tistos is required
             deps = self.dependencies(cuts)
             member = self._makeMember(deps, cuts, args)
             stages += deps

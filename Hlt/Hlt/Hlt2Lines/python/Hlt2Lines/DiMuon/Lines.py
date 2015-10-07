@@ -12,7 +12,7 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
                                     'Pt'         :     0 * MeV,
                                     'MuPt'       :     0 * MeV,
                                     'VertexChi2' :    25},
-                 
+
                  'JPsi' :          {'MassWindow' :   120 * MeV,
                                     'Pt'         :     0 * MeV,
                                     'MuPt'       :     0 * MeV,
@@ -32,13 +32,13 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
                                     'Pt'         :  3500 * MeV,
                                     'MuPt'       :     0 * MeV,
                                     'VertexChi2' :    25},
-                 
+
                  'B' :             {'MinMass'    :   4700 * MeV,
                                     'VertexChi2' :    25},
 
                  'Z' :             {'MinMass'    : 40000 * MeV,
                                     'Pt'         :     0 * MeV},
-                                                 
+
                  'Detached' :      {'IPChi2'     :    25,
                                     'DLS'        :     7},
                  'Soft' :          {'IP'         :   0.3 * mm ,
@@ -55,7 +55,7 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
                                     'MinBPVDira' :     0,
                                     'MaxIpDistRatio':  1./60,
                                     'cosAngle'   :0.999998
-                                    },                    
+                                    },
 
                  'DetachedHeavy' : {'MinMass'    :  2950 * MeV,
                                     'Pt'         :     0 * MeV,
@@ -63,7 +63,7 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
                                     'VertexChi2' :    25,
                                     'IPChi2'     :     0,
                                     'DLS'        :     5},
-                 
+
                  'DetachedJPsi' :  {'DLS'        :     3},
 
                  'DetachedPsi2S' : {'DLS'        :     3},
@@ -105,7 +105,7 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
                         'DetachedHeavy' : [DetachedDiMuonHeavyFilter('DetachedHeavy')],
                         'DetachedJPsi'  : [DetachedJpsiFilter('DetachedJPsi')],
                         'DetachedPsi2S' : [DetachedPsi2SFilter('DetachedPsi2S')],
-                        # Turbo lines 
+                        # Turbo lines
                         'JPsiTurbo'     : [JpsiFilter('JPsiTurbo')],
                         'Psi2STurbo'    : [Psi2SFilter('Psi2STurbo')],
                         'BTurbo'        : [BFilter('BTurbo')],
@@ -119,7 +119,7 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Line
         from Configurables import HltANNSvc
         stages = self.stages()
-        for (nickname, algos) in self.algorithms(stages).iteritems():
+        for (nickname, algos) in self.algorithms(stages):
             linename = 'DiMuon' + nickname if nickname != 'DiMuon' else nickname
             Hlt2Line(linename, prescale = self.prescale,
                      algos = algos, postscale = self.postscale)
@@ -127,6 +127,3 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
                 HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonJPsiDecision":  50201 } )
             if nickname is 'JPsiTurbo':
                 HltANNSvc().Hlt2SelectionID.update( { 'Hlt2DiMuonJPsiTurboDecision':  50212 } )
-
-
-

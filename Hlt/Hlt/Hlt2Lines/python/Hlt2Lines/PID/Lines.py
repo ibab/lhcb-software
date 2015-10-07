@@ -15,7 +15,7 @@ class PIDLines(Hlt2LinesConfigurableUser):
                                 'Lambda2PPiLL'          : 0.003, # First tuning from Lucio (ish)
                                 'Lambda2PPiLLhighPT'    : 0.1,
                                 'Lambda2PPiLLveryhighPT': 1.0,
-                                'Lambda2PPiLLisMuon'    : 0.05, 
+                                'Lambda2PPiLLisMuon'    : 0.05,
                                 'Lambda2PPiDD'          : 0.0,
                                 'Lambda2PPiDDhighPT'    : 0.0,
                                 'Lambda2PPiDDveryhighPT': 0.0,
@@ -109,7 +109,7 @@ class PIDLines(Hlt2LinesConfigurableUser):
                  'Lambda2PPiDDisMuon' : {
                                 'LambdaProtonP' : 2.0 * GeV,
                                 'LambdaProtonPT': 0.0 * GeV},
-                 'JPsiMuMu' :  {'ProbePt'       : 0 * MeV, 
+                 'JPsiMuMu' :  {'ProbePt'       : 0 * MeV,
                                 'ProbeMinIPChi2': 9.0,
                                 'ProbeTisTos'   : [
                                   "L0(" + "|".join(l0_muons) + ")Decision%TIS",
@@ -414,7 +414,7 @@ class PIDLines(Hlt2LinesConfigurableUser):
                  'D02KPiTag' : {
                                 'TagVCHI2PDOF_MAX'         :  15.0,         # Stripping has 13
                                 'DeltaM_AM_MIN'            :  0.0,          # Stripping has (ADAMASS('D*(2010)+')<75)
-                                'DeltaM_AM_MAX'            :  165.0 * MeV,  # Stripping has 165 
+                                'DeltaM_AM_MAX'            :  165.0 * MeV,  # Stripping has 165
                                 'DeltaM_MIN'               :  0.0,          # Stripping has 130
                                 'DeltaM_MAX'               :  155.0 * MeV}, # Stripping has 155
                                                                             # Stripping has D* APT > 2.2 GeV
@@ -492,11 +492,11 @@ class PIDLines(Hlt2LinesConfigurableUser):
               'Ds2PiPhiKKNegTagged'   : [ BCombiner('PhiKKNeg', [ PhiKKNegTagged, BachelorPions ], nickname = "PhiKK", decay = ds2phipi ) ]
               }
             }
-        
+
         from HltLine.HltLine import Hlt2Line
         for turbo in ['TurboCalib']:
           for category, stages in stagemap.iteritems():
-            for (nickname, algos) in self.algorithms(stages).iteritems():
+            for (nickname, algos) in self.algorithms(stages):
                 linename = 'PID' + nickname
                 l0reqdict = self.getProp("L0Req")
                 hlt1reqdict = self.getProp('Hlt1Req')

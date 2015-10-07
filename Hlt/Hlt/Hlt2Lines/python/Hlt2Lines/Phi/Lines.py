@@ -1,4 +1,4 @@
-from GaudiKernel.SystemOfUnits import GeV, MeV, mm 
+from GaudiKernel.SystemOfUnits import GeV, MeV, mm
 
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 class PhiLines(Hlt2LinesConfigurableUser) :
@@ -52,6 +52,6 @@ class PhiLines(Hlt2LinesConfigurableUser) :
     from HltLine.HltLine import Hlt2Line
     from Configurables import HltANNSvc
     stages = self.stages()
-    for (nickname, algos) in self.algorithms(stages).iteritems():
+    for (nickname, algos) in self.algorithms(stages):
       linename = nickname
       Hlt2Line(linename, prescale = self.prescale, algos = algos, postscale = self.postscale)

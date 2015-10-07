@@ -1,10 +1,10 @@
 ##
 #  @author G. Ciezarek gregory.max.ciezarek@cern.ch
-#          B. Hamilton   
+#          B. Hamilton
 #  @date 2015-28-08
 #
 #  Please contact the abovementioned responsibles before editing this file
-# 
+#
 ##
 
 
@@ -18,10 +18,10 @@ class XcMuXForTauLines(Hlt2LinesConfigurableUser):
                              'DTrk_ALL_PT_MIN'           : 200.0 * MeV
                             , 'DTrk_ALL_P_MIN'            : 5.0  * GeV
                             , 'DTrk_ALL_MIPCHI2DV_MIN'    : 9.0
-                            , 'K_PIDK'    : 2 
-                            , 'Pi_PIDK'    : 4 
-                            , 'P_PIDp'    : 0 
-                 
+                            , 'K_PIDK'    : 2
+                            , 'Pi_PIDK'    : 4
+                            , 'P_PIDp'    : 0
+
                             },
                  'Xc' : {
                               'Pair_AMINDOCA_MAX'        : 0.10 * mm
@@ -42,15 +42,15 @@ class XcMuXForTauLines(Hlt2LinesConfigurableUser):
                              'Mu_IPCHI2'    : 16
                             },
                  'B' : {
-                
+
                              'XcMu_VTXCHI2'        : 15
                             , 'XcMu_DOCA_MAX'        : 0.50 * mm
                             , 'XcMu_DIRA'        : 0.999
                             , 'XcMu_FDCHI2'        : 50
                             }
-		   
+
                  }
-    
+
     def stages(self, nickname=""):
         if hasattr(self, '_stages') and self._stages:
             if nickname:
@@ -60,27 +60,24 @@ class XcMuXForTauLines(Hlt2LinesConfigurableUser):
 
 
         from Stages import (B2XcMuComb,B2XcFakeMuComb)
-        self._stages = { 
+        self._stages = {
                    'B2XcMu' : [ B2XcMuComb],
                    'B2XcFakeMu' : [ B2XcFakeMuComb],
                   }
-                  
+
         if nickname:
             return self._stages[nickname]
         else:
             return self._stages
-    
+
     def __apply_configuration__(self):
-        
+
         from HltLine.HltLine import Hlt2Line
 
         stages = self.stages()
-        
-        for (nickname, algos) in self.algorithms(stages).iteritems():
+
+        for (nickname, algos) in self.algorithms(stages):
             Hlt2Line('XcMuXForTau' + nickname,
                      prescale = self.prescale,
                      algos = algos,
                      postscale = self.postscale)
-
-
-
