@@ -83,11 +83,10 @@ Rich::SmartIDTool::globalPosition ( const Rich::HPDPixelCluster& cluster,
   if ( !cluster.smartIDs().empty() )
   {
     // get position for each point in cluster
-    for ( LHCb::RichSmartID::Vector::const_iterator iS = cluster.smartIDs().begin();
-          iS != cluster.smartIDs().end(); ++iS )
+    for ( const auto& S : cluster.smartIDs() )
     {
       Gaudi::XYZPoint tmpP;
-      sc = sc && globalPosition(*iS,tmpP);
+      sc = sc && globalPosition(S,tmpP);
       detectPoint += (Gaudi::XYZVector)tmpP;
     }
     // normalise
@@ -101,7 +100,7 @@ Rich::SmartIDTool::globalPosition ( const Rich::HPDPixelCluster& cluster,
 // on the HPD entrance window
 //=============================================================================
 StatusCode
-Rich::SmartIDTool::globalPosition ( const LHCb::RichSmartID smartID,
+Rich::SmartIDTool::globalPosition ( const LHCb::RichSmartID& smartID,
                                     Gaudi::XYZPoint& detectPoint ) const
 {
   RichPDPanels::const_iterator richIndex = m_photoDetPanels.find(smartID.rich());
@@ -125,7 +124,7 @@ Rich::SmartIDTool::globalPosition ( const Gaudi::XYZPoint& localPoint,
 // Returns the HPD position (center of the silicon wafer)
 //=============================================================================
 StatusCode
-Rich::SmartIDTool::pdPosition ( const LHCb::RichSmartID pdid,
+Rich::SmartIDTool::pdPosition ( const LHCb::RichSmartID& pdid,
                                 Gaudi::XYZPoint& pdPoint ) const
 {
   // Create temporary RichSmartIDs for two corners of the PD wafer

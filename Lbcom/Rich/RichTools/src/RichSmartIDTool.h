@@ -66,7 +66,7 @@ namespace Rich
   public: // methods (and doxygen comments) inherited from interface
 
     // Converts a RichSmartID channel identification into a position in global LHCb coordinates.
-    virtual StatusCode globalPosition ( const LHCb::RichSmartID smartid,
+    virtual StatusCode globalPosition ( const LHCb::RichSmartID& smartid,
                                         Gaudi::XYZPoint& detectPoint ) const;
 
     // Finds the average position of a cluster of RichSmartIDs, in global LHCb coordinates
@@ -74,7 +74,7 @@ namespace Rich
                                         Gaudi::XYZPoint& detectPoint ) const;
 
     // Converts an PD RichSmartID identification into a position in global LHCb coordinates.
-    virtual StatusCode pdPosition ( const LHCb::RichSmartID pdid,
+    virtual StatusCode pdPosition ( const LHCb::RichSmartID& pdid,
                                     Gaudi::XYZPoint& pdPoint ) const;
 
     // Computes the global position coordinate for a given position in local
@@ -83,7 +83,7 @@ namespace Rich
                                              const Rich::Side side ) const;
 
     // Converts a position in global coordinates to the corresponding RichSmartID
-    virtual StatusCode smartID( const Gaudi::XYZPoint&  globalPoint,
+    virtual StatusCode smartID( const Gaudi::XYZPoint& globalPoint,
                                 LHCb::RichSmartID& smartid ) const;
 
     // Supplies a vector of all currently active and valid channels in the RICH detectors
