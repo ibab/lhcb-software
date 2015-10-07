@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HltSys
 ################################################################################
-gaudi_subdir(HltSys v24r1)
+gaudi_subdir(HltSys v24r2)
 
 gaudi_depends_on_subdirs(Hlt/Hlt1Lines
                          Hlt/Hlt1Muons
@@ -22,10 +22,16 @@ gaudi_depends_on_subdirs(Hlt/Hlt1Lines
                          Hlt/HltSettings
                          Hlt/HltTracking
                          Hlt/TCKUtils
-                         Pr/PrPixel ###
-                         Tf/TrackSys ###
-                         Tr/PatChecker ###
-                         Phys/DecayTreeFitter ###
-                         Phys/LoKiTrigger)
+                         Phys/LoKiTrigger
+                         ## Packages from other projects
+                         Pr/PrPixel          
+                         Tf/TrackSys         
+                         Tr/PatChecker       
+                         Muon/MuonID          
+                         Muon/MuonTrackRec    
+                         Phys/DecayTreeFitter
+                         Phys/KalmanFilter   
+                         Phys/LoKiFitters    
+                         Phys/TisTosTobbing)
 
 gaudi_add_test(QMTest QMTEST)
