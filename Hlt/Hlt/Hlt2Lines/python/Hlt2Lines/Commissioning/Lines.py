@@ -43,7 +43,7 @@ class CommissioningLines(Hlt2LinesConfigurableUser):
                   'KS0_LL'      : [KS0_LL]}
 
         from HltLine.HltLine import Hlt2Line
-        for name, algos in self.algorithms(stages):
+        for name, algos in self.algorithms(stages).iteritems():
             localProps = self.getProps().get(name, {})
             doturbo = False
             linename = name

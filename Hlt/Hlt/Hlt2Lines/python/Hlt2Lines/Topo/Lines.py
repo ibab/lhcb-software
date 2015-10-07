@@ -76,7 +76,7 @@ class TopoLines(Hlt2LinesConfigurableUser):
         if props['USE_KS']:
             parts.append(FilterParts('KsLL', [KsLLTF], gec))
             parts.append(FilterParts('KsDD', [KsDD], gec))
-        if props['USE_LAMBDA']:
+        if props['USE_LAMBDA']: 
             parts.append(FilterParts('LambdaLL', [LambdaLLTrackFitted], gec))
             parts.append(FilterParts('LambdaDD', [LambdaDDTrackFitted], gec))
         parts4 = [FilterParts4([BiKalmanFittedKaonsWithMuonID], gec)]
@@ -99,13 +99,13 @@ class TopoLines(Hlt2LinesConfigurableUser):
                 FilterMVA(n, self._stages['Topo%iBodyCombos' % n], props,
                           props['MU_BDT_%iBODY_MIN' % n],True)]
 
-        # Return the stages.
+        # Return the stages. 
         if nickname: return self._stages[nickname]
         else: return self._stages
 
     def __apply_configuration__(self):
         from HltLine.HltLine import Hlt2Line
-        for (name, algos) in self.algorithms(self.stages()):
+        for (name, algos) in self.algorithms(self.stages()).iteritems():
             if 'Combos' in name: continue
             if 'Run1TopoE' in name:
                 l0   = self.getProps()['Common']['RUN1_L0_ELECTRON_FILTER']

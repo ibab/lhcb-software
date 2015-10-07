@@ -6,36 +6,36 @@ class SMOGLines(Hlt2LinesConfigurableUser) :
       'Prescale' : {},
       'Postscale': {},
       'TrackGEC' : { 'NTRACK_MAX'           : 10000},
-      'Common'   : { 'Trk_ALL_TRCHI2DOF_MAX'    :  3.0,
+      'Common'   : { 'Trk_ALL_TRCHI2DOF_MAX'    :  3.0,    
                      'Trk_ALL_P_MIN'            :  1000 * MeV,
                      'VCHI2PDOF_MAX'            :  10.0,
-                },
+                },  
       'SMOGSharedDpmChild_K' : {
-               'PID_LIM'                  :  5,
+               'PID_LIM'                  :  5,  
                'Trk_ALL_PT_MIN'           :  200 * MeV
         },
       'SMOGSharedDpmChild_pi' : {
-               'PID_LIM'                  :  5,
+               'PID_LIM'                  :  5,  
                'Trk_ALL_PT_MIN'           :  200 * MeV
         },
       'SMOGSharedDpmChild_TightK' : {
-               'PID_LIM'                  :  7,
+               'PID_LIM'                  :  7,  
                'Trk_ALL_PT_MIN'           :  250 * MeV
         },
       'SMOGSharedDpmChild_Tightpi' : {
-               'PID_LIM'                  :  7,
+               'PID_LIM'                  :  7,  
                'Trk_ALL_PT_MIN'           :  250 * MeV
         },
       'SMOGSharedLcChild_pi' : {
-               'PID_LIM'                  :  5,
+               'PID_LIM'                  :  5,  
                'Trk_ALL_PT_MIN'           :  200 * MeV
         },
       'SMOGSharedLcChild_K'  : {
-               'PID_LIM'                  :  5,
+               'PID_LIM'                  :  5,  
                'Trk_ALL_PT_MIN'           :  200 * MeV
         },
       'SMOGSharedLcChild_p'  : {
-               'PID_LIM'                  :  5,
+               'PID_LIM'                  :  5,  
                'Trk_ALL_PT_MIN'           :  200 * MeV
         },
       'TighterProtons' :             {
@@ -46,12 +46,12 @@ class SMOGLines(Hlt2LinesConfigurableUser) :
       'D02HH'   : {
         'TisTosSpec'               : "Hlt1SMOGSingleTrackDecision%TOS",
         'Pair_AMINDOCA_MAX'        : 0.10 * mm,
-        'Trk_Max_APT_MIN'          : 500.0 * MeV,
+        'Trk_Max_APT_MIN'          : 500.0 * MeV, 
         'D0_VCHI2PDOF_MAX'         : 10.0,       # neuter
-        'Comb_AM_MIN'              : 1775.0 * MeV,
-        'Comb_AM_MAX'              : 1955.0 * MeV,
-        'Trk_ALL_PT_MIN'           : 250.0 * MeV,
-        'Trk_ALL_P_MIN'            : 2.0  * GeV,
+        'Comb_AM_MIN'              : 1775.0 * MeV, 
+        'Comb_AM_MAX'              : 1955.0 * MeV, 
+        'Trk_ALL_PT_MIN'           : 250.0 * MeV, 
+        'Trk_ALL_P_MIN'            : 2.0  * GeV, 
         'Mass_M_MIN'               :  1784.0 * MeV,
         'Mass_M_MAX'               :  1944.0 * MeV,
         },
@@ -67,7 +67,7 @@ class SMOGLines(Hlt2LinesConfigurableUser) :
         'Mass_M_MIN'               :  1789.0 * MeV,
         'Mass_M_MAX'               :  1949.0 * MeV,
         },
-      'Ds2HHH' : {
+      'Ds2HHH' : { 
         'TisTosSpec'               : "Hlt1SMOGSingleTrackDecision%TOS",
         'Trk_ALL_PT_MIN'           :  200.0 * MeV,
         'Trk_2OF3_PT_MIN'          :  400.0 * MeV,
@@ -135,6 +135,6 @@ class SMOGLines(Hlt2LinesConfigurableUser) :
     from HltLine.HltLine import Hlt2Line
     from Configurables import HltANNSvc
     stages = self.stages()
-    for (nickname, algos) in self.algorithms(stages):
+    for (nickname, algos) in self.algorithms(stages).iteritems():
       linename = nickname
       Hlt2Line( linename, prescale = self.prescale, algos = algos, postscale = self.postscale )

@@ -2,8 +2,8 @@ from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 
 class CharmHadD2HHHLines() :
-    def localcuts(self) :
-        return { # Now the combiner for the CPV lines
+    def localcuts(self) : 
+        return { # Now the combiner for the CPV lines 
                  'Dpm2HHH' : {
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
                                  'Trk_2OF3_MIPCHI2DV_MIN'   :  10.0,
@@ -19,7 +19,7 @@ class CharmHadD2HHHLines() :
                                  'AM_MAX'                   :  1959 * MeV,
                                  'Mass_M_MIN'               :  1789.0 * MeV,
                                  'Mass_M_MAX'               :  1949.0 * MeV,
-                                 'VCHI2PDOF_MAX'            :  6,
+                                 'VCHI2PDOF_MAX'            :  6, 
                                  'TisTosSpec'               : "Hlt1.*Track.*Decision%TOS"
                                 },
                  # Be aware the following cuts are used for a flavour tagging calibration line
@@ -40,9 +40,9 @@ class CharmHadD2HHHLines() :
                                  'AM_MAX'                   :  2059 * MeV,
                                  'Mass_M_MIN'               :  1889.0 * MeV,
                                  'Mass_M_MAX'               :  2049.0 * MeV,
-                                 'VCHI2PDOF_MAX'            :  6,
+                                 'VCHI2PDOF_MAX'            :  6, 
                                  'TisTosSpec'               : "Hlt1.*Track.*Decision%TOS"
-                                },
+                                }, 
                  'Dpm2PPP' : {
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
                                  'Trk_2OF3_MIPCHI2DV_MIN'   :  10.0,
@@ -174,7 +174,7 @@ class CharmHadD2HHHLines() :
                                  'Mass_M_MAX'               :  2543.0 * MeV,
                                 },
 
-                 # The combiner for the lifetime unbiased lines
+                 # The combiner for the lifetime unbiased lines 
                  'Dpm2HHH_LTUNB' : {
                                  'TisTosSpec'               : "Hlt1Track.*Decision%TIS",
                                  'BPVLTIME_MIN'             :  0.5 * picosecond,
@@ -185,7 +185,7 @@ class CharmHadD2HHHLines() :
                                  'Mass_M_MIN'               :  1789.0 * MeV,
                                  'Mass_M_MAX'               :  1949.0 * MeV,
                                 },
-                 'Ds2HHH_LTUNB' : {
+                 'Ds2HHH_LTUNB' : { 
                                  'TisTosSpec'               : "Hlt1Track.*Decision%TIS",
                                  'BPVLTIME_MIN'             :  0.25 * picosecond,
                                  'BPVDIRA_MIN'              :  0.9,
@@ -195,7 +195,7 @@ class CharmHadD2HHHLines() :
                                  'Mass_M_MIN'               :  1889.0 * MeV,
                                  'Mass_M_MAX'               :  2049.0 * MeV,
                                 },
-                 # Wide mass window accomodates the Xi_c+
+                 # Wide mass window accomodates the Xi_c+ 
                  'Lc2HHH_LTUNB'    : {
                                  'TisTosSpec'               : "Hlt1Track.*Decision%TIS",
                                  'BPVLTIME_MIN'             :  0.15 * picosecond,
@@ -207,7 +207,7 @@ class CharmHadD2HHHLines() :
                                  'Mass_M_MAX'               :  2543.0 * MeV,
                                 },
                  # The combiner for a KPi asymmetry line
-                 'Dpm2KPiPi_ForKPiAsym' : {
+                 'Dpm2KPiPi_ForKPiAsym' : { 
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  25.0,
                                  'Trk_2OF3_MIPCHI2DV_MIN'   :  49.0,
                                  'Trk_1OF3_MIPCHI2DV_MIN'   :  100.0,
@@ -222,16 +222,9 @@ class CharmHadD2HHHLines() :
                                  'AM_MAX'                   :  1929 * MeV,
                                  'Mass_M_MIN'               :  1819.0 * MeV,
                                  'Mass_M_MAX'               :  1919.0 * MeV,
-                                },
-                 'DConeVar05' : { "ConeAngle" : 0.5,
-                                  "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-                                  "Location"  : 'DConeVar05' },
-                 'DConeVar10' : { "ConeAngle" : 1.0,
-                                  "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-                                  "DaughterLocations" : {"[D_s+ -> ^K- K+ pi+]CC" : "KmConeVar10"} },
-                 'VertexIsolation' : { "Location"  : "VertexIsoInfo" }
+                                }, 
                 }
-
+    
     def locallines(self):
         from Stages import MassFilter, TagDecay, HHHCombiner
         from Stages import DetAsym_DpToKmPipPip
@@ -250,7 +243,7 @@ class CharmHadD2HHHLines() :
         from Stages import LcXic2HHH_LcpToKmPpPip, LcXic2HHH_LcpToKmPpKp
         from Stages import LcXic2HHH_LcpToPimPpPip, LcXic2HHH_LcpToPimPpKp
         from Stages import Lc2HHH_LcpToKmPpPip, Xic2HHH_XicpToKmPpPip
-
+       
 
         ## MassFilters for imported combiner instances.
         ## Since the D+ and D_s+ combinatorics were separated, do we still need
@@ -366,7 +359,7 @@ class CharmHadD2HHHLines() :
                   'LcpToPpKmPipTurbo'        : [Lc2HHH_LcpToKmPpPip],
                   'LcpToPpKmKpTurbo'         : [LcpToKmPpKp],
                   'LcpToPpPimPipTurbo'       : [LcpToPimPpPip],
-                  'LcpToPpKpPimTurbo'        : [LcpToPimPpKp],
+                  'LcpToPpKpPimTurbo'        : [LcpToPimPpKp], 
 
                   ## Xi_c+ -> p K- pi+, DO NOT SEND TO TURBO.
                   'XicpToPpKmPip'            : [Xic2HHH_XicpToKmPpPip],
@@ -380,16 +373,8 @@ class CharmHadD2HHHLines() :
                   'DpToKmPipPip_ForKPiAsym'  : [Dpm2KPiPi_ForKPiAsym]
             }
 
-        # Create Full stream version of this line for use in
+        # Create Full stream version of this line for use in 
         # flavour tagging calibration.
         stages['DspToKmKpPip'] = stages['DspToKmKpPipTurbo']
-
+        
         return stages
-
-    def relatedInfo(self):
-        from Hlt2Lines.Utilities.Hlt2RelatedInfo import Hlt2RelInfoConeVariables, Hlt2RelInfoVertexIsolation
-        DConeVar05 = Hlt2RelInfoConeVariables('DConeVar05')
-        DConeVar10 = Hlt2RelInfoConeVariables('DConeVar10')
-        VertexIso = Hlt2RelInfoVertexIsolation("VertexIsolation")
-        relInfo = {'DspToKmKpPipTurbo' : [DConeVar05, DConeVar10, VertexIso]}
-        return relInfo

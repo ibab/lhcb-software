@@ -5,7 +5,7 @@
 #  @date 2015-03-07
 #
 #  Please contact the abovementioned responsibles before editing this file
-#
+# 
 ##
 
 
@@ -70,7 +70,7 @@ class RareCharmLines(Hlt2LinesConfigurableUser):
                             , 'VtxChi2_HHmumu'               : 15.0     # unitless
                             , 'DIPChi2_HHmumu'               : 25.0     #  unitless
                             , 'DSumPt_HHmumu'                : 3000.0 * MeV
-                            , 'DDira_HHmumu'              : 0.9999     # adimensional
+                            , 'DDira_HHmumu'              : 0.9999     # adimensional                    
                             , 'MCOR_MAX_HHmumu'              : 3500.0 * MeV
                             , 'Sig_M_MIN_HHmumu'                   : 1800.0 * MeV
                             , 'Sig_M_MAX_HHmumu'                   : 1950.0 * MeV
@@ -113,16 +113,16 @@ class RareCharmLines(Hlt2LinesConfigurableUser):
                             , 'Pair_SumAPT_MIN_mueX'           : 0.0 * MeV
                             , 'Pair_BPVCORRM_MAX_mueX'         : 3500.0 * MeV
                    }
-
+		   
                  }
-
+    
     def stages(self, nickname=""):
         if hasattr(self, '_stages') and self._stages:
             if nickname:
                 return self._stages[nickname]
             else:
                 return self._stages
-
+        
         from Stages import (D02mumuComb,
                             D02pipiComb,
                             D02kpiComb,
@@ -220,20 +220,23 @@ class RareCharmLines(Hlt2LinesConfigurableUser):
                    'D02KPiMueFilter' : [ D02KPiMueFilter ],
                    'D02KPiMuMuSSFilter' : [ D02KPiMuMuSSFilter ],
                   }
-
+        
         if nickname:
             return self._stages[nickname]
         else:
             return self._stages
-
+    
     def __apply_configuration__(self):
-
+        
         from HltLine.HltLine import Hlt2Line
 
         stages = self.stages()
-
-        for (nickname, algos) in self.algorithms(stages):
+        
+        for (nickname, algos) in self.algorithms(stages).iteritems():
             Hlt2Line('RareCharm' + nickname,
                      prescale = self.prescale,
                      algos = algos,
                      postscale = self.postscale)
+
+
+

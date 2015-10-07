@@ -19,26 +19,26 @@ class TrackEffLines(Hlt2LinesConfigurableUser):
                              , 'D0_MinSimpleFitM' : 1865.-450. * MeV
                              , 'D0_MaxSimpleFitM' : 1865.+450. * MeV
                              , 'Dst_MaxAOA'  : 2.5 # degrees (hand made variable)
-                             , 'Dst_MinAPT'  : 1500. *MeV
-                             , 'Dst_MaxDTFM' : 2030. *MeV
-                             , 'Dst_MaxDTFCHI2NDF' : 3.0
+                             , 'Dst_MinAPT'  : 1500. *MeV 
+                             , 'Dst_MaxDTFM' : 2030. *MeV 
+                             , 'Dst_MaxDTFCHI2NDF' : 3.0 
                              , 'Dst_MaxSimpleFitDeltaMass' : 250. * MeV
                              , 'Tag_MinPT' : 1300. * MeV
-                             , 'Tag_MinIPCHI2' : 25.
-                             , 'Tag_MaxTrchi2' : 2.0
-                             , 'TagK_MinPIDK' : 0.
-                             , 'TagPi_MaxPIDK' : 10.
+                             , 'Tag_MinIPCHI2' : 25. 
+                             , 'Tag_MaxTrchi2' : 2.0 
+                             , 'TagK_MinPIDK' : 0. 
+                             , 'TagPi_MaxPIDK' : 10. 
                              , 'Slowpi_MinPt' : 120*MeV
                              }
                  }
     def __apply_configuration__(self):
         from Stages import FilteredDstD0ToKpiPionProbe
         from Stages import FilteredDstD0ToKpiKaonProbe
-
+        
         stages = {'PionProbe'  : [FilteredDstD0ToKpiPionProbe],
                   'KaonProbe'  : [FilteredDstD0ToKpiKaonProbe]}
-
+        
         from HltLine.HltLine import Hlt2Line
-        for (nickname, algos) in self.algorithms(stages):
+        for (nickname, algos) in self.algorithms(stages).iteritems():
             Hlt2Line('TrackEff_D0ToKpi' + nickname, prescale = self.prescale,
                      algos = algos, postscale = self.postscale)

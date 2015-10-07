@@ -25,8 +25,8 @@ class Bc2JpsiXLines(Hlt2LinesConfigurableUser):
                                    'MomCuts' : """
                                                (VFASPF(VCHI2PDOF) < 25)
                                                & (in_range( 3.1*GeV, MM, 7.0*GeV))
-                                               & (PT> 5.0 *GeV)
-                                               """
+                                               & (PT> 5.0 *GeV) 
+                                               """                                
                                    },
                  'Bc2JpsiH'     : {'Prescale': 1.0,
                                    'JpsiCuts': """
@@ -46,8 +46,8 @@ class Bc2JpsiXLines(Hlt2LinesConfigurableUser):
                                                & (in_range( 6.1*GeV, MM, 6.6*GeV))
                                                & (PT > 5.*GeV)
                                                & (BPVLTIME()>0.2*ps)
-                                               """
-                                   }
+                                               """                                
+                                   }                 
                  }
 
     def stages(self, nickname = ""):
@@ -72,9 +72,9 @@ class Bc2JpsiXLines(Hlt2LinesConfigurableUser):
 
         stages = self.stages()
         cuts   = self.getProps()
-        for nickname, algos in self.algorithms(stages):
+        for nickname, algos in self.algorithms(stages).iteritems():
             Hlt2Line(nickname,
-                     prescale = cuts[nickname].get('Prescale', 1.0),
+                     prescale = cuts[nickname].get('Prescale', 1.0), 
                      L0DU     = cuts[nickname].get('L0Req'   , None),
                      HLT1     = cuts[nickname].get('Hlt1Req' , None),
                      algos = algos, postscale = self.postscale)
