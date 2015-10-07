@@ -6,6 +6,8 @@
 ! Responsible : Victor Coco victor.coco@cern.ch
 ! Purpose     : Jet finding algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
+
+!========================= LoKiJets v6r13 2015-10-07 ==========================
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 

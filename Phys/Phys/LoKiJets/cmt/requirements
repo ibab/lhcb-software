@@ -4,7 +4,7 @@
 # Maintainer : Victor COCO victor.coco@cern.ch
 # =============================================================================
 package           LoKiJets
-version           v6r12
+version           v6r13
 
 # =============== structure ===================================================
 branches          cmt doc python src histo
