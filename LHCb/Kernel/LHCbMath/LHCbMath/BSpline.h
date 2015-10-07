@@ -191,10 +191,34 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
+      /// negate it! 
+      BSpline operator-() const ;
+      // ======================================================================
+    public:
+      // ======================================================================
       /// assignement      operator 
       BSpline& operator=( const BSpline& ) = default ; 
       /// assignement move operator 
       BSpline& operator=(       BSpline&& right ) ;
+      // ======================================================================
+    public: // operators for python
+      // ======================================================================
+      /// Sum of B-spline and a constant 
+      BSpline __add__   ( const double value ) const ;
+      /// Sum of B-spline and a constant 
+      BSpline __radd__  ( const double value ) const ;
+      /// Product B-spline and a constant
+      BSpline __mult__  ( const double value ) const ;
+      /// Product B-spline and a constant
+      BSpline __rmult__ ( const double value ) const ;
+      /// Subtract a constant from Benrstein polynomial
+      BSpline __sub__   ( const double value ) const ;
+      /// Constant minus B-spline 
+      BSpline __rsub__  ( const double value ) const ;
+      /// Divide B-spline by a constant 
+      BSpline __div__   ( const double value ) const ;
+      /// Negate B-spline 
+      BSpline __neg__   () const ;
       // ======================================================================
     private:
       // ======================================================================
@@ -220,6 +244,25 @@ namespace Gaudi
       std::vector<double>  m_knots_i ;              // the list of knots
       // ======================================================================
     };
+    // ========================================================================
+    ///  B-spline plus      constant 
+    inline BSpline operator+( const BSpline& p , const double v )
+    { return BSpline ( p ) += v ; } 
+    ///  B-spline multiply  constant
+    inline BSpline operator*( const BSpline& p , const double v ) 
+    { return BSpline ( p ) *= v ; } 
+    ///  B-spline minus constant
+    inline BSpline operator-( const BSpline& p , const double v ) 
+    { return BSpline ( p ) -= v ; } 
+    ///  B-spline divide constant
+    inline BSpline operator/( const BSpline& p , const double v ) 
+    { return BSpline ( p ) /= v ; } 
+    ///  Constant plus  B-spline 
+    inline BSpline operator+( const double v , const BSpline& p ) { return p +   v  ; }
+    ///  Constant times B-spline 
+    inline BSpline operator*( const double v , const BSpline& p ) { return p *   v  ; }
+    ///  Constant minus B-spline 
+    inline BSpline operator-( const double v , const BSpline& p ) { return v + (-p) ; }
     // ========================================================================
     /** @class PositiveSpline
      *  The special spline for non-negative function
@@ -335,6 +378,25 @@ namespace Gaudi
       double  derivative ( const double x   ) const 
       { return m_bspline.derivative ( x          ) ; }
       // ======================================================================
+    public: // operators for python 
+      // ======================================================================
+      /// Sum of spline and a constant 
+      BSpline __add__   ( const double value ) const { return m_bspline+ value ; }
+      /// Sum of spline and a constant 
+      BSpline __radd__  ( const double value ) const { return m_bspline + value ; }
+      /// Product of spline and a constant
+      BSpline __mult__  ( const double value ) const { return m_bspline * value ; }
+      /// Product of spline and a constant
+      BSpline __rmult__ ( const double value ) const { return m_bspline * value ; }
+      /// Subtract a constant from spline 
+      BSpline __sub__   ( const double value ) const { return m_bspline - value ; }
+      /// Constant minus spline 
+      BSpline __rsub__  ( const double value ) const { return value - m_bspline ; }
+      /// Divide spline by a constant 
+      BSpline __div__   ( const double value ) const { return m_bspline / value ; }
+      /// Negate spline  
+      BSpline __neg__   () const { return -m_bspline; }
+      // ======================================================================
     protected:
       // ======================================================================
       /// update coefficients  
@@ -348,6 +410,26 @@ namespace Gaudi
       Gaudi::Math::NSphere m_sphere   ; // the N-sphere of parameters
       // ======================================================================
     } ;
+    // ========================================================================
+    ///  Positive plus      constant 
+    inline BSpline operator+( const PositiveSpline& p , const double v )
+    { return p.bspline () + v ; }
+    ///  Positive multiply  constant 
+    inline BSpline operator*( const PositiveSpline& p , const double v )
+    { return p.bspline () * v ; }
+    ///  Positive minus     constant 
+    inline BSpline operator-( const PositiveSpline& p , const double v )
+    { return p.bspline () - v ; }
+    ///  Positive divide constant 
+    inline BSpline operator/( const PositiveSpline& p , const double v )
+    { return p.bspline () / v ; }
+    ///  Constant plus  Positive
+    inline BSpline operator+( const double v , const PositiveSpline& p ) { return p + v  ; }
+    ///  Constant times Positive
+    inline BSpline operator*( const double v , const PositiveSpline& p ) { return p * v  ; }
+    ///  Constant minus Positive 
+    inline BSpline operator-( const double v , const PositiveSpline& p ) 
+    { return v - p.bspline() ; }
     // ========================================================================
     /** @class ConvexOnlySpline
      *  The special spline for non-negative function, 

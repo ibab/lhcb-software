@@ -758,6 +758,14 @@ using namespace std;
     void shift ( std::vector<TYPE>& vct , SCALAR factor ) 
     { shift    ( vct.begin() , vct.end () , factor ) ; }
     // ========================================================================
+    template <class ITERATOR> 
+    void negate ( ITERATOR first , ITERATOR last ) 
+    { for ( ; first != last ; ++first ) { (*first) = -(*first) ; } }
+    // ========================================================================
+    template <class TYPE> 
+    void negate ( std::vector<TYPE>& vct ) 
+    { negate ( vct.begin() , vct.end() ) ; }
+    // ========================================================================
   } //                                              end of namespace LHCb::Math 
   // ==========================================================================
 } //                                                      end of namespace LHCb 

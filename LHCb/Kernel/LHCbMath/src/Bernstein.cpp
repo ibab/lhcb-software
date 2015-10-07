@@ -305,20 +305,86 @@ double Gaudi::Math::Bernstein::operator () ( const double x ) const
 Gaudi::Math::Bernstein&
 Gaudi::Math::Bernstein::operator+=( const double a ) 
 {
-  for ( std::vector<double>::iterator ip = m_pars.begin() ; m_pars.end() != ip ; ++ip ) 
-  { (*ip) += a ; }
-  //
+  LHCb::Math::shift ( m_pars , a ) ;
+  return *this ;
+}
+// ============================================================================
+Gaudi::Math::Bernstein&
+Gaudi::Math::Bernstein::operator*=( const double a ) 
+{
+  LHCb::Math::scale ( m_pars , a ) ;
   return *this ;
 }
 // ============================================================================
 Gaudi::Math::Bernstein&
 Gaudi::Math::Bernstein::operator-=( const double a ) 
 {
-  for ( std::vector<double>::iterator ip = m_pars.begin() ; m_pars.end() != ip ; ++ip ) 
-  { (*ip) -= a ; }
-  //
+  LHCb::Math::shift ( m_pars , -a ) ;
   return *this ;
 }
+// ============================================================================
+Gaudi::Math::Bernstein&
+Gaudi::Math::Bernstein::operator/=( const double a ) 
+{
+  LHCb::Math::scale ( m_pars , 1/a ) ;
+  return *this ;
+}
+// ============================================================================
+Gaudi::Math::Bernstein
+Gaudi::Math::Bernstein::operator-() const 
+{
+  Bernstein b ( *this ) ;
+  LHCb::Math::negate ( b.m_pars ) ;
+  return b ;
+}
+// ============================================================================
+// Sum of Bernstein polynomial and a constant 
+// ============================================================================
+Gaudi::Math::Bernstein
+Gaudi::Math::Bernstein::__add__   ( const double value ) const 
+{ return (*this) + value ; }
+// ============================================================================
+// Sum of Bernstein polynomial and a constant 
+// ============================================================================
+Gaudi::Math::Bernstein
+Gaudi::Math::Bernstein::__radd__  ( const double value ) const 
+{ return value + (*this) ; }
+// ============================================================================
+// Product of Bernstein polynomial and a constant
+// ============================================================================
+Gaudi::Math::Bernstein
+Gaudi::Math::Bernstein::__mult__  ( const double value ) const 
+{ return (*this) * value ; }
+// ============================================================================
+// Product of Bernstein polynomial and a constant
+// ============================================================================
+Gaudi::Math::Bernstein
+Gaudi::Math::Bernstein::__rmult__ ( const double value ) const 
+{ return value * (*this) ; }
+// ============================================================================
+// Subtract a constant from Benrstein polynomial
+// ============================================================================
+Gaudi::Math::Bernstein
+Gaudi::Math::Bernstein::__sub__  ( const double value ) const 
+{ return (*this) - value ; }
+// ============================================================================
+// Subtract Bernstein polynomial from a constant 
+// ============================================================================
+Gaudi::Math::Bernstein
+Gaudi::Math::Bernstein::__rsub__ ( const double value ) const 
+{ return value - (*this) ; }
+// ============================================================================
+// Divide Benrstein polynomial by a constant 
+// ============================================================================
+Gaudi::Math::Bernstein
+Gaudi::Math::Bernstein:: __div__   ( const double value ) const 
+{ return (*this) / value ; }
+// ============================================================================
+// Negate Bernstein polynomial 
+// ============================================================================
+Gaudi::Math::Bernstein
+Gaudi::Math::Bernstein::__neg__ ()  const 
+{ return -(*this); }
 // ============================================================================
 namespace 
 {

@@ -474,6 +474,61 @@ Gaudi::Math::BSpline::operator-=( const double a )
   return *this ;
 }
 // ============================================================================
+Gaudi::Math::BSpline
+Gaudi::Math::BSpline::operator-() const 
+{
+  BSpline b ( *this ) ;
+  LHCb::Math::negate ( b.m_pars  ) ;
+  return b ;
+}
+// ============================================================================
+// Sum of B-spline and a constant 
+// ============================================================================
+Gaudi::Math::BSpline
+Gaudi::Math::BSpline::__add__   ( const double value ) const 
+{ return (*this) + value ; }
+// ============================================================================
+// Sum of B-spline and a constant 
+// ============================================================================
+Gaudi::Math::BSpline
+Gaudi::Math::BSpline::__radd__  ( const double value ) const 
+{ return value + (*this) ; }
+// ============================================================================
+// Product of B-spline and a constant
+// ============================================================================
+Gaudi::Math::BSpline
+Gaudi::Math::BSpline::__mult__  ( const double value ) const 
+{ return (*this) * value ; }
+// ============================================================================
+// Product of B-spline and a constant
+// ============================================================================
+Gaudi::Math::BSpline
+Gaudi::Math::BSpline::__rmult__ ( const double value ) const 
+{ return value * (*this) ; }
+// ============================================================================
+// Subtract a constant from B-spline 
+// ============================================================================
+Gaudi::Math::BSpline
+Gaudi::Math::BSpline::__sub__  ( const double value ) const 
+{ return (*this) - value ; }
+// ============================================================================
+// Subtract B-spline from a constant 
+// ============================================================================
+Gaudi::Math::BSpline
+Gaudi::Math::BSpline::__rsub__ ( const double value ) const 
+{ return value - (*this) ; }
+// ============================================================================
+// Divide B-spline by a constant 
+// ============================================================================
+Gaudi::Math::BSpline
+Gaudi::Math::BSpline::__div__   ( const double value ) const 
+{ return (*this) / value ; }
+// ============================================================================
+// Negate Bernstein polynomial 
+// ============================================================================
+Gaudi::Math::BSpline
+Gaudi::Math::BSpline::__neg__ ()  const { return -(*this); }
+// ============================================================================
 // set k-parameter
 // ============================================================================
 bool Gaudi::Math::BSpline::setPar ( const unsigned short k , const double value ) 

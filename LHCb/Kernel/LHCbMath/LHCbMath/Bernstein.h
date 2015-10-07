@@ -192,6 +192,34 @@ namespace Gaudi
       Bernstein& operator += ( const double a ) ;
       /// simple  manipulations with polynoms: shift it!
       Bernstein& operator -= ( const double a ) ;
+      /// simple  manipulations with polynoms: scale it!
+      Bernstein& operator *= ( const double a ) ;
+      /// simple  manipulations with polynoms: scale it!
+      Bernstein& operator /= ( const double a ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// negate it! 
+      Bernstein  operator-() const ;
+      // ======================================================================
+    public: // a bit of operators for python 
+      // ======================================================================
+      /// Sum of Bernstein polynomial and a constant 
+      Bernstein __add__   ( const double value ) const ;
+      /// Sum of Bernstein polynomial and a constant 
+      Bernstein __radd__  ( const double value ) const ;
+      /// Product of Bernstein polynomial and a constant
+      Bernstein __mult__  ( const double value ) const ;
+      /// Product of Bernstein polynomial and a constant
+      Bernstein __rmult__ ( const double value ) const ;
+      /// Subtract a constant from Benrstein polynomial
+      Bernstein __sub__   ( const double value ) const ;
+      /// Constant minus Benrstein polynomial
+      Bernstein __rsub__  ( const double value ) const ;
+      /// Divide Benrstein polynomial by a constant 
+      Bernstein __div__   ( const double value ) const ;
+      /// Negate Bernstein polynomial 
+      Bernstein __neg__   () const ;
       // ======================================================================
     public:
       // ======================================================================
@@ -213,6 +241,25 @@ namespace Gaudi
       double m_xmax  ;                             // the right edge of interval
       // ======================================================================
     };
+    // ========================================================================
+    ///  Bernstein plus      constant 
+    inline Bernstein operator+( const Bernstein& p , const double v )
+    { return Bernstein ( p ) += v ; } //  Bernstein plus constant 
+    ///  Bernstein multiply  constant
+    inline Bernstein operator*( const Bernstein& p , const double v ) 
+    { return Bernstein ( p ) *= v ; } //  Bernstein plus constant 
+    ///  Bernstein minus constant
+    inline Bernstein operator-( const Bernstein& p , const double v ) 
+    { return Bernstein ( p ) -= v ; } //  Bernstein plus constant 
+    ///  Bernstein divide constant
+    inline Bernstein operator/( const Bernstein& p , const double v ) 
+    { return Bernstein ( p ) /= v ; } //  Bernstein plus constant 
+    ///  Constant plus  Bernstein 
+    inline Bernstein operator+( const double v , const Bernstein& p ) { return p +   v  ; }
+    ///  Constant times Bernstein
+    inline Bernstein operator*( const double v , const Bernstein& p ) { return p *   v  ; }
+    ///  Constant minus Bernstein 
+    inline Bernstein operator-( const double v , const Bernstein& p ) { return v + (-p) ; }
     // ========================================================================
     /** get the integral between low and high for a product of Bernstein
      *  polynom and the exponential function with the exponent tau
@@ -409,9 +456,28 @@ namespace Gaudi
       /// move assignement 
       Positive& operator=(       Positive&& right ) ;
       // ======================================================================
+    public:  /// basic operations  for python 
+      // ======================================================================
+      /// Sum of Bernstein polynomial and a constant 
+      Bernstein __add__   ( const double value ) const { return m_bernstein + value ; }
+      /// Sum of Bernstein polynomial and a constant 
+      Bernstein __radd__  ( const double value ) const { return m_bernstein + value ; }
+      /// Product of Bernstein polynomial and a constant
+      Bernstein __mult__  ( const double value ) const { return m_bernstein * value ; }
+      /// Product of Bernstein polynomial and a constant
+      Bernstein __rmult__ ( const double value ) const { return m_bernstein * value ; }
+      /// Subtract a constant from Benrstein polynomial
+      Bernstein __sub__   ( const double value ) const { return m_bernstein - value ; }
+      /// Constant minus Bernstein polynomial
+      Bernstein __rsub__  ( const double value ) const { return value - m_bernstein ; }
+      /// Divide Bernstein polynomial by a constant 
+      Bernstein __div__   ( const double value ) const { return m_bernstein / value ; }
+      /// Negate Bernstein polynomial 
+      Bernstein __neg__   () const { return -m_bernstein ; }
+      // ======================================================================
     protected:
       // ======================================================================
-      /// update bernstein coefficinects
+      /// update bernstein coefficiencts
       virtual bool updateBernstein () ;
       // ======================================================================
     protected:
@@ -422,6 +488,26 @@ namespace Gaudi
       Gaudi::Math::NSphere   m_sphere    ;
       // ======================================================================
     } ;
+    // ========================================================================
+    ///  Positive plus      constant 
+    inline Bernstein operator+( const Positive& p , const double v )
+    { return p.bernstein() + v ; }
+    ///  Positive multiply  constant 
+    inline Bernstein operator*( const Positive& p , const double v )
+    { return p.bernstein() * v ; }
+    ///  Positive minus     constant 
+    inline Bernstein operator-( const Positive& p , const double v )
+    { return p.bernstein() - v ; }
+    ///  Positive divide constant 
+    inline Bernstein operator/( const Positive& p , const double v )
+    { return p.bernstein() / v ; }
+    ///  Constant plus  Positive
+    inline Bernstein operator+( const double v , const Positive& p ) { return p + v  ; }
+    ///  Constant times Positive
+    inline Bernstein operator*( const double v , const Positive& p ) { return p * v  ; }
+    ///  Constant minus Positive 
+    inline Bernstein operator-( const double v , const Positive& p ) 
+    { return v - p.bernstein() ; }
     // ========================================================================
     /** @class Monothonic
      *  The "positive" monothonic polynomial of order N
