@@ -61,6 +61,7 @@ class protonArgon_2015:
             'Hlt1MBMicroBiasVelo',  ## Beam1 Micro Bias, prescaled to get 200 M events
             'Hlt1DiMuonHighMass' ,  ## di-muon: active on beam1 beam2 and collisions
             'Hlt1MBNoBiasLeadingCrossing', ## and on collisions
+            'Hlt1MBMicroBiasLowMultVelo',
             'Hlt1L0B1gas',
             'Hlt1L0B2gas',
             # SMOG Lines:
@@ -140,7 +141,8 @@ class protonArgon_2015:
             'NoBiasLeadingCrossingOdin': 'jbit( ODIN_EVTTYP,2 )' ,
             'Prescale' : { ## 'Hlt1MBNoBias'                       : 1.,
               'Hlt1MBNoBiasLeadingCrossing'        : 1.,
-              'Hlt1MBMicroBiasVelo'                : 1. },
+              'Hlt1MBMicroBiasVelo'                : 1.,
+              'Hlt1MBMicroBiasLowMultVelo'         : 1. },
             'Postscale' : {
             'Hlt1MBNoBiasLeadingCrossing' : 'RATE(50)',
             }

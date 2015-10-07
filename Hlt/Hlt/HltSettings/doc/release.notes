@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-10-07 - Patrick Robbe
+ - Add MicroBiasLowMult line to the protonArgon_2015 configuration
+
 ! 2015-10-06 - Patrick Robbe
  - Fix the protonArgon_2015 configuration
 
