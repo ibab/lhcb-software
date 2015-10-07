@@ -35,7 +35,7 @@ use  MuonTrackRec        v3r14     Muon
 use  DecayTreeFitter     v1r22    Phys
 use  KalmanFilter        v1r14    Phys
 use  LoKiFitters         v4r17    Phys
-use  TisTosTobbing       v9r1p1   Phys
+use  TisTosTobbing       v9r2     Phys
 
 # Declare this as a container package
 apply_pattern container_package
