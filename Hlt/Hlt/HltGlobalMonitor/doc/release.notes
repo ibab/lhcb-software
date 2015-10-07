@@ -5,6 +5,8 @@
 !Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
+!========================= HltGlobalMonitor v5r2 2015-10-07 =========================
+
 ! 2015-10-20 - Matthew Kenzie
  - Fix counters for the L0 channels (fix in declareInfo() )
 
