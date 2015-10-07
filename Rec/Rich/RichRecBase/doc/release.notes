@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2015-10-07 - Chris Jones
+ - Some fine tuning to the photon reconstruction base class.
+
 ! 2015-09-23 - Chris Jones
  - Adapt to class name changes in FastAllocVector.h
 

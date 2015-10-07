@@ -132,6 +132,18 @@ namespace Rich
       double ckSearchRange( LHCb::RichRecSegment * segment,
                             const Rich::ParticleIDType id ) const;
 
+      /*  Computes the cherenkov range to look in for a given track segment
+       *
+       *  @param segment The track segment
+       *  @param tkSeg   The RICH geometrical track segment (passed as well for speed).
+       *  @param id      The mass hypothesis
+       *
+       *  @return The Cherenkov angle range to search for photons in
+       */
+      double ckSearchRange( LHCb::RichRecSegment * segment,
+                            const LHCb::RichTrackSegment & tkSeg,
+                            const Rich::ParticleIDType id ) const;
+
       /** Absolute maximum Cherenkov theta value to reconstuct for given track segment
        *
        *  @param segment The track segment
@@ -147,6 +159,22 @@ namespace Rich
        *  @return The minimum Cherenkov angle to reconstruct
        */
       double absMinCKTheta( LHCb::RichRecSegment * segment ) const;
+
+      /** Absolute maximum Cherenkov theta value to reconstuct for given track segment
+       *
+       *  @param segment The track segment
+       *
+       *  @return The maximum Cherenkov angle to reconstruct
+       */
+      double absMaxCKTheta( const LHCb::RichTrackSegment & segment ) const;
+
+      /** Absolute minimum Cherenkov theta value to reconstuct for given track segment
+       *
+       *  @param segment The track segment
+       *
+       *  @return The minimum Cherenkov angle to reconstruct
+       */
+      double absMinCKTheta( const LHCb::RichTrackSegment & segment ) const;
 
       /** Maximum Cherenkov theta value to reconstuct for
        *  given track segment and mass hypothesis
@@ -317,16 +345,30 @@ namespace Rich
 
     inline double
     PhotonCreatorBase::ckSearchRange( LHCb::RichRecSegment * segment,
+                                      const LHCb::RichTrackSegment & tkSeg,
                                       const Rich::ParticleIDType id ) const
     {
       // # sigma * resolution
-      return m_nSigma[segment->trackSegment().radiator()] * m_ckRes->ckThetaResolution(segment,id);
+      return m_nSigma[tkSeg.radiator()] * m_ckRes->ckThetaResolution(segment,id);
     }
 
     inline double
+    PhotonCreatorBase::ckSearchRange( LHCb::RichRecSegment * segment,
+                                      const Rich::ParticleIDType id ) const
+    {
+      return ckSearchRange( segment, segment->trackSegment(), id );
+    }
+    
+    inline double
     PhotonCreatorBase::absMaxCKTheta( LHCb::RichRecSegment * segment ) const
     {
-      return m_maxCKtheta[segment->trackSegment().radiator()];
+      return absMaxCKTheta(segment->trackSegment());
+    }
+
+    inline double
+    PhotonCreatorBase::absMaxCKTheta( const LHCb::RichTrackSegment & segment ) const
+    {
+      return m_maxCKtheta[segment.radiator()];
     }
 
     inline double
@@ -339,7 +381,13 @@ namespace Rich
     inline double
     PhotonCreatorBase::absMinCKTheta( LHCb::RichRecSegment * segment ) const
     {
-      return m_minCKtheta[segment->trackSegment().radiator()];
+      return absMinCKTheta(segment->trackSegment());
+    }
+
+    inline double
+    PhotonCreatorBase::absMinCKTheta( const LHCb::RichTrackSegment & segment ) const
+    {
+      return m_minCKtheta[segment.radiator()];
     }
 
     inline double
