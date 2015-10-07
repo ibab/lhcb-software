@@ -4,6 +4,20 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2015-10-07 - John Back
+  - Updated EvtPhotosEngine to check that additional particles from the 
+    outgoing vertex are indeed (FSR) photons, since later versions of Photos++
+    introduce pair emission, where particles may not always be photons.
+
+  - Added the ability to store named attributes for EvtParticles in the
+    form of a map<string, int>. The setAttribute(name, value) stores the
+    required value, while getAttribute(name) retrieves the integer value.
+    This is used in EvtPhotosEngine to specify the final-state radiation
+    "FSR" attribute to 1 for any additional photons (EvtPhotonParticles)
+    created by Photos++. It also stores the "ISR" attribute, but this
+    is always set to zero, since only FSR photons are created.
+    If the named attribute doesn't exist, then getAttribute() returns zero.
+
 ! 2015-10-05 - John Back
   - Fixed accessed uninitialised memory in EvtPDL.cpp:213.
 

@@ -30,7 +30,6 @@
 #include "Photos/PhotosHepMCParticle.h"
 #include "Photos/PhotosParticle.h"
 
-#include "HepMC/GenVertex.h"
 #include "HepMC/SimpleVector.h"
 #include "HepMC/Units.h"
 
@@ -44,6 +43,7 @@ EvtPhotosEngine::EvtPhotosEngine(std::string photonType, bool useEvtGenRandom) {
 
   _photonType = photonType;
   _gammaId = EvtId(-1,-1);
+  _gammaPDG = 22; // default photon pdg integer
   _mPhoton = 0.0;
 
   report(INFO,"EvtGen")<<"Setting up PHOTOS."<<endl;
@@ -58,12 +58,14 @@ EvtPhotosEngine::EvtPhotosEngine(std::string photonType, bool useEvtGenRandom) {
 
   Photospp::Photos::initialize();
 
-  // Set minimum photon energy (0.1 keV at 1 GeV scale)
-  Photospp::Photos::setInfraredCutOff(1.0e-7);
   // Increase the maximum possible value of the interference weight
   Photospp::Photos::maxWtInterference(64.0); // 2^n, where n = number of charges (+,-)
   Photospp::Photos::setInterference(true);
-  Photospp::Photos::setExponentiation(true);
+  Photospp::Photos::setExponentiation(true); // Sets the infrared cutoff at 1e-7
+  // Reset the minimum photon energy, if required, in units of half of the decaying particle mass.
+  // This must be done after exponentiation! Keep the cut at 1e-7, i.e. 0.1 keV at the 1 GeV scale,
+  // which is appropriate for B decays
+  Photospp::Photos::setInfraredCutOff(1.0e-7);
 
   _initialised = false;
 
@@ -85,6 +87,7 @@ void EvtPhotosEngine::initialise() {
       _gammaId = EvtPDL::getId("gamma");
     }
 
+    _gammaPDG = EvtPDL::getStdHep(_gammaId);
     _mPhoton = EvtPDL::getMeanMass(_gammaId);
 
     _initialised = true;
@@ -124,12 +127,18 @@ bool EvtPhotosEngine::doDecay(EvtParticle* theMother) {
   theVertex->add_particle_in(hepMCMother);
 
   // Find all daughter particles and assign them as outgoing particles to the vertex.
-  int iDaug(0);
+  // Keep track of the number of photons already in the decay (e.g. we may have B -> K* gamma)
+  int iDaug(0), nGamma(0);
   for (iDaug = 0; iDaug < nDaug; iDaug++) {
 
     EvtParticle* theDaughter = theMother->getDaug(iDaug);
     HepMC::GenParticle* hepMCDaughter = this->createGenParticle(theDaughter, false);
     theVertex->add_particle_out(hepMCDaughter);
+
+    if (theDaughter) {
+      int daugId = theDaughter->getPDGId();
+      if (daugId == _gammaPDG) {nGamma++;}
+    }
 
   }
 
@@ -140,13 +149,17 @@ bool EvtPhotosEngine::doDecay(EvtParticle* theMother) {
   // Run the Photos algorithm
   photosEvent.process();    
 
-  // See if Photos has created new particles. If not, do nothing extra.
-  int nDecayPart = theVertex->particles_out_size();
+  // Find the number of (outgoing) photons in the event
+  int nPhotons = this->getNumberOfPhotons(theVertex);
+
+  // See if Photos has created additional photons. If not, do nothing extra
+  int nDiffPhotons = nPhotons - nGamma;
   int iLoop(0);
 
-  if (nDecayPart > nDaug) {
+  if (nDiffPhotons > 0) {
 
-    // We have extra particles from Photos
+    // We have extra particles from Photos; these would have been appended
+    // to the outgoing particle list
 
     // Get the iterator of outgoing particles for this vertex
     HepMC::GenVertex::particles_out_const_iterator outIter;
@@ -156,13 +169,16 @@ bool EvtPhotosEngine::doDecay(EvtParticle* theMother) {
       // Get the next HepMC GenParticle
       HepMC::GenParticle *outParticle = *outIter;
 
-      // Get the three-momentum Photos result for this particle
+      // Get the three-momentum Photos result for this particle, and the PDG id
       double px(0.0), py(0.0), pz(0.0);
+      int pdgId(0);
+
       if (outParticle != 0) {
 	HepMC::FourVector HepMCP4 = outParticle->momentum();
 	px = HepMCP4.px();
 	py = HepMCP4.py();
 	pz = HepMCP4.pz();
+	pdgId = outParticle->pdg_id();
       }
 
       // Create an empty 4-momentum vector for the new/modified daughters
@@ -185,20 +201,25 @@ bool EvtPhotosEngine::doDecay(EvtParticle* theMother) {
 
 	}
 
-      } else {
+      } else if (pdgId == _gammaPDG) {
 
-	// Extra photon particle. Setup the four-momentum object.
+	// Extra photon particle. Setup the four-momentum object
 	double energy = sqrt(_mPhoton*_mPhoton + px*px + py*py + pz*pz);
 	newP4.set(energy, px, py, pz);
 
 	// Create a new photon particle and add it to the list of daughters
 	EvtPhotonParticle* gamma = new EvtPhotonParticle();
 	gamma->init(_gammaId, newP4);
+	// Set the pre-FSR photon momentum to zero
 	gamma->setFSRP4toZero();
-	gamma->addDaug(theMother); // Let the mother know about this new particle
+	// Let the mother know about this new photon
+	gamma->addDaug(theMother);
+	// Set its particle attribute to specify it is a FSR photon
+	gamma->setAttribute("FSR", 1); // it is a FSR photon
+	gamma->setAttribute("ISR", 0); // it is not an ISR photon
 
       }
-      
+
       // Increment the loop counter for detecting additional photon particles
       iLoop++;
 
@@ -246,5 +267,34 @@ HepMC::GenParticle* EvtPhotosEngine::createGenParticle(EvtParticle* theParticle,
   HepMC::GenParticle* genParticle = new HepMC::GenParticle(hepMC_p4, PDGInt, status);
 
   return genParticle;
+
+}
+
+int EvtPhotosEngine::getNumberOfPhotons(const HepMC::GenVertex* theVertex) const {
+
+  // Find the number of photons from the outgoing particle list
+
+  if (!theVertex) {return 0;}
+
+  int nPhotons(0);
+
+  // Get the iterator of outgoing particles for this vertex
+  HepMC::GenVertex::particles_out_const_iterator outIter;
+  for (outIter = theVertex->particles_out_const_begin();
+       outIter != theVertex->particles_out_const_end(); ++outIter) {
+
+    // Get the next HepMC GenParticle
+    HepMC::GenParticle *outParticle = *outIter;
+
+    // Get the PDG id
+    int pdgId(0);
+    if (outParticle != 0) {pdgId = outParticle->pdg_id();}
+    
+    // Keep track of how many photons there are
+    if (pdgId == _gammaPDG) {nPhotons++;}
+
+  }
+
+  return nPhotons;
 
 }

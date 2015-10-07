@@ -66,6 +66,7 @@ EvtParticle::EvtParticle() {
    _validP4=false;
    _isDecayed=false;
    _decayProb=0;
+   _attributes.clear();
    //   _mix=false;
 }
 
@@ -1196,5 +1197,22 @@ std::string EvtParticle::getName() {
   
   std::string theName = _id.getName();
   return theName;
+
+}
+
+int EvtParticle::getAttribute(std::string attName) {
+
+  // Retrieve the attribute integer if the name exists.
+  // Otherwise, simply return 0
+
+  int attValue = 0;
+
+  EvtAttributeMap::iterator mapIter;
+
+  if ((mapIter = _attributes.find(attName)) != _attributes.end()) {
+    attValue = mapIter->second;
+  }
+
+  return attValue;
 
 }

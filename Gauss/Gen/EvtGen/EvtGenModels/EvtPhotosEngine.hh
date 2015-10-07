@@ -27,6 +27,7 @@
 
 #include "HepMC/GenEvent.h"
 #include "HepMC/GenParticle.h"
+#include "HepMC/GenVertex.h"
 
 #include <string>
 
@@ -47,10 +48,12 @@ private:
 
   std::string _photonType;
   EvtId _gammaId;
+  int _gammaPDG;
   double _mPhoton;
   bool _initialised;
 
   HepMC::GenParticle* createGenParticle(EvtParticle* theParticle, bool incoming);
+  int getNumberOfPhotons(const HepMC::GenVertex* theVertex) const;
 
 };
 

@@ -29,6 +29,7 @@
 #include "EvtGenBase/EvtSpinType.hh"
 #include <string>
 #include <vector>
+#include <map>
 
 class EvtDiracSpinor;
 class EvtVector4C;
@@ -200,7 +201,7 @@ public:
 
 
   /**
-  * Gets 4vector in the labframe for the 4-momentum befor FSR was 
+  * Gets 4vector in the labframe for the 4-momentum before FSR was 
   * generated in the parents decay. The lab frame is where the root
   * particles momentum is measured.
   */
@@ -413,6 +414,16 @@ public:
   // Return the name of the particle (from the EvtId number)
   std::string getName();
    
+  // Specify whether the particle has a special named attribute with 
+  // a set value. By default, nothing is set, but derived classes
+  // can set this to mean something specific, e.g. if a photon is FSR
+  void setAttribute(std::string attName, int attValue) {
+      _attributes[attName] = attValue;
+  }
+
+  // Retrieve the integer value for the given attribute name
+  int getAttribute(std::string attName);
+
 protected:
 
   void setp( double e, double px, double py, double pz) { 
@@ -432,6 +443,11 @@ protected:
     _id = particle_number; 
   }
   bool           _validP4;
+
+  // A typedef to define the attribute (name, integer) map
+  typedef std::map<std::string, int> EvtAttributeMap;
+
+  EvtAttributeMap _attributes;
 
 private:
 
