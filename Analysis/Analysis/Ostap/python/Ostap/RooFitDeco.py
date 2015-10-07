@@ -908,14 +908,13 @@ def _ds_project_  ( dataset , histo , what , *args ) :
 #  @see RooDataSet 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2013-07-06
-def _ds_draw_ ( dataset , what , *args ) :
+def _ds_draw_ ( dataset , what , cuts = '' , opts = '' , *args ) :
     """
     Helper draw method for RooDataSet
     
     >>> dataset.draw ( 'm', 'chi2<10' ) ## use histo
     
     """
-
 
     cuts = cuts.strip()
     opts = opts.strip()
