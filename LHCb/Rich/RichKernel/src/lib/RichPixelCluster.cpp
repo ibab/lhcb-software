@@ -29,26 +29,28 @@ HPDPixelClustersBuilder::
 initialise( HPDPixelClusters * clus,
             const HPDPixelCluster::SmartIDVector & smartIDs )
 {
+  // Update the pixel cluster object to work on
   m_hpdClus = clus;
+  // reset the first cluster ID to 0
   m_lastID  = 0;
 
   // use the smartIDs to set the active pixels
-  if ( !smartIDs.empty() )
+  if ( clus && !smartIDs.empty() )
   {
 
     // What mode are we in ?
     // note, assuming here that there is NOT a mixture of LHCb and ALICE mode hits
     // as this does not make sense (and likely not even technically possible from L1)
-    setAliceMode ( smartIDs.front().pixelSubRowDataIsValid() );
+    setAliceMode( smartIDs.front().pixelSubRowDataIsValid() );
 
     // Initialise the 'is set' array as required. If in LHCb mode, only reset the 
     // first 1/8 of the array, as this is all that is used.
+    // Note, do not reset m_clusters as this is only accesed for set clusters, so
+    // those that have m_data set on by the loop below, and thus m_clusters is 
+    // implicitly reset as required.
     memset ( m_data, 0, 
              aliceMode() ? sizeof(m_data) : 
              (sizeof(m_data)/Rich::DAQ::NumAlicePixelsPerLHCbPixel) );
-    
-    // assume all hits are from the same HPD (only sensible case)
-    m_hpdID = smartIDs.front().pdID();
 
     // set the hit pixels as "on"
     for ( const auto& S : smartIDs )
@@ -65,28 +67,8 @@ initialise( HPDPixelClusters * clus,
   else  // empty hit list... just reset.
   {
     setAliceMode(false);
-    m_hpdID = LHCb::RichSmartID();
   }
 
-}
-
-void HPDPixelClustersBuilder::setCluster( const int row, 
-                                          const int col, 
-                                          HPDPixelClusters::Cluster * clus )
-{
-  // set the pixel RichSmartID accordingly (ALICE or LHCb mode)
-  LHCb::RichSmartID tmpID(m_hpdID);
-  tmpID.setPixelCol(col);
-  if ( !aliceMode() )
-  {
-    tmpID.setPixelRow    ( row );
-  }
-  else
-  {
-    tmpID.setPixelRow    ( row / Rich::DAQ::NumAlicePixelsPerLHCbPixel );
-    tmpID.setPixelSubRow ( row % Rich::DAQ::NumAlicePixelsPerLHCbPixel );
-  }
-  setCluster( tmpID, row, col, clus );
 }
 
 HPDPixelClusters::Cluster *
@@ -153,21 +135,19 @@ splitClusters( const HPDPixelClusters::Cluster::PtnVector & clusters )
 //   Methods for the cluster class
 //=========================================================================================
 
-void HPDPixelClusters::suppressIDs( HPDPixelCluster::SmartIDVector & smartIDs,
-                                    const unsigned int maxSize ) const
+void 
+HPDPixelClusters::suppressIDs( HPDPixelCluster::SmartIDVector & smartIDs,
+                               const unsigned int maxSize ) const
 {
-  // // make a local copy of the orginal IDs
+  // make a local copy of the orginal IDs
   const HPDPixelCluster::SmartIDVector cache_ids(smartIDs);
-  // // clear the list
+  // clear the list
   smartIDs.clear();
-  // // refill the list with those not suppressed
+  // refill the list with those not suppressed
   for ( const auto& S : cache_ids )
   {
     const auto * c = getCluster(S);
-    if ( c && c->size() <= maxSize )
-    {
-      smartIDs.push_back(S);
-    }
+    if ( c && c->size() <= maxSize ) { smartIDs.push_back(S); }
   }
 }
 

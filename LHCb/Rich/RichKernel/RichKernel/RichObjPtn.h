@@ -4,9 +4,6 @@
  *
  *  Header file for RICH utility class : Rich::ObjPtn
  *
- *  CVS Log :-
- *  $Id: RichObjPtn.h,v 1.6 2007-04-23 12:44:04 jonrob Exp $
- *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   13/11/2005
  */
@@ -36,7 +33,7 @@ namespace Rich
   public:
 
     /// Default Constructor
-    ObjPtn() : m_obj(NULL) {}
+    ObjPtn() : m_obj(NULL) { }
 
     /** Constructor from pointer to the underlying object
      *
@@ -48,7 +45,7 @@ namespace Rich
      *  Consequently users should NOT manually delete objects they
      *  pass to a RichObjPtn.
      */
-    explicit ObjPtn( TYPE * obj ) : m_obj(obj) {}
+    explicit ObjPtn( TYPE * obj ) : m_obj(obj) { }
 
     /** Copy Constructor from another object of type TYPE
      *
@@ -57,7 +54,7 @@ namespace Rich
      *  This method requires the underlying object to have a valid copy constructor
      *  with syntax TYPE( TYPE& obj )
      */
-    explicit ObjPtn( const TYPE & obj ) : m_obj( new TYPE(obj) ) {}
+    explicit ObjPtn( const TYPE & obj ) : m_obj( new TYPE(obj) ) { }
 
     /// Destructor
     ~ObjPtn() { delete m_obj; }
@@ -67,8 +64,7 @@ namespace Rich
     /// Check if new object is needed
     inline TYPE* checkObj() const
     {
-      if ( NULL == m_obj ) { m_obj = new TYPE(); }
-      return m_obj;
+      return ( m_obj ? m_obj : ( m_obj = new TYPE() ) );
     }
 
   public:
@@ -94,7 +90,7 @@ namespace Rich
     /// Clone method
     inline TYPE* clone() const
     {
-      return ( NULL == m_obj ? NULL : new TYPE(*m_obj) );
+      return ( m_obj ? new TYPE(*m_obj) : NULL );
     }
 
     /// Overload output to ostream

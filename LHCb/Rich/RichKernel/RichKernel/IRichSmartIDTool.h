@@ -4,8 +4,6 @@
  *
  *  Header file for tool interface : Rich::ISmartIDTool
  *
- *  $Id: IRichSmartIDTool.h,v 1.23 2007-07-20 09:28:42 jonrob Exp $
- *
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-10-28
@@ -71,7 +69,7 @@ namespace Rich
      *  @retval StatusCode::SUCCESS The conversion to a global coordinate was successful
      *  @retval StatusCode::FAILURE The conversion to a global coordinate failed
      */
-    virtual StatusCode globalPosition ( const LHCb::RichSmartID smartid,
+    virtual StatusCode globalPosition ( const LHCb::RichSmartID& smartid,
                                         Gaudi::XYZPoint& detectPoint ) const = 0;
 
     /** Finds the average position of a cluster of RichSmartIDs, in global LHCb coordinates
@@ -125,7 +123,7 @@ namespace Rich
      *  @retval StatusCode::SUCCESS The conversion to a global coordinate was successful
      *  @retval StatusCode::FAILURE The conversion to a global coordinate failed
      */
-    virtual StatusCode pdPosition ( const LHCb::RichSmartID pdid,
+    virtual StatusCode pdPosition ( const LHCb::RichSmartID& pdid,
                                     Gaudi::XYZPoint& pdPoint ) const = 0;
 
     /** Computes the global position coordinate (on PD entrance window) for a given 

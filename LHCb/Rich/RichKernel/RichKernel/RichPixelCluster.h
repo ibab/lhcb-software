@@ -309,18 +309,9 @@ namespace Rich
     HPDPixelClusters::Cluster * getCluster( const int row, const int col ) const;
 
     /// Set cluster for given pixel
-    void setCluster( const int row, const int col, HPDPixelClusters::Cluster * clus );
-
-    /// Set cluster for given pixel
-    inline void setCluster( const LHCb::RichSmartID & id,
-                            const int row, const int col, 
-                            HPDPixelClusters::Cluster * clus )
-    {
-      // Set the pointer to the cluster for this (row,col)
-      (m_clusters[row])[col] = clus;
-      // save this hit to the list of pixels for this cluster
-      clus->addPixel(id);
-    }
+    void setCluster( const LHCb::RichSmartID & id,
+                     const int row, const int col, 
+                     HPDPixelClusters::Cluster * clus );
 
     /// Create a new cluster with given ID
     HPDPixelClusters::Cluster * createNewCluster();
@@ -373,9 +364,6 @@ namespace Rich
     /// Are we in ALICE mode ?
     bool m_aliceMode;
 
-    /// HPD ID
-    LHCb::RichSmartID m_hpdID;
-
     /** Raw input data (row,col) (false means no hit, true means hit)
      *  @attention Hardcoding number of rows here to ALICE mode
      */
@@ -388,31 +376,39 @@ namespace Rich
 
   };
 
-  inline void HPDPixelClustersBuilder::setOn( const int row, const int col )
+  inline 
+  void
+  HPDPixelClustersBuilder::setOn( const int row, const int col )
   {
     (m_data[row])[col] = true;
   }
 
-  inline bool HPDPixelClustersBuilder::isOn( const int row, const int col ) const
+  inline
+  bool
+  HPDPixelClustersBuilder::isOn( const int row, const int col ) const
   {
     return ( row>=0 && row<nPixelRows() &&
              col>=0 && col<nPixelCols() && (m_data[row])[col] );
   }
 
-  inline HPDPixelClusters::Cluster *
+  inline 
+  HPDPixelClusters::Cluster *
   HPDPixelClustersBuilder::getCluster( const int row, const int col ) const
   {
     return ( isOn(row,col) ? (m_clusters[row])[col] : NULL );
   }
 
-  inline HPDPixelClusters::Cluster *
+  inline 
+  HPDPixelClusters::Cluster *
   HPDPixelClustersBuilder::createNewCluster()
   {
     m_hpdClus->addCluster( new HPDPixelClusters::Cluster(++m_lastID) );
     return m_hpdClus->clusters().back();
   }
 
-  inline void HPDPixelClustersBuilder::removeCluster( HPDPixelClusters::Cluster * clus )
+  inline 
+  void 
+  HPDPixelClustersBuilder::removeCluster( HPDPixelClusters::Cluster * clus )
   {
     auto iF = std::find( m_hpdClus->clusters().begin(), 
                          m_hpdClus->clusters().end(), clus );
@@ -421,6 +417,18 @@ namespace Rich
       m_hpdClus->clusters().erase( iF );
       delete clus;
     }
+  }
+
+  inline 
+  void 
+  HPDPixelClustersBuilder::setCluster( const LHCb::RichSmartID & id,
+                                       const int row, const int col, 
+                                       HPDPixelClusters::Cluster * clus )
+  {
+    // Set the pointer to the cluster for this (row,col)
+    (m_clusters[row])[col] = clus;
+    // save this hit to the list of pixels for this cluster
+    clus->addPixel(id);
   }
 
 }
