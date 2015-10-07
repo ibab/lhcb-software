@@ -69,8 +69,8 @@ Hlt2RootPublishSvc::Hlt2RootPublishSvc(const string& name, ISvcLocator* loc)
    declareProperty("InfoConnection", m_infoCon);
    declareProperty("PublishInterval", m_publishInterval = 60.);
    declareProperty("RateStart", m_rateStart = 0.);
-   declareProperty("RunDuration", m_runDuration = 3600.);
-   declareProperty("RateInterval", m_rateInterval = 20.);
+   declareProperty("RunDuration", m_runDuration = 4000.);
+   declareProperty("RateInterval", m_rateInterval = 5.);
 }
 
 //=============================================================================
@@ -234,8 +234,12 @@ void Hlt2RootPublishSvc::function()
             } else {
                TH1D* rHisto = it->second.second;
                for (size_t i = 0; i < histo.data.size(); ++i) {
-                  auto binContent = rHisto->GetBinContent(i);
-                  rHisto->SetBinContent(i, binContent + histo.data[i]);
+                  // FIXME: Assume that the incoming histograms have bins of seconds. It would
+                  // be good if this was part of the info message for the respective histogram,
+                  // so no assumption/hardcoding would be needed here.
+                  auto rBin = rHisto->FindBin(i);
+                  auto binContent = rHisto->GetBinContent(rBin);
+                  rHisto->SetBinContent(rBin, binContent + histo.data[i]);
                }
             }
          }

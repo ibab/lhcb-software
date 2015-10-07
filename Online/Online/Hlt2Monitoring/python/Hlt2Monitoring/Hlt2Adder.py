@@ -3,10 +3,10 @@ import importlib
 
 from Utilities import *
 
-__ports = {'HistoRelay' : {'in' : 31337, 'out' : 31338},
-           'InfoRelay'  : {'in' : 31339, 'out' : 31340},
-           'Adder'      : {'out' :31341},
-           'InfoSvc'    : {'out' : 31342}
+__ports = {'HistoRelay' : {'in' : 31347, 'out' : 31348},
+           'InfoRelay'  : {'in' : 31349, 'out' : 31350},
+           'Adder'      : {'out' :31351},
+           'InfoSvc'    : {'out' : 31352}
           }
 
 def configureTop(appMgr, node_info):
@@ -34,7 +34,7 @@ def configureTop(appMgr, node_info):
     adderSvc = Hlt2AdderSvc()
     adderSvc.FrontConnection = histoRelay.BackConnection
     adderSvc.BackConnection  = connections['Hlt2AdderSvc']['back']
-    adderSvc.OutputLevel = 3
+    adderSvc.OutputLevel = 2
 
     ## The info svc ports
     from Configurables import Hlt2MonInfoSvc
@@ -54,6 +54,7 @@ def configureTop(appMgr, node_info):
     ## The saver svc
     from Configurables import Hlt2SaverSvc
     saverSvc = Hlt2SaverSvc()
+    saverSvc.BaseDirectory = "/home/raaij/histograms"
     saverSvc.DataConnection = rootSvc.BackConnection
     saverSvc.InfoConnection = infoSvc.BackConnection
     saverSvc.OutputLevel = 2

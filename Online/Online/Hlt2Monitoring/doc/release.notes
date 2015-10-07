@@ -4,6 +4,11 @@
 ! Purpose     : Online monitoring of Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-10-07 - Roel Aaij
+ - Fix bug in Hlt2RootPublishSvc: the bin size of the created histograms was
+   not properly taken into accout. For the future the bin size of the incoming
+   data should be part of the info message.
+
 ! 2015-09-08 - Roel Aaij
  - Store histogram type (i.e. RATE, HISTO1D) information in a
    map<string, string> in the SaveSet file.
