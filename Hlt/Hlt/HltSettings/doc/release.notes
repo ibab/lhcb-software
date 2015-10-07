@@ -4,6 +4,8 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v7r4 2015-10-07 =========================
+
 ! 2015-10-07 - Patrick Robbe
  - Add MicroBiasLowMult line to the protonArgon_2015 configuration
 
