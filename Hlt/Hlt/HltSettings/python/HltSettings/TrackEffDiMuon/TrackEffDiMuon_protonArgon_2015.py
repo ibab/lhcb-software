@@ -1,6 +1,6 @@
 from GaudiKernel.SystemOfUnits import GeV, mm, MeV
 
-class TrackEffDiMuon_25ns_August2015 :
+class TrackEffDiMuon_protonArgon_2015 :
     """
     Threshold settings for Hlt2 TrackEffDiMuon lines: proton-Argon run 2015
 
