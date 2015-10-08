@@ -2,7 +2,8 @@ from xml.dom import minidom
 import sys
 import os
 import OnlineEnvBase
-
+CounterDebugSvcs = ["DskWriter"]
+HistDebugSvcs =["MEPrx"]
 def TaskListfromArch(arch, tasklist):
     xmldoc = minidom.parse(arch)
     itemlist = xmldoc.getElementsByTagName('task')
@@ -118,6 +119,8 @@ MonitorSvc.CounterUpdateInterval     = 5;
               f.write(svc+".SaveonUpdate = false;\n");
               f.write(svc+".SaveSetTaskName= \""+svc+"\";\n");
               f.write(svc+".ReceiveTimeout = 1000000;\n")
+            if s in HistDebugSvcs:
+              f.write(svc+".DebugOn = true;\n")
         for s in cntsvc:
             svc = s+"CountAdder"
             f.write(svc+".PartitionName  = @OnlineEnv.PartitionName;\n")
@@ -126,6 +129,8 @@ MonitorSvc.CounterUpdateInterval     = 5;
             f.write(svc+".ServicePattern  = \"MON_<part>_<node>_"+s+"_(.*)/Counter/\";\n")
             f.write(svc+".AdderClass  = \"Counter\";\n")
             f.write(svc+".ReceiveTimeout = 2;\n")
+            if s in CounterDebugSvcs:
+              f.write(svc+".DebugOn = true;\n")
             if pname == "LHCbA":
               f.write(svc+".GotoPause = true;\n")
               f.write(svc+".ReceiveTimeout = 0;\n")
@@ -168,6 +173,8 @@ BusyAdderCountAdder.ReceiveTimeout          = 6;
             f.write(svc+".ReceiveTimeout = 6;\n")
             f.write(svc+".InDNS = "+InDns+";\n")
             f.write(svc+".OutDNS = "+OutDns+";\n")
+            if s in HistDebugSvcs:
+              f.write(svc+".DebugOn = true;\n")
             if pname == "LHCbA": # overwrite certain options for the Alignment...
               f.write(svc+".SaveInterval = -1;\n");
               f.write(svc+".SaveonUpdate = false;\n");
@@ -186,6 +193,8 @@ BusyAdderCountAdder.ReceiveTimeout          = 6;
             f.write(svc+".AdderClass = \"Counter\";\n")
             f.write(svc+".InDNS = "+InDns+";\n")
             f.write(svc+".OutDNS = "+OutDns+";\n")
+            if s in CounterDebugSvcs:
+              f.write(svc+".DebugOn = true;\n")
             if pname == "LHCbA":
               f.write(svc+".GotoPause = true;\n")
               f.write(svc+".ReceiveTimeout = 0;\n")
@@ -231,6 +240,8 @@ BusyAdderCountAdder.ReceiveTimeout          = 8;
             f.write(svc+".SaveInterval = -1;\n");
             f.write(svc+".SaveonUpdate = false;\n");
             f.write(svc+".SaveSetTaskName= \""+svc+"\";\n");
+            if s in HistDebugSvcs:
+              f.write(svc+".DebugOn = true;\n")
             if pname == "LHCbA" and s=="AligWrk": # overwrite certain options for the Alignment...
               act = ""
               act=OnlineEnvBase.Activity
@@ -256,6 +267,8 @@ BusyAdderCountAdder.ReceiveTimeout          = 8;
             f.write(svc+".ReceiveTimeout = 12;\n")
             f.write(svc+".InDNS = "+InDns+";\n")
             f.write(svc+".OutDNS = "+OutDns+";\n")
+            if s in CounterDebugSvcs:
+              f.write(svc+".DebugOn = true;\n")
             if pname == "LHCbA":
               f.write(svc+".ReceiveTimeout = 0;\n")
 #              f.write(svc+".GotoPause = true;\n")
@@ -296,6 +309,8 @@ BusyAdderCountAdder.ReceiveTimeout          = 8;
             f.write(svc+".ReceiveTimeout = 12;\n")
             f.write(svc+".InDNS = "+InDns+";\n")
             f.write(svc+".OutDNS = "+OutDns+";\n")
+            if s in DebugSvcs:
+              f.write(svc+".DebugOn = true;\n")
             if pname == "LHCbA":
               f.write(svc+".ReceiveTimeout = 1000000;\n")
             f.write("\n")

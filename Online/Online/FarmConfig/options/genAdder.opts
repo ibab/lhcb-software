@@ -1,3 +1,4 @@
 // Job options file. Simple Online monitoring example
 //==============================================================
 #include "$AdderOptsFile"
+MessageSvc.OutputLevel = 3;

@@ -16,4 +16,7 @@ read COMMAND <<EOF
 import GaudiKernel.ProcessJobOptions; from Gaudi.Configuration import importOptions; GaudiKernel.ProcessJobOptions.printing_level=3; from Hlt2Monitoring import Hlt2Adder; Hlt2Adder.configure()
 EOF
 
-exec -a ${UTGID} $gaudi_task -tasktype=LHCb::Class1Task -main=../options/Hlt2Main.opts -opt=command="${COMMAND}"
+## unset LD_PRELOAD to get rid of tcmalloc
+unset LD_PRELOAD
+exec -a ${UTGID} ${Class1_task} -opt=command="${COMMAND}";
+###BAD!!!! exec -a ${UTGID} $gaudi_task -tasktype=LHCb::Class1Task -main=../options/Hlt2Main.opts -opt=command="${COMMAND}"

@@ -24,8 +24,13 @@ EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true;
 EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };
 ApplicationMgr.TopAlg                = {"Sequencer/Sequencer"};
-Sequencer.Members                    = {"LHCb::TriggerTypeFilter/Filter", "LHCb::RawEvent2MBMMergerAlg/Merger"};
-Filter.TriggerTypeToPass             = 4;
+//Sequencer.Members                    = {"LHCb::TriggerTypeFilter/Filter", "LHCb::RawEvent2MBMMergerAlg/Merger"};
+//Filter.TriggerTypeToPass             = 4;
+//
+Sequencer.Members                    = {"LHCb::CalibAndTriggerTypeFilter/Filter", "LHCb::RawEvent2MBMMergerAlg/Merger"};
+Filter.TriggerTypesToPass            = { 4, 7};
+Filter.CalibTypesToPass              = { 2, 3};
+//
 Merger.Buffer                        = "Output";
 Merger.Compress                      = 0;
 //Merger.DataType                    = 3;  // MDF_NONE    = 1  MDF_RECORDS = 2    MDF_BANKS   = 3

@@ -117,3 +117,22 @@ AlignDataWriter_BWDivision.EvtFilePrefix        = "/localdisk/Alignment/BWDivisi
 AlignDataWriter_BWDivision.MaxEvents            = 1000;
 AlignDataWriter_BWDivision.DIMSteering = 1;
 AlignDataWriter_BWDivision.PartitionName             = @OnlineEnv.PartitionName;
+//
+//
+//
+//
+AlignDataWriter_HLTTiming.SizeLimit            = @Param.FileSizeLimit;
+AlignDataWriter_HLTTiming.PrintFreq            = 1.0;
+AlignDataWriter_HLTTiming.DIMSteering = 1;
+AlignDataWriter_HLTTiming.PartitionName             = @OnlineEnv.PartitionName;
+//
+// Requirements for Physics
+//
+AlignDataWriter_HLTTiming.Requirements         = {
+"EvType=2;TriggerMask=0x0,0x80,0x0,0x0;VetoMask=0x10000,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+};
+AlignDataWriter_HLTTiming.MEPFilePrefix        = "/localdisk/Alignment/HLTTiming/Run_";
+AlignDataWriter_HLTTiming.EvtFilePrefix        = "/localdisk/Alignment/HLTTiming/Run_";
+AlignDataWriter_HLTTiming.MaxEvents            = 1000;
+AlignDataWriter_HLTTiming.DIMSteering = 1;
+AlignDataWriter_HLTTiming.PartitionName             = @OnlineEnv.PartitionName;
