@@ -92,9 +92,11 @@ FileWriterSvc::FileWriterSvc(const string& nam, ISvcLocator* svc) :
   declareProperty("EventFraction",m_evfrac=1.0);
   declareProperty("DIMSteering",m_DIMSteering = 0);
   declareProperty("PartitionName",m_PartitionName="LHCb");
+  declareProperty("NodePattern",m_NodePattern="hlt[a-f][0-1][0-9](.*)");
   m_RunList.clear();
   m_texit = false;
   m_numev = 0;
+  m_writeEnabled=false;
   pthread_mutex_init(&m_listlock,0);
   pthread_create(&m_tid,NULL,&ClsFiles,this);
 }
@@ -140,9 +142,22 @@ StatusCode FileWriterSvc::initialize()
 {
   StatusCode sc = OnlineService::initialize();
   MsgStream log(msgSvc(), name());
+  bool matchstat;
   m_BytesOut = 0;
   m_NumFiles = 0;
   m_node = RTL::nodeNameShort();
+  m_writeEnabled = true;
+  reg_NodePattern = boost::regex(m_NodePattern.c_str(),boost::regex_constants::icase);
+  matchstat = boost::regex_search(m_node, reg_NodePattern);
+//  if (matchstat)
+//  {
+//    printf("[WARNING] Node %s matched pattern %s\n",m_node.c_str(), m_NodePattern.c_str());
+//  }
+//  else
+//  {
+//    printf("[WARNING] Node %s does not match pattern %s\n",m_node.c_str(), m_NodePattern.c_str());
+//  }
+  m_writeEnabled = matchstat;
   if (sc.isSuccess())
   {
 //        incidentSvc()->addListener(this, "DAQ_CANCEL");
@@ -151,7 +166,7 @@ StatusCode FileWriterSvc::initialize()
         declareInfo("MEPsOut", m_mepOut = 0, "Number of MEPs written.");
         declareInfo("EvtsIn", m_EvIn = 0, "Number of Events received.");
         declareInfo("EvtsOut", m_EvOut = 0, "Number of Events written.");
-        declareInfo("BytesOut",m_BytesOut=0,"Number of Bytes Writte to File");
+        declareInfo("BytesOut",m_BytesOut=0,"Number of Bytes Written to File");
         declareInfo("NumberofFiles",m_NumFiles=0,"Total Number of Files");
         this->m_SizeLimit *= 1024*1024;
         size_t lslash = m_FilePrefixMEP.find_last_of("/");
@@ -267,6 +282,10 @@ StatusCode FileWriterSvc::run(const EventDesc& e, unsigned int runnr)
     {
       return StatusCode::SUCCESS;
     }
+  }
+  if (!m_writeEnabled)
+  {
+    return StatusCode::SUCCESS;
   }
 //  ulonglong prtCount = fabs(m_freq) > 1. / ULONGLONG_MAX ? ulonglong(1.0/ m_freq) : ULONGLONG_MAX;
   m_receiveEvts = true;
@@ -501,6 +520,7 @@ std::vector<std::string> &FileWriterSvc::getRequirements()
 void FileWriterSvc::CreateMonitoringInfo(unsigned int runn)
 {
   RunDesc *r=m_RunList[runn];
+  if(true) return;
   std::string namePref;
   char cRunNo[255];
   sprintf(cRunNo,"%d/",runn);

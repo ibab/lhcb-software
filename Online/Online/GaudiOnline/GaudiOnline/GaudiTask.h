@@ -77,8 +77,10 @@ namespace LHCb  {
     IAppMgrUI*        m_subMgr;
     /// Reference to incident service
     IIncidentSvc*     m_incidentSvc;
-    /// Pointer to message service
+    /// Pointer to message service of the outer Gaudi layer
     IMessageSvc*      m_msgSvc;
+    /// Pointer to message service of the inner Gaudi layer
+    IMessageSvc*      m_subMsgSvc;
     /// Counter for consecutive errors during event processing
     int               m_nerr;
     /// Flag to indicate if runable has stopped executing

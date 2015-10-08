@@ -166,6 +166,7 @@ GaudiTask::GaudiTask(IInterface*)
 
   ::lib_rtl_create_lock(0,&s_lock);
   m_eventThread = false;
+  m_subMsgSvc = 0;
   s_task = this;
 }
 
@@ -258,7 +259,10 @@ StatusCode GaudiTask::unload()  {
 
 /// Access to message service object
 IMessageSvc* GaudiTask::msgSvc()  {
-  if ( !m_msgSvc )  {
+  if ( m_subMsgSvc )   {
+    return m_subMsgSvc;
+  }
+  else if ( !m_msgSvc )  {
     if ( m_appMgr )  {
       SmartIF<ISvcLocator> loc(m_appMgr);
       if ( loc )  {
@@ -415,7 +419,9 @@ void GaudiTask::stopRunable() {
 int GaudiTask::configApplication()  {
   MsgStream log(msgSvc(), name());
   StatusCode sc = StatusCode::FAILURE;
+
   m_eventThread = false;
+  m_subMsgSvc = 0;
   if (m_optOptions.find(".opts") != string::npos)
     sc = configSubManager();
   else
@@ -453,6 +459,11 @@ int GaudiTask::initApplication()  {
       StatusCode sc = m_subMgr->initialize();
       if ( sc.isSuccess() )   {
         if ( loc )  {
+	  m_subMsgSvc = 0;
+          if ( !loc->service("MessageSvc",m_subMsgSvc, true).isSuccess() )  {
+	    log << MSG::ERROR << "Failed to access message service." << endmsg;
+	    goto Error;
+	  }
           if ( loc->service("IncidentSvc",m_incidentSvc, true).isSuccess() )  {
             Incident incident(name(),"APP_INITIALIZED");
             m_incidentSvc->addListener(this,"DAQ_CONFIGURE");
@@ -663,6 +674,11 @@ int GaudiTask::finalizeApplication()  {
       if ( m_incidentSvc ) {
         m_incidentSvc->removeListener(this);
         m_incidentSvc->release();
+	m_incidentSvc = 0;
+      }
+      if ( m_subMsgSvc )  {
+	m_subMsgSvc->release();
+	m_subMsgSvc = 0;
       }
       m_incidentSvc= 0;
       sc = m_subMgr && m_execFinalize ? m_subMgr->finalize() : StatusCode::SUCCESS;

@@ -24,6 +24,7 @@
 #include "time.h"
 #include "pthread.h"
 #include "dic.hxx"
+#include <boost/regex.hpp>
 
 // Forward declarations
 class IIncidentSvc;
@@ -162,6 +163,9 @@ namespace LHCb
     std::string m_node;
     int m_FileCloseDelay;
     int m_DIMSteering;
+    std::string m_NodePattern;
+    bool m_writeEnabled;
+    boost::regex reg_NodePattern;
   public:
     SteeringInfo *m_SteeringSvc;
     ///Clear Counters
