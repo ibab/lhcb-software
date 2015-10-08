@@ -42,7 +42,7 @@ use HistDBPython        v1r8     Online
 use Hlt2Monitoring      v1r3     Online
 use InsertDB            v1r10    Online
 use MBMDump             v1r17    Online
-use OMAlib              v4r5     Online
+use OMAlib              v5r0     Online
 use OnlineAlign         v0r8     Online
 use OnlineBase          v1r38    Online
 use OnlineHistDB        v8r2     Online
