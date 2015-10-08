@@ -4,7 +4,7 @@
 # Authors    : Peter Somogyi, Gareth Rogers
 #============================================================================
 package           Camera
-version           v1r34
+version           v1r35
 
 #============================================================================
 # Structure, i.e. directories to process. 
