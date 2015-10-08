@@ -1,7 +1,7 @@
 ################################################################################
 # Package: Presenter
 ################################################################################
-gaudi_subdir(Presenter v3r11)
+gaudi_subdir(Presenter v3r12)
 
 gaudi_depends_on_subdirs(Online/Gaucho
                          Online/OMAlib
