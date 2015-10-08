@@ -1,6 +1,7 @@
 from GaudiKernel.SystemOfUnits import GeV, mm, MeV
 from GaudiKernel.SystemOfUnits import picosecond as ps
 
+turboversions = [ 'TurboCalib', '' ]
 class PID_protonArgon_2015:
     """
     Threshold settings for Hlt2 PID lines: 25ns August 2015
@@ -19,7 +20,7 @@ class PID_protonArgon_2015:
         Returns a list of active lines
         """
         
-        lines = [ 'Hlt2PID' + k + 'TurboCalib' for k in [
+        lines = [ 'Hlt2PID' + k + turbo for k in [
               'DetPhiKKUnbiased',
               'B2KJPsiMuMuPosTagged',
               'B2KJPsiPPNegTagged',
@@ -53,7 +54,7 @@ class PID_protonArgon_2015:
               'Lambda2PPiLLhighPT',
               'DetJPsiEEPosTagged',
               'B2KJPsiMuMuNegTagged',
-              'Sc02LcPi']
+              'Sc02LcPi'] for turbo in turboversions
               ]
         return lines
 
@@ -65,7 +66,7 @@ class PID_protonArgon_2015:
         from Hlt2Lines.PID.Lines import PIDLines
         d = {
             PIDLines : {
-              'Prescale' :  { 'Hlt2PID' + k + 'TurboCalib' : v for k, v in {
+              'Prescale' :  { 'Hlt2PID' + k + turbo : v for k, v in {
                                 'Lambda2PPiLL'          : 0.003, # First tuning from Lucio (ish)
                                 'Lambda2PPiLLhighPT'    : 0.1,
                                 'Lambda2PPiLLveryhighPT': 1.0,
@@ -104,7 +105,7 @@ class PID_protonArgon_2015:
                                 'D02KPiPiPi'            : 0.0,
                                 'D02KPiPiPiTag'         : 0.1,
                                 'D02KPiTag'             : 1.0
-                                }.iteritems()},
+                                }.iteritems() for turbo in turboversions},
                   'Common'   : {
                                 'TagP'          : 3 * GeV, # 6GeV in old stripping
                                 'ProbeTrChi2'   : 5.0, # no cut for ee in old stripping, 3 for detached mumu

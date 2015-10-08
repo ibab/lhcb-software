@@ -101,7 +101,7 @@ class protonArgon_2015:
         lines.extend(conf.ActiveHlt2Lines())
 
         # PID Calib lines
-        conf = __get_conf__("PID","_25ns_August2015")
+        conf = __get_conf__("PID","_protonArgon_2015")
         lines.extend(conf.ActiveHlt2Lines())
 
         return lines
