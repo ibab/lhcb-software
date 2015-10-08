@@ -12,6 +12,7 @@
   Updated/new packages:	
      MDF                 v3r42    DAQ
      OMAlib              v5r0     Online
+     OnlineHistDB        v8r3     Online
      Checkpointing       v0r24    Online
      Camera              v1r35    Online
      Controller          v0r23    Online
