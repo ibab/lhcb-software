@@ -3,7 +3,7 @@
 # Maintainer : Patrick ROBBE, Gloria CORTI
 #============================================================================
 package GENSER
-version v16r0p3
+version v16r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -51,7 +51,7 @@ set PYTHIA8DATA $(pythia8_home)/xmldoc
 
 #-- Pythia 6
 #============================================================================
-macro pythia6_native_version "428.2"
+macro pythia6_native_version "427.2"
 use pythia6  v* LCG_GeneratorsInterfaces -no_auto_imports
 macro_remove pythia6_linkopts " -lpythia6_pdfdummy " \
                         WIN32 " pythia6_pdfdummy.lib "
