@@ -425,7 +425,7 @@ class PID_protonArgon_2015:
                                 # For Lc+ which are Sc-tagged. Don't want to use the DetachedHHHCombiner
                                 # TisTosSpec CharmHad gives us because we share Lc+ between the Sc
                                 # and Lb tags.
-                                'PromptTisTosSpec'        : "Hlt1(Two)?TrackMVADecision%TOS",
+                                'PromptTisTosSpec'        : [],
                                 'BPVLTIME_MIN'            : 0.15 * ps},
                  # Note the pointing cut is now in the tagger so that we can re-use
                  # the Lc candidates in the PIDCALIB lines for Lb -> Lc pi and Lb -> Lc mu nu
@@ -454,7 +454,7 @@ class PID_protonArgon_2015:
                                 'DPT_MIN'                  :  2000 * MeV,
                                 'DMOM_MIN'                 :  30000 * MeV,
                                 'BPVVDCHI2_MIN'            :  25,
-                                'TisTosSpec'               :  "Hlt1.*Track.*Decision%TOS"},
+                                'TisTosSpec'               :  []},
                  'D02KPiPiPiTag' : {
                                 'TagVCHI2PDOF_MAX'         :  15.0,
                                 'DeltaM_AM_MIN'            :  0.0,

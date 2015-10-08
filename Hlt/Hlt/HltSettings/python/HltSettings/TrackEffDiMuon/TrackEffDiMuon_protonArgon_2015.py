@@ -42,7 +42,7 @@ class TrackEffDiMuon_protonArgon_2015 :
         from Hlt2Lines.TrackEffDiMuon.Lines     import TrackEffDiMuonLines
         d.update ({TrackEffDiMuonLines : { 
                  'Prescale' :  {},
-                 'Common'   :  {'TisTosSpec'    : "Hlt1TrackMuonDecision%TOS",
+                 'Common'   :  {'TisTosSpec'    : [],
                                 'L0Filter'      : "L0_CHANNEL('Muon')",
                                 'OverlapTT'     : 0.4,
                                 'OverlapIT'     : 0.4,

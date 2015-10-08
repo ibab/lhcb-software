@@ -136,16 +136,17 @@ class protonArgon_2015:
             'Postscale'  : { 'Hlt1Lumi' :  1. },
             },
             Hlt1MBLinesConf : {
-            'MicroBiasOdin': '(ODIN_BXTYP == LHCb.ODIN.Beam1)',
-            ## 'NoBiasOdin': 'jbit( ODIN_EVTTYP,5 ) | jbit( ODIN_EVTTYP,4)' ,
-            'NoBiasLeadingCrossingOdin': 'jbit( ODIN_EVTTYP,2 )' ,
+            'ODIN' : { 'MicroBias'               : '(ODIN_BXTYP == LHCb.ODIN.Beam1)'
+                     , 'MicroBiasLowMultVelo'    : '(ODIN_BXTYP == LHCb.ODIN.Beam1)'
+                     , 'NoBiasOdin'              : 'jbit( ODIN_EVTTYP,2 )'
+                     , 'CharmCalibrationNoBias'  : 'jbit( ODIN_EVTTYP,2 )'
+                     , 'NoBiasLeadingCrossing'   : 'jbit( ODIN_EVTTYP,2 )'},
             'Prescale' : { ## 'Hlt1MBNoBias'                       : 1.,
               'Hlt1MBNoBiasLeadingCrossing'        : 1.,
               'Hlt1MBMicroBiasVelo'                : 1.,
               'Hlt1MBMicroBiasLowMultVelo'         : 1. },
             'Postscale' : {
-            'Hlt1MBNoBiasLeadingCrossing' : 'RATE(50)',
-            }
+              'Hlt1MBNoBiasLeadingCrossing' : 'RATE(50)'}
             },
             Hlt1MuonLinesConf :     { 'DiMuonHighMass_VxDOCA'    :  0.2,
                                       'DiMuonHighMass_VxChi2'    :   25,
