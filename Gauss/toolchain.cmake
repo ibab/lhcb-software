@@ -10,7 +10,7 @@ set(generators_versions
     lhapdf      6.1.4
     photos++    3.56
     powheg-box  r2092
-    pythia6     428.2
+    pythia6     427.2
     pythia8     186
     rivet       1.9.0
     tauola++    1.1.4
