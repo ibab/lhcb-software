@@ -21,40 +21,45 @@ __author__  = "Sebastian Neubert, sebastian.neubert@cern.ch"
 __version__ = ""
 # =============================================================================
 
-from Gaudi.Configuration import * 
+from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 
 from GaudiKernel.SystemOfUnits import MeV, mm, m
 
 class HltRecoConf(LHCbConfigurableUser):
-   __slots__ = { "Forward_HPT_MinPt"            :  500. * MeV
-                 ,"Forward_HPT_MinP"            : 3000. * MeV
-                 ,"Forward_LPT_Muon_MinPt"      :  300. * MeV  
-                 ,"Forward_LPT_Muon_MinP"       : 3000. * MeV 
-                 ,"Forward_LPT_MinPt"           :   80. * MeV  # was 200
-                 ,"Forward_LPT_MinP"            : 1000. * MeV # was 3000
-                 ,"Forward_MaxOTHits"           : 15000
-                 ,"MatchVeloMuon_MinP"          : 6000. * MeV
-                 ,"GoodTrCHI2PDOF"              : 4.0  # This TrCHI2PDOF is used in the sequence to mark hits of good tracks.
-                 ,"MaxTrCHI2PDOF"               : 4.0  # This TrCHI2PDOF is used in the making of fitted tracks.
-                 ,"ApplyGHOSTPROBCut"           : False  # Enable cut on ghost probability in the making of protoparticles.
-                 ,"ApplyGHOSTPROBCutInTBTC"     : True  # Enable cut on ghost probability in the creation of fitted tracks.
-                 ,"MaxTrGHOSTPROB"              : 0.4  # Cut value of ghost probability for above options.
-                 ,"VeloSelectionCut"            : "(~TrBACKWARD) & ( TrNVELOMISS < 100 )"
-                 ,"FitVelo"                     : True
-                 ,"FastFitVelo"                 : True
-                 ,"OfflineSeeding"              : True
-                 ,"OfflineRich"                 : True
-                 ,"AddGhostProb"                : True
-                 ,"InitFits"                    : True
-                 ,"MoreOfflineLikeFit"          : True   # This runs a fit in HLT1 and HLT2 which uses the default offline fit
-                                                         # with a simplified material description
-                 ,"FitIterationsInHltFit"       : 1      # Increases the number of fit iterations in the current Hlt fit.
-                 ,"NewMSinFit"                  : True  # Use the new description of the multiple scattering term
-                 }
+   __slots__ = { "Forward_HPT_MinPt"           :  500. * MeV
+               , "Forward_HPT_MinP"            : 3000. * MeV
+               , "Forward_LPT_Muon_MinPt"      :  300. * MeV
+               , "Forward_LPT_Muon_MinP"       : 3000. * MeV
+               , "Forward_LPT_MinPt"           :   80. * MeV  # was 200
+               , "Forward_LPT_MinP"            : 1000. * MeV # was 3000
+               , "Forward_MaxOTHits"           : 15000
+               , "MatchVeloMuon_MinP"          : 6000. * MeV
+               , "GoodTrCHI2PDOF"              : 4.0  # This TrCHI2PDOF is used in the sequence to mark hits of good tracks.
+               , "MaxTrCHI2PDOF"               : 4.0  # This TrCHI2PDOF is used in the making of fitted tracks.
+               , "ApplyGHOSTPROBCut"           : False  # Enable cut on ghost probability in the making of protoparticles.
+               , "ApplyGHOSTPROBCutInTBTC"     : True  # Enable cut on ghost probability in the creation of fitted tracks.
+               , "MaxTrGHOSTPROB"              : 0.4  # Cut value of ghost probability for above options.
+               , "VeloSelectionCut"            : "(~TrBACKWARD) & ( TrNVELOMISS < 100 )"
+               , "FitVelo"                     : True
+               , "FastFitVelo"                 : True
+               , "OfflineSeeding"              : True
+               , "OfflineRich"                 : True
+               , "AddGhostProb"                : True
+               , "InitFits"                    : True
+               , "MoreOfflineLikeFit"          : True   # This runs a fit in HLT1 and HLT2 which uses the default offline fit
+                                                        # with a simplified material description
+               , "FitIterationsInHltFit"       : 1      # Increases the number of fit iterations in the current Hlt fit.
+               , "NewMSinFit"                  : True   # Use the new description of the multiple scattering term
+               , "PVOptions"                   : { "UseBeamSpotRCut"       : True,
+                                                   "BeamSpotRCut"          : 0.2 * mm,
+                                                   "TrackErrorScaleFactor" : 1.,
+                                                   "ResolverBound"         : 5 * mm,
+                                                   "MinTracks"             : 4.,
+                                                   "trackMaxChi2"          : 12.}
+               }
 
    def getConfiguredForward(Name) :
-       
        pass
 
    def __apply_configuration__(self):
@@ -88,15 +93,8 @@ VeloTTToolOptions = {"minMomentum" : 0.0,
                      "PassTracks" : True,
                      "PassHoleSize" : 40 * mm,  # Update to new default from 45 mm.
                      }
-                          
-VeloTTOptions = { }
 
-CommonPVOptions = {"UseBeamSpotRCut" : True,
-                   "BeamSpotRCut" : 0.2 * mm,
-                   "TrackErrorScaleFactor" : 1.,
-                   "ResolverBound" : 5 * mm,
-                   "MinTracks" : 4.,
-                   "trackMaxChi2" : 12.}
+VeloTTOptions = { }
 
 CommonForwardOptions = { "MaxOTHits" : 15000 ,  #Why do we have this three times?
                          "MaxITHits" : 999999 ,
@@ -105,7 +103,7 @@ CommonForwardOptions = { "MaxOTHits" : 15000 ,  #Why do we have this three times
 #Sascha: Rename this to tool,
 CommonForwardTrackingOptions = { "MaxChi2" : 40.,
                                  "MaxChi2Track" : 40.,
-                                 "MinHits" : 12,  
+                                 "MinHits" : 12,
                                  "MinOTHits" : 14  }
 
 #Sascha: Rename this to tool and hlt1
@@ -145,7 +143,7 @@ MuonTTOptions = {
 #
 MaxChi2 = HltRecoConf().getProp("MaxTrCHI2PDOF")
 HltRichDefaultHypos			= ["pion","kaon"]
-HltRichDefaultRadiators			= ["Rich1Gas","Rich2Gas"] 
+HltRichDefaultRadiators			= ["Rich1Gas","Rich2Gas"]
 HltRichDefaultTrackCuts     = { tt : { "Chi2Cut" : [0.,MaxChi2], "PCut" : [2,100], "PtCut" : [0.8,100]} for tt in ['Forward','Match']}
 
 
@@ -156,9 +154,9 @@ OfflineRichDefaultDownTrackCuts    = { tt : {'Chi2Cut' : [0,MaxChi2], 'PCut' : [
 
 
 
-## CommonForwardTrackingOptions_EarlyData = { "MaxChi2" : 40., 
-##                                  "MaxChi2Track" : 40, 
-##                                  "MinHits" : 12,  
+## CommonForwardTrackingOptions_EarlyData = { "MaxChi2" : 40.,
+##                                  "MaxChi2Track" : 40,
+##                                  "MinHits" : 12,
 ##                                  "MinOTHits" : 14,
 ##                                  "MinXPlanes" : 4,
 ##                                  "MinPlanes" : 8,
@@ -172,7 +170,7 @@ OfflineRichDefaultDownTrackCuts    = { tt : {'Chi2Cut' : [0,MaxChi2], 'PCut' : [
 ##                                            "MaxFinalChi2" : 30,
 ##                                            "MaxTrackChi2" : 40,
 ##                                            "MaxChi2HitIT" : 10,
-##                                            "MaxChi2HitOT" : 30}    
+##                                            "MaxChi2HitOT" : 30}
 ## CommonDownstreamTrackingOptions_EarlyData = { "xPredTol2" : 20.0,
 ##                                               "TolMatch" : 1.5,
 ##                                               "TolUV" : 2.0,
@@ -180,9 +178,4 @@ OfflineRichDefaultDownTrackCuts    = { tt : {'Chi2Cut' : [0,MaxChi2], 'PCut' : [
 ##                                               "MaxChisq" : 20.0,
 ##                                               "MaxDistance" : 0.3,
 ##                                               "deltaP" : 2.0,
-##                                               "errorZMagnet" : 30.0 } 
-
-
-
-   
-   
+##                                               "errorZMagnet" : 30.0 }

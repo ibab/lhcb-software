@@ -65,8 +65,8 @@ def PV3D(where):
     offlineTool = recoPV3D.PVOfflineTool
     fitter = recoPV3D.PVOfflineTool.LSAdaptPV3DFitter
     # Set options from HltRecoConf
-    from HltRecoConf import CommonPVOptions
-    for opt, value in CommonPVOptions.iteritems():
+    from Configurables import HltRecoConf
+    for opt, value in HltRecoConf().getProp("PVOptions").iteritems():
         found = False
         for tool in (fitter, offlineTool):
             if opt in tool.getProperties():
@@ -83,7 +83,6 @@ def PV3D(where):
     recoPV3D.PVOfflineTool.addTool(PVOfflineRecalculate, "PVOfflineRecalculate")
     recoPV3D.PVOfflineTool.PVOfflineRecalculate.addTool(TrackMasterExtrapolator, "TrackMasterExtrapolator")
     recoPV3D.PVOfflineTool.PVOfflineRecalculate.TrackMasterExtrapolator.addTool(SimplifiedMaterialLocator, name="MaterialLocator")
-    from Configurables import HltRecoConf
     if HltRecoConf().getProp("FitVelo"):
         recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.UseFittedTracks = True
     #recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.zVtxShift = 0.0

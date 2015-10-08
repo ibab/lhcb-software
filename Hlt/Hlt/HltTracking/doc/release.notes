@@ -4,6 +4,11 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+!========================= HltTracking v13r12 2015-10-08 =========================
+
+! 2015-10-08 - Roel Aaij
+ - Make CommonPVOptions a property of HltRecoConf name PVOptions.
+
 !========================= HltTracking v13r11 2015-08-05 =========================
 
 ! 2015-08-05 - Sascha Stahl
@@ -13,7 +18,7 @@
  - Hlt2ProbeTracking: Configure probe tracking to use new multiple scattering description.
 
 ! 2015-08-04 - Sascha Stahl
- - Hlt2Tracking: Fix function to create protoparticles with calo and muon id. 
+ - Hlt2Tracking: Fix function to create protoparticles with calo and muon id.
    This might be useful for Downstream tracks.
 
 ! 2015-08-03 - Sascha Stahl
