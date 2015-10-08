@@ -6,12 +6,13 @@ from GaudiKernel.SystemOfUnits import GeV, MeV, mm
 from GaudiKernel.SystemOfUnits import picosecond as ps
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 
+turboversions = [ 'TurboCalib', '' ]
 class PIDLines(Hlt2LinesConfigurableUser):
     l0_muons = ['Muon','DiMuon']
     l0_electrons = ['Photon', 'Electron', 'Hadron', 'Muon', 'DiMuon']
     hlt1_muons = 'Hlt1(TrackAllL0|TrackMuon|SingleMuon|DiMuon|TrackMVA|TwoTrackMVA).*Decision'
     hlt1_electrons = 'Hlt1.*Decision'
-    __slots__ = {'Prescale' :  { 'Hlt2PID' + k + 'TurboCalib' : v for k, v in {
+    __slots__ = {'Prescale' :  { 'Hlt2PID' + k + turbo : v for k, v in {
                                 'Lambda2PPiLL'          : 0.003, # First tuning from Lucio (ish)
                                 'Lambda2PPiLLhighPT'    : 0.1,
                                 'Lambda2PPiLLveryhighPT': 1.0,
@@ -50,7 +51,7 @@ class PIDLines(Hlt2LinesConfigurableUser):
                                 'D02KPiPiPi'            : 0.0,
                                 'D02KPiPiPiTag'         : 0.1,
                                 'D02KPiTag'             : 1.0
-                                }.iteritems()},
+                                }.iteritems() for turbo in turboversions},
                   'Common'   : {'TagTrChi2'     : 3.0,
                                 'TagMaxGhostProb': 0.5,
                                 'TagP'          : 3 * GeV, # 6GeV in old stripping
@@ -494,7 +495,7 @@ class PIDLines(Hlt2LinesConfigurableUser):
             }
         
         from HltLine.HltLine import Hlt2Line
-        for turbo in ['TurboCalib']:
+        for turbo in turboversions:
           for category, stages in stagemap.iteritems():
             for (nickname, algos) in self.algorithms(stages).iteritems():
                 linename = 'PID' + nickname
