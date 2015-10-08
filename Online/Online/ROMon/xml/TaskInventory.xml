@@ -92,8 +92,10 @@
 </TaskList>
 
 <TaskList name="Dirac">
+<!--
   <Task name="flukamon"/>
   <Task name="diracmon"/>
+-->
 </TaskList>
 
 <TaskList name="ControlsPC">
@@ -271,10 +273,10 @@
 <ConnectionList name="StorageWorker">
   <Connection name="storerecv01-d1"/>
   <Connection name="storerecv02-d1"/>
-  <Connection name="storerecv03-d1"/>
-  <Connection name="storerecv04-d1"/>
   <Connection name="storestrm01-d1"/>
   <Connection name="storestrm02-d1"/>
+  <Connection name="storerecv03-d1"/>
+  <Connection name="storerecv04-d1"/>
   <Connection name="storestrm03-d1"/>
   <Connection name="storestrm04-d1"/>
 </ConnectionList>
@@ -327,7 +329,7 @@
   -->
 </NodeType>
 
-<NodeType name="HLTControlHLT">
+<NodeType name="HLT01">
   <TaskList name="FMC"/>
   <TaskList name="StandardHLT"/>
   <TaskList name="ControlsPC"/>
@@ -341,6 +343,16 @@
   <Task name="LogPVSSSrv"/>
   <ConnectionList name="ControlsPC"/>
   <Project name="&lt;NODE&gt;"/>
+</NodeType>
+
+<NodeType name="HLT02">
+  <TaskList name="FMC"/>
+  <Task name="ROcollect"/>
+  <Task name="LogGaudiSrv"/>
+  <Task name="LogLHCb1Srv"/>
+  <Task name="LogLHCb2Srv"/>
+  <Task name="LogLHCbASrv"/>
+  <Connection name="&lt;DIM_DNS_NODE&gt;"/>
 </NodeType>
 
 <NodeType name="HLTControlNOPVSS">

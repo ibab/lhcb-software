@@ -1,0 +1,8 @@
+<TaskInventory>
+  <NodeList name="HLT01">
+    <Name>HLT01</Name>
+    <Node name="hlt01"   type="HLT01"/>
+    <Node name="hlt02"   type="HLT02"/>
+  </NodeList>
+</TaskInventory>
+
