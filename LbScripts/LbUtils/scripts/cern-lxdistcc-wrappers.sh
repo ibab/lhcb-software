@@ -53,6 +53,7 @@ setup_gcc() {
         export LD_LIBRARY_PATH
         export PATH
         export COMPILER_PATH
+        export GCC_TOOLCHAIN
 }
 
 setup_clang() {
@@ -93,7 +94,7 @@ case ${_self} in
                 setup_clang $_version
                 _self=${_self%-*}
                 _self=${_self#*-}
-                _self="${_self} --gcc-toolchain=${GCC_TOOCHAIN}"
+                _self="${_self} --gcc-toolchain=${GCC_TOOLCHAIN}"
                 ;;
 
         *)
