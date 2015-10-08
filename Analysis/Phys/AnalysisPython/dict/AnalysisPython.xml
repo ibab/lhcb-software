@@ -21,6 +21,7 @@
   <class name = "Analysis::SFactor"                   />
   <class name = "Analysis::Formula"                   />
   <class name = "Analysis::StatVar"                   />
+  <class name = "Analysis::HProject"                  />
   <class name = "Analysis::PyIterator"                />
   <class name = "Analysis::Models::BreitWigner"       />
   <class name = "Analysis::Models::Rho0"              />

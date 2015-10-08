@@ -18,10 +18,6 @@
 #include "TCut.h"
 #include "RooDataSet.h"
 // ============================================================================
-// Boost 
-// ============================================================================
-#include "boost/static_assert.hpp"
-// ============================================================================
 /** @file 
  *  Implementation file for class Analysis::StatVar
  *  @date 2013-10-13 
@@ -35,7 +31,8 @@
 namespace 
 {
   // ==========================================================================
-  BOOST_STATIC_ASSERT(std::numeric_limits<unsigned long>::is_specialized );
+  static_assert (std::numeric_limits<unsigned long>::is_specialized   , 
+                 "Numeric_limist<unsigned long> are not specialized!" ) ;
   // ==========================================================================
   /** @class Notifier
    *  Local helper class to keep the proper notifications for TTree

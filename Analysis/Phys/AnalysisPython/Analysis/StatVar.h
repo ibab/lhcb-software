@@ -30,8 +30,6 @@ class RooAbsData ; // RooFit
 namespace Analysis 
 {
   // ==========================================================================
-  extern const unsigned long n_LARGE ;
-  // ==========================================================================
   /** @class StatVar Analysis/StatVar.h
    *  Helper class to get statistical 
    *  infomation  about the variable/expression 

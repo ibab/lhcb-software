@@ -19,7 +19,7 @@
 #include "Analysis/Formula.h"
 #include "Analysis/PyIterator.h"
 #include "Analysis/StatVar.h"
-
+#include "Analysis/HProject.h"
 // ============================================================================
 /** @file 
  *
