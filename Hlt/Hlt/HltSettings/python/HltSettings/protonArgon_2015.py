@@ -138,7 +138,7 @@ class protonArgon_2015:
             Hlt1MBLinesConf : {
             'ODIN' : { 'MicroBias'               : '(ODIN_BXTYP == LHCb.ODIN.Beam1)'
                      , 'MicroBiasLowMultVelo'    : '(ODIN_BXTYP == LHCb.ODIN.Beam1)'
-                     , 'NoBiasOdin'              : 'jbit( ODIN_EVTTYP,2 )'
+                     , 'NoBias'                  : 'jbit( ODIN_EVTTYP,2 )'
                      , 'CharmCalibrationNoBias'  : 'jbit( ODIN_EVTTYP,2 )'
                      , 'NoBiasLeadingCrossing'   : 'jbit( ODIN_EVTTYP,2 )'},
             'Prescale' : { ## 'Hlt1MBNoBias'                       : 1.,
