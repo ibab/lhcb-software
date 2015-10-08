@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MDF
 ################################################################################
-gaudi_subdir(MDF v3r41)
+gaudi_subdir(MDF v3r42)
 
 gaudi_depends_on_subdirs(Event/DAQEvent
                          GaudiKernel)
