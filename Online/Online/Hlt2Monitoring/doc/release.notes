@@ -4,6 +4,10 @@
 ! Purpose     : Online monitoring of Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-10-08 - Roel Aaij
+ - Fix bug in Hlt2RootPublishSvc introduced with the previous commit. The
+   proper bin in the ROOT histograms is now properly calculated.
+
 ! 2015-10-07 - Roel Aaij
  - Fix bug in Hlt2RootPublishSvc: the bin size of the created histograms was
    not properly taken into accout. For the future the bin size of the incoming

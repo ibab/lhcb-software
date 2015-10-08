@@ -53,8 +53,11 @@ private:
 
    // data members
    typedef std::pair<Monitoring::RunNumber, Monitoring::HistId> histoKey_t;
-   boost::unordered_map<histoKey_t, std::pair<std::string, Gaudi::Histo1DDef>> m_defs;
-   boost::unordered_map<histoKey_t, std::pair<std::string, std::string>> m_rates;
+   typedef std::pair<std::string, Gaudi::Histo1DDef> histoValue_t;
+   typedef boost::unordered_map<histoKey_t, histoValue_t> histoMap_t;
+   
+   histoMap_t m_defs;
+   histoMap_t m_rates;
    boost::unordered_map<Monitoring::RunNumber, int> m_startTimes;
 
    // Histograms are kept as {(run, id) : (directory, histo)}

@@ -204,9 +204,14 @@ void Hlt2RootPublishSvc::function()
 
             if (reply[1] == Monitoring::s_Rate) {
                int nBins = boost::numeric_cast<int>(m_runDuration / m_rateInterval);
-               auto r = addHisto(key, Gaudi::Histo1DDef(reply[2], m_rateStart,
-                                                        m_rateStart + m_rateInterval * nBins, nBins));
-               m_rates[key] = r;
+               // Create a histogram def for the ROOT histogram based on our properties.
+               auto r = addHisto(key, Gaudi::Histo1DDef{reply[2], m_rateStart,
+                                       m_rateStart + m_rateInterval * nBins, nBins});
+
+               // FIXME: Create a definition of the incoming rate histogram. This should be
+               // sent by the info service as was, or at least the bin size.
+               Gaudi::Histo1DDef def{reply[2], 0., 3600., 3600};
+               m_rates[key] = make_pair(r.first, def);
                debug() << "Added Rate histo: " << r.first << " " << r.second << endmsg;
             } else if (reply[1] == Monitoring::s_Histo1D) {
                // Deserialize Histo1DDef
@@ -224,8 +229,19 @@ void Hlt2RootPublishSvc::function()
             }
          }
 
-         if (m_defs.count(key) || m_rates.count(key)) {
-            // It's a regular or rate histo that we know about, add the
+         histoMap_t::const_iterator defIt;
+         bool found = true;
+         if (m_defs.count(key)) {
+            defIt = m_defs.find(key);
+         } else if (m_rates.count(key)) {
+            defIt = m_rates.find(key);
+         } else {
+            found = false;
+         }
+         
+         if (found) {
+            const Gaudi::Histo1DDef& def = defIt->second.second;
+            // It's a regular or rate histo that we know about, add the incoming histogram
             auto it = m_histos.find(key);
             if (it == end(m_histos)) {
                warning() << "Should know about histogram " << key.first << " " << key.second
@@ -234,11 +250,16 @@ void Hlt2RootPublishSvc::function()
             } else {
                TH1D* rHisto = it->second.second;
                for (size_t i = 0; i < histo.data.size(); ++i) {
-                  // FIXME: Assume that the incoming histograms have bins of seconds. It would
-                  // be good if this was part of the info message for the respective histogram,
-                  // so no assumption/hardcoding would be needed here.
-                  auto rBin = rHisto->FindBin(i);
+                  // Get the real value in the incoming data
+                  auto start = def.lowEdge();
+                  auto diff = (def.highEdge() - start) / def.bins();
+                  auto x = start + (i + 0.5) * diff;
+
+                  // Find the bin in the ROOT histogram that this corresponds to
+                  auto rBin = rHisto->FindBin(x);
                   auto binContent = rHisto->GetBinContent(rBin);
+
+                  // Fill the ROOT histogram
                   rHisto->SetBinContent(rBin, binContent + histo.data[i]);
                }
             }
