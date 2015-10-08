@@ -822,6 +822,42 @@ def _pdf_mul_ ( pdf1 , pdf2 ) :
                                          pdf1 , pdf2 )
 ROOT.RooAbsPdf . __mul__  = _pdf_mul_ 
 
+
+## "convert" name/expression into variable/formula
+def var_from_name ( w , varset ) :
+    """ Convert name/expression into variable/formula
+    """
+    w = w.strip() 
+    if    0 < w.find('(') < what.find(')') :
+        print ' function ' , w 
+        pass
+    elif  0 < w.find('*')                  :
+        print ' multiply ' , w 
+        pass
+    elif  0 < w.find('/')                  :
+        print ' divide ' , w 
+        pass
+    elif  0 < w.find('+')                  :
+        print ' add  ' , w 
+        pass
+    elif  0 < w.find('-')                  :
+        print ' minus  ' , w 
+        pass
+    else :
+        print ' primitive ' , w 
+        v = varset[w]
+        return v
+    ##
+    
+    vlst = ROOT.RooArgList()
+    for s in varset : vlst.add ( s )
+    #
+    print ' LIST: %s ' % vlst
+    f = ROOT.RooFormulaVar( w , w , vlst )
+    print ' FORMULA %s ' % f
+    return f 
+
+
 # =============================================================================
 ## Helper project method for RooDataSet
 #
@@ -838,7 +874,7 @@ ROOT.RooAbsPdf . __mul__  = _pdf_mul_
 #  @see RooDataSet 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2013-07-06
-def _ds_project_  ( dataset , histo , what , *args ) :
+def _ds_project_  ( dataset , histo , what , cuts = '' , *args ) :
     """
     Helper project method for RooDataSet
     
@@ -847,53 +883,83 @@ def _ds_project_  ( dataset , histo , what , *args ) :
     
     >>> h1   = ROOT.TH1D(... )
     >>> dataset.project ( h1           , 'm', 'chi2<10' ) ## use histo
-
+    
     """
-
+    if isinstance ( cuts , str ) : cuts = cuts.strip() 
+    
+    ## native RooFit...  I have some suspicion that it does not work properly
     if isinstance ( what , ROOT.RooArgList ) and isinstance ( histo , ROOT.TH1 ) :
         histo.Reset() 
-        return dataset.fillHistogram  ( histo , what , *args ) 
-        
+        return dataset.fillHistogram  ( histo , what , cuts , *args ) 
+    
+    ## delegate to TTree 
     store = dataset.store()
     if store and isinstance ( what , str ) :
         tree = store.tree()
-        if tree : return tree.project ( histo , what , *args ) 
+        if tree : return tree.project ( histo , what , cuts , *args ) 
 
+    if   isinstance ( what , ROOT.RooFormulaVar ) : 
+        return _ds_project_ ( dataset , histo , what.GetTitle () , cuts , *args )
+    
+    if   isinstance ( what , ROOT.RooAbsReal ) : 
+        return _ds_project_ ( dataset , histo , what.GetName  () , cuts , *args ) 
+    
     if isinstance ( what , str ) : 
         vars  = [ v.strip() for v in what.split(':') ]
-        return _ds_project_ ( dataset , histo , vars , *args ) 
+        return _ds_project_ ( dataset , histo , vars , cuts , *args ) 
     
-    if isinstance ( what , ( list , tuple ) ) : 
-        vars_ = dataset.get()
-        vars  = ROOT.RooArgList()
-        for w in what : vars.add ( vars_[w] ) 
-        return _ds_project_ ( dataset , histo , vars , *args ) 
-    
-    if isinstance ( what , ROOT.RooRealVar ) :
-        
-        lst = ROOT.RooArgList()
-        lst.add ( what )
-        for a in args :
-            if isinstance ( a , ROOT.RooRealVar ) : lst.add( a )
-            else : break            
-        return _ds_project_ ( dataset , histo , lst , *args[ len( lst ) - 1 : ] ) 
-        
+    if isinstance ( what , (tuple,list) ) :
+        vars = []
+        for w in what :
+            if isinstance ( w , str ) : vars.append( w.strip() )
+            else                      : vars.append ( w ) 
+        return _ds_project_ ( dataset , histo , vars , cuts , *args ) 
+
+    if isinstance ( what , ROOT.RooArgList ) :
+        vars  = [ w for w in what ]
+        cuts0 = cuts 
+        if ''   == cuts : cuts0 = 0
+        elif isinstance ( cuts , str ) :
+            cuts0 = ROOT.RooFormulaVar( cuts , cuts , dataset.varlist() )
+        return _ds_project_ ( dataset , histo , vars , cuts0 , *args ) 
+            
     if isinstance ( histo , str ) :
     
         obj = ROOT.gROOT     .FindObject    ( histo )
         if instance ( obj  , ROOT.TH1 ) :
-            return _ds_project_ ( dataset , obj , what , *args )
+            return _ds_project_ ( dataset , obj , what , cuts , *args )
         obj = ROOT.gROOT     .FindObjectAny ( histo )
         if instance ( obj  , ROOT.TH1 ) :
-            return _ds_project_ ( dataset , obj , what , *args )
+            return _ds_project_ ( dataset , obj , what , cuts , *args )
         obj = ROOT.gDirectory.FindObject    ( histo )
         if instance ( obj  , ROOT.TH1 ) :
-            return _ds_project_ ( dataset , obj , what , *args )
+            return _ds_project_ ( dataset , obj , what , cuts , *args )
         obj = ROOT.gDirectory.FindObjectAny ( histo )
         if instance ( obj  , ROOT.TH1 ) :
-            return _ds_project_ ( dataset , obj , what , *args )
+            return _ds_project_ ( dataset , obj , what , cuts , *args )
 
-        
+    if  1 <= len(what) and isinstance ( what[0] , ROOT.RooAbsReal ) and isinstance ( cuts , str ) : 
+        if '' == cuts : cuts0 = 0 
+        elif isinstance ( cuts , str ) :
+            cuts0 = ROOT.RooFormulaVar( cuts , cuts , dataset.varlist() )
+        return _ds_project_ ( dataset , histo , what , cuts0 , *args )
+
+    if   isinstance ( histo , ROOT.TH3 ) and 3 == len(what)  :
+        return cpp.Analysis.HProject.project3 ( dataset ,
+                                                histo   , 
+                                                what[0] ,
+                                                what[1] ,
+                                                what[2] , cuts , *args) 
+    elif isinstance ( histo , ROOT.TH2 ) and 2 == len(what)  :
+        return cpp.Analysis.HProject.project2 ( dataset ,
+                                                histo   , 
+                                                what[0] ,
+                                                what[1] , cuts , *args )
+    elif isinstance ( histo , ROOT.TH1 ) and 1 == len(what)  :
+        return cpp.Analysis.HProject.project  ( dataset ,
+                                                histo   , 
+                                                what[0] , cuts , *args )
+    
     raise AttributeError ( 'DataSet::project, invalid case' )
 
 # =============================================================================
@@ -909,13 +975,17 @@ def _ds_project_  ( dataset , histo , what , *args ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2013-07-06
 def _ds_draw_ ( dataset , what , cuts = '' , opts = '' , *args ) :
+    """Helper draw method for drawing of RooDataSet
+    >>> dataset.draw ( 'm', 'chi2<10'                 )
+    ## cuts & weight 
+    >>> dataset.draw ( 'm', '(chi2<10)*weight'        )
+    ## use drawing options 
+    >>> dataset.draw ( 'm', '(chi2<10)*weight' , 'e1' )
+    ## start form event #1000 
+    >>> dataset.draw ( 'm', '(chi2<10)*weight' , 'e1' , 1000 ) 
+    ## for event in range 1000< i <10000
+    >>> dataset.draw ( 'm', '(chi2<10)*weight' , 'e1' , 1000 , 100000 )
     """
-    Helper draw method for RooDataSet
-    
-    >>> dataset.draw ( 'm', 'chi2<10' ) ## use histo
-    
-    """
-
     cuts = cuts.strip()
     opts = opts.strip()
     
@@ -925,76 +995,53 @@ def _ds_draw_ ( dataset , what , cuts = '' , opts = '' , *args ) :
         if tree : return tree.Draw( what , cuts , opts  , *args )
         
     if   isinstance ( what , str ) : 
-        vars  = [ v.replace(' ','') for v in what.split(':') ]
+        vars  = [ v.strip() for v in what.split(':') ]
         return _ds_draw_ ( dataset , vars , cuts , opts , *args ) 
-    elif isinstance ( what , ( list , tuple ) ) : 
-        vars_ = dataset.get()
-        vars  = ROOT.RooArgList()
-        for w in what : vars.add ( vars_[w] ) 
-        return _ds_draw_ ( dataset , vars , cuts , opts , *args ) 
-    elif isinstance ( what , ROOT.RooRealVar ) :
-        vars = ROOT.RooArgList()
-        vars.add ( what )
-        return _ds_draw_ ( dataset , vars , cuts , opts , *args )
-    elif not isinstance ( what , ROOT.RooArgList ) :
-        raise AttributeError ( 'DataSet::draw, invalid case' )
+    
+    if   isinstance ( what , ROOT.RooFormulaVar ) : 
+        return _ds_draw_ ( dataset , what.GetTitle () , cuts , opts , *args )
+    
+    if   isinstance ( what , ROOT.RooAbsReal ) : 
+        return _ds_draw_ ( dataset , what.GetName  () , cuts , opts , *args ) 
     
     if not 1 <= len ( what ) <= 3 :
         raise AttributeError ( 'DataSet::draw, invalid length' )
-
     
     if 1 == len ( what )  :
-        v1 = what[0]
-        mn1 , mx1 = v1.minmax()
-        if  mn1 < -1.e+10 or mx1 > 1.e+10  :
-            vmn , vmx = _ds_var_minmax_  ( dataset , v1 , cuts )
-            if vmn < vmx : mn1 , mx1 = vmn, vmx
+        w1        = what[0] 
+        mn1 , mx1 = _ds_var_minmax_  ( dataset , w1 , cuts )
         from Ostap.PyRoUts import hID
-        histo = ROOT.TH1F ( hID() , v1.GetName() , 200 , mn1 , mx1 )  ; histo.Sumw2()
-        if cuts : _ds_project_ ( dataset , histo , what , cuts , *args  )
-        else    : _ds_project_ ( dataset , histo , what ,        *args  )
+        histo = ROOT.TH1F ( hID() , w1 , 200 , mn1 , mx1 )  ; histo.Sumw2()
+        _ds_project_ ( dataset , histo , what , cuts , *args  )
         histo.Draw( opts )
         return histo
 
     if 2 == len ( what )  :
-        v1 = what[0]
-        mn1 , mx1 = v1.minmax()
-        if  mn1 < -1.e+10 or mx1 > 1.e+10  :
-            vmn , vmx = _ds_var_minmax_  ( dataset , v1 , cuts )
-            if vmn < vmx : mn1 , mx1 = vmn, vmx
-        v2 = what[1]
-        mn2 , mx2 = v2.minmax()
-        if  mn2 < -1.e+10 or mx2 > 1.e+10  :
-            vmn , vmx = _ds_var_minmax_  ( dataset , v2 , cuts )
-            if vmn < vmx : mn2 , mx2 = vmn, vmx
+        w1        = what[0] 
+        mn1 , mx1 = _ds_var_minmax_  ( dataset , w1 , cuts )
+        w2        = what[1] 
+        mn2 , mx2 = _ds_var_minmax_  ( dataset , w2 , cuts )
         from Ostap.PyRoUts import hID
-        histo = ROOT.TH2F ( hID() , v1.GetName() + ':' + v2.GetName() , 50 , mn1 , mx1 , 50 , mn2 , mx2 )  ; histo.Sumw2()
-        if cuts : _ds_project_ ( dataset , histo , what , cuts , *args  )
-        else    : _ds_project_ ( dataset , histo , what ,        *args  )
+        histo = ROOT.TH2F ( hID() , "%s:%s" % ( w1 , w2 ) ,
+                            50 , mn1 , mx1 ,
+                            50 , mn2 , mx2 )  ; histo.Sumw2()
+        _ds_project_ ( dataset , histo , what , cuts , *args  )
         histo.Draw( opts )
         return histo
 
     if 3 == len ( what )  :
-        v1 = what[0]
-        mn1 , mx1 = v1.minmax()
-        if  mn1 < -1.e+10 or mx1 > 1.e+10  :
-            vmn , vmx = _ds_var_minmax_  ( dataset , v1 , cuts )
-            if vmn < vmx : mn1 , mx1 = vmn, vmx
-        v2 = what[1]
-        mn2 , mx2 = v2.minmax()
-        if  mn2 < -1.e+10 or mx2 > 1.e+10  :
-            vmn , vmx = _ds_var_minmax_  ( dataset , v2 , cuts )
-            if vmn < vmx : mn2 , mx2 = vmn, vmx
-        v3 = what[2]
-        mn3 , mx3 = v3.minmax()
-        if  mn3 < -1.e+10 or mx3 > 1.e+10  :
-            vmn , vmx = _ds_var_minmax_  ( dataset , v3 , cuts )
-            if vmn < vmx : mn3 , mx3 = vmn, vmx
+        w1        = what[0] 
+        mn1 , mx1 = _ds_var_minmax_  ( dataset , w1 , cuts )
+        w2        = what[1] 
+        mn2 , mx2 = _ds_var_minmax_  ( dataset , w2 , cuts )
+        w3        = what[2] 
+        mn3 , mx3 = _ds_var_minmax_  ( dataset , w3 , cuts )
         from Ostap.PyRoUts import hID
-        histo = ROOT.TH3F ( hID() , v1.GetName() + ':' + v2.GetName() + ':' + v3.GetName() ,
-                            20 , mn1 , mx1 , 20 , mn2 , mx2 , 20 , mn3 , mx3 )  ; histo.Sumw2()
-        if cuts : _ds_project_ ( dataset , histo , what , cuts , *args  )
-        else    : _ds_project_ ( dataset , histo , what ,        *args  )
+        histo = ROOT.TH3F ( hID() , "%s:%s:%s" % ( w1 , w2 , w3 ) ,
+                            20 , mn1 , mx1 ,
+                            20 , mn2 , mx2 ,
+                            20 , mn2 , mx2 )  ; histo.Sumw2()
+        _ds_project_ ( dataset , histo , what , cuts , *args  )
         histo.Draw( opts )
         return histo
 
@@ -1049,7 +1096,7 @@ def _ds_var_minmax_ ( dataset , var , cuts = '' , delta = 0.0 )  :
     >>> mn,mx = data.vminmax('pt')
     >>> mn,mx = data.vminmax('pt','y>3')
     """
-    if isinstance  (  var , ROOT.RooAbsVar ) : var = var.GetName() 
+    if isinstance  (  var , ROOT.RooAbsReal ) : var = var.GetName() 
     if cuts : s = dataset.statVar ( var , cuts )
     else    : s = dataset.statVar ( var )
     mn,mx = s.minmax()
