@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-10-08 - Michael Kolpin
+ - Adjust protonArgon_2015 settings for sending tracking efficiency lines to Full
+
 ! 2015-10-08 - Olli Lupton
  - Adjust protonArgon_2015 settings for sending PID lines to Full
 

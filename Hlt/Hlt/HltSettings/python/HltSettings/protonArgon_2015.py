@@ -97,7 +97,7 @@ class protonArgon_2015:
         ]
 
         # TrackEffDiMuon Calib lines
-        conf = __get_conf__("TrackEffDiMuon", "_25ns_August2015")
+        conf = __get_conf__("TrackEffDiMuon", "_protonArgon_2015")
         lines.extend(conf.ActiveHlt2Lines())
 
         # PID Calib lines
