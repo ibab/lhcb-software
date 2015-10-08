@@ -23,4 +23,12 @@ preprocessor = LHCbPreprocessor + \
   RegexpReplacer(when = "RichHotPixels     SUCCESS  #WARNINGS   =",
                  orig = r'[01 ]{33}', repl = r'') +\
   RegexpReplacer(when = "Message = 'Fully suppressed     {",
-                 orig = r'[01 ]{33}', repl = r'')
+                 orig = r'[01 ]{33}', repl = r'') +\
+  RegexpReplacer(when = "ToolSvc.TrackIn...SUCCESS", orig = r' \[OTHitEfficiencyMonitor\]', repl = r'' ) + \
+  RegexpReplacer(when = "ToolSvc.TrackSt...SUCCESS", orig = r' \[TrackV0Finder\]', repl = r'' ) + \
+  RegexpReplacer(when = "ToolSvc.PatSeedFitSUCCESS", orig = r' \[TrackBestTrackCreator\]', repl = r'' ) + \
+  RegexpReplacer(when = "ToolSvc.PatSeedFitSUCCESS", orig = r' \[ForwardHLT1FitterAlg\]', repl = r'' ) + \
+  RegexpReplacer(when = "ToolSvc.TrackMa...SUCCESS", orig = r' \[TrackResChecker\]', repl = r'' ) + \
+  RegexpReplacer(when = "ToolSvc.OTChann...SUCCESS", orig = r' \[MuonIDAlgLite\]', repl = r'' ) + \
+  RegexpReplacer(when = "ToolSvc.OTChann...SUCCESS", orig = r' \[PatForwardHLT1\]', repl = r'' ) + \
+  RegexpReplacer(when = "ToolSvc.OTChann...SUCCESS", orig = r' \[PatForward\]', repl = r'' )
