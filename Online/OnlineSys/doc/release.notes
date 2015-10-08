@@ -11,6 +11,7 @@
   Use Gaudi v26r3
   Updated/new packages:	
      MDF                 v3r42    DAQ
+     Checkpointing       v0r24    Online
      Camera              v1r35    Online
      Controller          v0r23    Online
      DefHLTUtils         v1r15    Online
