@@ -258,7 +258,7 @@ class protonArgon_2015:
             CommissioningLines : {
                 'Prescale'  : { 'Hlt2PassThrough' : 1 },
                 'Postscale' : { 'Hlt2ErrorEvent'  : 'RATE(0.01)' },
-                'PassThrough' : { 'HLT1' : "HLT_PASS('Hlt1DiMuonHighMassDecision') | HLT_PASS('Hlt1MB.*Decision') | HLT_PASS('Hlt1L0B.*gasDecision')" }
+                'PassThrough' : { 'HLT1' : "HLT_PASS('Hlt1DiMuonHighMassDecision') | HLT_PASS_RE('Hlt1MB.*Decision') | HLT_PASS_RE('Hlt1L0B.*gasDecision')" }
             }
         })
         from GaudiKernel.SystemOfUnits import GeV, MeV, mm 

@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-10-08 - Patrick Robbe
+ - Fix Hlt2PassThrough definition in protonArgon_2015
+
 !========================= HltSettings v7r4 2015-10-07 =========================
 
 ! 2015-10-07 - Patrick Robbe
