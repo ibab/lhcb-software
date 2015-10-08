@@ -8,13 +8,13 @@
 !
 !----------------------------------------------------------------------------
 
+!========================= Hlt2Lines v10r4 2015-10-07 =========================
+
 ! 2015-10-08 - Michael Kolpin
  - Added full stream versions of TrackEffDiMuon lines for pAr run
 
 ! 2015-10-08 - Olli Lupton
  - PID: create full stream versions of the lines as well as TurboCalib
-
-!========================= Hlt2Lines v10r4 2015-10-07 =========================
 
 ! 2015-09-30 - Matthew Kenzie
  - SMOG: Added a PiMu combiner for the SMOG lines
