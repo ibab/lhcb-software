@@ -3,11 +3,11 @@
 # Maintainer : Vladimir Gligorov, Johannes Albrecht
 #============================================================================
 package           HltTracking
-version           v13r11
+version           v13r12
 
 # Structure
 #============================================================================
-branches          cmt doc src 
+branches          cmt doc src
 include_path      none
 
 # Used packages
@@ -53,6 +53,5 @@ private
   use $(LHCbAlgs_use)
   use $(CaloDAQ_use)
   use $(L0DU_use)
-  use PRConfig v* 
+  use PRConfig v*
 end_private
-
