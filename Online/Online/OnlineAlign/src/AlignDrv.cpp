@@ -171,6 +171,8 @@ void AlignDrv::writeReference()
   fprintf(f, "%ld", ref);
   fflush(f);
   fclose(f);
+  printf("[ERROR]==================> Wrote Reference %ld to file %s\n",ref,m_RefFileName.c_str());
+  fflush(::stdout);
 }
 
 
