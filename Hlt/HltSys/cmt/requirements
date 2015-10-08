@@ -17,10 +17,10 @@ use HltGlobalMonitor    v5r2     Hlt   # Eric van Herwijnen
 use HltL0Conf           v4r2     Hlt   # Johannes Albrecht
 use HltLine             v7r12    Hlt   # Roel Aaij, Gerhard Raven
 use HltLuminosity       v4r3     Hlt   # Rosen Matev
-use HltRawData          v5r10    Hlt   # Tomasz Skwarnicki
+use HltRawData          v5r9     Hlt   # Tomasz Skwarnicki
 use HltRecChecker       v3r2     Hlt   # Jose Angel Hernando-Morata
 use HltSettings         v7r4     Hlt   # Vava Gligorov, Mika Vesterinen, Roel Aaij
-use HltTracking         v13r11   Hlt   # Sascha Stahl, Vava Gligorov
+use HltTracking         v13r12   Hlt   # Sascha Stahl, Vava Gligorov
 use TCKUtils            v1r17    Hlt   # Gerhard Raven
 use LoKiTrigger         v15r7    Phys  # Vanya Belyaev
 
