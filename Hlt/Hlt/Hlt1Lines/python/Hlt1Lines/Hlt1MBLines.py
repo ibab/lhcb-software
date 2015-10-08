@@ -13,7 +13,7 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
 		, 'MaxVeloTracks'          : 10
                 , 'ODIN'                   : { 'MicroBias'               : '(ODIN_TRGTYP == LHCb.ODIN.LumiTrigger)'
                                              , 'MicroBiasLowMultVelo'    : 'jbit( ODIN_EVTTYP,2 )'
-                                             , 'NoBiasOdin'              : 'jbit( ODIN_EVTTYP,2 )'
+                                             , 'NoBias'                  : 'jbit( ODIN_EVTTYP,2 )'
                                              , 'CharmCalibrationNoBias'  : 'jbit( ODIN_EVTTYP,2 )'
                                              , 'NoBiasLeadingCrossing'   : 'jbit( ODIN_EVTTYP,14 )'}
                 , 'Prescale'               : { 'Hlt1MBNoBias' : 0.1
@@ -31,7 +31,7 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt1Line as Line
         return Line ( 'MBNoBias'
                     , prescale = self.prescale
-                    , ODIN = self.getProp('NoBiasOdin')
+                    , ODIN = self.__odin('NoBias')
                     , postscale = self.postscale
                     )
 
@@ -91,19 +91,19 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
                     ) 
 
     def __createLowMultVelo(self):
+        from Configurables import LoKi__HltUnit as HltUnit
+        from HltTracking.Hlt1Tracking import VeloCandidates
+        from HltLine.HltLine import Hlt1Line as Line
+
         name = 'MicroBiasLowMultVelo'
-        Hlt1Line ( "MB" + name
-                   , prescale = self.prescale
-                   , postscale = self.postscale
-                   , ODIN = self.__odin(name)
-                   , algos =  [ HltUnit( 'Hlt1MB' + name + 'Unit',
-                                         Preambulo = [ VeloCandidates(name) ],
-                                         Code =  """
-                                         VeloCandidates >> in_range(1, TC_SIZE, %s ) 
-                                         """  % self.getProp('MaxVeloTracks')
-                                         )
-                                ]
-                   )  
+        Line ( "MB" + name
+             , prescale = self.prescale
+             , postscale = self.postscale
+             , ODIN = self.__odin(name)
+             , algos = [ HltUnit( 'Hlt1MB' + name + 'Unit',
+                                  Preambulo = [ VeloCandidates(name) ],
+                                  Code =  "VeloCandidates >> in_range(1, TC_SIZE, %s )"  % self.getProp('MaxVeloTracks'))
+                       ])  
     
     def __apply_configuration__(self) :
         '''
@@ -122,10 +122,5 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
         ts = self.__create_microbias_line__('TStation', Hlt1Seeding)
         ts.clone( ts.name().lstrip('Hlt1') + 'RateLimited', postscale = self.postscale, prescale = self.prescale )
 	
-        from Configurables import LoKi__HltUnit as HltUnit
-        from HltLine.HltLine import Hlt1Line
-        from HltTracking.Hlt1Tracking import VeloCandidates
-
-
         lmv = self.__createLowMultVelo()
         
