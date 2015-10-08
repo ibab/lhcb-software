@@ -49,6 +49,7 @@ setup_gcc() {
         PATH="${_bin}${PATH:+:}${PATH}"
         COMPILER_PATH="${_prefix}/lib/gcc/x86_64-unknown-linux-gnu/${_version}"
 
+        GCC_TOOLCHAIN="${_prefix}"
         export LD_LIBRARY_PATH
         export PATH
         export COMPILER_PATH
@@ -92,6 +93,7 @@ case ${_self} in
                 setup_clang $_version
                 _self=${_self%-*}
                 _self=${_self#*-}
+                _self="${_self} --gcc-toolchain=${GCC_TOOCHAIN}"
                 ;;
 
         *)

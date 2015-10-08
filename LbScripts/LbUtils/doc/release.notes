@@ -1,3 +1,7 @@
+2015-10-08  Ben Couturier  <ben.couturier@cern.ch>
+
+	* scripts/lcg-clang-37: added wrappers for clang 3.7 
+
 2015-09-01  Ben Couturier  <ben.couturier@cern.ch>
 
 	* cmt/requirements: LBCORE-902: Release of v4r4p2
