@@ -116,3 +116,8 @@ class TrackEffDiMuonLines(Hlt2LinesConfigurableUser):
             Hlt2Line(linename, prescale = self.prescale,
                      algos = algos, postscale = self.postscale,
                      L0DU = self.getProp('Common').get('L0Filter'), Turbo = True)
+        for (nickname, algos) in self.algorithms(stages).iteritems():
+            linename = 'TrackEffDiMuon' + nickname + 'Fullstream'
+            Hlt2Line(linename, prescale = self.prescale,
+                     algos = algos, postscale = self.postscale,
+                     L0DU = self.getProp('Common').get('L0Filter'), Turbo = False)

@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-10-08 - Michael Kolpin
+ - Added full stream versions of TrackEffDiMuon lines for pAr run
+
 ! 2015-10-08 - Olli Lupton
  - PID: create full stream versions of the lines as well as TurboCalib
 
