@@ -30,21 +30,8 @@ class TrackEffDiMuon_protonArgon_2015 :
             'Hlt2TrackEffDiMuonVeloMuonPlusMatchedFullstream',
             'Hlt2TrackEffDiMuonVeloMuonMinusMatchedFullstream',
             'Hlt2TrackEffDiMuonDownstreamPlusMatchedFullstream',
-            'Hlt2TrackEffDiMuonDownstreamMinusMatchedFullstream',
-            'Hlt2TrackEffDiMuonMuonTTPlusTaggedTurboCalib',
-            'Hlt2TrackEffDiMuonMuonTTMinusTaggedTurboCalib',
-            'Hlt2TrackEffDiMuonVeloMuonPlusTaggedTurboCalib',
-            'Hlt2TrackEffDiMuonVeloMuonMinusTaggedTurboCalib',
-            'Hlt2TrackEffDiMuonDownstreamPlusTaggedTurboCalib',
-            'Hlt2TrackEffDiMuonDownstreamMinusTaggedTurboCalib',
-            'Hlt2TrackEffDiMuonMuonTTPlusMatchedTurboCalib',
-            'Hlt2TrackEffDiMuonMuonTTMinusMatchedTurboCalib',
-            'Hlt2TrackEffDiMuonVeloMuonPlusMatchedTurboCalib',
-            'Hlt2TrackEffDiMuonVeloMuonMinusMatchedTurboCalib',
-            'Hlt2TrackEffDiMuonDownstreamPlusMatchedTurboCalib',
-            'Hlt2TrackEffDiMuonDownstreamMinusMatchedTurboCalib',
+            'Hlt2TrackEffDiMuonDownstreamMinusMatchedFullstream'
         ]
-
 
         return lines
 

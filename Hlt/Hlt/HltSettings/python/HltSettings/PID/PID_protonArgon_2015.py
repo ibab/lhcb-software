@@ -1,7 +1,7 @@
 from GaudiKernel.SystemOfUnits import GeV, mm, MeV
 from GaudiKernel.SystemOfUnits import picosecond as ps
 
-turboversions = [ 'TurboCalib', '' ]
+turboversions = [ '' ]
 class PID_protonArgon_2015:
     """
     Threshold settings for Hlt2 PID lines: 25ns August 2015

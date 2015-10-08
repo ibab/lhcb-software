@@ -4,6 +4,12 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v7r4 2015-10-07 =========================
+
+! 2015-10-08 - Roel Aaij
+ - Remove TurboCalib versions of TrackEff and PID lines from protonArgon
+   settings.
+
 ! 2015-10-08 - Michael Kolpin
  - Adjust protonArgon_2015 settings for sending tracking efficiency lines to Full
 
@@ -12,8 +18,6 @@
 
 ! 2015-10-08 - Patrick Robbe
  - Fix Hlt2PassThrough definition in protonArgon_2015
-
-!========================= HltSettings v7r4 2015-10-07 =========================
 
 ! 2015-10-07 - Patrick Robbe
  - Add MicroBiasLowMult line to the protonArgon_2015 configuration
