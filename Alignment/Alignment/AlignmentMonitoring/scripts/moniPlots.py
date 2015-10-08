@@ -2,10 +2,7 @@
 
 import os, sys, fnmatch, re
 import ROOT as r
-from matplotlib.backends.backend_pdf import PdfPages
-import matplotlib.pyplot as plt
 from GaudiPython import gbl
-#from AlignmentOutputParser.AlPlotter import *
 from AlignmentOutputParser.AlignOutput import *
 from MultiPlot import MultiPlot
 
@@ -94,7 +91,10 @@ def plotsCompare(Pages, files_histo, outputFile_name, normalize = True):
     for name, histos in Pages:
         monApp.drawPage(name, normalize)
         r.gPad.GetCanvas().Print(outputFile_name)
-    os.remove('c1.eps')
+    try:
+        os.remove('c1.eps')
+    except OSError:
+        pass
 
 
 def makeGraph(values, errors=None):

@@ -46,7 +46,7 @@ def getAligns2Analise(activity = 'Velo', minAlign = 0):
 
 def hasNewAlignment(activity = 'Velo'):
     global oldtime
-    newtime = os.path.getmtime(os.path.join(alignment_dir, activity))
+    newtime = os.path.getmtime(os.path.join(alignment_dir,  '{0}/{0}Global'.format(activity)))
     if newtime > oldtime:
         oldtime = newtime
         return True
