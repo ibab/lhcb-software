@@ -48,7 +48,6 @@ def onlinePV():
     return {"PV3D" : pv3d}
 
 ##################################################################################
-
 class HltConf(LHCbConfigurableUser):
     """
     Hlt configuration
@@ -89,9 +88,12 @@ class HltConf(LHCbConfigurableUser):
                                                                 # (only matters if EnablelumiEventWriting = True)
                 , "AdditionalHlt1Lines"            : []         # must be configured
                 , "AdditionalHlt2Lines"            : []         # must be configured
+                , "Hlt2LinesForDQ"                 : ["PIDD02KPiTagTurboCalib", "PIDLambda2PPiLLTurboCalib", "PIDDetJPsiMuMuPosTaggedTurboCalib",
+                                                      "PIDDetJPsiMuMuNegTaggedTurboCalib", "PIDLambda2PPiLLhighPTTurboCalib", "PIDLambda2PPiLLveryhighPTTurboCalib",
+                                                      "DiMuonDetachedJPsi"]
                 , "NanoBanks"                      : ['ODIN','HltLumiSummary','HltRoutingBits','DAQ']
                 , "PruneHltANNSvc"                    : True
-                  }
+                }
 
     __settings__ = None
     #import logging
@@ -351,7 +353,8 @@ class HltConf(LHCbConfigurableUser):
                       # routing bit 90 for TurboCalib stream, includes lumi events.
                       , 90 : "HLT_TURBOPASS_RE('^Hlt2.*TurboCalibDecision$') | HLT_PASS('Hlt2LumiDecision')"
                       # VVG 01-05-2015
-                      }
+                      , 91 : "HLT_PASS_RE('^Hlt2(%s)Decision$')" % '|'.join(self.getProp("Hlt2LinesForDQ"))
+        }
         HltRoutingBitsWriter('Hlt1RoutingBitsWriter').RoutingBits = routingBits
         HltRoutingBitsWriter('Hlt2RoutingBitsWriter').RoutingBits = routingBits
 
