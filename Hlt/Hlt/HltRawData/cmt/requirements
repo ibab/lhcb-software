@@ -4,10 +4,10 @@
 # Maintainer : Tomasz Skwarnicki
 #============================================================================
 package           HltRawData
-version           v5r9
+version           v5r10
 
 #============================================================================
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #============================================================================
 branches          cmt doc src
 #============================================================================
@@ -16,10 +16,10 @@ branches          cmt doc src
 #============================================================================
 # use   Package      v1r*    Hat
 
-use GaudiKernel         v*    
+use GaudiKernel         v*
 private
 use GaudiObjDesc v* -no_auto_imports
-  use PRConfig v* 
+  use PRConfig v*
 end_private
 
 use GaudiAlg            v*
@@ -48,6 +48,5 @@ private
   macro LHCbAlgs_use "" QMTest "LHCbAlgs v* Kernel  -no_auto_imports"
   use $(SQL_use)
   use $(LHCbAlgs_use)
-  use PRConfig v* 
+  use PRConfig v*
 end_private
-
