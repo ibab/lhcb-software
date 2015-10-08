@@ -61,6 +61,7 @@ private:
   bool m_PauseOnEOR;
   int  m_SaveInterval; //in seconds
   bool m_SaveonUpdate;
+  bool m_DebugOn;
   std::string m_MyServiceName;
 };
 #endif // ONLINE_GAUCHO_ADDERSVC_H

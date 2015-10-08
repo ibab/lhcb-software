@@ -180,6 +180,10 @@ void CounterAdder::addBuffer(void *buff, int siz, MonInfo *minfo)
           char *nam = (char*)AddPtr(srch,srch->nameoff);
           m_hmap.insert(std::make_pair(nam,p));
         }
+        else
+        {
+          printf("ERROR: +++++++++++ Bad Name Offset (%d, %0x) for Counter %s\n",srch->nameoff,srch->nameoff,IFirst.c_str());
+        }
       }
       //printf("Counter Adder: UNLocking MAP\n");
       UnLockMap();

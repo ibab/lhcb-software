@@ -185,6 +185,7 @@ public:
   void *m_buffer;
   int m_buffersize;
   int m_usedSize;
+  bool m_DebugOn;
 //  FILE *logFile;
   std::string m_MyName;
   std::string m_NamePrefix;

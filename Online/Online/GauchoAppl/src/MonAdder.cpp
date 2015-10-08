@@ -437,7 +437,7 @@ void MonAdder::stop()
 void MonAdder::TimeoutHandler()
 {
   INServIter i;
-//  ::lib_rtl_output(LIB_RTL_INFO,"MonAdder Timeout handler for expected time %lli\n",m_reference);
+  ::lib_rtl_output(LIB_RTL_INFO,"MonAdder Timeout handler for expected time %lli\n",m_reference);
 //  printf("MonAdder Timeout handler for expected time %lli\n",m_reference);
   DimLock l;
   for (i=this->m_inputServicemap.begin();i!=m_inputServicemap.end();i++)
@@ -445,7 +445,8 @@ void MonAdder::TimeoutHandler()
     INServiceDescr *d = i->second;
     if (d->last_update < this->m_reference)
     {
-//      ::lib_rtl_output(LIB_RTL_INFO,"Timeout from source %s expected %lli last received %lli\n",
+      ::lib_rtl_output(LIB_RTL_INFO,"Timeout from source %s expected %lli last received %lli\n",
+          d->m_Info->m_TargetService.c_str(),m_reference,d->last_update);
       d->m_timeouts++;
 //      printf("Timeout from source %s (PID = %d) expected %lli last received %lli cons. TMO %d\n ",
 //          d->m_Info->m_TargetService.c_str(),d->m_pid, m_reference,d->last_update,d->m_timeouts);
@@ -470,6 +471,12 @@ void MonAdder::TimeoutHandler()
 }
 void MonAdder::i_update()
 {
+  if (m_DebugOn)
+  {
+    ::lib_rtl_output(LIB_RTL_INFO,"MonAdder::i_update: Expected Number %d received %d\n",
+        m_expected,m_received);
+  }
+
   if (m_received >= m_expected)
   {
     if (!m_timeout)
@@ -548,6 +555,11 @@ void MonAdder::basicAdd(void *buff, int siz, MonInfo *h)
   isvcd->last_update = current;
 
   m_RateBuff = 0;
+  if (m_DebugOn)
+  {
+    ::lib_rtl_output(LIB_RTL_INFO,"MonAdder received packet from %s. Expected Number %d received %d,timestamp %ill current Timestamp %ill\n",
+        h->m_TargetService.c_str(),m_expected,m_received,m_reference,current);
+  }
   if (m_histo != 0)
   {
     //printf("HistAdder Locking MonitorSvc\n");
@@ -563,6 +575,10 @@ void MonAdder::basicAdd(void *buff, int siz, MonInfo *h)
   }
   if (m_reference < current)
   {
+    if (m_DebugOn)
+    {
+      ::lib_rtl_output(LIB_RTL_INFO,"MonAdder: First Fragment from %s...\n",h->m_TargetService.c_str());
+    }
 //    printf("First fragment received from %s... starting timer...\n",h->m_TargetService.c_str());
     m_timeout = false;
     m_firstSource = isvcd->m_serviceName;
@@ -640,10 +656,18 @@ void MonAdder::basicAdd(void *buff, int siz, MonInfo *h)
   }
   else if (m_reference == current)
   {
+    if (m_DebugOn)
+    {
+      ::lib_rtl_output(LIB_RTL_INFO,"MonAdder matching TimeStamps... Adding\n");
+    }
     add(buff, siz, h);
   }
   else
   {
+    if (m_DebugOn)
+    {
+      ::lib_rtl_output(LIB_RTL_INFO,"late update from %s\n m_expected %lli received %lli. Using stored buffer...\n",h->m_TargetService.c_str(),m_reference,current);
+    }
     printf("late update from %s\n m_expected %lli received %lli. Using stored buffer...\n",h->m_TargetService.c_str(),m_reference,current);
     add(buff,siz,h);
 //    m_received++;

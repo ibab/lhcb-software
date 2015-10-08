@@ -26,6 +26,13 @@ public:
   double m_busybogus;
   double m_bogus;
   double m_Mybogus;
+  int m_NumCores;
+  int m_numCores;
+  long m_Memtot;
+  long m_Memfree;
+  long m_Membuff;
+  long m_MemSwaptot;
+  long m_MemSwapfree;
   bool m_first;
   IMonitorSvc *m_pMonitorSvc;
   IdleTimer *m_timer;

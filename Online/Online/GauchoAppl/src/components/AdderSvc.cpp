@@ -79,6 +79,7 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl),
   declareProperty("GotoPause",  m_doPause=false);
   declareProperty("PauseOnEOR",m_PauseOnEOR = false);
   declareProperty("SaveonUpdate",m_SaveonUpdate=false);
+  declareProperty("DebugOn",m_DebugOn = false);
 
   m_started     = false;
   m_SaveTimer   = 0;
@@ -253,6 +254,7 @@ StatusCode AdderSvc::start()
   {
     m_adder = new CounterAdder((char*)myservicename.c_str(), (char*)"Data");
   }
+  m_adder->m_DebugOn = m_DebugOn;
   m_adder->setParent(this);
   m_adder->setPause(m_doPause);
   if (m_doPause)
@@ -295,6 +297,7 @@ StatusCode AdderSvc::start()
   {
     m_EoRadder = new CounterAdder((char*)myservicename.c_str(), (char*)"EOR");
   }
+  m_EoRadder->m_DebugOn = m_DebugOn;
   m_EoRadder->setParent(this);
   m_EoRadder->setPause(m_PauseOnEOR);
   if (m_PauseOnEOR)
