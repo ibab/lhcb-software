@@ -7,7 +7,7 @@ use Hlt1Lines           v7r18    Hlt   # Roel Aaij, Vava Gligorov, Gerhard Raven
 use Hlt1Muons           v1r14p1  Hlt   # Vasilis Syropoulos
 use Hlt2Lines           v10r4    Hlt   # Vava Gligorov, Roel Aaij, Mika Vesterinen
 use Hlt2SharedParticles v7r8     Hlt   # Vava Gligorov
-use HltBase             v15r7    Hlt   # Gerhard Raven
+use HltBase             v15r6    Hlt   # Gerhard Raven
 use HltBeamGasAlley     v4r1     Hlt   # Rosen Matev
 use HltCommon           v10r5    Hlt   # Gerhard Raven
 use HltConf             v13r3p1  Hlt   # Roel Aaij, Gerhard Raven
