@@ -124,7 +124,7 @@ def submitVerificationJobs(name="",BrunelVer="v47r9",pickledRunsList=[]):
 def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
 
     from Ganga.GPI import ( Job, LHCbDataset, Brunel, File, queues,
-                            SplitByFiles, RootMerger, Dirac )
+                            SplitByFiles, RootMerger, Dirac, DiracFile )
     import time
 
     # If pickled run data list is empty, create full list
@@ -308,8 +308,8 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
                     #j.backend.settings['Destination'] = 'LCG.CERN.ch'
 
                     # Optional input files
-                    j.inputsandbox             = mySandBox
-                    j.backend.inputSandboxLFNs = mySandBoxLFNs
+                    j.inputfiles  = mySandBox
+                    j.inputfiles += [ DiracFile(file) for file in mySandBoxLFNs ]
 
                     # Enable automatic job re-submission
                     j.do_auto_resubmit = True
@@ -324,16 +324,16 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
                     print "Submitting Job", j.name, "( #", nJob, "of", len(sortedRuns), ")", time.strftime("%c")
                     print " -> Using", nFiles, "data file(s), max", nFilesPerJob, \
                           "file(s) per subjob,", nEventsPerJob, "events per job"
-                    for f in j.inputdata.files : print "  ->", f.name
+                    for f in j.inputdata.files : print "  ->", f.lfn
 
-                    # Submitt now
+                    # Submit now
                     #submitJob(j)
                     # queue the submission
                     queues.add( submitJob, args=(j,) )
+                    # Only one job at a time for testing...
+                    #return
 
 def submitJob(j):
-
-    import time
     
     submitOK = False
     submitCount = 0
@@ -347,6 +347,7 @@ def submitJob(j):
         except Exception,e:
             submitOK = False
         if not submitOK :
+            import time
             nSleep = 120
             print "WARNING : Job ", j.name, " not submitted -> Delete and try again after", nSleep, "secs..."
             new_j = j.copy()
@@ -808,7 +809,7 @@ def recoCKTheta(jobs,rad='Rich1Gas'):
 def uploadFile(pfn,lfn,sites=['CERN-USER','RAL-USER','IN2P3-USER',
                               'GRIDKA-USER','PIC-USER','CNAF-USER']):
     #   ,'NIKHEF-USER'
-    from Ganga.GPI import PhysicalFile, LogicalFile
+    from Ganga.GPI import PhysicalFile, DiracFile
     import time
 
     if len(sites) == 0 :
@@ -816,9 +817,9 @@ def uploadFile(pfn,lfn,sites=['CERN-USER','RAL-USER','IN2P3-USER',
         return False
 
     # Check if file has any replicas to start with
-    res = LogicalFile(lfn).getReplicas()
+    res = DiracFile(lfn).getReplicas()
     OK = True
-    if len(res) < len(sites) :
+    if len(res[0]) < len(sites) :
 
         print "Uploading", pfn, "to", sites[0], lfn
 
@@ -836,7 +837,7 @@ def uploadFile(pfn,lfn,sites=['CERN-USER','RAL-USER','IN2P3-USER',
             for site in sites :
                 try:
                     print '  -> Replicating to', site
-                    LogicalFile(lfn).replicate(site)
+                    DiracFile(lfn).replicate(site)
                 except Exception,e:
                     print '   -> ERROR Replication FAILED'
                     
