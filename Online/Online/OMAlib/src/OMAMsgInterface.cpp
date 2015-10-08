@@ -1,6 +1,7 @@
 // $Id: OMAMsgInterface.cpp,v 1.40 2010-10-22 10:54:28 ggiacomo Exp $
 #include <cstring>
 #include <sstream>
+#include <algorithm>
 #include <time.h>
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
