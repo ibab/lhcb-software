@@ -3,6 +3,15 @@ Package             : MooreSys
 Package Coordinator : R. Aaij
 Purpose             : LHCb HLT application
 
+</PRE><H1><A NAME=v24r2>2015-10-08 MooreSys v24r2</A></H1><PRE>
+
+Release for the proton argon data taking and to include fixes
+for problems found since the previous release.
+
+Release as part of stack based on LHCb v39r0 and Gaudi v26r3.
+Depends on Hlt v24r2
+
+
 </PRE><H1><A NAME=v24r1p1>2015-09-22 MooreSys v24r1p1</A></H1><PRE>
 
 Added fixes in following packages.

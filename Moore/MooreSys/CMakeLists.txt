@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MooreSys
 ################################################################################
-gaudi_subdir(MooreSys v24r1p1)
+gaudi_subdir(MooreSys v24r2)
 
 gaudi_depends_on_subdirs(Hlt/Moore
                          L0/L0App
