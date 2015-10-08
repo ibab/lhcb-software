@@ -5,7 +5,11 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
-!========================= Hlt1Lines v7r18 2015-10-07 =========================
+!========================= Hlt1Lines v7r18 2015-10-08 =========================
+
+! 2015-10-08 - Roel Aaij
+ - Allow all Hlt1 MB lines' ODIN requirements to be configured from the
+   settings.
 
 ! 2015-10-03 - Matthew Kenzie
  - Some more ODIN and L0 requirements for SMOG running
