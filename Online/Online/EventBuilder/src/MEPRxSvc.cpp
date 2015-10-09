@@ -623,8 +623,8 @@ int MEPRx::addMEP(int sockfd, const MEPHdr *hdr, int srcid, u_int64_t tsc,
               m_log << MSG::ERROR << "Foul! Event " << m_l0ID << " subevent lsb" << mepfrghdr->m_l0IDlow << " fragment # " << i <<
                 hex <<  " ODIN magic pattern is " << hex
                     << bank->magic() << endmsg;
-              
-          } 
+
+          }
           if (bank->type() != RawBank::ODIN) {
               m_log << MSG::ERROR << "Foul! Event " << m_l0ID << " subevent lsb" << mepfrghdr->m_l0IDlow << " fragment # " << i <<
               "ODIN bank type is " << hex << bank->type() <<
@@ -1043,7 +1043,11 @@ StatusCode MEPRxSvc::run()
         if ((*rxit)->m_runNumber != m_runNumber) {
             if (m_runNumber != 0)
             {
-              m_monSvc->updateSvc("this",m_runNumber,this);
+              int runo;
+              runo = int(m_runNumber);
+              log << MSG::INFO << "run-change detected - updating EOR services for run# " << m_runNumber
+                  << endmsg;
+              m_monSvc->updateSvc("this",runo,this);
               m_monSvc->resetHistos(0);
             }
             m_runNumber = (*rxit)->m_runNumber;
