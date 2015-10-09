@@ -18,8 +18,9 @@ if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
 
   gaudi_add_library(Chkpt         src/*.cpp
                     NO_PUBLIC_HEADERS
-                    LINK_LIBRARIES ${CMAKE_DL_LIBS})
+                    LINK_LIBRARIES ${CMAKE_DL_LIBS} -pthread)
 
+  string(REPLACE "-pthread" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
   gaudi_add_executable(restore aux/main.cpp)
   set_property(TARGET restore APPEND PROPERTY COMPILE_FLAGS " -g -O0")
   set_property(TARGET restore APPEND PROPERTY LINK_FLAGS " -g -O0 -static")
