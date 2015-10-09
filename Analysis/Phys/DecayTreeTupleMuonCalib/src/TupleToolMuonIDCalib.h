@@ -49,6 +49,7 @@ private:
   StatusCode fillCoordVectors();
   double foiX(const int &station, const int &region, const double &p, const double &dx);
   double foiY(const int &station, const int &region, const double &p, const double &dy);
+  StatusCode FindFieldPolarity();
   bool linFit(int &FromM1);
   bool calculatePt(int &FromM1);
   bool estrapola();
@@ -133,6 +134,7 @@ private:
   std::vector<double> m_resParams;
   double m_Constant;
   IBIntegrator* m_bIntegrator; // magnetic field tool
+  double m_FieldPolarity;
 
   double m_4qOverP;
   double m_4sigmaQOverP2;
@@ -169,6 +171,7 @@ private:
   std::vector<float> m_allMuonHitsTDC2;
   std::vector<float> m_allMuonHitsID;
   bool m_doVerbose;
+  bool m_estimate;
 
   // local array of region sizes
   std::vector<double> m_regionInnerX; // inner edge in abs(x)

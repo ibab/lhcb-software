@@ -60,6 +60,7 @@ DECLARE_TOOL_FACTORY( TupleToolMuonIDCalib )
   declareProperty( "YFOIParameter2", m_yfoiParam2 );
   declareProperty( "YFOIParameter3", m_yfoiParam3 );
   declareProperty( "isVerbose", m_doVerbose = false);
+  declareProperty( "MomentumEstimate", m_estimate = true);
 
   std::vector<double> tmp1 = boost::assign::list_of(0.015)(0.29);
   declareProperty( "resParams", m_resParams = tmp1);
@@ -103,9 +104,14 @@ StatusCode TupleToolMuonIDCalib::fill( const LHCb::Particle * /* top */,
   if(!sc) error()<<"couldnt fillCoorVectors!!!"<<endmsg;
   debug() <<"Fatima: fillCoordVectors in TupleToolMuIDCalib"<< endmsg;
 
+  m_FieldPolarity = 1;
+  StatusCode sc2 = FindFieldPolarity();
+  if (!sc2) error()<<"couldnt determine field polarity !!"<<endmsg;
+  
   const std::string prefix=fullName(head);
-  sc = fillVars( part, prefix, tuple );
-  return sc;
+  StatusCode sc3 = fillVars( part, prefix, tuple );
+  return sc3;
+  //return StatusCode(fillVars( part, prefix, tuple ));
 }
 
 
@@ -399,13 +405,13 @@ StatusCode TupleToolMuonIDCalib::fillVars(  const LHCb::Particle *part,
 
   for ( int i = 0; i < m_NStation; ++i )
   {
-    small_dist[i] = 100000.;
-    m_smalldist_X[i] = 10000000.;
-    m_smalldist_Y[i] = 10000000.;
-    m_smalldist_Z[i] = 10000000.;
-    m_smalldist_dX[i] = 10000000.;
-    m_smalldist_dY[i] = 10000000.;
-    m_smalldist_dZ[i] = 10000000.;
+    small_dist[i] = 100000000.;
+    m_smalldist_X[i] = 100000000.;
+    m_smalldist_Y[i] = 100000000.;
+    m_smalldist_Z[i] = 100000000.;
+    m_smalldist_dX[i] = 0.;
+    m_smalldist_dY[i] = 0.;
+    m_smalldist_dZ[i] = 0.;
   }
 
   // store hit info if its in the FOI of the track
@@ -538,43 +544,60 @@ StatusCode TupleToolMuonIDCalib::fillVars(  const LHCb::Particle *part,
 
   }
 
-  // estimate the momentum of the muon-track assuming it cames from the primary vertex
-  // first --> do a linear fit with the closest hits in FOI, starting from M1 to M5,
-  //           if successful call the tool to estimate the momentum
-  //
-  int FromM1 = 1;
-  bool fcode = linFit(FromM1);
-  if ( !fcode ) {
-    debug() << "linFit: linear fit closest hits in FOI failed " << endmsg;
-  } else {
-    bool pcode = calculatePt(FromM1);
-    if ( !pcode ) debug() << "calculatePt: calculation momentum of muon track failed " << endmsg;
-  }
-  test &= tuple->column(prefix+"_5pZM1", m_5pZM1);  
-  test &= tuple->column(prefix+"_5qOverP", m_5qOverP); 
-  test &= tuple->column(prefix+"_5sigmaQOverP2", m_5sigmaQOverP2); 
-  test &= tuple->column(prefix+"_5pXvtx", m_5pXPvtx); 
-  test &= tuple->column(prefix+"_5pYvtx", m_5pYPvtx);
-  test &= tuple->column(prefix+"_5pZvtx", m_5pZPvtx);
 
-  // estimate the momentum of the muon-track assuming it cames from the primary vertex
-  // first --> do a linear fit with the closest hits in FOI, starting from M2 to M5,
-  //           if successful call the tool to estimate the momentum
-  //
-  FromM1 = 0;
-  fcode = linFit(FromM1);
-  if ( !fcode ) {
-    debug() << "linFit: linear fit closest hits in FOI failed " << endmsg;
-  } else {
-    bool pcode = calculatePt(FromM1);
-    if ( !pcode ) debug() << "calculatePt: calculation momentum of muon track failed " << endmsg;
+  if(m_estimate){
+    // estimate the momentum of the muon-track assuming it cames from the primary vertex
+    // first --> do a linear fit with the closest hits in FOI, starting from M1 to M5,
+    //           if successful call the tool to estimate the momentum
+    //
+    m_5pZM1   = 0.;
+    m_5qOverP = 0.;
+    m_5sigmaQOverP2 = 0.;
+    m_5pXPvtx = 0.;
+    m_5pYPvtx = 0.;
+    m_5pZPvtx = 0.;
+
+    int FromM1 = 1;
+    bool fcode = linFit(FromM1);
+    if ( !fcode ) {
+      debug() << "linFit: linear fit closest hits in FOI failed " << endmsg;
+    } else {
+      bool pcode = calculatePt(FromM1);
+      if ( !pcode ) debug() << "calculatePt: calculation momentum of muon track failed From M1" << endmsg;
+    }
+    test &= tuple->column(prefix+"_5pZM1", m_5pZM1);  
+    test &= tuple->column(prefix+"_5qOverP", m_5qOverP); 
+    test &= tuple->column(prefix+"_5sigmaQOverP2", m_5sigmaQOverP2); 
+    test &= tuple->column(prefix+"_5pXvtx", m_5pXPvtx); 
+    test &= tuple->column(prefix+"_5pYvtx", m_5pYPvtx);
+    test &= tuple->column(prefix+"_5pZvtx", m_5pZPvtx);
+
+    // estimate the momentum of the muon-track assuming it cames from the primary vertex
+    // first --> do a linear fit with the closest hits in FOI, starting from M2 to M5,
+    //           if successful call the tool to estimate the momentum
+    //
+    m_4pZM1   = 0.;
+    m_4qOverP = 0.;
+    m_4sigmaQOverP2 = 0.;
+    m_4pXPvtx = 0.;
+    m_4pYPvtx = 0.;
+    m_4pZPvtx = 0.;
+
+    int FromM1_2 = 0;
+    bool fcode_2 = linFit(FromM1_2);
+    if ( !fcode_2 ) {
+      debug() << "linFit: linear fit closest hits in FOI failed " << endmsg;
+    } else {
+      bool pcode_2 = calculatePt(FromM1_2);
+      if ( !pcode_2 ) debug() << "calculatePt: calculation momentum of muon track failed From M2" << endmsg;
+    }
+    test &= tuple->column(prefix+"_4pZM1", m_4pZM1);  
+    test &= tuple->column(prefix+"_4qOverP", m_4qOverP); 
+    test &= tuple->column(prefix+"_4sigmaQOverP2", m_4sigmaQOverP2); 
+    test &= tuple->column(prefix+"_4pXvtx", m_4pXPvtx); 
+    test &= tuple->column(prefix+"_4pYvtx", m_4pYPvtx);
+    test &= tuple->column(prefix+"_4pZvtx", m_4pZPvtx);
   }
-  test &= tuple->column(prefix+"_4pZM1", m_4pZM1);  
-  test &= tuple->column(prefix+"_4qOverP", m_4qOverP); 
-  test &= tuple->column(prefix+"_4sigmaQOverP2", m_4sigmaQOverP2); 
-  test &= tuple->column(prefix+"_4pXvtx", m_4pXPvtx); 
-  test &= tuple->column(prefix+"_4pYvtx", m_4pYPvtx);
-  test &= tuple->column(prefix+"_4pZvtx", m_4pZPvtx);
 
   if (nHits>0)
   {
@@ -585,7 +608,7 @@ StatusCode TupleToolMuonIDCalib::fillVars(  const LHCb::Particle *part,
     verbose() <<" So the dist_ave for track "<< track->key()<<"  ("<< track->charge() 
               << ")   will be: " << dist_ave<< endmsg;
 
-  test &= tuple ->column ( prefix+"_DistAve", dist_ave ) ;
+  test &= tuple->column( prefix+"_DistAve", dist_ave ) ;
   return test;
 
 } // fillVars
@@ -601,28 +624,31 @@ bool TupleToolMuonIDCalib::linFit(int &FromM1)
   m_errby = m_errsy = m_covbsy = 0.;
   m_chi2x = m_chi2y = 0.;
 
+  
   int StartI = 0;              // fit from M1 to M5 
   if (FromM1==0) StartI = 1;   // fit from M2 to M5
   
   int nPunti = 0;
   for ( int i = StartI; i < m_NStation; ++i ) {
-    if (m_smalldist_X[i]==10000000.) continue;
+    if (m_smalldist_X[i]==0.0) continue;
     nPunti++;
   }
 
   double dof = nPunti - 2.;
-  if (dof<0) return false;
+  if (dof== 0.) return false;
 
   double xc11,xc12,xc22,xv1,xv2,xxx;
-  xc11 = xc12 = xc22 = xv1 = xv2 = xxx = 0;
+  xc11 = xc12 = xc22 = xv1 = xv2 = xxx = 0.;
   double yc11,yc12,yc22,yv1,yv2,yyy;
-  yc11 = yc12 = yc22 = yv1 = yv2 = yyy = 0;
+  yc11 = yc12 = yc22 = yv1 = yv2 = yyy = 0.;
   double xdet,ydet;
+  xdet = ydet = 0.;
   double xerr,yerr;
+  xerr = yerr = 0.;
   
   for ( int i = StartI; i < m_NStation; ++i ) {
 
-    if (m_smalldist_X[i]==10000000.) continue;
+    if (m_smalldist_dX[i]== 0.0) continue;
     double x,dx,y,dy,z; //dz;
            
     x = m_smalldist_X[i];
@@ -675,37 +701,72 @@ bool TupleToolMuonIDCalib::linFit(int &FromM1)
   return true;
 }
 
-/// estimate the momentum of the muon-track assuming it cames from the primary vertex 
+//=============================================================================
+// Determination of the field polarity
+//=============================================================================
+StatusCode TupleToolMuonIDCalib::FindFieldPolarity()
+{
+  // compute fiels polarity
+  // we will use this value for all tracks
+ 
+  double Zfirst = m_stationZ[0];   // M1
+ 
+  Gaudi::XYZPoint  begin( 0., 0., 0. );
+  Gaudi::XYZPoint  end( 0., 0., Zfirst );
+  Gaudi::XYZVector bdl;
+  double z;
+  
+  StatusCode sc = m_bIntegrator -> calculateBdlAndCenter( begin, end, 0., 0., z, bdl );
+  if (sc.isFailure()){
+    return Error("Failed to find field centre !", StatusCode::FAILURE);
+  } 
+  
+  if ( bdl.x() > 0.0 ) {
+    m_FieldPolarity =  1;
+  } 
+  else {
+    m_FieldPolarity = -1; 
+  }
+
+  debug() << "Integrated B field is "<< bdl.x() << " Tm" <<
+    "  centered at Z="<< z/Gaudi::Units::m << " m"<<endmsg;
+  
+  return StatusCode::SUCCESS;
+}
+
+//====================================================================================
+/// estimate the momentum of the muon-track assuming it cames from the primary vertex
+//==================================================================================== 
 bool TupleToolMuonIDCalib::calculatePt(int &FromM1)
 {
-  double Zfirst = m_stationZ[0];
+
+  double pZM1   = 0.;
+  double qOverP = 0.;
+  double sigmaQOverP2 = 0.;
+  double pXPvtx = 0.;
+  double pYPvtx = 0.;
+  double pZPvtx = 0.;
+
+  double Zfirst = m_stationZ[0];           //M1
+  if ( FromM1==0 ) Zfirst = m_stationZ[1]; //M2
         
   Gaudi::XYZPoint trackPos(m_bx + m_sx*Zfirst,
                            m_by + m_sy*Zfirst, Zfirst);
   LHCb::State state(LHCb::StateVector(trackPos, 
                                       Gaudi::XYZVector(m_sx, m_sy, 1.0 ), 1./10000.));
 
-  // compute integrated B field before M1 at x=y=0
-  // we will use this value for all tracks
-  double zCenter; // Bx field center position in z
-  double bdlX;    // integrated Bx field
-  int FieldPolarity;
+ //   
   Gaudi::XYZPoint  begin( 0., 0., 0. );
-  Gaudi::XYZPoint  end( 0., 0., Zfirst );
+  Gaudi::XYZPoint  end(state.x() , state.y(), state.z() );
   Gaudi::XYZVector bdl;
+  double zCenter;
   
-  m_bIntegrator -> calculateBdlAndCenter(begin, end, 0.0001, 
-                                         0., zCenter, bdl );
-  if ( bdl.x() > 0.0 ) {
-    FieldPolarity =  1;
-  } 
-  else {
-    FieldPolarity = -1; 
+  StatusCode sc = m_bIntegrator -> calculateBdlAndCenter(begin, end, state.tx(),
+                                                         state.ty(), zCenter, bdl );
+  if (!sc){  
+    error() <<" Failed to integrate field !!"<<endmsg;
+    return false;
   }
-  
-  bdlX = bdl.x();
-  debug() << "Integrated B field is "<< bdlX << " Tm" <<
-    "  centered at Z="<< zCenter/Gaudi::Units::m << " m"<<endmsg;
 
  // copied from the TrackPtKick tool by M. Needham
   double q = 0.;
@@ -715,9 +776,10 @@ bool TupleToolMuonIDCalib::calculatePt(int &FromM1)
   double xCenter;
   double zeta_trk; 
   double tx_vtx;   
-  double zeta_vtx;   
+  double zeta_vtx; 
+  double curv;
 
-  if ( fabs( bdlX ) > TrackParameters::hiTolerance ) {
+  if ( fabs( bdl.x() ) > TrackParameters::hiTolerance ) {
     //can estimate momentum and charge
     
     //Rotate to the  0-0-z axis and do the ptkick 
@@ -729,20 +791,20 @@ bool TupleToolMuonIDCalib::calculatePt(int &FromM1)
     zeta_vtx = -tx_vtx/ sqrt( 1.0 + tx_vtx*tx_vtx );
     
     // curvature
-    const double curv = ( zeta_trk - zeta_vtx );
-    
+    curv = ( zeta_trk - zeta_vtx );
+
     // charge
     int sign = 1;
     if( curv < TrackParameters::hiTolerance ) {
       sign *= -1;
     }
-    if ( bdlX < TrackParameters::hiTolerance ) {
+    if ( bdl.x() < TrackParameters::hiTolerance ) {
       sign *= -1;      
     }
-    q = -1. * FieldPolarity*sign;
+    q = -1. * m_FieldPolarity*sign;
     
     // momentum
-    p = Gaudi::Units::eplus * Gaudi::Units::c_light *fabs(bdlX) 
+    p = Gaudi::Units::eplus * Gaudi::Units::c_light *fabs(bdl.x()) 
       * sqrt((1.0 +tX*tX+gsl_pow_2(state.ty()))
              /(1.0 +gsl_pow_2(tX)))/fabs(curv);
     
@@ -760,20 +822,18 @@ bool TupleToolMuonIDCalib::calculatePt(int &FromM1)
     return false;
   }
 
-  double pZM1   = 0.;
-  double qOverP = 0.;
-  double sigmaQOverP2 = 0.;
-  double pXPvtx = 0.;
-  double pYPvtx = 0.;
-  double pZPvtx = 0.;
-
   pZM1 = p;
   qOverP = q / p;  
   const double err2 = gsl_pow_2(m_resParams[0]) + gsl_pow_2(m_resParams[1]/p) ;
   sigmaQOverP2 = err2*gsl_pow_2(1.0/p);
   
    // set MuonTrack momentum variables (momentum at primary vertex)
-  double pz_vtx =  state.p() * sqrt(1- tx_vtx*tx_vtx - state.ty()*state.ty() );
+  if ( (tx_vtx*tx_vtx + state.ty()*state.ty()) > 1.) {
+    // can't estimate momentum vector components 
+    error() << "can't estimate px, py, pz " << endmsg;
+    return false;
+  }  
+  double pz_vtx =  p * sqrt(1- tx_vtx*tx_vtx - state.ty()*state.ty() );
   Gaudi::XYZVector momentum_vtx( tx_vtx * pz_vtx,
                                  state.ty()* pz_vtx,
                                  pz_vtx);
@@ -800,8 +860,7 @@ bool TupleToolMuonIDCalib::calculatePt(int &FromM1)
     m_4pZPvtx = pZPvtx; 
   }
 
-  return true;
-  
+  return true;  
 }
 
 // extrapolation through the stations to get expected positions with 
