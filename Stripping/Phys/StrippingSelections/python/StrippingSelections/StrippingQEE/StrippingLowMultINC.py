@@ -45,10 +45,11 @@ from StrippingUtils.Utils        import LineBuilder
 default_config = {
     'NAME'        : 'LowMultINC',
     'BUILDERTYPE' : 'LowMultINCLines',
-    'STREAMS'     : ['BhadronCompleteEvent'],
+    'STREAMS'     : ['EW'],
     'WGs'         : ['QEE'],
     'CONFIG'      : {
-        'LowMultRequiredRawEvents' : ["Velo","Calo","HC"],  #Please add this!
+        #
+        'LowMultRequiredRawEvents' : ["Velo","Calo","HC","Trigger","Muon","Rich","Tracker"],  #Please add this!
         #
         'PrescaleL0DiHadron'  : 0,
         'DecisionL0DiHadron'  : None,#"L0_CHANNEL('DiHadron,lowMult')",
