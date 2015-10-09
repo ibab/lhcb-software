@@ -33,7 +33,7 @@ public:
   void Serialize();
   void Update();
 //  void setHeader(SerialHeader &hdr){m_hdr=hdr;};
-  void setRunNo(int runno){m_hdr.run_number=runno;};
+  void setRunNo(int runno){long long r = 0;r=runno;m_hdr.run_number=r;};
   void setTime(long long tim){m_hdr.ser_tim=tim;};
   void setEORflag(bool val);
   void setup(void);
