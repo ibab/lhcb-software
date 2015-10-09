@@ -157,32 +157,34 @@ StatusCode L0DURawBankMonitor::execute() {
   Sgn[1]=-1.;
 
   // Input Data monitoring
+  double caloEt =  m_conv ? m_condDB->caloEtScale() : 1.;
+  double muonPt =  m_conv ? m_condDB->muonPtScale() : 1.;
   if(m_data){
     // Calo
-    fill( histo1D(toHistoID("Data/Calo/1")),m_fromRaw->data("Electron(Et)") ,1  );
-    fill( histo1D(toHistoID("Data/Calo/2")),m_fromRaw->data("Photon(Et)")   ,1  );
-    fill( histo1D(toHistoID("Data/Calo/3")),m_fromRaw->data("LocalPi0(Et)") ,1  );
-    fill( histo1D(toHistoID("Data/Calo/4")),m_fromRaw->data("GlobalPi0(Et)"),1  );
-    fill( histo1D(toHistoID("Data/Calo/5")),m_fromRaw->data("Hadron(Et)")   ,1  );
+    fill( histo1D(toHistoID("Data/Calo/1")),m_fromRaw->data("Electron(Et)") *caloEt,1  );
+    fill( histo1D(toHistoID("Data/Calo/2")),m_fromRaw->data("Photon(Et)")   *caloEt,1  );
+    fill( histo1D(toHistoID("Data/Calo/3")),m_fromRaw->data("LocalPi0(Et)") *caloEt,1  );
+    fill( histo1D(toHistoID("Data/Calo/4")),m_fromRaw->data("GlobalPi0(Et)")*caloEt,1  );
+    fill( histo1D(toHistoID("Data/Calo/5")),m_fromRaw->data("Hadron(Et)")   *caloEt,1  );
     fill( histo1D(toHistoID("Data/Calo/6")),m_fromRaw->data("Spd(Mult)")    ,1  );
-    fill( histo1D(toHistoID("Data/SumEt/1")),m_fromRaw->data("Sum(Et)")      ,1  );
-    fill( histo1D(toHistoID("Data/SumEt/2")),m_fromRaw->data("Sum(Et,Prev2)")      ,1  );
-    fill( histo1D(toHistoID("Data/SumEt/3")),m_fromRaw->data("Sum(Et,Prev1)")      ,1  );
-    fill( histo1D(toHistoID("Data/SumEt/4")),m_fromRaw->data("Sum(Et,Next1)")      ,1  );
-    fill( histo1D(toHistoID("Data/SumEt/5")),m_fromRaw->data("Sum(Et,Next2)")      ,1  );
+    fill( histo1D(toHistoID("Data/SumEt/1")),m_fromRaw->data("Sum(Et)")            *caloEt,1  );
+    fill( histo1D(toHistoID("Data/SumEt/2")),m_fromRaw->data("Sum(Et,Prev2)")      *caloEt,1  );
+    fill( histo1D(toHistoID("Data/SumEt/3")),m_fromRaw->data("Sum(Et,Prev1)")      *caloEt,1  );
+    fill( histo1D(toHistoID("Data/SumEt/4")),m_fromRaw->data("Sum(Et,Next1)")      *caloEt,1  );
+    fill( histo1D(toHistoID("Data/SumEt/5")),m_fromRaw->data("Sum(Et,Next2)")      *caloEt,1  );
     // Pile-Up
     fill( histo1D(toHistoID("Data/Pus/1")),m_fromRaw->data("PUPeak1(Cont)") ,1);
     fill( histo1D(toHistoID("Data/Pus/2")),m_fromRaw->data("PUPeak2(Cont)") ,1);
     fill( histo1D(toHistoID("Data/Pus/3")),m_fromRaw->data("PUHits(Mult)") ,1);
     // Muon
-    fill( histo1D(toHistoID("Data/Muon/1")),m_fromRaw->data("M0(Pt)")  * Sgn[m_fromRaw->data("M0(Sgn)")] ,1);
-    fill( histo1D(toHistoID("Data/Muon/2")),m_fromRaw->data("M1(Pt)")  * Sgn[m_fromRaw->data("M1(Sgn)")] ,1);
-    fill( histo1D(toHistoID("Data/Muon/3")),m_fromRaw->data("M2(Pt)")  * Sgn[m_fromRaw->data("M2(Sgn)")] ,1);
-    fill( histo1D(toHistoID("Data/Muon/4")),m_fromRaw->data("M3(Pt)")  * Sgn[m_fromRaw->data("M3(Sgn)")] ,1);
-    fill( histo1D(toHistoID("Data/Muon/5")),m_fromRaw->data("M4(Pt)")  * Sgn[m_fromRaw->data("M4(Sgn)")] ,1);
-    fill( histo1D(toHistoID("Data/Muon/6")),m_fromRaw->data("M5(Pt)")  * Sgn[m_fromRaw->data("M5(Sgn)")] ,1);
-    fill( histo1D(toHistoID("Data/Muon/7")),m_fromRaw->data("M6(Pt)")  * Sgn[m_fromRaw->data("M6(Sgn)")] ,1);
-    fill( histo1D(toHistoID("Data/Muon/8")),m_fromRaw->data("M7(Pt)")  * Sgn[m_fromRaw->data("M7(Sgn)")] ,1);
+    fill( histo1D(toHistoID("Data/Muon/1")),m_fromRaw->data("M0(Pt)")  * Sgn[m_fromRaw->data("M0(Sgn)")] *muonPt,1);
+    fill( histo1D(toHistoID("Data/Muon/2")),m_fromRaw->data("M1(Pt)")  * Sgn[m_fromRaw->data("M1(Sgn)")] *muonPt,1);
+    fill( histo1D(toHistoID("Data/Muon/3")),m_fromRaw->data("M2(Pt)")  * Sgn[m_fromRaw->data("M2(Sgn)")] *muonPt,1);
+    fill( histo1D(toHistoID("Data/Muon/4")),m_fromRaw->data("M3(Pt)")  * Sgn[m_fromRaw->data("M3(Sgn)")] *muonPt,1);
+    fill( histo1D(toHistoID("Data/Muon/5")),m_fromRaw->data("M4(Pt)")  * Sgn[m_fromRaw->data("M4(Sgn)")] *muonPt,1);
+    fill( histo1D(toHistoID("Data/Muon/6")),m_fromRaw->data("M5(Pt)")  * Sgn[m_fromRaw->data("M5(Sgn)")] *muonPt,1);
+    fill( histo1D(toHistoID("Data/Muon/7")),m_fromRaw->data("M6(Pt)")  * Sgn[m_fromRaw->data("M6(Sgn)")] *muonPt,1);
+    fill( histo1D(toHistoID("Data/Muon/8")),m_fromRaw->data("M7(Pt)")  * Sgn[m_fromRaw->data("M7(Sgn)")] *muonPt,1);
   }
   // data address
   if( m_addr ){
@@ -210,9 +212,9 @@ StatusCode L0DURawBankMonitor::execute() {
 
   // L0DU Processed Data
   if( m_proc ){
-    fill( histo1D(toHistoID("Process/Muon/1")), m_fromRaw->data("Muon1(Pt)")* Sgn[m_fromRaw->data("Muon1(Sgn)")] ,1 );
-    fill( histo1D(toHistoID("Process/Muon/2")), m_fromRaw->data("Muon2(Pt)")* Sgn[m_fromRaw->data("Muon2(Sgn)")] ,1 );
-    fill( histo1D(toHistoID("Process/Muon/3")), m_fromRaw->data("Muon3(Pt)")* Sgn[m_fromRaw->data("Muon3(Sgn)")] ,1 );
+    fill( histo1D(toHistoID("Process/Muon/1")), m_fromRaw->data("Muon1(Pt)")* Sgn[m_fromRaw->data("Muon1(Sgn)")] *muonPt,1 );
+    fill( histo1D(toHistoID("Process/Muon/2")), m_fromRaw->data("Muon2(Pt)")* Sgn[m_fromRaw->data("Muon2(Sgn)")] *muonPt,1 );
+    fill( histo1D(toHistoID("Process/Muon/3")), m_fromRaw->data("Muon3(Pt)")* Sgn[m_fromRaw->data("Muon3(Sgn)")] *muonPt,1 );
     fill( histo1D(toHistoID("Process/Muon/4")), m_fromRaw->data("DiMuon(Pt)"),1);
     fill( histo1D(toHistoID("Process/Muon/5")), m_fromRaw->muonCleaningPattern(),1);
   }
