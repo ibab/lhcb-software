@@ -38,6 +38,8 @@ namespace FiniteStateMachine   {
   protected:
     /// ID of the DIM command to send commands to the slave
     std::pair<int,int>        m_dimState;
+    /// Service IDs for auxiliary and debug services
+    std::pair<int,int>        m_dbgState;
     /// Name of the DIM command to receive the slave's state information
     std::string               m_commandName;
     /// Name of the command to be sent as first action to shutdown slave
@@ -48,6 +50,8 @@ namespace FiniteStateMachine   {
     std::vector<std::string>  m_argv;
     /// Pointer array with environment variables (to be set by the sub-class)
     std::vector<std::string>  m_envp;
+
+    std::string               m_dbgData1, m_dbgData2;
 
   public:
     struct FSMMonitoring  {
@@ -99,6 +103,10 @@ namespace FiniteStateMachine   {
     static void infoHandler(void* tag, void* address, int* size);
     /// DimInfo overload to process messages
     static void stateHandler(void* tag, void* address, int* size);
+    /// DimInfo overload to process auxiliary debug publishings
+    static void dbgHandler1(void* tag, void** buff, int* size, int* first);
+    /// DimInfo overload to process auxiliary debug publishings
+    static void dbgHandler2(void* tag, void** buff, int* size, int* first);
   };   //  End class DimSlave
 }      //  End namespace 
 #endif //  ONLINE_CONTROLLER_DIMSLAVE_H
