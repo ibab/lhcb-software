@@ -557,7 +557,8 @@ void MonAdder::basicAdd(void *buff, int siz, MonInfo *h)
   m_RateBuff = 0;
   if (m_DebugOn)
   {
-    ::lib_rtl_output(LIB_RTL_INFO,"MonAdder received packet from %s. Expected Number %d received %d,timestamp %ill current Timestamp %ill\n",
+    ::lib_rtl_output(LIB_RTL_INFO,
+        "MonAdder received packet from %s. Expected Number %d received %d,timestamp %ld current Timestamp %ld\n",
         h->m_TargetService.c_str(),m_expected,m_received,m_reference,current);
   }
   if (m_histo != 0)
@@ -658,7 +659,7 @@ void MonAdder::basicAdd(void *buff, int siz, MonInfo *h)
   {
     if (m_DebugOn)
     {
-      ::lib_rtl_output(LIB_RTL_INFO,"MonAdder matching TimeStamps... Adding\n");
+      ::lib_rtl_output(LIB_RTL_INFO,"MonAdder %s matching TimeStamps... Adding\n",h->m_TargetService.c_str());
     }
     add(buff, siz, h);
   }
@@ -668,7 +669,7 @@ void MonAdder::basicAdd(void *buff, int siz, MonInfo *h)
     {
       ::lib_rtl_output(LIB_RTL_INFO,"late update from %s\n m_expected %lli received %lli. Using stored buffer...\n",h->m_TargetService.c_str(),m_reference,current);
     }
-    printf("late update from %s\n m_expected %lli received %lli. Using stored buffer...\n",h->m_TargetService.c_str(),m_reference,current);
+//    printf("late update from %s\n m_expected %lli received %lli. Using stored buffer...\n",h->m_TargetService.c_str(),m_reference,current);
     add(buff,siz,h);
 //    m_received++;
   }
