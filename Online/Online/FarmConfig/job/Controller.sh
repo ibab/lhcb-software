@@ -44,7 +44,7 @@ if test "${PARTITION_NAME}" = "LHCb2"; then
 	ctrl_args="-count=22 -bindcpu=0";
     fi;
 fi;
-cd /home/frankm/cmtuser/OnlineDev_v5r24;
+cd /group/online/dataflow/cmtuser/OnlineDev_v5r25;
 . setup.x86_64-slc6-gcc48-dbg.vars;
 #
 #
