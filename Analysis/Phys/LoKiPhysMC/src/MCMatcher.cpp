@@ -7,6 +7,7 @@
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/ToStream.h"
 #include "GaudiKernel/IAlgContextSvc.h"
+#include "GaudiKernel/IAlgManager.h"
 // ============================================================================
 // GaudiAlg
 // ============================================================================
@@ -66,7 +67,16 @@ namespace
   GaudiAlgorithm* _getAlg ( LoKi::ILoKiSvc* loki ) 
   {
     SmartIF<IAlgContextSvc> cntx ( loki );
-    return Gaudi::Utils::getGaudiAlg  ( cntx ) ;
+    GaudiAlgorithm* g = Gaudi::Utils::getGaudiAlg  ( cntx ) ;
+    if ( 0 != g ) { return g ; }
+    //
+    // try to create dedicated algorithm
+    SmartIF<IAlgManager> iam ( loki ) ;
+    if ( !iam ) { return nullptr ; }
+    SmartIF<IAlgorithm>& iap = iam->algorithm("GaudiAlgorithm/#MCMATCHER#", true );
+    if ( !iap ) { return nullptr ; }
+    //
+    return dynamic_cast<GaudiAlgorithm*>( iap.get() ) ;
   }
   // ==========================================================================
   /// invalid decay

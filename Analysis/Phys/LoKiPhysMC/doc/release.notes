@@ -5,6 +5,15 @@
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2015-10-09 - Vanya Belyaev
+
+ - add possibility to create mcMatch functors outside of the algorithm loop
+   e.g. in bender command line:
+
+    >>> get('/Event/Phys/StdNoPIDsPions/Particles', mcMatch('[  D*(2010)+ -> (D0 => pi- mu+ Nu) ^pi+]CC') )
+  
+   Thanks to Adam Davis for inspiring idea 
+   
 !========================= LoKiPhysMC v9r9 2015-07-24 =========================
 
 ! 2015-06-22 - Eduardo Rodrigues
