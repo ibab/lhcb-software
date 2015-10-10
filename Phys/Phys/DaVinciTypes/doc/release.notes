@@ -5,6 +5,13 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+! 2015-10-10 - Vanya Belyaev
+ - LHCb::HashID 
+   add few more methods (for Wouter)
+    - calculate hash-ID for sequence of LHCbIDs 
+    - calculate hash-ID for (sub) sequence of LHCbIDS of given type
+    - calculate hash-ID for tracks using only LHCbIDs of given type, e.g. velo 
+
 !======================== DaVinciTypes v2r13 2015-10-07 ======================
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers

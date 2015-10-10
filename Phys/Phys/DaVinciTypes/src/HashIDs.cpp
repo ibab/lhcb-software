@@ -32,7 +32,7 @@
 // ============================================================================
 // Boost 
 // ============================================================================
-#include "boost/functional/hash.hpp"
+//#include "boost/functional/hash.hpp"
 // ============================================================================
 /** @file 
  *  Implementation file for class : LHCb::HashID
@@ -333,7 +333,9 @@ namespace
     for ( ; begin != end ; ++begin ) { insert ( ids , *begin , good ) ; }
     return ids.size() - _size ;
   }
-  // ========================================================================== 
+  // ==========================================================================
+  
+  // ==========================================================================
   // calculate the actual ID 
   template <class OBJECT> 
   inline std::size_t _hash_id_ ( const OBJECT* obj ) 
@@ -343,12 +345,7 @@ namespace
     _LHCbIDs ids ;
     insert ( ids , obj ) ;
     //
-    std::size_t seed = 0 ;
-    using namespace boost ;
-    for ( _LHCbIDs::const_iterator i = ids.begin() ; ids.end() != i ; ++i ) 
-    { hash_combine ( seed , i->channelID () ) ; }
-    // 
-    return seed ;
+    return LHCb::HashIDs::hashID ( ids.begin() , ids.end() ) ;
     // ========================================================================
   }
   // ==========================================================================
@@ -489,7 +486,7 @@ std::size_t LHCb::HashIDs::hashID ( const LHCb::CaloHypo*      h )
 // hash for Track
 // ============================================================================
 std::size_t LHCb::HashIDs::hashID ( const LHCb::Track*         t ) 
-{ return _hash_id_ ( t ) ; }
+{ return 0 == t ? 0 : hashID ( t->lhcbIDs().begin() , t->lhcbIDs().begin() ) ; }
 // ============================================================================
 // hash for ProtoParticle 
 // ============================================================================
@@ -502,6 +499,27 @@ std::size_t LHCb::HashIDs::hashID ( const LHCb::Particle*      p )
 { return _hash_id_ ( p ) ; }
 // ============================================================================
 
+// ============================================================================
+// get hash-ID for the track using only LHCbIDs of certaint type 
+// ============================================================================
+std::size_t LHCb::HashIDs::hashID ( const LHCb::Track*          t    , 
+                                    LHCb::LHCbID::channelIDtype type ) 
+{
+  return 0 == t ? 0 : hashID ( t , _id_to_pmf_ ( type ) ) ;
+}
+// ============================================================================
+// get hash-ID for the track using only LHCbIDs of certaint type 
+// ============================================================================
+std::size_t hashID ( const LHCb::Track*    t    , 
+                     LHCb::HashIDs::PMF    good ) 
+{
+  return 
+    0 == t    ?  0 
+    0 == good ?  hashID ( t )  : 
+    hashID ( t->lhcbIDs().begin() , 
+             t->lhcbIDs().end  () , std::mem_fun_ref ( pmf ) ) ;           
+}
+// ============================================================================
 
 // ============================================================================
 // get IDs for Particle 
@@ -678,7 +696,7 @@ std::pair<double,double> LHCb::HashIDs::overlap
   return _overlap_ ( _ids1 , _ids2 ) ;
 }
 // ============================================================================
-// OVERLAP for sorted conatiners 
+// OVERLAP for sorted containers 
 // ============================================================================
 /* calculate the overlap for two SORTED containers
  *  param c1 INPUT the first  container 
