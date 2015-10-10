@@ -80,11 +80,8 @@ else                      : logger = getLogger ( __name__ )
 ## fire the incident with given name
 def fireIncident ( name   = "GoodEvent" ,
                    source = "Bender"    ) :
-    """
-    Fire the incident
-    
-    >>> fireIncident()
-    
+    """ Fire the incident
+    >>> fireIncident()    
     """
     from Bender.Utils import appMgr
     _g  = appMgr    ()
@@ -153,10 +150,9 @@ def writeEvent ( name = "GoodEvent" ) :
     #
     ## run-time (algorithm)
     #
-                  ...
-
-                  writeEvent()
-                  ...
+    ... 
+    ... writeEvent()
+    ...
     
     """
     from Bender.Utils import appMgr

@@ -118,6 +118,9 @@ def fill_initialize ( self ) :
     self._min_annpid_Mu   = MINTREE ( 'mu+' == ABSID     , PROBNNmu     ) 
     self._min_annpid_E    = MINTREE ( 'e+'  == ABSID     , PROBNNe      )
     self._min_annpid_P    = MINTREE ( 'p+'  == ABSID     , PROBNNp      )
+    
+    from LoKiCore.functions import switch 
+    self._has_rich        = switch  ( HASRICH , 1 , 0 ) 
     #
     self._min_Pt          = MINTREE ( ISBASIC & HASTRACK , PT  ) / GeV 
     self._min_Eta         = MINTREE ( ISBASIC & HASTRACK , ETA ) 
@@ -191,6 +194,8 @@ def fill_finalize   ( self ) :
     del self._min_annpid_E    # = None 
     del self._min_annpid_P    # = None 
 
+    del self._has_rich        # = None
+    
     del self._min_Pt          # = None 
     del self._min_Eta         # = None 
     del self._max_Eta         # = None
@@ -238,7 +243,7 @@ def treatPions ( self         ,
     ##    
     if hasattr ( p , 'particle' ) : p = p.particle() 
     #
-    ## get all pions from decay tree
+    ## get all pions from the decay tree
     #
     good  = LHCb.Particle.ConstVector()
     p.children ( self._pions , good ) 
@@ -250,18 +255,19 @@ def treatPions ( self         ,
     sc = tup.column_float ( 'minann_pi'  + suffix , self._min_annpid_Pi ( p ) ) 
     #
     tup.fArrayP (
-        'p_pion'     + suffix , P   / GeV    ,  
-        'pt_pion'    + suffix , PT  / GeV    , 
-        'eta_pion'   + suffix , ETA          , 
-        LHCb.Particle.Range ( good )         ,
-        'n_pion'     + suffix , 10           )
+        'p_pion'       + suffix , P   / GeV      ,  
+        'pt_pion'      + suffix , PT  / GeV      , 
+        'eta_pion'     + suffix , ETA            , 
+        'hasRich_pion' + suffix , self._has_rich ,  
+        LHCb.Particle.Range ( good )             ,
+        'n_pion'       + suffix , 10             )
     return tup.fArrayP (
-        'pid_pion'   + suffix , PIDpi - PIDK ,  
-        'ann_pion'   + suffix , PROBNNpi     ,  
-        'ann_pion_P' + suffix , PROBNNK      ,  
-        'ann_pion_K' + suffix , PROBNNp      ,  
-        LHCb.Particle.Range ( good )         ,
-        'n_pion'     + suffix , 10           )
+        'pid_pion'     + suffix , PIDpi - PIDK   ,  
+        'ann_pion'     + suffix , PROBNNpi       ,  
+        'ann_pion_P'   + suffix , PROBNNK        ,  
+        'ann_pion_K'   + suffix , PROBNNp        ,  
+        LHCb.Particle.Range ( good )             , 
+        'n_pion'       + suffix , 10             )
 
 # ==============================================================================
 ## add kaon information into n-tuple
@@ -279,7 +285,7 @@ def treatKaons ( self         ,
     ## 
     if hasattr ( p , 'particle' ) : p = p.particle() 
     #
-    ## get all kaons form decay tree
+    ## get all kaons from the decay tree
     #
     good  = LHCb.Particle.ConstVector()
     p.children ( self._kaons , good ) 
@@ -291,18 +297,19 @@ def treatKaons ( self         ,
     sc = tup.column_float ( 'minann_K' + suffix , self._min_annpid_K  ( p ) ) 
     #
     tup.fArrayP (
-        'p_kaon'      + suffix , P   / GeV    , 
-        'pt_kaon'     + suffix , PT  / GeV    , 
-        'eta_kaon'    + suffix , ETA          ,  
-        LHCb.Particle.Range ( good )          ,
-        'n_kaon'      + suffix , 10           )
+        'p_kaon'       + suffix , P   / GeV      , 
+        'pt_kaon'      + suffix , PT  / GeV      , 
+        'eta_kaon'     + suffix , ETA            ,  
+        'hasRich_kaon' + suffix , self._has_rich ,  
+        LHCb.Particle.Range ( good )             ,
+        'n_kaon'       + suffix , 10             )
     return tup.fArrayP (
-        'pid_kaon'    + suffix , PIDK - PIDpi ,  
-        'ann_kaon'    + suffix , PROBNNk      ,
-        'ann_kaon_PI' + suffix , PROBNNpi     ,  
-        'ann_kaon_P'  + suffix , PROBNNp      ,  
-        LHCb.Particle.Range ( good )          ,
-        'n_kaon'      + suffix , 10           )
+        'pid_kaon'     + suffix , PIDK - PIDpi   ,  
+        'ann_kaon'     + suffix , PROBNNk        ,
+        'ann_kaon_PI'  + suffix , PROBNNpi       ,  
+        'ann_kaon_P'   + suffix , PROBNNp        ,  
+        LHCb.Particle. Range ( good )            ,
+        'n_kaon'       + suffix , 10             )
 
 # ==============================================================================
 ## add proton information into n-tuple
@@ -320,7 +327,7 @@ def treatProtons ( self         ,
     ## 
     if hasattr ( p , 'particle' ) : p = p.particle() 
     #
-    ## get all protons form decay tree
+    ## get all protons from the decay tree
     #
     good   = LHCb.Particle.ConstVector()
     p.children ( self._protons , good ) 
@@ -333,19 +340,23 @@ def treatProtons ( self         ,
     sc = tup.column_float ( 'minann_P'   + suffix , self._min_annpid_P ( p ) ) 
     #
     tup.fArrayP (
-        'p_proton'      + suffix , P   / GeV    , 
-        'pt_proton'     + suffix , PT  / GeV    , 
-        'eta_proton'    + suffix , ETA          , 
-        'ann_proton'    + suffix , PROBNNp      ,
-        LHCb.Particle.Range ( good )            ,
-        'n_proton'      + suffix , 10           )
+        'p_proton'       + suffix , P   / GeV      , 
+        'pt_proton'      + suffix , PT  / GeV      , 
+        'eta_proton'     + suffix , ETA            , 
+        'ann_proton'     + suffix , PROBNNp        ,
+        LHCb.Particle.Range ( good )               ,
+        'n_proton'       + suffix , 10             )
+    tup.fArrayP (
+        'hasRich_proton' + suffix , self._has_rich ,  
+        LHCb.Particle.Range ( good )               ,
+        'n_proton'       + suffix , 10             )
     return tup.fArrayP (
-        'pid_proton_pi' + suffix , PIDp - PIDpi ,
-        'pid_proton_K'  + suffix , PIDp - PIDK  ,
-        'ann_proton_PI' + suffix , PROBNNpi     ,
-        'ann_proton_K'  + suffix , PROBNNk      ,
-        LHCb.Particle.Range ( good )            ,
-        'n_proton'      + suffix , 10           )
+        'pid_proton_pi'  + suffix , PIDp - PIDpi   ,
+        'pid_proton_K'   + suffix , PIDp - PIDK    ,
+        'ann_proton_PI'  + suffix , PROBNNpi       ,
+        'ann_proton_K'   + suffix , PROBNNk        ,
+        LHCb.Particle.Range ( good )               ,
+        'n_proton'       + suffix , 10             )
 
 # ==============================================================================
 ## add photon information into n-tuple
@@ -481,7 +492,7 @@ def treatTracks ( self         ,
     ## 
     if hasattr ( p , 'particle' ) : p = p.particle() 
     #
-    ## get all tracks from decay tree
+    ## get all tracks from the decay tree
     #
     from math import sqrt, acos 
     #
