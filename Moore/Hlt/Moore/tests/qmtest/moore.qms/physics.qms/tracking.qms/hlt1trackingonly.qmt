@@ -6,7 +6,7 @@
   </argument>
   <argument name="args"><set>
     <text>../options/Moore_Hlt1And2.py</text>
-    <text>../options/Input_Default.py</text>
+    <text>../options/Input_2015_0x0050.py</text>
     <text>../options/hlt1_trackingonly-threshold.py</text>
     <text>../options/Moore_Hlt1Only.py</text>
     <text>--option</text>
