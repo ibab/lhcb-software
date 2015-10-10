@@ -213,8 +213,8 @@ class Physics_25ns_September2015( object ):
                                          'Prescale'  : { 'Hlt1BeamGasCrossingForcedRecoFullZ': 0.001 }
                                        , 'Postscale' : { 'Hlt1BeamGasNoBeamBeam1'            : 'RATE(0.5)'
                                                        , 'Hlt1BeamGasNoBeamBeam2'            : 'RATE(0.5)'
-                                                       , 'Hlt1BeamGasBeam1'                  : 'RATE(2)'
-                                                       , 'Hlt1BeamGasBeam2'                  : 'RATE(2)'
+                                                       , 'Hlt1BeamGasBeam1'                  : 1.
+                                                       , 'Hlt1BeamGasBeam2'                  : 1.
                                                        , 'Hlt1BeamGasCrossingEnhancedBeam1'  : 'RATE(0)'
                                                        , 'Hlt1BeamGasCrossingEnhancedBeam2'  : 'RATE(0)'
                                                        , 'Hlt1BeamGasCrossingForcedReco'     : 'RATE(0.5)'

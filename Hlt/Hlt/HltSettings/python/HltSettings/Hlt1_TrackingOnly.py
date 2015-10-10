@@ -1,3 +1,5 @@
+from GaudiKernel.SystemOfUnits import GeV, MeV, mm
+
 def __update_conf__( current, extra ) :
     for (conf,d) in extra.iteritems() :
         if conf not in current : 
@@ -41,7 +43,7 @@ class Hlt1_TrackingOnly( object ):
             raise RuntimeError( 'Must update HltType when modifying ActiveHlt.Lines()' )
         
     def L0TCK(self) :
-        return '0x0046'
+        return '0x0050'
 
     def HltType(self) :
         self.verifyType( Hlt1_TrackingOnly ) 
@@ -52,43 +54,50 @@ class Hlt1_TrackingOnly( object ):
         Returns a dictionary of cuts
         """
 
-        from Hlt1Lines.Hlt1TrackLines          import Hlt1TrackLinesConf
+        from Hlt1Lines.Hlt1MVALines            import Hlt1MVALinesConf
 
-        thresholds = { Hlt1TrackLinesConf :    { 'DoTiming'              : True
-                                               , 'AllL0_PT'         :  1300
-                                               , 'AllL0_P'          :  3000
-                                               , 'AllL0_IPChi2'     :  13.
-                                               , 'AllL0_TrChi2'     :  2.
-                                               , 'AllL0_GEC'        : 'Loose'
-                                               , 'AllL0_Velo_NHits' : 9 
-                                               , 'AllL0_Velo_Qcut'  : 3  
-                                               , 'AllL0_TrNTHits'   : 16
-                                               , 'Muon_TrNTHits'    : 0 #OFF
-                                               , 'Muon_Velo_NHits'  : 0 #OFF
-                                               , 'Muon_Velo_Qcut'   : 999 #OFF
-                                               , 'Muon_PT'          : 800.
-                                               , 'Muon_P'           : 6000.
-                                               , 'Muon_IPChi2'      : 6.
-                                               , 'Muon_TrChi2'      : 2.
-                                               , 'Muon_GEC'         : 'Loose'
-                                               , 'Photon_PT'     :  1200
-                                               , 'Photon_P'      :  3000
-                                               , 'Photon_IPChi2' :    13.
-                                               , 'Photon_TrChi2' :     2.
-                                               , 'Photon_GEC'        : 'Loose'
-                                               , 'L0Channels'        : {'AllL0'  : 'L0_DECISION_PHYSICS',
-                                                                        'Muon'   : ('Muon', 'DiMuon'),
-                                                                        'Photon' : ("Photon", "Electron")}
-                                               , 'Prescale'          : {'Hlt1TrackAllL0'                   : 1.0}
-                                                }
-                        }
+        thresholds = { Hlt1MVALinesConf :     {'DoTiming'                     : False,
+                                               'TrackMVA' :    {'TrChi2'      :     2.5,
+                                                                'MinPT'       :  1000.  * MeV,
+                                                                'MaxPT'       : 25000.  * MeV,
+                                                                'MinIPChi2'   :     7.4,
+                                                                'Param1'      :     1.0,
+                                                                'Param2'      :     1.0,
+                                                                'Param3'      :     1.1,
+                                                                'GEC'         : 'Loose'},
+                                               'TwoTrackMVA' : {'P'           :  5000. * MeV,
+                                                                'PT'          :   500. * MeV,
+                                                                'TrChi2'      :     2.5,
+                                                                'IPChi2'      :     4.,
+                                                                'MinMCOR'     :  1000. * MeV,
+                                                                'MaxMCOR'     :   1e9  * MeV,
+                                                                'MinETA'      :     2.,
+                                                                'MaxETA'      :     5.,
+                                                                'MinDirA'     :     0.,
+                                                                'V0PT'        :  2000. * MeV,
+                                                                'VxChi2'      :    10.,
+                                                                'Threshold'   :     0.95,
+                                                                'MvaVars'     : {'chi2'   : 'VFASPF(VCHI2)',
+                                                                                 'fdchi2' : 'BPVVDCHI2',
+                                                                                 'sumpt'  : 'SUMTREE(PT, ISBASIC, 0.0)',
+                                                                                 'nlt16'  : 'NINTREE(ISBASIC & (BPVIPCHI2() < 16))'},
+                                                                'Classifier'  : {'Type'   : 'MatrixNet',
+                                                                                 'File'   : '$PARAMFILESROOT/data/Hlt1TwoTrackMVA.mx'},
+                                                                'GEC'         : 'Loose'},
+                                               'L0Channels'  : {'TrackMVA'    : 'L0_DECISION_PHYSICS',
+                                                                'TwoTrackMVA' : 'L0_DECISION_PHYSICS'},
+                                               'Priorities'  : {'TrackMVA'    : 20,
+                                                                'TwoTrackMVA' : 21}
+                                              }
+                     }
+
         return thresholds
                        
     def ActiveHlt1Lines(self) :
         """
         Returns a list of active lines
         """
-        lines = ['Hlt1TrackAllL0',]
+        lines = ['Hlt1TrackMVA']
        
         return lines 
 

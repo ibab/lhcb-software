@@ -4,12 +4,16 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-10-10 - Roel Aaij
+ - Set postscales of Hlt1Beam{1,2}Gas to 1 instead of a rate scaler.
+ - Update Hlt1_TrackingOnly to use Hlt1TrackMVA.
+
 !========================= HltSettings v7r4 2015-10-07 =========================
 
 ! 2015-10-08 - Roel Aaij
  - Configure Hlt1 MB lines' ODIN requirements from settings.
  - Remove TOS links in TrackEffDiMuon and PID for protonArgon.
- 
+
 ! 2015-10-08 - Roel Aaij
  - Remove TurboCalib versions of TrackEff and PID lines from protonArgon
    settings.
