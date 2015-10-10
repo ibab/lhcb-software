@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-10-11 - Mika Vesterinen
+ - Added Physics_25ns_October2015 and prescales set to 0.1 for SingleMuon and SingleMuonNoSPD
+
 ! 2015-10-10 - Roel Aaij
  - Set postscales of Hlt1Beam{1,2}Gas to 1 instead of a rate scaler.
  - Update Hlt1_TrackingOnly to use Hlt1TrackMVA.
