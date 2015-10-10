@@ -1,4 +1,4 @@
-// $Id: TreeCloners.h,v 1.1 2010-06-09 17:49:13 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef KERNEL_PARTICLECLONERS_H 
 #define KERNEL_PARTICLECLONERS_H 1

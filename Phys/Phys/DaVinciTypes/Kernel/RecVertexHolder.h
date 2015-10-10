@@ -1,4 +1,4 @@
-// $Id: $
+// $Id$
 // ============================================================================
 #ifndef DAVINCIKERNEL_RECVERTEXHOLDER_H 
 #define DAVINCIKERNEL_RECVERTEXHOLDER_H 1

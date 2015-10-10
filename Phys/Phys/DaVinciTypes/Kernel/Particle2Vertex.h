@@ -1,4 +1,4 @@
-// $Id: Particle2Vertex.h,v 1.3 2009-11-03 08:39:15 jpalac Exp $
+// $Id$
 #ifndef KERNEL_PARTICLE2VERTEX_H 
 #define KERNEL_PARTICLE2VERTEX_H 1
 

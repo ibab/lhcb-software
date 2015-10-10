@@ -1,4 +1,4 @@
-// $Id: DecayTree.h,v 1.3 2010-06-09 17:49:13 ibelyaev Exp $ 
+// $Id$ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DECAYTREE_H
 #define DAVINCIKERNEL_DECAYTREE_H
