@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2015-10-10 - Roel Aaij
+ - Update hlt1trackingonly test to use 2015 data.
+
 !========================= Moore v24r2 2015-10-08 =========================
 
 ! 2015-09-23 - Roel Aaij
