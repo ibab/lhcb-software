@@ -510,14 +510,14 @@ std::size_t LHCb::HashIDs::hashID ( const LHCb::Track*          t    ,
 // ============================================================================
 // get hash-ID for the track using only LHCbIDs of certaint type 
 // ============================================================================
-std::size_t hashID ( const LHCb::Track*    t    , 
-                     LHCb::HashIDs::PMF    good ) 
+std::size_t LHCb::HashIDs::hashID ( const LHCb::Track*    t    , 
+                                    LHCb::HashIDs::PMF    good ) 
 {
   return 
-    0 == t    ?  0 
+    0 == t    ?  0             :
     0 == good ?  hashID ( t )  : 
     hashID ( t->lhcbIDs().begin() , 
-             t->lhcbIDs().end  () , std::mem_fun_ref ( pmf ) ) ;           
+             t->lhcbIDs().end  () , std::mem_fun_ref ( good ) ) ;           
 }
 // ============================================================================
 
