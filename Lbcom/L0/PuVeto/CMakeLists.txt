@@ -1,7 +1,7 @@
 ################################################################################
 # Package: PuVeto
 ################################################################################
-gaudi_subdir(PuVeto v7r10)
+gaudi_subdir(PuVeto v7r10p1)
 
 gaudi_depends_on_subdirs(Det/VeloDet
                          Event/DAQEvent
