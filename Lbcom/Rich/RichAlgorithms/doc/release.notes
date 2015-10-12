@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= RichAlgorithms v1r9 2015-10-12 =========================
 ! 2015-08-22 - Chris Jones
  - Make RawEvent location a configurable property in RichLoadRawEvent.
 
