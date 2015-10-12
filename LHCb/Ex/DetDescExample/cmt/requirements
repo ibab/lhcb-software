@@ -1,5 +1,5 @@
 package DetDescExample
-version           v7r8
+version           v7r8p1
 
 branches doc src options cmt
 

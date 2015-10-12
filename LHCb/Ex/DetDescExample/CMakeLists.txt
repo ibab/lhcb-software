@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DetDescExample
 ################################################################################
-gaudi_subdir(DetDescExample v7r8)
+gaudi_subdir(DetDescExample v7r8p1)
 
 gaudi_depends_on_subdirs(Det/CaloDet
                          Det/CaloDetXmlCnv
