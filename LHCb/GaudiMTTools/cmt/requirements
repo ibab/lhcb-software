@@ -3,7 +3,7 @@
 # Maintainer : Illya Shapoval
 # ========================================================================
 package           GaudiMTTools
-version           v1r2p1
+version           v1r2p2
 
 # ========================================================================
 # Structure, i.e. directories to process.

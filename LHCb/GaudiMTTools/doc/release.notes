@@ -3,6 +3,8 @@
 ! Responsible : Illya SHAPOVAL
 ! Purpose     : The package for Gaudi multithreading tools and machinery
 !-----------------------------------------------------------------------------
+
+!========================= GaudiMTTools v1r2p2 2015-10-12 =========================
 ! 2015-08-03 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
