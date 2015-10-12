@@ -1,7 +1,7 @@
 ################################################################################
 # Package: L0Base
 ################################################################################
-gaudi_subdir(L0Base v2r4)
+gaudi_subdir(L0Base v2r4p1)
 
 gaudi_depends_on_subdirs(Event/DAQEvent
                          DAQ/DAQKernel
