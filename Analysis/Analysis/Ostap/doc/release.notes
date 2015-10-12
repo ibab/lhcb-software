@@ -8,6 +8,10 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-10-12 - Vanya Belyaev
+ - fix minor bug in TH3 treatment 
+    improve a bit CPU performance 
+
 ! 2015-10-08 - Vanya Belyaev
  - more efficient projections 
 

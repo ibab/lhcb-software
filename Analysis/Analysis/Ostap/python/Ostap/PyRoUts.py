@@ -830,17 +830,18 @@ def _h1_call_ ( h1 , x , func = lambda s : s , interpolate = True ) :
     >>> be    = histo ( x , interpolate = 2     ) ## parabolic interpolation  
     """
     #
-    if hasattr ( x , 'value' )  : x = x.value() ## return _h1_call_ ( h1 ,  x.value() )
+    x = float ( x )
     #
     ax = h1.GetXaxis (   )
     ix = ax.FindBin  ( x )
     mx = ax.GetXmax  (   )
     mn = ax.GetXmin  (   )
     nb = ax.GetNbins (   )
-
-    if  0      == ix and isequal ( x , mn ) : ix += 1  ## fresh trick
-    if  nb + 1 == ix and isequal ( x , mx ) : ix -= 1  ## fresh trick 
-    elif not 1 <= ix <= nb               : return VE(0,0)
+    #
+    if 0      == ix and isequal ( x , mn ) : ix += 1  ## fresh trick
+    if nb + 1 == ix and isequal ( x , mx ) : ix -= 1  ## fresh trick
+    #
+    if not 1 <= ix <= nb               : return VE(0,0)
     #
     val = h1.GetBinContent ( ix ) 
     err = h1.GetBinError   ( ix )
@@ -1116,16 +1117,30 @@ def _h2_call_ ( h2 , x , y , func = lambda s : s , interpolate = True ) :
     >>> ve    = histo ( x , y ) 
     """    
     #
-    if hasattr ( x , 'value' )  : return _h2_call_ ( h2 ,  x.value() , y          )
-    if hasattr ( y , 'value' )  : return _h2_call_ ( h2 ,  x         , y.value () )
+    x = float ( x )
+    y = float ( y )
     #
-    ax = h2.GetXaxis (   )
-    ix = ax.FindBin  ( x )
-    if not  1 <= ix <= ax.GetNbins() : return VE ( 0, 0 )
+    ax  = h2.GetXaxis (   )
+    ix  = ax.FindBin  ( x )
+    
+    mxx = ax.GetXmax  (   )
+    mnx = ax.GetXmin  (   )
+    nbx = ax.GetNbins (   )
+
+    if 0       == ix and isequal ( x , mnx ) : ix += 1  ## fresh trick
+    if nbx + 1 == ix and isequal ( x , mxx ) : ix -= 1  ## fresh trick
+    if not   1 <= ix <= nbx : return VE ( 0, 0 )
     #
-    ay = h2.GetYaxis (   )
-    iy = ay.FindBin  ( y )
-    if not  1 <= iy <= ay.GetNbins() : return VE ( 0, 0 )
+    ay  = h2.GetYaxis (   )
+    iy  = ay.FindBin  ( y )
+    
+    mxy = ay.GetXmax  (   )
+    mny = ay.GetXmin  (   )
+    nby = ay.GetNbins (   )
+
+    if 0       == ix and isequal ( y , mny ) : iy += 1  ## fresh trick
+    if nby + 1 == ix and isequal ( y , mxy ) : iy -= 1  ## fresh trick
+    if not   1 <= iy <= nby : return VE ( 0, 0 )
     ##
     val = h2.GetBinContent ( ix , iy ) 
     err = h2.GetBinError   ( ix , iy )
@@ -1195,24 +1210,39 @@ def _h3_call_ ( h3 , x , y , z , func = lambda s : s , interpolate = True ) :
     >>> ve    = histo ( x , y , z ) 
     """    
     #
-    if hasattr ( x , 'value' )  : return _h3_call_ ( h3 ,  x.value() , y          , z          )
-    if hasattr ( y , 'value' )  : return _h3_call_ ( h3 ,  x         , y.value () , z          )
-    if hasattr ( z , 'value' )  : return _h3_call_ ( h3 ,  x         , y          , z.value () )
+    x = float ( x )
+    y = float ( y )
+    z = float ( z )
     #
     ax  = h3.GetXaxis (   )
     ix  = ax.FindBin  ( x )
     nbx = ax.GetNbins (   )  
-    if not  1 <= ix <= nbx : return VE ( 0, 0 )
+    mxx = ax.GetXmax  (   )
+    mnx = ax.GetXmin  (   )
+    
+    if 0       == ix and isequal ( x , mnx ) : ix += 1  ## fresh trick
+    if nbx + 1 == ix and isequal ( x , mxx ) : ix -= 1  ## fresh trick
+    if not   1 <= ix <= nbx : return VE ( 0, 0 )
     #
     ay  = h3.GetYaxis (   )
     iy  = ay.FindBin  ( y )
     nby = ay.GetNbins (   )  
-    if not  1 <= iy <= nby : return VE ( 0, 0 )
+    mxy = ay.GetXmax  (   )
+    mny = ay.GetXmin  (   )
+
+    if 0       == iy and isequal ( y , mny ) : iy += 1  ## fresh trick
+    if nby + 1 == iy and isequal ( y , mxy ) : iy -= 1  ## fresh trick
+    if not   1 <= iy <= nby : return VE ( 0, 0 )
     ##
     az  = h3.GetZaxis (   )
     iz  = az.FindBin  ( z )
     nbz = az.GetNbins (   )  
-    if not  1 <= iz <= nbz : return VE ( 0, 0 )
+    mxz = az.GetXmax  (   )
+    mnz = az.GetXmin  (   )
+    
+    if 0       == iz and isequal ( z , mnz ) : iz += 1  ## fresh trick
+    if nby + 1 == iz and isequal ( z , mxz ) : iz -= 1  ## fresh trick
+    if not   1 <= iz <= nbz : return VE ( 0, 0 )
     ##
     if not interpolate :
         #
@@ -2085,7 +2115,9 @@ class FUNC_F2(FUNCX) :
                                                                      ymin , ymax )
 class FUNC_F3(FUNCX) :
     def __init__ ( self , func        ) : self.func = func 
-    def __call__ ( self , x , y ,  z  ) : return self.func ( float ( x ) , float ( y ) ) 
+    def __call__ ( self , x , y ,  z  ) : return self.func ( float ( x ) ,
+                                                             float ( y ) ,
+                                                             float ( z ) ) 
     def integral ( self ,
                    xmin , xmax        ,
                    ymin , ymax        , 
