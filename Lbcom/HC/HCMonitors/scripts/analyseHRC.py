@@ -54,7 +54,7 @@ parser.add_option( "--PedestalOffset", type="int",
 
 parser.add_option( "--BrunelScriptName", type="string",
                   help="Name of the Brunel script", 
-                  dest="BrunelScriptName",default =  'brunelHRC.py')
+                  dest="BrunelScriptName",default =  'rungaudi.py')
 
 parser.add_option( "--Directory", type="string",
                   help="Reference directory for analysed runs", 
@@ -141,15 +141,6 @@ def fitHist(plot, name = 'gg', centered = False ):
     plot.Fit( gau,'QNR') 
     return gau.GetParameter(1),gau.GetParameter(2),gau
 
-
-import random
-
-def randomize(adc):
-    if adc<128.5:return adc
-    elif adc<255.5:return adc+int(random.uniform(0,2))
-    elif adc<511.5:return adc+int(random.uniform(0,8))
-    else: return adc+int(random.uniform(0,16))
-    
 if options.analysisType == 'CommonMode':
     commonmode = ET.Element("COMMONMODE_RUN"+options.runNumber)
     xmlSide = {}
@@ -214,8 +205,6 @@ if options.analysisType == 'CommonMode':
     tree.write(options.Directory+'/'+options.runNumber+'/'+options.analysisType+'_'+options.runNumber+".xml")
 
 elif options.analysisType == 'Pedestals':
-
-
     stations = ['B0','B1','B2','F1','F2']
     for s in stations:
         Results[s]={'VFEclock':-1,'ADCclock':-1,'OddPedestals':{},'EvenPedestals':{},'OddPedestalsFit':{},'EvenPedestalsFit':{},'OddPedestalsRMS':{},'EvenPedestalsRMS':{},
@@ -234,18 +223,20 @@ elif options.analysisType == 'Pedestals':
     for s in stations:
         Canvas[s+'Pedestals']=TCanvas(s+'Pedestals',s+'Pedestals',1200,1000)
         Canvas[s+'Pedestals'].Divide(2,2)
-        Canvas[s+'PedestalsCor']=TCanvas(s+'PedestalsCor',s+'PedestalsCor',1200,1000)
-        Canvas[s+'PedestalsCor'].Divide(2,2)
+        if int(options.refRunNumber) > 0:
+          Canvas[s+'PedestalsCor']=TCanvas(s+'PedestalsCor',s+'PedestalsCor',1200,1000)
+          Canvas[s+'PedestalsCor'].Divide(2,2)
         for ii,q in enumerate(quadrants):
             opt = ''
             ymax = 0.
             ymaxCor = 0.
             for sl in slots:
               Plots[s+q+sl+'_pedestals']=f.Get('HCDigitMonitor/ADC/'+s+'/'+sl+'/Quadrant'+q)
-              Plots[s+q+sl+'_pedestals_Cor']=f.Get('HCDigitMonitor/ADCCor/'+s+'/'+sl+'/Quadrant'+q)
               if Plots[s + q + sl + "_pedestals"].GetMaximum() > ymax:
-                  ymax = Plots[s + q + sl + "_pedestals"].GetMaximum()
-              if Plots[s + q + sl + "_pedestals_Cor"].GetMaximum() > ymaxCor:
+                ymax = Plots[s + q + sl + "_pedestals"].GetMaximum()
+              if int(options.refRunNumber) > 0:
+                Plots[s+q+sl+'_pedestals_Cor']=f.Get('HCCorrectedDigitMonitor/ADC/'+s+'/'+sl+'/Quadrant'+q)
+                if Plots[s + q + sl + "_pedestals_Cor"].GetMaximum() > ymaxCor:
                   ymaxCor = Plots[s + q + sl + "_pedestals_Cor"].GetMaximum()
             for sl in slots:
                 Plots[s+q+sl+'_pedestals'].GetXaxis().SetTitle(s+q+' ADC')
@@ -254,41 +245,41 @@ elif options.analysisType == 'Pedestals':
                 #Plots[s+q+sl+'_pedestals'].GetXaxis().SetRangeUser(0,200)
                 Plots[s + q + sl + "_pedestals"].GetYaxis().SetRangeUser(0., ymax)
                 mean,rms,Results[s][sl+'PedestalsFit'][q] = fitHist(Plots[s+q+sl+'_pedestals'],s+q+sl+'_pedestalsFit')
-                Plots[s+q+sl+'_pedestals_Cor'].GetXaxis().SetTitle(s+q+' ADC')
-                Plots[s+q+sl+'_pedestals_Cor'].SetLineColor(slotColor[sl])
-                Plots[s+q+sl+'_pedestals_Cor'].SetMarkerColor(slotColor[sl])
-                Plots[s + q + sl + "_pedestals_Cor"].GetYaxis().SetRangeUser(0., ymaxCor)
-                meanCor,rmsCor,Results[s][sl+'PedestalsFitCor'][q] = fitHist(Plots[s+q+sl+'_pedestals_Cor'],s+q+sl+'_pedestalsFitCor',True)
                 Results[s][sl+'Pedestals'][q] = int(mean)
                 Results[s][sl+'PedestalsRMS'][q] = round(rms,1)
-                
                 xmlSide[s+q+sl] = ET.SubElement(commonmode,s+q+sl )
-                xmlSide[s+q+sl+'Cor'] = ET.SubElement(commonmode,s+q+sl+'Cor' )
                 ET.SubElement(xmlSide[s+q+sl], "mean", name="Pedestal Mean Value").text = str(round(mean,2))
                 ET.SubElement(xmlSide[s+q+sl], "rms", name="Pedestal RMS Value").text = str(round(rms,2))
-                ET.SubElement(xmlSide[s+q+sl], "mean_Cor", name="Corrected Pedestal Mean Value").text = str(round(meanCor,2))
-                ET.SubElement(xmlSide[s+q+sl], "rms_Cor", name="Corrected Pedestal RMS Value").text = str(round(rmsCor,2))
+                if int(options.refRunNumber) > 0:
+                  Plots[s+q+sl+'_pedestals_Cor'].GetXaxis().SetTitle(s+q+' ADC')
+                  Plots[s+q+sl+'_pedestals_Cor'].SetLineColor(slotColor[sl])
+                  Plots[s+q+sl+'_pedestals_Cor'].SetMarkerColor(slotColor[sl])
+                  Plots[s + q + sl + "_pedestals_Cor"].GetYaxis().SetRangeUser(0., ymaxCor)
+                  meanCor,rmsCor,Results[s][sl+'PedestalsFitCor'][q] = fitHist(Plots[s+q+sl+'_pedestals_Cor'],s+q+sl+'_pedestalsFitCor',True)
+                  xmlSide[s+q+sl+'Cor'] = ET.SubElement(commonmode,s+q+sl+'Cor' )
+                  ET.SubElement(xmlSide[s+q+sl], "mean_Cor", name="Corrected Pedestal Mean Value").text = str(round(meanCor,2))
+                  ET.SubElement(xmlSide[s+q+sl], "rms_Cor", name="Corrected Pedestal RMS Value").text = str(round(rmsCor,2))
 
                 Canvas[s+'Pedestals'].cd(ii+1)
                 Results[s][sl+'PedestalsFit'][q].SetLineColor(slotColor[sl])
                 Plots[s+q+sl+'_pedestals'].Draw(opt)
                 opt = 'same'
                 Results[s][sl+'PedestalsFit'][q].Draw(opt)
-                Canvas[s+'PedestalsCor'].cd(ii+1)
-                Results[s][sl+'PedestalsFitCor'][q].SetLineColor(slotColor[sl])
-                Plots[s+q+sl+'_pedestals_Cor'].Draw(opt)
-                opt = 'same'
-                Results[s][sl+'PedestalsFitCor'][q].Draw(opt)
+                if int(options.refRunNumber) > 0:
+                  Canvas[s+'PedestalsCor'].cd(ii+1)
+                  Results[s][sl+'PedestalsFitCor'][q].SetLineColor(slotColor[sl])
+                  Plots[s+q+sl+'_pedestals_Cor'].Draw(opt)
+                  opt = 'same'
+                  Results[s][sl+'PedestalsFitCor'][q].Draw(opt)
                 #Canvas[s+'Pedestals'].GetPad(ii+1).SetLogy()
                 
         Canvas[s+'Pedestals'].SaveAs(options.Directory+'/'+options.runNumber+'/Plots/'+options.analysisType+'_'+options.runNumber+'_'+s+'_Pedestals.pdf')
-        Canvas[s+'PedestalsCor'].SaveAs(options.Directory+'/'+options.runNumber+'/Plots/'+options.analysisType+'_'+options.runNumber+'_'+s+'_PedestalsCor.pdf')
+
+        if int(options.refRunNumber) > 0:
+          Canvas[s+'PedestalsCor'].SaveAs(options.Directory+'/'+options.runNumber+'/Plots/'+options.analysisType+'_'+options.runNumber+'_'+s+'_PedestalsCor.pdf')
     
     tree =  ET.ElementTree(commonmode)
     tree.write(options.Directory+'/'+options.runNumber+'/'+options.analysisType+'_'+options.runNumber+".xml")
-
-
-
 
 elif options.analysisType == 'PMTIntensity':
     Channel,Pedestal,sigma,mean,gau = {},{},{},{},{}
@@ -360,7 +351,7 @@ if options.analysisType == 'DelayScan':
     Canvas = {}
     maxStation = {}
     path = 'ADC'
-    if int(options.refRunNumber) >0.:
+    if int(options.refRunNumber) > 0:
         path = 'ADCCor'
     for s in stations:
         maxStation[s]=[-10.,-1]

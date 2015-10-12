@@ -11,7 +11,12 @@ DECLARE_ALGORITHM_FACTORY(HCDigitTuple)
 // Standard constructor, initializes variables
 //=============================================================================
 HCDigitTuple::HCDigitTuple(const std::string& name, ISvcLocator* pSvcLocator)
-    : HCMonitorBase(name, pSvcLocator), m_tag(0) {}
+    : HCMonitorBase(name, pSvcLocator), m_tag(0) {
+
+  declareProperty("DigitLocation", 
+                  m_digitLocation = LHCb::HCDigitLocation::Default);
+
+}
 
 //=============================================================================
 // Destructor
@@ -32,41 +37,22 @@ StatusCode HCDigitTuple::initialize() {
   std::string tae = "";
   if (std::string::npos != posPrev) {
     tae = tmp.substr(posPrev, 5);
+    if (!isdigit(tae.back())) {
+      warning() << "Invalid TAE slot (" << tae << ")" << endmsg;
+      tae = "";
+    } else {
+      m_tag = -1 * int(tae.back());
+    }
   } else if (std::string::npos != posNext) {
     tae = tmp.substr(posNext, 5);
+    if (!isdigit(tae.back())) {
+      warning() << "Invalid TAE slot (" << tae << ")" << endmsg;
+      tae = "";
+    } else {
+      m_tag = int(tae.back());
+    }
   }
-  if (tae == "")
-    m_tag = 0;
-  else if (tae == "Prev1")
-    m_tag = -1;
-  else if (tae == "Next1")
-    m_tag = 1;
-  else if (tae == "Prev2")
-    m_tag = -2;
-  else if (tae == "Next2")
-    m_tag = 2;
-  else if (tae == "Prev3")
-    m_tag = -3;
-  else if (tae == "Next3")
-    m_tag = 3;
-  else if (tae == "Prev4")
-    m_tag = -4;
-  else if (tae == "Next4")
-    m_tag = 4;
-  else if (tae == "Prev5")
-    m_tag = -5;
-  else if (tae == "Next5")
-    m_tag = 5;
-  else if (tae == "Prev6")
-    m_tag = -6;
-  else if (tae == "Next6")
-    m_tag = 6;
-  else if (tae == "Prev7")
-    m_tag = -7;
-  else if (tae == "Next7")
-    m_tag = 7;
 
-  m_digitLocation = LHCb::HCDigitLocation::Default;
   if (tae != "") {
     m_digitLocation = tae + "/" + m_digitLocation;
   }
@@ -108,7 +94,7 @@ StatusCode HCDigitTuple::execute() {
     }
   }
 
-  Tuple tuple = nTuple("HCDigitNtuple", "Herschel digits");
+  Tuple tuple = nTuple(name(), "Herschel digits");
   tuple->column("run", runodin);
   tuple->column("eventID", eventodin);
   tuple->column("orbitID", orbitodin);
@@ -119,19 +105,30 @@ StatusCode HCDigitTuple::execute() {
   tuple->array("adc_B", adcB.begin(), adcB.end());
   tuple->array("adc_F", adcF.begin(), adcF.end());
 
-  for (std::map<std::string, unsigned int>::iterator it =
-           m_channelsFromName.begin();
-       it != m_channelsFromName.end(); ++it) {
-    unsigned int adc = digits->object(it->second)->adc();
-    std::string chName = it->first;
-    unsigned int adc_ref = digits->object(m_refChannelsFromName[chName])->adc();
-    // unsigned int channel = digits->object(it->second)->cellID().channel();
-    tuple->column(chName, adc);
-    tuple->column(chName + "_reference", adc_ref);
-    if (!m_thetaConfig.empty()) {
-      tuple->column(chName + "_Cor",
-                    correctChannel(chName, adc, adc_ref, bunchid % 2));
-    }
+  const std::vector<std::string> stations = {"B0", "B1", "B2", "F1", "F2"};
+  const unsigned int nStations = 5;
+  for (unsigned int i = 0; i < nStations; ++i) {
+    for (unsigned int j = 0; j < 4; ++j) {
+      // Skip masked channels.
+      if (m_masked[i][j]) continue;
+      const std::string ch = stations[i] + std::to_string(j);
+      LHCb::HCCellID id(m_channels[i][j]);
+      const LHCb::HCDigit* digit = digits->object(id);
+      if (!digit) {
+        warning() << "Cannot retrieve digit for " << ch << endmsg;
+        continue;
+      }
+      unsigned int adc = digit->adc();
+      LHCb::HCCellID refid(m_references[i][j]);
+      const LHCb::HCDigit* refdigit = digits->object(refid);
+      if (!refdigit) {
+        warning() << "Cannot retrieve reference digit for " << ch << endmsg;
+        continue;
+      }
+      unsigned int refadc = refdigit->adc();
+      tuple->column(ch, adc);
+      tuple->column(ch + "_reference", refadc);
+     }
   }
   tuple->write();
   return StatusCode::SUCCESS;

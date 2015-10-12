@@ -4,7 +4,6 @@
 
 // Gaudi
 #include "GaudiAlg/GaudiTupleAlg.h"
-#include "GaudiKernel/IEventTimeDecoder.h"
 #include "GaudiKernel/RndmGenerators.h"
 
 /** @class HCMonitorBase HCMonitorBase.h
@@ -23,9 +22,6 @@ class HCMonitorBase : public GaudiTupleAlg {
   virtual StatusCode initialize();  ///< Algorithm initialization
 
  protected:
-  /// ODIN
-  IEventTimeDecoder* m_odin;
-
   /// Number of B-side crate
   unsigned int m_crateB;
   /// Number of F-side crate
@@ -35,11 +31,11 @@ class HCMonitorBase : public GaudiTupleAlg {
   std::vector<double> m_edges;
 
   /// Channel mappings
-  std::vector<unsigned int> m_masksB0;
-  std::vector<unsigned int> m_masksB1;
-  std::vector<unsigned int> m_masksB2;
-  std::vector<unsigned int> m_masksF1;
-  std::vector<unsigned int> m_masksF2;
+  std::vector<bool> m_maskedB0;
+  std::vector<bool> m_maskedB1;
+  std::vector<bool> m_maskedB2;
+  std::vector<bool> m_maskedF1;
+  std::vector<bool> m_maskedF2;
 
   std::vector<unsigned int> m_channelsB0;
   std::vector<unsigned int> m_channelsB1;
@@ -47,29 +43,18 @@ class HCMonitorBase : public GaudiTupleAlg {
   std::vector<unsigned int> m_channelsF1;
   std::vector<unsigned int> m_channelsF2;
 
-  std::vector<unsigned int> m_spareChannelsB0;
-  std::vector<unsigned int> m_spareChannelsB1;
-  std::vector<unsigned int> m_spareChannelsB2;
-  std::vector<unsigned int> m_spareChannelsF1;
-  std::vector<unsigned int> m_spareChannelsF2;
+  std::vector<unsigned int> m_sparesB0;
+  std::vector<unsigned int> m_sparesB1;
+  std::vector<unsigned int> m_sparesB2;
+  std::vector<unsigned int> m_sparesF1;
+  std::vector<unsigned int> m_sparesF2;
 
-  /// Calibration Constants Map
-  std::map<std::string, std::vector<float> > m_thetas;
-  std::map<std::string, std::vector<float> > m_x0;
-  std::map<std::string, std::vector<float> > m_y0;
-
-  std::vector<float> m_thetaConfig;
-  std::vector<float> m_x0Config;
-  std::vector<float> m_y0Config;
-  std::vector<std::string> m_channelsCalibConfig;
-
-  /// Channel from string
-  std::map<std::string, unsigned int> m_channelsFromName;
-  std::map<std::string, unsigned int> m_masksFromName;
-  std::map<std::string, unsigned int> m_refChannelsFromName;
-
-  /// List of stations
-  std::vector<std::string> m_stations;
+  /// Channel numbers for each quadrant
+  std::vector<std::vector<unsigned int> > m_channels;
+  /// Masked flags for each quadrant
+  std::vector<std::vector<bool> > m_masked;
+  /// Reference channel numbers for each quadrant
+  std::vector<std::vector<unsigned int> > m_references;
 
   /// Random number generator
   Rndm::Numbers m_uniform;
@@ -87,11 +72,15 @@ class HCMonitorBase : public GaudiTupleAlg {
   /// Highest BX ID to be included in the plots.
   unsigned int m_bxMax;
 
+  /// Setup the mapping for a given station.
+  bool mapChannels(const std::vector<unsigned int>& channels,
+                   const std::vector<unsigned int>& refs,
+                   const std::vector<bool>& masked,
+                   const unsigned int station, const bool bwd);
+  /// Print the channel mapping for information.
+  void printMapping() const;
   /// Randomise a given ADC value or add a correction term.
-  double fadc(const unsigned int adc);
+  double fadc(const int adc);
   /// Scale histograms (in case of variable binning).
   void scale(AIDA::IHistogram1D* h);
-  /// Establish the station and quadrant numbers for each channel.
-  float correctChannel(std::string channel, unsigned int adc,
-                       unsigned int adc_ref, unsigned int parity);
 };

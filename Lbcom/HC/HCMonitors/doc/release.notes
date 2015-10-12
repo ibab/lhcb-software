@@ -4,6 +4,12 @@
 ! Purpose     : Monitoring of Herschel data
 !-----------------------------------------------------------------------------
 
+! 2015-10-12 - Heinrich Schindler
+ - Add algorithm HCDigitCorrector.
+ - Replace maps for associating quadrants to channels by vectors.
+ - Remove private instances of EventTimeDecoder.
+ - Rearrange sequencing in python script.
+
 ! 2015-09-30 - Victor Coco
  - analyseHRC.py : change the access to brunelHRC.py
 
@@ -11,7 +17,6 @@
  - HCMonitorBase: change the way mapping is handeled and add correction factors 
    for the channels
  - Modify all other classes accordingly
-
 
 ! 2015-09-22 - Heinrich Schindler
  - HCMonitorBase: inherit from GaudiTupleAlg instead of GaudiHistoAlg.

@@ -40,14 +40,14 @@ StatusCode HCDigitMonitor::initialize() {
   if (sc.isFailure()) return sc;
 
   // Setup the histograms.
-  m_stations = {"B0", "B1", "B2", "F1", "F2"};
+  const std::vector<std::string> stations = {"B0", "B1", "B2", "F1", "F2"};
   const unsigned int nStations = 5;
   for (unsigned int i = 0; i < nStations; ++i) {
     // Book histograms for ADC sum distributions for each station.
     const unsigned int bins = m_variableBins ? 256 : 4096;
     const double low = -0.5;
     const double high = 4095.5;
-    const std::string st = m_stations[i];
+    const std::string st = stations[i];
     std::string name = "ADC/Sum/" + st;
     m_hAdcSum.push_back(book1D(name, st, low, high, bins));
     m_hAdcSumEven.push_back(book1D("ADC/Sum/Even/" + st, st, low, high, bins));
@@ -76,44 +76,6 @@ StatusCode HCDigitMonitor::initialize() {
     setAxisLabels(m_hAdcVsQuadrantOdd[i], "Quadrant", "ADC");
     setAxisLabels(m_hAdcVsQuadrantNoBeam[i], "Quadrant", "ADC");
     setAxisLabels(m_hAdcVsQuadrantBeam[i], "Quadrant", "ADC");
-
-    if (!m_thetaConfig.empty()) {
-      const double lowCor = -1000.5;
-      const double highCor = 5095.5;
-      const unsigned int binsCor = 6096;
-      std::string name = "ADCCor/Sum/" + st;
-      m_hAdcSumCor.push_back(book1D(name, st, lowCor, highCor, binsCor));
-      m_hAdcSumEvenCor.push_back(
-          book1D("ADCCor/Sum/Even/" + st, st, lowCor, highCor, binsCor));
-      m_hAdcSumOddCor.push_back(
-          book1D("ADCCor/Sum/Odd/" + st, st, lowCor, highCor, binsCor));
-      m_hAdcSumNoBeamCor.push_back(
-          book1D("ADCCor/Sum/NoBeam/" + st, st, lowCor, highCor, binsCor));
-      m_hAdcSumBeamCor.push_back(
-          book1D("ADCCor/Sum/Beam/" + st, st, lowCor, highCor, binsCor));
-      setAxisLabels(m_hAdcSumCor[i], "Sum ADCCor", "Entries");
-      setAxisLabels(m_hAdcSumEvenCor[i], "Sum ADCCor", "Entries");
-      setAxisLabels(m_hAdcSumOddCor[i], "Sum ADCCor", "Entries");
-      setAxisLabels(m_hAdcSumNoBeamCor[i], "Sum ADCCor", "Entries");
-      setAxisLabels(m_hAdcSumBeamCor[i], "Sum ADCCor", "Entries");
-      // Book profile histograms of average ADC vs. quadrant for each station.
-      name = "ADCCor/" + st + "/Average";
-      m_hAdcVsQuadrantCor.push_back(bookProfile1D(name, st, -0.5, 3.5, 4));
-      name = "ADCCor/" + st + "/Even/Average";
-      m_hAdcVsQuadrantEvenCor.push_back(bookProfile1D(name, st, -0.5, 3.5, 4));
-      name = "ADCCor/" + st + "/Odd/Average";
-      m_hAdcVsQuadrantOddCor.push_back(bookProfile1D(name, st, -0.5, 3.5, 4));
-      name = "ADCCor/" + st + "/NoBeam/Average";
-      m_hAdcVsQuadrantNoBeamCor.push_back(
-          bookProfile1D(name, st, -0.5, 3.5, 4));
-      name = "ADCCor/" + st + "/Beam/Average";
-      m_hAdcVsQuadrantBeamCor.push_back(bookProfile1D(name, st, -0.5, 3.5, 4));
-      setAxisLabels(m_hAdcVsQuadrantCor[i], "Quadrant", "ADCCor");
-      setAxisLabels(m_hAdcVsQuadrantEvenCor[i], "Quadrant", "ADCCor");
-      setAxisLabels(m_hAdcVsQuadrantOddCor[i], "Quadrant", "ADCCor");
-      setAxisLabels(m_hAdcVsQuadrantNoBeamCor[i], "Quadrant", "ADCCor");
-      setAxisLabels(m_hAdcVsQuadrantBeamCor[i], "Quadrant", "ADCCor");
-    }
   }
 
   const unsigned int nChannels = 64;
@@ -144,31 +106,6 @@ StatusCode HCDigitMonitor::initialize() {
     setAxisLabels(m_hAdcEvenF[i], "ADC", "Entries");
     setAxisLabels(m_hAdcOddB[i], "ADC", "Entries");
     setAxisLabels(m_hAdcOddF[i], "ADC", "Entries");
-
-    if (!m_thetaConfig.empty()) {
-      const double lowCor = -200.5;
-      const double highCor = 1223.5;
-      const unsigned int binsCor = 1424;
-      m_hAdcBCor.push_back(
-          book1D("ADCCor/B/" + ch, ch, lowCor, highCor, binsCor));
-      m_hAdcFCor.push_back(
-          book1D("ADCCor/F/" + ch, ch, lowCor, highCor, binsCor));
-      m_hAdcEvenBCor.push_back(
-          book1D("ADCCor/B/Even/" + ch, ch, lowCor, highCor, binsCor));
-      m_hAdcEvenFCor.push_back(
-          book1D("ADCCor/F/Even/" + ch, ch, lowCor, highCor, binsCor));
-      m_hAdcOddBCor.push_back(
-          book1D("ADCCor/B/Odd/" + ch, ch, lowCor, highCor, binsCor));
-      m_hAdcOddFCor.push_back(
-          book1D("ADCCor/F/Odd/" + ch, ch, lowCor, highCor, binsCor));
-
-      setAxisLabels(m_hAdcBCor[i], "ADCCor", "Entries");
-      setAxisLabels(m_hAdcFCor[i], "ADCCor", "Entries");
-      setAxisLabels(m_hAdcEvenBCor[i], "ADCCor", "Entries");
-      setAxisLabels(m_hAdcEvenFCor[i], "ADCCor", "Entries");
-      setAxisLabels(m_hAdcOddBCor[i], "ADCCor", "Entries");
-      setAxisLabels(m_hAdcOddFCor[i], "ADCCor", "Entries");
-    }
   }
 
   for (unsigned int i = 0; i < 4; ++i) {
@@ -176,26 +113,23 @@ StatusCode HCDigitMonitor::initialize() {
     const double low = -0.5;
     const double high = 1023.5;
     const unsigned int bins = 1024;
-    const double lowCor = -200.5;
-    const double highCor = 1223.5;
     // Book histograms for ADC distributions for each quadrant.
     const std::string qu = "Quadrant" + std::to_string(i);
     // Bx ID binning
     const double bxlow = -0.5;
     const double bxhigh = 4095.5;
     const unsigned int bxbins = 4096;
-    const double bxhighCor = 4095.5;
     std::vector<double> bxedges;
     for (unsigned int j = 0; j < bxbins + 1; ++j) {
       bxedges.push_back(j - 0.5);
     }
     for (unsigned int j = 0; j < nStations; ++j) {
-      const std::string name = "ADC/" + m_stations[j] + "/" + qu;
-      const std::string nameEven = "ADC/" + m_stations[j] + "/Even/" + qu;
-      const std::string nameOdd = "ADC/" + m_stations[j] + "/Odd/" + qu;
-      const std::string nameNoBeam = "ADC/" + m_stations[j] + "/NoBeam/" + qu;
-      const std::string nameBeam = "ADC/" + m_stations[j] + "/Beam/" + qu;
-      const std::string nameBx = "ADCvsBX/" + m_stations[j] + "/" + qu;
+      const std::string name = "ADC/" + stations[j] + "/" + qu;
+      const std::string nameEven = "ADC/" + stations[j] + "/Even/" + qu;
+      const std::string nameOdd = "ADC/" + stations[j] + "/Odd/" + qu;
+      const std::string nameNoBeam = "ADC/" + stations[j] + "/NoBeam/" + qu;
+      const std::string nameBeam = "ADC/" + stations[j] + "/Beam/" + qu;
+      const std::string nameBx = "ADCvsBX/" + stations[j] + "/" + qu;
       if (m_variableBins) {
         m_hAdcQuadrant.push_back(book1D(name, qu, m_edges));
         m_hAdcQuadrantEven.push_back(book1D(nameEven, qu, m_edges));
@@ -219,36 +153,6 @@ StatusCode HCDigitMonitor::initialize() {
       setAxisLabels(m_hAdcQuadrantNoBeam[index], "ADC", "Entries");
       setAxisLabels(m_hAdcQuadrantBeam[index], "ADC", "Entries");
       setAxisLabels(m_hAdcVsBx[index], "BX", "ADC");
-      if (!m_thetaConfig.empty()) {
-        const std::string nameCor = "ADCCor/" + m_stations[j] + "/" + qu;
-        const std::string nameEvenCor =
-            "ADCCor/" + m_stations[j] + "/Even/" + qu;
-        const std::string nameOddCor = "ADCCor/" + m_stations[j] + "/Odd/" + qu;
-        const std::string nameNoBeamCor =
-            "ADCCor/" + m_stations[j] + "/NoBeam/" + qu;
-        const std::string nameBeamCor =
-            "ADCCor/" + m_stations[j] + "/Beam/" + qu;
-        const std::string nameBxCor = "ADCCorvsBX/" + m_stations[j] + "/" + qu;
-        m_hAdcQuadrantCor.push_back(book1D(nameCor, qu, lowCor, highCor, bins));
-        m_hAdcQuadrantEvenCor.push_back(
-            book1D(nameEvenCor, qu, lowCor, highCor, bins));
-        m_hAdcQuadrantOddCor.push_back(
-            book1D(nameOddCor, qu, lowCor, highCor, bins));
-        m_hAdcQuadrantNoBeamCor.push_back(
-            book1D(nameNoBeamCor, qu, lowCor, highCor, bins));
-        m_hAdcQuadrantBeamCor.push_back(
-            book1D(nameBeamCor, qu, lowCor, highCor, bins));
-        m_hAdcVsBxCor.push_back(book2D(nameBxCor, qu, bxlow, bxhighCor, bxbins,
-                                       lowCor, highCor, bins));
-
-        const unsigned int index = i * nStations + j;
-        setAxisLabels(m_hAdcQuadrantCor[index], "ADCCor", "Entries");
-        setAxisLabels(m_hAdcQuadrantEvenCor[index], "ADCCor", "Entries");
-        setAxisLabels(m_hAdcQuadrantOddCor[index], "ADCCor", "Entries");
-        setAxisLabels(m_hAdcQuadrantNoBeamCor[index], "ADCCor", "Entries");
-        setAxisLabels(m_hAdcQuadrantBeamCor[index], "ADCCor", "Entries");
-        setAxisLabels(m_hAdcVsBxCor[index], "BX", "ADCCor");
-      }
     }
   }
 
@@ -268,27 +172,6 @@ StatusCode HCDigitMonitor::initialize() {
   setAxisLabels(m_hAdcVsChannelOddB, "Channel", "ADC");
   setAxisLabels(m_hAdcVsChannelOddF, "Channel", "ADC");
 
-  if (!m_thetaConfig.empty()) {
-    m_hAdcVsChannelBCor =
-        bookProfile1D("ADCCor/B/Average", "B", -0.5, 63.5, 64);
-    m_hAdcVsChannelFCor =
-        bookProfile1D("ADCCor/F/Average", "F", -0.5, 63.5, 64);
-    m_hAdcVsChannelEvenBCor =
-        bookProfile1D("ADCCor/B/Even/Average", "B", -0.5, 63.5, 64);
-    m_hAdcVsChannelEvenFCor =
-        bookProfile1D("ADCCor/F/Even/Average", "F", -0.5, 63.5, 64);
-    m_hAdcVsChannelOddBCor =
-        bookProfile1D("ADCCor/B/Odd/Average", "B", -0.5, 63.5, 64);
-    m_hAdcVsChannelOddFCor =
-        bookProfile1D("ADCCor/F/Odd/Average", "F", -0.5, 63.5, 64);
-    setAxisLabels(m_hAdcVsChannelBCor, "Channel", "ADCCor");
-    setAxisLabels(m_hAdcVsChannelFCor, "Channel", "ADCCor");
-    setAxisLabels(m_hAdcVsChannelEvenBCor, "Channel", "ADCCor");
-    setAxisLabels(m_hAdcVsChannelEvenFCor, "Channel", "ADCCor");
-    setAxisLabels(m_hAdcVsChannelOddBCor, "Channel", "ADCCor");
-    setAxisLabels(m_hAdcVsChannelOddFCor, "Channel", "ADCCor");
-  }
-
   return StatusCode::SUCCESS;
 }
 
@@ -298,7 +181,6 @@ StatusCode HCDigitMonitor::initialize() {
 StatusCode HCDigitMonitor::execute() {
 
   // Get event information from ODIN.
-  m_odin->getTime();
   const LHCb::ODIN* odin = getIfExists<LHCb::ODIN>(LHCb::ODINLocation::Default);
   if (!odin) {
     return Error("Cannot retrieve ODIN", StatusCode::SUCCESS);
@@ -316,9 +198,6 @@ StatusCode HCDigitMonitor::execute() {
     return Error("No digits in " + m_digitLocation, StatusCode::FAILURE);
   }
 
-  const unsigned int nStations = 5;
-  std::vector<double> sum(nStations, 0.);
-  std::vector<double> sumCor(nStations, 0.);
   // Loop over all digits.
   for (LHCb::HCDigit* digit : *digits) {
     const unsigned int crate = digit->cellID().crate();
@@ -327,149 +206,76 @@ StatusCode HCDigitMonitor::execute() {
     if (crate == m_crateB) {
       m_hAdcB[channel]->fill(adc);
       m_hAdcVsChannelB->fill(channel, adc);
-    } else if (crate == m_crateF) {
-      m_hAdcF[channel]->fill(adc);
-      m_hAdcVsChannelF->fill(channel, adc);
-    } else {
-      warning() << "Unexpected crate number (" << crate << ")" << endmsg;
-    }
-  }
-  // Get only the mapped ones
-  for (std::map<std::string, unsigned int>::iterator it =
-           m_channelsFromName.begin();
-       it != m_channelsFromName.end(); ++it) {
-    unsigned int adc = digits->object(LHCb::HCCellID(it->second))->adc();
-    unsigned int channel =
-        digits->object(LHCb::HCCellID(it->second))->cellID().channel();
-    std::string chName = it->first;
-    const unsigned int crate =
-        digits->object(LHCb::HCCellID(it->second))->cellID().crate();
-    unsigned int adc_ref = digits->object(m_refChannelsFromName[chName])->adc();
-    float adcCor = 0.;
-    if (!m_thetaConfig.empty()) {
-      adcCor = correctChannel(chName, adc, adc_ref, bxid % 2);
-    }
-
-    if (crate == m_crateB) {
-      m_hAdcB[channel]->fill(adc);
-      m_hAdcVsChannelB->fill(channel, adc);
-      if (!m_thetaConfig.empty()) {
-        m_hAdcFCor[channel]->fill(adcCor);
-        m_hAdcVsChannelFCor->fill(channel, adcCor);
-      }
       if (even) {
         m_hAdcEvenB[channel]->fill(adc);
         m_hAdcVsChannelEvenB->fill(channel, adc);
-        if (!m_thetaConfig.empty()) {
-          m_hAdcEvenBCor[channel]->fill(adcCor);
-          m_hAdcVsChannelEvenBCor->fill(channel, adcCor);
-        }
       } else {
         m_hAdcOddB[channel]->fill(adc);
         m_hAdcVsChannelOddB->fill(channel, adc);
-        if (!m_thetaConfig.empty()) {
-          m_hAdcOddBCor[channel]->fill(adcCor);
-          m_hAdcVsChannelOddBCor->fill(channel, adcCor);
-        }
       }
     } else if (crate == m_crateF) {
       m_hAdcF[channel]->fill(adc);
       m_hAdcVsChannelF->fill(channel, adc);
-      if (!m_thetaConfig.empty()) {
-        m_hAdcFCor[channel]->fill(adcCor);
-        m_hAdcVsChannelFCor->fill(channel, adcCor);
-      }
       if (even) {
         m_hAdcEvenF[channel]->fill(adc);
         m_hAdcVsChannelEvenF->fill(channel, adc);
-        if (!m_thetaConfig.empty()) {
-          m_hAdcEvenFCor[channel]->fill(adcCor);
-          m_hAdcVsChannelEvenFCor->fill(channel, adcCor);
-        }
       } else {
         m_hAdcOddF[channel]->fill(adc);
         m_hAdcVsChannelOddF->fill(channel, adc);
-        if (!m_thetaConfig.empty()) {
-          m_hAdcOddFCor[channel]->fill(adcCor);
-          m_hAdcVsChannelOddFCor->fill(channel, adcCor);
-        }
       }
     } else {
       warning() << "Unexpected crate number (" << crate << ")" << endmsg;
     }
   }
-  // Mapped but by quadrant only
-  for (unsigned int s = 0; s < m_stations.size(); ++s) {
-    for (int quadrant = 0; quadrant < 4; ++quadrant) {
-      const unsigned int index = quadrant * nStations + s;
-      std::string chName = m_stations[s] + std::to_string(quadrant);
-      unsigned int channelID = m_channelsFromName[chName];
-      float adc = digits->object(channelID)->adc();
-      unsigned int adc_ref =
-          digits->object(m_refChannelsFromName[chName])->adc();
-      float adcCor = 0.;
-      if (!m_thetaConfig.empty()) {
-        adcCor = correctChannel(chName, adc, adc_ref, bxid % 2);
+
+  const unsigned int nStations = 5;
+  std::vector<double> sum(nStations, 0.);
+  for (unsigned int i = 0; i < nStations; ++i) {
+    const bool bwd = i < 3;
+    for (unsigned int j = 0; j < 4; ++j) { 
+      // Skip masked quadrants.
+      if (m_masked[i][j]) continue;
+      LHCb::HCCellID id(m_channels[i][j]);
+      const LHCb::HCDigit* digit = digits->object(id);
+      if (!digit) {
+        const std::string st = bwd ? "B" + std::to_string(i) : 
+                                     "F" + std::to_string(i - 2); 
+        warning() << "Cannot retrieve digit for " << st << j << endmsg; 
+        continue;
       }
-      m_hAdcVsQuadrant[s]->fill(quadrant, adc);
+      unsigned int adc = digit->adc();
+      const unsigned int index = j * nStations + i;
+      m_hAdcVsQuadrant[i]->fill(j, adc);
       m_hAdcQuadrant[index]->fill(adc);
       m_hAdcVsBx[index]->fill(bxid, adc);
-      if (!m_thetaConfig.empty()) {
-        m_hAdcVsQuadrantCor[s]->fill(quadrant, adcCor);
-        m_hAdcQuadrantCor[index]->fill(adcCor);
-        m_hAdcVsBxCor[index]->fill(bxid, adcCor);
-      }
       if (even) {
-        m_hAdcVsQuadrantEven[s]->fill(quadrant, adc);
+        m_hAdcVsQuadrantEven[i]->fill(j, adc);
         m_hAdcQuadrantEven[index]->fill(adc);
-        if (!m_thetaConfig.empty()) {
-          m_hAdcVsQuadrantEvenCor[s]->fill(quadrant, adcCor);
-          m_hAdcQuadrantEvenCor[index]->fill(adcCor);
-        }
       } else {
-        m_hAdcVsQuadrantOdd[s]->fill(quadrant, adc);
+        m_hAdcVsQuadrantOdd[i]->fill(j, adc);
         m_hAdcQuadrantOdd[index]->fill(adc);
-        if (!m_thetaConfig.empty()) {
-          m_hAdcVsQuadrantOddCor[s]->fill(quadrant, adcCor);
-          m_hAdcQuadrantOddCor[index]->fill(adcCor);
-        }
       }
       if (bxtype == LHCb::ODIN::NoBeam) {
-        m_hAdcVsQuadrantNoBeam[s]->fill(quadrant, adc);
+        m_hAdcVsQuadrantNoBeam[i]->fill(j, adc);
         m_hAdcQuadrantNoBeam[index]->fill(adc);
-        if (!m_thetaConfig.empty()) {
-          m_hAdcVsQuadrantNoBeamCor[s]->fill(quadrant, adcCor);
-          m_hAdcQuadrantNoBeamCor[index]->fill(adcCor);
-        }
       } else if (bxtype == LHCb::ODIN::BeamCrossing) {
-        m_hAdcVsQuadrantBeam[s]->fill(quadrant, adc);
+        m_hAdcVsQuadrantBeam[i]->fill(j, adc);
         m_hAdcQuadrantBeam[index]->fill(adc);
-        if (!m_thetaConfig.empty()) {
-          m_hAdcVsQuadrantBeamCor[s]->fill(quadrant, adcCor);
-          m_hAdcQuadrantBeamCor[index]->fill(adcCor);
-        }
       }
-      sum[s] += adc;
-      if (!m_thetaConfig.empty()) sumCor[s] += adcCor;
+      sum[i] += adc;
     }
-    m_hAdcSum[s]->fill(sum[s]);
-    if (!m_thetaConfig.empty()) m_hAdcSumCor[s]->fill(sumCor[s]);
+    m_hAdcSum[i]->fill(sum[i]);
     if (even) {
-      m_hAdcSumEven[s]->fill(sum[s]);
-      if (!m_thetaConfig.empty()) m_hAdcSumEvenCor[s]->fill(sumCor[s]);
+      m_hAdcSumEven[i]->fill(sum[i]);
     } else {
-      m_hAdcSumOdd[s]->fill(sum[s]);
-      if (!m_thetaConfig.empty()) m_hAdcSumOddCor[s]->fill(sumCor[s]);
+      m_hAdcSumOdd[i]->fill(sum[i]);
     }
     if (bxtype == LHCb::ODIN::NoBeam) {
-      m_hAdcSumNoBeam[s]->fill(sum[s]);
-      if (!m_thetaConfig.empty()) m_hAdcSumNoBeamCor[s]->fill(sumCor[s]);
+      m_hAdcSumNoBeam[i]->fill(sum[i]);
     } else if (bxtype == LHCb::ODIN::BeamCrossing) {
-      m_hAdcSumBeam[s]->fill(sum[s]);
-      if (!m_thetaConfig.empty()) m_hAdcSumBeamCor[s]->fill(sumCor[s]);
+      m_hAdcSumBeam[i]->fill(sum[i]);
     }
   }
-
   return StatusCode::SUCCESS;
 }
 

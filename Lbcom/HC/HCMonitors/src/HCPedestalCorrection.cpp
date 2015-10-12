@@ -39,23 +39,26 @@ StatusCode HCPedestalCorrection::initialize() {
   // Initialise the base class.
   StatusCode sc = HCMonitorBase::initialize();
   if (sc.isFailure()) return sc;
+
   // Setup the histograms.
-  std::vector<std::string> parity = {"Odd", "Even"};
-  for (std::map<std::string, unsigned int>::iterator it =
-           m_channelsFromName.begin();
-       it != m_channelsFromName.end(); ++it) {
-    for (unsigned int p = 0; p < 2; ++p) {
-      std::string station = it->first;
-      station.erase(2, 1);
-      std::string quad = it->first;
-      quad.erase(0, 2);
-      const std::string name =
-          "Correlation/" + station + "/" + quad + "/" + parity[p];
-      m_hCorrelation[it->first + parity[p]] =
-          book2D(name, quad, 50., 300., 50, 15., 200., 50);
-      setAxisLabels(m_hCorrelation[it->first + parity[p]],
-                    it->first + "ADC ref " + parity[p],
-                    "ADC " + it->first + " " + parity[p]);
+  const std::vector<std::string> stations = {"B0", "B1", "B2", "F1", "F2"};
+  const std::vector<std::string> par = {"Even", "Odd"};
+  const unsigned int nStations = 5;
+  m_hCorrelation.resize(nStations);
+  for (unsigned int i = 0; i < nStations; ++i) {
+    const std::string st = stations[i];
+    m_hCorrelation[i].resize(4);
+    for (unsigned int j = 0; j < 4; ++j) {
+      const std::string qu = std::to_string(j);
+      for (unsigned int k = 0; k < 2; ++k) {
+        const std::string name = "Correlation/" + st + "/" + qu + "/" + par[k];
+        m_hCorrelation[i][j].push_back(book2D(name, qu, 50., 300., 50, 15., 200., 50));
+        setAxisLabels(m_hCorrelation[i][j][k], "Reference ADC", "ADC");
+      }
+    }
+  }
+  // TODO
+  /*
       std::string titleS = it->first + parity[p] + "_gaus2dfit";
       char* cstr = new char[titleS.length() + 1];
       std::strcpy(cstr, titleS.c_str());
@@ -65,8 +68,7 @@ StatusCode HCPedestalCorrection::initialize() {
           "(2*[5]*[5]))*(x-[1])*(x-[1])-2*(-sin(2*[3])/(4*[4]*[4])+sin(2*[3])/"
           "(4*[5]*[5]))*(x-[1])*(y-[2])-(sin([3])*sin([3])/"
           "(2*[4]*[4])+cos([3])*cos([3])/(2*[5]*[5]))*(y-[2])*(y-[2]))");
-    }
-  }
+  */
   return StatusCode::SUCCESS;
 }
 
@@ -74,6 +76,7 @@ StatusCode HCPedestalCorrection::initialize() {
 // Main execution
 //=============================================================================
 StatusCode HCPedestalCorrection::execute() {
+
   const LHCb::ODIN* odin = getIfExists<LHCb::ODIN>(LHCb::ODINLocation::Default);
   if (!odin) {
     return Error("Cannot retrieve ODIN.", StatusCode::SUCCESS);
@@ -83,22 +86,34 @@ StatusCode HCPedestalCorrection::execute() {
             << endmsg;
   }
   const unsigned int bxID = odin->bunchId();
+  const unsigned int parity = bxID % 2;
 
   // Grab the digits.
   const LHCb::HCDigits* digits = getIfExists<LHCb::HCDigits>(m_digitLocation);
   if (!digits) {
     return Error("No digits in " + m_digitLocation, StatusCode::FAILURE);
   }
-  std::vector<std::string> parity = {"Odd", "Even"};
+
   // Loop over the digits.
-  for (std::map<std::string, unsigned int>::iterator it =
-           m_channelsFromName.begin();
-       it != m_channelsFromName.end(); ++it) {
-    unsigned int adc = digits->object(LHCb::HCCellID(it->second))->adc();
-    std::string chName = it->first;
-    unsigned int adc_ref =
-        digits->object(LHCb::HCCellID(m_refChannelsFromName[chName]))->adc();
-    m_hCorrelation[chName + parity[bxID % 2]]->fill(adc_ref, adc);
+  const unsigned int nStations = 5;
+  for (unsigned int i = 0; i < nStations; ++i) {
+    for (unsigned int j = 0; j < 4; ++j) {
+      LHCb::HCCellID id(m_channels[i][j]);
+      const LHCb::HCDigit* digit = digits->object(id);
+      if (!digit) {
+        warning() << "Cannot retrieve digit." << endmsg;
+        continue;
+      }
+      unsigned int adc = digit->adc();
+      LHCb::HCCellID refid(m_references[i][j]);
+      const LHCb::HCDigit* refdigit = digits->object(refid);
+      if (!refdigit) {
+        warning() << "Cannot retrieve reference digit." << endmsg;
+        continue;
+      }
+      unsigned int refadc = refdigit->adc();
+      m_hCorrelation[i][j][parity]->fill(refadc, adc);
+    }
   }
   return StatusCode::SUCCESS;
 }

@@ -27,49 +27,32 @@ class HCDelayScan : public HCMonitorBase {
 
   virtual StatusCode initialize();  ///< Algorithm initialization
   virtual StatusCode execute();     ///< Algorithm execution
-  virtual StatusCode finalize();    ///< Algorithm finalization
-
-  /// A class to smooth the ADC
-  unsigned int randomizeADC(unsigned int adc);
 
  private:
   /// TES location of digits.
   std::string m_digitLocation;
-
-  /// ODIN
-  IEventTimeDecoder* m_odin;
 
   /// Number of B-side crate
   unsigned int m_crateB;
   /// Number of F-side crate
   unsigned int m_crateF;
 
-  int m_minStep;
-  int m_maxStep;
-  int m_VFEClkPitch;
-  int m_ADCClkPitch;
-
-  std::vector<int> m_BxRange;
-
-  // Namings
-  std::vector<std::string> m_stations;
-  std::vector<std::string> m_quadrants;
-  std::vector<std::string> m_slots;
+  unsigned int m_minStep;
+  unsigned int m_maxStep;
 
   /// Parameters for ADC distribution histograms
   Gaudi::Histo1DDef m_parAdc;
 
-  /// Quadrants ADCs per channels and tae slot
-  std::map<std::string, std::vector<TProfile*>> m_adcs;
-  std::map<std::string, std::vector<std::vector<TH1D*>>> m_adcsPerStep;
-  std::map<std::string, std::vector<TProfile*>> m_adcsCor;
-  std::map<std::string, std::vector<std::vector<TH1D*>>> m_adcsPerStepCor;
-  std::vector<std::vector<TH2D*>> m_scanResults;
-  std::vector<std::vector<TH2D*>> m_scanOffset;
+  /// Profile histograms (ADC vs. step) for each channel and slot.
+  std::vector<std::vector<std::vector<TProfile*> > > m_adcs;
+  /// ADC distributions for each channel, slot, and step.
+  std::vector<std::vector<std::vector<std::vector<TH1D* > > > > m_adcsPerStep;
+  std::vector<std::vector<TH2D*> > m_scanResults;
+  std::vector<std::vector<TH2D*> > m_scanOffset;
 
-  unsigned int m_BxCentral;
-  unsigned int m_BxNext;
-  unsigned int m_BxPrev;
+  unsigned int m_bxCentral;
+  unsigned int m_bxNext;
+  unsigned int m_bxPrev;
 };
 
 #endif
