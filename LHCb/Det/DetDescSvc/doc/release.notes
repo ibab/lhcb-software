@@ -3,6 +3,8 @@
 ! package manager : Marco Clemencic
 ! purpose:          Component library for Detector Description Services
 ! ====================================================================
+
+!========================= DetDescSvc v3r8p1 2015-10-12 =========================
 ! 2015-08-03 Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
