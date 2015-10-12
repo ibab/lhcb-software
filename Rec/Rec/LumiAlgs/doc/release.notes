@@ -1,8 +1,13 @@
 !-----------------------------------------------------------------------------
 ! Package     : Rec/LumiAlgs
-! Responsible : Jaap Panman
+! Responsible : 
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
+
+! 2015-10-12 - Marco Cattaneo
+ - Update lumi2reader reference to follow Gaudi v26r4 fix to GaudiSequencer 
+   reference counting
+
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
