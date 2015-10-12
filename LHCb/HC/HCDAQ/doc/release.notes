@@ -3,6 +3,11 @@
 ! Responsible : 
 ! Purpose     : Decoding of Herschel raw banks
 !-----------------------------------------------------------------------------
+
+!========================= HCDAQ v1r5 2015-10-12 =========================
+! 2015-10-05 - Heinrich Schindler
+ - Remove private instance of EventTimeDecoder tool
+
 ! 2015-08-03 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
