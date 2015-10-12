@@ -4,6 +4,10 @@ Package Coordinator : Sean Benson
 Purpose             : Turbo Stream Analysis
 !-----------------------------------------------------------------------------
 
+! 2015-10-12 - Sean Benson
+ - Add support for RelatedInfo packing.
+ - Add KillInputTurbo option to rerun (only useful for my personal debugging).
+
 !========================== Tesla v1r12 2015-09-09 ===========================
 
 ! 2015-8-20 - Sean Benson

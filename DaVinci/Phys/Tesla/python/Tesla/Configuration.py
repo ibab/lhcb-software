@@ -22,6 +22,7 @@ class Tesla(LHCbConfigurableUser):
           , 'Persistency' 	: '' 		# None, Root or Pool?
           , 'OutputLevel' 	: 4 		# Er, output level
           , 'DuplicateCheck' 	: False		# Do we want to add the algorithm to check for duplicates
+          , 'KillInputTurbo' 	: False		# If rerunning Tesla, kill input Turbo locations
           , "outputFile" 	: 'Tesla.dst' 	# output filename
           , 'WriteFSR'    	: False 	# copy FSRs as required
           , 'PV'	        : "Offline"     # Associate to the PV chosen by the HLT or the offline one
@@ -44,6 +45,7 @@ class Tesla(LHCbConfigurableUser):
             , 'Persistency' 	: "Root or Pool?"
             , 'OutputLevel' 	: "Output level"
             , 'DuplicateCheck' 	: "Add the test for duplicates?"
+            , 'KillInputTurbo' 	: "Are we rerunning Tesla"
             , "outputFile" 	: 'output filename, automatically selects MDF or InputCopyStream'
             , 'WriteFSR'    	: 'copy FSRs as required'
             , 'PV'     	        : 'Associate to the PV chosen by the HLT or the offline one'
@@ -305,6 +307,7 @@ class Tesla(LHCbConfigurableUser):
                     ,self.base+"pPhys/RecVertices#99"
                     ,self.base+"pPhys/Relations#99"
                     ,self.base+"pPhys/PP2MCPRelations#99"
+                    ,self.base+"pPhys/PartToRelatedInfoRelations#99"
                     ,self.base+"pRec/Track/Custom#99"
                     ,self.base+"pRec/Muon/CustomPIDs#99"
                     ,self.base+"pRec/Rich/CustomPIDs#99"
@@ -360,5 +363,10 @@ class Tesla(LHCbConfigurableUser):
         # Add monitors if they are there
         if len(self.getProp('Monitors'))>0:
             self._configureHistos()
+
+        if self.getProp('KillInputTurbo'):
+            enk = EventNodeKiller('KillTurbo')
+            enk.Nodes = [ "Turbo" ]
+            ApplicationMgr().TopAlg.insert( 0,  enk.getFullName() ) 
 
         ApplicationMgr().TopAlg+=[self.teslaSeq]
