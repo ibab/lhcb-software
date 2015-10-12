@@ -11,6 +11,7 @@
 #include "Event/STMeasurement.h"
 #include "Event/Measurement.h"
 
+#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 
 #include <map>
@@ -43,6 +44,9 @@ TrackMonitorBase( name , pSvcLocator ){
   declareProperty("InputData" , m_clusterLocation = STClusterLocation::TTClusters);
   declareProperty("plotsBySector", m_plotsBySector = false);// residual and signal to noise plots for each sector
   declareProperty("HitsOnTrack", m_hitsOnTrack = false);// use only hits on tracks (a la track monitor)
+  declareProperty("TH2DSummaryHist", m_2DSummaryHist = false);// residual and signal to noise plots for each sector
+  declareProperty("ProfileSummaryHist", m_ProfileSummaryHist = false);// residual and signal to noise plots for each sector
+
   setSplitByType(false) ;
   // dummy intialization, redone in initialize
   m_xMax = 0.;
@@ -178,21 +182,37 @@ void TTTrackMonitor::fillHistograms(const LHCb::Track& track,
       double residual = fNode->residual() * std::sqrt(fNode->errMeasure2()/fNode->errResidual2()) ;
       plot(residual, "Residual","Residual (rms-unbiased)",-0.5,0.5,100) ;
       plot(residual, layerName + "/Residual","Residual (rms-unbiased)",-0.5,0.5,100) ;
-      if ( hit && m_plotsBySector ) {
-        std::string sectorName = hit->cluster()->sectorName();
+      //if ( hit && m_plotsBySector ) {
+        //std::string sectorName = hit->cluster()->sectorName();
+        //plot(residual, "BySector/Residual_"+sectorName, "Residual (rms-unbiased)", -0.5, 0.5, 100);
+        //plot(fNode->unbiasedResidual(), "BySector/UnbiasedResidual_"+sectorName, "Residual (unbiased)", -0.5, 0.5, 100);
+      //}
+      if ( m_plotsBySector ) {
+        std::string sectorName = TTNames().UniqueSectorToString(chan);
+        //std::cout << sectorName << ": " << chan.station() << " " << chan.layer() << " " << chan.detRegion() << " " << chan.sector() << " id: "<<histoBin(chan)<<std::endl ;
         plot(residual, "BySector/Residual_"+sectorName, "Residual (rms-unbiased)", -0.5, 0.5, 100);
         plot(fNode->unbiasedResidual(), "BySector/UnbiasedResidual_"+sectorName, "Residual (unbiased)", -0.5, 0.5, 100);
       }
-      
+      if ( m_2DSummaryHist ){
+        plot2D(histoBin(chan), fNode->unbiasedResidual(),  "BySector/AllSectorsUnbiasedResidualHisto", "Residual (unbiased)", -0.5, 300.5, -0.5, 0.5, 301  , 100);
+        plot2D(histoBin(chan), fNode->residual(),  "BySector/AllSectorsBiasedResidualHisto", "Biased residual", -0.5, 300.5, -0.5, 0.5, 301  , 100);
+        plot2D(histoBin(chan), residual,  "BySector/AllSectorsResidualHisto", "Residual (rms-unbiased)",  -0.5, 300.5, -0.5, 0.5,301 , 100);
+      }
+      if ( m_ProfileSummaryHist){
+        profile1D(histoBin(chan), fNode->unbiasedResidual(),  "BySector/AllSectorsUnbiasedResidualProfile", "Residual (unbiased)",   -0.5, 300.5);
+        profile1D(histoBin(chan), fNode->residual(),  "BySector/AllSectorsBiasedResidualProfile", "Biased residual",    -0.5, 300.5);
+        profile1D(histoBin(chan), residual,  "BySector/AllSectorsResidualProfile", "Residual (rms-unbiased)",    -0.5, 300.5);
+      }
+
       // 2D plots in full detail mode
       if( fullDetail() ) {
         const unsigned int bin = histoBin(chan);
         plot2D(bin, residual, "unbiasedResRMSCorrSector"+layerName ,
-               "unbiasedResRMSCorrSector (rms-corrected)", 99.5, 500.5, -2., 2.,401 , 200  );
+               "unbiasedResRMSCorrSector (rms-corrected)", -0.5, 300.5, -2., 2.,301 , 200  );
         plot2D(bin, fNode->unbiasedResidual() , "unbiasedResSector"+layerName ,
-               "unbiasedResSector"+layerName  , 99.5, 500.5, -2., 2.,401 , 200  );
+               "unbiasedResSector"+layerName  , -0.5, 300.5, -2., 2.,301 , 200  );
         plot2D(bin, fNode->residual() , "biasedResSector"+layerName , 
-               "biasedResSector"+layerName  , 99.5, 500.5, -2., 2.,401 , 200  );
+               "biasedResSector"+layerName  , -0.5, 300.5, -2., 2.,301 , 200  );
 	
 	// plot residual versus Y position for every module
 	const DeSTSector* sector = static_cast<const DeSTSector*>(measurement.detectorElement()) ;
@@ -204,8 +224,8 @@ void TTTrackMonitor::fillHistograms(const LHCb::Track& track,
 	  double noise = hit->sector().noise(chan) ;
 	  if(noise>0) {
 	    const double signalToNoise = hit->totalCharge()/noise;
-	    plot2D(bin, signalToNoise,"SNSector"+layerName ,"SNSector"+layerName  , 99.5, 500.5, -0.25, 100.25, 401, 201);
-	    plot2D(bin, hit->totalCharge(),"CSector"+layerName ,"CSector"+layerName  , 99.5, 500.5, -0.5, 200.5,401,201 );
+	    plot2D(bin, signalToNoise,"SNSector"+layerName ,"SNSector"+layerName  , -0.5, 300.5, -0.25, 100.25, 401, 201);
+	    plot2D(bin, hit->totalCharge(),"CSector"+layerName ,"CSector"+layerName  , -0.5, 300.5, -0.5, 200.5,401,201 );
 	    if(m_plotsBySector) {
 	      std::string sectorName = hit->cluster()->sectorName();
 	      plot(signalToNoise, "BySector/SignalToNoise_"+sectorName, "Signal-to-noise", -0.5, 200.5, 200);
@@ -302,10 +322,9 @@ void TTTrackMonitor::fillHistograms(const LHCb::Track& track,
 unsigned int TTTrackMonitor::histoBin(const LHCb::STChannelID& chan) const {
 
   // convert layer and station to a flat number
-  unsigned int layer;
-  chan.station() == 1u ?layer = chan.layer() : layer = chan.layer() + 2;
-  return layer * 100 + (chan.detRegion()-1) * 30 + chan.sector();
+  return (chan.station()-1)*25*3*2 + (chan.layer()-1)*25*3 + (chan.detRegion()-1)*25 + (chan.sector() -1);
 }
+
 
 
 // Projected angle

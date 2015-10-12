@@ -10,6 +10,7 @@
 #include "Event/STMeasurement.h"
 #include "Event/Measurement.h"
 
+#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 
 #include <map>
@@ -40,6 +41,8 @@ TrackMonitorBase( name , pSvcLocator ){
   declareProperty("splitByITType", m_splitByITType = true); 
   declareProperty("plotsByLayer", m_plotsByLayer = true);
   declareProperty("plotsBySector", m_plotsBySector = false);// residual and signal to noise plots for each sector
+  declareProperty("TH2DSummaryHist", m_2DSummaryHist = false);
+  declareProperty("ProfileSummaryHist", m_ProfileSummaryHist = false);
   declareProperty("HitsOnTrack", m_hitsOnTrack = false);// use only hits on tracks (a la track monitor)
   declareProperty("minNumITHits", m_minNumITHits = 6u); 
   declareProperty("InputData" , m_clusterLocation = STClusterLocation::ITClusters);
@@ -190,11 +193,27 @@ void ITTrackMonitor::fillHistograms(const LHCb::Track& track,
     double residual = fNode->residual() * std::sqrt(fNode->errMeasure2()/fNode->errResidual2()) ;
     plot(residual, "Residual","Residual (rms-unbiased)",-0.5,0.5,100) ;
     plot(residual, ittype+"/Residual","Residual (rms-unbiased)",-0.5,0.5,100) ;
-    if ( hit && m_plotsBySector ) {
-      std::string sectorName = hit->cluster()->sectorName();
-      plot(residual, "BySector/Residual_"+sectorName, "Residual (rms-unbiased)", -0.5, 0.5, 100);
-      plot(fNode->unbiasedResidual(), "BySector/UnbiasedResidual_"+sectorName, "Residual (unbiased)", -0.5, 0.5, 100);
+    //if ( hit && m_plotsBySector ) {
+      //std::string sectorName = hit->cluster()->sectorName();
+      //plot(residual, "BySector/Residual_"+sectorName, "Residual (rms-unbiased)", -0.5, 0.5, 100);
+      //plot(fNode->unbiasedResidual(), "BySector/UnbiasedResidual_"+sectorName, "Residual (unbiased)", -0.5, 0.5, 100);
+    //}
+    if ( m_plotsBySector ) {
+        std::string sectorName = ITNames().UniqueSectorToString(chan);
+        //std::cout << sectorName << ": " << chan.station() << " " << chan.layer() << " " << chan.detRegion() << " " << chan.sector() << " id: "<<histoBin(chan)<<std::endl ;
+        plot(residual, "BySector/Residual_"+sectorName, "Residual (rms-unbiased)", -0.5, 0.5, 100);
+        plot(fNode->unbiasedResidual(), "BySector/UnbiasedResidual_"+sectorName, "Residual (unbiased)", -0.5, 0.5, 100);
+      }
+    if ( m_2DSummaryHist ) {
+      plot2D(histoBin(chan), fNode->unbiasedResidual(),  "BySector/AllSectorsUnbiasedResidualHisto", "Residual (unbiased)", -0.5, 336.5, -0.5, 0.5, 337  , 100);
+      plot2D(histoBin(chan), fNode->residual(),  "BySector/AllSectorsBiasedResidualHisto", "Biased residual", -0.5, 336.5, -0.5, 0.5, 337  , 100);
+      plot2D(histoBin(chan), residual,  "BySector/AllSectorsResidualHisto", "Residual (rms-unbiased)",  -0.5, 336.5, -0.5, 0.5,337 , 100);
     }
+    if ( m_ProfileSummaryHist ) {
+      profile1D(histoBin(chan), fNode->unbiasedResidual(),  "BySector/AllSectorsUnbiasedResidualProfile", "Residual (unbiased)",   -0.5, 336.5);
+      profile1D(histoBin(chan), fNode->residual(),  "BySector/AllSectorsBiasedResidualProfile", "Biased residual",    -0.5, 336.5);
+      profile1D(histoBin(chan), residual,  "BySector/AllSectorsResidualProfile", "Residual (rms-unbiased)",    -0.5, 336.5);
+    } 
 
     // make plots per layer
     if (m_plotsByLayer == true) {
@@ -301,6 +320,12 @@ void ITTrackMonitor::fillHistograms(const LHCb::Track& track,
       }
     }
   }
+}
+
+
+unsigned int ITTrackMonitor::histoBin(const LHCb::STChannelID& chan) const {
+  // convert sector to a flat number
+  return (chan.station()-1)*7*4*4 + (chan.layer()-1)*7*4 + (chan.detRegion()-1)*7 + (chan.sector() -1);
 }
 
 std::string ITTrackMonitor::ITCategory(const std::vector<LHCb::LHCbID>& ids) const {

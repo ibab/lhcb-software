@@ -37,6 +37,9 @@ protected:
 
 private:
 
+  unsigned int TThistoBin(const LHCb::STChannelID& chan) const;
+  unsigned int IThistoBin(const LHCb::STChannelID& chan) const;
+
   bool foundHitInSector( const ISTClusterCollector::Hits& hits,
                          LHCb::Track* const& track,
                          const unsigned int testsector,
@@ -184,6 +187,10 @@ private:
    * Plot residuals plot
    */
   bool m_resPlot;
+
+  bool m_2DSummaryHist;  
+  bool m_ProfileSummaryHist;  
+
     
 };
 #endif // STEFFICIENCY_H

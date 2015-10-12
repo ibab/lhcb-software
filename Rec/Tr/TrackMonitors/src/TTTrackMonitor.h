@@ -55,6 +55,9 @@ class TTTrackMonitor : public TrackMonitorBase {
   
   bool m_plotsBySector;//< individual plots by sector
   bool m_hitsOnTrack;//< plot only hits on tracks
+  bool m_2DSummaryHist;  
+  bool m_ProfileSummaryHist;  
+
   
 };
 

@@ -45,6 +45,8 @@ class ITTrackMonitor : public TrackMonitorBase {
                       const std::string& type,
                       const std::vector<LHCb::LHCbID>& itIDs) const ;
 
+  unsigned int histoBin(const LHCb::STChannelID& chan) const;
+
   double ProjectedAngle() const;
   
   double m_refZ;
@@ -54,6 +56,8 @@ class ITTrackMonitor : public TrackMonitorBase {
   unsigned int m_minNumITHits;
   bool m_splitByITType; 
   bool m_plotsByLayer;  
+  bool m_2DSummaryHist;  
+  bool m_ProfileSummaryHist;  
 
   std::string m_clusterLocation;
 

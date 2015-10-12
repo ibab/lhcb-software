@@ -3,6 +3,10 @@
 ! Responsible : Wouter Hulsbergen, Stephanie Hansmann-Menzemer
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
+! 2015-10-12 - Komarov Ilya
+ - Fixed per-sector histograms in TT/ITTrackMonitor
+ - Added option to IT/TTTrackMonitor and STEfficiency algorithms to dump per-sector information in 2D histograms.
+
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
