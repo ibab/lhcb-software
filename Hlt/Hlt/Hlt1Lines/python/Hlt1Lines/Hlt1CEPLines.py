@@ -78,6 +78,7 @@ class Hlt1CEPLinesConf( HltLinesConfigurableUser ):
     
     def __apply_configuration__( self ) : 
         from HltLine.HltLine import Hlt1Line
+        from HltTracking.HltSharedTracking import MinimalVelo
                
         Hlt1Line(
             'CEP',
@@ -86,9 +87,8 @@ class Hlt1CEPLinesConf( HltLinesConfigurableUser ):
             postscale = self.postscale,
             L0DU = "( ( L0_DATA('Spd(Mult)') < %(SpdMult)s ) & ( L0_CHANNEL_RE('%(NoVeloCutLineL0Dependency)s') ) )" % self.getProps(),   
             ##
-            algos     = self.streamer()
+            algos     =  [ MinimalVelo ] + self.streamer()
             )
-        from HltTracking.HltSharedTracking import MinimalVelo
         Hlt1Line(
             'CEPVeloCut',
             ##
