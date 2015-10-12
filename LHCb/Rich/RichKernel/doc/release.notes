@@ -4,6 +4,7 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+!========================= RichKernel v7r60 2015-10-12 =========================
 ! 2015-10-07 - Chris Jones
  - Fine tune the implementation of RichObjPtn for better CPU performance
    on object lookup.
