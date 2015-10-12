@@ -4,6 +4,7 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+!========================= STMonitors v4r4 2015-10-12 =========================
 ! 2015-08-20 - Mark Tobin
  - Add new algorithm to write tuple with TAE events (STTAEClusterTuple) which is
  needed for timing scans and spillover studies.
