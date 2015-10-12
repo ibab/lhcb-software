@@ -1,7 +1,7 @@
 ################################################################################
 # Package: VPDAQ
 ################################################################################
-gaudi_subdir(VPDAQ v2r7)
+gaudi_subdir(VPDAQ v2r7p1)
 
 gaudi_depends_on_subdirs(DAQ/DAQUtils
 			 DAQ/DAQKernel	

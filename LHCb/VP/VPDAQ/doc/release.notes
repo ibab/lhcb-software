@@ -3,6 +3,8 @@
 ! Responsible : Kurt Rinnert, Karol Hennessy
 ! Purpose     : Prepare VP RawBank and decode it
 !-----------------------------------------------------------------------------
+
+!========================= VPDAQ v2r7p1 2015-10-12 =========================
 ! 2015-08-03 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 

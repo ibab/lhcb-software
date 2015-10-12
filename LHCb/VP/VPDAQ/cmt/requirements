@@ -1,5 +1,5 @@
 package           VPDAQ
-version           v2r7
+version           v2r7p1
 
 # Structure, i.e. directories to process.
 #=====================================================================
