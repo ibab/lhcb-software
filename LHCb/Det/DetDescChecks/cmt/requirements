@@ -1,9 +1,9 @@
 # =====================================================================
 # Created    : 2002-05-25
-# Maintainer : Vanya Belyaev ibelyaev@physics.syr.edu
+# Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru
 # =====================================================================
 package           DetDescChecks
-version           v5r12
+version           v5r12p1
 
 # =============== structure ================================================
 branches          cmt doc src python
