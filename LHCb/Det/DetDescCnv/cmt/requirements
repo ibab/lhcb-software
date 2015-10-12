@@ -1,6 +1,6 @@
 # =======================================================================
 package           DetDescCnv
-version           v4r18
+version           v4r19
 
 # =========== structure ======================================================
 branches      DetDescCnv doc cmt src

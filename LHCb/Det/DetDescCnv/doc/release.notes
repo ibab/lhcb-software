@@ -3,6 +3,8 @@
 ! Responsible : Marco Clemencic, Juan Palacios
 ! Purpose     : standard converters for the LHCb Detector Description
 !------------------------------------------------------------------------------
+
+!========================= DetDescCnv v4r19 2015-10-12 =========================
 ! 2015-08-28 - Gerhard Raven
  - refactor code so that the static map can be const
  - prefer nullptr over 0 or NULL
