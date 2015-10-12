@@ -4,6 +4,7 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!========================= RichTools v2r50 2015-10-12 =========================
 ! 2015-10-07 - Chris Jones
  - Pass RichSmartIDs by const reference in RichSmartIDTool.
 
