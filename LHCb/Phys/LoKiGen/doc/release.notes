@@ -13,14 +13,13 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiGen v10r21 2015-10-12 =========================
 ! 2015-10-06 - Vanya Belyaev
   - attempt to speedup decay tree matchers ( aka "descriptors")
     with optional particles " {} " 
 
-
 ! 2015-08-03 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
-
 
 !========================= LoKiGen v10r20 2015-02-23 =========================
 ! 2015-01-23 - Vanya Belyaev
