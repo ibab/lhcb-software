@@ -1,9 +1,9 @@
 #=====================================================================
 # Created    : 2009-01-19
-# Maintainer : Jaap Panman
+# Maintainer : Massimiliano Ferro-Luzzi
 #=====================================================================
 package           LumiEvent
-version           v3r8
+version           v3r8p1
 
 #=====================================================================
 # Structure, i.e. directories to process.

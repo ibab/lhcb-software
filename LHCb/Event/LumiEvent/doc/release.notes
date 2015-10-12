@@ -1,8 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : Event/LumiEvent
-! Responsible : Jaap Panman
+! Responsible : Massimiliano Ferro-Luzzi
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
+
+!========================= LumiEvent v3r8p1 2015-10-12 =========================
 ! 2015-08-03 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
