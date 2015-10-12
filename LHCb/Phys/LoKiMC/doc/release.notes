@@ -14,7 +14,7 @@
 !
 ! -----------------------------------------------------------------------------
 
-
+!========================= LoKiMC v10r19 2015-10-12 =========================
 ! 2015-10-06 - Vanya Belyaev
  - attempt to speedup decay tree matchers ( aka "descriptors")
     with optional particles " {} " 

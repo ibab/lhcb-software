@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LoKiMC
 ################################################################################
-gaudi_subdir(LoKiMC v10r18)
+gaudi_subdir(LoKiMC v10r19)
 
 gaudi_depends_on_subdirs(Event/MCEvent
                          Kernel/MCInterfaces
