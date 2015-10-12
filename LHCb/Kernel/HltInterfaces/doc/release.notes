@@ -3,11 +3,11 @@
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
 
+!========================= HltInterfaces v6r2 2015-10-12 =========================
 ! 2015-08-19 - Roel Aaij
  - Remove obsolete methods from IConfigTreeEditor.
 
 !========================= HltInterfaces v6r1 2015-06-29 =========================
-
 ! 2015-06-29 - Roel Aaij
  - Add firedRoutingBits function to dictionary.
 
