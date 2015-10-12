@@ -2,6 +2,8 @@
 ! Package         : ST/STTools
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
+
+!========================= STTools v4r18 2015-10-12 =========================
 ! 2015-08-26 - Gerhard Raven
  - remove spurious include of GaudiKernel/cbrt.h 
  - prefer std::to_string over boost::lexical_cast<std::string>
