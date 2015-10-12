@@ -1,7 +1,7 @@
 ################################################################################
 # Package: VeloDAQ
 ################################################################################
-gaudi_subdir(VeloDAQ v6r12)
+gaudi_subdir(VeloDAQ v6r12p1)
 
 gaudi_depends_on_subdirs(DAQ/Tell1Kernel
                          Det/VeloDet
