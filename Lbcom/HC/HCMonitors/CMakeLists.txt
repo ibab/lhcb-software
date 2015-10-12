@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HCMonitors
 ################################################################################
-gaudi_subdir(HCMonitors v1r0)
+gaudi_subdir(HCMonitors v1r1)
 
 gaudi_depends_on_subdirs(Event/DigiEvent
                          GaudiAlg

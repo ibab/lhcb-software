@@ -4,6 +4,7 @@
 ! Purpose     : Monitoring of Herschel data
 !-----------------------------------------------------------------------------
 
+!========================= HCMonitors v1r1 2015-10-12 =========================
 ! 2015-10-12 - Heinrich Schindler
  - Add algorithm HCDigitCorrector.
  - Replace maps for associating quadrants to channels by vectors.
