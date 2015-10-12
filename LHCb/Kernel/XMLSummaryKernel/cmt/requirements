@@ -1,8 +1,8 @@
 # Created    : 07/07/2009
-# Maintainer : R. Lambert
+# Maintainer : 
 #=========================================================================
 package           XMLSummaryKernel 
-version           v1r13
+version           v1r13p1
 
 # Structure, i.e. directories to process. 
 #=========================================================================
