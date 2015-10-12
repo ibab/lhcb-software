@@ -2,7 +2,7 @@
 # The package with XML-converters for Caloriometer Detector Model 
 # =============================================================================
 package   CaloDetXmlCnv
-version           v3r3
+version           v3r3p1
 
 # =============== structure ===================================================	
 branches         src cmt doc

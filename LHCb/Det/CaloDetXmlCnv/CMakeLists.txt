@@ -1,7 +1,7 @@
 ################################################################################
 # Package: CaloDetXmlCnv
 ################################################################################
-gaudi_subdir(CaloDetXmlCnv v3r3)
+gaudi_subdir(CaloDetXmlCnv v3r3p1)
 
 gaudi_depends_on_subdirs(Det/CaloDet
                          Det/DetDescCnv)
