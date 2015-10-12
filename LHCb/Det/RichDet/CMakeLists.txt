@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RichDet
 ################################################################################
-gaudi_subdir(RichDet v17r4)
+gaudi_subdir(RichDet v17r5)
 
 gaudi_depends_on_subdirs(Det/DetDescCnv
                          Rich/RichKernel)
