@@ -3,6 +3,8 @@
 ! Responsible : Adlene Hicheur, Marco Cattaneo
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
+
+!========================= Magnet v7r9p1 2015-10-12 =========================
 ! 2015-08-03 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
