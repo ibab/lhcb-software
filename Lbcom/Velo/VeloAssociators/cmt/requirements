@@ -2,7 +2,7 @@
 # Maintainer : Chris Parkes & Tomasz Szumlak
 #
 package           VeloAssociators
-version           v2r5
+version           v2r5p1
 
 # Structure, i.e. directories to process. 
 #============================================================================
