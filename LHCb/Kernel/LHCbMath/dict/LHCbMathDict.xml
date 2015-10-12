@@ -271,7 +271,8 @@
   <class name = "Gaudi::Math::Chi2Fit"   />
 
 
-  <function name = "Gaudi::Math::combine" />
+  <function name = "Gaudi::Math::combine"            />
+  <function name = "Gaudi::Math::HistoInterpolation" />
 
   <class name = "Gaudi::Math::Chi2Solution<4,2,double>"         />
   <class name = "Gaudi::Math::Chi2Solution<4,2,double>::CMTRX2" />

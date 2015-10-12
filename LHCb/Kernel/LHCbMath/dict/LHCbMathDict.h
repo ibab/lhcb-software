@@ -39,6 +39,7 @@
 #include "LHCbMath/MoreFunctions.h"
 #include "LHCbMath/Binomial.h"
 #include "LHCbMath/Combine.h"
+#include "LHCbMath/HistoInterpolation.h"
 // ============================================================================
 /** @file LHCbMathDict.h
  *

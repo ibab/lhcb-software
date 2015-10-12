@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-10-12 - Vanya Belyaev
+ - speedup some utilities for Ostap 
+
 !========================= LHCbMath v3r59 2015-10-12 =========================
 ! 2015-10-07 - Vanya Belyaev
  - a bit more operators 
