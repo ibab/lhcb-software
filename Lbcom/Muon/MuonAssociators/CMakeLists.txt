@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MuonAssociators
 ################################################################################
-gaudi_subdir(MuonAssociators v3r5)
+gaudi_subdir(MuonAssociators v3r5p1)
 
 gaudi_depends_on_subdirs(Det/MuonDet
                          Event/DigiEvent
