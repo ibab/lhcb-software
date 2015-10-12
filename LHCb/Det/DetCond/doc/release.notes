@@ -3,6 +3,8 @@
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+!========================= DetCond v12r44 2015-10-12 =========================
 ! 2015-09-25 - Liang Sun
  - Remove references to SQLDDDB*.py option files
  - If UseOracle & Online options are both set to True, the Oracle ONLINE db is used, instead of sqlite db files
