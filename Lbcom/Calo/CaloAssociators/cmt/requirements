@@ -5,7 +5,7 @@
 # Package manager: Vanya BELYAEV Ivan.Belyaev@itep.ru 
 # ====================================================================
 package           CaloAssociators
-version           v6r14p1
+version           v6r14p2
         
 # =============== structure ===============================================
 branches          src cmt doc options python

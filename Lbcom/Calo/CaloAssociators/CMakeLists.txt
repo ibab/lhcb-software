@@ -1,7 +1,7 @@
 ################################################################################
 # Package: CaloAssociators
 ################################################################################
-gaudi_subdir(CaloAssociators v6r14p1)
+gaudi_subdir(CaloAssociators v6r14p2)
 
 gaudi_depends_on_subdirs(Calo/CaloUtils
                          Det/CaloDet
