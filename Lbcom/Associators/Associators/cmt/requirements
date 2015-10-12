@@ -1,7 +1,7 @@
 # Created by Rutger Hierck 07-07-2002
 #
 package Associators
-version           v3r9
+version           v3r9p1
 
 branches src cmt doc options
 
