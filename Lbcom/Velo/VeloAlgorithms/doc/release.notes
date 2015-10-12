@@ -2,6 +2,8 @@
 ! Package     : VeloAlgorithms
 ! Responsible : Tomasz Szumlak
 !--------------------------------------------------------------------------
+
+!========================= VeloAlgorithms v5r7p2 2015-10-12 =========================
 ! 2015-08-04 - Gerhard Raven
  - remove #include of obsolete Gaudi headers        
 
