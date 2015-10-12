@@ -1,7 +1,7 @@
 ################################################################################
 # Package: VeloSimulation
 ################################################################################
-gaudi_subdir(VeloSimulation v3r15)
+gaudi_subdir(VeloSimulation v3r15p1)
 
 gaudi_depends_on_subdirs(Det/VeloDet
                          Event/MCEvent
