@@ -3,6 +3,8 @@
 ! Responsible : Roel Aaij
 ! Purpose     : Create local copies of files from the grid at runtime.
 !-----------------------------------------------------------------------------
+
+!========================= FileStager v1r14p1 2015-10-12 =========================
 ! 2015-08-03 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
