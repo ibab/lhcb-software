@@ -3,6 +3,7 @@
 ! Responsible : Heinrich Schindler
 !--------------------------------------------------------------------------
 
+!========================= VPAssociators v2r7 2015-10-12 =========================
 ! 2015-10-02 - Heinrich Schindler
  - VPClusterLinker: split up the linking of clusters to MCHits and MCParticles
    such that it also works with LDSTs which only store the linker table 
