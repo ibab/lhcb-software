@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RichMCTools
 ################################################################################
-gaudi_subdir(RichMCTools v3r18)
+gaudi_subdir(RichMCTools v3r19)
 
 gaudi_depends_on_subdirs(Det/RichDet
                          Event/LinkerEvent
