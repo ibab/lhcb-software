@@ -4,6 +4,7 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================= RichDAQ v3r43 2015-10-12 =========================
 ! 2015-09-23 - Chris Jones
  - Various cleanups to RichRawDataFormatTool.
 
