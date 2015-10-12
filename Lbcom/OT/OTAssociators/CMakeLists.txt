@@ -1,7 +1,7 @@
 ################################################################################
 # Package: OTAssociators
 ################################################################################
-gaudi_subdir(OTAssociators v4r6)
+gaudi_subdir(OTAssociators v4r6p1)
 
 gaudi_depends_on_subdirs(Event/DigiEvent
                          Event/LinkerEvent
