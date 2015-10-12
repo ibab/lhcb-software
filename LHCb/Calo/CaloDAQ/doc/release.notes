@@ -3,6 +3,8 @@
 ! Responsible : Olivier Deschamps
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
+
+!========================= CaloDAQ v4r38p1 2015-10-12 =========================
 ! 2015-08-03 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
