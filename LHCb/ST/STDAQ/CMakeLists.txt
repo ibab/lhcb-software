@@ -1,7 +1,7 @@
 ################################################################################
 # Package: STDAQ
 ################################################################################
-gaudi_subdir(STDAQ v4r6)
+gaudi_subdir(STDAQ v4r7)
 
 gaudi_depends_on_subdirs(DAQ/DAQUtils
                          Det/DetDesc

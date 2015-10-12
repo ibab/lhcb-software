@@ -4,6 +4,7 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!========================= STDAQ v4r7 2015-10-12 =========================
 ! 2015-08-20 - Mark Tobin
  - update TAE python files to use RawEventLocations
 
