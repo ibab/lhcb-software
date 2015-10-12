@@ -2,7 +2,7 @@
 # Maintained by : Heinrich Schindler
 # =============== structure ===============================================
 package VPDet
-version           v3r2
+version           v3r2p1
 branches         src cmt doc VPDet dict
 
 # =============== used packages ===========================================
