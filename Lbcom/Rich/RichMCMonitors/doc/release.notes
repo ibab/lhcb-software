@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones
 ! Purpose     : Monitor algorithms that exclusively use MCEvent data objects
 !-----------------------------------------------------------------------------
+
+!========================= RichMCMonitors v1r10p1 2015-10-12 ========================
 ! 2015-08-04 - Gerhard Raven
  - remove #include of obsolete Gaudi headers        
 

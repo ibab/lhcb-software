@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RichMCMonitors
 ################################################################################
-gaudi_subdir(RichMCMonitors v1r10)
+gaudi_subdir(RichMCMonitors v1r10p1)
 
 gaudi_depends_on_subdirs(Event/MCEvent
                          Kernel/MCInterfaces
