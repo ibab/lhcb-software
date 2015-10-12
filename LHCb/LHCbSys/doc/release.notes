@@ -5,6 +5,245 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v39r1>2015-10-12 LHCbSys v39r1</A></H1><PRE>
+This version uses Gaudi v26r4 and LCG_79 with ROOT 6.04.02.
+
+- Packages modified: Calo/CaloDAQ v4r38p1, Calo/CaloUtils v10r5p1,
+    DAQ/DAQUtils v1r13p2, DAQ/MDF v3r42, Det/CaloDet v10r20p1, 
+    Det/CaloDetXmlCnv v3r3p1, Det/DDDB v1r81, Det/DetCond v12r44,
+    Det/DetDesc v18r38, Det/DetDescChecks v5r12p1, Det/DetDescCnv v4r19,
+    Det/DetDescSvc v3r8p1, Det/FTDet v2r10, Det/Magnet v7r9p1, Det/RichDet v17r5,
+    Det/VeloDet v13r21p1, Det/VPDet v3r2p1, Event/EventPacker v5r7,
+    Event/LumiEvent v3r8p1, Event/RecreatePIDTools v1r8, 
+    Ex/DetCondExample v11r14p1, Ex/DetDescExample v7r8p1, FT/FTDAQ v1r7p1,
+    GaudiConf v19r12, GaudiMTTools v1r2p2, HC/HCDAQ v1r5, Hlt/HltDAQ v4r20,
+    Hlt/HltServices v2r10, Kernel/FSRAlgs v1r8p1, Kernel/HltInterfaces v6r2,
+    Kernel/LHCbAlgs v3r6p1, Kernel/LHCbKernel v15r12, Kernel/LHCbMath v3r59,
+    Kernel/MCInterfaces v1r19, Kernel/PartProp v1r20, 
+    Kernel/XMLSummaryKernel v1r13p1, Kernel/VectorClass v1r17, L0/L0Base v2r4p1,
+    L0/L0Calo v11r14p1, L0/L0DU v10r34, L0/L0Muon v9r14p1, Muon/MuonDAQ v4r20p1,
+    OT/OTDAQ v7r20p1, Phys/LoKiCore v11r27, Phys/LoKiGen v10r21,
+    Phys/LoKiHlt v3r20p1, Phys/LoKiMC v10r19, Rich/RichDAQ v3r43,
+    Rich/RichKernel v7r60, Sim/SimComponents v3r0, ST/STDAQ v4r7,
+    Tools/CondDBEntityResolver v5r9, Tools/FileStager v1r14p1,
+    Tools/XmlTools v6r8p2, Velo/VeloDAQ v6r12p1, VP/VPDAQ v2r7p1
+
+- In Det/DDDB v1r78, v1r79, v1r80, v1r81
+  . Update default database tags to the latest ones:
+    o DDDB,     2015      : dddb-20150724
+    o DDDB,           2012: dddb-20150928
+    o LHCBCOND, 2015      : cond-20150828
+
+- In Det/DetCond v12r44
+  . Remove references to SQLDDDB*.py option files
+  . If UseOracle & Online options are both set to True, the Oracle ONLINE db is
+    used, instead of sqlite db files
+
+- In Det/DetDesc v18r38
+  . Add #include <iterator> directly instead of relying on something else
+    to include it and declare std::ostream_iterator...
+
+- In Det/DetDescCnv v4r19
+  . Refactor code so that the static map can be const
+  . Prefer nullptr over 0 or NULL
+  . Replace use of _itoa from GaudiKernel/xtoa.h with std::to_string
+
+- In Det/FTDet v2r10
+  . Change DeFTFibremat::CellIDCoordinates from private to public
+
+- In Det/RichDet v17r5
+  . Update API in DeRichSystem to pass ID types by const reference instead
+    of by value.
+
+- In Event/EventPacker v5r4, v5r5, v5r6, v5r7
+  . Fix bugs in PackedProtoParticle::check
+    o For CaloHypos the iterator value was compared, instead of the memory
+      location of the objects the SmartRefs point to
+    o The use of data() to access the pointer was causing it to not be properly
+      created. Should use target() instead which makes sure the pointer is
+      created on-demand.
+    o Add some protection to prevent potential out of range loop access in cases
+      where the data containers in the two objects have different sizes.
+  . Improve the debug information printed with various checks.
+  . Improved protection in UnpackParticlesAndVertices for being triggered
+    twice in the same event.
+  . Add protection against null Track SmartRefs in RecVertex packer.
+  . Fixed reference count of JobOptionsSvc in MapperToolBase.
+
+- In Event/RecreatePIDTools v1r8
+  . Small C++11 clean up of a few components
+
+- In GaudiConf v19r12
+  . Added line to allow IOHelper to treat RDST as DST.
+
+- In HC/HCDAQ v1r5
+  . Remove private instance of EventTimeDecoder tool
+
+- In Hlt/HltDAQ v4r20
+  . Fix reconstitution of CaloCluster 
+
+- In Hlt/HltServices v2r10
+  . Remove assert size of implement dependent object (std::time_t).
+
+- In Kernel/HltInterfaces v6r2
+  . Remove obsolete methods from IConfigTreeEditor
+
+- In Kernel/LHCbKernel v15r12
+  . Expand FastAllocVector.h to implement vectors using boost::pool_allocator as
+    alternative to gcc MT allocator. Former is seemingly much faster in some use
+    cases.
+  . Add STLOStreamRedirect.h that contains a guard class that redirects stdout
+    and stderr messages to a given location, for the lifetime of the guard.
+  . Add placement new/delete operators to MemPoolAlloc.h
+  . Replace ListItem with Gaudi::Utils::TypeNameString 
+  . Update hand written RichSmartID class to use Null Mutex Boost pool (similarly 
+    to the GOD generated event model classes).
+  . Disable mutex (thread) support in MemPoolAlloc.h as well ...
+  . Add specialization of std::hash for RichSmartID, and explicitly include
+    ext/hash_map prior to the existing specializations in the __gnu_cxx 
+    namespace.
+
+- In Kernel/LHCbMath v3r59
+  . Add Convex & ConvexOnly splines 
+  . Speed up integration of 2D polynomials and splines 
+  . Bernstein&B-spline:
+    1) speedup integration 
+    2) add more classification functions 
+  . Add confidence intervals for binomial proportions/efficiencies 
+  . Add few more functions including:
+    o to ValueWithError
+    o For easy operations with scipy
+    o Hypot function 
+    o Atlas function 
+  . pdg_format.py: simple module, implementing PDG rounding scheme 
+  . Add QMtest for Combine-utility 
+  . Split TestSimilarity into tests for AVX/SSE3, to put in evidence what has
+    been run.
+  . Fix TestSimilarity to take into account the matrix condition number.
+  . Remove private Eigen headers.
+  . Remove the 'static' SMatrix in the 'average' method in Similarity_*.cpp,
+    to fix a problem with gcc 4.9.3 'hanging' on __cxa_guard_acquire.
+    The code without static actually looks faster anyway ;-)
+  . Reshuffle a bit the code to reduce duplication
+  . Move some useful python code fragments to C++
+  . Various minor fixes
+  . Fix doxygen
+
+- In Kernel/LHCbMath v3r59, Phys/LoKiCore v11r25
+  . Replace Gaudi::Math::cbrt with std::cbrt
+
+- In Kernel/MCInterfaces v1r19
+  . New interface for setting fromSignal flag in MCParticles
+
+- In Kernel/PartProp v1r20
+  . Tweak code so it is independent of whether IFileAccess returns std::auto_ptr
+    or std::unique_ptr
+
+- In Kernel/VectorClass v1r17
+  . Update to external version 1.17
+
+- In L0/L0DU v10r34
+	. L0DURawBankMonitor
+    o fix data scaling 
+    ofix bug with EmulatorCheck masking
+  . L0Conf : use by default LUT V8 for L0Muon emulation for 2015 data
+
+- In Phys/LoKiCore v11r24, v11r25, v11r26, v11r27
+  . Trim dictionary a bit (see GAUDI-1098 and Gaudi gitlab merge request 22)
+  . Explicitly set the relative priority of LoKiSvc wrt. ToolSvc to ensure
+    that LoKiSvc gets finalized _before_ ToolSvc in order to avoid use
+    (even if only for an implicit cast!) of dangling pointers to tools.
+  . Moved here the CMake code to generate functors factories from StrippingCache.
+  . Finalised support for building C++ Functor caches:
+    o Modify the functionality to building of C++ cache
+      Building strategy depends on environment variable "LOKI_GENERATE_CPPCODE"
+        positive:  number of files
+        negative:  number of functors per file
+        zero:      single file
+    o Modified cache generation to ignore the already existing caches.
+      It ensures that the generated cache contains also the factories already
+      present in other caches.
+    o Added CMake option (LOKI_BUILD_FUNCTOR_CACHE) to turn on/off build of cache
+      libraries (ON by default).
+    o Add support to HybridBase for turning off the use of the C++ functor cache.
+      Enable either via the property UseCache or by setting the environment
+      variable LOKI_DISABLE_CACHE.
+    o Add some warnings to HybridBase for when either the python or cache functor
+      support is disabled. If both are disabled, such that no functors can be
+      produced, an error is now returned from initialize().
+    o Add Hlt1HltFactory and Hlt2HltFactory to the default list of factories
+      in LoKiFunctorCache.cmake
+    o Add DetDataSvc('DetectorDataSvc') to the start of the service list in
+      LokiFunctorsCachePostActionOpts.py. Needed to get CondDB access working
+      with Stripping 23.
+    o Added doc/LoKiFunctorsCache.md, documentation for the generation of LoKi
+      Functors caches
+    o For debugging install generated C++ functor sources.
+
+- In Phys/LoKiGen v10r21, Phys/LoKiMC v10r19
+  . Attempt to speedup decay tree matchers (aka "descriptors") with optional
+    particles " {} " 
+
+- In Rich/RichDAQ v3r43
+  . Various cleanups to RichRawDataFormatTool.
+  . Various CPU enhancements to the decoding. In particular:
+    o Avoid creating decoding objects on the heap, and deleting them, for each
+      HPD to be decoded each event.
+    o Use C++11 map::emplace function to populate the decoded HPD map, that 
+      avoids unneccesary data copying. 
+    Decoding is now, with all the improvements, about twice as fast as before.
+
+- In Rich/RichKernel v7r60
+  . Fine tune the implementation of RichObjPtn for better CPU performance
+    on object lookup.
+  . Remove unused data members and methods from the HPD pixel cluster class.
+  . Pass RichSmartID by const reference in IRichSmartIDTool.h
+  . Split the part of the functionality provided by the HPDPixelClusters class,
+    needed only to build the clusters, into a new dedicated utility class
+    HPDPixelClustersBuilder. This builder only needs to be created once per
+    job, and just removes the overhead from having to maintain large 2D arrays
+    to cache information needed for the cluster finding. HPDPixelClusters is
+    thus a lot smaller and focuses only on describing the found clusters.
+  . Various CPU improvements to pixel cluster classes and smart ID sorter.
+  . Adapt to class name changes for FastAllocVector.
+  . Add new headers for different sorts of map implementations, unordered and an
+    implementation using a pool allocator.
+  . Update RichDecodedData.h definitions to use the new templated maps.
+  . A few more CPU improvements for faster decoding.
+  . Various improvements to the DAQ Header and Footer classes, to allow for
+    more CPU efficient usage in RichDAQ.
+  . Use unordered map for decoded data format.
+
+- In Sim/SimComponents v3r0
+  . New tool to flag children from a signal particle propagating the relevant
+    flag
+
+- In ST/STDAQ v4r7
+  . Update TAE python files to use RawEventLocations
+
+- In Tools/CondDBEntityResolver v5r9
+  . Adapt CondDBEntityResolver::open such that it is invariant under whether
+    IFileAcces::open wants to return std::auto_ptr  or std::unique_ptr.
+
+- In Calo/CaloDAQ v4r38p1, Calo/CaloUtils v10r5p1, DAQ/DAQUtils v1r13p2,
+     DAQ/MDF v3r42, Det/CaloDet v10r20p1, Det/CaloDetXmlCnv v3r3p1,
+     Det/DetCond v12r44, Det/DetDesc v18r38, Det/DetDescChecks v5r12p1,
+     Det/DetDescCnv v4r19, Det/DetDescSvc v3r8p1, Det/FTDet v2r10,
+     Det/Magnet v7r9p1, Det/RichDet v17r5, Det/VeloDet v13r21p1, Det/VPDet v3r2p1,
+     Event/EventPacker v5r5, Event/LumiEvent v3r8p1, Event/RecreatePIDTools v1r8,
+     Ex/DetCondExample v11r14p1, Ex/DetDescExample v7r8p1, FT/FTDAQ v1r7p1,
+     GaudiMTTools v1r2p2, HC/HCDAQ v1r5, Hlt/HltDAQ v4r20, Hlt/HltServices v2r10,
+     Kernel/FSRAlgs v1r8p1, Kernel/LHCbAlgs v3r6p1, Kernel/PartProp v1r20,
+     Kernel/XMLSummaryKernel v1r13p1, L0/L0Base v2r4p1, L0/L0Calo v11r14p1,
+     L0/L0DU v10r34, L0/L0Muon v9r14p1, Muon/MuonDAQ v4r20p1, OT/OTDAQ v7r20p1,
+     Phys/LoKiCore v11r25, Phys/LoKiGen v10r21, Phys/LoKiHlt v3r20p1,
+     Phys/LoKiMC v10r19, Rich/RichDAQ v3r43, Rich/RichKernel v7r60,
+     Sim/SimComponents v3r0, ST/STDAQ v4r7, Tools/CondDBEntityResolver v5r9,
+     Tools/FileStager v1r14p1, Tools/XmlTools v6r8p2, Velo/VeloDAQ v6r12p1,
+     VP/VPDAQ v2r7p1
+  . Remove #include of obsolete Gaudi headers
+
+
 </PRE><H1><A NAME=v39r0>2015-07-21 LHCbSys v39r0</A></H1><PRE>
 This version uses Gaudi v26r3 and LCG_79 with ROOT 6.04.02.
 
