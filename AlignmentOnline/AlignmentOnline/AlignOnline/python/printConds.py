@@ -33,9 +33,9 @@ app.Simulation = False
 app.EvtMax = 1
 
 import HLT2Params
-
 app.DDDBtag = HLT2Params.DDDBTag
 app.CondDBtag = HLT2Params.CondDBTag
+
 
 from Configurables import EventClockSvc, FakeEventTime, EventDataSvc
 ecs = EventClockSvc()
@@ -63,7 +63,6 @@ if arguments.online:
     cdb.Online = True
 else:
     cdb.EnableRunStampCheck = False 
-    #cdb.IgnoreHeartBeat = True
 
     useNewFeature = False
     if useNewFeature:
@@ -71,6 +70,8 @@ else:
         cdb.UseOracle = True
         cdb.Online = True
     else:
+        pass
+#'''
         # Marco's workaround
         from Gaudi.Configuration import appendPostConfigAction
         from Configurables import CondDBDispatcherSvc, CondDBAccessSvc
@@ -82,9 +83,9 @@ else:
             
         appendPostConfigAction(oracle_online)
         os.environ['CORAL_DBLOOKUP_PATH'] = os.environ['CORAL_AUTH_PATH'] = '/group/online/condb_viewer'
+#'''
 
-
-    from Configurables import DumpConditions, GaudiSequencer
+from Configurables import DumpConditions, GaudiSequencer
 dumpSeq = GaudiSequencer("DumpSequence", Members = [DumpConditions()])
 ApplicationMgr().TopAlg = [dumpSeq]
 ApplicationMgr().ExtSvc += ["IncidentSvc"]

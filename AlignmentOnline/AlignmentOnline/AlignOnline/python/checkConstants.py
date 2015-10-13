@@ -40,22 +40,35 @@ def getOfflineRuns_old():
     return allOfflineRuns
 
 
-def getOfflineRuns(file2check = file_getHandshake, minRun = 157558):
+def getOfflineRuns(file2check = file_getHandshake, minRun = 157130):#149497):
     import glob    
     ll = glob.glob(os.path.join(conditions_dir,'*/{0}'.format(file2check)))
     return sorted([int(i.split('/')[-2]) for i in ll if int(i.split('/')[-2]) >= minRun])
 
 
-def getAnalisedRuns(fileName = runs_fileName):
+def getAnalisedRuns(fileName = runs_fileName, alsoBads=False):
     import pickle
     try:
-        toReturn = pickle.load(open(fileName, 'rb'))
+        analised = pickle.load(open(fileName, 'rb'))
     except IOError:
-        toReturn = []
+        analised = []
+    if fileName == runs_fileName:
+        gotHandShake = getOfflineRuns(file_giveHandshake)
+        toReturn = list(set(analised).intersection(set(gotHandShake)))
+    else:
+        toReturn = analised
+    if alsoBads:
+        toReturn += pickle.load(open(bads_fileName, 'rb'))
     return toReturn
 
 
-def sendEmail(run, diff, receivers = ['gdujany@cern.ch', 'lhcb-onlinealignmentcalibration@cern.ch'], problemSolved = False):
+def getRuns2Analise():
+    offline = getOfflineRuns()
+    analised = getAnalisedRuns()
+    return [i for i in offline if i not in analised]
+
+
+def sendEmail(run, diff, receivers = ['lhcb-onlinealignmentcalibration@cern.ch'], problemSolved = False):
     import smtplib
     sender = 'gdujany@cern.ch'
     message = 'From: Conditions Monitor <gdujany@cern.ch>\n'
@@ -121,7 +134,7 @@ if __name__ == '__main__':
 
     print 'Retrieving runs to process'
     lock()
-    toAnalise = [i for i in getOfflineRuns() if i not in getAnalisedRuns()]
+    toAnalise = getRuns2Analise()
     bads = getAnalisedRuns(bads_fileName)
 
     from diffConds import diffOnlineOffline
@@ -141,6 +154,10 @@ if __name__ == '__main__':
                 open(os.path.join(conditions_dir, '{0}/{1}'.format(run, file_giveHandshake)), 'a').close()
                 if run in bads:
                     removeRun(run, bads_fileName)
+                    try:
+                        os.remove(os.path.join(conditions_dir, '{0}/{1}'.format(run, file_notOk)))
+                    except OSError:
+                        pass
                     sendEmail(run, diff, problemSolved = True)
             else:
                 open(os.path.join(conditions_dir, '{0}/{1}'.format(run, file_notOk)), 'a').close()

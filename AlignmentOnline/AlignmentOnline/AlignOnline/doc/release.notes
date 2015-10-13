@@ -3,6 +3,9 @@ Package: AlignOnline
 Package Coordinator: Maurizio Martinelli
 Purpose: Code for running and testing Alignment in the online environment
 
+! 2015-10-13 - Giulio Dujany
+ - Added check that HLT2Params.py contains needed info
+
 ! 2015-10-01 - Giulio Dujany
  - Check conditions online offline sends email if more than 5 runs to analise.
  

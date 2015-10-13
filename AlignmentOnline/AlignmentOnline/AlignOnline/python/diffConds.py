@@ -76,10 +76,14 @@ def diffOnlineOffline(run, delCond = True):
     year = time.gmtime(startTime/10**9)[0]
 
     run_cond_dir = '/group/online/hlt/conditions/LHCb/{0}/{1}'.format(year, run)
-    if not os.path.exists(os.path.join(run_cond_dir, 'HLT2Params.py')):
+    try:
+        sys.path.append(run_cond_dir)
+        import HLT2Params
+        DDDBTag, CondDBTag = HLT2Params.DDDBTag, HLT2Params.CondDBTag
+    except (ImportError, AttributeError):
         print 'WARNING: Skipping due to missing HLT2Params'
-        assert(os.path.exists(os.path.join(run_cond_dir, 'HLT2Params.py')))
-    
+        raise AssertionError('WARNING: Skipping due to missing HLT2Params')
+
     env = os.environ.copy()
     env['PYTHONPATH'] = (env['PYTHONPATH']
                          + ':' + run_cond_dir
@@ -101,12 +105,14 @@ def diffOnlineOffline(run, delCond = True):
     print '######################################'
     print '###   RUN WITH ONLINE CONDITIONS   ###'
     print '######################################'
+    sys.stdout.flush()
     cmd = shlex.split(command.format(**opts_online))
     subprocess.call(cmd, env = env)
     assert(os.path.exists(fileNames['online']))
     print '#######################################'
     print '###   RUN WITH OFFLINE CONDITIONS   ###'
     print '#######################################'
+    sys.stdout.flush()
     cmd = shlex.split(command.format(**opts_offline))
     subprocess.call(cmd, env = env)
     assert(os.path.exists(fileNames['offline']))
