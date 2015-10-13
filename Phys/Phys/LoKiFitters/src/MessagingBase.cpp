@@ -34,7 +34,7 @@ LoKi::MessagingBase::MessagingBase
   //
   declareProperty 
     ( "PrintMyAlg"        ,
-      m_printMyAlg = true ,
+      m_printMyAlg = false ,
       "Print the name of ``associated'' algorithm" ) ;
   declareProperty 
     ( "MaxPrints"         ,
@@ -86,7 +86,7 @@ bool LoKi::MessagingBase::getMyAlg () const
 {
   m_myAlg = "" ;
   //
-  const IAlgContextSvc* asvc =  contextSvc () ;
+  const IAlgContextSvc* asvc = contextSvc () ;
   if ( NULL == asvc    ) { return false ; }
   //
   const IAlgorithm* current = asvc->currentAlg() ;

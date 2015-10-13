@@ -5,6 +5,12 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2015-10-13 - Chris Jones
+ - Disable by default the 'PrintMyAlg' option, that adds the currently activate
+   algorithm name to messages from public instances of the tools, as this
+   functionality has been ported to GaudiAlg as of Gaudi v26r4.
+   (Eventually the code should be simplified removing this option completely).
+
 !====================== Phys/LoKiFitters v4r17 2015-09-09 =====================
 
 ! 2015-09-09 - Vanya Belyaev
