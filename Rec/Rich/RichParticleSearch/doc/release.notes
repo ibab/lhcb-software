@@ -3,6 +3,8 @@
 ! Responsible : Matt Coombes
 ! Purpose     : Find exotic particles with the RICHes. Get Nobel price.
 !-----------------------------------------------------------------------------
+
+!========================= RichParticleSearch v1r12p1 2015-10-13 ======================
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 

@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RichParticleSearch
 ################################################################################
-gaudi_subdir(RichParticleSearch v1r12)
+gaudi_subdir(RichParticleSearch v1r12p1)
 
 gaudi_depends_on_subdirs(Event/MCEvent
                          Event/PhysEvent
