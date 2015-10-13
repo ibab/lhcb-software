@@ -3,7 +3,7 @@
 # Maintainer : Heinrich Schindler
 #=====================================================================
 package           PrPixel
-version           v1r13
+version           v1r13p1
 
 #=====================================================================
 # Structure, i.e. directories to process. 

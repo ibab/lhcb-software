@@ -1,7 +1,7 @@
 ################################################################################
 # Package: PrPixel
 ################################################################################
-gaudi_subdir(PrPixel v1r13)
+gaudi_subdir(PrPixel v1r13p1)
 
 gaudi_depends_on_subdirs(Det/VPDet
                          DAQ/DAQKernel
