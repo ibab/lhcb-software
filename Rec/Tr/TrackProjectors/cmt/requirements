@@ -3,7 +3,7 @@
 # Maintainer : Wouter Hulsbergen
 #=====================================================================
 package           TrackProjectors
-version           v3r2
+version           v3r2p1
 
 #=====================================================================
 # Structure, i.e. directories to process. 
