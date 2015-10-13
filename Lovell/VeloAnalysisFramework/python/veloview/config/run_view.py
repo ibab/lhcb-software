@@ -477,7 +477,59 @@ run_view_pages = OrderedDict([
 				]
     }),
     ('vertices', {
-        'title': 'Vertices'
+        'title': 'Vertices',
+				'subpages' : [
+					{'title' : 'PV Overview',
+						'plots' : [
+							{
+								'title': 'PV left-right delta x',
+								'name': 'Track/TrackVertexMonitor/PV left-right delta x',
+								'options': {'asPoints': False, 'yAxisZeroSuppressed': False}
+							},
+							{
+								'title': 'PV x position',
+								'name': 'Track/TrackVertexMonitor/PV x position',
+								'options': {'asPoints': False, 'yAxisZeroSuppressed': False}
+							},
+							{
+								'title': 'PV y position',
+								'name': 'Track/TrackVertexMonitor/PV y position',
+								'options': {'asPoints': False, 'yAxisZeroSuppressed': False}
+							},
+							{
+								'title': 'PV z position',
+								'name': 'Track/TrackVertexMonitor/PV z position',
+								'options': {'asPoints': False, 'yAxisZeroSuppressed': False}
+							}
+						],
+						'layout': (2,2)
+					},
+					{'title' : 'PV VELO Half Distance',
+						'plots' : [
+							{
+								'title': 'PV left-Left half x',
+								'name': 'Track/TrackVertexMonitor/PV left-Left half x',
+								'options': {'asPoints': False, 'yAxisZeroSuppressed': False}
+							},
+							{
+								'title': 'PV right-Right half x',
+								'name': 'Track/TrackVertexMonitor/PV right-Right half x',
+								'options': {'asPoints': False, 'yAxisZeroSuppressed': False}
+							},
+							{
+								'title': 'PV left-Left half y',
+								'name': 'Track/TrackVertexMonitor/PV left-Left half y',
+								'options': {'asPoints': False, 'yAxisZeroSuppressed': False}
+							},
+							{
+								'title': 'PV right-Right half y',
+								'name': 'Track/TrackVertexMonitor/PV right-Right half y',
+								'options': {'asPoints': False, 'yAxisZeroSuppressed': False}
+							}
+						],
+						'layout': (2,2)
+					}
+				]
     }),
     ('errors', {
         'title': 'Errors',
