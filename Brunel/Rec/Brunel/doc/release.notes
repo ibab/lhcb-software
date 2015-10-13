@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v49r0>2015-10-13 Brunel v49r0</A></H1><PRE>
+This version uses projects LHCb v39r1, Lbcom v17r1, Rec v18r2, Gaudi v26r4
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
 - Changes to references to reflect changes since v48r2
   . Follow fix to FastVeloTracking matching of RZ track to Phi hits when beam is
     off centre (FastVelo)
@@ -13,6 +17,9 @@ Purpose: LHCb reconstruction program
 
 - Changes to tests
   . Add temporary RegexpReplacers for forward compatibility with GAUDI-1078
+  . Follow GAUDI-1078
+  . Remove brunel-cheatedpr.error_ref following fix in error with :: in ROOT
+    directory names
 
 </PRE><H1><A NAME=v48r2>2015-08-25 Brunel v48r2</A></H1><PRE>
 This version uses projects LHCb v39r0, Lbcom v17r0, Rec v18r1, Gaudi v26r3

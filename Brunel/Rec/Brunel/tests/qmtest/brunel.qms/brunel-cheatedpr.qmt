@@ -9,8 +9,6 @@
     <text>from Brunel.Configuration import *; Brunel().Monitors = ["SC","FPE"]</text>
   </set></argument>
   <argument name="reference"><text>../refs/brunel-cheatedpr.ref</text></argument>
-  <!-- the tuple writer seems to provoke several TFile::cd errors but works anyway -->
-  <argument name="error_reference"><text>../refs/brunel-cheatedpr.error_ref</text></argument>
   <argument name="validator"><text>
 from Brunel.QMTest.BrunelExclusions import preprocessor
 validateWithReference(preproc = preprocessor)
