@@ -3,7 +3,7 @@
 # Maintainer : Mariusz Witek
 #=====================================================================
 package           PatVeloTT
-version           v4r7
+version           v4r7p1
 
 #=====================================================================
 # Structure, i.e. directories to process. 
