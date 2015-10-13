@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ###################################################
 # Helper functions, shared code, used in the tests
 ###################################################
@@ -61,6 +62,8 @@ def evalProject():
     cwd=os.getcwd()
     s=[s for s in cwd.split(os.sep) if "_" in s][-1]
     proj=s.split("_")[0]
+    if proj.endswith('Dev'):
+        proj = proj[:-3]
     ver=s.split("_")[-1]
     return proj,ver
 
