@@ -5,6 +5,11 @@
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+! 2015-10-13 - Sean Benson
+ - More robust IDs in CaloCluster saving.
+ - Introduce this for all lines.
+ - Hopefully get rid of the RecSummary (non) error this time.
+
 !========================= HltRawData v5r10 2015-10-08 =======================
 
 ! 2015-10-5 - Sean Benson

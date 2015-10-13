@@ -574,6 +574,14 @@ StatusCode HltSelReportsMaker::execute() {
      }
      m_Turbo = false;
   }
+  
+  // -------------------------------------------------------------------------------------
+  // clone HltObjectSummary-s of selection and insert them into object store (needed for raw data storage
+  // and global selections)
+  // -------------------------------------------------------------------------------------
+  std::transform( std::begin(*outputSummary), std::end(*outputSummary),
+                  std::back_inserter(*m_objectSummaries),
+                  [](HltSelReports::Container::const_reference i) { return new HltObjectSummary( i.second ); } );
 
   // Add a selection for event level data (make sure only done in the HLT2 level)
   string outLoc = m_outputHltSelReportsLocation;
@@ -596,22 +604,14 @@ StatusCode HltSelReportsMaker::execute() {
       eventObjectSummarySub->setNumericalInfo(EventInfo);
       //
       m_objectSummaries->push_back(eventObjectSummarySub);
-      m_objectSummaries->push_back(eventObjectSummary);
       eventObjectSummary->addToSubstructure(eventObjectSummarySub);
       if( outputSummary->insert("Hlt2RecSummary",*eventObjectSummary) == StatusCode::FAILURE ){
         Warning(" Failed to add RecSummary to its container ",StatusCode::SUCCESS, 10 );
       }
+      m_objectSummaries->push_back(eventObjectSummary);
     }
   }
 
-
-  // -------------------------------------------------------------------------------------
-  // clone HltObjectSummary-s of selection and insert them into object store (needed for raw data storage
-  // and global selections)
-  // -------------------------------------------------------------------------------------
-  std::transform( std::begin(*outputSummary), std::end(*outputSummary),
-                  std::back_inserter(*m_objectSummaries),
-                  [](HltSelReports::Container::const_reference i) { return new HltObjectSummary( i.second ); } );
 
   // -------------------------------------------------------------------------------------
   // create global selections ------------------------------------------------------------
@@ -914,28 +914,91 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::RecVertex& 
   return m_objectSummaries->back();
 }
 
-// -------------------------------------------
-// store CaloCluster in HltObjectSummary store
-// -------------------------------------------
+// -------------------------------------
+// store CaloCluser (new) in HltObjectSummary store
+// -------------------------------------
 const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::CaloCluster& object)
 {
-  std::unique_ptr<HltObjectSummary> hos { new HltObjectSummary{} };
+  // not yet in object store; create new one
+  HltObjectSummary* hos { new HltObjectSummary() };
   hos->setSummarizedObjectCLID( object.clID() );
   hos->setSummarizedObject(&object);
-  hos->setNumericalInfo(infoToSave( *hos ));
-  
-  // Save cluster LHCbIDs (all if Turbo)
-  std::vector<LHCbID> vec_IDs;
-  vec_IDs.push_back(object.seed());
-  if(m_Turbo){
-    for( auto e : object.entries() ){
-      if(e.digit().target()->cellID()==object.seed()) debug() << "Ignoring seed ID, already saved" << endmsg;
-      else vec_IDs.push_back(e.digit().target()->cellID());
+
+  HltObjectSummary::Info theseInfo = infoToSave( *hos );
+  std::vector<LHCbID> theseHits;
+  theseHits.push_back( object.seed() );
+  for( auto e : object.entries() ){
+    if(e.digit().target()->cellID()==object.seed()) debug() << "Ignoring seed ID, already saved" << endmsg;
+    else theseHits.push_back(e.digit().target()->cellID());
+  }
+  // required to allow the seed and the rest to coexist
+  std::sort( theseHits.begin(), theseHits.end() );
+
+  std::vector<LHCbID>::const_iterator rbegin1=theseHits.end(); --rbegin1;
+  std::vector<LHCbID>::const_iterator rend1=theseHits.begin(); --rend1;
+
+  // look for objects with the same lhcbids
+  // if many then the one which leaves least amount info on this one
+  HltObjectSummary* pBestHos(0);
+
+  // First assume we keep this one
+  bool reuse=false;
+  pBestHos = hos;
+
+  // find mutations of the same object
+  // leave the one with the most info, should be the Turbo
+  HltObjectSummarys::const_iterator rbegin=m_objectSummaries->end();  --rbegin;
+  HltObjectSummarys::const_iterator rend  =m_objectSummaries->begin(); --rend;
+  for( auto  ppHos=rbegin;ppHos!=rend;--ppHos){
+    HltObjectSummary* pHos(*ppHos);
+    if( pHos->summarizedObjectCLID() == object.clID() ){
+      std::vector<LHCbID> otherHits = pHos->lhcbIDsFlattened();
+      bool different=false;
+      if( otherHits.size() == theseHits.size() ){
+        std::vector<LHCbID>::const_iterator h2=otherHits.end(); --h2;
+        for( std::vector<LHCbID>::const_iterator h1=rbegin1;h1!=rend1;--h1,--h2){
+          if( h1->lhcbID() != h2->lhcbID() ){
+            different=true;
+            break;
+          }
+        }
+        if( different )continue;
+
+        // found object of the same type with the same lhcbid content!
+        //
+        // If:
+        // - it contains different info, leave it as it is.
+        // - if less info, choose one with the biggest info
+        HltObjectSummary::Info otherInfo = pHos->numericalInfoFlattened();
+        if( otherInfo.size() > theseInfo.size() ){
+          reuse=true;
+          pBestHos=pHos;
+          break;
+        }
+        if( otherInfo.size() == theseInfo.size() ){
+          bool diffCalc=false;
+          for( auto i1=otherInfo.begin();i1!=otherInfo.end();++i1 ){
+            auto i2 = theseInfo.find( i1->first );
+            if( i1->second != i2->second ) diffCalc=true;
+          }
+          if(!diffCalc) {
+            reuse=true;
+            pBestHos=pHos;
+          }
+          if(reuse) break;
+        }
+      }
     }
   }
-  hos->setLhcbIDs( vec_IDs );
-  m_objectSummaries->push_back(hos.release());
-  return m_objectSummaries->back();
+
+  if(!reuse){
+    hos->setLhcbIDs( std::move(theseHits) );
+    hos->setNumericalInfo( theseInfo );
+    m_objectSummaries->push_back(hos);
+    return m_objectSummaries->back();
+  }
+  else delete hos;
+  return pBestHos;
 }
 
 // -------------------------------------------
