@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RichRecPhotonTools
 ################################################################################
-gaudi_subdir(RichRecPhotonTools v1r17)
+gaudi_subdir(RichRecPhotonTools v1r18)
 
 gaudi_depends_on_subdirs(Det/RichDet
                          GaudiKernel

@@ -4,6 +4,7 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================= RichRecPhotonTools v1r18 2015-10-13 =======================
 ! 2015-10-07 - Chris Jones
  - Small CPU improvement to RichCKthetaBandsPhotonPredictor
 
