@@ -1,0 +1,14 @@
+package           powhegbox
+
+use LCG_Configuration v*
+use LCG_Settings      v*
+
+macro powhegbox_home  $(LCG_external)/MCGenerators/powheg-box/$(powhegbox_native_version)/$(LCG_system)
+
+include_path none
+
+# location of pwhg_main executable:
+macro powhegbox_execs  $(powhegbox_home)/bin
+
+# GC - 2 july 2013 - Not clear if it is needed
+#macro powheg_name "powheg" 
