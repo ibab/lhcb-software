@@ -3,6 +3,7 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+!========================= GaudiConf v19r13 2015-10-13 =========================
 ! 2015-10-13 - Marco Clemencic
  - Modified QMTest.ConfigurablesTest to understand lb-dev projects (<project>Dev).
 
