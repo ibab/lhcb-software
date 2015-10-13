@@ -3,6 +3,8 @@
 ! Responsible : M Needham
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
+
+!========================= TsaAlgorithms v3r30 2015-10-13 =========================
 ! 2015-09-28 - Gerhard Raven
  - replace std::auto_ptr with auto, endreq with endmsg
 
