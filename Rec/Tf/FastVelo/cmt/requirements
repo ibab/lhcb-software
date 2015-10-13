@@ -3,7 +3,7 @@
 # Maintainer : 
 #=====================================================================
 package           FastVelo
-version           v1r22
+version           v1r23
 
 #=====================================================================
 # Structure, i.e. directories to process. 
