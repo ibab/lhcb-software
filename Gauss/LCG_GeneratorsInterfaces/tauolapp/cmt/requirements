@@ -1,0 +1,18 @@
+package tauolapp
+
+use LCG_Configuration v*
+use LCG_Settings v*
+
+macro tauolapp_home $(LCG_external)/MCGenerators/tauola++/$(tauolapp_native_version)/$(LCG_system)
+
+include_path none
+include_dirs $(tauolapp_home)/include
+
+macro tauolapp_linkopts "-L$(tauolapp_home)/lib \
+                        -lTauolaFortran \
+                        -lTauolaCxxInterface "
+
+macro tauolapp_name "tauolapp"
+apply_pattern set_lib_path
+
+macro tauolapp_export_paths "$(tauolapp_home)/include $(tauolapp_home)/lib"
