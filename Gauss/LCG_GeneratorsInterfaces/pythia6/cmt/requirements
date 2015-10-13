@@ -1,0 +1,21 @@
+package pythia6
+
+use LCG_Configuration v*
+use LCG_Settings v*
+
+macro pythia6_home $(LCG_external)/MCGenerators/pythia6/$(pythia6_native_version)/$(LCG_system)
+
+include_path none
+include_dirs $(pythia6_home)/include
+
+macro pythia6_linkopts "-L$(pythia6_home)/lib \
+                        -lpythia6 \ 
+                        -lpythia6_dummy \
+                        -lpythia6_pdfdummy " \
+          target-winxp "/LIBPATH:$(pythia6_home)/lib pythia6.lib pythia6_dummy.lib pythia6_pdfdummy.lib "
+
+
+macro pythia6_name "pythia6"
+apply_pattern set_lib_path
+
+macro pythia6_export_paths "$(pythia6_home)/include $(pythia6_home)/lib"
