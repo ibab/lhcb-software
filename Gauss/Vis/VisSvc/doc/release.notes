@@ -1,0 +1,102 @@
+!-----------------------------------------------------------------------------
+! Package     : Vis/VisSvc
+! Responsible : Gloria CORTI (originally Sebastien Ponce)
+! Purpose     : 
+!-----------------------------------------------------------------------------
+
+!======================== VisSvc v5r7p1 2013-10-10 ===========================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!========================= VisSvc v5r7 2012-01-26 ============================
+! 2012-01-26 - Marco Cattaneo
+ - Fix missing Boost linkopts for Gaudi v23
+ - Remove obsolete VisSvc_dll.cpp
+ - Replace obsolete DeclareFactoryEntries.h include
+
+!========================= VisSvc v5r6 2011-09-20 ============================
+! 2009-02-14 - Chris Jones
+ - supress various icc warnings
+
+!======================== VisSvc v5r5 ===========================
+! 2009-08-25 - Thomas Ruf
+ - requirements, match to new CMT version
+!======================== VisSvc v5r4 2009-06-04 =============================
+
+! 2009-06-03 - Chris Jones
+ - Fix gcc 4.3 warnings
+ - Remove obsolete load file
+
+!======================== VisSvc v5r3 2008-08-08 =============================
+! 2008-08-01 - Guy Barrand
+ - In VisualizationSvc::visAttribute, handle <Item regex="" .../>.
+
+!======================== VisSvc v5r2 2008-02-08 =============================
+! 2007-01-18 - Jeroen van Tilburg
+ - Get the name of the material from registry()->identifier(). Since this
+   returns the full path. The method name() only returns the last part of 
+   the path.
+
+!======================== VisSvc v5r1 2007-12-07 =============================
+! 2007-12-04 - Gloria CORTI
+ - Adapt default name of xml file to new package Vis/XmlVis that need to
+   be used when running
+   . VisualizationSvc.cpp
+
+!====================== VisSvc v5r0 2007-03-05 =============================
+! 2007-03-05 - Marco Clemencic
+ - Updated following the changes in LHCb v22r1 XmlTools
+
+!====================== VisSvc v4r0 2007-01-12 =============================
+! 2007-01-12 - Florence RANJARD
+ - install include files on InstallArea
+
+! 2006-12-21 - Guy Barrand
+ - VisSvc_load.cpp : use standard Gaudi cpp macros.
+ - Det_[dll,load].cpp -> VisSvc_[dll,load].cpp.
+
+
+!====================== VisSvc v3r3 2004-08-02 =============================
+! 2004-08-02 - Gloria CORTI
+ - SimulationSvc.{h,cpp}
+   . use InterfaceID instead of IID to adapt to Gaudi v16
+
+!====================== VisSvc v3r2 2004-05-04 =============================
+! 2004-05-04 - Florence RANJARD
+ - replace all apply_pattern with apply_pattern component_library
+
+!====================== VisSvc v3r1 2003-06-27 ==============================
+! 2003-06-26 - Guy Barrand
+ - Update to compile with xerces-2.2.
+
+! 2003-04-16 - Sebastien Ponce
+ - added == operators on Color and VisAttribute
+
+!===================== VisSvc v2r1 2002-11-15 ===============================
+! 2002-11-15 - Florence Ranjard
+ - requirements - use new versions in the project environment
+
+! 2002-06-27 - Sebastien Ponce
+ - brand new version of this service, fully incompatible with the old one.
+   The main change is that the service provides VisAttributes instead of
+   colors now. These attributes contain the color but also the visibility,
+   the open status and the display mode of an object. The color was also
+   extended to include a alpha channel (transparency support).
+
+!====================== VisSvc v1r1 2001-02-04 ================================
+
+! 2001-02-04 - Sebastien Ponce
+  Exception catching in the logvolColor method in case getting the material
+  of the volume raises an exception.
+
+! 2001-01-23 - Sebastien Ponce
+  Bug fix concerning the new job option ColorDbLocation that was not taken
+  correctly into account. Also removed the use of $DDDB and $CDB
+
+!====================== VisSvc v1r0 2001-01-18 ================================
+
+! 2001-01-18 - Sebastien Ponce
+  NEW package for the visualization configuration and parametrization
+  This creates a VisualizationSvc that is able to give the color of a logical
+  volume or of a material by reading XML files in the database.
+

@@ -1,0 +1,32 @@
+#============================================================================
+# Created    : 2007-12-04
+# Maintainer : Gloria CORTI
+#============================================================================
+package           VisSvc
+version           v5r7p1
+
+# Structure, i.e. directories to process.
+#============================================================================
+branches          cmt doc src VisSvc
+
+# Used packages.
+#============================================================================
+use   XmlTools     v*      Tools
+use   DetDesc      v*      Det
+use   Boost        v*      LCG_Interfaces
+
+macro_append Boost_linkopts " $(Boost_linkopts_regex) "
+
+# Export include files
+#============================================================================
+apply_pattern install_more_includes more=VisSvc
+
+# Component library building rule
+#============================================================================
+library          VisSvc    ../src/*.cpp
+
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=VisSvc
+
+
