@@ -3,6 +3,25 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v29r10>2015-10-14 Boole v29r10</A></H1><PRE>
+This version uses projects:
+ LCG_79 (ROOT 6.04.02), Gaudi v26r4, LHCb v39r1, Lbcom v17r1
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+- Configuration changes
+  . L0Conf : use by default LUT V8 for L0Muon emulation of 2015 data (L0DU v10r34)
+
+- Code modernisation
+  . GAUDI-1094 - Provide (and use) C++11 smart pointer 'look and feel' for SmartIF
+  . GAUDI-1057 - C++11 modernization changes
+
+- Monitoring changes
+  . GAUDI-1078 - Update to GaudiAlg to include the caller algorithm name in
+                 messages from public tools
+
+- Changes to tests
+  . Add temporary RegexpReplacers for forward compatibility with GAUDI-1078
+
 </PRE><H1><A NAME=v29r9>2015-09-25 Boole v29r9</A></H1><PRE>
 This version uses projects:
  LCG_79 (ROOT 6.04.02), Gaudi v26r3, LHCb v39r0, Lbcom v17r0
