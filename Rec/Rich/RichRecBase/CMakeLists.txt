@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RichRecBase
 ################################################################################
-gaudi_subdir(RichRecBase v4r20)
+gaudi_subdir(RichRecBase v4r21)
 
 gaudi_depends_on_subdirs(Det/RichDet
                          Event/RecEvent
