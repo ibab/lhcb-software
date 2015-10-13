@@ -1,0 +1,19 @@
+package hijing
+
+use LCG_Configuration v*
+use LCG_Settings v*
+
+macro hijing_home $(LCG_external)/MCGenerators/hijing/$(hijing_native_version)/$(LCG_system)
+
+include_path none
+include_dirs $(hijing_home)/include
+
+macro hijing_linkopts "-L$(hijing_home)/lib \
+                        -lhijing \ 
+                        -lhijing_dummy " \
+         target-winxp "/LIBPATH:$(hijing_home)/lib hijing.lib hijing_dummy.lib "  
+
+macro hijing_name "hijing"
+apply_pattern set_lib_path
+
+macro hijing_export_paths "$(hijing_home)/include $(hijing_home)/lib"
