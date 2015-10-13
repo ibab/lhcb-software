@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MuonTrackAlign
 ################################################################################
-gaudi_subdir(MuonTrackAlign v1r10)
+gaudi_subdir(MuonTrackAlign v1r10p1)
 
 gaudi_depends_on_subdirs(Det/MuonDet
                          Event/LinkerEvent
