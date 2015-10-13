@@ -1,0 +1,16 @@
+<!-- This file is where visualization attributes are mapped to materials -->
+
+<!-- TT materials -->
+
+<Item name="/dd/Materials/TT/BoxWall"
+      attr="VisTTBoxWall"/>
+<Item name="/dd/Materials/TT/CableHV"
+      attr="VisTTCableHV"/>
+<Item name="/dd/Materials/TT/CableK"
+      attr="VisTTCableK"/>
+<Item name="/dd/Materials/TT/CableL"
+      attr="VisTTCableL"/>
+<Item name="/dd/Materials/TT/Rail"
+      attr="VisTTRail"/>
+<Item name="/dd/Materials/TT/Jacket"
+      attr="VisTTJacket"/>

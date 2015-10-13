@@ -1,0 +1,105 @@
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/T1/lvT1"
+      attr="VisOTStation"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/T2/lvT2"
+      attr="VisOTStation"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/T3/lvT3"
+      attr="VisOTStation"/>
+
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/T1/T1X1/lvT1X1"
+      attr="VisOTX1"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/T1/T1X2/lvT1X2"
+      attr="VisOTX2"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/T1/T1U/lvT1U"
+      attr="VisOTU"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/T1/T1V/lvT1V"
+      attr="VisOTV"/>
+
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/T2/T2X1/lvT2X1"
+      attr="VisOTX1"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/T2/T2X2/lvT2X2"
+      attr="VisOTX2"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/T2/T2U/lvT2U"
+      attr="VisOTU"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/T2/T2V/lvT2V"
+      attr="VisOTV"/>
+
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/T3/T3X1/lvT3X1"
+      attr="VisOTX1"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/T3/T3X2/lvT3X2"
+      attr="VisOTX2"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/T3/T3U/lvT3U"
+      attr="VisOTU"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/T3/T3V/lvT3V"
+      attr="VisOTV"/>
+
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/Modules/lvLModule"
+      attr="VisLModule"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/Modules/lvS1Module"
+      attr="VisS1Module"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/Modules/lvS2Module"
+      attr="VisS2Module"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/Modules/lvS3Module"
+      attr="VisS3Module"/>
+
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/Couplings/lvS1Coupling"
+      attr="VisSModCouplings"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/Couplings/lvS2Coupling"
+      attr="VisSModCouplings"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/Couplings/lvS3Coupling"
+      attr="VisSModCouplings"/>
+
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/CFrames/lvClosedCFrames"
+      attr="VisOTCFrame"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/CFrames/lvCSideHorCFramePlate"
+      attr="VisCSideHorCFramePlate"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/CFrames/lvCSideVerCFramePlate"
+      attr="VisCSideVerCFramePlate"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/CFrames/lvASideHorCFramePlate"
+      attr="VisASideHorCFramePlate"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/CFrames/lvASideVerCFramePlate"
+      attr="VisASideVerCFramePlate"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/CFrames/lvVerCFramePlate"
+      attr="VisVerCFramePlate"/>
+
+<!-- support for old volumes -->
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/lvOTStation"
+      attr="VisOTStation"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/lvOTCFrame"
+      attr="VisOTCFrame"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/lvOTX1layer"
+      attr="VisOTX1layer"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/lvOTX2layer"
+      attr="VisOTX2layer"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/lvOTUlayer"
+      attr="VisOTUlayer"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/lvOTVlayer"
+      attr="VisOTVlayer"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/lvSModCouplings"
+      attr="VisSModCouplings"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/Modules/lvLModule"
+      attr="VisLModule"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/Modules/lvS1LowerModule"
+      attr="VisS1LowerModule"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/Modules/lvS1UpperModule"
+      attr="VisS1UpperModule"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/Modules/lvS2LowerModule"
+      attr="VisS2LowerModule"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/Modules/lvS2UpperModule"
+      attr="VisS2UpperModule"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/Modules/lvS3LowerModule"
+      attr="VisS3LowerModule"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/Modules/lvS3UpperModule"
+      attr="VisS3UpperModule"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/CFrames/lvRHorCFramePlate"
+      attr="VisRHorCFramePlate"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/CFrames/lvRVerCFramePlate"
+      attr="VisRVerCFramePlate"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/CFrames/lvLHorCFramePlate"
+      attr="VisLHorCFramePlate"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/CFrames/lvLVerCFramePlate"
+      attr="VisLVerCFramePlate"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/T/OT/CFrames/lvVerCFramePlate"
+      attr="VisVerCFramePlate"/>
+
+
+

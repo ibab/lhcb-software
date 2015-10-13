@@ -1,0 +1,15 @@
+<!-- This part of the file contains definitions of visualization attributes for
+     the materials used in the Magnet description.
+     The only attribute defined here is the color of the material -->
+<VisAtt name="MagnetCoilAl">
+  <Color B="0.8196" G="0.8196" R="0.8196"/>
+</VisAtt>
+<VisAtt name="MagnetYokeSteel">
+  <Color B="0.6" G="0.5333" R="0.4667"/>
+</VisAtt>
+
+<!-- This part contains definitions of visualization attributes for
+     logical volumes. These take precedence on the material attributes
+     and complete them. That's why they don't define colors : the color
+     are taken from the material. -->
+<VisAtt name="MagnetYoke" mode="WireFrame"/>

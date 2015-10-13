@@ -1,0 +1,63 @@
+<VisAtt name="VisRich2Master" mode="WireFrame" opened="Yes">
+  <Color R="0.0" G="1.0" B="1.0"/>
+</VisAtt>
+
+<VisAtt name="VisRichCF4">
+  <Color R="0.99" G="0.98" B="0.1"/>
+</VisAtt>
+<VisAtt name="VisRich2MirrorGlass">
+  <Color R="0.8" G="1.0" B="0.9"/>
+</VisAtt>
+<VisAtt name="VisRich2CarbonFibre">
+  <Color R="0.3" G="0.3" B="0.3"/>
+</VisAtt>
+<VisAtt name="VisRich2Nitrogen">
+  <Color R="0.18" G="0.89" B="0.56"/>
+</VisAtt>
+<VisAtt name="VisRich2MirSupportMaterial">
+  <!--Color R="0.18" G="0.38" B="0.89"/-->
+  <Color R="0.1" G="0.7" B="0.9"/>
+</VisAtt>
+<VisAtt name="VisRich2Rohacell51IG">
+  <Color R="0.96" G="0.96" B="0.81"/>
+</VisAtt>
+
+<VisAtt name="VisRich2MagShield" mode="WireFrame"  >
+  <Color R="0.0" G="0.85" B="0.0"/>
+</VisAtt>
+
+<VisAtt name="VisRich2GasContainer" mode="WireFrame" opened="Yes" >
+  <Color R="0.1" G="0.1" B="0.1"/>
+</VisAtt>
+
+<VisAtt name="VisRich2EntryWindow" mode="WireFrame" opened="Yes"  >
+  <Color R="0.3" G="0.2" B="0.3"/>
+</VisAtt>
+
+<VisAtt name="VisRich2ExitWindow" mode="WireFrame" opened="Yes"  >
+  <Color R="0.3" G="0.2" B="0.3"/>
+</VisAtt>
+
+<VisAtt name="VisRich2Gas" mode="WireFrame" opened="Yes" visible="No" >
+  <Color R="0.99" G="0.98" B="0.1"/>
+</VisAtt>
+
+<VisAtt name="VisRich2MirrorSupports" mode="WireFrame" opened="Yes"  >
+  <Color R="0.3" G="0.7" B="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisRich2MirrorContainer" mode="WireFrame" opened="Yes"  >
+  <Color R="0.5" G="0.5" B="0.5"/>
+</VisAtt>
+
+<VisAtt name="VisRich2HPDPanel" mode="WireFrame" opened="Yes"  >
+  <Color R="0.4" G="0.8" B="0.6"/>
+</VisAtt>
+
+<VisAtt name="VisRich2QuartzWindow" mode="WireFrame" opened="Yes"  >
+  <Color R="0.9" G="0.4" B="0.5"/>
+</VisAtt>
+
+<VisAtt name="VisRich2SuperStructCont" mode="WireFrame" opened="Yes"  >
+  <Color R="0.9" G="0.9" B="0.9"/>
+</VisAtt>

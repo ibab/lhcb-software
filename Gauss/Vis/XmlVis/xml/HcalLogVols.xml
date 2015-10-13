@@ -1,0 +1,21 @@
+
+<Item name="/dd/Geometry/DownstreamRegion/Hcal/Installation/lvHcal"
+	attr="Hcal"/>
+<Item name="/dd/Geometry/DownstreamRegion/Hcal/Installation/lvHcalLeft"
+	attr="Hcal"/>
+<Item name="/dd/Geometry/DownstreamRegion/Hcal/Installation/lvHcalRight"
+	attr="Hcal"/>
+<Item name="/dd/Geometry/DownstreamRegion/Hcal/Installation/lvHcalInnerSectionLeft"
+	attr="HcalInnSection"/>
+<Item name="/dd/Geometry/DownstreamRegion/Hcal/Installation/lvHcalInnerSectionRight"
+	attr="HcalInnSection"/>
+<Item name="/dd/Geometry/DownstreamRegion/Hcal/Installation/lvHcalOuterSectionLeft"
+	attr="HcalOutSection"/>
+<Item name="/dd/Geometry/DownstreamRegion/Hcal/Installation/lvHcalOuterSectionRight"
+	attr="HcalOutSection"/>
+
+<Item name="/dd/Geometry/DownstreamRegion/Hcal/Installation/PlugSupportRight"
+      attr="VisHcalPlug"/>
+<Item name="/dd/Geometry/DownstreamRegion/Hcal/Installation/PlugSupportLeft"
+      attr="VisHcalPlug"/>
+

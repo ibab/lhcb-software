@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Sajan Easo -->
+<!--- Created : 2012-05-30 -->
+
+<Item name="/dd/Geometry/AfterMagnetRegion/TorchTBMaster/lvTorchTBMaster"
+    attr="VisTorchTBMaster" />
+<Item name="/dd/Geometry/AfterMagnetRegion/TorchTBMaster/lvTexSSBBasic"
+  attr="VisTorchTBTexSSBBasic" />
+<Item name="/dd/Geometry/AfterMagnetRegion/TorchTBMaster/lvTexSSBBasic1"
+  attr="VisTorchTBTexSSBBasic" />
+<Item name="/dd/Geometry/AfterMagnetRegion/TorchTBMaster/lvTexSSBBasic2"
+  attr="VisTorchTBTexSSBBasic" />
+<Item name="/dd/Geometry/AfterMagnetRegion/TorchTBMaster/lvTexSSBBasic3"
+  attr="VisTorchTBTexSSBBasic" />
+<Item name="/dd/Geometry/AfterMagnetRegion/TorchTBMaster/lvTexSSBBasic4"
+  attr="VisTorchTBTexSSBBasic" />
+
+<Item name="/dd/Geometry/AfterMagnetRegion/TorchTBMaster/lvMCPMaster"
+  attr="VisTorchTBMcpMaster" />
+<Item name="/dd/Geometry/AfterMagnetRegion/TorchTBMaster/lvMCPSMaster"
+  attr="VisTorchTBMcpSMaster" />
+
+<Item name="/dd/Geometry/AfterMagnetRegion/TorchTBMaster/lvMCPMaster1"
+  attr="VisTorchTBMcpMaster" />
+<Item name="/dd/Geometry/AfterMagnetRegion/TorchTBMaster/lvMCPSMaster1"
+  attr="VisTorchTBMcpSMaster" />
+
+<Item name="/dd/Geometry/AfterMagnetRegion/TorchTBMaster/lvMCPQuartz"
+  attr="VisTorchTBMcpQuartz" />
+<Item name="/dd/Geometry/AfterMagnetRegion/TorchTBMaster/lvMCPPhCathode"
+  attr="VisTorchTBMcpPhCathode" />
+<Item name="/dd/Geometry/AfterMagnetRegion/TorchTBMaster/lvMCPSideEnvelope"
+  attr="VisTorchTBMcpEnvelope" />
+<Item name="/dd/Geometry/AfterMagnetRegion/TorchTBMaster/lvMCPBackEnvelope"
+  attr="VisTorchTBMcpEnvelope" />
+<Item name="/dd/Geometry/AfterMagnetRegion/TorchTBMaster/lvMCPBackFrontRing"
+  attr="VisTorchTBMcpFrontRing" />
+
+<Item name="/dd/Geometry/AfterMagnetRegion/TorchTBMaster/lvMCPAnode"
+  attr="VisTorchTBMcpAnode" />
+

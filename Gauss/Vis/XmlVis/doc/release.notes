@@ -1,0 +1,122 @@
+!-----------------------------------------------------------------------------
+! Package     : Vis/XmlVis
+! Responsible : Gloria CORTI, Thomas RUF
+! Purpose     : Holds visualization attributes for a geometry
+!-----------------------------------------------------------------------------
+
+
+!========================== XmlVis v1r20 2015-05-07 ==========================
+! 2014-10-14 - Sajan Easo
+ - Updated RICH upgrade visibility options
+
+!========================== XmlVis v1r19 2014-08-21 ==========================
+! 2014-05-09 - Heinrich Schindler
+ - Update VP visualisation attributes.
+
+!=========================== XmlVis v1r18 ====================================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+! 2013-09-18 - Jianchun Wang
+ - Modify UT visualization
+!=========================== XmlVis v1r17 ====================================
+! 2013-07-14 - Thomas Ruf
+  more support for upgrade detectors
+!=========================== XmlVis v1r16 ====================================
+! 2013-05-14 - Thomas Ruf
+  added minimal support for upgrade detectors
+!=========================== XmlVis v1r15 ====================================
+! 2012-09-14 - Thomas Ruf
+
+!2012-08-18 - Sajan Easo
+ - Visualization for Torch Testbeam
+!=========================== XmlVis v1r14 ====================================
+!2012-02-20 - Sajan Easo
+ - Visualization for Gauss Tutorial
+!2012-02-07 - Sajan Easo
+  - Visualization attributes for the new Aerogel support box
+!=========================== XmlVis v1r13 ====================================
+! 2010-06-23 - Sajan Easo
+- Visualization attributes for Aerogel subtiles
+!=========================== XmlVis v1r12 ====================================
+! 2009-12-05 - Thomas Ruf
+- Added visual attributes for new implementation of Velo materials
+!=========================== XmlVis v1r11 ====================================
+! 2009-03-26 - Gloria CORTI
+ - Added visual attributes for new implementation of beam pipe supports, made
+   by Daria Savrina
+
+!=========================== XmlVis v1r10 ====================================
+! 2009-01-19 - Thomas Ruf
+ - made tunnel around Velo transparent 
+
+!=========================== XmlVis v1r8 =====================================
+! 2008-10-14 - Thomas Ruf
+ - new infrastructure made by Emilie Maurice, summerstudent 2008
+
+!=========================== XmlVis v1r7 =====================================
+
+! 2008-08-08 - Thomas Ruf
+ - changes for infrastructure, beampipe
+
+! 2008-07-28 - Antonis Papanestis
+ - Added visual attributes for the Rich2 superstructure
+
+!=========================== XmlVis v1r6 =====================================
+! 2008-07-28 - Thomas Ruf
+ - imported all forgotten modifications of Sajan
+! 2008-04-01 - Sajan Easo
+ -Modified the attributes for Rich1 Flat mirrors in accordance
+  with the geometry changes for these mirrors.
+! 2008-03-22 - Sajan Easo
+ - Added attributes for RichHpds in Rich1LogVols.xml
+   such that there is one log vol per hpd. The old naming is
+   also kept for backward compatibitly.
+
+! 2008-01-21 - Sajan Easo
+   Added the atributes for RICH1 CMA Spheirical Mirror
+
+! 2008-07-10 - Thomas Ruf
+ - match to latest changes in infrastructure, beampipe, beam magnets
+!=========================== XmlVis v1r5 =====================================
+
+!=========================== XmlVis v1r4 =====================================
+! 2008-02-21 - Thomas Ruf
+ - added nice colors for Ecal
+ - added colours for Infrastructure
+
+!=========================== XmlVis v1r3 2008-02-04 ==========================
+
+! 2008-01-31 - "Antonis Papanestis"
+ - New RICH attributes for the composite RICH1 spherical mirrors and the
+   extra volumes around the RICH2 spherical mirrors and HPDs.
+
+!=========================== XmlVis v1r2 2008-01-28 ==========================
+
+! 2008-01-18 - Jeroen van Tilburg
+ - Changed a few things in TT attributes.
+ - Added Copper to StandardMaterials.
+ - Made Vacuum transparent.
+
+!=========================== XmlVis v1r1 2007-12-19 ==========================
+
+! 2007-12-12 - Thomas Ruf
+ - Imported IT and TT attributes from Jeroen Tilburg and
+   added a few more things. Tried to optimize for an event display
+ - Made a first implementation for OT attributes 
+
+
+!=========================== XmlVis v1r0 2007-12-03 ==========================
+
+! 2007-12-03 - Gloria CORTI
+ - Use names of volumes as in DC06 geometry.
+ - First version of the package copying DTD and Visualization directory from
+   XmlDDDB v30r4.
+
+   To use it give as file for the visualization $XMLVISROOT/xml/colors.xml, 
+   for example for Panoramix you should do:
+
+     VisualizationSvc.ColorDbLocation = "$XMLVISROOT/xml/colors.xml
+
+ - Modify visualization for beam pipe materials and supports
+!=============================================================================

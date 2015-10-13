@@ -1,0 +1,80 @@
+<!-- This part of the file contains definitions of visualization attributes for
+     the materials used in the Standard materials.
+     The only attribute defined here is the color of the material -->
+<VisAtt name="Air">
+  <Color R="1" G="1" B="1"/>
+  <!--<Color R="1" G="1" B="1" A="1.0"/>/-->
+</VisAtt>
+<!--<VisAtt name="ArgonGas">
+  <Color R="0" G="0" B="0"/>
+</VisAtt>-->
+<!--<VisAtt name="Argon_CF4_CO2">
+  <Color R="0" G="0" B="0"/>
+</VisAtt>-->
+<!--<VisAtt name="CF4">
+  <Color R="0" G="0" B="0"/>
+</VisAtt>-->
+<!--<VisAtt name="CO2">
+  <Color R="0" G="0" B="0"/>
+</VisAtt>-->
+<VisAtt name="Silicon">
+  <Color R="0.9" G="0.9" B="0.9"/>
+</VisAtt>
+<VisAtt name="Aluminium">
+  <Color R="0.8196" G="0.8196" B="0.8196"/>
+</VisAtt>
+<VisAtt name="PureCarbon">
+  <Color R="0" G="0" B="0"/>
+</VisAtt>
+<!--<VisAtt name="SiO2">
+  <Color R="0" G="0" B="0"/>
+</VisAtt>-->
+<VisAtt name="Vacuum">
+  <Color R="0.2902" G="0.2902" B="0.2902"/>
+  <!--Color B="0" G="1" R="0" A="1.0"/-->
+</VisAtt>
+<VisAtt name="Water">
+  <Color R="0" G="0.6980" B="0.9333"/>
+</VisAtt>
+<VisAtt name="Copper">
+  <Color R="0.8" G="0.68" B="0.0"/>
+</VisAtt>
+<VisAtt name="VisCoilCopper">
+  <Color R="0.8" G="0.68" B="0.0"/>
+</VisAtt>
+<VisAtt name="VisConcrete">
+  <Color R="0.7" G="0.7" B="0.7"/>
+</VisAtt>
+<VisAtt name="VisIron">
+  <Color R="0.3" G="0.3" B="0.3"/>
+</VisAtt>
+<VisAtt name="VisYokeIron">
+  <Color R="0.8" G="0.25" B="0.1"/>
+</VisAtt>
+<VisAtt name="VisG10">
+  <Color R="0.8" G="0.1" B="0.0"/>
+</VisAtt>
+<VisAtt name="Lead">
+  <Color R="0.1" G="0.1" B="0.1"/>
+</VisAtt>
+<VisAtt name="Steel">
+  <Color R="0.4" G="0.4" B="0.4"/>
+</VisAtt>
+<VisAtt name="Tungsten">
+  <Color R="0.2" G="0.2" B="0.2"/>
+</VisAtt>
+
+
+<!-- This part contains definitions of visualization attributes for
+     logical volumes. These take precedence on the material attributes
+     and complete them. That's why they don't define colors : the color
+     are taken from the material. -->
+<VisAtt name="LHCbTop" opened="Yes"/>
+<VisAtt name="VisAfterMagnetRegion"  visible="No" opened="Yes"/>
+<VisAtt name="VisBeforeMagnetRegion" visible="No" opened="Yes"/>
+<VisAtt name="VisDownstreamRegion"   visible="No" opened="Yes"/>
+<VisAtt name="VisMagnetRegion"       visible="No" opened="Yes"/>
+<VisAtt name="VisUpstreamRegion"     visible="No" opened="Yes"/>
+<VisAtt name="VisMuon"  	     visible="No" opened="Yes"/>
+<VisAtt name="VisT"     	     visible="No" opened="Yes"/>
+

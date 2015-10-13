@@ -1,0 +1,69 @@
+<!-- This part of the file contains definitions of visualization attributes for
+     the materials used in the Rich1 description.
+     The only attribute defined here is the color of the material -->
+
+<VisAtt name="VisUT" opened="Yes">
+  <Color R="0.93" G="0.79" B="0.0"/>
+</VisAtt>
+
+<VisAtt name="VisUTStation" opened="Yes">
+  <Color B="0.8" G="0.9" R="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisUTLayer" opened="No">
+  <Color B="0.4" G="0.8" R="0.8"/>
+</VisAtt>
+
+<VisAtt name="VisUTModule" opened="Yes">
+  <Color B="0.5" G="0.4" R="0.6"/>
+</VisAtt>
+
+<VisAtt name="VisUTHybrid" opened="Yes">
+  <Color B="0." G="0.3" R="0.6"/>
+</VisAtt>
+
+<VisAtt name="VisUTMetalLayer">
+  <Color B="0.6" G="0.6" R="0.8"/>
+</VisAtt>
+
+<VisAtt name="VisUTGuardRing">
+  <Color B="0." G="0.6" R="0.3"/>
+</VisAtt>
+
+<VisAtt name="VisUTSensor">
+  <Color B="0." G="0.9" R="0.3"/>
+</VisAtt>
+
+<VisAtt name="VisUTSector" opened="Yes">
+  <Color B="0." G="0.3" R="0.6"/>
+</VisAtt>
+
+
+
+<VisAtt name="VisUTBoxWall" mode="WireFrame">
+  <Color R="0.95" G="0.40" B="0.0"/>
+</VisAtt>
+
+<VisAtt name="VisUTAsic">
+  <Color B="0.8" G="0.8" R="0.8"/>
+</VisAtt>
+
+<VisAtt name="VisUTHybridFlex">
+  <Color B="0.1" G="0.2" R="0.6"/>
+</VisAtt>
+
+<VisAtt name="VisUTKaptonCable">
+  <Color B="0.0" G="0.4" R="0.8"/>
+</VisAtt>
+
+<VisAtt name="VisUTKapton">
+  <Color B="0.0" G="0.4" R="0.8"/>
+</VisAtt>
+
+<VisAtt name="VisUTModuleStave">
+  <Color B="0.7" G="0.6" R="0.1"/>
+</VisAtt>
+
+<VisAtt name="VisBeamPipeJacket">
+  <Color B="0.95" G="0.2" R="0.2"/>
+</VisAtt>

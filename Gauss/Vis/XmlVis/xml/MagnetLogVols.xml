@@ -1,0 +1,23 @@
+
+<Item name="/dd/Geometry/LHCb/lvLHCb"
+      attr="LHCbTop"/>
+
+<Item name="/dd/Geometry/MagnetRegion/Magnet/YokeVert"
+      attr="MagnetYoke"/>
+<Item name="/dd/Geometry/MagnetRegion/Magnet/YokeHor"
+      attr="MagnetYoke"/>
+
+<Item name="/dd/Geometry/DownstreamRegion/lvDownstreamRegion"
+      attr="VisDownstreamRegion"/>
+<Item name="/dd/Geometry/BeforeMagnetRegion/lvBeforeMagnetRegion"
+      attr="VisBeforeMagnetRegion"/>      
+<Item name="/dd/Geometry/AfterMagnetRegion/lvAfterMagnetRegion"
+      attr="VisAfterMagnetRegion"/>      
+<Item name="/dd/Geometry/MagnetRegion/lvMagnetRegion"
+      attr="VisMagnetRegion"/>      
+<Item name="/dd/Geometry/UpstreamRegion/lvUpstreamRegion"
+      attr="VisUpstreamRegion"/>      
+<Item name="/dd/Geometry/DownstreamRegion/Muon/lvMuonBack"
+      attr="VisMuon"/>      
+<Item name="/dd/Geometry/AfterMagnetRegion/T/lvT"
+      attr="VisT"/>      

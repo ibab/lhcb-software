@@ -1,0 +1,50 @@
+<!-- This part of the file contains definitions of visualization attributes for
+     the materials used in the Infrastructure description.
+     The only attribute defined here is the color of the material -->
+<VisAtt name="VisShieldingWall">
+  <Color R="0.62" G="0.71" B="0.80"/>
+</VisAtt>
+
+<VisAtt name="VisShaft">
+  <Color R="0.53" G="0.80" B="0.98"/>
+</VisAtt>
+<VisAtt name="VisCavern">
+  <Color R="0.7" G="0.7" B="0.7"/>
+</VisAtt>
+<VisAtt name="VisTunnel">
+  <Color R="0.50" G="0.50" B="0.54"/>
+</VisAtt>
+<VisAtt name="VisBunker">
+  <Color R="0.86" G="0.86" B="0.86"/>
+</VisAtt>
+<VisAtt name="VisGantry">
+  <Color R="0.86" G="0.86" B="0.0"/>
+</VisAtt>
+<VisAtt name="VisBlockWallUpstr2">
+  <Color R="0.86" G="0.86" B="0.86"/>
+</VisAtt>
+<VisAtt name="VisBlockWallUpstr3">
+  <Color R="0.86" G="0.86" B="0.86"/>
+</VisAtt>
+<VisAtt name="VisBlockWallUpstr">
+  <Color R="0.86" G="0.86" B="0.86"/>
+</VisAtt>
+<VisAtt name="VisExtensionBunker">
+  <Color R="0.86" G="0.86" B="0.86"/>
+</VisAtt>
+<VisAtt name="VisSteelStructure">
+  <Color R="0.0" G="0.4" B="0.07"/>
+</VisAtt>
+<VisAtt name="VisVertexPlateform">
+  <Color R="0.80" G="0.8" B="0.8"/>
+</VisAtt>
+
+
+<!-- This part contains definitions of visualization attributes for
+     logical volumes. These take precedence on the material attributes
+     and complete them. That's why they don't define colors : the color
+     are taken from the material. -->
+<VisAtt name="VisInfrastructure" mode="WireFrame" visible="No" opened="Yes"/>
+<VisAtt name="VisAfterMuon" visible="No" opened="Yes"/>
+<VisAtt name="VisTunnel"    mode="WireFrame" visible="Yes" opened="Yes"/>
+<VisAtt name="VisUX85"      mode="WireFrame" visible="No" opened="Yes"/>

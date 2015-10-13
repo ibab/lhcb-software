@@ -1,0 +1,10 @@
+<!-- This part of the file contains definitions of visualization attributes for
+     the materials used in the VP description.
+     The only attribute defined here is the color of the material -->
+<!-- VL materials -->
+
+
+<!-- This part contains definitions of visualization attributes for
+     logical volumes. These take precedence on the material attributes
+     and complete them. That's why they don't define colors : the color
+     are taken from the material. -->

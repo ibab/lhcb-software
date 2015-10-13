@@ -1,0 +1,32 @@
+<!-- This part of the file contains definitions of visualization attributes for
+     the materials used in the Hcal description.
+     The only attribute defined here is the color of the material -->
+<VisAtt name="HcalMsPlSteel">
+  <Color B="0.9333" G="0.8235" R="0.7372"/>
+</VisAtt>
+<VisAtt name="HcalSc">
+  <Color B="0.9216" G="0.9216" R="0.9216"/>
+</VisAtt>
+<VisAtt name="HcalStripSteel">
+  <Color B="1" G="0.8823" R="0.7921"/>
+</VisAtt>
+<VisAtt name="HcalSupportSteel">
+  <Color B="0.8039" G="0.7098" R="0.6353"/>
+</VisAtt>
+<VisAtt name="HcalPb">
+  <Color R="0.75" G="0.75" B="0.75"/>
+</VisAtt>
+<VisAtt name="VisHcalPlug">
+  <Color R="0.48" G="0.54" B="0.54"/>
+</VisAtt>
+
+<VisAtt name="Hcal" mode="WireFrame" visible="No" opened="Yes">
+  <Color R="0.75" G="0.75" B="0.0"/>
+</VisAtt>
+<VisAtt name="HcalInnSection" mode="WireFrame" visible="Yes" opened="No">
+  <Color R="0.75" G="0.0" B="0.0"/>
+</VisAtt>
+<VisAtt name="HcalOutSection" mode="WireFrame" visible="Yes" opened="No">
+  <Color R="0.0" G="0.75" B="0.0"/>
+</VisAtt>
+

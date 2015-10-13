@@ -1,0 +1,309 @@
+<!-- This part of the file contains definitions of visualization attributes for
+     the materials used in the Rich1 description.
+     The only attribute defined here is the color of the material -->
+
+<!-- IT box encapsulation -->
+<VisAtt name="VisITFullCenterBox" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisITFullSideBox" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisIT_410_V_4to7_FullCenterBox" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisIT_410_V_1to4_X2_1to4_FullCenterBox" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisITX1LongLayer" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisITX1ShortLayer" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisITULongLayer" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisITUShortLayer" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisITVLongLayer" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisITVShortLayer" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisITX2LongLayer" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisITX2ShortLayer" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisITX2_410_1to4_ShortLayer" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisITV_410_1to4_ShortLayer" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisITV_410_4to7_ShortLayer" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisLongLadder" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisShortLadder" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisShort410Ladder" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisSideBox1" mode="WireFrame">
+  <Color R="0.7" G="0.7" B="0.7"/>
+</VisAtt>
+<VisAtt name="VisSideBox4" mode="WireFrame">
+  <Color R="0.7" G="0.7" B="0.7"/>
+</VisAtt>
+<VisAtt name="VisSideBoxBottom" mode="WireFrame">
+  <Color R="0.7" G="0.7" B="0.7"/>
+</VisAtt>
+<VisAtt name="VisSideBoxBeam" mode="WireFrame">
+  <Color R="0.7" G="0.7" B="0.7"/>
+</VisAtt>
+<VisAtt name="VisCenterBox1" mode="WireFrame">
+  <Color R="0.7" G="0.7" B="0.7"/>
+</VisAtt>
+<VisAtt name="VisCenterBox4" mode="WireFrame">
+  <Color R="0.7" G="0.7" B="0.7"/>
+</VisAtt>
+<VisAtt name="VisCenterBoxBeam" mode="WireFrame">
+  <Color R="0.7" G="0.7" B="0.7"/>
+</VisAtt>
+<VisAtt name="VisCenterBoxBottom" mode="WireFrame">
+  <Color R="0.7" G="0.7" B="0.7"/>
+</VisAtt>
+<VisAtt name="VisCSideCenterBox" mode="WireFrame">
+  <Color R="0.7" G="0.7" B="0.7"/>
+</VisAtt>
+<VisAtt name="VisASideCenterBox" mode="WireFrame">
+  <Color R="0.7" G="0.7" B="0.7"/>
+</VisAtt>
+<VisAtt name="VisCSideSideBox" mode="WireFrame">
+  <Color R="0.7" G="0.7" B="0.7"/>
+</VisAtt>
+<VisAtt name="VisASideSideBox" mode="WireFrame">
+  <Color R="0.7" G="0.7" B="0.7"/>
+</VisAtt>
+<VisAtt name="VisLong410Sensor" >
+  <Color R="0.6" G="0.1" B="0.1"/>
+</VisAtt>
+<VisAtt name="VisShort320Sensor" >
+  <Color R="0.6" G="0.1" B="0.1"/>
+</VisAtt>
+<VisAtt name="VisShort410Sensor" >
+  <Color R="0.1" G="0.9" B="0.1"/>
+</VisAtt>
+<VisAtt name="VisITShort410Sector" opened="Yes">
+  <Color R="0.98" G="0.94" B="0.9"/>
+</VisAtt>
+<VisAtt name="VisITShort320Sector" opened="Yes">
+  <Color R="0.98" G="0.94" B="0.9"/>
+</VisAtt>
+<VisAtt name="VisITLong410Sector" opened="Yes">
+  <Color R="0.98" G="0.94" B="0.9"/>
+</VisAtt>
+
+
+<!-- T1 -->
+<VisAtt name="VisITT1Station" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisT1SupportCSideLayer" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisT1SupportCSideLayerSig" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisT1SupportCSideLayerCarbon" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisT1SupportCSideLayerCool" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisT1SupportASideLayer" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisT1SupportASideLayerSig" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisT1SupportASideLayerCarbon" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisT1SupportASideLayerCool" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+
+<!-- T2 -->
+<VisAtt name="VisITT2Station" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisT2SupportCSideLayer" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisT2SupportCSideLayerSig" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisT2SupportCSideLayerCarbon" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisT2SupportCSideLayerCool" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisT2SupportASideLayer" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisT2SupportASideLayerSig" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisT2SupportASideLayerCarbon" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisT2SupportASideLayerCool" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+
+<!-- T3 -->
+<VisAtt name="VisITT3Station" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisT3SupportCSideLayer" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisT3SupportCSideLayerSig" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisT3SupportCSideLayerCarbon" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisT3SupportCSideLayerCool" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisT3SupportASideLayer" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisT3SupportASideLayerSig" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisT3SupportASideLayerCarbon" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisT3SupportASideLayerCool" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+
+<!-- RM -->
+<VisAtt name="VisITRMStation" mode="WireFrame" opened="Yes">
+  <Color R="0.0" G="0.2" B="0.5"/>
+</VisAtt>
+<VisAtt name="VisLadderRMS" mode="WireFrame" opened="Yes">
+  <Color R="0.0" G="0.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisFoilRMS"  >
+  <Color R="0.0" G="0.5" B="0.0"/>
+</VisAtt>
+<VisAtt name="VisSupportRMS"  >
+  <Color R="0.5" G="0.5" B="0.0"/>
+</VisAtt>
+<VisAtt name="VisTopPlateRMS"  >
+  <Color R="1.0" G="0.2" B="0.0"/>
+</VisAtt>
+
+
+<!-- IT materials -->
+<VisAtt name="VisITBoxWall">
+  <Color R="0.7" G="0.7" B="0.7"/>
+</VisAtt>
+<VisAtt name="VisITBoxCenter3">
+  <Color R="0.7" G="0.7" B="0.7"/>
+</VisAtt>
+<VisAtt name="VisITBoxCenter4">
+  <Color R="0.7" G="0.7" B="0.7"/>
+</VisAtt>
+<VisAtt name="VisITBoxCenterBeam">
+  <Color R="0.7" G="0.7" B="0.7"/>
+</VisAtt>
+<VisAtt name="VisITBox4">
+  <Color R="0.7" G="0.7" B="0.7"/>
+</VisAtt>
+<VisAtt name="VisITBoxSideBottom">
+  <Color R="0.7" G="0.7" B="0.7"/>
+</VisAtt>
+<VisAtt name="VisITBoxBeam">
+  <Color R="0.7" G="0.7" B="0.7"/>
+</VisAtt>
+<VisAtt name="VisITSideCover">
+  <Color R="0.7" G="0.7" B="0.7"/>
+</VisAtt>
+<VisAtt name="VisITCenterCover">
+  <Color R="0.7" G="0.7" B="0.7"/>
+</VisAtt>
+<VisAtt name="VisITLongSupport">
+  <Color R="0.2" G="0.2" B="0.2"/>
+</VisAtt>
+<VisAtt name="VisITShortSupport">
+  <Color R="0.2" G="0.2" B="0.2"/>
+</VisAtt>
+<VisAtt name="VisITSandwichSupport">
+  <Color R="0.3" G="0.3" B="0.3"/>
+</VisAtt>
+<VisAtt name="VisITColumn">
+  <Color R="0.2" G="0.2" B="0.2"/>
+</VisAtt>
+<VisAtt name="VisITCoolingCable">
+  <Color R="0.1" G="0.2" B="0.5"/>
+</VisAtt>
+<VisAtt name="VisITCoolingCable2">
+  <Color R="0.1" G="0.2" B="0.5"/>
+</VisAtt>
+<VisAtt name="VisITElecCable" mode="WireFrame">
+  <Color R="0.95" G="0.4" B="0.05"/>
+</VisAtt>
+<VisAtt name="VisITKaptonFlex-Center">
+  <Color R="0.1" G="0.6" B="0.1"/>
+</VisAtt>
+<VisAtt name="VisITKaptonFlex-Side">
+  <Color R="0.1" G="0.6" B="0.1"/>
+</VisAtt>
+<VisAtt name="VisITBalcony">
+  <Color R="0.5" G="0.35" B="0.25"/>
+</VisAtt>
+<VisAtt name="VisITLadderTop">
+  <Color R="0.4" G="0.25" B="0.15"/>
+</VisAtt>
+<VisAtt name="VisITPCBSmall">
+  <Color R="0.07" G="0.5" B="0.07"/>
+</VisAtt>
+<VisAtt name="VisITPCBBig">
+  <Color R="0.07" G="0.5" B="0.07"/>
+</VisAtt>
+<VisAtt name="VisITSVBox">
+  <Color R="0.51" G="0.54" B="0.54"/>
+</VisAtt>
+<VisAtt name="VisITElecCable">
+  <Color R="0.99" G="0.75" B="0.14"/>
+</VisAtt>
+<VisAtt name="VisITHVCable">
+  <Color R="0.80" G="0.07" B="0.0"/>
+</VisAtt>
+<VisAtt name="VisITXElecCable">
+  <Color R="0.35" G="0.35" B="0.67"/>
+</VisAtt>
+<VisAtt name="VisITPipe">
+  <Color R="0.84" G="0.53" B="0.10"/>
+</VisAtt>
+<VisAtt name="VisITCoolingRod">
+  <Color R="0.78" G="0.78" B="0.78"/>
+</VisAtt>
+<VisAtt name="VisITUSteel">
+  <Color R="0.43" G="0.48" B="0.54"/>
+</VisAtt>
+

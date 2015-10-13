@@ -1,0 +1,15 @@
+<!-- This file is where visualization attributes are mapped to materials -->
+<Item name="/dd/Materials/Ecal/EcalFiber"
+      attr="EcalFiber"/>
+<Item name="/dd/Materials/Ecal/EcalPaper"
+      attr="EcalPaper"/>
+<Item name="/dd/Materials/Ecal/EcalPlastic"
+      attr="EcalPlastic"/>
+<Item name="/dd/Materials/Ecal/EcalSc"
+      attr="EcalSc"/>
+<Item name="/dd/Materials/Ecal/EcalSteel"
+      attr="EcalSteel"/>
+<Item name="/dd/Materials/Ecal/EcalDrilledAluminium"
+      attr="EcalDrilledAluminium"/>
+<Item name="/dd/Materials/Ecal/EcalPb"
+      attr="HcalPb"/>

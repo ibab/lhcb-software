@@ -1,0 +1,5 @@
+<!-- This file is where visualization attributes are mapped to materials -->
+<Item name="/dd/Materials/Magnet/CoilAl"
+      attr="MagnetCoilAl"/>
+<Item name="/dd/Materials/Magnet/YokeSteel"
+      attr="MagnetYokeSteel"/>

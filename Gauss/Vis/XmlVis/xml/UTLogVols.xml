@@ -1,0 +1,66 @@
+<Item name="/dd/Geometry/BeforeMagnetRegion/UT/lvUT"
+      attr="VisUT"/>
+
+<Item name="/dd/Geometry/BeforeMagnetRegion/UT/lvUTa"
+      attr="VisUTStation"/>
+<Item name="/dd/Geometry/BeforeMagnetRegion/UT/lvUTb"
+      attr="VisUTStation"/>
+
+<Item name="/dd/Geometry/BeforeMagnetRegion/UT/lvUTaXLayer"
+      attr="VisUTLayer"/>
+<Item name="/dd/Geometry/BeforeMagnetRegion/UT/lvUTaULayer"
+      attr="VisUTLayer"/>
+<Item name="/dd/Geometry/BeforeMagnetRegion/UT/lvUTbVLayer"
+      attr="VisUTLayer"/>
+<Item name="/dd/Geometry/BeforeMagnetRegion/UT/lvUTbXLayer"
+      attr="VisUTLayer"/>
+
+<Item name="/dd/Geometry/BeforeMagnetRegion/UT/Modules/lvModuleA"
+      attr="VisUTModule"/>
+<Item name="/dd/Geometry/BeforeMagnetRegion/UT/Modules/lvModuleB"
+      attr="VisUTModule"/>
+<Item name="/dd/Geometry/BeforeMagnetRegion/UT/Modules/lvModuleC"
+      attr="VisUTModule"/>
+
+<Item name="/dd/Geometry/BeforeMagnetRegion/UT/Hybrids/lvHybridNorm"
+      attr="VisUTHybrid"/>
+<Item name="/dd/Geometry/BeforeMagnetRegion/UT/Hybrids/lvHybridDual"
+      attr="VisUTHybrid"/>
+<Item name="/dd/Geometry/BeforeMagnetRegion/UT/Hybrids/lvHybridQuad"
+      attr="VisUTHybrid"/>
+<Item name="/dd/Geometry/BeforeMagnetRegion/UT/Hybrids/lvHybridHole"
+      attr="VisUTHybrid"/>
+
+<Item name="/dd/Geometry/BeforeMagnetRegion/UT/Sensors/lvMetalLayerFull"
+      attr="VisUTMetalLayer"/>
+<Item name="/dd/Geometry/BeforeMagnetRegion/UT/Sensors/lvMetalLayerHalf"
+      attr="VisUTMetalLayer"/>
+<Item name="/dd/Geometry/BeforeMagnetRegion/UT/Sensors/lvMetalLayerHole"
+      attr="VisUTMetalLayer"/>
+
+<Item name="/dd/Geometry/BeforeMagnetRegion/UT/Sensors/lvGuardRingFull"
+      attr="VisUTGuardRing"/>
+<Item name="/dd/Geometry/BeforeMagnetRegion/UT/Sensors/lvGuardRingHalf"
+      attr="VisUTGuardRing"/>
+<Item name="/dd/Geometry/BeforeMagnetRegion/UT/Sensors/lvGuardRingFrame"
+      attr="VisUTGuardRing"/>
+<Item name="/dd/Geometry/BeforeMagnetRegion/UT/Sensors/lvGuardRingArc"
+      attr="VisUTGuardRing"/>
+
+<Item name="/dd/Geometry/BeforeMagnetRegion/UT/Sensors/lvSensorNorm"
+      attr="VisUTSensor"/>
+<Item name="/dd/Geometry/BeforeMagnetRegion/UT/Sensors/lvSensorDual"
+      attr="VisUTSensor"/>
+<Item name="/dd/Geometry/BeforeMagnetRegion/UT/Sensors/lvSensorQuad"
+      attr="VisUTSensor"/>
+<Item name="/dd/Geometry/BeforeMagnetRegion/UT/Sensors/lvSensorHole"
+      attr="VisUTSensor"/>
+
+<Item name="/dd/Geometry/BeforeMagnetRegion/UT/Sensors/lvSectorNorm"
+      attr="VisUTSector"/>
+<Item name="/dd/Geometry/BeforeMagnetRegion/UT/Sensors/lvSectorDual"
+      attr="VisUTSector"/>
+<Item name="/dd/Geometry/BeforeMagnetRegion/UT/Sensors/lvSectorQuad"
+      attr="VisUTSector"/>
+<Item name="/dd/Geometry/BeforeMagnetRegion/UT/Sensors/lvSectorHole"
+      attr="VisUTSector"/>

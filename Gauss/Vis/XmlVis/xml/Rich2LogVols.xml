@@ -1,0 +1,73 @@
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2Master"
+      attr="VisRich2Master"/>
+
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2MagShFront0"
+      attr="VisRich2MagShield"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2MagShFront1"
+      attr="VisRich2MagShield"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2MagShTopBot"
+      attr="VisRich2MagShield"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2MagShSideBack"
+      attr="VisRich2MagShield"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2MagShSideFront"
+      attr="VisRich2MagShield"/>
+
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2GasContTopBot"
+      attr="VisRich2GasContainer"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2GasContSide0"
+      attr="VisRich2GasContainer"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2GasContSide1"
+      attr="VisRich2GasContainer"/>
+
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2EntryWindowSkin"
+      attr="VisRich2EntryWindow"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2EntryWindowPMI"
+      attr="VisRich2EntryWindow"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2EntryWinTubeLock"
+      attr="VisRich2EntryWindow"/>
+
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2ExitWindowSkin"
+      attr="VisRich2ExitWindow"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2ExitWindowPMI"
+      attr="VisRich2ExitWindow"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2ExitWinTubeLock"
+      attr="VisRich2ExitWindow"/>
+
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2Gas"
+      attr="VisRich2Gas"/>
+
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2SphMSupport"
+      attr="VisRich2MirrorSupports"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2SecMSupport"
+      attr="VisRich2MirrorSupports"/>
+
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2SphMirrorCont0"
+      attr="VisRich2MirrorContainer"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2SphMirrorCont1"
+      attr="VisRich2MirrorContainer"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2SecMirrorCont0"
+      attr="VisRich2MirrorContainer"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2SecMirrorCont1"
+      attr="VisRich2MirrorContainer"/>
+
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2HPDN2Encl0"
+      attr="VisRich2HPDPanel"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2HPDN2Encl1"
+      attr="VisRich2HPDPanel"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2HPDPanel0"
+      attr="VisRich2HPDPanel"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2HPDPanel1"
+      attr="VisRich2HPDPanel"/>
+
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2QuartzWindow"
+      attr="VisRich2QuartzWindow"/>
+
+<!-- SuperStructure volumes -->
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2AirBoxTop"
+      attr="VisRich2SuperStructCont"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2AirBoxBot"
+      attr="VisRich2SuperStructCont"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2AirTrapRight"
+      attr="VisRich2SuperStructCont"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2AirTrapLeft"
+      attr="VisRich2SuperStructCont"/>

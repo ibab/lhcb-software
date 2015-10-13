@@ -1,0 +1,72 @@
+<!-- This file is where visualization attributes are mapped to materials -->
+
+<!-- Rich1 materials -->
+<!--
+<Item name="/dd/Materials/RichMaterials/Aerogel" 
+          attr="RichAerogel"/> -->
+<!--<Item name="/dd/Materials/RichMaterials/AerogelQuartz" 
+          attr="RichAerogelQuartz"/>-->
+<!--<Item name="/dd/Materials/RichMaterials/C4F10" 
+          attr="RichC4F10"/>-->
+<!--<Item name="/dd/Materials/RichMaterials/GasWindowQuartz" 
+          attr="RichGasWindowQuartz"/>-->
+<!--<Item name="/dd/Materials/RichMaterials/HpdS20PhCathode" 
+          attr="RichHpdS20PhCathode"/>-->
+<!--<Item name="/dd/Materials/RichMaterials/HpdWindowQuartz" 
+          attr="RichHpdWindowQuartz"/>-->
+<!--<Item name="/dd/Materials/RichMaterials/Kovar" 
+          attr="RichKovar"/>-->
+
+
+<!--<Item name="/dd/Materials/RichMaterials/MirrorQuartz" 
+          attr="RichMirrorQuartz"/>-->
+
+<Item name="/dd/Materials/RichMaterials/Rich1Nitrogen"
+      attr="Rich1Nitrogen"/>
+<Item name="/dd/Materials/RichMaterials/RichAir"
+      attr="RichAir"/>
+<Item name="/dd/Materials/RichMaterials/RichAntimony"
+      attr="RichAntimony"/>
+
+<!--<Item name="/dd/Materials/RichMaterials/RichBeamGasMaterial" 
+          attr="RichBeamGasMaterial"/>-->
+<!--<Item name="/dd/Materials/RichMaterials/RichBeamPipeMaterial" 
+          attr="RichBeamPipeMaterial"/>-->
+<!--
+<Item name="/dd/Materials/RichMaterials/RichCarbon"
+      attr="RichCarbon"/>
+<Item name="/dd/Materials/RichMaterials/RichCesium"
+      attr="RichCesium"/>
+<Item name="/dd/Materials/RichMaterials/RichHpdSilicon"
+      attr="RichHpdSilicon"/>
+<Item name="/dd/Materials/RichMaterials/RichPotassium"
+      attr="RichPotassium"/>
+<Item name="/dd/Materials/RichMaterials/RichSodium"
+      attr="RichSodium"/>
+-->
+<!--
+<Item name="/dd/Materials/RichMaterials/C4F10"
+      attr="C4F10"/>
+-->
+
+<Item name="/dd/Materials/RichMaterials/Rich1Mirror2SupportMaterial"
+      attr="VisRich1Mirror2SupportMaterial"/>
+<Item name="/dd/Materials/RichMaterials/Rich1MirrorGlassSimex" 
+          attr="VisRich1MirrorGlass"/>
+
+<!-- Rich2 materials -->
+
+<Item name="/dd/Materials/RichMaterials/Rich2SoftIron"
+      attr="VisRich2MagShield"/>
+<Item name="/dd/Materials/RichMaterials/CF4" 
+          attr="VisRichCF4"/>
+<Item name="/dd/Materials/RichMaterials/Rich2MirrorGlass" 
+          attr="VisRich2MirrorGlass"/>
+<Item name="/dd/Materials/RichMaterials/Rich2CarbonFibre" 
+          attr="VisRich2CarbonFibre"/>
+<Item name="/dd/Materials/RichMaterials/Rich2Nitrogen"
+      attr="VisRich2Nitrogen"/>
+<Item name="/dd/Materials/RichMaterials/Rich2MirSupportMaterial"
+      attr="VisRich2MirSupportMaterial"/>
+<Item name="/dd/Materials/RichMaterials/Rich2Rohacell51IG"
+      attr="VisRich2Rohacell51IG"/>

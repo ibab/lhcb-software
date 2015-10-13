@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Main node
+     It contains 3 subnodes : the definition of the Visualization attributes,
+     The association of these attributess to materials and the association of
+     these attributes to volumes -->
+<!ELEMENT Visualization (VisAtts, Materials, LogVols)>
+<!ATTLIST Visualization DTD_Version CDATA #FIXED "v2">
+
+<!-- The definitions of Visualization attributes -->
+<!ELEMENT VisAtts (VisAtt*)>
+
+<!-- Visualization attribute definition. This has a name and
+     defines the way a volume should be displayed. The possible
+     customization are :
+        - the color of the volume
+        - the visibility : if not visible, the volume and all
+          subvolumes are just removed from the scene
+        - the "open" status : if the volume is open, then its
+          children are displayed directly. The volume has to be
+          visible here.
+        - the visualization mode : solid or wireframe -->
+<!ELEMENT VisAtt (Color?)>
+<!ATTLIST VisAtt
+         name CDATA #REQUIRED
+         visible (Yes | No | Undefined) "Undefined"
+         opened  (Yes | No | Undefined) "Undefined"
+         mode    (Plain | WireFrame | Undefined) "Undefined">
+
+<!-- Color definition. It contains the name of the material that
+     should use this color as well as the three components of the
+     color in RGB system. These are floats in the range 0 - 1. -->
+<!ELEMENT Color EMPTY>
+<!ATTLIST Color
+   R      CDATA #REQUIRED
+   G      CDATA #REQUIRED
+   B      CDATA #REQUIRED
+   A      CDATA "0.0">
+
+<!-- Association of attributes and materials -->
+<!ELEMENT Materials (Item*)>
+
+<!-- Association of sets and logical volumes -->
+<!ELEMENT LogVols (Item*)>
+
+<!ELEMENT Item EMPTY>
+<!ATTLIST Item
+        name CDATA #REQUIRED
+        attr CDATA #REQUIRED>

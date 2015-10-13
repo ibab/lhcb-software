@@ -1,0 +1,63 @@
+<Item name="/dd/Geometry/DownstreamRegion/Muon/Filters/lvMuFilter1"
+      attr="VisMuFilter1"/>
+<Item name="/dd/Geometry/DownstreamRegion/Muon/Filters/lvMuFilter2"
+      attr="VisMuFilter2"/>
+<Item name="/dd/Geometry/DownstreamRegion/Muon/Filters/lvMuFilter3"
+      attr="VisMuFilter3"/>
+
+<Item name="/dd/Geometry/DownstreamRegion/Muon/StatPos/lvM5SupportPanel"
+      attr="VisMuSupport5"/>
+<Item name="/dd/Geometry/DownstreamRegion/Muon/StatPos/lvM4SupportPanel"
+      attr="VisMuSupport4"/>
+<Item name="/dd/Geometry/DownstreamRegion/Muon/StatPos/lvM3SupportPanel"
+      attr="VisMuSupport3"/>
+<Item name="/dd/Geometry/DownstreamRegion/Muon/StatPos/lvM2SupportPanel"
+      attr="VisMuSupport2"/>
+<Item name="/dd/Geometry/DownstreamRegion/Muon/StatPos/lvM1SupportPanel"
+      attr="VisMuSupport1"/>
+
+<Item name="/dd/Geometry/DownstreamRegion/Muon/M1R1Cham/lvM1R1Cham" 
+      attr="VisMuonCham"/>
+<Item name="/dd/Geometry/DownstreamRegion/Muon/M1R2Cham/lvM1R2Cham" 
+      attr="VisMuonCham"/>
+<Item name="/dd/Geometry/DownstreamRegion/Muon/M1R3Cham/lvM1R3Cham" 
+      attr="VisMuonCham"/>
+<Item name="/dd/Geometry/DownstreamRegion/Muon/M1R4Cham/lvM1R4Cham" 
+      attr="VisMuonCham"/>
+<Item name="/dd/Geometry/DownstreamRegion/Muon/M2R1Cham/lvM2R1Cham" 
+      attr="VisMuonCham"/>
+<Item name="/dd/Geometry/DownstreamRegion/Muon/M2R2Cham/lvM2R2Cham" 
+      attr="VisMuonCham"/>
+<Item name="/dd/Geometry/DownstreamRegion/Muon/M2R3Cham/lvM2R3Cham" 
+      attr="VisMuonCham"/>
+<Item name="/dd/Geometry/DownstreamRegion/Muon/M2R4Cham/lvM2R4Cham" 
+      attr="VisMuonCham"/>
+<Item name="/dd/Geometry/DownstreamRegion/Muon/M3R1Cham/lvM3R1Cham" 
+      attr="VisMuonCham"/>
+<Item name="/dd/Geometry/DownstreamRegion/Muon/M3R2Cham/lvM3R2Cham" 
+      attr="VisMuonCham"/>
+<Item name="/dd/Geometry/DownstreamRegion/Muon/M3R3Cham/lvM3R3Cham" 
+      attr="VisMuonCham"/>
+<Item name="/dd/Geometry/DownstreamRegion/Muon/M3R4Cham/lvM3R4Cham" 
+      attr="VisMuonCham"/>
+<Item name="/dd/Geometry/DownstreamRegion/Muon/M4R1Cham/lvM4R1Cham" 
+      attr="VisMuonCham"/>
+<Item name="/dd/Geometry/DownstreamRegion/Muon/M4R2Cham/lvM4R2Cham" 
+      attr="VisMuonCham"/>
+<Item name="/dd/Geometry/DownstreamRegion/Muon/M4R3Cham/lvM4R3Cham" 
+      attr="VisMuonCham"/>
+<Item name="/dd/Geometry/DownstreamRegion/Muon/M4R4Cham/lvM4R4Cham" 
+      attr="VisMuonCham"/>
+<Item name="/dd/Geometry/DownstreamRegion/Muon/M5R1Cham/lvM5R1Cham" 
+      attr="VisMuonCham"/>
+<Item name="/dd/Geometry/DownstreamRegion/Muon/M5R2Cham/lvM5R2Cham" 
+      attr="VisMuonCham"/>
+<Item name="/dd/Geometry/DownstreamRegion/Muon/M5R3Cham/lvM5R3Cham" 
+      attr="VisMuonCham"/>
+<Item name="/dd/Geometry/DownstreamRegion/Muon/M5R4Cham/lvM5R4Cham" 
+      attr="VisMuonCham"/>
+
+<!--
+<Item regex="/dd/Geometry/DownstreamRegion/Muon/M[1-5]R[1-4]Cham/lvM[1-5]R[1-4]Cham" attr="VisMuonCham"/>
+-->
+

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Sajan Easo -->
+<!--- Created : 2012-05-30 -->
+<VisAtt name="VisTorchTBMaster" mode="WireFrame">
+  <Color R="0.0" G="1.0" B="1.0"/>
+</VisAtt>
+
+<VisAtt name="VisTorchTBTexSSBBasic">
+  <Color R="0.3" G="0.4" B="0.4"/>
+</VisAtt>
+<VisAtt name="VisTorchTBMcpMaster">
+  <Color R="0.3" G="0.7" B="0.8"/>
+</VisAtt>
+<VisAtt name="VisTorchTBMcpSMaster">
+  <Color R="0.8" G="0.2" B="0.8"/>
+</VisAtt>
+<VisAtt name="VisTorchTBMcpQuartz">
+  <Color R="0.3" G="0.5" B="0.6"/>
+</VisAtt>
+
+<VisAtt name="VisTorchTBMcpPhCathode">
+  <Color R="0.3" G="0.5" B="0.6"/>
+</VisAtt>
+
+<VisAtt name="VisTorchTBMcpEnvelope">
+  <Color R="0.4" G="0.8" B="0.2"/>
+</VisAtt>
+
+<VisAtt name="VisTorchTBMcpFrontRing">
+  <Color R="0.4" G="0.1" B="0.7"/>
+</VisAtt>
+
+<VisAtt name="VisTorchTBMcpAnode">
+  <Color R="0.8" G="0.7" B="0.3"/>
+</VisAtt>
+
+
+
+
+
+
+
+
+
+

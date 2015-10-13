@@ -1,0 +1,20 @@
+<!-- This part of the file contains definitions of visualization attributes for
+     the materials used in the VP description.
+     The only attribute defined here is the color of the material -->
+<!-- VP materials -->
+<VisAtt name="VPCarbonFibre">
+  <Color B = "0.375" G = "0.375" R = "0.375"/>
+</VisAtt>
+<!-- This part contains definitions of visualization attributes for
+     logical volumes. These take precedence on the material attributes
+     and complete them. That's why they don't define colors : the color
+     are taken from the material. -->
+<VisAtt name = "VisVPSensor" opened = "No">
+  <Color R = "0.6" G = "0.14" B = "0.14"/>
+</VisAtt>
+<VisAtt name = "VisVPChip" opened = "No">
+  <Color R = "0.2" G = "0.4" B = "0.0"/>
+</VisAtt>
+<VisAtt name = "VisVPSubstrate" opened = "No">
+  <Color R = "0.68" G = "0.85" B = "0.9"/>
+</VisAtt>

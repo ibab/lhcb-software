@@ -1,0 +1,84 @@
+<!-- This part of the file contains definitions of visualization attributes for
+     the materials used in the Velo description.
+     The only attribute defined here is the color of the material -->
+<!-- Velo materials -->
+<VisAtt name="VeloKapton">
+  <Color B="0.0" G="1.0" R="0.0"/>
+</VisAtt>
+<VisAtt name="VeloCF">
+  <Color B="0.75" G="0.0" R="0.0"/>
+</VisAtt>
+<VisAtt name="VeloStainlessSteel">
+  <Color B="0.75" G="0.75" R="0.75"/>
+</VisAtt>
+<VisAtt name="VeloInvar">
+  <Color B="0.75" G="0.80" R="0.85"/>
+</VisAtt>
+<VisAtt name="VeloCopper">
+  <Color B="0.0" G="0.5" R="1.0"/>
+</VisAtt>
+<VisAtt name="VeloKaptonCable">
+  <Color B="0.12" G="0.41" R="0.82"/>
+</VisAtt>
+<VisAtt name="VeloStainlessSteel">
+  <Color B="0.80" G="0.78" R="0.69"/>
+</VisAtt>
+<VisAtt name="VeloTPG">
+  <Color B="0.30" G="0.30" R="0.19"/>
+</VisAtt>
+<VisAtt name="VeloLCP">
+  <Color B="0.0" G="0.0" R="0.80"/>
+</VisAtt>
+<VisAtt name="VeloBrass">
+  <Color B="0.26" G="0.65" R="0.71"/>
+</VisAtt>
+<VisAtt name="VeloBerylliumCopper">
+  <Color B="0.20" G="0.45" R="0.72"/>
+</VisAtt>
+<VisAtt name="VeloTestAluminium">
+  <Color B="0.87" G="0.85" R="0.67"/>
+</VisAtt>
+
+
+<!-- This part contains definitions of visualization attributes for
+     logical volumes. These take precedence on the material attributes
+     and complete them. That's why they don't define colors : the color
+     are taken from the material. -->
+<VisAtt name="VisVeloMaster" visible="No" mode="WireFrame" opened="Yes"/>
+<VisAtt name="VisVeloStation" mode="WireFrame" opened="Yes"/>
+<VisAtt name="VisVeloRDetector" opened="No">
+  <Color B="1.0" G="0.0" R="0.5"/>
+</VisAtt>
+<VisAtt name="VisVeloPhiDetector" opened="No">
+  <Color B="0.5" G="0.0" R="1.0"/>
+</VisAtt>
+<VisAtt name="VisVeloPuRDetector" opened="No">
+  <Color B="0.9" G="0.0" R="0.6"/>
+</VisAtt>
+<VisAtt name="VisVeloSupport" mode="WireFrame" opened="Yes"/>
+<VisAtt name="VisVeloHybCopper">
+  <Color B="0.0" G="0.5" R="1.0"/>
+</VisAtt>
+<VisAtt name="VisVeloHybFanout">
+  <Color B="0.5" G="0.3" R="0.1"/>
+</VisAtt>
+<VisAtt name="VisVeloHybChips">
+  <Color B="0.3" G="0.0" R="0.5"/>
+</VisAtt>
+<VisAtt name="VisVeloRFFoil" mode="WireFrame" opened="Yes"/>
+<VisAtt name="VisVeloVacTank" visible="No" mode="WireFrame" opened="Yes"/>
+<VisAtt name="VisVeloVacTankComp" mode="WireFrame" opened="Yes">  
+  <Color B="0.75" G="0.0" R="0.5"/>
+</VisAtt>
+<VisAtt name="VisVeloVacTankWindow" mode="WireFrame" opened="Yes">  
+  <Color B="0.75" G="0.0" R="0.5"/>
+</VisAtt>
+<VisAtt name="VisVeloRFBox" mode="WireFrame" opened="Yes"/>  
+<VisAtt name="VisVeloRFBoxComp" mode="WireFrame" opened="Yes"/>  
+<VisAtt name="VisVeloPipe" mode="WireFrame" opened="Yes"/>
+<VisAtt name="VisVeloPipeCuCylinder">
+  <Color B="0.0" G="0.5" R="1.0"/>
+</VisAtt>
+<VisAtt name="VeloDetSup"  visible="No" mode="WireFrame" opened="Yes"/>
+<VisAtt name="VeloVacTank" visible="Yes" opened="No"/>
+<VisAtt name="Rich1Gas"  visible="No" opened="Yes"/>

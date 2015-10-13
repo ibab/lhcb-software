@@ -1,0 +1,18 @@
+<!-- This file is where visualization attributes are mapped to materials -->
+
+<!-- UT materials -->
+
+<Item name="/dd/Materials/UT/BoxWall"
+      attr="VisUTBoxWall"/>
+<Item name="/dd/Materials/UT/UTAsic"
+      attr="VisUTAsic"/>
+<Item name="/dd/Materials/UT/HybridFlex"
+      attr="VisUTHybridFlex"/>
+<Item name="/dd/Materials/UT/KaptonCable"
+      attr="VisUTKaptonCable"/>
+<Item name="/dd/Materials/UT/Kapton"
+      attr="VisUTKapton"/>
+<Item name="/dd/Materials/UT/ModuleStave"
+      attr="VisUTModuleStave"/>
+<Item name="/dd/Materials/UT/BeamPipeJacket"
+      attr="VisBeamPipeJacket"/>

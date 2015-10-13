@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Sajan Easo -->
+<!--- Created : 2012-02-07 -->
+
+<VisAtt name="VisTutorialMaster" mode="WireFrame" opened="Yes">
+  <Color R="0.0" G="1.0" B="1.0"/>
+</VisAtt>
+
+<!--
+<VisAtt name="VisTutorialMaster" mode="WireFrame">
+  <Color R="0.0" G="1.0" B="1.0"/>
+</VisAtt>
+-->
+
+<VisAtt name="VisTutorialTexSSBBasic">
+  <Color R="0.7" G="0.4" B="0.3"/>
+</VisAtt>
+<VisAtt name="VisTutorialTexSSBTypeA">
+  <Color R="0.4" G="0.6" B="0.8"/>
+</VisAtt>
+<VisAtt name="VisTutorialTexSSBTypeB">
+  <Color R="0.2" G="0.8" B="0.3"/>
+</VisAtt>
+
+<VisAtt name="VisTutorialTexCoin">
+  <Color R="0.5" G="0.3" B="0.7"/>
+</VisAtt>
+<VisAtt name="VisTutorialTexSSBTypeC">
+  <Color R="0.9" G="0.7" B="0.2"/>
+</VisAtt>
+
+<VisAtt name="VisTutorialTexContainer" >
+  <Color R="0.2" G="0.3" B="0.85"/>
+</VisAtt>
+
+<VisAtt name="VisTutorialTexPix" >
+  <Color R="0.75" G="0.35" B="0.15"/>
+</VisAtt>

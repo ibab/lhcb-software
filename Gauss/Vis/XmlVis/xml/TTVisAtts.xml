@@ -1,0 +1,146 @@
+<!-- This part of the file contains definitions of visualization attributes for
+     the materials used in the Rich1 description.
+     The only attribute defined here is the color of the material -->
+
+<VisAtt name="VisTT" opened="Yes">
+  <Color R="0.93" G="0.79" B="0.0"/>
+</VisAtt>
+
+<VisAtt name="VisTTa" opened="Yes">
+  <Color B="0.9" G="0.9" R="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisTTb" opened="Yes">
+  <Color B="0.9" G="0.9" R="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisTTaXLayer" opened="Yes">
+  <Color B="0.9" G="0.9" R="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisTTaXLayerRight" opened="Yes">
+  <Color B="0.9" G="0.9" R="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisTTaXLayerLeft" opened="Yes">
+  <Color B="0.9" G="0.9" R="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisTTaXLayerMiddleTop" opened="Yes">
+  <Color B="0.9" G="0.9" R="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisTTaXLayerMiddleBottom" opened="Yes">
+  <Color B="0.9" G="0.9" R="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisTTaULayer" opened="Yes">
+  <Color B="0.9" G="0.9" R="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisTTaULayerRight" opened="Yes">
+  <Color B="0.9" G="0.9" R="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisTTaULayerLeft" opened="Yes">
+  <Color B="0.9" G="0.9" R="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisTTaULayerMiddleTop" opened="Yes">
+  <Color B="0.9" G="0.9" R="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisTTaULayerMiddleBottom" opened="Yes">
+  <Color B="0.9" G="0.9" R="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisTTbVLayer" opened="Yes">
+  <Color B="0.9" G="0.9" R="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisTTbVLayerRight" opened="Yes">
+  <Color B="0.9" G="0.9" R="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisTTbVLayerLeft" opened="Yes">
+  <Color B="0.9" G="0.9" R="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisTTbVLayerMiddleTop" opened="Yes">
+  <Color B="0.9" G="0.9" R="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisTTbVLayerMiddleBottom" opened="Yes">
+  <Color B="0.9" G="0.9" R="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisTTbXLayer" opened="Yes">
+  <Color B="0.9" G="0.9" R="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisTTbXLayerRight" opened="Yes">
+  <Color B="0.9" G="0.9" R="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisTTbXLayerLeft" opened="Yes">
+  <Color B="0.9" G="0.9" R="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisTTbXLayerMiddleTop" opened="Yes">
+  <Color B="0.9" G="0.9" R="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisTTbXLayerMiddleBottom" opened="Yes">
+  <Color B="0.9" G="0.9" R="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisTTSensorsLM" opened="Yes">
+  <Color B="0.9" G="0.9" R="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisTTSensorsKLM" opened="Yes">
+  <Color B="0.9" G="0.9" R="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisTTLadder1" opened="Yes">
+  <Color B="0.9" G="0.9" R="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisTTLadder2" opened="Yes">
+  <Color B="0.9" G="0.9" R="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisTTLadder3" opened="Yes">
+  <Color B="0.9" G="0.9" R="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisTTLadder4" opened="Yes">
+  <Color B="0.9" G="0.9" R="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisTTBoxWall" mode="WireFrame">
+  <Color R="0.93" G="0.79" B="0.0"/>
+</VisAtt>
+
+<VisAtt name="VisTTJacket">
+  <Color R="0.99" G="0.49" B="0.0"/>
+</VisAtt>
+
+<VisAtt name="VisTTCableHV">
+  <Color R="0.8" G="0.4" B="0.0"/>
+</VisAtt>
+
+<VisAtt name="VisTTCableK">
+  <Color R="0.8" G="0.4" B="0.0"/>
+  <!--Color R="0.68" G="0.5" B="0.32"/-->
+</VisAtt>
+
+<VisAtt name="VisTTCableL">
+  <Color R="0.65" G="0.3" B="0.0"/>
+  <!--Color R="0.7" G="0.55" B="0.3"/-->
+</VisAtt>
+
+<VisAtt name="VisTTRail">
+  <Color R="0.25" G="0.25" B="0.25"/>
+</VisAtt>
+

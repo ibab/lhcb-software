@@ -1,0 +1,3 @@
+<!-- This file is where visualization attributes are mapped to materials -->
+<Item name = "/dd/Materials/VP/CarbonFibre"
+      attr = "VPCarbonFibre"/>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Sajan Easo -->
+<!--- Created : 2012-02-07 -->
+<Item name="/dd/Geometry/AfterMagnetRegion/TutorialMaster/lvTutorialMaster"
+      attr="VisTutorialMaster"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/TutorialMaster/lvTexSSBBasic"
+      attr="VisTutorialTexSSBBasic"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/TutorialMaster/lvTexSSBTypeA"
+      attr="VisTutorialTexSSBTypeA"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/TutorialMaster/lvTexSSBTypeB"
+      attr="VisTutorialTexSSBTypeB"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/TutorialMaster/lvTexCoin"
+      attr="VisTutorialTexCoin"/>
+<Item name="/dd/Geometry/AfterMagnetRegion/TutorialMaster/lvTexSSBTypeC"
+      attr="VisTutorialTexSSBTypeC"/>
+
+<Item name="/dd/Geometry/AfterMagnetRegion/TutorialMaster/lvTexPixContainer" 
+    attr="VisTutorialTexContainer" />
+<Item name="/dd/Geometry/AfterMagnetRegion/TutorialMaster/lvTexSiPixel"
+    attr="VisTutorialTexPix" />
+<Item name="/dd/Geometry/AfterMagnetRegion/TutorialMaster/lvTexSiPixelR0"
+    attr="VisTutorialTexPix" />
+<Item name="/dd/Geometry/AfterMagnetRegion/TutorialMaster/lvTexSiPixelR1"
+    attr="VisTutorialTexPix" />
+<Item name="/dd/Geometry/AfterMagnetRegion/TutorialMaster/lvTexSiPixelR2"
+    attr="VisTutorialTexPix" />
+<Item name="/dd/Geometry/AfterMagnetRegion/TutorialMaster/lvTexSiPixelR3"
+    attr="VisTutorialTexPix" />
+<Item name="/dd/Geometry/AfterMagnetRegion/TutorialMaster/lvTexSiPixelR4"
+    attr="VisTutorialTexPix" />
+<Item name="/dd/Geometry/AfterMagnetRegion/TutorialMaster/lvTexSiPixelR5"
+    attr="VisTutorialTexPix" />
+<Item name="/dd/Geometry/AfterMagnetRegion/TutorialMaster/lvTexSiPixelR6"
+    attr="VisTutorialTexPix" />
+<Item name="/dd/Geometry/AfterMagnetRegion/TutorialMaster/lvTexSiPixelR7"
+    attr="VisTutorialTexPix" />
+<Item name="/dd/Geometry/AfterMagnetRegion/TutorialMaster/lvTexSiPixelR8"
+    attr="VisTutorialTexPix" />
+<Item name="/dd/Geometry/AfterMagnetRegion/TutorialMaster/lvTexSiPixelR9"
+    attr="VisTutorialTexPix" />
+<Item name="/dd/Geometry/AfterMagnetRegion/TutorialMaster/lvTexSiPixelR10"
+    attr="VisTutorialTexPix" />
+<Item name="/dd/Geometry/AfterMagnetRegion/TutorialMaster/lvTexSiPixelR11"
+    attr="VisTutorialTexPix" />
+<Item name="/dd/Geometry/AfterMagnetRegion/TutorialMaster/lvTexSiPixelR12"
+    attr="VisTutorialTexPix" />
+<Item name="/dd/Geometry/AfterMagnetRegion/TutorialMaster/lvTexSiPixelR13"
+    attr="VisTutorialTexPix" />

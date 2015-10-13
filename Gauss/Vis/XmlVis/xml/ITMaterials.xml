@@ -1,0 +1,65 @@
+<!-- This file is where visualization attributes are mapped to materials -->
+
+<!-- IT materials -->
+<Item name="/dd/Materials/IT/BoxWall"
+      attr="VisITBoxWall"/>
+<Item name="/dd/Materials/IT/BoxCenter3"
+      attr="VisITBoxCenter3"/>
+<Item name="/dd/Materials/IT/BoxCenter4"
+      attr="VisITBoxCenter4"/>
+<Item name="/dd/Materials/IT/BoxCenterBeam"
+      attr="VisITBoxCenterBeam"/>
+<Item name="/dd/Materials/IT/Box4"
+      attr="VisITBox4"/>
+<Item name="/dd/Materials/IT/BoxSideBottom"
+      attr="VisITBoxSideBottom"/>
+<Item name="/dd/Materials/IT/BoxBeam"
+      attr="VisITBoxBeam"/>
+<Item name="/dd/Materials/IT/CenterCover"
+      attr="VisITCenterCover"/>
+<Item name="/dd/Materials/IT/SideCover"
+      attr="VisITSideCover"/>
+<Item name="/dd/Materials/IT/LongSupport"
+      attr="VisITLongSupport"/>
+<Item name="/dd/Materials/IT/ShortSupport"
+      attr="VisITShortSupport"/>
+<Item name="/dd/Materials/IT/SandwichSupport"
+      attr="VisITSandwichSupport"/>
+<Item name="/dd/Materials/IT/ITColumn"
+      attr="VisITColumn"/>
+<Item name="/dd/Materials/IT/CoolingCable"
+      attr="VisITCoolingCable"/>
+<Item name="/dd/Materials/IT/CoolingCable2"
+      attr="VisITCoolingCable2"/>
+<Item name="/dd/Materials/IT/ElecCable"
+      attr="VisITElecCable"/>
+<Item name="/dd/Materials/IT/KaptonFlex-Center"
+      attr="VisITKaptonFlex-Center"/>
+<Item name="/dd/Materials/IT/KaptonFlex-Side"
+      attr="VisITKaptonFlex-Side"/>
+<Item name="/dd/Materials/IT/Balcony"
+      attr="VisITBalcony"/>
+<Item name="/dd/Materials/IT/LadderTop"
+      attr="VisITLadderTop"/>
+<Item name="/dd/Materials/IT/SVBox"
+      attr="VisITSVBox"/>
+<Item name="/dd/Materials/IT/ElecCable"
+      attr="VisITElecCable"/>
+<Item name="/dd/Materials/IT/HVCable"
+      attr="VisITHVCable"/>
+<Item name="/dd/Materials/IT/XElecCable"
+      attr="VisITXElecCable"/>
+<Item name="/dd/Materials/IT/G10"
+      attr="VisG10"/>
+<Item name="/dd/Materials/IT/Pipe"
+      attr="VisITPipe"/>
+<Item name="/dd/Materials/IT/CoolingRodCenter"
+      attr="VisITCoolingRod"/>
+<Item name="/dd/Materials/IT/CoolingRodSide"
+      attr="VisITCoolingRod"/>
+<Item name="/dd/Materials/IT/USteelConnector-Side"
+      attr="VisITUSteel"/>
+<Item name="/dd/Materials/IT/USteelConnector-Center"
+      attr="VisITUSteel"/>
+
+

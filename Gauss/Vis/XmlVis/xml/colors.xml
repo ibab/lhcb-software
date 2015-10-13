@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Visualization SYSTEM "../DTD/colors.dtd"[
+
+  <!ENTITY StandardVisAtts SYSTEM "StandardVisAtts.xml">
+  <!ENTITY EcalVisAtts SYSTEM "EcalVisAtts.xml">
+  <!ENTITY HcalVisAtts SYSTEM "HcalVisAtts.xml">
+  <!ENTITY MagnetVisAtts SYSTEM "MagnetVisAtts.xml">
+  <!ENTITY MuonVisAtts SYSTEM "MuonVisAtts.xml">
+  <!ENTITY PipeVisAtts SYSTEM "PipeVisAtts.xml">
+  <!ENTITY Rich1VisAtts SYSTEM "Rich1VisAtts.xml">
+  <!ENTITY Rich2VisAtts SYSTEM "Rich2VisAtts.xml">
+  <!ENTITY TorchTBVisAtts SYSTEM "TorchTBVisAtts.xml">
+  <!ENTITY VeloVisAtts SYSTEM "VeloVisAtts.xml">
+  <!ENTITY VPVisAtts SYSTEM "VPVisAtts.xml">
+  <!ENTITY VLVisAtts SYSTEM "VLVisAtts.xml">
+  <!ENTITY TTVisAtts SYSTEM "TTVisAtts.xml">
+  <!ENTITY UTVisAtts SYSTEM "UTVisAtts.xml">
+  <!ENTITY ITVisAtts SYSTEM "ITVisAtts.xml">
+  <!ENTITY OTVisAtts SYSTEM "OTVisAtts.xml">
+  <!ENTITY InfraStructureVisAtts SYSTEM "InfraStructureVisAtts.xml">
+  <!ENTITY TutorialVisAtts SYSTEM "TutorialVisAtts.xml">
+
+
+  <!ENTITY StandardMaterials SYSTEM "StandardMaterials.xml">
+  <!ENTITY EcalMaterials SYSTEM "EcalMaterials.xml">
+  <!ENTITY HcalMaterials SYSTEM "HcalMaterials.xml">
+  <!ENTITY MagnetMaterials SYSTEM "MagnetMaterials.xml">
+  <!ENTITY MuonMaterials SYSTEM "MuonMaterials.xml">
+  <!ENTITY PipeMaterials SYSTEM "PipeMaterials.xml">
+  <!ENTITY RichMaterials SYSTEM "RichMaterials.xml">
+  <!ENTITY VeloMaterials SYSTEM "VeloMaterials.xml">
+  <!ENTITY VPMaterials SYSTEM "VPMaterials.xml">
+  <!ENTITY TTMaterials SYSTEM "TTMaterials.xml">
+  <!ENTITY UTMaterials SYSTEM "UTMaterials.xml">
+  <!ENTITY ITMaterials SYSTEM "ITMaterials.xml">
+  <!ENTITY OTMaterials SYSTEM "OTMaterials.xml">
+
+  <!ENTITY EcalLogVols SYSTEM "EcalLogVols.xml">
+  <!ENTITY HcalLogVols SYSTEM "HcalLogVols.xml">
+  <!ENTITY MagnetLogVols SYSTEM "MagnetLogVols.xml">
+  <!ENTITY MuonLogVols SYSTEM "MuonLogVols.xml">
+  <!ENTITY PipeLogVols SYSTEM "PipeLogVols.xml">
+  <!ENTITY Rich1LogVols SYSTEM "Rich1LogVols.xml">
+  <!ENTITY Rich2LogVols SYSTEM "Rich2LogVols.xml">
+  <!ENTITY TorchTBLogVols SYSTEM "TorchTBLogVols.xml">
+  <!ENTITY VeloLogVols SYSTEM "VeloLogVols.xml">
+  <!ENTITY VPLogVols SYSTEM "VPLogVols.xml">
+  <!ENTITY VLLogVols SYSTEM "VLLogVols.xml">
+  <!ENTITY TTLogVols SYSTEM "TTLogVols.xml">
+  <!ENTITY UTLogVols SYSTEM "UTLogVols.xml">
+  <!ENTITY ITLogVols SYSTEM "ITLogVols.xml">
+  <!ENTITY OTLogVols SYSTEM "OTLogVols.xml">
+  <!ENTITY InfraStructureLogVols SYSTEM "InfraStructureLogVols.xml">
+  <!ENTITY TutorialLogVols SYSTEM "TutorialLogVols.xml">
+]>
+<Visualization>
+  <VisAtts>
+    &StandardVisAtts;
+    &EcalVisAtts;
+    &HcalVisAtts;
+    &MagnetVisAtts;
+    &MuonVisAtts;
+    &PipeVisAtts;
+    &Rich1VisAtts;
+    &Rich2VisAtts;
+    &TorchTBVisAtts;
+    &VeloVisAtts;
+    &VPVisAtts;
+    &VLVisAtts;
+    &TTVisAtts;
+    &UTVisAtts;
+    &ITVisAtts;
+    &OTVisAtts;
+    &InfraStructureVisAtts;
+    &TutorialVisAtts;
+  </VisAtts>
+  <Materials>
+    &StandardMaterials;
+    &EcalMaterials;
+    &HcalMaterials;
+    &MagnetMaterials;
+    &MuonMaterials;
+    &PipeMaterials;
+    &RichMaterials;
+    &VeloMaterials;
+    &VPMaterials;
+    &TTMaterials;
+    &UTMaterials;
+    &ITMaterials;
+    &OTMaterials;
+  </Materials>
+  <LogVols>
+    &EcalLogVols;
+    &HcalLogVols;
+    &MuonLogVols;
+    &MagnetLogVols;
+    &PipeLogVols;
+    &Rich1LogVols;
+    &Rich2LogVols;
+    &TorchTBLogVols;
+    &VeloLogVols;
+    &VPLogVols;
+    &VLLogVols;
+    &TTLogVols;
+    &UTLogVols;
+    &ITLogVols;
+    &OTLogVols;
+    &InfraStructureLogVols;  
+    &TutorialLogVols;
+  </LogVols>
+</Visualization>

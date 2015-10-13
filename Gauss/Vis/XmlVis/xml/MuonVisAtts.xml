@@ -1,0 +1,78 @@
+<!-- This part of the file contains definitions of visualization attributes for
+     the materials used in the Muon description.
+     The only attribute defined here is the color of the material -->
+<!--<VisAtt name="MuonC2_H2_F4">
+  <Color R="0" G="0" B="0"/>
+</VisAtt>-->
+<!--<VisAtt name="MuonC4_H10">
+  <Color R="0" G="0" B="0"/>
+</VisAtt>-->
+<!--<VisAtt name="MuonEpoxy">
+  <Color R="0" G="0" B="0"/>
+</VisAtt>-->
+<!--<VisAtt name="MuonG10">
+  <Color R="0" G="0" B="0"/>
+</VisAtt>-->
+<!--<VisAtt name="MuonHoneycomb">
+  <Color R="0" G="0" B="0"/>
+</VisAtt>-->
+<!--<VisAtt name="MuonPhenolic">
+  <Color R="0" G="0" B="0"/>
+</VisAtt>-->
+<!--<VisAtt name="MuonPolystyrene_Foam">
+  <Color R="0" G="0" B="0"/>
+</VisAtt>-->
+<!--<VisAtt name="MuonSF6">
+  <Color R="0" G="0" B="0"/>
+</VisAtt>-->
+<!--<VisAtt name="MuonS_CPC_gas">
+  <Color R="0" G="0" B="0"/>
+</VisAtt>-->
+<!--<VisAtt name="MuonS_MRPC_gas">
+  <Color R="0" G="0" B="0"/>
+</VisAtt>-->
+
+<VisAtt name="MuonCopper">
+  <Color R="0.29" G="0.46" B="0.43"/>
+</VisAtt>
+
+<VisAtt name="MuonG10">
+  <Color R="0.37" G="0.2" B="0.07"/>
+</VisAtt>
+
+<VisAtt name="MuonSteel">
+  <Color R="0.14" G="0.42" B="0.55"/>
+</VisAtt>
+
+<VisAtt name="MuonFilterIron">
+  <Color R="0" G="0.5" B="0"/>
+</VisAtt>
+
+<VisAtt name="MuonConcrete">
+  <Color R="0.8" G="0.8" B="0.8"/>
+</VisAtt>
+
+
+
+<VisAtt name="VisMuFilter1"  visible="No" opened="Yes"/>
+<VisAtt name="VisMuFilter2"  visible="No" opened="Yes"/>
+<VisAtt name="VisMuFilter3"  visible="No" opened="Yes"/>
+
+<VisAtt name="VisMuSupport1" mode="WireFrame" visible="Yes" opened="No">
+  <Color R="0.1" G="0.1" B="0.8"/>
+</VisAtt>  
+<VisAtt name="VisMuSupport2"  mode="WireFrame" visible="Yes" opened="No">
+  <Color R="0.1" G="0.1" B="0.8"/>
+</VisAtt>
+<VisAtt name="VisMuSupport3"  mode="WireFrame" visible="Yes" opened="No">
+  <Color R="0.1" G="0.1" B="0.8"/>
+</VisAtt>
+<VisAtt name="VisMuSupport4"  mode="WireFrame" visible="Yes" opened="No">
+  <Color R="0.1" G="0.1" B="0.8"/>
+</VisAtt>
+<VisAtt name="VisMuSupport5"  mode="WireFrame" visible="Yes" opened="No">
+  <Color R="0.1" G="0.1" B="0.8"/>
+</VisAtt>
+
+<VisAtt name="VisMuonCham" visible="No" opened="Yes">
+</VisAtt>

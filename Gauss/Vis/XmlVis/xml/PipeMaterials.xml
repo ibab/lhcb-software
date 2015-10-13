@@ -1,0 +1,27 @@
+<!-- This file is where visualization attributes are mapped to materials -->
+<Item name="/dd/Materials/Pipe/PipeAl6061"
+      attr="VisPipeAlus"/>
+<Item name="/dd/Materials/Pipe/PipeAl2219F"
+      attr="VisPipeAlus"/>
+<Item name="/dd/Materials/Pipe/PipeAl2219S"
+      attr="VisPipeAlus"/>
+<Item name="/dd/Materials/Pipe/PipeAl6082"
+      attr="VisPipeAlus"/>
+<Item name="/dd/Materials/Pipe/PipeBeTV56"
+      attr="VisPipeBe"/>
+<Item name="/dd/Materials/Pipe/Brass"
+      attr="VisPipeBrass"/>
+<Item name="/dd/Materials/Pipe/PipeSteel"
+      attr="VisPipeSteel"/>
+<Item name="/dd/Materials/Pipe/PipeSteel316LN"
+      attr="VisPipeSteel"/>
+<Item name="/dd/Materials/Pipe/BakeOutAerogel"
+      attr="VisPipeBakeOut"/>
+<Item name="/dd/Materials/Pipe/PipeCuOFE"
+      attr="VisPipeCuOFE"/>
+<Item name="/dd/Materials/Pipe/Sintimid15G"
+      attr="VisSintimid15G"/>
+<Item name="/dd/Materials/Pipe/AW2219"
+      attr="VisAW2219"/>
+<Item name="/dd/Materials/Standart/Titanium"
+      attr="VisTitanium"/>

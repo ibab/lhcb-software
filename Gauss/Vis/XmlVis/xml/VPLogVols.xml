@@ -1,0 +1,13 @@
+<!-- VP volumes -->
+<Item name="/dd/Geometry/BeforeMagnetRegion/VP/lvVP"
+      attr="VisVeloMaster"/>
+<Item name="/dd/Geometry/BeforeMagnetRegion/VP/VacTank/lvVTankUpStream"
+      attr="VisVeloVacTank"/>
+<Item name="/dd/Geometry/BeforeMagnetRegion/VP/VacTank/lvVTankDownStream"
+      attr="VisVeloVacTank"/>
+<Item name="/dd/Geometry/BeforeMagnetRegion/VP/Sensors/lvDet"
+      attr="VisVPSensor"/>
+<Item name="/dd/Geometry/BeforeMagnetRegion/VP/Ladders/lvChip"
+      attr="VisVPChip"/>
+<Item name="/dd/Geometry/BeforeMagnetRegion/VP/Supports/lvSubstrate"
+      attr="VisVPSubstrate"/>

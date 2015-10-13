@@ -1,0 +1,363 @@
+<!-- This part of the file contains definitions of visualization attributes for
+     the materials used in the Rich1 description.
+     The only attribute defined here is the color of the material -->
+<VisAtt name="VisRich1Master" mode="WireFrame" opened="Yes" >
+  <Color R="0.0" G="1.0" B="1.0"/>
+</VisAtt>
+<VisAtt name="VisRich1SubMaster" mode="WireFrame"  opened="Yes" >
+  <Color R="0.3" G="0.2" B="0.7"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelMaster" mode = "WireFrame" opened="Yes" >
+  <Color R="0.1" G="0.1" B="0.1"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelContainers" mode = "WireFrame" opened="Yes" >
+  <Color R="0.1" G="0.1" B="0.1"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelFilterFrame" mode = "WireFrame" opened="Yes" >
+  <Color R="0.3" G="0.4" B="0.1"/>
+</VisAtt>
+
+<VisAtt name="VisAerogelBoxRight"  >
+  <Color R="0.3" G="0.6" B="0.3"/>
+</VisAtt>
+<VisAtt name="VisAerogelBoxLeft"  >
+  <Color R="0.4" G="0.6" B="0.3"/>
+</VisAtt>
+<VisAtt name="VisAerogelWrapBox"  >
+  <Color R="0.3" G="0.6" B="0.3"/>
+</VisAtt>
+<VisAtt name="VisAerogelWrapBoxThreeL"  >
+  <Color R="0.4" G="0.4" B="0.3"/>
+</VisAtt>
+<VisAtt name="VisAerogelGasket"  >
+  <Color R="0.9" G="0.2" B="0.4"/>
+</VisAtt>
+
+<VisAtt name="VisAerogelGasketAttach"  >
+  <Color R="0.7" G="0.4" B="0.4"/>
+</VisAtt>
+
+<VisAtt name="VisAerogelEnclosureRoof"  >
+  <Color R="0.7" G="0.3" B="0.8"/>
+</VisAtt>
+<VisAtt name="VisRich1Filter" >
+  <Color R="1.0" G="1.0" B="0.0"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT0">
+  <Color R="0.0" G="0.70" B="0.9"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT1">
+  <Color R="0.0" G="0.71" B="0.9"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT2">
+  <Color R="0.0" G="0.72" B="0.9"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT3">
+  <Color R="0.0" G="0.73" B="0.9"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT4">
+  <Color R="0.0" G="0.74" B="0.9"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT5">
+  <Color R="0.0" G="0.75" B="0.9"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT6">
+  <Color R="0.0" G="0.76" B="0.9"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT7">
+  <Color R="0.0" G="0.77" B="0.9"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT8">
+  <Color R="0.0" G="0.78" B="0.9"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT9">
+  <Color R="0.0" G="0.79" B="0.9"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT10">
+  <Color R="0.0" G="0.80" B="0.9"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT11">
+  <Color R="0.0" G="0.81" B="0.9"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT12">
+  <Color R="0.0" G="0.82" B="0.9"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT13">
+  <Color R="0.0" G="0.83" B="0.9"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT14">
+  <Color R="0.0" G="0.84" B="0.9"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT15">
+  <Color R="0.0" G="0.85" B="0.9"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT00S">
+  <Color R="0.9" G="0.70" B="0.0"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT01S">
+  <Color R="0.9" G="0.71" B="0.0"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT02S">
+  <Color R="0.9" G="0.72" B="0.0"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT03S">
+  <Color R="0.9" G="0.73" B="0.0"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT04S">
+  <Color R="0.9" G="0.74" B="0.0"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT05S">
+  <Color R="0.9" G="0.75" B="0.0"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT06S">
+  <Color R="0.9" G="0.76" B="0.0"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT07S">
+  <Color R="0.9" G="0.77" B="0.0"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT08S">
+  <Color R="0.9" G="0.78" B="0.0"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT09S">
+  <Color R="0.9" G="0.79" B="0.0"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT10S">
+  <Color R="0.9" G="0.80" B="0.0"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT11S">
+  <Color R="0.9" G="0.81" B="0.0"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT12S">
+  <Color R="0.9" G="0.82" B="0.0"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT13S">
+  <Color R="0.9" G="0.83" B="0.0"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT14S">
+  <Color R="0.9" G="0.84" B="0.0"/>
+</VisAtt>
+<VisAtt name="VisRich1AerogelT15S">
+  <Color R="0.9" G="0.85" B="0.0"/>
+</VisAtt>
+<!--
+<VisAtt name="VisRich1MagSh " mode="WireFrame" opened="Yes" >
+  <Color R="0.1" G="0.1" B="0.9"/>
+</VisAtt>
+<VisAtt name="VisRich1MgShield" mode="WireFrame" opened="Yes" >
+  <Color R="0.1" G="0.1" B="0.9"/>
+</VisAtt>
+-->
+
+<VisAtt name="VisRich1MagSh" mode="WireFrame" opened="Yes" >
+  <Color R="0.9" G="0.1" B="0.2"/>
+</VisAtt>
+
+<VisAtt name="VisRich1MgShield" mode="WireFrame" opened="Yes" >
+  <Color R="0.1" G="0.1" B="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisRich1Mirror1CaFiInnerSeg">
+  <Color R="0" G="0.5" B="0.5"/> 
+</VisAtt>
+<VisAtt name="VisRich1Mirror1CaFiOuterSeg">
+  <Color R="0.2" G="0.3" B="0.5"/> 
+</VisAtt>
+<VisAtt name="VisRich1Mirror1CaFiCylinderSeg">
+  <Color R="0.1" G="0.5" B="0.8"/> 
+</VisAtt>
+<VisAtt name="VisRich1Mirror1Quadrant" mode = "WireFrame" opened="Yes" >
+  <Color R="0.6" G="0.3" B="0.3"/> 
+</VisAtt>
+<VisAtt name="VisRich1Mirror1Master" mode = "WireFrame" opened="Yes" >
+  <Color R="0.4" G="0.7" B="0.7"/>
+</VisAtt>
+<VisAtt name="VisRich1Mirror2Master" mode = "WireFrame" opened="Yes" >
+  <Color R="0.4" G="0.8" B="0.6"/>
+</VisAtt>
+<VisAtt name="VisRich1Mirror2Support">
+  <Color R="0.3" G="0.7" B="0.9"/>
+</VisAtt>
+<VisAtt name="VisRich1Mirror2">
+  <Color R="0.1" G="0.4" B="0.5"/>
+</VisAtt>
+<VisAtt name="VisRich1GQuartzW" mode="WireFrame" >
+  <Color R="0.9" G="0.4" B="0.5"/>
+</VisAtt>
+
+<VisAtt name="VisRich1PhDetSupFrame"  mode = "WireFrame"  opened="Yes">
+  <Color R="0.7" G="0.9" B="0.6"/>
+</VisAtt>
+
+
+<VisAtt name="VisRichHPDMaster" >
+  <Color R="0.8" G="0.7" B="0.7"/>
+</VisAtt>
+<VisAtt name="VisRichHPDSMaster" >
+  <Color R="0.6" G="0.3" B="0.7"/>
+</VisAtt>
+<VisAtt name="VisRichHPDKovarRing" >
+  <Color R="0.6" G="0.4" B="0.4"/>
+</VisAtt>
+<VisAtt name="VisRichHPDEnvLargeTub" >
+  <Color R="0.2" G="0.4" B="0.9"/>
+</VisAtt>
+<VisAtt name="VisRichHPDEnvEndCap">
+  <Color R="0.4" G="0.5" B="0.8"/>
+</VisAtt>
+<VisAtt name="VisRichHPDQuartzWindow" opened="Yes" visible="No">
+  <Color R="0.4" G="0.8" B="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisRichHPDPhCathode" opened="Yes" visible="No">
+  <Color R="0.2" G="0.3" B="0.3"/>
+</VisAtt>
+<VisAtt name="VisRichHPDSiDet">
+  <Color R="0" G="0.4" B="0.8"/>
+</VisAtt>
+<VisAtt name="VisRichHpdMuMetal" >
+<Color R="0.1" G="0.7" B="0.4" />
+</VisAtt>
+<VisAtt name="VisRichHpdKapton"  >
+<Color R="0.6" G="0.4" B="0.2" />
+</VisAtt>
+
+
+<VisAtt name="VisRichPMTMaster" mode = "WireFrame" opened="Yes" >
+  <Color R="0.8" G="0.7" B="0.7"/>
+</VisAtt>
+<VisAtt name="VisRichPMTSMaster" mode = "WireFrame" opened="Yes" >
+  <Color R="0.6" G="0.3" B="0.7"/>
+</VisAtt>
+
+
+<VisAtt name="VisRichPMTAnode" >
+  <Color R="0.0" G="0.4" B="0.8"/>
+</VisAtt>
+
+<VisAtt name="VisRichPMTQuartz" >
+  <Color R="0.4" G="0.8" B="0.9"/>
+</VisAtt>
+
+<VisAtt name="VisRichPMTPhCathode" >
+  <Color R="0.2" G="0.3" B="0.3"/>
+</VisAtt>
+<VisAtt name="VisRichPMTEnvelope" >
+  <Color R="0.2" G="0.4" B="0.9"/>
+</VisAtt>
+<VisAtt name="VisRichPMTFrontRing" >
+<Color R="0.1" G="0.7" B="0.4" />
+</VisAtt>
+
+
+<VisAtt name="VisRichPMTModuleShielding" >
+<Color R="0.5" G="0.3" B="0.7" />
+</VisAtt>
+
+<VisAtt name="VisRichPMTModuleMaster" >
+<Color R="0.7" G="0.4" B="0.2" />
+</VisAtt>
+
+
+
+
+
+
+<VisAtt name="VisRich1ExitG10Upstr" mode="WireFrame" >
+  <Color R="0.5" G="0.3" B="0.4" />
+</VisAtt>
+<VisAtt name="VisRich1ExitG10Dnstr" mode="WireFrame" >
+  <Color R="0.4" G="0.2" B="0.3" />
+</VisAtt>
+<VisAtt name="VisRich1ExitPMI" mode="WireFrame" >
+  <Color R="0.3" G="0.8" B="0.3" />
+</VisAtt>
+<VisAtt name="VisRich1ExitWall" mode="WireFrame" opened="Yes" >
+  <Color R="0.4" G="0.2" B="0.3"/>
+</VisAtt>
+
+
+
+
+
+<!--
+<VisAtt name="RichAerogel">
+  <Color R="0" G="0" B="0.4"/>
+</VisAtt>
+-->
+<!--<VisAtt name="RichAerogelQuartz">
+  <Color R="0" G="0" B="0"/>
+</VisAtt>-->
+<!--<VisAtt name="RichC4F10">
+  <Color R="0" G="0" B="0"/>
+</VisAtt>-->
+<!--<VisAtt name="RichCF4">
+  <Color R="0" G="0" B="0"/>
+</VisAtt>-->
+<!--<VisAtt name="RichGasWindowQuartz">
+  <Color R="0" G="0" B="0"/>
+</VisAtt>-->
+<!--<VisAtt name="RichHpdS20PhCathode">
+  <Color R="0" G="0" B="0"/>
+</VisAtt>-->
+<!--<VisAtt name="RichHpdWindowQuartz">
+  <Color R="0" G="0" B="0"/>
+</VisAtt>-->
+<!--<VisAtt name="RichKovar">
+  <Color R="0" G="0" B="0"/>
+</VisAtt>-->
+<!--<VisAtt name="RichMirrorQuartz">
+  <Color R="0" G="0" B="0"/>
+</VisAtt>-->
+<VisAtt name="Rich1Nitrogen">
+  <Color B="0.451" G="0.7765" R="0.8039"/>
+</VisAtt>
+<!--
+<VisAtt name="Rich2Nitrogen">
+  <Color B="0.5608" G="0.9647" R="1"/>
+</VisAtt>
+<VisAtt name="RichAir">
+  <Color B="0.98" G="0.98" R="0.98"/>
+</VisAtt>
+<VisAtt name="RichAntimony">
+  <Color B="0.4392" G="0.4392" R="0.4392"/>
+</VisAtt>
+<VisAtt name="RichC4F10">
+  <Color B="1" G="0.2353" R="0.2353"/>
+</VisAtt>
+-->
+<!--<VisAtt name="RichBeamGasMaterial">
+  <Color R="0" G="0" B="0"/>
+</VisAtt>-->
+
+<!--<VisAtt name="RichBeamPipeMaterial">
+  <Color R="0" G="0" B="0"/>
+</VisAtt>-->
+<!--
+<VisAtt name="RichCarbon">
+  <Color B="0.2353" G="0.2353" R="0.2353"/>
+</VisAtt>
+<VisAtt name="RichCesium">
+  <Color B="0.5882" G="0.7255" R="1"/>
+</VisAtt>
+<VisAtt name="RichHpdSilicon">
+  <Color B="0.5451" G="0.4823" R="0.3765"/>
+</VisAtt>
+<VisAtt name="RichPotassium">
+  <Color B="0.7608" G="0.7608" R="0.7608"/>
+</VisAtt>
+<VisAtt name="RichSodium">
+  <Color B="0.851" G="0.851" R="0.851"/>
+</VisAtt>
+-->
+
+
+<VisAtt name="VisRich1Mirror2" visible="No" opened="Yes" >
+</VisAtt>
+<VisAtt name="VisRich1Mirror2SupportMaterial">
+  <Color R="0.1" G="0.7" B="0.9"/>
+</VisAtt>
+<VisAtt name="VisRich1MirrorGlass">
+  <Color R="0.85" G="0.95" B="0.93"/>
+</VisAtt>
+
+

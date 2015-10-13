@@ -1,0 +1,30 @@
+<!-- This file is where visualization attributes are mapped to materials -->
+<!--<Item name="/dd/Materials/Muon/C2_H2_F4" 
+          attr="MuonC2_H2_F4"/>-->
+<!--<Item name="/dd/Materials/Muon/C4_H10" 
+          attr="MuonC4_H10"/>-->
+<!--<Item name="/dd/Materials/Muon/Epoxy" 
+          attr="MuonEpoxy"/>-->
+<!--<Item name="/dd/Materials/Muon/Honeycomb" 
+          attr="MuonHoneycomb"/>-->
+<!--<Item name="/dd/Materials/Muon/Phenolic" 
+          attr="MuonPhenolic"/>-->
+<!--<Item name="/dd/Materials/Muon/Polystyrene_Foam" 
+          attr="MuonPolystyrene_Foam"/>-->
+<!--<Item name="/dd/Materials/Muon/SF6" 
+          attr="MuonSF6"/>-->
+<!--<Item name="/dd/Materials/Muon/S_CPC_gas" 
+          attr="MuonS_CPC_gas"/>-->
+<!--<Item name="/dd/Materials/Muon/S_MRPC_gas" 
+          attr="MuonS_MRPC_gas"/>-->
+
+<Item name="/dd/Materials/Muon/MuonCopper" 
+          attr="MuonCopper"/>
+<Item name="/dd/Materials/Muon/G10Air" 
+          attr="MuonG10"/>
+<Item name="/dd/Materials/Muon/Steel" 
+          attr="MuonSteel"/>
+<Item name="/dd/Materials/Muon/MuonFilterIron" 
+          attr="MuonFilterIron"/>
+<Item name="/dd/Materials/Muon/Concrete"
+      attr="MuonConcrete"/>

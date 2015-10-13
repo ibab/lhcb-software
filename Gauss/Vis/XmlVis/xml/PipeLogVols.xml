@@ -1,0 +1,99 @@
+<!-- BeamPipe volumes -->
+
+<!-- Support UX851 -->
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX851Collar"
+      attr="VisPipeCollar"/>
+
+<!-- Fix point UX852, DC06 geometry -->
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX852FixCollarInner"
+      attr="VisPipeCollar"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX852FixCollarOuter"
+      attr="VisPipeCollar"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX852FixCollarClosing"
+      attr="VisPipeCollar"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX852FixCollarSmallBase"
+      attr="VisPipeCollar"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX852FixCollarMediumBase"
+      attr="VisPipeCollar"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX852FixCollarBigBaseA"
+      attr="VisPipeCollar"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX852FixCollarBigBaseB"
+      attr="VisPipeCollar"/>
+
+<!-- Fix point UX852, beampipe-20090209 tag in DDDB -->
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX852FixCollar"
+      attr="VisSintimid15G"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX852BigRingQuarter"
+      attr="VisSintimid15G"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX852InnerRing"
+      attr="VisSintimid15G"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX852BigRingSect1"
+      attr="VisSintimid15G"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX852BigRingSect2"
+      attr="VisSintimid15G"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX852BigRingSect3"
+      attr="VisSintimid15G"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX852BigRingSect4"
+      attr="VisSintimid15G"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX852CollarClipSmallSect"
+      attr="VisSintimid15G"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX852CollarClipBigSect"
+      attr="VisSintimid15G"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX852CollarClip"
+      attr="VisSintimid15G"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX852CollarAtt"
+      attr="VisAW2219"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX852CollarAttMain"
+      attr="VisAW2219"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX852CollarAttCircle"
+      attr="VisAW2219"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX852CollarAttInner"
+      attr="VisAW2219"/>   
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX852CableAttMainPlate"
+      attr="VisAW2219"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX852CableAttMain"
+      attr="VisAW2219"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX852CableAtt"
+      attr="VisAW2219"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX852AttRod"
+      attr="VisTitanium"/>
+
+<!-- Fix point UX853, DC06 geometry -->
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX853FixCollarInner"
+      attr="VisPipeCollar"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX853FixCollarOuter"
+      attr="VisPipeCollar"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX853FixCollarClosing"
+      attr="VisPipeCollar"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX853FixCollarSmallBase"
+      attr="VisPipeCollar"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX853FixCollarBigBase"
+      attr="VisPipeCollar"/>
+
+<!-- Fix point UX853, beampipe-20090209 tag in DDDB -->
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX853FixCollar"
+      attr="VisSintimid15G"/> 
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX853BigRingQuarter"
+      attr="VisSintimid15G"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX853InnerRing"
+      attr="VisSintimid15G"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX853CollarClipSmallSect"
+      attr="VisSintimid15G"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX853CollarClipBigSect"
+      attr="VisSintimid15G"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX853CollarClip"
+      attr="VisSintimid15G"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX853CollarAtt"
+      attr="VisAW2219"/>   
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX853FwdCableAtt"
+      attr="VisAW2219"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX853FwdAttRod"
+      attr="VisAW2219"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX853BckCableAtt"
+      attr="VisAW2219"/>
+<Item name="/dd/Geometry/MagnetRegion/PipeSupportsInMagnet/lvUX853BckAttRod"
+      attr="VisAW2219"/>
+
+<!-- Pipe in MBXWS -->
+<Item name="/dd/Geometry/DownstreamRegion/AfterMuon/PipeAfterMuon/PipeInMBXWS/lvMBXWSPipeBody"
+      attr="VisPipeMBXWS"/>

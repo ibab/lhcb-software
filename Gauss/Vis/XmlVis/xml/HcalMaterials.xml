@@ -1,0 +1,12 @@
+<!-- This file is where visualization attributes are mapped to materials -->
+<Item name="/dd/Materials/Hcal/HcalMsPlSteel"
+      attr="HcalMsPlSteel"/>
+<Item name="/dd/Materials/Hcal/HcalSc"
+      attr="HcalSc"/>
+<Item name="/dd/Materials/Hcal/HcalStripSteel"
+      attr="HcalStripSteel"/>
+<Item name="/dd/Materials/Hcal/HcalSupportSteel"
+      attr="HcalSupportSteel"/>
+<Item name="/dd/Materials/Hcal/HcalPb"
+      attr="HcalPb"/>
+

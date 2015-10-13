@@ -1,0 +1,121 @@
+
+<Item name="/dd/Geometry/DownstreamRegion/Ecal/Installation/Ecal"
+	attr="Ecal"/>
+<Item name="/dd/Geometry/DownstreamRegion/Ecal/Installation/EcalRight"
+	attr="Ecal"/>
+<Item name="/dd/Geometry/DownstreamRegion/Ecal/Installation/EcalLeft"
+	attr="Ecal"/>
+<Item name="/dd/Geometry/DownstreamRegion/Ecal/Installation/InnSectionLeft"
+	attr="EcalInnSection"/>
+<Item name="/dd/Geometry/DownstreamRegion/Ecal/Installation/InnSectionRight"
+	attr="EcalInnSection"/>
+<Item name="/dd/Geometry/DownstreamRegion/Ecal/Installation/MidSectionLeft"
+	attr="EcalMidSection"/>
+<Item name="/dd/Geometry/DownstreamRegion/Ecal/Installation/MidSectionRight"
+	attr="EcalMidSection"/>
+<Item name="/dd/Geometry/DownstreamRegion/Ecal/Installation/OutSectionLeft"
+	attr="EcalOutSection"/>
+<Item name="/dd/Geometry/DownstreamRegion/Ecal/Installation/OutSectionRight"
+	attr="EcalOutSection"/>
+<Item name="/dd/Geometry/DownstreamRegion/Ecal/Modules/Middle"
+	attr="EcalMiddleModule"/>
+<Item name="/dd/Geometry/DownstreamRegion/Ecal/Modules/MidFrontCover"
+	attr="EcalMiddleFrontCover"/>
+<Item name="/dd/Geometry/DownstreamRegion/Ecal/Modules/MidBackCover"
+	attr="EcalMiddleBackCover"/>
+<Item name="/dd/Geometry/DownstreamRegion/Ecal/Modules/MidReadOut"
+	attr="EcalMiddleReadOut"/>
+<Item name="/dd/Geometry/DownstreamRegion/Ecal/Modules/MidStack"
+	attr="EcalMiddleStack"/>
+	<Item name="/dd/Geometry/DownstreamRegion/Ecal/Modules/MidCell"
+	attr="EcalMiddleCell"/>
+	<Item name="/dd/Geometry/DownstreamRegion/Ecal/Modules/MidCellSteel"
+	attr="EcalMiddleCellSteel"/>
+	<Item name="/dd/Geometry/DownstreamRegion/Ecal/Modules/MidCellPlastic"
+	attr="EcalMiddleCellPlastic"/>
+	<Item name="/dd/Geometry/DownstreamRegion/Ecal/Modules/MidCellPb"
+	attr="EcalMiddleCellPb"/>
+	<Item name="/dd/Geometry/DownstreamRegion/Ecal/Modules/FiberPb"
+	attr="EcalMiddleFiberPb"/>
+
+<Item name="/dd/Geometry/DownstreamRegion/Ecal/Modules/Outer"
+	attr="EcalOuterModule"/>
+<Item name="/dd/Geometry/DownstreamRegion/Ecal/Modules/OutFrontCover"
+	attr="EcalOuterFrontCover"/>
+<Item name="/dd/Geometry/DownstreamRegion/Ecal/Modules/OutBackCover"
+	attr="EcalOuterBackCover"/>
+<Item name="/dd/Geometry/DownstreamRegion/Ecal/Modules/OutReadOut"
+	attr="EcalOuterReadOut"/>
+<Item name="/dd/Geometry/DownstreamRegion/Ecal/Modules/OutStack"
+	attr="EcalOuterStack"/>
+	<Item name="/dd/Geometry/DownstreamRegion/Ecal/Modules/OutCell"
+	attr="EcalOuterCell"/>
+	<Item name="/dd/Geometry/DownstreamRegion/Ecal/Modules/OutCellSteel"
+	attr="EcalOuterCellSteel"/>
+	<Item name="/dd/Geometry/DownstreamRegion/Ecal/Modules/OutCellPlastic"
+	attr="EcalOuterCellPlastic"/>
+	<Item name="/dd/Geometry/DownstreamRegion/Ecal/Modules/OutCellPb"
+	attr="EcalOuterCellPb"/>
+
+<Item name="/dd/Geometry/DownstreamRegion/Ecal/Installation/OutBlock"
+      attr="VisEcalOutBlock"/>
+<Item name="/dd/Geometry/DownstreamRegion/Ecal/Installation/MidBlock"
+      attr="VisEcalMidBlock"/>
+<Item name="/dd/Geometry/DownstreamRegion/Ecal/Installation/InnBlock1"
+      attr="VisEcalInnBlock1"/>
+<Item name="/dd/Geometry/DownstreamRegion/Ecal/Installation/InnBlock2"
+      attr="VisEcalInnBlock2"/>
+<Item name="/dd/Geometry/DownstreamRegion/Ecal/Installation/ShieldLeft"
+      attr="VisEcalShield"/>
+<Item name="/dd/Geometry/DownstreamRegion/Ecal/Installation/ShieldRight"
+      attr="VisEcalShield"/>
+<Item name="/dd/Geometry/DownstreamRegion/Ecal/Installation/PlugSupportRight"
+      attr="VisEcalPlug"/>
+<Item name="/dd/Geometry/DownstreamRegion/Ecal/Installation/PlugSupportLeft"
+      attr="VisEcalPlug"/>
+
+<!--the following are for SPD and PRS -->
+<Item name="/dd/Geometry/DownstreamRegion/Spd/Installation/Spd"
+      attr="VisSpd"/>
+<Item name="/dd/Geometry/DownstreamRegion/Spd/Installation/SpdLeft"
+      attr="VisSpd"/>
+<Item name="/dd/Geometry/DownstreamRegion/Spd/Installation/SpdRight"
+      attr="VisSpd"/>
+<Item name="/dd/Geometry/DownstreamRegion/Spd/Installation/InnerSectionLeft"
+	attr="SpdInnSection"/>
+<Item name="/dd/Geometry/DownstreamRegion/Spd/Installation/InnerSectionRight"
+	attr="SpdInnSection"/>
+<Item name="/dd/Geometry/DownstreamRegion/Spd/Installation/MiddleSectionLeft"
+	attr="SpdMidSection"/>
+<Item name="/dd/Geometry/DownstreamRegion/Spd/Installation/MiddleSectionRight"
+	attr="SpdMidSection"/>
+<Item name="/dd/Geometry/DownstreamRegion/Spd/Installation/OuterSectionLeft"
+	attr="SpdOutSection"/>
+<Item name="/dd/Geometry/DownstreamRegion/Spd/Installation/OuterSectionRight"
+	attr="SpdOutSection"/>
+<Item name="/dd/Geometry/DownstreamRegion/Spd/Installation/SensitivePlane"
+	attr="SpdSensitivePlan"/>
+
+<Item name="/dd/Geometry/DownstreamRegion/Prs/Installation/Prs"
+      attr="VisSpd"/>
+<Item name="/dd/Geometry/DownstreamRegion/Prs/Installation/PrsLeft"
+      attr="VisPrs"/>
+<Item name="/dd/Geometry/DownstreamRegion/Prs/Installation/PrsRight"
+      attr="VisPrs"/>
+<Item name="/dd/Geometry/DownstreamRegion/Prs/Installation/InnerSectionLeft"
+	attr="PrsInnSection"/>
+<Item name="/dd/Geometry/DownstreamRegion/Prs/Installation/InnerSectionRight"
+	attr="PrsInnSection"/>
+<Item name="/dd/Geometry/DownstreamRegion/Prs/Installation/MiddleSectionLeft"
+	attr="PrsMidSection"/>
+<Item name="/dd/Geometry/DownstreamRegion/Prs/Installation/MiddleSectionRight"
+	attr="PrsMidSection"/>
+<Item name="/dd/Geometry/DownstreamRegion/Prs/Installation/OuterSectionLeft"
+	attr="PrsOutSection"/>
+<Item name="/dd/Geometry/DownstreamRegion/Prs/Installation/OuterSectionRight"
+	attr="PrsOutSection"/>
+
+
+
+
+
