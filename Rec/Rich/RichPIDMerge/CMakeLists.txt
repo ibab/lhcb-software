@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RichPIDMerge
 ################################################################################
-gaudi_subdir(RichPIDMerge v2r11)
+gaudi_subdir(RichPIDMerge v2r11p1)
 
 gaudi_depends_on_subdirs(Rich/RichGlobalPID
                          Rich/RichRecBase)
