@@ -1,12 +1,9 @@
 #============================================================================
 # Created    : 2005-07-01
-# Maintainer : Olivier Callot
-#
-# Documentation on the requirement file can be found at
-# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+# Maintainer : 
 #============================================================================
 package           PatFitParams
-version           v4r2
+version           v4r3
 
 #============================================================================
 # Structure, i.e. directories to process. 
