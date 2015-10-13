@@ -6,6 +6,8 @@
 #include "GaudiAlg/GaudiTupleAlg.h"
 #include "GaudiKernel/RndmGenerators.h"
 
+class Condition;
+
 /** @class HCMonitorBase HCMonitorBase.h
  *
  *  Base class for Herschel monitoring algorithms.
@@ -23,6 +25,8 @@ class HCMonitorBase : public GaudiTupleAlg {
   virtual StatusCode initialize();  ///< Algorithm initialization
 
  protected:
+  Condition* m_cond;
+
   /// Number of B-side crate
   unsigned int m_crateB;
   /// Number of F-side crate
@@ -32,23 +36,23 @@ class HCMonitorBase : public GaudiTupleAlg {
   std::vector<double> m_edges;
 
   /// Channel mappings
-  std::vector<bool> m_maskedB0;
-  std::vector<bool> m_maskedB1;
-  std::vector<bool> m_maskedB2;
-  std::vector<bool> m_maskedF1;
-  std::vector<bool> m_maskedF2;
+  std::vector<int> m_masksB0;
+  std::vector<int> m_masksB1;
+  std::vector<int> m_masksB2;
+  std::vector<int> m_masksF1;
+  std::vector<int> m_masksF2;
 
-  std::vector<unsigned int> m_channelsB0;
-  std::vector<unsigned int> m_channelsB1;
-  std::vector<unsigned int> m_channelsB2;
-  std::vector<unsigned int> m_channelsF1;
-  std::vector<unsigned int> m_channelsF2;
+  std::vector<int> m_channelsB0;
+  std::vector<int> m_channelsB1;
+  std::vector<int> m_channelsB2;
+  std::vector<int> m_channelsF1;
+  std::vector<int> m_channelsF2;
 
-  std::vector<unsigned int> m_sparesB0;
-  std::vector<unsigned int> m_sparesB1;
-  std::vector<unsigned int> m_sparesB2;
-  std::vector<unsigned int> m_sparesF1;
-  std::vector<unsigned int> m_sparesF2;
+  std::vector<int> m_sparesB0;
+  std::vector<int> m_sparesB1;
+  std::vector<int> m_sparesB2;
+  std::vector<int> m_sparesF1;
+  std::vector<int> m_sparesF2;
 
   /// Channel numbers for each quadrant
   std::vector<std::vector<unsigned int> > m_channels;
@@ -73,10 +77,12 @@ class HCMonitorBase : public GaudiTupleAlg {
   /// Highest BX ID to be included in the plots.
   unsigned int m_bxMax;
 
+  /// Retrieve the mapping from the conditions database.
+  StatusCode cacheMapping();
   /// Setup the mapping for a given station.
-  bool mapChannels(const std::vector<unsigned int>& channels,
-                   const std::vector<unsigned int>& refs,
-                   const std::vector<bool>& masked,
+  bool mapChannels(const std::vector<int>& channels,
+                   const std::vector<int>& refs,
+                   const std::vector<int>& masks,
                    const unsigned int station, const bool bwd);
   /// Print the channel mapping for information.
   void printMapping() const;

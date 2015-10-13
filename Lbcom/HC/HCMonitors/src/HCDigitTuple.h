@@ -28,7 +28,5 @@ class HCDigitTuple : public HCMonitorBase {
   std::string m_digitLocation;
   std::string m_correctedDigitLocation;
   bool m_corrected;
-  void addQuadrants(const std::vector<unsigned int>& channels,
-                    const std::string& station, const bool bwd);
 };
 #endif

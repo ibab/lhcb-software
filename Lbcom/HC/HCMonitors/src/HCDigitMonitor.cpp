@@ -131,14 +131,15 @@ StatusCode HCDigitMonitor::initialize() {
       const std::string nameNoBeam = "ADC/" + stations[j] + "/NoBeam/" + qu;
       const std::string nameBeam = "ADC/" + stations[j] + "/Beam/" + qu;
       const std::string nameBx = "ADCvsBX/" + stations[j] + "/" + qu;
-      //if (m_variableBins) {
+      // TODO: check! Should avoid variable binning if not needed.
+      if (m_variableBins) {
         m_hAdcQuadrant.push_back(book1D(name, qu, m_edges));
         m_hAdcQuadrantEven.push_back(book1D(nameEven, qu, m_edges));
         m_hAdcQuadrantOdd.push_back(book1D(nameOdd, qu, m_edges));
         m_hAdcQuadrantNoBeam.push_back(book1D(nameNoBeam, qu, m_edges));
         m_hAdcQuadrantBeam.push_back(book1D(nameBeam, qu, m_edges));
         m_hAdcVsBx.push_back(book2D(nameBx, qu, bxedges, m_edges));
-        /*} else {
+      } else {
         m_hAdcQuadrant.push_back(book1D(name, qu, low, high, bins));
         m_hAdcQuadrantEven.push_back(book1D(nameEven, qu, low, high, bins));
         m_hAdcQuadrantOdd.push_back(book1D(nameOdd, qu, low, high, bins));
@@ -146,7 +147,7 @@ StatusCode HCDigitMonitor::initialize() {
         m_hAdcQuadrantBeam.push_back(book1D(nameBeam, qu, low, high, bins));
         m_hAdcVsBx.push_back(
             book2D(nameBx, qu, bxlow, bxhigh, bxbins, low, high, bins));
-            }*/
+      }
       const unsigned int index = i * nStations + j;
       setAxisLabels(m_hAdcQuadrant[index], "ADC", "Entries");
       setAxisLabels(m_hAdcQuadrantEven[index], "ADC", "Entries");

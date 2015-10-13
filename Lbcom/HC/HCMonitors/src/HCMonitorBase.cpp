@@ -4,6 +4,9 @@
 // Gaudi
 #include "GaudiUtils/Aida2ROOT.h"
 
+// LHCb
+#include "DetDesc/Condition.h"
+
 // Local
 #include "HCMonitorBase.h"
 
@@ -11,17 +14,17 @@
 // Standard constructor
 //=============================================================================
 HCMonitorBase::HCMonitorBase(const std::string& name, ISvcLocator* pSvcLocator)
-    : GaudiTupleAlg(name, pSvcLocator) {
+    : GaudiTupleAlg(name, pSvcLocator),
+      m_cond(nullptr) {
 
-  // Mappings (to be retrieved from conditions database).
   declareProperty("CrateB", m_crateB = 0);
   declareProperty("CrateF", m_crateF = 1);
 
-  declareProperty("MasksB0", m_maskedB0 = {false, false, false, false});
-  declareProperty("MasksB1", m_maskedB1 = {false, false, false, false});
-  declareProperty("MasksB2", m_maskedB2 = {false, false, false, false});
-  declareProperty("MasksF1", m_maskedF1 = {false, false, false, false});
-  declareProperty("MasksF2", m_maskedF2 = {false, false, false, false});
+  declareProperty("MasksB0", m_masksB0 = {0, 0, 0, 0});
+  declareProperty("MasksB1", m_masksB1 = {0, 0, 0, 0});
+  declareProperty("MasksB2", m_masksB2 = {0, 0, 0, 0});
+  declareProperty("MasksF1", m_masksF1 = {0, 0, 0, 0});
+  declareProperty("MasksF2", m_masksF2 = {0, 0, 0, 0});
 
   declareProperty("ChannelsB0", m_channelsB0);
   declareProperty("ChannelsB1", m_channelsB1);
@@ -35,7 +38,7 @@ HCMonitorBase::HCMonitorBase(const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("SpareChannelsF1", m_sparesF1);
   declareProperty("SpareChannelsF2", m_sparesF2);
 
-  // Real monitoring options
+  // Binning options
   declareProperty("VariableBins", m_variableBins = false);
   declareProperty("RandomiseADC", m_randomiseAdc = true);
   declareProperty("MinBX", m_bxMin = 0);
@@ -57,6 +60,7 @@ StatusCode HCMonitorBase::initialize() {
   StatusCode sc = GaudiTupleAlg::initialize();
   if (sc.isFailure()) return sc;
 
+
   // Setup the binning and ADC correction.
   m_adcCorrection.resize(1024, 0.);
   m_adcStep.resize(1024, 0);
@@ -77,16 +81,12 @@ StatusCode HCMonitorBase::initialize() {
       adc += step;
     }
     m_edges.push_back(1023.5);
-  }
-  else
-  {
-    double minVal (m_edges[0]);
-    double maxVal (m_edges[1]);
+  } else {
+    double minVal(m_edges[0]);
+    double maxVal(m_edges[1]);
     m_edges.clear();
-    for (int i = 0 ; i < maxVal-minVal +1 ; ++i )
-    {
+    for (int i = 0; i < maxVal-minVal +1 ; ++i) {
       m_edges.push_back(minVal+i);
-      
     }
   }
   
@@ -94,11 +94,23 @@ StatusCode HCMonitorBase::initialize() {
   m_channels.resize(5);
   m_references.resize(5);
   m_masked.resize(5);
-  mapChannels(m_channelsB0, m_sparesB0, m_maskedB0, 0, true);
-  mapChannels(m_channelsB1, m_sparesB1, m_maskedB1, 1, true);
-  mapChannels(m_channelsB2, m_sparesB2, m_maskedB2, 2, true);
-  mapChannels(m_channelsF1, m_sparesF1, m_maskedF1, 1, false);
-  mapChannels(m_channelsF2, m_sparesF2, m_maskedF2, 2, false);
+  // Check if the mapping is available in the conditions database.
+  const std::string location = "Conditions/ReadoutConf/HC/Mapping";
+  if (existDet<Condition>(location)) {
+    registerCondition(location, m_cond, &HCMonitorBase::cacheMapping);
+    // First update.
+    sc = updMgrSvc()->update(this);
+    if (sc.isFailure()) {
+      return Error("Cannot update mapping.", StatusCode::FAILURE);
+    }
+  } else {
+    warning() << "Cannot find " << location << " in database" << endmsg;
+  }
+  mapChannels(m_channelsB0, m_sparesB0, m_masksB0, 0, true);
+  mapChannels(m_channelsB1, m_sparesB1, m_masksB1, 1, true);
+  mapChannels(m_channelsB2, m_sparesB2, m_masksB2, 2, true);
+  mapChannels(m_channelsF1, m_sparesF1, m_masksF1, 1, false);
+  mapChannels(m_channelsF2, m_sparesF2, m_masksF2, 2, false);
   printMapping();
 
   // Setup the random number generator.
@@ -110,17 +122,46 @@ StatusCode HCMonitorBase::initialize() {
 }
 
 //=============================================================================
+// Update the channel map using the conditions database.
+//=============================================================================
+StatusCode HCMonitorBase::cacheMapping() {
+
+  m_crateB = m_cond->param<int>("CrateB");
+  m_crateF = m_cond->param<int>("CrateF");
+
+  m_channelsB0 = m_cond->paramVect<int>("ChannelsB0");
+  m_channelsB1 = m_cond->paramVect<int>("ChannelsB1");
+  m_channelsB2 = m_cond->paramVect<int>("ChannelsB2");
+  m_channelsF1 = m_cond->paramVect<int>("ChannelsF1");
+  m_channelsF2 = m_cond->paramVect<int>("ChannelsF2");
+
+  m_sparesB0 = m_cond->paramVect<int>("ReferenceChannelsB0");
+  m_sparesB1 = m_cond->paramVect<int>("ReferenceChannelsB1");
+  m_sparesB2 = m_cond->paramVect<int>("ReferenceChannelsB2");
+  m_sparesF1 = m_cond->paramVect<int>("ReferenceChannelsF1");
+  m_sparesF2 = m_cond->paramVect<int>("ReferenceChannelsF2");
+
+  m_masksB0 = m_cond->paramVect<int>("MasksB0");
+  m_masksB1 = m_cond->paramVect<int>("MasksB1");
+  m_masksB2 = m_cond->paramVect<int>("MasksB2");
+  m_masksF1 = m_cond->paramVect<int>("MasksF1");
+  m_masksF2 = m_cond->paramVect<int>("MasksF2");
+
+  return StatusCode::SUCCESS;
+}
+
+//=============================================================================
 // Setup the channel map for a given station.
 //=============================================================================
-bool HCMonitorBase::mapChannels(const std::vector<unsigned int>& channels,
-                                const std::vector<unsigned int>& refs,
-                                const std::vector<bool>& masked,
+bool HCMonitorBase::mapChannels(const std::vector<int>& channels,
+                                const std::vector<int>& refs,
+                                const std::vector<int>& masks,
                                 const unsigned int station,
                                 const bool bwd) {
 
   const unsigned int offset = bwd ? 0 : 2;
   // Check if the input is valid.
-  if (channels.size() != 4 || refs.size() != 4 || masked.size() != 4) {
+  if (channels.size() != 4 || refs.size() != 4 || masks.size() != 4) {
     std::string s = bwd ? "B" : "F";
     s += std::to_string(station);
     warning() << "Invalid channel map for station " << s 
@@ -136,9 +177,17 @@ bool HCMonitorBase::mapChannels(const std::vector<unsigned int>& channels,
   m_references[station + offset].resize(4);
   m_masked[station + offset].resize(4);
   for (unsigned int i = 0; i < 4; ++i) {
+    if (channels[i] < 0) {
+      std::string s = bwd ? "B" : "F";
+      s += std::to_string(station);
+      warning() << "Invalid channel number " << channels[i]
+                << ". Masking quadrant " << s << i << endmsg;
+      m_masked[station + offset][i] = true;
+      continue;
+    }
     m_channels[station + offset][i] = (crate << 6) | channels[i];
     m_references[station + offset][i] = (crate << 6) | refs[i];
-    m_masked[station + offset][i] = masked[i];
+    m_masked[station + offset][i] = masks[i] != 0;
   }
   return true;
 }

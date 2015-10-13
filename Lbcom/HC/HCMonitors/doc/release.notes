@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring of Herschel data
 !-----------------------------------------------------------------------------
 
+! 2015-10-13 - Heinrich Schindler
+ - Retrieve channel mapping from conditions database.
+
 !========================= HCMonitors v1r1 2015-10-12 =========================
 ! 2015-10-12 - Heinrich Schindler
  - Add algorithm HCDigitCorrector.
