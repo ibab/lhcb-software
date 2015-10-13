@@ -1,8 +1,10 @@
 !-----------------------------------------------------------------------------
-! Package     : Pat/PatVelo
+! Package     : Tf/PatVelo
 ! Responsible : David Hutchcroft
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
+
+!========================= PatVelo v3r32p1 2015-10-13 =========================
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
