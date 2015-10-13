@@ -3,15 +3,14 @@
 # Maintainer : Roel Aaij
 #=========================================================================
 package           HltMonitors
-version           v1r7
+version           v1r8
 
 #=========================================================================
 # Structure, i.e. directories to process. 
 #=========================================================================
 branches          cmt doc src python
 #=========================================================================
-# Used packages. Specify the version, * at the end specifies 'any revision'
-#    Put as many lines as needed, with all packages, without the '#'
+# Used packages
 #============================================================================
 # use   Package      v1r*    Hat
 use     GaudiKernel  v*

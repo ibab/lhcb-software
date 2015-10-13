@@ -3,6 +3,8 @@
 ! Responsible : Roel Aaij (roel.aaij@cern.ch)
 ! Purpose     : Offline Monitoring of Hlt rates and composition
 !-----------------------------------------------------------------------------
+
+!========================= HltMonitors v1r8 2015-10-13 =========================
 ! 2015-08-12 - Gerhard Raven
  - remove DECLARE_ALGORITHM_FACTORY( HltMonitorBase ) as it is not a 'concrete'
    algorithm, but intended to be inherited from and implement execute.
