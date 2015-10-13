@@ -763,65 +763,32 @@ ROOT.TH3D . __iter__     = _h3_iter_
 ROOT.TH3F . __reversed__ = _h3_iter_reversed_ 
 ROOT.TH3D . __reversed__ = _h3_iter_reversed_ 
 
+
 # =============================================================================
-# interpolate 
+## C++ function for 1D-histogram interpolation
+#  @see Gaudi::Math::HistoInterpolation
+#  @see Gaudi::Math::HistoInterpolation::interpolate_1D
+_interpolate_1D_ = cpp.Gaudi.Math.HistoInterpolation.interpolate_1D
 # =============================================================================
-## linear interpolation 
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2011-06-07
-def interpolate_1D ( x       ,
-                     x0 , v0 ,
-                     x1 , v1 ) :
-    """
-    Linear interpolation 
-    """
-    if hasattr ( x  , 'value' ) : x  = x  . value()
-    if hasattr ( x0 , 'value' ) : x0 = x0 . value()
-    if hasattr ( x1 , 'value' ) : x1 = x1 . value()
+## C++ function for 2D-histogram interpolation
+#  @see Gaudi::Math::HistoInterpolation
+#  @see Gaudi::Math::HistoInterpolation::interpolate_2D
+_interpolate_2D_ = cpp.Gaudi.Math.HistoInterpolation.interpolate_2D
+# =============================================================================
+## C++ function for 3D-histogram interpolation
+#  @see Gaudi::Math::HistoInterpolation
+#  @see Gaudi::Math::HistoInterpolation::interpolate_3D
+_interpolate_3D_ = cpp.Gaudi.Math.HistoInterpolation.interpolate_3D
+# =============================================================================
 
-    c1 = ( x - x0 ) / ( x1 - x0 )
-    c0 = ( x - x1 ) / ( x0 - x1 )
-
-    return c0 * v0 + c1 * v1
-
-# ========================================================================
-## bilinear interpolation 
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2011-06-07
-def interpolate_2D ( x   , y   ,
-                     x0  , x1  , 
-                     y0  , y1  ,
-                     v00 , v01 ,
-                     v10 , v11 ) : 
-    
-    """
-    Bi-linear interpolation 
-    """
-    #
-    if hasattr ( x  , 'value' ) : x  = x  . value()
-    if hasattr ( y  , 'value' ) : y  = y  . value()
-    #
-    if hasattr ( x0 , 'value' ) : x0 = x0 . value()
-    if hasattr ( x1 , 'value' ) : x1 = x1 . value()
-    if hasattr ( y0 , 'value' ) : y0 = y0 . value()
-    if hasattr ( y1 , 'value' ) : y1 = y1 . value()
-    
-    c00 =  ( x - x1 ) * ( y - y1 ) / ( x0 - x1 ) / ( y0 - y1 )
-    c01 =  ( x - x1 ) * ( y - y0 ) / ( x0 - x1 ) / ( y1 - y0 )
-    c10 =  ( x - x0 ) * ( y - y1 ) / ( x1 - x0 ) / ( y0 - y1 )
-    c11 =  ( x - x0 ) * ( y - y0 ) / ( x1 - x0 ) / ( y1 - y0 )
-    
-    return c00 * v00 + c01 * v01 + c10 * v10 + c11 * v11 
-
-
-## parabolic 1D-interpolation
-_PARAB = cpp.Gaudi.Math.ParabolaErr
 
 # =============================================================================
 ## histogram as function 
+#  @see Gaudi::Math::HistoInterpolation
+#  @see Gaudi::Math::HistoInterpolation::interpolate_1D
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
-def _h1_call_ ( h1 , x , func = lambda s : s , interpolate = True ) :
+def _h1_call_ ( h1 , x , func = lambda s : s , interpolate = 1 ) :
     """ Histogram as function:
     >>> histo = ....
     >>> ve    = histo ( x )                       ## default interpolation
@@ -832,65 +799,17 @@ def _h1_call_ ( h1 , x , func = lambda s : s , interpolate = True ) :
     #
     x = float ( x )
     #
-    ax = h1.GetXaxis (   )
-    ix = ax.FindBin  ( x )
-    mx = ax.GetXmax  (   )
-    mn = ax.GetXmin  (   )
-    nb = ax.GetNbins (   )
+    tx  = 1 
+    if isinstance ( interpolate , int ) and 0 <= interpolate :
+        tx = interpolate
+    elif not interpolate :
+        tx  = 0
     #
-    if 0      == ix and isequal ( x , mn ) : ix += 1  ## fresh trick
-    if nb + 1 == ix and isequal ( x , mx ) : ix -= 1  ## fresh trick
+    ## use C++ function for fast interpolation 
+    result = _interpolate_1D_ ( h1 , x , tx )
     #
-    if not 1 <= ix <= nb               : return VE(0,0)
-    #
-    val = h1.GetBinContent ( ix ) 
-    err = h1.GetBinError   ( ix )
-    #
-    value = VE ( val , err**2 )
-    #
-    if not interpolate : return func ( value )   ## RETURN 
-    #
-    ## try parabolic interpolation 
-    if 2 == interpolate and 3 <= nb :
+    return func ( result )
 
-        i,j,k             = ix-1 ,   ix , ix+1
-        if i < 1  : i,j,k =    1 ,    2 ,    3
-        if k > nb : i,j,k = nb-2 , nb-1 ,   nb
-
-        xi = ax.GetBinCenter(i)
-        if x < xi : return func ( value ) ## treat the first bin  (correct?)
-        
-        xk = ax.GetBinCenter(k)
-        if x > xk : return func ( value ) ## treat the last bin   (correct?)
-        
-        xj = ax.GetBinCenter(j)     ## middle bin
-        
-        yi = VE ( h1.GetBinContent ( i ) , h1.GetBinError ( i ) ** 2 )
-        yj = VE ( h1.GetBinContent ( j ) , h1.GetBinError ( j ) ** 2 )
-        yk = VE ( h1.GetBinContent ( k ) , h1.GetBinError ( k ) ** 2 )
-        #
-        ## create interpolation object:
-        #
-        parab = _PARAB ( xi , yi , xj , yj , xk , yk )
-        #
-        return func ( parab ( x ) ) 
-    # 
-    ## make linear interpolation
-    # 
-    bc   = ax.GetBinCenter( ix )
-    ibin = ix - 1 if x < bc else ix + 1
-    #
-    if 1<= ibin <= nb : 
-        #
-        bx =      ax.GetBinCenter  ( ibin )
-        bv = VE ( h1.GetBinContent ( ibin ) , h1.GetBinError ( ibin )**2 )
-        #
-        value = interpolate_1D (
-            x  ,
-            bc , value ,
-            bx , bv    )
-        #
-    return func ( value )  ## RETURN 
         
 ROOT.TH1F  . __getitem__  = _h1_get_item_
 ROOT.TH1D  . __getitem__  = _h1_get_item_
@@ -987,7 +906,7 @@ def _h1_find_ ( h1 , x ) :
     """ Find the bin in 1D-histogram
     >>> ibin = h1.findBin ( x ) 
     """
-    if hasattr ( x , 'value' ) : x = x.value()
+    x = float ( x )
     #
     ax = h1.GetXaxis()
     #
@@ -1000,8 +919,8 @@ def _h2_find_ ( h2 , x , y ) :
     """Find the bin in 3D-histogram
     >>> ibin = h2.findBin ( x , y ) 
     """
-    if hasattr ( x , 'value' ) : x = x.value()
-    if hasattr ( y , 'value' ) : y = y.value()
+    x = float ( x )
+    y = float ( y )
     #
     ax = h2.GetXaxis()
     ay = h2.GetYaxis()
@@ -1016,9 +935,9 @@ def _h3_find_ ( h3 , x , y , z ) :
     """Find the bin in 3D-histogram
     >>> ibin = h3.findBin ( x , y , z ) 
     """
-    if hasattr ( x , 'value' ) : x = x.value()
-    if hasattr ( y , 'value' ) : y = y.value()
-    if hasattr ( z , 'value' ) : z = z.value()
+    x = float ( x )
+    y = float ( y )
+    z = float ( z )
     #
     ax = h3.GetXaxis()
     ay = h3.GetYaxis()
@@ -1067,7 +986,7 @@ def _h1_find_X ( self             ,
                  forward   = True ) : 
     
     ##
-    if hasattr ( v , 'value' ) : v = v.value()
+    v = float ( v ) 
     ##
     mn , mx  = self.xminmax()
     ##
@@ -1108,7 +1027,9 @@ def _h1_find_X ( self             ,
 
 
 # =============================================================================
-## histogram as function 
+## histogram as function
+#  @see Gaudi::Math::HistoInterpolation
+#  @see Gaudi::Math::HistoInterpolation::interpolate_2D
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h2_call_ ( h2 , x , y , func = lambda s : s , interpolate = True ) :
@@ -1120,80 +1041,19 @@ def _h2_call_ ( h2 , x , y , func = lambda s : s , interpolate = True ) :
     x = float ( x )
     y = float ( y )
     #
-    ax  = h2.GetXaxis (   )
-    ix  = ax.FindBin  ( x )
-    
-    mxx = ax.GetXmax  (   )
-    mnx = ax.GetXmin  (   )
-    nbx = ax.GetNbins (   )
-
-    if 0       == ix and isequal ( x , mnx ) : ix += 1  ## fresh trick
-    if nbx + 1 == ix and isequal ( x , mxx ) : ix -= 1  ## fresh trick
-    if not   1 <= ix <= nbx : return VE ( 0, 0 )
-    #
-    ay  = h2.GetYaxis (   )
-    iy  = ay.FindBin  ( y )
-    
-    mxy = ay.GetXmax  (   )
-    mny = ay.GetXmin  (   )
-    nby = ay.GetNbins (   )
-
-    if 0       == ix and isequal ( y , mny ) : iy += 1  ## fresh trick
-    if nby + 1 == ix and isequal ( y , mxy ) : iy -= 1  ## fresh trick
-    if not   1 <= iy <= nby : return VE ( 0, 0 )
-    ##
-    val = h2.GetBinContent ( ix , iy ) 
-    err = h2.GetBinError   ( ix , iy )
-    #
-    value = VE ( val , err*err )
-    ##
-    if not interpolate : return func ( value )
-    ##
-    bcx = ax.GetBinCenter ( ix )
-    ibx = ix - 1 if x < bcx else ix + 1
-    #
-    bcy = ay.GetBinCenter ( iy )
-    iby = iy - 1 if y < bcy else iy + 1
-    #
-    if ibx in ax and iby in ay :  ## regular interpolation
+    tx = 1
+    ty = 1 
+    if   not interpolate :
+        tx = 0
+        ty = 0
+    elif isinstance ( interpolate , tuple ) and 2<= len ( interpolate ) : 
+        tx = int(interpolate[0])
+        ty = int(interpolate[1])
         
-        bx = ax.GetBinCenter  ( ibx )
-        by = ay.GetBinCenter  ( iby )
+    ## use C++ function for fast interpolation 
+    result = _interpolate_2D_ ( h2 , x , y , tx , ty )
 
-        value = interpolate_2D (
-            x   , y  ,
-            bcx , bx ,
-            bcy , by ,
-            ##
-            value    , 
-            VE ( h2.GetBinContent (  ix , iby ) , h2.GetBinError (  ix , iby )**2 ) ,
-            VE ( h2.GetBinContent ( ibx ,  iy ) , h2.GetBinError ( ibx ,  iy )**2 ) ,
-            VE ( h2.GetBinContent ( ibx , iby ) , h2.GetBinError ( ibx , iby )**2 ) )
-        
-    elif ibx in ax : ## interpolation in X-direction 
-
-        bx = ax.GetBinCenter  ( ibx )
-        
-        value = interpolate_1D (
-            x   ,
-            bcx , value , 
-            bx  ,
-            VE ( h2.GetBinContent ( ibx ,  iy ) , h2.GetBinError ( ibx ,  iy )**2 )
-            )
-
-    elif iby in ay : ## interpolation in Y-direction 
-
-        by = ay.GetBinCenter  ( iby )
-        
-        value = interpolate_1D (
-            y   ,
-            bcy , value , 
-            by  ,
-            VE ( h2.GetBinContent ( ix , iby ) , h2.GetBinError ( ix , iby )**2 )
-            )
-
-    
-    return func ( value )
+    return func ( result )
 
 
 ROOT.TH2   . __call__     = _h2_call_
@@ -1202,6 +1062,8 @@ ROOT.TH2D  . __getitem__  = _h2_get_item_
 
 # =============================================================================
 ## histogram as function 
+#  @see Gaudi::Math::HistoInterpolation
+#  @see Gaudi::Math::HistoInterpolation::interpolate_3D
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h3_call_ ( h3 , x , y , z , func = lambda s : s , interpolate = True ) :
@@ -1214,97 +1076,23 @@ def _h3_call_ ( h3 , x , y , z , func = lambda s : s , interpolate = True ) :
     y = float ( y )
     z = float ( z )
     #
-    ax  = h3.GetXaxis (   )
-    ix  = ax.FindBin  ( x )
-    nbx = ax.GetNbins (   )  
-    mxx = ax.GetXmax  (   )
-    mnx = ax.GetXmin  (   )
-    
-    if 0       == ix and isequal ( x , mnx ) : ix += 1  ## fresh trick
-    if nbx + 1 == ix and isequal ( x , mxx ) : ix -= 1  ## fresh trick
-    if not   1 <= ix <= nbx : return VE ( 0, 0 )
-    #
-    ay  = h3.GetYaxis (   )
-    iy  = ay.FindBin  ( y )
-    nby = ay.GetNbins (   )  
-    mxy = ay.GetXmax  (   )
-    mny = ay.GetXmin  (   )
+    tx = 1
+    ty = 1 
+    tz = 1 
+    if   not interpolate :
+        tx = 0
+        ty = 0
+        tz = 0
+    elif isinstance ( interpolate , tuple ) and 3 <= len ( interpolate ) :
+        tx = int ( interpolate [ 0 ] ) 
+        ty = int ( interpolate [ 1 ] ) 
+        tx = int ( interpolate [ 2 ] )
 
-    if 0       == iy and isequal ( y , mny ) : iy += 1  ## fresh trick
-    if nby + 1 == iy and isequal ( y , mxy ) : iy -= 1  ## fresh trick
-    if not   1 <= iy <= nby : return VE ( 0, 0 )
-    ##
-    az  = h3.GetZaxis (   )
-    iz  = az.FindBin  ( z )
-    nbz = az.GetNbins (   )  
-    mxz = az.GetXmax  (   )
-    mnz = az.GetXmin  (   )
-    
-    if 0       == iz and isequal ( z , mnz ) : iz += 1  ## fresh trick
-    if nby + 1 == iz and isequal ( z , mxz ) : iz -= 1  ## fresh trick
-    if not   1 <= iz <= nbz : return VE ( 0, 0 )
-    ##
-    if not interpolate :
-        #
-        val = h3.GetBinContent ( ix , iy , iz ) 
-        err = h3.GetBinError   ( ix , iy , iz )
-        #
-        return func ( VE ( val , err * err ) ) 
-    # 
-    ## make trilinear interpolation:
-    #  http://en.wikipedia.org/wiki/Trilinear_interpolation
-    #
-    xc = ax.GetBinCenter ( ix )
-    yc = ay.GetBinCenter ( iy )
-    zc = az.GetBinCenter ( iz )
-    #
-    if   1   == ix and x < xc : pass
-    elif nbx == ix and x > xc : pass
-    #
-    if   1   == iy and y < yc : pass
-    elif nby == iy and y > yc : pass
-    #
-    if   1   == iz and z < zc : pass
-    elif nbz == iz and z > zc : pass
-    #
-    if x <= xc : ix0,ix1 = max ( 1 , ix - 1 ) ,             ix
-    else       : ix0,ix1 =           ix       , min ( nbx , ix + 1 )
-    #
-    if y <= yc : iy0,iy1 = max ( 1 , iy - 1 ) ,             iy
-    else       : iy0,iy1 =           iy       , min ( nby , iy + 1 )
-    #
-    if z <= zc : iz0,iz1 = max ( 1 , iz - 1 ) ,             iz
-    else       : iz0,iz1 =           iz       , min ( nbz , iz + 1 )
-    #
-    x0,x1 = ax.GetBinCenter ( ix0 ) , ax.GetBinCenter ( ix1 )
-    y0,y1 = ay.GetBinCenter ( iy0 ) , ay.GetBinCenter ( iy1 )
-    z0,z1 = az.GetBinCenter ( iz0 ) , az.GetBinCenter ( iz1 )
-    #
-    if ix0 == ix1 : xd =   0 
-    else          : xd = ( x - x0 ) / ( x1 - x0 )
-    if iy0 == iy1 : yd =   0 
-    else          : yd = ( y - y0 ) / ( y1 - y0 )
-    if iz0 == iz1 : zd =   0 
-    else          : zd = ( z - z0 ) / ( z1 - z0 )
-    #
-    v000 = VE ( h3.GetBinContent ( ix0 , iy0 , iz0 ) , h3.GetBinError ( ix0 , iy0 , iz0 ) ** 2 )
-    v100 = VE ( h3.GetBinContent ( ix1 , iy0 , iz0 ) , h3.GetBinError ( ix1 , iy0 , iz0 ) ** 2 )
-    v010 = VE ( h3.GetBinContent ( ix0 , iy1 , iz0 ) , h3.GetBinError ( ix0 , iy1 , iz0 ) ** 2 )
-    v110 = VE ( h3.GetBinContent ( ix1 , iy1 , iz0 ) , h3.GetBinError ( ix1 , iy1 , iz0 ) ** 2 )
-    v001 = VE ( h3.GetBinContent ( ix0 , iy0 , iz1 ) , h3.GetBinError ( ix0 , iy0 , iz1 ) ** 2 )
-    v101 = VE ( h3.GetBinContent ( ix1 , iy0 , iz1 ) , h3.GetBinError ( ix1 , iy0 , iz1 ) ** 2 )
-    v011 = VE ( h3.GetBinContent ( ix0 , iy1 , iz1 ) , h3.GetBinError ( ix0 , iy1 , iz1 ) ** 2 )
-    v111 = VE ( h3.GetBinContent ( ix1 , iy1 , iz1 ) , h3.GetBinError ( ix1 , iy1 , iz1 ) ** 2 )
-    # 
-    c00 = v000 * ( 1 - xd ) + v100 * xd
-    c10 = v010 * ( 1 - xd ) + v110 * xd
-    c01 = v001 * ( 1 - xd ) + v101 * xd
-    c11 = v011 * ( 1 - xd ) + v111 * xd
-    #
-    c0  = c00  * ( 1 - yd ) + c10  * yd
-    c1  = c01  * ( 1 - yd ) + c11  * yd
-    #
-    return c0  * ( 1 - zd ) + c1   * zd 
+        
+    ## use C++ function for fast interpolation 
+    result = _interpolate_3D_ ( h3 , x , y , z , tx , ty , tz )
+
+    return func ( result )
 
 ROOT.TH3   . __call__     = _h3_call_
 ROOT.TH3F  . __getitem__  = _h3_get_item_
@@ -2536,7 +2324,7 @@ def _h1_xfind_ ( self           ,
     >>> x = h1.find_X ( 1000 , False )
     """
     #
-    if hasattr (  v , 'value' ) : v = v.value()
+    v = float ( v ) 
     #
     mn = self [ self.GetMinimumBin() ]
     mx = self [ self.GetMaximumBin() ]
@@ -3661,13 +3449,12 @@ def _cnv_ ( x , x0 , dx , sigma ) :
     convolution of gaussian with the single pulse 
     """
     _erf_ = ROOT.Math.erfc
-    
-    s = abs ( sigma )
-    if hasattr ( s , 'value' ) : s = s.value()
-    
+    #
+    s = abs   ( float ( sigma ) ) 
+    #
     h = ( x - ( x0 + 0.5 * dx ) ) / _sqrt_2_ / s 
     l = ( x - ( x0 - 0.5 * dx ) ) / _sqrt_2_ / s 
-    
+    #
     return 0.5 * ( _erf_ ( h ) - _erf_ ( l ) ) / dx 
 
 # =============================================================================
@@ -4960,7 +4747,7 @@ def _solve_ ( h1 , value ) :
     
     """
     #
-    if hasattr ( value , 'value' ) : value = value.value()
+    value = float ( value )
     #
     solutions = []
     _size = len ( h1 ) 

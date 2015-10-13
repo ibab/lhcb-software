@@ -8,6 +8,11 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-10-13 - Vanya Belyaev
+ - drastical CPU improvement for 
+   "histogram-as-function" operations due to delegation 
+   of the actual interpolation to C++
+
 ! 2015-10-12 - Vanya Belyaev
  - fix minor bug in TH3 treatment 
     improve a bit CPU performance 
