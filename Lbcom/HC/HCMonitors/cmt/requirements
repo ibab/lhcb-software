@@ -10,6 +10,7 @@ branches src cmt doc python
 # Used packages. 
 #=========================================================================
 use DigiEvent     v*  Event
+use DetDesc       v*  Det
 use GaudiAlg      v* 
 use AIDA          v*  LCG_Interfaces -no_auto_imports
 
