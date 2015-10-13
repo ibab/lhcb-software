@@ -1,9 +1,9 @@
 #=====================================================================
 # Created    : 2003-06-23
-# Maintainer : Marco CATTANEO
+# Maintainer : Marco Cattaneo
 #=====================================================================
 package           RecAlgs
-version           v3r3p1
+version           v3r3p2
 
 branches        cmt doc src
 include_path    none
