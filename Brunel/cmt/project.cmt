@@ -1,6 +1,6 @@
 project BRUNEL
 
-use REC   REC_v18r1
+use REC   REC_v18r2
 
 build_strategy	with_installarea
 setup_strategy	root
