@@ -3,7 +3,7 @@
 # Maintainer : 
 #=====================================================================
 package           TrackTools
-version           v5r11
+version           v5r12
 
 # Structure, i.e. directories to process. 
 #=====================================================================
