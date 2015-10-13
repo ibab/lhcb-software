@@ -3,6 +3,53 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v49r0>2015-10-13 Brunel v49r0</A></H1><PRE>
+This version uses projects:
+ LCG_79 (ROOT 6.04.02), Gaudi v26r4, LHCb v39r1, Lbcom v17r1, Rec v18r2
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Development release post-2015 data-taking
+
+- Changes in configuration
+  . Put upstream tracking before forward in RecoUpgradeTracking.py
+    (TrackSys v9r11)
+  . VPClusterLinker: split up the linking of clusters to MCHits and MCParticles
+    such that it also works with LDSTs (VPAssociators v2r7)
+
+- New physics tuning
+  . Update default database tags to the latest ones (DDDB v1r81):
+    o DDDB,           2012: dddb-20150928
+    o LHCBCOND, 2015      : cond-20150828
+  . Fix to FastVeloTracking matching of RZ track to Phi hits when beam is off
+    centre (FastVelo v1r23)
+
+- Code optimisation
+  . Speedups in Rich photon reconstruction
+    (RichRecBase v4r21, RichRecPhotonTools v1r18)
+  . Improvements in Rich Pixel clustering (RichTools v2r50, RichKernel v7r60)
+  . CPU enhancements in Rich RawBank decoding (RichDAQ v3r43, RichKernel v7r60)
+  . Simplify unit matrix assignment (TrackExtrapolators v2r39)
+
+- Code modernisation
+  . GAUDI-1094 - Provide (and use) C++11 smart pointer 'look and feel' for SmartIF
+  . GAUDI-1057 - C++11 modernization changes
+
+- Bug fixes
+  . Changed MuonTrackMomRec to update B field on changes in MagneticFieldSvc
+    (MuonTrackRec v3r14)
+
+- Monitoring changes
+  . GAUDI-1078 - Update to GaudiAlg to include the caller algorithm name in
+                 messages from public tools
+  . Add 2 counters to PatAddTTCoord (PatAlgorithms v4r43)
+
+- Changes to tests
+  . Add temporary RegexpReplacers for forward compatibility with GAUDI-1078
+  . Follow GAUDI-1078
+  . Remove brunel-cheatedpr.error_ref following fix in error with :: in ROOT
+    directory names
+
+
 </PRE><H1><A NAME=v48r2>2015-08-27 Brunel v48r2</A></H1><PRE>
 This version uses projects:
  LCG_79 (ROOT 6.04.02), Gaudi v26r3, LHCb v39r0, Lbcom v17r0, Rec v18r1

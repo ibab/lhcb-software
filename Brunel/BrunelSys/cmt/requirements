@@ -1,5 +1,5 @@
 package           BrunelSys
-version           v48r2
+version           v49r0
 
 branches cmt doc tests
  
@@ -8,7 +8,7 @@ branches cmt doc tests
 #=======================================================
 
 # Brunel application
-use Brunel v48r2 Rec
+use Brunel v49r0 Rec
 
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest
@@ -20,6 +20,4 @@ apply_pattern container_package
 apply_pattern QMTestSummarize
 
 # Packages from other projects updated temporarily in this release
-use DDDB     v1r80 Det
-use FastVelo v1r22 Tf
-use MuonID   v9r17 Muon
+
