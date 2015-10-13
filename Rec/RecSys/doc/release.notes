@@ -5,6 +5,143 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v18r2>2015-10-13 RecSys v18r2</A></H1><PRE>
+This version uses Gaudi v26r4, LHCb v39r1 and Lbcom v17r1 (and ROOT 6.04.02)
+
+- Packages modified: Calo/CaloMoniDst v5r19, Calo/CaloPIDs v5r20p1,
+    Calo/CaloReco v5r25p1, Calo/CaloTools v6r10p1, Hlt/HltMonitors v1r8,
+    Muon/MuonID v9r18, Muon/MuonPIDChecker v5r5p1, Muon/MuonTools v5r5p1,
+    Muon/MuonTrackAlign v1r10p1, Muon/MuonTrackMonitor v2r9p1,
+    Muon/MuonTrackRec v3r14, Pr/PrAlgorithms v1r16p1, Pr/PrFitParams v2r0p1,
+    Pr/PrKernel v1r9p1, Pr/PrMCTools v2r11, Pr/PrPixel v1r13p1,
+    Pr/PrUtils v2r0p1, Pr/PrVeloUT v2r2p1, Rec/ChargedProtoANNPID v2r12,
+    Rec/GlobalReco v6r54, Rec/LumiAlgs v9r9p1, Rec/RecAlgs v3r3p2,
+    Rich/RichAlignment v1r12p1, Rich/RichENNRingFinder v1r5p2,
+    Rich/RichGlobalPID v3r24p1, Rich/RichHPDImageAnalysis v1r18,
+    Rich/RichIFBAnalysis v1r4p1, Rich/RichParticleSearch v1r12p1,
+    Rich/RichPIDMerge v2r11p1, Rich/RichRecAlgorithms v2r21p1,
+    Rich/RichRecBase v4r21, Rich/RichRecMCAlgorithms v1r6p1,
+    Rich/RichRecMCTools v2r32p1, Rich/RichRecMonitors v2r36p1, 
+    Rich/RichRecPhotonTools v1r18, Rich/RichRecQC v2r72,
+    Rich/RichRecStereoTools v1r10p1, Rich/RichRecTemplateRings v1r7p1,
+    Rich/RichRecTools v4r28p1, Rich/RichRecTrackTools v1r40p1, Tf/FastVelo v1r23,
+    Tf/PatAlgorithms v4r43, Tf/PatKernel v2r10p1, Tf/PatVelo v3r32p1,
+    Tf/PatVeloTT v4r7p1, Tf/TfTools v1r20p1, Tf/TrackSys v9r11,
+    Tf/TsaAlgorithms v3r30, Tr/PatChecker v3r16p1, Tr/PatFitParams v4r4,
+    Tr/TrackAssociators v2r12p1, Tr/TrackCheckers v4r22p1,
+    Tr/TrackExtrapolators v2r39, Tr/TrackFitter v5r7p1, Tr/TrackIdealPR v2r20p1,
+    Tr/TrackMCTools v3r12p1, Tr/TrackMonitors v2r10, Tr/TrackProjectors v3r2p1,
+    Tr/TrackTools v5r12, Tr/TrackUtils v1r61p1, Tr/PatPV v3r28p1, 
+    Tf/FastPV v1r2p1, Velo/VeloRecMonitors v2r32
+
+- In Calo/CaloMoniDst v5r19, Hlt/HltMonitors v1r8
+  . Remove DECLARE_ALGORITHM_FACTORY(CaloMoniAlg), 
+    DECLARE_ALGORITHM_FACTORY(CaloNtpBase), 
+    DECLARE_ALGORITHM_FACTORY(HltMonitorBase) as these are not 'concrete'
+    algorithms, but base classes from which one first must inherit and implement
+    execute before they are useful. 
+
+- In Muon/MuonID v9r17, v9r18
+  . Remove container for pad sizes in CommonMuonTool. The pad sizes are obtained
+    from the hit via dx and dy. That way it is ensured that uncrossed hits are
+    associated with the correct pad sizes.
+  . Fixed bug in DLLMuonTool, see LHCBPS-1431: added two functions to be sure a
+    valid region is always used in the DLL calculation and consequentely changed
+    two GaudiExceptions into Error messages (which shold never happen, given the
+    new code). 
+
+- In Muon/MuonTrackRec v3r14
+  . Changed MuonTrackMomRec to update B field on changes in MagneticFieldSvc
+
+- In Pr/PrMCTools v2r11
+  . Code cleaning in PrChecker2.
+
+- In Rec/ChargedProtoANNPID v2r12
+  . Use new OStreamRedirect guard class to redirect messages from NB.
+
+- In Rec/GlobalReco v6r54
+  . replace GaudiUtils::HashMap with sorted std::vector
+  . prefer std::find_if over raw loop
+  . prefer range based loop
+  . qualify implementations with override instead of virtual
+  . replace NULL by nullptr
+  . prefer std::to_string over std::stringstream
+
+- In Rec/LumiAlgs v9r9p1
+  . Update lumi2reader reference to follow Gaudi v26r4 fix to GaudiSequencer 
+    reference counting
+
+- In Rich/RichHPDImageAnalysis v1r18
+  . Set HPD image axis titles.
+
+- In Rich/RichRecBase v4r21
+  . Some fine tuning to the photon reconstruction base class.
+  . Adapt to class name changes in FastAllocVector.h
+
+- In Rich/RichRecPhotonTools v1r18
+  . Small CPU improvement to RichCKthetaBandsPhotonPredictor
+
+- In Rich/RichRecQC v2r72
+  . Add an FPE guard to protect the per HPD fit.
+  . Forcibly redirect cout and cerr printout to /dev/null for the HPD fit
+    call, to work around the fact some printout from minuit does not honor
+    the 'quiet' setting.
+  . Fix a bug in RecoQC that prevent the per HPD fits from working.
+  . Add option to RichRecoQC to reject ambiguous photons
+  . Add a new set of resolution monitors to make plots for unambiguous photons.
+
+- In Tf/FastVelo v1r22, v1r23
+  . Fix to FastVeloTracking matching of RZ track to Phi hits when beam is off
+    centre
+  . FastVeloFitLHCbIDs: Protect from segfault in case of not decoded hits.
+
+- In Tf/PatAlgorithms v4r43
+  . Add 2 counters to PatAddTTCoord.
+
+- In Tf/TfTools v1r20p1, Tf/FastVelo v1r23,  Tf/TsaAlgorithms v3r30,
+     Tr/TrackExtrapolators v2r39
+  . Replace endreq with endmsg
+
+- In Tf/TrackSys v9r11
+  . Put upstream tracking before forward in RecoUpgradeTracking.py
+
+- In Tf/FastVelo v1r23, Tf/TsaAlgorithms v3r30
+  . Replace std::auto_ptr with auto
+
+- In Tr/PatFitParams v4r4
+  . FwdParameters: reimplement in terms of LinParFit as well, get identical
+    output, but somewhat more information when printed, so debugging becomes
+    easier (if something should go wrong)
+  . New class LinParFit for fits which are linear in their parameters, much
+    more flexible and general than anything previously available
+  . Adapt various classes to take advantage of LinParFit, retire
+    FwdFitPolinomial class which serves little purpose now 
+  . Modernise code in SeedFitParams
+
+- In Tr/TrackExtrapolators v2r39
+  . Simplify unit matrix assignment
+
+- In Tr/TrackMonitors v2r10
+  . Fixed per-sector histograms in TT/ITTrackMonitor
+  . Added option to IT/TTTrackMonitor and STEfficiency algorithms to dump
+    per-sector information in 2D histograms.
+
+- In Tr/TrackTools v5r12
+  . First commit of 'SelectTrackInVertex', a track selector that checks if a
+    track is in a collection of tracks of a Rec::Vertex.
+  . Change virtual private inheritance of interface into virtual public
+
+- In Velo/VeloRecMonitors v2r32
+  . VeloIPResolutionMonitorNT: Added tuple branches for track Ghost probability, 
+ 	  momentum x, y, z components and errors and momentum x, y, z, covariance matrix
+  . Fixing bugs in accessing MC info in VeloIPResolutionMonitorNT.
+  . VeloClusterMonitor: Added histograms to represent ADC cluster fits functions  
+    for offline monitoring purpose. A job option switched these off by default. 
+
+- In all above packages except Tf/TrackSys:
+  . remove #include of obsolete Gaudi headers
+
+
 </PRE><H1><A NAME=v18r1>2015-08-06 RecSys v18r1</A></H1><PRE>
 This version uses Gaudi v26r3, LHCb v39r0 and Lbcom v17r0 (and ROOT 6.04.02)
 
