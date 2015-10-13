@@ -1,7 +1,7 @@
 ################################################################################
 # Package: BooleSys
 ################################################################################
-gaudi_subdir(BooleSys v29r9)
+gaudi_subdir(BooleSys v29r10)
 
 gaudi_depends_on_subdirs(Digi/Boole
 				Det/DDDB
