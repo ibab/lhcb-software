@@ -3,7 +3,7 @@
 # Maintainer : 
 #=====================================================================
 package           PatChecker
-version           v3r16
+version           v3r16p1
 
 #=====================================================================
 # Structure, i.e. directories to process. 
