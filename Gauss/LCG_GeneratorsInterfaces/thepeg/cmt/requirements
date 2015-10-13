@@ -1,0 +1,17 @@
+package thepeg
+
+use LCG_Configuration v*
+use LCG_Settings v*
+
+macro thepeg_home $(LCG_external)/MCGenerators/thepeg/$(thepeg_native_version)/$(LCG_system)
+
+include_path none
+include_dirs $(thepeg_home)/include
+
+macro thepeg_linkopts "-L$(thepeg_home)/lib/ThePEG \
+                        -lThePEG "
+
+macro thepeg_name "thepeg"
+apply_pattern set_ext_lib_path windir=lib\ThePEG unixdir=lib/ThePEG
+
+macro thepeg_export_paths "$(thepeg_home)/include/ThePEG $(ThePEG_home)/lib/ThePEG"
