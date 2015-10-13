@@ -3,7 +3,7 @@
 # Maintainer : Stephanie Hansmann-Menzemer
 #=====================================================================
 package           PatKernel
-version           v2r10
+version           v2r10p1
 
 #=====================================================================
 # Structure
