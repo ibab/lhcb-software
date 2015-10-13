@@ -1,7 +1,7 @@
 ################################################################################
 # Package: PrUtils
 ################################################################################
-gaudi_subdir(PrUtils v2r0)
+gaudi_subdir(PrUtils v2r0p1)
 
 gaudi_depends_on_subdirs(Det/CaloDet
                          Det/OTDet
