@@ -1,0 +1,304 @@
+
+package LCG_Settings
+
+include_path none
+
+use LCG_Platforms v*
+
+macro_remove LCG_Platforms_project_release "CMT"
+
+macro LCG_releases       "$(LCG_Platforms_root)/../../../$(LCG_Platforms_project_release)" \
+      lcg-nightlies      "$(LCG_Platforms_root)/../../.." \
+      ATLAS&experimental "$(LCG_Platforms_root)/../../.." \
+      ATLAS              "${SITEROOT}/sw/lcg/app/releases/$(LCG_Platforms_project_release)"
+
+macro LCG_external       "$(LCG_releases)"
+
+# ==== pattern to express optional dependencies =====
+pattern use_optional \
+   macro use_pkg             "" \
+         <package>_use_<pkg> "<pkg> v* LCG_Interfaces -no_auto_imports" \
+         USE_ALL_OPT_PKGS    "<pkg> v* LCG_Interfaces -no_auto_imports" ;\
+   use $(use_pkg)
+
+
+# ==== pattern to announce include dir to ROOT =====
+pattern set_root_include_path \
+  path_prepend ROOT_INCLUDE_PATH $(<package>_include) ; \
+  include_dirs $(<package>_include) 
+
+# ==== pattern for declaring container packages ====
+pattern composite_package \
+  private ; \
+    macro <package>_sub_packages "<parts>" ; \
+    macro <package>_is_composite "1" ; \
+  end_private
+
+# ==== macro to set the "root" directory of a project ====
+cmtpath_pattern macro <project>_home "<path>"
+
+# ====== pattern to set list of libraries to be linked to InstallArea ==
+
+pattern declare_installed_libraries \
+   private ;\
+   macro list_cmd "$(LCG_Settings_root)/scripts/list_files.sh $(<package>_types) <dir> <extras>" ; \
+   macro <package>_types "--type $(shlibsuffix) --type rootmap" ;  \
+   macro_append <package>_types "" target-darwin " --type dylib" ;  \
+   macro <package>_libraries `$(list_cmd)` target-win "" ignore_installarea "" ;\
+   end_private
+
+# ====== pattern to create symbolic links to external libraries (<type> starts with "lib"), executables (<type> starts with "exe"), or both file types otherwise from <dir> in InstallArea ==
+
+pattern symlink_extern \
+   private ; \
+   action <package>_symlink_extern_<type> "python $(LCG_Settings_root)/python/lcg_InstallArea.py -p <package> -r $(<package>_root) -H '<dir>' -t '<type>' " ; \
+   macro_append all_dependencies "" \
+                 <project>_with_installarea&target-unix   " <package>_symlink_extern_<type>" ; \
+   end_private
+
+# ===== patterns to set PATH and LD_LIBRARY_PATH ==========================
+# ===== they use the <project> build_strategy =============================
+
+macro unixdirname               "lib" \
+      target-unix&target-x86_64 "lib64"
+
+pattern set_bin_and_lib_path \
+    apply_pattern clean_path ; \
+    apply_pattern set_lib_path ; \
+    apply_pattern set_bin_path 
+
+pattern set_ext_bin_and_lib_path \
+    apply_pattern clean_path ; \
+    apply_pattern set_ext_lib_path windir=<windir> unixdir=<unixdir> ; \
+    apply_pattern set_bin_path 
+
+pattern set_real_lib_path \
+    private ; \
+    apply_tag ignore_installarea ; \
+    apply_pattern set_ext_lib_path windir=lib unixdir=lib ; \
+    end_private
+
+pattern set_lib_path \
+    apply_pattern set_ext_lib_path windir=lib unixdir=lib ;
+
+pattern clean_path \
+    path_remove LD_LIBRARY_PATH   "/<package>/"         target-win "" ;\
+    path_remove LD_LIBRARY_PATH   "/$(<package>_name)/" target-win "" ;\
+    path_remove DYLD_LIBRARY_PATH ""                    target-win "" target-darwin "/<package>/"  ;\
+    path_remove DYLD_LIBRARY_PATH ""                    target-win "" target-darwin "/$(<package>_name)/"  ;\
+    path_remove PATH              "/<package>/" ;\
+    path_remove PATH              ""                    target-win "\<package>\" ;\
+    path_remove PATH              "/$(<package>_name)/" ;\
+    path_remove PATH              ""                    target-win "\$(<package>_name)\"  ;
+     
+
+pattern set_ext_lib_path \
+    apply_pattern symlink_extern dir=$(<package>_home) type=lib ;\
+    apply_pattern clean_path ;\
+    path_prepend LD_LIBRARY_PATH                             "$(<package>_home)/<unixdir>"  \
+                 target-win                                  "" \
+                 <project>_without_installarea&target-unix   "$(<package>_home)/<unixdir>" \
+                 ignore_installarea&target-unix              "$(<package>_home)/<unixdir>" ;\
+    path_prepend PATH                                        "" \
+                 target-win                                  "$(<package>_home)\<windir>" ;\
+    path_prepend DYLD_LIBRARY_PATH                           "" \
+                 <project>_without_installarea&target-darwin "$(<package>_home)/<unixdir>" \
+                 ignore_installarea&target-unix              "$(<package>_home)/<unixdir>" \
+                 target-darwin                               "$(<package>_home)/<unixdir>"
+
+# At the moment symbolic links for binaries/exectutables are not setup 
+# for the InstallArea so the external package  /bin directory is used
+# for all configurations.
+pattern set_bin_path \
+    apply_pattern symlink_extern dir=$(<package>_home) type=exe ;\
+    path_prepend PATH                               "$(<package>_home)/bin" \
+        <project>_without_installarea&target-unix   "$(<package>_home)/bin" \
+        <project>_without_installarea&target-darwin "$(<package>_home)/bin" \
+         target-win                                 "$(<package>_home)/bin" \
+        <project>_with_installarea&target-unix      "$(<package>_home)/bin" \
+        <project>_with_installarea&target-darwin    "$(<package>_home)/bin" ;
+
+
+# sets up the man path (on unix only)
+pattern set_man_path \
+    apply_pattern set_ext_man_path mandir=man ;
+
+pattern set_ext_man_path \ 
+    path_remove MANPATH                             "/<package>/" \
+         target-win                                 "" ; \
+    path_prepend MANPATH                            "$(<package>_home)/<mandir>" \
+        <project>_without_installarea&target-unix   "$(<package>_home)/<mandir>" \
+        <project>_without_installarea&target-darwin "$(<package>_home)/<mandir>" \
+         target-win                                 "" \
+        <project>_with_installarea&target-unix      "$(<package>_home)/<mandir>" \
+        <project>_with_installarea&target-darwin    "$(<package>_home)/<mandir>" ;
+
+# ==== Compiler Names and environment setup ====
+
+# gcc
+macro gcc_config_version       "" \
+      target-gcc43             "4.3.6" \
+      target-gcc44             "4.4.3" \
+      target-gcc45             "4.5.3" \
+      target-gcc46             "4.6.3" \
+      target-gcc47             "4.7.2" \
+      target-gcc48             "4.8.1" \
+      target-gcc49             "4.9.1" \
+      target-gccmax            "max" \
+      target-g11max            "g11" \
+      target-icc11             "4.3.6" \
+      target-icc13             "4.7.2" \
+      target-clang33           "4.8.1" \
+      target-clang34           "4.8.1" \
+      target-clang             "4.6.3" 
+macro gcc_native_version       "$(gcc_config_version)"
+macro gcc_home                 "$(LCG_external)/gcc/$(gcc_native_version)/$(LCG_hostos)"
+
+# clang
+macro clang_config_version      "" \
+      target-clang30            "3.0" \
+      target-clang31            "3.1" \
+      target-clang32            "3.2" \
+      target-clang33            "3.3" \
+      target-clang34            "3.4"
+macro clang_native_version      "$(clang_config_version)"
+macro clang_home                "$(LCG_external)/llvm/$(clang_native_version)/$(LCG_hostos)"
+
+# icc
+macro icc_config_version       "" \
+      target-icc11             "11.1" \
+      target-icc13             "xe2013"
+macro icc_native_version       "$(icc_config_version)"
+set intelplat                  "" \
+      target-icc&target-i686   "ia32" \
+      target-icc&target-x86_64 "intel64"
+set intel_home                 "" \
+      target-icc               "/afs/cern.ch/sw/IntelSoftware/linux"
+macro icc_home                 "" \
+      target-icc11             "$(intel_home)/x86_64/Compiler/$(icc_native_version)" \
+      target-icc               "$(intel_home)/x86_64/$(icc_native_version)"
+set icc_c_home                 "" \
+      target-icc11             "$(icc_home)/072" \
+      target-icc               "$(icc_home)"
+set icc_f_home                 "" \
+      target-icc11             "$(icc_home)/072" \
+      target-icc               "$(icc_home)"
+
+# LINKER
+set_append LDFLAGS                        "" \
+      host-x86_64&target-i686              " -m32"
+
+# C Preprocessor
+set_append CPPFLAGS                        "" \
+      host-x86_64&target-i686              " -m32"
+
+# C Settings
+macro cc_name                              "gcc" \
+      CERNDISTCC&target-slc&target-gcc     "lcg-gcc-$(gcc_config_version)" \
+      host-slc5&target-gcc34               "gcc34" \
+      target-darwin                        "cc" \
+      target-win                           "cl" \
+      target-clang                         "clang" \
+      target-icc                           "icc"
+
+macro cc                                   "$(cc_name)"
+
+set_append CFLAGS                          "" \
+      host-x86_64&target-i686              " -m32"
+
+# C++ Settings
+macro cpp_name                             "g++" \
+      CERNDISTCC&target-slc&target-gcc     "lcg-g++-$(gcc_config_version)" \
+      host-slc5&target-gcc34               "g++34" \
+      target-darwin                        "c++" \
+      target-win                           "cl" \
+      target-clang                         "clang++" \
+      target-icc                           "icpc"
+
+macro cpp                                  "$(cpp_name)"
+
+set_append CXXFLAGS                        "" \
+      host-x86_64&target-i686              " -m32"
+
+macro shlibbuilder                         "$(cpp_name)" 
+macro cpplinkname                          "$(cpp_name)" \
+      target-win                           "link.exe"
+
+# Fortran Settings
+macro for_name                             "g77" \
+      CERNDISTCC&target-slc&target-gcc     "lcg-gfortran-$(gcc_config_version)" \
+      target-gcc4                          "gfortran" \
+      target-win                           "f77.exe" \
+      target-clang                         "gfortran" \
+      target-icc                           "ifort"
+
+macro for                                  "$(for_name)"
+
+set_append FFLAGS                          "" \
+      host-x86_64&target-i686              " -m32"
+
+# Distcc Settings
+tag CERNDISTCC CERN use-distcc
+macro_prepend cpp "" use-distcc            "distcc "
+macro_prepend cc  "" use-distcc            "distcc "
+macro_prepend for "" use-distcc            "distcc "
+
+# Ccache Settings
+set CCACHE_PREFIX "" use-ccache&use-distcc "distcc"
+macro_remove  cpp "" use-ccache&use-distcc "distcc "
+macro_prepend cpp "" ATLAS                 ""        use-ccache            "ccache "
+macro_remove  cc  "" use-ccache&use-distcc "distcc "
+macro_prepend cc  "" ATLAS                 ""        use-ccache            "ccache "
+macro_remove  for "" use-ccache&use-distcc "distcc "
+macro_prepend for "" ATLAS                 ""        use-ccache            "ccache "
+
+# Environment for special compilers
+path_remove  PATH                                           "" \
+             target-lcg-compiler                            "$(LCG_external)/gcc/" \
+             target-icc                                     "$(LCG_external)/gcc/" \
+             target-clang                                   "$(LCG_external)/gcc/"
+
+path_remove  PATH                                           "" \
+             ATLAS&use-ccache                               "$(CCACHE_INST)/bin"
+
+path_remove  PATH                                           "" \
+             target-clang                                   "$(LCG_external)/llvm/" 
+
+path_prepend PATH                                           "" \
+             target-lcg-compiler                            "$(gcc_home)/bin" \
+             target-clang                                   "$(gcc_home)/bin" \
+             target-icc                                     "$(gcc_home)/bin"
+
+path_prepend PATH                                           "" \
+             ATLAS&use-ccache                               "$(CCACHE_INST)/bin"
+
+path_prepend PATH                                           "" \
+             target-clang                                   "$(clang_home)/bin" 
+
+set COMPILER_PATH "$(gcc_home)/lib/gcc/$(host_arch)-unknown-linux-gnu/$(gcc_native_version)"
+
+path_remove  LD_LIBRARY_PATH                                "" \
+             target-lcg-compiler                            "$(LCG_external)/gcc/" \
+             target-icc                                     "$(LCG_external)/gcc/" \
+             target-clang                                   "$(LCG_external)/gcc/"
+
+path_remove  LD_LIBRARY_PATH                                "" \
+             target-clang                                   "$(LCG_external)/llvm/" 
+
+path_prepend LD_LIBRARY_PATH                                "" \
+             target-lcg-compiler&host-x86_64&target-i686    "$(gcc_home)/lib64" \
+             target-icc&host-x86_64&target-i686             "$(gcc_home)/lib64" \
+             target-clang                                   "$(clang_home)/lib" 
+
+path_prepend LD_LIBRARY_PATH                                "" \
+             target-lcg-compiler                            "$(gcc_home)/$(unixdirname)" \
+             target-clang                                   "$(gcc_home)/$(unixdirname)" \
+             target-icc                                     "$(gcc_home)/$(unixdirname)"
+
+#code coverage - lcov tool
+macro use_lcov ""   target-cov "lcov v* LCG_Interfaces"
+use $(use_lcov)
+
+#profiling - igprof tool
+macro use_igprof "" target-pro "igprof v* LCG_Interfaces"
+use $(use_igprof)
