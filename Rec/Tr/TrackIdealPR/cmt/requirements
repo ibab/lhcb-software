@@ -3,7 +3,7 @@
 # Maintainer : Eduardo Rodrigues
 #============================================================================
 package           TrackIdealPR
-version           v2r20
+version           v2r20p1
 
 #============================================================================
 # Structure, i.e. directories to process. 
