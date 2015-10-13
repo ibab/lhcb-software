@@ -3,7 +3,7 @@
 # Maintainer : Olivier Deschamps odescham@in2p3.fr
 # ====================================================================
 package           CaloTools
-version           v6r10
+version           v6r10p1
 
 # ================= structure =============================================
 branches            cmt doc src
