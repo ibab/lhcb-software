@@ -1,0 +1,18 @@
+package photospp
+
+use LCG_Configuration v*
+use LCG_Settings v*
+
+macro photospp_home $(LCG_external)/MCGenerators/photos++/$(photospp_native_version)/$(LCG_system)
+
+include_path none
+include_dirs $(photospp_home)/include
+
+macro photospp_linkopts "-L$(photospp_home)/lib \
+                        -lPhotosFortran \
+                        -lPhotosCxxInterface "
+
+macro photospp_name "photospp"
+apply_pattern set_lib_path
+
+macro photospp_export_paths "$(photospp_home)/include $(photospp_home)/lib"
