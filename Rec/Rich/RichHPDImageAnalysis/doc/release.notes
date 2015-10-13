@@ -4,6 +4,7 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+!========================= RichHPDImageAnalysis v1r18 2015-10-13 =====================
 ! 2015-09-14 - Chris Jones
  - Set HPD image axis titles.
 
