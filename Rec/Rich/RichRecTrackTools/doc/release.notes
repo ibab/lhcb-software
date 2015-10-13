@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
+
+!========================= RichRecTrackTools v1r40p1 2015-10-13 ======================
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
