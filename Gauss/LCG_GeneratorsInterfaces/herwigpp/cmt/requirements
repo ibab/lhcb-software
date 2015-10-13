@@ -1,0 +1,16 @@
+package herwigpp
+
+use LCG_Configuration v*
+use LCG_Settings v*
+
+macro herwigpp_home $(LCG_external)/MCGenerators/herwig++/$(herwigpp_native_version)/$(LCG_system)
+set HERWIGPPHOME "$(herwigpp_home)"
+
+include_path none
+include_dirs $(herwigpp_home)/include/Herwig++
+
+macro herwigpp_name "herwigpp"
+apply_pattern set_ext_lib_path windir=lib\Herwig++ unixdir=lib/Herwig++
+
+macro herwigpp_export_paths "$(herwigpp_home)/include/Herwig++ $(herwigpp_home)/lib/Herwig++"
+
