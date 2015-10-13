@@ -1,0 +1,17 @@
+package pythia8
+
+use LCG_Configuration v*
+use LCG_Settings v*
+
+macro pythia8_home $(LCG_external)/MCGenerators/pythia8/$(pythia8_native_version)/$(LCG_system) 
+
+include_path none
+include_dirs $(pythia8_home)/include
+
+macro pythia8_linkopts "-L$(pythia8_home)/lib \
+                        -lpythia8 "
+
+macro pythia8_name "pythia8"
+apply_pattern set_lib_path
+
+macro pythia8_export_paths "$(pythia8_home)/include $(pythia8_home)/lib"
