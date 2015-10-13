@@ -4,7 +4,7 @@
 #=====================================================================
 
 package           GlobalReco
-version           v6r53
+version           v6r54
 
 branches          cmt doc src python root
 include_path none

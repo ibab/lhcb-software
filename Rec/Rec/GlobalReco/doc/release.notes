@@ -3,6 +3,8 @@
 ! Responsible : Global PID Group (C. Jones)
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
+
+!========================= GlobalReco v6r54 2015-10-13 =========================
 ! 2015-08-26 - Gerhard Raven
  - replace GaudiUtils::HashMap with sorted std::vector
  - prefer std::find_if over raw loop
