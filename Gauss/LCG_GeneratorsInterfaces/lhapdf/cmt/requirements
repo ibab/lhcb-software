@@ -1,0 +1,20 @@
+package lhapdf
+
+use LCG_Configuration v*
+use LCG_Settings v*
+
+macro lhapdf_path $(LCG_external)/MCGenerators/lhapdf/$(lhapdf_native_version)
+macro lhapdf_home $(lhapdf_path)/$(LCG_system) 
+
+include_path none
+include_dirs $(lhapdf_home)/include
+
+macro lhapdf_linkopts "-L$(lhapdf_home)/lib \
+                        -lLHAPDF " \
+         target-winxp "/LIBPATH:$(lhapdf_home)/lib LHAPDF.lib "
+
+macro lhapdf_name "lhapdf"
+apply_pattern set_lib_path
+
+macro lhapdf_export_paths "$(lhapdf_home)/include $(lhapdf_home)/lib"
+
