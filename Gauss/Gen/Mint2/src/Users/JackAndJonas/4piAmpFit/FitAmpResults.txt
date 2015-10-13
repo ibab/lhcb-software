@@ -1,9 +1,0 @@
-	(1) D0->rho(770)0(->pi+,pi-),rho(770)0(->pi+,pi-) = 0.926815 +/- 0(fit) +/- 0.00110102(integ)
-	(2) FocusFlatteD0->NonResVbar0(->pi+,pi-),f(0)(980)0(->pi+,pi-) = 0.0727283 +/- 0(fit) +/- 0.000353862(integ)
-==========================================================
-	 sum = 0.999543 +/- 0(fit) +/- 0.00113154(integ)
- (can differ from 1 due to interference effects)
-	(1) A(D0->rho(770)0(->pi+,pi-),rho(770)0(->pi+,pi-))_x_fitA(FocusFlatteD0->NonResVbar0(->pi+,pi-),f(0)(980)0(->pi+,pi-))* = 0.000457071 +/- 0(fit) +/- 0.00113154(integ)
-==========================================================
-	 sum = 0.000457071 +/- 0(fit)
- (can differ from 1 due to interference effects)

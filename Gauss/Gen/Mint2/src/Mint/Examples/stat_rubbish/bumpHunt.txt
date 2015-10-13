@@ -1,9 +1,0 @@
-N		1000
-NumExperiments  10000
-GeneratedA 	0.2
-DecayTime       1.5
-dm              17.0
-
-* name  fix?    start   step    (min)   (max) 
-  A     0       0       0.1
-
