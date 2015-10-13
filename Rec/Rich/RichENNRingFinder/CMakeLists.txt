@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RichENNRingFinder
 ################################################################################
-gaudi_subdir(RichENNRingFinder v1r5p1)
+gaudi_subdir(RichENNRingFinder v1r5p2)
 
 gaudi_depends_on_subdirs(Rich/RichRecBase)
 
