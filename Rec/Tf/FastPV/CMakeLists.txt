@@ -1,7 +1,7 @@
 ################################################################################
 # Package: FastPV
 ################################################################################
-gaudi_subdir(FastPV v1r2)
+gaudi_subdir(FastPV v1r2p1)
 
 gaudi_depends_on_subdirs(Det/DetCond
                          Event/MCEvent

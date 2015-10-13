@@ -1,8 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : Tf/FastPV
-! Responsible : Olivier Callot
+! Responsible :
 ! Purpose     : Reconstruct the PV in a fast way
 !-----------------------------------------------------------------------------
+
+!========================= FastPV v1r2p1 2015-10-13 =========================
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
