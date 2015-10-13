@@ -1,7 +1,7 @@
 ################################################################################
 # Package: PrKernel
 ################################################################################
-gaudi_subdir(PrKernel v1r9)
+gaudi_subdir(PrKernel v1r9p1)
 
 gaudi_depends_on_subdirs(Event/RecEvent
                          Tf/TfKernel     
