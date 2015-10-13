@@ -1,0 +1,41 @@
+package rivet
+
+use LCG_Configuration v*
+use LCG_Settings v*
+
+macro rivet_home $(LCG_external)/MCGenerators/rivet/$(rivet_native_version)/$(LCG_system)
+
+include_path none
+include_dirs $(rivet_home)/include
+
+macro rivet_linkopts "-L$(rivet_home)/lib \
+                        -lRivet " 
+
+macro rivet_name "rivet"
+apply_pattern set_bin_and_lib_path
+
+macro rivet_export_paths "$(rivet_home)/include $(rivet_home)/lib"
+
+path_remove  PYTHONPATH  "/rivet/"
+path_prepend PYTHONPATH  "$(rivet_home)/lib/python$(Python_version)/site-packages"
+
+set          TEXMFHOME   "${TEXMFHOME}"
+set_remove_regexp   TEXMFHOME   "/[^:]*rivet[^:]*:"
+set_prepend  TEXMFHOME   "$(rivet_home)/share/Rivet/texmf:"
+
+set          HOMETEXMF   "${HOMETEXMF}"
+set_remove_regexp   HOMETEXMF   "/[^:]*rivet[^:]*:"
+set_prepend  HOMETEXMF   "$(rivet_home)/share/Rivet/texmf:"
+
+set          TEXMFCNF    "${TEXMFCNF}"
+set_remove_regexp   TEXMFCNF   "/[^:]*rivet[^:]*:"
+set_prepend  TEXMFCNF    "$(rivet_home)/share/Rivet/texmf/cnf:"
+
+set          TEXINPUTS   "${TEXINPUTS}"
+set_remove_regexp   TEXINPUTS   "/[^:]*rivet[^:]*:"
+set_prepend  TEXINPUTS   "$(rivet_home)/share/Rivet/texmf/tex:"
+
+set          LATEXINPUTS "${LATEXINPUTS}"
+set_remove_regexp   LATEXINPUTS   "/[^:]*rivet[^:]*:"
+set_prepend  LATEXINPUTS "$(rivet_home)/share/Rivet/texmf/tex:"
+
