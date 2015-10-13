@@ -5,7 +5,7 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v39r1>2015-10-12 LHCbSys v39r1</A></H1><PRE>
+</PRE><H1><A NAME=v39r1>2015-10-13 LHCbSys v39r1</A></H1><PRE>
 This version uses Gaudi v26r4 and LCG_79 with ROOT 6.04.02.
 
 - Packages modified: Calo/CaloDAQ v4r38p1, Calo/CaloUtils v10r5p1,
@@ -16,7 +16,7 @@ This version uses Gaudi v26r4 and LCG_79 with ROOT 6.04.02.
     Det/VeloDet v13r21p1, Det/VPDet v3r2p1, Event/EventPacker v5r7,
     Event/LumiEvent v3r8p1, Event/RecreatePIDTools v1r8, 
     Ex/DetCondExample v11r14p1, Ex/DetDescExample v7r8p1, FT/FTDAQ v1r7p1,
-    GaudiConf v19r12, GaudiMTTools v1r2p2, HC/HCDAQ v1r5, Hlt/HltDAQ v4r20,
+    GaudiConf v19r13, GaudiMTTools v1r2p2, HC/HCDAQ v1r5, Hlt/HltDAQ v4r20,
     Hlt/HltServices v2r10, Kernel/FSRAlgs v1r8p1, Kernel/HltInterfaces v6r2,
     Kernel/LHCbAlgs v3r6p1, Kernel/LHCbKernel v15r12, Kernel/LHCbMath v3r59,
     Kernel/MCInterfaces v1r19, Kernel/PartProp v1r20, 
@@ -73,7 +73,8 @@ This version uses Gaudi v26r4 and LCG_79 with ROOT 6.04.02.
 - In Event/RecreatePIDTools v1r8
   . Small C++11 clean up of a few components
 
-- In GaudiConf v19r12
+- In GaudiConf v19r12, v19r13
+  . Modified QMTest.ConfigurablesTest to understand lb-dev projects (<project>Dev)
   . Added line to allow IOHelper to treat RDST as DST.
 
 - In HC/HCDAQ v1r5
@@ -107,7 +108,7 @@ This version uses Gaudi v26r4 and LCG_79 with ROOT 6.04.02.
   . Add Convex & ConvexOnly splines 
   . Speed up integration of 2D polynomials and splines 
   . Bernstein&B-spline:
-    1) speedup integration 
+    1) speed up integration 
     2) add more classification functions 
   . Add confidence intervals for binomial proportions/efficiencies 
   . Add few more functions including:
@@ -116,6 +117,7 @@ This version uses Gaudi v26r4 and LCG_79 with ROOT 6.04.02.
     o Hypot function 
     o Atlas function 
   . pdg_format.py: simple module, implementing PDG rounding scheme 
+  . Speed up some utilities for Ostap 
   . Add QMtest for Combine-utility 
   . Split TestSimilarity into tests for AVX/SSE3, to put in evidence what has
     been run.
