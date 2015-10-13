@@ -86,16 +86,25 @@ if len(options.runNumber.split(','))>1:
    options.runNumber = options.runNumber.split(',')[0]+'_'+options.runNumber.split(',')[-1]
 
 from Gaudi.Configuration import *
+
+from Configurables import DDDBConf
+DDDBConf(InitialTime = 'now')
 from Configurables import LHCbApp
 app = LHCbApp()
+app.DataType = "2015"
+app.CondDBtag = "cond-20150828"
 
 EventSelector().PrintFreq = 100000
 EventSelector().Input = listOfFiles
 
 # Set up the sequence of algorithms to be run.
 mainSeq = GaudiSequencer("MainSeq")
-from Configurables import createODIN
-mainSeq.Members += [createODIN()]
+
+from Configurables import DecodeRawEvent
+DecodeRawEvent()
+
+#from Configurables import createODIN
+#mainSeq.Members += [createODIN()]
 
 from Configurables import HltRoutingBitsFilter
 physFilter = HltRoutingBitsFilter("PhysFilter")
@@ -227,6 +236,5 @@ hpSvc.OutputFile = options.OutputDirectory+'/'+options.runNumber+'/'+options.ana
 ntSvc = appMgr.ntupleSvc()
 ntSvc.Output = [ "FILE1 DATAFILE='"+options.OutputDirectory+'/'+options.runNumber+'/'+options.analysisType+'_'+options.runNumber+"Tuple.root'  TYP='ROOT'  OPT='NEW'" ]
 
-#eventTimeDecoder = appMgr.toolsvc().create("OdinTimeDecoder", interface = "IEventTimeDecoder")
 appMgr.run(options.NumberOfEvents)
 
