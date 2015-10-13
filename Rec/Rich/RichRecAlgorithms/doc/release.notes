@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
+
+!========================= RichRecAlgorithms v2r21p1 2015-10-13 ======================
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 

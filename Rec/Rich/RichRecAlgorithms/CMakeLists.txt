@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RichRecAlgorithms
 ################################################################################
-gaudi_subdir(RichRecAlgorithms v2r21)
+gaudi_subdir(RichRecAlgorithms v2r21p1)
 
 gaudi_depends_on_subdirs(Rich/RichRecBase
                          Tr/TrackInterfaces)
