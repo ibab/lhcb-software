@@ -166,6 +166,8 @@ if int(options.refRunNumber) > 0:
 if options.analysisType == 'NTuple':
   from Configurables import HCDigitTuple
   digitTuple = HCDigitTuple()
+  if int(options.refRunNumber) > 0:
+    digitTuple.CorrectedDigitLocation = "Raw/HC/CorrectedDigits"
   configureMapping(digitTuple)
   mainSeq.Members += [digitTuple]
 elif options.analysisType == 'Pedestals':
@@ -178,6 +180,7 @@ elif options.analysisType == 'Pedestals':
   if int(options.refRunNumber) > 0:
     correctedDigitMonitor = HCDigitMonitor("HCCorrectedDigitMonitor")
     configureMapping(correctedDigitMonitor)
+    correctedDigitMonitor.Edges = [-300.5,1200]
     correctedDigitMonitor.DigitLocation = "Raw/HC/CorrectedDigits"
     correctedDigitMonitor.MinBX = options.minBx
     correctedDigitMonitor.MaxBX = options.maxBx

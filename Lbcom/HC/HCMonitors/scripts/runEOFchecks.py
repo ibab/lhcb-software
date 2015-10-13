@@ -27,13 +27,26 @@ parser.add_option( "--DataDirectory", type="string",
 options, arguments = parser.parse_args()
 
 for runNum in options.runNumber.split(','):
-    
-    print 'Running evaluation of common mode subtraction for run '+runNum+' ... can take a few minutes'
-    h = commands.getoutput('python analyseHRC.py -r '+runNum+' -a CommonMode -n 300000 -b --DataDirectory '+options.DataDirectory+' --Directory '+options.Directory)
+    try:  
+        os.environ["BRUNELROOT"]
+    except KeyError: 
+        print "No Brunel environment is setup"
+        sys.exit(1)
+    version = os.environ["BRUNELROOT"].split('/')[-3].split('_')[1]
+    scriptLocation = os.environ["User_release_area"]+'/Brunel_'+version+'/HC/HCMonitors/scripts/analyseHRC.py'
+    print 'Running CommonMode on run ',runNum
+    mycommand = ['python',scriptLocation,'-a','CommonMode', '-r', runNum,  '-n','300000','-b','--DataDirectory',options.DataDirectory ,  '--Directory',options.Directory]
+    p = Popen(mycommand, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
+    for line in iter(p.stdout.readline, ''):
+        print line, 
+    p.stdout.close()
 
-    print 'Running evaluation of corrected and uncorrected pedestals for run '+runNum+' ... can take a few minutes'
-    h = commands.getoutput('python analyseHRC.py -r '+runNum+' -a Pedestals -n 300000 -b --DataDirectory '+options.DataDirectory+' --refRunNumber '+runNum+' --Directory '+options.Directory)
-    
+    print 'Running Pedestals on run ',runNum
+    mycommand = ['python',scriptLocation,'-a','Pedestals', '-r', runNum, '--refRunNumber',runNum, '-n','300000','-b','--DataDirectory',options.DataDirectory ,  '--Directory',options.Directory]
+    p = Popen(mycommand, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
+    for line in iter(p.stdout.readline, ''):
+        print line, 
+    p.stdout.close()
 
     print 'Creating the summary...'
     
@@ -171,5 +184,3 @@ for runNum in options.runNumber.split(','):
     commands.getoutput('mv EOFSummary_'+runNum+'.pdf '+options.Directory+'/'+runNum+'/EOFSummary_'+runNum+'.pdf')
     commands.getoutput('rm EOFSummary_'+runNum+'.*')
 
-
-print 'Updating the '

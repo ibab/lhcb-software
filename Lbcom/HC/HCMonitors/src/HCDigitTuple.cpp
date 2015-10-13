@@ -15,6 +15,8 @@ HCDigitTuple::HCDigitTuple(const std::string& name, ISvcLocator* pSvcLocator)
 
   declareProperty("DigitLocation", 
                   m_digitLocation = LHCb::HCDigitLocation::Default);
+  declareProperty("CorrectedDigitLocation", 
+                  m_correctedDigitLocation = "");
 
 }
 
@@ -56,6 +58,11 @@ StatusCode HCDigitTuple::initialize() {
   if (tae != "") {
     m_digitLocation = tae + "/" + m_digitLocation;
   }
+  m_corrected = true;
+  if ( m_correctedDigitLocation == "" ) {
+    m_corrected = false;
+  }
+  
   return StatusCode::SUCCESS;
 }
 
@@ -79,9 +86,18 @@ StatusCode HCDigitTuple::execute() {
   const ulonglong evTimeGps = odin->gpsTime();
   const int step = odin->calibrationStep();
   const LHCb::HCDigits* digits = getIfExists<LHCb::HCDigits>(m_digitLocation);
+  const LHCb::HCDigits* correctedDigits = NULL;
+  
   if (!digits) {
     return Error("No digits in " + m_digitLocation, StatusCode::SUCCESS);
   }
+  if (m_corrected){
+    correctedDigits = getIfExists<LHCb::HCDigits>(m_correctedDigitLocation);
+     if (!correctedDigits) {
+       return Error("No digits in " + m_correctedDigitLocation, StatusCode::SUCCESS);
+     }
+  }
+  
 
   std::vector<double> adcB(64, 0);
   std::vector<double> adcF(64, 0);
@@ -130,6 +146,30 @@ StatusCode HCDigitTuple::execute() {
       tuple->column(ch + "_reference", refadc);
      }
   }
+  if (m_corrected)
+  {
+    for (unsigned int i = 0; i < nStations; ++i) {
+      for (unsigned int j = 0; j < 4; ++j) {
+        // Skip masked channels.
+        if (m_masked[i][j]) continue;
+        const std::string ch = stations[i] + std::to_string(j);
+        LHCb::HCCellID id(m_channels[i][j]);
+        const LHCb::HCDigit* digit = correctedDigits->object(id);
+        if (!digit) {
+          warning() << "Cannot retrieve digit for " << ch << endmsg;
+          continue;
+        }
+        unsigned int adc = digit->adc();
+        tuple->column(ch+"_cor", adc);
+      }
+    }
+  }
+  
   tuple->write();
+  
+  if (!m_corrected){
+    delete correctedDigits;
+  }
+  
   return StatusCode::SUCCESS;
 }

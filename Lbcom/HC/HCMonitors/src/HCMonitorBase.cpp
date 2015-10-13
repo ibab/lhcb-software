@@ -40,6 +40,7 @@ HCMonitorBase::HCMonitorBase(const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("RandomiseADC", m_randomiseAdc = true);
   declareProperty("MinBX", m_bxMin = 0);
   declareProperty("MaxBX", m_bxMax = 10000);
+  declareProperty("Edges", m_edges = {-0.5,1023.5});
 }
 
 //=============================================================================
@@ -61,20 +62,34 @@ StatusCode HCMonitorBase::initialize() {
   m_adcStep.resize(1024, 0);
   unsigned int adc = 0;
   unsigned int step = 1;
-  m_edges.clear();
-  while (adc < 1024) {
-    m_edges.push_back(adc - 0.5);
-    if (adc == 128)
-      step = 2;
-    else if (adc == 256)
-      step = 8;
-    else if (adc == 512)
-      step = 16;
-    m_adcCorrection[adc] = 0.5 * (step - 1.);
-    m_adcStep[adc] = step;
-    adc += step;
+  if (m_variableBins){  
+    m_edges.clear();
+    while (adc < 1024) {
+      m_edges.push_back(adc - 0.5);
+      if (adc == 128)
+        step = 2;
+      else if (adc == 256)
+        step = 8;
+      else if (adc == 512)
+        step = 16;
+      m_adcCorrection[adc] = 0.5 * (step - 1.);
+      m_adcStep[adc] = step;
+      adc += step;
+    }
+    m_edges.push_back(1023.5);
   }
-  m_edges.push_back(1023.5);
+  else
+  {
+    double minVal (m_edges[0]);
+    double maxVal (m_edges[1]);
+    m_edges.clear();
+    for (int i = 0 ; i < maxVal-minVal +1 ; ++i )
+    {
+      m_edges.push_back(minVal+i);
+      
+    }
+  }
+  
   // Setup the mapping.
   m_channels.resize(5);
   m_references.resize(5);

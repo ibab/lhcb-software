@@ -26,18 +26,18 @@ parser.add_option( "--DataDirectory", type="string",
 options, arguments = parser.parse_args()
 
 colors = {'Odd':kBlue,'Even':kRed}
-style = {'mean':kFullCircle,'mean_Cor':kOpenCircle,'rms':kFullCircle,'rms_Cor':kOpenCircle,'X0':kFullCircle,'Y0':kOpenCircle,'theta':kFullCircle}
-linestyle = {'mean':1,'mean_Cor':2,'rms':1,'rms_Cor':2,'X0':1,'Y0':2,'theta':1}
-title = {'mean':'Pedestal Mean','mean_Cor':'Pedestal Mean','rms':'Pedestal RMS','rms_Cor':'Pedestal RMS','X0':'X_{0},Y_{0}','Y0':'X_{0},Y_{0}','theta':'#theta'}
+style = {'mean':kFullCircle,'mean_Cor':kOpenCircle,'rms':kFullCircle,'rms_Cor':kOpenCircle,'X0':kFullCircle,'Y0':kOpenCircle,'theta':kFullCircle,'X0Y0':kFullCircle}
+linestyle = {'mean':1,'mean_Cor':2,'rms':1,'rms_Cor':2,'X0':1,'Y0':2,'theta':1,'X0Y0':2}
+title = {'mean':'Pedestal Mean','mean_Cor':'Pedestal Mean','rms':'Pedestal RMS','rms_Cor':'Pedestal RMS','X0':'X_{0},Y_{0}','Y0':'X_{0},Y_{0}','theta':'#theta','X0Y0':'Y0' }
 Graph = {}
-for g in ['mean','rms','mean_Cor','rms_Cor','theta','X0','Y0']:
+for g in ['mean','rms','mean_Cor','rms_Cor','theta','X0','Y0','X0Y0']:
     Graph[g]= {}
     for s in ['B0','B1','B2','F1','F2']:
         Graph[g][s]= {}
         for q in ['0','1','2','3']:
             Graph[g][s][q]= {}
             for p in ['Odd','Even']:
-                Graph[g][s][q][p]=TGraph()
+                Graph[g][s][q][p]=TGraphErrors()
                 Graph[g][s][q][p].SetName(q+'_'+s+q+p)
                 Graph[g][s][q][p].SetTitle(q+'_'+s+q+p)
                 Graph[g][s][q][p].SetLineColor(colors[p])
@@ -70,23 +70,30 @@ for runNum in runNumbers:
                 for p in ['Odd','Even']:
                     Graph[g][s][q][p].SetPoint(Graph[g][s][q][p].GetN(),int(runNum),float(pedestalXML.find(s+q+p).find(g).text)) 
 
-    for g in ['theta','X0','Y0']:
+    for g in ['theta','X0','Y0','X0Y0']:
         for s in ['B0','B1','B2','F1','F2']:
             for q in ['0','1','2','3']:
                 for p in ['Odd','Even']:
-                    Graph[g][s][q][p].SetPoint(Graph[g][s][q][p].GetN(),int(runNum),float(commonmodeXML.find(s+q+p).find(g).text)) 
+                    if g == 'X0Y0':
+                        Graph[g][s][q][p].SetPoint(Graph[g][s][q][p].GetN(),float(commonmodeXML.find(s+q+p).find('X0').text),float(commonmodeXML.find(s+q+p).find('Y0').text)) 
+                        if commonmodeXML.find(s+q+p).find('X0_err')!=None:
+                            Graph[g][s][q][p].SetPointError(Graph[g][s][q][p].GetN()-1,float(commonmodeXML.find(s+q+p).find('X0_err').text),float(commonmodeXML.find(s+q+p).find('Y0_err').text)) 
+                    else:
+                        Graph[g][s][q][p].SetPoint(Graph[g][s][q][p].GetN(),int(runNum),float(commonmodeXML.find(s+q+p).find(g).text)) 
+                        if commonmodeXML.find(s+q+p).find(g+'_err')!=None:
+                            Graph[g][s][q][p].SetPointError(Graph[g][s][q][p].GetN()-1,0.,float(commonmodeXML.find(s+q+p).find(g+'_err').text)) 
 
 
 
 Canvas = {}
 
-for c in ['mean','rms','theta','XY']:
+for c in ['mean','rms','theta','XY','X0Y0']:
     Canvas[c] = TCanvas(c,c)
     Canvas[c].Divide(4,5)
     for j,s in enumerate(['B0','B1','B2','F1','F2']):
         for i,q in enumerate(['0','1','2','3']):
             Canvas[c].cd(i+1+j*4)
-            opt = 'APL'
+            opt = 'APLE'
             for p in ['Odd','Even']:
                 if c == 'mean' or c == 'rms':
                     Graph[c][s][q][p].Draw(opt)
@@ -94,21 +101,30 @@ for c in ['mean','rms','theta','XY']:
                     Graph[c][s][q][p].GetYaxis().SetTitle(title[c])
                     if c== 'mean': Graph[c][s][q][p].GetYaxis().SetRangeUser(-10.,100.)
                     if c== 'rms': Graph[c][s][q][p].GetYaxis().SetRangeUser(0.,30.)
-                    opt = 'PLsame'
+                    opt = 'PLEsame'
                     Graph[c+'_Cor'][s][q][p].Draw(opt)
                 if c == 'theta':
                     Graph[c][s][q][p].Draw(opt)
                     Graph[c][s][q][p].GetXaxis().SetTitle('EOFCALIB15 Run Number')
                     Graph[c][s][q][p].GetYaxis().SetTitle(title[c])
-                    Graph[c][s][q][p].GetYaxis().SetRangeUser(0.5,1.5)
-                    opt = 'PLsame'
+                    Graph[c][s][q][p].GetYaxis().SetRangeUser(0.6,1.2)
+                    opt = 'PLEsame'
                 if c == 'XY':
                     for cc in ['X0','Y0']:
                         Graph[cc][s][q][p].Draw(opt)
                         Graph[cc][s][q][p].GetXaxis().SetTitle('EOFCALIB15 Run Number')
                         Graph[cc][s][q][p].GetYaxis().SetTitle(title[cc])
                         Graph[cc][s][q][p].GetYaxis().SetRangeUser(0.,250.)
-                        opt = 'PLsame'
+                        opt = 'PLEsame'
+                if c == 'X0Y0':
+                        Graph[c][s][q][p].GetXaxis().SetRangeUser(0.,250.)
+                        Graph[c][s][q][p].GetYaxis().SetRangeUser(0.,250.)
+                        Graph[c][s][q][p].Draw(opt)
+                        Graph[c][s][q][p].GetXaxis().SetTitle('X0')
+                        Graph[c][s][q][p].GetYaxis().SetTitle('Y0')
+                        Graph[c][s][q][p].GetXaxis().SetRangeUser(0.,250.)
+                        Graph[c][s][q][p].GetYaxis().SetRangeUser(0.,250.)
+                        opt = 'PLEsame'
     Canvas[c].SaveAs(options.Directory+'/'+c+'_VS_runNumber.pdf')
 
 
@@ -132,7 +148,16 @@ ftex.write("""
 \\includegraphics[height=7cm]{"""+options.Directory+'/XY_VS_runNumber.pdf'+"""}
 \\end{center}
 }
-""")   
+""")  
+ftex.write("""   
+\\frame{
+\\frametitle{Variation of X0 vs Y0} 
+\\framesubtitle{ Odd Blue, Even Red, should give theta}
+\\begin{center}
+\\includegraphics[height=7cm]{"""+options.Directory+'/X0Y0_VS_runNumber.pdf'+"""}
+\\end{center}
+}
+""")    
 ftex.write("""   
 \\frame{
 \\frametitle{Variation of $\\theta$} 
@@ -173,6 +198,8 @@ ftex.write(line+'\n')
 ftex.write("""   
 }
 """)   
+
+
 
 
 ftex.write("""   

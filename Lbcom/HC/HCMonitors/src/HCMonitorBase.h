@@ -13,6 +13,7 @@
  */
 
 class HCMonitorBase : public GaudiTupleAlg {
+
  public:
   /// Standard constructor
   HCMonitorBase(const std::string& name, ISvcLocator* pSvcLocator);
