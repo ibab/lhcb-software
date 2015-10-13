@@ -1,0 +1,20 @@
+package alpgen
+
+use LCG_Configuration v*
+use LCG_Settings v*
+
+macro alpgen_path  $(LCG_external)/MCGenerators/alpgen/$(alpgen_native_version)
+macro alpgen_home  $(alpgen_path)/$(LCG_system)
+
+include_path none
+
+macro alpgen_linkopts "-L$(alpgen_home)/lib \
+                        -lalpgen "
+macro alpsho_linkopts "-L$(alpgen_home)/lib \
+                        -lalpsho " 
+
+macro alpgen_name "alpgen"
+apply_pattern set_lib_path
+
+# it worked without the following, but you may want to have it
+# macro alpgen_export_path "$(alpgen_home)/include $(alpgen_home)/lib"
