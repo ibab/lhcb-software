@@ -1,7 +1,7 @@
 ################################################################################
 # Package: PrFitParams
 ################################################################################
-gaudi_subdir(PrFitParams v2r0)
+gaudi_subdir(PrFitParams v2r0p1)
 
 gaudi_depends_on_subdirs(Event/MCEvent
                          Event/LinkerEvent

@@ -3,7 +3,7 @@
 # Maintainer : Yasmine Amhis
 #=====================================================================
 package           PrFitParams
-version           v2r0
+version           v2r0p1
 
 #=====================================================================
 # Structure, i.e. directories to process. 
