@@ -15,6 +15,7 @@
 #include "EvtGenModels/EvtLb2plnuLCSR.hh"
 #include "EvtGenModels/EvtLb2plnuLQCD.hh"
 #include "EvtGenModels/EvtLb2Baryonlnu.hh"
+#include "EvtGenModels/EvtXLL.hh"
 
 //we use auto_ptr here to show explicit transfer of ownership
 std::auto_ptr<const EvtModelList> EvtModelRegExtras::getModels(){
@@ -35,6 +36,7 @@ std::auto_ptr<const EvtModelList> EvtModelRegExtras::getModels(){
 	models -> push_back(new EvtLb2plnuLQCD);
 	models -> push_back(new EvtLb2plnuLCSR);
 	models -> push_back (new EvtLb2Baryonlnu);
+	models -> push_back(new EvtXLL());
 	return std::auto_ptr<const EvtModelList>(models);
 	
 }

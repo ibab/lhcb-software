@@ -4,6 +4,10 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+! 2015-10-14 - John Back
+ - Added new EvtXLL model from Biplab Dey, which implements an optimised MC
+   generator for b -> h h mu mu decays (momentum and angular distributions).
+
 ! 2015-10-06 - Nikolai Nikitin
  - Added new model BUTOMMMN for the rare leptonic B-decays Bu -> Mu Mu Nu_{Mu} Mu.
    Listing of the new files:
