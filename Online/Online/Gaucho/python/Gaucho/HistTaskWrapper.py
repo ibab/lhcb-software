@@ -38,7 +38,7 @@ class HistTaskWrapper(object):
         Python list of Python strings.
         """
         locations = VectorOfString()
-        err = HistTask.TaskList(dns, locations)
+        err = ROOT.HistTask.TaskList(dns, locations)
         if err != 0:
             raise Exception('Could not obtain task list from DIM.')
         return locations
