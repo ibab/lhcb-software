@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring of Herschel data
 !-----------------------------------------------------------------------------
 
+! 2015-10-14 - Heinrich Schindler
+ - Retrieve calibration constants from conditions database.
+
 ! 2015-10-13 - Heinrich Schindler
  - Retrieve channel mapping from conditions database.
 

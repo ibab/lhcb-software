@@ -60,7 +60,6 @@ StatusCode HCMonitorBase::initialize() {
   StatusCode sc = GaudiTupleAlg::initialize();
   if (sc.isFailure()) return sc;
 
-
   // Setup the binning and ADC correction.
   m_adcCorrection.resize(1024, 0.);
   m_adcStep.resize(1024, 0);

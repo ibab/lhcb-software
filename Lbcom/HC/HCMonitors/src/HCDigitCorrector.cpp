@@ -7,6 +7,8 @@
 #include "Event/HCDigit.h"
 // Kernel/LHCbKernel
 #include "Kernel/HCCellID.h"
+// Det/DetDesc
+#include "DetDesc/Condition.h"
 
 // Local
 #include "HCDigitCorrector.h"
@@ -18,7 +20,8 @@ DECLARE_ALGORITHM_FACTORY(HCDigitCorrector)
 //=============================================================================
 HCDigitCorrector::HCDigitCorrector(const std::string& name,
                                    ISvcLocator* pSvcLocator)
-    : HCMonitorBase(name, pSvcLocator) {
+    : HCMonitorBase(name, pSvcLocator),
+      m_cond(nullptr) {
 
   declareProperty("InputLocation",
                   m_inputLocation = LHCb::HCDigitLocation::Default);
@@ -43,6 +46,19 @@ StatusCode HCDigitCorrector::initialize() {
 
   StatusCode sc = HCMonitorBase::initialize();
   if (sc.isFailure()) return sc;
+
+  // Check if the parameters are available in the conditions database.
+  const std::string location = "Conditions/Calibration/HC/CommonMode";
+  if (existDet<Condition>(location)) {
+    registerCondition(location, m_cond, &HCDigitCorrector::cacheParameters);
+    // First update.
+    sc = updMgrSvc()->update(this);
+    if (sc.isFailure()) {
+      return Error("Cannot update calibration constants.", StatusCode::FAILURE);
+    }
+  } else {
+    warning() << "Cannot find " << location << " in database." << endmsg;
+  }
 
   const unsigned int nStations = 5;
   const unsigned int nQuadrants = 4;
@@ -135,4 +151,35 @@ StatusCode HCDigitCorrector::execute() {
     }
   }
   return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+// Update the calibration constants using the conditions database.
+//=============================================================================
+StatusCode HCDigitCorrector::cacheParameters() {
+
+  info() << "Updating common mode calibration constants." << endmsg;
+  m_thetaConfig.clear();
+  m_x0Config.clear();
+  m_y0Config.clear();
+  const std::vector<std::string> stations = {"B0", "B1", "B2", "F1", "F2"};
+  const std::vector<std::string> parities = {"Even", "Odd"};
+  for (auto station : stations) {
+    const auto thetaEven = m_cond->paramVect<double>("Theta" + station + "Even");
+    const auto thetaOdd = m_cond->paramVect<double>("Theta" + station + "Odd");
+    const auto x0Even = m_cond->paramVect<double>("X0" + station + "Even");
+    const auto x0Odd = m_cond->paramVect<double>("X0" + station + "Odd");
+    const auto y0Even = m_cond->paramVect<double>("Y0" + station + "Even");
+    const auto y0Odd = m_cond->paramVect<double>("Y0" + station + "Odd");
+    for (unsigned int i = 0; i < 4; ++i) {
+      m_thetaConfig.push_back(thetaEven[i]);
+      m_thetaConfig.push_back(thetaOdd[i]);
+      m_x0Config.push_back(x0Even[i]);
+      m_x0Config.push_back(x0Odd[i]);
+      m_y0Config.push_back(y0Even[i]);
+      m_y0Config.push_back(y0Odd[i]);
+    }
+  }  
+  return StatusCode::SUCCESS;
+
 }

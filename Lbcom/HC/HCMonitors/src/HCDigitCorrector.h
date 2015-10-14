@@ -6,6 +6,8 @@
 // Local
 #include "HCMonitorBase.h"
 
+class Condition;
+
 /** @class HCDigitCorrector.h
  *
  * Apply common mode suppression to raw ADC values.
@@ -26,6 +28,8 @@ class HCDigitCorrector : public HCMonitorBase {
   std::string m_inputLocation;
   std::string m_outputLocation;
 
+  Condition* m_cond;
+
   /// Calibration constants for each channel and parity
   std::vector<std::vector<std::vector<float> > > m_tantheta;
   std::vector<std::vector<std::vector<float> > > m_x0;
@@ -35,5 +39,7 @@ class HCDigitCorrector : public HCMonitorBase {
   std::vector<float> m_thetaConfig;
   std::vector<float> m_x0Config;
   std::vector<float> m_y0Config;
+
+  StatusCode cacheParameters();
  
 };
