@@ -675,70 +675,6 @@ namespace
     //
   }
   // ==========================================================================
-  /** get the gaussian integral:
-   *  \f[ f = \int_a^b \exp { -x^2 + \beta x } \mathrm{d}x \f]
-   *  @param beta  the beta  parameter
-   *  @param a     the low  integration limit
-   *  @param b     the high integration limit
-   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
-   *  @date 2010-05-23
-   */
-  double gaussian_int
-  ( const double beta  ,
-    const double a     ,
-    const double b     )
-  {
-    //
-    if      ( s_equal ( a , b ) ) { return  0.0                        ; }
-    else if (           a > b   ) { return -1 * gaussian_int ( beta  ,
-                                                               b     ,
-                                                               a     ) ; }
-    // regular error function 
-    if ( s_equal ( beta , 0 ) ) 
-    { return s_HALFSQRTPI * ( error_func ( b ) - error_func ( a ) ) ; }
-    //
-    const double xa = a - 0.5 * beta ;
-    const double xb = b - 0.5 * beta ;
-    const double ya = a * beta - a * a ;
-    const double yb = b * beta - b * b ;
-    //
-    /// use Faddeeva function 
-    if ( -6 < xa && -6 < xb && 
-         ya < GSL_LOG_DBL_MAX && yb < GSL_LOG_DBL_MAX && 
-         ya > GSL_LOG_DBL_MIN && yb > GSL_LOG_DBL_MIN  )  
-    {
-      const double fa = Faddeeva::erfcx ( xa ) ;
-      const double fb = Faddeeva::erfcx ( xb ) ;
-      const double ea = std::exp        ( ya ) ;
-      const double eb = std::exp        ( yb ) ;
-      if ( !std::isnan ( fa ) && !isinf ( fa ) && 
-           !std::isnan ( fb ) && !isinf ( fb ) && 
-           !std::isnan ( ea ) && !isinf ( ea ) && 
-           !std::isnan ( eb ) && !isinf ( eb ) ) 
-      {   
-        const double result = s_HALFSQRTPI * ( ea * fa - eb * fb ) ;
-        if  ( !std::isnan ( result ) && 
-              !std::isinf ( result ) && 0 < result ) { return result ; }
-      }
-    }
-    //
-    const double b22 = 0.25 * beta * beta ;
-    if ( b22 < 0.1 * GSL_LOG_DBL_MAX ) 
-    {
-      const double result = s_HALFSQRTPI * std::exp ( b22 ) * 
-        ( std::erf ( xb ) - std::erf ( xa ) )  ;  
-      //
-      if ( !std::isnan ( result ) && !std::isinf ( result ) ) 
-      {
-        if      ( 0 < result             ) { return result  ; }
-        else if ( s_equal ( 0 , result ) ) { return s_SMALL ; }
-      }
-    }
-    //
-    // use GSL to evaluate the integral numerically 
-    return gaussian_int_num ( 1 , beta , a , b ) ;
-  }  
-  // ==========================================================================
   /** get "reduced" exponent
    *  \f[ f(x) = \frac{ e^{x}-1 }{x} \f]
    */
@@ -747,6 +683,9 @@ namespace
   // ==========================================================================
   /** get the exponential integral 
    *  \f[ f = \int_a^b \exp { \beta x } \mathrm{d}x \f]
+   *  @param beta  the beta  parameter
+   *  @param a     the low  integration limit
+   *  @param b     the high integration limit
    */
   double exponent_int
   ( const double beta , 
@@ -10645,7 +10584,7 @@ double Gaudi::Math::gaussian_integral
   const double high  ) 
 {
   // note the difference in the arguments! 
-  return gaussian_int ( alpha * alpha , beta , low ) ;
+  return gaussian_int ( alpha * alpha , beta , low , high ) ;
 }
 
 
