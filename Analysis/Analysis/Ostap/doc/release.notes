@@ -8,6 +8,9 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-10-14 - Vanya Belyaev
+ - fix typo
+
 ! 2015-10-13 - Vanya Belyaev
  - drastical CPU improvement for 
    "histogram-as-function" operations due to delegation 

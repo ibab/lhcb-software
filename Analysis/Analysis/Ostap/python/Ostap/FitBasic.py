@@ -341,9 +341,9 @@ class PDF (object) :
         #
         if refit and for_refit :
             logger.info ( 'PDF(%s).fitTo: call for refit:  %s/%s'  % ( self.name , for_refit , refit ) ) 
-            if ininstance ( refit , ( int , long ) )  : refit -= 1
+            if isinstance ( refit , ( int , long ) )  : refit -= 1
             else                                      : refit  = False
-            return  self.pdf ( dataset , draw , nbins , silent , refit , *args , **kwargs ) 
+            return  self.fitTo ( dataset , draw , nbins , silent , refit , *args , **kwargs ) 
 
 
         if hasattr ( self.pdf , 'setPars' ) : self.pdf.setPars()
