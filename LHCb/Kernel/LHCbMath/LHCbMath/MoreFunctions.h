@@ -156,7 +156,34 @@ namespace Gaudi
       const double low   ,
       const double high  ) ;
     // ========================================================================
-      
+    /** get the gaussian integral
+     *  \f[ f = \int_{a}^{_\inf} \exp { -\alpha^2 x^2 + \beta x } \mathrm{d}x \f]
+     *  @param alpha the alpha parameter
+     *  @param beta  the beta  parameter
+     *  @param low   the low  integration limit
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-05-23
+     */
+    GAUDI_API double gaussian_integral_right
+    ( const double alpha ,
+      const double beta  ,
+      const double low   ) ;
+    // ========================================================================
+    /** get the gaussian integral
+     *  \f[ f = \int_{-\inf}^b \exp { -\alpha^2 x^2 + \beta x } \mathrm{d}x \f]
+     *  @param alpha the alpha parameter
+     *  @param beta  the beta  parameter
+     *  @param high  the high integration limit
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-05-23
+     */
+    GAUDI_API double gaussian_integral_left
+    ( const double alpha ,
+      const double beta  ,
+      const double high  ) ;
+    // ========================================================================
+
+
     // ========================================================================
     // clenshaw summation algorithms 
     // ========================================================================

@@ -446,11 +446,6 @@ namespace Gaudi
       double integral ( const double low  ,
                         const double high ) const ;
       // ======================================================================
-    private: // recalculate constants
-      // ======================================================================
-      /// recalculate the integral
-      void integrate ()       ;                    // recalculate the integral
-      // ======================================================================
     private: // parameters
       // ======================================================================
       /// the peak position
@@ -479,8 +474,6 @@ namespace Gaudi
       /// tails parameters (times  Bukin's  constants)
       double m_L         ;   // left  tail
       double m_R         ;   // right tail
-      /// normalization integral
-      double m_integral  ;   // normalization integral
       /// workspace
       Gaudi::Math::WorkSpace m_workspace ;
       // ======================================================================

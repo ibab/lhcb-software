@@ -222,7 +222,8 @@ namespace
   /** @var s_INFINITY
    *  representation of positive INFINITY
    */
-  constexpr double s_INFINITY  = 0.8 * std::numeric_limits<double>::max ()  ;
+  //constexpr double s_INFINITY  = 0.8 * std::numeric_limits<double>::max ()  ;
+  constexpr double s_INFINITY  = 0.8 * std::numeric_limits<float>::max ()  ;
   // ==========================================================================
   /** @var s_SMALL
    *  representation of positive "small"
@@ -488,10 +489,10 @@ namespace
    */
   double error_func ( const double x )
   {
-    if ( 0 == x || s_zero ( x )       ) { return 0                 ; }
+    if ( 0 == x || s_zero ( x )       ) { return 0                  ; }
     const double x2 = x * x ;
-    if ( GSL_LOG_DBL_MIN > -0.9 * x2  ) { return 0 < x ? 1 : -1    ; }
-    if ( 0 > x                        ) { return -error_func ( x ) ; }
+    if ( GSL_LOG_DBL_MIN > -0.9 * x2  ) { return 0 < x ? 1 : -1     ; }
+    if ( 0 > x                        ) { return -error_func ( -x ) ; }
     //
     Sentry sentry ;
     //
@@ -706,6 +707,13 @@ namespace
     return result ;
   }
   // ==========================================================================
+  double gaussian_int_L ( const double alpha ,
+                          const double beta  ,
+                          const double b     );  
+  double gaussian_int_R ( const double alpha ,
+                          const double beta  ,
+                          const double b     );  
+  // ==========================================================================
   /** get the gaussian integral:
    *  \f[ f = \int_a^b \exp { -\alpha x^2 + \beta x } \mathrm{d}x \f]
    *  @attention note the sign for alpha-term!
@@ -742,37 +750,27 @@ namespace
     else if ( 0 < alpha ) 
     {
       const double b2a        = beta / ( 2 * alpha ) ;
-      const double sqrt_alpha = std::sqrt ( alpha ) ;      
       if ( a < b2a && b2a < b ) 
       {
-        const double da = std::abs ( a - b2a ) ;
-        const double db = std::abs ( b - b2a ) ;
-        return
-          gaussian_int ( alpha , beta , 
-                         b2a   , 
-                         b2a + std::min ( da , db ) ) * 2 +
-          gaussian_int ( alpha , beta , 
-                         b2a + std::min ( da , db ) , 
-                         b2a + std::max ( da , db ) ) ;                 
+        return 
+          gaussian_int ( alpha , beta , a   , b2a ) + 
+          gaussian_int ( alpha , beta , b2a , b   ) ;
       }
       const double c   = b2a * alpha * b2a    ;      
       if  ( b2a <= a && b2a <= b ) 
       {
+        const double sqrt_alpha = std::sqrt ( alpha ) ;      
         const double a1  = ( a - b2a ) * sqrt_alpha ;
         const double b1  = ( b - b2a ) * sqrt_alpha ;
         return s_HALFSQRTPI / sqrt_alpha * 
           ( my_exp ( -alpha * a * a + beta * a ) * Faddeeva::erfcx ( a1 ) - 
             my_exp ( -alpha * b * b + beta * b ) * Faddeeva::erfcx ( b1 ) ) ;  
       }
-      else if ( b2a >= a && b2a >= b ) 
-      {
-        const double a2  = ( 2*b2a - b ) * sqrt_alpha ;
-        const double b2  = ( 2*b2a - a ) * sqrt_alpha ;
-        return s_HALFSQRTPI / sqrt_alpha * 
-          ( my_exp ( -alpha * a * a + beta * a ) * Faddeeva::erfcx ( a2 ) - 
-            my_exp ( -alpha * b * b + beta * b ) * Faddeeva::erfcx ( b2 ) ) ;  
-      }
-      // .. should not be here ...
+      else if ( a <= b2a  && b<= b2a ) 
+      { return gaussian_int ( alpha , beta , 2*b2a - b , 2*b2a - a ) ; }
+      //
+      // .. should never be here, except some testing regime
+      //
       if ( c < 0.1 * GSL_LOG_DBL_MAX ) 
       { return my_exp ( c ) * gaussian_int ( alpha , 0 , a - b2a  , b - b2a ) ; } 
     }
@@ -795,28 +793,22 @@ namespace
                           const double a     )
   {
     //
-    if ( s_equal ( alpha , 0 ) )
+    if      ( 0 > alpha ) { return s_INFINITY ; }
+    else if ( s_zero ( alpha ) ) 
+    { return  0 > beta ? -beta * my_exp ( beta * a ) : s_INFINITY ; }
+    //
+    const double sqrt_alpha = std::sqrt ( alpha ) ;      
+    const double b2a        = beta / ( 2 * alpha ) ;
+    if ( b2a <= a ) 
     {
-      //
-      if ( beta < 0 )
-      {
-        // get the exponential integral
-        return - my_exp ( beta * a ) / beta ;       // RETURN
-      }
-      else                     { return s_INFINITY ; }  // RETURN
+      const double a1  = ( a - b2a ) * sqrt_alpha ;
+      return s_HALFSQRTPI / sqrt_alpha * 
+        my_exp ( -alpha * a * a + beta * a ) * Faddeeva::erfcx ( a1 ) ;
     }
-    else if ( alpha < 0 )      { return s_INFINITY ; }  // RETURN
     //
-    //
-    const double alpha_sqrt = std::sqrt ( alpha ) ;
-    //
-    const double factor1 = my_exp ( 0.25 * beta * beta / alpha ) / alpha_sqrt ;
-    const double factor  = factor1 * s_HALFSQRTPI ;
-    //
-    const double root    = 0.5 * beta / alpha ;
-    const double a_prime = alpha_sqrt * ( a - root ) ;
-    //
-    return factor * ( 1  - error_func ( a_prime ) ) ;
+    return 
+      gaussian_int    ( alpha , beta , a   , b2a ) +
+      gaussian_int_R  ( alpha , beta ,       b2a ) ;
   }
   // ==========================================================================
   /** get the gaussian integral:
@@ -830,31 +822,7 @@ namespace
   double gaussian_int_L ( const double alpha ,
                           const double beta  ,
                           const double b     )
-  {
-    //
-    if ( s_equal ( alpha , 0 ) )
-    {
-      //
-      if ( beta > 0 )
-      {
-        // get the exponential integral
-        return std::exp ( beta * b ) / beta ;           // RETURN
-      }
-      else                     { return s_INFINITY ; }  // RETURN
-    }
-    else if ( alpha < 0 )      { return s_INFINITY ; }  // RETURN
-    //
-    //
-    const double alpha_sqrt = std::sqrt ( alpha ) ;
-    //
-    const double factor1    = my_exp ( 0.25 * beta * beta / alpha ) / alpha_sqrt ;
-    const double factor     = factor1 * s_HALFSQRTPI ;
-    //
-    const double root       = 0.5 * beta / alpha ;
-    const double b_prime    = alpha_sqrt * ( b - root ) ;
-    //
-    return factor * ( error_func ( b_prime ) + 1  ) ;
-  }
+  { return gaussian_int_R ( alpha , -beta , -b ) ; }
   // ==========================================================================
   /** evaluate very simple power-law integral
    *  
@@ -1797,8 +1765,6 @@ Gaudi::Math::Bukin::Bukin
   , m_x1        ( M_PI )
   , m_x2        ( M_PI )
 //
-  , m_integral  ( -1000 )
-//
   , m_workspace ()
 {
   //
@@ -1842,8 +1808,6 @@ bool Gaudi::Math::Bukin::setSigma ( const double value )
   const double xi_ = m_xi/std::sqrt ( 1 + m_xi * m_xi ) ;
   m_x1 = m_peak + m_sigma * s_Bukin * ( xi_ - 1 ) ;
   m_x2 = m_peak + m_sigma * s_Bukin * ( xi_ + 1 ) ;
-  //
-  m_integral = -1000 ;
   //
   return true ;
 }
@@ -1893,8 +1857,6 @@ bool Gaudi::Math::Bukin::setXi    ( const double value )
   m_x1 = m_peak + m_sigma * s_Bukin * ( xi_ - 1 ) ;
   m_x2 = m_peak + m_sigma * s_Bukin * ( xi_ + 1 ) ;
   //
-  m_integral = -1000 ;
-  //
   return true ;
 }
 // ============================================================================
@@ -1905,7 +1867,6 @@ bool Gaudi::Math::Bukin::setRhoL  ( const double value )
   if ( s_equal ( value_ , m_rho_L  ) ) { return false ; }
   //
   m_rho_L    = value_ ;
-  m_integral = -1000  ;
   //
   return true ;
 }
@@ -1917,7 +1878,6 @@ bool Gaudi::Math::Bukin::setRhoR  ( const double value )
   if ( s_equal ( value_ , m_rho_R  ) ) { return false ; }
   //
   m_rho_R    = value_ ;
-  m_integral = -1000  ;
   //
   return true ;
 }
@@ -1965,50 +1925,33 @@ double Gaudi::Math::Bukin::integral
   //
   // split into reasonable sub-intervals
   //
-  if ( low < m_peak  && m_peak < high )
-  { return integral (  low , m_peak ) + integral ( m_peak , high ) ; }
   if ( low < m_x1    && m_x1   < high )
   { return integral (  low , m_x1   ) + integral ( m_x1   , high ) ; }
   if ( low < m_x2    && m_x2   < high )
   { return integral (  low , m_x2   ) + integral ( m_x2   , high ) ; }
+  if ( low < m_peak  && m_peak < high )
+  { return integral (  low , m_peak ) + integral ( m_peak , high ) ; }
   //
-  // // split, if the interval is too large
-  // //
-  // const double width = std::abs ( m_x2 - m_x1 ) ;
-  // for ( unsigned int i = 1 ; i < 6 ; ++i ) 
-  // {
-  //   const double xmid = m_x1 - i * width ;
-  //   if ( low < xmid && xmid < high ) 
-  //   { return integral (  low , xmid  ) + integral ( xmid, high ) ; }    
-  // }
-  // for ( unsigned int i = 1 ; i < 6 ; ++i )
-  // {
-  //   const double xmid = m_x2 + i * width ;
-  //   if ( low < xmid && xmid < high ) 
-  //   { return integral (  low , xmid  ) + integral ( xmid , high ) ; }    
-  // }
-  // 
-  // the left tail:
-  // 
-  double result_l = -100 ;
+  // the left tail
+  //
   if ( high <= std::min ( m_x1 , m_x2 ) )  // left tail
   {
     const double d =  m_peak - m_x1 ;
-    result_l = 0.5 * gaussian_int     ( m_rho_L * m_rho_L / ( d * d ) ,
-                                        m_L     / m_sigma  ,
-                                        low  - m_x1        ,
-                                        high - m_x1        ) ;
+    return  0.5 * gaussian_int     ( m_rho_L * m_rho_L / ( d * d ) ,
+                                     m_L     / m_sigma  ,
+                                     low  - m_x1        ,
+                                     high - m_x1        ) ;
   }
   //
   // the right tail:
-  double result_r = -100  ;
+  //
   if ( low >= std::max ( m_x1 , m_x2  ) )  // right tail
   {
     const double d = m_peak - m_x2 ;
-    result_r = 0.5 * gaussian_int    ( m_rho_R * m_rho_R / ( d * d )  ,
-                                       -1 * m_R  / m_sigma ,
-                                       low  - m_x2         ,
-                                       high - m_x2         ) ;
+    return 0.5 * gaussian_int    ( m_rho_R * m_rho_R / ( d * d )  ,
+                                   -1 * m_R  / m_sigma ,
+                                   low  - m_x2         ,
+                                   high - m_x2         ) ;
   }
   //
   // use GSL to evaluate the integral
@@ -2022,12 +1965,9 @@ double Gaudi::Math::Bukin::integral
   double result   = 1.0 ;
   double error    = 1.0 ;
   //
-  //const bool in_tail = 
-  //  ( high < m_x1 - 5 * std::abs ( m_x2 - m_x1 ) )  || 
-  //    ( low  > m_x2 + 5 * std::abs ( m_x2 - m_x1 ) ) ; 
-  const bool in_tail = false ;
-  // ( high < m_x1 - 5 * std::abs ( m_x2 - m_x1 ) )  || 
-  //   ( low  > m_x2 + 5 * std::abs ( m_x2 - m_x1 ) ) ; 
+  const bool in_tail = 
+    ( high < m_x1 - 5 * std::abs ( m_x2 - m_x1 ) )  || 
+    ( low  > m_x2 + 5 * std::abs ( m_x2 - m_x1 ) ) ; 
   //
   const int ierror = gsl_integration_qag
     ( &F                ,            // the function
@@ -2046,42 +1986,8 @@ double Gaudi::Math::Bukin::integral
     gsl_error ( "Gaudi::Math::Bukin::QAG" ,
                 __FILE__ , __LINE__ , ierror ) ;
   }
-  //  
-  if ( 0 < result_l && std::abs ( result / result_l - 1 ) > 0.001 ) 
-  {
-    std::cout << " LEFT : "
-              << result_l << " , " 
-              << result   << " ; " 
-              << std::abs ( result / result_l - 1 ) << "["
-              << low << "," << high << "]" 
-              << m_rho_L << " " << m_L / m_sigma 
-              << "(" 
-              << m_peak  << ","
-              << m_sigma << ","
-              << m_xi    << ","
-              << m_rho_L << ","
-              << m_rho_R << ")"
-              << std::endl ;
-  }
-  if ( 0 < result_r && std::abs ( result / result_r - 1 ) > 0.001 ) 
-  {
-    std::cout << " RIGHT: "
-              << result_r << " , " 
-              << result   << " ; " 
-              << std::abs ( result / result_r - 1 ) << "["
-              << low << "," << high << "] " 
-              << m_rho_R << " " << m_R / m_sigma 
-              << "(" 
-              << m_peak  << ","
-              << m_sigma << ","
-              << m_xi    << ","
-              << m_rho_L << ","
-              << m_rho_R << ")"
-              << std::endl ;
-  }
-  return 
-    0 < result_l ? result_l :
-    0 < result_r ? result_r : result ;
+  //
+  return result ;
   //
 }
 // =========================================================================
@@ -2089,28 +1995,15 @@ double Gaudi::Math::Bukin::integral
 // =========================================================================
 double Gaudi::Math::Bukin::integral () const
 {
-  if ( m_integral <= 0 )
-  {
-    Bukin* bukin = const_cast<Bukin*> ( this ) ;
-    bukin -> integrate() ;
-  }
   //
-  return m_integral ;
-}
-// ============================================================================
-// calculate  the integral
-// =========================================================================
-void Gaudi::Math::Bukin::integrate()
-{
-  //
-  m_integral = 0.0 ;
+  double result = 0 ;
   // left tail:
   {
     const double d     = m_peak - m_x1     ;
     const double alpha = m_rho_L / d / d   ;
     const double beta  = m_L     / m_sigma ;
     //
-    m_integral +=  0.5 * gaussian_int_L ( alpha , beta , 0 ) ;
+    result +=  0.5 * gaussian_int_L ( alpha , beta , 0 ) ;
   }
   // right tail
   {
@@ -2118,10 +2011,10 @@ void Gaudi::Math::Bukin::integrate()
     const double alpha =    m_rho_R / d / d   ;
     const double beta  =  - m_R     / m_sigma ;
     //
-    m_integral += 0.5 * gaussian_int_R ( alpha , beta  , 0 ) ;
+    result += 0.5 * gaussian_int_R ( alpha , beta  , 0 ) ;
   }
   //
-  m_integral += integral ( m_x1 , m_x2 ) ;
+  return result + integral ( m_x1 , m_x2 ) ;
   //
 }
 // ============================================================================
@@ -10586,6 +10479,43 @@ double Gaudi::Math::gaussian_integral
   // note the difference in the arguments! 
   return gaussian_int ( alpha * alpha , beta , low , high ) ;
 }
+// ============================================================================
+/** get the gaussian integral
+ *  \f[ f = \int_{a}^{_\inf} \exp { -\alpha^2 x^2 + \beta x } \mathrm{d}x \f]
+ *  @param alpha the alpha parameter
+ *  @param beta  the beta  parameter
+ *  @param low   the low  integration limit
+ *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+ *  @date 2010-05-23
+ */
+// ============================================================================
+double Gaudi::Math::gaussian_integral_right
+( const double alpha ,
+  const double beta  ,
+  const double low   ) 
+{
+  // note the difference in the arguments! 
+  return gaussian_int_R ( alpha * alpha , beta , low ) ;
+}
+// ========================================================================
+/** get the gaussian integral
+ *  \f[ f = \int_{-\inf}^b \exp { -\alpha^2 x^2 + \beta x } \mathrm{d}x \f]
+ *  @param alpha the alpha parameter
+ *  @param beta  the beta  parameter
+ *  @param high  the high integration limit
+ *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+ *  @date 2010-05-23
+ */
+// ========================================================================
+double Gaudi::Math::gaussian_integral_left
+( const double alpha ,
+  const double beta  ,
+  const double high  ) 
+{
+  // note the difference in the arguments! 
+  return gaussian_int_L ( alpha * alpha , beta , high ) ;
+}
+
 
 
 

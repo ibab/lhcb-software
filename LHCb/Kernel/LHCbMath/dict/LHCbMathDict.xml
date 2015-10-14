@@ -227,6 +227,9 @@
   <function name = "Gaudi::Math::exclusiveEff"      />
   <function name = "Gaudi::Math::zechEff"           />
   <function name = "Gaudi::Math::effJackknife"      />
+  <function name = "Gaudi::Math::gaussian_integral"       />  
+  <function name = "Gaudi::Math::gaussian_integral_left"  />  
+  <function name = "Gaudi::Math::gaussian_integral_right" />  
   
   <function name = "Gaudi::Math::wald_interval"                    />  
   <function name = "Gaudi::Math::wilson_score_interval"            />  
