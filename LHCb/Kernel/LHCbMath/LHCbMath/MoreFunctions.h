@@ -115,7 +115,7 @@ namespace Gaudi
      *  @param a INPUT a-parameter 
      *  @param b INPUT b-argument  (b>0)
      *  @param x argument
-     *  @retutrn value of Kummer function
+     *  @return value of Kummer function
      */
     GAUDI_API double kummer 
     ( const unsigned short a ,
@@ -129,9 +129,37 @@ namespace Gaudi
      */
     GAUDI_API double  probit ( const double alpha  ) ;
     // ========================================================================
+    /** scaled complementary error function 
+     *  \f$ 1 -  erf (x) = e^{-x^2} erfcx(x)  \f$ 
+     *  @param x  the argument 
+     *  @return the value of the scaled complementary error function 
+     *  @attention  overflow happens for x<-26.6
+     *  The actual implementation is copied from http://ab-initio.mit.edu/Faddeeva
+     *  @see http://ab-initio.mit.edu/Faddeeva
+     *  @see https://en.wikipedia.org/wiki/Error_function
+     *  @see https://en.wikipedia.org/wiki/Faddeeva_function
+     */
+    GAUDI_API double  erfcx ( const double x ) ;
+    // ========================================================================
+    /** get the gaussian integral
+     *  \f[ f = \int_a^b \exp { -\alpha^2 x^2 + \beta x } \mathrm{d}x \f]
+     *  @param alpha the alpha parameter
+     *  @param beta  the beta  parameter
+     *  @param low   the low  integration limit
+     *  @param high  the high integration limit
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-05-23
+     */
+    GAUDI_API double gaussian_integral
+    ( const double alpha ,
+      const double beta  ,
+      const double low   ,
+      const double high  ) ;
+    // ========================================================================
+      
+    // ========================================================================
     // clenshaw summation algorithms 
     // ========================================================================
-
     
     // ========================================================================
     /** Clenshaw algorithm for summation of Chebyshev polynomials 

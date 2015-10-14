@@ -24,6 +24,7 @@
 #include "LHCbMath/LHCbMath.h"
 #include "LHCbMath/Clenshaw.h"
 #include "LHCbMath/Combine.h"
+#include "LHCbMath/MoreFunctions.h"
 // ============================================================================
 // Boost
 // ============================================================================
@@ -1708,6 +1709,54 @@ Gaudi::Math::ValueWithError Gaudi::Math::erfc
   //
   const double d2 = factor * std::exp ( - bv * bv ) ;
   const double e2 = d2     * b.cov2() ;
+  //
+  return Gaudi::Math::ValueWithError ( v , e2 ) ;
+}
+// ============================================================================
+/*  evaluate erfcx(b)
+ *  @param b (INPUT) the parameter 
+ *  @return  erfc(b)
+ *  @warning invalid and small covariances are ignored 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::erfcx 
+( const Gaudi::Math::ValueWithError& b )
+{
+  if ( 0 >= b.cov2 () || _zero ( b.cov2() ) )
+  { return Gaudi::Math::erfcx ( b.value() ) ; }
+  //
+  const double bv = b.value() ;
+  const double v  = Gaudi::Math::erfcx ( bv ) ;
+  //
+  static const double factor  = 2.0 / std::sqrt ( M_PI ) ;
+  //
+  // derivative 
+  const double d  = 2 * bv * v - factor ; //  
+  const double e2 = d * d  * b.cov2()   ;
+  //
+  return Gaudi::Math::ValueWithError ( v , e2 ) ;
+}
+// ============================================================================
+/*  evaluate probit(b)
+ *  @param b (INPUT) the parameter 
+ *  @return  erfc(b)
+ *  @warning invalid and small covariances are ignored 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::probit 
+( const Gaudi::Math::ValueWithError& b )
+{
+  if ( 0 >= b.cov2 () || _zero ( b.cov2() ) )
+  { return Gaudi::Math::probit ( b.value() ) ; }
+  //
+  const double bv = b.value() ;
+  const double v  = Gaudi::Math::probit ( bv ) ;
+  //
+  static const double factor  = std::sqrt ( 2 * M_PI ) ;
+  //
+  // derivative 
+  const double d  = factor * std::exp ( 0.5 * v * v );
+  const double e2 = d * d  * b.cov2()   ;
   //
   return Gaudi::Math::ValueWithError ( v , e2 ) ;
 }

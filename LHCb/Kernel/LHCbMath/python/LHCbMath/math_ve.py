@@ -29,7 +29,7 @@ __all__     = (
     'sinh'   , 'cosh'   , 'tanh'  ,
     'asin'   , 'acos'   , 'atan'  , 
     'asinh'  , 'acosh'  , 'atanh' ,
-    'erf'    , 'erfc'   ,
+    'erf'    , 'erfc'   , 'erfcx' , 'probit' , 
     'gamma'  , 'tgamma' , 'lgamma' 
     )
 # =============================================================================
@@ -182,9 +182,10 @@ def tanh ( x ) :
 
 # =============================================================================
 ## define ``erf'' function 
+#  @see https://en.wikipedia.org/wiki/Error_function
 def erf ( x ) :
-    """
-    'erf' function taking into account the uncertainties
+    """ Error function taking into account the uncertainties
+    - see https://en.wikipedia.org/wiki/Error_function
     """
     fun = getattr ( x , '__erf__' , None )
     if fun : return fun()
@@ -192,9 +193,10 @@ def erf ( x ) :
 
 # =============================================================================
 ## define ``erfc'' function 
+#  @see https://en.wikipedia.org/wiki/Error_function
 def erfc ( x ) :
-    """
-    'erf' function taking into account the uncertainties
+    """ Complemenatry function taking into account the uncertainties
+    - see https://en.wikipedia.org/wiki/Error_function
     """
     fun = getattr ( x , '__erfc__' , None )
     if fun : return fun()
@@ -284,6 +286,31 @@ def lgamma ( x ) :
     if fun : return fun()
     return math.lgamma ( x )
 
+
+_erfcx_ = cpp.Gaudi.Math.erfcx 
+# =============================================================================
+## define ``erfc'' function 
+#  @see https://en.wikipedia.org/wiki/Error_function
+def erfcx ( x ) :
+    """ Scaled complementary error function taking into account the uncertainties
+    - see https://en.wikipedia.org/wiki/Error_function
+    """
+    fun = getattr ( x , '__erfcx__' , None )
+    if fun : return fun()
+    return _erfcx_ ( x )
+
+_probit_ = cpp.Gaudi.Math.probit  
+# =============================================================================
+## define ``probit'' function 
+#  @see https://en.wikipedia.org/wiki/Probit
+def probit ( x ) :
+    """ Probit function taking into account the uncertainties
+    - see https://en.wikipedia.org/wiki/Probit
+    """
+    fun = getattr ( x , '__probit__' , None )
+    if fun : return fun()
+    return _probit_ ( x )
+
 # =============================================================================
 if '__main__' == __name__ :
 
@@ -303,7 +330,7 @@ if '__main__' == __name__ :
               sinh  , cosh   , tanh   ,
               asin  , acos   , atan   ,
               asinh , acosh  , atanh  ,
-              erf   , erfc   ,
+              erf   , erfc   , erfcx  , probit , 
               gamma , tgamma , lgamma ]
     
     for v in vars :

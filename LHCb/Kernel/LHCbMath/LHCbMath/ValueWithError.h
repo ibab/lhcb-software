@@ -268,7 +268,7 @@ namespace Gaudi
       ValueWithError __tanh__   () const ;
       /// erf 
       ValueWithError __erf__    () const ;
-      /// erf 
+      /// erfc
       ValueWithError __erfc__   () const ;
       /// asin 
       ValueWithError __asin__   () const ;
@@ -711,6 +711,24 @@ namespace Gaudi
     ValueWithError erfc
     ( const ValueWithError& b ) ;
     // ========================================================================    
+    /** evaluate erfcx(b)
+     *  @param b (INPUT) the parameter 
+     *  @return  erfc(b)
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError erfcx
+    ( const ValueWithError& b ) ;
+    // ========================================================================    
+    /** evaluate probit(b)
+     *  @param b (INPUT) the parameter 
+     *  @return  erfc(b)
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError probit
+    ( const ValueWithError& b ) ;
+    // ========================================================================    
     /** evaluate asin(b)
      *  @param b (INPUT) the parameter 
      *  @return  asin(b)
@@ -807,14 +825,14 @@ namespace Gaudi
     /// check for goodness 
     inline bool good     ( const ValueWithError& v ) { return v.good     () ; }    
     // ========================================================================    
-    /** Does this object represent natual number?
+    /** Does this object represent natural number?
      *  - non-negative integer value 
      *  - cov2 == value  or cov2 == 0 
      */
     GAUDI_API 
     bool natural_number ( const ValueWithError& value ) ;
     // ========================================================================
-    /** Does this object represent natual entry in histogram
+    /** Does this object represent natural entry in histogram
      *  - non-negative integer value 
      *  - cov2 == value or ( 0 == value && 1 == cov2 ) 
      */
