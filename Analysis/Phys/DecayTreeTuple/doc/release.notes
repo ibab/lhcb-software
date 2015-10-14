@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2015-10-14 - Marian Stahl
+ - Added TupleToolAllTracks for isolation studies and/or adding particles 
+   to an existing chain. More details are given in the header
+
 ! 2015-10-05 - Pieter David
  - add TupleToolBeamSpot, an event tupletool which fills the beamspot x and y
    position
