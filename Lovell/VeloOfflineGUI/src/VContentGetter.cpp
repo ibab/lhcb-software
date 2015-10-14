@@ -814,6 +814,9 @@ void VContentGetter::jsonToOps(std::string * jsonOps,
 						plotInfo.push_back("0.0");
 						plotInfo.push_back("0.0");
 					}
+
+				  if (plot["options"]["zText90"].GetBool()) plotInfo.push_back("zText90");
+				  else plotInfo.push_back("noText90");
 					ops->push_back(plotInfo);
 				}
 			}
@@ -925,12 +928,13 @@ void VContentGetter::findPlots(std::vector<VTabContent*> * allTabs,
 					fit->m_retrivalCommand = (*iop)[10];
         }
 
-        std::cout<<(*iop).size()<<std::endl;
         if ((*iop)[11] == "true") {
           plot->m_zRangeSpecified = true;
           plot->m_zLow = atof((*iop)[12].c_str());
           plot->m_zUp = atof((*iop)[13].c_str());
         }
+
+        if ((*iop)[14] == "zText90") plot->m_text90 = true;
       }
     	iTab++;
     }

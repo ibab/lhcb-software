@@ -47,6 +47,7 @@ public:
   double m_zUp;
   QCPColorScale * m_colorScale;
   std::string m_tip;
+  bool m_text90;
 
 
   // Methods __________________________________________________________________

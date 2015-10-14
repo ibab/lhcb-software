@@ -17,7 +17,9 @@ VPlot::VPlot() :
 	m_zRangeSpecified(false),
 	m_zLow(0),
 	m_zUp(1),
-	m_tip("Default help text."){}
+	m_tip("Default help text."),
+	m_text90(false)
+{}
 
 
 //_____________________________________________________________________________
@@ -39,7 +41,8 @@ VPlot::VPlot(std::string title,
 	m_tip("Default help text."),
 	m_zRangeSpecified(false),
 	m_zLow(0),
-	m_zUp(1)
+	m_zUp(1),
+	m_text90(false)
 {
   m_title = title;
   m_tab = tab;
@@ -345,6 +348,19 @@ void VPlot::addColzPlot(VCustomPlot * vcp, VPlottable * plottable) {
   vcp->m_qcp->xAxis->rescale();
   vcp->m_qcp->yAxis->rescale();
   colorMap->setInterpolate(false);
+
+  if (m_text90 && !plottable->m_isRef && !plottable->m_isRefDiff) {
+  	for (int i=0; i<plottable->m_xs.size(); i++) {
+  		for (int j=0; j<plottable->m_ys.size(); j++) {
+  			QCPItemText *text = new QCPItemText(vcp->m_qcp);
+				vcp->m_qcp->addItem(text);
+				text->position->setCoords(plottable->m_xs[i], plottable->m_ys[j]);
+				text->setText("test");
+				text->setFont(QFont(font().family(), 8));
+				std::cout<<i<<"\t"<<plottable->m_xs.size()<<"\t"<<j<<"\t"<<plottable->m_ys.size()<<std::endl;
+  		}
+  	}
+  }
 }
 
 
