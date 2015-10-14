@@ -19,3 +19,5 @@ gaudi_add_library(GauchoLib src/*.cpp
 
 gaudi_add_module(Gaucho src/components/*.cpp
                  LINK_LIBRARIES GauchoLib DAQEventLib)
+
+gaudi_install_python_modules()
