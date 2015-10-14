@@ -385,9 +385,10 @@ void VPlot::add1dPlot(VCustomPlot * vcp, VPlottable* plottable) {
     // Like a TGraph with scatter points (red line and discs).
     QCPScatterStyle ss(QCPScatterStyle::ssCross, Qt::red, 6);
     vcp->m_qcp->graph()->setScatterStyle(ss);
-    QPen pen(Qt::red);
-    pen.setWidthF(1.5);
-    vcp->m_qcp->graph()->setPen(pen);
+    vcp->m_qcp->graph()->setLineStyle(QCPGraph::lsNone);
+//    QPen pen(Qt::red);
+//    pen.setWidthF(1.5);
+//    vcp->m_qcp->graph()->setPen(pen);
   }
 
   if (plottable->m_plottableStyle == 2) {
