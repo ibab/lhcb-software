@@ -42,6 +42,9 @@ public:
   bool m_yRangeSpecified;
   double m_yLow;
   double m_yUp;
+  bool m_zRangeSpecified;
+  double m_zLow;
+  double m_zUp;
   QCPColorScale * m_colorScale;
   std::string m_tip;
 

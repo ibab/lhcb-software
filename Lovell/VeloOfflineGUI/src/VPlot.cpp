@@ -14,6 +14,9 @@ VPlot::VPlot() :
 	m_yRangeSpecified(false),
 	m_yLow(0),
 	m_yUp(1),
+	m_zRangeSpecified(false),
+	m_zLow(0),
+	m_zUp(1),
 	m_tip("Default help text."){}
 
 
@@ -33,7 +36,10 @@ VPlot::VPlot(std::string title,
 	m_yRangeSpecified(false),
 	m_yLow(0),
 	m_yUp(1),
-	m_tip("Default help text.")
+	m_tip("Default help text."),
+	m_zRangeSpecified(false),
+	m_zLow(0),
+	m_zUp(1)
 {
   m_title = title;
   m_tab = tab;
@@ -50,6 +56,7 @@ void VPlot::draw() {
   m_layout->addWidget(m_vcp, 1, 1, 1, 1);
   m_vcp->makeSelected();
   if (m_yRangeSpecified) m_vcp->m_qcp->yAxis->setRange(QCPRange(m_yLow, m_yUp));
+  if (m_zRangeSpecified) m_colorScale->setDataRange(QCPRange(m_zLow, m_zUp));
 }
 
 
@@ -242,30 +249,6 @@ void VPlot::addColzPlot(VCustomPlot * vcp, VPlottable * plottable) {
 	QCPColorGradient * grad = new QCPColorGradient();
 	grad->clearColorStops();
 	grad->setColorInterpolation(QCPColorGradient::ciRGB);
-//	std::string buff;
-//	std::ifstream infile;
-//	std::vector< std::vector<double> > colMap;
-//	infile.open(":/viridis.txt");
-//	while (!infile.eof()) {
-//		getline(infile, buff);
-//		std::istringstream ss(buff);
-//		std::istream_iterator<std::string> begin(ss), end;
-//		std::vector<std::string> arrayTokens(begin, end);
-//
-//		std::vector<double> ithColMap;
-//		for (uint i=0; i<arrayTokens.size(); i++) {
-//				ithColMap.push_back(std::stof(arrayTokens[i]));
-//		}
-//		colMap.push_back(ithColMap);
-//		if (colMap.size() > 255) break;
-//	}
-//
-//	double step = 1./(1.*colMap.size());
-//	for (uint i=0; i<colMap.size()-1; i++) {
-//		grad->setColorStopAt(i*step, QColor(255*colMap[i][0], 255*colMap[i][1], 255*colMap[i][2]));
-//	}
-//	std::cout<<"colMap size: "<<colMap.size()<<std::endl;
-
 	grad->setColorStopAt(0.0, QColor(68.08602255, 1.24295415, 84.00087345));
 	grad->setColorStopAt(0.01171875, QColor(69.18274695, 5.0851743, 88.5534981));
 	grad->setColorStopAt(0.0234375, QColor(70.1128671, 9.62671155, 92.95852365));
@@ -439,6 +422,7 @@ void VPlot::add1dPlot(VCustomPlot * vcp, VPlottable* plottable) {
 void VPlot::makePopUp() {
   VCustomPlot * vcp = setupPlot(true);
   if (m_yRangeSpecified) vcp->m_qcp->yAxis->setRange(QCPRange(m_yLow, m_yUp));
+  if (m_zRangeSpecified) m_colorScale->setDataRange(QCPRange(m_zLow, m_zUp));
   vcp->resize(800, 600);
   vcp->show();
 }
@@ -452,6 +436,7 @@ void VPlot::refresh() {
   m_layout->addWidget(m_vcp, 1, 1, 1, 1);
   m_plotOps->newSelection(this, true);
   if (m_yRangeSpecified) m_vcp->m_qcp->yAxis->setRange(QCPRange(m_yLow, m_yUp));
+  if (m_zRangeSpecified) m_colorScale->setDataRange(QCPRange(m_zLow, m_zUp));
 }
 
 
@@ -460,8 +445,5 @@ void VPlot::refresh() {
 void VPlot::getData() {
   for (unsigned int i=0; i<m_plottables.size(); i++) m_plottables[i]->getData();
 }
-
-
-//_____________________________________________________________________________
 
 

@@ -797,6 +797,23 @@ void VContentGetter::jsonToOps(std::string * jsonOps,
 					if (plot.HasMember("fit_name")) plotInfo.push_back(plot["fit_name"].GetString());
 					else plotInfo.push_back("No_fit");
 
+
+
+					if (plot["options"].HasMember("zAxisMinimum") && plot["options"].HasMember("zAxisMaximum")) {
+						plotInfo.push_back("true");
+						std::stringstream ss1;
+						std::stringstream ss2;
+						ss1 << plot["options"]["zAxisMinimum"].GetDouble();
+						ss2 << plot["options"]["zAxisMaximum"].GetDouble();
+
+						plotInfo.push_back(ss1.str());
+						plotInfo.push_back(ss2.str());
+					}
+					else {
+						plotInfo.push_back("false");
+						plotInfo.push_back("0.0");
+						plotInfo.push_back("0.0");
+					}
 					ops->push_back(plotInfo);
 				}
 			}
@@ -906,6 +923,13 @@ void VContentGetter::findPlots(std::vector<VTabContent*> * allTabs,
 					fit->m_isRefDiff = false;
 					allPlottablesByTab[iTab].push_back(fit);
 					fit->m_retrivalCommand = (*iop)[10];
+        }
+
+        std::cout<<(*iop).size()<<std::endl;
+        if ((*iop)[11] == "true") {
+          plot->m_zRangeSpecified = true;
+          plot->m_zLow = atof((*iop)[12].c_str());
+          plot->m_zUp = atof((*iop)[13].c_str());
         }
       }
     	iTab++;

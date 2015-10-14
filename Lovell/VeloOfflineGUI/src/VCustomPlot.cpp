@@ -198,7 +198,11 @@ void VCustomPlot::doToggleRefDiff(int toggle) {
 		if (m_qcp->plottableCount() > 2) m_qcp->plottable(2)->setVisible(false);
 		if (m_qcp->plottableCount() > 3) m_qcp->plottable(3)->setVisible(false);
 		if (m_qcp->plottableCount() > 4) m_qcp->plottable(4)->setVisible(true); // fit
-		if (m_plot->m_plottables[0]->m_plottableDimension == 2) m_colormaps[0]->rescaleDataRange(true);
+		if (m_plot->m_plottables[0]->m_plottableDimension == 2) {
+			if (m_plot->m_zRangeSpecified)
+				m_colormaps[0]->setDataRange(QCPRange(m_plot->m_zLow, m_plot->m_zUp));
+			else m_colormaps[0]->rescaleDataRange(true);
+		}
 	}
   m_qcp->rescaleAxes(true);
   m_qcp->replot();
@@ -235,7 +239,11 @@ void VCustomPlot::doToggleRefRatio(int toggle) {
 		if (m_qcp->plottableCount() > 2) m_qcp->plottable(2)->setVisible(false);
 		if (m_qcp->plottableCount() > 3) m_qcp->plottable(3)->setVisible(false);
 		if (m_qcp->plottableCount() > 4) m_qcp->plottable(4)->setVisible(true); // fit
-		if (m_plot->m_plottables[0]->m_plottableDimension == 2) m_colormaps[0]->rescaleDataRange(true);
+		if (m_plot->m_plottables[0]->m_plottableDimension == 2) {
+			if (m_plot->m_zRangeSpecified)
+				m_colormaps[0]->setDataRange(QCPRange(m_plot->m_zLow, m_plot->m_zUp));
+			else m_colormaps[0]->rescaleDataRange(true);
+		}
   }
 
   m_qcp->rescaleAxes(true);
