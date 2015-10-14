@@ -56,7 +56,9 @@ void VPlot::draw() {
   m_layout->addWidget(m_vcp, 1, 1, 1, 1);
   m_vcp->makeSelected();
   if (m_yRangeSpecified) m_vcp->m_qcp->yAxis->setRange(QCPRange(m_yLow, m_yUp));
+  else m_vcp->m_qcp->yAxis->scaleRange(1.2, 0.5*(m_vcp->m_qcp->yAxis->range().lower + m_vcp->m_qcp->yAxis->range().upper));
   if (m_zRangeSpecified) m_colorScale->setDataRange(QCPRange(m_zLow, m_zUp));
+
 }
 
 
@@ -436,6 +438,7 @@ void VPlot::refresh() {
   m_layout->addWidget(m_vcp, 1, 1, 1, 1);
   m_plotOps->newSelection(this, true);
   if (m_yRangeSpecified) m_vcp->m_qcp->yAxis->setRange(QCPRange(m_yLow, m_yUp));
+  else m_vcp->m_qcp->yAxis->scaleRange(1.2, 0.5*(m_vcp->m_qcp->yAxis->range().lower + m_vcp->m_qcp->yAxis->range().upper));
   if (m_zRangeSpecified) m_colorScale->setDataRange(QCPRange(m_zLow, m_zUp));
 }
 
