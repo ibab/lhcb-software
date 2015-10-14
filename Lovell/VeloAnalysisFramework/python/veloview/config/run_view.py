@@ -484,21 +484,25 @@ run_view_pages = OrderedDict([
 							{
 								'title': 'PV left-right delta x',
 								'name': 'Track/TrackVertexMonitor/PV left-right delta x',
+								'normalise': True,
 								'options': {'asPoints': False, 'yAxisZeroSuppressed': False}
 							},
 							{
 								'title': 'PV x position',
 								'name': 'Track/TrackVertexMonitor/PV x position',
+								'normalise': True,
 								'options': {'asPoints': False, 'yAxisZeroSuppressed': False}
 							},
 							{
 								'title': 'PV y position',
 								'name': 'Track/TrackVertexMonitor/PV y position',
+								'normalise': True,
 								'options': {'asPoints': False, 'yAxisZeroSuppressed': False}
 							},
 							{
 								'title': 'PV z position',
 								'name': 'Track/TrackVertexMonitor/PV z position',
+								'normalise': True,
 								'options': {'asPoints': False, 'yAxisZeroSuppressed': False}
 							}
 						],
@@ -509,21 +513,25 @@ run_view_pages = OrderedDict([
 							{
 								'title': 'PV left-Left half x',
 								'name': 'Track/TrackVertexMonitor/PV left-Left half x',
+								'normalise': True,
 								'options': {'asPoints': False, 'yAxisZeroSuppressed': False}
 							},
 							{
 								'title': 'PV right-Right half x',
 								'name': 'Track/TrackVertexMonitor/PV right-Right half x',
+								'normalise': True,
 								'options': {'asPoints': False, 'yAxisZeroSuppressed': False}
 							},
 							{
 								'title': 'PV left-Left half y',
 								'name': 'Track/TrackVertexMonitor/PV left-Left half y',
+								'normalise': True,
 								'options': {'asPoints': False, 'yAxisZeroSuppressed': False}
 							},
 							{
 								'title': 'PV right-Right half y',
 								'name': 'Track/TrackVertexMonitor/PV right-Right half y',
+								'normalise': True,
 								'options': {'asPoints': False, 'yAxisZeroSuppressed': False}
 							}
 						],
