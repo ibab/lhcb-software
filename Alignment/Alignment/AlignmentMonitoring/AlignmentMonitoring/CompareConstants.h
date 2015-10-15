@@ -38,6 +38,7 @@ namespace Alignment
       void PrintWarnings(int level);
       void SaveHists(const char* filename);
       int GetNumWarnings(int level);
+      int GetNumWarnings(int level, const char* regex);
       
       // Verbosity
       void SetVerbosity(bool verb){m_verbose=verb;}

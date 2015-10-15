@@ -142,10 +142,10 @@ CompareConstants::PrintWarnings(int level)
 WarningLevel
 CompareConstants::CheckConstant(double delta, double d1, double d2)
 {
-  if (m_verbose) std::cout << delta << "\t["<< d1 << "," <<d2<<"]:";
+  if (m_verbose) std::cout << fabs(delta) << "\t["<< fabs(d1) << "," <<fabs(d2)<<"]:";
   WarningLevel wl = WarningLevel::SEVERE; // default=SEVERE
-  if (delta < d1) wl = WarningLevel::OK; // OK within range
-  else if (delta < d2) wl = WarningLevel::WARNING; // WARNING within double range
+  if (fabs(delta) < fabs(d1)) wl = WarningLevel::OK; // OK within range
+  else if (fabs(delta) < fabs(d2)) wl = WarningLevel::WARNING; // WARNING within double range
   if (m_verbose) std::cout << "\t" << wl << std::endl;
   return wl;
 }
@@ -218,14 +218,19 @@ CompareConstants::SetRanges(const char* filename)
   std::ifstream ifile( std::string(filename).size() == 0 ? (std::getenv("ALIGNMENTMONITORINGROOT")+std::string("/files/ConstantsReferences.txt")).c_str() : filename);
   if (ifile.is_open()) {
     while ( std::getline (ifile,line) ) {
-      std::vector<std::string> refs = ut.splitString(line,"\t");
+      std::vector<std::string> refs = ut.splitString(line," \t");
       if (refs.size() < 2 ||
           refs[0].find("#") != std::string::npos) continue;
       m_rngs[refs[0]] = {std::stod(refs[1]),std::stod(refs[2])};
     }
     ifile.close();
   }
-  return;
+  // if (1) //debug
+  //   std::cout<<"\nBegin elements checked\n";
+  //   for (auto coso : m_rngs)
+  //     std::cout << coso.first << "\t["<< coso.second[0] << "," << coso.second[1] <<"]:" << std::endl;
+  //   std::cout<<"End elements checked\n\n";
+  // return;
 }
 
 bool
@@ -246,5 +251,20 @@ CompareConstants::GetNumWarnings(int level)
   int nw(0);
   for (auto wrn : m_mapWarnings)
     if (wrn.second == level) ++nw;
+  return nw;
+}
+
+int
+CompareConstants::GetNumWarnings(int level, const char* regex)
+{
+  std::string s(regex);
+  boost::regex rgx(s);
+  if ( !CheckWarningLevel(level) ) return -1;
+  // get number of warnings of this level
+  int nw(0);
+  for (auto wrn : m_mapWarnings){
+    if (boost::regex_search(wrn.first.begin(), wrn.first.end(), rgx)) 
+      if (wrn.second == level) ++nw;
+  }
   return nw;
 }

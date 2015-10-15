@@ -16,7 +16,7 @@
 #include "TText.h"
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
-#include <boost/algorithm/string.hpp> 
+#include <boost/algorithm/string.hpp>
 #include "boost/regex.hpp"
 // USR
 //#include "AlignmentMonitoring/Utilities.h"
@@ -33,8 +33,8 @@ AlignmentMonitoring::AlignmentMonitoring(const char* filename, const char* outpu
  , m_verbose(false)
 {
 /* Constructor
- * To-do-list: 
- *    + tunning the range for all the values 
+ * To-do-list:
+ *    + tunning the range for all the values
  * */
   LoadGausFitReferences();
 }
@@ -45,8 +45,8 @@ AlignmentMonitoring::Run()
 {
   if( !exists(m_outputDirectory) and m_verbose ) create_directories( m_outputDirectory );
   if(m_verbose) {
-    gStyle->SetOptStat(1111110); 
-    gStyle->SetOptFit(1111110); 
+    gStyle->SetOptStat(1111110);
+    gStyle->SetOptFit(1111110);
   }
   CheckResiduals();
   CheckITOverlaps();
@@ -69,24 +69,24 @@ AlignmentMonitoring::GetReference(const char* hname)
   for (auto rng : m_mapGausFitReference) {
     if (rng.first == hname) {
       refs = rng.second;
-	if (m_verbose) {
-	  std::cout<< "reference: "<< hname << " \tfound: " << rng.first << " (" ;
-	  for (auto ival : rng.second) std::cout << ival << ",";
-	  std::cout<< ")\n";
-	}
+        if (m_verbose) {
+          std::cout<< "reference: "<< hname << " \tfound: " << rng.first << " (" ;
+          for (auto ival : rng.second) std::cout << ival << ",";
+          std::cout<< ")\n";
+        }
     }
   }
   if (refs.size() < 1) // if not found, look for regular expression
     for (auto rng : m_mapGausFitReference) {
       boost::regex rgx(rng.first);
       if (boost::regex_search(s.begin(), s.end(), rgx)) {
-	refs = rng.second;
-	if (m_verbose) {
-	  std::cout<< "reference: "<< hname << " \tfound: " << rng.first << " (" ;
-	  for (auto ival : rng.second) std::cout << ival << ",";
-	  std::cout<< ")\n";
-	}
-	break;
+        refs = rng.second;
+        if (m_verbose) {
+          std::cout<< "reference: "<< hname << " \tfound: " << rng.first << " (" ;
+          for (auto ival : rng.second) std::cout << ival << ",";
+          std::cout<< ")\n";
+        }
+        break;
       }
     }
   // still not found
@@ -117,13 +117,13 @@ void AlignmentMonitoring::CheckResiduals(){
       h.second->Draw();
     }
   }
-  
+ 
   // Fit residuals
   TFitResultPtr fitres = 0;
   for (auto h:resHists) {
     if (m_verbose) std::cout << h.second->GetName() << ":\n";
     m_mapWarnings[h.first] = WarningLevel::SEVERE;
-    m_insertOrder.push_back(h.first); 
+    m_insertOrder.push_back(h.first);
     if(!h.second->GetEntries()) continue;
     fitres = h.second->Fit("gaus",m_verbose ? "S" : "SQ");
     if(fitres->Chi2()<1e-6 or fitres->Ndf()==0) continue;
@@ -162,8 +162,8 @@ void AlignmentMonitoring::CheckITOverlapResiduals(){
   TFitResultPtr fitres = 0;
   for(auto h:ovITResHists){
     if(m_verbose) std::cout << h.second->GetName() << std::endl;
-    m_mapWarnings[h.first] = WarningLevel::SEVERE; 
-    m_insertOrder.push_back(h.first); 
+    m_mapWarnings[h.first] = WarningLevel::SEVERE;
+    m_insertOrder.push_back(h.first);
     if( !h.second->GetEntries() ) continue;
     fitres = h.second->Fit("gaus", m_verbose ? "S":"SQ");
     if(fitres->Chi2()<1e-6 or fitres->Ndf()==0) continue;
@@ -198,10 +198,10 @@ void AlignmentMonitoring::CheckVeloTMatchKickPosition(){
   TFitResultPtr fitres = 0;
   for(auto h:kickHists){
     if(m_verbose) std::cout << h.second->GetName() << std::endl;
-    m_mapWarnings[h.first] = WarningLevel::SEVERE; 
-    m_insertOrder.push_back(h.first); 
+    m_mapWarnings[h.first] = WarningLevel::SEVERE;
+    m_insertOrder.push_back(h.first);
     if(!h.second->GetEntries()) continue;
-    if( h.first.find("ZVsX") != string::npos ){ 
+    if( h.first.find("ZVsX") != string::npos ){
       fitres = h.second->Fit("pol0",m_verbose ? "S" : "SQ");
       if(fitres->Chi2()<1e-6 or fitres->Ndf()==0) continue;
       double chi2dof = fitres->Chi2()/fitres->Ndf();
@@ -240,8 +240,8 @@ void AlignmentMonitoring::CheckVeloTMatchKickPosition(){
 }
 
 void AlignmentMonitoring::CheckVeloTTandTMatchCurvature(){
-  /* Velo(TT)-T match: curvature 
- * To-do-list: 
+  /* Velo(TT)-T match: curvature
+ * To-do-list:
  *    + to calculate the weighted sigma for doble gaussian model
  * */
   std::map<std::string,TH1*> matchHists;
@@ -274,8 +274,8 @@ void AlignmentMonitoring::CheckVeloTTandTMatchCurvature(){
   model->SetParName(5,"B");
   for(auto h:matchHists){
     if(m_verbose) std::cout << h.second->GetName() << std::endl;
-    m_mapWarnings[h.first] = WarningLevel::SEVERE; 
-    m_insertOrder.push_back(h.first); 
+    m_mapWarnings[h.first] = WarningLevel::SEVERE;
+    m_insertOrder.push_back(h.first);
     if( !h.second->GetEntries() ) continue;
     if(h.first.find("VsQoP") != string::npos){
       fitres = h.second->Fit("pol0",m_verbose ? "S" : "SQ");
@@ -297,8 +297,8 @@ void AlignmentMonitoring::CheckVeloTTandTMatchCurvature(){
 }
 
 void AlignmentMonitoring::CheckVeloTTandTMatch(){
-  /* Velo(TT)-T match 
- * To-do-list: 
+  /* Velo(TT)-T match
+ * To-do-list:
  *    + to calculate the weighted sigma for doble gaussian model
  * */
   std::map<std::string,TH1*> matchHists;
@@ -338,8 +338,8 @@ void AlignmentMonitoring::CheckVeloTTandTMatch(){
   model->SetParName(5,"B");
   for(auto h:matchHists){
     if(m_verbose) std::cout << h.second->GetName() << std::endl;
-    m_mapWarnings[h.first] = WarningLevel::SEVERE; 
-    m_insertOrder.push_back(h.first); 
+    m_mapWarnings[h.first] = WarningLevel::SEVERE;
+    m_insertOrder.push_back(h.first);
     if(!h.second->GetEntries()) continue;
     /*if( h.first.find("pull")!=string::npos && h.first.find("T-TT")!=string::npos ){
       TF1 *model = new TF1("model","[0]*sin([1]*(x-[2]))+[3]",-20,20);
@@ -396,8 +396,8 @@ void AlignmentMonitoring::CheckTTResidualsInOverlapRegion(){
   TFitResultPtr fitres = 0;
   for(auto h:resTTOVHists){
     if(m_verbose) std::cout << h.second->GetName() << std::endl;
-    m_mapWarnings[h.first] = WarningLevel::SEVERE; 
-    m_insertOrder.push_back(h.first); 
+    m_mapWarnings[h.first] = WarningLevel::SEVERE;
+    m_insertOrder.push_back(h.first);
     if(!h.second->GetEntries()) continue;
     fitres = h.second->Fit("gaus", m_verbose ? "S":"SQ");
     if(fitres->Chi2()<1e-6 or fitres->Ndf()==0) continue;
@@ -436,8 +436,8 @@ void AlignmentMonitoring::CheckTTOverlapResiduals(){
   TFitResultPtr fitres = 0;
   for(auto h:ovTTResHists){
     if(m_verbose) std::cout << h.second->GetName() << std::endl;
-    m_mapWarnings[h.first] = WarningLevel::SEVERE; 
-    m_insertOrder.push_back(h.first); 
+    m_mapWarnings[h.first] = WarningLevel::SEVERE;
+    m_insertOrder.push_back(h.first);
     if( !h.second->GetEntries() ) continue;
     fitres = h.second->Fit("gaus", m_verbose ? "S":"SQ");
     if(fitres->Chi2()<1e-6 or fitres->Ndf()==0) continue;
@@ -451,9 +451,9 @@ void AlignmentMonitoring::CheckTTOverlapResiduals(){
 }
 
 void AlignmentMonitoring::CheckITOverlaps(){
-  /* overlaps 
- * To-do-list: 
- *    + Fit failed sometimes 
+  /* overlaps
+ * To-do-list:
+ *    + Fit failed sometimes
  * */
   std::vector<std::string> tracks= {"OTASide","OTCSide","ITASide","ITCSide","ITTop","ITBottom"};
   std::vector<std::string> stats = {"1","2","3"};
@@ -461,7 +461,7 @@ void AlignmentMonitoring::CheckITOverlaps(){
 
   std::vector<std::string> hNames={};
   for (auto trk : tracks)
-    for (auto stat: stats) 
+    for (auto stat: stats)
       for (auto box : boxes)
         hNames.push_back(trk+"Track/IT"+stat+box+"Box/hitres");
      
@@ -498,8 +498,8 @@ void AlignmentMonitoring::CheckITOverlaps(){
   ovf->SetParameter(3,0);
   for (auto h:ovHists) {
     if (m_verbose) std::cout << h.first << ":\n";
-    if( m_mapWarnings.find(h.first)==m_mapWarnings.end() ) m_mapWarnings[h.first] = WarningLevel::UNCHECKED; 
-    m_insertOrder.push_back(h.first); 
+    if( m_mapWarnings.find(h.first)==m_mapWarnings.end() ) m_mapWarnings[h.first] = WarningLevel::UNCHECKED;
+    m_insertOrder.push_back(h.first);
     if( !h.second->GetEntries() ) { std::cout << "Skipping " << h.first << ": empty histogram!\n"; continue; }
     ovf->SetParameter(0,h.second->GetEntries());
     if(h.first.find("OT")!=std::string::npos) ovf->SetParameter(2,0.25);
@@ -507,10 +507,10 @@ void AlignmentMonitoring::CheckITOverlaps(){
     if(fitres->IsEmpty()) { std::cout << "Skipping " << h.first << ": empty fit results\n"; continue; }
     if(fitres->Chi2()<1e-6 || fitres->Ndf()==0)  { std::cout << "Skipping " << h.first << ": too small chi2\n"; continue; }
     if(!fitres->Status() && fitres->CovMatrixStatus() != 3) {// dont check parameters when the fit failed
-      m_mapWarnings[h.first] = WarningLevel::FAILED; 
+      m_mapWarnings[h.first] = WarningLevel::FAILED;
       continue;
     }
-    m_mapWarnings[h.first] = WarningLevel::SEVERE; 
+    m_mapWarnings[h.first] = WarningLevel::SEVERE;
     std::vector<double> refs = GetReference(h.first.c_str());
     WarningLevel wl_mean = CheckFitPar(fitres->Parameter(1),fitres->ParError(1), refs[0], refs[1]);
     WarningLevel wl_width = CheckFitPar(fitres->Parameter(2),fitres->ParError(2), refs[2], refs[3]);
@@ -526,9 +526,9 @@ void AlignmentMonitoring::CheckITOverlaps(){
   if (m_verbose) {
     for (auto trk: tracks)
       m_pages[std::string("OverlapResidualsIT")+trk]->Print( (m_outputDirectory+"/"+"OverlapResidualsIT"+"_"+trk+".pdf").c_str() );
-  } 
+  }
 
-  // begin: a map of warnings for IT 
+  // begin: a map of warnings for IT
   std::map<std::string,int> track_indices({ {R"(OTASide)",1},{R"(OTCSide)",2},{R"(ITASide)",3},{R"(ITCSide)",4},{R"(ITTop)",5},{R"(ITBottom)",6} });
   std::map<std::string,int> box_indices({ {R"(ASide)",1},{R"(CSide)",2},{R"(Top)",3},{R"(Bottom)",4} });
   std::map<std::string,TH2F*> hmapWarnings;
@@ -549,9 +549,9 @@ void AlignmentMonitoring::CheckITOverlaps(){
     hmapWarnings[station]->GetYaxis()->SetBinLabel( track_indices[track], track.c_str());
   }
   m_pages["OverlapResidualsITMaps"] = (TCanvas*)m_hhelp.createPage( "OverlapResidualsITMaps","Overlap Residulas IT maps", 3, 1, 400*3, 300*1);
-  gStyle->SetOptStat(0); 
-  gStyle->SetOptFit(0); 
-  gROOT->ForceStyle(); 
+  gStyle->SetOptStat(0);
+  gStyle->SetOptFit(0);
+  gROOT->ForceStyle();
   Int_t colors[] = {6, 0, 3, 5, 2}; // #colors >= #levels - 1
   gStyle->SetPalette((sizeof(colors)/sizeof(Int_t)), colors);
   Double_t levels[] = {-1, 0, 1, 2, 3};
@@ -575,9 +575,9 @@ void AlignmentMonitoring::CheckITOverlaps(){
     }
   }
   m_pages["OverlapResidualsITMaps"]->Print( (m_outputDirectory+"/"+"OverlapResidualsITMaps.pdf").c_str() );
-  gStyle->SetOptStat(1111110); 
+  gStyle->SetOptStat(1111110);
   gStyle->SetOptFit(1111110);
-  gROOT->ForceStyle(); 
+  gROOT->ForceStyle();
   // end: a map of warnings for IT
 
   return;
@@ -607,8 +607,8 @@ void AlignmentMonitoring::CheckD0(){
   for(auto h:alignD0Hists){
     if(m_verbose) std::cout << h.second->GetName() << std::endl;
     if( !(h.first=="massPositiveY" || h.first=="massNegativeY") ){
-      m_mapWarnings[h.first] = WarningLevel::SEVERE; 
-      m_insertOrder.push_back(h.first); 
+      m_mapWarnings[h.first] = WarningLevel::SEVERE;
+      m_insertOrder.push_back(h.first);
     }
     if(!h.second->GetEntries()) continue;
     fitres = h.second->Fit("gaus",m_verbose ? "S" : "SQ"); // need to modify this
@@ -625,11 +625,11 @@ void AlignmentMonitoring::CheckD0(){
       }
     }//else
   }
-  m_mapWarnings["D0MassDifference"] = WarningLevel::SEVERE; 
-  m_insertOrder.push_back("D0MassDifference"); 
+  m_mapWarnings["D0MassDifference"] = WarningLevel::SEVERE;
+  m_insertOrder.push_back("D0MassDifference");
   double deltaM = mass_diff["massPositiveY"]->Parameter(1) - mass_diff["massNegativeY"]->Parameter(1);
   double sigmaDM= std::sqrt(mass_diff["massPositiveY"]->Parameter(2)*mass_diff["massPositiveY"]->Parameter(2)+mass_diff["massNegativeY"]->Parameter(2)*mass_diff["massNegativeY"]->Parameter(2));
-  std::vector<double> refs = GetReference("D0MassDifference"); 
+  std::vector<double> refs = GetReference("D0MassDifference");
   WarningLevel wl_mean = CheckFitPar(deltaM, sigmaDM,refs[0]-refs[1],refs[0]+refs[1]);
   m_mapWarnings["D0MassDifference"] = wl_mean;
   if(m_verbose) m_pages["AlignD02KPiMonitor"]->Print( (m_outputDirectory+"/"+"AlignD02KPiMonitor.pdf").c_str() );
@@ -672,7 +672,7 @@ WarningLevel AlignmentMonitoring::CheckFitPar(double x, double xerr, double xmin
   return wl;
 }
 
-void 
+void
 AlignmentMonitoring::LoadGausFitReferences(const char* filename)
 {
   //Utilities ut;
@@ -708,3 +708,4 @@ AlignmentMonitoring::GaussFit(TH1* h)
   T
 
 }*/
+  

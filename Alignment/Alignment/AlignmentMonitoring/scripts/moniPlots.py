@@ -1,11 +1,5 @@
 #!/usr/bin/env python
 
-import os, sys, fnmatch, re
-import ROOT as r
-from GaudiPython import gbl
-from AlignmentOutputParser.AlignOutput import *
-from MultiPlot import MultiPlot
-
 ##########################
 ###   Options parser   ###
 if __name__ == '__main__':
@@ -19,6 +13,12 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
 ##########################
+
+import os, sys, fnmatch, re
+import ROOT as r
+from GaudiPython import gbl
+from AlignmentOutputParser.AlignOutput import *
+from MultiPlot import MultiPlot
 
 AlMon = gbl.Alignment.AlignmentMonitoring
 
@@ -68,33 +68,46 @@ def findHistos(run):
     return files_histo
 
 
-def ConfigureMonApp(outputName, pages):
-    r.gStyle.SetOptTitle(1)
-    monApp = AlMon.MonitoringApplication(outputName)
-    for name, hists in pages:
-        if len(hists) == 1: monApp.addPage( AlMon.MonitoringPage(name, hists[0]) )
-        elif len(hists) == 2: monApp.addPage( AlMon.MonitoringPage(name, hists[0], hists[1]) )
-        elif len(hists) == 3: monApp.addPage( AlMon.MonitoringPage(name, hists[0], hists[1], hists[2]) )
-        elif len(hists) == 4: monApp.addPage( AlMon.MonitoringPage(name, hists[0], hists[1], hists[2], hists[3]) )
-        elif len(hists) == 5: monApp.addPage( AlMon.MonitoringPage(name, hists[0], hists[1], hists[2], hists[3], hists[4]) )
-        elif len(hists) == 6: monApp.addPage( AlMon.MonitoringPage(name, hists[0], hists[1], hists[2], hists[3], hists[4], hists[5]) )
-        elif len(hists) == 7: monApp.addPage( AlMon.MonitoringPage(name, hists[0], hists[1], hists[2], hists[3], hists[4], hists[5], hists[6]) )
-        elif len(hists) == 8: monApp.addPage( AlMon.MonitoringPage(name, hists[0], hists[1], hists[2], hists[3], hists[4], hists[5], hists[6], hists[7]) )
-        elif len(hists) == 9: monApp.addPage( AlMon.MonitoringPage(name, hists[0], hists[1], hists[2], hists[3], hists[4], hists[5], hists[6], hists[7], hists[8]) )
-        else: print 'Too many histograms per page requested!'
-    return monApp
-
-
 def plotsCompare(Pages, files_histo, outputFile_name, normalize = True):
-    monApp = ConfigureMonApp("dumb_string", Pages)
-    for label, f in sorted(files_histo.items(), key = lambda x: x[0], reverse=True): monApp.addFile(label+':'+f)
-    for name, histos in Pages:
-        monApp.drawPage(name, normalize)
-        r.gPad.GetCanvas().Print(outputFile_name)
-    try:
-        os.remove('c1.eps')
-    except OSError:
-        pass
+    inFiles = {key: r.TFile(path) for key, path in files_histo.items()}
+    for title, paths in Pages:
+        mps = []
+        for cont, _path in enumerate(paths):
+            histo_args = {}
+            wantMeanLines = False
+            if type(_path) == str:
+                path = _path
+            else:
+                try:
+                    path = _path[0]
+                    histo_args = _path[1]
+                    wantMeanLines = _path[2]
+                except IndexError:
+                    pass
+            if histo_args.has_key('vlines'):
+                histo_args['vlines_colors'] = {val : r.kBlue for val in  histo_args['vlines']}
+                histo_args['vlines_styles'] = {val : 3 for val in  histo_args['vlines']}
+            drawLegend = (cont==0)
+            histos = {key: inFiles[key].Get(path) for key in inFiles}
+            histo_title = histos['old'].GetTitle()
+            isProfile = isinstance(histos['old'], r.TProfile)
+            if normalize:
+                for histo in histos.values():
+                    if not isProfile:
+                        histo.Scale(1./histo.GetEntries())           
+            kind = 'p' if isProfile else 'h'
+            mps.append(MultiPlot(path, kind = kind, title=histo_title, drawLegend=drawLegend, **histo_args))
+            mps[-1].Add(histos['old'], 'old', color = r.kBlack, markerStyle=1)
+            mps[-1].Add(histos['new'], 'new', color = r.kRed, lineStyle=7, markerStyle=1)
+            if isinstance(histos['old'], r.TProfile):
+                mps[-1].DrawOption = 'nostack'
+            else:
+                mps[-1].DrawOption = 'nostack hist'
+            if wantMeanLines:
+                mps[-1].AddLine(histos['old'].GetMean(), 'v', color = r.kBlack, style=1)
+                mps[-1].AddLine(histos['new'].GetMean(), 'v', color = r.kRed, style=7)
+        c1 = getDrawnCanvas(mps)
+        c1.Print(outputFile_name)
 
 
 def makeGraph(values, errors=None):
@@ -170,7 +183,7 @@ def getExpression(aout, expression):
     
 
 
-def getDrawnCanvas(drawables):
+def getDrawnCanvas(drawables):#, title = 'Pollo'):
     
     if len(drawables) == 1:
         canvas_divsions = [1]
@@ -184,6 +197,39 @@ def getDrawnCanvas(drawables):
         canvas_divsions = [3,3]
         
     c = r.TCanvas()
+    c.pads = []
+    
+    # if title:
+    #     import random
+    #     title_pad = r.TPad("title_pad"+str(random.random()), "The pad 10% of the height",0.,.9,1.,1.)
+    #     title_pad.cd()
+    #     titletext = r.TText(0.5,0.5, title) 
+    #     titletext.SetNDC() 
+    #     titletext.SetTextSize(0.8) 
+    #     titletext.SetTextAlign(22) 
+    #     titletext.Draw() 
+    #     c.cd()
+    #     title_pad.Draw()
+    #     c.pads.append(title_pad)
+    #     pad = r.TPad("pad"+str(random.random()), "The pad 90% of the height",0.,.01,1.,.9)
+    #     #pad2.cd()
+    #     #framePulls.Draw()
+    # else:
+    #     pad = r.TPad("pad", "The pad 100% of the height",0.,.01,1.,1.)
+
+    # pad.Divide(*canvas_divsions)
+    
+    # for i in range(len(drawables)):
+    #     pad.cd(i+1)
+    #     drawables[i].Draw()
+
+    # c.cd()
+    # pad.Draw()
+    # c.pads.append(pad)
+    # c.Update()
+    # c.Print('c1.eps')
+    # return c
+    
     c.Divide(*canvas_divsions)
     
     for i in range(len(drawables)):
@@ -207,11 +253,11 @@ Pages = [("Long track properties and PV position", [ "Track/TrackMonitor/Velo/3"
                                        "Track/TrackVertexMonitor/PV chisquare per dof",
                                        "Velo/VeloTrackMonitor/Pseudoefficiency_per_sensor_vs_sensorID",
                                       ]),
-         ("VELO 2-halves alignment", [ "Track/TrackVertexMonitor/PV left-right delta x",
-                                       "Track/TrackVertexMonitor/PV left-right delta y",
-                                       "Track/TrackVertexMonitor/PV left-right delta z",
-                                       "Track/TrackVeloOverlapMonitor/overlapResidualPhi",
-                                       "Track/TrackVeloOverlapMonitor/overlapResidualR",
+         ("VELO 2-halves alignment", [ ["Track/TrackVertexMonitor/PV left-right delta x", {'vlines' : [0, -.008, .008], 'rangeX' : [-.03, .03]}, True],
+                                       ["Track/TrackVertexMonitor/PV left-right delta y", {'vlines' : [0, -.008, .008], 'rangeX' : [-.03, .03]}, True],
+                                       ["Track/TrackVertexMonitor/PV left-right delta z", {'vlines' : [0, -.05, .05], 'rangeX' : [-.3, .3]}, True],
+                                       ["Track/TrackVeloOverlapMonitor/overlapResidualPhi", {'vlines' : [0], 'rangeX' : [-.1, .1]}],
+                                       ["Track/TrackVeloOverlapMonitor/overlapResidualR", {'vlines' : [0], 'rangeX' : [-.1, .1]}],
                                        ]),
          ]
     
@@ -228,7 +274,7 @@ if __name__ == '__main__':
     aout.Parse()
     
     c = r.TCanvas('c', 'c')
-    outputFile_name = args.outFile if args.outFile else '/group/online/AligWork/MoniPlots/{0}/{1}.pdf'.format(activity, run)
+    outputFile_name = args.outFile if args.outFile else 'MoniPlots.pdf'
     c.Print(outputFile_name+'[')
 
     # Plots compare before-after
@@ -267,55 +313,55 @@ if __name__ == '__main__':
     c1.Print(outputFile_name)
     
 
-    # Modules
-    c.cd()
-    mp1 = MultiPlot('1', title = 'Convergence Modules;Iteration;Variation [#mum]',kind='g', hlines=[0,-2,2], rangeY = [-10, 10])
-    mp1.DrawOption = 'alp'
-    mp1.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Tx', alignable='Velo/VeloLeft/Module00')), '00-Tx',  style =1)
-    mp1.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Ty', alignable='Velo/VeloLeft/Module00')), '00-Ty', style =-1)
-    mp1.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Tx', alignable='Velo/VeloLeft/Module12')), '12',  style =2)
-    mp1.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Ty', alignable='Velo/VeloLeft/Module12')), style =-2)
-    mp1.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Tx', alignable='Velo/VeloLeft/Module32')), '32',  style =3)
-    mp1.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Ty', alignable='Velo/VeloLeft/Module32')), style =-3)
-    mp1.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Tx', alignable='Velo/VeloLeft/Module38')), '38',  style =4)
-    mp1.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Ty', alignable='Velo/VeloLeft/Module38')), style =-4)
+    # # Modules
+    # c.cd()
+    # mp1 = MultiPlot('1', title = 'Convergence Modules;Iteration;Variation [#mum]',kind='g', hlines=[0,-2,2], rangeY = [-10, 10])
+    # mp1.DrawOption = 'alp'
+    # mp1.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Tx', alignable='Velo/VeloLeft/Module00')), '00-Tx',  style =1)
+    # mp1.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Ty', alignable='Velo/VeloLeft/Module00')), '00-Ty', style =-1)
+    # mp1.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Tx', alignable='Velo/VeloLeft/Module12')), '12',  style =2)
+    # mp1.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Ty', alignable='Velo/VeloLeft/Module12')), style =-2)
+    # mp1.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Tx', alignable='Velo/VeloLeft/Module32')), '32',  style =3)
+    # mp1.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Ty', alignable='Velo/VeloLeft/Module32')), style =-3)
+    # mp1.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Tx', alignable='Velo/VeloLeft/Module38')), '38',  style =4)
+    # mp1.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Ty', alignable='Velo/VeloLeft/Module38')), style =-4)
 
-    mp2 = MultiPlot('2', title = 'Convergence Modules Rz;Iteration;Variation [#murad]', kind='g', hlines=[0,-100,100], rangeY = [-300, 300])
-    mp2.DrawOption = 'alp'
-    mp2.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Rz', alignable='Velo/VeloLeft/Module00')), '00', style = 1)
-    mp2.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Rz', alignable='Velo/VeloLeft/Module12')), '12', style = 2)
-    mp2.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Rz', alignable='Velo/VeloLeft/Module32')), '32', style = 3)
-    mp2.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Rz', alignable='Velo/VeloLeft/Module38')), '38', style = 4)
+    # mp2 = MultiPlot('2', title = 'Convergence Modules Rz;Iteration;Variation [#murad]', kind='g', hlines=[0,-100,100], rangeY = [-300, 300])
+    # mp2.DrawOption = 'alp'
+    # mp2.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Rz', alignable='Velo/VeloLeft/Module00')), '00', style = 1)
+    # mp2.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Rz', alignable='Velo/VeloLeft/Module12')), '12', style = 2)
+    # mp2.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Rz', alignable='Velo/VeloLeft/Module32')), '32', style = 3)
+    # mp2.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Rz', alignable='Velo/VeloLeft/Module38')), '38', style = 4)
 
-    mp3 = MultiPlot('3', title = 'Convergence Modules;Iteration;Variation [#mum]',kind='g', hlines=[0,-2,2], rangeY = [-10, 10])
-    mp3.DrawOption = 'alp'
-    mp3.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Tx', alignable='Velo/VeloRight/Module01')), '01-Tx',  style =1)
-    mp3.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Ty', alignable='Velo/VeloRight/Module01')), '01-Ty', style =-1)
-    mp3.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Tx', alignable='Velo/VeloRight/Module13')), '13',  style =2)
-    mp3.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Ty', alignable='Velo/VeloRight/Module13')), style =-2)
-    mp3.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Tx', alignable='Velo/VeloRight/Module33')), '33',  style =3)
-    mp3.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Ty', alignable='Velo/VeloRight/Module33')), style =-3)
-    mp3.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Tx', alignable='Velo/VeloRight/Module39')), '39',  style =4)
-    mp3.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Ty', alignable='Velo/VeloRight/Module39')), style =-4)
+    # mp3 = MultiPlot('3', title = 'Convergence Modules;Iteration;Variation [#mum]',kind='g', hlines=[0,-2,2], rangeY = [-10, 10])
+    # mp3.DrawOption = 'alp'
+    # mp3.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Tx', alignable='Velo/VeloRight/Module01')), '01-Tx',  style =1)
+    # mp3.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Ty', alignable='Velo/VeloRight/Module01')), '01-Ty', style =-1)
+    # mp3.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Tx', alignable='Velo/VeloRight/Module13')), '13',  style =2)
+    # mp3.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Ty', alignable='Velo/VeloRight/Module13')), style =-2)
+    # mp3.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Tx', alignable='Velo/VeloRight/Module33')), '33',  style =3)
+    # mp3.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Ty', alignable='Velo/VeloRight/Module33')), style =-3)
+    # mp3.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Tx', alignable='Velo/VeloRight/Module39')), '39',  style =4)
+    # mp3.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Ty', alignable='Velo/VeloRight/Module39')), style =-4)
 
-    mp4 = MultiPlot('4', title = 'Convergence Modules Rz;Iteration;Variation [#murad]', kind='g', hlines=[0,-100,100], rangeY = [-300, 300])
-    mp4.DrawOption = 'alp'
-    mp4.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Rz', alignable='Velo/VeloRight/Module01')), '01', style = 1)
-    mp4.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Rz', alignable='Velo/VeloRight/Module13')), '13', style = 2)
-    mp4.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Rz', alignable='Velo/VeloRight/Module33')), '33', style = 3)
-    mp4.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Rz', alignable='Velo/VeloRight/Module39')), '39', style = 4)
+    # mp4 = MultiPlot('4', title = 'Convergence Modules Rz;Iteration;Variation [#murad]', kind='g', hlines=[0,-100,100], rangeY = [-300, 300])
+    # mp4.DrawOption = 'alp'
+    # mp4.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Rz', alignable='Velo/VeloRight/Module01')), '01', style = 1)
+    # mp4.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Rz', alignable='Velo/VeloRight/Module13')), '13', style = 2)
+    # mp4.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Rz', alignable='Velo/VeloRight/Module33')), '33', style = 3)
+    # mp4.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Rz', alignable='Velo/VeloRight/Module39')), '39', style = 4)
 
     
-    # Modules histo
-    mp5 = MultiPlot('5', title = 'Variation All Modules;Variation [#mum];',kind='h', vlines=[-2,2])
-    mp5.Add(makeHisto('Tx5',getDofDeltas(aout,dof='Tx',regexes_alignables=['Velo/Velo(Left|Right)/Module..']),range=[-10,10], nBins=30),'Tx')
-    mp5.Add(makeHisto('Ty5',getDofDeltas(aout,dof='Ty',regexes_alignables=['Velo/Velo(Left|Right)/Module..']),range=[-10,10], nBins=30),'Ty')
+    # # Modules histo
+    # mp5 = MultiPlot('5', title = 'Variation All Modules;Variation [#mum];',kind='h', vlines=[-2,2])
+    # mp5.Add(makeHisto('Tx5',getDofDeltas(aout,dof='Tx',regexes_alignables=['Velo/Velo(Left|Right)/Module..']),range=[-10,10], nBins=30),'Tx')
+    # mp5.Add(makeHisto('Ty5',getDofDeltas(aout,dof='Ty',regexes_alignables=['Velo/Velo(Left|Right)/Module..']),range=[-10,10], nBins=30),'Ty')
 
-    mp6 = MultiPlot('6', title = 'Variation All Modules Rz;Variation [#murad];',kind='h', vlines=[-100,100], drawLegend=False)
-    mp6.Add(makeHisto('Rz6',getDofDeltas(aout,dof='Rz',regexes_alignables=['Velo/Velo(Left|Right)/Module..']),range=[-300,300], nBins=30))
+    # mp6 = MultiPlot('6', title = 'Variation All Modules Rz;Variation [#murad];',kind='h', vlines=[-100,100], drawLegend=False)
+    # mp6.Add(makeHisto('Rz6',getDofDeltas(aout,dof='Rz',regexes_alignables=['Velo/Velo(Left|Right)/Module..']),range=[-300,300], nBins=30))
 
-    c1 = getDrawnCanvas([mp1, mp3, mp5, mp2, mp4, mp6])
-    c1.Print(outputFile_name)
+    # c1 = getDrawnCanvas([mp1, mp3, mp5, mp2, mp4, mp6])
+    # c1.Print(outputFile_name)
         
     c.Print(outputFile_name+']')
     

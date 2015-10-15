@@ -5,8 +5,25 @@
 Tracker\..*	0.00001	0.001
 
 # Velo Global
+VeloSystem\..*	0.00001	0.001
 Velo\..*	0.00001	0.001
-Velo/Velo(Left|Right)\..*	0.00001	0.001
+Velo(Left|Right)\.T(x|y)	0.002	0.01
+Velo(Left|Right)\.Tz		0.004	0.01
+Velo(Left|Right)\.R(x|y)	0.0000035	0.000025
+Velo(Left|Right)\.Rz		0.000015		0.0001
+
+# Velo Modules
+Module[0-9]{2}\.T(x|y)	0.002	0.01
+Module[0-9]{2}\.Rz	0.0001	0.0003
+Module[0-9]{2}\.Tz	0.00001	0.00002
+Module[0-9]{2}\.R(x|y)	0.000001	0.00001
+Detector([0-3][0-9]|4[0-1])-0[0-1]\..*	0.000001	0.00001
+Velo/Velo(Left|Right)/Module([0-3][0-9]|4[0-1])/RPhiPair.*/Detector-0[0-1]\..*	0.000001	0.00001
+# pile-up module
+ModulePU0[0-3]\..*	0.000001	0.00001
+DetectorPU0[0-3]-00\..*	0.000001	0.00001
+
+
 
 # IT Global
 ITSystem\..*	0.00001	0.001

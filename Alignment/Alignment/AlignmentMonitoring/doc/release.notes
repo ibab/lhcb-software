@@ -3,6 +3,14 @@
 ! package manager: Maurizio Martinelli
 !------------------------------------------------------------------------------
 
+! 2015-10-15 - Giulio Dujany
+  - Added a method to get the number of warnings for each category given a regex
+  - Aesthetic changes of plots monitoring to make them clearer
+  - Various bugs fixed:
+   - When parse files with references do not assume presence of tabs but be happy also with spaces
+   - When parsing the xml files parse correctly also the velo halves that have info of resolver position
+ 
+
 ! 2015-10-08 - Giulio Dujany
  - Fixing bugs to make script monitoring VELO to run automatically
 
