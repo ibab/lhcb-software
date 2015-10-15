@@ -1,7 +1,7 @@
 ################################################################################
 # Package: GauchoAppl
 ################################################################################
-gaudi_subdir(GauchoAppl v1r28)
+gaudi_subdir(GauchoAppl v1r29)
 
 gaudi_depends_on_subdirs(Online/Gaucho
                          Online/GaudiOnline)
