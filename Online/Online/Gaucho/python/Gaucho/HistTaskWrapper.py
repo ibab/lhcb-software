@@ -96,6 +96,14 @@ class HistTaskWrapper(object):
     def histograms(self, histogram_names=None):
         """ Obtains histograms of given names for task associated with this
         instance.
+
+        Input is a Python list of Python strings.
         """
+        hist_names_vec = None
+        if histogram_names is not None:
+            # Convert list of strings to std::vector<std::string>
+            hist_names_vec = VectorOfString()
+            for hn in histogram_names:
+                hist_names_vec.push_back(hn)
         return [self._cast_TObject(t)
-                for t in self._histograms(histogram_names)]
+                for t in self._histograms(hist_names_vec)]
