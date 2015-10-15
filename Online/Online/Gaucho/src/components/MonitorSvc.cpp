@@ -5,6 +5,8 @@
 #include "GaudiKernel/IAlgTool.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/IRegistry.h"
 #include "Gaucho/CntrMgr.h"
 #include "Gaucho/MonHist.h"
 #include "Gaucho/MonSys.h"
@@ -100,6 +102,7 @@ MonitorSvc::MonitorSvc(const string& name, ISvcLocator* sl)
   declareProperty("ProcessName",m_ProcName="");
   declareProperty("ProgramName",m_ProgName="");
   declareProperty("DontResetCountersonRunChange",m_DontResetCountersonRunChange=false);
+  declareProperty("UseDStoreNames",m_useDStoreNames=false);
   TH1D::SetDefaultSumw2();
   TH2D::SetDefaultSumw2();
   TProfile::SetDefaultSumw2();
@@ -715,14 +718,32 @@ void MonitorSvc::declareInfo(const string& nam, const AIDA::IBaseHistogram* var,
   string hnam;
   if (m_disableMonObjectsForHistos == 0)
   {
-//    isMonObject = true;
-    if (nam.find(oname) == string::npos)
+    if (m_useDStoreNames)
     {
-      hnam = oname+"/"+nam;
+      AIDA::IBaseHistogram* h = (AIDA::IBaseHistogram*)var;
+      DataObject* dObj = dynamic_cast<DataObject*>(h);
+      IRegistry*  reg = dObj->registry();
+      string path = reg->identifier();   // /stat/bla//bla/<histo-name>
+      ::lib_rtl_output(LIB_RTL_INFO,"Data Store Path: %s , Hist Name: %s\n",path.c_str(),nam.c_str());
+      if (nam.find(oname) == string::npos)
+      {
+        hnam = oname+"/"+nam;
+      }
+      else
+      {
+        hnam = nam;
+      }
     }
     else
     {
-      hnam = nam;
+      if (nam.find(oname) == string::npos)
+      {
+        hnam = oname+"/"+nam;
+      }
+      else
+      {
+        hnam = nam;
+      }
     }
     mhist = new MonHist(msgSvc(),hnam,var);
     m_InfoMap.insert(make_pair(hnam,m_HistSubSys));
