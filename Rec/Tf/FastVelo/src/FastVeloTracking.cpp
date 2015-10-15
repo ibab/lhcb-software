@@ -1,7 +1,6 @@
 // Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "Event/Track.h"
 #include "Event/ProcStatus.h" 
 
@@ -423,10 +422,9 @@ void FastVeloTracking::findQuadruplets( unsigned int sens0, bool forward ) {
           }
           
           m_tracks.push_back( std::move(newTrack) );
-          
           if ( m_debug ) {
             info() << "      -- stored n=" << m_tracks.size()-1 << endmsg;
-            printRTrack( newTrack );
+            printRTrack( m_tracks.back() );
           }
         }
       }
@@ -833,9 +831,9 @@ void FastVeloTracking::findUnusedTriplets( unsigned int sens0, bool forward ) {
           m_tracks.push_back( std::move(newTrack) );
           if ( m_debug ) {
             info() << "      -- stored n=" << m_tracks.size()-1
-                   << " nbRHits " << newTrack.nbRHits()
-                   << " chi2 " << newTrack.rChi2() << endmsg;
-            printRTrack( newTrack );
+                   << " nbRHits " << m_tracks.back().nbRHits()
+                   << " chi2 " << m_tracks.back().rChi2() << endmsg;
+            printRTrack( m_tracks.back() );
           }
         }
       }

@@ -3,6 +3,9 @@
 ! Responsible : 
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
+! 2015-10-15 - Gerhard Raven
+ - remove #incldue of obsolete Gaudi header file
+ - make sure there is no use of objects after they have been std::move-ed
 
 !========================= FastVelo v1r23 2015-10-13 =========================
 ! 2015-09-28 - Gerhard Raven
