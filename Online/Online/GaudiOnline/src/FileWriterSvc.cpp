@@ -436,7 +436,7 @@ StatusCode FileWriterSvc::run(const EventDesc& e, unsigned int runnr)
           {
             Markclose(m_FileDesc);
             m_FileDesc->state = C_CLOSED;
-            r->m_CurrentFileDescr = openFile(m_RunNumber,FILETYPE_EVENT);
+            r->m_CurrentFileDescr = openFile(r->m_RunNumber,FILETYPE_EVENT);
           }
           break;
         }
