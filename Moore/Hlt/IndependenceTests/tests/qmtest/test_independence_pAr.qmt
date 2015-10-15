@@ -7,11 +7,11 @@
   <argument name="use_temp_dir"><enumeral>true</enumeral></argument>
   <argument name="args"><set>
     <text>-n</text>
-    <text>1000</text>
+    <text>10</text>
     <text>--hlt1lines=all</text>
     <text>--hlt2lines=none</text>
     <text>--nprocesses=8</text>
-    <text>--Settings=Physics_25ns_October2015</text>
+    <text>--Settings=protonArgon_2015</text>
   </set></argument>
   <argument name="unsupported_platforms"><set><text>.*dbg</text></set></argument>
   <argument name="validator"><text>

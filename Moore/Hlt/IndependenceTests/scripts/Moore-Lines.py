@@ -39,7 +39,7 @@ def main():
     usage = "usage: %prog [options] inputfile <inputfile>"
     parser = optparse.OptionParser( usage = usage )
     parser.add_option( "-d", "--datatype", action="store", dest="DataType", 
-                       default="2009", help="DataType to run on.")
+                       default="2015", help="DataType to run on.")
     parser.add_option( "-n", "--evtmax", type="int", action = "store", dest = "EvtMax",
                        default = 10000, help = "Number of events to run" )
     parser.add_option( "--dddbtag", action="store", dest="DDDBtag",
@@ -47,7 +47,7 @@ def main():
     parser.add_option( "--conddbtag", action = "store", dest = "CondDBtag",
                        default = 'sim-20090402-vc-md100', help = "CondDBtag to use" )
     parser.add_option( "--settings", action = "store", dest="ThresholdSettings",
-                       default = 'Physics_September2012',
+                       default = 'Physics_25ns_September2015',
                        help = "ThresholdSettings to use")
     parser.add_option( "-s", "--simulation", action = "store_true", dest = "Simulation",
                        default = False, help = "Run on simulated data")

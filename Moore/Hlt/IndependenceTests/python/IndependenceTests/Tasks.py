@@ -3,7 +3,7 @@ import sys, time
 
 from Gaudi.Configuration import *
 
-from HltMonitor.Base import Task
+from HltMonitoring.Base import Task
 
 from GaudiPython import AppMgr, SUCCESS, FAILURE
 
@@ -49,7 +49,9 @@ class Config( object ):
         Sequence( "Hlt2" ).Members = [ i.configurable() for i in lines2 ]
 
         # Reconfigure the monitoring to expect the correct lines
-        HltConf().configureHltMonitoring( lines1, lines2 )
+        from HltConf.HltMonitoring import HltMonitoringConf
+        HltMonitoringConf().configureHltMonitoring(lines1, lines2)
+        #HltConf().configureHltMonitoring( lines1, lines2 )
 
         for hltLine in Sequence( "Hlt1" ).Members + Sequence( "Hlt2" ).Members:
             if hasattr( hltLine, "Prescale" ):
@@ -201,32 +203,25 @@ class DecisionReporter( Task ):
             if self.wait():
                 self._condition.acquire()
             self._appMgr.run( 1 )
-
             # Check if there is still event data
             if not bool( evt[ '/Event' ] ):
                 self.done()
                 break
-            
-	    odin = evt[ 'DAQ/ODIN' ]
+            odin = evt['DAQ/ODIN']
             reports = dict()
             reports[ 'event' ] = odin.eventNumber()
             reports[ 'run' ] = odin.runNumber()
             # Grab the HltDecReports and put the decisions in a dict by line name
-	    if evt[ 'Hlt1/DecReports' ]:
-	    	decReports1 = evt[ 'Hlt1/DecReports' ]
-	    	names1 = decReports1.decisionNames()
-            	for name in names1:
-            	    reports[ name ] = decReports1.decReport( name ).decision()
-	    #nodes = evt.nodes ( node = '/',forceload = True )
-	    #nodes = set ( nodes )
-	    #for loc in nodes:
-		#    print loc
-	    if evt[ 'Hlt2/DecReports' ]:
-	    	decReports2 = evt[ 'Hlt2/DecReports' ]
-	    	names2 = decReports2.decisionNames()
-            	for name in names2:
-                	reports[ name ] = decReports2.decReport( name ).decision()
-
+            if evt[ 'Hlt1/DecReports' ]:
+                decReports1 = evt[ 'Hlt1/DecReports' ]
+                names1 = decReports1.decisionNames()
+                for name in names1:
+                    reports[ name ] = decReports1.decReport( name ).decision()
+            if evt[ 'Hlt2/DecReports' ]:
+                decReports2 = evt[ 'Hlt2/DecReports' ]
+                names2 = decReports2.decisionNames()
+                for name in names2:
+                    reports[ name ] = decReports2.decReport( name ).decision()
             # Put our dict on the queue
             self._outQueue.put( reports )
             event += 1
