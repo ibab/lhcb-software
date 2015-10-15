@@ -1,6 +1,6 @@
 project ONLINE
 
-use GAUDI GAUDI_v26r3
+use GAUDI GAUDI_v26r4
 
 build_strategy with_installarea
 setup_strategy root
