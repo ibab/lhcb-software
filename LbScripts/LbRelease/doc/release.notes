@@ -1,3 +1,7 @@
+2015-10-12  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* lb-deployment-checklist: minor updete in doc string
+
 2015-09-01  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v5r4p2

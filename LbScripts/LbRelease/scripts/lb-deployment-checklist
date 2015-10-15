@@ -98,7 +98,22 @@ class TemporaryDir(object):
 @check
 def rpm_copied(project, version):
     '''
-    You need to add the RPMs to the RPM repository.
+    You need to add the RPMs to the RPM repository with
+
+      lb-release-rpm /data/artifacts/release/lhcb-release/${build_id}
+
+    and
+
+      lb-release-rpm --copy /data/artifacts/release/lhcb-release/${build_id}
+
+    if the check was successful.
+
+    where build_id should have been specified in the release request.
+
+    The possible build ids can be retrieved with
+
+      curl -k https://buildlhcb.cern.ch/nightlies-release/buildIDs/<project>/<version>
+
     See https://twiki.cern.ch/twiki/bin/view/LHCb/ProjectRelease#PublishRPMs
     '''
     global rpm_platforms
