@@ -4,6 +4,9 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2015-10-15 - Sean Benson
+ - Fixes to extend interfaces in Trg functor factories.
+
 !========================= LoKiTrigger v15r7 2015-04-28 =========================
 
 ! 2015-04-16 - Albert Puig

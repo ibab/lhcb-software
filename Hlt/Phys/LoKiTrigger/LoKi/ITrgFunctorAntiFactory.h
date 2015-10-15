@@ -42,7 +42,7 @@ namespace LoKi
    *
    */
   class ITrgFunctorAntiFactory 
-    : public virtual extend_interfaces1<IAlgTool>
+    : public virtual extend_interfaces<IAlgTool>
   {
   public:
     // ========================================================================

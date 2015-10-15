@@ -41,7 +41,7 @@ namespace LoKi
    *  @author Vanya BELYAEV ibelayev@physics.syr.edu
    *  @date   2007-06-10
    */
-  class ITrgFunctorFactory : public virtual extend_interfaces1<IAlgTool>
+  class ITrgFunctorFactory : public virtual extend_interfaces<IAlgTool>
   {
   public:
     // ========================================================================
