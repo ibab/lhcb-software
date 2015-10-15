@@ -1040,7 +1040,7 @@ StatusCode MEPRxSvc::run()
         }
         m_rxPkt[srcid]++; // recieved packets per source
         int rc = (*rxit)->addMEP(m_dataSock, mephdr, srcid, tsc, m_tLastRx);
-        if ((*rxit)->m_runNumber != m_runNumber) {
+        if ((*rxit)->m_runNumber > m_runNumber) {
             if (m_runNumber != 0)
             {
               int runo;
@@ -1055,6 +1055,12 @@ StatusCode MEPRxSvc::run()
                 << endmsg;
             if (m_resetCounterOnRunChange)
                 clearCounters();
+        }
+        else if ((*rxit)->m_runNumber < m_runNumber)
+        {
+          log << MSG::INFO << "Received Run Number (" << (*rxit)->m_runNumber
+              << ") inferior to current Run number (" << m_runNumber << ")"
+              << endmsg;
         }
         if (rc == MEP_SENT) {
             rx = *rxit;
@@ -1433,7 +1439,12 @@ StatusCode MEPRxSvc::stop()
    StatusCode sc;
    if (m_monSvc)
    {
-     m_monSvc->updateSvc("this",m_runNumber,this);
+     MsgStream log(msgSvc(), "MEPRx"); // message stream is NOT thread-safe
+     log << MSG::INFO << "executing Stop - updating EOR services for run# " << m_runNumber
+         << endmsg;
+     int runo;
+     runo = int(m_runNumber);
+     m_monSvc->updateSvc("this",runo,this);
      m_monSvc->resetHistos(0);
    }
    sc = Service::stop();
