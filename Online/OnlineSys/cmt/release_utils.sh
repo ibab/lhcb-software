@@ -256,3 +256,16 @@ checkVersions()
     cd -;
 }
 echo "+++"
+echo "+++ Define macro \$> provide_tags "
+provide_tags()
+{
+    python <<EOF
+import os
+lines=os.popen('svn diff requirements |grep "+use" | cut -b 5-32').readlines()
+cmd=''
+for i in lines:
+  cmd = cmd + 'make_tag  '+i[:-1]+'; '
+print cmd
+EOF
+}
+echo "+++"

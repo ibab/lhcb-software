@@ -1,5 +1,5 @@
 package OnlineSys
-version v5r25
+version v5r26
 ###
 ### Note: 
 ### last v4 release: v4r69 based on Gaudi v23r7
@@ -18,33 +18,33 @@ use GaudiObjDesc        v11r23
 # LHCb Online packages
 #=======================================================
 use Camera              v1r35    Online
-use Checkpointing       v0r24    Online
+use Checkpointing       v0r25    Online
 macro CondDBServer_use "CondDBServer v1r6 Online" target-i686 ""
 use $(CondDBServer_use)
 ####use CondDBServer        v1r6     Online
-use Controller          v0r23    Online
+use Controller          v0r24    Online
 use ControllerTests     v0r3     Online
 use DailyReport         v1r3     Online
 use DefHLTUtils         v1r15    Online
 use DIM                 v20r7p4  Online
-use EventBuilder        v0r15    Online
-use FarmConfig          v0r21    Online
+use EventBuilder        v0r16    Online
+use FarmConfig          v0r22    Online
 use FarmMonitor         v2r13    Online
-use Gaucho              v7r44    Online
-use GauchoAppl          v1r28    Online
+use Gaucho              v7r45    Online
+use GauchoAppl          v1r29    Online
 use GaudiCheckpointing  v0r24    Online
-use GaudiOnline         v2r87    Online
+use GaudiOnline         v2r88    Online
 use GaudiOnlineTests    v1r7     Online
 use GaudiRootCnvTests   v1r14    Online
 use GaudiSerialize      v0r15    Online
 use GaudiUPI            v1r20    Online
 use HistDBPython        v1r8     Online
-use Hlt2Monitoring      v1r3     Online
+use Hlt2Monitoring      v1r4     Online
 use InsertDB            v1r10    Online
 use MBMDump             v1r17    Online
 use OMAlib              v5r0     Online
 use OnlineAlign         v0r8     Online
-use OnlineBase          v1r38    Online
+use OnlineBase          v1r39    Online
 use OnlineHistDB        v8r3     Online
 use OnlineKernel        v2r24    Online
 use OnlineTools         v1r5     Online
@@ -54,7 +54,7 @@ use PresenterDoc        v1r1     Online
 use PyDIM               v2r17    Online
 use RawBankSizes        v2r21    Online
 use RootCnv             v1r26    Online
-use ROMon               v1r56    Online
+use ROMon               v1r57    Online
 use ROLogger            v0r32    Online
 ## Only at the pit: macro Stomp_use "" CERN "Stomp v1r2 Online"
 ##use $(Stomp_use)
