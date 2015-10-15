@@ -603,7 +603,7 @@ void MonitorSvc::declareInfo(const string& name, const StatEntity& var,
     string oname = infoOwnerName(owner);
   if (m_started)
   {
-    printf("Declare Info called after start for Name %s\n",name.c_str());
+//    printf("Declare Info called after start for Name %s\n",name.c_str());
   }
   MsgStream msg(msgSvc(),"MonitorSvc");
    msg << MSG::DEBUG << "=========================== DeclareInfo for StatEntity "<< name << endmsg;
