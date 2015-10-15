@@ -486,7 +486,7 @@ std::size_t LHCb::HashIDs::hashID ( const LHCb::CaloHypo*      h )
 // hash for Track
 // ============================================================================
 std::size_t LHCb::HashIDs::hashID ( const LHCb::Track*         t ) 
-{ return 0 == t ? 0 : hashID ( t->lhcbIDs().begin() , t->lhcbIDs().begin() ) ; }
+{ return 0 == t ? 0 : hashID ( t->lhcbIDs().begin() , t->lhcbIDs().end() ) ; }
 // ============================================================================
 // hash for ProtoParticle 
 // ============================================================================

@@ -5,6 +5,11 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+! 2015-10-15 - Vanya BELYAEV
+
+- HashIDs
+   fix stupud typo :=(
+
 ! 2015-10-10 - Vanya Belyaev
  - LHCb::HashID 
    add few more methods (for Wouter)
