@@ -19,7 +19,7 @@ def configurePublisher(app, alg_name, initial_file):
     app.ExtSvc += ["Hlt2HistPublishSvc/" + alg_name]
 
 
-def configure(host_type = None):
+def configure(host_type = None, initial_file = ""):
     OnlineEnv = importOnline()
 
     ## ApplicationMgr
@@ -68,7 +68,6 @@ def configure(host_type = None):
     ## Needed services
     appMgr.ExtSvc += ["IncidentSvc", "HistogramSvc", "HistogramDataSvc", "MonitorSvc"]
 
-    initial_file = "/hist/Savesets/2015/LHCb2/Moore2Saver/06/12/Hlt2Saver-154703-20150612T210926.root"
     for alg in ("Hlt2RoutingBitsWriter", "Hlt2MassMonitor"):
         configurePublisher(appMgr, alg, initial_file)
 

@@ -429,8 +429,8 @@ void Hlt2SaverSvc::saveHistograms() const
             warning() << "Could not copy file " << outPath << " to "
                       << file.string() << endmsg;
          } else {
-            this->info() << "Saved histograms for run " << run << " to " << file.string()
-                         << "."  << endmsg;
+            this->debug() << "Saved histograms for run " << run << " to " << file.string()
+                          << "."  << endmsg;
          }
       };
 

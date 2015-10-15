@@ -17,21 +17,21 @@ namespace Monitoring {
 struct Histogram {
    Histogram() {};
    Histogram(RunNumber runNumber, TCK tck, HistId histId)
-      : runNumber{runNumber}, tck{tck}, histId{histId}, data(200) {}
+      : runNumber{runNumber}, tck{tck}, histId{histId}, data(4000, 0) {}
 
    Histogram(const Histogram& other)
       : runNumber{other.runNumber},
         tck{other.tck},
         histId{other.histId},
-        data{other.data} { }
+        data(other.data) { }
 
-   Histogram(Histogram&& other)
-   {
-      std::swap(runNumber, other.runNumber);
-      std::swap(tck, other.tck);
-      std::swap(histId, other.histId);
-      std::swap(data, other.data);
-   }
+   // Histogram(Histogram&& other)
+   // {
+   //    std::swap(runNumber, other.runNumber);
+   //    std::swap(tck, other.tck);
+   //    std::swap(histId, other.histId);
+   //    std::swap(data, other.data);
+   // }
 
    Histogram& operator=(const Histogram& other)
    {
@@ -45,17 +45,17 @@ struct Histogram {
       return *this;
    }
 
-   Histogram& operator=(Histogram&& other)
-   {
-      if (&other == this) {
-         return *this;
-      }
-      std::swap(runNumber, other.runNumber);
-      std::swap(tck, other.tck);
-      std::swap(histId, other.histId);
-      std::swap(data, other.data);
-      return *this;
-   }
+   // Histogram& operator=(Histogram&& other)
+   // {
+   //    if (&other == this) {
+   //       return *this;
+   //    }
+   //    std::swap(runNumber, other.runNumber);
+   //    std::swap(tck, other.tck);
+   //    std::swap(histId, other.histId);
+   //    std::swap(data, other.data);
+   //    return *this;
+   // }
 
    auto addChunk(const Chunk& c) noexcept -> void {
       assert(runNumber == c.runNumber && tck == c.tck && histId == c.histId);
@@ -67,11 +67,15 @@ struct Histogram {
 
       // Resize if needed.
       if (high > data.size()) {
-         data.resize(high);
+         data.resize(high, 0);
       }
 
       for (const auto& entry : c.data) {
-         data[entry.first] += entry.second;
+         auto bin = entry.first;
+         if (bin > data.size()) {
+            continue;
+         }
+         data[bin] += entry.second;
       }
    }
 

@@ -53,7 +53,6 @@ Hlt2AdderSvc::Hlt2AdderSvc(const string& name, ISvcLocator* loc)
 //=============================================================================
 Hlt2AdderSvc::~Hlt2AdderSvc()
 {
-
 }
 
 //===============================================================================
@@ -164,10 +163,8 @@ void Hlt2AdderSvc::function()
                boost::archive::text_oarchive oa{outStream};
                oa << it->second;
             }
-            auto str = outStream.str();
-
             // Send message
-            sendString(back, str);
+            sendString(back, outStream.str());
             m_updates[key] = now;
 
             // Zero out histogram
