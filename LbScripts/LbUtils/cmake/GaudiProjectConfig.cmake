@@ -3,7 +3,7 @@
 #
 # Authors: Pere Mato, Marco Clemencic
 #
-# Commit Id: af4b882f6d63cf5cbc235a69355e2f15fd3e793c
+# Commit Id: ee406c7a57b135616d12c49af3f77e0d774415b1
 
 cmake_minimum_required(VERSION 2.8.5)
 
@@ -1653,6 +1653,8 @@ function(gaudi_generate_configurables library)
     add_custom_target(${package}ConfAll ALL)
   endif()
   add_dependencies(${package}ConfAll ${library}Conf)
+  # ensure that the componentslist file is found at build time (GAUDI-1055)
+  gaudi_build_env(PREPEND LD_LIBRARY_PATH ${outdir})
   # Add dependencies on GaudiSvc and the genconf executable if they have to be built in the current project
   # Notify the project level target
   gaudi_merge_files_append(ConfDB ${library}Conf ${outdir}/${library}.confdb)
@@ -2590,6 +2592,8 @@ function(gaudi_generate_componentslist library)
                      ${listcomponents_cmd} --output ${componentsfile} ${libname}
                      DEPENDS ${library} listcomponents)
   add_custom_target(${library}ComponentsList ALL DEPENDS ${componentsfile})
+  # ensure that the componentslist file is found at build time (GAUDI-1055)
+  gaudi_build_env(PREPEND LD_LIBRARY_PATH ${CMAKE_CURRENT_BINARY_DIR})
   # Notify the project level target
   gaudi_merge_files_append(ComponentsList ${library}ComponentsList
                            ${CMAKE_CURRENT_BINARY_DIR}/${componentsfile})
@@ -2676,9 +2680,9 @@ macro(gaudi_generate_project_platform_config_file)
 
   set(project_environment_ ${project_environment})
   if(LCG_releases_base)
-    _make_relocatable(project_environment_ VARS LCG_releases_base)
+    _make_relocatable(project_environment_ VARS ${GAUDI_ENV_SUBSTITUTE_VARS} LCG_releases_base)
   else()
-    _make_relocatable(project_environment_ VARS LCG_releases LCG_external)
+    _make_relocatable(project_environment_ VARS ${GAUDI_ENV_SUBSTITUTE_VARS} LCG_releases LCG_external)
   endif()
   string(REPLACE "\$" "\\\$" project_environment_string "${project_environment_}")
 
@@ -2794,9 +2798,11 @@ function(_make_relocatable var)
   foreach(val ${${var}})
     foreach(root_var ${ARG_VARS})
       if(${root_var})
-        if(val MATCHES "^${${root_var}}")
+        if(IS_ABSOLUTE ${${root_var}} AND val MATCHES "^${${root_var}}")
           file(RELATIVE_PATH val ${${root_var}} ${val})
           set(val \${${root_var}}/${val})
+        elseif(val MATCHES "${${root_var}}")
+          string(REPLACE "${${root_var}}" "\${${root_var}}" val "${val}")
         endif()
       endif()
     endforeach()
@@ -2807,6 +2813,10 @@ function(_make_relocatable var)
           list(FIND map_keys "${key}" idx)
           list(GET map_values ${idx} map_val)
           set(val ${map_val}/${val})
+        elseif(val MATCHES "${key}")
+          list(FIND map_keys "${key}" idx)
+          list(GET map_values ${idx} map_val)
+          string(REPLACE "${key}" "${map_val}" val "${val}")
         endif()
       endforeach()
     endif()
@@ -2854,9 +2864,9 @@ function(gaudi_generate_env_conf filename)
 
   # variables that need to be used to make the environment relative
   if(LCG_releases_base)
-    set(root_vars LCG_releases_base)
+    set(root_vars ${GAUDI_ENV_SUBSTITUTE_VARS} LCG_releases_base)
   else()
-    set(root_vars LCG_releases LCG_external)
+    set(root_vars ${GAUDI_ENV_SUBSTITUTE_VARS} LCG_releases LCG_external)
   endif()
   foreach(root_var ${root_vars})
     set(data "${data}  <env:default variable=\"${root_var}\">${${root_var}}</env:default>\n")
@@ -2865,7 +2875,9 @@ function(gaudi_generate_env_conf filename)
   # include inherited environments
   # (note: it's important that the full search path is ready before we start including)
   foreach(other_project ${used_gaudi_projects} ${used_data_packages} ${inherited_data_packages})
-    set(data "${data}  <env:search_path>${${other_project}_DIR}</env:search_path>\n")
+    set(val "${${other_project}_DIR}")
+    _make_relocatable(val VARS ${root_vars})
+    set(data "${data}  <env:search_path>${val}</env:search_path>\n")
   endforeach()
   foreach(other_project ${used_gaudi_projects})
     set(data "${data}  <env:include>${other_project}.xenv</env:include>\n")
@@ -3065,9 +3077,9 @@ macro(gaudi_generate_exports)
   message(STATUS "Generating 'export' files.")
 
   if(LCG_releases_base)
-    set(_relocation_bases LCG_releases_base CMAKE_SOURCE_DIR)
+    set(_relocation_bases ${GAUDI_ENV_SUBSTITUTE_VARS} LCG_releases_base CMAKE_SOURCE_DIR)
   else()
-    set(_relocation_bases LCG_releases LCG_external CMAKE_SOURCE_DIR)
+    set(_relocation_bases ${GAUDI_ENV_SUBSTITUTE_VARS} LCG_releases LCG_external CMAKE_SOURCE_DIR)
   endif()
 
   foreach(package ${ARGN})

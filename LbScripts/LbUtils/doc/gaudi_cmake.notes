@@ -1,3 +1,111 @@
+! 2015-10-08 - Marco Clemencic (c50c176)
+
+ - improvements to documentation and release tools
+
+   See merge request !43
+
+
+! 2015-10-08 - Marco Clemencic (3aad395)
+
+ - updates cmake README file
+
+   fixes GAUDI-964
+
+
+! 2015-10-07 - Marco Clemencic (ac4d1b4)
+
+ - fixed GAUDI-1103 small issue with the latest change in xenv
+
+   
+
+! 2015-06-21 - Marco Clemencic (58fb830)
+
+ - converted CMake README to markdown and added to doxygen
+
+   
+
+! 2015-10-06 - Marco Clemencic (50d3872)
+
+ - xenv: wait for the subprocess to end after a KeyboardInterrupt
+
+   
+
+! 2015-07-24 - Charles Leggett (24bc17c)
+
+ - add -DATLAS to compiler flags for ATLAS
+
+   See merge request !13
+
+
+! 2015-09-17 - Marco Clemencic (a510676)
+
+ - Merge branch 'no-unused-local-typedefs-49' into 'master'
+
+   Hide unused-local-typedef warning also for gcc 4.9
+
+   add -Wno-unused-local-typedefs not only for gcc48 but also gcc49
+
+   See merge request !25
+
+
+! 2015-09-13 - Gerhard Raven (7ae0c22)
+
+ - hide unused-local-typedefs warning also for gcc 49
+
+   
+
+! 2015-07-20 - Marco Clemencic (b61a492)
+
+ - Fixed GAUDI-1055: access to configurables and components at build time
+
+   - added genConf directory to LD_LIBRARY_PATH to allow access to
+    configurables via the configurables database
+   - added module binary directory to LD_LIBRARY_PATH to allow loading of
+    components via PluginService at build time
+
+
+! 2015-07-07 - Marco Clemencic (b490f01)
+
+ - xenv: fixed expansion of variables in search_path entries
+
+   
+
+! 2015-07-07 - Marco Clemencic (ff48f6b)
+
+ - xenv: added test to expose a problem with vars in search path
+
+   
+
+! 2015-07-02 - Marco Clemencic (be711c9)
+
+ - fixed GAUDI-1051: GAUDI_ENV_SUBSTITUTE_VARS not working with relative paths
+
+   
+
+! 2015-06-25 - Marco Clemencic (c20ae65)
+
+ - allow user-defined variables in the env substitution
+
+   Use the variables specified in GAUDI_ENV_SUBSTITUTE_VARS to replace values
+   in the .xenv (and Export.cmake) files. LCG_releases_base (or LCG_releases,
+   LCG_external) are still used, but with lower priority.
+
+
+! 2015-06-25 - Marco Clemencic (248ec08)
+
+ - improved environment replacement function
+
+   * modified _make_relocatable to allow replacements of variables in the
+    middle of strings (not only at the beginning)
+   * applied _make_relocatable to the search_path values
+
+
+! 2015-06-25 - Marco Clemencic (1705b28)
+
+ - automatically use an existing "cache_preload.cmake" file (with cmake -C)
+
+   
+
 ! 2015-06-19 - Marco Clemencic (af4b882)
 
  - Fixed LBCORE-784: "eval `xenv ...`" not working for tcsh

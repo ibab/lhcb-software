@@ -48,6 +48,9 @@ NINJA := $(shell which ninja 2> /dev/null)
 ifneq ($(wildcard $(CURDIR)/toolchain.cmake),)
   override CMAKEFLAGS += -DCMAKE_TOOLCHAIN_FILE=$(CURDIR)/toolchain.cmake
 endif
+ifneq ($(wildcard $(CURDIR)/cache_preload.cmake),)
+  override CMAKEFLAGS += -C$(CURDIR)/cache_preload.cmake
+endif
 
 ifndef BINARY_TAG
   ifdef CMAKECONFIG

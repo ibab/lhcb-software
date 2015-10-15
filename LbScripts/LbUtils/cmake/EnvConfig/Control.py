@@ -31,6 +31,14 @@ class Environment(object):
         else:
             self.searchPath = list(searchPath)
 
+        def addToSearchPath(n, _1, _2):
+            '''
+            Add entries to the search path expanding variables inside.
+            '''
+            entries = Variable.List('_SEARCH_PATH')
+            entries.set(n, os.pathsep, environment=self.variables)
+            self.searchPath.extend(entries)
+
         self.actions = {}
         self.actions['include'] = lambda n, c, h: self.loadXML(self._locate(n, c, h))
         self.actions['append'] = lambda n, v, _: self.append(n, v)
@@ -41,7 +49,7 @@ class Environment(object):
         self.actions['remove'] = lambda n, v, _: self.remove(n, v)
         self.actions['remove-regexp'] = lambda n, v, _: self.remove_regexp(n, v)
         self.actions['declare'] = self.declare
-        self.actions['search_path'] = lambda n, _1, _2: self.searchPath.extend(n.split(self.separator))
+        self.actions['search_path'] = addToSearchPath
 
         self.variables = {}
 

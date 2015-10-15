@@ -1,3 +1,7 @@
+2015-10-15  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* cmake: updated CMake support modules
+
 2015-10-08  Ben Couturier  <ben.couturier@cern.ch>
 
 	* scripts/lcg-clang-37: added wrappers for clang 3.7 

@@ -66,6 +66,57 @@ class TempDir(object):
         '''
         return os.path.join(self.tmpdir, *args)
 
+class TemporaryDir(object):
+    '''
+    Helper class to create a temporary directory and manage its lifetime.
+
+    An instance of this class can be used inside the 'with' statement and
+    returns the path to the temporary directory.
+    '''
+    def __init__(self, chdir=False, keep=False):
+        '''Constructor.'''
+        self.chdir = chdir
+        self.keep = keep
+        self.path = mkdtemp()
+        self.old_dir = None
+    def join(self, *args):
+        '''
+        Equivalent to os.path.join(self.path, *args).
+        '''
+        return os.path.join(self.path, *args)
+    def __str__(self):
+        '''String representation (path to the temporary directory).'''
+        return self.path
+    def remove(self):
+        '''
+        Remove the temporary directory.
+        After a call to this method, the object is not usable anymore.
+        '''
+        if self.path: # allow multiple calls to the remove method
+            shutil.rmtree(self.path, ignore_errors=True)
+            self.path = None
+    def __enter__(self):
+        '''
+        Context Manager protocol 'enter' function.
+        '''
+        if self.chdir:
+            self.old_dir = os.getcwd()
+            os.chdir(self.path)
+        return self.path
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        '''
+        Context Manager protocol 'exit' function.
+        Remove the temporary directory and let the exceptions propagate.
+        '''
+        if self.old_dir:
+            os.chdir(self.old_dir)
+            self.old_dir = None
+        if not self.keep:
+            self.remove()
+        else:
+            print "WARNING: not removing temporary directory", self.path
+        return False
+
 class Test(unittest.TestCase):
 
 
@@ -110,11 +161,11 @@ class Test(unittest.TestCase):
         self.assertTrue('.' in control.variables)
         self.assertTrue('.' not in control.vars())
         self.assertTrue('.' not in control.vars(strings=False))
-        
+
         control.set('MY_DIR', '${.}')
         self.assertEqual(control.var('MY_DIR').value(True), 'some/dir')
         self.assertEqual(control.vars()['MY_DIR'], 'some/dir')
-        
+
 
 
     def testWrite(self):
@@ -504,6 +555,27 @@ class Test(unittest.TestCase):
         # restore search path
         EnvConfig.path = saved_path
 
+    def testsVariablesInSearchPath(self):
+        with TemporaryDir(chdir=True) as tmp:
+            with open('EntryPoint.xenv', 'w') as f:
+                f.write('''<?xml version="1.0" ?>
+<env:config xmlns:env="EnvSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="EnvSchema ./EnvSchema.xsd ">'
+<env:default variable="INCLUDED_FILE_PATH">${.}/subdir</env:default>
+<env:search_path>${INCLUDED_FILE_PATH}</env:search_path>
+<env:include>Included.xenv</env:include>
+</env:config>''')
+            os.makedirs('subdir')
+            with open('subdir/Included.xenv', 'w') as f:
+                f.write('''<?xml version="1.0" ?>
+<env:config xmlns:env="EnvSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="EnvSchema ./EnvSchema.xsd ">
+<env:set variable="INCLUDED_FILE">OK</env:set>
+</env:config>''')
+
+            control = Control.Environment(searchPath=[])
+            control.loadXML('EntryPoint.xenv')
+
+            self.assertEqual(str(control['INCLUDED_FILE_PATH']), os.path.join(tmp, 'subdir'))
+            self.assertEqual(str(control['INCLUDED_FILE']), 'OK')
 
     def testFileDir(self):
         tmp = TempDir({'env.xml':
