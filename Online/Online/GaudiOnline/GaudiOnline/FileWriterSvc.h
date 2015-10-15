@@ -52,6 +52,7 @@ namespace FileWriter
    *  @author Markus Frank
    *  @version 1.0
    */
+  class RunDesc;
   class FileDescr
   {
   public:
@@ -63,7 +64,9 @@ namespace FileWriter
     int state;
     FileWriter::FTYPE type;
     time_t m_CloseAt;
-    FileDescr(FileWriter::FTYPE t) :m_RunNumber(0),m_Handle(0),m_Sequence(0),m_BytesWritten(0),state(0),type(t),m_CloseAt(0)
+    RunDesc *m_rdesc;
+    FileDescr(FileWriter::FTYPE t,RunDesc *r) :m_RunNumber(0),m_Handle(0),m_Sequence(0),m_BytesWritten(0),
+        state(0),type(t),m_CloseAt(0),m_rdesc(r)
     {
     }
   };

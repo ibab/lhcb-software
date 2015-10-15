@@ -378,10 +378,11 @@ StatusCode FileWriterSvc::run(const EventDesc& e, unsigned int runnr)
         RawBank *ev = (RawBank*)e.data;
         MDFHeader *mdf = (MDFHeader*)ev->data();
         unsigned int runnr = mdf->subHeader().H1->runNumber();
+        RunDesc *r;
         if (m_RunNumber == 0)
         {
           m_RunNumber = runnr;
-          RunDesc *r = new RunDesc;
+          r = new RunDesc;
           r->m_RunNumber = m_RunNumber;
           r->m_Files = 0;
           m_RunList[m_RunNumber] = r;
@@ -390,21 +391,32 @@ StatusCode FileWriterSvc::run(const EventDesc& e, unsigned int runnr)
         }
         else
         {
-          if (m_RunNumber != runnr)
+          r = m_RunList[runnr];
+          if (r == 0)
           {
-//            close(m_FileDesc->m_Handle);
-//            m_FileDesc->state = C_CLOSED;
-            Markclose(m_FileDesc);
-            m_RunNumber = runnr;
-            RunDesc *r = new RunDesc;
-            r->m_RunNumber = m_RunNumber;
+            r = new RunDesc;
+            r->m_RunNumber = runnr;
             r->m_Files = 0;
-            m_RunList[m_RunNumber] = r;
-            m_FileDesc = openFile(m_RunNumber,FILETYPE_EVENT);
-            CreateMonitoringInfo(m_RunNumber);
+            m_RunList[runnr] = r;
+            m_FileDesc = openFile(runnr,FILETYPE_EVENT);
+            CreateMonitoringInfo(runnr);
+
           }
+//          if (m_RunNumber != runnr)
+//          {
+////            close(m_FileDesc->m_Handle);
+////            m_FileDesc->state = C_CLOSED;
+//            Markclose(m_FileDesc);
+//            m_RunNumber = runnr;
+//            RunDesc *r = new RunDesc;
+//            r->m_RunNumber = m_RunNumber;
+//            r->m_Files = 0;
+//            m_RunList[m_RunNumber] = r;
+//            m_FileDesc = openFile(m_RunNumber,FILETYPE_EVENT);
+//            CreateMonitoringInfo(m_RunNumber);
+//          }
         }
-        RunDesc *r = m_RunList[m_RunNumber];
+//        RunDesc *r = m_RunList[m_RunNumber];
         m_FileDesc = r->m_CurrentFileDescr;
         ssize_t status;
         size_t towrite = e.len - ev->hdrSize();
@@ -424,7 +436,7 @@ StatusCode FileWriterSvc::run(const EventDesc& e, unsigned int runnr)
           {
             Markclose(m_FileDesc);
             m_FileDesc->state = C_CLOSED;
-            m_FileDesc = openFile(m_RunNumber,FILETYPE_EVENT);
+            r->m_CurrentFileDescr = openFile(m_RunNumber,FILETYPE_EVENT);
           }
           break;
         }
@@ -464,7 +476,7 @@ FileDescr *FileWriterSvc::openFile(unsigned int runn, FTYPE t)
   int seq = r->m_Files;
   seq++;
   r->m_Files++;
-  FileDescr *f = new FileDescr(t);
+  FileDescr *f = new FileDescr(t,r);
   r->m_CurrentFileDescr = f;
   f->m_Sequence = seq;
   char fname[255];
