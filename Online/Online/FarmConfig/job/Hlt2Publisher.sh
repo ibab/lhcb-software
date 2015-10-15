@@ -16,4 +16,4 @@ read COMMAND <<EOF
 import GaudiKernel.ProcessJobOptions; from Gaudi.Configuration import importOptions; GaudiKernel.ProcessJobOptions.printing_level=3; from Hlt2Monitoring import Hlt2Publisher; Hlt2Publisher.configure()
 EOF
 
-exec -a ${UTGID} $gaudi_task -tasktype=LHCb::Class1Task -main=../options/Hlt2Main.opts -opt=command="${COMMAND}"
+exec -a ${UTGID} ${Class1_task} -opt=command="${COMMAND}";

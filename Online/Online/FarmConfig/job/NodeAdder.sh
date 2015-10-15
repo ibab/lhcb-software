@@ -9,6 +9,7 @@
 #
 # =========================================================================
 #
+export victimnodes="hltb01(.*)"
 export PYTHONPATH=${ONLINE_ENV_DIR}:${PYTHONPATH};
 export AdderOptsFile=/tmp/${PARTITION_NAME}_AdderOpts.opts;
 python ./Tasklist_from_architecture.py 1 ${AdderOptsFile};

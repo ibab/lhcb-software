@@ -13,6 +13,7 @@ if [ "${PARTITION_NAME}" = "LHCb2" ]; then
     ./Hlt2Adder.sh
 #    ./DummyTask.sh
 else
+    export victimnodes="hltb01(.*)"
     export PYTHONPATH=${ONLINE_ENV_DIR}:${PYTHONPATH}
     export AdderOptsFile=/tmp/${PARTITION_NAME}_AdderOpts.opts
     python ./Tasklist_from_architecture.py 2 ${AdderOptsFile}
