@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2015-10-15 - Andrea Contu
+ - Removing qmtests for S21 and S23 due to changes in RelatedInfo
+
 ! 2015-09-29 - Ricardo Vazquez Gomez
  - Update reference for S21r1 test
 
