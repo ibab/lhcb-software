@@ -5,6 +5,10 @@
 ! Created     : 2015-02-04
 ! -----------------------------------------------------------------------------
 
+
+! 2015-10-15 - Andrea Contu
+ - Removing S21 and S23 due to changes in RelatedInfo
+
 ! 2015-09-24 - Ricardo Vazquez Gomez
  - Add the S21r1 cache
 
