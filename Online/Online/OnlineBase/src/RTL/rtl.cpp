@@ -74,7 +74,12 @@ const char* RTL::errorString(int status)  {
 
 #define INSTALL_SIGNAL(x,y) install(x , #x , y);
 namespace RTL {
-
+  namespace {
+    static char rtl_processName[256] = "";
+    static char rtl_dataInterface[64] = "";
+    static char rtl_nodeName[64] = "";
+    static bool rtl_exit_handler_active = false;
+  }
   /**@class ExitSignalHandler
    *
    * Small class to manipulate default signal handling
@@ -153,24 +158,30 @@ void RTL::ExitSignalHandler::back_trace() {
 void RTL::ExitSignalHandler::back_trace() {
   void *bt[256];
   int bt_size = backtrace(bt, sizeof(bt) / sizeof(void *));
-  printf("\n[ERROR] (ExitSignalHandler) ---------------------- Backtrace ----------------------\n");
-  printf("Number of elements in backtrace: %d\n", bt_size);
+  ::fprintf(stdout,"\n[INFO] (ExitSignalHandler) ---------------------- Backtrace ----------------------\n");
+  ::fprintf(stdout,"[INFO] Number of elements in backtrace: %d\n", bt_size);
   for (int i = 0; i < bt_size; i++) {
-    printf("[ERROR] (ExitSignalHandler) %02d --> %p\n", i, bt[i]);
+    ::fprintf(stdout,"[INFO] (ExitSignalHandler) %02d --> %p\n", i, bt[i]);
   }
+  ::fflush(stdout);
 }
 #endif
 
 void RTL::ExitSignalHandler::handler(int signum, siginfo_t *info, void *ptr) {
   SigMap& m = instance().m_map;
   SigMap::iterator i=m.find(signum);
+  rtl_exit_handler_active = true;
   if ( i != m.end() ) {
     __sighandler_t old = (*i).second.second.sa_handler;
     func_cast<void (*)(int)> dsc0(old);
     func_cast<void (*)(int,siginfo_t*, void*)> dsc(dsc0.ptr);
+
     if ( s_RTL_exit_handler_print ) {
-      printf("[ERROR] (ExitSignalHandler) RTL:Handled signal: %d [%s] Old action:%p Mem:%p Code:%08X\n",
-             signum,(*i).second.first.c_str(),dsc.ptr,info->si_addr,info->si_code);
+      ::fprintf(stderr,"[FATAL] Process: '%s' (ExitSignalHandler) RTL:Handled signal: %d [%s] Old action:%p Mem:%p Code:%08X\n",
+	       rtl_processName,signum,(*i).second.first.c_str(),dsc.ptr,info->si_addr,info->si_code);
+      if ( signum == SIGSEGV || signum == SIGBUS || signum == SIGILL )  {
+	back_trace();
+      }
     }
     if ( signum == SIGINT || signum == SIGHUP || signum == SIGFPE || signum == SIGPIPE ) {
       if ( old && old != SIG_IGN && dsc.fun )
@@ -192,9 +203,11 @@ void RTL::ExitSignalHandler::handler(int signum, siginfo_t *info, void *ptr) {
       RTL::ExitHandler::execute();
       ::_exit(0);
     }
+    rtl_exit_handler_active = false;
     return;
   }
   RTL::ExitHandler::execute();
+  rtl_exit_handler_active = false;
 }
 
 #elif _WIN32
@@ -483,10 +496,11 @@ extern "C" size_t lib_rtl_output(int level, const char* format, ...)   {
   size_t result;
   va_list args;
   va_start( args, format );
-  result = (RTL::s_rtl_printer != 0)
-    ? (*RTL::s_rtl_printer)(RTL::s_rtl_printer_arg, level, format, args)
-    : ::vfprintf(stdout, format, args);
-  if ( !RTL::s_rtl_printer ) {
+  if ( RTL::s_rtl_printer != 0 && !RTL::rtl_exit_handler_active )  {
+    result = (*RTL::s_rtl_printer)(RTL::s_rtl_printer_arg, level, format, args);
+  }
+  else  {
+    result = ::vfprintf(stdout, format, args);
     ::fflush(stdout);
   }
   va_end(args);
@@ -498,10 +512,11 @@ extern "C" size_t lib_rtl_printf(const char* format, ...)   {
   size_t result;
   va_list args;
   va_start( args, format );
-  result = (RTL::s_rtl_printer != 0)
-    ? (*RTL::s_rtl_printer)(RTL::s_rtl_printer_arg, LIB_RTL_ALWAYS, format, args)
-    : ::vfprintf(stdout, format, args);
-  if ( !RTL::s_rtl_printer ) {
+  if ( RTL::s_rtl_printer != 0 && !RTL::rtl_exit_handler_active )  {
+    result = (*RTL::s_rtl_printer)(RTL::s_rtl_printer_arg, LIB_RTL_ALWAYS, format, args);
+  }
+  else  {
+    result = ::vfprintf(stdout, format, args);
     ::fflush(stdout);
   }
   va_end(args);
@@ -641,6 +656,7 @@ namespace RTL {
 
   void RTL_reset() {
     s_processName = s_dataInterfaceName = s_nodeName = s_nodeNameShort = "";
+    rtl_processName[0] = 0;
   }
   void RTL_init_sigs() {
 #ifndef _WIN32
@@ -649,25 +665,22 @@ namespace RTL {
   }
   const string& processName()  {
     if ( s_processName.empty() )  {
-      char txt[64];
-      ::lib_rtl_get_process_name(txt, sizeof(txt));
-      s_processName = txt;
+      ::lib_rtl_get_process_name(rtl_processName, sizeof(rtl_processName));
+      s_processName = rtl_processName;
     }
     return s_processName;
   }
   const string& dataInterfaceName()  {
     if ( s_dataInterfaceName.empty() )  {
-      char txt[64];
-      ::lib_rtl_get_datainterface_name(txt, sizeof(txt));
-      s_dataInterfaceName = txt;
+      ::lib_rtl_get_datainterface_name(rtl_dataInterface, sizeof(rtl_dataInterface));
+      s_dataInterfaceName = rtl_dataInterface;
     }
     return s_dataInterfaceName;
   }
   const string& nodeName()  {
     if ( s_nodeName.empty() )  {
-      char txt[64];
-      ::lib_rtl_get_node_name(txt,sizeof(txt));
-      s_nodeName = txt;
+      ::lib_rtl_get_node_name(rtl_nodeName,sizeof(rtl_nodeName));
+      s_nodeName = rtl_nodeName;
     }
     return s_nodeName;
   }

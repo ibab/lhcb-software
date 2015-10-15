@@ -145,7 +145,10 @@ int _mbm_shutdown (void* /* param */) {
       if ( bm->buff_add )
         ::lib_rtl_unmap_section(bm->buff_add);
       bm->buff_add = 0;
-      ::lib_rtl_output(LIB_RTL_INFO,"[INFO] mbmlib: Finished emergency shutdown of buffer %s\n",bm->bm_name);
+      ::lib_rtl_output(LIB_RTL_INFO,
+		       "[INFO] mbm client %s [pid:%d, part:%d]: "
+		       "CRASH - Shutdown of buffer %s\n",
+		       bm->name, bm->pid, bm->partID, bm->bm_name);
     }
   }
   desc_head = 0;
@@ -238,15 +241,16 @@ BMID mbm_include(const char* bm_name, const char* name, int partid) {
 
   ::snprintf(text,sizeof(text),"/tmp/bm_%s_server_0",bm->bm_name);
   if( (bm->reqFifo=::open(text, O_WRONLY|O_NONBLOCK)) < 0 ) {
-    ::lib_rtl_signal_message(LIB_RTL_OS,"Cannot open server fifo '%s' for MBM buffer %s.",
-                             text,bm->bm_name);
+    ::lib_rtl_signal_message(LIB_RTL_OS,"%s: Cannot open server fifo '%s' for MBM buffer %s.",
+                             bm->name,text,bm->bm_name);
     ::_mbm_close_fifos(bm.get());
     return MBM_INV_DESC;
   }
   ::snprintf(bm->fifoName,sizeof(bm->fifoName),"/tmp/bm_%s_%s",bm->bm_name,bm->name);  
   if( ::mkfifo(bm->fifoName,0666)  ) {
     if ( errno != EEXIST ) { // It is not an error if the file already exists....
-      ::lib_rtl_signal_message(LIB_RTL_OS,"Cannot create MBM fifo '%s'.",bm->fifoName);
+      ::lib_rtl_signal_message(LIB_RTL_OS,"%s: Cannot create MBM fifo '%s'.",
+			       bm->name,bm->fifoName);
       return MBM_INV_DESC;
     }
   }
@@ -278,7 +282,9 @@ BMID mbm_include(const char* bm_name, const char* name, int partid) {
   inc.pid = bm->pid;
   inc.partid = bm->partID;
   if ( msg.communicate(bm->reqFifo,bm->fifo) != MBM_NORMAL ) {
-    ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to communicate INCLUDE message to server '%s'.",bm->bm_name);
+    ::lib_rtl_signal_message(LIB_RTL_OS,
+			     "%s: Failed to communicate INCLUDE message to server '%s'.",
+			     bm->name, bm->bm_name);
     ::_mbm_close_fifos(bm.get());
     ::lib_rtl_unmap_section(bm->buff_add);
     bm->buffer_add = 0;
@@ -287,8 +293,8 @@ BMID mbm_include(const char* bm_name, const char* name, int partid) {
 
   // Communication now OK. Let's check if the actual request failed or not:
   if ( msg.status != MBM_NORMAL ) {
-    ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to include into MBM buffer %s. Status=%d",
-                             bm->bm_name,msg.status);
+    ::lib_rtl_signal_message(LIB_RTL_OS,"%s: Failed to include into MBM buffer %s. Status=%d",
+                             bm->name,bm->bm_name,msg.status);
     ::_mbm_close_fifos(bm.get());
     ::lib_rtl_unmap_section(bm->buff_add);
     bm->buffer_add = 0;
@@ -300,8 +306,9 @@ BMID mbm_include(const char* bm_name, const char* name, int partid) {
     ::snprintf(text,sizeof(text),"/tmp/bm_%s_server_%d",bm->bm_name,msg.data.include.serverid);
     ::close(bm->reqFifo);
     if( (bm->reqFifo=::open(text,O_WRONLY|O_NONBLOCK)) < 0 ) {
-      ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to open server fifo '%s' for MBM buffer %s.",
-                               text,bm->bm_name);
+      ::lib_rtl_signal_message(LIB_RTL_OS,
+			       "%s: Failed to open server fifo '%s' for MBM buffer %s.",
+                               bm->name,text,bm->bm_name);
       ::_mbm_close_fifos(bm.get());
       ::lib_rtl_unmap_section(bm->buff_add);
       bm->buffer_add = 0;
