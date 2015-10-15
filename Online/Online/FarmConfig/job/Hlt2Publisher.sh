@@ -16,4 +16,5 @@ read COMMAND <<EOF
 import GaudiKernel.ProcessJobOptions; from Gaudi.Configuration import importOptions; GaudiKernel.ProcessJobOptions.printing_level=3; from Hlt2Monitoring import Hlt2Publisher; Hlt2Publisher.configure()
 EOF
 
-exec -a ${UTGID} ${Class1_task} -opt=command="${COMMAND}";
+unset LD_PRELOAD
+exec -a ${UTGID} /home/raaij/cmtuser/OnlineDev_v5r25/InstallArea/x86_64-slc6-gcc48-dbg/bin/${Class1_task} -opt=command="${COMMAND}";

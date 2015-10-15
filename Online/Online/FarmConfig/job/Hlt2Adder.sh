@@ -16,4 +16,11 @@ read COMMAND <<EOF
 import GaudiKernel.ProcessJobOptions; from Gaudi.Configuration import importOptions; GaudiKernel.ProcessJobOptions.printing_level=3; from Hlt2Monitoring import Hlt2Adder; Hlt2Adder.configure()
 EOF
 
-exec -a ${UTGID} ${Class1_task} -opt=command="${COMMAND}";
+if [ "$HOSTNAME" == "hlt02" ]; then
+    ## unset LD_PRELOAD to get rid of tcmalloc
+    unset LD_PRELOAD
+    exec -a ${UTGID} /home/raaij/cmtuser/OnlineDev_v5r25/InstallArea/x86_64-slc6-gcc48-dbg/bin/${Class1_task} -opt=command="${COMMAND}";
+else
+    exec -a ${UTGID} ${Class1_task} -opt=command="${COMMAND}";
+fi
+
