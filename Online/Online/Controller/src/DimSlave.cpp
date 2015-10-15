@@ -47,8 +47,8 @@ DimSlave::DimSlave(const Type* typ, const string& nam, Machine* machine, bool in
 DimSlave::~DimSlave() {
   if ( m_dbgState.second ) ::dic_release_service(m_dbgState.second);
   if ( m_dbgState.first  ) ::dic_release_service(m_dbgState.first);
-  if ( m_dimState.second  ) ::dic_release_service(m_dimState.second);
-  if ( m_dimState.first   ) ::dic_release_service(m_dimState.first);
+  if ( m_dimState.second  ) ::dis_remove_service(m_dimState.second);
+  if ( m_dimState.first   ) ::dis_remove_service(m_dimState.first);
   m_dbgState = make_pair(0,0);
   m_dimState = make_pair(0,0);
   m_argv.clear();
