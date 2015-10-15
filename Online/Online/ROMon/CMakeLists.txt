@@ -1,7 +1,7 @@
 ################################################################################
 # Package: ROMon
 ################################################################################
-gaudi_subdir(ROMon v1r56)
+gaudi_subdir(ROMon v1r57)
 
 gaudi_depends_on_subdirs(Online/OnlineKernel
                          Online/DIM)
