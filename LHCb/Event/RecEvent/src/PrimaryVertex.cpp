@@ -3,7 +3,6 @@
 #include "Event/RecVertex.h"
 #include "TrackKernel/TrackVertexUtils.h"
 #include "LHCbMath/BloomFilter.h"
-#include "Kernel/HashIDs.h"
 
 namespace LHCb
 {
