@@ -9,7 +9,7 @@
 #define COUTSERVICE_H_
 #include <string>
 #include <map>
-#include "dim/dis.hxx"
+#include "dis.hxx"
 //class DimService;
 
 class COutServiceBase

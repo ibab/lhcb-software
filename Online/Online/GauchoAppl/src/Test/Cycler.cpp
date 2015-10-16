@@ -4,7 +4,7 @@
  *  Created on: Apr 19, 2011
  *      Author: beat
  */
-#include "dim/dic.hxx"
+#include "dic.hxx"
 #include <string>
 class myInfo : public DimInfo
 {

@@ -12,7 +12,7 @@
 #include <vector>
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IIncidentListener.h"
-#include "dim/dic.hxx"
+#include "dic.hxx"
 
 
 #include "CPP/Event.h"

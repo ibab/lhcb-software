@@ -6,13 +6,13 @@
 #include <map>
 #include <string>
 #include <boost/regex.hpp>
-#include "dim/dic.hxx"
+#include "dic.hxx"
 #include "Gaucho/MonInfo.h"
 #include "RTL/rtl.h"
 #include "Gaucho/Utilities.h"
 #include "GauchoAppl/AddTimer.h"
 #include "Gaucho/BRTL_Lock.h"
-#include "dim/dis.hxx"
+#include "dis.hxx"
 #define ADD_HISTO 1
 #define ADD_COUNTER 2
 
