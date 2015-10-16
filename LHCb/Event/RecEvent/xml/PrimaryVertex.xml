@@ -102,6 +102,18 @@
        desc     = "Constructor"
        argList="const LHCb::RecVertex&amp; recvtx, bool refit=false"/>
  
+     <method
+       name="clone"
+       type="LHCb::PrimaryVertex*"
+       const="TRUE"
+       virtual="TRUE"
+       desc="clone PrimaryVertex">
+       <code>
+         return new LHCb::PrimaryVertex(*this) ;
+       </code>
+     </method>
+
+
       <method
 	  name="read"
 	  type="template&lt;class Buffer&gt; void"
