@@ -1,0 +1,11 @@
+ApplicationMgr.ExtSvc               += {"AdderSvc/Moore2CountAdder"};
+
+
+Moore2CountAdder.PartitionName  = @OnlineEnv.PartitionName;
+Moore2CountAdder.MyName  = "<part>_Moore2_00";
+Moore2CountAdder.TaskPattern = "<part>_HLT[a-z][0-9][0-9]_SubFarmAdder_(.*)";
+Moore2CountAdder.ServicePattern  = "MON_<part>_hlt[a-z][0-9][0-9]_Moore2/Counter/";
+Moore2CountAdder.AdderClass  = "Counter";
+Moore2CountAdder.ReceiveTimeout = 12;
+Moore2CountAdder.InDNS = "hlt01";
+Moore2CountAdder.OutDNS = "mona08";
