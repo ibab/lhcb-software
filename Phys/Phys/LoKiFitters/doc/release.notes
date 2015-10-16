@@ -5,6 +5,8 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+!====================== Phys/LoKiFitters v4r18 2015-10-16 =====================
+
 ! 2015-10-13 - Chris Jones
  - Disable by default the 'PrintMyAlg' option, that adds the currently activate
    algorithm name to messages from public instances of the tools, as this
