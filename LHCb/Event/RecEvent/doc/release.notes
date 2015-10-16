@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output)
 !-----------------------------------------------------------------------------
 
+! 2015-10-15 - Wouter Hulsbergen
+ - Added new class 'PrimaryVertex'
+
 !========================= RecEvent v2r54 2015-04-20 =========================
 ! 2015-03-31 - Chris Jones
  - Avoid inline virtual methods, move implementations to cpp files.

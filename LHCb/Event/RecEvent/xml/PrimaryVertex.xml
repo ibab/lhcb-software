@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Alessia Satta -->
+<!--- Created : 2010-01-15 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name="RecEvent">
+    <class name="PrimaryVertex"
+      author="Wouter Hulsbergen"
+      virtual="TRUE"
+      desc="Primary vertex class"
+      keyedContTypeDef = "TRUE"
+      stdVectorTypeDef = "TRUE"
+      serializers="FALSE"
+      >
+
+      <location name="Default" place="Rec/Vertex/PrimaryVertices"/>
+      <location name="Packed" place="Rec/Vertex/PackedPrimaryVertices"/>
+
+      <import name="GaudiKernel/NamedRange"/>
+      <import name="GaudiKernel/SharedObjectsContainer"/>
+      <import name="Event/PrimaryVertexTrack"/>
+      <import name="Event/VertexBase.h"/>
+      <import name="RecVertex" soft="FORWARDONLY"/>
+
+      <base name = "VertexBase"/>
+      
+      <typedef 
+          type   = "uint32_t"
+          def    = "VeloSegmentID"
+          access = "PUBLIC"
+          desc   = "Unique identifier for velo segment (hash of Velo lhcbids)"
+	  />
+     <typedef 
+	 type = "SharedObjectsContainer&lt;LHCb::PrimaryVertex&gt;"
+	 def  = "Selection"
+	 desc = "For defining SharedObjectContainer"
+	 access = "PUBLIC"
+	 />
+     <typedef 
+	 type = "Gaudi::Range_&lt;ConstVector&gt;"
+	 def  = "Range"
+	 desc = "For accessing a list of vertices which is either a SharedObjectContainer, a KeyedContainer or a ConstVector"
+	 access = "PUBLIC"
+	 />
+     <typedef
+         type = "std::vector&lt;LHCb::PrimaryVertexTrack&gt;"
+	 def  = "TrackContainer"
+         desc = "Track container type"
+         access = "PUBLIC" 
+	 />
+     <typedef 
+	 type   = "Gaudi::Vector3"
+         def    = "Vector3"
+         access = "PRIVATE"
+	 desc   = "Vector of size 3"
+         />
+     <typedef 
+         type   = "Gaudi::SymMatrix3x3"
+         def    = "SymMatrix3"
+         access = "PRIVATE"
+	 desc   = "Symmetric matrix of size 3"
+         />
+     <attribute 
+	 type="float"
+	 name="refZ"
+         setMeth = "FALSE"
+         getMeth = "TRUE"
+	 desc="Reference position for track states"
+	 />
+     <attribute
+	 type="TrackContainer"
+	 name="tracks"
+         setMeth = "FALSE"
+         getMeth = "TRUE"
+	 desc="Tracks in PV"
+	 />
+     <attribute 
+	 type="SymMatrix3"
+	 name="sumhalfD2Chi2DX2"
+         setMeth = "FALSE"
+         getMeth = "FALSE"
+	 desc="Cached sum of second derivatives of tracks"
+	 />
+     <attribute 
+	 type="Vector3"
+	 name="sumhalfDChi2DX"
+         setMeth = "FALSE"
+         getMeth = "FALSE"
+	 desc="Cached sum of first derivatives of tracks"
+	 />
+     <attribute 
+	 type="double"
+	 name="sumchi2"
+         setMeth = "FALSE"
+         getMeth = "FALSE"
+	 desc="Cached sum of chi2 contributions of tracks"
+	 />
+
+     <constructor 
+       desc     = "Constructor"
+       argList="const LHCb::RecVertex&amp; recvtx, bool refit=false"/>
+ 
+      <method
+	  name="read"
+	  type="template&lt;class Buffer&gt; void"
+	  desc="Read data from buffer (for unpacking)">
+          <arg const="FALSE" name="buffer" type="Buffer"/>
+      </method>
+
+      <method
+	  name="write"
+	  const="TRUE"
+	  type="template&lt;class Buffer&gt; void"
+	  desc="Write data to buffer (for packing)">
+         <arg const="FALSE" name="buffer" type="Buffer"/>
+      </method>
+
+     <method 
+	 name="find"
+	 const="TRUE"
+	 type="LHCb::PrimaryVertex::TrackContainer::const_iterator"
+	 argList="VeloSegmentID id"
+	 desc="find segment in segment container"
+	 access="PRIVATE">
+      <code>
+   return std::find(begin(m_tracks),end(m_tracks),id) ;
+      </code>
+     </method>
+
+     <method 
+	 name="find"
+	 const="FALSE"
+	 type="LHCb::PrimaryVertex::TrackContainer::iterator"
+	 argList="VeloSegmentID id"
+	 desc="find segment in segment container"
+	 access="PRIVATE">
+      <code>
+   return std::find(begin(m_tracks),end(m_tracks),id) ;
+      </code>
+     </method>
+
+     <method 
+	 name="initCache"
+	 const="FALSE"
+	 type="void"
+	 desc="initialize the cache"
+	 access="PRIVATE"/>
+
+     <method
+	 name="isPrimary"
+	 type="bool"
+	 virtual="TRUE"
+	 const="TRUE"
+	 desc="See VertexBase">
+       <code>
+         return true ;
+       </code>
+     </method>
+
+     <method
+         name="uniqueVeloSegmentID"
+         static="TRUE"
+         type="VeloSegmentID"
+         argList="const LHCb::Track&amp; trk"
+	 desc="Compute unique identifier for velo segment of track (hash from LHCbIds)"/>
+      
+    <method 
+        name="weight"
+        type="double"
+	const="TRUE"
+        desc="return weight of track in vertex"
+        argList="const VeloSegmentID id">
+      <code>
+        auto it = find(id) ; 
+        return it != m_tracks.end() ? it->weight() : 0 ;
+      </code>
+    </method>
+
+    <method 
+        name="weight"
+        type="double"
+	const="TRUE"
+        desc="return weight of track in vertex"
+        argList="const LHCb::Track&amp; track">
+      <code>
+        auto it = find(uniqueVeloSegmentID(track)) ; 
+        return it != m_tracks.end() ? it->weight() : 0 ;
+      </code>
+    </method>
+
+    <method 
+        name="contains"
+        type="bool"
+	const="TRUE"
+        desc="tell whether given track is in the vertex"
+        argList="const VeloSegmentID id">
+      <code>
+        return weight(id) >0 ; 
+      </code>
+    </method>
+
+    <method 
+        name="contains"
+        type="bool"
+	const="TRUE"
+        desc="tell whether given track is in the vertex"
+        argList="const LHCb::Track&amp; track">
+      <code>
+        return weight(track) >0 ; 
+      </code>
+    </method>
+    
+    <method
+        name="ipchi2"
+        type="double"
+	const="TRUE"
+        desc="return IP chi2 of track. will unbias vertex position if needed."
+	argList="const LHCb::Track&amp; track"/>
+
+    <method
+        name="unbias"
+        const="FALSE"
+        type="size_t"
+        desc="Remove this set of tracks from the vertex. Returns the number of tracks that was removed."
+        argList="const std::vector&lt;const LHCb::Track*&gt; tracksToRemove"/>
+
+    <method
+        name="unbiasedPosition"
+        type="size_t"
+	const="TRUE"
+        desc="Remove this set of tracks from the vertex. Returns the number of tracks that was removed.">
+        <arg const="TRUE" name="tracksToRemove" type="std::vector&lt;const LHCb::Track*&gt;"/>
+        <arg const="FALSE" name="position" type="Gaudi::XYZPoint"/>
+        <arg const="FALSE" name="cov" type="Gaudi::SymMatrix3x3"/>
+    </method>
+
+    <method
+        name="fit"
+        const="FALSE"
+        type="void"
+        desc="Refit the vertex position"/>
+
+   </class>
+  </package>
+
+</gdd>

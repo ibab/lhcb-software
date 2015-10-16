@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Alessia Satta -->
+<!--- Created : 2010-01-15 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name="RecEvent">
+    <class name="PrimaryVertexTrack"
+      author="Wouter Hulsbergen"
+      virtual="FALSE"
+      desc="Compact information for track in primary vertex"
+      serializers="FALSE"
+      allocator="NO"
+      >
+      <import name="GaudiKernel/GenericVectorTypes"/>
+      <import name="GaudiKernel/SymmetricMatrixTypes"/>
+      <import name="vector" std="TRUE"/>
+      <import name='Track' soft='FORWARDONLY'/>
+
+      <typedef 
+          type   = "Gaudi::Vector2"
+          def    = "Vector2"
+          access = "PUBLIC"
+	  desc   = "Vector of size 2"
+          />
+      <typedef 
+          type   = "Gaudi::Vector3"
+          def    = "Vector3"
+          access = "PUBLIC"
+	  desc   = "Vector of size 3"
+          />
+      <typedef 
+          type   = "Gaudi::Vector4"
+          def    = "Vector4"
+          access = "PUBLIC"
+	  desc   = "Vector of size 4"
+          />
+      <typedef 
+          type   = "Gaudi::SymMatrix2x2"
+          def    = "SymMatrix2"
+          access = "PUBLIC"
+	  desc   = "Symmetric matrix of size 2"
+          />
+      <typedef 
+          type   = "Gaudi::SymMatrix3x3"
+          def    = "SymMatrix3"
+          access = "PUBLIC"
+	  desc   = "Symmetric matrix of size 3"
+          />
+      <attribute 
+        type="uint32_t"
+        name="id"
+        desc="unique ID for velo segment"
+	getMeth = "TRUE"
+	setMeth = "FALSE"/>
+      <attribute 
+	type="Vector4"
+        name="state"
+        desc="(x,y,tx,ty) at position refz (refz stored in mother vertex)"
+	setMeth = "FALSE"/>
+      <attribute
+	type="SymMatrix2"
+	name="invcov"
+	desc="inverse of cov(x,y)"
+	setMeth = "FALSE"/>
+      <attribute 
+	type="float"
+        name="weight"
+        desc="Tukey weight from PV fit"/>
+      <attribute 
+	type="float"
+        name="chi2"
+        desc="cached chi2 contribution of track relative to (0,0,zref) [not persisted]"
+	getMeth = "TRUE"
+	setMeth = "FALSE"/>
+      <attribute 
+	type="Vector3"
+        name="halfDChi2DX"
+        desc="0.5 * first derivative of chi2 to vertex parameters [not persisted]"
+	getMeth = "TRUE"
+	setMeth = "FALSE"/>
+      <attribute 
+	type="SymMatrix3"
+        name="halfD2Chi2DX2"
+        desc="0.5 * second derivative of chi2 to vertex parameters [not persisted]"
+	getMeth = "TRUE"
+	setMeth = "FALSE"/>
+
+      <method
+	  name="read"
+	  type="template&lt;class Buffer&gt; void"
+	  desc="Read data from buffer (for unpacking)">
+          <arg const="FALSE" name="buffer" type="Buffer"/>
+      </method>
+
+      <method
+	  name="write"
+	  const="TRUE"
+	  type="template&lt;class Buffer&gt; void"
+	  desc="Write data to buffer (for packing)">
+         <arg const="FALSE" name="buffer" type="Buffer"/>
+      </method>
+
+     <method 
+      name="chi2"
+      const="TRUE"
+      type="double"
+      argList="const Vector3&amp; vertexpos"
+      desc="compute chi2 contribution for given vertex pos. note: refz must be subtracted by caller">
+      <code>
+    Vector2 res ;
+    res(0) = m_state(0) + m_state(2) * vertexpos(2) - vertexpos(0) ;
+    res(1) = m_state(1) + m_state(2) * vertexpos(2) - vertexpos(1) ;
+    return ROOT::Math::Similarity(res,m_invcov) ;
+      </code>
+     </method>
+
+     <constructor 
+       desc     = "Constructor"
+       argList="const LHCb::Track&amp; track, double weight, double refz"/>
+       
+     <method
+      name="initCache"
+      const="FALSE"
+      type="void"
+      argList=""
+      desc="initialize the cache"/>
+
+
+     <method
+      name="operator&lt;"
+      type="bool"
+      argList="const PrimaryVertexTrack&amp; rhs"
+      const="TRUE"
+      desc="less than operator">
+      <code>
+        return m_id &lt; rhs.m_id ;
+      </code>
+     </method>
+
+     <method
+      name="operator=="
+      type="bool"
+      argList="const PrimaryVertexTrack&amp; rhs"
+      const="TRUE"
+      desc="equality operator">
+      <code>
+        return m_id == rhs.m_id ;
+      </code>
+     </method>
+
+     <method
+      name="operator&lt;"
+      type="bool"
+      argList="uint32_t rhsid"
+      const="TRUE"
+      desc="less than operator">
+      <code>
+        return m_id &lt; rhsid ;
+      </code>
+     </method>
+
+     <method
+      name="operator=="
+      type="bool"
+      argList="uint32_t rhsid"
+      const="TRUE"
+      desc="equality operator">
+      <code>
+        return m_id == rhsid ;
+      </code>
+     </method>
+
+   </class>
+  </package>
+
+</gdd>
