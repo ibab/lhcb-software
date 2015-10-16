@@ -59,7 +59,7 @@ def digitsReco  ( context            ,
 ## ============================================================================
 ## define the recontruction of Ecal clusters
 def clusterReco ( context , enableRecoOnDemand , clusterPt = 0.  , fastReco = False , external = '', makeTag=False,
-                  noSpdPrs=False , masksE=[] , masksP=[] ) :
+                  noSpdPrs=False , masksE=[] , masksP=[] , mergedPi0Pt = 2* GeV) :
     """
     Define the recontruction of Ecal Clusters
     """
@@ -127,7 +127,7 @@ def clusterReco ( context , enableRecoOnDemand , clusterPt = 0.  , fastReco = Fa
 
     ## setup onDemand for SplitClusters
     if enableRecoOnDemand : 
-        splitSeq   = mergedPi0Reco( context , enableRecoOnDemand , True, False, False)
+        splitSeq   = mergedPi0Reco( context , enableRecoOnDemand , True, False, False,mergedPi0Pt)
         onDemand ( 'Rec/Calo/EcalSplitClusters' , splitSeq , context ) 
 
 

@@ -4,6 +4,10 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2015-10-16 - Olivier Deschamps
+ - python configurable : propagate same Et threshold for mergedPi0 and for splitCluster production
+
+
 !========================= CaloReco v5r25p1 2015-10-13 =========================
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers

@@ -177,7 +177,8 @@ class CaloRecoConf(LHCbConfigurableUser):
                               self.getProp('MakeExternalClustersWithTag'),
                               self.getProp('NoSpdPrs'),
                               self.getProp('ClusterEnergyMasks'),
-                              self.getProp('ClusterPositionMasks')
+                              self.getProp('ClusterPositionMasks'),
+                              self.getProp('MergedPi0Pt')         
                               )
         _log.info ('Configured Ecal Clusters Reco : %s ' % cmp.name()  )
         

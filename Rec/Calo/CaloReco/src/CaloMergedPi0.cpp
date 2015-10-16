@@ -222,7 +222,7 @@ StatusCode CaloMergedPi0::execute(){
         dig2=dig;
       } 
     }
-    
+
     if ( NULL == dig2 ){
       counter("Cluster without 2nd seed found") += 1;
       continue ; 
@@ -303,7 +303,7 @@ StatusCode CaloMergedPi0::execute(){
     // == insert splitClusters into their container
     splitclusters->insert( cl1 ) ;
     splitclusters->insert( cl2 ) ;
-
+    
     // == create CaloHypos if needed
     if(!m_createClusterOnly){
       // new CaloHypos for splitPhotons
@@ -369,7 +369,7 @@ StatusCode CaloMergedPi0::execute(){
   // ====================== //
   counter ( m_clusters + "=>" + m_mergedPi0s )   += pi0s   -> size() ;
   counter ( m_clusters + "=>" + m_splitPhotons)  += phots  -> size() ;
-  counter ( m_clusters + "=>" + m_splitClusters) += clusters -> size() ;
+  counter ( m_clusters + "=>" + m_splitClusters) += splitclusters -> size() ;
 
   // delete (empty) container* if not on TES
   StatusCode sc = StatusCode::SUCCESS;
