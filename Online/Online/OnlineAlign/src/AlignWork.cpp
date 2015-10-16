@@ -69,7 +69,7 @@ StatusCode LHCb::AlignWork::initialize()
   ::lib_rtl_start_thread(WorkerThreadFunction,this,&m_thread);
   if (m_RefFileName.empty())
   {
-    m_RefFileName = "/group/online/dataflow/options/"+m_PartitionName+"/Alignement_Reference_File.txt";
+    m_RefFileName = "/group/online/dataflow/options/"+m_PartitionName+"/Alignment_Reference_File.txt";
   }
   StatusCode sc=m_ToolSvc->retrieveTool(m_FitFcnClass,m_FitFcnName,m_fitterFcn,this,true);
 //  m_fitterFcn->setParent((void*)((IDumAligWork*)this));
