@@ -4,6 +4,9 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2015-10-15 - Wouter Hulsbergen
+ - Added algorithm 'RecToPVConverter'
+
 !========================= PatPV v3r28p1 2015-10-13 =========================
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
