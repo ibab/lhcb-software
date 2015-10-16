@@ -339,6 +339,8 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         """
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
         from Configurables import LoKi__HltUnit as HltUnit
+        from HltTracking.Hlt1Tracking import TrackCandidatesAlgos
+        from HltTracking.HltPVs import PV3D
         unit = HltUnit(
             'Hlt1%(name)sStreamer' % properties,
             ##OutputLevel = 1 ,
@@ -369,7 +371,11 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             """ % properties
             )
         gec = properties[ 'GEC' ]
-        return [ Hlt1GECUnit( gec ), unit ]
+        return [ Hlt1GECUnit( gec ),
+                 PV3D('Hlt1'),
+                 TrackCandidatesAlgos(properties['name']),
+                 unit ]
+
 
 
     

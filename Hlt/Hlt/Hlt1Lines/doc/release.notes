@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-10-16 - Francesco Dettori
+ - Small fix to Hlt1MultiMuon line to restore independence. 
+
 ! 2015-10-12 - Dan Johnson
  - Make a fix to (previously not needed) Hlt1CEP line to ensure tracking
    happens before size of VELO track container is requested. Previously
