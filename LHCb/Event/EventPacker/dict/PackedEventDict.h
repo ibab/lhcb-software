@@ -29,6 +29,7 @@
 #include "Event/PackedCaloCluster.h"
 #include "Event/PackedFlavourTag.h"
 #include "Event/PackedPartToRelatedInfoRelation.h"
+#include "Event/GenericBuffer.h"
 
 namespace 
 {

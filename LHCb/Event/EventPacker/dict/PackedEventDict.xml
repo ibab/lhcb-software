@@ -119,4 +119,6 @@
   <class name="LHCb::PackedRelatedInfoRelations::RelationVector" />
   <class name="LHCb::PackedRelatedInfoRelations" id="00000630-0000-0000-0000-000000000000" />
 
+  <class name="LHCb::GenericBuffer" />
+  <class name="std::vector<char>" />
 </lcgdict>
