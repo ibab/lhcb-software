@@ -44,9 +44,9 @@ StatusCode HCDigitMonitor::initialize() {
   const unsigned int nStations = 5;
   for (unsigned int i = 0; i < nStations; ++i) {
     // Book histograms for ADC sum distributions for each station.
-    const unsigned int bins = m_variableBins ? 256 : 4096;
-    const double low = -0.5;
-    const double high = 4095.5;
+    const unsigned int bins = m_variableBins ? 256 : 4 * m_parADC.bins();
+    const double low = m_parADC.lowEdge();
+    const double high = 4 * (m_parADC.highEdge() + 0.5) - 0.5;
     const std::string st = stations[i];
     std::string name = "ADC/Sum/" + st;
     m_hAdcSum.push_back(book1D(name, st, low, high, bins));
@@ -243,7 +243,7 @@ StatusCode HCDigitMonitor::execute() {
         warning() << "Cannot retrieve digit for " << st << j << endmsg; 
         continue;
       }
-      unsigned int adc = digit->adc();
+      const double adc = fadc(digit->adc());
       const unsigned int index = j * nStations + i;
       m_hAdcVsQuadrant[i]->fill(j, adc);
       m_hAdcQuadrant[index]->fill(adc);

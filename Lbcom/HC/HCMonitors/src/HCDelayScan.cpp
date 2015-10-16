@@ -118,7 +118,7 @@ StatusCode HCDelayScan::execute() {
         warning() << "Cannot retrieve digit for " << st << j << endmsg;
         continue;
       }
-      unsigned int adc = digit->adc();
+      const int adc = digit->adc();
       m_adcs[i][j][slot]->Fill(step, fadc(adc));
       m_adcsPerStep[i][j][slot][step - m_minStep]->Fill(fadc(adc));
     }

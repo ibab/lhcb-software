@@ -106,8 +106,7 @@ StatusCode HCDigitCorrector::execute() {
     return Error("Cannot retrieve ODIN", StatusCode::SUCCESS);
   }
   const unsigned int bxid = odin->bunchId();
-  // TODO: check! For some reason 0 = odd, 1 = even?
-  const unsigned int parity = (bxid + 1) % 2;
+  const unsigned int parity = bxid % 2;
 
   // Grab the digits.
   const LHCb::HCDigits* indigits = getIfExists<LHCb::HCDigits>(m_inputLocation);
@@ -132,7 +131,7 @@ StatusCode HCDigitCorrector::execute() {
         warning() << "Cannot retrieve digit for " << st << j << endmsg;
         continue;
       }
-      const unsigned int adc = digit->adc();
+      const int adc = digit->adc();
       LHCb::HCCellID refid(m_references[i][j]);
       const LHCb::HCDigit* refdigit = indigits->object(refid);
       if (!refdigit) {
@@ -141,7 +140,7 @@ StatusCode HCDigitCorrector::execute() {
         warning() << "Cannot retrieve reference for " << st << j << endmsg;
         continue;
       }
-      const unsigned int refadc = refdigit->adc();
+      const int refadc = refdigit->adc();
       const double tantheta = m_tantheta[i][j][parity];
       const double x0 = m_x0[i][j][parity];
       const double y0 = m_y0[i][j][parity];

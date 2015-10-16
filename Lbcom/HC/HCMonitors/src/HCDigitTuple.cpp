@@ -58,10 +58,7 @@ StatusCode HCDigitTuple::initialize() {
   if (tae != "") {
     m_digitLocation = tae + "/" + m_digitLocation;
   }
-  m_corrected = true;
-  if ( m_correctedDigitLocation == "" ) {
-    m_corrected = false;
-  }
+  m_corrected = !m_correctedDigitLocation.empty();
   
   return StatusCode::SUCCESS;
 }
@@ -86,21 +83,19 @@ StatusCode HCDigitTuple::execute() {
   const ulonglong evTimeGps = odin->gpsTime();
   const int step = odin->calibrationStep();
   const LHCb::HCDigits* digits = getIfExists<LHCb::HCDigits>(m_digitLocation);
-  const LHCb::HCDigits* correctedDigits = NULL;
-  
   if (!digits) {
     return Error("No digits in " + m_digitLocation, StatusCode::SUCCESS);
   }
+  const LHCb::HCDigits* correctedDigits = nullptr;
   if (m_corrected){
     correctedDigits = getIfExists<LHCb::HCDigits>(m_correctedDigitLocation);
-     if (!correctedDigits) {
-       return Error("No digits in " + m_correctedDigitLocation, StatusCode::SUCCESS);
-     }
+    if (!correctedDigits) {
+      return Error("No digits in " + m_correctedDigitLocation, StatusCode::SUCCESS);
+    }
   }
   
-
-  std::vector<double> adcB(64, 0);
-  std::vector<double> adcF(64, 0);
+  std::vector<double> adcB(64, 0.);
+  std::vector<double> adcF(64, 0.);
   for (const LHCb::HCDigit* digit : *digits) {
     const int channel = int(digit->cellID().cellID() & 0x3F);
     if (digit->cellID().crate() == 0) {
@@ -134,42 +129,24 @@ StatusCode HCDigitTuple::execute() {
         warning() << "Cannot retrieve digit for " << ch << endmsg;
         continue;
       }
-      unsigned int adc = digit->adc();
+      tuple->column(ch, digit->adc());
       LHCb::HCCellID refid(m_references[i][j]);
       const LHCb::HCDigit* refdigit = digits->object(refid);
       if (!refdigit) {
         warning() << "Cannot retrieve reference digit for " << ch << endmsg;
         continue;
       }
-      unsigned int refadc = refdigit->adc();
-      tuple->column(ch, adc);
-      tuple->column(ch + "_reference", refadc);
-     }
-  }
-  if (m_corrected)
-  {
-    for (unsigned int i = 0; i < nStations; ++i) {
-      for (unsigned int j = 0; j < 4; ++j) {
-        // Skip masked channels.
-        if (m_masked[i][j]) continue;
-        const std::string ch = stations[i] + std::to_string(j);
-        LHCb::HCCellID id(m_channels[i][j]);
-        const LHCb::HCDigit* digit = correctedDigits->object(id);
-        if (!digit) {
-          warning() << "Cannot retrieve digit for " << ch << endmsg;
-          continue;
-        }
-        unsigned int adc = digit->adc();
-        tuple->column(ch+"_cor", adc);
+      tuple->column(ch + "_reference", refdigit->adc());
+      if (!m_corrected) continue;
+      const LHCb::HCDigit* cordigit = correctedDigits->object(id);
+      if (!cordigit) {
+        warning() << "Cannot retrieve corrected digit for " << ch << endmsg;
+        continue;
       }
+      tuple->column(ch + "_cor", cordigit->adc());
     }
   }
-  
   tuple->write();
-  
-  if (!m_corrected){
-    delete correctedDigits;
-  }
   
   return StatusCode::SUCCESS;
 }

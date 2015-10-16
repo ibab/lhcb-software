@@ -6,6 +6,7 @@
 
 ! 2015-10-16 - Heinrich Schindler
  - Add parameter for ADC binning.
+ - Bug fix (ADCs are int, not unsigned int). 
 
 ! 2015-10-14 - Heinrich Schindler
  - Retrieve calibration constants from conditions database.

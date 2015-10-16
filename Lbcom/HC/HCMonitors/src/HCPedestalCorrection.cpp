@@ -104,14 +104,14 @@ StatusCode HCPedestalCorrection::execute() {
         warning() << "Cannot retrieve digit." << endmsg;
         continue;
       }
-      unsigned int adc = digit->adc();
+      const int adc = digit->adc();
       LHCb::HCCellID refid(m_references[i][j]);
       const LHCb::HCDigit* refdigit = digits->object(refid);
       if (!refdigit) {
         warning() << "Cannot retrieve reference digit." << endmsg;
         continue;
       }
-      unsigned int refadc = refdigit->adc();
+      const int refadc = refdigit->adc();
       m_hCorrelation[i][j][parity]->fill(refadc, adc);
     }
   }
