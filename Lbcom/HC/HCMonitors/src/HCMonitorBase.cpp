@@ -15,7 +15,8 @@
 //=============================================================================
 HCMonitorBase::HCMonitorBase(const std::string& name, ISvcLocator* pSvcLocator)
     : GaudiTupleAlg(name, pSvcLocator),
-      m_cond(nullptr) {
+      m_cond(nullptr),
+      m_parADC("", -0.5, 1023.5, 1024) {
 
   declareProperty("CrateB", m_crateB = 0);
   declareProperty("CrateF", m_crateF = 1);
@@ -43,7 +44,7 @@ HCMonitorBase::HCMonitorBase(const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("RandomiseADC", m_randomiseAdc = true);
   declareProperty("MinBX", m_bxMin = 0);
   declareProperty("MaxBX", m_bxMax = 10000);
-  declareProperty("Edges", m_edges = {-0.5,1023.5});
+  declareProperty("ParametersADC", m_parADC);
 }
 
 //=============================================================================
@@ -80,14 +81,7 @@ StatusCode HCMonitorBase::initialize() {
       adc += step;
     }
     m_edges.push_back(1023.5);
-  } else {
-    double minVal(m_edges[0]);
-    double maxVal(m_edges[1]);
-    m_edges.clear();
-    for (int i = 0; i < maxVal-minVal +1 ; ++i) {
-      m_edges.push_back(minVal+i);
-    }
-  }
+  } 
   
   // Setup the mapping.
   m_channels.resize(5);

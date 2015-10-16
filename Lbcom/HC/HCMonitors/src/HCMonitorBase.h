@@ -67,6 +67,8 @@ class HCMonitorBase : public GaudiTupleAlg {
   bool m_variableBins;
   /// Flag whether to randomise the ADC values.
   bool m_randomiseAdc;
+  /// Binning in ADC histograms (in case of fixed binning).
+  Gaudi::Histo1DDef m_parADC;
 
   /// Additional term added to the ADC to get the correct average.
   std::vector<double> m_adcCorrection;

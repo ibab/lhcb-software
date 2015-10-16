@@ -82,25 +82,24 @@ StatusCode HCDigitMonitor::initialize() {
   for (unsigned int i = 0; i < nChannels; ++i) {
     // Book histograms for ADC distributions for each channel.
     const std::string ch = "Channel" + std::to_string(i);
-    //if (m_variableBins) {
+    if (m_variableBins) {
       m_hAdcB.push_back(book1D("ADC/B/" + ch, ch, m_edges));
       m_hAdcF.push_back(book1D("ADC/F/" + ch, ch, m_edges));
       m_hAdcEvenB.push_back(book1D("ADC/B/Even/" + ch, ch, m_edges));
       m_hAdcEvenF.push_back(book1D("ADC/F/Even/" + ch, ch, m_edges));
       m_hAdcOddB.push_back(book1D("ADC/B/Odd/" + ch, ch, m_edges));
       m_hAdcOddF.push_back(book1D("ADC/F/Odd/" + ch, ch, m_edges));
-      /*} else {
-      const double low = -0.;
-      const double high = 1023.5;
-      const unsigned int bins = 1024;
+    } else {
+      const double low = m_parADC.lowEdge();
+      const double high = m_parADC.highEdge();
+      const unsigned int bins = m_parADC.bins();
       m_hAdcB.push_back(book1D("ADC/B/" + ch, ch, low, high, bins));
       m_hAdcF.push_back(book1D("ADC/F/" + ch, ch, low, high, bins));
       m_hAdcEvenB.push_back(book1D("ADC/B/Even/" + ch, ch, low, high, bins));
       m_hAdcEvenF.push_back(book1D("ADC/F/Even/" + ch, ch, low, high, bins));
       m_hAdcOddB.push_back(book1D("ADC/B/Odd/" + ch, ch, low, high, bins));
       m_hAdcOddF.push_back(book1D("ADC/F/Odd/" + ch, ch, low, high, bins));
-
-      }*/
+    }
     setAxisLabels(m_hAdcB[i], "ADC", "Entries");
     setAxisLabels(m_hAdcF[i], "ADC", "Entries");
     setAxisLabels(m_hAdcEvenB[i], "ADC", "Entries");
@@ -111,9 +110,9 @@ StatusCode HCDigitMonitor::initialize() {
 
   for (unsigned int i = 0; i < 4; ++i) {
     // Histogram range and number of bins (in case of uniform binning).
-    const double low = -0.5;
-    const double high = 1023.5;
-    const unsigned int bins = 1024;
+    const double low = m_parADC.lowEdge();
+    const double high = m_parADC.highEdge();
+    const unsigned int bins = m_parADC.bins();
     // Book histograms for ADC distributions for each quadrant.
     const std::string qu = "Quadrant" + std::to_string(i);
     // Bx ID binning
@@ -131,7 +130,6 @@ StatusCode HCDigitMonitor::initialize() {
       const std::string nameNoBeam = "ADC/" + stations[j] + "/NoBeam/" + qu;
       const std::string nameBeam = "ADC/" + stations[j] + "/Beam/" + qu;
       const std::string nameBx = "ADCvsBX/" + stations[j] + "/" + qu;
-      // TODO: check! Should avoid variable binning if not needed.
       if (m_variableBins) {
         m_hAdcQuadrant.push_back(book1D(name, qu, m_edges));
         m_hAdcQuadrantEven.push_back(book1D(nameEven, qu, m_edges));

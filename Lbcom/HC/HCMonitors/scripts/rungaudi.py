@@ -189,7 +189,7 @@ elif options.analysisType == 'Pedestals':
   if int(options.refRunNumber) > 0:
     correctedDigitMonitor = HCDigitMonitor("HCCorrectedDigitMonitor")
     configureMapping(correctedDigitMonitor)
-    correctedDigitMonitor.Edges = [-300.5,1200]
+    correctedDigitMonitor.ParametersADC = ("", -300.5, 1200., 1502)
     correctedDigitMonitor.DigitLocation = "Raw/HC/CorrectedDigits"
     correctedDigitMonitor.MinBX = options.minBx
     correctedDigitMonitor.MaxBX = options.maxBx
