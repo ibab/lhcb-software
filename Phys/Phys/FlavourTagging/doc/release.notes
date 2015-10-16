@@ -7,6 +7,8 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+!====================== FlavourTagging v14r1 2015-10-16 ======================
+
 ! 2015-08-30 - Gerhard Raven
  - replace endreq with endmsg
 
