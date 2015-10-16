@@ -56,7 +56,7 @@ int main(int /* argc */, char** /* argv */) {
 
 /*
 
-g++ -o dim_fork -I../../DIM/dim -ldim -lrt -pthread ../test/dim_fork.cpp
+g++ -o dim_fork -I../../dim -ldim -lrt -pthread ../test/dim_fork.cpp
 
 [frankm@plus04 cmt]$ ./dim_fork
 PID:20407 Register Child to DNS....

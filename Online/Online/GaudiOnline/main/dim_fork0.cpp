@@ -44,7 +44,7 @@ int main(int /* argc */, char** /* argv */) {
 
 /*
 
-g++ -o xxxx -I../../DIM/dim -ldim -lrt -pthread ../test/test_dim.cpp
+g++ -o xxxx -I../../dim -ldim -lrt -pthread ../test/test_dim.cpp
 
 [frankm@plus04 cmt]$ ./xxxx
 PID:20407 Register Child to DNS....
