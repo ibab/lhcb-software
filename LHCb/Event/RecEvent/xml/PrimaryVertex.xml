@@ -16,7 +16,7 @@
       >
 
       <location name="Default" place="Rec/Vertex/PrimaryVertices"/>
-      <location name="Packed" place="Rec/Vertex/PackedPrimaryVertices"/>
+      <location name="Packed" place="pRec/Vertex/PrimaryVertices"/>
 
       <import name="GaudiKernel/NamedRange"/>
       <import name="GaudiKernel/SharedObjectsContainer"/>
