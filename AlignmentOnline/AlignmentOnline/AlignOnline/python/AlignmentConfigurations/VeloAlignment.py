@@ -10,8 +10,11 @@ def configureAlignment():
     # add the default PV selection
     TAlignment().PVSelection = configuredPVSelection()
 
-    from TAlignment.AlignmentScenarios import configureVeloAlignment
-    configureVeloAlignment()
+    from TAlignment.AlignmentScenarios import configureVeloHalfAlignment, configureVeloAlignment
+    configureVeloHalfAlignment()
+    # configureVeloAlignment()
+
+
 
     # Prescale Beam Beam interactions
     def prescaleBB(BBfraction = 1):
@@ -27,7 +30,7 @@ def configureAlignment():
         GaudiSequencer('HltFilterSeq').Members.append( collTypeSeq )
 
     # Prescale Beam Beam interactions using routing bits
-    def prescaleBB2(BBfraction = 0):
+    def prescaleBB2(BBfraction = 1):
         
         from Configurables import LoKi__Hybrid__HltFactory as HltFactory
         HltFactory().Modules.append("LoKiHlt.functions")

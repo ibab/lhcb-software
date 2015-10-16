@@ -3,6 +3,10 @@ Package: AlignOnline
 Package Coordinator: Maurizio Martinelli
 Purpose: Code for running and testing Alignment in the online environment
 
+! 2015-10-16 - Giulio Dujany
+ - Run as default Velo alignment only 2-halves alignment
+ - Velo update constants if one half moves significantly in one dof, error if too big change
+
 ! 2015-10-13 - Giulio Dujany
  - Added check that HLT2Params.py contains needed info
 

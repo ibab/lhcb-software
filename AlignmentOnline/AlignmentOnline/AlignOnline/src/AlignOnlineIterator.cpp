@@ -318,7 +318,11 @@ StatusCode AlignOnlineIterator::i_run()
     Alignment::AlignmentMonitoring::CompareConstants cmp(initAlConsts,finalAlConsts);
     cmp.Compare();
     if ( msgLevel(MSG::DEBUG) ) cmp.PrintWarnings(1);
-    if ( !(cmp.GetNumWarnings(3) || cmp.GetNumWarnings(2)>3) ) { // no significant change
+    if (m_runType != string("Tracker") && cmp.GetNumWarnings(3)){// changes to big, make it fail
+      error() << "Alignment converged but constants changes is unreasonably large" << endmsg;
+      sc = StatusCode::FAILURE;
+    }    
+    else if ( !( (m_runType == string("Velo") && cmp.GetNumWarnings(2, "Velo(Left|Right)\\..*")) || (m_runType == string("Tracker") && (cmp.GetNumWarnings(3) || cmp.GetNumWarnings(2)>3)) ) ){ // no significant change
       warning() << "Alignment converged in more than one iteration but constants didn't change significantly." 
 		<< endmsg;
       if (cmp.GetNumWarnings(2))
@@ -341,7 +345,7 @@ StatusCode AlignOnlineIterator::i_run()
 	    }
 	}
     } // end of check on the constants
-  }
+  } // end check alignmet converged in more than 1 iterations
   else
   {
     if (sc.isSuccess() && m_iteration <= 1)
