@@ -329,7 +329,7 @@ class protonArgon_2015:
         })
         
         # TrackEffDiMuon Calib thresholds
-        conf = __get_conf__("TrackEffDiMuon", "_25ns_August2015")
+        conf = __get_conf__("TrackEffDiMuon", "_protonArgon_2015")
         __update_conf__(thresholds, conf.Thresholds())
 
         # PID Calib thresholds

@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-10-16 - Michael Kolpin
+ - Fix to protonArgon_2015.py to import correct thresholds for TrackEffDiMuon lines
+
 ! 2015-10-15 - Mika Vesterinen
  - Set the L0TCK to 0x00A3 for the Physics_25ns_October2015 to keep the independence tests happy for now
 
