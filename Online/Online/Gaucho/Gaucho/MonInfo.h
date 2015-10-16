@@ -1,7 +1,7 @@
 #ifndef MonInfo_H
 #define MonInfo_H
 #include "dimhist.h"
-#include "dim/dic.hxx"
+#include "dic.hxx"
 #include <string>
 #include <map>
 class MonInfo : public DIMTYPE

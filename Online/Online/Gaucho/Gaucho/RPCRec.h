@@ -1,6 +1,6 @@
 #ifndef RPCREC_H
 #define RPCREC_H
-#include "dim/dic.hxx"
+#include "dic.hxx"
 #include "Gaucho/dimhist.h"
 #include "Gaucho/RPCdefs.h"
 #include <string>

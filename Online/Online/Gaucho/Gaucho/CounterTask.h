@@ -10,7 +10,7 @@
 #include <vector>
 #include <string>
 #include <boost/regex.hpp>
-#include "dim/dic.hxx"
+#include "dic.hxx"
 #include "Gaucho/RPCRec.h"
 class CntrDescr;
 //#include "TObject.h"

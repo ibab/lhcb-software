@@ -5,7 +5,7 @@
  *      Author: Beat Jost
  */
 
-#include "dim/dis.hxx"
+#include "dis.hxx"
 #include "Gaucho/MonSys.h"
 #include "Gaucho/MonSubSys.h"
 #include "components/MonitorSvc.h"

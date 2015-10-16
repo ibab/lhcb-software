@@ -12,7 +12,7 @@
 #define onesec_mili (unsigned long long)(1000000)
 #endif
 #define onesec_nano (unsigned long long)(1000000000)
-#include "dim/dic.hxx"
+#include "dic.hxx"
 namespace
 {
   int ThreadRoutine_C(void* arg)

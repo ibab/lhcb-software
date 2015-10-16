@@ -1,6 +1,6 @@
 #ifndef OBJRRPC_H
 #define OBJRRPC_H
-#include "dim/dis.hxx"
+#include "dis.hxx"
 #include "Gaucho/RPCdefs.h"
 #include "Gaucho/ObjSerializer.h"
 #include "Gaucho/BRTL_Lock.h"

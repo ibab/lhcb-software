@@ -4,7 +4,7 @@
 #include "Gaucho/MonObj.h"
 #include <vector>
 #include <string>
-#include "dim/dis.hxx"
+#include "dis.hxx"
 #include "Utilities.h"
 
 class CntrDescr

@@ -6,7 +6,7 @@
 #include "GaudiKernel/Property.h"
 #include "Gaucho/IGauchoMonitorSvc.h"
 //#include "GauchoTimer.h"
-#include "dim/dis.hxx"
+#include "dis.hxx"
 #include <map>
 #include <sstream>
 #include "Event/RawEvent.h"
