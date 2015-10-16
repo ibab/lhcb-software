@@ -30,7 +30,7 @@
 //#include <multimap>
 
 //#include "stdio.h"
-#include "dim/dis.hxx"
+#include "dis.hxx"
 #include <fstream>
 #include <iostream>
 //#include <string>

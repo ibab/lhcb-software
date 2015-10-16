@@ -5,8 +5,8 @@
  *      Author: Beat Jost
  */
 
-#include "dim/dic.hxx"
-#include "dim/dis.hxx"
+#include "dic.hxx"
+#include "dis.hxx"
 #include <string>
 #include "ROMon/Utilities.h"
 #include "stdio.h"

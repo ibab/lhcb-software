@@ -11,8 +11,8 @@
 #include <string>
 #include <list>
 #include <set>
-#include "dim/dic.hxx"
-#include "dim/dis.hxx"
+#include "dic.hxx"
+#include "dis.hxx"
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMon.h"
 #include "ROMon/CPUMon.h"

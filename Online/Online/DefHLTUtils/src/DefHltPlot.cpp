@@ -8,7 +8,7 @@
 #include "TH1F.h"
 #include "TApplication.h"
 #include "TRint.h"
-#include "dim/dic.hxx"
+#include "dic.hxx"
 #include "Gaucho/Utilities.h"
 #include <string>
 #include <map>
