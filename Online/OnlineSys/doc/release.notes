@@ -6,6 +6,17 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
+<H1><A NAME=v5r27>2015-10-17 OnlineSys v5r27</A></H1>
+<PRE>
+  Use Gaudi v26r4
+  Updated/new packages:	
+     DefHLTUtils         v1r16    Online
+     FarmConfig          v0r23    Online
+     Gaucho              v7r46    Online
+     GauchoAppl          v1r30    Online
+     GaudiOnline         v2r89    Online
+</PRE>
+
 <H1><A NAME=v5r26>2015-10-16 OnlineSys v5r26</A></H1>
 <PRE>
   Use Gaudi v26r4

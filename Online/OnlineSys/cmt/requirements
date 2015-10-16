@@ -1,5 +1,5 @@
 package OnlineSys
-version v5r26
+version v5r27
 ###
 ### Note: 
 ### last v4 release: v4r69 based on Gaudi v23r7
@@ -25,15 +25,14 @@ use $(CondDBServer_use)
 use Controller          v0r24    Online
 use ControllerTests     v0r3     Online
 use DailyReport         v1r3     Online
-use DefHLTUtils         v1r15    Online
+use DefHLTUtils         v1r16    Online
 use DIM                 v20r7p4  Online
 use EventBuilder        v0r16    Online
-use FarmConfig          v0r22    Online
-use FarmMonitor         v2r13    Online
-use Gaucho              v7r45    Online
-use GauchoAppl          v1r29    Online
+use FarmConfig          v0r23    Online
+use Gaucho              v7r46    Online
+use GauchoAppl          v1r30    Online
 use GaudiCheckpointing  v0r24    Online
-use GaudiOnline         v2r88    Online
+use GaudiOnline         v2r89    Online
 use GaudiOnlineTests    v1r7     Online
 use GaudiRootCnvTests   v1r14    Online
 use GaudiSerialize      v0r15    Online
@@ -70,6 +69,7 @@ use ZeroMQ              v4r1p3   Online
 #Obsolete: use confDBpython        v1r7     Online
 #Obsolete: macro CCPCHist_use "CCPCHist v2r6 Online" target-x86_64 ""
 #Obsolete: use $(CCPCHist_use)
+#Obsolete: use FarmMonitor         v2r13    Online
 #Obsolete  use Hugin              v1r6     Online
 #Obsolete: use HPDMonitor        v1r6     Online
 #Obsolete: use OnlineDummyReader v1r4     Online
