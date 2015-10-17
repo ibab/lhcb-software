@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring of Herschel data
 !-----------------------------------------------------------------------------
 
+! 2015-10-17 - Heinrich Schindler
+ - HCDelayScan: remove duplicated (and unused) property ParametersADC.
+
 ! 2015-10-16 - Heinrich Schindler
  - Add parameter for ADC binning.
  - Bug fix (ADCs are int, not unsigned int). 

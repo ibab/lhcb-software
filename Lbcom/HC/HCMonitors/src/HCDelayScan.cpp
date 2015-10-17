@@ -20,12 +20,10 @@ DECLARE_ALGORITHM_FACTORY(HCDelayScan)
 //=============================================================================
 HCDelayScan::HCDelayScan(const std::string& name, ISvcLocator* pSvcLocator)
     : HCMonitorBase(name, pSvcLocator),
-      m_minStep(0),
-      m_parAdc("", -0.5, 1023.5, 1023) {
+      m_minStep(0) {
 
   declareProperty("DigitLocation",
                   m_digitLocation = LHCb::HCDigitLocation::Default);
-  declareProperty("ParametersADC", m_parAdc);
   declareProperty("MinimumStepNr", m_minStep);
   declareProperty("MaximumStepNr", m_maxStep);
   declareProperty("BxPrev", m_bxPrev);

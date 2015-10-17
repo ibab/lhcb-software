@@ -6,11 +6,12 @@
 #include "AIDA/IHistogram2D.h"
 #include "AIDA/IProfile1D.h"
 
-#include "HCMonitorBase.h"
+// ROOT
 #include "TH2D.h"
 #include "TProfile.h"
-// Gaudi
-#include "GaudiKernel/IEventTimeDecoder.h"
+
+// Local
+#include "HCMonitorBase.h"
 
 /** @class HCDigitMonitor HCDigitMonitor.h
  *
@@ -39,9 +40,6 @@ class HCDelayScan : public HCMonitorBase {
 
   unsigned int m_minStep;
   unsigned int m_maxStep;
-
-  /// Parameters for ADC distribution histograms
-  Gaudi::Histo1DDef m_parAdc;
 
   /// Profile histograms (ADC vs. step) for each channel and slot.
   std::vector<std::vector<std::vector<TProfile*> > > m_adcs;
