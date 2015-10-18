@@ -225,13 +225,6 @@
     </method>
     
     <method
-        name="ipchi2"
-        type="double"
-	const="TRUE"
-        desc="return IP chi2 of track. will unbias vertex position if needed."
-	argList="const LHCb::Track&amp; track"/>
-
-    <method
         name="unbias"
         const="FALSE"
         type="size_t"

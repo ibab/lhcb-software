@@ -95,8 +95,9 @@ namespace LHCb
     const auto N = recvertex.tracks().size() ;
     m_tracks.reserve(N) ;
     for(size_t i=0; i<N; ++i )
-      m_tracks.push_back( PrimaryVertexTrack(*(recvertex.tracks()[i]), recvertex.weights()[i],m_refZ) ) ;
-    setNDoF( 2*N-3 ) ;
+      if( recvertex.tracks()[i] )
+	m_tracks.push_back( PrimaryVertexTrack(*(recvertex.tracks()[i]), recvertex.weights()[i],m_refZ) ) ;
+    setNDoF( 2*m_tracks.size()-3 ) ;
     // sort the tracks by ID
     std::sort(m_tracks.begin(),m_tracks.end()) ;
     // compute the derivatives by adding everything up
@@ -130,19 +131,6 @@ namespace LHCb
     setChi2AndDoF( chi2,nDoF() ) ;
   }
   
-  double
-  PrimaryVertex::ipchi2( const LHCb::Track& track ) const
-  {
-    // lazy way: unbias vertex position, then use track vertex utils.
-    // (for the faster way: realize that track fit was weighted. so,
-    // you cannot just scale the residual. anyway need to update the
-    // position.)
-    std::vector<const LHCb::Track*> tracks( {&track} ) ;
-    Gaudi::XYZPoint pos ;
-    SymMatrix3 cov ;
-    unbiasedPosition(tracks,pos,cov) ;
-    return TrackVertexUtils::vertexChi2( *(track.stateAt(LHCb::State::ClosestToBeam)),pos, cov ) ;
-  }
     
   size_t PrimaryVertex::unbias( const std::vector<const LHCb::Track*>& tracksToRemove )
   {

@@ -8,8 +8,7 @@ gaudi_depends_on_subdirs(Event/DigiEvent
                          Event/TrackEvent
                          GaudiObjDesc
                          Kernel/LHCbMath
-                         Kernel/PartProp
-                         Tr/TrackKernel)
+                         Kernel/PartProp)
 
 include(GaudiObjDesc)
 
@@ -19,7 +18,7 @@ gaudi_add_library(RecEvent
                   src/*.cpp
                   PUBLIC_HEADERS Event
                   INCLUDE_DIRS Event/DigiEvent Event/EventBase
-                  LINK_LIBRARIES TrackEvent LHCbMathLib PartPropLib TrackKernel)
+                  LINK_LIBRARIES TrackEvent LHCbMathLib PartPropLib)
 
 god_build_dictionary(xml/*.xml
                      EXTEND dict/lcgDict.h
