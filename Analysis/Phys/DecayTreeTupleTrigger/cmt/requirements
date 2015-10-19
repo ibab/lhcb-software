@@ -3,7 +3,7 @@
 # Maintainer : Patrick Koppenburg
 #============================================================================
 package           DecayTreeTupleTrigger
-version           v1r8
+version           v1r9
 
 #============================================================================
 # Structure

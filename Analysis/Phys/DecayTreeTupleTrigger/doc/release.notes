@@ -4,16 +4,13 @@
 ! Purpose     : Trigger and stripping related tuple tools
 !-----------------------------------------------------------------------------
 
-
-
+!=================== DecayTreeTupleTrigger v1r9 2015-10-19 ===================
 
 ! 2015-09-21 - Olivier Deschamps
  - TupleToolL0Data : add documentation
 
-
 ! 2015-08-11 - Albert Bursche
 added TupleToolFillingScheme
-
 
 !=================== DecayTreeTupleTrigger v1r8 2015-07-24 ===================
 
