@@ -5,6 +5,8 @@
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
 
+!======================= AnalysisConf v2r5 2015-10-19 ========================
+
 ! 2015-08-14 - Chris Jones
  - Add OutputLevel property to AnalysisConf configurable.
 
