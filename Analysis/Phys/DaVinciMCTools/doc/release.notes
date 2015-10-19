@@ -1,8 +1,10 @@
 ! $Id: release.notes,v 1.302 2010-08-20 14:45:59 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
-! Responsible : J.P. Palacios
+! Responsible : DaVinci coordinator
 !=============================================================================
+
+!======================= DaVinciMCTools v10r13 2015-10-19 ====================
 
 ! 2015-10-2 - Sean Benson
  - Additional properties for reuse of neutral PP2MC tables created in Turbo.

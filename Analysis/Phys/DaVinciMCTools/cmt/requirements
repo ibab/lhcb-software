@@ -1,7 +1,7 @@
 # $Id: requirements,v 1.94 2010-08-02 16:48:32 jpalac Exp $
 # =============================================================================
 # Created    : 19/05/2002
-# Maintainer : P. Koppenburg, J. Palacios
+# Maintainer : DaVinci coordinator
 # =============================================================================
 #
 # Documentation on the requirement file can be found at
@@ -9,7 +9,7 @@
 # =============================================================================
 
 package           DaVinciMCTools
-version           v10r12
+version           v10r13
 
 # This template is an example for a standard Algorithm package
 #
