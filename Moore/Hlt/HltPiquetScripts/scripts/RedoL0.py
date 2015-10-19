@@ -7,12 +7,12 @@ from Configurables import L0App
 app = L0App()
 app.ReplaceL0Banks = True
 app.outputFile = ""
-app.EvtMax = 10000
-app.TCK = '0x0141'
+app.EvtMax = 50000
+app.TCK = '0x024E'
 app.DataType = '2015'
 
-app.CondDBtag = 'cond-20150601'
-app.DDDBtag = 'dddb-20150526'
+app.CondDBtag = 'cond-20150828'
+app.DDDBtag = 'dddb-20150724'
 # app.Simulation = True
 
 from Configurables import CondDB
@@ -21,7 +21,7 @@ CondDB().UseDBSnapshot = True
 CondDB().DBSnapshotDirectory = "/group/online/hlt/conditions"
 CondDB().EnableRunChangeHandler = False
 CondDB().Tags["ONLINE"] = 'fake'
-CondDB().setProp("IgnoreHeartBeat", True)
+CondDB().Online = True
 
 from Configurables import EventSelector
 EventSelector().PrintFreq = 1000
@@ -35,10 +35,10 @@ EventSelector().PrintFreq = 1000
 # input = test_file_db['2012_raw_default']
 # input.run(configurable = app)
 
-base_dir = '/net/hlta0901/localdisk/hlt1'
-runnrs = [154192]
+base_dir = '/daqarea/lhcb/data/2015/RAW/TURBO/LHCb/COLLISION15/164699'
+runnrs = [164699]
 files = [os.path.join(base_dir, f) for f in os.listdir(base_dir) if any((str(r) in f for r in runnrs))]
-IOHelper("MDF", "MDF").inputFiles(files)
+IOHelper("MDF", "MDF").inputFiles(files[10:20])
 
 # Output writers
 # L0 filter

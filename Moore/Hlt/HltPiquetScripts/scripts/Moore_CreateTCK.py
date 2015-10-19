@@ -8,10 +8,10 @@ Moore().generateConfig = True
 Moore().ForceSingleL0Configuration = True
 Moore().OutputLevel = 4
 Moore().Split = ''
-Moore().EvtMax = 500
+Moore().EvtMax = 10000
 Moore().DataType = '2015'
-Moore().CondDBtag = 'cond-20150617'
-Moore().DDDBtag = 'dddb-20150526'
+Moore().CondDBtag = 'cond-20150828'
+Moore().DDDBtag = 'dddb-20150724'
 
 from Configurables import EventSelector
 EventSelector().PrintFreq = 100
@@ -19,12 +19,27 @@ EventSelector().PrintFreq = 100
 from Configurables import HltConf
 HltConf().Verbose = True
 
+## proton-Argon
+
+Moore().configLabel = 'Proton-Argon October 2015'
+Moore().ThresholdSettings = 'protonArgon_2015'
+
+Moore().inputFiles = ['MakeTCK_protonArgon.mdf', 'MakeTCK_protonArgon_pp.mdf',
+                      'RedoL0_0x024E_01.mdf', 'RedoL0_0x024E_02.mdf']
+
+## Physics
+
+# Moore().configLabel = 'Physics, 25ns Ramp, October 2015, 1600 bunches'
+# Moore().ThresholdSettings = 'Physics_25ns_September2015'
+
+# Moore().inputFiles = ['StripHLT_pp_TCK.mdf']
+
 ## EM
 
-Moore().configLabel = 'Early measurements test June 2015; split RICH mirror lines'
-Moore().ThresholdSettings = 'Physics_draftEM2015'
+# Moore().configLabel = 'Early measurements test June 2015; split RICH mirror lines'
+# Moore().ThresholdSettings = 'Physics_draftEM2015'
 
-Moore().inputFiles = ['StripHLT_153759.mdf']
+# Moore().inputFiles = ['StripHLT_153759.mdf']
 
 ## SMOG
 
@@ -69,7 +84,7 @@ CondDB().UseDBSnapshot = True
 CondDB().DBSnapshotDirectory = "/group/online/hlt/conditions"
 CondDB().EnableRunChangeHandler = True
 CondDB().Tags["ONLINE"] = 'fake'
-CondDB().setProp("IgnoreHeartBeat", True)
+CondDB().Online = True
 
 import sys
 try:

@@ -16,7 +16,7 @@ CondDB().UseDBSnapshot = True
 CondDB().DBSnapshotDirectory = "/group/online/hlt/conditions"
 CondDB().EnableRunChangeHandler = True
 CondDB().Tags["ONLINE"] = 'fake'
-CondDB().setProp("IgnoreHeartBeat", True)
+CondDB().Online = True
 
 import sys
 try:
@@ -44,12 +44,16 @@ EventSelector().PrintFreq = 1000
 # input = test_file_db['2012_raw_default']
 # input.run(configurable = app)
 
-base_dir = '/daqarea/lhcb/data/2015/RAW/TURBO/LHCb/COLLISION15EM'
+# base_dir = '/daqarea/lhcb/data/2015/RAW/TURBO/LHCb/COLLISION15EM'
 # base_dir = '/localdisk/hlt1/data2015/0506NB'
 # base_dir = '/net/hlta0405/localdisk/Alignment/BWDivision'
-runnrs = [157397]
-re_file = re.compile(r"(Run_)?(0*%s)_.*\.(mdf|raw)" % ('|'.join((str(r) for r in runnrs))))
-files = sorted([os.path.join(base_dir, str(run), f)  for run in runnrs for f in os.listdir(os.path.join(base_dir, str(run))) if re_file.match(f)])
+# runnrs = [157397]
+# re_file = re.compile(r"(Run_)?(0*%s)_.*\.(mdf|raw)" % ('|'.join((str(r) for r in runnrs))))
+# files = sorted([os.path.join(base_dir, str(run), f)  for run in runnrs for f in os.listdir(os.path.join(base_dir, str(run))) if re_file.match(f)])
+# files = ['/scratch/hlt/make_tcks/turcal_164699_0000000087.raw',
+#          '/scratch/hlt/make_tcks/turbo_164699_0000000088.raw',
+#          '/scratch/hlt/make_tcks/full_164699_0000000090.raw']
+files = ['/localdisk/hlt1/Run_0165857_20151015-063420.hlta0702.mdf']
 IOHelper("MDF", "MDF").inputFiles(files)
 
 # IOHelper("MDF", "MDF").inputFiles(['Moore_Hlt2.mdf'])
@@ -79,8 +83,8 @@ for dec in ("HltDecReportsDecoder/Hlt1DecReportsDecoder",
             "L0DUFromRawAlg/L0DUFromRaw"):
     topSeq.Members.append(DecoderDB[dec].setup())
 
-from Configurables import TCKANNSvc
-TCKANNSvc().AdditionalIDs = {"Hlt2SelectionID" : {"Hlt2Global" : 2}}
+# from Configurables import TCKANNSvc
+# TCKANNSvc().AdditionalIDs = {"Hlt2SelectionID" : {"Hlt2Global" : 2}}
 # "ProtoPV3D" : 10117}}
 
 ApplicationMgr().TopAlg = [topSeq]
@@ -105,46 +109,8 @@ ApplicationMgr().ExtSvc = ['LoKiSvc']
 from LoKiAlgo.decorators import Algo
 from GaudiPython import SUCCESS
 
-class BeamSpotAlgo(Algo):
-    """
-    Algorithm to get the beamspot position
-    """
-    ## initialize the algorithm
-    def initialize ( self ) :
-        """
-        Initialize the algorithm
-        """
-
-        ## initialize the base
-        sc = Algo.initialize ( self ) ## initialize the base
-        if sc.isFailure() : return sc
-        from LoKiPhys.functions import BEAMSPOT
-        from GaudiKernel.SystemOfUnits import mm
-        self._beamspot = BEAMSPOT( 1 * mm )
-
-        return SUCCESS
-
-    ## The standard method for analysis
-    def analyse ( self ) :
-        self.setFilterPassed ( True )
-        return SUCCESS
-
-    def x(self):
-        return self._beamspot.x()
-
-    def y(self):
-        return self._beamspot.y()
-
-    def beamspot(self):
-        return self._beamspot
-
-    def finalize( self ):
-        del self._beamspot
-        return Algo.finalize(self)
-
 from GaudiPython import AppMgr
 gaudi = AppMgr()
-bs_algo = BeamSpotAlgo("BeamspotAlgo")
 
 # gaudi.addAlgorithm(bs_algo)
 
@@ -169,17 +135,19 @@ events = defaultdict(int)
 #     # print selReports
 #     # print '\n\n\n'
 #     n += 1
-from GaudiPython.Bindings import gbl
-dummy = gbl.IConfigTreeEditor
+# from GaudiPython.Bindings import gbl
+# dummy = gbl.IConfigTreeEditor
 
-while True:
-    r = gaudi.run(1)
-    if not TES['/Event']:
-        print 'done'
-    rawEvent = TES['DAQ/RawEvent']
-    rbs = set([rb for rb in gbl.Hlt.firedRoutingBits(rawEvent)])
-    if 34 not in rbs:
-        continue
-    reports = TES['Hlt2/SelReports']
-    if reports:
-        break
+gaudi.run(1)
+
+# while True:
+#     r = gaudi.run(1)
+#     if not TES['/Event']:
+#         print 'done'
+#     rawEvent = TES['DAQ/RawEvent']
+#     rbs = set([rb for rb in gbl.Hlt.firedRoutingBits(rawEvent)])
+#     if 34 not in rbs:
+#         continue
+#     reports = TES['Hlt2/SelReports']
+#     if reports:
+#         break
