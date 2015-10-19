@@ -4,6 +4,11 @@
 ! Purpose     : Provide tools for refitting on DST
 !-----------------------------------------------------------------------------
 
+!=================== DaVinciTrackRefitting v2r2 2015-10-19 ===================
+
+! 2015-09-06 - Paul Seyfert
+ - refitting instruction updated + fixes after testrun
+
 !=================== DaVinciTrackRefitting v2r1 2015-07-24 ===================
 
 ! 2015-06-22 - Paul Seyfert
