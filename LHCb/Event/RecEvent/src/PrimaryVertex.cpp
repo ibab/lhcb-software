@@ -1,7 +1,6 @@
 #include "Event/PrimaryVertex.h"
 #include "Event/Track.h"
 #include "Event/RecVertex.h"
-#include "TrackKernel/TrackVertexUtils.h"
 #include "LHCbMath/BloomFilter.h"
 
 namespace LHCb
