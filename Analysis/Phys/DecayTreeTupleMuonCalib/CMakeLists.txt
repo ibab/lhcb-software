@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DecayTreeTupleMuonCalib
 ################################################################################
-gaudi_subdir(DecayTreeTupleMuonCalib v1r4)
+gaudi_subdir(DecayTreeTupleMuonCalib v1r5)
 
 gaudi_depends_on_subdirs(Det/MuonDet
                          Phys/DecayTreeTupleBase)
