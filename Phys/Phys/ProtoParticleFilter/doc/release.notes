@@ -3,6 +3,9 @@
 ! Responsible : Christopher Rob Jones
 ! Purpose     : Filters for ProtoParticles
 !-----------------------------------------------------------------------------
+
+!==================== ProtoParticleFilter v1r8 2015-10-19 ====================
+
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 

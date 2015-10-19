@@ -1,7 +1,7 @@
 ################################################################################
 # Package: ProtoParticleFilter
 ################################################################################
-gaudi_subdir(ProtoParticleFilter v1r7p2)
+gaudi_subdir(ProtoParticleFilter v1r8)
 
 gaudi_depends_on_subdirs(Calo/CaloUtils
                          GaudiAlg
