@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
+import os
 AligWork_dir = '/group/online/AligWork/'
 alignment_dir = '/group/online/alignment/'
-references = '../files/ConstantsReferences.txt'
+this_files_dir = os.path.dirname(os.path.realpath(__file__))
+references = os.path.join(this_files_dir, '../files/ConstantsReferences.txt')
 
 
 ##########################
@@ -18,7 +20,7 @@ if __name__ == '__main__':
 
 ##########################
 
-import os, sys, re
+import  re
 import ROOT as r
 from MultiPlot import MultiPlot
 
