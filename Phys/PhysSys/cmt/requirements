@@ -1,84 +1,84 @@
 package PhysSys
-version v20r1
+version v20r2
 
 branches doc cmt
 
 #===================================================================
 
-use  DaVinciInterfaces          v2r24    Phys    # Current DV Maintainer
-use  DaVinciTypes               v2r12    Phys    # Current DV Maintainer
+use  DaVinciInterfaces          v2r25    Phys    # Current DV Maintainer
+use  DaVinciTypes               v2r14    Phys    # Current DV Maintainer
 use  DaVinciUtils               v1r1p1   Phys    # Current DV Maintainer
-use  DaVinciKernel              v12r2    Phys    # Current DV Maintainer
-use  SelectionLine              v1r5     Kernel  # Gerhard Raven
+use  DaVinciKernel              v12r3    Phys    # Current DV Maintainer
+use  SelectionLine              v1r6     Kernel  # Gerhard Raven
 use  SelPy                      v4r3     Phys    # Current DV Maintainer
 use  PhysSelPython              v9r7     PhysSel # Current DV Maintainer
 
 #===================================================================
 
-use  PhysConf                   v1r28    Phys    # Patrick Koppenburg
-use  ProtoParticleFilter        v1r7p2   Phys    # Current DV Maintainer
-use  DaVinciTransporter 	v3r12    Phys    # Current DV Maintainer
-use  ParticleMaker      	v6r15    Phys    # Current DV Maintainer
-use  VertexFit			v6r21    Phys    # Yuehong Xie
-use  LoKiFitters                v4r16    Phys    # Vanya Belyaev
-use  DecayTreeFitter            v1r21    Phys    # Wouter Hulsbergen
+use  PhysConf                   v1r29    Phys    # Patrick Koppenburg
+use  ProtoParticleFilter        v1r8     Phys    # Current DV Maintainer
+use  DaVinciTransporter 	v3r13    Phys    # Current DV Maintainer
+use  ParticleMaker      	v6r16    Phys    # Current DV Maintainer
+use  VertexFit			v6r22    Phys    # Yuehong Xie
+use  LoKiFitters                v4r17    Phys    # Vanya Belyaev
+use  DecayTreeFitter            v1r22    Phys    # Wouter Hulsbergen
 use  PhysDict                   v4r2p4   Phys    # Current DV Maintainer
-use  HighPtJets                 v1r8p1   Phys    # Marcin Kucharczyk
-use  BBDecTreeTool              v1r7     Phys    # Mike Williams
+use  HighPtJets                 v1r9     Phys    # Marcin Kucharczyk
+use  BBDecTreeTool              v1r8     Phys    # Mike Williams
 
 #===================================================================
 
-use  DaVinciTools       	v24r3    Phys    # ?
-use  RelatedInfoTools           v1r1     Phys    # Anton Poluektov
-use  ExtraInfoTools             v1r0     Phys    # Anton Poluektov
-use  ParticleCombiners          v1r3     Phys    # ?
-use  DaVinciPVTools             v1r1     Phys    # ?
-use  DaVinciFilters             v1r2     Phys    # ?
-use  DaVinciDecayFinder         v1r0     Phys    # ?
-use  TopologicalTools           v1r0     Phys    # Mike Williams et. al.
-use  DaVinciOverlapsAndClones   v1r0     Phys    # ?
-use  DaVinciNeutralTools        v1r0     Phys    # CALO Group
+use  DaVinciTools       	v24r4    Phys    # DaVinci coordinator
+use  RelatedInfoTools           v1r2     Phys    # Anton Poluektov
+use  ExtraInfoTools             v1r1     Phys    # Anton Poluektov
+use  ParticleCombiners          v1r4     Phys    # ?
+use  DaVinciPVTools             v1r2     Phys    # ?
+use  DaVinciFilters             v1r3     Phys    # DaVinci coordinator
+use  DaVinciDecayFinder         v1r1     Phys    # DaVinci coordinator
+use  TopologicalTools           v1r1     Phys    # Mike Williams et. al.
+use  DaVinciOverlapsAndClones   v1r1     Phys    # ?
+use  DaVinciNeutralTools        v1r1     Phys    # CALO Group
 
 #===================================================================
 
 use  LoKiUtils                  v1r3p1   Phys    # Vanya Belyaev
-use  LoKiJets                   v6r12    Phys    # Vanya Belyaev, Victor Coco
+use  LoKiJets                   v6r13    Phys    # Vanya Belyaev, Victor Coco
 use  LoKiAlgo                   v9r10    Phys    # Vanya Belyaev
-use  LoKiArrayFunctors          v11r3    Phys    # Vanya Belyaev
-use  LoKiPhys                   v11r3    Phys    # Vanya Belyaev
+use  LoKiArrayFunctors          v11r4    Phys    # Vanya Belyaev
+use  LoKiPhys                   v11r4    Phys    # Vanya Belyaev
 use  LoKiProtoParticles         v3r1     Phys    # Vanya Belyaev
 use  LoKi                       v9r0p1   Phys    # Vanya Belyaev
-use  LoKiTracks                 v3r2     Phys    # Vanya Belyaev
-use  KalmanFilter               v1r13    Phys    # Vanya Belyaev
+use  LoKiTracks                 v3r3     Phys    # Vanya Belyaev
+use  KalmanFilter               v1r14    Phys    # Vanya Belyaev
 
 #===================================================================
 
-use TisTosTobbing		v9r1     Phys	 # Tomasz Skwarnicki
+use TisTosTobbing		v9r2     Phys	 # Tomasz Skwarnicki
 
 #===================================================================
 
-use Swimming                    v3r7     Phys    # Vava Gligorov, Roel Aaij
+use Swimming                    v3r8     Phys    # Vava Gligorov, Roel Aaij
 
 #===================================================================
 
-use NeuroBayesTools             v1r3     Phys   # ???
+use NeuroBayesTools             v1r4     Phys   # Chris Jones
 
 #===================================================================
 
-use FlavourTagging              v14r0    Phys   # Stefania Vecchi
+use FlavourTagging              v14r1    Phys   # Flavour tagging coordinators
 
 #===================================================================
 
-use JetAccessories              v3r13    Phys   # Victor Coco, Cedric Potterat
+use JetAccessories              v3r14    Phys   # Victor Coco, Cedric Potterat
 
 #===================================================================
 
-use MVADictTools                v1r9p1   Phys   # S.Neubert
+use MVADictTools                v1r10    Phys   # S.Neubert
 
 #===================================================================
 
 # Temporary MC stuff.
-use DaVinciMCKernel v4r4 Phys
+use DaVinciMCKernel v4r5 Phys
 
 # Declare this as a container package
 apply_pattern container_package
