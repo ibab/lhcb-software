@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-10-20 - Andrea Contu
+ - Added Reco15a test sample
+
 ! 2015-10-05 - Vanya Belyaev
 
  - StrippingPromptCharm:        
