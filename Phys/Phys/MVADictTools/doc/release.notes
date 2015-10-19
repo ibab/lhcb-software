@@ -4,6 +4,9 @@
 ! Responsible : Sam Hall, Sebastian Neubert
 ! Purpose     : Generic MVA classifier backends for DictTransform
 !---------------------------------------------------------------------------
+
+!====================== MVADictTools v1r10 2015-10-19 ======================
+
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
