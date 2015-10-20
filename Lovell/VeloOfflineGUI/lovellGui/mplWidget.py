@@ -22,15 +22,24 @@ class lPlottable():
         self.params = params
         self.plot = lPlot
 
-
+    '''
     def on_draw(self, tabOpsState):
-        plot_data = lInterfaces.runview_plot(tabOpsState.runNum, self.params['name'], 
-                                             tabOpsState.moduleID, True, tabOpsState.run_data_dir)
-        plot_data_x = json.loads(plot_data[0])
-        if 'binning' in plot_data_x['data']['data']:
-             self.json_1d(plot_data_x)
+	if tabOpsState.displayRefs:
+	    nominal, reference = lInterfaces.runview_plot(tabOpsState.runNum, 
+							  self.params['name'], 
+							  tabOpsState.moduleID, 
+							  tabOpsState.run_data_dir,
+							  refRun = tabOpsState.refRunNum,
+							  getRef = True)
+	else:
+	    nominal = lInterfaces.runview_plot(tabOpsState.runNum, 
+					       self.params['name'], 
+					       tabOpsState.moduleID, 
+					       tabOpsState.run_data_dir)
+        print nominal
+    '''
              
-    def json_1d(self, plot_data):
+    def runview_1d(self, nominal, reference):
           xs = []
           ys = []
           for bin_edges in plot_data['data']['data']['binning']:

@@ -8,7 +8,6 @@ gaudi_depends_on_subdirs(VeloAnalysisFramework)
 find_package(pyanalysis)
 find_package(pygraphics)
 find_package(PythonLibs)
-find_package(six)
 find_package(pytools)
 
 find_package(Boost COMPONENTS system)

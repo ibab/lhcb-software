@@ -80,6 +80,7 @@ class lTabOptions(QGroupBox):
 		self.grid_layout.addWidget(QLabel("Reference number:"), self.rowCount(), 0, 1, 2)
 		self.grid_layout.addWidget(self.run_numRef_box, self.rowCount(), 0, 1, 2)
 		
+		run_num_box.addItem('Auto')
 		for run in lInterfaces.run_list(self.run_data_dir):
 			self.run_num_box.addItem(str(run))
 			self.run_numRef_box.addItem(str(run))
@@ -126,7 +127,7 @@ class lTabOptions(QGroupBox):
 		moduleID = g*self.module_ID_box.count() + self.module_ID_box.currentIndex()
 		state = lTabOpsState(moduleID, self.showing_ref_box.isChecked(), self.overlay_ref_box.isChecked(), 
 			self.overlay_refDiff_box.isChecked(), self.overlay_refRatio_box.isChecked(), 
-			int(self.run_num_box.currentText()), int(self.run_numRef_box.currentText()), self.run_data_dir) 
+			self.run_num_box.currentText(), self.run_numRef_box.currentText(), self.run_data_dir) 
 		return state
 
 
