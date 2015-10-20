@@ -1,0 +1,57 @@
+#============================================================================
+# Created    : 2011-07-29
+# Author     : Roel Aaij
+# Maintainer : Mika Vesterinen
+#============================================================================
+package           IndependenceTests
+version           v1r13
+
+#============================================================================
+# Structure, i.e. directories to process.
+#============================================================================
+branches          cmt doc python src
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+# use   Package			v1r*    Hat
+use     HltDAQ                  v*      Hlt
+use     GaudiKernel             v*
+use     GaudiAlg                v*
+use     HltEvent                v*      Event
+use     HltMonitoring           v*      Hlt
+
+apply_pattern install_more_includes more=Independence
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          Independence      ../src/lib/TupleHltDecReports.cpp
+library          DecisionMap       ../src/dm/DecisionMap.cpp
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=Independence
+apply_pattern    linker_library    library=DecisionMap
+
+## applications
+application           find_mismatches        "../src/app/find_mismatches.cpp"
+macro_append find_mismatches_use_linkopts "${Boost_linkopts_program_options}"
+macro_append find_mismatches_dependencies DecisionMap
+
+# =============== LCG Dictionaries ==========================================
+apply_pattern     reflex_dictionary                             \
+                  dictionary=Independence                       \
+                  headerfiles=$(INDEPENDENCETESTSROOT)/dict/Independence.h     \
+                  selectionfile=$(INDEPENDENCETESTSROOT)/dict/Independence.xml \
+                  options="-U__MINGW32__"
+
+#============================================================================
+# Python modules
+#============================================================================
+apply_pattern install_python_modules
+
+#============================================================================
+# Tests
+#============================================================================
+apply_pattern QMTest
