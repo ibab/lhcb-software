@@ -6,8 +6,17 @@
 ! or using makedoc script in this folder
 !
 
+
+! 2015-10-20 - GG
+- add  ClonePageTree application to easily clone existing pages 
+- few more methods to OnlineHistogram.h
+
+
+!========================= v8r3 ========================= 
+
 ! 2015-09-30 - GG
 - change default server name (to reflect change at the pit)
+- update web interface (minor bug fixes)
 
 !========================= v8r2 ========================= 
 

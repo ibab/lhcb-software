@@ -1,7 +1,7 @@
 ################################################################################
 # Package: OnlineHistDB
 ################################################################################
-gaudi_subdir(OnlineHistDB v8r3)
+gaudi_subdir(OnlineHistDB v8r4)
 
 find_package(Oracle)
 

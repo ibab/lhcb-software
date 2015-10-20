@@ -3,7 +3,7 @@
 # Maintainer : Giacomo Graziani 
 # =============================================================================
 package             OnlineHistDB
-version             v8r3
+version             v8r4
 
 branches            cmt doc src OnlineHistDB sql www main
 use GaudiPolicy    v*
@@ -21,6 +21,8 @@ application  ChangeTaskName ../main/ChangeTaskName.cpp
 macro_append ChangeTaskName_dependencies " OnlineHistDB "
 application  ChangeAlgorithmName ../main/ChangeAlgorithmName.cpp
 macro_append ChangeAlgorithmName_dependencies " OnlineHistDB "
+application  ClonePageTree ../main/ClonePageTree.cpp
+macro_append ClonePageTree_dependencies " OnlineHistDB "
 
 macro_prepend   oracle_linkopts " -Wl,--no-as-needed " WIN32 ""
 macro_append    oracle_linkopts " -Wl,--as-needed "    WIN32 ""

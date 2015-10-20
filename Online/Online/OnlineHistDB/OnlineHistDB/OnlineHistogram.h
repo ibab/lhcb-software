@@ -186,6 +186,10 @@ class  OnlineHistogram : public OnlineHistDBEnv
   /// success.
   bool initHistoPageDisplayOptionsFromHist(std::string FullPathPageName = "_DEFAULT_",
 					   int Instance=-1); 
+  /// copies display options from another histogram record
+  bool copyDisplayOptions(OnlineHistogram* h);
+  /// copies display options from another histogram on a given page
+  bool copyDisplayOptions(OnlineHistoOnPage* h);
 
 
   /// set custom bin labels for X and/or Y axis. Provide null pointers for not changing labels
@@ -211,8 +215,9 @@ class  OnlineHistogram : public OnlineHistDBEnv
   // ANALYSIS OPTIONS
   /// for analysis histogram, get the directions for creating histogram
   bool getCreationDirections(std::string& Algorithm,
-			     std::vector<std::string> &source_list,
-			     std::vector<float> &parameters);
+                             std::vector<std::string> &source_list,
+                             std::vector<float> &parameters,
+                             int* optionalSourceSet=NULL);
   /// number of analysis to be performed on the histogram set
   int nanalysis() const {return m_nanalysis;}
   /// get analysy description as vectors of length {\it  nanalysis}() containing 
@@ -225,8 +230,11 @@ class  OnlineHistogram : public OnlineHistDBEnv
     anaIDs.insert(anaIDs.begin(),m_anaId.begin(),m_anaId.end());
     anaAlgs.insert(anaAlgs.begin(),m_anaName.begin(),m_anaName.end());
   }
-  /// true if the histogram is produced at analysis level
+  /// true if the histogram is a virtual histogram (produced at display/analysis level)
   bool isAnaHist() const {return m_isAnaHist;}
+  /// true if the histogram is a virtual histogram (produced at display/analysis level)
+  bool isVirtual() {return  m_isAnaHist;}
+
   /// declare an analysis to be performed on the histogram set. If the algorithm
   /// requires some parameters, the input parameters and the warning and alarm 
   /// thresholds for output parameters must be
@@ -382,6 +390,7 @@ class  OnlineHistogram : public OnlineHistDBEnv
   bool useHistForPageDisplay();
   OnlineDisplayOption* getDO(std::string ParameterName); 
   void getDisplayOptions(int doid); 
+  bool copyDO(std::string hname, std::string page="", unsigned int instance=1);
   std::string& algFromID(int anaid);
   int setDisplayOptions(std::string function);
   void createDisplayOptions();

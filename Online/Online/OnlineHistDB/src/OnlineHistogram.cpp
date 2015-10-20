@@ -9,6 +9,7 @@
 #include <cstring>
 #include "OnlineHistDB/OnlineHistogram.h"
 #include "OnlineHistDB/OnlineHistoOnPage.h"
+#include "OnlineHistDB/OnlineHistPage.h"
 using namespace std;
 using namespace OnlineHistDBEnv_constants;
 OnlineHistogram::OnlineHistogram(OnlineHistDBEnv &env,
@@ -1386,6 +1387,42 @@ OnlineHistogram::OnlineDisplayOption* OnlineHistogram::getDO(std::string Paramet
   return out;
 }
 
+bool OnlineHistogram::copyDisplayOptions(OnlineHistoOnPage* h) {
+  std::string pagename="";
+  if(h->page()) pagename = h->page()->name();
+  return copyDO(h->histo->hid(), pagename, h->instance);
+}
+bool OnlineHistogram::copyDisplayOptions(OnlineHistogram* h) {
+  if(h->onpage())
+    return copyDisplayOptions(h->onpage());                       
+  return copyDO(h->hid());
+}
+
+
+bool OnlineHistogram::copyDO(std::string hid, std::string page, unsigned int instance) {
+  bool out=false;
+  int doid=0;
+  OCIStmt *stmt=NULL;
+  if (page.length() == 0) page="NULL";
+  m_StmtMethod = "OnlineHistogram::copyDO";
+  std::stringstream function;
+  function << "BEGIN :out := ONLINEHISTDB.GetBestDO(theHID => '" << hid <<"',thePage => '" << page  << "',TheInstance =>" << instance
+           << "); END;";
+  
+  if ( OCI_SUCCESS == prepareOCIStatement
+       (stmt, function.str().c_str()) ) {
+    myOCIBindInt   (stmt,":out", doid);
+    if (OCI_SUCCESS == myOCIStmtExecute(stmt)) {
+      out=true;
+      getDisplayOptions(doid);
+    }
+    releaseOCIStatement(stmt);
+  }
+  return out;
+}
+
+
+
 // dump functions
 
 
@@ -1503,8 +1540,10 @@ std::string& OnlineHistogram::algFromID(int anaid) {
 
 
 bool OnlineHistogram::getCreationDirections(std::string &Algorithm,
-					    std::vector<std::string> &source_list,
-					    std::vector<float> &parameters) {
+                                            std::vector<std::string> &source_list,
+                                            std::vector<float> &parameters,
+                                            int* optionalSourceSet
+                                            ) {
   bool out = false;
   if (m_isAnaHist) { 
     if (!m_credirLoaded) loadCreationDirections(); 
@@ -1518,6 +1557,8 @@ bool OnlineHistogram::getCreationDirections(std::string &Algorithm,
       if(!SourcePar.empty()) 
         parameters.insert( parameters.begin(),  
                            SourcePar.begin(), SourcePar.end() );
+      if(optionalSourceSet)
+        *optionalSourceSet = SourceSet;
       out = true;
     }
   }
