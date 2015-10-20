@@ -93,29 +93,27 @@
   <class name = "LoKi::TES::Stat"          />
   <class name = "LoKi::TES::HasRecSummary" />
   <class name = "LoKi::TES::RecSummary"    />
-
-  <class    name = "LoKi::TES::Get" >
-    <field name = "m_algorithm" transient = "true"/>
-    <field name = "m_datasvc"   transient = "true"/>
-  </class>
-
-  <class pattern="LoKi::TES::*">
-    <method name="=" />
-  </class>
+  <class name = "LoKi::TES::Get"           />
   
-  <class name="LoKi::TES::Stat">
-    <field name="m_getter" />
-  </class>
   
-  <class    name = "LoKi::TES::Get" >
-    <field name = "m_algorithm" />
-    <field name = "m_datasvc"   />
-  </class>
-    
-
   <exclusion>
+    
+    <class pattern="LoKi::TES::*">
+      <method name="=" />
+    </class>
+    
+    <class name="LoKi::TES::Stat">
+      <field name="m_getter" />
+    </class>
+    
+    <class    name = "LoKi::TES::Get" >
+      <field name = "m_algorithm" />
+      <field name = "m_datasvc"   />
+    </class>
+    
+    
     <function name    = "LoKi::tokenize" />
-
+    
     <class pattern="LoKi::Interface&lt;*&gt;">
       <method name="=" />
     </class>

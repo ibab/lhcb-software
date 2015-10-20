@@ -13,6 +13,11 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2015-10-20 - Vanya Belyaev
+ - LoKiCore.xml 
+   remove duplicated selection 
+   thank to Marco Cattaneo 
+
 !========================= LoKiCore v11r27 2015-10-12 =========================
 ! 2015-09-25 - Gerhard Raven
  - trim dictionary a bit (see GAUDI-1098 and Gaudi gitlab merge request 22)
