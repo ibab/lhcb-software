@@ -14,8 +14,6 @@ If any invalid arguments are supplied, 1 is returned and the program exits.
 # This is due to what appears to be a ROOT bug, where doing `import ROOT`
 # prints a control sequence to stdout on xterm terminal types
 import os
-os.environ["TERM"] = "dumb"
-
 import sys
 import argparse
 
@@ -105,7 +103,7 @@ def retrieve_run_view_plot(run, plot, sensor, noreference, run_data_dir):
         exit_with_error(msg)
 
     # Return a JSON list containing the two plot objects
-    sys.stdout.write('[{0}]'.format(','.join(response)))
+    return response
 
 
 def main():

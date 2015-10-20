@@ -44,6 +44,16 @@ def veloview_configuration(param, run_data_dir):
         sys.stdout.write(json.dumps(Config().run_view_pages))
     elif param == "run_list":
         sys.stdout.write("\n".join([str(r) for r in utils.run_list()]))
+        
+        
+def runview_config():
+     return Config().run_view_pages   
+       
+        
+def run_list(run_data_dir):
+     from veloview.runview import utils
+     Config().run_data_dir = run_data_dir
+     return utils.run_list()
 
 
 def main():
