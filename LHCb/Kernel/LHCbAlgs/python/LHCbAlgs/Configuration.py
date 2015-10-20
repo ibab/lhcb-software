@@ -129,6 +129,13 @@ class LHCbApp(LHCbConfigurableUser):
             CondDB().Tags [ "SIMCOND"  ] = self.getProp("CondDBtag")
         if hasattr( self, "DQFLAGStag" ):
             CondDB().Tags [ "DQFLAGS" ] = self.getProp("DQFLAGStag")
+        # Set up a time decoder for real data (Simulation uses FakeEventTime)
+        if not self.getProp("Simulation"):
+            from Configurables import EventClockSvc
+            ecs = EventClockSvc()
+            # do not overwrite already set values
+            if not ecs.isPropertySet("EventTimeDecoder"):
+                ecs.EventTimeDecoder = "OdinTimeDecoder"
 
     def defineEvents(self):
         SkipEvents = self.getProp("SkipEvents")
