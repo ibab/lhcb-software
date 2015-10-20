@@ -122,7 +122,7 @@ default_config = {
         'DecisionLowMultPi0'              : "HLT_PASS_RE('Hlt2LowMultPi0Decision')",
         #
         'PrescaleLowMultNonBeamBeamNoBias'         : 1,
-        'DecisionLowMultNonBeamBeamNoBias'         : "HLT_PASS_RE('Hlt2NonBeamBeamNoBiasDecision')",
+        'DecisionLowMultNonBeamBeamNoBias'         : "HLT_PASS_RE('Hlt2NoBiasNonBeamBeamDecision')",
         'PrescaleLowMultTechnical'                 : 1,
         'DecisionLowMultTechnical'                 : "HLT_PASS_RE('Hlt2LowMultTechnical_MinBiasDecision')",
         #
