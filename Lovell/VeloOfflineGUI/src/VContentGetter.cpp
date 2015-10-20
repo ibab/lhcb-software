@@ -4,7 +4,6 @@
 #include "rapidjson/stringbuffer.h"
 //#include "PythonQt3.0/src/PythonQt.h"
 //#include "TPython.h"
-#include <boost/python.hpp>
 #include <unistd.h>
 #include <stdarg.h>
 

@@ -1,6 +1,8 @@
 #include "VeloView.h"
 #include <QtGui/QApplication>
 #include <sstream>
+#include <boost/python.hpp>
+#include <stdlib.h>
 
 int main(int argc, char *argv[]) {
 	std::vector<std::string> ops;
@@ -18,4 +20,5 @@ int main(int argc, char *argv[]) {
 
   std::cout<<"Done."<<std::endl;
   return a.exec();
+//	system("python ~/LovellDev_HEAD/VeloOfflineGUI/lovellgui/lovellGUI.py");
 }
