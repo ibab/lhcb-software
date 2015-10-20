@@ -18,3 +18,5 @@ gaudi_add_executable(ExtractFromTrendingFile ExtractFromTrendingFile.cpp
                      LINK_LIBRARIES GaudiKernel)
 gaudi_add_executable(DumpTrendingFile DumpTrendingFile.cpp
                      LINK_LIBRARIES GaudiKernel)
+
+gaudi_install_python_modules()
