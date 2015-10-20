@@ -8,6 +8,8 @@ gaudi_depends_on_subdirs(VeloAnalysisFramework)
 find_package(pyanalysis)
 find_package(pygraphics)
 find_package(PythonLibs)
+find_package(six)
+find_package(pytools)
 
 find_package(Boost COMPONENTS system)
 
@@ -29,5 +31,5 @@ gaudi_add_executable(VeloOfflineGUI src/*.cpp ${MOCS} ${RC_SRCS}
                      LINK_LIBRARIES Qt ROOT Boost PythonLibs)
 
 add_dependencies(VeloOfflineGUI GenUIHeaders)
-
+gaudi_install_python_modules()
 gaudi_install_scripts()
