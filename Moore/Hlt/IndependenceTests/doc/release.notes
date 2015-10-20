@@ -3,6 +3,9 @@ Package Coordinator : Mika Vesterinen
 Purpose     : HLT application to test indepence of Hlt lines
 
 ! 2015-10-15 - Mika Vesterinen
+ - Minor fix to the pp nightly test and remove the pAr test
+
+! 2015-10-15 - Mika Vesterinen
  - Get the independence tests up and running again in the nightlies and add another test for the pAr config
 
 !========================= IndependenceTests v1r13 2015-09-01 =========================

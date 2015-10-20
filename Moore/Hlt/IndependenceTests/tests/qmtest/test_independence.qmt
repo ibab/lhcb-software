@@ -15,7 +15,7 @@
   </set></argument>
   <argument name="unsupported_platforms"><set><text>.*dbg</text></set></argument>
   <argument name="validator"><text>
-expected_string = &quot;No mismatches found.&quot;
+expected_string = &quot;No mismatches found&quot;
 if stdout.find(expected_string) == -1:
     causes.append('missing string')
     result['GaudiTest.expected_string'] = result.Quote(expected_string)

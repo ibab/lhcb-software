@@ -342,7 +342,7 @@ def run( options, args ):
     second_width=12
     full_width=76
     print '-'*full_width
-    print '\033[1m'+('Line:\t').expandtabs(first_width) + '|'+('All(A)\tSingle(S)\tA!S\tS!A').expandtabs(second_width)+'\033[0m'
+    print ('Line:\t').expandtabs(first_width) + '|'+('All(A)\tSingle(S)\tA!S\tS!A').expandtabs(second_width)
     print '-'*full_width
     line_list = hlt1Lines.union( hlt2Lines )
     nLine=0
