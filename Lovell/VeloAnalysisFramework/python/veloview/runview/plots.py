@@ -29,7 +29,7 @@ def get_run_plot(name, run, reference=False, formatter=dictionary_formatter, ref
         except ValueError:
             return None
 
-    else: run = refRun
+    elif reference: run = refRun
 
     # Get the latest run file in the run's directory
     base = utils.run_file_path(run)
@@ -62,9 +62,8 @@ def get_run_plot(name, run, reference=False, formatter=dictionary_formatter, ref
         clone.Scale(1.0/integral)
 
     return formatter(clone)
-
-
-def get_run_plot_with_reference(name, run, formatter=dictionary_formatter, refRun == None):
+        
+def get_run_plot_with_reference(name, run, formatter=dictionary_formatter, refRun = None):
     """Return the formatted nominal and reference plots.
 
     A 2-tuple of two plots is returned:

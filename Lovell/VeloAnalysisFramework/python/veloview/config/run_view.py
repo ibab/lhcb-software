@@ -81,22 +81,26 @@ run_view_pages = OrderedDict([
     }),
     ('pedestals', {
         'title': 'Pedestals',
-        'plots': [
-            {
-                'title': 'Pedestal bank',
-                'name': 'Vetra/VeloPedestalSubtractorMoni/TELL1_{0:03d}/Pedestal_Bank',
-                'sensor_dependent': True,
-                'tip': 'Test of tipping - Hello world!'
-            },
-            {
-                'title': 'Subtracted ADC profile',
-                'name': 'Vetra/VeloPedestalSubtractorMoni/TELL1_{0:03d}/Ped_Sub_ADCs_Profile',
-                'sensor_dependent': True
-            },
-            {
-                'title': 'Subtracted ADC 2D',
+        'subpages': [
+            {'title': '1d plots',
+             'plots': [
+                {
+                    'title': 'Pedestal bank',
+                    'name': 'Vetra/VeloPedestalSubtractorMoni/TELL1_{0:03d}/Pedestal_Bank',
+                    'sensor_dependent': True,
+                    'tip': 'Test of tipping - Hello world!'
+                },
+                {
+                    'title': 'Subtracted ADC profile',
+                    'name': 'Vetra/VeloPedestalSubtractorMoni/TELL1_{0:03d}/Ped_Sub_ADCs_Profile',
+                    'sensor_dependent': True
+                }]},
+            {'title': '2d plots',
+            'plots': [
+                {'title': 'Subtracted ADC 2D',
                 'name': 'Vetra/VeloPedestalSubtractorMoni/TELL1_{0:03d}/Ped_Sub_ADCs_2D',
                 'sensor_dependent': True
+                }]
             }
         ],
         'layout': (1, 3)
@@ -438,10 +442,13 @@ run_view_pages = OrderedDict([
     }),
     ('tracks', {
         'title': 'Tracks',
-				'plots': [
+        'subpages': [
+            {'title': 'Tracks_1',
+			'plots': [
 					{
 						'title': 'Number of clusters associated to a track',
 						'name': 'Velo/VeloTrackMonitor/NMeasurements',
+                        'color': 'k',
 						'options' : {'asPoints': True, 'yAxisZeroSuppressed': False}, 
 					},
 					{
@@ -451,14 +458,20 @@ run_view_pages = OrderedDict([
 					},
 					{
 						'title': 'ADC for R clusters associated to a track',
-						'name': 'Velo/VeloTrackMonitor/Track_radc',
+                        'plottables': [{'name': 'Velo/VeloTrackMonitor/Track_radc', 'color':'k', 'style':3},
+                                       {'name': 'Velo/VeloTrackMonitor/Track_phiadc', 'color': 'g'}],
+                                        
 						'options' : {'asPoints': True, 'yAxisZeroSuppressed': False}, 
 					},
 					{
 						'title': 'ADC for Phi clusters associated to a track',
 						'name': 'Velo/VeloTrackMonitor/Track_phiadc',
 						'options' : {'asPoints': True, 'yAxisZeroSuppressed': False}, 
-					},
+					}],
+            'layout': (2,2)
+            },
+             {'title': 'Tracks_2',
+              'plots': [
 					{
 						'title': 'Track polar angle theta (degrees)',
 						'name': 'Velo/VeloTrackMonitor/Track_Theta',
@@ -474,7 +487,7 @@ run_view_pages = OrderedDict([
 						'name': 'Velo/VeloTrackMonitor/Track_Phi',
 						'options' : {'asPoints': True, 'yAxisZeroSuppressed': False}, 
 					},
-				]
+				]}]
     }),
     ('vertices', {
         'title': 'Vertices',
