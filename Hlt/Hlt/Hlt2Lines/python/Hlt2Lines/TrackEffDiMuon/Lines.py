@@ -28,6 +28,7 @@ class TrackEffDiMuonLines(Hlt2LinesConfigurableUser):
     __slots__ = {'Prescale' :  {},
                  'Common'   :  {'TisTosSpec'	: "Hlt1TrackMuonDecision%TOS",
 			        'L0Filter'	: "L0_CHANNEL('Muon') | L0_CHANNEL('DiMuon')",
+                                'Hlt1Filter'    : None,
 				'OverlapTT'	: 0.4,
 				'OverlapIT'	: 0.4,
 				'OverlapOT'	: 0.4,
@@ -115,9 +116,13 @@ class TrackEffDiMuonLines(Hlt2LinesConfigurableUser):
             linename = 'TrackEffDiMuon' + nickname + 'TurboCalib'
             Hlt2Line(linename, prescale = self.prescale,
                      algos = algos, postscale = self.postscale,
-                     L0DU = self.getProp('Common').get('L0Filter'), Turbo = True)
+                     L0DU = self.getProp('Common').get('L0Filter'), 
+                     HLT1 = self.getProp('Common').get('Hlt1Filter'), 
+                     Turbo = True)
         for (nickname, algos) in self.algorithms(stages).iteritems():
             linename = 'TrackEffDiMuon' + nickname + 'Fullstream'
             Hlt2Line(linename, prescale = self.prescale,
                      algos = algos, postscale = self.postscale,
-                     L0DU = self.getProp('Common').get('L0Filter'), Turbo = False)
+                     L0DU = self.getProp('Common').get('L0Filter'), 
+                     HLT1 = self.getProp('Common').get('Hlt1Filter'), 
+                     Turbo = False)

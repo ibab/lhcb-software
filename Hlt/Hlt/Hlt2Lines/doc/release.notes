@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-10-20 - Sascha Stahl
+ - TrackEffDiMuon lines: Add possibility to change Hlt1Filter in case there is
+   no TisTosTagger.
+
 !========================= Hlt2Lines v10r4 2015-10-07 =========================
 
 ! 2015-10-08 - Michael Kolpin
