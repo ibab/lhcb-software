@@ -29,8 +29,7 @@ confname='Bs2MuMuLines' #FOR USERS
 from StrippingSelections import buildersConf
 confs = buildersConf()
 from StrippingSelections.Utils import lineBuilder, buildStreamsFromBuilder
-#confs[confname]["CONFIG"]["KMaxDOCAMassMeasDown"] = 2.
-#confs[confname]["CONFIG"]["SigmaPPi0CalPrescale"] = 0.5 ## FOR USERS, YOU ONLY NEED TO QUICKLY MODIFY CutName and NewValue (no need to recompile the package but please update the default_config)
+#confs[confname]["CONFIG"]["SigmaPPi0CalPrescale"] = 0.5 ## FOR USERS, YOU ONLY NEED TO QUICKLY MODIFY CutName and NewValue (no need to recompile the package but please update the default_config before committing)
 streams = buildStreamsFromBuilder(confs,confname)
 
 #clone lines for CommonParticles overhead-free timing
@@ -156,11 +155,8 @@ TimingAuditor().TIMER.NameSize = 60
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
 # database
-#DaVinci().DDDBtag  = "dddb-20150526"
-#DaVinci().CondDBtag = "cond-20150625"
+DaVinci().DDDBtag   = "dddb-20150724"
+DaVinci().CondDBtag = "cond-20150828"
 
 # input file
-#importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco15_NoBias.py")
-#importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_Run125113.py")
-#importOptions("/afs/cern.ch/user/r/rvazquez/StrippingS23/DaVinciDev_v36r7p7/Phys/StrippingSelections/tests/data/validationReco15_NoBias.py")
-#importOptions("/afs/cern.ch/user/r/rvazquez/StrippingS23/DaVinciDev_v36r7p7/Phys/StrippingSelections/tests/data/validationReco15_NoBias2.py")
+importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco15a_Run164668.py")

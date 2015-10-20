@@ -6,7 +6,6 @@
 <File ID="E08A92BA-F371-E511-8D96-089E01D8252F">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008783_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008783_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008783_1.rdst"/>
@@ -15,25 +14,22 @@
 <File ID="dcbab2d6-6a92-11e5-8d65-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000744.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000744.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000744.raw"/>
    </logical>
 </File>
-<File ID="666A276B-F371-E511-91CF-B083FED71AAE">
+<File ID="E6AC7A6A-F771-E511-8FBA-0026557FA308">
    <physical>
-      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008714_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008714_1.rdst" se="SARA-BUFFER"/>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008791_1.rdst" se="CERN-FREEZER-EOS"/>
    </physical>
    <logical>
-      <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008714_1.rdst"/>
+      <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008791_1.rdst"/>
    </logical>
 </File>
 <File ID="f0a88f80-6a82-11e5-b98b-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000695.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000695.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000695.raw"/>
@@ -42,16 +38,22 @@
 <File ID="ac9e7898-6a7f-11e5-8b63-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000623.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000623.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000623.raw"/>
    </logical>
 </File>
+<File ID="2a5174ca-6b3e-11e5-93ef-00259012197e">
+   <physical>
+      <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000857.raw" se="CERN-FREEZER-EOS"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000857.raw"/>
+   </logical>
+</File>
 <File ID="CEE86A9B-F371-E511-AC99-B083FED26E7A">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008771_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008771_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008771_1.rdst"/>
@@ -60,7 +62,6 @@
 <File ID="48fe79ac-6a82-11e5-a9ba-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000658.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000658.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000658.raw"/>
@@ -69,7 +70,6 @@
 <File ID="48e797dc-6a82-11e5-a072-002590138ac2">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000657.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000657.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000657.raw"/>
@@ -78,7 +78,6 @@
 <File ID="ba7e5cd8-6a86-11e5-b2a6-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000731.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000731.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000731.raw"/>
@@ -87,7 +86,6 @@
 <File ID="4A8CAC74-F071-E511-99B2-B083FED74050">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008702_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008702_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008702_1.rdst"/>
@@ -96,7 +94,6 @@
 <File ID="E645AE79-F371-E511-8292-B083FEDFC78D">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008756_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008756_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008756_1.rdst"/>
@@ -105,7 +102,6 @@
 <File ID="c4454b9e-6a74-11e5-996c-002590138ac2">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000485.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000485.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000485.raw"/>
@@ -114,7 +110,6 @@
 <File ID="D488781C-F671-E511-9A90-00265581E0E0">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008748_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008748_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008748_1.rdst"/>
@@ -123,7 +118,6 @@
 <File ID="eefba646-6a72-11e5-b54d-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000448.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000448.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000448.raw"/>
@@ -132,7 +126,6 @@
 <File ID="9A63BFB1-F671-E511-B15C-B083FED70DF7">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008784_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008784_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008784_1.rdst"/>
@@ -141,16 +134,22 @@
 <File ID="2afcccf6-6a64-11e5-a892-002590138ac2">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000306.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000306.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000306.raw"/>
    </logical>
 </File>
+<File ID="d5ce481a-6a16-11e5-babc-00259011312c">
+   <physical>
+      <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000208.raw" se="CERN-FREEZER-EOS"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000208.raw"/>
+   </logical>
+</File>
 <File ID="1776ebc6-6bd6-11e5-bf3a-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001086.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001086.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001086.raw"/>
@@ -159,7 +158,6 @@
 <File ID="7AE16D72-F271-E511-9362-002655214400">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008739_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008739_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008739_1.rdst"/>
@@ -168,7 +166,6 @@
 <File ID="2050348E-F171-E511-94AD-00265521B398">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008727_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008727_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008727_1.rdst"/>
@@ -177,7 +174,6 @@
 <File ID="ee74bbb8-6a7c-11e5-8b67-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000598.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000598.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000598.raw"/>
@@ -186,7 +182,6 @@
 <File ID="AEC2E7D0-F571-E511-A64A-0026557F26B0">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008735_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008735_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008735_1.rdst"/>
@@ -195,7 +190,6 @@
 <File ID="e2f2b2ca-69d9-11e5-a58d-00259012194e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000121.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000121.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000121.raw"/>
@@ -204,7 +198,6 @@
 <File ID="9A7E17A1-F371-E511-839C-B083FED72F6A">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008762_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008762_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008762_1.rdst"/>
@@ -213,7 +206,6 @@
 <File ID="04EE4225-F771-E511-9BD4-B083FECEA4F2">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008722_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008722_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008722_1.rdst"/>
@@ -222,16 +214,22 @@
 <File ID="b09244bc-6a74-11e5-aff0-002590138ac2">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000476.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000476.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000476.raw"/>
    </logical>
 </File>
+<File ID="02384778-6a19-11e5-b0e0-002590138ac2">
+   <physical>
+      <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000202.raw" se="CERN-FREEZER-EOS"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000202.raw"/>
+   </logical>
+</File>
 <File ID="bf3acbf0-6a7f-11e5-a3b9-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000631.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000631.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000631.raw"/>
@@ -240,7 +238,6 @@
 <File ID="bd54a0f4-6a7f-11e5-a0a2-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000629.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000629.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000629.raw"/>
@@ -249,7 +246,6 @@
 <File ID="5E0CDFA5-F371-E511-AF2F-B083FED7584D">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008781_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008781_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008781_1.rdst"/>
@@ -258,7 +254,6 @@
 <File ID="aea102a6-6d49-11e5-baf6-00259012194e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001577.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001577.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001577.raw"/>
@@ -267,7 +262,6 @@
 <File ID="292f4b4c-6a64-11e5-9b0b-002590138ac2">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000298.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000298.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000298.raw"/>
@@ -276,7 +270,6 @@
 <File ID="F4D7E68C-F371-E511-9006-B083FECEB21E">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008749_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008749_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008749_1.rdst"/>
@@ -285,7 +278,6 @@
 <File ID="D2ABC968-F171-E511-8AFD-A0369F13E414">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008706_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008706_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008706_1.rdst"/>
@@ -294,7 +286,6 @@
 <File ID="D0DCBF22-F471-E511-ADF5-0026557F4A40">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008760_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008760_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008760_1.rdst"/>
@@ -303,7 +294,6 @@
 <File ID="BA6221A8-F271-E511-B166-B083FED75541">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008712_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008712_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008712_1.rdst"/>
@@ -312,7 +302,6 @@
 <File ID="d1cdbe3a-6a6b-11e5-93a1-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000379.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000379.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000379.raw"/>
@@ -321,7 +310,6 @@
 <File ID="233d62c4-6a68-11e5-9a65-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000332.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000332.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000332.raw"/>
@@ -330,7 +318,6 @@
 <File ID="705D9457-0172-E511-AEFB-B083FED75541">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008788_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008788_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008788_1.rdst"/>
@@ -339,7 +326,6 @@
 <File ID="3a6eac84-6d72-11e5-bac0-00259012194e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000002002.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000002002.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000002002.raw"/>
@@ -348,7 +334,6 @@
 <File ID="d8637d28-6a7c-11e5-9d09-002590138ac2">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000592.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000592.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000592.raw"/>
@@ -357,7 +342,6 @@
 <File ID="70CB1885-F571-E511-BA8C-00265521F930">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008785_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008785_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008785_1.rdst"/>
@@ -366,7 +350,6 @@
 <File ID="45bf429c-6a66-11e5-bfa5-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000319.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000319.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000319.raw"/>
@@ -375,7 +358,6 @@
 <File ID="b93fdf92-6a16-11e5-a80f-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000171.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000171.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000171.raw"/>
@@ -384,25 +366,22 @@
 <File ID="9E297CD9-F271-E511-A7B4-B083FEDFC7B9">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008726_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008726_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008726_1.rdst"/>
    </logical>
 </File>
-<File ID="03815bbe-6a83-11e5-8d61-002590138ac2">
+<File ID="40072B5A-F371-E511-9B6B-B083FECEB30E">
    <physical>
-      <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000701.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000701.raw" se="SARA-BUFFER"/>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008743_1.rdst" se="CERN-FREEZER-EOS"/>
    </physical>
    <logical>
-      <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000701.raw"/>
+      <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008743_1.rdst"/>
    </logical>
 </File>
 <File ID="A2DAF8FB-F371-E511-809F-90B11C280F44">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008763_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008763_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008763_1.rdst"/>
@@ -411,7 +390,6 @@
 <File ID="B0651124-F271-E511-8145-0026557F26B0">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008717_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008717_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008717_1.rdst"/>
@@ -420,7 +398,6 @@
 <File ID="9CE4F0D5-F571-E511-BBBB-00265521AB80">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008772_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008772_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008772_1.rdst"/>
@@ -429,7 +406,6 @@
 <File ID="96125C8B-F871-E511-8C39-B083FED75541">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008794_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008794_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008794_1.rdst"/>
@@ -438,25 +414,22 @@
 <File ID="238b2a8e-6a15-11e5-a369-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000135.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000135.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000135.raw"/>
    </logical>
 </File>
-<File ID="CE60C4DF-F171-E511-B85E-002655808988">
+<File ID="6400d11c-6bb0-11e5-91fd-002590138ac2">
    <physical>
-      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008704_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008704_1.rdst" se="SARA-BUFFER"/>
+      <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001052.raw" se="CERN-FREEZER-EOS"/>
    </physical>
    <logical>
-      <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008704_1.rdst"/>
+      <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001052.raw"/>
    </logical>
 </File>
 <File ID="04F8963E-F371-E511-BB28-B083FECE8D6E">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008740_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008740_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008740_1.rdst"/>
@@ -465,7 +438,6 @@
 <File ID="CEADAE5B-F371-E511-B28D-B083FEDFEF2E">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008719_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008719_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008719_1.rdst"/>
@@ -474,7 +446,6 @@
 <File ID="329bbf3e-6a15-11e5-b316-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000168.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000168.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000168.raw"/>
@@ -483,7 +454,6 @@
 <File ID="969B496F-F371-E511-BABD-B083FECEA8FB">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008744_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008744_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008744_1.rdst"/>
@@ -492,7 +462,6 @@
 <File ID="587f0edc-6dac-11e5-aab1-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000002057.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000002057.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000002057.raw"/>
@@ -501,7 +470,6 @@
 <File ID="F27585B2-F771-E511-8A53-002655218B90">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008709_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008709_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008709_1.rdst"/>
@@ -510,7 +478,6 @@
 <File ID="e204c376-6a83-11e5-8439-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000718.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000718.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000718.raw"/>
@@ -519,7 +486,6 @@
 <File ID="7420926E-F371-E511-A26C-0026552139D8">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008766_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008766_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008766_1.rdst"/>
@@ -528,7 +494,6 @@
 <File ID="6a8a3cc2-6a6f-11e5-ae70-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000418.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000418.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000418.raw"/>
@@ -537,7 +502,6 @@
 <File ID="35412bd6-6a68-11e5-beb0-002590138ac2">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000345.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000345.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000345.raw"/>
@@ -546,7 +510,6 @@
 <File ID="F0E1E806-F971-E511-BC75-B083FED70AB3">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008796_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008796_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008796_1.rdst"/>
@@ -555,7 +518,6 @@
 <File ID="7ED60D42-F371-E511-9F0B-B083FEDFC36E">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008705_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008705_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008705_1.rdst"/>
@@ -564,7 +526,6 @@
 <File ID="24CB3D32-F771-E511-BC7D-0026552148C8">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008770_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008770_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008770_1.rdst"/>
@@ -573,25 +534,22 @@
 <File ID="0C6FB42A-F771-E511-A5CD-B083FED72271">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008776_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008776_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008776_1.rdst"/>
    </logical>
 </File>
-<File ID="40072B5A-F371-E511-9B6B-B083FECEB30E">
+<File ID="FE4AE530-F271-E511-AB79-B083FECD1CF0">
    <physical>
-      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008743_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008743_1.rdst" se="SARA-BUFFER"/>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008730_1.rdst" se="CERN-FREEZER-EOS"/>
    </physical>
    <logical>
-      <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008743_1.rdst"/>
+      <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008730_1.rdst"/>
    </logical>
 </File>
 <File ID="9d865126-6a6d-11e5-a716-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000391.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000391.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000391.raw"/>
@@ -600,7 +558,6 @@
 <File ID="106cb652-6a6a-11e5-a66d-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000357.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000357.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000357.raw"/>
@@ -609,7 +566,6 @@
 <File ID="d4f5ded0-6c14-11e5-97dc-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001178.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001178.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001178.raw"/>
@@ -618,7 +574,6 @@
 <File ID="CC4030D8-F571-E511-872E-002655210A50">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008800_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008800_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008800_1.rdst"/>
@@ -627,7 +582,6 @@
 <File ID="141AF2E4-F171-E511-B5E8-002655216880">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008728_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008728_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008728_1.rdst"/>
@@ -636,7 +590,6 @@
 <File ID="864A2540-F371-E511-9ED4-B083FECEA362">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008708_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008708_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008708_1.rdst"/>
@@ -645,7 +598,6 @@
 <File ID="ac53b8be-6bd6-11e5-8099-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001085.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001085.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001085.raw"/>
@@ -654,7 +606,6 @@
 <File ID="59b8cd88-6a82-11e5-b4c9-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000663.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000663.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000663.raw"/>
@@ -663,7 +614,6 @@
 <File ID="1E40D3B2-F471-E511-AFFE-1803730B4AA1">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008754_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008754_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008754_1.rdst"/>
@@ -672,7 +622,6 @@
 <File ID="90406AFA-F371-E511-9CAD-B083FED701DA">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008787_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008787_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008787_1.rdst"/>
@@ -681,7 +630,6 @@
 <File ID="676f7b4c-6a6f-11e5-baa4-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000415.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000415.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000415.raw"/>
@@ -690,7 +638,6 @@
 <File ID="060DEF34-F771-E511-8F6C-B083FECD252D">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008780_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008780_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008780_1.rdst"/>
@@ -699,7 +646,6 @@
 <File ID="6fa10db0-6a7b-11e5-8c3f-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000566.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000566.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000566.raw"/>
@@ -708,7 +654,6 @@
 <File ID="42960C11-F271-E511-BBA5-B083FEDFB954">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008732_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008732_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008732_1.rdst"/>
@@ -717,7 +662,6 @@
 <File ID="ECC06571-F071-E511-A951-B083FECD5DFE">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008703_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008703_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008703_1.rdst"/>
@@ -726,7 +670,6 @@
 <File ID="0a81d630-6cfb-11e5-b124-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001335.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001335.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001335.raw"/>
@@ -735,7 +678,6 @@
 <File ID="A284A9C0-F271-E511-985B-00265521E700">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008724_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008724_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008724_1.rdst"/>
@@ -744,7 +686,6 @@
 <File ID="96DAFC68-F371-E511-8C58-B083FECE9CBB">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008736_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008736_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008736_1.rdst"/>
@@ -753,7 +694,6 @@
 <File ID="9A5E9619-F471-E511-9FB3-089E01DC6CC1">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008738_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008738_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008738_1.rdst"/>
@@ -762,7 +702,6 @@
 <File ID="97a2bf4c-6a86-11e5-b2d0-002590138ac2">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000727.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000727.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000727.raw"/>
@@ -771,16 +710,22 @@
 <File ID="41960634-6a4c-11e5-b680-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000231.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000231.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000231.raw"/>
    </logical>
 </File>
+<File ID="4779e514-6a71-11e5-9e57-002590138ac2">
+   <physical>
+      <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000447.raw" se="CERN-FREEZER-EOS"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000447.raw"/>
+   </logical>
+</File>
 <File ID="9ADF8BDC-F171-E511-972C-0026552168D0">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008721_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008721_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008721_1.rdst"/>
@@ -789,7 +734,6 @@
 <File ID="464FA5B4-F371-E511-9FE8-001B21B98EEC">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008774_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008774_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008774_1.rdst"/>
@@ -798,7 +742,6 @@
 <File ID="e471b712-6c14-11e5-8744-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001175.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001175.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001175.raw"/>
@@ -807,7 +750,6 @@
 <File ID="1090EF2A-F671-E511-BEDA-0026552168B8">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008755_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008755_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008755_1.rdst"/>
@@ -816,7 +758,6 @@
 <File ID="d89e7da8-6c14-11e5-b33a-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001176.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001176.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001176.raw"/>
@@ -825,7 +766,6 @@
 <File ID="64850B73-F371-E511-AC95-B083FED71268">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008753_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008753_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008753_1.rdst"/>
@@ -834,7 +774,6 @@
 <File ID="df7b5bc0-6a82-11e5-88c4-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000676.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000676.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000676.raw"/>
@@ -843,7 +782,6 @@
 <File ID="5A808DA2-F171-E511-A3AF-002655219F40">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008711_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008711_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008711_1.rdst"/>
@@ -852,7 +790,6 @@
 <File ID="F6E5275A-F371-E511-8D81-B083FECE9130">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008768_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008768_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008768_1.rdst"/>
@@ -861,7 +798,6 @@
 <File ID="74af3cca-6a6f-11e5-b912-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000422.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000422.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000422.raw"/>
@@ -870,7 +806,6 @@
 <File ID="B0362C96-F371-E511-A79C-A0369F13EA38">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008757_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008757_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008757_1.rdst"/>
@@ -879,7 +814,6 @@
 <File ID="a93e29f0-6a16-11e5-8e93-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000134.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000134.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000134.raw"/>
@@ -888,7 +822,6 @@
 <File ID="eaa22e80-6bf8-11e5-b1cb-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001147.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001147.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001147.raw"/>
@@ -897,7 +830,6 @@
 <File ID="5E2DA3E5-F671-E511-B9E0-0026557FB600">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008725_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008725_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008725_1.rdst"/>
@@ -906,7 +838,6 @@
 <File ID="ea123df2-6bf8-11e5-aeb9-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001139.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001139.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001139.raw"/>
@@ -915,7 +846,6 @@
 <File ID="e205f808-6a6b-11e5-adfb-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000386.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000386.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000386.raw"/>
@@ -924,7 +854,6 @@
 <File ID="364CE14F-F371-E511-8DA9-B083FED72215">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008752_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008752_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008752_1.rdst"/>
@@ -933,7 +862,6 @@
 <File ID="32DD1D95-F371-E511-A7C5-B083FED71CE4">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008775_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008775_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008775_1.rdst"/>
@@ -942,7 +870,6 @@
 <File ID="0271d6bc-6a7a-11e5-9451-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000553.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000553.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000553.raw"/>
@@ -951,7 +878,6 @@
 <File ID="08A6067C-F371-E511-A399-B083FED7584D">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008769_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008769_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008769_1.rdst"/>
@@ -960,7 +886,6 @@
 <File ID="e34db9ee-6c14-11e5-ad15-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001169.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001169.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001169.raw"/>
@@ -969,25 +894,22 @@
 <File ID="e651530e-69d9-11e5-a532-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000120.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000120.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000120.raw"/>
    </logical>
 </File>
-<File ID="ef262f32-6e24-11e5-8c00-00259012197e">
+<File ID="3807DAC6-F371-E511-881A-A0369F13EA38">
    <physical>
-      <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000002094.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000002094.raw" se="SARA-BUFFER"/>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008773_1.rdst" se="CERN-FREEZER-EOS"/>
    </physical>
    <logical>
-      <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000002094.raw"/>
+      <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008773_1.rdst"/>
    </logical>
 </File>
 <File ID="8C227CA1-F371-E511-A4DA-001B21B99310">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008782_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008782_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008782_1.rdst"/>
@@ -996,7 +918,6 @@
 <File ID="F29A0CA6-F371-E511-91B9-B083FECD6099">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008747_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008747_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008747_1.rdst"/>
@@ -1005,25 +926,22 @@
 <File ID="49d101be-6a88-11e5-be27-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000741.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000741.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000741.raw"/>
    </logical>
 </File>
-<File ID="FE4AE530-F271-E511-AB79-B083FECD1CF0">
+<File ID="1d75316a-6b3e-11e5-aefe-002590138ac2">
    <physical>
-      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008730_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008730_1.rdst" se="SARA-BUFFER"/>
+      <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000848.raw" se="CERN-FREEZER-EOS"/>
    </physical>
    <logical>
-      <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008730_1.rdst"/>
+      <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000848.raw"/>
    </logical>
 </File>
 <File ID="2a079750-6a5e-11e5-a5b4-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000261.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000261.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000261.raw"/>
@@ -1032,7 +950,6 @@
 <File ID="05a66b9a-6a93-11e5-93bd-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000753.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000753.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000753.raw"/>
@@ -1041,16 +958,22 @@
 <File ID="D4196B69-F371-E511-B1F4-00265521FDF0">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008761_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008761_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008761_1.rdst"/>
    </logical>
 </File>
+<File ID="062040E6-F071-E511-9016-B083FECD4898">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008700_1.rdst" se="CERN-FREEZER-EOS"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008700_1.rdst"/>
+   </logical>
+</File>
 <File ID="405C6BB5-F371-E511-8F90-089E01D82664">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008777_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008777_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008777_1.rdst"/>
@@ -1059,7 +982,6 @@
 <File ID="04C806E8-F571-E511-8A54-00265521C4A0">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008758_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008758_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008758_1.rdst"/>
@@ -1068,7 +990,6 @@
 <File ID="34c11e64-6a68-11e5-9786-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000339.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000339.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000339.raw"/>
@@ -1077,7 +998,6 @@
 <File ID="af9c3008-6a7f-11e5-b232-002590138ac2">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000626.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000626.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000626.raw"/>
@@ -1086,7 +1006,6 @@
 <File ID="DC8E38F8-0072-E511-BCA3-B083FEDFC7B9">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008789_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008789_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008789_1.rdst"/>
@@ -1095,7 +1014,6 @@
 <File ID="3a6f0586-6a4c-11e5-aeda-002590138ac2">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000233.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000233.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000233.raw"/>
@@ -1104,7 +1022,6 @@
 <File ID="A6D7662B-F171-E511-9A4C-B083FECD252D">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008710_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008710_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008710_1.rdst"/>
@@ -1113,7 +1030,6 @@
 <File ID="0256EB74-F371-E511-9841-B083FEDFCBDA">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008778_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008778_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008778_1.rdst"/>
@@ -1122,25 +1038,38 @@
 <File ID="e7f81e12-6a6b-11e5-9fee-002590138ac2">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000388.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000388.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000388.raw"/>
    </logical>
 </File>
+<File ID="5d5f7002-6bb0-11e5-831a-00259012197e">
+   <physical>
+      <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001061.raw" se="CERN-FREEZER-EOS"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001061.raw"/>
+   </logical>
+</File>
 <File ID="026443a8-6a7a-11e5-8631-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000549.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000549.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000549.raw"/>
    </logical>
 </File>
+<File ID="CE60C4DF-F171-E511-B85E-002655808988">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008704_1.rdst" se="CERN-FREEZER-EOS"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008704_1.rdst"/>
+   </logical>
+</File>
 <File ID="F8B6DBBB-F671-E511-9ECD-00265521FCA8">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008790_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008790_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008790_1.rdst"/>
@@ -1149,7 +1078,6 @@
 <File ID="A8A2968B-F371-E511-BAF6-0026557FF7B0">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008715_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008715_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008715_1.rdst"/>
@@ -1158,7 +1086,6 @@
 <File ID="2fdc5dd2-6a68-11e5-a25d-002590138ac2">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000344.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000344.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000344.raw"/>
@@ -1167,7 +1094,6 @@
 <File ID="bc557db0-6bd6-11e5-9997-002590138ac2">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001091.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001091.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001091.raw"/>
@@ -1176,7 +1102,6 @@
 <File ID="826f753c-6a4c-11e5-b33d-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000227.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000227.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000227.raw"/>
@@ -1185,7 +1110,6 @@
 <File ID="0ea1f91a-6a5e-11e5-85fa-002590138ac2">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000253.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000253.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000253.raw"/>
@@ -1194,7 +1118,6 @@
 <File ID="df7bc376-6a82-11e5-8132-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000667.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000667.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000667.raw"/>
@@ -1203,7 +1126,6 @@
 <File ID="AEDCC9A9-F371-E511-A401-B083FEDFC36E">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008792_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008792_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008792_1.rdst"/>
@@ -1212,7 +1134,6 @@
 <File ID="D0AD83F7-F371-E511-B5C1-90B11C27E1C1">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008742_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008742_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008742_1.rdst"/>
@@ -1221,7 +1142,6 @@
 <File ID="7704d610-6a6f-11e5-8d2c-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000423.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000423.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000423.raw"/>
@@ -1230,7 +1150,6 @@
 <File ID="b415bd3a-6a74-11e5-8419-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000477.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000477.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000477.raw"/>
@@ -1239,7 +1158,6 @@
 <File ID="0224f772-6bd6-11e5-81ac-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001082.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001082.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001082.raw"/>
@@ -1248,7 +1166,6 @@
 <File ID="56135C9C-F971-E511-9522-002655213910">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008793_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008793_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008793_1.rdst"/>
@@ -1257,7 +1174,6 @@
 <File ID="3f2007e2-6a7e-11e5-8901-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000610.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000610.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000610.raw"/>
@@ -1266,7 +1182,6 @@
 <File ID="cab88de2-6a74-11e5-8e08-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000490.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000490.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000490.raw"/>
@@ -1275,7 +1190,6 @@
 <File ID="1f61275c-6a64-11e5-98f7-002590138ac2">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000297.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000297.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000297.raw"/>
@@ -1284,7 +1198,6 @@
 <File ID="7ff5d27c-6a7b-11e5-bcbb-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000574.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000574.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000574.raw"/>
@@ -1293,7 +1206,6 @@
 <File ID="10CC4470-F271-E511-8193-B083FEDFC36E">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008751_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008751_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008751_1.rdst"/>
@@ -1302,7 +1214,6 @@
 <File ID="1551e05e-6a5e-11e5-8d78-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000256.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000256.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000256.raw"/>
@@ -1311,7 +1222,6 @@
 <File ID="934b218c-6a86-11e5-8183-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000728.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000728.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000728.raw"/>
@@ -1320,7 +1230,6 @@
 <File ID="E47A4992-F371-E511-AB5C-B083FED35D3B">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008713_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008713_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008713_1.rdst"/>
@@ -1329,7 +1238,6 @@
 <File ID="885AB4A1-F571-E511-9ABC-0026557F5410">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008798_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008798_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008798_1.rdst"/>
@@ -1338,7 +1246,6 @@
 <File ID="4EDC15CB-F571-E511-B4BD-B083FECD26B9">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008765_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008765_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008765_1.rdst"/>
@@ -1347,25 +1254,22 @@
 <File ID="26d630c8-6a5e-11e5-8f9c-002590138ac2">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000264.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000264.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000264.raw"/>
    </logical>
 </File>
-<File ID="4779e514-6a71-11e5-9e57-002590138ac2">
+<File ID="ef262f32-6e24-11e5-8c00-00259012197e">
    <physical>
-      <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000447.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000447.raw" se="SARA-BUFFER"/>
+      <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000002094.raw" se="CERN-FREEZER-EOS"/>
    </physical>
    <logical>
-      <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000447.raw"/>
+      <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000002094.raw"/>
    </logical>
 </File>
 <File ID="5A437358-F271-E511-8C0F-001B21B99144">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008718_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008718_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008718_1.rdst"/>
@@ -1374,7 +1278,6 @@
 <File ID="40C46C38-F371-E511-B24D-B083FEDFEF2E">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008723_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008723_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008723_1.rdst"/>
@@ -1383,7 +1286,6 @@
 <File ID="147e44bc-6a7a-11e5-889b-002590138ac2">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000528.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000528.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000528.raw"/>
@@ -1392,7 +1294,6 @@
 <File ID="48fb2180-6a82-11e5-9a7d-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000673.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000673.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000673.raw"/>
@@ -1401,7 +1302,6 @@
 <File ID="A08FC67F-F471-E511-80EF-B083FECD25D1">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008733_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008733_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008733_1.rdst"/>
@@ -1410,7 +1310,6 @@
 <File ID="3e29d264-6a4c-11e5-9aae-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000229.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000229.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000229.raw"/>
@@ -1419,7 +1318,6 @@
 <File ID="8C6E916A-F671-E511-933B-B083FED75481">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008779_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008779_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008779_1.rdst"/>
@@ -1428,7 +1326,6 @@
 <File ID="2f7af456-6a64-11e5-991a-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000305.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000305.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000305.raw"/>
@@ -1437,7 +1334,6 @@
 <File ID="e12d696e-6bd5-11e5-9ddd-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001087.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001087.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001087.raw"/>
@@ -1446,7 +1342,6 @@
 <File ID="72CCC71F-F971-E511-8F12-001B21BAC578">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008801_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008801_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008801_1.rdst"/>
@@ -1455,7 +1350,6 @@
 <File ID="ded85ece-6a83-11e5-a879-002590138ac2">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000717.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000717.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000717.raw"/>
@@ -1464,7 +1358,6 @@
 <File ID="AA5E6C7A-F371-E511-8D4D-B083FECEABC2">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008741_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008741_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008741_1.rdst"/>
@@ -1473,7 +1366,6 @@
 <File ID="48f03ad6-6a82-11e5-8328-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000661.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000661.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000661.raw"/>
@@ -1482,7 +1374,6 @@
 <File ID="45798bce-6d51-11e5-a664-00259012194e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001687.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001687.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001687.raw"/>
@@ -1491,7 +1382,6 @@
 <File ID="7EBEFBF4-F671-E511-B2EC-00265522A2C8">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008729_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008729_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008729_1.rdst"/>
@@ -1500,7 +1390,6 @@
 <File ID="4625be46-6a66-11e5-9be4-002590138ac2">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000320.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000320.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000320.raw"/>
@@ -1509,7 +1398,6 @@
 <File ID="FEC97EDF-F371-E511-8135-B083FECEA3D0">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008799_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008799_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008799_1.rdst"/>
@@ -1518,7 +1406,6 @@
 <File ID="5a290d90-6a4c-11e5-acbb-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000220.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000220.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000220.raw"/>
@@ -1527,7 +1414,6 @@
 <File ID="d82e14b4-6a16-11e5-a678-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000205.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000205.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000205.raw"/>
@@ -1536,7 +1422,6 @@
 <File ID="bdb1532c-6a74-11e5-a01f-002590138ac2">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000481.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000481.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000481.raw"/>
@@ -1545,7 +1430,6 @@
 <File ID="B8578416-0172-E511-A945-00265521D470">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008786_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008786_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008786_1.rdst"/>
@@ -1554,7 +1438,6 @@
 <File ID="e2ab1852-69d9-11e5-965e-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000090.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000090.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000090.raw"/>
@@ -1563,7 +1446,6 @@
 <File ID="39ac954a-6a66-11e5-95bd-002590138ac2">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000314.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000314.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000314.raw"/>
@@ -1572,7 +1454,6 @@
 <File ID="c04b4776-6d55-11e5-bc68-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001782.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001782.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001782.raw"/>
@@ -1581,25 +1462,30 @@
 <File ID="019a3284-6a93-11e5-8224-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000746.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000746.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000746.raw"/>
    </logical>
 </File>
-<File ID="E6AC7A6A-F771-E511-8FBA-0026557FA308">
+<File ID="666A276B-F371-E511-91CF-B083FED71AAE">
    <physical>
-      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008791_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008791_1.rdst" se="SARA-BUFFER"/>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008714_1.rdst" se="CERN-FREEZER-EOS"/>
    </physical>
    <logical>
-      <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008791_1.rdst"/>
+      <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008714_1.rdst"/>
+   </logical>
+</File>
+<File ID="2584995a-6ae3-11e5-a9cc-00259011312c">
+   <physical>
+      <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000830.raw" se="CERN-FREEZER-EOS"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000830.raw"/>
    </logical>
 </File>
 <File ID="2042d0d6-6a68-11e5-a551-002590138ac2">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000333.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000333.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000333.raw"/>
@@ -1608,7 +1494,6 @@
 <File ID="e1bdacce-6a6b-11e5-8a17-002590138ac2">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000385.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000385.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000385.raw"/>
@@ -1617,7 +1502,6 @@
 <File ID="50373D94-F371-E511-9104-B083FECE8E3A">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008795_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008795_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008795_1.rdst"/>
@@ -1626,7 +1510,6 @@
 <File ID="859aa5c2-6a7b-11e5-826e-002590138ac2">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000573.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000573.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000573.raw"/>
@@ -1635,7 +1518,6 @@
 <File ID="EC01EFB3-F271-E511-BEB1-001B21BAD034">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008746_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008746_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008746_1.rdst"/>
@@ -1644,7 +1526,6 @@
 <File ID="26fafa0c-6a68-11e5-8be5-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000340.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000340.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000340.raw"/>
@@ -1653,7 +1534,6 @@
 <File ID="3629AB92-F571-E511-95E6-A0369F13FC70">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008737_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008737_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008737_1.rdst"/>
@@ -1662,7 +1542,6 @@
 <File ID="6f369c82-6a7b-11e5-836d-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000568.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000568.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000568.raw"/>
@@ -1671,7 +1550,6 @@
 <File ID="5d9e12ea-6a4c-11e5-ae57-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000226.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000226.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000226.raw"/>
@@ -1680,7 +1558,6 @@
 <File ID="D8E967B8-F171-E511-A2F0-B083FED72EA6">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008731_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008731_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008731_1.rdst"/>
@@ -1689,7 +1566,6 @@
 <File ID="14EF071E-F171-E511-BC64-0026557F9AE0">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008701_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008701_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008701_1.rdst"/>
@@ -1698,7 +1574,6 @@
 <File ID="58820444-1572-E511-9C7E-A0369F13FDD4">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008767_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008767_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008767_1.rdst"/>
@@ -1707,7 +1582,6 @@
 <File ID="0AB97A45-F171-E511-A7DC-B083FECD1CF0">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008707_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008707_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008707_1.rdst"/>
@@ -1716,7 +1590,6 @@
 <File ID="8EC187FE-1172-E511-B55A-B083FECD252D">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008720_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008720_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008720_1.rdst"/>
@@ -1725,7 +1598,6 @@
 <File ID="86C34F66-F271-E511-8B04-00265521AAC0">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008745_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008745_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008745_1.rdst"/>
@@ -1734,7 +1606,6 @@
 <File ID="4497f232-6a71-11e5-94a1-002590138ac2">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000445.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000445.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000445.raw"/>
@@ -1743,7 +1614,6 @@
 <File ID="D064A029-F371-E511-9622-B083FECD579F">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008750_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008750_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008750_1.rdst"/>
@@ -1752,7 +1622,6 @@
 <File ID="F4BB8939-F771-E511-8D4C-0026557FB600">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008797_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008797_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008797_1.rdst"/>
@@ -1761,7 +1630,6 @@
 <File ID="f239e458-6a72-11e5-abaf-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000449.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000449.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000449.raw"/>
@@ -1770,7 +1638,6 @@
 <File ID="f6673a4e-6a72-11e5-9e1f-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000450.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000450.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000450.raw"/>
@@ -1779,7 +1646,6 @@
 <File ID="40ba3b0e-6a6a-11e5-96a4-002590138ac2">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000366.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000366.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000366.raw"/>
@@ -1788,7 +1654,6 @@
 <File ID="f8ef5d96-6a72-11e5-8813-00259012197e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000455.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000455.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000455.raw"/>
@@ -1797,7 +1662,6 @@
 <File ID="99930762-6d47-11e5-899a-00259012194e">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001561.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001561.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001561.raw"/>
@@ -1806,7 +1670,6 @@
 <File ID="945779A7-F971-E511-919F-001B21B9903C">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008759_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://by27-5.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008759_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008759_1.rdst"/>
@@ -1815,7 +1678,6 @@
 <File ID="698e1784-6d72-11e5-abc7-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000002001.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000002001.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000002001.raw"/>
@@ -1824,25 +1686,22 @@
 <File ID="ce9552d2-6a16-11e5-b316-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000184.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000184.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000184.raw"/>
    </logical>
 </File>
-<File ID="3807DAC6-F371-E511-881A-A0369F13EA38">
+<File ID="03815bbe-6a83-11e5-8d61-002590138ac2">
    <physical>
-      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008773_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008773_1.rdst" se="SARA-BUFFER"/>
+      <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000701.raw" se="CERN-FREEZER-EOS"/>
    </physical>
    <logical>
-      <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008773_1.rdst"/>
+      <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000000701.raw"/>
    </logical>
 </File>
 <File ID="7CAF29FA-F271-E511-BA01-0026557FA5F0">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008716_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-1.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008716_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008716_1.rdst"/>
@@ -1851,7 +1710,6 @@
 <File ID="f1692b26-6cfa-11e5-bcda-00259011312c">
    <physical>
       <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001337.raw" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="mdf:root://bw27-3.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001337.raw" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001337.raw"/>
@@ -1860,7 +1718,6 @@
 <File ID="72207B55-F371-E511-99D4-B083FED71CD8">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008764_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://s35-01.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008764_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008764_1.rdst"/>
@@ -1869,10 +1726,17 @@
 <File ID="028F431C-F271-E511-93A2-0026557F5410">
    <physical>
       <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008734_1.rdst" se="CERN-FREEZER-EOS"/>
-      <pfn filetype="ROOT_All" name="root://bw32-4.grid.sara.nl:1094/pnfs/grid.sara.nl/data/lhcb/buffer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008734_1.rdst" se="SARA-BUFFER"/>
    </physical>
    <logical>
       <lfn name="/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008734_1.rdst"/>
+   </logical>
+</File>
+<File ID="59cd265a-6bb0-11e5-977c-00259012197e">
+   <physical>
+      <pfn filetype="ROOT_All" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001043.raw" se="CERN-FREEZER-EOS"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15/164668/164668_0000001043.raw"/>
    </logical>
 </File>
 

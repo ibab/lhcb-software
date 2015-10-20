@@ -8,26 +8,17 @@ from Gaudi.Configuration import *
 from Configurables import DaVinci
 from StrippingConf.Configuration import StrippingConf
 
-# Tighten Trk Chi2 to <3
-from CommonParticles.Utils import DefaultTrackingCuts
-DefaultTrackingCuts().Cuts  = { "Chi2Cut" : [ 0, 4 ],
-                                "GhostProbCut" : [ 0,   0.4  ],
-                                "CloneDistCut" : [5000, 9e+99 ] }
-
 #
 #Raw event juggler to split Other/RawEvent into Velo/RawEvent and Tracker/RawEvent
 #
 from Configurables import RawEventJuggler
-juggler = RawEventJuggler( DataOnDemand=True, Input=0.3, Output=4.1 )
+juggler = RawEventJuggler( DataOnDemand=True, Input=0.3, Output=4.2 )
 
 #
 #Fix for TrackEff lines
 #
 from Configurables import DecodeRawEvent
-DecodeRawEvent().setProp("OverrideInputs",4.1)
-
-from Configurables import ConfigCDBAccessSvc
-ConfigCDBAccessSvc().File = '$STRIPPINGSELECTIONSROOT/tests/data/config.cdb'
+DecodeRawEvent().setProp("OverrideInputs",4.2)
 
 # Specify the name of your configuration
 my_wg='Charm' #FOR LIAISONS
@@ -48,7 +39,7 @@ charmMicroDSTname      = 'Charm'
 pidMicroDSTname        = 'PID'
 bhadronMicroDSTname    = 'Bhadron'
 mdstStreams = [ leptonicMicroDSTname,charmMicroDSTname,pidMicroDSTname,bhadronMicroDSTname ]
-dstStreams  = [ "BhadronCompleteEvent", "CharmCompleteEvent", "CharmToBeSwum", "Dimuon",
+dstStreams  = [ "BhadronCompleteEvent", "CharmCompleteEvent", "Dimuon",
                 "EW", "Semileptonic", "Calibration", "MiniBias", "Radiative" ]
 
 stripTESPrefix = 'Strip'
@@ -136,19 +127,6 @@ sr = StrippingReport(Selections = sc.selections())
 from Configurables import AlgorithmCorrelationsAlg
 ac = AlgorithmCorrelationsAlg(Algorithms = list(set(sc.selections())))
 
-## Configure PV refitter
-from GaudiKernel.SystemOfUnits import micrometer
-from Configurables import LoKi__PVReFitter
-LoKi__PVReFitter("ToolSvc.LoKi::PVReFitter").CheckTracksByLHCbIDs = True
-LoKi__PVReFitter("ToolSvc.LoKi::PVReFitter").DeltaChi2 = 0.01
-LoKi__PVReFitter("ToolSvc.LoKi::PVReFitter").DeltaDistance = 5*micrometer
-
-## Configure the VeloTrack unpacker
-from Configurables import UnpackTrack
-unpackIt = UnpackTrack("unpackIt")
-unpackIt.InputName = "pRec/Track/FittedHLT1VeloTracks"
-unpackIt.OutputName = "Rec/Track/FittedHLT1VeloTracks"
-
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
 DaVinci().EvtMax = 10000
 DaVinci().PrintFreq = 100
@@ -161,16 +139,17 @@ DaVinci().ProductionType = "Stripping"
 DaVinci().DataType  = "2015"
 DaVinci().InputType = "DST"
 
+MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
+
 # change the column size of timing table
 from Configurables import TimingAuditor, SequencerTimerTool
 TimingAuditor().addTool(SequencerTimerTool,name="TIMER")
 TimingAuditor().TIMER.NameSize = 60
 
-MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
 # database
-DaVinci().DDDBtag  = "dddb-20150526"
-DaVinci().CondDBtag = "cond-20150625"
+DaVinci().DDDBtag   = "dddb-20150724"
+DaVinci().CondDBtag = "cond-20150828"
 
 # input file
-importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco15_NoBias.py")
+importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco15a_Run164668.py")
