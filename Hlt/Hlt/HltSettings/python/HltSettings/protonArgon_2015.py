@@ -88,7 +88,7 @@ class protonArgon_2015:
         lines = [
             'Hlt2PassThrough', 
             'Hlt2Lumi', 
-            'Hlt2Transparent', 
+            'Hlt2Transparent',
             'Hlt2SMOGD02KPi',
             'Hlt2SMOGDpm2KPiPi',
             'Hlt2SMOGDs2KKPi',
@@ -257,10 +257,10 @@ class protonArgon_2015:
         from Hlt2Lines.Commissioning.Lines import CommissioningLines
         thresholds.update({
             CommissioningLines : {
-                'Prescale'  : { 'Hlt2PassThrough' : 1 },
+                'Prescale'  : { 'Hlt2PassThrough' : 1.0 },
                 'Postscale' : { 'Hlt2ErrorEvent'  : 'RATE(0.01)' },
                 'PassThrough' : { 'HLT1' : "HLT_PASS('Hlt1DiMuonHighMassDecision') | HLT_PASS_RE('Hlt1MB.*Decision') | HLT_PASS_RE('Hlt1L0B.*gasDecision')" }
-            }
+                }
         })
         from GaudiKernel.SystemOfUnits import GeV, MeV, mm 
         from Hlt2Lines.SMOG.Lines import SMOGLines
@@ -269,7 +269,7 @@ class protonArgon_2015:
                  'Prescale'  : {},
                  'Postscale' : {},
                  'D02HH'     : {
-                                  'TisTosSpec'               : "Hlt1SMOGSingleTrackDecision%TOS",
+                                  'TisTosSpec'               : "Hlt1SMOG.*Decision%TOS",
                                   'Pair_AMINDOCA_MAX'        : 0.10 * mm,
                                   'Trk_Max_APT_MIN'          : 500.0 * MeV, 
                                   'D0_VCHI2PDOF_MAX'         : 10.0,       # neuter
@@ -281,7 +281,7 @@ class protonArgon_2015:
                                   'Mass_M_MAX'               :  1944.0 * MeV,
                                 },
                  'Dpm2HHH'    : {
-                                 'TisTosSpec'               : "Hlt1SMOGSingleTrackDecision%TOS",
+                                 'TisTosSpec'               : "Hlt1SMOG.*Decision%TOS",
                                  'Trk_ALL_PT_MIN'           :  200.0 * MeV,
                                  'Trk_2OF3_PT_MIN'          :  400.0 * MeV,
                                  'Trk_1OF3_PT_MIN'          :  1000.0 * MeV,
@@ -293,7 +293,7 @@ class protonArgon_2015:
                                  'Mass_M_MAX'               :  1949.0 * MeV,
                                 },
                  'Ds2HHH'     : { 
-                                 'TisTosSpec'               : "Hlt1SMOGSingleTrackDecision%TOS",
+                                 'TisTosSpec'               : "Hlt1SMOG.*Decision%TOS",
                                  'Trk_ALL_PT_MIN'           :  200.0 * MeV,
                                  'Trk_2OF3_PT_MIN'          :  400.0 * MeV,
                                  'Trk_1OF3_PT_MIN'          :  1000.0 * MeV,
@@ -305,7 +305,7 @@ class protonArgon_2015:
                                  'Mass_M_MAX'               :  2049.0 * MeV,
                                 },
                  'Lc2HHH'     : {
-                                 'TisTosSpec'               : "Hlt1SMOGSingleTrackDecision%TOS",
+                                 'TisTosSpec'               : "Hlt1SMOG.*Decision%TOS",
                                  'Trk_ALL_PT_MIN'           :  200.0 * MeV,
                                  'Trk_2OF3_PT_MIN'          :  400.0 * MeV,
                                  'Trk_1OF3_PT_MIN'          :  1000.0 * MeV,
@@ -317,7 +317,7 @@ class protonArgon_2015:
                                  'Mass_M_MAX'               :  2543.0 * MeV,
                                 },
                  'B2PiMu' :     {
-                                 'TisTosSpec'             : "Hlt1SMOGSingleTrackDecision%TOS",
+                                 'TisTosSpec'             : "Hlt1SMOG.*Decision%TOS",
                                  'AM_MIN'                 : 0 * MeV,
                                  'AM_MAX'                 : 1000.0 * GeV,
                                  'ASUMPT_MIN'             : 4.0 * GeV,

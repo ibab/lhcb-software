@@ -44,6 +44,7 @@ class TrackEffDiMuon_protonArgon_2015 :
                  'Prescale' :  {},
                  'Common'   :  {'TisTosSpec'    : [],
                                 'L0Filter'      : "L0_CHANNEL('Muon')",
+                                'Hlt1Filter'    : "HLT_PASS_RE('Hlt1.*Decision')",
                                 'OverlapTT'     : 0.4,
                                 'OverlapIT'     : 0.4,
                                 'OverlapOT'     : 0.4,

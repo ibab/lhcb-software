@@ -61,7 +61,7 @@ class PID_protonArgon_2015:
     def Thresholds(self) :
         l0_muons = ['Muon','DiMuon']
         l0_electrons = ['Photon', 'Electron', 'Hadron', 'Muon', 'DiMuon']
-        hlt1_muons = 'Hlt1(TrackAllL0|TrackMuon|SingleMuon|DiMuon|TrackMVA|TwoTrackMVA).*Decision'
+        hlt1_muons = 'Hlt1.*Decision'
         hlt1_electrons = 'Hlt1.*Decision'
         from Hlt2Lines.PID.Lines import PIDLines
         d = {
@@ -376,7 +376,8 @@ class PID_protonArgon_2015:
                  'Hlt1Req'  : {
                      'Muon'           : "HLT_PASS_RE('" + hlt1_muons + "')",
                      'Electron'       : "HLT_PASS_RE('" + hlt1_electrons + "')",
-                     'ElectronFromL0' : "HLT_PASS_RE('" + hlt1_electrons + "')"
+                     'ElectronFromL0' : "HLT_PASS_RE('" + hlt1_electrons + "')",
+                     'Other'          : "HLT_PASS_RE('Hlt1.*Decision')"
                      },
                  'TrackGEC' : {'NTRACK_MAX'           : 10000},
                  "LcTightChild_pi"    : {
