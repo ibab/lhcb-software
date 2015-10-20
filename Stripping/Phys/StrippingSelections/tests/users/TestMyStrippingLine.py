@@ -8,29 +8,20 @@ from Gaudi.Configuration import *
 from Configurables import DaVinci
 from StrippingConf.Configuration import StrippingConf
 
-# Tighten Trk Chi2 to <3
-from CommonParticles.Utils import DefaultTrackingCuts
-DefaultTrackingCuts().Cuts  = { "Chi2Cut" : [ 0, 4 ],
-                                "GhostProbCut" : [ 0,   0.4   ],
-                                "CloneDistCut" : [5000, 9e+99 ] }
-
 #
 #Raw event juggler to split Other/RawEvent into Velo/RawEvent and Tracker/RawEvent
 #
 from Configurables import RawEventJuggler
-juggler = RawEventJuggler( DataOnDemand=True, Input=0.3, Output=4.1 )
+juggler = RawEventJuggler( DataOnDemand=True, Input=0.3, Output=4.2 )
 
 #
 #Fix for TrackEff lines
 #
 from Configurables import DecodeRawEvent
-DecodeRawEvent().setProp("OverrideInputs",4.1)
-
-from Configurables import ConfigCDBAccessSvc
-ConfigCDBAccessSvc().File = '$STRIPPINGSELECTIONSROOT/tests/data/config.cdb'
+DecodeRawEvent().setProp("OverrideInputs",4.2)
 
 # Specify the name of your configuration
-confname='Ditau' #FOR USERS
+confname='Bs2MuMuLines' #FOR USERS
 
 # NOTE: this will work only if you inserted correctly the 
 # default_config dictionary in the code where your LineBuilder 
@@ -38,7 +29,8 @@ confname='Ditau' #FOR USERS
 from StrippingSelections import buildersConf
 confs = buildersConf()
 from StrippingSelections.Utils import lineBuilder, buildStreamsFromBuilder
-#confs[confname]["CONFIG"]["CutName"] = NewValue ## FOR USERS, YOU ONLY NEED TO QUICKLY MODIFY CutName and NewValue (no need to recompile the package but please update the default_config)
+#confs[confname]["CONFIG"]["KMaxDOCAMassMeasDown"] = 2.
+#confs[confname]["CONFIG"]["SigmaPPi0CalPrescale"] = 0.5 ## FOR USERS, YOU ONLY NEED TO QUICKLY MODIFY CutName and NewValue (no need to recompile the package but please update the default_config)
 streams = buildStreamsFromBuilder(confs,confname)
 
 #clone lines for CommonParticles overhead-free timing
@@ -55,7 +47,7 @@ charmMicroDSTname      = 'Charm'
 pidMicroDSTname        = 'PID'
 bhadronMicroDSTname    = 'Bhadron'
 mdstStreams = [ leptonicMicroDSTname,charmMicroDSTname,pidMicroDSTname,bhadronMicroDSTname ]
-dstStreams  = [ "BhadronCompleteEvent", "CharmCompleteEvent", "CharmToBeSwum", "Dimuon",
+dstStreams  = [ "BhadronCompleteEvent", "CharmCompleteEvent", "Dimuon",
                 "EW", "Semileptonic", "Calibration", "MiniBias", "Radiative" ]
 
 stripTESPrefix = 'Strip'
@@ -143,30 +135,18 @@ sr = StrippingReport(Selections = sc.selections())
 from Configurables import AlgorithmCorrelationsAlg
 ac = AlgorithmCorrelationsAlg(Algorithms = list(set(sc.selections())))
 
-## Configure PV refitter
-from GaudiKernel.SystemOfUnits import micrometer
-from Configurables import LoKi__PVReFitter
-LoKi__PVReFitter("ToolSvc.LoKi::PVReFitter").CheckTracksByLHCbIDs = True
-LoKi__PVReFitter("ToolSvc.LoKi::PVReFitter").DeltaChi2 = 0.01
-LoKi__PVReFitter("ToolSvc.LoKi::PVReFitter").DeltaDistance = 5*micrometer
-
-## Configure the VeloTrack unpacker
-from Configurables import UnpackTrack
-unpackIt = UnpackTrack("unpackIt")
-unpackIt.InputName = "pRec/Track/FittedHLT1VeloTracks"
-unpackIt.OutputName = "Rec/Track/FittedHLT1VeloTracks"
+#Configure DaVinci
 
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
-DaVinci().EvtMax = 10000
+DaVinci().EvtMax = -1
 DaVinci().PrintFreq = 2000
-DaVinci().appendToMainSequence( [unpackIt] )
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
 DaVinci().appendToMainSequence( [ ac ] )
 DaVinci().appendToMainSequence( [ dstWriter.sequence() ] )
 DaVinci().ProductionType = "Stripping"
 DaVinci().DataType  = "2015"
-DaVinci().InputType = "DST"
+DaVinci().InputType = "RDST"
 
 # change the column size of timing table
 from Configurables import TimingAuditor, SequencerTimerTool
@@ -176,11 +156,11 @@ TimingAuditor().TIMER.NameSize = 60
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
 # database
-DaVinci().DDDBtag  = "dddb-20150526"
-DaVinci().CondDBtag = "cond-20150625"
+#DaVinci().DDDBtag  = "dddb-20150526"
+#DaVinci().CondDBtag = "cond-20150625"
 
 # input file
-importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco15_NoBias.py")
+#importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco15_NoBias.py")
 #importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_Run125113.py")
 #importOptions("/afs/cern.ch/user/r/rvazquez/StrippingS23/DaVinciDev_v36r7p7/Phys/StrippingSelections/tests/data/validationReco15_NoBias.py")
 #importOptions("/afs/cern.ch/user/r/rvazquez/StrippingS23/DaVinciDev_v36r7p7/Phys/StrippingSelections/tests/data/validationReco15_NoBias2.py")
