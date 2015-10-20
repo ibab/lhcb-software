@@ -4,12 +4,16 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2015-10-20 - Marco Cattaneo
+ - Update default database tags to the latest ones:
+   . LHCBCOND, 2015: cond-20151016
+
 !========================= DDDB v1r81 2015-10-12 =========================
 ! 2015-09-29 - Marco Cattaneo
  - Update default database tags to the latest ones:
    . DDDB, 2012: cond-20150928
 
-!! 2015-09-01 - Marco Cattaneo
+! 2015-09-01 - Marco Cattaneo
  - Update default database tags to the latest ones:
    . LHCBCOND, 2015: cond-20150828
 
