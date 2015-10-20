@@ -219,7 +219,6 @@
   <function name = "Gaudi::Math::kummer"            />  
   <function name = "Gaudi::Math::probit"            />  
   <function name = "Gaudi::Math::erfcx"             />  
-  <function name = "Gaudi::Math::gaussian_integral" />  
   <function name = "Gaudi::Math::binomEff"          />
   <function name = "Gaudi::Math::binomEff2"         />
   <function name = "Gaudi::Math::wilsonEff"         />

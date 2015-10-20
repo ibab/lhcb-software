@@ -6,6 +6,11 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-10-20 - Vanya Belyaev
+ - LHCbMath.xml
+   remove duplicated selections
+   thank to Marco Cattaneo 
+
 ! 2015-10-14 - Vanya Belyaev
  - few more improvements 
 
