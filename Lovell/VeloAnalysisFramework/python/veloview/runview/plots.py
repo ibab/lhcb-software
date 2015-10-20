@@ -10,7 +10,7 @@ from veloview.giantrootfile.gui_tree import Tree
 from veloview.runview import utils
 from veloview.runview.response_formatters import dictionary_formatter
 
-def get_run_plot(name, run, reference=False, formatter=dictionary_formatter):
+def get_run_plot(name, run, reference=False, formatter=dictionary_formatter, refRun = None):
     """Return the formatted object at the plot path in the run file.
 
     If reference is True, the corresponding plot from the reference file will
@@ -23,11 +23,13 @@ def get_run_plot(name, run, reference=False, formatter=dictionary_formatter):
     reference -- If True, include the reference plot for the given plot and run
     formatter -- Response formatter used to format the TObject
     """
-    if reference:
+    if reference and refRun==None:
         try:
             run = utils.reference_run(name, run)
         except ValueError:
             return None
+
+    else: run = refRun
 
     # Get the latest run file in the run's directory
     base = utils.run_file_path(run)
@@ -62,7 +64,7 @@ def get_run_plot(name, run, reference=False, formatter=dictionary_formatter):
     return formatter(clone)
 
 
-def get_run_plot_with_reference(name, run, formatter=dictionary_formatter):
+def get_run_plot_with_reference(name, run, formatter=dictionary_formatter, refRun == None):
     """Return the formatted nominal and reference plots.
 
     A 2-tuple of two plots is returned:
@@ -78,7 +80,7 @@ def get_run_plot_with_reference(name, run, formatter=dictionary_formatter):
     nominal = get_run_plot(name, run, reference=False, formatter=formatter)
     try:
         reference = get_run_plot(name, run, reference=True,
-                                 formatter=formatter)
+                                 formatter=formatter, refRun = refRun)
     except KeyError:
         reference = None
     return nominal, reference
