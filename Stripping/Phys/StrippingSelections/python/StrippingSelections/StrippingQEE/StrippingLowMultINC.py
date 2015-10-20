@@ -468,7 +468,8 @@ class LowMultINCLines( LineBuilder ) :
                                               L0DU      = None,
                                               HLT2 = config['DecisionLowMultTMP1'],
                                               RequiredRawEvents = config["LowMultRequiredRawEvents"])
-        self.registerLine(self.lineLowMultTMP2)
+        self.registerLine(self.lineLowMultTMP1)
+
         
         self.lineLowMultTMP2 = StrippingLine( "LowMultTMP2"+"Line",
                                               prescale  = config['PrescaleLowMultTMP2'],
