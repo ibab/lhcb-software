@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import ROOT
 import numpy as np
 from PyQt4.QtCore import *
@@ -7,11 +6,11 @@ import json
 
 import matplotlib
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
+from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 import colormaps as newMaps
-
 import lInterfaces
+matplotlib.rcParams.update({'axes.titlesize': 'medium'})
 
 
 class lPlottable():
@@ -22,52 +21,197 @@ class lPlottable():
         self.params = params
         self.plot = lPlot
 
-    '''
+    
     def on_draw(self, tabOpsState):
-	if tabOpsState.displayRefs:
-	    nominal, reference = lInterfaces.runview_plot(tabOpsState.runNum, 
-							  self.params['name'], 
-							  tabOpsState.moduleID, 
-							  tabOpsState.run_data_dir,
-							  refRun = tabOpsState.refRunNum,
-							  getRef = True)
-	else:
-	    nominal = lInterfaces.runview_plot(tabOpsState.runNum, 
-					       self.params['name'], 
-					       tabOpsState.moduleID, 
-					       tabOpsState.run_data_dir)
-        print nominal
-    '''
+        if tabOpsState.displayRefs: nominal, reference = lInterfaces.runview_plot(tabOpsState.runNum, self.params['name'], tabOpsState.moduleID, tabOpsState.run_data_dir, refRun = tabOpsState.refRunNum, getRef = True)
+        else:
+            nominal = lInterfaces.runview_plot(tabOpsState.runNum, self.params['name'], tabOpsState.moduleID, tabOpsState.run_data_dir)
+            reference = None
+        if 'binning' in nominal['data']['data']:
+            if not tabOpsState.displayRefs: self.runview_1d_runviewReturn(nominal)
+            elif tabOpsState.overLayRef:
+                self.runview_1d_runviewReturn(nominal)
+                if reference != None: self.runview_1d_runviewReturn(reference, True)
+            elif tabOpsState.refDiff: self.runview_1d_dataMinusRef(nominal, reference)
+            elif tabOpsState.refRatio: self.runview_1d_dataMinusRef(nominal, reference, True)
+            
+            
+        elif 'xbinning' in nominal['data']['data']:  
+            if tabOpsState.refDiff and tabOpsState.displayRefs: self.runview_2d_dataMinusRef(nominal, reference)
+            elif tabOpsState.refRatio and tabOpsState.displayRefs: self.runview_2d_dataMinusRef(nominal, reference, True)
+            else: self.runview_2d(nominal)
+        
+        # Titles.
+        xlabel = 'Default x label'
+        ylabel = 'Default y label'
+        
+        if 'axis_titles' in nominal:
+            xlabel = nominal['axis_titles'][0]
+            ylabel = nominal['axis_titles'][1]
+        
+        self.plot.axes.set_xlabel(xlabel)
+        self.plot.axes.set_ylabel(ylabel)
+        
+        
+    def runview_1d_dataMinusRef(self, nominal, reference, infactRatio = False):
+        binwidth = nominal['data']['data']['binning'][0][1] - nominal['data']['data']['binning'][0][0]
+        xs = np.linspace(nominal['data']['data']['binning'][0][0] + 0.5*binwidth,
+                         nominal['data']['data']['binning'][-1][0] + 0.5*binwidth,
+                         len(nominal['data']['data']['binning']))
+        
+        style = 1
+        ys = []
+        for i in range(len(nominal['data']['data']['values'])):
+            if infactRatio:
+                if reference['data']['data']['values'][i] == 0.0: ys.append(0)
+                else: ys.append(nominal['data']['data']['values'][i]/(1.*reference['data']['data']['values'][i]))
+            else:
+                ys.append(nominal['data']['data']['values'][i] - reference['data']['data']['values'][i])
+        
+        col = 'r'
+        self.add_1d_plot(xs, ys, style, col)
+        minX = xs[0]
+        maxX = xs[-1]
+        if len(self.plot.xLims) == 0: 
+            self.plot.xLims.append(minX)
+            self.plot.xLims.append(maxX)
+        elif minX < self.plot.xLims[0]: self.plot.xLims[0] = minX
+        elif maxX > self.plot.xLims[1]: self.plot.xLims[1] = maxX 
+        
+        
              
-    def runview_1d(self, nominal, reference):
-          xs = []
-          ys = []
-          for bin_edges in plot_data['data']['data']['binning']:
-               xs.append(0.5*(bin_edges[1] + bin_edges[0]))
-          
-          for value in plot_data['data']['data']['values']:
-               ys.append(value)
-          
-          if not 'style' in self.params: style = 0
-          else: style = self.params['style']    
-          self.add_1d_plot(xs, ys, style)
-          
-          minX = min(xs)
-          maxX = max(xs)
-          minY = min(ys)
-          maxY = max(ys)
-          
-          if len(self.plot.xLims) == 0: 
-               self.plot.xLims.append(minX)
-               self.plot.xLims.append(maxX)
-          elif minX < self.plot.xLims[0]: self.plot.xLims[0] = minX
-          elif maxX > self.plot.xLims[1]: self.plot.xLims[1] = maxX
-               
-          if len(self.plot.yLims) == 0: 
-               self.plot.yLims.append(minY)
-               self.plot.yLims.append(maxY)
-          elif minY < self.plot.yLims[0]: self.plot.yLims[0] = minY
-          elif maxY > self.plot.yLims[1]: self.plot.yLims[1] = maxY
+    def runview_1d_runviewReturn(self, nominal, isRef = False):
+        binwidth = nominal['data']['data']['binning'][0][1] - nominal['data']['data']['binning'][0][0]
+        xs = np.linspace(nominal['data']['data']['binning'][0][0] + 0.5*binwidth,
+                         nominal['data']['data']['binning'][-1][0] + 0.5*binwidth,
+                         len(nominal['data']['data']['binning']))
+        
+        style = 1
+        if 'style' in self.params: style = self.params['style']
+        elif 'options' in self.params: 
+            if 'asPoints' in self.params['options']: 
+                style = 3
+
+        col = 'b'
+        if isRef: 
+            style = 3
+            col = 'r'
+        else: 
+            if 'color' in self.params: print 'hi dan', self.params
+            if 'color' in self.params: 
+                if self.params['color'] == 'r':
+                    print 'Red is reserved for references - defaulting to blue'
+                else: col = self.params['color']
+                
+        ys = nominal['data']['data']['values']
+        print 'Before:', col
+        self.add_1d_plot(xs, ys, style, col)
+        minX = xs[0]
+        maxX = xs[-1]
+        minY = min(ys)
+        maxY = max(ys)
+        
+        if len(self.plot.xLims) == 0: 
+            self.plot.xLims.append(minX)
+            self.plot.xLims.append(maxX)
+        elif minX < self.plot.xLims[0]: self.plot.xLims[0] = minX
+        elif maxX > self.plot.xLims[1]: self.plot.xLims[1] = maxX
+             
+        if len(self.plot.yLims) == 0: 
+            self.plot.yLims.append(minY)
+            self.plot.yLims.append(maxY)
+        elif minY < self.plot.yLims[0]: self.plot.yLims[0] = minY
+        elif maxY > self.plot.yLims[1]: self.plot.yLims[1] = maxY
+    
+    
+    def runview_2d_dataMinusRef(self, nominal, reference, infactRatio = False):
+        minX = nominal['data']['data']['xbinning'][0][0]
+        maxX = nominal['data']['data']['xbinning'][-1][1]
+        minY = nominal['data']['data']['ybinning'][0][0]
+        maxY = nominal['data']['data']['ybinning'][-1][1]
+        
+        pyBins = []
+        for i in range(len(nominal['data']['data']['values'])):
+            bins = []
+            for j in range(len(nominal['data']['data']['values'][0])):
+                if infactRatio:
+                    if reference['data']['data']['values'][i][j] == 0.0: z = 0
+                    else: z = nominal['data']['data']['values'][i][j]/(1.*reference['data']['data']['values'][i][j])
+                else:
+                    z = nominal['data']['data']['values'][i][j] - reference['data']['data']['values'][i][j]
+                bins.append(z)
+            pyBins.append(bins)
+                
+        npBins = np.empty([len(pyBins[0]), len(pyBins)])
+        for i in range(len(pyBins)):
+            for j in range(len(pyBins[0])):
+                npBins[len(pyBins[0])-j-1][i] = pyBins[i][j]
+        
+        npBins[npBins == 0.0] = np.nan
+        self.cax = self.axes.imshow(npBins, 
+            interpolation='none', cmap=newMaps.viridis, 
+            extent = [minX, maxX, minY, maxY],
+            aspect='auto'
+            )
+
+        if not self.cbar_set:
+            self.cbar = self.fig.colorbar(self.cax)
+            self.cbar_set = True
+            
+        else:
+            self.cbar.on_mappable_changed(self.cax)
+            
+        if len(self.plot.xLims) == 0: 
+            self.plot.xLims.append(minX)
+            self.plot.xLims.append(maxX)
+        elif minX < self.plot.xLims[0]: self.plot.xLims[0] = minX
+        elif maxX > self.plot.xLims[1]: self.plot.xLims[1] = maxX
+             
+        if len(self.plot.yLims) == 0: 
+            self.plot.yLims.append(minY)
+            self.plot.yLims.append(maxY)
+        elif minY < self.plot.yLims[0]: self.plot.yLims[0] = minY
+        elif maxY > self.plot.yLims[1]: self.plot.yLims[1] = maxY
+        
+        
+    def runview_2d(self, nominal):
+        minX = nominal['data']['data']['xbinning'][0][0]
+        maxX = nominal['data']['data']['xbinning'][-1][1]
+        minY = nominal['data']['data']['ybinning'][0][0]
+        maxY = nominal['data']['data']['ybinning'][-1][1]
+        
+        
+        pyBins = nominal['data']['data']['values']
+        npBins = np.empty([len(pyBins[0]), len(pyBins)])
+        for i in range(len(pyBins)):
+            for j in range(len(pyBins[0])):
+                npBins[len(pyBins[0])-j-1][i] = pyBins[i][j]
+        
+        npBins[npBins == 0.0] = np.nan
+        self.cax = self.axes.imshow(npBins, 
+            interpolation='none', cmap=newMaps.viridis, 
+            extent = [minX, maxX, minY, maxY],
+            aspect='auto'
+            )
+
+        if not self.cbar_set:
+            self.cbar = self.fig.colorbar(self.cax)
+            self.cbar_set = True
+            
+        else:
+            self.cbar.on_mappable_changed(self.cax)
+            
+        if len(self.plot.xLims) == 0: 
+            self.plot.xLims.append(minX)
+            self.plot.xLims.append(maxX)
+        elif minX < self.plot.xLims[0]: self.plot.xLims[0] = minX
+        elif maxX > self.plot.xLims[1]: self.plot.xLims[1] = maxX
+             
+        if len(self.plot.yLims) == 0: 
+            self.plot.yLims.append(minY)
+            self.plot.yLims.append(maxY)
+        elif minY < self.plot.yLims[0]: self.plot.yLims[0] = minY
+        elif maxY > self.plot.yLims[1]: self.plot.yLims[1] = maxY
 
 
     def plotTH1(self, g):
@@ -77,31 +221,31 @@ class lPlottable():
             xs.append(g.GetXaxis().GetBinCenter(i))
             ys.append(g.GetBinContent(i))
 
-        if not 'style' in self.params: style = 0
-        else: style = self.params['style']
+        if 'style' in self.params: style = self.params['style']
+        elif 'options' in self.params: 
+            if 'asPoints' in self.params['options']: 
+                style = 3
+        else: style = 0
         self.add_1d_plot(xs, ys, style)
 
 
-    def add_1d_plot(self, xs, ys, style):
+    def add_1d_plot(self, xs, ys, style, col = 'b'):
         if style == 0:
             # Defaut - blue bars with black line on top.
-            self.axes.bar(xs, ys, width = xs[1] - xs[0], alpha = 0.6, color = 'b', 
+            self.axes.bar(xs, ys, width = xs[1] - xs[0], alpha = 0.6, color = col, 
                 linewidth = 0, align = 'center')
-            self.axes.step(xs, ys, where = 'mid', linewidth = 1.2, c = 'k')
+            self.axes.step(xs, ys, where = 'mid', linewidth = 1.2, c = col)
 
         elif style == 1:
             # Just black line step on time (no fill)
-            self.axes.step(xs, ys, where = 'mid', linewidth = 1.5, c = 'k')
+            self.axes.step(xs, ys, where = 'mid', linewidth = 1.5, c = col)
 
         elif style == 2:
-            if 'color' in self.params: col = self.params['color']
-            else: col = 'b'
-            self.axes.plot(xs, ys, '-o', marker = '^', c = col, markeredgecolor='none')
+            self.axes.plot(xs, ys, '-o', marker = '^', markerfacecolor = col, markeredgecolor='none', markersize = 8)
 
         elif style == 3:
-            if 'color' in self.params: col = self.params['color']
-            else: col = 'b'
-            self.axes.plot(xs, ys, 'o', marker = '^', c = col, markeredgecolor='none')
+            self.axes.plot(xs, ys, 'o', marker = '^', markerfacecolor = col, markeredgecolor='none', markersize = 8)
+            
 
 
     def plotTH2(self, g):
@@ -134,13 +278,14 @@ class lPlottable():
             aspect='auto'
             )
 
-        if self.cbar_set == False:
-            self.cbar = self.fig.colorbar(self.cax)
-            self.cbar.ax.set_aspect(11)
-            self.cbar_set = True
-
-        # else:
-        #     self.cbar.on_mappable_changed(self.cax)
+        print self.cbar_set
+        if self.cbar_set:
+            print 'hey'
+            self.plot.fig.delaxes(self.figure.axes[1])
+            self.plot.fig.subplots_adjust(right=0.90)
+        
+        self.cbar = self.fig.colorbar(self.cax)
+        self.cbar_set = True
 
 
 
@@ -174,7 +319,7 @@ class mplWidget(QWidget):
         del self.yLims[:]
         del self.zLims[:]
         
-        tabOpsState.outline()
+#         tabOpsState.outline()
         print "(Re)Plotting:", self.params['title']
         self.axes.clear()                
         for p in self.plottables: p.on_draw(tabOpsState)
@@ -183,11 +328,13 @@ class mplWidget(QWidget):
 
         if 'xrange' in self.params: self.axes.set_xlim(self.params['xrange'])
         else: self.axes.set_xlim(self.xLims)
-        if 'yrange' in self.params: self.axes.set_ylim(self.params['yrange'])
-        else: 
-             shift = 0.07*(self.yLims[1] - self.yLims[0])
-             self.axes.set_ylim([self.yLims[0] - shift, self.yLims[1] + shift])
-        if 'zrange' in self.params: self.plottables[0].cax.set_clim(vmin = self.params['zrange'][0], vmax = self.params['zrange'][1])
+        if tabOpsState.refDiff == False and tabOpsState.refRatio == False:
+            if 'yrange' in self.params: self.axes.set_ylim(self.params['yrange'])
+            else: 
+                 shift = 0.07*(self.yLims[1] - self.yLims[0])
+                 self.axes.set_ylim([self.yLims[0] - shift, self.yLims[1] + shift])
+            if 'zrange' in self.params: self.plottables[0].cax.set_clim(vmin = self.params['zrange'][0], vmax = self.params['zrange'][1])
+        
         self.fig.tight_layout()
         self.canvas.draw()
         
@@ -209,17 +356,18 @@ class mplWidget(QWidget):
 
         # Create the navigation toolbar, tied to the canvas
         self.mpl_toolbar = NavigationToolbar(self.canvas, self)
-        vbox = QVBoxLayout()
-        vbox.addWidget(self.canvas)
+        vbox = QGridLayout()
+        vbox.addWidget(self.canvas, 0, 0)
         menu = QWidget(self)
         hbox = QHBoxLayout()
         menu.setLayout(hbox)
         hbox.addWidget(self.mpl_toolbar)
-        vbox.addWidget(menu)
+        vbox.addWidget(menu, 1, 0)
         hbox.setContentsMargins(0, 0, 0, 0)
         vbox.setContentsMargins(0, 0, 0, 0)
         vbox.setSpacing(0)
         self.setLayout(vbox)
+        vbox.setRowStretch(0, 10)
 
         self.tipBut = QPushButton("?")
         self.tipBut.clicked.connect(self.show_tip)

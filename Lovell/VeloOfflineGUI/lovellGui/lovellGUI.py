@@ -46,5 +46,5 @@ def main():
 
 
 if __name__ == "__main__":
-    print 'Starting the Lovell GUI (~20secs)...' 
+    print 'Starting the Lovell GUI (~10secs)...' 
     main()

@@ -22,12 +22,11 @@ class lTab(QWidget):
     def setup_plots(self):
         for plot in self.params['plots']: self.plots.append(mplWidget(plot))
         for i in range(len(self.plots)):
-            if 'layout' in self.params:
-                row = i%self.params['layout'][1]
-                col = i/self.params['layout'][1]
-            else: 
-                row = 2
-                col = 2
+            if 'layout' in self.params: nRows = self.params['layout'][1]
+            else: nRows = 2
+            row = i%nRows
+            col = i/nRows
+                
             self.grid_layout.addWidget(self.plots[i], row, col)
 
 

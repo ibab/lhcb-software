@@ -80,7 +80,7 @@ class lTabOptions(QGroupBox):
 		self.grid_layout.addWidget(QLabel("Reference number:"), self.rowCount(), 0, 1, 2)
 		self.grid_layout.addWidget(self.run_numRef_box, self.rowCount(), 0, 1, 2)
 		
-		run_num_box.addItem('Auto')
+		self.run_numRef_box.addItem('Auto')
 		for run in lInterfaces.run_list(self.run_data_dir):
 			self.run_num_box.addItem(str(run))
 			self.run_numRef_box.addItem(str(run))
@@ -96,11 +96,11 @@ class lTabOptions(QGroupBox):
 	def add_reference_buttons(self):
 		self.add_bar()
 		self.showing_ref_box = QCheckBox("Display References")
-		self.showing_ref_box.setChecked(True)
+		self.showing_ref_box.setChecked(False)
 		self.overlay_ref_box = QRadioButton("Overlay", self)
 		self.overlay_ref_box.setChecked(True)
-		self.overlay_refDiff_box = QRadioButton("Difference", self)
-		self.overlay_refRatio_box = QRadioButton("Ratio", self)
+		self.overlay_refDiff_box = QRadioButton("Data - Ref", self)
+		self.overlay_refRatio_box = QRadioButton("Data/Ref", self)
 
 		self.grid_layout.addWidget(self.showing_ref_box, self.rowCount(), 0, 1, 2)
 		self.grid_layout.addWidget(self.overlay_ref_box, self.rowCount(), 0, 1, 2)
