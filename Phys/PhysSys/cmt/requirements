@@ -15,7 +15,7 @@ use  PhysSelPython              v9r7     PhysSel # Current DV Maintainer
 
 #===================================================================
 
-use  PhysConf                   v1r29    Phys    # Patrick Koppenburg
+use  PhysConf                   v1r30    Phys    # Patrick Koppenburg
 use  ProtoParticleFilter        v1r8     Phys    # Current DV Maintainer
 use  DaVinciTransporter 	v3r13    Phys    # Current DV Maintainer
 use  ParticleMaker      	v6r16    Phys    # Current DV Maintainer
