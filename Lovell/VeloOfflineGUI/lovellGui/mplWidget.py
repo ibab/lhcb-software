@@ -11,6 +11,8 @@ from matplotlib.figure import Figure
 import colormaps as newMaps
 import lInterfaces
 matplotlib.rcParams.update({'axes.titlesize': 'medium'})
+matplotlib.rcParams.update({'legend.fontsize': 'medium'})
+matplotlib.rcParams.update({'legend.framealpha': '0.5'})
 
 
 class lPlottable():
@@ -58,8 +60,7 @@ class lPlottable():
         xs = np.linspace(nominal['data']['data']['binning'][0][0] + 0.5*binwidth,
                          nominal['data']['data']['binning'][-1][0] + 0.5*binwidth,
                          len(nominal['data']['data']['binning']))
-        
-        style = 1
+            
         ys = []
         for i in range(len(nominal['data']['data']['values'])):
             if infactRatio:
@@ -68,7 +69,9 @@ class lPlottable():
             else:
                 ys.append(nominal['data']['data']['values'][i] - reference['data']['data']['values'][i])
         
-        col = 'r'
+        style = 0
+        if not infactRatio: col = 'r'
+        else: col = 'g'
         self.add_1d_plot(xs, ys, style, col)
         minX = xs[0]
         maxX = xs[-1]
@@ -86,21 +89,19 @@ class lPlottable():
                          nominal['data']['data']['binning'][-1][0] + 0.5*binwidth,
                          len(nominal['data']['data']['binning']))
         
-        style = 1
+        style = 0
         if 'style' in self.params: style = self.params['style']
-        elif 'options' in self.params: 
-            if 'asPoints' in self.params['options']: 
-                style = 3
 
         col = 'b'
         if isRef: 
             style = 3
             col = 'r'
         else: 
-            if 'color' in self.params: print 'hi dan', self.params
             if 'color' in self.params: 
-                if self.params['color'] == 'r':
-                    print 'Red is reserved for references - defaulting to blue'
+                if self.params['color'] == 'r' and style == 0:
+                    print 'Red bars are reserved for references - defaulting to blue'
+                elif self.params['color'] == 'g' and style == 0:
+                    print 'Green bars are reserved for references - defaulting to blue'
                 else: col = self.params['color']
                 
         ys = nominal['data']['data']['values']
@@ -179,7 +180,10 @@ class lPlottable():
         maxX = nominal['data']['data']['xbinning'][-1][1]
         minY = nominal['data']['data']['ybinning'][0][0]
         maxY = nominal['data']['data']['ybinning'][-1][1]
-        
+        xHalfBinWidth = 0.5*(nominal['data']['data']['xbinning'][0][1] 
+                         - nominal['data']['data']['xbinning'][0][0])
+        yHalfBinWidth = 0.5*(nominal['data']['data']['ybinning'][0][1] 
+                         - nominal['data']['data']['ybinning'][0][0])
         
         pyBins = nominal['data']['data']['values']
         npBins = np.empty([len(pyBins[0]), len(pyBins)])
@@ -188,14 +192,24 @@ class lPlottable():
                 npBins[len(pyBins[0])-j-1][i] = pyBins[i][j]
         
         npBins[npBins == 0.0] = np.nan
-        self.cax = self.axes.imshow(npBins, 
-            interpolation='none', cmap=newMaps.viridis, 
-            extent = [minX, maxX, minY, maxY],
-            aspect='auto'
-            )
+        if 'asText' in self.params and self.params['asText']:
+            # Loop over bins, see if something is above zero. If so, add as text.
+            for i in range(len(pyBins)):
+                for j in range(len(pyBins[0])): 
+                    if pyBins[i][j] == 0:
+                        x = nominal['data']['data']['xbinning'][i][0] + xHalfBinWidth
+                        y = nominal['data']['data']['ybinning'][i][0] + yHalfBinWidth
+                        t = str(pyBins[i][j])
+                        self.axes.text(x, y, t, ha='center', va='bottom')
+        else:
+            self.cax = self.axes.imshow(npBins, 
+                interpolation='none', cmap=newMaps.viridis, 
+                extent = [minX, maxX, minY, maxY],
+                aspect='auto'
+                )
 
         if not self.cbar_set:
-            self.cbar = self.fig.colorbar(self.cax)
+            self.cbar = self.fig.colorbar(self.cax, aspect=12)
             self.cbar_set = True
             
         else:
@@ -230,21 +244,41 @@ class lPlottable():
 
 
     def add_1d_plot(self, xs, ys, style, col = 'b'):
+        lab = 'Default'
+        if 'legend' in self.params: 
+            lab = self.params['legend']
+            print 'Dan!', lab
         if style == 0:
             # Defaut - blue bars with black line on top.
-            self.axes.bar(xs, ys, width = xs[1] - xs[0], alpha = 0.6, color = col, 
-                linewidth = 0, align = 'center')
-            self.axes.step(xs, ys, where = 'mid', linewidth = 1.2, c = col)
+            # Need slightly different format to fill.
+            xsMod = []
+            ysMod = []
+            halfBinWidth = 0.5*(xs[1] - xs[0])
+            for i in range(len(xs)):
+                xsMod.append(xs[i] - halfBinWidth)
+                xsMod.append(xs[i] + halfBinWidth)
+                ysMod.append(ys[i])
+                ysMod.append(ys[i])
+#                     
+            self.axes.bar(xs[1], ys[1], width = 0, align = 'center', linewidth = 0, alpha = 0.5, color = col, label = lab)  
+            self.axes.fill_between(xsMod, ysMod, np.zeros(len(xsMod)), alpha = 0.5, color = col, edgecolor = None)
+            self.axes.step(xs, ys, where = 'mid', linewidth = 1.0, c = 'k')
+            # This bit is ugly. Since the fill_between method does not support legend, add an invisible
+            # bar, just for the first bin.
 
         elif style == 1:
             # Just black line step on time (no fill)
-            self.axes.step(xs, ys, where = 'mid', linewidth = 1.5, c = col)
+            self.axes.step(xs, ys, where = 'mid', linewidth = 1.5, c = col, label = lab)
 
         elif style == 2:
-            self.axes.plot(xs, ys, '-o', marker = '^', markerfacecolor = col, markeredgecolor='none', markersize = 8)
+            self.axes.plot(xs, ys, '-o', marker = '^', markerfacecolor = col, markeredgecolor='none', markersize = 8, label = lab)
 
         elif style == 3:
-            self.axes.plot(xs, ys, 'o', marker = '^', markerfacecolor = col, markeredgecolor='none', markersize = 8)
+            self.axes.plot(xs, ys, 'o', marker = '^', markerfacecolor = col, markeredgecolor='none', markersize = 8, label = lab)
+            
+        elif style == 4:
+            # Solid line.
+            self.axes.plot(xs, ys, '-', color = col, linewidth = 2.5, label = lab)
             
 
 
@@ -328,15 +362,26 @@ class mplWidget(QWidget):
 
         if 'xrange' in self.params: self.axes.set_xlim(self.params['xrange'])
         else: self.axes.set_xlim(self.xLims)
-        if tabOpsState.refDiff == False and tabOpsState.refRatio == False:
+        
+        
+        manSetY = False
+        if tabOpsState.refDiff == False and tabOpsState.refRatio == False: manSetY=True
+        if tabOpsState.displayRefs == False: manSetY=True
+        
+        if manSetY:
+            print 'Manually setting y axis range.'
             if 'yrange' in self.params: self.axes.set_ylim(self.params['yrange'])
             else: 
                  shift = 0.07*(self.yLims[1] - self.yLims[0])
                  self.axes.set_ylim([self.yLims[0] - shift, self.yLims[1] + shift])
             if 'zrange' in self.params: self.plottables[0].cax.set_clim(vmin = self.params['zrange'][0], vmax = self.params['zrange'][1])
+        else: print 'Automatically setting y axis range (using matplotlib).'
         
         self.fig.tight_layout()
+        if 'showLegend' in self.params and self.params['showLegend']:
+            if manSetY: self.axes.legend()
         self.canvas.draw()
+        self.fig.tight_layout()
         
     
     def show_tip(self):

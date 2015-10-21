@@ -28,8 +28,8 @@ class lTabOpsState():
 
 class lTabOptions(QGroupBox):
 	state_change = pyqtSignal()
-	def __init__(self, parent=None):
-		self.run_data_dir = "/afs/cern.ch/work/a/apearce/public/VetraOutput"
+	def __init__(self, parent, run_data_dir):
+		self.run_data_dir = run_data_dir
 		QGroupBox.__init__(self, "Global Tab Options", parent)
 		self.grid_layout = QGridLayout(self)
 		setPadding(self.grid_layout)
