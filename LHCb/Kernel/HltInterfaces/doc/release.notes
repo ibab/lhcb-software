@@ -3,6 +3,10 @@
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
 
+! 2015-10-21 - Marco Clemencic
+ - Workaround for Boost bug 11743.
+   https://svn.boost.org/trac/boost/ticket/11743
+
 !========================= HltInterfaces v6r2 2015-10-12 =========================
 ! 2015-08-19 - Roel Aaij
  - Remove obsolete methods from IConfigTreeEditor.

@@ -9,6 +9,11 @@ gaudi_depends_on_subdirs(Event/DAQEvent
 
 find_package(Boost COMPONENTS regex)
 
+if(Boost_VERSION STREQUAL "105900")
+  # See https://svn.boost.org/trac/boost/ticket/11743
+  add_definitions(-UNDEBUG)
+endif()
+
 gaudi_add_library(HltInterfaces
                   src/*.cpp
                   PUBLIC_HEADERS Kernel
