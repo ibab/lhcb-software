@@ -76,6 +76,7 @@ class TrendReader(object):
         
         Start time and end time can be specified optionally.
         """
-        if not self.ttool.select(start_time, end_time, tag):
+        import ROOT
+        if not self.ttool.select(start_time, end_time, ROOT.std.string(tag)):
             raise CouldNotSelectTagException()
         return [(t, v) for t, v in self._itervalues()]
