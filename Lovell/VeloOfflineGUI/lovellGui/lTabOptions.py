@@ -32,6 +32,13 @@ class lTabOptions(QGroupBox):
 		self.run_data_dir = run_data_dir
 		QGroupBox.__init__(self, "Global Tab Options", parent)
 		self.grid_layout = QGridLayout(self)
+		title = QLabel('LovellGUI')
+		font = QFont()
+		font.setPointSize(20)
+		font.setBold(True)
+		title.setFont(font)
+
+		self.grid_layout.addWidget(title, self.rowCount(), 0, 1, 2)
 		setPadding(self.grid_layout)
 		self.add_group_selector()
 		self.add_ID_selector()

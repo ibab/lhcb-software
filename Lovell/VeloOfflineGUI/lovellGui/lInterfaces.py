@@ -11,9 +11,9 @@ def runview_config():
     return run_view.run_view_pages
 
 
-def runview_plot(run, name, sensor, run_data_dir, refRun = 'Auto', getRef = False):
+def runview_plot(run, name, sensor, run_data_dir, refRun = 'Auto', 
+                 getRef = False, normalise = False):
     Config().run_data_dir = run_data_dir
-    
     err = False
     # Need to append the sensor number to the name.
 #     if not utils.valid_run(run):
@@ -30,9 +30,9 @@ def runview_plot(run, name, sensor, run_data_dir, refRun = 'Auto', getRef = Fals
     if getRef:
         if refRun == 'Auto':
             print 'Getting auto ref'
-            return plots.get_run_plot_with_reference(name, run)
+            return plots.get_run_plot_with_reference(name, run, normalise = normalise)
         else:
             print 'Getting specified ref'
-            return plots.get_run_plot_with_reference(name, run, refRun=refRun)
+            return plots.get_run_plot_with_reference(name, run, refRun=refRun, normalise = normalise)
     else:
-        return plots.get_run_plot(name, run)
+        return plots.get_run_plot(name, run, normalise = normalise)

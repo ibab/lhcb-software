@@ -2,20 +2,29 @@ import sys
 from lTab import *
 from lTabOptions import *
 from lFuncs import *
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
 import lInterfaces
 
 
-class lovellGUI(QMainWindow):
+class lovellGui(QMainWindow):
     def __init__(self, run_data_dir, parent=None):
         QMainWindow.__init__(self, parent)
+        self.top_tab = QTabWidget(self)
+        self.setCentralWidget(self.top_tab)
+        self.top_tab.addTab(run_view(run_data_dir, self), 'Run View')
+        #self.top_tab.addTab(QWidget(self), 'IV')
+        
+                
+class run_view(QWidget):
+    def __init__(self, run_data_dir, parent=None):
+        QTabWidget.__init__(self, parent)
         self.run_data_dir = run_data_dir
-        self.widg = QWidget(self)
         self.grid_layout = QGridLayout()
         setPadding(self.grid_layout)
-        self.widg.setLayout(self.grid_layout)
+        self.setLayout(self.grid_layout)
         self.pages = []
         self.setup_tabs()
-        self.setCentralWidget(self.widg)
 
 
     def setup_tabs(self):
@@ -65,7 +74,8 @@ class lovellGUI(QMainWindow):
                 for i in range(len(plotsPerPage)):
                     subpages.append({'title': str(i), 'plots': plotsPerPage[i]})
                 
-                val['subpages'] = subpages
+                if 'subpages' in val: val['subpages'] += subpages
+                else: val['subpages'] = subpages
                 
             
         
@@ -86,7 +96,7 @@ def main():
         if sys.argv[1][0:15] == '--run-data-dir=': run_data_dir = sys.argv[1][15:]
     print 'run-data-dir set to:', run_data_dir
     app = QApplication(sys.argv) 
-    form = lovellGUI(run_data_dir)
+    form = lovellGui(run_data_dir)
     form.resize(1200, 700)
     form.show()
 #     app.setStyle("plastique")

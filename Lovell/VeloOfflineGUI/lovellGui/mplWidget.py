@@ -25,9 +25,15 @@ class lPlottable():
 
     
     def on_draw(self, tabOpsState):
-        if tabOpsState.displayRefs: nominal, reference = lInterfaces.runview_plot(tabOpsState.runNum, self.params['name'], tabOpsState.moduleID, tabOpsState.run_data_dir, refRun = tabOpsState.refRunNum, getRef = True)
+        if 'normalise' in self.params and self.params['normalise']: 
+            norm = True
+        else: norm = False
+        if tabOpsState.displayRefs: nominal, reference = lInterfaces.runview_plot(tabOpsState.runNum, self.params['name'], 
+                                                                                  tabOpsState.moduleID, tabOpsState.run_data_dir, 
+                                                                                  refRun = tabOpsState.refRunNum, getRef = True, normalise = norm)
         else:
-            nominal = lInterfaces.runview_plot(tabOpsState.runNum, self.params['name'], tabOpsState.moduleID, tabOpsState.run_data_dir)
+            nominal = lInterfaces.runview_plot(tabOpsState.runNum, self.params['name'], 
+                                               tabOpsState.moduleID, tabOpsState.run_data_dir, normalise = norm)
             reference = None
         if 'binning' in nominal['data']['data']:
             if not tabOpsState.displayRefs: self.runview_1d_runviewReturn(nominal)
@@ -105,7 +111,6 @@ class lPlottable():
                 else: col = self.params['color']
                 
         ys = nominal['data']['data']['values']
-        print 'Before:', col
         self.add_1d_plot(xs, ys, style, col)
         minX = xs[0]
         maxX = xs[-1]
@@ -247,7 +252,6 @@ class lPlottable():
         lab = 'Default'
         if 'legend' in self.params: 
             lab = self.params['legend']
-            print 'Dan!', lab
         if style == 0:
             # Defaut - blue bars with black line on top.
             # Need slightly different format to fill.
@@ -312,9 +316,7 @@ class lPlottable():
             aspect='auto'
             )
 
-        print self.cbar_set
         if self.cbar_set:
-            print 'hey'
             self.plot.fig.delaxes(self.figure.axes[1])
             self.plot.fig.subplots_adjust(right=0.90)
         
@@ -372,7 +374,7 @@ class mplWidget(QWidget):
             print 'Manually setting y axis range.'
             if 'yrange' in self.params: self.axes.set_ylim(self.params['yrange'])
             else: 
-                 shift = 0.07*(self.yLims[1] - self.yLims[0])
+                 shift = 0.05*(self.yLims[1] - self.yLims[0])
                  self.axes.set_ylim([self.yLims[0] - shift, self.yLims[1] + shift])
             if 'zrange' in self.params: self.plottables[0].cax.set_clim(vmin = self.params['zrange'][0], vmax = self.params['zrange'][1])
         else: print 'Automatically setting y axis range (using matplotlib).'
