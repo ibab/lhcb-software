@@ -9,6 +9,7 @@ ROOT.gSystem.Load("libGaucho.so")
 ROOT.gInterpreter.Declare('#include "Gaucho/HistTask.h"')
 
 # ROOT "typedefs"
+StdString = ROOT.std.string
 VectorOfString = ROOT.vector('string')
 VectorOfTObjectPtr = ROOT.vector('TObject*')
 
@@ -104,6 +105,6 @@ class HistTaskWrapper(object):
             # Convert list of strings to std::vector<std::string>
             hist_names_vec = VectorOfString()
             for hn in histogram_names:
-                hist_names_vec.push_back(hn)
+                hist_names_vec.push_back(StdString(hn))
         return [self._cast_TObject(t)
                 for t in self._histograms(hist_names_vec)]
