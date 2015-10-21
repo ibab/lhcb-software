@@ -233,7 +233,7 @@ private:
   double m_centerOTYSize;
   double m_maxDeltaY;
   double m_maxDeltaYSlope;
-  int    m_maxXCandidateSize;
+  unsigned int m_maxXCandidateSize;
 
   std::pair<double,double>  m_magnetKickParams ;
   double m_minRange;
