@@ -35,7 +35,6 @@ VeloMuonBuilder::VeloMuonBuilder( const std::string& name, ISvcLocator* pSvcLoca
   declareProperty( "zmagnet"         , m_zmagnet = 5400. );
   declareProperty( "zmatch"          , m_zmatch = 15000. );
   declareProperty( "chamberhit"      , m_chamberhit = true );
-  declareProperty( "distancecut"     , m_distancecut = 3000000 );
   declareProperty( "lhcbids"         , n_lhcbids = 4);
   declareProperty( "cut"       , m_distcutmultiplyer =1);
   declareProperty( "MaxVeloTracks" , m_maxvelos = 1000 );
@@ -171,6 +170,7 @@ StatusCode VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks
       // now calculate distance
       float weighteddistance = float((velopunktx.x()-muonpunktx.x())*(velopunktx.x()-muonpunktx.x())*m_xscale[reg]+(1-m_xscale[reg])*(velopunkty.y()-muonpunkty.y())*(velopunkty.y()-muonpunkty.y()));
 
+      double m_distancecut;
       // -- hard coded after determination on private ntuple
       if (reg == 0)
         m_distancecut = 30*30;//100;

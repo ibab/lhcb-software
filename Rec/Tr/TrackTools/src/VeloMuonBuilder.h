@@ -55,7 +55,6 @@ private:
   bool m_chamberhit;
   double m_zmagnet;
   float m_zmatch;
-  double m_distancecut;
   const float m_xscale[4] = {0.06f,0.1f,0.15f,0.15f};
   std::string m_muonpath;
   std::string m_velopath;
