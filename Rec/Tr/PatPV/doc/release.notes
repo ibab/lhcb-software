@@ -5,6 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-10-15 - Wouter Hulsbergen
+ - Added AdaptivePV3DFitter
  - Added algorithm 'RecToPVConverter'
  - Changed PatPV3D to write (also) new list of type PrimaryVertices
 
