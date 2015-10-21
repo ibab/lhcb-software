@@ -11,6 +11,12 @@ oldtime = 0
 
 this_file_dir = os.path.dirname(os.path.realpath(__file__))
 
+sys.path.append('/group/online/rundb/RunDatabase/python/')
+def getFillNumber(runNumber):
+    import rundb
+    db = rundb.RunDB()
+    return db.getrun(runNumber)[0]['fillID']
+
 def getAlignsAnalised():
     alignsDir = os.path.join(Moni_dir, activity)
     runs = []
@@ -56,22 +62,47 @@ def hasNewAlignment(activity = 'Velo'):
 def printTime():
     return time.strftime('%d/%m/%y %H:%M:%S |')
 
+def writeInLogbook(Fill, activity, file2upload=None):
+    host = 'lblogbook.cern.ch' #'localhost'
+    port = 8080
+    username = 'common Common\\!'
+    logbook = 'Alignment monitoring'
+    author = 'monibot'
+    Type = 'Convergence'
+    status = 'Unchecked'
+    subject = 'Monitoring plots'
+    text = "Monitoring plots for fill {Fill}, shifter's instructions can be found at https://lbgroups.cern.ch/online/Shifts/alignMonitoring.pdf".format(**locals())
+    
+    command = 'elog -h "{host}" -p {port} -l "{logbook}" -u {username} -a "Author={author}" -a "Fill={Fill}" -a "System={activity}" -a "Type={Type}" -a "Status={status}" -a "Subject={subject}" "{text}"'.format(**locals())
+
+    if file2upload:
+        command += ' -f "{0}"'.format(file2upload)
+
+    cmd = shlex.split(command)
+    FNULL = open(os.devnull, 'w')
+    subprocess.call(cmd)#, stdout=FNULL, stderr=subprocess.STDOUT)
+    return 0
+
 if __name__ == '__main__':
     while True:
-        if hasNewAlignment(activity):            
+        if hasNewAlignment(activity):
+            if not os.path.exists(os.path.join(Moni_dir, activity)):
+                os.mkdir(os.path.join(Moni_dir, activity))
             toAnalise = getAligns2Analise(activity, minAlign)
             print printTime(), 'Alignments, runs to analise:', toAnalise
             sys.stdout.flush()
             for alignVersion, run in toAnalise:
                 print printTime(), 'Analising run {0}, alignment v{1} '.format(run ,alignVersion)
                 sys.stdout.flush()
+                outFile_name = os.path.join(Moni_dir, '{0}/v{1}.pdf'.format(activity, alignVersion))
                 command = '{0} -r {1} -o {2}'.format(
                     os.path.join(this_file_dir, 'moniPlots.py'), 
                     run, 
-                    os.path.join(Moni_dir, '{0}/v{1}.pdf'.format(activity, alignVersion)))
+                    outFile_name)
                 cmd = shlex.split(command)
                 FNULL = open(os.devnull, 'w')
                 subprocess.call(cmd, stdout=FNULL, stderr=subprocess.STDOUT)
+                writeInLogbook(Fill=getFillNumber(run), activity=activity, file2upload=outFile_name)
             print printTime(), 'Done for now'
             sys.stdout.flush()
             

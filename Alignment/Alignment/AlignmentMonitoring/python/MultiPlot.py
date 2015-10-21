@@ -41,7 +41,7 @@ class MultiPlot:
     markersA=[20,21,22,23,29,33,34,8]*2
     markersC=[24,25,26,32,30,27,28,4]*2
 
-    def __init__(self, name, title='', kind='h', histos={}, labels={}, styles = {}, colors={}, markerStyles={}, markerSizes={}, lineStyles={}, fillHisto={}, legPosition = (.80, 0.80, .99, .99), rangeY = [None, None], rangeX = [None, None], autoStyle=True, legMarker=None, drawLegend = True, hlines = [], vlines = [], hlines_colors ={},  vlines_colors ={}, hlines_styles ={},  vlines_styles ={}):
+    def __init__(self, name, title='', kind='h', histos={}, labels={}, styles = {}, colors={}, markerStyles={}, markerSizes={}, lineStyles={}, fillHisto={}, legPosition = (.80, 0.80, .99, .99), rangeY = [None, None], rangeX = [None, None], autoStyle=True, legMarker=None, drawLegend = True, hlines = [], vlines = [], hlines_colors ={},  vlines_colors ={}, hlines_styles ={},  vlines_styles ={}, hlines_width ={},  vlines_width ={}):
         self.kind = kind
         self.autoStyle = autoStyle
         self.numHistos = 0
@@ -57,6 +57,8 @@ class MultiPlot:
         self.vlines_colors = vlines_colors
         self.hlines_styles = hlines_styles
         self.vlines_styles = vlines_styles
+        self.hlines_width = hlines_width
+        self.vlines_width = vlines_width
 
         if self.kind.lower() in ('h', 'histo', 'histos'):
             self.hs = r.THStack(name, title)
@@ -116,7 +118,7 @@ class MultiPlot:
             self.leg.AddEntry(self.hist_list[self.numHistos-1], label, self.legMarker)
 
 
-    def AddLine(self, val, kind='h', color=None, style=None):
+    def AddLine(self, val, kind='h', color=None, style=None, width=None):
         '''
         kind can be "v" "vertical" or "h" "horizontal"
         '''
@@ -124,10 +126,12 @@ class MultiPlot:
             self.vlines.append(val)
             if color != None: self.vlines_colors[val] = color
             if style != None: self.vlines_styles[val] = style
+            if width != None: self.vlines_width[val] = width
         elif kind.lower() in ['h', 'horizontal']:
             self.hlines.append(val)
             if color != None: self.hlines_colors[val] = color
             if style != None: self.hlines_styles[val] = style
+            if width != None: self.hlines_width[val] = width
 
     
     def Draw(self):
@@ -162,6 +166,7 @@ class MultiPlot:
                 else:
                     self.lines[val].SetLineStyle(self.hlines_styles.get(val, 7))
                 self.lines[val].SetLineColor(self.hlines_colors.get(val, r.kBlack))
+                self.lines[val].SetLineWidth(self.hlines_width.get(val, 1))
                 
         if self.vlines:
             self.lines2 = {}
@@ -177,3 +182,4 @@ class MultiPlot:
                 else:
                     self.lines2[val].SetLineStyle(self.vlines_styles.get(val, 1))
                 self.lines2[val].SetLineColor(self.vlines_colors.get(val, r.kBlack))
+                self.lines2[val].SetLineWidth(self.vlines_width.get(val, 1))

@@ -3,6 +3,9 @@
 ! package manager: Maurizio Martinelli
 !------------------------------------------------------------------------------
 
+! 2015-10-21 - Giulio Dujany
+ - Monitoring script now publish in dedicated logbook
+
 ! 2015-10-19 - Giulio Dujany
  - Added script to make trend plots of automatic alignment procedure
 

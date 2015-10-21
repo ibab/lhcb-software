@@ -13,7 +13,7 @@ if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description ="Macro to make trend plots alignments")
     parser.add_argument('-a','--alignables', help='eg. VeloLeft.Tx Module01.Rz, for having all 6 dof for an alignable: VeloLeft.*', default= ['VeloLeft.*'],nargs='+')
-    parser.add_argument('-r','--runs', help='run numbers, default is the last one', nargs=2, type=int,default=[0, 1e20])
+    parser.add_argument('-r','--runs', help='run range to plot, default is all', nargs=2, type=int,default=[0, 1e20])
     parser.add_argument('--activity', help='eg. Velo, Tracker ...', default= 'Velo')
     parser.add_argument('-o','--outName',help='output file name without extension, make both pdf and directory', default='trendPlots')
     args = parser.parse_args()

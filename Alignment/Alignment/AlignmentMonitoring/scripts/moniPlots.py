@@ -86,19 +86,25 @@ def plotsCompare(Pages, files_histo, outputFile_name, normalize = True):
                     pass
             if histo_args.has_key('vlines'):
                 histo_args['vlines_colors'] = {val : r.kBlue for val in  histo_args['vlines']}
+                histo_args['vlines_colors'][0] = r.kGreen+2
                 histo_args['vlines_styles'] = {val : 3 for val in  histo_args['vlines']}
+                histo_args['vlines_styles'][0] = 5
+                histo_args['vlines_width'] = {0 : 2}
             drawLegend = (cont==0)
             histos = {key: inFiles[key].Get(path) for key in inFiles}
-            histo_title = histos['old'].GetTitle()
+            if not histo_args.has_key('title'):
+                histo_args['title'] = histos['old'].GetTitle()
             isProfile = isinstance(histos['old'], r.TProfile)
             if normalize:
                 for histo in histos.values():
                     if not isProfile:
                         histo.Scale(1./histo.GetEntries())           
             kind = 'p' if isProfile else 'h'
-            mps.append(MultiPlot(path, kind = kind, title=histo_title, drawLegend=drawLegend, **histo_args))
+            mps.append(MultiPlot(path, kind = kind, drawLegend=drawLegend, **histo_args))
             mps[-1].Add(histos['old'], 'old', color = r.kBlack, markerStyle=1)
-            mps[-1].Add(histos['new'], 'new', color = r.kRed, lineStyle=7, markerStyle=1)
+            try:
+                mps[-1].Add(histos['new'], 'new', color = r.kRed, lineStyle=7, markerStyle=1)
+            except KeyError: pass
             if isinstance(histos['old'], r.TProfile):
                 mps[-1].DrawOption = 'nostack'
             else:
@@ -240,24 +246,24 @@ def getDrawnCanvas(drawables):#, title = 'Pollo'):
     return c
 
 
-Pages = [("Long track properties and PV position", [ "Track/TrackMonitor/Velo/3",
-                                                    "Track/TrackMonitor/Velo/7",
-                                                    "Track/TrackMonitor/Velo/8",
+Pages = [("Long track properties and PV position", [ ["Track/TrackMonitor/Velo/3", {'title' : 'track #chi^{2}/ndof'}],
+                                                    ["Track/TrackMonitor/Velo/7", {'title' : 'track #eta'}],
+                                                    ["Track/TrackMonitor/Velo/8", {'title' : 'track #phi'}],
                                                     "Track/TrackVertexMonitor/PV x position",
                                                     "Track/TrackVertexMonitor/PV y position",
                                                     "Track/TrackVertexMonitor/PV z position",
                                                     ]),
-         ("VELO related quantities", [ "Track/TrackMonitor/Velo/chi2PerDofVelo",
+         ("VELO related quantities", [ ["Track/TrackMonitor/Velo/chi2PerDofVelo", {'title' : 'Velo segment #chi^{2}/ndof'}],
                                       "Track/TrackMonitor/Velo/VeloPhiresidualPull",
                                        "Track/TrackMonitor/Velo/VeloRresidualPull",
-                                       "Track/TrackVertexMonitor/PV chisquare per dof",
+                                       ["Track/TrackVertexMonitor/PV chisquare per dof", {'title' : 'PV #chi^{2}/ndof'}],
                                        "Velo/VeloTrackMonitor/Pseudoefficiency_per_sensor_vs_sensorID",
                                       ]),
          ("VELO 2-halves alignment", [ ["Track/TrackVertexMonitor/PV left-right delta x", {'vlines' : [0, -.008, .008], 'rangeX' : [-.03, .03]}, True],
                                        ["Track/TrackVertexMonitor/PV left-right delta y", {'vlines' : [0, -.008, .008], 'rangeX' : [-.03, .03]}, True],
                                        ["Track/TrackVertexMonitor/PV left-right delta z", {'vlines' : [0, -.05, .05], 'rangeX' : [-.3, .3]}, True],
-                                       ["Track/TrackVeloOverlapMonitor/overlapResidualPhi", {'vlines' : [0], 'rangeX' : [-.1, .1]}],
-                                       ["Track/TrackVeloOverlapMonitor/overlapResidualR", {'vlines' : [0], 'rangeX' : [-.1, .1]}],
+                                       ["Track/TrackVeloOverlapMonitor/overlapResidualPhi", {'vlines' : [0,-.03,.03], 'rangeX' : [-.1, .1]}, True],
+                                       ["Track/TrackVeloOverlapMonitor/overlapResidualR", {'vlines' : [0,-.03,.03], 'rangeX' : [-.1, .1]}, True],
                                        ]),
          ]
     
