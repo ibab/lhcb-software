@@ -8,6 +8,10 @@
 // Interfaces
 #include "TrackInterfaces/IPVOfflineTool.h"
 
+// From Event
+#include "Event/Track.h"
+#include "Event/RecVertex.h"
+
 /** @class PatPV3D PatPV3D.h
  *  Algorithm to find the primary vertices at the HLT.
  *
@@ -33,10 +37,8 @@ protected:
 protected:
  
 private: 
-  
-  std::string m_recVertexLocation;
-  std::string m_primaryVertexLocation;
-  bool m_refitpv ;
+    
+  std::string m_outputVerticesName;  
 
   IPVOfflineTool* m_pvsfit;    // PV fitting tool
 
