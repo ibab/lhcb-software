@@ -20,7 +20,12 @@ class lovellGUI(QMainWindow):
 
     def setup_tabs(self):
         self.top_tab = QTabWidget(self)
-        for key, val in lInterfaces.runview_config().iteritems():
+        runview_config = lInterfaces.runview_config()
+        
+        # Do the sensor overview adjustments here.
+        self.prepSensorOverview(runview_config)
+        
+        for key, val in runview_config.iteritems():
             page = lTab(val, self)
             self.top_tab.addTab(page, val['title'])
             self.pages.append(page)
@@ -35,6 +40,43 @@ class lovellGUI(QMainWindow):
     def tab_changed(self):
         iPage = self.top_tab.currentIndex()
         self.pages[iPage].replot(self.tab_options.state())
+        
+        
+    def prepSensorOverview(self, config):
+        # Find the entry in the dictionary for the sensor overview.
+        # Just dictionary gymnastics.
+        
+        for key, val in config.iteritems():
+            if key == 'sensor_overview':
+                plots = []
+                # Now loop over all plots in the other tabs (inc. subtabs).
+                for key2, val2 in config.iteritems():
+                    if key2 == 'sensor_overview': continue      
+                    if 'plots' in val2: plots += self.findSensorViewPlots(val2['plots'])
+                    elif 'subpages' in val2:
+                        for page in val2['subpages']: 
+                            if 'plots' in page:
+                                plots += self.findSensorViewPlots(page['plots'])
+
+
+                plotsPerPage=[plots[x:x+4] for x in xrange(0, len(plots), 4)] 
+                subpages = []
+            
+                for i in range(len(plotsPerPage)):
+                    subpages.append({'title': str(i), 'plots': plotsPerPage[i]})
+                
+                val['subpages'] = subpages
+                
+            
+        
+        
+    def findSensorViewPlots(self, plot_list):
+        plots = []
+        for plot in plot_list:
+            if 'showInSensorOverview' in plot and plot['showInSensorOverview']:
+                plots.append(plot)
+              
+        return plots
 
 
 def main():
