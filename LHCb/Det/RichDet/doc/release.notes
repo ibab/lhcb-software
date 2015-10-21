@@ -4,6 +4,9 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2015-10-21 - Chris Jones
+ - Pass some more RichSmartIDs by const reference instead of by value.
+
 !========================= RichDet v17r5 2015-10-12 =========================
 ! 2015-09-23 - Chris Jones
  - Update API in DeRichSystem to pass ID types by const reference instead

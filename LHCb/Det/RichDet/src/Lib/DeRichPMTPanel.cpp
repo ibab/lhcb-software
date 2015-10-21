@@ -1540,7 +1540,7 @@ bool DeRichPMTPanel::isInPmtAnodeLateralAcc(const Gaudi::XYZPoint& aPointInPmtAn
 }
 
 
-unsigned int DeRichPMTPanel::pdNumber( const LHCb::RichSmartID smartID ) const
+unsigned int DeRichPMTPanel::pdNumber( const LHCb::RichSmartID& smartID ) const
 {
   //  info()<<"derich pmt panel smartid "<<smartID <<endmsg;
 
@@ -1548,7 +1548,7 @@ unsigned int DeRichPMTPanel::pdNumber( const LHCb::RichSmartID smartID ) const
            smartID.pdCol() * m_NumPmtInRichModule  + smartID.pdNumInCol() :
            nPDs() + 1 );
 }
-bool DeRichPMTPanel::pdGrandSize( const LHCb::RichSmartID smartID ) const 
+bool DeRichPMTPanel::pdGrandSize( const LHCb::RichSmartID& smartID ) const 
 {
   return ModuleIsWithGrandPMT(smartID.pdCol());
 }

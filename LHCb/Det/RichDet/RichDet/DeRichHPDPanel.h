@@ -90,7 +90,7 @@ public:
    *  @param[in] smartID      The HPD channel ID
    *  @return The detection anode point in global coordinates
    */
-  Gaudi::XYZPoint detPointOnAnode( const LHCb::RichSmartID smartID ) const;
+  Gaudi::XYZPoint detPointOnAnode( const LHCb::RichSmartID& smartID ) const;
 
   // Returns the intersection point with an HPD window given a vector and a point.
   virtual LHCb::RichTraceMode::RayTraceResult
@@ -127,7 +127,7 @@ public:
     return deHPD;
   }
 
-  // Adds to the given vector all the available readout channels in this HPD panel
+  /// Adds to the given vector all the available readout channels in this HPD panel
   virtual StatusCode readoutChannelList( LHCb::RichSmartID::Vector& readoutChannels ) const;
 
   /// sensitive volume identifier
@@ -145,10 +145,10 @@ private: // methods
   bool findHPDColAndPos(const Gaudi::XYZPoint& inPanel, LHCb::RichSmartID& id) const;
 
   /// Returns the PD number for the given RichSmartID
-  unsigned int pdNumber( const LHCb::RichSmartID smartID ) const;
+  unsigned int pdNumber( const LHCb::RichSmartID& smartID ) const;
 
   /// Need to ask Sajan about this
-  inline bool pdGrandSize( const LHCb::RichSmartID /** smartID **/ ) const { return false; }
+  inline bool pdGrandSize( const LHCb::RichSmartID& /** smartID **/ ) const { return false; }
   
   /// Check HPD panel acceptance
   LHCb::RichTraceMode::RayTraceResult checkPanelAcc( const Gaudi::XYZPoint & point ) const;
@@ -169,8 +169,8 @@ private: // data
   /// The active HPD window radius (photocathode coverage) Squared
   double m_activeRadiusSq;
 
-  double m_pixelSize;      ///< The pixel size on the silicon sensor
-  double m_subPixelSize;   ///< The size of the subpixel (Alice mode)
+  double m_pixelSize;              ///< The pixel size on the silicon sensor
+  double m_subPixelSize;           ///< The size of the subpixel (Alice mode)
   double m_siliconHalfLengthX;     ///< Half size (x) of silicon sensor
   double m_siliconHalfLengthY;     ///< Half size (y) of silicon sensor
 
@@ -198,7 +198,7 @@ private: // data
 //=========================================================================
 //  convert a SmartID to a point on the anode (global coord system)
 //=========================================================================
-inline Gaudi::XYZPoint DeRichHPDPanel::detPointOnAnode( const LHCb::RichSmartID smartID ) const
+inline Gaudi::XYZPoint DeRichHPDPanel::detPointOnAnode( const LHCb::RichSmartID& smartID ) const
 {
   return deHPD(smartID)->detPointOnAnode(smartID);
 }
@@ -218,10 +218,11 @@ inline Gaudi::XYZPoint DeRichHPDPanel::detPointOnAnode( const LHCb::RichSmartID 
 inline LHCb::RichTraceMode::RayTraceResult
 DeRichHPDPanel::checkPanelAcc( const Gaudi::XYZPoint & point ) const
 {
-  const double u = ( rich() == Rich::Rich1 ? point.y() : point.x() );
-  const double v = ( rich() == Rich::Rich1 ? point.x() : point.y() );
-  return ( ( fabs(u) >= fabs(m_panelColumnSideEdge) ||
-             fabs(v) >= m_panelStartColPos ) ?
+  const auto uv = ( rich() == Rich::Rich1 ? 
+                    std::make_pair(point.y(),point.x()) :
+                    std::make_pair(point.x(),point.y()) );
+  return ( ( fabs(uv.first)  >= fabs(m_panelColumnSideEdge) ||
+             fabs(uv.second) >= m_panelStartColPos ) ?
            LHCb::RichTraceMode::OutsideHPDPanel : LHCb::RichTraceMode::InHPDPanel );
 }
 

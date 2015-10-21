@@ -717,7 +717,7 @@ StatusCode DeRichHPDPanel::geometryUpdate()
 
 //=========================================================================
 
-unsigned int DeRichHPDPanel::pdNumber( const LHCb::RichSmartID smartID ) const
+unsigned int DeRichHPDPanel::pdNumber( const LHCb::RichSmartID& smartID ) const
 {
   return ( smartID.rich() == rich() && smartID.panel() == side() ?
            smartID.pdCol() * nPDsPerCol() + smartID.pdNumInCol() :

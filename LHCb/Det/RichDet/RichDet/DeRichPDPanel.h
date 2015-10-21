@@ -197,11 +197,11 @@ public: // virtual methods. Derived classes must implement these
                               LHCb::RichSmartID& id ) const = 0;
 
   /// Returns the PD number for the given RichSmartID
-  virtual unsigned int pdNumber( const LHCb::RichSmartID smartID ) const = 0;
+  virtual unsigned int pdNumber( const LHCb::RichSmartID& smartID ) const = 0;
   ///Returns true when the given smartID corresponds to a GrandPMT.  
   // For hpds and for standard pmts returns false.
 
-  virtual bool  pdGrandSize( const LHCb::RichSmartID smartID ) const = 0;
+  virtual bool pdGrandSize( const LHCb::RichSmartID& smartID ) const = 0;
 
   /**
    * Adds to the given vector all the available readout channels in this PD panel

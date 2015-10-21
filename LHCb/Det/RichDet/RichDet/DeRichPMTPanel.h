@@ -92,11 +92,12 @@ public:
 private:
 
   /// Returns the PD number for the given RichSmartID
-  unsigned int pdNumber( const LHCb::RichSmartID smartID ) const;
-  bool pdGrandSize( const LHCb::RichSmartID smartID ) const ;
+  unsigned int pdNumber( const LHCb::RichSmartID& smartID ) const;
+
+  /// Size of something ...
+  bool pdGrandSize( const LHCb::RichSmartID& smartID ) const ;
   
   const DeRichPMT* dePMT( const unsigned int PmtCopyNumber ) const;
-
 
   std::vector<int> getPmtRowColFromPmtNum( const int aPmtNum );
   std::vector<int> getGrandPmtRowColFromPmtNum( const int aPmtNum );
