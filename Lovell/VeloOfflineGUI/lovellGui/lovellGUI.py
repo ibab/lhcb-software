@@ -1,3 +1,5 @@
+print 'Starting the Lovell GUI (~10secs)...' 
+
 import sys
 from lTab import *
 from lTabOptions import *
@@ -38,17 +40,20 @@ class run_view(QWidget):
             page = lTab(val, self)
             self.top_tab.addTab(page, val['title'])
             self.pages.append(page)
+            
         self.grid_layout.addWidget(self.top_tab, 0, 1)
         self.top_tab.currentChanged.connect(self.tab_changed)
         self.tab_options = lTabOptions(self, self.run_data_dir)
         self.tab_options.state_change.connect(self.tab_changed)
         self.grid_layout.addWidget(self.tab_options, 0, 0)
+        msg = "Current run number: " + self.tab_options.state().runNum
+        self.tab_options.notify(msg)
         self.tab_changed()
 
  
     def tab_changed(self):
         iPage = self.top_tab.currentIndex()
-        self.pages[iPage].replot(self.tab_options.state())
+        self.pages[iPage].replot(self.tab_options.state(), self.tab_options)
         
         
     def prepSensorOverview(self, config):
@@ -90,7 +95,6 @@ class run_view(QWidget):
 
 
 def main():
-    print 'Starting the Lovell GUI (~10secs)...' 
     run_data_dir = "/afs/cern.ch/work/a/apearce/public/VetraOutput"
     if len(sys.argv) > 1:
         if sys.argv[1][0:15] == '--run-data-dir=': run_data_dir = sys.argv[1][15:]

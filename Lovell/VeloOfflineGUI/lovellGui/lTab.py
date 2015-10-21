@@ -13,10 +13,10 @@ class lTab(QWidget):
         elif 'subpages' in self.params: self.setup_subpages()
 
 
-    def replot(self, tabOpsState):
-        for plot in self.plots: plot.on_draw(tabOpsState)
+    def replot(self, tabOpsState, notifyBox):
+        for plot in self.plots: plot.on_draw(tabOpsState, notifyBox)
         if len(self.subpages) > 0:
-            self.subpages[self.tabs.currentIndex()].replot(tabOpsState)
+            self.subpages[self.tabs.currentIndex()].replot(tabOpsState, notifyBox)
 
 
     def setup_plots(self):

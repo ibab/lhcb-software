@@ -24,16 +24,18 @@ class lPlottable():
         self.plot = lPlot
 
     
-    def on_draw(self, tabOpsState):
+    def on_draw(self, tabOpsState, notifyBox):
         if 'normalise' in self.params and self.params['normalise']: 
             norm = True
         else: norm = False
         if tabOpsState.displayRefs: nominal, reference = lInterfaces.runview_plot(tabOpsState.runNum, self.params['name'], 
                                                                                   tabOpsState.moduleID, tabOpsState.run_data_dir, 
-                                                                                  refRun = tabOpsState.refRunNum, getRef = True, normalise = norm)
+                                                                                  refRun = tabOpsState.refRunNum, getRef = True, 
+                                                                                  normalise = norm, notifyBox = notifyBox)
         else:
             nominal = lInterfaces.runview_plot(tabOpsState.runNum, self.params['name'], 
-                                               tabOpsState.moduleID, tabOpsState.run_data_dir, normalise = norm)
+                                               tabOpsState.moduleID, tabOpsState.run_data_dir, 
+                                               normalise = norm, notifyBox = notifyBox)
             reference = None
         if 'binning' in nominal['data']['data']:
             if not tabOpsState.displayRefs: self.runview_1d_runviewReturn(nominal)
@@ -349,7 +351,7 @@ class mplWidget(QWidget):
             self.plottables.append(p)
 
 
-    def on_draw(self, tabOpsState):
+    def on_draw(self, tabOpsState, notifyBox):
         # Redraws the figure
         del self.xLims[:]
         del self.yLims[:]
@@ -358,7 +360,7 @@ class mplWidget(QWidget):
 #         tabOpsState.outline()
         print "(Re)Plotting:", self.params['title']
         self.axes.clear()                
-        for p in self.plottables: p.on_draw(tabOpsState)
+        for p in self.plottables: p.on_draw(tabOpsState, notifyBox)
         self.axes.grid()
         self.axes.set_title(self.params['title'])
 

@@ -37,14 +37,29 @@ class lTabOptions(QGroupBox):
 		font.setPointSize(20)
 		font.setBold(True)
 		title.setFont(font)
+		self.setMinimumWidth(250)
 
 		self.grid_layout.addWidget(title, self.rowCount(), 0, 1, 2)
 		setPadding(self.grid_layout)
 		self.add_group_selector()
 		self.add_ID_selector()
 		self.add_next_prev_buttons()
+		self.add_notify_box()
 		self.add_reference_buttons()
 		self.add_run_num_buttons()
+		
+		
+	def add_notify_box(self):
+		notifyFont = QFont()
+		notifyFont.setPointSize(8)
+		self.grid_layout.addWidget(QLabel("Notifcations:"), self.rowCount(), 0, 1, 2)
+		self.notifyBox = QTextEdit("Hello world! :)", self)
+		self.notifyBox.setFont(notifyFont)
+		self.grid_layout.addWidget(self.notifyBox, self.rowCount(), 0, 1, 2)
+
+
+	def notify(self, text):
+		self.notifyBox.append(text)
 
 
 	def add_group_selector(self):
