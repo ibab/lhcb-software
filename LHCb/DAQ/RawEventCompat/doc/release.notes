@@ -4,12 +4,16 @@
 ! Purpose     : To hold configurables for splitting/joining raw events
 !-----------------------------------------------------------------------------
 
-!========================= RawEventCompat v1r6p1 2015-07-20 ========================
+! 2015-10-21 - Marco Cattaneo
+ - Fix raweventcompat.gaudiread test following LHCBPS-1434 patch: LHCbApp()
+   now assigns OdinTimeDecoder as EventClockSvc().EventTimeDecoder when
+   processing real data
+
+!========================= RawEventCompat v1r6p1 2015-07-20 ======================
 ! 2015-07-16 - Marco Clemencic
  - Avoid crashes in tests when the QMTest validators are called on empty files.
 
-!========================= RawEventCompat v1r6 2014-07-28 =========================
-
+!========================= RawEventCompat v1r6 2014-07-28 ========================
 ! 2014-07-18 - Marco Cattaneo
  - If a new bank is requested to be added to a RawEvent in an output location
    that already existed as input location, print a warning and skip

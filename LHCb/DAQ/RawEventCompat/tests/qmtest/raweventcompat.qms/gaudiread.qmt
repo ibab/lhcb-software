@@ -33,8 +33,10 @@ StoreExplorerAlg     INFO | +--> /Trigger [Address: CLID=0x1 Type=0x2]  DataObje
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
 StoreExplorerAlg     INFO | +--> /Rich [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
-StoreExplorerAlg     INFO   +--> /Calo [Address: CLID=0x1 Type=0x2]  DataObject
-StoreExplorerAlg     INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent""", stdout, result, causes, signature_offset =0, id="4100")
+StoreExplorerAlg     INFO | +--> /Calo [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
+StoreExplorerAlg     INFO   +--> /DAQ [No Address]  DataObject
+StoreExplorerAlg     INFO     +--> /ODIN [No Address]  LHCb::ODIN""", stdout, result, causes, signature_offset =0, id="4100")
 
 countErrorLines({"FATAL":0, "ERROR":0, "WARNING" :0})
 
