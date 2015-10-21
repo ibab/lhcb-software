@@ -4,6 +4,11 @@
 ! Purpose     : Various utilities for manipulating RawEvent
 !-----------------------------------------------------------------------------
 
+! 2015-10-21 - Marco Cattaneo
+ - Fix DAQUtils.dumpmultievents reference following LHCBPS-1434 patch: LHCbApp()
+   now assigns OdinTimeDecoder as EventClockSvc().EventTimeDecoder when
+   processing real data
+
 !========================= DAQUtils v1r13p2 2015-10-12 =========================
 ! 2015-08-03 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
