@@ -10,7 +10,8 @@ from veloview.giantrootfile.gui_tree import Tree
 from veloview.runview import utils
 from veloview.runview.response_formatters import dictionary_formatter
 
-def get_run_plot(name, run, reference=False, formatter=dictionary_formatter, refRun = None, normalise = False):
+def get_run_plot(name, run, reference=False, formatter=dictionary_formatter, 
+                 refRun = None, normalise = False, notifyBox = None):
     if normalise: print 'even still should norm'
 
     """Return the formatted object at the plot path in the run file.
@@ -35,20 +36,26 @@ def get_run_plot(name, run, reference=False, formatter=dictionary_formatter, ref
 
     # Get the latest run file in the run's directory
     base = utils.run_file_path(run)
-    files = sorted(glob.glob("{0}/*.root".format(base)))
+    files = sorted(glob.glob('{0}/*_NZS_Clusters_Brunel.root'.format(base)))    # Filter to get merged files only.
     try:
         path = files[-1]
     except IndexError:
-        raise IOError("Run file not found for run {0}".format(run))
+        if notifyBox != None:
+            notifyBox.notify("Merged run file not found for run {0}".format(run))
+        raise IOError("Merged run file not found for run {0}".format(run))
 
     # Try to open the file
     f = ROOT.TFile(path)
     if f.IsZombie():
+        if notifyBox != None:
+            notifyBox.notify("Run file not found for run {0}".format(run))
         raise IOError("Run file not found for run {0}".format(run))
 
     # Retrieve the object
     obj = f.Get(name)
     if not obj:
+        if notifyBox != None:
+            notifyBox.notify("Plot {0} not found in run file {1}".format(name, run))
         raise KeyError("Plot {0} not found in run file {1}".format(name, run))
     # The file will be closed when the function returns, so we need to clone
     # the fetched object outside the file's scope
@@ -67,7 +74,9 @@ def get_run_plot(name, run, reference=False, formatter=dictionary_formatter, ref
 
     return formatter(clone)
         
-def get_run_plot_with_reference(name, run, formatter=dictionary_formatter, refRun = None, normalise = False):
+        
+def get_run_plot_with_reference(name, run, formatter=dictionary_formatter, 
+                                refRun = None, normalise = False, notifyBox = None):
     """Return the formatted nominal and reference plots.
 
     A 2-tuple of two plots is returned:
@@ -80,10 +89,12 @@ def get_run_plot_with_reference(name, run, formatter=dictionary_formatter, refRu
     If the reference get_run_plot call returns None, None is returned in place
     of the reference object.
     """
-    nominal = get_run_plot(name, run, reference=False, formatter=formatter, normalise = normalise)
+    nominal = get_run_plot(name, run, reference=False, formatter=formatter, 
+                           normalise = normalise, notifyBox = notifyBox)
     try:
         reference = get_run_plot(name, run, reference=True,
-                                 formatter=formatter, refRun = refRun, normalise= normalise)
+                                 formatter=formatter, refRun = refRun, 
+                                 normalise= normalise, notifyBox = notifyBox)
     except KeyError:
         reference = None
     return nominal, reference
