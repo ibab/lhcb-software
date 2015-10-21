@@ -4,6 +4,8 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================== EvtGen v14r3 2015-10-21 ==========================
+
 ! 2015-10-07 - John Back
   - Updated EvtPhotosEngine to check that additional particles from the 
     outgoing vertex are indeed (FSR) photons, since later versions of Photos++
