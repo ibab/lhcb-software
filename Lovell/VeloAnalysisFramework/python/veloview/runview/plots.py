@@ -10,7 +10,9 @@ from veloview.giantrootfile.gui_tree import Tree
 from veloview.runview import utils
 from veloview.runview.response_formatters import dictionary_formatter
 
-def get_run_plot(name, run, reference=False, formatter=dictionary_formatter, refRun = None):
+def get_run_plot(name, run, reference=False, formatter=dictionary_formatter, refRun = None, normalise = False):
+    if normalise: print 'even still should norm'
+
     """Return the formatted object at the plot path in the run file.
 
     If reference is True, the corresponding plot from the reference file will
@@ -55,15 +57,17 @@ def get_run_plot(name, run, reference=False, formatter=dictionary_formatter, ref
     f.Close()
 
     # Normalise histogram if required
-    plot_dict = get_plot_dictionary(name)
-    if plot_dict is not None and plot_dict.get('normalised', False):
-      integral = clone.Integral()
-      if integral > 0:
-        clone.Scale(1.0/integral)
+#     plot_dict = get_plot_dictionary(name)
+#     if plot_dict is not None and plot_dict.get('normalised', False): normalise = True
+    if normalise:
+        print 'normalising'
+        integral = clone.Integral()
+        if integral > 0:
+            clone.Scale(1.0/integral)
 
     return formatter(clone)
         
-def get_run_plot_with_reference(name, run, formatter=dictionary_formatter, refRun = None):
+def get_run_plot_with_reference(name, run, formatter=dictionary_formatter, refRun = None, normalise = False):
     """Return the formatted nominal and reference plots.
 
     A 2-tuple of two plots is returned:
@@ -76,10 +80,10 @@ def get_run_plot_with_reference(name, run, formatter=dictionary_formatter, refRu
     If the reference get_run_plot call returns None, None is returned in place
     of the reference object.
     """
-    nominal = get_run_plot(name, run, reference=False, formatter=formatter)
+    nominal = get_run_plot(name, run, reference=False, formatter=formatter, normalise = normalise)
     try:
         reference = get_run_plot(name, run, reference=True,
-                                 formatter=formatter, refRun = refRun)
+                                 formatter=formatter, refRun = refRun, normalise= normalise)
     except KeyError:
         reference = None
     return nominal, reference
