@@ -28,6 +28,7 @@ PatPV3D::PatPV3D( const std::string& name,
 {
   declareProperty( "OutputVerticesName" , m_recVertexLocation  =  LHCb::RecVertexLocation::Velo3D );
   declareProperty( "PrimaryVertexLocation" , m_primaryVertexLocation =  LHCb::PrimaryVertexLocation::Default );
+  declareProperty( "RefitPV", m_refitpv = false ) ;
 }
 
 //=============================================================================
@@ -82,6 +83,7 @@ StatusCode PatPV3D::execute() {
   std::vector<LHCb::RecVertex> rvts;
   StatusCode scfit = m_pvsfit->reconstructMultiPV(rvts);
   if (scfit == StatusCode::SUCCESS) {
+    setFilterPassed( !rvts.empty() ) ;
     if( outputRecVertices ) {
       for( std::vector<LHCb::RecVertex>::iterator iv = rvts.begin(); iv != rvts.end(); iv++) {
         LHCb::RecVertex* vertex = new LHCb::RecVertex(*iv);
@@ -91,14 +93,14 @@ StatusCode PatPV3D::execute() {
     }
     if( outputPrimaryVertices ) {
       for( const auto& iv : rvts ) {
-        LHCb::PrimaryVertex* vertex = new LHCb::PrimaryVertex(iv,false);
+        LHCb::PrimaryVertex* vertex = new LHCb::PrimaryVertex(iv,m_refitpv);
         outputPrimaryVertices->insert(vertex);
       }
     }
   } else {
+    setFilterPassed( false ) ;
     Warning("reconstructMultiPV failed!",scfit).ignore();
   }
-  setFilterPassed(!rvts.empty());
   
   return StatusCode::SUCCESS;
 }

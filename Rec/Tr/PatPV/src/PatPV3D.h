@@ -36,6 +36,7 @@ private:
   
   std::string m_recVertexLocation;
   std::string m_primaryVertexLocation;
+  bool m_refitpv ;
 
   IPVOfflineTool* m_pvsfit;    // PV fitting tool
 
