@@ -566,7 +566,7 @@ void EvtB2MuMuMuNuAmp::CalcAmp(EvtParticle *parent,
         +unit1*vaa*dual(EvtGenFunctions::directProd(p,q_fierst))
         -uniti*a1[aa]*(M1 + M2[aa])*EvtTensor4C::g()
         +uniti*a2aa*EvtGenFunctions::directProd((p + q_fierst),p)
-        +uniti*EvtGenFunctions::directProd((p - q_fierst),p));
+        +uniti*a3aa*EvtGenFunctions::directProd((p - q_fierst),p));
       }
  
   Tvmd_second = 0.0*EvtTensor4C::g();

@@ -4,6 +4,10 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+!======================= EvtGenExtras v3r12 2015-10-21 =======================
+! 2015-10-21 - John Back
+ - Correction to form factor in EvtB2MuMuMuNuAmp.cpp (line 569). New tag.
+
 ! 2015-10-14 - John Back
  - Added new EvtXLL model from Biplab Dey, which implements an optimised MC
    generator for b -> h h mu mu decays (momentum and angular distributions).
