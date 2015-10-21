@@ -2,6 +2,9 @@ Package     : Hlt/IndepenceTests
 Package Coordinator : Mika Vesterinen
 Purpose     : HLT application to test indepence of Hlt lines
 
+! 2015-10-21 - Marco Clemencic
+ - Disabled test for 'do0' builds.
+
 ! 2015-10-15 - Mika Vesterinen
  - Minor fix to the pp nightly test and remove the pAr test
 

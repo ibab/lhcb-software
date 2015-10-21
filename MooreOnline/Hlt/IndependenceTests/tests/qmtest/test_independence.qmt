@@ -13,7 +13,7 @@
     <text>--nprocesses=8</text>
     <text>--Settings=Physics_25ns_October2015</text>
   </set></argument>
-  <argument name="unsupported_platforms"><set><text>.*dbg</text></set></argument>
+  <argument name="unsupported_platforms"><set><text>.*dbg</text><text>.*do0</text></set></argument>
   <argument name="validator"><text>
 expected_string = &quot;No mismatches found&quot;
 if stdout.find(expected_string) == -1:
