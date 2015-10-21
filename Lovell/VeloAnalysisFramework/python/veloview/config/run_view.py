@@ -315,9 +315,17 @@ run_view_pages = OrderedDict([
                       {
                           'title': 'Cluster ADC values for each sensor',
                           'short': 'Cluster ADC values for each sensor',
-                          'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC value sensor {0}',
-                          'fit_name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC value fit function sensor {0}',
-                          'sensor_dependent': True
+                          'plottables' : [
+                                {'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC value sensor {0}',
+                                 'legend': 'Data',
+                                 'style': 0},
+                                {'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC value fit function sensor {0}',
+                                 'legend': 'Fit',
+                                 'color':'k',
+                                 'style': 4}],
+                          'showLegend': True,
+                          'sensor_dependent': True,
+                          'showInSensorOverview': True
                       },
                   ],
                   'layout': (2, 2)
@@ -458,14 +466,16 @@ run_view_pages = OrderedDict([
 					},
 					{
 						'title': 'ADC for R clusters associated to a track',
-                        'plottables': [{'name': 'Velo/VeloTrackMonitor/Track_radc', 'color':'k', 'style':3},
-                                       {'name': 'Velo/VeloTrackMonitor/Track_phiadc', 'color': 'g'}],
-                                        
+                        'plottables': [{'name': 'Velo/VeloTrackMonitor/Track_radc', 'color':'k', 'style':3, 'legend': 'R'},
+                                       {'name': 'Velo/VeloTrackMonitor/Track_phiadc', 'color': 'g', 'style':3, 'legend': 'Phi'}],
+                        'showLegend': True,
 						'options' : {'asPoints': True, 'yAxisZeroSuppressed': False}, 
 					},
 					{
 						'title': 'ADC for Phi clusters associated to a track',
 						'name': 'Velo/VeloTrackMonitor/Track_phiadc',
+                        'legend': 'Phi',
+                        'showLegend': True,
 						'options' : {'asPoints': True, 'yAxisZeroSuppressed': False}, 
 					}],
             'layout': (2,2)
@@ -563,6 +573,7 @@ run_view_pages = OrderedDict([
     }),
     ('sensor_overview', {
         'title': 'Sensor overview'
+        # Filled automatically - get in touch if support needed to define manually as well.
     }),
     # IP plots
     ('IP resolutions', {
