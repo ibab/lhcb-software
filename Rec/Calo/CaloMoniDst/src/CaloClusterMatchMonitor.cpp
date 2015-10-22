@@ -52,8 +52,8 @@ class CaloClusterMatchMonitor : public CaloMoniAlg
   friend class AlgFactory<CaloClusterMatchMonitor>;
 public:
   /// standard algorithm initialization
-  virtual StatusCode initialize()
-  { StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
+  virtual StatusCode initialize(){ 
+    StatusCode sc = CaloMoniAlg::initialize(); // must be executed first
     if ( sc.isFailure() ) return sc; // error already printedby GaudiAlgorithm
     hBook1( "1", "log10(#Links+1) '"+inputData()+"'", 0,    4, 100 );
     hBook1( "2", "Tracks per cluster",                0,   25,  25 );

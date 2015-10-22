@@ -48,7 +48,7 @@ class CaloClusterChecker : public CaloMoniAlg
 public:
   /// standard algorithm initialization
   virtual StatusCode initialize()
-  { StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
+  { StatusCode sc = CaloMoniAlg::initialize(); // must be executed first
     if ( sc.isFailure() ) return sc; // error already printedby GaudiAlgorithm
     hBook1( "1", "log10(#Links+1)  '" + inputData() + "'", 0,  5 );
     hBook1( "2", "Rels/Cluster     '" + inputData() + "'", 0, 50 );

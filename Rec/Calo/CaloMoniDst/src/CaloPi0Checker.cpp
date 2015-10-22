@@ -52,7 +52,7 @@ class CaloPi0Checker : public CaloMoniAlg{
 public:
   /// standard algorithm initialization
   virtual StatusCode initialize()
-  { StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
+  { StatusCode sc = CaloMoniAlg::initialize(); // must be executed first
     if ( sc.isFailure() ) return sc; // error already printedby GaudiAlgorithm
 
 // re-initialize the Ecal cluster selector

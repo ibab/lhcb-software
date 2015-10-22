@@ -130,7 +130,7 @@ StatusCode CaloDigitMonitor::execute(){
   Digits* digits = get<Digits> ( inputData() );
   if ( digits -> empty() ){
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-      debug() << "No hypo found in " << inputData() << endmsg;
+      debug() << "No digit found in " << inputData() << endmsg;
     return StatusCode::SUCCESS;
   }  
   

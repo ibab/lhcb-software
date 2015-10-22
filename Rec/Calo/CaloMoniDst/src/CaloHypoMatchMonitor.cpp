@@ -53,7 +53,7 @@ class CaloHypoMatchMonitor : public CaloMoniAlg
 public:
   /// standard algorithm initialization
   virtual StatusCode initialize()
-  { StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
+  { StatusCode sc = CaloMoniAlg::initialize(); // must be executed first
     if ( sc.isFailure() ) return sc; // error already printedby GaudiAlgorithm
     std::string common = "'" + inputData() + "' " + name();
     hBook1( "1", "log10(#Links+1) " + common, 0,    4, 100 );

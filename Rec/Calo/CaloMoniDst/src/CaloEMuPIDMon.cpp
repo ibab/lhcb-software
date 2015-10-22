@@ -233,7 +233,7 @@ StatusCode CaloEMuPIDMon::check()
  */
 StatusCode CaloEMuPIDMon::initialize()
 {
-  StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
+  StatusCode sc = CaloMoniAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;
 
   hBook1(    "eop",    "E/p", 0.05,  2.55, 50);

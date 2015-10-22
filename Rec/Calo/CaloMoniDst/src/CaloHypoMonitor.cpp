@@ -146,10 +146,12 @@ StatusCode CaloHypoMonitor::execute(){
 
   initCounters();
   for( Hypos::const_iterator hypo = hypos->begin(); hypos->end () != hypo ; ++hypo ){ 
+
     if ( 0 == *hypo ) continue;
     LHCb::CaloMomentum momentum( *hypo );
     const double e = momentum.e();
     const double et= momentum.pt();
+
     const double mass=momentum.momentum().mass();
     if(e    < m_eFilter)continue;
     if(et   < m_etFilter)continue;

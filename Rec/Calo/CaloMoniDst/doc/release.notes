@@ -4,6 +4,10 @@
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+
+! 2015-10-22 - O. Deschamps
+  -initialize base-class (CaloMoniAlg) everywhere 
+
 !========================= CaloMoniDst v5r19 2015-10-13 =========================
 ! 2015-08-30 - Gerhard Raven
  - remove DECLARE_ALGORITHM_FACTORY( CaloMoniAlg ) and DECLARE_ALGORITHM_FACTORY( CaloNtpBase )
