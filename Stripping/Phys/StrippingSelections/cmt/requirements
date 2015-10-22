@@ -2,7 +2,7 @@
 # Maintainer : A. Poluektov
 
 package           StrippingSelections
-version           v4r7p1
+version           v4r8
 
 # Structure, i.e. directories to process.
 #============================================================================
