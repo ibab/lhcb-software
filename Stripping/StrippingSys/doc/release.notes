@@ -1,7 +1,34 @@
 <PRE>
 Package     : StrippingSys
-Package Coordinator : Andrea.Contu@cern.ch, Stefano.Perazzini@cern.ch
+Package Coordinator : Andrea.Contu@cern.ch, Ricardo.Vazquez.Gomez@cern.ch
 Purpose     : LHCb stripping packages
+
+!========================= StrippingSys v9r12 2015-10-22 ===========================
+Phys/StrippingSelections 
+ - Updated test scripts
+ - Added new TestMyStrippingLine.py
+ - Added Reco15a test sample
+ - StrippingPromptCharm:
+   release chi2_IP cut for Lambda_c->pKpi and Lambda_c->pKK to 400
+ - Changed StrippingDstarD2KShh.py to CharmCompleteEvent
+
+Phys/StrippingArchive
+ - Update references for StrippingArchive
+
+Phys/StrippingConf
+ - Adding print of the line number in RelatedInfo exceptions
+ - Change daughter configuration syntax in RelatedInfoTools option of StrippingLine.
+   Instead of 'Locations' and 'RecursionLevel', a single dictionary must be provided with the
+   'DaughterLocations' key, in the form
+   {
+     'LoKi daughter selection string' : 'RelatedInfo TES location'
+   }
+   e.g.
+   "DaughterLocations" : {
+     "[Lambda_c+ -> ^p+ K- K+]CC" : "Cone2p",
+     "[Lambda_c+ -> p+ ^K- K+]CC" : "Cone2k",
+     "[Lambda_c+ -> p+ K- ^K+]CC" : "Cone2pi",
+   }
 
 !========================= StrippingSys v9r11p1 2015-09-23 ===========================
 
