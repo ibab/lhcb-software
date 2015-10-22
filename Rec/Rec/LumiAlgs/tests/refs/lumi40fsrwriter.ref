@@ -1,12 +1,13 @@
-# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@4/build/REC/REC_HEAD/Rec/LumiAlgs/job/LumiFsrWriter0.py'
-# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@4/build/REC/REC_HEAD/Rec/LumiAlgs/job/LumiFsrWriter0.py'
+# setting LC_ALL to "C"
+# --> Including file '/afs/cern.ch/work/c/cattanem/private/cmakeuser/RecDev_HEAD/Rec/LumiAlgs/job/LumiFsrWriter0.py'
+# <-- End of file '/afs/cern.ch/work/c/cattanem/private/cmakeuser/RecDev_HEAD/Rec/LumiAlgs/job/LumiFsrWriter0.py'
 # applying configuration of LumiFsrWriterConf
-# WARNING: Using default tag dddb-20140610 for partition DDDB
+# WARNING: Using default tag dddb-20150522 for partition DDDB
 # WARNING: Using default tag tt-20110126 for partition DQFLAGS
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr (GaudiCoreSvc v3r2)
-                                          running on lbbuild06.cern.ch on Wed Feb 18 07:57:44 2015
+                                                   Welcome to RecDev version HEAD
+                                          running on mcat.cern.ch on Thu Oct 22 10:56:24 2015
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -16,7 +17,7 @@ LumiSeq              INFO Member list: GaudiSequencer/writeLumiSeq, GaudiSequenc
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.27 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.70 times the speed of a 2.8 GHz Xeon.
 writeLumiSeq         INFO Member list: createODIN, bankKiller/KillAll, FileIdBankWriter
 KillAll           SUCCESS bankKiller : all banks of type 'ODIN' will be kept.
 KillAll           SUCCESS bankKiller : all banks of type 'HltLumiSummary' will be kept.
@@ -48,14 +49,13 @@ Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome 
 
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
-DDDB                 INFO Using TAG "dddb-20140610"
-LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
+DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/DDDB.db/DDDB"
+DDDB                 INFO Using TAG "dddb-20150522"
+LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/LHCBCOND.db/LHCBCOND"
 LHCBCOND             INFO Using TAG "cond-20141002"
-EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
 LumiBeamCrossin...   INFO Member list: LoKi::ODINFilter/FilterBeamCrossing, HltLumiSummaryDecoder/LumiDecodeBeamCrossing, FilterOnLumiSummary/LumiFilterBeamCrossing, LumiAccounting/LumiCountBeamCrossing
 LumiBeam1Seq         INFO Member list: LoKi::ODINFilter/FilterBeam1, HltLumiSummaryDecoder/LumiDecodeBeam1, FilterOnLumiSummary/LumiFilterBeam1, FilterFillingScheme/FillingBeam1, LumiAccounting/LumiCountBeam1
-ONLINE_2010          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2010.db/ONLINE"
+ONLINE_2010          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/ONLINE-2010.db/ONLINE"
 ONLINE_2010          INFO Using TAG ""
 LumiBeam2Seq         INFO Member list: LoKi::ODINFilter/FilterBeam2, HltLumiSummaryDecoder/LumiDecodeBeam2, FilterOnLumiSummary/LumiFilterBeam2, FilterFillingScheme/FillingBeam2, LumiAccounting/LumiCountBeam2
 TimeSpanSeq          INFO Member list: LoKi::ODINFilter/TimeSpanFilter, TimeAccounting/TimeSpanAccounting
@@ -70,10 +70,8 @@ ApplicationMgr       INFO Application Manager Started successfully
 EventSelector.D...   INFO Compression:0 Checksum:1
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 EventPersistenc...   INFO Added successfully Conversion service:LHCb::RawDataCnvSvc
-ONLINE_2008          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2008.db/ONLINE"
-ONLINE_2008          INFO Using TAG ""
-FillingBeam1      WARNING Magnet State condition not implemented for these data
-FillingBeam2      WARNING Magnet State condition not implemented for these data
+ONLINE_2012          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/ONLINE-2012.db/ONLINE"
+ONLINE_2012          INFO Using TAG ""
 FileIdBankWriter     INFO RunInfo record: 2d9d961c-9898-11e1-95f3-002590121862
 EventSelector.D...   INFO Cannot read more data  (Header). End-of-File reached.
 EventSelector        INFO Stream:EventSelector.DataStreamTool_2 Def:DATAFILE='lfn:/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/114753/114753_0000000016.raw' SVC='LHCb::MDFSelector' OPT='READ'
@@ -86,25 +84,25 @@ FilterNoBeam      SUCCESS Number of counters : 1
  |*"#passed"                                       |      1000 |          9 |( 0.900000 +- 0.298647 )%|   -------   |   -------   |
 LumiDecodeNoBeam     INFO Average event size :    11.0 words
 LumiCountNoBeam      INFO number of files seen: 2
-LumiCountNoBeam      INFO INTEGRAL: {  runs : 114753  files : 2d9d961c-9898-11e1-95f3-002590121862 14dceef0-9890-11e1-95f3-002590121862  info (key/incr/integral) : 0 9 1 / 1 9 0 / 2 9 0 / 3 9 0 / 4 9 0 / 6 9 37 / 7 9 991 / 8 9 0 / 11 9 0 / 14 9 0 / 21 9 18 / 50 9 0 / 51 9 0 / 52 9 0 / 53 9 0 / 54 9 0 / 56 9 4 / 57 9 0 / 58 9 0 / 61 9 0 / 64 9 0 / 71 9 9 /  }
+LumiCountNoBeam      INFO INTEGRAL: {  runs : 114753  files : 2d9d961c-9898-11e1-95f3-002590121862 14dceef0-9890-11e1-95f3-002590121862  info (key/incr/integral) : 0 9 1 / 1 9 0 / 2 9 0 / 3 9 0 / 4 9 0 / 6 9 37 / 7 9 991 / 8 9 0 / 11 9 0 / 14 9 0 / 21 9 18 / 50 9 0 / 51 9 0 / 52 9 0 / 53 9 0 / 54 9 0 / 56 9 4 / 57 9 9 / 58 9 0 / 61 9 0 / 64 9 0 / 71 9 9 /  }
 FilterBeamCrossingSUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  |*"#passed"                                       |      1000 |        127 |(  12.7000 +- 1.05295  )%|   -------   |   -------   |
 LumiDecodeBeamC...   INFO Average event size :    11.0 words
 LumiCountBeamCr...   INFO number of files seen: 2
-LumiCountBeamCr...   INFO INTEGRAL: {  runs : 114753  files : 2d9d961c-9898-11e1-95f3-002590121862 14dceef0-9890-11e1-95f3-002590121862  info (key/incr/integral) : 0 127 2595 / 1 127 7803 / 2 127 2194 / 3 127 7351 / 4 127 14 / 6 127 23536 / 7 127 205553 / 8 127 0 / 11 127 206 / 14 127 205 / 21 127 254 / 50 127 107 / 51 127 109 / 52 127 99 / 53 127 109 / 54 127 12 / 56 127 116 / 57 127 97 / 58 127 0 / 61 127 108 / 64 127 108 / 71 127 127 /  }
+LumiCountBeamCr...   INFO INTEGRAL: {  runs : 114753  files : 2d9d961c-9898-11e1-95f3-002590121862 14dceef0-9890-11e1-95f3-002590121862  info (key/incr/integral) : 0 127 2595 / 1 127 7803 / 2 127 2194 / 3 127 7351 / 4 127 14 / 6 127 23536 / 7 127 205553 / 8 127 0 / 11 127 206 / 14 127 205 / 21 127 254 / 50 127 107 / 51 127 109 / 52 127 99 / 53 127 109 / 54 127 12 / 56 127 116 / 57 127 127 / 58 127 0 / 61 127 108 / 64 127 108 / 71 127 127 /  }
 FilterBeam1       SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  |*"#passed"                                       |      1000 |         29 |(  2.90000 +- 0.530651 )%|   -------   |   -------   |
 LumiDecodeBeam1      INFO Average event size :    11.0 words
 LumiCountBeam1       INFO number of files seen: 2
-LumiCountBeam1       INFO INTEGRAL: {  runs : 114753  files : 2d9d961c-9898-11e1-95f3-002590121862 14dceef0-9890-11e1-95f3-002590121862  info (key/incr/integral) : 0 29 10 / 1 29 18 / 2 29 1 / 3 29 1 / 4 29 0 / 6 29 113 / 7 29 3211 / 8 29 0 / 11 29 0 / 14 29 0 / 21 29 58 / 50 29 1 / 51 29 1 / 52 29 0 / 53 29 0 / 54 29 0 / 56 29 8 / 57 29 0 / 58 29 0 / 61 29 0 / 64 29 0 / 71 29 29 /  }
+LumiCountBeam1       INFO INTEGRAL: {  runs : 114753  files : 2d9d961c-9898-11e1-95f3-002590121862 14dceef0-9890-11e1-95f3-002590121862  info (key/incr/integral) : 0 29 10 / 1 29 18 / 2 29 1 / 3 29 1 / 4 29 0 / 6 29 113 / 7 29 3211 / 8 29 0 / 11 29 0 / 14 29 0 / 21 29 58 / 50 29 1 / 51 29 1 / 52 29 0 / 53 29 0 / 54 29 0 / 56 29 8 / 57 29 29 / 58 29 0 / 61 29 0 / 64 29 0 / 71 29 29 /  }
 FilterBeam2       SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  |*"#passed"                                       |      1000 |         21 |(  2.10000 +- 0.453420 )%|   -------   |   -------   |
 LumiDecodeBeam2      INFO Average event size :    11.0 words
 LumiCountBeam2       INFO number of files seen: 2
-LumiCountBeam2       INFO INTEGRAL: {  runs : 114753  files : 2d9d961c-9898-11e1-95f3-002590121862 14dceef0-9890-11e1-95f3-002590121862  info (key/incr/integral) : 0 21 0 / 1 21 0 / 2 21 0 / 3 21 0 / 4 21 0 / 6 21 17 / 7 21 2159 / 8 21 0 / 11 21 0 / 14 21 0 / 21 21 42 / 50 21 0 / 51 21 0 / 52 21 0 / 53 21 0 / 54 21 0 / 56 21 3 / 57 21 0 / 58 21 0 / 61 21 0 / 64 21 0 / 71 21 21 /  }
+LumiCountBeam2       INFO INTEGRAL: {  runs : 114753  files : 2d9d961c-9898-11e1-95f3-002590121862 14dceef0-9890-11e1-95f3-002590121862  info (key/incr/integral) : 0 21 0 / 1 21 0 / 2 21 0 / 3 21 0 / 4 21 0 / 6 21 17 / 7 21 2159 / 8 21 0 / 11 21 0 / 14 21 0 / 21 21 42 / 50 21 0 / 51 21 0 / 52 21 0 / 53 21 0 / 54 21 0 / 56 21 3 / 57 21 21 / 58 21 0 / 61 21 0 / 64 21 0 / 71 21 21 /  }
 TimeSpanFilter    SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  |*"#passed"                                       |      1000 |        186 |(  18.6000 +- 1.23046  )%|   -------   |   -------   |
@@ -142,13 +140,13 @@ ToolSvc.HltFactorySUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "# loaded from PYTHON"                          |         5 |          5 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.27 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.70 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO writeLumiSeq                  |     0.309 |     0.336 |    0.000       1.7 |    1000 |     0.336 |
-ToolSvc.Sequenc...   INFO   createODIN                  |     0.037 |     0.066 |    0.000       1.0 |    1000 |     0.066 |
-ToolSvc.Sequenc...   INFO   KillAll                     |     0.258 |     0.260 |    0.000       1.1 |    1000 |     0.260 |
-ToolSvc.Sequenc...   INFO   FileIdBankWriter            |     0.009 |     0.005 |    0.000       0.9 |    1000 |     0.005 |
+ToolSvc.Sequenc...   INFO writeLumiSeq                  |     0.039 |     0.124 |    0.050       0.6 |    1000 |     0.124 |
+ToolSvc.Sequenc...   INFO   createODIN                  |     0.001 |     0.005 |    0.004       0.0 |    1000 |     0.005 |
+ToolSvc.Sequenc...   INFO   KillAll                     |     0.035 |     0.111 |    0.039       0.3 |    1000 |     0.111 |
+ToolSvc.Sequenc...   INFO   FileIdBankWriter            |     0.000 |     0.004 |    0.003       0.2 |    1000 |     0.004 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 CounterSummarySvc    INFO filling counters...
 CounterSummarySvc    INFO counters filled OK

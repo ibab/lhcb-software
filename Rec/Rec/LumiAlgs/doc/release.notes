@@ -4,6 +4,10 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2015-10-22 - Marco Cattaneo
+ - Update test references to follow LHCBPS-1434 patch: LHCbApp() now assigns 
+   OdinTimeDecoder as EventClockSvc().EventTimeDecoder when processing real data
+
 !========================= LumiAlgs v9r9p1 2015-10-13 =========================
 ! 2015-10-12 - Marco Cattaneo
  - Update lumi2reader reference to follow Gaudi v26r4 fix to GaudiSequencer 

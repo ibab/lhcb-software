@@ -1,5 +1,6 @@
-# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@4/build/REC/REC_HEAD/Rec/LumiAlgs/job/LumiAlgsConfTest.py'
-# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@4/build/REC/REC_HEAD/Rec/LumiAlgs/job/LumiAlgsConfTest.py'
+# setting LC_ALL to "C"
+# --> Including file '/afs/cern.ch/work/c/cattanem/private/cmakeuser/RecDev_HEAD/Rec/LumiAlgs/job/LumiAlgsConfTest.py'
+# <-- End of file '/afs/cern.ch/work/c/cattanem/private/cmakeuser/RecDev_HEAD/Rec/LumiAlgs/job/LumiAlgsConfTest.py'
 # applying configuration of LHCbApp
 # /***** User LHCbApp/LHCbApp ************************************************************************
 # |-Persistency    = None
@@ -31,13 +32,13 @@
 # |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
 # |-Simulation        = False
 # |-Context           = 'Offline'
-# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0x22750f0>  (default: None)
+# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0x7ffbfcf1ea00>  (default: None)
 # |-IgnoreDQFlags     = False
 # \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
 # skipping configuration of XMLSummary
 # applying configuration of DDDBConf
-# WARNING: Using default tag dddb-20130929-1 for partition DDDB
-# WARNING: Using default tag cond-20141007 for partition LHCBCOND
+# WARNING: Using default tag dddb-20150928 for partition DDDB
+# WARNING: Using default tag cond-20150409-1 for partition LHCBCOND
 # WARNING: Using default tag dq-20140822 for partition DQFLAGS
 # /***** User DDDBConf/DDDBConf **********************************************************************
 # |-DataType    = '2012'
@@ -47,10 +48,9 @@
 # |-Simulation  = False
 # \----- (End of User DDDBConf/DDDBConf) -------------------------------------------------------------
 # applying configuration of CondDB
-# --> Including file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
 # /***** User CondDB/CondDB **************************************************************************
 # |-Upgrade                    = False
+# |-EnableRunStampCheck        = True
 # |-DBSnapshotDirectory        = '/group/online/hlt/conditions'
 # |-LatestLocalTagsByDataType  = []  (default: [])
 # |-Online                     = False
@@ -63,6 +63,7 @@
 # |-LoadCALIBDB                = 'OFFLINE'
 # |-AllLocalTagsByDataType     = []  (default: [])
 # |-UseOracle                  = False
+# |-RunStampCondition          = ''
 # |-PartitionConnectionString  = {}  (default: {})
 # |-LocalTags                  = {}  (default: {})
 # |-IgnoreHeartBeat            = False
@@ -79,8 +80,8 @@
 # \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr (GaudiCoreSvc v3r2)
-                                          running on lbbuild06.cern.ch on Wed Feb 18 07:56:41 2015
+                                                   Welcome to RecDev version HEAD
+                                          running on mcat.cern.ch on Thu Oct 22 10:56:02 2015
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -89,7 +90,7 @@ LumiSequence         INFO OR Member list: GaudiSequencer/LumiNoBeamSeq, GaudiSeq
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.33 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.72 times the speed of a 2.8 GHz Xeon.
 LumiNoBeamSeq        INFO Member list: LoKi::ODINFilter/FilterNoBeam, HltLumiSummaryDecoder/LumiDecodeNoBeam, FilterOnLumiSummary/LumiFilterNoBeam, LumiAccounting/LumiCountNoBeam
 LoKiSvc           SUCCESS
 
@@ -206,11 +207,10 @@ LumiCountNoBeam   VERBOSE ServiceLocatorHelper::service: found service DetectorD
 LumiCountNoBeam     DEBUG ==> Register DB
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
-DDDB                 INFO Using TAG "dddb-20130929-1"
-LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
-LHCBCOND             INFO Using TAG "cond-20141007"
-EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
+DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/DDDB.db/DDDB"
+DDDB                 INFO Using TAG "dddb-20150928"
+LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/LHCBCOND.db/LHCBCOND"
+LHCBCOND             INFO Using TAG "cond-20150409-1"
 LumiBeamCrossin...   INFO Member list: LoKi::ODINFilter/FilterBeamCrossing, HltLumiSummaryDecoder/LumiDecodeBeamCrossing, FilterOnLumiSummary/LumiFilterBeamCrossing, LumiAccounting/LumiCountBeamCrossing
 LumiFilterBeamC...  DEBUG Property update for OutputLevel : new value = 1
 LumiFilterBeamC...  DEBUG Property update for OutputLevel : new value = 1
@@ -392,7 +392,7 @@ FillingBeam1        DEBUG Property ['Name': Value] =  'OutputLevel':1
 FillingBeam1        DEBUG ==> Initialize
 FillingBeam1      VERBOSE ServiceLocatorHelper::service: found service DetectorDataSvc
 FillingBeam1        DEBUG ==> Register DB
-ONLINE_2012          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2012.db/ONLINE"
+ONLINE_2012          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/ONLINE-2012.db/ONLINE"
 ONLINE_2012          INFO Using TAG ""
 FillingBeam1        DEBUG Conditions/Online/LHCb/LHCFillingScheme
 FillingBeam1        DEBUG Conditions/Online/LHCb/Magnet/Measured
@@ -814,7 +814,7 @@ ToolSvc.HltFactorySUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "# loaded from PYTHON"                          |         5 |          5 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.33 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.72 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------

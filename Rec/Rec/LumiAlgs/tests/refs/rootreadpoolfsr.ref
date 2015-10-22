@@ -1,12 +1,13 @@
-# --> Including file '/afs/cern.ch/work/c/cattanem/private/cmtuser/Rec_HEAD/Rec/LumiAlgs/job/LumiFsrReader.py'
-# <-- End of file '/afs/cern.ch/work/c/cattanem/private/cmtuser/Rec_HEAD/Rec/LumiAlgs/job/LumiFsrReader.py'
+# setting LC_ALL to "C"
+# --> Including file '/afs/cern.ch/work/c/cattanem/private/cmakeuser/RecDev_HEAD/Rec/LumiAlgs/job/LumiFsrReader.py'
+# <-- End of file '/afs/cern.ch/work/c/cattanem/private/cmakeuser/RecDev_HEAD/Rec/LumiAlgs/job/LumiFsrReader.py'
 # applying configuration of LumiFsrReaderConf
 # WARNING: Using default tag dddb-20150522 for partition DDDB
 # WARNING: Using default tag tt-20110126 for partition DQFLAGS
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr (GaudiCoreSvc v3r4)
-                                          running on mcat.cern.ch on Thu Jun 18 15:08:19 2015
+                                                   Welcome to RecDev version HEAD
+                                          running on mcat.cern.ch on Thu Oct 22 10:54:37 2015
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -16,19 +17,18 @@ LumiSeq              INFO Member list: DumpFSR/dumpFSR
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.70 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.67 times the speed of a 2.8 GHz Xeon.
 EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='testPoolFsr.dst' SVC='Gaudi::RootEvtSelector' OPT='READ'
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
-EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
 ApplicationMgr       INFO Application Manager Started successfully
 FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
-ONLINE_2008          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2008.db/ONLINE"
-ONLINE_2008          INFO Using TAG ""
+ONLINE_2010          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/ONLINE-2010.db/ONLINE"
+ONLINE_2010          INFO Using TAG ""
 dumpFSR              INFO lu address: /FileRecords/92276DC3-898B-E011-B992-002590138ADC/LumiFSRNoBeam
 dumpFSR              INFO /FileRecords/92276DC3-898B-E011-B992-002590138ADC/LumiFSRNoBeam: LumiFSR: {  runs : 81430  files : 0238bd38-9252-12df-8123-00188b856c32  info (key/incr/integral) : 0 8 0 / 1 8 0 / 2 8 0 / 6 8 30 / 7 8 5112 / 8 8 0 / 11 8 0 / 21 8 16 / 50 8 0 / 51 8 0 / 52 8 0 / 56 8 4 / 57 8 1 / 58 8 0 / 61 8 0 / 71 8 8 /  }
 dumpFSR              INFO lu address: /FileRecords/92276DC3-898B-E011-B992-002590138ADC/LumiFSRBeamCrossing
@@ -59,7 +59,7 @@ dumpFSR              INFO /FileRecords/92276DC3-898B-E011-B992-002590138ADC/Time
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.70 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.67 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------

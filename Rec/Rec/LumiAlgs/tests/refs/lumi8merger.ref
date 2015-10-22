@@ -1,5 +1,6 @@
-# --> Including file '/afs/cern.ch/work/c/cattanem/private/cmtuser/Rec_HEAD/Rec/LumiAlgs/job/LumiFsrMerger.py'
-# <-- End of file '/afs/cern.ch/work/c/cattanem/private/cmtuser/Rec_HEAD/Rec/LumiAlgs/job/LumiFsrMerger.py'
+# setting LC_ALL to "C"
+# --> Including file '/afs/cern.ch/work/c/cattanem/private/cmakeuser/RecDev_HEAD/Rec/LumiAlgs/job/LumiFsrMerger.py'
+# <-- End of file '/afs/cern.ch/work/c/cattanem/private/cmakeuser/RecDev_HEAD/Rec/LumiAlgs/job/LumiFsrMerger.py'
 # applying configuration of LHCbApp
 # /***** User LHCbApp/LHCbApp ************************************************************************
 # |-Persistency    = None
@@ -19,7 +20,7 @@
 # |-Monitors       = []  (default: [])
 # \----- (End of User LHCbApp/LHCbApp) ---------------------------------------------------------------
 # applying configuration of DDDBConf
-# WARNING: Using default tag dddb-20150522-2 for partition DDDB
+# WARNING: Using default tag dddb-20150928 for partition DDDB
 # WARNING: Using default tag dq-20140822 for partition DQFLAGS
 # /***** User DDDBConf/DDDBConf **********************************************************************
 # |-DataType    = '2012'
@@ -32,7 +33,7 @@
 # /***** User LumiMergeFSRConf/LumiMergeFSRConf ******************************************************
 # |-Persistency   = None
 # |-outputFile    = 'mergeout.dst'  (default: '')
-# |-LumiSequencer = <GaudiSequencer/LumiMergeSeq at 0x7effe877a430>  (default: None)
+# |-LumiSequencer = <GaudiSequencer/LumiMergeSeq at 0x7f9fb4b38810>  (default: None)
 # |-InputType     = 'DST'
 # \----- (End of User LumiMergeFSRConf/LumiMergeFSRConf) ---------------------------------------------
 # applying configuration of XMLSummary
@@ -40,8 +41,6 @@
 # |-XMLSummary = 'summary.xml'  (default: None)
 # \----- (End of User XMLSummary/XMLSummary) ---------------------------------------------------------
 # applying configuration of CondDB
-# --> Including file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
 # /***** User CondDB/CondDB **************************************************************************
 # |-Upgrade                    = False
 # |-EnableRunStampCheck        = True
@@ -74,8 +73,8 @@
 # \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr (GaudiCoreSvc v3r4)
-                                          running on mcat.cern.ch on Thu Jun 18 15:10:47 2015
+                                                   Welcome to RecDev version HEAD
+                                          running on mcat.cern.ch on Thu Oct 22 10:57:36 2015
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -85,7 +84,7 @@ LumiMergeSeq         INFO Member list: EventAccounting/EventAccount, LumiMergeFS
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.73 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.74 times the speed of a 2.8 GHz Xeon.
 MergeFSR             INFO Primary  BXType BeamCrossing
 MergeFSR             INFO Subtract BXType Beam1
 MergeFSR             INFO Subtract BXType Beam2
@@ -97,13 +96,12 @@ FSROutputStream...   INFO Data source: FileRecordDataSvc output: DATAFILE='merge
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:testFSRout.dst' SVC='Gaudi::RootEvtSelector' OPT='READ'
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
-EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
 ApplicationMgr       INFO Application Manager Started successfully
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
-ONLINE_2008          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2008.db/ONLINE"
-ONLINE_2008          INFO Using TAG ""
+ONLINE_2012          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/ONLINE-2012.db/ONLINE"
+ONLINE_2012          INFO Using TAG ""
 EventSelector        INFO Stream:EventSelector.DataStreamTool_2 Def:DATAFILE='PFN:testFSRout0.dst' SVC='Gaudi::RootEvtSelector' OPT='READ'
 EventSelector     SUCCESS Reading Event record 1001. Record number within stream 2: 1
 EventLoopMgr         INFO No more events in event selection
@@ -120,13 +118,13 @@ FSROutputStream...   INFO Events output: 1
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.73 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.74 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO LumiMergeSeq                  |     0.004 |     0.006 |    0.005       0.0 |    2000 |     0.012 |
-ToolSvc.Sequenc...   INFO   EventAccount                |     0.001 |     0.002 |    0.001       0.0 |    2000 |     0.004 |
-ToolSvc.Sequenc...   INFO   MergeFSR                    |     0.001 |     0.001 |    0.001       0.0 |    2000 |     0.002 |
-ToolSvc.Sequenc...   INFO   FSRCleaner                  |     0.000 |     0.001 |    0.001       0.0 |    2000 |     0.002 |
+ToolSvc.Sequenc...   INFO LumiMergeSeq                  |     0.009 |     0.007 |    0.006       0.1 |    2000 |     0.015 |
+ToolSvc.Sequenc...   INFO   EventAccount                |     0.003 |     0.002 |    0.001       0.0 |    2000 |     0.005 |
+ToolSvc.Sequenc...   INFO   MergeFSR                    |     0.001 |     0.001 |    0.001       0.0 |    2000 |     0.003 |
+ToolSvc.Sequenc...   INFO   FSRCleaner                  |     0.002 |     0.001 |    0.001       0.0 |    2000 |     0.003 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 CounterSummarySvc    INFO filling counters...
 CounterSummarySvc    INFO counters filled OK

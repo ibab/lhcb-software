@@ -1,13 +1,14 @@
-# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform/build/REC/REC_HEAD/Rec/LumiAlgs/job/LumiReader.py'
-# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform/build/REC/REC_HEAD/Rec/LumiAlgs/job/LumiReader.py'
+# setting LC_ALL to "C"
+# --> Including file '/afs/cern.ch/work/c/cattanem/private/cmakeuser/RecDev_HEAD/Rec/LumiAlgs/job/LumiReader.py'
+# <-- End of file '/afs/cern.ch/work/c/cattanem/private/cmakeuser/RecDev_HEAD/Rec/LumiAlgs/job/LumiReader.py'
 # applying configuration of LumiReaderConf
 # WARNING: Using default tag dddb-20150522 for partition DDDB
 # WARNING: Using default tag cond-20150527 for partition LHCBCOND
 # WARNING: Using default tag tt-20110126 for partition DQFLAGS
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Rec version HEAD
-                                          running on lbbuild08.cern.ch on Mon Oct 12 04:13:13 2015
+                                                   Welcome to RecDev version HEAD
+                                          running on mcat.cern.ch on Thu Oct 22 10:55:40 2015
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -16,7 +17,7 @@ LumiSeq              INFO Member list: GaudiSequencer/readLumiSeq
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.33 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.73 times the speed of a 2.8 GHz Xeon.
 readLumiSeq         DEBUG Property update for OutputLevel : new value = 2
 readLumiSeq         DEBUG Property update for OutputLevel : new value = 2
 readLumiSeq         DEBUG Initialize base class GaudiCommon<Algorithm>
@@ -179,7 +180,6 @@ IODataManager       ERROR You may not be able to navigate back to the input file
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='file:testout.mdf' SVC='LHCb::MDFSelector' OPT='READ'
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
-EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
 ApplicationMgr       INFO Application Manager Started successfully
 readLumiSeq         DEBUG Property update for OutputLevel : new value = 2
 readLumiSeq         DEBUG ==> beginRun
@@ -191,8 +191,8 @@ EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
 EventPersistenc...   INFO Added successfully Conversion service:LHCb::RawDataCnvSvc
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
-ONLINE_2008          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/ONLINE-2008.db/ONLINE"
-ONLINE_2008          INFO Using TAG ""
+ONLINE_2012          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/ONLINE-2012.db/ONLINE"
+ONLINE_2012          INFO Using TAG ""
 readLumiSeq         DEBUG ==> Execute
 LumiFileReader      DEBUG ==> Execute
 LumiFileReader      DEBUG LumiSummary loaded!!
@@ -1024,18 +1024,18 @@ ToolSvc.HltFactorySUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "# loaded from PYTHON"                          |         1 |          1 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.33 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.73 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO readLumiSeq                   |     0.600 |     0.761 |    0.498       3.3 |      20 |     0.015 |
-ToolSvc.Sequenc...   INFO   createODIN                  |     0.100 |     0.110 |    0.000       1.3 |      20 |     0.002 |
-ToolSvc.Sequenc...   INFO   OdinTriggerTypes            |     0.000 |     0.023 |    0.000       0.3 |      20 |     0.000 |
-ToolSvc.Sequenc...   INFO   HltLumiSummaryDecoder       |     0.000 |     0.037 |    0.000       0.3 |      20 |     0.001 |
-ToolSvc.Sequenc...   INFO   filterLumi                  |     0.050 |     0.015 |    0.000       0.1 |      20 |     0.000 |
-ToolSvc.Sequenc...   INFO     LumiRandomFilter          |     0.000 |     0.008 |    0.000       0.1 |      20 |     0.000 |
+ToolSvc.Sequenc...   INFO readLumiSeq                   |     0.300 |     0.357 |    0.281       1.2 |      20 |     0.007 |
+ToolSvc.Sequenc...   INFO   createODIN                  |     0.000 |     0.007 |    0.004       0.0 |      20 |     0.000 |
+ToolSvc.Sequenc...   INFO   OdinTriggerTypes            |     0.000 |     0.009 |    0.004       0.1 |      20 |     0.000 |
+ToolSvc.Sequenc...   INFO   HltLumiSummaryDecoder       |     0.050 |     0.026 |    0.011       0.3 |      20 |     0.001 |
+ToolSvc.Sequenc...   INFO   filterLumi                  |     0.000 |     0.011 |    0.006       0.1 |      20 |     0.000 |
+ToolSvc.Sequenc...   INFO     LumiRandomFilter          |     0.000 |     0.008 |    0.003       0.1 |      20 |     0.000 |
 ToolSvc.Sequenc...   INFO     LumiLowFilter             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO   LumiFileReader              |     0.100 |     0.167 |    0.094       0.6 |      20 |     0.003 |
-ToolSvc.Sequenc...   INFO   InputDump                   |     0.300 |     0.383 |    0.276       0.6 |      20 |     0.008 |
+ToolSvc.Sequenc...   INFO   LumiFileReader              |     0.150 |     0.095 |    0.069       0.3 |      20 |     0.002 |
+ToolSvc.Sequenc...   INFO   InputDump                   |     0.100 |     0.194 |    0.171       0.4 |      20 |     0.004 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

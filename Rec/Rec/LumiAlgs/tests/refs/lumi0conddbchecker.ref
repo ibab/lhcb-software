@@ -1,71 +1,85 @@
-# --> Including file '/afs/cern.ch/user/r/rlambert/cmtuser/Rec_HEAD/Rec/LumiAlgs/job/LumiCheckCondDB.py'
-# <-- End of file '/afs/cern.ch/user/r/rlambert/cmtuser/Rec_HEAD/Rec/LumiAlgs/job/LumiCheckCondDB.py'
+# setting LC_ALL to "C"
+# --> Including file '/afs/cern.ch/work/c/cattanem/private/cmakeuser/RecDev_HEAD/Rec/LumiAlgs/job/LumiCheckCondDB.py'
+# <-- End of file '/afs/cern.ch/work/c/cattanem/private/cmakeuser/RecDev_HEAD/Rec/LumiAlgs/job/LumiCheckCondDB.py'
 # applying configuration of LHCbApp
 # /***** User LHCbApp/LHCbApp ************************************************************************
-# |-DDDBtag     = ''
-# |-OutputLevel = 3
-# |-DataType    = '2009'
-# |-TimeStamp   = False
-# |-SkipEvents  = 0
-# |-EvtMax      = -1
-# |-CondDBtag   = 'lumi-20110131'  (default: '')
-# |-DQFLAGStag  = ''
-# |-XMLSummary  = None
-# |-Simulation  = False
-# |-Monitors    = []  (default: [])
+# |-Persistency    = None
+# |-DataType       = '2012'
+# |-DDDBtag        = ''
+# |-SkipEvents     = 0
+# |-XMLSummary     = None
+# |-OutputLevel    = 3
+# |-EvtMax         = -1
+# |-Simulation     = False
+# |-DQFLAGStag     = ''
+# |-IgnoreDQFlags  = True
+# |-Detectors      = []  (default: [])
+# |-LocalDataTypes = []  (default: [])
+# |-TimeStamp      = False
+# |-CondDBtag      = 'cond-20141002'  (default: '')
+# |-Monitors       = []  (default: [])
 # \----- (End of User LHCbApp/LHCbApp) ---------------------------------------------------------------
 # applying configuration of DDDBConf
-# WARNING: Using default tag head-20101206 for partition DDDB
-# WARNING: Using default tag tt-20110126 for partition DQFLAGS
+# WARNING: Using default tag dddb-20150928 for partition DDDB
+# WARNING: Using default tag dq-20140822 for partition DQFLAGS
 # /***** User DDDBConf/DDDBConf **********************************************************************
-# |-DataType   = '2009'
-# |-DbRoot     = 'conddb:/lhcb.xml'
-# |-Simulation = False
+# |-DataType    = '2012'
+# |-DbRoot      = 'conddb:/lhcb.xml'
+# |-InitialTime = 'Safe'
+# |-AutoTags    = False
+# |-Simulation  = False
 # \----- (End of User DDDBConf/DDDBConf) -------------------------------------------------------------
 # skipping configuration of XMLSummary
 # applying configuration of CondDB
-# --> Including file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
 # /***** User CondDB/CondDB **************************************************************************
-# |-PartitionConnectionString = {}  (default: {})
-# |-LocalTags                 = {}  (default: {})
-# |-IgnoreHeartBeat           = False
-# |-Tags                      = {}  (default: {})
-# |-Overrides                 = [(0, <CondDBAccessSvc/automatic_LHCBCOND at 0x135e3570>)]  (default: [])
-# |-DisableLFC                = False
-# |-Simulation                = False
-# |-SQLiteLocalCopiesDir      = ''
-# |-HeartBeatCondition        = '/Conditions/Online/LHCb/Tick'
-# |-Online                    = False
-# |-QueryGranularity          = 0
-# |-UseOracle                 = False
-# |-LogFile                   = ''
-# |-UseLatestTags             = []  (default: [])
-# |-OverwriteSQLiteLocalCopy  = False
+# |-Upgrade                    = False
+# |-EnableRunStampCheck        = True
+# |-DBSnapshotDirectory        = '/group/online/hlt/conditions'
+# |-LatestLocalTagsByDataType  = []  (default: [])
+# |-Online                     = False
+# |-LogFile                    = ''
+# |-SQLiteLocalCopiesDir       = ''
+# |-EnableRunChangeHandler     = False
+# |-RunChangeHandlerConditions = {'online_%d.xml': ['Conditions/Online/LHCb/Magnet/Set', 'Conditions/Online/Velo/MotionSystem', 'Conditions/Online/LHCb/Lumi/LumiSettings', 'Conditions/Online/LHCb/LHCFillingScheme', 'Conditions/Online/LHCb/RunParameters', 'Conditions/Online/Rich1/R1HltGasParameters', 'Conditions/Online/Rich2/R2HltGasParameters']}
+# |                            (default: {'online_%d.xml': ['Conditions/Online/LHCb/Magnet/Set', 'Conditions/Online/Velo/MotionSystem', 'Conditions/Online/LHCb/Lumi/LumiSettings', 'Conditions/Online/LHCb/LHCFillingScheme', 'Conditions/Online/LHCb/RunParameters', 'Conditions/Online/Rich1/R1HltGasParameters', 'Conditions/Online/Rich2/R2HltGasParameters']})
+# |-Tags                       = {}  (default: {})
+# |-LoadCALIBDB                = 'OFFLINE'
+# |-AllLocalTagsByDataType     = []  (default: [])
+# |-UseOracle                  = False
+# |-RunStampCondition          = ''
+# |-PartitionConnectionString  = {}  (default: {})
+# |-LocalTags                  = {}  (default: {})
+# |-IgnoreHeartBeat            = False
+# |-Overrides                  = [(0, <CondDBAccessSvc/automatic_LHCBCOND at 0x7fa31bb708a0>)]  (default: [])
+# |-Simulation                 = False
+# |-QueryGranularity           = 0
+# |-LatestGlobalTagByDataType  = ''
+# |-UseDBSnapshot              = False
+# |-DisableLFC                 = False
+# |-HeartBeatCondition         = '/Conditions/Online/LHCb/Tick'
+# |-LatestGlobalTagByDataTypes = []  (default: [])
+# |-UseLatestTags              = []  (default: [])
+# |-OverwriteSQLiteLocalCopy   = False
 # \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lbcsrv01 on Wed May 25 11:56:08 2011
+                                                   Welcome to RecDev version HEAD
+                                          running on mcat.cern.ch on Thu Oct 22 10:54:46 2015
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
-DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
 DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 CheckDB              INFO Member list: LumiCheckCondDB/CheckCondDB
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.35 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.72 times the speed of a 2.8 GHz Xeon.
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 automatic_LHCBCOND   INFO Connected to database "sqlite_file:LHCBCOND_Lumi_IOV.db/LHCBCOND"
 automatic_LHCBCOND   INFO Using TAG ""
-DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
-DDDB                 INFO Using TAG "head-20101206"
-EventPersistenc...   INFO  'CnvServices':[ 'PoolDbCnvSvc/PoolRootEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootTreeEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootKeyEvtCnvSvc' , 'LHCb::RawDataCnvSvc' ]
-EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
-HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
+DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/DDDB.db/DDDB"
+DDDB                 INFO Using TAG "dddb-20150928"
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
@@ -317,12 +331,11 @@ ApplicationMgr       INFO Application Manager Stopped successfully
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.35 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.72 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 ToolSvc.Sequenc...   INFO CheckDB                       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 ToolSvc.Sequenc...   INFO   CheckCondDB                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

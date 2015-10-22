@@ -1,13 +1,14 @@
-# --> Including file '/afs/cern.ch/work/c/cattanem/private/cmtuser/Rec_HEAD/Rec/LumiAlgs/job/LumiFsrToFile.py'
-# <-- End of file '/afs/cern.ch/work/c/cattanem/private/cmtuser/Rec_HEAD/Rec/LumiAlgs/job/LumiFsrToFile.py'
+# setting LC_ALL to "C"
+# --> Including file '/afs/cern.ch/work/c/cattanem/private/cmakeuser/RecDev_HEAD/Rec/LumiAlgs/job/LumiFsrToFile.py'
+# <-- End of file '/afs/cern.ch/work/c/cattanem/private/cmakeuser/RecDev_HEAD/Rec/LumiAlgs/job/LumiFsrToFile.py'
 # applying configuration of LumiFsrReaderConf
 # WARNING: Using default tag dddb-20150522 for partition DDDB
 # WARNING: Using default tag cond-20150527 for partition LHCBCOND
 # WARNING: Using default tag tt-20110126 for partition DQFLAGS
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr (GaudiCoreSvc v3r4)
-                                          running on mcat.cern.ch on Thu Jun 18 15:10:44 2015
+                                                   Welcome to RecDev version HEAD
+                                          running on mcat.cern.ch on Thu Oct 22 10:57:32 2015
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -21,14 +22,13 @@ EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:testFSRout.dst' SVC='Gaudi::RootEvtSelector' OPT='READ'
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
-EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
 ApplicationMgr       INFO Application Manager Started successfully
 FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
-ONLINE_2008          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2008.db/ONLINE"
-ONLINE_2008          INFO Using TAG ""
+ONLINE_2012          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/ONLINE-2012.db/ONLINE"
+ONLINE_2012          INFO Using TAG ""
 EventLoopMgr         INFO No more events in event selection
 ApplicationMgr       INFO Application Manager Stopped successfully
 dumpFSR           SUCCESS asciifile: test_ascii_fsr.dat - opened
