@@ -1,9 +1,9 @@
 #============================================================================
 # Created    : 2010-05-19
-# Maintainer : Juan PALACIOS
+# Maintainer : DaVinci coordinator
 #============================================================================
 package           DSTWriterTests
-version           v2r5
+version           v2r6
 
 #============================================================================
 # Structure, i.e. directories to process. 

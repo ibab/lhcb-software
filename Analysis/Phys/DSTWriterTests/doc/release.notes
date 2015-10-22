@@ -1,8 +1,11 @@
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriterTests
-! Responsible : Juan Palacios
+! Responsible : DaVinci coordinator
 ! Purpose     : Options to generate selection or Micro DSTs and scripts to test them.
 !-----------------------------------------------------------------------------
+
+!===================== DSTWriterTests v2r6 2015-10-22 ========================
+
 ! 2015-08-20 - Gerhard Raven
  - remove configration of obsolete ANNDispatchSvc
 
