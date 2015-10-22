@@ -20,7 +20,7 @@ use  ProtoParticleFilter        v1r8     Phys    # Current DV Maintainer
 use  DaVinciTransporter 	v3r13    Phys    # Current DV Maintainer
 use  ParticleMaker      	v6r16    Phys    # Current DV Maintainer
 use  VertexFit			v6r22    Phys    # Yuehong Xie
-use  LoKiFitters                v4r17    Phys    # Vanya Belyaev
+use  LoKiFitters                v4r18    Phys    # Vanya Belyaev
 use  DecayTreeFitter            v1r22    Phys    # Wouter Hulsbergen
 use  PhysDict                   v4r2p4   Phys    # Current DV Maintainer
 use  HighPtJets                 v1r9     Phys    # Marcin Kucharczyk
@@ -29,14 +29,14 @@ use  BBDecTreeTool              v1r8     Phys    # Mike Williams
 #===================================================================
 
 use  DaVinciTools       	v24r4    Phys    # DaVinci coordinator
-use  RelatedInfoTools           v1r2     Phys    # Anton Poluektov
+use  RelatedInfoTools           v1r3     Phys    # Anton Poluektov
 use  ExtraInfoTools             v1r1     Phys    # Anton Poluektov
-use  ParticleCombiners          v1r4     Phys    # ?
-use  DaVinciPVTools             v1r2     Phys    # ?
+use  ParticleCombiners          v1r4     Phys    # Chris Jones
+use  DaVinciPVTools             v1r2     Phys    # Chris Jones
 use  DaVinciFilters             v1r3     Phys    # DaVinci coordinator
 use  DaVinciDecayFinder         v1r1     Phys    # DaVinci coordinator
 use  TopologicalTools           v1r1     Phys    # Mike Williams et. al.
-use  DaVinciOverlapsAndClones   v1r1     Phys    # ?
+use  DaVinciOverlapsAndClones   v1r1     Phys    # DaVinci coordinator
 use  DaVinciNeutralTools        v1r1     Phys    # CALO Group
 
 #===================================================================
