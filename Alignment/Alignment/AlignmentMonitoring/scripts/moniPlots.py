@@ -35,6 +35,7 @@ def findLastRun():
     return ll[-1][0]
 
     
+
 def findAlignlog(run):
     rootDir = '/group/online/AligWork/{0}/'.format(activity)
     inDir = os.path.join(rootDir, 'run{0}'.format(run))
@@ -85,11 +86,11 @@ def plotsCompare(Pages, files_histo, outputFile_name, normalize = True):
                 except IndexError:
                     pass
             if histo_args.has_key('vlines'):
-                histo_args['vlines_colors'] = {val : r.kBlue for val in  histo_args['vlines']}
+                histo_args['vlines_colors'] = {val : r.kBlack for val in  histo_args['vlines']}
                 histo_args['vlines_colors'][0] = r.kGreen+2
                 histo_args['vlines_styles'] = {val : 3 for val in  histo_args['vlines']}
                 histo_args['vlines_styles'][0] = 5
-                histo_args['vlines_width'] = {0 : 2}
+                histo_args['vlines_width'] = {val : 2 for val in  histo_args['vlines']}#{0 : 2}
             drawLegend = (cont==0)
             histos = {key: inFiles[key].Get(path) for key in inFiles}
             if not histo_args.has_key('title'):
@@ -101,17 +102,17 @@ def plotsCompare(Pages, files_histo, outputFile_name, normalize = True):
                         histo.Scale(1./histo.GetEntries())           
             kind = 'p' if isProfile else 'h'
             mps.append(MultiPlot(path, kind = kind, drawLegend=drawLegend, **histo_args))
-            mps[-1].Add(histos['old'], 'old', color = r.kBlack, markerStyle=1)
+            mps[-1].Add(histos['old'], 'old', color = r.kRed, markerStyle=1)
             try:
-                mps[-1].Add(histos['new'], 'new', color = r.kRed, lineStyle=7, markerStyle=1)
+                mps[-1].Add(histos['new'], 'new', color = r.kBlue, lineStyle=2, markerStyle=1)
             except KeyError: pass
             if isinstance(histos['old'], r.TProfile):
                 mps[-1].DrawOption = 'nostack'
             else:
                 mps[-1].DrawOption = 'nostack hist'
             if wantMeanLines:
-                mps[-1].AddLine(histos['old'].GetMean(), 'v', color = r.kBlack, style=1)
-                mps[-1].AddLine(histos['new'].GetMean(), 'v', color = r.kRed, style=7)
+                mps[-1].AddLine(histos['old'].GetMean(), 'v', color = r.kRed, style=1)
+                mps[-1].AddLine(histos['new'].GetMean(), 'v', color = r.kBlue, style=2)
         c1 = getDrawnCanvas(mps)
         c1.Print(outputFile_name)
 
@@ -259,8 +260,8 @@ Pages = [("Long track properties and PV position", [ ["Track/TrackMonitor/Velo/3
                                        ["Track/TrackVertexMonitor/PV chisquare per dof", {'title' : 'PV #chi^{2}/ndof'}],
                                        "Velo/VeloTrackMonitor/Pseudoefficiency_per_sensor_vs_sensorID",
                                       ]),
-         ("VELO 2-halves alignment", [ ["Track/TrackVertexMonitor/PV left-right delta x", {'vlines' : [0, -.008, .008], 'rangeX' : [-.03, .03]}, True],
-                                       ["Track/TrackVertexMonitor/PV left-right delta y", {'vlines' : [0, -.008, .008], 'rangeX' : [-.03, .03]}, True],
+         ("VELO 2-halves alignment", [ ["Track/TrackVertexMonitor/PV left-right delta x", {'vlines' : [0, -.008, .008], 'rangeX' : [-.04, .04]}, True],
+                                       ["Track/TrackVertexMonitor/PV left-right delta y", {'vlines' : [0, -.008, .008], 'rangeX' : [-.04, .04]}, True],
                                        ["Track/TrackVertexMonitor/PV left-right delta z", {'vlines' : [0, -.05, .05], 'rangeX' : [-.3, .3]}, True],
                                        ["Track/TrackVeloOverlapMonitor/overlapResidualPhi", {'vlines' : [0,-.03,.03], 'rangeX' : [-.1, .1]}, True],
                                        ["Track/TrackVeloOverlapMonitor/overlapResidualR", {'vlines' : [0,-.03,.03], 'rangeX' : [-.1, .1]}, True],
