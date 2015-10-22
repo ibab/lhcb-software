@@ -1,7 +1,7 @@
 ################################################################################
 # Package: Boole
 ################################################################################
-gaudi_subdir(Boole v29r10)
+gaudi_subdir(Boole v29r11)
 
 gaudi_depends_on_subdirs(Bcm/BcmDigi
 			 Calo/CaloDigit
