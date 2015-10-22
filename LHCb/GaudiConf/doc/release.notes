@@ -3,6 +3,12 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+!======================== GaudiConf v19r13p1 2015-10-22 =======================
+! 2015-10-22 - Gloria Corti
+ - In DigiConf packing of MCHits for xdigi events is now done only when
+   the packing is requested. 
+   Bug fix, see https://its.cern.ch/jira/browse/LHCBGAUSS-544
+
 !========================= GaudiConf v19r13 2015-10-13 =========================
 ! 2015-10-13 - Marco Clemencic
  - Modified QMTest.ConfigurablesTest to understand lb-dev projects (<project>Dev).

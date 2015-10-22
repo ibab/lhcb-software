@@ -241,7 +241,8 @@ class DigiConf(LHCbConfigurableUser):
         if dType == "Extended":
 
             # Enable packing of MCHits in main event (for old data)
-            SimConf().PackingSequencers[''] =  self.getProp("PackSequencer")
+            if self.getProp( "EnablePack" ):
+                SimConf().PackingSequencers[''] =  self.getProp("PackSequencer")
             
             # Add the sub detector MCHits
             SimConf().addSubDetSimInfo(writer)
