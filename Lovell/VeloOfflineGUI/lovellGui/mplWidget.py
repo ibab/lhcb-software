@@ -1,4 +1,6 @@
+print 'Loading ROOT...'
 import ROOT
+print '...done.'
 import numpy as np
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
@@ -10,6 +12,7 @@ from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as Navigatio
 from matplotlib.figure import Figure
 import colormaps as newMaps
 import lInterfaces
+from numpy.ma.bench import xs
 matplotlib.rcParams.update({'axes.titlesize': 'medium'})
 matplotlib.rcParams.update({'legend.fontsize': 'medium'})
 matplotlib.rcParams.update({'legend.framealpha': '0.5'})
@@ -23,19 +26,42 @@ class lPlottable():
         self.params = params
         self.plot = lPlot
 
+    def tab(self):
+        return self.plot.parent()
     
     def on_draw(self, tabOpsState, notifyBox):
         if 'normalise' in self.params and self.params['normalise']: 
             norm = True
         else: norm = False
-        if tabOpsState.displayRefs: nominal, reference = lInterfaces.runview_plot(tabOpsState.runNum, self.params['name'], 
-                                                                                  tabOpsState.moduleID, tabOpsState.run_data_dir, 
-                                                                                  refRun = tabOpsState.refRunNum, getRef = True, 
-                                                                                  normalise = norm, notifyBox = notifyBox)
+        moduleID = tabOpsState.moduleID
+        if 'sensorShift' in self.params: 
+            moduleID += self.params['sensorShift']
+        if tabOpsState.displayRefs:
+            if 'isIV' in self.params and self.params['isIV']:
+                nominal, reference = lInterfaces.IV_plot(self.params['name'], moduleID, 
+                                                         self.tab().dataIvDate(),
+                                                         self.tab().IV_directory,
+                                                         self.tab().sensor_mapping,
+                                                         refDate = self.tab().refIvDate(),
+                                                         getRef = True,
+                                                         notifyBox = notifyBox)
+            else:
+                nominal, reference = lInterfaces.runview_plot(tabOpsState.runNum, self.params['name'], 
+                                                              moduleID, tabOpsState.run_data_dir, 
+                                                              refRun = tabOpsState.refRunNum, getRef = True, 
+                                                              notifyBox = notifyBox)
+                
         else:
-            nominal = lInterfaces.runview_plot(tabOpsState.runNum, self.params['name'], 
-                                               tabOpsState.moduleID, tabOpsState.run_data_dir, 
-                                               normalise = norm, notifyBox = notifyBox)
+            if 'isIV' in self.params and self.params['isIV']:
+                nominal = lInterfaces.IV_plot(self.params['name'], moduleID, 
+                                              self.tab().dataIvDate(),
+                                              self.tab().IV_directory,
+                                              self.tab().sensor_mapping,
+                                              notifyBox = notifyBox)
+            else:
+                nominal = lInterfaces.runview_plot(tabOpsState.runNum, self.params['name'], 
+                                                   moduleID, tabOpsState.run_data_dir, 
+                                                   normalise = norm, notifyBox = notifyBox)
             reference = None
         if 'binning' in nominal['data']['data']:
             if not tabOpsState.displayRefs: self.runview_1d_runviewReturn(nominal)
@@ -65,9 +91,8 @@ class lPlottable():
         
     def runview_1d_dataMinusRef(self, nominal, reference, infactRatio = False):
         binwidth = nominal['data']['data']['binning'][0][1] - nominal['data']['data']['binning'][0][0]
-        xs = np.linspace(nominal['data']['data']['binning'][0][0] + 0.5*binwidth,
-                         nominal['data']['data']['binning'][-1][0] + 0.5*binwidth,
-                         len(nominal['data']['data']['binning']))
+        xs = []
+        for bin in nominal['data']['data']['binning']: xs.append(0.5*(bin[0] + bin[1]))
             
         ys = []
         for i in range(len(nominal['data']['data']['values'])):
@@ -81,8 +106,8 @@ class lPlottable():
         if not infactRatio: col = 'r'
         else: col = 'g'
         self.add_1d_plot(xs, ys, style, col)
-        minX = xs[0]
-        maxX = xs[-1]
+        minX = min(xs)
+        maxX = max(xs)
         if len(self.plot.xLims) == 0: 
             self.plot.xLims.append(minX)
             self.plot.xLims.append(maxX)
@@ -93,10 +118,8 @@ class lPlottable():
              
     def runview_1d_runviewReturn(self, nominal, isRef = False):
         binwidth = nominal['data']['data']['binning'][0][1] - nominal['data']['data']['binning'][0][0]
-        xs = np.linspace(nominal['data']['data']['binning'][0][0] + 0.5*binwidth,
-                         nominal['data']['data']['binning'][-1][0] + 0.5*binwidth,
-                         len(nominal['data']['data']['binning']))
-        
+        xs = []
+        for bin in nominal['data']['data']['binning']: xs.append(0.5*(bin[0] + bin[1]))
         style = 0
         if 'style' in self.params: style = self.params['style']
 
@@ -107,15 +130,19 @@ class lPlottable():
         else: 
             if 'color' in self.params: 
                 if self.params['color'] == 'r' and style == 0:
-                    print 'Red bars are reserved for references - defaulting to blue'
+                    msg = 'Red bars are reserved for references - defaulting to blue'
+                    print msg
+                    self.tab().notify(msg)
                 elif self.params['color'] == 'g' and style == 0:
-                    print 'Green bars are reserved for references - defaulting to blue'
+                    msg = 'Green bars are reserved for references - defaulting to blue'
+                    print msg
+                    self.tab().notify(msg)
                 else: col = self.params['color']
                 
         ys = nominal['data']['data']['values']
         self.add_1d_plot(xs, ys, style, col)
-        minX = xs[0]
-        maxX = xs[-1]
+        minX = min(xs)
+        maxX = max(xs)
         minY = min(ys)
         maxY = max(ys)
         

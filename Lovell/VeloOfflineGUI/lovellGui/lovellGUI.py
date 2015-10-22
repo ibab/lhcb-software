@@ -1,5 +1,5 @@
-print 'Starting the Lovell GUI (~10secs)...' 
-
+print 'Starting the Lovell GUI (~10secs)' 
+print 'Loading modules'
 import sys
 from lTab import *
 from lTabOptions import *
@@ -21,13 +21,17 @@ class lovellGui(QMainWindow):
 class run_view(QWidget):
     def __init__(self, run_data_dir, parent=None):
         QTabWidget.__init__(self, parent)
+        print 'run-data-dir set to:', run_data_dir
+        #self.IV_directory = '/calib/velo/dqm/IVScan'
+        self.IV_directory = '/afs/cern.ch/user/d/dsaunder/IV_test'
+        print 'IV_directory set to:', self.IV_directory
         self.run_data_dir = run_data_dir
         self.grid_layout = QGridLayout()
         setPadding(self.grid_layout)
         self.setLayout(self.grid_layout)
-        self.pages = []
+        self.pages = [] 
         self.setup_tabs()
-
+        
 
     def setup_tabs(self):
         self.top_tab = QTabWidget(self)
@@ -35,15 +39,21 @@ class run_view(QWidget):
         
         # Do the sensor overview adjustments here.
         self.prepSensorOverview(runview_config)
-        
+        i=1
+        self.tab_options = lTabOptions(self, self.run_data_dir)
+        nTabs = len(runview_config)
         for key, val in runview_config.iteritems():
+            msg = 'Preparing tab (' + str(i) + '/' + str(nTabs) + '): ' + val['title']
+            print msg 
             page = lTab(val, self)
+            if val['title'] == 'IV': page.modifyPageForIV(self.IV_directory)
             self.top_tab.addTab(page, val['title'])
             self.pages.append(page)
+            i+=1
             
         self.grid_layout.addWidget(self.top_tab, 0, 1)
         self.top_tab.currentChanged.connect(self.tab_changed)
-        self.tab_options = lTabOptions(self, self.run_data_dir)
+        
         self.tab_options.state_change.connect(self.tab_changed)
         self.grid_layout.addWidget(self.tab_options, 0, 0)
         msg = "Current run number: " + self.tab_options.state().runNum
@@ -59,7 +69,6 @@ class run_view(QWidget):
     def prepSensorOverview(self, config):
         # Find the entry in the dictionary for the sensor overview.
         # Just dictionary gymnastics.
-        
         for key, val in config.iteritems():
             if key == 'sensor_overview':
                 plots = []
@@ -98,12 +107,11 @@ def main():
     run_data_dir = "/afs/cern.ch/work/a/apearce/public/VetraOutput"
     if len(sys.argv) > 1:
         if sys.argv[1][0:15] == '--run-data-dir=': run_data_dir = sys.argv[1][15:]
-    print 'run-data-dir set to:', run_data_dir
     app = QApplication(sys.argv) 
-    form = lovellGui(run_data_dir)
+    form = run_view(run_data_dir)
     form.resize(1200, 700)
-    form.show()
-#     app.setStyle("plastique")
+    form.show() 
+    app.setStyle("plastique")
     app.exec_()
 
 

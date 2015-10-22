@@ -1,0 +1,249 @@
+//---------------------------------------------------------------------------//
+//                                                                           //
+//  channelMapper.C                                                          //
+//  ===============                                                          //
+//                                                                           //
+// Implementation file for channelMapper.C                                   //'
+//                                                                           //
+// @author Lars Eklund                                                       //
+// @date   2009-04-24                                                        //
+//                                                                           //
+//---------------------------------------------------------------------------//
+
+// Includes from Velo/VetraScripts
+
+#include "channelMapper.h"
+
+using namespace std; 
+
+
+//=============================================================================
+// 
+//=============================================================================
+channelMapper::channelMapper( bool debug ) {
+  // Constructor that defines the mapping between the different numbers.
+  int i=0;
+  m_slotNum[i] = "PU01_AB";   m_hvChan[i] = "Iseg/can0/crate00/ma00/ch00"; m_SWNum[i]= 128; i++;  
+  m_slotNum[i] = "PU02_AT";   m_hvChan[i] = "Iseg/can0/crate00/ma00/ch01"; m_SWNum[i]= 130; i++;  
+  m_slotNum[i] = "VL01_AT";   m_hvChan[i] = "Iseg/can0/crate00/ma00/ch02"; m_SWNum[i]= 	64; i++;  
+  m_slotNum[i] = "VL01_AB";   m_hvChan[i] = "Iseg/can0/crate00/ma00/ch03"; m_SWNum[i]= 	 0; i++;  
+  m_slotNum[i] = "VL02_AT";   m_hvChan[i] = "Iseg/can0/crate00/ma00/ch04"; m_SWNum[i]= 	 2; i++;  
+  m_slotNum[i] = "VL02_AB";   m_hvChan[i] = "Iseg/can0/crate00/ma00/ch05"; m_SWNum[i]= 	66; i++;  
+  m_slotNum[i] = "VL03_AT";   m_hvChan[i] = "Iseg/can0/crate00/ma00/ch06"; m_SWNum[i]= 	68; i++;  
+  m_slotNum[i] = "VL03_AB";   m_hvChan[i] = "Iseg/can0/crate00/ma00/ch07"; m_SWNum[i]= 	 4;  i++;  
+  m_slotNum[i] = "VL04_AT";   m_hvChan[i] = "Iseg/can0/crate00/ma01/ch00"; m_SWNum[i]= 	 6;  i++;  
+  m_slotNum[i] = "VL04_AB";   m_hvChan[i] = "Iseg/can0/crate00/ma01/ch01"; m_SWNum[i]= 	70; i++;  
+  m_slotNum[i] = "VL05_AT";   m_hvChan[i] = "Iseg/can0/crate00/ma01/ch02"; m_SWNum[i]= 	72; i++;  
+  m_slotNum[i] = "VL05_AB";   m_hvChan[i] = "Iseg/can0/crate00/ma01/ch03"; m_SWNum[i]= 	 8;  i++;  
+  m_slotNum[i] = "VL06_AT";   m_hvChan[i] = "Iseg/can0/crate00/ma01/ch04"; m_SWNum[i]= 	10; i++;  
+  m_slotNum[i] = "VL06_AB";   m_hvChan[i] = "Iseg/can0/crate00/ma01/ch05"; m_SWNum[i]= 	74; i++;  
+  m_slotNum[i] = "VL07_AT";   m_hvChan[i] = "Iseg/can0/crate00/ma01/ch06"; m_SWNum[i]= 	76; i++;  
+  m_slotNum[i] = "VL07_AB";   m_hvChan[i] = "Iseg/can0/crate00/ma01/ch07"; m_SWNum[i]= 	12; i++;  
+  m_slotNum[i] = "VL08_AT";   m_hvChan[i] = "Iseg/can0/crate00/ma02/ch00"; m_SWNum[i]= 	14; i++;  
+  m_slotNum[i] = "VL08_AB";   m_hvChan[i] = "Iseg/can0/crate00/ma02/ch01"; m_SWNum[i]= 	78; i++;  
+  m_slotNum[i] = "VL09_AT";   m_hvChan[i] = "Iseg/can0/crate00/ma02/ch02"; m_SWNum[i]= 	80; i++;  
+  m_slotNum[i] = "VL09_AB";   m_hvChan[i] = "Iseg/can0/crate00/ma02/ch03"; m_SWNum[i]= 	16; i++;  
+  m_slotNum[i] = "VL10_AT";   m_hvChan[i] = "Iseg/can0/crate00/ma02/ch04"; m_SWNum[i]= 	18; i++;  
+  m_slotNum[i] = "VL10_AB";   m_hvChan[i] = "Iseg/can0/crate00/ma02/ch05"; m_SWNum[i]= 	82; i++;  
+  m_slotNum[i] = "VL11_AT";   m_hvChan[i] = "Iseg/can0/crate00/ma02/ch06"; m_SWNum[i]= 	84; i++;  
+  m_slotNum[i] = "VL11_AB";   m_hvChan[i] = "Iseg/can0/crate00/ma02/ch07"; m_SWNum[i]= 	20; i++;  
+  m_slotNum[i] = "VL12_AT";   m_hvChan[i] = "Iseg/can0/crate00/ma03/ch00"; m_SWNum[i]= 	22; i++;  
+  m_slotNum[i] = "VL12_AB";   m_hvChan[i] = "Iseg/can0/crate00/ma03/ch01"; m_SWNum[i]= 	86; i++;  
+  m_slotNum[i] = "VL13_AT";   m_hvChan[i] = "Iseg/can0/crate00/ma03/ch02"; m_SWNum[i]= 	88; i++;  
+  m_slotNum[i] = "VL13_AB";   m_hvChan[i] = "Iseg/can0/crate00/ma03/ch03"; m_SWNum[i]= 	24; i++;  
+  m_slotNum[i] = "VL14_AT";   m_hvChan[i] = "Iseg/can0/crate00/ma03/ch04"; m_SWNum[i]= 	26; i++;  
+  m_slotNum[i] = "VL14_AB";   m_hvChan[i] = "Iseg/can0/crate00/ma03/ch05"; m_SWNum[i]= 	90; i++;  
+  m_slotNum[i] = "VL15_AT";   m_hvChan[i] = "Iseg/can0/crate00/ma03/ch06"; m_SWNum[i]= 	92; i++;  
+  m_slotNum[i] = "VL15_AB";   m_hvChan[i] = "Iseg/can0/crate00/ma03/ch07"; m_SWNum[i]= 	28; i++;  
+  m_slotNum[i] = "VL16_AT";   m_hvChan[i] = "Iseg/can0/crate00/ma04/ch00"; m_SWNum[i]= 	30; i++;  
+  m_slotNum[i] = "VL16_AB";   m_hvChan[i] = "Iseg/can0/crate00/ma04/ch01"; m_SWNum[i]= 	94; i++;  
+  m_slotNum[i] = "VL19_AT";   m_hvChan[i] = "Iseg/can0/crate00/ma04/ch02"; m_SWNum[i]= 	96; i++;  
+  m_slotNum[i] = "VL19_AB";   m_hvChan[i] = "Iseg/can0/crate00/ma04/ch03"; m_SWNum[i]= 	32; i++;  
+  m_slotNum[i] = "VL22_AT";   m_hvChan[i] = "Iseg/can0/crate00/ma04/ch04"; m_SWNum[i]= 	34; i++;  
+  m_slotNum[i] = "VL22_AB";   m_hvChan[i] = "Iseg/can0/crate00/ma04/ch05"; m_SWNum[i]= 	98; i++;  
+  m_slotNum[i] = "VL23_AT";   m_hvChan[i] = "Iseg/can0/crate00/ma04/ch06"; m_SWNum[i]= 100; i++;  
+  m_slotNum[i] = "VL23_AB";   m_hvChan[i] = "Iseg/can0/crate00/ma04/ch07"; m_SWNum[i]=  36; i++;  
+  m_slotNum[i] = "VL24_AT";   m_hvChan[i] = "Iseg/can0/crate00/ma05/ch00"; m_SWNum[i]=  38; i++;  
+  m_slotNum[i] = "VL24_AB";   m_hvChan[i] = "Iseg/can0/crate00/ma05/ch01"; m_SWNum[i]= 102; i++;  
+  m_slotNum[i] = "VL25_AT";   m_hvChan[i] = "Iseg/can0/crate00/ma05/ch02"; m_SWNum[i]= 104; i++;  
+  m_slotNum[i] = "VL25_AB";   m_hvChan[i] = "Iseg/can0/crate00/ma05/ch03"; m_SWNum[i]=  40; i++;
+  m_slotNum[i] = "PU01_CB";   m_hvChan[i] = "Iseg/can0/crate00/ma06/ch00"; m_SWNum[i]= 129; i++;  
+  m_slotNum[i] = "PU02_CT";   m_hvChan[i] = "Iseg/can0/crate00/ma06/ch01"; m_SWNum[i]= 131; i++;  
+  m_slotNum[i] = "VL01_CT";   m_hvChan[i] = "Iseg/can0/crate00/ma06/ch02"; m_SWNum[i]=  65; i++;  
+  m_slotNum[i] = "VL01_CB";   m_hvChan[i] = "Iseg/can0/crate00/ma06/ch03"; m_SWNum[i]=   1; i++;  
+  m_slotNum[i] = "VL02_CT";   m_hvChan[i] = "Iseg/can0/crate00/ma06/ch04"; m_SWNum[i]= 	 3; i++;  
+  m_slotNum[i] = "VL02_CB";   m_hvChan[i] = "Iseg/can0/crate00/ma06/ch05"; m_SWNum[i]= 	67; i++;  
+  m_slotNum[i] = "VL03_CT";   m_hvChan[i] = "Iseg/can0/crate00/ma06/ch06"; m_SWNum[i]= 	69; i++;  
+  m_slotNum[i] = "VL03_CB";   m_hvChan[i] = "Iseg/can0/crate00/ma06/ch07"; m_SWNum[i]= 	 5; i++;  
+  m_slotNum[i] = "VL04_CT";   m_hvChan[i] = "Iseg/can0/crate00/ma07/ch00"; m_SWNum[i]= 	 7; i++;  
+  m_slotNum[i] = "VL04_CB";   m_hvChan[i] = "Iseg/can0/crate00/ma07/ch01"; m_SWNum[i]= 	71; i++;  
+  m_slotNum[i] = "VL05_CT";   m_hvChan[i] = "Iseg/can0/crate00/ma07/ch02"; m_SWNum[i]= 	73; i++;  
+  m_slotNum[i] = "VL05_CB";   m_hvChan[i] = "Iseg/can0/crate00/ma07/ch03"; m_SWNum[i]= 	 9; i++;  
+  m_slotNum[i] = "VL06_CT";   m_hvChan[i] = "Iseg/can0/crate00/ma07/ch04"; m_SWNum[i]= 	11; i++;  
+  m_slotNum[i] = "VL06_CB";   m_hvChan[i] = "Iseg/can0/crate00/ma07/ch05"; m_SWNum[i]= 	75; i++;  
+  m_slotNum[i] = "VL07_CT";   m_hvChan[i] = "Iseg/can0/crate00/ma07/ch06"; m_SWNum[i]= 	77; i++;  
+  m_slotNum[i] = "VL07_CB";   m_hvChan[i] = "Iseg/can0/crate00/ma07/ch07"; m_SWNum[i]= 	13; i++;  
+  m_slotNum[i] = "VL08_CT";   m_hvChan[i] = "Iseg/can0/crate00/ma08/ch00"; m_SWNum[i]= 	15; i++;  
+  m_slotNum[i] = "VL08_CB";   m_hvChan[i] = "Iseg/can0/crate00/ma08/ch01"; m_SWNum[i]= 	79; i++;  
+  m_slotNum[i] = "VL09_CT";   m_hvChan[i] = "Iseg/can0/crate00/ma08/ch02"; m_SWNum[i]= 	81; i++;  
+  m_slotNum[i] = "VL09_CB";   m_hvChan[i] = "Iseg/can0/crate00/ma08/ch03"; m_SWNum[i]= 	17; i++;  
+  m_slotNum[i] = "VL10_CT";   m_hvChan[i] = "Iseg/can0/crate00/ma08/ch04"; m_SWNum[i]= 	19; i++;  
+  m_slotNum[i] = "VL10_CB";   m_hvChan[i] = "Iseg/can0/crate00/ma08/ch05"; m_SWNum[i]= 	83; i++;  
+  m_slotNum[i] = "VL11_CT";   m_hvChan[i] = "Iseg/can0/crate00/ma08/ch06"; m_SWNum[i]= 	85; i++;  
+  m_slotNum[i] = "VL11_CB";   m_hvChan[i] = "Iseg/can0/crate00/ma08/ch07"; m_SWNum[i]= 	21; i++;  
+  m_slotNum[i] = "VL12_CT";   m_hvChan[i] = "Iseg/can0/crate00/ma09/ch00"; m_SWNum[i]= 	23; i++;  
+  m_slotNum[i] = "VL12_CB";   m_hvChan[i] = "Iseg/can0/crate00/ma09/ch01"; m_SWNum[i]= 	87; i++;  
+  m_slotNum[i] = "VL13_CT";   m_hvChan[i] = "Iseg/can0/crate00/ma09/ch02"; m_SWNum[i]= 	89; i++;  
+  m_slotNum[i] = "VL13_CB";   m_hvChan[i] = "Iseg/can0/crate00/ma09/ch03"; m_SWNum[i]= 	25; i++;  
+  m_slotNum[i] = "VL14_CT";   m_hvChan[i] = "Iseg/can0/crate00/ma09/ch04"; m_SWNum[i]= 	27; i++;  
+  m_slotNum[i] = "VL14_CB";   m_hvChan[i] = "Iseg/can0/crate00/ma09/ch05"; m_SWNum[i]= 	91; i++;  
+  m_slotNum[i] = "VL15_CT";   m_hvChan[i] = "Iseg/can0/crate00/ma09/ch06"; m_SWNum[i]= 	93; i++;  
+  m_slotNum[i] = "VL15_CB";   m_hvChan[i] = "Iseg/can0/crate00/ma09/ch07"; m_SWNum[i]= 	29; i++;  
+  m_slotNum[i] = "VL16_CT";   m_hvChan[i] = "Iseg/can0/crate00/ma10/ch00"; m_SWNum[i]=  31; i++;  
+  m_slotNum[i] = "VL16_CB";   m_hvChan[i] = "Iseg/can0/crate00/ma10/ch01"; m_SWNum[i]=  95; i++;  
+  m_slotNum[i] = "VL19_CT";   m_hvChan[i] = "Iseg/can0/crate00/ma10/ch02"; m_SWNum[i]=  97; i++;  
+  m_slotNum[i] = "VL19_CB";   m_hvChan[i] = "Iseg/can0/crate00/ma10/ch03"; m_SWNum[i]=  33; i++;  
+  m_slotNum[i] = "VL22_CT";   m_hvChan[i] = "Iseg/can0/crate00/ma10/ch04"; m_SWNum[i]=  35; i++;  
+  m_slotNum[i] = "VL22_CB";   m_hvChan[i] = "Iseg/can0/crate00/ma10/ch05"; m_SWNum[i]=  99; i++;  
+  m_slotNum[i] = "VL23_CT";   m_hvChan[i] = "Iseg/can0/crate00/ma10/ch06"; m_SWNum[i]= 101; i++;  
+  m_slotNum[i] = "VL23_CB";   m_hvChan[i] = "Iseg/can0/crate00/ma10/ch07"; m_SWNum[i]=  37; i++;  
+  m_slotNum[i] = "VL24_CT";   m_hvChan[i] = "Iseg/can0/crate00/ma11/ch00"; m_SWNum[i]=  39; i++;  
+  m_slotNum[i] = "VL24_CB";   m_hvChan[i] = "Iseg/can0/crate00/ma11/ch01"; m_SWNum[i]= 103; i++;  
+  m_slotNum[i] = "VL25_CT";   m_hvChan[i] = "Iseg/can0/crate00/ma11/ch02"; m_SWNum[i]= 105; i++;  
+  m_slotNum[i] = "VL25_CB";   m_hvChan[i] = "Iseg/can0/crate00/ma11/ch03"; m_SWNum[i]=  41; i++;  
+
+  if ( debug )
+    printf("channelMapper::channelMapper(); Generated channel map for %d sensors\n", i);
+}
+
+//=============================================================================
+// 
+//============================================================================= 		
+channelMapper::~channelMapper() { }
+
+//=============================================================================
+// Gives the slot HV chanenl for a corresponding to a particular slot
+//=============================================================================
+string channelMapper::slotToHVChan(string slotNum) {				   
+  int i;
+  for(i=0;i<nSensors;++i) {
+    if(m_slotNum[i].compare(slotNum)==0) return m_hvChan[i];
+  }
+  return string("");
+}
+
+//=============================================================================
+// Gives the SW number for a particular slot 
+//=============================================================================
+int channelMapper::slotToSWNum(string slotNum) {				   
+  int i;
+  for(i=0;i<nSensors;++i) {
+    if(m_slotNum[i].compare(slotNum)==0) return m_SWNum[i];
+  }
+  return 0;
+}
+
+//=============================================================================
+// Returns the slot number for the next slot
+//=============================================================================
+string channelMapper::nextSlot(string slotNum) {
+  int i, curr=0;
+  if(slotNum.empty()) return m_slotNum[0];
+  for(i=0;i<nSensors;++i) {
+    if(m_slotNum[i].compare(slotNum)==0) curr=i;
+  }
+  
+  if(curr<nSensors-1) return m_slotNum[curr+1];
+  else return m_slotNum[curr];
+}
+
+//=============================================================================
+// Returns the slot number for the previous slot
+//=============================================================================
+string channelMapper::prevSlot(string slotNum) {
+  int i, curr=0;
+  if(slotNum.empty()) return m_slotNum[0];
+  for(i=0;i<nSensors;++i) {
+    if(m_slotNum[i].compare(slotNum)==0) curr=i;
+  }
+  
+  if(curr>0) return m_slotNum[curr-1];
+  else return m_slotNum[curr];
+}
+
+//=============================================================================
+// Returns the HV channel for the next slot
+//=============================================================================
+string channelMapper::nextHVChan(string hvChan) {
+  int i, curr=0;
+  if(hvChan.empty()) return m_hvChan[0];
+  for(i=0;i<nSensors;++i) {
+    if(m_hvChan[i].compare(hvChan)==0) curr=i;
+  }
+  
+  if(curr<nSensors-1) return m_hvChan[curr+1];
+  else return m_hvChan[curr];
+}
+
+//=============================================================================
+// Returns the HV channel for the previous slot
+//=============================================================================
+string channelMapper::prevHVChan(string hvChan) {
+  int i, curr=0;
+  if(hvChan.empty()) return m_hvChan[0];
+  for(i=0;i<nSensors;++i) {
+    if(m_hvChan[i].compare(hvChan)==0) curr=i;
+  }
+  
+  if(curr>0) return m_hvChan[curr-1];
+  else return m_hvChan[curr];
+}
+
+//=============================================================================
+// Returns the HV channel corresponding to a certain slot
+//=============================================================================
+string channelMapper::hvChanToSlot(string hvChan) {
+  int i;
+  for(i=0;i<nSensors;++i) {
+    if(m_hvChan[i].compare(hvChan)==0) return m_slotNum[i];
+  }
+  return string("");
+}
+
+//=============================================================================
+// Returns the S/W number (e.g. 64)
+//=============================================================================
+int channelMapper::intToSWNum(int i) {
+  return m_SWNum[i];
+}
+
+//=============================================================================
+// Returns the full HV channel name (e.g. VEHV:Iseg/can0/crate00/ma10/ch03)
+//=============================================================================
+string channelMapper::intToHVChan(int i) {
+  return m_hvChan[i];
+}
+
+//=============================================================================
+// Returns the full slot number (e.g. VL19_CB)
+//=============================================================================
+string channelMapper::intToSlotName(int i) {
+  return m_slotNum[i];
+}
+
+//=============================================================================
+// Returns the name of the module position (e.g. VL19)
+//=============================================================================
+string channelMapper::intToSlot(int i) {
+  if(m_slotNum[i].substr(0,2).compare("PU")==0) return m_slotNum[i].substr(0,2); 
+  else return m_slotNum[i].substr(0,4);
+}
+
+//=============================================================================
+// Returns the VELO side of the module (A or C)
+//=============================================================================
+string channelMapper::intToSide(int i) {
+  return m_slotNum[i].substr(5,1);
+}
+
+//=============================================================================

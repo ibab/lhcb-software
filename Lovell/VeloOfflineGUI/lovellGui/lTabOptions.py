@@ -14,7 +14,7 @@ class lTabOpsState():
 		self.refRatio = refRatio
 		self.runNum = runNum
 		self.refRunNum = refRunNum
-
+		
 
 	def outline(self):
 		print "Module:", self.moduleID
@@ -29,6 +29,7 @@ class lTabOpsState():
 class lTabOptions(QGroupBox):
 	state_change = pyqtSignal()
 	def __init__(self, parent, run_data_dir):
+		self.block_state_change = False
 		self.run_data_dir = run_data_dir
 		QGroupBox.__init__(self, "Global Tab Options", parent)
 		self.grid_layout = QGridLayout(self)
@@ -37,7 +38,7 @@ class lTabOptions(QGroupBox):
 		font.setPointSize(20)
 		font.setBold(True)
 		title.setFont(font)
-		self.setMinimumWidth(250)
+		self.setMinimumWidth(275)
 
 		self.grid_layout.addWidget(title, self.rowCount(), 0, 1, 2)
 		setPadding(self.grid_layout)
@@ -58,14 +59,31 @@ class lTabOptions(QGroupBox):
 		self.grid_layout.addWidget(self.notifyBox, self.rowCount(), 0, 1, 2)
 
 
-	def notify(self, text):
+	def notify(self, text, textHighlight = None):
+		# highlightRange is range in passed text.
+		length = len(self.notifyBox.toPlainText())
 		self.notifyBox.append(text)
+		self.notifyBox.verticalScrollBar().setValue(self.notifyBox.verticalScrollBar().maximum());
+
+		if textHighlight != None:
+			begin = length + text.find(textHighlight) + 1 
+			end = begin + len(textHighlight) 
+			fmt = QTextCharFormat()
+			col = QColor(Qt.red)
+			col.setAlpha(130)
+			fmt.setBackground(col)
+			cursor = QTextCursor(self.notifyBox.document())
+			cursor.setPosition(begin)
+			cursor.setPosition(end, QTextCursor.KeepAnchor)
+			cursor.setCharFormat(fmt)
 
 
 	def add_group_selector(self):
 		self.module_group_box = QComboBox(self)
 		self.module_group_box.currentIndexChanged.connect(self.state_changed)
-		self.grid_layout.addWidget(QLabel("Module Group:"), self.rowCount(), 0)
+		lab = QLabel("Module Group:")
+		lab.setAlignment(Qt.AlignRight)
+		self.grid_layout.addWidget(lab, self.rowCount(), 0)
 		self.grid_layout.addWidget(self.module_group_box, self.rowCount()-1, 1)
 		self.module_group_box.addItem("R (0)")
 		self.module_group_box.addItem("Phi (1)")
@@ -74,7 +92,9 @@ class lTabOptions(QGroupBox):
 	def add_ID_selector(self):
 		self.module_ID_box = QComboBox(self)
 		self.module_ID_box.currentIndexChanged.connect(self.state_changed)
-		self.grid_layout.addWidget(QLabel("Module ID:"), self.rowCount(), 0)
+		lab = QLabel("Module ID:")
+		lab.setAlignment(Qt.AlignRight)
+		self.grid_layout.addWidget(lab, self.rowCount(), 0)
 		self.grid_layout.addWidget(self.module_ID_box, self.rowCount()-1, 1)
 		for i in range(0, 42): self.module_ID_box.addItem(str(i))
 		for i in range(64, 106): self.module_ID_box.addItem(str(i))
@@ -87,6 +107,13 @@ class lTabOptions(QGroupBox):
 		self.grid_layout.addWidget(self.prev_button, self.rowCount()-1, 1)
 		self.next_button.clicked.connect(self.next_clicked)
 		self.prev_button.clicked.connect(self.prev_clicked)
+		
+		self.next_four_button = QPushButton("Next Four")
+		self.grid_layout.addWidget(self.next_four_button, self.rowCount(), 0)
+		self.prev_four_button = QPushButton("Prev Four")
+		self.grid_layout.addWidget(self.prev_four_button, self.rowCount()-1, 1)
+		self.next_four_button.clicked.connect(self.next_four_clicked)
+		self.prev_four_button.clicked.connect(self.prev_four_clicked)
 
 
 	def add_run_num_buttons(self):
@@ -118,6 +145,7 @@ class lTabOptions(QGroupBox):
 	def add_reference_buttons(self):
 		self.add_bar()
 		self.showing_ref_box = QCheckBox("Display References")
+		self.showing_ref_box.stateChanged.connect(self.reference_button_fading)
 		self.showing_ref_box.setChecked(False)
 		self.overlay_ref_box = QRadioButton("Overlay", self)
 		self.overlay_ref_box.setChecked(True)
@@ -134,6 +162,7 @@ class lTabOptions(QGroupBox):
 		self.overlay_ref_box.clicked.connect(self.state_changed)
 		self.overlay_refDiff_box.clicked.connect(self.state_changed)
 		self.overlay_refRatio_box.clicked.connect(self.state_changed)
+		self.reference_button_fading()
 
 
 	def rowCount(self):
@@ -141,7 +170,8 @@ class lTabOptions(QGroupBox):
 
 
 	def state_changed(self):
-		self.state_change.emit()
+		if self.block_state_change == False:
+			self.state_change.emit()
 
 
 	def state(self):
@@ -152,6 +182,21 @@ class lTabOptions(QGroupBox):
 			self.run_num_box.currentText(), self.run_numRef_box.currentText(), self.run_data_dir) 
 		return state
 
+	def next_four_clicked(self):
+		self.block_state_change = True
+		for i in range(4):
+			self.next_clicked()
+			
+		self.block_state_change = False
+		self.state_changed()
+		
+	def prev_four_clicked(self):
+		self.block_state_change = True
+		for i in range(4):
+			self.prev_clicked()
+			
+		self.block_state_change = False
+		self.state_changed()
 
 	def next_clicked(self):
 		currentGroup = self.module_group_box.currentIndex()
@@ -181,3 +226,16 @@ class lTabOptions(QGroupBox):
 			else: 
 				self.module_group_box.setCurrentIndex(self.module_group_box.count()-1)
 			self.module_ID_box.setCurrentIndex(self.module_ID_box.count()-1)
+			
+	
+	def reference_button_fading(self):
+		if self.showing_ref_box.isChecked():
+			self.overlay_ref_box.setEnabled(True)
+			self.overlay_refDiff_box.setEnabled(True)
+			self.overlay_refRatio_box.setEnabled(True)
+			
+		else:
+			self.overlay_ref_box.setEnabled(False)
+			self.overlay_refDiff_box.setEnabled(False)
+			self.overlay_refRatio_box.setEnabled(False)
+		
