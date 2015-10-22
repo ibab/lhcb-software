@@ -41,22 +41,24 @@ def get_run_plot(name, run, reference=False, formatter=dictionary_formatter,
         path = files[-1]
     except IndexError:
         if notifyBox != None:
-            notifyBox.notify("Merged run file not found for run {0}".format(run))
+            notifyBox.notify("Merged run file not found for run {0}".format(run), 'run file not found')
         raise IOError("Merged run file not found for run {0}".format(run))
 
     # Try to open the file
     f = ROOT.TFile(path)
     if f.IsZombie():
         if notifyBox != None:
-            notifyBox.notify("Run file not found for run {0}".format(run))
-        raise IOError("Run file not found for run {0}".format(run))
+            notifyBox.notify("Run file is zombie for run {0}".format(run), 'is zombie')
+        raise IOError("Run file is zombie for run {0}".format(run), 'is zombie')
 
     # Retrieve the object
     obj = f.Get(name)
     if not obj:
         if notifyBox != None:
-            notifyBox.notify("Plot {0} not found in run file {1}".format(name, run))
-        raise KeyError("Plot {0} not found in run file {1}".format(name, run))
+            msg = "Plot {0} not found in run file {1}"
+            msg = msg.format(name, run).rstrip()
+            notifyBox.notify("Plot {0} not found in run file {1}".format(name, run), 'not found')
+        raise KeyError("Plot {0} not found in run file {1}".format(name, run), 'not found')
     # The file will be closed when the function returns, so we need to clone
     # the fetched object outside the file's scope
     ROOT.gROOT.cd()

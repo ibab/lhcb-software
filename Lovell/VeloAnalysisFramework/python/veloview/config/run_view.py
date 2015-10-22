@@ -77,11 +77,13 @@ that is not already available, please contact the authors of the GUIs.
 from collections import OrderedDict
 
 run_view_pages = OrderedDict([
+    #==========================================================================
     ('dqs', 
         {
         'title': 'DQS'
         }
     ),
+    #==========================================================================
     ('pedestals', 
         {
         'title': 'Pedestals',
@@ -119,6 +121,7 @@ run_view_pages = OrderedDict([
             ]
         }
     ),
+    #==========================================================================
     ('noise', 
         {
         'title': 'Noise',
@@ -220,6 +223,7 @@ run_view_pages = OrderedDict([
             ]
         }
     ),
+    #==========================================================================
     ('headerxtalk', 
         {
         'title': 'HeaderxTalk',
@@ -268,6 +272,7 @@ run_view_pages = OrderedDict([
             ]
         }
     ),
+    #==========================================================================
     ('clusters', 
         {
         'title': 'Clusters',
@@ -377,6 +382,7 @@ run_view_pages = OrderedDict([
             ]
         }
     ),
+    #==========================================================================
     ('occupancy', 
         {
         'title': 'Occupancy',
@@ -409,6 +415,7 @@ run_view_pages = OrderedDict([
             ]
         }
     ),
+    #==========================================================================
     ('bad_channels', 
         {
         'title': 'Bad Channels',
@@ -468,6 +475,7 @@ run_view_pages = OrderedDict([
             ]
         }
     ),
+    #==========================================================================
     ('tracks', 
         {
         'title': 'Tracks',
@@ -532,6 +540,7 @@ run_view_pages = OrderedDict([
             ]
         }
     ),
+    #==========================================================================
     ('vertices', 
         {
         'title': 'Vertices',
@@ -610,6 +619,7 @@ run_view_pages = OrderedDict([
             ]
         }
     ),
+    #==========================================================================
     ('sensor_overview', 
         # Clones from other tabs, as recommended by Piquets:
         {
@@ -676,6 +686,7 @@ run_view_pages = OrderedDict([
             ]
         }
     ),
+    #==========================================================================
     ('IP resolutions', 
         {
         'title' : 'IP resolutions',
@@ -790,6 +801,106 @@ run_view_pages = OrderedDict([
             ]
         }
     ),
+    #==========================================================================
+    ('IV', 
+        {
+        'title': 'IV',
+        'plots':
+            [
+                {
+                'title': 'IV of selected module',
+                'plottables':
+                    [
+                        {
+                        'name': 'Ramp Up',
+                        'color': 'b',
+                        'style': 3,
+                        'legend': 'Ramp Up',
+                        'isIV': True
+                        },
+                        {
+                        'name': 'Ramp Down',
+                        'color': 'g',
+                        'style': 3,
+                        'legend': 'Ramp Down',
+                        'isIV': True
+                        }
+                    ],
+                'showLedend': True
+                },
+                {
+                'title': 'IV of selected module + 1',
+                'plottables':
+                    [
+                        {
+                        'name': 'Ramp Up',
+                        'color': 'b',
+                        'style': 3,
+                        'legend': 'Ramp Up',
+                        'isIV': True,
+                        'sensorShift': 1,
+                        },
+                        {
+                        'name': 'Ramp Down',
+                        'color': 'g',
+                        'style': 3,
+                        'legend': 'Ramp Down',
+                        'isIV': True,
+                        'sensorShift': 1
+                        }
+                    ],
+                'showLedend': True,
+                },
+                {
+                'title': 'IV of selected module + 2',
+                'plottables':
+                    [
+                        {
+                        'name': 'Ramp Up',
+                        'color': 'b',
+                        'style': 3,
+                        'legend': 'Ramp Up',
+                        'isIV': True,
+                        'sensorShift': 2
+                        },
+                        {
+                        'name': 'Ramp Down',
+                        'color': 'g',
+                        'style': 3,
+                        'legend': 'Ramp Down',
+                        'isIV': True,
+                        'sensorShift': 2
+                        }
+                    ],
+                'showLedend': True,
+                },
+                {
+                'title': 'IV of selected module + 3',
+                'plottables':
+                    [
+                        {
+                        'name': 'Ramp Up',
+                        'color': 'b',
+                        'style': 3,
+                        'legend': 'Ramp Up',
+                        'isIV': True,
+                        'sensorShift': 3
+                        },
+                        {
+                        'name': 'Ramp Down',
+                        'color': 'g',
+                        'style': 3,
+                        'legend': 'Ramp Down',
+                        'isIV': True,
+                        'sensorShift': 3
+                        }
+                    ],
+                'showLedend': True,
+                }
+            ]
+        }
+    ),
+    #==========================================================================
     ('graphics_examples',
         {
         'title': 'Graphics Examples',
@@ -799,19 +910,19 @@ run_view_pages = OrderedDict([
                 'title': 'Normalised contours of possible line styles with legend',
                 'plottables': 
                     [
-#                         {
-#                         'name': 'Velo/VeloTrackMonitor/Track_radc', 
-#                         'color':'y', 
-#                         'style':0, 
-#                         'legend': '0',
-#                         'normalise': True
-#                         },
-#                         {
-#                         'name': 'Velo/VeloTrackMonitor/Track_phiadc', 
-#                         'style':1,
-#                         'legend': '1',
-#                         'normalise': True
-#                         },
+                        {
+                        'name': 'Velo/VeloTrackMonitor/Track_radc', 
+                        'color':'y', 
+                        'style':0, 
+                        'legend': '0',
+                        'normalise': True
+                        },
+                        {
+                        'name': 'Velo/VeloTrackMonitor/Track_phiadc', 
+                        'style':1,
+                        'legend': '1',
+                        'normalise': True
+                        },
                         {
                         'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC value sensor {0}',
                         'legend': '2',
@@ -822,19 +933,20 @@ run_view_pages = OrderedDict([
                         'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC value fit function sensor {0}',
                         'legend': '4',
                         'color':'k',
-                        'style': 4,
+                        'style': 2,
+                        'normalise': True
+                        },
+                        {
+                        'name': 'Velo/VeloTrackMonitor/Track_Theta',
+                        'legend': '2',
+                        'style': 2,
                         'normalise': True
                         }
-#                         {
-#                         'name': 'Velo/VeloTrackMonitor/Track_Theta',
-#                         'legend': '2',
-#                         'style': 2,
-#                         'normalise': True
-#                         }
                     ],
                 'showLegend': True
                 }
             ]
         }
     )
+    #==========================================================================
 ])
