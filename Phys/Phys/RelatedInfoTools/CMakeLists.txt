@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RelatedInfoTools
 ################################################################################
-gaudi_subdir(RelatedInfoTools v1r2)
+gaudi_subdir(RelatedInfoTools v1r3)
 
 gaudi_depends_on_subdirs(Phys/DaVinciKernel
                          Phys/LoKiPhys)
