@@ -90,7 +90,14 @@ wilsonEff       = Gaudi.Math.wilsonEff
 agrestiCoullEff = Gaudi.Math.agrestiCoullEff
 iszero          = cpp.LHCb.Math.Zero     ('double')()
 isequal         = cpp.LHCb.Math.Equal_To ('double')()
-#
+isint           = Gaudi.Math.isint 
+islong          = Gaudi.Math.islong
+## natural number ?
+#  @see Gaudi::Math::natural_number 
+natural_number = Gaudi.Math.natural_number
+## natural etry in histo-bin ? 
+#  @see Gaudi::Math::natural_entry
+natural_entry  = Gaudi.Math.natural_entry
 
 # =============================================================================
 # logging 
@@ -142,27 +149,6 @@ def histID  () : return histoID ( )
 def hID     () : return histoID ( )
 ## global ROOT identified for dataset objects 
 def dsID    () : return rootID  ( 'ds_' )
-
-try :
-    natural_number = Gaudi.Math.natural_number
-    logger.info     ( 'TMP: natural_number is loaded from C++, skip guard..' )
-except AttributeError :
-    logger.warning  ( 'TMP: Python version of natural_number is used, keep guard..' )
-    def natural_number ( ve ) :
-        return 0 <= v.value () and \
-               0 <= v.cov2  () and \
-               (  iszero ( v.cov2() ) or isequal (  v.value() , v.cov2() ) )
-    
-try :
-    natural_entry = Gaudi.Math.natural_entry
-    logger.info     ( 'TMP: natural_entry is loaded from C++, skip guard..' )
-except AttributeError :
-    logger.warning  ( 'TMP: Python version of natural_entry is used, keep guard..' )
-    def natural_entry ( ve ) :
-        return 0 <= v.value () and \
-               0 <= v.cov2  () and \
-               ( isequal (  v.value() , v.cov2() ) or
-                 ( iszero ( v.value() ) and isequal ( 1.0 , v.cov2() ) ) )
 
 # =============================================================================
 ## FIX
@@ -263,10 +249,8 @@ def pwd() :
 # =============================================================================
 def _int ( ve , precision = 1.e-5 ) :
     #
-    if isinstance  ( ve , ( int , long ) ) : return True
-    #
-    if isinstance  ( ve , float ) :
-        if Gaudi.Math.isint ( ve ) or Gaudi.Math.islong ( ve ) : return True 
+    if isinstance  ( ve , ( int , long ) )          : return True
+    if isinstance  ( ve , float ) and islong ( ve ) : return True 
     # 
     if not hasattr ( ve , 'value' ) :
         return _int ( VE ( ve , abs ( ve ) ) , precision )  
@@ -296,24 +280,10 @@ def _natural_ ( histo ) :
     >>> print 'natural? ', histo.natural()
     
     """
-    _islong = cpp.Gaudi.Math.islong
-    _round  = cpp.Gaudi.Math.round
     ## loop over all histogram bins 
     for i in histo :
-        
         v  = histo [ i ]
-        vv = v.value ()
-        if not _islong ( vv )             : return False  ## integer
-        vl = _round ( vv )
-        if 0 > vl                         : return False  ## non-negative 
-        #
-        ve = v.cov2  ()
-        if not _islong ( ve )             : return False  ## integer 
-        ## 
-        if isequal ( vv , ve )            : continue      ## OK
-        if 0 == vl and isequal ( ve , 1 ) : continue      ## OK 
-        #
-        return False   
+        if not natural_entry ( v ) : return False
 
     return True
 
@@ -524,7 +494,7 @@ def _h1_set_item_ ( h1 , ibin , v ) :
 
     elif isinstance ( v , float ) :
         
-        if _int ( v ) : return _h1_set_item_ ( h1 , ibin , long ( v ) )
+        if Gaudi.Math.islong ( v ) : return _h1_set_item_ ( h1 , ibin , long ( v ) )
         else          : vv = VE ( v , 0 ) 
 
     #
@@ -543,18 +513,19 @@ def _h2_set_item_ ( h2 , ibin , v ) :
     >>> histo[ ix , iy ] = value     
     """
     #
-    vv = VE ( v ) 
-    if   isinstance ( v , ( int , long ) ) :
+    ##
+    vv = VE ( v )
+    if isinstance   ( v , ( int , long ) ) :
         
-        if   0  < v   : vv = VE ( v , v ) 
-        elif 0 == v   : vv = VE ( 0 , 1 ) 
-        else          : vv = VE ( v , 0 ) 
-        
+        if   0  < v     : vv = VE ( v , v ) 
+        elif 0 == v     : vv = VE ( 0 , 1 ) 
+        else            : vv = VE ( v , 0 ) 
+
     elif isinstance ( v , float ) :
         
-        if _int ( v ) : return _h2_set_item_ ( h2 , ibin , long ( v ) )
-        else          : vv = VE ( v , 0 ) 
-
+        if islong ( v ) : return _h2_set_item_ ( h2 , ibin , long ( v )  )
+        else            : vv = VE ( v , 0 ) 
+        
     ## check the validity of the bin 
     if not ibin in h2 : raise IndexError 
     #
@@ -577,14 +548,14 @@ def _h3_set_item_ ( h3 , ibin , v ) :
     vv = VE ( v ) 
     if   isinstance ( v , ( int , long ) ) :
         
-        if   0  < v   : vv = VE ( v , v )
-        elif 0 == v   : vv = VE ( 0 , 1 ) 
-        else          : vv = VE ( v , 0 ) 
+        if   0  < v     : vv = VE ( v , v )
+        elif 0 == v     : vv = VE ( 0 , 1 ) 
+        else            : vv = VE ( v , 0 ) 
         
     elif isinstance ( v , float ) :
         
-        if _int ( v ) : return _h3_set_item_ ( h3 , ibin , long ( v ) )
-        else          : vv = VE ( v , 0 ) 
+        if islong ( v ) : return _h3_set_item_ ( h3 , ibin , long ( v ) )
+        else            : vv = VE ( v , 0 ) 
 
     ## check the validity of the bin 
     if not ibin in h3 : raise IndexError 
@@ -1482,10 +1453,8 @@ def useLL ( histo         ,
     for ibin in histo : 
 
         v = histo [ ibin ]
-        
-        if 0 > v.value()         : return False
-        if not _int ( v , diff ) : return False 
-        
+
+        if not natural_entry ( v ) : return False 
         minv = min ( minv , v.value() )
         
     return  minv < abs ( minc ) 
@@ -1571,15 +1540,15 @@ def binomEff_h1 ( h1 , h2 , func = binomEff ) :
     #
     for i1,x1,y1 in h1.iteritems() :
         #
-        assert ( _int ( y1 ) )
+        assert ( natural_entry ( y1 ) )
         #
         y2 = h2 ( x1.value() ) 
-        assert ( _int ( y2 ) )
+        assert ( natural_entry ( y2 ) )
         #
         l1 = long ( y1.value () )
         l2 = long ( y2.value () )
         #
-        assert ( l1 <= l2 )
+        assert ( 0 <= l1 and 0<= l2 and l1 <= l2 )
         #
         v = VE ( func ( l1 , l2 ) ) 
         #
@@ -1618,15 +1587,15 @@ def binomEff_h2 ( h1 , h2 , func = binomEff ) :
     #
     for ix1,iy1,x1,y1,z1 in h1.iteritems() :
         #
-        assert ( _int ( z1 ) )
+        assert ( natural_entry ( z1 ) )
         #
         z2 = h2 ( x1.value() , y1.value() ) 
-        assert ( _int ( z2 ) )
+        assert ( natural_entry ( z2 ) )
         #
         l1 = long ( z1.value () )
-        l2 = long ( z2.value ()  )
+        l2 = long ( z2.value () )
         #
-        assert ( l1 <= l2 )
+        assert ( 0 <= l1 and 0 <= l2 and l1 <= l2 )
         #
         v = VE ( func ( l1 , l2 ) ) 
         #
@@ -1664,15 +1633,15 @@ def binomEff_h3 ( h1 , h2 , func = binomEff ) :
     #
     for ix1,iy1,iz1,x1,y1,z1,v1 in h1.iteritems() :
         #
-        assert ( _int ( v1 ) )
+        assert ( natural_entry ( v1 ) )
         #
         v2 = h2 ( x1.value() , y1.value() , z1.value() ) 
-        assert ( _int ( v2 ) )
+        assert ( natural_entry ( v2 ) )
         #
         l1 = long ( v1.value () )
-        l2 = long ( v2.value ()  )
+        l2 = long ( v2.value () )
         #
-        assert ( l1 <= l2 )
+        assert ( 0 <= l1 and 0<= l2 and l1 <= l2 )
         #
         v = VE ( func ( l1 , l2 ) ) 
         #

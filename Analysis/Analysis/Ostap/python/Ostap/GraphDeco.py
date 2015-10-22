@@ -1375,6 +1375,35 @@ ROOT.TGraph  . xmin    = _gr_xmin_
 ROOT.TGraph  . xmax    = _gr_xmax_
 ROOT.TGraph  . xminmax = _gr_xminmax_
 
+## propagate the color for each graph in multigraph 
+def _mg_color_ ( mgraph , color = 2 , marker = 20 , size = -1 ) :
+    """ Propagate color settion to each graph in multigraph
+    >>> mg = .. ## multigraph
+    >>> mg.color ( 2 ) 
+    """
+    _graphs = mgraph.GetListOfGraps()
+    for g in _graphs : g.color ( g , color , marker , size ) 
+
+def _mg_red_      ( mgraph , marker = 20 , size = -1 ) :
+    return _mg_color_ ( mgraph , 2 , marker , size )
+def _mg_blue_     ( mgraph , marker = 25 , size = -1 ) :
+    return _mg_color_ ( mgraph , 2 , marker , size )
+def _mg_magenta_  ( mgraph , marker = 22 , size = -1 ) :
+    return _mg_color_ ( mgraph , 2 , marker , size )
+def _mg_cyan_     ( mgraph , marker = 23 , size = -1 ) :
+    return _mg_color_ ( mgraph , 2 , marker , size )
+def _mg_green_    ( mgraph , marker = 33 , size = -1 ) :
+    return _mg_color_ ( mgraph , 2 , marker , size )
+def _mg_yellow_   ( mgraph , marker = 34 , size = -1 ) :
+    return _mg_color_ ( mgraph , 2 , marker , size )
+
+ROOT.TMultiGraph.color    = _mg_color_
+ROOT.TMultiGraph.red      = _mg_red_
+ROOT.TMultiGraph.blue     = _mg_blue_
+ROOT.TMultiGraph.magenta  = _mg_magenta_
+ROOT.TMultiGraph.cyan     = _mg_cyan_
+ROOT.TMultiGraph.green    = _mg_green_
+ROOT.TMultiGraph.yellow   = _mg_yellow_
 
 # =============================================================================
 ## Convert the histogram to into "Laffery-Wyatt" graph
