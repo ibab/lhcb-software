@@ -3,7 +3,7 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
-!======================== GaudiConf v19r13p1 2015-10-22 =======================
+!========================= GaudiConf v19r14 2015-10-22 =========================
 ! 2015-10-22 - Gloria Corti
  - In DigiConf packing of MCHits for xdigi events is now done only when
    the packing is requested. 
