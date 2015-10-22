@@ -1,5 +1,5 @@
 package  StrippingSys
-version  v9r12
+version  v9r11p2
 
 branches doc cmt tests
 

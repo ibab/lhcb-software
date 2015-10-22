@@ -3,7 +3,7 @@ Package     : StrippingSys
 Package Coordinator : Andrea.Contu@cern.ch, Ricardo.Vazquez.Gomez@cern.ch
 Purpose     : LHCb stripping packages
 
-!========================= StrippingSys v9r12 2015-10-22 ===========================
+!========================= StrippingSys v9r11p2 2015-10-22 ===========================
 Phys/StrippingSelections 
  - Updated test scripts
  - Added new TestMyStrippingLine.py
