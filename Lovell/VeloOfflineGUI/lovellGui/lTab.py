@@ -2,6 +2,7 @@ from mplWidget import *
 from lFuncs import *
 import glob
 import pickle
+import os
 
 class lTab(QWidget):
     def __init__(self, params, parent=None):
@@ -66,8 +67,9 @@ class lTab(QWidget):
         for file in fileNames:
             self.dataIvBox.addItem(file)
             self.refIvBox.addItem(file)
-            
-        self.sensor_mapping = pickle.load(open("VeloOfflineGUI/lovellGui/sensor_mapping.p", "rb" ))
+        
+        fn = os.path.join(os.path.dirname(__file__), 'sensor_mapping.p')
+        self.sensor_mapping = pickle.load(open(fn, "rb" ))
  
 
     def getIVfileName(self, direc):
