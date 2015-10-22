@@ -3,8 +3,8 @@ Package             : PhysSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics packages
 
-</PRE><H1><A NAME=v20r2>2015-10-20 Phys v20r2</A></H1><PRE>
-Development release for 2015 data taking, based on Gaudi v26r4, LHCb v39r1 and Rec v18r2.
+</PRE><H1><A NAME=v20r2>2015-10-22 Phys v20r2</A></H1><PRE>
+Development release for 2016 data taking, based on Gaudi v26r4, LHCb v39r1 and Rec v18r2.
 Uses LCG_79 with ROOT 6.04.02.
 
 - Packages updated :
@@ -13,10 +13,10 @@ Uses LCG_79 with ROOT 6.04.02.
    Phys/DaVinciNeutralTools v1r1, Phys/DaVinciOverlapsAndClones v1r1, Phys/DaVinciPVTools v1r2,
    Phys/DaVinciTools v24r4, Phys/DaVinciTransporter v3r13, Phys/DaVinciTypes v2r14,
    Phys/DecayTreeFitter v1r22, Phys/ExtraInfoTools v1r1, Phys/FlavourTagging v14r1, Phys/HighPtJets v1r9,
-   Phys/JetAccessories v3r14, Phys/KalmanFilter v1r14, Phys/LoKiArrayFunctors v11r4, Phys/LoKiFitters v4r17,
+   Phys/JetAccessories v3r14, Phys/KalmanFilter v1r14, Phys/LoKiArrayFunctors v11r4, Phys/LoKiFitters v4r18,
    Phys/LoKiJets v6r13, Phys/LoKiPhys v11r4, Phys/LoKiTracks v3r3, Phys/MVADictTools v1r10,
    Phys/NeuroBayesTools v1r4, Phys/ParticleCombiners v1r4, Phys/ParticleMaker v6r16, Phys/PhysConf v1r30,
-   Phys/ProtoParticleFilter v1r8, Phys/RelatedInfoTools v1r2, Phys/Swimming v3r8, Phys/TisTosTobbing v9r2,
+   Phys/ProtoParticleFilter v1r8, Phys/RelatedInfoTools v1r3, Phys/Swimming v3r8, Phys/TisTosTobbing v9r2,
    Phys/TopologicalTools v1r1, Phys/VertexFit v6r22.
 
 - Full (long) list of release notes at https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Phys&version=v20r2.
