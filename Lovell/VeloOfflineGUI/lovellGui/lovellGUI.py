@@ -22,8 +22,8 @@ class run_view(QWidget):
     def __init__(self, run_data_dir, parent=None):
         QTabWidget.__init__(self, parent)
         print 'run-data-dir set to:', run_data_dir
-        #self.IV_directory = '/calib/velo/dqm/IVScan'
-        self.IV_directory = '/afs/cern.ch/user/d/dsaunder/IV_test'
+        self.IV_directory = '/calib/velo/dqm/IVScan'
+        #self.IV_directory = '/afs/cern.ch/user/d/dsaunder/IV_test'
         print 'IV_directory set to:', self.IV_directory
         self.run_data_dir = run_data_dir
         self.grid_layout = QGridLayout()

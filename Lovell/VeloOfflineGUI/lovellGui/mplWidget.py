@@ -38,6 +38,7 @@ class lPlottable():
             moduleID += self.params['sensorShift']
         if tabOpsState.displayRefs:
             if 'isIV' in self.params and self.params['isIV']:
+                self.plot.ext = ' - module ' + str(moduleID)
                 nominal, reference = lInterfaces.IV_plot(self.params['name'], moduleID, 
                                                          self.tab().dataIvDate(),
                                                          self.tab().IV_directory,
@@ -46,6 +47,8 @@ class lPlottable():
                                                          getRef = True,
                                                          notifyBox = notifyBox)
             else:
+                if 'sensor_dependent' in self.plot.params and self.plot.params['sensor_dependent']:
+                    self.plot.ext = ' - module ' + str(moduleID)
                 nominal, reference = lInterfaces.runview_plot(tabOpsState.runNum, self.params['name'], 
                                                               moduleID, tabOpsState.run_data_dir, 
                                                               refRun = tabOpsState.refRunNum, getRef = True, 
@@ -53,17 +56,21 @@ class lPlottable():
                 
         else:
             if 'isIV' in self.params and self.params['isIV']:
+                self.plot.ext = ' - module ' + str(moduleID)
                 nominal = lInterfaces.IV_plot(self.params['name'], moduleID, 
                                               self.tab().dataIvDate(),
                                               self.tab().IV_directory,
                                               self.tab().sensor_mapping,
                                               notifyBox = notifyBox)
             else:
+
+                if 'sensor_dependent' in self.plot.params and self.plot.params['sensor_dependent']:
+                    self.plot.ext = ' - module ' + str(moduleID)
                 nominal = lInterfaces.runview_plot(tabOpsState.runNum, self.params['name'], 
                                                    moduleID, tabOpsState.run_data_dir, 
                                                    normalise = norm, notifyBox = notifyBox)
             reference = None
-        if 'binning' in nominal['data']['data']:
+        if 'binning' in nominal['data']['data'] and len(nominal['data']['data']['binning']) > 0:
             if not tabOpsState.displayRefs: self.runview_1d_runviewReturn(nominal)
             elif tabOpsState.overLayRef:
                 self.runview_1d_runviewReturn(nominal)
@@ -72,7 +79,7 @@ class lPlottable():
             elif tabOpsState.refRatio: self.runview_1d_dataMinusRef(nominal, reference, True)
             
             
-        elif 'xbinning' in nominal['data']['data']:  
+        elif 'xbinning' in nominal['data']['data'] and len(nominal['data']['data']['xbinning']) > 0:  
             if tabOpsState.refDiff and tabOpsState.displayRefs: self.runview_2d_dataMinusRef(nominal, reference)
             elif tabOpsState.refRatio and tabOpsState.displayRefs: self.runview_2d_dataMinusRef(nominal, reference, True)
             else: self.runview_2d(nominal)
@@ -304,10 +311,14 @@ class lPlottable():
             self.axes.step(xs, ys, where = 'mid', linewidth = 1.5, c = col, label = lab)
 
         elif style == 2:
-            self.axes.plot(xs, ys, '-o', marker = '^', markerfacecolor = col, markeredgecolor='none', markersize = 8, label = lab)
+            m = '^'
+            if 'marker' in self.params: m = self.params['marker']
+            self.axes.plot(xs, ys, '-o', marker = m, markerfacecolor = col, markeredgecolor='none', markersize = 8, label = lab)
 
         elif style == 3:
-            self.axes.plot(xs, ys, 'o', marker = '^', markerfacecolor = col, markeredgecolor='none', markersize = 8, label = lab)
+            m = '^'
+            if 'marker' in self.params: m = self.params['marker']
+            self.axes.plot(xs, ys, 'o', marker = m, markerfacecolor = col, markeredgecolor='none', markersize = 8, label = lab)
             
         elif style == 4:
             # Solid line.
@@ -357,6 +368,7 @@ class lPlottable():
 class mplWidget(QWidget):
     def __init__(self, params, parent=None):
         QWidget.__init__(self, parent)
+        self.ext = ""
         self.params = params
         self.create_main_frame()
         self.plottables = []
@@ -389,10 +401,11 @@ class mplWidget(QWidget):
         self.axes.clear()                
         for p in self.plottables: p.on_draw(tabOpsState, notifyBox)
         self.axes.grid()
-        self.axes.set_title(self.params['title'])
+        self.axes.set_title(self.params['title'] + self.ext)
 
         if 'xrange' in self.params: self.axes.set_xlim(self.params['xrange'])
-        else: self.axes.set_xlim(self.xLims)
+        else:
+            if len(self.xLims) == 2: self.axes.set_xlim(self.xLims)
         
         
         manSetY = False
@@ -403,14 +416,15 @@ class mplWidget(QWidget):
             print 'Manually setting y axis range.'
             if 'yrange' in self.params: self.axes.set_ylim(self.params['yrange'])
             else: 
-                 shift = 0.05*(self.yLims[1] - self.yLims[0])
-                 self.axes.set_ylim([self.yLims[0] - shift, self.yLims[1] + shift])
+                if len(self.yLims) == 2: 
+                    shift = 0.05*(self.yLims[1] - self.yLims[0])
+                    self.axes.set_ylim([self.yLims[0] - shift, self.yLims[1] + shift]) 
             if 'zrange' in self.params: self.plottables[0].cax.set_clim(vmin = self.params['zrange'][0], vmax = self.params['zrange'][1])
         else: print 'Automatically setting y axis range (using matplotlib).'
         
         self.fig.tight_layout()
         if 'showLegend' in self.params and self.params['showLegend']:
-            if manSetY: self.axes.legend()
+            if manSetY: self.axes.legend(loc = 'best')
         self.canvas.draw()
         self.fig.tight_layout()
         
@@ -424,7 +438,11 @@ class mplWidget(QWidget):
 
 
     def create_main_frame(self):
-        self.fig = Figure()
+        p = self.palette()
+        p.setColor(self.backgroundRole(), Qt.white)
+        self.setPalette(p)
+        figColor = self.palette().color(QPalette.Background)
+        self.fig = Figure(facecolor = [figColor.red()/255., figColor.blue()/255., figColor.green()/255.])
         
         self.canvas = FigureCanvas(self.fig)
         self.canvas.setParent(self)

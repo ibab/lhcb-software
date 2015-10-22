@@ -59,6 +59,10 @@ class lTab(QWidget):
         widgLayout.addWidget(self.refIvBox, 0, widgLayout.columnCount(), 1, 1)
         self.grid_layout.addWidget(widg, self.grid_layout.rowCount(), 0, 1, self.grid_layout.columnCount())
         fileNames = self.getIVfileName(IV_directory)
+        if (len(fileNames)) == 0:
+            msg = 'No IV files found'
+            self.parent().tab_options.notify(msg)
+            print msg
         for file in fileNames:
             self.dataIvBox.addItem(file)
             self.refIvBox.addItem(file)
@@ -69,7 +73,7 @@ class lTab(QWidget):
     def getIVfileName(self, direc):
         files = []
         st = direc + "/*.iv"
-        print "Searching for IV files in :", st
+        "Searching for IV files in :", st
         for file in glob.glob(st): files.append(file.split('/')[-1])
         return files
     

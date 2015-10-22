@@ -35,6 +35,7 @@ class lTabOptions(QGroupBox):
 		self.grid_layout = QGridLayout(self)
 		title = QLabel('LovellGUI')
 		font = QFont()
+		title.setAlignment(Qt.AlignHCenter)
 		font.setPointSize(20)
 		font.setBold(True)
 		title.setFont(font)
@@ -85,6 +86,8 @@ class lTabOptions(QGroupBox):
 		lab.setAlignment(Qt.AlignRight)
 		self.grid_layout.addWidget(lab, self.rowCount(), 0)
 		self.grid_layout.addWidget(self.module_group_box, self.rowCount()-1, 1)
+		lab.hide()
+		self.module_group_box.hide()
 		self.module_group_box.addItem("R (0)")
 		self.module_group_box.addItem("Phi (1)")
 
@@ -136,7 +139,7 @@ class lTabOptions(QGroupBox):
 
 
 	def add_bar(self):
-		bar = QLabel('_______________')
+		bar = QLabel('_______________________________')
 		bar.setAlignment(Qt.AlignHCenter)
 		bar.setAlignment(Qt.AlignVCenter)
 		self.grid_layout.addWidget(bar, self.rowCount(), 0, 1, 2)
@@ -176,7 +179,7 @@ class lTabOptions(QGroupBox):
 
 	def state(self):
 		g = self.module_group_box.currentIndex()
-		moduleID = g*self.module_ID_box.count() + self.module_ID_box.currentIndex()
+		moduleID = int(self.module_ID_box.currentText())
 		state = lTabOpsState(moduleID, self.showing_ref_box.isChecked(), self.overlay_ref_box.isChecked(), 
 			self.overlay_refDiff_box.isChecked(), self.overlay_refRatio_box.isChecked(), 
 			self.run_num_box.currentText(), self.run_numRef_box.currentText(), self.run_data_dir) 

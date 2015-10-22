@@ -46,22 +46,22 @@ def runview_plot(run, name, sensor, run_data_dir, refRun = 'Auto',
     
 def IV_plot(name, moduleID, dataDate, IV_directory, sensor_mapping, refDate = None, 
             getRef = False, notifyBox = None):
-    nominal = getIVcurve(name, moduleID, dataDate, IV_directory, sensor_mapping)
+    nominal = getIVcurve(name, moduleID, dataDate, IV_directory, sensor_mapping, notifyBox)
     if getRef: 
-        reference = getIVcurve(name, moduleID, dataDate, IV_directory, sensor_mapping)
+        reference = getIVcurve(name, moduleID, refDate, IV_directory, sensor_mapping, notifyBox)
         return nominal, reference 
     else: return nominal    
     return nominal
 
 
-def getIVcurve(name, moduleID, filename, IV_directory, sensor_mapping):
+def getIVcurve(name, moduleID, filename, IV_directory, sensor_mapping, notifyBox):
     plot = {'axis_titles': ['V', 'I']}
     bins = []
     vals = []
     if moduleID in sensor_mapping: 
         mapped_name = sensor_mapping[moduleID]
         
-        wholeFilename = IV_directory + "/" + filename
+        wholeFilename = IV_directory + "/" + str(filename)
         # Loop over the file.
         f = open(wholeFilename, 'r')
         i=0
@@ -86,7 +86,16 @@ def getIVcurve(name, moduleID, filename, IV_directory, sensor_mapping):
             bins.append([V, V])
             vals.append(float(lineBits[3]))
             i += 1
+
+    else: 
+        msg = "Sensor mapping not found for module " + str(moduleID)
+        notifyBox.notify(msg, "mapping not found")
+        print msg
         
+    if len(vals) == 0:
+        msg = "No IV data found for module " + str(moduleID)
+        notifyBox.notify(msg, "No IV data")
+        print msg 
     plot['data'] = {'data': {'binning': bins, 'values': vals}}
     return plot
     
