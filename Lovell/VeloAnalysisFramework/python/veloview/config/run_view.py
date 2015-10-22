@@ -483,33 +483,33 @@ run_view_pages = OrderedDict([
             [
                 {
                 'title': 'Tracks_1',
-	            'plots': 
+                'plots': 
                     [
-    					{
-						'title': 'Number of clusters associated to a track',
-						'name': 'Velo/VeloTrackMonitor/NMeasurements',
+                        {
+                        'title': 'Number of clusters associated to a track',
+                        'name': 'Velo/VeloTrackMonitor/NMeasurements',
                         'style':3, 
-						'options' : {'yAxisZeroSuppressed': False}, 
-    					},
-    					{
-						'title': 'Pseudo efficiency by interpolation',
-						'name': 'Velo/VeloTrackMonitor/Track_pseudoEfficiencyByInterp',
+                        'options' : {'yAxisZeroSuppressed': False}, 
+                        },
+                        {
+                        'title': 'Pseudo efficiency by interpolation',
+                        'name': 'Velo/VeloTrackMonitor/Track_pseudoEfficiencyByInterp',
                         'style':3, 
-						'options' : {'yAxisZeroSuppressed': False}, 
-    					},
-    					{
-						'title': 'ADC for R clusters associated to a track',
+                        'options' : {'yAxisZeroSuppressed': False}, 
+                        },
+                        {
+                        'title': 'ADC for R clusters associated to a track',
                         'name': 'Velo/VeloTrackMonitor/Track_radc', 
                         'style':3, 
-    					},
-    					{
-						'title': 'ADC for Phi clusters associated to a track',
-						'name': 'Velo/VeloTrackMonitor/Track_phiadc',
+                        },
+                        {
+                        'title': 'ADC for Phi clusters associated to a track',
+                        'name': 'Velo/VeloTrackMonitor/Track_phiadc',
                         'legend': 'Phi',
                         'showLegend': True,
                         'style':3, 
-						'options' : {'yAxisZeroSuppressed': False}, 
-    					}
+                        'options' : {'yAxisZeroSuppressed': False}, 
+                        }
                     ],
                     'layout': (2,2)
                 },
@@ -517,25 +517,25 @@ run_view_pages = OrderedDict([
                 'title': 'Tracks_2',
                 'plots': 
                     [
-    					{
-						'title': 'Track polar angle theta (degrees)',
-						'name': 'Velo/VeloTrackMonitor/Track_Theta',
+                        {
+                        'title': 'Track polar angle theta (degrees)',
+                        'name': 'Velo/VeloTrackMonitor/Track_Theta',
                         'style':3, 
-						'options' : {'yAxisZeroSuppressed': False}, 
-    					},
-    					{
-						'title': 'Track pseudo rapidity eta',
-						'name': 'Velo/VeloTrackMonitor/Track_Eta',
+                        'options' : {'yAxisZeroSuppressed': False}, 
+                        },
+                        {
+                        'title': 'Track pseudo rapidity eta',
+                        'name': 'Velo/VeloTrackMonitor/Track_Eta',
                         'style':3, 
-						'options' : {'yAxisZeroSuppressed': False}, 
-    					},
-    					{
-						'title': 'Track aimuth phi (degrees)',
-						'name': 'Velo/VeloTrackMonitor/Track_Phi',
+                        'options' : {'yAxisZeroSuppressed': False}, 
+                        },
+                        {
+                        'title': 'Track aimuth phi (degrees)',
+                        'name': 'Velo/VeloTrackMonitor/Track_Phi',
                         'style':3, 
-						'options' : {'yAxisZeroSuppressed': False}, 
-    					},
-				    ]
+                        'options' : {'yAxisZeroSuppressed': False}, 
+                        },
+                    ]
                 }
             ]
         }
@@ -544,67 +544,67 @@ run_view_pages = OrderedDict([
     ('vertices', 
         {
         'title': 'Vertices',
-		'subpages' : 
+        'subpages' : 
             [
-			    {
+                {
                 'title' : 'PV Overview',
-			    'plots' : 
+                'plots' : 
                     [
-						{
-						'title': 'PV left-right delta x',
-						'name': 'Track/TrackVertexMonitor/PV left-right delta x',
-						'normalise': True,
-						'options': {'yAxisZeroSuppressed': False}
-						},
-						{
-						'title': 'PV x position',
-						'name': 'Track/TrackVertexMonitor/PV x position',
-						'normalise': True,
-						'options': {'yAxisZeroSuppressed': False}
-						},
-						{
-						'title': 'PV y position',
-						'name': 'Track/TrackVertexMonitor/PV y position',
-						'normalise': True,
-						'options': {'yAxisZeroSuppressed': False}
-						},
-						{
-						'title': 'PV z position',
-						'name': 'Track/TrackVertexMonitor/PV z position',
-						'normalise': True,
-						'options': {'yAxisZeroSuppressed': False}
-						}
-					],
-				'layout': (2,2)
-				},
-				{
+                        {
+                        'title': 'PV left-right delta x',
+                        'name': 'Track/TrackVertexMonitor/PV left-right delta x',
+                        'normalise': True,
+                        'options': {'yAxisZeroSuppressed': False}
+                        },
+                        {
+                        'title': 'PV x position',
+                        'name': 'Track/TrackVertexMonitor/PV x position',
+                        'normalise': True,
+                        'options': {'yAxisZeroSuppressed': False}
+                        },
+                        {
+                        'title': 'PV y position',
+                        'name': 'Track/TrackVertexMonitor/PV y position',
+                        'normalise': True,
+                        'options': {'yAxisZeroSuppressed': False}
+                        },
+                        {
+                        'title': 'PV z position',
+                        'name': 'Track/TrackVertexMonitor/PV z position',
+                        'normalise': True,
+                        'options': {'yAxisZeroSuppressed': False}
+                        }
+                    ],
+                'layout': (2,2)
+                },
+                {
                 'title' : 'PV VELO Half Distance',
-				'plots' : 
+                'plots' : 
                     [
-						{
-						'title': 'PV left-Left half x',
-						'name': 'Track/TrackVertexMonitor/PV left-Left half x',
-						'normalise': True,
-						},
-						{
-						'title': 'PV right-Right half x',
-						'name': 'Track/TrackVertexMonitor/PV right-Right half x',
-						'normalise': True,
-						},
-						{
-						'title': 'PV left-Left half y',
-						'name': 'Track/TrackVertexMonitor/PV left-Left half y',
-						'normalise': True,
-						},
-						{
-						'title': 'PV right-Right half y',
-						'name': 'Track/TrackVertexMonitor/PV right-Right half y',
-						'normalise': True,
-						}
-					],
-				'layout': (2,2)
-				}
-			]
+                        {
+                        'title': 'PV left-Left half x',
+                        'name': 'Track/TrackVertexMonitor/PV left-Left half x',
+                        'normalise': True,
+                        },
+                        {
+                        'title': 'PV right-Right half x',
+                        'name': 'Track/TrackVertexMonitor/PV right-Right half x',
+                        'normalise': True,
+                        },
+                        {
+                        'title': 'PV left-Left half y',
+                        'name': 'Track/TrackVertexMonitor/PV left-Left half y',
+                        'normalise': True,
+                        },
+                        {
+                        'title': 'PV right-Right half y',
+                        'name': 'Track/TrackVertexMonitor/PV right-Right half y',
+                        'normalise': True,
+                        }
+                    ],
+                'layout': (2,2)
+                }
+            ]
         }
     ),
     ('errors', 
@@ -808,80 +808,81 @@ run_view_pages = OrderedDict([
         'plots':
             [
                 {
-                'title': 'IV of selected module',
+                'title': 'IV',
                 'plottables':
                     [
                         {
                         'name': 'Ramp Up',
                         'color': 'b',
-                        'style': 3,
+                        'style': 2,
                         'legend': 'Ramp Up',
-                        'isIV': True
+                        'isIV': True,
+                        'marker': 'v'
                         },
                         {
                         'name': 'Ramp Down',
                         'color': 'g',
-                        'style': 3,
+                        'style': 2,
                         'legend': 'Ramp Down',
                         'isIV': True
                         }
                     ],
-                'showLedend': True
+                'showLegend': True
                 },
                 {
-                'title': 'IV of selected module + 1',
+                'title': 'IV',
                 'plottables':
                     [
                         {
                         'name': 'Ramp Up',
                         'color': 'b',
-                        'style': 3,
+                        'style': 2,
                         'legend': 'Ramp Up',
-                        'isIV': True,
-                        'sensorShift': 1,
-                        },
-                        {
-                        'name': 'Ramp Down',
-                        'color': 'g',
-                        'style': 3,
-                        'legend': 'Ramp Down',
                         'isIV': True,
                         'sensorShift': 1
-                        }
-                    ],
-                'showLedend': True,
-                },
-                {
-                'title': 'IV of selected module + 2',
-                'plottables':
-                    [
-                        {
-                        'name': 'Ramp Up',
-                        'color': 'b',
-                        'style': 3,
-                        'legend': 'Ramp Up',
-                        'isIV': True,
-                        'sensorShift': 2
                         },
                         {
                         'name': 'Ramp Down',
                         'color': 'g',
-                        'style': 3,
+                        'style': 2,
                         'legend': 'Ramp Down',
                         'isIV': True,
-                        'sensorShift': 2
+                        'sensorShift': 1,
+                        'marker': 'v'
                         }
-                    ],
-                'showLedend': True,
+                    ]
                 },
                 {
-                'title': 'IV of selected module + 3',
+                'title': 'IV',
                 'plottables':
                     [
                         {
                         'name': 'Ramp Up',
                         'color': 'b',
-                        'style': 3,
+                        'style': 2,
+                        'legend': 'Ramp Up',
+                        'isIV': True,
+                        'sensorShift': 2,
+                        },
+                        {
+                        'name': 'Ramp Down',
+                        'color': 'g',
+                        'style': 2,
+                        'legend': 'Ramp Down',
+                        'isIV': True,
+                        'sensorShift': 2,
+                        'marker': 'v'
+                        }
+                    ]
+                },
+                {
+                'title': 'IV',
+                'plottables':
+                    [
+                        {
+                        'name': 'Ramp Up',
+                        'color': 'b',
+                        'style': 2,
                         'legend': 'Ramp Up',
                         'isIV': True,
                         'sensorShift': 3
@@ -889,13 +890,13 @@ run_view_pages = OrderedDict([
                         {
                         'name': 'Ramp Down',
                         'color': 'g',
-                        'style': 3,
+                        'style': 2,
                         'legend': 'Ramp Down',
                         'isIV': True,
-                        'sensorShift': 3
+                        'sensorShift': 3,
+                        'marker': 'v'
                         }
-                    ],
-                'showLedend': True,
+                    ]
                 }
             ]
         }
