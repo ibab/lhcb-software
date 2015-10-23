@@ -91,14 +91,13 @@ class lPlottable():
         
         if 'axis_titles' in nominal:
             xlabel = nominal['axis_titles'][0]
-            ylabel = nominal['axis_titles'][1]
-            
-            if len(nominal['axis_titles'][1]) == 3:
-                zlabel = nominal['axis_titles'][2]
+            ylabel = nominal['axis_titles'][1]        
+            if len(nominal['axis_titles'][1]) == 3: zlabel = ['axis_titles'][2]
         
         self.plot.axes.set_xlabel(xlabel)
         self.plot.axes.set_ylabel(ylabel)
-        self.cbar.set_label(zlabel)
+        if self.cbar_set: self.cbar.set_label(zlabel)
+        
         
         
     def runview_1d_dataMinusRef(self, nominal, reference, infactRatio = False):
