@@ -1,5 +1,6 @@
-# --> Including file '/afs/cern.ch/work/c/cattanem/private/cmtuser/LHCb_HEAD/Ex/IOExample/tests/options/CopyReco08toROOTdst.py'
-# <-- End of file '/afs/cern.ch/work/c/cattanem/private/cmtuser/LHCb_HEAD/Ex/IOExample/tests/options/CopyReco08toROOTdst.py'
+# setting LC_ALL to "C"
+# --> Including file '/afs/cern.ch/work/c/cattanem/private/cmakeuser/LHCbDev_HEAD/Ex/IOExample/tests/options/CopyReco08toROOTdst.py'
+# <-- End of file '/afs/cern.ch/work/c/cattanem/private/cmakeuser/LHCbDev_HEAD/Ex/IOExample/tests/options/CopyReco08toROOTdst.py'
 # applying configuration of LHCbApp
 # /***** User LHCbApp/LHCbApp ************************************************************************
 # |-Persistency    = None
@@ -78,8 +79,6 @@
 # |-AlwaysCreate        = False
 # \----- (End of User DstConf/DstConf) ---------------------------------------------------------------
 # applying configuration of CondDB
-# --> Including file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
 # /***** User CondDB/CondDB **************************************************************************
 # |-Upgrade                    = False
 # |-EnableRunStampCheck        = True
@@ -114,8 +113,8 @@
 # No Writer defined for DIGI
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr (GaudiCoreSvc v3r4)
-                                          running on mcat.cern.ch on Tue Jun 23 16:21:32 2015
+                                                   Welcome to LHCbDev version HEAD
+                                          running on mcat.cern.ch on Fri Oct 23 15:25:10 2015
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -208,20 +207,20 @@ FSRInputCopyStream   INFO Data source: FileRecordDataSvc output: DATAFILE='PFN:R
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/swtest/lhcb/data/2010/BHADRON.DST/00008399/0000/00008399_00001052_1.bhadron.dst' SVC='Gaudi::RootEvtSelector' OPT='READ'
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
-EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
 ApplicationMgr       INFO Application Manager Started successfully
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
-ONLINE_2008          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2008.db/ONLINE"
-ONLINE_2008          INFO Using TAG ""
-PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x5df9140@EventDataSvc]:
+ONLINE_2010          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/ONLINE-2010.db/ONLINE"
+ONLINE_2010          INFO Using TAG ""
+PrintHeader          INFO Run 80845, Event 260804558
+StoreExplorerAlg     INFO ========= /Event[0x685a0e0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
+StoreExplorerAlg     INFO | | +--> /ODIN [No Address]  LHCb::ODIN
 StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x2]  LHCb::RecHeader
 StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x2]  LHCb::ProcStatus
@@ -642,12 +641,14 @@ DumpTracks          DEBUG *** Track ***
   -8.01853e-09 3.77925e-09-3.44475e-12 4.35686e-12 1.20198e-13 ]
 
 
+IODataManager        INFO Referring to dataset ROOT-Reco08.dst by its file ID:AAB6F681-8979-E511-B295-02163E008F18
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
-PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0xc389bb0@EventDataSvc]:
+PrintHeader          INFO Run 80845, Event 260808468
+StoreExplorerAlg     INFO ========= /Event[0xcde8c50@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
+StoreExplorerAlg     INFO | | +--> /ODIN [No Address]  LHCb::ODIN
 StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x2]  LHCb::RecHeader
 StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x2]  LHCb::ProcStatus
@@ -1053,11 +1054,12 @@ DumpTracks          DEBUG *** Track ***
 
 
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
-PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0xc389b80@EventDataSvc]:
+PrintHeader          INFO Run 80845, Event 260798495
+StoreExplorerAlg     INFO ========= /Event[0xce57d70@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
+StoreExplorerAlg     INFO | | +--> /ODIN [No Address]  LHCb::ODIN
 StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x2]  LHCb::RecHeader
 StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x2]  LHCb::ProcStatus
@@ -1453,11 +1455,12 @@ DumpTracks          DEBUG *** Track ***
 
 
 EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
-PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0xd9e4750@EventDataSvc]:
+PrintHeader          INFO Run 80845, Event 260772325
+StoreExplorerAlg     INFO ========= /Event[0xbe40e60@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
+StoreExplorerAlg     INFO | | +--> /ODIN [No Address]  LHCb::ODIN
 StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x2]  LHCb::RecHeader
 StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x2]  LHCb::ProcStatus
@@ -1867,11 +1870,12 @@ DumpTracks          DEBUG *** Track ***
 
 
 EventSelector     SUCCESS Reading Event record 5. Record number within stream 1: 5
-PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0xd7debc0@EventDataSvc]:
+PrintHeader          INFO Run 80845, Event 260795190
+StoreExplorerAlg     INFO ========= /Event[0xe15eec0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
+StoreExplorerAlg     INFO | | +--> /ODIN [No Address]  LHCb::ODIN
 StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x2]  LHCb::RecHeader
 StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x2]  LHCb::ProcStatus
@@ -2288,8 +2292,6 @@ UnpackTrack       SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "# Unpacked Tracks"                             |         5 |        994 |     198.80 |     56.989 |      112.00 |      270.00 |
 PrintHeader          INFO Filtered 5 events
-PrintHeader       SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
-PrintHeader       SUCCESS  #WARNINGS   = 5        Message = 'No ODIN Header'
 TESFingerPrint      DEBUG ==> Finalize
 TESFingerPrint    VERBOSE ==> TES DataObject statistics: {/Event: 5, /Event/Bhadron: 5, /Event/Bhadron/Phys: 5, /Event/Bhadron/Phys/AllB2D0KPiPiLineLoose: 5, /Event/Bhadron/Phys/AllB2D0KPiPiLineLoose/Particles: 5, /Event/Bhadron/Phys/AllB2D0PiPiPiLineLoose: 5, /Event/Bhadron/Phys/AllB2D0PiPiPiLineLoose/Particles: 5, /Event/Bhadron/Phys/AllB2DDLineLoose: 5, /Event/Bhadron/Phys/AllB2DDLineLoose/Particles: 5, /Event/Bhadron/Phys/AllB2DKPiPiLineLoose: 5, /Event/Bhadron/Phys/AllB2DKPiPiLineLoose/Particles: 5, /Event/Bhadron/Phys/AllB2DPiPiPiLineLoose: 5, /Event/Bhadron/Phys/AllB2DPiPiPiLineLoose/Particles: 5, /Event/Bhadron/Phys/AllLambdaB2LambdaCKPiPiLineLoose: 1, /Event/Bhadron/Phys/AllLambdaB2LambdaCKPiPiLineLoose/Particles: 1, /Event/Bhadron/Phys/AllLambdaB2LambdaCPiPiPiLineLoose: 1, /Event/Bhadron/Phys/AllLambdaB2LambdaCPiPiPiLineLoose/Particles: 1, /Event/Bhadron/Phys/AllWSB2DDLineLoose: 2, /Event/Bhadron/Phys/AllWSB2DDLineLoose/Particles: 2, /Event/Bhadron/Phys/AllWSB2DKPiPiLineLoose: 3, /Event/Bhadron/Phys/AllWSB2DKPiPiLineLoose/Particles: 3, /Event/Bhadron/Phys/AllWSB2DPiPiPiLineLoose: 1, /Event/Bhadron/Phys/AllWSB2DPiPiPiLineLoose/Particles: 1, /Event/Bhadron/Phys/B2Charged2Body: 5, /Event/Bhadron/Phys/B2Charged2Body/Particles: 5, /Event/Bhadron/Phys/B2DXWithD2KPiPi0MergedLine: 5, /Event/Bhadron/Phys/B2DXWithD2KPiPi0MergedLine/Particles: 5, /Event/Bhadron/Phys/B2DXWithD2KPiPi0ResolvedLine: 5, /Event/Bhadron/Phys/B2DXWithD2KPiPi0ResolvedLine/Particle2VertexRelations: 2, /Event/Bhadron/Phys/B2DXWithD2KPiPi0ResolvedLine/Particles: 5, /Event/Bhadron/Phys/B2DXWithD2KPiPi0ResolvedLine/decayVertices: 2, /Event/Bhadron/Phys/B2DXWithD2KshhLine: 5, /Event/Bhadron/Phys/B2DXWithD2KshhLine/Particle2VertexRelations: 1, /Event/Bhadron/Phys/B2DXWithD2KshhLine/Particles: 5, /Event/Bhadron/Phys/B2DXWithD2KshhLine/decayVertices: 1, /Event/Bhadron/Phys/B2DXWithD2hhLine: 5, /Event/Bhadron/Phys/B2DXWithD2hhLine/Particle2VertexRelations: 1, /Event/Bhadron/Phys/B2DXWithD2hhLine/Particles: 5, /Event/Bhadron/Phys/B2DXWithD2hhLine/decayVertices: 1, /Event/Bhadron/Phys/B2DXWithD2hhWSLine: 2, /Event/Bhadron/Phys/B2DXWithD2hhWSLine/Particles: 2, /Event/Bhadron/Phys/B2DXWithD2hhhLine: 5, /Event/Bhadron/Phys/B2DXWithD2hhhLine/Particle2VertexRelations: 1, /Event/Bhadron/Phys/B2DXWithD2hhhLine/Particles: 5, /Event/Bhadron/Phys/B2DXWithD2hhhLine/decayVertices: 1, /Event/Bhadron/Phys/B2DXWithD2hhhhLine: 5, /Event/Bhadron/Phys/B2DXWithD2hhhhLine/Particle2VertexRelations: 3, /Event/Bhadron/Phys/B2DXWithD2hhhhLine/Particles: 5, /Event/Bhadron/Phys/B2DXWithD2hhhhLine/decayVertices: 3, /Event/Bhadron/Phys/B2DXWithLambdaLine: 5, /Event/Bhadron/Phys/B2DXWithLambdaLine/Particle2VertexRelations: 1, /Event/Bhadron/Phys/B2DXWithLambdaLine/Particles: 5, /Event/Bhadron/Phys/B2DXWithLambdaLine/decayVertices: 1, /Event/Bhadron/Phys/B2DXWithUnbiasedB2DPiLine: 2, /Event/Bhadron/Phys/B2DXWithUnbiasedB2DPiLine/Particles: 2, /Event/Bhadron/Phys/B2PPbarLine: 5, /Event/Bhadron/Phys/B2PPbarLine/Particles: 5, /Event/Bhadron/Phys/B2Quasi2Body4piLine: 1, /Event/Bhadron/Phys/B2Quasi2Body4piLine/Particles: 1, /Event/Bhadron/Phys/B2Quasi2Body4piLine/decayVertices: 1, /Event/Bhadron/Phys/B2threebodyLine: 4, /Event/Bhadron/Phys/B2threebodyLine/Particles: 4, /Event/Bhadron/Phys/B2twobodyLine: 5, /Event/Bhadron/Phys/B2twobodyLine/Particles: 5, /Event/Bhadron/Phys/Bd2DstarTauNuTight: 1, /Event/Bhadron/Phys/Bd2DstarTauNuTight/Particles: 1, /Event/Bhadron/Phys/Bs2KstKst: 5, /Event/Bhadron/Phys/Bs2KstKst/Particles: 5, /Event/Bhadron/Phys/Bu2D0h_D02KShh_KSLL: 2, /Event/Bhadron/Phys/Bu2D0h_D02KShh_KSLL/Particle2VertexRelations: 2, /Event/Bhadron/Phys/Bu2D0h_D02KShh_KSLL/Particles: 2, /Event/Bhadron/Phys/DiTracksForCharmlessB: 1, /Event/Bhadron/Phys/DiTracksForCharmlessB/Particles: 1, /Event/Bhadron/Phys/DiTracksForCharmlessB/decayVertices: 1, /Event/Bhadron/Phys/SelD2KPiPi0ResolvedForB2DX: 2, /Event/Bhadron/Phys/SelD2KPiPi0ResolvedForB2DX/Particles: 2, /Event/Bhadron/Phys/SelD2KPiPi0ResolvedForB2DX/decayVertices: 2, /Event/Bhadron/Phys/SelD2KshhForB2DX: 1, /Event/Bhadron/Phys/SelD2KshhForB2DX/Particles: 1, /Event/Bhadron/Phys/SelD2KshhForB2DX/decayVertices: 1, /Event/Bhadron/Phys/SelD2hhForB2DX: 1, /Event/Bhadron/Phys/SelD2hhForB2DX/Particles: 1, /Event/Bhadron/Phys/SelD2hhForB2DX/decayVertices: 1, /Event/Bhadron/Phys/SelD2hhhForB2DX: 1, /Event/Bhadron/Phys/SelD2hhhForB2DX/Particles: 1, /Event/Bhadron/Phys/SelD2hhhForB2DX/decayVertices: 1, /Event/Bhadron/Phys/SelD2hhhhForB2DX: 3, /Event/Bhadron/Phys/SelD2hhhhForB2DX/Particles: 3, /Event/Bhadron/Phys/SelD2hhhhForB2DX/decayVertices: 3, /Event/Bhadron/Phys/SelKsForB2DX: 1, /Event/Bhadron/Phys/SelKsForB2DX/Particles: 1, /Event/Bhadron/Phys/SelKsForB2DX/decayVertices: 1, /Event/Bhadron/Phys/SelKstarForB2DX: 1, /Event/Bhadron/Phys/SelKstarForB2DX/Particles: 1, /Event/Bhadron/Phys/SelKstarForB2DX/decayVertices: 1, /Event/Bhadron/Phys/SelKstarNoMWForB2DX: 1, /Event/Bhadron/Phys/SelKstarNoMWForB2DX/Particles: 1, /Event/Bhadron/Phys/SelKstarNoMWForB2DX/decayVertices: 1, /Event/Bhadron/Phys/SelLambdaC2pKPiForB2DX: 1, /Event/Bhadron/Phys/SelLambdaC2pKPiForB2DX/Particles: 1, /Event/Bhadron/Phys/SelLambdaC2pKPiForB2DX/decayVertices: 1, /Event/Bhadron/Phys/SelPhiNoMWForB2DX: 1, /Event/Bhadron/Phys/SelPhiNoMWForB2DX/Particles: 1, /Event/Bhadron/Phys/SelPhiNoMWForB2DX/decayVertices: 1, /Event/Bhadron/Phys/SelRhoForB2DX: 2, /Event/Bhadron/Phys/SelRhoForB2DX/Particles: 2, /Event/Bhadron/Phys/SelRhoForB2DX/decayVertices: 2, /Event/Bhadron/Phys/SelRhoNoMWForB2DX: 1, /Event/Bhadron/Phys/SelRhoNoMWForB2DX/Particles: 1, /Event/Bhadron/Phys/SelRhoNoMWForB2DX/decayVertices: 1, /Event/Bhadron/Phys/StdLooseResolvedPi0: 2, /Event/Bhadron/Phys/StdLooseResolvedPi0/Particles: 2, /Event/Bhadron/Phys/StdNoPIDsKaons: 5, /Event/Bhadron/Phys/StdNoPIDsKaons/Particles: 5, /Event/Bhadron/Phys/StdNoPIDsPions: 5, /Event/Bhadron/Phys/StdNoPIDsPions/Particles: 5, /Event/Bhadron/Phys/StdNoPIDsProtons: 1, /Event/Bhadron/Phys/StdNoPIDsProtons/Particles: 1, /Event/Bhadron/Phys/StripB2HHPi0M: 5, /Event/Bhadron/Phys/StripB2HHPi0M/Particles: 5, /Event/Bhadron/Phys/StripB2HHPi0R: 5, /Event/Bhadron/Phys/StripB2HHPi0R/Particles: 5, /Event/Bhadron/Phys/StripB2KSDDhh: 2, /Event/Bhadron/Phys/StripB2KSDDhh/Particles: 2, /Event/Bhadron/Phys/StripB2KSLLhh: 3, /Event/Bhadron/Phys/StripB2KSLLhh/Particles: 3, /Event/Bhadron/Phys/StripB2hhLTUnbiased: 1, /Event/Bhadron/Phys/StripB2hhLTUnbiased/Particles: 1, /Event/Bhadron/Phys/StripBu2hhh: 4, /Event/Bhadron/Phys/StripBu2hhh/Particles: 4, /Event/Bhadron/Phys/TracksForCharmlessB: 1, /Event/Bhadron/Phys/TracksForCharmlessB/Particles: 1, /Event/Bhadron/Rec: 5, /Event/Bhadron/Rec/Vertex: 5, /Event/Bhadron/Rec/Vertex/Primary: 5, /Event/DAQ: 5, /Event/DAQ/RawEvent: 5, /Event/Rec: 5, /Event/Rec/Header: 5, /Event/Rec/Status: 5, /Event/Strip: 5, /Event/Strip/Phys: 5, /Event/Strip/Phys/DecReports: 5, /Event/pRec: 5, /Event/pRec/Calo: 5, /Event/pRec/Calo/Electrons: 5, /Event/pRec/Calo/MergedPi0s: 5, /Event/pRec/Calo/Photons: 5, /Event/pRec/Calo/SplitPhotons: 5, /Event/pRec/Muon: 5, /Event/pRec/Muon/MuonPID: 5, /Event/pRec/ProtoP: 5, /Event/pRec/ProtoP/Charged: 5, /Event/pRec/ProtoP/Neutrals: 5, /Event/pRec/Rich: 5, /Event/pRec/Rich/PIDs: 5, /Event/pRec/Track: 5, /Event/pRec/Track/Best: 5, /Event/pRec/Track/Muon: 5, /Event/pRec/Vertex: 5, /Event/pRec/Vertex/Primary: 5, /Event/pRec/Vertex/V0: 5, /Event/pRec/Vertex/Weights: 5}
 TESFingerPrint    VERBOSE ==> TES Container sizes: {/Event/Bhadron/Phys/AllB2D0KPiPiLineLoose/Particles: {0: 5}, /Event/Bhadron/Phys/AllB2D0PiPiPiLineLoose/Particles: {0: 5}, /Event/Bhadron/Phys/AllB2DDLineLoose/Particles: {0: 5}, /Event/Bhadron/Phys/AllB2DKPiPiLineLoose/Particles: {0: 5}, /Event/Bhadron/Phys/AllB2DPiPiPiLineLoose/Particles: {0: 5}, /Event/Bhadron/Phys/AllLambdaB2LambdaCKPiPiLineLoose/Particles: {0: 1}, /Event/Bhadron/Phys/AllLambdaB2LambdaCPiPiPiLineLoose/Particles: {0: 1}, /Event/Bhadron/Phys/AllWSB2DDLineLoose/Particles: {0: 2}, /Event/Bhadron/Phys/AllWSB2DKPiPiLineLoose/Particles: {0: 3}, /Event/Bhadron/Phys/AllWSB2DPiPiPiLineLoose/Particles: {0: 1}, /Event/Bhadron/Phys/B2Charged2Body/Particles: {0: 5}, /Event/Bhadron/Phys/B2DXWithD2KPiPi0MergedLine/Particles: {0: 5}, /Event/Bhadron/Phys/B2DXWithD2KPiPi0ResolvedLine/Particles: {0: 3, 2: 1, 12: 1}, /Event/Bhadron/Phys/B2DXWithD2KPiPi0ResolvedLine/decayVertices: {2: 1, 12: 1}, /Event/Bhadron/Phys/B2DXWithD2KshhLine/Particles: {0: 4, 7: 1}, /Event/Bhadron/Phys/B2DXWithD2KshhLine/decayVertices: {7: 1}, /Event/Bhadron/Phys/B2DXWithD2hhLine/Particles: {0: 4, 1: 1}, /Event/Bhadron/Phys/B2DXWithD2hhLine/decayVertices: {1: 1}, /Event/Bhadron/Phys/B2DXWithD2hhWSLine/Particles: {0: 2}, /Event/Bhadron/Phys/B2DXWithD2hhhLine/Particles: {0: 4, 8: 1}, /Event/Bhadron/Phys/B2DXWithD2hhhLine/decayVertices: {8: 1}, /Event/Bhadron/Phys/B2DXWithD2hhhhLine/Particles: {0: 2, 2: 1, 3: 1, 16: 1}, /Event/Bhadron/Phys/B2DXWithD2hhhhLine/decayVertices: {2: 1, 3: 1, 16: 1}, /Event/Bhadron/Phys/B2DXWithLambdaLine/Particles: {0: 4, 4: 1}, /Event/Bhadron/Phys/B2DXWithLambdaLine/decayVertices: {4: 1}, /Event/Bhadron/Phys/B2DXWithUnbiasedB2DPiLine/Particles: {0: 2}, /Event/Bhadron/Phys/B2PPbarLine/Particles: {0: 5}, /Event/Bhadron/Phys/B2Quasi2Body4piLine/Particles: {2: 1}, /Event/Bhadron/Phys/B2Quasi2Body4piLine/decayVertices: {2: 1}, /Event/Bhadron/Phys/B2threebodyLine/Particles: {0: 4}, /Event/Bhadron/Phys/B2twobodyLine/Particles: {0: 5}, /Event/Bhadron/Phys/Bd2DstarTauNuTight/Particles: {0: 1}, /Event/Bhadron/Phys/Bs2KstKst/Particles: {0: 5}, /Event/Bhadron/Phys/Bu2D0h_D02KShh_KSLL/Particles: {0: 2}, /Event/Bhadron/Phys/DiTracksForCharmlessB/Particles: {3: 1}, /Event/Bhadron/Phys/DiTracksForCharmlessB/decayVertices: {3: 1}, /Event/Bhadron/Phys/SelD2KPiPi0ResolvedForB2DX/Particles: {1: 1, 6: 1}, /Event/Bhadron/Phys/SelD2KPiPi0ResolvedForB2DX/decayVertices: {1: 1, 6: 1}, /Event/Bhadron/Phys/SelD2KshhForB2DX/Particles: {1: 1}, /Event/Bhadron/Phys/SelD2KshhForB2DX/decayVertices: {1: 1}, /Event/Bhadron/Phys/SelD2hhForB2DX/Particles: {1: 1}, /Event/Bhadron/Phys/SelD2hhForB2DX/decayVertices: {1: 1}, /Event/Bhadron/Phys/SelD2hhhForB2DX/Particles: {2: 1}, /Event/Bhadron/Phys/SelD2hhhForB2DX/decayVertices: {2: 1}, /Event/Bhadron/Phys/SelD2hhhhForB2DX/Particles: {1: 1, 3: 1, 4: 1}, /Event/Bhadron/Phys/SelD2hhhhForB2DX/decayVertices: {1: 1, 3: 1, 4: 1}, /Event/Bhadron/Phys/SelKsForB2DX/Particles: {1: 1}, /Event/Bhadron/Phys/SelKsForB2DX/decayVertices: {1: 1}, /Event/Bhadron/Phys/SelKstarForB2DX/Particles: {1: 1}, /Event/Bhadron/Phys/SelKstarForB2DX/decayVertices: {1: 1}, /Event/Bhadron/Phys/SelKstarNoMWForB2DX/Particles: {1: 1}, /Event/Bhadron/Phys/SelKstarNoMWForB2DX/decayVertices: {1: 1}, /Event/Bhadron/Phys/SelLambdaC2pKPiForB2DX/Particles: {2: 1}, /Event/Bhadron/Phys/SelLambdaC2pKPiForB2DX/decayVertices: {2: 1}, /Event/Bhadron/Phys/SelPhiNoMWForB2DX/Particles: {1: 1}, /Event/Bhadron/Phys/SelPhiNoMWForB2DX/decayVertices: {1: 1}, /Event/Bhadron/Phys/SelRhoForB2DX/Particles: {1: 2}, /Event/Bhadron/Phys/SelRhoForB2DX/decayVertices: {1: 2}, /Event/Bhadron/Phys/SelRhoNoMWForB2DX/Particles: {2: 1}, /Event/Bhadron/Phys/SelRhoNoMWForB2DX/decayVertices: {2: 1}, /Event/Bhadron/Phys/StdLooseResolvedPi0/Particles: {3: 1, 8: 1}, /Event/Bhadron/Phys/StdNoPIDsKaons/Particles: {2: 2, 4: 2, 6: 1}, /Event/Bhadron/Phys/StdNoPIDsPions/Particles: {3: 1, 4: 2, 6: 1, 8: 1}, /Event/Bhadron/Phys/StdNoPIDsProtons/Particles: {2: 1}, /Event/Bhadron/Phys/StripB2HHPi0M/Particles: {0: 5}, /Event/Bhadron/Phys/StripB2HHPi0R/Particles: {0: 5}, /Event/Bhadron/Phys/StripB2KSDDhh/Particles: {0: 2}, /Event/Bhadron/Phys/StripB2KSLLhh/Particles: {0: 3}, /Event/Bhadron/Phys/StripB2hhLTUnbiased/Particles: {0: 1}, /Event/Bhadron/Phys/StripBu2hhh/Particles: {0: 4}, /Event/Bhadron/Phys/TracksForCharmlessB/Particles: {5: 1}, /Event/Bhadron/Rec/Vertex/Primary: {1: 1, 2: 4}}
@@ -2306,9 +2308,10 @@ InputCopyStream      INFO Events output: 5
 FSRInputCopyStream   INFO Set up File Summary Record
 FSRInputCopyStream   INFO Events output: 1
 EventLoopMgr         INFO Histograms converted successfully according to request.
-DataOnDemandSvc      INFO Handled "DataFault" incidents: 5/5/81(Alg/Node/Total).
+DataOnDemandSvc      INFO Handled "DataFault" incidents: 5/5/97(Alg/Node/Total).
 ToolSvc              INFO Removing all tools created by ToolSvc
 RootCnvSvc           INFO Disconnected data IO:1E6C5061-A145-E011-9550-002481E10D3E [root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/swtest/lhcb/data/2010/BHADRON.DST/00008399/0000/00008399_00001052_1.bhadron.dst]
-RootCnvSvc           INFO Disconnected data IO:4EA23B3C-9F16-E511-AE96-02163E008F18 [ROOT-Reco08.dst]
+RootCnvSvc           INFO Disconnected data IO:AAB6F681-8979-E511-B295-02163E008F18 [ROOT-Reco08.dst]
+XMLCatalog           INFO File 'test_catalog.xml' does not exist. New file created.
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

@@ -1,5 +1,6 @@
-# --> Including file '/afs/cern.ch/work/c/cattanem/private/cmtuser/LHCb_HEAD/Ex/IOExample/tests/options/CopyReco14Stripping20toROOTdst.py'
-# <-- End of file '/afs/cern.ch/work/c/cattanem/private/cmtuser/LHCb_HEAD/Ex/IOExample/tests/options/CopyReco14Stripping20toROOTdst.py'
+# setting LC_ALL to "C"
+# --> Including file '/afs/cern.ch/work/c/cattanem/private/cmakeuser/LHCbDev_HEAD/Ex/IOExample/tests/options/CopyReco14Stripping20toROOTdst.py'
+# <-- End of file '/afs/cern.ch/work/c/cattanem/private/cmakeuser/LHCbDev_HEAD/Ex/IOExample/tests/options/CopyReco14Stripping20toROOTdst.py'
 # applying configuration of LHCbApp
 # /***** User LHCbApp/LHCbApp ************************************************************************
 # |-Persistency    = None
@@ -78,8 +79,6 @@
 # |-AlwaysCreate        = False
 # \----- (End of User DstConf/DstConf) ---------------------------------------------------------------
 # applying configuration of CondDB
-# --> Including file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
 # /***** User CondDB/CondDB **************************************************************************
 # |-Upgrade                    = False
 # |-EnableRunStampCheck        = True
@@ -114,8 +113,8 @@
 # No Writer defined for DIGI
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr (GaudiCoreSvc v3r4)
-                                          running on mcat.cern.ch on Tue Jun 23 16:23:50 2015
+                                                   Welcome to LHCbDev version HEAD
+                                          running on mcat.cern.ch on Fri Oct 23 15:26:15 2015
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -208,17 +207,16 @@ FSRInputCopyStream   INFO Data source: FileRecordDataSvc output: DATAFILE='PFN:R
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/swtest/lhcb/LHCb/Collision12/DIMUON.DST/00020567/0000/00020567_00006473_1.dimuon.dst' SVC='Gaudi::RootEvtSelector' OPT='READ'
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
-EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
 ApplicationMgr       INFO Application Manager Started successfully
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
-ONLINE_2008          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2008.db/ONLINE"
-ONLINE_2008          INFO Using TAG ""
-PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x781baa0@EventDataSvc]:
+ONLINE_2012          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/ONLINE-2012.db/ONLINE"
+ONLINE_2012          INFO Using TAG ""
+PrintHeader          INFO Run 129929, Event 1863829673
+StoreExplorerAlg     INFO ========= /Event[0x8e1c620@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x2]  LHCb::RecHeader
@@ -257,6 +255,7 @@ StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /pPhys [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x617 Type=0x2]  LHCb::PackedDecReport
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /ODIN [No Address]  LHCb::ODIN
 StoreExplorerAlg     INFO   +--> /Dimuon [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO   | +--> /pPhys [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO   | | +--> /Particles [Address: CLID=0x62d Type=0x2]  LHCb::PackedParticles
@@ -519,9 +518,10 @@ DumpTracks          DEBUG *** Track ***
   -7.46472e-10 8.50617e-09-6.45502e-12 2.36202e-11 5.51697e-13 ]
 
 
+IODataManager        INFO Referring to dataset Reco14-Stripping20.dst by its file ID:A8D4C1A4-8979-E511-90FE-02163E008F18
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
-PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0xa7232e0@EventDataSvc]:
+PrintHeader          INFO Run 129929, Event 2181438038
+StoreExplorerAlg     INFO ========= /Event[0xbd3cf00@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x2]  LHCb::RecHeader
@@ -569,6 +569,7 @@ StoreExplorerAlg     INFO | | +--> /pRec [Address: CLID=0x1 Type=0x2]  DataObjec
 StoreExplorerAlg     INFO | |   +--> /Vertex [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | |     +--> /Primary [Address: CLID=0x611 Type=0x2]  LHCb::PackedRecVertices
 StoreExplorerAlg     INFO   +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     +--> /ODIN [No Address]  LHCb::ODIN
 TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 223 tracks in Rec/Track/Best
@@ -823,8 +824,8 @@ DumpTracks          DEBUG *** Track ***
 
 
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
-PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0xa82c390@EventDataSvc]:
+PrintHeader          INFO Run 129929, Event 2194641729
+StoreExplorerAlg     INFO ========= /Event[0x8c4f410@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x2]  LHCb::RecHeader
@@ -863,6 +864,7 @@ StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /pPhys [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x617 Type=0x2]  LHCb::PackedDecReport
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /ODIN [No Address]  LHCb::ODIN
 StoreExplorerAlg     INFO   +--> /Dimuon [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO   | +--> /pPhys [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO   | | +--> /Particles [Address: CLID=0x62d Type=0x2]  LHCb::PackedParticles
@@ -1136,8 +1138,8 @@ DumpTracks          DEBUG *** Track ***
 
 
 EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
-PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x8051f70@EventDataSvc]:
+PrintHeader          INFO Run 129929, Event 2451462780
+StoreExplorerAlg     INFO ========= /Event[0xb89c020@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x2]  LHCb::RecHeader
@@ -1185,6 +1187,7 @@ StoreExplorerAlg     INFO | | +--> /pRec [Address: CLID=0x1 Type=0x2]  DataObjec
 StoreExplorerAlg     INFO | |   +--> /Vertex [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | |     +--> /Primary [Address: CLID=0x611 Type=0x2]  LHCb::PackedRecVertices
 StoreExplorerAlg     INFO   +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     +--> /ODIN [No Address]  LHCb::ODIN
 TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 364 tracks in Rec/Track/Best
@@ -1439,8 +1442,8 @@ DumpTracks          DEBUG *** Track ***
 
 
 EventSelector     SUCCESS Reading Event record 5. Record number within stream 1: 5
-PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x915fdb0@EventDataSvc]:
+PrintHeader          INFO Run 129929, Event 2084883817
+StoreExplorerAlg     INFO ========= /Event[0xcb20be0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x2]  LHCb::RecHeader
@@ -1479,6 +1482,7 @@ StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /pPhys [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x617 Type=0x2]  LHCb::PackedDecReport
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /ODIN [No Address]  LHCb::ODIN
 StoreExplorerAlg     INFO   +--> /Dimuon [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO   | +--> /pPhys [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO   | | +--> /Particles [Address: CLID=0x62d Type=0x2]  LHCb::PackedParticles
@@ -1747,8 +1751,6 @@ UnpackTrack       SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "# Unpacked Tracks"                             |         5 |       1233 |     246.60 |     111.33 |      65.000 |      364.00 |
 PrintHeader          INFO Filtered 5 events
-PrintHeader       SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
-PrintHeader       SUCCESS  #WARNINGS   = 5        Message = 'No ODIN Header'
 TESFingerPrint      DEBUG ==> Finalize
 TESFingerPrint    VERBOSE ==> TES DataObject statistics: {/Event: 5, /Event/Calo: 5, /Event/Calo/RawEvent: 5, /Event/DAQ: 5, /Event/Dimuon: 5, /Event/Dimuon/pPhys: 5, /Event/Dimuon/pPhys/Particles: 5, /Event/Dimuon/pPhys/RecVertices: 3, /Event/Dimuon/pPhys/Relations: 5, /Event/Dimuon/pPhys/Vertices: 5, /Event/Dimuon/pRec: 5, /Event/Dimuon/pRec/Vertex: 5, /Event/Dimuon/pRec/Vertex/Primary: 5, /Event/Muon: 5, /Event/Muon/RawEvent: 5, /Event/Other: 5, /Event/Other/RawEvent: 5, /Event/Rec: 5, /Event/Rec/Header: 5, /Event/Rec/Status: 5, /Event/Rec/Summary: 5, /Event/Rich: 5, /Event/Rich/RawEvent: 5, /Event/Strip: 5, /Event/Strip/pPhys: 5, /Event/Strip/pPhys/DecReports: 5, /Event/Trigger: 5, /Event/Trigger/RawEvent: 5, /Event/pRec: 5, /Event/pRec/Calo: 5, /Event/pRec/Calo/Electrons: 5, /Event/pRec/Calo/MergedPi0s: 5, /Event/pRec/Calo/Photons: 5, /Event/pRec/Calo/SplitPhotons: 5, /Event/pRec/Muon: 5, /Event/pRec/Muon/MuonPID: 5, /Event/pRec/ProtoP: 5, /Event/pRec/ProtoP/Charged: 5, /Event/pRec/ProtoP/Neutrals: 5, /Event/pRec/Rich: 5, /Event/pRec/Rich/PIDs: 5, /Event/pRec/Track: 5, /Event/pRec/Track/Best: 5, /Event/pRec/Track/Muon: 5, /Event/pRec/Vertex: 5, /Event/pRec/Vertex/Primary: 5, /Event/pRec/Vertex/V0: 5}
 TESFingerPrint    VERBOSE ==> TES Container sizes: {}
@@ -1767,7 +1769,7 @@ FSRInputCopyStream   INFO Events output: 1
 EventLoopMgr         INFO Histograms converted successfully according to request.
 DataOnDemandSvc      INFO Handled "DataFault" incidents: 5/5/81(Alg/Node/Total).
 ToolSvc              INFO Removing all tools created by ToolSvc
-RootCnvSvc           INFO Disconnected data IO:6834858C-9F16-E511-A0CF-02163E008F18 [Reco14-Stripping20.dst]
 RootCnvSvc           INFO Disconnected data IO:88531E87-0D5B-E211-849D-001B21BAC514 [root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/swtest/lhcb/LHCb/Collision12/DIMUON.DST/00020567/0000/00020567_00006473_1.dimuon.dst]
+RootCnvSvc           INFO Disconnected data IO:A8D4C1A4-8979-E511-90FE-02163E008F18 [Reco14-Stripping20.dst]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

@@ -4,6 +4,11 @@
 ! Purpose: Tests reading and writing of legacy datasets
 !-------------------------------------------------------------------------------
 
+! 2015-10-23 - Marco Cattaneo
+  - Adapt tests to follow LHCBPS-1434 patch: LHCbApp() now assigns 
+    OdinTimeDecoder as EventClockSvc().EventTimeDecoder when processing real data
+  - mdst copy tests currently broken by above change
+
 !========================= IOExample v4r16 2015-07-20 =========================
 ! 2015-06-18 - Marco Cattaneo
  . Fix tests to follow changes in output due to introduction of CondDB Run Stamp
