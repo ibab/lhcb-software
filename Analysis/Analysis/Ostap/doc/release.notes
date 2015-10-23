@@ -8,6 +8,15 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-10-23 - Vanya Belyaev
+ - few more improvements for RooFitResult:
+   >>> print r.sum('A','B')  ## A+B
+   >>> print r.multiply('A','B') ## A*B  
+   >>> print r.subtract('A','B') ## A-B 
+   >>> print r.divide('A','B')   ## A/B
+   >>> print r.ratio('A','B')    ## A/B 
+   >>> print r.fraction('A','B') ## A/(A+B) 
+
 ! 2015-10-22 - Vanya Belyaev
  - more tiny improvements 
 

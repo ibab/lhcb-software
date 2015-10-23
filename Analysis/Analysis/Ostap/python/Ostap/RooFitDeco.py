@@ -373,6 +373,103 @@ def _rfr_getattr_ ( self , att ) :
         
     raise AttributeError ( 'RooFitResult: invalid attribute %s ' % att )
 
+# ===========================================================================
+## get correct estimate of sum of two variables,
+#  taking into account correlations
+#  @code
+#  >>> r = ...
+#  >>> print r.sum( 'S' , 'B' )  ## S+B
+#  @endcode
+#  @see Gaudi:Math::sum 
+def _rfr_sum_ ( self , var1 , var2 ) :
+    """Get correct estimate of sum of two variables,
+    taking into account correlations
+    >>> r = ...
+    >>> print r.sum( 'S' , 'B' ) ## S+B
+    """
+    _v1  = self.param ( var1 )[0]
+    _v2  = self.param ( var2 )[0]
+    _cor = self.corr  ( var1 , var2 ) 
+    return cpp.Gaudi.Math.sum ( _v1 , _v2 , _cor ) 
+   
+# ===========================================================================
+## get correct estimate of product of two variables,
+#  taking into account correlations
+#  @code
+#  >>> r = ...
+#  >>> print r.multiply( 'S' , 'B' ) ## S*B
+#  @endcode
+#  @see Gaudi:Math::multiply 
+def _rfr_multiply_ ( self , var1 , var2 ) :
+    """Get correct estimate of product of two variables,
+    taking into account correlations
+    >>> r = ...
+    >>> print r.multiply( 'S' , 'B' ) ## S*B
+    """
+    _v1  = self.param ( var1 )[0]
+    _v2  = self.param ( var2 )[0]
+    _cor = self.corr  ( var1 , var2 ) 
+    return cpp.Gaudi.Math.multiply ( _v1 , _v2 , _cor ) 
+    
+# ===========================================================================
+## get correct estimate of division  of two variables,
+#  taking into account correlations
+#  @code
+#  >>> r = ...
+#  >>> print r.divide( 'S' , 'B' ) ## S/B
+#  @endcode
+#  @see Gaudi:Math::divide
+def _rfr_divide_ ( self , var1 , var2 ) :
+    """Get correct estimate of division of two variables,
+    taking into account correlations
+    >>> r = ...
+    >>> print r.divide( 'S' , 'B' ) ## S/B
+    """
+    _v1  = self.param ( var1 )[0]
+    _v2  = self.param ( var2 )[0]
+    _cor = self.corr  ( var1 , var2 ) 
+    return cpp.Gaudi.Math.divide ( _v1 , _v2 , _cor ) 
+
+# ===========================================================================
+## get correct estimate of subtraction of two variables,
+#  taking into account correlations
+#  @code
+#  >>> r = ...
+#  >>> print r.subtract( 'S' , 'B' ) ## S-B
+#  @endcode
+#  @see Gaudi:Math::subtract
+def _rfr_subtract_ ( self , var1 , var2 ) :
+    """Get correct estimate of subtraction of two variables,
+    taking into account correlations
+    >>> r = ...
+    >>> print r.subtract( 'S' , 'B' ) ## S-B
+    """
+    _v1  = self.param ( var1 )[0]
+    _v2  = self.param ( var2 )[0]
+    _cor = self.corr  ( var1 , var2 ) 
+    return cpp.Gaudi.Math.subtract ( _v1 , _v2 , _cor ) 
+
+# ===========================================================================
+## get correct estimate of fraction  of two variables,
+#  taking into account correlations
+#  @code
+#  >>> r = ...
+#  >>> print r.fraction( 'S' , 'B' ) ## S/(S+B)
+#  @endcode
+#  @see Gaudi:Math::divide
+def _rfr_fraction_ ( self , var1 , var2 ) :
+    """Get correct estimate of fraction of two variables,
+    taking into account correlations
+    >>> r = ...
+    >>> print r.fraction( 'S' , 'B' ) ##   S/(S+B)
+    """
+    _av1  = abs ( self.param ( var1 )[0].value() ) 
+    _av2  = abs ( self.param ( var2 )[0].value() ) 
+    if _av1 > _av2 :
+        return 1 / ( 1 + self.ratio ( var2 , var1 ) )
+    return 1 - self.fraction ( var2 , var1 ) 
+
+
 # =============================================================================
 
 ## some decoration over RooFitResult
@@ -389,6 +486,15 @@ ROOT.RooFitResult . parameter   = _rfr_param_
 ROOT.RooFitResult . corr        = _rfr_corr_
 ROOT.RooFitResult . cor         = _rfr_corr_
 ROOT.RooFitResult . parValue    = lambda s,n : s.parameter(n)[0]
+ROOT.RooFitResult . sum         = _rfr_sum_
+ROOT.RooFitResult . plus        = _rfr_sum_
+ROOT.RooFitResult . multiply    = _rfr_multiply_
+ROOT.RooFitResult . product     = _rfr_multiply_
+ROOT.RooFitResult . subtract    = _rfr_subtract_
+ROOT.RooFitResult . minus       = _rfr_subtract_
+ROOT.RooFitResult . divide      = _rfr_divide_
+ROOT.RooFitResult . ratio       = _rfr_divide_
+ROOT.RooFitResult . fraction    = _rfr_fraction_
 
 # =============================================================================
 ## fix parameter at some value
@@ -911,9 +1017,9 @@ def _ds_project_  ( dataset , histo , what , cuts = '' , *args ) :
     if isinstance ( what , (tuple,list) ) :
         vars = []
         for w in what :
-            if isinstance ( w , str ) : vars.append( w.strip() )
+            if isinstance ( w , str ) : vars.append ( w.strip() )
             else                      : vars.append ( w ) 
-        return _ds_project_ ( dataset , histo , vars , cuts , *args ) 
+        ##return _ds_project_ ( dataset , histo , vars , cuts , *args ) 
 
     if isinstance ( what , ROOT.RooArgList ) :
         vars  = [ w for w in what ]
