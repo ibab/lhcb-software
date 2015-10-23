@@ -418,9 +418,11 @@ class mplWidget(QWidget):
         if tabOpsState.displayRefs == False: manSetY=True
         
         if manSetY:
-            print 'Manually setting y axis range.'
-            if 'yrange' in self.params: self.axes.set_ylim(self.params['yrange'])
+            if 'yrange' in self.params: 
+                print 'Setting y axis range as per run_view configuration'
+                self.axes.set_ylim(self.params['yrange'])
             else: 
+                print 'Setting y axis range automatically'
                 if len(self.yLims) == 2: 
                     print self.yLims[1], self.yLims[0]
                     shift = 0.05*(self.yLims[1] - self.yLims[0])
