@@ -422,6 +422,7 @@ class mplWidget(QWidget):
             if 'yrange' in self.params: self.axes.set_ylim(self.params['yrange'])
             else: 
                 if len(self.yLims) == 2: 
+                    print self.yLims[1], self.yLims[0]
                     shift = 0.05*(self.yLims[1] - self.yLims[0])
                     self.axes.set_ylim([self.yLims[0] - shift, self.yLims[1] + shift]) 
             if 'zrange' in self.params: self.plottables[0].cax.set_clim(vmin = self.params['zrange'][0], vmax = self.params['zrange'][1])
