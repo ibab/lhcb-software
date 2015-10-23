@@ -1,0 +1,33 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: M.Cattaneo
+# Purpose: Check that Brunel().DataType = "2015" is working correctly
+#          Currently explicitly setting an initial time (22nd October), to avoid changes due to changing magnet polarity "today". Remove when set in DDDB
+# Prerequisites: 
+# Common failure modes, severities and cures: 
+#          . MAJOR: Every failure should be understood. If brunel2012magdown test
+#                   also fails, check first reasons for those failures
+#######################################################
+-->
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="timeout"><integer>3600</integer></argument>
+  <argument name="args"><set>
+    <text>--option</text>
+    <text>from Configurables import Brunel; from PRConfig import TestFileDB; TestFileDB.test_file_db['2015_raw_full'].run(configurable=Brunel()); Brunel().EvtMax = 200; Brunel().DatasetName="2015magdown"; Brunel().Monitors=["SC","FPE"]; from Configurables import EventClockSvc; EventClockSvc( InitialTime =1445527400000000000 )
+</text>
+  </set></argument>
+  <argument name="reference"><text>../refs/2015magdown.ref</text></argument>
+  <argument name="validator"><text>
+#check if the output exists, and check the split locations are on it
+from RawEventCompat.QMTest.FormatTests import checkIsSplit, checkIsGone
+checkIsSplit("2015magdown-200ev.dst",4.1,causes,result,"brunel.2015magdown")
+checkIsGone("2015magdown-200ev.dst",["Event/DAQ"],causes,result,"brunel.2015magdown")
+
+from Brunel.QMTest.BrunelExclusions import preprocessor
+validateWithReference(preproc = preprocessor)
+</text></argument>
+</extension>

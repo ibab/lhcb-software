@@ -14,7 +14,6 @@
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="timeout"><integer>3600</integer></argument>
   <argument name="args"><set>
-    <text>$APPCONFIGOPTS/Brunel/saveFittedVeloTracks.py</text>
     <text>$PRCONFIGOPTS/Brunel/PR-COLLISION15EM-Beam6500GeV-VeloClosed-MagDown.py</text>
     <text>--option</text>
     <text>from Configurables import Brunel; Brunel().DataType = "2015"; Brunel().EvtMax = 1000; Brunel().DatasetName="2015-em"; Brunel().Monitors=["SC","FPE"]; Brunel().OutputType="RDST"; from Configurables import EventClockSvc; EventClockSvc( InitialTime = 1433509200000000000 )
