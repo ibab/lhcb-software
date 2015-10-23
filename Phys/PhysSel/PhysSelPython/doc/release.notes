@@ -1,9 +1,11 @@
 !$Id: release.notes,v 1.70 2010-08-20 15:00:08 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
-! Responsible : Juan Palacios
+! Responsible : Stripping coordinators
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
+
+!======================= PhysSelPython v9r8 2015-10-23 =======================
 
 ! 2015-10-22 - Ricardo Vazquez Gomez
  - Hotfix for the naming of DaVinci__NBodyDecays in Wrappers.py
