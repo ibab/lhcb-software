@@ -9,6 +9,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-10-23 - Vanya Belyaev
+ - small improvement 
+
+! 2015-10-23 - Vanya Belyaev
  - few more improvements for RooFitResult:
    >>> print r.sum('A','B')  ## A+B
    >>> print r.multiply('A','B') ## A*B  

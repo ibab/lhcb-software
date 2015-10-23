@@ -129,12 +129,9 @@ def _f1_draw_ ( self , *opts ) :
 # =============================================================================
 ## get the regular complex value for amplitude 
 def _amp_ ( self , x ) :
-    """
-    Get the complex value for amplitude
-    
+    """ Get the complex value for amplitude
     >>> fun
-    >>> a = fun.amp ( x )
-    
+    >>> a = fun.amp ( x )    
     """
     v = self.amplitude ( x )
     #
@@ -502,7 +499,163 @@ for f in ( Gaudi.Math.Positive       ,
     f.__getitem__ = _p_get_par_
     f.__len__     = lambda s : s.npars() 
 
-    
+# =============================================================================
+## random generators 
+# =============================================================================
+from random import uniform as _uniform_
+
+# =============================================================================
+## generate random numbers from bernstein-like distribuitions
+#  @code
+#  >>> func = ...
+#  >>> for x in func.generate( 1000 ) : print x 
+#  @endcode
+def _random_generate_bernstein_ ( fun , num ) :
+    """Generate random numbers from bernstein-like distribuitions
+    >>> func = ...
+    >>> for x in func.generate( 1000 ) : print x 
+    """
+    xmn = fun.xmin ()
+    xmx = fun.xmax ()
+    ymx = max ( fun.bernstein().pars() )
+    i   = 0 
+    while i < num : 
+        x = _uniform_ ( xmn , xmx ) 
+        y = _uniform_ (   0 , ymx )
+        v = fun ( x )
+        if v >= y :
+            i+= 1 
+            yield x
+            
+# =============================================================================
+## Get random number from bernstein-like distribuitions
+#  @code
+#  >>> func = ...
+#  >>> print fun.shoot() 
+#  @endcode
+def _random_shoot_bernstein_ ( fun ) :
+    """Get random number from bernstein-like distribuitions
+    >>> func = ...
+    >>> print func.shoot()  
+    """
+    xmn = fun.xmin ()
+    xmx = fun.xmax ()
+    ymx = max ( fun.bernstein().pars() )
+    i   = 0 
+    while True : 
+        x = _uniform_ ( xmn , xmx ) 
+        y = _uniform_ (   0 , ymx )
+        v = fun ( x )
+        if v >= y : return x 
+
+
+
+# =============================================================================
+## generate random numbers from b-spline-distribuitions
+#  @code
+#  >>> func = ...
+#  >>> for x in func.generate( 1000 ) : print x 
+#  @endcode
+def _random_generate_bspline_ ( fun , num ) :
+    """Generate random numbers from bspline-like distribuitions
+    >>> func = ...
+    >>> for x in func.generate( 1000 ) : print x 
+    """
+    xmn = fun.xmin ()
+    xmx = fun.xmax ()
+    ymx = max ( fun.bspline().pars() )
+    i   = 0 
+    while i < num : 
+        x = _uniform_ ( xmn , xmx ) 
+        y = _uniform_ (   0 , ymx )
+        v = fun ( x )
+        if v >= y :
+            i+= 1 
+            yield x
+            
+# =============================================================================
+## Get random number from bspline-like distribuitions
+#  @code
+#  >>> func = ...
+#  >>> print fun.shoot() 
+#  @endcode
+def _random_shoot_bspline_ ( fun ) :
+    """Get random number from bspline-like distribuitions
+    >>> func = ...
+    >>> print func.shoot()  
+    """
+    xmn = fun.xmin ()
+    xmx = fun.xmax ()
+    ymx = max ( fun.bspline().pars() )
+    i   = 0 
+    while True : 
+        x = _uniform_ ( xmn , xmx ) 
+        y = _uniform_ (   0 , ymx )
+        v = fun ( x )
+        if v >= y : return x 
+
+# =============================================================================
+## generate random numbers from 2D bernstein-like distribuitions
+#  @code
+#  >>> func = ...
+#  >>> for x,y in func.generate( 1000 ) : print x,y 
+#  @endcode
+def _random_generate_bernstein2D_ ( fun , num = 1 ) :
+    """Generate random numbers from 2D bernstein-like distribuitions
+    >>> func = ...
+    >>> for x,y in func.generate( 1000 ) : print x,y 
+    """
+    xmn = fun.xmin ()
+    xmx = fun.xmax ()
+    ymn = fun.ymin ()
+    ymx = fun.ymax ()
+    zmx = max ( fun.bernstein().pars() )
+    i   = 0 
+    while i < num : 
+        x = random.uniform ( xmn , xmx ) 
+        y = random.uniform ( ymn , ymx ) 
+        x = random.uniform (   0 , zmx )
+        v = fun ( x , y )
+        if v >= z :
+            i+= 1 
+            yield x,y
+
+# =============================================================================
+## Get random number from 2D bernstein-like distribuitions
+#  @code
+#  >>> func = ...
+#  >>> print fun.shoot() 
+#  @endcode
+def _random_shoot_bernstein2D_ ( fun ) :
+    """Get random number from 2D bernstein-like distribuitions
+    >>> func = ...
+    >>> print func.shoot()  
+    """
+    xmn = fun.xmin ()
+    xmx = fun.xmax ()
+    ymn = fun.ymin ()
+    ymx = fun.ymax ()
+    zmx = max ( fun.bernstein().pars() )
+    i   = 0 
+    while True : 
+        x = _uniform_ ( xmn , xmx ) 
+        y = _uniform_ ( ymn , ymx ) 
+        z = _uniform_ (   0 , zmx )
+        v = fun ( x , y )
+        if v >= z : return x,y
+
+
+Gaudi.Math.Positive      .generate = _random_generate_bernstein_
+Gaudi.Math.Positive      .shoot    = _random_shoot_bernstein_
+
+Gaudi.Math.PositiveSpline.generate = _random_generate_bspline_
+Gaudi.Math.PositiveSpline.shoot    = _random_shoot_bspline_
+
+Gaudi.Math.Positive2D    .generate = _random_generate_bernstein2D_
+Gaudi.Math.Positive2D    .shoot    = _random_shoot_bernstein2D_
+Gaudi.Math.Positive2DSym .generate = _random_generate_bernstein2D_
+Gaudi.Math.Positive2DSym .shoot    = _random_shoot_bernstein2D_
+
 # =============================================================================
 ## add complex amplitudes 
 # =============================================================================
