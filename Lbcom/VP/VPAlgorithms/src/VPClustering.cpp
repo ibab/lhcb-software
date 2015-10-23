@@ -115,8 +115,8 @@ StatusCode VPClustering::execute() {
         // Store some properties of this digit.
         const bool edge = isEdge((*cluster[i]));
         const unsigned int chip = (*cluster[i])->channelID().chip();
-        const unsigned int row = (*cluster[i])->channelID().row();
-        const unsigned int col = (*cluster[i])->channelID().col();
+        const int row = (*cluster[i])->channelID().row();
+        const int col = (*cluster[i])->channelID().col();
         // Loop down the stored digits until new pixels cannot be part of
         // cluster.
         LHCb::VPDigits::const_iterator iCand;
@@ -128,8 +128,8 @@ StatusCode VPClustering::execute() {
             if (chip != (*iCand)->channelID().chip())
               break;  // Next hit not on same chip
             // Skip pixels not neighbouring in y.
-            if (abs(row - (*iCand)->channelID().row()) > 1) continue;
-            if (abs(col - (*iCand)->channelID().col()) > 1)
+            if (abs(row - int((*iCand)->channelID().row())) > 1) continue;
+            if (abs(col - int((*iCand)->channelID().col())) > 1)
               continue;  // Too far away to be added
             // Add pixel and tag it as used.
             cluster.push_back(iCand);
@@ -141,8 +141,8 @@ StatusCode VPClustering::execute() {
             if (chip == (*iCand)->channelID().chip()) {
               // On the same chip
               // Skip pixels not neighbouring in y.
-              if (abs(row - (*iCand)->channelID().row()) > 1) continue;
-              if (abs(col - (*iCand)->channelID().col()) > 1)
+              if (abs(row - int((*iCand)->channelID().row())) > 1) continue;
+              if (abs(col - int((*iCand)->channelID().col())) > 1)
                 continue;  // Too far away to be added
               // Add pixel and tag it as used.
               cluster.push_back(iCand);
@@ -153,7 +153,7 @@ StatusCode VPClustering::execute() {
               // Not on the same chip
               if (!isEdge(*iCand)) break;  // No hits on neighbouring edge
               // Skip pixels not neighbouring in y.
-              if (abs(row - (*iCand)->channelID().row()) > 1) continue;
+              if (abs(row - int((*iCand)->channelID().row())) > 1) continue;
               // Add pixel and tag it as used.
               cluster.push_back(iCand);
               isUsed[iCand - itBegin] = true;
