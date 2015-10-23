@@ -112,7 +112,7 @@ def rpm_copied(project, version):
 
     The possible build ids can be retrieved with
 
-      curl -k https://buildlhcb.cern.ch/nightlies-release/buildIDs/<project>/<version>
+      curl -k https://lhcb-nightlies.cern.ch/release/buildIDs/<project>/<version>
 
     See https://twiki.cern.ch/twiki/bin/view/LHCb/ProjectRelease#PublishRPMs
     '''

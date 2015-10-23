@@ -1,3 +1,7 @@
+2015-10-23  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* lb-deployment-checklist: suggest to use lhcb-nightlies instead of buildlhcb
+
 2015-10-12  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* lb-deployment-checklist: minor updete in doc string
