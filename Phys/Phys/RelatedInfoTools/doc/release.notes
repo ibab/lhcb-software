@@ -4,6 +4,13 @@
 ! Purpose     : Related Info Tools
 !-----------------------------------------------------------------------------
 
+! 2015-10-23 - Roel Aaij
+ - Make RelInfoConeVariables usable in HLT: 
+    * "Inputs" property should now be used, which takes the list of track locations, 
+       instead of "TracksLocation" which takes a single location. By default, Inputs 
+       equals to all tracks in the event. 
+ - Use unique_ptr for selectors in AddRelatedInfo.
+
 !======================= RelatedInfoTools v1r3 2015-10-22 ====================
 
 ! 2015-09-29 - Anton Poluektov 

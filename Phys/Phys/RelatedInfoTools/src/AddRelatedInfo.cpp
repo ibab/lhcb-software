@@ -20,8 +20,8 @@ AddRelatedInfo::AddRelatedInfo( const std::string& name,
 : DaVinciAlgorithm ( name, pSvcLocator )
 {
   declareProperty("Tool", m_toolName, "Name of RelatedInfoTool" );
-  declareProperty("Location", m_topInfo, "Location of RelatedInfo objects for top-level particle"); 
-  declareProperty("DaughterLocations", m_daughterInfo, "Locations of RelatedInfo objects for daughters"); 
+  declareProperty("Location", m_topInfo, "Location of RelatedInfo objects for top-level particle");
+  declareProperty("DaughterLocations", m_daughterInfo, "Locations of RelatedInfo objects for daughters");
 }
 
 //=======================================================================
@@ -34,8 +34,8 @@ StatusCode AddRelatedInfo::initialize()
 
   for ( const auto & loc : m_daughterInfo )
   {
-    LoKi::Child::Selector* childSelector = new LoKi::Child::Selector( loc.first );
-    m_childSelectors[ loc.first ] = childSelector; 
+     auto selector = std::unique_ptr<LoKi::Child::Selector>(new LoKi::Child::Selector( loc.first ));
+     m_childSelectors.emplace(loc.first, std::move(selector));
   }
 
   debug() << "Daughter Info Locations : " << m_daughterInfo << endmsg;
@@ -51,7 +51,7 @@ StatusCode AddRelatedInfo::execute()
 {
   setFilterPassed( true ); // Filter always passes
 
-  m_relMap.clear(); 
+  m_relMap.clear();
 
   // Loop over input locations
   for ( const auto& loc : inputLocations() )
@@ -63,14 +63,14 @@ StatusCode AddRelatedInfo::execute()
     const std::string location = tmpLoc + "/Particles";
 
     const Particle::Range parts = getIfExists<Particle::Range>( location );
-    if (msgLevel(MSG::VERBOSE)) 
+    if (msgLevel(MSG::VERBOSE))
       verbose() << " Found "<< parts.size() << " particles at " << location << endreq;
 
     // Loop over particles in the locations
     for ( const Particle * p : parts )
     {
       Particle * c = const_cast<Particle*>(p);
-      
+
       if (m_topInfo.size() > 0) {
         fill( c, c, tmpLoc + "/" + m_topInfo );
       }
@@ -88,23 +88,23 @@ StatusCode AddRelatedInfo::execute()
 //==========================================================================
 
 void AddRelatedInfo::fill( const Particle* top,
-                           const Particle* c, 
-                           const std::string &map_location ) 
+                           const Particle* c,
+                           const std::string &map_location )
 {
-    if (msgLevel(MSG::DEBUG)) 
+    if (msgLevel(MSG::DEBUG))
       debug() << "GetOrCreate RelatedInfo at " << map_location << endreq;
 
-    ParticleInfoRelation * relation = 
-      getOrCreate<ParticleInfoRelation, ParticleInfoRelation>(map_location); 
+    ParticleInfoRelation * relation =
+      getOrCreate<ParticleInfoRelation, ParticleInfoRelation>(map_location);
 
     const StatusCode sc = m_tool->calculateRelatedInfo( top, c );
-    if ( sc.isFailure() ) 
+    if ( sc.isFailure() )
     {
       Warning( "Problem calculating related info" ).ignore();
       return;
     }
 
-    RelatedInfoMap* map = m_tool->getInfo(); 
+    RelatedInfoMap* map = m_tool->getInfo();
 
     if (map->size() == 0) {
       if (msgLevel(MSG::DEBUG)) debug() << "Got empty RelatedInfoMap. " << endreq;

@@ -1,4 +1,4 @@
-#ifndef ADDRELATEDINFO_H 
+#ifndef ADDRELATEDINFO_H
 #define ADDRELATEDINFO_H 1
 
 // Gaudi
@@ -25,7 +25,7 @@
  *  @date   15/01/2014
  */
 
-typedef LHCb::Relation1D<LHCb::Particle, LHCb::RelatedInfoMap> ParticleInfoRelation; 
+typedef LHCb::Relation1D<LHCb::Particle, LHCb::RelatedInfoMap> ParticleInfoRelation;
 
 class AddRelatedInfo : public DaVinciAlgorithm
 {
@@ -51,10 +51,10 @@ private:
   typedef std::map<std::string, std::string> InfoMap;
   InfoMap m_daughterInfo;
 
-  std::string m_topInfo; 
+  std::string m_topInfo;
 
-  typedef std::map<std::string, LoKi::Child::Selector*> SelectorMap; 
-  SelectorMap m_childSelectors; 
+  typedef std::map<std::string, std::unique_ptr<LoKi::Child::Selector>> SelectorMap;
+  SelectorMap m_childSelectors;
 
   typedef std::map<std::string, ParticleInfoRelation> RelationLocationMap;
   mutable RelationLocationMap m_relMap;

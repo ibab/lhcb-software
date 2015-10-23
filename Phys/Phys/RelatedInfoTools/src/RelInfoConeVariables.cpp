@@ -25,7 +25,7 @@ DECLARE_TOOL_FACTORY( RelInfoConeVariables )
 RelInfoConeVariables::RelInfoConeVariables( const std::string& type,
                                             const std::string& name,
                                             const IInterface* parent)
-: GaudiTool ( type, name , parent ), 
+: GaudiTool ( type, name , parent ),
   m_tracksLocation("")
 {
   declareInterface<IRelatedInfoTool>(this);
@@ -35,8 +35,10 @@ RelInfoConeVariables::RelInfoConeVariables( const std::string& type,
                    "Set the type of tracks which are considered inside the cone (default = 3)");
   declareProperty( "Variables", m_variables,
                    "List of variables to store (store all if empty)");
-  declareProperty( "TracksLocation", m_tracksLocation, 
-                   "Location for tracks to create the cone (use all best tracks by default)"); 
+  declareProperty( "TracksLocation", m_tracksLocation,
+                   "Location for tracks to create the cone (use all best tracks by default)");
+  declareProperty( "Inputs", m_inputs,
+                   "Location for tracks to create the cone (use all best tracks by default)");
 }
 
 //=============================================================================
@@ -50,26 +52,33 @@ StatusCode RelInfoConeVariables::initialize()
   if ( sc.isFailure() ) return sc;
 
   m_keys.clear();
-  
-  if ( m_variables.empty() ) 
+
+  if (m_tracksLocation.size() != 0) {
+     warning() << "The TracksLocation property is deprecated, please use the Inputs property" << endmsg;
+  }
+  if (m_inputs.empty() && m_tracksLocation.empty()) {
+     m_inputs.push_back(LHCb::TrackLocation::Default);
+  }
+
+  if ( m_variables.empty() )
   {
     if ( msgLevel(MSG::DEBUG) ) debug() << "List of variables empty, adding all" << endmsg;
-    m_keys.push_back( RelatedInfoNamed::CONEANGLE ); 
-    m_keys.push_back( RelatedInfoNamed::CONEMULT ); 
-    m_keys.push_back( RelatedInfoNamed::CONEPX ); 
-    m_keys.push_back( RelatedInfoNamed::CONEPY ); 
-    m_keys.push_back( RelatedInfoNamed::CONEPZ ); 
-    m_keys.push_back( RelatedInfoNamed::CONEP  ); 
-    m_keys.push_back( RelatedInfoNamed::CONEPT ); 
-    m_keys.push_back( RelatedInfoNamed::CONEPXASYM ); 
-    m_keys.push_back( RelatedInfoNamed::CONEPYASYM ); 
-    m_keys.push_back( RelatedInfoNamed::CONEPZASYM ); 
-    m_keys.push_back( RelatedInfoNamed::CONEPASYM ); 
-    m_keys.push_back( RelatedInfoNamed::CONEPTASYM ); 
-    m_keys.push_back( RelatedInfoNamed::CONEDELTAETA ); 
-    m_keys.push_back( RelatedInfoNamed::CONEDELTAPHI ); 
+    m_keys.push_back( RelatedInfoNamed::CONEANGLE );
+    m_keys.push_back( RelatedInfoNamed::CONEMULT );
+    m_keys.push_back( RelatedInfoNamed::CONEPX );
+    m_keys.push_back( RelatedInfoNamed::CONEPY );
+    m_keys.push_back( RelatedInfoNamed::CONEPZ );
+    m_keys.push_back( RelatedInfoNamed::CONEP  );
+    m_keys.push_back( RelatedInfoNamed::CONEPT );
+    m_keys.push_back( RelatedInfoNamed::CONEPXASYM );
+    m_keys.push_back( RelatedInfoNamed::CONEPYASYM );
+    m_keys.push_back( RelatedInfoNamed::CONEPZASYM );
+    m_keys.push_back( RelatedInfoNamed::CONEPASYM );
+    m_keys.push_back( RelatedInfoNamed::CONEPTASYM );
+    m_keys.push_back( RelatedInfoNamed::CONEDELTAETA );
+    m_keys.push_back( RelatedInfoNamed::CONEDELTAPHI );
   } else {
-  
+
     for ( const auto& var : m_variables )
     {
       short int key = RelatedInfoNamed::indexByName( var );
@@ -103,7 +112,7 @@ StatusCode RelInfoConeVariables::calculateRelatedInfo( const LHCb::Particle *top
 
   // -- Clear the vector with the particles in the specific decay
   m_decayParticles.clear();
-  m_tracksStorage.clear(); 
+  m_tracksStorage.clear();
 
   // -- Add the mother (prefix of the decay chain) to the vector
   if ( msgLevel(MSG::DEBUG) ) debug() << "Filling particle with ID " << top->particleID().pid() << endmsg;
@@ -112,33 +121,30 @@ StatusCode RelInfoConeVariables::calculateRelatedInfo( const LHCb::Particle *top
   // -- Save all particles that belong to the given decay in the vector m_decayParticles
   saveDecayParticles( top );
 
-  if (m_tracksLocation.size() == 0) {
-    // -- Get all tracks in the event
-    LHCb::Tracks* tracks = getIfExists<LHCb::Tracks>(LHCb::TrackLocation::Default);
-    if ( msgLevel(MSG::DEBUG) ) debug() << "Will use tracks from " << LHCb::TrackLocation::Default << endmsg;
-    if ( !tracks || tracks->empty() )
-    {
-      if ( msgLevel(MSG::WARNING) ) warning() << "Could not retrieve tracks. Skipping" << endmsg;
-      return StatusCode::FAILURE;
-    }
-    for ( const LHCb::Track * track : *tracks ) {
-      m_tracksStorage.push_back( track ); 
-    }
-  } else {
-    if ( msgLevel(MSG::DEBUG) ) debug() << "Will use tracks from " << m_tracksLocation << endmsg;
-
-    LHCb::Particle::Range parts = get<LHCb::Particle::Range>(m_tracksLocation + "/Particles");
-    if (parts.empty() ) {
-      if ( msgLevel(MSG::WARNING) ) warning() << "Could not retrieve particles. Skipping" << endmsg;
-      return StatusCode::FAILURE;
-    }
-
-    for(const LHCb::Particle * part : parts ) {
-      const LHCb::ProtoParticle* proto = part->proto();
-      if(proto)
-      {
-        const LHCb::Track* track = proto->track();
-        m_tracksStorage.push_back( track ); 
+  for (auto location : m_inputs) {
+    // -- Get tracks
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Will use tracks from " << location << endmsg;
+    auto tracks = getIfExists<LHCb::Tracks>(location);
+    if ( tracks ) {
+      for (auto track : *tracks) {
+        m_tracksStorage.push_back( track );
+      }
+    } else {
+      if (location.find("/Particles") != (location.size() - std::string{"/Particles"}.length())) {
+        location += "/Particles";
+      }
+      if (exist<LHCb::Particle::Range>(evtSvc(), location)) {
+        auto parts = get<LHCb::Particle::Range>(location);
+        for(const LHCb::Particle * part : parts ) {
+          const LHCb::ProtoParticle* proto = part->proto();
+          if (proto) {
+            const LHCb::Track* track = proto->track();
+            m_tracksStorage.push_back( track );
+          }
+        }
+      } else {
+        warning() << "Could not retrieve particles. Skipping" << endmsg;
+         return StatusCode::FAILURE;
       }
     }
   }
@@ -277,7 +283,7 @@ RelInfoConeVariables::ConeP(const LHCb::Particle *part,
   for ( std::vector<const LHCb::Track*>::const_iterator itrack = tracks->begin(); itrack != tracks->end(); itrack++ )
 //  for ( const LHCb::Track * track : *tracks )
   {
-    const LHCb::Track* track = *itrack; 
+    const LHCb::Track* track = *itrack;
 
     // -- Check if the track belongs to the decay itself
     bool isInDecay = isTrackInDecay(track);

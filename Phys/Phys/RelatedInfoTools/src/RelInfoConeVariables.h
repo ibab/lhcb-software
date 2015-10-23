@@ -1,4 +1,4 @@
-#ifndef RELINFOCONEVARIABLES_H 
+#ifndef RELINFOCONEVARIABLES_H
 #define RELINFOCONEVARIABLES_H 1
 
 // Include files
@@ -46,7 +46,7 @@
  *
  */
 
-class RelInfoConeVariables : public GaudiTool, virtual public IRelatedInfoTool 
+class RelInfoConeVariables : public GaudiTool, virtual public IRelatedInfoTool
 {
 
 public:
@@ -58,7 +58,7 @@ public:
 
   virtual ~RelInfoConeVariables( ); ///< Destructor
 
-  virtual StatusCode initialize(void); 
+  virtual StatusCode initialize(void);
 
 public:
 
@@ -85,9 +85,10 @@ private:
 
   double m_coneAngle;
   int m_trackType;
-  std::string m_tracksLocation; 
+  std::string m_tracksLocation;
+  std::vector<std::string> m_inputs;
   std::vector<std::string> m_variables;
-  std::vector<short int> m_keys; 
+  std::vector<short int> m_keys;
 
   int m_mult;
   double m_px;
@@ -104,7 +105,7 @@ private:
   double m_deltaPhi;
 
   std::vector<const LHCb::Particle*> m_decayParticles;
-  
+
   LHCb::RelatedInfoMap m_map;
 
   std::vector<const LHCb::Track*> m_tracksStorage;
