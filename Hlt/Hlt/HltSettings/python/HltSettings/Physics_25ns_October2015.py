@@ -57,28 +57,29 @@ class Physics_25ns_October2015( object ):
 
     def SubDirs(self):
         return {'August' : ['CcDiHadron', 'DPS', 'EW', 'PID', 'Topo',
-                            'Bc2JpsiX', 'DiMuon', 'DisplVertices', 
+                            'Bc2JpsiX', 'DiMuon', 'DisplVertices',
                             'TrackEff', 'TrackEffDiMuon', "Commissioning", 'RareStrange',
                             'TriMuon', 'B2HH', 'B2Kpi0','Phi','RareCharm'],
                 'September' : ['CharmHad', 'XcMuXForTau', 'Radiative'],
                 'October' : ['LowMult', 'SingleMuon']}
-                
+
 
     def Thresholds(self) :
         """
         Returns a dictionary of cuts
         """
 
-        from Hlt1Lines.Hlt1TrackLines          import Hlt1TrackLinesConf
-        from Hlt1Lines.Hlt1MuonLines           import Hlt1MuonLinesConf
-        from Hlt1Lines.Hlt1ElectronLines       import Hlt1ElectronLinesConf
-        from Hlt1Lines.Hlt1L0Lines             import Hlt1L0LinesConf
-        from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
-        from Hlt1Lines.Hlt1CommissioningLines  import Hlt1CommissioningLinesConf
-        from Hlt1Lines.Hlt1BeamGasLines        import Hlt1BeamGasLinesConf
-        from Hlt1Lines.Hlt1MVALines            import Hlt1MVALinesConf
-        from Hlt1Lines.Hlt1CalibTrackingLines  import Hlt1CalibTrackingLinesConf
-        from Hlt1Lines.Hlt1CalibRICHMirrorLines     import Hlt1CalibRICHMirrorLinesConf
+        from Hlt1Lines.Hlt1TrackLines           import Hlt1TrackLinesConf
+        from Hlt1Lines.Hlt1MuonLines            import Hlt1MuonLinesConf
+        from Hlt1Lines.Hlt1ElectronLines        import Hlt1ElectronLinesConf
+        from Hlt1Lines.Hlt1L0Lines              import Hlt1L0LinesConf
+        from Hlt1Lines.Hlt1MBLines              import Hlt1MBLinesConf
+        from Hlt1Lines.Hlt1CommissioningLines   import Hlt1CommissioningLinesConf
+        from Hlt1Lines.Hlt1BeamGasLines         import Hlt1BeamGasLinesConf
+        from Hlt1Lines.Hlt1MVALines             import Hlt1MVALinesConf
+        from Hlt1Lines.Hlt1CalibTrackingLines   import Hlt1CalibTrackingLinesConf
+        from Hlt1Lines.Hlt1LowMultLines         import Hlt1LowMultLinesConf
+        from Hlt1Lines.Hlt1CalibRICHMirrorLines import Hlt1CalibRICHMirrorLinesConf
 
         thresholds = { Hlt1TrackLinesConf :   {  'AllL0_Velo_NHits'  : 9
                                                , 'AllL0_Velo_Qcut'   : 3
@@ -305,11 +306,11 @@ class Physics_25ns_October2015( object ):
                                                 , 'VeloCut_Leptons_MinVelo'     :     0    # dimensionless
                                                 , 'VeloCut_Leptons_MaxVelo'     :   100    # dimensionless
                                                 , 'MaxVeloCut_MaxVelo'          :     8    # dimensionless
-                                                , 'MaxNVelo'                    :  1000    # dimensionless, 
-                                                , 'MinNVelo'                    :     2    # dimensionless, 
-                                                , 'TrChi2'                      :     5.   # dimensionless, 
+                                                , 'MaxNVelo'                    :  1000    # dimensionless,
+                                                , 'MinNVelo'                    :     2    # dimensionless,
+                                                , 'TrChi2'                      :     5.   # dimensionless,
                                                 , 'PT'                          :   500.   # MeV
-                                                , 'P'                           :     0.   # MeV 
+                                                , 'P'                           :     0.   # MeV
                                                 , 'LowMultLineL0Dependency'     :             "( L0_CHANNEL_RE('.*lowMult') & ~(L0_CHANNEL_RE('Photon,lowMult')) )"
                                                 , 'LowMultVeloCut_HadronsLineL0Dependency'  : "( L0_CHANNEL_RE('DiHadron,lowMult') )"
                                                 , 'LowMultVeloCut_LeptonsLineL0Dependency'  : "( L0_CHANNEL_RE('Muon,lowMult') | L0_CHANNEL_RE('DiMuon,lowMult') | L0_CHANNEL_RE('Electron,lowMult') )"
@@ -317,7 +318,7 @@ class Physics_25ns_October2015( object ):
                                                 , 'LowMultPassThroughLineL0Dependency'      : "L0_CHANNEL_RE('.*lowMult')"
                                                 , 'NoBiasTriggerType'                       : 'LumiTrigger' # dimensionless
                                                 , 'NoBiasBeamCrossingTypeVeto'              : 'BeamCrossing' # dimensionless
-                                                } 
+                                                }
                        }
 
         # HLT2 thresholds from individual files
