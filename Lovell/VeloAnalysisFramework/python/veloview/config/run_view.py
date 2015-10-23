@@ -143,7 +143,8 @@ run_view_pages = OrderedDict([
                         'sensor_dependent': True,
                         'yrange': [0, 5]
                         },
-                    ]
+                    ],
+                 'layout': (1, 2)
                 },
                 {
                 'title': 'Per Sensor (Strips)', 
@@ -162,6 +163,7 @@ run_view_pages = OrderedDict([
                         'yrange': [0, 5]
                         },
                     ],
+                 'layout': (1, 2)
                 },
                 {
                 'title': 'Velo Overview',
@@ -641,7 +643,8 @@ run_view_pages = OrderedDict([
                         'sensor_dependent': True,
                         'yrange': [0, 5]
                         }
-                    ]
+                    ],
+                    'layout': (1, 2)
                 },
                 {
                 'title': 'Subtracted ADC 2D',
