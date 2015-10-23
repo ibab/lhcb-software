@@ -27,9 +27,10 @@ class Hlt2LinesConfigurableUser(HltLinesConfigurableUser):
 
     def __relatedInfoSequence(self, stages, algorithms):
         if not stages:
-            return stages
+            return ([], stages)
 
         members = []
+        locations = []
         for stage in stages:
             # External stage sets the configurable to something that is not self.
             if stage._configurable():
@@ -37,11 +38,17 @@ class Hlt2LinesConfigurableUser(HltLinesConfigurableUser):
             else:
                 conf = self
             cuts = allCuts(conf)
-            members.append(stage.infoStage(cuts, algorithms[-1]))
+            infoStage, locs = stage.infoStage(cuts, algorithms[-1])
+            members.append(infoStage)
+            locations.extend(locs)
+
+        ## Consistency check
+        if len(locations) != len(set(locations)):
+            raise Exception('At least one location in %s appears twice, this will not work!' % locations)
 
         from HltLine.HltLine import Hlt2SubSequence
-        return [Hlt2SubSequence("RelatedInfoSequence", members,
-                                ModeOR = True, ShortCircuit = False)]
+        return (locations, [Hlt2SubSequence("RelatedInfoSequence", members,
+                                            ModeOR = True, ShortCircuit = False)])
 
     def algorithms(self, stages):
         from HltLine.HltLine import bindMembers

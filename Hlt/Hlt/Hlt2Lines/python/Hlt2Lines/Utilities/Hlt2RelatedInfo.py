@@ -66,11 +66,18 @@ class Hlt2RelatedInfo(Hlt2Stage):
         ## and Create the tool and algorithm
         args = self._localCuts(cuts)
         args.update(self.__args)
-        location = args.get('Location', None)
-        daughterLocations = args.get('DaughterLocations', None)
+        location = args.get('Location', "")
+        daughterLocations = args.get('DaughterLocations', {})
         if not location and not daughterLocations:
             raise Exception('\n Neither "Location" nor "DaughterLocations" are defined in RelatedInfo dictionary')
 
+        ## Collect all locations
+        locations = daughterLocations.values()
+        if location:
+            locations.append(location)
+        if len(locations) != len(set(locations)):
+            raise Exception('At least one location in %s appears twice, this will not work!' % locations)
+            
         ## Split the arguments
         toolConf = {}
         algArgs = {}
@@ -88,10 +95,11 @@ class Hlt2RelatedInfo(Hlt2Stage):
 
         if self._deps():
             deps = self.dependencies({})
-            return Hlt2SubSequence(self._name() + 'RelatedInfoSequence', deps + [relatedInfoAlg],
-                                   shared = self._shared())
+            seq = Hlt2SubSequence(self._name() + 'RelatedInfoSequence', deps + [relatedInfoAlg],
+                                  shared = self._shared())
+            return (seq, locations)
         else:
-            return relatedInfoAlg
+            return (relatedInfoAlg, locations)
 
 
 class Hlt2RelInfoConeVariables(Hlt2RelatedInfo):
