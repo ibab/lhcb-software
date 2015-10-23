@@ -4,6 +4,9 @@
 ! Purpose     : Analysis framework and configuration for offline and web GUIs
 !----------------------------------------------------------------------------
 
+! 2015-10-23 - Alex Pearce
+ - Return z-axis title for 2D plot objects.
+
 ! 2015-10-14 - Kurt Rinnert
  - Added normalisation tag to vertex plots; this does not seem to be respected
    by the GUI code yet.

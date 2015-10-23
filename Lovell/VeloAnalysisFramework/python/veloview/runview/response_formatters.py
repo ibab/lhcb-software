@@ -99,7 +99,7 @@ def th2_formatter(th2):
     ybinning -- List of 2-tuples of bins as (low y edge, high y edge)
     values -- List of list of bin contents, (ith, jth) entry falling in the
               (ith, jth) bin
-    axis_titles -- 2-tuple of (x-axis title, y-axis title)
+    axis_titles -- 3-tuple of (x-axis title, y-axis title, z-axis title)
     Keyword arguments:
     th2 -- ROOT.TH1 object or a that of deriving class (like TProfile2D)
     """
@@ -109,7 +109,8 @@ def th2_formatter(th2):
 
     xaxis = th2.GetXaxis()
     yaxis = th2.GetYaxis()
-    axis_titles = (xaxis.GetTitle(), yaxis.GetTitle())
+    zaxis = th2.GetZaxis()
+    axis_titles = (xaxis.GetTitle(), yaxis.GetTitle(), zaxis.GetTitle())
     nbinsx = th2.GetNbinsX()
     nbinsy = th2.GetNbinsY()
     xbins = [
