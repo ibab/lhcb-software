@@ -187,6 +187,7 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   // plots we should always make...
   plot(track.probChi2(),type+"/2","probChi2",0, 1, 50);
   plot(track.chi2PerDoF(),type+"/3","chi2/ndof",0,m_maxChi2Dof);
+  plot(track.ghostProbability(),type+"/ghostProb","ghostProb",0,1.0);
   plot(track.nLHCbIDs(),type+"/4","#nLHCbIDs", -0.5, 60.5, 61);
   plot(track.pseudoRapidity(),type+"/7", "eta", 0.95 , 6.05, 50);
   plot(track.phi(),type+"/8", "phi",-M_PI,M_PI,50) ;

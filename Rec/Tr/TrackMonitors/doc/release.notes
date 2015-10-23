@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-10-23 - Michel De Cian
+ - Add ghost probability histogram to TrackMonitor.
+
 !========================= TrackMonitors v2r10 2015-10-13 =========================
 ! 2015-10-12 - Komarov Ilya
  - Fixed per-sector histograms in TT/ITTrackMonitor
