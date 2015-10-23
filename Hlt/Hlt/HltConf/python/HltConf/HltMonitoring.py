@@ -112,7 +112,7 @@ class HltMonitoringConf(LHCbConfigurableUser):
                                                     ("DiMuon"     , "Hlt1DiMuon.*Decision"),
                                                     ("TrackMVA"   , "Hlt1(Two)?TrackMVADecision"),
                                                     ("ECAL"       , "Hlt1.*(Electron|Photon).*Decision"),
-                                                    ("CEP"        , "Hlt1CEP.*Decision"),
+                                                    ("LowMult"    , "Hlt1LowMult.*Decision"),
                                                     ("Beauty"     , "Hlt1B2.*Decision"),
                                                     ("Commissioning", "Hlt1(ODIN.*|Tell1Error|Incident)Decision"),
                                                     ("MinBias"    , "Hlt1MB.*Decision"),

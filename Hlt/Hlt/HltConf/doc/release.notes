@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-10-23 - Dan Johnson
+ - Change CEP to LowMult in HltMonitoring.py
+
 !========================= HltConf v13r3p2 2015-10-08 =======================
 
 ! 2015-10-08 - Roel Aaij
