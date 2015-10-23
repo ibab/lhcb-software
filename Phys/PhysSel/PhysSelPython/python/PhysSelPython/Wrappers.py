@@ -66,7 +66,7 @@ def checkName(name) :
         raise NameError('Could not instantiate Selection '+name+' because Configurable with the same name already exists. Try a different name for your Selection')
 
 def checkConfigurable(obj) :
-    if type(obj).__name__ == obj.name() :
+    if type(obj).__name__ == obj.name().replace('::','__') :
         raise NameError('Could not instantiate Selection because input Configurable '+obj.name()+' has default name. This is too unsafe to be allowed.')
 
 def selectionWrapper(selType, name, *args, **kwargs) :
