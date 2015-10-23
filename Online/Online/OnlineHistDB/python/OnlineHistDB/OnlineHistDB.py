@@ -39,7 +39,7 @@ class OnlineHistDB(object):
 
     def histograms_for_page(self, page):
         """Return a list of OnlineHistograms that belong to the given page."""
-        hists = VectorOfOnlineHistogram()
+        hists = VectorOfOnlineHistograms()
         self._hdb.getHistogramsByPage(page, hists)
         pyhists = []
         for h in hists:

@@ -160,10 +160,10 @@ class OnlineHistogram(object):
         coord = _coordinate(
             _ordinate(dh.xmin, dh.xmax), _ordinate(dh.ymin, dh.ymax)
         )
-        top = coord.ymax
-        left = coord.xmin
-        width = coord.xmax - coord.xmin
-        height = coord.ymax - coord.ymin
+        top = coord.y.max
+        left = coord.x.min
+        width = coord.x.max - coord.x.min
+        height = coord.y.max - coord.y.min
         return _pad_dimensions(top, left, width, height)
 
     @property
@@ -175,12 +175,16 @@ class OnlineHistogram(object):
         the ID of this histogram is returned.
         We create a pad ID as `identifier/instance`.
         """
+        return '{0.identifier}/{0.instance}'.format(self)
+
+    @property
+    def parent_pad_id(self):
         overlap = self.display_histogram.getOverlap()
         if overlap:
             parent = OnlineHistogram(overlap.histo)
         else:
-            parent = self
-        return '{0.identifier}/{0.instance}'.format(parent)
+            return None
+        return parent.pad_id
 
     @property
     def instance(self):
