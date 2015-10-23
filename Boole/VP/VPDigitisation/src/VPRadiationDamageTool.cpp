@@ -12,7 +12,7 @@ VPRadiationDamageTool::VPRadiationDamageTool(const std::string& type,
                                              const std::string& name,
                                              const IInterface* parent)
     : GaudiTool (type, name, parent),
-      m_det(NULL) {
+      m_det(nullptr) {
   
   declareInterface<VPRadiationDamageTool>(this);
 
@@ -34,21 +34,10 @@ StatusCode VPRadiationDamageTool::initialize() {
   m_det = getDet<DeVP>(DeVPLocation::Default);
  
   // Set fit values for fluence.
-  m_a.push_back(3.62911);   
-  m_a.push_back(0.000271931);
-  m_a.push_back(-3.30213e-06);
-  m_a.push_back(-3.42959e-09);
-  m_a.push_back(6.35852e-12);
-  m_a.push_back(1.93743e-15);
-  m_a.push_back(1.62919e-18);
-
-  m_k.push_back(2.29997); 
-  m_k.push_back(-0.000121513);
-  m_k.push_back(-5.11296e-06);
-  m_k.push_back(6.21903e-09);
-  m_k.push_back(2.79419e-11);
-  m_k.push_back(-6.86717e-14);
-  m_k.push_back(4.18305e-17);
+  m_a = { 3.62911,     0.000271931, -3.30213e-06, -3.42959e-09, 6.35852e-12,
+          1.93743e-15, 1.62919e-18};
+  m_k = { 2.29997,    -0.000121513, -5.11296e-06,  6.21903e-09, 2.79419e-11,
+         -6.86717e-14, 4.18305e-17};
   return StatusCode::SUCCESS;
 
 }

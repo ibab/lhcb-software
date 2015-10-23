@@ -1,5 +1,4 @@
-#ifndef VPRADIATIONDAMAGETOOL_H 
-#define VPRADIATIONDAMAGETOOL_H_1 
+#pragma once
 
 // Gaudi
 #include "GaudiAlg/GaudiTool.h"
@@ -38,4 +37,3 @@ private:
   std::vector<double> m_k;
 };
 
-#endif

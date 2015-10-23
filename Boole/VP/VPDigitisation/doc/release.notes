@@ -3,6 +3,9 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+! 2015-10-23 - Heinrich Schindler
+ - Fix header guard in VPRadiationDamageTool (uncovered by clang).
+
 !========================= VPDigitisation v1r6 2015-09-23 =========================
 ! 2015-08-18 - Heinrich Schindler
  - Protect against zero path lengths.
