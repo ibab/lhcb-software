@@ -357,9 +357,11 @@ _types_ = { MoveVerticesForSwimming : 'MoveVerticesForSwimming'
           }
 
 ## protected attributes
-_protected_ = ( 'IgnoreFilterPassed' , 'Members' , 'ModeOR', 'DecisionName', 'Prescale','Postscale','Filter1' )
+_protected_ = ( 'IgnoreFilterPassed', 'Members', 'ModeOR', 'DecisionName', 'Prescale',
+                 'Postscale', 'Filter1' )
 ## own slots for HltLine
-_myslots_   = ( 'name' , 'prescale'  , 'priority', 'postscale' , 'ODIN' , 'L0DU' , 'HLT1' , 'algos' , 'PV' , 'Turbo')
+_myslots_   = ( 'name' , 'prescale', 'priority', 'postscale', 'ODIN', 'L0DU', 'HLT1',
+                'RelatedInfo', 'algos', 'PV', 'Turbo' )
 
 # =============================================================================
 ## Get the full algorithm type from short nick
@@ -1266,7 +1268,7 @@ class Hlt2Member ( object ) :
         """
         from Configurables import FilterDesktop, CombineParticles, TisTosParticleTagger
         from Configurables import DaVinci__N3BodyDecays, DaVinci__N4BodyDecays, DaVinci__N5BodyDecays, DaVinci__N6BodyDecays, DaVinci__N7BodyDecays
-        from Configurables import DiElectronMaker, LoKi__VoidFilter
+        from Configurables import DiElectronMaker, LoKi__VoidFilter, AddRelatedInfo
         ## (0) verify input
         # Type must be a (configurable) class name, and only
         # a limited set is allowed (which must be DVAlgorithms...)
@@ -1274,7 +1276,7 @@ class Hlt2Member ( object ) :
                          , DaVinci__N3BodyDecays, DaVinci__N4BodyDecays
                          , DaVinci__N5BodyDecays, DaVinci__N6BodyDecays
                          , DaVinci__N7BodyDecays, DiElectronMaker
-                         , LoKi__VoidFilter ] :
+                         , LoKi__VoidFilter, AddRelatedInfo ] :
             raise AttributeError, "The type  %s is not known for Hlt2Member"%Type
         for key in Args :
             if  key not in Type.__slots__  :
@@ -1482,7 +1484,6 @@ class Hlt2Line(object):
     @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
     @date   2009-03-25
     """
-
     _defaultVoidFilter = None
     _defaultVoidFilterLock = False
     @classmethod
@@ -1510,19 +1511,20 @@ class Hlt2Line(object):
     #    - 'PV'        : insert PV reconstruction (or not)
     #    - 'algos'     : the list of actual members
     #    - 'postscale' : the postscale factor
-    def __init__ ( self             ,
-                   name             ,   # the base name for the Line
-                   prescale  = 1    ,   # prescale factor
-                   ODIN      = None ,   # ODIN predicate
-                   L0DU      = None ,   # L0DU predicate
-                   HLT1      = None ,   # HltDecReports predicate
-                   HLT2      = None ,   # HltDecReports predicate
-                   VoidFilter = None ,   # extra VoidFilter
-                   algos     = []   ,   # the list of algorithms/members
-                   postscale = 1    ,   # postscale factor
-                   priority  = None ,   # hint for ordering lines
-                   Turbo     = False,   # is the line intended for the Turbo stream
-                   **args           ) : # other configuration parameters
+    def __init__ ( self               ,
+                   name               ,   # the base name for the Line
+                   prescale    = 1    ,   # prescale factor
+                   ODIN        = None ,   # ODIN predicate
+                   L0DU        = None ,   # L0DU predicate
+                   HLT1        = None ,   # HltDecReports predicate
+                   HLT2        = None ,   # HltDecReports predicate
+                   VoidFilter  = None ,   # extra VoidFilter
+                   algos       = []   ,   # the list of algorithms/members
+                   postscale   = 1    ,   # postscale factor
+                   priority    = None ,   # hint for ordering lines
+                   Turbo       = False,   # is the line intended for the Turbo stream
+                   RelatedInfo = []   ,   # List of related info to calculate
+                   **args             ) : # other configuration parameters
         """
         The constructor, which essentially defines the line
 
@@ -1572,6 +1574,7 @@ class Hlt2Line(object):
         VoidFilter = deepcopy ( VoidFilter )
         algos = deepcopy ( algos )
         Turbo = deepcopy ( Turbo )
+        RelatedInfo = deepcopy ( RelatedInfo )
         args  = deepcopy ( args  )
 
         # 2) save all parameters (needed for the proper cloning)
@@ -1579,17 +1582,17 @@ class Hlt2Line(object):
         if callable(prescale) : prescale = prescale( self.name() )
         self._prescale  = prescale
         if callable(postscale) : postscale = postscale( self.name() )
-        self._postscale = postscale
-        self._priority  = priority
-        self._ODIN      = ODIN
-        self._L0DU      = L0DU
-        self._HLT1      = HLT1
-        self._HLT2      = HLT2
-        self._Turbo     = Turbo
-        self._VoidFilter       = VoidFilter
-        self._algos     = algos
-        self._args      = args
-
+        self._postscale   = postscale
+        self._priority    = priority
+        self._ODIN        = ODIN
+        self._L0DU        = L0DU
+        self._HLT1        = HLT1
+        self._HLT2        = HLT2
+        self._RelatedInfo = RelatedInfo
+        self._Turbo       = Turbo
+        self._VoidFilter  = VoidFilter
+        self._algos       = algos
+        self._args        = args
 
         # 3) decision: (pre)set to None, and assign once we're successfully completed ourselfs...
         self._decision  = None
@@ -1604,10 +1607,15 @@ class Hlt2Line(object):
         #start to contruct the sequence
         line = self.subname()
 
+        # Add related info at the end.
+        lastIndex = -1
+        if self._RelatedInfo:
+            lastIndex = len(algos) - 1
+            algos += self._RelatedInfo
+
         # bind members to line
         _boundMembers = bindMembers( line, algos )
         _members = _boundMembers.members()
-
 
         # create the line configurable
         # NOTE: even if pre/postscale = 1, we want the scaler, as we may want to clone configurations
@@ -1642,12 +1650,14 @@ class Hlt2Line(object):
         from Configurables import LoKi__VoidFilter
         if self._VoidFilter :
             mdict.update( Filter0 = LoKi__VoidFilter( voidName( line, 'Hlt2' ), Code = self._VoidFilter ) )
+
+        ## Check if 'last' is a FilterDesktop, CombineParticles, or something else...
         if _members :
-            last = _members[-1]
+            last = _members[lastIndex]
             while hasattr(last,'Members') :
                 last = getattr(last,'Members')[-1]
-            ## TODO: check if 'last' is a FilterDesktop, CombineParticles, or something else...
-            needsCopy = [ 'CombineParticles', 'FilterDesktop', 'Hlt2SelDV', 'TisTosParticleTagger', 'DaVinci::N3BodyDecays', 'DaVinci::N4BodyDecays', 'DaVinci::N5BodyDecays', 'DaVinci::N6BodyDecays', 'DaVinci::N7BodyDecays' ]
+            needsCopy = ['CombineParticles', 'FilterDesktop', 'Hlt2SelDV', 'TisTosParticleTagger', 'DaVinci::N3BodyDecays',
+                         'DaVinci::N4BodyDecays', 'DaVinci::N5BodyDecays', 'DaVinci::N6BodyDecays', 'DaVinci::N7BodyDecays']
             knownLastMembers = needsCopy + [ 'HltCopySelection<LHCb::Track>','HltIncidentGenerator','TF::PatVeloAlignTrackFilter' ]
             if last.getType() not in knownLastMembers :
               log.warning( 'last item in line ' + self.name() + ' is ' + last.getName() + ' with unknown type ' + last.getType() + '; as a result, TISTOS may not work for this line'  )
@@ -1680,7 +1690,6 @@ class Hlt2Line(object):
             _run_hlt_2_lines__.add( self )
         else :
             log.debug( 'skipping instantiation of ', self.name() )
-
 
 
     ## 'sub-name' of Hlt Line
@@ -1768,14 +1777,15 @@ class Hlt2Line(object):
 
         # Explictly copy all major structural parameters
         __name       = deepcopy ( name        )
-        __prescale   = deepcopy ( args.get ( 'prescale'  , self._prescale  ) )
-        __ODIN       = deepcopy ( args.get ( 'ODIN'      , self._ODIN      ) )
-        __L0DU       = deepcopy ( args.get ( 'L0DU'      , self._L0DU      ) )
-        __HLT1       = deepcopy ( args.get ( 'HLT1'      , self._HLT1      ) )
-        __postscale  = deepcopy ( args.get ( 'postscale' , self._postscale ) )
-        __Turbo      = deepcopy ( args.get ( 'Turbo' , self._Turbo  ) )
-        __priority   = deepcopy ( args.get ( 'priority ' , self._priority  ) )
-        __algos      = deepcopy ( args.get ( 'algos'     , self._algos     ) )
+        __prescale   = deepcopy ( args.get ( 'prescale'   , self._prescale    ) )
+        __ODIN       = deepcopy ( args.get ( 'ODIN'       , self._ODIN        ) )
+        __L0DU       = deepcopy ( args.get ( 'L0DU'       , self._L0DU        ) )
+        __HLT1       = deepcopy ( args.get ( 'HLT1'       , self._HLT1        ) )
+        __relInfo    = deepcopy ( args.get ( 'RelatedInfo', self._RelatedInfo ) )
+        __postscale  = deepcopy ( args.get ( 'postscale'  , self._postscale   ) )
+        __Turbo      = deepcopy ( args.get ( 'Turbo'      , self._Turbo       ) )
+        __priority   = deepcopy ( args.get ( 'priority '  , self._priority    ) )
+        __algos      = deepcopy ( args.get ( 'algos'      , self._algos       ) )
         __args       = deepcopy ( self._args  )
 
         # restore the original deepcopy behaviour...
@@ -1799,15 +1809,17 @@ class Hlt2Line(object):
         # and update them with all arguments, understandable by Sequencer
         __args.update ( _seq   )
 
-        return Hlt2Line ( name      = __name       ,
-                          prescale  = __prescale   ,
-                          ODIN      = __ODIN       ,
-                          L0DU      = __L0DU       ,
-                          HLT1      = __HLT1       ,
-                          postscale = __postscale  ,
-                          priority  = __priority   ,
-                          Turbo     = __Turbo   ,
-                          algos     = __algos      , **__args )
+        return Hlt2Line ( name        = __name     ,
+                          prescale    = __prescale ,
+                          ODIN        = __ODIN     ,
+                          L0DU        = __L0DU     ,
+                          HLT1        = __HLT1     ,
+                          postscale   = __postscale,
+                          priority    = __priority ,
+                          Turbo       = __Turbo    ,
+                          RelatedInfo = __relInfo  ,
+                          algos       = __algos    ,
+                          **__args )
 
 #
 #

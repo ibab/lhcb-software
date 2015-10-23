@@ -5,6 +5,9 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2015-10-23 - Roel Aaij
+ - Add support for RelatedInfo in Hlt2Line.
+
 !========================= HltLine v7r12 2015-07-26 =========================
 
 ! 2015-07-24 - Roel Aaij
