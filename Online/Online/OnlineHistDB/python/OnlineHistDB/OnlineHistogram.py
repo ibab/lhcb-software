@@ -181,7 +181,7 @@ class OnlineHistogram(object):
     def parent_pad_id(self):
         overlap = self.display_histogram.getOverlap()
         if overlap:
-            parent = OnlineHistogram(overlap.histo)
+            parent = OnlineHistogram(overlap.histo, self._hdb)
         else:
             return None
         return parent.pad_id
