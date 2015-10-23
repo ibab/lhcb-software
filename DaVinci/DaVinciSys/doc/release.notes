@@ -3,6 +3,27 @@ Package             : DaVinciSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics analysis application
 
+
+</PRE><H1><A NAME=v38r0>2015-10-23 DaVinci v38r0</A></H1><PRE>
+
+Development release for 2016 data taking, based on Gaudi v26r4, LHCb v39r1, Lbcom v17r1, Rec v18r2, Phys v20r2,
+Analysis v14r2 and Stripping v9r11p2. Uses LCG_79 with ROOT 6.04.02.
+
+- Packages updated :
+  DaVinciTests v3r0, Phys/DaVinci v38r0, Phys/Tesla v1r13.
+
+- In DaVinciTests v3r0 :
+  . Removed qmtests for S21 and S23 due to changes in RelatedInfo.
+  . Updates reference for S21r1 tests.
+  . Update references for stripping tests.
+
+- In Phys/DaVinci v38r0 :
+  . Development release in preparation for 2016 data-taking and simulation.
+
+- In Phys/Tesla v1r13 :
+  . Added support for RelatedInfo packing.
+  . Added KillInputTurbo option to rerun.
+
 </PRE><H1><A NAME=v37r2p4>2015-09-23 DaVinci v37r2p4</A></H1><PRE>
 
 Patch release for Stripping 23, identical to v37r2p3 except that it depends on Stripping v9r11p1

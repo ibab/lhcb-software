@@ -1,32 +1,9 @@
 ################################################################################
 # Package: DaVinciSys
 ################################################################################
-gaudi_subdir(DaVinciSys v37r2p4)
+gaudi_subdir(DaVinciSys v38r0)
 
 gaudi_depends_on_subdirs(DaVinciTests
-                         ##############################
-                         # Patch just for this version
-                         Det/DDDB
-                         Phys/TeslaTools
-                         Hlt/HltDAQ
-                         Phys/LoKiCore
-                         Phys/LoKiGen
-                         Phys/LoKiAlgo
-                         Phys/LoKiPhys
-                         Phys/LoKiHlt
-                         Phys/LoKiMC
-                         Phys/LoKiArrayFunctors
-                         Phys/LoKiTracks
-                         Phys/LoKiFitters
-                         Phys/KalmanFilter
-                         Phys/RelatedInfoTools
-                         Phys/DSTWriters
-                         Phys/PhysConf
-                         Phys/DaVinciTransporter
-                         Event/EventPacker
-                         GaudiConf
-                         Phys/JetAccessories
-                         Phys/TisTosTobbing
                          ##############################
                          # Temporarily moved in from Stripping, for S23 release
                          Phys/StrippingCache
