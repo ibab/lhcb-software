@@ -80,7 +80,7 @@ class TrackEffDiMuonLines(Hlt2LinesConfigurableUser):
 			        'JPsiVtxChi2'	: 5,
 			        'JPsiMassWin'	: 200 * MeV}
                 }
-    
+
     def stages(self, nickname = ""):
         if hasattr(self, '_stages') and self._stages:
             if nickname:
@@ -107,12 +107,12 @@ class TrackEffDiMuonLines(Hlt2LinesConfigurableUser):
             return self._stages[nickname]
         else:
             return self._stages
-    
+
     def __apply_configuration__(self):
-        
+
         stages = self.stages()
         from HltLine.HltLine import Hlt2Line
-        for (nickname, algos) in self.algorithms(stages).iteritems():
+        for (nickname, algos) in self.algorithms(stages):
             linename = 'TrackEffDiMuon' + nickname + 'TurboCalib'
             Hlt2Line(linename, prescale = self.prescale,
                      algos = algos, postscale = self.postscale,

@@ -1,6 +1,6 @@
 ##
 #  @author F. Dettori  Francesco.Dettori@cern.ch
-# 
+#
 #  Please contact the responsible before editing this file
 #
 #  For the Hlt2SingleMuonRare line please contact also Xabier Cid Vidal (@ cern.ch)
@@ -28,9 +28,9 @@ class SingleMuonLines(Hlt2LinesConfigurableUser) :
 
 
                  'HighPT':         { 'HighPt' : 10000 *MeV },
-                 
+
                  'VHighPT':        { 'HighPt' : 15000 *MeV },
-                 
+
                  'LowPT'   :       { 'HighPt' : 4800 * MeV },
 
                  'Rare'    :       { 'RarePtMin'          : 5000 * MeV,
@@ -40,7 +40,7 @@ class SingleMuonLines(Hlt2LinesConfigurableUser) :
                                      'RarePMax'  : 500 * GeV,
                                      'muID'  : 1
                                      }
-                 
+
                  }
 
     def stages(self, nickname = ""):
@@ -67,7 +67,7 @@ class SingleMuonLines(Hlt2LinesConfigurableUser) :
 
     def hlt_req(self, nickname = ""):
         if hasattr(self, 'HltReq') and self.HltReq:
-            if nickname in self.HltReq: 
+            if nickname in self.HltReq:
                 return self.HltReq[nickname]
             else:
                 return ""
@@ -76,10 +76,9 @@ class SingleMuonLines(Hlt2LinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Line
         from Configurables import HltANNSvc
         stages = self.stages()
-        for (nickname, algos) in self.algorithms(stages).iteritems():
+        for (nickname, algos) in self.algorithms(stages):
             linename = 'SingleMuon' + nickname if nickname != 'SingleMuon' else nickname
 
             Hlt2Line(linename, prescale = self.prescale,
                      HLT1 = self.hlt_req(nickname) ,
                      algos = algos, postscale = self.postscale)
-

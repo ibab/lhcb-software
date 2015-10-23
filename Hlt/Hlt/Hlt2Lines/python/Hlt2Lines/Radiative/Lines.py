@@ -56,7 +56,7 @@ class RadiativeLines(Hlt2LinesConfigurableUser):
             # Load stages
             stages.update(line_conf.get_stages(props))
         # Build lines
-        for (linename, algos) in self.algorithms(stages).iteritems():
+        for (linename, algos) in self.algorithms(stages):
             Hlt2Line(linename,
                      L0DU=l0_dependencies.get(linename, None),
                      HLT1=hlt1_dependencies.get(linename, None),

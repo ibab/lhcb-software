@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ## @file
-#  Set of Hlt2-lines for study of low multiplicity processes. Lines 
+#  Set of Hlt2-lines for study of low multiplicity processes. Lines
 #  are organised according to L0 trigger dependence
 #
 #  @author Dan Johnson daniel.johnson@cern.ch
@@ -84,7 +84,7 @@ theseSlots =      { 'Prescale' : { 'Hlt2LowMultL2pPi'       : 1.0
                     , 'Technical_L0'  : {"NoBias"          : "" ,
                                          "MinBias"         : "(L0_DATA('Spd(Mult)') < 100) & ( (L0_DATA('Spd(Mult)') > 2) | (L0_DATA('Electron(Et)') > 5) | (L0_DATA('Photon(Et)') > 5) | (L0_DATA('Hadron(Et)') > 10) )"}
                     , 'Technical_ODIN': {"ALL"             : "" }
-} 
+}
 theseSlots.update(_CEPHadronLines.localcuts())
 theseSlots.update(_CEPMuonLines.localcuts())
 theseSlots.update(_CEPPhotonLines.localcuts())
@@ -100,7 +100,7 @@ class LowMultLines(Hlt2LinesConfigurableUser) :
             return "|".join(["L0_CHANNEL('%s')" % chan for chan in l0])
         else:
             return l0
-    
+
     def __apply_configuration__(self) :
         # Set up the standard lines
         lines = {'Hadron'     : _CEPHadronLines.locallines(),
@@ -110,11 +110,11 @@ class LowMultLines(Hlt2LinesConfigurableUser) :
                 }
         from HltLine.HltLine import Hlt2Line
         for l0nick, lns in lines.iteritems():
-            for linename, algos in self.algorithms(lns).iteritems():
+            for linename, algos in self.algorithms(lns):
                   Hlt2Line(linename, prescale = self.prescale,
                            L0DU = self.__l0du(l0nick),
                            HLT1 = self.getProp('HLT')[l0nick],
-                           algos = algos) 
+                           algos = algos)
         # Add two additional technical lines
         Hlt2Line("NoBiasNonBeamBeam", prescale = self.prescale,
                  HLT1 = self.getProp('HLT')["TechnicalNoBias"],
@@ -124,4 +124,3 @@ class LowMultLines(Hlt2LinesConfigurableUser) :
                  HLT1 = self.getProp('HLT')["TechnicalNoBias"],
                  ODIN = self.getProp('Technical_ODIN')["ALL"],
                  L0DU = self.getProp('Technical_L0')["MinBias"])
-        

@@ -3,8 +3,8 @@ from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableU
 class TurboLines(Hlt2LinesConfigurableUser) :
     __slots__ = {'Prescale' : {},
                  'Postscale' : {},
-                 'CloneLines'  : {'DiMuon' : ['JPsi', 
-                                              'Psi2S', 
+                 'CloneLines'  : {'DiMuon' : ['JPsi',
+                                              'Psi2S',
                                               'B'],
 			          'Radiative': ['RadiativeB2GammaGamma'
 					            ],
@@ -24,14 +24,14 @@ class TurboLines(Hlt2LinesConfigurableUser) :
             # instantiate the turbo lines.
             for line in lines:
                 stages = conf.stages(line)
-                algos = conf.algorithms({'Turbo' : stages})
+                algos = dict(conf.algorithms({'Turbo' : stages}))
                 if module is not 'Radiative':
                     Hlt2Line(module + line + 'Turbo', prescale = self.prescale,
                             algos = algos['Turbo'], postscale = self.postscale, Turbo = True)
                 else:
                     Hlt2Line(line + 'Turbo', prescale = self.prescale,
                             algos = algos['Turbo'], postscale = self.postscale, Turbo = True)
-                
+
                 if module is 'DiMuon':
                     if line is 'JPsi':
                         HltANNSvc().Hlt2SelectionID.update( { 'Hlt2'+module+line+'Turbo'+'Decision':  50212 } )

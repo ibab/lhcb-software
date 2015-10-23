@@ -178,6 +178,6 @@ class DisplVerticesLines(Hlt2LinesConfigurableUser) :
                  }
 
         from HltLine.HltLine import Hlt2Line
-        for (nickname, lineStages) in self.algorithms(stages).iteritems():
+        for (nickname, lineStages) in self.algorithms(stages):
             linename = "DisplVertices{0}".format(nickname)
             Hlt2Line(linename, algos=lineStages, prescale=self.prescale(nickname), postscale=self.postscale(nickname))

@@ -6,7 +6,7 @@ from D2HHPi0Lines import CharmHadD2HHPi0Lines
 from D02HHHHLines import CharmHadD02HHHHLines
 from D2HHHKsLines import CharmHadD2HHHKsLines
 from Hc2HHHHLines import CharmHadHc2HHHHLines
-from XSecLines import CharmHadXSecLines 
+from XSecLines import CharmHadXSecLines
 from D2HHHPi0Lines import CharmHadD2HHHPi0Lines
 from D2HHLines import CharmHadD2HHLines
 from D2HHKsLines import CharmHadD2HHKshLines
@@ -46,24 +46,24 @@ theseslots = {   'Postscale' : {'Hlt2CharmHadD02KmKpTurbo'               : 0.1,
                                 'Hlt2CharmHadDspToKmKpPip_LTUNBTurbo'    : 0.05,
                                 'Hlt2CharmHadLcpToPpKmPip_LTUNBTurbo'    : 0.05,
                                 'Hlt2CharmHadXic0ToPpKmKmPip_LTUNBTurbo' : 0.05,
-                                'Hlt2CharmHadDpToKmPipPip_ForKPiAsym'    : 0.25  }, 
+                                'Hlt2CharmHadDpToKmPipPip_ForKPiAsym'    : 0.25  },
                  'TrackGEC' : { 'NTRACK_MAX'           : 10000},
                  'Common' : {'TisTosSpec'               : "Hlt1.*Track.*Decision%TOS",
-                             'Trk_ALL_TRCHI2DOF_MAX'    :  3.0,    
+                             'Trk_ALL_TRCHI2DOF_MAX'    :  3.0,
                              'Trk_ALL_P_MIN'            :  1000 * MeV,
                              'VCHI2PDOF_MAX'            :  10.0,
-                            },  
+                            },
                  # Particles for the "Detached" CPV lines
-                 'CharmHadSharedDetachedDpmChild_K' : { 
-                                 'PID_LIM'                  :  5,  
+                 'CharmHadSharedDetachedDpmChild_K' : {
+                                 'PID_LIM'                  :  5,
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
-                                              },  
-                 'CharmHadSharedDetachedDpmChild_pi' : { 
-                                 'PID_LIM'                  :  5, 
+                                              },
+                 'CharmHadSharedDetachedDpmChild_pi' : {
+                                 'PID_LIM'                  :  5,
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
-                                              },  
+                                              },
                  'CharmHadSharedDetachedDpmChild_TightK' : {
                                  'PID_LIM'                  :  7,
                                  'Trk_ALL_PT_MIN'           :  250 * MeV,
@@ -74,16 +74,16 @@ theseslots = {   'Postscale' : {'Hlt2CharmHadD02KmKpTurbo'               : 0.1,
                                  'Trk_ALL_PT_MIN'           :  250 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
                                               },
-                 'CharmHadSharedDetachedLcChild_K' : { 
-                                 'PID_LIM'                  :  5,  
+                 'CharmHadSharedDetachedLcChild_K' : {
+                                 'PID_LIM'                  :  5,
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
-                                              },  
-                 'CharmHadSharedDetachedLcChild_pi' : { 
-                                 'PID_LIM'                  :  5, 
+                                              },
+                 'CharmHadSharedDetachedLcChild_pi' : {
+                                 'PID_LIM'                  :  5,
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
-                                              },  
+                                              },
                  'CharmHadSharedDetachedLcChild_p' : {
                                  'PID_LIM'                  :  5,
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
@@ -152,7 +152,7 @@ theseslots = {   'Postscale' : {'Hlt2CharmHadD02KmKpTurbo'               : 0.1,
                                  'VZ_MIN'                  : 300. * mm,
                                  'VZ_MAX'                  : 2275. * mm,
                                              },
-                 # Particles for the 'Prompt' CF lifetime unbiased lines for the 
+                 # Particles for the 'Prompt' CF lifetime unbiased lines for the
                  # lifetime measurements
                  'CharmHadSharedPromptChild_K' : {
                                  'PID_LIM'                  :  10,
@@ -170,9 +170,9 @@ theseslots = {   'Postscale' : {'Hlt2CharmHadD02KmKpTurbo'               : 0.1,
                  'CharmHadSharedSoftTagChild_pi' : {
                                  'Trk_ALL_PT_MIN'           :  100.0 * MeV,
                                            },
-                 'CharmHadSharedSoftTagChild_mu' : { 
+                 'CharmHadSharedSoftTagChild_mu' : {
                                  'Trk_ALL_PT_MIN'           :  500.0 * MeV,
-                                           },  
+                                           },
 
                  # NoPID protons for the Sigma_c tagged Lambda_c line for PID calibration
                  # the IPCHI2 cut is tight because the PT/PT cuts have to be loose to give
@@ -181,7 +181,7 @@ theseslots = {   'Postscale' : {'Hlt2CharmHadD02KmKpTurbo'               : 0.1,
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  6.0,
                                           },
-                 # NoPID particles for other charm lines 
+                 # NoPID particles for other charm lines
                  'CharmHadSharedNoPIDDetachedChild_pi' : {
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  3.0,
@@ -191,14 +191,14 @@ theseslots = {   'Postscale' : {'Hlt2CharmHadD02KmKpTurbo'               : 0.1,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  3.0,
                                           },
                  # Neutral particles for D -> HHX lines
-                 # 
+                 #
                  'CharmHadSharedNeutralChild_pi0' : {
                                  'Neut_ALL_PT_MIN'           : 500.0 * MeV,
                                  'Neut_ALL_ADMASS_MAX'       : 60.0,
                                           },
                  'CharmHadSharedNeutralChild_pi0R' : {
                                  'Neut_ALL_PT_MIN'           : 500.0 * MeV,
-                                 'Neut_ALL_ADMASS_MAX'       : 60.0, 
+                                 'Neut_ALL_ADMASS_MAX'       : 60.0,
                                           },
                  'CharmHadSharedNeutralChild_pi0M' : {
                                  'Neut_ALL_PT_MIN'           : 500.0 * MeV,
@@ -241,8 +241,8 @@ theseslots = {   'Postscale' : {'Hlt2CharmHadD02KmKpTurbo'               : 0.1,
                 },
                 ## Configuration for Hc + pion combinatorics shared by lines
                 'InclHcst2PiHc2HHX'  : {
-                                  'Spi_TRCHI2DOF_MAX'         : 3.0       
-                                , 'Spi_PT_MIN'                : 150.0 * MeV   
+                                  'Spi_TRCHI2DOF_MAX'         : 3.0
+                                , 'Spi_PT_MIN'                : 150.0 * MeV
                                 , 'Dst_VCHI2PDOF_MAX'         : 50.0
                                 , 'Dst_PT_MIN'                : 2.0 * GeV
                                 , 'Dst_M_MAX'                 : 2700.0 * MeV
@@ -310,7 +310,6 @@ class CharmHadLines(Hlt2LinesConfigurableUser):
     __slots__ = deepcopy(theseslots)
     __lines__ = {}
 
-
     ## To avoid problems with propogating configuration changes for private
     ## tools back to CharmHadDst2PiD02HHXBDTLines, the line definitions for
     ## the inclusive lines are made here instead of in a sub-file.
@@ -358,12 +357,24 @@ class CharmHadLines(Hlt2LinesConfigurableUser):
             self.__lines__.update(HyperonLines.locallines())
             self.__lines__.update(D2HHHHHLines.locallines())
             self.__lines__.update(XiccLines.stages())
-            
+
         return self.__lines__[nickname] if nickname else self.__lines__
-            
+
+    def relatedInfo(self):
+        if not hasattr(self, "_relatedInfo"):
+            self._relatedInfo = {}
+            for mod in (D2HHHLines, D2V0HLines, D2V0V0Lines, D02HHLines, D2HHPi0Lines, D02HHHHLines,
+                        D2HHHKsLines, Hc2HHHHLines, XSecLines, D2HHHPi0Lines, D2HHLines, D2HHKsLines,
+                        CharmSpectroscopyLines, HyperonLines, D2HHHHHLines, XiccLines):
+                if hasattr(mod, 'relatedInfo'):
+                    self._relatedInfo.update(mod.relatedInfo())
+
+        return self._relatedInfo
+
     def __apply_configuration__(self):
-        
+
         _stages = self.stages()
+        _relatedInfo = self.relatedInfo()
 
         ## Other line Hlt2LinesConfigurableUser, like that for the DPS lines,
         ## can call self.stages().  This can (but probably won't) happen
@@ -377,13 +388,10 @@ class CharmHadLines(Hlt2LinesConfigurableUser):
 
 
         from HltLine.HltLine import Hlt2Line
-        for nickname, algos in self.algorithms( _stages ).iteritems():
+        for nickname, algos, relatedInfo in self.algorithms( _stages ):
             doturbo = True if (nickname.find('Turbo') > -1) else False
             Hlt2Line('CharmHad' + nickname, prescale = self.prescale,
-                     algos = algos, postscale = self.postscale, Turbo = doturbo)
+                     algos = algos, postscale = self.postscale, Turbo = doturbo,
+                     RelatedInfo = relatedInfo)
             if "Dst_2D0Pi0_D02KPi_XSec" in nickname:
                 HltANNSvc().Hlt2SelectionID.update( { "Hlt2CharmHadDst_2D0Pi0_D02KPi_XSecTurboDecision":  57222 } )
-
-
-
-
