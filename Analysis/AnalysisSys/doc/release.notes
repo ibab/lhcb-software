@@ -3,6 +3,71 @@ Package             : AnalysisSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb analysis packages
 
+
+</PRE><H1><A NAME=v14r2>2015-10-23 Analysis v14r2</A></H1><PRE>
+
+Development release for 2016 data taking, based on Gaudi v26r4, LHCb v39r1, Rec v18r2 and Phys v20r2.
+Uses LCG_79 with ROOT 6.04.02.
+
+- Packages updated :
+  Analysis/Ostap v1r10, MicroDST/MicroDSTTools v2r14, Phys/AnalysisConf v2r5, Phys/AnalysisPython v2r38,
+  Phys/DaVinciMCTools v10r13, Phys/DaVinciTrackRefitting v2r2, Phys/DecayTreeTupleMuonCalib v1r5,
+  Phys/DecayTreeTupleTracking v1r3, Phys/DecayTreeTupleTrigger v1r9, Phys/DecayTreeTuple v5r3, Phys/DSTWriters v4r22,
+  Phys/DSTWriterTests v2r6, Phys/LoKiPhysMC v9r10, Phys/TeslaTools v1r16.
+
+- In Analysis/Ostap v1r10 :
+  . Very many additions, improvements and fixes. See package release notes for details.
+
+- In MicroDST/MicroDSTTools v2r14 :
+  . Added some protection against NULL track SmartRefs in RecVertices.
+
+- In Phys/AnalysisConf v2r5 :
+  . Added OutputLevel property to AnalysisConf configurable.
+
+- In Phys/AnalysisPython v2r38 :
+  . More efficient projections.
+  . Added convext only spline, atlas.
+  . Removed iterators from interfaces.
+
+- In Phys/DaVinciMCTools v10r13 :
+  . Additional properties for reuse of neutral PP2MC tables created in Turbo.
+
+- In Phys/DaVinciTrackRefitting v2r2 :
+  . Refitting instructions updated + fixes after test run.
+
+- In Phys/DecayTreeTupleMuonCalib v1r5 :
+  . Control the momentum estimate using muon chambers via a flag.
+  . Added momentum estimate with and without M1 to TupleToolMuonIDCalib.cpp.
+
+- In Phys/DecayTreeTupleTracking v1r3 :
+  . Use target() not data().
+
+- In Phys/DecayTreeTupleTrigger v1r9 :
+  . TupleToolL0Data : added documentation.
+  . Added new tool TupleToolFillingScheme.
+
+- In Phys/DecayTreeTuple v5r3 :
+  . Added TupleToolAllTracks for isolation studies and/or adding particles to an existing chain.
+  . Added TupleToolBeamSpot, an event tupletool which fills the beamspot x and y position.
+  . Fixed out-of-bounds error in TupleToolCaloDigits.
+
+- In Phys/DSTWriters v4r22 :
+  . Updated PackTrackingClusters to allow the clusters for all tracks to be packed for DST streams.
+  . Added /Event/Rec/Track/FittedHLT1VeloTracks to the DST veto list.
+  . Fixed DST streams where Trigger/RawEvent was missing when running on RDSTs.
+
+- In Phys/DSTWriterTests v2r6 :
+  . Removed configuration of obsolete ANNDispatchSvc.
+
+- In Phys/LoKiPhysMC v9r10 :
+  . Added possibility to create mcMatch functors outside of the algorithm loop.
+    E.g. in bender command line:
+    >>> get('/Event/Phys/StdNoPIDsPions/Particles', mcMatch('[  D*(2010)+ -> (D0 => pi- mu+ Nu) ^pi+]CC') )
+
+- In Phys/TeslaTools v1r16 :
+  . Very many updates and improvements since v1r11 that was part of the previous Analysis v14r1 release.
+    See package release notes for details.
+
 </PRE><H1><A NAME=v14r1>2015-08-06 Analysis v14r1</A></H1><PRE>
 
 Development release for the 2015 25ns data taking, based on Gaudi v26r3, LHCb v39r0, Rec v18r1 and Phys v20r1.

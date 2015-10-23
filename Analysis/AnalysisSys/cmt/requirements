@@ -1,22 +1,22 @@
 package AnalysisSys
-version v14r1
+version v14r2
 
 branches doc cmt
 
 ####################################################################
 
-use  AnalysisConf               v2r4     Phys   # Patrick Koppenburg
-use  DSTWriters                 v4r21    Phys   # Chris Jones
-use  DSTWriterTests             v2r5     Phys   # Chris Jones
+use  AnalysisConf               v2r5     Phys   # Patrick Koppenburg
+use  DSTWriters                 v4r22    Phys   # Chris Jones
+use  DSTWriterTests             v2r6     Phys   # Chris Jones
 use  DaVinciMonitors            v1r23    Phys   # Patrick Koppenburg
 use  RichPIDQC                  v1r9     Rich   # Chris Jones
 
 ####################################################################
 
-use  DaVinciMCTools     	v10r12   Phys   # Chris Jones
+use  DaVinciMCTools     	v10r13   Phys   # Chris Jones
 use  LoKiAlgoMC                 v9r6p1   Phys   # Vanya Belyaev
 use  LoKiGenMC                  v9r2     Phys   # Vanya Belyaev
-use  LoKiPhysMC                 v9r9     Phys   # Vanya Belyaev
+use  LoKiPhysMC                 v9r10    Phys   # Vanya Belyaev
 use  DaVinciAssociators         v9r8     Phys   # Vladimir Gligorov
 use  Particle2MCTruth           v2r5p1   Phys   # Chris Jones
 use  VertexFitCheck             v1r9     Phys   # Yuehong Xie
@@ -35,12 +35,12 @@ use  DecayTreeTupleReco         v1r5     Phys
 use  DecayTreeTupleDalitz       v1r3     Phys
 use  DecayTreeTupleJets         v1r3     Phys
 use  DecayTreeTupleMC           v1r6     Phys
-use  DecayTreeTupleTrigger      v1r8     Phys
-use  DecayTreeTupleMuonCalib    v1r4     Phys
-use  DecayTreeTupleTracking     v1r2     Phys
+use  DecayTreeTupleTrigger      v1r9     Phys
+use  DecayTreeTupleMuonCalib    v1r5     Phys
+use  DecayTreeTupleTracking     v1r3     Phys
 use  DecayTreeTupleANNPID       v1r2     Phys
 use  DecayTreeTupleHerschel     v1r0     Phys
-use  DecayTreeTuple             v5r2     Phys 
+use  DecayTreeTuple             v5r3     Phys 
 
 ####################################################################
 
@@ -48,15 +48,15 @@ use  HltSelChecker              v12r4    Hlt    # Patrick Koppenburg
 
 ####################################################################
 
-use  AnalysisPython             v2r37    Phys     # Vanya Belyaev
+use  AnalysisPython             v2r38    Phys     # Vanya Belyaev
 use  PyAna                      v1r3p1   Analysis # Vanya Belyaev
-use  Ostap                      v1r9     Analysis # Vanya Belyaev
+use  Ostap                      v1r10    Analysis # Vanya Belyaev
 
 ####################################################################
 
 use  MicroDSTBase        	v3r5     MicroDST # Chris Jones
 use  MicroDSTInterfaces  	v1r7p2   MicroDST # Chris Jones
-use  MicroDSTTools      	v2r13    MicroDST # Chris Jones
+use  MicroDSTTools      	v2r14    MicroDST # Chris Jones
 use  MicroDSTAlgorithm   	v5r10    MicroDST # Chris Jones
 use  MicroDSTConf               v2r12    MicroDST # Chris Jones
 
@@ -69,12 +69,12 @@ use  MicroDSTExample            v2r15   Ex         # Chris Jones
 ####################################################################
 
 use  TrackSmearing              v1r6p1  Phys   # Alex Shires
-use  DaVinciTrackRefitting      v2r1    Phys   # Matt Needham
+use  DaVinciTrackRefitting      v2r2    Phys   # Matt Needham
 use  DaVinciTrackScaling        v1r4    Phys   # Vanya Belyaev
 
 ####################################################################
 
-use  TeslaTools                 v1r11   Phys   # Sean Benson
+use  TeslaTools                 v1r16   Phys   # Sean Benson
 
 ####################################################################
 
