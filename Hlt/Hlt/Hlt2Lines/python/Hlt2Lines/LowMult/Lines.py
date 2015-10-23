@@ -67,10 +67,10 @@ theseSlots =      { 'Prescale' : { 'Hlt2LowMultL2pPi'       : 1.0
                                  , 'Hlt2LowMultTechnical_NoBias'        : 0.33 # Aim for 100 Hz from 300 Hz non-bb crossings
                                  , 'Hlt2LowMultTechnical_MinBias'       : 1.0
                                  }
-                    , 'HLT'               :   {"Hadron"     : "HLT_PASS_RE('Hlt1CEPVeloCutDecision')",
-                                               "Muon"       : "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')",
-                                               "Photon"     : "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')",
-                                               "Electron"   : "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')",
+                    , 'HLT'               :   {"Hadron"     : "( HLT_PASS_RE('Hlt1LowMultPassThroughDecision') | HLT_PASS_RE('Hlt1LowMultDecision') | HLT_PASS_RE('Hlt1LowMultVeloCut_HadronsDecision') )",
+                                               "Muon"       : "( HLT_PASS_RE('Hlt1LowMultPassThroughDecision') | HLT_PASS_RE('Hlt1LowMultDecision') | HLT_PASS_RE('Hlt1LowMultVeloCut_LeptonsDecision') )",
+                                               "Photon"     : "( HLT_PASS_RE('Hlt1LowMultPassThroughDecision') | HLT_PASS_RE('Hlt1LowMultMaxVeloCutDecision') )",
+                                               "Electron"   : "( HLT_PASS_RE('Hlt1LowMultPassThroughDecision') | HLT_PASS_RE('Hlt1LowMultDecision') | HLT_PASS_RE('Hlt1LowMultVeloCut_LeptonsDecision') | HLT_PASS_RE('Hlt1LowMultMaxVeloCutDecision') )",
                                                "TechnicalNoBias"  : "HLT_PASS_RE('Hlt1NoBiasNonBeamBeamDecision')"
                                                }
                     , 'Common'    : {'H_PTmin'        :     100.0 * MeV,

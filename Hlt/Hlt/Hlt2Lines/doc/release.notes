@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-10-23 - Dan Johnson
+ - Change Hlt1 dependence of Hlt2LowMult lines to reflect Hlt1LowMult changes
+
 ! 2015-10-20 - Sascha Stahl
  - TrackEffDiMuon lines: Add possibility to change Hlt1Filter in case there is
    no TisTosTagger.
