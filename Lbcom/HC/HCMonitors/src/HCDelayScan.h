@@ -33,11 +33,6 @@ class HCDelayScan : public HCMonitorBase {
   /// TES location of digits.
   std::string m_digitLocation;
 
-  /// Number of B-side crate
-  unsigned int m_crateB;
-  /// Number of F-side crate
-  unsigned int m_crateF;
-
   unsigned int m_minStep;
   unsigned int m_maxStep;
 

@@ -24,8 +24,6 @@ class HCPedestalCorrection : public HCMonitorBase {
   virtual StatusCode execute();     ///< Algorithm execution
 
  private:
-  /// TAE slot
-  int m_tag;
   /// TES location of HC digits.
   std::string m_digitLocation;
 

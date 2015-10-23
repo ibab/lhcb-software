@@ -88,7 +88,9 @@ if len(options.runNumber.split(','))>1:
 from Gaudi.Configuration import *
 
 from Configurables import DDDBConf
-DDDBConf(InitialTime = 'now')
+#DDDBConf(InitialTime = 'now')
+privatedb_path = "/afs/cern.ch/user/h/hschindl/public/DDDB_HC/"
+DDDBConf(DbRoot = privatedb_path + "lhcb.xml")
 from Configurables import LHCbApp
 app = LHCbApp()
 app.DataType = "2015"

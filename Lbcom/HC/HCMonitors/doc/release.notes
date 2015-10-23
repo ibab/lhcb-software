@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring of Herschel data
 !-----------------------------------------------------------------------------
 
+! 2015-10-23 - Heinrich Schindler
+ - Remove unused class members.
+
 ! 2015-10-17 - Heinrich Schindler
  - HCDelayScan: remove duplicated (and unused) property ParametersADC.
 
