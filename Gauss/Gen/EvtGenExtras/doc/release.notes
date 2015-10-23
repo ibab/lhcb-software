@@ -4,6 +4,9 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+! 2015-10-23 - John Back
+  - Corrected kaon mass used in EvtXLL.
+
 !======================= EvtGenExtras v3r12 2015-10-21 =======================
 ! 2015-10-21 - John Back
  - Correction to form factor in EvtB2MuMuMuNuAmp.cpp (line 569). New tag.

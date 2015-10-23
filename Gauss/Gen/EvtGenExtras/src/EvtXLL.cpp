@@ -211,7 +211,7 @@ double EvtXLL::fn_cth(double cth){
 
 double EvtXLL::fn_wt_dihadron(double mX, int chan){
 
-   double mk(0.473), mpi(0.139),mp(0.938);
+   double mk(0.493), mpi(0.139),mp(0.938);
    double m_thresh(0.0);
    double f(0.0);
 
