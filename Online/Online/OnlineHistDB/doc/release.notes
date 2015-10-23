@@ -6,6 +6,10 @@
 ! or using makedoc script in this folder
 !
 
+! 2015-10-23 - Alex Pearce
+- Added Python interface to OnlineHistogramDB and
+  OnlineHistogram as part of the effort on the new
+  Presenter
 
 ! 2015-10-20 - GG
 - add  ClonePageTree application to easily clone existing pages 
