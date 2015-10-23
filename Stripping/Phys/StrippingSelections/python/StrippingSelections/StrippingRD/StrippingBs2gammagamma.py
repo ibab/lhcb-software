@@ -32,23 +32,35 @@ default_config = {
     'NAME'        : 'Bs2GammaGamma',
     'WGs'         : ['RD'],
     'BUILDERTYPE' : 'StrippingBs2gammagammaConf',
-    'CONFIG'      : { 'gammaPT'             : 1250    # MeV/c
-                     ,'gammaP'              : 11000   # MeV/c
-                     ,'gammaCL'             : 0.0     # adimensional
-                     ,'gammaConvPT'         : 1400    # MeV/c
-                     ,'gammaConvIPCHI'      : 1.5     # adimensional
-                     ,'gammaNonePT'         : 1700    # MeV/c
-                     ,'gammaNoneP'          : 16000   # MeV/c
-                     ,'gammaNoneCL'         : 0.42    # adimensional
-                     ,'BsPT'                : 1000    # MeV/c
+    'CONFIG'      : { 'gammaPT'             : 1000    # MeV/c
+                     ,'gammaP'              : 6000   # MeV/c
+                     ,'gammaCL'             : 0.3     # adimensional
+                     ,'gammaConvPT'         : 2000    # MeV/c
+                     ,'gammaConvMDD'        : 60     # MeV/cc
+                     ,'gammaConvIPCHI'      : 0     # adimensional
+                     ,'gammaNonePT'         : 1100    # MeV/c
+                     ,'gammaNoneP'          : 6000   # MeV/c
+                     ,'gammaNoneCL'         : 0.3    # adimensional
+                     ,'NoConvHCAL2ECAL'     : 0.1   # adimensional
+                     ,'LLProbNNe'           : 0.5    # adimensional
+                     ,'DDProbNNe'           : 0.3    # adimensional
+                     ,'ConvGhostLL'         : 0.3    # adimensional
+                     ,'ConvGhostDD'         : 0.3    # adimensional
+                     ,'BsPT'                : 2000    # MeV/c
                      ,'BsVertexCHI2pDOF'    : 20      # adimensional
-                     ,'BsLowMass'           : 4600    # MeV/cc
+                     ,'BsLowMass'           : 4300    # MeV/cc
+                     ,'BsLowMassDD'         : 4400    # MeV/cc
                      ,'BsNonePT'            : 2000    # MeV/c
-                     ,'BsLowMassDouble'     : 4300    # MeV/cc
-                     ,'BsLowMassNone'       : 4900    # MeV/cc
-                     ,'BsHighMass'          : 5800    # MeV/cc
-                     ,'BsHighMassNone'      : 6000    # MeV/cc
-                     ,'BsHighMassDouble'    : 5800    # MeV/cc
+                     ,'BsLowMassDouble'     : 4000    # MeV/cc
+                     ,'BsLowMassNone'       : 4800    # MeV/cc
+                     ,'BsHighMass'          : 6500    # MeV/cc
+                     ,'BsHighMassDD'        : 6700    # MeV/cc
+                     ,'BsHighMassNone'      : 6300    # MeV/cc
+                     ,'BsHighMassDouble'    : 7000    # MeV/cc
+                     ,'HLT2Double'          : "HLT_PASS_RE('Hlt2RadiativeB2GammaGammaDoubleDecision')"
+                     ,'HLT2LL'              : "HLT_PASS_RE('Hlt2RadiativeB2GammaGammaLLDecision')"
+                     ,'HLT2DD'              : "HLT_PASS_RE('Hlt2RadiativeB2GammaGammaDDDecision')"
+                     ,'HLTNone'             : "HLT_PASS_RE('.*GammaGammaDecision')"
                     },
     'STREAMS'     : ['Leptonic']
     }
@@ -62,19 +74,31 @@ class StrippingBs2gammagammaConf(LineBuilder):
         , 'gammaP'                         # MeV/c
         , 'gammaCL'                        # adimensional
         , 'gammaConvPT'                    # MeV/c
+        , 'gammaConvMDD'                   # MeV/cc
         , 'gammaConvIPCHI'                 # adimensional
         , 'gammaNonePT'                    # MeV/c
         , 'gammaNoneP'                     # MeV/c
         , 'gammaNoneCL'                    # adimensional
+        , 'NoConvHCAL2ECAL'                # adimensional
+        , 'LLProbNNe'                      # 
+        , 'DDProbNNe'                      # 
+        , 'ConvGhostLL'                    # 
+        , 'ConvGhostDD'                    # 
         , 'BsPT'                           # MeV/c
         , 'BsVertexCHI2pDOF'               # adimensional
         , 'BsLowMass'                      # MeV/cc
+        , 'BsLowMassDD'                    # MeV/cc
         , 'BsNonePT'                       # MeV/c
         , 'BsLowMassDouble'                # MeV/cc
         , 'BsLowMassNone'                  # MeV/cc
         , 'BsHighMass'                     # MeV/cc
+        , 'BsHighMassDD'                   # MeV/cc
         , 'BsHighMassDouble'               # MeV/cc
         , 'BsHighMassNone'                 # MeV/cc
+        , 'HLT2Double'
+        , 'HLT2LL'
+        , 'HLT2DD'
+        , 'HLTNone'
     )
 
     def __init__(self, name, config) :
@@ -82,11 +106,11 @@ class StrippingBs2gammagammaConf(LineBuilder):
 
         self.L0cut = "L0_CHANNEL_RE('Electron') | L0_CHANNEL_RE('Photon')"
 
-        fltrCode_LL = "(PT>(%(gammaConvPT)s-200.0)*MeV) & (MIPCHI2DV(PRIMARY)>%(gammaConvIPCHI)s)" % config
+        fltrCode_LL = "(MAXTREE(ISBASIC,TRGHOSTPROB)<%(ConvGhostLL)s) & (PT>(%(gammaConvPT)s-200.0)*MeV) & (MIPCHI2DV(PRIMARY)>%(gammaConvIPCHI)s) & (MAXTREE(ISBASIC,PPINFO( LHCb.ProtoParticle.ProbNNe,-1 ))>%(LLProbNNe)s)" % config
         self._trkFilter_LL = FilterDesktop( Code = fltrCode_LL )
-        fltrCode_DD = "(PT>%(gammaConvPT)s*MeV) & (MIPCHI2DV(PRIMARY)>(2.0/3.0)*%(gammaConvIPCHI)s)" % config
+        fltrCode_DD = "(MAXTREE(ISBASIC,TRGHOSTPROB)<%(ConvGhostDD)s) & (M<%(gammaConvMDD)s*MeV) & (PT>%(gammaConvPT)s*MeV) & (MIPCHI2DV(PRIMARY)>(2.0/3.0)*%(gammaConvIPCHI)s) & (MAXTREE(ISBASIC,PPINFO( LHCb.ProtoParticle.ProbNNe,-1 ))>%(DDProbNNe)s)" % config
         self._trkFilter_DD = FilterDesktop( Code = fltrCode_DD )
-        fltrCode_nonConv = "(PT>%(gammaPT)s*MeV) & (CL>%(gammaCL)s)" % config
+        fltrCode_nonConv = "(PT>%(gammaPT)s*MeV) & (CL>%(gammaCL)s) & (MAXTREE(ISBASIC,PPINFO( LHCb.ProtoParticle.CaloNeutralHcal2Ecal,1000 ))<%(NoConvHCAL2ECAL)s)" % config
         self._trkFilterNonConv = FilterDesktop( Code = fltrCode_nonConv )
         #
         self.convPhotons_LL = DataOnDemand(Location='Phys/StdAllLooseGammaLL/Particles')
@@ -142,18 +166,20 @@ class StrippingBs2gammagammaConf(LineBuilder):
                 name+"_LL",
                 Algorithm = _Bs2gammagamma_LL,
                 RequiredSelections = [self.convPhotons_LL_clean,self.stdPhotons_clean])
-
+        
         return StrippingLine(name+"_LLLine"
                      , prescale = 1
                      , postscale = 1
-                     , selection = self.TOSFilter(name+"_LLTOSLine",[Bs2gammagamma_LL],"L0(Photon|Electron)Decision")
+                     #, selection = self.TOSFilter(name+"_LLTOSLine",[Bs2gammagamma_LL],"L0(Photon|Electron)Decision")
+                     , selection = self.TOSFilter(name+"_LLTOSLine",[Bs2gammagamma_LL],"Hlt2RadiativeB2GammaGammaLLDecision") # HLT2 lines require L0 anyway
                      , L0DU = self.L0cut
+                     , HLT2 = config["HLT2LL"]
                      , RequiredRawEvents = ["Calo"],MDSTFlag = True
                      , EnableFlavourTagging = False
                      )
     def _Bs2gammagammaDD_X_Line( self, name, config) :
         BsGG_DC_DD = "(P>%(gammaP)s*MeV)" % config
-        BsGG_CC_DD = "(in_range(%(BsLowMass)s*MeV, AM, %(BsHighMass)s*MeV))" % config
+        BsGG_CC_DD = "(in_range(%(BsLowMassDD)s*MeV, AM, %(BsHighMassDD)s*MeV))" % config
         BsGG_MC_DD = "(PT>%(BsPT)s*MeV) & (INTREE( (ID=='gamma') & (ISBASIC) )) & (INTREE( HASTRACK & ISDOWN ))" % config
 
 
@@ -172,9 +198,11 @@ class StrippingBs2gammagammaConf(LineBuilder):
         return StrippingLine(name+"_DDLine"
                 , prescale = 1
                 , postscale = 1
-                , selection = self.TOSFilter(name+"_DDTOSLine",[Bs2gammagamma_DD],"L0(Photon|Electron)Decision")
-                                , L0DU = self.L0cut
-                                , RequiredRawEvents = ["Calo"],MDSTFlag = True
+                #, selection = self.TOSFilter(name+"_DDTOSLine",[Bs2gammagamma_DD],"L0(Photon|Electron)Decision")
+                , selection = self.TOSFilter(name+"_DDTOSLine",[Bs2gammagamma_DD],"Hlt2RadiativeB2GammaGammaDDDecision") # HLT2 lines require L0 anyway
+                , L0DU = self.L0cut
+                , HLT2 = config["HLT2DD"]
+                , RequiredRawEvents = ["Calo"],MDSTFlag = True
                 , EnableFlavourTagging = False)
     def _Bs2gammagammaDouble_X_Line( self, name, config) :
         BsGG_DC_double = "(PT>0.5*%(gammaConvPT)s*MeV) & (P>0.5*%(gammaP)s*MeV)" % config
@@ -189,17 +217,20 @@ class StrippingBs2gammagammaConf(LineBuilder):
                 , MotherCut      = BsGG_MC_double)
         _Bs2gammagamma_double.ParticleCombiners.update( { "" : "OfflineVertexFitter:PUBLIC"} )
 
+        allConv = MergedSelection("MergedConversions",RequiredSelections=[self.convPhotons_LL,self.convPhotons_DD])
         Bs2gammagamma_double = Selection(
                 name+"_double",
                 Algorithm = _Bs2gammagamma_double,
-                RequiredSelections = [self.convPhotons_LL,self.convPhotons_DD])
+                RequiredSelections = [allConv])
 
         return StrippingLine(name+"_doubleLine"
                 , prescale = 1
                 , postscale = 1
-                , selection = self.TOSFilter(name+"_doubleTOSLine",[Bs2gammagamma_double],"L0(Photon|Electron)Decision")
-                                , L0DU = self.L0cut
-                                , RequiredRawEvents = ["Calo"],MDSTFlag = True
+                #, selection = self.TOSFilter(name+"_doubleTOSLine",[Bs2gammagamma_double],"L0(Photon|Electron)Decision")
+                , selection = self.TOSFilter(name+"_doubleTOSLine",[Bs2gammagamma_double],"Hlt2RadiativeB2GammaGammaDoubleDecision") # HLT2 lines require L0 anyway
+                , L0DU = self.L0cut
+                , HLT2 = config["HLT2Double"]
+                , RequiredRawEvents = ["Calo"],MDSTFlag = True
                 , EnableFlavourTagging = False)
     def _Bs2gammagammaNone_X_Line( self, name, config, wide) :
 
@@ -212,7 +243,7 @@ class StrippingBs2gammagammaConf(LineBuilder):
             BsGG_MC_none = "(PT>%(BsNonePT)s*MeV) & (in_range(%(BsLowMassNone)s*MeV, M, %(BsHighMassNone)s*MeV))" % config
 
         if wide == True:
-            scaleWide = 0.1
+            scaleWide = 0.2
         else:
             scaleWide = 1.0
 
@@ -231,7 +262,10 @@ class StrippingBs2gammagammaConf(LineBuilder):
         return StrippingLine(name+"_NoConvLine"
                 , prescale = scaleWide
                 , postscale = 1
-                , selection = self.TOSFilter(name+"_NoConvTOSLine",[Bs2gammagamma_none],"L0(Photon|Electron)Decision")
+                , HLT1 = config["HLTNone"]
+                , HLT2 = config["HLTNone"]
+                #, selection = self.TOSFilter(name+"_NoConvTOSLine",[Bs2gammagamma_none],"L0(Photon|Electron)Decision")
+                , selection = self.TOSFilter(name+"_NoConvTOSLine",[Bs2gammagamma_none],"Hlt2RadiativeB2GammaGammaDecision") # HLT2 lines require L0 anyway
                                 , L0DU = self.L0cut
                                 , RequiredRawEvents = ["Calo"],MDSTFlag = True
                 , EnableFlavourTagging = False)
