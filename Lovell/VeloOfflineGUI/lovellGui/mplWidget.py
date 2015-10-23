@@ -1,6 +1,6 @@
-print 'Loading ROOT...'
+print '\tLoading ROOT...'
 import ROOT
-print '...done.'
+print '\tDone'
 import numpy as np
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
@@ -392,6 +392,7 @@ class mplWidget(QWidget):
 
     def on_draw(self, tabOpsState, notifyBox):
         # Redraws the figure
+        self.axes.set_title(self.params['title'])
         del self.xLims[:]
         del self.yLims[:]
         del self.zLims[:]
@@ -438,9 +439,9 @@ class mplWidget(QWidget):
 
 
     def create_main_frame(self):
-        p = self.palette()
-        p.setColor(self.backgroundRole(), Qt.white)
-        self.setPalette(p)
+#         p = self.palette()
+#         p.setColor(self.backgroundRole(), Qt.white)
+#         self.setPalette(p)
         figColor = self.palette().color(QPalette.Background)
         self.fig = Figure(facecolor = [figColor.red()/255., figColor.blue()/255., figColor.green()/255.])
         
