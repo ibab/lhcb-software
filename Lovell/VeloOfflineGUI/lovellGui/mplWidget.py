@@ -38,7 +38,7 @@ class lPlottable():
             moduleID += self.params['sensorShift']
         if tabOpsState.displayRefs:
             if 'isIV' in self.params and self.params['isIV']:
-                self.plot.ext = ' - module ' + str(moduleID)
+                self.plot.ext = ' - sensor ' + str(moduleID)
                 nominal, reference = lInterfaces.IV_plot(self.params['name'], moduleID, 
                                                          self.tab().dataIvDate(),
                                                          self.tab().IV_directory,
@@ -48,7 +48,7 @@ class lPlottable():
                                                          notifyBox = notifyBox)
             else:
                 if 'sensor_dependent' in self.plot.params and self.plot.params['sensor_dependent']:
-                    self.plot.ext = ' - module ' + str(moduleID)
+                    self.plot.ext = ' - sensor ' + str(moduleID)
                 nominal, reference = lInterfaces.runview_plot(tabOpsState.runNum, self.params['name'], 
                                                               moduleID, tabOpsState.run_data_dir, 
                                                               refRun = tabOpsState.refRunNum, getRef = True, 
@@ -56,7 +56,7 @@ class lPlottable():
                 
         else:
             if 'isIV' in self.params and self.params['isIV']:
-                self.plot.ext = ' - module ' + str(moduleID)
+                self.plot.ext = ' - sensor ' + str(moduleID)
                 nominal = lInterfaces.IV_plot(self.params['name'], moduleID, 
                                               self.tab().dataIvDate(),
                                               self.tab().IV_directory,
@@ -65,7 +65,7 @@ class lPlottable():
             else:
 
                 if 'sensor_dependent' in self.plot.params and self.plot.params['sensor_dependent']:
-                    self.plot.ext = ' - module ' + str(moduleID)
+                    self.plot.ext = ' - sensor ' + str(moduleID)
                 nominal = lInterfaces.runview_plot(tabOpsState.runNum, self.params['name'], 
                                                    moduleID, tabOpsState.run_data_dir, 
                                                    normalise = norm, notifyBox = notifyBox)

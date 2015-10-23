@@ -17,7 +17,7 @@ class lTabOpsState():
 		
 
 	def outline(self):
-		print "Module:", self.moduleID
+		print "Sensor:", self.moduleID
 		print "Display refs:", self.displayRefs
 		print "Overlaying refs:", self.overLayRef
 		print "Reference diff:", self.refDiff
@@ -95,7 +95,7 @@ class lTabOptions(QGroupBox):
 	def add_ID_selector(self):
 		self.module_ID_box = QComboBox(self)
 		self.module_ID_box.currentIndexChanged.connect(self.state_changed)
-		lab = QLabel("Module ID:")
+		lab = QLabel("Sensor ID:")
 		lab.setAlignment(Qt.AlignRight)
 		self.grid_layout.addWidget(lab, self.rowCount(), 0)
 		self.grid_layout.addWidget(self.module_ID_box, self.rowCount()-1, 1)

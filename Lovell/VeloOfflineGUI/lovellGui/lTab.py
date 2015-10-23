@@ -62,7 +62,7 @@ class lTab(QWidget):
         fileNames = self.getIVfileName(IV_directory)
         if (len(fileNames)) == 0:
             msg = 'No IV files found'
-            self.parent().tab_options.notify(msg)
+            self.parent().tab_options.notify(msg, 'No IV files found')
             print msg
         for file in fileNames:
             self.dataIvBox.addItem(file)
