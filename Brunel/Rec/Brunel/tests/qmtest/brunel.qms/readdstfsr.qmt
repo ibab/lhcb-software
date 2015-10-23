@@ -23,9 +23,9 @@
   <argument name="validator"><text>
 from Brunel.QMTest.BrunelExclusions import preprocessor as BrunelPreprocessor
 preprocessor = BrunelPreprocessor + \
-  RegexpReplacer(when = "ONLINE_2008         DEBUG Connection string", orig = r'/v7r999', repl = r'') + \
-  RegexpReplacer(when = "ONLINE_2008         DEBUG Connection string", orig = r'SQLite', repl = r'DBASE/Det') + \
-  LineSkipper(["ONLINE_2008.Tim...VERBOSE Starting"])
+  RegexpReplacer(when = "ONLINE_2010         DEBUG Connection string", orig = r'/v7r999', repl = r'') + \
+  RegexpReplacer(when = "ONLINE_2010         DEBUG Connection string", orig = r'SQLite', repl = r'DBASE/Det') + \
+  LineSkipper(["ONLINE_2010.Tim...VERBOSE Starting"])
 validateWithReference(preproc = preprocessor)
 </text></argument>
   <argument name="prerequisites"><set>

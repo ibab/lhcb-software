@@ -5,7 +5,9 @@
 # ...................
 # Author: M.Cattaneo
 # Purpose: Check that Brunel().DataType = "2015" is working correctly on 50ns ("EM") data.
-#          Currently explicitly setting an initial time, to avoid changes due to changing magnet polarity "today". Remove when set in DDDB
+#          Initial time must be explicitly set to before TS2 (end August), to
+#          test in initialise() that correct (Stripping20) Calo initialisation is
+#          being picked up
 # Prerequisites: brunel.2015-em-rdst, so that in case of failure the new 
 #                reference file of this test is the one that survives 
 # Common failure modes, severities and cures: 
