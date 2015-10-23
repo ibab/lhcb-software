@@ -11,7 +11,7 @@ use  DaVinciUtils               v1r1p1   Phys    # Current DV Maintainer
 use  DaVinciKernel              v12r3    Phys    # Current DV Maintainer
 use  SelectionLine              v1r6     Kernel  # Gerhard Raven
 use  SelPy                      v4r3     Phys    # Current DV Maintainer
-use  PhysSelPython              v9r7     PhysSel # Current DV Maintainer
+use  PhysSelPython              v9r8     PhysSel # Current DV Maintainer
 
 #===================================================================
 
