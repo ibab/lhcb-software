@@ -5,6 +5,12 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-10-23 - Dan Johnson
+ - Remove Hlt1NoPVPassThrough from Hlt1MuonLines
+ - Change naming: Hlt1CEP to Hlt1LowMult
+ - Change Hlt1 treatment of LowMult L0 triggers: introduce discretisation of 
+   lines
+
 ! 2015-10-16 - Francesco Dettori
  - Small fix to Hlt1MultiMuon line to restore independence. 
 

@@ -72,7 +72,6 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                  , 'CalibMuonAlignJpsi_CombTAU'                : 0.     # ps
                  , 'CalibMuonAlignJpsi_JpsiMassWinLoose'         : 150     # MeV
                  , 'CalibMuonAlignJpsi_JpsiMassWin'              : 100     # MeV
-                 , 'NoPVPassThrough_L0ChannelRe' : "(L0_CHANNEL_RE('.*lowMult')) & ~(L0_CHANNEL_RE('.*DiHadron,lowMult'))"
                  , 'ODINFilter'               : {}
                  , 'L0Channels'               : { 'SingleMuonHighPT' : ( 'Muon', 'MuonEW' ),
                                                   'SingleMuonNoIP'   : ( 'Muon', ),
@@ -472,18 +471,6 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             algos = algos
             )
 
-
-    
-    def build_NoPVMuonPassThrough(self): 
-        from HltLine.HltLine import Hlt1Line   as Line
-        # The pass-through NoPV line
-        Hlt1NoPVMuonPassThrough = Line( 'NoPVPassThrough'
-                                        , prescale = self.prescale
-                                        , L0DU = "%(L0ChannelRe)s"%(self.localise_props( 'NoPVPassThrough' ))
-                                        , ODIN = "~jbit( ODIN_EVTTYP,0 )"
-                                        , postscale = self.postscale)
-
-
     def build_line( self, name, streamer ):
         from HltLine.HltLine import Hlt1Line
         algos = [ self.do_timing( unit ) if self.getProp('DoTiming') else unit for unit in streamer( self.localise_props( name ) ) ]
@@ -526,5 +513,4 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         for line, streamer in to_build:
             self.build_line( line, streamer )
 
-        self.build_NoPVMuonPassThrough() 
         self.build_Jpsi2MuMuLine()
