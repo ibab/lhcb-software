@@ -170,19 +170,20 @@ StatusCode VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks
       // now calculate distance
       float weighteddistance = float((velopunktx.x()-muonpunktx.x())*(velopunktx.x()-muonpunktx.x())*m_xscale[reg]+(1-m_xscale[reg])*(velopunkty.y()-muonpunkty.y())*(velopunkty.y()-muonpunkty.y()));
 
-      double m_distancecut;
+      double distancecut = 0;
       // -- hard coded after determination on private ntuple
       if (reg == 0)
-        m_distancecut = 30*30;//100;
+        distancecut = 30*30;//100;
       if (reg == 1)
-        m_distancecut = 60*60;//200;
+        distancecut = 60*60;//200;
       if (reg == 2)
-        m_distancecut = 110*110;//9000;
+        distancecut = 110*110;//9000;
       if (reg == 3)
-        m_distancecut = 200*200;//38000;
+        distancecut = 200*200;//38000;
+      else continue;
 
-      m_distancecut*=m_distcutmultiplyer;
-      if (weighteddistance>m_distancecut) continue;
+      distancecut*=m_distcutmultiplyer;
+      if (weighteddistance>distancecut) continue;
 
 
 

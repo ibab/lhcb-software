@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2015-10-23 - Michael Kolpin
+ - Fixed unitiliased use of variable and naming conventions in VeloMuonBuilder 
+
 ! 2015-10-21 - Michael Kolpin
  - Removed distanceCut property from VeloMuonBuilder, as the value is hardcoded during execute
 
