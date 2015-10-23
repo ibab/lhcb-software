@@ -3,6 +3,9 @@ version v38r0
 
 branches doc cmt
 
+##############################
+# Patch just for this version
+use  CaloReco    v5r26    Calo
 # Temporarily moved in from Stripping, for S23 release
 # To be decided if longer term this stays in the DaVinci 
 # project, or moves elsewhere.
