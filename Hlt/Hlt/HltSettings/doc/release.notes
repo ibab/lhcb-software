@@ -4,6 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-10-23 - Dan Johnson
+ - Changes to LowMult threshold settings to reflect changes in Hlt1LowMult lines 
+   (and resulting changes in Hlt2LowMult lines).
+ - Added Hlt1LowMult settings to Physics_25ns_October2015 recipe
+
 ! 2015-10-20 - Sascha Stahl
  - Fix TISTOS and Hlt1 filters in protonArgon settings.
 

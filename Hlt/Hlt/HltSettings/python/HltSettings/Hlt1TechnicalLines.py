@@ -21,7 +21,6 @@ class Hlt1TechnicalLines :
                 , 'Hlt1BeamGasCrossingEnhancedBeam1', 'Hlt1BeamGasCrossingEnhancedBeam2'
                 , 'Hlt1BeamGasCrossingForcedReco', 'Hlt1BeamGasCrossingForcedRecoFullZ'
                 , 'Hlt1BeamGasCrossingParasitic', 'Hlt1BeamGasHighRhoVertices'
-                , 'Hlt1NoPVPassThrough'
                 , 'Hlt1Lumi'
                 , 'Hlt1L0Any','Hlt1L0AnyNoSPD'
                 , 'Hlt1MBNoBias'

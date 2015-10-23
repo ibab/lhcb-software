@@ -57,11 +57,11 @@ class Physics_25ns_October2015( object ):
 
     def SubDirs(self):
         return {'August' : ['CcDiHadron', 'DPS', 'EW', 'PID', 'Topo',
-                            'Bc2JpsiX', 'DiMuon', 'DisplVertices', 'LowMult',
+                            'Bc2JpsiX', 'DiMuon', 'DisplVertices', 
                             'TrackEff', 'TrackEffDiMuon', "Commissioning", 'RareStrange',
                             'TriMuon', 'B2HH', 'B2Kpi0','Phi','RareCharm'],
                 'September' : ['CharmHad', 'XcMuXForTau', 'Radiative'],
-                'October' : ['SingleMuon']}
+                'October' : ['LowMult', 'SingleMuon']}
                 
 
     def Thresholds(self) :
@@ -297,7 +297,27 @@ class Physics_25ns_October2015( object ):
                                                           , 'LM_MaxTr' : 40
                                                           , 'LM_GEC'   : 'Loose'
                                                           }
-
+                       , Hlt1LowMultLinesConf : { 'Prescale' : {"Hlt1LowMultPassThrough" : 0.01}
+                                                , 'SpdMult'  :   100.   # dimensionless, Spd Multiplicity cut
+                                                , 'VeloCut_Hadrons_MinVelo'     :     2    # dimensionless
+                                                , 'VeloCut_Hadrons_MaxVelo'     :     8    # dimensionless
+                                                , 'VeloCut_Hadrons_SpdMult'     :    20    # dimensionless
+                                                , 'VeloCut_Leptons_MinVelo'     :     0    # dimensionless
+                                                , 'VeloCut_Leptons_MaxVelo'     :   100    # dimensionless
+                                                , 'MaxVeloCut_MaxVelo'          :     8    # dimensionless
+                                                , 'MaxNVelo'                    :  1000    # dimensionless, 
+                                                , 'MinNVelo'                    :     2    # dimensionless, 
+                                                , 'TrChi2'                      :     5.   # dimensionless, 
+                                                , 'PT'                          :   500.   # MeV
+                                                , 'P'                           :     0.   # MeV 
+                                                , 'LowMultLineL0Dependency'     :             "( L0_CHANNEL_RE('.*lowMult') & ~(L0_CHANNEL_RE('Photon,lowMult')) )"
+                                                , 'LowMultVeloCut_HadronsLineL0Dependency'  : "( L0_CHANNEL_RE('DiHadron,lowMult') )"
+                                                , 'LowMultVeloCut_LeptonsLineL0Dependency'  : "( L0_CHANNEL_RE('Muon,lowMult') | L0_CHANNEL_RE('DiMuon,lowMult') | L0_CHANNEL_RE('Electron,lowMult') )"
+                                                , 'LowMultMaxVeloCutLineL0Dependency'       : "( L0_CHANNEL_RE('Photon,lowMult') | L0_CHANNEL_RE('DiEM,lowMult') )"
+                                                , 'LowMultPassThroughLineL0Dependency'      : "L0_CHANNEL_RE('.*lowMult')"
+                                                , 'NoBiasTriggerType'                       : 'LumiTrigger' # dimensionless
+                                                , 'NoBiasBeamCrossingTypeVeto'              : 'BeamCrossing' # dimensionless
+                                                } 
                        }
 
         # HLT2 thresholds from individual files
@@ -347,8 +367,11 @@ class Physics_25ns_October2015( object ):
                  , 'Hlt1CalibRICHMirrorRICH2'
                  , 'Hlt1DiProton'
                  , 'Hlt1DiProtonLowMult'
-                 , 'Hlt1CEP'
-                 , 'Hlt1CEPVeloCut'
+                 , 'Hlt1LowMult'
+                 , 'Hlt1LowMultVeloCut_Hadrons'
+                 , 'Hlt1LowMultVeloCut_Leptons'
+                 , 'Hlt1LowMultMaxVeloCut'
+                 , 'Hlt1LowMultPassThrough'
                  , 'Hlt1NoBiasNonBeamBeam']
 
         from Hlt1TechnicalLines import Hlt1TechnicalLines
