@@ -60,9 +60,9 @@ StatusCode WriteSTNoiseConditions::initialize()
 
 StatusCode WriteSTNoiseConditions::finalize()
 {
-  info() << "Writing alignment conditions to file" << endreq;
+  info() << "Writing alignment conditions to file" << endmsg;
   // Print out the full tree
-  info() << "Trying for top element " << tracker()->name() << endreq;
+  info() << "Trying for top element " << tracker()->name() << endmsg;
 
   // get the sectors 
   const DeSTDetector::Sectors& sectors = tracker()->sectors();

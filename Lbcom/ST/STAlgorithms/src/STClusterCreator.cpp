@@ -161,7 +161,7 @@ StatusCode STClusterCreator::createClusters( const STDigits* digitCont,
                                                                 measValue.fractionalPosition);
         if (aPair.first.id() == STTell1ID::nullBoard) {
         // screwed
-         err()  << "failed to link " << uniqueSector(measValue.strip) << endreq;
+         err()  << "failed to link " << uniqueSector(measValue.strip) << endmsg;
          return Error("Failed to find Tell1 board" ,  StatusCode::FAILURE);
         }       
 

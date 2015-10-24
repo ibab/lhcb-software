@@ -60,7 +60,7 @@ StatusCode WriteSTStatusConditions::initialize()
 
 StatusCode WriteSTStatusConditions::finalize()
 {
-  info() << "Writing status conditions to file" << endreq;
+  info() << "Writing status conditions to file" << endmsg;
   // Print out the full tree
   info() << "Trying for top element " << tracker()->name() << endmsg;
    
