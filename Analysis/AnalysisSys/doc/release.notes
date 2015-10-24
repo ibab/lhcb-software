@@ -4,7 +4,7 @@ Package Coordinator : DaVinci coordinator
 Purpose             : LHCb analysis packages
 
 
-</PRE><H1><A NAME=v14r2>2015-10-23 Analysis v14r2</A></H1><PRE>
+</PRE><H1><A NAME=v14r2>2015-10-24 Analysis v14r2</A></H1><PRE>
 
 Development release for 2016 data taking, based on Gaudi v26r4, LHCb v39r1, Rec v18r2 and Phys v20r2.
 Uses LCG_79 with ROOT 6.04.02.
@@ -13,7 +13,7 @@ Uses LCG_79 with ROOT 6.04.02.
   Analysis/Ostap v1r10, MicroDST/MicroDSTTools v2r14, Phys/AnalysisConf v2r5, Phys/AnalysisPython v2r38,
   Phys/DaVinciMCTools v10r13, Phys/DaVinciTrackRefitting v2r2, Phys/DecayTreeTupleMuonCalib v1r5,
   Phys/DecayTreeTupleTracking v1r3, Phys/DecayTreeTupleTrigger v1r9, Phys/DecayTreeTuple v5r3, Phys/DSTWriters v4r22,
-  Phys/DSTWriterTests v2r6, Phys/LoKiPhysMC v9r10, Phys/TeslaTools v1r16.
+  Phys/DSTWriterTests v2r6, Phys/JetTagging v1r9, Phys/LoKiPhysMC v9r10, Phys/TeslaTools v1r16.
 
 - In Analysis/Ostap v1r10 :
   . Very many additions, improvements and fixes. See package release notes for details.
@@ -58,6 +58,9 @@ Uses LCG_79 with ROOT 6.04.02.
 
 - In Phys/DSTWriterTests v2r6 :
   . Removed configuration of obsolete ANNDispatchSvc.
+
+- In Phys/JetTagging v1r9 :
+  . std::isfinite and std::isnan preferred over GaudiAlg/CheckForNaN.h.
 
 - In Phys/LoKiPhysMC v9r10 :
   . Added possibility to create mcMatch functors outside of the algorithm loop.

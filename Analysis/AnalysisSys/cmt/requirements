@@ -23,7 +23,7 @@ use  VertexFitCheck             v1r9     Phys   # Yuehong Xie
 use  FlavourTaggingChecker      v7r9     Phys   # Marc Grabalosa
 use  ParticleMakerChecker       v1r5p1   Phys   # Chris Jones
 use  DisplVerticesMC            v1r4p5   Phys   # Victor Coco
-use  JetTagging                 v1r8     Phys   # Cedric Potterat
+use  JetTagging                 v1r9     Phys   # Cedric Potterat
 use  JetAccessoriesMC		v2r9     Phys   # Victor Coco, Cedric Potterat
 use  CommonMCParticles          v1r1     Phys   # Conor Fitzpatrick
 use  DaVinciAngleCalculators    v1r0     Phys   # ?
