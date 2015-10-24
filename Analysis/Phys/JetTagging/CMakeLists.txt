@@ -1,7 +1,7 @@
 ################################################################################
 # Package: JetTagging
 ################################################################################
-gaudi_subdir(JetTagging v1r8)
+gaudi_subdir(JetTagging v1r9)
 
 gaudi_depends_on_subdirs(Phys/LoKiJets
 			 Phys/LoKiAlgo
