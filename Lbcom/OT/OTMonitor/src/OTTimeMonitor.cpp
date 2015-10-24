@@ -10,10 +10,8 @@
 #include "OTDet/DeOTModule.h"
 
 /// BOOST
-#include "boost/lexical_cast.hpp"
 #include "boost/lambda/bind.hpp"
 #include "boost/lambda/lambda.hpp"
-#include "boost/foreach.hpp"
 
 // local
 #include "OTTimeMonitor.h"
@@ -28,7 +26,6 @@
 using namespace LHCb;
 using namespace boost;
 using namespace boost::lambda;
-using boost::lexical_cast;
 
 /// Declaration of algorithm factory
 DECLARE_ALGORITHM_FACTORY( OTTimeMonitor )
@@ -82,10 +79,10 @@ StatusCode OTTimeMonitor::execute() {
   m_nTimesHisto->fill(m_decoder->totalNumberOfHits());
   
   // loop over all modules
-  BOOST_FOREACH(const DeOTModule* module, m_tracker->modules()) {
+  for(const DeOTModule* module: m_tracker->modules()) {
     LHCb::OTChannelID modid = module->elementID();
     LHCb::OTLiteTimeRange ottimes = m_decoder->decodeModule(modid);
-    BOOST_FOREACH(const LHCb::OTLiteTime& ottime, ottimes)
+    for(const LHCb::OTLiteTime& ottime: ottimes)
       fillHistograms( ottime, *module )  ;
   }
   
@@ -121,7 +118,7 @@ void OTTimeMonitor::initHistograms() {
   IHistogram1D* aHisto1D;
   unsigned int iStation = m_firstStation;
   for (; iStation <= m_nStations; ++iStation) {
-    std::string stationToString = boost::lexical_cast<std::string>(iStation);
+    std::string stationToString = std::to_string(iStation);
     
     // Calibrated time spectra
     id = 300 + iStation;

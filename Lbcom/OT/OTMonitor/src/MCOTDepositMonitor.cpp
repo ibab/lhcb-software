@@ -20,10 +20,8 @@
 #include "GaudiKernel/Point3DTypes.h"
 
 /// BOOST
-#include "boost/lexical_cast.hpp"
 #include "boost/lambda/bind.hpp"
 #include "boost/lambda/lambda.hpp"
-#include <boost/foreach.hpp>
 
 // local
 #include "MCOTDepositMonitor.h"
@@ -40,7 +38,6 @@
 
 using namespace boost;
 using namespace boost::lambda;
-using boost::lexical_cast;
 
 namespace MonitorHelpers {
   const std::string& findSpill( const LHCb::MCHit* aHit ) {
@@ -159,10 +156,10 @@ StatusCode MCOTDepositMonitor::execute() {
 }
 
 void MCOTDepositMonitor::initHistograms() {
-  BOOST_FOREACH( DeOTStation* station, m_det->stations() )
+  for( DeOTStation* station: m_det->stations() )
   {
     const unsigned    stationID       = station->stationID();
-    const std::string stationToString = boost::lexical_cast<std::string>( stationID );
+    const std::string stationToString = std::to_string( stationID );
 
     /// Deposit spectrum
     m_spectrumHistos[ depSpectrum( stationID ) ] = book( depSpectrum( stationID ) ,

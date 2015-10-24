@@ -16,9 +16,6 @@
 // local
 #include "OTChannelMonitor.h"
 
-#include <boost/lexical_cast.hpp>
-#include <boost/foreach.hpp>
-
 #define longModuleLength 2421  // Half module without inefficient region in mm
 //-----------------------------------------------------------------------------
 // Implementation file for class : OTChannelMonitor
@@ -85,11 +82,11 @@ StatusCode OTChannelMonitor::initialize() {
       for(int q=0; q<4; q++){      // Quadrant
         for(int m=1; m<=9; m++){   // Module 
           for(int o=0; o<4; o++){  // Otis
-            otisname = "T"+boost::lexical_cast<std::string>( s )+
-              "L"+boost::lexical_cast<std::string>( l )+
-              "Q"+boost::lexical_cast<std::string>( q )+
-              "M"+boost::lexical_cast<std::string>( m )+
-              "Otis"+boost::lexical_cast<std::string>( o );
+            otisname = "T"+std::to_string( s )+
+              "L"+std::to_string( l )+
+              "Q"+std::to_string( q )+
+              "M"+std::to_string( m )+
+              "Otis"+std::to_string( o );
 	    
             int uniqueQuadrant = uniqueLayer*nQuadrants + q;
             int uniqueModule = uniqueQuadrant * nModules + m-1;
@@ -107,8 +104,8 @@ StatusCode OTChannelMonitor::initialize() {
       }// Quadrant
 
       // Set layer name
-      layername = "T"+boost::lexical_cast<std::string>( s )+
-        "L"+boost::lexical_cast<std::string>( l );
+      layername = "T"+std::to_string( s )+
+        "L"+std::to_string( l );
 
       // Get layer from detector 
       //      LHCb::OTChannelID  aChan(uniqueLayer/4 +1 , uniqueLayer%4, 1, 0u, 0u, 0u);
@@ -305,7 +302,7 @@ void OTChannelMonitor::getLayerGeometry(int uniqueLayer,
   std::sort(min_modules_y.begin(), min_modules_y.end());
   
   if ( msgLevel(MSG::DEBUG) ){
-    BOOST_FOREACH(double num, min_modules_x) {
+    for(double num: min_modules_x) {
       verbose() << "get layer geometry  value " << num << endmsg; 
     }
   }
