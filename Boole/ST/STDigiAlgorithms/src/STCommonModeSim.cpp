@@ -62,7 +62,7 @@ StatusCode STCommonModeSim::initialize() {
   m_cmTool = tool<ISTCMSimTool>( m_cmToolName,  m_cmToolName,  this);
 
   // Gaussian
-  sc = randSvc()->generator(Rndm::Gauss(0.,1.),m_gaussDist.pRef());
+  m_gaussDist = randSvc()->generator(Rndm::Gauss(0.,1.));
 
   // get the cuts from condition if present
   if (existDet<Condition>(m_conditionLocation) == false || 

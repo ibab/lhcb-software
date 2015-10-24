@@ -68,17 +68,15 @@ StatusCode STDigitCreator::initialize()
 
   
   // random numbers generators (flat, gaussian and gaussian tail)
-  sc = randSvc()->generator(Rndm::Flat(0.,1.),m_uniformDist.pRef());
-  sc = randSvc()->generator(Rndm::Gauss(0.,1.),m_gaussDist.pRef());
-  sc = randSvc()->generator(Rndm::GaussianTail(m_tailStart,1.),
-                            m_gaussTailDist.pRef());
+  m_uniformDist = randSvc()->generator(Rndm::Flat(0.,1.));
+  m_gaussDist = randSvc()->generator(Rndm::Gauss(0.,1.));
+  m_gaussTailDist = randSvc()->generator(Rndm::GaussianTail(m_tailStart,1.));
 
   // cache the number of noise strips
   if (!m_allStrips){
     double fracOfNoiseStrips = 0.5*gsl_sf_erfc(m_tailStart/sqrt(2.0));
     m_numNoiseStrips = (int)(fracOfNoiseStrips*tracker()->nStrip());
-  }
-  else {
+  } else {
     m_numNoiseStrips = tracker()->nStrip();
   }
   return sc;
