@@ -74,14 +74,14 @@ StatusCode PhotonChecker::execute() {
 
     debug() << " (ID= " <<  (*it)->particleID().pid()
             << ") has momentum " << (*it)->momentum()/GeV
-            << " and mass " <<  (*it)->measuredMass()/GeV << " GeV" << endreq;
+            << " and mass " <<  (*it)->measuredMass()/GeV << " GeV" << endmsg;
 
 
     if ( abs((*it)->particleID().pid())!=22 ) continue ;
     const LHCb::Particle* Part = *it;
     const LHCb::MCParticle* MCP = m_pLinker->firstMCP( Part ); ;
-    if (0==MCP) debug() << "no MCParticle found " <<endreq;
-    else debug() << "MCParticle is found " << endreq;
+    if (0==MCP) debug() << "no MCParticle found " <<endmsg;
+    else debug() << "MCParticle is found " << endmsg;
     if (0==MCP) continue ;
 
     ntuple->column("partTrue",1.);
@@ -166,18 +166,18 @@ StatusCode PhotonChecker::getPhotonParameter(const LHCb::Particle& photon,
 
   int pid=photon.particleID().pid();
   if(pid!=22) {
-    err() <<"Particle is not a photon!"<<endreq;
+    err() <<"Particle is not a photon!"<<endmsg;
     return StatusCode::FAILURE;
   }
 
   const LHCb::ProtoParticle*   proto  = photon.proto() ;
   if( 0 == proto  ) {
-    err() <<"ProtoParticle points to NULL!"<<endreq;
+    err() <<"ProtoParticle points to NULL!"<<endmsg;
     return StatusCode::FAILURE;
   }
 
   if( proto->calo().empty() ) {
-    err() <<"ProtoParticle has no CaloHypos "<<endreq;
+    err() <<"ProtoParticle has no CaloHypos "<<endmsg;
     return StatusCode::FAILURE;
   }
   typedef const SmartRefVector<CaloHypo> Hypos;
@@ -194,7 +194,7 @@ StatusCode PhotonChecker::getPhotonParameter(const LHCb::Particle& photon,
   // get the position
   const CaloPosition* pos = hypo->position() ;
   if( 0 == pos    ) {
-    err() <<"CaloPosition* points to NULL! "<<endreq;
+    err() <<"CaloPosition* points to NULL! "<<endmsg;
     return StatusCode::FAILURE;
   }
   zg=pos->z();
@@ -202,8 +202,8 @@ StatusCode PhotonChecker::getPhotonParameter(const LHCb::Particle& photon,
   para(1)=pos->y();
   para(2)=pos->e();
   cov=pos -> covariance();
-  verbose() <<"Photon parameters: " <<para<<endreq;
-  verbose() <<"Photon cov : " <<cov<<endreq;
+  verbose() <<"Photon parameters: " <<para<<endmsg;
+  verbose() <<"Photon cov : " <<cov<<endmsg;
 
   return sc;
 }

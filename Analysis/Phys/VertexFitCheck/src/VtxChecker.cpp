@@ -77,14 +77,14 @@ StatusCode VtxChecker::execute() {
     
     debug() << " (ID= " <<  (*it)->particleID().pid()
             << ") has momentum " << (*it)->momentum()/GeV
-            << " and mass " <<  (*it)->measuredMass()/GeV << " GeV" << endreq;
+            << " and mass " <<  (*it)->measuredMass()/GeV << " GeV" << endmsg;
 
 
     if ( abs((*it)->particleID().pid())!=m_pidToCheck ) continue ;
     const LHCb::Particle* Part = *it;
     const LHCb::MCParticle* MCP = m_pLinker->firstMCP( Part ); ;
-    if (0==MCP) debug() << "no MCParticle found " <<endreq;
-    else debug() << "MCParticle is found " << endreq;
+    if (0==MCP) debug() << "no MCParticle found " <<endmsg;
+    else debug() << "MCParticle is found " << endmsg;
     if (0==MCP) continue ;
     sc = plotParameters(Part , MCP, "Particle ");
 

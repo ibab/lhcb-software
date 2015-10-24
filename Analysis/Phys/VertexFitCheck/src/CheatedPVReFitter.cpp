@@ -71,14 +71,14 @@ StatusCode CheatedPVReFitter::initialize()
 //=============================================================================
 StatusCode CheatedPVReFitter::reFit(LHCb::VertexBase* PV) const {
 
-  debug() <<"Now reFit PV"<< endreq;
+  debug() <<"Now reFit PV"<< endmsg;
 
   StatusCode sc = StatusCode::SUCCESS;
 
   LinkedTo<LHCb::MCParticle,LHCb::Track> directLink( evtSvc(), msgSvc(), TrackLocation::Default );
 
   if(!(PV->isPrimary())) {
-    debug() <<"CheatedPVReFitter is used to reFit a  non-PV"<< endreq;
+    debug() <<"CheatedPVReFitter is used to reFit a  non-PV"<< endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -109,7 +109,7 @@ StatusCode CheatedPVReFitter::reFit(LHCb::VertexBase* PV) const {
 
   sc=fitPV( primvtx , tracks);
   if(!sc.isSuccess()) {
-    debug() << "fitPV fails" <<endreq;
+    debug() << "fitPV fails" <<endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -122,7 +122,7 @@ StatusCode CheatedPVReFitter::reFit(LHCb::VertexBase* PV) const {
 StatusCode CheatedPVReFitter::remove(const LHCb::Particle* /*part*/,
                                      LHCb::VertexBase* /*PV*/) const {
 
-  warning() <<"remove method not implemented! "<< endreq;
+  warning() <<"remove method not implemented! "<< endmsg;
 
   return StatusCode::SUCCESS;
 
@@ -136,12 +136,12 @@ StatusCode CheatedPVReFitter::fitPV(LHCb::RecVertex* PV,
                                     std::vector<LHCb::Track*> & tracks) const {
   StatusCode sc = StatusCode::SUCCESS;
 
-  debug() <<"Now entering fitPV!"<<endreq;
+  debug() <<"Now entering fitPV!"<<endmsg;
 
   PV->clearTracks();
 
   if(tracks.size()<2) {
-    debug() << "number of track left for the PV "<< tracks.size() <<endreq;
+    debug() << "number of track left for the PV "<< tracks.size() <<endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -151,13 +151,13 @@ StatusCode CheatedPVReFitter::fitPV(LHCb::RecVertex* PV,
   tracks.pop_back();
 
   if(!tr1 || !tr2 ) {
-    debug() << "Null track pointer found ! " << endreq;
+    debug() << "Null track pointer found ! " << endmsg;
     return StatusCode::FAILURE;
   }
 
   sc = seedPV(PV, tr1, tr2);
   if(sc.isFailure()) {
-    debug() << "Fail to seedPV" << endreq;
+    debug() << "Fail to seedPV" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -166,7 +166,7 @@ StatusCode CheatedPVReFitter::fitPV(LHCb::RecVertex* PV,
     LHCb::Track* tr = *itrack;
     sc = addTr(PV, tr);
     if(sc.isFailure()) {
-      debug() << "Fail to addTr" << endreq;
+      debug() << "Fail to addTr" << endmsg;
       return StatusCode::FAILURE;
     }
   }
@@ -249,7 +249,7 @@ StatusCode CheatedPVReFitter::seedPV(LHCb::RecVertex* PV,
     zEstimate = (((sumX*sumSlopeX + sumY*sumSlopeY)/2.)
                  - sumCrossedProduct) /det;
   }  else {
-    err() << "Unable to make z estimate " << endreq;
+    err() << "Unable to make z estimate " << endmsg;
     if(z1<z2) zEstimate = z1-.001;
     else zEstimate = z2-0.001;
   }
@@ -268,7 +268,7 @@ StatusCode CheatedPVReFitter::seedPV(LHCb::RecVertex* PV,
     if(isVelo1 || isVeloB1) sc = m_veloExtrapolator->propagate( newstate1, zPreviousFit );
     else  sc = m_fullExtrapolator->propagate( newstate1, zPreviousFit );
     if( sc.isFailure ()) {
-      debug() << "failed to propagate tarck state in seedPV!" << endreq;
+      debug() << "failed to propagate tarck state in seedPV!" << endmsg;
       return sc;
     }
 
@@ -276,7 +276,7 @@ StatusCode CheatedPVReFitter::seedPV(LHCb::RecVertex* PV,
     if(isVelo2 || isVeloB2) sc = m_veloExtrapolator->propagate( newstate2, zPreviousFit );
     else  sc = m_fullExtrapolator->propagate( newstate2, zPreviousFit );
     if( sc.isFailure ()) {
-      debug() << "failed to propagate tarck state in seedPV!" << endreq;
+      debug() << "failed to propagate tarck state in seedPV!" << endmsg;
       return sc;
     }
 
@@ -328,13 +328,13 @@ StatusCode CheatedPVReFitter::seedPV(LHCb::RecVertex* PV,
 
     while(!converged && iter< m_maxIter)  {
       iter++;
-      verbose() << ":-) Iteration   " << iter << endreq;
+      verbose() << ":-) Iteration   " << iter << endmsg;
 
       //f=(x2-x1)*(py2*pz1-py1*pz2)-(y2-y1)*(px2*pz1-px1*pz2)
       ROOT::Math::SVector<double, 1> f;
       f(0)=(vfit(5)-vfit(0))*(vfit(8)*vfit(4)-vfit(3)*vfit(9))-
         (vfit(6)-vfit(1))*(vfit(7)*vfit(4)-vfit(2)*vfit(9));
-      verbose() << "constraint values   " << f << endreq;
+      verbose() << "constraint values   " << f << endmsg;
       //D is the derivative matrix
       ROOT::Math::SMatrix<double, 1, 10> D;
       D(0,0)=-(vfit(8)*vfit(4)-vfit(3)*vfit(9));
@@ -353,7 +353,7 @@ StatusCode CheatedPVReFitter::seedPV(LHCb::RecVertex* PV,
       Gaudi::SymMatrix1x1 VD=ROOT::Math::Similarity<double,1,10>(D, Cx);
 
       if(!VD.Invert()) {
-        debug() << "could not invert matrix VD in seedPV! " <<endreq;
+        debug() << "could not invert matrix VD in seedPV! " <<endmsg;
         return StatusCode::FAILURE;
       }
 
@@ -471,7 +471,7 @@ StatusCode  CheatedPVReFitter::addTr(LHCb::RecVertex* PV,
   if(isVelo || isVeloB) sc = m_veloExtrapolator->propagate( newstate, z2 );
   else  sc = m_fullExtrapolator->propagate( newstate, z2 );
   if( sc.isFailure ()) {
-    debug() << "failed to propagate tarck state in addTr!" << endreq;
+    debug() << "failed to propagate tarck state in addTr!" << endmsg;
     return sc;
   }
 
@@ -520,7 +520,7 @@ StatusCode  CheatedPVReFitter::addTr(LHCb::RecVertex* PV,
 
   while(!converged && iter< m_maxIter)  {
     iter++;
-    verbose() << ":-) Iteration   " << iter << endreq;
+    verbose() << ":-) Iteration   " << iter << endmsg;
 
     //f(0)=(xtr-xpv)*pztr-(z2-zpv)*pxtr
     //f(1)=(ytr-ypv)*pztr-(z2-zpv)*pytr
@@ -553,7 +553,7 @@ StatusCode  CheatedPVReFitter::addTr(LHCb::RecVertex* PV,
 
     Gaudi::SymMatrix2x2 VD=ROOT::Math::Similarity<double,2,8>(D, Cx);
     if(!VD.Invert()) {
-      debug() << "could not invert matrix VD in addTr! " <<endreq;
+      debug() << "could not invert matrix VD in addTr! " <<endmsg;
       return StatusCode::FAILURE;
     }
 
@@ -619,7 +619,7 @@ StatusCode CheatedPVReFitter::kalman_remove(LHCb::RecVertex* PV, LHCb::Track* tr
   if(isVelo || isVeloB) sc = m_veloExtrapolator->propagate( newstate, z2 );
   else  sc = m_fullExtrapolator->propagate( newstate, z2 );
   if( sc.isFailure ()) {
-    debug() << "failed to propagate tarck state in addTr!" << endreq;
+    debug() << "failed to propagate tarck state in addTr!" << endmsg;
     return sc;
   }
 
