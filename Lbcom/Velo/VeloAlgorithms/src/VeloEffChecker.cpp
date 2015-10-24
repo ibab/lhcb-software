@@ -7,9 +7,6 @@
 #include "VeloEffChecker.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
-// BOOST
-#include <boost/lexical_cast.hpp>
-
 #include "Event/MCHit.h"
 #include "Event/VeloCluster.h"
 
@@ -63,7 +60,7 @@ StatusCode VeloEffChecker::initialize()
 
 StatusCode VeloEffChecker::execute(){
 
- 
+
   AsctTool associator(evtSvc(),VeloClusterLocation::Default+"2MCHits" );
   m_table = associator.inverse();
   if (!m_table) {
@@ -73,14 +70,14 @@ StatusCode VeloEffChecker::execute(){
   // histos per particle
   MCHits* hits = get<MCHits>(MCHitLocation::Velo);
 
-  for (MCHits::iterator iterHit = hits->begin(); 
+  for (MCHits::iterator iterHit = hits->begin();
        iterHit != hits->end(); ++iterHit){
     if (((*iterHit)->p() > m_pMin )&& ((*iterHit)->time() < m_tMax )){
       if (inActive(*iterHit) == true) fillEffHistos(*iterHit);
-    }   
-      
+    }
+
   } // iterHit
-  
+
 
   return StatusCode::SUCCESS;
 }
@@ -91,24 +88,24 @@ StatusCode VeloEffChecker::finalize(){
   info() << " -------Efficiency %--------- " << endmsg;
 
   const Histo2DMapID& histos = histo2DMapID();
-  
+
   double avg = 0;
   unsigned int n = 0;
-  unsigned int missed = 0; 
-  
+  unsigned int missed = 0;
+
   for ( Histo2DMapID::const_iterator entry = histos.begin() ;
-        histos.end() != entry ; ++entry  ) 
+        histos.end() != entry ; ++entry  )
   {
     // histogram ID
     AIDA::IHistogram2D* h  = entry->second ;
     if ( !entry->first.numeric() ) { continue ; }
     const int id = entry->first.numericID() ;
     if ( ( 0 == h ) || ( id >= m_effOffset ) )  { continue ;}
-    
+
     // find the eff histo...
     Histo2DMapID::const_iterator effEntry = histos.find( id + m_effOffset) ;
-    
-    if (effEntry != histos.end()) 
+
+    if (effEntry != histos.end())
     {
       int nAcc = h->allEntries();
       int nFound = effEntry->second->allEntries();
@@ -116,17 +113,17 @@ StatusCode VeloEffChecker::finalize(){
       double err = sqrt((eff*(100.0-eff))/(double)nAcc);
       info() << "Sensor " << entry->first << " Eff " << eff << " +/- "<< err << endmsg;
       ++n;
-      avg += eff; 
+      avg += eff;
     }
     else {
-      info() << "Sensor " << entry->first << "0 +/- 0" << endmsg; 
+      info() << "Sensor " << entry->first << "0 +/- 0" << endmsg;
       ++missed;
     }
   }
-  
-  info() << " Avg: " << avg/n << " Missed " <<  missed << endmsg;  
+
+  info() << " Avg: " << avg/n << " Missed " <<  missed << endmsg;
   info() << " ---------------- " << endmsg;
-  
+
 
   return GaudiHistoAlg::finalize();
 }
@@ -136,20 +133,20 @@ void VeloEffChecker::fillEffHistos(const MCHit* aHit) {
 
   Gaudi::XYZPoint mPoint = aHit->midPoint();
   int sensorID = aHit->sensDetID();
-  plot2D(mPoint.x()/cm,mPoint.y()/cm,sensorID, 
-          "x_vs_y_MCHit"+boost::lexical_cast<std::string>(sensorID) , -5.0, 5.0, -5.0, 5.0 , 200, 200);
-  
+  plot2D(mPoint.x()/cm,mPoint.y()/cm,sensorID,
+          "x_vs_y_MCHit"+std::to_string(sensorID) , -5.0, 5.0, -5.0, 5.0 , 200, 200);
+
   // check if there is an associated cluster...
   Range range = m_table->relations(aHit);
-  if ((range.empty() == false)){   
+  if ((range.empty() == false)){
     const VeloCluster* first = (*range.begin()).to();
-     if (first->highThreshold()) 
-     plot2D(mPoint.x()/cm,mPoint.y()/cm,sensorID + m_effOffset , 
-            "x vs y cluster"+boost::lexical_cast<std::string>(sensorID), -5., 5., -5., 5. , 200, 200);
+     if (first->highThreshold())
+     plot2D(mPoint.x()/cm,mPoint.y()/cm,sensorID + m_effOffset ,
+            "x vs y cluster"+std::to_string(sensorID), -5., 5., -5., 5. , 200, 200);
   }
   else {
-      plot2D(mPoint.x()/cm,mPoint.y()/cm, sensorID+ m_inEffOffset, 
-             "x vs y none"+boost::lexical_cast<std::string>(sensorID), -5., 5., -5., 5. , 200, 200);
+      plot2D(mPoint.x()/cm,mPoint.y()/cm, sensorID+ m_inEffOffset,
+             "x vs y none"+std::to_string(sensorID), -5., 5., -5., 5. , 200, 200);
   }
 
 }

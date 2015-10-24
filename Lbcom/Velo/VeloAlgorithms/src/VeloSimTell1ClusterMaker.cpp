@@ -543,7 +543,7 @@ StatusCode VeloSimTell1ClusterMaker::i_cacheConditions()
     m_zsEnableMap[tell1]=static_cast<int>(sens->isReadOut());
     
     // now the real stuff with the SIMCOND - get the noise
-    std::string stell1=boost::lexical_cast<std::string>(tell1);
+    std::string stell1=std::to_string(tell1);
     std::string name=m_condPath+"/Sensors/VeloSensor-"+stell1+"-StripNoise";
     Condition* cond=getDet<Condition>(name);
     tmpdouble=cond->param<std::vector<double> >("StripNoise");

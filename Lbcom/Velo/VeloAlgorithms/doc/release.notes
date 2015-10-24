@@ -2,6 +2,8 @@
 ! Package     : VeloAlgorithms
 ! Responsible : Tomasz Szumlak
 !--------------------------------------------------------------------------
+! 2015-10-24 - Gerhard Raven
+ - replace boost::lexical_cast with std::to_string
 
 !========================= VeloAlgorithms v5r7p2 2015-10-12 =========================
 ! 2015-08-04 - Gerhard Raven
