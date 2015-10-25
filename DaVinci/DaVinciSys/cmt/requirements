@@ -9,7 +9,7 @@ use  CaloReco    v5r26    Calo
 # Temporarily moved in from Stripping, for S23 release
 # To be decided if longer term this stays in the DaVinci 
 # project, or moves elsewhere.
-use StrippingCache   v1r2     Phys
+use StrippingCache   v1r3     Phys
 ##############################
 
 # Packages

@@ -4,7 +4,7 @@ Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics analysis application
 
 
-</PRE><H1><A NAME=v38r0>2015-10-23 DaVinci v38r0</A></H1><PRE>
+</PRE><H1><A NAME=v38r0>2015-10-25 DaVinci v38r0</A></H1><PRE>
 
 Development release for 2016 data taking, based on Gaudi v26r4, LHCb v39r1, Lbcom v17r1, Rec v18r2, Phys v20r2,
 Analysis v14r2 and Stripping v9r11p2. Uses LCG_79 with ROOT 6.04.02.
@@ -13,7 +13,7 @@ Analysis v14r2 and Stripping v9r11p2. Uses LCG_79 with ROOT 6.04.02.
   Calo/CaloReco v5r26.
 
 - Packages updated :
-  DaVinciTests v3r0, Phys/DaVinci v38r0, Phys/Tesla v1r13.
+  DaVinciTests v3r0, Phys/DaVinci v38r0, Phys/StrippingCache v1r3, Phys/Tesla v1r13.
 
 - In Calo/CaloReco v5r26 :
   . Python configurable : propagate same Et threshold for mergedPi0 and for splitCluster production.
@@ -25,6 +25,11 @@ Analysis v14r2 and Stripping v9r11p2. Uses LCG_79 with ROOT 6.04.02.
 
 - In Phys/DaVinci v38r0 :
   . Development release in preparation for 2016 data-taking and simulation.
+
+- In Phys/StrippingCache v1r3 :
+  . Removed S20r0p3 due to bugfix in PySel Wrappers.
+  . Removed S21 and S23 due to changes in RelatedInfo.
+  . Added the S21r1 cache.
 
 - In Phys/Tesla v1r13 :
   . Added support for RelatedInfo packing.
