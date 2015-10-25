@@ -8,6 +8,9 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-10-25 - Vanya Belyaev
+ - HepDATA.py:  make the code much more robust  
+
 ! 2015-10-23 - Vanya Belyaev
  - small improvement 
 

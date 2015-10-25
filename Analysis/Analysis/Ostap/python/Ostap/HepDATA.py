@@ -56,7 +56,7 @@ hepfile_fields = ( 'author'     ,
                    'status'     ,
                    'experiment' , ## e.g. CERN-LHC-LHCb
                    'detector'   , ## e.g. LHCb 
-                   'spiresId'   , ## id in SPIRES  (http://www.slac.stanford.edu/spires/) 
+                   ## 'spiresId'   , ## id in SPIRES  (http://www.slac.stanford.edu/spires/) 
                    'inspireId'  , ## id in INSPIRE (http://inspirehep.net/)
                    'cdsId'      , ## id in CDS     (http://cds.cern.ch/)
                    'durhamId'   , ## will be added after submission 
@@ -76,7 +76,8 @@ class HepDataBase(object) :
     """
     def __init__ ( self , metainfo = defaultdict(list) , **kwargs ) :
         ##
-        self.meta = metainfo
+        from copy import deepcopy 
+        self.meta = deepcopy(metainfo)
         for k , v in kwargs.iteritems() :
             if isinstance ( v , (list,tuple) ) :
                 for i in v :
@@ -201,12 +202,14 @@ class HepData(HepDataBase) :
         self.histo = histo 
         m = self.missing ( dataset_fields ) 
         if m : logger.warning('HepData missing keys: %s' % m )
-        self.syst1 = syst1
-        self.syst2 = syst2
-        self.syst3 = syst3
-        
+        from copy import deepcopy 
+        self.syst1  = deepcopy ( syst1 )
+        self.syst2  = deepcopy ( syst2 )
+        self.syst3  = deepcopy ( syst3 )
+
+        self.result =  self.format ('dataset',dataset_fields)+'\n'
     ## the actual output :-) 
-    def __str__ ( self ) : return self.format ('dataset',dataset_fields)+'\n'
+    def __str__ ( self ) : return self.result ## self.format ('dataset',dataset_fields)+'\n'
 
     ## the most important line: the proper delegation
     def formatData ( self , the_lines ) :
@@ -234,7 +237,7 @@ def get_syst ( syst , *index ) :
     if   isinstance ( syst , str )   : return syst
     elif syst and hasattr  ( syst , '__getitem__' )  : return str ( syst [  index ] )
     elif syst and callable ( syst )                  : return str ( syst ( *index ) )
-    elif syst : raise AttributeError("Invalid ssystematic %s/%s" % ( syst , type( syst ) ) )
+    elif syst : raise AttributeError("Invalid systematic %s/%s" % ( syst , type( syst ) ) )
     
     return ''
     
