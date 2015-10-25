@@ -4,6 +4,10 @@
 ! Purpose     : Simulation of digitisation for Herschel counters 
 !--------------------------------------------------------------------------
 
+! 2015-10-25 - Heinrich Schindler
+ - Add channel mapping.
+ - Add monitoring plots.
+
 !========================= HCDigitisation v1r1 2015-06-01 =========================
 ! 2015-04-26 - Heinrich Schindler
  - Update raw bank encoding to PS/SPD format.

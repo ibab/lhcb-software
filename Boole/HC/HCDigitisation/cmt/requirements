@@ -11,6 +11,7 @@ include_path none
 #=====================================================================
 use  LHCbKernel    v*  Kernel
 use  MCEvent       v*  Event
+use  GenEvent      v*  Event
 use  DAQEvent      v*  Event
 use  GaudiAlg      v*
 
