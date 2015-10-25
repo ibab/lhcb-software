@@ -9,6 +9,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-10-25 - Vanya Belyaev
+ - TFileDeco.py: bug fix 
+
+! 2015-10-25 - Vanya Belyaev
  - HepDATA.py:  make the code much more robust  
 
 ! 2015-10-23 - Vanya Belyaev

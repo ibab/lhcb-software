@@ -9,7 +9,7 @@
 #  @code
 #  rfile = ...
 #
-#  obj   = rfile['A/B/C/myobj']     ## READ  object form the file/directory
+#  obj   = rfile['A/B/C/myobj']     ## READ  object from the file/directory
 #  rfile['A/B/C/myobj2'] = object2  ## WRITE object to the file/directory 
 #
 #  obj  = rfile.A.B.C.myobj        ## another way to access to the object in file
@@ -96,8 +96,8 @@ logger.debug ( 'Some useful decorations for TFile objects')
 #  @author Vanya BELYAEV Ivan.Belyaev@iep.ru
 #  @date 2015-07-30
 class ROOTCWD(object) :
-    """
-    Context manager to preserve current directory (rather confusing stuff in ROOT) 
+    """Context manager to preserve current directory
+    (rather confusing stuff in ROOT) 
     >>> print ROOT.gROOT.CurrentDirectory() 
     >>> with ROOTCWD() :
     ...     print ROOT.gROOT.CurrentDirectory() 
@@ -126,8 +126,7 @@ class ROOTCWD(object) :
 #  @author Vanya BELYAEV Ivan.Belyaev@iep.ru
 #  @date 2015-07-30
 def _rd_setitem_ ( rdir , name , tobj ) :
-    """
-    Write the object to ROOT-file/directory
+    """Write the object to ROOT-file/directory
     >>> rfile['myhisto'] = h1
     >>> rfile['MyDir/MyHisto'] = h2
     """
@@ -169,8 +168,7 @@ def _rd_setitem_ ( rdir , name , tobj ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@iep.ru
 #  @date 2015-07-30
 def _rd_getitem_ ( rdir , name ) :
-    """
-    Get the object from ROOT-file/directory
+    """Get the object from ROOT-file/directory
     >>> t = f['A/tup']
     >>> h = f['histo']
     """
@@ -230,8 +228,7 @@ def _rd_getattr_ ( rdir , name ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@iep.ru
 #  @date 2015-07-30
 def _rd_contains_ ( rdir , name ) :
-    """
-    Check the existence of key in the root-file/directory
+    """Check the existence of key in the root-file/directory
     >>> if not 'myhisto'  in rfile : break 
     >>> if 'MyDir/MyHisto' in rfile : print 'OK!'
     """
@@ -261,8 +258,7 @@ def _rd_contains_ ( rdir , name ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@iep.ru
 #  @date 2015-07-30
 def _rd_delitem_ ( rdir , name , cycle=';*') :
-    """
-    Delete an object from ROOT file/directory
+    """Delete an object from ROOT file/directory
     >>> del rfile['h1']
     >>> del rfile['mydir/h1']
     """
@@ -299,8 +295,7 @@ def _rd_delitem_ ( rdir , name , cycle=';*') :
 #  @author Vanya BELYAEV Ivan.Belyaev@iep.ru
 #  @date 2015-07-30
 def _rd_keys_ ( rdir , recursive = True , no_dir = True ) :
-    """
-    Get all keys from ROOT file/directory
+    """Get all keys from ROOT file/directory
     >>> keys = rfile.keys() 
     """
     _res = []
@@ -336,9 +331,8 @@ def _rd_keys_ ( rdir , recursive = True , no_dir = True ) :
 #  @endcode
 #  @author Vanya BELYAEV Ivan.Belyaev@iep.ru
 #  @date 2015-07-30
-def _rd_iteritems_ ( rdir , fun = lambda k,o : True , recursive = True , no_dir = True  ) :
-    """
-    Iterate over the content of ROOT directory/file:
+def _rd_iteritems_ ( rdir , fun = lambda k,t,o : True , recursive = True , no_dir = True  ) :
+    """Iterate over the content of ROOT directory/file:
     >>> for key,obj  in rfile.iteritems()           : print key , obj
     >>> for key,hist in rfile.iteritems( ROOT.TH1 ) : print key , hist
     >>> for key,obj  in rfile.iteritems( lambda name,tkey,obj : name[0]=='M' ) : print key,obj
@@ -354,15 +348,16 @@ def _rd_iteritems_ ( rdir , fun = lambda k,o : True , recursive = True , no_dir 
         _lst = rdir.GetListOfKeys()
         for i in _lst :
             inam   = i.GetName()
-            obj    = rdir.Get ( inam )
             folder = i.IsFolder()
             if not folder or not no_dir : 
+                obj = rdir.Get ( inam )
                 if fun ( inam , i , obj ) : yield inam , obj
             if recursive and folder :
-                idir  = rdir.GetDirectory( inam ) 
-                for k, o in _rd_iteritems_ ( idir , fun , recursive , no_dir ) :
-                    yield k,o
-
+                idir  = rdir.GetDirectory( inam )
+                if idir : 
+                    for k, o in _rd_iteritems_ ( idir , fun , recursive , no_dir ) :
+                        yield k,o
+                    
 # =============================================================================a
 ## Iterate over the keys in ROOT file/directory 
 #  @code
@@ -375,8 +370,7 @@ def _rd_iteritems_ ( rdir , fun = lambda k,o : True , recursive = True , no_dir 
 #  @author Vanya BELYAEV Ivan.Belyaev@iep.ru
 #  @date 2015-07-30
 def _rd_iterkeys_ ( rdir , typ = None , recursive = True , no_dir = True ) :
-    """
-    Iterate over the keys in ROOT file/directory 
+    """Iterate over the keys in ROOT file/directory 
     >>> for key,obj  in rfile.iteritems()           : print key , obj
     >>> for key,hist in rfile.iteritems( ROOT.TH1 ) : print key , hist
     """
@@ -390,7 +384,7 @@ def _rd_iterkeys_ ( rdir , typ = None , recursive = True , no_dir = True ) :
             folder = i.IsFolder()
             if not folder or not no_dir : 
                 if typ is None  or isinstance ( rdir.Get ( inam ) , typ ) : yield inam 
-            if recursive and fodler  :
+            if recursive and folder  :
                 idir  = rdir.GetDirectory( inam ) 
                 for k in _rd_iterkeys_ ( idir , typ , recursive , no_dir ) :
                     yield k
@@ -410,12 +404,11 @@ def _rd_iterkeys_ ( rdir , typ = None , recursive = True , no_dir = True ) :
 #  @endcode
 #  @author Vanya BELYAEV Ivan.Belyaev@iep.ru
 #  @date 2015-07-30
-def _rd_itervalues_ ( rdir , fun = lambda k,o : True , recursive = True , no_dir = True ) :
-    """
-    Iterate over the content of ROOT directory/file:
-    >>> for obj  in rfile.itervalues ()           : print obj
-    >>> for hist in rfile.itervalues ( ROOT.TH1 ) : print hist
-    >>> for obj  in rfile.itervalues ( lambda k,o : k[0]=='M' ) : print obj
+def _rd_itervalues_ ( rdir , fun = lambda k,t,o : True , recursive = True , no_dir = True ) :
+    """Iterate over the content of ROOT directory/file:
+    >>> for obj  in rfile.itervalues ()             : print obj
+    >>> for hist in rfile.itervalues ( ROOT.TH1 )   : print hist
+    >>> for obj  in rfile.itervalues ( lambda k,t,o : k[0]=='M' ) : print obj
     """
     ##
     with ROOTCWD() :
@@ -432,8 +425,7 @@ def _rd_itervalues_ ( rdir , fun = lambda k,o : True , recursive = True , no_dir
 #  @author Vanya BELYAEV Ivan.Belyaev@iep.ru
 #  @date 2015-07-30
 def _rd_iter_ ( rdir ) :
-    """
-    Iterate (recursive) over the content in ROOT file/directory
+    """Iterate (recursive) over the content in ROOT file/directory
     >>> for obj  in rfile : print obj
     """
     ##
@@ -453,8 +445,7 @@ def _rd_iter_ ( rdir ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@iep.ru
 #  @date 2015-07-30
 def _rd_rm_ ( rdir , name , cycle=';*') :
-    """
-    Delete an object from ROOT file/directory
+    """Delete an object from ROOT file/directory
     >>> rfile.rm( 'h1')
     >>> rfile.rm('mydir/h1')
     """
@@ -482,7 +473,7 @@ def _rd_get_ ( rdir , name , default = None ) :
     if not rdir : return default 
     ##
     try :
-        return _rd_getitem_ ( name )
+        return _rd_getitem_ ( rdir , name )
     except KeyError :
         return default
     
@@ -492,8 +483,7 @@ def _rd_get_ ( rdir , name , default = None ) :
 #  with ROOT.TFile('ququ.root') as f : f.ls() 
 #  @endcode
 def _rf_enter_ ( self      ) :
-    """
-    Use ROOT-file with the context manager
+    """Use ROOT-file with the context manager
     >>> with ROOT.TFile('ququ.root') as f : f.ls() 
     """ 
     return self
@@ -504,8 +494,7 @@ def _rf_enter_ ( self      ) :
 #  with ROOT.TFile('ququ.root') as f : f.ls() 
 #  @endcode
 def _rf_exit_  ( self , *_ ) :
-    """
-    Use ROOT-file with the context manager    
+    """Use ROOT-file with the context manager    
     >>> with ROOT.TFile('ququ.root') as f : f.ls()
     """
     try :
@@ -514,7 +503,7 @@ def _rf_exit_  ( self , *_ ) :
 
             
 
-## basic protocol:
+## the basic protocol:
 
 ROOT.TDirectory.__getitem__  = _rd_getitem_ 
 ROOT.TDirectory.__setitem__  = _rd_setitem_
@@ -523,7 +512,7 @@ ROOT.TDirectory.__getattr__  = _rd_getattr_
 ROOT.TDirectory.__delitem__  = _rd_delitem_
 ROOT.TDirectory.__iter__     = _rd_iter_
 
-## extended protocol
+## the extended protocol
 
 ROOT.TDirectory.get          = _rd_get_
 ROOT.TDirectory.keys         = _rd_keys_
@@ -532,7 +521,7 @@ ROOT.TDirectory.iteritems    = _rd_iteritems_
 ROOT.TDirectory.iterkeys     = _rd_iterkeys_
 ROOT.TDirectory.itervalues   = _rd_itervalues_
 
-## extra
+## some extra stuff 
 
 ROOT.TDirectory.rm           = _rd_rm_
 
@@ -553,7 +542,7 @@ else :
 #  @endcode
 def _rf_new_init_ ( rfile , *args ) :
     """
-    Create ROOT-file without making it a current working directory
+    Open/create ROOT-file without making it a current working directory
     >>> print ROOT.gROOT.CurrentDirectory()
     >>> f = ROOT.TFile('test_file.root','recreate')
     >>> print ROOT.gROOT.CurrentDirectory()
@@ -570,7 +559,7 @@ def _rf_new_init_ ( rfile , *args ) :
 #  @endcode
 def _rf_new_open_ ( *args ) :
     """
-    Create ROOT-file without making it a current working directory
+    Open/create ROOT-file without making it a current working directory
     >>> print ROOT.gROOT.CurrentDirectory()
     >>> f = ROOT.TFile.Open('test_file.root','recreate')
     >>> print ROOT.gROOT.CurrentDirectory()
