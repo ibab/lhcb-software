@@ -122,7 +122,7 @@ private:
 
   mutable MsgStream                                m_log;
   std::vector<std::pair<std::string,FPE::Guard*> > m_guards;
-  std::auto_ptr<FPE::Guard>                        m_superGuard;
+  std::unique_ptr<FPE::Guard>                      m_superGuard;
   FPEMaskProperty                                  m_mask;
   std::vector<std::string>                         m_when, m_veto;
   bool                                             m_activateSuperGuard;

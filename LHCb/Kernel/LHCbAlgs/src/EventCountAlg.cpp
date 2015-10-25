@@ -19,23 +19,13 @@ DECLARE_ALGORITHM_FACTORY( EventCountAlg )
 EventCountAlg::EventCountAlg( const std::string& name,
                       ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
-  , m_nHandled    ( 0 )
-  , m_nExecuted   ( 0 )
-  , m_counterName ( "" )
-  , m_incSvc      (0)
 {
-
   //declare the filename to write. If the string is empty, no file will be written
   declareProperty("CounterName",m_counterName="efficiency");
   //I know this is a stat entity, make sure it's written as such
-  //(property StatEntityList of GaudiAlgorithm)
-  m_statEntityList = {".*"};
-
+  StatusCode sc = setProperty ( "StatEntityList" , "[ \".*\" ]" );
+  // m_statEntityList = {".*"};
 }
-//=============================================================================
-// Destructor
-//=============================================================================
-EventCountAlg::~EventCountAlg() {}
 
 //=============================================================================
 // Initialization
@@ -46,12 +36,10 @@ StatusCode EventCountAlg::initialize() {
   if ( sc.isFailure() ) return sc;
 
   //prepare the incident service
-  sc=service("IncidentSvc", m_incSvc, false);
-  if(!sc.isSuccess() || m_incSvc== NULL) return StatusCode::FAILURE;
+  m_incSvc = service("IncidentSvc", false);
+  if(!m_incSvc) return StatusCode::FAILURE;
   m_incSvc->addListener( this, IncidentType::BeginEvent);
-
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
-
   return StatusCode::SUCCESS;
 }
 

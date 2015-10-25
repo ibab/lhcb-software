@@ -4,6 +4,13 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2015-10-25 - Gerhard Raven
+ - replace std::auto_ptr with std::unique_ptr
+ - avoid using protected m_statEntityList, use setProperty instead
+ - prefer SmartIF to raw pointers to services
+ - qualify virtual function implementations as override
+ - prefer nullptr over 0
+
 ! 2015-10-20 - Marco Cattaneo
  - LHCBPS-1434: Added to LHCbApp() assignment of OdinTimeDecoder as 
    EventClockSvc().EventTimeDecoder when processing real data.

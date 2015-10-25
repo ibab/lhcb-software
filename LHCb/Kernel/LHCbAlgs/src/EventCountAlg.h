@@ -30,24 +30,22 @@ public:
   /// Standard constructor
   EventCountAlg( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~EventCountAlg( ); ///< Destructor
+  ~EventCountAlg( ) override = default; ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
+  StatusCode initialize() override;    ///< Algorithm initialization
+  StatusCode execute   () override;    ///< Algorithm execution
+  StatusCode finalize  () override;    ///< Algorithm finalization
 
   /// IListener interface to be triggered at begin of event
-  virtual void handle(const Incident&) { m_nHandled++; }
+  void handle(const Incident&) override { m_nHandled++; }
  
-protected:
-
 private:
   ///two integers are used, and a StatEntity isn't defined 
   ///until the last moment.
-  unsigned long int m_nHandled; ///<total events
-  unsigned long int m_nExecuted; ///<number of events reaching this point
+  unsigned long int m_nHandled = 0; ///<total events
+  unsigned long int m_nExecuted = 0; ///<number of events reaching this point
   std::string m_counterName; ///<name of counter, set by option CounterName
-  IIncidentSvc* m_incSvc; ///<the incident service
+  SmartIF<IIncidentSvc> m_incSvc; ///<the incident service
 
 };
 #endif // EVENTCOUNTHISTO_H

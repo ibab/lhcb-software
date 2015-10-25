@@ -66,7 +66,7 @@ LHCb::ODIN* ODINCodecBaseTool::i_decode(const LHCb::RawBank* bank, LHCb::ODIN* o
   Assert((bank!=NULL), "Called without a RawBank object (pointer NULL)");
 
   // ensure that the new object is deleted in case of failure
-  std::auto_ptr<LHCb::ODIN> ptr;
+  std::unique_ptr<LHCb::ODIN> ptr;
   if (!odin) {
     odin = new LHCb::ODIN();
     ptr.reset(odin);
@@ -83,7 +83,7 @@ LHCb::ODIN* ODINCodecBaseTool::i_decode(const LHCb::RawBank* bank, LHCb::ODIN* o
     msg << "Unknown ODIN bank version " << version << ", latest known is " << bank_version;
     //Exception(msg.str()); // throw
     Error(msg.str()).ignore();
-    return 0;
+    return nullptr;
   }
   // Validate bank size
   const size_t size = bank->size();
@@ -95,7 +95,7 @@ LHCb::ODIN* ODINCodecBaseTool::i_decode(const LHCb::RawBank* bank, LHCb::ODIN* o
     else { msg << bank_size_v2; }
     //Exception(msg.str()); // throw
     Error(msg.str()).ignore();
-    return 0;
+    return nullptr;
   }
 
   // pointer to the data
