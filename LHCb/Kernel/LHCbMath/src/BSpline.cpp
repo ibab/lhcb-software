@@ -36,7 +36,7 @@ namespace
    *  @see LHCb::Math::Zero 
    *  @see Gaudi::Math::Lomont
    */
-  const LHCb::Math::Zero<double>     s_zero  ;
+  const LHCb::Math::Zero<double>     s_zero{}  ;
   // ==========================================================================
   /** @var s_equal
    *  comparison of double values 
@@ -48,14 +48,14 @@ namespace
    *  @see LHCb::Math::Equal_To 
    *  @see Gaudi::Math::Lomont
    */
-  const LHCb::Math::Equal_To<double> s_equal ;
+  const LHCb::Math::Equal_To<double> s_equal{} ;
   // ==========================================================================
   /** @var s_less 
    *  sorting criteria for splines 
    *  @see LHCb::Math::NumLess 
    *  @see LHCb::Math::Equal_To 
    */
-  const LHCb::Math::NumLess<double>  s_less  ;
+  const LHCb::Math::NumLess<double>  s_less{}  ;
 }
 // ============================================================================
 // de Boor-Cox 

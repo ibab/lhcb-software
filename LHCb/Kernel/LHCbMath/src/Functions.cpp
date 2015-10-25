@@ -196,11 +196,11 @@ namespace
 {
   // ==========================================================================
   /// equality criteria for doubles
-  const LHCb::Math::Equal_To<double>            s_equal ; // equality criteria for doubles
+  const LHCb::Math::Equal_To<double>            s_equal{} ; // equality criteria for doubles
   /// zero for doubles  
-  const LHCb::Math::Zero<double>                s_zero  ; // zero for doubles
+  const LHCb::Math::Zero<double>                s_zero{}  ; // zero for doubles
   /// zero for vectors 
-  const LHCb::Math::Zero< std::vector<double> > s_vzero ; // zero for vectors
+  const LHCb::Math::Zero< std::vector<double> > s_vzero{} ; // zero for vectors
   // ==========================================================================
   typedef Gaudi::Math::GSL::GSL_Error_Handler Sentry ;
   // ==========================================================================
@@ -3157,8 +3157,8 @@ Gaudi::Math::GramCharlierA::~GramCharlierA() {}
 // ============================================================================
 namespace 
 { 
-  const Gaudi::Math::Hermite_<3>  s_h3 ;
-  const Gaudi::Math::Hermite_<4>  s_h4 ;
+  constexpr Gaudi::Math::Hermite_<3>  s_h3{} ;
+  constexpr Gaudi::Math::Hermite_<4>  s_h4{} ;
 }
 // ============================================================================
 // evaluate Gram-Charlier type A approximation

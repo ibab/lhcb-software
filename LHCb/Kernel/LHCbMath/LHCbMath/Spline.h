@@ -234,7 +234,7 @@ namespace Gaudi
       /// the actual type of spline object 
       typedef Genfun::GaudiMathImplementation::SplineBase  SPLINE ;      
       /// the spline itself
-      std::auto_ptr<SPLINE> m_spline ; // the spline itself
+      std::unique_ptr<SPLINE> m_spline ; // the spline itself
       // ======================================================================
     };
     // ========================================================================

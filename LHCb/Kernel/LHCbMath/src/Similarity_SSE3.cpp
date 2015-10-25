@@ -1,5 +1,3 @@
-#pragma GCC optimize "O3"
-#pragma GCC target "sse3"
 #include <x86intrin.h>
 
 namespace {

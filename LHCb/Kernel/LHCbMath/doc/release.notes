@@ -6,6 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-10-25 - Gerhard Raven
+ - remove unneeded gcc specific pragmas
+ - replace std::auto_ptr with std::unique_ptr
+
 ! 2015-10-20 - Vanya Belyaev
  - LHCbMath.xml
    remove duplicated selections
