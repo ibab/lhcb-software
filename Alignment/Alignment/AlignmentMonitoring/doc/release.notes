@@ -4,6 +4,9 @@
 !------------------------------------------------------------------------------
 
 ! 2015-10-25
+ - Added the missing scripts
+
+! 2015-10-25
  - Added functions for residual monitoring for IT/TT sectors: 
    - CheckTTSectorResiduals() shows mean and sigma for TT sectors
    - CheckITSectorResiduals() shows mean and sigma for IT sectors
