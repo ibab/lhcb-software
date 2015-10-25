@@ -61,7 +61,7 @@ Particle2MCLinks::~Particle2MCLinks() {}
 //=============================================================================
 StatusCode Particle2MCLinks::initialize() {
 
-  _debug << "==> Initialise" << endreq;
+  _debug << "==> Initialise" << endmsg;
 
   StatusCode sc = GaudiAlgorithm::initialize();
   if( !sc.isSuccess() ) return sc;
@@ -96,7 +96,7 @@ StatusCode Particle2MCLinks::initialize() {
 //=============================================================================
 StatusCode Particle2MCLinks::execute() {
 
-  _debug << "==> Execute" << endreq;
+  _debug << "==> Execute" << endmsg;
 
   if( "" != outputTable() ) {
     return Error( "Usage of Relations in Particle Associators is obsolete, use Linkers instead");
@@ -120,20 +120,20 @@ StatusCode Particle2MCLinks::execute() {
     // Get Particles
     SmartDataPtr<Particles> parts (eventSvc(), *inp);
     if( 0 == parts ) {
-      _verbose << "Could not find container " << *inp << endreq;
+      _verbose << "Could not find container " << *inp << endmsg;
       continue;
     }
     int npp = parts->size();
     int nrel = 0;
     int nass = 0;
     _debug << "    " << npp 
-           << " Particles retrieved from " << *inp << endreq;
+           << " Particles retrieved from " << *inp << endmsg;
     
     // loop on Parts and MCParts to match them
     for( Particles::const_iterator pIt=parts->begin() ;
          parts->end() != pIt; ++pIt ) {
       Particle* PPP = *pIt ;
-      _verbose << "Particle " << PPP->momentum() << endreq
+      _verbose << "Particle " << PPP->momentum() << endmsg
                << "    Particle " << objectName(*pIt);
 
       const MCParticle* mcPart = NULL ;
@@ -169,7 +169,7 @@ StatusCode Particle2MCLinks::execute() {
     }
     _debug << "Out of " << npp << " Particles in " << *inp << ", "
            << nass << " are associated, "
-           << nrel << " relations found" << endreq;
+           << nrel << " relations found" << endmsg;
   }
   return StatusCode::SUCCESS ;
 }
@@ -179,7 +179,7 @@ StatusCode Particle2MCLinks::execute() {
 //=============================================================================
 StatusCode Particle2MCLinks::finalize() {
 
-  _debug << "==> Finalize" << endreq;
+  _debug << "==> Finalize" << endmsg;
 
   if( NULL != m_chargedLink ) delete m_chargedLink;
   if( NULL != m_neutralLink ) delete m_neutralLink;

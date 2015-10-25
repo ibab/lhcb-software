@@ -52,7 +52,7 @@ Particle2MCChi2::~Particle2MCChi2() {}
 //=============================================================================
 StatusCode Particle2MCChi2::initialize() {
  
-  _debug << "==> Initialise" << endreq;
+  _debug << "==> Initialise" << endmsg;
 
   StatusCode sc = GaudiAlgorithm::initialize();
   if( !sc.isSuccess() ) return sc;
@@ -71,7 +71,7 @@ StatusCode Particle2MCChi2::initialize() {
 //=============================================================================
 StatusCode Particle2MCChi2::execute() {
 
-  _debug << "==> Execute" << endreq;
+  _debug << "==> Execute" << endmsg;
 
   //////////////////////////////////
   // Loop on Particles containers //
@@ -94,7 +94,7 @@ StatusCode Particle2MCChi2::execute() {
     int nass = 0;
     int nrel = 0;
     _debug << "    " << npp 
-           << " Particles retrieved from " << *inp << endreq;
+           << " Particles retrieved from " << *inp << endmsg;
 
     for( Particles::const_iterator pIt=parts->begin();
          parts->end() != pIt; pIt++) {
@@ -122,12 +122,12 @@ StatusCode Particle2MCChi2::execute() {
         _verbose << " not associated to any MCPart, minChi2 = " 
                             << minChi2;
       }
-      _verbose << endreq;
+      _verbose << endmsg;
     }
     _debug 
       << "Out of " << npp << " Particles in " << *inp << ", "
       << nass << " are associated, "
-      << nrel << " relations found" << endreq;
+      << nrel << " relations found" << endmsg;
   }
       
   return StatusCode::SUCCESS;
@@ -138,7 +138,7 @@ StatusCode Particle2MCChi2::execute() {
 //=============================================================================
 StatusCode Particle2MCChi2::finalize() {
 
-  _debug << "==> Finalize" << endreq;
+  _debug << "==> Finalize" << endmsg;
   if( NULL != m_p2MCLink ) delete m_p2MCLink;
   m_p2MCLink = NULL;
   return GaudiAlgorithm::finalize();

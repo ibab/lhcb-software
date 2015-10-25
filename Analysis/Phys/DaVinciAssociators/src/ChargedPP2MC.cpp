@@ -107,7 +107,7 @@ ChargedPP2MC::~ChargedPP2MC() {}
 //=============================================================================
 StatusCode ChargedPP2MC::execute() {
 
-  _debug << "==> Execute" << endreq;
+  _debug << "==> Execute" << endmsg;
 
   // flag to create a Relations table if needed,
   const bool createTable = !outputTable().empty();
@@ -156,7 +156,7 @@ StatusCode ChargedPP2MC::execute() {
     int npp = protos->size();
     _verbose << "    " << npp
              << " ProtoParticles retrieved from "
-             << *inp << endreq;
+             << *inp << endmsg;
 
     // loop on Protos to match them from their tracks
     int nrel = 0 ;
@@ -190,12 +190,12 @@ StatusCode ChargedPP2MC::execute() {
       } else {
         _verbose << " not originating from a track";
       }
-      _verbose << endreq;
+      _verbose << endmsg;
     }
     _debug
       << "Out of " << npp << " Charged ProtoParts in " << *inp << ", "
       << nass << " are associated, "
-      << nrel << " relations found" << endreq;
+      << nrel << " relations found" << endmsg;
   }
 
   return StatusCode::SUCCESS ;
@@ -206,7 +206,7 @@ StatusCode ChargedPP2MC::execute() {
 //=============================================================================
 StatusCode ChargedPP2MC::finalize() {
 
-  _debug << "==> Finalize" << endreq;
+  _debug << "==> Finalize" << endmsg;
   delete m_track2MCLink;
   m_track2MCLink = NULL;
   return GaudiAlgorithm::finalize();

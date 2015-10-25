@@ -90,7 +90,7 @@ TestLinker::~TestLinker() { }
 StatusCode TestLinker::initialize() {
 
   // Use the message service
-  _info << ">>> Initialize" << endreq;
+  _info << ">>> Initialize" << endmsg;
 
   std::vector<std::string> inp =
     m_setInputData ? m_inputData : std::vector<std::string>();
@@ -140,13 +140,13 @@ StatusCode TestLinker::execute() {
     SmartDataPtr<Particles> parts (eventSvc(), *inp);
     if ( ! parts ) {
       _debug << "    No Particles retrieved from "
-             << *inp << endreq;
+             << *inp << endmsg;
       continue;
     }
     else {
       // msg number of Candidates retrieved
       _verbose << "    Number of Particles retrieved from "
-               << *inp << "  = " << parts->size() << endreq;
+               << *inp << "  = " << parts->size() << endmsg;
       if( parts->size() == 0 ) skippedEvt = 1;
     }
 
@@ -173,13 +173,13 @@ StatusCode TestLinker::execute() {
                << part->p() << " "
                << part->slopes().X() << " "
                << part->slopes().Y()
-               << endreq;
+               << endmsg;
 
       if( NULL != mcPartLinks ) {
         // An association was obtained from links
         _verbose << "    Associated to "
                  << m_linkLinks->associatedMCP(part)
-                 << " MCParts: " << endreq;
+                 << " MCParts: " << endmsg;
         if( part->charge() ) matchLinks++;
         int nass = 0;
         do {
@@ -192,7 +192,7 @@ StatusCode TestLinker::execute() {
                    << weight << ") from links : momentum, slopes "
                    << mc4Mom.Vect().R() << " "
                    << mc4Mom.Px()/mc4Mom.Pz() << " "
-                   << mc4Mom.Py()/mc4Mom.Pz() << endreq;
+                   << mc4Mom.Py()/mc4Mom.Pz() << endmsg;
           mcPartLinks = m_linkLinks->next();
         } while( NULL != mcPartLinks );
 
@@ -204,7 +204,7 @@ StatusCode TestLinker::execute() {
             matchComp++;
             if( mcPartLinks != mcPartComp ) {
               _verbose << "    MCPart from Composite != Links"
-                       << endreq;
+                       << endmsg;
               if( 0 != mcPartLinks ) matchLinksDiffComp++;
             }
           } else {
@@ -212,7 +212,7 @@ StatusCode TestLinker::execute() {
           }
         }
       } else {
-        _verbose << "    No MCPart found from links" << endreq;
+        _verbose << "    No MCPart found from links" << endmsg;
       }
       if( 0 == part->charge() ) continue;
       mcPartChi2 = m_linkWithChi2->first( part, chi2);
@@ -223,12 +223,12 @@ StatusCode TestLinker::execute() {
           _verbose << " (Chi2 was " << chi2 << ")";
           matchLinksHighChi2++;
         }
-        _verbose << endreq;
+        _verbose << endmsg;
         if( mcPartLinks ) matchLinksNotChi2++;
       } else {
         if( mcPartChi2 == mcPartLinks ) {
           _verbose << "      MCPart found from Chi2 as well (Chi2 = " << chi2
-                   << ")" << endreq;
+                   << ")" << endmsg;
           matchFull++;
         }
         if( !mcPartLinks ) matchChi2NotLinks++;
@@ -236,7 +236,7 @@ StatusCode TestLinker::execute() {
       if( mcPartChi2 && (mcPartChi2 != mcPartLinks) ) {
         if( mcPartLinks ) {
           matchDifferent++;
-          _verbose << "      MCPart found from Chi2 is different" << endreq;
+          _verbose << "      MCPart found from Chi2 is different" << endmsg;
         }
         const Gaudi::LorentzVector mc4Mom = mcPartChi2->momentum();
         _verbose << "      MCPart from Chi2 "
@@ -244,12 +244,12 @@ StatusCode TestLinker::execute() {
                  << " : momentum, slope "
                  << mc4Mom.Vect().R() << " "
                  << mc4Mom.Px()/mc4Mom.Pz() << " "
-                 << mc4Mom.Py()/mc4Mom.Pz() << endreq;
-        _verbose << "       Chi2 was " << chi2 << endreq;
+                 << mc4Mom.Py()/mc4Mom.Pz() << endmsg;
+        _verbose << "       Chi2 was " << chi2 << endmsg;
         Particle* partLinks = m_linkLinks->firstP( mcPartChi2 );
         if( partLinks ) {
           _verbose << "       It is linked to Particle "
-                   << partLinks->key() << endreq;
+                   << partLinks->key() << endmsg;
         }
       }
       if( nbChi2 ) {
@@ -264,21 +264,21 @@ StatusCode TestLinker::execute() {
 
   _debug << "========= On " << std::setw(width) <<  nbParts
          << " Particles ========="
-         << endreq
+         << endmsg
          << "   | Matched with Links | " << std::setw(width) << matchLinks
          << " | Missed with Chi2  | " << std::setw(width) << matchLinksNotChi2
          << " | Too large Chi2    | " << std::setw(width) << matchLinksHighChi2
-         << endreq
+         << endmsg
          << "   | Matched with Comp. | " << std::setw(width) << matchComp
          << " | Diff. from Links  | " << std::setw(width) << matchLinksDiffComp
          << " | Missed with Comp. | " << std::setw(width) << matchMissedComp
-         << endreq
+         << endmsg
          << "   | Matched with Chi2  | " << std::setw(width) << matchChi2
          << " | Missed with Links | " << std::setw(width) << matchChi2NotLinks
-         << endreq
+         << endmsg
          << "   | Matched with both  | " << std::setw(width) << matchFull
          << " | Matched different | " << std::setw(width) << matchDifferent
-         << endreq;
+         << endmsg;
 
   m_matchLinks += matchLinks;
   m_matchChi2 += matchChi2;
@@ -335,8 +335,8 @@ StatusCode TestLinker::execute() {
       //      }
       // Check if it was reconstructible
       if( trackInfo.hasVeloAndT( mcPart ) ) {
-        verbose() << "    MCParticle " << mcPart->key() << endreq
-                  << "      Is reconstructable as Long track" << endreq;
+        verbose() << "    MCParticle " << mcPart->key() << endmsg
+                  << "      Is reconstructable as Long track" << endmsg;
         mcPartRecons++;
         bool countTr = true;
         bool countProto = true;
@@ -345,7 +345,7 @@ StatusCode TestLinker::execute() {
              tr = trLink.next()) {
           verbose() << "      Is associated to track " << tr->key();
           if( !tr->checkFlag( Track::Clone ) ) {
-            verbose() << " that is unique" << endreq;
+            verbose() << " that is unique" << endmsg;
             // Look at the type of track
             int type = trType( tr );
             if( 0 == type ) continue;
@@ -362,7 +362,7 @@ StatusCode TestLinker::execute() {
                  NULL != proto;
                  proto = protoLink->nextP() ) {
               verbose() << "      and gave ProtoParticle "
-                        << proto->key() << endreq;
+                        << proto->key() << endmsg;
               if( 0 != proto && proto->track() == tr ) {
                 if( countProto ) mcPart2Proto[0]++;
                 mcPart2Proto[type]++;
@@ -370,7 +370,7 @@ StatusCode TestLinker::execute() {
               }
             }
           } else {
-            verbose() << " that is NOT unique" << endreq;
+            verbose() << " that is NOT unique" << endmsg;
           }
         }
         // Now look at association to Particles with all associators
@@ -410,13 +410,13 @@ StatusCode TestLinker::execute() {
   _debug
     << "========= On " << std::setw(width) << mcPartCount
     << " MCParticles ========="
-    << endreq
+    << endmsg
     << "   |                       |  Total  | Forward |  Match  |  Velo   |"
-    << "  Seed   | Upstream|  Missed |" << endreq;
+    << "  Seed   | Upstream|  Missed |" << endmsg;
   width = 7;
   _debug
     << "   | Reconstructible long  | " << std::setw(width) << mcPartRecons
-    <<endreq;
+    <<endmsg;
 
   prTable( MSG::DEBUG,
            "   | Linked to a track     | ", mcPart2Track, width);
@@ -457,7 +457,7 @@ void TestLinker::prTable( const MSG::Level level,
     for( unsigned int i=0; i < table.size(); i++ ) {
       msgStream(level) << std::setw(width) << table[i] << " | ";
     }
-    msgStream(level) << endreq;
+    msgStream(level) << endmsg;
   }
 }
 
@@ -482,42 +482,42 @@ int TestLinker::trType( const Track* tr ){
 //=============================================================================
 StatusCode TestLinker::finalize() {
 
-  _debug << ">>> Finalize" << endreq;
+  _debug << ">>> Finalize" << endmsg;
   int width = (int)log10((double)m_nbParts+1)+1;
 
   _info << "======== Statistics for Particles to MCParticles association"
-        << "========" << endreq
+        << "========" << endmsg
         << "======== On " << std::setw(width) <<  m_nbParts
         << " Particles ( " << m_nbEvts << " events) ========"
-        <<endreq
+        <<endmsg
         << "   | Matched with Links | " << std::setw(width) << m_matchLinks
         << " | Missed with Chi2  | " << std::setw(width) << m_matchLinksNotChi2
         << " | Too large Chi2    | " << std::setw(width) << m_matchLinksHighChi2
-        << endreq
+        << endmsg
         << "   | Matched with Comp. | " << std::setw(width) << m_matchComp
         << " | Diff. from Links  | " << std::setw(width) << m_matchLinksDiffComp
         << " | Missed with Comp. | " << std::setw(width) << m_matchMissedComp
-        << endreq
+        << endmsg
         << "   | Matched with Chi2  | " << std::setw(width) << m_matchChi2
         << " | Missed with Links | " << std::setw(width) << m_matchChi2NotLinks
-        << endreq
+        << endmsg
         << "   | Matched with both  | " << std::setw(width) << m_matchFull
         << " | Matched different | " << std::setw(width) << m_matchDifferent
-        << endreq;
+        << endmsg;
 
 #ifdef TR_EFFICIENCY
   width = (int)log10((double)m_mcPartCount+1)+1;
   _info << "======== Statistics on MCParticle associations ========"
-        << endreq
+        << endmsg
         << "======== On " << std::setw(width) << m_mcPartCount
         << " MCParticles ( " << m_nbEvts-m_skippedEvts << " events, "
         << m_skippedEvts << " skipped) ========"
-        << endreq
+        << endmsg
         << "   |                       |  Total  | Forward |  Match  |  Velo   |"
-        << "  Seed   | Upstream|  Missed |" << endreq;
+        << "  Seed   | Upstream|  Missed |" << endmsg;
   width = 7;
   _info  << "   | Reconstructible long  | " << std::setw(width) << m_mcPartRecons
-         <<endreq;
+         <<endmsg;
 
   prTable( MSG::INFO,
            "   | Linked to a track     | ", m_mcPart2Track, width);

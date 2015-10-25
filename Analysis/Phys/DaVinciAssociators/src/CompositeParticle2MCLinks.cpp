@@ -71,7 +71,7 @@ CompositeParticle2MCLinks::~CompositeParticle2MCLinks() {}
 //=============================================================================
 StatusCode CompositeParticle2MCLinks::initialize() {
 
-  _debug << "==> Initialise" << endreq;
+  _debug << "==> Initialise" << endmsg;
 
   StatusCode sc = GaudiAlgorithm::initialize();
   if( !sc.isSuccess() ) return sc;
@@ -85,7 +85,7 @@ StatusCode CompositeParticle2MCLinks::initialize() {
     }
   }
   _info << "Composite association uses "
-        << Particle2MCMethod::extension[method] << " as input" << endreq;
+        << Particle2MCMethod::extension[method] << " as input" << endmsg;
   // This is a link helper for the underlying associator (default : Links)
   m_p2MCLink = new Object2MCLinker<>( this, method, m_inputData ) ;
   // This is a linker to itself, to check if Particles have already been associated
@@ -102,7 +102,7 @@ StatusCode CompositeParticle2MCLinks::initialize() {
 //=============================================================================
 StatusCode CompositeParticle2MCLinks::finalize() {
 
-  _debug << "==> Finalize" << endreq;
+  _debug << "==> Finalize" << endmsg;
   if( NULL != m_p2MCLink ) delete m_p2MCLink;
   if( NULL != m_p2MCComp ) delete m_p2MCComp;
   m_p2MCLink = NULL;
@@ -115,7 +115,7 @@ StatusCode CompositeParticle2MCLinks::finalize() {
 //=============================================================================
 StatusCode CompositeParticle2MCLinks::execute() {
 
-  _debug << "==> Execute" << endreq;
+  _debug << "==> Execute" << endmsg;
 
   if( "" != outputTable() ) {
     return Error( "Usage of Relations in Particle Associators is obsolete, use Linkers instead");
@@ -147,7 +147,7 @@ StatusCode CompositeParticle2MCLinks::execute() {
     m_nrel = 0;
     m_nass = 0;
 
-    _debug << npp << " Particles retrieved from " << *inp << endreq;
+    _debug << npp << " Particles retrieved from " << *inp << endmsg;
     
     // loop on Parts and MCParts to match them
     for( Particles::const_iterator pIt=parts->begin() ;
@@ -185,7 +185,7 @@ StatusCode CompositeParticle2MCLinks::execute() {
           }
           mcp = m_p2MCLink->next();
         }
-        _verbose << endreq;
+        _verbose << endmsg;
       } // if mcp
 
       //
@@ -227,13 +227,13 @@ StatusCode CompositeParticle2MCLinks::execute() {
       if( !foundDirectAssociation && (*pIt)->daughters().size() == 0) {
         _verbose << "Particle " << objectName(*pIt)
                  << " not considered: no direct asct and no daughters"
-                 << endreq;
+                 << endmsg;
       } //if
 
     }
     _debug << "Out of " << npp << " Particles in " << *inp << ", "
            << m_nass << " are associated, "
-           << m_nrel << " relations found" << endreq;
+           << m_nrel << " relations found" << endmsg;
   }    
   return StatusCode::SUCCESS ;
 }
@@ -255,19 +255,19 @@ CompositeParticle2MCLinks::associateTree(const Particle *p,
              << " (" << idP.pid() << ") "
              << " and MCPart " 
              << m->key() << " (" <<idM.pid()
-             << ") potential match " << endreq;
+             << ") potential match " << endmsg;
 #endif
     // Check if these particles have already been associated
     if( m_p2MCComp->checkAssociation( p, m) ) {
       _verbose << "     Association already registered between Particle "
                << objectName(p) << " and MCPart "
-               << m->key() << endreq;
+               << m->key() << endmsg;
       return true;
     }
     if(p->daughters().size()==0) {
 #ifdef DEEPDEBUG
       _verbose << "     No daughter, check underlying particle associator" 
-               << endreq;
+               << endmsg;
 #endif
       s = m_p2MCLink->checkAssociation(p, m); 
       asctType = "Direct";
@@ -312,7 +312,7 @@ CompositeParticle2MCLinks::associateTree(const Particle *p,
              << " -> MCPart - " 
              << m->key()
              << " (" <<idM.pid() << ")"
-             << endreq;
+             << endmsg;
     if( NULL != m_linkerTable ) m_linkerTable->link( p, m);
     ++m_nrel;
     ++m_nass;  

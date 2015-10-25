@@ -100,7 +100,7 @@ StatusCode NeutralPP2MC::execute(){
                                     << "::  inputData   = ("           << m_inputData << ")"
                                     << "::  output Relation table =  " << m_outputTable 
                                     << "::  input  Relation table =  " << m_mcTable
-                                    << endreq;
+                                    << endmsg;
   // avoid the long name and always use "const" qualifier
   typedef const SmartRefVector<CaloHypo>                        Hypos    ;
   typedef const SmartRefVector<CaloCluster>                     Clusters ;
@@ -190,7 +190,7 @@ StatusCode NeutralPP2MC::execute(){
   
   if ( msgLevel( MSG::DEBUG ) && 0 != table ){
     debug() << "Number of MC links are " 
-            << table->relations().size() << endreq ;
+            << table->relations().size() << endmsg ;
   }
   return StatusCode::SUCCESS;
 }

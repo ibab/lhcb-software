@@ -63,7 +63,7 @@ Particle2MCWithChi2::~Particle2MCWithChi2() {}
 //=============================================================================
 StatusCode Particle2MCWithChi2::initialize() {
 
-  _debug << "==> Initialise" << endreq;
+  _debug << "==> Initialise" << endmsg;
   // Book histograms...
   if( m_histos ) {    
     m_hisChi2 = histoSvc()->book( "asct", 1, "Chi2", 100, 0., 1000. );
@@ -107,7 +107,7 @@ StatusCode Particle2MCWithChi2::initialize() {
 //=============================================================================
 StatusCode Particle2MCWithChi2::execute() {
 
-  _debug << "==> Execute" << endreq;
+  _debug << "==> Execute" << endmsg;
 
   // Get the MCParticles
   MCParticles* mcParts = get<MCParticles>( MCParticleLocation::Default );
@@ -127,11 +127,11 @@ StatusCode Particle2MCWithChi2::execute() {
       linkerTable = p2MCLink.linkerTable( linkContainer );
     if( NULL != linkerTable ) {
       _verbose << "    Created Linker table for container "
-                          << linkContainer << endreq;
+                          << linkContainer << endmsg;
     } else {
       _verbose << "    Linker table for container "
                           << linkContainer << " already exists"
-                          << endreq;
+                          << endmsg;
     }
     if( NULL == linkerTable ) continue;
     
@@ -141,7 +141,7 @@ StatusCode Particle2MCWithChi2::execute() {
     int npp = parts->size();
     int nass = 0;
     _verbose << "    " << npp 
-                        << " Particles retrieved from " << *inp << endreq;
+                        << " Particles retrieved from " << *inp << endmsg;
     
     // loop on Parts and then on MCParts to match them
     for( Particles::const_iterator pIt=parts->begin();
@@ -159,12 +159,12 @@ StatusCode Particle2MCWithChi2::execute() {
       cov(2,2) = 1.;
 #ifdef DEBUG_COV
       _verbose << "Particle :\n" << *part << "\n" 
-               << cov << endreq;
+               << cov << endmsg;
       if( 0 != part->proto() ) {
         _verbose << "Covariance matrix of the track " << "\n"
-                 << part->proto()->track()->firstState().posMomCovariance() << endreq;
+                 << part->proto()->track()->firstState().posMomCovariance() << endmsg;
         _verbose << "Here is the state " << "\n"
-                 << part->proto()->track()->firstState() << endreq;
+                 << part->proto()->track()->firstState() << endmsg;
       }
 #endif
       
@@ -172,12 +172,12 @@ StatusCode Particle2MCWithChi2::execute() {
       bool ok = cov.Invert();
       
       if( !ok ) {
-        _info << "    Covariance matrix inversion failed" << endreq;
-        _verbose << "Covariance matrix:\n" << cov << endreq;
+        _info << "    Covariance matrix inversion failed" << endmsg;
+        _verbose << "Covariance matrix:\n" << cov << endmsg;
       } else {
 #ifdef DEBUG_COV
         _verbose << "Inverse matrix for Particle " << part->key() << "\n" 
-                 << cov << endreq;
+                 << cov << endmsg;
 #endif
         Gaudi::Vector6 pVector( part->referencePoint().x(), 
                                 part->referencePoint().y(), 
@@ -188,7 +188,7 @@ StatusCode Particle2MCWithChi2::execute() {
         
         double axz =  part->referencePoint().z();
         double pCharge = part->charge();
-        _verbose << "Particle " << part->key() << " " << part->momentum() << endreq;
+        _verbose << "Particle " << part->key() << " " << part->momentum() << endmsg;
         // Loop on MCParticles
         for( MCParticles::const_iterator mcIt=mcParts->begin();
              mcParts->end() != mcIt; mcIt++) {
@@ -216,7 +216,7 @@ StatusCode Particle2MCWithChi2::execute() {
           double chi2 = ROOT::Math::Similarity( pVector - mcpVector, cov);
 
           _verbose << "     & MCPart " << mcPart->key() << " " << mcPart->momentum() 
-                   << "-> Chi2 = " << chi2  << endreq;
+                   << "-> Chi2 = " << chi2  << endmsg;
 
           if( m_histos && chi2 > 0. ) {
             m_hisChi2vsDiffP->fill( fabs(mcpVector[5]-pVector[5])/pVector[5], 
@@ -234,7 +234,7 @@ StatusCode Particle2MCWithChi2::execute() {
           if( NULL != linkerTable ) 
             linkerTable->link( part, minMCPart, minChi2);
           _verbose << "Particle " << part->key() << " associated with MCPart " << minMCPart->key()
-                   << "- Chi2 = " << minChi2 << endreq;
+                   << "- Chi2 = " << minChi2 << endmsg;
           nass++;
         }
         if( m_histos ) {
@@ -245,7 +245,7 @@ StatusCode Particle2MCWithChi2::execute() {
       }
     }
     _debug << npp << " Particles in " << *inp << ", "
-           << nass << " are associated, " << endreq;
+           << nass << " are associated, " << endmsg;
   } // End of loop on input data locations
   
   return StatusCode::SUCCESS;
@@ -256,7 +256,7 @@ StatusCode Particle2MCWithChi2::execute() {
 //=============================================================================
 StatusCode Particle2MCWithChi2::finalize() {
 
-  _debug << "==> Finalize" << endreq;
+  _debug << "==> Finalize" << endmsg;
   return StatusCode::SUCCESS;
 }
 
