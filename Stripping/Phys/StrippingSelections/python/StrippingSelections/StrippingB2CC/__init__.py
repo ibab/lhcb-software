@@ -8,7 +8,8 @@ _selections = ['StrippingB2JpsiXforBeta_s',
                'StrippingBs2EtacPhiBDT',
                'StrippingBd2JpsieeKS',
                'StrippingBs2JpsieePhi',
-               'StrippingB2JpsiPi0']
+               'StrippingB2JpsiPi0',
+               'StrippingB2JpsiHH']
 
 for _sel in _selections :
     try :

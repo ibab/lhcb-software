@@ -23,7 +23,8 @@ _selections = (
     'StrippingBc2JpsiHBDT',
     'StrippingBc2JpsiMuXNew',
     'StrippingCcbar2PpbarNew',
-    'StrippingCcbar2PhiPhi'
+    'StrippingCcbar2PhiPhi',
+    'StrippingLb2EtacKp'
     )
 
 for _sel in _selections :

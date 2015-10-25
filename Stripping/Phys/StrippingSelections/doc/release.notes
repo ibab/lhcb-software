@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-10-25 - Zhang Liming
+ - Add StrippingLb2EtacKp to BandQ
+ - Add StrippingB2JpsiHH to B2CC
+
 ! 2015-10-23 - Sean Benson
  - Updates to StrippingBs2GammaGamma to reflect 2015 trigger changes.
 
