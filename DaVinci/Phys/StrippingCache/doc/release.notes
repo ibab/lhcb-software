@@ -5,6 +5,8 @@
 ! Created     : 2015-02-04
 ! -----------------------------------------------------------------------------
 
+! 2015-10-25 - Andrea Contu
+ - Removing S20r0p3 due to bugfix in PySel Wrappers
 
 ! 2015-10-15 - Andrea Contu
  - Removing S21 and S23 due to changes in RelatedInfo
