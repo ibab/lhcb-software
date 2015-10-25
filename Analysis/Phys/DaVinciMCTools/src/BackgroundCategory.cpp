@@ -113,7 +113,7 @@ BackgroundCategory::category( const LHCb::Particle* reconstructed_mother,
   {
     if (msgLevel(MSG::VERBOSE)) verbose() << "Descendents are "
                                           << particles_in_decay
-                                          << endreq;
+                                          << endmsg;
   }
 
   //Now we have to associate each one of them to an MCParticle if possible

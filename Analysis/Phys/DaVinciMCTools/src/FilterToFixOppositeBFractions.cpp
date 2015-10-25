@@ -186,7 +186,7 @@ StatusCode FilterToFixOppositeBFractions::execute() {
 
       int evtn = evt->evtNumber();
       int runn = evt->runNumber();
-      debug()<<"Event ="<<evtn<<"    Run="<<runn<<endreq;
+      debug()<<"Event ="<<evtn<<"    Run="<<runn<<endmsg;
 
       //Look for B forced to decay
       const MCParticle *BS = 0, *BO = 0;
@@ -201,7 +201,7 @@ StatusCode FilterToFixOppositeBFractions::execute() {
           if(BS) break;
         }
       }
-      debug()<<"Signal B ID = "<<BS->particleID().pid()<<endreq;
+      debug()<<"Signal B ID = "<<BS->particleID().pid()<<endmsg;
       //retrieve opposite B using the same origin vertex
       MCParticles::const_iterator imc;
       for ( imc = mcpart->begin(); imc != mcpart->end(); imc++ ) {
@@ -213,17 +213,17 @@ StatusCode FilterToFixOppositeBFractions::execute() {
               }
             }
             else{
-              info()<<"Origin vertex of a B inexistant"<<endreq;
+              info()<<"Origin vertex of a B inexistant"<<endmsg;
             }
           }
         }
       }
       if(!BO){
-        info()<<"Opposite B not found !!"<<endreq;
+        info()<<"Opposite B not found !!"<<endmsg;
         setFilterPassed(false);
         return StatusCode::SUCCESS;
       }
-      debug()<<"B Opposite ID = "<<BO->particleID().pid()<<endreq;
+      debug()<<"B Opposite ID = "<<BO->particleID().pid()<<endmsg;
       if(BO->particleID().abspid()==531) m_coutBs++;
       if(BO->particleID().abspid()==521) m_coutBu++;
       if(BO->particleID().abspid()==511) m_coutBd++;
@@ -238,12 +238,12 @@ StatusCode FilterToFixOppositeBFractions::execute() {
         double fx = iET->second.second;
         if(a < 50.*(1-((1/gx)-1)/((1/fx)-1))){
           m_rejected++;
-          debug()<<"Event rejected !!"<<endreq;
+          debug()<<"Event rejected !!"<<endmsg;
           setFilterPassed(false);
           return StatusCode::SUCCESS;
         }
       }
-      debug()<<"Event accepted !!"<<endreq;
+      debug()<<"Event accepted !!"<<endmsg;
       m_coutevtAC = m_coutevtAC+1.0;
       if(BO->particleID().abspid()==531) m_coutBsAC++;
       if(BO->particleID().abspid()==521) m_coutBuAC++;
@@ -288,50 +288,50 @@ StatusCode FilterToFixOppositeBFractions::finalize() {
 
   info() << "==> Finalize" << endmsg;
 
-  info() << "   Event Type was :"<<m_ievt<<endreq;
-  info() << "   Total evts Before any corrections= " <<m_coutevt<<endreq;
+  info() << "   Event Type was :"<<m_ievt<<endmsg;
+  info() << "   Total evts Before any corrections= " <<m_coutevt<<endmsg;
   info() << " Fraction where opposite B ID = Signal B ID : "
          <<r(percent(m_coutSameB,m_coutevt))<<" +/- "
          <<r(errorp(m_coutSameB,m_coutevt))<<" %"
-         <<endreq;
+         <<endmsg;
   info() << "        Total Bu oppo = "
          <<m_coutBu<<"/"<<m_coutevt<<" = "
          <<r(m_BuBC)<<" +/- "
-         <<r(m_errBuBC)<<" %"<<endreq;
+         <<r(m_errBuBC)<<" %"<<endmsg;
   info() << "        Total Bd oppo = "
          <<m_coutBd<<"/"<<m_coutevt<<" = "
          <<r(m_BdBC)<<" +/- "
-         <<r(m_errBdBC)<<" %"<<endreq;
+         <<r(m_errBdBC)<<" %"<<endmsg;
   info() << "        Total Bs oppo = "
          <<m_coutBs<<"/"<<m_coutevt<<" = "
          <<r(m_BsBC)<<" +/- "
-         <<r(m_errBsBC)<<" %"<<endreq;
+         <<r(m_errBsBC)<<" %"<<endmsg;
   info() << "        Total Ot oppo = "
          <<m_coutOt<<"/"<<m_coutevt<<" = "
          <<r(m_OtBC)<<" +/- "
-         <<r(m_errOtBC)<<" %"<<endreq;
-  info() << endreq;
+         <<r(m_errOtBC)<<" %"<<endmsg;
+  info() << endmsg;
   info() << "        Total rejected = "
          <<r(percent(m_rejected,m_coutevt))<<" +/- "
-         <<r(errorp(m_rejected,m_coutevt))<<" %"<<endreq;
+         <<r(errorp(m_rejected,m_coutevt))<<" %"<<endmsg;
   info() << "   Total evts After Correction = "
-         <<m_coutevtAC<<endreq;
+         <<m_coutevtAC<<endmsg;
   info() << "        Total Bu oppo AC= "
          <<m_coutBuAC<<"/"<<m_coutevtAC<<" = "
          <<r(m_BuAC)<<" +/- "
-         <<r(m_errBuAC)<<" %"<<endreq;
+         <<r(m_errBuAC)<<" %"<<endmsg;
   info() << "        Total Bd oppo AC= "
          <<m_coutBdAC<<"/"<<m_coutevtAC<<" = "
          <<r(m_BdAC)<<" +/- "
-         <<r(m_errBdAC)<<" %"<<endreq;
+         <<r(m_errBdAC)<<" %"<<endmsg;
   info() << "        Total Bs oppo AC= "
          <<m_coutBsAC<<"/"<<m_coutevtAC<<" = "
          <<r(m_BsAC)<<" +/- "
-         <<r(m_errBsAC)<<" %"<<endreq;
+         <<r(m_errBsAC)<<" %"<<endmsg;
   info() << "        Total Ot oppo AC= "
          <<m_coutOtAC<<"/"<<m_coutevtAC<<" = "
          <<r(m_OtAC)<<" +/- "
-         <<r(m_errOtAC)<<" %"<<endreq;
+         <<r(m_errOtAC)<<" %"<<endmsg;
 
 
   return GaudiAlgorithm::finalize(); //=== For DC04, return StatusCode::SUCCESS;

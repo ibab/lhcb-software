@@ -84,11 +84,11 @@ StatusCode IsBEvent::execute() {
   LHCb::MCParticles* mcparts = get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default );
   if( !mcparts ){
     fatal() << "Unable to find MC particles at '"
-            << LHCb::MCParticleLocation::Default << "'" << endreq;
+            << LHCb::MCParticleLocation::Default << "'" << endmsg;
     return StatusCode::FAILURE;
   }
   bool found = goodEvent(mcparts);
-  if (found) debug() << "Found required particle(s)" << endreq;
+  if (found) debug() << "Found required particle(s)" << endmsg;
   setFilterPassed(found);
 
   return StatusCode::SUCCESS;

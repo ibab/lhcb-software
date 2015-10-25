@@ -100,7 +100,7 @@ StatusCode PrintDecayTreeTool::initialize( void )
     else if( tok=="PPK" )   m_keys.push_back(PPK);
     else
       err() << "Unknown output key '" << tok << "'. Ignoring it."
-            << endreq;
+            << endmsg;
     if( pos != std::string::npos ) { oldpos = pos+1; }
     else                           { oldpos = pos; }
   }
@@ -111,12 +111,12 @@ StatusCode PrintDecayTreeTool::initialize( void )
   else if (m_energyUnit == MeV) m_energyUnitName = "MeV" ;
   else if (m_energyUnit <= 0) {
     err() << "You have chosen a unit for energies: "
-          << m_energyUnit << endreq;
+          << m_energyUnit << endmsg;
     return StatusCode::FAILURE ;
   }
   else {
     warning() << "You have chosen a non-standard unit for energies: "
-              << m_energyUnit << endreq;
+              << m_energyUnit << endmsg;
     m_energyUnitName = "???" ;
   }
   if (m_lengthUnit == mm) m_lengthUnitName = "mm" ;
@@ -124,12 +124,12 @@ StatusCode PrintDecayTreeTool::initialize( void )
   else if (m_lengthUnit == m) m_lengthUnitName = "m" ;
   else if (m_lengthUnit <= 0) {
     err() << "You have chosen a unit for lengths: "
-          << m_lengthUnit << endreq;
+          << m_lengthUnit << endmsg;
     return StatusCode::FAILURE ;
   }
   else {
     warning() << "You have chosen a non-standard unit for lengths: "
-              << m_lengthUnit << endreq;
+              << m_lengthUnit << endmsg;
     m_lengthUnitName = "??" ;
 
   }
@@ -751,9 +751,9 @@ void PrintDecayTreeTool::printTree( const LHCb::MCParticle *mother,
 
   info().setf(std::ios::fixed,std::ios::floatfield);
   printDecayTree( mother, assoc, "", maxDepth, info() );
-  info() << endreq;
+  info() << endmsg;
   printUsedContainers( info() );
-  info() << endreq;
+  info() << endmsg;
 }
 //=============================================================================
 void PrintDecayTreeTool::printAsTree( const LHCb::MCParticle::ConstVector &particles,
@@ -769,7 +769,7 @@ void PrintDecayTreeTool::printAsTree( const LHCb::MCParticle::ConstVector &parti
         ((*i)->originVertex()->mother() == NULL) )
       printDecayTree( *i, assoc, "", m_depth, info() );
   }
-  info() << endreq;
+  info() << endmsg;
 }
 //=============================================================================
 void PrintDecayTreeTool::printAsTree( const LHCb::MCParticles &particles,
@@ -785,7 +785,7 @@ void PrintDecayTreeTool::printAsTree( const LHCb::MCParticles &particles,
         ((*i)->originVertex()->mother() == NULL) )
       printDecayTree( *i, assoc, "", m_depth, info() );
   }
-  info() << endreq;
+  info() << endmsg;
 }
 //=============================================================================
 void PrintDecayTreeTool::printDecayTree( const LHCb::MCParticle* mother,
@@ -830,7 +830,7 @@ void PrintDecayTreeTool::printTree( const LHCb::Particle *mother,
 
   if( !mother )
   {
-    err() << "printTree called with NULL Particle" << endreq;
+    err() << "printTree called with NULL Particle" << endmsg;
     return;
   }
 
@@ -840,9 +840,9 @@ void PrintDecayTreeTool::printTree( const LHCb::Particle *mother,
 
   info().setf(std::ios::fixed,std::ios::floatfield);
   printDecayTree( mother, assoc, "", maxDepth, info() );
-  info() << endreq;
+  info() << endmsg;
   printUsedContainers( info() );
-  info() << endreq;
+  info() << endmsg;
 }
 //=============================================================================
 void PrintDecayTreeTool::printDecayTree( const LHCb::Particle *mother,
@@ -882,7 +882,7 @@ void PrintDecayTreeTool::printAsList( const LHCb::Particle::ConstVector& particl
   {
     printInfo( "", *i, assoc, info() );
   }
-  info() << endreq;
+  info() << endmsg;
 }
 //=============================================================================
 void PrintDecayTreeTool::printAsList( const LHCb::MCParticle::ConstVector& particles,
@@ -896,7 +896,7 @@ void PrintDecayTreeTool::printAsList( const LHCb::MCParticle::ConstVector& parti
   {
     printInfo( "", *i, assoc, info() );
   }
-  info() << endreq;
+  info() << endmsg;
 }
 //=============================================================================
 void PrintDecayTreeTool::printAsList( const LHCb::Particles& particles )
@@ -914,7 +914,7 @@ void PrintDecayTreeTool::printAsList( const LHCb::Particles& particles,
   {
     printInfo( "", *i, assoc, info() );
   }
-  info() << endreq;
+  info() << endmsg;
 }
 //=============================================================================
 void PrintDecayTreeTool::printAsList( const LHCb::MCParticles& particles,
@@ -928,7 +928,7 @@ void PrintDecayTreeTool::printAsList( const LHCb::MCParticles& particles,
   {
     printInfo( "", *i, assoc, info() );
   }
-  info() << endreq;
+  info() << endmsg;
 }
 //=============================================================================
 void PrintDecayTreeTool::printUsedContainers( MsgStream &log )
