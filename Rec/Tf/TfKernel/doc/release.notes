@@ -4,6 +4,10 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2015-10-25 - Michel De Cian
+ - Add method in IndexedHitContainer to return hits in a given layer non-const. Fix indentation everywhere.
+ - Add sorting in station and layer in TTStationHitManager.
+
 !========================= TfKernel v2r33 2015-07-20 =========================
 ! 2015-07-13 - Manuel Tobias Schiller
  - My last commit was not enabled due to overly clever preprocessor directives

@@ -272,6 +272,19 @@ namespace Tf
       std::sort ( rng.first, rng.second, SORTER() );
     }
 
+    /** Sort the hits in a given station and layer
+     *  Note: This does not use sorting in regions
+     *  @param[in] sta    Station ID
+     *  @param[in] lay    Station layer ID
+     */
+    template < typename SORTER >
+    void sortHits(const TTStationID sta, const TTLayerID lay);
+    
+    /// Sort the this in all layers and stations
+    template < typename SORTER >
+    void sortHits();
+    
+
     /// max number of regions
     inline TTStationID maxStations() const { return TTStationID(Tf::RegionID::TTIndex::kNStations); }
 
@@ -330,6 +343,15 @@ namespace Tf
                                     const TTRegionID region
                                   ) const { m_hits_ready.set(sta,lay,region); }
 
+    /** Set the hits sorted flag for given region
+     *  @param[in] sta    Station ID
+     *  @param[in] lay    Station layer ID
+     *  @param[in] ok     The status flag (true means hits sorted, false means not sorted)
+     */
+    inline void setAllHitsSorted( const TTStationID sta,
+                                  const TTLayerID lay) const { m_hits_sorted[2*sta+lay] = true; }
+
+
     /** Are all the hits ready
      *  @return boolean indicating if all the hits in the given region are ready or not
      *  @retval TRUE  Hits are ready
@@ -369,7 +391,27 @@ namespace Tf
      */
     inline bool allHitsPrepared(const TTStationID sta) const
     { return m_hits_ready.all(sta); }
+    
+    /** Are all the hits sorted in the given layer
+     *  @param[in] sta    Station ID
+     *  @param[in] lay    Station layer ID
+     *  @return boolean indicating if all the hits in the given layer are sorted or not
+     *  @retval TRUE  Hits are sorted
+     *  @retval FALSE Hits are not sorted
+     */
+    inline bool allHitsSorted(const TTStationID sta,
+                              const TTLayerID lay) const
+    { return m_hits_sorted[2*sta + lay]; }
 
+    /** Are all the hits sorted in all layers and stations
+     *  @return boolean indicating if all the hits are sorted or not
+     *  @retval TRUE  Hits are sorted
+     *  @retval FALSE Hits are not sorted
+     */
+    inline bool allHitsSorted() const
+    { return std::all_of(m_hits_sorted.begin(), m_hits_sorted.end(), [](const bool val){ return val;});}
+  
+    
   private:
 
     /// The underlying TT hit creator
@@ -383,7 +425,11 @@ namespace Tf
                              Tf::RegionID::TTIndex::kNRegions
                            >   m_hits_ready; ///< Flags to indicate which regions have hits ready
 
+    mutable std::array<bool,4 > m_hits_sorted; ///< Flags to indicate which stations and layers have hits sorted
+
   };
+  
+  
 
   template<class Hit>
   TTStationHitManager<Hit>::TTStationHitManager( const std::string& type,
@@ -409,7 +455,7 @@ namespace Tf
 
     // make sure we are ready for first event
     this->clearHits();
-
+    
     return sc;
   }
 
@@ -427,6 +473,7 @@ namespace Tf
     std::for_each( rng.begin(), rng.end(), std::default_delete<Hit>() ) ; 
     m_hits.clear();
     m_hits_ready.clear();
+    m_hits_sorted.fill(false);
   }
 
   template<class Hit>
@@ -509,6 +556,34 @@ namespace Tf
     } // station
   }
 #endif
+
+  // sort hits in all layers and stations
+  template < class Hit       >
+  template < typename SORTER >
+  void TTStationHitManager<Hit>::sortHits(){
+    if( this->allHitsSorted() ) return;
+    for (TTStationID sta=0; sta<maxStations(); ++sta ) {
+      for (TTLayerID lay=0; lay<maxLayers(); ++lay ) {
+        this->sortHits<SORTER>( sta, lay );
+      }
+    }
+  }
+  
+  // sort hits in one layer
+  template <class Hit>
+  template < typename SORTER >
+  void TTStationHitManager<Hit>::sortHits( const TTStationID sta,
+                                           const TTLayerID lay)
+  {
+    if (this->allHitsSorted(sta,lay)) return;
+    std::pair<typename Hits::iterator,typename Hits::iterator>  rng = m_hits.range_(sta,lay);
+    std::sort ( rng.first, rng.second, SORTER() );
+    this->setAllHitsSorted(sta,lay);
+  }
+
+
+
+
 } // Tf namespace
 
 #endif // TFKERNEL_TTSTATIONHITMANAGER_H
