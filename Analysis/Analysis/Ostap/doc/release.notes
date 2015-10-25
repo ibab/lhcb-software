@@ -9,6 +9,11 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-10-25 - Vanya Belyaev
+ - 1) put few fixes into PyTMVA
+   2) add qmtest for PyTMVA 
+
+
+! 2015-10-25 - Vanya Belyaev
  - TFileDeco.py: bug fix 
 
 ! 2015-10-25 - Vanya Belyaev

@@ -5,9 +5,9 @@
 # ==========================================================================================
 ## @file  PyTMVA.py
 #
-#  Python interface to TMVA: Trainer and Reader 
+#  Python interface to basic TMVA functionality: Trainer and Reader 
 #
-#  Actually for Trainer, it is a bit simplified version of Albert's code 
+#  Actually for the Trainer, it is a bit simplified version of Albert's code 
 #  @thanks Albert PUIG
 #  Inspired from
 #  @see http://www.slac.stanford.edu/grp/eg/minos/ROOTSYS/cvs/tmva/test/TMVAClassification.py
@@ -36,16 +36,14 @@
 #                 by $Author$ 
 # =============================================================================
 """ Python interface to two major TMVA classes
-
 -  Trainer
 -  Reader 
-
-Actually for Trainer, it is a bit simplified version of Albert's code [thanks Albert Puig],
+Actually for the Trainer, it is a bit simplified version of Albert's code [thanks Albert Puig],
 inspired from
 http://www.slac.stanford.edu/grp/eg/minos/ROOTSYS/cvs/tmva/test/TMVAClassification.py
 
 This file is a part of BENDER project:
-    ``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
+``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
 
 The project has been designed with the kind help from Pere MATO and Andrey TSAREGORODTSEV. 
 
@@ -72,31 +70,6 @@ from   AnalysisPython.Logger  import getLogger
 if '__main__' ==  __name__ : logger = getLogger( 'Ostap.PyTMVA' )
 else                       : logger = getLogger( __name__ )
 # =============================================================================
-## get the direct access to various TMVA macros&scripts 
-try :
-    ##
-    import os 
-    mpath  = ROOT.gROOT.GetMacroPath() 
-    mpath  = mpath.split(':')
-    mpath += [ '$ROOTSYS/tmva/test'        ,
-               '$ROOTSYS/../src/tmva/test' ]
-    
-    # for i in range(0,len(mpath) ) :
-    #    mpath[i] = os.path.expandvars ( mpath[i] )
-    #    mpath[i] = os.path.expanduser ( mpath[i] )
-    #    mpath[i] = os.path.expandvars ( mpath[i] )
-        
-    mpath = ':'.join( mpath )
-    mpath = mpath.replace('::',':')
-    ## 
-    ROOT.gROOT.SetMacroPath ( mpath ) 
-    ##
-    logger.info    ( 'Update MacroPath to get the direct access to TMVA macros')
-    ## 
-except :
-    logger.warning ( 'Unable to update MacroPath')
-    pass 
-
     
 # =============================================================================
 ## @class TMVATrainer
@@ -136,9 +109,7 @@ except :
 #  @author Vanya  BELYAEV Ivan.Belyaev@itep.ru
 #  @thanks Albert PUIG
 class Trainer(object):
-    """
-    Helper class to train TMVA
-    
+    """Helper class to train TMVA:  
     #
     #  from PyTMVA import Trainer 
     #  t = Trainer( methods =  [
@@ -155,6 +126,7 @@ class Trainer(object):
     #    'vchi2'   
     #  ]
     #
+    #  ## start the actual training 
     #  t.train ( var_list                              ,
     #            signal          = treeSignal          ,
     #            background      = treeBackgrund       ,
@@ -163,8 +135,11 @@ class Trainer(object):
     #            background_cuts = cuts_for_background ,
     #            spectators      = []                  ) 
     #
-    
+    Actuially it is a bit simplified version of the original code by Albert PUIG,
+    inspired from
+    http://www.slac.stanford.edu/grp/eg/minos/ROOTSYS/cvs/tmva/test/TMVAClassification.py
     """
+    # =========================================================================
     ## constructor
     #  @code
     # 
@@ -178,12 +153,12 @@ class Trainer(object):
     #  For more detailes
     #  @see http://www.slac.stanford.edu/grp/eg/minos/ROOTSYS/cvs/tmva/test/TMVAClassification.py.
     def __init__(self, methods ):
-        """
-        Constructor with list of mehtods
+        """Constructor with list of methoods
         >>> from PyTMVA import Trainer
         >>> methods = ....
-        >>> trainer = Trainer ( methods )
-        
+        >>> trainer = Trainer ( methods )        
+        For more detailes
+        see http://www.slac.stanford.edu/grp/eg/minos/ROOTSYS/cvs/tmva/test/TMVAClassification.py.
         """
         self.methods  = methods
         self._verbose = False
@@ -209,35 +184,32 @@ class Trainer(object):
     #          background_cuts = cuts_for_background ,
     #          spectators      = []                  ) 
     #  @endcode  
-    # 
-    def train ( self   , var_list    ,
-                signal , background  ,
-                outputfile           ,
-                signal_cuts     = '' ,
-                background_cuts = '' ,
-                spectators      = [] ) :
-        """
-        Train the TMVA:
+    #  @return the name of output XML file with weights 
+    def train ( self   , var_list             ,
+                signal , background           ,
+                outputfile      = 'TMVA.root' ,
+                signal_cuts     = ''          ,
+                background_cuts = ''          ,
+                spectators      = []          ,
+                configuration   = "nTrain_Signal=0:nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:!V" ) :
+        """Train the TMVA:
         >>> trainer.train ( var_list , ... ) 
         """
         #
         ## get the logger
-        # 
-        from   AnalysisPython.Logger  import getLogger
-        ln = outputfile  
-        p  = ln.find('.root')
-        if 0 < p : ln = ln [ : p ]
-        logger = getLogger ( "Trainer/%s" % ln ) 
-        # 
-        
+        #
+        import os 
+        name = os.path.split    ( outputfile )[-1] 
+        name = os.path.splitext ( name       )[ 0]
+
         outFile = ROOT.TFile.Open   ( outputfile, 'RECREATE' )
-        logger.info ( 'Output ROOT file: %s ' % outputfile )
+        logger.info ( 'Trainer(%s): output ROOT file: %s ' % ( name , outputfile  ) ) 
 
         factory = ROOT.TMVA.Factory (
             "TMVAClassification"  ,
             outFile               ,
             "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=Classification" ) 
-        logger.info ( 'Book TMVA-factory' ) 
+        logger.info ( 'Trainer(%s): book TMVA-factory' % name ) 
         
         factory.SetVerbose(self._verbose)
         #
@@ -254,33 +226,34 @@ class Trainer(object):
         signalWeight     = 1.0
         backgroundWeight = 1.0
         #
-        logger.info ( ' Signal     cuts: "%s" ' %     signal_cuts )
-        logger.info ( ' Background cuts: "%s" ' % background_cuts ) 
+        logger.info ( 'Trainer(%s): Signal     cuts: "%s" ' % ( name ,     signal_cuts ) ) 
+        logger.info ( 'Trainer(%s): Background cuts: "%s" ' % ( name , background_cuts ) )
         # 
         factory.AddTree ( signal     , 'Signal'     ,     signalWeight ,
                           ROOT.TCut (      signal_cuts ) )
         factory.AddTree ( background , 'Background' , backgroundWeight ,
                           ROOT.TCut (  background_cuts ) )
         #
+        logger.info ( 'Trainer(%s): Configuration  : "%s" ' % ( name , configuration ) )
         factory.PrepareTrainingAndTestTree(
             ROOT.TCut ( signal_cuts     ) ,
             ROOT.TCut ( background_cuts ) ,
-            "nTrain_Signal=0:nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:!V" )
+            configuration                 )
         #
         for m in self.methods :
             factory.BookMethod( *m )
 
         # Train MVAs
-        logger.info  ( "Train    all Methods" )  
+        logger.info  ( "Trainer(%s): Train    all Methods" % name )  
         factory.TrainAllMethods    ()
         # Test MVAs
-        logger.info  ( "Test     all Methods" )  
+        logger.info  ( "Trainer(%s): Test     all Methods" % name )  
         factory.TestAllMethods     ()
         # Evaluate MVAs
-        logger.info  ( "Evaluate all Methods" )  
+        logger.info  ( "Trainer(%s): Evaluate all Methods" % name )  
         factory.EvaluateAllMethods ()
         # Save the output.
-        logger.info  ( "Output ROOT file is closed" )  
+        logger.info  ( "Trainer(%s): Output ROOT file %s is closed" % ( name , outputfile ) )  
         outFile.Close()
         # Now move the weights files
         import glob, os, shutil 
@@ -288,13 +261,15 @@ class Trainer(object):
             typeWeight = os.path.splitext(weightFile)[0].split("_")[-1].replace('.weights', '')
             outWeight  = os.path.splitext(outputfile)[0] + '_%s_weights.xml' % typeWeight
             shutil.move   ( weightFile, outWeight)
-            logger.info   ( "Weights file is created: %s" % outWeight )  
+            logger.info   ( "Trainer(%s): Weights file is created: %s" % ( name , outWeight ) ) 
             shutil.rmtree ( 'weights')
 
+        ## return the name of weigth file w
+        return outWeight 
 # =============================================================================
 ## @class Reader
 #  Rather generic python interface to TMVA-reader
-#  @attention It is not CPU-efficient
+#  @attention It is *not* CPU-efficient
 #  Ugly tricks with arrays are required to bypass some technical limitations
 #
 #  @code
@@ -319,9 +294,7 @@ class Trainer(object):
 #  @author Vanya  BELYAEV Ivan.Belyaev@itep.ru
 #  @thanks Alexander BARANOV
 class Reader(object)  :
-    """
-    Rather generic python interface to TMVA-reader
-    
+    """ Rather generic python interface to TMVA-reader
     #
     #  r = Reader ( 'MyTMVA' ,
     #       variables = [
@@ -336,7 +309,6 @@ class Reader(object)  :
     #       ] ,
     #       weights_file = 'my_weights.xml'
     #      )
-    #  
     """
     def __init__ ( self         ,
                    name         , 
@@ -345,12 +317,10 @@ class Reader(object)  :
         
         self.reader = ROOT.TMVA.Reader()
         self.name   = name
-        
-        ## get the logger
-        # 
-        from   AnalysisPython.Logger  import getLogger
-        self.logger = getLogger ( "Reader /%s" % name )
 
+        ##  book the variables:
+        #   dirt trick with arrays is needed due to a bit strange reader interface.
+        #   [TMVA reader needs the address of ``float''(in C++ sense) variable]
         from array import array
 
         self._variables = []
@@ -361,39 +331,37 @@ class Reader(object)  :
                 
                 vname  = v
                 fvun   = lambda s : getattr ( s , vname )
-                vfield = array ( 'f' , [1] )
+                vfield = array ( 'f' , [1] )                  ## NB: note the type 
                 
             elif isinstance ( v , tuple ) and 2 == len ( v ) :
 
                 vname  = v[0]
                 vfun   = v[1]
-                vfield = array ( 'f' , [1] )
+                vfield = array ( 'f' , [1] )                  ## NB: note the type here 
 
             else :
                 
-                self.logger.error    ('Invalid variable description!')
+                logger.error ('Reader(%s): Invalid variable description!' % name )
                 raise AttributeError, 'Invalid variable description!'
 
             ##                     name    accessor   address 
             self._variables += [ ( vname , vfun     , vfield  ) ] 
 
 
-        ## declare all varibales to TMVA.Reader 
+        ## declare all variables to TMVA.Reader 
         for v in self._variables :
-            self.reader.AddVariable ( v[0] , v[2] )
-            
+            self.reader.AddVariable ( v[0] , v[2] )            
             
         self.reader.BookMVA( self.name , weights_file )
-        self.logger.info ('TMVA-reader is booked %s %s ' % ( self.name , weights_file ) ) 
+        logger.info ('TMVA Reader(%s) is booked: %s ' % ( self.name , weights_file ) ) 
 
     # =========================================================================
     ## evaluate TMVA
-    #  @attention It is not CPU efficient
+    #  @attention it is *not* CPU efficient
     #  Ugly trick with arrays is needed due to some technicla problems
     #  (actually TMVA reader needs the address of ``float''(in C++ sense) variable
     def __call__ ( self , entry ) :
-        """
-        Evaluate TMVA
+        """Evaluate TMVA
         - It is not CPU efficient :-( 
         - Ugly trick with arrays is needed due to some pure technical problem
         [actually TMVA reader needs the address of ``float''(in C++ sense) variable]
@@ -414,14 +382,14 @@ def tmvaGUI ( filename , new_canvas = True ) :
     """
     Start TMVA-GUI
     """
-    ROOT.gROOT.LoadMacro('TMVAGui.C')
+    ## ROOT.gROOT.LoadMacro('TMVAGui.C')
     if new_canvas :
-        _c = ROOT.TCanvas ( 'TMVA', __name__ , 1000 , 800 )
-        global _canvas 
-        _canvas += [ _c ]
+        from Ostap.Canvas import getCanvas
+        _c = getCanvas ('glTMVA' , 'TMVA' )
+        if not _c in _canvas : _canvas.append ( _c )
     #
     ## start GUI
-    ROOT.TMVAGui( filename )
+    return ROOT.TMVA.TMVAGui( filename )
 
 
 # =============================================================================
