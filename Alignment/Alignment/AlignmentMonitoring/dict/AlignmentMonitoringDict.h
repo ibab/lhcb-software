@@ -9,5 +9,7 @@
 #include "AlignmentMonitoring/MonitoringPage.h"
 #include "AlignmentMonitoring/ParseConstants.h"
 #include "AlignmentMonitoring/Utilities.h"
+#include "AlignmentMonitoring/NameITSector.h"
+#include "AlignmentMonitoring/NameTTSector.h"
 
 #endif // DICT_ALIGNMENTMONITORINGDICT_H

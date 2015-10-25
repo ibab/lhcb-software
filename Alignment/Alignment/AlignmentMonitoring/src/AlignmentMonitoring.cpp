@@ -14,12 +14,17 @@
 #include "TStyle.h"
 #include "TROOT.h"
 #include "TText.h"
+#include "TBox.h"
+#include "TArrow.h"
+#include "TColor.h"
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
 #include "boost/regex.hpp"
 // USR
 //#include "AlignmentMonitoring/Utilities.h"
+#include "AlignmentMonitoring/NameTTSector.h"
+#include "AlignmentMonitoring/NameITSector.h"
 
 using namespace std;
 using namespace boost;
@@ -47,6 +52,7 @@ AlignmentMonitoring::Run()
   if(m_verbose) {
     gStyle->SetOptStat(1111110);
     gStyle->SetOptFit(1111110);
+    gROOT->SetStyle("Plain");
   }
   CheckResiduals();
   CheckITOverlaps();
@@ -57,6 +63,8 @@ AlignmentMonitoring::Run()
   CheckVeloTTandTMatchCurvature();
   CheckVeloTMatchKickPosition();
   CheckD0();
+  CheckTTSectorResiduals();
+  CheckITSectorResiduals();
   PrintWarnings();
 }
 
@@ -134,6 +142,9 @@ void AlignmentMonitoring::CheckResiduals(){
   }
   if(m_verbose) m_pages["Residuals"]->Print( (m_outputDirectory+"/"+"Residuals.pdf").c_str() );
 
+  // clean up
+  for(auto h:resHists) delete h.second;
+
   return;
 }
 
@@ -173,6 +184,8 @@ void AlignmentMonitoring::CheckITOverlapResiduals(){
     m_mapWarnings[h.first] = wl_mean > wl_width ? wl_mean : wl_width;
   }
   if(m_verbose) m_pages["ITOverlapResiduals"]->Print( (m_outputDirectory+"/"+"ITOverlapResiduals.pdf").c_str() );
+  // clean up
+  for(auto h:ovITResHists) delete h.second;
   return;
 }
 
@@ -236,6 +249,8 @@ void AlignmentMonitoring::CheckVeloTMatchKickPosition(){
   }
 
   if(m_verbose) m_pages["Velo-TMatchKickPosition"]->Print( (m_outputDirectory+"/"+"Velo-TMatchKickPosition.pdf").c_str() );
+  //clean up
+  for(auto h:kickHists) delete h.second;
   return;
 }
 
@@ -293,6 +308,8 @@ void AlignmentMonitoring::CheckVeloTTandTMatchCurvature(){
     }
   }
   if(m_verbose) m_pages["VeloTT-TMatchCurvature"]->Print( (m_outputDirectory+"/"+"VeloTT-TMatchCurvature.pdf").c_str() );
+  //clean up
+  for(auto h:matchHists) delete h.second;
   return;
 }
 
@@ -367,6 +384,8 @@ void AlignmentMonitoring::CheckVeloTTandTMatch(){
     }
   }
   if(m_verbose) m_pages["VeloTT-TMatch"]->Print( (m_outputDirectory+"/"+"VeloTT-TMatch.pdf").c_str() );
+  //clean up
+  for(auto h:matchHists) delete h.second;
   return;
 }
 
@@ -407,6 +426,8 @@ void AlignmentMonitoring::CheckTTResidualsInOverlapRegion(){
     m_mapWarnings[h.first] = wl_mean > wl_width ? wl_mean : wl_width;
   }
   if(m_verbose) m_pages["TTResidualsInOverlapRegion"]->Print( (m_outputDirectory+"/"+"TTResidualsInOverlapRegion.pdf").c_str() );
+  // clean up
+  for(auto h:resTTOVHists) delete h.second;
   return;
 
 }
@@ -447,7 +468,651 @@ void AlignmentMonitoring::CheckTTOverlapResiduals(){
     m_mapWarnings[h.first] = wl_mean > wl_width ? wl_mean : wl_width;
   }
   if(m_verbose) m_pages["TTOverlapResiduals"]->Print((m_outputDirectory+"/"+"TTOverlapResiduals.pdf").c_str());
+  for(auto h:ovTTResHists) delete h.second;
   return;
+}
+
+void AlignmentMonitoring::CheckTTSectorResiduals(){
+
+  std::vector<std::string> stations = {"a", "b"};
+  std::vector<std::string> regions={"A","B","C"};
+  std::vector<std::string> layers= {"X", "U", "V"};
+  std::vector<std::string> hNames={};
+  for(auto station:stations){
+    for(auto layer:layers){
+      for(auto region:regions){
+        if( (station.compare("a")==0 && layer.compare("V")==0) || (station.compare("b")==0 && layer.compare("U")==0) ) continue;
+        if( region.compare("B")==0 && station.compare("a")==0 ){
+          for(int sector=1; sector<=18; sector++) hNames.push_back( "TT"+station+layer+"Region"+region+"Sector"+std::to_string(sector) );
+        } else if( region.compare("B")==0 && station.compare("b")==0 ){
+          for(int sector=1; sector<=26; sector++) hNames.push_back( "TT"+station+layer+"Region"+region+"Sector"+std::to_string(sector) );
+        } else {
+          for(int sector=1; sector<=24; sector++) hNames.push_back( "TT"+station+layer+"Region"+region+"Sector"+std::to_string(sector) );
+        }
+      }//regions 
+    }//layers 
+  }//stations
+  TH2* hist_allsectors = m_hhelp.getH2(m_inputFileName.c_str(), "Track/TTTrackMonitor/BySector/AllSectorsUnbiasedResidualHisto");
+  std::map<std::string,TH1*> ovHists;
+  for( auto name:hNames ){
+    // input of the histograms here
+    NameTTSector* sector = new NameTTSector(name);
+    int chanX = sector->GetChannel();
+    TH1* hist;
+    if( hist_allsectors==0 )
+      hist = m_hhelp.getH1(m_inputFileName.c_str(), "Track/TTTrackMonitor/BySector/UnbiasedResidual_"+name);
+    else
+      hist = hist_allsectors->ProjectionY( name.c_str(), chanX, chanX );
+    if(hist==0) {hist = new TH1F();  m_mapWarnings[name] = 0; }
+    ovHists[name] = hist;
+    ovHists[name]->SetTitle( name.c_str() );
+  }
+  if (m_verbose) {
+    for(auto station:stations){
+      for(auto layer:layers){
+        for(auto region:regions){
+          m_pages["TTResidualsBySectorTT"+station+layer+"Region"+region] = (TCanvas*)m_hhelp.createPage( ("TTResidualsBySectorTT"+station+layer+"Region"+region).c_str(),
+                                    ("Residulas TT"+station+layer+"Region"+region+" Per Sector").c_str(), 7, 4, 300*7, 400*4);
+          int i = 1;
+          for(auto h:ovHists){
+            if( h.first.find( ("TT"+station+layer+"Region"+region).c_str() )==std::string::npos) continue;
+            m_pages["TTResidualsBySectorTT"+station+layer+"Region"+region]->cd(i++);
+            h.second->Draw();
+          }//ovHists
+        }//region
+      }//layer
+    }//stats
+  }
+  if (m_verbose) 
+    for(auto station:stations)
+      for(auto layer:layers)
+        for(auto region:regions)
+          m_pages["TTResidualsBySectorTT"+station+layer+"Region"+region]->Print( (m_outputDirectory+"/"+"TTResidualsBySectorTT"+station+layer+"Region"+region+".pdf").c_str() );
+
+
+  std::map< std::string, std::pair<double,double> > m_mean_values;
+  std::map< std::string, std::pair<double,double> > m_sigma_values;
+  for (auto h:ovHists) {
+    if( !h.second->GetEntries() ) { std::cout << "Skipping " << h.first << ": empty histogram!\n"; continue; }
+    m_mean_values[h.first]  = std::make_pair(h.second->GetMean(),h.second->GetMeanError());
+    m_sigma_values[h.first] = std::make_pair(h.second->GetRMS(),h.second->GetRMSError());
+  }
+  // build 2D histogram to visualize the mean and sigma
+  gStyle->SetOptStat(0); 
+  gStyle->SetOptFit(0);
+  gStyle->SetPadRightMargin(0.25);
+  gStyle->SetTitleX(0.5);
+  gStyle->SetTitleAlign(23);
+  gStyle->SetTitleBorderSize(0);
+  gStyle->SetPaintTextFormat("5.0f");
+  gStyle->SetStatFormat("5.5f");
+  gStyle->SetTitleFontSize(0.07);
+  gStyle->SetPadTickY(1);
+  gStyle->SetPadTickX(1);
+  unsigned int nColors=52;
+  Int_t MyPalette[52];
+  Double_t s[3] = {0.00, 0.50, 1.00};
+  Double_t b[3] = {0.80, 1.00, 0.00};
+  Double_t g[3] = {0.00, 1.00, 0.00};
+  Double_t r[3] = {0.00, 1.00, 0.80};
+  Int_t FI = TColor::CreateGradientColorTable(3, s, r, g, b, nColors);
+  for (unsigned int k(0); k < nColors; k++){
+    MyPalette[k] = FI+k;
+  }
+  gStyle->SetNumberContours(nColors);
+  gStyle->SetPalette(nColors, MyPalette); 
+  gROOT->ForceStyle();
+ 
+  std::map< int, std::pair<double,double> > m_mapping;
+  std::map< int, int > m_nSensors;
+  for (auto name : hNames){
+    NameTTSector* sector = new NameTTSector(name);
+    int uniqueSector = sector->GetUniqueSector();
+    m_mapping[uniqueSector]  = TTMapping(uniqueSector);
+    m_nSensors[uniqueSector] = TTNumberOfSensors(uniqueSector);
+  }
+
+  int nBinsX = 43;
+  int nBinsY = 40;
+  double lowX = -21.5;
+  double upX  =  21.5;
+  double lowY = -20;
+  double upY  =  20;
+  TH2D* hist_mean_values  = new TH2D("hist_mean_values", "TT Residuals Mean Value", nBinsX, lowX, upX, nBinsY, lowY, upY);
+  TH2D* hist_sigma_values = new TH2D("hist_sigma_values", "TT Residuals RMS Value", nBinsX, lowX, upX, nBinsY, lowY, upY);
+  // start to fill values
+  for(auto sector_mean:m_mean_values){
+    NameTTSector* sector = new NameTTSector(sector_mean.first);
+    int uniqueSector = sector->GetUniqueSector();
+    std::pair<double,double> mean = sector_mean.second;
+    for(int i=0; i<m_nSensors[uniqueSector]; i++){
+      hist_mean_values->Fill(m_mapping[uniqueSector].first, m_mapping[uniqueSector].second+i, mean.first);
+    } 
+  }
+  for(auto sector_sigma:m_sigma_values){
+    NameTTSector* sector = new NameTTSector(sector_sigma.first);
+    int uniqueSector = sector->GetUniqueSector();
+    std::pair<double,double> mean = sector_sigma.second;
+    for(int i=0; i<m_nSensors[uniqueSector]; i++)
+      hist_sigma_values->Fill(m_mapping[uniqueSector].first, m_mapping[uniqueSector].second+i, mean.first); 
+  }
+  // draw the histogram
+  m_pages["TTResidualsBySectorMapping"] = (TCanvas*)m_hhelp.createPage( "TTResidualsBySectorMapping","Overlap Residulas TT Map", 1, 2, 1200, 600*2);
+  m_pages["TTResidualsBySectorMapping"]->cd(1);
+  hist_mean_values->SetMaximum( 0.3);
+  hist_mean_values->SetMinimum(-0.3);
+  hist_mean_values->Draw("COLZ");
+  PlotTTLabels(hist_mean_values,hNames,m_mapping,m_nSensors);
+  PlotTTBoxes(hist_mean_values,hNames,m_mapping,m_nSensors);
+  m_pages["TTResidualsBySectorMapping"]->cd(2);
+  hist_sigma_values->SetMaximum( 0.3);
+  hist_sigma_values->SetMinimum( 0);
+  hist_sigma_values->Draw("COLZ");
+  PlotTTLabels(hist_sigma_values,hNames,m_mapping,m_nSensors);
+  PlotTTBoxes(hist_sigma_values,hNames,m_mapping,m_nSensors);
+  m_pages["TTResidualsBySectorMapping"]->Print( (m_outputDirectory+"/"+"TTResidualsBySectorMapping.pdf").c_str() );
+
+  gStyle->SetOptStat(1111110); 
+  gStyle->SetOptFit(1111110);
+  gROOT->ForceStyle(); 
+
+  // clean up
+  for (auto h:ovHists) delete h.second;
+  return ;
+}
+
+void AlignmentMonitoring::PlotTTBoxes(TH2D* hist, std::vector<std::string> hNames, std::map< int, std::pair<double,double> >  m_mapping, std::map<int,int> m_nSensors){
+  TBox* box = new TBox();
+  box->SetFillColor(kWhite);
+  box->SetFillStyle(0);
+  box->SetLineStyle(3);
+  box->SetLineColor(kBlack); //14
+  box->SetLineWidth(box->GetLineWidth()/10.);
+
+  TBox* boxempty = new TBox();
+  boxempty->SetFillColor(14);
+  boxempty->SetFillStyle(3254);
+  boxempty->SetLineStyle(3);
+  boxempty->SetLineColor(14);
+  boxempty->SetLineWidth(boxempty->GetLineWidth()/100.);
+
+  for (auto name : hNames){
+    NameTTSector* sector = new NameTTSector( name );
+    int uniqueSector = sector->GetUniqueSector();
+    box->DrawBox(m_mapping[uniqueSector].first-0.5,m_mapping[uniqueSector].second-0.5,
+                     m_mapping[uniqueSector].first+0.5,m_mapping[uniqueSector].second+0.5+m_nSensors[uniqueSector]-1.);
+    if(hist->GetBinContent( hist->GetXaxis()->FindBin(m_mapping[uniqueSector].first), hist->GetYaxis()->FindBin(m_mapping[uniqueSector].second) )==0 ) 
+      boxempty->DrawBox(m_mapping[uniqueSector].first-0.5,m_mapping[uniqueSector].second-0.5,
+                    m_mapping[uniqueSector].first+0.5,m_mapping[uniqueSector].second+0.5+m_nSensors[uniqueSector]-1.);
+  }
+}
+
+void AlignmentMonitoring::PlotTTLabels(TH2D* hist, std::vector<std::string> hNames, std::map< int, std::pair<double,double> >  m_mapping, std::map<int,int> m_nSensors){
+  hist->GetXaxis()->SetTickLength(0);
+  hist->GetYaxis()->SetTickLength(0);
+  hist->GetXaxis()->SetLabelColor(kWhite);
+  hist->GetYaxis()->SetLabelColor(kWhite);
+
+  TText* tta = new TText(-0.75, -9.8, "TTa");
+  tta->Draw();
+
+  TText* ttb = new TText(-0.75, 8., "TTb");
+  ttb->Draw();
+
+  TText* ttaX = new TText(-19.8, -9., "X");
+  ttaX->Draw();
+
+  TText* ttaU = new TText(19.3, -9., "U");
+  ttaU->Draw();
+
+  TText* ttbV = new TText(-19.8, 8., "V");
+  ttbV->Draw();
+
+  TText* ttbX = new TText(19.3, 8., "X");
+  ttbX->Draw();
+
+  TText* ttA = new TText(-20.8, -0.5, "A");
+  ttA->SetTextSize(0.07);
+  ttA->Draw();
+
+  TText* ttC = new TText(19.8, -0.5, "C");
+  ttC->SetTextSize(0.07);
+  ttC->Draw();
+
+  TArrow* XArrow = new TArrow(0.,-18.,-8.5,-18.,0.005,"|-|>");
+  XArrow->Draw();
+
+  TText* X = new TText(-9.1, -19., "X");
+  X->SetTextSize(0.04);
+  X->Draw();
+
+  for(auto name:hNames){
+    NameTTSector* sector = new NameTTSector(name);
+    int uniqueSector = sector->GetUniqueSector();
+    int sectorID     = sector->GetSectorID();
+    int nSensors     = m_nSensors[uniqueSector];
+    TText* tt = new TText(m_mapping[uniqueSector].first-0.25, m_mapping[uniqueSector].second+0.45*(nSensors-1), std::to_string(sectorID).c_str());
+    tt->SetTextSize(0.015);
+    tt->Draw();
+  }
+}
+
+
+int AlignmentMonitoring::TTNumberOfSensors(int uniqueSector){
+  int uniqueSector_= uniqueSector;
+  Double_t TTlayer(uniqueSector_/1000);
+  uniqueSector_ = uniqueSector_-TTlayer*1000;
+  Double_t Region(uniqueSector_/100);
+  uniqueSector_ = uniqueSector_-Region*100;
+  Int_t Sectorno_1(uniqueSector_/1-1);
+
+  if(TTlayer < 2.5){
+    if(Region == 3){
+      if(Sectorno_1%4 == 0 || Sectorno_1%4 == 3)
+        return 4;
+      else
+        return 3;
+    }else if(Region == 1){
+      if(Sectorno_1%4 == 0 || Sectorno_1%4 == 3)
+        return 4; 
+      else
+        return 3;
+    }else{
+      if(Sectorno_1%6 == 0 || Sectorno_1%6 == 5)
+        return 4;
+      else if(Sectorno_1%6 == 1 || Sectorno_1%6 == 4)
+        return 2;
+      else
+        return 1;
+    }
+  }else{
+    if(Region == 3){
+      if(Sectorno_1%4 == 0 || Sectorno_1%4 == 3)
+        return 4;
+      else
+        return 3;
+    }else if(Region == 1){
+      if(Sectorno_1%4 == 0 || Sectorno_1%4 == 3)
+        return 4; 
+      else
+        return 3;
+    }else{
+      if(Sectorno_1 < 4){
+        if(Sectorno_1%4 == 0 || Sectorno_1%4 == 3)
+          return 4; 
+        else
+          return 3;
+      }else if(Sectorno_1 > 21){
+        Sectorno_1 -= 22;
+        if(Sectorno_1%4 == 0 || Sectorno_1%4 == 3)
+          return 4; 
+        else
+          return 3;
+      }else{
+        Sectorno_1 -= 4;
+        if(Sectorno_1%6 == 0 || Sectorno_1%6 == 5)
+          return 4;
+        else if(Sectorno_1%6 == 1 || Sectorno_1%6 == 4)
+          return 2;
+        else
+          return 1;
+      }
+    }
+  }
+  
+}
+std::pair<double,double> AlignmentMonitoring::TTMapping(int uniqueSector){
+  int uniqueSector_= uniqueSector;
+  Double_t TTlayer(uniqueSector_/1000);
+  uniqueSector_ = uniqueSector_-TTlayer*1000;
+  Double_t Region(uniqueSector_/100);
+  uniqueSector_ = uniqueSector_-Region*100;
+  Int_t Sectorno_1(uniqueSector_/1-1);
+
+  Double_t XOffSet, YOffSet;
+  if(TTlayer == 1){
+    XOffSet = -10.;
+    YOffSet = -9.;
+  }else if(TTlayer == 2){
+    XOffSet = 10.;
+    YOffSet = -9.;
+  }else if(TTlayer == 3){
+    XOffSet = -10.;
+    YOffSet = 9.;
+  }else{
+    XOffSet = 10.;
+    YOffSet = 9.;
+  }
+
+  const Int_t seq4[4] = {0,4,3,3};
+  const Int_t seq6[6] = {0,4,2,1,1,2};
+  Double_t compute(0.);
+  if(TTlayer < 2.5){
+    if(Region == 3){
+      double x = XOffSet + 7. - Sectorno_1/4;
+      compute = YOffSet - 7.;
+      for(Int_t i(0);i<=Sectorno_1%4;i++)
+        compute += seq4[i];
+      double y = compute + 0.5;
+      return std::make_pair(x,y);
+    }else if(Region == 1){
+      double x = XOffSet - 2. - Sectorno_1/4;
+      compute = YOffSet - 7.;
+      for(Int_t i(0);i<=Sectorno_1%4;i++)
+        compute += seq4[i];
+      double y = compute + 0.5;
+      return std::make_pair(x,y);
+    }else{
+      double x = XOffSet + 1. - Sectorno_1/6;
+      compute = YOffSet - 7.;
+      for(Int_t i(0);i<=Sectorno_1%6;i++)
+        compute += seq6[i];
+      double y = compute + 0.5;
+      return std::make_pair(x,y);
+    }
+  }else{
+    if(Region == 3){
+      double x = XOffSet + 8. - Sectorno_1/4;
+      compute = YOffSet - 7.;
+      for(Int_t i(0);i<=Sectorno_1%4;i++)
+        compute += seq4[i];
+      double y = compute + 0.5;
+      return std::make_pair(x,y);
+    }else if(Region == 1){
+      double x = XOffSet - 3. - Sectorno_1/4;
+      compute = YOffSet - 7.;
+      for(Int_t i(0);i<=Sectorno_1%4;i++)
+        compute += seq4[i];
+      double y = compute + 0.5;
+      return std::make_pair(x,y);
+    }else{
+      if(Sectorno_1 < 4){
+        double x = XOffSet + 2. - Sectorno_1/4;
+        compute = YOffSet - 7.;
+        for(Int_t i(0);i<=Sectorno_1%4;i++)
+          compute += seq4[i];
+        double y = compute + 0.5;
+        return std::make_pair(x,y);
+      }else if(Sectorno_1 > 21){
+        Sectorno_1 -= 22;
+        double x = XOffSet - 2. - Sectorno_1/4;
+        compute = YOffSet - 7.;
+        for(Int_t i(0);i<=Sectorno_1%4;i++)
+          compute += seq4[i];
+        double y = compute + 0.5;
+        return std::make_pair(x,y);
+      }else{
+        Sectorno_1 -= 4;
+        double x = XOffSet + 1. - Sectorno_1/6;
+        compute = YOffSet - 7.;
+        for(Int_t i(0);i<=Sectorno_1%6;i++)
+          compute += seq6[i];
+        double y = compute + 0.5;
+        return std::make_pair(x,y);
+      }
+    }
+  }
+  
+}
+
+
+void AlignmentMonitoring::CheckITSectorResiduals(){
+
+  std::vector<std::string> stats = {"1","2","3"};
+  std::vector<std::string> boxes = {"ASide","CSide","Top","Bottom"};
+  std::vector<std::string> layers= {"X1", "U", "V", "X2"};
+  std::vector<std::string> sectors={"1","2","3","4","5","6","7"};
+
+  std::vector<std::string> hNames={};
+  for(auto sector:sectors)
+    for(auto layer:layers)
+      for(auto box:boxes)
+        for(auto stat:stats)
+          hNames.push_back("IT"+stat+box+layer+"Sector"+sector);
+
+  TH2* hist_allsectors = m_hhelp.getH2(m_inputFileName.c_str(), "Track/ITTrackMonitor/BySector/AllSectorsUnbiasedResidualHisto");
+  std::map<std::string,TH1*> ovHists;
+  for( auto name:hNames ){
+    // input of the histograms here
+    NameITSector* sector = new NameITSector(name);
+    int chanX = sector->GetChannel();
+    TH1* hist;
+    if( hist_allsectors==0 )
+      hist = m_hhelp.getH1(m_inputFileName.c_str(), "Track/ITTrackMonitor/BySector/UnbiasedResidual_"+name);
+    else
+      hist = hist_allsectors->ProjectionY( name.c_str(), chanX, chanX );
+    if(hist==0) {hist = new TH1F();  m_mapWarnings[name] = 0; }
+    ovHists[name] = hist;
+    ovHists[name]->SetTitle( name.c_str() );
+  }
+
+  if (m_verbose) {
+    for(auto stat:stats){
+      for(auto box:boxes){
+        m_pages["ITResidualsBySectorIT"+stat+box] = (TCanvas*)m_hhelp.createPage( ("ITResidualsBySectorIT"+stat+box).c_str(),
+                                      ("Residulas IT"+stat+" "+box+" Per Sector").c_str(), 7, 4, 300*7, 400*4);
+        int i = 1;
+        for(auto h:ovHists){
+          if( h.first.find( ("IT"+stat).c_str() )==std::string::npos || h.first.find(box)==std::string::npos) continue;
+          m_pages["ITResidualsBySectorIT"+stat+box]->cd(i++);
+          h.second->Draw();
+        }//ovHists
+      }//boxes
+    }//stats
+  }
+  if (m_verbose) 
+    for(auto stat:stats)
+      for(auto box:boxes)
+        m_pages["ITResidualsBySectorIT"+stat+box]->Print( (m_outputDirectory+"/"+"ITResidualsBySectorIT"+stat+box+".pdf").c_str() );
+
+  std::map< std::string, std::pair<double,double> > m_mean_values;
+  std::map< std::string, std::pair<double,double> > m_sigma_values;
+  for (auto h:ovHists) {
+    if( !h.second->GetEntries() ) { std::cout << "Skipping " << h.first << ": empty histogram!\n"; continue; }
+    //get the histogram mean and rms
+    m_mean_values[h.first]  = std::make_pair(h.second->GetMean(),h.second->GetMeanError());
+    m_sigma_values[h.first] = std::make_pair(h.second->GetRMS(),h.second->GetRMSError());
+  }
+  // build 2D histogram to visualize the mean and sigma
+  gStyle->SetOptStat(0); 
+  gStyle->SetOptFit(0);
+  gStyle->SetPadRightMargin(0.25);
+  gStyle->SetTitleX(0.5);
+  gStyle->SetTitleAlign(23);
+  gStyle->SetTitleBorderSize(0);
+  gStyle->SetPaintTextFormat("5.1f");
+  gStyle->SetStatFormat("5.5f");
+  gStyle->SetTitleFontSize(0.07);
+  gStyle->SetPadTickY(1);
+  gStyle->SetPadTickX(1);
+  unsigned int nColors=52;
+  Int_t MyPalette[52];
+  Double_t s[3] = {0.00, 0.50, 1.00};
+  Double_t b[3] = {0.80, 1.00, 0.00};
+  Double_t g[3] = {0.00, 1.00, 0.00};
+  Double_t r[3] = {0.00, 1.00, 0.80};
+  Int_t FI = TColor::CreateGradientColorTable(3, s, r, g, b, nColors);
+  for (unsigned int k(0); k < nColors; k++){
+    MyPalette[k] = FI+k;
+  }
+  gStyle->SetNumberContours(nColors);
+  gStyle->SetPalette(nColors, MyPalette); 
+  gROOT->ForceStyle();
+ 
+  std::map< int, std::pair<double,double> > m_mapping;
+  for (auto name : hNames){
+    NameITSector* sector = new NameITSector(name);
+    int uniqueSector = sector->GetUniqueSector();
+    m_mapping[uniqueSector] = ITMapping(uniqueSector);
+  }
+
+  int nBinsX = 25;
+  int nBinsY = 52;
+  double lowX = -12.5;
+  double upX  =  12.5;
+  double lowY = -13;
+  double upY  =  13;
+  TH2D* hist_mean_values = new TH2D("hist_mean_values", "IT Residuals Mean Value", nBinsX, lowX, upX, nBinsY, lowY, upY);
+  TH2D* hist_sigma_values = new TH2D("hist_sigma_values", "IT Residuals RMS Value", nBinsX, lowX, upX, nBinsY, lowY, upY);
+  // start to fill values
+  for(auto sector_mean:m_mean_values){
+    NameITSector* sector = new NameITSector(sector_mean.first);
+    int uniqueSector = sector->GetUniqueSector();
+    std::pair<double,double> mean = sector_mean.second;
+    hist_mean_values->Fill(m_mapping[uniqueSector].first, m_mapping[uniqueSector].second, mean.first);
+  }
+  for(auto sector_sigma:m_sigma_values){
+    NameITSector* sector = new NameITSector(sector_sigma.first);
+    int uniqueSector = sector->GetUniqueSector();
+    std::pair<double,double> mean = sector_sigma.second;
+    hist_sigma_values->Fill(m_mapping[uniqueSector].first, m_mapping[uniqueSector].second, mean.first); 
+  }
+  // draw the histogram
+  m_pages["ITResidualsBySectorMapping"] = (TCanvas*)m_hhelp.createPage( "ITResidualsBySectorMapping","Overlap Residulas IT Map", 1, 2, 1200, 600*2);
+  m_pages["ITResidualsBySectorMapping"]->cd(1);
+  hist_mean_values->SetMaximum( 0.3);
+  hist_mean_values->SetMinimum(-0.3);
+  hist_mean_values->Draw("COLZ");
+  PlotITLabels(hist_mean_values);
+  PlotITBoxes(hist_mean_values,hNames,m_mapping);
+  m_pages["ITResidualsBySectorMapping"]->cd(2);
+  hist_sigma_values->SetMaximum( 0.2);
+  hist_sigma_values->SetMinimum( 0);
+  hist_sigma_values->Draw("COLZ");
+  PlotITLabels(hist_sigma_values);
+  PlotITBoxes(hist_sigma_values,hNames,m_mapping);
+  m_pages["ITResidualsBySectorMapping"]->Print( (m_outputDirectory+"/"+"ITResidualsBySectorMapping.pdf").c_str() );
+
+  gStyle->SetOptStat(1111110); 
+  gStyle->SetOptFit(1111110);
+  gROOT->ForceStyle(); 
+
+  // clean up
+  for (auto h:ovHists) delete h.second;
+  return ;
+}
+
+void AlignmentMonitoring::PlotITBoxes(TH2D* hist, std::vector<std::string> hNames, std::map< int, std::pair<double,double> >  m_mapping){
+  TBox* box = new TBox();
+  box->SetFillColor(kWhite);
+  box->SetFillStyle(0);
+  box->SetLineStyle(3);
+  box->SetLineColor(kBlack); //14
+  box->SetLineWidth(box->GetLineWidth()/10.);
+
+  TBox* boxempty = new TBox();
+  boxempty->SetFillColor(14);
+  boxempty->SetFillStyle(3254);
+  boxempty->SetLineStyle(3);
+  boxempty->SetLineColor(14);
+  boxempty->SetLineWidth(boxempty->GetLineWidth()/100.);
+
+  for (auto name : hNames){
+    NameITSector* sector = new NameITSector( name );
+    int uniqueSector = sector->GetUniqueSector();
+    box->DrawBox(m_mapping[uniqueSector].first-0.5, m_mapping[uniqueSector].second-0.25, m_mapping[uniqueSector].first+0.5, m_mapping[uniqueSector].second+0.25);
+    if(hist->GetBinContent( hist->GetXaxis()->FindBin(m_mapping[uniqueSector].first), hist->GetYaxis()->FindBin(m_mapping[uniqueSector].second) )==0 ) 
+      boxempty->DrawBox(m_mapping[uniqueSector].first-0.5, m_mapping[uniqueSector].second-0.25, m_mapping[uniqueSector].first+0.5, m_mapping[uniqueSector].second+0.25);
+  }
+}
+
+void AlignmentMonitoring::PlotITLabels(TH2D* hist){
+  hist->GetXaxis()->SetTickLength(0);
+  hist->GetYaxis()->SetTickLength(0);
+  hist->GetXaxis()->SetLabelColor(kWhite);
+  hist->GetYaxis()->SetLabelColor(kWhite);
+  TText* it1 = new TText(-0.3, -8.5, "IT1");
+  it1->Draw();
+  TText* it2 = new TText(-0.3, -0.5, "IT2");
+  it2->Draw();
+  TText* it3 = new TText(-0.3, 7.5, "IT3");
+  it3->Draw();
+  TText* itA = new TText(-11.5, -0.5, "A");
+  itA->SetTextSize(0.07);
+  itA->Draw();
+  TText* itC = new TText(11.1, -0.5, "C");
+  itC->SetTextSize(0.07);
+  itC->Draw();
+  TArrow* XArrow = new TArrow(0.,-12.,-5.5,-12.,0.005,"|-|>");
+  XArrow->Draw();
+  TText* X = new TText(-5.9, -12.5, "X");
+  X->SetTextSize(0.04);
+  X->Draw();
+
+  auto drawLayerSymbol = [] (double x, double y) { 
+    TText* itX1 = new TText(x, y, "X1");
+    itX1->SetTextSize(0.02);
+    itX1->Draw();
+    TText* itU = new TText(x, y+0.5, "U");
+    itU->SetTextSize(0.02);
+    itU->Draw();
+    TText* itV = new TText(x, y+1.0, "V");
+    itV->SetTextSize(0.02);
+    itV->Draw();
+    TText* itX2 = new TText(x, y+1.5, "X2");
+    itX2->SetTextSize(0.02);
+    itX2->Draw();
+  };
+  drawLayerSymbol(10.7,-9);
+  drawLayerSymbol(10.7,-1);
+  drawLayerSymbol(10.7, 7);
+
+  auto drawSectorID = [] (double x, double y){
+    TText* itno1 = new TText(x, y, "1");
+    itno1->SetTextSize(0.02);
+    itno1->Draw();
+    TText* itno2 = new TText(x-1, y, "2");
+    itno2->SetTextSize(0.02);
+    itno2->Draw();
+    TText* itno3 = new TText(x-2, y, "3");
+    itno3->SetTextSize(0.02);
+    itno3->Draw();
+    TText* itno4 = new TText(x-3, y, "4");
+    itno4->SetTextSize(0.02);
+    itno4->Draw();
+    TText* itno5 = new TText(x-4, y, "5");
+    itno5->SetTextSize(0.02);
+    itno5->Draw();
+    TText* itno6 = new TText(x-5, y, "6");
+    itno6->SetTextSize(0.02);
+    itno6->Draw();
+    TText* itno7 = new TText(x-6, y, "7");
+    itno7->SetTextSize(0.02);
+    itno7->Draw();
+  };
+  drawSectorID(10,  1.2);
+  drawSectorID( 3, 11.2);
+  drawSectorID( 3,-11.65);
+  drawSectorID(-4,  1.2);
+
+}
+
+std::pair<double,double> AlignmentMonitoring::ITMapping(int uniqueSector){
+    int uniqueSector_= uniqueSector;
+    double Itno(uniqueSector_/1000);
+    uniqueSector_ = uniqueSector_-Itno*1000;
+    double Boxno(uniqueSector_/100);
+    uniqueSector_ = uniqueSector_-Boxno*100;
+    double Layerno(uniqueSector_/10);
+    uniqueSector_ = uniqueSector_-Layerno*10;
+    double Sectorno(uniqueSector_/1);
+    if(Boxno == 1){
+      double x = -3. - Sectorno;
+      double y = (16.*(Itno-1.)+7.+Layerno)/2. -13. + 0.25;
+      return std::make_pair(x,y);
+    }else if(Boxno == 2){
+      double x = 11. - Sectorno;
+      double y = (16.*(Itno-1.)+7.+Layerno)/2. -13. + 0.25;
+      return std::make_pair(x,y);
+    }else if(Boxno == 3){
+      double x = 4. - Sectorno;
+      double y = (16.*(Itno-1.)+11.+Layerno)/2. -13. + 0.25;
+      return std::make_pair(x,y);
+    }else{
+      double x = 4. - Sectorno;
+      double y = (16.*(Itno-1.)+3.+Layerno)/2. -13. + 0.25;
+      return std::make_pair(x,y);
+    }
 }
 
 void AlignmentMonitoring::CheckITOverlaps(){
@@ -490,19 +1155,21 @@ void AlignmentMonitoring::CheckITOverlaps(){
   TF1 *ovf = new TF1("ovf","[0]*exp(-0.5*((x-[1])/[2])**2)+[3]",-5,5);
   ovf->SetParName(0,"Constant");
   ovf->SetParName(1,"Mean");
-  ovf->SetParameter(1,0);
+  ovf->SetParLimits(1,-1.0,1.0);
   ovf->SetParName(2,"Sigma");
-  ovf->SetParameter(2,0.15);
-  ovf->SetParLimits(2,0,1);
+  ovf->SetParameter(2,0.10);
+  ovf->SetParLimits(2,0.05,0.5);
   ovf->SetParName(3,"Background");
   ovf->SetParameter(3,0);
+
   for (auto h:ovHists) {
     if (m_verbose) std::cout << h.first << ":\n";
     if( m_mapWarnings.find(h.first)==m_mapWarnings.end() ) m_mapWarnings[h.first] = WarningLevel::UNCHECKED;
     m_insertOrder.push_back(h.first);
     if( !h.second->GetEntries() ) { std::cout << "Skipping " << h.first << ": empty histogram!\n"; continue; }
-    ovf->SetParameter(0,h.second->GetEntries());
-    if(h.first.find("OT")!=std::string::npos) ovf->SetParameter(2,0.25);
+    ovf->SetParLimits(0,0,h.second->GetEntries());
+    ovf->SetParameter(1,h.second->GetMean());
+    if(h.first.find("OT")!=std::string::npos) ovf->SetParameter(2,0.15);
     fitres = h.second->Fit(ovf,m_verbose ? "S" : "SQ"); // need to modify this
     if(fitres->IsEmpty()) { std::cout << "Skipping " << h.first << ": empty fit results\n"; continue; }
     if(fitres->Chi2()<1e-6 || fitres->Ndf()==0)  { std::cout << "Skipping " << h.first << ": too small chi2\n"; continue; }
@@ -510,7 +1177,11 @@ void AlignmentMonitoring::CheckITOverlaps(){
       m_mapWarnings[h.first] = WarningLevel::FAILED;
       continue;
     }
-    m_mapWarnings[h.first] = WarningLevel::SEVERE;
+    if(ovf->GetProb()>0.9) {
+      m_mapWarnings[h.first] = WarningLevel::FAILED; 
+      continue;
+    }
+    m_mapWarnings[h.first] = WarningLevel::SEVERE; 
     std::vector<double> refs = GetReference(h.first.c_str());
     WarningLevel wl_mean = CheckFitPar(fitres->Parameter(1),fitres->ParError(1), refs[0], refs[1]);
     WarningLevel wl_width = CheckFitPar(fitres->Parameter(2),fitres->ParError(2), refs[2], refs[3]);
@@ -580,6 +1251,9 @@ void AlignmentMonitoring::CheckITOverlaps(){
   gROOT->ForceStyle();
   // end: a map of warnings for IT
 
+  // clean up
+  for( auto h:ovHists ) delete h.second;
+
   return;
 }
 // Add check on the D0 position and width
@@ -607,8 +1281,8 @@ void AlignmentMonitoring::CheckD0(){
   for(auto h:alignD0Hists){
     if(m_verbose) std::cout << h.second->GetName() << std::endl;
     if( !(h.first=="massPositiveY" || h.first=="massNegativeY") ){
-      m_mapWarnings[h.first] = WarningLevel::SEVERE;
-      m_insertOrder.push_back(h.first);
+      m_mapWarnings[h.first] = WarningLevel::UNCHECKED; 
+      m_insertOrder.push_back(h.first); 
     }
     if(!h.second->GetEntries()) continue;
     fitres = h.second->Fit("gaus",m_verbose ? "S" : "SQ"); // need to modify this
@@ -625,14 +1299,19 @@ void AlignmentMonitoring::CheckD0(){
       }
     }//else
   }
-  m_mapWarnings["D0MassDifference"] = WarningLevel::SEVERE;
+  m_mapWarnings["D0MassDifference"] = WarningLevel::UNCHECKED; 
   m_insertOrder.push_back("D0MassDifference");
-  double deltaM = mass_diff["massPositiveY"]->Parameter(1) - mass_diff["massNegativeY"]->Parameter(1);
-  double sigmaDM= std::sqrt(mass_diff["massPositiveY"]->Parameter(2)*mass_diff["massPositiveY"]->Parameter(2)+mass_diff["massNegativeY"]->Parameter(2)*mass_diff["massNegativeY"]->Parameter(2));
-  std::vector<double> refs = GetReference("D0MassDifference");
-  WarningLevel wl_mean = CheckFitPar(deltaM, sigmaDM,refs[0]-refs[1],refs[0]+refs[1]);
-  m_mapWarnings["D0MassDifference"] = wl_mean;
+  if( !(mass_diff.find("massPositiveY")==mass_diff.end() || mass_diff.find("massNegativeY")==mass_diff.end()) ) { 
+    double deltaM = mass_diff["massPositiveY"]->Parameter(1) - mass_diff["massNegativeY"]->Parameter(1);
+    double sigmaDM= std::sqrt(mass_diff["massPositiveY"]->Parameter(2)*mass_diff["massPositiveY"]->Parameter(2)+mass_diff["massNegativeY"]->Parameter(2)*mass_diff["massNegativeY"]->Parameter(2));
+    std::vector<double> refs = GetReference("D0MassDifference"); 
+    WarningLevel wl_mean = CheckFitPar(deltaM, sigmaDM,refs[0]-refs[1],refs[0]+refs[1]);
+    m_mapWarnings["D0MassDifference"] = wl_mean;
+  }
   if(m_verbose) m_pages["AlignD02KPiMonitor"]->Print( (m_outputDirectory+"/"+"AlignD02KPiMonitor.pdf").c_str() );
+
+  for(auto h:alignD0Hists) delete h.second;
+
   return;
 }
 

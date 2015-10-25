@@ -44,6 +44,8 @@ namespace Alignment
       void CheckVeloTMatchKickPosition();
       void CheckD0();
       void Run();
+      void CheckITSectorResiduals();
+      void CheckTTSectorResiduals();
       
       // Verbosity
       void SetVerbosity(bool verb){m_verbose=verb;}
@@ -58,6 +60,14 @@ namespace Alignment
       
       // Vars
     private:
+      std::pair<double,double> ITMapping(int uniqueSector);
+      void PlotITLabels(TH2D* hist);
+      void PlotITBoxes(TH2D* hist, std::vector<std::string> hNames, std::map< int, std::pair<double,double> > m_mapping);
+      std::pair<double,double> TTMapping(int uniqueSector);
+      int TTNumberOfSensors(int uniqueSector);
+      void PlotTTLabels(TH2D* hist, std::vector<std::string> hNames, std::map< int, std::pair<double,double> > m_mapping, std::map<int,int>);
+      void PlotTTBoxes(TH2D* hist, std::vector<std::string> hNames, std::map< int, std::pair<double,double> > m_mapping, std::map<int,int>);
+
       std::string m_inputFileName;
       std::string m_outputDirectory;
       std::map<std::string, int> m_mapWarnings;

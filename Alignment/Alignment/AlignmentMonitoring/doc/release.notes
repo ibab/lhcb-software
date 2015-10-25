@@ -3,6 +3,11 @@
 ! package manager: Maurizio Martinelli
 !------------------------------------------------------------------------------
 
+! 2015-10-25
+ - Added functions for residual monitoring for IT/TT sectors: 
+   - CheckTTSectorResiduals() shows mean and sigma for TT sectors
+   - CheckITSectorResiduals() shows mean and sigma for IT sectors
+
 ! 2015-10-22 - Giulio Dujany
  - Changed color scheme to match convention in presenter
 

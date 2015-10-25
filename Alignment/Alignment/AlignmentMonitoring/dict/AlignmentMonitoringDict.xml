@@ -13,4 +13,6 @@
   <class name = "Alignment::AlignmentMonitoring::MonitoringPage" />
   <class name = "Alignment::AlignmentMonitoring::ParseConstants" />
   <class name = "Alignment::AlignmentMonitoring::Utilities" />
+  <class name = "Alignment::AlignmentMonitoring::NameITSector" />
+  <class name = "Alignment::AlignmentMonitoring::NameTTSector" />
 </lcgdict>
