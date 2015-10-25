@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-10-25 - Sean Benson
+ - Fix TurboOnly for nightlies.
+
 ! 2015-10-23 - Dan Johnson
  - Changes to LowMult threshold settings to reflect changes in Hlt1LowMult lines 
    (and resulting changes in Hlt2LowMult lines).

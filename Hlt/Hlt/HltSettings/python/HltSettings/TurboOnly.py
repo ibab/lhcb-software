@@ -102,7 +102,6 @@ class TurboOnly( object ):
                  , 'Hlt1BeamGasCrossingEnhancedBeam1', 'Hlt1BeamGasCrossingEnhancedBeam2'
                  , 'Hlt1BeamGasCrossingForcedReco', 'Hlt1BeamGasCrossingForcedRecoFullZ'
                  , 'Hlt1BeamGasCrossingParasitic', 'Hlt1BeamGasHighRhoVertices'
-                 , 'Hlt1NoPVPassThrough'
                  , 'Hlt1MBNoBias' 
                  , 'Hlt1ODINTechnical', 'Hlt1Tell1Error' , 'Hlt1ErrorEvent'   
                  , 'Hlt1MBMicroBiasVelo','Hlt1MBMicroBiasTStation' 
