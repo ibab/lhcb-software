@@ -84,6 +84,7 @@ class Moore(LHCbConfigurableUser):
         , "inputFiles" :       [ ] # input
         , "EnableTimer" :       None
         , "TimingTableWidth" :   90
+        , "PersistReco" :   False
         , "EnableDataOnDemand": False
         , "OutputLevel" : WARNING #if this is set to WARNING (or higher) Moore will become almost silent.
                              #if this is set to DEBUG or VERBOSE, this mimics the previous verbose setting
@@ -188,6 +189,10 @@ class Moore(LHCbConfigurableUser):
         # Options to make processed data look like actual input...
         #######################################
         , "RemoveInputHltRawBanks" : "Remove any Hlt rawbank from the input file at the start of the event loop"
+        #######################################
+        # Options for offline running
+        #######################################
+        , "PersistReco" : "Do we want toe persist Moore reconstruction containers (if writing DST)"
         #########################################
         # Deprecated former options
         #########################################
@@ -347,6 +352,8 @@ class Moore(LHCbConfigurableUser):
                                     , RequireAlgs = self.getProp('WriterRequires')
                                     )
             IOHelper(persistency,persistency).outStream(fname,writer,writeFSR=MooreExpert().getProp('WriteFSR'))
+            if self.getProp("PersistReco"):
+                HltConf().PersistReco=True
 
 
     def getRelease(self):

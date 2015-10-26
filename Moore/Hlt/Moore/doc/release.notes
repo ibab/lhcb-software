@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2015-10-26 - Sean Benson
+ - Add PersistReco slot.
+
 ! 2015-10-10 - Mika Vesterinen
  - Add test to check the hlt output rate with the physics settings
 
