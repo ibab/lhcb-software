@@ -440,7 +440,8 @@ run_view_pages = OrderedDict([
                         'short': 'Occupancy spectrum',
                         'name': 'Velo/VeloPrivateOccupancyMonitor/OccSpectMaxLow'
                         }
-                    ]
+                    ],
+                'layout': (1, 2)
                 },
                 {
                 'title': 'Occupancy_3',
@@ -456,7 +457,8 @@ run_view_pages = OrderedDict([
                         'short': 'Occupancy vs. BCID (C side)',
                         'name': 'Velo/VeloPrivateOccupancyMonitor/h_veloOccVsBunchId_CSide'
                         }
-                    ]
+                    ],
+                'layout': (1, 2)
                 }
             ]
         }
