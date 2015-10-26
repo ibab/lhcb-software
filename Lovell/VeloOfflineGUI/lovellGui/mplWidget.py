@@ -30,6 +30,7 @@ class lPlottable():
         return self.plot.parent()
     
     def on_draw(self, tabOpsState, notifyBox):
+        print self.params['name']
         if 'normalise' in self.params and self.params['normalise']: 
             norm = True
         else: norm = False
@@ -124,7 +125,9 @@ class lPlottable():
                 if z == 0.0: continue
                 x = nominal['data']['data']['xbinning'][i][1] + halfBinX
                 y = nominal['data']['data']['ybinning'][j][1] + halfBinY
-                print x, y, z
+                
+                if int(z) % 2 == 0: y = 3
+                else y = -3
                 self.axes.annotate(str(int(z)), xy=(x, y), xycoords='data', fontsize=9,
                                    horizontalalignment='center', verticalalignment='center', rotation=90)
         
