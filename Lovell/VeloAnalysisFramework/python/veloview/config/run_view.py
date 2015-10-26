@@ -409,27 +409,27 @@ run_view_pages = OrderedDict([
             [
                 {
                 'title': 'Channel occupancy',
-                'name': 'Velo/VeloOccupancyMonitor/OccPerChannelSens{0}',
+                'name': 'Velo/VeloPrivateOccupancyMonitor/OccPerChannelSens{0}',
                 'sensor_dependent': True,
                 },
                 {
                 'title': 'Average sensor occupancy',
-                'name': 'Velo/VeloOccupancyMonitor/OccAvrgSens'
+                'name': 'Velo/VeloPrivateOccupancyMonitor/OccAvrgSens'
                 },
                 {
                 'title': 'Occupancy spectrum (zoom)',
                 'short': 'Occupancy spectrum',
-                'name': 'Velo/VeloOccupancyMonitor/OccSpectMaxLow'
+                'name': 'Velo/VeloPrivateOccupancyMonitor/OccSpectMaxLow'
                 },
                 {
                 'title': '% VELO occupancy vs. LHC bunch ID (A side)',
                 'short': 'Occupancy vs. BCID (A side)',
-                'name': 'Velo/VeloOccupancyMonitor/h_veloOccVsBunchId_ASide'
+                'name': 'Velo/VeloPrivateOccupancyMonitor/h_veloOccVsBunchId_ASide'
                 },
                 {
                 'title': '% VELO occupancy vs. LHC bunch ID (C side)',
                 'short': 'Occupancy vs. BCID (C side)',
-                'name': 'Velo/VeloOccupancyMonitor/h_veloOccVsBunchId_CSide'
+                'name': 'Velo/VeloPrivateOccupancyMonitor/h_veloOccVsBunchId_CSide'
                 }
             ]
         }
@@ -447,12 +447,12 @@ run_view_pages = OrderedDict([
                         {
                         'title': 'Dead Channels Per Sensor',
                         'short': 'Dead Channels Per Sensor',
-                        'name': 'Velo/VeloOccupancyMonitor/DeadPerSensor',
+                        'name': 'Velo/VeloPrivateOccupancyMonitor/DeadPerSensor',
                         },
                         {
                         'title': 'Noisy Channels Per Sensor',
                         'short': 'Noisy Channels Per Sensor',
-                        'name': 'Velo/VeloOccupancyMonitor/NoisyPerSensor',
+                        'name': 'Velo/VeloPrivateOccupancyMonitor/NoisyPerSensor',
                         },
                     ],
                 'layout': (1, 2)
@@ -464,12 +464,12 @@ run_view_pages = OrderedDict([
                         {
                         'title': 'Dead Channels Per Sensor And Link',
                         'short': 'Dead Channels Per Sensor And Link',
-                        'name': 'Velo/VeloOccupancyMonitor/DeadPerSensorAndLink',
+                        'name': 'Velo/VeloPrivateOccupancyMonitor/DeadPerSensorAndLink',
                         },
                         {
                         'title': 'Noisy Channels Per Sensor And Link',
                         'short': 'Noisy Channels Per Sensor And Link',
-                        'name': 'Velo/VeloOccupancyMonitor/NoisyPerSensorAndLink',
+                        'name': 'Velo/VeloPrivateOccupancyMonitor/NoisyPerSensorAndLink',
                         },
                     ],
                 'layout': (1, 2)
@@ -481,12 +481,12 @@ run_view_pages = OrderedDict([
                         {
                         'title': 'Dead/Noisy Channels Per Sensor',
                         'short': 'Dead/Noisy Channels Per Sensor',
-                        'name': 'Velo/VeloOccupancyMonitor/DeadOrNoisyPerSensor',
+                        'name': 'Velo/VeloPrivateOccupancyMonitor/DeadOrNoisyPerSensor',
                         },
                         {
                         'title': 'Dead/Noisy Channels Per Sensor And Link',
                         'short': 'Dead/Noisy Channels Per Sensor And Link',
-                        'name': 'Velo/VeloOccupancyMonitor/DeadOrNoisyPerSensorAndLink',
+                        'name': 'Velo/VeloPrivateOccupancyMonitor/DeadOrNoisyPerSensorAndLink',
                         },
                     ],
                 'layout': (1, 2)
@@ -651,7 +651,7 @@ run_view_pages = OrderedDict([
                     [
                         {
                         'title': 'Channel occupancy',
-                        'name': 'Velo/VeloOccupancyMonitor/OccPerChannelSens{0}',
+                        'name': 'Velo/VeloPrivateOccupancyMonitor/OccPerChannelSens{0}',
                         'sensor_dependent': True,
                         },
                         {
