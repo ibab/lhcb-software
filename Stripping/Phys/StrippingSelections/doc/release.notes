@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-10-26 - Tom Hadavizadeh
+ - Added a Line to StrippingD2PiPi0
+ 
 ! 2015-10-25 - Zhang Liming
  - Add StrippingLb2EtacKp to BandQ
  - Add StrippingB2JpsiHH to B2CC

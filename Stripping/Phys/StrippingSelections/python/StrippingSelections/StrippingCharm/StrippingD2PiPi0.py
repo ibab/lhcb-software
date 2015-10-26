@@ -5,11 +5,11 @@ StrippingD2EtaHConf      : D+ -> h+ (eta -> pi+ pi- gamma, pi+ pi- pi0) prompt
 StrippingD2EtaPrimeHConf : D+ -> h+ (eta_prime -> pi+ pi- gamma, pi+ pi- eta) prompt
 StrippingD2PhiHConf      : D+ -> h+ (phi/omega -> pi+ pi- pi0) prompt
 StrippingD2EtaEEGHConf   : D+ -> h+ (eta -> e+ e- gamma) prompt
-StrippingDst2PiD0EEGConf : D*+ -> (D0 -> e+ e- gamma) pi+
+StrippingDst2PiD0EEGConf : D*+ -> (D0 -> e+ e- gamma) pi+ and D*+ -> (D0 -> e+ e-) pi+
 '''
                                                                
 __author__ = ['Simone Stracka simone.stracka@unipi.it']
-__date__ = '15/05/2015'
+__date__ = '26/10/2015'
 __version__ = '$Revision$'
 
 __all__ = (
@@ -32,6 +32,7 @@ from StandardParticles import (
     StdLooseResolvedPi0,
     StdLooseResolvedEta,
     StdLooseAllPhotons,
+    StdAllLooseElectrons,
     StdDiElectronFromTracks
 )
 
@@ -105,12 +106,12 @@ default_config = {
                 'Hlt1Filter'      : None,
                 'Hlt2Filter'      : "(HLT_PASS_RE('Hlt2CharmHadD.*EmEp.*Decision') | HLT_PASS_RE('Hlt2Topo.*Decision'))",
                 # prescale and postscale
-                'PrescaleD2PiPi0EEG' : 1,
-                'PrescaleD2KPi0EEG'  : 1,
+                'PrescaleD2PiPi0EEG'  : 1,
+                'PrescaleD2KPi0EEG'   : 1,
                 'PrescaleDst2D0PiEEG' : 1,
-                'PostscaleD2PiPi0EEG': 1,
-                'PostscaleD2KPi0EEG' : 1,
-                'PostscaleDst2D0PiEEG' : 1
+                'PostscaleD2PiPi0EEG' : 1,
+                'PostscaleD2KPi0EEG'  : 1,
+                'PostscaleDst2D0PiEEG': 1
                 }
           },
     'D2EtaEEGH' : {
@@ -179,27 +180,11 @@ default_config = {
           'BUILDERTYPE': 'StrippingDst2PiD0EEGConf',
           'STREAMS': ['Charm'],
           'CONFIG': {
-                # Minimum best primary vertex IP chi^2 for charged D daughters
-                'Daug_IPCHI2_MIN'      : 6.0,      
-                # Minimum PT for charged D daughters 
-                'Daug_PT_MIN'          : 1300  *MeV, 
-                # Minimum momentum for charged D daughters 
-                'Daug_P_MIN'           : 2000 *MeV,  
-                # Maximum momentum for charged D daughters 
-                'Daug_P_MAX'           : 100000 *MeV,
-                # Minimum pseudorapidity for charged D daughters 
-                'Daug_ETA_MIN'         : 2.0,
-                # Maximum pseudorapidity for charged D daughters 
-                'Daug_ETA_MAX'         : 5.0,
-                # Track quality requirement for charged D daughters
-                'Daug_TRCHI2DOF_MAX'   : 3,    
-                # Maximum ghost probability for charged D daughters
-                'Daug_TRGHOSTPROB_MAX' : 0.5,
-                # Minimum PT for intermediate resonance neutral daughters
+                # Minimum PT for gamma in D0-> e+ e- gamma
                 'Neut_PT_MIN'        : 600  *MeV, # 350
-                # Maximum mass for dielectron                
+                # Maximum mass for dielectron in D0-> e+ e- gamma                
                 'DiElectron_Mass_MAX'       : 1914  *MeV,
-                # Minimum PT for dielectron                
+                # Minimum PT for dielectron in D0-> e+ e- gamma              
                 'DiElectron_PT_MIN'       : 2600  *MeV, 
                 # Minimum mass for intermediate resonance
                 'Res_Mass_MIN'       : 1814   *MeV, 
@@ -212,12 +197,24 @@ default_config = {
                 'Dstar_MDiff_MAX': 160. * MeV,                
                 # Maximum chi^2 on Dstar vertex
                 'Dstar_VCHI2VDOF_MAX': 9.,
+                # Minimum P for electrons in D0-> e+ e-
+                'Electron_P_MIN'       : 1000  *MeV,
+                # Minimum PT for electrons in D0-> e+ e-                
+                'Electron_PT_MIN'       : 350  *MeV,
+                # Track quality requirement for electrons in in D0-> e+ e-
+                'Electron_TRCHI2DOF_MAX'   : 6,    
+                # Maximum ghost probability for electrons in in D0-> e+ e-
+                'Electron_TRGHOSTPROB_MAX' : 0.5,
+                # Minimum best primary vertex IP chi^2 for electrons in in D0-> e+ e-
+                'Electron_IPCHI2_MIN'      : 16.0,   
                 # HLT filters, only process events firing triggers matching the RegEx
                 'Hlt1Filter'         : None,
                 'Hlt2Filter'      : "HLT_PASS_RE('Hlt2CharmHadDstp2.*EmEp.*Decision') | HLT_PASS_RE('Hlt2Topo.*Decision')",
                  # prescale and postscale
-                'PrescaleDst2PiD0EEG' : 1,
-                'PostscaleDst2PiD0EEG' : 1                
+                'PrescaleDst2PiD0EEG'  : 1,
+                'PostscaleDst2PiD0EEG' : 1,
+                'PrescaleDst2PiD0EE'   : 1,
+                'PostscaleDst2PiD0EE'  : 1                
                 }
           },
     'D2EtaH' : {
@@ -553,7 +550,9 @@ class StrippingDst2PiD0EEGConf(LineBuilder):
     
     # Decay descriptors
     Dst2D0Pi = ['D*(2010)+ -> D0 pi+','D*(2010)- -> D0 pi-']
+    
     D0EEG = ['D0 -> J/psi(1S) gamma']
+    D0EE  = ['D0 -> e+ e-']
     
     def __init__(self, name, config):
         """Initialise this LineBuilder instance."""
@@ -563,18 +562,35 @@ class StrippingDst2PiD0EEGConf(LineBuilder):
         
         d0eeg_name = '{0}D0EEG'.format(name)
         dst2pid0eeg_name = '{0}Dst2PiD0EEG'.format(name)
+        
+        d0ee_name = '{0}D0EE'.format(name)
+        dst2pid0ee_name = '{0}Dst2PiD0EE'.format(name)
 
         self.selD0EEG = makeEEGResonance(
             d0eeg_name, 
             config,
             inputSel=[StdLooseAllPhotons,StdDiElectronFromTracks],
             decDescriptors=self.D0EEG
+            )      
+
+        self.selD0EE = makeEEResonance(
+            d0ee_name, 
+            config,
+            inputSel=[StdAllLooseElectrons],
+            decDescriptors=self.D0EE
             )
-        
+                    
         self.selDst2PiD0EEG = makeDstar(
             dst2pid0eeg_name,
             config,
             inputSel=[self.selD0EEG, StdAllNoPIDsPions],
+            decDescriptors=self.Dst2D0Pi,
+            )
+
+        self.selDst2PiD0EE = makeDstar(
+            dst2pid0ee_name,
+            config,
+            inputSel=[self.selD0EE, StdAllNoPIDsPions],
             decDescriptors=self.Dst2D0Pi,
             )
 
@@ -584,6 +600,16 @@ class StrippingDst2PiD0EEGConf(LineBuilder):
             prescale=config['PrescaleDst2PiD0EEG'],
             postscale=config['PostscaleDst2PiD0EEG'],
             selection=self.selDst2PiD0EEG,
+            HLT1=config['Hlt1Filter'],
+            HLT2=config['Hlt2Filter']
+            )
+
+        self.line_Dst2PiD0EE = make_line(
+            self,
+            '{0}Line'.format(dst2pid0ee_name),
+            prescale=config['PrescaleDst2PiD0EE'],
+            postscale=config['PostscaleDst2PiD0EE'],
+            selection=self.selDst2PiD0EE,
             HLT1=config['Hlt1Filter'],
             HLT2=config['Hlt2Filter']
             )
@@ -1079,18 +1105,6 @@ def make_line(self, name, selection, prescale, postscale, **kwargs):
     
 def makeEEGResonance(name, config, inputSel, decDescriptors):  
     
-    daugCuts = ( 
-        '(PT > {0[Daug_PT_MIN]})'
-        '& (P > {0[Daug_P_MIN]}) '
-        '& (MIPCHI2DV(PRIMARY) > {0[Daug_IPCHI2_MIN]})'
-        '& (TRCHI2DOF < {0[Daug_TRCHI2DOF_MAX]}) '
-        '& (TRGHOSTPROB < {0[Daug_TRGHOSTPROB_MAX]}) '
-        ).format(config)
-    
-    pidFiducialCuts = ( 
-        '(in_range({0[Daug_P_MIN]}, P, {0[Daug_P_MAX]}))'
-        '& (in_range({0[Daug_ETA_MIN]}, ETA, {0[Daug_ETA_MAX]}))'
-        ).format(config)
     
     combCuts = "in_range( {0[Res_Mass_MIN]},AM,{0[Res_Mass_MAX]} )".format(config)
     
@@ -1117,6 +1131,29 @@ def makeEEGResonance(name, config, inputSel, decDescriptors):
     
     return Selection(name, Algorithm=_combiner, RequiredSelections=inputSel)
 
+def makeEEResonance(name, config, inputSel, decDescriptors):  
+    
+    combCuts = "in_range( {0[Res_Mass_MIN]},AM,{0[Res_Mass_MAX]} )".format(config)
+    
+    electronCuts = ( 
+        '(PT > {0[Electron_PT_MIN]})'
+        '& (P > {0[Electron_P_MIN]}) '
+        '& (MIPCHI2DV(PRIMARY) > {0[Electron_IPCHI2_MIN]})'
+        '& (TRCHI2DOF < {0[Electron_TRCHI2DOF_MAX]}) '
+        '& (TRGHOSTPROB < {0[Electron_TRGHOSTPROB_MAX]}) '
+        ).format(config)   
+    resCuts = "ALL"
+    
+    _combiner = CombineParticles(
+        DecayDescriptors=decDescriptors,
+        DaughtersCuts={
+        'e+': '{0}'.format(electronCuts)
+        },
+        CombinationCut=combCuts,
+        MotherCut=resCuts
+        )
+    
+    return Selection(name, Algorithm=_combiner, RequiredSelections=inputSel)
 
 def makeResonance( name, config, inputSel, decDescriptors):  
 
