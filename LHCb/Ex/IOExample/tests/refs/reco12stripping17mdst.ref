@@ -1,26 +1,7 @@
-# --> Including file '/afs/cern.ch/work/c/cattanem/private/cmtuser/LHCb_HEAD/Ex/IOExample/tests/options/CopyReco12Stripping17toROOTmdst.py'
-# <-- End of file '/afs/cern.ch/work/c/cattanem/private/cmtuser/LHCb_HEAD/Ex/IOExample/tests/options/CopyReco12Stripping17toROOTmdst.py'
-# applying configuration of LHCbApp
-# /***** User LHCbApp/LHCbApp ************************************************************************
-# |-Persistency    = None
-# |-DataType       = '2011'  (default: '2012')
-# |-DDDBtag        = 'head-20110914'  (default: '')
-# |-SkipEvents     = 0
-# |-XMLSummary     = None
-# |-OutputLevel    = 3
-# |-EvtMax         = -1
-# |-Simulation     = False  (default: False)
-# |-DQFLAGStag     = ''
-# |-IgnoreDQFlags  = True
-# |-Detectors      = []  (default: [])
-# |-LocalDataTypes = []  (default: [])
-# |-TimeStamp      = False
-# |-CondDBtag      = 'head-20110914'  (default: '')
-# |-Monitors       = []  (default: [])
-# \----- (End of User LHCbApp/LHCbApp) ---------------------------------------------------------------
-# skipping configuration of XMLSummary
+# setting LC_ALL to "C"
+# --> Including file '/afs/cern.ch/work/c/cattanem/private/cmakeuser/LHCbDev_HEAD/Ex/IOExample/tests/options/CopyReco12Stripping17toROOTmdst.py'
+# <-- End of file '/afs/cern.ch/work/c/cattanem/private/cmakeuser/LHCbDev_HEAD/Ex/IOExample/tests/options/CopyReco12Stripping17toROOTmdst.py'
 # applying configuration of IOTest
-# WARNING: Property 'EvtMax' is set in both 'IOTest' and 'ApplicationMgr', using 'IOTest.EvtMax'
 # /***** User IOTest/IOTest **************************************************************************
 # |-KillDAQ     = True  (default: False)
 # |-DataContent = 'MDST'  (default: 'DST')
@@ -29,61 +10,17 @@
 # |-EvtMax      = 5  (default: -1)
 # |-WithMC      = False
 # \----- (End of User IOTest/IOTest) -----------------------------------------------------------------
-# applying configuration of DDDBConf
-# WARNING: Using default tag dq-20140822 for partition DQFLAGS
-# /***** User DDDBConf/DDDBConf **********************************************************************
-# |-DataType    = '2011'  (default: '2012')
-# |-DbRoot      = 'conddb:/lhcb.xml'
-# |-InitialTime = 'Safe'
-# |-AutoTags    = False
-# |-Simulation  = False  (default: False)
-# \----- (End of User DDDBConf/DDDBConf) -------------------------------------------------------------
 # skipping configuration of DstConf
-# applying configuration of CondDB
-# --> Including file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
-# /***** User CondDB/CondDB **************************************************************************
-# |-Upgrade                    = False
-# |-EnableRunStampCheck        = True
-# |-DBSnapshotDirectory        = '/group/online/hlt/conditions'
-# |-LatestLocalTagsByDataType  = []  (default: [])
-# |-Online                     = False
-# |-LogFile                    = ''
-# |-SQLiteLocalCopiesDir       = ''
-# |-EnableRunChangeHandler     = False
-# |-RunChangeHandlerConditions = {'online_%d.xml': ['Conditions/Online/LHCb/Magnet/Set', 'Conditions/Online/Velo/MotionSystem', 'Conditions/Online/LHCb/Lumi/LumiSettings', 'Conditions/Online/LHCb/LHCFillingScheme', 'Conditions/Online/LHCb/RunParameters', 'Conditions/Online/Rich1/R1HltGasParameters', 'Conditions/Online/Rich2/R2HltGasParameters']}
-# |                            (default: {'online_%d.xml': ['Conditions/Online/LHCb/Magnet/Set', 'Conditions/Online/Velo/MotionSystem', 'Conditions/Online/LHCb/Lumi/LumiSettings', 'Conditions/Online/LHCb/LHCFillingScheme', 'Conditions/Online/LHCb/RunParameters', 'Conditions/Online/Rich1/R1HltGasParameters', 'Conditions/Online/Rich2/R2HltGasParameters']})
-# |-Tags                       = {}  (default: {})
-# |-LoadCALIBDB                = 'OFFLINE'
-# |-AllLocalTagsByDataType     = []  (default: [])
-# |-UseOracle                  = False
-# |-RunStampCondition          = ''
-# |-PartitionConnectionString  = {}  (default: {})
-# |-LocalTags                  = {}  (default: {})
-# |-IgnoreHeartBeat            = False
-# |-Overrides                  = []  (default: [])
-# |-Simulation                 = False  (default: False)
-# |-QueryGranularity           = 0
-# |-LatestGlobalTagByDataType  = ''
-# |-UseDBSnapshot              = False
-# |-DisableLFC                 = False
-# |-HeartBeatCondition         = '/Conditions/Online/LHCb/Tick'
-# |-LatestGlobalTagByDataTypes = []  (default: [])
-# |-UseLatestTags              = []  (default: [])
-# |-OverwriteSQLiteLocalCopy   = False
-# \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
 # skipping configuration of DigiConf
 # skipping configuration of CaloDstPackConf
 # skipping configuration of SimConf
 # skipping configuration of CaloDstUnPackConf
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr (GaudiCoreSvc v3r4)
-                                          running on mcat.cern.ch on Tue Jun 23 16:22:46 2015
+                                                   Welcome to LHCbDev version HEAD
+                                          running on mcat.cern.ch on Mon Oct 26 15:26:11 2015
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
-DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
-DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 TESFingerPrint    VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
@@ -133,17 +70,12 @@ FSRInputCopyStream   INFO Data source: FileRecordDataSvc output: DATAFILE='PFN:R
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/swtest/lhcb/LHCb/Collision11/CHARM.MDST/00012547/0000/00012547_00000013_1.charm.mdst' SVC='Gaudi::RootEvtSelector' OPT='READ'
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
-EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
 ApplicationMgr       INFO Application Manager Started successfully
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 EventPersistenc...   INFO Added successfully Conversion service:LHCb::RawDataCnvSvc
-COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
-COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
-ONLINE_2008          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2008.db/ONLINE"
-ONLINE_2008          INFO Using TAG ""
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x8d0c730@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x98d9690@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x2]  LHCb::RecHeader
@@ -202,7 +134,7 @@ StoreExplorerAlg     INFO     +--> /Particle2LHCbIDMap [Address: CLID=0x370 Type
 TESFingerPrint      DEBUG ==> Execute
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0xa801d10@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0xae120a0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x2]  LHCb::RecHeader
@@ -264,7 +196,7 @@ StoreExplorerAlg     INFO     +--> /Particle2LHCbIDMap [Address: CLID=0x370 Type
 TESFingerPrint      DEBUG ==> Execute
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0xb3d6f90@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0xbee8590@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x2]  LHCb::RecHeader
@@ -340,7 +272,7 @@ StoreExplorerAlg     INFO     +--> /Particle2LHCbIDMap [Address: CLID=0x370 Type
 TESFingerPrint      DEBUG ==> Execute
 EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0xbb6ce90@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0xb36e9b0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x2]  LHCb::RecHeader
@@ -410,7 +342,7 @@ StoreExplorerAlg     INFO     +--> /Particle2LHCbIDMap [Address: CLID=0x370 Type
 TESFingerPrint      DEBUG ==> Execute
 EventSelector     SUCCESS Reading Event record 5. Record number within stream 1: 5
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0xb3f7240@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0xd04c5d0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x2]  LHCb::RecHeader
@@ -505,7 +437,7 @@ FSRInputCopyStream   INFO Events output: 1
 EventLoopMgr         INFO Histograms converted successfully according to request.
 DataOnDemandSvc      INFO Handled "DataFault" incidents: 0/0/5(Alg/Node/Total).
 ToolSvc              INFO Removing all tools created by ToolSvc
+RootCnvSvc           INFO Disconnected data IO:64E25348-8A79-E511-8304-02163E008F18 [Reco12-Stripping17.mdst]
 RootCnvSvc           INFO Disconnected data IO:AC2B9F1D-38F1-E011-94B0-E0CB4E29C4DE [root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/swtest/lhcb/LHCb/Collision11/CHARM.MDST/00012547/0000/00012547_00000013_1.charm.mdst]
-RootCnvSvc           INFO Disconnected data IO:EEB5C972-9F16-E511-8717-02163E008F18 [Reco12-Stripping17.mdst]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
