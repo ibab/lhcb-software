@@ -1,6 +1,6 @@
 project LOVELL
 
-use GAUDI GAUDI_v26r1
+use GAUDI GAUDI_v26r4
 
 build_strategy with_installarea
 setup_strategy root
