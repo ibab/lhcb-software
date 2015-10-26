@@ -8,12 +8,14 @@ Purpose: LHCb reconstruction program
     LHCbApp() now assigns OdinTimeDecoder as EventClockSvc().EventTimeDecoder
     when processing real data (LHCbAlgs)
   . In 2015-em.ref, follow LHCBCNDB-567 (use "Stripping20" Calo settings for 
-    2015 data prior to TS2). CondDB tag cond-20151016 (DDDB) 
+    2015 data prior to TS2). CondDB tag cond-20151016 (DDDB)
+  . Add ghost probability histogram to TrackMonitor 
 
 - Changes to tests
   . Add 2015magdown test, reco of 2015 pp 25ns data
   . Remove obsolete inclusion of $APPCONFIGOPTS/Brunel/saveFittedVeloTracks.py
     in 2015-em, 2015-em-rdst tests, already done by default for 2015 DataType
+  . Remove temporary RegexpReplacers for forward compatibility with GAUDI-1078
 
 </PRE><H1><A NAME=v49r0>2015-10-13 Brunel v49r0</A></H1><PRE>
 This version uses projects LHCb v39r1, Lbcom v17r1, Rec v18r2, Gaudi v26r4
