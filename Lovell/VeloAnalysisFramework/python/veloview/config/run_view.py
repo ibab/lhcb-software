@@ -414,31 +414,50 @@ run_view_pages = OrderedDict([
     ('occupancy', 
         {
         'title': 'Occupancy',
-        'plots': 
+        'subpages':
             [
                 {
-                'title': 'Channel occupancy',
-                'name': 'Velo/VeloPrivateOccupancyMonitor/OccPerChannelSens{0}',
-                'sensor_dependent': True,
+                'title': 'Occupancy_1',
+                'plots': 
+                    [
+                        {
+                        'title': 'Channel occupancy',
+                        'name': 'Velo/VeloPrivateOccupancyMonitor/OccPerChannelSens{0}',
+                        'sensor_dependent': True,
+                        }
+                    ]
                 },
                 {
-                'title': 'Average sensor occupancy',
-                'name': 'Velo/VeloPrivateOccupancyMonitor/OccAvrgSens'
+                'title': 'Occupancy_2',
+                'plots':
+                    [
+                        {
+                        'title': 'Average sensor occupancy',
+                        'name': 'Velo/VeloPrivateOccupancyMonitor/OccAvrgSens'
+                        },
+                        {
+                        'title': 'Occupancy spectrum (zoom)',
+                        'short': 'Occupancy spectrum',
+                        'name': 'Velo/VeloPrivateOccupancyMonitor/OccSpectMaxLow'
+                        }
+                    ],
+                'layout': (2, 1)
                 },
                 {
-                'title': 'Occupancy spectrum (zoom)',
-                'short': 'Occupancy spectrum',
-                'name': 'Velo/VeloPrivateOccupancyMonitor/OccSpectMaxLow'
-                },
-                {
-                'title': '% VELO occupancy vs. LHC bunch ID (A side)',
-                'short': 'Occupancy vs. BCID (A side)',
-                'name': 'Velo/VeloPrivateOccupancyMonitor/h_veloOccVsBunchId_ASide'
-                },
-                {
-                'title': '% VELO occupancy vs. LHC bunch ID (C side)',
-                'short': 'Occupancy vs. BCID (C side)',
-                'name': 'Velo/VeloPrivateOccupancyMonitor/h_veloOccVsBunchId_CSide'
+                'title': 'Occupancy_3',
+                'plots':
+                    [   
+                        {
+                        'title': '% VELO occupancy vs. LHC bunch ID (A side)',
+                        'short': 'Occupancy vs. BCID (A side)',
+                        'name': 'Velo/VeloPrivateOccupancyMonitor/h_veloOccVsBunchId_ASide'
+                        },
+                        {
+                        'title': '% VELO occupancy vs. LHC bunch ID (C side)',
+                        'short': 'Occupancy vs. BCID (C side)',
+                        'name': 'Velo/VeloPrivateOccupancyMonitor/h_veloOccVsBunchId_CSide'
+                        }
+                    ]
                 }
             ]
         }
