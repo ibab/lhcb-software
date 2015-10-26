@@ -116,7 +116,8 @@ run_view_pages = OrderedDict([
                         'name': 'Vetra/VeloPedestalSubtractorMoni/TELL1_{0:03d}/Ped_Sub_ADCs_2D',
                         'sensor_dependent': True
                         }
-                    ]
+                    ],
+                'axis_titles': ['config x', 'config y']
                 }
             ]
         }
