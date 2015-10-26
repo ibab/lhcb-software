@@ -84,7 +84,7 @@ class lPlottable():
             
         elif 'xbinning' in nominal['data']['data'] and len(nominal['data']['data']['xbinning']) > 0: 
             if 'asText' in self.params and self.params['asText']: self.runview_2d_text(nominal)
-            if tabOpsState.refDiff and tabOpsState.displayRefs: self.runview_2d_dataMinusRef(nominal, reference)
+            elif tabOpsState.refDiff and tabOpsState.displayRefs: self.runview_2d_dataMinusRef(nominal, reference)
             elif tabOpsState.refRatio and tabOpsState.displayRefs: self.runview_2d_dataMinusRef(nominal, reference, True)
             else: self.runview_2d(nominal)
         
@@ -121,7 +121,7 @@ class lPlottable():
             for j in range(len(nominal['data']['data']['values'][0])):
                 z = nominal['data']['data']['values'][i][j]
                 
-                if z == 0.: continue
+                if z == 0.0: continue
                 x = nominal['data']['data']['xbinning'][i][1] + halfBinX
                 y = nominal['data']['data']['ybinning'][j][1] + halfBinY
                 self.axes.text(str(z), x , y)
@@ -266,21 +266,12 @@ class lPlottable():
                 npBins[len(pyBins[0])-j-1][i] = pyBins[i][j]
         
         npBins[npBins == 0.0] = np.nan
-        if 'asText' in self.params and self.params['asText']:
-            # Loop over bins, see if something is above zero. If so, add as text.
-            for i in range(len(pyBins)):
-                for j in range(len(pyBins[0])): 
-                    if pyBins[i][j] == 0:
-                        x = nominal['data']['data']['xbinning'][i][0] + xHalfBinWidth
-                        y = nominal['data']['data']['ybinning'][i][0] + yHalfBinWidth
-                        t = str(pyBins[i][j])
-                        self.axes.text(x, y, t, ha='center', va='bottom')
-        else:
-            self.cax = self.axes.imshow(npBins, 
-                interpolation='none', cmap=newMaps.viridis, 
-                extent = [minX, maxX, minY, maxY],
-                aspect='auto'
-                )
+
+        self.cax = self.axes.imshow(npBins, 
+            interpolation='none', cmap=newMaps.viridis, 
+            extent = [minX, maxX, minY, maxY],
+            aspect='auto'
+            )
 
         if not self.cbar_set:
             self.cbar = self.fig.colorbar(self.cax, aspect=12)
