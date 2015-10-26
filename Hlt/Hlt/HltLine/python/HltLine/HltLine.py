@@ -1150,6 +1150,9 @@ class Hlt1Line(object):
     def outputSelections ( self ) :
         return self._outputSelections
 
+    # Return list of related info locations that will be filled for this line
+    def relatedInfoLocations(self):
+        return []
 
     # determine the index for the given algorithm name
     #def index( self, name = None ) :
@@ -1511,20 +1514,20 @@ class Hlt2Line(object):
     #    - 'PV'        : insert PV reconstruction (or not)
     #    - 'algos'     : the list of actual members
     #    - 'postscale' : the postscale factor
-    def __init__ ( self               ,
-                   name               ,   # the base name for the Line
-                   prescale    = 1    ,   # prescale factor
-                   ODIN        = None ,   # ODIN predicate
-                   L0DU        = None ,   # L0DU predicate
-                   HLT1        = None ,   # HltDecReports predicate
-                   HLT2        = None ,   # HltDecReports predicate
-                   VoidFilter  = None ,   # extra VoidFilter
-                   algos       = []   ,   # the list of algorithms/members
-                   postscale   = 1    ,   # postscale factor
-                   priority    = None ,   # hint for ordering lines
-                   Turbo       = False,   # is the line intended for the Turbo stream
-                   RelatedInfo = []   ,   # List of related info to calculate
-                   **args             ) : # other configuration parameters
+    def __init__ ( self                  ,
+                   name                  ,   # the base name for the Line
+                   prescale    = 1       ,   # prescale factor
+                   ODIN        = None    ,   # ODIN predicate
+                   L0DU        = None    ,   # L0DU predicate
+                   HLT1        = None    ,   # HltDecReports predicate
+                   HLT2        = None    ,   # HltDecReports predicate
+                   VoidFilter  = None    ,   # extra VoidFilter
+                   algos       = []      ,   # the list of algorithms/members
+                   postscale   = 1       ,   # postscale factor
+                   priority    = None    ,   # hint for ordering lines
+                   Turbo       = False   ,   # is the line intended for the Turbo stream
+                   RelatedInfo = ([], []),   # Lists of related info locations and algorithms
+                   **args                ) : # other configuration parameters
         """
         The constructor, which essentially defines the line
 
@@ -1609,9 +1612,9 @@ class Hlt2Line(object):
 
         # Add related info at the end.
         lastIndex = -1
-        if self._RelatedInfo:
+        if self._RelatedInfo[1]:
             lastIndex = len(algos) - 1
-            algos += self._RelatedInfo
+            algos += self._RelatedInfo[1]
 
         # bind members to line
         _boundMembers = bindMembers( line, algos )
@@ -1741,6 +1744,10 @@ class Hlt2Line(object):
     # (with only a few exceptions). So do not assume any ordering when you write a line
     def priority( self ) :
         return self._priority
+
+    # Return list of related info locations that will be filled for this line
+    def relatedInfoLocations(self):
+        return self._RelatedInfo[0]
 
     ## Clone the line
     def clone ( self , name , **args ) :
