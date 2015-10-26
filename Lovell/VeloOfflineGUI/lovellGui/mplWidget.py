@@ -93,6 +93,11 @@ class lPlottable():
             xlabel = nominal['axis_titles'][0]
             ylabel = nominal['axis_titles'][1]        
             if len(nominal['axis_titles'][1]) == 3: zlabel = ['axis_titles'][2]
+            
+        elif 'axis_titles' in self.params:
+            xlabel = self.params['axis_titles'][0]
+            ylabel = self.params['axis_titles'][1]        
+            if len(self.params['axis_titles']) == 3: zlabel = ['axis_titles'][2]
         
         self.plot.axes.set_xlabel(xlabel)
         self.plot.axes.set_ylabel(ylabel)
