@@ -129,7 +129,7 @@ class lPlottable():
                 if int(z) % 2 == 0: y = 2.75
                 else: y = -2.75
                 self.axes.annotate(str(int(z)), xy=(x, y), xycoords='data', fontsize=9,
-                                   horizontalalignment='center', verticalalignment='center', rotation=90, weight = demibold)
+                                   horizontalalignment='center', verticalalignment='center', rotation=90, weight = 'demibold')
         
         
     def runview_1d_dataMinusRef(self, nominal, reference, infactRatio = False):
