@@ -82,7 +82,8 @@ class lPlottable():
             elif tabOpsState.refRatio: self.runview_1d_dataMinusRef(nominal, reference, True)
             
             
-        elif 'xbinning' in nominal['data']['data'] and len(nominal['data']['data']['xbinning']) > 0:  
+        elif 'xbinning' in nominal['data']['data'] and len(nominal['data']['data']['xbinning']) > 0: 
+            if 'asText' in self.params and self.params['asText']: self.runview_2d_text(nominal)
             if tabOpsState.refDiff and tabOpsState.displayRefs: self.runview_2d_dataMinusRef(nominal, reference)
             elif tabOpsState.refRatio and tabOpsState.displayRefs: self.runview_2d_dataMinusRef(nominal, reference, True)
             else: self.runview_2d(nominal)
@@ -92,7 +93,6 @@ class lPlottable():
         ylabel = 'Default y label'
         zlabel = 'Default z label'
         
-        print self.plot.params
         if 'axis_titles' in self.plot.params:
             xlabel = self.plot.params['axis_titles'][0]
             ylabel = self.plot.params['axis_titles'][1]        
@@ -107,7 +107,23 @@ class lPlottable():
         self.plot.axes.set_xlabel(xlabel)
         self.plot.axes.set_ylabel(ylabel)
         if self.cbar_set: self.cbar.set_label(zlabel)
+     
         
+    def runview_2d_text(self, nominal):
+        minX = nominal['data']['data']['xbinning'][0][0]
+        maxX = nominal['data']['data']['xbinning'][-1][1]
+        minY = nominal['data']['data']['ybinning'][0][0]
+        maxY = nominal['data']['data']['ybinning'][-1][1]
+        halfBinX = 0.5*(nominal['data']['data']['xbinning'][0][1] + nominal['data']['data']['xbinning'][0][0])
+        halfBinY = 0.5*(nominal['data']['data']['ybinning'][0][1] + nominal['data']['data']['ybinning'][0][0])
+        
+        pyBins = []
+        for i in range(len(nominal['data']['data']['values'])):
+            for j in range(len(nominal['data']['data']['values'][0])):
+                z = pyBins[i][j]
+                x = nominal['data']['data']['xbinning'][i][1] + halfBinX
+                y = nominal['data']['data']['ybinning'][j][1] + halfBinY
+                self.axes.text(str(z), x , y)
         
         
     def runview_1d_dataMinusRef(self, nominal, reference, infactRatio = False):
@@ -204,6 +220,8 @@ class lPlottable():
                 npBins[len(pyBins[0])-j-1][i] = pyBins[i][j]
         
         npBins[npBins == 0.0] = np.nan
+        
+        
         self.cax = self.axes.imshow(npBins, 
             interpolation='none', cmap=newMaps.viridis, 
             extent = [minX, maxX, minY, maxY],
