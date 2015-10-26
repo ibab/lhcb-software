@@ -169,18 +169,35 @@ run_view_pages = OrderedDict([
                 'title': 'Velo Overview',
                 'plots': 
                     [
+#                         {
+#                         'title': 'RMS CMS noise vs. station / R sensors (neg. for C-side)',
+#                         'short': 'RMS CMS noise vs. station / R sensors (neg. for C-side)',
+#                         'name': 'Vetra/NoiseMon/ADCCMSuppressed/Average/RMSNoise_vs_Station_R',
+#                         'yrange': [-4, 4] 
+#                         },
+#                         {
+#                         'title': 'RMS CMS noise vs. station / Phi sensors (neg. for C-side)',
+#                         'short': 'RMS CMS noise vs. station / Phi sensors (neg. for C-side)',
+#                         'name': 'Vetra/NoiseMon/ADCCMSuppressed/Average/RMSNoise_vs_Station_Phi',
+#                         'yrange': [-4, 4] 
+#                         },
                         {
-                        'title': 'RMS CMS noise vs. station / R sensors (neg. for C-side)',
-                        'short': 'RMS CMS noise vs. station / R sensors (neg. for C-side)',
-                        'name': 'Vetra/NoiseMon/ADCCMSuppressed/Average/RMSNoise_vs_Station_R',
-                        'yrange': [-4, 4] 
-                        },
-                        {
-                        'title': 'RMS CMS noise vs. station / Phi sensors (neg. for C-side)',
-                        'short': 'RMS CMS noise vs. station / Phi sensors (neg. for C-side)',
-                        'name': 'Vetra/NoiseMon/ADCCMSuppressed/Average/RMSNoise_vs_Station_Phi',
-                        'yrange': [-4, 4] 
-                        },
+                        'title': 'RMS CMS noise vs. station (neg. for C-side)',
+                        'yrange': [-4, 4],
+                        'plottables': 
+                            [
+                                {
+                                'name': 'Vetra/NoiseMon/ADCCMSuppressed/Average/RMSNoise_vs_Station_R',
+                                'legend': 'R'
+                                },
+                                {
+                                'name': 'Vetra/NoiseMon/ADCCMSuppressed/Average/RMSNoise_vs_Station_Phi',
+                                'legend': 'Phi',
+                                'color': 'y'
+                                }
+                            ],
+                        'showLegend': True
+                        }
                     ],
                 'layout': (2, 1)
                 },
