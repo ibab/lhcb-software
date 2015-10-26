@@ -599,12 +599,14 @@ void AlignmentMonitoring::CheckTTSectorResiduals(){
   // draw the histogram
   m_pages["TTResidualsBySectorMapping"] = (TCanvas*)m_hhelp.createPage( "TTResidualsBySectorMapping","Overlap Residulas TT Map", 1, 2, 1200, 600*2);
   m_pages["TTResidualsBySectorMapping"]->cd(1);
+  gPad->SetGrid(0,0);
   hist_mean_values->SetMaximum( 0.3);
   hist_mean_values->SetMinimum(-0.3);
   hist_mean_values->Draw("COLZ");
   PlotTTLabels(hist_mean_values,hNames,m_mapping,m_nSensors);
   PlotTTBoxes(hist_mean_values,hNames,m_mapping,m_nSensors);
   m_pages["TTResidualsBySectorMapping"]->cd(2);
+  gPad->SetGrid(0,0);
   hist_sigma_values->SetMaximum( 0.3);
   hist_sigma_values->SetMinimum( 0);
   hist_sigma_values->Draw("COLZ");
@@ -627,14 +629,14 @@ void AlignmentMonitoring::PlotTTBoxes(TH2D* hist, std::vector<std::string> hName
   box->SetFillStyle(0);
   box->SetLineStyle(3);
   box->SetLineColor(kBlack); //14
-  box->SetLineWidth(box->GetLineWidth()/10.);
+  //box->SetLineWidth(box->GetLineWidth()/10.);
 
   TBox* boxempty = new TBox();
   boxempty->SetFillColor(14);
   boxempty->SetFillStyle(3254);
   boxempty->SetLineStyle(3);
   boxempty->SetLineColor(14);
-  boxempty->SetLineWidth(boxempty->GetLineWidth()/100.);
+  //boxempty->SetLineWidth(boxempty->GetLineWidth()/100.);
 
   for (auto name : hNames){
     NameTTSector* sector = new NameTTSector( name );
@@ -970,12 +972,14 @@ void AlignmentMonitoring::CheckITSectorResiduals(){
   // draw the histogram
   m_pages["ITResidualsBySectorMapping"] = (TCanvas*)m_hhelp.createPage( "ITResidualsBySectorMapping","Overlap Residulas IT Map", 1, 2, 1200, 600*2);
   m_pages["ITResidualsBySectorMapping"]->cd(1);
+  gPad->SetGrid(0,0);
   hist_mean_values->SetMaximum( 0.3);
   hist_mean_values->SetMinimum(-0.3);
   hist_mean_values->Draw("COLZ");
   PlotITLabels(hist_mean_values);
   PlotITBoxes(hist_mean_values,hNames,m_mapping);
   m_pages["ITResidualsBySectorMapping"]->cd(2);
+  gPad->SetGrid(0,0);
   hist_sigma_values->SetMaximum( 0.2);
   hist_sigma_values->SetMinimum( 0);
   hist_sigma_values->Draw("COLZ");
@@ -998,14 +1002,14 @@ void AlignmentMonitoring::PlotITBoxes(TH2D* hist, std::vector<std::string> hName
   box->SetFillStyle(0);
   box->SetLineStyle(3);
   box->SetLineColor(kBlack); //14
-  box->SetLineWidth(box->GetLineWidth()/10.);
+  //box->SetLineWidth(box->GetLineWidth()/10.);
 
   TBox* boxempty = new TBox();
   boxempty->SetFillColor(14);
   boxempty->SetFillStyle(3254);
   boxempty->SetLineStyle(3);
   boxempty->SetLineColor(14);
-  boxempty->SetLineWidth(boxempty->GetLineWidth()/100.);
+  //boxempty->SetLineWidth(boxempty->GetLineWidth()/100.);
 
   for (auto name : hNames){
     NameITSector* sector = new NameITSector( name );
