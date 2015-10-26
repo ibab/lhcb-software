@@ -197,10 +197,12 @@ run_view_pages = OrderedDict([
                                 'color': 'y'
                                 },
                                 {
-                                'name': 'Vetra/NoiseMon/ADCCMSuppressed/Average/RMSNoise_vs_Station_R'
+                                'name': 'Vetra/NoiseMon/ADCCMSuppressed/Average/RMSNoise_vs_Station_R',
+                                'asText': 'True'
                                 },
                                 {
-                                'name': 'Vetra/NoiseMon/ADCCMSuppressed/Average/Sensor_vs_Station_Phi'
+                                'name': 'Vetra/NoiseMon/ADCCMSuppressed/Average/Sensor_vs_Station_Phi',
+                                'asText': 'True'
                                 }
                             ],
                         'showLegend': True
