@@ -74,8 +74,6 @@ class HltRecoConf(LHCbConfigurableUser):
         LoKi__PVReFitter("LoKi::PVReFitter").CheckTracksByLHCbIDs = True
 
 
-MaxOTHits = 15000 #--> move to CommonForwardOptions, this one is used e.g. in Hlt1GECs.py or Hlt1BeamGasLines.py
-
 MatchVeloMuonOptions = {"MaxChi2DoFX" : 10.,
                         "XWindow" : 200.,
                         "YWindow" : 400.
@@ -96,8 +94,7 @@ VeloTTToolOptions = {"minMomentum" : 0.0,
 
 VeloTTOptions = { }
 
-CommonForwardOptions = { "MaxOTHits" : 15000 ,  #Why do we have this three times?
-                         "MaxITHits" : 999999 ,
+CommonForwardOptions = { "MaxITHits" : 999999 ,
                          "MaxNVelo" : 999999 }
 
 #Sascha: Rename this to tool,

@@ -88,10 +88,13 @@ recoVeloTT.VetoObjects = [ recoVeloTT.OutputTracksName ]
 #### Forward Tracking
 from Configurables import PatForward, PatForwardTool
 from Configurables import HltRecoConf
+from HltRecoConf import CommonForwardOptions
 recoForwardHPT = PatForward( 'Hlt1ForwardHPT'
-                          , InputTracksName  = recoVeloTT.OutputTracksName 
-                          , OutputTracksName = HltSharedTrackLoc["ForwardHPT"]
-                          , maxOTHits=HltRecoConf().getProp("Forward_MaxOTHits") )
+                             , InputTracksName  = recoVeloTT.OutputTracksName 
+                             , OutputTracksName = HltSharedTrackLoc["ForwardHPT"]
+                             , maxOTHits = HltRecoConf().getProp("Forward_MaxOTHits")
+                             , maxITHits = CommonForwardOptions["MaxITHits"]
+                             , MaxNVelo = CommonForwardOptions["MaxNVelo"] )
 recoForwardHPT.VetoObjects = [ recoForwardHPT.OutputTracksName ]
 # apply modifications on top
 from HltRecoConf import CommonForwardTrackingOptions, ForwardTrackingOptions_MomEstimate
@@ -227,7 +230,7 @@ def ConfiguredPatSeeding(name
     from Configurables import HltRecoConf
     from HltTracking.HltRecoConf import CommonForwardOptions
     recoSeeding.PatSeedingTool.MaxOTHits = HltRecoConf().getProp("Forward_MaxOTHits")
-    recoSeeding.PatSeedingTool.MaxITHits = CommonForwardOptions["MaxITHits"] #ugly...
+    recoSeeding.PatSeedingTool.MaxITHits = CommonForwardOptions["MaxITHits"] 
     return recoSeeding
 
 #TODO: Move this to TrackFitter package?

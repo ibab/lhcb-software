@@ -4,6 +4,11 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-10-26 - Sascha Stahl
+ - HltSharedTracking: Fix configuration of Hlt1 Forward GECs. Affected number of 
+   IT hits and number of Velo tracks.
+ - HltRecoConf: Remove two out of three instances of the GEC cut for OT hits.
+
 !========================= HltTracking v13r12 2015-10-08 =========================
 
 ! 2015-10-08 - Roel Aaij
