@@ -136,10 +136,9 @@ Rich::Rec::Track::Type Rich::Rec::Track::type( const LHCb::Track * track )
 
 Rich::Rec::Track::Type Rich::Rec::Track::type( const LHCb::MCRichTrack * track )
 {
-  if ( track )
+  if ( UNLIKELY(!track) ) 
   {
-    return Rich::Rec::Track::MCRichTrack;
+    throw GaudiException( "Null Track pointer", "*Rich::Rec::Track::type*", StatusCode::FAILURE );
   }
-  // Should not get here either ...
-  throw GaudiException( "Null Track pointer", "*Rich::Rec::Track::type*", StatusCode::FAILURE );
+  return Rich::Rec::Track::MCRichTrack;
 }

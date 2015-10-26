@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2015-10-26 - Chris Jones
+ - Various minor cleanups to base classes.
+
 !========================= RichRecBase v4r21 2015-10-13 =========================
 ! 2015-10-07 - Chris Jones
  - Some fine tuning to the photon reconstruction base class.

@@ -42,14 +42,14 @@ PhotonCreatorBase::PhotonCreatorBase( const std::string& type,
   m_minCKtheta     = {0.075, 0.005, 0.005} ;
   m_maxCKtheta     = {0.320, 0.075, 0.035} ;
   m_minPhotonProb  = {1e-15, 1e-15, 1e-15} ;
-  if ( contextContains("HLT") )
-  {
-    m_nSigma = { 3.5, 2.8, 3.0 } ;
-  }
-  else // Offline settings
-  {
-    m_nSigma = { 3.8, 3.3, 3.3 } ;
-  }
+  //if ( contextContains("HLT") )
+  //{
+  //  m_nSigma = { 3.5, 2.8, 3.0 } ;
+  //}
+  //else // Offline settings
+  //{
+  m_nSigma         = { 3.8,  3.3,   3.3  } ;
+  //}
 
   // set properties
   declareProperty( "RichRecPhotonLocation",
@@ -588,7 +588,8 @@ PhotonCreatorBase::checkAngleInRange( LHCb::RichRecSegment * segment,
   const auto & tkSeg = segment->trackSegment();
 
   // Just check overall absolute min - max range
-  if ( ckTheta > absMinCKTheta(tkSeg) && ckTheta < absMaxCKTheta(tkSeg) )
+  if ( ckTheta < absMaxCKTheta(tkSeg) && 
+       ckTheta > absMinCKTheta(tkSeg) )
   {
     // Finer grained check, to be within tolerence of any mass hypothesis
     for ( const auto & hypo : m_pidTypes )

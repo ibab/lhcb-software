@@ -170,19 +170,19 @@ namespace Rich
         {
           // Print out of track count for this event
           unsigned int nTotTried(0), nTotSel(0);
-          for ( TrackTypeCount::iterator i = m_nTracksAll.begin(); i != m_nTracksAll.end(); ++i )
+          for ( const auto & i : m_nTracksAll )
           {
-            nTotTried += (*i).second.triedTracks - m_nTracksLast[(*i).first].triedTracks;
-            nTotSel   += (*i).second.selectedTracks - m_nTracksLast[(*i).first].selectedTracks;
+            nTotTried += i.second.triedTracks - m_nTracksLast[i.first].triedTracks;
+            nTotSel   += i.second.selectedTracks - m_nTracksLast[i.first].selectedTracks;
           }
           debug() << "Selected " << nTotSel << "/" << nTotTried << " Tracks :";
-          for ( TrackTypeCount::iterator i = m_nTracksAll.begin(); i != m_nTracksAll.end(); ++i )
+          for ( const auto & i : m_nTracksAll )
           {
             const std::string name =
-              ( (*i).first.second ? "Unique:" : "NonUnique:" ) + Rich::text( (*i).first.first );
+              ( i.first.second ? "Unique:" : "NonUnique:" ) + Rich::text( i.first.first );
             debug() << " " << name << "=("
-                    << (*i).second.selectedTracks - m_nTracksLast[(*i).first].selectedTracks << "/"
-                    << (*i).second.triedTracks - m_nTracksLast[(*i).first].triedTracks << ")";
+                    << i.second.selectedTracks - m_nTracksLast[i.first].selectedTracks << "/"
+                    << i.second.triedTracks - m_nTracksLast[i.first].triedTracks << ")";
           }
           debug() << endmsg;
         } // debug

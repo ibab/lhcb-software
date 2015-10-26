@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH reconstruction tool base class : RichRecTupleToolBase
  *
- *  CVS Log :-
- *  $Id: RichRecTupleToolBase.cpp,v 1.2 2007-02-01 17:26:23 jonrob Exp $
- *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005/01/13
  */

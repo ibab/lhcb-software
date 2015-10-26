@@ -5,9 +5,6 @@
  *  Implementation file for RICH reconstruction monitor
  *  algorithm base class : Rich::Rec::HistoAlgBase
  *
- *  CVS Log :-
- *  $Id: RichRecHistoAlgBase.cpp,v 1.2 2007-02-01 17:26:23 jonrob Exp $
- *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005/01/13
  */
@@ -33,7 +30,7 @@ template class Rich::Rec::CommonBase<Rich::HistoAlgBase> ;
 // Standard constructor
 // ============================================================================
 Rich::Rec::HistoAlgBase::HistoAlgBase( const std::string& name,
-                                        ISvcLocator* pSvcLocator )
+                                       ISvcLocator* pSvcLocator )
   : Rich::HistoAlgBase   ( name, pSvcLocator ),
     Rich::Rec::CommonBase<Rich::HistoAlgBase> ( this )
 {

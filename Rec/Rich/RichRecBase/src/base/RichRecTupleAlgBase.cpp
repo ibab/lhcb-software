@@ -5,9 +5,6 @@
  *  Implementation file for RICH reconstruction monitor
  *  algorithm base class : RichRecTupleAlgBase
  *
- *  CVS Log :-
- *  $Id: RichRecTupleAlgBase.cpp,v 1.2 2007-02-01 17:26:23 jonrob Exp $
- *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005/01/13
  */

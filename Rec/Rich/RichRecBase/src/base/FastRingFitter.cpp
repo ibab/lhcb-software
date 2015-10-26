@@ -137,11 +137,10 @@ void FastRingFitter::addPoints( const LHCb::RichRecRing & ring )
   // loop over hits on the ring
   m_X.reserve( ring.richRecPixels().size() );
   m_Y.reserve( ring.richRecPixels().size() );
-  for ( LHCb::RichRecPixelOnRing::Vector::const_iterator iP = ring.richRecPixels().begin();
-        iP != ring.richRecPixels().end(); ++iP )
+  for ( const auto & P : ring.richRecPixels() )
   {
     // get pixel from pixelOnRing
-    const LHCb::RichRecPixel * pixel = (*iP).pixel();
+    const LHCb::RichRecPixel * pixel = P.pixel();
     // pixel hit position
     const Gaudi::XYZPoint & pos = ( rad != Rich::InvalidRadiator ?
                                     pixel->radCorrLocalPositions().position(rad) :

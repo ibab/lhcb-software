@@ -35,12 +35,7 @@ namespace Rich
       declareInterface<ITrackSelector>(this);
 
       // Default track types to select
-      declareProperty( "TrackAlgs", m_trNames =
-#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
-                       {"Forward", "Match", "Seed", "VeloTT", "KsTrack"} );
-#else
-                       boost::assign::list_of("Forward")("Match")("Seed")("VeloTT")("KsTrack") );
-#endif
+      declareProperty( "TrackAlgs", m_trNames = {"Forward", "Match", "Seed", "VeloTT", "KsTrack"} );
 
       declareProperty( "MinPCut",       m_minPCut     = 0.0 ); // in GeV
       declareProperty( "MaxPCut",       m_maxPCut     = 500 ); // in GeV
@@ -53,12 +48,11 @@ namespace Rich
 
       declareProperty( "Charge",        m_chargeSel   = 0   );
 
-      //declareProperty( "MinCloneDistCut", m_minCloneCut    = -1e10 );
-      declareProperty( "MinCloneDistCut", m_minCloneCut    = boost::numeric::bounds<double>::lowest() );
-      declareProperty( "MaxCloneDistCut", m_maxCloneCut    = boost::numeric::bounds<double>::highest() );
+      declareProperty( "MinCloneDistCut", m_minCloneCut  = boost::numeric::bounds<double>::lowest() );
+      declareProperty( "MaxCloneDistCut", m_maxCloneCut  = boost::numeric::bounds<double>::highest() );
 
-      declareProperty( "MinGhostProbCut", m_minGhostProb   = boost::numeric::bounds<double>::lowest() );
-      declareProperty( "MaxGhostProbCut", m_maxGhostProb   = boost::numeric::bounds<double>::highest() );
+      declareProperty( "MinGhostProbCut", m_minGhostProb = boost::numeric::bounds<double>::lowest() );
+      declareProperty( "MaxGhostProbCut", m_maxGhostProb = boost::numeric::bounds<double>::highest() );
 
       declareProperty( "AcceptClones", m_acceptClones = false );
 
@@ -68,19 +62,10 @@ namespace Rich
       declareProperty( "MinLikelihood", m_minLL = boost::numeric::bounds<double>::lowest() );
       declareProperty( "MaxLikelihood", m_maxLL = boost::numeric::bounds<double>::highest() );
 
-      m_jobOpts =
-#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
-        {"MinPCut", "MaxPCut", "MinPtCut", "MaxPtCut",
-         "MinChi2Cut", "MaxChi2Cut", "Charge", "MinCloneDistCut", "MaxCloneDistCut",
-         "MinGhostProbCut", "MaxGhostProbCut",
-         "MinLikelihood", "MaxLikelihood", "AcceptClones", "RejectNonIsolated"};
-#else
-        boost::assign::list_of
-        ("MinPCut")("MaxPCut")("MinPtCut")("MaxPtCut")
-        ("MinChi2Cut")("MaxChi2Cut")("Charge")("MinCloneDistCut")("MaxCloneDistCut")
-        ("MinGhostProbCut")("MaxGhostProbCut")
-        ("MinLikelihood")("MaxLikelihood")("AcceptClones")("RejectNonIsolated");
-#endif
+      m_jobOpts = { "MinPCut", "MaxPCut", "MinPtCut", "MaxPtCut",
+                    "MinChi2Cut", "MaxChi2Cut", "Charge", "MinCloneDistCut", "MaxCloneDistCut",
+                    "MinGhostProbCut", "MaxGhostProbCut",
+                    "MinLikelihood", "MaxLikelihood", "AcceptClones", "RejectNonIsolated" };
     }
 
     //=============================================================================

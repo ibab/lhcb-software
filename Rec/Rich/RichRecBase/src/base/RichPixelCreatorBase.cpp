@@ -279,50 +279,46 @@ namespace Rich
           richPixels()->reserve( 2000 );
 
           // Loop over L1 boards
-          for ( Rich::DAQ::L1Map::const_iterator iL1 = data.begin();
-                iL1 != data.end(); ++iL1 )
+          for ( const auto & L1 : data )
           {
             // loop over ingresses for this L1 board
-            for ( Rich::DAQ::IngressMap::const_iterator iIn = (*iL1).second.begin();
-                  iIn != (*iL1).second.end(); ++iIn )
+            for ( const auto & In : L1.second )
             {
               // Loop over HPDs in this ingress
-              for ( Rich::DAQ::HPDMap::const_iterator iHPD = (*iIn).second.hpdData().begin();
-                    iHPD != (*iIn).second.hpdData().end(); ++iHPD )
+              for ( const auto & HPD : In.second.hpdData() )
               {
 
                 // inhibited HPD ?
-                if ( (*iHPD).second.header().inhibit() ) { continue; }
+                if ( HPD.second.header().inhibit() ) { continue; }
 
                 // Is the HPD OK
-                if ( !hpdIsOK((*iHPD).second.hpdID()) )  { continue; }
+                if ( !hpdIsOK(HPD.second.hpdID()) )  { continue; }
 
                 // Do we have any hits in this HPD ?
-                if ( !(*iHPD).second.smartIDs().empty() )
+                if ( !HPD.second.smartIDs().empty() )
                 {
 
                   // apply HPD pixel suppression
                   // NB : taking a copy of the smartIDs here since we might remove
                   // some, and we cannot change the raw data from smartIDdecoder()
-                  LHCb::RichSmartID::Vector smartIDs = (*iHPD).second.smartIDs();
-                  applyPixelSuppression( (*iHPD).second.hpdID(), smartIDs );
+                  LHCb::RichSmartID::Vector smartIDs = HPD.second.smartIDs();
+                  applyPixelSuppression( HPD.second.hpdID(), smartIDs );
 
                   // if any left, proceed and make pixels
                   if ( !smartIDs.empty() )
                   {
 
                     // which rich
-                    const Rich::DetectorType rich = (*iHPD).second.hpdID().rich();
+                    const Rich::DetectorType rich = HPD.second.hpdID().rich();
 
-                    if ( m_noClusterFinding )
+                    if ( UNLIKELY(m_noClusterFinding) )
                     {
 
                       // just loop over the raw RichSmartIDs and make a pixel for each
                       // note that the associated cluster is not set in this mode ...
-                      for ( LHCb::RichSmartID::Vector::const_iterator iID = smartIDs.begin();
-                            iID != smartIDs.end(); ++iID )
+                      for ( const auto & ID : smartIDs )
                       {
-                        LHCb::RichRecPixel * pixel = buildPixel( *iID );
+                        LHCb::RichRecPixel * pixel = buildPixel(ID);
                         if (pixel) pixel->setPhotonDetOccupancy(smartIDs.size());
                       }
 
@@ -338,30 +334,28 @@ namespace Rich
                       }
 
                       // loop over the clusters
-                      for ( HPDPixelClusters::Cluster::PtnVector::const_iterator iC = clusters->clusters().begin();
-                            iC != clusters->clusters().end(); ++iC )
+                      for ( const auto * clus : clusters->clusters() )
                       {
 
-                        if ( m_clusterHits[rich] )
+                        if ( UNLIKELY(m_clusterHits[rich]) )
                         {
                           // make a single pixel for this cluster
-                          LHCb::RichRecPixel * pixel = buildPixel( (*iC)->pixels() );
-                          if (pixel) 
+                          LHCb::RichRecPixel * pixel = buildPixel( clus->pixels() );
+                          if ( pixel ) 
                           {
-                            pixel->setAssociatedCluster( (*iC)->pixels() );
+                            pixel->setAssociatedCluster( clus->pixels() );
                             pixel->setPhotonDetOccupancy(smartIDs.size());
                           }
                         }
                         else
                         {
                           // make a smartID for each channel in the cluster
-                          for ( LHCb::RichSmartID::Vector::const_iterator iID = (*iC)->pixels().smartIDs().begin();
-                                iID != (*iC)->pixels().smartIDs().end(); ++iID )
+                          for ( const auto & ID : clus->pixels().smartIDs() )
                           {
-                            LHCb::RichRecPixel * pixel = buildPixel( *iID );
-                            if (pixel) 
+                            LHCb::RichRecPixel * pixel = buildPixel( ID );
+                            if ( pixel ) 
                             {
-                              pixel->setAssociatedCluster( (*iC)->pixels() );
+                              pixel->setAssociatedCluster( clus->pixels() );
                               pixel->setPhotonDetOccupancy(smartIDs.size());
                             }
                           }
@@ -380,7 +374,7 @@ namespace Rich
                 else
                 {
                   std::ostringstream mess;
-                  mess << "Empty HPD data block : L0ID = " << (*iHPD).second.header().l0ID();
+                  mess << "Empty HPD data block : L0ID = " << HPD.second.header().l0ID();
                   Warning( mess.str(), StatusCode::SUCCESS, 0 ).ignore();
                 }
 
@@ -506,12 +500,11 @@ namespace Rich
           if ( bookKeep() )
           {
             // Remake local pixel reference map
-            for ( LHCb::RichRecPixels::const_iterator iPixel = m_pixels->begin();
-                  iPixel != m_pixels->end(); ++iPixel )
+            for ( auto * pixel : *m_pixels )
             {
               // should look into making this book keeping map use the full vector of IDs ?
-              m_pixelExists [ (*iPixel)->hpdPixelCluster().primaryID() ] = *iPixel;
-              m_pixelDone   [ (*iPixel)->hpdPixelCluster().primaryID() ] = true;
+              m_pixelExists [ pixel->hpdPixelCluster().primaryID() ] = pixel;
+              m_pixelDone   [ pixel->hpdPixelCluster().primaryID() ] = true;
             }
           }
 
