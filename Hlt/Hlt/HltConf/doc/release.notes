@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-10-26 - Sean Benson
+ - Added HltPersistRecoConf to go with new slot "PersistReco". 
+
 ! 2015-10-23 - Dan Johnson
  - Change CEP to LowMult in HltMonitoring.py
 

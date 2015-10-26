@@ -11,6 +11,7 @@ from Configurables       import GaudiSequencer as Sequence
 from Hlt1                import Hlt1Conf
 from Hlt2                import Hlt2Conf
 from HltAfterburner      import HltAfterburnerConf
+from HltPersistReco      import HltPersistRecoConf
 from HltMonitoring       import HltMonitoringConf
 
 #############################################################################
@@ -55,7 +56,8 @@ class HltConf(LHCbConfigurableUser):
     __used_configurables__ = [ Hlt1Conf
                              , Hlt2Conf
                              , HltMonitoringConf
-                             , HltAfterburnerConf ]
+                             , HltAfterburnerConf 
+                             , HltPersistRecoConf ]
     __slots__ = { "L0TCK"                          : None
                 , 'ForceSingleL0Configuration'     : True
                 , 'SkipDisabledL0Channels'         : False
@@ -93,6 +95,7 @@ class HltConf(LHCbConfigurableUser):
                                                       "DiMuonDetachedJPsi"]
                 , "NanoBanks"                      : ['ODIN','HltLumiSummary','HltRoutingBits','DAQ']
                 , "PruneHltANNSvc"                    : True
+                , "PersistReco"                    : False
                 }
 
     __settings__ = None
@@ -211,6 +214,10 @@ class HltConf(LHCbConfigurableUser):
                 seq = Sequence("HltAfterburner", IgnoreFilterPassed = True)
                 Dec.Members.append(seq)
                 HltAfterburnerConf().Sequence = seq
+                # Have we been asked to persist the Hlt reco
+                if self.getProp("PersistReco"):
+                    PRseq = Sequence("HltPersistReco", IgnoreFilterPassed = True)
+                    HltPersistRecoConf().Sequence = PRseq
             Dec.Members.append(Sequence("Hlt2Postamble"))
             Hlt2Conf()
             self.setOtherProps(Hlt2Conf(),[ "DataType" ])
