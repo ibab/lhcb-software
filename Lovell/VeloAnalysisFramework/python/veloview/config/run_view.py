@@ -723,6 +723,7 @@ run_view_pages = OrderedDict([
                                 'style': 4
                                 }
                             ],
+                        'showLegend': True
                         }
                     ],
                 'showLegend': True,
