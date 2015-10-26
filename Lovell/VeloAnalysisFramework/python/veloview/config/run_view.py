@@ -440,8 +440,7 @@ run_view_pages = OrderedDict([
                         'short': 'Occupancy spectrum',
                         'name': 'Velo/VeloPrivateOccupancyMonitor/OccSpectMaxLow'
                         }
-                    ],
-                'layout': (2, 1)
+                    ]
                 },
                 {
                 'title': 'Occupancy_3',
