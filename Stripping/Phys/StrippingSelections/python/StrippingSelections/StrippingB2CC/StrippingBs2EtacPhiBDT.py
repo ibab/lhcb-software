@@ -53,7 +53,7 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from Configurables import DaVinci__N4BodyDecays
+from GaudiConfUtils.ConfigurableGenerators import DaVinci__N4BodyDecays
 
 class Bs2EtacPhiBDTConf(LineBuilder):
     

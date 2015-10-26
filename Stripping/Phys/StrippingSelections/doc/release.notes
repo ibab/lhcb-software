@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-10-26 - Jibo He
+ - Fixed NBody-import issue for Bs2EtacPhiBDT
+
 ! 2015-10-26 - Tom Hadavizadeh
  - Added a Line to StrippingD2PiPi0
  
