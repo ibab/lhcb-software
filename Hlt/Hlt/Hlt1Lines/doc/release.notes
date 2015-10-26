@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-10-26 - Sascha Stahl
+ - Hlt1GEC: The GEC cut for OT hits is now steered by a configurable option.
+
+
 ! 2015-10-23 - Dan Johnson
  - Remove Hlt1NoPVPassThrough from Hlt1MuonLines
  - Change naming: Hlt1CEP to Hlt1LowMult

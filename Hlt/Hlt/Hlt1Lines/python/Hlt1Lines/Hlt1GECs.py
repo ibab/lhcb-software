@@ -1,15 +1,15 @@
 def Hlt1GECStreamer( gec = 'Loose', accept = True ):
-    from HltTracking.HltRecoConf import MaxOTHits
-    gecs = { 'Tight' : { 'MaxOTHits'   : MaxOTHits,
-                         'MaxITHits'   :  3000,
-                         'MaxVeloHits' :  3000,
-                         'IsActivity'  :  False },
-             'Loose' : { 'MaxOTHits'   : MaxOTHits,
-                         'MaxITHits'   :  3000,
+    from Configurables import HltRecoConf
+    gecs = { 'Tight' : { 'MaxOTHits'   : HltRecoConf().getProp("Forward_MaxOTHits"),
+                         'MaxITHits'   : 3000,
+                         'MaxVeloHits' : 3000,
+                         'IsActivity'  : False },
+             'Loose' : { 'MaxOTHits'   : HltRecoConf().getProp("Forward_MaxOTHits"),
+                         'MaxITHits'   : 3000,
                          'MaxVeloHits' : 6000,
                          'IsActivity'  :  False } ,
              'Activity' : { 'MinOTHits'   : 100,
-                            'MinITHits'   :  100,
+                            'MinITHits'   : 100,
                             'MinVeloHits' : 100,
                             'IsActivity'  : True } }
     from Configurables import Hlt__GEC
