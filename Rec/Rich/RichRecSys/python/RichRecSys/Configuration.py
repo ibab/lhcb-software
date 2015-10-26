@@ -533,6 +533,9 @@ class RichRecSysConf(RichRecSysBaseConf) :
         
         # Main options
         self.copyOptions( self, groupConfig )
+
+        # RichTools
+        self.copyOptions( self.richTools(), groupConfig.richTools() )
         
         # clone options for used configurables
         self.copyOptions( self.trackConfig(),  groupConfig.trackConfig()  )
@@ -673,7 +676,7 @@ class RichRecSysConf(RichRecSysBaseConf) :
                     groupConfig.setProp("TrackTypeGroups",[])
                     # Proper context for this group
                     self.propagateContext( groupConfig, groupcont )
- 
+  
                     # Clone tool registry tool list
                     groupConfig.toolRegistry().Tools = self.toolRegistry().Tools
 
