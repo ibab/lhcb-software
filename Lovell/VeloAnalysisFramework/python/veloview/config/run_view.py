@@ -129,44 +129,6 @@ run_view_pages = OrderedDict([
         'subpages': 
             [
                 {
-                'title': 'Per Sensor (Channels)', 
-                'plots': 
-                    [
-                        {
-                        'title': 'RMS noise vs. chip channel',
-                        'name': 'Vetra/NoiseMon/DecodedADC/TELL1_{0:03d}/RMSNoise_vs_ChipChannel',
-                        'sensor_dependent': True,
-                        'yrange': [0, 5]
-                        },
-                        {
-                        'title': 'RMS CMS noise vs. chip channel',
-                        'name': 'Vetra/NoiseMon/ADCCMSuppressed/TELL1_{0:03d}/RMSNoise_vs_ChipChannel',
-                        'sensor_dependent': True,
-                        'yrange': [0, 5]
-                        },
-                    ],
-                 'layout': (1, 2)
-                },
-                {
-                'title': 'Per Sensor (Strips)', 
-                'plots':
-                    [
-                        {
-                        'title': 'RMS noise vs. strip',
-                        'name': 'Vetra/NoiseMon/DecodedADC/TELL1_{0:03d}/RMSNoise_vs_Strip',
-                        'sensor_dependent': True,
-                        'yrange': [0, 5]
-                        },
-                        {
-                        'title': 'RMS CMS noise vs. strip',
-                        'name': 'Vetra/NoiseMon/ADCCMSuppressed/TELL1_{0:03d}/RMSNoise_vs_Strip',
-                        'sensor_dependent': True,
-                        'yrange': [0, 5]
-                        },
-                    ],
-                 'layout': (1, 2)
-                },
-                {
                 'title': 'Velo Overview',
                 'plots': 
                     [
@@ -209,6 +171,44 @@ run_view_pages = OrderedDict([
                         }
                     ],
                 'layout': (2, 1)
+                },
+                {
+                'title': 'Per Sensor (Channels)', 
+                'plots': 
+                    [
+                        {
+                        'title': 'RMS noise vs. chip channel',
+                        'name': 'Vetra/NoiseMon/DecodedADC/TELL1_{0:03d}/RMSNoise_vs_ChipChannel',
+                        'sensor_dependent': True,
+                        'yrange': [0, 5]
+                        },
+                        {
+                        'title': 'RMS CMS noise vs. chip channel',
+                        'name': 'Vetra/NoiseMon/ADCCMSuppressed/TELL1_{0:03d}/RMSNoise_vs_ChipChannel',
+                        'sensor_dependent': True,
+                        'yrange': [0, 5]
+                        },
+                    ],
+                 'layout': (1, 2)
+                },
+                {
+                'title': 'Per Sensor (Strips)', 
+                'plots':
+                    [
+                        {
+                        'title': 'RMS noise vs. strip',
+                        'name': 'Vetra/NoiseMon/DecodedADC/TELL1_{0:03d}/RMSNoise_vs_Strip',
+                        'sensor_dependent': True,
+                        'yrange': [0, 5]
+                        },
+                        {
+                        'title': 'RMS CMS noise vs. strip',
+                        'name': 'Vetra/NoiseMon/ADCCMSuppressed/TELL1_{0:03d}/RMSNoise_vs_Strip',
+                        'sensor_dependent': True,
+                        'yrange': [0, 5]
+                        },
+                    ],
+                 'layout': (1, 2)
                 },
                 {
                 'title': 'Average Distribution',
