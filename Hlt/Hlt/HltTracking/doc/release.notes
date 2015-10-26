@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-10-26 - Sean Benson
+ - Add HltPersistRecoConf so that it can get the output locations.
+
 ! 2015-10-26 - Sascha Stahl
  - HltSharedTracking: Fix configuration of Hlt1 Forward GECs. Affected number of 
    IT hits and number of Velo tracks.

@@ -40,6 +40,7 @@ from Configurables import CaloProcessor, RichRecSysConf, TrackSelector, TrackSys
 #import all Hlt2 lines configurables in our scope so that genConfUser can find it... (i.e. make sure it is in 'dir()')
 from HltConf.ThresholdUtils import importLineConfigurables
 from HltConf.HltAfterburner import HltAfterburnerConf
+from HltConf.HltPersistReco import HltPersistRecoConf
 
 import Hlt2Lines
 _hlt2linesconfs = importLineConfigurables( Hlt2Lines )
@@ -58,7 +59,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
     __used_configurables__ = [ (CaloProcessor, None),
                                (RichRecSysConf, None),
                                TrackSys,
-                               HltAfterburnerConf
+                               HltAfterburnerConf,
+                               HltPersistRecoConf
                                ] + _hlt2linesconfs
                              # This above hlt2linesconf defines all the Hlt2 Lines since they
                              # configured after the tracking. This means that each
