@@ -117,10 +117,9 @@ class lPlottable():
         halfBinX = 0.5*(nominal['data']['data']['xbinning'][0][1] + nominal['data']['data']['xbinning'][0][0])
         halfBinY = 0.5*(nominal['data']['data']['ybinning'][0][1] + nominal['data']['data']['ybinning'][0][0])
         
-        pyBins = []
         for i in range(len(nominal['data']['data']['values'])):
             for j in range(len(nominal['data']['data']['values'][0])):
-                z = pyBins[i][j]
+                z = nominal['data']['data']['values'][i][j]
                 x = nominal['data']['data']['xbinning'][i][1] + halfBinX
                 y = nominal['data']['data']['ybinning'][j][1] + halfBinY
                 self.axes.text(str(z), x , y)
