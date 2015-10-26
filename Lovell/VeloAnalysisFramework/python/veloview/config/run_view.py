@@ -117,7 +117,7 @@ run_view_pages = OrderedDict([
                         'name': 'Vetra/VeloPedestalSubtractorMoni/TELL1_{0:03d}/Ped_Sub_ADCs_2D',
                         'sensor_dependent': True
                         }
-                    ],
+                    ]
                 }
             ]
         }
@@ -195,6 +195,12 @@ run_view_pages = OrderedDict([
                                 'name': 'Vetra/NoiseMon/ADCCMSuppressed/Average/RMSNoise_vs_Station_Phi',
                                 'legend': 'Phi',
                                 'color': 'y'
+                                },
+                                {
+                                'name': 'Vetra/NoiseMon/ADCCMSuppressed/Average/RMSNoise_vs_Station_R'
+                                },
+                                {
+                                'name': 'Vetra/NoiseMon/ADCCMSuppressed/Average/Sensor_vs_Station_Phi'
                                 }
                             ],
                         'showLegend': True
