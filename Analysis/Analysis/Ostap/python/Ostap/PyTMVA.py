@@ -152,7 +152,7 @@ class Trainer(object):
     #  @endcode
     #  For more detailes
     #  @see http://www.slac.stanford.edu/grp/eg/minos/ROOTSYS/cvs/tmva/test/TMVAClassification.py.
-    def __init__(self, methods ):
+    def __init__(self, methods , verbose = True ):
         """Constructor with list of methoods
         >>> from PyTMVA import Trainer
         >>> methods = ....
@@ -160,11 +160,11 @@ class Trainer(object):
         For more detailes
         see http://www.slac.stanford.edu/grp/eg/minos/ROOTSYS/cvs/tmva/test/TMVAClassification.py.
         """
-        self.methods  = methods
-        self._verbose = False
+        self.methods = methods
+        self.verbose = verbose 
 
     ## define the verbosity 
-    def setVerbose(self, verbosity ): self._verbose =  bool( verbosity )
+    def setVerbose(self, verbosity ): self.verbose =  bool( verbosity )
 
     # =========================================================================
     ## train TMVA 
@@ -191,6 +191,7 @@ class Trainer(object):
                 signal_cuts     = ''          ,
                 background_cuts = ''          ,
                 spectators      = []          ,
+                bookingoptions  = "Transformations=I;D;P;G,D" , 
                 configuration   = "nTrain_Signal=0:nTrain_Background=0:SplitMode=Random:NormMode=NumEvents:!V" ) :
         """Train the TMVA:
         >>> trainer.train ( var_list , ... ) 
@@ -203,15 +204,46 @@ class Trainer(object):
         name = os.path.splitext ( name       )[ 0]
 
         outFile = ROOT.TFile.Open   ( outputfile, 'RECREATE' )
-        logger.info ( 'Trainer(%s): output ROOT file: %s ' % ( name , outputfile  ) ) 
+        logger.info ( 'Trainer(%s): output ROOT file: %s ' % ( name , outputfile  ) )
+
+        if self.verbose and 0 > bookingoptions.find ('Silent') : bookingoptions+= ':Silent'
+        #
+        if 0 > bookingoptions.find( "AnalysisType=" ) :
+            bookingoptions += ":AnalysisType=Classification"
+            logger.info('Trainer(%s): booking options are appended with ":AnalysisType=Classification"' % name )
+            
+        if self.verbose and 0 <= bookingoptions.find ('!V:') :
+            bookingoptions.replace('!V:', 'V')
+
+        if   0 <= bookingoptions.find ('!V:') : pass 
+        elif 0 <= bookingoptions.find ( 'V:') : pass 
+        elif self.verbose : bookingoptions +=  ':V:'
+        else              : bookingoptions += ':!V:'
+
+
+        if   0 <= bookingoptions.find ('!Silent') : pass 
+        elif 0 <= bookingoptions.find ( 'Silent') : pass 
+        elif self.verbose : bookingoptions += ':!Silent'
+        else              : bookingoptions +=  ':Silent'
+        
+        if   0 <= bookingoptions.find ('!Color') : pass 
+        elif 0 <= bookingoptions.find ( 'Color') : pass 
+        elif self.verbose : bookingoptions +=  ':Color'
+        else              : bookingoptions += ':!Color'
+
+        if   0 <= bookingoptions.find ('!DrawProgressBar') : pass 
+        elif 0 <= bookingoptions.find ( 'DrawProgressBar') : pass 
+        elif self.verbose : bookingoptions +=  ':DrawProgressBar'
+        else              : bookingoptions += ':!DrawProgressBar'
+
 
         factory = ROOT.TMVA.Factory (
             "TMVAClassification"  ,
             outFile               ,
-            "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=Classification" ) 
-        logger.info ( 'Trainer(%s): book TMVA-factory' % name ) 
+            bookingoptions        )
+        logger.info ( 'Trainer(%s): book TMVA-factory %s ' % ( name , bookingoptions ) )
         
-        factory.SetVerbose(self._verbose)
+        factory.SetVerbose(self.verbose)
         #
         for v in var_list :
             vv = v

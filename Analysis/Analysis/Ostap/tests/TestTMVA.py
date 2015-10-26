@@ -61,7 +61,8 @@ if not os.path.exists( data_file ) :
         treeBkg   .Branch ( 'var2' , var2 , 'var2/D' )
         
         ## fill background tuple: 
-        for i in progress_bar ( xrange ( nB ) ) : 
+        #for i in progress_bar ( xrange ( nB ) ) : 
+        for i in xrange ( nB ) : 
             
             x = random.uniform ( -2 , 2 )
             y = random.uniform ( -2 , 2 )
@@ -73,7 +74,8 @@ if not os.path.exists( data_file ) :
             treeBkg.Fill()
             
         ## fill signal tuple: 
-        for i in progress_bar ( xrange ( 20000 ) ) : 
+        #for i in progress_bar ( xrange ( nS ) ) : 
+        for i in xrange ( nS ) : 
             
             x = random.gauss ( 0 , 0.1 )
             y = random.gauss ( 0 , 0.1 )
@@ -98,15 +100,18 @@ if not os.path.exists ( tmva_file ) :
     ## book TMVA trainer
     #
     from Ostap.PyTMVA import Trainer 
-    trainer = Trainer ( methods = [
+    trainer = Trainer (
+        methods = [
         # type                   name   configuration 
         ( ROOT.TMVA.Types.kMLP , "MLP", "H:!V:EstimatorType=CE:VarTransform=N:NCycles=600:HiddenLayers=N+7:TestRate=5:!UseRegulator" ) 
-        ] )
+        ] ,
+        verbose = False )
     
+    xml_file = trainer.train (
+        [ 'var1' , 'var2' ] , 
+        signal         = tSignal ,
+        background     = tBkg    )
     
-    xml_file = trainer.train ( [ 'var1' , 'var2' ]  , 
-                              signal     = tSignal ,
-                              background = tBkg    ) 
     logger.info ( 'Weight file %s is created ' % xml_file  )
     
     datafile.close()
@@ -131,11 +136,13 @@ variables = [
 from Ostap.Selectors import SelectorWithVars     
 dsS = SelectorWithVars (
     variables = variables + [ ( 'signal' , 'signal' , -1 , 3 , lambda s : 1 ) ] ,
-    selection = "var1 < 100"
+    selection = "var1 < 100" , 
+    silence   = True          
     )
 dsB = SelectorWithVars (
     variables = variables + [ ( 'signal' , 'signal' , -1 , 3 , lambda s : 0 ) ] ,
-    selection = "var1 < 100"
+    selection = "var1 < 100" ,
+    silence   = True           
     )
 
 datafile = ROOT.TFile.Open( data_file ,'READ')
