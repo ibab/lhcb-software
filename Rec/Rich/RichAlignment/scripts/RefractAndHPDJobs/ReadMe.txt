@@ -52,7 +52,7 @@ proxy location to your normal work, to isolate it. You can do this with
    You must run 'SetupProject Ganga' after this, to pick up the new setting
 
  - Start ganga using something like
-    > ganga -o[Configuration]gangadir=/r02/lhcb/jonesc/gangadir-calibration
+    > ganga -o[Configuration]gangadir=/var/nwork/pclx/jonesc/gangadir-calibration
 
 The file has a series of methods to submit the calibration jobs, and analyse the
 results. For submission just run at the ganga prompt 

@@ -186,7 +186,7 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
     #dbFiles += { "2015RootFiles-RunAligned-Sobel-Smoothed1.0hours-HPDAlign-20062015" : "LHCBCOND" }
     #dbFiles["2015RootFiles-RunAligned-Sobel-Smoothed1.0hours-HPDAlign-22062015"] = "LHCBCOND"
     # New mirror alignment
-    dbFiles["2015-MirrorAlign-50ns-V1-20072015"] = "LHCBCOND"
+    #dbFiles["2015-MirrorAlign-50ns-V1-20072015"] = "LHCBCOND"
 
     # Only for Calibration jobs only
     if jobType == "RefInCalib" :
@@ -195,24 +195,27 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
 
     # For verification jobs only, use custom DB Slice for n-1 corrections
     if jobType == "RefInVerify" :
-        pass
-        #dbFiles += ["RefInCalib-2010RePro-V1_BR-v45r1-15052014"]
-        #dbFiles += ["2010RePro-RootFiles-V1-RunAligned-Sobel-Smoothed1.0hours-HPDAlign-15052014"]
-        #dbFiles += ["2010RePro-RootFiles-V1-RunAligned-Sobel-Smoothed0.5hours-HPDOcc-16052014"]
-        #dbFiles += ["2010MirrorAlign-28052014"]
-
+        #pass
+        #dbFiles["2015-refscale-V1"] = "CALIBOFF"
+        dbFiles["2015-refscale-V2"] = "CALIBOFF"
+        
     # Configure additional DBs
     for dbFile,dbType in dbFiles.iteritems() :
         print "Using DB", dbFile, dbType
         dbopts += ["CondDB().addLayer(CondDBAccessSvc(\""+dbFile+"\",ConnectionString=\"sqlite_file:"+dbFile+".db/"+dbType+"\",DefaultTAG=\"HEAD\"))\n"]
         # Upload to LFNs
         lfnname = "LFN:/lhcb/user/j/jonrob/DBs/"+dbFile+".db"
-        if not uploadFile("databases/"+dbFile+".db",lfnname) : return False
+        #if not uploadFile("databases/"+dbFile+".db",lfnname) : return False
         # Add to LFNs sandbox
         mySandBoxLFNs += [lfnname]
+        # Add the real file to the sandbox        
+        #mySandBox += ["databases/"+dbFile+".db"]
 
     # minimum run number
     minRun = 0
+
+    # maximum number of jobs to submit (for debugging)
+    maxJobs = 99999999
 
     # Loop over the list of pickled run data files
     print "Submitting jobs for RunData", pickledRunsList
@@ -229,14 +232,15 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
 
             # Count jobs
             nJob += 1
+            if nJob > maxJobs : return
 
             # LFNs for this run
             lfns = sorted(RunLFNs[run])
-            if len(lfns)>0 :
+            if len(lfns) > 0 :
 
                 # Construct the job name
                 jobname = basejobname + "_Run-"+str(run)
-
+                
                 # is this job already submitted ?
                 if run < minRun or jobExists(jobname):
 
@@ -324,7 +328,7 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
                     print "Submitting Job", j.name, "( #", nJob, "of", len(sortedRuns), ")", time.strftime("%c")
                     print " -> Using", nFiles, "data file(s), max", nFilesPerJob, \
                           "file(s) per subjob,", nEventsPerJob, "events per job"
-                    for f in j.inputdata.files : print "  ->", f.lfn
+                    #for f in j.inputdata.files : print "  ->", f.lfn
 
                     # Submit now
                     #submitJob(j)
@@ -372,7 +376,7 @@ def makeAllColumnFits(jobs,rad='Rich1Gas',polarity=''):
             for n in [0,1,2,3,4,5,6,7,8]:
                 refractiveIndexCalib(jobs,rad,polarity,'Rich2-'+panel+'-Col'+str(n))
 
-def refractiveIndexCalib(jobs,rads=['Rich1Gas','Rich2Gas'],polarity='',pdCol='') :
+def refractiveIndexCalib(jobs,rads=['Rich1Gas','Rich2Gas'],polarity='',pdCol='',bckOnly=False) :
 
     from ROOT import TFile, TGraphErrors, TF1, TH1, TH1F, gROOT, gStyle, TText, TLatex
     from Ganga.GPI import Job
@@ -448,8 +452,8 @@ def refractiveIndexCalib(jobs,rads=['Rich1Gas','Rich2Gas'],polarity='',pdCol='')
                     gStyle.SetOptFit(1011)
 
                     # Fits
-                    fitResultRes = fitCKThetaHistogram(rootfile,run,rad,resPlot)
-                    fitResultRaw = fitCKThetaHistogram(rootfile,run,rad,'thetaRec',-1)
+                    fitResultRes = fitCKThetaHistogram(rootfile,run,rad,resPlot,4,bckOnly)
+                    fitResultRaw = fitCKThetaHistogram(rootfile,run,rad,'thetaRec',-1,bckOnly)
                     fitResultExp = fitCKExpectedHistogram(rootfile,run,rad)
 
                     if fitResultRes['OK'] and fitResultRaw['OK'] and fitResultExp['OK'] :
@@ -854,15 +858,30 @@ def uploadDBs(dbFiles=[]):
 
 def addToJobTree(j,dir):
     from Ganga.GPI import jobtree
-    fulldir = "/RichCalibration/"+dir
+    base    = "/RichCalibration"
+    fulldir = base+"/"+dir
+    if not jobtree.exists(base)    : jobtree.mkdir(base)
     if not jobtree.exists(fulldir) : jobtree.mkdir(fulldir)
     jobtree.cd(fulldir)
     jobtree.add(j,fulldir)
     
 def jobExists(jobname):
     from Ganga.GPI import jobs
+    import time
+    #print "Checking if job", jobname, "exists", time.strftime("%c")
     slice = jobs.select(name=jobname)
-    return len(slice) > 0
+    res = len(slice) > 0
+    #print "... Done", res
+    return res
+
+def findJobsForRuns(runs=[]):
+    from Ganga.GPI import jobs
+    seljobs = []
+    for j in jobs :
+        for run in runs :
+            if 'Run-'+str(run) in j.name :
+                seljobs += [j]
+    return seljobs
 
 def getInfoFromJob(j,info='Run'):
     run = 0
@@ -1014,17 +1033,15 @@ def getControlJobList(name="",BrunelVer="v47r9",statuscodes=['completed'],
 
 def nScaleFromShift(shift,rad='Rich1Gas'):
 
-    # As of RICH S/W meeting 3/9/2010
-    #slope = 38.2388535346
-    #if rad == 'Rich2Gas': slope = 68.2
+    # Shift test V1
+    #slope = 38.1
+    #if rad == 'Rich2Gas': slope = 65.25
 
-    # 2011-NewTkRichAlign-V1
-    #slope = 38.0
-    #if rad == 'Rich2Gas': slope = 68.5
+    # Shift test V2
+    slope = 38.058
+    if rad == 'Rich2Gas': slope = 65.315
 
-    # Final tuning for 2011 repro
-    slope = 38.1
-    if rad == 'Rich2Gas': slope = 65.25
+    #print rad, "using scale slope", slope
     
     # Compute the scale factor and its error
     result = 1.0 + (shift['Mean'][0]*slope)
@@ -1184,7 +1201,7 @@ def fitCKForFile(filename,plot='ckResAll',outfile="CKFit.pdf"):
 def checkCKThetaStats(hist,minEntries=5000):
     return hist.GetEntries() >= minEntries
         
-def fitCKThetaHistogram(rootfile,run,rad='Rich1Gas',plot='ckResAll',nPolFull=4):
+def fitCKThetaHistogram(rootfile,run,rad='Rich1Gas',plot='ckResAll',nPolFull=4,bckOnly=False):
 
     from ROOT import TH1F, TF1, TH1, TText, gROOT
 
@@ -1223,6 +1240,9 @@ def fitCKThetaHistogram(rootfile,run,rad='Rich1Gas',plot='ckResAll',nPolFull=4):
                 xPeak = hist.GetBinCenter(hist.GetMaximumBin())
                 #print "Mooo", xPeak
 
+                # Maximum y Value
+                yMax = hist.GetBinContent(hist.GetMaximumBin())
+
                 # Pre Fitting range
                 delta = 0.0025
                 if rad == 'Rich2Gas' : delta = 0.00105
@@ -1241,18 +1261,13 @@ def fitCKThetaHistogram(rootfile,run,rad='Rich1Gas',plot='ckResAll',nPolFull=4):
                     preFitF.SetParameter(2,0.0007)
  
                 # Do the pre fit with just a Gaussian
-                hist.Fit(preFitF,"QRS0")
-                #print "Baaa", preFitF.GetParameter(1)
+                if not bckOnly : hist.Fit(preFitF,"QRS0")
 
                 # Full Fitting range
                 if rad == 'Rich1Gas' :
-##                     fitMax = xPeak+0.0069
-##                     fitMin = xPeak-0.0088
                     fitMax =  0.0075
                     fitMin = -0.0075
                 else:
-##                     fitMax = xPeak+0.0036
-##                     fitMin = xPeak-0.0044
                     fitMax =  0.0035
                     fitMin = -0.0039
 
@@ -1263,26 +1278,41 @@ def fitCKThetaHistogram(rootfile,run,rad='Rich1Gas',plot='ckResAll',nPolFull=4):
                 fitOK    = True
                 if nPolFull>0 :
                     for nPol in xrange(1,nPolFull+1):
-                        fFuncType = "gaus(0)+pol"+str(nPol)+"(3)"
-                        fFitF = TF1(rad+"FitF"+str(nPol),fFuncType,fitMin,fitMax)
-                        fFitF.SetLineColor(fullFitColor)
-                        fFitF.SetParName(0,"Gaus Constant")
-                        fFitF.SetParName(1,"Gaus Mean")
-                        fFitF.SetParName(2,"Gaus Sigma")
-                        nParamsToSet = 3
-                        if nPol > 1 : nParamsToSet = 3+nPol
-                        for p in xrange(0,nParamsToSet) :
-                            fFitF.SetParameter(p,lastFitF.GetParameter(p))
+
+                        if not bckOnly :
+                            fFuncType = "gaus(0)+pol"+str(nPol)+"(3)"
+                            fFitF = TF1(rad+"FitF"+str(nPol),fFuncType,fitMin,fitMax)
+                            fFitF.SetLineColor(fullFitColor)
+                            fFitF.SetParName(0,"Gaus Constant")
+                            fFitF.SetParName(1,"Gaus Mean")
+                            fFitF.SetParName(2,"Gaus Sigma")
+                            nParamsToSet = 3
+                            if nPol > 1 : nParamsToSet = 3+nPol
+                            for p in xrange(0,nParamsToSet) :
+                                fFitF.SetParameter(p,lastFitF.GetParameter(p))
+                        else:
+                            fFuncType = "pol"+str(nPol)+""
+                            fFitF = TF1(rad+"FitF"+str(nPol),fFuncType,fitMin,fitMax)
+                            fFitF.SetLineColor(fullFitColor)
+                            nParamsToSet = 0
+                            if nPol > 1 : nParamsToSet = nPol
+                            for p in xrange(0,nParamsToSet) :
+                                fFitF.SetParameter(p,lastFitF.GetParameter(p))
+                                
                         hist.Fit(fFitF,"MQRSE0")
                         lastFitF = fFitF
+                        
                         # Fit OK ?
                         maxErrorForOK = 1e-3
                         maxResForOK   = 3e-3
                         # gMinuit = gROOT.GetGlobal( "gMinuit", 1 )
                         # print gMinuit.GetStatus()
-                        fitOK = ( fFitF.GetParError(1)  < maxErrorForOK and
-                                  fFitF.GetParError(2)  < maxErrorForOK and
-                                  fFitF.GetParameter(2) < maxResForOK )
+                        if not bckOnly :
+                            fitOK = ( fFitF.GetParError(1)  < maxErrorForOK and
+                                      fFitF.GetParError(2)  < maxErrorForOK and
+                                      fFitF.GetParameter(2) < maxResForOK )
+                        else :
+                            fitOK = True # To Do ...
                         if fitOK :
                             bestFitF = fFitF
                             bestNPol = nPol
@@ -1296,6 +1326,7 @@ def fitCKThetaHistogram(rootfile,run,rad='Rich1Gas',plot='ckResAll',nPolFull=4):
                             if nPol > 1 : break
                   
                 # Draw the histogram
+                if bckOnly : hist.SetMaximum(1.15*yMax)
                 hist.Draw()
 
                 # Draw the full fit
@@ -1508,7 +1539,8 @@ def filesPerJob(nFiles):
     if nFiles == 12 : return 4
     if nFiles == 18 : return 6
     if nFiles < 20  : return 5
-    if nFiles < 100 : return 6
+    if nFiles < 50  : return 8
+    if nFiles < 100 : return 10
     return 10
 
 def removeCalibrationDataSet(name,BrunelVer="v47r9"):

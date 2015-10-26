@@ -25,8 +25,8 @@ importOptions("$L0TCK/L0DUConfig.opts")
 
 # For 2015 data
 importOptions("$APPCONFIGOPTS/Brunel/DataType-2015.py")
-LHCbApp().DDDBtag    = "dddb-20150526"
-LHCbApp().CondDBtag  = "cond-20150625"
+LHCbApp().DDDBtag    = "dddb-20150724"
+LHCbApp().CondDBtag  = "cond-20150828"
 
 # Aerogel Sub Tiles
 #CondDB().LocalTags["LHCBCOND"] = ["rich1-20110624"]
@@ -113,7 +113,7 @@ longT.EnablePerPDPlots    = True
 longT.EnablePerPDColPlots = True
 
 # Flip the panels for background shape studies
-#rConf.richTools().PixelCreatorType = "RawBufferWithPanelFlip"
+rConf.richTools().PixelCreatorType = "RawBufferWithPanelFlip"
 
 # Don't reject HLT error events
 Brunel().VetoHltErrorEvents = False 

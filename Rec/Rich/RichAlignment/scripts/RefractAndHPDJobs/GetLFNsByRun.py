@@ -41,7 +41,7 @@ elif 2012 == year :
 elif 2013 == year :
   ConfigV = ['Collision13','Protonion13','Ionproton13','Ionsmog']
 elif 2015 == year :
-  ConfigV = ['Collision15','Collision15em']
+  ConfigV = ['Collision15','Collision15em','Protonhelium15','Protonneon15']
 else:
   print 'Unknown year', year
   DIRAC.exit(2)

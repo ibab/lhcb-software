@@ -46,9 +46,9 @@ def initialise():
   #LHCbApp().DDDBtag   = "head-20110303"
   #LHCbApp().CondDBtag = "head-20110524"
   
-  DDDBConf(DataType = "2010")
-  LHCbApp().DDDBtag   = "head-20110721"
-  LHCbApp().CondDBtag = "cond-20140328"
+  #DDDBConf(DataType = "2010")
+  #LHCbApp().DDDBtag   = "head-20110721"
+  #LHCbApp().CondDBtag = "cond-20140328"
 
   #DDDBConf(DataType = "2011")
   #LHCbApp().DDDBtag   = "head-20110722" 
@@ -57,6 +57,10 @@ def initialise():
   #DDDBConf(DataType = "2012")
   #LHCbApp().DDDBtag   = "dddb-20120831"
   #LHCbApp().CondDBtag = "cond-20121025"
+
+  DDDBConf(DataType = "2015")
+  LHCbApp().DDDBtag   = "dddb-20150526"
+  LHCbApp().CondDBtag = "cond-20150625"
 
   # Set message level to info and above only
   msgSvc().setOutputLevel(3)
@@ -134,7 +138,7 @@ def loadDict(filename):
 def fillDB(calibration,db,runsTimes,rad):
 
   # Create DB paths for the conditions
-  path = "/Conditions/"+rad+"/Environment/Gas.xml"
+  path = "/Conditions/Online/"+rad+"/Environment/Gas.xml"
   db.createNode(path)
 
   # Add a null entry covering all periods
@@ -160,9 +164,10 @@ def fillDB(calibration,db,runsTimes,rad):
     dStartTime = runsTimes["RunTimes"][run]["Start"]
     #dStopTime  = runsTimes["RunTimes"][run]["Stop"]
     #dStopTime  = runsTimes["GlobalStopTime"]
-    dStopTime  = datetime.datetime(  2010,  12,   31,   23,   59,  59  )
+    #dStopTime  = datetime.datetime(  2010,  12,   31,   23,   59,  59  )
     #dStopTime  = datetime.datetime(  2011,  12,   31,   23,   59,  59  )
     #dStopTime  = datetime.datetime(  2100,  12,   31,   23,   59,  59  )
+    dStopTime  = datetime.datetime(  2015,  12,   31,   23,   59,  59  )
 
     startTime = correctStartTime( run, getUNIXTime(dStartTime) )
     stopTime  = getUNIXTime( dStopTime  )
@@ -198,7 +203,7 @@ def getRunTimes(calibrations):
     if run in runTimeCache.keys():
       res = runTimeCache[run]
     else:
-      from LHCbDIRAC.NewBookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
+      from LHCbDIRAC.BookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
       res = BookkeepingClient().getRunInformations(int(run))
       if len(res.keys()) > 0 and res.has_key('OK') :
         if res['OK']:
@@ -233,7 +238,7 @@ rootName = str(args[0])
 # Open a new DB
 dbFileName = "results/"+rootName+"-"+dateString()+".db"
 if os.path.exists(dbFileName) : os.remove(dbFileName)
-db = CondDBUI.CondDB( "sqlite_file:"+dbFileName+"/LHCBCOND",
+db = CondDBUI.CondDB( "sqlite_file:"+dbFileName+"/CALIBOFF",
                       create_new_db=True, readOnly=False )
 print "Opened DB file", dbFileName
 
