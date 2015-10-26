@@ -122,6 +122,7 @@ class lPlottable():
                 z = nominal['data']['data']['values'][i][j]
                 
                 if z == 0.0: continue
+                print x, y, z
                 x = nominal['data']['data']['xbinning'][i][1] + halfBinX
                 y = nominal['data']['data']['ybinning'][j][1] + halfBinY
                 self.axes.text(str(z), x , y)
