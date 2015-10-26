@@ -23,6 +23,15 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
+<A NAME=v27r0> 2015-10-26 Bender v27r0 based on the DaVinci v38r0</A>
+<ul>						 
+<li>Based on the DaVinci v38r0</li>
+<li>Similar to v26r3p1 </li>
+<li>Some extension of Bender.Fill: <code>hasrich</code> is added for hadrons</li>
+<li>Further simplification of <code>treatXXX</code> and <code>tistos</code> 
+    machinery</li>
+<ul>						 
+
 <A NAME=v26r3p1> 2015-08-28 Bender v26r3p1 based on the DaVinci v37r2p2</A>
 <ul>						 
 <li>Based on the DaVinci v37r2p2</li>
