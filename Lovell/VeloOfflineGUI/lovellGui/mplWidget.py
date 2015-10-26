@@ -89,7 +89,7 @@ class lPlottable():
         ylabel = 'Default y label'
         zlabel = 'Default z label'
         
-        
+        print self.plot.params
         if 'axis_titles' in self.plot.params:
             xlabel = self.plot.params['axis_titles'][0]
             ylabel = self.plot.params['axis_titles'][1]        
