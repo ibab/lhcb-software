@@ -126,8 +126,8 @@ class lPlottable():
                 x = nominal['data']['data']['xbinning'][i][1] + halfBinX
                 y = nominal['data']['data']['ybinning'][j][1] + halfBinY
                 
-                if int(z) % 2 == 0: y = 3
-                else: y = -3
+                if int(z) % 2 == 0: y = 2.75
+                else: y = -2.75
                 self.axes.annotate(str(int(z)), xy=(x, y), xycoords='data', fontsize=9,
                                    horizontalalignment='center', verticalalignment='center', rotation=90)
         
