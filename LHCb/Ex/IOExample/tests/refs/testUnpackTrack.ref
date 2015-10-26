@@ -1,87 +1,19 @@
-# --> Including file '/afs/cern.ch/work/c/cattanem/private/cmtuser/LHCb_HEAD/Ex/IOExample/tests/options/testUnpackTrack.py'
-# Warning, guessing type of SDST to be ROOT use IOHelper instead to avoid this warning
-# <-- End of file '/afs/cern.ch/work/c/cattanem/private/cmtuser/LHCb_HEAD/Ex/IOExample/tests/options/testUnpackTrack.py'
-# applying configuration of LHCbApp
-# /***** User LHCbApp/LHCbApp ************************************************************************
-# |-Persistency    = None
-# |-DataType       = '2011'  (default: '2012')
-# |-DDDBtag        = 'head-20110302'  (default: '')
-# |-SkipEvents     = 0
-# |-XMLSummary     = None
-# |-OutputLevel    = 3
-# |-EvtMax         = -1
-# |-Simulation     = False  (default: False)
-# |-DQFLAGStag     = ''
-# |-IgnoreDQFlags  = True
-# |-Detectors      = []  (default: [])
-# |-LocalDataTypes = []  (default: [])
-# |-TimeStamp      = False
-# |-CondDBtag      = 'head-20110622'  (default: '')
-# |-Monitors       = []  (default: [])
-# \----- (End of User LHCbApp/LHCbApp) ---------------------------------------------------------------
-# applying configuration of DDDBConf
-# WARNING: Using default tag dq-20140822 for partition DQFLAGS
-# /***** User DDDBConf/DDDBConf **********************************************************************
-# |-DataType    = '2011'  (default: '2012')
-# |-DbRoot      = 'conddb:/lhcb.xml'
-# |-InitialTime = 'Safe'
-# |-AutoTags    = False
-# |-Simulation  = False  (default: False)
-# \----- (End of User DDDBConf/DDDBConf) -------------------------------------------------------------
-# skipping configuration of XMLSummary
-# applying configuration of CondDB
-# --> Including file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
-# /***** User CondDB/CondDB **************************************************************************
-# |-Upgrade                    = False
-# |-EnableRunStampCheck        = True
-# |-DBSnapshotDirectory        = '/group/online/hlt/conditions'
-# |-LatestLocalTagsByDataType  = []  (default: [])
-# |-Online                     = False
-# |-LogFile                    = ''
-# |-SQLiteLocalCopiesDir       = ''
-# |-EnableRunChangeHandler     = False
-# |-RunChangeHandlerConditions = {'online_%d.xml': ['Conditions/Online/LHCb/Magnet/Set', 'Conditions/Online/Velo/MotionSystem', 'Conditions/Online/LHCb/Lumi/LumiSettings', 'Conditions/Online/LHCb/LHCFillingScheme', 'Conditions/Online/LHCb/RunParameters', 'Conditions/Online/Rich1/R1HltGasParameters', 'Conditions/Online/Rich2/R2HltGasParameters']}
-# |                            (default: {'online_%d.xml': ['Conditions/Online/LHCb/Magnet/Set', 'Conditions/Online/Velo/MotionSystem', 'Conditions/Online/LHCb/Lumi/LumiSettings', 'Conditions/Online/LHCb/LHCFillingScheme', 'Conditions/Online/LHCb/RunParameters', 'Conditions/Online/Rich1/R1HltGasParameters', 'Conditions/Online/Rich2/R2HltGasParameters']})
-# |-Tags                       = {}  (default: {})
-# |-LoadCALIBDB                = 'OFFLINE'
-# |-AllLocalTagsByDataType     = []  (default: [])
-# |-UseOracle                  = False
-# |-RunStampCondition          = ''
-# |-PartitionConnectionString  = {}  (default: {})
-# |-LocalTags                  = {}  (default: {})
-# |-IgnoreHeartBeat            = False
-# |-Overrides                  = []  (default: [])
-# |-Simulation                 = False  (default: False)
-# |-QueryGranularity           = 0
-# |-LatestGlobalTagByDataType  = ''
-# |-UseDBSnapshot              = False
-# |-DisableLFC                 = False
-# |-HeartBeatCondition         = '/Conditions/Online/LHCb/Tick'
-# |-LatestGlobalTagByDataTypes = []  (default: [])
-# |-UseLatestTags              = []  (default: [])
-# |-OverwriteSQLiteLocalCopy   = False
-# \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
+# setting LC_ALL to "C"
+# --> Including file '/afs/cern.ch/work/c/cattanem/private/cmakeuser/LHCbDev_HEAD/Ex/IOExample/tests/options/testUnpackTrack.py'
+# <-- End of file '/afs/cern.ch/work/c/cattanem/private/cmakeuser/LHCbDev_HEAD/Ex/IOExample/tests/options/testUnpackTrack.py'
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr (GaudiCoreSvc v3r4)
-                                          running on mcat.cern.ch on Tue Jun 23 16:24:34 2015
+                                                   Welcome to LHCbDev version HEAD
+                                          running on mcat.cern.ch on Mon Oct 26 13:46:34 2015
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
-DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
-DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
-EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/swtest/lhcb/swtest/Reco10-sdst-10events/00011652_00000001_1-evt-18641to18650.sdst' SVC='Gaudi::RootEvtSelector' OPT='READ'
+EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/swtest/lhcb/swtest/Reco10-sdst-10events/00011652_00000001_1-evt-18641to18650.sdst' SVC='Gaudi::RootEvtSelector' OPT='READ'
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
-EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
 ApplicationMgr       INFO Application Manager Started successfully
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 EventPersistenc...   INFO Added successfully Conversion service:LHCb::RawDataCnvSvc
-COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
-COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
-ONLINE_2008          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2008.db/ONLINE"
-ONLINE_2008          INFO Using TAG ""
 DumpTracks           INFO There are 326 tracks in Rec/Track/Best
 DumpTracks           INFO There are 322 tracks in Rec/Track/Best
 DumpTracks           INFO There are 646 tracks in Rec/Track/Best
