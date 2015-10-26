@@ -97,7 +97,8 @@ run_view_pages = OrderedDict([
                         'title': 'Pedestal bank',
                         'name': 'Vetra/VeloPedestalSubtractorMoni/TELL1_{0:03d}/Pedestal_Bank',
                         'sensor_dependent': True,
-                        'tip': 'Test of tipping - Hello world!'
+                        'tip': 'Test of tipping - Hello world!',
+                        'axis_titles': ['config x', 'config y']
                         },
                         {
                         'title': 'Subtracted ADC profile',
@@ -117,7 +118,6 @@ run_view_pages = OrderedDict([
                         'sensor_dependent': True
                         }
                     ],
-                'axis_titles': ['config x', 'config y']
                 }
             ]
         }
