@@ -125,8 +125,8 @@ class lPlottable():
                 x = nominal['data']['data']['xbinning'][i][1] + halfBinX
                 y = nominal['data']['data']['ybinning'][j][1] + halfBinY
                 print x, y, z
-                self.axes.annotate(str(z), xy=(x, y), xycoords='data', fontsize=10,
-                                   horizontalalignment='center', verticalalignment='center')
+                self.axes.annotate(str(int(z)), xy=(x, y), xycoords='data', fontsize=9,
+                                   horizontalalignment='center', verticalalignment='center', rotation=90)
         
         
     def runview_1d_dataMinusRef(self, nominal, reference, infactRatio = False):
