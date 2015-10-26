@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-10-26 - Michel De Cian
+ - Change in PatAddTTCoord to be smarter with memory (std::vector as member variable), chi2 calculation and exploiting new hit sorting in hit manager.
+
 !========================= PatAlgorithms v4r43 2015-10-13 =========================
 ! 2015-09-23 - Michel De Cian
  - add 2 counters to PatAddTTCoord.

@@ -71,13 +71,11 @@ public:
   
  private:
 
-  void selectHits(PatTTHits& selected, const LHCb::State& state, const double p);
-  void calculateChi2(PatTTHits& goodTT,  double& chi2, const double& bestChi2, double& finalDist, const double& p );
-  void printInfo(const PatTTHits& goodTT, double dist, double chi2, const LHCb::State& state);
+  void selectHits(const LHCb::State& state, const double p);
+  void calculateChi2(double& chi2, const double& bestChi2, double& finalDist, const double& p );
+  void printInfo(double dist, double chi2, const LHCb::State& state);
   void initEvent();
   
-  /// internal container to store hits in a sorted way
-  std::array<PatTTHits, 4> m_hitsLayers;
   bool m_newEvent;
   double m_invMajAxProj2;
   
@@ -99,6 +97,9 @@ public:
   ILHCbMagnetSvc*     m_magFieldSvc; 
   double m_bendProtoParam;
   
+  PatTTHits m_selected; // -- The container for all the hits compatible with the track
+  PatTTHits m_goodTT; // -- The container with one "group" of hits
+    
   
 };
 
