@@ -3,8 +3,8 @@
 from copy import deepcopy
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
-from Configurables import ( DaVinci__N3BodyDecays, DaVinci__N4BodyDecays,
-                            DaVinci__N5BodyDecays )
+from GaudiConfUtils.ConfigurableGenerators import ( DaVinci__N3BodyDecays, 
+                            DaVinci__N4BodyDecays, DaVinci__N5BodyDecays )
 from PhysSelPython.Wrappers import Selection, MergedSelection
 from Beauty2Charm_LoKiCuts import LoKiCuts
 from Beauty2Charm_Utils import *
