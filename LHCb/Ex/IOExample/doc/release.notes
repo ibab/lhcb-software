@@ -4,6 +4,9 @@
 ! Purpose: Tests reading and writing of legacy datasets
 !-------------------------------------------------------------------------------
 
+! 2015-10-24 - Marco Cattaneo
+  - Add tests to copy and read Stripping21 MDST
+
 ! 2015-10-23 - Marco Cattaneo
   - Adapt tests to follow LHCBPS-1434 patch: LHCbApp() now assigns 
     OdinTimeDecoder as EventClockSvc().EventTimeDecoder when processing real data

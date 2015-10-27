@@ -1,8 +1,21 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
-  <argument name="args"><set><text>../options/ReadReco08ROOTmdst.py</text></set></argument>
-  <argument name="reference"><text>../refs/Reco08mdst.ref</text></argument>
+  <argument name="options"><text>
+from Configurables import IOTest
+from GaudiConf.IOHelper import IOHelper
+
+from Configurables import ApplicationMgr, createODIN
+odin = createODIN()
+ApplicationMgr().TopAlg += [ odin ]
+
+IOTest( EvtMax = 5, LoadAll = True, DataContent = 'MDST' )
+
+ioh = IOHelper()
+ioh.setupServices()
+ioh.inputFiles(['Reco14-Stripping21.mdst'])
+  </text></argument>
+  <argument name="reference"><text>../refs/reco14stripping21mdst.ref</text></argument>
   <argument name="validator"><text>
 from GaudiConf.QMTest.LHCbExclusions import preprocessor as LHCbPreprocessor
 preprocessor = LHCbPreprocessor + \
@@ -17,6 +30,6 @@ preprocessor = LHCbPreprocessor + \
 validateWithReference(preproc = preprocessor)
 </text></argument>
   <argument name="prerequisites"><set>
-    <tuple><text>ioexample.copyreco08mdsttoroot</text><enumeral>PASS</enumeral></tuple>
+    <tuple><text>ioexample.copyreco14stripping21mdsttoroot</text><enumeral>PASS</enumeral></tuple>
   </set></argument>
 </extension>

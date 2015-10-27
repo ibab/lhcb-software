@@ -11,7 +11,6 @@ preprocessor = LHCbPreprocessor + \
   LineSkipper(["EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE"]) + \
   LineSkipper(["EventPersistenc...   INFO Added successfully Conversion service:LHCb::RawDataCnvSvc"]) + \
   LineSkipper(["InputCopyStream"]) + \
-  LineSkipper(["EventClockSvc.F...   INFO Event times generated from 0 with steps of 0"]) + \
   LineSkipper(["COOLConfSvc          INFO CORAL Connection Retrial"]) + \
   LineSkipper(["ONLINE_xxxxxx        INFO Connected to database"]) + \
   LineSkipper(["FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc"])

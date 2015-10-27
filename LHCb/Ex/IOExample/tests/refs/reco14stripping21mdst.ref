@@ -1,0 +1,367 @@
+# setting LC_ALL to "C"
+# --> Including file '/tmp/cattanem/tmpxC6lZp.py'
+# <-- End of file '/tmp/cattanem/tmpxC6lZp.py'
+# applying configuration of LHCbApp
+# /***** User LHCbApp/LHCbApp ************************************************************************
+# |-Persistency    = None
+# |-DataType       = '2012'  (default: '2012')
+# |-DDDBtag        = 'dddb-20130929-1'  (default: '')
+# |-SkipEvents     = 0
+# |-XMLSummary     = None
+# |-OutputLevel    = 3
+# |-EvtMax         = -1
+# |-Simulation     = False  (default: False)
+# |-DQFLAGStag     = ''
+# |-IgnoreDQFlags  = True
+# |-Detectors      = []  (default: [])
+# |-LocalDataTypes = []  (default: [])
+# |-TimeStamp      = False
+# |-CondDBtag      = 'cond-20141107'  (default: '')
+# |-Monitors       = []  (default: [])
+# \----- (End of User LHCbApp/LHCbApp) ---------------------------------------------------------------
+# skipping configuration of XMLSummary
+# applying configuration of IOTest
+# WARNING: Property 'EvtMax' is set in both 'IOTest' and 'ApplicationMgr', using 'IOTest.EvtMax'
+# /***** User IOTest/IOTest **************************************************************************
+# |-KillDAQ     = False
+# |-DataContent = 'MDST'  (default: 'DST')
+# |-DataType    = '2011'
+# |-LoadAll     = True  (default: False)
+# |-EvtMax      = 5  (default: -1)
+# |-WithMC      = False
+# \----- (End of User IOTest/IOTest) -----------------------------------------------------------------
+# applying configuration of DDDBConf
+# WARNING: Using default tag dq-20140822 for partition DQFLAGS
+# /***** User DDDBConf/DDDBConf **********************************************************************
+# |-DataType    = '2012'  (default: '2012')
+# |-DbRoot      = 'conddb:/lhcb.xml'
+# |-InitialTime = 'Safe'
+# |-AutoTags    = False
+# |-Simulation  = False  (default: False)
+# \----- (End of User DDDBConf/DDDBConf) -------------------------------------------------------------
+# skipping configuration of DstConf
+# applying configuration of CondDB
+# /***** User CondDB/CondDB **************************************************************************
+# |-Upgrade                    = False
+# |-EnableRunStampCheck        = True
+# |-DBSnapshotDirectory        = '/group/online/hlt/conditions'
+# |-LatestLocalTagsByDataType  = []  (default: [])
+# |-Online                     = False
+# |-LogFile                    = ''
+# |-SQLiteLocalCopiesDir       = ''
+# |-EnableRunChangeHandler     = False
+# |-RunChangeHandlerConditions = {'online_%d.xml': ['Conditions/Online/LHCb/Magnet/Set', 'Conditions/Online/Velo/MotionSystem', 'Conditions/Online/LHCb/Lumi/LumiSettings', 'Conditions/Online/LHCb/LHCFillingScheme', 'Conditions/Online/LHCb/RunParameters', 'Conditions/Online/Rich1/R1HltGasParameters', 'Conditions/Online/Rich2/R2HltGasParameters']}
+# |                            (default: {'online_%d.xml': ['Conditions/Online/LHCb/Magnet/Set', 'Conditions/Online/Velo/MotionSystem', 'Conditions/Online/LHCb/Lumi/LumiSettings', 'Conditions/Online/LHCb/LHCFillingScheme', 'Conditions/Online/LHCb/RunParameters', 'Conditions/Online/Rich1/R1HltGasParameters', 'Conditions/Online/Rich2/R2HltGasParameters']})
+# |-Tags                       = {}  (default: {})
+# |-LoadCALIBDB                = 'OFFLINE'
+# |-AllLocalTagsByDataType     = []  (default: [])
+# |-UseOracle                  = False
+# |-RunStampCondition          = ''
+# |-PartitionConnectionString  = {}  (default: {})
+# |-LocalTags                  = {}  (default: {})
+# |-IgnoreHeartBeat            = False
+# |-Overrides                  = []  (default: [])
+# |-Simulation                 = False  (default: False)
+# |-QueryGranularity           = 0
+# |-LatestGlobalTagByDataType  = ''
+# |-UseDBSnapshot              = False
+# |-DisableLFC                 = False
+# |-HeartBeatCondition         = '/Conditions/Online/LHCb/Tick'
+# |-LatestGlobalTagByDataTypes = []  (default: [])
+# |-UseLatestTags              = []  (default: [])
+# |-OverwriteSQLiteLocalCopy   = False
+# \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
+# skipping configuration of DigiConf
+# skipping configuration of CaloDstPackConf
+# skipping configuration of SimConf
+# skipping configuration of CaloDstUnPackConf
+ApplicationMgr    SUCCESS
+====================================================================================================================================
+                                                   Welcome to LHCbDev version HEAD
+                                          running on mcat.cern.ch on Tue Oct 27 14:32:44 2015
+====================================================================================================================================
+ApplicationMgr       INFO Application Manager Configured successfully
+DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
+DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
+TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
+TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
+TESFingerPrint    VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
+TESFingerPrint      DEBUG Initialize base class GaudiCommon<Algorithm>
+TESFingerPrint      DEBUG could not locate CounterSummarySvc, no counter summary will be made
+TESFingerPrint      DEBUG List of ALL properties of TESFingerPrint/TESFingerPrint  #properties = 34
+TESFingerPrint      DEBUG Property ['Name': Value] =  'OutputFileName':tes_finger_print.dat
+TESFingerPrint      DEBUG Property ['Name': Value] =  'HeuristicsLevel':Medium
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
+TESFingerPrint      DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
+TESFingerPrint      DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
+TESFingerPrint      DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
+TESFingerPrint      DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
+TESFingerPrint      DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+TESFingerPrint      DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RootOnTES':
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RootInTES':
+TESFingerPrint      DEBUG Property ['Name': Value] =  'Context':
+TESFingerPrint      DEBUG Property ['Name': Value] =  'TypePrint':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'StatPrint':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RegisterForContextService':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditStop':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditStart':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditEndRun':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditBeginRun':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditFinalize':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditExecute':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditRestart':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditReinitialize':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditInitialize':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditAlgorithms':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'ErrorCounter':0
+TESFingerPrint      DEBUG Property ['Name': Value] =  'ErrorMax':1
+TESFingerPrint      DEBUG Property ['Name': Value] =  'Enable':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'OutputLevel':1
+TESFingerPrint      DEBUG ==> Initialize
+TESFingerPrint    VERBOSE ServiceLocatorHelper::service: found service ToolSvc
+EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
+InputCopyStream      INFO Data source: EventDataSvc output: DATAFILE='PFN:Reco14-Stripping21.mdst' SVC='RootCnvSvc' OPT='REC'
+FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
+FSRInputCopyStream   INFO Data source: FileRecordDataSvc output: DATAFILE='PFN:Reco14-Stripping21.mdst' SVC='FileRecordCnvSvc' OPT='REC'
+EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision12/BHADRON.MDST/00041836/0000/00041836_00000001_1.bhadron.mdst' SVC='Gaudi::RootEvtSelector' OPT='READ'
+HistogramPersis...WARNING Histograms saving not required.
+ApplicationMgr       INFO Application Manager Initialized successfully
+ApplicationMgr       INFO Application Manager Started successfully
+TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
+EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
+COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
+COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
+ONLINE_2012          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/ONLINE-2012.db/ONLINE"
+ONLINE_2012          INFO Using TAG ""
+PrintHeader          INFO Run 111829, Event 573292
+StoreExplorerAlg     INFO ========= /Event[0x5449280@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x2]  LHCb::RecHeader
+StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x2]  LHCb::ProcStatus
+StoreExplorerAlg     INFO | | +--> /Summary [Address: CLID=0x6a Type=0x2]  LHCb::RecSummary
+StoreExplorerAlg     INFO | +--> /Trigger [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
+StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /pPhys [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x617 Type=0x2]  LHCb::PackedDecReport
+StoreExplorerAlg     INFO | +--> /Bhadron [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /pRec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Track [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x604 Type=0x2]  LHCb::PackedClusters
+StoreExplorerAlg     INFO | | | | +--> /Best [Address: CLID=0x60e Type=0x2]  LHCb::PackedTracks
+StoreExplorerAlg     INFO | | | +--> /ProtoP [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Charged [Address: CLID=0x610 Type=0x2]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | | | +--> /Neutrals [Address: CLID=0x610 Type=0x2]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | | +--> /Calo [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Electrons [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | | +--> /Photons [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | | +--> /EcalClusters [Address: CLID=0x605 Type=0x2]  LHCb::PackedCaloClusters
+StoreExplorerAlg     INFO | | | +--> /Rich [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /PIDs [Address: CLID=0x619 Type=0x2]  LHCb::PackedRichPIDs
+StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /MuonPID [Address: CLID=0x623 Type=0x2]  LHCb::PackedMuonPIDs
+StoreExplorerAlg     INFO | | | +--> /Vertex [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | |   +--> /Primary [Address: CLID=0x611 Type=0x2]  LHCb::PackedRecVertices
+StoreExplorerAlg     INFO | | +--> /pPhys [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Particles [Address: CLID=0x62d Type=0x2]  LHCb::PackedParticles
+StoreExplorerAlg     INFO | | | +--> /Vertices [Address: CLID=0x62e Type=0x2]  LHCb::PackedVertices
+StoreExplorerAlg     INFO | | | +--> /FlavourTags [Address: CLID=0x62f Type=0x2]  LHCb::PackedFlavourTags
+StoreExplorerAlg     INFO | | | +--> /Relations [Address: CLID=0x618 Type=0x2]  LHCb::PackedRelations
+StoreExplorerAlg     INFO | |   +--> /PartToRelatedInfoRelations [Address: CLID=0x630 Type=0x2]  LHCb::PackedRelatedInfoRelations
+StoreExplorerAlg     INFO   +--> /DAQ [No Address]  DataObject
+StoreExplorerAlg     INFO     +--> /ODIN [No Address]  LHCb::ODIN
+TESFingerPrint      DEBUG ==> Execute
+EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
+PrintHeader          INFO Run 111829, Event 705996
+StoreExplorerAlg     INFO ========= /Event[0x559d6e0@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x2]  LHCb::RecHeader
+StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x2]  LHCb::ProcStatus
+StoreExplorerAlg     INFO | | +--> /Summary [Address: CLID=0x6a Type=0x2]  LHCb::RecSummary
+StoreExplorerAlg     INFO | +--> /Trigger [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
+StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /pPhys [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x617 Type=0x2]  LHCb::PackedDecReport
+StoreExplorerAlg     INFO | +--> /Bhadron [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /pRec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Track [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x604 Type=0x2]  LHCb::PackedClusters
+StoreExplorerAlg     INFO | | | | +--> /Best [Address: CLID=0x60e Type=0x2]  LHCb::PackedTracks
+StoreExplorerAlg     INFO | | | | +--> /Muon [Address: CLID=0x60e Type=0x2]  LHCb::PackedTracks
+StoreExplorerAlg     INFO | | | +--> /ProtoP [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Charged [Address: CLID=0x610 Type=0x2]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | | | +--> /Neutrals [Address: CLID=0x610 Type=0x2]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | | +--> /Calo [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Electrons [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | | +--> /Photons [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | | +--> /MergedPi0s [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | | +--> /SplitPhotons [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | | +--> /EcalClusters [Address: CLID=0x605 Type=0x2]  LHCb::PackedCaloClusters
+StoreExplorerAlg     INFO | | | | +--> /EcalSplitClusters [Address: CLID=0x605 Type=0x2]  LHCb::PackedCaloClusters
+StoreExplorerAlg     INFO | | | +--> /Rich [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /PIDs [Address: CLID=0x619 Type=0x2]  LHCb::PackedRichPIDs
+StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /MuonPID [Address: CLID=0x623 Type=0x2]  LHCb::PackedMuonPIDs
+StoreExplorerAlg     INFO | | | +--> /Vertex [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | |   +--> /Primary [Address: CLID=0x611 Type=0x2]  LHCb::PackedRecVertices
+StoreExplorerAlg     INFO | | +--> /pPhys [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Particles [Address: CLID=0x62d Type=0x2]  LHCb::PackedParticles
+StoreExplorerAlg     INFO | | | +--> /Vertices [Address: CLID=0x62e Type=0x2]  LHCb::PackedVertices
+StoreExplorerAlg     INFO | | | +--> /FlavourTags [Address: CLID=0x62f Type=0x2]  LHCb::PackedFlavourTags
+StoreExplorerAlg     INFO | | | +--> /Relations [Address: CLID=0x618 Type=0x2]  LHCb::PackedRelations
+StoreExplorerAlg     INFO | |   +--> /PartToRelatedInfoRelations [Address: CLID=0x630 Type=0x2]  LHCb::PackedRelatedInfoRelations
+StoreExplorerAlg     INFO   +--> /DAQ [No Address]  DataObject
+StoreExplorerAlg     INFO     +--> /ODIN [No Address]  LHCb::ODIN
+TESFingerPrint      DEBUG ==> Execute
+EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
+PrintHeader          INFO Run 111829, Event 861406
+StoreExplorerAlg     INFO ========= /Event[0x593e5b0@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x2]  LHCb::RecHeader
+StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x2]  LHCb::ProcStatus
+StoreExplorerAlg     INFO | | +--> /Summary [Address: CLID=0x6a Type=0x2]  LHCb::RecSummary
+StoreExplorerAlg     INFO | +--> /Trigger [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
+StoreExplorerAlg     INFO | +--> /Calo [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
+StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /pPhys [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x617 Type=0x2]  LHCb::PackedDecReport
+StoreExplorerAlg     INFO | +--> /Bhadron [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /pRec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Track [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x604 Type=0x2]  LHCb::PackedClusters
+StoreExplorerAlg     INFO | | | | +--> /Best [Address: CLID=0x60e Type=0x2]  LHCb::PackedTracks
+StoreExplorerAlg     INFO | | | +--> /ProtoP [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Charged [Address: CLID=0x610 Type=0x2]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | | | +--> /Neutrals [Address: CLID=0x610 Type=0x2]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | | +--> /Calo [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Photons [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | | +--> /MergedPi0s [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | | +--> /SplitPhotons [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | | +--> /EcalClusters [Address: CLID=0x605 Type=0x2]  LHCb::PackedCaloClusters
+StoreExplorerAlg     INFO | | | | +--> /EcalSplitClusters [Address: CLID=0x605 Type=0x2]  LHCb::PackedCaloClusters
+StoreExplorerAlg     INFO | | | +--> /Rich [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /PIDs [Address: CLID=0x619 Type=0x2]  LHCb::PackedRichPIDs
+StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /MuonPID [Address: CLID=0x623 Type=0x2]  LHCb::PackedMuonPIDs
+StoreExplorerAlg     INFO | | | +--> /Vertex [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | |   +--> /Primary [Address: CLID=0x611 Type=0x2]  LHCb::PackedRecVertices
+StoreExplorerAlg     INFO | | +--> /pPhys [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Particles [Address: CLID=0x62d Type=0x2]  LHCb::PackedParticles
+StoreExplorerAlg     INFO | | | +--> /Vertices [Address: CLID=0x62e Type=0x2]  LHCb::PackedVertices
+StoreExplorerAlg     INFO | | | +--> /Relations [Address: CLID=0x618 Type=0x2]  LHCb::PackedRelations
+StoreExplorerAlg     INFO | |   +--> /PartToRelatedInfoRelations [Address: CLID=0x630 Type=0x2]  LHCb::PackedRelatedInfoRelations
+StoreExplorerAlg     INFO   +--> /DAQ [No Address]  DataObject
+StoreExplorerAlg     INFO     +--> /ODIN [No Address]  LHCb::ODIN
+TESFingerPrint      DEBUG ==> Execute
+EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
+PrintHeader          INFO Run 111829, Event 2320796
+StoreExplorerAlg     INFO ========= /Event[0x5bccf60@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x2]  LHCb::RecHeader
+StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x2]  LHCb::ProcStatus
+StoreExplorerAlg     INFO | | +--> /Summary [Address: CLID=0x6a Type=0x2]  LHCb::RecSummary
+StoreExplorerAlg     INFO | +--> /Trigger [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
+StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /pPhys [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x617 Type=0x2]  LHCb::PackedDecReport
+StoreExplorerAlg     INFO | +--> /Bhadron [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /pRec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Track [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x604 Type=0x2]  LHCb::PackedClusters
+StoreExplorerAlg     INFO | | | | +--> /Best [Address: CLID=0x60e Type=0x2]  LHCb::PackedTracks
+StoreExplorerAlg     INFO | | | +--> /ProtoP [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Charged [Address: CLID=0x610 Type=0x2]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | | | +--> /Neutrals [Address: CLID=0x610 Type=0x2]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | | +--> /Calo [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Electrons [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | | +--> /Photons [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | | +--> /EcalClusters [Address: CLID=0x605 Type=0x2]  LHCb::PackedCaloClusters
+StoreExplorerAlg     INFO | | | +--> /Rich [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /PIDs [Address: CLID=0x619 Type=0x2]  LHCb::PackedRichPIDs
+StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /MuonPID [Address: CLID=0x623 Type=0x2]  LHCb::PackedMuonPIDs
+StoreExplorerAlg     INFO | | | +--> /Vertex [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | |   +--> /Primary [Address: CLID=0x611 Type=0x2]  LHCb::PackedRecVertices
+StoreExplorerAlg     INFO | | +--> /pPhys [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Particles [Address: CLID=0x62d Type=0x2]  LHCb::PackedParticles
+StoreExplorerAlg     INFO | | | +--> /Vertices [Address: CLID=0x62e Type=0x2]  LHCb::PackedVertices
+StoreExplorerAlg     INFO | | | +--> /FlavourTags [Address: CLID=0x62f Type=0x2]  LHCb::PackedFlavourTags
+StoreExplorerAlg     INFO | | | +--> /RecVertices [Address: CLID=0x611 Type=0x2]  LHCb::PackedRecVertices
+StoreExplorerAlg     INFO | |   +--> /Relations [Address: CLID=0x618 Type=0x2]  LHCb::PackedRelations
+StoreExplorerAlg     INFO   +--> /DAQ [No Address]  DataObject
+StoreExplorerAlg     INFO     +--> /ODIN [No Address]  LHCb::ODIN
+TESFingerPrint      DEBUG ==> Execute
+EventSelector     SUCCESS Reading Event record 5. Record number within stream 1: 5
+PrintHeader          INFO Run 111829, Event 3855296
+StoreExplorerAlg     INFO ========= /Event[0x54501f0@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x2]  LHCb::RecHeader
+StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x2]  LHCb::ProcStatus
+StoreExplorerAlg     INFO | | +--> /Summary [Address: CLID=0x6a Type=0x2]  LHCb::RecSummary
+StoreExplorerAlg     INFO | +--> /Trigger [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
+StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /pPhys [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x617 Type=0x2]  LHCb::PackedDecReport
+StoreExplorerAlg     INFO | +--> /Bhadron [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /pRec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Track [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x604 Type=0x2]  LHCb::PackedClusters
+StoreExplorerAlg     INFO | | | | +--> /Best [Address: CLID=0x60e Type=0x2]  LHCb::PackedTracks
+StoreExplorerAlg     INFO | | | | +--> /Muon [Address: CLID=0x60e Type=0x2]  LHCb::PackedTracks
+StoreExplorerAlg     INFO | | | +--> /ProtoP [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Charged [Address: CLID=0x610 Type=0x2]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | | | +--> /Neutrals [Address: CLID=0x610 Type=0x2]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | | +--> /Calo [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Electrons [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | | +--> /Photons [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | | +--> /EcalClusters [Address: CLID=0x605 Type=0x2]  LHCb::PackedCaloClusters
+StoreExplorerAlg     INFO | | | +--> /Rich [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /PIDs [Address: CLID=0x619 Type=0x2]  LHCb::PackedRichPIDs
+StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /MuonPID [Address: CLID=0x623 Type=0x2]  LHCb::PackedMuonPIDs
+StoreExplorerAlg     INFO | | | +--> /Vertex [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | |   +--> /Primary [Address: CLID=0x611 Type=0x2]  LHCb::PackedRecVertices
+StoreExplorerAlg     INFO | | +--> /pPhys [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Particles [Address: CLID=0x62d Type=0x2]  LHCb::PackedParticles
+StoreExplorerAlg     INFO | | | +--> /Vertices [Address: CLID=0x62e Type=0x2]  LHCb::PackedVertices
+StoreExplorerAlg     INFO | | | +--> /FlavourTags [Address: CLID=0x62f Type=0x2]  LHCb::PackedFlavourTags
+StoreExplorerAlg     INFO | | | +--> /RecVertices [Address: CLID=0x611 Type=0x2]  LHCb::PackedRecVertices
+StoreExplorerAlg     INFO | |   +--> /Relations [Address: CLID=0x618 Type=0x2]  LHCb::PackedRelations
+StoreExplorerAlg     INFO   +--> /DAQ [No Address]  DataObject
+StoreExplorerAlg     INFO     +--> /ODIN [No Address]  LHCb::ODIN
+TESFingerPrint      DEBUG ==> Execute
+TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
+ApplicationMgr       INFO Application Manager Stopped successfully
+PrintHeader          INFO Filtered 5 events
+TESFingerPrint      DEBUG ==> Finalize
+TESFingerPrint    VERBOSE ==> TES DataObject statistics: {/Event: 5, /Event/Bhadron: 5, /Event/Bhadron/pPhys: 5, /Event/Bhadron/pPhys/FlavourTags: 4, /Event/Bhadron/pPhys/PartToRelatedInfoRelations: 3, /Event/Bhadron/pPhys/Particles: 5, /Event/Bhadron/pPhys/RecVertices: 2, /Event/Bhadron/pPhys/Relations: 5, /Event/Bhadron/pPhys/Vertices: 5, /Event/Bhadron/pRec: 5, /Event/Bhadron/pRec/Calo: 5, /Event/Bhadron/pRec/Calo/EcalClusters: 5, /Event/Bhadron/pRec/Calo/EcalSplitClusters: 2, /Event/Bhadron/pRec/Calo/Electrons: 4, /Event/Bhadron/pRec/Calo/MergedPi0s: 2, /Event/Bhadron/pRec/Calo/Photons: 5, /Event/Bhadron/pRec/Calo/SplitPhotons: 2, /Event/Bhadron/pRec/Muon: 5, /Event/Bhadron/pRec/Muon/MuonPID: 5, /Event/Bhadron/pRec/ProtoP: 5, /Event/Bhadron/pRec/ProtoP/Charged: 5, /Event/Bhadron/pRec/ProtoP/Neutrals: 5, /Event/Bhadron/pRec/Rich: 5, /Event/Bhadron/pRec/Rich/PIDs: 5, /Event/Bhadron/pRec/Track: 5, /Event/Bhadron/pRec/Track/Best: 5, /Event/Bhadron/pRec/Track/Clusters: 5, /Event/Bhadron/pRec/Track/Muon: 2, /Event/Bhadron/pRec/Vertex: 5, /Event/Bhadron/pRec/Vertex/Primary: 5, /Event/Calo: 1, /Event/Calo/RawEvent: 1, /Event/Rec: 5, /Event/Rec/Header: 5, /Event/Rec/Status: 5, /Event/Rec/Summary: 5, /Event/Strip: 5, /Event/Strip/pPhys: 5, /Event/Strip/pPhys/DecReports: 5, /Event/Trigger: 5, /Event/Trigger/RawEvent: 5}
+TESFingerPrint    VERBOSE ==> TES Container sizes: {}
+TESFingerPrint      DEBUG Finalize base class GaudiAlgorithm
+TESFingerPrint      DEBUG Tools to release :
+TESFingerPrint      DEBUG Services to release :
+InputCopyStream      INFO Events output: 5
+FSRInputCopyStream   INFO Set up File Summary Record
+FSRInputCopyStream   INFO Events output: 1
+EventLoopMgr         INFO Histograms converted successfully according to request.
+DataOnDemandSvc      INFO Handled "DataFault" incidents: 0/0/5(Alg/Node/Total).
+ToolSvc              INFO Removing all tools created by ToolSvc
+RootCnvSvc           INFO Disconnected data IO:3E068417-5076-E411-BF1F-002590747E1C [root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision12/BHADRON.MDST/00041836/0000/00041836_00000001_1.bhadron.mdst]
+RootCnvSvc           INFO Disconnected data IO:A8AF9FEB-AE7C-E511-800E-02163E008F18 [Reco14-Stripping21.mdst]
+ApplicationMgr       INFO Application Manager Finalized successfully
+ApplicationMgr       INFO Application Manager Terminated successfully

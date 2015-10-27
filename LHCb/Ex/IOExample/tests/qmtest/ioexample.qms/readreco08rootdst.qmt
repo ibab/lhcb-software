@@ -12,7 +12,6 @@ preprocessor = LHCbPreprocessor + \
   LineSkipper(["EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc"]) + \
   LineSkipper(["InputCopyStream"]) + \
   LineSkipper(["FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc"]) + \
-  LineSkipper( ["EventClockSvc.F...   INFO Event times generated from 0 with steps of 0"]) + \
   LineSkipper(["COOLConfSvc          INFO CORAL Connection Retrial"]) + \
   LineSkipper(["ONLINE_xxxxxx        INFO Connected to database"]) + \
   RegexpReplacer(when = "-4.38741e-08", orig = r'-4.38741e-08', repl = r' -4.3874e-08') +\
