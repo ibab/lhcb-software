@@ -108,20 +108,16 @@ StatusCode HCDigitCreator::execute() {
   if (!collisions) {
     return Error("Cannot retrieve collisions");
   }
-  const unsigned int firstCollisionType = (*collisions->begin())->processType();
   for (LHCb::GenCollisions::const_iterator it = collisions->begin(); it != collisions->end(); ++it) {
     const unsigned int collisionType = (*it)->processType();
     const bool hardQCD = (collisionType >= 110);
     const bool iselastic = (collisionType == 102);
     const bool issd = (collisionType == 103 || collisionType == 104);
     const bool isdd = (collisionType == 105);
-    const bool isother = !hardQCD && !iselastic && !issd && !isdd;
-    if (isother) info() << "Collision type " << collisionType << endmsg;
     counter("HardScat") += hardQCD; 
     counter("Elastic") += iselastic;
     counter("SD") += issd;
     counter("DD") += isdd;
-    counter("Other") += isother;
   } 
   // Loop over the hits and sum up the signals in each quadrant.
   constexpr unsigned int nChannelsPerBoard = 64;

@@ -4,6 +4,9 @@
 ! Purpose     : Simulation of digitisation for Herschel counters 
 !--------------------------------------------------------------------------
 
+! 2015-10-27 - Heinrich Schindler
+ - Remove unused variable.
+
 ! 2015-10-25 - Heinrich Schindler
  - Add channel mapping.
  - Add monitoring plots.
