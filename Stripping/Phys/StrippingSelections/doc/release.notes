@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-10-27 - Pablo Ruiz Valls
+ - Fixed NBody-import issue for Beauty2XGamma
+ - Added Run II trigger lines to Beauty2XGamma dictionary for S24
+
 ! 2015-10-27 - Alessandro Bertolin
 - Fixed NBody-import issue for StrippingB2OC
   Beauty2Charm_DBuilder, Beauty2Charm_HHHBuilder and

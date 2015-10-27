@@ -121,14 +121,27 @@ default_config = {
                               'Hlt2Topo(2|3|4)Body.*Decision%TIS':0,
                               'Hlt2IncPhi.*Decision%TOS':0,
                               'Hlt2IncPhi.*Decision%TIS':0,
-                              'Hlt2RadiativeTopo.*Decision%TOS':0, ## Cut based raditive topological
-                              'Hlt2RadiativeTopo.*Decision%TIS':0, ## Cut based raditive topological
-                              'Hlt2TopoRad.*Decision%TOS':0, ## BBDT based radiative topological
-                              'Hlt2TopoRad.*Decision%TIS':0, ## BBDT based radiative topological
-                              'Hlt2Bs2PhiGamma.*Decision%TOS':0,
-                              'Hlt2Bs2PhiGamma.*Decision%TIS':0,
-                              'Hlt2Bd2KstGamma.*Decision%TOS':0,
-                              'Hlt2Bd2KstGamma.*Decision%TIS':0
+                              #'Hlt2RadiativeTopo.*Decision%TOS':0, ## Cut based raditive topological
+                              #'Hlt2RadiativeTopo.*Decision%TIS':0, ## Cut based raditive topological
+                              #'Hlt2TopoRad.*Decision%TOS':0, ## BBDT based radiative topological
+                              #'Hlt2TopoRad.*Decision%TIS':0, ## BBDT based radiative topological
+                              #'Hlt2Bs2PhiGamma.*Decision%TOS':0,
+                              #'Hlt2Bs2PhiGamma.*Decision%TIS':0,
+                              #'Hlt2Bd2KstGamma.*Decision%TOS':0,
+                              #'Hlt2Bd2KstGamma.*Decision%TIS':0
+                              'Hlt2Radiative.*Decision%TOS':0,
+                              'Hlt2Radiative.*Decision%TIS':0,
+                              # """This is equivalent to:
+                              # 'Hlt2RadiativeInc.*Decision%TOS':0, ## Run II inclusive radiative lines (BBDT based)
+                              # 'Hlt2RadiativeInc.*Decision%TIS':0,
+                              # 'Hlt2RadiativeBs2PhiGamma.*Decision%TOS':0, ## Run II exclusive radiative lines
+                              # 'Hlt2RadiativeBs2PhiGamma.*Decision%TIS':0,
+                              # 'Hlt2RadiativeBd2KstGamma.*Decision%TOS':0,
+                              # 'Hlt2RadiativeBd2KstGamma.*Decision%TIS':0,
+                              # 'Hlt2RadiativeB2GammaGamma.*Decision%TOS':0,
+                              # 'Hlt2RadiativeB2GammaGamma.*Decision%TIS':0,
+                              # 'Hlt2RadiativeLb2L0Gamma.*Decision%TOS':0,
+                              # 'Hlt2RadiativeLb2L0Gamma.*Decision%TIS':0,"""
                               }
           },
     'STREAMS' : ['Leptonic'],
@@ -140,8 +153,8 @@ from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdAllNoPIDsKaons, StdAllNoPIDsPions, StdLooseAllPhotons, StdLooseMergedPi0, StdLooseResolvedPi0, StdAllLooseGammaDD,StdAllLooseGammaLL, StdAllNoPIDsProtons
-from Configurables import DaVinci__N3BodyDecays as Combine3Particles
-from Configurables import DaVinci__N4BodyDecays as Combine4Particles
+from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays as Combine3Particles
+from GaudiConfUtils.ConfigurableGenerators import DaVinci__N4BodyDecays as Combine4Particles
 
 name = "Beauty2XGamma"
 
