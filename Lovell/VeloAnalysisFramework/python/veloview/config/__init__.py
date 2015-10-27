@@ -34,6 +34,7 @@ DEFAULTS = {
     'analysis_config': (analysis_config.analysis_config_branches, analysis_config.analysis_config_leaves),
     'grf_file_name': 'GRF.root',
     'grf_tree_name': 'DQTree',
+    'grf_runs_file': '/calib/velo/dqm/VeloView/VetraOutput/RunList_GRF.txt',
 }
 
 # Only export the Config class
