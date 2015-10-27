@@ -46,8 +46,7 @@ class lPlottable():
                                                          self.tab().sensor_mapping,
                                                          refDate = self.tab().refIvDate(),
                                                          getRef = True,
-                                                         notifyBox = notifyBox,
-                                                         normalise = norm)
+                                                         notifyBox = notifyBox)
             else:
                 if 'sensor_dependent' in self.plot.params and self.plot.params['sensor_dependent']:
                     self.plot.ext = ' - sensor ' + str(moduleID)
@@ -56,16 +55,15 @@ class lPlottable():
                                                               refRun = tabOpsState.refRunNum, getRef = True, 
                                                               notifyBox = notifyBox,
                                                               normalise = norm)
-                
+                 
         else:
-            if 'isIV' in self.params and self.params['isIV']:
+            if 'isIV' in self.params and self.params['isIV']: 
                 self.plot.ext = ' - sensor ' + str(moduleID)
                 nominal = lInterfaces.IV_plot(self.params['name'], moduleID, 
                                               self.tab().dataIvDate(),
                                               self.tab().IV_directory,
                                               self.tab().sensor_mapping,
-                                              notifyBox = notifyBox,
-                                              normalise = norm)
+                                              notifyBox = notifyBox) 
             else:
 
                 if 'sensor_dependent' in self.plot.params and self.plot.params['sensor_dependent']:
