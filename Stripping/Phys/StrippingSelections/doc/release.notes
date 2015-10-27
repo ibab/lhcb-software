@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-10-27 - Mika Vesterinen
+ - Fixed NBody-import issue for CharmFromBSemi
+
 ! 2015-10-26 - Jibo He
  - Fixed NBody-import issue for Bs2EtacPhiBDT
 
