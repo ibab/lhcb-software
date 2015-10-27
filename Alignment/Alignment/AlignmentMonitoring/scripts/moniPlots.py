@@ -247,24 +247,24 @@ def getDrawnCanvas(drawables):#, title = 'Pollo'):
     return c
 
 
-Pages = [("Long track properties and PV position", [ ["Track/TrackMonitor/Velo/3", {'title' : 'track #chi^{2}/ndof'}],
-                                                    ["Track/TrackMonitor/Velo/7", {'title' : 'track #eta'}],
-                                                    ["Track/TrackMonitor/Velo/8", {'title' : 'track #phi'}],
-                                                    "Track/TrackVertexMonitor/PV x position",
-                                                    "Track/TrackVertexMonitor/PV y position",
-                                                    "Track/TrackVertexMonitor/PV z position",
+Pages = [("Long track properties and PV position", [ ["Track/TrackMonitor/Velo/3", {'title' : '(1) track #chi^{2}/ndof'}],
+                                                    ["Track/TrackMonitor/Velo/7", {'title' : '(2) track #eta'}],
+                                                    ["Track/TrackMonitor/Velo/8", {'title' : '(3) track #phi'}],
+                                                    ["Track/TrackVertexMonitor/PV x position", {'title' : '(4) PV x position'}],
+                                                    ["Track/TrackVertexMonitor/PV y position", {'title' : '(5) PV y position'}],
+                                                    ["Track/TrackVertexMonitor/PV z position", {'title' : '(6) PV z position'}],
                                                     ]),
-         ("VELO related quantities", [ ["Track/TrackMonitor/Velo/chi2PerDofVelo", {'title' : 'Velo segment #chi^{2}/ndof'}],
-                                      "Track/TrackMonitor/Velo/VeloPhiresidualPull",
-                                       "Track/TrackMonitor/Velo/VeloRresidualPull",
-                                       ["Track/TrackVertexMonitor/PV chisquare per dof", {'title' : 'PV #chi^{2}/ndof'}],
-                                       "Velo/VeloTrackMonitor/Pseudoefficiency_per_sensor_vs_sensorID",
+         ("VELO related quantities", [ ["Track/TrackMonitor/Velo/chi2PerDofVelo", {'title' : '(7) Velo segment #chi^{2}/ndof'}],
+                                      ["Track/TrackMonitor/Velo/VeloPhiresidualPull", {'title' : '(8) Velo #phi residual pull'}],
+                                       ["Track/TrackMonitor/Velo/VeloRresidualPull", {'title' : '(9) Velo R residual pull'}],
+                                       ["Track/TrackVertexMonitor/PV chisquare per dof", {'title' : '(10) PV #chi^{2}/ndof'}],
+                                       ["Velo/VeloTrackMonitor/Pseudoefficiency_per_sensor_vs_sensorID", {'title' : '(11) Pseudoefficiency vs sensorID'}],
                                       ]),
-         ("VELO 2-halves alignment", [ ["Track/TrackVertexMonitor/PV left-right delta x", {'vlines' : [0, -.008, .008], 'rangeX' : [-.04, .04]}, True],
-                                       ["Track/TrackVertexMonitor/PV left-right delta y", {'vlines' : [0, -.008, .008], 'rangeX' : [-.04, .04]}, True],
-                                       ["Track/TrackVertexMonitor/PV left-right delta z", {'vlines' : [0, -.05, .05], 'rangeX' : [-.3, .3]}, True],
-                                       ["Track/TrackVeloOverlapMonitor/overlapResidualPhi", {'vlines' : [0,-.03,.03], 'rangeX' : [-.1, .1]}, True],
-                                       ["Track/TrackVeloOverlapMonitor/overlapResidualR", {'vlines' : [0,-.03,.03], 'rangeX' : [-.1, .1]}, True],
+         ("VELO 2-halves alignment", [ ["Track/TrackVertexMonitor/PV left-right delta x", {'title' : '(12) PV left-right delta x', 'vlines' : [0, -.008, .008], 'rangeX' : [-.04, .04]}, True],
+                                       ["Track/TrackVertexMonitor/PV left-right delta y", {'title' : '(13) PV left-right delta y', 'vlines' : [0, -.008, .008], 'rangeX' : [-.04, .04]}, True],
+                                       ["Track/TrackVertexMonitor/PV left-right delta z", {'title' : '(14) PV left-right delta z', 'vlines' : [0, -.05, .05], 'rangeX' : [-.3, .3]}, True],
+                                       ["Track/TrackVeloOverlapMonitor/overlapResidualPhi", {'title' : '(15) Overlap residuals #phi-sensors', 'vlines' : [0,-.03,.03], 'rangeX' : [-.1, .1]}, True],
+                                       ["Track/TrackVeloOverlapMonitor/overlapResidualR", {'title' : '(16) overlap residual R-sensors', 'vlines' : [0,-.03,.03], 'rangeX' : [-.1, .1]}, True],
                                        ]),
          ]
     
@@ -289,7 +289,7 @@ if __name__ == '__main__':
 
     mps = []
     
-    for expression, title in [('TrChi2nDof', 'Track #chi^{2}/dof'), ('VChi2nDof', 'Vertex #chi^{2}/dof'), ('NormalisedChi2Change', '#Delta #chi^{2}/dof')]:
+    for expression, title in [('TrChi2nDof', '(17) Track #chi^{2}/dof'), ('VChi2nDof', '(18) Vertex #chi^{2}/dof'), ('NormalisedChi2Change', '(19) #Delta #chi^{2}/dof')]:
         gr = makeGraph(getExpression(aout, expression))
         mps.append(MultiPlot(expression, title = '{0};Iteration;{0}'.format(title), histos = {expression:gr},
                        kind='g', drawLegend = False))
@@ -297,19 +297,19 @@ if __name__ == '__main__':
 
     # 2 halves
     c.cd()
-    mp1 = MultiPlot('1', title = 'Convergence Halves;Iteration;Variation [#mum]',kind='g', hlines=[0,-2,2,-4,4],
+    mp1 = MultiPlot('1', title = '(20) Convergence Halves;Iteration;Variation [#mum]',kind='g', hlines=[0,-2,2,-4,4],
                     hlines_colors = {-4: r.kGreen+3, 4: r.kGreen+3}, rangeY = [-10, 10])
     mp1.DrawOption = 'alp'
     mp1.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Tx', alignable='Velo/VeloLeft')), 'Tx')
     mp1.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Ty', alignable='Velo/VeloLeft')), 'Ty')
     mp1.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Tz', alignable='Velo/VeloLeft')), 'Tz')
 
-    mp2 = MultiPlot('2', title = 'Convergence Halves;Iteration;Variation [#murad]',kind='g', hlines=[0,-3.5,3.5], rangeY = [-25, 25])
+    mp2 = MultiPlot('2', title = '(21) Convergence Halves;Iteration;Variation [#murad]',kind='g', hlines=[0,-3.5,3.5], rangeY = [-25, 25])
     mp2.DrawOption = 'alp'
     mp2.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Rx', alignable='Velo/VeloLeft')), 'Rx')
     mp2.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Ry', alignable='Velo/VeloLeft')), 'Ry')
 
-    mp3 = MultiPlot('3', title = 'Convergence Halves Rz;Iteration;Variation [#murad]', kind='g', drawLegend = False, hlines=[0,-15,15], rangeY = [-100, 100],
+    mp3 = MultiPlot('3', title = '(22) Convergence Halves Rz;Iteration;Variation [#murad]', kind='g', drawLegend = False, hlines=[0,-15,15], rangeY = [-100, 100],
                     histos = {'Rz1': makeGraph(*getDofDeltaConvergence(aout, dof='Rz', alignable='Velo/VeloLeft'))},
                       )
     mp3.DrawOption = 'alp'

@@ -3,6 +3,9 @@
 ! package manager: Maurizio Martinelli
 !------------------------------------------------------------------------------
 
+! 2015-10-27 - Giulio Dujany
+ - Minor aestetic changes Velo monitoring plots
+
 ! 2015-10-26
  - Fix plotting styles for residual monitoring of IT/TT sectors in Alignment v10r5
 
