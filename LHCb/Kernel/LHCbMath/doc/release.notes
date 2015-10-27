@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-10-27 - Vanya Belyaev
+ - add explicitly the dictionary for std::unary_function<double,double>
+
 ! 2015-10-25 - Gerhard Raven
  - remove unneeded gcc specific pragmas
  - replace std::auto_ptr with std::unique_ptr
