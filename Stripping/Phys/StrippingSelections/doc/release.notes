@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-10-27 - Alessandro Bertolin
+- Fixed NBody-import issue for StrippingB2OC
+  Beauty2Charm_DBuilder, Beauty2Charm_HHHBuilder and
+  Beauty2Charm_Lb2XBuilder
+
 ! 2015-10-27 - Mika Vesterinen
  - Fixed NBody-import issue for CharmFromBSemi
 
