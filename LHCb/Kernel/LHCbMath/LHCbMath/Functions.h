@@ -4315,10 +4315,10 @@ namespace Gaudi
     public:
       // ======================================================================
       /// constructor from the order
-      PS2DPol ( const PhaseSpaceNL&   psx     , 
-                const PhaseSpaceNL&   psy     , 
-                const unsigned short  Nx =  1 ,
-                const unsigned short  Ny =  1 ) ;
+      PS2DPol ( const PhaseSpaceNL&   psx = PhaseSpaceNL () , 
+                const PhaseSpaceNL&   psy = PhaseSpaceNL () , 
+                const unsigned short  Nx  =  1 ,
+                const unsigned short  Ny  =  1 ) ;
       /// constructor from the order
       PS2DPol ( const PhaseSpaceNL&   psx     , 
                 const PhaseSpaceNL&   psy     , 
@@ -4418,8 +4418,8 @@ namespace Gaudi
     public:
       // ======================================================================
       /// constructor from the order
-      PS2DPolSym ( const PhaseSpaceNL&   ps      , 
-                   const unsigned short  N  =  1 ) ;
+      PS2DPolSym ( const PhaseSpaceNL&   ps = PhaseSpaceNL() , 
+                   const unsigned short  N  =  1             ) ;
       /// constructor from the order
       PS2DPolSym ( const PhaseSpaceNL&   ps      , 
                    const unsigned short  N       ,
@@ -4511,11 +4511,11 @@ namespace Gaudi
     public:
       // ======================================================================
       /// constructor from the order
-      ExpoPS2DPol ( const PhaseSpaceNL&   psy     , 
-                    const double          xmin    , 
-                    const double          xmax    ,
-                    const unsigned short  Nx =  1 ,
-                    const unsigned short  Ny =  1 ) ;
+      ExpoPS2DPol ( const PhaseSpaceNL&   psy  = PhaseSpaceNL() , 
+                    const double          xmin = 0 , 
+                    const double          xmax = 1 ,
+                    const unsigned short  Nx   = 1 ,
+                    const unsigned short  Ny   = 1 ) ;
       /// constructor from the order
       ExpoPS2DPol ( const PhaseSpaceNL&   psy     , 
                     const double          xmin    , 
@@ -4619,12 +4619,12 @@ namespace Gaudi
     public:
       // ======================================================================
       /// constructor from the order
-      Expo2DPol ( const double          xmin    , 
-                  const double          xmax    ,
-                  const double          ymin    , 
-                  const double          ymax    ,
-                  const unsigned short  Nx =  1 ,
-                  const unsigned short  Ny =  1 ) ;
+      Expo2DPol ( const double          xmin = 0  , 
+                  const double          xmax = 1  ,
+                  const double          ymin = 0  , 
+                  const double          ymax = 1  ,
+                  const unsigned short  Nx   =  1 ,
+                  const unsigned short  Ny   =  1 ) ;
       // ======================================================================
     public:
       // ======================================================================
@@ -4714,9 +4714,9 @@ namespace Gaudi
     public:
       // ======================================================================
       /// constructor from the order
-      Expo2DPolSym ( const double          xmin    , 
-                     const double          xmax    ,
-                     const unsigned short  N  =  1 ) ;
+      Expo2DPolSym ( const double          xmin = 0 , 
+                     const double          xmax = 1 ,
+                     const unsigned short  N    = 1 ) ;
       // ======================================================================
     public:
       // ======================================================================
@@ -4991,12 +4991,12 @@ namespace Gaudi
     public:
       // ======================================================================
       TwoExpoPositive  
-        ( const unsigned short N , 
-          const double alpha = 1 , 
-          const double delta = 1 , 
-          const double x0    = 0 ,
-          const double xmin  = 0 , 
-          const double xmax  = 1 ) ;
+        ( const unsigned short N = 1 , 
+          const double alpha     = 1 , 
+          const double delta     = 1 , 
+          const double x0        = 0 ,
+          const double xmin      = 0 , 
+          const double xmax      = 1 ) ;
       // ======================================================================
       TwoExpoPositive  
         ( const std::vector<double>& pars , 

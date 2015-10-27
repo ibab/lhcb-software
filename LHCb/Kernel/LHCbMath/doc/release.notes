@@ -7,6 +7,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-10-27 - Vanya Belyaev
+ - enable several default constructors
+
+! 2015-10-27 - Vanya Belyaev
  - add explicitly the dictionary for std::unary_function<double,double>
 
 ! 2015-10-25 - Gerhard Raven
