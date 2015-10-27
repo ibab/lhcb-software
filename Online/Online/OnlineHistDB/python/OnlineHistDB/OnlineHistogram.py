@@ -11,8 +11,8 @@ VectorOfStrings = ROOT.std.vector('string')
 VectorOfInts = ROOT.std.vector('int')
 VectorOfFloats = ROOT.std.vector('float')
 MapOfStringToInt = ROOT.std.map('string,int')
-MapOfStringToFloat = ROOT.std.map('string,int')
-MapOfStringToString = ROOT.std.map('string,int')
+MapOfStringToFloat = ROOT.std.map('string,float')
+MapOfStringToString = ROOT.std.map('string,string')
 VectorOfOnlineHistoOnPages = ROOT.std.vector('OnlineHistoOnPage*')
 
 # Tuples for pad coordinates
