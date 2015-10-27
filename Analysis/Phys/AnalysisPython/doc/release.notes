@@ -5,6 +5,9 @@
 !               GaudiPython analyses.
 !-----------------------------------------------------------------------------
 
+! 2015-10-27 - Vanya Belyaev
+ - add several default constructors re-enabling proper (de)serialisation
+
 !====================== AnalysisPython v2r38 2015-10-19 ======================
 
 ! 2015-10-08 - Vanya Belyaev

@@ -148,6 +148,11 @@ namespace Analysis
       /// clone 
       virtual BreitWigner* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization 
+      BreitWigner() {} ;
+      // ======================================================================
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -224,6 +229,11 @@ namespace Analysis
       /// clone 
       virtual Rho0* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization 
+      Rho0 () {} ;
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class Kstar
@@ -263,6 +273,11 @@ namespace Analysis
       /// clone 
       virtual  Kstar* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization 
+      Kstar () {} ;
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class Phi
@@ -300,6 +315,11 @@ namespace Analysis
       virtual ~Phi () ;
       /// clone 
       virtual  Phi* clone ( const char* name ) const ; 
+      // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization 
+      Phi () {} ;
       // ======================================================================
     } ;
     // ========================================================================
@@ -363,6 +383,11 @@ namespace Analysis
       virtual ~BW23L() ;
       /// clone 
       virtual BW23L* clone ( const char* name ) const ; 
+      // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization 
+      BW23L () {} ;
       // ======================================================================
     public:
       // ======================================================================
@@ -439,6 +464,11 @@ namespace Analysis
       virtual ~Flatte () ;
       /// clone 
       virtual Flatte* clone ( const char* name ) const ; 
+      // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization 
+      Flatte () {} ;
       // ======================================================================
     public:
       // ======================================================================
@@ -517,6 +547,11 @@ namespace Analysis
       /// clone 
       virtual Flatte2* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization 
+      Flatte2 () {} ;
+      // ======================================================================
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -589,6 +624,11 @@ namespace Analysis
       virtual ~LASS () ;
       /// clone 
       virtual  LASS * clone ( const char* name ) const ; 
+      // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization 
+      LASS () {} ;
       // ======================================================================
     public:
       // ======================================================================
@@ -670,6 +710,11 @@ namespace Analysis
       virtual ~LASS23L() ;
       /// clone 
       virtual  LASS23L* clone ( const char* name ) const ; 
+      // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization 
+      LASS23L () {} ;
       // ======================================================================
     public:
       // ======================================================================
@@ -754,6 +799,11 @@ namespace Analysis
       virtual ~Bugg () ;
       /// clone 
       virtual  Bugg* clone ( const char* name ) const ; 
+      // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization 
+      Bugg () {} ;
       // ======================================================================
     public:
       // ======================================================================
@@ -843,6 +893,11 @@ namespace Analysis
       /// clone 
       virtual  Bugg23L* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization 
+      Bugg23L () {} ;
+      // ======================================================================
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -920,6 +975,11 @@ namespace Analysis
       /// clone 
       virtual  Voigt* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization 
+      Voigt () {} ;
+      // ======================================================================
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -995,6 +1055,11 @@ namespace Analysis
       /// clone 
       virtual  CrystalBall* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization 
+      CrystalBall () {} ;
+      // ======================================================================
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -1065,6 +1130,11 @@ namespace Analysis
       virtual ~CrystalBallRS () ;
       /// clone 
       virtual  CrystalBallRS* clone ( const char* name ) const ; 
+      // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization 
+      CrystalBallRS () {} ;
       // ======================================================================
     public:
       // ======================================================================
@@ -1138,6 +1208,11 @@ namespace Analysis
       virtual ~CrystalBallDS() ;
       /// clone 
       virtual  CrystalBallDS* clone ( const char* name ) const ; 
+      // ======================================================================
+    public : // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization 
+      CrystalBallDS() {} ;
       // ======================================================================
     public:
       // ======================================================================
@@ -1214,6 +1289,11 @@ namespace Analysis
       virtual ~Needham () ;
       /// clone 
       virtual  Needham* clone ( const char* name ) const ; 
+      // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      Needham () {} ;
       // ======================================================================
     public:
       // ======================================================================
@@ -1297,6 +1377,11 @@ namespace Analysis
       /// clone 
       virtual  Apolonios* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      Apolonios () {} ;
+      // ======================================================================
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -1372,6 +1457,11 @@ namespace Analysis
       /// clone 
       virtual  Apolonios2* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      Apolonios2 () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -1442,6 +1532,11 @@ namespace Analysis
       /// clone 
       virtual  BifurcatedGauss* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      BifurcatedGauss () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -1513,6 +1608,11 @@ namespace Analysis
       /// clone 
       virtual  GenGaussV1* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      GenGaussV1 () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -1584,6 +1684,11 @@ namespace Analysis
       /// clone 
       virtual  GenGaussV2* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      GenGaussV2 () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -1655,6 +1760,11 @@ namespace Analysis
       /// clone 
       virtual  SkewGauss* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      SkewGauss () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -1728,6 +1838,11 @@ namespace Analysis
       /// clone 
       virtual  Bukin* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      Bukin () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -1804,6 +1919,11 @@ namespace Analysis
       /// clone 
       virtual  StudentT* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      StudentT () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -1874,6 +1994,11 @@ namespace Analysis
       /// clone 
       virtual  BifurcatedStudentT* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      BifurcatedStudentT () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -1947,6 +2072,11 @@ namespace Analysis
       /// clone 
       virtual  GramCharlierA* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      GramCharlierA () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -2020,6 +2150,11 @@ namespace Analysis
       /// clone 
       virtual PhaseSpace2* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      PhaseSpace2 () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -2078,6 +2213,11 @@ namespace Analysis
       /// clone 
       virtual PhaseSpaceLeft* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      PhaseSpaceLeft () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       /// set all parameters 
@@ -2143,6 +2283,11 @@ namespace Analysis
       /// clone 
       virtual PhaseSpaceRight* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      PhaseSpaceRight () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -2211,6 +2356,11 @@ namespace Analysis
       /// clone 
       virtual PhaseSpaceNL* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      PhaseSpaceNL () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -2346,6 +2496,11 @@ namespace Analysis
       /// clone 
       virtual  PhaseSpacePol* clone( const char* name )  const ;
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      PhaseSpacePol () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       virtual Double_t evaluate () const ;
@@ -2430,6 +2585,11 @@ namespace Analysis
       /// clone 
       virtual PhaseSpace23L* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      PhaseSpace23L () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -2499,6 +2659,11 @@ namespace Analysis
       /// clone 
       virtual  PolyPositive* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      PolyPositive () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -2569,6 +2734,11 @@ namespace Analysis
       /// clone 
       virtual  PolyMonothonic* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      PolyMonothonic () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -2640,6 +2810,11 @@ namespace Analysis
       /// clone 
       virtual  PolyConvex* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      PolyConvex () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -2710,6 +2885,11 @@ namespace Analysis
       /// clone 
       virtual  PolyConvexOnly* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      PolyConvexOnly () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -2780,6 +2960,11 @@ namespace Analysis
       /// clone 
       virtual  ExpoPositive* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      ExpoPositive () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -2854,6 +3039,11 @@ namespace Analysis
       /// clone 
       virtual  PolySigmoid* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      PolySigmoid () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -2936,6 +3126,11 @@ namespace Analysis
       /// clone 
       virtual  TwoExpoPositive* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      TwoExpoPositive() {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -3005,6 +3200,11 @@ namespace Analysis
       /// clone 
       virtual  GammaDist* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      GammaDist () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -3082,6 +3282,11 @@ namespace Analysis
       /// clone 
       virtual  GenGammaDist* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      GenGammaDist () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -3154,6 +3359,11 @@ namespace Analysis
       /// clone 
       virtual  Amoroso* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      Amoroso () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -3225,6 +3435,11 @@ namespace Analysis
       /// clone 
       virtual  LogGammaDist* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      LogGammaDist () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -3294,6 +3509,11 @@ namespace Analysis
       /// clone 
       virtual  Log10GammaDist* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      Log10GammaDist () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -3371,6 +3591,11 @@ namespace Analysis
       /// clone 
       virtual  LogGamma* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      LogGamma () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -3443,6 +3668,11 @@ namespace Analysis
       /// clone 
       virtual  BetaPrime* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      BetaPrime () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -3514,6 +3744,11 @@ namespace Analysis
       /// clone 
       virtual  Landau* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      Landau () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -3600,6 +3835,11 @@ namespace Analysis
       /// clone 
       virtual  SinhAsinh* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      SinhAsinh () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -3692,6 +3932,11 @@ namespace Analysis
       /// clone 
       virtual  JohnsonSU* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      JohnsonSU () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -3766,6 +4011,11 @@ namespace Analysis
       /// clone 
       virtual  Atlas* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      Atlas () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -3836,6 +4086,11 @@ namespace Analysis
       /// clone 
       virtual  Argus* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      Argus () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -3920,6 +4175,11 @@ namespace Analysis
       /// clone 
       virtual  Tsallis* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      Tsallis () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -4002,6 +4262,11 @@ namespace Analysis
       /// clone 
       virtual  QGSM* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      QGSM  () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -4074,6 +4339,11 @@ namespace Analysis
       /// clone 
       virtual  TwoExpos* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      TwoExpos  () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -4160,6 +4430,11 @@ namespace Analysis
       /// clone 
       virtual  PositiveSpline* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      PositiveSpline  () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -4236,6 +4511,11 @@ namespace Analysis
       /// clone 
       virtual  MonothonicSpline* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      MonothonicSpline  () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -4310,6 +4590,11 @@ namespace Analysis
       /// clone 
       virtual  ConvexOnlySpline* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      ConvexOnlySpline  () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -4386,6 +4671,11 @@ namespace Analysis
       /// clone 
       virtual  ConvexSpline* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      ConvexSpline  () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -4463,6 +4753,11 @@ namespace Analysis
       /// clone 
       virtual  Poly2DPositive* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      Poly2DPositive  () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -4533,6 +4828,11 @@ namespace Analysis
       /// clone 
       virtual  Poly2DSymPositive* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      Poly2DSymPositive  () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -4616,6 +4916,11 @@ namespace Analysis
       /// clone 
       virtual  PS2DPol* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      PS2DPol  () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -4703,6 +5008,11 @@ namespace Analysis
       /// clone 
       virtual  PS2DPolSym* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      PS2DPolSym () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -4793,6 +5103,11 @@ namespace Analysis
       /// clone 
       virtual  ExpoPS2DPol* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      ExpoPS2DPol () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -4873,6 +5188,11 @@ namespace Analysis
       /// clone 
       virtual  Expo2DPol* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      Expo2DPol () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -4950,6 +5270,11 @@ namespace Analysis
       /// clone 
       virtual  Expo2DPolSym* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      Expo2DPolSym () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -5023,6 +5348,11 @@ namespace Analysis
       /// clone 
       virtual  Spline2D* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      Spline2D () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
@@ -5094,6 +5424,11 @@ namespace Analysis
       /// clone 
       virtual  Spline2DSym* clone ( const char* name ) const ; 
       // ======================================================================
+    public: // some fake functionality
+      // ======================================================================
+      // fake default contructor, needed just for proper (de)serialization
+      Spline2DSym () {} ;
+      // ======================================================================  
     public:
       // ======================================================================
       // the actual evaluation of function 
