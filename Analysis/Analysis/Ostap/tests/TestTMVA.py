@@ -155,8 +155,13 @@ tBkg   .process ( dsB )
 ds1 = dsS.data
 ds2 = dsB.data
 
+
+ds = ds1.reduce('var1>-100')
+ds.append(ds2)
+
 logger.info('<TMVA> for signal     %s' % ds1.statVar('tmva') )
 logger.info('<TMVA> for background %s' % ds2.statVar('tmva') )
+logger.info('<TMVA> for S+B sample %s' % ds .statVar('tmva') )
 
 
 

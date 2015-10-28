@@ -991,19 +991,25 @@ def _ds_project_  ( dataset , histo , what , cuts = '' , *args ) :
     >>> dataset.project ( h1           , 'm', 'chi2<10' ) ## use histo
     
     """
-    if isinstance ( cuts , str ) : cuts = cuts.strip() 
+    if isinstance ( cuts , ROOT.TCut ) : cuts = str ( cuts ).strip()  
+    if isinstance ( what , str       ) : what = what.strip()
+    if isinstance ( cuts , str       ) : cuts = cuts.strip()
     
     ## native RooFit...  I have some suspicion that it does not work properly
     if isinstance ( what , ROOT.RooArgList ) and isinstance ( histo , ROOT.TH1 ) :
         histo.Reset() 
-        return dataset.fillHistogram  ( histo , what , cuts , *args ) 
+        return dataset.fillHistogram  ( histo , what , cuts , *args )
     
-    ## delegate to TTree 
-    store = dataset.store()
-    if store and isinstance ( what , str ) :
-        tree = store.tree()
-        if tree : return tree.project ( histo , what , cuts , *args ) 
+    ## delegate to TTree (only for non-weighted dataset with TTree-based storage type) 
+    if not dataset.isWeighted() \
+       and isinstance ( what , str ) \
+       and isinstance ( cuts , str ) : 
+        store = dataset.store()
+        if store :
+            tree = store.tree()
+            if tree : return tree.project ( histo , what , cuts , *args ) 
 
+            
     if   isinstance ( what , ROOT.RooFormulaVar ) : 
         return _ds_project_ ( dataset , histo , what.GetTitle () , cuts , *args )
     
@@ -1092,13 +1098,20 @@ def _ds_draw_ ( dataset , what , cuts = '' , opts = '' , *args ) :
     ## for event in range 1000< i <10000
     >>> dataset.draw ( 'm', '(chi2<10)*weight' , 'e1' , 1000 , 100000 )
     """
-    cuts = cuts.strip()
-    opts = opts.strip()
-    
-    store = dataset.store()
-    if store and isinstance ( what , str ) : 
-        tree = store.tree()
-        if tree : return tree.Draw( what , cuts , opts  , *args )
+    if isinstance ( cuts , ROOT.TCut ) : cuts = str ( cuts ).strip()  
+    if isinstance ( what , str       ) : what = what.strip()
+    if isinstance ( cuts , str       ) : cuts = cuts.strip()
+    if isinstance ( opts , str       ) : opts = opts.strip()
+
+    ## delegate to TTree for non-weighted datasets with TTree-based storage type 
+    if not dataset.isWeighted() \
+       and isinstance ( what , str ) \
+       and isinstance ( cuts , str ) \
+       and isinstance ( opts , str ) : 
+        store = dataset.store()
+        if store : 
+            tree = store.tree()
+            if tree : return tree.Draw( what , cuts , opts  , *args )
         
     if   isinstance ( what , str ) : 
         vars  = [ v.strip() for v in what.split(':') ]
