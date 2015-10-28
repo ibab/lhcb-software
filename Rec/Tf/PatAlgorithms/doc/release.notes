@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-10-28 - Michel De Cian
+ - Change in PatLongLivedTracking to exploit new hit sorting in TTStationHitManager.
+
 ! 2015-10-26 - Michel De Cian
  - Change in PatAddTTCoord to be smarter with memory (std::vector as member variable), chi2 calculation and exploiting new hit sorting in hit manager.
 

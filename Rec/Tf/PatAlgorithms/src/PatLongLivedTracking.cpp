@@ -52,7 +52,6 @@ PatLongLivedTracking::PatLongLivedTracking( const std::string& name,
   m_overlapTime( 0 ),
   m_printing( false ),
   m_magnetOff( false ),
-  m_firstEvent(true),
   m_magFieldSvc(nullptr),
   m_ttHitManager(nullptr),
   m_debugTool(nullptr),
@@ -270,7 +269,7 @@ StatusCode PatLongLivedTracking::execute() {
   //=== Prepare T-Seeds
   prepareSeeds( inTracks, myInTracks );
   
-  // -- put the hits in a container per layer and sort them according to x at y=0
+  // -- prepare the this and sort them (all done in HitManager, only runs if this is the first algorithm using TT hits)
   initEvent();
   
 
@@ -610,63 +609,66 @@ void PatLongLivedTracking::getPreSelection( PatDownTrack& track ) {
   const double yTrack = track.yAtZ( 0. );
   const double tyTr   = track.slopeY();
 
-  for(int iLayer = 0; iLayer < 4; ++iLayer){
+  for(int iStation = 0; iStation < 2; ++iStation){
+    for(int iLayer = 0; iLayer < 2; ++iLayer){
   
-    if( m_hitsLayers[iLayer].empty() ) continue;
-    
-    const double zLayer = m_hitsLayers[iLayer].front()->z();
-    const double yPredLay   = track.yAtZ( zLayer );
-    const double xPredLay = track.xAtZ( zLayer );
-    const double dxDy = m_hitsLayers[iLayer].front()->hit()->dxDy();
-    
-    // -- this should sort of take the stereo angle and some tolerance into account.
-    const double lowerBoundX = xPredLay - xPredTol - dxDy*yPredLay - 2.0;
-    
-    PatTTHits::iterator itHit = std::lower_bound( m_hitsLayers[iLayer].begin(), 
-                                                  m_hitsLayers[iLayer].end(), 
-                                                  lowerBoundX, 
-                                                  Tf::compByX_LB< PatTTHit >() );
-    
-    for( ; itHit != m_hitsLayers[iLayer].end(); ++itHit){
+      Tf::TTStationHitManager<PatTTHit>::HitRange range =  m_ttHitManager->hits(iStation,iLayer);
 
-      PatTTHit* hit = *itHit;
+      if( range.empty() ) continue;
       
-      if( m_debugTool && !m_debugTool->isTrueHit( track.track(), hit ) ) continue;
+      const double zLayer   = range.front()->z();
+      const double yPredLay = track.yAtZ( zLayer );
+      const double xPredLay = track.xAtZ( zLayer );
+      const double dxDy     = range.front()->hit()->dxDy();
       
-
-      if (hit->hit()->ignore()) continue;
+      // -- this should sort of take the stereo angle and some tolerance into account.
+      const double lowerBoundX = xPredLay - xPredTol - dxDy*yPredLay - 2.0;
       
-      const double yPos   = track.yAtZ( hit->z() );
-      if ( !hit->hit()->isYCompatible( yPos, yTol ) ) continue;
+      PatTTHits::const_iterator itHit = std::lower_bound( range.begin(), 
+                                                          range.end(), 
+                                                          lowerBoundX, 
+                                                          Tf::compByX_LB< PatTTHit >() );
       
-     
-      updateTTHitForTrackFast( hit, yTrack, tyTr);
-      const double pos    = track.xAtZ( hit->z() ) - correction;
-      
-      // -- go from -x to +x
-      // -- can break if we go out of the right bound
-      if( xPredTol < pos - hit->x() ) continue;
-      if( xPredTol < hit->x() - pos ) break;
-      
-      hit->hit()->setStatus( Tf::HitBase::UsedByPatDownstream, false );
-      hit->setProjection( fabs( hit->x()-pos ) );
-    
-      m_preSelHits[iLayer].push_back( hit );
-      
-      if ( UNLIKELY( m_printing )) {
-        info() << format( "  plane%2d z %8.2f x %8.2f pos %8.2f High%2d dist %8.2f", 
-                          hit->planeCode(), hit->z(), hit->x(), pos, 
-                          hit->hit()->sthit()->cluster().highThreshold(), hit->x() - pos);
-        if ( m_debugTool ) m_debugTool->debugTTCluster( info(), hit );
-        info() << endmsg;
+      for( ; itHit != range.end(); ++itHit){
+        
+        PatTTHit* hit = *itHit;
+        
+        if( UNLIKELY( m_debugTool && !m_debugTool->isTrueHit( track.track(), hit ) ) ) continue;
+        
+        
+        if( UNLIKELY( hit->hit()->ignore()) ) continue;
+        
+        const double yPos   = track.yAtZ( hit->z() );
+        if ( !hit->hit()->isYCompatible( yPos, yTol ) ) continue;
+        
+        
+        updateTTHitForTrackFast( hit, yTrack, tyTr);
+        const double pos    = track.xAtZ( hit->z() ) - correction;
+        
+        // -- go from -x to +x
+        // -- can break if we go out of the right bound
+        if( xPredTol < pos - hit->x() ) continue;
+        if( xPredTol < hit->x() - pos ) break;
+        
+        hit->hit()->setStatus( Tf::HitBase::UsedByPatDownstream, false );
+        hit->setProjection( fabs( hit->x()-pos ) );
+        
+        m_preSelHits[2*iStation + iLayer].push_back( hit );
+        
+        if ( UNLIKELY( m_printing )) {
+          info() << format( "  plane%2d z %8.2f x %8.2f pos %8.2f High%2d dist %8.2f", 
+                            hit->planeCode(), hit->z(), hit->x(), pos, 
+                            hit->hit()->sthit()->cluster().highThreshold(), hit->x() - pos);
+          if ( m_debugTool ) m_debugTool->debugTTCluster( info(), hit );
+          info() << endmsg;
+        }
       }
+      
+      if( iStation == 1 && m_preSelHits[0].empty() && m_preSelHits[1].empty() ) break;
+      
     }
-
-    if( iLayer == 1 && m_preSelHits[0].empty() && m_preSelHits[1].empty() ) break;
-    
-
   }
-
+  
 
   std::sort(m_preSelHits[1].begin(), m_preSelHits[1].end(), Tf::increasingByProjection<PatTTHit>() );
   std::sort(m_preSelHits[2].begin(), m_preSelHits[2].end(), Tf::increasingByProjection<PatTTHit>() );
@@ -677,7 +679,6 @@ void PatLongLivedTracking::getPreSelection( PatDownTrack& track ) {
   std::sort( m_xHits.begin(),  m_xHits.end(),  Tf::increasingByProjection<PatTTHit>() );
   
   if ( m_doTiming ) m_timerTool->stop( m_preselTime );
-
 }
 //=========================================================================
 //  Fit and remove the worst hit, as long as over tolerance
@@ -1388,26 +1389,6 @@ double PatLongLivedTracking::evaluateFisher( const LHCb::Track* track ){
 void PatLongLivedTracking::initEvent () {
  
   m_ttHitManager->prepareHits();
+  m_ttHitManager->sortHits<Tf::increasingByXAtYEq0<PatTTHit>>();
   
-  
-  m_hitsLayers[0].clear();
-  m_hitsLayers[1].clear();
-  m_hitsLayers[2].clear();
-  m_hitsLayers[3].clear();
-
-  Tf::TTStationHitManager<PatTTHit>::HitRange range = m_ttHitManager->hits(0,0);
-  m_hitsLayers[0].insert(m_hitsLayers[0].end(), range.begin(), range.end() );
-  range = m_ttHitManager->hits(0,1);
-  m_hitsLayers[1].insert(m_hitsLayers[1].end(), range.begin(), range.end() );
-  range = m_ttHitManager->hits(1,0);
-  m_hitsLayers[2].insert(m_hitsLayers[2].end(), range.begin(), range.end() );
-  range = m_ttHitManager->hits(1,1);
-  m_hitsLayers[3].insert(m_hitsLayers[3].end(), range.begin(), range.end() );
-
-  for(int i = 0; i < 4; ++i){
-    std::sort(m_hitsLayers[i].begin(), m_hitsLayers[i].end(), [](const PatTTHit* lhs, const PatTTHit* rhs){
-        return lhs->hit()->xAtYEq0() < rhs->hit()->xAtYEq0();
-      });
-  }
-
 }

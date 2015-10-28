@@ -190,8 +190,7 @@ private:
   // -- other member variables which are not settable
   bool          m_printing; 
   bool          m_magnetOff;
-  bool          m_firstEvent;
- 
+   
   
   // -- pointers to tools
   ILHCbMagnetSvc*                     m_magFieldSvc; 
