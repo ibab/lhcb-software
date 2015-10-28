@@ -14,8 +14,12 @@ class lovellGui(QMainWindow):
         QMainWindow.__init__(self, parent)
         self.top_tab = QTabWidget(self)
         self.setCentralWidget(self.top_tab)
+        self.top_tab.addTab(QWidget(self), 'Overview')
         self.top_tab.addTab(run_view(run_data_dir, self), 'Run View')
-        #self.top_tab.addTab(QWidget(self), 'IV')
+        self.top_tab.addTab(QWidget(self), 'Sensor view')
+        self.top_tab.addTab(QWidget(self), 'TELL1')
+        self.top_tab.addTab(QWidget(self), 'Special analyses')
+        self.top_tab.setCurrentIndex(1)
         
                 
 class run_view(QWidget):
@@ -108,7 +112,8 @@ def main():
     if len(sys.argv) > 1:
         if sys.argv[1][0:15] == '--run-data-dir=': run_data_dir = sys.argv[1][15:]
     app = QApplication(sys.argv) 
-    form = run_view(run_data_dir)
+#     form = run_view(run_data_dir)
+    form = lovellGui(run_data_dir)
     form.resize(1200, 700)
     form.show() 
     app.setStyle("plastique")
