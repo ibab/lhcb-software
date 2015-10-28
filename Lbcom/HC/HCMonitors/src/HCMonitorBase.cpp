@@ -98,12 +98,12 @@ StatusCode HCMonitorBase::initialize() {
     }
   } else {
     warning() << "Cannot find " << location << " in database" << endmsg;
+    mapChannels(m_channelsB0, m_sparesB0, m_masksB0, 0, true);
+    mapChannels(m_channelsB1, m_sparesB1, m_masksB1, 1, true);
+    mapChannels(m_channelsB2, m_sparesB2, m_masksB2, 2, true);
+    mapChannels(m_channelsF1, m_sparesF1, m_masksF1, 1, false);
+    mapChannels(m_channelsF2, m_sparesF2, m_masksF2, 2, false);
   }
-  mapChannels(m_channelsB0, m_sparesB0, m_masksB0, 0, true);
-  mapChannels(m_channelsB1, m_sparesB1, m_masksB1, 1, true);
-  mapChannels(m_channelsB2, m_sparesB2, m_masksB2, 2, true);
-  mapChannels(m_channelsF1, m_sparesF1, m_masksF1, 1, false);
-  mapChannels(m_channelsF2, m_sparesF2, m_masksF2, 2, false);
   printMapping();
 
   // Setup the random number generator.
@@ -140,6 +140,11 @@ StatusCode HCMonitorBase::cacheMapping() {
   m_masksF1 = m_cond->paramVect<int>("MasksF1");
   m_masksF2 = m_cond->paramVect<int>("MasksF2");
 
+  mapChannels(m_channelsB0, m_sparesB0, m_masksB0, 0, true);
+  mapChannels(m_channelsB1, m_sparesB1, m_masksB1, 1, true);
+  mapChannels(m_channelsB2, m_sparesB2, m_masksB2, 2, true);
+  mapChannels(m_channelsF1, m_sparesF1, m_masksF1, 1, false);
+  mapChannels(m_channelsF2, m_sparesF2, m_masksF2, 2, false);
   return StatusCode::SUCCESS;
 }
 

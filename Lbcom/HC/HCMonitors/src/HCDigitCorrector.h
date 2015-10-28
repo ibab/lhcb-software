@@ -28,7 +28,7 @@ class HCDigitCorrector : public HCMonitorBase {
   std::string m_inputLocation;
   std::string m_outputLocation;
 
-  Condition* m_cond;
+  Condition* m_condCM;
 
   /// Calibration constants for each channel and parity
   std::vector<std::vector<std::vector<float> > > m_tantheta;
@@ -41,5 +41,6 @@ class HCDigitCorrector : public HCMonitorBase {
   std::vector<float> m_y0Config;
 
   StatusCode cacheParameters();
+  StatusCode setParameters();
  
 };

@@ -4,6 +4,10 @@
 ! Purpose     : Monitoring of Herschel data
 !-----------------------------------------------------------------------------
 
+! 2015-10-28 - Heinrich Schindler
+ - Bug fix in HCMonitorBase and HCDigitCorrector to update conditions 
+   at every change (not only once at initialization). 
+
 ! 2015-10-23 - Heinrich Schindler
  - Remove unused class members.
 

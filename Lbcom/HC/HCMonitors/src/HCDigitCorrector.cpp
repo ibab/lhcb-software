@@ -21,7 +21,7 @@ DECLARE_ALGORITHM_FACTORY(HCDigitCorrector)
 HCDigitCorrector::HCDigitCorrector(const std::string& name,
                                    ISvcLocator* pSvcLocator)
     : HCMonitorBase(name, pSvcLocator),
-      m_cond(nullptr) {
+      m_condCM(nullptr) {
 
   declareProperty("InputLocation",
                   m_inputLocation = LHCb::HCDigitLocation::Default);
@@ -50,48 +50,20 @@ StatusCode HCDigitCorrector::initialize() {
   // Check if the parameters are available in the conditions database.
   const std::string location = "Conditions/Calibration/HC/CommonMode";
   if (existDet<Condition>(location)) {
-    registerCondition(location, m_cond, &HCDigitCorrector::cacheParameters);
+    registerCondition(location, m_condCM, &HCDigitCorrector::cacheParameters);
     // First update.
     sc = updMgrSvc()->update(this);
     if (sc.isFailure()) {
-      return Error("Cannot update calibration constants.", StatusCode::FAILURE);
+      return Error("Cannot update calibration constants.");
     }
   } else {
     warning() << "Cannot find " << location << " in database." << endmsg;
-  }
-
-  const unsigned int nStations = 5;
-  const unsigned int nQuadrants = 4;
-  // Check if the lists of calibration constants have the right size.
-  const unsigned int nExpectedSize = nStations * 4 * 2;
-  if (m_thetaConfig.size() != nExpectedSize || 
-      m_x0Config.size() != nExpectedSize ||
-      m_y0Config.size() != nExpectedSize) {
-    return Error("List of calibration constants has incorrect size.",
-                 StatusCode::FAILURE);
-  } 
-  // TODO: check if I got this right
-  m_tantheta.resize(nStations);
-  m_x0.resize(nStations);
-  m_y0.resize(nStations);
-  unsigned int index = 0;
-  for (unsigned int i = 0; i < nStations; ++i) {
-    m_tantheta[i].resize(nQuadrants);
-    m_x0[i].resize(nQuadrants);
-    m_y0[i].resize(nQuadrants);
-    for (unsigned int j = 0; j < nQuadrants; ++j) {
-      m_tantheta[i][j].resize(2);
-      m_x0[i][j].resize(2);
-      m_y0[i][j].resize(2);
-      for (unsigned int k = 0; k < 2; ++k) {
-        m_tantheta[i][j][k] = tan(m_thetaConfig[index]);
-        m_x0[i][j][k] = m_x0Config[index];
-        m_y0[i][j][k] = m_y0Config[index];
-        ++index;
-      }
+    sc = setParameters();
+    if (sc.isFailure()) {
+      return Error("Cannot set calibration constants.");
     }
   }
- 
+
   return StatusCode::SUCCESS;
 }
 
@@ -153,7 +125,7 @@ StatusCode HCDigitCorrector::execute() {
 }
 
 //=============================================================================
-// Update the calibration constants using the conditions database.
+// Retrieve the calibration constants from the conditions database.
 //=============================================================================
 StatusCode HCDigitCorrector::cacheParameters() {
 
@@ -162,14 +134,13 @@ StatusCode HCDigitCorrector::cacheParameters() {
   m_x0Config.clear();
   m_y0Config.clear();
   const std::vector<std::string> stations = {"B0", "B1", "B2", "F1", "F2"};
-  const std::vector<std::string> parities = {"Even", "Odd"};
-  for (auto station : stations) {
-    const auto thetaEven = m_cond->paramVect<double>("Theta" + station + "Even");
-    const auto thetaOdd = m_cond->paramVect<double>("Theta" + station + "Odd");
-    const auto x0Even = m_cond->paramVect<double>("X0" + station + "Even");
-    const auto x0Odd = m_cond->paramVect<double>("X0" + station + "Odd");
-    const auto y0Even = m_cond->paramVect<double>("Y0" + station + "Even");
-    const auto y0Odd = m_cond->paramVect<double>("Y0" + station + "Odd");
+  for (const auto& st : stations) {
+    const auto thetaEven = m_condCM->paramVect<double>("Theta" + st + "Even");
+    const auto thetaOdd = m_condCM->paramVect<double>("Theta" + st + "Odd");
+    const auto x0Even = m_condCM->paramVect<double>("X0" + st + "Even");
+    const auto x0Odd = m_condCM->paramVect<double>("X0" + st + "Odd");
+    const auto y0Even = m_condCM->paramVect<double>("Y0" + st + "Even");
+    const auto y0Odd = m_condCM->paramVect<double>("Y0" + st + "Odd");
     for (unsigned int i = 0; i < 4; ++i) {
       m_thetaConfig.push_back(thetaEven[i]);
       m_thetaConfig.push_back(thetaOdd[i]);
@@ -179,6 +150,45 @@ StatusCode HCDigitCorrector::cacheParameters() {
       m_y0Config.push_back(y0Odd[i]);
     }
   }  
+  return setParameters();
+
+}
+
+//=============================================================================
+// Update the calibration constants.
+//=============================================================================
+StatusCode HCDigitCorrector::setParameters() {
+
+  const unsigned int nStations = 5;
+  const unsigned int nQuadrants = 4;
+  // Check if the lists of calibration constants have the right size.
+  const unsigned int nExpectedSize = nStations * 4 * 2;
+  if (m_thetaConfig.size() != nExpectedSize || 
+      m_x0Config.size() != nExpectedSize ||
+      m_y0Config.size() != nExpectedSize) {
+    return Error("List of calibration constants has incorrect size.");
+  } 
+  m_tantheta.resize(nStations);
+  m_x0.resize(nStations);
+  m_y0.resize(nStations);
+  unsigned int index = 0;
+  for (unsigned int i = 0; i < nStations; ++i) {
+    m_tantheta[i].resize(nQuadrants);
+    m_x0[i].resize(nQuadrants);
+    m_y0[i].resize(nQuadrants);
+    for (unsigned int j = 0; j < nQuadrants; ++j) {
+      m_tantheta[i][j].resize(2);
+      m_x0[i][j].resize(2);
+      m_y0[i][j].resize(2);
+      for (unsigned int k = 0; k < 2; ++k) {
+        m_tantheta[i][j][k] = tan(m_thetaConfig[index]);
+        m_x0[i][j][k] = m_x0Config[index];
+        m_y0[i][j][k] = m_y0Config[index];
+        ++index;
+      }
+    }
+  }
   return StatusCode::SUCCESS;
 
 }
+ 
