@@ -24,7 +24,7 @@
 // ============================================================================
 namespace 
 {
-  const std::hash<std::string> s_hash ;
+  const std::hash<std::string> s_hash{} ;
 }
 // ============================================================================
 /*  calculate the hash for the code flagment 
