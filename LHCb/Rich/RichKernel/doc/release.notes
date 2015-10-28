@@ -4,6 +4,9 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2015-10-28 - Marco Cattaneo
+ - RichCommonBase.icpp: fix unprotected debug()
+
 !========================= RichKernel v7r60 2015-10-12 =========================
 ! 2015-10-07 - Chris Jones
  - Fine tune the implementation of RichObjPtn for better CPU performance

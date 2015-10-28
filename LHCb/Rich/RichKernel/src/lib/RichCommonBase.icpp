@@ -209,7 +209,8 @@ Rich::CommonBase<PBASE>::my_getProperty( const std::string & name,
   }
   else
   {
-    this->debug() << "NULL properties vector found for '" << name << "'" << endmsg;
+    if ( this -> msgLevel(MSG::DEBUG) )
+      this->debug() << "NULL properties vector found for '" << name << "'" << endmsg;
   }
   return sp;
 }
