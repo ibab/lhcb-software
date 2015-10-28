@@ -6,7 +6,7 @@ A separate file is for exclusive selections
 
 ########################################################################
 __author__  = ['Paolo Gandini']
-__date__    = '07/10/2015'
+__date__    = '28/10/2015'
 __version__ = '$Revision:1.0$'
 
 __all__ = ('LowMultINCLines',
@@ -48,6 +48,11 @@ default_config = {
     'STREAMS'     : ['EW'],
     'WGs'         : ['QEE'],
     'CONFIG'      : {
+    #
+    # PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE 
+    # Stripping Liason please inform Paolo Gandini when putting in these settings
+    # PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE      
+    #
         #
         'LowMultRequiredRawEvents' : ["Velo","Calo","HC","Trigger","Muon","Rich","Tracker"],  #Please add this!
         #
@@ -125,6 +130,11 @@ default_config = {
         'DecisionLowMultNonBeamBeamNoBias'         : "HLT_PASS_RE('Hlt2NoBiasNonBeamBeamDecision')",
         'PrescaleLowMultTechnical'                 : 1,
         'DecisionLowMultTechnical'                 : "HLT_PASS_RE('Hlt2LowMultTechnical_MinBiasDecision')",
+        #
+        'PrescaleHlt1NoBiasNonBeamBeam'   : 1,
+        'DecisionHlt1NoBiasNonBeamBeam'   : "HLT_PASS_RE('Hlt1NoBiasNonBeamBeamDecision')",
+        'PrescaleHlt2PassThrough'         : 1,
+        'DecisionHlt2PassThrough'         : "HLT_PASS_RE('Hlt2PassThroughDecision')",
         #
         'PrescaleLowMultTMP1'                 : 0,
         'DecisionLowMultTMP1'                 : None,
@@ -460,6 +470,25 @@ class LowMultINCLines( LineBuilder ) :
         self.registerLine(self.lineLowMultTechnical)
         
 #####
+        self.lineHlt1NoBiasNonBeamBeam = StrippingLine( "Hlt1NoBiasNonBeamBeam"+"Line",
+                                                        prescale  = config['PrescaleHlt1NoBiasNonBeamBeam'],
+                                                        checkPV   = False,
+                                                        EnableFlavourTagging = False,
+                                                        L0DU      = None,
+                                                        HLT2 = config['DecisionHlt1NoBiasNonBeamBeam'],
+                                                        RequiredRawEvents = config["LowMultRequiredRawEvents"])
+
+        self.registerLine(self.lineHlt1NoBiasNonBeamBeam)
+        self.lineHlt2PassThrough = StrippingLine( "Hlt2PassThrough"+"Line",
+                                                  prescale  = config['PrescaleHlt2PassThrough'],
+                                                  checkPV   = False,
+                                                  EnableFlavourTagging = False,
+                                                  L0DU      = None,
+                                                  HLT2 = config['DecisionHlt2PassThrough'],
+                                                  RequiredRawEvents = config["LowMultRequiredRawEvents"])
+        self.registerLine(self.lineHlt2PassThrough)
+
+        
 #####    
         self.lineLowMultTMP1 = StrippingLine( "LowMultTMP1"+"Line",
                                               prescale  = config['PrescaleLowMultTMP1'],
@@ -479,4 +508,7 @@ class LowMultINCLines( LineBuilder ) :
                                               HLT2 = config['DecisionLowMultTMP2'],
                                               RequiredRawEvents = config["LowMultRequiredRawEvents"])
         self.registerLine(self.lineLowMultTMP2)
-                
+
+
+
+#####
