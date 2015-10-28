@@ -18,6 +18,12 @@ matplotlib.rcParams.update({'legend.fontsize': 'medium'})
 matplotlib.rcParams.update({'legend.framealpha': '0.5'})
 
 
+class NavigationToolbar_mod(NavigationToolbar):
+    # only display the buttons we need
+    toolitems = [t for t in NavigationToolbar.toolitems if
+                 t[0] in ('Home', 'Pan', 'Zoom', 'Save')]
+
+
 class lPlottable():
     def __init__(self, axes, fig, params, lPlot):
         self.axes = axes
@@ -480,7 +486,7 @@ class mplWidget(QWidget):
         self.axes = self.fig.add_subplot(111)
 
         # Create the navigation toolbar, tied to the canvas
-        self.mpl_toolbar = NavigationToolbar(self.canvas, self)
+        self.mpl_toolbar = NavigationToolbar_mod(self.canvas, self)
         vbox = QGridLayout()
         vbox.addWidget(self.canvas, 0, 0)
         menu = QWidget(self)

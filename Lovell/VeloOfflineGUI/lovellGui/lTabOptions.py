@@ -105,16 +105,16 @@ class lTabOptions(QGroupBox):
 
 	def add_next_prev_buttons(self):
 		self.next_button = QPushButton("Next")
-		self.grid_layout.addWidget(self.next_button, self.rowCount(), 0)
+		self.grid_layout.addWidget(self.next_button, self.rowCount(), 1)
 		self.prev_button = QPushButton("Prev")
-		self.grid_layout.addWidget(self.prev_button, self.rowCount()-1, 1)
+		self.grid_layout.addWidget(self.prev_button, self.rowCount()-1, 0)
 		self.next_button.clicked.connect(self.next_clicked)
 		self.prev_button.clicked.connect(self.prev_clicked)
 		
 		self.next_four_button = QPushButton("Next Four")
-		self.grid_layout.addWidget(self.next_four_button, self.rowCount(), 0)
+		self.grid_layout.addWidget(self.next_four_button, self.rowCount(), 1)
 		self.prev_four_button = QPushButton("Prev Four")
-		self.grid_layout.addWidget(self.prev_four_button, self.rowCount()-1, 1)
+		self.grid_layout.addWidget(self.prev_four_button, self.rowCount()-1, 0)
 		self.next_four_button.clicked.connect(self.next_four_clicked)
 		self.prev_four_button.clicked.connect(self.prev_four_clicked)
 
