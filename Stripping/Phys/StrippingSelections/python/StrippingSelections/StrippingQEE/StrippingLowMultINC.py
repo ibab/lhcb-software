@@ -140,7 +140,12 @@ default_config = {
         'DecisionLowMultTMP1'                 : None,
         'PrescaleLowMultTMP2'                 : 0,
         'DecisionLowMultTMP2'                 : None,
-    }
+        #
+        #
+        #
+        'PrescaleLowMultBXTYPE'   : 1,
+         }
+
 }
 
 
@@ -475,7 +480,7 @@ class LowMultINCLines( LineBuilder ) :
                                                         checkPV   = False,
                                                         EnableFlavourTagging = False,
                                                         L0DU      = None,
-                                                        HLT2 = config['DecisionHlt1NoBiasNonBeamBeam'],
+                                                        HLT1 = config['DecisionHlt1NoBiasNonBeamBeam'],
                                                         RequiredRawEvents = config["LowMultRequiredRawEvents"])
 
         self.registerLine(self.lineHlt1NoBiasNonBeamBeam)
@@ -511,4 +516,16 @@ class LowMultINCLines( LineBuilder ) :
 
 
 
-#####
+####################################################################################################
+        self.lineLowMultBXTYPE = StrippingLine( "LowMultBXTYPE"+"Line",
+                                              prescale  = config['PrescaleLowMultBXTYPE'],
+                                              checkPV   = False,
+                                              EnableFlavourTagging = False,
+                                              ODIN = "( ODIN_BXTYP == LHCb.ODIN.NoBeam)",
+                                              L0DU      = None,
+                                              HLT2 = None,
+                                              RequiredRawEvents = config["LowMultRequiredRawEvents"])
+        self.registerLine(self.lineLowMultBXTYPE)
+####################################################################################################
+        
+        
