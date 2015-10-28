@@ -3,7 +3,7 @@
 # Maintainer : Chris Jones
 #============================================================================
 package           VectorClass
-version           v1r17
+version           v1r18
 
 #============================================================================
 # Structure, i.e. directories to process. 
