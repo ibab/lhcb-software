@@ -124,34 +124,28 @@ def configureMapping(algorithm):
   algorithm.CrateF = 1
   algorithm.ChannelsB0 = [47, 46, 45, 44]
   algorithm.ChannelsB1 = [23, 22, 21, 20]
-  algorithm.ChannelsB2 = [11, 10, 9, 8]
-  # Default: no masked channels
-  #algorithm.MasksB0 = [1,1,1,1]
-  #algorithm.MasksB1 = [1,1,1,1]
-  #algorithm.MasksB2 = [1,1,1,1]
-  #algorithm.MasksF1 = [1,1,1,1]
-  #algorithm.MasksF2 = [1,1,1,1]
-  algorithm.SpareChannelsB0 = [12,12,12,12]
-  algorithm.SpareChannelsB1 = [51,51,51,51]
-  algorithm.SpareChannelsB2 = [43,43,43,43]
+  algorithm.ChannelsB2 = [11, 10,  9,  8]
+  algorithm.SpareChannelsB0 = [12, 12, 12, 12]
+  algorithm.SpareChannelsB1 = [51, 51, 51, 51]
+  algorithm.SpareChannelsB2 = [43, 43, 43, 43]
   if options.runNumber > 163708: 
     ## When F13 was put to the other side
     algorithm.ChannelsF1 = [23, 22, 21, 46]
-    algorithm.ChannelsF2 = [11, 10, 9, 8]
-    algorithm.SpareChannelsF1 = [ 51,51,51,45]
-    algorithm.SpareChannelsF2 = [43,43,43,43]
+    algorithm.ChannelsF2 = [11, 10,  9,  8]
+    algorithm.SpareChannelsF1 = [51, 51, 51, 45]
+    algorithm.SpareChannelsF2 = [43, 43, 43, 43]
   elif options.runNumber < 163707 and options.runNumber > 161696: 
     ## `After TS2 mapping same than B side
     algorithm.ChannelsF1 = [23, 22, 21, 20]
-    algorithm.ChannelsF2 = [11, 10, 9, 8]
-    algorithm.SpareChannelsF1 = [51,51,51,51]
-    algorithm.SpareChannelsF2 = [43,43,43,43]
+    algorithm.ChannelsF2 = [11, 10,  9,  8]
+    algorithm.SpareChannelsF1 = [51, 51, 51, 51]
+    algorithm.SpareChannelsF2 = [43, 43, 43, 43]
   elif options.runNumber < 161697: 
     ## Between adaptor board installation and TS2
     algorithm.ChannelsF1 = [23, 22, 21, 20]
     algorithm.ChannelsF2 = [47, 46, 45, 44]
-    algorithm.SpareChannelsF1 = [ 51,51,51,51]
-    algorithm.SpareChannelsF2 = [43,43,43,43 ]
+    algorithm.SpareChannelsF1 = [51, 51, 51, 51]
+    algorithm.SpareChannelsF2 = [43, 43, 43, 43 ]
 
 if int(options.refRunNumber) > 0:
   from Configurables import HCDigitCorrector
@@ -165,7 +159,7 @@ if int(options.refRunNumber) > 0:
   commonmode = tree.getroot()
   Corrections = {'Theta':[],'x0':[],'y0':[]}
   for q in quads:
-    for p in ['Odd','Even']:
+    for p in ['Even','Odd']:
       Corrections['Theta'].append( float(commonmode.find(q+p).find('theta').text))
       Corrections['x0'].append( float(commonmode.find(q+p).find('X0').text))
       Corrections['y0'].append( float(commonmode.find(q+p).find('Y0').text))
