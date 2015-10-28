@@ -952,52 +952,52 @@ run_view_pages = OrderedDict([
         }
     ),
     #==========================================================================
-    ('graphics_examples',
-        {
-        'title': 'Graphics Examples',
-        'plots': 
-            [
-                {
-                'title': 'Normalised contours of possible line styles with legend',
-                'plottables': 
-                    [
-                        {
-                        'name': 'Velo/VeloTrackMonitor/Track_radc', 
-                        'color':'y', 
-                        'style':0, 
-                        'legend': '0',
-                        'normalise': True
-                        },
-                        {
-                        'name': 'Velo/VeloTrackMonitor/Track_phiadc', 
-                        'style':1,
-                        'legend': '1',
-                        'normalise': True
-                        },
-                        {
-                        'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC value sensor {0}',
-                        'legend': '2',
-                        'style': 2,
-                        'normalise': True
-                        },
-                        {
-                        'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC value fit function sensor {0}',
-                        'legend': '4',
-                        'color':'k',
-                        'style': 2,
-                        'normalise': True
-                        },
-                        {
-                        'name': 'Velo/VeloTrackMonitor/Track_Theta',
-                        'legend': '2',
-                        'style': 2,
-                        'normalise': True
-                        }
-                    ],
-                'showLegend': True
-                }
-            ]
-        }
-    )
+#     ('graphics_examples',
+#         {
+#         'title': 'Graphics Examples',
+#         'plots': 
+#             [
+#                 {
+#                 'title': 'Normalised contours of possible line styles with legend',
+#                 'plottables': 
+#                     [
+#                         {
+#                         'name': 'Velo/VeloTrackMonitor/Track_radc', 
+#                         'color':'y', 
+#                         'style':0, 
+#                         'legend': '0',
+#                         'normalise': True
+#                         },
+#                         {
+#                         'name': 'Velo/VeloTrackMonitor/Track_phiadc', 
+#                         'style':1,
+#                         'legend': '1',
+#                         'normalise': True
+#                         },
+#                         {
+#                         'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC value sensor {0}',
+#                         'legend': '2',
+#                         'style': 2,
+#                         'normalise': True
+#                         },
+#                         {
+#                         'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC value fit function sensor {0}',
+#                         'legend': '4',
+#                         'color':'k',
+#                         'style': 2,
+#                         'normalise': True
+#                         },
+#                         {
+#                         'name': 'Velo/VeloTrackMonitor/Track_Theta',
+#                         'legend': '2',
+#                         'style': 2,
+#                         'normalise': True
+#                         }
+#                     ],
+#                 'showLegend': True
+#                 }
+#             ]
+#         }
+#     )
     #==========================================================================
 ])
