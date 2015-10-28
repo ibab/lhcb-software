@@ -14,15 +14,15 @@ __all__ = ('D2HHHPi0Lines',
 
 from Gaudi.Configuration import *
 
-from GaudiConfUtils.ConfigurableGenerators import CombineParticles
-from Configurables                         import DaVinci__N4BodyDecays
+from GaudiConfUtils.ConfigurableGenerators import CombineParticles, DaVinci__N4BodyDecays
 from StandardParticles                     import StdNoPIDsPions, StdNoPIDsKaons
 from StandardParticles                     import StdLooseResolvedPi0, StdLooseMergedPi0
 
 from PhysSelPython.Wrappers      import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils        import LineBuilder, checkConfig
-from Configurables               import SubstitutePID, FilterDesktop
+
+from Configurables import FilterDesktop
 
 from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
 
@@ -68,15 +68,15 @@ default_config = {
 
 class D2HHHPi0Lines( LineBuilder ) :
     """Class defining the D(s)+ -> h h pi pi0 stripping lines"""
-    
+
     __configuration_keys__ = default_config['CONFIG'].keys()
-    
-    def __init__( self,name,config ) :        
-        
+
+    def __init__( self,name,config ) :
+
         LineBuilder.__init__(self, name, config)
-        
+
         self.D2HHHPi0, self.lineD2HHHPi0 = {}, {}
-        
+
         decays = { 'PiPiPiPi0'  : ['[D+ -> pi+ pi- pi+ pi0]cc'],
                    'KPiPiPi0'   : ['[D+ -> K- pi+ pi+ pi0]cc', '[D+ -> K+ pi- pi+ pi0]cc'],
                    'KKPiPi0'    : ['[D+ -> K+ K- pi+ pi0]cc', '[D+ -> K+ K+ pi- pi0]cc'],
@@ -94,14 +94,14 @@ class D2HHHPi0Lines( LineBuilder ) :
         for decay, decayDescriptors in decays.iteritems():
             # make the various stripping selections
             D2HHHPi0Name   = name + "D2" + decay
-        
+
             am34 = (139.57 + 134.9766) * MeV
             am4 = 134.9766 * MeV
             inputs = [ StdNoPIDsPions ] if decays == 'PiPiPiPi0' else [ StdNoPIDsPions, StdNoPIDsKaons ]
-        
+
             # use both LL and DD KS
             for pizName, pizCands in Piz.iteritems():
-            
+
                 # Create the D+ candidate
                 self.D2HHHPi0[decay+pizName] = self.makeD2HHHPi0(D2HHHPi0Name+pizName,
                                                               decayDescriptors,
@@ -124,14 +124,14 @@ class D2HHHPi0Lines( LineBuilder ) :
                                                               config['MinBPVTAU'],
                                                               inputs+[pizCands]
                                                               )
-        
+
                 # Create the stripping line
                 self.lineD2HHHPi0[decay+pizName] = StrippingLine(D2HHHPi0Name+pizName+"Line",
                                                                prescale  = config['PrescaleD2'+decay+pizName],
                                                                selection = self.D2HHHPi0[decay+pizName],
                                                                HLT1 = config['Hlt1Filter'],
                                                                HLT2 = config['Hlt2Filter'] )
-        
+
                 # Register the line
                 self.registerLine(self.lineD2HHHPi0[decay+pizName])
             # end loop on piz types
@@ -183,15 +183,15 @@ class D2HHHPi0Lines( LineBuilder ) :
           minLT           : minimum lifetime wrt best PV
           inputSel        : input selections
         """
-    
+
         _daughters_cuts = " (TRGHOSTPROB < %(trGhostProb)s)" \
                           "&(TRCHI2DOF < %(trChi2)s)" \
                           "&(PT > %(minPT)s)" \
                           "&(MIPCHI2DV(PRIMARY) > %(minIPChi2)s )" %locals()
         _pidPi = "&(PIDK < %(highPIDK)s)" %locals()
         _pidK  = "&(PIDK > %(lowPIDK)s)" %locals()
-    
-    
+
+
         _c12_cuts = (" ( AM < (%(amMax)s - %(am34)s) ) " \
                      "&( ACHI2DOCA(1,2) < %(maxDocaChi2)s ) " %locals() )
         _c123_cuts =(" ( AM < (%(amMax)s - %(am4)s) ) " \
@@ -212,11 +212,10 @@ class D2HHHPi0Lines( LineBuilder ) :
                                               Combination12Cut = _c12_cuts, Combination123Cut = _c123_cuts,
                                               CombinationCut = _combination_cuts,
                                               MotherCut = _mother_cuts)
-    
+
         return Selection(name,
                          Algorithm = CombineD2HHHKs,
                          RequiredSelections = inputSel )
 
 
-########################################################################  
-
+########################################################################

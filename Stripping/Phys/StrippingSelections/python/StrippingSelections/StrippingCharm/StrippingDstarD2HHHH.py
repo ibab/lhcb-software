@@ -7,21 +7,19 @@ Authors: Maurizio Martinelli, Maxime Schubiger
 ########################################################################
 __author__ = ['Maurizio Martinelli', 'Maxime Schubiger']
 __date__ = '07/05/2015'
-__version__ = '$Revision: 0.1 $'
+__version__ = '$Revision: 1.0 $'
 
 __all__ = ('DstarD2HHHHLines',
            'default_config')
 
 from Gaudi.Configuration import *
 
-from GaudiConfUtils.ConfigurableGenerators import CombineParticles
-from Configurables                         import DaVinci__N4BodyDecays
+from GaudiConfUtils.ConfigurableGenerators import CombineParticles, DaVinci__N4BodyDecays
 from StandardParticles                     import StdAllNoPIDsPions, StdNoPIDsPions, StdNoPIDsKaons
 
 from PhysSelPython.Wrappers      import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils        import LineBuilder, checkConfig
-from Configurables               import SubstitutePID, FilterDesktop
 
 from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
 
@@ -67,30 +65,30 @@ default_config = {
 
 class DstarD2HHHHLines( LineBuilder ) :
     """Class defining the D*+ -> (D0 -> pi h h h) pi+ stripping lines"""
-    
+
     __configuration_keys__ = default_config['CONFIG'].keys()
-    
-    def __init__( self,name,config ) :        
-        
+
+    def __init__( self,name,config ) :
+
         LineBuilder.__init__(self, name, config)
-        
+
         self.D2HHHH, self.Dst2D0pi, self.lineDstarD2HHHH = {}, {}, {}
-        
+
         decays = { 'PiPiPiPi'  : ['D0 -> pi+ pi- pi+ pi-'],
                    'KPiPiPi'   : ['D0 -> K- pi+ pi+ pi-', 'D0 -> K+ pi- pi+ pi-'],
                    'KKPiPi'    : ['D0 -> K+ K- pi+ pi-'],
                    'KKKPi'     : ['D0 -> K- K+ K- pi+', 'D0 -> K+ K+ K- pi-']
                      }
-        
+
         for decay, decayDescriptors in decays.iteritems():
             # make the various stripping selections
             DstarD2HHHHName   = name + "DstarD2" + decay
             D2HHHHName   = name + "D2" + decay
-        
+
             am34 = (139.57 + (493.677 if decay == 'KKKPi' else 139.57) ) * MeV
             am4 = 139.57 * MeV
             inputs = [ StdNoPIDsPions] if decays == 'PiPiPiPi' else [ StdNoPIDsPions, StdNoPIDsKaons ]
-        
+
             # Create the D0 candidate
             self.D2HHHH[decay] = self.makeD2HHHH(D2HHHHName,
                                             decayDescriptors,
@@ -116,20 +114,20 @@ class DstarD2HHHHLines( LineBuilder ) :
                                             config['MinDP'],
                                             inputs
                                             )
-            
+
             # Create the D* candidate
             self.Dst2D0pi[decay] = self.makeDstar2D0Pi(DstarD2HHHHName,
                                                   config,
                                                   ['D*(2010)+ -> D0 pi+', 'D*(2010)- -> D0 pi-'],
                                                   inputSel = [self.D2HHHH[decay], StdAllNoPIDsPions] )
-        
+
             # Create the stripping line
             self.lineDstarD2HHHH[decay] = StrippingLine(DstarD2HHHHName+"Line",
                                                         prescale  = config['PrescaleDstarD2'+decay],
                                                         selection = self.Dst2D0pi[decay],
                                                         HLT1 = config['Hlt1Filter'],
                                                         HLT2 = config['Hlt2Filter'] )
-        
+
             # Register the line
             self.registerLine(self.lineDstarD2HHHH[decay])
         # end loop on decay modes
@@ -170,15 +168,15 @@ class DstarD2HHHHLines( LineBuilder ) :
           minDP           : minimum D P
           inputSel        : input selections
         """
-    
+
         _daughters_cuts = " (TRGHOSTPROB < %(trGhostProb)s)" \
                           "&(TRCHI2DOF < %(trChi2)s)" \
                           "&(PT > %(minPT)s)" \
                           "&(MIPCHI2DV(PRIMARY) > %(minIPChi2)s )" %locals()
         _pidPi = "&(PIDK < %(highPIDK)s)" %locals()
         _pidK  = "&(PIDK > %(lowPIDK)s)" %locals()
-    
-    
+
+
         _c12_cuts = (" ( AM < (%(amMax)s - %(am34)s) ) " \
                      "&( ACHI2DOCA(1,2) < %(maxDocaChi2)s ) " %locals() )
         _c123_cuts =(" ( AM < (%(amMax)s - %(am4)s) ) " \
@@ -202,7 +200,7 @@ class DstarD2HHHHLines( LineBuilder ) :
                                               Combination12Cut = _c12_cuts, Combination123Cut = _c123_cuts,
                                               CombinationCut = _combination_cuts,
                                               MotherCut = _mother_cuts)
-    
+
         return Selection(name,
                          Algorithm = CombineD2HHHH,
                          RequiredSelections = inputSel )
@@ -236,5 +234,4 @@ class DstarD2HHHHLines( LineBuilder ) :
                          )
 
 
-########################################################################  
-
+########################################################################

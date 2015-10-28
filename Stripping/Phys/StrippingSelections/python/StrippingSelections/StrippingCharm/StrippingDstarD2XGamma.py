@@ -21,7 +21,8 @@ from StandardParticles                     import StdLooseAllPhotons, StdAllLoos
 from PhysSelPython.Wrappers      import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils        import LineBuilder, checkConfig
-from Configurables               import SubstitutePID, FilterDesktop
+
+from Configurables import FilterDesktop
 
 from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
 
@@ -85,13 +86,13 @@ default_config = {
 
 class DstarD2XGammaLines( LineBuilder ) :
     """Class defining the D*+ -> (D0 -> (X->h h) gamma) pi+ stripping lines"""
-    
+
     __configuration_keys__ = default_config['CONFIG'].keys()
-    
-    def __init__( self,name,config ) :        
-        
+
+    def __init__( self,name,config ) :
+
         LineBuilder.__init__(self, name, config)
-        
+
         # Select photons
         self.selPhotons = {'': self.makePhoton('GammaFor'+name,
                                                 config['photonPT']),
@@ -105,20 +106,20 @@ class DstarD2XGammaLines( LineBuilder ) :
                                                         config['MaxVCHI2_CNV_DD'],
                                                         config['MinPT_CNV_DD'],
                                                         [StdAllLooseGammaDD]) }
-        
+
         self.HHForD2XGamma, self.D2XGamma, self.Dst2D0pi, self.lineDstarD2XGamma = {}, {}, {}, {}
-        
+
         decays = { 'PiPiGamma'  : {'HHdesc': ['rho(770)0 -> pi+ pi-'], 'D0desc': ['D0 -> rho(770)0 gamma'] },
                    'KPiGamma'   : {'HHdesc': ['K*(892)0 -> K- pi+', 'K*(892)0 -> K+ pi-'], 'D0desc': ['D0 -> K*(892)0 gamma'] },
                    'KKGamma'    : {'HHdesc': ['phi(1020) -> K+ K-'], 'D0desc': ['D0 -> phi(1020) gamma'] },
                      }
-        
+
         for decay, decayDescriptors in decays.iteritems():
             # make the various stripping selections
             DstarD2XGammaName   = name + "DstarD2" + decay
             D2XGammaName   = name + "D2" + decay
             HHCombName   = name + "HHForD2" + decay
-        
+
             inputs = [ StdNoPIDsPions] if decays == 'PiPiGamma' else [ StdNoPIDsPions, StdNoPIDsKaons ]
 
             # Create the 2-body candidate
@@ -143,7 +144,7 @@ class DstarD2XGammaLines( LineBuilder ) :
                                                      )
 
             for phName, photons in self.selPhotons.iteritems():
-                        
+
                 # Create the D0 candidate
                 self.D2XGamma[decay+phName] = self.makeD2XGamma(D2XGammaName+phName,
                                                                 decayDescriptors['D0desc'],
@@ -157,20 +158,20 @@ class DstarD2XGammaLines( LineBuilder ) :
                                                                 config['MinBPVTAU'],
                                                                 inputSel = [self.HHForD2XGamma[decay], photons]
                                                                 )
-            
+
                 # Create the D* candidate
                 self.Dst2D0pi[decay+phName] = self.makeDstar2D0Pi(DstarD2XGammaName+phName,
                                                                   config,
                                                                   ['D*(2010)+ -> D0 pi+', 'D*(2010)- -> D0 pi-'],
                                                                   inputSel = [self.D2XGamma[decay+phName], StdNoPIDsPions] )
-        
+
                 # Create the stripping line
                 self.lineDstarD2XGamma[decay+phName] = StrippingLine(DstarD2XGammaName+phName+"Line",
                                                                      prescale  = config['PrescaleDstarD2'+decay+phName],
                                                                      selection = self.Dst2D0pi[decay+phName],
                                                                      HLT1 = config['Hlt1Filter'],
                                                                      HLT2 = config['Hlt2Filter'] )
-        
+
                 # Register the line
                 self.registerLine(self.lineDstarD2XGamma[decay+phName])
         # end loop on decay modes
@@ -180,16 +181,16 @@ class DstarD2XGammaLines( LineBuilder ) :
 
         @arg name: name of the Selection.
         @arg photonPT: PT of the photon
-    
+
         @return: Selection object
-    
+
         """
         # Prepare selection
         _code = "(PT> %(photonPT)s*MeV)" % locals()
         _gammaFilter = FilterDesktop(name = "GammaFilter_"+name, Code=_code)
         _stdGamma = StdLooseAllPhotons
         return Selection(name, Algorithm=_gammaFilter, RequiredSelections=[_stdGamma])
-    
+
     def makePhotonConv(self, name,
                        mMax, maxVChi, minPT,
                        inputSel):
@@ -209,7 +210,7 @@ class DstarD2XGammaLines( LineBuilder ) :
                          Algorithm = _filter,
                          RequiredSelections = inputSel )
 
-        _DDConvSel = FilterDesktop(Code = "(MM < 100*MeV) & (HASVERTEX) & (VFASPF(VCHI2/VDOF)<9) & (PT >  %(B2XGGammaCNVPTMin)s)" % self.__confdict__ 
+        _DDConvSel = FilterDesktop(Code = "(MM < 100*MeV) & (HASVERTEX) & (VFASPF(VCHI2/VDOF)<9) & (PT >  %(B2XGGammaCNVPTMin)s)" % self.__confdict__
 )
 
         self.ConvLLPhoton = Selection( 'ConvLLPhoton' + self.name,
@@ -245,14 +246,14 @@ class DstarD2XGammaLines( LineBuilder ) :
           minVDChi2        : minimum vertex distance chi2
           inputSel         : input selections
         """
-    
+
         _daughters_cuts = " (TRGHOSTPROB < %(trGhostProb)s)" \
                           "&(TRCHI2DOF < %(trChi2)s)" \
                           "&(PT > %(minTrkPT)s)" \
                           "&(MIPCHI2DV(PRIMARY) > %(minIPChi2)s )" %locals()
         _pidPi = "&(PIDK < %(highPIDK)s)" %locals()
         _pidK  = "&(PIDK > %(lowPIDK)s)" %locals()
-        
+
         _combination_cuts =  (" (in_range( %(amMin)s, AM, %(amMax)s ) ) " \
                               "&( (APT1+APT2) > %(minPT)s )"  \
                               "&( ACHI2DOCA(1,2) < %(maxDocaChi2)s )" %locals() )
@@ -265,11 +266,11 @@ class DstarD2XGammaLines( LineBuilder ) :
                                        DaughtersCuts = { "pi+" : _daughters_cuts+_pidPi, "K+" : _daughters_cuts+_pidK },
                                        CombinationCut = _combination_cuts,
                                        MotherCut = _mother_cuts)
-    
+
         return Selection(name,
                          Algorithm = CombineX2HH,
                          RequiredSelections = inputSel )
-               
+
 
     def makeD2XGamma( self, name, decayDescriptors,
                       amMin, amMax,
@@ -289,7 +290,7 @@ class DstarD2XGammaLines( LineBuilder ) :
           minLT           : minimum lifetime wrt best PV
           inputSel        : input selections
         """
-    
+
         _combination_cuts =  (" (in_range( %(amMin)s, AM, %(amMax)s )) " %locals() )
         _mother_cuts = (" (in_range( %(vmMin)s* MeV, M, %(vmMax)s )) " \
                         "&(PT > %(minPT)s)" \
@@ -300,7 +301,7 @@ class DstarD2XGammaLines( LineBuilder ) :
         CombineD2XGamma = CombineParticles(DecayDescriptors = decayDescriptors,
                                            CombinationCut = _combination_cuts,
                                            MotherCut = _mother_cuts)
-    
+
         return Selection(name,
                          Algorithm = CombineD2XGamma,
                          RequiredSelections = inputSel )
@@ -334,5 +335,4 @@ class DstarD2XGammaLines( LineBuilder ) :
                          )
 
 
-########################################################################  
-
+########################################################################

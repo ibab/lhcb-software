@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-10-28 - Maurizio Martinelli
+ - Fixed NBody-import issue for DstarD2HHHH, DstarD2KSHHPi0, DstarD2XGamma,
+     D2HHHKs, D2HHHPi0
+
 ! 2015-10-27 - Pablo Ruiz Valls
  - Fixed NBody-import issue for Beauty2XGamma
  - Added Run II trigger lines to Beauty2XGamma dictionary for S24
