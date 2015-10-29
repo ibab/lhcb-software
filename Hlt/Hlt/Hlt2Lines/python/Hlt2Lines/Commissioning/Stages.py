@@ -19,7 +19,7 @@ class IncidentGenerator(Hlt2Stage):
         super(IncidentGenerator, self).__init__("Generator", [])
 
     def stage(self, stages, cuts):
-        from Configurables import HltIncidentGenerator, HltSelReportsMaker
-        HltSelReportsMaker().DebugIncident = 'RequestDebugEvent'
+        from Configurables import HltIncidentGenerator, Hlt2SelReportsMaker
+        Hlt2SelReportsMaker().DebugIncident = 'RequestDebugEvent'
         return HltIncidentGenerator('Hlt2DebugEventDecision',
-                                    Incident = HltSelReportsMaker().DebugIncident)
+                                    Incident = Hlt2SelReportsMaker().DebugIncident)
