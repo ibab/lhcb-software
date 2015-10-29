@@ -73,7 +73,7 @@ private:
 
   bool m_measureTime;                    ///< Flag to measure time
   bool m_returnOK;                       ///< Forces the sequencer to return a good status
-  ISequencerTimerTool* m_timerTool = nullptr;      ///< Pointer to the timer tool
+  ISequencerTimerTool* m_timerTool;      ///< Pointer to the timer tool
   int  m_timer;                          ///< Timer number for the sequencer
 
   boost::threadpool::pool m_thrd_pool;   ///< Thread and task pool

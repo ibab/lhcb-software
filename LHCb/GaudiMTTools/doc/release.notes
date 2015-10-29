@@ -3,8 +3,6 @@
 ! Responsible : Illya SHAPOVAL
 ! Purpose     : The package for Gaudi multithreading tools and machinery
 !-----------------------------------------------------------------------------
-! 2015-10-29 - Gerhard Raven
- - stop propagating globalTimeOffset (see GAUDI-1122)
 
 !========================= GaudiMTTools v1r2p2 2015-10-12 =========================
 ! 2015-08-03 - Gerhard Raven

@@ -142,6 +142,7 @@ StatusCode GaudiParallelizer::decodeNames(){
   IJobOptionsSvc* jos = svc<IJobOptionsSvc>( "JobOptionsSvc" );
   bool addedContext = false;  //= Have we added the context ?
   bool addedRootInTES = false;  //= Have we added the rootInTES ?
+  bool addedGlobalTimeOffset = false;  //= Have we added the globalTimeOffset ?
 
 
   //= Get the Application manager, to see if algorithm exist
@@ -159,9 +160,11 @@ StatusCode GaudiParallelizer::decodeNames(){
     if ( !myIAlg.isValid() ) {
       //== Set the Context if not in the jobOptions list
       if ( ""  != context() ||
-           ""  != rootInTES() ) {
+           ""  != rootInTES() ||
+           0.0 != globalTimeOffset() ) {
         bool foundContext = false;
         bool foundRootInTES = false;
+        bool foundGlobalTimeOffset = false;
         const std::vector<const Property*>* properties = jos->getProperties( theName );
         if ( 0 != properties ) {
           // Iterate over the list to set the options
@@ -176,6 +179,9 @@ StatusCode GaudiParallelizer::decodeNames(){
               if ( "RootInTES" == (*itProp)->name() ) {
                 foundRootInTES = true;
               }
+              if ( "GlobalTimeOffset" == (*itProp)->name() ) {
+                foundGlobalTimeOffset = true;
+              }
             }
           }
         }
@@ -188,6 +194,11 @@ StatusCode GaudiParallelizer::decodeNames(){
           StringProperty rootInTESProperty( "RootInTES", rootInTES() );
           jos->addPropertyToCatalogue( theName, rootInTESProperty ).ignore();
           addedRootInTES = true;
+        }
+        if ( !foundGlobalTimeOffset && 0.0 != globalTimeOffset() ) {
+          DoubleProperty globalTimeOffsetProperty( "GlobalTimeOffset", globalTimeOffset() );
+          jos->addPropertyToCatalogue( theName, globalTimeOffsetProperty ).ignore();
+          addedGlobalTimeOffset = true;
         }
       }
 
@@ -213,6 +224,10 @@ StatusCode GaudiParallelizer::decodeNames(){
     if ( addedRootInTES ) {
       jos->removePropertyFromCatalogue( theName, "RootInTES" ).ignore();
       addedRootInTES = false;
+    }
+    if ( addedGlobalTimeOffset ) {
+      jos->removePropertyFromCatalogue( theName, "GlobalTimeOffset" ).ignore();
+      addedGlobalTimeOffset = false;
     }
 
     // propagate the sub-algorithm into own state.
@@ -276,6 +291,7 @@ StatusCode GaudiParallelizer::decodeNames(){
   }
   if ( "" != context() ) msg << ", with context '" << context() << "'";
   if ( "" != rootInTES() ) msg << ", with rootInTES '" << rootInTES() << "'";
+  if ( 0.0 != globalTimeOffset() ) msg << ", with globalTimeOffset " << globalTimeOffset();
   msg << endmsg;
 
   return final;
@@ -296,7 +312,7 @@ void GaudiParallelizer::membershipHandler ( Property& /* p */ )
 
   // add the entries into timer table:
 
-  if ( !m_timerTool )
+  if ( 0 == m_timerTool )
   { m_timerTool = tool<ISequencerTimerTool>( "SequencerTimerTool" ) ; }
 
   if ( m_timerTool->globalTiming() ) m_measureTime = true;
