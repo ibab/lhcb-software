@@ -47,7 +47,11 @@ namespace LHCb
       GO_PROCESS=1,
       GO_GENTLE_STOP=2
     };
-
+    enum {
+      AUTO_INPUT_TYPE = 0,
+      MDF_INPUT_TYPE = 1,
+      MEP_INPUT_TYPE = 2
+    };
   protected:
     /// Flag indicating that MBM event retrieval is active
     bool                     m_receiveEvts;
@@ -74,6 +78,8 @@ namespace LHCb
     std::string              m_brokenHostsFile;
     /// Property: List of runs to be processed (as strings!)
     std::vector<std::string> m_allowedRuns;
+    /// Property: Buffer names to be checked on special transitions
+    std::vector<std::string> m_mbmNames;
     /// Property: Maximum number of seconds to wait for consumers (default: 20 seconds)
     int                      m_maxConsWait;
     /// Property: Time for initial sleep before starting to process files (default: 10 sec)
@@ -84,9 +90,8 @@ namespace LHCb
     int                      m_rescan;
     /// Property: Maximum number of events to be read from 1 single input file
     int                      m_max_events_per_file;
-    /// Property: Buffer names to be checked on special transitions
-    std::vector<std::string> m_mbmNames;
-
+    /// Property: Disable automatic check to determine MDF file type and require it (0=auto, 1=MDF, 2=MEP)
+    int                      m_inputType;
     /// Monitoring quantity: Number of events processed
     int                      m_evtCount;
     /// Monitoring quantity: Number of events per current input file
@@ -243,6 +248,7 @@ HltBufferedIOReader::HltBufferedIOReader(const string& nam, ISvcLocator* svcLoc)
     m_producer(0), m_evtCount(0), m_evtCountFile(0), m_runSvcID(0), m_currentRun(0),
     m_goSvcID(0), m_goValue(0), m_disabled(false), m_paused(false), m_mbmInfos(0)
 {
+  declareProperty("InputType",      m_inputType       = AUTO_INPUT_TYPE );
   declareProperty("Buffer",         m_buffer          = "Mep");
   declareProperty("Directory",      m_directory       = "/localdisk");
   declareProperty("FilePrefix",     m_filePrefix      = "Run_");
@@ -686,6 +692,16 @@ StatusCode HltBufferedIOReader::i_run()  {
         }
         bool is_mdf   = size_buf[0] == size_buf[1] && size_buf[0] == size_buf[2];
         int  evt_size = size_buf[0];
+	if ( m_inputType == AUTO_INPUT_TYPE )  {
+	  is_mdf   = size_buf[0] == size_buf[1] && size_buf[0] == size_buf[2];
+	}
+	else if ( m_inputType == MDF_INPUT_TYPE && !is_mdf )   {
+	  // Corrupted file: Try to fix it!
+	}
+	else if ( m_inputType == MEP_INPUT_TYPE && is_mdf )   {
+	  // Error!
+	}
+
         int  buf_size = evt_size + (is_mdf ? bank->hdrSize() : sizeof(MEPEVENT) + sizeof(int));
         // Careful here: sizeof(int) MUST match me->sizeOf() !
         // The problem is that we do not (yet) have a valid data pointer!
@@ -727,11 +743,11 @@ StatusCode HltBufferedIOReader::i_run()  {
             MEPEvent* me = (MEPEvent*) e->data;
             me->setSize(evt_size);
             e->refCount = m_refCount;
-            e->evID = ++id;
-            e->begin = long(e) - long(m_producer->bufferAddress());
+            e->evID    = ++id;
+            e->begin   = long(e) - long(m_producer->bufferAddress());
             e->packing = -1;
-            e->valid = 1;
-            e->magic = mep_magic_pattern();
+            e->valid   = 1;
+            e->magic   = mep_magic_pattern();
             for (size_t j = 0; j < MEP_MAX_PACKING; ++j)   {
               e->events[j].begin = 0;
               e->events[j].evID = 0;

@@ -52,6 +52,8 @@ namespace LHCb  {
     int               m_nerr;
     /// Monitoring quantity: Number of events processed
     int               m_evtCount;
+    /// Flag to indicate that we received a forced exit event
+    bool              m_forceExit;
     /// Flag that indicates that we received an error event 
     bool	      m_errorFired;	 
     /// Flag that indicates that a timeout occurred

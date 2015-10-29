@@ -13,7 +13,8 @@ using namespace std;
 /// Standard Constructor
 EventRunable::EventRunable(const string& nam, ISvcLocator* svcLoc)   
   : OnlineService(nam, svcLoc), m_mepMgr(0), m_dataSvc(0),
-    m_nerr(0), m_evtCount(0), m_errorFired(false), m_eventTMO(false),
+    m_nerr(0), m_evtCount(0), m_forceExit(false), 
+    m_errorFired(false), m_eventTMO(false),
     m_receiveEvts(false), m_processingEvt(false)
 {
   declareProperty("WaitForEvent",         m_waitForEvent=0);
@@ -57,6 +58,7 @@ StatusCode EventRunable::initialize()   {
   incidentSvc()->addListener(this,"DAQ_CANCEL");
   incidentSvc()->addListener(this,"DAQ_PAUSE");
   incidentSvc()->addListener(this,"DAQ_ERROR");
+  incidentSvc()->addListener(this,"DAQ_EXIT");
   incidentSvc()->addListener(this,"DAQ_PROCESS_EVENT");
   incidentSvc()->addListener(this,m_tmoIncident);
   declareInfo("EvtCount",m_evtCount=0,"Number of events processed");
@@ -78,7 +80,10 @@ void EventRunable::handle(const Incident& inc)    {
     return;
   }
   info("Got incident:"+inc.source()+" of type "+inc.type());  
-  if ( inc.type() == "DAQ_PAUSE" )  {
+  if ( inc.type() == "DAQ_EXIT" )  {
+    m_forceExit = true;
+  }
+  else if ( inc.type() == "DAQ_PAUSE" )  {
     //m_receiveEvts = false;
   }
   else if ( inc.type() == "DAQ_ENABLE" )  {
@@ -134,6 +139,15 @@ StatusCode EventRunable::run()   {
     while ( m_receiveEvts )   {
       // loop over the events
       
+      // If we got a forced exit, do not attempt to process a new event.
+      if ( m_forceExit )  {
+	SmartIF<IService> mep(m_mepMgr);
+        mep->stop();
+        mep->finalize();
+	info("Data processing stops now. Calling _exit.");
+	_exit(0);
+      }
+
       if(m_errorFired) {
         //    Incident incident(name(),"DAQ_ERROR");
         //    m_incidentSvc->fireIncident(incident);
@@ -158,6 +172,15 @@ StatusCode EventRunable::run()   {
       }
       m_processingEvt = false;
       incidentSvc()->fireIncident(Incident(name(),"DAQ_END_EVENT"));
+      // If we got a forced exit, do not attempt to process a new event. Exit NOW!
+      if ( m_forceExit )  {
+	info("Data processing stops now. Calling _exit.");
+	SmartIF<IService> mep(m_mepMgr);
+        mep->stop();
+        mep->finalize();
+	_exit(0);
+      }
+
       if ( sc.isSuccess() )  {
         m_evtCount++;
         if ( m_eventTMO )    {
