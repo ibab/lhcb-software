@@ -13,9 +13,6 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
-! 2015-10-29 - Gerhard Raven
- - stop propagating globalTimeOffset (see GAUDI-1122)
-
 ! 2015-10-28 - Gerhard Raven
  - fix clang error
 

@@ -97,7 +97,7 @@ namespace
     SmartIF<IAlgContextSvc> cntx ( ls ) ;
     LoKi::Assert ( !(!cntx) , "IAlgContextSvc* points to NULL!" ) ;
     GaudiAlgorithm *parent = Gaudi::Utils::getGaudiAlg ( cntx ) ;
-    LoKi::Assert ( parent!=nullptr , "parent not a GaudiAlg!" ) ;
+    LoKi::Assert ( parent!=0 , "parent not a GaudiAlg!" ) ;
     IJobOptionsSvc* jos = parent->svc<IJobOptionsSvc>( "JobOptionsSvc" );
 
     /////////////////////////////
@@ -108,24 +108,31 @@ namespace
 
     bool addedContext = false;
     bool addedRootInTES = false;
+    bool addedGlobalTimeOffset = false;
     // do not create it now
     SmartIF<IAlgorithm> myIAlg = iam->algorithm( typeName , false); 
     if ( !myIAlg.isValid() ) {
       //== Set the Context if not in the jobOptions list
       if ( ""  != parent->context() ||
-           ""  != parent->rootInTES() ) {
+           ""  != parent->rootInTES() ||
+           0.0 != parent->globalTimeOffset() ) {
         bool foundContext = false;
         bool foundRootInTES = false;
+        bool foundGlobalTimeOffset = false;
         const std::vector<const Property*>* properties = 
           jos->getProperties( theName );
-        if ( properties ) {
+        if ( 0 != properties ) {
           // Iterate over the list to set the options
-          for (const auto & property : *properties)   {
+          for ( std::vector<const Property*>::const_iterator itProp = 
+                  properties->begin();
+                itProp != properties->end();
+                itProp++ )   {
             const StringProperty* sp =
-              dynamic_cast<const StringProperty*>(property);
-            if ( sp )    {
-              if ( "Context" == property->name() ) foundContext = true;
-              if ( "RootInTES" == property->name() ) foundRootInTES = true;
+              dynamic_cast<const StringProperty*>(*itProp); // is GlobalTimeOffSet really a stringproperty....
+            if ( 0 != sp )    {
+              if ( "Context" == (*itProp)->name() ) foundContext = true;
+              if ( "RootInTES" == (*itProp)->name() ) foundRootInTES = true;
+              if ( "GlobalTimeOffset" == (*itProp)->name() ) foundGlobalTimeOffset = true;
             }
           }
         }
@@ -139,9 +146,16 @@ namespace
           jos->addPropertyToCatalogue( theName, rootInTESProperty ).ignore();
           addedRootInTES = true;
         }
+        if ( !foundGlobalTimeOffset && 0.0 != parent->globalTimeOffset() ) {
+          DoubleProperty globalTimeOffsetProperty( "GlobalTimeOffset", 
+                                                   parent->globalTimeOffset() );
+          jos->addPropertyToCatalogue( theName, 
+                                       globalTimeOffsetProperty ).ignore();
+          addedGlobalTimeOffset = true;
+        }
       }
 
-      Algorithm *myAlg = nullptr;
+      Algorithm *myAlg = 0;
       StatusCode result = parent->createSubAlgorithm( theType, theName, myAlg );
       // (MCl) this should prevent bug #35199... even if I didn't manage to
       // reproduce it with a simple test.
@@ -164,6 +178,10 @@ namespace
     if ( addedRootInTES ) {
       jos->removePropertyFromCatalogue( theName, "RootInTES" ).ignore();
       addedRootInTES = false;
+    }
+    if ( addedGlobalTimeOffset ) {
+      jos->removePropertyFromCatalogue( theName, "GlobalTimeOffset" ).ignore();
+      addedGlobalTimeOffset = false;
     }
     ///////// end of code copied from GaudiSequencer...
 
@@ -200,7 +218,7 @@ namespace
   ( const std::string&    name , LoKi::ILoKiSvc* loki )  
   {
     SmartIF<IAlgManager> iam = getAlgManager  ( loki ) ;
-    if ( !iam ) { return nullptr ; }  
+    if ( !iam ) { return 0 ; }  
     return getAlgorithm ( name , iam ) ;
   }
   // ==========================================================================
