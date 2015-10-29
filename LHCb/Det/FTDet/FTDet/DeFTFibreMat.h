@@ -282,10 +282,27 @@ public:
    */
   DetectorSegment createDetSegment(const LHCb::FTChannelID& channel, double fracPos) const;
 
+
+  /** Function encapsulating the creation of FTChannelIDs.
+   *  @param hitLayer FT layer ID of the channel
+   *  @param quarter FT quarter of the channel
+   *  @param simpID SiPM ID of the channel
+   *  @param grossCellID Used to determine the CellID of the channel
+   *  @return FTChannelID
+   */
+  LHCb::FTChannelID createChannel(unsigned int hitLayer,
+                                  int          module,
+                                  int          mat,
+                                  unsigned int sipmID,
+                                  unsigned int grossCellID) const;
+
+
   /// Make the Test algo a friend so that it can call private methods
   friend class DeFTTestAlg;
 
-private: // private member functions
+
+
+private: //-----private member functions
 
   /** Get the x-position at the top/bottom of the layer by extrapolating
    *  along the fibres the initial
@@ -326,18 +343,6 @@ private: // private member functions
    */
   unsigned int grossCellID(const unsigned int netID) const;
 
-  /** Function encapsulating the creation of FTChannelIDs.
-   *  @param hitLayer FT layer ID of the channel
-   *  @param quarter FT quarter of the channel
-   *  @param simpID SiPM ID of the channel
-   *  @param grossCellID Used to determine the CellID of the channel
-   *  @return FTChannelID
-   */
-  LHCb::FTChannelID createChannel(unsigned int hitLayer,
-                                  int          module,
-                                  int          mat,
-                                  unsigned int sipmID,
-                                  unsigned int grossCellID) const;
 
 
   /** Determine the XYZ crossing point of a straight line determined by
