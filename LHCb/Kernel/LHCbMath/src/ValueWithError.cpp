@@ -1296,13 +1296,16 @@ Gaudi::Math::ValueWithError Gaudi::Math::sum
   //
   // few more trivial cases 
   //
-  if      ( _zero ( a ) ) { return b ; }
-  else if ( _zero ( b ) ) { return a ; }
-  //
-  const double v = a.value() + b.value();
+  if      ( _zero ( a )  ) { return b ; }
+  else if ( _zero ( b )  ) { return a ; }
   //
   // the second trivial case, no correlation  
-  if ( _zero ( c ) ) { return a + b ; } 
+  if      ( _zero ( c )  ) { return a + b ; } 
+  //
+  if      ( 0 > a.cov2() ) { return sum ( a.value() , b         , c ) ; }
+  else if ( 0 > b.cov2() ) { return sum ( a         , b.value() , c ) ; }
+  //
+  const double v = a.value() + b.value();
   //
   // adjust the correlation coefficient 
   const double r   = std::max ( -1.0 , std::min ( 1.0 , c ) ) ;
@@ -1358,6 +1361,9 @@ Gaudi::Math::ValueWithError Gaudi::Math::subtract
   //
   const double v = a.value() - b.value();
   //
+  if      ( 0 > a.cov2() ) { return subtract ( a.value() , b         , c ) ; }
+  else if ( 0 > b.cov2() ) { return subtract ( a         , b.value() , c ) ; }
+  //
   // the second trivial case, no correlation  
   if ( _zero ( c ) ) { return a - b ; } 
   //
@@ -1403,6 +1409,11 @@ Gaudi::Math::ValueWithError Gaudi::Math::multiply
   else if ( _zero ( b ) ) { return ValueWithError ( 0 , 0 ) ; }
   else if ( _one  ( a ) ) { return b ; }
   else if ( _one  ( b ) ) { return a ; }
+  //
+  // ignore negative uncertainties 
+  //
+  if      ( 0 > a.cov2() ) { return multiply ( a.value() , b         , c ) ; }
+  else if ( 0 > b.cov2() ) { return multiply ( a         , b.value() , c ) ; }
   //
   // the second trivial case, no correlation  
   //
@@ -1453,6 +1464,11 @@ Gaudi::Math::ValueWithError Gaudi::Math::divide
   else if ( _one  ( a ) ) { return 1./b ; }
   else if ( _one  ( b ) ) { return a    ; }
   //
+  // ignore negative uncertainties 
+  //
+  if      ( 0 > a.cov2() ) { return divide ( a.value() , b         , c ) ; }
+  else if ( 0 > b.cov2() ) { return divide ( a         , b.value() , c ) ; }
+  //
   // the second trivial case, no correlation  
   //
   if ( _zero ( c ) ) { return a / b ; }                         // RETURN
@@ -1496,6 +1512,7 @@ Gaudi::Math::fraction
   const Gaudi::Math::ValueWithError& b , 
   const double                       c ) 
 {
+  //
   const double av = std::abs ( a.value() ) ;
   const double bv = std::abs ( b.value() ) ;
   return 
@@ -1519,6 +1536,7 @@ Gaudi::Math::ValueWithError Gaudi::Math::asymmetry
   const Gaudi::Math::ValueWithError& b , 
   const double                       c ) 
 {
+  //
   const double av = std::abs ( a.value() ) ;
   const double bv = std::abs ( b.value() ) ;
   if ( av > bv ) 
