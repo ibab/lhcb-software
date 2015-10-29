@@ -73,6 +73,7 @@ extern "C" int fsm_ctrl(int argc, char** argv)  {
   auto_ptr<Online::FMCLogger> logger;
   string utgid = RTL::processName(), runinfo, taskdefs, mode, partition;
   string fsm_typ_name = "DAQ", slave_type="FmcSlave";
+  string tag_svc = "";
   int    print = 0, count=-1, secs_sleep=0, bind_cpus=0;
   RTL::CLI cli(argc, argv, help_ctrl);
   cli.getopt("fsm",3,fsm_typ_name);
@@ -85,6 +86,7 @@ extern "C" int fsm_ctrl(int argc, char** argv)  {
   cli.getopt("taskconfig",2,taskdefs);
   cli.getopt("sleep",2,secs_sleep);
   cli.getopt("bindcpus",2,bind_cpus);
+  cli.getopt("service",2,tag_svc);
 
   if ( secs_sleep > 0 ) {
     for(secs_sleep *= 1000; secs_sleep >= 0; secs_sleep -= 100)
@@ -106,7 +108,7 @@ extern "C" int fsm_ctrl(int argc, char** argv)  {
 
   TypedObject::setPrintLevel(print);
   Machine              mach(fsm_type(fsm_typ_name),utgid+"::daq");
-  Controller           ctrl(utgid,&mach);
+  Controller           ctrl(utgid,tag_svc,&mach);
   XmlTaskConfiguration cfg(partition,taskdefs,runinfo,mode,count);
   
   ctrl.display(ctrl.INFO,utgid.c_str(),"Selected running mode is:%s",mode.c_str());
@@ -114,7 +116,7 @@ extern "C" int fsm_ctrl(int argc, char** argv)  {
     ::fprintf(stderr,"Failed to interprete XML tasklist.\n");
     ::exit(EINVAL);
   }
-  ctrl.display(ctrl.INFO,utgid.c_str(),"Controller task started...");
+  ctrl.display(ctrl.INFO,utgid.c_str(),"Controller task started... tag service:%s",tag_svc.c_str());
   ctrl.run();
   return 1;
 }

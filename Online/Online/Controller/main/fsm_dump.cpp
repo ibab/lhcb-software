@@ -226,7 +226,8 @@ void ControllerDump::show()    {
       is = m_slaves.begin();
     }
   }
-  ::lib_rtl_output(LIB_RTL_ALWAYS,"+------------------------------------------------------+");
+  const char* time_str = ::lib_rtl_timestr();
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"+- %s -----------------------------------------------------+",time_str);
 }
 
 

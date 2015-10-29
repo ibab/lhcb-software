@@ -88,27 +88,27 @@ bool XmlTaskConfiguration::attachTasks(Machine& machine, const string& slave_typ
     map<int,int> num_instance, task_instance;
 
     // Init counters
-    for(size_t i=0; i<=num_sockets; ++i) {
-      num_instance[i] = 0;
-      task_instance[i] = 0;
+    for(size_t j=0; j<=num_sockets; ++j) {
+      num_instance[j] = 0;
+      task_instance[j] = 0;
     }
-    // Determine the number of   task instances per CPU slot
-    for(size_t i=0; i<=instances; ++i) 
-      ++num_instance[i%num_sockets];
+    // Determine the number of task instances per CPU slot
+    for(size_t j=0; j<=instances; ++j) 
+      ++num_instance[j%num_sockets];
     // Create 'real' and 'internal' slaves
-    for(size_t i=0; i<=instances; ++i)   {
+    for(size_t j=0; j<=instances; ++j)   {
       DimSlave* slave = 0;
-      int cpu_slot = i%num_sockets;
+      int cpu_slot = j%num_sockets;
       int task_id  = task_instance[cpu_slot];
       bool forking = (m_mode != "NORMAL") && (instances != 0);
-      bool internal_slave = forking && i>=num_sockets;      
+      bool internal_slave = forking && j>=num_sockets;      
       if ( instances>0 )
 	::snprintf(text,sizeof(text),"%1d%02d",cpu_slot,task_id);
       else
-	::snprintf(text,sizeof(text),"%d",int(i));
+	::snprintf(text,sizeof(text),"%d",int(j));
       string instance_utgid = RTL::str_replace(utgid,"${INSTANCE}",text);
-      string instance_args = RTL::str_replace(arguments,"${INSTANCE}",text);
-      string instance_fmc = RTL::str_replace(fmc_start,"${INSTANCE}",text)+ " -DUTGID="+instance_utgid;
+      string instance_args  = RTL::str_replace(arguments,"${INSTANCE}",text);
+      string instance_fmc   = RTL::str_replace(fmc_start,"${INSTANCE}",text)+ " -DUTGID="+instance_utgid;
       string cmd = t->command;
 
       ++task_instance[cpu_slot];
@@ -155,6 +155,7 @@ bool XmlTaskConfiguration::attachTasks(Machine& machine, const string& slave_typ
 			  cmd.c_str(),instance_args.c_str());
       }
       slave->setCommand(cmd);
+      slave->setInstanceTag(int(j));
       machine.addSlave(slave);
       const Type::States& states = type->states();
       for(Tasklist::Timeouts::const_iterator it=t->timeouts.begin(); it!=t->timeouts.end(); ++it)   {

@@ -94,7 +94,7 @@ extern "C" int controller_fsm_test(int argc, char** argv)  {
   for(int i=0; i<num_slaves; ++i)
     mac->addSlave(new ExternalSlave(daq,make_slave_name(i),mac));
 
-  Controller* target = new Controller(dim_name,mac);
+  Controller* target = new Controller(dim_name,"",mac);
   target->display(target->ALWAYS,dim_name.c_str(),"Controller task started...");
   target->publish();
   target->run();

@@ -50,7 +50,7 @@ static const char* _metaStateName(int meta)   {
 Slave::Slave(const Type *typ, const string& nam, Machine* machine, bool internal)
   : TypedObject(typ,nam), m_timerID(0,0), m_tmo(5), 
     m_meta(SLAVE_LIMBO), m_status(SLAVE_LIMBO), m_machine(machine), m_state(0), 
-    m_rule(0), m_internal(internal), m_mayStart(!internal), 
+    m_rule(0), m_instanceTag(0), m_internal(internal), m_mayStart(!internal), 
     m_alive(false), m_answered(false)
 {
   m_state = type()->initialState();
@@ -234,10 +234,14 @@ void Slave::handleTimeout()  {
   int st = currentState();
   display(INFO,c_name(),"Slave TIMEOUT. State:%08X [%s] value:%08X [%s]",
 	  st,metaStateName(),m_timerID.second,_metaStateName(m_timerID.second));
-  if ( m_timerID.second == SLAVE_UNLOAD_TIMEOUT ) {
+  if ( isInternal() )  {
+    display(DEBUG,c_name(),"Received timeout from internal slave [Ignored].");
+    return;
+  }
+  else if ( m_timerID.second == SLAVE_UNLOAD_TIMEOUT ) {
     handleUnloadTimeout();
   }
-  if ( m_timerID.second == SLAVE_TERMINATE_TIMEOUT ) {
+  else if ( m_timerID.second == SLAVE_TERMINATE_TIMEOUT ) {
     handleUnloadTimeout();
   }
   else if ( isLimbo() )  {  // Slave died in between
@@ -266,14 +270,26 @@ void Slave::handleUnloadTimeout()  {
 	    "Insufficient Implementation",metaStateName());	  
   }
 }
+namespace {
+  struct Publish {
+    Slave* slave;
+    Publish(Slave* s) : slave(s) {}
+    ~Publish() { slave->publishDebugInfo(); }
+  };
+}
 
 /// Handle state updates for a particular slave
 void Slave::handleState(const string& msg)  {
+  Publish pub(this);
   string        m = msg;
   int          st = currentState();
   bool   starting = st == SLAVE_LIMBO || st == SLAVE_STARTING;
   stopTimer();
-  if ( m.empty() )    {  // No-link ?
+  if ( isInternal() )  {      // We ignore messages from slaves, which are set internal
+    display(INFO,c_name(),"Received message %s from internal slave [Ignored].",m.c_str());
+    return;
+  }
+  else if ( m.empty() )    {  // No-link ?
     if ( !starting )  {
       display(NOLOG,c_name(),"Slave DEAD. Curr State:%s",metaStateName());
       iamDead();
@@ -326,10 +342,18 @@ void Slave::handleState(const string& msg)  {
   transitionFailed();
 }
 
+/// Publish debug information
+void Slave::publishDebugInfo()  {
+}
+
+/// Publish tag information
+void Slave::publishTag(const string& /* tag */)   {
+}
 
 /// IOC handler
 void Slave::handle(const Event& event)   {
   const State* state = (const State*)event.data;
+  Publish pub(this);
   switch(event.type)  {
   case Slave::SLAVE_ALIVE:
     display(DEBUG,c_name(),"Received IAMHERE from internal slave. rule:%s",Rule::c_name(m_rule));

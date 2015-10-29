@@ -40,6 +40,18 @@ static void feed(void* tag, void** buff, int* size, int* /* first */) {
   *size = 1;
 }
 
+/// DimInfo overload to process messages
+static void numTaskHandler(void* tag, void* address, int* size) {
+  if ( tag ) {
+    int         len = size ? *size : 0;
+    Controller*   c = *(Controller**)tag;
+    int         msg = *(int*)address;
+    if ( len == sizeof(int) && msg > 0 ) {
+      c->publishInstances(msg);
+    }
+  }
+}
+
 static void error_call(int severity, int error_code, char* message) {
   static int enabled = 1;
   if ( severity == ERROR_CONTROL ) {
@@ -68,17 +80,21 @@ static void error_call(int severity, int error_code, char* message) {
 }
 
 /// Constructor
-Controller::Controller(const string&  nam, Machine* m)
-  : CommandTarget(nam), m_errorState(0), m_machine(m)
+Controller::Controller(const string&  nam, const std::string& tag_svc, Machine* m)
+  : CommandTarget(nam), m_errorState(0), m_machine(m), m_tagSvcName(tag_svc), 
+    m_fsmTasks(0), m_numTasks(0), m_maxInstanceTag(100000)
 {
   const Type* typ = m_machine->type();
-  const Transition* start = typ->transition(ST_NAME_READY,ST_NAME_RUNNING);
+  const Transition* config = typ->transition(ST_NAME_NOT_READY,ST_NAME_READY);
+  const Transition* start  = typ->transition(ST_NAME_READY,ST_NAME_RUNNING);
   m_errorState = typ->state(ST_NAME_ERROR);
   m->setFailAction(Callback::make(this,&Controller::fail));
   m->setCompletionAction(Callback::make(this,&Controller::publish));
   m->setMetaStateAction(Callback::make(this,&Controller::publishSlaves));
   m->setPreAction(start,Callback::make(this,&Controller::start));
+  m->setCompletionAction(config,Callback::make(this,&Controller::config));
   m_fsmTasks = ::dis_add_service((char*)(nam+"/tasks").c_str(),(char*)"C",0,0,feed,(long)&m_taskInfo);
+  m_fsmTags  = ::dis_add_service((char*)(nam+"/instances").c_str(),(char*)"C",0,0,feed,(long)&m_tagInfo);
   error_call(ERROR_CONTROL,0,(char*)this);
   ::dis_add_error_handler(error_call);
   ::dic_add_error_handler(error_call);
@@ -86,7 +102,9 @@ Controller::Controller(const string&  nam, Machine* m)
 
 /// Standard destructor
 Controller::~Controller() {
-  if ( m_fsmTasks != 0 ) ::dis_remove_service(m_fsmTasks);
+  if ( 0 != m_numTasks ) ::dic_release_service(m_numTasks);
+  if ( 0 != m_fsmTags  ) ::dis_remove_service(m_fsmTags);
+  if ( 0 != m_fsmTasks ) ::dis_remove_service(m_fsmTasks);
 }
 
 /// Publish state information when transition failed. 
@@ -183,14 +201,23 @@ FSM::ErrCond Controller::publish()  {
   return declareState(state);
 }
 
+/// Transition pre-action for configure
+FSM::ErrCond Controller::config()  {
+  //controlInstances(m_maxInstanceTag);
+  if ( 0 == m_numTasks && !m_tagSvcName.empty() )  {
+    m_numTasks = ::dic_info_service(m_tagSvcName.c_str(),MONITORED,0,0,0,numTaskHandler,(long)this,0,0);
+  }
+  display(ALWAYS,c_name(),"config: Adjust number of instance tasks to %d.",m_maxInstanceTag);
+  for(Machine::Slaves::iterator i=m_machine->slaves().begin(); i!= m_machine->slaves().end(); ++i) 
+    (*i)->publishTag(m_tagInfo);
+  return FSM::SUCCESS;
+}
+
+static bool s_started = false;
 /// Transition pre-action for start: Reset all internal slaves to external ones
 FSM::ErrCond Controller::start()  {
-  for(Machine::Slaves::iterator i=m_machine->slaves().begin(); i!= m_machine->slaves().end(); ++i)  {
-    Slave* s = *i;
-    if ( s->isInternal() )  {
-      s->setInternal(false);
-    }
-  }
+  s_started = true;
+  controlInstances();
   return FSM::SUCCESS;
 }
 
@@ -305,4 +332,40 @@ void Controller::commandHandler()   {
     return;
   }
   declareSubState(EXEC_ACTION);
+}
+
+void Controller::publishInstances(int count)   {
+  if ( count > 0 )  {
+    string tag = "|";
+    m_maxInstanceTag = count;
+    display(ALWAYS,c_name(),"Adjust number of instance tasks to %d.",m_maxInstanceTag);
+    for(Machine::Slaves::iterator i=m_machine->slaves().begin(); i!= m_machine->slaves().end(); ++i)  {
+      Slave* s = *i;
+      if ( s->instanceTag() <= m_maxInstanceTag )  {
+	tag += s->name();
+	tag += "|";
+      }
+    }
+    m_tagInfo = tag;
+    ::dis_update_service(m_fsmTags);
+  }
+  controlInstances();
+}
+
+/// Adjust the number of slaves to be controlled (ignore overcounted slaves)
+void Controller::controlInstances()   {
+  display(ALWAYS,c_name(),"controlInstances: Adjust number of instance tasks to %d.",m_maxInstanceTag);
+  for(Machine::Slaves::iterator i=m_machine->slaves().begin(); i!= m_machine->slaves().end(); ++i)  {
+    Slave* s = *i;
+    bool internal = s->instanceTag() > m_maxInstanceTag;
+    if ( s_started )  {
+      display(ALWAYS,c_name(),"controlInstances: Set slave %s to %s",
+	      s->c_name(), internal ? "INTERNAL" : "PHYSICAL");
+      s->setInternal(internal);
+    }
+    else if ( internal && !s->isInternal() )
+      s->setInternal(true);
+    s->publishDebugInfo();
+    s->publishTag(m_tagInfo);
+  }
 }

@@ -81,6 +81,8 @@ namespace FiniteStateMachine {
     const State*      m_state;
     /// Rule currently applied during this transition
     const Rule*       m_rule;
+    /// Instance identifier (default: 0, >0 for forked processes)
+    int               m_instanceTag;
     /// Flag indicating (initial) internal transition actions
     bool              m_internal;
     /// Flag indicating if the slave may be started (internal slaves may not!)
@@ -112,6 +114,10 @@ namespace FiniteStateMachine {
     SlaveState statusState() const                        {  return m_status;               }
     /// Access meta state as string
     const char* statusName() const;
+    /// Access instance identifier
+    int instanceTag() const                               {  return m_instanceTag;          }
+    /// Set instance ID
+    void setInstanceTag(int new_tag)                      {  m_instanceTag = new_tag;       }
     /// Check if the slave answered to the current request
     bool answered()  const                                {  return m_answered;             }
     /// Check if the task is alive
@@ -122,6 +128,8 @@ namespace FiniteStateMachine {
     bool isInternal() const                               {  return m_internal;             }
     /// Access flag indicating (initial) internal transition actions
     void setInternal(bool internal_flag)                  {  m_internal = internal_flag;    }
+    /// Access flag indicating if slave may be started after death (ie. not forked/internal)
+    bool mayStart() const                                 {  return m_mayStart;             }
     /// Access current state of the slave
     const State* state() const                            {  return m_state;                }
     /// Set current state of the slave. Note: be careful modifying the state if it does not correspond to the object 
@@ -185,6 +193,10 @@ namespace FiniteStateMachine {
      *  or FSM::WAIT_ACTION if slave is going to die.
      */
     virtual ErrCond kill();
+    /// Publish debug information
+    virtual void publishDebugInfo();
+    /// Publish tag information
+    virtual void publishTag(const std::string& tag);
 
     /// Callback on alive signs of slave process: Invoke using IOC SLAVE_ALIVE
     virtual ErrCond iamHere();

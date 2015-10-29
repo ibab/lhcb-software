@@ -21,6 +21,7 @@ extern "C" {
 
 // C/C++ include files
 #include <cstring>
+#include <sstream>
 
 using namespace FiniteStateMachine;
 using namespace std;
@@ -39,16 +40,16 @@ DimSlave::DimSlave(const Type* typ, const string& nam, Machine* machine, bool in
   display(DEBUG,c_name(),"State data point: %s",(nam+"/status").c_str());
   m_dimState.first  = ::dic_info_service((nam+"/status").c_str(),MONITORED,0,0,0,stateHandler,(long)this,0,0);
   m_dimState.second = ::dic_info_service((nam+"/fsm_status").c_str(),MONITORED,0,0,0,infoHandler,(long)this,0,0);
-  m_dbgState.first = ::dis_add_service((utgid+"/Slave/"+nam+"/CtrlState").c_str(),"C",0,0,dbgHandler1,(long)this);
+  m_dbgState.first  = ::dis_add_service((utgid+"/Slave/"+nam+"/CtrlState").c_str(),"C",0,0,dbgHandler1,(long)this);
   m_dbgState.second = 0;
 }
 
 /// Standatrd destructor
 DimSlave::~DimSlave() {
-  if ( m_dbgState.second ) ::dic_release_service(m_dbgState.second);
-  if ( m_dbgState.first  ) ::dic_release_service(m_dbgState.first);
-  if ( m_dimState.second  ) ::dis_remove_service(m_dimState.second);
-  if ( m_dimState.first   ) ::dis_remove_service(m_dimState.first);
+  if ( m_dbgState.second  ) ::dis_remove_service(m_dbgState.second);
+  if ( m_dbgState.first   ) ::dis_remove_service(m_dbgState.first);
+  if ( m_dimState.second  ) ::dic_release_service(m_dimState.second);
+  if ( m_dimState.first   ) ::dic_release_service(m_dimState.first);
   m_dbgState = make_pair(0,0);
   m_dimState = make_pair(0,0);
   m_argv.clear();
@@ -150,8 +151,12 @@ void DimSlave::stateHandler(void* tag, void* address, int* size) {
     DimSlave*     s = *(DimSlave**)tag;
     const char* msg = (const char*)address;
     s->handleState(len > 0 ? string(msg) : string(""));
-    ::dis_update_service(s->m_dbgState.first);
   }
+}
+
+/// Publish debug information
+void DimSlave::publishDebugInfo()   {
+  ::dis_update_service(m_dbgState.first);
 }
 
 /// DTQ overload to process timeout(s)
@@ -167,21 +172,17 @@ void DimSlave::dbgHandler1(void* tag, void** buff, int* size, int* /* first */) 
   static const char* defaults = "Type:NONE|State:DEAD|Status:LIMBO|Meta:LIMBO|Alive:NO_|Answered:NO_";
   DimSlave* s = *(DimSlave**)tag;
   if ( s )  {
-    string& data = s->m_dbgData1;
-    data = "Type:";
-    data += (s->isInternal() ? "INTERNAL" : "PHYSICAL");
-    data += "|State:";
-    data += s->c_state();
-    data += "|Status:";
-    data += s->statusName();
-    data += "|Meta:";
-    data += s->metaStateName();
-    data += "|Alive:";
-    data += (s->isAlive() ? "YES" : "NO_");
-    data += "|Answered:";
-    data += (s->answered() ? "YES" : "NO_");
-    *buff = (void*)data.c_str();
-    *size = data.length()+1;
+    stringstream str;
+    str << "Tag:"     << s->instanceTag()
+	<< "|Type:"   << (s->isInternal() ? "INTERNAL" : "PHYSICAL")
+	<< "|State:"  << s->c_state()
+	<< "|Status:" << s->statusName()
+	<< "|Meta:"   << s->metaStateName()
+	<< "|Alive:"  << (s->isAlive() ? "YES" : "NO_")
+	<< "|Answered:" << (s->answered() ? "YES" : "NO_");
+    s->m_dbgData1 = str.str();
+    *buff = (void*)s->m_dbgData1.c_str();
+    *size = s->m_dbgData1.length()+1;
     return;
   }
   *buff = (void*)defaults;
@@ -196,4 +197,10 @@ void DimSlave::dbgHandler2(void* tag, void** buff, int* size, int* /* first */) 
   }
   *buff = (void*)defaults;
   *size = ::strlen(defaults)+1;
+}
+
+/// Publish tag information
+void DimSlave::publishTag(const string& tag)   {
+  string cmd_tag = m_commandName +"/Instances";
+  ::dic_cmnd_service(cmd_tag.c_str(),(void*)tag.c_str(),tag.length()+1);
 }

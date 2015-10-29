@@ -43,14 +43,24 @@ namespace FiniteStateMachine   {
     const State* m_errorState;
     /// Reference to machine object
     Machine*     m_machine;
+    /// Service name to retrieve number of instances
+    std::string  m_tagSvcName;
     /// Variable to publish the task information
     std::string  m_taskInfo;
+    /// Variable to publish the instance information
+    std::string  m_tagInfo;
     /// Pointer to the dim service publishing the task information
     int          m_fsmTasks;
+    /// Pointer to the dim service publishing the instance information
+    int          m_fsmTags;
+    /// Pointer to dim client with maximum instance tag
+    int          m_numTasks;
+    /// Maximum instance tag
+    int          m_maxInstanceTag;
 
   public:
     /// Constructor
-    Controller(const std::string& nam, Machine* machine);
+    Controller(const std::string& nam, const std::string& tag_svc, Machine* machine);
     /// Standard destructor
     virtual ~Controller();
     /// DimCommand overload: handle DIM commands
@@ -64,13 +74,18 @@ namespace FiniteStateMachine   {
     virtual ErrCond publish();
     /// Publish state information of the slaves
     virtual FSM::ErrCond publishSlaves();
+    /// Transition pre-action for configure
+    virtual ErrCond config();
     /// Transition pre-action for start: Reset all internal slaves to external ones
     virtual ErrCond start();
     /// Invoke single transition request on machine
     virtual ErrCond invokeTransition(const std::string& tr);
     /// Set transition target state
     virtual void setTargetState(int target);
+    /// Adjust the number of slaves to be controlled (ignore overcounted slaves)
+    void publishInstances(int max_tag);
+    void controlInstances();
   };   //  End class Controller
 }      //  End namespace 
-#endif //  ONLINE_FINITESTATEMACHINE_CONTROLLER_H
 
+#endif //  ONLINE_FINITESTATEMACHINE_CONTROLLER_H

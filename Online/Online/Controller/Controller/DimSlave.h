@@ -84,6 +84,10 @@ namespace FiniteStateMachine   {
     virtual ErrCond kill();
     /// Send transition request to the slave
     virtual ErrCond sendRequest(const Transition* tr);
+    /// Publish debug information
+    virtual void publishDebugInfo();
+    /// Publish tag information
+    virtual void publishTag(const std::string& tag);
 
     /// Start the slave's transition timeout
     DimSlave& startTimer(int reason, const void* param=0);
