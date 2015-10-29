@@ -16,9 +16,7 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IIncidentListener.h"
 
-extern "C" {
 #include "dis.hxx"
-}
 
 #include <map>
 #include <ctime>
@@ -41,7 +39,14 @@ namespace LHCb  {
    *  @date   2005-10-13
    */
   class CheckpointSvc : public Service, public IIncidentListener   {
-    typedef std::map<int,int> Children;
+    struct Child {
+      std::string utgid;
+      int         pid, active;
+      Child() : pid(-1), active(0) {}
+      Child(const Child& c) : utgid(c.utgid), pid(c.pid), active(c.active) {}
+      Child& operator=(const Child& c) { utgid=c.utgid; pid=c.pid; active=c.active; return *this; }
+    };
+    typedef std::map<int,Child> Children;
     typedef void*             Files;
 
     /// Fork time queue
@@ -99,6 +104,8 @@ namespace LHCb  {
     bool                      m_restartChildren;
     /// Internal flag to indicate if chldren should be killed in releaseChildren
     bool                      m_killChildren;
+    /// Pointer to DIM command service of the InstanceSvc
+    DimCommand               *m_instanceClient;
     /// Reference to the IncidentSvc instance
     IIncidentSvc             *m_incidentSvc;
     /// Reference to the steering FSM unit (DimTaskFSM)
@@ -107,6 +114,8 @@ namespace LHCb  {
     Files                     m_files;
     /// Chilren map
     Children                  m_children;
+    /// Tag string from instance service
+    std::string               m_tag;
 
   protected:
     /// Debug hook: set option CheckpointSvc.ChildWait to something big. Then connect with gdb
@@ -141,6 +150,15 @@ namespace LHCb  {
 
     /// Helper to build Child UTGID
     std::string buildChildUTGID(int which) const;
+
+    /// Shut down all DIM services and stop dim
+    void disconnectDIM();
+    /// Connect DIM, get it running and attach services/clients
+    void connectDIM();
+
+  public:
+    /// Update instance tag number
+    void setInstanceTag(const char* tags);
 
   public:
     /// Standard constructor
@@ -181,6 +199,8 @@ namespace LHCb  {
   };
 }
 #endif // GAUDICHECKPOINTING_CHECKPOINTSVC_H
+
+
 //  ============================================================
 //
 //  CheckpointSvc.cpp
@@ -325,11 +345,30 @@ namespace  {
     }
   };
 
+  /** @class Command
+   *
+   *  @author M.Frank
+   */
+  class InstanceCommand : public DimCommand  {
+    /// Reference to checkpoint service
+    LHCb::CheckpointSvc* m_check;
+  public:
+    /// Constructor
+    InstanceCommand(const std::string& nam, LHCb::CheckpointSvc* svc)
+      : DimCommand(nam.c_str(),"C"), m_check(svc)  { }
+    /// DimCommand overload: handle DIM commands
+    virtual void commandHandler()   {
+      std::string cmd = getString();
+      if ( cmd.length() > 0 ) m_check->setInstanceTag(cmd.c_str());
+    }
+  };
+
 }
 
 /// Standard constructor
 CheckpointSvc::CheckpointSvc(const string& nam,ISvcLocator* pSvc)
-  : Service(nam,pSvc), m_incidentSvc(0), m_fsm(0), m_files(0)
+  : Service(nam,pSvc), m_instanceClient(0),
+    m_incidentSvc(0), m_fsm(0), m_files(0)
 {
   m_masterProcess = true;
   m_restartChildren = false;
@@ -385,6 +424,9 @@ StatusCode CheckpointSvc::initialize() {
       }
       log << MSG::INFO << RTL::processName() << "> Reconnect handle:" << (unsigned long)func;
       m_fsm = (ITaskFSM*)func();
+
+      string svc = proc+"/Instances";
+      m_instanceClient = new InstanceCommand(svc,this);
     }
     log << " Interactor: " << (unsigned long) m_fsm << endmsg;
     if ( m_numInstances < 0 ) {
@@ -421,10 +463,10 @@ StatusCode CheckpointSvc::start() {
     m_forkQueue.clear();
     if ( m_useCores || (m_numInstances != 0) )   {
       stopMainInstance();
-      int n_child = m_useCores ? numCores() + m_numInstances : m_numInstances;
-      for(int i=0; i<n_child; ++i)    {
+      int num_children = m_useCores ? numCores() + m_numInstances : m_numInstances;
+      for(int i=0; i<num_children; ++i)    {
         pid_t pid = forkChild(i+1);
-        if ( 0 == pid )   {
+        if ( 0 == pid )   { // This is the child process: exit creation loop
           return execChild();
         }
       }
@@ -454,6 +496,10 @@ StatusCode CheckpointSvc::restart() {
 
 /// Service overload: finalize the service
 StatusCode CheckpointSvc::finalize() {
+  if ( m_instanceClient )  {
+    delete m_instanceClient;
+    m_instanceClient = 0;
+  }
   if ( m_incidentSvc ) {
     m_incidentSvc->removeListener(this);
     m_incidentSvc->release();
@@ -719,13 +765,62 @@ int CheckpointSvc::saveCheckpoint() {
   return StatusCode::SUCCESS;
 }
 
+/// Update instance tag number
+void CheckpointSvc::setInstanceTag(const char* tag_str)   {
+  string tag  = tag_str;
+  string proc = RTL::processName();
+  string pattern = "|" + proc + "|";
+  MsgStream log(msgSvc(),name());
+  log << MSG::INFO;
+  log << "ProcessName:" << proc << " Instance tag:" << tag;
+  log << endmsg;
+  if ( m_masterProcess )  {
+    // Mother process remembers tag to know which children should not be reforked.
+    m_tag = tag;
+  }
+  else if ( tag.find(pattern) == string::npos )   {
+    // We are NOT part of the game anymore: fire incident to gracefully stop
+    log << MSG::INFO << "Stop processing -- instance tag." << endmsg;
+    m_incidentSvc->fireIncident(Incident(name(),"DAQ_EXIT"));
+  }
+}
+
+/// Shut down all DIM services and stop dim
+void CheckpointSvc::disconnectDIM()   {
+  if ( m_instanceClient )  {
+    delete m_instanceClient;
+    m_instanceClient = 0;
+  }
+  if ( m_connectDIM )  {
+    m_fsm->disconnectDIM();
+  }
+}
+
+/// Connect DIM, get it running and attach services/clients
+void CheckpointSvc::connectDIM()   {
+  const char* dns = ::getenv("DIM_DNS_NODE");
+  if ( dns && m_connectDIM ) {
+    ::dis_set_dns_node(dns);
+    ::dic_set_dns_node(dns);
+  }
+  //
+  // We have to overload the underlying dim command, since for the
+  // forker instance all Gaudi actions are over....
+  // This new command make sure nothing will happen
+  // ever again inside Gaudi.
+  //
+  if ( m_connectDIM ) {
+    string proc = RTL::processName();
+    m_instanceClient = new InstanceCommand(proc+"/Instances",this);
+    m_fsm->connectDIM(m_masterProcess ? new Command(proc,this,m_fsm) : 0);
+  }
+}
+
 /// Checkpoint main process instance. Stops dim
 int CheckpointSvc::stopMainInstance() {
   // First get rid of DIM
   // Debug ONLY: checkpointing_set_print_level(1);
-  if ( m_connectDIM ) {
-    m_fsm->disconnectDIM();
-  }
+  disconnectDIM();
   ::lib_rtl_sleep(100);
   if ( m_files ) ::free(m_files);
   m_files = 0;
@@ -741,37 +836,12 @@ int CheckpointSvc::stopMainInstance() {
 /// Resume main process instance from checkpoint. Restarts dim
 int CheckpointSvc::resumeMainInstance(bool with_resume_child_threads) {
   string proc  = RTL::processName();
-  const char* dns = 0;
   // Let the paret resume its work
   if ( with_resume_child_threads )   {
     checkpointing_resume_process();
     ::lib_rtl_sleep(200);
   }
-  dns = ::getenv("DIM_DNS_NODE");
-  MsgStream log(msgSvc(),name());
-  log << MSG::INFO;
-  log << "ProcessName:" << proc << " ";
-  if ( dns && m_connectDIM ) {
-    log << "DIM_DNS_NODE:" << dns << " ";
-    ::dis_set_dns_node(dns);
-    ::dic_set_dns_node(dns);
-  }
-  log << endmsg;
-  //
-  // We have to overload the underlying dim command, since for the
-  // forker instance all Gaudi actions are over....
-  // This new command make sure nothing will happen
-  // ever again inside Gaudi.
-  //
-  if ( m_connectDIM ) {
-    Command* command = 0;
-    if ( m_useCores || (m_numInstances != 0) )   {
-      if ( FSMState() == Gaudi::StateMachine::RUNNING )    {
-        command = new Command(proc,this,m_fsm);
-      }
-    }
-    m_fsm->connectDIM(command);
-  }
+  connectDIM();
   return 1;
 }
 
@@ -780,12 +850,26 @@ int CheckpointSvc::forkChild(int which) {
   string proc  = RTL::processName();
   string utgid = buildChildUTGID(which);
 
+  if ( !m_tag.empty() )   {
+    // Note: No locking necessary, because DIM is shut down!
+    //       Hence: m_tag cannot be modified.
+    string pattern = "|"+utgid+"|";
+    // Slave not active: Do not fork!
+    if ( m_tag.find(pattern) == string::npos )   {
+      m_children[which].utgid  = utgid;
+      m_children[which].pid    = -1;
+      m_children[which].active = 0;
+      return -1;
+    }
+  }
   checkpointing_set_utgid(utgid.c_str());
   pid_t pid = checkpointing_fork_process();
   if ( pid == 0 ) {             // Child
     m_masterProcess = false;    // Flag child locally
     m_numInstances = 0;
     m_useCores = false;
+    m_children.clear();
+    m_tag = "";
     if ( m_forceUTGID>0 ) {
       checkpointing_force_utgid(utgid.c_str());
     }
@@ -796,14 +880,17 @@ int CheckpointSvc::forkChild(int which) {
   }
   else if ( pid>0 ) {
     m_masterProcess = true;
-    m_children[which] = pid;
+    m_children[which].utgid  = utgid;
+    m_children[which].pid    = pid;
+    m_children[which].active = 1;
     checkpointing_set_utgid(proc.c_str());
   }
   else if (pid < 0)    {        // failed to fork
     bool do_wait = true;
     char text[512];
-    int err = errno;
-    ::snprintf(text,sizeof(text),"[ERROR] Failed to fork child:%s -> %s [%d]\n",utgid.c_str(),::strerror(err),err);
+    int  err = errno;
+    ::snprintf(text,sizeof(text),"[ERROR] Failed to fork child:%s -> %s [%d]\n",
+	       utgid.c_str(),::strerror(err),err);
     while (do_wait)   {
       ::write(STDOUT_FILENO,text,strlen(text));
       ::write(STDOUT_FILENO,text,strlen(text));
@@ -843,21 +930,14 @@ int CheckpointSvc::execChild() {
   /// Now it should be save to restart the children
   checkpointing_start_child();
   /// Configure DIM startup
-  const char* dns = ::getenv("DIM_DNS_NODE");
-  string proc = RTL::processName();
-  if ( m_connectDIM ) {
-    if ( dns ) {
-      ::dis_set_dns_node(dns);
-      ::dic_set_dns_node(dns);
-    }
-    m_fsm->connectDIM(0);
-  }
+  connectDIM();
   return StatusCode::SUCCESS;
 }
 
 /// Watch children while running. If a child dies, restart it
 int CheckpointSvc::watchChildren() {
   bool run_loop = true;
+
   while(run_loop)   {
     ::lib_rtl_sleep(2000);
     int count = waitChildren();
@@ -865,7 +945,8 @@ int CheckpointSvc::watchChildren() {
       stopMainInstance();
       for(Children::const_iterator i=m_children.begin(); i!=m_children.end();++i) {
         int id  = (*i).first;
-        if ( (*i).second == -1 ) {
+	const Child& c   = (*i).second;
+        if ( c.pid == -1 && c.active ) {
           int pid = forkChild(id);
           if ( 0 == pid )    {
             // This is a child process. Exit here and ensure start() is completed!
@@ -885,8 +966,10 @@ int CheckpointSvc::watchChildren() {
       MsgStream log(msgSvc(),name());
       log << MSG::DEBUG << "watchChildren:";
       for(Children::const_iterator i=m_children.begin(); i!=m_children.end();++i) {
-        if ( (*i).second != -1 )
-          log << (*i).second << " ";
+        if ( (*i).second.pid != -1 )
+          log << (*i).second.pid << " ";
+        else if ( !(*i).second.active )
+          log << (*i).second.pid << "/INACT ";
         else
           log << "No." << (*i).first << "/DEAD ";
       }
@@ -900,23 +983,37 @@ int CheckpointSvc::watchChildren() {
 int CheckpointSvc::waitChildren() {
   pid_t w_pid = 0;
   int count = 0;
+
+  if ( m_instanceClient && !m_tag.empty() )   {
+    dim_lock();
+    for(Children::iterator i=m_children.begin(); i!=m_children.end();++i) {
+      string pattern="|"+(*i).second.utgid+"|";
+      if ( m_tag.find(pattern) == string::npos )  { // To be removed....
+	(*i).second.active = 0;
+      }
+      else if ( !(*i).second.active )  {  // This task wants to be 'resurrected'....
+	(*i).second.active = 1;
+	++count;
+      }
+    }
+    dim_unlock();
+  }
   do   {
     int status = 0;
     w_pid = ::waitpid(0, &status, WUNTRACED | WCONTINUED | WNOHANG);
     if ( w_pid > 0 ) {
-      for(Children::const_iterator i=m_children.begin(); i!=m_children.end();++i) {
-        int id  = (*i).first;
-        int pid = (*i).second;
+      for(Children::iterator i=m_children.begin(); i!=m_children.end();++i) {
+        int pid = (*i).second.pid;
         if ( pid == w_pid ) {
-          m_children[id] = -1;
-          ++count;
+	  (*i).second.pid = -1;
+          if ( (*i).second.active ) ++count;
         }
       }
     }
   } while (w_pid>0);
   if ( count == 0 ) {
     for(Children::const_iterator i=m_children.begin(); i!=m_children.end();++i) {
-      if ( (*i).second == -1 ) ++count;
+      if ( (*i).second.pid == -1 && (*i).second.active ) ++count;
     }
   }
   return count;
@@ -955,6 +1052,7 @@ void CheckpointSvc::handle(const Incident& inc) {
   if ( inc.type() == "APP_INITIALIZED" ) {
     if ( !m_checkPoint.empty() ) {
       StatusCode sc;
+      m_tag = "";
       stopMainInstance();
       if ( !(sc=saveCheckpoint()).isSuccess() ) {
         MsgStream log(msgSvc(),name());
