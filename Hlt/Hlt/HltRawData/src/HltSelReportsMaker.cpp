@@ -16,6 +16,8 @@
 
 #include "Kernel/Particle2Vertex.h"
 
+#include "DetDesc/RunChangeIncident.h"
+
 #include "Event/HltSelReports.h"
 #include "Event/HltObjectSummary.h"
 #include "Event/HltDecReports.h"
@@ -29,16 +31,13 @@
 #include "Event/HltStage.h"
 #include "Event/HltCandidate.h"
 
-
-//#include "Kernel/CaloCellCode.h"
-
 #include "HltBase/HltSelection.h"
+
 // local
 #include "HltSelReportsMaker.h"
 
-static const  Gaudi::StringKey Hlt1SelectionID{"Hlt1SelectionID"};
-static const  Gaudi::StringKey Hlt2SelectionID{"Hlt2SelectionID"};
 static const  Gaudi::StringKey InfoID{"InfoID"};
+static const  Gaudi::StringKey RelInfoLocations{"RelInfoLocations"};
 
 using namespace LHCb;
 
@@ -56,15 +55,12 @@ namespace {
 // 2008-07-23 : Tomasz Skwarnicki
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltSelReportsMaker )
-
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 HltSelReportsMaker::HltSelReportsMaker( const std::string& name,
-                                                      ISvcLocator* pSvcLocator)
+                                        ISvcLocator* pSvcLocator,
+                                        const Gaudi::StringKey idKey)
   : GaudiAlgorithm ( name , pSvcLocator )
   , m_conv(NULL)
   , m_hltANNSvc {nullptr}
@@ -78,14 +74,13 @@ HltSelReportsMaker::HltSelReportsMaker( const std::string& name,
   , m_presentInfoLevelParticle(kMaxInfoLevel)
   , m_presentInfoLevelCaloCluster(kMaxInfoLevel)
   , m_presentInfoLevelSelection(kMaxInfoLevel)
+  , m_idKey(idKey)
 {
 
   declareProperty("OutputHltSelReportsLocation",
       m_outputHltSelReportsLocation= LHCb::HltSelReportsLocation::Default);
   declareProperty("InputHltDecReportsLocation",
       m_inputHltDecReportsLocation= LHCb::HltDecReportsLocation::Default);
-
-  declareProperty("RecSummaryLocation",m_RecSummaryLoc = "Hlt2/RecSummary" );
 
   declareProperty("DebugEventPeriod",m_debugPeriod = 0 );
 
@@ -128,18 +123,30 @@ HltSelReportsMaker::HltSelReportsMaker( const std::string& name,
 
   declareProperty("DebugIncident", m_debugIncidentName = "RequestDebugEvent" );
 
+  declareProperty("RelatedInfoLocations", m_RelInfoLocationsMap);
 
   m_debugMode=false;
   m_event=0;
 
 }
 
+//=============================================================================
 // add incident listener, and set m_event
-void HltSelReportsMaker::handle ( const Incident& /*incident*/ ) {
-    m_event = 0u-1; // yes, it is unsigned, but all we need is
-                    // ++m_event to be zero to force a debug event;-)
-}
+//=============================================================================
+void HltSelReportsMaker::handle ( const Incident& incident ) {
+  m_event = 0u-1; // yes, it is unsigned, but all we need is
+                  // ++m_event to be zero to force a debug event;-)
 
+  // Update info IDs on RunChange
+  if (incident.type() == IncidentType::RunChange) {
+     m_infoIntToName.clear();
+     for (const auto& i : m_hltANNSvc->items(InfoID)) {
+       if ((0 <= i.second) && (i.second <= 65535)) {
+          m_infoIntToName.insert(i.second, i.first);
+      }
+    }
+  }
+}
 
 //=============================================================================
 // Destructor
@@ -173,10 +180,7 @@ StatusCode HltSelReportsMaker::initialize() {
 
  // get string-to-int selection ID map
   std::map<IANNSvc::minor_key_type,IANNSvc::minor_mapped_type> selectionNameToIntMap;
-  for( const IANNSvc::minor_value_type& p: m_hltANNSvc->items(Hlt1SelectionID) ) {
-      selectionNameToIntMap.insert( p );
-  }
-  for( const IANNSvc::minor_value_type& p: m_hltANNSvc->items(Hlt2SelectionID) ) {
+  for( const IANNSvc::minor_value_type& p: m_hltANNSvc->items(m_idKey) ) {
       selectionNameToIntMap.insert( p );
   }
 
@@ -227,8 +231,6 @@ StatusCode HltSelReportsMaker::initialize() {
 
   return StatusCode::SUCCESS;
 }
-
-
 
 //=============================================================================
 // Main execution
@@ -386,6 +388,23 @@ StatusCode HltSelReportsMaker::execute() {
      m_Turbo = turbo_signature;
      bookmark=0;
 
+     // After we have determined if the line is Turbo, see if we're supposed to store
+     // RelInfo for it. If so, ask the ANNSvc for the IDs.
+     m_RelInfoToSave.clear();
+     auto infoIt = m_RelInfoLocationsMap.find(selName);
+     if (infoIt != end(m_RelInfoLocationsMap)) {
+       for( auto loc : infoIt->second ){
+         auto infoId = m_hltANNSvc->value(RelInfoLocations, loc);
+         if (infoId) {
+           m_RelInfoToSave.emplace_back(loc, infoId->second);
+         } else {
+           error() << "Requested to save RelatedInfo at " << loc
+                   << " but no ID is registered for it in the ANNSvc, skipping!"
+                   << endmsg;
+         }
+       }
+     }
+
      std::vector<const ContainedObject*> candidates; candidates.reserve( sel->size() );
 
      if( sel->classID() == Hlt::Candidate::classID() ) {
@@ -527,22 +546,13 @@ StatusCode HltSelReportsMaker::execute() {
        if( pvSelectionName == m_lastPVSelectionName ){
          intPVSelID = m_intPVSelID;
        } else {
-         const auto& items = m_hltANNSvc->items(Hlt1SelectionID);
+         const auto& items = m_hltANNSvc->items(m_idKey);
          auto si = std::find_if( std::begin(items), std::end(items),
                                  [&](const std::pair<std::string,int>& i) { return i.first == pvSelectionName; } );
          if( si != std::end(items) ) {
            intPVSelID=si->second;
            m_lastPVSelectionName = pvSelectionName;
            m_intPVSelID = intPVSelID;
-         } else {
-           const auto& hlt2 = m_hltANNSvc->items(Hlt2SelectionID);
-           auto si = std::find_if( std::begin(hlt2), std::end(hlt2),
-                                   [&](const std::pair<std::string,int>& i) { return i.first == pvSelectionName; } );
-           if( si != std::end(hlt2) ) {
-             intPVSelID=si->second;
-             m_lastPVSelectionName = pvSelectionName;
-             m_intPVSelID = intPVSelID;
-           }
          }
        }
        if( !intPVSelID ){
@@ -574,7 +584,7 @@ StatusCode HltSelReportsMaker::execute() {
      }
      m_Turbo = false;
   }
-  
+
   // -------------------------------------------------------------------------------------
   // clone HltObjectSummary-s of selection and insert them into object store (needed for raw data storage
   // and global selections)
@@ -583,137 +593,12 @@ StatusCode HltSelReportsMaker::execute() {
                   std::back_inserter(*m_objectSummaries),
                   [](HltSelReports::Container::const_reference i) { return new HltObjectSummary( i.second ); } );
 
-  // Add a selection for event level data (make sure only done in the HLT2 level)
-  string outLoc = m_outputHltSelReportsLocation;
-  if( boost::algorithm::contains( outLoc, "Hlt2") ){
-    const LHCb::RecSummary* recsummary = getIfExists<LHCb::RecSummary>(m_RecSummaryLoc);
-
-    if( !recsummary && !m_RecSummaryLoc.empty() ) {
-       Warning( "No RecSummary object found, you will not get event level information in the reports",
-                StatusCode::SUCCESS, 10 );
-    } else if (recsummary) {
-      HltObjectSummary* eventObjectSummary = new HltObjectSummary();
-      HltObjectSummary* eventObjectSummarySub = new HltObjectSummary();
-      eventObjectSummarySub->setSummarizedObjectCLID( recsummary->clID() );
-      eventObjectSummary->setSummarizedObjectCLID( 1 ); // use special CLID for selection summaries (lowest number for sorting to the end)
-
-      // integer selection id
-      eventObjectSummary->addToInfo("0#SelectionID",float(m_hltANNSvc->item_map(Hlt2SelectionID)["Hlt2RecSummary"]));
-      HltObjectSummary::Info EventInfo;
-      m_conv->RecSummaryObject2Summary(&EventInfo,recsummary);
-      eventObjectSummarySub->setNumericalInfo(EventInfo);
-      //
-      m_objectSummaries->push_back(eventObjectSummarySub);
-      eventObjectSummary->addToSubstructure(eventObjectSummarySub);
-      if( outputSummary->insert("Hlt2RecSummary",*eventObjectSummary) == StatusCode::FAILURE ){
-        Warning(" Failed to add RecSummary to its container ",StatusCode::SUCCESS, 10 );
-      }
-      m_objectSummaries->push_back(eventObjectSummary);
-    }
+  // post process the output summery with stage-dependent info
+  auto sc = postExecute(outputSummary, decReports);
+  if (!sc.isSuccess()) {
+    return sc;
   }
-
-
-  // -------------------------------------------------------------------------------------
-  // create global selections ------------------------------------------------------------
-  // -------------------------------------------------------------------------------------
-  if( !outputSummary->hasSelectionName("Hlt1Global") ){
-
-     HltObjectSummary selSumOut;
-     selSumOut.setSummarizedObjectCLID( 1 ); // use special CLID for selection summaries (lowest number for sorting to the end)
-
-     // integer selection id
-     selSumOut.addToInfo("0#SelectionID",float(kHlt1GlobalID));
-
-     // see which decisions contributed to it
-     for( const auto& it : *outputSummary) {
-       const std::string & selName = it.first;
-       if( !boost::algorithm::starts_with( selName, "Hlt1") ||
-           !boost::algorithm::ends_with(   selName, "Decision") ) continue;
-       const LHCb::HltObjectSummary& selRep = it.second;
-       // must find corresponding HltObjectSummary in the object store
-       auto i = selRep.numericalInfo().find("0#SelectionID");
-       if( i==selRep.numericalInfo().end() ){
-           Error(" (1) HltObjectSummary of selection-summary-type has no SelectionID info ",StatusCode::SUCCESS,20);
-           continue;
-       }
-       int id = (int)(i->second+0.1);
-       for( const auto& pObj : *m_objectSummaries) {
-         if( pObj->summarizedObjectCLID()!=1 ) continue;
-         auto j=pObj->numericalInfo().find("0#SelectionID");
-         if( j==pObj->numericalInfo().end() ){
-           Error(" (2) HltObjectSummary of selection-summary-type has no SelectionID info ",StatusCode::SUCCESS,20);
-           continue;
-         }
-         if( id == (int)(j->second+0.1) ){
-           // must also check its decision in HltDecReports since it might have been killed by postscale
-           if( decReports ){
-             const HltDecReport* decReport = decReports->decReport(selName);
-             if( decReport && !decReport->decision() ) break;
-           }
-           selSumOut.addToSubstructure( (const SmartRef<HltObjectSummary>)(pObj) );
-           break;
-         }
-       }
-     }
-     if( !selSumOut.substructure().empty() ){
-
-       // insert selection into the container
-       if( outputSummary->insert("Hlt1Global",selSumOut) == StatusCode::FAILURE ){
-         Error( "  Failed to add Hlt selection name Hlt1Global to its container ", StatusCode::SUCCESS, 10 );
-       }
-       m_objectSummaries->push_back(new HltObjectSummary{ selSumOut });
-     }
-  }
-
-  if( !outputSummary->hasSelectionName("Hlt2Global") ){
-
-     HltObjectSummary selSumOut;
-     selSumOut.setSummarizedObjectCLID( 1 ); // use special CLID for selection summaries (lowest number for sorting to the end)
-
-     // integer selection id
-     selSumOut.addToInfo("0#SelectionID",float(kHlt2GlobalID));
-
-     // see which decisions contributed to it
-     for(const  auto&  it : *outputSummary ) {
-       const std::string & selName = it.first;
-       if( !boost::algorithm::starts_with(selName, "Hlt2")  ||
-           !boost::algorithm::ends_with( selName, "Decision") ) continue;
-       auto& selRep = it.second;
-       // must find corresponding HltObjectSummary in the object store
-       auto i = selRep.numericalInfo().find("0#SelectionID");
-       if( i==selRep.numericalInfo().end() ){
-         Error(" (1) HltObjectSummary of selection-summary-type has no SelectionID info ",StatusCode::SUCCESS,20);
-         continue;
-       }
-       int id = (int)(i->second+0.1);
-       for( const auto& pObj : *m_objectSummaries ){
-         if( pObj->summarizedObjectCLID()!=1 )continue;
-         auto j=pObj->numericalInfo().find("0#SelectionID");
-         if( j==pObj->numericalInfo().end() ){
-           Error(" (2) HltObjectSummary of selection-summary-type has no SelectionID info ",StatusCode::SUCCESS,20);
-           continue;
-         }
-         if( id == (int)(j->second+0.1) ){
-           // must also check its decision in HltDecReports since it might have been killed by postscale
-           if( decReports ){
-             const HltDecReport* decReport = decReports->decReport(selName);
-             if( decReport && !(decReport->decision()) )break;
-           }
-           selSumOut.addToSubstructure( pObj );
-           break;
-         }
-       }
-     }
-     if( selSumOut.substructure().size() ){
-
-       // insert selection into the container
-       if( outputSummary->insert("Hlt2Global",selSumOut) == StatusCode::FAILURE ){
-         Error( "  Failed to add Hlt selection name Hlt2Global to its container ", StatusCode::SUCCESS, 10 );
-       }
-       m_objectSummaries->push_back( new HltObjectSummary{ selSumOut } );
-     }
-  }
-
+  
   // ----------------- printout ------------------------
   if ( msgLevel(MSG::VERBOSE) ){
 
@@ -736,6 +621,29 @@ StatusCode HltSelReportsMaker::execute() {
    }
   }
   return StatusCode::SUCCESS;
+}
+
+// -------------------------------------------
+// store RelatedInfoMap in HltObjectSummary store
+// -------------------------------------------
+const LHCb::HltObjectSummary* HltSelReportsMaker::store_(std::pair<int,const LHCb::RelatedInfoMap&> pair)
+{
+  // Make a report with the location enum saved in the map, then
+  // add the related info as substructure
+  std::unique_ptr<HltObjectSummary> hos{ new HltObjectSummary() };
+  hos->setSummarizedObjectCLID( 40 );
+  hos->addToInfo("0#LocationID",pair.first);
+
+  std::unique_ptr<HltObjectSummary> hos_Sub{ new HltObjectSummary() };
+  HltObjectSummary::Info isoInfo;
+  m_conv->GenericMapObject2Summary(&isoInfo,&pair.second);
+  hos_Sub->setSummarizedObjectCLID( 41 );
+  hos_Sub->setNumericalInfo(isoInfo);
+  hos->addToSubstructure(hos_Sub.get());
+
+  m_objectSummaries->push_back(hos_Sub.release());
+  m_objectSummaries->push_back(hos.release());
+  return m_objectSummaries->back();
 }
 
 // -------------------------------------
@@ -1115,12 +1023,24 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle& o
       // we only do this for the mother
       bookmark+=1;
 
-      // See if relations point to the normal Hlt PV
-      // If not, assume refitted and persist
       const DataObject* container = object.parent();
       IRegistry* registry = ( container ? container->registry() : nullptr ) ;
       if( registry ){
         std::string path = registry->identifier() ;
+
+        // First look for related info
+        for( auto info : m_RelInfoToSave ){
+          std::string relpath = boost::replace_last_copy(path, "Particles", info.first);
+          using RelInfoTable = LHCb::Relation1D<LHCb::Particle,LHCb::RelatedInfoMap>;
+          LHCb::Relation1D<LHCb::Particle,LHCb::RelatedInfoMap>* rel = getIfExists<RelInfoTable>(relpath);
+          if(rel && !rel->relations(&object).empty()) {
+             auto summary = store_(std::make_pair(info.second, rel->relations(&object)[0].to()));
+             hos->addToSubstructure(summary);
+          }
+        }
+
+        // See if relations point to the normal Hlt PV
+        // If not, assume refitted and persist
         boost::replace_last(path,"/Particles","/_RefitPVs");
         if ( msgLevel(MSG::DEBUG) ) debug() << "Looking for PVs in: " << path << endmsg;
         LHCb::RecVertex::Container* pv_hlt = getIfExists< LHCb::RecVertex::Container >(path);
@@ -1294,14 +1214,14 @@ HltObjectSummary::Info HltSelReportsMaker::infoToSave( const HltObjectSummary& h
       const RecVertex* candi = dynamic_cast<const RecVertex*>(hos.summarizedObject());
       if( !candi )return infoPersistent;
       if( kExtraInfoLevel &  m_presentInfoLevelRecVertex & m_presentInfoLevel ){
-	for( const auto& ei : candi->extraInfo() ) {
+    for( const auto& ei : candi->extraInfo() ) {
           if( ( 0<= ei.first ) && ( ei.first<=65535 ) ){
-	    auto i=m_infoIntToName.find(ei.first);
-	    if( i!=m_infoIntToName.end() ){
-	      infoPersistent.insert( i->second, float( ei.second ) );
-	    }
-	  }
-	}
+        auto i=m_infoIntToName.find(ei.first);
+        if( i!=m_infoIntToName.end() ){
+          infoPersistent.insert( i->second, float( ei.second ) );
+        }
+      }
+    }
       }
       if( kStandardInfoLevel &  m_presentInfoLevelRecVertex & m_presentInfoLevel ){
         m_conv->RecVertexObject2Summary(&infoPersistent, candi, m_Turbo);
@@ -1340,6 +1260,7 @@ HltObjectSummary::Info HltSelReportsMaker::infoToSave( const HltObjectSummary& h
   return infoPersistent;
 }
 
+//=============================================================================
 int HltSelReportsMaker::rank_(const LHCb::Track& object) const
 {
   HltObjectSummary hos;
@@ -1348,6 +1269,7 @@ int HltSelReportsMaker::rank_(const LHCb::Track& object) const
   return 100*rankLHCbIDs( object.lhcbIDs() ) +  infoToSave( hos ).size();
 }
 
+//=============================================================================
 int HltSelReportsMaker::rank_(const LHCb::RichPID& object) const
 {
   HltObjectSummary hos;
@@ -1356,6 +1278,7 @@ int HltSelReportsMaker::rank_(const LHCb::RichPID& object) const
   return 10000 +  infoToSave( hos ).size();
 }
 
+//=============================================================================
 int HltSelReportsMaker::rank_(const LHCb::MuonPID& object) const
 {
   HltObjectSummary hos;
@@ -1364,6 +1287,7 @@ int HltSelReportsMaker::rank_(const LHCb::MuonPID& object) const
   return 10000 +  infoToSave( hos ).size();
 }
 
+//=============================================================================
 int HltSelReportsMaker::rank_(const LHCb::ProtoParticle& object) const
 {
   HltObjectSummary hos;
@@ -1372,6 +1296,7 @@ int HltSelReportsMaker::rank_(const LHCb::ProtoParticle& object) const
   return 10000 +  infoToSave( hos ).size();
 }
 
+//=============================================================================
 int HltSelReportsMaker::rank_(const LHCb::Vertex& object) const
 {
   HltObjectSummary hos;
@@ -1380,6 +1305,7 @@ int HltSelReportsMaker::rank_(const LHCb::Vertex& object) const
   return 10000 +  infoToSave( hos ).size();
 }
 
+//=============================================================================
 int HltSelReportsMaker::rank_(const LHCb::CaloCluster& object) const
 {
   HltObjectSummary hos;
@@ -1388,6 +1314,7 @@ int HltSelReportsMaker::rank_(const LHCb::CaloCluster& object) const
   return 100*rankLHCbIDs( { { object.seed() } } ) +  infoToSave( hos ).size();
 }
 
+//=============================================================================
 int HltSelReportsMaker::rank_(const LHCb::RecVertex& object) const
 {
   HltObjectSummary hos;
@@ -1396,6 +1323,15 @@ int HltSelReportsMaker::rank_(const LHCb::RecVertex& object) const
   return 10000 +  infoToSave( hos ).size();
 }
 
+//=============================================================================
+int HltSelReportsMaker::rank_(const LHCb::RecSummary& object) const
+{
+  HltObjectSummary hos;
+  hos.setSummarizedObjectCLID( object.clID() );
+  return 10000 +  infoToSave( hos ).size();
+}
+
+//=============================================================================
 int HltSelReportsMaker::rank_(const LHCb::Particle& object) const
 {
   HltObjectSummary  hos;
@@ -1404,6 +1340,7 @@ int HltSelReportsMaker::rank_(const LHCb::Particle& object) const
   return 100000 +  infoToSave( hos ).size();
 }
 
+//=============================================================================
 int HltSelReportsMaker::rankLHCbIDs( const std::vector<LHCbID> & lhcbIDs ) const
 {
   return std::accumulate( std::begin(lhcbIDs), std::end(lhcbIDs), 0,
@@ -1417,8 +1354,6 @@ int HltSelReportsMaker::rankLHCbIDs( const std::vector<LHCbID> & lhcbIDs ) const
     return rank;
   } );
 }
-
-
 
 //=============================================================================
 // qualify trigger selections for persistency
@@ -1515,6 +1450,7 @@ void HltSelReportsMaker::setPresentInfoLevel( const std::string & selName )
   }
 }
 
+//=============================================================================
 bool HltSelReportsMaker::rankSelLess::operator()( const HltSelReportsMaker::RankedSelection & elem1,
                                                   const HltSelReportsMaker::RankedSelection & elem2) const
 {

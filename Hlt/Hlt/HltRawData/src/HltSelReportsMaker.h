@@ -10,7 +10,7 @@
 #include "Event/HltObjectSummary.h"
 #include "Event/Track.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
-//#include "Event/PackedTrack.h"
+#include "Event/RelatedInfoMap.h"
 
 
 #include "Kernel/IANNSvc.h"
@@ -24,8 +24,9 @@ namespace LHCb {
   class CaloCluster;
   class Particle;
   class RecVertex;
+  class HltSelReports;
+  class HltDecReports;
 }
-
 
 /** @class HltSelReportsMaker HltSelReportsMaker.h
  *
@@ -51,19 +52,37 @@ public:
 
 
   /// Standard constructor
-  HltSelReportsMaker( const std::string& name, ISvcLocator* pSvcLocator );
+  HltSelReportsMaker( const std::string& name, ISvcLocator* pSvcLocator,
+                      const Gaudi::StringKey idKey);
 
   virtual ~HltSelReportsMaker( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-
+   
   void handle(const Incident&);
+
+protected:
+
+  virtual StatusCode postExecute(LHCb::HltSelReports* outputSummary,
+                                 const LHCb::HltDecReports* decReports) = 0;
+
+  LHCb::HltObjectSummary::Container& objectSummaries() const { return *m_objectSummaries; }
+
+  IANNSvc* hltANNSvc() const { return m_hltANNSvc; }
+
+  Gaudi::StringKey idKey() const { return m_idKey; }
+
+  IReportConvert* reportConverter() const { return m_conv; }
 
 private:
 
   /// for producing numerical info to be saved on the object
   LHCb::HltObjectSummary::Info infoToSave( const LHCb::HltObjectSummary& hos ) const;
+
+  /// for splitting strings
+  std::vector<std::string> &split(const std::string &, char, std::vector<std::string> &);
+  std::vector<std::string> split(const std::string &, char);
 
   /// for converting objects in to summaries
   IReportConvert* m_conv;
@@ -84,6 +103,8 @@ private:
   const LHCb::HltObjectSummary* store_(const LHCb::ProtoParticle& object);
   /// store CaloCluster in HltObjectSummary store
   const LHCb::HltObjectSummary* store_(const LHCb::CaloCluster& object);
+  /// store RelatedInfoMap in HltObjectSummary store
+  const LHCb::HltObjectSummary* store_(std::pair<int,const LHCb::RelatedInfoMap&> object);
 
   template <typename T> const LHCb::HltObjectSummary* store(const ContainedObject* obj) {
       auto t = dynamic_cast<const T*>(obj);
@@ -113,6 +134,8 @@ private:
   int rank_(const LHCb::Particle& object) const;
   /// rank CaloCluster
   int rank_(const LHCb::CaloCluster& object) const;
+  /// rank RecSummary
+  int rank_(const LHCb::RecSummary& object) const;
 
   template <typename T> bool rank(const ContainedObject* obj, int& rnk) {
       const T* c = dynamic_cast<const T*>(obj);
@@ -142,12 +165,16 @@ private:
 
   /// HltObjectSummary container
   LHCb::HltObjectSummary::Container* m_objectSummaries;
-
+   
   /// HltANNSvc for making selection names to int selection ID
   IANNSvc* m_hltANNSvc;
   Hlt::IData* m_hltSvc;
   Hlt::IRegister* m_regSvc;
   Hlt::IInspector* m_inspectionSvc;
+
+  // RelatedInfo
+  std::map<std::string,std::vector<std::string>> m_RelInfoLocationsMap;
+  std::vector<std::pair<std::string,int> > m_RelInfoToSave;
 
   // from info id to its name
   GaudiUtils::VectorMap< int, std::string > m_infoIntToName;
@@ -196,6 +223,9 @@ private:
   unsigned int m_presentInfoLevelParticle;
   unsigned int m_presentInfoLevelCaloCluster;
   unsigned int m_presentInfoLevelSelection;
+
+  /// Which selectionIDs should be stored
+  const  Gaudi::StringKey m_idKey;
 
   /// debug event period (global, can't be change per selection)  0=never 1=always e.g. 100=every 100th event
   UnsignedIntegerProperty m_debugPeriod;

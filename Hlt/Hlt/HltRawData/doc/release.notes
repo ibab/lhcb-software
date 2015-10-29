@@ -5,10 +5,23 @@
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+! 2015-10-29 - Roel Aaij
+ - Split HltSelReportsMaker into Hlt1SelReportsMaker and Hlt2SelReportsMaker
+   to avoid storing Hlt1SelReports in the Hlt2SelReports raw bank.
+
+! 2015-10-26 - Roel Aaij
+ - Use a property of the SelReportsMaker to configure which pieces of
+   RelatedInfo should be stored in the SelReports per line.
+ - Use a the HltANNSvc to translate the related info locations to integers.
+ - Update info ID mapping at run change.
+
 ! 2015-10-13 - Sean Benson
  - More robust IDs in CaloCluster saving.
  - Introduce this for all lines.
  - Hopefully get rid of the RecSummary (non) error this time.
+
+! 2015-10-12 - Sean Benson
+ - Support for related info saving.
 
 !========================= HltRawData v5r10 2015-10-08 =======================
 
