@@ -2,6 +2,14 @@
 #include "AlignmentMonitoring/HistHelper.h"
 // STL
 #include <iostream>
+#include "TLine.h"
+#include "TH1.h"
+#include "TH2.h"
+#include "TCanvas.h"
+#include "TFile.h"
+#include "TPaveStats.h"
+#include "TStyle.h"
+#include "TROOT.h"
 
 using namespace Alignment::AlignmentMonitoring;
 
@@ -39,18 +47,179 @@ MonitoringPage::MonitoringPage(const char* atitle,
     std::cout << "This software can handle at most 9 histograms on the same page! Do nothing." << std::endl;
 }
 
-void
-MonitoringPage::draw(const std::vector<TString>& filenames, TCanvas* canvas, bool normalize )
+void MonitoringPage::setTitle(char* hname, char* htitle){
+  if( std::find(m_h.begin(),m_h.end(),hname)==m_h.end() ) std::cout << hname << " doesn't exist!" << std::endl;
+  m_titles[std::string(hname)] = htitle;
+  std::cout << hname << " " << htitle << std::endl;
+}
+
+void MonitoringPage::setVLine(char* hname, std::vector<double> vlines){
+  if( std::find(m_h.begin(),m_h.end(),hname)==m_h.end() ) std::cout << hname << " doesn't exist!" << std::endl;
+  m_vlines[std::string(hname)] = vlines;
+}
+
+void MonitoringPage::setHLine(char* hname, std::vector<double> hlines){
+  if( std::find(m_h.begin(),m_h.end(),hname)==m_h.end() ) std::cout << hname << " doesn't exist!" << std::endl;
+  m_hlines[std::string(hname)] = hlines;
+}
+
+void MonitoringPage::setReferenceLine(char* hname, char* axis, double value){
+  if( std::find(m_h.begin(),m_h.end(),hname)==m_h.end() ) std::cout << hname << " doesn't exist!" << std::endl;
+  m_reflines[std::string(hname)] = std::make_pair(std::string(axis), value);
+}
+
+void MonitoringPage::setMLine(char* hname, char* axis){
+  if( std::find(m_h.begin(),m_h.end(),hname)==m_h.end() ) std::cout << hname << " doesn't exist!" << std::endl;
+  m_mlines[std::string(hname)] = std::string(axis);
+}
+
+void MonitoringPage::setLines(char* hname, std::vector<TLine*> lines){
+  if( std::find(m_h.begin(),m_h.end(),hname)==m_h.end() ) std::cout << hname << " doesn't exist!" << std::endl;
+  m_lines[std::string(hname)] = lines;
+}
+
+void MonitoringPage::setXRange(char* hname, double xmin, double xmax){
+  if( std::find(m_h.begin(),m_h.end(),hname)==m_h.end() ) std::cout << hname << " doesn't exist!" << std::endl;
+  m_xranges[std::string(hname)] = std::make_pair(xmin,xmax);
+}
+
+void MonitoringPage::setYRange(char* hname, double ymin, double ymax){
+  if( std::find(m_h.begin(),m_h.end(),hname)==m_h.end() ) std::cout << hname << " doesn't exist!" << std::endl;
+  m_yranges[std::string(hname)] = std::make_pair(ymin,ymax);
+}
+
+void MonitoringPage::draw(const std::vector<TString>& filenames, TCanvas* canvas, bool normalize )
 {
+  gStyle->SetOptStat(1100);
+  gStyle->SetOptTitle(0);
+  gROOT->ForceStyle();
   HistHelper hh;
   size_t ny = 2 ;
   size_t nx = std::max(int(m_h.size()/ny),2) ;
   if( nx*ny < m_h.size()) ++nx ;
   TCanvas* c1 = canvas ? canvas : hh.getCanvas(m_title,m_title) ;
   hh.createPage(c1,m_title,nx,ny) ;
+
+  auto drawTLine = [] (double x1, double y1, double x2, double y2, int color, int style){
+    TLine* line = new TLine(x1,y1,x2,y2);
+    line->SetLineStyle(style);
+    line->SetLineColor(color);
+    line->Draw();
+    return line;
+  };
+
   for( size_t i=0; i< m_h.size() ; ++i) {
     c1->cd(i+1) ;
-    hh.drawH1(filenames,m_h[i],"",normalize) ;
+    gPad->SetGrid(0,0);
+    auto ret = hh.drawH1(filenames,m_h[i],"",normalize) ;
+
+    //check the histogram name not changed
+    for( auto h:ret.second ){
+      if( strcmp(h->GetName(),m_h[i])==0) continue;
+      h->SetName(m_h[i]);
+      h->SetTitle(m_h[i]);
+    }
+
+    std::sort(ret.second.begin(), ret.second.end());
+    ret.second.erase(std::remove(ret.second.begin(), ret.second.end(), nullptr), ret.second.end());
+    if (ret.second.empty()) continue;
+
+    double minY = std::numeric_limits<double>::max();    
+    double maxY = -std::numeric_limits<double>::max();
+    for (auto h: ret.second) {
+        minY = std::min(minY, hh.min1D(*h)), maxY = std::max(maxY, hh.max1D(*h));
+    }
+    
+    if (0. == minY * maxY) {
+        if (0. > minY) {
+            minY *= 1.1;
+            //ret.second.front()->SetMinimum(minY);
+            for(auto h:ret.second) h->SetMinimum(minY);
+        } else {
+            maxY *= 1.1;
+            //ret.second.front()->SetMaximum(maxY);
+            for(auto h:ret.second) h->SetMaximum(maxY);
+        }
+    } else {
+        double m = 0.5 * (maxY + minY), w = 0.5 * (maxY - minY);
+        w *= 1.1;
+        minY = m - w, maxY = m + w;
+        //ret.second.front()->SetMinimum(minY);
+        //ret.second.front()->SetMaximum(maxY);
+        for(auto h:ret.second) {h->SetMinimum(minY); h->SetMaximum(maxY);}
+    }
+    int iPaveStat = 0;
+    for (auto h: ret.second){
+      auto ityr = m_yranges.find(std::string(h->GetName()));
+      if( m_yranges.end()!=ityr ){
+        if( ityr->second.first<hh.min1D(*h)) h->SetMinimum(ityr->second.first);
+        if( ityr->second.second>hh.max1D(*h)) h->SetMaximum(ityr->second.second);
+      }
+      auto it = m_vlines.find(std::string(h->GetName()));
+      if( m_vlines.end() != it){
+        std::vector<double> xvals = it->second;
+        for( auto xval:xvals)
+          drawTLine(xval, minY, xval, maxY, kBlack, 3); 
+      }//draw vlines
+      auto it2 = m_hlines.find(std::string(h->GetName()));
+      if( m_hlines.end() != it2){
+        double minX = h->GetXaxis()->GetXmin();
+        double maxX = h->GetXaxis()->GetXmax();
+        std::vector<double> yvals = it2->second;
+        for( auto yval:yvals)
+          drawTLine(minX, yval, maxX, yval, kBlack, 3); 
+      }//draw hlines
+      auto itref = m_reflines.find(std::string(h->GetName()));
+      if( m_reflines.end() != itref){
+        if( itref->second.first.compare("H")==0 ){
+          double minX = h->GetXaxis()->GetXmin();
+          double maxX = h->GetXaxis()->GetXmax();
+          drawTLine(minX, itref->second.second, maxX, itref->second.second, kGreen, 5); 
+        }
+        if( itref->second.first.compare("V")==0 ){
+          drawTLine(itref->second.second, minY, itref->second.second, maxY, kGreen, 5); 
+        }
+      }//draw referenceline
+      auto it3 = m_mlines.find(std::string(h->GetName()));
+      if( m_mlines.end()!=it3 ){
+        if( it3->second.compare("X")==0 ){
+          double xmid = h->GetMean();
+          drawTLine(xmid,minY,xmid,maxY,h->GetLineColor(),h->GetLineStyle());
+        }
+        if( it3->second.compare("Y")==0 ){
+          double tot = 0;
+          for(int bin = 1; bin<h->GetNbinsX()+1; bin++) if(h->GetBinContent(bin)) tot+=1;
+          double yval = h->Integral()/tot;
+          double minX = h->GetXaxis()->GetXmin();
+          double maxX = h->GetXaxis()->GetXmax();
+          drawTLine(minX,yval,maxX,yval,h->GetLineColor(),h->GetLineStyle());
+        }
+      }//draw lines for mean
+      auto itany = m_lines.find(std::string(h->GetName()));
+      if( m_lines.end()!=itany ){
+        for(auto line:itany->second ){
+          line->SetLineColor(1);
+          line->SetLineStyle(3);
+          line->Draw();
+        }
+      }//any lines
+      //TPaveStats
+      if( hh.isProfile1D(h) ) h->SetStats(0);
+      else{
+        ret.first->Update();
+        TPaveStats *st = (TPaveStats*) h->FindObject("stats");
+        if(st) {
+          st->SetTextColor(h->GetLineColor());
+          st->SetX1NDC(0.15);
+          st->SetX2NDC(0.35);
+          st->SetY1NDC(0.35+iPaveStat*0.1);
+          st->SetY2NDC(0.45+iPaveStat*0.1);
+          iPaveStat += 1;
+        }
+      }
+
+    }
+    
   }
   return;
 }

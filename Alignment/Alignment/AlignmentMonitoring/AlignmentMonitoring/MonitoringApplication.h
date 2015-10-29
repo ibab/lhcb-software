@@ -27,6 +27,7 @@ namespace Alignment
       void addFile( const TString& filenametag);
       void drawPage(TString pagename, bool normalize=false);
       void draw(bool print=false, bool normalize=false);
+      void draw(TCanvas* c1, bool normalize=false);
   
     private:
       std::string m_outputName;

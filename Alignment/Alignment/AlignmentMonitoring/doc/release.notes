@@ -3,6 +3,9 @@
 ! package manager: Maurizio Martinelli
 !------------------------------------------------------------------------------
 
+! 2015-10-27 - Zhirui Xu
+  - Modifications on classes MonitoringApplication, MonitoringPage and HistHelper to make plots for the online automatic tracker alignment monitoring 
+
 ! 2015-10-27 - Giulio Dujany
  - Minor aestetic changes Velo monitoring plots
 

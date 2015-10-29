@@ -1,12 +1,13 @@
 #include "AlignmentMonitoring/HistHelper.h"
 // ROOT
-#include "TString.h"
+#include "TCanvas.h"
+#include "TFile.h"
 #include "TH1.h"
 #include "TH2.h"
+#include "TObject.h"
+#include "TString.h"
 #include "TProfile.h"
-#include "TCanvas.h"
 #include "TPostScript.h"
-#include "TFile.h"
 #include "TStyle.h"
 #include "TPaveStats.h"
 #include "TROOT.h"
@@ -171,7 +172,7 @@ HistHelper::max1D( const TH1& h1 ) {
   const TProfile* pr = dynamic_cast<const TProfile*>(&h1) ;
   for(int ibin=firstbin; ibin<=lastbin; ++ibin)
     if(!pr || pr->GetBinEntries(ibin)>0) 
-      rc = std::max(rc,h1.GetBinContent(ibin)) ;
+      rc = std::max(rc,h1.GetBinContent(ibin)+h1.GetBinError(ibin)) ;
   return rc ;
 }
 
@@ -183,7 +184,7 @@ HistHelper::min1D( const TH1& h1 ) {
   const TProfile* pr = dynamic_cast<const TProfile*>(&h1) ;
   for(int ibin=firstbin; ibin<=lastbin; ++ibin)
      if(!pr || pr->GetBinEntries(ibin)>0) 
-       rc = std::min(rc,h1.GetBinContent(ibin)) ;
+       rc = std::min(rc,h1.GetBinContent(ibin)-h1.GetBinError(ibin)) ;
   return rc ;
 }
 
@@ -192,20 +193,24 @@ HistHelper::drawH1(TString filename,
 		   TString hisname,
 		   const char* drawopt,
 		   int color,
+           int style,
 		   bool normalize)
 {
   TH1* h1 = getH1(filename,hisname) ;
   if(h1) {
     h1->SetLineColor(color) ;
+    h1->SetLineStyle(style);
     h1->SetMarkerColor(color) ;
     if(normalize && is1D(h1) ) {
       double integral = h1->Integral() ;
       if(integral >0 && fabs(integral-1)>1e-6) {
-	if( h1->GetSumw2()==0 ) h1->Sumw2() ;
-	h1->Scale(1/integral) ;
+	    if( h1->GetSumw2()==0 ) h1->Sumw2() ;
+	    h1->Scale(1/integral) ;
       }
     }
-    h1 = h1->DrawCopy(drawopt) ;
+    auto nh1 = h1->DrawCopy(drawopt) ;
+    nh1->SetName(h1->GetName());
+    h1 = nh1;
     //h1->Draw(drawopt) ;
   }
   return h1 ;
@@ -250,19 +255,23 @@ HistHelper::drawH2(TString filename,
 int
 HistHelper::colorFromIndex(int index)
 {
-  int colors[] = {1,2,9,3,5,6,7} ;
+  int colors[] = {4,2,9,3,5,6,7} ;
   return colors[index] ;
 }
 
 
-TH1*
+std::pair<TVirtualPad*, std::vector<TH1*> >
 HistHelper::drawH1(const std::vector<TString>& files,
 		   const TString& hisname,
 		   TString drawopt,
 		   bool normalize)
 {
-  TH1* rc = drawH1(files[0],hisname,drawopt,colorFromIndex(0),false) ;
-  if(rc ) {
+  std::vector<TH1*> retVal;
+  TVirtualPad* retValPad = nullptr;
+  TH1* rc = drawH1(files[0],hisname,drawopt,colorFromIndex(0),2,false) ;
+  if (rc) {
+    //retValPad = gPad;
+    //retVal.push_back(rc);
     double norm = rc->Integral() ;
 
     if(  drawopt=="" ) {
@@ -274,51 +283,53 @@ HistHelper::drawH1(const std::vector<TString>& files,
     double minval = min1D(*rc) ;
     double maxval = max1D(*rc) ;
     for( unsigned int i=1; i<files.size(); ++i) {
-      TH1* h1 = drawH1(files[i],hisname,drawopt + " same",colorFromIndex(i),false) ;
+      TH1* h1 = drawH1(files[i],hisname,drawopt + " SAMES",colorFromIndex(i),1,false) ;
       if(h1) {
-	if( isProfile1D(rc) ) rc->SetStats(0) ;
-	else {
-	  TPaveStats *st = (TPaveStats*)h1->FindObject("stats") ;
-	  if(st) st->SetTextColor(colorFromIndex(i)) ;
-	}
-	if( is1D(h1) && normalize ) {
-	  if( h1->GetSumw2()==0 ) h1->Sumw2() ;
-	  h1->Scale(norm/h1->Integral()) ;
-	}
-	maxval = std::max(maxval,max1D(*h1)) ;
-	minval = std::min(minval,min1D(*h1)) ;
+        retVal.push_back(h1);
+	    if( isProfile1D(rc) ) rc->SetStats(0) ;
+	    else {
+	      TPaveStats *st = (TPaveStats*)h1->FindObject("stats") ;
+	      if(st) st->SetTextColor(colorFromIndex(i)) ;
+	    }
+	    if( is1D(h1) && normalize ) {
+	      if( h1->GetSumw2()==0 ) h1->Sumw2() ;
+	      h1->Scale(norm/h1->Integral()) ;
+	    }
+	    maxval = std::max(maxval,max1D(*h1)) ;
+	    minval = std::min(minval,min1D(*h1)) ;
       }
     }
 
     if ( is1D(rc) ) {
       if( ! gPad->GetLogy() ) {
-	if(maxval >  max1D(*rc) ) rc->SetMaximum(1.1*maxval) ;
-	rc->SetMinimum(0) ;
+	    if(maxval >  max1D(*rc) ) rc->SetMaximum(1.1*maxval) ;
+	    rc->SetMinimum(0) ;
       } else {
-	rc->SetMaximum(2*maxval) ;
-	rc->SetMinimum(minval>0 ? 0.5*minval : 0.5) ;
+	    rc->SetMaximum(2*maxval) ;
+	    rc->SetMinimum(minval>0 ? 0.5*minval : 0.5) ;
       }
     } else if( isProfile1D(rc) ) {
       double miny,maxy ;
       if( minval<0 && maxval>0) {
-	// symmetrize
-	maxy = 1.1 * std::max(-minval,maxval) ;
-	miny = -maxy ;
+	    // symmetrize
+	    maxy = 1.1 * std::max(-minval,maxval) ;
+	    miny = -maxy ;
       } else {
-	maxy = maxval + 0.1*(maxval-minval) ;
-	miny = minval - 0.1*(maxval-minval) ;
-	if(minval>=0 && miny<0) miny=0 ;
+	    maxy = maxval + 0.1*(maxval-minval) ;
+	    miny = minval - 0.1*(maxval-minval) ;
+	    if(minval>=0 && miny<0) miny=0 ;
       }
       //if( maxy > rc->GetMaximum() ) rc->SetMaximum(maxy) ;
       //if( miny < rc->GetMinimum() ) rc->SetMinimum(miny) ;
       rc->SetMaximum( maxy ) ;
       rc->SetMinimum( miny ) ;
     }
+    retValPad = gPad;
+    retVal.push_back(rc);
   } else {
     gPad->Clear() ;
   }
-  
-  return rc ;
+  return std::make_pair(retValPad, retVal);
 }
 
 TH1*

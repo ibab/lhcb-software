@@ -12,6 +12,8 @@
 #include "TCanvas.h"
 #include "TFitResult.h"
 
+class TH2D;
+
 namespace Alignment
 {
   namespace AlignmentMonitoring

@@ -56,6 +56,24 @@ MonitoringApplication::drawPage(TString pagename, bool normalize)
       std::cout << m_pages[ipage]->GetName() << std::endl ;
   }
 }
+
+
+void MonitoringApplication::draw(TCanvas* c1, bool normalize){
+  
+  for( size_t ipage=0; ipage<m_pages.size(); ++ipage) {
+    m_pages[ipage]->draw(m_filenames,c1,normalize) ;
+    gPad->GetCanvas()->cd(1) ;
+    TText text ;
+    text.SetNDC() ;
+    for(size_t i=0; i<m_tags.size(); ++i) {
+      if(m_tags[i] != TString()) {
+	    text.SetTextColor( m_hhelp.colorFromIndex(i) ) ;
+	    text.DrawText(0.8,0.5-0.1*i,m_tags[i]) ;
+      }
+    }
+    if(c1) {c1->Print(m_outputName.c_str()); c1->Update();}
+  }
+}
   
 void 
 MonitoringApplication::draw(bool print, bool normalize)

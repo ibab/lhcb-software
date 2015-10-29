@@ -1,15 +1,18 @@
 #ifndef ALIGNMENT_ALIGNMENTMONITORING_HISTHELPER_H
 #define ALIGNMENT_ALIGNMENTMONITORING_HISTHELPER_H 1
 // ROOT
-#include "TCanvas.h"
-#include "TFile.h"
-#include "TH1.h"
-#include "TH2.h"
-#include "TObject.h"
 #include "TString.h"
 // STL
 #include <string>
 #include <vector>
+#include <utility>
+
+class TVirtualPad;
+class TH1;
+class TH2;
+class TCanvas;
+class TFile;
+class TObject;
 
 namespace Alignment
 {
@@ -36,10 +39,10 @@ namespace Alignment
       bool isProfile1D( TH1* h1 );
       double max1D( const TH1& h1 );
       double min1D( const TH1& h1 );
-      TH1* drawH1(TString filename, TString hisname, const char* drawopt="", int color=1, bool normalize = false);
+      TH1* drawH1(TString filename, TString hisname, const char* drawopt="", int color=1, int style=1, bool normalize = false);
       TH1* drawH2(TString filename, TString hisname, const char* drawopt="", int color=1);
       int colorFromIndex(int index);
-      TH1* drawH1(const std::vector<TString>& files, const TString& hisname, TString drawopt = "", bool normalize = false);
+      std::pair<TVirtualPad*, std::vector<TH1*> > drawH1(const std::vector<TString>& files, const TString& hisname, TString drawopt = "", bool normalize = false);
       TH1* drawH2(std::vector<TString> files, TString hisname, TString drawopt);
     private:
     };
