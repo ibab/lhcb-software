@@ -396,7 +396,8 @@ int main()
     const double cond_min = 1;
     const double cond_max = 1e15;
     const int nbres = (int)(log10(cond_max) -log(cond_min) + 1);
-    TestResults results[nbres];
+    std::vector<TestResults> results;
+    results.reserve(nbres);
 
     Gaudi::Matrix5x5 F;
     Gaudi::SymMatrix5x5 origin;
