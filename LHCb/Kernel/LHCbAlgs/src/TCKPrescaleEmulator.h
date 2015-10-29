@@ -38,7 +38,7 @@ class TCKPrescaleEmulator : public GaudiAlgorithm {
 	
 	StatusCode getPrescalesFromTCK(unsigned int, std::map<std::string, double> &, std::map<std::string, double> &, std::map<std::string, double> &); ///< Fill maps with prescale, postscale and post*prescale based on specificed TCK
 
-	const HltDecReports* getReports(); ///< get the DecReports for each event, calculate the ratio of prescales if the TCK has changed or first event and call updatePrescalers if so
+	StatusCode getReports(); ///< get the DecReports for each event, calculate the ratio of prescales if the TCK has changed or first event and call updatePrescalers if so
 
 	StatusCode getPrescalers(); ///< Initialise Prescalers
 	StatusCode updatePrescalers(); ///< Set accept rates of Prescalers based on ratio of prescales from the user-specced TCK and the TCK in (the first, or changed) MC event TCK
@@ -70,5 +70,6 @@ class TCKPrescaleEmulator : public GaudiAlgorithm {
 	bool firstevent;
 	unsigned int lasttck;
 
+	HltDecReports* decreports;
 };
 #endif // TCKPRESCALEEMULATOR_H
