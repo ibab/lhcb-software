@@ -4,6 +4,9 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2015-10-29 - Michel De Cian
+ - Make sorting in layers more failsafe by issuing a warning if hits are accessed per region, but sorting is per layer
+
 ! 2015-10-25 - Michel De Cian
  - Add method in IndexedHitContainer to return hits in a given layer non-const. Fix indentation everywhere.
  - Add sorting in station and layer in TTStationHitManager.
