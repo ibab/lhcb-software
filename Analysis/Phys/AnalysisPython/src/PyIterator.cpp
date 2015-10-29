@@ -17,10 +17,6 @@
 #include "TTree.h"
 #include "TCut.h"
 // ============================================================================
-// Boost
-// ============================================================================
-#include "boost/static_assert.hpp"
-// ============================================================================
 /** @file 
  *  implemetation file for class Analysis::PyIterator
  *  @author Vanya Belyaev
@@ -33,8 +29,8 @@
 // ============================================================================
 namespace 
 {
-  BOOST_STATIC_ASSERT( std::numeric_limits<unsigned long>::is_specialized  && 
-                       boost::integer_traits<unsigned long>::is_specialized ) ;
+  static_assert ( std::numeric_limits<unsigned long>::is_specialized , 
+                  "std::numeric_limits<unsigned long> is not specialized" ) ;
 }
 // ============================================================================
 // constructor 
@@ -76,7 +72,7 @@ Analysis::PyIterator::PyIterator
   const TCut&         cuts  , 
   const unsigned long first , 
   const unsigned long last  )  
-  : m_tree     ( tree  ) 
+  : m_tree     ( tree  )
   , m_formula  ( 0     )  
   , m_current  ( first )
   , m_last     ( last  )
@@ -114,27 +110,27 @@ Analysis::PyIterator::~PyIterator()
 TTree* Analysis::PyIterator::next () const                   // go to next item 
 {
   //
-  if ( 0 == m_tree         ) { return 0 ; }
-  if ( 0 == m_formula      ) { return 0 ; }
+  if ( 0 == m_tree         ) { return nullptr ; }
+  if ( 0 == m_formula      ) { return nullptr ; }
   //
-  for ( ; m_current < m_last ; ++m_current ) 
+  for ( ; m_current <= m_last ; ++m_current ) 
   {
     //
-    long ievent = m_tree->GetEntryNumber ( m_current ) ;
-    if ( 0 > ievent ) { continue ; }  // CONTINUE
+    const long ievent = m_tree->GetEntryNumber ( m_current ) ;
+    if ( 0 > ievent             ) { continue ; }  // CONTINUE
     //
-    ievent      = m_tree->LoadTree ( ievent ) ;
-    if ( 0 > ievent ) { continue ; }  //  CONTINUE 
+    // check the cuts: 
+    if ( !m_formula->evaluate() ) { continue ; }  // CONTINUE 
     //
-    if ( m_formula->evaluate() ) 
-    { 
-      m_tree -> GetEntry ( ievent ) ; // ATTENTION! Load here everything!
-      ++m_current   ; // NB! 
-      return m_tree ;
-    } 
+    // ATTENTION! Load here everything!
+    const long result = m_tree -> GetEntry ( ievent ) ; 
+    if ( 0 >= result ) { return nullptr ; }
+    //
+    ++m_current   ;   // ADVANCE THE COUNTER   
+    return m_tree ;   // return TREE 
   }
   //
-  return 0 ;
+  return nullptr ;
 }
 // ============================================================================
 // check if formula is ok 

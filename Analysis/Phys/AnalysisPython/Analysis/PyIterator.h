@@ -14,10 +14,6 @@
 // ============================================================================
 #include "GaudiKernel/Kernel.h"
 // ============================================================================
-// Boost
-// ============================================================================
-#include "boost/integer_traits.hpp"
-// ============================================================================
 // forward declarations 
 // ============================================================================
 class TTree ; // from ROOT 
@@ -46,13 +42,13 @@ namespace Analysis
       ( TTree*              tree      , 
         const std::string&  cuts      , 
         const unsigned long first = 0 , 
-        const unsigned long last  = boost::integer_traits<unsigned long>::const_max );
+        const unsigned long last  = std::numeric_limits<unsigned long>::max() );
     //
     PyIterator 
       ( TTree*              tree      , 
         const TCut&         cuts      , 
         const unsigned long first = 0 , 
-        const unsigned long last  = boost::integer_traits<unsigned long>::const_max );
+        const unsigned long last  = std::numeric_limits<unsigned long>::max() );
     /// destructor 
     virtual ~PyIterator() ;  // destructor 
     // ========================================================================
@@ -65,6 +61,11 @@ namespace Analysis
     /// check if formula is ok 
     bool   ok   () const ;
     // ========================================================================
+  public:
+    // ========================================================================
+    /// get the current element 
+    unsigned long current() const { return m_current ; }
+    // ========================================================================
   private:
     // ========================================================================
     PyIterator () ;
@@ -75,7 +76,7 @@ namespace Analysis
     // ========================================================================
     TTree*                            m_tree    ;
     Analysis::Formula*                m_formula ;
-    mutable unsigned long             m_current ;
+    mutable unsigned long long        m_current ;
     unsigned long                     m_last    ;
     // ========================================================================
   };
