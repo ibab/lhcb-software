@@ -1,3 +1,7 @@
+2015-10-29  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* data/Makefile-cmt.mk: fixed detection of container package
+
 2015-10-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* lb-run/lb-dev: use 'latest' as default version for Compat

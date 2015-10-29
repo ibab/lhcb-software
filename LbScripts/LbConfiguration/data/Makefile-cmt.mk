@@ -10,7 +10,7 @@ ifneq ($(wildcard cmt/project.cmt),)
 container := $(shell awk '/^ *container /{print $$2}' cmt/project.cmt)
 endif
 ifndef container
-container := $(word 1,$(filter %Sys,$(shell echo $(packages) | sed 's_/.*__')))
+container := $(word 1,$(filter %Sys,$(shell echo $(packages) | sed 's_/[^ ]*__g')))
 ifdef container
 $(warning No container keyword in cmt/project.cmt, so I try $(container).)
 endif
