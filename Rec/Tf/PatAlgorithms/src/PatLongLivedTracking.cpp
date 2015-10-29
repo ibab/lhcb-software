@@ -1389,6 +1389,6 @@ double PatLongLivedTracking::evaluateFisher( const LHCb::Track* track ){
 void PatLongLivedTracking::initEvent () {
  
   m_ttHitManager->prepareHits();
-  m_ttHitManager->sortHits<Tf::increasingByXAtYEq0<PatTTHit>>();
+  m_ttHitManager->sortHitsLayers<Tf::increasingByXAtYEq0<PatTTHit>>();
   
 }

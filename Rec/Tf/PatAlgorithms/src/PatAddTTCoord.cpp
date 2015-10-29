@@ -471,7 +471,7 @@ void PatAddTTCoord::handle ( const Incident& incident ) {
 void PatAddTTCoord::initEvent () {
  
   m_ttHitManager->prepareHits();
-  m_ttHitManager->sortHits<Tf::increasingByXAtYEq0<PatTTHit>>();
+  m_ttHitManager->sortHitsLayers<Tf::increasingByXAtYEq0<PatTTHit>>();
 
   // -- This does not change between events
   m_bendProtoParam = m_ttParam * -1 * m_magFieldSvc->signedRelativeCurrent() ;

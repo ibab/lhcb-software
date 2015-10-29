@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-10-29 - Michel De Cian
+ - Change in PatAddTTCoord and PatLongLivedTracking to new name of hit-sorting function.
+
 ! 2015-10-28 - Michel De Cian
  - Change in PatLongLivedTracking to exploit new hit sorting in TTStationHitManager.
 
