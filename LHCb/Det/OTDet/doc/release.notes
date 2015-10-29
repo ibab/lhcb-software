@@ -1,6 +1,8 @@
 ! Package     : OTDet
 ! Responsible : Alexandr Kozlinskiy, Lucia Grillo
 !--------------------------------------------------------------------------
+! 2015-10-29 - Gerhard Raven
+ - use VectorClass in walkrelation SIMD code to make it portable to clang
 
 !========================= OTDet v8r17 2015-07-09 =========================
 ! 2015-07-09 - Michel De Cian

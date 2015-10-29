@@ -5,6 +5,7 @@
 #include <algorithm> // std::min, std::max
 
 #include "GaudiKernel/Kernel.h" // for LIKELY/UNLIKELY
+#include "VectorClass/vectorclass.h"
 
 #include "LHCbMath/ChebyshevApprox.h"
 
@@ -87,10 +88,9 @@ namespace OTDet
 
     auto tanh = xx * numer / denom;
 #else // same code SIMD'ified
-    typedef double dv2 __attribute__ ((vector_size(16)));
-    dv2 sum = xx2 * dv2{ 1, 28 } + dv2{ 378, 3150 };
-    sum = xx2 * sum + dv2{ 17325, 62370 };
-    sum = xx2 * sum + dv2{ 135135, 135135 };
+    auto sum = xx2 * Vec2d{ 1, 28 } + Vec2d{ 378, 3150 };
+    sum = xx2 * sum + Vec2d{ 17325, 62370 };
+    sum = xx2 * sum + Vec2d{ 135135, 135135 };
     auto tanh = xx * sum[0] / sum[1];
 #endif
     tanh = 2 * tanh / (tanh * tanh + 1);
