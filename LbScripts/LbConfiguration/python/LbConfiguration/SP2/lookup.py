@@ -15,7 +15,7 @@ import logging
 
 # FIXME: when we drop Python 2.4, this should become 'from . import path'
 from LbConfiguration.SP2 import path, Error
-from LbConfiguration.SP2.version import DEFAULT_VERSION
+from LbConfiguration.SP2.version import DEFAULT_VERSION, expandVersionAlias
 
 log = logging.getLogger(__name__)
 
@@ -49,7 +49,7 @@ class MissingDataPackageError(NotFoundError):
     def __str__(self):
         return 'cannot data package {0} {1} in {2}'.format(*self.args)
 
-def findProject(name, version, platform):
+def findProject(name, version, platform, allow_empty_version=False):
     '''
     Find a Gaudi-based project in the directories specified in the 'path'
     variable.
@@ -57,16 +57,20 @@ def findProject(name, version, platform):
     @param name: name of the project (case sensitive for local projects)
     @param version: version of the project
     @param platform: binary platform id
+    @param allow_empty_version: if True, we allow also the plain project name (without version)
 
     @return path to the project binary directory
     '''
-    log.debug('findProject(name=%r, version=%r, platform=%r)',
-              name, version, platform)
+    log.debug('findProject(name=%r, version=%r, platform=%r, '
+              'allow_empty_version=%r)',
+              name, version, platform, allow_empty_version)
+
     # standard project suffixes
     suffixes = ['{0}_{1}'.format(name, version),
-                os.path.join(name.upper(), '{0}_{1}'.format(name.upper(), version))]
-    # special case: with the default 'latest' version we allow the plain name
-    if version == 'latest':
+                os.path.join(name.upper(), '{0}_{1}'.format(name.upper(), version)),
+                os.path.join(name.upper(), version),]
+    # special case: for the 'latest' version we allow the plain name
+    if allow_empty_version:
         suffixes.insert(0, name)
 
     bindir = os.path.join('InstallArea', platform)

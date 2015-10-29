@@ -1,3 +1,7 @@
+2015-10-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* lb-run/lb-dev: improved version alias mapping (LBCORE-938)
+
 2015-09-01  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: LBCORE-902 release of version v8r4p2

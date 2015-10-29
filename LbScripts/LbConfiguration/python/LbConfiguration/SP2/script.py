@@ -187,6 +187,7 @@ class SP2(EnvConfig.Script):
                             overriding_projects = [],
                             auto_override = True,
                             use_grid = False)
+        self.allow_empty_version = False
 
     def _parse_args(self, args=None):
         super(SP2, self)._parse_args(args)
@@ -196,6 +197,8 @@ class SP2(EnvConfig.Script):
         if self.cmd and isValidVersion(self.project, self.cmd[0]):
             self.version = self.cmd.pop(0)
         else:
+            # if no version is specified, we want to allow just the project name
+            self.allow_empty_version = True
             self.version = DEFAULT_VERSION
 
     def _makeEnv(self):
@@ -215,6 +218,9 @@ class SP2(EnvConfig.Script):
                 print '%s in %s' % entry
             sys.exit(0)
 
+        self.version = expandVersionAlias(self.project, self.version,
+                                          self.opts.platform)
+
         # prepare the list of projects to use
         projects = []
         if self.opts.use_grid:
@@ -230,7 +236,8 @@ class SP2(EnvConfig.Script):
         # Check if the main project needs a special search path
         self.log.debug('check if we need extra search path')
         project_path = findProject(self.project, self.version,
-                                   self.opts.platform)
+                                   self.opts.platform,
+                                   allow_empty_version=self.allow_empty_version)
         extra_path = projectExtraPath(project_path)
         if extra_path:
             self.log.debug('the project requires an extra search path')
@@ -244,7 +251,7 @@ class SP2(EnvConfig.Script):
         # set the environment XML search path
         env_path = []
         for p, v in projects:
-            v = expandVersionAlias(p, v)
+            v = expandVersionAlias(p, v, self.opts.platform)
             env_path.extend(getEnvXmlPath(p, v, self.opts.platform))
         # FIXME: EnvConfig has got problems with unicode in the search path
         env_path = map(str, env_path) # ensure that we do not have unicode strings
