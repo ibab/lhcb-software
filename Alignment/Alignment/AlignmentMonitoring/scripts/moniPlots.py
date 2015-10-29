@@ -27,9 +27,6 @@ r.gROOT.SetBatch(True)
 
 activity = 'Velo'
 
-if args.Tracker:
-    activity = 'Tracker'
-
 
 def plotsCompare(Pages, files_histo, outputFile_name, normalize = True):
     inFiles = {key: r.TFile(path) for key, path in files_histo.items()}

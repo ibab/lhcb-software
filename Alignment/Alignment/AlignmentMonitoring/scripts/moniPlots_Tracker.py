@@ -112,9 +112,7 @@ if __name__ == '__main__':
     parser.add_argument('-o','--outFile',help='output file name')
     args = parser.parse_args()
 
-    activity = 'Velo'
-    if args.Tracker:
-        activity = 'Tracker' 
+    activity = 'Tracker' 
 
     run = args.run if args.run else OnlineUtils.findLastRun(activity)
 
