@@ -317,6 +317,16 @@ StatusCode HltSelReportsDecoder::execute() {
             m_conv->SummaryFromRaw(&infoPersistent, &stdInfo, LHCb::CLID_CaloCluster);
         }
         break;
+      case 40:
+        {      
+            m_conv->SummaryFromRaw(&infoPersistent, &stdInfo, 40);
+        }
+        break;
+      case 41:
+        {      
+            m_conv->SummaryFromRaw(&infoPersistent, &stdInfo, 41);
+        }
+        break;
       case 1:
         {
           infoPersistent.insert( "0#SelectionID", floatFromInt(stdInfo[0]) );
@@ -435,6 +445,7 @@ StatusCode HltSelReportsDecoder::execute() {
     if ( i != std::end( hos->numericalInfo() ) ) {
         int id = (int)(i->second+0.1);
         selName = idmap.find( id );
+        always() << "ID = " << id << endmsg;
     }
     if( selName != std::end(idmap) ){
 

@@ -78,6 +78,7 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
     void RecVertexObject2Summary( HltObjectSummary::Info*, const LHCb::RecVertex*, bool) ;
     void VertexObject2Summary( HltObjectSummary::Info*, const LHCb::Vertex*, bool) ;
     void RecSummaryObject2Summary( HltObjectSummary::Info*, const LHCb::RecSummary*) ;
+    void GenericMapObject2Summary( HltObjectSummary::Info*, const GaudiUtils::VectorMap<short,float>*) ;
     //
     /// Put the information in the summary back in the object
     void ParticleObjectFromSummary( const HltObjectSummary::Info*, LHCb::Particle*,bool) ;
@@ -89,8 +90,10 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
     void RecVertexObjectFromSummary( const HltObjectSummary::Info*, LHCb::RecVertex*,bool) ;
     void VertexObjectFromSummary( const HltObjectSummary::Info*, LHCb::Vertex*,bool) ;
     void RecSummaryObjectFromSummary( const HltObjectSummary::Info*, LHCb::RecSummary*) ;
+    void GenericMapObjectFromSummary( const HltObjectSummary::Info*, GaudiUtils::VectorMap<short,float>*) ;
 
     int findBestPrevious(unordered_map<int, unordered_map<string,pair<int,int> > >,int) ;
+    
 
   protected:
   

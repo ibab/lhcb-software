@@ -17,6 +17,7 @@
 #include "Event/CaloCluster.h"
 #include "Event/RecVertex.h"
 #include "Event/Vertex.h"
+#include "GaudiKernel/VectorMap.h"
 
 using LHCb::HltObjectSummary;
 using LHCb::HltSelRepRBStdInfo;
@@ -47,6 +48,7 @@ class IReportConvert : virtual public IAlgTool {
     virtual void RecVertexObject2Summary( HltObjectSummary::Info*, const LHCb::RecVertex*, bool) = 0;
     virtual void VertexObject2Summary( HltObjectSummary::Info*, const LHCb::Vertex*, bool) = 0;
     virtual void RecSummaryObject2Summary( HltObjectSummary::Info*, const LHCb::RecSummary*) = 0;
+    virtual void GenericMapObject2Summary( HltObjectSummary::Info*, const GaudiUtils::VectorMap<short,float>*) = 0;
     //
     // Put the information in the summary back in the object
     virtual void ParticleObjectFromSummary( const HltObjectSummary::Info*, LHCb::Particle*, bool) = 0;
@@ -58,6 +60,7 @@ class IReportConvert : virtual public IAlgTool {
     virtual void RecVertexObjectFromSummary( const HltObjectSummary::Info*, LHCb::RecVertex*, bool) = 0;
     virtual void VertexObjectFromSummary( const HltObjectSummary::Info*, LHCb::Vertex*, bool) = 0;
     virtual void RecSummaryObjectFromSummary( const HltObjectSummary::Info*, LHCb::RecSummary*) = 0;
+    virtual void GenericMapObjectFromSummary( const HltObjectSummary::Info*, GaudiUtils::VectorMap<short,float>*) = 0;
 
 };
 

@@ -192,6 +192,37 @@ void ReportConvertTool::SummaryFromRaw(HltObjectSummary::Info* info, HltSelRepRB
         used_map = m_recsummary_unordered_map2;
       }
       break;
+    case 40: // This is a special number to deal with the holder of related info, contains only the location enum
+      {      
+        info->insert( "0#LocationID", floatFromInt( (*subbank)[ 0 ]));
+        return;
+      }
+      break;
+    case 41: // This is a special number to deal with the actual related info
+      {
+        unsigned int n=0;
+        do {
+          // First make map key 
+          std::stringstream key;
+          int len = snprintf(nullptr, 0, "%d", n);
+          int padding = 4 - len;
+          for(int m=0; m<padding; m++) key << "0";
+          key << n << "#GenericKey";
+          info->insert(key.str().c_str(),floatFromInt( (*subbank)[ n ]));
+          n++;
+
+          // Then do the same for the value
+          std::stringstream keykey;
+          int len2 = snprintf(nullptr, 0, "%d", n);
+          int padding2 = 4 - len2;
+          for(int m=0; m<padding2; m++) keykey << "0";
+          keykey << n << "#GenericValue";
+          info->insert(keykey.str().c_str(),floatFromInt( (*subbank)[ n ]));
+          n++;
+        }while(n<subbank->size());
+        return;
+      }
+      break;
     case LHCb::CLID_CaloCluster:
       {      
         if(m_version<3) {
@@ -609,6 +640,30 @@ void ReportConvertTool::RecSummaryObject2Summary( HltObjectSummary::Info* info, 
     }
   }
 
+}
+
+// Convert generic Gaudi::VectorMap into a summary
+void ReportConvertTool::GenericMapObject2Summary( HltObjectSummary::Info* info , const GaudiUtils::VectorMap<short,float>* map) {
+  int n=0;
+  for( auto i : *map ){
+    // First put the map key inside
+    std::stringstream key;
+    int len = snprintf(nullptr, 0, "%d", n);
+    int padding = 4 - len;
+    for(int m=0; m<padding; m++) key << "0";
+    key << n << "#GenericKey";
+    n++;
+    info->insert( key.str().c_str() , float( i.first ) );
+
+    // Then do the same for the value
+    std::stringstream keykey;
+    int len2 = snprintf(nullptr, 0, "%d", n);
+    int padding2 = 4 - len2;
+    for(int m=0; m<padding2; m++) keykey << "0";
+    keykey << n << "#GenericValue";
+    n++;
+    info->insert( keykey.str().c_str() , float( i.second ) );
+  }
 }
 
 // Put the information in the summary back in the object
@@ -1082,5 +1137,31 @@ void ReportConvertTool::RecSummaryObjectFromSummary( const HltObjectSummary::Inf
       case 21: ( object->addInfo( LHCb::RecSummary::nMuonTracks, (*info)[ recsummary_it->first ] ) ); break;
       case 22: ( object->addInfo( LHCb::RecSummary::nPVs, (*info)[ recsummary_it->first ] ) ); break;
     }
+  }
+}
+
+// Convert generic Gaudi::VectorMap summary back into the object
+void ReportConvertTool::GenericMapObjectFromSummary( const HltObjectSummary::Info* info , GaudiUtils::VectorMap<short,float>* map) {
+  for( unsigned int n=0;n<info->size();n++){
+    // First put the map key inside
+    std::stringstream key;
+    int len = snprintf(nullptr, 0, "%d", n);
+    int padding = 4 - len;
+    for(int m=0; m<padding; m++) key << "0";
+    key << n << "#GenericKey";
+    n++;
+
+    short i_key = short( (*info)[key.str().c_str()] );
+    // Then do the same for the value
+    std::stringstream keykey;
+    int len2 = snprintf(nullptr, 0, "%d", n);
+    int padding2 = 4 - len2;
+    for(int m=0; m<padding2; m++) keykey << "0";
+    keykey << n << "#GenericValue";
+    n++;
+    
+    float i_value = float( (*info)[keykey.str().c_str()] );
+  
+    map->insert(std::pair<short,float>(i_key,i_value));
   }
 }

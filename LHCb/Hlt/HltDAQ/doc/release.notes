@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2015-10-12 - Sean Benson
+ - Related info support.
+
 !========================= HltDAQ v4r20 2015-08-14 =========================
 
 ! 2015-08-03 - Gerhard Raven
