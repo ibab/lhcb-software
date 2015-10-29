@@ -4,6 +4,10 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2015-10-29 - Marco Cattaneo
+ - lumi9mergesmallfiles.qmt: add temporary exclusion for printout of Algorithm
+   RootOnTES property, removed after Gaudi v26r4
+
 ! 2015-10-22 - Marco Cattaneo
  - Update test references to follow LHCBPS-1434 patch: LHCbApp() now assigns 
    OdinTimeDecoder as EventClockSvc().EventTimeDecoder when processing real data
