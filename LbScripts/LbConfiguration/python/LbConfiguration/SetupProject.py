@@ -425,7 +425,7 @@ def LatestVersion(versions):
 
 def VersionMatch(version, pattern):
     """Compare a version string with a pattern. The pattern can be
-    the exact match, a glob pattern or None (in which case matches an None version).
+    the exact match, a glob pattern or None (in which case matches a None version).
     """
     return version == pattern or \
         ((pattern is not None) and (version is not None) and fnmatch(version, pattern))
@@ -1667,17 +1667,21 @@ class SetupProject(object):
             # check if the next argument can be interpreted as a version for the requested project
             found = False
             pattern = self.args[0]
-            if pattern.upper() == 'HEAD':
-                pattern = self.args[0] = 'HEAD'
-            for v in versions:
-                if VersionMatch(v[1], pattern):
-                    found = True
-                    break
-            if found:
-                self.project_version = self.args.pop(0)
-            elif re.match('v[0-9]*r[0-9p]*|HEAD', self.args[0]):
-                self._error("Cannot find version '%s' of %s. Try with --list-versions." % (self.args[0], self.project_name))
-                return 1
+            if pattern.lower() == 'latest':
+                self.args.pop(0)
+                self.project_version = None
+            else:
+                if pattern.upper() == 'HEAD':
+                    pattern = self.args[0] = 'HEAD'
+                for v in versions:
+                    if VersionMatch(v[1], pattern):
+                        found = True
+                        break
+                if found:
+                    self.project_version = self.args.pop(0)
+                elif re.match('v[0-9]*r[0-9p]*|HEAD', self.args[0]):
+                    self._error("Cannot find version '%s' of %s. Try with --list-versions." % (self.args[0], self.project_name))
+                    return 1
 
         #------------- Prompt for a version to use
         # Ask if --ask or with --build-env and no version specified
