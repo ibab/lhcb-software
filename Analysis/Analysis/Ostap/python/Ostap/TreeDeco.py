@@ -59,32 +59,40 @@ def _iter_cuts_ ( self , cuts , first = 0 , last = _large , progress = False ) :
     """
     #
     last = min ( last , len ( self )  )
-    if last < first : return 
+    if last < first : return
         
-    _pit = cpp.Analysis.PyIterator ( self , cuts , first , last )
-    if  not _pit.ok() :
+    pit = cpp.Analysis.PyIterator ( self , cuts , first , last )
+    if  not pit.ok() :
         raise TypeError ( "Invalid Formula: %s" % cuts )
     #
-    step = 2000.0 / ( last - first ) 
     from Ostap.progress_bar import ProgressBar 
     with ProgressBar ( min_value = first        ,
                        max_value = last  - 1    ,
                        silent    = not progress ) as bar :
-        _t = _pit.tree()
+        bar.update_amount( first )
+        step = 13.0 * max ( bar.width , 101 ) / ( last - first ) 
+        
+        _t = pit.tree()
+        _o = _t 
         while _t :
-            
-            current = _pit.current() - 1 
-            s       = long ( step * ( current - first ) )
-            if 0 == s % 10 or \
-               0 == current % 50000 or \
-               0 == ( current - first ) % 10000 : 
-                bar.update_amount( current )
-                
-            yield _t
-            _t   = _pit.next()
 
-            #
-        del _pit
+            yield _t
+            _t      = pit.next()         ## advance to next extry  
+
+            if progress : 
+                current = pit.current() - 1  ## get current entry 
+                if not _t                          \
+                       or  _t != _o                \
+                       or current - first   < 100  \
+                       or last    - current < 100  \
+                       or 0 == current % 100000    \
+                       or 0 == int ( step * ( current - first ) ) % 5  :
+                    
+                    ## show progress bar 
+                    bar.update_amount( current )
+                    _o = _t
+                    
+    del pit
 
 ROOT.TTree .withCuts  = _iter_cuts_ 
 ROOT.TChain.withCuts  = _iter_cuts_ 
