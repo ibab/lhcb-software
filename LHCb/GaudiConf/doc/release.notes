@@ -3,6 +3,10 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2015-10-29 - Marco Cattaneo
+ - LHCbExclusions.py: add temporary exclusion for printout of Algorithm
+   RootOnTES property, removed after Gaudi v26r4
+
 !========================= GaudiConf v19r14 2015-10-22 =========================
 ! 2015-10-22 - Gloria Corti
  - In DigiConf packing of MCHits for xdigi events is now done only when

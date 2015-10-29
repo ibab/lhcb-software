@@ -27,4 +27,6 @@ preprocessor = normalizeExamples + \
     LineSkipper(["Memory for the event exceeds 3*sigma"]) + \
     LineSkipper(["Mean 'delta-memory' exceeds 3*sigma"]) + \
     LineSkipper(["INFO  'CnvServices':"]) + \
-    LineSkipper(["DEBUG Property ['Name': Value] =  'ErrorCount"])
+    LineSkipper(["DEBUG Property ['Name': Value] =  'ErrorCount"]) + \
+    LineSkipper(["DEBUG Property ['Name': Value] =  'RootOnTES':"]) + \
+    LineSkipper(["#properties ="])
