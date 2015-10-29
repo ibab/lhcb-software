@@ -15,6 +15,7 @@
 #include "Event/ProtoParticle.h"
 #include "Event/Track.h"
 #include "Event/RecVertex.h"
+#include "Event/RelatedInfoMap.h"
 //
 #include <TLorentzVector.h>
 #include "GaudiKernel/Vector4DTypes.h"
@@ -25,6 +26,7 @@
 #include "LoKi/Services.h"
 #include "Kernel/IDistanceCalculator.h"
 #include "Kernel/Particle2Vertex.h"
+#include "Kernel/IANNSvc.h"
 //
 #include "ReportCheckTool.h"
 //
@@ -61,6 +63,10 @@ public:
             ,Particle2Vertex::Table*);
         void fillParticleInfo(std::vector<ContainedObject*>,const LHCb::HltObjectSummary*,bool, LHCb::Track::Container*,std::vector<ContainedObject*>*);
         void fillVertexInfo(LHCb::Vertex*,const LHCb::HltObjectSummary*);
+        void AddRelInfo(const LHCb::HltObjectSummary*,LHCb::Particle*);
+        /// for splitting strings
+        std::vector<std::string> &split(const std::string &, char, std::vector<std::string> &);
+        std::vector<std::string> split(const std::string &, char);
 
         template <typename Iter, typename Cont>
         inline bool is_last(Iter iter, const Cont& cont)
@@ -78,6 +84,7 @@ private:
 	std::string m_PVLoc;
 	std::string m_VertRepLoc;
 	std::string m_OutputPref;
+        std::map<std::string,int> m_RelInfoLocationsMap;
        
         bool turbo;
         bool m_PV3D;
@@ -86,5 +93,7 @@ private:
         IDistanceCalculator *   m_dist;
         IReportCheck*   m_check;
         IReportConvert* m_conv;
+        /// HltANNSvc for making selection names to int selection ID
+        IANNSvc* m_hltANNSvc;
 };
 #endif // TESLAREPORTALGO_H

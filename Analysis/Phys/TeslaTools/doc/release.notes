@@ -3,6 +3,12 @@
 ! Responsible : Sean Benson
 !=============================================================================
 
+! 2015-10-29 - Roel Aaij
+ - Update to agreed upon way of storing {location : id} in HltANNSvc.
+
+! 2015-10-12 - Sean Benson
+ - Restore related info.
+
 !========================= TeslaTools v1r16 2015-10-19 =======================
 
 ! 2015-10-5 - Sean Benson

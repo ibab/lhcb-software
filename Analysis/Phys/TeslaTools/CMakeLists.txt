@@ -13,12 +13,14 @@ gaudi_depends_on_subdirs(Event/MicroDst
                          Event/HltEvent
                          Event/DAQEvent
                          Hlt/HltDAQ
+                         Hlt/HltServices
+                         Kernel/HltInterfaces
                          GaudiUtils
                          GaudiConf)
 
 gaudi_add_module(TeslaTools
                  src/*.cpp
-                 LINK_LIBRARIES DAQEventLib HltEvent RecEvent DaVinciKernelLib
+                 LINK_LIBRARIES DAQEventLib HltEvent RecEvent DaVinciKernelLib HltInterfaces
                  LoKiArrayFunctorsLib LoKiPhysLib
                  DaVinciInterfacesLib)
 

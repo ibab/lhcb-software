@@ -19,19 +19,20 @@ library          TeslaTools    ../src/*.cpp
 # Configurable (python) dependencies
 #########################################
 
-use  MicroDst    v* Event
-use  HltEvent    v* Event
-use  DAQEvent    v* Event
-use  LHCbAlgs    v* Kernel
-use  GaudiConf   v*
-use  GaudiUtils  v*
-use  RecEvent    v* Event
-use  DaVinciKernel v*    Phys
-use  DaVinciInterfaces v*    Phys
-use  HltDAQ      v* Hlt
-use  LoKiPhys                  v*    Phys
-use  LoKiArrayFunctors                      v*    Phys
-
+use  MicroDst    	   v* Event
+use  HltEvent    	   v* Event
+use  DAQEvent    	   v* Event
+use  LHCbAlgs    	   v* Kernel
+use  GaudiConf   	   v*
+use  GaudiUtils  	   v*
+use  RecEvent    	   v* Event
+use  DaVinciKernel     v* Phys
+use  DaVinciInterfaces v* Phys
+use  HltDAQ            v* Hlt
+use  HltServices       v* Hlt
+use  HltInterfaces     v* Kernel 
+use  LoKiPhys          v* Phys
+use  LoKiArrayFunctors v* Phys
 
 # standard patterns (order is essential!)
 # ============================================================================

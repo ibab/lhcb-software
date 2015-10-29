@@ -1,7 +1,7 @@
-// Include files 
+// Include files
 // from Gaudi
 #include "Event/ODIN.h" // event & run number
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 #include "Event/HltDecReports.h"
 
 #include "Event/HltSelReports.h"
@@ -9,6 +9,8 @@
 #include "Event/HltDecReports.h"
 // local
 #include "TeslaReportAlgo.h"
+
+static const  Gaudi::StringKey RelInfoLocations{"RelInfoLocations"};
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TeslaReportAlgo
@@ -24,6 +26,7 @@ DECLARE_ALGORITHM_FACTORY( TeslaReportAlgo )
 TeslaReportAlgo::TeslaReportAlgo( const std::string& name,
                                     ISvcLocator* pSvcLocator)
 : GaudiAlgorithm ( name , pSvcLocator ), m_PV3D(true), m_refitted(false), m_dist(NULL), m_check(NULL), m_conv(NULL)
+, m_hltANNSvc {NULL}
 {
   declareProperty( "TriggerLine" ,          m_inputName    = "Hlt2CharmHadD02HH_D02KK" );
   declareProperty( "OutputPrefix" ,         m_OutputPref   = "Tesla" );
@@ -35,7 +38,7 @@ TeslaReportAlgo::TeslaReportAlgo( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-TeslaReportAlgo::~TeslaReportAlgo() {} 
+TeslaReportAlgo::~TeslaReportAlgo() {}
 
 //=============================================================================
 // Initialization
@@ -43,25 +46,31 @@ TeslaReportAlgo::~TeslaReportAlgo() {}
 StatusCode TeslaReportAlgo::initialize()
 {
   turbo=false;
-  StatusCode sc = GaudiAlgorithm::initialize(); 
+  StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
   if ( msgLevel(MSG::DEBUG) ) debug() << "Requested processing of line: " << m_inputName << endmsg;
   m_dist = tool<IDistanceCalculator>("LoKi::DistanceCalculator", this );
-  if ( !m_dist ) 
+  if ( !m_dist )
   {
     return Error("Unable to retrieve the IDistanceCalculator tool");
   }
   m_check = tool<IReportCheck>("ReportCheckTool", this );
-  if ( !m_check ) 
+  if ( !m_check )
   {
     return Error("Unable to retrieve the ReportCheckTool");
   }
   m_conv = tool<IReportConvert>("ReportConvertTool", this );
   m_conv->setReportVersionLatest();
-  if ( !m_conv ) 
+  if ( !m_conv )
   {
     return Error("Unable to retrieve the ReportConvertTool");
+  }
+
+  m_hltANNSvc = svc<IANNSvc>("HltANNSvc");
+  // get string-to-dict Rel. info. locations map
+  for( auto p: m_hltANNSvc->items(RelInfoLocations) ) {
+    m_RelInfoLocationsMap.insert( p );
   }
   return StatusCode::SUCCESS;
 }
@@ -72,17 +81,17 @@ StatusCode TeslaReportAlgo::initialize()
 StatusCode TeslaReportAlgo::execute()
 {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-  
+
   std::stringstream HltLoc;
   HltLoc << m_inputName << "Decision";
   //
   std::string RepLoc = "Hlt2/SelReports";
-  
+
   // For jobs with multiple versions, need to check bank header
   int versionNum = m_check->checkBankVersion();
   if ( msgLevel(MSG::DEBUG) ) debug() << "VersionNum = " << versionNum << endmsg;
   m_conv->setReportVersion(versionNum);
-  
+
   const LHCb::HltSelReports* selReports;
   const LHCb::HltVertexReports* vtxReports;
   const LHCb::HltVertexReports::HltVertexReport* vtxRep;
@@ -121,16 +130,17 @@ StatusCode TeslaReportAlgo::execute()
     //
     return StatusCode::SUCCESS;
   }
-	
+
   // Bring back RecSummary
   const LHCb::HltObjectSummary* recsummaryObj = selReports->selReport("Hlt2RecSummary");
-  if ( recsummaryObj && !exist<LHCb::RecSummary>( "Turbo/Rec/Summary" ) ) { 
+  if ( recsummaryObj && !exist<LHCb::RecSummary>( "Turbo/Rec/Summary" ) ) {
     LHCb::RecSummary* recSummary = new LHCb::RecSummary() ;
     put( recSummary , "Turbo/Rec/Summary" );
     LHCb::HltObjectSummary::Info Rec_info = recsummaryObj->substructure()[0].target()->numericalInfo();
     m_conv->RecSummaryObjectFromSummary(&Rec_info,recSummary);
     if ( msgLevel(MSG::DEBUG) ){
-      debug() << "Expected RecSummary HLTOS has ID (106): " << recsummaryObj->substructure()[0].target()->summarizedObjectCLID() << endmsg;
+      debug() << "Expected RecSummary HLTOS has ID (106): "
+              << recsummaryObj->substructure()[0].target()->summarizedObjectCLID() << endmsg;
       debug() << "Global subdetector properties:" << endmsg;
       debug() << "nTracks = " << recSummary->info(LHCb::RecSummary::nTracks,0) << endmsg;
       debug() << "nLongTracks = " << recSummary->info(LHCb::RecSummary::nLongTracks,0) << endmsg;
@@ -140,18 +150,18 @@ StatusCode TeslaReportAlgo::execute()
       debug() << "nRich1Hits = " << recSummary->info(LHCb::RecSummary::nRich1Hits,0) << endmsg;
       debug() << "nRich2Hits = " << recSummary->info(LHCb::RecSummary::nRich2Hits,0) << endmsg;
     }
-  } 
+  }
   else if( !recsummaryObj && !exist<LHCb::RecSummary>( "Turbo/Rec/Summary" ) ){
     info() << "RecSummary unavailable, global dectector information will not be resurrected" << endmsg;
   }
-  
-  
+
+
   // Go and get the information from the Hlt
   const LHCb::HltObjectSummary * MotherRep = selReports->selReport(HltLoc.str().c_str());
 
   if(MotherRep!=0) {if ( msgLevel(MSG::DEBUG) ) debug() << "Required line has been fired" << endmsg;}
   else return StatusCode::SUCCESS;
- 
+
   // Check validity
   LHCb::HltObjectSummary firstCand = *(MotherRep->substructure()[0]->substructure()[0].target());
   if( (firstCand.numericalInfo().size()==0) && (firstCand.summarizedObjectCLID()==LHCb::Particle::classID()) ){
@@ -233,7 +243,9 @@ StatusCode TeslaReportAlgo::execute()
       std::vector<std::string> vec_keys = Obj->numericalInfoKeys();
       if ( msgLevel(MSG::DEBUG) ) {
         debug() << "Saved Rec::Vertex information: " << endmsg;
-        for(std::vector<std::string>::iterator it = vec_keys.begin(); it!=vec_keys.end(); it++) debug() << *it << " = " << PV_info[(*it)] << endmsg;
+        for(std::vector<std::string>::iterator it = vec_keys.begin(); it!=vec_keys.end(); it++) {
+           debug() << *it << " = " << PV_info[(*it)] << endmsg;
+        }
       }
       m_conv->RecVertexObjectFromSummary(&PV_info,refit_PV,true);
       // Make sure technique is known as Primary
@@ -274,7 +286,7 @@ StatusCode TeslaReportAlgo::execute()
 
       // Fill PV container
       cont_PV->insert( vnew );
-    } 
+    }
   }
   else if(m_refitted) {
     if ( msgLevel(MSG::DEBUG) ) debug() << "Inserting refitted PVs to container" << endmsg;
@@ -284,7 +296,7 @@ StatusCode TeslaReportAlgo::execute()
   //
   Particle2Vertex::Table* cont_P2PV = new Particle2Vertex::Table() ;
   put( cont_P2PV , ss_P2PVLoc.str().c_str() );
-  
+
   if(MotherRep){
     if ( msgLevel(MSG::DEBUG) ){
       debug() << "Reference: " << endmsg;
@@ -304,8 +316,8 @@ StatusCode TeslaReportAlgo::execute()
     SmartRefVector <LHCb::HltObjectSummary> substructure = MotherRep->substructure();
     if ( msgLevel(MSG::DEBUG) ) debug() << "Number of triggered candidates = " << substructure.size() << endmsg;
     //
-    
-    
+
+
     int nCandidate = -1;
 
     // loop over the trigger candidates
@@ -316,7 +328,7 @@ StatusCode TeslaReportAlgo::execute()
         debug() << "Mother object CLASS ID = " << child.target()->summarizedObjectCLID() << endmsg;
       }
       LHCb::HltObjectSummary* Obj = child.target();
-     
+
       // Check we have turbo level information
       if(m_conv->getSizeSelRepParticleLatest()<(int)Obj->numericalInfo().size()) turbo=true;
 
@@ -330,7 +342,7 @@ StatusCode TeslaReportAlgo::execute()
         if ( msgLevel(MSG::DEBUG) ) debug() << (it).target()->summarizedObjectCLID() << endmsg;
         if((it).target()->summarizedObjectCLID()==LHCb::Particle::classID()) motherBasic=false;
       }
-      
+
       // make the objects to be stored
       std::vector<ContainedObject*> newObjects_mother;
       LHCb::Particle* Part = new LHCb::Particle();
@@ -355,8 +367,8 @@ StatusCode TeslaReportAlgo::execute()
         newObjects_mother.push_back(muon);
         cont_MPID->insert( muon );
         //
-      } 
-      
+      }
+
       fillParticleInfo( newObjects_mother , Obj , motherBasic, cont_Track, &calo_mother );
       cont_Part->insert( Part );
       for( auto calo : calo_mother ){
@@ -378,8 +390,8 @@ StatusCode TeslaReportAlgo::execute()
                     cont_Proto, cont_RPID, cont_MPID, cont_Track, cont_CaloHypo, cont_CaloClust, cont_P2PV);
     } // candidate (loop)
   } // report exists (if)
-	
-  setFilterPassed(true);  // Mandatory. Set to true if event is accepted. 
+
+  setFilterPassed(true);  // Mandatory. Set to true if event is accepted.
   if ( msgLevel(MSG::DEBUG) ) debug() << "End of algorithm execution" << endmsg;
   return StatusCode::SUCCESS;
 }
@@ -402,9 +414,14 @@ StatusCode TeslaReportAlgo::ProcessObject(int n, LHCb::Particle* Part, const LHC
   cont_Vert->insert( vert_mother );
 
   for( auto child : Obj->substructure() ){
-    if ( msgLevel(MSG::DEBUG) ) debug() << "Daughter CLASS ID (level " << n << ") = " << (child).target()->summarizedObjectCLID() << endmsg;
+    if ( msgLevel(MSG::DEBUG) )
+       debug() << "Daughter CLASS ID (level " << n << ") = " << (child).target()->summarizedObjectCLID() << endmsg;
 
     const LHCb::HltObjectSummary * Obj_d = child.target();
+    if( Obj_d->summarizedObjectCLID()==40 ) {// RelatedInfo
+      AddRelInfo(Obj_d,Part);
+      continue;
+    }
 
     if( Obj_d->summarizedObjectCLID()==LHCb::RecVertex::classID() ) {
       if(n!=1) {
@@ -423,7 +440,8 @@ StatusCode TeslaReportAlgo::ProcessObject(int n, LHCb::Particle* Part, const LHC
     }
 
     // do we have a basic particle?
-    if ( msgLevel(MSG::DEBUG) ) debug() << "Daughter ID (level " << n << "): " << Obj_d->numericalInfo()["0#Particle.particleID.pid"] << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Daughter ID (level " << n << "): "
+                                        << Obj_d->numericalInfo()["0#Particle.particleID.pid"] << endmsg;
     bool d_Basic = true;
     if ( msgLevel(MSG::DEBUG) ) debug() << "Daughter (level " << n <<") has substructure consisting of:" << endmsg;
     for( auto it : Obj_d->substructure() ){
@@ -439,7 +457,7 @@ StatusCode TeslaReportAlgo::ProcessObject(int n, LHCb::Particle* Part, const LHC
     newObjects_d.push_back(Part_d);
     Part->addToDaughters(Part_d);
     cont_Part->insert( Part_d );
-    
+
     //
     if( d_Basic == true ){
       //
@@ -472,7 +490,7 @@ StatusCode TeslaReportAlgo::ProcessObject(int n, LHCb::Particle* Part, const LHC
       ProcessObject( n, Part_d, Obj_d, cont_PV, cont_Vert, cont_Part,
           cont_Proto, cont_RPID, cont_MPID, cont_Track, cont_CaloHypo, cont_CaloClust, cont_P2PV);
     }
-    
+
     if( m_PV3D || m_refitted ) {
       debug() << "Finding related PV" << endmsg;
       cont_P2PV->relate( Part_d , bestPV( Part_d, cont_PV ) );
@@ -483,13 +501,13 @@ StatusCode TeslaReportAlgo::ProcessObject(int n, LHCb::Particle* Part, const LHC
       }
     }
   }
-  
+
   return StatusCode::SUCCESS;
 }
 
-void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, 
-    const LHCb::HltObjectSummary* obj, 
-    bool isBasic, LHCb::Track::Container* cont_Track, 
+void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
+    const LHCb::HltObjectSummary* obj,
+    bool isBasic, LHCb::Track::Container* cont_Track,
     std::vector<ContainedObject*>* calo_vector){
 /*
  * vector Key:
@@ -506,19 +524,20 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
 
   // Set particle information
   const LHCb::HltObjectSummary::Info HLT_info = obj->numericalInfo();
-  
+
   // What keys are present:
   std::vector<std::string> vec_keys = obj->numericalInfoKeys();
   if ( msgLevel(MSG::DEBUG) ) {
     debug() << "Available information" << endmsg;
-    for(std::vector<std::string>::iterator it = vec_keys.begin(); it!=vec_keys.end(); it++) debug() << *it << " = " << HLT_info[(*it)] << endmsg;
+    for(std::vector<std::string>::iterator it = vec_keys.begin(); it!=vec_keys.end(); it++)
+       debug() << *it << " = " << HLT_info[(*it)] << endmsg;
   }
-  // 
-  
+  //
+
   // PARTICLE *******************************************************
   // ID/Mass/Kinematics
   LHCb::Particle* part = (LHCb::Particle*)vec_obj[0];
-  
+
   m_conv->ParticleObjectFromSummary(&HLT_info,part,turbo);
   if ( msgLevel(MSG::DEBUG) ) {
     debug() << "p = " << part->p() << endmsg;
@@ -540,7 +559,8 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
     LHCb::MuonPID* muon = (LHCb::MuonPID*)vec_obj[4];
 
     std::vector<LHCb::LHCbID> totalIDs;
-    for(SmartRefVector <LHCb::HltObjectSummary>::const_iterator it_basic = obj->substructure().begin();it_basic!=obj->substructure().end();++it_basic){
+    for(SmartRefVector <LHCb::HltObjectSummary>::const_iterator it_basic
+           = obj->substructure().begin();it_basic!=obj->substructure().end();++it_basic){
 
       const LHCb::HltObjectSummary* ObjBasic = it_basic->target();
       totalIDs.insert( totalIDs.end(), ObjBasic->lhcbIDs().begin(), ObjBasic->lhcbIDs().end());
@@ -570,9 +590,10 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
             std::vector<std::string> vec_keys_tr = ObjBasic->numericalInfoKeys();
             if ( msgLevel(MSG::DEBUG) ) {
               debug() << "Available information (track)" << endmsg;
-              for(std::vector<std::string>::iterator it = vec_keys_tr.begin(); it!=vec_keys_tr.end(); it++) debug() << *it << " = " << Track_info[(*it)] << endmsg;
+              for(std::vector<std::string>::iterator it = vec_keys_tr.begin(); it!=vec_keys_tr.end(); it++)
+                 debug() << *it << " = " << Track_info[(*it)] << endmsg;
             }
-            // 
+            //
             // LHCb track members:
             // double   m_chi2PerDoF ##
             // int  m_nDoF ##
@@ -586,10 +607,10 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
             // SmartRefVector< LHCb::Track >  m_ancestors
             m_conv->TrackObjectFromSummary(&Track_info,track,turbo);
             if ( msgLevel(MSG::DEBUG) ) debug() << "Track #chi^{2}/DoF = " << track->chi2PerDoF() << endmsg;
-            
-            if ( msgLevel(MSG::DEBUG) ) debug() << "Track details added" << endmsg; 
+
+            if ( msgLevel(MSG::DEBUG) ) debug() << "Track details added" << endmsg;
             break;
-          } 
+          }
 
         case LHCb::CLID_ProtoParticle:
           {
@@ -597,7 +618,8 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
             // What keys are present:
             std::vector<std::string> vec_keys_pp = ObjBasic->numericalInfoKeys();
             if ( msgLevel(MSG::DEBUG) ) {
-              for(std::vector<std::string>::iterator it = vec_keys_pp.begin(); it!=vec_keys_pp.end(); it++) debug() << *it << " = " << Proto_info[(*it)] << endmsg;
+              for(std::vector<std::string>::iterator it = vec_keys_pp.begin(); it!=vec_keys_pp.end(); it++)
+                 debug() << *it << " = " << Proto_info[(*it)] << endmsg;
               debug() << "Available information (proto)" << endmsg;
             }
             m_conv->ProtoParticleObjectFromSummary(&Proto_info,proto,turbo);
@@ -606,7 +628,7 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
             // THIS IS A PLACE WHERE NEED TO KNOW WHAT PEOPLE NEED
             if ( msgLevel(MSG::DEBUG) ) {
               debug() << "Proto isPhoton = " << proto->info( 381,-1000) << endmsg;
-              debug() << "ProtoParticle details added" << endmsg; 
+              debug() << "ProtoParticle details added" << endmsg;
             }
             break;
           }
@@ -618,16 +640,17 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
             std::vector<std::string> vec_keys_rich = ObjBasic->numericalInfoKeys();
             if ( msgLevel(MSG::DEBUG) ) {
               debug() << "Available information (rich)" << endmsg;
-              for(std::vector<std::string>::iterator it = vec_keys_rich.begin(); it!=vec_keys_rich.end(); it++) debug() << *it << " = " << Rich_info[(*it)] << endmsg;
+              for(std::vector<std::string>::iterator it = vec_keys_rich.begin(); it!=vec_keys_rich.end(); it++)
+                 debug() << *it << " = " << Rich_info[(*it)] << endmsg;
             }
-            // 
+            //
             // LHCb RichPID  members:
             // unsigned int   m_pidResultCode
             // std::vector< float >   m_particleLLValues
-            // SmartRef< LHCb::Track >  m_track 
+            // SmartRef< LHCb::Track >  m_track
             //
             m_conv->RichPIDObjectFromSummary(&Rich_info,rich,turbo);
-            if ( msgLevel(MSG::DEBUG) ) debug() << "RichPID details added" << endmsg; 
+            if ( msgLevel(MSG::DEBUG) ) debug() << "RichPID details added" << endmsg;
             break;
           }
 
@@ -638,31 +661,40 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
             std::vector<std::string> vec_keys_muon = ObjBasic->numericalInfoKeys();
             if ( msgLevel(MSG::DEBUG) ) {
               debug() << "Available information (muon)" << endmsg;
-              for(std::vector<std::string>::iterator it = vec_keys_muon.begin(); it!=vec_keys_muon.end(); it++) debug() << *it << " = " << Muon_info[(*it)] << endmsg;
+              for(std::vector<std::string>::iterator it = vec_keys_muon.begin(); it!=vec_keys_muon.end(); it++)
+                 debug() << *it << " = " << Muon_info[(*it)] << endmsg;
             }
-            // 
+            //
             // LHCb MuonPID  members:
             // double   m_MuonLLMu
             // double   m_MuonLLBg
             // int  m_NShared
             // unsigned int   m_Status
-            // SmartRef< LHCb::Track >  
+            // SmartRef< LHCb::Track >
             // SmartRef< LHCb::Track >  m_muonTrack (NOT INCLUDED)
             m_conv->MuonPIDObjectFromSummary(&Muon_info,muon,turbo);
             debug() << "Muon LLMu = " << muon->MuonLLMu() << endmsg;
-            debug() << "MuonPID details added" << endmsg; 
+            debug() << "MuonPID details added" << endmsg;
             break;
           }
-        
+
         case LHCb::CLID_CaloCluster:
           {
+            debug() << "Adding CaloCluster details" << endmsg;
             // Need to make new CaloCluster and seed Digit
             LHCb::CaloCluster* calo = new LHCb::CaloCluster();
-            
+
             std::vector<LHCb::LHCbID> ids = ObjBasic->lhcbIDs();
+
+            if ( msgLevel(MSG::DEBUG) ) {
+              debug() << "Associated CALO LHCbIDs:" << endmsg;
+              for(unsigned int i=0;i<ids.size();i++){
+                debug()<<i<<"\t"<<ids[i].detectorType()<<"\t"<<ids[i].lhcbID()<<endmsg;
+              }
+            }
             // reports save seed LHCbID as the first one
             LHCb::CaloCellID cellID = (*(ids.begin())).caloID();
-            
+
             // make digits from our LHCb IDs
             std::vector<LHCb::CaloDigit*> digits;
             for( auto id : ids ){
@@ -670,17 +702,18 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
               LHCb::CaloDigit* i_digit = DigitSearchRaw(i_cellID);
               if(i_digit) digits.push_back(i_digit);
             }
-            
+
             const LHCb::HltObjectSummary::Info Calo_info = ObjBasic->numericalInfo();
             // What keys are present:
             std::vector<std::string> vec_keys_calo = ObjBasic->numericalInfoKeys();
             if ( msgLevel(MSG::DEBUG) ) {
               debug() << "Available information (calo)" << endmsg;
-              for(std::vector<std::string>::iterator it = vec_keys_calo.begin(); it!=vec_keys_calo.end(); it++) debug() << *it << " = " << Calo_info[(*it)] << endmsg;
+              for(std::vector<std::string>::iterator it = vec_keys_calo.begin(); it!=vec_keys_calo.end(); it++)
+                 debug() << *it << " = " << Calo_info[(*it)] << endmsg;
             }
             m_conv->CaloClusterObjectFromSummary(&Calo_info,calo,turbo);
             calo->setSeed(cellID);
-            
+
             std::vector<LHCb::CaloClusterEntry> entries;
             for( auto digit : digits ){
               if ( msgLevel(MSG::DEBUG) ) debug() << "Digit found to adding to cluster" << endmsg;
@@ -691,8 +724,14 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
             }
             calo->setEntries(entries);
             calo_vector->push_back(calo);
-            
+
             break;
+          }
+        default:
+          {
+            if ( msgLevel(MSG::DEBUG) )
+               debug() << "No specific info for classID: " <<  ObjBasic->summarizedObjectCLID() << endmsg;
+            continue;
           }
       }
     }
@@ -702,7 +741,9 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
     track->setLhcbIDs( totalIDs );
     if ( msgLevel(MSG::DEBUG) ) debug() << "Associated LHCbIDs:" << endmsg;
     if ( msgLevel(MSG::DEBUG) ){
-      for(unsigned int i=0;i<totalIDs.size();i++){ debug()<<i<<"\t"<<totalIDs[i].detectorType()<<"\t"<<totalIDs[i].lhcbID()<<endmsg; }
+      for(unsigned int i=0;i<totalIDs.size();i++){
+        debug()<<i<<"\t"<<totalIDs[i].detectorType()<<"\t"<<totalIDs[i].lhcbID()<<endmsg;
+      }
     }
 
     // Only want to do this for charged particles, not neutral ones
@@ -726,8 +767,8 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
     if(proto->info( LHCb::ProtoParticle::TrackNumDof,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::TrackNumDof,track->nDoF());
     if(proto->info( LHCb::ProtoParticle::TrackType,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::TrackType,track->type());
     if(proto->info( LHCb::ProtoParticle::TrackHistory,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::TrackHistory,track->history());
-    if(proto->info( LHCb::ProtoParticle::TrackP,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::TrackP,part->p()); 
-    if(proto->info( LHCb::ProtoParticle::TrackPt,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::TrackPt,part->pt()); 
+    if(proto->info( LHCb::ProtoParticle::TrackP,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::TrackP,part->p());
+    if(proto->info( LHCb::ProtoParticle::TrackPt,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::TrackPt,part->pt());
     // Set rich quantities in the protoparticle
     if(proto->info( LHCb::ProtoParticle::RichDLLe,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::RichDLLe,rich->particleDeltaLL(Rich::ParticleIDType::Electron));
     if(proto->info( LHCb::ProtoParticle::RichDLLmu,-1000)==-1000) proto->addInfo(LHCb::ProtoParticle::RichDLLmu,rich->particleDeltaLL(Rich::ParticleIDType::Muon));
@@ -783,7 +824,8 @@ void TeslaReportAlgo::fillVertexInfo(LHCb::Vertex* vert, const LHCb::HltObjectSu
   std::vector<std::string> vec_keys_v = obj->numericalInfoKeys();
   if ( msgLevel(MSG::DEBUG) ) {
     debug() << "Available information (vertex)" << endmsg;
-    for(std::vector<std::string>::iterator it = vec_keys_v.begin(); it!=vec_keys_v.end(); it++) debug() << *it << " = " << Vert_info[(*it)] << endmsg;
+    for(std::vector<std::string>::iterator it = vec_keys_v.begin(); it!=vec_keys_v.end(); it++)
+      debug() << *it << " = " << Vert_info[(*it)] << endmsg;
   }
   //
   m_conv->VertexObjectFromSummary(&Vert_info,vert,true);
@@ -793,7 +835,7 @@ void TeslaReportAlgo::fillVertexInfo(LHCb::Vertex* vert, const LHCb::HltObjectSu
 }
 
 LHCb::CaloDigit* TeslaReportAlgo::DigitSearchRaw(LHCb::CaloCellID id){
- 
+
   // Ecal
   LHCb::CaloDigits * caloDigits = getIfExists<LHCb::CaloDigits>( LHCb::CaloDigitLocation::Ecal );
   if( caloDigits ){
@@ -853,7 +895,7 @@ LHCb::CaloDigit* TeslaReportAlgo::DigitSearchRaw(LHCb::CaloCellID id){
 }
 
 LHCb::RecVertex* TeslaReportAlgo::bestPV(LHCb::Particle* part, LHCb::RecVertex::Container* cont){
-  
+
   double min_var = -1.0;
   int key = 0;
   for( auto pv : *cont ){
@@ -877,4 +919,32 @@ LHCb::RecVertex* TeslaReportAlgo::bestPV(LHCb::Particle* part, LHCb::RecVertex::
   }
   return (LHCb::RecVertex*)cont->containedObject( key );
 
+}
+
+void TeslaReportAlgo::AddRelInfo(const LHCb::HltObjectSummary* Obj_d, LHCb::Particle* Part){
+  if ( msgLevel(MSG::DEBUG) ) debug() << "Found RelatedInfo" << endmsg;
+  const LHCb::HltObjectSummary::Info loc_info = Obj_d->numericalInfo();
+  int loc_enum = (int)loc_info["0#LocationID"];
+  std::stringstream locRelInfo;
+  locRelInfo << "/Event/" << m_OutputPref << m_inputName << "/";
+  auto infoLoc = m_hltANNSvc->value(RelInfoLocations, loc_enum);
+  if (infoLoc) {
+    locRelInfo << infoLoc->first.str();
+  } else {
+    error() << "Requested to save RelatedInfo for ID " << loc_enum
+            << " but it is not registered in the ANNSvc, skipping!"
+            << endmsg;
+  }
+  if ( msgLevel(MSG::DEBUG) ) debug() << "Placing RelInfo at location ("
+                                      << loc_enum << "): " << locRelInfo << endmsg;
+  if (Obj_d->substructure().size() > 0){
+    const LHCb::HltObjectSummary* RelInfo_sub = Obj_d->substructure()[0].target();
+    const LHCb::HltObjectSummary::Info rel_info = RelInfo_sub->numericalInfo();
+    LHCb::Relation1D<LHCb::Particle,LHCb::RelatedInfoMap>* rel_RelInfo
+       = new LHCb::Relation1D<LHCb::Particle,LHCb::RelatedInfoMap>();
+    LHCb::RelatedInfoMap* relmap = new LHCb::RelatedInfoMap();
+    m_conv->GenericMapObjectFromSummary(&rel_info,relmap);
+    rel_RelInfo->relate(Part,*relmap);
+    put( rel_RelInfo , locRelInfo.str() );
+  }
 }
