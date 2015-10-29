@@ -202,6 +202,8 @@
   <function name = "Gaudi::Math::mult"            />
   <function name = "Gaudi::Math::multiply"        />
   <function name = "Gaudi::Math::divide"          />
+  <function name = "Gaudi::Math::asymmetry"       />
+  <function name = "Gaudi::Math::fraction"        />
   <function name = "Gaudi::Math::sumabs"          />
   <function name = "Gaudi::Math::abssum"          />
   <function name = "Gaudi::Math::natural_number"  />

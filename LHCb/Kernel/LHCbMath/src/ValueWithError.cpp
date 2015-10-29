@@ -434,6 +434,9 @@ Gaudi::Math::ValueWithError
 Gaudi::Math::ValueWithError::frac
 ( const Gaudi::Math::ValueWithError& b ) const
 {
+  //
+  if ( &b == this ) { return fraction ( *this , b , 1 ) ; }
+  //
   const double r  = value() / ( value() + b.value() ) ;
   //
   const double s  = value() + b.value() ;
@@ -466,6 +469,8 @@ Gaudi::Math::ValueWithError
 Gaudi::Math::ValueWithError::asym
 ( const Gaudi::Math::ValueWithError& b ) const
 {
+  //
+  if ( &b == this ) { return asymmetry ( *this , b , 1 ) ; }
   //
   const double r  = ( value() - b.value() ) / ( value() + b.value() ) ;
   //
@@ -1473,6 +1478,56 @@ Gaudi::Math::ValueWithError Gaudi::Math::divide
                           ac2_n +  
                           av2_n * bc2_n - 
                           2 * v * r * std::sqrt ( ac2_n * bc2_n ) ) ;
+}
+// ===========================================================================
+/*  calculate "fraction" of two elements (a/(a+b)) taking into account the 
+ *  correlation coefficient  
+ *  @param a  (input) the first value 
+ *  @param b  (input) the second value 
+ *  @param c  (input) the correlation coefficient
+ *  @return a/(a+b)
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2012-11-09
+ */
+// ===========================================================================
+Gaudi::Math::ValueWithError  
+Gaudi::Math::fraction
+( const Gaudi::Math::ValueWithError& a , 
+  const Gaudi::Math::ValueWithError& b , 
+  const double                       c ) 
+{
+  const double av = std::abs ( a.value() ) ;
+  const double bv = std::abs ( b.value() ) ;
+  return 
+    av > bv ? 
+    1.0       / ( 1.0 + divide ( b , a , c ) ) : 
+    1.0 - 1.0 / ( 1.0 + divide ( a , b , c ) ) ;
+}
+// ===========================================================================
+/* calculate "asymmetry" of two elements $\frac{a-b}{a+b}$
+ *  taking into account the correlation coefficient  
+ *  @param a  (input) the first value 
+ *  @param b  (input) the second value 
+ *  @param c  (input) the correlation coefficient
+ *  @return (a-b)/(a+b)
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2012-11-09
+ */
+// ===========================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::asymmetry
+( const Gaudi::Math::ValueWithError& a , 
+  const Gaudi::Math::ValueWithError& b , 
+  const double                       c ) 
+{
+  const double av = std::abs ( a.value() ) ;
+  const double bv = std::abs ( b.value() ) ;
+  if ( av > bv ) 
+  {
+    const ValueWithError d = divide ( b , a , c )  ;
+    return divide ( 1.0 - d , 1.0 + d , -1.0 ) ;
+  }
+  const ValueWithError d = divide ( a , b , c )  ;
+  return divide ( d - 1.0 , d + 1.0 , 1.0 ) ;
 }
 // ============================================================================
 /*  evaluate log10(b)

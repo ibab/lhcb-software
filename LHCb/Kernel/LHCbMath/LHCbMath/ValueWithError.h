@@ -300,6 +300,11 @@ namespace Gaudi
       /// conversion to the string using format 
       std::string   toString   ( const std::string& fmt ) const ;
       // ======================================================================
+    public:
+      // ======================================================================
+      /// swap the content with another objects  
+      inline void swap ( ValueWithError& right ) ;
+      // ======================================================================
     private:
       // ======================================================================
       /// the actual value 
@@ -914,6 +919,36 @@ namespace Gaudi
       const ValueWithError& b     , 
       const double          c = 0 ) ;
     // ========================================================================
+    /** calculate "fraction" of two elements $\frac{a}{a+b}$
+     *  taking into account the correlation coefficient  
+     *  @param a  (input) the first value 
+     *  @param b  (input) the second value 
+     *  @param c  (input) the correlation coefficient
+     *  @return a/(a+b)
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2012-11-09
+     */
+    GAUDI_API 
+    ValueWithError  fraction
+    ( const ValueWithError& a     , 
+      const ValueWithError& b     , 
+      const double          c = 0 ) ;
+    // ========================================================================
+    /** calculate "asymmetry" of two elements $\frac{a-b}{a+b}$
+     *  taking into account the correlation coefficient  
+     *  @param a  (input) the first value 
+     *  @param b  (input) the second value 
+     *  @param c  (input) the correlation coefficient
+     *  @return (a-b)/(a+b)
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2012-11-09
+     */
+    GAUDI_API 
+    ValueWithError  asymmetry
+    ( const ValueWithError& a     , 
+      const ValueWithError& b     , 
+      const double          c = 0 ) ;
+    // ========================================================================
     /** simple linear interpolation 
      *  @param  x  the point to evaluate the function 
      *  @param  x0 the abscissa for the first  point
@@ -1025,6 +1060,17 @@ namespace Gaudi
     ( std::ostream& s , 
       const std::vector<Gaudi::Math::ValueWithError>& v ) ;
     // ========================================================================
+    /// swap the content with another object
+    inline void ValueWithError::swap ( ValueWithError& right ) 
+    {
+      std::swap ( m_value , right.m_value ) ;
+      std::swap ( m_cov2  , right.m_cov2  ) ;
+    }
+    // ========================================================================
+    /// swap the content of two objects 
+    inline void swap ( ValueWithError& left , 
+                       ValueWithError& right ) { left.swap ( right ) ; }
+    // ======================================================================
   } //                                             end of namespace Gaudi::Math 
   // ==========================================================================
   namespace Parsers 

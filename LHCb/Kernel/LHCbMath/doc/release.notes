@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-10-29 - Vanya Belyaev
+ - ValueWithError: two more functions are added
+
 ! 2015-10-27 - Vanya Belyaev
  - enable several default constructors
 
