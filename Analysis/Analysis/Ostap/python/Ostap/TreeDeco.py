@@ -47,7 +47,7 @@ _large = 2**63
 #  @see Analysis::Formula
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2013-05-06
-def _iter_cuts_ ( self , cuts , first = 0 , last = _large ) :
+def _iter_cuts_ ( self , cuts , first = 0 , last = _large , progress = False ) :
     """
     Iterator over ``good events'' in TTree/TChain:
     
@@ -58,16 +58,33 @@ def _iter_cuts_ ( self , cuts , first = 0 , last = _large ) :
                no need in second call 
     """
     #
+    last = min ( last , len ( self )  )
+    if last < first : return 
+        
     _pit = cpp.Analysis.PyIterator ( self , cuts , first , last )
-    if first < last and not _pit.ok() :
+    if  not _pit.ok() :
         raise TypeError ( "Invalid Formula: %s" % cuts )
     #
-    _t = _pit.tree()
-    while _t :
-        yield _t
-        _t = _pit.next()
-    #
-    del _pit
+    step = 2000.0 / ( last - first ) 
+    from Ostap.progress_bar import ProgressBar 
+    with ProgressBar ( min_value = first        ,
+                       max_value = last  - 1    ,
+                       silent    = not progress ) as bar :
+        _t = _pit.tree()
+        while _t :
+            
+            current = _pit.current() - 1 
+            s       = long ( step * ( current - first ) )
+            if 0 == s % 10 or \
+               0 == current % 50000 or \
+               0 == ( current - first ) % 10000 : 
+                bar.update_amount( current )
+                
+            yield _t
+            _t   = _pit.next()
+
+            #
+        del _pit
 
 ROOT.TTree .withCuts  = _iter_cuts_ 
 ROOT.TChain.withCuts  = _iter_cuts_ 

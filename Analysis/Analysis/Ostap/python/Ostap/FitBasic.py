@@ -425,40 +425,35 @@ class PDF (object) :
             data_options = kwargs.pop ( 'data_options' , FD.data_options )
             if dataset : dataset .plotOn ( frame , ROOT.RooFit.Invisible() , *data_options )
             
-            ## draw various ``background'' terms 
+            ## draw various ``background'' terms
+            boptions = kwargs.pop (     'background_options' , FD.   background_options )
+            bbcolor  = kwargs.pop (  'base_background_color' , FD.base_background_color ) 
             if self.backgrounds () :
-                self._draw( self.backgrounds()                                                 ,
-                            frame                                                              ,
-                            kwargs.pop (     'background_options' , FD.   background_options ) , 
-                            kwargs.pop (  'base_background_color' , FD.base_background_color ) )
+                self._draw( self.backgrounds() , frame , boptions , bbcolor )
                 
-            ## ugly :-( 
+            ## ugly :-(
+            ct1options = kwargs.pop (     'crossterm1_options' , FD.   crossterm1_options )
+            ct1bcolor  = kwargs.pop (  'base_crossterm1_color' , FD.base_crossterm1_color ) 
             if hasattr ( self , 'crossterms1' ) and self.crossterms1() : 
-                self._draw( self.crossterms1()                                                 ,
-                            frame                                                              ,
-                            kwargs.pop (     'crossterm1_options' , FD.   crossterm1_options ) , 
-                            kwargs.pop (  'base_crossterm2_color' , FD.base_crossterm1_color ) )
+                self._draw( self.crossterms1() , frame , ct1options , ct1bcolor )
 
-            ## ugly :-( 
+            ## ugly :-(
+            ct2options = kwargs.pop (     'crossterm2_options' , FD.   crossterm1_options )
+            ct2bcolor  = kwargs.pop (  'base_crossterm2_color' , FD.base_crossterm1_color )                 
             if hasattr ( self , 'crossterms2' ) and self.crossterms2() :
-                self._draw( self.crossterms2()                                                 ,
-                            frame                                                              ,
-                            kwargs.pop (     'crossterm2_options' , FD.   crossterm2_options ) , 
-                            kwargs.pop (  'base_crossterm2_color' , FD.base_crossterm2_color ) )
+                self._draw( self.crossterms2() , frame , ct2options , ct2bcolor )
 
-            ## draw ``other'' components 
+            ## draw ``other'' components
+            coptions   = kwargs.pop (      'component_options' , FD.    component_options  )
+            cbcolor    = kwargs.pop (   'base_component_color' , FD. base_component_color  ) 
             if self.components () :
-                self._draw( self.components()                                                  ,
-                            frame                                                              ,
-                            kwargs.pop (      'component_options' , FD.    component_options  ) , 
-                            kwargs.pop (   'base_component_color' , FD. base_component_color  ) )
+                self._draw( self.components() , frame , coptions , cbcolor )
 
-            ## draw ``signal'' components 
+            ## draw ``signal'' components
+            soptions   = kwargs.pop (         'signal_options' , FD.      signal_options  )
+            sbcolor    = kwargs.pop (      'base_signal_color' , FD.   base_signal_color  ) 
             if self.signals    () :
-                self._draw( self.signals()                                                     ,
-                            frame                                                              ,
-                            kwargs.pop (         'signal_options' , FD.      signal_options  ) , 
-                            kwargs.pop (      'base_signal_color' , FD.   base_signal_color  ) )
+                self._draw( self.signals() , frame , soptions , sbcolor )
 
             #
             ## the total fit curve
@@ -889,7 +884,7 @@ class PDF2 (PDF) :
             args [ 'crossterm2_options' ] = crossterm2_options
             args [  'total_fit_options' ] =  total_fit_options
             
-        background_options    = args.pop ( 'background_options'    , FD.background2D_options )
+        background_options    = args.pop ( 'background_options'    , FD.background2D_options    )
         base_background_color = args.pop ( 'base_background_color' , FD.base_background2D_color )
         args [ 'background_options'    ] = background_options
         args [ 'base_background_color' ] = base_background_color
