@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/env python
 
 from GaudiPython import gbl
 import ROOT as r
@@ -105,12 +105,11 @@ r.gROOT.SetBatch(True)
 ###   Options parser   ###
 if __name__ == '__main__':
     import argparse
-    parser = argparse.ArgumentParser(description ="Macro to make plots from alignlog")
+    parser = argparse.ArgumentParser(description ="Macro to make plots to monitor automatic Tracker alignment")
     parser.add_argument('-r','--run', help='run number, default is the last one')
     parser.add_argument('--alignlog', help='location of alignlog.txt, default is guessed by run number')
     parser.add_argument('--histoFiles', help='location of histograms files, expect two paths, old ad new align histos, default is guessed by run number', nargs=2)
     parser.add_argument('-o','--outFile',help='output file name')
-    parser.add_argument('-t','--Tracker', help='Analise Tracker instead of Velo',action='store_true')
     args = parser.parse_args()
 
     activity = 'Velo'

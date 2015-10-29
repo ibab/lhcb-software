@@ -22,7 +22,7 @@ if __name__ == '__main__':
 
 import  re
 import ROOT as r
-from MultiPlot import MultiPlot
+from AlignmentMonitoring.MultiPlot import MultiPlot
 
 
 #r.gROOT.ProcessLine('.L LHCbStyle.C')

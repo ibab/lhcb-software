@@ -4,12 +4,11 @@
 ###   Options parser   ###
 if __name__ == '__main__':
     import argparse
-    parser = argparse.ArgumentParser(description ="Macro to make plots from alignlog")
+    parser = argparse.ArgumentParser(description ="Macro to make plots to monitor automatic VELO alignment")
     parser.add_argument('-r','--run', help='run number, default is the last one')
     parser.add_argument('--alignlog', help='location of alignlog.txt, default is guessed by run number')
     parser.add_argument('--histoFiles', help='location of histograms files, expect two paths, old ad new align histos, default is guessed by run number', nargs=2)
     parser.add_argument('-o','--outFile',help='output file name')
-    parser.add_argument('-t','--Tracker', help='Analise Tracker instead of Velo',action='store_true')
     args = parser.parse_args()
 
 ##########################
@@ -18,7 +17,9 @@ import os, sys, fnmatch, re
 import ROOT as r
 from GaudiPython import gbl
 from AlignmentOutputParser.AlignOutput import *
-from MultiPlot import MultiPlot
+from AlignmentMonitoring.MultiPlot import MultiPlot
+from AlignmentMonitoring.OnlineUtils import findLastRun, findAlignlog, findHistos
+from AlignmentMonitoring.RootUtils import getExpression, getDofDeltas, getDofDeltaConvergence, makeGraph, makeHisto, getDrawnCanvas
 
 AlMon = gbl.Alignment.AlignmentMonitoring
 
@@ -28,45 +29,6 @@ activity = 'Velo'
 
 if args.Tracker:
     activity = 'Tracker'
-    
-def findLastRun():
-    rootDir = '/group/online/AligWork/{0}/'.format(activity)
-    ll = sorted([(re.findall('run([0-9]+)', i)[0],  os.stat(os.path.join(rootDir, i)).st_mtime) for i in os.listdir(rootDir)if re.match('run([0-9]+)', i)], key= lambda x: x[-1])
-    return ll[-1][0]
-
-    
-
-def findAlignlog(run):
-    rootDir = '/group/online/AligWork/{0}/'.format(activity)
-    inDir = os.path.join(rootDir, 'run{0}'.format(run))
-    alignlog_path = os.path.join(inDir, 'alignlog.txt')
-    return alignlog_path
-
-
-def findHistos(run):
-    histDir = '/hist/Savesets/2015/LHCbA/AligWrk_{0}'.format(activity)
-    matches = []
-    for root, dirs, files in os.walk(histDir):
-        for file in files:
-            match = re.findall(r'AligWrk_{activity}-{run}(.*?)-(.*?)-EOR.root'.format(activity = activity,**locals()), file)
-            if match:
-                matches.append(list(match[0])+[os.path.join(root, file)])
-
-    matches = sorted(matches, key=lambda x: x[1], reverse = True)
-   
-    files_histo = {}
-    if matches[0][0] == '01': # only one histogram file
-        files_histo['old'] = matches[0][2]
-    else:
-        for match in matches:
-            if match[0] == '01':
-                files_histo['old'] = match[2]
-                files_histo['new'] = matches[0][2]
-                break
-    if not len(files_histo): # temporary patch if first run has not 01, use only timestamp info, assumes each fill run only once
-        files_histo['old'] = matches[-1][2]
-        files_histo['new'] = matches[0][2]
-    return files_histo
 
 
 def plotsCompare(Pages, files_histo, outputFile_name, normalize = True):
@@ -117,135 +79,6 @@ def plotsCompare(Pages, files_histo, outputFile_name, normalize = True):
         c1.Print(outputFile_name)
 
 
-def makeGraph(values, errors=None):
-    import numpy as np
-    x = np.array([float(i) for i in range(len(values))])
-    ex = np.array([0 for i in range(len(x))])
-    y = np.array([float(i) for i in values])
-    if errors:
-        ey = np.array([float(i) for i in errors])
-    else:
-        ey = np.array([0 for i in range(len(x))])
-    return r.TGraphErrors(len(x),x, y, ex, ey)
-
-
-def makeHisto(name, values, title = None, range = [None, None], nBins = 100):
-    if range[0] == None: range[0] = min(values)
-    if range[1] == None: range[1] = max(values)+1
-    if title == None: title = name
-    h = r.TH1D(name, title, nBins, *range)
-    for i in values:
-        h.Fill(i)
-    return h
-
-
-def getDofDeltaConvergence(aout, dof='Tx', alignable='Velo/VeloLeft'):
-    '''
-    For this to work one must have already done
-    aout = AlignOutput(fileName)
-    aout.Parse()
-
-    return list values and list errors
-    '''
-    list_delta = [(j.Delta, j.DeltaErr) for j in sum([i.Alignables[alignable].AlignmentDOFs for i in aout.AlignIterations],[]) if j.Name == dof ]
-    if 'T' in dof:
-        delta = [(i[0]*1000, i[1]*1000) for i in list_delta] # Translations in um 
-    elif 'R' in dof:
-        delta = [(i[0]*1000000, i[1]*1000000) for i in list_delta] # Rotations in urad
-    return [i[0] for i in delta], [i[1] for i in delta]
-
-
-def getDofDeltas(aout, dof='Tx', regexes_alignables=['Velo/Velo(Left|Right)/Module..']):
-    '''
-    For this to work one must have already done
-    aout = AlignOutput(fileName)
-    aout.Parse()
-
-    return list values of difference after-before for all the alignables which satisfy one of the regexes
-    '''
-    import re
-    deltas = []
-    for alignable in aout.AlignIterations[0].Alignables.keys():
-        match = [re.match(regex+'$', alignable) for regex in regexes_alignables]
-        if match != [None]*len(match): # there is at least a match
-            deltas.append(sum([j.Delta for j in sum([i.Alignables[alignable].AlignmentDOFs for i in aout.AlignIterations],[]) if j.Name == dof ]))
-    if 'T' in dof:
-        deltas = [i*1000 for i in deltas] # Translations in um 
-    elif 'R' in dof:
-        deltas = [i*1000000 for i in deltas] # Rotations in urad
-    return deltas
-
-
-def getExpression(aout, expression):
-    '''
-    For this to work one must have already done
-    aout = AlignOutput(fileName)
-    aout.Parse()
-
-    return list values
-
-    expression in [Chi2, DeltaChi2, DeltaChi2nDofs, DeltaChi2overNDofs, LocalDeltaChi2, MaxModeChi2, NormalisedChi2Change, TrChi2nDof, VChi2nDof]
-    '''
-    return [getattr(i,expression) for i in aout.AlignIterations]
-    
-
-
-def getDrawnCanvas(drawables):#, title = 'Pollo'):
-    
-    if len(drawables) == 1:
-        canvas_divsions = [1]
-    elif len(drawables) == 2:
-        canvas_divsions = [2]
-    elif len(drawables) in [3, 4]:
-        canvas_divsions = [2,2]
-    elif len(drawables) in [5, 6]:
-        canvas_divsions = [3,2]
-    elif len(drawables) in [7, 8, 9]:
-        canvas_divsions = [3,3]
-        
-    c = r.TCanvas()
-    c.pads = []
-    
-    # if title:
-    #     import random
-    #     title_pad = r.TPad("title_pad"+str(random.random()), "The pad 10% of the height",0.,.9,1.,1.)
-    #     title_pad.cd()
-    #     titletext = r.TText(0.5,0.5, title) 
-    #     titletext.SetNDC() 
-    #     titletext.SetTextSize(0.8) 
-    #     titletext.SetTextAlign(22) 
-    #     titletext.Draw() 
-    #     c.cd()
-    #     title_pad.Draw()
-    #     c.pads.append(title_pad)
-    #     pad = r.TPad("pad"+str(random.random()), "The pad 90% of the height",0.,.01,1.,.9)
-    #     #pad2.cd()
-    #     #framePulls.Draw()
-    # else:
-    #     pad = r.TPad("pad", "The pad 100% of the height",0.,.01,1.,1.)
-
-    # pad.Divide(*canvas_divsions)
-    
-    # for i in range(len(drawables)):
-    #     pad.cd(i+1)
-    #     drawables[i].Draw()
-
-    # c.cd()
-    # pad.Draw()
-    # c.pads.append(pad)
-    # c.Update()
-    # c.Print('c1.eps')
-    # return c
-    
-    c.Divide(*canvas_divsions)
-    
-    for i in range(len(drawables)):
-        c.cd(i+1)
-        drawables[i].Draw()
-        
-    c.Update()
-    return c
-
 
 Pages = [("Long track properties and PV position", [ ["Track/TrackMonitor/Velo/3", {'title' : '(1) track #chi^{2}/ndof'}],
                                                     ["Track/TrackMonitor/Velo/7", {'title' : '(2) track #eta'}],
@@ -272,9 +105,10 @@ Pages = [("Long track properties and PV position", [ ["Track/TrackMonitor/Velo/3
 
 if __name__ == '__main__':
 
-    run = args.run if args.run else findLastRun()
-    alignlog = args.alignlog if args.alignlog else findAlignlog(run)
-    files_histo = {'old': args.histoFiles[0], 'new': args.histoFiles[1]} if args.histoFiles else findHistos(run)
+    if not (args.alignlog and args.histoFiles):
+        run = args.run if args.run else findLastRun(activity)
+    alignlog = args.alignlog if args.alignlog else findAlignlog(activity, run)
+    files_histo = {'old': args.histoFiles[0], 'new': args.histoFiles[1]} if args.histoFiles else findHistos(activity, run)
     
     # read alignlog
     aout = AlignOutput(alignlog)

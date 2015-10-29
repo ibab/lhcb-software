@@ -26,7 +26,10 @@ def findHistos(activity,run):
                 matches.append(list(match[0])+[os.path.join(root, file)])
 
     matches = sorted(matches, key=lambda x: x[1], reverse = True)
-   
+
+    if len(matches) == 0:
+        raise IOError('No histogram file found for run {0}'.format(run))
+       
     files_histo = {}
     if matches[0][0] == '01': # only one histogram file
         files_histo['old'] = matches[0][2]

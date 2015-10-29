@@ -3,6 +3,9 @@
 ! package manager: Maurizio Martinelli
 !------------------------------------------------------------------------------
 
+! 2015-10-29 - Giulio Dujany
+  - Omogenize Velo and Tracker monitoring scripts
+
 ! 2015-10-27 - Zhirui Xu
   - set gStyle->SetOptTitle(1) to print the titles of the plots
 
