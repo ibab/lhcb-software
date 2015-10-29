@@ -185,7 +185,7 @@ class CharmHad_25ns_September2015 :
                  'Hlt2CharmHadMuTag_Dstp_D02KmPimPipPipTurbo',
                  'Hlt2CharmHadMuTag_Dstp_D02KpPimPimPipTurbo',
                  'Hlt2CharmHadMuTag_Dstp_D02KmKmKpPipTurbo',
-                 'Hlt2CharmHadMuTag_Dstp_D02KmKpKpPimTurbo', 
+                 'Hlt2CharmHadMuTag_Dstp_D02KmKpKpPimTurbo',
                  'Hlt2CharmHadDstp2D0Pip_D02KS0KS0_KS0LLTurbo',
                  'Hlt2CharmHadDstp2D0Pip_D02KS0KS0_KS0LL_KS0DDTurbo',
                  'Hlt2CharmHadDstp2D0Pip_D02KS0KS0_KS0DDTurbo',
@@ -1617,8 +1617,15 @@ class CharmHad_25ns_September2015 :
                    , 'Xicc_BPVVDCHI2_MIN'   :   -1.0
                    , 'Xicc_acosBPVDIRA_MIN' : math.pi / 2.0
                    , 'TisTosSpec'           : "Hlt1.*Track.*Decision%TOS"
+                 },
+ 'DConeVar05' : { "ConeAngle" : 0.5,
+                  "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                 "Location"  : 'DConeVar05' },
+ 'DConeVar10' : { "ConeAngle" : 1.0,
+                  "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                  "DaughterLocations" : {"[D_s+ -> ^K- K+ pi+]CC" : "KmConeVar10"} },
+ 'VertexIsolation' : { "Location"  : "VertexIsoInfo" }
             }
-          }
         }   )
 
         return d

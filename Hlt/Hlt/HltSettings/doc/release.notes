@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-10-29 - Roel Aaij
+ - Add example for configuration of RelatedInfo.
+
 ! 2015-10-25 - Sean Benson
  - Fix TurboOnly for nightlies.
 
