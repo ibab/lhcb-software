@@ -32,9 +32,9 @@ namespace
 {
   // ==========================================================================
   /// equality criteria for doubles
-  const LHCb::Math::Equal_To<double> s_equal ; // equality criteria for doubles
+  const LHCb::Math::Equal_To<double> s_equal{} ; // equality criteria for doubles
   /// zero for doubles  
-  const LHCb::Math::Zero<double>     s_zero  ; // zero for doubles
+  const LHCb::Math::Zero<double>     s_zero{}  ; // zero for doubles
   // ==========================================================================
   inline 
   std::pair<double,double> _sincos_ ( const double phase ) 

@@ -44,9 +44,9 @@ namespace
 {
   // ==========================================================================
   /// equality criteria for doubles
-  const LHCb::Math::Equal_To<double> s_equal ; // equality criteria for doubles
+  const LHCb::Math::Equal_To<double> s_equal{} ; // equality criteria for doubles
   /// zero for doubles  
-  const LHCb::Math::Zero<double>     s_zero  ; // zero for doubles
+  const LHCb::Math::Zero<double>     s_zero{}  ; // zero for doubles
   // ==========================================================================
   // get bin content for 1D-histogram 
   inline Gaudi::Math::ValueWithError _bin_ 

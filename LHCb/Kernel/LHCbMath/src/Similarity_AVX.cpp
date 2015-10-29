@@ -1,5 +1,3 @@
-#pragma GCC optimize "O3"
-#pragma GCC target   "avx"
 #include "GaudiKernel/GenericVectorTypes.h"
 #include "GaudiKernel/GenericMatrixTypes.h"
 #include "GaudiKernel/SymmetricMatrixTypes.h"
@@ -48,7 +46,7 @@ namespace {
   }
 
   // reshuffle a symmetric, lower triangle, row major matrix for SIMD use...
-  struct alignas(16) avx_5_t {
+  struct alignas(32) avx_5_t {
     Vec4d c0,c1,c2,c3,c4; // r4 == c4...
     double c44 ;
     avx_5_t(const double* d)  :

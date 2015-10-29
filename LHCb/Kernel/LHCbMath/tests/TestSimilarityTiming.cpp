@@ -370,12 +370,12 @@ TestResults compareInstructionSets(Mat &Ftype, SymMat &Otype,
         //std::cout << "AVX     maxdiff: " << results.maxDiff[ISet::AVX]  << std::endl;
     }
 
-    delete(F);
-    delete(O);
-    delete(resGeneric);
-    delete(resClassic);
-    delete(resSSE3);
-    delete(resAVX);
+    delete[] F;
+    delete[] O;
+    delete[] resGeneric;
+    delete[] resClassic;
+    delete[] resSSE3;
+    delete[] resAVX;
 
     return results;
 }

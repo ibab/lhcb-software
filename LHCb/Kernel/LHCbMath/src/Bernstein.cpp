@@ -34,11 +34,11 @@ namespace
 {
   // ==========================================================================
   /// equality criteria for doubles
-  const LHCb::Math::Equal_To<double> s_equal ; // equality criteria for doubles
+  const LHCb::Math::Equal_To<double> s_equal{} ; // equality criteria for doubles
   /// zero for doubles  
-  const LHCb::Math::Zero<double>     s_zero  ; // zero for doubles
+  const LHCb::Math::Zero<double>     s_zero{}  ; // zero for doubles
   /// zero fo vectors 
-  const LHCb::Math::Zero< std::vector<double> > s_vzero ; // zero for vectors
+  const LHCb::Math::Zero< std::vector<double> > s_vzero{} ; // zero for vectors
   ///
   static_assert( std::numeric_limits<double>::is_specialized , 
                  "std::numeric_limits<double> is not specialized" ) ;

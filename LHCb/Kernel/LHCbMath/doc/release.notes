@@ -5,6 +5,8 @@
 !               for geometry and matrix algebra
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
+! 2015-10-25 - Gerhard Raven
+ - fix clang compilation errors
 
 ! 2015-10-29 - Vanya Belyaev
  - ValueWithError: two more functions are added
