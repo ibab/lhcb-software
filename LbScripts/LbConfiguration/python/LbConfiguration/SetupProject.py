@@ -1249,6 +1249,9 @@ class SetupProject(object):
         parser.add_option("--profile", action="store_true",
                           help="Print some profile informations about the execution.")
 
+        parser.add_option('--use-sp', action='store_true',
+                          help='unused, needed for compatibility with lb-run')
+
         parser.set_defaults(output=None,
                             mktemp=False,
                             append=False,

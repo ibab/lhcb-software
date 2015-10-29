@@ -177,6 +177,11 @@ class SP2(EnvConfig.Script):
         parser.add_option("--use-grid", action="store_true",
                           help = "Enable auto selection of LHCbGrid project")
 
+        parser.add_option("--use-sp", action="store_true",
+                          dest="use_setupproject",
+                          help="Force the fallback on SetupProject even if the "
+                          "project have manifest.xml and a .xenv file.")
+
         # Note: the profile is not used in the script class, but in the wrapper
         #       it is added to the parser to appear in the help and for checking
         parser.add_option("--profile", action="store_true",
@@ -186,7 +191,8 @@ class SP2(EnvConfig.Script):
                             runtime_projects = [],
                             overriding_projects = [],
                             auto_override = True,
-                            use_grid = False)
+                            use_grid = False,
+                            use_setupproject = False)
         self.allow_empty_version = False
 
     def _parse_args(self, args=None):
@@ -312,6 +318,9 @@ class SP2(EnvConfig.Script):
     def main(self):
         from lookup import NotFoundError
         try:
-            super(SP2, self).main()
+            if not self.opts.use_setupproject:
+                super(SP2, self).main()
+            else:
+                self.compatMain()
         except (NotFoundError, IOError, OSError), x:
             self.compatMain(x)
