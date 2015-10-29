@@ -4,6 +4,15 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-10-29 - Roel Aaij
+ - Adapt to split of HltSelReportsMaker into separate version
+   for HLT1 and HLT2.
+ - Add HLT1 mass monitoring plot for non-detached D->Kpi.
+ 
+! 2015-10-26 - Roel Aaij
+ - Configure SelReportsMaker with RelatedInfo locations and add corresponding
+ 	 IDs to the HtlANNSvc.
+
 ! 2015-10-26 - Sean Benson
  - Added HltPersistRecoConf to go with new slot "PersistReco". 
 

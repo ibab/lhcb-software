@@ -128,19 +128,21 @@ class HltMonitoringConf(LHCbConfigurableUser):
         massMon = HltMassMonitor("Hlt1MassMonitor")
         massMon.DecReportsLocation = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"].listOutputs()[0]
         massMon.SelReportsLocation = DecoderDB["HltSelReportsDecoder/Hlt1SelReportsDecoder"].listOutputs()[0]
-        massMon.Decisions  = {"Jpsi"      : "Hlt1DiMuonHighMassDecision",
-                              "JpsiAlign" : "Hlt1CalibMuonAlignJpsiDecision",
-                              "D0->Kpi"   : 'Hlt1CalibTrackingKPiDetachedDecision',
-                              "D0->KK"    : 'Hlt1CalibTrackingKKDecision',
-                              "D0->pipi"  : "Hlt1CalibTrackingPiPiDecision",
-                              "phi->KK"   : "Hlt1IncPhiDecision"}
+        massMon.Decisions  = {"Jpsi"         : "Hlt1DiMuonHighMassDecision",
+                              "JpsiAlign"    : "Hlt1CalibMuonAlignJpsiDecision",
+                              "D0->Kpi(det)" : 'Hlt1CalibTrackingKPiDetachedDecision',
+                              "D0->Kpi"      : 'Hlt1CalibTrackingKPiDecision',
+                              "D0->KK"       : 'Hlt1CalibTrackingKKDecision',
+                              "D0->pipi"     : "Hlt1CalibTrackingPiPiDecision",
+                              "phi->KK"      : "Hlt1IncPhiDecision"}
         massMon.DecisionStructure = {"Jpsi" : [105.658,105.658]}
-        massMon.Histograms = {"Jpsi"      : [ 3010, 3190, 90 ],
-                              "JpsiAlign" : [ 3010, 3190, 90 ],
-                              "D0->Kpi"   : [ 1815, 1915, 50 ],
-                              "D0->KK"    : [ 1815, 1915, 50 ],
-                              "D0->pipi"  : [ 1815, 1915, 50 ],
-                              "phi->KK"   : [ 1000, 1040, 80 ]}
+        massMon.Histograms = {"Jpsi"         : [ 3010, 3190, 90 ],
+                              "JpsiAlign"    : [ 3010, 3190, 90 ],
+                              "D0->Kpi(det)" : [ 1815, 1915, 50 ],
+                              "D0->Kpi"      : [ 1815, 1915, 50 ],
+                              "D0->KK"       : [ 1815, 1915, 50 ],
+                              "D0->pipi"     : [ 1815, 1915, 50 ],
+                              "phi->KK"      : [ 1000, 1040, 80 ]}
 
         # Setup the track monitoring
         from Configurables        import Hlt1TrackMonitor

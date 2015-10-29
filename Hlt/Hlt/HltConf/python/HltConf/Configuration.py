@@ -14,10 +14,6 @@ from HltAfterburner      import HltAfterburnerConf
 from HltPersistReco      import HltPersistRecoConf
 from HltMonitoring       import HltMonitoringConf
 
-#############################################################################
-# Helper functions
-#############################################################################
-
 def __forAll__( c, prop_value_dict, types=['FilterDesktop','CombineParticles',"DVAlgorithm", "DaVinciAlgorithm", "DaVinciHistoAlgorithm", "DaVinciTupleAlgorithm", "*" ] ) :
     """ Find all configurable algorithms and set certain properties
     """
@@ -36,6 +32,12 @@ def __forAll__( c, prop_value_dict, types=['FilterDesktop','CombineParticles',"D
         if type(seq) is not list: seq = [ seq ]
         for i in seq : __forAll__(i,prop_value_dict,types)
 
+def __updateDict__( d, id, entries ) :
+    # pick up first unused entry after 'id'
+    for i in entries :
+        while id in d.values() : id = id + 1
+        d.update({ i : id } )
+        
 ### TODO: move this into HltPVs...
 def onlinePV():
     """Use the tracking cofigurables to define the onlinePV location
@@ -48,7 +50,6 @@ def onlinePV():
     pv3d  = _vertexLocation( HltSharedVerticesPrefix, HltGlobalVertexLocation, PV3DSelection )
     return {"PV3D" : pv3d}
 
-##################################################################################
 class HltConf(LHCbConfigurableUser):
     """
     Hlt configuration
@@ -107,7 +108,6 @@ class HltConf(LHCbConfigurableUser):
     #_log.addHandler( handler )
     #_log.setLevel(logging.DEBUG)
 
-##################################################################################
     def defineL0Channels(self, L0TCK = None) :
         """
         Define L0 channels
@@ -130,7 +130,6 @@ class HltConf(LHCbConfigurableUser):
         from Hlt1Lines.HltL0Candidates import setupL0Channels
         setupL0Channels()
 
-##################################################################################
     def settings(self) :
         """
         Get the class that contains the thresholds, etc
@@ -140,7 +139,6 @@ class HltConf(LHCbConfigurableUser):
         from HltConf.ThresholdUtils import Name2Threshold
         return Name2Threshold(name)
 
-##################################################################################
     def confType(self) :
         """
         Decoding of configuration. This is where Hlt1 and 2 configurations are called.
@@ -257,7 +255,6 @@ class HltConf(LHCbConfigurableUser):
         appendPostConfigAction(__setOnlinePV__)
 
 
-##################################################################################
     def configureRoutingBits(self) :
         """
         Routing bits
@@ -377,18 +374,16 @@ class HltConf(LHCbConfigurableUser):
         HltFactory('HltRoutingBitsWriter.LoKi::Hybrid::HltFactory').Modules += [ 'LoKiCore.functions', 'LoKiNumbers.sources' ]
         # and, last but not least, tell the writer what it should write..
 
-##################################################################################
-    def configurePersistence(self, lines, stage) :
+    def configurePersistence(self, hlt1Lines, lines, stage) :
         """
         persistify vertices
         """
         ## and persist some vertices...
         from Configurables import HltVertexReportsMaker
         vertices =[ 'PV3D' ]
-        selections = []
-        from HltLine.HltLine     import hlt1Lines
-        for i in hlt1Lines() :
-             if i.name() in lines : selections.extend( [ j for j in i.outputSelections() if j not in selections ] )
+        selections = set()
+        for i in hlt1Lines:
+            selections = selections.union(set([j for j in i.outputSelections()]))
         vertices = [ i for i in vertices if i in selections ]
 
         vtxMaker = HltVertexReportsMaker(stage + "VtxReportsMaker")
@@ -398,30 +393,35 @@ class HltConf(LHCbConfigurableUser):
         vtxMaker.PVLocation= onlinePV()["PV3D"]
 
         ## do not write out the candidates for the vertices we store
-        from Configurables import HltSelReportsMaker
-        selMaker = HltSelReportsMaker(stage + "SelReportsMaker")
+        from Configurables import Hlt1SelReportsMaker, Hlt2SelReportsMaker
+        configs = {'Hlt1' : Hlt1SelReportsMaker, 'Hlt2' : Hlt1SelReportsMaker}
+        selMaker = configs[stage](stage + "SelReportsMaker")
         selMaker.SelectionMaxCandidates.update( dict( [ (i, 0) for i in vertices if i.endswith('Decision') ] ) )
 
-        veto = [ 'TES:Trig/L0/FullCalo' ,   'TES:Trig/L0/MuonCtrl'
-               , 'TES:Hlt/Vertex/ASidePV3D','TES:Hlt/Vertex/CSidePV3D' , 'TES:Hlt2/Track/Forward',
-                 'TES:Hlt/Track/RZVelo',    'TES:Hlt2/Track/Velo'
-               , 'TES:Hlt/Vertex/PV3D'
-               , 'TES:Hlt/Track/MuonSegmentForL0Single'
-               , 'RZVeloBW'
-               ]
+        ## Related info locations need to be passed the SelReportsMaker and the
+        ## HltANNSvc needs to be updated
+        from Configurables import HltANNSvc
+        locIDs = HltANNSvc().RelInfoLocations
+        infoLocs = []
+        for line in lines:
+            locs = line.relatedInfoLocations()
+            infoLocs.extend(locs)
+            if locs:
+                selMaker.RelatedInfoLocations[line.decision()] = locs
+        __updateDict__(locIDs, 50, sorted(list(set(infoLocs))))
+        HltANNSvc().RelInfoLocations = locIDs
+
+        # Veto some selections
+        veto = [ 'TES:Trig/L0/FullCalo', 'TES:Trig/L0/MuonCtrl', 'TES:Hlt/Vertex/ASidePV3D',
+                 'TES:Hlt/Vertex/CSidePV3D', 'TES:Hlt2/Track/Forward', 'RZVeloBW',
+                 'TES:Hlt/Track/RZVelo', 'TES:Hlt2/Track/Velo',
+                 'TES:Hlt/Vertex/PV3D', 'TES:Hlt/Track/MuonSegmentForL0Single' ]
         selMaker.SelectionMaxCandidatesDebug = dict( [ (i,0) for i in veto ] )
 
-##################################################################################
     def configureANNSelections(self) :
         """
         Assigned numbers configuration
         """
-
-        def updateDict( d, id, entries ) :
-             # pick up first unused entry after 'id'
-             for i in entries :
-                 while id in d.values() : id = id + 1
-                 d.update({ i : id } )
 
         ### TODO: use the computed indices available from the lines...
         ### TODO: what about shared selections??? (which appear with multiple indices!)
@@ -438,9 +438,9 @@ class HltConf(LHCbConfigurableUser):
             missing += [ i for i in sorted(set(decisions) - set(ids.keys())) ]
             missing = sorted(list(set(missing)))
             missingDecisions  = [ i for i in missing if i.endswith('Decision') ]
-            updateDict( ids, decStart, missingDecisions )
+            __updateDict__( ids, decStart, missingDecisions )
             missingSelections = [ i for i in missing if not i.endswith('Decision') ]
-            updateDict( ids, selStart, missingSelections )
+            __updateDict__( ids, selStart, missingSelections )
             log.warning( '# added %d %s selections to HltANNSvc' %  (len( missingSelections ), stage ) )
             log.warning( '# added %d %s decisions to HltANNSvc' % ( len( missingDecisions ), stage ) )
 
@@ -467,32 +467,6 @@ class HltConf(LHCbConfigurableUser):
         if overlap :
             raise RuntimeError, ' # Hlt1 and Hlt2 have overlapping ID values: %s -- this will cause problems when decoding the raw bank' % overlap
 
-        if False :
-            from HltLine.HltLine     import hlt1Lines
-            for i in hlt1Lines() :
-                print ( "checking " + i.name() )
-                decisionName = i.name() + 'Decision'
-                if decisionName in HltANNSvc().Hlt1SelectionID :
-                    id = HltANNSvc().Hlt1SelectionID[ decisionName ]
-                else :
-                    id = None
-
-                if id :
-                    print ( i.index() )
-                    for (key,value ) in zip(i.index(),range(0,len(i.index()))) :
-                        from HltLine.HltLine     import hlt1Selections
-                        if key in hlt1Selections()['All'] :
-                            # TODO: see if the selection is unique to this line...
-                            unique = key.startswith(i.name())
-                            cur = HltANNSvc().Hlt1SelectionID[ key ] if key in HltANNSvc().Hlt1SelectionID else  None
-                            print( ' selection %s in line %s (unique:%s) should have ID %d:%d -- has %d' % ( key,  i.name(), unique, id, value, cur)  )
-                        #else :
-                        #    print ' line %s, algo %s does not have a selection? ' % (i.name(),key)
-                else :
-                    log.warning( 'Hlt1Line %s not known to ANNSvc??' % i.name() )
-
-
-##################################################################################
     def _runHltLines(self):
         from HltLine.HltLine     import hlt2Lines
 
@@ -574,15 +548,15 @@ class HltConf(LHCbConfigurableUser):
         Sequence('Hlt2').Members += [ i.configurable() for i in lines2 ]
 
         # switch on timing limit / accept if slow
-        for i in hlt1Lines() :
+        for i in lines1 :
                 i.configurable().AcceptIfSlow = self.getProp('EnableAcceptIfSlow')
                 i.configurable().FlagAsSlowThreshold = self.getProp('SlowHlt1Threshold')
-        for i in hlt2Lines() :
+        for i in lines2 :
                 i.configurable().AcceptIfSlow =  self.getProp('EnableAcceptIfSlow')
                 i.configurable().FlagAsSlowThreshold = self.getProp('SlowHlt2Threshold')
 
         for stage, lines in zip(('Hlt1', 'Hlt2'), (lines1, lines2)):
-            self.configurePersistence( [ i.name() for i in lines ], stage )
+            self.configurePersistence( lines1, lines, stage )
         self.configureANNSelections()
 
         from HltConf.HltMonitoring import HltMonitoringConf
@@ -590,10 +564,6 @@ class HltConf(LHCbConfigurableUser):
 
         if self.getProp("Verbose") : print Sequence('Hlt')
 
-##################################################################################
-#
-# end sequence
-#
     def _safeSet(self, option, newVal):
         """
         Set properties safely, only if not already set by someone.. I'm pretty sure there is a way to do this in gudi with owned configurables ...
@@ -613,7 +583,7 @@ class HltConf(LHCbConfigurableUser):
         from Configurables        import GaudiSequencer as Sequence
         from Configurables        import bankKiller
         from Configurables        import LoKi__HDRFilter   as HltFilter
-        from Configurables        import HltSelReportsMaker, HltSelReportsWriter
+        from Configurables        import Hlt1SelReportsMaker, Hlt2SelReportsMaker, HltSelReportsWriter
         from Configurables        import HltDecReportsWriter
         from Configurables        import HltVertexReportsMaker, HltVertexReportsWriter
         from Configurables        import HltTrackReportsWriter
@@ -669,7 +639,7 @@ class HltConf(LHCbConfigurableUser):
                                                                                                          'Hlt2DecReportsLocation' : '',  } )
                          , ( "EnableHltDecReports"  ,  HltDecReportsWriter,    'Hlt1DecReportsWriter',  {'SourceID' : 1,
                                                                                                          'InputHltDecReportsLocation' : hlt1_decrep_loc } )
-                         , ( "EnableHltSelReports"  ,  HltSelReportsMaker,     'Hlt1SelReportsMaker',   dict( InputHltDecReportsLocation = hlt1_decrep_loc
+                         , ( "EnableHltSelReports"  ,  Hlt1SelReportsMaker,    'Hlt1SelReportsMaker',   dict( InputHltDecReportsLocation = hlt1_decrep_loc
                                                                                                             , OutputHltSelReportsLocation = hlt1_selrep_loc
                                                                                                             , **sel_rep_opts )  )
                          , ( "EnableHltSelReports"  ,  HltSelReportsWriter,    'Hlt1SelReportsWriter',  {'SourceID' : 1,
@@ -680,20 +650,20 @@ class HltConf(LHCbConfigurableUser):
                                                                                                          'InputHltVertexReportsLocation': hlt1_vtxrep_loc } )
                          )
         _hlt2postamble = ( ( "EnableHltRoutingBits" ,  type(l0decoder), l0decoder.getName(), {})
-                         , ( "EnableHltRoutingBits" ,  HltRoutingBitsWriter, 'Hlt2RoutingBitsWriter', { 'Hlt1DecReportsLocation' : hlt1_decrep_loc,
-                                                                                                        'Hlt2DecReportsLocation' : hlt2_decrep_loc,
-                                                                                                        'UpdateExistingRawBank'  : True} )
-                         , ( "EnableHltDecReports"  ,  HltDecReportsWriter,  'Hlt2DecReportsWriter',  { 'SourceID': 2,
-                                                                                                        'InputHltDecReportsLocation' : hlt2_decrep_loc } )
-                         , ( "EnableHltSelReports"  ,  HltSelReportsMaker,   'Hlt2SelReportsMaker',  dict( InputHltDecReportsLocation = hlt2_decrep_loc,
-                                                                                                           OutputHltSelReportsLocation = hlt2_selrep_loc,
-                                                                                                           RecSummaryLocation = recSumLoc,
-                                                                                                           **sel_rep_opts ) )
-                         , ( "EnableHltSelReports"  ,  HltSelReportsWriter,  'Hlt2SelReportsWriter',  { 'SourceID' : 2,
-                                                                                                        'InputHltSelReportsLocation': hlt2_selrep_loc } )
-                         , ( "EnableHltVtxReports"  ,  HltVertexReportsMaker,  'Hlt2VtxReportsMaker',   {'OutputHltVertexReportsLocation' : hlt2_vtxrep_loc } )
-                         , ( "EnableHltVtxReports"  ,  HltVertexReportsWriter, 'Hlt2VtxReportWriter',  { 'SourceID' : 2,
-                                                                                                         'InputHltVertexReportsLocation': hlt2_vtxrep_loc } ) )
+                         , ( "EnableHltRoutingBits" ,  HltRoutingBitsWriter,   'Hlt2RoutingBitsWriter', { 'Hlt1DecReportsLocation' : hlt1_decrep_loc,
+                                                                                                          'Hlt2DecReportsLocation' : hlt2_decrep_loc,
+                                                                                                          'UpdateExistingRawBank'  : True} )
+                         , ( "EnableHltDecReports"  ,  HltDecReportsWriter,    'Hlt2DecReportsWriter',  { 'SourceID': 2,
+                                                                                                          'InputHltDecReportsLocation' : hlt2_decrep_loc } )
+                         , ( "EnableHltSelReports"  ,  Hlt2SelReportsMaker,    'Hlt2SelReportsMaker',   dict( InputHltDecReportsLocation = hlt2_decrep_loc,
+                                                                                                              OutputHltSelReportsLocation = hlt2_selrep_loc,
+                                                                                                              RecSummaryLocation = recSumLoc,
+                                                                                                              **sel_rep_opts ) )
+                         , ( "EnableHltSelReports"  ,  HltSelReportsWriter,    'Hlt2SelReportsWriter',  { 'SourceID' : 2,
+                                                                                                          'InputHltSelReportsLocation': hlt2_selrep_loc } )
+                         , ( "EnableHltVtxReports"  ,  HltVertexReportsMaker,  'Hlt2VtxReportsMaker',   { 'OutputHltVertexReportsLocation' : hlt2_vtxrep_loc } )
+                         , ( "EnableHltVtxReports"  ,  HltVertexReportsWriter, 'Hlt2VtxReportWriter',   { 'SourceID' : 2,
+                                                                                                          'InputHltVertexReportsLocation': hlt2_vtxrep_loc } ) )
 
         # Don't try to decode L0 for the routing bits writer if no L0TCK has
         # been set. This allows forward compatibility.
@@ -740,8 +710,6 @@ class HltConf(LHCbConfigurableUser):
             L0accept = Sequence(name='HltEndSequenceFilter', Members = DecodeL0DU.members() + [ L0Filter( 'L0Pass', Code = "L0_DECISION_PHYSICS" )])
             EndMembers.insert(1,  L0accept )  # after routing bits
 
-
-##################################################################################
     def __apply_configuration__(self):
         """
         Apply Hlt configuration
