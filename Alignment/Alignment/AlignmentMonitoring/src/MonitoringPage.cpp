@@ -91,7 +91,6 @@ void MonitoringPage::setYRange(char* hname, double ymin, double ymax){
 void MonitoringPage::draw(const std::vector<TString>& filenames, TCanvas* canvas, bool normalize )
 {
   gStyle->SetOptStat(1100);
-  gStyle->SetOptTitle(0);
   gROOT->ForceStyle();
   HistHelper hh;
   size_t ny = 2 ;

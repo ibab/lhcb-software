@@ -8,7 +8,7 @@ import numpy as np
 
 AlMon = gbl.Alignment.AlignmentMonitoring
 def ConfigureMonApp(outputName, pages):
-    r.gStyle.SetOptTitle(0)
+    r.gStyle.SetOptTitle(1)
     monApp = AlMon.MonitoringApplication(outputName)
     for name, hists in pages.iteritems():
         hists_sa = RootUtils.wrapStringArray(hists)

@@ -4,6 +4,9 @@
 !------------------------------------------------------------------------------
 
 ! 2015-10-27 - Zhirui Xu
+  - set gStyle->SetOptTitle(1) to print the titles of the plots
+
+! 2015-10-27 - Zhirui Xu
   - add folder python/AlignmentMonitoring with utils
   - add script scripts/moniPlots_Tracker.py 
 
