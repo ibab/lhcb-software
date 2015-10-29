@@ -22,7 +22,7 @@ from LbConfiguration.SP2.version import (isValidVersion, expandVersionAlias,
 from LbConfiguration.SetupProject import FixProjectCase
 
 
-auto_override_projects = [('Compat', DEFAULT_VERSION)]
+auto_override_projects = [('Compat', 'latest')]
 
 def decodePkg(s):
     '''
