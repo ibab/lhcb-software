@@ -655,14 +655,123 @@ run_view_pages = OrderedDict([
             ]
         }
     ),
-    ('errors', 
+#==========================================================================
+    ('errors',
         {
         'title': 'Errors',
-        'plots': 
+        'subpages':
             [
                 {
-                'title': 'Errors per sensor',
-                'name': 'Velo/ErrorMon/Error Counter'
+                'title': 'Overview',
+                'plots':
+                    [
+                        {
+                        'title': 'Errors per sensor',
+                        'name': 'Velo/ErrorMon/Error Counter',
+                        'axis_titles': ['Sensor number', 'Number of errors']
+                        },
+                        {
+                        'title': 'Mean error frequency per sensor',
+                        'name': 'Velo/ErrorMon/Error Frequency',
+                        'axis_titles': ['Sensor number', 'Mean error frequency']
+                        },
+                        {
+                        'title': 'Error type frequency',
+                        'name': 'Velo/ErrorMon/Types of Errors',
+                        'axis_titles': ['Sensor number', 'Number of errors'],
+                        'tip': '0=pseudoheader, 1=PCN, 2=adc_FIFO, 3=channel'
+                        },
+                        {
+                        'title': 'Number of desyncs in SEU counter',
+                        'name': 'Velo/SEUMonitor/desyncctr1d',
+                        'axis_titles': ['Sensor number', 'Number of desyncs']
+                        }
+                    ]
+                },
+                {
+                'title': 'Error Banks',
+                'plots':
+                    [
+                        {
+                        'title': 'Pseudoheader errors per link per sensor',
+                        'name': 'Velo/ErrorMon/Overview pseudoheader errors',
+                        'axis_titles': ['Sensor number', 'Link number']
+                        },
+                        {
+                        'title': 'PCN errors per link per sensor',
+                        'name': 'Velo/ErrorMon/Overview PCN errors',
+                        'axis_titles': ['Sensor number', 'Link number']
+                        },
+                        {
+                        'title': 'adc_FIFO errors per link per sensor',
+                        'name': 'Velo/ErrorMon/Overview adc_FIFO errors',
+                        'axis_titles': ['Sensor number', 'Link number']
+                        },
+                        {
+                        'title': 'IHeader errors per link per sensor',
+                        'name': 'Velo/ErrorMon/Overview IHeader errors',
+                        'axis_titles': ['Sensor number', 'Link number']
+                        }
+                    ]
+                },
+                {
+                'title': 'Single Event Upsets',
+                'plots':
+                    [
+                        {
+                        'title': 'Event statistics',
+                        'name': 'Velo/SEUMonitor/eventstat',
+                        'axis_titles': ['Event type', 'Number of events']
+                        },
+                        {
+                        'title': 'Number of desyncs in SEU counter',
+                        'name': 'Velo/SEUMonitor/desyncctr1d',
+                        'axis_titles': ['Sensor number', 'Number of desyncs']
+                        },
+                        {
+                        'title': 'Number of SEU\'s',
+                        'name': 'Velo/SEUMonitor/seuctr1d',
+                        'axis_titles': ['Sensor number', 'Number of SEU\'s']
+                        },
+                        {
+                        'title': 'Number of desyncs in SEU counter per beetle',
+                        'name': 'Velo/SEUMonitor/desyncctr2d',
+                        'axis_titles': ['Sensor number', 'Beetle number']
+                        }
+                    ]
+                },
+                #{
+                #'title': 'ProcStatus warnings',
+                #'plots':
+                    #[
+                        #{
+                        #'title': 'Number of ProcStatuses of each type found so far',
+                        #'name': 'Velo/ProcStatusMonitor/m_numProcStatus',
+                        #'axis_titles': ['ProcStatus type', 'Frequency']
+                        #}
+                    #]
+                #},
+                {
+                'title': 'PCN error details',
+                'plots':
+                    [
+                        {
+                        'title': 'Beetle PCN error map',
+                        'name': 'Velo/PCNErrorMon/hBeetleMap',
+                        'axis_titles': ['Tell1 ID', 'Beetle number']
+                        },
+                        {
+                        'title': 'FEM PCN errors',
+                        'name': 'Velo/PCNErrorMon/hFEMPCNsync',
+                        'axis_titles': ['Sensor number', 'Desync frequency']
+                        },
+                        {
+                        'title': 'Per-sensor PCN error map',
+                        'name': 'Velo/PCNErrorMon/hperBeetleBitMap_{0}_0',
+                        'sensor_dependent': True,
+                        'axis_titles': ['PCN bit', 'Correct value for PCN bit']
+                        }
+                    ]
                 }
             ]
         }
