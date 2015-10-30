@@ -261,43 +261,55 @@ class Bu2hhhBuilder(LineBuilder) :
                                            algos      = self.algosKKK,
                                            FILTER = filter,
                                            RelatedInfoTools = [
-                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-                                            'RecursionLevel' : 1,
-                                            'Locations' : {
-                                                   self.selKKK : 'ConeIso05B', 
-                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["ConeIso05K1", "ConeIso05K2", "ConeIso05K3"],
-                                               }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-                                            'RecursionLevel' : 1,
-                                            'Locations' : {
-                                                   self.selKKK : 'ConeIso10B', 
-                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["ConeIso10K1", "ConeIso10K2", "ConeIso10K3"],
-                                               }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-                                            'RecursionLevel' : 1,
-                                            'Locations' : {
-                                                   self.selKKK : 'ConeIso15B', 
-                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["ConeIso15K1", "ConeIso15K2", "ConeIso15K3"],
-                                               }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
-                                            'RecursionLevel' : 1,
-                                            'Locations' : {
-                                                   self.selKKK : 'NConeIso05B', 
-                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["NConeIso05K1", "NConeIso05K2", "NConeIso05K3"],
-                                               }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
-                                            'RecursionLevel' : 1,
-                                            'Locations' : {
-                                                   self.selKKK : 'NConeIso10B', 
-                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["NConeIso10K1", "NConeIso10K2", "NConeIso10K3"],
-                                               }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
-                                            'RecursionLevel' : 1,
-                                            'Locations' : {
-                                                   self.selKKK : 'NConeIso15B', 
-                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["NConeIso15K1", "NConeIso15K2", "NConeIso15K3"],
-                                               }                                                                           },
-                                     ],
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPASYM', 'CONEPTASYM'],
+                                              'Location'  : 'ConeIso05B',
+                                             "DaughterLocations" : {
+                                                 "[B+ -> ^K+ K+ K-]CC" : "ConeIso05K1",
+                                                 "[B+ -> K+ ^K+ K-]CC" : "ConeIso05K2",
+                                                 "[B+ -> K+ K+ ^K-]CC" : "ConeIso05K3",
+                                             }
+},
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPASYM', 'CONEPTASYM'],
+                                              'Location'  : 'ConeIso10B',
+                                             "DaughterLocations" : {
+                                                 "[B+ -> ^K+ K+ K-]CC" : "ConeIso10K1",
+                                                 "[B+ -> K+ ^K+ K-]CC" : "ConeIso10K2",
+                                                 "[B+ -> K+ K+ ^K-]CC" : "ConeIso10K3",
+                                             }
+},
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPASYM', 'CONEPTASYM'],
+                                              'Location'  : 'ConeIso15B',
+                                             "DaughterLocations" : {
+                                                 "[B+ -> ^K+ K+ K-]CC" : "ConeIso15K1",
+                                                 "[B+ -> K+ ^K+ K-]CC" : "ConeIso15K2",
+                                                 "[B+ -> K+ K+ ^K-]CC" : "ConeIso15K3",
+                                             }
+},
+                                           { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
+                                              'Location'  : 'NConeIso05B',
+                                             "DaughterLocations" : {
+                                                 "[B+ -> ^K+ K+ K-]CC" : "NConeIso05K1",
+                                                 "[B+ -> K+ ^K+ K-]CC" : "NConeIso05K2",
+                                                 "[B+ -> K+ K+ ^K-]CC" : "NConeIso05K3",
+                                             }
+                                           },
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
+                                              'Location'  : 'NConeIso10B',
+                                             "DaughterLocations" : {
+                                                 "[B+ -> ^K+ K+ K-]CC" : "NConeIso10K1",
+                                                 "[B+ -> K+ ^K+ K-]CC" : "NConeIso10K2",
+                                                 "[B+ -> K+ K+ ^K-]CC" : "NConeIso10K3",
+                                             }
+                                           },
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
+                                              'Location'  : 'NConeIso15B',
+                                             "DaughterLocations" : {
+                                                 "[B+ -> ^K+ K+ K-]CC" : "NConeIso15K1",
+                                                 "[B+ -> K+ ^K+ K-]CC" : "NConeIso15K2",
+                                                 "[B+ -> K+ K+ ^K-]CC" : "NConeIso15K3",
+                                             }
+                                           }
+                                     ]
 )
         
         self.lineKpKpKp_incl = StrippingLine( _KpKpKp_inclName + 'Line',
@@ -306,43 +318,55 @@ class Bu2hhhBuilder(LineBuilder) :
                                               algos      = self.algosKpKpKp,
                                               FILTER = filter,
                                               RelatedInfoTools = [
-                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-                                            'RecursionLevel' : 1,
-                                            'Locations' : {
-                                                   self.selKKK : 'ConeIso05B', 
-                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["ConeIso05K1", "ConeIso05K2", "ConeIso05K3"],
-                                               }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-                                            'RecursionLevel' : 1,
-                                            'Locations' : {
-                                                   self.selKKK : 'ConeIso10B', 
-                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["ConeIso10K1", "ConeIso10K2", "ConeIso10K3"],
-                                               }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-                                            'RecursionLevel' : 1,
-                                            'Locations' : {
-                                                   self.selKKK : 'ConeIso15B', 
-                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["ConeIso15K1", "ConeIso15K2", "ConeIso15K3"],
-                                               }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
-                                            'RecursionLevel' : 1,
-                                            'Locations' : {
-                                                   self.selKKK : 'NConeIso05B', 
-                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["NConeIso05K1", "NConeIso05K2", "NConeIso05K3"],
-                                               }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
-                                            'RecursionLevel' : 1,
-                                            'Locations' : {
-                                                   self.selKKK : 'NConeIso10B', 
-                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["NConeIso10K1", "NConeIso10K2", "NConeIso10K3"],
-                                               }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
-                                            'RecursionLevel' : 1,
-                                            'Locations' : {
-                                                   self.selKKK : 'NConeIso15B', 
-                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["NConeIso15K1", "NConeIso15K2", "NConeIso15K3"],
-                                               }                                                                           },
-                                     ],
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPASYM', 'CONEPTASYM'],
+                                              'Location'  : 'ConeIso05B',
+                                             "DaughterLocations" : {
+                                                 "[B+ -> ^K+ K+ K+]CC" : "ConeIso05K1",
+                                                 "[B+ -> K+ ^K+ K+]CC" : "ConeIso05K2",
+                                                 "[B+ -> K+ K+ ^K+]CC" : "ConeIso05K3",
+                                             }
+},
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPASYM', 'CONEPTASYM'],
+                                              'Location'  : 'ConeIso10B',
+                                             "DaughterLocations" : {
+                                                 "[B+ -> ^K+ K+ K+]CC" : "ConeIso10K1",
+                                                 "[B+ -> K+ ^K+ K+]CC" : "ConeIso10K2",
+                                                 "[B+ -> K+ K+ ^K+]CC" : "ConeIso10K3",
+                                             }
+},
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPASYM', 'CONEPTASYM'],
+                                              'Location'  : 'ConeIso15B',
+                                             "DaughterLocations" : {
+                                                 "[B+ -> ^K+ K+ K+]CC" : "ConeIso15K1",
+                                                 "[B+ -> K+ ^K+ K+]CC" : "ConeIso15K2",
+                                                 "[B+ -> K+ K+ ^K+]CC" : "ConeIso15K3",
+                                             }
+},
+                                           { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
+                                              'Location'  : 'NConeIso05B',
+                                             "DaughterLocations" : {
+                                                 "[B+ -> ^K+ K+ K+]CC" : "NConeIso05K1",
+                                                 "[B+ -> K+ ^K+ K+]CC" : "NConeIso05K2",
+                                                 "[B+ -> K+ K+ ^K+]CC" : "NConeIso05K3",
+                                             }
+                                           },
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
+                                              'Location'  : 'NConeIso10B',
+                                             "DaughterLocations" : {
+                                                 "[B+ -> ^K+ K+ K+]CC" : "NConeIso10K1",
+                                                 "[B+ -> K+ ^K+ K+]CC" : "NConeIso10K2",
+                                                 "[B+ -> K+ K+ ^K+]CC" : "NConeIso10K3",
+                                             }
+                                           },
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
+                                              'Location'  : 'NConeIso15B',
+                                             "DaughterLocations" : {
+                                                 "[B+ -> ^K+ K+ K+]CC" : "NConeIso15K1",
+                                                 "[B+ -> K+ ^K+ K+]CC" : "NConeIso15K2",
+                                                 "[B+ -> K+ K+ ^K+]CC" : "NConeIso15K3",
+                                             }
+                                           }
+                                     ]
 )
         
         self.linepph_incl = StrippingLine( _pph_inclName + 'Line',
@@ -351,49 +375,55 @@ class Bu2hhhBuilder(LineBuilder) :
                                            algos      = self.algospph,
                                            FILTER = filter,
                                            RelatedInfoTools = [
-                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-                                            'RecursionLevel' : 1,
-                                            'Locations' : {
-                                                   self.selpph : 'ConeIso05B', 
-                                                   'Phys/StdAllLooseProtons'   :                                                     ["ConeIso05p1", "ConeIso05p2"],
-                                                   'Phys/StdAllNoPIDsKaons'   : 'ConeIso05K'
-                                               }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-                                            'RecursionLevel' : 1,
-                                            'Locations' : {
-                                                   self.selpph : 'ConeIso10B', 
-                                                   'Phys/StdAllLooseProtons'   :                                                     ["ConeIso10p1", "ConeIso10p2"],
-                                                   'Phys/StdAllNoPIDsKaons'   : 'ConeIso10K'
-                                               }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-                                            'RecursionLevel' : 1,
-                                            'Locations' : {
-                                                   self.selpph : 'ConeIso15B', 
-                                                   'Phys/StdAllLooseProtons'   :                                                     ["ConeIso15p1", "ConeIso15p2"],
-                                                   'Phys/StdAllNoPIDsKaons'   : 'ConeIso15K'
-                                               }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
-                                            'RecursionLevel' : 1,
-                                            'Locations' : {
-                                                   self.selpph : 'NConeIso05B', 
-                                                   'Phys/StdAllLooseProtons'   :                                                     ["NConeIso05p1", "NConeIso05p2"],
-                                                   'Phys/StdAllNoPIDsKaons'   : 'NConeIso05K'
-                                               }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
-                                            'RecursionLevel' : 1,
-                                            'Locations' : {
-                                                   self.selpph : 'NConeIso10B', 
-                                                   'Phys/StdAllLooseProtons'   :                                                     ["NConeIso10p1", "NConeIso10p2"],
-                                                   'Phys/StdAllNoPIDsKaons'   : 'NConeIso10K'
-                                               }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
-                                            'RecursionLevel' : 1,
-                                            'Locations' : {
-                                                   self.selpph : 'NConeIso15B', 
-                                                   'Phys/StdAllLooseProtons'   :                                                     ["NConeIso15p1", "NConeIso15p2"],
-                                                   'Phys/StdAllNoPIDsKaons'   : 'NConeIso15K'
-                                               }                                                                           },
-                                     ],
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPASYM', 'CONEPTASYM'],
+                                              'Location'  : 'ConeIso05B',
+                                             "DaughterLocations" : {
+                                                 "[B+ -> ^p+ p~- K+]CC" : "ConeIso05p1",
+                                                 "[B+ -> p+ ^p~- K+]CC" : "ConeIso05p2",
+                                                 "[B+ -> p+ p~- ^K+]CC" : "ConeIso05h",
+                                             }
+},
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPASYM', 'CONEPTASYM'],
+                                              'Location'  : 'ConeIso10B',
+                                             "DaughterLocations" : {
+                                                 "[B+ -> ^p+ p~- K+]CC" : "ConeIso10p1",
+                                                 "[B+ -> p+ ^p~- K+]CC" : "ConeIso10p2",
+                                                 "[B+ -> p+ p~- ^K+]CC" : "ConeIso10h",
+                                             }
+},
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPASYM', 'CONEPTASYM'],
+                                              'Location'  : 'ConeIso15B',
+                                             "DaughterLocations" : {
+                                                 "[B+ -> ^p+ p~- K+]CC" : "ConeIso15p1",
+                                                 "[B+ -> p+ ^p~- K+]CC" : "ConeIso15p2",
+                                                 "[B+ -> p+ p~- ^K+]CC" : "ConeIso15h",
+                                             }
+},
+                                           { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
+                                              'Location'  : 'NConeIso05B',
+                                             "DaughterLocations" : {
+                                                 "[B+ -> ^p+ p~- K+]CC" : "NConeIso05p1",
+                                                 "[B+ -> p+ ^p~- K+]CC" : "NConeIso05p2",
+                                                 "[B+ -> p+ p~- ^K+]CC" : "NConeIso05h",
+                                             }
+                                           },
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
+                                              'Location'  : 'NConeIso10B',
+                                             "DaughterLocations" : {
+                                                 "[B+ -> ^p+ p~- K+]CC" : "NConeIso10p1",
+                                                 "[B+ -> p+ ^p~- K+]CC" : "NConeIso10p2",
+                                                 "[B+ -> p+ p~- ^K+]CC" : "NConeIso10h",
+                                             }
+                                           },
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
+                                              'Location'  : 'NConeIso15B',
+                                             "DaughterLocations" : {
+                                                 "[B+ -> ^p+ p~- K+]CC" : "NConeIso15p1",
+                                                 "[B+ -> p+ ^p~- K+]CC" : "NConeIso15p2",
+                                                 "[B+ -> p+ p~- ^K+]CC" : "NConeIso15h",
+                                             }
+                                           }
+                                     ]
 )
         
         self.registerLine(self.lineKKK_incl)

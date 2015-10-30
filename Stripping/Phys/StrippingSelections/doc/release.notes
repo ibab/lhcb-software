@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-10-30 - Adlene Hicheur
+ - Fixed new cone variables format for StrippingBnoC/StrippingBu2hhh.py
+
+! 2015-10-30 - Adlene Hicheur
  - Fixed new cone variables format for StrippingBnoC/StrippingBc2hhh_BnoC.py
  - Added few more cone variables by the same occasion
 
