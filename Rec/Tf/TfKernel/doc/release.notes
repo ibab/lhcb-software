@@ -4,6 +4,9 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2015-10-30 - Michel De Cian
+ - Revert idea of yesterday: Split between hits in regions and sorted hits in layers. This should ensure full compatibility with all access methods.
+
 ! 2015-10-29 - Michel De Cian
  - Make sorting in layers more failsafe by issuing a warning if hits are accessed per region, but sorting is per layer
 

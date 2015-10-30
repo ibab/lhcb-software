@@ -67,7 +67,6 @@ namespace Tf
    *  Tf::TTStationHitManager::HitRange range = hitMan->hits(sta,lay,reg);
    *  @endcode
    *
-   *  Note: Hits are frequently sorted in layers (and not in regions). This will result in wrong results getting the hits afterwards per region.
    *
    *  In addition, it is possible to perform a custom selection of hits based on
    *  a user defined selection object :-
@@ -181,8 +180,6 @@ namespace Tf
                           const TTRegionID region ) const
     {
       if (!allHitsPrepared(sta,lay,region)) prepareHits(sta,lay,region);
-      if ( allHitsSortedLayers(sta,lay) ) Warning("Hits are sorted in layers. Getting them per region will give wrong results!", 
-                                                  StatusCode::SUCCESS, 10);
       return m_hits.range( sta,lay, region );
     }
 
@@ -245,6 +242,25 @@ namespace Tf
                        range.end() );
     }
 
+
+     /** Load the sorted hits for a given station and layer of interest
+     *
+     *  @param[in] sta    Station ID
+     *  @param[in] lay    Station layer ID
+     *
+     *  @return Range object for the hits in the selected region of interest
+     */
+    template < typename SORTER >
+    inline HitRange sortedLayerHits( const TTStationID sta,
+                                     const TTLayerID lay ) const
+    {
+      if (!allHitsPrepared(sta,lay)) prepareHits(sta,lay);
+      if (!allHitsSortedLayers(sta,lay)) sortHitsLayers<SORTER>(sta,lay);
+      return m_sortedLayerHits.range( sta,lay );
+    }
+
+
+
     /** Retrieve the STRegion for a certain TT region ID. The region
      *   knows its 'size' and gives access to its hits.
      *
@@ -283,13 +299,12 @@ namespace Tf
      *  @param[in] lay    Station layer ID
      */
     template < typename SORTER >
-    void sortHitsLayers(const TTStationID sta, const TTLayerID lay);
+    void sortHitsLayers(const TTStationID sta, const TTLayerID lay) const;
     
-    /// Sort the this in all layers and stations
+    /// Sort the this in all layers and stations (per layer)
     template < typename SORTER >
-    void sortHitsLayers();
+    void sortHitsLayers() const;
     
-
     /// max number of regions
     inline TTStationID maxStations() const { return TTStationID(Tf::RegionID::TTIndex::kNStations); }
 
@@ -422,7 +437,8 @@ namespace Tf
     /// The underlying TT hit creator
     ToolHandle<Tf::ITTHitCreator> m_tthitcreator ;
 
-    mutable Hits m_hits;
+    mutable Hits m_hits; ///< Hits, split in regions
+    mutable Hits m_sortedLayerHits; ///< hits, sorted and split in layers only
 
     // Flags to indicate which hits are ready
     mutable IndexedBitArray< Tf::RegionID::TTIndex::kNStations, 
@@ -477,6 +493,11 @@ namespace Tf
     HitRange rng = m_hits.range();
     std::for_each( rng.begin(), rng.end(), std::default_delete<Hit>() ) ; 
     m_hits.clear();
+    
+    rng = m_sortedLayerHits.range();
+    std::for_each( rng.begin(), rng.end(), std::default_delete<Hit>() ) ; 
+    m_sortedLayerHits.clear();
+    
     m_hits_ready.clear();
     m_hits_sorted_layers.fill(false);
   }
@@ -525,6 +546,7 @@ namespace Tf
       auto b =  boost::make_transform_iterator(std::begin(tthits), std::cref(fun));
       auto e =  boost::make_transform_iterator(std::end(tthits), std::cref(fun));
       m_hits.insert( sta,lay,region, b, e);
+      m_sortedLayerHits.insert( sta,lay,region, b, e);
       setAllHitsPrepared(sta,lay,region);
     }
   }
@@ -555,6 +577,7 @@ namespace Tf
           auto b =  boost::make_transform_iterator(std::begin(tthits), std::cref(fun));
           auto e =  boost::make_transform_iterator(std::end(tthits), std::cref(fun));
           m_hits.insert( sta, lay, reg, b, e);
+          m_sortedLayerHits.insert( sta,lay,region, b, e);
           this->setAllHitsPrepared(sta,lay,reg,true);
         }
       }// layer
@@ -565,7 +588,7 @@ namespace Tf
   // sort hits in all layers and stations
   template < class Hit       >
   template < typename SORTER >
-  void TTStationHitManager<Hit>::sortHitsLayers(){
+  void TTStationHitManager<Hit>::sortHitsLayers() const{
     if( this->allHitsSortedLayers() ) return;
     for (TTStationID sta=0; sta<maxStations(); ++sta ) {
       for (TTLayerID lay=0; lay<maxLayers(); ++lay ) {
@@ -578,10 +601,10 @@ namespace Tf
   template <class Hit>
   template < typename SORTER >
   void TTStationHitManager<Hit>::sortHitsLayers( const TTStationID sta,
-                                                 const TTLayerID lay)
+                                                 const TTLayerID lay) const
   {
     if (this->allHitsSortedLayers(sta,lay)) return;
-    std::pair<typename Hits::iterator,typename Hits::iterator>  rng = m_hits.range_(sta,lay);
+    std::pair<typename Hits::iterator,typename Hits::iterator>  rng = m_sortedLayerHits.range_(sta,lay);
     std::sort ( rng.first, rng.second, SORTER() );
     this->setAllHitsSortedLayers(sta,lay);
   }
