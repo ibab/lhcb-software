@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-10-30 - Adlene Hicheur
+ - Fixed new cone variables format for StrippingBnoC/StrippingBc2hhh_BnoC.py
+ - Added few more cone variables by the same occasion
+
 ! 2015-10-28 - Maurizio Martinelli
  - Fixed NBody-import issue for DstarD2HHHH, DstarD2KSHHPi0, DstarD2XGamma,
      D2HHHKs, D2HHHPi0

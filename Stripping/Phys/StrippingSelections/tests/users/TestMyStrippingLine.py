@@ -21,7 +21,7 @@ from Configurables import DecodeRawEvent
 DecodeRawEvent().setProp("OverrideInputs",4.2)
 
 # Specify the name of your configuration
-confname='Bs2MuMuLines' #FOR USERS
+confname='Bc2hhh' #FOR USERS
 
 # NOTE: this will work only if you inserted correctly the 
 # default_config dictionary in the code where your LineBuilder 
@@ -137,7 +137,7 @@ ac = AlgorithmCorrelationsAlg(Algorithms = list(set(sc.selections())))
 #Configure DaVinci
 
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
-DaVinci().EvtMax = -1
+DaVinci().EvtMax = 10000
 DaVinci().PrintFreq = 2000
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
