@@ -50,7 +50,7 @@ MonitoringPage::MonitoringPage(const char* atitle,
 void MonitoringPage::setTitle(char* hname, char* htitle){
   if( std::find(m_h.begin(),m_h.end(),hname)==m_h.end() ) std::cout << hname << " doesn't exist!" << std::endl;
   m_titles[std::string(hname)] = htitle;
-  std::cout << hname << " " << htitle << std::endl;
+  //std::cout << hname << " new title: " << htitle << std::endl;
 }
 
 void MonitoringPage::setVLine(char* hname, std::vector<double> vlines){
@@ -123,12 +123,12 @@ void MonitoringPage::draw(const std::vector<TString>& filenames, TCanvas* canvas
     ret.second.erase(std::remove(ret.second.begin(), ret.second.end(), nullptr), ret.second.end());
     if (ret.second.empty()) continue;
 
-    double minY = std::numeric_limits<double>::max();    
+    double minY = std::numeric_limits<double>::max();
     double maxY = -std::numeric_limits<double>::max();
     for (auto h: ret.second) {
         minY = std::min(minY, hh.min1D(*h)), maxY = std::max(maxY, hh.max1D(*h));
     }
-    
+
     if (0. == minY * maxY) {
         if (0. > minY) {
             minY *= 1.1;
@@ -149,6 +149,16 @@ void MonitoringPage::draw(const std::vector<TString>& filenames, TCanvas* canvas
     }
     int iPaveStat = 0;
     for (auto h: ret.second){
+			auto itt = m_titles.find(std::string(h->GetName()));
+			if( m_titles.end()!=itt ){
+				//std::cout<< "Set title " << itt->second << " for " << h->GetName() << std::endl;
+				h->SetTitle(itt->second.c_str());
+			}
+			// change X or Y ranges
+      auto itxr = m_xranges.find(std::string(h->GetName()));
+      if( m_xranges.end()!=itxr ){
+				h->GetXaxis()->SetRangeUser(itxr->second.first, itxr->second.second);
+    	}
       auto ityr = m_yranges.find(std::string(h->GetName()));
       if( m_yranges.end()!=ityr ){
         if( ityr->second.first<hh.min1D(*h)) h->SetMinimum(ityr->second.first);
@@ -158,7 +168,7 @@ void MonitoringPage::draw(const std::vector<TString>& filenames, TCanvas* canvas
       if( m_vlines.end() != it){
         std::vector<double> xvals = it->second;
         for( auto xval:xvals)
-          drawTLine(xval, minY, xval, maxY, kBlack, 3); 
+          drawTLine(xval, minY, xval, maxY, kBlack, 3);
       }//draw vlines
       auto it2 = m_hlines.find(std::string(h->GetName()));
       if( m_hlines.end() != it2){
@@ -166,17 +176,17 @@ void MonitoringPage::draw(const std::vector<TString>& filenames, TCanvas* canvas
         double maxX = h->GetXaxis()->GetXmax();
         std::vector<double> yvals = it2->second;
         for( auto yval:yvals)
-          drawTLine(minX, yval, maxX, yval, kBlack, 3); 
+          drawTLine(minX, yval, maxX, yval, kBlack, 3);
       }//draw hlines
       auto itref = m_reflines.find(std::string(h->GetName()));
       if( m_reflines.end() != itref){
         if( itref->second.first.compare("H")==0 ){
-          double minX = h->GetXaxis()->GetXmin();
-          double maxX = h->GetXaxis()->GetXmax();
-          drawTLine(minX, itref->second.second, maxX, itref->second.second, kGreen, 5); 
+					double minX = ( m_xranges.end()!=itxr ) ? itxr->second.first  : h->GetXaxis()->GetXmin() ;
+					double maxX = ( m_xranges.end()!=itxr ) ? itxr->second.second : h->GetXaxis()->GetXmax() ;
+          drawTLine(minX, itref->second.second, maxX, itref->second.second, kGreen+3, 5);
         }
         if( itref->second.first.compare("V")==0 ){
-          drawTLine(itref->second.second, minY, itref->second.second, maxY, kGreen, 5); 
+          drawTLine(itref->second.second, minY, itref->second.second, maxY, kGreen+3, 5);
         }
       }//draw referenceline
       auto it3 = m_mlines.find(std::string(h->GetName()));
@@ -187,10 +197,19 @@ void MonitoringPage::draw(const std::vector<TString>& filenames, TCanvas* canvas
         }
         if( it3->second.compare("Y")==0 ){
           double tot = 0;
-          for(int bin = 1; bin<h->GetNbinsX()+1; bin++) if(h->GetBinContent(bin)) tot+=1;
+          for(int bin = 1; bin<h->GetNbinsX()+1; bin++) {
+						if(m_xranges.end()==itxr) {
+							if(h->GetBinContent(bin)) tot+=1;
+						} else {
+							if(	(h->GetBinLowEdge(bin)+h->GetBinWidth(bin))>itxr->second.first &&
+									h->GetBinLowEdge(bin)<itxr->second.second &&
+									h->GetBinContent(bin)) tot+=1;
+						}
+					}
           double yval = h->Integral()/tot;
-          double minX = h->GetXaxis()->GetXmin();
-          double maxX = h->GetXaxis()->GetXmax();
+          double minX = ( m_xranges.end()==itxr ) ? h->GetXaxis()->GetXmin() : itxr->second.first;
+          double maxX = ( m_xranges.end()==itxr ) ? h->GetXaxis()->GetXmax() : itxr->second.second;
+					//std::cout << minX << " " << yval << " " << maxX << " " <<yval << std::endl;
           drawTLine(minX,yval,maxX,yval,h->GetLineColor(),h->GetLineStyle());
         }
       }//draw lines for mean
@@ -209,16 +228,16 @@ void MonitoringPage::draw(const std::vector<TString>& filenames, TCanvas* canvas
         TPaveStats *st = (TPaveStats*) h->FindObject("stats");
         if(st) {
           st->SetTextColor(h->GetLineColor());
-          st->SetX1NDC(0.15);
+          st->SetX1NDC(0.1);
           st->SetX2NDC(0.35);
-          st->SetY1NDC(0.35+iPaveStat*0.1);
-          st->SetY2NDC(0.45+iPaveStat*0.1);
+          st->SetY1NDC(0.7+iPaveStat*0.1);
+          st->SetY2NDC(0.8+iPaveStat*0.1);
           iPaveStat += 1;
         }
       }
 
     }
-    
+
   }
   return;
 }

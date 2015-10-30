@@ -3,6 +3,9 @@
 ! package manager: Maurizio Martinelli
 !------------------------------------------------------------------------------
 
+! 2015-10-30 - Maurizio Martinelli
+ - Added a few modifications to MonitoringPage for producing the DM monitoring plots
+
 ! 2015-10-30 - Zhirui Xu
   - shift the channel number by +1 in NameITSector and NameTTSector
 
@@ -14,10 +17,10 @@
 
 ! 2015-10-27 - Zhirui Xu
   - add folder python/AlignmentMonitoring with utils
-  - add script scripts/moniPlots_Tracker.py 
+  - add script scripts/moniPlots_Tracker.py
 
 ! 2015-10-27 - Zhirui Xu
-  - Modifications on classes MonitoringApplication, MonitoringPage and HistHelper to make plots for the online automatic tracker alignment monitoring 
+  - Modifications on classes MonitoringApplication, MonitoringPage and HistHelper to make plots for the online automatic tracker alignment monitoring
 
 ! 2015-10-27 - Giulio Dujany
  - Minor aestetic changes Velo monitoring plots
@@ -29,7 +32,7 @@
  - Added the missing scripts
 
 ! 2015-10-25
- - Added functions for residual monitoring for IT/TT sectors: 
+ - Added functions for residual monitoring for IT/TT sectors:
    - CheckTTSectorResiduals() shows mean and sigma for TT sectors
    - CheckITSectorResiduals() shows mean and sigma for IT sectors
 
@@ -48,7 +51,7 @@
   - Various bugs fixed:
    - When parse files with references do not assume presence of tabs but be happy also with spaces
    - When parsing the xml files parse correctly also the velo halves that have info of resolver position
- 
+
 ! 2015-10-08 - Giulio Dujany
  - Fixing bugs to make script monitoring VELO to run automatically
 
@@ -56,7 +59,7 @@
  - Adding script to monitor VELO online alignment
 
 ! 2015-10-02 - Maurizio Martinelli
- - Added a few modifications to AlignmentMonitoring  
+ - Added a few modifications to AlignmentMonitoring
 
 ! 2015-09-08 - Maurizio Martinelli
  - Modified IT boxes Tz thresholds
@@ -87,7 +90,7 @@
  - added CompareWithRun function and modified the output format in src/CompareConstants.cpp
  - updated src/AlignmentMonitoring.cpp
  - modified examples/RunMonitoring.py and examples/CompareConstants.py
- - updated files/GausFitReferences.txt  
+ - updated files/GausFitReferences.txt
 
 ! 2015-08-12 - Maurizio Martinelli
  - removed unnecessary compilation requirements

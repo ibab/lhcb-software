@@ -43,11 +43,11 @@ namespace Alignment
       void setXRange(char* hname, double xmin, double xhigh);
       void setYRange(char* hname, double ymin, double yhigh);
       void setLines(char* hname, std::vector<TLine*> lines);
-      
+
     private:
       TString m_title ;
       std::vector<TString> m_h ;
-      std::map<std::string, char*> m_titles;
+      std::map<std::string, std::string> m_titles;
       std::map<std::string, std::vector<double> > m_vlines;
       std::map<std::string, std::vector<double> > m_hlines;
       std::map<std::string, std::pair<std::string,double> > m_reflines;
@@ -55,8 +55,8 @@ namespace Alignment
       std::map<std::string, std::pair<double,double> > m_xranges;
       std::map<std::string, std::pair<double,double> > m_yranges;
       std::map<std::string, std::vector<TLine*> > m_lines;
-      
+
     };
-  } // AlignmentMonitoring 
+  } // AlignmentMonitoring
 } // Alignment
 #endif
