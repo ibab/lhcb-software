@@ -612,8 +612,8 @@ void PatLongLivedTracking::getPreSelection( PatDownTrack& track ) {
   for(int iStation = 0; iStation < 2; ++iStation){
     for(int iLayer = 0; iLayer < 2; ++iLayer){
   
-      Tf::TTStationHitManager<PatTTHit>::HitRange range =  m_ttHitManager->hits(iStation,iLayer);
-
+      Tf::TTStationHitManager<PatTTHit>::HitRange range =  m_ttHitManager->sortedLayerHits<Tf::increasingByXAtYEq0<PatTTHit>>(iStation,iLayer);
+      
       if( range.empty() ) continue;
       
       const double zLayer   = range.front()->z();
@@ -1389,6 +1389,5 @@ double PatLongLivedTracking::evaluateFisher( const LHCb::Track* track ){
 void PatLongLivedTracking::initEvent () {
  
   m_ttHitManager->prepareHits();
-  m_ttHitManager->sortHitsLayers<Tf::increasingByXAtYEq0<PatTTHit>>();
   
 }

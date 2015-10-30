@@ -236,7 +236,7 @@ void PatAddTTCoord::selectHits(const LHCb::State& state, const double p){
   for(int iStation = 0; iStation < 2; ++iStation){
     for(int iLayer = 0; iLayer < 2; ++iLayer){
   
-      Tf::TTStationHitManager<PatTTHit>::HitRange range =  m_ttHitManager->hits(iStation,iLayer);
+      Tf::TTStationHitManager<PatTTHit>::HitRange range =  m_ttHitManager->sortedLayerHits<Tf::increasingByXAtYEq0<PatTTHit>>(iStation,iLayer);
       
       const double zLayer = range.front()->z();
       const double yPredLay = stateY + ( zLayer -stateZ ) * stateTy;
@@ -471,8 +471,7 @@ void PatAddTTCoord::handle ( const Incident& incident ) {
 void PatAddTTCoord::initEvent () {
  
   m_ttHitManager->prepareHits();
-  m_ttHitManager->sortHitsLayers<Tf::increasingByXAtYEq0<PatTTHit>>();
-
+  
   // -- This does not change between events
   m_bendProtoParam = m_ttParam * -1 * m_magFieldSvc->signedRelativeCurrent() ;
   
