@@ -42,7 +42,7 @@ constexpr struct to_json_t {
 
     template <typename K, typename V> std::string operator()(const std::pair<K,V>& p) const ;
     template <typename V> std::string operator()(const std::map<std::string,V>& m) const ;
-} to_json;
+} to_json {};
 
 std::string to_json_t::operator()(const std::string& s) const {
     // TODO: replace with C++14 std::quoted

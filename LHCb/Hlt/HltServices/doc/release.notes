@@ -4,6 +4,9 @@
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
 
+! 2015-10-30 - Gerhard Raven
+ - fix clang compilation error
+
 ! 2015-10-12 - Sean Benson
  - New dictionary for related info.
 
