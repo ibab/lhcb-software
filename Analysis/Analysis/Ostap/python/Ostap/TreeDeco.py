@@ -47,7 +47,7 @@ _large = 2**64
 #  @see Analysis::Formula
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2013-05-06
-def _iter_cuts_ ( self , cuts , first = 0 , last = _large , progress = False ) :
+def _iter_cuts_ ( self , cuts , first = 0 , last = _large , progress = True ) :
     """
     Iterator over ``good events'' in TTree/TChain:
     
@@ -62,14 +62,13 @@ def _iter_cuts_ ( self , cuts , first = 0 , last = _large , progress = False ) :
     if last < first : return
         
     pit = cpp.Analysis.PyIterator ( self , cuts , first , last )
-    if  not pit.ok() :
-        raise TypeError ( "Invalid Formula: %s" % cuts )
+    if not pit.ok() : raise TypeError ( "Invalid Formula: %s" % cuts )
     #
     from Ostap.progress_bar import ProgressBar 
     with ProgressBar ( min_value = first        ,
-                       max_value = last  - 1    ,
+                       max_value = last         ,
                        silent    = not progress ) as bar :
-        bar.update_amount( first )
+        
         step = 13.0 * max ( bar.width , 101 ) / ( last - first ) 
         
         _t = pit.tree()
@@ -77,14 +76,14 @@ def _iter_cuts_ ( self , cuts , first = 0 , last = _large , progress = False ) :
         while _t :
 
             yield _t
-            _t      = pit.next()         ## advance to next extry  
+            _t      = pit.next()             ## advance to the next entry  
 
             if progress : 
-                current = pit.current() - 1  ## get current entry 
+                current = pit.current() - 1  ## get the current entry index 
                 if not _t                          \
                        or  _t != _o                \
-                       or current - first   < 100  \
-                       or last    - current < 100  \
+                       or current - first   < 120  \
+                       or last    - current < 120  \
                        or 0 == current % 100000    \
                        or 0 == int ( step * ( current - first ) ) % 5  :
                     
@@ -92,6 +91,8 @@ def _iter_cuts_ ( self , cuts , first = 0 , last = _large , progress = False ) :
                     bar.update_amount( current )
                     _o = _t
                     
+        if progress : bar.update_amount( last ) 
+        
     del pit
 
 ROOT.TTree .withCuts  = _iter_cuts_ 

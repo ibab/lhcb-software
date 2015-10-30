@@ -218,8 +218,9 @@ class ProgressBar(object):
     ...       <do something here>
     """
     def __init__(self, min_value = 0, max_value = 100, width=110 ,**kwargs):
-        self.char = kwargs.get ( 'char' , '#'     )
-        self.mode = kwargs.get ( 'mode' , 'fixed' ) # fixed or dynamic
+
+        self.char = kwargs.get ( 'char' , '#'       ) ##
+        self.mode = kwargs.get ( 'mode' , 'fixed'   ) ## fixed or dynamic
         if not self.mode in ['fixed', 'dynamic']:
             self.mode = 'fixed'
             
@@ -231,7 +232,7 @@ class ProgressBar(object):
         ncols         = columns ()  - 7
         self.width    = min ( ncols , width ) if ncols > 0 else width
         
-        self.prefix   = kwargs.get('description','')
+        self.prefix   = kwargs.get('description','' )  ## description
         self.width    = self.width - len(self.prefix)
         
         self.amount   = 0    
@@ -239,10 +240,11 @@ class ProgressBar(object):
         self._hashes  = -1 
         self._percent = -1 
 
-        self.silent = kwargs.get( 'silent' , False ) 
-
-        self.update_amount(0) 
-                
+        self.silent   = kwargs.get( 'silent' , False ) 
+        
+        self.update_amount( self.min )
+        self.build_bar ()
+        
     def increment_amount(self, add_amount = 1):
         return self.update_amount ( self.amount + add_amount )
 
@@ -294,17 +296,17 @@ class ProgressBar(object):
         return str(self.bar)
 
     def show ( self ) :
-        if self.prefix : sys.stdout.write( self.prefix ) 
-        sys.stdout.write( self.bar + '\r' ) 
-        sys.stdout.flush()
-        
-    def end  ( self  ) :
-        if not self.silent :
+        if not self.silent  : 
             if self.prefix : sys.stdout.write( self.prefix ) 
-            sys.stdout.write( self.bar + '\n' ) 
+            sys.stdout.write( self.bar + '\r' ) 
             sys.stdout.flush()
         
-    def __enter__ ( self      ) : return self
+    def end  ( self  ) : self.show() 
+        
+    def __enter__ ( self      ) :
+        self.show() 
+        return self
+    
     def __exit__  ( self , *_ ) :
         self.end()
         return False ##  allow propagation of exceptions 

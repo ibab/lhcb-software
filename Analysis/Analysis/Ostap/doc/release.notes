@@ -8,6 +8,9 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-10-30 - Vanya Belyaev
+ - improve a bit progress bar for TTree/TChain iterators with cuts 
+
 ! 2015-10-29 - Vanya Belyaev
  - improve tree/chain iterator with cuts 
 
