@@ -3,6 +3,9 @@
 ! package manager: Maurizio Martinelli
 !------------------------------------------------------------------------------
 
+! 2015-10-30 - Zhirui Xu
+  - shift the channel number by +1 in NameITSector and NameTTSector
+
 ! 2015-10-29 - Giulio Dujany
   - Omogenize Velo and Tracker monitoring scripts
 

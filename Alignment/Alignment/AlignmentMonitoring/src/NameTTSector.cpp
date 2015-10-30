@@ -332,6 +332,8 @@ void NameTTSector::ConvertName2Channel(){
   if (m_sector == "TTaXRegionASector5") m_channel =  54;
   if (m_sector == "TTaXRegionASector6") m_channel =  55;
   if (m_sector == "TTaXRegionASector9") m_channel =  58;
+
+  m_channel += 1;
 }
 
 

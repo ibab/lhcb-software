@@ -386,6 +386,7 @@ void NameITSector::ConvertName2Channel(){
   if (m_sector == "IT1TopX1Sector6") m_channel = 26;
   if (m_sector == "IT1TopX1Sector7") m_channel = 27;
 
+  m_channel += 1;
 }
 
 int NameITSector::GetUniqueSector(){
