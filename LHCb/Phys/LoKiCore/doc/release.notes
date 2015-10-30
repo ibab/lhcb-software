@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2015-10-30 - Gerhard Raven
+ - fix another clang error, avoid use of stringstream
+
 ! 2015-10-28 - Gerhard Raven
  - fix clang error
 

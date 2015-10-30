@@ -15,11 +15,9 @@ namespace LoKi
   {
     typedef T CutType;
     typedef ::Gaudi::PluginService::Factory<CutType*> Factory;
-    static constexpr std::string id(unsigned int hash) 
+    static std::string id(unsigned int hash)
     {
-      std::ostringstream s;
-      s << "loki_functor_" << hash;
-      return s.str();
+      return "loki_functor_" + std::to_string(hash);
     }
   };
   // ==========================================================================
