@@ -129,8 +129,19 @@ with timing('Remove SQL' ) : os.remove ( db_sql_name  )
 with timing('Remove ZIP' ) : os.remove ( db_zip_name  )
 with timing('Remove ROOT') : os.remove ( db_root_name )
 
+db_sql_tmp  = SQLiteShelve.tmpdb()
+db_zip_tmp  = ZipShelve   .tmpdb()
+db_root_tmp = RootShelve  .tmpdb()
 
+for d in ( db_sql_tmp  ,
+           db_zip_tmp  ,
+           db_root_tmp ) :
     
+    d['h1'] = h1
+    d['h2'] = h2
+    d.ls()
+    
+
 # =============================================================================
 # The END 
 # =============================================================================

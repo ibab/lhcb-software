@@ -54,7 +54,7 @@ m_gamma0.theta.setVal( 1 )
 
 dataset2 = m_gamma0.pdf.generate ( varset2 , events ) 
  
-
+models = [] 
 # =============================================================================
 logger.info('Test  Gamma-Distribution')
 # =============================================================================
@@ -72,6 +72,8 @@ else :
     print  "\tGamma:       k    = %s " % result( m_gamma.k.GetName()     )[0]
     print  "\tGamma:       theta= %s " % result( m_gamma.theta.GetName() )[0]   
 
+
+models.append ( m_gamma )
 
 # =============================================================================
 logger.info('Test  GenGamma-Distribution')
@@ -99,6 +101,8 @@ else :
     print  "\tGenGamma:    p    = %s " % result( m_gengamma.p.GetName()     )[0]
     print  "\tGenGamma:    low  = %s " % result( m_gengamma.low.GetName()   )[0]   
 
+models.append ( m_gengamma )
+
 # =============================================================================
 logger.info('Test  Amoroso-Distribution')
 # =============================================================================
@@ -122,6 +126,7 @@ else :
     print  "\tAmoroso:     beta = %s " % result( m_amoroso.beta .GetName()  )[0]   
     print  "\tAmoroso:     a    = %s " % result( m_amoroso.a    .GetName()  )[0]   
 
+models.append ( m_amoroso )
 
 # =============================================================================
 logger.info('Test  LogGamma-Distribution')
@@ -146,6 +151,7 @@ else :
     print  "\tLogGamma:    lam=   %s " % result( m_loggamma. lam    .GetName()  )[0]   
     print  "\tLogGamma:    alpha= %s " % result( m_loggamma. alpha  .GetName()  )[0]   
 
+models.append ( m_loggamma )
 
 # =============================================================================
 logger.info('Test  log(Gamma)-Distribution')
@@ -166,6 +172,7 @@ else :
     print  "\tLn(Gamma):   k=     %s " % result( m_lngamma. k     .GetName()  )[0]   
     print  "\tLn(Gamma):   theta= %s " % result( m_lngamma. theta .GetName()  )[0]   
 
+models.append ( m_lngamma )
 
 # =============================================================================
 logger.info('Test  log10(Gamma)-Distribution')
@@ -186,6 +193,7 @@ else :
     print  "\tLog10(Gamma):k=     %s " % result( m_log10gamma. k     .GetName()  )[0]   
     print  "\tLog10(Gamma):theta= %s " % result( m_log10gamma. theta .GetName()  )[0]   
 
+models.append ( m_log10gamma )
 
 # =============================================================================
 logger.info("Test  Landau-Distribution")
@@ -209,6 +217,7 @@ else :
     print  "\tLandau:      scale= %s " % result( m_landau. scale     .GetName()  )[0]   
     print  "\tLandau:      delta= %s " % result( m_landau. delta     .GetName()  )[0]   
 
+models.append ( m_landau )
 
 # =============================================================================
 logger.info("Test  Beta'-Distribution")
@@ -232,6 +241,7 @@ else :
     print  "\tBeta':       scale= %s " % result( m_betaprime. scale     .GetName()  )[0]   
     print  "\tBeta':       delta= %s " % result( m_betaprime. delta     .GetName()  )[0]   
 
+models.append ( m_betaprime )
 
 # =============================================================================
 logger.info("Test  Argus-Distribution")
@@ -255,6 +265,8 @@ else :
     print  "\tArgus:       high = %s " % result( m_argus . high      .GetName()  )[0]   
     print  "\tArgus:       low  = %s " % result( m_argus . low       .GetName()  )[0]   
 
+
+models.append ( m_argus )
 
 # =============================================================================
 logger.info("Test  Adjusted Argus-Distribution")
@@ -282,6 +294,7 @@ else :
     print  "\tArgusA:      low  = %s " % result( m_argusa . low       .GetName()  )[0]   
     ## print  "\tArgusA:      p0   = %s " % result( m_argusa . p0_value  .GetName()  )[0]   
 
+models.append ( m_argusa )
 
 # =============================================================================
 logger.info("Test  2-expo-distribution")
@@ -300,6 +313,7 @@ else :
     print  "\t2expo:       delta= %s " % result( m_2expo . delta     .GetName()  )[0]   
     print  "\t2expo:          x0= %s " % result( m_2expo . x0        .GetName()  )[0]   
 
+models.append ( m_2expo )
 
 # =============================================================================
 logger.info("Test  Poly(2)*Expo2 -Distribution")
@@ -319,6 +333,7 @@ else :
     for phi in m_p2e2.phis : 
         print  "\tPoly2e2:      phi=  %s " % phi.ve() 
 
+models.append ( m_p2e2 )
 
 # =============================================================================
 logger.info("Test  Poly(6)-Distribution")
@@ -337,6 +352,7 @@ else :
         print  "\tPoly6:       phi= %s " % phi.ve() 
         
 
+models.append ( m_p6 )
 
 # =============================================================================
 logger.info("Test  Poly(4)*Expo -Distribution")
@@ -356,6 +372,7 @@ else :
     for phi in m_p4e.phis : 
         print  "\tPoly4e:      phi=  %s " % phi.ve() 
 
+models.append ( m_p4e )
 
 # =============================================================================
 logger.info("Test  Poly(4)*PS -Distribution")
@@ -374,6 +391,7 @@ else :
     for phi in m_ps.phis : 
         print  "\tPoly3ps:     phi=  %s " % phi.ve() 
 
+models.append ( m_ps  )
 
 # =============================================================================
 logger.info ("Test positive spline: order 3 with 4 inner knots ")
@@ -392,6 +410,19 @@ else :
     for phi in m_s3.phis : 
         print  "\tSpline3:     phi=  %s " % phi.ve() 
 
+models.append ( m_s3  )
+
+#
+## check that everything is serializable
+# 
+import Ostap.ZipShelve   as DBASE
+with DBASE.tmpdb() as db : 
+    db['mass2,vars'] = mass2, varset2
+    db['dataset2'  ] = dataset2
+    db['models'    ] = models
+    db['result'    ] = result
+    db['frame'     ] = f
+    db.ls() 
 
 # =============================================================================
 # The END 

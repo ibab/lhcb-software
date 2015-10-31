@@ -313,6 +313,19 @@ print result
 models.append ( model ) 
 
 
+
+#
+## check that everything is serializable
+# 
+import Ostap.ZipShelve   as DBASE
+with DBASE.tmpdb() as db : 
+    db['x,y,vars'] = m_x, m_y, varset
+    db['dataset' ] = dataset
+    db['models'  ] = models
+    db['result'  ] = result
+    db['frame'   ] = frame
+    db.ls() 
+
 # =============================================================================
 # The END 
 # =============================================================================

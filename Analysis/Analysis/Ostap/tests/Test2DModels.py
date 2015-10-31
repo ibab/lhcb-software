@@ -64,12 +64,9 @@ for i in xrange(0,5000) :
 
 print dataset
 
-import Ostap.ZipShelve   as DBASE
-db_base = 'Test2DModels.db'
-db      = DBASE.open(db_base)
-
 import Ostap.Fit2DModels as Models 
 
+models = []
 # =============================================================================
 ## Positive polynomial in X and Y 
 # =============================================================================
@@ -96,8 +93,9 @@ else :
     print 'Bernstein Coefficients:' , b2d.pars()
     print poly2D.pars() 
 
-db ['poly2D' ] = poly2D 
 b2d_1 = b2d 
+
+models.append ( poly2D ) 
 # =============================================================================
 ## Positive *SYMMETRIC* polynomial in X and Y 
 # =============================================================================
@@ -124,8 +122,9 @@ else :
     print 'Bernstein Coefficients:' , b2d.pars()
     print poly2Dsym.pars() 
 
-b2d_2 = b2d 
-db ['poly2DSym' ] = poly2Dsym 
+b2d_2 = b2d
+
+models.append ( poly2Dsym ) 
 
 # =============================================================================
 ## product of phase space factors, modulated by positive polynomial in X and Y 
@@ -156,7 +155,7 @@ else :
     print 'Bernstein Coefficients:' , b2d.pars() 
     print poly2D_ps.pars() 
 
-db ['poly2D_ps' ] = poly2D_ps 
+models.append ( poly2D_ps ) 
 
 # =============================================================================
 ## *SYMMETRIC* product of phase space factors, modulated by positive polynomial in X and Y 
@@ -186,7 +185,7 @@ else :
     print poly2D_pss.pars() 
 
 
-db ['poly2D_pss' ] = poly2D_pss 
+models.append ( poly2D_pss ) 
 
 # =============================================================================
 ## exponential times phase space factor, modulated by positive polynomial in X and Y 
@@ -217,7 +216,7 @@ else :
     print 'Bernstein Coefficients:' , b2d.pars() , result('tau_EPS', False)[0]
     print poly2D_eps.pars() 
 
-db ['poly2D_eps' ] = poly2D_eps 
+models.append ( poly2D_eps ) 
 
 # =============================================================================
 ## exponential times exponential modulated by positive polynomial in X and Y 
@@ -247,7 +246,7 @@ else :
     print 'Bernstein Coefficients:' , b2d.pars() , result('taux_EP', False)[0]
     print poly2D_ee.pars() 
 
-db ['poly2D_ee' ] = poly2D_ee 
+models.append ( poly2D_ee ) 
 
 # =============================================================================
 ## symmetric exponential times exponential modulated by positive polynomial in X and Y 
@@ -277,7 +276,7 @@ else :
     print 'Bernstein Coefficients:' , result('tau_EPs', False)[0]
     print poly2D_ees.pars() 
 
-db ['poly2D_ees' ] = poly2D_ees 
+models.append ( poly2D_ees ) 
 
 # =============================================================================
 ## 2D-spline 
@@ -300,7 +299,7 @@ if 0 != result.status() or 3 != result.covQual() :
 else :
     print 'Spline-2D Coefficients: %s ' % sp_2D.phis
 
-db ['sp_2D' ] = sp_2D 
+models.append ( sp_2D ) 
 
 # =============================================================================
 ## Symetric 2D-spline 
@@ -322,17 +321,22 @@ if 0 != result.status() or 3 != result.covQual() :
 else :
     print 'Spline-2D symmetric Coefficients: %s ' % sps_2D.phis
 
-    
-db ['sps_2D'  ] = sps_2D 
-db ['dataset' ] = dataset
-db.close()
+models.append ( sps_2D ) 
 
 
-with DBASE.open( db_base ,'r') as db :
+
+#
+## check that everything is serializeable
+# 
+import Ostap.ZipShelve   as DBASE
+with DBASE.tmpdb() as db :
+    db['x,y,vars'] = m_x, m_y, varset
+    db['dataset' ] = dataset
+    db['models'  ] = models
+    db['result'  ] = result
+    db['frame'   ] = f
     db.ls()
     
-import os
-os.remove(db_base) 
 
 # =============================================================================
 # The END 

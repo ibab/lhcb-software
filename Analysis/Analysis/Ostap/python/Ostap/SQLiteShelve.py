@@ -112,7 +112,8 @@ __version__ = "$Revision$"
 # =============================================================================
 __all__ = (
     'SQLiteShelf' ,   ## The DB-itself
-    'open'            ## helper function to hide the actual DB
+    'open'        ,   ## helper function to hide the actual DB
+    'tmpdb'       ,   ## helper function to create the temporary database 
     )
 # =============================================================================
 from AnalysisPython.Logger import getLogger
@@ -127,11 +128,12 @@ import zlib
 #  
 class SQLiteShelf(SqliteDict):
     """
+    SQLite-based ``shelve-like'' database with compressed content. 
     """
-    def __init__ ( self                     ,
+    def __init__ ( self                       ,
                    filename       = None      ,
                    mode           = 'c'       ,
-                   tablename      = 'PyPaw'   ,
+                   tablename      = 'Ostap'   ,
                    writeback      = True      , ## original name: "autocommit"
                    compress_level = zlib.Z_BEST_COMPRESSION , 
                    journal_mode   = "DELETE"  ) :
@@ -167,6 +169,8 @@ class SQLiteShelf(SqliteDict):
             filename  = os.path.expandvars ( filename )
             filename  = os.path.abspath    ( filename )
             
+        self.__filename = filename 
+        
         SqliteDict.__init__ ( self                        ,
                               filename     = filename     ,
                               tablename    = tablename    ,
@@ -272,6 +276,34 @@ SQLiteShelf.__exit__  = _sql_exit_
 def open(*args, **kwargs):
     """See documentation of the SQLiteShelf class."""
     return SQLiteShelf(*args, **kwargs)
+
+# =============================================================================
+## @class TmpSQLiteShelf
+#  TEMPORARY SQLite-based ``shelve-like'' database with compressed content. 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2015-10-31
+class TmpSQLiteShelf(SQLiteShelf):
+    """
+    TEMPORARY SQLite-based ``shelve-like'' database with compressed content. 
+    """
+    def __init__ ( self                        ,
+                   tablename      = 'Ostap'    ,
+                   compress_level = zlib.Z_BEST_COMPRESSION , 
+                   journal_mode   = "DELETE"   ) :
+        
+        SQLiteShelf.__init__ ( self            ,
+                               None            ,
+                               'c'             ,
+                               tablename       ,
+                               True            , ## False , ## writeback/autocommit
+                               compress_level  ,
+                               journal_mode    ) 
+        
+# =============================================================================
+## open new TEMPORARY SQLiteShelve data base
+def tmpdb(*args, **kwargs):
+    """See documentation of the TmpSQLiteShelf class."""
+    return TmpSQLiteShelf( *args , **kwargs )
 
 # =============================================================================
 if '__main__' == __name__ :

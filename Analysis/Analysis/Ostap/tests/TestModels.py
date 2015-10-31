@@ -62,6 +62,8 @@ print dataset0
 
 import Ostap.FitModels as     Models 
 
+models = []
+
 # =============================================================================
 ## gauss PDF
 # =============================================================================
@@ -73,7 +75,7 @@ signal_gauss . mean  . setVal ( m.value () )
 signal_gauss . sigma . setVal ( m.error () )
 
 
-
+models.append ( signal_gauss )
 # =============================================================================
 ## Gauss PDF
 # =============================================================================
@@ -94,6 +96,7 @@ else :
     print 'Mean   & Sigma      are: ', result ( 'mean_Gauss')[0] , result( 'sigma_Gauss' )[0]
 
 
+models.append ( model_gauss )
 
 # =============================================================================
 ## CrystalBall PDF
@@ -121,6 +124,8 @@ else :
     print 'Mean   & Sigma      are: ', result ( 'mean_Gauss')[0] , result( 'sigma_Gauss' )[0]
     print 'Alpha  & n          are: ', result ( model_cb.signal.alpha.GetName() ) [ 0 ] , result ( model_cb.signal.    n.GetName() ) [ 0 ] 
 
+models.append ( model_cb )
+
 # =============================================================================
 ## right side CrystalBall PDF
 # =============================================================================
@@ -147,6 +152,8 @@ if 0 != result.status() or 3 != result.covQual() :
 else : 
     print 'Signal & Background are: ', result ( 'S'         )[0] , result( 'B'           )[0]
     print 'Mean   & Sigma      are: ', result ( 'mean_Gauss')[0] , result( 'sigma_Gauss' )[0]
+
+models.append ( model_cbrs  )
 
 # =============================================================================
 ## double sided CrystalBall PDF
@@ -180,6 +187,8 @@ else :
     print 'Signal & Background are: ', result ( 'S'         )[0] , result( 'B'           )[0]
     print 'Mean   & Sigma      are: ', result ( 'mean_Gauss')[0] , result( 'sigma_Gauss' )[0]
 
+models.append ( model_cbds  )
+
 
 # =============================================================================
 ## Needham PDF
@@ -207,6 +216,7 @@ else :
     print 'Mean   & Sigma      are: ', result ( 'mean_Gauss')[0] , result( 'sigma_Gauss' )[0]
 
 
+models.append ( model_matt  )
 
 
 # ==========================================================================
@@ -234,6 +244,7 @@ else :
     print 'Signal & Background are: ', result ( 'S'         )[0] , result( 'B'           )[0]
     print 'Mean   & Sigma      are: ', result ( 'mean_Gauss')[0] , result( 'sigma_Gauss' )[0]
 
+models.append ( model_apolonios )
 
 # ==========================================================================
 ## Apolonios2
@@ -258,6 +269,8 @@ if 0 != result.status() or 3 != result.covQual() :
 else : 
     print 'Signal & Background are: ', result ( 'S'         )[0] , result( 'B'           )[0]
     print 'Mean   & Sigma      are: ', result ( 'mean_Gauss')[0] , result( 'sigma_Gauss' )[0]
+
+models.append ( model_apolonios2 )
 
 # =============================================================================
 ## Bifurkated gauss PDF
@@ -286,6 +299,7 @@ else :
     print 'Signal & Background are: ', result ( 'S'         )[0] , result( 'B'           )[0]
     print 'Mean   & Sigma      are: ', result ( 'mean_Gauss')[0] , result( 'sigma_Gauss' )[0]
 
+models.append ( model_bifurcated  )
 
 # =============================================================================
 ## GenGaussV1
@@ -313,6 +327,8 @@ if 0 != result.status() or 3 != result.covQual() :
 else :     
     print 'Signal & Background are: ', result ( 'S'         )[0] , result( 'B'           )[0]
     print 'Mean                is: ' , result ( 'mean_Gauss')[0] 
+
+models.append ( model_gauss_gv1  )
 
 # =============================================================================
 ## GenGaussV2
@@ -344,6 +360,7 @@ else :
     print 'Signal & Background are: ', result ( 'S'         )[0] , result( 'B'           )[0]
     print 'Mean                is: ' , result ( 'mean_Gauss')[0] 
 
+models.append ( model_gauss_gv2  )
 
 # =============================================================================
 ## SkewGauss
@@ -367,6 +384,7 @@ else :
     print 'Signal & Background are: ', result ( 'S'         )[0] , result( 'B'           )[0]
     print 'Mean                is: ' , result ( 'mean_Gauss')[0] 
 
+models.append ( model_gauss_skew  )
 
 # =============================================================================
 ## Bukin
@@ -406,6 +424,7 @@ else :
     print 'Mean                is: ' , result ( 'mean_Gauss')[0] 
 
 
+models.append ( model_bukin  )
 
 # =============================================================================
 ## StudentT
@@ -432,6 +451,7 @@ else :
     print 'Signal & Background are: ', result ( 'S'         )[0] , result( 'B'           )[0]
     print 'Mean                is: ' , result ( 'mean_Gauss')[0] 
 
+models.append ( model_student  )
 
 # =============================================================================
 ## Bifurcated StudentT
@@ -462,6 +482,7 @@ else :
     print 'n(L)                is: ' , result ( model_bstudent.signal.nL    .GetName() )[0] 
     print 'n(R)                is: ' , result ( model_bstudent.signal.nR    .GetName() )[0] 
     
+models.append ( model_bstudent  )
     
 ## # =============================================================================
 ## ## Breit-Wigner
@@ -528,6 +549,7 @@ else :
     print  "\tSinhAsinh:   eps  = %s " % result( signal.epsilon )[0]   
     print  "\tSinhAsinh:   delta= %s " % result( signal.delta   )[0]   
 
+models.append ( model_shash )
 
 # =============================================================================
 logger.info("Test  JohnsonSU-Distribution")
@@ -558,6 +580,8 @@ else :
     print  "\tJohnsonSU:   delta= %s " % result ( signal.delta   )[0]
     print  "\tJohnsonSU:   gamma= %s " % result ( signal.gamma   )[0]
 
+models.append ( model_jsu )
+
 # =============================================================================
 logger.info("Test  ATLAS")
 # =============================================================================
@@ -584,6 +608,8 @@ if 0 != result.status() or 3 != result.covQual() :
 else :
     print  "\tAtlas:       mean = %s " % result ( signal.mean    )[0]
     print  "\tAtlas:       sigma= %s " % result ( signal.sigma   )[0]
+
+models.append ( model_atlas )
 
 # =============================================================================
 ## Voigt
@@ -616,6 +642,20 @@ else :
     print 'Mean   & Gamma      are: ', result ( signal.mean   )[0] , result ( signal.gamma  )[0]
     print 'Sigma               is : ', result ( signal.sigma  )[0] 
     
+models.append ( model_vgt )
+
+#
+## check that everything is serializable
+# 
+import Ostap.ZipShelve   as DBASE
+with DBASE.tmpdb() as db : 
+    db['mass,vars'] = mass, varset0
+    db['dataset'  ] = dataset0
+    db['models'   ] = models
+    db['result'   ] = result
+    db['frame'    ] = frame
+    db.ls() 
+
 
 # =============================================================================
 # The END 

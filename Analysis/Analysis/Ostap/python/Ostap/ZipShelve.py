@@ -63,7 +63,7 @@
 #
 # @endcode 
 #
-# @attention: In case DB-name has extention "gz", the whoel data base
+# @attention: In case DB-name has extention "gz", the whole data base
 #             will be gzipped. 
 #
 #
@@ -130,7 +130,8 @@ __version__ = "$Revision$"
 # =============================================================================
 __all__ = (
     'ZipShelf' ,   ## The DB-itself
-    'open'         ## helper function to hide the actual DB
+    'open'     ,   ## helper function to hide the actual DB
+    'tmpdb'    ,   ## create TEMPORARY data base 
     )
 # =============================================================================
 # import logging 
@@ -236,7 +237,9 @@ class ZipShelf(shelve.Shelf):
         
         self.compresslevel = compress
         self.__opened      = True
-        
+
+    def filename ( self ) : return self.__filename
+    
     ## destructor 
     def __del__ ( self ) :
         """
@@ -439,12 +442,11 @@ def _zip_setitem ( self , key , value ) :
     p.dump(value)
     self.dict[key] = zlib.compress( f.getvalue(), self.compresslevel)
 
-
 ZipShelf.__getitem__ = _zip_getitem
 ZipShelf.__setitem__ = _zip_setitem
 
 # =============================================================================
-## helepr finction to access ZipShelve data base#
+## helper finction to access ZipShelve data base#
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2010-04-30
 def open ( filename                                   ,
@@ -473,6 +475,65 @@ def open ( filename                                   ,
                       writeback     ,
                       silent        )
 
+
+
+# =============================================================================
+## TEMPORARY Zipped-version of ``shelve''-database
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2015-10-31
+class TmpZipShelf(ZipShelf):
+    """
+    TEMPORARY Zipped-version of ``shelve''-database     
+    """    
+    def __init__(
+        self                                   ,
+        protocol  = HIGHEST_PROTOCOL           , 
+        compress  = zlib.Z_BEST_COMPRESSION    ,
+        silent    = False                      ) :
+
+        ## create temporary file name 
+        import tempfile
+        filename = tempfile.mktemp  ( suffix = '.zdb' )
+        
+        ZipShelf.__init__ ( self     ,  
+                            filename ,
+                            'n'      ,
+                            protocol ,
+                            compress , 
+                            False    , ## writeback 
+                            silent   ) 
+        
+    ## close and delete the file 
+    def close ( self )  :
+        ## close the shelve file
+        fname = self.filename() 
+        ZipShelf.close ( self )
+        ## delete the file 
+        if os.path.exists ( fname ) :
+            try :
+                os.unlink ( fname )
+            except : 
+                pass
+            
+# =============================================================================
+## helper finction to open TEMPORARY ZipShelve data base#
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2010-04-30
+def tmpdb ( protocol      = HIGHEST_PROTOCOL           ,
+            compresslevel = zlib.Z_BEST_COMPRESSION    , 
+            silent        = True                       ) : 
+    """
+    Open a TEMPORARY persistent dictionary for reading and writing.
+    
+    The optional protocol parameter specifies the
+    version of the pickle protocol (0, 1, or 2).
+    
+    See the module's __doc__ string for an overview of the interface.
+    """
+    return TmpZipShelf ( protocol      ,
+                         compresslevel ,
+                         silent        )
+    
 
 # ============================================================================
 logger.debug ( "Simple generic (c)Pickle-based ``zipped''-database")

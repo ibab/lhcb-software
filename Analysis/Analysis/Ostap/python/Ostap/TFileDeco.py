@@ -533,6 +533,17 @@ else :
     ROOT.TFile.__enter__ = _rf_enter_
     ROOT.TFile.__exit__  = _rf_exit_
 
+    
+# =============================================================================
+_modes = { 'n'  : 'NEW'      ,
+           'c'  : 'RECREATE' ,
+           'r'  : 'READ'     ,
+           'w'  : 'WRITE'    ,
+           'u'  : 'UPDATE'   ,
+           'w+' : 'UPDATE'   ,
+           'rw' : 'UPDATE'   ,
+           '+'  : 'UPDATE'   ,
+           'a'  : 'UPDATE'   }
 # =============================================================================
 ## create ROOT.TFile without making it a current working directory 
 #  @code
@@ -540,7 +551,7 @@ else :
 #  f = ROOT.TFile('test_file.root','recreate')
 #  print ROOT.gROOT.CurrentDirectory()
 #  @endcode
-def _rf_new_init_ ( rfile , *args ) :
+def _rf_new_init_ ( fname , mode = '' , *args ) :
     """
     Open/create ROOT-file without making it a current working directory
     >>> print ROOT.gROOT.CurrentDirectory()
@@ -548,7 +559,9 @@ def _rf_new_init_ ( rfile , *args ) :
     >>> print ROOT.gROOT.CurrentDirectory()
     """
     with ROOTCWD() :
-        rfile._old_init_ ( *args )
+        rfile._old_init_ ( fname ,
+                           _modes.get ( mode.lower() , mode.upper() ) 
+                           *args )
 
 # ===========================================================================
 ## create ROOT.TFile without making it a current working directory 
@@ -557,7 +570,7 @@ def _rf_new_init_ ( rfile , *args ) :
 #  f = ROOT.TFile.Open('test_file.root','recreate')
 #  print ROOT.gROOT.CurrentDirectory()
 #  @endcode
-def _rf_new_open_ ( *args ) :
+def _rf_new_open_ ( fname , mode = '' , *args ) :
     """
     Open/create ROOT-file without making it a current working directory
     >>> print ROOT.gROOT.CurrentDirectory()
@@ -565,8 +578,10 @@ def _rf_new_open_ ( *args ) :
     >>> print ROOT.gROOT.CurrentDirectory()
     """
     with ROOTCWD() :
-        return ROOT.TFile._old_open_ ( *args ) 
-
+        rfile._old_init_ ( fname ,
+                           _modes.get ( mode.lower() , mode.upper() ) 
+                           *args )
+        
 # ===========================================================================
 
 if hasattr ( ROOT.TFile , '_new_init_' ) and hasattr ( ROOT.TFile , '_old_init_' ) : pass

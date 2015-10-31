@@ -8,6 +8,11 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-10-31 - Vanya Belyaev
+ - add TEMPORARY databases
+   update and extend tests 
+
+
 ! 2015-10-30 - Vanya Belyaev
  - improve a bit progress bar for TTree/TChain iterators with cuts 
 

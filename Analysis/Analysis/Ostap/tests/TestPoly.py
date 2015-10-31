@@ -53,6 +53,7 @@ m_gamma0.theta.setVal( 1 )
 
 dataset2 = m_gamma0.pdf.generate ( varset2 , events ) 
  
+models = []
 
 # =============================================================================
 logger.info('Test  Gamma-Distribution')
@@ -71,6 +72,8 @@ else :
     print  "\tGamma:       k    = %s " % result( m_gamma.k.GetName()     )[0]
     print  "\tGamma:       theta= %s " % result( m_gamma.theta.GetName() )[0]   
 
+models.append ( m_gamma ) 
+
 # =============================================================================
 logger.info("Test  Poly(4)-Distribution")
 # =============================================================================
@@ -87,6 +90,7 @@ else :
     for phi in m_p4.phis : 
         print  "\tPoly6:       phi= %s " % phi.ve() 
         
+models.append ( m_p4 ) 
 
 # =============================================================================
 logger.info("Test  monothonic Poly(4)-Distribution")
@@ -104,6 +108,7 @@ else :
     for phi in m_d4.phis : 
         print  "\tPoly4:       phi= %s " % phi.ve() 
 
+models.append ( m_d4 ) 
 
 # =============================================================================
 logger.info("Test  convex Poly(4)-Distribution")
@@ -121,6 +126,7 @@ else :
     for phi in m_c4.phis : 
         print  "\tPoly4:       phi= %s " % phi.ve() 
         
+models.append ( m_c4 ) 
 
 # =============================================================================
 logger.info("Test  Poly(4)*Expo -Distribution")
@@ -140,6 +146,7 @@ else :
     for phi in m_p4e.phis : 
         print  "\tPoly4e:      phi=  %s " % phi.ve() 
 
+models.append ( m_p4e ) 
 
 # =============================================================================
 logger.info ("Test positive spline: order 3 with 2 inner knots ")
@@ -158,6 +165,7 @@ else :
     for phi in m_s3.phis : 
         print  "\tSpline3:     phi=  %s " % phi.ve() 
 
+models.append ( m_s3 ) 
 
 # =============================================================================
 logger.info ("Test positive decreasing: order 3 with 2 inner knots ")
@@ -176,6 +184,8 @@ else :
     for phi in m_m3.phis : 
         print  "\tSpline3:     phi=  %s " % phi.ve() 
 
+models.append ( m_m3 ) 
+
 # =============================================================================
 logger.info ("Test positive decreasing convex: order 3 with 2 inner knots ")
 # =============================================================================
@@ -193,6 +203,19 @@ else :
     for phi in m_c3.phis : 
         print  "\tSpline3:     phi=  %s " % phi.ve() 
 
+models.append ( m_c3 ) 
+
+#
+## check that everything is serializable
+# 
+import Ostap.ZipShelve   as DBASE
+with DBASE.tmpdb() as db : 
+    db['mass,vars'] = mass2, varset2
+    db['dataset'  ] = dataset2
+    db['models'   ] = models
+    db['result'   ] = result
+    db['frame'    ] = f
+    db.ls() 
 
 # =============================================================================
 # The END 

@@ -97,7 +97,8 @@ __version__ = "$Revision$"
 __all__ = (
     'RootShelf'     , ## The DB-itself
     'RootOnlyShelf' , ## "data base" for ROOT-only objects
-    'open'        ## helper function to hide the actual DB
+    'open'          , ## helper function to hide the actual DB
+    'tmpdb'         , ## helper function to crerte TEMPPRARY  RootShelve database 
     )
 # =============================================================================
 from AnalysisPython.Logger import getLogger
@@ -134,13 +135,15 @@ class RootOnlyShelf(shelve.Shelf):
                    'rw' : 'UPDATE'   ,
                    '+'  : 'UPDATE'   ,
                    'a'  : 'UPDATE'   }
-        
+
+        self.__filename = filename 
         from Ostap.TFileDeco import ROOTCWD 
         with ROOTCWD() : ## preserve current directory in ROOT 
-            mode  = _modes.get ( mode.lower()  , mode.upper() ) 
-            rfile = ROOT.TFile.Open ( filename , mode , *args  )
+            mode  = _modes.get ( mode.lower()    , mode.upper() ) 
+            rfile = ROOT.TFile.Open ( filename   , mode , *args  )
             shelve.Shelf.__init__ ( self , rfile , writeback ) 
-            
+
+    def filename    ( self       ) : return self.__filename 
     def __enter__   ( self       ) : return self 
     def __exit__    ( self , *_  ) : self.close ()
 
@@ -236,9 +239,9 @@ def _pickled_getitem_ (self, key):
             ## unpack it unpickle!
             s     = value.GetName()
             ##
-            if 0<= s.find ('\377\001') or 0<=s.find('\377\376') : 
-                ## restore zeroes
-                s     = s.replace('\377\001', '\000').replace('\377\376', '\377')
+            ##if 0<= s.find ('\377\001') or 0<=s.find('\377\376') : 
+            ## restore zeroes
+            s     = s.replace('\377\001', '\000').replace('\377\376', '\377')
             ## unpickle! 
             f     = StringIO ( s )
             value = Unpickler( f ).load()
@@ -271,9 +274,9 @@ def _pickled_setitem_ ( self , key , value ) :
         p.dump( value )
         s = f.getvalue()
         ##
-        if 0<= s.find('\377') or 0<=s.find('\000') : 
-            ## avoid appearence of zeroes in TObjString
-            s = s.replace('\377', '\377\376').replace('\000', '\377\001')
+        ##if 0<= s.find('\377') or 0<=s.find('\000') : 
+        ## avoid appearence of zeroes in TObjString
+        s = s.replace('\377', '\377\376').replace('\000', '\377\001')
         value = ROOT.TObjString( s )
     ## finally use ROOT 
     self.dict[key] = value
@@ -300,6 +303,70 @@ def open ( filename              ,
     return RootShelf ( filename  ,
                        mode      ,
                        writeback , * args )
+
+
+# =============================================================================
+## @class TmpRootShelf
+#  TEMPORARY The actual class for ROOT-based shelve-like data base
+#  it implement shelve-intergase with underlyinog ROOT-fiel storage
+#  - ROOT-object are store ddirectly in the ROOT-file,
+#  - other objects are pickled and stored in ROOT.TObjString
+#  @code
+#  db = RootShelf( 'mydb.root' , 'c' )
+#  db['histo'] = h1
+#  db['tuple'] = ('a',1,h1) 
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2015-07-31 
+class TmpRootShelf(RootShelf):
+    """
+    TEMPORARY 
+    The actual class for ROOT-based shelve-like data base
+    it implement shelve-intergase with underlyinog ROOT-fiel storage
+    - ROOT-object are store ddirectly in the ROOT-file,
+    - other objects are pickled and stored in ROOT.TObjString
+    """
+    def __init__( self, *args ):
+        
+        ## create temporary file name 
+        import tempfile
+        filename = tempfile.mktemp  ( suffix = '.root' )
+        
+        RootShelf.__init__ ( self              ,
+                             filename          ,
+                             mode      = 'n'   ,
+                             writeback = False , *args )
+        
+    ## close and delete the file 
+    def close ( self )  :
+        ## close the shelve file
+        fname = self.filename() 
+        RootShelf.close ( self )
+        ## delete the file
+        import os 
+        if os.path.exists ( fname ) : 
+            try :
+                os.unlink ( fname )
+            except : 
+                pass
+            
+# =============================================================================
+## helper function to open RootShelve data base
+#  @code
+#  import RootShelve as DBASE
+#  db = DBASE.open ( 'mydb.root' , 'c' )
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2010-04-30
+def tmpdb ( *args ) : 
+    """
+    Helper function to open TEMPPORARY RootShelve data base
+    >>> import RootShelve as DBASE
+    >>> db = DBASE.tmpdb()
+    """    
+    return TmpRootShelf ( *args )
+
+
 
 # =============================================================================
 if '__main__' == __name__ :
