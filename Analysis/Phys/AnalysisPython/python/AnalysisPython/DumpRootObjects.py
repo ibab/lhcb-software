@@ -82,9 +82,10 @@ def dumpToFile ( objects , fbase  = 'ROOT_Objects_%d_%s.root' ) :
     return fname
 
 
-v1 = ROOT.RooRealVar('v1','',1)
-v2 = ROOT.RooRealVar('v2','',1)
-vars = ROOT.RooArgSet ( v1 , v2 ) 
+v1   = ROOT.RooRealVar( 'v1' , '',1)
+v2   = ROOT.RooRealVar( 'v2' , '',1)
+vars = ROOT.RooArgSet (  v1  ,    v2 )
+
 objects = [
     
     ROOT.TH1F ( 'h1f' , '' , 10 , 0 , 1 ) , 
@@ -103,7 +104,7 @@ objects = [
     ROOT.TBox   ( 0 , 0 , 1 , 1 ) ,
     ROOT.TLine  ( 0 , 0 , 1 , 1 ) ,
     ROOT.TAxis  ( 2 , 0 , 1 ) ,
-    ROOT.TFitResultPtr () ,  
+    ## ROOT.TFitResultPtr () ,  
     ROOT.TFitResult    () , 
     ROOT.TCut   ('cut') ,
     ##
