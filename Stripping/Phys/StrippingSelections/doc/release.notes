@@ -3,6 +3,8 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2015-10-31 - Zhang Liming
+ - Change StrippingLb2EtacKp selection 
 
 ! 2015-10-30 - Adlene Hicheur
  - Fixed new cone variables format for StrippingBnoC/StrippingBu2hhh.py
