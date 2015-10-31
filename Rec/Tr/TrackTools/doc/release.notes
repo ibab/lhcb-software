@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2015-10-31 - Adam Davis
+ - Fixed memory leak in FTHitExpectation::collectHits
+
 ! 2015-10-23 - Michael Kolpin
  - Fixed unitiliased use of variable and naming conventions in VeloMuonBuilder 
 

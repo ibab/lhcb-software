@@ -176,8 +176,11 @@ void FTHitExpectation::collectHits( Tf::Tsa::Line3D aLine3D,
       hit -> setEntry( globalEntry );
       hit -> setDisplacement ( globalExit-globalEntry  );
       hit -> setEnergy( 1.0 );
-      if( !((*iterF) -> isInside( hit -> midPoint() ) ) ) continue;
-      (*iterF) -> calculateHits( hit, vectFTPairs );      /// FIXME: this is an unchecked StatusCode
+      //fix memory leak by removing continue
+      if( ((*iterF) -> isInside( hit -> midPoint() ) ) ){ 
+        (*iterF) -> calculateHits( hit, vectFTPairs );      /// FIXME: this is an unchecked StatusCode
+      }
+      
       delete hit;
     }
 }
