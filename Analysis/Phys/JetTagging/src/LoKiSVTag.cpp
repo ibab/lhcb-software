@@ -119,7 +119,7 @@ bool LoKi::SVTag::calculateJetProperty
   sc = setJetVertex();
   if(sc.isFailure())
     {
-      err() << "Unable to set jet vertex" << endreq;
+      err() << "Unable to set jet vertex" << endmsg;
       return StatusCode::SUCCESS;
     }
 

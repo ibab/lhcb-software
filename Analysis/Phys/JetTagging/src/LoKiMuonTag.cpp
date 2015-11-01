@@ -116,7 +116,7 @@ StatusCode LoKi::MuonTag::getMuons()
   inputMuons.insert(inputMuons.begin(),m_JetInputs.begin(),m_JetInputs.end());
 
   if(msgLevel(MSG::DEBUG))
-    debug() << inputMuons.size() << " muon candidates found" << endreq;
+    debug() << inputMuons.size() << " muon candidates found" << endmsg;
 
   m_Muons->clear();
 
@@ -145,7 +145,7 @@ StatusCode LoKi::MuonTag::getMuons()
     if(!isMuon)
     {
       if(msgLevel(MSG::DEBUG))
-        debug() << "Muon candidate failed isMuon selection" << endreq;
+        debug() << "Muon candidate failed isMuon selection" << endmsg;
 
       continue;
     }
@@ -156,7 +156,7 @@ StatusCode LoKi::MuonTag::getMuons()
     if(deltaR > m_MuonCutDR)
     {
       if(msgLevel(MSG::DEBUG))
-        debug() << "Muon candidate failed dR selection " << deltaR << endreq;
+        debug() << "Muon candidate failed dR selection " << deltaR << endmsg;
 
       continue;
     }
@@ -169,7 +169,7 @@ StatusCode LoKi::MuonTag::getMuons()
     if(chiSquared < m_MuonTrackCutChi)
     {
       if(msgLevel(MSG::DEBUG))
-        debug() << "Muon candidate failed chi selection " << chiSquared << endreq;
+        debug() << "Muon candidate failed chi selection " << chiSquared << endmsg;
 
       continue;
     }
@@ -179,7 +179,7 @@ StatusCode LoKi::MuonTag::getMuons()
     if(ghost > m_MuonTrackCutGhost)
     {
       if(msgLevel(MSG::DEBUG))
-        debug() << "Muon candidate failed ghost selection " << ghost << endreq;
+        debug() << "Muon candidate failed ghost selection " << ghost << endmsg;
 
       continue;
     }
@@ -189,7 +189,7 @@ StatusCode LoKi::MuonTag::getMuons()
   }
 
   if(msgLevel(MSG::DEBUG))
-    debug() << m_Muons->size() << " good muons found" << endreq;
+    debug() << m_Muons->size() << " good muons found" << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -235,7 +235,7 @@ bool LoKi::MuonTag::calculateJetProperty
   sc = setJetVertex();
   if(sc.isFailure())
   {
-    err() << "Unable to set jet vertex" << endreq;
+    err() << "Unable to set jet vertex" << endmsg;
     return StatusCode::SUCCESS;
   }
 

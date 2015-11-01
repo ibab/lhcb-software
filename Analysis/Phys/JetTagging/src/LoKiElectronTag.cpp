@@ -116,7 +116,7 @@ StatusCode LoKi::ElectronTag::getElectrons()
   inputElectrons.insert(inputElectrons.begin(),m_JetInputs.begin(),m_JetInputs.end());
 
   if(msgLevel(MSG::DEBUG))
-    debug() << inputElectrons.size() << " electron candidates found" << endreq;
+    debug() << inputElectrons.size() << " electron candidates found" << endmsg;
 
   m_Electrons->clear();
 
@@ -145,7 +145,7 @@ StatusCode LoKi::ElectronTag::getElectrons()
     if(!isElectron)
     {
       if(msgLevel(MSG::DEBUG))
-        debug() << "Electron candidate failed isElectron selection" << endreq;
+        debug() << "Electron candidate failed isElectron selection" << endmsg;
 
       continue;
     }
@@ -156,7 +156,7 @@ StatusCode LoKi::ElectronTag::getElectrons()
     if(deltaR > m_ElectronCutDR)
     {
       if(msgLevel(MSG::DEBUG))
-        debug() << "Electron candidate failed dR selection " << deltaR << endreq;
+        debug() << "Electron candidate failed dR selection " << deltaR << endmsg;
 
       continue;
     }
@@ -169,7 +169,7 @@ StatusCode LoKi::ElectronTag::getElectrons()
     if(chiSquared < m_ElectronTrackCutChi)
     {
       if(msgLevel(MSG::DEBUG))
-        debug() << "Electron candidate failed chi selection " << chiSquared << endreq;
+        debug() << "Electron candidate failed chi selection " << chiSquared << endmsg;
 
       continue;
     }
@@ -179,7 +179,7 @@ StatusCode LoKi::ElectronTag::getElectrons()
     if(ghost > m_ElectronTrackCutGhost)
     {
       if(msgLevel(MSG::DEBUG))
-        debug() << "Electron candidate failed ghost selection " << ghost << endreq;
+        debug() << "Electron candidate failed ghost selection " << ghost << endmsg;
 
       continue;
     }
@@ -189,7 +189,7 @@ StatusCode LoKi::ElectronTag::getElectrons()
   }
 
   if(msgLevel(MSG::DEBUG))
-    debug() << m_Electrons->size() << " good electrons found" << endreq;
+    debug() << m_Electrons->size() << " good electrons found" << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -235,7 +235,7 @@ bool LoKi::ElectronTag::calculateJetProperty
   sc = setJetVertex();
   if(sc.isFailure())
   {
-    err() << "Unable to set jet vertex" << endreq;
+    err() << "Unable to set jet vertex" << endmsg;
     return StatusCode::SUCCESS;
   }
 

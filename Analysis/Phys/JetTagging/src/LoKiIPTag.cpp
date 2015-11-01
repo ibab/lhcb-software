@@ -105,7 +105,7 @@ StatusCode LoKi::IPTag::removeV0()
   inputDaus.insert(inputDaus.begin(),m_JetInputs.begin(),m_JetInputs.end());
 
   if(msgLevel(MSG::DEBUG))
-    debug() << inputDaus.size() << " daughters found in the jet" << endreq;
+    debug() << inputDaus.size() << " daughters found in the jet" << endmsg;
 
   m_CleanedDaugthers->clear();
 
@@ -163,7 +163,7 @@ StatusCode LoKi::IPTag::removeV0()
       if(VOTag.count(protoparticle->key())>0.5)
 	{
 	  if(msgLevel(MSG::DEBUG))
-	    debug() << "V0 daughter candidate" << endreq;
+	    debug() << "V0 daughter candidate" << endmsg;
 	  continue;
 	}
 
@@ -176,7 +176,7 @@ StatusCode LoKi::IPTag::removeV0()
       if(chiSquared < m_DauTrackCutChi)
 	{
 	  if(msgLevel(MSG::DEBUG))
-	    debug() << "Daugther failed chi selection " << chiSquared << endreq;
+	    debug() << "Daugther failed chi selection " << chiSquared << endmsg;
 
 	  continue;
 	}
@@ -186,7 +186,7 @@ StatusCode LoKi::IPTag::removeV0()
       if(ghost > m_DauTrackCutGhost)
 	{
 	  if(msgLevel(MSG::DEBUG))
-	    debug() << "Daugther failed ghost selection " << ghost << endreq;
+	    debug() << "Daugther failed ghost selection " << ghost << endmsg;
 
 	  continue;
 	}
@@ -196,7 +196,7 @@ StatusCode LoKi::IPTag::removeV0()
     }
 
   if(msgLevel(MSG::DEBUG))
-    debug() << m_CleanedDaugthers->size() << " good daugthers found" << endreq;
+    debug() << m_CleanedDaugthers->size() << " good daugthers found" << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -242,7 +242,7 @@ bool LoKi::IPTag::calculateJetProperty
   sc = setJetVertex();
   if(sc.isFailure())
     {
-      err() << "Unable to set jet vertex" << endreq;
+      err() << "Unable to set jet vertex" << endmsg;
       return StatusCode::SUCCESS;
     }
 
