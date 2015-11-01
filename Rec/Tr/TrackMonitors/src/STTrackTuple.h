@@ -56,23 +56,23 @@ private:
 
   std::string formatNumber( const double& nbr, const unsigned int& digits = 2u ) const;
 
-  bool hasMinStationPassed(LHCb::Track* const&) const;
+  bool hasMinStationPassed(const LHCb::Track* ) const;
 
-  bool crossedLayer(LHCb::Track* const& aTrack,
+  bool crossedLayer(const LHCb::Track* aTrack,
                                 DeSTLayer * &aLayer) const;
-  unsigned int hitsOnLayer(ISTClusterCollector::Hits hits,
-                                DeSTLayer * &aLayer) const;
+  unsigned int hitsOnLayer(const ISTClusterCollector::Hits& hits,
+                                DeSTLayer * aLayer) const;
 
-  unsigned int hitsOnLayer(std::vector<const LHCb::STMeasurement*> measVector,
-                                     DeSTLayer * &aLayer) const;
+  unsigned int hitsOnLayer(const std::vector<const LHCb::STMeasurement*>& measVector,
+                                     DeSTLayer * aLayer) const;
 
   DeSTSensor* findSensor(const DeSTSector* sector,
                                     LHCb::STChannelID id);
 
-  LHCb::LHCbID findHitId(LHCb::Track* const& aTrack,
+  LHCb::LHCbID findHitId(const LHCb::Track* aTrack,
                           const LHCb::STMeasurement* aHit) const;
   
-  double retrieveErrResidual2(LHCb::Track* const& aTrack,
+  double retrieveErrResidual2(const LHCb::Track* aTrack,
                                         LHCb::LHCbID aID) const;
 
 
@@ -133,8 +133,6 @@ private:
   CounterMap m_expectedSector, m_expectedLayer;
   std::map<unsigned int , DeSTSector*> m_nameMapSector, m_nameMapLayer;
   
-  void filterNameList(std::vector< unsigned int>& vec);
-
   /**
    * Cut applied on the cluster charge, in terms of signal to noise.
    */

@@ -3,6 +3,14 @@
 ! Responsible : Wouter Hulsbergen, Stephanie Hansmann-Menzemer
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
+! 2015-11-01 - Gerhard Raven
+ - replace LoKi::select with std::copy_if
+ - replace raw loops with STL algorithms 
+ - replace BOOST_FOREACH with range-based for
+ - various const-correctness fixes
+ - prefer range-based for loops
+ - prefer auto
+ - replace boost::assign::list_of with use of std::initializer_list
 
 ! 2015-10-23 - Michel De Cian
  - Add ghost probability histogram to TrackMonitor.

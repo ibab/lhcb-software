@@ -38,16 +38,8 @@
 
 #include "Event/ODIN.h"
 
-#include "LoKi/select.h"
-
 #include <sstream>
-
 #include <cmath>
-
-#include <boost/bind.hpp>
-#include <boost/foreach.hpp>
-#include <boost/assign/list_of.hpp>
-
 #include <iostream>
 
 // Namespaces
@@ -56,7 +48,6 @@ using namespace LHCb;
 using namespace ST;
 using namespace AIDA;
 using namespace Gaudi;
-using namespace boost::assign;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : STTrackTuple
@@ -83,8 +74,7 @@ STTrackTuple::STTrackTuple( const std::string& name,
   declareProperty( "DetType"            , m_detType = "IT" );
   declareProperty( "ClusterCollector"   , m_clustercollectorName = m_detType+"ClusterCollector");  
   declareProperty( "HitExpectation"     , m_expectedHitsToolName = m_detType+"HitExpectation");  
-  std::vector<double> tmp = list_of( 300. * Gaudi::Units::um );
-  declareProperty( "Cuts"               , m_spacialCuts = tmp );
+  declareProperty( "Cuts"               , m_spacialCuts = { 300. * Gaudi::Units::um } );
   declareProperty( "XLayerCut"          , m_xCut = 300. * Gaudi::Units::um );
   declareProperty( "StereoLayerCut"     , m_stereoCut = 300. * Gaudi::Units::um );
   declareProperty( "defaultCut"         , m_defaultCut = 300. * Gaudi::Units::um );
@@ -139,7 +129,7 @@ StatusCode STTrackTuple::initialize()
   {
     Tuple positions = nTuple("SectorPositions");
     std::vector<DeSTSensor*> sensorsInSector;
-    BOOST_FOREACH(DeSTSector * sector, sectors)
+    for(DeSTSector * sector: sectors)
     {
       // Printouts
       //std::cout << sector->nickname() << "\t" << int( sector->elementID() ) << "\t\t" ;
@@ -172,10 +162,10 @@ StatusCode STTrackTuple::initialize()
         sensor_y.push_back( float(pos.y()) );
         sensor_z.push_back( float(pos.z()) );
         // Sensor corners
-        std::auto_ptr<LHCb::Trajectory> firsttraj = (*sensor)->trajectory(1, 0.);
+        auto firsttraj = (*sensor)->trajectory(1, 0.);
         Gaudi::XYZPoint corner1 = firsttraj->beginPoint();
         Gaudi::XYZPoint corner2 = firsttraj->endPoint();
-        std::auto_ptr<LHCb::Trajectory> lasttraj = (*sensor)->trajectory(512, 0.);
+        auto lasttraj = (*sensor)->trajectory(512, 0.);
         Gaudi::XYZPoint corner3 = lasttraj->beginPoint();
         Gaudi::XYZPoint corner4 = lasttraj->endPoint();
         corner1_x.push_back( float(corner1.x()) );
@@ -210,8 +200,7 @@ StatusCode STTrackTuple::initialize()
     } // end loop (sectors)
   }
 
-  DeSTDetector::Sectors::const_iterator iterS = sectors.begin();
-  for ( ; iterS != sectors.end(); ++iterS)
+  for (auto iterS = sectors.begin() ; iterS != sectors.end(); ++iterS)
   {
     STChannelID elemID = (*iterS)->elementID();
     m_expectedSector[elemID.uniqueSector()] = 0u;
@@ -340,7 +329,7 @@ StatusCode STTrackTuple::execute()
     }
         
     // convert the expected hits into expected sectors, cutting, sensor edges if m_skipEdges=true
-    BOOST_FOREACH(LHCbID id, expectedHits)
+    for(const auto& id: expectedHits)
     {
       if( m_minDistToEdgeX > 0. || m_minDistToEdgeY > 0.){
         sector = m_tracker -> findSector( id.stID() );
@@ -351,7 +340,7 @@ StatusCode STTrackTuple::execute()
         }
         sensors = sector -> sensors();
         inActiveSensor = false;
-        BOOST_FOREACH(DeSTSensor* sensor, sensors)
+        for(const auto& sensor: sensors)
         {
           inSensor = extrapolator() -> propagate( (**It), sensor -> plane(), trackState, sensor -> thickness() );
           if( inSensor.isSuccess() ){
@@ -372,7 +361,7 @@ StatusCode STTrackTuple::execute()
       continue; 
         
     // Fill foundHits and foundSectors
-    BOOST_FOREACH(ISTClusterCollector::Hit hit, prefoundHits)
+    for(const auto& hit: prefoundHits)
     {
       // if the hit sector is in the list of expected sectors
       if(find( expectedSectors.begin(), expectedSectors.end(), hit.cluster->channelID().uniqueSector() ) != expectedSectors.end()){
@@ -424,7 +413,7 @@ StatusCode STTrackTuple::execute()
     {
       LHCb::ODIN* report = get<LHCb::ODIN>(LHCb::ODINLocation::Default);
       if ( ! tup_test->column( "RunNumber", report->runNumber() ) ) return StatusCode::FAILURE;
-      if (msgLevel(MSG::DEBUG)) debug() << "Run number:  " << report->runNumber() << endreq;
+      if (msgLevel(MSG::DEBUG)) debug() << "Run number:  " << report->runNumber() << endmsg;
     }
 
     if (m_branchByTrack)
@@ -469,14 +458,12 @@ StatusCode STTrackTuple::execute()
         // Vector of measurements on the track
         std::vector<const LHCb::STMeasurement*> measVector; measVector.reserve(maxhits);
         // Read the nodes on the track
-        LHCb::Track::ConstNodeRange nodes = (*It) -> nodes();
-        LHCb::Track::ConstNodeRange::const_iterator iNodes = nodes.begin();
-        for ( ; iNodes != nodes.end(); ++iNodes )
+        for (const auto& node: (*It) -> nodes() ) 
         {
-          const LHCb::FitNode* fNode = dynamic_cast<const LHCb::FitNode*>(*iNodes);
+          const LHCb::FitNode* fNode = dynamic_cast<const LHCb::FitNode*>(node);
           if ( fNode->hasMeasurement() == false ) continue;
-          if ( m_hitsOnTrack && ( (*iNodes)->type() != LHCb::Node::HitOnTrack ) ) continue;
-          if ( (*iNodes)->errResidual2() <= TrackParameters::lowTolerance ) continue;
+          if ( m_hitsOnTrack && ( node->type() != LHCb::Node::HitOnTrack ) ) continue;
+          if ( node->errResidual2() <= TrackParameters::lowTolerance ) continue;
           // Count number of TT and IT hits
           if ( fNode->measurement().type() != LHCb::Measurement::TT ) numTTHits++;
           if ( fNode->measurement().type() != LHCb::Measurement::IT ) numITHits++;
@@ -489,10 +476,10 @@ StatusCode STTrackTuple::execute()
           const STMeasurement* aHit = dynamic_cast<const STMeasurement*>(&fNode->measurement());
           measVector.push_back(aHit);
           // Fill residual and residual error
-          hit_residual.push_back( (*iNodes)->residual() );
-          hit_errResidual.push_back( (*iNodes)->errResidual() );
+          hit_residual.push_back( node->residual() );
+          hit_errResidual.push_back( node->errResidual() );
           // Fill position of the track state
-          const LHCb::State & aState = (*iNodes)->state();
+          const LHCb::State & aState = node->state();
           trackState_x.push_back( (float)(aState.x()) );
           trackState_y.push_back( (float)(aState.y()) );
           trackState_z.push_back( (float)(aState.z()) );
@@ -509,7 +496,7 @@ StatusCode STTrackTuple::execute()
           double noise = sector->noise(aCluster->channelID()); 
           clusterNoise.push_back( noise );
           // Find the position of the charge deposit on the hit strip
-          std::auto_ptr<LHCb::Trajectory> traj = m_tracker -> trajectory( aCluster->channelID(), interStripFrac );
+          auto traj = m_tracker -> trajectory( aCluster->channelID(), interStripFrac );
           double mu = traj.get()->muEstimate(aState.position());
           LHCb::Trajectory::Point midStripPosition = traj.get()->position(mu);
           traj_mu.push_back(mu);
@@ -520,11 +507,10 @@ StatusCode STTrackTuple::execute()
           cluster_z.push_back( (float)(midStripPosition.z()) );
           // Fill measurement error
           hit_errMeasure.push_back( aHit->errMeasure() );
-        } // end loop (iNodes)
+        } // end loop (nndes)
 
         // Count the number of hits on each ST layer
-        const DeSTDetector::Layers& layers = m_tracker->layers();
-        BOOST_FOREACH(DeSTLayer * layer, layers)
+        for(const auto& layer: m_tracker->layers())
         {
           unsigned int nHitsOnLayer = hitsOnLayer( measVector, layer );
           tup_test -> column(layer->nickname()+"_nHits", nHitsOnLayer);
@@ -543,14 +529,14 @@ StatusCode STTrackTuple::execute()
       {
         // Count the number of hits on each ST layer
         const DeSTDetector::Layers& layers = m_tracker->layers();
-        BOOST_FOREACH(DeSTLayer * layer, layers)
+        for(const auto& layer: layers)
         {
           unsigned int nHitsOnLayer = hitsOnLayer( foundHits, layer );
           tup_test -> column(layer->nickname()+"_nHits", nHitsOnLayer);
         } // end loop (layers)
 
         // Loop on the found hits
-        BOOST_FOREACH(ISTClusterCollector::Hit aHit, foundHits)
+        for(const auto& aHit: foundHits)
         {
           // Count the number of TT and IT hits
           if ( aHit.cluster->isTT() ) numTTHits++;
@@ -575,7 +561,7 @@ StatusCode STTrackTuple::execute()
             trackState_y.push_back( (float)(aState.y()) );
             trackState_z.push_back( (float)(aState.z()) );
             // Find the position of the charge deposit on the hit strip
-            std::auto_ptr<LHCb::Trajectory> traj = m_tracker -> trajectory( aHit.cluster->channelID(), interStripFrac );
+            auto traj = m_tracker -> trajectory( aHit.cluster->channelID(), interStripFrac );
             double mu = traj.get()->muEstimate(aState.position());
             traj_mu.push_back(mu);
             LHCb::Trajectory::Point hitPosition = traj.get()->position(mu);
@@ -621,7 +607,7 @@ StatusCode STTrackTuple::execute()
     if (m_branchBySector)
     {
       bool foundHit = false;
-      BOOST_FOREACH(DeSTSector * sector, sectors)
+      for(const auto& sector: sectors)
       {
         tup_test -> column (sector->nickname(), -1000000 * Gaudi::Units::um);
       }
@@ -673,7 +659,7 @@ bool STTrackTuple::foundHitInSector( const ISTClusterCollector::Hits& hits,
                                      const double resCut,
                                      const bool toplot ) const
 {
-  BOOST_FOREACH(ISTClusterCollector::Hit aHit, hits)
+  for(const auto& aHit: hits)
     {
       if ( aHit.cluster->channelID().uniqueSector() == testsector ){
         if(fullDetail()&&toplot){
@@ -712,7 +698,7 @@ bool STTrackTuple::foundHitInLayer( const ISTClusterCollector::Hits& hits,
                                      const unsigned int testlayer,
                                      const double resCut ) const
 {
-  BOOST_FOREACH(ISTClusterCollector::Hit aHit, hits)
+  for(const auto& aHit: hits)
     {
       if ( aHit.cluster->channelID().uniqueLayer() == testlayer ){
         if( fabs(aHit.residual) < resCut ){
@@ -742,7 +728,7 @@ double STTrackTuple::foundResInSector( const ISTClusterCollector::Hits& hits,
                                      const unsigned int testsector,
                                      const double resCut ) const
 {
-  BOOST_FOREACH(ISTClusterCollector::Hit aHit, hits)
+  for(const auto& aHit: hits)
     {
       if ( aHit.cluster->channelID().uniqueSector() == testsector ){
         if( fabs(aHit.residual) < resCut ){
@@ -977,7 +963,7 @@ std::string STTrackTuple::formatNumber(const double& nbr,
  *
  * @return \e true if yes.
  */
-bool STTrackTuple::hasMinStationPassed(LHCb::Track* const& aTrack) const
+bool STTrackTuple::hasMinStationPassed(const LHCb::Track* aTrack) const
 {
   std::set<unsigned int> stations;
   const std::vector<LHCb::LHCbID>& ids = aTrack -> lhcbIDs();
@@ -1029,19 +1015,13 @@ DeSTSensor* STTrackTuple::findSensor(const DeSTSector* sector,
  *
  * @return true if yes.
  */
-bool STTrackTuple::crossedLayer(LHCb::Track* const& aTrack,
+bool STTrackTuple::crossedLayer(const LHCb::Track* aTrack,
                                 DeSTLayer * &aLayer) const
 {
-  const std::vector<LHCb::LHCbID>& ids = aTrack -> lhcbIDs();
-  for (std::vector<LHCb::LHCbID>::const_iterator iter = ids.begin(); iter != ids.end(); ++iter)
-  {
-    if ( aLayer->contains( iter->stID() ) )
-      return true;
-    //unsigned int theLayer = (iter->stID()).uniqueLayer();
-    //if (theLayer == aLayer)
-    //  return true;
-  }
-  return false;
+  const auto& ids = aTrack -> lhcbIDs();
+  auto i = std::find_if( ids.begin(), ids.end(), 
+                         [&](const LHCb::LHCbID& id) { return aLayer->contains( id.stID() ); } );
+  return i!=ids.end();
 } // STTrackTuple::crossedLayer()
 
 
@@ -1053,16 +1033,13 @@ bool STTrackTuple::crossedLayer(LHCb::Track* const& aTrack,
  *
  * @return number of hits on the layer.
  */
-unsigned int STTrackTuple::hitsOnLayer(std::vector<const LHCb::STMeasurement*> measVector,
-                                     DeSTLayer * &aLayer) const
+unsigned int STTrackTuple::hitsOnLayer(const std::vector<const LHCb::STMeasurement*>& measVector,
+                                     DeSTLayer * aLayer) const
 {
-  unsigned int counter = 0;
-  for (std::vector<const LHCb::STMeasurement*>::const_iterator iter = measVector.begin(); iter != measVector.end(); ++iter)
-  {
-    if ( aLayer->contains( (*iter)->channelID() ) )
-      counter = counter + 1;
-  }
-  return counter;
+  return std::count_if( measVector.begin(), measVector.end(), 
+                        [&](const LHCb::STMeasurement* m) { 
+      return aLayer->contains( m->channelID() );
+  });
 } // STTrackTuple::hitsOnLayer()
 
 
@@ -1074,16 +1051,12 @@ unsigned int STTrackTuple::hitsOnLayer(std::vector<const LHCb::STMeasurement*> m
  *
  * @return number of hits on the layer.
  */
-unsigned int STTrackTuple::hitsOnLayer(ISTClusterCollector::Hits hits,
-                                    DeSTLayer * &aLayer) const
+unsigned int STTrackTuple::hitsOnLayer(const ISTClusterCollector::Hits& hits,
+                                    DeSTLayer *aLayer) const
 {
-  unsigned int counter = 0;
-  BOOST_FOREACH(ISTClusterCollector::Hit aHit, hits)
-  {
-    if ( aLayer->contains( (aHit.cluster)->channelID() ) )
-      counter = counter + 1;
-  }
-  return counter;
+  return std::count_if( hits.begin(), hits.end(), [&](const ISTClusterCollector::Hit& hit) {
+    return aLayer->contains( hit.cluster->channelID() ); 
+  });
 } // STTrackTuple::hitsOnLayer()
 
 
@@ -1095,12 +1068,12 @@ unsigned int STTrackTuple::hitsOnLayer(ISTClusterCollector::Hits hits,
  *
  * @return the LHCbID.
  */
-LHCb::LHCbID STTrackTuple::findHitId(LHCb::Track* const& aTrack,
-                                    const LHCb::STMeasurement* aHit) const
+LHCb::LHCbID STTrackTuple::findHitId(const LHCb::Track* aTrack,
+                                     const LHCb::STMeasurement* aHit) const
 {
   LHCb::LHCbID hitId(0);
   const std::vector<LHCb::LHCbID>& ids = aTrack -> lhcbIDs();
-  for (std::vector<LHCb::LHCbID>::const_iterator iter = ids.begin(); iter != ids.end(); ++iter)
+  for (auto iter = ids.begin(); iter != ids.end(); ++iter)
   {
     if ( (aHit->cluster())->channelID() == iter->stID() )
       hitId = (*iter);
@@ -1162,31 +1135,27 @@ namespace {
  *
  * @return the square of the residual error.
  */
-double STTrackTuple::retrieveErrResidual2(LHCb::Track* const& aTrack,
+double STTrackTuple::retrieveErrResidual2(const LHCb::Track* aTrack,
                                         LHCb::LHCbID aID) const
 {
   double errResidual2(0);
   HitType mtype = VeloR; // initialize to avoid compiler warning
-  LHCb::Track::ConstNodeRange nodes = aTrack -> nodes();
-  for( LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin() ;
-        inode != nodes.end(); ++inode)
+  for( const auto& node: aTrack -> nodes() ) 
   {
-    if( (*inode)->type() == LHCb::Node::HitOnTrack 
+    if( node->type() == LHCb::Node::HitOnTrack 
         // discard extremely small fraction of hits with zero error
         // on residual. (e.g. a downstream track with only one
         // active TT hit)
-        && (*inode)->errResidual2() > TrackParameters::lowTolerance 
-        && (mtype = hittypemap( (*inode)->measurement() ) )!=HitTypeUnknown )
+        && node->errResidual2() > TrackParameters::lowTolerance 
+        && (mtype = hittypemap( node->measurement() ) )!=HitTypeUnknown )
     {
-      if ( (*inode)->measurement().lhcbID() == aID )
+      if ( node->measurement().lhcbID() == aID )
       {
-        errResidual2 = (*inode)->errResidual2();
+        errResidual2 = node->errResidual2();
       }// end if (node is associated to the current measurement)
     }// end if (node not discarded)
   }// end loop on nodes
   return errResidual2;
 } // STTrackTuple::retrieveErrResidual2
-
-
 
 //=============================================================================

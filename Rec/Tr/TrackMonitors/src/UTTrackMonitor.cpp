@@ -16,15 +16,8 @@
 #include <map>
 #include "Map.h"
 #include "Kernel/ITNames.h"
-#include "LoKi/select.h"
 #include "AIDA/IHistogram1D.h"
 
-// Boost
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/lambda.hpp>
-#include <boost/foreach.hpp>
-
-using namespace boost::lambda;
 using namespace LHCb;
 using namespace Gaudi;
 
@@ -77,28 +70,26 @@ StatusCode UTTrackMonitor::execute()
   // locate the cluster container
   const LHCb::STClusters* clusters = get<LHCb::STClusters>(m_clusterLocation);
 
-  std::map<std::string, unsigned int> tMap;
-
   // tmp container for ids
   std::vector<unsigned int> usedIDs; usedIDs.reserve(clusters->size());
 
   // histograms per track
-  BOOST_FOREACH( const LHCb::Track* track, tracks) 
+  for( const LHCb::Track* track: tracks) 
     if( track->hasUT()) {
     
       // find the IT hits on the track 
-      const std::vector<LHCb::LHCbID>& ids = track->lhcbIDs();
+      const auto& ids = track->lhcbIDs();
       std::vector<LHCb::LHCbID> ttHits; ttHits.reserve(ids.size());
-      LoKi::select(ids.begin(), ids.end(), std::back_inserter(ttHits), bind(&LHCbID::isUT,_1));
+      std::copy_if(ids.begin(), ids.end(), std::back_inserter(ttHits), 
+                   [](const LHCb::LHCbID& id) { return id.isUT(); } );
       
       if (ids.size() < m_minNumUTHits) continue;
       
       std::string type = histoDirName(*track) ;
       
       // insert into tmp container
-      BOOST_FOREACH( LHCb::LHCbID id, ids ){
-	usedIDs.push_back(id.stID());
-      } // for each
+      std::transform( ids.begin(), ids.end(), std::back_inserter(usedIDs),
+                      [](const LHCb::LHCbID& id) { return id.stID(); } );
       
       fillHistograms(*track,ids,type);
     }
