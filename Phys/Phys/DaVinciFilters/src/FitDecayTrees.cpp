@@ -2,9 +2,8 @@
 // ============================================================================
 // Include files
 // ============================================================================
-// LoKi
-// ============================================================================
-#include "LoKi/select.h"
+#include <algorithm>
+#include <functional>
 // ============================================================================
 // DecayTreeFitter
 // ============================================================================
@@ -41,7 +40,7 @@ FitDecayTrees::FitDecayTrees                       // standard contructor
 ( const std::string& name ,                        // the algorithm instance name
   ISvcLocator*       pSvc )                        // pointer to Service Locator
   : FilterDesktop ( name , pSvc )
-// Track extrapolator  
+// Track extrapolator
   , m_extrapolator     ( 0 )
   , m_extrapolatorName ( "TrackStateProvider" )
 // chi2 cut for decay tree fit
@@ -118,12 +117,12 @@ void FitDecayTrees::updateExtrapolator ( Property& /* p */ )      // update the 
 {
   // no action if not yet initialized
   if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
-  //        
+  //
   MsgStream& log = info() ;
   log << "New Track extrapolator to be used '" << m_extrapolatorName <<  "'" ;
   const IAlgTool* e = extrapolator() ;
   if ( 0 != e ) { log  << " : " << e->type() << "/" << e->name() ;}
-  log << endreq ;
+  log << endmsg ;
   //
 }
 
@@ -176,14 +175,12 @@ LHCb::DecayTree FitDecayTrees::reFitted ( const LHCb::Particle* p ) const
   std::auto_ptr<Fitter>  fitter ;
   //
   // instantiate the fitter
-  fitter.reset ( 0 == pv ? 
-                 new Fitter ( *p, extrapolator() ) : 
-                 new Fitter ( *p , *pv, extrapolator() ) ) ;
+  fitter.reset ( pv ? new Fitter( *p , *pv, extrapolator() ) :
+                      new Fitter( *p, extrapolator() ) ) ;
   //
   // apply mass-constraints (if needed)
-  for ( std::vector<LHCb::ParticleID>::const_iterator ipid = m_mc_2.begin() ;
-        m_mc_2.end() != ipid ; ++ipid )
-  { fitter->setMassConstraint ( *ipid )  ; }
+  for ( const auto& ipid : m_mc_2 )
+  { fitter->setMassConstraint ( ipid )  ; }
   //
   // fit!
   fitter->fit() ;
@@ -219,16 +216,14 @@ StatusCode FitDecayTrees::filter
   //
   LHCb::Particle::ConstVector good ;
   good.reserve ( input.size  () ) ;
-  LoKi::select ( input.begin () ,
+  std::copy_if ( input.begin () ,
                  input.end   () ,
-                 std::back_inserter ( good ) , predicate() ) ;
+                 std::back_inserter ( good ) , std::cref(predicate()) ) ;
   if ( good.empty() ) { return StatusCode::SUCCESS ; }
   //
-  for ( LHCb::Particle::ConstVector::const_iterator ip = good.begin() ;
-        good.end() != ip ; ++ip )
+  for ( const auto& p : good )
   {
-    const LHCb::Particle* p = *ip ;
-    if ( 0 == p ) { continue ; }
+    if ( !p ) { continue ; }
     //
     LHCb::DecayTree tree = reFitted ( p ) ;
     //
@@ -251,8 +246,7 @@ StatusCode FitDecayTrees::decodeConstraints ()    // decode constraints
   //
   if ( m_mc_1.empty() )
   {
-    MsgStream& log = debug() ;
-    log << "No Mass-Constraints will be applied" << endreq ;
+    debug() << "No Mass-Constraints will be applied" << endmsg ;
     return StatusCode::SUCCESS ;
   }
   ///
@@ -260,26 +254,24 @@ StatusCode FitDecayTrees::decodeConstraints ()    // decode constraints
     svc<LHCb::IParticlePropertySvc>( "LHCb::ParticlePropertySvc" ) ;
   //
   std::set<LHCb::ParticleID> pids ;
-  for ( std::vector<std::string>::const_iterator ic = m_mc_1.begin() ;
-        m_mc_1.end() != ic ; ++ic )
+  for ( const auto& ic : m_mc_1 )
   {
-    const LHCb::ParticleProperty* pp = ppsvc->find ( *ic ) ;
-    if ( 0 == pp ) { return Error ( "Unable to find particle '" + (*ic) + "'") ; }
-    pids.insert ( LHCb::ParticleID ( pp->pid().abspid() ) ) ;
+    const LHCb::ParticleProperty* pp = ppsvc->find ( ic ) ;
+    if ( !pp ) { return Error ( "Unable to find particle '" + ic + "'") ; }
+    pids.emplace( pp->pid().abspid() ) ;
   }
   //
-  m_mc_2.insert ( m_mc_2.end() , pids.begin() , pids.end() ) ;
+  m_mc_2.insert( m_mc_2.end() , pids.begin() , pids.end() ) ;
   //
   MsgStream& log = info() ;
   std::set<std::string> parts ;
-  for ( std::vector<LHCb::ParticleID>::const_iterator ipid = m_mc_2.begin() ;
-        m_mc_2.end() != ipid ; ++ipid )
+  for ( const auto& ipid : m_mc_2 )
   {
-    const LHCb::ParticleProperty* pp = ppsvc->find ( *ipid ) ;
-    if ( 0 != pp ) { parts.insert ( pp->particle () ) ; }
+    auto pp = ppsvc->find ( ipid ) ;
+    if ( pp ) { parts.insert ( pp->particle () ) ; }
   }
   log << "Mass Constraints will be applied for : " <<
-    Gaudi::Utils::toString ( parts ) << endreq ;
+    Gaudi::Utils::toString ( parts ) << endmsg ;
   //
   release ( ppsvc ) ;
   //
@@ -296,8 +288,8 @@ StatusCode FitDecayTrees::_saveInTES ()
 // attention:restore the original action by DVAlgorithm
 // ===========================================================================
 void FitDecayTrees::writeEmptyTESContainers()
-{ 
-  FilterDesktop::BaseClass::writeEmptyTESContainers() ; 
+{
+  FilterDesktop::BaseClass::writeEmptyTESContainers() ;
 }
 // ===========================================================================
 /// the factory

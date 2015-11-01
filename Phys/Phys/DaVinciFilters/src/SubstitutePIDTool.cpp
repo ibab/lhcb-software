@@ -288,7 +288,7 @@ void SubstitutePIDTool::updateHandler ( Property& p )
             "' is updated. It will take effect at the next call" ,
             StatusCode( StatusCode::SUCCESS, true ) ) ;
   if ( msgLevel(MSG::DEBUG) )
-    debug () << "The updated property is: " << p << endreq ;
+    debug () << "The updated property is: " << p << endmsg ;
 }
 
 //=============================================================================

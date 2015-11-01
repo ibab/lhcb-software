@@ -1,8 +1,10 @@
+#include <cmath>
+#include <algorithm>
+#include <functional>
 #include "GaudiKernel/IIncidentSvc.h"
 //#include "Kernel/Particle2Vertex.h"
 #include "Kernel/IDVAlgorithm.h"
 #include "Kernel/IDistanceCalculator.h"
-#include "LoKi/select.h"
 #include "FilterDesktop.h"
 
 /** @class ConeJetProxyFilter
@@ -22,12 +24,8 @@ public:
 
   virtual StatusCode initialize();
 
-public:
-
   virtual StatusCode filter(const LHCb::Particle::ConstVector& input,
                             LHCb::Particle::ConstVector& output);
-
-private:
 
   double conePT ( const LHCb::Particle* p,
                   const LHCb::Particles * charged,
@@ -97,14 +95,12 @@ StatusCode ConeJetProxyFilter::filter(const LHCb::Particle::ConstVector& input,
 
   LHCb::Particle::ConstVector filtered;
   filtered.reserve(input.size());
-  LoKi::select(input.begin(),input.end(),
-               std::back_inserter(filtered),predicate());
+  std::copy_if(input.begin(),input.end(),
+               std::back_inserter(filtered),std::cref(predicate()));
 
   output.reserve(filtered.size());
-  for ( LHCb::Particle::ConstVector::const_iterator ip = filtered.begin();
-        filtered.end() != ip; ++ip ) 
+  for ( const auto& p : filtered ) 
   {
-    const LHCb::Particle *p = *ip;
     if ( !p ) { continue ; }
     const LHCb::VertexBase* bpv = bestVertex(p);
     const double pt = conePT(p,charged,neutral,bpv);
@@ -123,27 +119,26 @@ double ConeJetProxyFilter::conePT(const LHCb::Particle *p,
   Gaudi::LorentzVector p4cone(0,0,0,0);
   const Gaudi::LorentzVector& p4 = p->momentum();
   // charged
-  for ( LHCb::Particles::const_iterator ip = charged->begin(); 
-        ip != charged->end(); ++ip ) 
+  for ( const auto& cp : *charged ) 
   {
     // clean up
-    if ( (*ip)->proto()->track()->chi2PerDoF()     > m_maxTkChiSqPerDOF ) continue;
-    if ( (*ip)->proto()->track()->ghostProbability() > m_maxTkGhostProb ) continue;
+    if ( cp->proto()->track()->chi2PerDoF()     > m_maxTkChiSqPerDOF ) continue;
+    if ( cp->proto()->track()->ghostProbability() > m_maxTkGhostProb ) continue;
     // prompt from same pv or "close" to topo
     bool use = false;
     double imp(-1),chi2(-1),doca(-1);
-    m_dist->distance((*ip),pv,imp,chi2);
+    m_dist->distance((cp),pv,imp,chi2);
     if ( chi2 < m_maxTkIPChiSq )
     {
       use = true; 
     }
     else
     {
-      m_dist->distance(p,(*ip),doca);
+      m_dist->distance(p,cp,doca);
       if ( doca < m_maxTkDOCA ) { use = true; }
     }
     if(!use) continue;
-    const Gaudi::LorentzVector& p4part = (*ip)->momentum();
+    const Gaudi::LorentzVector& p4part = cp->momentum();
     double deltaPhi = fabs( p4.Phi() - p4part.Phi() );
     if(deltaPhi > M_PI) deltaPhi = 2*M_PI - deltaPhi;
     const double deltaEta = p4.Eta() - p4part.Eta();
@@ -151,14 +146,13 @@ double ConeJetProxyFilter::conePT(const LHCb::Particle *p,
     if ( dR < m_dR ) { p4cone += p4part; }
   }
   // neutral
-  for ( LHCb::Particles::const_iterator ip = neutral->begin(); 
-        ip != neutral->end(); ++ip ) 
+  for ( const auto& np : *neutral )
   {
-    const Gaudi::LorentzVector& p4part = (*ip)->momentum();
+    const Gaudi::LorentzVector& p4part = np->momentum();
     double deltaPhi = fabs( p4.Phi() - p4part.Phi() );
     if(deltaPhi > M_PI) deltaPhi = 2*M_PI - deltaPhi;
     const double deltaEta = p4.Eta() - p4part.Eta();
-    const double dR   = std::sqrt(deltaPhi*deltaPhi + deltaEta*deltaEta);
+    const double dR   = std::hypot(deltaPhi,deltaEta);
     if ( dR < m_dR ) { p4cone += p4part; }
   }
   return p4cone.Pt();

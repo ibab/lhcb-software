@@ -2,6 +2,9 @@
 // ============================================================================
 // Include files
 // ============================================================================
+#include <algorithm>
+#include <functional>
+// ============================================================================
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/StatEntity.h"
@@ -13,7 +16,6 @@
 // LoKi
 // ============================================================================
 #include "LoKi/IHybridFactory.h"
-#include "LoKi/select.h"
 // ============================================================================
 // Boost
 // ============================================================================
@@ -245,7 +247,7 @@ void FilterDesktop::updateHandler2 ( Property& p )
   if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
   /// mark as "to-be-updated"
   m_to_be_updated2 = true ;
-  debug () << "The histogramming property is updated: " << p << endreq ;
+  debug () << "The histogramming property is updated: " << p << endmsg ;
 }
 // ============================================================================
 void FilterDesktop::writeEmptyTESContainers()
@@ -305,10 +307,10 @@ StatusCode FilterDesktop::updateMajor ()
 StatusCode FilterDesktop::updateHistos ()
 {
   // ========================================================================
-  if ( 0 != m_inputPlots  )
-  { releaseTool ( m_inputPlots  ) ; m_inputPlots  = 0 ; }
-  if ( 0 != m_outputPlots )
-  { releaseTool ( m_outputPlots ) ; m_outputPlots = 0 ; }
+  if ( m_inputPlots  )
+  { releaseTool ( m_inputPlots  ) ; m_inputPlots  = nullptr ; }
+  if ( m_outputPlots )
+  { releaseTool ( m_outputPlots ) ; m_outputPlots = nullptr ; }
   // =========================================================================
   if ( produceHistos () )
   {
@@ -361,7 +363,7 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
   if ( monitor() && !m_preMonitorCode.empty() ) { m_preMonitor ( particles ) ; }
 
   // make plots
-  if ( produceHistos () && 0 != m_inputPlots )
+  if ( produceHistos () && m_inputPlots )
   {
     StatusCode sc = m_inputPlots -> fillPlots ( particles ) ;
     if ( sc.isFailure () )
@@ -380,7 +382,7 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
   // this -> markTrees     ( m_accepted ) ;
 
   // make the final plots
-  if ( produceHistos () && 0 != m_outputPlots )
+  if ( produceHistos () && m_outputPlots )
   {
     const StatusCode scc = m_outputPlots -> fillPlots ( i_markedParticles()  ) ;
     if ( scc.isFailure () )
@@ -411,9 +413,9 @@ StatusCode FilterDesktop::filter
   LHCb::Particle::ConstVector&       filtered )
 {
   // Filter particles!!  - the most important line :-)
-  LoKi::select ( input.begin () ,
+  std::copy_if ( input.begin () ,
                  input.end   () ,
-                 std::back_inserter ( filtered ) , m_cut ) ;
+                 std::back_inserter ( filtered ) , std::cref(m_cut) ) ;
   //
   // mark & store filtered particles in DaVinciAlgorithm local container
   markParticles ( filtered ) ;
@@ -444,12 +446,9 @@ StatusCode FilterDesktop::_save ( ) const
   //
   CLONER cloner ;
   //
-  for ( LHCb::Particle::Range::iterator ip = i_markedParticles().begin(); 
-        ip != i_markedParticles().end(); ++ip )
+  for ( const auto& p : i_markedParticles() )
   {
-    //
-    const LHCb::Particle* p = *ip ;
-    if ( NULL == p ) { continue ; } // CONTINUE
+    if ( !p ) { continue ; } // CONTINUE
 
     // clone if needeed
     LHCb::Particle* p_cloned = cloner ( p ) ;
@@ -458,7 +457,7 @@ StatusCode FilterDesktop::_save ( ) const
     this  -> cloneP2PVRelation ( p , p_cloned ) ;
     //
     const LHCb::Vertex* v = p->endVertex() ;
-    if ( NULL != v )
+    if ( v )
     {
       LHCb::Vertex* v_cloned = cloner ( v ) ;
       p_cloned -> setEndVertex ( v_cloned ) ;
@@ -468,17 +467,16 @@ StatusCode FilterDesktop::_save ( ) const
   //
   // check that the decay trees are fully in the TES
   //
-  for ( typename PARTICLES::const_iterator ip = p_tes->begin() ;
-        p_tes->end () != ip ; ++ip )
+  for ( const auto& ip : *p_tes )
   {
-    if (! DaVinci::Utils::decayTreeInTES( *ip ) )
+    if (! DaVinci::Utils::decayTreeInTES( ip ) )
     {
       return Error ( "FilterDesktop::_save Element of saved decay tree not in TES. Likely memory leak!");
     }
   }
   //
-  return ( i_markedParticles().size() != p_tes->size() ?
-           StatusCode::FAILURE : StatusCode::SUCCESS   );
+  return  i_markedParticles().size() != p_tes->size() ?
+          StatusCode::FAILURE : StatusCode::SUCCESS   ;
 }
 // ============================================================================
 namespace
@@ -515,7 +513,7 @@ void FilterDesktop::cloneP2PVRelation
   const LHCb::Particle*   clone       ) const
 {
   const LHCb::VertexBase* bestPV = getStoredBestPV(particle);
-  if ( 0!= bestPV ) { this->relate ( clone , bestPV ) ; }
+  if ( bestPV ) { this->relate ( clone , bestPV ) ; }
 
 }
 // ============================================================================

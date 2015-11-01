@@ -2,15 +2,15 @@
 // ============================================================================
 // Include files
 // ============================================================================
+#include <algorithm>
+#include <functional>
+// ============================================================================
+// GaudiKernel
+// ============================================================================
 #include "GaudiKernel/IIncidentSvc.h"
-// ============================================================================
-// LoKi
-// ============================================================================
-#include "LoKi/select.h"
 // ============================================================================
 // Boost
 // ============================================================================
-#include "boost/foreach.hpp"
 #include "boost/numeric/conversion/bounds.hpp"
 #include "boost/limits.hpp"
 // ============================================================================
@@ -215,9 +215,9 @@ StatusCode SubstitutePID::filter
   //
   // filter particles
   //
-  LoKi::select ( input.begin () ,
+  std::copy_if ( input.begin () ,
                  input.end   () ,
-                 std::back_inserter ( filtered ) , predicate() ) ;
+                 std::back_inserter ( filtered ) , std::cref(predicate()) ) ;
   //
   if (filtered.empty()) return StatusCode::SUCCESS ;
   LHCb::Particle::ConstVector substituted ;

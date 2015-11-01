@@ -5,8 +5,6 @@
 #include <sstream>
 #include "GaudiKernel/IIncidentSvc.h"
 #include "LoKi/ParticleProperties.h"
-#include "LoKi/select.h"
-#include "boost/foreach.hpp"
 #include "boost/numeric/conversion/bounds.hpp"
 #include "boost/limits.hpp"
 #include "FilterDesktop.h"
@@ -122,14 +120,13 @@ StatusCode SubPIDMMFilter::filter( const LHCb::Particle::ConstVector& input,
 {
   LHCb::Particle::ConstVector filtered ;
   filtered.reserve(input.size());
-  LoKi::select(input.begin(),input.end(),
-               std::back_inserter(filtered),predicate());
+  std::copy_if(input.begin(),input.end(),
+               std::back_inserter(filtered),std::cref(predicate()));
   bool reachedMax = false;
-  for ( LHCb::Particle::ConstVector::const_iterator ip = filtered.begin();
-        filtered.end() != ip; ++ip )
+  for ( auto ip = filtered.begin(); filtered.end() != ip; ++ip )
   {
     const LHCb::Particle* p = *ip ;
-    if ( NULL == p ) { continue ; }
+    if ( !p ) { continue ; }
     for ( unsigned int i = 0; i < m_pids.size(); ++i )
     {
       if ( i_markedParticles().size() > m_maxParticles )
@@ -159,14 +156,13 @@ StatusCode SubPIDMMFilter::filter( const LHCb::Particle::ConstVector& input,
 
 bool SubPIDMMFilter::substitute( LHCb::Particle* p,const unsigned int which )
 {
-  if ( NULL == p ) { return false; }
+  if ( !p ) { return false; }
 
   // Check which index (should never fail...)
   if ( which >= m_pids.size() )
   {
-    std::ostringstream mess;
-    mess << "'which' index " << which << " exceeds bound " << m_pids.size()-1;
-    Warning( mess.str() ).ignore();
+    Warning( "'which' index " + std::to_string(which) 
+           + " exceeds bound " + std::to_string( m_pids.size()-1)).ignore();
     return false;
   }
 
@@ -176,13 +172,13 @@ bool SubPIDMMFilter::substitute( LHCb::Particle* p,const unsigned int which )
   {
     double energySum = 0.0, pxSum = 0.0, pySum = 0.0, pzSum = 0.0;
     unsigned int index = 0;
-    BOOST_FOREACH( const LHCb::Particle* daughter, daughters )
+    for( const LHCb::Particle* daughter: daughters )
     {
       if ( index >= (m_pids[which]).size() )
       {
-        std::ostringstream mess;
-        mess << "'index' index " << index << " exceeds bound " << (m_pids[which]).size()-1;
-        Warning( mess.str() ).ignore();
+        Warning( "'index' index " + std::to_string(index) 
+               + " exceeds bound " + std::to_string((m_pids[which]).size()-1)
+               ).ignore();
       }
       else
       {

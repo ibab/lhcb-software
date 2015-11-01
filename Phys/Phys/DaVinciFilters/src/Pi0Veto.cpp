@@ -2,13 +2,12 @@
 // ============================================================================
 // Include files 
 // ============================================================================
+#include <algorithm>
+#include <functional>
+// ============================================================================
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/SystemOfUnits.h"
-// ============================================================================
-// LoKiCore
-// ============================================================================
-#include "LoKi/select.h"
 // ============================================================================
 // LoKiPhys 
 // ============================================================================
@@ -80,10 +79,10 @@ void Pi0Veto::Filter::updateHandler20 ( Property& p )
   // no action if not initialized yet:
   if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
   //
-  info () << "The updated property is: " << p << endreq ;
+  info () << "The updated property is: " << p << endmsg ;
   //
   if ( 0 >= m_massWindow ) 
-  { warning() << "The mass-window for veto is disabled " << endreq ; }
+  { warning() << "The mass-window for veto is disabled " << endmsg ; }
 }
 // ============================================================================  
 void Pi0Veto::Filter::updateHandler21 ( Property& p ) 
@@ -91,10 +90,10 @@ void Pi0Veto::Filter::updateHandler21 ( Property& p )
   // no action if not initialized yet:
   if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
   //
-  info () << "The updated property is: " << p << endreq ;
+  info () << "The updated property is: " << p << endmsg ;
   //
   if ( 0 >= m_massChi2 ) 
-  { warning() << "The chi2 for veto is disabled " << endreq ; }
+  { warning() << "The chi2 for veto is disabled " << endmsg ; }
 }
 // ============================================================================  
 void Pi0Veto::Filter::updateHandler22 ( Property& p ) 
@@ -102,10 +101,10 @@ void Pi0Veto::Filter::updateHandler22 ( Property& p )
   // no action if not initialized yet:
   if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
   //
-  info () << "The updated property is: " << p << endreq ;
+  info () << "The updated property is: " << p << endmsg ;
   //
   if ( 0 >= m_pi0Mass ) 
-  { error () << "Pi0 mass is invalid" << endreq ; }
+  { error () << "Pi0 mass is invalid" << endmsg ; }
 }
 // ============================================================================  
 // the standard initialization 
@@ -142,9 +141,9 @@ StatusCode Pi0Veto::Filter::filter
   photons.reserve ( input.size() ) ;
   //
   // Filter particles!! 
-  LoKi::select ( input.begin () , 
+  std::copy_if ( input.begin () , 
                  input.end   () , 
-                 std::back_inserter ( photons ) , predicate()  ) ;
+                 std::back_inserter ( photons ) , std::cref(predicate())  ) ;
   //
   // Apply pi0 veto!
   // 
@@ -221,10 +220,10 @@ void Pi0Veto::Tagger::updateHandler30 ( Property& p )
   // no action if not initialized yet:
   if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
   //
-  info () << "The updated property is: " << p << endreq ;
+  info () << "The updated property is: " << p << endmsg ;
   //
   if ( LHCb::Particle::LastGlobal >= m_index  ) 
-  { error () << "Invalid index for ExtraInfo" << endreq ; }
+  { error () << "Invalid index for ExtraInfo" << endmsg ; }
   //
 }
 // ============================================================================/
@@ -233,8 +232,8 @@ namespace
   // ==========================================================================
   std::string short_name ( const std::string& loc ) 
   {
-    std::string::size_type i1 = loc. find ( "/Event/Phys/" ) ;
-    std::string::size_type i2 = loc.rfind ( "/Particles"   ) ;
+    auto i1 = loc. find ( "/Event/Phys/" ) ;
+    auto i2 = loc.rfind ( "/Particles"   ) ;
     //
     if      ( std::string::npos == i1 ) { i1 =  0 ; }
     else if ( 0 == i1                 ) { i1 = 12 ; }
@@ -263,13 +262,12 @@ void Pi0Veto::Tagger::updateHandler31 ( Property& p )
   // no action if not initialized yet:
   if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
   //
-  info () << "The updated property is: " << p  << endreq ;
+  info () << "The updated property is: " << p  << endmsg ;
   //
-  for ( std::vector<std::string>::iterator iloc = 
-          m_photons.begin() ; m_photons.end() != iloc ; ++iloc ) 
-  { *iloc = long_name ( *iloc ) ; }
+  for ( auto& iloc : m_photons )
+  { iloc = long_name ( iloc ) ; }
   //
-  info () << "The updated property is: " << m_photons << endreq ;
+  info () << "The updated property is: " << m_photons << endmsg ;
   //
 }
 // ============================================================================
@@ -284,9 +282,8 @@ StatusCode Pi0Veto::Tagger::initialize()
   if ( m_photons.empty() ) 
   { Warning ( "No photon locations are specified" , StatusCode::SUCCESS ) ; }
   //
-  for ( std::vector<std::string>::iterator iloc = 
-          m_photons.begin() ; m_photons.end() != iloc ; ++iloc ) 
-  { *iloc = long_name ( *iloc ) ; }
+  for ( auto& iloc : m_photons )
+  { iloc = long_name ( iloc ) ; }
   //
   if ( LHCb::Particle::LastGlobal >= m_index  ) 
   { return Error ( "Invalid index for ExtraInfo" ) ; }
@@ -328,19 +325,18 @@ Pi0Veto::Tagger::getPhotons ( LHCb::Particle::ConstVector& other ) const
   other.clear   (     ) ;
   other.reserve ( 150 ) ;
   //
-  for ( std::vector<std::string>::const_iterator iloc = 
-          m_photons.begin() ; m_photons.end() != iloc ; ++iloc ) 
+  for ( const auto& iloc : m_photons )
   {
     //
-    std::string sname = short_name ( *iloc ) ;
+    std::string sname = short_name ( iloc ) ;
     //
-    if ( !exist<LHCb::Particle::Range> ( *iloc , false ) ) 
+    if ( !exist<LHCb::Particle::Range> ( iloc , false ) ) 
     {
       Warning ( "No particles at \"" + sname + "\"" ) ;
       continue ;
     }
     /// get particles form TES 
-    LHCb::Particle::Range input = get<LHCb::Particle::Range> ( *iloc , false ) ;
+    LHCb::Particle::Range input = get<LHCb::Particle::Range> ( iloc , false ) ;
     
     ///
     std::size_t s1 = other.size() ;
@@ -395,7 +391,7 @@ StatusCode Pi0Veto::Tagger::filter
            photons.begin() ; photons.end() != iph ; ++iph ) 
   {
     const LHCb::Particle* gamma = *iph ;
-    if ( 0 == gamma ) { continue ; }
+    if ( !gamma ) { continue ; }
     //
     LHCb::Particle* _gamma = const_cast<LHCb::Particle*> ( gamma ) ;
     //
@@ -486,13 +482,13 @@ StatusCode Pi0Veto::Tagger2g::filter
            digamma.begin() ; digamma.end() != i2g ; ++i2g ) 
   {
     const LHCb::Particle* diphoton = *i2g ;
-    if ( 0 == diphoton ) { continue ; }
+    if ( !diphoton ) { continue ; }
     //
     const LHCb::Particle* gamma1 = LoKi::Child::child ( diphoton , 1 ) ;
-    if ( 0 == gamma1 ) 
+    if ( !gamma1 ) 
     { Error ( "Invalid first  photon" ) ; continue ; }    
     const LHCb::Particle* gamma2 = LoKi::Child::child ( diphoton , 2 ) ;
-    if ( 0 == gamma2 ) 
+    if ( !gamma2 ) 
     { Error ( "Invalid second photon" ) ; continue ; }
     //
     LHCb::Particle* _diphoton = const_cast<LHCb::Particle*> ( diphoton ) ;
