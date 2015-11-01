@@ -102,7 +102,7 @@ StatusCode TupleToolDecay::initializeDecay( const std::string& dcy, bool isMC )
   }
 
   if (msgLevel(MSG::DEBUG)) debug() << "Initialized " << name()
-                                    << " with decay " << decay() << endreq;
+                                    << " with decay " << decay() << endmsg;
 
   std::sort( m_stufferList.begin(), m_stufferList.end() );
   m_stufferList.erase(std::unique(m_stufferList.begin(),m_stufferList.end()),
@@ -124,7 +124,7 @@ std::string TupleToolDecay::decay() const
 }
 
 std::string TupleToolDecay::getInfo() const { return name() + " :" + decay(); }
-void TupleToolDecay::printInfo() const { info() << getInfo() << endreq; }
+void TupleToolDecay::printInfo() const { info() << getInfo() << endmsg; }
 
 IDecayFinder* TupleToolDecay::decayFinder() const {return m_dkFinder;}
 IMCDecayFinder* TupleToolDecay::mcDecayFinder() const {return m_mcdkFinder;}

@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones
 ! Purpose     : Base classes for the DecayTreeTuples
 !-----------------------------------------------------------------------------
+! 2015-11-01 - Gerhard Raven
+ - replace endreq with endmsg
 
 !========================= DecayTreeTupleBase v1r4 2014-07-25 =========================
 

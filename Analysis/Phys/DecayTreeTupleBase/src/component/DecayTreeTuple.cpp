@@ -78,18 +78,18 @@ StatusCode DecayTreeTuple::execute()
       return StatusCode::SUCCESS;
     }
     if (msgLevel(MSG::VERBOSE)) verbose() << "I have " << mothers.size()
-                                          << " particles to handle" << endreq;
+                                          << " particles to handle" << endmsg;
     StatusCode test = getDecayMatches( mothers, heads );
     found = test.isSuccess();
   }
   if ( found )
   {
     if (msgLevel(MSG::VERBOSE)) verbose() << "There is " << heads.size()
-                                          << " top particles matching the decay." << endreq;
+                                          << " top particles matching the decay." << endmsg;
   }
   else
   {
-    if (msgLevel(MSG::VERBOSE)) verbose() << "No particle matching the decay." << endreq;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "No particle matching the decay." << endmsg;
     setFilterPassed(false);
     return StatusCode::SUCCESS;
   }
@@ -105,7 +105,7 @@ StatusCode DecayTreeTuple::execute()
 
   if ( test.isSuccess() )
   {
-    if (msgLevel(MSG::VERBOSE)) verbose() << "NTuple sucessfully filled" << endreq;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "NTuple sucessfully filled" << endmsg;
   }
 
   setFilterPassed( test.isSuccess() );

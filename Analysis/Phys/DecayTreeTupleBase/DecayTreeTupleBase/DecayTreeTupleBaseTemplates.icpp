@@ -147,7 +147,7 @@ bool sizeCheckOrInit( const std::vector<const PARTICLE*> & row )
   }
 
   if (msgLevel(MSG::DEBUG))
-    debug() << "Entering the initialization process" << endreq;
+    debug() << "Entering the initialization process" << endmsg;
 
   // initializing the particles object.
   m_parts.reserve( size );
@@ -180,7 +180,7 @@ bool sizeCheckOrInit( const std::vector<const PARTICLE*> & row )
   }
 
   if (msgLevel(MSG::DEBUG)) debug() << "There are " << m_parts.size()
-                                    << " particles to initialize." << endreq;
+                                    << " particles to initialize." << endmsg;
 
   // set the base properties...
   switchStufferTools(row[0]); // that's a cheat
@@ -325,12 +325,12 @@ void initializeStufferTools(std::vector< ITUPLETOOL* >& pTools)
               " know what you are doing." ).ignore();
     }
     if( test1 && !test2 )
-      if (msgLevel(MSG::VERBOSE)) verbose() << *it << " instantiated as an Event related tool" << endreq;
+      if (msgLevel(MSG::VERBOSE)) verbose() << *it << " instantiated as an Event related tool" << endmsg;
     if( !test1 && test2 )
-      if (msgLevel(MSG::VERBOSE)) verbose() << *it << " instantiated as a Particle related tool" << endreq;
+      if (msgLevel(MSG::VERBOSE)) verbose() << *it << " instantiated as a Particle related tool" << endmsg;
   }
 
-  if (msgLevel(MSG::DEBUG)) debug() << "Generic and inherited tool list successfully created" << endreq;
+  if (msgLevel(MSG::DEBUG)) debug() << "Generic and inherited tool list successfully created" << endmsg;
 }
 //=============================================================================
 //=============================================================================
@@ -385,7 +385,7 @@ void initializeOnePartsStufferTools( Decays::OnePart* P
         {
           if (msgLevel(MSG::VERBOSE))
             verbose() << "Found! Part " << P->info() << " inherits "
-                      << pTools[k]->type() << endreq;
+                      << pTools[k]->type() << endmsg;
           P->addTool( pTools[k] );
           flag = true;
           break;
@@ -410,7 +410,7 @@ void initializeOnePartsStufferTools( Decays::OnePart* P
       continue;
     }
     if (msgLevel(MSG::VERBOSE)) verbose() << "locTools: Part " << P->info() << " inherits "
-                                          << tt->type() << endreq;
+                                          << tt->type() << endmsg;
     P->addTool( tt );
   }
 }

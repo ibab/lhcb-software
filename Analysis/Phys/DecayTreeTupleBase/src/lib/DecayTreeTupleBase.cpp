@@ -127,7 +127,7 @@ bool DecayTreeTupleBase::initializeDecays( const bool isMC )
         Error( "Cannot initialize the main decay '" + m_headDecay+ "' properly." ).ignore();
         return false;
       }
-      info() << "Will look for " << m_mcdkFinder->decay() << endreq;
+      info() << "Will look for " << m_mcdkFinder->decay() << endmsg;
     }
     else
     {
@@ -137,7 +137,7 @@ bool DecayTreeTupleBase::initializeDecays( const bool isMC )
         Error( "Cannot initialize the main decay '" + m_headDecay+ "' properly." ).ignore();
         return false;
       }
-      info() << "Will look for " << m_dkFinder->decay() << endreq;
+      info() << "Will look for " << m_dkFinder->decay() << endmsg;
     }
   }
 
@@ -146,7 +146,7 @@ bool DecayTreeTupleBase::initializeDecays( const bool isMC )
   std::map<std::string,std::string>::iterator mit;
   for( mit=m_decayMap.begin(); m_decayMap.end()!=mit; ++mit )
   {
-    if (msgLevel(MSG::DEBUG)) debug() << "Try now to instanciate " << mit->first << endreq;
+    if (msgLevel(MSG::DEBUG)) debug() << "Try now to instanciate " << mit->first << endmsg;
     ITupleToolDecay * m = tool<ITupleToolDecay>( "TupleToolDecay", mit->first, this );
     if ( !Gaudi::Utils::setProperty(m,"UseLoKiDecayFinders",useLoKiDecayFinders()) )
     {
@@ -163,7 +163,7 @@ bool DecayTreeTupleBase::initializeDecays( const bool isMC )
 
   if( !m_decays.empty() )
   {
-    info() << "Explicit sub decays :" << m_decays.size() << endreq;
+    info() << "Explicit sub decays :" << m_decays.size() << endmsg;
     for ( std::vector<ITupleToolDecay*>::const_iterator di = m_decays.begin();
           di != m_decays.end(); ++di )
     {
@@ -172,7 +172,7 @@ bool DecayTreeTupleBase::initializeDecays( const bool isMC )
   }
   else
   {
-    if (msgLevel(MSG::DEBUG)) debug() << "No sub decay to create" << endreq;
+    if (msgLevel(MSG::DEBUG)) debug() << "No sub decay to create" << endmsg;
   }
   return true;
 }
