@@ -105,7 +105,7 @@ StatusCode SaveParticlesFrom::execute() {
   MCParticles* mcparts = get<MCParticles>(MCParticleLocation::Default );
   if( !mcparts ){
     warning() << "Unable to find MC particles at '"
-              << MCParticleLocation::Default << "'" << endreq;
+              << MCParticleLocation::Default << "'" << endmsg;
     return StatusCode::FAILURE;
   }
   debug() << "There are " <<  mcparts->size() << " MC particles" << endmsg;

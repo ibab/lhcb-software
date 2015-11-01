@@ -583,22 +583,22 @@ StatusCode MCDisplVertices::finalize() {
   if( context() == "HLT" ) return DaVinciTupleAlgorithm::finalize();
 
 
-  info()<<"-------------------------------------------------------"<< endreq;
-  info()<<"              DisplVertices Statistics                 "<< endreq;
-  info()<<"-------------------------------------------------------"<< endreq;
+  info()<<"-------------------------------------------------------"<< endmsg;
+  info()<<"              DisplVertices Statistics                 "<< endmsg;
+  info()<<"-------------------------------------------------------"<< endmsg;
   info()<<"Number of reconstructed "<< m_Prey <<"               : "
-        << counter("Nb of candidates").flag() << endreq;
+        << counter("Nb of candidates").flag() << endmsg;
   info()<<"Number of reconstructed "<<  m_MotherPrey <<"                 : "
-        << counter("Nb of mothers").flag() << endreq;
+        << counter("Nb of mothers").flag() << endmsg;
   if( m_MC ){
     info()<<"Percentage of reconstructed "<< m_Prey <<"           : "
-          << 100.*counter("RecbleMCPrey").flagMean() << endreq;
+          << 100.*counter("RecbleMCPrey").flagMean() << endmsg;
     info()<<"Nb of ass. MC tracks of "<< m_Prey <<"               : "
           << counter("NbassfromaPrey").flagMean() <<" +- "
-          << counter("NbassfromaPrey").flagMeanErr() << endreq;
+          << counter("NbassfromaPrey").flagMeanErr() << endmsg;
     info()<<"Average purity of reconstructed "<< m_Prey <<"       : "
           << counter("purity").flagMean() <<" +- "
-          << counter("purity").flagMeanErr() <<endreq;
+          << counter("purity").flagMeanErr() <<endmsg;
     info()<<"Pure "<< m_Prey <<"    (purity > "<< m_maxmixed
           << ")               :" << 100.*counter("p1").flagMean() <<"%"<< endmsg;
     info()<<"Mixed "<< m_Prey <<"   ( "<< m_minmixed <<" < purity < "
@@ -608,7 +608,7 @@ StatusCode MCDisplVertices::finalize() {
           << m_maxunpure << ")                :"
           << 100.*counter("p3").flagMean() <<"%"<< endmsg;
   }
-  info()<<"-------------------------------------------------------"<< endreq;
+  info()<<"-------------------------------------------------------"<< endmsg;
 
 
   return DaVinciTupleAlgorithm::finalize();
@@ -793,7 +793,7 @@ void MCDisplVertices::StudyDiffGenMC(){
   MCParticles* mcparts = get<MCParticles>(MCParticleLocation::Default );
   if( !mcparts ){
     warning() << "Unable to find MC particles at '"
-              << MCParticleLocation::Default << "'" << endreq;
+              << MCParticleLocation::Default << "'" << endmsg;
     return;
   }
   //Find MC PV
@@ -1651,7 +1651,7 @@ StatusCode MCDisplVertices::GetMCInfos() {
   MCParticles* mcparts = get<MCParticles>(MCParticleLocation::Default );
   if( !mcparts ){
     warning() << "Unable to find MC particles at '"
-              << MCParticleLocation::Default << "'" << endreq;
+              << MCParticleLocation::Default << "'" << endmsg;
     return StatusCode::FAILURE;
   }
   //debug() << "There are " <<  mcparts->size() << " MC particles" << endmsg;
@@ -3616,7 +3616,7 @@ StatusCode MCDisplVertices::SaveTrigInfinTuple( Tuple & tuple ){
   L0DUReport * l0 = get<L0DUReport>( L0DUReportLocation::Default );
   int L0dec = l0->decision();
   if( msgLevel(MSG::DEBUG) )
-    debug()<<"L0 decision                  : " << L0dec << endreq;
+    debug()<<"L0 decision                  : " << L0dec << endmsg;
   tuple->column( "L0", L0dec );
 
   //fill the HLT global : Hlt2 : 77,Hlt1 :  46
@@ -3688,7 +3688,7 @@ StatusCode MCDisplVertices::SaveTrigInfinTuple( Tuple & tuple ){
   //   bool Hlt2Globdec = false;
   //   if( decrep != NULL ) Hlt2Globdec = decrep->decision();
   //   if( msgLevel(MSG::DEBUG) )
-  //     debug()<<"Hlt2 Global decision         : " << Hlt2Globdec << endreq;
+  //     debug()<<"Hlt2 Global decision         : " << Hlt2Globdec << endmsg;
   //   tuple->column( "Hlt2", Hlt2Globdec);
 
   //To print entire report container :

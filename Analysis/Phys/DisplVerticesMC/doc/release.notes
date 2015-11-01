@@ -4,6 +4,8 @@
 ! Purpose     : Offline algorithms and tools for the selection
 !               of events with exotic displaced vertices (MC-dependent code)
 !-----------------------------------------------------------------------------
+! 2015-11-01 - Gerhard Raven
+ - replace endreq with endmsg
 
 !========================= DisplVerticesMC v1r4p5 2013-06-13 =========================
 
