@@ -1,6 +1,8 @@
-// $Id$
 // ============================================================================
 // Include files
+// ============================================================================
+#include <algorithm>
+#include <functional>
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -24,16 +26,8 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  By usage of this code one clearly states the disagreement 
- *  with the smear campaign of Dr.O.Callot et al.: 
- *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
- *
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  @date   2004-08-17 
- * 
- *                    $Revision$
- *  Last modification $Date$
- *                 by $Author$
  */
 // ============================================================================
 namespace LoKi 
@@ -276,7 +270,7 @@ StatusCode LoKi::DecayTruth::analyse   ()
   
   if ( msgLevel ( MSG::DEBUG ) ) 
   { debug() << " cut used for selection of RC particles '" 
-            << cut.printOut() << "'" << endreq ; }
+            << cut.printOut() << "'" << endmsg ; }
   
   /// select all recostructed "interesting" particles: 
   Range RC = select( "RC" , cut ) ;
@@ -329,14 +323,14 @@ StatusCode LoKi::DecayTruth::analyse   ()
     if ( 0 == rc ) { continue ; }
     MsgStream& log = always() ;
     
-    log << std::string(80,'*') << endreq ;
+    log << std::string(80,'*') << endmsg ;
     log << " Reconstructed "
         << LoKi::Particles::nameFromPID( rc->particleID() ) 
         << "  #" << index << "/" << RC.size() ;
     if ( rc->hasKey() ) { log << " (key:" << rc->key() << ")" ; }
     log << std::endl ;
     rcPrinter.print ( rc , log.stream() , '\n'       , PALL  , PNONE ) ;
-    log << endreq ;
+    log << endmsg ;
     
     // get all daughters of this 'Particle'  
     RCCont children ;
@@ -351,10 +345,10 @@ StatusCode LoKi::DecayTruth::analyse   ()
       // get all Monte Carlo particles which 'matched' with this daugter particle 
       MCCut  rcChild   = RCTRUTH ( match , child ) ;
       MCCont mcCont ;
-      LoKi::select
+      std::copy_if
         ( MC.begin () , 
           MC.end   () , 
-          std::back_inserter ( mcCont ) , rcChild ) ;
+          std::back_inserter ( mcCont ) , std::cref(rcChild) ) ;
       
       // transform this container into container of trees:
       MCIter trees = LoKi::MCTrees::buildTrees ( mcCont.begin() , mcCont.end() ) ;
@@ -378,9 +372,9 @@ StatusCode LoKi::DecayTruth::analyse   ()
           rcChild        ,
           "  "           , 0  );
       //
-      log_ << endreq ;
+      log_ << endmsg ;
     } //                                              end of loop over children
-    always () << std::string(80,'*') << endreq ;
+    always () << std::string(80,'*') << endmsg ;
   } //                      end of loop over reconstructed & selected particles
   // ==========================================================================
   return StatusCode::SUCCESS ;

@@ -5,6 +5,7 @@
 // STD & STL 
 // ============================================================================
 #include <algorithm>
+#include <functional>
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -21,7 +22,6 @@
 // LoKi
 // ============================================================================
 #include "LoKi/IMCHybridFactory.h"
-#include "LoKi/select.h"
 #include "LoKi/Primitives.h"
 #include "LoKi/Operators.h"
 // ============================================================================
@@ -56,11 +56,11 @@ namespace LoKi
       {
         filtered.clear() ;
         // copy the particles,whcih satisfy the cut into output conterner
-        LoKi::select                             //      missing "std::copy_if" 
+        std::copy_if 
           ( input.begin ()              ,        // begin of the input sequence 
             input.end   ()              ,        //   end of the input sequence      
             std::back_inserter ( filtered ) ,   //                  destination 
-            m_mccut                         ) ; //                     criteria  
+            std::cref(m_mccut)              ) ; //                     criteria  
         //
         return StatusCode::SUCCESS ;
       }
@@ -129,14 +129,14 @@ StatusCode LoKi::Hybrid::MCParticleArrayFilter::initialize ()
   if ( sc.isFailure() ) { return sc ; }                               // RETURN 
   // (2) get the factory:
   IMCHybridFactory* factory = tool<IMCHybridFactory> ( m_factory , this ) ;  
-  if ( 0 == factory ) 
+  if ( !factory ) 
   { return Error ( "Could not locate IMCHybridFactory" ) ; }          // RETURN 
   // (3) use the factory to get the cuts
   sc = factory->get (  m_code , m_mccut ) ;
   if ( sc.isFailure() ) 
   { return Error ( "Error from IMCHybridFactory", sc   ) ; }          // RETURN 
   // 
-  info() << "CUT: '" << m_mccut << "' "<< endreq ;
+  info() << "CUT: '" << m_mccut << "' "<< endmsg ;
   //
   return StatusCode::SUCCESS ;  
 }

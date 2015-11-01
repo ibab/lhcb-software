@@ -4,6 +4,10 @@
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : MC-analogue for the basic LoKi algorithm 
 ! -----------------------------------------------------------------------------
+! 2015-11-01 - Gerhard Raven
+ - replace endreq with endmsg
+ - replace LoKi::select with std::copy_if
+ - avoid comparing (smart)pointers to 0
 
 !========================= LoKiAlgoMC v9r6p1 2014-10-30 =========================
 
