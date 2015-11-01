@@ -3,6 +3,8 @@
 ! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
+! 2015-11-01 - Gerhard Raven
+ - minimal change to make SIMDChi2Fit compile with clang
 
 ! 2015-10-30 - Michel De Cian
  - Revert idea of yesterday: Split between hits in regions and sorted hits in layers. This should ensure full compatibility with all access methods.

@@ -324,7 +324,11 @@ namespace vect_impl {
     /// vectorised dot product @f$\sum_i a_{Wi+k} * b_{Wi+k}@f$ (k=0, ..., W-1)
     template <typename T, unsigned N, unsigned W>
     struct vdot {
+#ifdef __clang__
+	typedef T __attribute__((ext_vector_type(W))) vT;
+#else
 	typedef T __attribute__((vector_size(W * sizeof(T)))) vT;
+#endif
 	vT operator()(const vT* a, const vT *b)
 	{
 	    return (1 == N) ? (*a * *b) :
@@ -336,7 +340,11 @@ namespace vect_impl {
     /// dot product driver
     template <typename T, unsigned N, unsigned W>
     struct dot {
+#ifdef __clang__
+	typedef T __attribute__((ext_vector_type(W))) vT;
+#else
 	typedef T __attribute__((vector_size(W * sizeof(T)))) vT;
+#endif
 	T operator()(const T* a, const T* b, T init)
 	{
 	    if (N / W) {
