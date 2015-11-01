@@ -3,6 +3,8 @@
 ! Responsible : Vanya Belyaev
 ! Purpose     : Track scaling and smearing
 !-----------------------------------------------------------------------------
+! 2015-11-01 - Gerhard Raven
+ - replace endreq with endmsg
 
 !=================== DaVinciTrackScaling v1r4 2015-01-16 =====================
 

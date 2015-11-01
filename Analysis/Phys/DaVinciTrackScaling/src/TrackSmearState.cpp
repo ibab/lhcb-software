@@ -301,12 +301,12 @@ StatusCode TrackSmearState::initialize()
     m_graph.reset ( g  ) ;
     info() << "Use the momentum smearing from root-file '"
            << m_filename << "'"
-           << endreq ;
+           << endmsg ;
   }
   else if ( Gaudi::Parsers::parse ( m_h , m_h_str ).isSuccess () ) 
   {
     //
-    info() << "Use the momentum smearing from options" << endreq ;
+    info() << "Use the momentum smearing from options" << endmsg ;
   }
   else if ( !m_cond_path.empty() && existDet<DataObject>( detSvc() , m_cond_path ) ) 
   {
@@ -324,7 +324,7 @@ StatusCode TrackSmearState::initialize()
     sc = runUpdate () ;
     if ( sc.isFailure() ) { return Error ( "Unable update Run" , sc ) ; }
     //
-    info() << "Use the momentum smearing from CONDDB"  << endreq ;
+    info() << "Use the momentum smearing from CONDDB"  << endmsg ;
   }
   else 
   {
@@ -409,7 +409,7 @@ StatusCode TrackSmearState::i_updateDATA ()
   info () << " Condition: " << m_condition -> name()    << "   "
           << ( m_condition ->isValid() ? "  Valid;  " : "Invalid; " ) 
           << " Validity: "  << m_condition -> validSince ().format ( true ) 
-          << " -> "         << m_condition -> validTill  ().format ( true )  << endreq ;
+          << " -> "         << m_condition -> validTill  ().format ( true )  << endmsg ;
   //
   h1 -> Copy ( m_h       ) ;
   // reset the graph 

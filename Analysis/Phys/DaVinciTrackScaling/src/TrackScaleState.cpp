@@ -560,7 +560,7 @@ StatusCode TrackScaleState::initialize()
   {
     //
     m_scaler.reset ( new CalScale ( &m_h1 , &m_h2 , m_delta ) ) ;
-    info() << "Use the momentum   calibration from options" << endreq ;
+    info() << "Use the momentum   calibration from options" << endmsg ;
   }
   else if ( !m_cond_path.empty() && existDet<DataObject>( detSvc() , m_cond_path ) ) 
   {
@@ -580,7 +580,7 @@ StatusCode TrackScaleState::initialize()
     sc = runUpdate () ;
     if ( sc.isFailure() ) { return Error ( "Unable update Run" , sc ) ; }
     //
-    info() << "Use the momentum   calibration from CONDDB"  << endreq ;
+    info() << "Use the momentum   calibration from CONDDB"  << endmsg ;
   }
   else 
   {
@@ -589,7 +589,7 @@ StatusCode TrackScaleState::initialize()
   //  scale covariance matrices 
   if ( Gaudi::Parsers::parse ( m_hc      , m_hc_str      ).isSuccess () ) 
   {
-    info() << "Use the covariance calibration from options" << endreq ;
+    info() << "Use the covariance calibration from options" << endmsg ;
   }
   else if ( !m_cond_path_cov.empty() && 
             existDet<DataObject>( detSvc() , m_cond_path_cov ) ) 
@@ -610,7 +610,7 @@ StatusCode TrackScaleState::initialize()
     sc = runUpdate () ;
     if ( sc.isFailure() ) { return Error ( "Unable update Run" , sc ) ; }
     //
-    info() << "Use the covariance calibration from CONDDB"  << endreq ;
+    info() << "Use the covariance calibration from CONDDB"  << endmsg ;
   }
   else 
   {
@@ -643,7 +643,7 @@ StatusCode TrackScaleState::initialize()
   {
     Warning ( "Track slope scaling is  activated" ) ;
     warning () << " SlopeScale " << m_slope 
-               << " DeltaSlope " << m_delta_slope << endreq ;
+               << " DeltaSlope " << m_delta_slope << endmsg ;
   }
   //
   return sc ;
@@ -659,7 +659,7 @@ StatusCode TrackScaleState::finalize ()
   {
     Warning ( "Track slope scaling was used"      ) ;
     warning () << " SlopeScale " << m_slope 
-               << " DeltaSlope " << m_delta_slope << endreq ;
+               << " DeltaSlope " << m_delta_slope << endmsg ;
   }
   //
   m_magfieldsvc = 0 ;
@@ -724,7 +724,7 @@ StatusCode TrackScaleState::i_updateSCALE ()
     _fix_dir_ ( *h1 ) ;
     //
     ON_DEBUG
-    { info () << "Comment for IdpPlus  : " << m_condition->comment ( "IdpPlus"  ) << endreq ; }
+    { info () << "Comment for IdpPlus  : " << m_condition->comment ( "IdpPlus"  ) << endmsg ; }
     //
     h2 = DetDesc::Params::paramAsHisto2D ( m_condition , "IdpMinus"  ) ;
     if ( 0 == h2 ) 
@@ -735,7 +735,7 @@ StatusCode TrackScaleState::i_updateSCALE ()
     _fix_dir_ ( *h2 ) ;
     //
     ON_DEBUG
-    { info () << "Comment for IdpMinus : " << m_condition->comment ( "IdpMinus" ) << endreq ; }
+    { info () << "Comment for IdpMinus : " << m_condition->comment ( "IdpMinus" ) << endmsg ; }
     //
     ro = DetDesc::Params::paramAsHisto1D ( m_condition , "Offsets"   ) ;
     if ( 0 == ro ) 
@@ -746,7 +746,7 @@ StatusCode TrackScaleState::i_updateSCALE ()
     _fix_dir_ ( *ro ) ;
     //
     ON_DEBUG
-    { info () << "Comment for Offsets  : " << m_condition->comment ( "Offsets"  ) << endreq ; }
+    { info () << "Comment for Offsets  : " << m_condition->comment ( "Offsets"  ) << endmsg ; }
     //
     if ( m_condition->exists ( "Delta" ) && m_condition->is<double>( "Delta" ) ) 
     { 
@@ -754,7 +754,7 @@ StatusCode TrackScaleState::i_updateSCALE ()
       counter("#DELTA update") += m_delta ;
       //
       ON_DEBUG
-      { info () << "Comment for Delta    : " << m_condition->comment ( "Delta"    ) << endreq ; }
+      { info () << "Comment for Delta    : " << m_condition->comment ( "Delta"    ) << endmsg ; }
       //
     }
     //
@@ -768,7 +768,7 @@ StatusCode TrackScaleState::i_updateSCALE ()
   info () << " Condition: " << m_condition -> name()    << "   "
           << ( m_condition ->isValid() ? "  Valid;  " : "Invalid; " ) 
           << " Validity: "  << m_condition -> validSince ().format ( true ) 
-          << " -> "         << m_condition -> validTill  ().format ( true )  << endreq ;
+          << " -> "         << m_condition -> validTill  ().format ( true )  << endmsg ;
   //
   h1 -> Copy ( m_h1      ) ;
   h2 -> Copy ( m_h2      ) ;
@@ -812,7 +812,7 @@ StatusCode TrackScaleState::i_updateCOV2 ()
   info () << " Condition: " << m_condition_cov -> name()    << "   "
           << ( m_condition_cov ->isValid() ? "  Valid;  " : "Invalid; " ) 
           << " Validity: "  << m_condition_cov -> validSince ().format ( true ) 
-          << " -> "         << m_condition_cov -> validTill  ().format ( true )  << endreq ;
+          << " -> "         << m_condition_cov -> validTill  ().format ( true )  << endmsg ;
   //
   h1 -> Copy ( m_hc      ) ;
   //
