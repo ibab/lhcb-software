@@ -3,6 +3,8 @@
 ! Responsible : Mike Williams
 ! Purpose     : Topological tools
 !-----------------------------------------------------------------------------
+! 2015-11-01 - Gerhard Raven
+ - replace endreq with endmsg
 
 !====================== TopologicalTools v1r1 2015-10-05 =====================
 

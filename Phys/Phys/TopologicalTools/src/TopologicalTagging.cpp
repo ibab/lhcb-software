@@ -53,12 +53,12 @@ StatusCode TopologicalTagging::execute()
     bool locseed = exist<LHCb::Particle::Range>( m_tinputs );
     if(!locseed){
         debug()<< "Unable to get location at '"
-            << m_tinputs  << "'" << endreq;
+            << m_tinputs  << "'" << endmsg;
     }else if(locseed){
         topos = get<LHCb::Particle::Range>(  m_tinputs );
         if( !topos ){
             debug()<< "Unable to get particles at '"
-                << m_tinputs  << "'" << endreq;
+                << m_tinputs  << "'" << endmsg;
         }
     }
     std::vector<const LHCb::HltObjectSummary*> hltObjs
