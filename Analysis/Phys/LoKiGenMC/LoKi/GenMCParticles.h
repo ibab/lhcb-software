@@ -10,7 +10,6 @@
 // LoKi
 // ============================================================================
 #include "Relations/IRelation.h"
-#include "LoKi/Interface.h"
 #include "LoKi/UniqueKeeper.h"
 #include "LoKi/MCTypes.h"
 #include "LoKi/GenTypes.h"

@@ -446,7 +446,7 @@ StatusCode LoKi::HepMC2MC::build () const
   { counter ( "#HepMC->MC" ) += links ; }
   
   if ( msgLevel ( MSG::DEBUG ) )
-  { debug() << " Number of 'HepMC<-->MC' links : " << links  << endreq ; }
+  { debug() << " Number of 'HepMC<-->MC' links : " << links  << endmsg ; }
 
   
   /// IMPORTANT! 

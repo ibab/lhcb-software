@@ -256,7 +256,7 @@ StatusCode LoKi::HepMC2MCAlg::execute()
   { counter ( "#HepMC->MC" ) += links ; }
   //
   if ( msgLevel ( MSG::DEBUG ) )
-  { debug() << " Number of 'HepMC<-->MC' links : " << links  << endreq ; }
+  { debug() << " Number of 'HepMC<-->MC' links : " << links  << endmsg ; }
   
   return StatusCode::SUCCESS;
 }
