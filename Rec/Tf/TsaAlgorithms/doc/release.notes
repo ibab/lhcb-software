@@ -3,6 +3,14 @@
 ! Responsible : M Needham
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
+! 2015-11-01 - Gerhard Raven
+ - replace LoKi::select with std::copy_if
+ - replace BOOST_FOREACH with range-based for
+ - replace boost::assign::list_of with std::initializer_list
+ - prefer STL algorithms over raw loops
+ - prefer lambda over bind (the latter makes it impossible for the compiler to inline)
+ - prefer range-based for loops
+ - use move semantics when possible to avoid copying of vectors
 
 !========================= TsaAlgorithms v3r30 2015-10-13 =========================
 ! 2015-09-28 - Gerhard Raven

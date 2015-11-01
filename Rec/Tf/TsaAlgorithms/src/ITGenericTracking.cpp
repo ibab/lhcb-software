@@ -24,7 +24,6 @@
 #include "TfKernel/STHit.h"
 #include "TfKernel/RecoFuncs.h"
 
-#include "LoKi/select.h"
 #include "TsaKernel/Line.h"
 #include "TsaKernel/TsaConstants.h"
 #include "Kernel/STDataFunctor.h"
@@ -34,22 +33,8 @@
 #include "Event/State.h"
 #include "Event/StateParameters.h"
 
-#include <boost/foreach.hpp>
-#include <boost/assign/list_of.hpp>
 
 using namespace LHCb;
-
-// Boost
-#include <boost/assign/std/vector.hpp>
-#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
-#include <functional>
-using std::bind;
-using namespace std::placeholders;
-#else
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/lambda.hpp>
-using namespace boost::lambda;
-#endif
 
 #include "TrackInterfaces/IHitExpectation.h"
 
@@ -84,18 +69,9 @@ ITGenericTracking::ITGenericTracking( const std::string& name,
   declareProperty("maxYRef", m_maxRefY = 1000000.);
   declareProperty("minXHits", m_minXHits = 5);
   declareProperty("minYHits", m_minYHits = 5);
-  {
-    std::vector<unsigned int> tmp = boost::assign::list_of(1)(2)(3)(4);
-    declareProperty("allowedBoxes", m_allowedBoxes = tmp);
-  }
-  {
-    std::vector<unsigned int> tmp = boost::assign::list_of(1);
-    declareProperty("firstStation", m_firstStation = tmp);
-  }
-  {
-    std::vector<unsigned int> tmp = boost::assign::list_of(3);
-    declareProperty("lastStation", m_lastStation = tmp);
-  }
+  declareProperty("allowedBoxes", m_allowedBoxes = { 1, 2, 3, 4 } );
+  declareProperty("firstStation", m_firstStation = { 1 } );
+  declareProperty("lastStation", m_lastStation = { 3 });
   declareProperty("minHits", m_minHits = 11);
   declareProperty("minXHitsToConfirm", m_minXHitsToConfirm = 0u);
   declareProperty("requireFirstAndLast", m_requireFirstAndLast = true);
@@ -142,45 +118,47 @@ StatusCode ITGenericTracking::execute()
 
   // make line hits
   std::vector<Tf::STHit*> hits; hits.reserve(clusterCont->size());
-  for (STLiteCluster::STLiteClusters::const_iterator iter = clusterCont->begin();
-    iter != clusterCont->end(); ++iter){
-    const DeSTSector* aSector = findSector(iter->channelID());
-    Tf::STHit* newHit = new Tf::STHit(*aSector,*iter);
-    hits.push_back(newHit);
-  }
+  std::transform( clusterCont->begin(), clusterCont->end(), std::back_inserter(hits),
+                  [&](STLiteCluster::STLiteClusters::const_reference cluster) {
+    auto aSector = findSector(cluster.channelID());
+    return new Tf::STHit(*aSector,cluster);
+  });
 
   // get the x hits
   std::vector<Tf::STHit*> xHits;  xHits.reserve(hits.size());
-  LoKi::select(hits.begin(), hits.end(), std::back_inserter(xHits), bind(&Tf::STHit::isX,_1));
+  std::copy_if(hits.begin(), hits.end(), std::back_inserter(xHits),
+               [](const Tf::STHit* hit) { return hit->isX(); } );
 
 
   std::vector<Tf::STHit*> x2Hits; x2Hits.reserve(xHits.size());  // get the x hits in station 2
   std::vector<Tf::STHit*> x13Hits; x13Hits.reserve(xHits.size());   // get the x hits in station 13
-  BOOST_FOREACH(Tf::STHit* aHit , xHits) {
+  for(Tf::STHit* aHit : xHits) {
     if (aHit->cluster().station() == ITNames::IT2) x2Hits.push_back(aHit);
     if (allowedFirstStation(aHit) || allowedLastStation(aHit)) x13Hits.push_back(aHit);
   }
 
   // sort
   std::stable_sort(x2Hits.begin(), x2Hits.end(),
-      bind(std::less<double>(), bind(&Tf::STHit::xMid,_1), bind(&Tf::STHit::xMid,_2))); // sort by x
+                   [](const Tf::STHit* lhs, const Tf::STHit* rhs) {
+                       return lhs->xMid() < rhs->xMid();// sort by x
+  } );
 
 
   // get the stereo hits
   std::vector<Tf::STHit*> stereoHits;  stereoHits.reserve(hits.size());
-  LoKi::select(hits.begin(), hits.end(), std::back_inserter(stereoHits),
-               bind(std::logical_not<bool>(), bind(&Tf::STHit::isX,_1)));
+  std::copy_if(hits.begin(), hits.end(), std::back_inserter(stereoHits),
+               [](const Tf::STHit* hit) { return !hit->isX(); } );
   if (xHits.size() < 3u || stereoHits.size() < 3u ) return StatusCode::SUCCESS;
 
 
   // lets do some tracking
-  for (std::vector<Tf::STHit*>::iterator iterX1 = x13Hits.begin(); iterX1 != x13Hits.end(); ++iterX1){
+  for (auto iterX1 = x13Hits.begin(); iterX1 != x13Hits.end(); ++iterX1){
 
     if (m_requireFirstAndLast && (*iterX1)->cluster().channelID().layer() != 1) continue;
 
     if ( !allowedFirstStation(*iterX1) || allowedBox(*iterX1) == false) continue;
 
-    std::vector<Tf::STHit*>::iterator iterX2 = iterX1; ++iterX2;
+    auto iterX2 = iterX1; ++iterX2;
     for (; iterX2 != x13Hits.end(); ++iterX2){
       if (!allowedLastStation(*iterX2) || allowedBox(*iterX2) == false) continue;
       if (!sameBox(*iterX1,*iterX2)) continue;
@@ -252,7 +230,9 @@ StatusCode ITGenericTracking::execute()
           collectIDs(selectedY2, ids);
 
           std::stable_sort(ids.begin(), ids.end(),
-              bind(std::less<unsigned int>(), bind(&LHCb::LHCbID::lhcbID,_1), bind(&LHCb::LHCbID::lhcbID,_2)));
+                           [](const LHCb::LHCbID& lhs, const LHCb::LHCbID& rhs) {
+                               return lhs.lhcbID() < rhs.lhcbID();
+                           });
 
           if (fullDetail()) plot(ids.size(), "nhits", -0.5, 20.5, 21);
           const unsigned int nUnique = countSectors(selectedX2) + countSectors(selectedY2);
@@ -293,7 +273,7 @@ StatusCode ITGenericTracking::execute()
 
 
   // delete them again
-  for (std::vector<Tf::STHit*>::const_iterator iterHit = hits.begin(); iterHit != hits.end(); ++iterHit ){
+  for (auto iterHit = hits.begin(); iterHit != hits.end(); ++iterHit ){
      delete *iterHit;
   }
 
@@ -304,17 +284,17 @@ StatusCode ITGenericTracking::execute()
        iterT != tmpTracks.end(); ++iterT){
     if ((*iterT)->checkFlag(Track::Clone ) == true) continue;
     const std::vector<LHCb::LHCbID>& ids1 = (*iterT)->lhcbIDs();
-    std::vector<LHCb::Track*>::const_iterator iterT2 = iterT; ++iterT2;
+    auto iterT2 = iterT; ++iterT2;
     for (;  iterT2 != tmpTracks.end(); ++iterT2){
        if ((*iterT2)->checkFlag(Track::Clone ) == true) continue;
-       const std::vector<LHCb::LHCbID>& ids2 = (*iterT2)->lhcbIDs();
+       const auto& ids2 = (*iterT2)->lhcbIDs();
        if ( ids1.size() == ids2.size() && std::equal(ids1.begin(), ids1.end(), ids2.begin()) == true){
 	 (*iterT2)->setFlag( LHCb::Track::Clone, true );
        }
     } // iterT2
   } // iterT
 
-  for (Tracks::const_iterator iterT2 = tmpTracks.begin();
+  for (auto iterT2 = tmpTracks.begin();
        iterT2 != tmpTracks.end(); ++iterT2){
     if ((*iterT2)->checkFlag(Track::Clone ) == false){
       Track* newTrack = (*iterT2)->clone();
@@ -418,7 +398,7 @@ void ITGenericTracking::selectY(const std::vector<yInfo>& hits, CandidateHits& c
 	  std::vector <std::vector<yInfo> > uniqueCan; uniqueCan.reserve(16);
           std::stable_sort(selected.begin(), selected.end(), Less_by_Channel());
           splitCandidates(selected, uniqueCan);
-          BOOST_FOREACH( std::vector<yInfo> hits, uniqueCan ){
+          for( const auto& hits: uniqueCan ){
             if (newStereoCandidate( hits ,canhits ) == true){
 	      LineFitResults results = fitY(hits);
 	      Tf::Tsa::Line tempLine(results.m,  results.c);
@@ -428,7 +408,7 @@ void ITGenericTracking::selectY(const std::vector<yInfo>& hits, CandidateHits& c
 	  }
 	}
         else {
-          if (canhits.empty() == true) {
+          if (canhits.empty()) {
 
             canhits.push_back(selected); lines.push_back(yline);
 	  }
@@ -581,9 +561,8 @@ unsigned int ITGenericTracking::countHigh( const std::vector<Tf::STHit*>& xhits,
 
 unsigned int ITGenericTracking::countSectors(const std::vector<Tf::STHit*>& xhits) const{
   std::vector<unsigned int> nLayers; nLayers.reserve(12);
-  BOOST_FOREACH(Tf::STHit* hit, xhits){
-    nLayers.push_back(hit->channelID().uniqueSector());
-  }
+  std::transform( xhits.begin(), xhits.end(), std::back_inserter(nLayers),
+                 [](const Tf::STHit* hit) { return hit->channelID().uniqueSector(); } );
   std::stable_sort(nLayers.begin(), nLayers.end());
   nLayers.erase(std::unique(nLayers.begin(), nLayers.end()), nLayers.end());
   return nLayers.size();
@@ -591,9 +570,8 @@ unsigned int ITGenericTracking::countSectors(const std::vector<Tf::STHit*>& xhit
 
 unsigned int ITGenericTracking::countSectors(const std::vector<yInfo>& xhits) const{
   std::vector<unsigned int> nLayers; nLayers.reserve(12);
-  BOOST_FOREACH(yInfo hit, xhits){
-    nLayers.push_back(hit.first->channelID().uniqueSector());
-  }
+  std::transform( xhits.begin(), xhits.end(), std::back_inserter(nLayers),
+                  [](const yInfo& hit) { return hit.first->channelID().uniqueSector(); } );
   std::stable_sort(nLayers.begin(), nLayers.end());
   nLayers.erase(std::unique(nLayers.begin(), nLayers.end()), nLayers.end());
   return nLayers.size();
@@ -617,22 +595,22 @@ void ITGenericTracking::splitCandidates(const std::vector<Tf::STHit*>& input,
       ++iter;
     }
 
-    if (currentSector.empty() == false){
+    if (!currentSector.empty()){
 
       // make a temporary list of candidates
       std::vector<std::vector<Tf::STHit*> > tempCont;
-      BOOST_FOREACH(std::vector<Tf::STHit*> hits, output ){
-	BOOST_FOREACH(Tf::STHit* newHit, currentSector){
-	  std::vector<Tf::STHit*> newCan;
+      for(const auto& hits: output ){
+	for(const auto& newHit: currentSector){
+	  std::vector<Tf::STHit*> newCan; newCan.reserve(hits.size());
 	  std::copy(hits.begin(), hits.end(), std::back_inserter(newCan));
           newCan.push_back(newHit);
-          tempCont.push_back(newCan);
+          tempCont.push_back(std::move(newCan));
 	} // currentSector
       }  // tempCont
 
-      // now copy to the output container
+      // now move to the output container
       output.clear();
-      std::copy(tempCont.begin(),tempCont.end(),std::back_inserter(output));
+      std::copy(std::make_move_iterator(tempCont.begin()),std::make_move_iterator(tempCont.end()),std::back_inserter(output));
 	// }
     } // if
 
@@ -662,18 +640,18 @@ void ITGenericTracking::splitCandidates(const std::vector<yInfo>& input,
 
       // make a temporary list of candidates
       std::vector<std::vector<yInfo> > tempCont;
-      BOOST_FOREACH(std::vector<yInfo> hits, output ){
-	BOOST_FOREACH(yInfo newHit, currentSector){
-	  std::vector<yInfo> newCan;
+      for(const auto&  hits: output ){
+	for(const auto& newHit: currentSector){
+	  std::vector<yInfo> newCan; newCan.reserve(hits.size());
 	  std::copy(hits.begin(), hits.end(), std::back_inserter(newCan));
           newCan.push_back(newHit);
-          tempCont.push_back(newCan);
+          tempCont.push_back(std::move(newCan));
 	} // currentSector
       }  // tempCont
 
-      // now copy to the output container
+      // now move to the output container
       output.clear();
-      std::copy(tempCont.begin(),tempCont.end(),std::back_inserter(output));
+      std::copy(std::make_move_iterator(tempCont.begin()),std::make_move_iterator(tempCont.end()),std::back_inserter(output));
 	// }
     } // if
 
@@ -688,7 +666,7 @@ ITGenericTracking::LineFitResults ITGenericTracking::fitX(const std::vector<Tf::
   std::vector<double> x; x.reserve(hits.size());
   std::vector<double> z; x.reserve(hits.size());
   std::vector<double> w; w.reserve(hits.size());
-  BOOST_FOREACH(Tf::STHit* aHit, hits){
+  for(Tf::STHit* aHit: hits){
     x.push_back(aHit->xMid()); z.push_back(aHit->zMid()); w.push_back(44);
   }
 
@@ -701,7 +679,7 @@ ITGenericTracking::LineFitResults ITGenericTracking::fitY(const std::vector<ITGe
   std::vector<double> y; y.reserve(hits.size());
   std::vector<double> z; z.reserve(hits.size());
   std::vector<double> w; w.reserve(hits.size());
-  BOOST_FOREACH(yInfo aHit, hits){
+  for(const auto&  aHit: hits){
     y.push_back(aHit.second.y()); z.push_back(aHit.second.z()); w.push_back(0.16);
   }
 
@@ -718,8 +696,6 @@ ITGenericTracking::LineFitResults ITGenericTracking::lineFit(const std::vector<d
 
 bool ITGenericTracking::newStereoCandidate(const std::vector<ITGenericTracking::yInfo>& testCand,
                                                 const CandidateHits& tracks) const{
-
-#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
   // return true if nothing was found
   return tracks.end() ==
     std::find_if(tracks.begin(), tracks.end(),    // loop over all the tracks
@@ -730,16 +706,4 @@ bool ITGenericTracking::newStereoCandidate(const std::vector<ITGenericTracking::
                  return a.second == b.second;
               });
       }); // when a match is found, 'find_if' returns the iterator != 'end()'
-#else
-  bool newCan = true;
-  BOOST_FOREACH(CandidateHits::value_type can, tracks ) {
-    if (testCand.size() == can.size() && equal(can.begin(), can.end(), testCand.begin(),
-            ret<const yInfo::second_type&>(bind(&yInfo::second,_1)) == ret<const yInfo::second_type&>(bind(&yInfo::second,_2))) == true) {
-      newCan = false;
-      break;
-    }
-  } // for each
-  return newCan;
-#endif
 }
-
