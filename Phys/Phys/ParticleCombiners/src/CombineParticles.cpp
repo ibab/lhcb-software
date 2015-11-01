@@ -334,7 +334,7 @@ StatusCode CombineParticles::decodeAllCuts()
     item.m_pid  = LoKi::Particles::pidFromName ( ic->first ) ;
     item.m_moni = false     ;
     //
-    debug () << "The decoded cuts for '"+ ( ic->first ) +"' are: " << item.m_cut << endreq ;
+    debug () << "The decoded cuts for '"+ ( ic->first ) +"' are: " << item.m_cut << endmsg ;
     //
     if ( monitor() && !m_daughterMonitors.empty() )
     {
@@ -347,7 +347,7 @@ StatusCode CombineParticles::decodeAllCuts()
                          ic->first + "':" + imoni->second , sc ) ; }
         item.m_moni = true ;
         debug () << "The decoded monitor for '"+ ( ic->first )
-          + "' is: " << item.m_moni << endreq ;
+          + "' is: " << item.m_moni << endmsg ;
       }
     }
     m_cuts.push_back ( item ) ;
@@ -357,14 +357,14 @@ StatusCode CombineParticles::decodeAllCuts()
     StatusCode sc = factory -> get ( m_combinationCut , m_acut , preambulo () ) ;
     if ( sc.isFailure () )
     { return Error ( "Unable to  decode the 'A'-cut: " + m_combinationCut  , sc ) ; }
-    debug () << "The decoded cut for 'combination' is: " << m_acut << endreq ;
+    debug () << "The decoded cut for 'combination' is: " << m_acut << endmsg ;
   }
   // 3) decode the final cut for the constructed mother particle
   {
     StatusCode sc = factory -> get ( m_motherCut , m_cut , preambulo () ) ;
     if ( sc.isFailure () )
     { return Error ( "Unable to  decode 'mother'-cut: " + m_motherCut  , sc ) ; }
-    debug () << "The decoded cut for 'mother' is: " << m_motherCut << endreq ;
+    debug () << "The decoded cut for 'mother' is: " << m_motherCut << endmsg ;
   }
   // monitor combinations ?
   if ( monitor() && !m_combinationMonitorCode.empty() )
@@ -375,7 +375,7 @@ StatusCode CombineParticles::decodeAllCuts()
     { return Error ( "Unable to  decode 'combination-monitor': "
                      + m_combinationMonitorCode  , sc ) ; }
     debug () << "The decoded 'combination-monitor' is: "
-             << m_combinationMonitor << endreq ;
+             << m_combinationMonitor << endmsg ;
   }
   // monitor mothers ?
   if ( monitor() && !m_motherMonitorCode.empty() )
@@ -386,7 +386,7 @@ StatusCode CombineParticles::decodeAllCuts()
     { return Error ( "Unable to  decode 'mother-monitor': "
                      + m_motherMonitorCode  , sc ) ; }
     debug () << "The decoded 'mother-monitor' is: "
-             << m_motherMonitor << endreq ;
+             << m_motherMonitor << endmsg ;
   }
   //
   StatusCode sc = decodeRest ( factory ) ;
@@ -491,7 +491,7 @@ StatusCode CombineParticles::get_daughters
   {
     info() << " The external set of " << particles.size()
            << " particles is used instead of InputLocations "
-           << endreq ;
+           << endmsg ;
   }
   //
   if ( msgLevel ( MSG::VERBOSE ) )
@@ -823,7 +823,7 @@ StatusCode CombineParticles::setInput
   m_useInputParticles = true  ;
   info() << "The external set of " << input.size()
          << " particles will be used as input instead of InputLocations "
-         << endreq ;
+         << endmsg ;
   return StatusCode ( StatusCode::SUCCESS , true ) ;
 }
 // =============================================================================
@@ -838,7 +838,7 @@ void CombineParticles::propertyHandler1 ( Property& p )
   Warning ( "The structural property '" + p.name() +
             "' is updated. It will take affect at the next 'execute'" ,
             StatusCode( StatusCode::SUCCESS, true ) ) ;
-  info () << "The updated property is: " << p << endreq ;
+  info () << "The updated property is: " << p << endmsg ;
 }
 // =============================================================================
 // the handle for the property update
@@ -849,7 +849,7 @@ void CombineParticles::propertyHandler2 ( Property& p )
   if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
   /// mark as "to-be-updated"
   m_to_be_updated2 = true ;
-  debug () << "The histogramming property is updated: " << p << endreq ;
+  debug () << "The histogramming property is updated: " << p << endmsg ;
 }
 // ============================================================================
 // perform the update of the major properties
@@ -932,13 +932,13 @@ StatusCode CombineParticles::updateMajor  ()
     if ( UNLIKELY ( msgLevel ( MSG::DEBUG ) ) ) 
     {
       debug () << "The updated map of daughter cuts is : "
-               << Gaudi::Utils::toString ( m_daughterCuts ) << endreq ;
+               << Gaudi::Utils::toString ( m_daughterCuts ) << endmsg ;
     }
     
     if ( UNLIKELY ( msgLevel( MSG::DEBUG ) && monitor() && !m_daughterMonitors.empty() ) )
     {
       debug () << "The updated map of daughter monitors is : "
-               << Gaudi::Utils::toString ( m_daughterMonitors ) << endreq ;
+               << Gaudi::Utils::toString ( m_daughterMonitors ) << endmsg ;
     }
     
   }

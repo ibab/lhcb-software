@@ -785,7 +785,7 @@ StatusCode DaVinci::N3BodyDecays::decodeRest ( LoKi::IHybridFactory* factory )
   { return Error ( "Unable to  decode 'Combination12Cut': "
                    + m_combination12Cut  , sc ) ; }
   debug () << "The decoded 'Combination12Cut' is: "
-           << m_acut12 << endreq ;
+           << m_acut12 << endmsg ;
   //
   return CombineParticles::decodeRest ( factory ) ;
   //
@@ -843,7 +843,7 @@ StatusCode DaVinci::N4BodyDecays::decodeRest ( LoKi::IHybridFactory* factory )
   { return Error ( "Unable to  decode 'Combination123Cut': "
                    + m_combination123Cut  , sc ) ; }
   debug () << "The decoded 'Combination123Cut' is: "
-           << m_acut123 << endreq ;
+           << m_acut123 << endmsg ;
   //
   return DaVinci::N3BodyDecays::decodeRest ( factory ) ;
   //
@@ -902,7 +902,7 @@ StatusCode DaVinci::N5BodyDecays::decodeRest ( LoKi::IHybridFactory* factory )
   { return Error ( "Unable to  decode 'Combination1234Cut': "
                    + m_combination1234Cut  , sc ) ; }
   debug () << "The decoded 'Combination1234Cut' is: "
-           << m_acut1234 << endreq ;
+           << m_acut1234 << endmsg ;
   //
   return DaVinci::N4BodyDecays::decodeRest ( factory ) ;
   //
@@ -962,7 +962,7 @@ StatusCode DaVinci::N6BodyDecays::decodeRest ( LoKi::IHybridFactory* factory )
   { return Error ( "Unable to  decode 'Combination12345Cut': "
                    + m_combination12345Cut  , sc ) ; }
   debug () << "The decoded 'Combination12345Cut' is: "
-           << m_acut12345 << endreq ;
+           << m_acut12345 << endmsg ;
   //
   return DaVinci::N5BodyDecays::decodeRest ( factory ) ;
   //
@@ -1023,7 +1023,7 @@ StatusCode DaVinci::N7BodyDecays::decodeRest ( LoKi::IHybridFactory* factory )
   { return Error ( "Unable to  decode 'Combination123456Cut': "
                    + m_combination123456Cut  , sc ) ; }
   debug () << "The decoded 'Combination123456Cut' is: "
-           << m_acut123456 << endreq ;
+           << m_acut123456 << endmsg ;
   //
   return DaVinci::N6BodyDecays::decodeRest ( factory ) ;
   //
@@ -1083,7 +1083,7 @@ StatusCode DaVinci::N8BodyDecays::decodeRest ( LoKi::IHybridFactory* factory )
   { return Error ( "Unable to  decode 'Combination1234567Cut': "
                    + m_combination1234567Cut  , sc ) ; }
   debug () << "The decoded 'Combination1234567Cut' is: "
-           << m_acut1234567 << endreq ;
+           << m_acut1234567 << endmsg ;
   //
   return DaVinci::N7BodyDecays::decodeRest ( factory ) ;
   //
