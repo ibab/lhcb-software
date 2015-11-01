@@ -41,7 +41,7 @@ StatusCode TaggingUtilsChecker::initialize() {
   }
   m_debug = tool<IPrintMCDecayTreeTool> ( "PrintMCDecayTreeTool", this );
   if( ! m_debug ) {
-    fatal() << "Unable to retrieve Debug tool "<< endreq;
+    fatal() << "Unable to retrieve Debug tool "<< endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -92,14 +92,14 @@ StatusCode TaggingUtilsChecker::calcIP( const Particle* axp,
   StatusCode sc2 = m_Dist->distance (axp, v, ipC, ipChi2);
   Gaudi::XYZVector ipV;
   StatusCode sc = m_Dist->distance (axp, v, ipV);
-  debug()<<"ipS: "<<ipC<<", ipV.R: "<<ipV.R()<<endreq;
+  debug()<<"ipS: "<<ipC<<", ipV.R: "<<ipV.R()<<endmsg;
   if(sc2 && ipChi2!=0) {
     if (sc) zsign = ipV.z()>0? 1:-1;
     //ip=ipC;
     ip=ipC*zsign;
     iperr=ipC/sqrt(ipChi2);
   }
-  debug()<<"IP: "<<ipC<<", "<<ip<<", (sign = "<<zsign<<" )"<<endreq;
+  debug()<<"IP: "<<ipC<<", "<<ip<<", (sign = "<<zsign<<" )"<<endmsg;
   return sc2;
 }
 
@@ -222,7 +222,7 @@ bool TaggingUtilsChecker::isinTree(const Particle* axp,
                   << " isinTree part: " << axp->particleID().pid() 
                   << " with p="<< axp->p()/Gaudi::Units::GeV 
                   << " pt="<< axp->pt()/Gaudi::Units::GeV 
-                  << " proto_axp,ip="<<axp->proto()<<" "<<(*ip)->proto() << endreq;
+                  << " proto_axp,ip="<<axp->proto()<<" "<<(*ip)->proto() << endmsg;
       return true;
     }
   }
@@ -267,7 +267,7 @@ Particle::ConstVector TaggingUtilsChecker::FindDaughters( const Particle* axp ) 
           aplist.push_back(*itmp);
           debug() << " ID daughter= "<< (*itmp)->particleID().pid() 
                   << " P=" << (*itmp)->p()/Gaudi::Units::GeV  
-                  << " Pt=" << (*itmp)->pt()/Gaudi::Units::GeV  << endreq;
+                  << " Pt=" << (*itmp)->pt()/Gaudi::Units::GeV  << endmsg;
         }
       }
     }
@@ -319,7 +319,7 @@ TaggingUtilsChecker::prodsBstarstar( const MCParticle* B0 ) {
         // 	debug() <<"Bstarstar descendant "<<(*idescend)->pdg_id()
         // 		<<" correps MCPart P="
         // 		<<mcdescend->momentum().P()/Gaudi::Units::GeV 
-        // 		<<endreq;
+        // 		<<endmsg;
       }
     }
   }
@@ -363,7 +363,7 @@ TaggingUtilsChecker::prodsBstar( const MCParticle* B0 ) {
       //       if(mcdescend) debug() <<"Bstar descendant "<<(*idescend)->pdg_id()
       // 			    <<" correps MCPart P="
       // 			    <<mcdescend->momentum().P()/Gaudi::Units::GeV
-      // 			    <<endreq;
+      // 			    <<endmsg;
     }
   }
 
@@ -529,7 +529,7 @@ int TaggingUtilsChecker::comes_from_excitedB(const MCParticle* BS,
   }
   if (ancestorP == mcp ) origin = 0;  
 
-  debug()<<" TaggingUtilsChecker::comes_from_excitedB has found xFlag="<< origin<< endreq;
+  debug()<<" TaggingUtilsChecker::comes_from_excitedB has found xFlag="<< origin<< endmsg;
   
   return origin;
 }

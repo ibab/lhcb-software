@@ -48,7 +48,7 @@ StatusCode BOppositeMonitoring::initialize() {
   //m_forcedBtool = tool<IForcedBDecayTool> ( "ForcedBDecayTool", this );// doesn't work for MC12 data
   m_forcedBtool = tool<IBDecayTool> ( "BDecayTool", this );
   if( ! m_forcedBtool ) {
-    fatal() << "Unable to retrieve BDecayTool tool "<< endreq;
+    fatal() << "Unable to retrieve BDecayTool tool "<< endmsg;
     return StatusCode::FAILURE;
   }
   
@@ -84,20 +84,20 @@ StatusCode BOppositeMonitoring::execute() {
 
   // Event info
   RecHeader* evt = get<RecHeader> (RecHeaderLocation::Default);
-  debug()<<">>>>>  Processing Event "<<evt->evtNumber()<<" (run: "<<evt->runNumber()<<")"<<endreq;
+  debug()<<">>>>>  Processing Event "<<evt->evtNumber()<<" (run: "<<evt->runNumber()<<")"<<endmsg;
   
   // Retrieve MCParticles
   MCParticles* mcpart = get<MCParticles> (MCParticleLocation::Default);
-  debug() << "Nr of MCParticles retrieved="<< mcpart->size()<< endreq;
+  debug() << "Nr of MCParticles retrieved="<< mcpart->size()<< endmsg;
   
   //check what is the B forced to decay
   const MCParticle* BS = m_forcedBtool->forcedB();
   if ( !BS ) {
-    warning() << "Missing Forced Signal B meson in MC!"<< endreq;
+    warning() << "Missing Forced Signal B meson in MC!"<< endmsg;
     //return StatusCode::SUCCESS;                      
   }
   if ( BS ) {
-    debug()<<"BS, P: "<<BS->momentum().P()<<", Pt: "<<BS->pt()<<", PID: "<<BS->particleID().pid()<<endreq;
+    debug()<<"BS, P: "<<BS->momentum().P()<<", Pt: "<<BS->pt()<<", PID: "<<BS->particleID().pid()<<endmsg;
   }
   
   //look for opposite mc particles
@@ -109,7 +109,7 @@ StatusCode BOppositeMonitoring::execute() {
         ++nmcpb;
 
         //info mcpart
-        debug()<<"P: "<<(*imc)->momentum().P()<<", Pt: "<<(*imc)->pt()<<", PID: "<<(*imc)->particleID().pid()<<endreq;
+        debug()<<"P: "<<(*imc)->momentum().P()<<", Pt: "<<(*imc)->pt()<<", PID: "<<(*imc)->particleID().pid()<<endmsg;
 
         //counters
         int aid = abs( (*imc)->particleID().pid() );
@@ -153,17 +153,17 @@ StatusCode BOppositeMonitoring::finalize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
   
   //info
-  info()<<"######### Fraction of B opposite particle type"<<endreq;
+  info()<<"######### Fraction of B opposite particle type"<<endmsg;
   double dmcpb = double ( nmcpb );
-  info()<<nmcpb<<" mcp with B"<<std::setprecision(3)<<endreq;
+  info()<<nmcpb<<" mcp with B"<<std::setprecision(3)<<endmsg;
   info()<<"B_d  : "<<nB511/dmcpb<<" B^+  : "<<nB521/dmcpb<<" B_s  : "<<nB531/dmcpb<<" B_c  : "<<nB541/dmcpb<<endmsg;
   info()<<"B*_d : "<<nB513/dmcpb<<" B^*+ : "<<nB523/dmcpb<<" B*_s : "<<nB533/dmcpb<<" B*_c : "<<nB543/dmcpb<<endmsg;
-  info()<<"B^*0_2  + B(H)^0_1  + B(L)^0_1  + B^*0_0  : "<<nB515/dmcpb<<endreq;
-  info()<<"B^*+_2  + B(H)^+_1  + B(L)^+_1  + B^*+_0  : "<<nB525/dmcpb<<endreq;
-  info()<<"B^*0_s2 + B(H)^0_s1 + B(L)^0_s1 + B^*0_s0 : "<<nB535/dmcpb<<endreq;
-  info()<<"B^*+_c2 + B(H)^+_c1 + B(L)^+_c1 + B^*+_c0 : "<<nB545/dmcpb<<endreq;
+  info()<<"B^*0_2  + B(H)^0_1  + B(L)^0_1  + B^*0_0  : "<<nB515/dmcpb<<endmsg;
+  info()<<"B^*+_2  + B(H)^+_1  + B(L)^+_1  + B^*+_0  : "<<nB525/dmcpb<<endmsg;
+  info()<<"B^*0_s2 + B(H)^0_s1 + B(L)^0_s1 + B^*0_s0 : "<<nB535/dmcpb<<endmsg;
+  info()<<"B^*+_c2 + B(H)^+_c1 + B(L)^+_c1 + B^*+_c0 : "<<nB545/dmcpb<<endmsg;
   info()<<"Barions: "<<nBarion/dmcpb<<endmsg;
-  info()<<"#########"<<endreq;
+  info()<<"#########"<<endmsg;
   
   return DaVinciHistoAlgorithm::finalize();
 }

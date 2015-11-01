@@ -42,14 +42,14 @@ StatusCode BTaggingInclusive::initialize() {
 
   m_debug = tool<IPrintMCDecayTreeTool> ( "PrintMCDecayTreeTool", this );
   if( ! m_debug ) {
-    fatal() << "Unable to retrieve Debug tool "<< endreq;
+    fatal() << "Unable to retrieve Debug tool "<< endmsg;
     return StatusCode::FAILURE;
   }
 
   //m_forcedBtool = tool<IForcedBDecayTool> ( "ForcedBDecayTool", this );
   m_forcedBtool = tool<IBDecayTool> ( "BDecayTool", this );
   if( ! m_forcedBtool ) {
-    fatal() << "Unable to retrieve BDecayTool tool "<< endreq;
+    fatal() << "Unable to retrieve BDecayTool tool "<< endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -91,11 +91,11 @@ StatusCode BTaggingInclusive::execute() {
     tags   = get<FlavourTags>( m_tagslocation );
     ostags = get<FlavourTags>( m_ostagslocation );
   } else {
-    debug() << "Tags dont exist" << endreq;
+    debug() << "Tags dont exist" << endmsg;
     return StatusCode::SUCCESS;
   }
-  debug()<< tags->size()  <<" tags found in "<< m_tagslocation   << endreq;
-  debug()<< ostags->size()<<" tags found in "<< m_ostagslocation << endreq;
+  debug()<< tags->size()  <<" tags found in "<< m_tagslocation   << endmsg;
+  debug()<< ostags->size()<<" tags found in "<< m_ostagslocation << endmsg;
   //
   int osmuondec = 0;
   int oselectrondec = 0;
@@ -124,7 +124,7 @@ StatusCode BTaggingInclusive::execute() {
 	       << std::setw(3) << truetag
 	       << std::setw(3) << ix
 	       << std::setw(3) << osmuondec
-	       << endreq;
+	       << endmsg;
       }
 
       ////////////////////////////////////////
@@ -144,7 +144,7 @@ StatusCode BTaggingInclusive::execute() {
 	       << std::setw(3) << truetag
 	       << std::setw(3) << ix
 	       << std::setw(3) << oselectrondec
-	       << endreq;
+	       << endmsg;
       }
 
       ////////////////////////////////////////
@@ -163,7 +163,7 @@ StatusCode BTaggingInclusive::execute() {
 	       << std::setw(3) << truetag
 	       << std::setw(3) << ix
 	       << std::setw(3) << oskaondec
-	       << endreq;
+	       << endmsg;
       }
 
       ////////////////////////////////////////
@@ -182,7 +182,7 @@ StatusCode BTaggingInclusive::execute() {
 	       << std::setw(3) << truetag
 	       << std::setw(3) << ix
 	       << std::setw(3) << sskaondec
-	       << endreq;
+	       << endmsg;
       }
 
       ////////////////////////////////////////
@@ -201,7 +201,7 @@ StatusCode BTaggingInclusive::execute() {
 	       << std::setw(3) << truetag
 	       << std::setw(3) << ix
 	       << std::setw(3) << vtxChargedec
-	       << endreq;
+	       << endmsg;
       }
 
       if (ix > 5) continue; 
@@ -310,9 +310,9 @@ StatusCode BTaggingInclusive::finalize() {
 	  << omtag*100 << "+-" <<omtag_err*100
 	  <<" "<<std::setw(7)<< (int) rtag
 	  <<" "<<std::setw(7)<< (int) wtag
-	  << endreq;
+	  << endmsg;
   }
-  info()<<"========================================================="<<endreq;
+  info()<<"========================================================="<<endmsg;
   info()<<"==========END OF INCLUSIVE BTAGGING PERFORMANCE ======="<<endmsg;
 
   return  StatusCode::SUCCESS;

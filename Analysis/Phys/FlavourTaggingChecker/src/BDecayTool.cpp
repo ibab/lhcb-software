@@ -41,7 +41,7 @@ const MCParticle* BDecayTool::forcedB() {
 
   //const LHCb::MCParticle* head = 0 ;
   if(m_mcDecay->findDecay( BS)){
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Particle matching the decay. ID = "<<BS->particleID().pid()<< endreq;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Particle matching the decay. ID = "<<BS->particleID().pid()<< endmsg;
   }
   
   return BS;

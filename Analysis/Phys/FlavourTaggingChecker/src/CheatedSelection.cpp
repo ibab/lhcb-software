@@ -39,27 +39,27 @@ CheatedSelection::~CheatedSelection() {}
 //=============================================================================
 StatusCode CheatedSelection::initialize() {
 
-  debug() << "CheatedSelection initialize"<< endreq;
+  debug() << "CheatedSelection initialize"<< endmsg;
 
   if(m_setInputData.size()==0) {
-    fatal() << "AssociatorInputData property is not set!"<<endreq;
+    fatal() << "AssociatorInputData property is not set!"<<endmsg;
     return StatusCode::FAILURE;
   }
   m_linker = new Particle2MCLinker( this, Particle2MCMethod::Links,
                                     m_setInputData );
   if( !m_linker ) {
-    fatal()<< "Unable to retrieve Link Associator tool"<<endreq;
+    fatal()<< "Unable to retrieve Link Associator tool"<<endmsg;
     return StatusCode::FAILURE;
   }
   m_debug = tool<IPrintMCDecayTreeTool> ( "PrintMCDecayTreeTool", this );
   if( ! m_debug ) {
-    fatal() << "Unable to retrieve Debug tool "<< endreq;
+    fatal() << "Unable to retrieve Debug tool "<< endmsg;
     return StatusCode::FAILURE;
   }
   //m_forcedBtool = tool<IForcedBDecayTool> ( "ForcedBDecayTool", this );
   m_forcedBtool = tool<IBDecayTool> ( "BDecayTool", this );
   if( ! m_forcedBtool ) {
-    fatal() << "Unable to retrieve BDecayTool tool "<< endreq;
+    fatal() << "Unable to retrieve BDecayTool tool "<< endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -79,7 +79,7 @@ StatusCode CheatedSelection::execute() {
   for( Particle::Range::const_iterator ip=ptmp.begin(); 
        ip!=ptmp.end(); ++ip){
     const MCParticle* mcp= m_linker->first(*ip);
-    if (mcp) debug()<<"part: "<< (*ip)->pt()<< "  mcpart: "<< mcp->pt()<<endreq;
+    if (mcp) debug()<<"part: "<< (*ip)->pt()<< "  mcpart: "<< mcp->pt()<<endmsg;
     parts.push_back(*ip);
   }
 
@@ -90,9 +90,9 @@ StatusCode CheatedSelection::execute() {
   const MCParticle*     mcSignal = m_forcedBtool->forcedB();
 
   if(mcSignal){
-    debug()<<"Found B="<<mcSignal->particleID().pid()<<endreq;
+    debug()<<"Found B="<<mcSignal->particleID().pid()<<endmsg;
   } else {
-    warning()<<"No B forced to decay in this event. Skip."<<endreq;
+    warning()<<"No B forced to decay in this event. Skip."<<endmsg;
     return StatusCode::SUCCESS;
   }
   
@@ -110,7 +110,7 @@ StatusCode CheatedSelection::execute() {
   } else return StatusCode::SUCCESS;
 
   debug() << "Calculated signal MCmass= " <<ptotmc.M()
-          << "   RECmass= " <<ptot.M()<<endreq;
+          << "   RECmass= " <<ptot.M()<<endmsg;
 
   //----------------------------------------------------------------------
   // Create candidate B
@@ -136,12 +136,12 @@ StatusCode CheatedSelection::execute() {
   debug() << "Reconstructed "<< candB->particleID().pid()
           << " with m="      << candB->momentum().M()
           << " p="           << candB->p()/Gaudi::Units::GeV
-          << " pt="          << candB->pt()/Gaudi::Units::GeV <<endreq;
+          << " pt="          << candB->pt()/Gaudi::Units::GeV <<endmsg;
 
 
   axdaughter.push_back(candB);
   debug()<<"Going to save this B hypo to TES with "<<axdaughter.size()-1
-         <<" daughters."<<endreq;
+         <<" daughters."<<endmsg;
   // marke particles for savint to TES in location specified by jobOptions
   this->markNewTrees(axdaughter);
 
@@ -172,10 +172,10 @@ void CheatedSelection::SignalTree(const MCParticle* B0,
         if( ((*imc)->p() - axp->p()) /(*imc)->p() > m_tolerance ) continue;
 
         debug() << " mcp=" << (*imc)->p()/Gaudi::Units::GeV
-                << " axp=" << axp->p()/Gaudi::Units::GeV    <<endreq;
+                << " axp=" << axp->p()/Gaudi::Units::GeV    <<endmsg;
         if((*imc)->particleID().abspid() != axp->particleID().abspid()) {
           debug() << "Mis-ID true " << (*imc)->particleID().pid()
-                  << " reconst as " << axp->particleID().pid() << endreq;
+                  << " reconst as " << axp->particleID().pid() << endmsg;
           double mcmass = (*imc)->momentum().M();
           Gaudi::LorentzVector pax = axp->momentum();
           Gaudi::LorentzVector newpax( pax.x(), pax.y(), pax.z(),

@@ -72,11 +72,11 @@ StatusCode BTaggingChecker::execute()
   if ( !tags )
   {
     if ( msgLevel(MSG::DEBUG) )
-      debug() << "No tags found in " << m_tags_location << endreq;
+      debug() << "No tags found in " << m_tags_location << endmsg;
     return StatusCode::SUCCESS;
   }
   if ( msgLevel(MSG::DEBUG) )
-    debug()<< tags->size()<<" tags found in "<<m_tags_location << endreq;
+    debug()<< tags->size()<<" tags found in "<<m_tags_location << endmsg;
 
   const Particle* P = NULL;
   int bkgcat = -1;
@@ -101,13 +101,13 @@ StatusCode BTaggingChecker::execute()
 
       for ( std::vector<Tagger>::const_iterator itag = mytaggers.begin();
             itag != mytaggers.end(); ++itag )
-      {        
+      {
         const int taggdec = itag->decision();
-        /* 
+        /*
         if(taggdec==truetag) ++nrtag[(int) itag->type()];
         else                 ++nwtag[(int) itag->type()];
         */
-        switch ( itag->type() ) 
+        switch ( itag->type() )
         {
         case Tagger::OS_Muon    : (taggdec==truetag ? ++nrtag[1] : ++nwtag[1]); break;
         case Tagger::OS_Electron: (taggdec==truetag ? ++nrtag[2] : ++nwtag[2]); break;
@@ -123,7 +123,7 @@ StatusCode BTaggingChecker::execute()
         }
       }
       if(msgLevel(MSG::DEBUG)) m_debug->printTree( (*ti)->taggedB() );
-    }    
+    }
 
   }
 
@@ -131,7 +131,7 @@ StatusCode BTaggingChecker::execute()
   {
     bkgcat = (int)(m_bkg->category( P ));
     if ( msgLevel(MSG::DEBUG) )
-      debug() << "BackgroundCategory decision  "<< bkgcat << endreq;
+      debug() << "BackgroundCategory decision  "<< bkgcat << endmsg;
   }
 
   //----------------------------------------------------------------------
@@ -140,12 +140,12 @@ StatusCode BTaggingChecker::execute()
   long long HLT2Decision = 0;
   int trig = -1;
   L0DUReport* l0 = getIfExists<L0DUReport>(L0DUReportLocation::Default);
-  if ( l0 ) 
+  if ( l0 )
   {
     L0Decision = l0->decision();
     trig = L0Decision;
   }
-  if ( m_requireHltTrigger ) 
+  if ( m_requireHltTrigger )
   {
     const HltDecReports* decReports =
       getIfExists<HltDecReports>(LHCb::HltDecReportsLocation::Default);
@@ -160,7 +160,7 @@ StatusCode BTaggingChecker::execute()
   //----------------------------------------------------------------------
   if ( msgLevel(MSG::DEBUG) )
     debug() << "BTAGGING MON "<< std::setw(3) << trig << std::setw(4) << truetag
-            << std::setw(4) << bkgcat << endreq;
+            << std::setw(4) << bkgcat << endmsg;
 
   //count rights and wrongs in categories
   ++nsele;
@@ -182,10 +182,10 @@ StatusCode BTaggingChecker::finalize()
   double ef_tot(0), effe_tot(0);
   double epsilerr(0), epsilerrtot(0);
 
-  info()<<"======================================================="<<endreq;
+  info()<<"======================================================="<<endmsg;
   info()<< std::setw(40)<< "Summary: EXCLUSIVE TAGGING PERFORMANCE " <<endmsg;
   info()<< " Category            EFF.          Etag         Wrong TF"
-        << "      r       w       "<<endreq;
+        << "      r       w       "<<endmsg;
 
   for( int it=1; it < 24; ++it ) {
     rtag = wtag = 0;
@@ -203,7 +203,7 @@ StatusCode BTaggingChecker::finalize()
     //if(it==10) cats =  "    k + ks";
     //if(it==11) cats =  "   mu+k+ks";
     //if(it==12) cats =  "    e+k+ks";
-    
+
     if(it==13) { cats =  "    OS muon"; rtag = nrtag[1]; wtag = nwtag[1]; }
     if(it==14) { cats =  "    OS elec"; rtag = nrtag[2]; wtag = nwtag[2]; }
     if(it==15) { cats =  "    OS kaon"; rtag = nrtag[3]; wtag = nwtag[3]; }
@@ -217,7 +217,7 @@ StatusCode BTaggingChecker::finalize()
     if(it==23) { cats =  " SS pionBDT"; rtag=  nrtag[11];wtag = nwtag[11]; }
     if(it<13) cats =  "  Category ";
     else if(it==13)
-      info()<<"---------------------------------------------------------"<<endreq;
+      info()<<"---------------------------------------------------------"<<endmsg;
 
     if(it<13) { rtag = nrt[it]; wtag = nwt[it]; }
 
@@ -242,7 +242,7 @@ StatusCode BTaggingChecker::finalize()
     double diff_tag = (rtag - wtag);
     double sum_tag  = (rtag + wtag);
 
-    
+
     epsilerr = sqrt(( diff_tag*diff_tag*
                      (-(diff_tag*diff_tag*sum_tag)+nsele
                       *(rtag*rtag +14*rtag*wtag+ wtag*wtag)))
@@ -261,9 +261,9 @@ StatusCode BTaggingChecker::finalize()
           <<" "<<std::setw(8)<< omtag*100 << "+-" <<omtag_err*100
           <<" "<<std::setw(7)<< (int) rtag
           <<" "<<std::setw(7)<< (int) wtag
-          << endreq;
+          << endmsg;
   }
-  
+
 
 
 
@@ -276,14 +276,14 @@ StatusCode BTaggingChecker::finalize()
   double eftot_err= sqrt((rtt*utt + utt*wtt)/nsele)/nsele;
   double avw_invert_err= sqrt( rtt*wtt /(rtt+wtt) ) / (rtt+wtt);
 
-  info() << "---------------------------------------------------------"<< endreq;
+  info() << "---------------------------------------------------------"<< endmsg;
   info() << "Tagging efficiency =  "<<std::setw(5)
-         << ef_tot*100 << " +/- "<<eftot_err*100<< " %"<< endreq;
+         << ef_tot*100 << " +/- "<<eftot_err*100<< " %"<< endmsg;
   info() << "Wrong Tag fraction =  "<<std::setw(5)
-         << avw_invert*100 << " +/- " <<avw_invert_err*100 << " %"<< endreq;
+         << avw_invert*100 << " +/- " <<avw_invert_err*100 << " %"<< endmsg;
   info() << "EFFECTIVE COMB. TE =  "<<std::setw(5)
          << effe_tot*100 << " +/- "<<epsilerrtot*100<< " %"
-         << "     (Total events= "<<std::setw(5) << int(nsele) <<")"<< endreq;
+         << "     (Total events= "<<std::setw(5) << int(nsele) <<")"<< endmsg;
   info() << "=========================================================\n\n";
 
   return DaVinciAlgorithm::finalize() ;
