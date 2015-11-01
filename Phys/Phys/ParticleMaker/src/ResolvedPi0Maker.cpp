@@ -171,15 +171,15 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
       // print out
       if ( msgLevel(MSG::VERBOSE))
       {
-        verbose() << " ---- Resolved " << m_pid <<" found [" << nPi0 << "]"<< endreq;
-        verbose() << "Point   : " << pi0->referencePoint() << endreq;
-        verbose() << "Pt("<<m_pid<<") : "  << pi0->momentum().Pt() << endreq;
-        verbose() << "Pt(g1)  : "  << g1->momentum().Pt() << endreq;
-        verbose() << "Pt(g2)  : "  << g2->momentum().Pt() << endreq;
-        verbose() << "CL("<<m_pid<<") : "  << pi0->confLevel() << endreq;
-        verbose() << "CL(g1)  : "  << g1->confLevel() << endreq;
-        verbose() << "CL(g2)  : "  << g2->confLevel() << endreq;
-        verbose() << "Mass    : "  << pi0->momentum().M()  << endreq;
+        verbose() << " ---- Resolved " << m_pid <<" found [" << nPi0 << "]"<< endmsg;
+        verbose() << "Point   : " << pi0->referencePoint() << endmsg;
+        verbose() << "Pt("<<m_pid<<") : "  << pi0->momentum().Pt() << endmsg;
+        verbose() << "Pt(g1)  : "  << g1->momentum().Pt() << endmsg;
+        verbose() << "Pt(g2)  : "  << g2->momentum().Pt() << endmsg;
+        verbose() << "CL("<<m_pid<<") : "  << pi0->confLevel() << endmsg;
+        verbose() << "CL(g1)  : "  << g1->confLevel() << endmsg;
+        verbose() << "CL(g2)  : "  << g2->confLevel() << endmsg;
+        verbose() << "Mass    : "  << pi0->momentum().M()  << endmsg;
       }
     }
   }
@@ -195,14 +195,14 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
 
   if (msgLevel(MSG::DEBUG))
   {
-    debug() << " " << endreq;
-    debug() << "-----------------------" << endreq;
-    debug() << " Filtered and created :" << endreq;
-    debug() << " --> " << nPi0 << " Resolved " << m_pid <<"s " << endreq;
+    debug() << " " << endmsg;
+    debug() << "-----------------------" << endmsg;
+    debug() << " Filtered and created :" << endmsg;
+    debug() << " --> " << nPi0 << " Resolved " << m_pid <<"s " << endmsg;
     debug() << " --> " << nGamma-nDel <<" photons have been used among the "
-            << nGamma << " selected " << endreq;
-    debug() << " Skipped " << m_pid <<" : " << nSkip << endreq;
-    debug() << "-----------------------" << endreq;
+            << nGamma << " selected " << endmsg;
+    debug() << " Skipped " << m_pid <<" : " << nSkip << endmsg;
+    debug() << "-----------------------" << endmsg;
   }
   return sc ;
 }

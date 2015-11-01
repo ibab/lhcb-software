@@ -76,9 +76,9 @@ StatusCode Pi0MakerBase::finalize      ()
 {
 
   double f = (m_count[0] == 0) ? 0. :  (float) m_count[1]/ (float) m_count[0];
-  info() << " - Pi0MakerBase Summary -----" << endreq;
-  info() << " Created : " << f << " " << m_pid << "per event" << endreq;
-  info() << " --------------------------------" << endreq;
+  info() << " - Pi0MakerBase Summary -----" << endmsg;
+  info() << " Created : " << f << " " << m_pid << "per event" << endmsg;
+  info() << " --------------------------------" << endmsg;
   // finalize the base class
   return ParticleMakerBase::finalize ();
 }

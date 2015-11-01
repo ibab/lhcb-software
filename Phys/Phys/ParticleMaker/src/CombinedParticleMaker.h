@@ -13,8 +13,6 @@
 #define PARTICLEMAKER_COMBINEDPARTICLEMAKER_H 1
 
 #include "ChargedParticleMakerBase.h"
-// from Gaudi
-#include "GaudiKernel/HashMap.h"
 
 // from EventSys
 #include "Event/ProtoParticle.h"

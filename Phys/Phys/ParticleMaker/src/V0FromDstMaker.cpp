@@ -144,7 +144,7 @@ LHCb::Particle* V0FromDstMaker::build( const LHCb::TwoProngVertex& vertex,
         track == vertex.trackB() ) dauB = dau ;
   }
   if(dauA && dauB) v0 = build( vertex, pid, *dauA, *dauB) ;
-  //info() << "Did we find the pions? " << pionA << " " << pionB << endreq ;
+  //info() << "Did we find the pions? " << pionA << " " << pionB << endmsg ;
   return v0 ;
 }
 
@@ -224,7 +224,7 @@ StatusCode V0FromDstMaker::execute()
     }
   }
 
-  //info() << "Number of input vertices/output: " << vertices.size() << " " << outputparticles->size() << endreq ;
+  //info() << "Number of input vertices/output: " << vertices.size() << " " << outputparticles->size() << endmsg ;
 
   return StatusCode::SUCCESS ;
 }
