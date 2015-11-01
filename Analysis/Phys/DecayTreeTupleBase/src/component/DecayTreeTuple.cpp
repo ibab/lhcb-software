@@ -4,7 +4,9 @@
 #include "boost/lexical_cast.hpp"
 #include "Kernel/Escape.h"
 
-#include "LoKi/select.h"
+#include <algorithm>
+#include <functional>
+
 // local
 #include "DecayTreeTuple.h"
 
@@ -67,11 +69,11 @@ StatusCode DecayTreeTuple::execute()
   LHCb::Particle::ConstVector heads;
   bool found = false;
   if ( useLoKiDecayFinders() ) {
-    LoKi::select( i_particles().begin(), i_particles().end(), std::back_inserter(heads), decayTree() );
+    std::copy_if( i_particles().begin(), i_particles().end(), std::back_inserter(heads), std::cref(decayTree()) );
     found = !heads.empty();
   } else {
     const LHCb::Particle::ConstVector mothers( this->particles().begin(),
-                                              this->particles().end()   );
+                                               this->particles().end()   );
     if ( mothers.empty() )
     {
       setFilterPassed(false);

@@ -1,9 +1,10 @@
 // $Id: MCDecayTreeTuple.cpp,v 1.6 2010-04-20 06:40:48 rlambert Exp $
 // Include files
 
+#include <algorithm>
+#include <functional>
 #include "boost/lexical_cast.hpp"
 #include "Kernel/Escape.h"
-#include "LoKi/select.h"
 // local
 #include "MCDecayTreeTuple.h"
 
@@ -61,7 +62,7 @@ StatusCode MCDecayTreeTuple::execute()
   bool found = false;
   if ( useLoKiDecayFinders() ) {
     const LHCb::MCParticles* mcParts = get<LHCb::MCParticles>( LHCb::MCParticleLocation::Default );
-    LoKi::select( mcParts->begin(), mcParts->end(), std::back_inserter(heads), mcDecayTree() );
+    std::copy_if( mcParts->begin(), mcParts->end(), std::back_inserter(heads), std::cref(mcDecayTree()) );
     found = !heads.empty();
   } else {
     LHCb::MCParticle::ConstVector mothers ;
