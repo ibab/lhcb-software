@@ -4,6 +4,11 @@
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
+! 2015-11-01 - Gerhard Raven
+ - replace endreq with endmsg
+ - avoid comparing (smart)pointers to 0
+ - replace BOOST_STATIC_ASSERT with static_assert
+ - prefer range-based for loops
 
 !======================== LoKiPhysMC v9r10 2015-10-19 =========================
 

@@ -20,7 +20,6 @@
 // LoKiCore 
 // ============================================================================
 #include "LoKi/ILoKiSvc.h"
-#include "LoKi/Interface.h"
 // ============================================================================
 // LoKiGen 
 // ============================================================================
@@ -37,10 +36,6 @@
 // LoKiPhysMC
 // ============================================================================
 #include "Kernel/RC2HepMC.h"
-// ============================================================================
-// Boost 
-// ============================================================================
-#include "boost/static_assert.hpp"
 // ============================================================================
 // DaVinciMCKernel
 // ============================================================================
@@ -311,9 +306,9 @@ StatusCode LoKi::HepMCParticleMaker::initialize()
   info ()
     << " Particles to be selected: " 
     << Gaudi::Utils::toString ( m_particles ) 
-    << " Cut to be used " << m_ids << endreq ;  
+    << " Cut to be used " << m_ids << endmsg ;
 
-  if(m_partonicmode)info()<<"Partonic Mode on"<<endreq;
+  if(m_partonicmode)info()<<"Partonic Mode on"<<endmsg;
   
   // if partonic mode, skip acceptance cut
   if (m_partonicmode) return StatusCode::SUCCESS ;
@@ -359,7 +354,7 @@ StatusCode LoKi::HepMCParticleMaker::initialize()
     << " Cuts for gammas: "  << m_gammacut   
     << " Charged: "          << m_charged 
     << " Cuts for charged: " << m_chargedcut 
-    << endreq ;
+    << endmsg ;
 
   return StatusCode::SUCCESS ;
 } 
@@ -420,7 +415,7 @@ StatusCode LoKi::HepMCParticleMaker::makeParticles
 
   // Create the relation table between Particles and GenParticles
   typedef LHCb::Relation2D<LHCb::Particle,HepMC::GenParticle*> Table ;
-  BOOST_STATIC_ASSERT(INHERITS(Table,LHCb::RC2HepMC2D));
+  static_assert(INHERITS(Table,LHCb::RC2HepMC2D),"Table must be convertible from LHCb::RC2HepMC2D");
   Table* table = 0 ;  
   if ( !outputTable().empty()  ) 
     {
@@ -453,7 +448,7 @@ StatusCode LoKi::HepMCParticleMaker::makeParticles
     for  ( Container::const_iterator ip = mothersSelected.begin() ; mothersSelected.end() != ip ; ++ip )
       {
 	if (m_motherSelectorTool->accept(*ip)){
-	  //  always()<<"A MOOOOOOOOOOOOOOOOOOOOOOOOOOOOTHER IS FOUND...................."<<endreq;
+	  //  always()<<"A MOOOOOOOOOOOOOOOOOOOOOOOOOOOOTHER IS FOUND...................."<<endmsg;
         
 	  m_momsSel = m_momsSel || ( GE(*ip) == GE ) ; 
 	}
@@ -548,15 +543,12 @@ StatusCode LoKi::HepMCParticleMaker::makeParticles
 	bool from_mother = false;
 	const HepMC::GenParticle* p2 = p;     
 	while (in_loop) {
-	  if (p2==NULL) {
+	  if (!p2) {
 	  break;
 	  }
 	  HepMC::GenVertex * thePV =  p2 -> production_vertex() ;
-	  if (thePV == NULL) {
-	    break;
-	  }
-	  HepMC::GenVertex::particle_iterator p_in ;
-	  for(p_in = thePV -> particles_begin( HepMC::parents); p_in != thePV -> particles_end(HepMC::parents); ++p_in){
+	  if (!thePV) break;
+	  for(auto p_in = thePV -> particles_begin( HepMC::parents); p_in != thePV -> particles_end(HepMC::parents); ++p_in){
 	    if (GABSID(*p_in)==m_excludeMotherNumber) {
 	      from_mother = true;
 	      in_loop = false;
@@ -583,7 +575,7 @@ StatusCode LoKi::HepMCParticleMaker::makeParticles
 	  continue ;                                               // CONTINUE 
 	}
       // fill the relation table if needed 
-      if ( 0 != table ) { table->i_push( particle , p ) ; }     // NB: i_push! 
+      if ( table ) { table->i_push( particle , p ) ; }     // NB: i_push!
       Gaudi::LorentzVector inc_mom ( p->momentum() ) ;
       included_energy+=inc_mom;
       // add to the container 
@@ -591,12 +583,12 @@ StatusCode LoKi::HepMCParticleMaker::makeParticles
     }
   
   // MANDATORY CALL FOR i_sort after i_push !
-  if ( 0 != table ) { table->i_sort() ; }  // ATTENTION! 
+  if ( table ) { table->i_sort() ; }  // ATTENTION!
   // some decorations 
   if ( statPrint() || msgLevel ( MSG::DEBUG ) ) 
     {
       counter("#particles") += particles.size() - N0 ;
-      if ( 0 != table ) { counter("#links") += table->relations().size() ; }
+      if ( table ) { counter("#links") += table->relations().size() ; }
     }
   //
   if ( msgLevel(MSG::DEBUG) ) debug() <<"Included Momentum 4-vector of event: "<< included_energy<<std::endl;
@@ -612,15 +604,15 @@ StatusCode LoKi::HepMCParticleMaker::fillParticle
 ( const HepMC::GenParticle* gen ,
   LHCb::Particle*           rcp ) 
 {
-  if ( 0 == gen ) { return Error ( "HepMC::GenParticle* points to NULL" ) ; }
-  if ( 0 == rcp ) { return Error ( "LHCb::Particle*     points to NULL" ) ; }
+  if ( !gen ) { return Error ( "HepMC::GenParticle* points to NULL" ) ; }
+  if ( !rcp ) { return Error ( "LHCb::Particle*     points to NULL" ) ; }
   Gaudi::LorentzVector mom ( gen->momentum() ) ;
   StatusCode sc = generateCovariance ( mom , m_covariance ) ;
   if ( sc.isFailure() ) 
     { return Error ( "Error form generate covariance" , sc ) ; }
   Gaudi::XYZPoint point ( 0 , 0 , 0 ) ;
   const HepMC::GenVertex* v = gen->production_vertex() ;
-  if ( 0 != v ) { point = Gaudi::XYZPoint( v -> point3d() ) ; }
+  if ( v ) { point = Gaudi::XYZPoint( v -> point3d() ) ; }
   else 
     { Warning ( "HepMC::GenVertex* points to NULL, use (0,0,0) instead" ) ; }
   //
@@ -635,11 +627,11 @@ bool LoKi::HepMCParticleMaker::use ( const HepMC::GenParticle* p ) const
   using namespace LoKi::Cuts  ;
   using namespace LoKi::Types ;
   
-  if ( 0 == p ) { return false ; }
+  if ( !p ) { return false ; }
   
   // check the origin cylinder  
   const HepMC::GenVertex* v0 = p->production_vertex() ;
-  if ( 0 == v0 ) 
+  if ( !v0 )
     {
       Warning("Production vertex is NULL, skip it") ;
       return false ;                                         // RETURN 
@@ -655,7 +647,7 @@ bool LoKi::HepMCParticleMaker::use ( const HepMC::GenParticle* p ) const
   // check for decay vertex 
   const HepMC::GenVertex* ve = p->end_vertex() ;
   if( ! m_forceNoCutAcceptance ){  
-    if ( 0 != ve ) 
+    if ( ve )
       {
 	const Gaudi::XYZPoint pe ( ve->point3d() ) ;
 	if ( 0 < m_minZend  && pe.Z() < m_minZend ) { return false ; }  
@@ -664,8 +656,7 @@ bool LoKi::HepMCParticleMaker::use ( const HepMC::GenParticle* p ) const
     else if ( m_charged ( p ) ) { return m_chargedcut ( p ) ; }
   }
   else{
-    if (ve ==0) {return true;}
-    if (ve !=0) {return false;}
+    return ve == nullptr;
   }
 
   // other particles 

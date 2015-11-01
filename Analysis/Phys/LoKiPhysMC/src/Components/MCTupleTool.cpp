@@ -294,7 +294,7 @@ StatusCode LoKi::Hybrid::MCTupleTool::initVariables ()
     //
     debug() << "The decoded variable name is '"
             << m_items.back().m_name << "'\t, the functor : '"
-            << m_items.back().m_fun  << "'" << endreq ;
+            << m_items.back().m_fun  << "'" << endmsg ;
   }  
   // 
   if ( m_items.empty() ) { Warning ( "No variables/items are defined" ) ; }

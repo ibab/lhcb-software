@@ -40,7 +40,6 @@
 // LoKi
 // ============================================================================
 #include "LoKi/ILoKiSvc.h"
-#include "LoKi/Interface.h"
 #include "LoKi/Geometry.h"
 #include "LoKi/select.h"
 #include "LoKi/PhysTypes.h"

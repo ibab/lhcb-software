@@ -75,7 +75,7 @@ void LoKi::P2MCBase::inputsHandler ( Property& /* p */ )
   if ( 0 == m_linker ) { return ; }                       // NO ACTION 
   // linker exists (and probably initialized already) 
   warning() 
-    << "Linker must be reinitialized for " << m_inputs << endreq  ;
+    << "Linker must be reinitialized for " << m_inputs << endmsg  ;
   if ( 0 != m_linker ) { delete m_linker ; m_linker = 0 ; }
 } 
 // ============================================================================
@@ -86,7 +86,7 @@ void LoKi::P2MCBase::methodHandler ( Property& /* p */ )
   if ( 0 == m_linker ) { return ; }                       // NO ACTION 
   // linker exists (and probably initialized already) 
   warning() 
-    << "Linker must be reinitialized for " << m_method << endreq  ;
+    << "Linker must be reinitialized for " << m_method << endmsg  ;
   if ( 0 != m_linker ) { delete m_linker ; m_linker = 0 ; }
 } 
 // ============================================================================
