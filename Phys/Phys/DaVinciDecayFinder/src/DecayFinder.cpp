@@ -64,7 +64,7 @@ StatusCode DecayFinder::initialize()
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc ;
 
-  debug() << "==> Initializing" << endreq;
+  debug() << "==> Initializing" << endmsg;
 
   if( serviceLocator() ) {
     sc = serviceLocator()->service("LHCb::ParticlePropertySvc",m_ppSvc);
@@ -78,23 +78,23 @@ StatusCode DecayFinder::initialize()
 
   sc = service("EventDataSvc", m_EDS, true);
   if( sc.isFailure() ) {
-    fatal() << " Unable to locate Event Data Service" << endreq;
+    fatal() << " Unable to locate Event Data Service" << endmsg;
     return sc;
   }
 
   if( m_source.length() == 0 )
   {
-    warning() << "No decay specified!" << endreq;
+    warning() << "No decay specified!" << endmsg;
     return StatusCode::SUCCESS;
   }
   if( compile(m_source) )
   {
     debug() << "The compilation of the decay was successfull"
-            << endreq;
+            << endmsg;
     return StatusCode::SUCCESS;
   }
 
-  debug() << "Could not compile the decay description" << endreq;
+  debug() << "Could not compile the decay description" << endmsg;
   return StatusCode::FAILURE;
 }
 //=============================================================================
@@ -114,10 +114,10 @@ StatusCode DecayFinder::setDecay( const std::string& decay )
   m_decay = NULL;
   m_members = NULL;
 
-  debug() << "Setting decay to " << decay << endreq;
+  debug() << "Setting decay to " << decay << endmsg;
   if( compile(decay) ) {
     debug() << "The compilation of the decay was successfull"
-            << endreq;
+            << endmsg;
     m_source = decay;
     if( old_decay )
       delete old_decay;
@@ -143,7 +143,7 @@ StatusCode DecayFinder::setDecay( const std::string& decay )
     delete m_members;
   }
   m_members = old_members;
-  debug() << "Could not compile the decay description" << endreq;
+  debug() << "Could not compile the decay description" << endmsg;
 
   return StatusCode::FAILURE;
 }
@@ -183,25 +183,25 @@ bool DecayFinder::compile( const std::string &source )
   catch( DescriptorError e )
   {
     err() << "Invalid decay description '"
-          << source << "'" << endreq;
-    err() << e.cause() << endreq;
+          << source << "'" << endmsg;
+    err() << e.cause() << endmsg;
     yy_delete_buffer(bs);
     return false;
   }
   yy_delete_buffer(bs);
-  debug() << "Result of the compilation:\n" << revert() << endreq;
+  debug() << "Result of the compilation:\n" << revert() << endmsg;
   return true;
 }
 
 bool DecayFinder::hasDecay( const LHCb::Particle::ConstVector &event )
 {
-  verbose() << "About to test the event" << endreq;
+  verbose() << "About to test the event" << endmsg;
   const LHCb::Particle *drop_me = NULL;
   if( m_decay )
     return m_decay->test( event.begin(), event.end(), drop_me );
   else
   {
-    warning() << "Trying to find an unspecified decay!" << endreq;
+    warning() << "Trying to find an unspecified decay!" << endmsg;
     return false;
   }
 }
@@ -209,25 +209,25 @@ bool DecayFinder::hasDecay( const LHCb::Particle::ConstVector &event )
 bool DecayFinder::findDecay( const LHCb::Particle::ConstVector &event,
                              const LHCb::Particle *&previous_result )
 {
-  verbose() << "About to test the event" << endreq;
+  verbose() << "About to test the event" << endmsg;
   if( m_decay )
     return m_decay->test( event.begin(), event.end(), previous_result );
   else
   {
-    warning() << "Trying to find an unspecified decay!" << endreq;
+    warning() << "Trying to find an unspecified decay!" << endmsg;
     return false;
   }
 }
 
 bool DecayFinder::hasDecay( const LHCb::Particle::Container &event )
 {
-  verbose() << "About to test the event" << endreq;
+  verbose() << "About to test the event" << endmsg;
   const LHCb::Particle *drop_me = NULL;
   if( m_decay )
     return m_decay->test( event.begin(), event.end(), drop_me );
   else
   {
-    warning() << "Trying to find an unspecified decay!" << endreq;
+    warning() << "Trying to find an unspecified decay!" << endmsg;
     return false;
   }
 }
@@ -235,12 +235,12 @@ bool DecayFinder::hasDecay( const LHCb::Particle::Container &event )
 bool DecayFinder::findDecay( const LHCb::Particle::Container &event,
                              const LHCb::Particle *&previous_result )
 {
-  verbose() << "About to test the event" << endreq;
+  verbose() << "About to test the event" << endmsg;
   if( m_decay )
     return m_decay->test( event.begin(), event.end(), previous_result );
   else
   {
-    warning() << "Trying to find an unspecified decay!" << endreq;
+    warning() << "Trying to find an unspecified decay!" << endmsg;
     return false;
   }
 }
@@ -251,7 +251,7 @@ bool DecayFinder::hasDecay( void )
   if( !parts )
   {
     fatal() << "Enable to find Particles at '"
-            << LHCb::ParticleLocation::Production << "'" << endreq;
+            << LHCb::ParticleLocation::Production << "'" << endmsg;
     return false;
   }
   return hasDecay( *parts );
@@ -263,7 +263,7 @@ bool DecayFinder::findDecay( const LHCb::Particle *&previous_result )
   if( !parts )
   {
     fatal() << "Enable to find Particles at '"
-            << LHCb::ParticleLocation::Production << "'" << endreq;
+            << LHCb::ParticleLocation::Production << "'" << endmsg;
     return false;
   }
   return findDecay( *parts, previous_result );
