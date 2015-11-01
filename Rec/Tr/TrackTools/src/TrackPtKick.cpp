@@ -157,8 +157,7 @@ StatusCode TrackPtKick::calculate( const LHCb::State* tState,
 
   
   qOverP = q / p;  
-  const double err2 = gsl_pow_2(m_resParams[0]) + gsl_pow_2(m_resParams[1]/p) ;
-  sigmaQOverP = sqrt(err2*gsl_pow_2(1.0/p));
+  sigmaQOverP = std::hypot(m_resParams[0],m_resParams[1]/p)/p;
  
   return sc;
 }

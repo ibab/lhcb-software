@@ -13,8 +13,6 @@
 #include "LHCbMath/GeomFun.h"
 #include "OTDet/DeOTDetector.h"
 
-#include "LoKi/select.h"
-
 // local
 #include "OTHitExpectation.h"
 
@@ -90,7 +88,7 @@ IHitExpectation::Info OTHitExpectation::expectation(const LHCb::Track& aTrack) c
 
   const std::vector<LHCb::LHCbID>& ids = aTrack.lhcbIDs();
   std::vector<LHCb::LHCbID> otHits; otHits.reserve(ids.size());
-  LoKi::select(ids.begin(), ids.end(), std::back_inserter(otHits), bind(&LHCbID::isOT,_1));
+  std::copy_if(ids.begin(), ids.end(), std::back_inserter(otHits), [](const LHCb::LHCbID& id) { return id.isOT(); } );
   
   Tf::Tsa::Parabola aParab(0.,0.,0.);
   Tf::Tsa::Line aLine(0.,0.);
@@ -147,7 +145,7 @@ void OTHitExpectation::collect(const LHCb::Track& aTrack ,std::vector<LHCb::LHCb
   
   const std::vector<LHCb::LHCbID>& idsOnTrack = aTrack.lhcbIDs();
   std::vector<LHCb::LHCbID> otHits; otHits.reserve(idsOnTrack.size());
-  LoKi::select(idsOnTrack.begin(), idsOnTrack.end(), std::back_inserter(otHits), bind(&LHCbID::isOT,_1));
+  std::copy_if(idsOnTrack.begin(), idsOnTrack.end(), std::back_inserter(otHits),[](const LHCb::LHCbID& id) { return id.isOT(); } );
   
   Tf::Tsa::Parabola aParab(0.,0.,0.);
   Tf::Tsa::Line aLine(0.,0.);

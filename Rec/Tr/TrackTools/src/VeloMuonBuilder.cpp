@@ -189,7 +189,7 @@ StatusCode VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks
 
       {
 
-        std::auto_ptr<State> monitorstate( ((*veloIter)->firstState()).clone() );
+        std::unique_ptr<State> monitorstate( ((*veloIter)->firstState()).clone() );
         float xkick = (float)(chamber.x() - monitorstate->x());//jstefaniak used interpolated value here
         const float m_ptkickConstant = 1265.f;
         float qp = float(xkick / m_ptkickConstant / ((float)chamber.z() - m_zmagnet));

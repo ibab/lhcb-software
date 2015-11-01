@@ -16,8 +16,6 @@
 
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/ICountContainedObjects.h"
-#include "LoKi/select.h"
-#include "boost/bind.hpp"
 #include "Event/Track.h"
 
 class CountVeloTracks : public GaudiTool,
@@ -48,8 +46,8 @@ public:
 			 const LHCb::Track* track) const {
     const std::vector<LHCb::LHCbID>& vids = track->lhcbIDs();
     veloHits.reserve(vids.size());
-    LoKi::select(vids.begin(), vids.end(), std::back_inserter(veloHits), 
-		 boost::bind(&LHCb::LHCbID::isVelo,_1));
+    std::copy_if(vids.begin(), vids.end(), std::back_inserter(veloHits), 
+                [](const LHCb::LHCbID& id) { return id.isVelo(); } );
   }
 
 };

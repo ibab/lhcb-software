@@ -26,27 +26,24 @@ public:
   {m_points[station]=point;  
   };
   
-  StandaloneMuonPoint  point(unsigned int station)
+  StandaloneMuonPoint  point(unsigned int station) const
   {return m_points[station];  
   };
   
   void setClone(){m_clone=1;};
-  bool clone(){if(m_clone>0)return true;
-	else return false;};
+  bool clone() const { return m_clone>0; }
 
 double slopeX(int stationFirst,int stationSecond, 
-	double zFirst, double zSecond){
+	double zFirst, double zSecond) const {
 return 
 (m_points[stationFirst].x()-m_points[stationSecond].x())/(zFirst-zSecond);
 };
 double slopeY(int stationFirst,int stationSecond, 
-        double zFirst, double zSecond){
+        double zFirst, double zSecond) const {
 return 
 (m_points[stationFirst].y()-m_points[stationSecond].y())/(zFirst-zSecond);
 };
 
-
-protected:
 
 private:
   StandaloneMuonPoint m_points[5];

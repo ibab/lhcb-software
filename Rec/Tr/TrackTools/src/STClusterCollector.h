@@ -22,8 +22,7 @@
 
 #include "Event/STCluster.h"
 
-// for std::auto_ptr
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 
 namespace LHCb{
@@ -67,7 +66,7 @@ class STClusterCollector: public ST::ToolBase,
   virtual void handle( const Incident& incident );
 
   
-  typedef std::pair<LHCb::STCluster*, boost::shared_ptr<LHCb::Trajectory> >
+  typedef std::pair<LHCb::STCluster*, std::shared_ptr<LHCb::Trajectory> >
     STClusterTrajectory;
   typedef std::vector<STClusterTrajectory> STClusterTrajectories;
 

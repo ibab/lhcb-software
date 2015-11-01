@@ -92,7 +92,7 @@ StatusCode VeloClusterPosition::initialize()
   // use SmartDataPtr to test existence, did not exist for 2009, mc09, mc10
   SmartDataPtr<Condition> cond(detSvc(), (m_condPath+"/VeloErrorParam"));
   
-  if(0!=cond)
+  if(cond)
   {
     
     mgrSvc->registerCondition(this, m_condPath,
@@ -121,7 +121,7 @@ StatusCode VeloClusterPosition::initialize()
   }
   
   // assign angles in rad from 0 to 400 mrad
-  std::vector<double>::iterator it=m_projAngles.begin();
+  auto it=m_projAngles.begin();
   int value=0;
   while(it!=m_projAngles.end()){
     (*it)=static_cast<double>(value*Gaudi::Units::pi/RAD_TO_DEG);
@@ -150,8 +150,8 @@ StatusCode VeloClusterPosition::initialize()
 StatusCode VeloClusterPosition::finalize() {
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
-  if(m_p0!=0) {delete m_p0; m_p0=0;}
-  if(m_p1!=0) {delete m_p1; m_p0=0;}
+  delete m_p0; m_p0=0;
+  delete m_p1; m_p0=0;
 
   return ( GaudiTool::finalize() );  // must be called after all other actions
 }
@@ -168,7 +168,7 @@ double VeloClusterPosition::meanResolution(const double& pitch) const
   //
   double resolution=p_0+(p_1*pitch);
   //
-  return ( resolution );
+  return resolution;
 }
 //=========================================================================
 double VeloClusterPosition::fracPosLA(const LHCb::VeloCluster* cluster) const
@@ -512,8 +512,7 @@ Pair VeloClusterPosition::projectedAngle(const DeVeloSensor* sensor,
     const DeVeloPhiType* phiSensor=static_cast<const DeVeloPhiType*>(sensor);
     double radiusOnPhi=aLocPoint.rho();
     // make velo trajectory
-    std::auto_ptr<LHCb::Trajectory> traj=
-      m_veloDet->trajectory(LHCb::LHCbID(centreChan), m_fracPos);
+    auto traj= m_veloDet->trajectory(LHCb::LHCbID(centreChan), m_fracPos);
     double trajEnd=traj->endPoint().rho();
     double trajBeg=traj->beginPoint().rho();
     double rMax=trajEnd;

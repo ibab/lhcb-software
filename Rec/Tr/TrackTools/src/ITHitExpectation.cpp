@@ -12,14 +12,6 @@
 #include "TsaKernel/Parabola.h"
 #include "TsaKernel/IITExpectedHits.h"
 
-// Boost
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/lambda.hpp>
-#include <boost/assign/std/vector.hpp>
-#include <boost/assign/list_of.hpp>
-
-#include "LoKi/select.h"
-
 #include "LHCbMath/GeomFun.h"
 #include "STDet/DeSTDetector.h"
 
@@ -31,7 +23,6 @@
 
 #include "LHCbMath/GeomFun.h"
 
-using namespace boost::lambda;
 using namespace LHCb;
 using namespace Gaudi;
 
@@ -95,7 +86,8 @@ IHitExpectation::Info ITHitExpectation::expectation(const LHCb::Track& aTrack) c
 
   const std::vector<LHCb::LHCbID>& ids = aTrack.lhcbIDs();
   std::vector<LHCb::LHCbID> itHits; itHits.reserve(ids.size());
-  LoKi::select(ids.begin(), ids.end(), std::back_inserter(itHits), bind(&LHCbID::isIT,_1));
+  std::copy_if(ids.begin(), ids.end(), std::back_inserter(itHits),
+               [](const LHCb::LHCbID& id) { return id.isIT(); } );
 
   Tf::Tsa::Parabola aParab(0.,0.,0.);
   Tf::Tsa::Line aLine(0.,0.);

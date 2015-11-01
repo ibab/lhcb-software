@@ -3,6 +3,19 @@
 ! Responsible : 
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+! 2015-11-01 - Gerhard Raven
+ - replace LoKi::select with std::copy_if
+ - prefer lambda over bind (the latter will prevent inlining)
+ - prefer std::unique_ptr over deprecated std::auto_ptr
+ - do not check against 0 before deleting a pointer (deleting a nullptr is a no-op)
+ - prefer auto over long winded useless type specifications
+ - prefer not the compare (smart)pointers to 0
+ - prefer std::hypot over sqrt( gsl_pow2(...) + gsl_pow2(...)  )
+ - various const-correctness fixes
+ - prefer range-based loops
+ - prefer std::shared_ptr over boost::shared_ptr
+ - replace BOOST_FOREACH by range-based for
+ - preferably put objects on the stack
 
 ! 2015-10-31 - Adam Davis
  - Fixed memory leak in FTHitExpectation::collectHits

@@ -20,16 +20,8 @@
 #include "Event/Track.h"
 #include "CaloUtils/Calo2Track.h"
 
-// Boost
-#include <boost/foreach.hpp>
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/lambda.hpp>
-
-// Loki
-#include "LoKi/select.h"
 
 using namespace LHCb;
-using namespace boost::lambda;
 
 DECLARE_TOOL_FACTORY( ITTrackConfirmation )
 
@@ -48,7 +40,6 @@ ITTrackConfirmation::ITTrackConfirmation( const std::string& type,
   declareProperty("MinCaloEnergy", m_minCaloEnergy =0.0*Gaudi::Units::MeV);
 
   declareInterface<ITrackSelector>(this);
-
 }
 
 ITTrackConfirmation::~ITTrackConfirmation() { }
@@ -88,23 +79,20 @@ bool ITTrackConfirmation::accept ( const Track& aTrack ) const
 
 bool ITTrackConfirmation::selfConfirm(const LHCb::Track& aTrack) const {
 
- // a track can confirm itself if it passes thro 3 stations
-
+ // a track can confirm itself if it passes through 3 stations
  const std::vector<LHCb::LHCbID>& ids = aTrack.lhcbIDs();
  std::vector<LHCb::LHCbID> itHits; itHits.reserve(ids.size());
- LoKi::select(ids.begin(), ids.end(), std::back_inserter(itHits), bind(&LHCbID::isIT,_1));
- 
+ std::copy_if(ids.begin(), ids.end(), std::back_inserter(itHits),
+              [](const LHCb::LHCbID& id) { return id.isIT(); } );
  // count stations
- std::vector<unsigned int> stations;
- BOOST_FOREACH( LHCb::LHCbID id, itHits ){
-   stations.push_back(id.stID().station());
- } 
-
+ std::vector<unsigned int> stations; stations.reserve(itHits.size());
+ std::transform(itHits.begin(), itHits.end(), std::back_inserter(stations),
+                [](const LHCb::LHCbID& id) { return id.stID().station(); } );
  // number of unique elements
  std::sort(stations.begin(), stations.end());
  stations.erase(std::unique(stations.begin(),stations.end()), stations.end());
  plot(stations.size(), "# stations", -0.5, 10.5, 11);  
 
- return stations.size() == 3 ? true : false ;
+ return stations.size() == 3;
 }
 

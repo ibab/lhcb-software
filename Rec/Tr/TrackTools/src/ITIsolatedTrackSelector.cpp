@@ -18,24 +18,8 @@
 
 // Tsa
 #include "ITIsolatedTrackSelector.h"
-#include "LoKi/select.h"
 #include "TrackInterfaces/ISTClusterCollector.h"
-// Boost
-#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
-#include <functional>
-using std::bind;
-using namespace std::placeholders;
-#else
-#include <boost/lambda/bind.hpp>
-using namespace boost::lambda;
-#endif
 
-#include <boost/lambda/lambda.hpp>
-
-#include <boost/foreach.hpp>
-#include <boost/assign/list_of.hpp>
-
-using namespace boost::assign;
 using namespace LHCb;
 using namespace Gaudi;
 using namespace std;
@@ -88,8 +72,8 @@ bool ITIsolatedTrackSelector::accept ( const Track& aTrack ) const
   const vector<LHCb::LHCbID>& ids = aTrack.lhcbIDs();
   vector<LHCb::LHCbID> expectedHits;;
   vector<LHCb::LHCbID> itHits; itHits.reserve(ids.size());
-  LoKi::select(ids.begin(), ids.end(), back_inserter(itHits),
-	       bind(&LHCbID::isIT,_1));
+  std::copy_if(ids.begin(), ids.end(), back_inserter(itHits),
+               [](const LHCbID& id) { return id.isIT(); } );
 
   plot( itHits.size(), "ITHits", "Number of real IT its added by pat reco",
 	-.5, 30.5, 31 );
@@ -140,12 +124,9 @@ bool ITIsolatedTrackSelector::accept ( const Track& aTrack ) const
 
 ITIsolatedTrackSelector::Category ITIsolatedTrackSelector::ITCategory(const vector<LHCb::LHCbID>& ids) const
 {
-  typedef map<unsigned int, unsigned int> BoxMap;
-  BoxMap nBox;
-  BOOST_FOREACH(LHCb::LHCbID id, ids)
-    {
+  std::map<unsigned int, unsigned int> nBox;
+  for(const auto& id: ids ) {
       nBox[ id.stID().detRegion() ] += 1;
-    } // for each
-  
+  } 
   return nBox.size() == 1 ? Category(nBox.begin() -> first) : Mixed ;
 }
