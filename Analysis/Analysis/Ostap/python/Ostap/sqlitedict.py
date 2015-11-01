@@ -81,8 +81,9 @@ class SqliteDict(object, DictMixin):
         """
         self.in_temp = filename is None
         if self.in_temp:
-            randpart = hex(random.randint(0, 0xffffff))[2:]
-            filename = os.path.join(tempfile.gettempdir(), 'sqldict' + randpart)
+            # randpart = hex(random.randint(0, 0xffffff))[2:]
+            # filename = os.path.join(tempfile.gettempdir(), 'sqldict' + randpart)
+            filename   = tempfile.mktemp  ( suffix = '.msql' )
         if flag == 'n':
             if os.path.exists(filename):
                 os.remove(filename)

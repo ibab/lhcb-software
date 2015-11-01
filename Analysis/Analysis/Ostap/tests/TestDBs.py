@@ -36,9 +36,9 @@ else :
 # =============================================================================
 import os,tempfile
 #
-db_sql_name  = tempfile.mktemp ( suffix = '.sqldb' ) 
-db_zip_name  = tempfile.mktemp ( suffix = '.zipdb' )
-db_root_name = tempfile.mktemp ( suffix = '.root'  )
+db_sql_name  = tempfile.mktemp ( suffix = '.msql' ) 
+db_zip_name  = tempfile.mktemp ( suffix = '.zdb'  )
+db_root_name = tempfile.mktemp ( suffix = '.root' )
 #
 # =============================================================================
 import Ostap.ZipShelve    as ZipShelve

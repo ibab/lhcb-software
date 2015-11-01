@@ -81,7 +81,7 @@
 
  Access existing DB in update mode :
 
- >>> import RootShelve as DBASE ## import the ZipShelve module 
+ >>> import RootShelve as DBASE   ## import the RootShelve module 
  >>> db = DBASE.open ('a_db' )    ## access existing dbase in update mode
  ...
  >>> for key in db : print key
@@ -98,7 +98,7 @@ __all__ = (
     'RootShelf'     , ## The DB-itself
     'RootOnlyShelf' , ## "data base" for ROOT-only objects
     'open'          , ## helper function to hide the actual DB
-    'tmpdb'         , ## helper function to crerte TEMPPRARY  RootShelve database 
+    'tmpdb'         , ## helper function to create TEMPORARY  RootShelve database 
     )
 # =============================================================================
 from AnalysisPython.Logger import getLogger
@@ -114,33 +114,37 @@ import ROOT, shelve
 #  essentially it is nothing more than just shelve-like interface for ROOT-files
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2015-07-31
-#  @attention it depends on proper TFile-decorations in Ostap.TFileDeco module
+#  @attention It CRUCIALLY depends on the proper TFile-decorations from Ostap.TFileDeco module
+#  @code
+#  db = RooOnlyShelf('mydb.root','c')
+#  h1 = ...
+#  db ['histogram'] = h1
+#  db.ls()
+#  @endcode 
 #  @see Ostap.TFileDeco
 class RootOnlyShelf(shelve.Shelf):
-    """
-    Plain vanilla DBASE for ROOT-object (only)
+    """Plain vanilla DBASE for ROOT-object (only)
     Essentially it is nothing more than just shelve-like
     interface for ROOT-files
+    Attention: It CRUCIALLY depends on the proper
+    TFile-decorations from Ostap.TFileDeco module
+    
+    >>> db = RooOnlyShelf('mydb.root','c')
+    >>> h1 = ...
+    >>> db ['histogram'] = h1
+    >>> db.ls()
     """
     ## constructors 
     #  @attention it depends on proper TFile-decorations in Ostap.TFileDeco module
     def __init__( self, filename , mode , writeback=False , *args ):
-        
-        _modes = { 'n'  : 'NEW'      ,
-                   'c'  : 'RECREATE' ,
-                   'r'  : 'READ'     ,
-                   'w'  : 'WRITE'    ,
-                   'u'  : 'UPDATE'   ,
-                   'w+' : 'UPDATE'   ,
-                   'rw' : 'UPDATE'   ,
-                   '+'  : 'UPDATE'   ,
-                   'a'  : 'UPDATE'   }
-
+        """ Create Root-only database 
+        >>> db = RooOnlyShelf('mydb.root','c')
+        >>> h1 = ...
+        """
         self.__filename = filename 
-        from Ostap.TFileDeco import ROOTCWD 
+        from Ostap.TFileDeco import ROOTCWD, open_mode  
         with ROOTCWD() : ## preserve current directory in ROOT 
-            mode  = _modes.get ( mode.lower()    , mode.upper() ) 
-            rfile = ROOT.TFile.Open ( filename   , mode , *args  )
+            rfile = ROOT.TFile.Open ( filename   , open_mode ( mode ) , *args  )
             shelve.Shelf.__init__ ( self , rfile , writeback ) 
 
     def filename    ( self       ) : return self.__filename 
@@ -155,8 +159,7 @@ class RootOnlyShelf(shelve.Shelf):
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2015-07-31 
 def _root_getitem_ ( self , key ) :
-    """
-    Get item from ROOT-file
+    """Get the item from ROOT-file
     >>> obj = db['A/B/C/histo']
     """
     try:
@@ -190,14 +193,15 @@ RootOnlyShelf.__setitem__ = _root_setitem_
 # =============================================================================
 ## @class RootShelf
 #  The actual class for ROOT-based shelve-like data base
-#  it implement shelve-intergase with underlyinog ROOT-fiel storage
-#  - ROOT-object are store ddirectly in the ROOT-file,
-#  - other objects are pickled and stored in ROOT.TObjString
+#  it implement shelve-interface with underlying ROOT-file as storage
+#  - ROOT-objects are stored directly in the ROOT-file,
+#  - other objects are pickled and stored via ROOT.TObjString
 #  @code
 #  db = RootShelf( 'mydb.root' , 'c' )
 #  db['histo'] = h1
 #  db['tuple'] = ('a',1,h1) 
 #  @endcode
+#  @see RootOnlyShelf 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2015-07-31 
 class RootShelf(RootOnlyShelf):
@@ -308,23 +312,23 @@ def open ( filename              ,
 # =============================================================================
 ## @class TmpRootShelf
 #  TEMPORARY The actual class for ROOT-based shelve-like data base
-#  it implement shelve-intergase with underlyinog ROOT-fiel storage
-#  - ROOT-object are store ddirectly in the ROOT-file,
+#  it implements shelve-interface with underlying ROOT-file as a storage
+#  - ROOT-objects are stored directly in the ROOT-file,
 #  - other objects are pickled and stored in ROOT.TObjString
 #  @code
-#  db = RootShelf( 'mydb.root' , 'c' )
+#  db = TmmRootShelf()
 #  db['histo'] = h1
 #  db['tuple'] = ('a',1,h1) 
 #  @endcode
+#  @see RootShelf 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2015-07-31 
 class TmpRootShelf(RootShelf):
-    """
-    TEMPORARY 
-    The actual class for ROOT-based shelve-like data base
+    """The actual class for TEMPRARY ROOT-based shelve-like data base
     it implement shelve-intergase with underlyinog ROOT-fiel storage
-    - ROOT-object are store ddirectly in the ROOT-file,
-    - other objects are pickled and stored in ROOT.TObjString
+    - ROOT-object are stored directly in the ROOT-file,
+    - other objects are pickled and stored via  ROOT.TObjString
+    see RootShelf
     """
     def __init__( self, *args ):
         
@@ -359,13 +363,11 @@ class TmpRootShelf(RootShelf):
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2010-04-30
 def tmpdb ( *args ) : 
-    """
-    Helper function to open TEMPPORARY RootShelve data base
+    """ Helper function to open TEMPPORARY RootShelve data base
     >>> import RootShelve as DBASE
     >>> db = DBASE.tmpdb()
     """    
     return TmpRootShelf ( *args )
-
 
 
 # =============================================================================

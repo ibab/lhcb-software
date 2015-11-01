@@ -60,7 +60,7 @@
 # @endcode 
 #
 # 
-# @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+# @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 # @date   2010-04-30
 # 
 #                    $Revision$
@@ -124,11 +124,59 @@ from   Ostap.sqlitedict import SqliteDict
 import zlib 
 # =============================================================================
 ## @class SQLiteShelf
-#  SQLite-based ``shelve-like'' database with compressed content. 
-#  
+#  SQLite-based ``shelve-like'' database with compressed content.
+#
+#  Keeping the same interface and functionlity as shelve data base,
+#  SQLiteShelve allows much more compact file size through
+#  the compression of the content
+#
+#  The actual code has been taken from <c>sqlitedict</c> code
+#  by Radim Rehurek <radimrehurek@seznam.cz>
+#  Hacked together from:
+#  * http://code.activestate.com/recipes/576638-draft-for-an-sqlite3-based-dbm/
+#  * http://code.activestate.com/recipes/526618/   ( see Google...)
+#
+# The compression (with zlib) is added atop of original code
+#
+# @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+# @date   2010-04-30
 class SQLiteShelf(SqliteDict):
-    """
-    SQLite-based ``shelve-like'' database with compressed content. 
+    """ SQLite-based ``shelve-like'' database with compressed content.
+
+    Keeping the same interface and functionlity as shelve data base,
+    SQLiteShelve allows much more compact file size through
+    the compression of the content
+    
+    The actual code has been inspired by <c>sqlitedict</c> ( see Google...)
+    The compression (with zlib) is added atop of original code 
+    
+    Create new DB:
+    
+    >>> import SQLiteShelve                     ## import the SQLiteShelve module 
+    >>> db = SQLiteShelve.open ('a_db', 'n')    ## create new DB
+    ...
+    >>> abcde = ...
+    >>> db['some_key'] =  abcde                 ## add information to DB
+    ...
+    >>> db.close()
+    
+    Access to DB in read-only mode :
+    
+    >>> import SQLiteShelve                     ## import the SQLiteShelve module 
+    >>> db = SQLiteShelve.open ('a_db' , 'r' )  ## access existing dbase in read-only mode
+    ...
+    >>> for key in db : print key
+    ...
+    >>> abcd = db['some_key']
+    
+    Access existing DB in update mode :
+    
+    >>> import SQLiteShelve                    ## import the SQLiteShelve module 
+    >>> db = SQLiteShelve.open ('a_db' )       ## access existing dbase in update mode
+    ...
+    >>> for key in db : print key
+    ...
+    >>> abcd = db['some_key']
     """
     def __init__ ( self                       ,
                    filename       = None      ,
@@ -273,8 +321,18 @@ SQLiteShelf.__exit__  = _sql_exit_
 
 # =============================================================================
 ## open new SQLiteShelve data base
+#  @code
+#  import SQLiteShleve as DBASE
+#  db = DBASE.open( 'data.msql')
+#  db['a'] = ...
+#  @endcode
+#  @see SQLiteShelf
 def open(*args, **kwargs):
-    """See documentation of the SQLiteShelf class."""
+    """See documentation of the SQLiteShelf class.
+    >>> import SQLiteShleve as DBASE
+    >>> db = DBASE.open('data.msql','c')
+    >>> db['a'] = ...
+    """
     return SQLiteShelf(*args, **kwargs)
 
 # =============================================================================
@@ -282,9 +340,11 @@ def open(*args, **kwargs):
 #  TEMPORARY SQLite-based ``shelve-like'' database with compressed content. 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2015-10-31
+#  @see SQLiteShelf
 class TmpSQLiteShelf(SQLiteShelf):
     """
     TEMPORARY SQLite-based ``shelve-like'' database with compressed content. 
+    see SQLiteShelf
     """
     def __init__ ( self                        ,
                    tablename      = 'Ostap'    ,
@@ -301,8 +361,20 @@ class TmpSQLiteShelf(SQLiteShelf):
         
 # =============================================================================
 ## open new TEMPORARY SQLiteShelve data base
+# @code
+# import SQLiteShleve as DBASE
+# db = DBASE.tmpdb()
+# db['a'] = ...
+# @endcode
+# @see TmpSQLiteShelf
+# @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+# @date   2015-10-31
 def tmpdb(*args, **kwargs):
-    """See documentation of the TmpSQLiteShelf class."""
+    """See documentation of the TmpSQLiteShelf class.
+    >>> import SQLiteShleve as DBASE
+    >>> db = DBASE.tmpdb()
+    >>> db['a'] = ...
+    """
     return TmpSQLiteShelf( *args , **kwargs )
 
 # =============================================================================

@@ -69,6 +69,8 @@ __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-06-07"
 __all__     = (
     'ROOTCWD'      , ## context manager to keep Current Directory
+    'open_mode'    , ## decode open-mode for ROOT-files
+    'open'         , ## just for completness 
     ) 
 # =============================================================================
 import ROOT, os , cppyy              ## attention here!!
@@ -544,6 +546,15 @@ _modes = { 'n'  : 'NEW'      ,
            'rw' : 'UPDATE'   ,
            '+'  : 'UPDATE'   ,
            'a'  : 'UPDATE'   }
+
+# =============================================================================
+## define open modes for ROOT-file 
+def open_mode ( mode ) :
+    """ Define open-mode for ROOT-file
+    >>> m = open_mode ( 'n' )
+    """
+    return _modes.get ( mode.lower() , mode.upper() )
+
 # =============================================================================
 ## create ROOT.TFile without making it a current working directory 
 #  @code
@@ -551,7 +562,7 @@ _modes = { 'n'  : 'NEW'      ,
 #  f = ROOT.TFile('test_file.root','recreate')
 #  print ROOT.gROOT.CurrentDirectory()
 #  @endcode
-def _rf_new_init_ ( fname , mode = '' , *args ) :
+def _rf_new_init_ ( rfile , fname , mode = '' , *args ) :
     """
     Open/create ROOT-file without making it a current working directory
     >>> print ROOT.gROOT.CurrentDirectory()
@@ -559,11 +570,9 @@ def _rf_new_init_ ( fname , mode = '' , *args ) :
     >>> print ROOT.gROOT.CurrentDirectory()
     """
     with ROOTCWD() :
-        rfile._old_init_ ( fname ,
-                           _modes.get ( mode.lower() , mode.upper() ) 
-                           *args )
+        rfile._old_init_ ( fname , open_mode ( mode ) , *args )
 
-# ===========================================================================
+# =============================================================================
 ## create ROOT.TFile without making it a current working directory 
 #  @code
 #  print ROOT.gROOT.CurrentDirectory()
@@ -578,12 +587,14 @@ def _rf_new_open_ ( fname , mode = '' , *args ) :
     >>> print ROOT.gROOT.CurrentDirectory()
     """
     with ROOTCWD() :
-        rfile._old_init_ ( fname ,
-                           _modes.get ( mode.lower() , mode.upper() ) 
-                           *args )
-        
-# ===========================================================================
+        return ROOT.TFile._old_open_ ( fname , open_mode ( mode ) , *args )
 
+
+# =============================================================================
+## another name, just for convinince
+open = _rf_new_open_
+
+# =============================================================================
 if hasattr ( ROOT.TFile , '_new_init_' ) and hasattr ( ROOT.TFile , '_old_init_' ) : pass
 else :
     
