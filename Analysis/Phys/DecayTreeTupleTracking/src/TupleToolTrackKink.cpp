@@ -79,7 +79,7 @@ StatusCode TupleToolTrackKink::fill( const LHCb::Particle*,
   if (msgLevel(MSG::VERBOSE)) verbose() << *track << endmsg ;
 
   if (msgLevel(MSG::DEBUG))
-    debug() << "Going to refit track " << endreq;
+    debug() << "Going to refit track " << endmsg;
 
   double kinkchi2(-999.), zkink(-999.);
   StatusCode sc = m_trackfitter->fit( const_cast<LHCb::Track&>(*track) ) ;
@@ -167,7 +167,7 @@ StatusCode TupleToolTrackKink::kinkChi2( const LHCb::Track& track,
     for( int i=minkinkstep-1; i<N-minkinkstep+1; ++i )
     {
       const double thischi2kink = (chi2tot - chi2forward[i] - chi2backward[i+1]) / ndof ;
-      //info() << " kinkchi2: thischi2kink " << thischi2kink << endreq;
+      //info() << " kinkchi2: thischi2kink " << thischi2kink << endmsg;
       if( thischi2kink > chi2kink )
       {
         ikink = i ;
@@ -201,7 +201,7 @@ StatusCode TupleToolTrackKink::fitKink( const LHCb::Track &input_track,
   if( fitresult )
   {
     if (msgLevel(MSG::VERBOSE))
-      verbose() << "fitKink: got fit result " << endreq;
+      verbose() << "fitKink: got fit result " << endmsg;
 
     const LHCb::TrackFitResult::NodeContainer& nodes = fitresult->nodes() ;
     //    const std::vector<LHCb::Measurement*>& measures = fitresult->measurements();
@@ -246,12 +246,12 @@ StatusCode TupleToolTrackKink::fitKink( const LHCb::Track &input_track,
       if (msgLevel(MSG::VERBOSE))
       {
         verbose() << "covariance " << std::endl
-                  << cov << endreq;
+                  << cov << endmsg;
         verbose() << "DMATRIX" << std::endl
                   << Dconstr << std::endl
-                  << DconstrT << endreq;
+                  << DconstrT << endmsg;
         verbose() << "DVD " << std::endl
-                  << DVD << endreq;
+                  << DVD << endmsg;
       }
 
       if ( !DVDinv.Invert() )
@@ -260,7 +260,7 @@ StatusCode TupleToolTrackKink::fitKink( const LHCb::Track &input_track,
       }
       if (msgLevel(MSG::DEBUG))
         debug() << "DVD inverted " << std::endl
-                << DVDinv << endreq;
+                << DVDinv << endmsg;
 
       Matrix5x5 H = cov * DconstrT * DVDinv * Dconstr;
       //      5x5 = 5x5 *   5x3    *  3x3   * 3*5
@@ -276,14 +276,14 @@ StatusCode TupleToolTrackKink::fitKink( const LHCb::Track &input_track,
 
       if (msgLevel(MSG::DEBUG))
       {
-        debug() << "  delta was " << delta_zero  << " now it is " << delta << endreq;
-        debug() << "  lambda is  " << lambda  << endreq;
+        debug() << "  delta was " << delta_zero  << " now it is " << delta << endmsg;
+        debug() << "  lambda is  " << lambda  << endmsg;
       }
 
       //       // Then we get the chi2
       double chi2 = ROOT::Math::Dot(lambda ,lambda_mod);
       if (msgLevel(MSG::DEBUG))
-        debug() << " Chi2 is " << chi2 << endreq;
+        debug() << " Chi2 is " << chi2 << endmsg;
 
       Matrix5x5 cov_2 = cov - H   * cov;
       //         5x5  = 5x5 - 5x5 * 5x5
@@ -305,7 +305,7 @@ StatusCode TupleToolTrackKink::fitKink( const LHCb::Track &input_track,
 
       if (msgLevel(MSG::DEBUG))
         debug() << "DeltaR is " << deltaR << " +- " << deltaR_err
-                << " chi2 is " << chi2 <<   "     max_chi2 "<< max_chi2 << endreq;
+                << " chi2 is " << chi2 <<   "     max_chi2 "<< max_chi2 << endmsg;
     }
   }
   else

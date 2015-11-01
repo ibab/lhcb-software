@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+! 2015-11-01 - Gerhard Raven
+ - replace endreq with endmsg
 
 !================= DecayTreeTupleTracking v1r3 2015-10-22 ====================
 
