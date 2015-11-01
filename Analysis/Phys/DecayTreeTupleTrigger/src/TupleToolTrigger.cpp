@@ -82,7 +82,7 @@ StatusCode TupleToolTrigger::fillBasic( Tuples::Tuple& tuple )
       return StatusCode::FAILURE;
     if ( report )
     {
-      if (msgLevel(MSG::DEBUG)) debug() << "L0 decision:  " << report->decision() << endreq;
+      if (msgLevel(MSG::DEBUG)) debug() << "L0 decision:  " << report->decision() << endmsg;
     }
   }
 
@@ -101,7 +101,7 @@ StatusCode TupleToolTrigger::fillBasic( Tuples::Tuple& tuple )
     }
 
     if(! decReports1 )
-      debug() << "No reports at LHCb::HltDecReportsLocation::Hlt1Default (" << LHCb::HltDecReportsLocation::Hlt1Default << ")" << endreq;
+      debug() << "No reports at LHCb::HltDecReportsLocation::Hlt1Default (" << LHCb::HltDecReportsLocation::Hlt1Default << ")" << endmsg;
 
     // allow data with only Hlt2 report
     decReports2 =
@@ -113,7 +113,7 @@ StatusCode TupleToolTrigger::fillBasic( Tuples::Tuple& tuple )
     }
 
     if(! decReports2 )
-      debug() << "No reports at LHCb::HltDecReportsLocation::Hlt2Default (" << LHCb::HltDecReportsLocation::Hlt2Default << ")" << endreq;
+      debug() << "No reports at LHCb::HltDecReportsLocation::Hlt2Default (" << LHCb::HltDecReportsLocation::Hlt2Default << ")" << endmsg;
 
     //fill the HLT1 global
     if ( !tuple->column( prefix+"Hlt1Global",

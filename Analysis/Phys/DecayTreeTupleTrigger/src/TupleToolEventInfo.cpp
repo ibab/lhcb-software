@@ -141,6 +141,6 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
 
   test &= tuple->column( prefix+"Polarity", (short)(m_magSvc->isDown()?-1:1) );
 
-  if( msgLevel( MSG::VERBOSE ) ) verbose() << "Returns " << test << endreq;
+  if( msgLevel( MSG::VERBOSE ) ) verbose() << "Returns " << test << endmsg;
   return StatusCode(test);
 }

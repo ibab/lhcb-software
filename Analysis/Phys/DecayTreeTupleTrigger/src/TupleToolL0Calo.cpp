@@ -159,7 +159,7 @@ StatusCode TupleToolL0Calo::fill( const LHCb::Particle* /* mother */,
   }
 
 
-  if( msgLevel( MSG::VERBOSE ) ) verbose() << "Returns " << test << endreq;
+  if( msgLevel( MSG::VERBOSE ) ) verbose() << "Returns " << test << endmsg;
   return StatusCode(test);
 
 }

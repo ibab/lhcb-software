@@ -3,6 +3,8 @@
 ! Responsible : DaVinci coordinator
 ! Purpose     : Trigger and stripping related tuple tools
 !-----------------------------------------------------------------------------
+! 2015-11-01 - Gerhard Raven
+ - replace endreq with endmsg
 
 !=================== DecayTreeTupleTrigger v1r9 2015-10-19 ===================
 
