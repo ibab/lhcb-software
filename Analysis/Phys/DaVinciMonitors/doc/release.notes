@@ -3,6 +3,8 @@
 ! Responsible : Patrick Koppenburg
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
+! 2015-11-01 - Gerhard Raven
+ - replace endreq with endmsg
 
 !=================== DaVinciMonitors v1r23 2015-07-24 ========================
 

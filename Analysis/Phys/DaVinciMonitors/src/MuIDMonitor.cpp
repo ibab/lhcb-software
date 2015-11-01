@@ -91,7 +91,7 @@ StatusCode MuIDMonitor::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   debug() << " MuIDMonitor v5r2 " << endmsg;
-  debug() << "==> Initialise" << endreq;
+  debug() << "==> Initialise" << endmsg;
 
   m_extrFail = 0;
   m_NStation = 0;
@@ -102,7 +102,7 @@ StatusCode MuIDMonitor::initialize()
   int i=0;
   while(i<m_NStation){
     m_stationNames.push_back(basegeometry.getStationName(i));
-    // debug()   <<" station "<<i<<" "<<m_stationNames[i]<<endreq;
+    // debug()   <<" station "<<i<<" "<<m_stationNames[i]<<endmsg;
     i++;
   }
 
@@ -128,7 +128,7 @@ StatusCode MuIDMonitor::initialize()
       m_padSizeY[station * m_NRegion + region]=m_mudet->getPadSizeY(station,region);
 
       if(m_padSizeX[station * m_NRegion + region]==0){
-        error() << "Muon Chamber Pad Size could not be retrieved !!!" <<  endreq;
+        error() << "Muon Chamber Pad Size could not be retrieved !!!" <<  endmsg;
         return StatusCode::FAILURE;
       }
     }
@@ -154,7 +154,7 @@ StatusCode MuIDMonitor::initialize()
     err() << "OPTIONS initialising MuIDMonitor are missing"
           << " or wrong size for " << m_NStation << " stations and "
           << m_NRegion << " regions"
-          << endreq;
+          << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -162,22 +162,22 @@ StatusCode MuIDMonitor::initialize()
     err()
       << "OPTIONS are wrong:"
       << " size of MomentumCuts vector is not correct"
-      << endreq;
+      << endmsg;
     return StatusCode::FAILURE;
   }
 
-  debug()  << " Momentum bins are (MeV/c) " <<endreq;
-  debug()  << " PreSelMomentum = "<<  m_PreSelMomentum << endreq;
+  debug()  << " Momentum bins are (MeV/c) " <<endmsg;
+  debug()  << " PreSelMomentum = "<<  m_PreSelMomentum << endmsg;
 
   std::vector<double>::const_iterator iMom;
   for(iMom = m_MomentumCuts.begin() ; iMom != m_MomentumCuts.end() ; iMom++){
-    debug()  << "Mom. cuts = " << *iMom << endreq ;
+    debug()  << "Mom. cuts = " << *iMom << endmsg ;
   }
 
   if( m_distPion.size() != 9 || m_distMuon.size() != 9){
     err() << "OPTIONS are wrong:"
           <<" size of m_distPion or m_distMuon vector is not correct"
-          << endreq;
+          << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -189,7 +189,7 @@ StatusCode MuIDMonitor::initialize()
 //=============================================================================
 StatusCode MuIDMonitor::execute() {
 
-  debug()  << "==> Execute" << endreq;
+  debug()  << "==> Execute" << endmsg;
 
   double dllMu(-999),dllBg(-999);
 
@@ -218,7 +218,7 @@ StatusCode MuIDMonitor::execute() {
       LHCb::MuonTileID tile=(*iCoord)->key();
       sc = m_mudet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
       if (sc.isFailure()){
-        warning() << "Failed to get x,y,z of tile " << tile << endreq;
+        warning() << "Failed to get x,y,z of tile " << tile << endmsg;
         continue;
       }
 
@@ -338,7 +338,7 @@ StatusCode MuIDMonitor::execute() {
         //Extrapolate the track that is not belonging to the already IDed mu
         sc = trackExtrapolate(track);
         if ( sc.isFailure() ){
-          warning() << " trackExtrapolate failed for track " << track << endreq;
+          warning() << " trackExtrapolate failed for track " << track << endmsg;
           m_extrFail++;
           return StatusCode::SUCCESS;
         }
@@ -525,7 +525,7 @@ StatusCode MuIDMonitor::execute() {
 //=============================================================================
 StatusCode MuIDMonitor::finalize()
 {
-  debug() <<"Number of tracks that failed extrapolation:: "<<m_extrFail<<endreq;
+  debug() <<"Number of tracks that failed extrapolation:: "<<m_extrFail<<endmsg;
   // Execute base class method
   return DaVinciHistoAlgorithm::finalize();
 }
@@ -543,11 +543,11 @@ StatusCode MuIDMonitor::trackExtrapolate(const LHCb::Track *pTrack){
   const LHCb::State * state = &(pTrack->closestState(m_stationZ[0]));
 
   if(!state1){
-    err() << " Failed to get 1st state from track " << endreq;
+    err() << " Failed to get 1st state from track " << endmsg;
     return StatusCode::FAILURE;
   }
   if(!state){
-    err() << " Failed to get state from track " << endreq;
+    err() << " Failed to get state from track " << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -693,7 +693,7 @@ StatusCode MuIDMonitor::get_closest(const LHCb::MuonPID *pMuid, double *closest_
     StatusCode sc =
       m_mudet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
     if (sc.isFailure()){
-      warning() << "Failed to get x,y,z of tile " << tile << endreq;
+      warning() << "Failed to get x,y,z of tile " << tile << endmsg;
       continue;
     }
 
@@ -741,7 +741,7 @@ double MuIDMonitor::calc_closestDist(const LHCb::MuonPID *pMuid, const double& p
   StatusCode sc = get_closest(pMuid,closest_x,closest_y,closest_region);
 
   if ( sc.isFailure() ){
-    warning() << " Closest_hit failed " << endreq;
+    warning() << " Closest_hit failed " << endmsg;
     return -1;
   }
 

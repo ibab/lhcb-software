@@ -349,13 +349,13 @@ StatusCode MuEffMonitor::initialize() {
   // Tracks extrapolator Tool:
   m_extrapolator = tool<ITrackExtrapolator>( m_extrapolatorName, "MuEffExtrap",this );
   if (!m_extrapolator){
-    err()<<" error retrieving the Extrapolator Tool"<<endreq;
+    err()<<" error retrieving the Extrapolator Tool"<<endmsg;
     return StatusCode::FAILURE;
   } 
   
   m_posTool = tool<IMuonFastPosTool>(m_posToolName);
   if(!m_posTool) {
-    error()<<"error retrieving the muon position tool "<<endreq;
+    error()<<"error retrieving the muon position tool "<<endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -429,7 +429,7 @@ StatusCode MuEffMonitor::execute() {
   }
 
   if (!protos){
-    error() << " ==> Failed to get ProtoParticle container " << endreq;
+    error() << " ==> Failed to get ProtoParticle container " << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -517,7 +517,7 @@ StatusCode MuEffMonitor::execute() {
     m_nEvts->fill(2.);
     LookForMuOccu();
   }
-  debug()  << " ==> after tracks loop: # Mu Can PreSel "<< m_nTrk << endreq;
+  debug()  << " ==> after tracks loop: # Mu Can PreSel "<< m_nTrk << endmsg;
   
   setFilterPassed(true);
   if(m_measureTime) m_timer->stop(m_timeFnl);  
@@ -570,19 +570,19 @@ StatusCode MuEffMonitor::LoadMuonGeometry(){
     m_stationOuterY[station] = m_mudet->getOuterY(station);
     m_stationZ[station] = m_mudet->getStationZ(station);
 
-    debug() <<"Muon Station "<<station<<" x,y Inner "<<m_stationInnerX[station]<<", "<< m_stationInnerY[station]<<endreq;
-    debug() <<"Muon Station "<<station<<" x,y Outer "<<m_stationOuterX[station]<<", "<< m_stationOuterY[station]<<endreq;
+    debug() <<"Muon Station "<<station<<" x,y Inner "<<m_stationInnerX[station]<<", "<< m_stationInnerY[station]<<endmsg;
+    debug() <<"Muon Station "<<station<<" x,y Outer "<<m_stationOuterX[station]<<", "<< m_stationOuterY[station]<<endmsg;
 
     for(int region = 0 ; region < m_NRegion ; region++ ){
       m_padSizeX[station * m_NRegion + region]=m_mudet->getPadSizeX(station,region);
       m_padSizeY[station * m_NRegion + region]=m_mudet->getPadSizeY(station,region);
        
       int ind = station*m_NRegion+region;
-      debug() <<"Muon Region "<<region<<" x Pad Size "<< ind <<", "<< m_padSizeX[ind]<<endreq;
-      debug() <<"Muon Region "<<region<<" y Pad Size "<< ind <<", "<< m_padSizeY[ind]<<endreq;
+      debug() <<"Muon Region "<<region<<" x Pad Size "<< ind <<", "<< m_padSizeX[ind]<<endmsg;
+      debug() <<"Muon Region "<<region<<" y Pad Size "<< ind <<", "<< m_padSizeY[ind]<<endmsg;
      
       if(m_padSizeX[station * m_NRegion + region]==0){
-        error() << " ==> Muon Chamber Pad Size could not be retrieved !!" <<  endreq;
+        error() << " ==> Muon Chamber Pad Size could not be retrieved !!" <<  endmsg;
         return StatusCode::FAILURE;
       }
     }
@@ -663,7 +663,7 @@ StatusCode MuEffMonitor::lookTisTos
   // protection in case tistos'ing is impossible. Mail Tomasz Skwarnicki
   if( m_TriggerTisTosTool->offlineLHCbIDs().size() == 0 )
   {
-    info()<<"lookTisTos: problem with the signal. It has no LHCbIDs TisTos'ing will fail"<<endreq;
+    info()<<"lookTisTos: problem with the signal. It has no LHCbIDs TisTos'ing will fail"<<endmsg;
     return StatusCode::SUCCESS;
   }
   if ( (decision)&&(tis) ) {
@@ -718,7 +718,7 @@ StatusCode MuEffMonitor::fillCoordVectors(){
   // get the MuonCoords for each station in turn
   LHCb::MuonCoords* coords = get<LHCb::MuonCoords>(LHCb::MuonCoordLocation::MuonCoords);
   if ( !coords ) {
-   err() << " ==> Cannot retrieve MuonCoords " << endreq;
+   err() << " ==> Cannot retrieve MuonCoords " << endmsg;
    return StatusCode::FAILURE;
   }
 
@@ -735,20 +735,20 @@ StatusCode MuEffMonitor::fillCoordVectors(){
 
     if(m_ignoreM1 && 0==station) continue;
     double uncross = (station == 0 || ((station>2)&&(region==0))) ? false : (*iCoord)->uncrossed();
-    debug() <<"Muon coord  " << tile << " station "<< station <<" region "<< region  <<" cross  "<< uncross <<endreq;
+    debug() <<"Muon coord  " << tile << " station "<< station <<" region "<< region  <<" cross  "<< uncross <<endmsg;
 
     if(uncross && m_mustCross) continue;
     if (!uncross) { //use FastPosTool
       sc = m_posTool->calcTilePos(tile,x,dx,y,dy,z,dz);
       if (sc.isFailure()){
-        warning() << " Failed to get x,y,z of tile " << tile << endreq;
+        warning() << " Failed to get x,y,z of tile " << tile << endmsg;
         continue; 
       }
     }
     else {
       StatusCode sc = m_mudet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
       if (sc.isFailure()){
-        warning() << " Failed to get x,y,z of tile " << tile << endreq;
+        warning() << " Failed to get x,y,z of tile " << tile << endmsg;
         continue; 
       }
     }
@@ -783,13 +783,13 @@ bool MuEffMonitor::DoTrackPreSelection(const LHCb::Track *pTrack, const LHCb::St
     
   muState = &(pTrack->closestState(m_stationZ[0]));
   if (!muState) {
-    error() << " ==> Failed to get state from track at station M1 " << endreq;
+    error() << " ==> Failed to get state from track at station M1 " << endmsg;
     return false;
   }
    
   const LHCb::State *muState0 = &(pTrack->firstState());
   if (!muState0) {
-    error() << " ==> Failed to get state from track at first state " << endreq;
+    error() << " ==> Failed to get state from track at first state " << endmsg;
     return false;
   }
 
@@ -957,7 +957,7 @@ bool MuEffMonitor::DoTrackSelection(){
 
     StatusCode scHlt2 = lookTisTos(m_Muon.pTrack, m_seleids, m_Hlt2LinesNames, Hlt2Tis );
     if (scHlt2.isFailure()) {
-      info() << " ==> Failed to get Hlt2 TisTos infos " << endreq;
+      info() << " ==> Failed to get Hlt2 TisTos infos " << endmsg;
       return false;
     }
     if(!Hlt2Tis)  {
@@ -966,7 +966,7 @@ bool MuEffMonitor::DoTrackSelection(){
     }
     StatusCode scHlt1 = lookTisTos(m_Muon.pTrack, m_seleids, m_Hlt1LinesNames, Hlt1Tis );
     if (scHlt1.isFailure()) {
-      info() << " ==> Failed to get Hlt1 TisTos infos " << endreq;
+      info() << " ==> Failed to get Hlt1 TisTos infos " << endmsg;
       return false;
     }
     if(!Hlt1Tis) {
@@ -975,7 +975,7 @@ bool MuEffMonitor::DoTrackSelection(){
     }
     StatusCode scL0 = lookL0TisTos(m_Muon.pTrack, m_seleids, m_L0LinesNames, L0Tis );
     if (scL0.isFailure()) {
-      info() << " ==> Failed to get L0 TisTos infos " << endreq;
+      info() << " ==> Failed to get L0 TisTos infos " << endmsg;
       return false;
     }
     
@@ -1529,7 +1529,7 @@ StatusCode MuEffMonitor::LookForBck(){
   // get the MuonCoords for each station in turn
   LHCb::MuonCoords* coords = get<LHCb::MuonCoords>(LHCb::MuonCoordLocation::MuonCoords);
   if ( !coords ) {
-   err() << " ==> Cannot retrieve MuonCoords " << endreq;
+   err() << " ==> Cannot retrieve MuonCoords " << endmsg;
    return StatusCode::FAILURE;
   }
 
@@ -1542,7 +1542,7 @@ StatusCode MuEffMonitor::LookForBck(){
     unsigned int region = tile.region();
 
     double uncross = (station == 0 || ((station>2)&&(region==0))) ? false : (*iCoord)->uncrossed();
-    debug() <<"Muon coord  " << tile << " station "<< station <<" region "<< region  <<" cross  "<< uncross <<endreq;
+    debug() <<"Muon coord  " << tile << " station "<< station <<" region "<< region  <<" cross  "<< uncross <<endmsg;
 
     if(uncross && m_mustCross) continue;
     nBck[station][region]++;
@@ -1573,7 +1573,7 @@ StatusCode MuEffMonitor::LookForMuOccu(){
   // get the MuonCoords for each station in turn
   LHCb::MuonCoords* coords = get<LHCb::MuonCoords>(LHCb::MuonCoordLocation::MuonCoords);
   if ( !coords ) {
-   err() << " ==> Cannot retrieve MuonCoords " << endreq;
+   err() << " ==> Cannot retrieve MuonCoords " << endmsg;
    return StatusCode::FAILURE;
   }
 
@@ -1586,7 +1586,7 @@ StatusCode MuEffMonitor::LookForMuOccu(){
     unsigned int region = tile.region();
 
     double uncross = (station == 0 || ((station>2)&&(region==0))) ? false : (*iCoord)->uncrossed();
-    debug() <<"Muon coord  " << tile << " station "<< station <<" region "<< region  <<" cross  "<< uncross <<endreq;
+    debug() <<"Muon coord  " << tile << " station "<< station <<" region "<< region  <<" cross  "<< uncross <<endmsg;
 
     if(uncross && m_mustCross) continue;
     nHits[station][region]++;

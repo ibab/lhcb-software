@@ -151,7 +151,7 @@ StatusCode ParticleMonitor::configureCut( LoKi::IHybridFactory* f,
 {
   const StatusCode sc = f -> get ( s , c  ) ;
   if ( sc.isFailure () ) { return Error ( "Unable to  decode cut: " + s  , sc ) ; }
-  if ( msgLevel(MSG::DEBUG)) debug () << "The decoded cut is: " << s << endreq ;
+  if ( msgLevel(MSG::DEBUG)) debug () << "The decoded cut is: " << s << endmsg ;
   return sc;
 }
 
