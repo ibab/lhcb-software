@@ -7,6 +7,12 @@
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
 
+! 2015-11-01 - Gerhard Raven
+ - replace endreq with endmsg
+ - avoid comparing pointers to 0
+ - prefer range-based for loops
+ - use lambda where appropriate
+
 !========================= LoKiExample v8r9 2015-02-26 ========================
 
 ! 2015-01-26 - Vanya Belyaev

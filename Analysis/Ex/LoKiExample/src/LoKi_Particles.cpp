@@ -42,7 +42,7 @@ LOKI_ALGORITHM( SelectParticles)
   info() << " # of found mu/K/pi = "
          <<  muons.size() << " / "
          <<  kaons.size() << " / "
-         <<  pions.size() << endreq ;
+         <<  pions.size() << endmsg ;
   
   setFilterPassed ( true ) ;
   

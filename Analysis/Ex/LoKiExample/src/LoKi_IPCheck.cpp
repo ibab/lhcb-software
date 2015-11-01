@@ -90,7 +90,7 @@ LOKI_MCALGORITHM( IPCheck )
     << " #particles MC: "
     << good.size() << "/" << fromPV.size()
     << " RC: " << signal.size() << "/" << frompv.size()
-    << endreq ;
+    << endmsg ;
   
   std::vector<Range> ranges ;
   ranges.push_back ( signal ) ;

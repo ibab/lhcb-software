@@ -52,7 +52,7 @@ LOKI_ALGORITHM(TestHybrid)
          << all    .size () << "/"
          << first  .size () << "/"
          << second .size () << "/"
-         << third  .size () << endreq ;
+         << third  .size () << endmsg ;
   
   return SUCCESS ;                                       // RETURN 
 }

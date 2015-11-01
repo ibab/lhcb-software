@@ -139,7 +139,7 @@ LOKI_MCALGORITHM( MCDecayDescriptor )
     log << std::endl 
         << "p12 : " << ( p12 ( p ) ? "True  " : "False " ) << "  " << p12  ;
     
-    log << endreq ;
+    log << endmsg ;
   }
   
  

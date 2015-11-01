@@ -52,12 +52,11 @@ namespace LoKi
     virtual StatusCode execute () 
     {
       //
-      for ( DECAYS::const_iterator id = m_decays.begin() ; 
-            m_decays.end() != id ; ++id ) 
+      for ( const auto& d : m_decays )
       {
         always () 
-          << " The decay: '" <<              ( *id ) << "'" << endreq 
-          << " CC-decay : '" << ppSvc()-> cc ( *id ) << "'" << endreq ;
+          << " The decay: '" <<              ( d ) << "'" << endmsg
+          << " CC-decay : '" << ppSvc()-> cc ( d ) << "'" << endmsg ;
       }   
       //
       return StatusCode::SUCCESS ;
@@ -96,21 +95,15 @@ namespace LoKi
     // get the particle property service 
     inline const LHCb::IParticlePropertySvc* ppSvc() const 
     {
-      if ( 0 != m_ppSvc ) { return m_ppSvc ; }
-      m_ppSvc = svc<LHCb::IParticlePropertySvc>  
+      if ( !m_ppSvc ) m_ppSvc = svc<LHCb::IParticlePropertySvc>
         ( "LHCb::ParticlePropertySvc" , true ) ;
       return m_ppSvc ;                                            
     }
     // ========================================================================
   private:
     // ========================================================================
-    /// the actual type for the list of decays 
-    typedef std::vector<std::string> DECAYS ; // the list of decays
-    // ========================================================================
-  private:
-    // ========================================================================
     /// the list of decays to be "cc-fied":
-    DECAYS m_decays ; // the list of decays to be "cc-fied"
+    std::vector<std::string> m_decays ; // the list of decays to be "cc-fied"
     /// the particle properties service 
     mutable const LHCb::IParticlePropertySvc* m_ppSvc ; // the service 
     // ========================================================================

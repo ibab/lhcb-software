@@ -31,7 +31,7 @@ LOKI_ALGORITHM( DecayDescriptor )
   
   MsgStream& log = always() ;
   
-  log << "Number of input particles: " << b.size() << endreq ;
+  log << "Number of input particles: " << b.size() << endmsg ;
 
   Decays::Node bquark = Decays::Nodes::HasQuark ( LHCb::ParticleID::bottom ) ;
   Decays::Trees::Exclusive p1 ( bquark ) ;
@@ -73,7 +73,7 @@ LOKI_ALGORITHM( DecayDescriptor )
     log << std::endl 
         << "p4  : " << ( p4  ( p ) ? "True  " : "False " ) << "  " << p4  ;
 
-    log << endreq ;
+    log << endmsg ;
     
   }
 

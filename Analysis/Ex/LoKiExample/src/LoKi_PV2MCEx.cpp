@@ -110,7 +110,7 @@ StatusCode LoKi::Example::PV2MCEx::analyse  ()
   /// get all primary vertices 
   VRange primaries = vselect ( "primaries" , PRIMARY ) ;
   
-  always() << "Number of PVs: " << primaries.size() << endreq ;
+  always() << "Number of PVs: " << primaries.size() << endmsg ;
   
   const IPV2MC::PV2MC*        t1 = pvmc () -> pv2MC        () ;
   const IPV2MC::PV2Collision* t2 = pvmc () -> pv2Collision () ;
@@ -119,7 +119,7 @@ StatusCode LoKi::Example::PV2MCEx::analyse  ()
   
   MsgStream& log = always() ;
   
-  log << "Number of PVs: " << primaries.size() << endreq ;
+  log << "Number of PVs: " << primaries.size() << endmsg ;
   for ( VRange::iterator ipv = primaries.begin() ; 
         primaries.end() != ipv ; ++ipv ) 
   {
@@ -171,7 +171,7 @@ StatusCode LoKi::Example::PV2MCEx::analyse  ()
         << std::endl ;
     }
   }
-  log << endreq ;
+  log << endmsg ;
   
   return StatusCode::SUCCESS ;
 }

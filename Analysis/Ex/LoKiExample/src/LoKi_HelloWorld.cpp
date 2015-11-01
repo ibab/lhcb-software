@@ -23,7 +23,7 @@
 // ============================================================================
 LOKI_ALGORITHM(HelloWorld)
 {
-  info() << "Hello,World!" << endreq ;
+  info() << "Hello,World!" << endmsg ;
   
   return StatusCode::SUCCESS ;
 }

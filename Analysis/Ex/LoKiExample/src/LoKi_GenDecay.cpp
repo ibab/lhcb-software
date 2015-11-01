@@ -225,7 +225,7 @@ LOKI_MCALGORITHM( GenDecayDescriptor )
       p22.reset() ;
     }
     
-    log << endreq ;
+    log << endmsg ;
   }
   
  

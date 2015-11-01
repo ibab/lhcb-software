@@ -47,13 +47,13 @@ namespace LoKi
       //
       sc = factory->get ( m_funCode , m_fun ) ;
       if ( sc.isFailure () ) { return sc ; }                        // RETURN 
-      info() << " The created function  is '" << m_fun << "'" << endreq ;
+      info() << " The created function  is '" << m_fun << "'" << endmsg ;
       //
       // create the predicate:
       //
       sc = factory->get ( m_cutCode , m_cut ) ;
       if ( sc.isFailure () ) { return sc ; }                        // RETURN 
-      info() << " The created predicate is '" << m_cut << "'" << endreq ;
+      info() << " The created predicate is '" << m_cut << "'" << endmsg ;
       //
       return StatusCode::SUCCESS ;  
     }
@@ -134,9 +134,9 @@ StatusCode LoKi::TestFunctor::execute()
     const double dvalue = m_fun ( p ) ;      // USE THE FUNCTION ==============  
     const bool   bvalue = m_cut ( p ) ;      // USE THE PREDICATE =============
     
-    info () << " Test the function:  " << m_fun << "(p)=" << dvalue << endreq ;
+    info () << " Test the function:  " << m_fun << "(p)=" << dvalue << endmsg ;
     info () << " Test the predicate: " << m_cut << "(p)=" <<
-      ( bvalue ? "True" : "False" ) << endreq ;
+      ( bvalue ? "True" : "False" ) << endmsg ;
 
     counter ( "funValue") += dvalue ;
     counter ( "cutEff"  ) += bvalue ;

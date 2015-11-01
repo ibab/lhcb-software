@@ -152,7 +152,7 @@ LOKI_MCALGORITHM ( CheckMC_Bs2PsiPhi )
       << " \t" << " mu- ? " << ( trueMum ? "True" : "False" )     << std::endl 
       << " \t" << " psi ? " << ( truePsi ? "True" : "False" )     << std::endl
       << " \t" << " phi ? " << ( truePhi ? "True" : "False" )     << std::endl 
-      << " \t" << " Bs  ? " << ( trueBs  ? "True" : "False" )     << endreq ;
+      << " \t" << " Bs  ? " << ( trueBs  ? "True" : "False" )     << endmsg ;
     
   }
   
