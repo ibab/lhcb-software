@@ -64,7 +64,7 @@ StatusCode AddRelatedInfo::execute()
 
     const Particle::Range parts = getIfExists<Particle::Range>( location );
     if (msgLevel(MSG::VERBOSE))
-      verbose() << " Found "<< parts.size() << " particles at " << location << endreq;
+      verbose() << " Found "<< parts.size() << " particles at " << location << endmsg;
 
     // Loop over particles in the locations
     for ( const Particle * p : parts )
@@ -92,7 +92,7 @@ void AddRelatedInfo::fill( const Particle* top,
                            const std::string &map_location )
 {
     if (msgLevel(MSG::DEBUG))
-      debug() << "GetOrCreate RelatedInfo at " << map_location << endreq;
+      debug() << "GetOrCreate RelatedInfo at " << map_location << endmsg;
 
     ParticleInfoRelation * relation =
       getOrCreate<ParticleInfoRelation, ParticleInfoRelation>(map_location);
@@ -107,9 +107,9 @@ void AddRelatedInfo::fill( const Particle* top,
     RelatedInfoMap* map = m_tool->getInfo();
 
     if (map->size() == 0) {
-      if (msgLevel(MSG::DEBUG)) debug() << "Got empty RelatedInfoMap. " << endreq;
+      if (msgLevel(MSG::DEBUG)) debug() << "Got empty RelatedInfoMap. " << endmsg;
     } else {
-      if (msgLevel(MSG::DEBUG)) debug() << "Got RelatedInfoMap : " << *map << endreq;
+      if (msgLevel(MSG::DEBUG)) debug() << "Got RelatedInfoMap : " << *map << endmsg;
       relation->i_relate(top, *map);
     }
 

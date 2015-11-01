@@ -188,7 +188,7 @@ StatusCode RelInfoVertexIsolationDetached::calculateRelatedInfo( const LHCb::Par
     source = target;
   } while(target.size() > 0);
 
-  if (msgLevel(MSG::DEBUG)) debug() << "Final states size= " <<  finalStates.size()  << endreq;
+  if (msgLevel(MSG::DEBUG)) debug() << "Final states size= " <<  finalStates.size()  << endmsg;
 
 
   //--------------------------------------------------
@@ -200,14 +200,14 @@ StatusCode RelInfoVertexIsolationDetached::calculateRelatedInfo( const LHCb::Par
       i !=m_inputParticles.end(); ++i){
 
     if (!exist<LHCb::Particle::Range>(*i+"/Particles")){
-      if (msgLevel(MSG::DEBUG)) debug() << "No particles at " << *i << " !!!!!" << endreq;
+      if (msgLevel(MSG::DEBUG)) debug() << "No particles at " << *i << " !!!!!" << endmsg;
       continue;
     }
 
     LHCb::Particle::Range parts = get<LHCb::Particle::Range>(*i+"/Particles");
 
     if (msgLevel(MSG::DEBUG)) debug() << "Getting particles from " << *i
-                                      << " with " << (parts).size() << " particles" << endreq;
+                                      << " with " << (parts).size() << " particles" << endmsg;
 
     for(LHCb::Particle::Range::const_iterator iparts = (parts).begin();
         iparts != (parts).end(); ++iparts)
@@ -252,7 +252,7 @@ StatusCode RelInfoVertexIsolationDetached::calculateRelatedInfo( const LHCb::Par
 
   if (msgLevel(MSG::DEBUG)) 
     debug() << "Number of particles to check excluding signal, particles with same proto and gammas = "
-            << theParts.size() << endreq;
+            << theParts.size() << endmsg;
   //--------------------------------------------------
 
   /*Now we want to make a list of daughters
@@ -269,7 +269,7 @@ StatusCode RelInfoVertexIsolationDetached::calculateRelatedInfo( const LHCb::Par
 
   if (msgLevel(MSG::DEBUG))
     debug() <<"Now final states should include only your particles direct desendents. finalStates.size()= "
-            <<  finalStates.size()  <<endreq;
+            <<  finalStates.size()  <<endmsg;
 
 
   int nCompatibleDeltaChi2 = 0;
@@ -317,9 +317,9 @@ StatusCode RelInfoVertexIsolationDetached::calculateRelatedInfo( const LHCb::Par
   if ( msgLevel(MSG::DEBUG) )
   {
     if(m_deltaChi2 > 0.0)  debug() << "Number of particles with delta chi2 < cut Delta chi2 = "
-                                   << nCompatibleDeltaChi2 << endreq;
+                                   << nCompatibleDeltaChi2 << endmsg;
     if(m_Chi2 > 0.0)  debug() << "Number of particles with  chi2 < cut  chi2 = "
-                              << nCompatibleChi2 << endreq;
+                              << nCompatibleChi2 << endmsg;
   }
 
   if (m_deltaChi2 < 0.0) nCompatibleDeltaChi2 = 0; 
@@ -338,7 +338,7 @@ StatusCode RelInfoVertexIsolationDetached::calculateRelatedInfo( const LHCb::Par
     case RelatedInfoNamed::VTXISODETSMALLESTDELTACHI2       : value = smallestDeltaChi2; break;
     default: value = 0.; break;
     }
-    debug() << "  Inserting key = " << key << ", value = " << value << " into map" << endreq;
+    debug() << "  Inserting key = " << key << ", value = " << value << " into map" << endmsg;
     m_map.insert( std::make_pair( key, value) );
 
   }
@@ -355,7 +355,7 @@ const Vertex* RelInfoVertexIsolationDetached::originVertex( const Particle* top
 
   const SmartRefVector< LHCb::Particle >& dau = top->daughters ();
   if( dau.empty() ){
-    // if (msgLevel(MSG::DEBUG)) debug() << " Particle has no daughters! "  << endreq;
+    // if (msgLevel(MSG::DEBUG)) debug() << " Particle has no daughters! "  << endmsg;
     return 0;
   }
 

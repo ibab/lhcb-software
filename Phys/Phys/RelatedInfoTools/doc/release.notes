@@ -4,6 +4,9 @@
 ! Purpose     : Related Info Tools
 !-----------------------------------------------------------------------------
 
+! 2015-11-01 - Gerhard Raven
+ - replace endreq with endmsg
+
 ! 2015-10-23 - Roel Aaij
  - Make RelInfoConeVariables usable in HLT: 
     * "Inputs" property should now be used, which takes the list of track locations, 

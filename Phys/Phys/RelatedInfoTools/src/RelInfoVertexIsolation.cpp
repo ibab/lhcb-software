@@ -127,7 +127,7 @@ StatusCode RelInfoVertexIsolation::calculateRelatedInfo( const LHCb::Particle *t
     // Get the particles
     LHCb::Particle::Range particles = getIfExists<LHCb::Particle::Range>(location+"/Particles") ;
     if (msgLevel(MSG::DEBUG))
-      debug() << "Got " << particles.size() << " particles from " << location << endreq ;
+      debug() << "Got " << particles.size() << " particles from " << location << endmsg ;
     if ( particles.empty() ) continue ;
 
     // Loop over the particles and take the ones we can use for vertexing
@@ -168,7 +168,7 @@ StatusCode RelInfoVertexIsolation::calculateRelatedInfo( const LHCb::Particle *t
   }
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Number of particles to check excluding signal, particles with same proto and gammas = "
-            << partsToCheck.size() << endreq;
+            << partsToCheck.size() << endmsg;
   // Now let's do some vertexing
   if( !part )
   {
@@ -179,7 +179,7 @@ StatusCode RelInfoVertexIsolation::calculateRelatedInfo( const LHCb::Particle *t
   // Get particles to vertex
   m_particlesToVertex = part->daughtersVector() ;
 
-  if (msgLevel(MSG::DEBUG)) debug() << "Particles to vertex = " <<  m_particlesToVertex.size()  << endreq;
+  if (msgLevel(MSG::DEBUG)) debug() << "Particles to vertex = " <<  m_particlesToVertex.size()  << endmsg;
 
   IsolationResult isolationOneTrack = getIsolation(originalVtxChi2, partsToCheck) ;
   IsolationResult isolationTwoTracks ;
@@ -234,7 +234,7 @@ StatusCode RelInfoVertexIsolation::calculateRelatedInfo( const LHCb::Particle *t
     case RelatedInfoNamed::VTXISODCHI2MASSTWOTRACK : value = m_smallestDeltaChi2MassTwoTracks; break;
     default: value = 0.; break;
     }
-    debug() << "  Inserting key = " << key << ", value = " << value << " into map" << endreq;
+    debug() << "  Inserting key = " << key << ", value = " << value << " into map" << endmsg;
     m_map.insert( std::make_pair( key, value) );
   }
 

@@ -202,7 +202,7 @@ void  RelInfoPFVariables::fillMap(){
     default: value = 0.; break;
     }
 
-    debug() << "  Inserting key = " << key << ", value = " << value << " into map" << endreq;
+    debug() << "  Inserting key = " << key << ", value = " << value << " into map" << endmsg;
     m_map.insert( std::make_pair(key,value) );
   }
 
