@@ -131,7 +131,7 @@ void TupleToolMuonIDCalib::LoadMuonGeometry()
   int i=0;
   while(i<m_NStation){
     m_stationNames.push_back(basegeometry.getStationName(i));
-    debug()   <<" station "<<i<<" "<<m_stationNames[i]<<endreq;
+    debug()   <<" station "<<i<<" "<<m_stationNames[i]<<endmsg;
     i++;
   }
   m_mudet=getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon");
@@ -186,7 +186,7 @@ StatusCode TupleToolMuonIDCalib::fillCoordVectors(){
     coords = get<LHCb::MuonCoords>(LHCb::MuonCoordLocation::MuonCoords);
   if ( !coords )
   {
-    err() << "Cannot retrieve MuonCoords " << endreq;
+    err() << "Cannot retrieve MuonCoords " << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -202,7 +202,7 @@ StatusCode TupleToolMuonIDCalib::fillCoordVectors(){
     LHCb::MuonTileID tile=(*iCoord)->key();
     StatusCode sc = m_mudet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
     if (sc.isFailure()){
-      warning() << "Failed to get x,y,z of tile " << tile << endreq;
+      warning() << "Failed to get x,y,z of tile " << tile << endmsg;
       continue;
     }
     m_coordPos[station*m_NRegion+region].
@@ -287,7 +287,7 @@ StatusCode TupleToolMuonIDCalib::fillVars(  const LHCb::Particle *part,
     if(exist<LHCb::MuonPIDs>(LHCb::MuonPIDLocation::Default)) pMuids=get<LHCb::MuonPIDs>(LHCb::MuonPIDLocation::Default);
 
     if (!pMuids){
-      error() << " Failed to get pMuids" <<  LHCb::MuonPIDLocation::Default << endreq;
+      error() << " Failed to get pMuids" <<  LHCb::MuonPIDLocation::Default << endmsg;
       return StatusCode::FAILURE;
     }
     if ( msgLevel(MSG::DEBUG) )
@@ -302,7 +302,7 @@ StatusCode TupleToolMuonIDCalib::fillVars(  const LHCb::Particle *part,
       }
     } // end of muonIDs loop
     if ( msgLevel(MSG::DEBUG) )
-      debug()<<"Fatima, I out of mutrack loop"<<endreq;
+      debug()<<"Fatima, I out of mutrack loop"<<endmsg;
 
     if(mutrack) {
       const std::vector< LHCb::LHCbID > lhcbIDs = mutrack->lhcbIDs();

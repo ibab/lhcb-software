@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones
 ! Purpose     : tuple tools for Muon PID calibration
 !-----------------------------------------------------------------------------
+! 2015-11-01 - Gerhard Raven
+ - replace endreq with endmsg
 
 !================= DecayTreeTupleMuonCalib v1r5 2015-10-019 ==================
 
