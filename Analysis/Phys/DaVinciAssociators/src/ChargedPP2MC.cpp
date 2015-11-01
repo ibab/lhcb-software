@@ -122,9 +122,9 @@ StatusCode ChargedPP2MC::execute() {
     // Get ProtoParticles
     SmartDataPtr<ProtoParticles> protos ( evtSvc(), *inp );
     // Check here to avoid the rest running on uDSTs where Protos are missing
-    //if ( 0 == protos ) continue;
+    //if ( !protos ) continue;
     // Though we do not want to create empty containers in Turbo processing
-    if ( (0 == protos) && m_vetoempty ) continue;
+    if ( !protos && m_vetoempty ) continue;
 
     // postpone the check for pointer till linker and relations table
     // are cretsaed/locate/registered
@@ -134,24 +134,23 @@ StatusCode ChargedPP2MC::execute() {
       *inp + Particle2MCMethod::extension[Particle2MCMethod::ChargedPP];
     // Just a fake helper class
     Object2MCLinker<LHCb::ProtoParticle> p2MCLink(this);
-    Object2MCLinker<LHCb::ProtoParticle>::Linker*
-      linkerTable = p2MCLink.linkerTable( linkContainer );
+    auto linkerTable = p2MCLink.linkerTable( linkContainer );
 
-    Table* table = 0 ;
+    Table* table = nullptr ;
     if ( createTable )
     {
       // create new table
-      table = new Table( 0 == protos ? 0 : protos->size() ) ;
+      table = new Table( protos ? protos->size() : 0 ) ;
       // Register the relations table on the TES using Marco's convention
       std::string loc = *inp ;
-      if ( 0 == loc.find("/Event/") ) { loc.replace(0,7,"") ;}
+      if ( loc.compare(0,7,"/Event/") == 0 ) { loc.erase(0,7) ;}
       put ( table , "Relations/" + loc );
     }
 
-    if ( NULL == table && NULL == linkerTable ) continue;
+    if ( !table && !linkerTable ) continue;
 
     // and only here check the input data
-    if ( 0 == protos                          ) continue;
+    if ( !protos                          ) continue;
 
     int npp = protos->size();
     _verbose << "    " << npp

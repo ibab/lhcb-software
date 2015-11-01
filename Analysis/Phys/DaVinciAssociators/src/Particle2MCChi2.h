@@ -5,6 +5,7 @@
 // Include files
 // from STL
 #include <string>
+#include <memory>
 
 // from Gaudi
 #include "GaudiKernel/SmartDataPtr.h"
@@ -35,6 +36,6 @@ protected:
 
 private:
   double                m_chi2;         ///< Chi2 maximum
-  Object2MCLinker<>*        m_p2MCLink;     ///< Pointer to a P2MCPLink object
+  std::unique_ptr<Object2MCLinker<>> m_p2MCLink;     ///< Pointer to a P2MCPLink object
 };
 #endif // Particle2MCChi2_H

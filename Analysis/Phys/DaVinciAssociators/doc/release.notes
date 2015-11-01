@@ -3,6 +3,9 @@
 ! Package     : DaVinciAssociators
 ! Responsible : Vladimir Gligorov
 !==============================================================================
+! 2015-11-01 - Gerhard Raven
+ - prefer not to compare (smart)pointers to 0
+ - prefer std::unique_ptr over raw ptr with explicit delete 
 
 !==================== DaVinciAssociators v9r8 2015-07-24 ======================
 

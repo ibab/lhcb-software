@@ -1,5 +1,5 @@
 // $Id: Particle2MCChi2.cpp,v 1.14 2007-01-12 13:58:53 ranjard Exp $
-// Include files 
+// Include files
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -37,7 +37,6 @@ Particle2MCChi2::Particle2MCChi2( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : AsctAlgorithm ( name , pSvcLocator )
   , m_chi2( 100. )
-  , m_p2MCLink(NULL)
 {
   declareProperty( "Chi2Cut", m_chi2 );
 }
@@ -45,25 +44,23 @@ Particle2MCChi2::Particle2MCChi2( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-Particle2MCChi2::~Particle2MCChi2() {} 
+Particle2MCChi2::~Particle2MCChi2() {}
 
 //=============================================================================
 // Initialisation. Check parameters
 //=============================================================================
 StatusCode Particle2MCChi2::initialize() {
- 
+
   _debug << "==> Initialise" << endmsg;
 
   StatusCode sc = GaudiAlgorithm::initialize();
   if( !sc.isSuccess() ) return sc;
 
-  m_p2MCLink = new Object2MCLinker<>( this,
-                                      Particle2MCMethod::WithChi2, 
-                                      m_inputData);
-  if( NULL == m_p2MCLink ) {
-    return Error("Cannot create Object2MCLinker helper");
-  }
-  return StatusCode::SUCCESS;
+  m_p2MCLink.reset( new Object2MCLinker<>( this,
+                                      Particle2MCMethod::WithChi2,
+                                      m_inputData) );
+  return !m_p2MCLink ? Error("Cannot create Object2MCLinker helper")
+                     : StatusCode::SUCCESS;
 }
 
 //=============================================================================
@@ -77,59 +74,55 @@ StatusCode Particle2MCChi2::execute() {
   // Loop on Particles containers //
   //////////////////////////////////
 
-  for( std::vector<std::string>::iterator inp = m_inputData.begin(); 
-       m_inputData.end()!= inp; inp++) {
+  for( const auto& inp : m_inputData ) {
     // Create a linker table
-    const std::string linkContainer = 
-      *inp + Particle2MCMethod::extension[Particle2MCMethod::Chi2];
-    Object2MCLinker<>::Linker*
-      linkerTable = m_p2MCLink->linkerTable( linkContainer );
+    const std::string linkContainer =
+      inp + Particle2MCMethod::extension[Particle2MCMethod::Chi2];
+    auto linkerTable = m_p2MCLink->linkerTable( linkContainer );
+    if( !linkerTable) continue;
 
-    if( NULL == linkerTable) continue;
-    
     // Get Particles
-    SmartDataPtr<Particles> parts (eventSvc(), *inp);
-    if( 0 == parts ) continue;
+    SmartDataPtr<Particles> parts (eventSvc(), inp);
+    if( !parts ) continue;
     int npp = parts->size();
     int nass = 0;
     int nrel = 0;
-    _debug << "    " << npp 
-           << " Particles retrieved from " << *inp << endmsg;
+    _debug << "    " << npp
+           << " Particles retrieved from " << inp << endmsg;
 
-    for( Particles::const_iterator pIt=parts->begin();
-         parts->end() != pIt; pIt++) {
-      _verbose << "    Particle " << objectName(*pIt);
-      const MCParticle* mcPart = m_p2MCLink->first( *pIt);
+    for( const auto&  part : *parts) {
+      _verbose << "    Particle " << objectName(part);
+      const MCParticle* mcPart = m_p2MCLink->first( part);
       bool found = false;
       double minChi2 = 0;
-      while( NULL != mcPart ) {
+      while( mcPart ) {
         double weight = m_p2MCLink->weight();
         if( weight <= m_chi2 ) {
           if( !found ) {
             _verbose << " associated to MCParts";
           }
           _verbose << " - " << mcPart->key();
-          if( NULL != linkerTable) 
-            linkerTable->link( *pIt, mcPart, weight);
+          if( linkerTable)
+            linkerTable->link( part, mcPart, weight);
           found = true;
           nrel++;
         }
         if( minChi2 == 0 || weight < minChi2) minChi2 = weight;
         mcPart = m_p2MCLink->next();
       }
-      if( found) nass++;
+      if( found) ++nass;
       else {
-        _verbose << " not associated to any MCPart, minChi2 = " 
+        _verbose << " not associated to any MCPart, minChi2 = "
                             << minChi2;
       }
       _verbose << endmsg;
     }
-    _debug 
-      << "Out of " << npp << " Particles in " << *inp << ", "
+    _debug
+      << "Out of " << npp << " Particles in " << inp << ", "
       << nass << " are associated, "
       << nrel << " relations found" << endmsg;
   }
-      
+
   return StatusCode::SUCCESS;
 }
 
@@ -139,8 +132,7 @@ StatusCode Particle2MCChi2::execute() {
 StatusCode Particle2MCChi2::finalize() {
 
   _debug << "==> Finalize" << endmsg;
-  if( NULL != m_p2MCLink ) delete m_p2MCLink;
-  m_p2MCLink = NULL;
+  m_p2MCLink.reset();
   return GaudiAlgorithm::finalize();
 }
 

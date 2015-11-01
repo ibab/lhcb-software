@@ -119,7 +119,7 @@ StatusCode Particle2MCLinks::execute() {
 
     // Get Particles
     SmartDataPtr<Particles> parts (eventSvc(), *inp);
-    if( 0 == parts ) {
+    if( !parts ) {
       _verbose << "Could not find container " << *inp << endmsg;
       continue;
     }
@@ -136,11 +136,11 @@ StatusCode Particle2MCLinks::execute() {
       _verbose << "Particle " << PPP->momentum() << endmsg
                << "    Particle " << objectName(*pIt);
 
-      const MCParticle* mcPart = NULL ;
+      const MCParticle* mcPart = nullptr ;
       Object2MCLinker< LHCb::ProtoParticle >* link = (*pIt)->charge() ? m_chargedLink : m_neutralLink;
       // check if it is from a ProtoParticle
       const ProtoParticle* protoPart = (*pIt)->proto() ;
-      if( NULL != protoPart ) {
+      if( protoPart ) {
         if( msgLevel( MSG::VERBOSE )) {
           std::string strCharged = (*pIt)->charge() ? "Charged" : "Neutral";
           verbose() << " from " << strCharged << " ProtoParticle " 
@@ -153,7 +153,7 @@ StatusCode Particle2MCLinks::execute() {
         verbose() << " is not from a ProtoParticle";
       }
       
-      if( NULL != mcPart ) {
+      if( mcPart ) {
         nass++;
         _verbose << " is associated to MCParts:" << endmsg ;
         do {
@@ -181,10 +181,8 @@ StatusCode Particle2MCLinks::finalize() {
 
   _debug << "==> Finalize" << endmsg;
 
-  if( NULL != m_chargedLink ) delete m_chargedLink;
-  if( NULL != m_neutralLink ) delete m_neutralLink;
-  m_chargedLink = NULL;
-  m_neutralLink = NULL;
+  delete m_chargedLink; m_chargedLink = nullptr;
+  delete m_neutralLink; m_neutralLink = nullptr;
   return GaudiAlgorithm::finalize();
 }
 

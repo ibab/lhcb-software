@@ -137,7 +137,7 @@ StatusCode Particle2MCWithChi2::execute() {
     
     // Get Particles
     SmartDataPtr<Particles> parts (eventSvc(), *inp);
-    if( 0 == parts ) continue;
+    if( !parts ) continue;
     int npp = parts->size();
     int nass = 0;
     _verbose << "    " << npp 
