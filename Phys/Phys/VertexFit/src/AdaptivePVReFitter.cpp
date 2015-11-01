@@ -161,14 +161,14 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
   if ( nTracks < m_minTrNumber )
   {
     if ( msgLevel(MSG::DEBUG) )
-      debug() << "number of track left for the PV = " << nTracks <<endreq;
+      debug() << "number of track left for the PV = " << nTracks <<endmsg;
     return StatusCode::FAILURE;
   }
 
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug()<< "old position " << PV->position()  <<endreq;
-    debug()<< "old position covariance" << PV->covMatrix() <<endreq;
+    debug()<< "old position " << PV->position()  <<endmsg;
+    debug()<< "old position covariance" << PV->covMatrix() <<endmsg;
   }
 
   bool converged = false;
@@ -184,7 +184,7 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
   while ( !converged && Iter < m_maxIter )
   {
     if ( msgLevel(MSG::DEBUG) )
-      debug() <<" Iteration " << Iter <<endreq;
+      debug() <<" Iteration " << Iter <<endmsg;
 
     const Gaudi::XYZPoint& PosPV = PV->position();
 
@@ -215,7 +215,7 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
       const double wk = aFitTrack.getWeight();
       if ( msgLevel(MSG::VERBOSE) )
         verbose() << " Track " << aFitTrack.getTrack()->key() 
-                  << " weight " << wk << endreq;
+                  << " weight " << wk << endmsg;
 
       const LHCb::State& statetr = tr->firstState();
       LHCb::State& newstate = aFitTrack.getState();
@@ -234,7 +234,7 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
       if ( sc.isFailure() ) 
       {
         if ( msgLevel(MSG::DEBUG) )
-          debug() << "failed to propagate tarck state in addTr!" << endreq;
+          debug() << "failed to propagate tarck state in addTr!" << endmsg;
         return sc;
       }
 
@@ -315,7 +315,7 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
       const double wk = aFitTrack.getWeight();
       if ( msgLevel(MSG::VERBOSE) )
         verbose() << " Track " << aFitTrack.getTrack()->key() 
-                  << " weight " << wk << endreq;
+                  << " weight " << wk << endmsg;
 
       const LHCb::State& statetr = aFitTrack.getState();
 
@@ -388,7 +388,7 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
       const double wk = aFitTrack.getWeight();
       if ( msgLevel(MSG::VERBOSE) )
         verbose() << " Track " << aFitTrack.getTrack()->key() 
-                  << " weight " << wk << endreq;
+                  << " weight " << wk << endmsg;
 
       const LHCb::State& statetr = aFitTrack.getState();
 
@@ -476,11 +476,11 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
         aFitTrack.setWeight(wknew);
         if ( msgLevel(MSG::VERBOSE) )
           verbose() << " Track " << aFitTrack.getTrack()->key() 
-                    << " new weight " << wknew << endreq;
+                    << " new weight " << wknew << endmsg;
       }
     }
     if ( msgLevel(MSG::DEBUG) )
-      debug() <<"chi2Fit " << chi2Fit <<endreq;
+      debug() <<"chi2Fit " << chi2Fit <<endmsg;
 
     if ( fabs(chi2Fit-chi2Previous) < m_maxDeltaChi2 )
     {
@@ -496,8 +496,8 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
 
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug()<< "new position " << PV->position()  <<endreq;
-    debug()<< "new position covariance" << PV->covMatrix() <<endreq;
+    debug()<< "new position " << PV->position()  <<endmsg;
+    debug()<< "new position covariance" << PV->covMatrix() <<endmsg;
   }
 
   PV->setChi2(chi2Fit);

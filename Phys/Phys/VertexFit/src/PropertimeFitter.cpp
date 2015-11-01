@@ -130,7 +130,7 @@ StatusCode PropertimeFitter::fit( const LHCb::VertexBase& PV,
     ++iter;
     
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << ":-) Iteration   " << iter << endreq;
+      verbose() << ":-) Iteration   " << iter << endmsg;
 
     //f(0)=(xb-xpv)*pzb-(zb-zpv)*pxb
     //f(1)=(yb-ypv)*pzb-(zb-zpv)*pyb
@@ -170,7 +170,7 @@ StatusCode PropertimeFitter::fit( const LHCb::VertexBase& PV,
     if ( !VD.Invert() )
     {
       if ( msgLevel(MSG::DEBUG) )
-        debug() << "could not invert matrix VD in fit! " <<endreq;
+        debug() << "could not invert matrix VD in fit! " <<endmsg;
       return StatusCode::FAILURE;
     }
 

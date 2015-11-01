@@ -45,8 +45,8 @@ StatusCode ParticleAdder::fit
 {
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "start ParticleAdder fit " <<endreq;
-    debug() << "using " << parts.size() <<" particles" <<endreq;
+    debug() << "start ParticleAdder fit " <<endmsg;
+    debug() << "using " << parts.size() <<" particles" <<endmsg;
   }
 
   P.clearDaughters();
