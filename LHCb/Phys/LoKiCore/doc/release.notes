@@ -13,6 +13,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2015-11-01 - Gerhard Raven
+ - augment LoKi::Interface so that it supports the same semantics as 
+   regular smartpointers, i.e. add explicit operator bool and get
+
 ! 2015-10-30 - Gerhard Raven
  - fix another clang error, avoid use of stringstream
 
