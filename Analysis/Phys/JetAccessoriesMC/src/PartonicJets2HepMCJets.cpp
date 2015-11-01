@@ -15,7 +15,6 @@
 #include "LoKi/Geometry.h"
 
 #include "LoKi/ILoKiSvc.h"
-#include "LoKi/Interface.h"
 
 #include "Relations/Relation2D.h"
 

@@ -33,7 +33,7 @@ StatusCode LoKi::MCPartBHadronSeed::initialize ()
 
   m_combiner = tool<IParticleCombiner> ( m_combinerName , this ) ;
   if ( !m_combiner) {
-    err() << "Unable to Retrieve Default  ParticleCombiner" << endreq;
+    err() << "Unable to Retrieve Default  ParticleCombiner" << endmsg;
     return StatusCode::FAILURE;
   }
   
@@ -87,7 +87,7 @@ StatusCode LoKi::MCPartBHadronSeed::makeJets
  LHCb::MCParticles* mcparts = get< LHCb::MCParticles>( LHCb::MCParticleLocation::Default );
   if( !mcparts ){
     warning() << "Unable to find MC particles at '"
-	      <<  LHCb::MCParticleLocation::Default << "'" << endreq;
+	      <<  LHCb::MCParticleLocation::Default << "'" << endmsg;
   }else{   
     for(  LHCb::MCParticle::Vector::iterator i = mcparts->begin(); i != mcparts->end();  i++ ){     
       if((*i)->particleID().hasBottom()){

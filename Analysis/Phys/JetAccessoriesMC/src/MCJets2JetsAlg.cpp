@@ -100,7 +100,7 @@ StatusCode MCJets2JetsAlg::initialize   ()
   if ( sc.isFailure() ) return sc;
   if( m_jetALocation.empty() || m_jetBLocation.empty() )return Error("No input locations is specified") ;
   if( m_jetMatcherName.empty() || m_jetBLocation.empty() )return Error("No jet matching tool specified") ;
-  info()<<"Matching "<<m_jetALocation<<" with "<<m_jetBLocation<<endreq;
+  info()<<"Matching "<<m_jetALocation<<" with "<<m_jetBLocation<<endmsg;
   if (m_output.empty())return Error ( "No OutputTable is specified" ) ;
   if (m_output2.empty())return Error ( "No OutputInverseTable is specified" ) ;
   return sc;
@@ -126,15 +126,15 @@ StatusCode MCJets2JetsAlg::execute   ()
   // create the relation table
   IRelateJets::Table* table122 = new IRelateJets::Table();
   put ( table122 , m_output ) ; 
-  //always()<<"table122"<<endreq;
+  //always()<<"table122"<<endmsg;
   IRelateJets::Table* table221 = new IRelateJets::Table();
   put ( table221 , m_output2 ) ; 
-  //always()<<"table221"<<endreq;
+  //always()<<"table221"<<endmsg;
 
   // call the tool
   m_jetMatcher->makeRelation(*JetsA, *JetsB, *table122, *table221);
   
-  //always()<<"end"<<endreq;
+  //always()<<"end"<<endmsg;
   // total number of established links 
   const size_t links122 = table122->relations().size() ;
   const size_t links221 = table221->relations().size() ;

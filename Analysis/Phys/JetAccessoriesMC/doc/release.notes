@@ -4,6 +4,9 @@
 ! Purpose     : Jet finding MC accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2015-11-01 - Gerahrd Raven
+ - replace endreq with endmsg
+
 !====================== JetAccessoriesMC v2r9 2015-02-26 ======================
 
 ! 2015-01-23 - Vanya Belyaev

@@ -20,7 +20,6 @@
 
 
 #include "LoKi/ILoKiSvc.h"
-#include "LoKi/Interface.h"
 
 
 #include "LoKi/ParticleCuts.h"

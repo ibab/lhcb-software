@@ -22,7 +22,6 @@
 #include "LoKi/PhysMCParticleCuts.h"
 
 #include "LoKi/ILoKiSvc.h"
-#include "LoKi/Interface.h"
 
 #include "LoKi/MCMatch.h"
 #include "LoKi/MCTypes.h"
@@ -273,7 +272,7 @@ void LoKi::MCJets2Jets::makeRelation( const IRelateJets::Jets& StdPrimaryJets,
       ps_tmp.pop_back() ;
       delete p ;
     }
-    //always()<<"g"<<endreq;
+    //always()<<"g"<<endmsg;
   }
 }
 void LoKi::MCJets2Jets::addTables(LoKi::MCMatchObj* matcher) const

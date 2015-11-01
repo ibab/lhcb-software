@@ -97,7 +97,7 @@ bool ZPlusJetHepMCSelector::accept(const HepMC::GenParticle* p ) const
   HepMC::GenVertex::particle_iterator p_out2 ;
   //for(p_out2 = p-> production_vertex() -> particles_begin( HepMC::children);
   //    p_out2 != (p)-> production_vertex() ->particles_end(HepMC::children); ++p_out2){
-  //  always()<<"Daugthers: "<<GABSID(*p_out2)<<endreq;
+  //  always()<<"Daugthers: "<<GABSID(*p_out2)<<endmsg;
   //}
 
   //     // it have a quark as mother
@@ -108,7 +108,7 @@ bool ZPlusJetHepMCSelector::accept(const HepMC::GenParticle* p ) const
   //         HepMC::GenVertex::particle_iterator p_out2 ;
   //         for(p_out2 = p-> production_vertex() -> particles_begin( HepMC::children);
   //             p_out2 != (p)-> production_vertex() ->particles_end(HepMC::children); ++p_out2){
-  //           always()<<"Daugthers: "<<GABSID(*p_out2)<<endreq;
+  //           always()<<"Daugthers: "<<GABSID(*p_out2)<<endmsg;
 
   //         }
 

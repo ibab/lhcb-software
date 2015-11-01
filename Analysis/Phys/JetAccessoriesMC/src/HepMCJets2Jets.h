@@ -23,7 +23,6 @@
 #include "LoKi/PhysMCParticleCuts.h"
 
 #include "LoKi/ILoKiSvc.h"
-#include "LoKi/Interface.h"
 
 #include "LoKi/MCMatch.h"
 #include "LoKi/MCTypes.h"
