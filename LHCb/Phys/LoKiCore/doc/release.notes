@@ -16,6 +16,7 @@
 ! 2015-11-01 - Gerhard Raven
  - augment LoKi::Interface so that it supports the same semantics as 
    regular smartpointers, i.e. add explicit operator bool and get
+ - replace LoKi::select with std::copy_if
 
 ! 2015-10-30 - Gerhard Raven
  - fix another clang error, avoid use of stringstream

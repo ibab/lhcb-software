@@ -8,15 +8,12 @@
 // STD & STL 
 // ============================================================================
 #include <algorithm>
+#include <functional>
 // ============================================================================
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/HashMap.h"
 #include "GaudiKernel/NamedRange.h"
-// ============================================================================
-// LoKi 
-// ============================================================================
-#include "LoKi/select.h"
 // ============================================================================
 /** @file
  *
@@ -109,9 +106,9 @@ namespace LoKi
       // get the container 
       Container& cont = m_map[ name ] ;
       // append approprate objects to the constainer
-      LoKi::select( first , last  , std::back_inserter( cont ) , cut ) ;
+      std::copy_if( first , last  , std::back_inserter( cont ) , std::cref(cut) ) ;
       // return valid range 
-      return Range( cont.begin() , cont.end() , name );      
+      return Range( cont.begin() , cont.end() , name );
     }
     /** add the object to the tagged container 
      *  @param name   tag for objects 
