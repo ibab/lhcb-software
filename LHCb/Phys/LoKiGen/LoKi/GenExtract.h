@@ -13,9 +13,7 @@
 // ============================================================================
 #include "Event/HepMCEvent.h"
 // ============================================================================
-// LoKiCore
-// ============================================================================
-#include "LoKi/select.h"
+#include <algorithm>
 // ============================================================================
 /** @file
  *
@@ -263,13 +261,13 @@ namespace LoKi
       OUTPUT                  output    , 
       const PREDICATE&        predicate ) 
     {
-      if ( 0 == vertex ) { return output ; }            // RETURN
+      if ( !vertex ) { return output ; }            // RETURN
       HepMC::GenVertex* v = const_cast<HepMC::GenVertex*> ( vertex ) ;
-      if ( 0 == v      ) { return output ; }            // RETURN
+      if ( !v      ) { return output ; }            // RETURN
       //
-      return  LoKi::select
+      return  std::copy_if
         ( v->particles_begin( range ) , 
-          v->particles_end  ( range ) , output , predicate ) ;
+          v->particles_end  ( range ) , output , std::cref(predicate) ) ;
     }
     // ========================================================================
     /** simple function which allows to extract a certain 
