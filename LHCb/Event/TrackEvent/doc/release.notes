@@ -3,6 +3,8 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Package for the tracking event model classes
 !-------------------------------------------------------------------------------
+! 2015-11-01 - Gerhard Raven
+ - make pre-defined z-positions of states constexpr
 
 !========================= TrackEvent v6r3 2015-07-20 =========================
 ! 2015-06-03 - Wouter Hulsbergen
