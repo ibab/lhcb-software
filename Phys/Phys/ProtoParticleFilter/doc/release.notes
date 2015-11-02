@@ -3,6 +3,8 @@
 ! Responsible : Christopher Rob Jones
 ! Purpose     : Filters for ProtoParticles
 !-----------------------------------------------------------------------------
+! 2015-11-01 - Gerhard Raven
+ - replace endreq with endmsg
 
 !==================== ProtoParticleFilter v1r8 2015-10-19 ====================
 

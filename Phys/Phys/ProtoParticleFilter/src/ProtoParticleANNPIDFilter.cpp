@@ -107,7 +107,7 @@ ProtoParticleANNPIDFilter::createCut( const std::string & tag,
   }
   else
   {
-    debug() << "Unknown tag " << tag << endreq;
+    debug() << "Unknown tag " << tag << endmsg;
     delete cut;
     cut = NULL;
   }

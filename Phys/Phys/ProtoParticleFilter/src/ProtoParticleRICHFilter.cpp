@@ -145,7 +145,7 @@ ProtoParticleRICHFilter::createCut( const std::string & tag,
   }
   else
   {
-    debug() << "Unknown DLL tag " << tag << endreq;
+    debug() << "Unknown DLL tag " << tag << endmsg;
     delete dllcut;
     dllcut = NULL;
   }
@@ -153,7 +153,7 @@ ProtoParticleRICHFilter::createCut( const std::string & tag,
   if ( msgLevel(MSG::DEBUG) && dllcut )
   {
     debug() << "  -> Created new DLLCut : "
-            << tag << " " << delim << " " << dllcut->cutValue() << endreq;
+            << tag << " " << delim << " " << dllcut->cutValue() << endmsg;
   }
 
   return dllcut;

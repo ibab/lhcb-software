@@ -89,7 +89,7 @@ ProtoParticleCALOFilter::createCut( const std::string & tag,
   if ( !ok )
   {
     if ( msgLevel(MSG::DEBUG) )
-      debug() << "Unknown tag " << tag << endreq;
+      debug() << "Unknown tag " << tag << endmsg;
     ++counter("Unknown ProtoParticleFilter tag "+tag);
     delete dllcut;
     dllcut = NULL;
@@ -98,7 +98,7 @@ ProtoParticleCALOFilter::createCut( const std::string & tag,
   if ( msgLevel(MSG::DEBUG) && dllcut )
   {
     debug() << "  -> Created new DLLCut : "
-            << tag << " " << delim << " " << dllcut->cutValue() << endreq;
+            << tag << " " << delim << " " << dllcut->cutValue() << endmsg;
   }
   
   return dllcut;

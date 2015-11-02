@@ -45,7 +45,7 @@ ProtoParticleDLLFilter::createCut( const std::string & tag,
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "  -> Cut data : "
-            << tag << " " << delim << " " << value << endreq;
+            << tag << " " << delim << " " << value << endmsg;
   }
 
   // Try to get a double from the value
@@ -84,7 +84,7 @@ ProtoParticleDLLFilter::createCut( const std::string & tag,
   if ( msgLevel(MSG::DEBUG) && dllcut )
   {
     debug() << "  -> Created new DLLCut : "
-            << tag << " " << delim << " " << dllcut->cutValue() << endreq;
+            << tag << " " << delim << " " << dllcut->cutValue() << endmsg;
   }
 
   return dllcut;
@@ -174,7 +174,7 @@ ProtoParticleDLLFilter::tryDllTypes( const std::string & tag,
   }
   else
   {
-    debug() << "Unknown DLL tag " << tag << endreq;
+    debug() << "Unknown DLL tag " << tag << endmsg;
     OK = false;
   }
   return OK;

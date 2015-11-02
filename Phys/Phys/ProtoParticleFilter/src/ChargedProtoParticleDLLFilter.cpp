@@ -63,11 +63,11 @@ ChargedProtoParticleDLLFilter::isSatisfied( const ProtoParticle* const & proto )
   if ( !m_trSel->accept(*track) )
   {
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> ProtoParticle fails Track selection" << endreq;
+      verbose() << " -> ProtoParticle fails Track selection" << endmsg;
     return false;
   }
   if ( msgLevel(MSG::VERBOSE) )
-    verbose() << " -> ProtoParticle passes Track selection" << endreq;
+    verbose() << " -> ProtoParticle passes Track selection" << endmsg;
   // if that is OK, apply cuts
   return ProtoParticleANNPIDFilter::isSatisfied( proto );
 }
@@ -111,7 +111,7 @@ ChargedProtoParticleDLLFilter::createCut( const std::string & tag,
   }
   else
   {
-    debug() << "Unknown tag " << tag << endreq;
+    debug() << "Unknown tag " << tag << endmsg;
     delete cut;
     cut = NULL;
   }
