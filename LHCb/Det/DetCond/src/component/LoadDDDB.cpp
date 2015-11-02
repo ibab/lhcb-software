@@ -85,9 +85,7 @@ StatusCode LoadDDDB::execute() {
     fatal() << "Gaught unknown exception!!" << endmsg;
     return StatusCode::FAILURE;
   }
-
   info() << "done." << endmsg;
-
   return StatusCode::SUCCESS;
 }
 
@@ -97,7 +95,6 @@ StatusCode LoadDDDB::execute() {
 StatusCode LoadDDDB::finalize() {
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
-
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 

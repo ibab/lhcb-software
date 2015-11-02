@@ -53,7 +53,7 @@ StatusCode CondDBReplayAlg::initialize() {
   m_reader = svc<ICondDBReader>(m_readerName,create);
 
   // Open the input file.
-  std::auto_ptr<std::istream> logFile(new std::ifstream(m_logFileName.c_str()));
+  std::unique_ptr<std::istream> logFile(new std::ifstream(m_logFileName.c_str()));
   if ( ! logFile->good() ) {
     error() << "Problems opening " << m_logFileName << endmsg;
     return StatusCode::FAILURE;

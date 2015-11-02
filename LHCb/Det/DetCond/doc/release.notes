@@ -4,6 +4,12 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2015-11-02 - Gerhard Raven
+ - pass sink arguments by value, and std::move them
+ - replace deprecated std::auto_ptr with std::unique_ptr
+ - prefer range-based for loops
+ - prefer emplace_back over push_back
+
 !========================= DetCond v12r44 2015-10-12 =========================
 ! 2015-09-25 - Liang Sun
  - Remove references to SQLDDDB*.py option files

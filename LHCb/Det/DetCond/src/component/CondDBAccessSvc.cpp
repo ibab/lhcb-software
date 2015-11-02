@@ -66,10 +66,8 @@ CondDBAccessSvc::CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc):
   m_coolConfSvc(0),
   m_cache(0),
   m_rndmSvc(0),
-  m_latestHeartBeat(0),
-  m_timeOutCheckerThread(0)
+  m_latestHeartBeat(0)
 {
-
   declareProperty("ConnectionString", m_connectionString = ""    );
   declareProperty("DefaultTAG",       m_dbTAG            = ""    );
   declareProperty("NoDB",             m_noDB             = false );

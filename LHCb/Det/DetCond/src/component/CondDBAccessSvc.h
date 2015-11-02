@@ -325,7 +325,7 @@ private:
   friend class SvcFactory<CondDBAccessSvc>;
 
   /// AttributeListSpecification used to sore XML strings
-  static std::auto_ptr<cool::RecordSpecification> s_XMLstorageSpec;
+  static std::unique_ptr<cool::RecordSpecification> s_XMLstorageSpec;
 
   /// Parameter controlling the granularity of the queries to the conditions database (in time units).
   ///
@@ -358,7 +358,7 @@ private:
   boost::mutex     m_lastAccessMutex;
 
   /// Pointer to the second thread.
-  std::auto_ptr<boost::thread> m_timeOutCheckerThread;
+  std::unique_ptr<boost::thread> m_timeOutCheckerThread;
 
   /// Function to set the last access time to "now".
   inline void touchLastAccess()
@@ -375,10 +375,9 @@ private:
 
   /// Start the timeout checker thread, if requested.
   inline void i_startTimeoutChecker() {
-    if ( UNLIKELY( (NULL == m_timeOutCheckerThread.get())
+    if ( UNLIKELY( (!m_timeOutCheckerThread)
                    && (!m_connectionTimeOut.is_pos_infinity()) ) ) {
-      TimeOutChecker tc(this);
-      m_timeOutCheckerThread = std::auto_ptr<boost::thread>(new boost::thread(tc));
+      m_timeOutCheckerThread.reset( new boost::thread(TimeOutChecker{this}) );
     }
   }
 

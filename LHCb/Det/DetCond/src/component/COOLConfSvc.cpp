@@ -94,8 +94,8 @@ namespace
 
       /// Constructor.
       /// @param theSite the local LHCb Production Site (<i>SITE</i>.<i>country</i>)
-      Comparator(const std::string &theSite):
-        site(theSite),
+      Comparator(std::string theSite):
+        site(std::move(theSite)),
         gen(// this is the rather longish Boost way of getting the current number of
             // seconds since the beginning of the day... that I want to use as seed
             // for the local random number generator (I do not use "seconds since epoch"
@@ -120,8 +120,8 @@ namespace
 
     /// Constructor.
     /// @param theSite the local LHCb Production Site (LCG.<i>SITE</i>.<i>country</i>)
-    ReplicaSortAlg(const std::string &theSite, IMessageSvc *msgSvc):
-      localSite(theSite),
+    ReplicaSortAlg(std::string theSite, IMessageSvc *msgSvc):
+      localSite(std::move(theSite)),
       log(msgSvc,"ReplicaSortAlg")
     {
       if( UNLIKELY( log.level() <= MSG::VERBOSE ) )
@@ -168,7 +168,7 @@ DECLARE_SERVICE_FACTORY(COOLConfSvc)
 // Standard constructor, initializes variables
 //=============================================================================
 COOLConfSvc::COOLConfSvc(const std::string& name, ISvcLocator* svcloc):
-  base_class(name,svcloc),m_coolApplication(0),m_replicaSortAlg(0)
+  base_class(name,svcloc)
 {
   declareProperty("UseLFCReplicaSvc", m_useLFCReplicaSvc = false );
   declareProperty("LocalSite", m_localSite = "",

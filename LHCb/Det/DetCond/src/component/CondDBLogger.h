@@ -135,7 +135,7 @@ private:
   std::string m_loggedReaderName;
 
   /// Path to the file that will contain the log.
-  std::auto_ptr<std::ostream> m_logFile;
+  std::unique_ptr<std::ostream> m_logFile;
 
   /// Path to the file that will contain the log.
   std::string m_logFileName;

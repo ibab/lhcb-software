@@ -6,14 +6,14 @@
 #include "CoolKernel/Record.h"
 #include "CoolKernel/StorageType.h"
 
-static std::auto_ptr<cool::RecordSpecification> s_XMLStorageSpec(NULL);
+static std::unique_ptr<cool::RecordSpecification> s_XMLStorageSpec{};
 
 namespace CondDB {
 
 const cool::RecordSpecification& getXMLStorageSpec() {
   if ( s_XMLStorageSpec.get() == NULL){
     // attribute list spec template
-    s_XMLStorageSpec = std::auto_ptr<cool::RecordSpecification>(new cool::RecordSpecification());
+    s_XMLStorageSpec = std::unique_ptr<cool::RecordSpecification>(new cool::RecordSpecification());
     s_XMLStorageSpec->extend("data", cool::StorageType::String16M);
   }
   return *s_XMLStorageSpec;

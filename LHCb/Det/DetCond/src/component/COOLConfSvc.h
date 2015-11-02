@@ -58,9 +58,9 @@ private:
   }
 
   /// Pointer to a shared instance of the COOL Application
-  std::auto_ptr<cool::Application> m_coolApplication;
+  std::unique_ptr<cool::Application> m_coolApplication;
 
-  std::auto_ptr<coral::IReplicaSortingAlgorithm> m_replicaSortAlg;
+  std::unique_ptr<coral::IReplicaSortingAlgorithm> m_replicaSortAlg;
 
   /// Flag to turn off/on the CORAL LFCReplicaService (option UseLFCReplicaSvc, default = false).
   /// Setting this option works only if it is set for the first COOLConfSvc initialized

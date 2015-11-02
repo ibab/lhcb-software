@@ -21,7 +21,7 @@ DECLARE_SERVICE_FACTORY(CondDBLogger)
 // Standard constructor, initializes variables
 //=============================================================================
 CondDBLogger::CondDBLogger( const std::string& name, ISvcLocator* svcloc ):
-  base_class(name,svcloc), m_loggedReader(0), m_logFile(0) {
+  base_class(name,svcloc), m_loggedReader(nullptr) {
 
   declareProperty("LoggedReader",  m_loggedReaderName = "",
                   "Fully qualified name of the ICondDBReader to which the calls"
@@ -70,7 +70,7 @@ StatusCode CondDBLogger::initialize(){
   }
 
   // Open the output file and start writing.
-  m_logFile =  std::auto_ptr<std::ostream>(new std::ofstream(m_logFileName.c_str()));
+  m_logFile =  std::unique_ptr<std::ostream>(new std::ofstream(m_logFileName.c_str()));
   if ( ! m_logFile->good() ) {
     log << MSG::ERROR << "Problems opening " << m_logFileName << endmsg;
     return StatusCode::FAILURE;
