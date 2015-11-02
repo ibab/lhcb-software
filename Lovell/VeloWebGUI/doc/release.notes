@@ -4,6 +4,11 @@
 ! Purpose     : Web GUI for analysis of VELO data
 !------------------------------------------------------------------------------
 
+! 2015-11-02 - Alex Pearce
+  - Add preliminary support for subpages and references plots.
+  - Still to be done: support layout option and plottables (see run view
+    configuration dictionary in VeloAnalysisFramework for more information).
+
 ! 2015-08-24 - Jon Harrison
   - Moved static resources to resources directory.
 

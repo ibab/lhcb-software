@@ -21,27 +21,41 @@
     where X = layout[0]/12, as there are 12 'columns' in Bootstrap. If not,
     place each plot in its own container and use a tabbed interface.
     TODO What about where the AxB > number of plots?
+    TODO This is actually not supported since the introduction of 'subpages',
+         where pages can have many tabs, each of which can specify a layout.
   #}
-  {% set use_grid = 'layout' in g.page_data %}
-  {% set nhorizontal = 1 if not use_grid else g.page_data.layout[0] %}
+  {% set has_subpages = 'subpages' in g.page_data %}
+  {% set subpages = g.page_data.subpages %}
+  {% set nhorizontal = 1 %}
 
-  {# One tab per histogram if no grid layout is specified #}
-  {% if  not use_grid %}
+  {# One tab per subpage #}
+  {% if subpages %}
     <ul class="nav nav-tabs nav-justified" role="tablist">
-      {% for plot in g.page_data.plots %}
-        {# Sanitise plot.name in to a valid URL hash value, as valid ROOT key names can contain invalid URL hash characters #}
-        <li class="run-view-tab"><a href="#{{ plot.name | sanitise }}" role="tab" data-toggle="tab">{{ plot.short or plot.title }}</a></li>
+      {% for subpage in subpages %}
+        {# Sanitise subplot.title in to a valid URL hash value #}
+        <li class="run-view-tab"><a href="#{{ subpage.title | sanitise }}" role="tab" data-toggle="tab">{{ subpage.title }}</a></li>
       {% endfor %}
     </ul>
   {% endif %}
-  {# One pane per histogram if no grid layout, else use a grid #}
-  <div class="{% if not use_grid %}tab-content{% else %}row{% endif %}">
+  {% if subpages %}
+    <div class="tab-content">
+      {% for subpage in subpages %}
+        <div class="tab-pane run-view-pane" id="{{ subpage.title | sanitise }}">
+        {% for plot in subpage.plots %}
+          {% if use_grid %}<div class="col-sm-{{ 12//nhorizontal }}">{% endif %}
+            {% include "_plot.html" %}
+          {% if use_grid %}</div>{% endif %}
+        {% endfor %}
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
     {% for plot in g.page_data.plots %}
       {% if use_grid %}<div class="col-sm-{{ 12//nhorizontal }}">{% endif %}
         {% include "_plot.html" %}
       {% if use_grid %}</div>{% endif %}
     {% endfor %}
-  </div>
+  {% endif %}
 
   {% include "_sensor_selector.html" %}
 

@@ -9,7 +9,7 @@ var VeloMonitor = (function(window, undefined) {
   var TEMPLATES = {}
   TEMPLATES.failureDiv = '<div class="alert alert-danger">{0}</div>';
   TEMPLATES.failureMsg = '<p>There was a problem retrieving plot '
-    + '<code>{0}</code>'
+    + '<code>{0}</code>. '
     + 'Please contact the administrator. Error message:</p>';
   TEMPLATES.div = '<div></div>';
   TEMPLATES.plotablesContainer = '<ul class="plotables">{0}</ul>';
@@ -106,7 +106,7 @@ var VeloMonitor = (function(window, undefined) {
       // Can always resolve as only successful jobs are cached
       task.resolve(cacheResult);
     } else {
-      task = JobMonitor.createTask('runview.plots.get_run_plot', args);
+      task = JobMonitor.createTask('runview.plots.get_run_plot_with_reference', args);
       JobCounter.increment();
     }
 
@@ -118,6 +118,10 @@ var VeloMonitor = (function(window, undefined) {
         var plotTypes = [],
             plotData = [];
         for (var i = 0; i < result.length; i++) {
+          if (result[i] === null) {
+            // TODO alert user that a plot failed
+            continue;
+          }
           var resultData = result[i]['data'],
               keyData = resultData['data'];
           // Add the key name and title on to the data passed to the plotter
@@ -462,5 +466,7 @@ var VeloMonitor = (function(window, undefined) {
 })(window);
 
 $(function() {
+  // Poll running jobs every 500 milliseconds
+  JobMonitor.settings.pollRate = 500;
   VeloMonitor.init(activePage);
 });
