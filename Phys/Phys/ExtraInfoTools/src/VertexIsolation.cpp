@@ -106,7 +106,7 @@ StatusCode VertexIsolation::calculateExtraInfo( const LHCb::Particle *top,
     // Get the particles
     LHCb::Particle::Range particles = getIfExists<LHCb::Particle::Range>(*iLocation+"/Particles") ;
     if (msgLevel(MSG::DEBUG))
-      debug() << "Got " << particles.size() << " particles from " << *iLocation << endreq ;
+      debug() << "Got " << particles.size() << " particles from " << *iLocation << endmsg ;
     if ( particles.empty() ) { continue; }
 
     // Loop over the particles and take the ones we can use for vertexing
@@ -141,7 +141,7 @@ StatusCode VertexIsolation::calculateExtraInfo( const LHCb::Particle *top,
   }
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Number of particles to check excluding signal, particles with same proto and gammas = "
-            << partsToCheck.size() << endreq;
+            << partsToCheck.size() << endmsg;
   // Now let's do some vertexing
   if( !part )
   {

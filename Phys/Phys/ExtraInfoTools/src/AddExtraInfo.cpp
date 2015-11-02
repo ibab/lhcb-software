@@ -67,11 +67,11 @@ StatusCode AddExtraInfo::execute()
     const Particle::Range parts = getIfExists<Particle::Range>( location );
     if ( parts.empty() )
     {
-      if (msgLevel(MSG::VERBOSE)) verbose() << "No particles found at " << location << endreq;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "No particles found at " << location << endmsg;
       continue;
     }
 
-    if (msgLevel(MSG::VERBOSE)) verbose() << " Found "<< parts.size() << " particles" <<endreq;
+    if (msgLevel(MSG::VERBOSE)) verbose() << " Found "<< parts.size() << " particles" <<endmsg;
 
     // Loop over particles in the locations
     for ( Particle::Range::const_iterator icand = parts.begin(); icand != parts.end(); ++icand )
@@ -103,7 +103,7 @@ void AddExtraInfo::fill( const Particle* top, Particle* c, int level )
   if ( c == top || isInDaughters )
   {
 
-    if (msgLevel(MSG::DEBUG)) debug() << "Filling ExtraInfo for particle at " << c_location << endreq;
+    if (msgLevel(MSG::DEBUG)) debug() << "Filling ExtraInfo for particle at " << c_location << endmsg;
 
     // Calculate extra information using each tool
     for ( std::list<IExtraInfoTool*>::iterator iTool = m_tools.begin();
@@ -137,7 +137,7 @@ void AddExtraInfo::fill( const Particle* top, Particle* c, int level )
 
           c->addInfo( index+i, value);
           if (msgLevel(MSG::DEBUG))
-            debug() << "Added extra info: " << name << "=" << value << endreq;
+            debug() << "Added extra info: " << name << "=" << value << endmsg;
 
         }
 
@@ -147,7 +147,7 @@ void AddExtraInfo::fill( const Particle* top, Particle* c, int level )
   else
   {
     if (msgLevel(MSG::VERBOSE))
-      verbose() << "Particle at " << c_location << " not in the list, skipping" << endreq;
+      verbose() << "Particle at " << c_location << " not in the list, skipping" << endmsg;
   }
 
   // If we reached the maximum recursion level, we're done

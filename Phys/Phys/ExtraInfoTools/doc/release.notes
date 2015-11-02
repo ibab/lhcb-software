@@ -3,6 +3,8 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Extra Info Tools
 !-----------------------------------------------------------------------------
+! 2015-11-02 - Gerhard Raven
+ - replace endreq with endmsg
 
 !====================== ExtraInfoTools v1r1 2015-10-05 =======================
 
