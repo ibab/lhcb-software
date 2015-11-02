@@ -7,6 +7,8 @@
 // Local
 //#include "PatVertexState.h"
 #include "PatPV3D.h"
+#include "Event/RecVertex.h"
+#include "Event/PrimaryVertex.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : PatPV3D
@@ -22,10 +24,11 @@ DECLARE_ALGORITHM_FACTORY( PatPV3D )
 PatPV3D::PatPV3D( const std::string& name,
                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
-  m_outputVerticesName(""),
   m_pvsfit(0)
 {
-  declareProperty( "OutputVerticesName" , m_outputVerticesName  =  LHCb::RecVertexLocation::Velo3D );
+  declareProperty( "OutputVerticesName" , m_recVertexLocation  =  LHCb::RecVertexLocation::Velo3D );
+  declareProperty( "PrimaryVertexLocation" , m_primaryVertexLocation );
+  declareProperty( "RefitPV", m_refitpv = false ) ;
 }
 
 //=============================================================================
@@ -65,22 +68,40 @@ StatusCode PatPV3D::execute() {
     debug() << "==> Execute" << endmsg;
   }
 
-  LHCb::RecVertices* outputVertices  = new LHCb::RecVertices();
-  put(outputVertices, m_outputVerticesName);
+  LHCb::RecVertices* outputRecVertices(0) ;
+  if( !m_recVertexLocation.empty() ) {
+    outputRecVertices = new LHCb::RecVertices();
+    put(outputRecVertices, m_recVertexLocation);
+  }
+  
+  LHCb::PrimaryVertices* outputPrimaryVertices(0) ;
+  if( !m_primaryVertexLocation.empty() ) {
+    outputPrimaryVertices = new LHCb::PrimaryVertices() ;
+    put( outputPrimaryVertices, m_primaryVertexLocation ) ;
+  }
 
   std::vector<LHCb::RecVertex> rvts;
   StatusCode scfit = m_pvsfit->reconstructMultiPV(rvts);
   if (scfit == StatusCode::SUCCESS) {
-      for(std::vector<LHCb::RecVertex>::iterator iv = rvts.begin(); iv != rvts.end(); iv++) {
+    setFilterPassed( !rvts.empty() ) ;
+    if( outputRecVertices ) {
+      for( std::vector<LHCb::RecVertex>::iterator iv = rvts.begin(); iv != rvts.end(); iv++) {
         LHCb::RecVertex* vertex = new LHCb::RecVertex(*iv);
         vertex->setTechnique(LHCb::RecVertex::Primary);
-        outputVertices->insert(vertex);
+        outputRecVertices->insert(vertex);
       }
+    }
+    if( outputPrimaryVertices ) {
+      for( const auto& iv : rvts ) {
+        LHCb::PrimaryVertex* vertex = new LHCb::PrimaryVertex(iv,m_refitpv);
+        outputPrimaryVertices->insert(vertex);
+      }
+    }
   } else {
+    setFilterPassed( false ) ;
     Warning("reconstructMultiPV failed!",scfit).ignore();
   }
-  setFilterPassed(!outputVertices->empty());
-
+  
   return StatusCode::SUCCESS;
 }
 

@@ -7,6 +7,7 @@
 ! 2015-10-15 - Wouter Hulsbergen
  - Added AdaptivePV3DFitter
  - Added algorithms 'RecToPVConverter' and 'PVToRecConverter'
+ - Added option to PatPV3D to write also new PV list
 
 !========================= PatPV v3r28p1 2015-10-13 =========================
 ! 2015-08-12 - Gerhard Raven
