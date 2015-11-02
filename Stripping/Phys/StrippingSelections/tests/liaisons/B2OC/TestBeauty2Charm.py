@@ -80,6 +80,26 @@ MyLines = [
     'StrippingBc2DstD0Dst2DPI0D2KSHD02HHPI0Beauty2CharmLine',
     'StrippingBc2DstD0Dst2DPI0D2KSHD02KSHHBeauty2CharmLine',
 
+    # Bc+ -> D+ D*0
+    'StrippingBc2DDst0D2KSHHHDst02D0GammaD02KSHHBeauty2CharmLine',
+    'StrippingBc2DDst0D2KSHHHDst02D0GammaD02KHHHBeauty2CharmLine',
+    'StrippingBc2DDst0D2KSHHHDst02D0PI0D02HHBeauty2CharmLine',
+    'StrippingBc2DDst0D2KSHHHDst02D0PI0D02KHHHBeauty2CharmLine',
+    'StrippingBc2DDst0D2KSHHHDst02D0PI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DDst0D2KSHHHDst02D0GammaD02HHBeauty2CharmLine',
+    'StrippingBc2DDst0D2KSHDst02D0GammaD02KSHHBeauty2CharmLine',
+    'StrippingBc2DDst0D2KSHDst02D0GammaD02KHHHBeauty2CharmLine',
+    'StrippingBc2DDst0D2KSHDst02D0PI0D02HHBeauty2CharmLine',
+    'StrippingBc2DDst0D2KSHDst02D0PI0D02KHHHBeauty2CharmLine',
+    'StrippingBc2DDst0D2KSHDst02D0PI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DDst0D2KSHDst02D0GammaD02HHBeauty2CharmLine',
+    'StrippingBc2DDst0D2HHHDst02D0GammaD02KSHHBeauty2CharmLine',
+    'StrippingBc2DDst0D2HHHDst02D0GammaD02KHHHBeauty2CharmLine',
+    'StrippingBc2DDst0D2HHHDst02D0PI0D02HHBeauty2CharmLine',
+    'StrippingBc2DDst0D2HHHDst02D0PI0D02KHHHBeauty2CharmLine',
+    'StrippingBc2DDst0D2HHHDst02D0PI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DDst0D2HHHDst02D0GammaD02HHBeauty2CharmLine',
+
     # Bc+ -> D*+ D*0
     'StrippingBc2DstDst0Dst2DPI0D2HHHDst02D0GammaD02KSHHBeauty2CharmLine',
     'StrippingBc2DstDst0Dst2DPI0D2HHHDst02D0GammaD02KHHHBeauty2CharmLine',
