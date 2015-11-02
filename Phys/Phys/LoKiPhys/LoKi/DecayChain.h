@@ -108,7 +108,7 @@ namespace LoKi
      *    
      *    /// print decay chain to gausdi message stream
      *    MsgStream log( msgSvc() , name() ) ;
-     *    dc.print ( head , log , endreq          ) ;
+     *    dc.print ( head , log , endmsg          ) ;
      *
      *  @endcode 
      * 

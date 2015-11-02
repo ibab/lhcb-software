@@ -114,10 +114,6 @@ LoKi::Legacy::DHCoplanarity::fillStream ( std::ostream& s ) const
 // ============================================================================
 // ============================================================================
 
-namespace 
-{
-  const ILifetimeFitter*  const s_FITTER = 0 ;
-}
 // ============================================================================
 // constructor from the index & tool  
 // ============================================================================
@@ -155,7 +151,7 @@ LoKi::Legacy::DaughterParticleCTau::DaughterParticleCTau
   : LoKi::AuxFunBase( std::tie ( index , fitter ) )
   , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
   , m_index  ( index   ) 
-  , m_fitter ( s_FITTER ) 
+  , m_fitter ( nullptr ) 
 {
   if ( !m_fitter ) 
   { m_fitter = LoKi::GetTools::lifetimeFitter ( *this , fitter ) ; }

@@ -92,15 +92,15 @@ LoKi::Particles::LifeTime::result_type
 LoKi::Particles::LifeTime::lifeTime 
 ( LoKi::Particles::LifeTime::argument p ) const 
 {
-  if ( 0 == p ) 
+  if ( !p ) 
   {
     Error ("LHCb::Particle* points to NULL, return -InvalidTime").ignore() ;
     return -LoKi::Constants::InvalidTime ;                         // RETURN 
   }
   // check the vertex
-  Assert ( 0 != vertex() , "Primary vertex is invalid! " ) ;
+  Assert ( vertex() , "Primary vertex is invalid! " ) ;
   // check the fitter 
-  Assert ( 0 != tool () , "ILifetimeFitter is invalid! " ) ;
+  Assert ( tool() , "ILifetimeFitter is invalid! " ) ;
   //
   double i_time  = 0 ;
   double i_error = 0 ;
@@ -128,15 +128,15 @@ LoKi::Particles::LifeTime::result_type
 LoKi::Particles::LifeTime::lifeTimeChi2
 ( LoKi::Particles::LifeTime::argument p ) const 
 {
-  if ( 0 == p ) 
+  if ( !p ) 
   {
     Error ( "LHCb::Particle* points to NULL, return InvalidChi2" ).ignore() ;
     return LoKi::Constants::InvalidChi2 ;                         // RETURN 
   }
   // check the vertex
-  Assert ( 0 != vertex () , "Primary vertex is invalid! " ) ;
+  Assert ( vertex () , "Primary vertex is invalid! " ) ;
   // check the fitter 
-  Assert ( 0 != tool   ()  , "ILifetimeFitter is invalid! " ) ;
+  Assert ( tool   ()  , "ILifetimeFitter is invalid! " ) ;
   //
   double i_time  = 0 ;
   double i_error = 0 ;
@@ -164,15 +164,15 @@ LoKi::Particles::LifeTime::result_type
 LoKi::Particles::LifeTime::lifeTimeSignedChi2
 ( LoKi::Particles::LifeTime::argument p ) const 
 {
-  if ( 0 == p ) 
+  if ( !p ) 
   {
     Error ( "LHCb::Particle* points to NULL, return InvalidChi2" ).ignore() ;
     return LoKi::Constants::InvalidChi2 ;                         // RETURN 
   }
   // check the vertex
-  Assert ( 0 != vertex () , "Primary vertex is invalid! " ) ;
+  Assert ( vertex () , "Primary vertex is invalid! " ) ;
   // check the fitter 
-  Assert ( 0 != fitter () , "ILifetimeFitter is invalid! " ) ;
+  Assert ( fitter () , "ILifetimeFitter is invalid! " ) ;
   //
   double i_time  = 0 ;
   double i_error = 0 ;
@@ -204,15 +204,15 @@ LoKi::Particles::LifeTime::result_type
 LoKi::Particles::LifeTime::lifeTimeFitChi2
 ( LoKi::Particles::LifeTime::argument p ) const 
 {
-  if ( 0 == p ) 
+  if ( !p ) 
   {
     Error ( "LHCb::Particle* points to NULL, return InvalidChi2" ).ignore() ;
     return LoKi::Constants::InvalidChi2 ;                         // RETURN 
   }
   // check the vertex
-  Assert ( 0 != vertex () , "Primary vertex is invalid! " ) ;
+  Assert ( vertex () , "Primary vertex is invalid! " ) ;
   // check the fitter 
-  Assert ( 0 != fitter () , "ILifetimeFitter is invalid! " ) ;
+  Assert ( fitter () , "ILifetimeFitter is invalid! " ) ;
   //
   double i_time  = 0 ;
   double i_error = 0 ;
@@ -237,15 +237,15 @@ LoKi::Particles::LifeTime::result_type
 LoKi::Particles::LifeTime::lifeTimeError
 ( LoKi::Particles::LifeTime::argument p ) const 
 {
-  if ( 0 == p ) 
+  if ( !p ) 
   {
     Error ( "LHCb::Particle* points to NULL, return InvalidTime" ) ;
     return LoKi::Constants::InvalidTime ;                         // RETURN 
   }
   // check the vertex
-  Assert ( 0 != vertex () , "Primary vertex is invalid! " ) ;
+  Assert ( vertex () , "Primary vertex is invalid! " ) ;
   // check the fitter 
-  Assert ( 0 != fitter () , "ILifetimeFitter is invalid! " ) ;
+  Assert ( fitter () , "ILifetimeFitter is invalid! " ) ;
   //
   double i_time  = 0 ;
   double i_error = 0 ;

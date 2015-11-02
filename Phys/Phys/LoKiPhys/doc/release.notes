@@ -4,6 +4,15 @@
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+! 2015-11-01 - Gerhard Raven
+ - replace LoKi::select with std::copy_if
+ - replace endreq with endmsg
+ - prefer not to explicitly call default constructors
+ - prefer range-based for loops
+ - prefer emplace over insert
+ - prefer auto
+ - prefer nullptr
+ - avoid comparison of (smart)pointers to 0
 
 !========================== LoKiPhys v11r4 2015-10-16 =========================
 

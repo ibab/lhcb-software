@@ -70,7 +70,7 @@ LoKi::Particles::Value::Value
     }
   }
   //
-  Assert ( m_function.validPointer() , "Unable to locate tool " + function ) ;
+  Assert ( m_function , "Unable to locate tool " + function ) ;
 } 
 // ============================================================================
 // constructor from the function 
@@ -111,7 +111,7 @@ LoKi::Particles::Value::result_type
 LoKi::Particles::Value::operator() 
   ( LoKi::Particles::Value::argument p ) const 
 {
-  if ( 0 == p ) 
+  if ( !p ) 
   {
     Error ( "Invalid argument, return 'false'");
     return false ;                                                 // RETURN 
@@ -131,7 +131,7 @@ std::ostream&
 LoKi::Particles::Value::fillStream( std::ostream& s ) const 
 {
   s << " VALUE( ";
-  if ( m_function.validPointer() ) 
+  if ( m_function ) 
   { s << m_function->type() << "/" << m_function->name() ; }
   else 
   { s << "<invalid>" ; }
@@ -142,4 +142,3 @@ LoKi::Particles::Value::fillStream( std::ostream& s ) const
 // ============================================================================
 // The END
 // ============================================================================
-

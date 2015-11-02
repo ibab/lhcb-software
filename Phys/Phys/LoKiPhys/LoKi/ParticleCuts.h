@@ -5233,13 +5233,13 @@ namespace LoKi
      *
      *  ...
      *  info () 
-     *     << " Monitoring results : "                 << endreq 
-     *     << " NEntries:  #" << counter->entries  ()  << endreq 
-     *     << " TotalSum:   " << counter->flag     ()  << endreq 
+     *     << " Monitoring results : "                 << endmsg 
+     *     << " NEntries:  #" << counter->entries  ()  << endmsg 
+     *     << " TotalSum:   " << counter->flag     ()  << endmsg 
      *     << " Mean+-RMS:  " << counter->flagMean () 
-     *     << "+="            << counter->flagRMS  ()  << endreq      
+     *     << "+="            << counter->flagRMS  ()  << endmsg      
      *     << " Min/Max:    " << counter->flagMin  ()  
-     *     << "/"             << counter->flagMax  ()  << endreq ;
+     *     << "/"             << counter->flagMax  ()  << endmsg ;
      *
      *  @endcode
      *

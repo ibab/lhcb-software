@@ -1,5 +1,3 @@
-// $Id$
-// ============================================================================
 #ifndef LOKI_BEAMLINEFUNCTIONS_H 
 #define LOKI_BEAMLINEFUNCTIONS_H 1
 // ============================================================================
@@ -32,16 +30,8 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  By usage of this code one clearly states the disagreement 
- *  with the smear campaign of Dr.O.Callot et al.: 
- *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
- *  
  *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
  *  @date   2011-03-10
- *
- *                    $Revision$
- *  Last Modification $Date$ 
- *                 by $Author$ 
  */
 // ============================================================================
 namespace LoKi 

@@ -5,6 +5,8 @@
 // STD & STL 
 // ============================================================================
 #include <set>
+#include <algorithm>
+#include <functional>
 // ============================================================================
 // Local
 // ============================================================================
@@ -12,7 +14,6 @@
 #include "LoKi/PhysRangeTypes.h"
 #include "LoKi/PhysExtract.h"
 #include "LoKi/apply.h"
-#include "LoKi/select.h"
 #include "LoKi/Streamers.h"
 // ============================================================================
 /** @file 
@@ -65,7 +66,7 @@ namespace
   {
     //
     LHCb::Particle::ConstVector r ; 
-    if ( 0 == parts || parts->empty()  ) { return r ; }  // RETURN 
+    if ( !parts || parts->empty()  ) { return r ; }  // RETURN 
     //
     r.reserve ( parts->size() ) ;
     // 
@@ -98,7 +99,7 @@ namespace
   {
     //
     std::vector<double> r ;
-    if ( 0 == parts || parts->empty()  ) { return r ; }  // RETURN 
+    if ( !parts || parts->empty()  ) { return r ; }  // RETURN 
     //
     r.reserve ( parts->size() ) ;
     // 
@@ -118,7 +119,7 @@ namespace
     inline bool operator() ( const LHCb::Particle* p ) const 
     {
       static const LHCb::VertexBase* s_v ;
-      return ( 0 == p ) ? m_cuts ( s_v ) : m_cuts ( p->endVertex() ) ;
+      return p ? m_cuts( p->endVertex() ) : m_cuts ( s_v ) ;
     }
     // ========================================================================
   private:
@@ -143,8 +144,8 @@ namespace
     //
     LHCb::Particle::ConstVector r ; r.reserve ( last - first  ) ;
     // 
-    _VRTX_ vx ( cuts ) ;
-    LoKi::select ( first , last , std::back_inserter ( r ) , vx ) ;
+    _VRTX_ vx{ cuts };
+    std::copy_if ( first , last , std::back_inserter ( r ) , std::cref(vx) ) ;
     //
     return r ;
   }
@@ -155,16 +156,13 @@ namespace
   _wget_ ( const PARTICLES*          parts ,
            const LoKi::Types::VCuts& cuts  )
   {
-    //
     LHCb::Particle::ConstVector r ; 
-    if ( 0 == parts || parts -> empty() ) { return r ; }
-    //
-    r.reserve ( parts -> size()  ) ;
-    // 
-    _VRTX_ vx ( cuts ) ;
-    LoKi::select ( parts -> begin () ,
-                   parts -> end   () , std::back_inserter ( r ) , vx ) ;
-    //
+    if ( parts ) {
+      r.reserve ( parts -> size()  ) ;
+      _VRTX_ vx ( cuts ) ;
+      std::copy_if ( parts -> begin () ,
+                     parts -> end   () , std::back_inserter ( r ) , std::cref(vx) ) ;
+    }
     return r ;
   }
   // ==========================================================================
@@ -256,7 +254,7 @@ operator>>
   const LoKi::Types::VCuts&             cuts  ) 
 {
   LHCb::VertexBase::ConstVector r ; 
-  if ( 0 == input || input->empty() ) { return r ; }
+  if ( !input || input->empty() ) { return r ; }
   r.reserve ( input->size() ) ;
   LoKi::apply_filter ( input -> begin ()  , 
                        input -> end   ()  , cuts , std::back_inserter ( r ) ) ;
@@ -269,7 +267,7 @@ operator>>
   const LoKi::Types::VCuts&             cuts  ) 
 {
   LHCb::RecVertex::ConstVector r ; 
-  if ( 0 == input || input->empty() ) { return r ; }
+  if ( !input || input->empty() ) { return r ; }
   r.reserve ( input->size() ) ;
   LoKi::apply_filter ( input -> begin ()  , 
                        input -> end   ()  , cuts , std::back_inserter ( r ) ) ;

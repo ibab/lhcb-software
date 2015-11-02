@@ -66,7 +66,7 @@ LoKi::Particles::RelatedInfo::result_type
 LoKi::Particles::RelatedInfo::operator () 
   ( LoKi::Particles::RelatedInfo::argument p ) const 
 {
-  if ( 0 == p ) 
+  if ( !p ) 
   {
     Error("Invalid particle, return ...") ;
     return -1000 ;

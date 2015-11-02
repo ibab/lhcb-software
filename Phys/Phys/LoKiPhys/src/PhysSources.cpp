@@ -2,6 +2,9 @@
 // ============================================================================
 // Include files 
 // ============================================================================
+#include <algorithm>
+#include <functional>
+// ============================================================================
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/SmartDataPtr.h"
@@ -21,7 +24,6 @@
 // ============================================================================
 #include "LoKi/PhysSources.h"
 #include "LoKi/Services.h"
-#include "LoKi/select.h"
 #include "LoKi/Algs.h"
 #include "LoKi/PhysExtract.h"
 // ============================================================================
@@ -175,7 +177,7 @@ LoKi::Particles::SourceTES::operator() () const
   {
     const LoKi::Services& svcs = LoKi::Services::instance() ;
     m_dataSvc = svcs.evtSvc() ;
-    Assert ( m_dataSvc.validPointer ( )               ,
+    Assert ( m_dataSvc               ,
              "Could not locate valid IDataProviderSvc" ) ;
   }
   //
@@ -202,9 +204,9 @@ namespace
   {
     const std::size_t n = out.size() ;
     out.reserve ( n + cnt->size() ) ;
-    LoKi::select ( cnt->begin () , 
+    std::copy_if ( cnt->begin () , 
                    cnt->end   () , 
-                   std::back_inserter ( out ) , cut ) ;
+                   std::back_inserter ( out ) , std::cref(cut) ) ;
     return out.size() - n ;
   } 
   // ==========================================================================  
@@ -231,7 +233,7 @@ std::size_t LoKi::Particles::SourceTES::get
   {
     const LoKi::Services& svcs = LoKi::Services::instance() ;
     m_dataSvc = svcs.evtSvc() ;
-    Assert ( m_dataSvc.validPointer ( )               ,
+    Assert ( m_dataSvc               ,
              "Could not locate valid IDataProviderSvc" ) ;
   }
   //
@@ -261,7 +263,7 @@ std::size_t LoKi::Particles::SourceTES::count
   {
     const LoKi::Services& svcs = LoKi::Services::instance() ;
     m_dataSvc = svcs.evtSvc() ;
-    Assert ( m_dataSvc.validPointer ( )               ,
+    Assert ( m_dataSvc               ,
              "Could not locate valid IDataProviderSvc" ) ;
   }
   //
@@ -402,7 +404,7 @@ LoKi::Particles::SourceDesktop::operator() () const
     const IDVAlgorithm* alg = Gaudi::Utils::getIDVAlgorithm ( svcs.contextSvc() ) ;
     if ( 0 != alg ) { m_desktop = alg ; }
     //
-    Assert ( m_desktop.validPointer ( )               ,
+    Assert ( m_desktop               ,
              "Could not locate valid IDVAlgorithm" ) ;
   }
   //
@@ -411,11 +413,11 @@ LoKi::Particles::SourceDesktop::operator() () const
   LHCb::Particle::ConstVector output ;
   output.reserve ( input.size() ) ;
   // use cuts:
-  LoKi::select 
+  std::copy_if 
     ( input.begin () , 
       input.end   () , 
       std::back_inserter ( output ) , 
-      m_cut.func  () ) ;
+      std::cref(m_cut.func()) ) ;
   //
   return output ;
 }
@@ -564,7 +566,7 @@ LoKi::Vertices::SourceTES::operator() () const
   {
     const LoKi::Services& svcs = LoKi::Services::instance() ;
     m_dataSvc = svcs.evtSvc() ;
-    Assert ( m_dataSvc.validPointer ( )               ,
+    Assert ( m_dataSvc               ,
              "Could not locate valid IDataProviderSvc" ) ;
   }
   //
@@ -589,7 +591,7 @@ std::size_t LoKi::Vertices::SourceTES::get
   {
     const LoKi::Services& svcs = LoKi::Services::instance() ;
     m_dataSvc = svcs.evtSvc() ;
-    Assert ( m_dataSvc.validPointer ( )               ,
+    Assert ( m_dataSvc               ,
              "Could not locate valid IDataProviderSvc" ) ;
   }  
   //
@@ -626,7 +628,7 @@ std::size_t LoKi::Vertices::SourceTES::count
   {
     const LoKi::Services& svcs = LoKi::Services::instance() ;
     m_dataSvc = svcs.evtSvc() ;
-    Assert ( m_dataSvc.validPointer ( )               ,
+    Assert ( m_dataSvc               ,
              "Could not locate valid IDataProviderSvc" ) ;
   }  
   //
@@ -714,9 +716,9 @@ LoKi::Vertices::SourceDesktop::operator() () const
   { 
     const LoKi::Services& svcs = LoKi::Services::instance() ;
     const IDVAlgorithm* alg = Gaudi::Utils::getIDVAlgorithm ( svcs.contextSvc() ) ;
-    if ( 0 != alg ) { m_desktop = alg ; }
+    if ( alg ) { m_desktop = alg ; }
     //
-    Assert ( m_desktop.validPointer ( )               ,
+    Assert ( m_desktop               ,
              "Could not locate valid IDVAlgorithm" ) ;
   }
   //  
@@ -729,10 +731,10 @@ LoKi::Vertices::SourceDesktop::operator() () const
   LHCb::VertexBase::ConstVector output ;
   output.reserve ( input2.size() ) ;
   // use cuts:
-  LoKi::select ( input2.begin () , 
+  std::copy_if ( input2.begin () , 
                  input2.end   () , 
                  std::back_inserter ( output ) , 
-                 m_cut.func () ) ;
+                 std::cref(m_cut.func ()) ) ;
   //
   if ( output.empty() ) 
   { Warning ("No vertices are selected by '" + m_cut.printOut() + "'" ) ; }

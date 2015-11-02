@@ -2,6 +2,9 @@
 // ============================================================================
 // Include files 
 // ============================================================================
+#include <algorithm>
+#include <functional>
+// ============================================================================
 // Event 
 // ============================================================================
 #include "Event/Particle.h"
@@ -94,7 +97,7 @@ LoKi::Dicts::Extract::tracks
   LHCb::Track::ConstVector r0 ;
   LoKi::Extract::getTracks   ( particle , std::back_inserter ( r0 ) ) ;
   LHCb::Track::ConstVector r1 ; r1.reserve ( r0.size() ) ;
-  LoKi::select ( r0.begin() , r0.end(), std::back_inserter ( r1 ) , tcut ) ;
+  std::copy_if ( r0.begin() , r0.end(), std::back_inserter ( r1 ) , std::cref(tcut) ) ;
   return r1 ;
 }
 // ==========================================================================
@@ -116,7 +119,7 @@ LoKi::Dicts::Extract::tracks
   LHCb::Track::ConstVector r0 ;
   LoKi::Extract::getTracks_if ( particle , std::back_inserter ( r0 ) , pcut ) ;
   LHCb::Track::ConstVector r1 ; r1.reserve ( r0.size() ) ;
-  LoKi::select ( r0.begin() , r0.end(), std::back_inserter ( r1 ) , tcut ) ;
+  std::copy_if ( r0.begin() , r0.end(), std::back_inserter ( r1 ) , std::cref(tcut) ) ;
   return r1 ;
 }
 // ==========================================================================

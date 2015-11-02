@@ -624,14 +624,14 @@ LoKi::Particles::ChildCTau::result_type
 LoKi::Particles::ChildCTau::operator() 
   ( LoKi::Particles::ChildCTau::argument p ) const 
 {
-  if ( 0 == p ) 
+  if ( !p ) 
   {
     Error ( "LHCb::Particle* points to NULL, return InvalidDistance" );
     return LoKi::Constants::InvalidDistance ; 
   }
   //
-  const IDecayTreeFit::Fitted* fitted  = params ( p ) ;
-  if ( 0 == fitted ) { return LoKi::Constants::InvalidDistance ; }
+  auto fitted  = params ( p ) ;
+  if ( !fitted ) { return LoKi::Constants::InvalidDistance ; }
   //
   return fitted->ctau().value() ;
 } 
@@ -641,22 +641,22 @@ LoKi::Particles::ChildCTau::operator()
 const IDecayTreeFit::Fitted*
 LoKi::Particles::ChildCTau::params ( const LHCb::Particle* p ) const 
 {
-  if ( 0 == p ) { return 0 ; }                                      // REUTRN 
+  if ( !p ) { return nullptr ; }                                      // REUTRN 
   //
   const LHCb::Particle* c = child( p ) ;
-  if ( c == 0 ) 
+  if ( !c ) 
   {
     Warning ( "Unable to select the proper child particle ") ;
-    return 0 ;                                                       // RETURN 
+    return nullptr ;                                                       // RETURN 
   }
   //
   IDecayTreeFit* _fitter = fitter() ;
   //
-  const LHCb::VertexBase* vertex = 0 ;
+  const LHCb::VertexBase* vertex = nullptr ;
   if ( usePV() ) 
   {
     vertex = bestVertex ( p ) ;
-    if ( 0 == vertex ) 
+    if ( !vertex ) 
     { Warning ( "``Best vertex'' points zero, constraints will be disabled!" ) ; } 
   }
   //
@@ -667,16 +667,16 @@ LoKi::Particles::ChildCTau::params ( const LHCb::Particle* p ) const
   if ( sc.isFailure() ) 
   {
     Warning ( "Error from IDecayTreeFit" , sc ) ;
-    return 0 ;                                                       // RETURN
+    return nullptr ;                                                       // RETURN
   }
   //
   // apply chi2/nDoF cut if needed
   //
   if ( 0 < m_chi2 && ( m_chi2 * _fitter->nDoF() <= _fitter -> chi2() ) ) 
-  { return 0 ; }                                                 // RETURN 
+  { return nullptr ; }                                                 // RETURN 
   //
   const IDecayTreeFit::Fitted* f = _fitter->fitted ( c ) ; 
-  if ( 0 == f ) { Warning ( "Gaudi::Math::ParticleParams points to NULL" ); }
+  if ( !f ) { Warning ( "Gaudi::Math::ParticleParams points to NULL" ); }
   //
   return f ;
 }

@@ -39,19 +39,13 @@
 // constructor from the fitter 
 // ============================================================================
 LoKi::AuxDTFBase::AuxDTFBase ( const IDecayTreeFit* fitter ) 
-  : LoKi::AuxDesktopBase () 
-  , m_fitterName  (        ) 
-  , m_fitter      ( fitter ) 
-  , m_constraints (        )
+  : m_fitter      ( fitter ) 
 {}
 // ============================================================================
 // constructor from the fitter 
 // ============================================================================
 LoKi::AuxDTFBase::AuxDTFBase ( const std::string& fitter ) 
-  : LoKi::AuxDesktopBase () 
-  , m_fitterName  ( fitter ) 
-  , m_fitter      () 
-  , m_constraints ()
+  : m_fitterName  ( fitter ) 
 {}
 // ============================================================================
 // constructor from the fitter 
@@ -60,11 +54,7 @@ LoKi::AuxDTFBase::AuxDTFBase
 ( const std::vector<std::string>&      constraints , 
   const LoKi::AuxDTFBase::MASSES&      masses      ,
   const IDecayTreeFit*                 fitter      ) 
-  : LoKi::AuxDesktopBase () 
-  , m_fitterName  (        ) 
-  , m_fitter      ( fitter ) 
-  , m_constraints (        )
-  , m_masses      (        )
+  : m_fitter      ( fitter ) 
 {
   setConstraint ( constraints  ) ;
   setConstraint ( masses       ) ;
@@ -76,11 +66,7 @@ LoKi::AuxDTFBase::AuxDTFBase
 ( const std::vector<std::string>&      constraints , 
   const LoKi::AuxDTFBase::MASSES2&     masses      ,
   const IDecayTreeFit*                 fitter      ) 
-  : LoKi::AuxDesktopBase () 
-  , m_fitterName  (        ) 
-  , m_fitter      ( fitter ) 
-  , m_constraints (        )
-  , m_masses      (        )
+  : m_fitter      ( fitter ) 
 {
   setConstraint ( constraints  ) ;
   setConstraint ( masses       ) ;
@@ -92,11 +78,7 @@ LoKi::AuxDTFBase::AuxDTFBase
 ( const std::vector<LHCb::ParticleID>& constraints , 
   const LoKi::AuxDTFBase::MASSES&      masses      ,
   const IDecayTreeFit*                 fitter      ) 
-  : LoKi::AuxDesktopBase () 
-  , m_fitterName  (        ) 
-  , m_fitter      ( fitter ) 
-  , m_constraints (        )
-  , m_masses      (        )
+  : m_fitter      ( fitter ) 
 {
   setConstraint ( constraints  ) ;
   setConstraint ( masses       ) ;
@@ -108,11 +90,7 @@ LoKi::AuxDTFBase::AuxDTFBase
 ( const std::vector<LHCb::ParticleID>& constraints , 
   const LoKi::AuxDTFBase::MASSES2&     masses      ,
   const IDecayTreeFit*                 fitter      ) 
-  : LoKi::AuxDesktopBase () 
-  , m_fitterName  (        ) 
-  , m_fitter      ( fitter ) 
-  , m_constraints (        )
-  , m_masses      (        )
+  : m_fitter      ( fitter ) 
 {
   setConstraint ( constraints  ) ;
   setConstraint ( masses       ) ;
@@ -124,11 +102,7 @@ LoKi::AuxDTFBase::AuxDTFBase
 ( const std::vector<std::string>&      constraints , 
   const std::string&                   fitter      ,
   const LoKi::AuxDTFBase::MASSES&      masses      )
-  : LoKi::AuxDesktopBase () 
-  , m_fitterName  ( fitter ) 
-  , m_fitter      (        ) 
-  , m_constraints (        )
-  , m_masses      (        )
+  : m_fitterName  ( fitter ) 
 {
   setConstraint ( constraints  ) ;
   setConstraint ( masses       ) ;
@@ -140,11 +114,7 @@ LoKi::AuxDTFBase::AuxDTFBase
 ( const std::vector<std::string>&      constraints , 
   const std::string&                   fitter      ,
   const LoKi::AuxDTFBase::MASSES2&     masses      )
-  : LoKi::AuxDesktopBase () 
-  , m_fitterName  ( fitter ) 
-  , m_fitter      (        ) 
-  , m_constraints (        )
-  , m_masses      (        )
+  : m_fitterName  ( fitter ) 
 {
   setConstraint ( constraints  ) ;
   setConstraint ( masses       ) ;
@@ -156,11 +126,7 @@ LoKi::AuxDTFBase::AuxDTFBase
 ( const std::vector<LHCb::ParticleID>& constraints , 
   const std::string&                   fitter      , 
   const LoKi::AuxDTFBase::MASSES&      masses      )
-  : LoKi::AuxDesktopBase () 
-  , m_fitterName  ( fitter ) 
-  , m_fitter      (        ) 
-  , m_constraints (        )
-  , m_masses      (        )
+  : m_fitterName  ( fitter ) 
 {
   setConstraint ( constraints  ) ;
   setConstraint ( masses       ) ;
@@ -172,11 +138,7 @@ LoKi::AuxDTFBase::AuxDTFBase
 ( const std::vector<LHCb::ParticleID>& constraints , 
   const std::string&                   fitter      ,
   const LoKi::AuxDTFBase::MASSES2&     masses      )
-  : LoKi::AuxDesktopBase () 
-  , m_fitterName  ( fitter ) 
-  , m_fitter      (        ) 
-  , m_constraints (        )
-  , m_masses      (        )
+  : m_fitterName  ( fitter ) 
 {
   setConstraint ( constraints  ) ;
   setConstraint ( masses       ) ;
@@ -202,12 +164,11 @@ unsigned int LoKi::AuxDTFBase::setConstraint
   m_constraints.clear() ;
   //
   std::set<LHCb::ParticleID> _pids ;
-  for  ( std::vector<std::string>::const_iterator ip = 
-           pids.begin() ; pids.end() != ip ; ++ip ) 
+  for  ( const auto & ip : pids )
   {
-    LHCb::ParticleID pid = LoKi::Particles::pidFromName ( *ip ) ;
+    LHCb::ParticleID pid = LoKi::Particles::pidFromName ( ip ) ;
     Assert ( LHCb::ParticleID() != pid , 
-             "Invalid mass constraint: '" + (*ip) + "'" ) ;
+             "Invalid mass constraint: '" + ip + "'" ) ;
     { _pids.insert ( LHCb::ParticleID( pid.abspid() ) ) ; }
   }
   //
@@ -245,13 +206,12 @@ unsigned int LoKi::AuxDTFBase::setConstraint
   //
   std::set<LHCb::ParticleID> _pids ;
   //
-  static const LHCb::ParticleID s_ID = LHCb::ParticleID() ;
+  static const LHCb::ParticleID s_ID{};
   //
-  for  ( std::vector<LHCb::ParticleID>::const_iterator ip = 
-           pids.begin() ; pids.end() != ip ; ++ip ) 
+  for  ( const auto& ip : pids )
   {
-    if ( s_ID != *ip ) 
-    { _pids.insert ( LHCb::ParticleID( ip->abspid() ) ) ; }
+    if ( ip != s_ID ) 
+    { _pids.emplace( ip.abspid() ) ; }
   }
   //
   m_constraints.insert
@@ -275,17 +235,16 @@ unsigned int LoKi::AuxDTFBase::setConstraint
 {
   m_masses.clear() ;
   //
-  static const LHCb::ParticleID s_ID = LHCb::ParticleID() ;
+  static const LHCb::ParticleID s_ID{};
   //
-  for  (  LoKi::AuxDTFBase::MASSES::const_iterator ip = 
-            pids.begin() ; pids.end() != ip ; ++ip ) 
+  for  (  const auto &ip : pids ) 
   {
     //
-    LHCb::ParticleID pid = LoKi::Particles::pidFromName ( ip->first ) ;
-    Assert ( LHCb::ParticleID() != pid , 
-             "Invalid mass constraint: '" + (ip->first) + "'" ) ;
+    LHCb::ParticleID pid = LoKi::Particles::pidFromName ( ip.first ) ;
+    Assert ( s_ID != pid , 
+             "Invalid mass constraint: '" + ip.first + "'" ) ;
     //
-    m_masses [ pid ] = ip->second ;
+    m_masses [ pid ] = ip.second ;
   }
   //
   return m_masses.size() ;
@@ -300,12 +259,11 @@ unsigned int LoKi::AuxDTFBase::setConstraint
   //
   static const LHCb::ParticleID s_ID = LHCb::ParticleID() ;
   //
-  for  (  LoKi::AuxDTFBase::MASSES2::const_iterator ip = 
-            pids.begin() ; pids.end() != ip ; ++ip ) 
+  for  (  const auto& ip : pids ) 
   {
-    if ( s_ID == ip->first ) { continue ; } // skip invalids  
+    if ( s_ID == ip.first ) { continue ; } // skip invalids  
     //
-    m_masses [ LHCb::ParticleID ( ip->first.abspid() ) ] = ip->second ;
+    m_masses [ LHCb::ParticleID ( ip.first.abspid() ) ] = ip.second ;
   }
   //
   return m_masses.size() ;
@@ -325,9 +283,8 @@ std::vector<std::string> LoKi::AuxDTFBase::constraints ()  const
   //
   std::set<std::string> pids ;
   //
-  for ( std::vector<LHCb::ParticleID>::const_iterator ipid = 
-          m_constraints.begin() ; m_constraints.end()  != ipid ; ++ipid ) 
-  { pids.insert( LoKi::Particles::nameFromPID( *ipid ) ) ; }
+  for ( const auto& ipid : m_constraints )
+  { pids.insert( LoKi::Particles::nameFromPID( ipid ) ) ; }
   //
   return std::vector<std::string>( pids.begin() , pids.end() );
 }
@@ -340,10 +297,9 @@ LoKi::AuxDTFBase::masses ()  const
   //
   MASSES mass  ;
   //
-  for ( MASSES2::const_iterator ipid = 
-          m_masses.begin() ; m_masses.end()  != ipid ; ++ipid ) 
+  for ( const auto& ipid : m_masses )
   { 
-    mass [ LoKi::Particles::nameFromPID( ipid->first ) ] = ipid->second ;
+    mass [ LoKi::Particles::nameFromPID( ipid.first ) ] = ipid.second ;
   }
   //
   return mass ;
@@ -356,13 +312,11 @@ void LoKi::AuxDTFBase::applyConstraints () const
   IDecayTreeFit* _fitter = fitter() ;
   Assert ( !(!_fitter) , "applyConstraints: Invalid Fitter!" ) ;
   //
-  for ( std::vector<LHCb::ParticleID>::const_iterator ipid = 
-          m_constraints.begin() ; m_constraints.end() != ipid ; ++ipid ) 
-  { _fitter->addConstraint ( *ipid ) ; }  
+  for ( const auto& ipid : m_constraints ) 
+  { _fitter->addConstraint ( ipid ) ; }  
   //
-  for ( MASSES2::const_iterator imass = 
-          m_masses.begin() ; m_masses.end() != imass ; ++imass ) 
-  { _fitter->addConstraint ( imass->first , imass->second ) ; }  
+  for ( const auto& imass : m_masses )
+  { _fitter->addConstraint ( imass.first , imass.second ) ; }  
   //
 }
 // ============================================================================
@@ -380,7 +334,7 @@ std::ostream& LoKi::AuxDTFBase::printConstraints ( std::ostream& s ) const
 {
   if ( m_constraints.empty() ) { return s ; }                          // RETURN
   //
-  std::vector<std::string> ss = constraints () ;
+  auto ss = constraints () ;
   if ( ss.empty ()         ) { return s ; }                            // RETURN 
   //
   if ( 1 == ss.size()      ) { return s << ", '"  << ss[0] << "' " ; } // RETURN
@@ -391,8 +345,7 @@ std::ostream& LoKi::AuxDTFBase::printConstraints ( std::ostream& s ) const
   if ( !m_masses.empty() ) 
   {
     s << ", " ;
-    MASSES ss = masses() ;
-    Gaudi::Utils::toStream ( ss , s ) ;
+    Gaudi::Utils::toStream ( masses() , s ) ;
   }
   //
   return s ;                                                           // RETURN

@@ -50,7 +50,7 @@ LoKi::Particles::Filter::Filter
   //
   SmartIF<IAlgContextSvc> context ( loki ) ;
   GaudiAlgorithm* alg = Gaudi::Utils::getGaudiAlg ( context ) ;
-  if ( 0 != alg ) 
+  if ( alg ) 
   { m_filter = alg->tool<IParticleFilter> ( filter , alg , true ) ; }
   else 
   { 
@@ -58,17 +58,17 @@ LoKi::Particles::Filter::Filter
     SmartIF<IToolSvc> tsvc ( loki ) ;
     if ( ! ( ! tsvc ) ) 
     {
-      IParticleFilter* _fltr  = 0 ;
-      const IInterface* parent = 0 ;
+      IParticleFilter* _fltr  = nullptr ;
+      const IInterface* parent = nullptr ;
       StatusCode sc = tsvc->retrieveTool 
         ( filter , _fltr , parent , true ) ;
       Assert ( sc.isSuccess() , "Unable to retrieve the tool " + filter , sc ) ;
-      Assert ( 0 != _fltr     , "Unable to retrieve the tool " + filter      ) ;
+      Assert ( _fltr     , "Unable to retrieve the tool " + filter      ) ;
       m_filter = _fltr ;
     }
   }
   //
-  Assert ( m_filter.validPointer() , "Unable to locate tool " + filter ) ;
+  Assert ( m_filter , "Unable to locate tool " + filter ) ;
 } 
 // ============================================================================
 // constructor from the filter 
@@ -101,7 +101,7 @@ LoKi::Particles::Filter::result_type
 LoKi::Particles::Filter::operator() 
   ( LoKi::Particles::Filter::argument p ) const 
 {
-  if ( 0 == p ) 
+  if ( !p ) 
   {
     Error ( "Invalid argument, return 'false'");
     return false ;                                                 // RETURN 
@@ -121,7 +121,7 @@ std::ostream&
 LoKi::Particles::Filter::fillStream( std::ostream& s ) const 
 {
   s << " FILTER( ";
-  if ( m_filter.validPointer() ) 
+  if ( m_filter ) 
   { s << m_filter->type() << "/" << m_filter->name() ; }
   else 
   { s << "<invalid>" ; }
