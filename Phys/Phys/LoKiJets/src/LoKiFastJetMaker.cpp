@@ -82,7 +82,7 @@ fastjet::JetDefinition LoKi::FastJetMaker::prepare
   if ( msgLevel ( MSG::DEBUG ) )
   {
     debug() << "fastjet::JetDefinition:" << endmsg ;
-    debug() << jet_def.description()      << endreq    ;
+    debug() << jet_def.description()      << endmsg    ;
   }
 
   return jet_def ;

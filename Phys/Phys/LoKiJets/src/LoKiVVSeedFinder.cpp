@@ -29,19 +29,19 @@ StatusCode LoKi::VVSeedFinder::initialize ()
 
   m_dist       = tool<IDistanceCalculator>("LoKi::DistanceCalculator");
   if ( !m_dist ) {
-    err() << "Unable to Retrieve LoKi::DistanceCalculator" << endreq;
+    err() << "Unable to Retrieve LoKi::DistanceCalculator" << endmsg;
     return StatusCode::FAILURE;
   }
 
   m_combiner = tool<IParticleCombiner> ( m_combinerName , this ) ;
   if ( !m_combiner) {
-    err() << "Unable to Retrieve Default  ParticleCombiner" << endreq;
+    err() << "Unable to Retrieve Default  ParticleCombiner" << endmsg;
     return StatusCode::FAILURE;
   }
 
   m_fitter     = tool<IVertexFit>("OfflineVertexFitter");
   if ( !m_fitter ) {
-    err() << "Unable to Retrieve Default VertexFitter" << endreq;
+    err() << "Unable to Retrieve Default VertexFitter" << endmsg;
     return StatusCode::FAILURE;
   }
 

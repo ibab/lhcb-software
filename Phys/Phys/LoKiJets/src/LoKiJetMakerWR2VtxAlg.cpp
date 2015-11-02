@@ -164,14 +164,14 @@ StatusCode LoKi::JetMakerWR2Vtx::analyse   ()
 
   const LHCb::RecVertex::Range PVs =  get<LHCb::RecVertex::Range>(  m_VtxLoc );
 
-  if ( msgLevel(MSG::DEBUG) ) debug()<<"Vtx size : " <<PVs.size() <<endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug()<<"Vtx size : " <<PVs.size() <<endmsg;
 
   int i =0 ;
   // std::vector<int> sjets;
   for(LHCb::RecVertex::Range::const_iterator  ipv2= PVs.begin();ipv2!=PVs.end();++ipv2){
     //   sjets.at(i) = 0;
 
-    if ( msgLevel(MSG::DEBUG) ) debug()<<"Vtx: " <<i<<endreq;
+    if ( msgLevel(MSG::DEBUG) ) debug()<<"Vtx: " <<i<<endmsg;
 
     IJetMaker::Jets jets ;
 
