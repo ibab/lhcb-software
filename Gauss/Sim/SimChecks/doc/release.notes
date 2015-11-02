@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2015-10-30 - Benedikt Hegner
+- Fixing syntax error in TargetSummary.py
+
 ! 2015-09-04 - Luca Pescatore
  - Minor fixes to make scripts compatible with older versions of python.
    Tested with Gauss v48r1, v48r3, v45r10p1 and v46r7p2

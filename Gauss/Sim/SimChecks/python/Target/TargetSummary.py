@@ -497,7 +497,7 @@ def doMultiHistos(nt, curdir, mod, mat, Dx, pgun, eng) :
                "Ngamma"    :   in_dau_gamma.GetMean()
                    }
     
-    if(countinel>0)
+    if(countinel>0):
         reult["NChPerc"]   = avg_nChPerc/countinel
         reult["PlusPerc"]  = avg_ChPlusPerc/countinel
         reult["MinusPerc"] = avg_ChMinusPerc/countinel
