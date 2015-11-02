@@ -23,6 +23,14 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
+<A NAME=v27r0p1> 2015-11-02 Bender v27r0[1 based on the DaVinci v38r0</A>
+<ul>						 
+<li>Based on the DaVinci v38r0</li>
+<li>Similar to v27r0p1 </li>
+<li>Added example for usage of <code>TupleTools</code> withg Bender</li>
+<li>Patched <code>Ostap</code> </li>
+<ul>						 
+
 <A NAME=v27r0> 2015-10-26 Bender v27r0 based on the DaVinci v38r0</A>
 <ul>						 
 <li>Based on the DaVinci v38r0</li>
