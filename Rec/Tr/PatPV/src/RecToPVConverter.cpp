@@ -16,7 +16,7 @@ private:
 DECLARE_ALGORITHM_FACTORY( RecToPVConverter )
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : PackVertices
+// Implementation file for class : RecToPVConverter
 //
 // 2015-09-25 : Wouter Hulsbergen
 //-----------------------------------------------------------------------------
