@@ -37,6 +37,7 @@ class DstConf(LHCbConfigurableUser):
        , "DataType"        : ""
        , "WriteFSR"        : True
        , "SplitRawEventOutput" : 2.0 #split raw event from Stripping 20
+       , "PVPersistence"   : "RecVertex"
          }
 
     _propertyDocDct = {
@@ -118,10 +119,16 @@ class DstConf(LHCbConfigurableUser):
 
         writer.ItemList += [ "/Event/" + recDir + "/Track/Best"        + depth]
 
-        # for 2015, fitted velo tracks are stored on DST to make PV refit possible offline
-        if( self.getProp("DataType") is "2015" ):
-            writer.ItemList += [ "/Event/" + recDir + "/Track/FittedHLT1VeloTracks"        + depth]
-
+        if( self.getProp("PVPersistence") is "RecVertex" ) :
+            writer.ItemList += [ "/Event/" + recDir + "/Vertex/Primary"    + depth ]
+            # for 2015, fitted velo tracks are stored on DST to make PV refit possible offline
+            if( self.getProp("DataType") is "2015" ):
+                writer.ItemList += [ "/Event/" + recDir + "/Track/FittedHLT1VeloTracks" + depth]
+        elif( self.getProp("PVPersistence") is "PrimaryVertex" ) :
+            writer.ItemList += [ "/Event/" + recDir + "/Vertex/PrimaryVertices" + depth ]
+        else:
+             raise RuntimeError("Unknown PVPersistence type: '%s'" % self.getProp("PVPersistence") )
+                                
         if "Rich" in self.getProp("Detectors"):
             writer.ItemList += [ "/Event/" + recDir + "/Rich/PIDs"         + depth]
         if "Muon" in self.getProp("Detectors"):
@@ -134,7 +141,6 @@ class DstConf(LHCbConfigurableUser):
 
         writer.ItemList += [ "/Event/" + recDir + "/ProtoP/Charged"    + depth
                              , "/Event/" + recDir + "/ProtoP/Neutrals"   + depth
-                             , "/Event/" + recDir + "/Vertex/Primary"    + depth
                              , "/Event/" + recDir + "/Vertex/V0"         + depth]
 
         if "Muon" in self.getProp("Detectors"):
@@ -260,6 +266,7 @@ class DstConf(LHCbConfigurableUser):
                                     PackRecVertex, PackTwoProngVertex,
                                     DataPacking__Pack_LHCb__RichPIDPacker_,
                                     DataPacking__Pack_LHCb__MuonPIDPacker_,
+                                    PackPrimaryVertices,
                                     ChargedProtoParticleRemovePIDInfo )
 
         alwaysCreate = self.getProp("AlwaysCreate")
@@ -326,7 +333,8 @@ class DstConf(LHCbConfigurableUser):
         if "Tracking" not in self.getProp("EnableUnpack"): 
             packDST.Members += [
                 PackRecVertex(AlwaysCreateOutput = alwaysCreate),
-                PackTwoProngVertex(AlwaysCreateOutput = alwaysCreate)
+                PackTwoProngVertex(AlwaysCreateOutput = alwaysCreate),
+                PackPrimaryVertices()
                 ]
 
         if "Muon" in self.getProp("Detectors"):
@@ -374,16 +382,25 @@ class DstConf(LHCbConfigurableUser):
         Set up DataOnDemandSvc to unpack reconstruction information
         """
         from Configurables import ( UnpackTrack, UnpackCaloHypo, UnpackProtoParticle,
-                                    UnpackRecVertex, UnpackTwoProngVertex,
-                                    DataPacking__Unpack_LHCb__WeightsVectorPacker_ )
+                                    UnpackRecVertex, UnpackTwoProngVertex,UnpackPrimaryVertices,
+                                    DataPacking__Unpack_LHCb__WeightsVectorPacker_,
+                                    RecToPVConverter, PVToRecConverter)
 
         log.debug("In DstConf._doUnpack")
 
         DataOnDemandSvc().AlgMap[ "/Event/Rec/Track/Best" ]     = UnpackTrack()
-        DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/Primary" ] = UnpackRecVertex()
         DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/V0" ]      = UnpackTwoProngVertex()
-        pvWunpack = DataPacking__Unpack_LHCb__WeightsVectorPacker_("UnpackPVWeights")
-        DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/Weights" ] = pvWunpack
+       
+        if( self.getProp("PVPersistence") is "RecVertex" ):
+            DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/Primary" ] = UnpackRecVertex()
+            pvWunpack = DataPacking__Unpack_LHCb__WeightsVectorPacker_("UnpackPVWeights")
+            DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/Weights" ] = pvWunpack
+            DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/PrimaryVertices"] = RecToPVConverter()
+        elif( self.getProp("PVPersistence") is "PrimaryVertex" ): 
+            DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/PrimaryVertices" ] = UnpackPrimaryVertices()       
+            DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/Primary" ] = PVToRecConverter()
+        else:
+             raise RuntimeError("Unknown PVPersistence type: '%s'" % self.getProp("PVPersistence") )
 
         if( self.getProp("DataType") is "2015" ):
             unpackFittedVeloTracks = UnpackTrack("unpackFittedVeloTracks")

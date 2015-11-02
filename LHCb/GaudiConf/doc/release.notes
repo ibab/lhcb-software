@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2015-11-02 - Wouter Hulsbergen
+ - Added flag 'PVPersistence' to DstConf to steer between old/new PV persistence.
+
 ! 2015-10-29 - Marco Cattaneo
  - LHCbExclusions.py: add temporary exclusion for printout of Algorithm
    RootOnTES property, removed after Gaudi v26r4
