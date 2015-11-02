@@ -22,6 +22,8 @@
 ! ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 ! -----------------------------------------------------------------------------
 
+!  ====================== Ex/BenderExample v27r0p1 2015-11-02 ================
+
 ! 2015-10-31 - Vanya Belyaev
  - add new example illustrating the usage of TupleTools with Bender 
 
