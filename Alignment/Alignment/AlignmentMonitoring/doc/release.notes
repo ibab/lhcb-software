@@ -3,6 +3,9 @@
 ! package manager: Maurizio Martinelli
 !------------------------------------------------------------------------------
 
+! 2015-11-02 - Giulio Dujany
+ - Turned on automatic Tracker alignment monitoring 
+
 ! 2015-10-31 - Maurizio Martinelli
  - Updated IT Tz constants references
 

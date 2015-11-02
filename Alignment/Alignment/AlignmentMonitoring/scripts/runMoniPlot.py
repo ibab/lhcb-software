@@ -81,6 +81,8 @@ def writeInLogbook(Fill, activity, updated = False, file2upload=None, version = 
     author = 'monibot'
     Type = 'Convergence'
     instruction_file = 'https://lbgroups.cern.ch/online/Shifts/alignMonitoring.pdf'
+    if activity == 'Tracker':
+        instruction_file = 'https://lbgroups.cern.ch/online/Shifts/alignMonitoring_Tracker.pdf'
     if updated:
         status = 'Unchecked'
         subject = 'Monitoring plots'
@@ -105,7 +107,7 @@ if __name__ == '__main__':
     moniScript = {'Velo' : 'moniPlots.py', 'Tracker' : 'moniPlots_Tracker.py'}
 
     while True:
-        for activity in ['Velo']:#, 'Tracker']:
+        for activity in ['Velo', 'Tracker']:
             if hasNewAlignment(activity):
                 if not os.path.exists(os.path.join(Moni_dir, activity)):
                     os.mkdir(os.path.join(Moni_dir, activity))
