@@ -7,6 +7,11 @@
 !-----------------------------------------------------------------------------
 
 
+!========================= LHCbMath v3r60 2015-11-02 =========================
+
+! 2015-11-02 - Vanya Belyaev
+ - tagged for release with Bender v27r0p1 
+
 ! 2015-10-29 - Vanya Belyaev
  - add binary_function into dictionary 
 
