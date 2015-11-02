@@ -43,12 +43,12 @@ StatusCode CheckPV::initialize()
 
   if ( m_minPV > 0 && m_maxPV > 0 ){
     if (msgLevel(MSG::DEBUG)) debug() << "will select events with between " << m_minPV << " and " << m_maxPV
-                                      << " reconstructed PVs" << endreq ;
+                                      << " reconstructed PVs" << endmsg ;
   } else if ( m_minPV > 0 ){
     if (msgLevel(MSG::DEBUG)) debug() << "will select events with " << m_minPV
-                                      << " or more reconstructed PVs" << endreq ;
+                                      << " or more reconstructed PVs" << endmsg ;
   } else if ( m_minPV == 0 ){
-    if (msgLevel(MSG::DEBUG)) debug() << "will select events with no reconstructed PVs" << endreq ;
+    if (msgLevel(MSG::DEBUG)) debug() << "will select events with no reconstructed PVs" << endmsg ;
   }
 
   return sc;
@@ -62,7 +62,7 @@ StatusCode CheckPV::execute()
   int n = 0 ;
   bool ok = false ;
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Getting PV from " << m_PVContainer << endreq ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Getting PV from " << m_PVContainer << endmsg ;
 
   // load the PVs. NULL if not available.
   const LHCb::RecVertices* PV = getIfExists<LHCb::RecVertices>(m_PVContainer);
@@ -78,7 +78,7 @@ StatusCode CheckPV::execute()
     n = PV->size() ;
 
     if (msgLevel(MSG::VERBOSE) || m_print ) 
-      verbose() << "There are " << n << " primary vertices." << endreq ;
+      verbose() << "There are " << n << " primary vertices." << endmsg ;
     
     counter("PVs") += n;
 
@@ -93,8 +93,8 @@ StatusCode CheckPV::execute()
 
   if (msgLevel(MSG::DEBUG))
   {
-    if (ok) debug() << "Event accepted because there are " << n << " primary vertices." << endreq ;
-    else    debug() << "Event rejected because there are " << n << " primary vertices." << endreq ;
+    if (ok) debug() << "Event accepted because there are " << n << " primary vertices." << endmsg ;
+    else    debug() << "Event rejected because there are " << n << " primary vertices." << endmsg ;
   }
 
   setFilterPassed(ok);
