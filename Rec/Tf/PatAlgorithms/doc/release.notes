@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-11-2 - Michel De Cian
+ - Add counter to PatLongLivedTracking.cpp
+
 ! 2015-10-30 - Michel De Cian
  - Change in PatAddTTCoord and PatLongLivedTracking for new access method of hits.
 

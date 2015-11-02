@@ -1185,6 +1185,8 @@ void PatLongLivedTracking::storeTrack( PatDownTrack& track, LHCb::Tracks* finalT
   
   if ( m_doTiming ) m_timerTool->start( m_storeTrackTime );
 
+  counter("# Downstream tracks made")++;
+  
   //=== Store the tracks
   //== new LHCb::Track
   LHCb::Track* dTr = new LHCb::Track();
@@ -1199,6 +1201,7 @@ void PatLongLivedTracking::storeTrack( PatDownTrack& track, LHCb::Tracks* finalT
   //== add new LHCbIDs
   for ( const PatTTHit* hit : track.hits() ){
     dTr->addToLhcbIDs( hit->hit()->lhcbID() );
+    counter("#TT hits added")++;
   }
   
   
