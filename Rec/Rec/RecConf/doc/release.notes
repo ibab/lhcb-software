@@ -4,6 +4,9 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2015-11-02 - Wouter Hulsbergen
+ - Added RecToPVConverter to PV sequence
+
 !========================= RecConf v2r22 2015-07-20 =========================
 ! 2015-06-13 - Michel De Cian
  - Remove list of detectors for fieldOff, as it was never used and is identical to list for fieldOn (in Configuration.py)

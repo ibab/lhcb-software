@@ -140,6 +140,9 @@ class RecSysConf(LHCbConfigurableUser):
             GaudiSequencer("RecoVertexSeq").Members += [ pvAlg ];
             GaudiSequencer("RecoVertexSeq").IgnoreFilterPassed = True
 
+            from Configurables import RecToPVConverter
+            GaudiSequencer("RecoVertexSeq").Members += [ RecToPVConverter() ]
+
         ## Upgrade type?
         if self.getProp("DataType") == 'Upgrade' :
              specialDataList = self.getProp("SpecialData")
