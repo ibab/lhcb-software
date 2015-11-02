@@ -136,12 +136,10 @@ class RecSysConf(LHCbConfigurableUser):
             pvAlg.PVOfflineTool.BeamSpotRCut = 0.2
             pvAlg.PVOfflineTool.InputTracks = [ "Rec/Track/FittedHLT1VeloTracks" ]
             pvAlg.OutputVerticesName = "Rec/Vertex/Primary"
+            pvAlg.PrimaryVertexLocation = "Rec/Vertex/PrimaryVertices"
             
             GaudiSequencer("RecoVertexSeq").Members += [ pvAlg ];
             GaudiSequencer("RecoVertexSeq").IgnoreFilterPassed = True
-
-            from Configurables import RecToPVConverter
-            GaudiSequencer("RecoVertexSeq").Members += [ RecToPVConverter() ]
 
         ## Upgrade type?
         if self.getProp("DataType") == 'Upgrade' :
