@@ -3,8 +3,9 @@
 from copy import deepcopy
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
-from GaudiConfUtils.ConfigurableGenerators import ( DaVinci__N3BodyDecays, 
-                            DaVinci__N4BodyDecays, DaVinci__N5BodyDecays )
+from GaudiConfUtils.ConfigurableGenerators import ( DaVinci__N3BodyDecays,
+                                                    DaVinci__N4BodyDecays,
+                                                    DaVinci__N5BodyDecays )
 from PhysSelPython.Wrappers import Selection, MergedSelection
 from Beauty2Charm_LoKiCuts import LoKiCuts
 from Beauty2Charm_Utils import *
@@ -61,7 +62,7 @@ def makeSel(parent,dec):
 class DBuilder(object):
      '''Produces all D mesons for the Beauty2Charm module.'''
 
-     def __init__(self,pions,kaons,ks,pi0,uppions,upkaons,muons,hh,config,config_pid):
+     def __init__(self,pions,kaons,ks,pi0,uppions,upkaons,muons,hh,config,config_pid,config_pi0):
 
           self.pions = pions
           self.kaons = kaons
@@ -73,11 +74,12 @@ class DBuilder(object):
           self.hhBuilder = hh
           self.config = config
           self.config_pid = config_pid
+          self.config_pi0 = config_pi0
           self.hh   = self._makeD2hh()
           self.hhh  = self._makeD2hhh()
           self.hhhh = self._makeD2hhhh()
           self.hhhh_old = self._makeD2hhhhold()
-
+          
           self.ksh_ll    = self._makeD2KSh("LL")
           self.ksh_dd    = self._makeD2KSh("DD")
           self.kshh_ll   = self._makeD2KShh("LL")
@@ -86,7 +88,6 @@ class DBuilder(object):
           self.kshhh_dd  = self._makeD2KShhh("DD")
           self.kshh_ll_old   = self._makeD2KShhold("LL")
           self.kshh_dd_old   = self._makeD2KShhold("DD")
-
 
           self.pi0hh_merged = self._makeD2Pi0hh("Merged")
           self.pi0hh_resolved = self._makeD2Pi0hh("Resolved")
@@ -170,6 +171,17 @@ class DBuilder(object):
           #self.pi0hhhh_merged_pid   = [filterPID('D2MergedPi0HHHHPID',self.pi0hhhh_merged,config_pid)]
           #self.pi0hhhh_resolved_pid = [filterPID('D2ResolvedPi0HHHHPID',self.pi0hhhh_resolved,config_pid)]
 
+          # Pi0HH, Pi0HHH with Tigher Pi0 cuts
+          tightPi0_sel = "(NINTREE( ('pi0'==ABSID) & (PT < %s) ) == 0)" % self.config_pi0['TIGHT_PT_MIN']
+          self.pi0hh_tightpi0_merged_pid = [filterSelection('D2MergedTightPi0HHPID',
+                                                            tightPi0_sel, self.pi0hh_merged_pid)]
+          self.pi0hh_tightpi0_resolved_pid = [filterSelection('D2ResolvedTightPi0HHPID',
+                                                              tightPi0_sel, self.pi0hh_resolved_pid)]
+          self.pi0hhh_tightpi0_merged_pid = [filterSelection('D2MergedTightPi0HHHPID',
+                                                             tightPi0_sel, self.pi0hhh_merged_pid)]
+          self.pi0hhh_tightpi0_resolved_pid = [filterSelection('D2ResolvedTightPi0HHHPID',
+                                                               tightPi0_sel, self.pi0hhh_resolved_pid)]
+          
           # subset decays
           oneK = "NINTREE(ABSID=='K+') == 1"
           self.kpi = [filterSelection('D2KPi',oneK,self.hh)]
@@ -1205,7 +1217,7 @@ class DBuilder(object):
           config.pop('ADOCA24_MAX')
           config.pop('ADOCA34_MAX')
 
-          extrainputs = self.pi0[which] 
+          extrainputs = self.pi0[which]
 
           decaysp = [['pi+','pi+','pi-','pi0'],
                      ['K+', 'pi+','pi-','pi0'],
@@ -1359,7 +1371,7 @@ class DBuilder(object):
           config.pop('ADOCA23_MAX')
           
           extrainputs = self.pi0[which]
-
+          
           sels = [ ]
 
           for dec in decaysp :
@@ -1928,12 +1940,13 @@ class DstarBuilder(object):
           self.dpi_2460_pid = [filterPID('D0star24602DPiPID',dpi_2460,
                                          config_pid,2)]
 
-     def _makeHc2Dpi(self,name,massCut,decays,inputs):
+     def _makeHc2Dpi(self,name,massCut,momCut,decays,inputs):
           comboCuts = [massCut,LoKiCuts(['ADOCA12'],self.config).code()]
           comboCuts = LoKiCuts.combine(comboCuts)
-          momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVDIRA'],
-                             self.config).code()
-          cp = CombineParticles(CombinationCut=comboCuts,MotherCut=momCuts,
+          momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVDIRA'],self.config).code()
+          if momCut != "ALL" : momCuts = momCuts + " & " + momCut
+          cp = CombineParticles(CombinationCut=comboCuts,
+                                MotherCut=momCuts,
                                 DecayDescriptors=decays)
           return [Selection(name+'2D0PiBeauty2Charm',Algorithm=cp,
                             RequiredSelections=inputs)]
@@ -1945,33 +1958,35 @@ class DstarBuilder(object):
                name += 'UP'
                pions += [self.uppions]
           massCut = "(ADAMASS('D*(2010)+') < %(MASS_WINDOW)s) " % self.config
+          momCut  = "(M-MAXTREE(ABSID=='D0',M) < %(DELTAMASS_MAX)s)" % self.config
           decays=["D*(2010)+ -> pi+ D0","D*(2010)- -> pi- D0"]
-          return self._makeHc2Dpi('Dstar'+name,massCut,decays,d2x+pions)
+          return self._makeHc2Dpi('Dstar'+name,massCut,momCut,decays,d2x+pions)
 
      def _makeDstar24602D0pi(self):
           '''Makes D*2(2460)+- -> D0 pi+-'''
           massCut = "(ADAMASS('D*_2(2460)+') < 100*MeV) "
+          momCut  = "ALL"
           decays=["D*_2(2460)+ -> pi+ D0","D*_2(2460)- -> pi- D0"]
-          return self._makeHc2Dpi('Dstar2460',massCut,decays,
+          return self._makeHc2Dpi('Dstar2460',massCut,momCut,decays,
                                   self.d.kpi_pid+[self.pions])
 
      def _makeD0star24602Dpi(self):
           '''Makes D*2(2460)0 -> D+- pi-+'''
           massCut = "(ADAMASS('D*_2(2460)0') < 100*MeV) "
+          momCut  = "ALL"
           decays=["D*_2(2460)0 -> pi+ D-","D*_2(2460)0 -> pi- D+"]
-          return self._makeHc2Dpi('D0star2460',massCut,decays,
+          return self._makeHc2Dpi('D0star2460',massCut,momCut,decays,
                                   self.d.hhh_cf_pid+[self.pions])
-
 
      def _makeDstar02D0X0(self,name,decays,inputs):
           ''' Makes all X -> HH selections involving neutrals.'''
           comboCuts = "(ADAMASS('D*(2007)0') < %(MASS_WINDOW)s) " % self.config
-          momCuts = "ALL"
+          #momCuts = "ALL"
+          momCuts = "(M-MAXTREE(ABSID=='D0',M) < %(DELTAMASS_MAX)s)" % self.config
           cp = CombineParticles( CombinationCut   = comboCuts,
                                  MotherCut        = momCuts  ,
                                  DecayDescriptors = decays    )
           cp = cp.configurable( name + 'Beauty2CharmCombiner' )
-          #cp.ParticleCombiners.update( { '' : 'MomentumCombiner' } )
           return Selection( 'Dstar02D0' + name + 'Beauty2Charm',
                             Algorithm          = cp            ,
                             RequiredSelections = inputs         )
@@ -1979,12 +1994,12 @@ class DstarBuilder(object):
      def _makeDstar2DX0(self,name,decays,inputs):
           ''' Makes all X+ -> HH selections involving neutrals.'''
           comboCuts = "(ADAMASS('D*_s+') < %(MASS_WINDOW)s) " % self.config
-          momCuts = "ALL"
+          #momCuts = "ALL"
+          momCuts = "(M-MAXTREE(ABSID=='D+',M) < %(DELTAMASS_MAX)s)" % self.config
           cp = CombineParticles( CombinationCut   = comboCuts,
                                  MotherCut        = momCuts  ,
                                  DecayDescriptors = decays    )
           cp = cp.configurable( name + 'Beauty2CharmCombiner' )
-          #cp.ParticleCombiners.update( { '' : 'MomentumCombiner' } )
           return Selection( 'Dstar2D' + name + 'Beauty2Charm',
                             Algorithm          = cp            ,
                             RequiredSelections = inputs         )
@@ -2005,7 +2020,7 @@ class DstarBuilder(object):
           # return [ self._makeDstar02D0X0( name + 'Gamma', decays, d2x + [ self.photons ] ) ]
 
           combinationCuts = "(AALL)"
-          motherCuts      = "(M-MAXTREE(ABSID=='D0',M)<200*MeV)"
+          motherCuts      = "(M-MAXTREE(ABSID=='D0',M) < %(DELTAMASS_MAX)s)" % self.config
 
           cp = CombineParticles( CombinationCut   = combinationCuts,
                                  MotherCut        = motherCuts     ,
@@ -2023,7 +2038,7 @@ class DstarBuilder(object):
           decays = [ "[D*_s+ -> D+ gamma]cc" ]
 
           combinationCuts = "(AALL)"
-          motherCuts      = "(M-MAXTREE(ABSID=='D*_s+',M)<200*MeV)"
+          motherCuts      = "(M-MAXTREE(ABSID=='D+',M) < %(DELTAMASS_MAX)s)" % self.config
 
           cp = CombineParticles( CombinationCut   = combinationCuts,
                                  MotherCut        = motherCuts     ,

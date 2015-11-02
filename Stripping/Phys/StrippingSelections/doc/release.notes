@@ -3,6 +3,17 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2015-11-02 - Chris Jones
+ - Chages to to the Bc->DD lines in the B2OC module.
+  + Add missing Bc+ -> D+ D*0 modes
+  + Remove lines with K*'s as these had very poor rates and high overlap with 
+    other modes
+  + Change D->KHH to D->HHH to pick up the 3pi mode
+  + Improvements to the cuts for D* candidates, adding a delta(M) cut and thus
+    loosening off the D* mass window cut.
+  + Add D->HHpi0 modes, with tigher pt>1GeV cut on the pi0.
+
 ! 2015-10-31 - Zhang Liming
  - Change StrippingLb2EtacKp selection 
 
