@@ -112,7 +112,6 @@ Configs = {
 }
 
 
-from AlignmentOutputParser.AlPlotter import *
 from AlignmentOutputParser.AlignOutput import *
 from matplotlib.backends.backend_pdf import PdfPages
 from AlignmentMonitoring.MultiPlot import MultiPlot
