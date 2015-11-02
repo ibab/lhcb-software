@@ -370,7 +370,7 @@ void LoKi::Hybrid::PrintTool::printTree
     msg << " " << std::string( header.size()-1 , '-' ) << std::endl ;
     print ( particle , msg.stream() , 0 , maxDepth ) ;
     msg << " " << std::string( header.size()-1 , '-' ) << std::endl ;
-    msg << endreq ;
+    msg << endmsg ;
   }
 }
 // ===========================================================================

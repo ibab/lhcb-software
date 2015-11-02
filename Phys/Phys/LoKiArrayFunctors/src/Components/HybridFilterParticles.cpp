@@ -165,7 +165,7 @@ StatusCode LoKi::Hybrid::FilterParticles::initCut ()
   //
   release ( factory ) ;
   //
-  debug() << "CUT: '" << m_cut << "' "<< endreq ;
+  debug() << "CUT: '" << m_cut << "' "<< endmsg ;
   //
   return StatusCode::SUCCESS ;  
 }

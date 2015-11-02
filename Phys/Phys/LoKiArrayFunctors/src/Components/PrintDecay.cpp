@@ -127,7 +127,7 @@ void LoKi::PrintDecay::printTree
   // use it! 
   printer.print ( mother                  , 
                   info  ()                ,
-                  endreq                  , 
+                  endmsg                  , 
                   LoKi::Objects::_VALID_  , 
                   LoKi::Objects::_NONE_   ) ;
   //

@@ -186,7 +186,7 @@ StatusCode LoKi::Hybrid::ProtoParticleFilter::initVar ()
   if ( sc.isFailure() ) 
   { return Error ( "Error from IHybridFactory", sc   ) ; }               // RETURN 
   // 
-  debug() << "CUT: '" << m_cut << "' "<< endreq ;
+  debug() << "CUT: '" << m_cut << "' "<< endmsg ;
   //
   return StatusCode::SUCCESS ;  
 }
