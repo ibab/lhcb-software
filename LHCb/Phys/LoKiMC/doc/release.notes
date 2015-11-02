@@ -13,6 +13,8 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+! 2015-11-01 - Gerhard Raven
+ - replace LoKi::select with std::copy_if
 
 !========================= LoKiMC v10r19 2015-10-12 =========================
 ! 2015-10-06 - Vanya Belyaev
