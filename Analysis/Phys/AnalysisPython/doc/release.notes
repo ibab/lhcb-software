@@ -5,6 +5,13 @@
 !               GaudiPython analyses.
 !-----------------------------------------------------------------------------
 
+
+
+!====================== AnalysisPython v2r39 2015-11-02 ======================
+
+! 2015-11-02 - Vanya Belyaev
+ - tagged for release with Bender v27r0p1 
+
 ! 2015-10-27 - Vanya Belyaev
  - add several default constructors re-enabling proper (de)serialisation
 
