@@ -17,7 +17,8 @@ __all__ = ('B2pphhConf',
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles, FilterDesktop
-from Configurables import DaVinci__N4BodyDecays
+#from Configurables import DaVinci__N4BodyDecays
+from GaudiConfUtils.ConfigurableGenerators import DaVinci__N4BodyDecays
 
 from StandardParticles import StdAllNoPIDsKaons, StdAllNoPIDsPions, StdAllNoPIDsProtons
 from PhysSelPython.Wrappers import Selection, DataOnDemand

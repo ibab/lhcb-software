@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-02 - Roberta Cardinale
+	- Fixed NBody-import issue for StrippingBnoC/StrippingB2pphh.py
+
 ! 2015-11-02 - Chris Jones
  - Chages to to the Bc->DD lines in the B2OC module.
   + Add missing Bc+ -> D+ D*0 modes
