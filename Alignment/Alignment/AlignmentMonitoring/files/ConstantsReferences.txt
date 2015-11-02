@@ -32,7 +32,7 @@ ITT.*Box\.R(x|y)	0.00001	0.001
 ITT.*Box\.Rz	0.002	0.01
 ITT.*Box\.Tx	0.08	0.2
 ITT.*Box\.Ty	0.002	0.01
-ITT.*Box\.Tz	0.5	2.0
+ITT.*Box\.Tz	0.2	0.5
 # elements name
 IT\..*	0.00001	0.001
 IT/Station(1|2|3)\..*	0.00001	0.001
@@ -40,7 +40,7 @@ IT/Station.*Box\.R(x|y)	0.00001	0.001
 IT/Station.*Box\.Rz	0.002	0.01
 IT/Station.*Box\.Tx	0.08	0.2
 IT/Station.*Box\.Ty	0.002	0.01
-IT/Station.*Box\.Tz	0.150	0.5
+IT/Station.*Box\.Tz	0.2	0.5
 
 # IT Modules
 ITT.*Layer.*Ladder.*	0.00001	0.001
@@ -54,7 +54,7 @@ TTSystem\..*	0.00001	0.001
 TTa\..*		0.00001	0.001
 TTb\..*		0.00001	0.001
 TT.*Layer\.T(x|y)	0.00001	0.001
-TT.*Layer\.Tz	0.2	0.5
+TT.*Layer\.Tz	0.1	0.3
 TT.*Layer\.R.*	0.00001	0.001
 # elements name
 TT\..*	0.00001	0.001

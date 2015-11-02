@@ -3,6 +3,9 @@
 ! package manager: Maurizio Martinelli
 !------------------------------------------------------------------------------
 
+! 2015-10-31 - Maurizio Martinelli
+ - Updated IT Tz constants references
+
 ! 2015-10-30 - Maurizio Martinelli
  - Added a few modifications to MonitoringPage for producing the DM monitoring plots
 
