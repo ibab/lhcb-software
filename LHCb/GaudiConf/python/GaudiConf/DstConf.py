@@ -278,7 +278,7 @@ class DstConf(LHCbConfigurableUser):
                                             AlwaysCreateOutput = alwaysCreate,
                                             EnableCheck        = doChecks ) ]
             # for 2015, add packed Velo tracks
-            if( self.getProp("DataType") is "2015" ):
+            if( (self.getProp("DataType") is "2015") and (self.getProp("PVPersistence") is "RecVertex") ):
                 packFittedVelo = PackTrack( name               = "PackTracksFittedVelo",
                                             InputName          = "Rec/Track/FittedHLT1VeloTracks",
                                             OutputName         = "pRec/Track/FittedHLT1VeloTracks",
@@ -331,11 +331,11 @@ class DstConf(LHCbConfigurableUser):
 
         # Pack vertices if they were not read from the input file...
         if "Tracking" not in self.getProp("EnableUnpack"): 
-            packDST.Members += [
-                PackRecVertex(AlwaysCreateOutput = alwaysCreate),
-                PackTwoProngVertex(AlwaysCreateOutput = alwaysCreate),
-                PackPrimaryVertices()
-                ]
+            if self.getProp("PVPersistence") is "RecVertex":
+                packDST.Members += [ PackRecVertex(AlwaysCreateOutput = alwaysCreate) ]
+            elif self.getProp("PVPersistence") is "PrimaryVertex":
+                packDST.Members += [ PackPrimaryVertices() ]                
+            packDST.Members += [ PackTwoProngVertex(AlwaysCreateOutput = alwaysCreate) ]
 
         if "Muon" in self.getProp("Detectors"):
             packDST.Members += [ PackTrack( name               = "PackMuonTracks",
