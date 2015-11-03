@@ -1,0 +1,5 @@
+#!/bin/sh
+
+. lb-sdb-env.sh
+python ${LBRELEASEROOT}/python/LbRelease/SoftConfDB/LbSdbGenerateVersionJSON.py $@
+lb-sdb-clearenv.sh
