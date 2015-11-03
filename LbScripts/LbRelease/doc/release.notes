@@ -1,3 +1,9 @@
+2015-11-03  Ben Couturier <Ben.Couturier@cern.ch>
+
+	LBCORE-962: Keep Software conf DB SSO cookie for a couple of hours.
+	* scripts/lb-sdb-env.sh
+	* scripts/lb-sdb-clearenv.sh
+
 2015-10-23  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* lb-deployment-checklist: suggest to use lhcb-nightlies instead of buildlhcb

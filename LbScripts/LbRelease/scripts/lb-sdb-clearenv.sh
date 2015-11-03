@@ -7,8 +7,10 @@
 
 if [ -n $cookie_file ]; then
     if [ -f $cookie_file ]; then
-	#echo "Removing the cookie file: $cookie_file"
-        rm -f $cookie_file
+        # Only remove the cookie if the variable LB_SDB_REMOVE_COOKIE was set
+	if [ -n "${LB_SDB_REMOVE_COOKIE}" ]; then
+	    rm -f $cookie_file
+	fi
     fi
 fi
 
