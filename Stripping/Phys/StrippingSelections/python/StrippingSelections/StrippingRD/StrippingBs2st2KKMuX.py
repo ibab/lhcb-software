@@ -35,19 +35,19 @@ default_config = {
 
         'GEC_nLongTrk'     : 1000. ,# adimensional
         'HLT_FILTER'       : ''    ,
-        
+
         # Kaon from B_s2*0 -> B K
         'K1PT'             : 500.  ,# MeV
         'K1PTLoose'        : 250.  ,# MeV
         'K1MinIPChi2'      : 9.    ,# adimensional
         'K1PIDK'           : 16.   ,# adimensional
-        
+
         # Kaon from B -> K mu X
         'K2P'              : 3000. ,# MeV
         'K2PT'             : 1000. ,# MeV
         'K2MinIPChi2'      : 9.    ,# adimensional
         'K2PIDK'           : 0.    ,# adimensional
-        
+
         # Muon from B -> K mu X
         'MuP'              : 3000. ,# MeV
         'MuPT'             : 1000. ,# MeV
@@ -56,7 +56,7 @@ default_config = {
 
         # J/psi from B -> K J/psi
         'JpsiMassWindow'   : 80.   ,# MeV
-        
+
         # B -> K mu X
         'KMuVChi2Dof'      : 4.    ,# adimensional
         'KMuFdChi2'        : 100.  ,# adimensional
@@ -74,20 +74,22 @@ default_config = {
         'DMKKMu'           : 713.677,# MeV (493.677 + 220)
         'DMKKJpsi'         : 1093.677,# MeV (493.677 + 600)
         'DZBPV'            : 1.0    ,# mm
-        
+
+        # Track isolation
         'RelatedInfoTools' : [
             {'Type' : 'RelInfoBs2MuMuTrackIsolations',
-             'RecursionLevel' : 2,
              'Variables' : [
                  'BSMUMUTRACKPLUSISO',
                  'BSMUMUTRACKPLUSISOTWO',
                  'ISOTWOBODYMASSISOPLUS',
                  'ISOTWOBODYCHI2ISOPLUS',
-                 'ISOTWOBODYISO5PLUS'
+                 'ISOTWOBODYISO5PLUS',
+                 'BSMUMUTRACKID'
                  ],
-             'Locations' : {
-                 'Phys/StdLooseKaons' : 'KaonISO',
-                 'Phys/StdLooseMuons' : 'MuonISO'
+             'DaughterLocations' : {
+                 "[B*_s20 -> (B+ -> ^K+ [mu-]cc) [K-]cc]CC": "K2ISO",
+                 "[B*_s20 -> (B+ -> K+ ^[mu-]cc) [K-]cc]CC": "MuISO",
+                 "[B*_s20 -> (B+ -> K+ [mu-]cc) ^[K-]cc]CC": "K1ISO"
                  },
              'tracktype'  : 3,
              'angle'      : 0.27,
@@ -106,7 +108,7 @@ default_config = {
     }
 
 class Bs2st2KKMuXConf(LineBuilder):
-    
+
     __configuration_keys__ = (
         'Bs2st2KKMuPrescale'
         ,'Bs2st2KKMuWSPrescale'
@@ -115,22 +117,22 @@ class Bs2st2KKMuXConf(LineBuilder):
 
         ,'GEC_nLongTrk'
         ,'HLT_FILTER'
-        
+
         ,'K1PT'
         ,'K1PTLoose'
         ,'K1MinIPChi2'
         ,'K1PIDK'
-        
+
         ,'K2P'
         ,'K2PT'
         ,'K2MinIPChi2'
         ,'K2PIDK'
-        
+
         ,'MuP'
         ,'MuPT'
         ,'MuMinIPChi2'
         ,'MuPIDmu'
-        
+
         ,'JpsiMassWindow'
 
         ,'KMuVChi2Dof'
@@ -147,16 +149,16 @@ class Bs2st2KKMuXConf(LineBuilder):
         ,'DMKKMu'
         ,'DMKKJpsi'
         ,'DZBPV'
-        
+
         ,'RelatedInfoTools'
         )
-    
+
     __confdict__ = {}
-    
+
     def __init__(self, name, config):
         LineBuilder.__init__(self, name, config)
         self.__confdict__ = config
-        
+
 
         self.GECs = { "Code":"( recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %(GEC_nLongTrk)s )" % config,
                       "Preambulo": ["from LoKiTracks.decorators import *"]}
@@ -209,7 +211,7 @@ class Bs2st2KKMuXConf(LineBuilder):
         self.Bu2KMu.MotherCut      = "(VFASPF(VCHI2/VDOF) < %(KMuVChi2Dof)s) & (BPVDIRA > 0.99) & "\
                                      "(BPVVDCHI2 > %(KMuFdChi2)s)" % config
         self.Bu2KMu.ReFitPVs       = True
-        
+
         self.SelBu2KMu = Selection("Bu2KMu_for" + name,
                                    Algorithm          = self.Bu2KMu,
                                    RequiredSelections = [self.SelKaon2, self.SelMuon])
@@ -220,7 +222,7 @@ class Bs2st2KKMuXConf(LineBuilder):
         self.Bu2KJpsi.MotherCut      = "(VFASPF(VCHI2/VDOF) < %(KJpsiVChi2Dof)s) & (BPVDIRA > 0.99) & "\
                                        "(BPVVDCHI2 > %(KJpsiFdChi2)s)" % config
         self.Bu2KJpsi.ReFitPVs       = True
-        
+
         self.SelBu2KJpsi = Selection("Bu2KJpsi_for" + name,
                                      Algorithm          = self.Bu2KJpsi,
                                      RequiredSelections = [self.SelKaon2, self.SelJpsi])
@@ -274,37 +276,34 @@ class Bs2st2KKMuXConf(LineBuilder):
                                             prescale  = config['Bs2st2KKMuPrescale'],
                                             FILTER    = self.GECs,
                                             RelatedInfoTools = config['RelatedInfoTools'],
-                                            selection = self.SelBs2KKMu,
-                                            MDSTFlag  = True)
-        self.Bs2st2KKMuLine.RelatedInfoTools[0]['Locations'] = {
-            self.SelKaon2: 'KaonISO',
-            self.SelMuon:  'MuonISO'}
+                                            selection = self.SelBs2KKMu
+                                            #, MDSTFlag  = True
+                                            )
 
         self.Bs2st2KKMuWSLine = StrippingLine("Bs2st2KKMuWSLine",
                                               prescale  = config['Bs2st2KKMuWSPrescale'],
                                               FILTER    = self.GECs,
                                               RelatedInfoTools = self.Bs2st2KKMuLine.RelatedInfoTools,
-                                              selection = self.SelBs2KKMuWS,
-                                              MDSTFlag  = True)
-        
+                                              selection = self.SelBs2KKMuWS
+                                              #, MDSTFlag  = True
+                                              )
+
         self.Bs2st2KKJpsiLine = StrippingLine("Bs2st2KKJpsiLine",
                                               prescale  = config['Bs2st2KKMuPrescale'],
                                               FILTER    = self.GECs,
-                                              selection = self.SelBs2KKJpsi,
-                                              MDSTFlag  = True)
+                                              selection = self.SelBs2KKJpsi
+                                              #, MDSTFlag  = True
+                                              )
 
         self.Bs2st2KKJpsiWSLine = StrippingLine("Bs2st2KKJpsiWSLine",
                                                 prescale  = config['Bs2st2KKJpsiWSPrescale'],
                                                 FILTER    = self.GECs,
-                                                selection = self.SelBs2KKJpsiWS,
-                                                MDSTFlag  = True)
+                                                selection = self.SelBs2KKJpsiWS
+                                                #, MDSTFlag  = True
+                                                )
 
         # register stripping lines
         self.registerLine(self.Bs2st2KKMuLine)
         self.registerLine(self.Bs2st2KKMuWSLine)
         self.registerLine(self.Bs2st2KKJpsiLine)
         self.registerLine(self.Bs2st2KKJpsiWSLine)
-
-
-
-
