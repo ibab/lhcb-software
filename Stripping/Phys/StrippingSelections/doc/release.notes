@@ -6,6 +6,7 @@
 
 ! 2015-11-03 - Maurizio Martinelli
  - Removed MINIPCHI2 cut on D candidates in CharmFromBSemi
+ - Fixed a bug in DstarD2KSHHPi0, DstarD2XGamma lines (wrong soft pion container)
 
 ! 2015-11-03 - Chris Jones
  - Lower the gamma pt cut in the B2OC module from 1200MeV to 800MeV. It was

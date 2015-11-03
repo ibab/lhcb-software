@@ -15,7 +15,7 @@ __all__ = ('DstarD2KSHHPi0Lines',
 from Gaudi.Configuration import *
 
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles, DaVinci__N4BodyDecays
-from StandardParticles                     import StdNoPIDsPions, StdNoPIDsKaons, StdLooseResolvedPi0, StdLooseMergedPi0, StdLooseKsDD, StdLooseKsLL
+from StandardParticles                     import StdAllNoPIDsPions, StdNoPIDsPions, StdNoPIDsKaons, StdLooseResolvedPi0, StdLooseMergedPi0, StdLooseKsDD, StdLooseKsLL
 
 from PhysSelPython.Wrappers      import Selection, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
@@ -162,7 +162,7 @@ class DstarD2KSHHPi0Lines( LineBuilder ) :
                 self.Dst2D0pi[decay+ksName] = self.makeDstar2D0Pi(DstarD2KSHHPi0Name+ksName,
                                                                   config,
                                                                   ['D*(2010)+ -> D0 pi+', 'D*(2010)- -> D0 pi-'],
-                                                                  inputSel = [self.D2HHHH[decay+ksName], StdNoPIDsPions] )
+                                                                  inputSel = [self.D2HHHH[decay+ksName],    StdAllNoPIDsPions] )
 
                 # Create the stripping line
                 self.lineDstarD2HHHH[decay+ksName] = StrippingLine(DstarD2KSHHPi0Name+ksName+"Line",

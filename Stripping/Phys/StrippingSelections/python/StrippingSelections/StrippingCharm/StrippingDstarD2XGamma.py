@@ -15,7 +15,7 @@ __all__ = ('DstarD2XGammaLines',
 from Gaudi.Configuration import *
 
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
-from StandardParticles                     import StdNoPIDsPions, StdNoPIDsKaons
+from StandardParticles                     import StdAllNoPIDsPions, StdNoPIDsPions, StdNoPIDsKaons
 from StandardParticles                     import StdLooseAllPhotons, StdAllLooseGammaLL, StdAllLooseGammaDD
 
 from PhysSelPython.Wrappers      import Selection
@@ -163,7 +163,7 @@ class DstarD2XGammaLines( LineBuilder ) :
                 self.Dst2D0pi[decay+phName] = self.makeDstar2D0Pi(DstarD2XGammaName+phName,
                                                                   config,
                                                                   ['D*(2010)+ -> D0 pi+', 'D*(2010)- -> D0 pi-'],
-                                                                  inputSel = [self.D2XGamma[decay+phName], StdNoPIDsPions] )
+                                                                  inputSel = [self.D2XGamma[decay+phName], StdAllNoPIDsPions] )
 
                 # Create the stripping line
                 self.lineDstarD2XGamma[decay+phName] = StrippingLine(DstarD2XGammaName+phName+"Line",
