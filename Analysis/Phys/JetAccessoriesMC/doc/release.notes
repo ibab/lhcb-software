@@ -4,6 +4,9 @@
 ! Purpose     : Jet finding MC accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2105-11-03 - Cedric Potterat
+ - adding the JetTagging MC code (from previous Phys/JetTagging)
+
 ! 2015-11-01 - Gerahrd Raven
  - replace endreq with endmsg
 
