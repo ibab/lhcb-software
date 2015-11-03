@@ -1,3 +1,4 @@
+#include "GaudiKernel/Algorithm.h"
 #define NO_LONGLONG_TYPEDEF
 #include "dis.hxx"
 #include "GaudiKernel/IMessageSvc.h"
@@ -43,7 +44,7 @@ namespace  {
     Target* m_target;
   public:
     /// Constructor
-    Command(const std::string& nam, DimTaskFSM* target) 
+    Command(const std::string& nam, DimTaskFSM* target)
       : DimCommand(nam.c_str(), (char*)"C"), m_target(target) { }
     /// DimCommand overload: handle DIM commands
     virtual void commandHandler()   {
@@ -150,7 +151,7 @@ namespace  {
   }
 }
 
-DimTaskFSM::DimTaskFSM(IInterface*) 
+DimTaskFSM::DimTaskFSM(IInterface*)
   : m_name(RTL::processName()), m_stateName(ST_NAME_UNKNOWN), m_prevStateName(ST_NAME_UNKNOWN),
     m_command(0), m_service(0), m_fsmService(0), m_haveEventLoop(false), m_refCount(1)
 {
@@ -423,7 +424,7 @@ StatusCode DimTaskFSM::startupDone()  {
 StatusCode DimTaskFSM::configure()  {
   return declareState(ST_READY);
 }
-  
+
 StatusCode DimTaskFSM::initialize()  {
   IOCSENSOR.send(this, START);
   return StatusCode::SUCCESS;

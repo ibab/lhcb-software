@@ -1,7 +1,10 @@
 ! $Id: release.notes,v 1.14 2009/11/16 15:46:34 niko Exp $
-! Package     : Online/Gaucho	
+! Package     : Online/Gaucho
 ! Responsible : Eric.van.Herwijnen@cern.ch
 !--------------------------------------------------------------------------
+
+! 2015-11-03 - Marco Clemencic
+ - Fixed compilation with GaudiHive (see GAUDI-978).
 
 ! 2014-01-07 - Marco Clemencic
  - Added CMakeLists.txt.
@@ -20,7 +23,7 @@ MonitorSvc.ExpandNameInfix       = "<part>_x_<program>/";
 MonitorSvc.PartitionName         = @OnlineEnv.PartitionName;
 MonitorSvc.ProgramName           = @OnlineEnv.ProcessNickName;
 
-Please do not set any other "good, old" options, which were present 
+Please do not set any other "good, old" options, which were present
 with the old implementation!
 
 
@@ -54,7 +57,7 @@ with the old implementation!
 !======================== Gaucho v5r1 2006-11-28 ==========================
 ! 2006-11-28 - Eric van Herwijnen
  - Fire an incident when the DimCmdServer receives the 'save_histos' command
- - Add the resethistos and resethistos histogramname commands to the 
+ - Add the resethistos and resethistos histogramname commands to the
    DimPropServer
  - Fixed a bug in MonitorSvc so that utgid is never undefined
 
@@ -69,7 +72,7 @@ with the old implementation!
 
 ! 2005-06-11 - Jose Helder Lopes
   - MonitorSvc and DimEngine: Implemented declare methods for pairs of doubles.
-    They are published as two independent double services as DIM doesn't work 
+    They are published as two independent double services as DIM doesn't work
     with std::pair's.
     These services have "DimPair" in their names to help identify them.
   - MonitorSvc: Changed use of nodename/PID to UTGID defined in an environment
@@ -95,11 +98,10 @@ with the old implementation!
 ! 20040921 - Pere Mato
   - Changed requirements file and include file path to use new DIM
     interface package
-  
+
 ! 20030603 - Gaucho v1
   Gaucho makes counters, floats, 1DHistogram of a Gaudi application
-  online available as Dim Services. Properties of Algorithms can be 
+  online available as Dim Services. Properties of Algorithms can be
   read/set with the DimPropServer class.
-   
+
 ! ====================================================================
- 

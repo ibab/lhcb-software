@@ -1,5 +1,4 @@
-#include "GaudiKernel/SvcFactory.h"
-#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/Algorithm.h"
 
 //
 #include "GaudiOnline/AMSService.h"

@@ -1,14 +1,15 @@
 // $Id: AnalysisTask.cpp,v 1.26 2010-06-17 10:46:00 ggiacomo Exp $
 #include <cmath>
-#include <dic.hxx>
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h"
 // local
 #include "OMAlib/OMAlib.h"
 #include "OMAlib/OMAAlgorithms.h"
 #include "OMAlib/AnalysisTask.h"
 #include "OMAlib/SavesetFinder.h"
 #include "OMAlib/RunInfo.h"
+
+#include <dic.hxx>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : AnalysisTask
@@ -40,7 +41,7 @@ AnalysisTask::AnalysisTask( const std::string& name,
   declareProperty ( "TextLog"      , m_textLogName = "");
   declareProperty ( "HistDBMsgPersistency", m_logToHistDB = true);
   declareProperty ( "PublishDIMmessages", m_doPublish = true);
-  declareProperty ( "ForceOnlineEnv", m_forceOnlineEnv = false); // enable online tools (DIM, status checks) also in offline mode 
+  declareProperty ( "ForceOnlineEnv", m_forceOnlineEnv = false); // enable online tools (DIM, status checks) also in offline mode
   declareProperty ( "ChangeHistPadColors", m_padcolors = false);
   declareProperty ( "CheckDetectorStatus", m_checkStatus = true);
   //
@@ -57,12 +58,12 @@ AnalysisTask::~AnalysisTask() {
   for(iDI = m_statusInfo.begin() ; iDI != m_statusInfo.end() ; iDI++) {
     delete (*iDI);
   }
-} 
+}
 
 
 StatusCode AnalysisTask::initialize() {
-  StatusCode sc = GaudiHistoAlg::initialize(); 
-  if ( sc.isFailure() ) return sc;  
+  StatusCode sc = GaudiHistoAlg::initialize();
+  if ( sc.isFailure() ) return sc;
   setMsgStream(&(always()));
   // add the partition name to the analysis task identifier
   m_anaTaskname = m_anaTaskname+"/"+m_partition;
@@ -140,7 +141,7 @@ StatusCode AnalysisTask::initialize() {
   else { // online mode: start SavesetFinder for each requested monitoring task
     std::vector<std::string>::iterator iF;
     if(m_inputTasks.size()>0) {
-      if (m_inputTasks[0]=="any") 
+      if (m_inputTasks[0]=="any")
         getAllTasks();
     }
     closeDBSession();
@@ -172,7 +173,7 @@ StatusCode AnalysisTask::execute() {
 
 StatusCode AnalysisTask::finalize() {
   closeLog();
-  return GaudiHistoAlg::finalize();  
+  return GaudiHistoAlg::finalize();
 }
 
 void AnalysisTask::getAllTasks() {
@@ -203,7 +204,7 @@ long AnalysisTask::checkStatus() {
             " but DIM service is not available"<<endmsg;
     }
     else {
-      if (cond == 1)   status += (1<<ic); 
+      if (cond == 1)   status += (1<<ic);
       dimfound = true;
     }
   }

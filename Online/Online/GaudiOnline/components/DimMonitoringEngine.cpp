@@ -1,3 +1,4 @@
+#include "GaudiKernel/Service.h"
 #define NO_LONGLONG_TYPEDEF
 #include "dis.hxx"
 #include "RTL/rtl.h"

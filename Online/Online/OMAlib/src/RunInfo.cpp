@@ -1,11 +1,11 @@
 // $Id: RunInfo.cpp,v 1.1 2010-06-11 13:00:11 ggiacomo Exp $
-// Include files 
+// Include files
 
 
 
 // local
-#include "OMAlib/RunInfo.h"
 #include "OMAlib/AnalysisTask.h"
+#include "OMAlib/RunInfo.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RunInfo

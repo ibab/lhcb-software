@@ -1,4 +1,5 @@
 // Include files
+#include "GaudiKernel/Service.h"
 #define NO_LONGLONG_TYPEDEF
 #include "dis.hxx"
 
@@ -45,7 +46,7 @@ MonitoringEngine::Histogram::Histogram(const string& nam,IMessageSvc* msg,IHisto
       m_data[6] = Buffer::value_type(m_hist.h2->yAxis().upperEdge());
       break;
     default:
-      log << MSG::ERROR << "Unable to instantiate a DimHisto for " 
+      log << MSG::ERROR << "Unable to instantiate a DimHisto for "
           << m_hist.HIST->dimension() << "D histogram " << nam << endmsg;
       throw std::runtime_error("Monitoring cannot handle histogram:"+nam);
   }
@@ -79,7 +80,7 @@ void MonitoringEngine::Histogram::fill_2d()  {
   *p++ = Buffer::value_type(h2->binHeight(UFLW,OFLW));
   for(i=0; i<nx; i++) {
     *p++ = Buffer::value_type(h2->binHeight(i,UFLW));
-    for (j=0; j<ny; j++) 
+    for (j=0; j<ny; j++)
       *p++= Buffer::value_type(h2->binHeight(i,i));
     *p++= Buffer::value_type(h2->binHeight(i,OFLW));
   }
@@ -91,7 +92,7 @@ void MonitoringEngine::Histogram::fill_2d()  {
   *p++= Buffer::value_type(h2->binError(UFLW,UFLW));
   for (i=0; i<ny; i++) *p++= Buffer::value_type(h2->binError(UFLW,i));
   *p++= Buffer::value_type(h2->binError(UFLW,OFLW));
-  for (i=0; i<nx; i++){    
+  for (i=0; i<nx; i++){
     *p++= Buffer::value_type(h2->binError(i,UFLW));
     for (j=0; j<ny; j++)
       *p++= Buffer::value_type(h2->binError(i,j));
@@ -114,7 +115,7 @@ void MonitoringEngine::Histogram::filldata()  {
     // Error: allocated space does not match!
     throw std::runtime_error("Histogram datasize mismatch while monitoring!");
   case 2:
-    //Sum of the entries in all the IHistogram's bins, i.e in-range bins, UNDERFLOW and OVERFLOW. 
+    //Sum of the entries in all the IHistogram's bins, i.e in-range bins, UNDERFLOW and OVERFLOW.
     //This is equivalent to the number of times the method fill was invoked.
     size = (8+2*(m_hist.h2->xAxis().bins()+2)*(m_hist.h2->yAxis().bins()+2));
     if ( size == m_data.size() )  {
@@ -124,11 +125,11 @@ void MonitoringEngine::Histogram::filldata()  {
     throw std::runtime_error("Histogram mismatch while monitoring!");
   default:
     throw std::runtime_error("Unknown Histogram type while monitoring! [Internal error]");
-   } 
+   }
 }
 
 StatusCode MonitoringEngine::initialize()  {
-  StatusCode sc = Service::initialize(); 
+  StatusCode sc = Service::initialize();
   MsgStream msg(msgSvc(),name());
   if ( !sc.isSuccess() )  {
     msg << MSG::ERROR << "Cannot initialize service base class." << endmsg;
@@ -162,13 +163,13 @@ StatusCode MemMonitorSvc::queryInterface(const InterfaceID& riid, void** ppvIF) 
     *ppvIF = dynamic_cast<IMonitorSvc*> (this);
     addRef();
     return StatusCode::SUCCESS;
-  } 
+  }
   return Service::queryInterface(riid, ppvIF);
 }
 
 StatusCode MemMonitorSvc::initialize() {
   MsgStream msg(msgSvc(),name());
-  StatusCode sc = Service::initialize(); 
+  StatusCode sc = Service::initialize();
   if ( !sc.isSuccess() )  {
     msg << MSG::ERROR << "Cannot initialize base class." << endmsg;
   }
@@ -286,5 +287,5 @@ string MemMonitorSvc::clientName(Client owner)  {
   return "";
 }
 
-void MemMonitorSvc::declareInfo(CSTR nam, const AIDA::IBaseHistogram* var,CSTR dsc,Client own) 
+void MemMonitorSvc::declareInfo(CSTR nam, const AIDA::IBaseHistogram* var,CSTR dsc,Client own)
 { i_publish(regItem(nam,dsc,own),dynamic_cast<const AIDA::IHistogram*>(var)); }

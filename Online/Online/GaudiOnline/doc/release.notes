@@ -1,6 +1,9 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+! 2015-11-03 - Marco Clemencic
+ - Fixed compilation with GaudiHive (see GAUDI-978).
+
 ! 2015-09-30 - Giacomo Graziani
 - add a LazyRunable doing nothing for tasks which just need to wait and don't expect input events
 

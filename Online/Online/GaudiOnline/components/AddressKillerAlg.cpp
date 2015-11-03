@@ -5,7 +5,6 @@
 //	Author    : Markus Frank
 //
 // ====================================================================
-#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/IOpaqueAddress.h"
@@ -101,6 +100,7 @@ namespace LHCb  {
       return StatusCode::FAILURE;
     }
   };
+
+  DECLARE_COMPONENT(AddressKillerAlg)
 }
 
-DECLARE_NAMESPACE_ALGORITHM(LHCb,AddressKillerAlg)

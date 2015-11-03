@@ -7,6 +7,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IRegistry.h"
+#include "GaudiKernel/Service.h"
 #include "Gaucho/CntrMgr.h"
 #include "Gaucho/MonHist.h"
 #include "Gaucho/MonSys.h"

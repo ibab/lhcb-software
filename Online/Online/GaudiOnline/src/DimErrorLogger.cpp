@@ -1,4 +1,5 @@
 // $Id: DimErrorLogger.cpp,v 1.18 2010-09-22 13:38:19 frankb Exp $
+#include "GaudiKernel/Service.h"
 #define NO_LONGLONG_TYPEDEF
 
 #include "dis.hxx"
@@ -82,7 +83,7 @@ namespace LHCb  {
 
 
 // Standard Constructor
-LHCb::DimErrorLogger::DimErrorLogger(const std::string& nam, ISvcLocator* svcLoc)   
+LHCb::DimErrorLogger::DimErrorLogger(const std::string& nam, ISvcLocator* svcLoc)
 : OnlineRunable(nam, svcLoc), m_dns(0)
 {
   declareProperty("OutputFormat",          m_outputFmt  = "% F%20W%S%7W%R%T %0W%M");
@@ -106,7 +107,7 @@ LHCb::DimErrorLogger::DimErrorLogger(const std::string& nam, ISvcLocator* svcLoc
 }
 
 // Standard Destructor
-LHCb::DimErrorLogger::~DimErrorLogger()   
+LHCb::DimErrorLogger::~DimErrorLogger()
 {
 }
 
@@ -211,7 +212,7 @@ void LHCb::DimErrorLogger::report(int typ, const std::string& src, const std::st
       if ( !m_warningMsg  ) return;
       break;
     case MSG::ERROR:
-      if ( !m_errorMsg    ) return; 
+      if ( !m_errorMsg    ) return;
       break;
     case MSG::FATAL:
       if ( !m_fatalMsg    ) return;

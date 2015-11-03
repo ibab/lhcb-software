@@ -5,6 +5,7 @@
  *      Author: Beat Jost
  */
 
+#include "GaudiKernel/PropertyMgr.h"
 #include "dis.hxx"
 #include "Gaucho/MonSys.h"
 #include "Gaucho/MonSubSys.h"

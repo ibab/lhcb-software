@@ -1,3 +1,4 @@
+#include "GaudiKernel/Algorithm.h"
 #define NO_LONGLONG_TYPEDEF
 #include "dic.hxx"
 #include "dis.hxx"
@@ -10,7 +11,7 @@
  *   LHCb namespace declaration
  */
 namespace LHCb  {
-    
+
   /** @class DimDataHandler DimDataHandler.cpp GaudiOnline/DimDataHandler.cpp
     *
     *  Implementation of the NetworkDataHandler using DIM.

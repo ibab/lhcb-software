@@ -1,4 +1,5 @@
 // $Id: DimMessageSvc.cpp,v 1.10 2010-09-22 13:38:19 frankb Exp $
+#include "GaudiKernel/Service.h"
 #define NO_LONGLONG_TYPEDEF
 #include "dis.hxx"
 #include "RTL/rtl.h"
@@ -57,7 +58,7 @@ StatusCode LHCb::DimMessageSvc::queryInterface(const InterfaceID& riid, void** p
   return OnlineMessageSvc::queryInterface(riid, ppIf);
 }
 
-/// Initialize Service 
+/// Initialize Service
 StatusCode LHCb::DimMessageSvc::initialize() {
   StatusCode sc = OnlineMessageSvc::initialize();
   if( sc.isFailure() ) return sc;
@@ -78,7 +79,7 @@ StatusCode LHCb::DimMessageSvc::finalize() {
 void LHCb::DimMessageSvc::report(int typ, const std::string& src, const std::string& msg)  {
   m_mess.makeBuffer(typ,src,msg);
   if ( m_logger )  {
-    m_logger->updateService(m_mess.buffer(),m_mess.size()); 
+    m_logger->updateService(m_mess.buffer(),m_mess.size());
   }
 }
 

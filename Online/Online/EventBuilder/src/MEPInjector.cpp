@@ -34,6 +34,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/Algorithm.h"
 #include "EventBuilder/MEPRxSys.h"
 #include "GaudiKernel/Chrono.h"
 #include "GaudiKernel/SvcFactory.h"
@@ -737,9 +738,9 @@ StatusCode MEPInjector::getEvent(int nbEv) {
     char *ccur = (((char *) m_OdinMEP) + MEPEVENTOFFSET);
     OnlineRunInfo *ori = ( OnlineRunInfo *) (ccur+IPHDRSZ+MEPHDRSZ+nbEv*(ODFRAGSZ) + FRAGHDRSZ + BKHDRSZ);
 
-#if 0   
+#if 0
     int eventActual = 0;
-    do 
+    do
 #endif
     {
         if(m_EventBuffers.size() < 1) {
@@ -809,15 +810,15 @@ StatusCode MEPInjector::getEvent(int nbEv) {
         // Checks if the buffer is not empty before to try to get an event from it
 #if 0
         if (mbm_events_in_buffer(bmid, &eventActual) != MBM_NORMAL) {
-            msgLog << MSG::WARNING << WHERE << "Error checking number of event in buffer of trigger type: " 
+            msgLog << MSG::WARNING << WHERE << "Error checking number of event in buffer of trigger type: "
               << ori->triggerType << endmsg;
             MEPRxSys::microsleep(1000);
         }
-#endif 
-    }   
-#if 0    
-    while (eventActual <= 0 && m_InjState == RUNNING); // do 
-#endif    
+#endif
+    }
+#if 0
+    while (eventActual <= 0 && m_InjState == RUNNING); // do
+#endif
     if (m_InjState != RUNNING) {
         msgLog << MSG::INFO << WHERE << "End of injection : mbm_get_event cancelled" << endmsg;
         return StatusCode::RECOVERABLE;
@@ -1290,7 +1291,7 @@ StatusCode MEPInjector::readThenSend() {
 	      else
 		ERRMSG(msgLog, "NULL MEP pointer, not send : " << MEPRxSys::dotted_addr(iteTell1ID->first));
             } // end for
-	    
+
             m_TotEvtsSent += m_PackingFactor;
             if(++m_DatagramID == 0) ++m_DatagramID;
 
