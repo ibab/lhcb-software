@@ -344,7 +344,7 @@ def _tgae_hepdata_ ( graph      ,
     """
     
     ## the basic format 
-    fmt   = '   %s TO %s ; %s +%s -%s; '
+    fmt   = '   %s TO %s ; %s +%s -%s '
     lines = [ '*data: x : y ' ]
 
     index = 0 
@@ -381,7 +381,8 @@ def _tgae_hepdata_ ( graph      ,
             if s2 : line += ",DSYS=%s" % s2
             if s3 : line += ",DSYS=%s" % s3
             line += ") ; "
-            
+
+        line += " ; "
         lines.append (line)
         
     lines.append ('*dataend:')
