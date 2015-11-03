@@ -3,10 +3,11 @@
 ! Responsible : Victor Coco victor.coco@cern.ch, Cedric Potterat cedric.potterat@cern.ch
 ! Purpose     : Jet Tagging Package
 ! -----------------------------------------------------------------------------
-! 2015-11-01 - Gerhard Raven
- - replace endreq with endmsg
 
-!========================= JetTagging v1r9 2015-10-24 =========================
+! 2015-11-03 - Cedric Potterat
+ - preapre tht move  ANALYSIS to PHYS:
+  . move all Truth Tagger to JetAccessoresMC
+  . remove all MC related package
 
 ! 2015-08-20 - Gerhard Raven
  - prefer std::isfinite and std::isnan over GaudiAlg/CheckForNaN.h

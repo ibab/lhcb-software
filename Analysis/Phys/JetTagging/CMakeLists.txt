@@ -7,8 +7,6 @@ gaudi_depends_on_subdirs(Phys/LoKiJets
 			 Phys/LoKiAlgo
 			 Kernel/LHCbMath
 			 Phys/JetAccessories
-			 Phys/JetAccessoriesMC
-			 Phys/LoKiPhysMC
 			 Phys/DaVinciInterfaces
 			 )
 
@@ -20,7 +18,7 @@ gaudi_install_headers(Kernel)
 gaudi_add_module(JetTagging
                  src/*.cpp
                  INCLUDE_DIRS NeuroBayesExpert
-                 LINK_LIBRARIES LoKiAlgo LHCbMathLib LoKiPhysMCLib DaVinciInterfacesLib NeuroBayesExpert ROOT)
+                 LINK_LIBRARIES LoKiAlgo LHCbMathLib DaVinciInterfacesLib NeuroBayesExpert ROOT)
 
 gaudi_add_dictionary(JetTagging
                      dict/JetTaggingInterface.h

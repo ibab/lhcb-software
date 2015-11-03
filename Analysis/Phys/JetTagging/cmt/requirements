@@ -14,8 +14,6 @@ use               LoKiAlgo          v* Phys
 use               fastjet           v* LCG_Interfaces -no_auto_imports 
 use               LHCbMath          v* Kernel 
 use               JetAccessories    v* Phys
-use               JetAccessoriesMC  v* Phys
-use               LoKiPhysMC        v* Phys
 use               DaVinciInterfaces v* Phys
 # NB is currently only supported on linux GCC
 macro use_NB_expert "neurobayes_expert v* LCG_Interfaces -no_auto_imports" ""
