@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-03 - Chris Jones
+ - Lower the gamma pt cut in the B2OC module from 1200MeV to 800MeV. It was 
+   previously increased to help with rententions in D* modes, but now with a 
+   better selection using a delta(m) cut, this is no longer neccesary.
+ - Add a B2OC 'liasion' test for for running over an MC sample.
+
 ! 2015-11-02 - Roberta Cardinale
 	- Fixed NBody-import issue for StrippingBnoC/StrippingB2pphh.py
 

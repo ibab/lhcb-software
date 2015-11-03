@@ -8,15 +8,8 @@ from Gaudi.Configuration import *
 from Configurables import DaVinci
 from StrippingConf.Configuration import StrippingConf, StrippingStream
 
-#
-#Raw event juggler to split Other/RawEvent into Velo/RawEvent and Tracker/RawEvent
-#
-from Configurables import RawEventJuggler
-juggler = RawEventJuggler( DataOnDemand=True, Input=0.3, Output=4.2 )
-
 # Specify the name of your configuration
 confname='Beauty2Charm' #FOR USERS
-
 
 # NOTE: this will work only if you inserted correctly the 
 # default_config dictionary in the code where your LineBuilder 
@@ -169,6 +162,12 @@ streams = [streamsel]
 ## Use this instead to run everything in the B2OC module
 #streams = streamall
 
+for stream in streams:
+    for line in stream.lines:
+        line._prescale = 1.0
+
+#streamsel.sequence().IgnoreFilterPassed = True # so that we get all events written out  
+
 leptonicMicroDSTname   = 'Leptonic'
 charmMicroDSTname      = 'Charm'
 pidMicroDSTname        = 'PID'
@@ -204,31 +203,12 @@ from DSTWriters.Configuration import ( SelDSTWriter,
                                        stripCalibMicroDSTStreamConf )
 
 #
-# Configuration of MicroDST
-# per-event an per-line selective writing of the raw event is active (selectiveRawEvent=True)
-#
-mdstStreamConf = stripMicroDSTStreamConf(pack=enablePacking, selectiveRawEvent=True)
-mdstElements   = stripMicroDSTElements(pack=enablePacking)
-
-#
 # Configuration of SelDSTWriter
 # per-event an per-line selective writing of the raw event is active (selectiveRawEvent=True)
 #
-SelDSTWriterElements = {
-    'default'               : stripDSTElements(pack=enablePacking),
-    charmMicroDSTname       : mdstElements,
-    leptonicMicroDSTname    : mdstElements,
-    pidMicroDSTname         : mdstElements,
-    bhadronMicroDSTname     : mdstElements
-    }
+SelDSTWriterElements = { 'default' : stripDSTElements(pack=enablePacking) }
 
-SelDSTWriterConf = {
-    'default'                : stripDSTStreamConf(pack=enablePacking, selectiveRawEvent=True),
-    charmMicroDSTname        : mdstStreamConf,
-    leptonicMicroDSTname     : mdstStreamConf,
-    bhadronMicroDSTname      : mdstStreamConf,
-    pidMicroDSTname          : stripCalibMicroDSTStreamConf(pack=enablePacking, selectiveRawEvent=True)
-    }
+SelDSTWriterConf = { 'default' : stripDSTStreamConf(pack=enablePacking,selectiveRawEvent=True) }
 
 dstWriter = SelDSTWriter( "MyDSTWriter",
                           StreamConf = SelDSTWriterConf,
@@ -253,7 +233,7 @@ TimingAuditor().TIMER.NameSize = 60
 from Configurables import AuditorSvc, ChronoAuditor
 AuditorSvc().Auditors.append( ChronoAuditor("Chrono") )
 
-pFreq = 10000
+pFreq = 1000
 DaVinci().EvtMax = -1
 DaVinci().PrintFreq = pFreq
 
@@ -269,7 +249,6 @@ DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
 #DaVinci().appendToMainSequence( [ ac ] )
 DaVinci().appendToMainSequence( [ dstWriter.sequence() ] )
-#if(len(mdstDstLines)>0): DaVinci().appendToMainSequence( [ mdstDstSeq ] )
 DaVinci().ProductionType = "Stripping"
 
 # change the column size of timing table
@@ -284,6 +263,20 @@ DaVinci().DDDBtag   = "dddb-20150724"
 DaVinci().CondDBtag = "cond-20150828"
 
 # input file
-DaVinci().DataType  = "2015"
-DaVinci().InputType = "RDST"
-#importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco15a_Run164668.py")
+DaVinci().DataType   = "2012"
+DaVinci().InputType  = "DST"
+DaVinci().Simulation = True
+
+#from Gaudi.Configuration import * 
+#from GaudiConf import IOHelper
+#IOHelper('ROOT').inputFiles(["PFN:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2012/ALLSTREAMS.DST/00046547/0000/00046547_00000017_2.AllStreams.dst"],clear=True)
+
+# 2012 mag Down
+#DaVinci().DDDBtag   = "Sim08-20130326-1"
+#DaVinci().CondDBtag = "Sim08-20130326-1-vc-md100"
+#importOptions("/usera/jonesc/MC-bc2dd-14195001-MagDown.py")
+
+# 2012 mag Up
+DaVinci().DDDBtag   = "Sim08-20130326-1"
+DaVinci().CondDBtag = "Sim08-20130326-1-vc-mu100"
+#importOptions("/usera/jonesc/MC-bc2dd-14195001-MagUp.py")

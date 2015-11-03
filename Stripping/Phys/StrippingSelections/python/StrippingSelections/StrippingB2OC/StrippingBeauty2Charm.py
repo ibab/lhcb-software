@@ -75,7 +75,7 @@ default_config ={
     'TIGHT_PT_MIN'  : '1000*MeV'
     },
     "gamma" : { # Cuts made on all photons
-    'PT_MIN'     : '1200*MeV',
+    'PT_MIN'     : '800*MeV',
     'CL_MIN'     : 0.25,
     'ISNOTE_MIN' : -999.0
     },
