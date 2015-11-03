@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-11-03 - Rosen Matev
+ - Commit HLT2 fix for protonArgon settings.
+
 ! 2015-10-29 - Roel Aaij
  - Add example for configuration of RelatedInfo.
 

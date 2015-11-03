@@ -89,6 +89,7 @@ class protonArgon_2015:
             'Hlt2PassThrough', 
             'Hlt2Lumi', 
             'Hlt2Transparent',
+            'Hlt2SMOGPhysics', 
             'Hlt2SMOGD02KPi',
             'Hlt2SMOGDpm2KPiPi',
             'Hlt2SMOGDs2KKPi',
@@ -257,9 +258,12 @@ class protonArgon_2015:
         from Hlt2Lines.Commissioning.Lines import CommissioningLines
         thresholds.update({
             CommissioningLines : {
-                'Prescale'  : { 'Hlt2PassThrough' : 1.0 },
+                'Prescale'  : { 'Hlt2PassThrough' : 1.0,
+                                'Hlt2SMOGPhysics' : 0.2},
                 'Postscale' : { 'Hlt2ErrorEvent'  : 'RATE(0.01)' },
-                'PassThrough' : { 'HLT1' : "HLT_PASS('Hlt1DiMuonHighMassDecision') | HLT_PASS_RE('Hlt1MB.*Decision') | HLT_PASS_RE('Hlt1L0B.*gasDecision')" }
+                'Transparent' : { 'HLT1' : "HLT_PASS_RE('^Hlt1(ODIN.*|L0.*|BeamGas.*|Velo.*|NZS.*|Incident|Tell1Error|ErrorEvent)Decision$')" },
+                'PassThrough' : { 'HLT1' : "HLT_PASS('Hlt1DiMuonHighMassDecision') | HLT_PASS('Hlt1MBMicroBiasLowMultVeloDecision') | HLT_PASS_RE('Hlt1L0B.*gasDecision') | HLT_PASS('Hlt1MBNoBiasLeadingCrossingDecision')" },
+                'SMOGPhysics' : { 'HLT1' : "HLT_PASS('Hlt1MBMicroBiasVeloDecision')"} ,
                 }
         })
         from GaudiKernel.SystemOfUnits import GeV, MeV, mm 
