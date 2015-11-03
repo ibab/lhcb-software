@@ -80,7 +80,7 @@ StatusCode MIFWriter::execute()    {
   //std::cout << "FID:" << dsn << " " << fid << endl;
         if ( i == m_fidMap.end() )   {
           MsgStream log(msgSvc(),name());
-          m_fidMap.insert(std::make_pair(fid,dsn));
+          m_fidMap.emplace(fid,dsn);
           MIFHeader* hdr = MIFHeader::create(memory, dsn, fid);
           if ( !m_ioMgr->write(m_connection, hdr, hdr->totalSize()).isSuccess() )  {
             log << MSG::ERROR << "Failed to write File record for " << dsn << endmsg;

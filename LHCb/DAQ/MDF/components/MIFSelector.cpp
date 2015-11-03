@@ -131,14 +131,14 @@ StatusCode MIFContext::connect(const std::string& spec)  {
   int fid = genChecksum(1,spec.c_str(),spec.length()+1);
   FidMap::iterator i = m_fidMap.find(fid);
   if ( i == m_fidMap.end() )  {
-    std::auto_ptr<IDataConnection> c(new RawDataConnection(m_sel,spec));
+    std::unique_ptr<IDataConnection> c(new RawDataConnection(m_sel,spec));
     StatusCode sc = m_ioMgr->connectRead(false,c.get());
     if ( sc.isSuccess() )  {
       MsgStream log(m_msg,"MIFSelector");
       log << MSG::ALWAYS << "Connected to:" << spec << " " << c->pfn() 
   /* << " " << fid */ 
     << endmsg;
-      m_fidMap.insert(std::make_pair(fid,c.release()));
+      m_fidMap.emplace(fid,c.release());
       m_mifFID = fid;
       return sc;
     }

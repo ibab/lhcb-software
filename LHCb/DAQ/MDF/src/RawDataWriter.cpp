@@ -180,23 +180,23 @@ RawDataFile* RawDataWriter::outputFile(unsigned int run_no, unsigned int orbit) 
       filePath.replace(idx,4,txt);
       idx = filePath.find("%RNO");
     }
-    auto_ptr<RawDataFile> f(new RawDataFile(m_ioMgr,this,filePath,m_genMD5,run_no,orbit));
+    std::unique_ptr<RawDataFile> f(new RawDataFile(m_ioMgr,this,filePath,m_genMD5,run_no,orbit));
     if ( f->open().isSuccess() )  {
       /// register file with run database
       if ( !submitRunDbOpenInfo(f.get(), false).isSuccess() )  {
         MsgStream log(msgSvc(), name());
         log << MSG::ERROR << "Failed to register file:" << filePath 
             << " with run database." << endmsg;
-        return 0;
+        return nullptr;
       }
-      m_connections.push_back(f.get());
-      return f.release();
+      m_connections.push_back(f.release());
+      return m_connections.back();
     }
   }
   else  {
     // This means the event is soooooo late that the file already was closed...
   }
-  return 0;
+  return nullptr;
 }
 
 // Submit information to register file to run database

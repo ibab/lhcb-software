@@ -162,7 +162,7 @@ StatusCode RawDataCnvSvc::connectOutput(CSTR outputFile,CSTR openMode)  {
     void* entry = openIO(outputFile, openMode);
     closeDisconnected();
     if ( entry ) {
-      m_fileMap.insert(make_pair(outputFile,entry));
+      m_fileMap.emplace(outputFile,entry);
       m_current = m_fileMap.find(outputFile);
       return StatusCode::SUCCESS;
     }
@@ -178,7 +178,7 @@ StatusCode RawDataCnvSvc::connectInput(CSTR fname, void*& iodesc)   {
     iodesc = openIO(fname, "READ");
     closeDisconnected();
     if ( iodesc ) {
-      m_fileMap.insert(make_pair(fname,iodesc));
+      m_fileMap.emplace(fname,iodesc);
       return StatusCode::SUCCESS;
     }
     return error("connectInput> FAILED to bind I/O channel:"+fname);
@@ -202,11 +202,11 @@ RawDataCnvSvc::createObj(IOpaqueAddress* pA, DataObject*& refpObj) {
         try {
           IRegistry* pReg = pA->registry();
           RawDataAddress* pAddRaw = dynamic_cast<RawDataAddress*>(pA);
-          refpObj = 0;
+          refpObj = nullptr;
           //if ( rand() < int(RAND_MAX*0.05) )
           //  return error("TEST: Triggered access failure for "+pReg->identifier());
           if ( pReg && pAddRaw ) {
-            auto_ptr<RawEvent> raw(new RawEvent());
+            std::unique_ptr<RawEvent> raw(new RawEvent());
             StatusCode sc  = StatusCode::FAILURE;
             int        typ = pAddRaw->type();
             // MBM input from event selector: banks already filled...
