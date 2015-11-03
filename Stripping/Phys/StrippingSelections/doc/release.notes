@@ -4,9 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-03 - Maurizio Martinelli
+ - Removed MINIPCHI2 cut on D candidates in CharmFromBSemi
+
 ! 2015-11-03 - Chris Jones
- - Lower the gamma pt cut in the B2OC module from 1200MeV to 800MeV. It was 
-   previously increased to help with rententions in D* modes, but now with a 
+ - Lower the gamma pt cut in the B2OC module from 1200MeV to 800MeV. It was
+   previously increased to help with rententions in D* modes, but now with a
    better selection using a delta(m) cut, this is no longer neccesary.
  - Add a B2OC 'liasion' test for for running over an MC sample.
 
@@ -16,7 +19,7 @@
 ! 2015-11-02 - Chris Jones
  - Chages to to the Bc->DD lines in the B2OC module.
   + Add missing Bc+ -> D+ D*0 modes
-  + Remove lines with K*'s as these had very poor rates and high overlap with 
+  + Remove lines with K*'s as these had very poor rates and high overlap with
     other modes
   + Change D->KHH to D->HHH to pick up the 3pi mode
   + Improvements to the cuts for D* candidates, adding a delta(M) cut and thus
@@ -24,7 +27,7 @@
   + Add D->HHpi0 modes, with tigher pt>1GeV cut on the pi0.
 
 ! 2015-10-31 - Zhang Liming
- - Change StrippingLb2EtacKp selection 
+ - Change StrippingLb2EtacKp selection
 
 ! 2015-10-30 - Adlene Hicheur
  - Fixed new cone variables format for StrippingBnoC/StrippingBu2hhh.py
@@ -54,7 +57,7 @@
 
 ! 2015-10-26 - Tom Hadavizadeh
  - Added a Line to StrippingD2PiPi0
- 
+
 ! 2015-10-25 - Zhang Liming
  - Add StrippingLb2EtacKp to BandQ
  - Add StrippingB2JpsiHH to B2CC
@@ -75,9 +78,9 @@
 
 ! 2015-10-05 - Vanya Belyaev
 
- - StrippingPromptCharm:        
+ - StrippingPromptCharm:
    release chi2_IP cut for Lambda_c->pKpi and Lambda_c->pKK to 400
-   
+
 ! 2015-09-28 - Marco Gersabeck
  - Changed StrippingDstarD2KShh.py to CharmCompleteEvent
 
@@ -129,9 +132,9 @@
  - Modified StrippingRareStrange configuration
 
 ! 2015-09-07 - Mirco Dorigo
- - Added StrippingD2hhh_FTcalib.py in StrippingSelections/StrippingCharm for SSK calibrations 
+ - Added StrippingD2hhh_FTcalib.py in StrippingSelections/StrippingCharm for SSK calibrations
 
-! 2015-09-06 - Erica Polycarpo 
+! 2015-09-06 - Erica Polycarpo
  - Added RelatedInfo for isolationg including neutrals to D2hhh_conf lines
 
 ! 2015-09-02 - Andrea Contu
@@ -148,10 +151,10 @@
 
 ! 2015-09-01 - Maurizio Martinelli
  - Added an IPChi2 cut to the D candidates in B2DDphi stripping lines to reduce
-   background, retention and candidates multiplicity 
+   background, retention and candidates multiplicity
 
 ! 2015-08-28 - Chris Jones
- - Extend the mass window for the Bc2DD lines to 4.8 - 6.8 GeV, to cover the 
+ - Extend the mass window for the Bc2DD lines to 4.8 - 6.8 GeV, to cover the
    B+ control modes.
 
 !========================== StrippingSelections v4r6 2015-08-26 ===============
@@ -175,21 +178,21 @@
  - Propagate commits in StrippingArchive to fix hlt issues
 
 ! 2015-08-17 - Roberta Cardinale
- - Changed public OfflineVertexFitter in StrippingBandQ/StrippingChiCJPsiGammaConv.py 
+ - Changed public OfflineVertexFitter in StrippingBandQ/StrippingChiCJPsiGammaConv.py
 
 ! 2015-08-17 - Andrea Contu
  - Bugfix to StrippingMiniBias
 
 ! 2015-08-17 - Vanya Belyaev
- - StrippingUpsilonExotic 
+ - StrippingUpsilonExotic
    - fix a bug in proton-selection
-   - adjust a bit selection cuts 
+   - adjust a bit selection cuts
 
 ! 2015-08-15 - Ramon Niet
  - Replaced hardcoded cuts in Bd2JpsieeKS module
 
 ! 2015-08-15 - Ramon Niet
- - Tightened selection in Bd2JpsieeKstar lines to reduce multiplicities 
+ - Tightened selection in Bd2JpsieeKstar lines to reduce multiplicities
 
 ! 2015-08-14 - Albert Puig
  - Use public instance of ParticleCombiners in Radiative lines in RD
@@ -211,7 +214,7 @@
  - Fix bug in StrippingCharm/StrippingPromptCharm.py
 
 ! 2015-08-04 - Vanya Belyaev
- - StrippingBc3h:  replace HLT with HLT1 and HLT2 
+ - StrippingBc3h:  replace HLT with HLT1 and HLT2
 
 ! 2015-08-04 - Chris Jones
  - Implement a more sensible input selection for the D builders in B2OC module.
@@ -251,7 +254,7 @@
    to implementations not using SubPID, to avoid hitting max combination limits.
 
 ! 2015-08-01 - Chris Jones
- - Improve the new implementations for HHH, HHHH, HHHPi0, HHPi0, KsPi0HH such 
+ - Improve the new implementations for HHH, HHHH, HHHPi0, HHPi0, KsPi0HH such
    that SubPID is still used, for speed, but mulitple SubPID instances are used
    to avoid max combination limits.
 
@@ -269,7 +272,7 @@
  - Additional updates to TrackEffDownMuon
 
 ! 2015-07-31 - Greg Ciezarek
- - Updates to: 
+ - Updates to:
    -StrippingB2XTauNu.py
    -StrippingB2DMuForTauMu.py
    -StrippingLb2pMuNuVub.py
@@ -290,24 +293,24 @@
  - Updated default config for StrippingBnoC/StrippingB2pphh.py for S23 tuning
 
 ! 2015-07-31 - Stefano Perazzini
- - Modified default_config for StrippingB2KShh.py and StrippingLb2V0hh.py 
+ - Modified default_config for StrippingB2KShh.py and StrippingLb2V0hh.py
    in BnoC directory to cope with new names of HltLines.
 
 ! 2015-07-31 - Stefano Perazzini
- - Added two tests for BnoC WG tests/liaisons/BnoC/TestBnoCfromSelections.py 
+ - Added two tests for BnoC WG tests/liaisons/BnoC/TestBnoCfromSelections.py
    tests/liaisons/BnoC/TestBnoCfromSettings.py
 
 ! 2015-07-31 - Roberta Cardinale
  - Updated StrippingBandQ/StrippingXic2HHH.py
 
 ! 2015-07-30 - Maurizio Martinelli
- - Updated dictionary in 
+ - Updated dictionary in
    . StrippingCharm/StrippingD2HHHKs.py
    . StrippingCharm/StrippingDstarD2XGamma.py
    . StrippingCharm/StrippingD2HHHPi0.py
 
-! 2015-07-30 - Erica Polycarpo 
- - Updated dictionary in StrippingCharm/StrippingD2hhh_conf.py 
+! 2015-07-30 - Erica Polycarpo
+ - Updated dictionary in StrippingCharm/StrippingD2hhh_conf.py
 
 ! 2015-07-30 - Michael Kolpin
  - Fixed bug in StrippingTrackEffDownMuon, which affected all best tracks for events
@@ -317,7 +320,7 @@
  - Updated StrippingRD/StrippingPhiToKSKS.py for S23 tuning.
 
 ! 2015-07-30 - Chris Jones
- - Increase min Pt cut for gammas in B2OC module from 400 to 1600 MeV. 
+ - Increase min Pt cut for gammas in B2OC module from 400 to 1600 MeV.
    (400MeV was in fact a bug, only intended for testing but left in by mistake)
  - Add option to filter gammas using IsNotE variable. Not enabled by default.
 
@@ -343,7 +346,7 @@
 ! 2015-07-30 - Stefano Perazzini
  - Updated StrippingB2HHBDT.py
 
-! 2015-07-29 - Simone Stracka 
+! 2015-07-29 - Simone Stracka
  - Updated Hlt2 filters and prescales for StrippingD2PiPi0.py
 
 ! 2015-07-29 - Chris Jones
@@ -361,7 +364,7 @@
 
 ! 2015-07-29 - Chris Jones
  - Update BcDD builder in B2OC
-  - Use KHHH and KHH final states instead of HHHH and HHH (i.e. demand at least 
+  - Use KHHH and KHH final states instead of HHHH and HHH (i.e. demand at least
     one kaon) to help with retention and timing.
   - Do not use a MergedSelection when the selection list one has one entry...
 
@@ -395,7 +398,7 @@
  - Added default settings for LoKi::PVRrefitter in test scripts
 
 ! 2015-07-21 - Federico Redi
- - In StrippingRD/StrippingB2Lambda0MuLines.py added DD candidates, 
+ - In StrippingRD/StrippingB2Lambda0MuLines.py added DD candidates,
    Rate: 0.055 %; Timing: 0.045 ms/evt.
 
 ! 2015-07-21 - Michael Kolpin
