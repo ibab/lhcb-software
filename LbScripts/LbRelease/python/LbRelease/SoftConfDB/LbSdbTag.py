@@ -69,7 +69,7 @@ class LbSdbTag(Script):
 
 
 if __name__=='__main__':
-    sUsage = """%prog [-r] project
+    sUsage = """%prog [-r] project version tag
     Sets the flag indicating which buildtool is used for the build"""
     s = LbSdbTag(usage=sUsage)
     sys.exit(s.run())
