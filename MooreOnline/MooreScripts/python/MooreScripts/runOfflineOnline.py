@@ -4,11 +4,6 @@ import os
 def configure(**kwargs) :
     # Add some expected stuff to OnlineEnv
     import OnlineEnv
-    OnlineEnv.MooreStartupMode = 1 # 1 is forking
-    OnlineEnv.TAE = 0
-    OnlineEnv.PartitionID = 0
-    OnlineEnv.PartitionIDName = "0000"
-    OnlineEnv.PartitionName = kwargs.pop('PartitionName')
     from Gaudi.Configuration import INFO, WARNING
     output_level = kwargs.pop('OutputLevel', WARNING)
     OnlineEnv.OutputLevel = output_level

@@ -4,6 +4,9 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+! 2015-11-03 - Roel Aaij
+ - Fix runOfflineOnline with changes in latest PRConfig.
+
 !========================= MooreScripts v1r12p2 2015-10-08 =========================
 
 ! 2015-09-30 - Sascha Stahl
