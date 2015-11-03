@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2015-11-03 - Gerhard Raven
+ - add deprecation warning to LoKi::select and LoKi::transform
+
 ! 2015-11-01 - Gerhard Raven
  - augment LoKi::Interface so that it supports the same semantics as 
    regular smartpointers, i.e. add explicit operator bool and get

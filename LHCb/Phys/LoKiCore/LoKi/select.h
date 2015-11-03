@@ -1,5 +1,3 @@
-// $Id$
-// ============================================================================
 #ifndef LOKI_SELECT_H 
 #define LOKI_SELECT_H 1
 // ============================================================================
@@ -36,7 +34,9 @@ namespace LoKi
    *  @date   2002-07-24   
    */
   template<class INPUT , class OUTPUT , class CUT>
-  inline OUTPUT select( INPUT      begin , 
+  inline OUTPUT 
+  __attribute__((deprecated("please replace LoKi::select with std::copy_if; you may have to wrap std::cref around your predicate")))
+                select( INPUT      begin , 
                         INPUT      end   ,
                         OUTPUT     out   ,
                         const CUT& cut   )
@@ -46,7 +46,7 @@ namespace LoKi
     return out ;
   } 
   // ==========================================================================
-  /** helpful utility to transfortm objects from the container
+  /** helpful utility to transform objects from one container
    *  to another container. 
    *
    *  @param begin begin iterator from the sequence to be copied 
@@ -59,7 +59,9 @@ namespace LoKi
    *  @date   2010-11-23   
    */
   template<class INPUT , class OUTPUT , class FUN>
-  inline OUTPUT transform 
+  inline OUTPUT 
+  __attribute__((deprecated("please replace LoKi::transform with std::transform; you may have to wrap std::cref around your predicate")))
+  transform 
   ( INPUT      begin , 
     INPUT      end   ,
     OUTPUT     out   ,
