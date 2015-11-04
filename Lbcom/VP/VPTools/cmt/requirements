@@ -14,7 +14,10 @@ include_path none
 #=====================================================================
 
 use  LHCbTrackInterfaces v*  Tr
+use  MCEvent             v*  Event
 use  DigiEvent           v*  Event
+use  PhysEvent           v*  Event
+use  LinkerEvent         v*  Event
 use  VPDet               v*  Det
 use  GaudiAlg            v*  
 use  GaudiGSL            v*   

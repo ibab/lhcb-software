@@ -4,6 +4,10 @@
 ! Purpose     : Tools used in VP reconstruction
 !--------------------------------------------------------------------------
 
+!========================= VPTools v2r5p2 2015-10-12 =========================
+! 2015-11-04 - Christoph Hombach
+	- Added VPTrackTool - Tool to analyse track properties like chi2, residuals, etc.
+
 !========================= VPTools v2r5p1 2015-10-12 =========================
 ! 2015-08-04 - Gerhard Raven
  - remove #include of obsolete Gaudi headers        
