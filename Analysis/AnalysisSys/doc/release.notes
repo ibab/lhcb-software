@@ -3,6 +3,8 @@ Package             : AnalysisSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb analysis packages
 
+! 2015-11-04 - Eduardo Rodrigues
+ - Removed package Phys/JetTagging from this project and moved it to Phys.
 
 </PRE><H1><A NAME=v14r2>2015-10-24 Analysis v14r2</A></H1><PRE>
 
