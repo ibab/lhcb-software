@@ -45,5 +45,6 @@ gaudi_depends_on_subdirs(Kernel/SelectionLine
                          Phys/VertexFit
                          Phys/FlavourTagging
                          Phys/JetAccessories
+                         Phys/JetTagging
                          Phys/MVADictTools
                          PhysSel/PhysSelPython)

@@ -3,6 +3,9 @@ Package             : PhysSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics packages
 
+! 2015-11-04 - Eduardo Rodrigues
+ - Package Phys/JetTagging moved from the Analysis to this (Phys) project.
+
 </PRE><H1><A NAME=v20r2>2015-10-23 Phys v20r2</A></H1><PRE>
 Development release for 2016 data taking, based on Gaudi v26r4, LHCb v39r1 and Rec v18r2.
 Uses LCG_79 with ROOT 6.04.02.

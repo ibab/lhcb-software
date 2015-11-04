@@ -70,6 +70,7 @@ use FlavourTagging              v14r1    Phys   # Flavour tagging coordinators
 #===================================================================
 
 use JetAccessories              v3r14    Phys   # Victor Coco, Cedric Potterat
+use JetTagging                  v1r8     Phys   # Cedric Potterat
 
 #===================================================================
 
