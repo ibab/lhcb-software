@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-04 - Pieter David
+ - Update RelatedInfoTool configuration in StrippingQEE/StrippingDisplVertices.py
+
 ! 2015-11-03 - Jianchun Wang
  - Fix RelatedInfoTool in StrippingRD/StrippingBs2st2KKMuX.py
 

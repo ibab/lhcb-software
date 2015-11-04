@@ -2,8 +2,12 @@
 Configuration for the Exotic Displaced Vertex Stripping lines
 """
 
-__author__ = ['Neal Gauvin', 'Victor Coco', "Veerle Heijne", "Pieter David"]
-__date__   = '28/08/2014'
+__author__ = [ "Pieter David <pieter.david@cern.ch>"
+             ## previously:
+             , "Victor Coco"
+             , "Veerle Heijne"
+             , "Neal Gauvin" ]
+__date__   = "04/11/2015"
 
 __all__ = ( 'DisplVerticesLinesConf', 'default_config' )
 
@@ -642,7 +646,7 @@ class DisplVerticesLinesConf(LineBuilder):
                      , prescale  = self.validatedGetProps(lSelName, ["PreScale"])["PreScale"]
                      , selection = lineSel
                      , RequiredRawEvents = [ "Calo" ]
-                     , RelatedInfoTools = [ { "Type" : "AddVeloEventShapeS21", "RecursionLevel" : 0, "TopSelection" : lineSel, "Location" : "P2VES" } ]
+                     , RelatedInfoTools = [ { "Type" : "AddVeloEventShapeS21", "TopSelection" : lineSel, "Location" : "P2VES" } ]
                      )
             if lShortName in self.configurationParameter("HLT"):
                 line.HLT2 = self.configurationParameter("HLT")[lShortName]
@@ -707,7 +711,7 @@ class DisplVerticesLinesConf(LineBuilder):
                      , prescale  = self.validatedGetProps(lSelName, ["PreScale"])["PreScale"]
                      , selection = lineSel
                      , RequiredRawEvents = [ "Calo" ]
-                     , RelatedInfoTools = [ { "Type" : "AddVeloEventShapeS21", "RecursionLevel" : 0, "TopSelection" : lineSel, "Location" : "P2VES" } ]
+                     , RelatedInfoTools = [ { "Type" : "AddVeloEventShapeS21", "TopSelection" : lineSel, "Location" : "P2VES" } ]
                      )
             if lShortName in self.configurationParameter("HLT"):
                 line.HLT2 = self.configurationParameter("HLT")[lShortName]
@@ -754,7 +758,7 @@ class DisplVerticesLinesConf(LineBuilder):
                      , prescale  = self.validatedGetProps(lSelName, ["PreScale"])["PreScale"]
                      , selection = lineSel
                      , RequiredRawEvents = [ "Calo" ]
-                     , RelatedInfoTools = [ { "Type" : "AddVeloEventShapeS21", "RecursionLevel" : 0, "TopSelection" : lineSel, "Location" : "P2VES" } ]
+                     , RelatedInfoTools = [ { "Type" : "AddVeloEventShapeS21", "TopSelection" : lineSel, "Location" : "P2VES" } ]
                      )
             if lShortName in self.configurationParameter("HLT"):
                 line.HLT2 = self.configurationParameter("HLT")[lShortName]
@@ -792,7 +796,7 @@ class DisplVerticesLinesConf(LineBuilder):
                      , prescale  = self.validatedGetProps(lSelName, ["PreScale"])["PreScale"]
                      , selection = lineSel
                      , RequiredRawEvents = [  "Calo" ]
-                     , RelatedInfoTools = [ { "Type" : "AddVeloEventShapeS21", "RecursionLevel" : 0, "TopSelection" : lineSel, "Location" : "P2VES" } ]
+                     , RelatedInfoTools = [ { "Type" : "AddVeloEventShapeS21", "TopSelection" : lineSel, "Location" : "P2VES" } ]
                      )
             if lShortName in self.configurationParameter("HLT"):
                 line.HLT2 = self.configurationParameter("HLT")[lShortName]
@@ -860,7 +864,7 @@ class DisplVerticesLinesConf(LineBuilder):
                      , HLT2      = self.configurationParameter("HLT")[lShortName]
                      , selection = lineSel
                      , RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"]
-                     , RelatedInfoTools = [ { "Type" : "AddVeloEventShapeS21", "RecursionLevel" : 0, "TopSelection" : lineSel, "Location" : "P2VES" } ]
+                     , RelatedInfoTools = [ { "Type" : "AddVeloEventShapeS21", "TopSelection" : lineSel, "Location" : "P2VES" } ]
                      )
 
             self.registerLine(line)
