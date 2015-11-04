@@ -4,9 +4,12 @@
 ! Purpose     : Tools used in VP reconstruction
 !--------------------------------------------------------------------------
 
-!========================= VPTools v2r5p2 2015-10-12 =========================
+! 2015-11-04 - Heinrich Schindler
+ - Remove unnecessary includes. Protect debug output.
+
 ! 2015-11-04 - Christoph Hombach
-	- Added VPTrackTool - Tool to analyse track properties like chi2, residuals, etc.
+ - Added VPTrackMoni algorithm to analyse track properties 
+   like chi2, residuals, etc.
 
 !========================= VPTools v2r5p1 2015-10-12 =========================
 ! 2015-08-04 - Gerhard Raven

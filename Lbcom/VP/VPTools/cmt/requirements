@@ -18,10 +18,10 @@ use  MCEvent             v*  Event
 use  DigiEvent           v*  Event
 use  PhysEvent           v*  Event
 use  LinkerEvent         v*  Event
+use  TrackEvent          v*  Event
 use  VPDet               v*  Det
 use  GaudiAlg            v*  
 use  GaudiGSL            v*   
-use  TrackEvent          v*  Event
 
 # Component library building rule
 #=====================================================================

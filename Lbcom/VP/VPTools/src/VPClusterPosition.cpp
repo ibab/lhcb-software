@@ -21,7 +21,7 @@ DECLARE_TOOL_FACTORY(VPClusterPosition)
 VPClusterPosition::VPClusterPosition(const std::string& type,
                                      const std::string& name,
                                      const IInterface* parent)
-    : GaudiTool(type, name, parent), m_det(NULL) {
+    : GaudiTool(type, name, parent), m_det(nullptr) {
 
   declareInterface<IVPClusterPosition>(this);
 
@@ -46,7 +46,11 @@ StatusCode VPClusterPosition::initialize() {
 
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;
-  m_det = getDet<DeVP>(DeVPLocation::Default);
+  m_det = getDetIfExists<DeVP>(DeVPLocation::Default);
+  if (!m_det) {
+    return Error("No detector element at " + DeVPLocation::Default);
+  }
+
   // Store the rotations of each sensor.
   const unsigned int nSensors = m_det->numberSensors();
   m_c2.resize(nSensors, 1.);

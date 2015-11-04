@@ -1,20 +1,10 @@
-// Include files 
+#include <boost/foreach.hpp>
 
- // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
-// local
+// LHCb
+#include "Event/Node.h"
+// Local
 #include "VPTrackMoni.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : VPTrackMoni
-//
-// 2015-01-08 : Christoph Hombach
-//-----------------------------------------------------------------------------
-
-
-
-// Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( VPTrackMoni )
 
 using namespace Gaudi;
@@ -132,20 +122,9 @@ StatusCode VPTrackMoni::execute() {
 }
 
 //=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode VPTrackMoni::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiTupleAlg::finalize();  // must be called after all other actions
-}
-
-//=============================================================================
 
 XYZPoint VPTrackMoni::getResidual(const LHCb::Track* track,const DeVPSensor* sens, XYZPoint hit)
 {
-  debug() << "In getResidual" << endmsg;
   XYZPoint p_e_loc(0., 0., 0.);
   XYZPoint   n_loc(0., 0., 1.);
   XYZPoint p_e = sens->localToGlobal( p_e_loc );
@@ -155,10 +134,11 @@ XYZPoint VPTrackMoni::getResidual(const LHCb::Track* track,const DeVPSensor* sen
   
   XYZVector slope = track->slopes();
   XYZPoint p_T    = track->position();
-  
-  debug() << "p_e: " << p_e.x() << " " << p_e.y() << " " << p_e.z() << endmsg;
-  debug() << "n: " << n_x << " " << n_y << " " << n_z << endmsg;
-
+ 
+  if (msgLevel(MSG::DEBUG)) { 
+    debug() << "p_e: " << p_e.x() << " " << p_e.y() << " " << p_e.z() << endmsg;
+    debug() << "n: " << n_x << " " << n_y << " " << n_z << endmsg;
+  }
   double sl_n   = n_x*slope.x()+n_y*slope.y()+n_z*slope.z();
   double p_eT_n = n_x*(p_e.x()-p_T.x())+n_y*(p_e.y()-p_T.y())+n_z*(p_e.z()-p_T.z());
   double inter_x = p_T.x()+p_eT_n/sl_n*slope.x();
@@ -166,9 +146,10 @@ XYZPoint VPTrackMoni::getResidual(const LHCb::Track* track,const DeVPSensor* sen
   double inter_z = p_T.z()+p_eT_n/sl_n*slope.z();
   
   XYZPoint inter(inter_x, inter_y, inter_z);  
-  debug() << "inter: " << inter_x << " " << inter_y << " " << inter_z << endmsg;
-  debug() << "hit:   " << hit.x() << " " << hit.y() << " " <<hit.z();
-  
+  if (msgLevel(MSG::DEBUG)) { 
+    debug() << "inter: " << inter_x << " " << inter_y << " " << inter_z << endmsg;
+    debug() << "hit:   " << hit.x() << " " << hit.y() << " " <<hit.z();
+  }
   XYZPoint residual(inter.x()-hit.x(),inter.y()-hit.y(),inter.z()-hit.z());
   return residual;
   
