@@ -5,9 +5,12 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-11-04 - Roel Aaij
+ - Swap IsMuon and TrackFit and the SharedMuonUnit to prevent tracks from being
+   fitted again. They have already been fitted for other lines.
+
 ! 2015-10-26 - Sascha Stahl
  - Hlt1GEC: The GEC cut for OT hits is now steered by a configurable option.
-
 
 ! 2015-10-23 - Dan Johnson
  - Remove Hlt1NoPVPassThrough from Hlt1MuonLines

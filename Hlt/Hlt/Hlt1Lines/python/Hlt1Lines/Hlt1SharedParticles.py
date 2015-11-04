@@ -94,11 +94,11 @@ class Hlt1SharedParticles(HltLinesConfigurableUser):
 
         code = """
         TrackCandidates
-        >>  IsMuon
         >>  tee ( monitor( TC_SIZE > 0, '# pass IsMuon', LoKi.Monitoring.ContextSvc ) )
         >>  FitTrack
         >>  ( ( TrPT > %(PT)s * MeV ) & \
               ( TrP  > %(P)s  * MeV ) )
+        >>  IsMuon
         >>  tee ( monitor( TC_SIZE > 0, '# pass Cuts', LoKi.Monitoring.ContextSvc ) )
         >>  tee ( monitor( TC_SIZE > 0, '# pass IsMuon', LoKi.Monitoring.ContextSvc ) )
         >>  TC_TOPROTOPARTICLES( '' )

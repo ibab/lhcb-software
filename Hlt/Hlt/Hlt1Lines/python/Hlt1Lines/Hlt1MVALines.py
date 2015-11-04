@@ -193,14 +193,13 @@ class Hlt1MVALinesConf( HltLinesConfigurableUser ) :
         algos = [ unit for unit in streamer( name, self.localise_props( name ), inputParticles ) ]
         priorities = self.getProp( "Priorities" )
         priority = priorities[ name ] if name in priorities else None
-        line = Hlt1Line(
-            name,
-            prescale  = self.prescale,
-            postscale = self.postscale,
-            priority  = priority,
-            ODIN = self.__odin(name),
-            L0DU = self.__l0du(name),
-            algos = algos)
+        line = Hlt1Line(name,
+                        prescale  = self.prescale,
+                        postscale = self.postscale,
+                        priority  = priority,
+                        ODIN = self.__odin(name),
+                        L0DU = self.__l0du(name),
+                        algos = algos)
 
     def mvaPreambulo(self):
         return ["import math"]
