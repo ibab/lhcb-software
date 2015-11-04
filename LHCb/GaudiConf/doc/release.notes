@@ -3,6 +3,10 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2015-11-04 - Marco Cattaneo
+ - LHCbExclusions.py: add temporary exclusions for printout of new Algorithm
+   properties introduced by GaudiHive merge
+
 ! 2015-11-02 - Wouter Hulsbergen
  - Added flag 'PVPersistence' to DstConf to steer between old/new PV persistence.
 

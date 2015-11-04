@@ -29,4 +29,10 @@ preprocessor = normalizeExamples + \
     LineSkipper(["INFO  'CnvServices':"]) + \
     LineSkipper(["DEBUG Property ['Name': Value] =  'ErrorCount"]) + \
     LineSkipper(["DEBUG Property ['Name': Value] =  'RootOnTES':"]) + \
+    LineSkipper(["VERBOSE ServiceLocatorHelper::service: found service"]) + \
+    LineSkipper(["DEBUG Property ['Name': Value] =  'NeededResources':[  ]"]) + \
+    LineSkipper(["DEBUG Property ['Name': Value] =  'Cardinality':1"]) + \
+    LineSkipper(["DEBUG Property ['Name': Value] =  'IsClonable':False"]) + \
+    LineSkipper(["DEBUG Property ['Name': Value] =  'DataOutputs':"]) + \
+    LineSkipper(["DEBUG Property ['Name': Value] =  'DataInputs':"]) + \
     LineSkipper(["#properties ="])
