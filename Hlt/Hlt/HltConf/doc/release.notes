@@ -4,6 +4,11 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-11-04 - Roel Aaij
+ - Fix configuration of Hlt2SelReportsMaker.
+ - Move configuration of LoKi::HltFactories into Configuration.py to ensure
+   they are also configured when running with Split = 'Hlt2'.
+ 
 ! 2015-10-29 - Roel Aaij
  - Adapt to split of HltSelReportsMaker into separate version
    for HLT1 and HLT2.

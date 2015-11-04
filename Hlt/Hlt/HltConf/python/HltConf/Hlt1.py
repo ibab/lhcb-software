@@ -38,41 +38,6 @@ class Hlt1Conf(LHCbConfigurableUser):
 #
 #
    def __apply_configuration__(self):
-      ## Add correct modules to factories.
-      from itertools import product
-      import HltTracking.Hlt1Tracking
-      from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
-      from Configurables import LoKi__Hybrid__Tool as HybridFactory
-      from Configurables import LoKi__Hybrid__HltFactory as HltFactory
-      modules = ["LoKiCore.decorators",
-                 "LoKiTrigger.decorators",
-                 "LoKiNumbers.decorators",
-                 'LoKiNumbers.sources',
-                 "LoKiCore.functions",
-                 "LoKiCore.math",
-                 "LoKiHlt.algorithms"]
-      extra_modules = ["LoKiArrayFunctors.decorators",
-                       "LoKiPhys.decorators",
-                       "LoKiTracks.decorators"]
-
-      for factories, mods in {(HltFactory(),
-                               HltFactory("HltFactory"),
-                               HltFactory("Hlt1HltFactory"),
-                               HltFactory("Hlt2HltFactory")) :
-                              modules,
-                              (CoreFactory("Hlt1Factory"),
-                               CoreFactory("Hlt1CoreFactory"),
-                               CoreFactory("Hlt2CoreFactory"),
-                               HybridFactory("Hlt1HybridFactory"),
-                               HybridFactory("Hlt2HybridFactory")) :
-                              modules + extra_modules}.iteritems():
-         for factory in factories:
-            for module in mods:
-               if not module in factory.Modules:
-                  factory.Modules.append(module)
-                  factory.Lines += ["from GaudiKernel.SystemOfUnits import GeV, MeV, mm",
-                                    "import HltTracking.Hlt1StreamerConf"]
-
       ## Apply ThresholdSettings to HLT1 lines configurables
       from ThresholdUtils import setThresholds
       from functools import partial

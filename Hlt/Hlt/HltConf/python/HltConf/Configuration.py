@@ -139,6 +139,41 @@ class HltConf(LHCbConfigurableUser):
         from HltConf.ThresholdUtils import Name2Threshold
         return Name2Threshold(name)
 
+    def configureFactories(self):
+        ## Add correct modules to factories.
+        from itertools import product
+        import HltTracking.Hlt1Tracking
+        from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
+        from Configurables import LoKi__Hybrid__Tool as HybridFactory
+        from Configurables import LoKi__Hybrid__HltFactory as HltFactory
+        modules = ["LoKiCore.decorators",
+                   "LoKiTrigger.decorators",
+                   "LoKiNumbers.decorators",
+                   'LoKiNumbers.sources',
+                   "LoKiCore.functions",
+                   "LoKiCore.math",
+                   "LoKiHlt.algorithms"]
+        extra_modules = ["LoKiArrayFunctors.decorators",
+                         "LoKiPhys.decorators",
+                         "LoKiTracks.decorators"]
+
+        for factories, mods in {(HltFactory(),
+                                 HltFactory("HltFactory"),
+                                 HltFactory("Hlt1HltFactory"),
+                                 HltFactory("Hlt2HltFactory")) :
+                                modules,
+                                (CoreFactory("Hlt1Factory"),
+                                 CoreFactory("Hlt1CoreFactory"),
+                                 CoreFactory("Hlt2CoreFactory"),
+                                 HybridFactory("Hlt1HybridFactory"),
+                                 HybridFactory("Hlt2HybridFactory")) :
+                                modules + extra_modules}.iteritems():
+             for factory, module in product(factories, mods):
+                 if not module in factory.Modules:
+                     factory.Modules.append(module)
+                     factory.Lines += ["from GaudiKernel.SystemOfUnits import GeV, MeV, mm",
+                                       "import HltTracking.Hlt1StreamerConf"]
+    
     def confType(self) :
         """
         Decoding of configuration. This is where Hlt1 and 2 configurations are called.
@@ -394,7 +429,7 @@ class HltConf(LHCbConfigurableUser):
 
         ## do not write out the candidates for the vertices we store
         from Configurables import Hlt1SelReportsMaker, Hlt2SelReportsMaker
-        configs = {'Hlt1' : Hlt1SelReportsMaker, 'Hlt2' : Hlt1SelReportsMaker}
+        configs = {'Hlt1' : Hlt1SelReportsMaker, 'Hlt2' : Hlt2SelReportsMaker}
         selMaker = configs[stage](stage + "SelReportsMaker")
         selMaker.SelectionMaxCandidates.update( dict( [ (i, 0) for i in vertices if i.endswith('Decision') ] ) )
 
@@ -719,6 +754,7 @@ class HltConf(LHCbConfigurableUser):
         GaudiKernel.ProcessJobOptions.PrintOff()
         import HltConf.HltInit  # make sure ANN numbers are assigned...
 
+        self.configureFactories()
         self.confType()
         self.endSequence()
         self.configureRoutingBits()
