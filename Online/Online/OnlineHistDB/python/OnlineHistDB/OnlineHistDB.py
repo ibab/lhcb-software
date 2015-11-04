@@ -49,11 +49,14 @@ class OnlineHistDB(object):
 
     def histogram_for_id(self, hid):
         """Return the OnlineHistogram with the given histogram ID."""
+        # getHistogram is from the OnlineHistogramStorage class, which is
+        # declared in the OnlineHistogram header, from which the OnlineHistDB
+        # C++ class inherits
         return OnlineHistogram(self._hdb.getHistogram(StdString(hid)), self)
 
     def page(self, page_path):
         """Return the OnlineHistPage object for the given path."""
-        ohp = self._hdb.getPage(page_path)
+        ohp = self._hdb.getPage(StdString(page_path))
         ohp.load()
         return ohp
 

@@ -6,6 +6,9 @@
 ! or using makedoc script in this folder
 !
 
+! 2015-11-04 - Alex Pearce
+- Better separation between histograms and visible histogram objects
+
 ! 2015-10-23 - Alex Pearce
 - Added Python interface to OnlineHistogramDB and
   OnlineHistogram as part of the effort on the new
