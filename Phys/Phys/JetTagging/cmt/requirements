@@ -1,0 +1,52 @@
+# =============================================================================
+# Created    : 2013-02-07
+# Maintainer : Cedric Potterat cedric.potterat@cern.ch Victor Coco victor.coco@cern.ch
+# =============================================================================
+package           JetTagging
+version           v1r9
+
+# =============== structure ===================================================
+branches          cmt doc python src Kernel dict
+
+# =============== dependencies ================================================ 
+use               LoKiJets          v* Phys 
+use               LoKiAlgo          v* Phys 
+use               fastjet           v* LCG_Interfaces -no_auto_imports 
+use               LHCbMath          v* Kernel 
+use               JetAccessories    v* Phys
+use               DaVinciInterfaces v* Phys
+# NB is currently only supported on linux GCC
+macro use_NB_expert "neurobayes_expert v* LCG_Interfaces -no_auto_imports" ""
+use $(use_NB_expert)
+private
+use               ROOT              v* LCG_Interfaces
+macro_append      ROOT_linkopts        " -lTMVA -lPhysics"
+end_private
+
+# =============== exported include directories ================================
+include_path      none
+
+#apply_pattern
+apply_pattern install_python_modules 
+apply_pattern install_more_includes more=Kernel
+# =============== constituents ================================================
+library           JetTagging -import=neurobayes_expert -import=fastjet ../src/*.cpp 
+
+# =============== standard patterns ===========================================
+apply_pattern     component_library library=JetTagging
+private
+macro_append      JetTagging_cppflags "" \
+                           target-gcc " -Wno-variadic-macros "
+end_private
+
+apply_pattern install_python_modules 
+
+apply_pattern reflex_dictionary                                             \
+              dictionary=JetTagging                                        \
+              headerfiles=$(JETTAGGINGROOT)/dict/JetTaggingInterface.h         \
+              selectionfile=$(JETTAGGINGROOT)/dict/JetTaggingInterface.xml     \
+              options="-U__MINGW32__"
+
+# =============================================================================
+# The END 
+# =============================================================================
