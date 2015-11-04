@@ -1440,14 +1440,24 @@ class Voigt_pdf(MASS) :
         MASS.__init__  ( self    , name , mn , mx ,
                          mass    ,
                          mean    , gamma ) 
-        
-        # 
-        self.gamma  = makeVar ( gamma               ,
-                                'gamma_%s'   % name ,
-                                '#gamma(%s)' % name , gamma , 
-                                0.01 * ( mass.getMax()  - mass.getMin() ) , 
+
+        #
+        ##  rename it
+        #
+        self.gamma = self.sigma
+        sname  = self.gamma.GetName  ()
+        stitle = self.gamma.GetTitle ()
+        gname  = sname .replace ( 'sigma' , 'gamma' )
+        gtitle = stitle.replace ( 'sigma' , 'Gamma' )
+        self.gamma.SetName  ( gname  ) 
+        self.gamma.SetTitle ( gtitle )
+
+        self.sigma  = makeVar ( sigma               ,
+                                'sigma_%s'   % name ,   
+                                '#sigma(%s)' % name , sigma , 
+                                0.0001 * ( mass.getMax()  - mass.getMin() ) , 
                                 0    ,
-                                0.20 * ( mass.getMax()  - mass.getMin() ) )
+                                0.3000 * ( mass.getMax()  - mass.getMin() ) )
         #
         ## finally build pdf
         # 
@@ -1537,6 +1547,7 @@ class BreitWigner_pdf(MASS) :
         gtitle = stitle.replace ( 'sigma' , 'Gamma' )
         self.gamma.SetName  ( gname  ) 
         self.gamma.SetTitle ( gtitle )
+        del self.sigma
         
         #
         ## define the actual BW-shape using

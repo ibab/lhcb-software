@@ -8,6 +8,11 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-11-04  Vanya BELYAEV- 
+
+ - Fix mix of varibales inn Voigt_pdf 
+   remove "sigma" from BreitWigner_pdf 
+
 ! 2015-11-03 - Vanya Belyaev
 
  - fix in HepDATA formatting 

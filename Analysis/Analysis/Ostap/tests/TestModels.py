@@ -484,37 +484,39 @@ else :
     
 models.append ( model_bstudent  )
     
-## # =============================================================================
-## ## Breit-Wigner
-## # =============================================================================
-## logger.info ('Test BreitWigner_pdf' )
-## bw = cpp.Gaudi.Math.BreitWigner( m.value() ,
-##                                  m.error() ,
-##                                  0.150     ,
-##                                  0.150     , 1 )
-## model_bw = Models.Fit1D (
-##     signal = Models.BreitWigner_pdf ( name        = 'BW'              ,
-##                                       breitwigner = bw                ,     
-##                                       mass        = mass              ,
-##                                       mean        = signal_gauss.mean ,
-##                                       convolution = 0.010             ) , 
-##     background = model_gauss.background  )
+# =============================================================================
+## Breit-Wigner
+# =============================================================================
+logger.info ('Test BreitWigner_pdf' )
+bw = cpp.Gaudi.Math.BreitWigner( m.value() ,
+                                 m.error() ,
+                                 0.150     ,
+                                 0.150     , 1 )
+model_bw = Models.Fit1D (
+    signal = Models.BreitWigner_pdf ( name        = 'BW'              ,
+                                      breitwigner = bw                ,     
+                                      mass        = mass              ,
+                                      mean        = signal_gauss.mean ,
+                                      convolution = 0.010             ) , 
+    background = model_gauss.background  )
 
-## model_bw.b.fix(500)
-## model_bw.signal.mean.fix ( m.value() )
-## with rooSilent() : 
-##     result, frame = model_bw. fitTo ( dataset0 )
-##     model_bw.signal.mean .release()
-##     model_bw.signal.gamma.release()
-##     result, frame = model_bw. fitTo ( dataset0 )
+model_bw.b.fix(500)
+model_bw.signal.mean.fix ( m.value() )
+with rooSilent() : 
+    result, frame = model_bw. fitTo ( dataset0 )
+    model_bw.signal.mean .release()
+    model_bw.signal.gamma.release()
+    result, frame = model_bw. fitTo ( dataset0 )
     
-## if 0 != result.status() or 3 != result.covQual() :
-##     logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual () ) )
-##     print result 
-## else :
-##     print 'Signal & Background are: ', result ( 'S'         )[0] , result( 'B'        )[0]
-##     print 'Mean   & Gamma      are: ', result ( 'mean_Gauss')[0] , result( 'gamma_BW' )[0]
+if 0 != result.status() or 3 != result.covQual() :
+    logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual () ) )
+    print result 
+else :
+    print 'Signal & Background are: ', result ( 'S'         )[0] , result( 'B'        )[0]
+    print 'Mean   & Gamma      are: ', result ( 'mean_Gauss')[0] , result( 'gamma_BW' )[0]
 
+
+models.append ( model_bw)
 
 # =============================================================================
 logger.info("Test  SinhAsinh-Distribution")
