@@ -445,7 +445,6 @@ StatusCode HltSelReportsDecoder::execute() {
     if ( i != std::end( hos->numericalInfo() ) ) {
         int id = (int)(i->second+0.1);
         selName = idmap.find( id );
-        always() << "ID = " << id << endmsg;
     }
     if( selName != std::end(idmap) ){
 
