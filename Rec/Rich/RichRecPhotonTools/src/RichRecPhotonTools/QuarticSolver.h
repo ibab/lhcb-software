@@ -146,21 +146,21 @@ namespace Rich
 #ifdef __clang__
 
         // Implementation using STL classes
-        std::complex<TYPE> w1(u1,u2), w2(u1,-u2);
-        w1 = std::sqrt(w1);
-        w2 = std::sqrt(w2);
-        const auto V = w1 * w2;
-        const std::complex<TYPE> w3 = ( std::abs(V) != 0.0 ? ( qq * -0.125f ) / V : std::complex<TYPE>(0,0) );
+        const auto w1 = std::sqrt( std::complex<TYPE>(u1, u2) );
+        const auto w2 = std::sqrt( std::complex<TYPE>(u1,-u2) );
+        const auto  V = w1 * w2;
+        const std::complex<TYPE> w3 = ( std::abs(V) != 0.0 ? ( qq * -0.125f ) / V : 
+                                        std::complex<TYPE>(0,0) );
         const TYPE res = std::real(w1) + std::real(w2) + std::real(w3) - (r4*a);
 
 #else
 
         // Vectorised implementation using VectorClass
         // Currently causes problems with clang
-        const Complex4f W  = sqrt( Complex4f(u1,u2,u1,-u2) );
-        const auto V       = W.get_low() * W.get_high();
+        const Complex4f  W = sqrt( Complex4f(u1,u2,u1,-u2) );
+        const auto       V = W.get_low() * W.get_high();
         const Complex2f w3 = ( abs(V) != 0.0 ? ( qq * -0.125f ) / V : Complex2f(0,0) );
-        const TYPE res     = W.extract(0) + W.extract(2) + w3.extract(0) - (r4*a);
+        const TYPE     res = W.extract(0) + W.extract(2) + w3.extract(0) - (r4*a);
 
 #endif
 
