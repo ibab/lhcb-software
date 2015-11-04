@@ -4,6 +4,7 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+!======================= EvtGenExtras v3r12p1 2015-11-04 =====================
 ! 2015-10-23 - John Back
   - Corrected kaon mass used in EvtXLL.
 
