@@ -4,6 +4,12 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-11-04 - Chris Jones
+ - Add a work around when compiling with clang where the complex class from
+   VectorClass was causing some compilation issues. Until resolved upstream
+   (either by clang or VectorClass, its not completely clear where the issue 
+   is yet) use STL's complex number implementation when compiling with clang.
+
 !========================= RichRecPhotonTools v1r18 2015-10-13 =======================
 ! 2015-10-07 - Chris Jones
  - Small CPU improvement to RichCKthetaBandsPhotonPredictor

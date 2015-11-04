@@ -18,7 +18,6 @@
 
 // STL
 #include <math.h>
-//#include <complex>
 
 // Eigen
 #include "LHCbMath/EigenTypes.h"
@@ -27,8 +26,12 @@
 // VDT
 #include "vdt/asin.h"
 
-// Vector Class
+// For complex classes. Use vector class with gcc, STL with clang
+#ifdef __clang__
+#include <complex>
+#else
 #include "VectorClass/complexvec.h"
+#endif
 
 // LHCb Maths
 #include "LHCbMath/FastRoots.h"
@@ -140,21 +143,28 @@ namespace Rich
         const auto u1 = -0.5f * (A + B) - rc / 3.0f;
         const auto u2 = UU * fabs(A-B);
 
-        // std::complex<TYPE> w1(u1,u2), w2(u1,-u2);
-        // w1 = std::sqrt(w1);
-        // w2 = std::sqrt(w2);
+#ifdef __clang__
 
-        const Complex4f W = sqrt( Complex4f(u1,u2,u1,-u2) );
+        // Implementation using STL classes
+        std::complex<TYPE> w1(u1,u2), w2(u1,-u2);
+        w1 = std::sqrt(w1);
+        w2 = std::sqrt(w2);
+        const auto V = w1 * w2;
+        const std::complex<TYPE> w3 = ( std::abs(V) != 0.0 ? ( qq * -0.125f ) / V : std::complex<TYPE>(0,0) );
+        const TYPE res = std::real(w1) + std::real(w2) + std::real(w3) - (r4*a);
 
-        //const auto V = w1 * w2;
-        const auto V = W.get_low() * W.get_high();
+#else
 
-        //const std::complex<TYPE> w3 = ( std::abs(V) != 0.0 ? ( qq * -0.125f ) / V : std::complex<TYPE>(0,0) );
-        //const TYPE res = std::real(w1) + std::real(w2) + std::real(w3) - (r4*a);
-
+        // Vectorised implementation using VectorClass
+        // Currently causes problems with clang
+        const Complex4f W  = sqrt( Complex4f(u1,u2,u1,-u2) );
+        const auto V       = W.get_low() * W.get_high();
         const Complex2f w3 = ( abs(V) != 0.0 ? ( qq * -0.125f ) / V : Complex2f(0,0) );
-        const TYPE res = W.extract(0) + W.extract(2) + w3.extract(0) - (r4*a);
+        const TYPE res     = W.extract(0) + W.extract(2) + w3.extract(0) - (r4*a);
 
+#endif
+
+        // return the final result
         return ( res >  1.0 ?  1.0 :
                  res < -1.0 ? -1.0 :
                  res );
