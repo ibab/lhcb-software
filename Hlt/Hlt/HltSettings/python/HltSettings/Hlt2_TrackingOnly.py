@@ -41,7 +41,7 @@ class Hlt2_TrackingOnly( object ):
             raise RuntimeError( 'Must update HltType when modifying ActiveHlt.Lines()' )
         
     def L0TCK(self) :
-        return '0x0044'
+        return '0x00a8'
 
     def HltType(self) :
         self.verifyType( Hlt2_TrackingOnly ) 
@@ -51,22 +51,19 @@ class Hlt2_TrackingOnly( object ):
         """
         Returns a dictionary of cuts
         """
-        from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
-        return {   Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough'  : 0.0001 
-                                                                , 'Hlt2Forward'      : 0.00001
-                                                                , 'Hlt2DebugEvent'   : 0.000001  }
-                                                , 'Postscale' : { 'Hlt2ErrorEvent'   : 'RATE(0.01)' } 
-                                                }
+        from Hlt2Lines.Commissioning.Lines  import CommissioningLines
+        return {CommissioningLines : {'Prescale' : { 'Hlt2PassThrough'  : 0.0001 
+                                                   , 'Hlt2Forward'      : 0.00001
+                                                   , 'Hlt2DebugEvent'   : 0.000001  }
+                                                   , 'Postscale' : { 'Hlt2ErrorEvent'   : 'RATE(0.01)' } 
+                                                   }
                }
-
       
- 
-                       
     def ActiveHlt2Lines(self) :
         """
         Returns a list of active lines
         """
-        return ['Hlt2PassThrough','Hlt2Lumi','Hlt2DebugEvent','Hlt2Forward','Hlt2ErrorEvent','Hlt2Transparent','Hlt2LowMultHadron','Hlt2B2HH']
+        return ['Hlt2PassThrough', 'Hlt2Lumi', 'Hlt2DebugEvent', 'Hlt2Forward', 'Hlt2ErrorEvent', 'Hlt2Transparent', 'Hlt2B2HH']
        
     def ActiveHlt1Lines(self) :
         """
