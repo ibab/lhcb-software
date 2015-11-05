@@ -17,19 +17,20 @@
 #    - Lambda_c+/Xi_c -> p K pi              ## for Lesha Dziuba  
 #    - Lambda_c+/Xi_c -> p K K               ## for Lesha Dziuba 
 #    - Xic0           -> Lc+ pi-             ## for Lesha Dziuba 
-#    - Xi_c0 -> p K K pi                     ## for Marco Pappagallo
-#    - Omega_c0 -> p K K pi                  ## for Marco Pappagallo  
-#    - Xi'_c+ -> Xi_c+ gamma                 ## for Marco Pappagallo 
-#    - Xi_c+* -> Xi_c0 pi+                   ## for Marco Pappagallo
+#    - Xi_c0          -> p K K pi            ## for Marco Pappagallo
+#    - Omega_c0       -> p K K pi            ## for Marco Pappagallo  
 # 
 #  Excited charm baryons 
 #
 #    - Sigma_c(0,++) -> Lambda_c+ pi        ( 2455 & 2520 )
 #    - Xi_c0*        -> Xi_c+ pi                            
 #    - Lambda_c+*    -> Lambda_c+ pi+ pi-   ( 2595, 2625 & 2880 )
+#    - Xi'_c+        -> Xi_c+ gamma          ## for Marco Pappagallo
+#    - Xi_c+*        -> Xi_c0 pi+            ## for Marco Pappagallo  
 #    - Omega_c0*     -> Lambda_c+/Xic+ K-    ## for Marco Pappagallo 
 #    - Omega_c0*     -> Xic0 pi+ K-          ## for Marco Pappagallo
 #    - Omega_c0*     -> Xic'+ K-             ## for Marco Pappagallo
+#    - Xi_c(2815)+   -> Lambda_c+ pi+ K-     ## for Marco Pappagallo 
 #    - Omega_cc+     -> Xic+ pi+ K-          ## for Marco Pappagallo
 #    - Omega_cc+     -> Xic+ K+ K-           ## for Marco Pappagallo
 #
@@ -264,11 +265,12 @@ _default_configuration_ = {
     "psi_prime     =   ADAMASS (  'psi(2S)') < 150 * MeV"  ,
     ] ,
     # Q Values:
-    'QvalueXiCK'     :  500 * MeV ,
+    'QvalueXiCK'     :  600 * MeV ,
     'QvalueXiCprime' :  250 * MeV ,
     'QvalueXiCstar'  :  150 * MeV ,
-    'QvalueXiCPiK'   :  500 * MeV ,
-    'QvalueXiCprimeK':  500 * MeV ,
+    'QvalueXiCPiK'   :  600 * MeV ,
+    'QvalueXiCprimeK':  600 * MeV ,
+    'QvalueLcPiK'    :  700 * MeV ,
     'QvalueOmegaCC'  : 4500 * MeV ,
     ## monitoring ?
     'Monitor'     : False ,
@@ -287,12 +289,13 @@ _default_configuration_ = {
     'XiC*Prescale'             : 1.0 ,
     'OmegaC*2XiCPiKPrescale'   : 1.0 ,
     'OmegaC*2XiCprimeKPrescale': 1.0 ,
-    'OmegaCCPrescale'          : 1.0 ,
+    'XiC**2LcPiKPrescale'      : 1.0 ,
+    #'OmegaCCPrescale'          : 1.0 ,
     'SigmaCPrescale'           : 1.0 ,
     'Xic02LcPiPrescale'        : 1.0 ,
     #
-    'OmegaCCKpiPrescale'       : 1.0 ,
-    'OmegaCCKKPrescale'        : 1.0 ,
+    'OmegaCC2XiCKpiPrescale'       : 1.0 ,
+    'OmegaCC2XiCKKPrescale'        : 1.0 ,
     ##
     'D02KKPrescale'            : 1.0 ,
     'D02pipiPrescale'          : 1.0 ,
@@ -330,8 +333,9 @@ default_config = {
                                      'StrippingXiCstarForPromptCharm'             ,
                                      'StrippingOmegaCstar2XiCPiKForPromptCharm'   ,
                                      'StrippingOmegaCstar2XiCprimeKForPromptCharm',
-                                     'StrippingOmegaCCKpiForPromptCharm'          ,
-                                     'StrippingOmegaCCKKForPromptCharm'           ,
+                                     'StrippingXiCstarstar2LambdaCPiKForPromptCharm',
+                                     'StrippingOmegaCC2XiCKpiForPromptCharm'      ,
+                                     'StrippingOmegaCC2XiCKKForPromptCharm'       ,
                                      'StrippingXic02LcPiForPromptCharm'           ,
                                      'StrippingDiCharmForPromptCharm'             , ## ? 
                                      'StrippingChiAndCharmForPromptCharm'         ,
@@ -484,13 +488,14 @@ class StrippingPromptCharmConf(LineBuilder) :
                  self.LamC2pKK       () ,
                  self.SigC           () ,
                  self.LamCstar       () ,
-                 self.OmgCstar         () ,
-                 self.XiCprime         () ,
-                 self.XiCstar          () ,
-                 self.OmgCstar2XiCPiK  () ,
+                 self.OmgCstar       () ,
+                 self.XiCprime       () ,
+                 self.XiCstar        () ,
+                 self.OmgCstar2XiCPiK() ,
                  self.OmgCstar2XiCprimeK  () ,
-                 self.OmgCCKpi () ,
-                 self.OmgCCKK  () ,
+                 self.XiCstarstar2LambdaCPiK () ,
+                 self.OmgCC2XicKpi   () ,
+                 self.OmgCC2XiCKK    () ,
                  self.Xic02LcPi      () ,
                  self.DiMuon         () ,
                  self.DiCharm        () ,
@@ -643,19 +648,26 @@ class StrippingPromptCharmConf(LineBuilder) :
             checkPV  = self['CheckPV'         ] ,
             algos    =     [ self.OmgCstar2XiCprimeK () ]
             ) ,
+            ## Xi_c** -> Lc+ pi+ K-
+            StrippingLine (
+            "XiCstarstar2LambdaCPiKFor" + self.name() ,
+            prescale = self['XiC**2LcPiKPrescale' ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'         ] ,
+            algos    =     [ self.XiCstarstar2LambdaCPiK () ]
+            ) ,
             ## Omega_cc -> Xic+  K- pi+
             StrippingLine (
-            "OmegaCCKpiFor" + self.name() ,
-            prescale = self['OmegaCCKpiPrescale' ] , ## ATTENTION! Prescale here !!
+            "OmegaCC2XiCKpiFor" + self.name() ,
+            prescale = self['OmegaCC2XiCKpiPrescale' ] , ## ATTENTION! Prescale here !!
             checkPV  = self['CheckPV'            ] ,
-            algos    =     [ self.OmgCCKpi ()    ]
+            algos    =     [ self.OmgCC2XicKpi ()    ]
             ) ,
             ## Omega_cc -> Xic+  K- K+
             StrippingLine (
-            "OmegaCCKKFor" + self.name() ,
-            prescale = self['OmegaCCKKPrescale'  ] , ## ATTENTION! Prescale here !!
+            "OmegaCC2XiCKKFor" + self.name() ,
+            prescale = self['OmegaCC2XiCKKPrescale'  ] , ## ATTENTION! Prescale here !!
             checkPV  = self['CheckPV'            ] ,
-            algos    =     [ self.OmgCCKK ()     ]
+            algos    =     [ self.OmgCC2XiCKK ()     ]
             ) ,
             ## Lambda_c*
             StrippingLine (
@@ -1333,7 +1345,7 @@ class StrippingPromptCharmConf(LineBuilder) :
     ## new decay mode \f$ \Xi_c^0 \rightarrow \Lambda_c^+ \pi^-\f$
     #  the evidence for this decay is obtaine by Belle in Phys.Rev. D89 (2014) 9, 091102 
     #  @see http://dx.doi.org/10.1103/PhysRevD.89.091102
-    #  Also Lesha Dziuba sees the hint for this peak in his chamr baryon studies 
+    #  Also Lesha Dziuba sees the hint for this peak in his charm baryon studies 
     def Xic02LcPi ( self ) :
         """
         Xi_c0 -> Lc+ pi-
@@ -1482,7 +1494,7 @@ class StrippingPromptCharmConf(LineBuilder) :
         return self.make_selection (
             'OmegaCstar'         ,
             CombineParticles     ,
-            [ self.LamC() , self.promptKaons() ] , 
+            [ self.LamC() , self.LamC2pKK(), self.promptKaons() ] , 
             #
             ## algorithm properties 
             DecayDescriptors  = [
@@ -1507,8 +1519,8 @@ class StrippingPromptCharmConf(LineBuilder) :
         ##
         photoncut = "CL > %s " % self['PhotonCLCut']                
         ##
-        return self.make_selection (
-            'XiCprime'         ,
+        pre_XiCprime = self.make_selection (
+            'PreXiCprime'         ,
             CombineParticles   ,
             [ self.LamC() , inpts ] ,
             #
@@ -1523,6 +1535,17 @@ class StrippingPromptCharmConf(LineBuilder) :
             CombinationCut   = " AM - AM1 < %s  " %  self['QvalueXiCprime'],
             ##
             MotherCut        = " ALL "
+            )
+        
+        from GaudiConfUtils.ConfigurableGenerators import Pi0Veto__Tagger
+        ##
+        return self.make_selection (
+            'XiCprime'                 ,
+            Pi0Veto__Tagger               ,
+            [ pre_XiCprime ]                   ,
+            MassWindow     = 25 * MeV     ,
+            MassChi2       = -1           ,
+            ExtraInfoIndex = 25020     ## unique !
             )
 
     # =============================================================================
@@ -1568,12 +1591,7 @@ class StrippingPromptCharmConf(LineBuilder) :
         
         from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays        
         ##
-        pioncut = """
-        ( CLONEDIST   > 5000      ) &
-        ( TRGHOSTPROB < 0.5       ) &
-        in_range ( 2  , ETA , 4.9 ) &
-        HASRICH                     
-        """
+
         return self.make_selection (
             'OmegaCstar2XiCPiK'         ,
             DaVinci__N3BodyDecays       ,
@@ -1582,7 +1600,9 @@ class StrippingPromptCharmConf(LineBuilder) :
             ## algorithm properties
             DecayDescriptors = [
             "[ Omega_c*0 -> Xi_c0 K- pi+ ]cc",
-            "[ Omega_c*0 -> Xi_c0 K+ pi+ ]cc"
+            "[ Omega_c*0 -> Xi_c0 K+ pi+ ]cc",
+            "[ Omega_c*0 -> Xi_c0 K- pi- ]cc",
+            "[ Omega_c*0 -> Xi_c0 K+ pi- ]cc"
             ],
             ##
             DaughtersCuts    = {
@@ -1614,8 +1634,8 @@ class StrippingPromptCharmConf(LineBuilder) :
         ##
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         ##
-        return self.make_selection (
-            'OmegaCstar2XiCprimeK'         ,
+        pre_OmegaCstar2XiCprimeK = self.make_selection (
+            'PreOmegaCstar2XiCprimeK'         ,
             CombineParticles  ,
             [ self.XiCprime() , self.promptKaons() ] ,
             #
@@ -1632,10 +1652,66 @@ class StrippingPromptCharmConf(LineBuilder) :
             """ ,
             )
 
+        from GaudiConfUtils.ConfigurableGenerators import Pi0Veto__Tagger
+        ##
+        return self.make_selection (
+            'OmegaCstar2XiCprimeK'                 ,
+            Pi0Veto__Tagger               ,
+            [pre_OmegaCstar2XiCprimeK ]                   ,
+            MassWindow     = 25 * MeV     ,
+            MassChi2       = -1           ,
+            ExtraInfoIndex = 25025     ## unique !
+            )
+
+    # =============================================================================
+    # Xi_c**+ -> Lambda_c+ pi+ K- selection for Marco Pappagallo
+    # =============================================================================
+    def XiCstarstar2LambdaCPiK ( self ) :
+        """
+        Xi_c(2815)+ -> Lambda_c+ pi+ K- selection for Marco Pappagallo
+        """
+        
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays
+        ##
+
+        return self.make_selection (
+            'XiCstarstar2LambdaCPiK'         ,
+            DaVinci__N3BodyDecays       ,
+            [ self.LamC(), self.promptKaons() , self.slowPions()  ] ,
+            #
+            ## algorithm properties
+            DecayDescriptors = [
+            "[ Xi_c(2815)+ -> Lambda_c+ K- pi+ ]cc",
+            #"[ Xi_c(2815)+ -> Lambda_c+ K+ pi+ ]cc",
+            "[ Xi_c(2815)+ -> Lambda_c+ K- pi- ]cc"#,
+            #"[ Xi_c(2815)+ -> Lambda_c+ K+ pi- ]cc"
+            ],
+            ##
+            DaughtersCuts    = {
+            'Lambda_c+' : "M < 2400 * MeV",
+            'pi+' : self['TrackCut']
+            } ,
+            ##
+            Combination12Cut = """
+            ( ACHI2DOCA(1,2)  < 16 ) & ( AM < 6 * GeV )
+            """,
+            ##
+            CombinationCut   = """
+            ( AM - AM1 < ( 500 * MeV + %s ) ) &
+            ( ACHI2DOCA(1,3)  < 16 ) &
+            ( ACHI2DOCA(2,3)  < 16 )
+            """ %  self['QvalueLcPiK'] ,
+            ##
+            MotherCut      = """
+            ( chi2vx  < 16 )
+            """ ,
+            )
+                                                                
+
     # =============================================================================
     # Omega_cc+ -> Xi_C+ K- pi+ selection for Marco Pappagallo
     # =============================================================================
-    def OmgCCKpi( self ) :
+    def OmgCC2XicKpi( self ) :
         """
         Omega_cc+ -> Xi_C+ K- pi+ selection for Marco Pappagallo
         """
@@ -1648,7 +1724,12 @@ class StrippingPromptCharmConf(LineBuilder) :
             [ self.preLamC() , self.promptKaons () , self.slowPions() ] ,
             #
             ## algorithm properties
-            DecayDescriptor = " [ Omega_cc+ -> Lambda_c+ K- pi+ ]cc" ,
+            DecayDescriptors = [
+            " [ Omega_cc+ -> Lambda_c+ K- pi+ ]cc" ,
+            #" [ Omega_cc+ -> Lambda_c+ K+ pi+ ]cc" ,
+            " [ Omega_cc+ -> Lambda_c+ K- pi- ]cc" #,
+            #" [ Omega_cc+ -> Lambda_c+ K+ pi- ]cc"
+            ],
             ##
             DaughtersCuts    = {
             'Lambda_c+' : "M > 2400 * MeV",
@@ -1673,9 +1754,9 @@ class StrippingPromptCharmConf(LineBuilder) :
     # =============================================================================
     # Omega_cc+ -> Xi_C+ K- K+ selection for Marco Pappagallo
     # =============================================================================
-    def OmgCCKK ( self ) :
+    def OmgCC2XiCKK ( self ) :
         """
-        Omega_cc+ -> Xi_C+ K- K+ selection for Marco Pappagallo
+        Omega_cc+ -> Xi_c+ K- K+ selection for Marco Pappagallo
         """
         
         from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays
@@ -1686,7 +1767,11 @@ class StrippingPromptCharmConf(LineBuilder) :
             [ self.preLamC() , self.promptKaons () ] ,
             #
             ## algorithm properties
-            DecayDescriptor = " [ Omega_cc+ -> Lambda_c+ K- K+  ]cc" , 
+            DecayDescriptors = [
+            " [ Omega_cc+ -> Lambda_c+ K- K+  ]cc",
+            #" [ Omega_cc+ -> Lambda_c+ K+ K+  ]cc",
+            " [ Omega_cc+ -> Lambda_c+ K- K-  ]cc"
+            ] ,
             ##
             DaughtersCuts    = {
             'Lambda_c+' : "M > 2400 * MeV",

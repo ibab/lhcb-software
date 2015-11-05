@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-05 - Marco Pappagallo
+ - StrippingCharm/StrippingPromptCharm.py updated
+   New line for Xic** -> Lc K pi
+   Pi0 veto added to Xic' -> Xic gamma and Omegac** -> Xic' K
+
 ! 2015-11-05 - Andrea Contu
  - Updated StrippingDstarD02xx to be compatible with RelatedInfoTool and swith to ConfigurableGenerators
 
