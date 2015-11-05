@@ -61,23 +61,33 @@ def configure(**kwargs) :
     ##     ta.OutputLevel = OnlineEnv.OutputLevel
     ##     ta.addTool(LHCbSequencerTimerTool, name = 'TIMER')
     ##     ta.TIMER.OutputLevel = OnlineEnv.OutputLevel
-    ## appendPostConfigAction(info_dammit)
+    ## appendPostConfigAction(info_dammit)    
 
+    userOptions = user_package.MooreOptions
     # This is the stuff that should come from the PRConfig user module
     for conf, d in { moore: {'DDDBtag' : str, 'CondDBtag' : str},
                      mooreOnline : {'UseTCK' : bool, 'Simulation' : bool,
                                     'DataType' : ('2011', '2012', '2013', '2014', '2015'),
                                     'HltLevel' : ('Hlt1', 'Hlt2', 'Hlt1Hlt2')}}.iteritems():
         for a, t in d.iteritems():
-            ua = user_package.MooreOptions.pop(a)
+            ua = userOptions.pop(a)
             if hasattr(t, '__iter__'):
                 assert(ua in t)
             else:
                 assert(type(ua) == t)
             conf.setProp(a, ua)
-    if 'InitialTCK' in user_package.MooreOptions:
-        moore.setProp('InitialTCK', user_package.MooreOptions['InitialTCK'])
 
+    if 'InitialTCK' in userOptions:
+        moore.setProp('InitialTCK', userOptions['InitialTCK'])
+
+    if userOptions.pop('Split', None):
+        print 'WARNING: Split property is ignored, value from HltLevel will be used instead.'
+        
+    if mooreOnline.getProp('HltLevel') == 'Hlt1Hlt2':
+        moore.setProp('Split', '')
+    else:
+        moore.setProp('Split', mooreOnline.getProp('HltLevel'))
+            
     if input_type == 'MEP' and 'Hlt1' in mooreOnline.HltLevel:
         mooreOnline.REQ1 = "EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0"
     elif input_type == 'MDF' and 'Hlt1' in mooreOnline.HltLevel:
@@ -94,9 +104,8 @@ def configure(**kwargs) :
 
     # Extra options
     from Configurables import MooreExpert
-    args = user_package.MooreOptions
-    args.update(kwargs)
-    for k,v in args.iteritems():
+    userOptions.update(kwargs)
+    for k,v in userOptions.iteritems():
         #iterate through the available configurables to set required properties
         found=False
         for conf in [mooreOnline, moore, MooreExpert()]:

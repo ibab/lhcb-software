@@ -4,6 +4,9 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+! 2015-11-05 - Roel Aaij
+ - Handle HltLevel properly in runOfflineOnline.
+
 ! 2015-11-03 - Roel Aaij
  - Fix runOfflineOnline with changes in latest PRConfig.
 
