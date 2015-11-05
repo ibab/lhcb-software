@@ -130,7 +130,8 @@ class TeslaBrunelMonitorConf:
                       HistTitle       = None,
                       Variables       = None,
                       Tools           = None,
-                      TeslaMatcher    = None):
+                      TeslaMatcher    = None,
+                      NumberOfBins    = None):
     self.name = name;
     if not isinstance(TurboInput, list): TurboInput = [TurboInput]
     self.TurboInput = TurboInput
@@ -141,6 +142,7 @@ class TeslaBrunelMonitorConf:
     self.TeslaMatcher= TeslaMatcher if TeslaMatcher else "TeslaMatcher:PUBLIC"
     self.Tools= Tools if Tools else []
     self.Variables = Variables if Variables else []
+    self.NumberOfBins = NumberOfBins if NumberOfBins else 200
 
   def addVariable ( self, name, particle, code,  max, cut=None):
     self.Variables += [{
@@ -171,6 +173,7 @@ class TeslaBrunelMonitorConf:
                       HistTitle= self.HistTitle,
                       TeslaMatcher=self.TeslaMatcher,
                       MatchLocations = self.MatchLocations,
+                      NumberOfBins = self.NumberOfBins
                     )
 
 
