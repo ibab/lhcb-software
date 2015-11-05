@@ -8,17 +8,17 @@ from Gaudi.Configuration import *
 from Configurables import DaVinci
 from StrippingConf.Configuration import StrippingConf
 
-# Tighten Trk Chi2 to <3
-from CommonParticles.Utils import DefaultTrackingCuts
-DefaultTrackingCuts().Cuts  = { "Chi2Cut" : [ 0, 3 ],
-                                "CloneDistCut" : [5000, 9e+99 ] }
-
 #
 #Raw event juggler to split Other/RawEvent into Velo/RawEvent and Tracker/RawEvent
 #
 from Configurables import RawEventJuggler
-juggler = RawEventJuggler( DataOnDemand=True, Input=2.0, Output=4.0 )
+juggler = RawEventJuggler( DataOnDemand=True, Input=0.3, Output=4.2 )
 
+#
+#Fix for TrackEff lines
+#
+from Configurables import DecodeRawEvent
+DecodeRawEvent().setProp("OverrideInputs",4.2)
 
 # Specify the name of your configuration
 my_wg='Semileptonic' #FOR LIAISONS
@@ -37,7 +37,7 @@ charmMicroDSTname      = 'Charm'
 pidMicroDSTname        = 'PID'
 bhadronMicroDSTname    = 'Bhadron'
 mdstStreams = [ leptonicMicroDSTname,charmMicroDSTname,pidMicroDSTname,bhadronMicroDSTname ]
-dstStreams  = [ "BhadronCompleteEvent", "CharmCompleteEvent", "CharmToBeSwum", "Dimuon",
+dstStreams  = [ "BhadronCompleteEvent", "CharmCompleteEvent", "Dimuon",
                 "EW", "Semileptonic", "Calibration", "MiniBias", "Radiative" ]
 
 stripTESPrefix = 'Strip'
@@ -123,7 +123,7 @@ from Configurables import StrippingReport
 sr = StrippingReport(Selections = sc.selections())
 
 from Configurables import AlgorithmCorrelationsAlg
-ac = AlgorithmCorrelationsAlg(Algorithms = sc.selections())
+ac = AlgorithmCorrelationsAlg(Algorithms = list(set(sc.selections())))
 
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
 DaVinci().EvtMax = 1e5
@@ -133,8 +133,8 @@ DaVinci().appendToMainSequence( [ sr ] )
 #DaVinci().appendToMainSequence( [ ac ] )
 DaVinci().appendToMainSequence( [ dstWriter.sequence() ] )
 DaVinci().ProductionType = "Stripping"
-DaVinci().DataType  = "2012"
-DaVinci().InputType = "DST"
+DaVinci().DataType  = "2015"
+DaVinci().InputType = "RDST"
 
 # change the column size of timing table
 from Configurables import TimingAuditor, SequencerTimerTool
@@ -144,8 +144,9 @@ TimingAuditor().TIMER.NameSize = 60
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
 # database
-DaVinci().DDDBtag  = "dddb-20120831"
-DaVinci().CondDBtag = "cond-20121008"
+DaVinci().DDDBtag   = "dddb-20150724"
+DaVinci().CondDBtag = "cond-20150828"
 
 # input file
-importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_Run125113.py")
+#importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_Run125113.py")
+importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco15a_Run164668.py")

@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-05 - Greg Ciezarek
+ - StrippingB2DMuForTauMu.py updated
+   New lines for D0 -> K pi pi pi, D+ -> K pi pi, Ds -> K K pi, /\c -> p k pi, matching fake lines
+   All selection requirements aligned with 2015 trigger
+
+
 ! 2015-11-05 - Marco Pappagallo
  - StrippingCharm/StrippingPromptCharm.py updated
    New line for Xic** -> Lc K pi
