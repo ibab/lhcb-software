@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2015-11-05 - Marco Cattaneo
+ - LbAppInit.cpp: fix clang warning, avoid stringstream
+
 !========================= LHCbKernel v15r12 2015-10-12 =========================
 ! 2015-09-23 - Chris Jones
  - Expand FastAllocVector.h to implement vectors using both the Boost pool

@@ -1,7 +1,4 @@
 
-// STL
-#include <sstream>
-
 // Boost
 #include "boost/format.hpp"
 
@@ -138,17 +135,16 @@ StatusCode LbAppInit::execute()
   {
     unsigned long long mem     = System::virtualMemory();
     const    long long memDiff = (long long)(mem-m_lastMem);
-    if ( UNLIKELY( abs(memDiff) >= m_minMemDelta ) )
+    if ( UNLIKELY( std::abs(memDiff) >= m_minMemDelta ) )
     {
       info() << "Memory has changed from " << m_lastMem << " to " << mem << " KB"
              << " (" << memDiff << "KB, " << 100.*memDiff/m_lastMem << "%)"
              << " in last " << m_increment << " events" << endmsg ;
       if ( mem > m_memPurgeLimit )
       {
-        std::ostringstream mess;
-        mess << "Memory exceeds limit of " << m_memPurgeLimit
-             << " KB -> Purging pools";
-        Info( mess.str(), StatusCode::SUCCESS, 1 ).ignore();
+
+        Info( "Memory exceeds limit of " + std::to_string(m_memPurgeLimit) 
+            + " KB -> Purging pools", StatusCode::SUCCESS, 1 ).ignore();
         releaseMemoryPools();
         mem = System::virtualMemory();
       }
