@@ -3,6 +3,12 @@
 ! Responsible : Wouter Hulsbergen, Stephanie Hansmann-Menzemer
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
+
+! 2015-11-05 - Marco Cattaneo
+ - TrackITOverlapMonitor:
+   o Remove unnecessary forward declaration to fix clang compilation
+   o Remove unnecessary includes
+
 ! 2015-11-01 - Gerhard Raven
  - replace LoKi::select with std::copy_if
  - replace raw loops with STL algorithms 

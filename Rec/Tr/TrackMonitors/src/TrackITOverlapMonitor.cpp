@@ -3,7 +3,6 @@
 // from std
 #include <string>
 #include <vector>
-#include "boost/lexical_cast.hpp"
 
 // from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
@@ -22,7 +21,6 @@
 #include "LHCbMath/Line.h"
 
 #include "TrackKernel/TrackTraj.h"
-#include "TfKernel/IITHitCreator.h"
 
 #include <boost/foreach.hpp>
 
@@ -30,8 +28,6 @@ namespace Al {
   class Equations;
   class Residuals ;
 }
-class IHistogram1D ;
-class IHistogram2D ;
 
 /** @class TrackITOverlapMonitor TrackITOverlapMonitor.cpp
 *
