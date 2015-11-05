@@ -52,7 +52,7 @@ StatusCode ZeroMQSvc::finalize()
 //=============================================================================
 zmq::context_t& ZeroMQSvc::context() const
 {
-   if (!m_context) {
+   if (UNLIKELY(!m_context)) {
       if (FSMState() < Gaudi::StateMachine::INITIALIZED) {
          throw GaudiException("First call to ZeroMQSvc::context must be after initialize",
                               "", StatusCode::FAILURE);

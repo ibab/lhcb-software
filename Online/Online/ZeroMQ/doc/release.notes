@@ -6,6 +6,9 @@
                 COPYING.LESSER. See README.md for more information.
 !-----------------------------------------------------------------------------
 
+! 2015-11-05 - Roel Aaij
+ - Added convenience methods to IZeroMQSvc.
+
 ! 2015-07-22 - Roel Aaij
  - Fix double definition of PACKAGE_NAME and PACKAGE_VERSION from cmake and
    platform.hpp by renaming the definitions in platform.hpp.

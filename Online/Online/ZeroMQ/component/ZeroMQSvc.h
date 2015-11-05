@@ -31,6 +31,10 @@ class ZeroMQSvc : public extends1<Service, IZeroMQSvc> {
 
    virtual zmq::context_t& context() const;
 
+   zmq::socket_t socket(int type) const {
+      return zmq::socket_t{context(), type};
+   }
+   
 private:
 
    // properties
