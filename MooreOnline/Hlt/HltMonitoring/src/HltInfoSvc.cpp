@@ -42,12 +42,16 @@ DECLARE_COMPONENT(HltInfoSvc)
 HltInfoSvc::HltInfoSvc(const string& name, ISvcLocator* loc)
    : Service(name, loc),
    m_zmqSvc{nullptr},
+   m_evtSvc{nullptr},
    m_updMgrSvc{nullptr},
    m_infoOut{nullptr}
 {
    declareProperty("InfoConnection", m_infoCon = "ipc:///tmp/hlt2MonInfo_0");
    declareProperty("LumiSettingsCondition", m_lumiCond = "Conditions/Online/LHCb/Lumi/LumiSettings");
    declareProperty("StartTimeCondition", m_runCond = "Conditions/Online/LHCb/RunParameters");
+   declareProperty("TCKCondition", m_tckCond = "Conditions/Online/LHCb/RunInfo/Trigger");
+   declareProperty("DecReportsLocation", m_decRepLoc = "Hlt2/DecReports");
+   declareProperty("Application", m_info.application = "Hlt2");
 }
 
 //===============================================================================
@@ -67,6 +71,13 @@ StatusCode HltInfoSvc::initialize()
       return sc;
    }
 
+   // Event data service
+   sc = serviceLocator()->service("EventDataSvc", m_evtSvc, true);
+   if (!sc.isSuccess()) {
+      fatal() << "EventDataSvc not found" << endmsg;
+      return sc;
+   }
+   
    // UpdateManagerSvc
    sc = serviceLocator()->service("UpdateManagerSvc", m_updMgrSvc, true);
    if (!sc.isSuccess()) {
@@ -83,11 +94,13 @@ StatusCode HltInfoSvc::initialize()
 
    register_(m_lumiCond);
    register_(m_runCond);
+   register_(m_tckCond);
 
    sc = m_updMgrSvc->update(this);
    if (!sc.isSuccess()) {
       fatal() << "Could not update conditions." << endmsg;
    }
+
    return sc;
 }
 
@@ -99,7 +112,7 @@ StatusCode HltInfoSvc::start()
 
    // Info output connection
    if (!m_infoOut) {
-      m_infoOut = new zmq::socket_t{m_zmqSvc->context(), ZMQ_PUB};
+      m_infoOut = new zmq::socket_t{zmq().context(), ZMQ_PUB};
       m_infoOut->connect(m_infoCon.c_str());
    }
 
@@ -130,59 +143,72 @@ void HltInfoSvc::sendInfo()
    if (FSMState() < Gaudi::StateMachine::RUNNING) {
       return;
    }
-   debug() << "Sending run info." << endmsg;
 
-   // First type of info
-   auto it = Monitoring::s_RunInfo;
-   zmq::message_t msg(it.length());
-   memcpy(static_cast<void*>(msg.data()), it.c_str(), it.length());
-   m_infoOut->send(msg, ZMQ_SNDMORE);
-
+   // Serialize
    std::stringstream ss;
    {
       boost::archive::text_oarchive oa{ss};
       oa << m_info;
    }
-   string info = ss.str();
-
-   // Prepare message and send
-   msg.rebuild(info.size());
-   memcpy(static_cast<void*>(msg.data()), info.c_str(), info.length());
-   m_infoOut->send(msg);
+   
+   // First send type of info
+   zmq().send(*m_infoOut, Monitoring::s_RunInfo, ZMQ_SNDMORE);
+   // Then send info message
+   zmq().send(*m_infoOut, ss.str());
 }
 
 //===============================================================================
 StatusCode HltInfoSvc::updateConditions()
 {
-   auto check = [this](const std::string& cond, std::string par) -> StatusCode {
+   auto check = [this](const std::string& cond, std::string par, bool canFail) -> StatusCode {
       if (m_conditions[cond] == 0) {
-         error() << "Could not obtain Condition " << cond << " from conditions DB" << endmsg;
-        return StatusCode::FAILURE;
+         if (!canFail)
+            error() << "Could not obtain Condition " << cond << " from conditions DB" << endmsg;
+         return StatusCode::FAILURE;
       }
       if (!m_conditions[cond]->exists(par)) {
-         error() << "Condition does not contain " << par << endmsg;
+         if (!canFail)
+            error() << "Condition does not contain " << par << endmsg;
          return StatusCode::FAILURE;
       }
       return StatusCode::SUCCESS;
    };
 
    // Lumi parameters
-   auto sc = check(m_lumiCond, "LumiPars");
+   auto sc = check(m_lumiCond, "LumiPars", false);
    if (!sc.isSuccess()) return sc;
    m_info.lumiPars = m_conditions[m_lumiCond]->paramVect<double>("LumiPars"); // seconds
 
    // Start time
-   sc = check(m_runCond, "RunStartTime");
+   sc = check(m_runCond, "RunStartTime", false);
    if (!sc.isSuccess()) return sc;
    m_info.start = m_conditions[m_runCond]->param<int>("RunStartTime"); // seconds
 
    // Run number
-   sc = check(m_runCond, "RunNumber");
+   sc = check(m_runCond, "RunNumber", false);
    if (!sc.isSuccess()) return sc;
    m_info.run = m_conditions[m_runCond]->param<int>("RunNumber");
 
-   // Send new info
-   sendInfo();
+   // TCK
+   sc = check(m_tckCond, "TCK", true);
+   if (sc.isSuccess()) {
+      m_info.tck = m_conditions[m_tckCond]->param<int>("TCK");
+   } else {
+      // Get the HltDecReports to obtain the TCK
+      DataObject* obj{nullptr};
+      StatusCode sc = m_evtSvc->retrieveObject(m_decRepLoc, obj);
+      if (!sc.isSuccess()) {
+         m_info.tck = 0;
+      }
+      const LHCb::HltDecReports* decReps = static_cast<const LHCb::HltDecReports*>(obj);
+      m_info.tck = decReps->configuredTCK();
 
+   }
+
+   // Send new info
+   if (FSMState() == Gaudi::StateMachine::RUNNING) {
+      sendInfo();
+   }
+   
    return StatusCode::SUCCESS;
 }

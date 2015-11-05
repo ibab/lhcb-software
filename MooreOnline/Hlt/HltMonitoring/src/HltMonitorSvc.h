@@ -84,6 +84,7 @@ private:
 
    StatusCode updateConditions();
 
+   IZeroMQSvc& zmq() const { return *m_zmqSvc; }
    void sendInfo();
    void sendChunks(bool all = true);
 
@@ -94,14 +95,12 @@ private:
    // properties
    std::string m_dataCon;
    std::string m_infoCon;
-   std::string m_decRepLoc;
    double m_updateInterval;
 
    // data members
    IZeroMQSvc* m_zmqSvc;
    IIncidentSvc* m_incidentSvc;
    IUpdateManagerSvc *m_updMgrSvc;
-   IDataProviderSvc* m_evtSvc;
    Condition *m_runPars;
 
    zmq::socket_t* m_dataOut;

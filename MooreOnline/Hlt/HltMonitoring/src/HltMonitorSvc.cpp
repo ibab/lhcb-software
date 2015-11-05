@@ -48,17 +48,14 @@ HltMonitorSvc::HltMonitorSvc(const string& name, ISvcLocator* loc)
    m_zmqSvc{nullptr},
    m_incidentSvc{nullptr},
    m_updMgrSvc{nullptr},
-   m_evtSvc{nullptr},
    m_runPars{nullptr},
    m_dataOut{nullptr},
    m_infoOut{nullptr},
    m_run{0},
-   m_tck{0},
    m_startOfRun{0}
 {
    declareProperty("DataConnection", m_dataCon = "ipc:///tmp/hlt2MonData_0");
    declareProperty("InfoConnection", m_infoCon = "ipc:///tmp/hlt2MonInfo_0");
-   declareProperty("HltDecReportsLocation", m_decRepLoc = "Hlt2/DecReports");
    declareProperty("UpdateInterval", m_updateInterval = 10.);
 }
 
@@ -107,11 +104,6 @@ StatusCode HltMonitorSvc::initialize()
    if (!sc.isSuccess()) {
       fatal() << "Could not update run parameter condition." << endmsg;
       return sc;
-   }
-
-   sc = serviceLocator()->service("EventDataSvc", m_evtSvc, true);
-   if (!sc.isSuccess()) {
-      fatal() << "EventDataSvc not found" << endmsg;
    }
    return sc;
 }
@@ -197,7 +189,7 @@ void HltMonitorSvc::count(const Gaudi::StringKey& key, double t)
    // Create a new chunk if we don't have one for this identifier
    auto it = m_chunks.find(key);
    if (it == end(m_chunks)) {
-      it = m_chunks.emplace(key, Chunk{m_run, tck(), key.__hash__()}).first;
+      it = m_chunks.emplace(key, Chunk{m_run, key.__hash__()}).first;
    }
 
    // Count
@@ -245,7 +237,7 @@ void HltMonitorSvc::fill(const Gaudi::StringKey& key, size_t bin)
    // Create a new chunk if we don't have one for this identifier
    auto it = m_chunks.find(key);
    if (it == end(m_chunks)) {
-      it = m_chunks.emplace(key, Chunk{m_run, tck(), key.__hash__()}).first;
+      it = m_chunks.emplace(key, Chunk{m_run, key.__hash__()}).first;
    }
 
    // Count
@@ -304,30 +296,19 @@ void HltMonitorSvc::sendInfo()
       auto& infoMsg = it->second;
 
       // First type of info
-      auto type = Monitoring::s_HistoInfo;
-      zmq::message_t msg(type.length());
-      memcpy(static_cast<void*>(msg.data()), type.c_str(), type.length());
-      m_infoOut->send(msg, ZMQ_SNDMORE);
+      zmq().send(*m_infoOut, Monitoring::s_HistoInfo, ZMQ_SNDMORE);
 
       // Then run number
-      msg.rebuild(sizeof(Monitoring::RunNumber));
-      memcpy(msg.data(), &m_run, sizeof(Monitoring::RunNumber));
-      m_infoOut->send(msg, ZMQ_SNDMORE);
+      zmq().send(*m_infoOut, m_run, ZMQ_SNDMORE);
 
       // Then HistId
-      msg.rebuild(sizeof(Monitoring::HistId));
-      memcpy(msg.data(), &infoMsg.id, msg.size());
-      m_infoOut->send(msg, ZMQ_SNDMORE);
+      zmq().send(*m_infoOut, infoMsg.id, ZMQ_SNDMORE);
 
       // The type of histogram
-      msg.rebuild(infoMsg.type.length());
-      memcpy(static_cast<void*>(msg.data()), infoMsg.type.c_str(), msg.size());
-      m_infoOut->send(msg, ZMQ_SNDMORE);
+      zmq().send(*m_infoOut, infoMsg.type, ZMQ_SNDMORE);
 
       // The infomation
-      msg.rebuild(infoMsg.info.length());
-      memcpy(static_cast<void*>(msg.data()), infoMsg.info.c_str(), msg.size());
-      m_infoOut->send(msg);
+      zmq().send(*m_infoOut, infoMsg.info);
    }
 
    // Clear set of messages to send
@@ -364,10 +345,8 @@ void HltMonitorSvc::sendChunks(bool all)
       string s = ss.str();
 
       // Prepare message and send
-      zmq::message_t msg(s.size() + 1);
-      memcpy(static_cast<void*>(msg.data()), s.c_str(), s.size() + 1);
-      m_dataOut->send(msg);
-      entry.second = Chunk{m_run, tck(), entry.second.histId};
+      zmq().send(*m_dataOut, s);
+      entry.second = Chunk{m_run, entry.second.histId};
    }
 }
 
@@ -380,23 +359,6 @@ void HltMonitorSvc::addInfo(Monitoring::HistId id, const std::string& type,
    auto msgId = m_infoMessages.size();
    m_infoMessages.emplace(msgId, InfoMessage{id, type, inf});
    m_toSend.insert(msgId);
-}
-
-//===============================================================================
-unsigned int HltMonitorSvc::tck() const
-{
-   if (UNLIKELY(!m_tck)) {
-      // Get the newly created HltDecReports to obtain the TCK
-      DataObject* obj{nullptr};
-      StatusCode sc = m_evtSvc->retrieveObject(m_decRepLoc, obj);
-      if (!sc.isSuccess()) {
-         throw GaudiException(name() + " Could not retrieve LHCb::HltDecReports from " + m_decRepLoc, "",
-                              StatusCode::FAILURE);
-      }
-      const LHCb::HltDecReports* decReps = static_cast<const LHCb::HltDecReports*>(obj);
-      m_tck = decReps->configuredTCK();
-   }
-   return m_tck;
 }
 
 //===============================================================================

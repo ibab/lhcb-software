@@ -46,18 +46,22 @@ public:
 
 private:
 
+   IZeroMQSvc& zmq() const { return *m_zmqSvc; }
+
    StatusCode updateConditions();
 
    void sendInfo();
 
    // properties
    std::string m_infoCon;
-   std::string m_decRepLoc;
    std::string m_lumiCond;
    std::string m_runCond;
+   std::string m_decRepLoc;
+   std::string m_tckCond;
 
    // data members
    IZeroMQSvc* m_zmqSvc;
+   IDataProviderSvc* m_evtSvc;
    IUpdateManagerSvc* m_updMgrSvc;
 
    std::map<std::string, Condition*> m_conditions;
