@@ -4,6 +4,14 @@
 ! Purpose     : Online monitoring of Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-11-05 - Roel Aaij
+ - Adapt to changes in Online/ZeroMQ.
+
+! 2015-11-05 - Roel Aaij
+ - Move TCK out of Chunk and Histogram into RunInfo. Obtain TCK from condition
+   if possible, otherwise from DecReports (only works when running from TCK),
+   and otherwise set it to 0.
+
 ! 2015-10-08 - Roel Aaij
  - Fix bug in Hlt2RootPublishSvc introduced with the previous commit. The
    proper bin in the ROOT histograms is now properly calculated.
