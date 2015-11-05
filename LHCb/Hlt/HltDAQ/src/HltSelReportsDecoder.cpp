@@ -418,7 +418,11 @@ StatusCode HltSelReportsDecoder::execute() {
           Error(  " Substructure object index out of range ", StatusCode::SUCCESS, 10 );
         }
       }
-      hos->setSubstructure( thisSubstructure );
+      hos->setSubstructureExtended( thisSubstructure );
+      if( hltselreportsRawBank0->version() < 3 )
+      {
+        hos->setSubstructure( thisSubstructure );
+      }
     }
 
     // give ownership to TES
@@ -427,6 +431,59 @@ StatusCode HltSelReportsDecoder::execute() {
 
   // clean-up
   hltSelReportsBank.deleteBank();
+
+
+  // fix intermix of substructure needed by TisTos tool and by Turbo stream  
+  // substructure() returns only things needed by TisTos, substructureExetended() all things needed by Turbo
+  // logic below is somewhat messy and depends on what was done in HltSelReportsMaker; this is the best we
+  //      can do without restructuring rawbanks that don't distinguish between the two types 
+
+  //     don't waste time on older version banks which did not have extended info 
+  if( hltselreportsRawBank0->version() > 2 )
+  {
+    for( unsigned int iObj=0; iObj!= nObj; ++iObj){
+    
+      HltObjectSummary* & hos = objects[iObj];        
+      if( hos->summarizedObjectCLID()!=LHCb::CLID_Particle )
+      {
+        hos->setSubstructure( hos->substructureExtended() );
+      }
+      else 
+      {
+        // for TisTos need to delete calo clusters from a particle that has a track in substructure
+
+        const SmartRefVector< LHCb::HltObjectSummary > & sub = hos->substructureExtended();
+        // look for a track among substracture
+        bool trackFound(false);
+        for( SmartRefVector< LHCb::HltObjectSummary >::const_iterator ihos=sub.begin();ihos!=sub.end();++ihos)
+        {
+          if( !(ihos->target()) )continue;
+          if( ihos->target()->summarizedObjectCLID() != LHCb::CLID_Track )continue;
+          trackFound = true;
+          break;
+        }
+
+        if( trackFound )
+        {
+          for( SmartRefVector< LHCb::HltObjectSummary >::const_iterator ihos=sub.begin();ihos!=sub.end();++ihos)
+          {
+            if( !(ihos->target()) )continue;
+            // add only if not calo cluster
+            if( ihos->target()->summarizedObjectCLID() != LHCb::CLID_CaloCluster )continue;
+            hos->addToSubstructure( ihos->target() );
+          }
+        }
+        else
+        {
+          // no track, no worry
+          hos->setSubstructure( hos->substructureExtended() );
+        }
+        
+      }
+
+    }
+  }
+  
 
   // ---------------------------------------------------------
   // ------- special container for selections ----------------

@@ -4,6 +4,12 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2015-11-05 - Tomasz Skwarnicki
+ - Modify HltSelReportsDecoder to split substructure saved in RawBanks
+   to the one needed by TisTos, returned by substructure(), and the one
+   needed by Turbo stream, returned by substructureExtended() of
+   mofified HltObjectSummary
+
 ! 2015-11-04 - Roel Aaij
  - Remove leftover debug printout.
 
