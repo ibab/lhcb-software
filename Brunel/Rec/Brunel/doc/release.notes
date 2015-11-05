@@ -3,6 +3,8 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes to references to reflect changes in TTStationHitManager (causing changes in PatLongLivedTracking), FTHitExpectation and PrimaryVertex class packing
+
 - Changes to references to reflect changes since v49r0
   . In brunel-lumiconddbchecker.ref and test-FSR.ref, follow LHCBPS-1434 patch:
     LHCbApp() now assigns OdinTimeDecoder as EventClockSvc().EventTimeDecoder
