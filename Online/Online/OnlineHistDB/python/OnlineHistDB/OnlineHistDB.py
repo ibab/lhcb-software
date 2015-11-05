@@ -11,6 +11,7 @@ ROOT.gInterpreter.Declare('#include "OnlineHistDB/OnlineHistogram.h"')
 
 # ROOT "typedefs"
 StdString = ROOT.std.string
+VectorOfStrings = ROOT.std.vector('string')
 VectorOfOnlineHistograms = ROOT.std.vector('OnlineHistogram*')
 
 
@@ -53,6 +54,15 @@ class OnlineHistDB(object):
         # declared in the OnlineHistogram header, from which the OnlineHistDB
         # C++ class inherits
         return OnlineHistogram(self._hdb.getHistogram(StdString(hid)), self)
+
+    def pages(self):
+        """Return a list of all pages in the database."""
+        pages_vec = VectorOfStrings()
+        self._hdb.getPageNames(pages_vec)
+        # Return a fully Pythonized object
+        pages = [str(page) for page in pages_vec]
+        del pages_vec
+        return pages
 
     def page(self, page_path):
         """Return the OnlineHistPage object for the given path."""
