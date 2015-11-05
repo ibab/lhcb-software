@@ -3,6 +3,9 @@
 ! Responsible : Sean Benson
 !=============================================================================
 
+! 2015-11-05 - Lucio Anderlini
+ - Made number of bins of the TeslaBrunelMonitor a configurable
+
 ! 2015-10-29 - Roel Aaij
  - Update to agreed upon way of storing {location : id} in HltANNSvc.
 

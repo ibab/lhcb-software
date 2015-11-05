@@ -65,6 +65,9 @@ TeslaBrunelMonitor::TeslaBrunelMonitor( const std::string& name,
   declareProperty("Cut", m_cut, 
                   "LoKi requirement to the entries included in the histogram");
 
+  declareProperty("NumberOfBins", m_numberOfBins = 1000,
+                  "Number of bins to plot each variable difference.");
+
 
   declareProperty ( "MatchLocations" , m_matching_locations );                   
 
@@ -124,7 +127,7 @@ StatusCode TeslaBrunelMonitor::initialize() {
     h = histo2D ( m_histName ) ;
     if ( NULL == h )   
       h = book2D (m_histName, m_histTitle, 0, m_nVariables, m_nVariables,
-                                          -1., 1., 1000.); 
+                                          -1., 1., m_numberOfBins); 
 
     for (size_t iVar = 0; iVar < m_nVariables; ++iVar)
     {
@@ -195,12 +198,12 @@ StatusCode TeslaBrunelMonitor::execute() {
 
       plot2D((double)iVar , normdiff,
          m_histName, m_histTitle,
-         0, m_nVariables, -1, 1., m_nVariables, 1000);
+         0, m_nVariables, -1, 1., m_nVariables, m_numberOfBins);
 
       plot1D(diff,
               m_histName + "_" + var.m_name,
               var.m_name,
-              -var.m_max, var.m_max, 1000);
+              -var.m_max, var.m_max, m_numberOfBins);
 
       counter ("Entries") ++;
     }

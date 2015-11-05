@@ -64,7 +64,7 @@ private:
 
   std::string m_histTitle, m_histName, m_teslaMatcherName;
 
-  size_t m_nVariables;
+  size_t m_nVariables, m_numberOfBins;
 
   ITeslaMatcher* m_matcher;
 
