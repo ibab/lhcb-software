@@ -120,7 +120,7 @@ void Hlt2HistPublishSvc::declareHisto(string, TH1D* histo) {
 //===============================================================================
 void Hlt2HistPublishSvc::function()
 {
-   zmq::socket_t data{context(), ZMQ_SUB};
+   zmq::socket_t data = socket(ZMQ_SUB);
    data.connect(m_dataCon.c_str());
    data.setsockopt(ZMQ_SUBSCRIBE, "", 0);
    info() << "Connected data socket to: " << m_dataCon << endmsg;
@@ -132,7 +132,7 @@ void Hlt2HistPublishSvc::function()
    }
 
    // Control socket
-   zmq::socket_t control{context(), ZMQ_SUB};
+   zmq::socket_t control = socket(ZMQ_SUB);
    control.bind(ctrlCon().c_str());
    control.setsockopt(ZMQ_SUBSCRIBE, "", 0);
 
@@ -151,7 +151,7 @@ void Hlt2HistPublishSvc::function()
       zmq::poll(&items[0], 2, -1);
 
       if (items[0].revents & ZMQ_POLLIN) {
-         auto cmd = receiveString(control);
+         auto cmd = receive<std::string>(control);
          if (cmd == "TERMINATE") {
             int linger = 0;
             data.setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
@@ -170,10 +170,10 @@ void Hlt2HistPublishSvc::function()
          auto key = receiveRunAndId(data);
 
          // Receive type
-         auto type = receiveString(data);
+         auto type = receive<std::string>(data);
 
          // Receive directory
-         auto dir = receiveString(data);
+         auto dir = receive<std::string>(data);
 
          // Receive ROOT histogram
          data.recv(&message);

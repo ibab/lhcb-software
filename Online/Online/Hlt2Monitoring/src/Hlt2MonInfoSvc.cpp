@@ -105,7 +105,7 @@ void Hlt2MonInfoSvc::function()
 {
 
    // Create frontend, backend and control sockets
-   zmq::socket_t data{context(), ZMQ_SUB};
+   zmq::socket_t data = socket(ZMQ_SUB);
    data.connect(m_frontCon.c_str());
    data.setsockopt(ZMQ_SUBSCRIBE, "", 0);
    info() << "Connected data input socket to: " << m_frontCon << endmsg;
@@ -116,11 +116,11 @@ void Hlt2MonInfoSvc::function()
       msg.rebuild();
    }
 
-   zmq::socket_t inf{context(), ZMQ_REP};
+   zmq::socket_t inf = socket(ZMQ_REP);
    inf.bind(m_backCon.c_str());
    info() << "Bound info service socket to: " << m_backCon << endmsg;
 
-   zmq::socket_t control{context(), ZMQ_SUB};
+   zmq::socket_t control = socket(ZMQ_SUB);
    control.bind(ctrlCon().c_str());
    control.setsockopt(ZMQ_SUBSCRIBE, "", 0);
 
@@ -139,7 +139,7 @@ void Hlt2MonInfoSvc::function()
 
       if (items[0].revents & ZMQ_POLLIN) {
          // Control messages
-         auto cmd = receiveString(control);
+         auto cmd = receive<std::string>(control);
          if (cmd == "TERMINATE") {
             int linger = 0;
             data.setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
@@ -155,7 +155,7 @@ void Hlt2MonInfoSvc::function()
          }
       }
       if (!paused && (items[1].revents & ZMQ_POLLIN)) {
-         auto type = receiveString(data);
+         auto type = receive<std::string>(data);
          debug() << "New info message: " << type << endmsg;
 
          if (type == Monitoring::s_HistoInfo) {
@@ -169,7 +169,7 @@ void Hlt2MonInfoSvc::function()
       if (!paused && (items[2].revents & ZMQ_POLLIN)) {
          // Requests for info
          // what type
-         auto type = receiveString(inf);
+         auto type = receive<std::string>(inf);
          debug() << "New info request: " << type << endmsg;
 
          if (type == Monitoring::s_HistoInfo) {
@@ -200,18 +200,18 @@ bool Hlt2MonInfoSvc::receiveHistoInfo(zmq::socket_t& data) const
       }
    } else {
       // What type
-      std::string type = receiveString(data);
+      std::string type = receive<std::string>(data);
 
       debug() << "New histogram: " << type;
 
       // Last part, the content.
       if (type == Monitoring::s_Rate) {
-         m_rates[key] = receiveString(data);
+         m_rates[key] = receive<std::string>(data);
          debug() << " " << m_rates[key] << endmsg;
       } else if (type == Monitoring::s_Histo1D) {
          // Deserialize Histo1DDef
          Gaudi::Histo1DDef def;
-         std::stringstream ss{receiveString(data)};
+         std::stringstream ss{receive<std::string>(data)};
          {
             boost::archive::text_iarchive ia{ss};
             ia >> def;
@@ -232,7 +232,7 @@ bool Hlt2MonInfoSvc::receiveRunInfo(zmq::socket_t& data) const
 {
    // Deserialize RunInfo
    Monitoring::RunInfo runInfo;
-   auto info = receiveString(data);
+   auto info = receive<std::string>(data);
    std::stringstream ss{info};
    {
       boost::archive::text_iarchive ia{ss};
@@ -284,7 +284,7 @@ bool Hlt2MonInfoSvc::histoInfoRequest(zmq::socket_t& inf) const
    array<string, 4> rep = {known, type, reply};
    for (auto it = begin(rep), last = end(rep); it != last; ++it) {
       debug() << *it << "|";
-      sendString(inf, *it, (it != (last -1) ? ZMQ_SNDMORE : 0));
+      send(inf, *it, (it != (last -1) ? ZMQ_SNDMORE : 0));
    }
    debug() << endmsg;
    return true;
@@ -317,7 +317,7 @@ bool Hlt2MonInfoSvc::runInfoRequest(zmq::socket_t& inf) const
    array<string, 2> rep = {known, reply};
    for (auto it = begin(rep), last = end(rep); it != last; ++it) {
       debug() << *it << "|";
-      sendString(inf, *it, (it != (last - 1) ? ZMQ_SNDMORE : 0));
+      send(inf, *it, (it != (last - 1) ? ZMQ_SNDMORE : 0));
    }
    debug() << endmsg;
    return true;

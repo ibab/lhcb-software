@@ -100,7 +100,7 @@ StatusCode Hlt2RootPublishSvc::initialize()
 //===============================================================================
 void Hlt2RootPublishSvc::function()
 {
-   zmq::socket_t front{context(), ZMQ_SUB};
+   zmq::socket_t front = socket(ZMQ_SUB);
    front.connect(m_frontCon.c_str());
    front.setsockopt(ZMQ_SUBSCRIBE, "", 0);
    info() << "Connected front socket to: " << m_frontCon << endmsg;
@@ -111,18 +111,18 @@ void Hlt2RootPublishSvc::function()
       msg.rebuild();
    }
 
-   zmq::socket_t inf{context(), ZMQ_REQ};
+   zmq::socket_t inf = socket(ZMQ_REQ);
    inf.connect(m_infoCon.c_str());
    int timeo = 1000;
    inf.setsockopt(ZMQ_RCVTIMEO, &timeo, sizeof(timeo));
    info() << "Connected info socket to: " << m_infoCon << endmsg;
 
-   zmq::socket_t back{context(), ZMQ_PUB};
+   zmq::socket_t back = socket(ZMQ_PUB);
    back.bind(m_backCon.c_str());
    info() << "Bound back socket to: " << m_backCon << endmsg;
 
    // Control socket
-   zmq::socket_t control{context(), ZMQ_SUB};
+   zmq::socket_t control = socket(ZMQ_SUB);
    control.bind(ctrlCon().c_str());
    control.setsockopt(ZMQ_SUBSCRIBE, "", 0);
 
@@ -142,7 +142,7 @@ void Hlt2RootPublishSvc::function()
       zmq::poll(&items[0], 2, -1);
 
       if (items[0].revents & ZMQ_POLLIN) {
-         auto cmd = receiveString(control);
+         auto cmd = receive<std::string>(control);
          if (cmd == "TERMINATE") {
             int linger = 0;
             front.setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
@@ -160,7 +160,7 @@ void Hlt2RootPublishSvc::function()
       if (!paused && (items[1].revents & ZMQ_POLLIN)) {
          // Deserialize
          Monitoring::Histogram histo;
-         std::stringstream ss{receiveString(front)};
+         std::stringstream ss{receive<std::string>(front)};
          {
             boost::archive::text_iarchive ia{ss};
             ia >> histo;
@@ -184,16 +184,16 @@ void Hlt2RootPublishSvc::function()
             // request histo info from MonInfoSvc
 
             // send request
-            sendString(inf, Monitoring::s_HistoInfo, ZMQ_SNDMORE);
-            sendMessage(inf, key.first, ZMQ_SNDMORE);
-            sendMessage(inf, key.second);
+            send(inf, Monitoring::s_HistoInfo, ZMQ_SNDMORE);
+            send(inf, key.first, ZMQ_SNDMORE);
+            send(inf, key.second);
 
             // Wait for reply
             size_t err = 0;
             vector<string> reply;
             bool more = true;
             while (more) {
-               reply.push_back(receiveString(inf, &more));
+               reply.push_back(receive<std::string>(inf, &more));
             }
 
             // If we get an error or the histogram is not known, continue.
@@ -309,14 +309,14 @@ void Hlt2RootPublishSvc::publishHistograms(zmq::socket_t& socket) const
               << " " << dir << " " << histo->GetName() << endmsg;
 
       // Send run and ID
-      sendMessage(socket, run, ZMQ_SNDMORE);
-      sendMessage(socket, id, ZMQ_SNDMORE);
+      send(socket, run, ZMQ_SNDMORE);
+      send(socket, id, ZMQ_SNDMORE);
 
       // Send type of histogram
-      sendString(socket, type, ZMQ_SNDMORE);
+      send(socket, type, ZMQ_SNDMORE);
 
       // Send histogram directory
-      sendString(socket, dir, ZMQ_SNDMORE);
+      send(socket, dir, ZMQ_SNDMORE);
 
       // Serialize histogram
       TBufferFile buffer(TBuffer::kWrite);

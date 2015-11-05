@@ -75,7 +75,7 @@ StatusCode Hlt2AdderSvc::initialize()
 //===============================================================================
 void Hlt2AdderSvc::function()
 {
-   zmq::socket_t front{context(), ZMQ_SUB};
+   zmq::socket_t front = socket(ZMQ_SUB);
    front.connect(m_frontCon.c_str());
    front.setsockopt(ZMQ_SUBSCRIBE, "", 0);
    info() << "Connected frontend to: " << m_frontCon << endmsg;
@@ -86,12 +86,12 @@ void Hlt2AdderSvc::function()
       msg.rebuild();
    }
 
-   zmq::socket_t back{context(), ZMQ_PUB};
+   zmq::socket_t back = socket(ZMQ_PUB);
    back.bind(m_backCon.c_str());
    info() << "Bound backend to: " << m_backCon << endmsg;
 
    // WORKING: control socket and zmq_poll to stop. Check restart logic.
-   zmq::socket_t control{context(), ZMQ_SUB};
+   zmq::socket_t control = socket(ZMQ_SUB);
    control.bind(ctrlCon().c_str());
    control.setsockopt(ZMQ_SUBSCRIBE, "", 0);
 
@@ -110,7 +110,7 @@ void Hlt2AdderSvc::function()
       if (!paused) zmq::poll (&items [0], 2, -1);
 
       if (paused || (items[0].revents & ZMQ_POLLIN)) {
-         auto cmd = receiveString(control);
+         auto cmd = receive<std::string>(control);
          if (cmd == "TERMINATE") {
             int linger = 0;
             front.setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
@@ -129,7 +129,7 @@ void Hlt2AdderSvc::function()
          // Deserialize
          Monitoring::Chunk c;
          {
-            std::stringstream inStream{receiveString(front)};
+            std::stringstream inStream{receive<std::string>(front)};
             try {
                boost::archive::text_iarchive ia{inStream};
                ia >> c;
@@ -145,7 +145,7 @@ void Hlt2AdderSvc::function()
          // Add to internal store
          auto it = m_histograms.find(key);
          if (it == end(m_histograms)) {
-            auto r = m_histograms.insert(make_pair(key, Monitoring::Histogram{c.runNumber, c.tck, c.histId}));
+            auto r = m_histograms.insert(make_pair(key, Monitoring::Histogram{c.runNumber, c.histId}));
             assert(r.second);
             it = r.first;
             m_updates[key] = now;
@@ -164,7 +164,7 @@ void Hlt2AdderSvc::function()
                oa << it->second;
             }
             // Send message
-            sendString(back, outStream.str());
+            send(back, outStream.str());
             m_updates[key] = now;
 
             // Zero out histogram

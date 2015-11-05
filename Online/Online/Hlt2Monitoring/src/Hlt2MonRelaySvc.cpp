@@ -94,9 +94,9 @@ StatusCode Hlt2MonRelaySvc::initialize()
 void Hlt2MonRelaySvc::function()
 {
    // Create frontend, backend, control and possible capture sockets
-   zmq::socket_t front{context(), ZMQ_XSUB};
-   zmq::socket_t back{context(), ZMQ_XPUB};
-   zmq::socket_t control{context(), ZMQ_SUB};
+   zmq::socket_t front = zmq().socket(ZMQ_XSUB);
+   zmq::socket_t back = zmq().socket(ZMQ_XPUB);
+   zmq::socket_t control = zmq().socket(ZMQ_SUB);
    zmq::socket_t* cap{nullptr};
 
    //  Bind sockets to TCP ports
@@ -126,7 +126,7 @@ void Hlt2MonRelaySvc::function()
    std::thread* captureThread{nullptr};
    if (m_capture) {
       captureThread = new std::thread{[this]{capture();}};
-      cap = new zmq::socket_t{context(), ZMQ_PUB};
+      cap = new zmq::socket_t{zmq().context(), ZMQ_PUB};
       cap->bind(m_captureCon.c_str());
    }
 
@@ -159,11 +159,11 @@ void Hlt2MonRelaySvc::function()
 void Hlt2MonRelaySvc::capture() const
 {
    // Create frontend, backend and control sockets
-   zmq::socket_t capture{context(), ZMQ_SUB};
+   zmq::socket_t capture = zmq().socket(ZMQ_SUB);
    capture.connect(m_captureCon.c_str());
    capture.setsockopt(ZMQ_SUBSCRIBE, "", 0);
 
-   zmq::socket_t control{context(), ZMQ_SUB};
+   zmq::socket_t control = zmq().socket(ZMQ_SUB);
    control.connect(ctrlCon().c_str());
    control.setsockopt(ZMQ_SUBSCRIBE, "", 0);
 
@@ -182,7 +182,7 @@ void Hlt2MonRelaySvc::capture() const
       zmq::poll(&items[0], 2, -1);
 
       if (items[0].revents & ZMQ_POLLIN) {
-         auto cmd = receiveString(control);
+         auto cmd = zmq().receive<std::string>(control);
          if (cmd == "TERMINATE") {
             int linger = 0;
             control.setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
@@ -196,7 +196,7 @@ void Hlt2MonRelaySvc::capture() const
       }
       if (!paused && (items[1].revents & ZMQ_POLLIN)) {
          // Capture
-         auto first = receiveString(capture);
+         auto first = zmq().receive<std::string>(capture);
          debug() << "Captured message; first part: " << first << endmsg;
       }
    }

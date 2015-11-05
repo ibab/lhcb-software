@@ -7,6 +7,7 @@
 #include <ostream>
 
 #include <boost/serialization/vector.hpp>
+#include <boost/serialization/version.hpp>
 
 #include "Common.h"
 
@@ -16,22 +17,20 @@ namespace Monitoring {
  */
 struct Histogram {
    Histogram() {};
-   Histogram(RunNumber runNumber, TCK tck, HistId histId)
-      : runNumber{runNumber}, tck{tck}, histId{histId}, data(4000, 0) {}
+   Histogram(RunNumber runNumber, HistId histId)
+      : runNumber{runNumber}, histId{histId}, data(4000, 0) {}
 
    Histogram(const Histogram& other)
       : runNumber{other.runNumber},
-        tck{other.tck},
         histId{other.histId},
         data(other.data) { }
 
-   // Histogram(Histogram&& other)
-   // {
-   //    std::swap(runNumber, other.runNumber);
-   //    std::swap(tck, other.tck);
-   //    std::swap(histId, other.histId);
-   //    std::swap(data, other.data);
-   // }
+   Histogram(Histogram&& other)
+   {
+      std::swap(runNumber, other.runNumber);
+      std::swap(histId, other.histId);
+      std::swap(data, other.data);
+   }
 
    Histogram& operator=(const Histogram& other)
    {
@@ -39,26 +38,24 @@ struct Histogram {
          return *this;
       }
       runNumber = other.runNumber;
-      tck = other.tck;
       histId = other.histId;
       data = other.data;
       return *this;
    }
 
-   // Histogram& operator=(Histogram&& other)
-   // {
-   //    if (&other == this) {
-   //       return *this;
-   //    }
-   //    std::swap(runNumber, other.runNumber);
-   //    std::swap(tck, other.tck);
-   //    std::swap(histId, other.histId);
-   //    std::swap(data, other.data);
-   //    return *this;
-   // }
+   Histogram& operator=(Histogram&& other)
+   {
+      if (&other == this) {
+         return *this;
+      }
+      std::swap(runNumber, other.runNumber);
+      std::swap(histId, other.histId);
+      std::swap(data, other.data);
+      return *this;
+   }
 
    auto addChunk(const Chunk& c) noexcept -> void {
-      assert(runNumber == c.runNumber && tck == c.tck && histId == c.histId);
+      assert(runNumber == c.runNumber && histId == c.histId);
       // Skip empty chunks
       if (c.data.empty()) return;
 
@@ -80,11 +77,13 @@ struct Histogram {
    }
 
    RunNumber runNumber;
-   TCK tck;
+   TCK tck = 0; // for backwards compatibility
    HistId histId;
    std::vector<BinContent> data;
 
 };
-
 }
+
+BOOST_CLASS_VERSION(Monitoring::Histogram, 1)
+
 #endif // HLT2MONITORING_HISTOGRAM_H

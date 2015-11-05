@@ -2,6 +2,14 @@
 #define HLT2MONITORING_RUNINFO_H 1
 
 // Include files
+#include <string>
+#include <vector>
+
+// boost
+#include <boost/serialization/version.hpp>
+
+// local
+#include "Common.h"
 
 namespace Monitoring {
 /** @class HltRunInfo HltRunInfo.h Hlt2Monitoring/HltRunInfo.h
@@ -19,17 +27,24 @@ public:
    RunInfo& operator=(RunInfo&&) = default;
    
    RunInfo(const std::vector<double> pars, Monitoring::RunNumber r,
-           size_t s)
+           size_t s, TCK t, std::string app)
       : lumiPars{pars},
         run{r},
-        start{s} { }
+        start{s},
+        tck{t},
+        application{app} { }
    
    virtual ~RunInfo( ) {}; ///< Destructor
 
    std::vector<double> lumiPars;
    Monitoring::RunNumber run;
    size_t start;
+   TCK tck;
+   std::string application;
    
 };
 }
+
+BOOST_CLASS_VERSION(Monitoring::RunInfo, 1)
+
 #endif // HLT2MONITORING_RUNINFO_H

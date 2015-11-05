@@ -21,13 +21,6 @@
 class ISvcLocator;
 class IIncidentSvc;
 
-namespace {
-   template <class T>
-   size_t defaultSizeOf(const T&) {
-      return sizeof(T);
-   }
-}
-
 /** @class Hlt2Saver Hlt2Saver.h
  *
  *
@@ -53,26 +46,25 @@ public:
 
 protected:
 
-   IZeroMQSvc* zmqSvc() const { return m_zmqSvc; }
-   inline zmq::context_t& context() const { return m_zmqSvc->context(); }
-   inline zmq::socket_t& control() const { return *m_control; }
+   IZeroMQSvc& zmq() const { return *m_zmqSvc; }
+   inline zmq::socket_t& control() { return *m_control; }
    const std::string& ctrlCon() const { return m_ctrlCon; }
 
-   // General method to send simple objects
-   template <class T>
-   bool sendMessage(zmq::socket_t& socket, const T& item, int flag = 0,
-                    std::function<size_t(const T& t)> sizeFun = defaultSizeOf<T>) const {
-      size_t s = sizeFun(item);
-      zmq::message_t msg(s);
-      memcpy(static_cast<void*>(msg.data()), &item, s);
-      return socket.send(msg, flag);
+   // Convenience
+   virtual zmq::socket_t socket(int type) const {
+      return zmq().socket(type);
    }
 
-   bool sendString(zmq::socket_t& socket, const std::string& item, int flags = 0) const {
-      return sendMessage<const char>(socket, *item.c_str(), flags, [](const char& cs){ return strlen(&cs); });
+   template<class... Args>
+   bool send(zmq::socket_t& s, Args&&... args) const {
+      return zmq().send(s, std::forward<Args>(args)...);
    }
 
-   std::string receiveString(zmq::socket_t& socket, bool* more = nullptr) const;
+   template<class T, class... Args>
+   T receive(zmq::socket_t& s, Args&&... args) const {
+      return zmq().receive<T>(s, std::forward<Args>(args)...);
+   }
+   
    std::pair<Monitoring::RunNumber, Monitoring::HistId> receiveRunAndId(zmq::socket_t& socket, bool* more = nullptr) const;
 
    // Are we enabled?
@@ -91,11 +83,12 @@ protected:
    unsigned int m_inPort;
    unsigned int m_outPort;
 
-
 private:
 
-   // data members
+   // properties
    bool m_bindControl;
+
+   // data members
    bool m_enabled;
    IIncidentSvc* m_incidentSvc;
    std::thread* m_thread;

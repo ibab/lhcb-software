@@ -92,13 +92,13 @@ StatusCode Hlt2MonBaseSvc::start()
    if (!m_enabled) return sc;
 
    if (m_thread) {
-      sendString(*m_control, "RESUME");
+      zmq().send(*m_control, "RESUME");
       return sc;
    }
 
    m_thread = new std::thread([this]{function();});
 
-   m_control = new zmq::socket_t{context(), ZMQ_PUB};
+   m_control = new zmq::socket_t{zmq().context(), ZMQ_PUB};
    if (m_bindControl) {
       m_control->bind(m_ctrlCon.c_str());
    } else {
@@ -112,7 +112,7 @@ StatusCode Hlt2MonBaseSvc::start()
 StatusCode Hlt2MonBaseSvc::stop()
 {
    // Disable the pause command until some better synchronisation is available
-   // if (m_control) {
+   // if (m_thread) {
    //    sendString(*m_control, "PAUSE");
    // }
    return StatusCode::SUCCESS;
@@ -123,7 +123,7 @@ StatusCode Hlt2MonBaseSvc::finalize()
 {
    // terminate the proxy
    if (m_thread) {
-      sendString(*m_control, "TERMINATE");
+      send<std::string>(*m_control, "TERMINATE");
       m_thread->join();
       delete m_thread;
       m_thread = nullptr;
@@ -146,29 +146,7 @@ std::pair<Monitoring::RunNumber, Monitoring::HistId>
 Hlt2MonBaseSvc::receiveRunAndId(zmq::socket_t& socket, bool* more) const
 {
    // Incoming IDs
-   zmq::message_t message;
-   socket.recv(&message);
-   Monitoring::RunNumber run{0};
-   memcpy(&run, message.data(), sizeof(run));
-
-   // Histogram ID
-   message.rebuild(sizeof(Monitoring::HistId));
-   socket.recv(&message);
-   Monitoring::HistId id{0};
-   memcpy(&id, message.data(), sizeof(id));
-
-   if (more) *more = message.more();
+   auto run = receive<Monitoring::RunNumber>(socket, more);
+   auto id = receive<Monitoring::HistId>(socket, more);
    return make_pair(run, id);
-}
-
-//===============================================================================
-std::string Hlt2MonBaseSvc::receiveString(zmq::socket_t& socket, bool* more) const
-{
-   zmq::message_t msg;
-   socket.recv(&msg);
-   if (more) *more = msg.more();
-
-   string r(msg.size() + 1, char{});
-   r.assign(static_cast<char*>(msg.data()), msg.size());
-   return r;
 }

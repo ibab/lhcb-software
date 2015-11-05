@@ -114,7 +114,7 @@ StatusCode Hlt2SaverSvc::initialize()
 //===============================================================================
 void Hlt2SaverSvc::save()
 {
-   zmq::socket_t control{context(), ZMQ_PUB};
+   zmq::socket_t control = zmq().socket(ZMQ_PUB);
    control.connect(ctrlCon().c_str());
 
    while(!m_stopSaving) {
@@ -127,7 +127,7 @@ void Hlt2SaverSvc::save()
          ++n;
       }
       if (!m_stopSaving)
-         sendString(control, "SAVE");
+         send(control, "SAVE");
    }
 
    int linger = 0;
@@ -137,7 +137,7 @@ void Hlt2SaverSvc::save()
 //===============================================================================
 void Hlt2SaverSvc::function()
 {
-   zmq::socket_t data{context(), ZMQ_SUB};
+   zmq::socket_t data = zmq().socket(ZMQ_SUB);
    data.connect(m_dataCon.c_str());
    data.setsockopt(ZMQ_SUBSCRIBE, "", 0);
    info() << "Connected data socket to: " << m_dataCon << endmsg;
@@ -149,7 +149,7 @@ void Hlt2SaverSvc::function()
    }
 
    // Control socket
-   zmq::socket_t control{context(), ZMQ_SUB};
+   zmq::socket_t control = zmq().socket(ZMQ_SUB);
    control.bind(ctrlCon().c_str());
    control.setsockopt(ZMQ_SUBSCRIBE, "", 0);
 
@@ -171,7 +171,7 @@ void Hlt2SaverSvc::function()
       zmq::poll(&items[0], 2, -1);
 
       if (items[0].revents & ZMQ_POLLIN) {
-         auto cmd = receiveString(control);
+         auto cmd = receive<std::string>(control);
          if (cmd == "TERMINATE") {
             pruneHistograms();
             saveHistograms();
@@ -195,10 +195,10 @@ void Hlt2SaverSvc::function()
          auto key = receiveRunAndId(data);
 
          // Receive type
-         auto type = receiveString(data);
+         auto type = receive<std::string>(data);
 
          // Receive directory
-         auto dir = receiveString(data);
+         auto dir = receive<std::string>(data);
 
          // Receive ROOT histogram
          data.recv(&message);
@@ -483,19 +483,19 @@ Hlt2SaverSvc::runInfo(Monitoring::RunNumber run) const
    if (it != end(m_runInfo)) {
       r = it->second;
    } else {
-      zmq::socket_t inf{context(), ZMQ_REQ};
+      zmq::socket_t inf = zmq().socket(ZMQ_REQ);
       inf.connect(m_infoCon.c_str());
       int timeo = 1000;
       inf.setsockopt(ZMQ_RCVTIMEO, &timeo, sizeof(timeo));
 
       // Send request for info
-      sendString(inf, Monitoring::s_RunInfo, ZMQ_SNDMORE);
-      sendMessage(inf, run);
+      send(inf, Monitoring::s_RunInfo, ZMQ_SNDMORE);
+      send(inf, run);
 
       vector<string> reply;
       bool more = true;
       while (more) {
-         reply.push_back(receiveString(inf, &more));
+         reply.push_back(receive<std::string>(inf, &more));
       }
       if (reply[0] == Monitoring::s_Known) {
          Monitoring::RunInfo runInfo;

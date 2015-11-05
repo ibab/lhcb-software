@@ -11,6 +11,7 @@
 
 // Boost
 #include <boost/serialization/vector.hpp>
+#include <boost/serialization/string.hpp>
 #include <boost/serialization/map.hpp>
 
 namespace boost {
@@ -110,19 +111,21 @@ auto serialize(
 // Serialize Chunk
 template <typename Archive>
 auto serialize(Archive& archive, Monitoring::Chunk& chunk,
-               const unsigned int) -> void {
+               const unsigned int v) -> void {
    archive& chunk.runNumber;
+   if (v == 0)
+      archive& chunk.tck;
    archive& chunk.histId;
-   archive& chunk.tck;
    archive& chunk.data;
 }
 
 // Serialize Histogram
 template <typename Archive>
 auto serialize(Archive& archive, Monitoring::Histogram& histo,
-               const unsigned int) -> void {
+               const unsigned int v) -> void {
    archive& histo.runNumber;
-   archive& histo.tck;
+   if (v == 0)
+      archive& histo.tck;
    archive& histo.histId;
    archive& histo.data;
 }
@@ -130,10 +133,14 @@ auto serialize(Archive& archive, Monitoring::Histogram& histo,
 // Serialize RunInfo
 template <typename Archive>
 auto serialize(Archive& archive, Monitoring::RunInfo& info,
-               const unsigned int) -> void {
+               const unsigned int v) -> void {
    archive& info.lumiPars;
    archive& info.run;
    archive& info.start;
+   if (v > 0) {
+      archive& info.tck;
+      archive& info.application;
+   }
 }
 
 }
