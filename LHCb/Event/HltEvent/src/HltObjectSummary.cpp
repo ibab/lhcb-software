@@ -23,6 +23,11 @@ std::ostream& LHCb::HltObjectSummary::fillStream(std::ostream& ss) const
     ss <<  j->index() << ":" << j->summarizedObjectCLID() << " , ";
   }
   ss << " } ";
+  ss << " substructureExtended : { ";
+  for( const auto& j : substructureExtended() ){
+    ss <<  j->index() << ":" << j->summarizedObjectCLID() << " , ";
+  }
+  ss << " } ";
   ss << " lhcbIDs : { ";
   for( const auto& k : lhcbIDs() ){
     ss <<  k.lhcbID() << " , ";

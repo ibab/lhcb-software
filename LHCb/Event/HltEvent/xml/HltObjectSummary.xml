@@ -73,6 +73,15 @@
 	multiplicity = 'N'
       />
 
+      <relation
+        type      = 'LHCb::HltObjectSummary'
+        name      = 'substructureExtended'
+        addMeth   = 'TRUE'
+        desc      = 'substructure (used in TisTos) plus any extended substructure added for Turbo stream.'
+        access    = 'PROTECTED' 
+	multiplicity = 'N'
+      />
+
 
      <!-- methods undoing subobjects if any -->
 
