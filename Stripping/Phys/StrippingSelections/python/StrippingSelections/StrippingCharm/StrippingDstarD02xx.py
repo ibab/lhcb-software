@@ -16,11 +16,10 @@ __all__ = ('StrippingDstarD02xxConf'
             
 '''
 from Gaudi.Configuration import *
-from LHCbKernel.Configuration import *
-from Configurables import FilterDesktop, CombineParticles
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
-from StrippingUtils.Utils import LineBuilder, checkConfig
+from StrippingUtils.Utils import LineBuilder
 
 # Default values
 
@@ -176,9 +175,8 @@ class StrippingDstarD02xxConf(LineBuilder):
         D* -> D0(-> xx) pi
         """
         xxCombSel = combinetwobody(name, config,xplus, xminus,"forTag")
-        dstar = combineDstar(name, config)
         combname = xplus+xminus
-        dstar_box = dstar.clone(name+config['prefix']+"Dst2PiD02"+combname+"D0PiComb" )
+        dstar_box = combineDstar(config)
         dst_req_sel = [DataOnDemand( "Phys/StdAllNoPIDsPions/Particles" ) ,
                        DataOnDemand( "Phys/StdNoPIDsUpPions/Particles"),
                        xxCombSel]
@@ -191,67 +189,19 @@ class StrippingDstarD02xxConf(LineBuilder):
         # Capitalize particle names to match Hlt2 D*->pi D0-> xx lines
         Xplus  = xplus[0].upper() + xplus[1:]    
         Xminus = xminus[0].upper() + xminus[1:]
-        inputLoc = {
-             "pi" : "Phys/StdAllNoPIDsPions/Particles"
-            ,"mu" : "Phys/StdAllLooseMuons/Particles"
-            ,"K" : "Phys/StdAllLooseKaons/Particles"
-            ,"e" : "Phys/StdAllLooseElectrons/Particles"
-            }
+        
         coneinfo = []
         for conekey, coneitem in (config['ConeAngles']).iteritems():
-          if xplus!=xminus and xplus!="pi" and xminus!="pi":
             coneinfo.append({ 
                                         'Type' : 'RelInfoConeVariables', 'ConeAngle' : coneitem, 'Variables' : config['ConeVariables'], 
-                                        'RecursionLevel' : 2, 
-                                        'Locations' : {
-                                          _tag_sel : 'P2CVDstar'+conekey,
-                                          xxCombSel   : 'P2CVD'+conekey, 
-                                          (inputLoc[xplus]).replace("/Particles","") : 'P2CVplus'+conekey,
-                                          (inputLoc[xminus]).replace("/Particles","") : 'P2CVminus'+conekey
+                                        'DaughterLocations' : {
+                                          '[D*(2010)+ -> ^(Charm -> X+ X- ) pi+]CC' : 'P2CVD0'+conekey,
+                                          '[D*(2010)+ -> (Charm -> X+ X- ) ^pi+]CC' : 'P2CVpis'+conekey,
+                                          '[D*(2010)+ -> (Charm -> ^X+ X- ) pi+]CC' : 'P2CVplus'+conekey,
+                                          '[D*(2010)+ -> (Charm -> X+ ^X- ) pi+]CC' : 'P2CVminus'+conekey,
                                         } 
                                       })
-          elif xplus!=xminus and xminus=="pi":
-            coneinfo.append({ 
-                                        'Type' : 'RelInfoConeVariables', 'ConeAngle' : coneitem, 'Variables' : config['ConeVariables'], 
-                                        'RecursionLevel' : 2, 
-                                        'Locations' : {
-                                          _tag_sel : 'P2CVDstar'+conekey,
-                                          xxCombSel   : 'P2CVD'+conekey, 
-                                          (inputLoc[xplus]).replace("/Particles","") : 'P2CVplus'+conekey,
-                                          (inputLoc[xminus]).replace("/Particles","") : ['P2CVminus'+conekey,'P2CVslow'+conekey]
-                                        } 
-                                      })
-          elif xplus!=xminus and xplus=="pi":
-            coneinfo.append({ 
-                                        'Type' : 'RelInfoConeVariables', 'ConeAngle' : coneitem, 'Variables' : config['ConeVariables'], 
-                                        'RecursionLevel' : 2, 
-                                        'Locations' : {
-                                          _tag_sel : 'P2CVDstar'+conekey,
-                                          xxCombSel   : 'P2CVD'+conekey, 
-                                          (inputLoc[xplus]).replace("/Particles","") : ['P2CVplus'+conekey,'P2CVslow'+conekey],
-                                          (inputLoc[xminus]).replace("/Particles","") : 'P2CVminus'+conekey
-                                        } 
-                                      })
-          elif xplus==xminus and xminus!="pi":
-            coneinfo.append({ 
-                                        'Type' : 'RelInfoConeVariables', 'ConeAngle' : coneitem, 'Variables' : config['ConeVariables'], 
-                                        'RecursionLevel' : 2, 
-                                        'Locations' : {
-                                          _tag_sel : 'P2CVDstar'+conekey,
-                                          xxCombSel   : 'P2CVD'+conekey, 
-                                          (inputLoc[xplus]).replace("/Particles","") : ['P2CVplus'+conekey,'P2CVminus'+conekey]
-                                        } 
-                                      })
-          elif xplus==xminus and xminus=="pi":
-            coneinfo.append({ 
-                                        'Type' : 'RelInfoConeVariables', 'ConeAngle' : coneitem, 'Variables' : config['ConeVariables'], 
-                                        'RecursionLevel' : 2, 
-                                        'Locations' : {
-                                          _tag_sel : 'P2CVDstar'+conekey,
-                                          xxCombSel   : 'P2CVD'+conekey, 
-                                          (inputLoc[xplus]).replace("/Particles","") : ['P2CVplus'+conekey,'P2CVminus'+conekey,'P2slowCV'+conekey]
-                                        } 
-                                      })
+          
         
         if (xplus == "e" and xminus =="mu") or (xplus == "mu" and xminus == "e"):
             
@@ -294,33 +244,16 @@ class StrippingDstarD02xxConf(LineBuilder):
         hltname = config['HLT2String']  # * matches Signal, Sidebands and Box lines
         hltname = hltname.replace('LAB1',Xplus)
         hltname = hltname.replace('LAB2',Xminus)
-        inputLoc = {
-             "pi" : "Phys/StdAllNoPIDsPions/Particles"
-            ,"mu" : "Phys/StdAllLooseMuons/Particles"
-            ,"K" : "Phys/StdAllLooseKaons/Particles"
-            ,"e" : "Phys/StdAllLooseElectrons/Particles"
-            }
         coneinfo = []
         for conekey, coneitem in (config['ConeAngles']).iteritems():
-          if xplus!=xminus:
             coneinfo.append({ 
                                         'Type' : 'RelInfoConeVariables', 'ConeAngle' : coneitem, 'Variables' : config['ConeVariables'], 
-                                        'RecursionLevel' : 1, 
-                                        'Locations' : {
-                                          xxCombSel   : 'P2CVD'+conekey,
-                                          (inputLoc[xplus]).replace("/Particles","") : 'P2CVplus'+conekey,
-                                          (inputLoc[xminus]).replace("/Particles","") : 'P2CVminus'+conekey
+                                        'DaughterLocations' : {
+                                          '[Charm -> ^X+ X- ]CC' : 'P2CVplus'+conekey,
+                                          '[Charm -> X+ ^X- ]CC' : 'P2CVminus'+conekey,
                                         } 
                                       })
-          elif xplus==xminus:
-            coneinfo.append({ 
-                                        'Type' : 'RelInfoConeVariables', 'ConeAngle' : coneitem, 'Variables' : config['ConeVariables'], 
-                                        'RecursionLevel' : 1, 
-                                        'Locations' : {
-                                          xxCombSel   : 'P2CVD'+conekey,
-                                          (inputLoc[xplus]).replace("/Particles","") : ['P2CV'+conekey+"_1",'P2CV'+conekey+"_2"]
-                                        } 
-                                      })
+        
         if(minbias==1):
             line_untagged_box = StrippingLine(name+config['prefix']+"Dst2PiD02"+combname+"_untagged_BoxMB",
                                               HLT1 = config['HLT1MB'],
@@ -349,7 +282,6 @@ class StrippingDstarD02xxConf(LineBuilder):
 
 ####### Template for combine particles for D0 -> x+ y-  ######
 def combinetwobody(name, config, xplus, xminus, postfix="") :
-    from Configurables import CombineParticles
     if(xplus == "mu") and (xminus == "mu") :                                     
         d0comb_combcut =       "(AMAXDOCA('')< %(doca)s *mm) & (DAMASS('D0')< %(DMassWinMuMuHigh)s *MeV) & (DAMASS('D0')> %(DMassWinMuMuLow)s *MeV) & (AMAXCHILD(PT)>%(XmaxPT)s *MeV) & (APT> %(D0MinPT)s)"
     elif (((xplus == "mu") and (xminus == "e")) or ((xplus == "e") and (xminus == "mu"))) :
@@ -359,8 +291,7 @@ def combinetwobody(name, config, xplus, xminus, postfix="") :
         
     d0comb_childcut = "(PT> %(XminPT)s *MeV) & (P>%(XminP)s *MeV) & (TRCHI2DOF<%(XTrackChi2)s) & (MIPCHI2DV(PRIMARY)> %(XminIPChi2)s) & ( TRGHOSTPROB < %(ghostProbCut)s )" 
     d0comb_d0cut = "(BPVDIRA> %(DDira)s) & (INGENERATION( (MIPCHI2DV(PRIMARY)>%(XmaxIPChi2)s),1 ) ) & (BPVVDCHI2> %(DMinFlightChi2)s) & (MIPCHI2DV(PRIMARY)< %(DMaxIPChi2)s) & (VFASPF(VCHI2/VDOF)< %(DVChi2)s)"
-    xx_name = "D02"+xplus+xminus+postfix
-    xx_comb = CombineParticles( config['prefix']+xx_name )
+    
 
     inputLoc = {
           "pi" : "Phys/StdAllNoPIDsPions/Particles"
@@ -369,42 +300,43 @@ def combinetwobody(name, config, xplus, xminus, postfix="") :
         ,"e" : "Phys/StdAllLooseElectrons/Particles"
         }
     req_sel = []
+    xx_name = "D02"+xplus+xminus+postfix
     if xplus != xminus :
         decays = ["D0 -> "+ xplus + "+ " + xminus + "- ", "D0 -> "+ xplus + "- " + xminus + "+ " ]
-        xx_comb.DecayDescriptors =  decays
-        xx_comb.DaughtersCuts = { xplus+"+" : d0comb_childcut % config
-                                  , xminus+"-" : d0comb_childcut % config }
+        xx_comb = CombineParticles( DecayDescriptors =  decays,
+                                    DaughtersCuts = { xplus+"+" : d0comb_childcut % config, xminus+"-" : d0comb_childcut % config },
+                                    MotherCut = d0comb_d0cut  % config,
+                                    CombinationCut = d0comb_combcut % config
+                                    )
         req_sel.append(DataOnDemand(Location = inputLoc[xplus]))
         req_sel.append(DataOnDemand(Location = inputLoc[xminus]))
+        _untag_sel = Selection (name+"seq_"+xx_name+"_selection", Algorithm = xx_comb, RequiredSelections = req_sel)
+        return _untag_sel
     else:
         decay = "D0 -> "+ xplus + "+ " + xminus + "- "
-        xx_comb.DecayDescriptor =  decay
-        xx_comb.DaughtersCuts = { xplus+"+" : d0comb_childcut % config }
+        xx_comb = CombineParticles( DecayDescriptor =  decay,
+                                    DaughtersCuts = { xplus+"+" : d0comb_childcut % config },
+                                    MotherCut = d0comb_d0cut  % config,
+                                    CombinationCut = d0comb_combcut % config
+                                    )
         req_sel.append(DataOnDemand(Location = inputLoc[xplus]))
-    xx_comb.MotherCut = d0comb_d0cut  % config
-    xx_comb.CombinationCut = d0comb_combcut % config
-
-    _untag_sel = Selection (name+"seq_"+xx_name+"_selection", Algorithm = xx_comb, RequiredSelections = req_sel)
-    
-    
-    return _untag_sel
+        _untag_sel = Selection (name+"seq_"+xx_name+"_selection", Algorithm = xx_comb, RequiredSelections = req_sel)
+        return _untag_sel
 
 
 ####### Template for combine particles for D* -> D0 pi
-def combineDstar(name, config) :
-    from Configurables import CombineParticles
+def combineDstar(config) :
     dstcomb_dstcut       =  "(abs(M-MAXTREE('D0'==ABSID,M)-145.42) < %(DstD0DMWin)s ) & (VFASPF(VCHI2/VDOF)< %(DVChi2)s)"
     dstcomb_combcut =  "(ADAMASS('D*(2010)+')<%(DstMassWin)s * MeV)"
     dstcomb_picut = "(PT> %(PiMinPT)s * MeV) &  ( MIPCHI2DV(PRIMARY)< %(PiMaxIPCHI2)s) & (TRCHI2DOF<%(XTrackChi2Pi)s) "
     dstcomb_d0cut = "PT>0"
     
-    dstar = CombineParticles( config['prefix']+"combine" )
-    #dstar.DecayDescriptors = ['[D*(2010)+ -> D0 pi+]cc']
-    dstar.DecayDescriptors = ['D*(2010)+ -> D0 pi+', 'D*(2010)- -> D0 pi-']
-    dstar.DaughtersCuts = {    "pi+" : dstcomb_picut % config ,
-                                "D0"    : dstcomb_d0cut % config
-                                }
-    dstar.CombinationCut = dstcomb_combcut % config
-    dstar.MotherCut =  dstcomb_dstcut % config
+    dstar = CombineParticles( DecayDescriptors = ['D*(2010)+ -> D0 pi+', 'D*(2010)- -> D0 pi-'],
+                            DaughtersCuts = {    "pi+" : dstcomb_picut % config ,
+                                                 "D0"    : dstcomb_d0cut % config
+                                            },
+                            CombinationCut = dstcomb_combcut % config,
+                            MotherCut =  dstcomb_dstcut % config
+        )
 
     return dstar

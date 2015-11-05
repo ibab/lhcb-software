@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-05 - Andrea Contu
+ - Updated StrippingDstarD02xx to be compatible with RelatedInfoTool and swith to ConfigurableGenerators
+
 ! 2015-11-04 - Pieter David
  - Update RelatedInfoTool configuration in StrippingQEE/StrippingDisplVertices.py
 
