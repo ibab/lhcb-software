@@ -137,7 +137,7 @@ StatusCode L0CaloScale::execute(){
     for ( LHCb::L0CaloCandidates::iterator  icand = candidates -> begin() ; candidates -> end() != icand ;++icand ) { 
       LHCb::L0CaloCandidate* cand = *icand ;
       LHCb::CaloCellID l0id = cand -> id() ; 
-      if( l0id.area() != id.area() || abs(l0id.row()-id.row())>1 || abs(l0id.col()-id.col())>1)continue;
+      if( l0id.area() != id.area() || abs((int)l0id.row()-(int)id.row())>1 || abs((int)l0id.col()-(int)id.col())>1)continue;
       type = cand -> type() ;
       if( type != L0DUBase::CaloType::Electron && type != L0DUBase::CaloType::Photon)continue;
       l0et   = cand -> etCode();

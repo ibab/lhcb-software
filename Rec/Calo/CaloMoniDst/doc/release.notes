@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 
+! 2015-11-06 - O. Deschamps
+  -fix clang warnings
+
 ! 2015-10-22 - O. Deschamps
   -initialize base-class (CaloMoniAlg) everywhere 
 
