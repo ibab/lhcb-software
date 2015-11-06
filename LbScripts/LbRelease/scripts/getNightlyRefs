@@ -13,7 +13,7 @@ options:
   cmtconfig is always taken from the corresponding environment variable
   the ordering of options is fixed.
 
-  Ideally you need to have called getpack on teh packages you want to update before calling this script.
+  Ideally you need to have called getpack on the packages you want to update before calling this script.
 
 standard usage:
   check your local cmtconfig
@@ -22,7 +22,7 @@ standard usage:
   go to the PROJECT_version top directory
   call this script
   go through and replace the references you want to update
-  
+
 """
 import time
 import tempfile
@@ -63,13 +63,13 @@ if len(sys.argv)>4:
 else:
     dest="."
 
-for k,v in {"app":app,"slot":slot,"day":day,"dest":dest}.iteritems():
+for k,v in {"app": app, "slot": slot, "day": day, "dest": dest}.iteritems():
     if not len(v.strip()):
         usage()
         print k,v
         raise ValueError("Could not parse option")
 
-print "looking for slot: ",slot,", day: ",day,", app: ",app
+print "looking for slot: %s, day: %s, app: %s" % (slot, day, app)
 
 nightly="buildlhcb.cern.ch:/data/artifacts/"
 slotdir=os.environ["LHCBNIGHTLIES"]+"/"+slot+"/"+day

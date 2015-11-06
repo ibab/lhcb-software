@@ -1,3 +1,47 @@
+! 2015-10-29 - Marco Clemencic (06b0aa0)
+
+ - fixed a test on CMake modules
+
+   The variable GAUDI_CXX_STANDARD_DEFAULT must be defined even if the LCG 
+   toolchain is not used.
+
+
+! 2015-10-28 - Ben Couturier (ff3fb28)
+
+ - Merge branch 'master', remote branch 'origin' into LBCORE-934
+
+   
+
+! 2015-10-26 - Marco Clemencic (b7a7fdb)
+
+ - improved host OS detection in HEPTools toolchain
+
+   * use /etc/redhat-release if available
+   * added support for Scientific Linux (and CernVM)
+   * added support for CentoOS
+
+
+! 2015-10-12 - Ben Couturier (c460edb)
+
+ - Set clang 3.7 to c++ 14 and add --gcc-toolchain option
+
+   
+
+! 2015-10-10 - Ben Couturier (96c8ef9)
+
+ - Set path for compiler before calling genreflex
+
+   
+
+! 2015-10-08 - Ben Couturier (f843d1e)
+
+ - Fixes for clang37
+
+   Initial version
+
+   Set flags correctly and fix IssueSeveririty to compile
+
+
 ! 2015-10-08 - Marco Clemencic (c50c176)
 
  - improvements to documentation and release tools

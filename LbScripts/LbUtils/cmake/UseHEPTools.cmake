@@ -1,3 +1,4 @@
+
 include(${CMAKE_CURRENT_LIST_DIR}/HEPToolsMacros.cmake)
 
 # use_heptools(heptools_version)
@@ -56,6 +57,11 @@ macro(use_heptools heptools_version)
       endforeach()
     endif()
 
+    if(LCG_FORCE_COMPILER)
+      string(REPLACE "-" ";" _l "${LCG_FORCE_COMPILER}")
+      lcg_set_compiler(${_l})
+    endif()
+
     foreach(_info_file ${LCG_TOOLCHAIN_INFO} ${LCG_TOOLCHAIN_INFOS})
        file(STRINGS ${_info_file} _lcg_infos)
        foreach(_l ${_lcg_infos})
@@ -63,7 +69,11 @@ macro(use_heptools heptools_version)
            string(REPLACE "COMPILER:" "" _l "${_l}")
            string(STRIP _l "${_l}")
            string(REGEX REPLACE " +" ";" _l "${_l}")
-           lcg_set_compiler(${_l})
+           if (NOT LCG_FORCE_COMPILER)
+             lcg_set_compiler(${_l})
+           endif()
+           # We add the compiler to the path 
+           lcg_set_lcg_system_compiler_path(${_l})
          else()
            if(NOT _l MATCHES "^((PLATFORM|VERSION|COMPILER):|#)")
              string(REGEX REPLACE "; *" ";" _l "${_l}")
@@ -72,6 +82,7 @@ macro(use_heptools heptools_version)
          endif()
        endforeach()
     endforeach()
+
 
     # Enable the right compiler (needs LCG_external)
     lcg_common_compilers_definitions()

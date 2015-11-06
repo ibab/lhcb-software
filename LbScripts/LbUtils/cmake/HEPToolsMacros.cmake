@@ -55,16 +55,25 @@ function(lcg_find_host_os)
       set(os winxp)
       set(osvers)
     else()
-      execute_process(COMMAND cat /etc/issue OUTPUT_VARIABLE issue OUTPUT_STRIP_TRAILING_WHITESPACE)
-      if(issue MATCHES Ubuntu)
+      if(EXISTS /etc/redhat-release)
+        file(READ /etc/redhat-release release_file)
+      else()
+        file(READ /etc/issue release_file)
+      endif()
+      if(release_file MATCHES Ubuntu)
         set(os ubuntu)
         string(REGEX REPLACE ".*Ubuntu ([0-9]+)[.]([0-9]+).*" "\\1.\\2" osvers "${issue}")
-      elseif(issue MATCHES SLC|Fedora) # RedHat-like distributions
-        string(TOLOWER "${CMAKE_MATCH_0}" os)
-        if(os STREQUAL fedora)
-          set(os fc) # we use an abbreviation for Fedora
+      elseif(release_file MATCHES "Fedora|Scientific Linux( CERN)?|CentOS") # RedHat-like distributions
+        if(CMAKE_MATCH_0 STREQUAL "Scientific Linux CERN")
+          set(os slc)
+        elseif(CMAKE_MATCH_0 STREQUAL "Scientific Linux") # SL or CernVM
+          set(os sl)
+        elseif(CMAKE_MATCH_0 STREQUAL "Fedora")
+          set(os fc)
+        else()
+          string(TOLOWER "${CMAKE_MATCH_0}" os)
         endif()
-        string(REGEX REPLACE ".*release ([0-9]+)[. ].*" "\\1" osvers "${issue}")
+        string(REGEX REPLACE ".*release ([0-9]+)[. ].*" "\\1" osvers "${release_file}")
       else()
         message(WARNING "Unkown OS, assuming 'linux'")
         set(os linux)
@@ -306,6 +315,22 @@ macro(lcg_set_compiler flavor)
 endmacro()
 
 ################################################################################
+# Add a specific compiler to the path 
+macro(lcg_set_lcg_system_compiler_path flavor)
+  set(version ${ARGV1})
+  if(${flavor} MATCHES "^gcc|GNU$")
+    set(lcg_system_compiler_path ${LCG_external}/gcc/${version}/${LCG_HOST_ARCH}-${LCG_HOST_OS}${LCG_HOST_OSVERS})   
+  elseif(${flavor} STREQUAL "icc")
+    # Note: icc must be in the path already because of the licensing
+    set(lcg_system_compiler_path)
+  elseif(${flavor} STREQUAL "clang")
+    set(lcg_system_compiler_path ${LCG_external}/llvm/${version}/${LCG_HOST_ARCH}-${LCG_HOST_OS}${LCG_HOST_OSVERS})   
+  else()
+    message(FATAL_ERROR "Uknown compiler flavor ${flavor}.")
+  endif()
+endmacro()
+
+################################################################################
 # Define variables and location of the compiler.
 macro(_lcg_compiler id flavor version)
   #message(STATUS "LCG_compiler(${ARGV})")
@@ -328,6 +353,7 @@ macro(lcg_common_compilers_definitions)
     _lcg_compiler(clang33 clang 3.3)
     _lcg_compiler(clang34 clang 3.4)
     _lcg_compiler(clang35 clang 3.5)
+    _lcg_compiler(clang37 clang 3.7)
   endif()
 endmacro()
 

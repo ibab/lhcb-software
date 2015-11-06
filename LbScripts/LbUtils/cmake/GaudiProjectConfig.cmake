@@ -3,7 +3,7 @@
 #
 # Authors: Pere Mato, Marco Clemencic
 #
-# Commit Id: ee406c7a57b135616d12c49af3f77e0d774415b1
+# Commit Id: aa624e174605249807910ca5659cf222faf0687f
 
 cmake_minimum_required(VERSION 2.8.5)
 
@@ -2075,6 +2075,7 @@ function(gaudi_add_dictionary dictionary header selection)
       -D_Instantiations=${dictionary}_Instantiations)
 
   # override the genreflex call to wrap it in the right environment
+  gaudi_env(PREPEND PATH ${lcg_system_compiler_path}/bin)
   set(ROOT_genreflex_CMD ${env_cmd} --xml ${env_xml} ${ROOT_genreflex_CMD})
 
   # we need to forward the SPLIT_CLASSDEF option to reflex_dictionary()
