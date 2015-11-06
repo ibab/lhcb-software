@@ -143,8 +143,7 @@ StatusCode DeFTFibreMat::initialize(){
     if( deFibreTracker -> exists( "FTversion" )) FTversion = deFibreTracker -> param<int>("FTversion");
   }
   if (FTversion < 0) {
-    fatal() << "Can't access FT version" << endmsg;
-    return StatusCode::FAILURE;
+    throw GaudiException( "Can't access FT version", "DeFTFibreMat.cpp", StatusCode::FAILURE );
   }
   else {
     m_FTGeomversion=FTversion;
@@ -199,32 +198,27 @@ StatusCode DeFTFibreMat::initialize(){
     if( !m_holey ){   //fibremat without holes
       outerBox = dynamic_cast<const SolidBox*>( this->geometry()->lvolume()->solid() );
       if ( 0 == outerBox ) {
-        fatal() << "Can't acquire layer geometry (SolidBox not holey)" << endmsg;
-        return StatusCode::FAILURE;
+        throw GaudiException( "Can't acquire layer geometry (SolidBox not holey)", "DeFTFibreMat.cpp", StatusCode::FAILURE );
       }
       m_innerHoleRadius = 0.0;
     }
     else {   //with holes
       const SolidSubtraction *subtrObject = dynamic_cast<const SolidSubtraction*>( this->geometry()->lvolume()->solid() );
       if ( 0 == subtrObject ) {
-        fatal() << "Can't acquire layer geometry (SolidSubtraction)" << endmsg;
-        return StatusCode::FAILURE;
+        throw GaudiException( "Can't acquire layer geometry (SolidSubtraction)", "DeFTFibreMat.cpp", StatusCode::FAILURE );
       }
       outerBox = dynamic_cast<const SolidBox*>( subtrObject->coverTop() );
       if ( 0 == outerBox ) {
-        fatal() << "Can't acquire layer geometry (SolidBox holey)" << endmsg;
-        return StatusCode::FAILURE;
+        throw GaudiException( "Can't acquire layer geometry (SolidBox holey)", "DeFTFibreMat.cpp", StatusCode::FAILURE );
       }
       //Hole geometry
       const SolidChild *tmpChild = dynamic_cast<const SolidChild*>( (*subtrObject)[0] );
       if ( 0 == tmpChild ) {
-        fatal() << "Can't acquire layer geometry (SolidChild)" << endmsg;
-        return StatusCode::FAILURE;
+        throw GaudiException( "Can't acquire layer geometry (SolidChild)", "DeFTFibreMat.cpp", StatusCode::FAILURE );
       }
       const SolidCons *innerCons = dynamic_cast<const SolidCons*>( tmpChild->solid() );
       if ( 0 == innerCons ) {
-        fatal() << "Can't acquire layer geometry (SolidCons)" << endmsg;
-        return StatusCode::FAILURE;
+        throw GaudiException( "Can't acquire layer geometry (SolidCons)", "DeFTFibreMat.cpp", StatusCode::FAILURE );
       }
       m_innerHoleRadius = innerCons->outerRadiusAtPlusZ();
     }
@@ -389,8 +383,8 @@ StatusCode DeFTFibreMat::initialize(){
         FTFibreModuleSizeZ = 2*FTDeadHSizeZ+FTFibreSizeZ;
       }
       else {
-        fatal() << "Can't find 2nd level parent detector element of Fibremat (geometry v2)" << endmsg;
-        return StatusCode::FAILURE;
+        throw GaudiException( "Can't find 2nd level parent detector element of Fibremat (geometry v2)",
+                              "DeFTFibreMat.cpp", StatusCode::FAILURE );
       }
     }
     
@@ -411,8 +405,8 @@ StatusCode DeFTFibreMat::initialize(){
         FTFibreModuleSizeZ = parent2Det->params()->param<double>("FTFullModuleSizeZ");
       }
       else {
-        fatal() << "Can't find 2nd level parent detector element of Fibremat (geometry v4)" << endmsg;
-        return StatusCode::FAILURE;
+        throw GaudiException( "Can't find 2nd level parent detector element of Fibremat (geometry v4)",
+                              "DeFTFibreMat.cpp", StatusCode::FAILURE );
       }
     }
  
@@ -441,8 +435,7 @@ StatusCode DeFTFibreMat::initialize(){
     m_dzDy=std::abs(asin(rotToGlobalMat(1,2)));    //rot matrix(1,2) = -sin(angrotX) (euler ZXZ)
   }
   else {
-   fatal() << "Can't acquire parent detector element of FibreMat" << endmsg;
-   return StatusCode::FAILURE;
+   throw GaudiException( "Can't acquire parent detector element of FibreMat", "DeFTFibreMat.cpp", StatusCode::FAILURE );
   }
   
   
@@ -1391,8 +1384,7 @@ FTChannelID DeFTFibreMat::nextChannelRight(const FTChannelID& channel) const {
 StatusCode DeFTFibreMat::findSolidBase(IDetectorElement *det, const std::string& pvolname, const SolidBase* &solidbase) {
   
   if(0==det) {
-    fatal() << "Null input detector element"<< endmsg;
-    return StatusCode::FAILURE;
+    throw GaudiException( "Null input detector element", "DeFTFibreMat.cpp", StatusCode::FAILURE );
   }
   
   const IPVolume *pvol=det->geometry()->lvolume()->pvolume(pvolname);
@@ -1400,8 +1392,7 @@ StatusCode DeFTFibreMat::findSolidBase(IDetectorElement *det, const std::string&
     
   solidbase = dynamic_cast<const SolidBase*>(pvol->lvolume()->solid());
   if(0==solidbase) {
-    fatal() << "Can't find SolidBase for PVolume: "<<pvolname<< endmsg;
-    return StatusCode::FAILURE;
+    throw GaudiException( "Can't find SolidBase for PVolume: "+pvolname, "DeFTFibreMat.cpp", StatusCode::FAILURE );
   }
   return StatusCode::SUCCESS;
 }
@@ -1416,7 +1407,7 @@ StatusCode DeFTFibreMat::findSolidBase(IDetectorElement *det, const std::string&
 bool DeFTFibreMat::inBeamHole(const Gaudi::XYZPoint hitLocal,
                               double& fibrelengthMax) const {
     
-    bool inHole;
+    bool inHole(false);
     if(m_holey) {
       if (m_FTGeomversion <= m_FTGeomVersion_reference) { //geom v20
         double YFibreHole;
@@ -1459,7 +1450,8 @@ bool DeFTFibreMat::inBeamHole(const Gaudi::XYZPoint hitLocal,
         }
       }
       else {   //no clear geometry
-        fatal() << "Can't find geometry to define beam hole: v"<<m_FTGeomversion<< endmsg;
+        throw GaudiException( "Can't find geometry to define beam hole:" + std::to_string(m_FTGeomversion),
+                              "DeFTFibreMat.cpp", StatusCode::FAILURE );
       }
     }
     else {   //not a hole fibremat
