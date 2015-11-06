@@ -33,7 +33,7 @@ BetaS = {
                     , 'DaughterPT'           :       1000
                     , 'VCHI2PDOF'            :       10
                     , 'HLTCuts'              :       "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')"
-                    , 'Jpsi2MuMuPrescale'    :       0.3
+                    , 'Jpsi2MuMuPrescale'    :       0.15
                     , 'Bd2JpsiKstarPrescale' :       1.0
                     , 'Bd2JpsiKsPrescale'    :       1.0
                     , 'Bs2JpsiPhiPrescale'   :       1.0
@@ -46,11 +46,34 @@ BetaS = {
                                     'StrippingBetaSBd2JpsiKsLDDetachedLine',
                                     'StrippingBetaSBs2JpsiKstarWideLine',
                                     'StrippingBetaSLambdab2JpsiLambdaUnbiasedLine'],
-                      'Dimuon'  :  ['StrippingBetaSBu2JpsiKDetachedLine',
+                      'Dimuon'   : ['StrippingBetaSBu2JpsiKDetachedLine',
                                     'StrippingBetaSBd2JpsiKstarDetachedLine',
                                     'StrippingBetaSBs2JpsiPhiDetachedLine',
                                     'StrippingBetaSJpsi2MuMuLine',
                                     'StrippingBetaSBd2JpsiKsDetachedLine'] },
+    'WGs'         : [ 'B2CC' ]
+    }
+
+######################################################################
+## StrippingB2JpsiHHBs2Jpsif0PrescaledLine (MDST.DST)
+## StrippingB2JpsiHHBs2Jpsif0PrescaledLine (MDST.DST)
+## StrippingB2JpsiHHBs2Jpsif0Line (FullDST)
+## -------------------------------------------------------------------
+## Lines defined in StrippingB2JpsiHH.py
+## Authors: Liming Zhang
+######################################################################
+
+B2JpsiHH = {
+    'BUILDERTYPE' : 'B2JpsiHHConf',
+    'CONFIG'      : { 'TRCHI2DOF'         :           5
+                    , 'JpsiMassWindow'    :           80
+                    , 'VCHI2PDOF'         :           10
+                    , 'HLTCuts'           :           "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')"
+                    , 'Bs2Jpsif0Prescale' :           0.10 # 2011: 0.13, 2012: 0.62
+                    },
+    'STREAMS'     : { 'Leptonic' : ['StrippingB2JpsiHHBs2JpsiKstarLine',
+                                    'StrippingB2JpsiHHBs2Jpsif0PrescaledLine'],
+                      'Dimuon'   : ['StrippingB2JpsiHHBs2Jpsif0Line'] },
     'WGs'         : [ 'B2CC' ]
     }
 
@@ -175,7 +198,7 @@ Bs2EtacPhiBDT = {
 ## Author: Ramon Niet
 ######################################################################
 
-Bd2JpsieeKS ={
+Bd2JpsieeKS = {
     'BUILDERTYPE'       : 'Bd2JpsieeKSConf',
     'CONFIG'    : {
           'BPVLTIME'              :     0.2   # ps
