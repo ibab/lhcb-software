@@ -230,7 +230,6 @@ void DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
       Gaudi::XYZPoint lambda;
       /// loop over straws
       /// First monolayer
-      Straws::const_iterator iS;
       for (auto straw: straws) {
         const double x = localUOfStraw(straw);
         wB.SetX(x);

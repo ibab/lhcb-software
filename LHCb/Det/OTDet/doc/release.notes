@@ -1,6 +1,11 @@
 ! Package     : OTDet
 ! Responsible : Alexandr Kozlinskiy, Lucia Grillo
 !--------------------------------------------------------------------------
+
+! 2015-11-06 - Marco Cattaneo
+ - Removed unused variable left over from previous cleanups
+ - Fix use of uninitialised variable in WalkRelation constructor
+
 ! 2015-10-29 - Gerhard Raven
  - use VectorClass in walkrelation SIMD code to make it portable to clang
 

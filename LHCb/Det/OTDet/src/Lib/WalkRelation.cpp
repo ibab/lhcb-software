@@ -14,7 +14,7 @@ namespace OTDet
 
   WalkRelation::WalkRelation(double off, double amp, double tau, double dpt) :
     m_upperend(9.1 * std::abs(tau)),
-    m_foff(off), m_fdptfactor((0. != tau) ? (1e-3 * m_dpt) : 0.),
+    m_foff(off), m_fdptfactor((0. != tau) ? (1e-3 * dpt) : 0.),
     m_approx(0., 9.1 * std::abs(tau), [off, amp, tau, dpt] (double l) {
 	return off + amp * (std::tanh(((0. != tau) ?
 	      (1. / std::abs(tau)) : 0.) * l) - 1.0) +
