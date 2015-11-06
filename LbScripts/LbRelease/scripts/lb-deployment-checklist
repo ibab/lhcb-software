@@ -100,11 +100,11 @@ def rpm_copied(project, version):
     '''
     You need to add the RPMs to the RPM repository with
 
-      lb-release-rpm /data/artifacts/release/lhcb-release/${build_id}
+      lb-release-rpm /data/archive/artifacts/release/lhcb-release/${build_id}
 
     and
 
-      lb-release-rpm --copy /data/artifacts/release/lhcb-release/${build_id}
+      lb-release-rpm --copy /data/archive/artifacts/release/lhcb-release/${build_id}
 
     if the check was successful.
 

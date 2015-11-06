@@ -1,3 +1,7 @@
+2015-11-06  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* lb-deployment-checklist: updated for the new path to artifacts (on lhcb-archive)
+
 2015-11-03  Ben Couturier <Ben.Couturier@cern.ch>
 
 	LBCORE-962: Keep Software conf DB SSO cookie for a couple of hours.
