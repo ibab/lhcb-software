@@ -57,11 +57,12 @@ default_config =  {
         'BDTWeightsFile'          : '$TMVAWEIGHTSROOT/data/Bd2eeKstar_BDTG_v1r0.xml',
         #
         'RelatedInfoTools'       : [ { "Type" : "RelInfoBs2MuMuTrackIsolations"
-                                       , "RecursionLevel" : 2
-                                       , "Locations" : { 'Phys/StdAllLooseElectrons' : [ 'Electron1ISO', 'Electron2ISO' ] ,
-                                                         'Phys/StdAllLooseKaons'     :  'KaonISO',
-                                                         'Phys/StdAllLoosePions'     :  'PionISO'
-                                                         }
+                                       , "DaughterLocations" : {
+                                           '[B0 -> ( K*(892)0 -> K+ pi-) ( J/psi(1S) -> ^e+ e-) ]CC' : 'Electron1ISO',
+                                           '[B0 -> ( K*(892)0 -> K+ pi-) ( J/psi(1S) ->  e+^e-) ]CC' : 'Electron2ISO',
+                                           '[B0 -> ( K*(892)0 ->^K+ pi-) ( J/psi(1S) ->  e+ e-) ]CC' : 'KaonISO',
+                                           '[B0 -> ( K*(892)0 -> K+^pi-) ( J/psi(1S) ->  e+ e-) ]CC' : 'PionISO'
+                                           }
                                        , "tracktype"  : 3
                                        , "angle"      : 0.27
                                        , "fc"         : 0.60
@@ -75,11 +76,12 @@ default_config =  {
                                        , "IsoTwoBody" : False
                                        } ],       
         'RelatedInfoTools2'       : [ { "Type" : "RelInfoBs2MuMuTrackIsolations"
-                                       , "RecursionLevel" : 2
-                                       , "Locations" : { 'Phys/StdDiElectronFromTracks' : [ 'Electron1ISO', 'Electron2ISO' ] ,
-                                                         'Phys/StdAllLooseKaons'     :  'KaonISO',
-                                                         'Phys/StdAllLoosePions'     :  'PionISO'
-                                                         }
+                                       , "DaughterLocations" : {
+                                           '[B0 -> ( K*(892)0 -> K+ pi-) ( J/psi(1S) -> ^e+ e-) ]CC' : 'Electron1ISO',
+                                           '[B0 -> ( K*(892)0 -> K+ pi-) ( J/psi(1S) ->  e+^e-) ]CC' : 'Electron2ISO',
+                                           '[B0 -> ( K*(892)0 ->^K+ pi-) ( J/psi(1S) ->  e+ e-) ]CC' : 'KaonISO',
+                                           '[B0 -> ( K*(892)0 -> K+^pi-) ( J/psi(1S) ->  e+ e-) ]CC' : 'PionISO'
+                                           } 
                                        , "tracktype"  : 3
                                        , "angle"      : 0.27
                                        , "fc"         : 0.60
