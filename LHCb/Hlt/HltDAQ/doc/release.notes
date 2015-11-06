@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2015-11-06 - Tomasz Skwarnicki
+ - Fix a mistake in the change implemented yesterday
+
 ! 2015-11-05 - Tomasz Skwarnicki
  - Modify HltSelReportsDecoder to split substructure saved in RawBanks
    to the one needed by TisTos, returned by substructure(), and the one

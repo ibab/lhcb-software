@@ -469,7 +469,7 @@ StatusCode HltSelReportsDecoder::execute() {
           {
             if( !(ihos->target()) )continue;
             // add only if not calo cluster
-            if( ihos->target()->summarizedObjectCLID() != LHCb::CLID_CaloCluster )continue;
+            if( ihos->target()->summarizedObjectCLID() == LHCb::CLID_CaloCluster )continue;
             hos->addToSubstructure( ihos->target() );
           }
         }
