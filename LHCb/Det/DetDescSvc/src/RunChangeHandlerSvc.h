@@ -1,4 +1,3 @@
-// $Id: RunChangeHandlerSvc.h,v 1.2 2009-02-04 18:02:28 marcocle Exp $
 #ifndef _RUNCHANGEHANDLERSVC_H_
 #define _RUNCHANGEHANDLERSVC_H_
 
@@ -115,9 +114,6 @@ private:
 
   /// Current run number.
   unsigned long m_currentRun;
-
-  /// Current flagging state.
-  bool m_flagging;
 
   /// EventDataSvc, for ODIN
   mutable SmartIF<IDataProviderSvc> m_evtSvc;
