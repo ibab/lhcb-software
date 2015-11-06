@@ -15,7 +15,6 @@
 
 // Kernel
 #include "Kernel/IJetMaker.h"
-#include "Kernel/IParticle2MCAssociator.h"
 #include "Kernel/IDistanceCalculator.h"
 #include "Kernel/IJetTagTool.h"
 #include "Kernel/IJets2Jets.h"
@@ -66,20 +65,16 @@ namespace LoKi
     ~SVTag();
 
   private:
-    
+
     SVTag();                        // disable default constructor
     SVTag(const SVTag&);            // disable copy constructor
     SVTag& operator=(const SVTag&); // disable assignement operator
-    
+
     const LHCb::Particle *m_Jet;  // jet
     IJetMaker::Input m_JetInputs; // jet inputs
     LHCb::RecVertex m_JetVertex;  // jet vertex
 
     IDistanceCalculator *m_distCalc; // distance calculator
-
-    // Particle to mcparticle associator tool and type
-    IParticle2MCAssociator* m_p2mcAssoc;
-    std::string m_p2mcAssocType;
 
   private:
 

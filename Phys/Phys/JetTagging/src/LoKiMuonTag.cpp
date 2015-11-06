@@ -25,8 +25,6 @@ LoKi::MuonTag::MuonTag
   , m_JetVertex(0)
   , m_Muons(0)
   , m_distCalc(0)
-  , m_p2mcAssoc(0)
-  , m_p2mcAssocType("DaVinciSmartAssociator")
 {
   // Interface
   declareInterface<IJetTagTool>(this);
@@ -304,11 +302,11 @@ bool LoKi::MuonTag::calculateJetProperty
     {
       bestIPSig = ipSignSig;
       bestIPSigPtRel = ptRel;
-    } 
+    }
     if(ptRel > bestPtRelforIPSig16 && ipSignSig > m_MuonTrackCutIPSig)
       bestPtRelforIPSig16 = ptRel;
 
-	
+
   }
   jetWeight["bestIPSig"]      = bestIPSig;
   jetWeight["bestIPSigPtRel"] = bestIPSigPtRel;
@@ -316,7 +314,7 @@ bool LoKi::MuonTag::calculateJetProperty
   jetWeight["bestPtRelIPSig"] = bestPtRelIPSig;
   jetWeight["bestPtRelforIPSigCut"] = bestPtRelforIPSig16;
 
-  
+
   double tag_global = 0;
 
   if (bestPtRel >  m_MuonCutPTRel)
@@ -325,7 +323,7 @@ bool LoKi::MuonTag::calculateJetProperty
 
   jetWeight["Tag"] = tag_global;
 
- 
+
   jetWeight["extraInfo"] = 5400;
 
   if(msgLevel(MSG::DEBUG)) debug() << "Tag weight: " << jetWeight << endmsg;

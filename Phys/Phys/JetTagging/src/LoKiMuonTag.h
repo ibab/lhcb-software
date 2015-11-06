@@ -15,7 +15,6 @@
 
 // Kernel
 #include "Kernel/IJetMaker.h"
-#include "Kernel/IParticle2MCAssociator.h"
 #include "Kernel/IDistanceCalculator.h"
 #include "Kernel/IJetTagTool.h"
 #include "Kernel/IJets2Jets.h"
@@ -90,9 +89,6 @@ namespace LoKi
 
       std::string m_AlgMode; // algorithm mode - PtRel or IPSig
 
-      // Particle to mcparticle associator tool and type
-      IParticle2MCAssociator* m_p2mcAssoc;
-      std::string m_p2mcAssocType;
   };
 }
 

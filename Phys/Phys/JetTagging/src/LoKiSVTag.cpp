@@ -23,8 +23,6 @@ LoKi::SVTag::SVTag
   , m_Jet(0)
   , m_JetVertex(0)
   , m_distCalc(0)
-  , m_p2mcAssoc(0)
-  , m_p2mcAssocType("DaVinciSmartAssociator")
   , m_seedFinder(0)
   , m_seedFinderName( "LoKi__SeedFinderNTrks"  ) // runs ntrack seeder by default
 {
@@ -126,7 +124,7 @@ bool LoKi::SVTag::calculateJetProperty
   // Try to get seeds with respect to the jet vertex
   IJetMaker::Jets jetSeeds;
   m_seedFinder->makeJets(m_JetInputs, m_JetVertex, jetSeeds);
-  
+
   double lengthMax = -999,
     lengthMaxN = -999,
     lengthMaxM = -999,
@@ -135,7 +133,7 @@ bool LoKi::SVTag::calculateJetProperty
     lengthMaxDirAngleJ2S = -999,
     lengthMaxDirAngleS2S = -999;
 
-  
+
   double sigMax = -999,
     sigMaxN = -999,
     sigMaxM = -999,
@@ -165,11 +163,11 @@ bool LoKi::SVTag::calculateJetProperty
 
 	  double product = seedSeg.Dot(jetSeg);
 	  double product2 = seedSeg.Unit().Dot(jetSeg.Unit());
-      
+
 	  Gaudi::XYZVector jetRef =  Gaudi::XYZVector(m_Jet->referencePoint().X(),m_Jet->referencePoint().Y(), m_Jet->referencePoint().Z());
 	  Gaudi::XYZVector seedDecay = Gaudi::XYZVector(jetSeeds.at(iSeed)->endVertex()->position().X(), jetSeeds.at(iSeed)->endVertex()->position().Y(),jetSeeds.at(iSeed)->endVertex()->position().Z());
-      
-      
+
+
 	  Gaudi::XYZVector seedd = seedDecay -jetRef;
 	  double cos1 = (seedSeg.Unit()).Dot(seedd.Unit());
 
@@ -224,7 +222,7 @@ bool LoKi::SVTag::calculateJetProperty
   jetWeight["SigMaxDirAngleJ2S"]=sigMaxDirAngleJ2S;
   jetWeight["Nvertices"]=jetSeeds.size();
 
-  
+
   double tag_global = 0;
 
   if (lengthMax > -999)

@@ -25,8 +25,6 @@ LoKi::ElectronTag::ElectronTag
   , m_JetVertex(0)
   , m_Electrons(0)
   , m_distCalc(0)
-  , m_p2mcAssoc(0)
-  , m_p2mcAssocType("DaVinciSmartAssociator")
 {
   // Interface
   declareInterface<IJetTagTool>(this);

@@ -15,7 +15,6 @@
 
 // Kernel
 #include "Kernel/IJetMaker.h"
-#include "Kernel/IParticle2MCAssociator.h"
 #include "Kernel/IDistanceCalculator.h"
 #include "Kernel/IJetTagTool.h"
 #include "Kernel/IJets2Jets.h"
@@ -40,29 +39,29 @@ namespace LoKi
   {
     friend class ToolFactory<LoKi::TopoTagDir>;  // friend factory
 
- 
+
 
   protected:
 
     // standard constructor
     TopoTagDir
-      (const std::string& type, 
-       const std::string& name, 
+      (const std::string& type,
+       const std::string& name,
        const IInterface* parent)
       : GaudiTool(type, name, parent)
       , m_Jet(0)
       , m_JetVertex(0)
-      , m_distCalc(0)  
-      , m_dva(0)          
+      , m_distCalc(0)
+      , m_dva(0)
       , m_tinputs              ("/Event/Phys/PseudoTopoCands/Particles")
       , m_in2(0)
       // runs ntrack seeder by default
       {
 	// Interface
-	declareInterface<IJetTagTool>(this);	
+	declareInterface<IJetTagTool>(this);
 	// Algorithm related properties
 	declareProperty("TestInputs", m_tinputs);
-	declareProperty("In2", m_in2);	
+	declareProperty("In2", m_in2);
       }
 
     // standard destructor
@@ -87,14 +86,14 @@ namespace LoKi
 
   protected:
 
-    std::string m_tinputs; 
-    int m_in2; 
+    std::string m_tinputs;
+    int m_in2;
 
   private:
 
     void heavyVChi2Dof(const LHCb::Particle *p, double &chi2, int &dof);
     std::vector<const LHCb::Particle*> extractDaugthers(const LHCb::Particle *p);
-  
+
 
   public:
 
@@ -108,7 +107,7 @@ namespace LoKi
        std::map < std::string,double > &jetWeight
        );
 
-      
+
   };
 }
 
