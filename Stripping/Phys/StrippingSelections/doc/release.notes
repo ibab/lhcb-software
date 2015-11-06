@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-06 - Andrea Contu
+ - Fixed TestMyWGfromSettings.py
+
 ! 2015-11-06 - Carlos Vazquez Sierra
  - Updated TestMyWGfromSettings.py
  - Updated some B2CC lines (minor modifications on dictionaries) and added B2CC tests scripts to tests/liaisons

@@ -21,7 +21,7 @@ from Configurables import DecodeRawEvent
 DecodeRawEvent().setProp("OverrideInputs",4.2)
 
 # Specify the name of your configuration
-my_wg='Charm' #FOR LIAISONS
+my_wg='B2CC' #FOR LIAISONS
 stripping='stripping23r1'
 
 
@@ -137,7 +137,7 @@ DaVinci().appendToMainSequence( [ sr ] )
 DaVinci().appendToMainSequence( [ dstWriter.sequence() ] )
 DaVinci().ProductionType = "Stripping"
 DaVinci().DataType  = "2015"
-DaVinci().InputType = "DST"
+DaVinci().InputType = "RDST"
 
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
