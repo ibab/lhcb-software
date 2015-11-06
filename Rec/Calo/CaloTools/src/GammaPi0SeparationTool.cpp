@@ -184,8 +184,8 @@ bool GammaPi0SeparationTool::ClusterVariables(const LHCb::CaloHypo* hypo,
     const double fraction = entry->fraction();
     const double energy   = digit->e() * fraction ;
 
-    if( abs( digit->cellID().col() - cluster->seed().col() ) <= 1 && 
-        abs( digit->cellID().row() - cluster->seed().row() ) <= 1 &&
+    if( abs( (int)digit->cellID().col() - (int)cluster->seed().col() ) <= 1 && 
+        abs( (int)digit->cellID().row() - (int)cluster->seed().row() ) <= 1 &&
         digit->cellID().area() == cluster->seed().area() )etot += energy;
 
     
@@ -381,14 +381,14 @@ double GammaPi0SeparationTool::photonDiscriminant(int area,
         
         input.push_back(r2);
         input.push_back(r2r4);
-        input.push_back(abs(asym));
+        input.push_back(std::abs(asym));
         input.push_back(kappa);
         input.push_back(Eseed);//already divided by Ecl
         input.push_back(E2); //means (e2+eseed)/ecl
         input.push_back(eMaxPS);//divided by Esum
         input.push_back(e2ndPS);//divided by Esum
         input.push_back(r2PS);
-        input.push_back(abs(asymPS));
+        input.push_back(std::abs(asymPS));
         input.push_back(multiPS);
         input.push_back(multiPS15);
         input.push_back(multiPS30);

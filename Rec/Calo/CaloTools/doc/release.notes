@@ -3,6 +3,9 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !-------------------------------------------------------------------------------
 
+! 2015-11-06 - O. Deschamps
+ - fix clang compilation warnings
+
 !========================= CaloTools v6r10p1 2015-10-13 =========================
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
