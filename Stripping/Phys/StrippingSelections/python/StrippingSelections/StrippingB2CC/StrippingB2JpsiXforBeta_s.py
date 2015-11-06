@@ -37,7 +37,7 @@ default_config = {
                  ,       'DaughterPT'                :       1000
                  ,       'VCHI2PDOF'                 :       10
                  ,       'HLTCuts'                   :       "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')"
-                 ,       'Jpsi2MuMuPrescale'         :       0.30    # 2015: tune to 0.1, 2011: 0.014, 2012: 0.075
+                 ,       'Jpsi2MuMuPrescale'         :       0.15    # 2015: tune to 0.1 (0.3), 2011: 0.014, 2012: 0.075
                  ,       'Bd2JpsiKstarPrescale'      :       1.0     # 2011: 0.065, 2012: 0.29
                  ,       'Bd2JpsiKsPrescale'         :       1.0     # 2011: 1.0, 2012: 1.0
                  ,       'Bs2JpsiPhiPrescale'        :       1.0     # 2011: 0.13, 2012: 0.62

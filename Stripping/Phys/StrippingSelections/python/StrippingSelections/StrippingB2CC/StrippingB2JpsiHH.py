@@ -114,7 +114,7 @@ class B2JpsiHHConf(LineBuilder) :
                                    PreVertexCuts = "in_range(5100,AM,5720)",
 	                           PostVertexCuts = "in_range(5150,M,5670) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s ) & (BPVDIRA >0.999) & (BPVVD > 1.5 *mm)" % self.config ) # for the other particles is 10.
 
-        Bs2Jpsif0Line  = StrippingLine( self.name + "Bs2Jpsif0Line", algos = [ Bs2Jpsif0 ], EnableFlavourTagging = True )
+        Bs2Jpsif0Line  = StrippingLine( self.name + "Bs2Jpsif0Line", algos = [ Bs2Jpsif0 ], EnableFlavourTagging = False )
         
         Bs2Jpsif0Prescaled = self.createCombinationSel( OutputList = "Bs2Jpsif0Prescale" + self.name,
                                    DecayDescriptor = "B_s0 -> J/psi(1S) f_0(980)",
