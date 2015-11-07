@@ -4,6 +4,9 @@
 ! Purpose     : Tools used in VP reconstruction
 !--------------------------------------------------------------------------
 
+! 2015-11-07 - Christoph Hombach
+	- Debugged residual calculation
+
 ! 2015-11-04 - Heinrich Schindler
  - Remove unnecessary includes. Protect debug output.
 

@@ -52,10 +52,15 @@ StatusCode VPTrackMoni::execute() {
     double phi      = track->phi();
     double eta      = track->pseudoRapidity();
     
-
-    LHCb::Track::Types type = track->type();
+    enum{Backward = 12, MaxType = 32};
     
-    if (type != LHCb::Track::Types::Velo && type != LHCb::Track::Types::Long) continue;
+    //    LHCb::Track::Types type = track->type();
+    const int type = ( track->checkFlag(LHCb::Track::Backward) ?
+                       int(Backward) : int(track->type()) );
+    
+    
+    if (type != int(LHCb::Track::Types::Velo) && type != int(LHCb::Track::Types::Long) && type != int(LHCb::Track::Backward)) 
+      continue;
     bool fitStatus = track->checkFitStatus(LHCb::Track::FitStatus::Fitted);
 
     if (!fitStatus) continue;
@@ -63,9 +68,11 @@ StatusCode VPTrackMoni::execute() {
     unsigned int nClusters = nodes.size();
     for(LHCb::Track::ConstNodeRange::iterator inode = nodes.begin(); inode != nodes.end(); ++inode)
     {
+      const LHCb::FitNode& fitnode =  dynamic_cast<const LHCb::FitNode&>(**inode);
+      if(!fitnode.hasMeasurement()) continue;
       
-      if ((*inode)->type() == LHCb::Node::HitOnTrack)
-      {if ( ((*inode)->measurement()).type() == LHCb::Measurement::VP )
+      if ((*inode)->type() == LHCb::Node::HitOnTrack){
+        if ( ((*inode)->measurement()).type() == LHCb::Measurement::VP )
         {
         
           LHCb::LHCbID nodeID = ((*inode)->measurement()).lhcbID();
@@ -86,7 +93,7 @@ StatusCode VPTrackMoni::execute() {
           
           XYZPoint cluPos     = (*inode)->state().position();
         
-          XYZPoint residual = getResidual(track, sens, cluPos);
+          XYZPoint residual = getResidual(cluPos, sens, fitnode);
           double   nodeResidual = (*inode)->residual();
           Tuple theTuple = nTuple( "VPTrackMonitor" , "" );
           theTuple->column("resX", residual.x() );
@@ -123,34 +130,23 @@ StatusCode VPTrackMoni::execute() {
 
 //=============================================================================
 
-XYZPoint VPTrackMoni::getResidual(const LHCb::Track* track,const DeVPSensor* sens, XYZPoint hit)
+XYZPoint VPTrackMoni::getResidual(XYZPoint cluPos,const DeVPSensor* sens, const LHCb::FitNode& fitnode)
 {
-  XYZPoint p_e_loc(0., 0., 0.);
-  XYZPoint   n_loc(0., 0., 1.);
-  XYZPoint p_e = sens->localToGlobal( p_e_loc );
-  double n_x   = sens->localToGlobal( n_loc   ).x()-p_e.x();
-  double n_y   = sens->localToGlobal( n_loc   ).y()-p_e.y();
-  double n_z   = sens->localToGlobal( n_loc   ).z()-p_e.z();
-  
-  XYZVector slope = track->slopes();
-  XYZPoint p_T    = track->position();
- 
-  if (msgLevel(MSG::DEBUG)) { 
-    debug() << "p_e: " << p_e.x() << " " << p_e.y() << " " << p_e.z() << endmsg;
-    debug() << "n: " << n_x << " " << n_y << " " << n_z << endmsg;
-  }
-  double sl_n   = n_x*slope.x()+n_y*slope.y()+n_z*slope.z();
-  double p_eT_n = n_x*(p_e.x()-p_T.x())+n_y*(p_e.y()-p_T.y())+n_z*(p_e.z()-p_T.z());
-  double inter_x = p_T.x()+p_eT_n/sl_n*slope.x();
-  double inter_y = p_T.y()+p_eT_n/sl_n*slope.y();
-  double inter_z = p_T.z()+p_eT_n/sl_n*slope.z();
-  
-  XYZPoint inter(inter_x, inter_y, inter_z);  
-  if (msgLevel(MSG::DEBUG)) { 
-    debug() << "inter: " << inter_x << " " << inter_y << " " << inter_z << endmsg;
-    debug() << "hit:   " << hit.x() << " " << hit.y() << " " <<hit.z();
-  }
-  XYZPoint residual(inter.x()-hit.x(),inter.y()-hit.y(),inter.z()-hit.z());
-  return residual;
-  
+  // if(track->checkFitHistory(LHCb::Track::BiKalman) == true)
+  //{
+    debug() << "Start Unbiased Residual method" << endmsg;
+    const LHCb::State state = fitnode.unbiasedState();
+    Gaudi::XYZPoint trackInterceptGlobal(state.x(),state.y(),state.z());
+    Gaudi::XYZPoint trackInterceptLocal(0,0,0) ;        
+    trackInterceptLocal = sens->globalToLocal(trackInterceptGlobal);
+    Gaudi::XYZPoint clusterLocal(0,0,0) ;        
+    clusterLocal = sens->globalToLocal(cluPos);
+
+    double resx = trackInterceptLocal.X()-clusterLocal.X();
+    double resy = trackInterceptLocal.Y()-clusterLocal.Y();
+    double resz = trackInterceptLocal.Z()-clusterLocal.Z();  
+    Gaudi::XYZPoint residual(resx,resy,resz);
+    
+    return residual;
 }
+

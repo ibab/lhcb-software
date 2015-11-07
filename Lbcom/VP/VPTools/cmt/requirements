@@ -19,6 +19,7 @@ use  DigiEvent           v*  Event
 use  PhysEvent           v*  Event
 use  LinkerEvent         v*  Event
 use  TrackEvent          v*  Event
+use  TrackFitEvent       v*  Tr
 use  VPDet               v*  Det
 use  GaudiAlg            v*  
 use  GaudiGSL            v*   

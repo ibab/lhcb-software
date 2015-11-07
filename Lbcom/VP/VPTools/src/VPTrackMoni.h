@@ -8,6 +8,8 @@
 #include "VPDet/DeVPSensor.h"
 #include "VPDet/DeVP.h"
 #include "Event/Track.h"
+#include "Event/State.h"
+#include "Event/FitNode.h"
 
 /** @class VPTrackMoni VPTrackMoni.h
  *  
@@ -30,6 +32,6 @@ private:
   std::string m_tracklocation;
   DeVP* m_veloDet_VP;
 
-  Gaudi::XYZPoint getResidual(const LHCb::Track*, const DeVPSensor*, Gaudi::XYZPoint); 
+  Gaudi::XYZPoint getResidual(Gaudi::XYZPoint, const DeVPSensor*, const LHCb::FitNode& ); 
 };
 #endif // VPTRACKMONI_H
