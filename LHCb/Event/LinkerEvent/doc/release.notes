@@ -3,6 +3,12 @@
 ! Responsible : 
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
+! 2015-11-08 - Gerhard Raven
+ - avoid comparing (smart)pointers to 0 or NULL
+ - replace NULL by nullptr
+ - prefer emplace_back over push_back
+ - prefer std::string::compare over std::string::substr = " ... " 
+   (avoids the creation of a temporary string)
 
 !========================= LinkerEvent v3r10p1 2013-06-03 =======================
 ! 2013-05-06 - Marco Cattaneo

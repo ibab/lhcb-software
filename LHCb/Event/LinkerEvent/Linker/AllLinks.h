@@ -30,12 +30,12 @@ public:
             std::string containerName ) {
     m_eventSvc = eventSvc;          
     std::string name = "Link/" + containerName;
-    if ( "/Event/" == containerName.substr(0,7) ) {
+    if ( containerName.compare(0,7,"/Event/") == 0 ) {
       name = "Link/" + containerName.substr(7);
     }
     SmartDataPtr<LHCb::LinksByKey> links( eventSvc, name );
-    if ( 0 == links ) {
-      if ( 0 != msgSvc ) {
+    if ( !links ) {
+      if ( msgSvc ) {
         MsgStream msg( msgSvc, "AllLinks::"+containerName );
         msg << MSG::ERROR << "*** Link container " << name
             << " not found." << endmsg;
@@ -63,23 +63,23 @@ public:
             
   virtual ~AllLinks( ) {}; ///< Destructor
   
-  bool notFound() const { return (0 == m_links); }
+  bool notFound() const { return !m_links; }
 
   TARGET* first( ) {
-    if ( NULL == m_links ) return NULL;
+    if ( !m_links ) return nullptr;
     m_iter = m_links->keyIndex().begin();
-    if ( m_links->keyIndex().end() == m_iter ) return NULL;
+    if ( m_links->keyIndex().end() == m_iter ) return nullptr;
     m_curReference.setNextIndex( (*m_iter).second );
     return next();
   }
     
   TARGET* next( ) {
-    if ( NULL == m_links ) return NULL;
+    if ( !m_links ) return nullptr;
     int nn = m_curReference.nextIndex();
     while ( 0 > nn ) {
-      if ( m_links->keyIndex().end() == m_iter ) return NULL;
+      if ( m_links->keyIndex().end() == m_iter ) return nullptr;
       m_iter++;
-      if ( m_links->keyIndex().end() == m_iter ) return NULL;
+      if ( m_links->keyIndex().end() == m_iter ) return nullptr;
       nn = (*m_iter).second;
     }
     m_curReference = m_links->linkReference()[nn] ;
@@ -93,37 +93,30 @@ public:
 protected:
 
   TARGET* currentTarget() {
-    if ( NULL == m_links ) return NULL;
+    if ( !m_links ) return nullptr;
     int myLinkID = m_curReference.linkID();
     LinkManager::Link* link = m_links->linkMgr()->link( myLinkID );
     if ( 0 == link->object() ) {
       SmartDataPtr<DataObject> tmp( m_eventSvc, link->path() );
       link->setObject( tmp );
-      if ( 0 == tmp ) return NULL;
+      if ( !tmp ) return nullptr;
     }
     ObjectContainerBase* parent = dynamic_cast<ObjectContainerBase*>(link->object() );
-    if ( 0 != parent ) {
-      TARGET* myObj = (TARGET*)parent->containedObject( m_curReference.objectKey() );
-      return myObj;
-    }
-    return NULL;
+    return parent ?  (TARGET*)parent->containedObject( m_curReference.objectKey() ) : nullptr;
   }  
 
  SOURCE* currentSource( int key ) {
-    if ( NULL == m_links ) return NULL;
+    if ( !m_links ) return nullptr;
     int myLinkID = m_curReference.srcLinkID();
-    if ( 0 > myLinkID ) return NULL;
+    if ( 0 > myLinkID ) return nullptr;
     LinkManager::Link* link = m_links->linkMgr()->link( myLinkID );
     if ( 0 == link->object() ) {
       SmartDataPtr<DataObject> tmp( m_eventSvc, link->path() );
       link->setObject( tmp );
-      if ( 0 == tmp ) return NULL;
+      if ( !tmp ) return nullptr;
     }
     ObjectContainerBase* parent = dynamic_cast<ObjectContainerBase*>(link->object() );
-    if ( 0 != parent ) {
-      return (SOURCE*)parent->containedObject( key );
-    }
-    return NULL;
+    return  parent ? (SOURCE*)parent->containedObject( key ) : nullptr;
   }  
 
 private:

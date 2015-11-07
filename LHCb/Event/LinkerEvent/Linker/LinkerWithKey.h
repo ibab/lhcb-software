@@ -21,8 +21,8 @@ public:
   /// Standard constructor
   LinkerWithKey( IDataProviderSvc* evtSvc,
                  IMessageSvc* msgSvc,
-                 std::string containerName ) : m_links( NULL ) {
-    if ( "" != containerName ) {
+                 std::string containerName ) : m_links( nullptr ) {
+    if ( !containerName.empty() ) {
       std::string name = "Link/" + containerName;
       if ( "/Event/" == containerName.substr(0,7) ) {
         name = "Link/" + containerName.substr(7);
@@ -31,12 +31,12 @@ public:
       //== If it exists, just append to it.
       
       SmartDataPtr<LHCb::LinksByKey> links( evtSvc, name );
-      if ( 0 != links ) {
+      if ( links ) {
         m_links = links;
       } else {
         m_links = new LHCb::LinksByKey();
         StatusCode sc = evtSvc->registerObject( name, m_links );
-        if ( !sc && NULL != msgSvc ) {
+        if ( !sc && msgSvc ) {
           MsgStream msg( msgSvc, "LinkerWithKey::"+containerName );
           msg << MSG::ERROR << "*** Link container " << name
               << " cannot be registered, Status " << sc << endmsg;
@@ -48,16 +48,16 @@ public:
     }
   }; 
 
-  virtual ~LinkerWithKey( ) {}; ///< Destructor
+  virtual ~LinkerWithKey( ) = default; ///< Destructor
 
   void reset() { m_links->reset(); } 
 
   void link( const SOURCE* source,
              const TARGET* dest, 
              double weight = 1. ) {
-    if ( NULL == source  ) return;
-    if ( NULL == dest    ) return;
-    if ( NULL == m_links ) return;
+    if ( !source  ) return;
+    if ( !dest    ) return;
+    if ( !m_links ) return;
     int srcIndex   = source->index ();
     int srcLinkID  = m_links->linkID( source->parent() );
     int destIndex  = dest->index();
@@ -67,15 +67,15 @@ public:
   }
   
   void link( int key , const TARGET* dest , double weight = 1. ) {
-    if ( NULL == dest    ) return;
-    if ( NULL == m_links ) return;
+    if ( !dest    ) return;
+    if ( !m_links ) return;
     int destIndex  = dest->index ();
     int destLinkID = m_links->linkID( dest->parent() );
     m_links->addReference( key, -1, destIndex, destLinkID, weight );
   }
   
-  void setIncreasingWeight() { if ( NULL != m_links ) m_links->setIncreasing(); }
-  void setDecreasingWeight() { if ( NULL != m_links ) m_links->setDecreasing(); }
+  void setIncreasingWeight() { if ( m_links ) m_links->setIncreasing(); }
+  void setDecreasingWeight() { if ( m_links ) m_links->setDecreasing(); }
   
 protected:
   

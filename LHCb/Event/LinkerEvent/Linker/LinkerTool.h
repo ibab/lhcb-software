@@ -53,7 +53,7 @@ public:
 
   DirectType* direct ( ) {
     SmartDataPtr<LHCb::LinksByKey> links( m_evtSvc, m_location );
-    if ( 0 != links ) {
+    if ( links ) {
       links->resolveLinks( m_evtSvc );
 
       if ( links->sourceClassID() != SOURCE::classID() ) {
@@ -72,8 +72,7 @@ public:
     
     const LHCb::LinksByKey* linkPtr = links;
     m_table.load( linkPtr );
-    if ( 0 == linkPtr ) return 0;
-    return &m_table;
+    return linkPtr ? &m_table : nullptr;
   }
 
   /** retrieve the inverse relation, build it if not yet done

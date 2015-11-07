@@ -34,12 +34,12 @@ public:
             std::string containerName ) {
     m_eventSvc = eventSvc;
     std::string name = "Link/" + containerName;
-    if ( "/Event/" == containerName.substr(0,7) ) {
+    if ( containerName.compare(0,7,"/Event/") == 0 ) {
       name = "Link/" + containerName.substr(7);
     }
     SmartDataPtr<LHCb::LinksByKey> links( eventSvc, name );
-    if ( 0 == links ) {
-      if ( 0 != msgSvc ) {
+    if ( !links ) {
+      if ( msgSvc ) {
         MsgStream msg( msgSvc, "LinkedTo::"+containerName );
         msg << MSG::ERROR << "*** Link container " << name
             << " not found." << endmsg;
@@ -72,11 +72,11 @@ public:
    /** returns the first target related to the specified source.
    */
   TARGET* first( const SOURCE* source ) {
-    if ( NULL == m_links ) return NULL;
+    if ( !m_links ) return nullptr;
     bool status = m_links->firstReference ( source->index(), source->parent(), m_curReference );
     if ( !status ) {
       m_curReference.setNextIndex( -1 );
-      return NULL;
+      return nullptr;
     }
     return currentTarget();
   }
@@ -84,26 +84,22 @@ public:
    /** returns the first target related to the source specified as a key.
    */
   TARGET* first( int key ) {
-    if ( NULL == m_links ) return NULL;
-    bool status = m_links->firstReference( key, NULL, m_curReference );
-    if ( !status ) {
-      m_curReference.setNextIndex( -1 );
-      return NULL;
-    }
-    return currentTarget();
+    if ( !m_links ) return nullptr;
+    bool status = m_links->firstReference( key, nullptr, m_curReference );
+    if ( status ) return currentTarget();
+    m_curReference.setNextIndex( -1 );
+    return nullptr;
   }
   
   /** returns the next target. The source of the relation was specified by a 
       previous call to 'first'
    */
    TARGET* next( ) {
-    if ( NULL == m_links ) return NULL;
+    if ( !m_links ) return nullptr;
     bool status = m_links->nextReference( m_curReference );
-    if ( !status ) {
-      m_curReference.setNextIndex( -1 );
-      return NULL;
-    }
-    return currentTarget();
+    if (status) return currentTarget();
+    m_curReference.setNextIndex( -1 );
+    return nullptr;
   }
   /** returns the weight of the previously defined relation */
   double weight()   { return m_curReference.weight(); }
@@ -112,8 +108,8 @@ public:
    */
   LRange& range( const SOURCE* source ) {
     m_vect.clear();
-    TARGET* tmp = first( source );
-    while ( NULL != tmp ) {
+    auto tmp = first( source );
+    while ( tmp ) {
       m_vect.push_back( tmp );
       tmp = next();
     }
@@ -124,8 +120,8 @@ public:
    */
   LRange& range( int key ) {
     m_vect.clear();
-    TARGET* tmp = first( key );
-    while ( NULL != tmp ) {
+    auto tmp = first( key );
+    while ( tmp ) {
       m_vect.push_back( tmp );
       tmp = next();
     }
@@ -138,20 +134,18 @@ public:
 protected:
 
   TARGET* currentTarget() {
-    if ( NULL == m_links ) return NULL;
+    if ( !m_links ) return nullptr;
     int myLinkID = m_curReference.linkID();
     LinkManager::Link* link = m_links->linkMgr()->link( myLinkID );
     if ( 0 == link->object() ) {
       SmartDataPtr<DataObject> tmp( m_eventSvc, link->path() );
       link->setObject( tmp );
-      if ( 0 == tmp ) return NULL;
+      if ( !tmp ) return nullptr;
     }
     ObjectContainerBase* parent = dynamic_cast<ObjectContainerBase*>(link->object() );
-    if ( 0 != parent ) {
-      TARGET* myObj = (TARGET*)parent->containedObject( m_curReference.objectKey() );
-      return myObj;
-    }
-    return NULL;
+    if ( !parent ) return nullptr;
+    TARGET* myObj = (TARGET*)parent->containedObject( m_curReference.objectKey() );
+    return myObj;
   }  
 
 private:
