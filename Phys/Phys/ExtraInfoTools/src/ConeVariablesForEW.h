@@ -79,7 +79,7 @@ private:
 
   /// Calculate properties of your remaining tracks inside the cone
   StatusCode ChargedCone( const LHCb::Particle *seed,
-			  const LHCb::Particles *parts,
+			  const LHCb::Particle::Range& parts,
 			  const double rcut,
 			  int &mult,
 			  std::vector<double> &vP,
@@ -91,7 +91,7 @@ private:
 			  double &maxPtMu );
 
   StatusCode NeutralCone( const LHCb::Particle *seed,
-                          const LHCb::Particles *parts,
+                          const LHCb::Particle::Range& parts,
                           const double rcut,
                           int &mult,
                           std::vector<double> &vP,

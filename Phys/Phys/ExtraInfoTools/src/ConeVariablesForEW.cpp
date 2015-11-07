@@ -77,8 +77,8 @@ StatusCode ConeVariablesForEW::calculateExtraInfo( const LHCb::Particle *top,
   saveDecayParticles( top );
 
   // -- Get all particles in the event
-  LHCb::Particles *parts = get<LHCb::Particles>( "Phys/" + m_extraParticlesLocation + "/Particles" );
-  if ( parts->size() == 0 ) {
+  const LHCb::Particle::Range parts = get<LHCb::Particle::Range>("Phys/" + m_extraParticlesLocation + "/Particles");
+  if ( parts.empty() ) {
     if ( msgLevel(MSG::WARNING) )
       warning() << "Could not retrieve extra-particles. Skipping" << endmsg;
     return StatusCode::FAILURE;
@@ -152,8 +152,8 @@ StatusCode ConeVariablesForEW::calculateExtraInfo( const LHCb::Particle *top,
     double nscalarPt = 0.;
 
     // -- Get all photons in the event
-    LHCb::Particles *photons = get<LHCb::Particles>( "Phys/" + m_extraPhotonsLocation + "/Particles" );
-    if ( photons->size() != 0 ) {
+    const LHCb::Particle::Range photons = get<LHCb::Particle::Range>( "Phys/" + m_extraPhotonsLocation + "/Particles" );
+    if ( ! photons.empty() ) {
       StatusCode nsc = NeutralCone( seed, photons, m_coneAngle,
                                     nmultiplicity, nvectorP, nscalarP, nscalarPt );
       if ( nsc.isFailure() )
@@ -242,7 +242,7 @@ void ConeVariablesForEW::saveDecayParticles( const LHCb::Particle *top ) {
 // Loop over all the tracks in the cone which do not belong to the desired decay
 //=============================================================================
 StatusCode ConeVariablesForEW::ChargedCone( const LHCb::Particle *seed,
-                                            const LHCb::Particles *parts,
+                                            const LHCb::Particle::Range& parts,
                                             const double rcut,
                                             int &mult,
                                             std::vector < double > &vP,
@@ -269,9 +269,7 @@ StatusCode ConeVariablesForEW::ChargedCone( const LHCb::Particle *seed,
   // -- Get the 4-momentum of the seed particle
   Gaudi::LorentzVector seedMomentum = seed->momentum();
 
-  for ( LHCb::Particles::const_iterator ip = parts->begin(); ip != parts->end(); ++ip ) {
-    const LHCb::Particle *particle = (*ip);
-
+  for ( auto particle : parts ) {
     const LHCb::ProtoParticle *proto = particle->proto();
     if ( proto ) {
 
@@ -602,7 +600,7 @@ StatusCode ConeVariablesForEW::ChargedCone( const LHCb::Particle *seed,
 
   }
 */
-StatusCode ConeVariablesForEW::NeutralCone( const LHCb::Particle *seed, const LHCb::Particles *photons, const double rcut,
+StatusCode ConeVariablesForEW::NeutralCone( const LHCb::Particle *seed, const LHCb::Particle::Range& photons, const double rcut,
                                             int &mult, std::vector < double > &vP,
                                             double &sP, double &sPt ) {
 
@@ -617,9 +615,7 @@ StatusCode ConeVariablesForEW::NeutralCone( const LHCb::Particle *seed, const LH
   // -- Get the 4-momentum of the seed particle
   Gaudi::LorentzVector seedMomentum = seed->momentum();
 
-  for ( LHCb::Particles::const_iterator ip = photons->begin(); ip != photons->end(); ++ip ) {
-    const LHCb::Particle *photon = (*ip);
-
+  for ( auto photon : photons ) {
     // -- Get the 3-momentum of the photon
     Gaudi::XYZVector photonMomentum = photon->momentum().Vect();
 

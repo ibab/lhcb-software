@@ -3,6 +3,11 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Extra Info Tools
 !-----------------------------------------------------------------------------
+
+! 2015-11-07 - Pieter David
+ - ConeVariablesForEW: use LHCb::Particle::Range instead of LHCb::Particles to
+   read from the TES (and range-based for loop to iterate over the container)
+
 ! 2015-11-02 - Gerhard Raven
  - replace endreq with endmsg
 
