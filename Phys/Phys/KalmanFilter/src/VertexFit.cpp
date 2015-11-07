@@ -66,11 +66,11 @@ namespace
   /** @var s_equal
    *  equality criteria 
    */
-  const LHCb::Math::Equal_To<double> s_equal ;
+  const LHCb::Math::Equal_To<double> s_equal{} ;
   /** @var s_zero
    *  equality criteria witrh zero
    */
-  const LHCb::Math::Zero<double>     s_zero  ;
+  const LHCb::Math::Zero<double>     s_zero{} ;
   // ==========================================================================
   /// inverse "large" error in position: used to avoid singularity
   const std::array<double,3> s_ERROR2_i  = { { 
