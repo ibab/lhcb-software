@@ -3,6 +3,9 @@
 ! Responsible : Alex Shires
 !============================================================================
 
+! 2015-11-07 - Pieter David
+ - null pointer check of bestVertex result in RelInfoBs2MuMuTrackIsolations
+
 !========================= IsolationTools v1r6 2015-09-08 =========================
 
 ! 2015-09-19 - Chris Jones

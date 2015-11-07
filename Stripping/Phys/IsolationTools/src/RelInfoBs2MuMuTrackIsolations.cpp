@@ -243,6 +243,9 @@ StatusCode RelInfoBs2MuMuTrackIsolations::TrackIsolations(const LHCb::Particle *
   IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm( contextSvc() ) ; 
   if ( !dva ) { return Error("Could not get parent DVAlgorithm"); }
   const LHCb::VertexBase *PV = dva->bestVertex(top);
+  if ( ! PV ) {
+    return Error("No PV found", StatusCode::SUCCESS);
+  }
   /// Fatima, this will be the BPV of the jpsi in some cases!
   const LHCb::VertexBase *SV = top->endVertex();
 
