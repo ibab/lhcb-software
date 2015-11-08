@@ -3,6 +3,9 @@
 ! Responsible : Sean Benson
 !=============================================================================
 
+! 2015-11-08 - Sean Benson
+ - Also look in extendedSubstructure.
+
 ! 2015-11-05 - Lucio Anderlini
  - Made number of bins of the TeslaBrunelMonitor a configurable
  - Made the NumberOfBins accessible from TeslaMonitor python interface

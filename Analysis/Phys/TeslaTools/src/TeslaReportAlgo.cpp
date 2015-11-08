@@ -559,8 +559,11 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
     LHCb::MuonPID* muon = (LHCb::MuonPID*)vec_obj[4];
 
     std::vector<LHCb::LHCbID> totalIDs;
+    // Get vector of substructure and extended substructure
+    SmartRefVector<LHCb::HltObjectSummary> totSubstructure = obj->substructure();
+    totSubstructure.insert( totSubstructure.end(), obj->substructureExtended().begin(), obj->substructureExtended().end() );
     for(SmartRefVector <LHCb::HltObjectSummary>::const_iterator it_basic
-           = obj->substructure().begin();it_basic!=obj->substructure().end();++it_basic){
+           = totSubstructure.begin();it_basic!=totSubstructure.end();++it_basic){
 
       const LHCb::HltObjectSummary* ObjBasic = it_basic->target();
       totalIDs.insert( totalIDs.end(), ObjBasic->lhcbIDs().begin(), ObjBasic->lhcbIDs().end());
