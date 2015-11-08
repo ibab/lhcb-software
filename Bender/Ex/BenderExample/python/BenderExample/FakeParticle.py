@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id:$ 
+# $Id$ 
 # =============================================================================
 ## @file FakeParticle.py 
 #
@@ -25,9 +25,9 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2015-10-31
 #
-#                    $Revision: 172885 $
-#  Last modification $Date: 2014-05-16 19:48:30 +0200 (Fri, 16 May 2014) $
-#                 by $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """Demonstration how to use ``Fake-H''-utility
 
@@ -52,14 +52,14 @@ By usage of this code one clearly states the disagreement
 with the smear campaign of Dr.O.Callot et al.: 
     ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-                  $Revision: 172885 $
-Last modification $Date: 2014-05-16 19:48:30 +0200 (Fri, 16 May 2014) $
-               by $Author: ibelyaev $
+                  $Revision$
+Last modification $Date$
+               by $Author$
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2014-10-31" 
-__version__ = " $Revision:$"
+__version__ = " $Revision$"
 # ============================================================================= 
 ## import everything from bender 
 from Bender.Main               import *
