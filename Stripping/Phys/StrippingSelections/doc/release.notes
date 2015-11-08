@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-08 - Xabier Cid Vidal
+ - Added Sigma3Mu and Sigma3MuDownstream lines to RareStrange
+
 ! 2015-11-08 - Andrea Contu
  - Fix to relinfo for DstarD02xx, DstarPromptWithD02HHLL and RareStrange
 

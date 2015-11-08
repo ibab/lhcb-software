@@ -17,6 +17,8 @@ __all__ = ('RareStrangeLinesConf',
            'makeSigmaPMuMuDown',
            'makeSigmaPEEDown',
            'makeSigmaPMuMuLFVDown',
+           'makeSigmaMuMuMu',
+           'makeSigmaMuMuMuDown',           
            'makeKPiMuMu',
            'makeKPiMuMuLFV',
            'makeKPiPiPi',
@@ -57,6 +59,8 @@ default_config = {
         'SigmaPEEDownPrescale' : 0.1,
         'SigmaPMuMuLFVPrescale' :0.1,
         'SigmaPMuMuLFVDownPrescale' :0.1,
+        'SigmaMuMuMuPrescale' : 1,
+        'SigmaMuMuMuDownPrescale' :1,   
         'KPiPiPiPrescale' : 0.01,
         'KPiPiPiMassMeasPrescale' :1,
         'KPiMuMuPrescale' :1,
@@ -91,6 +95,23 @@ default_config = {
         'pi0MinPt': 0.,
         'muonMinIpChi2Down' : 9.,
         'electronMinIpChi2Down': 4.,
+        'Sigma3MinTauPs' : 0.1,
+        'Sigma3MinPt' : 0.,
+        'Sigma3MaxDOCA' : 25.,
+        'Sigma3MassWin' : 500.,
+        'Sigma3MinDIRA' : 0.9,
+        'Sigma3MaxIpChi2' : 50.,
+        'Sigma3VtxChi2' : 50.,
+        'Sigma3MinTauPsDown' : 0.1,
+        'Sigma3MinPtDown' : 0.,
+        'Sigma3MaxDOCADown' : 50.,
+        'Sigma3MassWinDown' : 500.,
+        'Sigma3MinDIRADown' : 0.1,
+        'Sigma3MaxIpChi2Down' : 500.,
+        'Sigma3VtxChi2Down' : 500.,
+        'Sigma3DauTrChi2Down': 9.,
+        'muon3MinIpChi2' : 5.,
+        'muon3MinIpChi2Down' : 5.,
         'KMaxDOCA' : 3.,
         'KMinPT' : 100. ,
         'KMassWin' : 100.,
@@ -152,6 +173,8 @@ class RareStrangeLinesConf(LineBuilder) :
         'SigmaPEEDownPrescale',
         'SigmaPMuMuLFVPrescale',
         'SigmaPMuMuLFVDownPrescale',
+        'SigmaMuMuMuPrescale',
+        'SigmaMuMuMuDownPrescale',
         'KPiPiPiPrescale',
         'KPiPiPiMassMeasPrescale',
         'KPiMuMuPrescale',
@@ -185,7 +208,24 @@ class RareStrangeLinesConf(LineBuilder) :
         'electronMinIpChi2',
         'muonMinIpChi2Down',
         'pi0MinPt',
-        'electronMinIpChi2Down',
+        'electronMinIpChi2Down',        
+        'Sigma3MinTauPs',
+        'Sigma3MinPt',
+        'Sigma3MaxDOCA',
+        'Sigma3MassWin',
+        'Sigma3MinDIRA',
+        'Sigma3MaxIpChi2',
+        'Sigma3VtxChi2',
+        'Sigma3MinTauPsDown',
+        'Sigma3MinPtDown',
+        'Sigma3MaxDOCADown',
+        'Sigma3MassWinDown',
+        'Sigma3MinDIRADown',
+        'Sigma3MaxIpChi2Down',
+        'Sigma3VtxChi2Down',
+        'Sigma3DauTrChi2Down',
+        'muon3MinIpChi2',
+        'muon3MinIpChi2Down',                
         'KMaxDOCA',
         'KMinPT',
         'KMassWin',
@@ -242,6 +282,8 @@ class RareStrangeLinesConf(LineBuilder) :
         speedown_name=name+'SigmaPEEDown'
         spmumulfv_name=name+'SigmaPMuMuLFV'
         spmumulfvdown_name=name+'SigmaPMuMuLFVDown'
+        smumumu_name=name+'SigmaMuMuMu'
+        smumumudown_name=name+'SigmaMuMuMuDown'                        
         kpimumu_name=name+'KPiMuMu'
         kpimumulfv_name=name+'KPiMuMuLFV'
         kpipipi_name=name+'KPiPiPi'
@@ -260,6 +302,8 @@ class RareStrangeLinesConf(LineBuilder) :
         self.selSigmaPEEDown   = makeSigmaPEEDown(speedown_name, config)
         self.selSigmaPMuMuLFV = makeSigmaPMuMuLFV(spmumulfv_name, config)
         self.selSigmaPMuMuLFVDown = makeSigmaPMuMuLFVDown(spmumulfvdown_name, config)
+        self.selSigmaMuMuMu = makeSigmaMuMuMu(smumumu_name, config)
+        self.selSigmaMuMuMuDown = makeSigmaMuMuMuDown(smumumudown_name, config)
         self.selKPiMuMu = makeKPiMuMu(kpimumu_name, config)
         self.selKPiMuMuLFV = makeKPiMuMuLFV(kpimumulfv_name, config)
         self.selKPiPiPi = makeKPiPiPi(kpipipi_name, config)
@@ -556,6 +600,53 @@ class RareStrangeLinesConf(LineBuilder) :
                                             ]
                                      )
 
+
+        self.SigmaMuMuMuLine = StrippingLine(smumumu_name+"Line",
+                                             prescale = config['SigmaMuMuMuPrescale'],
+                                             postscale = config['Postscale'],
+                                             algos = [ self.selSigmaMuMuMu ],
+                                             RequiredRawEvents = ["Velo"],
+                                             MDSTFlag=False,
+                                             RelatedInfoTools =
+                                             [{'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                               'Location' : 'P2CVSigma09',
+                                               'DaughterLocations' : {"[Sigma+ -> ^mu+ mu+ mu-]CC":'P2CVMu09_1',
+                                                                      "[Sigma+ -> mu+ ^mu+ mu-]CC":'P2CVMu09_2',
+                                                                      "[Sigma+ -> mu+ mu+ ^mu-]CC":'P2CVMu09_3'}},
+                                              {'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                               'Location' : 'P2CVSigma10',
+                                               'DaughterLocations' :{"[Sigma+ -> ^mu+ mu+ mu-]CC":'P2CVMu10_1',
+                                                                     "[Sigma+ -> mu+ ^mu+ mu-]CC":'P2CVMu10_2',
+                                                                     "[Sigma+ -> mu+ mu+ ^mu-]CC":'P2CVMu10_3'}},
+                                              {'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                               'Location' : 'P2CVSigma11',
+                                               'DaughterLocations' :{"[Sigma+ -> ^mu+ mu+ mu-]CC":'P2CVMu11_1',
+                                                                     "[Sigma+ -> mu+ ^mu+ mu-]CC":'P2CVMu11_2',
+                                                                     "[Sigma+ -> mu+ mu+ ^mu-]CC":'P2CVMu11_3'}}])
+                                              
+        self.SigmaMuMuMuDownLine = StrippingLine(smumumudown_name+"Line",
+                                                 prescale = config['SigmaMuMuMuDownPrescale'],
+                                                 postscale = config['Postscale'],
+                                                 algos = [ self.selSigmaMuMuMuDown ],
+                                                 RequiredRawEvents = ["Velo"],
+                                                 MDSTFlag=False,
+                                                 RelatedInfoTools =
+                                                 [{'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                                   'Location' : 'P2CVSigma09',
+                                                   'DaughterLocations' : {"[Sigma+ -> ^mu+ mu+ mu-]CC":'P2CVMu09_1',
+                                                                          "[Sigma+ -> mu+ ^mu+ mu-]CC":'P2CVMu09_2',
+                                                                          "[Sigma+ -> mu+ mu+ ^mu-]CC":'P2CVMu09_3'}},
+                                                  {'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                                   'Location' : 'P2CVSigma10',
+                                                   'DaughterLocations' :{"[Sigma+ -> ^mu+ mu+ mu-]CC":'P2CVMu10_1',
+                                                                         "[Sigma+ -> mu+ ^mu+ mu-]CC":'P2CVMu10_2',
+                                                                         "[Sigma+ -> mu+ mu+ ^mu-]CC":'P2CVMu10_3'}},
+                                                  {'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                                   'Location' : 'P2CVSigma11',
+                                                   'DaughterLocations' :{"[Sigma+ -> ^mu+ mu+ mu-]CC":'P2CVMu11_1',
+                                                                         "[Sigma+ -> mu+ ^mu+ mu-]CC":'P2CVMu11_2',
+                                                                         "[Sigma+ -> mu+ mu+ ^mu-]CC":'P2CVMu11_3'}}])
+        
         self.KPiMuMuLine = StrippingLine(kpimumu_name+"Line",
                                              prescale = config['KPiMuMuPrescale'],
                                             postscale = config['Postscale'],
@@ -855,6 +946,8 @@ class RareStrangeLinesConf(LineBuilder) :
         self.registerLine(self.SigmaPMuMuLFVLine)
         self.registerLine(self.SigmaPMuMuLFVDownLine)
         self.registerLine(self.SigmaPMuMuDownLine)
+        self.registerLine(self.SigmaMuMuMuLine)
+        self.registerLine(self.SigmaMuMuMuDownLine)
         self.registerLine(self.KPiMuMuLine)
         self.registerLine(self.KPiMuMuLFVLine)
         self.registerLine(self.KPiMuMuLFVDownLine)
@@ -1034,6 +1127,71 @@ def makeSigmaPPi0Cal(name, config):
                                              _stdLooseProtons ])
 
 
+
+
+
+# Sigma+ -> mu mu mu
+def makeSigmaMuMuMu(name, config):
+    """
+    Line for the selection of Sigma+ -> mu+ mu+ mu-,
+    Before prescaling this line, please contact the authors listed above
+    
+    Arguments:
+    name        : name of the Selection.
+    config      : dictionary of tunable cuts
+    """
+    
+    #from Configurables import OfflineVertexFitter
+    SigmaMuMuMu = CombineParticles(  DecayDescriptor = "[Sigma+ -> mu+ mu+ mu-]cc",
+                                     DaughtersCuts = { "mu+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(muon3MinIpChi2)s)"%config },
+                                     CombinationCut = "(ADAMASS('Sigma+')<%(Sigma3MassWin)s *MeV) & (AMAXDOCA('')< %(Sigma3MaxDOCA)s *mm)"%config,
+                                     MotherCut = "(VFASPF(VCHI2/VDOF)< %(Sigma3VtxChi2)s)  & (PT> %(Sigma3MinPt)s *MeV)"\
+                                     "& (ADMASS('Sigma+') < %(Sigma3MassWin)s *MeV )"\
+                                     "& (BPVDIRA > %(Sigma3MinDIRA)s) "\
+                                     "& (BPVIPCHI2()< %(Sigma3MaxIpChi2)s)"\
+                                     "& (BPVLTIME()> %(Sigma3MinTauPs)s * ps)" %config
+                                     )
+    
+    
+    # AllLooseMuons are needed in order to avoid the pt and ip cuts used in StdLooseMuons: do not change this!
+    _stdAllLooseMuons   = DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")
+    
+    return Selection (name,
+                      Algorithm = SigmaMuMuMu,
+                      RequiredSelections = [ _stdAllLooseMuons])
+
+
+
+# Sigma+ -> mu mu mu down
+def makeSigmaMuMuMuDown(name, config):
+    """
+    Line for the selection of Sigma+ -> mu+ mu+ mu-,
+    Before prescaling this line, please contact the authors listed above
+    
+    Arguments:
+    name        : name of the Selection.
+    config      : dictionary of tunable cuts
+    """
+    
+    #from Configurables import OfflineVertexFitter
+    SigmaMuMuMu = CombineParticles(  DecayDescriptor = "[Sigma+ -> mu+ mu+ mu-]cc",
+                                     DaughtersCuts = { "mu+" : "(TRCHI2DOF< %(Sigma3DauTrChi2Down)s) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(muon3MinIpChi2Down)s)"%config},
+                                     CombinationCut = "(ADAMASS('Sigma+')<%(Sigma3MassWinDown)s *MeV) & (AMAXDOCA('')< %(Sigma3MaxDOCADown)s *mm)"%config,
+                                     MotherCut = "(VFASPF(VCHI2/VDOF)< %(Sigma3VtxChi2Down)s)  & (PT> %(Sigma3MinPtDown)s *MeV)"\
+                                     "& (ADMASS('Sigma+') < %(Sigma3MassWinDown)s *MeV )"\
+                                     "& (BPVDIRA > %(Sigma3MinDIRADown)s) "\
+                                     "& (BPVIPCHI2()< %(Sigma3MaxIpChi2Down)s)"\
+                                     "& (BPVLTIME()> %(Sigma3MinTauPsDown)s * ps)" %config
+                                     )
+                                     
+    
+    # AllLooseMuons are needed in order to avoid the pt and ip cuts used in StdLooseMuons: do not change this!
+    _Muons   = DataOnDemand(Location = "Phys/StdLooseDownMuons/Particles")
+    
+    return Selection (name,
+                      Algorithm = SigmaMuMuMu,
+                      RequiredSelections = [ _Muons])
+        
 
 # K -> pi mu mu 
 def makeKPiMuMu(name, config):
