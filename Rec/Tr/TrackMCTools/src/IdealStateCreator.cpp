@@ -62,7 +62,7 @@ IdealStateCreator::~IdealStateCreator() {}
 //=============================================================================
 StatusCode IdealStateCreator::initialize()
 {
-  debug() << "==> Initialize" << endreq;
+  debug() << "==> Initialize" << endmsg;
 
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;
@@ -173,7 +173,7 @@ StatusCode IdealStateCreator::createState( const MCHit* aHit,
   StatusCode sc = m_extrapolator->propagate(state,zRec );
   if( sc.isFailure() ) {
     warning() << "Extrapolation of True State from z = "
-              << state.z() << " to z = " << zRec << " failed!" << endreq;
+              << state.z() << " to z = " << zRec << " failed!" << endmsg;
   }
 
   return sc;
@@ -200,7 +200,7 @@ StatusCode IdealStateCreator::createStateVector(const MCHit* aHit,
   StatusCode sc = m_extrapolator->propagate(pVec ,zRec );
   if( sc.isFailure() ) {
     warning() << "Extrapolation of True State from z = "
-              << pVec.z() << " to z = " << zRec << " failed!" << endreq;
+              << pVec.z() << " to z = " << zRec << " failed!" << endmsg;
   }
   //  pVec.setZ(zRec);
 

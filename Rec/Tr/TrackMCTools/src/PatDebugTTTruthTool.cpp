@@ -72,7 +72,7 @@ void PatDebugTTTruthTool::debugTTClusterOnTrack (  const LHCb::Track* track,
       info() << format( " MC Key %4d PID %6d  P %8.3f GeV tx %9.5f ty %9.5f",
                         part->key(), part->particleID().pid(), momentum / Gaudi::Units::GeV,
                         part->momentum().x()/ part->momentum().z(),
-                        part->momentum().y()/ part->momentum().z() ) << endreq;
+                        part->momentum().y()/ part->momentum().z() ) << endmsg;
       for ( PatTTHits::const_iterator itH = beginCoord; endCoord != itH; ++itH ){
         const PatTTHit* hit = *itH;
         LHCb::STChannelID id = hit->hit()->lhcbID().stID();
@@ -92,7 +92,7 @@ void PatDebugTTTruthTool::debugTTClusterOnTrack (  const LHCb::Track* track,
                  << format( "(S%1d,L%1d,R%2d,S%2d,S%3d) x%7.1f High %1d", 
                             id.station(), id.layer(), id.detRegion(), 
                             id.sector(), id.strip(), xCoord, 
-                            (*itH)->hit()->sthit()->cluster().highThreshold() ) << endreq;
+                            (*itH)->hit()->sthit()->cluster().highThreshold() ) << endmsg;
         }
       }
       part = trLink.next();

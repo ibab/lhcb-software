@@ -267,7 +267,7 @@ void DebugTrackingLosses::printMCParticle ( const LHCb::MCParticle* part ) {
       mother = vert->mother();
     }
   }
-  info() << endreq;
+  info() << endmsg;
 }
 //=============================================================================
 //  Finalize

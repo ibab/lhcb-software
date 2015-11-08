@@ -185,6 +185,6 @@ void MeasureIPResolution::printMCParticle ( const LHCb::MCParticle* part ) {
       mother = vert->mother();
     }
   }
-  info() << endreq;
+  info() << endmsg;
 }
 //=============================================================================
