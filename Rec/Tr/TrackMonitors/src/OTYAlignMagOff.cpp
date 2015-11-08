@@ -23,7 +23,6 @@
 #include "AIDA/IProfile1D.h"
 #include "AIDA/IHistogram2D.h"
 
-#include <boost/foreach.hpp>
 #include <iomanip>
 
 using namespace LHCb;

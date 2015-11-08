@@ -18,11 +18,6 @@
 
 #include "Map.h"
 
-// Boost
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/lambda.hpp>
-
-using namespace boost::lambda;
 using namespace LHCb;
 using namespace Gaudi;
  
@@ -53,11 +48,10 @@ class TrackMonitorNT : public GaudiTupleAlg {
  private:
 
   ITrackSelector* selector(LHCb::Track::Types aType) const {
-    return m_splitByAlgorithm == true ? m_selectors[aType] : m_selectors[LHCb::Track::TypeUnknown];
+    return m_selectors[ m_splitByAlgorithm ? aType : LHCb::Track::TypeUnknown ];
   }
   
-  void fillNtuple(const LHCb::Track* aTrack, 
-		  const std::string& type);
+  void fillNtuple(const LHCb::Track* aTrack, const std::string& type);
 private:
   std::string m_tracksInContainer;    ///< Input Tracks container location
   bool m_splitByAlgorithm; 
@@ -95,20 +89,13 @@ StatusCode TrackMonitorNT::initialize()
   StatusCode sc = GaudiTupleAlg::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  if (m_splitByAlgorithm == true){
-    const TrackMonitorMaps::TypeMap& tMap = TrackMonitorMaps::typeDescription();
-    TrackMonitorMaps::TypeMap::const_iterator iterM = tMap.begin();
-    for (; iterM != tMap.end(); ++iterM ){
+  if (m_splitByAlgorithm){
+    for (const auto&  map : TrackMonitorMaps::typeDescription() ){
       // make a tool from this
-      std::string name = iterM->first+"Selector";
-      ITrackSelector* selector = tool<ITrackSelector>("TrackSelector",name);  
-      m_selectors[iterM->second] = selector;  
-    } // iterM
-  }
-  else {
-    std::string name = m_allString+"Selector";
-    ITrackSelector* selector = tool<ITrackSelector>("TrackSelector",name);  
-    m_selectors[LHCb::Track::TypeUnknown] = selector;  
+      m_selectors[map.second] = tool<ITrackSelector>("TrackSelector",map.first+"Selector");  
+    } 
+  } else {
+    m_selectors[LHCb::Track::TypeUnknown] = tool<ITrackSelector>("TrackSelector",m_allString+"Selector");  
   } // splitByType
 
    
@@ -122,35 +109,30 @@ StatusCode TrackMonitorNT::execute()
 {
   // get the input data
   LHCb::Tracks* tracks = getIfExists<LHCb::Tracks>(m_tracksInContainer);
-  if ( NULL == tracks )
+  if ( !tracks )
     return Warning( m_tracksInContainer+" not found", StatusCode::SUCCESS, 0);
 
   std::map<std::string, unsigned int> tMap;
-  std::string type = "";
 
   // # number of tracks
   plot(tracks->size(),1, "# tracks", 0., 500., 50);
 
   // histograms per track
-  LHCb::Tracks::const_iterator iterT = tracks->begin();
   
-  for (; iterT != tracks->end(); ++iterT){
-    if ( /*selector((*iterT)->type())->accept(**iterT) ==*/ true){
+  for (const auto& iterT : *tracks ) { 
+    if ( /*selector((iterT)->type())->accept(*iterT) ==*/ true){
 
-      m_splitByAlgorithm == true ? 
-        type = Gaudi::Utils::toString((*iterT)->history()) : type= m_allString ; 
-
-      tMap[type]+= 1;
-      fillNtuple(*iterT,type);
+      std::string type = ( m_splitByAlgorithm 
+                                  ? Gaudi::Utils::toString(iterT->history()) 
+                                  : m_allString ); 
+      ++tMap[type];
+      fillNtuple(iterT,type);
     }
   } // iterT
 
   // fill counters....
   counter("#Tracks") += tracks->size();
-  for (std::map<std::string,unsigned int>::const_iterator iterS = tMap.begin();
-       iterS != tMap.end(); ++iterS){
-    counter("#"+iterS->first) += iterS->second;
-  } // iterS
+  for (const auto& map : tMap ) counter("#"+map.first) += map.second;
 
   return StatusCode::SUCCESS;
 }

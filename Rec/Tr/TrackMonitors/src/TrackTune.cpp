@@ -95,7 +95,7 @@ bool TrackTune::isFound(const LHCb::Track::Range& tracks, const LHCb::Particle& 
   bool ok = true;
   const SmartRefVector<LHCb::Particle>& daughters = part.daughters();
   for (SmartRefVector<LHCb::Particle>::const_iterator iter = daughters.begin(); 
-      iter != daughters.end() && ok == true ; ++iter){
+      iter != daughters.end() && ok ; ++iter){
      const LHCb::Track* aTrack = track(**iter);
      if (!aTrack) {
        info() << "Failed to find track " << endmsg;
@@ -117,29 +117,27 @@ bool TrackTune::isFound(const LHCb::Track::Range& tracks, const LHCb::Particle& 
 
 bool TrackTune::select(std::vector<const LHCb::Particle* >& output, const LHCb::Particle::Range& input) const
 {
-  if (m_selectBest == true){
-    double bestChi2 = 9999.; const LHCb::Particle* bestPart = 0;
-    for (LHCb::Particle::Range::const_iterator iter = input.begin(); iter != input.end(); ++iter){
-      if (inMassRange(**iter) == false) continue;
-      const LHCb::Vertex* vert  = (*iter)->endVertex();
+  if (m_selectBest){
+    double bestChi2 = 9999.; const LHCb::Particle* bestPart = nullptr;
+    for (const auto& i : input ) {
+      if (!inMassRange(*i)) continue;
+      auto vert  = i->endVertex();
       if (vert->chi2PerDoF() < bestChi2){
         bestChi2= vert->chi2PerDoF();
-        bestPart = *iter;
+        bestPart = i;
       }
     }
     if (bestPart) output.push_back(bestPart);
   }   
   else {
-    for (LHCb::Particle::Range::const_iterator iter = input.begin(); iter != input.end(); ++iter){
-      output.push_back(*iter);
-    }
+    output.insert( output.end(), input.begin(), input.end() );
   }
   return (output.size() == 0 ? false : true ); 
 }
 
 bool TrackTune::inMassRange(const LHCb::Particle& particle) const
 {
-  const double m = particle.measuredMass();
+  double m = particle.measuredMass();
   return  (m > m_minMass && m< m_maxMass);
 }
 

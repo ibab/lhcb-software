@@ -3,7 +3,6 @@
 // from std
 #include <string>
 #include <vector>
-#include "boost/lexical_cast.hpp"
 
 // from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
@@ -22,7 +21,6 @@
 // AIDA
 #include "AIDA/IHistogram1D.h"
 
-#include <boost/foreach.hpp>
 
 /** @class AlignAlgorithm AlignAlgorithm.h
 *
@@ -112,7 +110,7 @@ TrackVeloOverlapMonitor::TrackVeloOverlapMonitor( const std::string& name,
 
 TrackVeloOverlapMonitor::~TrackVeloOverlapMonitor() 
 {
-  BOOST_FOREACH( Histogrammer* histo, m_histogrammers )
+  for( Histogrammer* histo: m_histogrammers )
     if(histo) delete histo ;
   delete m_sumhistogrammer ;
 }
@@ -188,12 +186,12 @@ StatusCode TrackVeloOverlapMonitor::execute()
   }
 
   // loop over all tracks
-  BOOST_FOREACH( const LHCb::Track* track, tracks) 
+  for( const LHCb::Track* track: tracks) 
     if( track->hasVelo() ) {
       std::vector< std::vector<const LHCb::FitNode*> > phinodes(22) ;
       std::vector< std::vector<const LHCb::FitNode*> > rnodes(22) ;
 
-      BOOST_FOREACH( const LHCb::Node* node, track->nodes() ) 
+      for( const LHCb::Node* node: track->nodes() ) 
 	if( node->hasMeasurement() &&
 	    node->measurement().lhcbID().isVelo() &&
 	    (!m_omitOutliers || node->type()==LHCb::Node::HitOnTrack) ) {

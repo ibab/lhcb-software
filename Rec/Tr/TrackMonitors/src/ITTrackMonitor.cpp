@@ -16,14 +16,7 @@
 #include <map>
 #include "Map.h"
 #include "Kernel/ITNames.h"
-#include "LoKi/select.h"
 
-// Boost
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/lambda.hpp>
-#include <boost/foreach.hpp>
-
-using namespace boost::lambda;
 using namespace LHCb;
 using namespace Gaudi;
 
@@ -89,13 +82,14 @@ StatusCode ITTrackMonitor::execute()
   std::vector<unsigned int> usedIDs; usedIDs.reserve(clusters->size());
 
   // histograms per track
-  BOOST_FOREACH( const LHCb::Track* track, tracks) {
+  for( const LHCb::Track* track: tracks) {
     if (track->hasT()){
       
       // find the IT hits on the track 
       const std::vector<LHCb::LHCbID>& ids = track->lhcbIDs();
       std::vector<LHCb::LHCbID> itHits; itHits.reserve(ids.size());
-      LoKi::select(ids.begin(), ids.end(), std::back_inserter(itHits), bind(&LHCbID::isIT,_1));
+      std::copy_if(ids.begin(), ids.end(), std::back_inserter(itHits),
+                   [](const LHCb::LHCbID& id) { return id.isIT(); } );
 
       if (ids.size() < m_minNumITHits) continue;
 
@@ -103,9 +97,10 @@ StatusCode ITTrackMonitor::execute()
       fillHistograms(*track,type,ids);
 
       // insert into tmp container
-      BOOST_FOREACH( LHCb::LHCbID id, ids ){
-        usedIDs.push_back(id.stID());
-      } // for each
+      std::transform( ids.begin(), ids.end(), std::back_inserter(usedIDs),
+                      [](const LHCb::LHCbID& id) {
+          return id.stID();
+      } );
     }
 
   } // iterT
@@ -128,7 +123,7 @@ void ITTrackMonitor::fillHistograms(const LHCb::Track& track,
 {
 
   std::string ittype = type;
-  if (splitByITType() == true){
+  if (splitByITType()){
     if( !ittype.empty() ) ittype += "/" ;
     ittype += ITCategory(itIds);
   }
@@ -216,7 +211,7 @@ void ITTrackMonitor::fillHistograms(const LHCb::Track& track,
     } 
 
     // make plots per layer
-    if (m_plotsByLayer == true) {
+    if (m_plotsByLayer) {
       const std::string layerName = ITNames().LayerToString(chan);
       const std::string stationName = ITNames().StationToString(chan);
       plot(fNode->unbiasedResidual(),ittype+"/unbiasedResidual"+layerName,"unbiasedResidual"+layerName,  -2., 2., 200 );
@@ -332,12 +327,12 @@ std::string ITTrackMonitor::ITCategory(const std::vector<LHCb::LHCbID>& ids) con
   
   typedef std::map<unsigned int, unsigned int> BoxMap;
   BoxMap nBox;
-  BOOST_FOREACH(LHCb::LHCbID id, ids) {
+  for(const auto& id: ids) {
     nBox[id.stID().detRegion()]  += 1;
-  } // for each
+  }
   
   unsigned int bestBox = 0; unsigned int nBest =0;
-  BOOST_FOREACH( BoxMap::value_type  box, nBox ) {
+  for( const auto&  box: nBox ) {
     if (box.second > nBest ){ 
       bestBox = box.first;
       nBest = box.second;

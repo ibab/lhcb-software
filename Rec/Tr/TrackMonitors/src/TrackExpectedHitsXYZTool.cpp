@@ -6,9 +6,6 @@
 #include <exception>
 #include <algorithm>
 
-#include <boost/foreach.hpp>
-#include <boost/type_traits.hpp>
-
 #include "TrackExpectedHitsXYZTool.h"
 
 #include "Math/CholeskyDecomp.h"

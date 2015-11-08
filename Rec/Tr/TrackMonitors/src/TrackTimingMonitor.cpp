@@ -20,11 +20,6 @@
 using namespace LHCb;
 using namespace Gaudi;
  
-/// BOOST
-#include "boost/lexical_cast.hpp"
-#include "boost/lambda/bind.hpp"
-#include "boost/lambda/lambda.hpp"
-#include "boost/foreach.hpp"
 
 /** @class TrackTimingMonitor TrackTimingMonitor.h  
  * 
@@ -117,60 +112,27 @@ StatusCode TrackTimingMonitor::execute()
 
   Tuple theTuple = nTuple( "Timing" , "" , CLID_ColumnWiseTuple );
 
-  if (pf != -1)
-    theTuple->column( "TimePatForward", m_timerTool->lastTime(pf));
-  if (ps !=-1)
-    theTuple->column( "TimePatSeeding", m_timerTool->lastTime(ps));
-  if (pd != -1)
-    theTuple->column( "TimePatDownstream", m_timerTool->lastTime(pd));
-  if (ts !=-1)
-    theTuple->column( "TimingTsaSeeding", m_timerTool->lastTime(ts));
-  if (vRZ != -1)
-    theTuple->column( "TimeVeloRZ", m_timerTool->lastTime(vRZ));
-  if (v3D !=-1)
-    theTuple->column( "TimeVeloSpace", m_timerTool->lastTime(v3D));
-  if (vg != -1)
-    theTuple->column( "TimeVeloGeneral", m_timerTool->lastTime(vg));
-  if (vTT !=-1)
-    theTuple->column( "TimingVeloTT", m_timerTool->lastTime(vTT));
-  if (tm !=-1)
-    theTuple->column( "TimingTrackMatching", m_timerTool->lastTime(tm));
+  if (pf != -1) theTuple->column( "TimePatForward", m_timerTool->lastTime(pf));
+  if (ps !=-1) theTuple->column( "TimePatSeeding", m_timerTool->lastTime(ps));
+  if (pd != -1) theTuple->column( "TimePatDownstream", m_timerTool->lastTime(pd));
+  if (ts !=-1) theTuple->column( "TimingTsaSeeding", m_timerTool->lastTime(ts));
+  if (vRZ != -1) theTuple->column( "TimeVeloRZ", m_timerTool->lastTime(vRZ));
+  if (v3D !=-1) theTuple->column( "TimeVeloSpace", m_timerTool->lastTime(v3D));
+  if (vg != -1) theTuple->column( "TimeVeloGeneral", m_timerTool->lastTime(vg));
+  if (vTT !=-1) theTuple->column( "TimingVeloTT", m_timerTool->lastTime(vTT));
+  if (tm !=-1) theTuple->column( "TimingTrackMatching", m_timerTool->lastTime(tm));
 
-  LHCb::Tracks* tracks = NULL;
-  tracks = getIfExists<LHCb::Tracks>( LHCb::TrackLocation::RZVelo );
-  if ( NULL != tracks ) {
-    theTuple->column( "NbVeloRZTracks", tracks->size());
+  for ( const auto& i : { std::make_pair( LHCb::TrackLocation::RZVelo,     "NbVeloRZTracks" )
+                        , std::make_pair( LHCb::TrackLocation::Velo,       "NbVelo3DTracks" )
+                        , std::make_pair( LHCb::TrackLocation::Forward,    "NbForwardTracks" )
+                        , std::make_pair( LHCb::TrackLocation::Seed,       "NbSeedTracks" )
+                        , std::make_pair( LHCb::TrackLocation::Downstream, "NbDownstreamTracks" )
+                        , std::make_pair( LHCb::TrackLocation::VeloTT,     "NbVeloTTTracks" )
+                        , std::make_pair( LHCb::TrackLocation::Match,      "NbMatchTracks" ) } ) {
+    auto tracks = getIfExists<LHCb::Tracks>( i.first  );
+    if ( tracks ) theTuple->column(i.second, tracks->size());
   }
 
-  tracks = getIfExists<LHCb::Tracks>( LHCb::TrackLocation::Velo );
-  if ( NULL != tracks ) {
-    theTuple->column( "NbVelo3DTracks", tracks->size());
-  }
-
-  tracks = getIfExists<LHCb::Tracks>( LHCb::TrackLocation::Forward );
-  if ( NULL != tracks ) {
-    theTuple->column( "NbForwardTracks", tracks->size());
-  }
-
-  tracks = getIfExists<LHCb::Tracks>( LHCb::TrackLocation::Seed );
-  if ( NULL != tracks ) {
-    theTuple->column( "NbSeedTracks", tracks->size());
-  }
-  
-  tracks = getIfExists<LHCb::Tracks>( LHCb::TrackLocation::Downstream );
-  if ( NULL != tracks ) {
-    theTuple->column( "NbDownstreamTracks", tracks->size());
-  }
-
-  tracks = getIfExists<LHCb::Tracks>( LHCb::TrackLocation::VeloTT );
-  if ( NULL != tracks ) {
-    theTuple->column( "NbVeloTTTracks", tracks->size());
-  } 
-
-  tracks = getIfExists<LHCb::Tracks>( LHCb::TrackLocation::Match );
-  if ( NULL != tracks ) {
-    theTuple->column( "NbMatchTracks", tracks->size());
-  }
 
   std::vector<double> OTOcc;
   int maxOTModules = m_tracker->modules().size();
@@ -178,9 +140,8 @@ StatusCode TrackTimingMonitor::execute()
   int allOTHits = 0;
 
   // loop over all modules
-  BOOST_FOREACH(const DeOTModule* module, m_tracker->modules()) {
-    LHCb::OTChannelID modid = module->elementID();
-    LHCb::OTLiteTimeRange ottimes = m_decoder->decodeModule(modid);
+  for(const DeOTModule* module: m_tracker->modules()) {
+    auto  ottimes = m_decoder->decodeModule(module->elementID());
     OTOcc.push_back(1.0*ottimes.size()/module->nChannels());
     allOTHits += ottimes.size();
   }
@@ -188,20 +149,15 @@ StatusCode TrackTimingMonitor::execute()
   theTuple->column("NbOTHits", allOTHits);
   theTuple->farray( "OTOcc"     , OTOcc      , "nOTmodules" , maxOTModules );  
 
-  const LHCb::STLiteCluster::STLiteClusters* ITClusterCont = 
-    get<LHCb::STLiteCluster::STLiteClusters>(LHCb::STLiteClusterLocation::ITClusters);
+  auto ITClusterCont = get<LHCb::STLiteCluster::STLiteClusters>(LHCb::STLiteClusterLocation::ITClusters);
   theTuple->column("NITClusters", ITClusterCont->size());
-  
-  const LHCb::STLiteCluster::STLiteClusters* TTClusterCont = 
-    get<LHCb::STLiteCluster::STLiteClusters>(LHCb::STLiteClusterLocation::TTClusters);
+  auto TTClusterCont = get<LHCb::STLiteCluster::STLiteClusters>(LHCb::STLiteClusterLocation::TTClusters);
   theTuple->column("NTTClusters", TTClusterCont->size());
-
-  LHCb::VeloClusters* m_clusters = get<LHCb::VeloClusters>( LHCb::VeloClusterLocation::Default );
-  
+  auto  m_clusters = get<LHCb::VeloClusters>( LHCb::VeloClusterLocation::Default );
   theTuple->column("NVeloClusters", m_clusters->size());
   
   const LHCb::ODIN* odin = getIfExists<LHCb::ODIN> ( LHCb::ODINLocation::Default );  
-  if( NULL != odin ) { 
+  if( odin ) { 
     theTuple->column("RunNb", odin->runNumber());
 
     unsigned long hi_num =  (unsigned long) (odin->eventNumber() >> 32);

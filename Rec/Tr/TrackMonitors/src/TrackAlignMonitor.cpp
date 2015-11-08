@@ -5,8 +5,6 @@
 #include "Event/State.h"
 #include "Event/Node.h"
 #include "Event/Measurement.h"
-#include <boost/foreach.hpp>
-#include <boost/assign/list_of.hpp>
 #include "AIDA/IProfile1D.h"
 #include "AIDA/IHistogram1D.h"
 #include "GaudiUtils/Aida2ROOT.h"
@@ -100,7 +98,7 @@ namespace {
     size_t m_numelements ;
   } ;
 
-  const std::vector<std::string> AlignProfile::m_dofnames = boost::assign::list_of("Tx")("Ty")("Tz")("Rx")("Ry")("Rz") ;
+  const std::vector<std::string> AlignProfile::m_dofnames =  { "Tx" ,"Ty","Tz", "Rx", "Ry", "Rz" };
 
 }
 
@@ -233,12 +231,12 @@ StatusCode TrackAlignMonitor::execute()
   LHCb::Track::Range tracks = get<LHCb::Track::Range>( m_trackLocation ) ;
 
   //fix by RWL to get rid of stupid nightly warnings about bracketing. 16/11/2009
-  BOOST_FOREACH( const LHCb::Track* track, tracks) {
+  for( const LHCb::Track* track: tracks) {
     if( ( (track->hasT() && track->hasVelo() ) ||
           track->checkFlag(LHCb::Track::Backward))  &&
         (track->chi2PerDoF()< m_maxTrackChi2PerDoF)
         ) {
-      BOOST_FOREACH( const LHCb::Node* node, track->nodes() ) {
+      for( const LHCb::Node* node: track->nodes() ) {
         if( node->type() == LHCb::Node::HitOnTrack ) {
           const LHCb::Measurement& meas = node->measurement() ;
           // we'll evaluate everything in global coordinates, but to
@@ -271,15 +269,13 @@ StatusCode TrackAlignMonitor::execute()
 void TrackAlignMonitor::transformToLocal( ITrackProjector::Derivatives& deriv,
                                           const DetectorElement& element ) const
 {
-  Jacobians::iterator it = m_jacobians.find( &element ) ;
-
   // insert a new jacobian if it wasn't there yet
+  auto it = m_jacobians.find( &element ) ;
   if( it == m_jacobians.end() ) {
     Gaudi::Transform3D localToGlobal = element.geometry()->toGlobalMatrix() ;
     Matrix6x6 jacobian = DetDesc::getTransformJacobian( localToGlobal ) ;
     //m_jacobians[&element] = jacobian ;
-    std::pair<Jacobians::iterator, bool> location =
-      m_jacobians.insert( std::make_pair(&element,jacobian) ) ;
+    auto location = m_jacobians.emplace( &element,jacobian ) ;
     it = location.first ;
   }
 

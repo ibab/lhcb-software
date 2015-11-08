@@ -4,7 +4,7 @@
 #include <vector>
 #include <bitset>
 #include <string>
-#include <boost/array.hpp>
+#include <array>
 
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiKernel/Vector3DTypes.h"
@@ -52,7 +52,7 @@ class HitEffPlotter : public GaudiHistoAlg
 		unsigned nxbins, const double xmin, const double xmax,
 		unsigned nybins, const double ymin, const double ymax,
 		const std::bitset<N>& expected, const std::bitset<N>& ontrack,
-		const boost::array<Gaudi::XYZVector, N>& points);
+		const std::array<Gaudi::XYZVector, N>& points);
 
 
 };

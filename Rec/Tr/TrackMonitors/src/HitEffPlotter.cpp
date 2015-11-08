@@ -1,8 +1,6 @@
 #include "HitEffPlotter.h"
 
 #include <limits>
-#include <boost/foreach.hpp>
-
 #include "Event/Track.h"
 #include "Kernel/HitPattern.h"
 
@@ -62,7 +60,7 @@ template<size_t N> void HitEffPlotter::plot(
 	unsigned nxbins, const double xmin, const double xmax,
 	unsigned nybins, const double ymin, const double ymax,
 	const std::bitset<N>& expected, const std::bitset<N>& ontrack,
-	const boost::array<Gaudi::XYZVector, N>& points)
+	const std::array<Gaudi::XYZVector, N>& points)
 {
     // check that there are hits at all
     if (0ul == expected.to_ulong()) return;
@@ -106,8 +104,8 @@ StatusCode HitEffPlotter::execute()
 {
     if(msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
 
-    const LHCb::Tracks* tracks = get<LHCb::Tracks>(m_inputCollection);
-    BOOST_FOREACH(const LHCb::Track* tr, *tracks) {
+    const auto tracks = get<LHCb::Tracks>(m_inputCollection);
+    for(const LHCb::Track* tr: *tracks) {
 	// skip tracks that do not look good
 	if ((tr->p() < 2e3) || ((tr->chi2() / double(tr->nDoF())) > 25.)) continue;
 

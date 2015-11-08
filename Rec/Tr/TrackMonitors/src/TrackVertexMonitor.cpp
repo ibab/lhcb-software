@@ -6,9 +6,6 @@
 #include "Event/TwoProngVertex.h"
 #include "TrackKernel/TrackStateVertex.h"
 #include "TrackInterfaces/ITrackVertexer.h"
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/lambda.hpp>
-#include <boost/foreach.hpp>
 #include <algorithm>
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IProfile1D.h"
@@ -195,7 +192,7 @@ namespace {
   {
     std::vector<const LHCb::Track*> rc ;
     rc.reserve( tracks.size() ) ;
-    BOOST_FOREACH(const LHCb::Track* t, tracks )
+    for(const LHCb::Track* t: tracks )
       if( t ) rc.push_back( t ) ;
     return rc ;
   }
@@ -262,7 +259,7 @@ StatusCode TrackVertexMonitor::execute()
   // number of primary vertices
   plot(pvcontainer.size(),"NumPrimaryVertices",-0.5,10.5,11) ;
 
-  BOOST_FOREACH( const LHCb::RecVertex* pv, pvcontainer ) {
+  for( const LHCb::RecVertex* pv: pvcontainer ) {
     TrackVector tracks = myconvert(pv->tracks()) ;
     TrackVector forwardtracks = myselect(tracks,isForward) ;
     TrackVector backwardtracks =  myselect(tracks,isBackward) ;
@@ -292,9 +289,8 @@ StatusCode TrackVertexMonitor::execute()
 
     // refit the primary vertex with only the long tracks
     if(longtracks.size()>=2) {
-      LHCb::RecVertex* longvertex = m_vertexer->fit( longtracks ) ;
+      auto longvertex = std::unique_ptr<LHCb::RecVertex>(m_vertexer->fit( longtracks ) );
       if(longvertex) plot( longvertex->chi2() / longvertex->nDoF(), "PV long chisquare per dof",0,10) ;
-      delete longvertex ;
     }
 
     // now split the primary vertex in left and right tracks
@@ -302,7 +298,7 @@ StatusCode TrackVertexMonitor::execute()
     TrackVector righttracks =  myselect(tracks,TrackVeloSidePredicate(-1)) ;
     if( lefttracks.size() >= 2 && righttracks.size() >= 2 ) {
       // fit two vertices
-      LHCb::RecVertex* leftvertex  = m_vertexer->fit( lefttracks ) ;
+      auto leftvertex  = std::unique_ptr<LHCb::RecVertex>(m_vertexer->fit( lefttracks ) );
 
       if( leftvertex ) {
         plot( leftvertex->position().x(), "PV left x",-m_rpvmax,m_rpvmax) ;
@@ -313,7 +309,7 @@ StatusCode TrackVertexMonitor::execute()
           plot( -(leftSensor->globalToVeloHalfBox(leftvertex->position())).y(), "PV left-Left half y",-m_rpvmax/2,m_rpvmax/2) ;
         }
       }
-      LHCb::RecVertex* rightvertex = m_vertexer->fit( righttracks ) ;
+      auto  rightvertex = std::unique_ptr<LHCb::RecVertex>(m_vertexer->fit( righttracks ));
       if( rightvertex) {
         plot( rightvertex->position().x(), "PV right x",-m_rpvmax,m_rpvmax) ;
         plot( rightvertex->position().y(), "PV right y",-m_rpvmax,m_rpvmax) ;
@@ -368,16 +364,13 @@ StatusCode TrackVertexMonitor::execute()
         }else{
           Info("right ndof = 0", StatusCode::SUCCESS,10).ignore();
         }
-        
       }
-      delete leftvertex ;
-      delete rightvertex ;
     }
 
     if( forwardtracks.size() >= 2 && backwardtracks.size() >= 2 ) {
       // fit two vertices
-      LHCb::RecVertex* forwardvertex  = m_vertexer->fit( forwardtracks ) ;
-      LHCb::RecVertex* backwardvertex = m_vertexer->fit( backwardtracks ) ;
+      auto forwardvertex  = std::unique_ptr<LHCb::RecVertex>( m_vertexer->fit( forwardtracks ) );
+      auto backwardvertex = std::unique_ptr<LHCb::RecVertex>( m_vertexer->fit( backwardtracks ) );
       if( forwardvertex && backwardvertex) {
         Gaudi::XYZVector dx = forwardvertex->position() - backwardvertex->position() ;
 
@@ -421,10 +414,7 @@ StatusCode TrackVertexMonitor::execute()
         }else{
           Info("backward ndof = 0", StatusCode::SUCCESS,10).ignore();
         }
-        
       }
-      delete forwardvertex ;
-      delete backwardvertex ;
     }
 
     // for events with a single vertex, do something with IP of
@@ -433,12 +423,12 @@ StatusCode TrackVertexMonitor::execute()
 
       // now get all good long tracks from the best container:
       TrackVector goodlongtracks ;
-      BOOST_FOREACH( const LHCb::Track* tr, alltracks )
+      for( const LHCb::Track* tr: alltracks )
         if( isLong(tr) && tr->chi2PerDoF()<m_maxLongTrackChisqPerDof &&
             tr->p()>m_minLongTrackMomentum)
           goodlongtracks.push_back( tr ) ;
 
-      BOOST_FOREACH( const LHCb::Track* tr, goodlongtracks ) {
+      for( const LHCb::Track* tr: goodlongtracks ) {
         const LHCb::State& firststate = tr->firstState() ;
         double dz  = pv->position().z() - firststate.z() ;
         double dx  = firststate.x() + dz * firststate.tx() - pv->position().x() ;
@@ -459,34 +449,33 @@ StatusCode TrackVertexMonitor::execute()
 
       if( goodlongtracks.size()>=2 ) {
 
-        using namespace boost::lambda;
         std::sort(goodlongtracks.begin(), goodlongtracks.end(),
-                  bind(&LHCb::State::pt,bind(&LHCb::Track::firstState,*_1)) <
-                  bind(&LHCb::State::pt,bind(&LHCb::Track::firstState,*_2)) ) ;
+                  [](const LHCb::Track* lhs, const LHCb::Track* rhs) {
+                      return lhs->firstState().pt() < rhs->firstState().pt();
+                  } );
 
         const LHCb::Track* firsttrack = goodlongtracks.back() ;
         goodlongtracks.pop_back() ;
 
         // now pick a 2nd track that makes the highest possible invariant mass with this one
         double highestmass2(0) ;
-        const LHCb::Track* secondtrack(0) ;
+        const LHCb::Track* secondtrack = nullptr;
         Gaudi::XYZVector firstp3 = firsttrack->firstState().momentum() ;
-        for( TrackVector::const_iterator it = goodlongtracks.begin();
-             it != goodlongtracks.end(); ++it) {
-          Gaudi::XYZVector p3 = (*it)->firstState().momentum() ;
+        for( const auto& t : goodlongtracks ) {
+          Gaudi::XYZVector p3 = t->firstState().momentum() ;
           double mass2= p3.r() * firstp3.r() - p3.Dot( firstp3 ) ;
           if(secondtrack==0 || highestmass2 < mass2 ) {
             highestmass2 = mass2 ;
-            secondtrack = *it ;
+            secondtrack = t ;
           }
         }
 
         // recompute the vertex without these tracks
-        TrackVector::iterator newend = tracks.end() ;
+        auto newend = tracks.end() ;
         newend = std::remove(tracks.begin(),newend,firsttrack) ;
         newend = std::remove(tracks.begin(),newend,secondtrack) ;
         tracks.erase(newend,tracks.end()) ;
-        LHCb::RecVertex* restvertex  = m_vertexer->fit( tracks ) ;
+        auto restvertex  = std::unique_ptr<LHCb::RecVertex>( m_vertexer->fit( tracks ) );
         if( restvertex && firsttrack->nStates()!=0 ) {
           const LHCb::State& firststate = firsttrack->firstState() ;
           double dz  = restvertex->position().z() - firststate.z() ;
@@ -532,7 +521,7 @@ StatusCode TrackVertexMonitor::execute()
               m_twoprongDocaVsPhi->fill(firstp3.phi(),doca) ;
             }
             // the easiest way to compute the pull is with a vertex fit
-            LHCb::TwoProngVertex* twoprong = m_vertexer->fit(firsttrack->firstState(),secondtrack->firstState()) ;
+            auto twoprong = std::unique_ptr<LHCb::TwoProngVertex>(m_vertexer->fit(firsttrack->firstState(),secondtrack->firstState()) );
             if(twoprong) {
               double pc = twoprong->p3().R() ;
               m_twoprongMomentum->fill( pc / Gaudi::Units::GeV ) ;
@@ -544,11 +533,9 @@ StatusCode TrackVertexMonitor::execute()
               m_twoprongIPChisquare->fill( chi2 / 2 ) ;
               m_twoprongCTau->fill( decaylength * mass / pc ) ;
               m_twoprongTau->fill( decaylength * mass / (pc * Gaudi::Units::c_light * Gaudi::Units::picosecond) ) ;
-              delete twoprong ;
             }
           }
         }
-        delete restvertex ;
       }
     }
   }

@@ -7,7 +7,6 @@
 #include "AIDA/IHistogram1D.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
-#include <boost/foreach.hpp>
 
 class TrackFitMatchMonitor : public GaudiHistoAlg 
 {
@@ -232,7 +231,7 @@ StatusCode TrackFitMatchMonitor::execute()
 
   LHCb::Track::Range tracks = get<LHCb::Track::Range>( m_trackContainerName ) ;
   
-  BOOST_FOREACH( const LHCb::Track* track, tracks) {
+  for( const LHCb::Track* track: tracks) {
     if( track->fitResult() && track->fitResult()->nodes().size()>0 ) {
       plotCurvatureMatch( *track ) ;
       
@@ -297,7 +296,7 @@ void TrackFitMatchMonitor::plotCurvatureMatch(const LHCb::Track& track)
     
     // first make sure that we have hits in all 3 T stations
     int hitsInStation[3] = {0,0,0} ;
-    BOOST_FOREACH( LHCb::Node* node, track.fitResult()->nodes() ) {
+    for( LHCb::Node* node: track.fitResult()->nodes() ) {
       if(node->type() == LHCb::Node::HitOnTrack ) {
 	LHCb::LHCbID id = node->measurement().lhcbID() ;
 	if( id.isOT() ) {
@@ -313,7 +312,7 @@ void TrackFitMatchMonitor::plotCurvatureMatch(const LHCb::Track& track)
       // first get the 3 measurements of the curvature with error
       //nodes are sorted in decreasing z. find the nodes around the magnet
       const LHCb::Node *nodeAfter(0), *nodeBefore(0), *firstNodeAfterT1(0) ;
-      BOOST_FOREACH( LHCb::Node* node, track.fitResult()->nodes() ) {
+      for( LHCb::Node* node: track.fitResult()->nodes() ) {
 	if( node->z() > 5200 ) {
 	  if( nodeAfter==0 || nodeAfter->z() > node->z() ) nodeAfter = node ;
 	} else {

@@ -815,7 +815,7 @@ StatusCode STTrackTuple::finalize()
   {
     channelID = iterS -> second -> elementID();
     nick   = iterS -> second -> nickname();
-    iterS->second->isStereo() == true ? presentCut = m_whichCut[1]: presentCut = m_whichCut[0] ;
+    presentCut = m_whichCut[ iterS->second->isStereo() ? 1 : 0 ];
       
     root = "perSector";
     
@@ -966,21 +966,13 @@ std::string STTrackTuple::formatNumber(const double& nbr,
 bool STTrackTuple::hasMinStationPassed(const LHCb::Track* aTrack) const
 {
   std::set<unsigned int> stations;
-  const std::vector<LHCb::LHCbID>& ids = aTrack -> lhcbIDs();
-  for (std::vector<LHCb::LHCbID>::const_iterator iter = ids.begin(); iter != ids.end(); ++iter){
-    if (m_detType == "IT"){
-      if (iter->isIT() == true ) 
-        stations.insert( iter->stID().station() );
-    }else{
-      if (iter->isTT() == true ) 
-        stations.insert( iter->stID().station() );
-    }
+  auto fun = ( m_detType == "IT" ? &LHCb::LHCbID::isIT : &LHCb::LHCbID::isTT );
+  for (const auto& id : aTrack -> lhcbIDs() ) {
+    if ( (id.*fun)()) stations.insert( id.stID().station() );
   }
   if(fullDetail())
     plot(stations.size(), "Control/NbCrossedStation","Number of stations crossed by the track",-0.5,3.5,4);
-  if(stations.size() >= m_minStationPassed)
-    return true;
-  return false;
+  return stations.size() >= m_minStationPassed;
 } // STTrackTuple::hasMinStationPassed()
 
 
@@ -995,14 +987,9 @@ bool STTrackTuple::hasMinStationPassed(const LHCb::Track* aTrack) const
 DeSTSensor* STTrackTuple::findSensor(const DeSTSector* sector,
                                     STChannelID id)
 {
-  std::vector<DeSTSensor*> sensors = sector->sensors();
   DeSTSensor* foundSensor = new DeSTSensor();
-  for (std::vector<DeSTSensor*>::const_iterator iter = sensors.begin(); iter != sensors.end(); ++iter)
-  {
-    if ( (*iter)->contains(id) )
-    {
-      foundSensor = (*iter);
-    }
+  for (const auto& sensor : sector->sensors() ) {
+    if ( sensor->contains(id) ) foundSensor = sensor;
   }
   return foundSensor;
 } // STTrackTuple::findSensor()

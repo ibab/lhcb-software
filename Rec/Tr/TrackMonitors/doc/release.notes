@@ -4,6 +4,24 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-11-08 - Gerhard Raven
+ - replace boost::array with std::array
+ - replace BOOST_FOREACH with range-based for loop
+ - prefer range-based for loops
+ - do not compare bool to false or true
+ - replace boost assign with (implicit) std::initializer_list
+ - replace boost lambda and bind with regular lambda
+ - replace explicit delete with use std::unique_ptr
+ - prefer string::empty over == ""
+ - hoist if statements out of loops
+ - prefer range-based insert over loop with push_back
+ - replace LoKi::select with std::copy_if
+ - prefer STL algorithms over raw loops
+ - use auto to simplify code
+ - make sure static objects are always const
+ - prefer loops over cut-and-paste
+ - replace boost::lexical_cast<std::string> with std::to_string
+
 ! 2015-11-05 - Marco Cattaneo
  - TrackITOverlapMonitor:
    o Remove unnecessary forward declaration to fix clang compilation

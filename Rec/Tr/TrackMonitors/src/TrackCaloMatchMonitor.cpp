@@ -8,7 +8,6 @@
 #include "Event/CaloPosition.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
 #include "CaloDet/DeCalorimeter.h"
-#include <boost/foreach.hpp>
 
 #include "AIDA/IProfile1D.h"
 #include "AIDA/IHistogram1D.h"
@@ -190,7 +189,7 @@ namespace {
     if( track.hasVelo() && nodes.size()>0 ) {
       // find the last node with a velo measurement
       const LHCb::Node* node(0) ;
-      BOOST_FOREACH( const LHCb::Node* inode, nodes ) {
+      for( const LHCb::Node* inode: nodes ) {
 	if( inode->z() < StateParameters::ZEndVelo &&
 	    (node==0 || (node->z() < inode->z()) ) )
 	  node = inode ;
@@ -213,13 +212,13 @@ StatusCode TrackCaloMatchMonitor::execute()
   if( !m_clusterLocation.empty() ) {
     const LHCb::CaloClusters* caloclusters = get<LHCb::CaloClusters>( m_clusterLocation ) ;
     calopositions.reserve( caloclusters->size()) ;
-    BOOST_FOREACH( const LHCb::CaloCluster* cluster, *caloclusters) {
+    for( const LHCb::CaloCluster* cluster: *caloclusters) {
       calopositions.push_back( MyCaloPosition( cluster->seed(), cluster->position()) ) ;
     }
   } else {
     const LHCb::CaloDigits* calodigits = get<LHCb::CaloDigits>( m_caloDigitLocation ) ;
     calopositions.reserve( calodigits->size()) ;
-    BOOST_FOREACH( const LHCb::CaloDigit* digit, *calodigits) {
+    for( const LHCb::CaloDigit* digit: *calodigits) {
       if (! m_caloDet->isNoisy(digit->cellID()) ) {
 	Gaudi::XYZPoint center = m_caloDet->cellCenter(digit->cellID()) ;
 	Gaudi::Vector3 parameters ;
@@ -235,12 +234,12 @@ StatusCode TrackCaloMatchMonitor::execute()
   }
 
   if(m_useGeometricZ) {
-    BOOST_FOREACH( MyCaloPosition& cluster, calopositions) 
+    for( MyCaloPosition& cluster: calopositions) 
       cluster.pos.setZ( m_geometricZ ) ;
   }
 
   LHCb::Track::Range trackcontainer = get<LHCb::Track::Range>( m_trackLocation ) ;
-  BOOST_FOREACH( const LHCb::Track* track, trackcontainer) 
+  for( const LHCb::Track* track: trackcontainer) 
     if( !m_requireTHits || track->hasT() ) {
       const LHCb::State& closest = track->closestState( m_geometricZ  );
       LHCb::StateVector state = LHCb::StateVector( closest.stateVector(), closest.z()) ;
@@ -254,7 +253,7 @@ StatusCode TrackCaloMatchMonitor::execute()
 	m_extrapolator->propagate( velostate, m_geometricZ ) ;
       }
 
-      BOOST_FOREACH( const MyCaloPosition& cluster, calopositions) {
+      for( const MyCaloPosition& cluster: calopositions) {
 	//state = &(track->closestState(pos.z())) ;
 	double dz = cluster.pos.z() + m_clusterZCorrection - state.z() ;
 	double xtrack = state.x() + state.tx() * dz ;

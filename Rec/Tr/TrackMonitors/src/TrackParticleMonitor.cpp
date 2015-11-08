@@ -13,7 +13,6 @@
 #include "AIDA/IHistogram2D.h"
 #include "AIDA/IProfile1D.h"
 
-#include <boost/foreach.hpp>
 
 class TrackParticleMonitor;
 
@@ -169,7 +168,7 @@ namespace {
       tracks.push_back(p.proto()->track() );
       masshypos.push_back(p.momentum().M());
     } else {
-      BOOST_FOREACH( const LHCb::Particle* dau, p.daughters() )
+      for( const LHCb::Particle* dau: p.daughters() )
         addTracks( *dau, tracks, masshypos );
     }
   }
@@ -674,7 +673,7 @@ StatusCode TrackParticleMonitor::execute()
   histo(multID)->fill(particles.size());
   //info() << "particles: " << particles.size() << endmsg;
 
-  BOOST_FOREACH( const LHCb::Particle* particle, particles) {
+  for( const LHCb::Particle* particle: particles) {
     
     std::vector< const LHCb::Track* > tracks;
     std::vector< double > masshypos;
@@ -684,7 +683,7 @@ StatusCode TrackParticleMonitor::execute()
     double z = particle->referencePoint().z();
     //double z= particle->endVertex()->position().z();
 
-    BOOST_FOREACH( const LHCb::Track* track, tracks) {
+    for( const LHCb::Track* track: tracks) {
       histo(trackChi2ID)->fill(track->chi2PerDoF());
       histo(trackPID)->fill(track->p()/Gaudi::Units::GeV);
       histo(trackPtID)->fill(track->pt()/Gaudi::Units::GeV);
@@ -793,7 +792,7 @@ StatusCode TrackParticleMonitor::execute()
     profile1D(openangleProID)->fill(openangle,mass);
     
     // Memory management
-    BOOST_FOREACH( const LHCb::State* s, states) delete s;
+    for( const LHCb::State* s: states) delete s;
   }
   return StatusCode::SUCCESS;
 }

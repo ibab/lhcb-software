@@ -34,12 +34,7 @@
 
 #include "Map.h"
 
-// Boost
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/lambda.hpp>
-#include <boost/foreach.hpp>
 
-using namespace boost::lambda;
 using namespace LHCb;
 using namespace Gaudi;
 
@@ -99,7 +94,7 @@ StatusCode TrackMonitor::execute()
   plot(tracks.size(),"TrackMultiplicityFine", "# tracks", 0.0, 2000., 200);
   
   // histograms per track
-  BOOST_FOREACH( const LHCb::Track* track, tracks) {
+  for( const LHCb::Track* track: tracks) {
     std::string type = histoDirName(*track) ;
     m_multiplicityMap[type] += 1;
     fillHistograms(*track,type);
@@ -109,12 +104,11 @@ StatusCode TrackMonitor::execute()
 
   // fill counters....
   counter("#Tracks") += tracks.size();
-  for(MultiplicityMap::const_iterator it = m_multiplicityMap.begin() ;
-      it != m_multiplicityMap.end(); ++it) {
-    counter("#"+it->first) += it->second;
-    plot( it->second, it->first + "/multiplicity", 
-          it->first + " multiplicity", -1.,201.,101) ;
-  } // iterS
+  for( const auto& mm : m_multiplicityMap ) {
+    counter("#"+mm.first) += mm.second;
+    plot( mm.second, mm.first + "/multiplicity", 
+          mm.first + " multiplicity", -1.,201.,101) ;
+  }
   
   return StatusCode::SUCCESS;
 }
@@ -124,17 +118,16 @@ void TrackMonitor::findRefStates(const LHCb::Track& track,
                                  const LHCb::State*& lastMeasurementState) const
 {
   firstMeasurementState = lastMeasurementState = 0  ;
-  LHCb::Track::ConstNodeRange nodes = track.nodes() ;
-  for( LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin() ;
-       inode != nodes.end() ; ++inode) 
-    if( (*inode)->type()==LHCb::Node::HitOnTrack ) {
+  for( const auto& node : track.nodes() ) { 
+    if( node->type()==LHCb::Node::HitOnTrack ) {
       if( firstMeasurementState==0 ||
-          (*inode)->z() < firstMeasurementState->z() )
-        firstMeasurementState = &((*inode)->state()) ;
+          node->z() < firstMeasurementState->z() )
+        firstMeasurementState = &(node->state()) ;
       if( lastMeasurementState==0 ||
-          (*inode)->z() > lastMeasurementState->z() )
-        lastMeasurementState = &((*inode)->state()) ;
+          node->z() > lastMeasurementState->z() )
+        lastMeasurementState = &(node->state()) ;
     }
+  }
 }
 
 namespace {
@@ -224,14 +217,14 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
 
   // found hits of each type
   const std::vector<LHCb::LHCbID>& ids = track.lhcbIDs();
-  const unsigned int nTTHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isTT,_1));
-  const unsigned int nUTHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isUT,_1));
-  const unsigned int nITHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isIT,_1));
-  const unsigned int nOTHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isOT,_1));
-  const unsigned int nVeloHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isVelo,_1));
-  const unsigned int nVeloRHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isVeloR,_1));
-  const unsigned int nVeloPhiHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isVeloPhi,_1));
-  const unsigned int nMuonHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isMuon,_1));
+  const auto nTTHits = std::count_if(ids.begin(), ids.end(),[](const LHCb::LHCbID& id) { return id.isTT(); } );
+  const auto nUTHits = std::count_if(ids.begin(), ids.end(),[](const LHCb::LHCbID& id) { return id.isUT(); } );
+  const auto nITHits = std::count_if(ids.begin(), ids.end(),[](const LHCb::LHCbID& id) { return id.isIT(); } );
+  const auto nOTHits = std::count_if(ids.begin(), ids.end(),[](const LHCb::LHCbID& id) { return id.isOT(); } );
+  const auto nVeloHits = std::count_if(ids.begin(), ids.end(),[](const LHCb::LHCbID& id) { return id.isVelo(); } );
+  const auto nVeloRHits = std::count_if(ids.begin(), ids.end(),[](const LHCb::LHCbID& id) { return id.isVeloR(); } );
+  const auto nVeloPhiHits = std::count_if(ids.begin(), ids.end(),[](const LHCb::LHCbID& id) { return id.isVeloPhi(); } );
+  const auto nMuonHits = std::count_if(ids.begin(), ids.end(),[](const LHCb::LHCbID& id) { return id.isMuon(); } );
   
   plot(nTTHits, type+"/110", "# TT hits",  -0.5, 10.5 ,11);
   plot(nITHits, type+"/111", "# IT hits",  -0.5, 50.5 ,51);
@@ -244,70 +237,67 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   
   size_t numoutliers(0) ;
   HitType mtype = VeloR; // initialize to avoid compiler warning
-  if( track.nodes().size()>0 ) {
-    LHCb::Track::ConstNodeRange nodes = track.nodes() ;
-    for( LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin() ;
-         inode != nodes.end(); ++inode) 
-      if( (*inode)->type() == LHCb::Node::HitOnTrack 
-          // discard extremely small fraction of hits with zero error
-          // on residual. (e.g. a downstream track with only one
-          // active TT hit)
-          && (*inode)->errResidual2() > TrackParameters::lowTolerance 
-          && (mtype = hittypemap( (*inode)->measurement() ) )!=HitTypeUnknown )  {
+  for( const auto& node : track.nodes() ) {
+    if( node->type() == LHCb::Node::HitOnTrack 
+        // discard extremely small fraction of hits with zero error
+        // on residual. (e.g. a downstream track with only one
+        // active TT hit)
+        && node->errResidual2() > TrackParameters::lowTolerance 
+        && (mtype = hittypemap( node->measurement() ) )!=HitTypeUnknown )  {
 	
-        const std::string& name = HitTypeName[ mtype ] ;
-        const double resmax    = HitTypeMaxRes[ mtype ] ;
+      const std::string& name = HitTypeName[ mtype ] ;
+      const double resmax    = HitTypeMaxRes[ mtype ] ;
 	
-        // factor for unbiasing the rms (not the mean!)
-        double f = std::sqrt( (*inode)->errMeasure2()/(*inode)->errResidual2()) ;
-        plot(f*(*inode)->residual(),
-             type+"/"+name+"Residual",name+" residual (rms-unbiased)",
-             -resmax,resmax,50);
-        plot((*inode)->residual()/(*inode)->errResidual(),
-             type+"/"+name+"residualPull",name+" residual pull",-5,5,50);
-        // these should be expert plots because 2D
-        if((mtype==VeloR || mtype==VeloPhi) && fullDetail()) {
-          // calculate R in the local frame
-          Gaudi::XYZPoint globalPoint = (*inode)->state().position() ;
-          Gaudi::XYZPoint localPoint = 
-            (*inode)->measurement().detectorElement()->geometry()->toLocal( globalPoint ) ;
-          double r = localPoint.Rho() ;
-          // factor to calculate residual in detector plane
-          const LHCb::FitNode* fitnode = dynamic_cast<const LHCb::FitNode*>(*inode) ;
-          double cosalpha(1) ;
-          if(fitnode) {
-            // this vector is along residual, perp to strips
-            Gaudi::XYZVector localUnitPocaVector = 
-              (*inode)->measurement().detectorElement()->geometry()->toLocal( fitnode->pocaVector() ) ;
-            cosalpha = localUnitPocaVector.Rho()/localUnitPocaVector.R() ;
-          }
-          plot2D(r,(*inode)->residual()*f/cosalpha,
-                 type+"/"+name+"residualVsR",name+" residual vs R",
-                 10,42,-resmax,resmax, 16, 50);
-
-          if( m_veloDet) {
-            // now get the pitch ...
-            double pitch(1) ;
-            if( (*inode)->measurement().type() == LHCb::Measurement::VeloPhi ||
-                (*inode)->measurement().type() == LHCb::Measurement::VeloLitePhi) {
-              const LHCb::VeloCluster* clus = 
-                static_cast<LHCb::VeloPhiMeasurement&>((*inode)->measurement()).cluster() ;
-              const DeVeloPhiType* phiDet = m_veloDet->phiSensor( clus->channelID().sensor() );
-              pitch = r * phiDet->phiPitch( unsigned(clus->strip(0)) ) ;
-            } else {
-              const LHCb::VeloCluster* clus = 
-                static_cast<LHCb::VeloRMeasurement&>((*inode)->measurement()).cluster() ;
-              const DeVeloRType* rDet = m_veloDet->rSensor( clus->channelID().sensor() );
-              pitch = rDet->rPitch( unsigned(clus->strip(0)) ) ;
-            }
-            plot2D(pitch,(*inode)->residual()*f/cosalpha,
-                   type+"/"+name+"residualVsPitch",name+" residual vs pitch",
-                   0.04,0.100,-resmax,resmax, 12, 50);
-          }
+      // factor for unbiasing the rms (not the mean!)
+      double f = std::sqrt( node->errMeasure2()/node->errResidual2()) ;
+      plot(f*node->residual(),
+           type+"/"+name+"Residual",name+" residual (rms-unbiased)",
+           -resmax,resmax,50);
+      plot(node->residual()/node->errResidual(),
+           type+"/"+name+"residualPull",name+" residual pull",-5,5,50);
+      // these should be expert plots because 2D
+      if((mtype==VeloR || mtype==VeloPhi) && fullDetail()) {
+        // calculate R in the local frame
+        Gaudi::XYZPoint globalPoint = node->state().position() ;
+        Gaudi::XYZPoint localPoint = 
+          node->measurement().detectorElement()->geometry()->toLocal( globalPoint ) ;
+        double r = localPoint.Rho() ;
+        // factor to calculate residual in detector plane
+        const LHCb::FitNode* fitnode = dynamic_cast<const LHCb::FitNode*>(node) ;
+        double cosalpha(1) ;
+        if(fitnode) {
+          // this vector is along residual, perp to strips
+          Gaudi::XYZVector localUnitPocaVector = 
+            node->measurement().detectorElement()->geometry()->toLocal( fitnode->pocaVector() ) ;
+          cosalpha = localUnitPocaVector.Rho()/localUnitPocaVector.R() ;
         }
-      } else if( (*inode)->type() == LHCb::Node::Outlier ) {
-        ++numoutliers ;
+        plot2D(r,node->residual()*f/cosalpha,
+               type+"/"+name+"residualVsR",name+" residual vs R",
+               10,42,-resmax,resmax, 16, 50);
+
+        if( m_veloDet) {
+          // now get the pitch ...
+          double pitch(1) ;
+          if( node->measurement().type() == LHCb::Measurement::VeloPhi ||
+              node->measurement().type() == LHCb::Measurement::VeloLitePhi) {
+            const LHCb::VeloCluster* clus = 
+              static_cast<LHCb::VeloPhiMeasurement&>(node->measurement()).cluster() ;
+            const DeVeloPhiType* phiDet = m_veloDet->phiSensor( clus->channelID().sensor() );
+            pitch = r * phiDet->phiPitch( unsigned(clus->strip(0)) ) ;
+          } else {
+            const LHCb::VeloCluster* clus = 
+              static_cast<LHCb::VeloRMeasurement&>(node->measurement()).cluster() ;
+            const DeVeloRType* rDet = m_veloDet->rSensor( clus->channelID().sensor() );
+            pitch = rDet->rPitch( unsigned(clus->strip(0)) ) ;
+          }
+          plot2D(pitch,node->residual()*f/cosalpha,
+                 type+"/"+name+"residualVsPitch",name+" residual vs pitch",
+                 0.04,0.100,-resmax,resmax, 12, 50);
+        }
       }
+    } else if( node->type() == LHCb::Node::Outlier ) {
+      ++numoutliers ;
+    }
   }
   plot(numoutliers,type+"/101","#outliers", -0.5, 10.5, 11);
 
@@ -353,7 +343,7 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   }
   
   // expert checks  
-  if (fullDetail() == true){
+  if (fullDetail()){
 
     static const double halfOverLog10 = 0.5/std::log(10.0) ;
     // find first and last node with measurement
@@ -484,5 +474,5 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   std::bitset<LHCb::HitPattern::NumVelo> velo = hitpattern.velo() ;
   for(size_t ilay=0; ilay<LHCb::HitPattern::NumVelo; ++ilay)
     profile1D( double(ilay),velo.test(ilay),type+"/HitVeloLayers", "Hits per Velo layer", -0.5,22.5,23) ;
-  
+   
 }

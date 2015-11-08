@@ -1,3 +1,4 @@
+#include <memory>
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiKernel/ToolHandle.h"
 #include "TrackInterfaces/ITrackProjector.h"
@@ -5,8 +6,6 @@
 #include "Event/State.h"
 #include "Event/Node.h"
 #include "Event/Measurement.h"
-#include <boost/foreach.hpp>
-#include <boost/assign/list_of.hpp>
 #include "AIDA/IProfile1D.h"
 #include "AIDA/IHistogram1D.h"
 #include "GaudiUtils/Aida2ROOT.h"
@@ -22,13 +21,11 @@
 #include "Event/STMeasurement.h"
 #include "Kernel/ITNames.h"
 #include "Kernel/TTNames.h"
-#include "LoKi/select.h"
 
 //tuples in finalise:
 #include "GaudiAlg/GaudiTupleAlg.h"
 #include <GaudiAlg/Tuple.h>
 #include <GaudiAlg/GaudiTuples.h>
-//using namespace boost::lambda;
 using namespace LHCb;
 using namespace Gaudi;
 using namespace Tuples;
@@ -37,8 +34,8 @@ namespace {
 
 
   struct ResidualRecorder{
-    ResidualRecorder(GaudiHistoAlg& alg, const std::string& dir, 
-                     size_t numelements, std::string m_names[42]) 
+    ResidualRecorder(GaudiHistoAlg& alg, const std::string& dir,
+                     size_t numelements, std::string m_names[42])
       : m_dir(dir), m_parent(&alg), m_numelements(numelements) {
       // initialise finalisation histograms
       m_parentMean = alg.book1D("Means","Means",-0.1,0.1,1000);
@@ -52,12 +49,12 @@ namespace {
         if(m_dir=="OT"){f=3.0;}
         if(m_dir=="Velo"){f=0.4;}
         m_residual[i] = alg.book1D( m_dir + "/" + m_names[i], "Residual (RMS unbiased) in " + m_names[i] , -0.5*f, 0.5*f, 100) ;
-        //if (msgLevel(MSG::DEBUG)) debug() << i <<"th 1D Histo booked: " << dir << "/" << m_names[i] << endmsg ; 
+        //if (msgLevel(MSG::DEBUG)) debug() << i <<"th 1D Histo booked: " << dir << "/" << m_names[i] << endmsg ;
       };
     };
-    
+
     void fill(size_t layer, const LHCb::Node& node) {
-      if (node.hasMeasurement() == true){	
+      if (node.hasMeasurement()){	
         double residual = node.residual() * std::sqrt(node.errMeasure2()/node.errResidual2()) ;
         m_residual[layer]->fill(residual);
       };
@@ -104,7 +101,7 @@ namespace {
 class AlignmentOnlineMonitor : public GaudiHistoAlg {
 
 /** @class  AlignmentOnlineMonitor
- * 
+ *
  *  Produces residual plots to check the alignment in OnlineBrunel
  *
  *  @author Stefan Hallmann
@@ -149,8 +146,8 @@ private:
   } ;
 
   //size_t veloUniqueID(const LHCb::VeloChannelID& id) {
-  //	unsigned int station = (id.sensor()%64)/2 ; 
-  //	unsigned int side    = (id.sensor()%2) ; 
+  //	unsigned int station = (id.sensor()%64)/2 ;
+  //	unsigned int side    = (id.sensor()%2) ;
   //unsigned int type    = (id.sensor()/64) ;
   // if (msgLevel(MSG::VERBOSE)) verbose()   << "velo: " << side << " " << station << endmsg ;
   //	return side * 21 + station ;
@@ -172,14 +169,14 @@ private:
   } ;
 
   size_t itUniqueID(const LHCb::STChannelID& id) {
-    if (msgLevel(MSG::VERBOSE)) verbose()   << "it: " << id.station() << " " << id.layer() << " " 
+    if (msgLevel(MSG::VERBOSE)) verbose()   << "it: " << id.station() << " " << id.layer() << " "
                                             << id.detRegion() << " " << id.sector() << endmsg ;
     return (((id.station()-1)*4 + id.layer()-1)*4 + id.detRegion()-1)*7 + id.sector()-1 ;
   } ;
 
 		
   size_t itUniqueBoxStation(const LHCb::STChannelID& id) {
-    if (msgLevel(MSG::VERBOSE)) verbose()   << "it: " << id.station() << " " << id.layer() << " " 
+    if (msgLevel(MSG::VERBOSE)) verbose()   << "it: " << id.station() << " " << id.layer() << " "
                                             << id.detRegion() << " " << id.sector() << endmsg ;
     return itUniqueID(id)%4 + 4*(id.station()-1);
   } ;
@@ -188,31 +185,31 @@ private:
 
 
   size_t itUniqueBox(const LHCb::STChannelID& id) {
-    if (msgLevel(MSG::VERBOSE)) verbose()   << "it: " << id.station() << " " << id.layer() << " " 
+    if (msgLevel(MSG::VERBOSE)) verbose()   << "it: " << id.station() << " " << id.layer() << " "
                                             << id.detRegion() << " " << id.sector() << endmsg ;
     return itUniqueID(id)%4;
   } ;
 	
   size_t itUniqueStation(const LHCb::STChannelID& id) {
-    if (msgLevel(MSG::VERBOSE)) verbose()   << "it: " << id.station() << " " << id.layer() << " " 
+    if (msgLevel(MSG::VERBOSE)) verbose()   << "it: " << id.station() << " " << id.layer() << " "
                                             << id.detRegion() << " " << id.sector() << endmsg ;
     return (id.station()-1);
   } ;
 
   //size_t ttUniqueID(const LHCb::STChannelID& id) {
-  //if (msgLevel(MSG::VERBOSE)) verbose()   << "tt: " << id.station() << " " << id.layer() << " " 
+  //if (msgLevel(MSG::VERBOSE)) verbose()   << "tt: " << id.station() << " " << id.layer() << " "
   //                                        << id.detRegion() << " " << id.sector() << endmsg ;
   //	return (((id.station()-1)*2 + id.layer()-1)*3 + id.detRegion()-1)*24 + id.sector()-1 ;
   //} ;
 
   size_t ttUniqueLayer(const LHCb::STChannelID& id) {
-    if (msgLevel(MSG::VERBOSE)) verbose()   << "tt: " << id.station() << " " << id.layer() << " " 
+    if (msgLevel(MSG::VERBOSE)) verbose()   << "tt: " << id.station() << " " << id.layer() << " "
                                             << id.detRegion() << " " << id.sector() << endmsg ;
     return (id.station()-1)*2 + id.layer()-1 ;
   } ;
 	
   size_t ttUniqueStation(const LHCb::STChannelID& id) {
-    if (msgLevel(MSG::VERBOSE)) verbose()   << "tt: " << id.station() << " " << id.layer() << " " 
+    if (msgLevel(MSG::VERBOSE)) verbose()   << "tt: " << id.station() << " " << id.layer() << " "
                                             << id.detRegion() << " " << id.sector() << endmsg ;
     return (id.station()-1) ;
   } ;
@@ -227,12 +224,12 @@ private:
   std::string m_modeIT;
   std::string m_modeOT;
   std::string m_modeTT;
-  ResidualRecorder* m_velo ;
-  ResidualRecorder* m_it ;
-  ResidualRecorder* m_ot ;
-  ResidualRecorder* m_tt ;
+  std::unique_ptr<ResidualRecorder> m_velo ;
+  std::unique_ptr<ResidualRecorder> m_it ;
+  std::unique_ptr<ResidualRecorder> m_ot ;
+  std::unique_ptr<ResidualRecorder> m_tt ;
 } ;
- 
+
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( AlignmentOnlineMonitor )
 
@@ -240,7 +237,7 @@ DECLARE_ALGORITHM_FACTORY( AlignmentOnlineMonitor )
 // Standard constructor, initializes variables
 //=============================================================================
   AlignmentOnlineMonitor::AlignmentOnlineMonitor( const std::string& name, ISvcLocator* pSvcLocator)
-    : GaudiHistoAlg( name , pSvcLocator ), m_projector("TrackProjector"), m_velo(0), m_it(0), m_ot(0), m_tt(0) {
+    : GaudiHistoAlg( name , pSvcLocator ), m_projector("TrackProjector")  {
     declareProperty( "TrackLocation", m_trackLocation = LHCb::TrackLocation::Default);
     declareProperty( "VeloMode", m_modeVelo="side");
     declareProperty( "OTMode", m_modeOT="all");
@@ -257,24 +254,24 @@ AlignmentOnlineMonitor::~AlignmentOnlineMonitor() {
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode AlignmentOnlineMonitor::initialize() 
+StatusCode AlignmentOnlineMonitor::initialize()
 {
 	StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
 	if(sc.isFailure()) return sc ;
 	sc = m_projector.retrieve() ;
-  static const std::string histoDir = "Track/" ;
-  if ( "" == histoTopDir() ) setHistoTopDir(histoDir);
+    static const std::string histoDir = "Track/" ;
+    if ( histoTopDir().empty() ) setHistoTopDir(histoDir);
 
 	
 	if(m_modeOT == "all"){ // 3stations * 4quarters (neglected: * 18modules)
 		std::string otNames[12] = {"OT1a","OT1b","OT1c","OT1d","OT2a","OT2b","OT2c","OT2d","OT3a","OT3b","OT3c","OT3d"};
-		m_ot   = new ResidualRecorder(*this, "OT",   12, otNames) ;
+		m_ot.reset( new ResidualRecorder(*this, "OT",   12, otNames) );
 	} else if((m_modeOT == "quarter")){
     std::string otNames[4] = {"OTa","OTb","OTc","OTd"};
-		m_ot   = new ResidualRecorder(*this, "OT",   4, otNames) ;
+		m_ot.reset( new ResidualRecorder(*this, "OT",   4, otNames) );
 	} else if(m_modeOT == "station"){
 		std::string otNames[3] = {"OT1","OT2","OT3"};
-		m_ot   = new ResidualRecorder(*this, "OT",   3, otNames) ;
+		m_ot.reset( new ResidualRecorder(*this, "OT",   3, otNames) );
 	} else {
     err() << "OT histogram mode not defined. Possible values are <<>>, <<quarter>>, <<station>>" << endmsg ;
 	}
@@ -289,14 +286,14 @@ StatusCode AlignmentOnlineMonitor::initialize()
 			}
 		};
 		//	 = {"IT1a","IT1b","IT1c","IT1d","IT2a","IT2b","IT2c","IT2d","IT3a","IT3b","IT3c","IT3d"};
-		m_it   = new ResidualRecorder(*this, "IT",   12, itNames) ;
+		m_it.reset(  new ResidualRecorder(*this, "IT",   12, itNames) );
 	} else if((m_modeIT == "box")){
     std::string itNames[4];
 		for(int i = 0; i<4; i++){ itNames[i] =  ITNames().BoxToString(i+1);}
-		m_it   = new ResidualRecorder(*this, "IT",   4, itNames) ;
+		m_it.reset(  new ResidualRecorder(*this, "IT",   4, itNames) );
 	} else if(m_modeIT == "station"){
     std::string itNames[3] = {"IT1","IT2","IT3"};
-		m_it   = new ResidualRecorder(*this, "IT",   3, itNames) ;
+		m_it.reset(  new ResidualRecorder(*this, "IT",   3, itNames) );
 	} else {
 		err() << "IT histogram mode not defined. Possible values are <<>>, <<box>>, <<station>>" << endmsg;
 	}
@@ -314,10 +311,10 @@ StatusCode AlignmentOnlineMonitor::initialize()
 			veloNames[i*2] = "Velo Side 1, Station "+s;
 			veloNames[i*2+1] = "Velo Side 2, Station "+s;
 		}
-		m_velo = new ResidualRecorder(*this, "Velo", 42, veloNames) ;
+		m_velo.reset( new ResidualRecorder(*this, "Velo", 42, veloNames) );
 	} else if(m_modeVelo == "side"){
     std::string veloNames[2] = {"Velo Side 1","Velo Side 2"};
-		m_velo = new ResidualRecorder(*this, "Velo", 2, veloNames) ;
+		m_velo.reset( new ResidualRecorder(*this, "Velo", 2, veloNames) );
 	} else {
 		Warning("Velo histogram mode not defined. Possible values are <<>>, <<side>>").ignore();
 	}
@@ -326,10 +323,10 @@ StatusCode AlignmentOnlineMonitor::initialize()
 
 	if(m_modeTT == "station"){
     std::string ttNames[2] = {"TTa","TTb"};
-		m_tt = new ResidualRecorder(*this, "TT", 2, ttNames) ;
+		m_tt.reset(  new ResidualRecorder(*this, "TT", 2, ttNames) );
 	} else if(m_modeTT == "layer" || m_modeTT == "all"){
     std::string ttNames[4] = {"TTaX","TTaU","TTbV","TTbX"};
-		m_tt = new ResidualRecorder(*this, "TT", 4, ttNames) ;
+		m_tt.reset( new ResidualRecorder(*this, "TT", 4, ttNames) );
 	} else {
     Warning("TT histogram mode not defined. Possible values are <<>>, <<layer>>, <<station>>").ignore();
 	}
@@ -341,62 +338,53 @@ StatusCode AlignmentOnlineMonitor::initialize()
 //=============================================================================
 // Finalize
 //=============================================================================
-StatusCode AlignmentOnlineMonitor::finalize() 
+StatusCode AlignmentOnlineMonitor::finalize()
 {
 	StatusCode sc = m_projector.release() ;
 	if(sc.isFailure()) return sc ;
-	delete m_velo ;
-	delete m_ot ;
-	delete m_it ;
-	delete m_tt ;
+	m_velo.reset();
+	m_ot.reset() ;
+	m_it.reset() ;
+	m_tt.reset() ;
 	return GaudiHistoAlg::finalize() ;
 }
 
 StatusCode AlignmentOnlineMonitor::execute()
-{ 
-	LHCb::Track::Range tracks = get<LHCb::Track::Range>( m_trackLocation ) ;
+{
+	auto tracks = get<LHCb::Track::Range>( m_trackLocation ) ;
 
-	BOOST_FOREACH( const LHCb::Track* track, tracks) {
-		BOOST_FOREACH( const LHCb::Node* node, track->nodes() ) {
-			if( node->type() == LHCb::Node::HitOnTrack ) {
-				const LHCb::Measurement& meas = node->measurement() ;
-	
-				LHCb::LHCbID id = meas.lhcbID();
 
-				if( id.isOT() ) {
-					if (m_modeOT == "station"){	
-						m_ot->fill( otUniqueStation(id.otID()), *node) ;
-					} else if (m_modeOT == "quarter"){
-						m_ot->fill( otUniqueQuarter(id.otID()), *node) ;
-					} else if (m_modeOT == "all"){
-						m_ot->fill( otUniqueStationQuarter(id.otID()), *node);
-					} 
-				} else if( id.isVelo() ) {
-					if (m_modeVelo == "side"){
-						m_velo->fill( veloUniqueSide(id.veloID()), *node) ;
-					} else if (m_modeVelo == "all"){
-						m_velo->fill( veloUniqueSideStation(id.veloID()), *node);
-					}	
-				} else if( id.isIT() ) {
-					if (m_modeIT == "station"){
-						m_it->fill( itUniqueStation(id.stID()), *node) ;
-					} else if (m_modeIT == "box"){
-						m_it->fill( itUniqueBox(id.stID()), *node) ;
-					} else if (m_modeIT == "all"){
-						m_it->fill( itUniqueBoxStation(id.stID()), *node) ;
-					}
-				} else if( id.isTT() ) {
-					if( m_modeTT == "layer" || m_modeTT == "all" ){
-						m_tt->fill( ttUniqueLayer(id.stID()), *node) ;
-					} else if( m_modeTT == "station"){
-						m_tt->fill( ttUniqueStation(id.stID()), *node) ;
-					}	
-					
-				}
+    auto  ot_fun = ( m_modeOT == "station" ?  &AlignmentOnlineMonitor::otUniqueStation
+                   : m_modeOT == "quarter" ?  &AlignmentOnlineMonitor::otUniqueQuarter
+                   : m_modeOT == "all"     ?  &AlignmentOnlineMonitor::otUniqueStationQuarter
+                   : nullptr );
+    auto velo_fun = ( m_modeVelo == "side" ?  &AlignmentOnlineMonitor::veloUniqueSide
+                    : m_modeVelo == "all"  ?  &AlignmentOnlineMonitor:: veloUniqueSideStation
+                    : nullptr );
+    auto it_fun = ( m_modeIT == "station" ? &AlignmentOnlineMonitor::itUniqueStation
+                  : m_modeIT == "box"     ? &AlignmentOnlineMonitor::itUniqueBox
+                  : m_modeIT == "all"     ? &AlignmentOnlineMonitor::itUniqueBoxStation
+                  : nullptr );
+
+    auto tt_fun = (	( m_modeTT == "layer" || m_modeTT == "all" ) ? &AlignmentOnlineMonitor::ttUniqueLayer
+                  :  m_modeTT == "station" ? &AlignmentOnlineMonitor::ttUniqueStation
+                  : nullptr );
+
+	for( const LHCb::Track* track: tracks) {
+		for( const LHCb::Node* node: track->nodes() ) {
+			if( node->type() != LHCb::Node::HitOnTrack ) continue;
+			const LHCb::Measurement& meas = node->measurement() ;
+			LHCb::LHCbID id = meas.lhcbID();
+			if( id.isOT() && ot_fun) {
+                m_ot->fill( (this->*ot_fun)(id.otID()), *node) ;
+			} else if( id.isVelo() && velo_fun) {
+                m_velo->fill( (this->*velo_fun)(id.veloID()), *node) ;
+			} else if( id.isIT() && it_fun ) {
+                m_it->fill( (this->*it_fun)(id.stID()), *node) ;
+			} else if( id.isTT() && tt_fun) {
+                m_tt->fill( (this->*tt_fun)(id.stID()), *node) ;
 			}
 		}
 	}
 	return StatusCode::SUCCESS ;
 }
-
-

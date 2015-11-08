@@ -8,7 +8,6 @@
 #include "TrackInterfaces/IPVOfflineTool.h"
 
 #include <algorithm>
-#include <boost/foreach.hpp>
 
 #include "Event/ODIN.h"
 
@@ -167,7 +166,7 @@ StatusCode TrackPV2HalfAlignMonitor::execute()
   typedef std::vector<const LHCb::Track*> TrackVector ;
   LHCb::Track::Range alltracks = get<LHCb::Track::Range>(m_trackContainerName);
   TrackVector selectedtracks ;
-  BOOST_FOREACH( const LHCb::Track* tr, alltracks) 
+  for( const LHCb::Track* tr: alltracks) 
     if( tr->hasVelo() && tr->chi2PerDoF() < 10 ) 
       selectedtracks.push_back(tr);
   
@@ -186,7 +185,7 @@ StatusCode TrackPV2HalfAlignMonitor::execute()
     int n_goodleftPV=0;
     int n_goodrightPV=0;
 
-    BOOST_FOREACH( const LHCb::RecVertex& pv, leftoutvtxvec) {
+    for( const LHCb::RecVertex& pv: leftoutvtxvec) {
       plot( pv.tracks().size(), "Left PV Num of track ",0,100,200) ;
       if( pv.tracks().size() >= m_PV_trackmin) {
 	++n_goodleftPV ;
@@ -203,7 +202,7 @@ StatusCode TrackPV2HalfAlignMonitor::execute()
       }
     }
 
-    BOOST_FOREACH( const LHCb::RecVertex& pv, rightoutvtxvec) {
+    for( const LHCb::RecVertex& pv: rightoutvtxvec) {
       plot( pv.tracks().size(), "Right PV Num of track ",0,100,200) ;
       if( pv.tracks().size() >= m_PV_trackmin) {
 	++n_goodrightPV;

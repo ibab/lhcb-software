@@ -14,9 +14,6 @@
 // Tools for histogramming
 #include "AIDA/IHistogram1D.h"
 
-#include <boost/lexical_cast.hpp>
-#include <boost/foreach.hpp>
-
 // local
 #include "TrackMuonMatchMonitor.h"
 using namespace LHCb;
@@ -71,13 +68,13 @@ StatusCode TrackMuonMatchMonitor::initialize() {
     unsigned int nbin=100;
     double max = 80. + 40.*float(iR);
     double min = -max;
-    name = "resX_ASide_M1R"+ boost::lexical_cast<std::string>(iR+1);
+    name = "resX_ASide_M1R"+ std::to_string(iR+1);
     m_resx_a[iR] = book1D( name, name, min, max, nbin );
-    name = "resY_ASide_M1R"+ boost::lexical_cast<std::string>(iR+1);
+    name = "resY_ASide_M1R"+ std::to_string(iR+1);
     m_resy_a[iR] = book1D( name, name, min, max, nbin );
-    name = "resX_CSide_M1R"+ boost::lexical_cast<std::string>(iR+1);
+    name = "resX_CSide_M1R"+ std::to_string(iR+1);
     m_resx_c[iR] = book1D( name, name, min, max, nbin );
-    name = "resY_CSide_M1R"+ boost::lexical_cast<std::string>(iR+1);
+    name = "resY_CSide_M1R"+ std::to_string(iR+1);
     m_resy_c[iR] = book1D( name, name, min, max, nbin );
     m_hisxmax[iR] = max ;
   }
@@ -117,7 +114,8 @@ StatusCode TrackMuonMatchMonitor::execute() {
   std::vector< MuonHit > muonhits ;
   MuonHit muonhit ;
   muonhits.reserve( coords->size() ) ;
-  BOOST_FOREACH(muonhit.coord , *coords )  
+  for(const auto& coord : *coords ) {
+    muonhit.coord = coord; 
     if ( m_iMS == int(muonhit.coord->key().station()) ) { // only the Chosen station
       StatusCode sc = m_muonDet->Tile2XYZ(muonhit.coord->key(),
 					  muonhit.x,muonhit.dx,
@@ -125,9 +123,10 @@ StatusCode TrackMuonMatchMonitor::execute() {
 					  muonhit.z,muonhit.dz) ;
       if(sc.isSuccess()) muonhits.push_back( muonhit ) ;
     }
+  }
   
   if(msgLevel(MSG::DEBUG)) debug() << " Found " << tTracks.size() << " tracks in the container " << endmsg;
-  BOOST_FOREACH( const LHCb::Track* track, tTracks) {
+  for( const LHCb::Track* track: tTracks) {
     if( track->hasT() &&
 	track->chi2PerDoF() <5 &&
 	track->p() > 1 * Gaudi::Units::GeV ) {
@@ -139,7 +138,7 @@ StatusCode TrackMuonMatchMonitor::execute() {
 	 std::abs(stateAtM1.x()) < m_MAXsizeX && std::abs(stateAtM1.y()) < m_MAXsizeY &&
 	 std::sqrt(stateAtM1.errX2()) < m_maxErrX && std::sqrt(stateAtM1.errY2()) < m_maxErrY ) {
 	
-	BOOST_FOREACH( const MuonHit& hit, muonhits ) {
+	for( const MuonHit& hit: muonhits ) {
 	    
 	  int region = hit.coord->key().region() ;
 	  double deltaZ = hit.z - stateAtM1.z() ;

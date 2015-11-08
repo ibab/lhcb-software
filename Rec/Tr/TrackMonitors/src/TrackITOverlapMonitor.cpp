@@ -22,7 +22,6 @@
 
 #include "TrackKernel/TrackTraj.h"
 
-#include <boost/foreach.hpp>
 
 namespace Al {
   class Equations;
@@ -129,9 +128,7 @@ TrackITOverlapMonitor::TrackITOverlapMonitor( const std::string& name,
 
 TrackITOverlapMonitor::~TrackITOverlapMonitor()
 {
-  BOOST_FOREACH( DeltaHistogrammer* h, m_histograms ) {
-    delete h ;
-  }
+  for( auto& h: m_histograms ) delete h ;
   m_histograms.clear() ;
 }
 
@@ -162,7 +159,7 @@ int TrackITOverlapMonitor::trackType( const LHCb::Track& track) const
 {
   size_t numIT[4] = {0,0,0,0} ;
   size_t numOT[2] = {0,0} ;
-  BOOST_FOREACH( const LHCb::LHCbID& id, track.lhcbIDs()) {
+  for( const LHCb::LHCbID& id: track.lhcbIDs()) {
     if( id.isIT() ) {
       LHCb::STChannelID stid = id.stID() ;
       ++(numIT[stid.detRegion()-1]) ;
@@ -196,7 +193,7 @@ StatusCode TrackITOverlapMonitor::execute()
   m_ithitcreator->hits() ;
     
   // loop over all tracks
-  BOOST_FOREACH( const LHCb::Track* track, tracks) {
+  for( const LHCb::Track* track: tracks) {
 
     // get the nodes for later use
     LHCb::Track::ConstNodeRange nodes = track->nodes() ;
@@ -204,7 +201,7 @@ StatusCode TrackITOverlapMonitor::execute()
     // make sure that there are sufficient active nodes behind the
     // magnet. we want at least 8 active nodes.
     size_t numnodes(0) ;
-    BOOST_FOREACH( const LHCb::Node* node, nodes) 
+    for( const LHCb::Node* node: nodes) 
       if(node->type() == LHCb::Node::HitOnTrack) {
 	double z = node->z() ;
 	if( 7500 < z && z < 9500 ) ++numnodes ;
@@ -258,7 +255,7 @@ StatusCode TrackITOverlapMonitor::execute()
 		Gaudi::XYZVectorF trkdir((float) refstate.tx(),(float) refstate.ty(),1) ;
 	    
 		// now loop over all hits
-		BOOST_FOREACH( const Tf::STHit* hit, thesehits ) {
+		for( const Tf::STHit* hit: thesehits ) {
 		  double ytrk = refstate.y() + ( hit->zMid() - refstate.z() ) * refstate.ty() ;
 		  // this window is a bit large
 		  if( hit->isYCompatible(ytrk,m_maxTolY) ) {

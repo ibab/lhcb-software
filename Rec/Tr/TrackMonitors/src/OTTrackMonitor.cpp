@@ -16,8 +16,6 @@
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IProfile1D.h"
 
-#include <boost/foreach.hpp>
-#include <boost/lexical_cast.hpp>
 #include <map>
 
 const double cellRadius = 2.5;
@@ -271,13 +269,13 @@ StatusCode OTTrackMonitor::initialize()
   case 1:
     for(int s = 0; s < 3; s++)
     {
-      bookHists(s, "station" + boost::lexical_cast<std::string>(s + 1) + "/");
+      bookHists(s, "station" + std::to_string(s + 1) + "/");
     }
     break;
   case 2:
     for(int s = 0; s < 3; s++) for(int l = 0; l < 4; l++)
     {
-      bookHists(4 * s + l, "layer" + boost::lexical_cast<std::string>(4 * s + l) + "/");
+      bookHists(4 * s + l, "layer" + std::to_string(4 * s + l) + "/");
     }
     break;
   }
@@ -391,7 +389,7 @@ StatusCode OTTrackMonitor::execute()
 
   // iterate over all tracks
   size_t numHots(0);
-  BOOST_FOREACH(const LHCb::Track* track,tracks)
+  for(const LHCb::Track* track:tracks)
   {
     int timeResidualSumN = 0;
     double timeResidualSum = 0;
@@ -426,7 +424,7 @@ StatusCode OTTrackMonitor::execute()
     }
 
     // iterate over all track nodes
-    BOOST_FOREACH(const LHCb::Node* node, track->nodes())
+    for(const LHCb::Node* node: track->nodes())
     {
       // process only OT nodes which are HitOnTrack or Outlier and with OT measurement
       if((node->type() != LHCb::Node::HitOnTrack && node->type() && node->type() != LHCb::Node::Outlier) || node->measurement().type() != LHCb::Measurement::OT) continue;
@@ -581,31 +579,31 @@ StatusCode OTTrackMonitor::execute()
       // 2D occupancy plot, quite a beast. should be forbidden in monitoring!
       plotHist2D(histXY[histIndex], node->state().x(), node->state().y(), 1.0);
       plotHist2D(histRT[histIndex], trackDistance, drifttime, 1.0);
-    } // BOOST_FOREACH(const LHCb::Node* node, track->nodes())
+    } // for(const LHCb::Node* node, track->nodes())
 
     if(timeResidualSumN > 5)
     {
       plotHist1D(histAverageTimeResidual, timeResidualSum / timeResidualSumN, 1.0);
       plotHist2D(histAverageTimeResidualVsMomentum, track->p() / 1000.0, timeResidualSum / timeResidualSumN, 1.0);
     } // if(timeResidualSumN > 5)
-  } // BOOST_FOREACH(const LHCb::Track* track,tracks)
+  } // for(const LHCb::Track* track,tracks)
 
   if(eventAverageTimeResidualN > 9)
   {
     plotHist1D(histEventAverageTimeResidual, eventAverageTimeResidual / eventAverageTimeResidualN, 1.0);
   }
 
-  BOOST_FOREACH(const DeOTModule* module, m_otdet->modules())
+  for(const DeOTModule* module: m_otdet->modules())
   {
     LHCb::OTChannelID modid = module->elementID();
     LHCb::OTLiteTimeRange liteTimes = m_decoder->decodeModule(modid);
     size_t numhits = liteTimes.size();
     plotHist1D(histModuleHitOccupancy, uniqueModule(modid), numhits);
-    BOOST_FOREACH(const LHCb::OTLiteTime& liteTime, liteTimes)
+    for(const LHCb::OTLiteTime& liteTime: liteTimes)
     {
       plotHist1D(histOtisHitOccupancy, uniqueOtis(liteTime.channel()), 1.0);
     }
-  } // BOOST_FOREACH(const DeOTModule* module, m_otdet->modules())
+  } // for(const DeOTModule* module, m_otdet->modules())
 
   plotHist1D(m_hitMultiplicity, m_decoder->totalNumberOfHits(), 1.0 );
   plotHist1D(m_hotMultiplicity, numHots , 1.0);
