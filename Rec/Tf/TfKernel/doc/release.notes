@@ -3,6 +3,9 @@
 ! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
+! 2015-11-08 - Gerhard Raven
+ - simplify VeloSensorHits.h   
+
 ! 2015-11-01 - Gerhard Raven
  - minimal change to make SIMDChi2Fit compile with clang
 
