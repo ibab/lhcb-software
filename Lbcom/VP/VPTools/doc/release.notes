@@ -4,8 +4,12 @@
 ! Purpose     : Tools used in VP reconstruction
 !--------------------------------------------------------------------------
 
+! 2015-11-08 - Heinrich Schindler
+ - Move VPTrackMoni to Tr/TrackMonitors (in Rec).
+ - Remove dependency on Tr/TrackFitEvent.
+
 ! 2015-11-07 - Christoph Hombach
-	- Debugged residual calculation
+ - Debugged residual calculation
 
 ! 2015-11-04 - Heinrich Schindler
  - Remove unnecessary includes. Protect debug output.
