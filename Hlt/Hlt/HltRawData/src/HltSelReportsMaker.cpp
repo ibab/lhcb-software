@@ -1101,7 +1101,7 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle& o
             int numCluster=0;
             for( auto cluster : hypo->clusters() ){
               numCluster++;
-              hos->addToSubstructure( store_( *cluster ) );
+              hos->addToSubstructureExtended( store_( *cluster ) );
               if(numCluster==3) break;
             }
           }

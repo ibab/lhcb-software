@@ -5,6 +5,9 @@
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+! 2015-11-8 - Sean Benson
+ - Write CaloCluster report for Turbo to the extended substructure.
+
 ! 2015-10-29 - Roel Aaij
  - Split HltSelReportsMaker into Hlt1SelReportsMaker and Hlt2SelReportsMaker
    to avoid storing Hlt1SelReports in the Hlt2SelReports raw bank.
