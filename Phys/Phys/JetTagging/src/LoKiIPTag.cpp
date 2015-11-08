@@ -25,8 +25,6 @@ LoKi::IPTag::IPTag
   , m_JetVertex(0)
   , m_CleanedDaugthers(0)
   , m_distCalc(0)
-  , m_p2mcAssoc(0)
-  , m_p2mcAssocType("DaVinciSmartAssociator")
 {
   // Interface
   declareInterface<IJetTagTool>(this);
@@ -72,9 +70,9 @@ StatusCode LoKi::IPTag::initialize()
   StatusCode sc = GaudiTool::initialize();
   if(sc.isFailure())
     return sc;
-  
+
   // svc<LoKi::ILoKiSvc>("LoKiSvc", true);
-  
+
   m_CleanedDaugthers = new LHCb::Particles();
 
   m_distCalc = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
@@ -298,12 +296,12 @@ bool LoKi::IPTag::calculateJetProperty
     }
 
 
-  
+
   jetWeight["ThirdTrack"]=ThirdSignValue;
   jetWeight["SecondTrack"]=SecondSignValue;
   jetWeight["FirstTrack"]=FirstSignValue;
   jetWeight["SumSignValue"] = SumSignValue;
-  
+
 
 
   jetWeight["extraInfo"] = 5600;
@@ -312,10 +310,10 @@ bool LoKi::IPTag::calculateJetProperty
   if (SecondSignValue >  m_secCut && SumSignValue > m_sumCut)
     tag_global =1;
   //IT HAS TO BEHTE LAST ONE: GLOBAL DECISTION
- 
+
   jetWeight["Tag"] = tag_global;
 
- 
+
 
   if(msgLevel(MSG::DEBUG)) debug() << "Tag weight: " << jetWeight << endmsg;
   if(tag_global)

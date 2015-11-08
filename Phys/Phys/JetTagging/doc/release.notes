@@ -4,6 +4,9 @@
 ! Purpose     : Jet Tagging Package
 ! -----------------------------------------------------------------------------
 
+! 2015-11-08 - Cedric Potterat
+ - remove MC associations headers. IParticle2MCAssociator.h...
+
 ! 2015-11-06 - Cedric Potterat
  - remove MC associations headers. IParticle2MCAssociator.h
 
