@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-08 - Andrea Contu
+ - Fix to relinfo for DstarD02xx, DstarPromptWithD02HHLL and RareStrange
+
 ! 2015-11-06 - Andrea Contu
  - Fixed TestMyWGfromSettings.py
 

@@ -194,6 +194,7 @@ class StrippingDstarD02xxConf(LineBuilder):
         for conekey, coneitem in (config['ConeAngles']).iteritems():
             coneinfo.append({ 
                                         'Type' : 'RelInfoConeVariables', 'ConeAngle' : coneitem, 'Variables' : config['ConeVariables'], 
+                                        'Location' : 'P2CVDst'+conekey,
                                         'DaughterLocations' : {
                                           '[D*(2010)+ -> ^(Charm -> X+ X- ) pi+]CC' : 'P2CVD0'+conekey,
                                           '[D*(2010)+ -> (Charm -> X+ X- ) ^pi+]CC' : 'P2CVpis'+conekey,
@@ -248,6 +249,7 @@ class StrippingDstarD02xxConf(LineBuilder):
         for conekey, coneitem in (config['ConeAngles']).iteritems():
             coneinfo.append({ 
                                         'Type' : 'RelInfoConeVariables', 'ConeAngle' : coneitem, 'Variables' : config['ConeVariables'], 
+                                        'Location' : 'P2CVD0'+conekey,
                                         'DaughterLocations' : {
                                           '[Charm -> ^X+ X- ]CC' : 'P2CVplus'+conekey,
                                           '[Charm -> X+ ^X- ]CC' : 'P2CVminus'+conekey,

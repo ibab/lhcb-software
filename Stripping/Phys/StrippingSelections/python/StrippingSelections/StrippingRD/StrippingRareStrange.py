@@ -28,7 +28,7 @@ __all__ = ('RareStrangeLinesConf',
            )
 
 from Gaudi.Configuration import *
-from Configurables import FilterDesktop, CombineParticles
+from GaudiConfUtils.ConfigurableGenerators import CombineParticles
 from CommonParticles import StdNoPIDsDownElectrons
 from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
@@ -278,29 +278,29 @@ class RareStrangeLinesConf(LineBuilder) :
                                             RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selSigmaPMuMu : 'P2CVSigma09', 
-                                                "Phys/StdAllLooseMuons"   : ['P2CVMu09_1','P2CVMu09_2'], 
-                                                "Phys/StdAllLooseProton"   : 'P2CVProton09', 
+                                                'Location' : 'P2CVSigma09',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p+ ^mu+ mu-]CC" : 'P2CVMu09_1', 
+                                                            "[Sigma+ -> p+ mu+ ^mu-]CC" : 'P2CVMu09_2',
+                                                            "[Sigma+ -> ^p+ mu+ mu-]CC" : 'P2CVProton09'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selSigmaPMuMu : 'P2CVSigma10', 
-                                                "Phys/StdAllLooseMuons"   : ['P2CVMu10_1','P2CVMu10_2'], 
-                                                "Phys/StdAllLooseProton"   : 'P2CVProton10', 
+                                                'Location' : 'P2CVSigma10',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p+ ^mu+ mu-]CC" : 'P2CVMu10_1', 
+                                                            "[Sigma+ -> p+ mu+ ^mu-]CC" : 'P2CVMu10_2',
+                                                            "[Sigma+ -> ^p+ mu+ mu-]CC" : 'P2CVProton10'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selSigmaPMuMu : 'P2CVSigma11', 
-                                                "Phys/StdAllLooseMuons"   : ['P2CVMu11_1','P2CVMu11_2'], 
-                                                "Phys/StdAllLooseProton"   : 'P2CVProton11', 
+                                                'Location' : 'P2CVSigma11',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p+ ^mu+ mu-]CC" : 'P2CVMu11_1', 
+                                                            "[Sigma+ -> p+ mu+ ^mu-]CC" : 'P2CVMu11_2',
+                                                            "[Sigma+ -> ^p+ mu+ mu-]CC" : 'P2CVProton11'
                                                 }
                                               }
                                             ]
@@ -314,29 +314,29 @@ class RareStrangeLinesConf(LineBuilder) :
                                             RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selSigmaPMuMuDown : 'P2CVSigma09', 
-                                                "Phys/StdLooseDownMuons"   : ['P2CVMu09_1','P2CVMu09_2'], 
-                                                "Phys/StdNoPIDsDownProtons"   : 'P2CVProton09', 
+                                                'Location' : 'P2CVSigma09',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p+ ^mu+ mu-]CC" : 'P2CVMu09_1', 
+                                                            "[Sigma+ -> p+ mu+ ^mu-]CC" : 'P2CVMu09_2',
+                                                            "[Sigma+ -> ^p+ mu+ mu-]CC" : 'P2CVProton09'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selSigmaPMuMuDown : 'P2CVSigma10', 
-                                                "Phys/StdLooseDownMuons"   : ['P2CVMu10_1','P2CVMu10_2'], 
-                                                "Phys/StdNoPIDsDownProtons"   : 'P2CVProton10', 
+                                                'Location' : 'P2CVSigma10',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p+ ^mu+ mu-]CC" : 'P2CVMu10_1', 
+                                                            "[Sigma+ -> p+ mu+ ^mu-]CC" : 'P2CVMu10_2',
+                                                            "[Sigma+ -> ^p+ mu+ mu-]CC" : 'P2CVProton10'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selSigmaPMuMuDown : 'P2CVSigma11', 
-                                                "Phys/StdLooseDownMuons"   : ['P2CVMu11_1','P2CVMu11_2'], 
-                                                "Phys/StdNoPIDsDownProtons"   : 'P2CVProton11', 
+                                                'Location' : 'P2CVSigma11',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p+ ^mu+ mu-]CC" : 'P2CVMu11_1', 
+                                                            "[Sigma+ -> p+ mu+ ^mu-]CC" : 'P2CVMu11_2',
+                                                            "[Sigma+ -> ^p+ mu+ mu-]CC" : 'P2CVProton11'
                                                 }
                                               }
                                             ]
@@ -351,29 +351,29 @@ class RareStrangeLinesConf(LineBuilder) :
                                             RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selSigmaPEE : 'P2CVSigma09', 
-                                                "Phys/StdAllLooseElectrons"   : ['P2CVEl09_1','P2CVEl09_2'], 
-                                                "Phys/StdAllLooseProton"   : 'P2CVProton09', 
+                                                'Location' : 'P2CVSigma09',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p+ ^e+ e-]CC" : 'P2CVE09_1', 
+                                                            "[Sigma+ -> p+ e+ ^e-]CC" : 'P2CVE09_2',
+                                                            "[Sigma+ -> ^p+ e+ e-]CC" : 'P2CVProton09'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selSigmaPEE : 'P2CVSigma10', 
-                                                "Phys/StdAllLooseElectrons"   : ['P2CVEl10_1','P2CVEl10_2'], 
-                                                "Phys/StdAllLooseProton"   : 'P2CVProton10', 
+                                                'Location' : 'P2CVSigma10',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p+ ^e+ e-]CC" : 'P2CVE10_1', 
+                                                            "[Sigma+ -> p+ e+ ^e-]CC" : 'P2CVE10_2',
+                                                            "[Sigma+ -> ^p+ e+ e-]CC" : 'P2CVProton10'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selSigmaPEE : 'P2CVSigma11', 
-                                                "Phys/StdAllLooseElectrons"   : ['P2CVEl11_1','P2CVEl11_2'], 
-                                                "Phys/StdAllLooseProton"   : 'P2CVProton11', 
+                                                'Location' : 'P2CVSigma11',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p+ ^e+ e-]CC" : 'P2CVE11_1', 
+                                                            "[Sigma+ -> p+ e+ ^e-]CC" : 'P2CVE11_2',
+                                                            "[Sigma+ -> ^p+ e+ e-]CC" : 'P2CVProton11'
                                                 }
                                               }
                                             ]
@@ -387,35 +387,26 @@ class RareStrangeLinesConf(LineBuilder) :
                                            RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selSigmaPPi0 : 'P2CVSigma09',
-                                                "StdLooseDalitzPi0"    : ['P2CVEl09_1','P2CVEl09_2'],
-                                                #"StdLoosePi024e"       : ['P2CVEl09_1','P2CVEl09_2'],
-                                                #"StdLoosePi02gee"      : ['P2CVEl09_1','P2CVEl09_2'],
-                                                "Phys/StdAllLooseProton"   : 'P2CVProton09', 
+                                                'Location' : 'P2CVSigma09',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p+ ^pi0]CC" : 'P2CVPi009', 
+                                                            "[Sigma+ -> ^p+ pi0]CC" : 'P2CVProton09'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selSigmaPPi0 : 'P2CVSigma10',
-                                                "StdLooseDalitzPi0"    : ['P2CVEl09_1','P2CVEl09_2'],
-                                                #"StdLoosePi024e"       : ['P2CVEl09_1','P2CVEl09_2'],
-                                                #"StdLoosePi02gee"      : ['P2CVEl09_1','P2CVEl09_2'],
-                                                "Phys/StdAllLooseProton"   : 'P2CVProton10', 
+                                                'Location' : 'P2CVSigma10',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p+ ^pi0]CC" : 'P2CVPi010', 
+                                                            "[Sigma+ -> ^p+ pi0]CC" : 'P2CVProton10'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selSigmaPPi0 : 'P2CVSigma11',
-                                                "StdLooseDalitzPi0"    : ['P2CVEl09_1','P2CVEl09_2'],
-                                                #"StdLoosePi024e"       : ['P2CVEl09_1','P2CVEl09_2'],
-                                                #"StdLoosePi02gee"      : ['P2CVEl09_1','P2CVEl09_2'],
-                                                "Phys/StdAllLooseProton"   : 'P2CVProton11', 
+                                                'Location' : 'P2CVSigma11',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p+ ^pi0]CC" : 'P2CVPi011', 
+                                                            "[Sigma+ -> ^p+ pi0]CC" : 'P2CVProton11'
                                                 }
                                               }
                                             ]
@@ -429,32 +420,26 @@ class RareStrangeLinesConf(LineBuilder) :
                                            RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selSigmaPPi0Cal : 'P2CVSigma09', 
-                                                "Phys/StdLooseMergedPi0"   : ['P2CVEl09_1','P2CVEl09_2'],
-                                                "Phys/StdLooseResolvedPi0"   : ['P2CVEl09_1','P2CVEl09_2'], 
-                                                "Phys/StdAllLooseProton"   : 'P2CVProton09', 
+                                                'Location' : 'P2CVSigma09',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p+ ^pi0]CC" : 'P2CVPi009', 
+                                                            "[Sigma+ -> ^p+ pi0]CC" : 'P2CVProton09'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selSigmaPPi0Cal : 'P2CVSigma10', 
-                                                "Phys/StdLooseMergedPi0"   : ['P2CVEl10_1','P2CVEl10_2'],
-                                                "Phys/StdLooseResolvedPi0"   : ['P2CVEl09_1','P2CVEl09_2'], 
-                                                "Phys/StdAllLooseProton"   : 'P2CVProton10', 
+                                                'Location' : 'P2CVSigma10',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p+ ^pi0]CC" : 'P2CVPi010', 
+                                                            "[Sigma+ -> ^p+ pi0]CC" : 'P2CVProton10'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selSigmaPPi0Cal : 'P2CVSigma11', 
-                                                "Phys/StdLooseMergedPi0"   : ['P2CVEl11_1','P2CVEl11_2'],
-                                                "Phys/StdLooseResolvedPi0"   : ['P2CVEl09_1','P2CVEl09_2'], 
-                                                "Phys/StdAllLooseProton"   : 'P2CVProton11', 
+                                                'Location' : 'P2CVSigma11',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p+ ^pi0]CC" : 'P2CVPi011', 
+                                                            "[Sigma+ -> ^p+ pi0]CC" : 'P2CVProton11'
                                                 }
                                               }
                                             ]
@@ -470,29 +455,29 @@ class RareStrangeLinesConf(LineBuilder) :
                                              RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selSigmaPEEDown : 'P2CVSigma09', 
-                                                "Phys/StdNoPIDsDownElectrons"   : ['P2CVEl09_1','P2CVEl09_2'], 
-                                                "Phys/StdNoPIDsDownProtons"   : 'P2CVProton09', 
+                                                'Location' : 'P2CVSigma09',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p+ ^e+ e-]CC" : 'P2CVE09_1', 
+                                                            "[Sigma+ -> p+ e+ ^e-]CC" : 'P2CVE09_2',
+                                                            "[Sigma+ -> ^p+ e+ e-]CC" : 'P2CVProton09'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selSigmaPEEDown : 'P2CVSigma10', 
-                                                "Phys/StdNoPIDsDownElectrons"   : ['P2CVEl10_1','P2CVEl10_2'], 
-                                                "Phys/StdNoPIDsDownProtons"   : 'P2CVProton10', 
+                                                'Location' : 'P2CVSigma10',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p+ ^e+ e-]CC" : 'P2CVE10_1', 
+                                                            "[Sigma+ -> p+ e+ ^e-]CC" : 'P2CVE10_2',
+                                                            "[Sigma+ -> ^p+ e+ e-]CC" : 'P2CVProton10'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selSigmaPEEDown : 'P2CVSigma11', 
-                                                "Phys/StdNoPIDsDownElectrons"   : ['P2CVEl11_1','P2CVEl11_2'], 
-                                                "Phys/StdNoPIDsDownProtons"   : 'P2CVProton11', 
+                                                'Location' : 'P2CVSigma11',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p+ ^e+ e-]CC" : 'P2CVE11_1', 
+                                                            "[Sigma+ -> p+ e+ ^e-]CC" : 'P2CVE11_2',
+                                                            "[Sigma+ -> ^p+ e+ e-]CC" : 'P2CVProton11'
                                                 }
                                               }
                                             ]
@@ -506,29 +491,29 @@ class RareStrangeLinesConf(LineBuilder) :
                                             RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selSigmaPMuMuLFV : 'P2CVSigma09', 
-                                                "Phys/StdAllLooseMuons"   : ['P2CVMu09_1','P2CVMu09_2'], 
-                                                "Phys/StdAllLooseProton"   : 'P2CVProton09', 
+                                                'Location' : 'P2CVSigma09',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p~- ^mu+ mu+]CC" : 'P2CVMu09_1', 
+                                                            "[Sigma+ -> p~- mu+ ^mu+]CC" : 'P2CVMu09_2',
+                                                            "[Sigma+ -> ^p~- mu+ mu+]CC" : 'P2CVProton09'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selSigmaPMuMuLFV : 'P2CVSigma10', 
-                                                "Phys/StdAllLooseMuons"   : ['P2CVMu10_1','P2CVMu10_2'], 
-                                                "Phys/StdAllLooseProton"   : 'P2CVProton10', 
+                                                'Location' : 'P2CVSigma10',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p~- ^mu+ mu+]CC" : 'P2CVMu10_1', 
+                                                            "[Sigma+ -> p~- mu+ ^mu+]CC" : 'P2CVMu10_2',
+                                                            "[Sigma+ -> ^p~- mu+ mu+]CC" : 'P2CVProton10'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selSigmaPMuMuLFV : 'P2CVSigma11', 
-                                                "Phys/StdAllLooseMuons"   : ['P2CVMu11_1','P2CVMu11_2'], 
-                                                "Phys/StdAllLooseProton"   : 'P2CVProton11', 
+                                                'Location' : 'P2CVSigma11',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p~- ^mu+ mu+]CC" : 'P2CVMu11_1', 
+                                                            "[Sigma+ -> p~- mu+ ^mu+]CC" : 'P2CVMu11_2',
+                                                            "[Sigma+ -> ^p~- mu+ mu+]CC" : 'P2CVProton11'
                                                 }
                                               }
                                             ]
@@ -543,29 +528,29 @@ class RareStrangeLinesConf(LineBuilder) :
                                             RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selSigmaPMuMuLFVDown : 'P2CVSigma09', 
-                                                "Phys/StdLooseDownMuons"   : ['P2CVMu09_1','P2CVMu09_2'], 
-                                                "Phys/StdNoPIDsDownProtons"   : 'P2CVProton09', 
+                                                'Location' : 'P2CVSigma09',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p~- ^mu+ mu+]CC" : 'P2CVMu09_1', 
+                                                            "[Sigma+ -> p~- mu+ ^mu+]CC" : 'P2CVMu09_2',
+                                                            "[Sigma+ -> ^p~- mu+ mu+]CC" : 'P2CVProton09'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selSigmaPMuMuLFVDown : 'P2CVSigma10', 
-                                                "Phys/StdLooseDownMuons"   : ['P2CVMu10_1','P2CVMu10_2'], 
-                                                "Phys/StdNoPIDsDownProtons"   : 'P2CVProton10', 
+                                                'Location' : 'P2CVSigma10',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p~- ^mu+ mu+]CC" : 'P2CVMu10_1', 
+                                                            "[Sigma+ -> p~- mu+ ^mu+]CC" : 'P2CVMu10_2',
+                                                            "[Sigma+ -> ^p~- mu+ mu+]CC" : 'P2CVProton10'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selSigmaPMuMuLFVDown : 'P2CVSigma11', 
-                                                "Phys/StdLooseDownMuons"   : ['P2CVMu11_1','P2CVMu11_2'], 
-                                                "Phys/StdNoPIDsDownProtons"   : 'P2CVProton11', 
+                                                'Location' : 'P2CVSigma11',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p~- ^mu+ mu+]CC" : 'P2CVMu11_1', 
+                                                            "[Sigma+ -> p~- mu+ ^mu+]CC" : 'P2CVMu11_2',
+                                                            "[Sigma+ -> ^p~- mu+ mu+]CC" : 'P2CVProton11'
                                                 }
                                               }
                                             ]
@@ -576,33 +561,33 @@ class RareStrangeLinesConf(LineBuilder) :
                                             postscale = config['Postscale'],
                                             algos = [ self.selKPiMuMu ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=False,
+                                            MDSTFlag=False, 
                                             RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selKPiMuMu: 'P2CVK09', 
-                                                "Phys/StdAllLooseMuons"   : ['P2CVMu09_1','P2CVMu09_2'], 
-                                                "Phys/StdAllLoosePions"   : 'P2CVPion09', 
+                                                'Location' : 'P2CVK09',
+                                                'DaughterLocations' : {
+                                                            "[K+ -> pi+ ^mu+ mu-]CC" : 'P2CVMu09_1', 
+                                                            "[K+ -> pi+ mu+ ^mu-]CC" : 'P2CVMu09_2',
+                                                            "[K+ -> ^pi+ mu+ mu-]CC" : 'P2CVPi09'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selKPiMuMu : 'P2CVK10', 
-                                                "Phys/StdAllLooseMuons"   : ['P2CVMu10_1','P2CVMu10_2'], 
-                                                "Phys/StdAllLoosePions"   : 'P2CVPion10', 
+                                                'Location' : 'P2CVK10',
+                                                'DaughterLocations' : {
+                                                            "[K+ -> pi+ ^mu+ mu-]CC" : 'P2CVMu10_1', 
+                                                            "[K+ -> pi+ mu+ ^mu-]CC" : 'P2CVMu10_2',
+                                                            "[K+ -> ^pi+ mu+ mu-]CC" : 'P2CVPi10'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selKPiMuMu : 'P2CVK11', 
-                                                "Phys/StdAllLooseMuons"   : ['P2CVMu11_1','P2CVMu11_2'], 
-                                                "Phys/StdAllLoosePions"   : 'P2CVPion11', 
+                                                'Location' : 'P2CVK11',
+                                                'DaughterLocations' : {
+                                                            "[K+ -> pi+ ^mu+ mu-]CC" : 'P2CVMu11_1', 
+                                                            "[K+ -> pi+ mu+ ^mu-]CC" : 'P2CVMu11_2',
+                                                            "[K+ -> ^pi+ mu+ mu-]CC" : 'P2CVPi11'
                                                 }
                                               }
                                             ]
@@ -614,34 +599,34 @@ class RareStrangeLinesConf(LineBuilder) :
                                             RequiredRawEvents = ["Velo"],
                                             MDSTFlag=False,
                                             RelatedInfoTools = [
-                                            {
-                                              'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                              'RecursionLevel' : 1, 
-                                              'Locations' : {
-                                              self.selKPiMuMuLFV : 'P2CVK09', 
-                                              "Phys/StdAllLooseMuons"   : ['P2CVMu09_1','P2CVMu09_2'], 
-                                                "Phys/StdAllLoosePions"   : 'P2CVPion09', 
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'Location' : 'P2CVK09',
+                                                'DaughterLocations' : {
+                                                            "[K+ -> pi- ^mu+ mu+]CC" : 'P2CVMu09_1', 
+                                                            "[K+ -> pi- mu+ ^mu+]CC" : 'P2CVMu09_2',
+                                                            "[K+ -> ^pi- mu+ mu+]CC" : 'P2CVPi09'
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'Location' : 'P2CVK10',
+                                                'DaughterLocations' : {
+                                                            "[K+ -> pi- ^mu+ mu+]CC" : 'P2CVMu10_1', 
+                                                            "[K+ -> pi- mu+ ^mu+]CC" : 'P2CVMu10_2',
+                                                            "[K+ -> ^pi- mu+ mu+]CC" : 'P2CVPi10'
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'Location' : 'P2CVK11',
+                                                'DaughterLocations' : {
+                                                            "[K+ -> pi- ^mu+ mu+]CC" : 'P2CVMu11_1', 
+                                                            "[K+ -> pi- mu+ ^mu+]CC" : 'P2CVMu11_2',
+                                                            "[K+ -> ^pi- mu+ mu+]CC" : 'P2CVPi11'
+                                                }
                                               }
-                                            },
-                                            {
-                                              'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                              'RecursionLevel' : 1, 
-                                              'Locations' : {
-                                              self.selKPiMuMuLFV : 'P2CVK10', 
-                                              "Phys/StdAllLooseMuons"   : ['P2CVMu10_1','P2CVMu10_2'], 
-                                                "Phys/StdAllLoosePions"   : 'P2CVPion10', 
-                                              }
-                                            },
-                                            {
-                                              'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                              'RecursionLevel' : 1, 
-                                              'Locations' : {
-                                              self.selKPiMuMuLFV : 'P2CVK11', 
-                                              "Phys/StdAllLooseMuons"   : ['P2CVMu11_1','P2CVMu11_2'], 
-                                                "Phys/StdAllLoosePions"   : 'P2CVPion11', 
-                                              }
-                                            }
-                                          ]
+                                            ]
                                          )
         
         self.KPiPiPiLine = StrippingLine(kpipipi_name+"Line",
@@ -650,29 +635,32 @@ class RareStrangeLinesConf(LineBuilder) :
                                             algos = [ self.selKPiPiPi ],
                                             RequiredRawEvents = ["Velo"],
                                             MDSTFlag=False,
-                                             RelatedInfoTools = [
+                                            RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selKPiPiPi : 'P2CVK09', 
-                                                "Phys/StdAllLoosePions"   : ['P2CVPion09_1','P2CVPion09_2','P2CVPion09_3']
+                                                'Location' : 'P2CVK09',
+                                                'DaughterLocations' : {
+                                                            "[K+ -> ^pi+ pi+ pi-]CC" : 'P2CVPi09_1', 
+                                                            "[K+ -> pi+ ^pi+ pi-]CC" : 'P2CVPi09_2',
+                                                            "[K+ -> pi+ pi+ ^pi-]CC" : 'P2CVPi09'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selKPiPiPi : 'P2CVK10', 
-                                                "Phys/StdAllLoosePions"   : ['P2CVPion10_1','P2CVPion10_2','P2CVPion10_3']
+                                                'Location' : 'P2CVK10',
+                                                'DaughterLocations' : {
+                                                            "[K+ -> ^pi+ pi+ pi-]CC" : 'P2CVPi10_1', 
+                                                            "[K+ -> pi+ ^pi+ pi-]CC" : 'P2CVPi10_2',
+                                                            "[K+ -> pi+ pi+ ^pi-]CC" : 'P2CVPi10'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selKPiPiPi : 'P2CVK11',
-                                                "Phys/StdAllLoosePions"   : ['P2CVPion11_1','P2CVPion11_2','P2CVPion11_3']
+                                                'Location' : 'P2CVK11',
+                                                'DaughterLocations' : {
+                                                            "[K+ -> ^pi+ pi+ pi-]CC" : 'P2CVPi11_1', 
+                                                            "[K+ -> pi+ ^pi+ pi-]CC" : 'P2CVPi11_2',
+                                                            "[K+ -> pi+ pi+ ^pi-]CC" : 'P2CVPi11'
                                                 }
                                               }
                                             ]
@@ -686,26 +674,29 @@ class RareStrangeLinesConf(LineBuilder) :
                                             RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selKPiPiPiMassMeas : 'P2CVK09', 
-                                                "Phys/StdAllLoosePions"   : ['P2CVPion09_1','P2CVPion09_2','P2CVPion09_3']
+                                                'Location' : 'P2CVK09',
+                                                'DaughterLocations' : {
+                                                            "[K+ -> ^pi+ pi+ pi-]CC" : 'P2CVPi09_1', 
+                                                            "[K+ -> pi+ ^pi+ pi-]CC" : 'P2CVPi09_2',
+                                                            "[K+ -> pi+ pi+ ^pi-]CC" : 'P2CVPi09'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selKPiPiPiMassMeas : 'P2CVK10', 
-                                                "Phys/StdAllLoosePions"   : ['P2CVPion10_1','P2CVPion10_2','P2CVPion10_3']
+                                                'Location' : 'P2CVK10',
+                                                'DaughterLocations' : {
+                                                            "[K+ -> ^pi+ pi+ pi-]CC" : 'P2CVPi10_1', 
+                                                            "[K+ -> pi+ ^pi+ pi-]CC" : 'P2CVPi10_2',
+                                                            "[K+ -> pi+ pi+ ^pi-]CC" : 'P2CVPi10'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selKPiPiPiMassMeas : 'P2CVK11',
-                                                "Phys/StdAllLoosePions"   : ['P2CVPion11_1','P2CVPion11_2','P2CVPion11_3']
+                                                'Location' : 'P2CVK11',
+                                                'DaughterLocations' : {
+                                                            "[K+ -> ^pi+ pi+ pi-]CC" : 'P2CVPi11_1', 
+                                                            "[K+ -> pi+ ^pi+ pi-]CC" : 'P2CVPi11_2',
+                                                            "[K+ -> pi+ pi+ ^pi-]CC" : 'P2CVPi11'
                                                 }
                                               }
                                             ]
@@ -719,29 +710,29 @@ class RareStrangeLinesConf(LineBuilder) :
                                             RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selKPiMuMuDown : 'P2CVK09', 
-                                                "Phys/StdLooseDownMuons"   : ['P2CVMu09_1','P2CVMu09_2'], 
-                                                "Phys/StdNoPIDsDownPions"   : 'P2CVPion09', 
+                                                'Location' : 'P2CVK09',
+                                                'DaughterLocations' : {
+                                                            "[K+ -> pi+ ^mu+ mu-]CC" : 'P2CVMu09_1', 
+                                                            "[K+ -> pi+ mu+ ^mu-]CC" : 'P2CVMu09_2',
+                                                            "[K+ -> ^pi+ mu+ mu-]CC" : 'P2CVPi09'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selKPiMuMuDown : 'P2CVK10', 
-                                                "Phys/StdLooseDownMuons"   : ['P2CVMu10_1','P2CVMu10_2'], 
-                                                "Phys/StdNoPIDsDownPions"   : 'P2CVPion10', 
+                                                'Location' : 'P2CVK10',
+                                                'DaughterLocations' : {
+                                                            "[K+ -> pi+ ^mu+ mu-]CC" : 'P2CVMu10_1', 
+                                                            "[K+ -> pi+ mu+ ^mu-]CC" : 'P2CVMu10_2',
+                                                            "[K+ -> ^pi+ mu+ mu-]CC" : 'P2CVPi10'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selKPiMuMuDown : 'P2CVK11', 
-                                                "Phys/StdLooseDownMuons"   : ['P2CVMu11_1','P2CVMu11_2'], 
-                                                "Phys/StdNoPIDsDownPions"   : 'P2CVPion11', 
+                                                'Location' : 'P2CVK11',
+                                                'DaughterLocations' : {
+                                                            "[K+ -> pi+ ^mu+ mu-]CC" : 'P2CVMu11_1', 
+                                                            "[K+ -> pi+ mu+ ^mu-]CC" : 'P2CVMu11_2',
+                                                            "[K+ -> ^pi+ mu+ mu-]CC" : 'P2CVPi11'
                                                 }
                                               }
                                             ]
@@ -755,26 +746,29 @@ class RareStrangeLinesConf(LineBuilder) :
                                             RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selKPiPiPiDown : 'P2CVK09', 
-                                                "Phys/StdNoPIDsDownPions"   : ['P2CVPion09_1','P2CVPion09_2','P2CVPion09_3'] 
+                                                'Location' : 'P2CVK09',
+                                                'DaughterLocations' : {
+                                                            "[K+ -> ^pi+ pi+ pi-]CC" : 'P2CVPi09_1', 
+                                                            "[K+ -> pi+ ^pi+ pi-]CC" : 'P2CVPi09_2',
+                                                            "[K+ -> pi+ pi+ ^pi-]CC" : 'P2CVPi09'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selKPiPiPiDown : 'P2CVK10', 
-                                                "Phys/StdNoPIDsDownPions"   : ['P2CVPion10_1','P2CVPion10_2','P2CVPion10_3'] 
+                                                'Location' : 'P2CVK10',
+                                                'DaughterLocations' : {
+                                                            "[K+ -> ^pi+ pi+ pi-]CC" : 'P2CVPi10_1', 
+                                                            "[K+ -> pi+ ^pi+ pi-]CC" : 'P2CVPi10_2',
+                                                            "[K+ -> pi+ pi+ ^pi-]CC" : 'P2CVPi10'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selKPiPiPiDown : 'P2CVK11',
-                                                "Phys/StdNoPIDsDownPions"   : ['P2CVPion11_1','P2CVPion11_2','P2CVPion11_3'] 
+                                                'Location' : 'P2CVK11',
+                                                'DaughterLocations' : {
+                                                            "[K+ -> ^pi+ pi+ pi-]CC" : 'P2CVPi11_1', 
+                                                            "[K+ -> pi+ ^pi+ pi-]CC" : 'P2CVPi11_2',
+                                                            "[K+ -> pi+ pi+ ^pi-]CC" : 'P2CVPi11'
                                                 }
                                               }
                                             ]
@@ -788,26 +782,29 @@ class RareStrangeLinesConf(LineBuilder) :
                                             RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selKPiPiPiMassMeasDown : 'P2CVK09', 
-                                                "Phys/StdNoPIDsDownPions"   : ['P2CVPion09_1','P2CVPion09_2','P2CVPion09_3'] 
+                                                'Location' : 'P2CVK09',
+                                                'DaughterLocations' : {
+                                                            "[K+ -> ^pi+ pi+ pi-]CC" : 'P2CVPi09_1', 
+                                                            "[K+ -> pi+ ^pi+ pi-]CC" : 'P2CVPi09_2',
+                                                            "[K+ -> pi+ pi+ ^pi-]CC" : 'P2CVPi09'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selKPiPiPiMassMeasDown : 'P2CVK10', 
-                                                "Phys/StdNoPIDsDownPions"   : ['P2CVPion10_1','P2CVPion10_2','P2CVPion10_3'] 
+                                                'Location' : 'P2CVK10',
+                                                'DaughterLocations' : {
+                                                            "[K+ -> ^pi+ pi+ pi-]CC" : 'P2CVPi10_1', 
+                                                            "[K+ -> pi+ ^pi+ pi-]CC" : 'P2CVPi10_2',
+                                                            "[K+ -> pi+ pi+ ^pi-]CC" : 'P2CVPi10'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selKPiPiPiMassMeasDown : 'P2CVK11',
-                                                "Phys/StdNoPIDsDownPions"   : ['P2CVPion11_1','P2CVPion11_2','P2CVPion11_3'] 
+                                                'Location' : 'P2CVK11',
+                                                'DaughterLocations' : {
+                                                            "[K+ -> ^pi+ pi+ pi-]CC" : 'P2CVPi11_1', 
+                                                            "[K+ -> pi+ ^pi+ pi-]CC" : 'P2CVPi11_2',
+                                                            "[K+ -> pi+ pi+ ^pi-]CC" : 'P2CVPi11'
                                                 }
                                               }
                                             ]
@@ -822,29 +819,29 @@ class RareStrangeLinesConf(LineBuilder) :
                                             RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selKPiMuMuLFVDown : 'P2CVK09', 
-                                                "Phys/StdLooseDownMuons"   : ['P2CVMu09_1','P2CVMu09_2'], 
-                                                "Phys/StdNoPIDsDownPions"   : 'P2CVPion09'
+                                                'Location' : 'P2CVK09',
+                                                'DaughterLocations' : {
+                                                            "[K+ -> pi- ^mu+ mu+]CC" : 'P2CVMu09_1', 
+                                                            "[K+ -> pi- mu+ ^mu+]CC" : 'P2CVMu09_2',
+                                                            "[K+ -> ^pi- mu+ mu+]CC" : 'P2CVPi09'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selKPiMuMuLFVDown : 'P2CVK10', 
-                                                "Phys/StdLooseDownMuons"   : ['P2CVMu10_1','P2CVMu10_2'], 
-                                                "Phys/StdNoPIDsDownPions"   : 'P2CVPion10' 
+                                                'Location' : 'P2CVK10',
+                                                'DaughterLocations' : {
+                                                            "[K+ -> pi- ^mu+ mu+]CC" : 'P2CVMu10_1', 
+                                                            "[K+ -> pi- mu+ ^mu+]CC" : 'P2CVMu10_2',
+                                                            "[K+ -> ^pi- mu+ mu+]CC" : 'P2CVPi10'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-                                                'RecursionLevel' : 1, 
-                                                'Locations' : {
-                                                self.selKPiMuMuLFVDown : 'P2CVK11', 
-                                                "Phys/StdLooseDownMuons"   : ['P2CVMu11_1','P2CVMu11_2'], 
-                                                "Phys/StdNoPIDsDownPions"   : 'P2CVPion11', 
+                                                'Location' : 'P2CVK11',
+                                                'DaughterLocations' : {
+                                                            "[K+ -> pi- ^mu+ mu+]CC" : 'P2CVMu11_1', 
+                                                            "[K+ -> pi- mu+ ^mu+]CC" : 'P2CVMu11_2',
+                                                            "[K+ -> ^pi- mu+ mu+]CC" : 'P2CVPi11'
                                                 }
                                               }
                                             ]
@@ -882,24 +879,17 @@ def makeSigmaPMuMu(name, config):
     config      : dictionary of tunable cuts 
     """
     
-    from Configurables import OfflineVertexFitter
-    SigmaPMuMu = CombineParticles("Combine"+name)
-    SigmaPMuMu.DecayDescriptor = "[Sigma+ -> p+ mu+ mu-]cc"
-    #SigmaPMuMu.addTool( OfflineVertexFitter )
-    #SigmaPMuMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    #SigmaPMuMu.OfflineVertexFitter.useResonanceVertex = False
-    SigmaPMuMu.DaughtersCuts = { "mu+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(muonMinIpChi2)s)"%config,
-                                 "p+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PIDp > %(protonPIDp)s)"%config
-                                 }
-
-    SigmaPMuMu.CombinationCut = "(ADAMASS('Sigma+')<%(SigmaMassWin)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCA)s *mm)"%config
-
-    SigmaPMuMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2)s)  & (PT> %(SigmaMinPt)s *MeV)"\
+    #from Configurables import OfflineVertexFitter
+    SigmaPMuMu = CombineParticles(  DecayDescriptor = "[Sigma+ -> p+ mu+ mu-]cc",
+                                    DaughtersCuts = { "mu+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(muonMinIpChi2)s)"%config, 
+                                                     "p+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PIDp > %(protonPIDp)s)"%config},
+                                    CombinationCut = "(ADAMASS('Sigma+')<%(SigmaMassWin)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCA)s *mm)"%config,
+                                    MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2)s)  & (PT> %(SigmaMinPt)s *MeV)"\
                               "& (ADMASS('Sigma+') < %(SigmaMassWin)s *MeV )"\
                               "& (BPVDIRA > %(SigmaMinDIRA)s) "\
                               "& (BPVIPCHI2()< %(SigmaMaxIpChi2)s)"\
                               "& (BPVLTIME()> %(SigmaMinTauPs)s * ps)" %config  
-
+                                )
     # AllLooseMuons are needed in order to avoid the pt and ip cuts used in StdLooseMuons: do not change this!
     _stdAllLooseMuons   = DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")
     _stdLooseProtons = DataOnDemand(Location = "Phys/StdLooseProtons/Particles")
@@ -920,25 +910,17 @@ def makeSigmaPMuMuLFV(name, config):
     name        : name of the Selection.
     config      : dictionary of tunable cuts 
     """
-    
-    from Configurables import OfflineVertexFitter
-    SigmaPMuMu = CombineParticles("Combine"+name)
-    SigmaPMuMu.DecayDescriptor = "[Sigma+ -> p~- mu+ mu+]cc"
-    #SigmaPMuMu.addTool( OfflineVertexFitter )
-    #SigmaPMuMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    #SigmaPMuMu.OfflineVertexFitter.useResonanceVertex = False
-    SigmaPMuMu.DaughtersCuts = { "mu+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(muonMinIpChi2)s)"%config,
-                                 "p+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PIDp > %(protonPIDp)s)"%config
-                                 }
-    SigmaPMuMu.CombinationCut = "(ADAMASS('Sigma+')<%(SigmaMassWin)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCA)s *mm)"%config
+    SigmaPMuMu = CombineParticles(  DecayDescriptor = "[Sigma+ -> p~- mu+ mu+]cc",
+                                    DaughtersCuts = { "mu+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(muonMinIpChi2)s)"%config,
+                                                        "p+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PIDp > %(protonPIDp)s)"%config},
+                                    CombinationCut = "(ADAMASS('Sigma+')<%(SigmaMassWin)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCA)s *mm)"%config,
+                                    MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2)s)  & (PT> %(SigmaMinPt)s *MeV)"\
+                                                "& (ADMASS('Sigma+') < %(SigmaMassWin)s *MeV )"\
+                                                "& (BPVDIRA > %(SigmaMinDIRA)s) "\
+                                                "& (BPVIPCHI2()< %(SigmaMaxIpChi2)s)"\
+                                                "& (BPVLTIME()> %(SigmaMinTauPs)s * ps)" %config  
 
-    SigmaPMuMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2)s)  & (PT> %(SigmaMinPt)s *MeV)"\
-                              "& (ADMASS('Sigma+') < %(SigmaMassWin)s *MeV )"\
-                              "& (BPVDIRA > %(SigmaMinDIRA)s) "\
-                              "& (BPVIPCHI2()< %(SigmaMaxIpChi2)s)"\
-                              "& (BPVLTIME()> %(SigmaMinTauPs)s * ps)" %config  
-
-
+                                )
     # AllLooseMuons are needed in order to avoid the pt and ip cuts used in StdLooseMuons: do not change this!
     _stdAllLooseMuons   = DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")
     
@@ -962,26 +944,16 @@ def makeSigmaPEE(name, config):
     config      : dictionary of tunable cuts 
     """
     
-    from Configurables import OfflineVertexFitter
-    SigmaPEE = CombineParticles("Combine"+name)
-    SigmaPEE.DecayDescriptor = "[Sigma+ -> p+ e+ e-]cc"
-    #SigmaPEE.addTool( OfflineVertexFitter )
-    #SigmaPEE.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    #SigmaPEE.OfflineVertexFitter.useResonanceVertex = False
-
-    
-    SigmaPEE.DaughtersCuts = { "e+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PIDe > %(electronPIDe)s ) &  (MIPCHI2DV(PRIMARY)>%(electronMinIpChi2)s)"%config,
-                               "p+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PIDp > %(protonPIDp)s)"%config
-                               }
-    
-    SigmaPEE.CombinationCut = "(ADAMASS('Sigma+')<%(SigmaMassWin)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCA)s *mm)"%config
-
-    SigmaPEE.MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2)s)  & (PT> %(SigmaMinPt)s *MeV)"\
-                              "& (ADMASS('Sigma+') < %(SigmaMassWin)s *MeV )"\
-                              "& (BPVDIRA > %(SigmaMinDIRA)s) "\
-                              "& (BPVIPCHI2()< %(SigmaMaxIpChi2)s)"\
-                              "& (BPVLTIME()> %(SigmaMinTauPs)s * ps)" %config  
-    
+    SigmaPEE = CombineParticles(    DecayDescriptor = "[Sigma+ -> p+ e+ e-]cc",
+                                    DaughtersCuts = { "e+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PIDe > %(electronPIDe)s ) &  (MIPCHI2DV(PRIMARY)>%(electronMinIpChi2)s)"%config,
+                                                    "p+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PIDp > %(protonPIDp)s)"%config},
+                                    CombinationCut = "(ADAMASS('Sigma+')<%(SigmaMassWin)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCA)s *mm)"%config,
+                                    MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2)s)  & (PT> %(SigmaMinPt)s *MeV)"\
+                                                "& (ADMASS('Sigma+') < %(SigmaMassWin)s *MeV )"\
+                                                "& (BPVDIRA > %(SigmaMinDIRA)s) "\
+                                                "& (BPVIPCHI2()< %(SigmaMaxIpChi2)s)"\
+                                                "& (BPVLTIME()> %(SigmaMinTauPs)s * ps)" %config  
+                                )
     # AllLooseElectrons are needed in order to avoid the pt and ip cuts used in StdLooseMuons: do not change this!
     _stdAllLooseElectrons   = DataOnDemand(Location = "Phys/StdAllLooseElectrons/Particles")
     
@@ -1010,26 +982,16 @@ def makeSigmaPPi0(name, config):
                                                                       ] ) 
 
     
-    from Configurables import OfflineVertexFitter
-    SigmaPPi0 = CombineParticles("Combine"+name)
-    SigmaPPi0.DecayDescriptor = "[Sigma+ -> p+ pi0]cc"
-    #SigmaPPi0.addTool( OfflineVertexFitter )
-    #SigmaPPi0.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    #SigmaPPi0.OfflineVertexFitter.useResonanceVertex = False
-
-    
-    SigmaPPi0.DaughtersCuts = { "pi0" : "(PT > %(pi0MinPt)s)"%config,
-                                "p+" : "(PT > %(pMinPt)s) & (TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PIDp > %(protonPIDpTight)s )"%config
-                               }
-    
-    SigmaPPi0.CombinationCut = "(ADAMASS('Sigma+')<%(SigmaPPi0MassWin)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCA)s *mm)"%config
-
-    SigmaPPi0.MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2)s)  & (PT> %(SigmaMinPt)s *MeV)"\
-                              "& (ADMASS('Sigma+') < %(SigmaPPi0MassWin)s *MeV )"\
-                              "& (BPVDIRA > %(SigmaMinDIRA)s) "\
-                              "& (BPVIPCHI2()< %(SigmaMaxIpChi2)s)"\
-                              "& (BPVLTIME()> %(SigmaMinTauPs)s * ps)" %config  
-    
+    SigmaPPi0 = CombineParticles(   DecayDescriptor = "[Sigma+ -> p+ pi0]cc",
+                                    DaughtersCuts = { "pi0" : "(PT > %(pi0MinPt)s)"%config,
+                                    "p+" : "(PT > %(pMinPt)s) & (TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PIDp > %(protonPIDpTight)s )"%config},
+                                    CombinationCut = "(ADAMASS('Sigma+')<%(SigmaPPi0MassWin)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCA)s *mm)"%config,
+                                    MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2)s)  & (PT> %(SigmaMinPt)s *MeV)"\
+                                                "& (ADMASS('Sigma+') < %(SigmaPPi0MassWin)s *MeV )"\
+                                                "& (BPVDIRA > %(SigmaMinDIRA)s) "\
+                                                "& (BPVIPCHI2()< %(SigmaMaxIpChi2)s)"\
+                                                "& (BPVLTIME()> %(SigmaMinTauPs)s * ps)" %config  
+                                )
 
 #    _stdPizeros   =  DataOnDemand(Location = "Phys/StdLooseMergedPi0/Particles")
     _stdLooseProtons = DataOnDemand(Location = "Phys/StdLooseProtons/Particles")
@@ -1052,22 +1014,16 @@ def makeSigmaPPi0Cal(name, config):
     pi0sel = MergedSelection("Pi0For" + name, RequiredSelections = [ StdLooseMergedPi0, StdLooseResolvedPi0 ] ) 
 
     
-    from Configurables import OfflineVertexFitter
-    SigmaPPi0 = CombineParticles("Combine"+name)
-    SigmaPPi0.DecayDescriptor = "[Sigma+ -> p+ pi0]cc"
-    
-    SigmaPPi0.DaughtersCuts = { "pi0" : "(PT > %(pi0MinPt)s)"%config,
-                               "p+" : "(PT > %(pMinPt)s) & (TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PIDp > %(protonPIDpTight)s )"%config
-                               }
-    
-    SigmaPPi0.CombinationCut = "(ADAMASS('Sigma+')<%(SigmaPPi0MassWin)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCA)s *mm)"%config
-
-    SigmaPPi0.MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2)s)  & (PT> %(SigmaMinPt)s *MeV)"\
-                              "& (ADMASS('Sigma+') < %(SigmaPPi0MassWin)s *MeV )"\
-                              "& (BPVDIRA > %(SigmaMinDIRA)s) "\
-                              "& (BPVIPCHI2()< %(SigmaMaxIpChi2)s)"\
-                              "& (BPVLTIME()> %(SigmaMinTauPs)s * ps)" %config  
-    
+    SigmaPPi0 = CombineParticles(   DecayDescriptor = "[Sigma+ -> p+ pi0]cc",
+                                    DaughtersCuts = { "pi0" : "(PT > %(pi0MinPt)s)"%config,
+                                    "p+" : "(PT > %(pMinPt)s) & (TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PIDp > %(protonPIDpTight)s )"%config},
+                                    CombinationCut = "(ADAMASS('Sigma+')<%(SigmaPPi0MassWin)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCA)s *mm)"%config,
+                                    MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2)s)  & (PT> %(SigmaMinPt)s *MeV)"\
+                                    "& (ADMASS('Sigma+') < %(SigmaPPi0MassWin)s *MeV )"\
+                                    "& (BPVDIRA > %(SigmaMinDIRA)s) "\
+                                    "& (BPVIPCHI2()< %(SigmaMaxIpChi2)s)"\
+                                    "& (BPVLTIME()> %(SigmaMinTauPs)s * ps)" %config  
+                                )
 
 #    _stdPizeros   =  DataOnDemand(Location = "Phys/StdLooseMergedPi0/Particles")
     _stdLooseProtons = DataOnDemand(Location = "Phys/StdLooseProtons/Particles")
@@ -1090,22 +1046,13 @@ def makeKPiMuMu(name, config):
     config      : dictionary of tunable cuts 
     """
     
-    from Configurables import OfflineVertexFitter
-    KPiMuMu = CombineParticles("Combine"+name)
-    KPiMuMu.DecayDescriptor = "[K+ -> pi+ mu+ mu-]cc"
-    #KPiMuMu.addTool( OfflineVertexFitter )
-
-    #KPiMuMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    #KPiMuMu.OfflineVertexFitter.useResonanceVertex = False
-    KPiMuMu.DaughtersCuts = { "mu+" : "(P>3000) & (TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2)s)"%config,
-                              "pi+":"(P>1000) & (TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB < 0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2)s)"%config,
-                              }
-
-    KPiMuMu.CombinationCut = "(ADAMASS('K+') < %(KMassWin)s *MeV) & (AMAXDOCA('')< %(KMaxDOCA)s *mm)"%config
-    
-    KPiMuMu.MotherCut ="(PT> %(KMinPT)s) & (ADMASS('K+') < %(KMassWin)s *MeV) & (BPVDIRA > %(KMinDIRA)s)"\
-                        "& (VFASPF(VCHI2) < %(KVtxChi2)s) & (BPVVDCHI2 > %(KMinVDChi2)s) & (BPVIPCHI2()< %(KMaxIpChi2)s )"%config
-
+    KPiMuMu = CombineParticles( DecayDescriptor = "[K+ -> pi+ mu+ mu-]cc",
+                                DaughtersCuts = { "mu+" : "(P>3000) & (TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2)s)"%config,
+                                                    "pi+":"(P>1000) & (TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB < 0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2)s)"%config},
+                                CombinationCut = "(ADAMASS('K+') < %(KMassWin)s *MeV) & (AMAXDOCA('')< %(KMaxDOCA)s *mm)"%config,
+                                MotherCut ="(PT> %(KMinPT)s) & (ADMASS('K+') < %(KMassWin)s *MeV) & (BPVDIRA > %(KMinDIRA)s)"\
+                                    "& (VFASPF(VCHI2) < %(KVtxChi2)s) & (BPVVDCHI2 > %(KMinVDChi2)s) & (BPVIPCHI2()< %(KMaxIpChi2)s )"%config
+                                )
     _stdAllLoosePions = DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")
     _stdAllLooseMuons   = DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")    
     return Selection (name,
@@ -1123,22 +1070,13 @@ def makeKPiMuMuLFV(name, config):
     config      : dictionary of tunable cuts 
     """
     
-    from Configurables import OfflineVertexFitter
-    KPiMuMuLFV = CombineParticles("Combine"+name)
-    KPiMuMuLFV.DecayDescriptor = "[K+ -> pi- mu+ mu+]cc"
-    #KPiMuMuLFV.addTool( OfflineVertexFitter )
-
-    #KPiMuMuLFV.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    #KPiMuMuLFV.OfflineVertexFitter.useResonanceVertex = False
-    KPiMuMuLFV.DaughtersCuts = { "mu+" : "(P>3000) & (TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2)s)"%config,
-                              "pi+":"(P>1000) & (TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB < 0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2)s)"%config,
-                              }
-
-    KPiMuMuLFV.CombinationCut = "(ADAMASS('K+') < %(KMassWin)s *MeV) & (AMAXDOCA('')< %(KMaxDOCA)s *mm)"%config
-    
-    KPiMuMuLFV.MotherCut ="(PT> %(KMinPT)s) & (ADMASS('K+') < %(KMassWin)s *MeV) & ((BPVDIRA > %(KMinDIRA)s))"\
-                        "& (VFASPF(VCHI2) < %(KVtxChi2)s) & (BPVVDCHI2 > %(KMinVDChi2)s) & (BPVIPCHI2()< %(KMaxIpChi2)s )"%config
-
+    KPiMuMuLFV = CombineParticles(  DecayDescriptor = "[K+ -> pi- mu+ mu+]cc",
+                                    DaughtersCuts = { "mu+" : "(P>3000) & (TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2)s)"%config,
+                                        "pi+":"(P>1000) & (TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB < 0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2)s)"%config},
+                                    CombinationCut = "(ADAMASS('K+') < %(KMassWin)s *MeV) & (AMAXDOCA('')< %(KMaxDOCA)s *mm)"%config,
+                                    MotherCut ="(PT> %(KMinPT)s) & (ADMASS('K+') < %(KMassWin)s *MeV) & ((BPVDIRA > %(KMinDIRA)s))"\
+                                        "& (VFASPF(VCHI2) < %(KVtxChi2)s) & (BPVVDCHI2 > %(KMinVDChi2)s) & (BPVIPCHI2()< %(KMaxIpChi2)s )"%config
+                                )
     _stdAllLoosePions = DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")
     _stdAllLooseMuons   = DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")    
     return Selection (name,
@@ -1159,18 +1097,12 @@ def makeKPiPiPi(name, config):
     config      : dictionary of tunable cuts 
     """
     
-    from Configurables import OfflineVertexFitter
-    KPiPiPi = CombineParticles("Combine"+name)
-    KPiPiPi.DecayDescriptor = "[K+ -> pi+ pi+ pi-]cc"
-    #KPiPiPi.addTool( OfflineVertexFitter )
-    #KPiPiPi.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    #KPiPiPi.OfflineVertexFitter.useResonanceVertex = False
-    KPiPiPi.DaughtersCuts = { "pi+":"(P>1000) & (TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB < 0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2)s)"%config
-                                 }
-    KPiPiPi.CombinationCut = "(ADAMASS('K+') < %(KMassWin)s *MeV) & (AMAXDOCA('')< %(KMaxDOCA)s *mm)"%config
-    KPiPiPi.MotherCut ="(PT> %(KMinPT)s) & (ADMASS('K+') < %(KMassWin)s *MeV) & (BPVDIRA > %(KMinDIRA)s)"\
-                        "& (VFASPF(VCHI2) < %(KVtxChi2)s) & (BPVVDCHI2 > %(KMinVDChi2)s) & (BPVIPCHI2()< %(KMaxIpChi2)s )"%config
-
+    KPiPiPi = CombineParticles( DecayDescriptor = "[K+ -> pi+ pi+ pi-]cc",
+                                DaughtersCuts = { "pi+":"(P>1000) & (TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB < 0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2)s)"%config},
+                                CombinationCut = "(ADAMASS('K+') < %(KMassWin)s *MeV) & (AMAXDOCA('')< %(KMaxDOCA)s *mm)"%config,
+                                MotherCut ="(PT> %(KMinPT)s) & (ADMASS('K+') < %(KMassWin)s *MeV) & (BPVDIRA > %(KMinDIRA)s)"\
+                                "& (VFASPF(VCHI2) < %(KVtxChi2)s) & (BPVVDCHI2 > %(KMinVDChi2)s) & (BPVIPCHI2()< %(KMaxIpChi2)s )"%config
+                            )
 
     _stdAllLoosePions = DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")
 
@@ -1188,20 +1120,12 @@ def makeKPiPiPiMassMeas(name, config):
     config      : dictionary of tunable cuts 
     """
     
-    from Configurables import OfflineVertexFitter
-    KPiPiPi = CombineParticles("Combine"+name)
-    KPiPiPi.DecayDescriptor = "[K+ -> pi+ pi+ pi-]cc"
-    #KPiPiPi.addTool( OfflineVertexFitter )
-
-    #KPiPiPi.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    #KPiPiPi.OfflineVertexFitter.useResonanceVertex = False
-    KPiPiPi.DaughtersCuts = {   "pi+":"(P>1000) & (MIPCHI2DV(PRIMARY) > 25.0) & (TRCHI2DOF<5) & (TRGHOSTPROB < 0.4)"
-                                 }
-    KPiPiPi.CombinationCut = "(ADAMASS('K+') < %(KMassWinMassMeas)s *MeV) & (AMAXDOCA('')< %(KMaxDOCAMassMeas)s *mm)"%config
-    
-    KPiPiPi.MotherCut ="(PT> %(KMinPTMassMeas)s) & (ADMASS('K+') < %(KMassWinMassMeas)s *MeV) & (BPVDIRA > %(KMinDIRAMassMeas)s)"\
-                        "& (VFASPF(VCHI2) < %(KVtxChi2MassMeas)s) & (BPVVDCHI2 > %(KMinVDChi2MassMeas)s) & (BPVIPCHI2()< %(KMaxIpChi2MassMeas)s )"%config
-
+    KPiPiPi = CombineParticles( DecayDescriptor = "[K+ -> pi+ pi+ pi-]cc",
+                                DaughtersCuts = {   "pi+":"(P>1000) & (MIPCHI2DV(PRIMARY) > 25.0) & (TRCHI2DOF<5) & (TRGHOSTPROB < 0.4)"},
+                                CombinationCut = "(ADAMASS('K+') < %(KMassWinMassMeas)s *MeV) & (AMAXDOCA('')< %(KMaxDOCAMassMeas)s *mm)"%config,
+                                MotherCut ="(PT> %(KMinPTMassMeas)s) & (ADMASS('K+') < %(KMassWinMassMeas)s *MeV) & (BPVDIRA > %(KMinDIRAMassMeas)s)"\
+                                "& (VFASPF(VCHI2) < %(KVtxChi2MassMeas)s) & (BPVVDCHI2 > %(KMinVDChi2MassMeas)s) & (BPVIPCHI2()< %(KMaxIpChi2MassMeas)s )"%config
+                                )
 
     _stdAllLoosePions = DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")
 
@@ -1225,25 +1149,16 @@ def makeSigmaPMuMuDown(name, config):
     config      : dictionary of tunable cuts 
     """
     
-    from Configurables import OfflineVertexFitter
-    SigmaPMuMu = CombineParticles("Combine"+name)
-    SigmaPMuMu.DecayDescriptor = "[Sigma+ -> p+ mu+ mu-]cc"
-    #SigmaPMuMu.addTool( OfflineVertexFitter )
-    #SigmaPMuMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    #SigmaPMuMu.OfflineVertexFitter.useResonanceVertex = False
-    SigmaPMuMu.DaughtersCuts = { "mu+" : "(TRCHI2DOF< %(SigmaDauTrChi2Down)s) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(muonMinIpChi2Down)s)"%config,
-                                 "p+" : "(TRCHI2DOF<%(SigmaDauTrChi2Down)s) & (TRGHOSTPROB<0.3)"%config
-                                 }
-
-    SigmaPMuMu.CombinationCut = "(ADAMASS('Sigma+')<%(SigmaMassWinDown)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCADown)s *mm)"%config
-
-    SigmaPMuMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2Down)s)  & (PT> %(SigmaMinPtDown)s *MeV)"\
-                              "& (ADMASS('Sigma+') < %(SigmaMassWinDown)s *MeV )"\
-                              "& (BPVDIRA > %(SigmaMinDIRADown)s) "\
-                              "& (BPVIPCHI2()< %(SigmaMaxIpChi2Down)s)"\
-                              "& (BPVLTIME()> %(SigmaMinTauPsDown)s * ps)" %config  
-
-
+    SigmaPMuMu = CombineParticles(  DecayDescriptor = "[Sigma+ -> p+ mu+ mu-]cc",
+                                    DaughtersCuts = { "mu+" : "(TRCHI2DOF< %(SigmaDauTrChi2Down)s) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(muonMinIpChi2Down)s)"%config,
+                                                "p+" : "(TRCHI2DOF<%(SigmaDauTrChi2Down)s) & (TRGHOSTPROB<0.3)"%config},
+                                    CombinationCut = "(ADAMASS('Sigma+')<%(SigmaMassWinDown)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCADown)s *mm)"%config,
+                                    MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2Down)s)  & (PT> %(SigmaMinPtDown)s *MeV)"\
+                                        "& (ADMASS('Sigma+') < %(SigmaMassWinDown)s *MeV )"\
+                                        "& (BPVDIRA > %(SigmaMinDIRADown)s) "\
+                                        "& (BPVIPCHI2()< %(SigmaMaxIpChi2Down)s)"\
+                                        "& (BPVLTIME()> %(SigmaMinTauPsDown)s * ps)" %config  
+                                    )
     # AllLooseMuons are needed in order to avoid the pt and ip cuts used in StdLooseMuons: do not change this!
     _Muons   = DataOnDemand(Location = "Phys/StdLooseDownMuons/Particles")
     _Protons = DataOnDemand(Location = "Phys/StdNoPIDsDownProtons/Particles")
@@ -1263,24 +1178,16 @@ def makeSigmaPMuMuLFVDown(name, config):
     config      : dictionary of tunable cuts 
     """
     
-    from Configurables import OfflineVertexFitter
-    SigmaPMuMu = CombineParticles("Combine"+name)
-    SigmaPMuMu.DecayDescriptor = "[Sigma+ -> p~- mu+ mu+]cc"
-    #SigmaPMuMu.addTool( OfflineVertexFitter )
-    #SigmaPMuMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    #SigmaPMuMu.OfflineVertexFitter.useResonanceVertex = False
-    SigmaPMuMu.DaughtersCuts = { "mu+" : "(TRCHI2DOF<%(SigmaDauTrChi2Down)s) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(muonMinIpChi2)s)"%config,
-                                 "p~-" : "(TRCHI2DOF<%(SigmaDauTrChi2Down)s) & (TRGHOSTPROB<0.3)"%config
-                                 }
-
-    SigmaPMuMu.CombinationCut = "(ADAMASS('Sigma+')<%(SigmaMassWinDown)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCADown)s *mm)"%config
-
-    SigmaPMuMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2Down)s)  & (PT> %(SigmaMinPtDown)s *MeV)"\
-                              "& (ADMASS('Sigma+') < %(SigmaMassWinDown)s *MeV )"\
-                              "& (BPVDIRA > %(SigmaMinDIRADown)s) "\
-                              "& (BPVIPCHI2()< %(SigmaMaxIpChi2Down)s)"\
-                              "& (BPVLTIME()> %(SigmaMinTauPsDown)s * ps)" %config  
-
+    SigmaPMuMu = CombineParticles(  DecayDescriptor = "[Sigma+ -> p~- mu+ mu+]cc",
+                                    DaughtersCuts = { "mu+" : "(TRCHI2DOF<%(SigmaDauTrChi2Down)s) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(muonMinIpChi2)s)"%config,
+                                    "p~-" : "(TRCHI2DOF<%(SigmaDauTrChi2Down)s) & (TRGHOSTPROB<0.3)"%config},
+                                    CombinationCut = "(ADAMASS('Sigma+')<%(SigmaMassWinDown)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCADown)s *mm)"%config,
+                                    MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2Down)s)  & (PT> %(SigmaMinPtDown)s *MeV)"\
+                                        "& (ADMASS('Sigma+') < %(SigmaMassWinDown)s *MeV )"\
+                                        "& (BPVDIRA > %(SigmaMinDIRADown)s) "\
+                                        "& (BPVIPCHI2()< %(SigmaMaxIpChi2Down)s)"\
+                                        "& (BPVLTIME()> %(SigmaMinTauPsDown)s * ps)" %config  
+                                    )
 
     # AllLooseMuons are needed in order to avoid the pt and ip cuts used in StdLooseMuons: do not change this!
     _Muons   = DataOnDemand(Location = "Phys/StdLooseDownMuons/Particles")
@@ -1303,26 +1210,16 @@ def makeSigmaPEEDown(name, config):
     config      : dictionary of tunable cuts 
     """
     
-    from Configurables import OfflineVertexFitter
-    SigmaPEE = CombineParticles("Combine"+name)
-    SigmaPEE.DecayDescriptor = "[Sigma+ -> p+ e+ e-]cc"
-    #SigmaPEE.addTool( OfflineVertexFitter )
-    #SigmaPEE.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    #SigmaPEE.OfflineVertexFitter.useResonanceVertex = False
-
-    
-    SigmaPEE.DaughtersCuts = { "e+" : "(TRCHI2DOF<%(SigmaDauTrChi2Down)s) & (TRGHOSTPROB<0.3)  &  (MIPCHI2DV(PRIMARY)>%(electronMinIpChi2Down)s)"%config,
-                               "p+" : "(TRCHI2DOF<%(SigmaDauTrChi2Down)s) & (TRGHOSTPROB<0.3) "%config
-                               }
-    
-    SigmaPEE.CombinationCut = "(ADAMASS('Sigma+')<%(SigmaPEEMassWinDown)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCADown)s *mm)"%config
-
-    SigmaPEE.MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2Down)s)  & (PT> %(SigmaMinPtDown)s *MeV)"\
-                              "& (ADMASS('Sigma+') < %(SigmaPEEMassWinDown)s *MeV )"\
-                              "& (BPVDIRA > %(SigmaMinDIRADown)s) "\
-                              "& (BPVIPCHI2()< %(SigmaMaxIpChi2Down)s)"\
-                              "& (BPVLTIME()> %(SigmaMinTauPsDown)s * ps)" %config
-    
+    SigmaPEE = CombineParticles(    DecayDescriptor = "[Sigma+ -> p+ e+ e-]cc",
+                                    DaughtersCuts = { "e+" : "(TRCHI2DOF<%(SigmaDauTrChi2Down)s) & (TRGHOSTPROB<0.3)  &  (MIPCHI2DV(PRIMARY)>%(electronMinIpChi2Down)s)"%config,
+                                    "p+" : "(TRCHI2DOF<%(SigmaDauTrChi2Down)s) & (TRGHOSTPROB<0.3) "%config},
+                                    CombinationCut = "(ADAMASS('Sigma+')<%(SigmaPEEMassWinDown)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCADown)s *mm)"%config,
+                                    MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2Down)s)  & (PT> %(SigmaMinPtDown)s *MeV)"\
+                                    "& (ADMASS('Sigma+') < %(SigmaPEEMassWinDown)s *MeV )"\
+                                    "& (BPVDIRA > %(SigmaMinDIRADown)s) "\
+                                    "& (BPVIPCHI2()< %(SigmaMaxIpChi2Down)s)"\
+                                    "& (BPVLTIME()> %(SigmaMinTauPsDown)s * ps)" %config
+                                )
     _stdAllLooseElectrons   = DataOnDemand(Location = "Phys/StdNoPIDsDownElectrons/Particles")
     
     _stdLooseProtons = DataOnDemand(Location = "Phys/StdNoPIDsDownProtons/Particles")
@@ -1346,22 +1243,13 @@ def makeKPiMuMuDown(name, config):
     config      : dictionary of tunable cuts 
     """
     
-    from Configurables import OfflineVertexFitter
-    KPiMuMu = CombineParticles("Combine"+name)
-    KPiMuMu.DecayDescriptor = "[K+ -> pi+ mu+ mu-]cc"
-    #KPiMuMu.addTool( OfflineVertexFitter )
-
-    #KPiMuMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    #KPiMuMu.OfflineVertexFitter.useResonanceVertex = False
-    KPiMuMu.DaughtersCuts = {  "mu+" : "(TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2Down)s)"%config,
-                              "pi+":"(TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB < 0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2Down)s)"%config,
-                              }
-
-    KPiMuMu.CombinationCut = "(ADAMASS('K+') < %(KMassWinDown)s *MeV) & (AMAXDOCA('')< %(KMaxDOCADown)s *mm)"%config
-    
-    KPiMuMu.MotherCut ="(PT> %(KMinPTDown)s) & (ADMASS('K+') < %(KMassWinDown)s *MeV) & (BPVDIRA > %(KMinDIRADown)s)"\
-                        "& (VFASPF(VCHI2) < %(KVtxChi2Down)s) & (BPVVDCHI2 > %(KMinVDChi2Down)s) & (BPVVDZ > %(KVDPVMinDown)s*mm) & (BPVVDZ < %(KVDPVMaxDown)s*mm)"%config
-
+    KPiMuMu = CombineParticles( DecayDescriptor = "[K+ -> pi+ mu+ mu-]cc",
+                                DaughtersCuts = {  "mu+" : "(TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2Down)s)"%config,
+                                                    "pi+":"(TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB < 0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2Down)s)"%config},
+                                CombinationCut = "(ADAMASS('K+') < %(KMassWinDown)s *MeV) & (AMAXDOCA('')< %(KMaxDOCADown)s *mm)"%config,
+                                MotherCut ="(PT> %(KMinPTDown)s) & (ADMASS('K+') < %(KMassWinDown)s *MeV) & (BPVDIRA > %(KMinDIRADown)s)"\
+                                "& (VFASPF(VCHI2) < %(KVtxChi2Down)s) & (BPVVDCHI2 > %(KMinVDChi2Down)s) & (BPVVDZ > %(KVDPVMinDown)s*mm) & (BPVVDZ < %(KVDPVMaxDown)s*mm)"%config
+                                )
     
     _Muons   = DataOnDemand(Location = "Phys/StdLooseDownMuons/Particles")
     _Pions = DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")
@@ -1382,22 +1270,13 @@ def makeKPiMuMuLFVDown(name, config):
     config      : dictionary of tunable cuts 
     """
     
-    from Configurables import OfflineVertexFitter
-    KPiMuMu = CombineParticles("Combine"+name)
-    KPiMuMu.DecayDescriptor = "[K+ -> pi- mu+ mu+]cc"
-    #KPiMuMu.addTool( OfflineVertexFitter )
-
-    #KPiMuMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    #KPiMuMu.OfflineVertexFitter.useResonanceVertex = False
-    KPiMuMu.DaughtersCuts = { "mu+" : "(TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2Down)s)"%config,
-                              "pi-":"(TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB < 0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2Down)s)"%config,
-                              }
-
-    KPiMuMu.CombinationCut = "(ADAMASS('K+') < %(KMassWin)s *MeV) & (AMAXDOCA('')< %(KMaxDOCA)s *mm)"%config
-    
-    KPiMuMu.MotherCut ="(PT> %(KMinPTDown)s) & (ADMASS('K+') < %(KMassWinDown)s *MeV) & (BPVDIRA > %(KMinDIRADown)s)"\
-                        "& (VFASPF(VCHI2) < %(KVtxChi2Down)s) & (BPVVDCHI2 > %(KMinVDChi2Down)s) & (BPVVDZ > %(KVDPVMinDown)s*mm) & (BPVVDZ < %(KVDPVMaxDown)s*mm)"%config
-
+    KPiMuMu = CombineParticles( DecayDescriptor = "[K+ -> pi- mu+ mu+]cc",
+                                DaughtersCuts = { "mu+" : "(TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2Down)s)"%config,
+                                "pi-":"(TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB < 0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2Down)s)"%config},
+                                CombinationCut = "(ADAMASS('K+') < %(KMassWin)s *MeV) & (AMAXDOCA('')< %(KMaxDOCA)s *mm)"%config,
+                                MotherCut ="(PT> %(KMinPTDown)s) & (ADMASS('K+') < %(KMassWinDown)s *MeV) & (BPVDIRA > %(KMinDIRADown)s)"\
+                                "& (VFASPF(VCHI2) < %(KVtxChi2Down)s) & (BPVVDCHI2 > %(KMinVDChi2Down)s) & (BPVVDZ > %(KVDPVMinDown)s*mm) & (BPVVDZ < %(KVDPVMaxDown)s*mm)"%config
+                                )
     
     _Muons   = DataOnDemand(Location = "Phys/StdLooseDownMuons/Particles")
     _Pions = DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")
@@ -1417,20 +1296,12 @@ def makeKPiPiPiDown(name, config):
     config      : dictionary of tunable cuts 
     """
     
-    from Configurables import OfflineVertexFitter
-    KPiPiPi = CombineParticles("Combine"+name)
-    KPiPiPi.DecayDescriptor = "[K+ -> pi+ pi+ pi-]cc"
-    #KPiPiPi.addTool( OfflineVertexFitter )
-    #KPiPiPi.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    #KPiPiPi.OfflineVertexFitter.useResonanceVertex = False
-
-    KPiPiPi.DaughtersCuts = {  "pi+":"(TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB < 0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2Down)s)"%config
-                               }
-    KPiPiPi.CombinationCut = "(ADAMASS('K+') < %(KMassWinDown)s *MeV) & (AMAXDOCA('')< %(KMaxDOCADown)s *mm)"%config
-    
-    KPiPiPi.MotherCut ="(PT> %(KMinPTDown)s) & (ADMASS('K+') < %(KMassWinDown)s *MeV) & (BPVDIRA > %(KMinDIRADown)s)"\
-                        "& (VFASPF(VCHI2) < %(KVtxChi2Down)s) & (BPVVDCHI2 > %(KMinVDChi2Down)s) & (BPVVDZ > %(KVDPVMinDown)s*mm) & (BPVVDZ < %(KVDPVMaxDown)s*mm)"%config
-
+    KPiPiPi = CombineParticles( DecayDescriptor = "[K+ -> pi+ pi+ pi-]cc",
+                                DaughtersCuts = {  "pi+":"(TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB < 0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2Down)s)"%config},
+                                CombinationCut = "(ADAMASS('K+') < %(KMassWinDown)s *MeV) & (AMAXDOCA('')< %(KMaxDOCADown)s *mm)"%config,
+                                MotherCut ="(PT> %(KMinPTDown)s) & (ADMASS('K+') < %(KMassWinDown)s *MeV) & (BPVDIRA > %(KMinDIRADown)s)"\
+                                    "& (VFASPF(VCHI2) < %(KVtxChi2Down)s) & (BPVVDCHI2 > %(KMinVDChi2Down)s) & (BPVVDZ > %(KVDPVMinDown)s*mm) & (BPVVDZ < %(KVDPVMaxDown)s*mm)"%config
+                                )
     
     _Pions = DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")
     
@@ -1449,20 +1320,12 @@ def makeKPiPiPiMassMeasDown(name, config):
     config      : dictionary of tunable cuts 
     """
     
-    from Configurables import OfflineVertexFitter
-    KPiPiPi = CombineParticles("Combine"+name)
-    KPiPiPi.DecayDescriptor = "[K+ -> pi+ pi+ pi-]cc"
-    #KPiPiPi.addTool( OfflineVertexFitter )
-    #KPiPiPi.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    #KPiPiPi.OfflineVertexFitter.useResonanceVertex = False
-
-    KPiPiPi.DaughtersCuts = {  "pi+":"(TRCHI2DOF<5) & (TRGHOSTPROB < 0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2MassMeasDown)s)"%config
-                                 }
-    KPiPiPi.CombinationCut = "(ADAMASS('K+') < %(KMassWinMassMeasDown)s *MeV) & (AMAXDOCA('')< %(KMaxDOCAMassMeasDown)s *mm)"%config
-    
-    KPiPiPi.MotherCut ="(PT> %(KMinPTMassMeasDown)s) & (ADMASS('K+') < %(KMassWinMassMeasDown)s *MeV) & (BPVDIRA > %(KMinDIRAMassMeasDown)s)"\
-                        "& (VFASPF(VCHI2) < %(KVtxChi2MassMeasDown)s) & (BPVVDCHI2 > %(KMinVDChi2MassMeasDown)s)  & (BPVVDZ > %(KVDPVMinMassMeasDown)s*mm) & (BPVVDZ < %(KVDPVMaxMassMeasDown)s*mm)"%config
-
+    KPiPiPi = CombineParticles( DecayDescriptor = "[K+ -> pi+ pi+ pi-]cc",
+                                DaughtersCuts = {  "pi+":"(TRCHI2DOF<5) & (TRGHOSTPROB < 0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2MassMeasDown)s)"%config},
+                                CombinationCut = "(ADAMASS('K+') < %(KMassWinMassMeasDown)s *MeV) & (AMAXDOCA('')< %(KMaxDOCAMassMeasDown)s *mm)"%config,
+                                MotherCut ="(PT> %(KMinPTMassMeasDown)s) & (ADMASS('K+') < %(KMassWinMassMeasDown)s *MeV) & (BPVDIRA > %(KMinDIRAMassMeasDown)s)"\
+                                "& (VFASPF(VCHI2) < %(KVtxChi2MassMeasDown)s) & (BPVVDCHI2 > %(KMinVDChi2MassMeasDown)s)  & (BPVVDZ > %(KVDPVMinMassMeasDown)s*mm) & (BPVVDZ < %(KVDPVMaxMassMeasDown)s*mm)"%config
+                                )
     
     _Pions = DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")
     

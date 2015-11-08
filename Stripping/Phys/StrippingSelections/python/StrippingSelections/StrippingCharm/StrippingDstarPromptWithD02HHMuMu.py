@@ -12,9 +12,9 @@ Exported symbols (use python help):
   - makePromptDstar
 '''
 
-__author__ = ['Benoit VIAUD']
+__author__ = ['Andrea Contu','Benoit VIAUD']
 __date__ = '23/08/2012'
-__version__ = '$Revision: 1.0 $'
+__version__ = '$Revision: 2.0 $'
 
 __all__ = ('DstarPromptWithD02HHLLConf'
            , 'makeD02hhll'
@@ -75,8 +75,10 @@ default_config= {
   ,'MaxVeloTracks'    : None
   ,'MaxSpdDigits'     : None
   ,'MaxITClusters'    : None
-  ,'ApplyGhostProbCut': True
+  ,'ApplyGhostProbCut': False
   ,'GhostProbCut'     : 0.5
+  ,'ConeAngles'     : {"11":1.1,"13":1.3,"15":1.5,"17":1.7,"19":1.9}
+  ,'ConeVariables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
   ,'Prescale'         : 1
   ,'Postscale'        : 1
   }
@@ -152,6 +154,9 @@ class DstarPromptWithD02HHLLConf(LineBuilder):
 
     ,'ApplyGhostProbCut'
     ,'GhostProbCut'    
+
+    ,'ConeAngles'     
+    ,'ConeVariables' 
 
     ,'Prescale'
     ,'Postscale'
@@ -235,7 +240,18 @@ class DstarPromptWithD02HHLLConf(LineBuilder):
                                      'from LoKiNumbers.decorators    import *',
                                      'from LoKiCore.functions    import *']
                       }
-
+    coneinfo=[]
+    for conekey, coneitem in (config['ConeAngles']).iteritems():
+            coneinfo.append({ 
+                                        'Type' : 'RelInfoConeVariables', 'ConeAngle' : coneitem, 'Variables' : config['ConeVariables'], 
+                                        'Location' : 'P2CVDst'+conekey,
+                                        'DaughterLocations' : {
+                                          #'[^D*(2010)+ -> Charm pi+]CC' : 'P2CVDst'+conekey,
+                                          '[D*(2010)+ -> ^Charm pi+]CC' : 'P2CVD0'+conekey,
+                                          '[D*(2010)+ -> Charm ^pi+]CC' : 'P2CVpis'+conekey,
+                                          
+                                        } 
+                                      })
 
     self.line_tagged_d02hhll = StrippingLine(
       moduleName+"Line"
@@ -243,7 +259,9 @@ class DstarPromptWithD02HHLLConf(LineBuilder):
       ,postscale=config['Postscale']
       ,selection=selPromptDstar
       ,checkPV=config['CheckPV']
-      ,FILTER=_GECfilter)
+      ,FILTER=_GECfilter
+      ,RelatedInfoTools=coneinfo
+      )
     self.registerLine(self.line_tagged_d02hhll)
 
 def makeD02hhll(
@@ -355,7 +373,7 @@ def makeD02hhll(
 
   from StandardParticles import StdAllNoPIDsPions, StdAllNoPIDsKaons
   from StandardParticles import StdAllLoosePions, StdAllLooseKaons, StdAllLooseMuons 
-  from StandardParticles import StdAllNoPIDsElectrons,StdAllLooseElectrons 
+  from StandardParticles import StdAllLooseElectrons 
   from StandardParticles import StdAllLooseMuPion
 
 
