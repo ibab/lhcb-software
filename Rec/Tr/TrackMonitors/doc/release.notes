@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-11-08 - Heinrich Schindler
+ - Add VPTrackMonitor (moved over from VP/VPTools in Lbcom).
+
 ! 2015-11-08 - Gerhard Raven
  - replace boost::array with std::array
  - replace BOOST_FOREACH with range-based for loop
