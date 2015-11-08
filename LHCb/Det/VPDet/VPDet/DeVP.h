@@ -43,6 +43,9 @@ class DeVP : public DetectorElement {
   /// Return the number of sensors.
   unsigned int numberSensors() const { return m_nSensors; }
 
+  /// Return vector of sensors.
+  const std::vector<DeVPSensor*>& sensors() const { return m_sensors; }
+
   /// Return iterator corresponding to first sensor.
   std::vector<DeVPSensor*>::const_iterator sensorsBegin() const {
     return m_sensors.begin();
@@ -55,14 +58,14 @@ class DeVP : public DetectorElement {
   /// Return pointer to sensor for a given point in the global frame.
   const DeVPSensor* sensor(const Gaudi::XYZPoint& point) const {
     const int sensorNumber = sensitiveVolumeID(point);
-    return sensorNumber >= 0 ? m_sensors[sensorNumber] : NULL;
+    return sensorNumber >= 0 ? m_sensors[sensorNumber] : nullptr;
   }
   /// Return pointer to sensor for a given channel ID.
   const DeVPSensor* sensorOfChannel(LHCb::VPChannelID channel) const {
     return sensor(channel.sensor());
   }
   /// Return pointer to sensor for a given sensor number.
-  const DeVPSensor* sensor(unsigned int sensorNumber) const {
+  const DeVPSensor* sensor(const unsigned int sensorNumber) const {
     return m_sensors[sensorNumber];
   }
 
@@ -83,6 +86,7 @@ class DeVP : public DetectorElement {
       return (x->z() < y->z());
     }
   };
+  /// Custom operator for sorting sensors by sensor number.
   struct less_SensorNumber {
     bool operator()(DeVPSensor* const& x, DeVPSensor* const& y) {
       return (x->sensorNumber() < y->sensorNumber());

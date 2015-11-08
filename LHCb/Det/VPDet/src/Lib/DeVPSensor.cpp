@@ -4,25 +4,13 @@
 #include "GaudiKernel/IJobOptionsSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
-#include "GaudiKernel/PhysicalConstants.h"
 
 // LHCb
 // Det/DetDesc
 #include "DetDesc/Condition.h"
-// Kernel/LHCbKernel
-#include "Kernel/LineTraj.h"
-#include "Kernel/VPChannelID.h"
 
 // Local
 #include "VPDet/DeVPSensor.h"
-
-/** @file DeVPSensor.cpp
- *
- *  Implementation of class DeVPSensor
- *
- *  @author Victor Coco victor.coco@cern.ch
- * 
- */
 
 // Dimensions of the sensor active area
 double DeVPSensor::m_sizeX;
@@ -53,7 +41,7 @@ bool DeVPSensor::m_common_cache_valid = false;
 // Standard constructor
 //==============================================================================
 DeVPSensor::DeVPSensor(const std::string& name)
-    : DetectorElement(name), m_geometry(NULL), m_msg(NULL) {
+    : DetectorElement(name), m_geometry(nullptr), m_msg(nullptr) {
   
 }
 
@@ -62,7 +50,7 @@ DeVPSensor::DeVPSensor(const std::string& name)
 //==============================================================================
 DeVPSensor::~DeVPSensor() {
 
-  if (m_msg) delete m_msg;
+  delete m_msg;
 
 }
 

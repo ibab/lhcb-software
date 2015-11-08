@@ -15,18 +15,11 @@
 // Local
 #include "VPDet/DeVP.h"
 
-/** @file DeVP.cpp
- *
- *  Implementation of class DeVP
- *
- *  @author Victor Coco Victor.Coco@cern.ch
- */
-
 //============================================================================
 // Constructor
 //============================================================================
 DeVP::DeVP(const std::string& name)
-    : DetectorElement(name), m_nSensors(0), m_msg(NULL) {
+    : DetectorElement(name), m_nSensors(0), m_msg(nullptr) {
 
 }
 
@@ -35,7 +28,7 @@ DeVP::DeVP(const std::string& name)
 //============================================================================
 DeVP::~DeVP() {
 
-  if (m_msg) delete m_msg;
+  delete m_msg;
 
 }
 
@@ -88,8 +81,7 @@ StatusCode DeVP::initialize() {
   m_nSensors = 0;
   unsigned int nLeftSensors = 0;
   unsigned int nRightSensors = 0;
-  std::vector<DeVPSensor*>::iterator it;
-  for (it = sensors.begin(); it != sensors.end(); ++it) {
+  for (auto it = sensors.begin(), end = sensors.end(); it != end; ++it) {
     m_sensors.push_back(*it);
     ++m_nSensors;
     if ((*it)->isLeft()) {
@@ -113,8 +105,7 @@ int DeVP::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
   const double z = point.z();
   const double tol = 10 * Gaudi::Units::mm; 
   // Loop over all VP sensors.
-  std::vector<DeVPSensor*>::const_iterator it;
-  for (it = m_sensors.begin(); it != m_sensors.end(); ++it) {
+  for (auto it = m_sensors.cbegin(), end = m_sensors.cend(); it != end; ++it) {
     // Skip sensors which are far away in z.
     if (fabs(z - (*it)->z()) > tol) continue; 
     // Check if the point is inside this sensor.
@@ -133,9 +124,8 @@ void DeVP::findSensors(IDetectorElement* det,
                        std::vector<DeVPSensor*>& sensors) {
 
   // Get the daughter detector elements.
-  std::vector<IDetectorElement*> elements = det->childIDetectorElements();
-  std::vector<IDetectorElement*>::iterator it;
-  for (it = elements.begin(); it != elements.end(); ++it) {
+  auto elements = det->childIDetectorElements();
+  for (auto it = elements.begin(), end = elements.end(); it != end; ++it) {
     if (m_debug) {
       msg() << MSG::DEBUG << std::setw(12) << std::setiosflags(std::ios::left)
             << (*it)->name() << endmsg;

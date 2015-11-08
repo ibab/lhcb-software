@@ -41,6 +41,7 @@ class DeVPSensor : public DetectorElement {
   /// Calculate the nearest channel to a given point.
   bool pointToChannel(const Gaudi::XYZPoint& point, const bool local,
                       LHCb::VPChannelID& channel) const;
+  /// Calculate the nearest channel to a point and the inter-pixel fractions.
   bool pointToChannel(const Gaudi::XYZPoint& point, const bool local,
                       LHCb::VPChannelID& channel,
                       std::pair<double, double>& fraction) const;

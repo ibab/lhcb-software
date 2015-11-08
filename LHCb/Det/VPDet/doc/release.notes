@@ -4,6 +4,10 @@
 ! Purpose     : Detector element for upgraded VELO
 !-----------------------------------------------------------------------------
 
+! 2015-11-07 - Heinrich Schindler
+ - Add getter function to access directly the vector of sensors.
+ - Remove unnecessary includes.
+
 !========================= VPDet v3r2p1 2015-10-12 =========================
 ! 2015-08-03 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
