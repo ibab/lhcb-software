@@ -1,14 +1,16 @@
-#ifndef VPTRACKMONI_H
-#define VPTRACKMONI_H 1
+#pragma once
 
 // Gaudi
 #include "GaudiAlg/GaudiTupleAlg.h"
+#include "GaudiKernel/Vector3DTypes.h"
 
 // LHCb
+// Det/VPDet
 #include "VPDet/DeVPSensor.h"
 #include "VPDet/DeVP.h"
-#include "Event/Track.h"
-#include "Event/State.h"
+
+// Rec
+// Tr/TrackFitEvent
 #include "Event/FitNode.h"
 
 /** @class VPTrackMonitor VPTrackMonitor.h
@@ -21,18 +23,20 @@ class VPTrackMonitor : public GaudiTupleAlg {
  public:
   /// Standard constructor
   VPTrackMonitor(const std::string& name, ISvcLocator* pSvcLocator);
-
-  virtual ~VPTrackMonitor();  ///< Destructor
+  /// Destructor
+  virtual ~VPTrackMonitor();
 
   virtual StatusCode initialize();  ///< Algorithm initialization
   virtual StatusCode execute();     ///< Algorithm execution
 
  private:
-  // TES locations
-  std::string m_tracklocation;
-  DeVP* m_veloDet_VP;
+  // TES location of tracks
+  std::string m_trackLocation;
 
-  Gaudi::XYZPoint getResidual(Gaudi::XYZPoint, const DeVPSensor*,
-                              const LHCb::FitNode&);
+  /// Detector element
+  DeVP* m_det;
+
+  Gaudi::XYZVector getResidual(const Gaudi::XYZPoint& cluster, 
+                               const DeVPSensor* sensor,
+                               const LHCb::FitNode& fitNode) const;
 };
-#endif  // VPTRACKMONI_H

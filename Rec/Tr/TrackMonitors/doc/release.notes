@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-11-08 - Heinrich Schindler
- - Add VPTrackMonitor (moved over from VP/VPTools in Lbcom).
+ - Add VPTrackMonitor (moved over from VP/VPTools in Lbcom) and tidy it up.
 
 ! 2015-11-08 - Gerhard Raven
  - replace boost::array with std::array
