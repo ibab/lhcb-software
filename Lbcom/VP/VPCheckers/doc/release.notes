@@ -3,6 +3,9 @@
 ! Responsible : Mark Williams
 !--------------------------------------------------------------------------
 
+! 2015-11-08 - Heinrich Schindler
+ - Add check whether the detector element is found.
+
 !========================= VPCheckers v1r0p1 2015-10-12 =========================
 ! 2015-08-04 - Gerhard Raven
  - remove #include of obsolete Gaudi headers        

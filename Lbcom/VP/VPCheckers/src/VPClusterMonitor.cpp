@@ -14,7 +14,7 @@ DECLARE_ALGORITHM_FACTORY(VPClusterMonitor)
 VPClusterMonitor::VPClusterMonitor(const std::string& name,
                                    ISvcLocator* pSvcLocator) :
     GaudiHistoAlg(name, pSvcLocator),
-    m_det(NULL) {
+    m_det(nullptr) {
 
   declareProperty("ClusterLocation", 
                   m_clusterLocation = LHCb::VPClusterLocation::Default);
@@ -34,14 +34,13 @@ VPClusterMonitor::~VPClusterMonitor() {}
 StatusCode VPClusterMonitor::initialize() {
   StatusCode sc = GaudiHistoAlg::initialize(); 
   if (sc.isFailure()) return sc;
-  setHistoTopDir("VP/");
+
   // Get detector element
-  m_det = getDet<DeVP>(DeVPLocation::Default);
+  m_det = getDetIfExists<DeVP>(DeVPLocation::Default);
   if (!m_det) {
-    error() << "Cannot retrieve detector element " << DeVPLocation::Default 
-            << endmsg;
-    return StatusCode::FAILURE;
+    return Error("No detector element at " + DeVPLocation::Default);
   }
+  setHistoTopDir("VP/");
   return StatusCode::SUCCESS;
 }
 
@@ -53,8 +52,7 @@ StatusCode VPClusterMonitor::execute() {
   // Get the clusters.
   const LHCb::VPClusters* clusters = getIfExists<LHCb::VPClusters>(m_clusterLocation);
   if (!clusters) {
-    error() << "No clusters in " << m_clusterLocation << endmsg;
-    return StatusCode::FAILURE;
+    return Error("No clusters in " + m_clusterLocation);
   }
   if (UNLIKELY(msgLevel(MSG::DEBUG))) {
     debug() << "Found " << clusters->size() << " clusters" << endmsg;
