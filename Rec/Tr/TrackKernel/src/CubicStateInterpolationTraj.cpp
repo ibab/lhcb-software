@@ -14,13 +14,13 @@ namespace LHCb
   
   Gaudi::TrackSymMatrix CubicStateInterpolationTraj::covariance( double z ) const
   {
-    static Gaudi::TrackMatrix Fb = Gaudi::TrackMatrix( ROOT::Math::SMatrixIdentity() );
+    Gaudi::TrackMatrix Fb = ROOT::Math::SMatrixIdentity();
     Fb(1,3) = Fb(0,2) = (z - zbegin()) ;
     
-    static Gaudi::TrackMatrix Fe = Gaudi::TrackMatrix( ROOT::Math::SMatrixIdentity() );
+    Gaudi::TrackMatrix Fe = ROOT::Math::SMatrixIdentity();
     Fe(1,3) = Fe(0,2) = (z - zend()) ;
     
-    static Gaudi::TrackSymMatrix cov ;
+    Gaudi::TrackSymMatrix cov ;
 
     if( z <= zbegin() ) {
       cov = LHCb::Math::Similarity(Fb, *m_covbegin) ;
