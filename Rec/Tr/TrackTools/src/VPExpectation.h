@@ -1,9 +1,8 @@
-#ifndef TRACKTOOLS_VPExpectation_H
-#define TRACKTOOLS_VPExpectation_H
+#pragma once
 
 /** @class VPExpectation VPExpectation.h
  *
- *  Tool to estimate how many hits are expected in the velo
+ *  Tool to estimate how many hits are expected in the VELO 
  *
  *  @author Thomas Bird
  *  @date   05/12/2012
@@ -11,11 +10,11 @@
 
 #include "GaudiAlg/GaudiTool.h"
 
-#include "DetDesc/IGeometryInfo.h"
+// LHCb
+// Event/TrackEvent
 #include "Event/Track.h"
 
 #include "TrackInterfaces/IVPExpectation.h"
-#include "TsaKernel/Line.h"
 
 class DeVP;
 class DeVPSensor;
@@ -49,8 +48,8 @@ class VPExpectation : public GaudiTool, virtual public IVPExpectation {
   /** Returns number of hits expected, from zStart to zStop
    *
    *  @param track Reference to the Track to test
-   *  @param zStart --> start of scan range
-   *  @param zStop --> end of scan range
+   *  @param zStart Start of scan range
+   *  @param zStop End of scan range
    *  @return Info
    */
   virtual int nExpected(const LHCb::Track &track, const double zStart,
@@ -59,8 +58,8 @@ class VPExpectation : public GaudiTool, virtual public IVPExpectation {
   /** Returns expected hits info, from zStart to zStop
    *
    *  @param track Reference to the Track to test
-   *  @param zStart --> start of scan range
-   *  @param zStop --> end of scan range
+   *  @param zStart Start of scan range
+   *  @param zStop End of scan range
    *  @return Info
    */
   virtual IVPExpectation::Info expectedInfo(const LHCb::Track &track,
@@ -77,7 +76,7 @@ class VPExpectation : public GaudiTool, virtual public IVPExpectation {
   /** Returns number of hits missed, from z to firstHit
    *
    *  @param track Reference to the Track to test
-   *  @param z --> z to start from
+   *  @param z z to start from
    *  @return number of hits missed before first hit
    */
   virtual int nMissed(const LHCb::Track &track, const double z) const;
@@ -85,7 +84,7 @@ class VPExpectation : public GaudiTool, virtual public IVPExpectation {
   /** Returns true if track passes through the active area of a sensor
    *
    *  @param track Reference to the Track to test
-   *  @param sensorNum ---> sensor number
+   *  @param sensorNum sensor number
    *  @return true if track crosses a working pixel
    */
   virtual bool isInside(const LHCb::Track &track,
@@ -95,25 +94,17 @@ class VPExpectation : public GaudiTool, virtual public IVPExpectation {
   IVPExpectation::Info scan(const LHCb::Track &track, const double zStart,
                             const double zStop) const;
 
-  bool isInside(const DeVPSensor *sensor, const Tf::Tsa::Line &xLine,
-                const Tf::Tsa::Line &yLine, const double z) const;
+  bool isInside(const DeVPSensor *sensor, const double x,
+                const double y) const;
 
   double zMin(const LHCb::Track &track) const;
-
   double zMax(const LHCb::Track &track) const;
 
   int nFound(const LHCb::Track &track, const double zStart,
              const double zStop) const;
 
-  void param(const LHCb::Track &track, const double z, Tf::Tsa::Line &xLine,
-             Tf::Tsa::Line &yLine) const;
-
   double zBeamLine(const LHCb::Track &track) const;
-
-  bool isInsideChildren(const IGeometryInfo *igi,
-                        const Gaudi::XYZPoint globalPoint) const;
 
   DeVP *m_det;
 };
 
-#endif  // TRACKTOOLS_VPExpectation_H

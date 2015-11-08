@@ -1,17 +1,3 @@
-
-//-----------------------------------------------------------------------------
-/** @file VPExpectation.cpp
- *
- *  Implementation file for reconstruction tool : VPExpectation
- *
- *  @author T.Bird Thomas.Bird@cern.ch
- *  @date   05/12/2012
- */
-//-----------------------------------------------------------------------------
-
-// Gaudi
-#include "GaudiKernel/SystemOfUnits.h"
-
 // LHCb
 // Event/TrackEvent
 #include "Event/State.h"
@@ -19,16 +5,20 @@
 // Det/VPDet
 #include "VPDet/DeVP.h"
 
+// Rec
+// Tf/TsaKernel
+#include "TsaKernel/Line.h"
+
 // Local
 #include "VPExpectation.h"
 
 using namespace LHCb;
-using namespace Gaudi;
 
 DECLARE_TOOL_FACTORY(VPExpectation)
 
-//-----------------------------------------------------------------------------
-
+//=============================================================================
+// Constructor
+//=============================================================================
 VPExpectation::VPExpectation(const std::string &type, const std::string &name,
                              const IInterface *parent)
     : GaudiTool(type, name, parent) {
@@ -37,40 +27,55 @@ VPExpectation::VPExpectation(const std::string &type, const std::string &name,
 
 }
 
+//=============================================================================
+// Destructor
+//=============================================================================
 VPExpectation::~VPExpectation() {}
 
+//=============================================================================
+// Initialisation
+//=============================================================================
 StatusCode VPExpectation::initialize() {
   const StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;
 
-  m_det = getDet<DeVP>(DeVPLocation::Default);
-
-  return sc;
+  m_det = getDetIfExists<DeVP>(DeVPLocation::Default);
+  if (!m_det) {
+    return Error("No detector element at " + DeVPLocation::Default);
+  }
+  return StatusCode::SUCCESS;
 }
 
+//=============================================================================
+// Return number of hits expected
+//=============================================================================
 int VPExpectation::nExpected(const Track &track) const {
   IVPExpectation::Info expectedHits = expectedInfo(track);
   return expectedHits.n;
 }
 
+//=============================================================================
+// Return info
+//=============================================================================
 IVPExpectation::Info VPExpectation::expectedInfo(const Track &track) const {
 
-  // work out the first and last z on the track
-  double zStart;
-  double zStop;
+  // Work out the first and last z on the track
+  double zStart = -9999.;
+  double zStop = 9999.;
   if (track.checkFlag(Track::Backward) == false) {
     // forward track
     zStart = zMin(track) - 1e-3;
-    zStop = 9999.0;
   } else {
     // backward track
-    zStart = -9999.;
     zStop = zMax(track) + 1e-3;
   }
 
   return expectedInfo(track, zStart, zStop);
 }
 
+//=============================================================================
+// Return number of hits expected within a given z range
+//=============================================================================
 int VPExpectation::nExpected(const LHCb::Track &track, const double zStart,
                              const double zStop) const {
 
@@ -78,6 +83,9 @@ int VPExpectation::nExpected(const LHCb::Track &track, const double zStart,
   return expectedHits.n;
 }
 
+//=============================================================================
+// Return info for a given z range
+//=============================================================================
 IVPExpectation::Info VPExpectation::expectedInfo(const LHCb::Track &track,
                                                  const double zStart,
                                                  const double zStop) const {
@@ -85,22 +93,27 @@ IVPExpectation::Info VPExpectation::expectedInfo(const LHCb::Track &track,
   return scan(track, zStart, zStop);
 }
 
+//=============================================================================
+// Check whether a track crosses the active area of a sensor
+//=============================================================================
 bool VPExpectation::isInside(const LHCb::Track &track,
                              const unsigned int sensorNum) const {
 
-  // make a line representing the track
+  // Make a line representing the track
   const State &state = track.firstState();
   Tf::Tsa::Line xLine(state.tx(), state.x(), state.z());
   Tf::Tsa::Line yLine(state.ty(), state.y(), state.z());
   const DeVPSensor* sensor = m_det->sensorOfChannel(sensorNum);
   const double z = sensor->z();
-
-  return isInside(sensor, xLine, yLine, z);
+  return isInside(sensor, xLine.value(z), yLine.value(z));
 }
 
+//=============================================================================
+// Return the number of missed hits on a track
+//=============================================================================
 int VPExpectation::nMissed(const Track &track) const {
 
-  // forward or backward track ?
+  // Determine the z-range.
   double zStart;
   double zStop;
   if (track.checkFlag(Track::Backward) == false) {
@@ -110,32 +123,32 @@ int VPExpectation::nMissed(const Track &track) const {
     zStart = zMax(track) - 1e-3;
     zStop = zBeamLine(track);
   }
-
-  // number expected...
+  // Get the expected number of hits.
   IVPExpectation::Info expectedHits = scan(track, zStart, zStop);
-
   return expectedHits.n - nFound(track, zStart, zStop);
 }
 
+//=============================================================================
+// Return the number of missed hits on a track, for a given z range
+//=============================================================================
 int VPExpectation::nMissed(const Track &track, const double z) const {
 
-  // line representing track
-  double zStart;
-  double zStop;
+  // Determine the z-range.
+  double zStart = z;
+  double zStop = z;
   if (track.checkFlag(Track::Backward) == false) {
-    zStart = z;
-    zStop = zMin(track) + 1e-3;
+    zStop = zMin(track) + 1.e-3;
   } else {
-    zStart = zMax(track) - 1e-3;
-    zStop = z;
+    zStart = zMax(track) - 1.e-3;
   }
-
-  // number expected...
+  // Get the expected number of hits.
   IVPExpectation::Info expectedHits = scan(track, zStart, zStop);
-
   return expectedHits.n - nFound(track, zStart, zStop);
 }
 
+//=============================================================================
+// Return the expected number of measurements and smallest radius
+//=============================================================================
 IVPExpectation::Info VPExpectation::scan(const LHCb::Track &track,
                                          const double zStart,
                                          const double zStop) const {
@@ -144,143 +157,110 @@ IVPExpectation::Info VPExpectation::scan(const LHCb::Track &track,
   nHits.n = 0;
   nHits.firstR = 99999.;
 
-  Tf::Tsa::Line xLine(0., 0.);
-  Tf::Tsa::Line yLine(0., 0.);
-  std::vector<DeVPSensor*>::const_iterator iterV = m_det->sensorsBegin();
-  for (; iterV != m_det->sensorsEnd(); ++iterV) {
-    // only sensors the track could see
-    const double z = (*iterV)->z();
-    if (z >= zStart && z <= zStop) {
-      param(track, z, xLine, yLine);
-      if (isInside(*iterV, xLine, yLine, z) == true) {
-        ++nHits.n;
-
-        const double x = xLine.value(z);
-        const double y = yLine.value(z);
-        const double r = sqrt(x * x + y * y);
-
-        if (nHits.firstR > r) {
-          nHits.firstX = x;
-          nHits.firstY = y;
-          nHits.firstZ = z;
-          nHits.firstR = r;
-        }
-
-        nHits.expectedZ.push_back(z);
-      }
+  auto sensors = m_det->sensors();
+  for (auto it = sensors.cbegin(), end = sensors.cend(); it != end; ++it) {
+    // Skip sensors outside the range.
+    const double z = (*it)->z();
+    if (z < zStart || z > zStop) continue;
+    auto state = track.closestState(z);
+    Tf::Tsa::Line xLine(state.tx(), state.x(), state.z());
+    Tf::Tsa::Line yLine(state.ty(), state.y(), state.z());
+    const double x = xLine.value(z);
+    const double y = yLine.value(z);
+    if (!isInside(*it, x, y)) continue;
+    ++nHits.n;
+    const double r = sqrt(x * x + y * y);
+    if (nHits.firstR > r) {
+      nHits.firstX = x;
+      nHits.firstY = y;
+      nHits.firstZ = z;
+      nHits.firstR = r;
     }
-  }  // iterV
+    nHits.expectedZ.push_back(z);
+  } 
 
   return nHits;
 }
 
+//=============================================================================
+// Check whether a point is inside the  active area of a sensor
+//=============================================================================
 bool VPExpectation::isInside(const DeVPSensor* sensor,
-                             const Tf::Tsa::Line &xLine,
-                             const Tf::Tsa::Line &yLine, const double z) const {
+                             const double x, const double y) const {
 
-  if (abs(sensor->z() - z) > 1e-2) {
-    warning() << "The sensor z isnt the sensor z! " << sensor->z() << " " << z
-              << " " << abs(sensor->z() - z) << endmsg;
-    return false;
-  }
-
-  Gaudi::XYZPoint trackPos(xLine.value(z), yLine.value(z), z);
+  Gaudi::XYZPoint trackPos(x, y, sensor->z());
   return sensor->isInActiveArea(sensor->globalToLocal(trackPos));
 }
 
-bool VPExpectation::isInsideChildren(const IGeometryInfo *igi,
-                                     const Gaudi::XYZPoint globalPoint) const {
-  if (igi->isInside(globalPoint)) {
-    return true;
-  } else {
-    std::vector<IGeometryInfo *> children = igi->childIGeometryInfos();
-    for (std::vector<IGeometryInfo *>::const_iterator iChild = children.begin();
-         iChild != children.end(); ++iChild) {
-      if (isInsideChildren((*iChild), globalPoint)) {
-        return true;
-      }
-    }
-  }
-  return false;
-}
-
+//=============================================================================
+// Get the lowest z coordinate of all measurements on the track
+//=============================================================================
 double VPExpectation::zMin(const Track &track) const {
 
   // get the hit at least z
   double z = 99999.0;
-  const std::vector<LHCbID> &vids = track.lhcbIDs();
-  for (std::vector<LHCbID>::const_iterator iter = vids.begin();
-       iter != vids.end(); ++iter) {
-    if (iter->isVP()) {
-      VPChannelID chan = iter->vpID();
-      const DeVPSensor* sensor = m_det->sensorOfChannel(chan);
-      if (sensor != NULL) {
-        if (sensor->z() < z) {
-          z = sensor->z();
-        }
-      } else
-        warning() << "Sensor is null for " << chan << endmsg;
+  for (auto id : track.lhcbIDs()) {
+    if (!id.isVP()) continue;
+    const DeVPSensor* sensor = m_det->sensorOfChannel(id.vpID());
+    if (!sensor) {
+      warning() << "No sensor for " << id.vpID() << endmsg;
+      continue;
     }
+    if (sensor->z() < z) z = sensor->z();
   }
   return z;
 }
 
+//=============================================================================
+// Get the largest z coordinate of all measurements on the track
+//=============================================================================
 double VPExpectation::zMax(const Track &track) const {
 
   double z = -99999.0;
-  const std::vector<LHCbID> &vids = track.lhcbIDs();
-  for (std::vector<LHCbID>::const_iterator iter = vids.begin();
-       iter != vids.end(); ++iter) {
-    if (iter->isVP()) {
-      VPChannelID chan = iter->vpID();
-      const DeVPSensor* sensor = m_det->sensorOfChannel(chan);
-      if (sensor->z() > z) {
-        z = sensor->z();
-      }
+  for (auto id : track.lhcbIDs()) {
+    if (!id.isVP()) continue;
+    const DeVPSensor* sensor = m_det->sensorOfChannel(id.vpID());
+    if (!sensor) {
+      warning() << "No sensor for " << id.vpID() << endmsg;
+      continue;
     }
+    if (sensor->z() > z) z = sensor->z();
   }
   return z;
 }
 
+//=============================================================================
+// Get the number of measurements within a given z range
+//=============================================================================
 int VPExpectation::nFound(const Track &track, const double zStart,
                           const double zStop) const {
   int nFound = 0;
-  const std::vector<LHCbID> &vids = track.lhcbIDs();
-  for (std::vector<LHCbID>::const_iterator iter = vids.begin();
-       iter != vids.end(); ++iter) {
-    if (iter->isVP()) {
-      VPChannelID chan = iter->vpID();
-      const DeVPSensor* sensor = m_det->sensorOfChannel(chan);
-      if (sensor->z() >= zStart && sensor->z() <= zStop) {
-        ++nFound;
-      }
+  for (auto id : track.lhcbIDs()) {
+    if (!id.isVP()) continue;
+    const DeVPSensor* sensor = m_det->sensorOfChannel(id.vpID());
+    if (!sensor) {
+      warning() << "No sensor for " << id.vpID() << endmsg;
+      continue;
     }
+    if (sensor->z() >= zStart && sensor->z() <= zStop) ++nFound;
   }
   return nFound;
 }
 
-void VPExpectation::param(const LHCb::Track &track, const double z,
-                          Tf::Tsa::Line &xLine, Tf::Tsa::Line &yLine) const {
-
-  const LHCb::State &state = track.closestState(z);
-  xLine = Tf::Tsa::Line(state.tx(), state.x(), state.z());
-  yLine = Tf::Tsa::Line(state.ty(), state.y(), state.z());
-}
-
+//=============================================================================
+// Get z-position of the closest distance to the beam line
+//=============================================================================
 double VPExpectation::zBeamLine(const Track &track) const {
-  double z = 0.;
+
   const State &state = track.closestState(0.);
-  if (state.checkLocation(State::ClosestToBeam) == true) {
-    z = state.z();
-  } else {
-    const TrackVector &vec = state.stateVector();
-    z = state.z();
-    // check on division by zero (track parallel to beam line!)
-    if (fabs(vec[2]) > TrackParameters::lowTolerance ||
-        vec[3] > TrackParameters::lowTolerance) {
-      z -= (vec[0] * vec[2] + vec[1] * vec[3]) /
-           (vec[2] * vec[2] + vec[3] * vec[3]);
-    }
+  double z = state.z();
+  if (state.checkLocation(State::ClosestToBeam) == true) return z;
+  const Gaudi::TrackVector &vec = state.stateVector();
+  // check on division by zero (track parallel to beam line!)
+  if (fabs(vec[2]) > TrackParameters::lowTolerance ||
+      vec[3] > TrackParameters::lowTolerance) {
+    z -= (vec[0] * vec[2] + vec[1] * vec[3]) /
+         (vec[2] * vec[2] + vec[3] * vec[3]);
   }
   return z;
 }

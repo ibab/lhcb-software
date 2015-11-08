@@ -14,7 +14,6 @@
 // Event/TrackEvent
 #include "Event/Measurement.h"
 #include "Event/StateVector.h"
-// #include "Event/TrackParameters.h"
 // Tr/LHCbTrackInterfaces
 #include "TrackInterfaces/IVPClusterPosition.h"
 
@@ -61,8 +60,7 @@ public:
                          const LHCb::ZTrajectory& ref) const;
 
   StatusCode load(LHCb::Track&) const {
-    info() << "Sorry, MeasurementProviderBase::load not implemented" << endmsg;
-    return StatusCode::FAILURE;
+    return Error("MeasurementProviderBase::load not implemented");
   }
 
 private:
@@ -87,9 +85,9 @@ VPMeasurementProvider::VPMeasurementProvider(const std::string& type,
                                              const std::string& name,
                                              const IInterface* parent) :
     GaudiTool(type, name, parent),
-    m_det(NULL),
+    m_det(nullptr),
     m_positionTool("VPClusterPosition"),
-    m_clusters(NULL) {
+    m_clusters(nullptr) {
 
   declareInterface<IMeasurementProvider>(this);
   declareProperty("ClusterLocation", 
@@ -98,7 +96,7 @@ VPMeasurementProvider::VPMeasurementProvider(const std::string& type,
 }
 
 //=============================================================================
-/// Initialize
+// Initialize
 //=============================================================================
 StatusCode VPMeasurementProvider::initialize() {
   StatusCode sc = GaudiTool::initialize();
@@ -119,16 +117,16 @@ StatusCode VPMeasurementProvider::initialize() {
 }
 
 //=============================================================================
-/// Handle a begin-event incidence: Make sure clusters are reloaded.
+// Handle a begin-event incidence: Make sure clusters are reloaded.
 //=============================================================================
 void VPMeasurementProvider::handle(const Incident& incident) {
 
-  if (IncidentType::BeginEvent == incident.type()) m_clusters = NULL;
+  if (IncidentType::BeginEvent == incident.type()) m_clusters = nullptr;
 
 }
 
 //=============================================================================
-/// Load clusters from the TES
+// Load clusters from the TES
 //=============================================================================
 const LHCb::VPClusters* VPMeasurementProvider::clusters() const {
   if (!m_clusters) {
@@ -138,71 +136,68 @@ const LHCb::VPClusters* VPMeasurementProvider::clusters() const {
 }
 
 //=============================================================================
-/// Create a measurement
+// Create a measurement
 //=============================================================================
 LHCb::Measurement* VPMeasurementProvider::measurement(const LHCb::LHCbID& id, bool localY) const {
 
-  LHCb::Measurement* meas(NULL);
   if (!id.isVP()) {
     error() << "Not a VP measurement" << endmsg;
-    return meas;
-  }
+    return nullptr;
+  } 
   const LHCb::VPCluster* cluster = clusters()->object(id.vpID());
-  if (cluster) {
-    LHCb::VPMeasurement::VPMeasurementType dir = localY ? 
-      LHCb::VPMeasurement::Y : LHCb::VPMeasurement::X;
-    LHCb::VPPositionInfo info = m_positionTool->position(cluster);
-    meas = new LHCb::VPMeasurement(*cluster, info, dir);
-  } else {
-    error() << "Cannot find cluster for id " << id << endmsg ;
+  if (!cluster) {
+    error() << "Cannot find cluster for id " << id << endmsg;
+    return nullptr;
   }
+  LHCb::VPMeasurement::VPMeasurementType dir = localY ? 
+    LHCb::VPMeasurement::Y : LHCb::VPMeasurement::X;
+  LHCb::VPPositionInfo info = m_positionTool->position(cluster);
+  LHCb::Measurement* meas = new LHCb::VPMeasurement(*cluster, info, dir);
   return meas;
 
 }
 
 //=============================================================================
-/// Create a measurement with ref vector
+// Create a measurement with ref vector
 //=============================================================================
 LHCb::Measurement* VPMeasurementProvider::measurement(const LHCb::LHCbID& id, 
                                                       const LHCb::ZTrajectory& ref,
                                                       bool localY) const {
 
-  LHCb::Measurement* meas(0);
   if (!id.isVP()) {
     error() << "Not a VP measurement" << endmsg;
-    return meas;
+    return nullptr;
   } 
   const LHCb::VPCluster* cluster = clusters()->object(id.vpID());
-  if (cluster) {
-    LHCb::VPMeasurement::VPMeasurementType dir = localY ? 
-      LHCb::VPMeasurement::Y : LHCb::VPMeasurement::X;
-    double z = nominalZ(id);
-    LHCb::StateVector sv = ref.stateVector(z);
-    LHCb::VPPositionInfo info = m_positionTool->position(cluster, sv.position(), sv.tx(), sv.ty());
-    meas = new LHCb::VPMeasurement(*cluster, info, dir);
-  } else {
-    error() << "Cannot find cluster for id " << id << endmsg ;
+  if (!cluster) {
+    error() << "Cannot find cluster for id " << id << endmsg;
+    return nullptr;
   }
+  LHCb::VPMeasurement::VPMeasurementType dir = localY ? 
+      LHCb::VPMeasurement::Y : LHCb::VPMeasurement::X;
+  double z = nominalZ(id);
+  LHCb::StateVector sv = ref.stateVector(z);
+  LHCb::VPPositionInfo info = m_positionTool->position(cluster, sv.position(), sv.tx(), sv.ty());
+  LHCb::Measurement* meas = new LHCb::VPMeasurement(*cluster, info, dir);
   return meas;
 
 }
 
 //=============================================================================
-/// Return the z-coordinate of this lhcb-id (w/o creating the hit)
+// Return the z-coordinate of this lhcb-id (w/o creating the hit)
 //=============================================================================
 double VPMeasurementProvider::nominalZ(const LHCb::LHCbID& id) const {
   return m_det->sensorOfChannel(id.vpID())->z();
 }
 
 //=============================================================================
-/// Create measurements for list of LHCbIDs
+// Create measurements for list of LHCbIDs
 //=============================================================================
 void VPMeasurementProvider::addToMeasurements(const std::vector<LHCb::LHCbID>& lhcbids,
                                               std::vector<LHCb::Measurement*>& measurements,
                                               const LHCb::ZTrajectory& ref) const {
   
-  std::vector<LHCb::LHCbID>::const_iterator it = lhcbids.begin();  
-  for (it = lhcbids.begin(); it != lhcbids.end(); ++it) {
+  for (auto it = lhcbids.cbegin(), end = lhcbids.cend(); it != end; ++it) {
     measurements.push_back(measurement(*it, ref, false));
     measurements.push_back(measurement(*it, ref, true));
   }

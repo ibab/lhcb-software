@@ -3,6 +3,11 @@
 ! Responsible : 
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+
+! 2015-11-08 - Heinrich Schindler
+ - VPExpectation: remove unused function and unnecessary includes. Use auto.
+ - VPMeasurementProvider: use nullptr instead of NULL. Use auto.
+
 ! 2015-11-01 - Gerhard Raven
  - replace LoKi::select with std::copy_if
  - prefer lambda over bind (the latter will prevent inlining)
