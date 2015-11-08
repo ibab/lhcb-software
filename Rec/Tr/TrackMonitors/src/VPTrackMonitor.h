@@ -11,18 +11,18 @@
 #include "Event/State.h"
 #include "Event/FitNode.h"
 
-/** @class VPTrackMoni VPTrackMoni.h
+/** @class VPTrackMonitor VPTrackMonitor.h
  *  
  *
  *  @author Christoph Hombach
  *  @date   2015-01-08
  */
-class VPTrackMoni : public GaudiTupleAlg {
+class VPTrackMonitor : public GaudiTupleAlg {
 public: 
   /// Standard constructor
-  VPTrackMoni( const std::string& name, ISvcLocator* pSvcLocator );
+  VPTrackMonitor( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~VPTrackMoni( ); ///< Destructor
+  virtual ~VPTrackMonitor( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution

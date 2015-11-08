@@ -3,15 +3,15 @@
 // LHCb
 #include "Event/Node.h"
 // Local
-#include "VPTrackMoni.h"
+#include "VPTrackMonitor.h"
 
-DECLARE_ALGORITHM_FACTORY( VPTrackMoni )
+DECLARE_ALGORITHM_FACTORY( VPTrackMonitor )
 
 using namespace Gaudi;
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-VPTrackMoni::VPTrackMoni( const std::string& name,
+VPTrackMonitor::VPTrackMonitor( const std::string& name,
                           ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator )
 {
@@ -21,12 +21,12 @@ VPTrackMoni::VPTrackMoni( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VPTrackMoni::~VPTrackMoni() {} 
+VPTrackMonitor::~VPTrackMonitor() {} 
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode VPTrackMoni::initialize() {
+StatusCode VPTrackMonitor::initialize() {
   StatusCode sc = GaudiTupleAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
@@ -39,7 +39,7 @@ StatusCode VPTrackMoni::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode VPTrackMoni::execute() {
+StatusCode VPTrackMonitor::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   
@@ -130,7 +130,7 @@ StatusCode VPTrackMoni::execute() {
 
 //=============================================================================
 
-XYZPoint VPTrackMoni::getResidual(XYZPoint cluPos,const DeVPSensor* sens, const LHCb::FitNode& fitnode)
+XYZPoint VPTrackMonitor::getResidual(XYZPoint cluPos,const DeVPSensor* sens, const LHCb::FitNode& fitnode)
 {
   // if(track->checkFitHistory(LHCb::Track::BiKalman) == true)
   //{
