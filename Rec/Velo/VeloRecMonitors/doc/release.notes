@@ -3,6 +3,10 @@
 ! Responsible : VELO monitoring group
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
+! 2015-11-08 - Gerhard Raven
+ - replace endreq with endmsg
+ - replace auto_ptr with auto so that code will be forward-compatible 
+   in case trajectory starts to run unique_ptr instead...
 
 !========================= VeloRecMonitors v2r32 2015-10-13 =========================
 ! 2015-08-25 - John Beddow

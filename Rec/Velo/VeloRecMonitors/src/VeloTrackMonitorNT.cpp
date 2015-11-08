@@ -549,7 +549,7 @@ StatusCode Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track,
             Gaudi::XYZVector global3dDir_mc=Gaudi::XYZVector(slx_mc, sly_mc, 1.);
             localDirection_mc=localTrackDirection(global3dDir_mc, phiDet);
             projAngle_mc=projAnglePhi(localDirection_mc, phiDet, centreStrip);
-            auto_ptr<Trajectory> traj=phiDet->trajectory(cluCentChann, fracPos);
+            auto traj=phiDet->trajectory(cluCentChann, fracPos);
             Gaudi::XYZPoint localBeg=phiDet->globalToLocal(traj->beginPoint());
             Gaudi::XYZPoint localEnd=phiDet->globalToLocal(traj->endPoint());
             double traj_x1=localBeg.x();

@@ -373,7 +373,7 @@ void PVResolution::fill_ntuplePV(std::vector<LHCb::RecVertex> outvec, std::strin
     LHCb::L0DUReport* report = getIfExists<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default);
     if( NULL != report ) {
       if ( ! tuple->column( "L0Decision", report->decision() ) ) return;
-      if (msgLevel(MSG::DEBUG)) debug() << "L0 decision:  " << report->decision() << endreq;
+      if (msgLevel(MSG::DEBUG)) debug() << "L0 decision:  " << report->decision() << endmsg;
       LHCb::L0DUChannel::Map channels = report->configuration()->channels();
       for(LHCb::L0DUChannel::Map::const_iterator it = channels.begin();
           it!=channels.end();it++){
