@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id:$
+# $Id$
 # =============================================================================
 ## @file BenderExample/Jibo.py
 #  The simple Bender-based example to read J/psi from microDST 
@@ -23,9 +23,9 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2012-04-24
 #
-#                    $Revision: 138276 $
-#  Last modification $Date: 2012-04-10 18:21:39 +0200 (Tue, 10 Apr 2012) $
-#                 by $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """
 The simple Bender-based example to read J/psi from microDST 
@@ -43,14 +43,14 @@ By usage of this code one clearly states the disagreement
 with the smear campaign of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-                  $Revision: 138276 $
-Last modification $Date: 2012-04-10 18:21:39 +0200 (Tue, 10 Apr 2012) $
-               by $Author: ibelyaev $
+                  $Revision$
+Last modification $Date$
+               by $Author$
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = " 2012-02-24 " 
-__version__ = " Version $Revision: 138276 $"
+__version__ = " Version $Revision$"
 # =============================================================================
 ## import everything from bender 
 from   Bender.Main               import *

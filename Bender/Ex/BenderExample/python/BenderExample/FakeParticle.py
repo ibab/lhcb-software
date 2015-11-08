@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id: TupleTools.py$ 
+# $Id:$ 
 # =============================================================================
-## @file TupleTools.py 
+## @file FakeParticle.py 
 #
-#  Demonstration how to use TupleTools with Bender
+#  Demonstration how to use "Fake-H" utility 
 #
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
@@ -25,11 +25,11 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2015-10-31
 #
-#                    $Revision$
-#  Last modification $Date$
-#                 by $Author$
+#                    $Revision: 172885 $
+#  Last modification $Date: 2014-05-16 19:48:30 +0200 (Fri, 16 May 2014) $
+#                 by $Author: ibelyaev $
 # =============================================================================
-"""Demonstration how to use TupleTools with Bender
+"""Demonstration how to use ``Fake-H''-utility
 
 oooooooooo.                              .o8                     
 `888'   `Y8b                            \"888                     
@@ -52,17 +52,19 @@ By usage of this code one clearly states the disagreement
 with the smear campaign of Dr.O.Callot et al.: 
     ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-                  $Revision$
-Last modification $Date$
-               by $Author$
+                  $Revision: 172885 $
+Last modification $Date: 2014-05-16 19:48:30 +0200 (Fri, 16 May 2014) $
+               by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2014-10-31" 
-__version__ = " $Revision$"
+__version__ = " $Revision:$"
 # ============================================================================= 
 ## import everything from bender 
-from   Bender.Main import *
+from Bender.Main               import *
+from GaudiKernel.SystemOfUnits import GeV 
+from BenderTools.FakeH         import FakeKaon 
 # =============================================================================
 ## optional logging
 # =============================================================================
@@ -70,70 +72,46 @@ from Bender.Logger import getLogger
 if '__main__' == __name__ : logger = getLogger ( 'BenderTutor.TupleTools' )
 else                      : logger = getLogger ( __name__ )
 # =============================================================================
-## @class TupleTools
-#  Demonstration how to use TupleTools with Bender
+## @class FakeParticle
+#  Demonstration how to use ``Fake-H''-utility
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2015-10-31
-class TupleTools(Algo):
+class FakeParticle(Algo):
     """
-    Demonstration how to use TupleTools with Bender
+    Demonstration how to use ``Fake-H''-utility 
     """
-    def initialize ( self ) :
-
-        sc = Algo.initialize ( self ) ## initialize the base class
-        if sc.isFailure() : return sc
-        
-        IPTT = cpp.IParticleTupleTool
-        IETT = cpp.IEventTupleTool
-        
-        self.t1 = self.tool( IPTT,'TupleToolPid'      , parent=self )
-        if not self.t1 : return FAILURE 
-        
-        self.t2 = self.tool( IPTT,'TupleToolGeometry' , parent=self )
-        if not self.t2 : return FAILURE
-
-        self.e1 = self.tool( IETT,'TupleToolBeamSpot' , parent=self )
-        if not self.e1 : return FAILURE 
-        
-        return SUCCESS
-
-    def finalize ( self ) :
-
-        del self.t1
-        del self.t2
-        
-        return Algo.finalize ( self )
-    
     ## the main 'analysis' method 
     def analyse( self ) :   ## IMPORTANT! 
         """
         The main 'analysis' method
         """
-        
+
         ## get particles from the input locations 
-        particles = self.select ( 'bmesons', 'Beauty -> J/psi(1S) K+ K-'  )
+        particles = self.select ( 'bmesons', '[Beauty -> J/psi(1S) K- pi+]CC'  )
         if particles.empty() : return self.Warning('No input particles', SUCCESS )
-        
-        tup = self.nTuple('MyTuple')
+
+        fun_m   = DTF_FUN( M   , True , 'J/psi(1S)' )
+        fun_m23 = DTF_FUN( M23 , True , 'J/psi(1S)' )
         
         for b in particles :
+
+            pion = b(3)
             
-            psi = b ( 1 ) ## the first daughter: J/psi 
+            mass_0 = fun_m   ( b ) / GeV 
+            m23_0  = fun_m23 ( b ) / GeV 
+
+            print 'ORIGINAL      :  %s M=%s[GeV] M23=%s[GeV] ' % ( b.decay() , mass_0 , m23_0 )
+            print 'WITH FAKE KAON:  %s M=%s[GeV] M23=%s[GeV] ' % ( b.decay() , mass_0 , m23_0 )
             
-            ## Particle Tuple Tool
-            sc = self.t1.fill ( b , psi , 'psi_' , tup )
-            if sc.isFailure() : return sc
-            
-            ## Particle Tuple Tool 
-            sc = self.t2.fill ( b , b   , 'b_'   , tup )
-            if sc.isFailure() : return sc            
-            
-            ## Event Tuple Tool 
-            sc = self.e1.fill ( tup )
-            if sc.isFailure() : return sc            
-            
-            tup.write() 
-            
+            with FakeKaon ( pion ) :
+
+                mass_1 = fun_m   ( b ) / GeV 
+                m23_1  = fun_m23 ( b ) / GeV 
+                
+                print 'WITH FAKE KAON:  %s M=%s[GeV] M23=%s[GeV] ' % ( b.decay() , mass_1 , m23_1 )
+
+            print 'CONTEXT-OFF   :  %s ' % b.decay()
+                
         ## 
         return SUCCESS      ## IMPORTANT!!! 
 # =============================================================================
@@ -149,7 +127,7 @@ def configure ( inputdata        ,    ## the list of input files
     from Configurables import DaVinci
     ## delegate the actual configuration to DaVinci
     rootInTES = '/Event/PSIX'
-    the_line  = 'Phys/SelPsi2KForPsiX/Particles'
+    the_line  = 'Phys/SelPsi2KPiForPsiX/Particles'
     
     from PhysConf.Filters import LoKi_Filters
     fltrs = LoKi_Filters (
@@ -165,7 +143,7 @@ def configure ( inputdata        ,    ## the list of input files
                    )
     
     ## add the name of Bender algorithm into User sequence sequence 
-    alg_name = 'TupleTools'
+    alg_name = 'Fake'
     dv.UserAlgorithms += [ alg_name ]
     
     ## define the input data
@@ -175,7 +153,7 @@ def configure ( inputdata        ,    ## the list of input files
     gaudi = appMgr() 
     
     ## (1) create the algorithm with given name 
-    alg   = TupleTools (
+    alg   = FakeParticle(
         alg_name ,
         RootInTES = rootInTES , ## we are reading uDST
         Inputs    = [ the_line ]
@@ -213,12 +191,7 @@ if __name__ == '__main__' :
     configure( inputdata , castor = True )
     
     ## event loop 
-    run(5000)
-    
-    gaudi = appMgr()
-    alg   = gaudi.algorithm('TupleTools')
-    alg.NTuplePrint = True 
-                          
+    run(500)
     
 # =============================================================================
 # The END
