@@ -120,6 +120,9 @@ from AnalysisPython.Logger import getLogger
 if '__main__' == __name__ : logger = getLogger ( 'BenderTools.FakeH' )
 else                      : logger = getLogger ( __name__ )
 # ==============================================================================
+## @attention: need valid hashing for LHCb.ParticleID!
+LHCb.ParticleID.__hash__ =  LHCb.ParticleID.pid
+# ==============================================================================
 ## @class FakeH
 #  Helper class to substitute PID for the basic particle
 #  @code
@@ -141,8 +144,7 @@ else                      : logger = getLogger ( __name__ )
 #  @thanks Alexander BARANOV 
 #  @date 2014-05-12
 class FakeH ( object ) :
-    """
-    Helper class to substitute PID for the basic particle
+    """ Helper class to substitute PID for the (basic) particle
     #
     #  mass = DTF_FUN ( M , True , 'J/psi(1S)') ## calculate the mass with constrains
     #  for B in container :
@@ -160,19 +162,19 @@ class FakeH ( object ) :
 
         self._particle = particle
         self._oldpid   = None
-        
-        if particle : 
-            _pid           = particle.particleID() 
-            self._newpid   = _mapping.get( _pid , None )
+
+        if particle :
+            _pid          = particle.particleID() 
+            self._newpid  = _mapping.get( _pid , None )
 
     def __enter__ ( self ) :
             
         if self._particle and self._newpid  :
             _pid = self._particle.particleID()
-            self._oldpid   = LHC.Particle ( _pid ) 
-            self._particle.setParticleID  ( self._newpid )
+            self._oldpid  = LHCb.ParticleID ( _pid ) 
+            self._particle.setParticleID     ( self._newpid )
             
-        return self
+        return self._particle
         
     def __exit__  ( self, *_ ) :
 
@@ -182,7 +184,7 @@ class FakeH ( object ) :
         self._particle = None
         self._oldpid   = None 
         self._newpid   = None 
-
+    
 # ===============================================================================
 # | pi-               |         -211 |  -1  |   139.6 MeV | 
 # | pi+               |          211 |   1  |   139.6 MeV |
@@ -255,23 +257,21 @@ def validatePIDs ( parts = _particles_ ) :
     Try to validate the hardcoded PIDs
     It is highly recommended to call this function in run-time 
     """
-    ppsv = LoKi.Services.instance().ppSvc() 
+    ppsvc = LoKi.Services.instance().ppSvc() 
     if not ppsvc :
         logger.error("Unable to validate, Particle properties service is invalid ")
-        return False
-
-    _error = False 
+        raise RuntimeError ( 'Particle properties service is invalid!' )
+    
     for key in parts :
         pid1 = parts [key] 
         pid2 = LoKi.Particles.pidFromName ( key )
-        
+
         if pid1.pid() != pid2.pid() :
             logger.error("Unable to validate %s  %s %s "
                          % ( key , pid1.pid() , pid2.pid() ) )
-            _error = True 
-
-    return _error
-
+            raise AttributeError("Unable to validate %s  %s %s "
+                                 % ( key , pid1.pid() , pid2.pid() ) )
+        
 # =============================================================================
 if '__main__' == __name__ :
 

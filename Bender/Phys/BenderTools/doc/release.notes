@@ -5,6 +5,11 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2015-11-08 - Vanya Belyaev
+ - FakeH
+   fix proper hashing for LHCb.ParticleID object 
+
+
 ! ==================== Phys/BenderTools v27r0p1 2015-11-02 ====================
 ! ==================== Phys/BenderTools v27r0   2015-10-26 ====================
 
