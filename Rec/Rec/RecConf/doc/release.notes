@@ -4,6 +4,11 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2015-11-09 - Chris Jones
+ - Only set RichRecSysConf track and pid locations if not previously set.
+   Allows for custom studies using non standard locations, configured at 
+   the top level options file level.
+
 ! 2015-11-02 - Wouter Hulsbergen
  - Configured PatPV3D such that it also creates list of new type PrimaryVertices
 

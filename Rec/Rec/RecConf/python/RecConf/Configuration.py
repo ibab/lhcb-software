@@ -172,12 +172,16 @@ class RecSysConf(LHCbConfigurableUser):
             
             # Set the sequencer the RICH reco algs should be added to
             richConf.RecoSequencer = seq
-            
+
             # Input Tracks (would be better to not hard code this. Get from TrackSys() or DstConf())
-            richConf.trackConfig().InputTracksLocation = "Rec/Track/Best"
-            
-            # Output PID Location (Same again. maybe get this location from DstConf())
-            richConf.RichPIDLocation = "Rec/Rich/PIDs"
+            # Only set if not previously set, to allow for custom studies using non standard locations
+            # set at the top level options file level
+            if not richConf.trackConfig().isPropertySet("InputTracksLocation") :
+                richConf.trackConfig().setProp("InputTracksLocation","Rec/Track/Best")
+                
+            # Output PID Location. Again allow for pre-defined custom locations.
+            if not richConf.isPropertySet("RichPIDLocation") :
+                richConf.setProp("RichPIDLocation","Rec/Rich/PIDs")
             
             # Printout
             import GaudiKernel.ProcessJobOptions
