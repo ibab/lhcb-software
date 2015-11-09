@@ -560,8 +560,7 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
 
     std::vector<LHCb::LHCbID> totalIDs;
     // Get vector of substructure and extended substructure
-    SmartRefVector<LHCb::HltObjectSummary> totSubstructure = obj->substructure();
-    totSubstructure.insert( totSubstructure.end(), obj->substructureExtended().begin(), obj->substructureExtended().end() );
+    SmartRefVector<LHCb::HltObjectSummary> totSubstructure = obj->substructureExtended();
     for(SmartRefVector <LHCb::HltObjectSummary>::const_iterator it_basic
            = totSubstructure.begin();it_basic!=totSubstructure.end();++it_basic){
 
