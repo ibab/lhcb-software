@@ -293,7 +293,10 @@ run_view_pages = OrderedDict([
                     [
                         {
                         'title': 'Noise on 1st Channel Minus Average Noise of Link',
-                        'name':  'Vetra/VeloBeetleHeaderXTalkCorrectionMoni/BHXT_SummaryPlot_2D'
+                        'name':  'Vetra/VeloBeetleHeaderXTalkCorrectionMoni/BHXT_SummaryPlot_2D',
+                        'tip': ('The distribution should stay below 20. Any sensors whereby their ' +
+                               'number of noisy links extends 20 should be reported.'),
+                        'axis_titles': ['sensor number', 'Analogue Link']
                         },
                         {
                         'title': 'BHXT_SummaryPlot_1D',
