@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-09 - Nicola Skidmore
+ - Updating lines in StrippingBeauty2Charm.py
+
 ! 2015-11-09 - Mika Vesterinen
  - Updates to StrippingTrackEffD0ToKPi.py
 
