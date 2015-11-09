@@ -128,5 +128,5 @@ StatusCode HltLumiSummaryDecoder::finalize()
     info() << "Average event size : " << format( "%7.1f words", m_totDataSize ) 
 	   << endmsg;
   }
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
+  return Decoder::AlgBase::finalize(); // must be called after all other actions
 }

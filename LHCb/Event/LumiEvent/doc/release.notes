@@ -4,6 +4,9 @@
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
 
+! 2015-11-09 - Marco Cattaneo
+ - HltLumiSummaryDecoder: call correct base class finalize()
+
 !========================= LumiEvent v3r8p1 2015-10-12 =========================
 ! 2015-08-03 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
@@ -21,7 +24,6 @@
  - HltLumiSummaryDecoder adapted to follow decoder baseclass task #49078
 
 !========================= LumiEvent v3r5 2013-09-22 =========================
-
 ! 2013-09-20 - Jaap Panman
  - Update of TimeSpanFSR to implement the += operator on two time spans.
 
