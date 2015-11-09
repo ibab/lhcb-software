@@ -294,7 +294,7 @@ run_view_pages = OrderedDict([
                         {
                         'title': 'Noise on 1st Channel Minus Average Noise of Link',
                         'name':  'Vetra/VeloBeetleHeaderXTalkCorrectionMoni/BHXT_SummaryPlot_2D',
-                        'tip': ('test'),
+                        'tip': ('The colours represent the amount of noise in the first channel of each link minus the average noise of that analogue link. It is normal to get a lot of high noise values aobve zero.'),
                         'axis_titles': ['sensor number', 'Analogue Link']
                         },
                         {
