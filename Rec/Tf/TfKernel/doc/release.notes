@@ -3,6 +3,12 @@
 ! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
+! 2015-11-09 - Gerhard Raven
+ - VeloHitManager:
+    o replace the type ZLessThan by the instance ZLessThan
+    o use direct member initialization 
+    o use auto and range-based for loops
+
 ! 2015-11-08 - Gerhard Raven
  - simplify VeloSensorHits.h   
 

@@ -185,8 +185,8 @@ namespace Tf
     mutable std::vector<HIT> m_data[m_nHalfs][m_nStations][NZONES];
 
     /// Cache validity flags
-    mutable bool m_dataValid;
-    mutable bool m_eventExpired;
+    mutable bool m_dataValid = false;
+    mutable bool m_eventExpired = true;
 
     /// access to VELO detector element
     DeVelo* m_velo;
@@ -204,11 +204,8 @@ namespace Tf
                                                         const std::string& name,
                                                         const IInterface* parent)
     : GaudiTool(type, name, parent)
-    , m_dataValid(false)
-    , m_eventExpired(true)
   {
     declareInterface<VeloHitManager<SENSORTYPE,HIT,NZONES> >(this);
-
     declareProperty("DetectorLocation",m_detectorLocation=DeVeloLocation::Default);
   }
 
@@ -218,11 +215,7 @@ namespace Tf
   template <typename SENSORTYPE, typename HIT, int NZONES>
   VeloHitManager<SENSORTYPE,HIT,NZONES>::~VeloHitManager()
   {
-    for (StationIterator iS = m_stationsAll.begin();
-        iS !=  m_stationsAll.end();
-        ++iS) {
-      delete *iS;
-    }
+    for (auto& i : m_stationsAll ) delete i;
   }
 
   //=============================================================================
@@ -261,10 +254,7 @@ namespace Tf
   StatusCode VeloHitManager<SENSORTYPE,HIT,NZONES>::finalize()
   {
     clearHits();
-
     debug() << "==> Finalize" << endmsg;
-
-
     return GaudiTool::finalize();  // must be called after all other actions
   }
 
@@ -286,8 +276,8 @@ namespace Tf
     // the maximum sensor number, determines size of sparse vector used for mapping
     unsigned int maxSensorNumber=0;
 
-    typename std::vector<DeVeloSensor*>::const_iterator sensorIter = m_velo->sensorsBegin();
-    typename std::vector<DeVeloSensor*>::const_iterator sensorsEnd = m_velo->sensorsEnd();
+    auto sensorIter = m_velo->sensorsBegin();
+    auto sensorsEnd = m_velo->sensorsEnd();
 
     for ( ; sensorIter != sensorsEnd; ++sensorIter ) {
       if ( (*sensorIter)->isPileUp() ) continue; // ignore pile up sensors
@@ -300,9 +290,9 @@ namespace Tf
 
     // sort by station z position
     for (unsigned int half=0; half<m_nHalfs; ++half) {
-      std::sort(m_stationsHalf[half].begin(),m_stationsHalf[half].end(),typename VeloSensorHits<SENSORTYPE,HIT,NZONES>::ZLessThan());
+      std::sort(m_stationsHalf[half].begin(),m_stationsHalf[half].end(),Tf::ZLessThan);
     }
-    std::sort(m_stationsAll.begin(),m_stationsAll.end(),typename VeloSensorHits<SENSORTYPE,HIT,NZONES>::ZLessThan());
+    std::sort(m_stationsAll.begin(),m_stationsAll.end(),Tf::ZLessThan);
 
     // create mapping from sensor numbers to station iterators
     m_stationBySensorNumber.resize(maxSensorNumber+1,0);
@@ -333,9 +323,7 @@ namespace Tf
   template <typename SENSORTYPE, typename HIT, int NZONES>
   void VeloHitManager<SENSORTYPE,HIT,NZONES>::handle ( const Incident& incident )
   {
-    if ( IncidentType::BeginEvent == incident.type() ){
-      this->clearHits();
-    }
+    if ( IncidentType::BeginEvent == incident.type() ) this->clearHits();
   }
 
   //=============================================================================
@@ -352,9 +340,7 @@ namespace Tf
         }
       }
     }
-    for (StationIterator si=m_stationsAll.begin(); si!=m_stationsAll.end(); ++si) {
-      (*si)->clear();
-    }
+    for (auto& si : m_stationsAll) si->clear();
 
     m_dataValid = false;
     m_eventExpired = true;
