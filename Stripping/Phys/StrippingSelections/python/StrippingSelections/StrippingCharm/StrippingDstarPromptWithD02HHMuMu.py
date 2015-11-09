@@ -29,7 +29,7 @@ from StrippingUtils.Utils import checkConfig, LineBuilder
 from GaudiKernel.SystemOfUnits import MeV, GeV, mm
 from copy import copy
 
-moduleName='DstarPromptWithD02HHLL'
+#moduleName='DstarPromptWithD02HHLL'
 
 # What follows documents the cuts to
 # be implemented by the Stripping team in
@@ -162,11 +162,11 @@ class DstarPromptWithD02HHLLConf(LineBuilder):
     ,'Postscale'
     )
 
-  def __init__(self, moduleName, config):
-    LineBuilder.__init__(self, moduleName, config)
+  def __init__(self, name, config):
+    LineBuilder.__init__(self, name, config)
 
     selD02hhll = makeD02hhll(
-      moduleName = moduleName
+      moduleName = name
       ,combMassWin = config['CombD0MassWin']
       ,massWin = config['D0MassWin']
       ,maxDOCA = config['D0MaxDOCA']
@@ -191,7 +191,7 @@ class DstarPromptWithD02HHLLConf(LineBuilder):
       )
 
     selPromptDstar = makePromptDstar(
-      moduleName = moduleName
+      moduleName = name
       ,selection = selD02hhll
       ,combDelmLower = config['CombDelmLower']
       ,combDelmUpper = config['CombDelmUpper']

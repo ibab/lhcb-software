@@ -40,7 +40,7 @@ from StrippingUtils.Utils import checkConfig, LineBuilder
 from GaudiKernel.SystemOfUnits import MeV, GeV, mm
 from copy import copy
 
-moduleName='DstarPromptWithD02HHHH'
+#moduleName='DstarPromptWithD02HHHH'
 
 # What follows documents the cuts to
 # be implemented by the Stripping team in
@@ -84,6 +84,8 @@ default_config = {
        ,'MaxITClusters'    : None
        ,'ApplyGhostProbCut': False # !!!
        ,'GhostProbCut'     : 0.4 # !!!
+       ,'ConeAngles'     : {"11":1.1,"13":1.3,"15":1.5,"17":1.7,"19":1.9}
+       ,'ConeVariables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
        ,'Prescale'         : 0.05
        ,'Postscale'        : 1
        ,'RunK3pi'          : True
@@ -152,7 +154,8 @@ class DstarPromptWithD02HHHHConf(LineBuilder):
 
     ,'ApplyGhostProbCut'
     ,'GhostProbCut'
-
+    ,'ConeAngles'   
+    ,'ConeVariables'
     ,'CheckPV'
 
     ,'ApplyGECs'
@@ -170,11 +173,11 @@ class DstarPromptWithD02HHHHConf(LineBuilder):
     ,'Postscale'
     )
 
-  def __init__(self, moduleName, config):
-    LineBuilder.__init__(self, moduleName, config)
+  def __init__(self, name, config):
+    LineBuilder.__init__(self, name, config)
 
     selD02hhhh = makeD02hhhh(
-      moduleName = moduleName
+      moduleName = name
       ,combMassWin = config['CombD0MassWin']
       ,massWin = config['D0MassWin']
       ,maxDOCA = config['D0MaxDOCA']
@@ -201,7 +204,7 @@ class DstarPromptWithD02HHHHConf(LineBuilder):
       )
 
     selPromptDstar = makePromptDstar(
-      moduleName = moduleName
+      moduleName = name
       ,selection = selD02hhhh
       ,combDelmLower = config['CombDelmLower']
       ,combDelmUpper = config['CombDelmUpper']
@@ -251,23 +254,25 @@ class DstarPromptWithD02HHHHConf(LineBuilder):
                                      'from LoKiCore.functions    import *']
                       }
 
-
+    coneinfo=[]
+    for conekey, coneitem in (config['ConeAngles']).iteritems():
+            coneinfo.append({ 
+                                        'Type' : 'RelInfoConeVariables', 'ConeAngle' : coneitem, 'Variables' : config['ConeVariables'], 
+                                        'Location' : 'P2CVDst'+conekey,
+                                        'DaughterLocations' : {
+                                          #'[^D*(2010)+ -> Charm pi+]CC' : 'P2CVDst'+conekey,
+                                          '[D*(2010)+ -> ^Charm pi+]CC' : 'P2CVD0'+conekey,
+                                          '[D*(2010)+ -> Charm ^pi+]CC' : 'P2CVpis'+conekey,
+                                          
+                                        } 
+                                      })
     self.line_tagged_d02hhhh = StrippingLine(
-      moduleName+"Line"
+      name+"Line"
       ,prescale=config['Prescale']
       ,postscale=config['Postscale']
       ,selection=selPromptDstar
       ,checkPV=config['CheckPV']
-      ,RelatedInfoTools = [
-        { 
-          'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
-          'RecursionLevel' : 1, 
-          'Locations' : {
-            selPromptDstar : 'P2CVDstar1', 
-            selD02hhhh   : 'P2CVD1', 
-          } 
-        }, 
-      ]
+      ,RelatedInfoTools = coneinfo
       ,FILTER=_GECfilter)
     self.registerLine(self.line_tagged_d02hhhh)
 

@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-09 - Andrea Contu
+ - Updates StrippingDstarPromptWithD02HHMuMu.py and StrippingDstarPromptWithD02HHHH.py
+
 ! 2015-11-09 - Nicola Skidmore
  - Updating lines in StrippingBeauty2Charm.py
 
