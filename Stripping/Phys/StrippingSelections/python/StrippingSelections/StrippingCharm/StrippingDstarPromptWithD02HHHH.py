@@ -23,14 +23,10 @@ __author__ = ['Philip Hunt']
 __date__ = '26/08/2011'
 __version__ = '$Revision: 1.2 $'
 
-__all__ = ('DstarPromptWithD02K3PiConf'
-           ,'makeD02K3Pi'
-           ,'makeD02K3PiDCS'
-           ,'makeD02KKPiPi'
-           ,'makeD02FourPi'
-           ,'makeD02Pi3K'
-           ,'makeD02Pi3KDCS'
-           ,'makePromptDstar')
+__all__ = ('DstarPromptWithD02HHHHConf'
+           ,'makeD02hhhh'
+           ,'makePromptDstar'
+           ,'default_config')
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles, ConjugateNeutralPID

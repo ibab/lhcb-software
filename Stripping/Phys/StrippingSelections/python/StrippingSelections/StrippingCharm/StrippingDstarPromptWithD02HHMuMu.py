@@ -254,7 +254,7 @@ class DstarPromptWithD02HHLLConf(LineBuilder):
                                       })
 
     self.line_tagged_d02hhll = StrippingLine(
-      moduleName+"Line"
+      name+"Line"
       ,prescale=config['Prescale']
       ,postscale=config['Postscale']
       ,selection=selPromptDstar
