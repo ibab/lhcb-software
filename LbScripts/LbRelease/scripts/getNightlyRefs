@@ -30,10 +30,38 @@ import json
 import os
 import sys
 
+from zipfile import ZipFile
+from StringIO import StringIO
+
+from LbConfiguration.SetupProject import FixProjectCase
+
+CHECK_SSL = False
+
+def urlopen(url):
+    '''
+    Wrapper for urllib2.urlopen to enable or disable SSL verification.
+    '''
+    import urllib2
+    if not CHECK_SSL and sys.version_info >= (2, 7, 9):
+        # with Python >= 2.7.9 SSL certificates are validated by default
+        # but we can ignore them
+        from ssl import SSLContext, PROTOCOL_SSLv23
+        return urllib2.urlopen(url, context=SSLContext(PROTOCOL_SSLv23))
+    return urllib2.urlopen(url)
+
 def usage():
     print __doc__
 
-ignore_missing_dirs=True
+def guess_project_name():
+    proj = os.path.basename(os.getcwd())
+    if '_' in proj:
+        proj = proj.split('_', 1)[0]
+    if proj.endswith('Dev'):
+        proj = proj[:-3]
+    return FixProjectCase(proj)
+
+# if set to True, do not extract files if the directory is missing
+ignore_missing_dirs = True
 
 if "--help" in sys.argv or "-h" in sys.argv:
     usage()
@@ -44,65 +72,53 @@ if len(sys.argv)<2 or len(sys.argv)>5:
     raise AttributeError("Incorrect number of options")
 
 #usage()
-slot=sys.argv[1]
-if len(sys.argv)>2:
-    day=sys.argv[2]
-else:
-    day=time.strftime("%A")[0:3]
-    day=day.lower()
-    day=day[0].upper()+day[1:]
-if len(sys.argv)>3:
-    app=sys.argv[3]
-else:
-    app=os.path.abspath(".").split("_")[0].split("/")[-1]
-    app=app.lower()
-    app=app[0].upper()+app[1:]
-if len(sys.argv)>4:
-    dest=sys.argv[4]
-    ignore_missing_dirs=False
-else:
-    dest="."
+args = sys.argv[1:]
 
-for k,v in {"app": app, "slot": slot, "day": day, "dest": dest}.iteritems():
-    if not len(v.strip()):
+slot = args.pop(0)
+day = args.pop(0) if args else time.strftime('%a')
+app = FixProjectCase(args.pop(0)) if args else guess_project_name()
+if args:
+    dest = args.pop(0)
+    ignore_missing_dirs = False
+else:
+    dest = os.curdir
+
+for k, v in (('slot', slot), ('app', app), ('day', day), ('dest', dest)):
+    if not v.strip():
         usage()
-        print k,v
+        print k, v
         raise ValueError("Could not parse option")
 
-print "looking for slot: %s, day: %s, app: %s" % (slot, day, app)
+platform = os.environ['CMTCONFIG']
 
-nightly="lhcb-archive.cern.ch:/data/artifacts/nightly"
-slotdir=os.environ["LHCBNIGHTLIES"]+"/"+slot+"/"+day
-if not os.path.exists(slotdir):
-    print slotdir
-    raise IOError("The day/slot combination you gave does not exist")
-if not os.path.exists(slotdir+"/"+app.upper()):
-    print slotdir
-    raise IOError("The day/slot/application combination you gave does not exist")
+print "looking for slot: %s, day: %s, app: %s, platform: %s" % (slot, day, app, platform)
 
+arch_url = ('https://lhcb-archive.cern.ch/cgi-bin/lb-get-nightly-refs'
+            '?slot={0}&day={1}&project={2}&platform={3}'
+            ).format(slot, day, app, platform)
 
-def findbuildid(slotdir):
-    f=open(slotdir+"/slot-config.json")
-    conf=json.load(f)
-    f.close()
-    return conf["build_id"]
+arch_data = urlopen(arch_url).read()
+if not arch_data:
+    print 'cannot find data for the requested combination'
+    exit(1)
 
-buildid=findbuildid(slotdir)
+arch = ZipFile(StringIO(arch_data))
 
-print "retrieving buildID", buildid
+print 'Extracting', 'specific' if ignore_missing_dirs else 'all', 'refs...'
 
-def getrefs(slot,day,app,dest):
-    dir=nightly+slot+"/"+day+"/newrefs."+os.environ["CMTCONFIG"]+"/"+app+"/*"
-    cmd="rsync -vr --max-delete=0  "+dir+" "+dest
-    print cmd
-    os.system(cmd)
+def should_extract(filename):
+    '''
+    Tell if a filename should be extracted.
+    '''
+    return (not ignore_missing_dirs # True means extract everything
+            or (not filename.endswith('/') # ignore directories
+                and os.path.isdir(os.path.dirname(filename))))
 
-if not ignore_missing_dirs:
-    getrefs(slot,day,app,dest)
-else:
-    import glob
-    exists=glob.glob(dest+"/*/*")+glob.glob(dest+"/*/*/*")
-    exists=[e for e in exists if os.path.isdir(e) and e.endswith("tests")]
-    print exists
-    for e in exists:
-        getrefs(slot,day,app+e.replace(dest,""),e)
+for info in arch.infolist():
+    if should_extract(info.filename):
+        if dest == os.curdir:
+            print info.filename
+        else:
+            print info.filename, '->', os.path.join(dest, info.filename)
+
+        arch.extract(info, path=dest)

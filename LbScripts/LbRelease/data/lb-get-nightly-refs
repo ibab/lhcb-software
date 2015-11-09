@@ -1,0 +1,38 @@
+#!/usr/bin/python
+import cgi
+from subprocess import Popen, PIPE
+import os
+import cgitb
+cgitb.enable()
+
+HDR = '''Content-type: application/zip
+Content-Disposition: inline; filename="{project}.{slot}.{day}.{platform}.zip"
+Content-Length: {size}
+'''
+
+form = cgi.FieldStorage()
+
+def getparam(key, default=None):
+    value = form.getfirst(key, default)
+    if (value and '/' not in value and value not in ('.', '..')):
+        return value
+    raise RuntimeError('invalid data in parameter %s' % key)
+
+params = dict((key, getparam(key))
+              for key in ('slot', 'day', 'project', 'platform'))
+params['flavour'] = getparam('flavour', 'nightly')
+
+dirname = '/data/archive/artifacts/{flavour}/{slot}/{day}/newrefs.{platform}/{project}'.format(**params)
+
+if os.path.isdir(dirname):
+    zip = Popen(['zip', '-q', '-r', '-', '.'], cwd=dirname, stdout=PIPE)
+    out, err = zip.communicate()
+
+    if zip.returncode == 0:
+        print HDR.format(size=len(out), **params)
+        print out
+
+    exit(zip.returncode)
+
+else:
+    print HDR.format(size=0, **params)

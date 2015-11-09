@@ -1,3 +1,7 @@
+2015-11-09  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* getNightlyRefs: fixed LBCORE-816 (remove dependency on ssh to lhcb-archive)
+
 2015-11-09  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* scripts/getNightlyRefs: Updated to connect to lhcb-archive instead of buidlhcb
