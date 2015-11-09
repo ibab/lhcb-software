@@ -1,3 +1,7 @@
+2015-11-09  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* scripts/getNightlyRefs: Updated to connect to lhcb-archive instead of buidlhcb
+
 2015-11-06  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* lb-deployment-checklist: updated for the new path to artifacts (on lhcb-archive)
