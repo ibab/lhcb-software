@@ -5,7 +5,8 @@
 // Include files
 #include "P2MCP/P2MCPTypes.h"
 #include "LoKi/BuildMCTrees.h"
-#include "LoKi/select.h"
+#include <algorithm>
+#include <functional>
 /** @namespace P2MCP::Functors P2MCP/P2MCPFunctors.h
  *  
  *
@@ -61,10 +62,10 @@ namespace P2MCP{
         for ( ; itHead != heads.end() ; ++itHead) {
           Selector selector(*itHead);
           P2MCP::Types::FlatTree tree;
-          LoKi::select(mcps.begin(), 
+          std::copy_if(mcps.begin(), 
                        mcps.end(), 
                        std::back_inserter(tree), 
-                       selector);
+                       std::cref(selector));
           std::stable_sort( tree.begin() , 
                             tree.end() , 
                             Sorter() ) ;

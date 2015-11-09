@@ -5,6 +5,8 @@
 ! Purpose     : Collection of implementations of IP2MCP and
 !               P2MCPBase for Particle -> MCTruth matching
 !-----------------------------------------------------------------------------
+! 2015-11-09 - Gerhard Raven
+ - replace LoKi::Select with std::copy_if
 
 !========================= Particle2MCTruth v2r5p1 2013-12-18 =========================
 
