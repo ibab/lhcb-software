@@ -12,12 +12,6 @@
 
 using namespace LHCb;
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : VPDigitCreator
-//
-// 2010-07-07 : Thomas Britton
-//-----------------------------------------------------------------------------
-
 DECLARE_ALGORITHM_FACTORY(VPDigitCreator)
 
 //=============================================================================
@@ -62,7 +56,7 @@ VPDigitCreator::VPDigitCreator(const std::string& name,
 VPDigitCreator::~VPDigitCreator() {}
 
 //=============================================================================
-/// Initialization
+// Initialization
 //=============================================================================
 StatusCode VPDigitCreator::initialize() {
 
@@ -74,14 +68,12 @@ StatusCode VPDigitCreator::initialize() {
 
   // Initialize the random number generators.
   sc = m_gauss.initialize(randSvc(), Rndm::Gauss(0., 1.));
-  if (!sc) {
-    error() << "Cannot initialize Gaussian random number generator." << endmsg;
-    return sc;
+  if (sc.isFailure()) {
+    return Error("Cannot initialize Gaussian random number generator.");
   }
   sc = m_uniform.initialize(randSvc(), Rndm::Flat(0., 1.));
-  if (!sc) {
-    error() << "Cannot initialize uniform random number generator." << endmsg;
-    return sc;
+  if (sc.isFailure()) {
+    return Error("Cannot initialize uniform random number generator.");
   }
   if (m_noisyPixels) {
     // Calculate the total number of noisy pixels. 
@@ -94,20 +86,19 @@ StatusCode VPDigitCreator::initialize() {
 }
 
 //=============================================================================
-/// Main execution
+// Main execution
 //=============================================================================
 StatusCode VPDigitCreator::execute() {
   
   if (m_deadTime) {
     // Update the list of currently inactive pixels.
-    std::map<const VPChannelID, double>::iterator itp;
-    for (itp = m_deadPixels.begin(); itp != m_deadPixels.end(); ++itp) {
-      m_deadPixels[itp->first] -= m_dischargeRate;
+    for (auto it = m_deadPixels.begin(); it != m_deadPixels.end(); ++it) {
+      m_deadPixels[it->first] -= m_dischargeRate;
       if (msgLevel(MSG::DEBUG)) {
-        debug() << (itp->first).channelID() << " " << itp->second << endmsg;
+        debug() << (it->first).channelID() << " " << it->second << endmsg;
       }
-      if (m_deadPixels[itp->first] < m_threshold) {
-        std::map<const VPChannelID, double>::iterator here = itp++;
+      if (m_deadPixels[it->first] < m_threshold) {
+        auto here = it++;
         m_deadPixels.erase(here);
       }
     }
@@ -116,8 +107,7 @@ StatusCode VPDigitCreator::execute() {
   // Pick up the MC digits.
   const LHCb::MCVPDigits* mcdigits = getIfExists<LHCb::MCVPDigits>(m_inputLocation);
   if (!mcdigits) {
-    error() << "No digits in " << m_inputLocation << endmsg;
-    return StatusCode::FAILURE;
+    return Error("No digits in " + m_inputLocation);
   }
 
   // Create a container for the digits and transfer ownership to the TES. 
@@ -125,14 +115,13 @@ StatusCode VPDigitCreator::execute() {
   put(digits, m_outputLocation); 
 
   // Loop over the MC digits.
-  LHCb::MCVPDigits::const_iterator it;
-  for (it = mcdigits->begin(); it != mcdigits->end(); ++it) {
+  for (const LHCb::MCVPDigit* mcdigit : *mcdigits) {
     // Sum up the collected charge from all deposits.
-    const std::vector<double>& deposits = (*it)->deposits();
+    const std::vector<double>& deposits = mcdigit->deposits();
     const double charge = std::accumulate(deposits.begin(), deposits.end(), 0.);
     // Check if the collected charge exceeds the threshold.
     if (charge < m_threshold + m_electronicNoise * m_gauss()) continue;
-    const LHCb::VPChannelID channel = (*it)->channelID();
+    const LHCb::VPChannelID channel = mcdigit->channelID();
     if (m_deadTime) {
       // Check if the pixel is already over threshold.
       if (m_deadPixels.count(channel) == 1) {

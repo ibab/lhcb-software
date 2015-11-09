@@ -7,12 +7,6 @@
 
 using namespace Gaudi::Units;
 
-/** @file VPDepositMonitor.cpp
- *
- *  Implementation of class : VPDepositMonitor
- *
- */
-
 DECLARE_ALGORITHM_FACTORY(VPDepositMonitor)
 
 //=============================================================================
@@ -21,7 +15,7 @@ DECLARE_ALGORITHM_FACTORY(VPDepositMonitor)
 VPDepositMonitor::VPDepositMonitor(const std::string& name, 
                                    ISvcLocator* pSvcLocator) : 
     GaudiTupleAlg(name, pSvcLocator),
-    m_det(NULL) {
+    m_det(nullptr) {
 
   declareProperty("Detailed", m_detailed = false);
 
@@ -35,7 +29,11 @@ StatusCode VPDepositMonitor::initialize() {
   StatusCode sc = GaudiTupleAlg::initialize();
   if (sc.isFailure()) return sc;
 
-  m_det = getDet<DeVP>(DeVPLocation::Default);
+  m_det = getDetIfExists<DeVP>(DeVPLocation::Default);
+  if (!m_det) {
+    return Error("No detector element at " + DeVPLocation::Default);
+  }
+
   setHistoTopDir("VP/");
   return StatusCode::SUCCESS;
 
@@ -46,9 +44,9 @@ StatusCode VPDepositMonitor::initialize() {
 //=============================================================================
 StatusCode VPDepositMonitor::execute() {
 
-  LHCb::MCHits* hits = getIfExists<LHCb::MCHits>(LHCb::MCHitLocation::VP);
+  const LHCb::MCHits* hits = getIfExists<LHCb::MCHits>(LHCb::MCHitLocation::VP);
   if (hits) monitorHits(hits);
-  LHCb::MCVPDigits* mcdigits = getIfExists<LHCb::MCVPDigits>(LHCb::MCVPDigitLocation::Default);
+  const LHCb::MCVPDigits* mcdigits = getIfExists<LHCb::MCVPDigits>(LHCb::MCVPDigitLocation::Default);
   if (mcdigits) monitorDigits(mcdigits);
   return StatusCode::SUCCESS;
 
@@ -57,13 +55,12 @@ StatusCode VPDepositMonitor::execute() {
 //=============================================================================
 // Fill histograms for MC hits
 //=============================================================================
-void VPDepositMonitor::monitorHits(LHCb::MCHits* hits) {
+void VPDepositMonitor::monitorHits(const LHCb::MCHits* hits) {
 
-  LHCb::MCHits::const_iterator it;
-  for (it = hits->begin(); it != hits->end(); ++it) {
-    plot((*it)->pathLength() / Gaudi::Units::micrometer, "PathInSensor",  
+  for (const LHCb::MCHit* hit : *hits) {
+    plot(hit->pathLength() / Gaudi::Units::micrometer, "PathInSensor",  
          "Path in sensor [um]" , 0.0, 300.0, 60);
-    plot((*it)->energy() / Gaudi::Units::keV, "EnergyInSensor",
+    plot(hit->energy() / Gaudi::Units::keV, "EnergyInSensor",
          "Energy deposited in sensor [keV]" , 0.0, 200.0, 40);
   }
 
@@ -72,18 +69,17 @@ void VPDepositMonitor::monitorHits(LHCb::MCHits* hits) {
 //=============================================================================
 // Fill histograms for MC digits 
 //=============================================================================
-void VPDepositMonitor::monitorDigits(LHCb::MCVPDigits* mcdigits) {
+void VPDepositMonitor::monitorDigits(const LHCb::MCVPDigits* mcdigits) {
 
   plot(mcdigits->size(), "nDigits", "Number of MCVPDigits / event", 
        0., 10000., 50);
-  LHCb::MCVPDigits::iterator it;
-  for (it = mcdigits->begin(); it != mcdigits->end(); ++it) {
-    LHCb::VPChannelID channel = (*it)->channelID();
+  for (const LHCb::MCVPDigit* mcdigit : *mcdigits) {
+    LHCb::VPChannelID channel = mcdigit->channelID();
     plot(channel.module(), "DigitsPerModule",
          "Number of digits / module", -0.5, 51.5, 52);
     // Loop over the deposits.
     double charge = 0.;
-    const std::vector<double>& deposits = (*it)->deposits();
+    const std::vector<double>& deposits = mcdigit->deposits();
     const unsigned int nDeposits = deposits.size();
     for (unsigned int i = 0; i < nDeposits; ++i) {
       charge += deposits[i];

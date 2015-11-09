@@ -26,7 +26,7 @@ DECLARE_ALGORITHM_FACTORY(VPDepositCreator)
 VPDepositCreator::VPDepositCreator(const std::string& name, 
                                    ISvcLocator* pSvcLocator) : 
     GaudiTupleAlg(name, pSvcLocator),
-    m_det(NULL), m_radDamageTool(NULL) {
+    m_det(nullptr), m_radDamageTool(nullptr) {
 
   declareProperty("HitLocation", m_hitLocation = LHCb::MCHitLocation::VP);
   declareProperty("DigitLocation", m_digitLocation = LHCb::MCVPDigitLocation::Default);
@@ -62,7 +62,10 @@ StatusCode VPDepositCreator::initialize() {
   if (sc.isFailure()) return sc;
 
   // Get the detector element.
-  m_det = getDet<DeVP>(DeVPLocation::Default);
+  m_det = getDetIfExists<DeVP>(DeVPLocation::Default);
+  if (!m_det) {
+    return Error("No detector element at " + DeVPLocation::Default);
+  }
 
   // Get the radiation damage tool.
   if (m_irradiated) {
@@ -102,8 +105,7 @@ StatusCode VPDepositCreator::execute() {
   // Pick up the MC hits.
   const LHCb::MCHits* hits = getIfExists<LHCb::MCHits>(m_hitLocation);
   if (!hits) {
-    error() << "No hits in " << m_hitLocation << endmsg;
-    return StatusCode::FAILURE;
+    return Error("No hits in " + m_hitLocation);
   }
 
   // Create a container for the MC digits and transfer ownership to the TES. 

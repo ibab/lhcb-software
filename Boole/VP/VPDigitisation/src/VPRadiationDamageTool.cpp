@@ -31,8 +31,11 @@ StatusCode VPRadiationDamageTool::initialize() {
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;
 
-  m_det = getDet<DeVP>(DeVPLocation::Default);
- 
+  m_det = getDetIfExists<DeVP>(DeVPLocation::Default);
+  if (!m_det) {
+    return Error("No detector element at " + DeVPLocation::Default);
+  }
+
   // Set fit values for fluence.
   m_a = { 3.62911,     0.000271931, -3.30213e-06, -3.42959e-09, 6.35852e-12,
           1.93743e-15, 1.62919e-18};
@@ -45,7 +48,7 @@ StatusCode VPRadiationDamageTool::initialize() {
 //=========================================================================
 // Calculate the fluence at a given position in the global frame.
 //=========================================================================
-double VPRadiationDamageTool::fluence(const Gaudi::XYZPoint point, 
+double VPRadiationDamageTool::fluence(const Gaudi::XYZPoint& point, 
                                       const double lint) {
 
   const double x = point.x() / Gaudi::Units::cm;

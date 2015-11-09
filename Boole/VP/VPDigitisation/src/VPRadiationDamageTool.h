@@ -27,7 +27,7 @@ public:
   virtual StatusCode initialize();
 
   /// Fluence as function of position and integrated luminosity (in fb-1).
-  double fluence(const Gaudi::XYZPoint point, const double lint);
+  double fluence(const Gaudi::XYZPoint& point, const double lint);
   /// Charge collection efficiency as function of 1 MeV n eq. fluence and bias.
   double chargeCollectionEfficiency(const double f, const double v);
 

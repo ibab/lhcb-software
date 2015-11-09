@@ -28,8 +28,8 @@ public:
 
 private:
 
-  void monitorHits(LHCb::MCHits*);
-  void monitorDigits(LHCb::MCVPDigits*);
+  void monitorHits(const LHCb::MCHits*);
+  void monitorDigits(const LHCb::MCVPDigits*);
 
   bool m_detailed;
   DeVP* m_det;
