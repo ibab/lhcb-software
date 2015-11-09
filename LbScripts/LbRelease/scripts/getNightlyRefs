@@ -71,7 +71,7 @@ for k,v in {"app": app, "slot": slot, "day": day, "dest": dest}.iteritems():
 
 print "looking for slot: %s, day: %s, app: %s" % (slot, day, app)
 
-nightly="lhcb-archive.cern.ch:/data/artifacts/"
+nightly="lhcb-archive.cern.ch:/data/artifacts/nigthly"
 slotdir=os.environ["LHCBNIGHTLIES"]+"/"+slot+"/"+day
 if not os.path.exists(slotdir):
     print slotdir
