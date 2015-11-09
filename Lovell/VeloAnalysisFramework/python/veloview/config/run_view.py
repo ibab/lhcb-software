@@ -279,7 +279,7 @@ run_view_pages = OrderedDict([
                         },
                         {
                         'title': 'RMS CMS Normalised Header noise for all sensors',
-                        'name': 'Vetra/NoiseMon/ADCCMSuppressed/Header/HeaderNoise_allSensors'
+                        'name': 'Vetra/NoiseMon/ADCCMSuppressed/Header/HeaderNoise_allSensors',
                         },
                         {
                        'title': 'RMS CMS NoisyHeaderLinksPerSensor',
@@ -292,16 +292,19 @@ run_view_pages = OrderedDict([
                 'plots':
                     [
                         {
-                       'title': 'Noise on 1st Channel Minus Average Noise of Link',
-                       'name':  'Vetra/VeloBeetleHeaderXTalkCorrectionMoni/BHXT_SummaryPlot_2D'
+                        'title': 'Noise on 1st Channel Minus Average Noise of Link',
+                        'name':  'Vetra/VeloBeetleHeaderXTalkCorrectionMoni/BHXT_SummaryPlot_2D'
                         },
                         {
-                       'title': 'BHXT_SummaryPlot_1D',
-                       'name':  'Vetra/VeloBeetleHeaderXTalkCorrectionMoni/BHXT_SummaryPlot_1D'
+                        'title': 'BHXT_SummaryPlot_1D',
+                        'name':  'Vetra/VeloBeetleHeaderXTalkCorrectionMoni/BHXT_SummaryPlot_1D'
                         },
                         {
-                       'title': 'Noise difference between the first and the reference channel',
-                       'name':  'Vetra/VeloBeetleHeaderXTalkCorrectionMoni/BHXT_DiffPlot_1D'
+                        'title': 'Noise difference between the first and the reference channel',
+                        'name':  'Vetra/VeloBeetleHeaderXTalkCorrectionMoni/BHXT_DiffPlot_1D',
+                        'tip': ('The distribution should stay below 20. Any sensors whereby their ' +
+                               'number of noisy links extends 20 should be reported.'),
+                        'axis_titles': ['difference in ADC counts', 'number of channels']
                         },
                     ]
                 } 
