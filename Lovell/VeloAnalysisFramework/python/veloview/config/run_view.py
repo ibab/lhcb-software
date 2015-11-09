@@ -264,15 +264,18 @@ run_view_pages = OrderedDict([
                         {
                         'title': 'RMS Normalised Header noise for all sensors',
                         'name': 'Vetra/NoiseMon/DecodedADC/Header/HeaderNoise_allSensors',
-                        'tip': ('This plot shows for every link (64 entries per powered sensor) the noise measured' +  
-                               'in the first channel of that link, which is affected by header cross talk, normalised' + 
-                               'to the average noise of the link. The peak of the distribution should be to the left' + 
+                        'tip': ('This plot shows for every link (64 entries per powered sensor) the noise measured ' +  
+                               'in the first channel of that link, which is affected by header cross talk, normalised ' + 
+                               'to the average noise of the link. The peak of the distribution should be to the left ' + 
                                'of 2. There should only be a very small tail to the right of 2.'),
                         'axis_titles': ['normalised header noise', 'number of channels']
                         },
                         {
                         'title': 'RMS NoisyHeaderLinksPerSensor',
-                        'name': 'Vetra/NoiseMon/DecodedADC/Header/NoisyHeaderLinksPerSensor'
+                        'name': 'Vetra/NoiseMon/DecodedADC/Header/NoisyHeaderLinksPerSensor',
+                        'tip': ('The distribution should stay below 20. Any sensors whereby their ' +
+                               'number of noisy links extends 20 should be reported.'),
+                        'axis_titles': ['sensor number', 'noisy header links']
                         },
                         {
                         'title': 'RMS CMS Normalised Header noise for all sensors',
