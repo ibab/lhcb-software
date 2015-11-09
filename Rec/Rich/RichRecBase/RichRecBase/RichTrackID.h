@@ -36,7 +36,7 @@ namespace Rich
     {
 
       /// Number of Track types
-      static const unsigned int NTrTypes = 9;
+      static const unsigned int NTrTypes = 10;
 
       /** @enum Rich::Rec::Track::Type
        *
@@ -58,7 +58,8 @@ namespace Rich
           KsTrack     =  5, ///< Track algorithm type is KsTrack
           Velo        =  6, ///< Track algorithm type is Velo
           Trigger     =  7, ///< Track algorithm type Trigger track
-          MCRichTrack =  8  ///< MCRichTrack track
+          MuonID      =  8, ///< Track produced by the Muon ID reconstruction
+          MCRichTrack =  9  ///< MCRichTrack track
         };
 
       /** Access the enumerated type for given Track

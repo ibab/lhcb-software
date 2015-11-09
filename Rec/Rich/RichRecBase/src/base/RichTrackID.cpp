@@ -53,17 +53,18 @@ std::string Rich::Rec::text( const Rich::Rec::Track::Type track )
 
 Rich::Rec::Track::Type Rich::Rec::Track::type( const std::string & name )
 {
-  if      ( "Trigger"  == name )    { return Rich::Rec::Track::Trigger;  }
-  else if ( "Forward"  == name )    { return Rich::Rec::Track::Forward;  }
-  else if ( "Match"    == name )    { return Rich::Rec::Track::Match;    }
-  else if ( "KsTrack"  == name )    { return Rich::Rec::Track::KsTrack;  }
-  else if ( "VeloTT"   == name )    { return Rich::Rec::Track::VeloTT;   }
-  else if ( "Seed"     == name )    { return Rich::Rec::Track::Seed;     }
-  else if ( "Follow"   == name )    { return Rich::Rec::Track::Follow;   }
-  else if ( "Velo"     == name )    { return Rich::Rec::Track::Velo;     }
-  else if ( "Unknown"  == name )    { return Rich::Rec::Track::Unknown;  }
-  else if ( "Unusable" == name )    { return Rich::Rec::Track::Unusable; }
+  if      ( "Trigger"     == name ) { return Rich::Rec::Track::Trigger;  }
+  else if ( "Forward"     == name ) { return Rich::Rec::Track::Forward;  }
+  else if ( "Match"       == name ) { return Rich::Rec::Track::Match;    }
+  else if ( "KsTrack"     == name ) { return Rich::Rec::Track::KsTrack;  }
+  else if ( "VeloTT"      == name ) { return Rich::Rec::Track::VeloTT;   }
+  else if ( "Seed"        == name ) { return Rich::Rec::Track::Seed;     }
+  else if ( "Follow"      == name ) { return Rich::Rec::Track::Follow;   }
+  else if ( "Velo"        == name ) { return Rich::Rec::Track::Velo;     }
+  else if ( "Unknown"     == name ) { return Rich::Rec::Track::Unknown;  }
+  else if ( "Unusable"    == name ) { return Rich::Rec::Track::Unusable; }
   else if ( "MCRichTrack" == name ) { return Rich::Rec::Track::MCRichTrack;}
+  else if ( "MuonID"      == name ) { return Rich::Rec::Track::MuonID;}
   else
   { // Should not get here ...
     throw GaudiException( "Unknown track string name '"+name+"'",
@@ -96,13 +97,15 @@ Rich::Rec::Track::Type Rich::Rec::Track::type( const LHCb::Track * track )
     else if ( LHCb::Track::PrVeloUT      == hist )  { return Rich::Rec::Track::VeloTT;   }
     // Ks Tracks
     else if ( LHCb::Track::PatKShort     == hist ||
-              LHCb::Track::PatDownstream == hist )  { return Rich::Rec::Track::KsTrack;  }
-    else if ( LHCb::Track::PrDownstream  == hist )  { return Rich::Rec::Track::KsTrack;   }
+              LHCb::Track::PatDownstream == hist ||
+              LHCb::Track::PrDownstream  == hist )  { return Rich::Rec::Track::KsTrack;  }
     // Velo only tracks (from any source)
     else if ( LHCb::Track::Velo  == track->type() ||
               LHCb::Track::VeloR == track->type() ) { return Rich::Rec::Track::Velo;     }
     // MC or ideal tracking
     else if ( LHCb::Track::TrackIdealPR  == hist )  { return Rich::Rec::Track::MCRichTrack; }
+    // Muon ID
+    else if ( LHCb::Track::MuonID        == hist )  { return Rich::Rec::Track::MuonID; }
     // Imported HLT tracks
     else if ( LHCb::Track::HLTImportedTrack == hist )
     {

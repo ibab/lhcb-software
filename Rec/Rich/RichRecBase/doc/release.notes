@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2015-11-09 - Chris Jones
+ - Add 'MuonID' to the list of known track types.
+
 ! 2015-10-26 - Chris Jones
  - Various minor cleanups to base classes.
 
