@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-11-09 - Mika Vesterinen
+ - First version of the settings for HeavyIon_November2015 and corresponding PID and TrackEffDiMuon
+
 ! 2015-11-03 - Rosen Matev
  - Commit HLT2 fix for protonArgon settings.
 
