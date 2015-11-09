@@ -5,6 +5,10 @@
 !--------------------------------------------------------------------------
 
 ! 2015-11-08 - Heinrich Schindler
+ - VPClusterPosition: use DeVP::sensors getter instead of sensorsBegin/End.
+ - Remove dependency on GaudiGSL.
+
+! 2015-11-08 - Heinrich Schindler
  - Move VPTrackMoni to Tr/TrackMonitors (in Rec).
  - Remove dependency on Tr/TrackFitEvent.
 

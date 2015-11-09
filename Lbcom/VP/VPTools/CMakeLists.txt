@@ -7,11 +7,10 @@ gaudi_depends_on_subdirs(Det/VPDet
                          Event/DigiEvent
                          Event/TrackEvent
                          GaudiAlg
-                         GaudiGSL
                          Tr/LHCbTrackInterfaces)
 
 gaudi_add_module(VPTools
                  src/*.cpp
                  INCLUDE_DIRS Event/DigiEvent Tr/LHCbTrackInterfaces
-                 LINK_LIBRARIES VPDetLib TrackEvent GaudiAlgLib GaudiGSLLib)
+                 LINK_LIBRARIES VPDetLib TrackEvent GaudiAlgLib)
 

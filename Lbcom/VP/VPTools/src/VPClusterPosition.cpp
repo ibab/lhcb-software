@@ -56,7 +56,8 @@ StatusCode VPClusterPosition::initialize() {
   m_c2.resize(nSensors, 1.);
   m_s2.resize(nSensors, 0.);
   const Gaudi::XYZVector vl(1., 0., 0.);
-  for (auto it = m_det->sensorsBegin(); it != m_det->sensorsEnd(); ++it) {
+  auto sensors = m_det->sensors();
+  for (auto it = sensors.cbegin(), end = sensors.cend(); it != end; ++it) {
     const unsigned int sensor = (*it)->sensorNumber();
     if (sensor >= m_c2.size()) {
       m_c2.resize(sensor + 1);
