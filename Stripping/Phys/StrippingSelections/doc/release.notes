@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-09 - Mika Vesterinen
+ - Updates to StrippingTrackEffD0ToKPi.py
+
 ! 2015-11-08 - Xabier Cid Vidal
  - Added Sigma3Mu and Sigma3MuDownstream lines to RareStrange
 

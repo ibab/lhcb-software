@@ -13,6 +13,7 @@ _selections = [
     "StrippingCharmFromBSemiForProtonPID",
     "StrippingProtonAsym",
     "StrippingTrackEffD0ToKPi",
+    "StrippingTrackEffD0ToKPiPrep",
     "StrippingTrackEffD0ToK3Pi",
     "StrippingTrackEffMuonTT",
     "StrippingTrackEffVeloMuon",
