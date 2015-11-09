@@ -303,14 +303,14 @@ run_view_pages = OrderedDict([
                         'title': 'Noise difference between the first and the reference channel',
                         'name':  'Vetra/VeloBeetleHeaderXTalkCorrectionMoni/BHXT_DiffPlot_1D',
                         'tip': ('This is a 1D summary plot of the noise difference between the ' +
-                                'first channel in each link and the reference channel. There should ' +
-                                'only be a small difference in ADC counts between the channels and the ' +
-                                'reference channel. Thus we usually get a broad distribution (usually ' +
-                                'centred somewhere between 0 and 1) with the majority of the entries ' +
-                                'lying somewhere between -2 and 2. If there are a large number of ' +
-                                'channels which differ significantly from the reference, i.e. entries ' +
-                                'with a high difference in ADC counts (greater/less than +/-3), then ' +
-                                'this should be reported.'),
+                               'first channel in each link and the reference channel. There should ' +
+                               'only be a small difference in ADC counts between the channels and the ' +
+                               'reference channel. Thus we usually get a broad distribution (usually ' +
+                               'centred somewhere between 0 and 1) with the majority of the entries ' +
+                               'lying somewhere between -2 and 2. If there are a large number of ' +
+                               'channels which differ significantly from the reference, i.e. entries ' +
+                               'with a high difference in ADC counts (greater/less than +/-3), then ' +
+                               'this should be reported.'),
                         'axis_titles': ['difference in ADC counts', 'number of channels']
                         },
                     ]
