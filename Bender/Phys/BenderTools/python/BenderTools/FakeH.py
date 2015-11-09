@@ -120,8 +120,25 @@ from AnalysisPython.Logger import getLogger
 if '__main__' == __name__ : logger = getLogger ( 'BenderTools.FakeH' )
 else                      : logger = getLogger ( __name__ )
 # ==============================================================================
-## @attention: need valid hashing for LHCb.ParticleID!
-LHCb.ParticleID.__hash__ =  LHCb.ParticleID.pid
+if     1 != hash ( LHCb.ParticleID ( 1 ) ) \
+   or  0 != hash ( LHCb.ParticleID (   ) ) :
+    ## 
+    def _pid_hash_ ( self ) :
+        """Modified hash-function for
+        see LHCb::ParticleID::pid 
+        """
+        return self.pid()
+    ## 
+    def _pp_hash_ ( self ) :
+        """Modified hash-function for
+        see LHCb::ParticleProperty::particleID
+        """
+        return self.particleID().pid()
+    LHCb.ParticleID      .__hash__ =  _pid_hash_
+    LHCb.ParticleProperty.__hash__ =   _pp_hash_
+    logger.warning ( "Modified hash-function for LHCb.ParticleID"       )
+    logger.warning ( "Modified hash-function for LHCb.ParticleProperty" )
+    
 # ==============================================================================
 ## @class FakeH
 #  Helper class to substitute PID for the basic particle
