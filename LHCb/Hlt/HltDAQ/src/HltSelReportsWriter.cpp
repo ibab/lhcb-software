@@ -337,10 +337,21 @@ StatusCode HltSelReportsWriter::execute() {
     unsigned int sHitType=0;
 
     const auto& subs = hos->substructure();
+    const auto& subsExt = hos->substructureExtended();
     if( !subs.empty() ){
       std::transform( std::begin(subs), std::end(subs),
                       std::back_inserter(svect),
                       [&](const SmartRef<LHCb::HltObjectSummary>& i) { return fromIndexToNewIndex[ i->index() ] ; } );
+      if( !subsExt.empty() )
+      {   // add Extended items if not in already
+        for( const auto& i: subsExt )
+        {
+          if( subs.end() == std::find( subs.begin(), subs.end(), i ) )
+          {
+            svect.push_back( fromIndexToNewIndex[ i->index() ] );
+          }
+        }
+      }
     } else if( !hos->lhcbIDs().empty() ) {
       // hits
       sHitType=1;

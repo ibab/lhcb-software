@@ -4,6 +4,11 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2015-11-08 - Tomasz Skwarnicki
+ - Change HltSelReportsWriter to use substructureExtended() if set.
+   Increase version numbers of the HltSelReports Writer and Decoder to 7
+     (will be saved in RawBank) even though bank itself is not changed.
+
 ! 2015-11-06 - Tomasz Skwarnicki
  - Fix a mistake in the change implemented yesterday
 

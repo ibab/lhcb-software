@@ -26,7 +26,7 @@ public:
   StatusCode execute   () override;    ///< Algorithm execution
 
 private:
-  enum HeaderIDs { kVersionNumber=6 };
+  enum HeaderIDs { kVersionNumber=7 };
   /// location of output
   StringProperty m_outputHltSelReportsLocation;
   /// for converting objects in to summaries
