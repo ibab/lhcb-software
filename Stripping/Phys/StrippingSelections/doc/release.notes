@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-10 - Stefano Perazzini
+ - Updated test script for BnoC liaison
+
 ! 2015-11-10 - Ricardo Vazquez Gomez
  - Added CharmToBeSwum stream to the users and liaisons tests for Incremental stripping scripts
 

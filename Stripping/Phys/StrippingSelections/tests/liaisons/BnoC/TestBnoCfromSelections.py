@@ -17,16 +17,13 @@ DefaultTrackingCuts().Cuts  = { "Chi2Cut" : [ 0, 3 ],
 #Raw event juggler to split Other/RawEvent into Velo/RawEvent and Tracker/RawEvent
 #
 from Configurables import RawEventJuggler
-juggler = RawEventJuggler( DataOnDemand=True, Input=0.3, Output=4.1 )
+juggler = RawEventJuggler( DataOnDemand=True, Input=0.3, Output=4.2 )
 
 #
 #Fix for TrackEff lines
 #
 from Configurables import DecodeRawEvent
-DecodeRawEvent().setProp("OverrideInputs",4.1)
-
-from Configurables import ConfigCDBAccessSvc
-ConfigCDBAccessSvc().File = '$STRIPPINGSELECTIONSROOT/tests/data/config.cdb'
+DecodeRawEvent().setProp("OverrideInputs",4.2)
 
 # Specify the name of your configuration
 my_wg='BnoC' #FOR LIAISONS
@@ -149,14 +146,13 @@ unpackIt.OutputName = "Rec/Track/FittedHLT1VeloTracks"
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
 DaVinci().EvtMax = 100000
 DaVinci().PrintFreq = 100
-DaVinci().appendToMainSequence( [unpackIt] )
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
 #DaVinci().appendToMainSequence( [ ac ] )
 DaVinci().appendToMainSequence( [ dstWriter.sequence() ] )
 DaVinci().ProductionType = "Stripping"
 DaVinci().DataType  = "2015"
-DaVinci().InputType = "DST"
+DaVinci().InputType = "RDST"
 
 # change the column size of timing table
 from Configurables import TimingAuditor, SequencerTimerTool
@@ -166,8 +162,8 @@ TimingAuditor().TIMER.NameSize = 60
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
 # database
-DaVinci().DDDBtag  = "dddb-20150526"
-DaVinci().CondDBtag = "cond-20150625"
+DaVinci().DDDBtag   = "dddb-20150724"
+DaVinci().CondDBtag = "cond-20150828"
 
 # input file
-importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco15_NoBias.py")
+importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco15a_Run164668.py")
