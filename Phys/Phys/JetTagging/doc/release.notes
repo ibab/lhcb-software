@@ -5,7 +5,7 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-11-10 - Cedric Potterat
- - modification in BDTTag, remvoing the "erase" of Particle from the TES.
+ - modification in BDTTag, remvoing the "erase" of Particle from the TES..
 
 ! 2015-11-08 - Cedric Potterat
  - remove MC associations headers. IParticle2MCAssociator.h...

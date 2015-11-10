@@ -246,7 +246,6 @@ const vector<LoKi::BDTTag::Svr> *LoKi::BDTTag::tbvs(bool force) {
     return 0;
   }
 
-  //std::cout<<"here ??"<<std::endl;
   std::vector<Particle*>   m_prtsSaved;      ///< Particles used to build SVRs.
   // Select and sort the particles.
   // A lower minimum IP chi-squared requirement is applied for MC.
@@ -273,14 +272,11 @@ const vector<LoKi::BDTTag::Svr> *LoKi::BDTTag::tbvs(bool force) {
       }
       if (!(ipChi2Min > ipChi2MinCut)) { continue;}
 
-      //std::cout<<"adddd0"<<std::endl;
       m_prtsSaved.push_back(*prt);
-      //std::cout<<"adddd"<<std::endl;
     }
   }
 
 
-//  std::cout<<"m_prtsSaved size"<< m_prtsSaved.size()  <<std::endl;
   sort(m_prtsSaved.begin(), m_prtsSaved.end(), comparePrtPt);
 
   // Create and select the two-body SVRs.
