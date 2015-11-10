@@ -65,7 +65,7 @@ namespace LoKi {
      * responses are returned via "TagX_bdt0" and "TagX_bdt1". The
      * SVRs are sorted from high to low via the variable set with
      * m_nbvSort, which by default is SVR pT.
-     * 
+     *
      * An additional variable "TagX_pass" is also provided, which
      * flags whether the n-body SVR has passed the pre-selection of
      * Table 5 from LHCb-ANA-2014-074. If m_nbvSelect is set to true
@@ -83,7 +83,7 @@ namespace LoKi {
   protected:
 
     /// Standard constructor.
-    BDTTag(const std::string& type, const std::string& name, 
+    BDTTag(const std::string& type, const std::string& name,
 	   const IInterface* parent);
 
     /// Standard destructor.
@@ -115,7 +115,7 @@ namespace LoKi {
      * of SVRs.
      */
     class Svr {
-  
+
     public:
 
       /// Two-body constructor.
@@ -123,10 +123,10 @@ namespace LoKi {
 
       /// N-body constructor.
       Svr(const Svr *svr);
-      
+
       /**
        * Check if the two-body SVR passes the quality requirements.
-       * 
+       *
        * The two-body vertex requirements are given in Table 4 of
        * LHCb-ANA-2014-074.
        */
@@ -149,17 +149,17 @@ namespace LoKi {
        * properties are calculated; any values dependent upon the jet
        * are not calculated.
        */
-      bool calc(const Particle *jet = 0, bool force = false); 
+      bool calc(const Particle *jet = 0, bool force = false);
       /// Link an n-body SVR with another n-body SVR, failure returns false.
       bool link(Svr &nbv);
-      
+
       // Members.
       vector<const Particle*> m_trks; ///< The stored tracks.
       vector<const Svr*>      m_tbvs; ///< The stored two-body SVRs.
       const RecVertex        *m_pvr;  ///< The associated PVR.
       Vertex                  m_vrt;  ///< The SVR vertex.
       Particle                m_prt;  ///< The SVR particle.
-      
+
       // Stored variables.
       bool     m_stored;  ///< Flag if variables are stored.
       bool     m_fit;     ///< Flag whether the vertex has been fit.
@@ -184,7 +184,7 @@ namespace LoKi {
     private:
 
       ///< The parent tagging algorithm.
-      BDTTag *m_parent; 
+      BDTTag *m_parent;
     };
 
     /// Calculate dR between two particles.
@@ -317,7 +317,7 @@ namespace LoKi {
      * already been called. Warning, changing the particle selection
      * invalidates the results of LHCb-ANA-2014-074.
      */
-    bool m_prtSelect; 
+    bool m_prtSelect;
     /**
      * If true, apply the default selection to the n-body SVRs.
      *
@@ -327,7 +327,7 @@ namespace LoKi {
      * when calculateJetProperty is called. Warning, changing the
      * n-body selection invalidates the results of LHCb-ANA-2014-074.
      */
-    bool m_nbvSelect; 
+    bool m_nbvSelect;
     /**
      * Sort the n-body SVRs by "pt", "bdt0", or "bdt1".
      *
@@ -388,7 +388,7 @@ namespace LoKi {
     string m_odnLocation;
 
   private:
-    
+
     BDTTag();                         ///< Disables the default constructor.
     BDTTag(const BDTTag&);            ///< Disables the copy constructor.
     BDTTag& operator=(const BDTTag&); ///< Disables the assignment operator.
