@@ -3,6 +3,9 @@
 ! Responsible : Wouter Hulsbergen, Stephanie Hansmann-Menzemer
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
+! 2015-11-10 - Gerhard Raven
+ - undo latest round of changes to OTHitEfficiencyMonitor, as it seems
+   to cause some unintended changes to the tests...
 
 ! 2015-11-08 - Heinrich Schindler
  - Add VPTrackMonitor (moved over from VP/VPTools in Lbcom) and tidy it up.
