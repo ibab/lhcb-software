@@ -479,8 +479,8 @@ private: // private data members
 
   /// Holes
   Gaudi::XYZPoint m_posHole;   ///Hole position
-  double m_HoleShiftXSt;   ///X Hole shiftin local frame
-  double m_HoleShiftYSt;   ///Y Hole shiftin local frame
+  double m_HoleShiftX;    ///X Hole shift in local frame
+  double m_HoleShiftY;    ///Y Hole shift in local frame
   double m_halfHole1X;    ///Hole in local frame X, section 1
   double m_halfHole2X;    ///Hole in local frame X, section 2
   double m_halfHole3X;    ///Hole in local frame X, section 3

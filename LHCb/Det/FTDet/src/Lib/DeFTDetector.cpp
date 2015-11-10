@@ -9,6 +9,7 @@
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
 
+#include <boost/lexical_cast.hpp>
 
 /** @file DeFTDetector.cpp
  *
@@ -87,7 +88,7 @@ StatusCode DeFTDetector::initialize(){
   const IDetectorElement::IDEContainer & detelems = childIDetectorElements();
   updMgrSvc()->registerCondition( this, geometry(), &DeFTDetector::geometryUpdate );
 
-  if( ( m_FTversion == 20 )  || ( m_FTversion >=  40 )  ){
+  if( m_FTversion >= 20 ){    //geom 20,4x,5x...
     for (iS = detelems.begin(); iS != detelems.end(); ++iS) {
       SmartDataPtr<DeFTStation> station(dataSvc(), (*iS)->name());
       if (station  ) {
@@ -96,14 +97,15 @@ StatusCode DeFTDetector::initialize(){
         // register UMS dependency
         updMgrSvc()->registerCondition( this, station->geometry(), &DeFTDetector::geometryUpdate );
         ///loop over layers and fill the vector of layers
+        
         if( ! (station->childIDetectorElements().empty()) ){
           for (iL = station->childIDetectorElements().begin() ; 
                iL != station->childIDetectorElements().end(); ++iL) {
-          SmartDataPtr<DeFTLayer>  layer (dataSvc(),(*iL)->name());
-          if ( layer ) {
+           SmartDataPtr<DeFTLayer>  layer (dataSvc(),(*iL)->name());
+         
+           if ( layer ) {
             m_layers.push_back(layer);
-            updMgrSvc()->registerCondition( this, 
-                                            layer->geometry(), &DeFTDetector::geometryUpdate );
+            updMgrSvc()->registerCondition( this, layer->geometry(), &DeFTDetector::geometryUpdate );
             //*m_msg << MSG::INFO <<"registered FT  layer "<< iL - station->childIDetectorElements().begin() <<endmsg;
             ///loop over modules and fill the vector of modules
             if( !(layer ->childIDetectorElements().empty()) ){
@@ -192,7 +194,7 @@ StatusCode DeFTDetector::initialize(){
   ///>>> print the layer properties <<<///
   if ( m_msg->level() <= MSG::DEBUG ) {
     
-    if( m_FTversion == 20 ){
+    if( m_FTversion >= 20 ){
       
       ///loop over fibremats
       FibreMats::const_iterator iFMat;
@@ -344,12 +346,48 @@ const DeFTFibreMat* DeFTDetector::findFibreMat(const Gaudi::XYZPoint& point) con
 // Find a FibreMat using an FTChannelID
 //=========================================================================
 const DeFTFibreMat* DeFTDetector::findFibreMat ( const LHCb::FTChannelID id ) const {
-
-  unsigned int layer    = id.layer();
-  unsigned int module = id.module();
-  unsigned int mat = id.mat();
+ // convention change: TTLLQQMMM (binary 9 bits, MSB to the left)
+ // simplified from hardware format, but same conventions
+ // T station (1-3), L layer (0-3), Q quarter (0-3),
+ // M module in quarter (1-6, full Left:1->5, 5->1 full right, holes: 6)
   
-  unsigned int fibreMatID = mat+100*module+10000*layer;
+  unsigned int fibreMatID;
+  if (m_FTversion<=42) {   //geom 2 and 4x
+    unsigned int layer    = id.layer();
+    unsigned int module = id.module();
+    unsigned int mat = id.mat();
+    fibreMatID = mat+100*module+10000*layer;
+  }
+  else {   //geom 5x: Fibrematid changed, temp hack  //DBL
+    unsigned int layerv2  = id.layer();  //numbering v2 style: 0 -> 11
+    unsigned int modulev2 = id.module();   //numbering v2 style: 0,1,2,3,4,10,11,5,6,7,8,9 left(x>0) to right
+    unsigned int matv2 = id.mat();
+    
+    unsigned int station    = layerv2/4 + 1;   //4 layers per station, numbering start at 1...
+    unsigned int layer = layerv2%4;
+    
+    unsigned int quarter;
+    if((modulev2<=4 || modulev2==10) && matv2==0) quarter=3;
+    else if((modulev2>=5 || modulev2==11) && matv2==0) quarter=2;
+    else if((modulev2<=4 || modulev2==10) && matv2==1) quarter=1;
+    else quarter=0;
+    
+    unsigned int module;    //numbering v5 style: 1,2,3,4,5,6 (left, L->R) and 6,5,4,3,2,1 (right, L->R)
+    if(modulev2==10||modulev2==11) module=6;
+    else if(modulev2<=4) module=modulev2+1;
+    else if(modulev2>=5) module=(9-modulev2)+1;
+    std::bitset<2> bT(station);
+    std::bitset<2> bL(layer);
+    std::bitset<2> bQ(quarter);
+    std::bitset<3> bM(module);
+    fibreMatID=boost::lexical_cast<unsigned int>(bT.to_string()+bL.to_string()+bQ.to_string()+bM.to_string());
+    
+    /* DBL
+    std::cout<<"==lv2:"<<layerv2<<" m2:"<<modulev2<<" matv2:"<<matv2<<std::endl;
+    std::cout<<"==st:"<<station<<" l  :"<<layer<<" q:"<<quarter<<" m:"<<module<<std::endl;
+    std::cout<<"==fid:"<<fibreMatID<<std::endl;
+    */
+  }
 
   /// Find the fibreMat using a binary search
   FibreMats::const_iterator itL = std::lower_bound(m_fibremats.begin(),
@@ -364,10 +402,5 @@ const DeFTFibreMat* DeFTDetector::findFibreMat ( const LHCb::FTChannelID id ) co
   }else{
     return nullptr;
   }
-  
-  //for ( FibreMats:: const_iterator iL = m_fibremats.begin(); iL != m_fibremats.end(); ++iL) {
-  //  if ( fibreMatID == (*iL)->FibreMatID() ) return *iL;
-  //}
-  //return NULL;
 
 }

@@ -32,7 +32,7 @@ Boole().DataType = "Upgrade"
 ####
 
 #NTupleSvc().Output = ["FILE1 DATAFILE='/afs/cern.ch/work/d/delbuono/RootOutput/TestFT.root' TYP='ROOT' OPT='NEW'"]
-NTupleSvc().Output = ["FILE1 DATAFILE='/afs/cern.ch/user/d/delbuono/cmtuser/Boole_v29r9/Det/FTDet/tests/TestFT.root' TYP='ROOT' OPT='NEW'"]
+NTupleSvc().Output = ["FILE1 DATAFILE='/afs/cern.ch/user/d/delbuono/cmtuser/Boole_v29r8/Det/FTDet/tests/TestFT.root' TYP='ROOT' OPT='NEW'"]
 
 #DDDBConf().DbRoot = "/afs/cern.ch/user/f/fpolci/cmtuser/Brunel_v44r5_BeforeHolidays/static_DDDB_VP+UT+FT_v20/lhcb.xml"
 #DDDBConf().DbRoot = "/afs/cern.ch/user/s/seaso/public/Simulation/upgrade/Gauss-FT/Det/myDDDB-Upgrade-FTMod-July-2014/lhcb.xml"
@@ -58,22 +58,6 @@ DDDBConf().DbRoot = "/afs/cern.ch/user/d/delbuono/cmtuser/DDDB_FTv2_20150424_s20
 #datasetName = 'bev_5000ev-May2015-v5'
 #EventSelector().Input = ["DATAFILE='/afs/cern.ch/user/d/delbuono/cmtuser/Gauss_v48r1p1/" + datasetName + ".sim'"]
 
-
-#Yasmin november
-#EventSelector().Input = ["DATAFILE='LFN:/lhcb/MC/Upgrade/XDIGI/00039735/0000/00039735_00000002_1.xdigi'",
-#                         "DATAFILE='LFN:/lhcb/MC/Upgrade/XDIGI/00039735/0000/00039735_00000003_1.xdigi'",
-#                         "DATAFILE='LFN:/lhcb/MC/Upgrade/XDIGI/00039735/0000/00039735_00000004_1.xdigi'",
-#                         "DATAFILE='LFN:/lhcb/MC/Upgrade/XDIGI/00039735/0000/00039735_00000005_1.xdigi'",
-#                         "DATAFILE='LFN:/lhcb/MC/Upgrade/XDIGI/00039735/0000/00039735_00000007_1.xdigi'",
-#                         "DATAFILE='LFN:/lhcb/MC/Upgrade/XDIGI/00039735/0000/00039735_00000009_1.xdigi'",
-#                         "DATAFILE='LFN:/lhcb/MC/Upgrade/XDIGI/00039735/0000/00039735_00000011_1.xdigi'",
-#                         "DATAFILE='LFN:/lhcb/MC/Upgrade/XDIGI/00039735/0000/00039735_00000018_1.xdigi'",
-#                         "DATAFILE='LFN:/lhcb/MC/Upgrade/XDIGI/00039735/0000/00039735_00000020_1.xdigi'"
-#                        ]
-#FileCatalog().Catalogs += [ 'xmlcatalog_file:reprocessedfiles_YasminNov2014.xml' ]
-
-
-#sim october 2015
 #EventSelector().Input = [
 #"DATAFILE='/afs/cern.ch/work/d/delbuono/public/Scifi/sims/FT_v5_noptcut/0/Gauss-13104012-1000ev-20151008.sim'",
 #"DATAFILE='/afs/cern.ch/work/d/delbuono/public/Scifi/sims/FT_v5_noptcut/1/Gauss-13104012-1000ev-20151008.sim'",
@@ -89,6 +73,19 @@ EventSelector().Input = [
 "DATAFILE='/afs/cern.ch/work/d/delbuono/public/Scifi/sims/FT_v2_noptcut/4/Gauss-13104012-1000ev-20151008.sim'"
 ]
 
+#Yasmin november
+#EventSelector().Input = ["DATAFILE='LFN:/lhcb/MC/Upgrade/XDIGI/00039735/0000/00039735_00000002_1.xdigi'",
+#                         "DATAFILE='LFN:/lhcb/MC/Upgrade/XDIGI/00039735/0000/00039735_00000003_1.xdigi'",
+#                         "DATAFILE='LFN:/lhcb/MC/Upgrade/XDIGI/00039735/0000/00039735_00000004_1.xdigi'",
+#                         "DATAFILE='LFN:/lhcb/MC/Upgrade/XDIGI/00039735/0000/00039735_00000005_1.xdigi'",
+#                         "DATAFILE='LFN:/lhcb/MC/Upgrade/XDIGI/00039735/0000/00039735_00000007_1.xdigi'",
+#                         "DATAFILE='LFN:/lhcb/MC/Upgrade/XDIGI/00039735/0000/00039735_00000009_1.xdigi'",
+#                         "DATAFILE='LFN:/lhcb/MC/Upgrade/XDIGI/00039735/0000/00039735_00000011_1.xdigi'",
+#                         "DATAFILE='LFN:/lhcb/MC/Upgrade/XDIGI/00039735/0000/00039735_00000018_1.xdigi'",
+#                         "DATAFILE='LFN:/lhcb/MC/Upgrade/XDIGI/00039735/0000/00039735_00000020_1.xdigi'"
+#                        ]
+#FileCatalog().Catalogs += [ 'xmlcatalog_file:reprocessedfiles_YasminNov2014.xml' ]
+
 
 from Configurables import DeFTTestAlg
 
@@ -102,7 +99,7 @@ Boole().MainSequence = [ testAlg ]
 Boole().OutputLevel = ERROR #ERROR
 Boole().Outputs = [] #no writing sequence
 
-Boole().EvtMax = 100
+Boole().EvtMax = 1000
 
 '''
 ### Remove irrelevant algorithms (not necessary when we set the 'MainSequence' of Boole) 

@@ -81,8 +81,8 @@ DeFTFibreMat::DeFTFibreMat( const std::string& name ) :
   //-----params causing "private part" problem in FTDet
   //Hole geometry
   m_posHole(0,0,0),          //Hole position
-  m_HoleShiftXSt(0.),
-  m_HoleShiftYSt(0.),
+  m_HoleShiftX(0.),
+  m_HoleShiftY(0.),
   m_halfHole1X(0.),   //Hole in X, 4 sections
   m_halfHole2X(0.),
   m_halfHole3X(0.),
@@ -154,14 +154,95 @@ StatusCode DeFTFibreMat::initialize(){
   m_angle = this->params()->param<double>("stereoAngle");
   m_tanAngle = tan(m_angle);
   m_cosAngle = cos(m_angle);
-    
+        
   //---Set sections IDs and some flags  
-  // Given the AABBCC convention for the FibreMatID, 
-  // AA layer number T1( 00 01 02 03 ) T2( 04 05 06 07 ) T3 ( 08 09 10 11 )
-  // BB module number 00 01 02 03 04 10(LeftH) 11(RightH) 05 06 07 08 09
-  // CC 00(Top) 01(Bottom) 
-  m_mat = m_FibreMatID%10;
-  m_module = int( ( m_FibreMatID %10000 ) / 100 );
+  if(m_FTGeomversion < 50) {   //geom < 5x
+    // Given the AABBCC convention for the FibreMatID, 
+    // AA layer number T1( 00 01 02 03 ) T2( 04 05 06 07 ) T3 ( 08 09 10 11 )
+    // BB module number 00 01 02 03 04 10(LeftH) 11(RightH) 05 06 07 08 09
+    // CC 00(Top) 01(Bottom) 
+    m_mat = m_FibreMatID%10;
+    m_module = int( ( m_FibreMatID %10000 ) / 100 );
+
+    if      ( (m_module <= 4 || m_module == 10) && m_mat ) m_quarter = 1;
+    else if ( (m_module <= 4 || m_module == 10) && !m_mat ) m_quarter = 3;
+    else if ( ((m_module >= 5 && m_module <= 9) || m_module == 11) && m_mat ) m_quarter = 0;
+    else if ( ((m_module >= 5 && m_module <= 9) || m_module == 11) && !m_mat ) m_quarter = 2;
+    else{
+      m_quarter = -99;
+      if( m_msg->level() <= MSG::DEBUG ) debug() << "Aborting calculateHits: not possible to find module/quarter" << endmsg;
+      return StatusCode::FAILURE;
+    }
+    m_layer  = int( m_FibreMatID / 10000 ); 
+  }
+  else {
+    // convention change: TTLLQQMMM (binary 9 bits, MSB to the left)
+    // simplified from hardware format, but same conventions
+    // T station (1-3), L layer (0-3), Q quarter (0-3),
+    // M module in quarter (1-6, full Left:1->5, 5->1 full right, holes: 6)
+    const unsigned int nFMbits=9;
+    std::bitset<nFMbits> bset(std::to_string(m_FibreMatID));
+    std::bitset<nFMbits> bT(bset.to_string(),0,2);
+    std::bitset<nFMbits> bL(bset.to_string(),2,2);
+    std::bitset<nFMbits> bQ(bset.to_string(),4,2);
+    std::bitset<nFMbits> bM(bset.to_string(),6,3);
+    int dT=bT.to_ulong();
+    int dL=bL.to_ulong();
+    int dQ=bQ.to_ulong();
+    int dM=bM.to_ulong();
+    
+    //temporary hack to stick to old convention
+    //(and for compatibility with other codes also...)
+    if(dQ%2>0) {    //0,2= right,  1,3=left
+      if(dM<6) m_module=dM-1;
+      else m_module=10;
+    }
+    else {
+      if(dM<6) m_module=2*5-dM;
+      else m_module=11;
+    }
+    m_quarter=dQ;
+    m_layer=dL+4*(dT-1);
+    if(dQ>1) m_mat=0;
+    else m_mat=1;   
+  
+    ///DBL
+    //std::cout<<"===== m_FibreMatID:"<<m_FibreMatID<<"   "<<bset<<"   "<<bset.to_string()<<std::endl;
+    //std::cout<<"===== m_FibreMatID:"<<m_FibreMatID<<"   "<<bT<<" "<<bL<<" "<<bQ<<" "<<bM<<std::endl;
+    //std::cout<<"===== m_FibreMatID:"<<m_FibreMatID<<"   "<<dT<<" "<<dL<<" "<<dQ<<" "<<dM<<std::endl;
+    //std::cout<<"=== module:"<<m_module<<" mq: "<<m_quarter<<" mat: "<<m_mat<<std::endl;
+    
+    /*
+    unsigned int layerv2    = m_layer;  //numbering v2 style: 0 -> 11
+    unsigned int modulev2 = m_module;   //numbering v2 style: 0,1,2,3,4,10,11,5,6,7,8,9 left(x>0) to right
+    unsigned int mat = m_mat;
+    
+    unsigned int station    = layerv2/4 + 1;   //4 layers per station, numbering start at 1...
+    unsigned int layer = layerv2%4;
+    unsigned int quarter;
+    if((modulev2<=4 || modulev2==10) && mat==0) quarter=3;
+    else if((modulev2>=5 || modulev2==11) && mat==0) quarter=2;
+    else if((modulev2<=4 || modulev2==10) && mat==1) quarter=1;
+    else quarter=0;
+    unsigned int module;    //numbering v5 style: 1,2,3,4,5,6 (left, L->R) and 6,5,4,3,2,1 (right, L->R)
+    if(modulev2==10||modulev2==11) module=6;
+    else if(modulev2<=4) module=modulev2+1;
+    else if(modulev2>=5) module=(9-modulev2)+1;
+    std::bitset<2> bbT(station);
+    std::bitset<2> bbL(layer);
+    std::bitset<2> bbQ(quarter);
+    std::bitset<3> bbM(module);
+    std::string sfid = bbT.to_string()+bbL.to_string()+bbQ.to_string()+bbM.to_string();
+    unsigned int fibreMatID=boost::lexical_cast<unsigned int>(bbT.to_string()+bbL.to_string()+bbQ.to_string()+bbM.to_string());
+    
+    std::cout<<"==lv2:"<<layerv2<<" m2:"<<modulev2<<" mat:"<<mat<<std::endl;
+    std::cout<<"==st:"<<station<<" l  :"<<layer<<" q:"<<quarter<<" m:"<<module<<std::endl;
+    std::cout<<"==fid:"<<bset<<" 2: "<<sfid<<std::endl;
+    if(bset.to_string()!=sfid) std::cout<<"WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"<<std::endl;
+    */
+  }
+  
+  //derived numberings
   m_relativemodule = 
     ( m_module == 10 || m_module == 11 )? 0 :
     ( m_module == 4  || m_module == 5  )? 1 :
@@ -170,25 +251,15 @@ StatusCode DeFTFibreMat::initialize(){
     ( m_module == 1  || m_module == 8  )? 4 :
     ( m_module == 0  || m_module == 9  )? 5 : 99;
 
-  if      ( (m_module <= 4 || m_module == 10) && m_mat ) m_quarter = 1;
-  else if ( (m_module <= 4 || m_module == 10) && !m_mat ) m_quarter = 3;
-  else if ( ((m_module >= 5 && m_module <= 9) || m_module == 11) && m_mat ) m_quarter = 0;
-  else if ( ((m_module >= 5 && m_module <= 9) || m_module == 11) && !m_mat ) m_quarter = 2;
-  else{
-    m_quarter = -99;
-    if( m_msg->level() <= MSG::DEBUG ) debug() << "Aborting calculateHits: not possible to find module/quarter" << endmsg;
-    return StatusCode::FAILURE;
-  }
-  m_layer  = int( m_FibreMatID / 10000 ); 
-  m_layerID = m_layer;
+  m_layerID = m_layer;    //DBL: obsolete ?
   m_holey = ( m_module == 10 || m_module == 11 );   //central fibremats with holes
 
   
   //-----------------Get geometrical info
   
-  //-------------fibremat geometry
+  //-------------fibremat geometries
   
-  //----------geometry v20
+  //----------fibremat geometry v20
   if(m_FTGeomversion <= m_FTGeomVersion_reference) {
     
     //other flags
@@ -239,16 +310,14 @@ StatusCode DeFTFibreMat::initialize(){
   }
 
     
-  //-----------geometry v4x
+  //-----------fibremat geometry v4x and later
   if (m_FTGeomversion > m_FTGeomVersion_reference) {
     //other flags
-    ///if(m_module==11) m_RightHoleAxesXZInversion=true;    //invert Right Hole XZ axes if v4 geometry (temporary)
-    ///else m_RightHoleAxesXZInversion=false;
     m_RightHoleAxesXZInversion=false;   ///DBL, back to normal for this
     
     //FibreMat size and position 
-    m_fibreMatHalfSizeX = 0.5*this->params()->param<double>("FTFibreMatSizeXSt");
-    m_fibreMatHalfSizeY = 0.5*this->params()->param<double>("FTFibreMatSizeYSt");
+    m_fibreMatHalfSizeX = 0.5*this->params()->param<double>("FTFibreMatSizeX");
+    m_fibreMatHalfSizeY = 0.5*this->params()->param<double>("FTFibreMatSizeY");
     m_fibreMatHalfSizeZ = 0.5*this->params()->param<double>("FTFibreMatSizeZ");
 
     //Fibremat center and corners (Right, Left, Bottom, Top ...) in global frame
@@ -274,11 +343,11 @@ StatusCode DeFTFibreMat::initialize(){
     //Hole(s)
     if( m_holey ) {   //fibremat with holes
       //Hole position (local frame): same for all sub-boxes
-      m_HoleShiftXSt=this->params()->param<double>("HoleShiftXSt");
-      if(m_RightHoleAxesXZInversion) m_HoleShiftXSt = -m_HoleShiftXSt;
+      m_HoleShiftX=this->params()->param<double>("HoleShiftX");  
+      if(m_RightHoleAxesXZInversion) m_HoleShiftX = -m_HoleShiftX;
       
-      m_HoleShiftYSt=this->params()->param<double>("HoleShiftYSt");
-      m_posHole.SetXYZ(m_HoleShiftXSt, m_HoleShiftYSt, m_fibreMatGlobalCenter.z());
+      m_HoleShiftY=this->params()->param<double>("HoleShiftY"); 
+      m_posHole.SetXYZ(m_HoleShiftX, m_HoleShiftY, m_fibreMatGlobalCenter.z());
       
       //Hole sub boxes sizes (local frame)
       m_halfHole1X=this->params()->param<double>("Hole1X")/2;
@@ -291,15 +360,15 @@ StatusCode DeFTFibreMat::initialize(){
       m_halfHole4Y=this->params()->param<double>("Hole4Y")/2;
     }
   }
+  
 
 
-
-  //--------------layer module geometry (local coordinates)
+  //--------------layer module geometries (local coordinates)
   double FTFibreModuleSizeX(0),FTFibreModuleSizeY(0),FTDeadHSizeZ(0),FTFibreModuleSizeZ(0),FTFibreSizeZ(0);
   IDetectorElement *parentDet = this->parentIDetectorElement();
   if(0 != parentDet) {
   
-    //-------------geometry before v4x    
+    //-------------layer geometry before v4x and v5x    
     if(m_FTGeomversion <= m_FTGeomVersion_reference) {
       //Left/right vertical dead zone 
       const SolidBase *sbDeadV(0);
@@ -389,11 +458,12 @@ StatusCode DeFTFibreMat::initialize(){
     }
     
     
-    //-------------geometry v4x 
+    //-------------layer geometry v4x and v5x
     if(m_FTGeomversion > m_FTGeomVersion_reference) {
       //Left vertical dead zone
-      m_moduleEdgeSizeX = parentDet->params()->param<double>("FTDeadVSizeXSt");   
-      m_moduleGapH = parentDet->params()->param<double>("FTDeadHSizeYSt");
+      m_moduleEdgeSizeX = parentDet->params()->param<double>("FTDeadVSizeX") +
+                          parentDet->params()->param<double>("FTModuleGapX");   
+      m_moduleGapH = parentDet->params()->param<double>("FTDeadHSizeY");
       
       //Fibre zone
       FTFibreSizeZ = this->params()->param<double>("FTFibreMatSizeZ");   
@@ -405,7 +475,7 @@ StatusCode DeFTFibreMat::initialize(){
         FTFibreModuleSizeZ = parent2Det->params()->param<double>("FTFullModuleSizeZ");
       }
       else {
-        throw GaudiException( "Can't find 2nd level parent detector element of Fibremat (geometry v4)",
+        throw GaudiException( "Can't find 2nd level parent detector element of Fibremat (geometry v4/v5)",
                               "DeFTFibreMat.cpp", StatusCode::FAILURE );
       }
     }
@@ -428,32 +498,38 @@ StatusCode DeFTFibreMat::initialize(){
     m_layerMaxZ = m_fibreMatGlobalCenter.Z()+m_layerHalfSizeZ;  //use here m_fibreMatGlobalCenter, different from layerCenter
 
     /// Determine the slope in the global y-z plane (All geometries)
-    Gaudi::Rotation3D rotToGlobal;
-    Gaudi::Matrix3x3 rotToGlobalMat;
-    this->geometry()->toGlobalMatrixNominal().GetRotation(rotToGlobal);
-    rotToGlobal.GetRotationMatrix(rotToGlobalMat);
-    m_dzDy=std::abs(asin(rotToGlobalMat(1,2)));    //rot matrix(1,2) = -sin(angrotX) (euler ZXZ)
+    Gaudi::XYZPoint tmpLocPoint1(0., 0., 0.);
+    Gaudi::XYZPoint tmpLocPoint2(0., 1000000., 0.);
+    Gaudi::XYZPoint tmpGlobPoint1 = this->geometry()->toGlobal( tmpLocPoint1 );
+    Gaudi::XYZPoint tmpGlobPoint2 = this->geometry()->toGlobal( tmpLocPoint2 );
+    m_dzDy = (tmpGlobPoint2.z() - tmpGlobPoint1.z()) / (tmpGlobPoint2.y() - tmpGlobPoint1.y());
   }
   else {
    throw GaudiException( "Can't acquire parent detector element of FibreMat", "DeFTFibreMat.cpp", StatusCode::FAILURE );
   }
   
   
-  //-----------sipm geometry (to be put in some DB)
+  //-----------sipm geometries
   m_sipmNChannels=128;
-  m_cellSizeX=0.25;
   m_nSipmPerModule = 16;  
-  if(m_FTGeomversion <= m_FTGeomVersion_reference) {
+  if(m_FTGeomversion <= m_FTGeomVersion_reference) {   //----sipm geometry v2x
     m_sipmSizeX=32.25;
+    m_cellSizeX=0.25;
     m_sipmEdgeSizeX=0.625;  //1 dead cell (0.25) + 0.375
   }
-  else {
+  else if(m_FTGeomversion<50) {   //----sipm geometry v4x,v5x
     m_sipmSizeX=32.25;
     double deadXTot=2*m_fibreMatHalfSizeX-m_nSipmPerModule*m_sipmSizeX;
+    m_cellSizeX=0.25;
     ///m_sipmEdgeSizeX=0.2;   ///DBL: size of fibremats ?
     m_sipmEdgeSizeX=0.5*deadXTot/m_nSipmPerModule;
   }
-    
+  else if (m_FTGeomversion >= 50) {    //-----sipm geometry v5x
+     m_sipmEdgeSizeX=this->params()->param<double>("FTSiPMGapX");        //dead egdge area (air+half fiber)
+     m_sipmSizeX=this->params()->param<double>("FTSiPMSizeX")-2*m_sipmEdgeSizeX;      //active part
+     m_cellSizeX=this->params()->param<double>("FTSiPMCellSizeX");
+  }
+  
   m_sipmPitchX = m_sipmSizeX + 2*m_sipmEdgeSizeX;
   //origin of sipm numbering in local frame (number 0 SiPM closest to
   //global ref frame origin, X axis points to the "left")
@@ -1095,6 +1171,7 @@ double DeFTFibreMat::cellLocalX(const FTChannelID& channel) const {
       
     lCoordX = sipmREdgeX+cellOffset;
   }
+    
   return lCoordX;
 }
 
@@ -1233,7 +1310,7 @@ StatusCode DeFTFibreMat::cellCrossingPointLocal(const double lcellEdgeX,
 //=============================================================================
 DetectorSegment DeFTFibreMat::createDetSegment(const FTChannelID& channel,
                                                double fracPos) const {
-
+  
   /// Determine the x coordinate at y=0 of the det. segment
   double hitLocalX = cellLocalX(channel) + fracPos*m_cellSizeX;   //hit x in local fibremat frame
    
@@ -1388,7 +1465,9 @@ StatusCode DeFTFibreMat::findSolidBase(IDetectorElement *det, const std::string&
   }
   
   const IPVolume *pvol=det->geometry()->lvolume()->pvolume(pvolname);
-  if(0==pvol) return StatusCode::FAILURE;
+  if(0==pvol) {
+    throw GaudiException( "Can't find PVolume: "+pvolname, "DeFTFibreMat.cpp", StatusCode::FAILURE );
+  }
     
   solidbase = dynamic_cast<const SolidBase*>(pvol->lvolume()->solid());
   if(0==solidbase) {
@@ -1424,7 +1503,7 @@ bool DeFTFibreMat::inBeamHole(const Gaudi::XYZPoint hitLocal,
                   << fibrelengthMax << endmsg;
         }
       }
-      else if (m_FTGeomversion > m_FTGeomVersion_reference) { //geom v4x
+      else if (m_FTGeomversion > m_FTGeomVersion_reference) { //geom v4x,v5x
         double dxHit=std::abs(hitLocal.X()-m_posHole.X());        //absolute dx to hole center
         //Hole size for each sub-box
         double dyHole;
