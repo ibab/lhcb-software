@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-11-10 - Stefano Perazzini
+ - Updated RelatedInfo syntax for StrippingBs2PhiPhi lines
+
+! 2015-11-10 - Stefano Perazzini
  - Updated test script for BnoC liaison
 
 ! 2015-11-10 - Ricardo Vazquez Gomez
