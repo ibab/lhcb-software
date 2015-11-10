@@ -18,6 +18,7 @@ from StrippingUtils.Utils import LineBuilder
 from PhysSelPython.Wrappers import EventSelection
 from Configurables import LoKi__VoidFilter
 from Configurables import HighPtTopoTool as HighpTDT
+from GaudiKernel.SystemOfUnits import GeV
 
 
 default_config = {
@@ -26,19 +27,18 @@ default_config = {
   'WGs'         : [ 'QEE' ],
   'STREAMS'     : [ 'EW'  ],
   'CONFIG'      : { 
-    'HighPtTopo40000_Prescale'  : 1.0, 
-    'HighPtTopo20000_Prescale'  : 1.0, 
-    'HighPtTopo10000_Prescale'  : 0.0014,
-    'HighPtTopo1000_Prescale'   : 0.00017,
-    'HighPtTopo20000_Cone55_Prescale'  : 0.1, 
-    'HighPtTopo_Postscale'   : 1.0,
-    'pT'        : 40000,
-    'pT20'      : 20000,
-    'pT10'      : 10000,
-    'pT1'       : 1000,
+    'HighPtTopo40000_Prescale'        : 1.0, 
+    'HighPtTopo20000_Prescale'        : 1.0, 
+    'HighPtTopo10000_Prescale'        : 0.0014,
+    'HighPtTopo1000_Prescale'         : 0.00017,
+    'HighPtTopo20000_Cone55_Prescale' : 0.1, 
+    'HighPtTopo_Postscale'            : 1.0,
+    'pT'        : 40 * GeV,
+    'pT20'      : 20 * GeV,
+    'pT10'      : 10 * GeV,
+    'pT1'       :  1 * GeV,
+    'pTcone'    : 55 * GeV,
     'conesize'  : 0.3,
-    'pTcone'    : 55000,
-    #
     'HLT2'      : "HLT_PASS_RE('Hlt2Topo.*Decision')",
   },
 }

@@ -4,6 +4,14 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-10 - Chitsanu Khurewathanakul
+ - QEE S24 Maintenance
+    - Fix import statements to use `ConfigurableGenerators` instead of `Configurables` wherever applicable.
+    - Scan usage of HLT to conform with Run-II name changes.
+    - Refactors several hard-coded value to default_config (especially `RequiredRawEvents`).
+    - Clean more hard-coded units.
+    - Fix regex typo in InclbJets.
+
 ! 2015-11-10 - Stefano Perazzini
  - Updated RelatedInfo syntax for StrippingBs2PhiPhi lines
 

@@ -8,11 +8,10 @@ Xi -> Lambda pi,   Omega -> Lambda K
 LLL
 '''
 
-__author__ = ['Florin Maciuc']
-__date__ = '13/01/2014'
+__author__  = ['Florin Maciuc']
+__date__    = '13/01/2014'
 __version__ = '$Revision: 0.0 $'
-
-__all__ = ( 'StrippingStrangeBaryonsNoPIDConf', 'default_config' )
+__all__     = ( 'StrippingStrangeBaryonsNoPIDConf', 'default_config' )
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
@@ -30,7 +29,8 @@ default_config = {
     'CONFIG'      :  { #PID cuts
         'PreScale'    : 1,
         'checkPV'     : False,
-        'HLT1'        : "HLT_PASS('Hlt1MBNoBiasDecision')|HLT_PASS('Hlt1MBMicroBiasTStationDecision')|HLT_PASS('Hlt1MBMicroBiasVeloDecision')|HLT_PASS('Hlt1MBMicroBiasTStationRateLimitedDecision')|HLT_PASS('Hlt1MBMicroBiasVeloRateLimitedDecision')",
+        'HLT1'        : "HLT_PASS_RE('Hlt1.*NoBias.*Decision')|HLT_PASS_RE('Hlt1.*MB.*Bias.*Decision')|HLT_PASS_RE('Hlt1.*MicroBias.*Decision')",
+        'RawEvents'   : [ "Muon", "Calo", "Rich" ],
         'ProtonPIDppi':       -5.,  #(PIDp-PIDpi) > -5                   
         'PionPIDpiK'  :       0.,   #(PIDp-PIDK) > 0
        
@@ -148,7 +148,12 @@ class StrippingStrangeBaryonsNoPIDConf(LineBuilder) :
                                                       PostVertexCuts = myPostVertexCuts % self.config
                                                       )
               
-              Ximinus2LambdaPiLine = StrippingLine (OutputList+self.name, prescale = "%(PreScale)s" %self.config, HLT1 = "%(HLT1)s" %self.config , algos = [Ximinus2LambdaPi],RequiredRawEvents = ["Muon","Calo","Rich"])
+              Ximinus2LambdaPiLine = StrippingLine(OutputList+self.name, 
+                  prescale  = self.config['PreScale'], 
+                  HLT1      = self.config['HLT1'], 
+                  algos     = [Ximinus2LambdaPi],
+                  RequiredRawEvents = self.config['RawEvents'],
+              )
               self.registerLine (Ximinus2LambdaPiLine)
 
 
@@ -165,7 +170,12 @@ class StrippingStrangeBaryonsNoPIDConf(LineBuilder) :
                                                         PreVertexCuts = "(ADAMASS('Omega-') < %(OmegaMassWindow)s*MeV)" % self.config,
                                                         PostVertexCuts = myPostVertexCuts % self.config
                                                         )
-              Omegaminus2LambdaKLine = StrippingLine(OutputList+self.name, prescale = "%(PreScale)s" %self.config, HLT1 = "%(HLT1)s" %self.config, algos = [Omegaminus2LambdaK],RequiredRawEvents = ["Muon","Calo","Rich"])
+              Omegaminus2LambdaKLine = StrippingLine(OutputList+self.name, 
+                  prescale  = self.config['PreScale'], 
+                  HLT1      = self.config['HLT1'], 
+                  algos     = [Omegaminus2LambdaK],
+                  RequiredRawEvents = self.config['RawEvents'],
+              )
               self.registerLine (Omegaminus2LambdaKLine)             
 
 

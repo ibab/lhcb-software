@@ -3,7 +3,8 @@
 #
 
 from Gaudi.Configuration import *
-from Configurables       import FilterDesktop, CombineParticles, LoKi__VertexFitter
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+from Configurables       import CombineParticles, LoKi__VertexFitter
 from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
@@ -80,8 +81,7 @@ class WeAKTJetsConf( LineBuilder ) :
                    '& (HASTRACK & TRCUT(0<TrIDC(\'isTT\')))' %self._config
 
 
-        _filter = FilterDesktop( _name,
-                                 Preambulo = ["from LoKiTracks.decorators import *"],
+        _filter = FilterDesktop( Preambulo = ["from LoKiTracks.decorators import *"],
                                  Code      = _code
                                  )
 

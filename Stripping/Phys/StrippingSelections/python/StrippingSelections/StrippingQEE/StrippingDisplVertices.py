@@ -45,8 +45,9 @@ LLPLHCbName = "~chi_10"
 
 default_config = {
     'NAME'        : 'DisplVertices',
-    'WGs'         : ['QEE'],
     'BUILDERTYPE' : 'DisplVerticesLinesConf',
+    'STREAMS'     : [ 'EW'  ],
+    'WGs'         : [ 'QEE' ],
     'CONFIG'      : {
         ## Velo GEC
           "VeloGEC"                 : { "Apply"                : True
@@ -235,7 +236,6 @@ default_config = {
                                                          ]
                                       }
         },
-    'STREAMS'     : [ 'EW' ]
 }
 
 
@@ -252,24 +252,7 @@ class DisplVerticesLinesConf(LineBuilder):
         - Each line applies cuts optimised for a different part of phasespace.
           "Single" lines add a FilterDesktop and "Double" lines a CombineParticles algorithm
     """
-    __configuration_keys__ = (
-              "VeloGEC"
-            , "FilterVelo"
-            , "RV2PWithVelo"
-            , "JetID"
-            #, "SingleSelection"
-            , "SinglePSSelection"
-            , "JetSingleLowMassSelection"
-            , "JetSingleHighMassSelection"
-            , "JetHltSingleLowMassSelection"
-            , "JetHltSingleHighMassSelection"
-            , "DoubleSelection"
-            , "RV2PDown"
-            #, "SingleDownSelection"
-            , "HLTPS"
-            , "HltEffCharmHLTSelection"
-            , "HLT"
-            )
+    __configuration_keys__ = default_config['CONFIG'].keys()
 
     def validatedGetProps(self, selName, propsToSet):
         """

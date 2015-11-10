@@ -70,6 +70,12 @@ The functor should be standard one, or otherwise put it in the preambulo section
 Version history
 ---------------
 
+## 2.2 -- 151103 ( For S24 )
+> Restructure control lines (samesign) so that they don't have isolation,
+  ( which is used for data-driven background study ), in exchange for prescale.
+> Use `from GaudiConfUtils.ConfigurableGenerators`
+> RelatedInfo ?
+
 ## 2.1 -- 150729 (S23 Tuning period summer 2015)
 - Properly expand SS lines (*explicit is better than implicit*)
 - Fixed duplication in decay descriptor of same particle 
@@ -112,12 +118,12 @@ from PhysSelPython.Wrappers import Selection, SimpleSelection, MergedSelection, 
 from StrippingUtils.Utils import LineBuilder
 from StrippingConf.StrippingLine import StrippingLine
 from StandardParticles import PFParticles
-from Configurables import CombineParticles, FilterDesktop
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 
 
 __author__  = 'chitsanu.khurewathanakul@cern.ch'
-__date__    = '2015-07-29'
-__version__ = 2.1
+__date__    = '2015-11-03'
+__version__ = 2.2
 __all__     = [ 'DitauConf', 'default_config' ]
 
 
@@ -133,16 +139,18 @@ config_tau_e = {
   'min_ETA'       : 2,
   'max_ETA'       : 4.5,
   # 'max_BPVIP'     : 1. * mm,
-  'min_PTFrac05C' : 0.7,
-  # 'min_PTFrac05A' : -1,  # DON'T USE ME!
   #
-  # 'min_ECALFrac'  : 0.1,  # Not good for e-conversion
-  'max_HCALFrac'  : 0.10,
+  'min_ECALFrac'  : 0.1,  # Not good for e-conversion ??
+  'max_HCALFrac'  : 0.05,
   'min_CaloPrsE'  : 50 * MeV,
   #
   'extracut'      : 'ALL'
 }
 
+config_tau_e_iso = {
+  'min_PTFrac05C': 0.7,
+  # 'min_PTFrac05A' : -1,  # DON'T USE ME!
+}
 
 config_tau_mu = {
   'ISMUON'        : True,
@@ -152,13 +160,15 @@ config_tau_mu = {
   'min_ETA'       : 2.0,
   'max_ETA'       : 4.5,
   # 'max_BPVIP'     : 1. * mm, 
-  'min_PTFrac05C' : 0.8,
-  # 'max_ECone02A'  : 100 * GeV,
-  # 'max_PTCone05C' : 4 * GeV,
   # 'max_HCALFrac'  : 0.20,  # Not effective
   'extracut'      : 'ALL',  
 }
 
+config_tau_mu_iso = {
+  'min_PTFrac05C' : 0.8,
+  # 'max_ECone02A'  : 100 * GeV,
+  # 'max_PTCone05C' : 4 * GeV,
+}
 
 config_tau_h1 = {
   'ISMUONLOOSE'     : False,
@@ -170,16 +180,18 @@ config_tau_h1 = {
   # 'min_BPVDLS'      : -40,
   # 'max_BPVDLS'      : 40,
   # 'max_BPVIP'       : 1. * mm, 
-  # 'max_ECone05C'    : 400 * GeV,
-  # 'min_ECone02PN'   : 20 * GeV,
-  # 'min_EFrac02PN05N': 0.7,
-  # 'min_EFrac02PN05A': 0.7,
-  'min_PTFrac05C'   : 0.8,
   'min_HCALFrac'    : 0.05,   
   # 'max_TRGHOSTPROB' : 0.1,
   'extracut'        : 'ALL'  
 }
 
+config_tau_h1_iso = {
+  # 'max_ECone05C'    : 400 * GeV,
+  # 'min_ECone02PN'   : 20 * GeV,
+  # 'min_EFrac02PN05N': 0.7,
+  # 'min_EFrac02PN05A': 0.7,
+  'min_PTFrac05C'   : 0.8,
+}
 
 
 config_tau_h3 = {
@@ -209,8 +221,6 @@ config_tau_h3 = {
     # 'max_BPVIP'     : 1. * mm,
     # 'min_BPVVDZ'    : 0.1,
     #
-    # 'max_ECone05C'  : 30 * GeV,
-    'min_PTFrac05C' : 0.8,
     #
     'max_DRTRIOMAX' : 0.4,
     'max_DRTRIOMID' : 0.3,
@@ -221,6 +231,11 @@ config_tau_h3 = {
     #
     'max_VCHI2PDOF' : 20.,
   }
+}
+
+config_tau_h3_iso = {
+  # 'max_ECone05C'  : 30 * GeV,
+  'min_PTFrac05C' : 0.8,  
 }
 
 #-------#
@@ -392,6 +407,12 @@ default_config = {
     'tau_h3'  : config_tau_h3,
     'tau_mu'  : config_tau_mu,
 
+    ## Isolation cuts, removed in same-sign control lines.
+    'iso_e'   : config_tau_e_iso,
+    'iso_mu'  : config_tau_mu_iso,
+    'iso_h1'  : config_tau_h1_iso,
+    'iso_h3'  : config_tau_h3_iso,
+
     ## Individual ditau
     'ditau_ee'   : config_ditau_e_e,
     'ditau_eh1'  : config_ditau_e_h1,
@@ -407,16 +428,16 @@ default_config = {
     ## Prescale/Postscale
     'EX_prescale'     : 1.,
     'EX_postscale'    : 1.,
-    'EXss_prescale'   : 1.,
+    'EXss_prescale'   : 0.1,
     'EXss_postscale'  : 1.,
     'MX_prescale'     : 1.,
     'MX_postscale'    : 1.,
-    'MXss_prescale'   : 1.,
+    'MXss_prescale'   : 0.1,
     'MXss_postscale'  : 1.,
     'HH_prescale'     : 1.,
     'HH_postscale'    : 1.,
-    'HHss_prescale'   : 1.,
-    'HHss_postscale'  : 0.5,
+    'HHss_prescale'   : 0.05,
+    'HHss_postscale'  : 1.,
 
     ## For advance usage
     # Extra preambulo, give me barestring with proper linebreak.
@@ -596,17 +617,27 @@ def doubling_sign_dict(d):
 # SELECTION
 #------------------------------------------------------------------------------
 
-def selection_tau_single( config , preambulo, inputs, ttype ):
-  return SimpleSelection( 'FiltTauCand_'+ttype, FilterDesktop, inputs, 
-    'LooseTauCand_'+ttype,
+def selection_filt( config, preambulo, sel, newname ):
+  """
+  Given a selection, apply FilterDesktop on top of it, 
+  with cuts from config to be parsed.
+  """
+  return SimpleSelection( newname, FilterDesktop, sel,
     Preambulo = preambulo0 + preambulo.split('\n'),
     Code      = parse_cuts_auto(config),
   )
 
+# def selection_tau_single( config , preambulo, inputs, ttype ):
+#   return selection_filt( config , preambulo, inputs, 'SelTauCand_'+ttype )
+
+#   return SimpleSelection( 'SelTauCand_'+ttype, FilterDesktop, inputs, 
+#     Preambulo = preambulo0 + preambulo.split('\n'),
+#     Code      = parse_cuts_auto(config),
+#   )
+
 def selection_tau_h3( config, preambulo, inputs ):
   dcut = parse_cuts_auto(config['dcuts'])
-  return SimpleSelection( 'FiltTauCand_h3', CombineParticles, inputs,
-    'CombTauCand_h3',
+  return SimpleSelection( 'SelTauCand_h3', CombineParticles, inputs,
     DecayDescriptor   = '[ tau- -> pi- pi- pi+ ]cc',
     Preambulo         = preambulo0 + preambulo.split('\n'),
     DaughtersCuts     = {'pi-':dcut, 'pi+':dcut},
@@ -615,10 +646,9 @@ def selection_tau_h3( config, preambulo, inputs ):
   )
 
 def selection_ditau( config, preambulo, pcomb, dcname, decay , inputs ):
-  # dcuts quite complicate since it's a-priori nested dict index by particle-name.
+  ## dcuts are quite complicate since it's a-priori nested dict index by particle-name.
   dcuts = { key:parse_cuts_auto(val) for key,val in doubling_sign_dict(config['dcuts']).iteritems() }
   return SimpleSelection( 'SelDitauCand_'+dcname, CombineParticles, inputs,
-    'CombDitauCand_'+dcname,
     Preambulo         = preambulo0 + preambulo.split('\n'),
     DecayDescriptor   = decay,
     DaughtersCuts     = dcuts,
@@ -653,29 +683,43 @@ class DitauConf(LineBuilder):
     input_mu    = [ AutomaticData(Location=CONFIG['TES_mu']) ]
     input_pi    = [ AutomaticData(Location=CONFIG['TES_pi']) ]
 
-    ## Make 4 selections of tau candidates first
-    tau_cands = MergedSelection('SelTauCand', [
-    # tau_cands = [
-      selection_tau_single( CONFIG['tau_e']  , preambulo, input_e , 'e'  ),
-      selection_tau_single( CONFIG['tau_mu'] , preambulo, input_mu, 'mu' ),
-      selection_tau_single( CONFIG['tau_h1'] , preambulo, input_pi, 'h1' ),
-      selection_tau_h3    ( CONFIG['tau_h3'] , preambulo, input_pi       ),
-    ])  # Need merge so that the selection is parallel, not sequential
+    ## Make pre-selection no-isolation of tau candidates first
+    sels_tau_noiso = {
+      # 'e' : selection_tau_single( CONFIG['tau_e']  , preambulo, input_e , 'e'  ),
+      # 'mu': selection_tau_single( CONFIG['tau_mu'] , preambulo, input_mu, 'mu' ),
+      # 'h1': selection_tau_single( CONFIG['tau_h1'] , preambulo, input_pi, 'h1' ),
+      'e' : selection_filt  ( CONFIG['tau_e']  , preambulo, input_e  , 'SelTauNoiso_e'  ),
+      'mu': selection_filt  ( CONFIG['tau_mu'] , preambulo, input_mu , 'SelTauNoiso_mu' ),
+      'h1': selection_filt  ( CONFIG['tau_h1'] , preambulo, input_pi , 'SelTauNoiso_h1' ),
+      'h3': selection_tau_h3( CONFIG['tau_h3'] , preambulo, input_pi ),
+    }
 
+    sels_tau_iso = {
+      'e' : selection_filt( CONFIG['iso_e'] , preambulo, [sels_tau_noiso['e']] , 'SelTauIso_e'  ),
+      'mu': selection_filt( CONFIG['iso_mu'], preambulo, [sels_tau_noiso['mu']], 'SelTauIso_mu' ),
+      'h1': selection_filt( CONFIG['iso_h1'], preambulo, [sels_tau_noiso['h1']], 'SelTauIso_h1' ),
+    }
+
+    ## Merge these together (parallel, not sequential selection) for SS-Lines
+    tau_noiso = MergedSelection('TauNoiso', sels_tau_noiso.values())
+    tau_iso   = MergedSelection('TauIso'  , sels_tau_iso.values())
+
+    ## Prepare selection of ditau
     sels_ditau = {}  # Selections, indexed by dcname (for emu sharing)
 
     ## Loop over all lines, make groupping
     for linename, dcdict in lines_decays.iteritems():
 
-      ## Make list of selections in single line
+      ## Make list of selections to be put in single line
       sels = []
       for dcname, decay in dcdict.iteritems():
-        if dcname in sels_ditau:  # for emu case
+        if dcname in sels_ditau:  # for emu case, use cache
           sel = sels_ditau[dcname]
         else:
           dtype   = dcname.split('_')[0]   # eh1_ss --> eh1
-          config  = CONFIG['ditau_'+dtype]
-          sel     = selection_ditau( config, preambulo, ditau_pcomb, dcname, decay, [tau_cands] )
+          config  = CONFIG['ditau_'+dtype] # Same ditau-level config for OS/SS
+          inputs  = [ tau_noiso ] if ('ss' in dcname) else [ tau_iso ] # For SS, use noiso tau
+          sel     = selection_ditau( config, preambulo, ditau_pcomb, dcname, decay, inputs )
           sels_ditau[dcname] = sel
         sels.append(sel)
 

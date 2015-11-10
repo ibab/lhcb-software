@@ -11,10 +11,9 @@ from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
-from Configurables import CombineParticles
 from JetAccessories.JetMaker_Config import JetMakerConf
 from StandardParticles import StdJets, StdAllNoPIDsPions
-from Configurables import LoKi__VoidFilter, FilterInTrees
+from Configurables import CombineParticles
 from Configurables import TopologicalTagging
 from Configurables import LoKi__VertexFitter
 
@@ -29,45 +28,55 @@ default_config = {
 
     # Prescale for the calibration line.
     'CONFIG':{
-        "PRESCALE" : {"MB"         : 1.0,
-                      "DIFF"       : 1.0,
-                      "bJetPT15"   : 0.005,
-                      "bJetPT50"   : 0.1,
-                      "bJetPT90"   : 1.0,
-                      "dibJetT6A"  : 0.05,
-                      "dibJetT6PS" : 1.0,
-                      "_3jets_Pt7_3sv" : 1.0,
-                      "_4jets_Pt5_3sv" : 1.0,
-                      "_4jets_Pt5_0sv_Prescaled" : 0.01
-                      },
-
+        "PRESCALE" : {
+            "MB"              : 1.0,
+            "DIFF"            : 1.0,
+            "bJetPT15"        : 0.005,
+            "bJetPT50"        : 0.1,
+            "bJetPT90"        : 1.0,
+            "dibJetT6A"       : 0.05,
+            "dibJetT6PS"      : 1.0,
+            "_3jets_Pt7_3sv"  : 1.0,
+            "_4jets_Pt5_3sv"  : 1.0,
+            "_4jets_Pt5_0sv_Prescaled" : 0.01
+        },
         # HLT properties.
-        "HLT"   : {"LINETOPO"       : "Hlt2Topo", #Line to use for TOPO
-                   "LINEMB"         : "Hlt1MBNoBiasDecision"} , # Line to use for MB
+        "HLT"   : {
+            "LINETOPO"  : "Hlt2Topo.*Decision", # Line to use for TOPO
+            "LINEMB"    : "Hlt1MBNoBiasDecision",  # Line to use for MB
+        }, 
         # Track properties.
-        "TRK"   : {"MAX_MULT"       : 2500,       # Multiplicity.
-                   "MIN_P"          : 5*GeV,     # Momentum.
-                   "MIN_PT"         : 500*MeV,   # Transverse momentum.
-                   "MIN_MIPCHI2DV"  : 16,        # Impact parameter chi-squared.
-                   "MAX_GHP"        : 0.4,
-                   "MAX_PROBNNGHOST": 0.7},      # Ghost probability.
+        "TRK"   : {
+            "MAX_MULT"       : 2500,      # Multiplicity.
+            "MIN_P"          : 5*GeV,     # Momentum.
+            "MIN_PT"         : 500*MeV,   # Transverse momentum.
+            "MIN_MIPCHI2DV"  : 16,        # Impact parameter chi-squared.
+            "MAX_GHP"        : 0.4,
+            "MAX_PROBNNGHOST": 0.7,       # Ghost probability.
+        },
         # Secondary vertex properties.
-        "SVR"   : {"MAX_CHI2DOCA"   : 8,         # Chi-squared of closest approach.
-                   "MIN_BPVDIRA"    : 0,         # Cos of angle between P and flight.
-                   "MIN_BPVVDCHI2"  : 100,       # Chi-squared distance with PV.
-                   "MAX_CHI2"       : 8,         # Chi-squared.
-                   "MAX_M"          : 7*GeV,     # Combined mass.
-                   "MIN_SUM_PT"     : 2*GeV},    # Scalar sum of transverse momenta.
+        "SVR"   : {
+            "MAX_CHI2DOCA"   : 8,         # Chi-squared of closest approach.
+            "MIN_BPVDIRA"    : 0,         # Cos of angle between P and flight.
+            "MIN_BPVVDCHI2"  : 100,       # Chi-squared distance with PV.
+            "MAX_CHI2"       : 8,         # Chi-squared.
+            "MAX_M"          : 7*GeV,     # Combined mass.
+            "MIN_SUM_PT"     : 2*GeV,     # Scalar sum of transverse momenta.
+        },
         # Fully reconstructed jet p roperties.
-        "JET"   : {"JEC"            : False,     # If no STDJETS, apply JEC.
-                   "R"              : 0.5,       # If no STDJETS, set jet radius.
-                   "MIN_PT"         :  5*GeV,    # Transverse momentum.
-                   "EXTLOW_PT"      : 7*GeV,    # Transverse momentum.
-                   "VERYLOW_PT"     : 15*GeV,   # Transverse momentum.
-                   "LOW_PT"         : 17*GeV,   # Transverse momentum.
-                   "MEDIUM_PT"      : 50*GeV,   # Transverse momentum.
-                   "HIGH_PT"        : 90*GeV},   # Transverse momentum.
-        "DIJET" : {"MAX_COSDPHI"    : -0.8}      # Cos of transverse angle.
+        "JET"   : {
+            "JEC"            : False,     # If no STDJETS, apply JEC.
+            "R"              : 0.5,       # If no STDJETS, set jet radius.
+            "MIN_PT"         :  5*GeV,    # Transverse momentum.
+            "EXTLOW_PT"      :  7*GeV,    # Transverse momentum.
+            "VERYLOW_PT"     : 15*GeV,    # Transverse momentum.
+            "LOW_PT"         : 17*GeV,    # Transverse momentum.
+            "MEDIUM_PT"      : 50*GeV,    # Transverse momentum.
+            "HIGH_PT"        : 90*GeV,    # Transverse momentum.
+        },
+        "DIJET" : {
+            "MAX_COSDPHI"    : -0.8,      # Cos of transverse angle.
+        },
     },
 
 }
@@ -86,8 +95,8 @@ class JetsConf(LineBuilder):
         self._name = name
 
         # Preselection strings for HLT and FILTER.
-        hlt     = "HLT_PASS_RE('" + self._config["HLT"]["LINETOPO"] + ".*Decision')"
-        hltMB   = "HLT_PASS('"+self._config["HLT"]["LINEMB"]+"')"
+        hlt     = "HLT_PASS_RE('%s')" % config["HLT"]["LINETOPO"]
+        hltMB   = "HLT_PASS_RE('%s')" % config["HLT"]["LINEMB"]
         fltDIFF = {"Code" : "(recSummary(LHCb.RecSummary.nPVs, 'Rec/Vertex/Primary')<2)"
                             "& (recSummaryTrack(LHCb.RecSummary.nBackTracks, TrBACKWARD) < 1)",
                    'Preambulo' : ['from LoKiTracks.decorators import *',
@@ -217,7 +226,7 @@ class JetsConf(LineBuilder):
         bjets = TopologicalTagging(self._name+'taggingJet')
         bjets.ParticleAbsPID = 98
         bjets.SVLocation = test.outputLocation()
-        bjets.TriggerLine = self._config["HLT"]["LINETOPO"] + ".*Decision"
+        bjets.TriggerLine = self._config["HLT"]["LINETOPO"]
         ## Fix Hlt split configuration
         config_split_HLT(bjets)
 

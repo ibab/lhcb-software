@@ -8,52 +8,52 @@ Long tracks only
 
 '''
 
-__author__ = ['Florin MACIUC']
-__date__ = '24/08/2013'
+__author__  = ['Florin MACIUC']
+__date__    = '24/08/2013'
 __version__ = '$Revision: 1.0 $'
+__all__     = ( 'SbarSCorrelationsConf', 'default_config' )
 
-__all__ = ( 'SbarSCorrelationsConf', 'default_config' )
+
+from Gaudi.Configuration                    import *
+from GaudiConfUtils.ConfigurableGenerators  import FilterDesktop, CombineParticles
+from StandardParticles                      import StdAllNoPIDsPions, StdTightKaons, StdAllNoPIDsProtons
+from PhysSelPython.Wrappers                 import Selection, DataOnDemand, MergedSelection
+from StrippingConf.StrippingLine            import StrippingLine
+from StrippingUtils.Utils                   import LineBuilder
+from GaudiKernel.SystemOfUnits import MeV, GeV
+
 
 default_config = {
-    'NAME'        : 'SbarSCorrelations',
-    'BUILDERTYPE' : 'SbarSCorrelationsConf',
-    'STREAMS'     : [ 'EW'  ],
-    'WGs'         : [ 'QEE' ],
-    'CONFIG' : { 'HLT' : "HLT_PASS('Hlt1MBNoBiasDecision')|HLT_PASS('Hlt1MBMicroBiasTStationDecision')|HLT_PASS('Hlt1MBMicroBiasVeloDecision')|HLT_PASS('Hlt1MBMicroBiasTStationRateLimitedDecision')|HLT_PASS('Hlt1MBMicroBiasVeloRateLimitedDecision')"
-                ,  'LongTrackGEC'          :    1000 # 150 or 500 might be a better choice
-                ,  'Trk_P_MIN'             : 5000 # to limit material interactions for Kaons
-                ,  'isLong'                : '(ISLONG)'
-                ,  'KAON_PIDK_MIN'         : 8 # DLL_KAON_vs_PION
-                ,  'KAON_PIDKp_MIN'        : 0 # DLL_KAON_vs_PROTON
-                ,  'KAON_ipChi2_MAX'                : 49 # IPCHI2 with respect to best PV (do not know if UPCHI2 or IP is used, but I guess IPCHI2 was used to tag the best PV )
+  'NAME'        : 'SbarSCorrelations',
+  'BUILDERTYPE' : 'SbarSCorrelationsConf',
+  'STREAMS'     : [ 'EW'  ],
+  'WGs'         : [ 'QEE' ],
+  'CONFIG'      : { 
+      'HLT'               : "HLT_PASS_RE('Hlt1.*NoBias.*Decision')|HLT_PASS_RE('Hlt1.*MB.*Bias.*Decision')|HLT_PASS_RE('Hlt1.*MicroBias.*Decision')",
+      'LongTrackGEC'      : 1000,     # 150 or 500 might be a better choice
+      'Trk_P_MIN'         : 5 * GeV,  # to limit material interactions for Kaons
+      'isLong'            : '(ISLONG)',
+      'KAON_PIDK_MIN'     : 8,        # DLL_KAON_vs_PION
+      'KAON_PIDKp_MIN'    : 0,        # DLL_KAON_vs_PROTON
+      'KAON_ipChi2_MAX'   : 49,       # IPCHI2 with respect to best PV (do not know if UPCHI2 or IP is used, but I guess IPCHI2 was used to tag the best PV )
 #
-                ,   'PION_ipChi2_MIN'       : 9
-                ,   'PROTON_ipChi2_MIN'     : 9
-                ,   'PION_P_MIN'            : 2000
-                ,   'PROTON_P_MIN'          : 2000
+      'PION_ipChi2_MIN'   : 9,
+      'PROTON_ipChi2_MIN' : 9,
+      'PION_P_MIN'        : 2 * GeV,
+      'PROTON_P_MIN'      : 2 * GeV,
 #
-                ,   'Fisher'                : 10
-                ,   'Lambda_V_Chi2_Max'      : 9
-                ,   'Lambda_Adamass'        : 50
-                ,   'Lambda_ipChi2_MAX'     : 49
+      'Fisher'            : 10,
+      'Lambda_V_Chi2_Max' : 9,
+      'Lambda_Adamass'    : 50 * MeV,
+      'Lambda_ipChi2_MAX' : 49,
 #                   
-                , 'Phiprescale'             :    0.05
-                , 'F2prescale'              :    1.0
-                , 'LambdaCprescale'         :    1.0                   
-                , 'postscale'             :    1.0
-           },
-    }
+      'Phiprescale'       : 0.05,
+      'F2prescale'        : 1.0,
+      'LambdaCprescale'   : 1.0,                  
+      'postscale'         : 1.0,
+    },
+}
 
-
-
-from Gaudi.Configuration                   import *
-from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
-from StandardParticles import StdAllNoPIDsPions, StdTightKaons, StdAllNoPIDsProtons
-from PhysSelPython.Wrappers                import Selection, DataOnDemand, MergedSelection
-from StrippingConf.StrippingLine           import StrippingLine
-from StrippingUtils.Utils                  import LineBuilder
-
-from GaudiKernel.SystemOfUnits import MeV
 
 class SbarSCorrelationsConf(LineBuilder):
     __configuration_keys__ = default_config['CONFIG'].keys() 
@@ -228,7 +228,7 @@ def makeLambda(name, inputDecayDescriptors, inputDaughters, FISHER_D, LAMBDA_V_C
 #    X.CombinationCut = "(ADAMASS('Lambda0')<50*MeV) & (ADOCACHI2CUT(30, ''))"
 #    X.MotherCut      =  "(ADMASS('Lambda0')<35*MeV) & (VFASPF(VCHI2)<30) & (BPVVDCHI2 > 4.)"
     
-    _combCutMass = "(ADAMASS('Lambda0')<%(LAMBDA_ADAMASS)s*MeV)"  % locals()
+    _combCutMass = "(ADAMASS('Lambda0')<%(LAMBDA_ADAMASS)s)"  % locals()
     
 # not needed because pion and proton are originating in Lambda (long-lived) decay vertex    _combCutsPV   = "(AALLSAMEBPV)"
 

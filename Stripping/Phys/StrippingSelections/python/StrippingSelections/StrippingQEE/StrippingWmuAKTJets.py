@@ -3,7 +3,8 @@
 #
 
 from Gaudi.Configuration import *
-from Configurables       import FilterDesktop, CombineParticles, LoKi__VertexFitter
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+from Configurables       import CombineParticles, LoKi__VertexFitter
 from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
@@ -66,13 +67,9 @@ class WmuAKTJetsConf( LineBuilder ) :
     def makeW( self, _name):
         # Define the W->mu cuts
         _code     = '(PT>%(min_mu_pT)s*GeV) & (PT<%(max_mu_pT)s*GeV)' %self._config
-
-        _filter = FilterDesktop( _name,
-                                 Code      = _code
-                                 )
-
+        
         return Selection ( "sel"+_name,
-                           Algorithm          = _filter,
+                           Algorithm          = FilterDesktop( Code=_code ),
                            RequiredSelections = [StdAllLooseMuons]
                            )
 

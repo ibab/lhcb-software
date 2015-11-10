@@ -12,7 +12,7 @@ from StandardParticles import StdAllNoPIDsPions
 from StandardParticles import StdLooseAllPhotons
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-
+from GaudiConfUtils.ConfigurableGenerators import bJetSeeds
 
 __all__ = (
   'InclbJetsLinesConf',
@@ -37,7 +37,7 @@ default_config = {
         'VtxChi2Cut'    : 20.0,
         'scale'         : 0.05,
         #
-        'HLT2'          : "HLT_PASS_RE('Hlt2*.Topo.*Decision')",
+        'HLT2'          : "HLT_PASS_RE('Hlt2.*Topo.*Decision')",
         'VertexFitter'  : 'LoKi::VertexFitter:PUBLIC',
     },
 }
@@ -53,20 +53,18 @@ class InclbJetsConf(LineBuilder) :
         self.registerLine(self.inclbJetLine)
 
     def _makeInclbJetSel(self, name) :
-        from Configurables import bJetSeeds
-        selectionAlg = bJetSeeds('Sel'+name+'Alg')
-        selectionAlg.NrPVs    = self.__confdict__['NrPVsCut']
-        selectionAlg.NrSeeds  = self.__confdict__['NrSeedsCut']
-        selectionAlg.TrkChi2  = self.__confdict__['TrkChi2Cut']
-        selectionAlg.PrtMom   = self.__confdict__['PrtMomCut']
-        selectionAlg.PrtPt    = self.__confdict__['PrtPtCut']
-        selectionAlg.PrtIPS   = self.__confdict__['PrtIPSCut']
-        selectionAlg.DZSVPV   = self.__confdict__['DZSVPVCut']
-        selectionAlg.SumMomSV = self.__confdict__['SumMomSVCut']
-        selectionAlg.VtxChi2  = self.__confdict__['VtxChi2Cut']
-
-        selectionAlg.VertexFitter = self.__confdict__['VertexFitter']
-
+        selectionAlg = bJetSeeds(
+            NrPVs         = self.__confdict__['NrPVsCut'],
+            NrSeeds       = self.__confdict__['NrSeedsCut'],
+            TrkChi2       = self.__confdict__['TrkChi2Cut'],
+            PrtMom        = self.__confdict__['PrtMomCut'],
+            PrtPt         = self.__confdict__['PrtPtCut'],
+            PrtIPS        = self.__confdict__['PrtIPSCut'],
+            DZSVPV        = self.__confdict__['DZSVPVCut'],
+            SumMomSV      = self.__confdict__['SumMomSVCut'],
+            VtxChi2       = self.__confdict__['VtxChi2Cut'],
+            VertexFitter  = self.__confdict__['VertexFitter'],
+        )
         return Selection("Sel" + name, Algorithm = selectionAlg,
                          RequiredSelections = [StdAllNoPIDsPions, StdLooseAllPhotons])
 

@@ -6,17 +6,16 @@ __all__ = ('DijetsConf',
            'default_config')
 
 from Gaudi.Configuration import *
-from Configurables import TisTosParticleTagger
 from GaudiKernel.SystemOfUnits import MeV, GeV, mm
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
+from StandardParticles import StdLoosePhotons, StdAllNoPIDsPions, StdJets
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
 from Configurables import CombineParticles
-from JetAccessories.JetMaker_Config import JetMakerConf
 from Configurables import LoKi__FastJetMaker, LoKi__JetMaker
-from StandardParticles import StdLoosePhotons, StdAllNoPIDsPions, StdJets
 from Configurables import LoKi__VertexFitter
+from JetAccessories.JetMaker_Config import JetMakerConf
 
 # Define the default configuration.
 
@@ -29,7 +28,7 @@ default_config = {
         # Prescale for the calibration line.
         "PRESCALE" : 0.03,
         # HLT properties.
-        "HLT"   : {"LINE" : "Hlt1TrackMuon"},   # Line to use.
+        "HLT"   : {"LINE" : "Hlt1TrackMuon.*Decision"},   # Line to use.
         # Track properties.
         "TRK"   : {"MAX_MULT"      : 250,       # Multiplicity.
                    "MIN_P"         : 5*GeV,     # Momentum.
@@ -77,9 +76,9 @@ class DijetsConf(LineBuilder):
         self._name = name
 
         # Preselection strings for HLT and FILTER.
-        hlt = "HLT_PASS_RE('" + self._config["HLT"]["LINE"] + ".*Decision')"
-        flt = {"Code" : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG)"
-               " < %s)" % self._config["TRK"]["MAX_MULT"],
+        hlt1 = "HLT_PASS_RE('%s')" % config["HLT"]["LINE"]
+        flt  = {"Code" : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG)"
+               " < %s)" % config["TRK"]["MAX_MULT"],
                'Preambulo' : ["from LoKiTracks.decorators import *",
                               'from LoKiCore.functions    import *']}
 
@@ -96,8 +95,7 @@ class DijetsConf(LineBuilder):
             name + "Line",
             prescale = 1.0,
             RequiredRawEvents = ["Calo"],
-            # HLT = hlt,
-            HLT1 = hlt,
+            HLT1 = hlt1,
             FILTER = flt,
             selection = dijets
             )
@@ -108,8 +106,7 @@ class DijetsConf(LineBuilder):
             name + "PrescaledLine",
             prescale = self._config["PRESCALE"],
             RequiredRawEvents = ["Calo"],
-            # HLT = hlt,
-            HLT1 = hlt,
+            HLT1 = hlt1,
             FILTER = flt,
             selection =  self._create_dijets([jets], "Prescaled")
             )

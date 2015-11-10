@@ -16,11 +16,10 @@ __all__ = ('H24MuLineConf',
            )
 
 from Gaudi.Configuration import *
-from Configurables import FilterDesktop, CombineParticles
+from Configurables import CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-#from Configurables import OfflineVertexFitter
 
 default_name = 'H24Mu'
 
@@ -101,45 +100,7 @@ class H24MuLineConf(LineBuilder) :
     
     """
  
-    __configuration_keys__ = (
-        'DefaultPostscale',
-        'PromptLinePrescale',
-        'SimpleLinePrescale',
-        'DetachedLinePrescale',
-        'LooseLinePrescale',
-        'MuTrackChi2DoF',
-        'MuPIDdll',
-        'MuNShared',
-        
-        'MupTprompt',
-        'MupTdetached',
-        'MuMaxIPchi2',
-        'MuMinIPchi2',
-        'MuGhostProb',
-        'A1maxMass',
-        'A1Doca',
-        'A1Vchi2',
-        'A1DocaTight',
-        'A1Vchi2Tight',
-        'A1Dira',
-        'A1maxIPchi2',
-        'A1FDChi2',
-        'HmaxDOCA',
-        'HpT',
-        'HVchi2',
-        'HmaxDOCATight',
-        'HVchi2Tight',
-        'MuTrackChi2DoF_loose',
-        'MupT_loose',
-        'MuMaxIPchi2_loose',
-        'A1maxMass_loose',
-        'A1Doca_loose',
-        'A1Vchi2_loose',
-        'HmaxDOCA_loose',
-        'HpT_loose',
-        'HVchi2_loose'
-    )
-
+    __configuration_keys__ = default_config['CONFIG'].keys()
 
     def __init__(self, 
                  name = default_name,
@@ -218,15 +179,16 @@ class H24MuLineConf(LineBuilder) :
                                           RequiredRawEvents = ["Muon"]
                                           )
         
-        ## no need for mdst or raw data in the loose line...
-        self.looseLine = StrippingLine(loose_name+"Line",
-                                       prescale = config['LooseLinePrescale'],
-                                       postscale = config['DefaultPostscale'],
-#                                       algos = [ self.selLoose ],
-                                       selection = self.selLoose,
-                                       ExtraInfoTools = ExtraInfoTools,
-                                       ExtraInfoSelections = ExtraInfoDaughters["loose"],
-                                       )
+## 2015-11-10 ckhurewa: Instantiated but unused Line raises warning...
+#         ## no need for mdst or raw data in the loose line...
+#         self.looseLine = StrippingLine(loose_name+"Line",
+#                                        prescale = config['LooseLinePrescale'],
+#                                        postscale = config['DefaultPostscale'],
+# #                                       algos = [ self.selLoose ],
+#                                        selection = self.selLoose,
+#                                        ExtraInfoTools = ExtraInfoTools,
+#                                        ExtraInfoSelections = ExtraInfoDaughters["loose"],
+#                                        )
 
         self.registerLine(self.promptLine)
         self.registerLine(self.simpleLine)

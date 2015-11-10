@@ -43,6 +43,8 @@ default_config = {
         'DY2MuMu1HLT2': "HLT_PASS_RE( 'Hlt2.*DiMuonDY.*Decision' )",
         'DY2MuMu2HLT2': "HLT_PASS_RE( 'Hlt2.*DiMuonDY.*Decision' )",
         #
+        'RawEvents'   : ["Muon","Calo","Rich","Velo","Tracker"],
+        #
         'DY1MinMass'  :  3.2 * GeV,
         'DY1MaxMass'  :  5. * GeV,
         'DY2MinMass'  :  5. * GeV,
@@ -91,7 +93,7 @@ class DY2MuMuConf( LineBuilder ) :
         line_DY2MuMu1 = StrippingLine( name + 'Line1',
                                             prescale  = config['DY2MuMu1LinePrescale'],
                                             postscale = config['DY2MuMuLinePostscale'],
-                                            RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
+                                            RequiredRawEvents = config['RawEvents'],
                                             selection = sel_DY2MuMu1,
 #                                            RelatedInfoTools = [
 #                                                               {'Type' : 'RelInfoConeVariables',
@@ -117,9 +119,8 @@ class DY2MuMuConf( LineBuilder ) :
         line_DY2MuMu1Hlt = StrippingLine( name + 'Line1Hlt',
                                                prescale  = config[ 'DY2MuMu1LineHltPrescale' ],
                                                postscale = config[ 'DY2MuMuLinePostscale' ],
-                                               RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
+                                               RequiredRawEvents = config['RawEvents'],
                                                HLT2      = config[ 'DY2MuMu1HLT2' ],
-                                               # HLT2      = "HLT_PASS_RE( 'Hlt2.*DiMuonDY.*Decision' )",
                                                selection = sel_DY2MuMu1Hlt,
                                                )
 
@@ -137,7 +138,7 @@ class DY2MuMuConf( LineBuilder ) :
         line_DY2MuMu2 = StrippingLine( name + 'Line2',
                                             prescale  = config['DY2MuMu2LinePrescale'],
                                             postscale = config['DY2MuMuLinePostscale'],
-                                            RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
+                                            RequiredRawEvents = config['RawEvents'],
                                             selection = sel_DY2MuMu2,
                                             )
 
@@ -156,9 +157,8 @@ class DY2MuMuConf( LineBuilder ) :
         line_DY2MuMu2Hlt = StrippingLine( name + 'Line2Hlt',
                                                prescale  = config[ 'DY2MuMu2LineHltPrescale' ],
                                                postscale = config[ 'DY2MuMuLinePostscale' ],
-                                               RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
+                                               RequiredRawEvents = config['RawEvents'],
                                                HLT2      = config[ 'DY2MuMu1HLT2' ],
-                                               # HLT2      = "HLT_PASS_RE( 'Hlt2.*DiMuonDY.*Decision' )",
                                                selection = sel_DY2MuMu2Hlt,
                                                )
 
@@ -176,7 +176,7 @@ class DY2MuMuConf( LineBuilder ) :
         line_DY2MuMu3 = StrippingLine( name + 'Line3',
                                             prescale  = config[ 'DY2MuMu3LinePrescale' ],
                                             postscale = config[ 'DY2MuMuLinePostscale' ],
-                                            RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
+                                            RequiredRawEvents = config['RawEvents'],
                                             selection = sel_DY2MuMu3,
                                             )
 
@@ -194,7 +194,7 @@ class DY2MuMuConf( LineBuilder ) :
         line_DY2MuMu4 = StrippingLine( name + 'Line4',
                                             prescale  = config[ 'DY2MuMu4LinePrescale' ],
                                             postscale = config[ 'DY2MuMuLinePostscale' ],
-                                            RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
+                                            RequiredRawEvents = config['RawEvents'],
                                             selection = sel_DY2MuMu4,
                                             )
 
