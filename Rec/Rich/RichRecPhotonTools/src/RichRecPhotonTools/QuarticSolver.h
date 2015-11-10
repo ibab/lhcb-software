@@ -237,7 +237,7 @@ namespace Rich
         using Complex4x = typename std::conditional<std::is_same<TYPE,float>::value,Complex4f,Complex4d>::type;
         using Complex2x = typename std::conditional<std::is_same<TYPE,float>::value,Complex2f,Complex2d>::type;
 
-        const Complex4x  W = sqrt( Complex4f(u1,u2,u1,-u2) );
+        const Complex4x  W = sqrt( Complex4x(u1,u2,u1,-u2) );
         const auto       V = W.get_low() * W.get_high();
         const Complex2x w3 = ( abs(V) != 0.0 ? ( qq * -0.125f ) / V : Complex2x(0,0) );
         const TYPE     res = W.extract(0) + W.extract(2) + w3.extract(0) - (r4*a);
