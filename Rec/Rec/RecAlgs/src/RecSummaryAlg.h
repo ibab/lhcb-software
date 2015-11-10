@@ -171,9 +171,6 @@ private:
   /// CountVeloTracks tool
   const ICountContainedObjects* m_countVeloTracks;
 
-  /// Use Lite clusters for Velo and ST
-  bool m_liteClusters;
-
 };
 
 #endif // RECSUMMARYALG_H

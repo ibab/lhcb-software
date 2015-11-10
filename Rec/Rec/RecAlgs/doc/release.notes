@@ -4,6 +4,9 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-11-10 - Marco Cattaneo
+ - Remove unused variable
+
 !========================= RecAlgs v3r3p2 2015-10-13 =========================
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
