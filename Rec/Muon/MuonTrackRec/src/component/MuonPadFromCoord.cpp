@@ -110,10 +110,13 @@ StatusCode MuonPadFromCoord::buildLogicalPads(const std::vector<MuonLogHit*>* ) 
     unsigned int station = tile->station();
     unsigned int region = tile->region();
     double uncross = (station == 0 || ((station>2)&&(region==0))) ? false : (*iCoord)->uncrossed();
+    int time1= (int) (*iCoord)->digitTDC1();
+    int time2= (int) (*iCoord)->digitTDC2();
 
     if(uncross) {
       m_tiles.push_back(tile);
       log1 = new MuonLogHit(tile);
+      log1->setTime(time1);
       m_hits.push_back(log1);
       m_pads.push_back(new MuonLogPad(log1));
     }
@@ -122,6 +125,7 @@ StatusCode MuonPadFromCoord::buildLogicalPads(const std::vector<MuonLogHit*>* ) 
       tile = new MuonTileID(thetiles[0]);
       m_tiles.push_back(tile);
       log1 = new MuonLogHit(tile);
+      log1->setTime(time1);
       m_hits.push_back(log1);
       if (thetiles.size() == 1) {        
         MuonLogPad* lpad=new MuonLogPad(log1);
@@ -132,6 +136,7 @@ StatusCode MuonPadFromCoord::buildLogicalPads(const std::vector<MuonLogHit*>* ) 
         tile = new MuonTileID(thetiles[1]);
         m_tiles.push_back(tile);
         log2 = new MuonLogHit(tile);
+        log2->setTime(time2);
         m_hits.push_back(log2);
         m_pads.push_back(new MuonLogPad(log1,log2));
       }
