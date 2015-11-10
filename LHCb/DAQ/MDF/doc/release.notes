@@ -5,6 +5,10 @@
 !               Contains also the data structures to control MEPs and
 !               MEP fragments
 !-----------------------------------------------------------------------------
+
+! 2015-11-10 - Marco Cattaneo
+ - Fix a format-pedantic warning from clang
+
 ! 2015-11-03 - Gerhard Raven
  - replace deprecated std::auto_ptr with std::unique_ptr
  - prefer emplace over insert

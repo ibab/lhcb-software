@@ -498,7 +498,7 @@ bool LHCb::checkRawBanks(const char* start, const char* end, bool exc,bool prt) 
     return true;
   }
 Error:  // Anyhow only end up here if no exception was thrown...
-  ::sprintf(txt,"%s Error in multi raw bank buffer start:%p end:%p",s_checkLabel,start,end);
+  ::sprintf(txt,"%s Error in multi raw bank buffer start:%p end:%p",s_checkLabel,reinterpret_cast<const void*>(start),reinterpret_cast<const void*>(end));
   if ( prt ) {
     cout << txt << endl;
     print_previous_bank(prev);
