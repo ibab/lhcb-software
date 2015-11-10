@@ -136,7 +136,7 @@ StatusCode MuonHitDecode::decodeRawData()
   for ( TileAndTDCMap::iterator it = m_tilesAndTDC.begin(); it != m_tilesAndTDC.end(); ++it )
   {
     newhit = new MuonLogHit( &((*it).first) );
-    long L1Number,link_number,ODE_number,ode_ch;
+    long L1Number=0,link_number=0,ODE_number=0,ode_ch=0;
     if(!m_skipHWNumber)  m_muonDetector->getDAQInfo()->findHWNumber ( (*it).first,
                                                                       L1Number,link_number,ODE_number,ode_ch);
     unsigned int on=ODE_number, oc=ode_ch;

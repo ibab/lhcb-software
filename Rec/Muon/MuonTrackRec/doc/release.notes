@@ -10,6 +10,7 @@
 
 ! 2015-11-10 - G.Graziani
  - add timing information to MuonPadFromCoord 
+ - fix some compilation warnings and some cleanup in MuonHitDecode
 
 !========================= MuonTrackRec v3r14 2015-09-22 =========================
 

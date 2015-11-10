@@ -45,9 +45,9 @@ public:
     return (const std::vector<MuonLogHit*>*) (&m_fakehits);
   }
   // specific for Online Monitoring, not implemented here (just avoid compil. warnings)
-  virtual int banksSize(LHCb::RawBank::BankType bankType, std::vector<int> &sizes)
-  { return 0* (bankType == bankType) * sizes.size();}
-  virtual unsigned int odeErrorWord(int T1, int BX) {return T1+BX;}
+  virtual int banksSize(LHCb::RawBank::BankType , std::vector<int>& )
+  { return 0;}
+  virtual unsigned int odeErrorWord(int , int ) {return 0;}
   virtual int bankVersion() {return 0;}
   virtual void dumpRawBanks() {}
   virtual void dumpFrame(int, int) {}
@@ -63,21 +63,16 @@ public:
   virtual bool firstBX() {return true;}
   virtual bool lastBX() {return true;}
   virtual LHCb::MuonTileID* tileFromODE(int, int) { return NULL; }
-  virtual int odeIndex(int ODEnumber) {return 0*ODEnumber;}
-  virtual int channelsPerQuadrant(int station,
-				  int region) {return 0*station*region;}
-  virtual int nPadX(int s) {return 0*s;}
-  virtual int nPadY(int s) {return 0*s;}
-  virtual int nPadXvy(int s, int r) {return 0*s*r;}
-  virtual int nPadYvx(int s, int r) {return 0*s*r;}
-  virtual float padSizeX(int station,			    
-                         int region)  {return (float)(0.*station*region);}
-  virtual float padSizeY(int station,			    
-                         int region)  {return (float)(0.*station*region);}
-  virtual float padSizeXvy(int station,			    
-                           int region)  {return (float)(0.*station*region);}
-  virtual float padSizeYvx(int station,			    
-                           int region)  {return (float)(0.*station*region);}
+  virtual int odeIndex(int ) {return 0;}
+  virtual int channelsPerQuadrant(int, int ) {return 0;}
+  virtual int nPadX(int ) {return 0;}
+  virtual int nPadY(int ) {return 0;}
+  virtual int nPadXvy(int , int ) {return 0;}
+  virtual int nPadYvx(int , int ) {return 0;}
+  virtual float padSizeX(int , int)	{return 0.;}
+  virtual float padSizeY(int , int)	{return 0.;}
+  virtual float padSizeXvy(int , int)	{return 0.;}
+  virtual float padSizeYvx(int , int)	{return 0.;}
   virtual LHCb::MuonTileID* tileFromLogCh(unsigned int,
                                           unsigned int,
                                           unsigned int,
