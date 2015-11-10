@@ -109,7 +109,7 @@ namespace Rich
           // vectorise 4 square roots into 1
           const auto tmp_sqrt = sqrt( Vec4x( e2, 
                                              d2, 
-                                             cosgamma2 < 1.0f ? 1.0f-cosgamma2 : 0.0f, 
+                                             cosgamma2 < 1.0 ? 1.0-cosgamma2 : 0.0, 
                                              cosgamma2 ) );
           const auto e         = tmp_sqrt[0];
           const auto d         = tmp_sqrt[1];
@@ -122,11 +122,11 @@ namespace Rich
           const auto edx       = e + dx;
 
           // Fill array for quartic equation
-          const auto a0     =     4.0f * e2 * d2;
-          const auto inv_a0 =   ( 1.0f / a0 );
-          const auto a1     = - ( 4.0f * e2 * dy * radius ) * inv_a0;
+          const auto a0     =     4.0 * e2 * d2;
+          const auto inv_a0 =   ( 1.0 / a0 );
+          const auto a1     = - ( 4.0 * e2 * dy * radius ) * inv_a0;
           const auto a2     =   ( (dy2 * r2) + ( edx * edx * r2 ) - a0 ) * inv_a0;
-          const auto a3     =   ( 2.0f * e * dy * (e-dx) * radius ) * inv_a0;
+          const auto a3     =   ( 2.0 * e * dy * (e-dx) * radius ) * inv_a0;
           const auto a4     =   ( ( e2 - r2 ) * dy2 ) * inv_a0;
 
           // use simplified RICH version of quartic solver
@@ -184,11 +184,11 @@ namespace Rich
                                        const TYPE& d ) const
       {
 
-        const auto r4 = 1.0f / 4.0f;
-        const auto q2 = 1.0f / 2.0f;
-        const auto q8 = 1.0f / 8.0f;
-        const auto q1 = 3.0f / 8.0f;
-        const auto q3 = 3.0f / 16.0f;
+        const auto r4 = 1.0 / 4.0;
+        const auto q2 = 1.0 / 2.0;
+        const auto q8 = 1.0 / 8.0;
+        const auto q1 = 3.0 / 8.0;
+        const auto q3 = 3.0 / 16.0;
 
         const auto UU = -( std::sqrt(3.0) / 2.0 );
 
@@ -201,10 +201,10 @@ namespace Rich
         const auto tc = -(q8 * qq * q8 * qq);
 
         const auto qcub = (rc * rc - 3 * sc);
-        const auto rcub = (2.0f * rc * rc * rc - 9 * rc * sc + 27.0f * tc);
+        const auto rcub = (2.0 * rc * rc * rc - 9 * rc * sc + 27.0 * tc);
 
-        const auto Q = qcub / 9.0f;
-        const auto R = rcub / 54.0f;
+        const auto Q = qcub / 9.0;
+        const auto R = rcub / 54.0;
 
         const auto Q3 = Q * Q * Q;
         const auto R2 = R * R;
@@ -215,7 +215,7 @@ namespace Rich
         
         const auto B = Q / A;
 
-        const auto u1 = -0.5f * (A + B) - rc / 3.0f;
+        const auto u1 = -0.5 * (A + B) - rc / 3.0;
         const auto u2 = UU * fabs(A-B);
 
 #ifdef __clang__
@@ -225,7 +225,7 @@ namespace Rich
         const auto w1 = std::sqrt( std::complex<TYPE>(u1, u2) );
         const auto w2 = std::sqrt( std::complex<TYPE>(u1,-u2) );
         const auto  V = w1 * w2;
-        const std::complex<TYPE> w3 = ( std::abs(V) != 0.0 ? ( qq * -0.125f ) / V : 
+        const std::complex<TYPE> w3 = ( std::abs(V) != 0.0 ? ( qq * -0.125 ) / V : 
                                         std::complex<TYPE>(0,0) );
         const TYPE res = std::real(w1) + std::real(w2) + std::real(w3) - (r4*a);
 
@@ -239,7 +239,7 @@ namespace Rich
 
         const Complex4x  W = sqrt( Complex4x(u1,u2,u1,-u2) );
         const auto       V = W.get_low() * W.get_high();
-        const auto      w3 = ( abs(V) != 0.0 ? ( qq * -0.125f ) / V : Complex2x(0,0) );
+        const auto      w3 = ( abs(V) != 0.0 ? ( qq * -0.125 ) / V : Complex2x(0,0) );
         const TYPE     res = W.extract(0) + W.extract(2) + w3.extract(0) - (r4*a);
 
 #endif
