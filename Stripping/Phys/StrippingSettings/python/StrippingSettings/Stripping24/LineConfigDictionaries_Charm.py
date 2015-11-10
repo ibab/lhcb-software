@@ -866,6 +866,36 @@ D2hh = {
     "WGs": [ "Charm" ]
 }
 
+D2hhhFTCalib = {
+    "BUILDERTYPE": "D2hhhFTCalibConf", 
+    "CONFIG": {
+        "D2KKKDaughter2IPChi2": 4.0, 
+        "D2KKKDaughterIPChi2": 4.0, 
+        "D2KKPLinePostscale": 1.0, 
+        "D2KKPLinePrescale": 0.2, 
+        "DDIRA": 0.99995, 
+        "DIPChi2": 1500.0, 
+        "DOCAChi2": 50.0, 
+        "DOCAMax": 0.5, 
+        "DPVLTIME": 0.2, 
+        "DPt": 2000.0, 
+        "DVXChi2NDOF": 6.0, 
+        "Daughter2IPChi2": 10.0, 
+        "DaughterIPChi2": 4.0, 
+        "DaughterP": 2000.0, 
+        "DaughterPT": 250.0, 
+        "DdcaFDChi2": 150.0, 
+        "KPIDK": 7.0, 
+        "MaxMassPosFit": 2040.0, 
+        "MaxTracksInEvent": 500, 
+        "MinMassPosFit": 1920.0, 
+        "PTSum": 3200.0, 
+        "piPIDK": 3.0
+    }, 
+    "STREAMS": [ "CharmCompleteEvent" ], 
+    "WGs": [ "ALL" ]
+}
+
 D2hhhLines = {
     "BUILDERTYPE": "D2hhhConf", 
     "CONFIG": {
@@ -912,56 +942,25 @@ D2hhhLines = {
     "WGs": [ "Charm" ]
 }
 
-D2hhhFTCalib = {
-    'WGs'         :  ['ALL'],
-    'BUILDERTYPE' : 'D2hhhFTCalibConf',
-    'STREAMS' : [ 'CharmCompleteEvent' ],
-    'CONFIG'      : {
-		'DaughterPT'            : 250.,
-		'DaughterP'             : 2000.,
-		'DaughterIPChi2'        : 4.,
-		'Daughter2IPChi2'       : 10.,
-		'D2KKKDaughterIPChi2'   : 4.,
-		'D2KKKDaughter2IPChi2'  : 4.,
-		'KPIDK'                 : 7.,
-		'piPIDK'                : 3.,
-		'PTSum'                 : 3200.,
-		'DOCAMax'               : 0.5,
-		'DOCAChi2'              : 50.,
-		'DPt'                   : 2000.,
-		'DIPChi2'               : 1500.,
-		'DdcaFDChi2'            : 150.,
-		'DPVLTIME'              : 0.2,
-		'DDIRA'                 : 0.99995,
-		'DVXChi2NDOF'           : 6.,
-		'MinMassPosFit'         : 1920.,
-		'MaxMassPosFit'         : 2040.,
-		'MaxTracksInEvent'      : 500,
-		'D2KKPLinePrescale'     : 0.2,
-		'D2KKPLinePostscale'    : 1.0 ,
-    }
-}
-
 Dst2PiD0EEG = {
     "BUILDERTYPE": "StrippingDst2PiD0EEGConf", 
     "CONFIG": {
-        "Daug_ETA_MAX": 5.0, 
-        "Daug_ETA_MIN": 2.0, 
-        "Daug_IPCHI2_MIN": 6.0, 
-        "Daug_PT_MIN": 1300.0, 
-        "Daug_P_MAX": 100000.0, 
-        "Daug_P_MIN": 2000.0, 
-        "Daug_TRCHI2DOF_MAX": 3, 
-        "Daug_TRGHOSTPROB_MAX": 0.5, 
         "DiElectron_Mass_MAX": 1914.0, 
         "DiElectron_PT_MIN": 2600.0, 
         "Dstar_AMDiff_MAX": 165.0, 
         "Dstar_MDiff_MAX": 160.0, 
         "Dstar_VCHI2VDOF_MAX": 9.0, 
+        "Electron_IPCHI2_MIN": 16.0, 
+        "Electron_PT_MIN": 350.0, 
+        "Electron_P_MIN": 1000.0, 
+        "Electron_TRCHI2DOF_MAX": 6, 
+        "Electron_TRGHOSTPROB_MAX": 0.5, 
         "Hlt1Filter": None, 
         "Hlt2Filter": "HLT_PASS_RE('Hlt2CharmHadDstp2.*EmEp.*Decision') | HLT_PASS_RE('Hlt2Topo.*Decision')", 
         "Neut_PT_MIN": 600.0, 
+        "PostscaleDst2PiD0EE": 1, 
         "PostscaleDst2PiD0EEG": 1, 
+        "PrescaleDst2PiD0EE": 1, 
         "PrescaleDst2PiD0EEG": 1, 
         "Res_Mass_MAX": 1914.0, 
         "Res_Mass_MIN": 1814.0, 
@@ -1067,38 +1066,36 @@ DstarD0ToHHPi0 = {
 
 DstarD2HHHH = {
     "BUILDERTYPE": "DstarD2HHHHLines", 
-    'CONFIG'      : { 'PrescaleDstarD2PiPiPiPi' : 1,
-                      'PrescaleDstarD2KPiPiPi'  : 1,
-                      'PrescaleDstarD2KKPiPi'   : 1,
-                      'PrescaleDstarD2KKKPi'    : 1,
-                      # D0 -> HHHH
-                      'TrChi2'                  : 3,
-                      'TrGhostProb'             : 0.5,
-                      'MinTrkPT'                : 250 * MeV,
-                      'MinTrkIPChi2'            : 3,
-                      'HighPIDK'                : 0,
-                      'LowPIDK'                 : 0,
-                      'MaxADOCACHI2'            : 10.0,
-                      'CombMassLow'             : 1730 * MeV,
-                      'CombMassHigh'            : 2000 * MeV,
-                      'MinCombPT'               : 1500 * MeV,
-                      'MinCombP'                : 20000 * MeV,
-                      'MaxVCHI2NDOF'            : 12.0,
-                      'MinBPVDIRA'              : 0.9998,
-                      'MinBPVTAU'               : 0.1 * picosecond,
-                      'MassLow'                 : 1790 * MeV,
-                      'MassHigh'                : 1940 * MeV,
-                      'MinDPT'                  : 1600 * MeV,
-                      'MinDP'                   : 25000 * MeV,
-                      # D* -> D0 pi+
-                      'Daug_TRCHI2DOF_MAX'      : 3,
-                      'Dstar_AMDiff_MAX'        : 190 * MeV,
-                      'Dstar_VCHI2VDOF_MAX'     : 15.0,
-                      'Dstar_MDiff_MAX'         : 170 * MeV,
-                      # HLT filters, only process events firing triggers matching the RegEx
-                      'Hlt1Filter': None,
-                      'Hlt2Filter': None,
-                    }, 
+    "CONFIG": {
+        "CombMassHigh": 2000.0, 
+        "CombMassLow": 1730.0, 
+        "Daug_TRCHI2DOF_MAX": 3, 
+        "Dstar_AMDiff_MAX": 190.0, 
+        "Dstar_MDiff_MAX": 170.0, 
+        "Dstar_VCHI2VDOF_MAX": 15.0, 
+        "HighPIDK": 0, 
+        "Hlt1Filter": None, 
+        "Hlt2Filter": None, 
+        "LowPIDK": 0, 
+        "MassHigh": 1940.0, 
+        "MassLow": 1790.0, 
+        "MaxADOCACHI2": 10.0, 
+        "MaxVCHI2NDOF": 12.0, 
+        "MinBPVDIRA": 0.9998, 
+        "MinBPVTAU": 0.0001, 
+        "MinCombP": 20000.0, 
+        "MinCombPT": 1500.0, 
+        "MinDP": 25000.0, 
+        "MinDPT": 1600.0, 
+        "MinTrkIPChi2": 3, 
+        "MinTrkPT": 250.0, 
+        "PrescaleDstarD2KKKPi": 1, 
+        "PrescaleDstarD2KKPiPi": 1, 
+        "PrescaleDstarD2KPiPiPi": 1, 
+        "PrescaleDstarD2PiPiPiPi": 1, 
+        "TrChi2": 3, 
+        "TrGhostProb": 0.5
+    }, 
     "STREAMS": [ "Charm" ], 
     "WGs": [ "Charm" ]
 }
@@ -1269,13 +1266,25 @@ DstarPromptWithD02HHLL = {
     "CONFIG": {
         "ApplyElePIDe": False, 
         "ApplyGECs": False, 
-        "ApplyGhostProbCut": True, 
+        "ApplyGhostProbCut": False, 
         "ApplyKaonPIDK": False, 
         "ApplyPionPIDK": False, 
         "CheckPV": True, 
         "CombD0MassWin": 120.0, 
         "CombDelmLower": -9.0, 
         "CombDelmUpper": 20.0, 
+        "ConeAngles": {
+            "11": 1.1, 
+            "13": 1.3, 
+            "15": 1.5, 
+            "17": 1.7, 
+            "19": 1.9
+        }, 
+        "ConeVariables": [
+            "CONEANGLE", 
+            "CONEMULT", 
+            "CONEPTASYM"
+        ], 
         "D0DIRA": 0.9998, 
         "D0DauIPChi2": 3.0, 
         "D0DauMaxIPChi2": 9, 
@@ -1302,6 +1311,65 @@ DstarPromptWithD02HHLL = {
         "PionPIDK": 100, 
         "Postscale": 1, 
         "Prescale": 1, 
+        "SlowPionPt": 120.0, 
+        "TrackChi2DOF": 3
+    }, 
+    "STREAMS": [ "Charm" ], 
+    "WGs": [ "Charm" ]
+}
+
+DstarPromptWithD02HHMuMuControl = {
+    "BUILDERTYPE": "DstarPromptWithD02HHHHConf", 
+    "CONFIG": {
+        "ApplyGECs": False, 
+        "ApplyGhostProbCut": False, 
+        "ApplyKaonPIDK": False, 
+        "ApplyPionPIDK": False, 
+        "CheckPV": True, 
+        "CombD0MassWin": 120.0, 
+        "CombDelmLower": -9.0, 
+        "CombDelmUpper": 20.0, 
+        "ConeAngles": {
+            "11": 1.1, 
+            "13": 1.3, 
+            "15": 1.5, 
+            "17": 1.7, 
+            "19": 1.9
+        }, 
+        "ConeVariables": [
+            "CONEANGLE", 
+            "CONEMULT", 
+            "CONEPTASYM"
+        ], 
+        "D0DIRA": 0.9998, 
+        "D0DauIPChi2": 3.0, 
+        "D0DauMaxIPChi2": 9, 
+        "D0DauP": 3000.0, 
+        "D0DauPt": 300.0, 
+        "D0FDChi2": 30, 
+        "D0IPChi2": 36, 
+        "D0MassWin": 100.0, 
+        "D0MaxDOCA": 0.3, 
+        "D0Pt": 2000.0, 
+        "D0VtxChi2DOF": 20, 
+        "DelmLower": -8.0, 
+        "DelmUpper": 18.0, 
+        "DstarDOCA": 0.3, 
+        "DstarPt": 2000.0, 
+        "DstarVtxChi2DOF": 20, 
+        "GhostProbCut": 0.4, 
+        "KaonPIDK": 0.0, 
+        "MaxITClusters": None, 
+        "MaxLongTracks": 250, 
+        "MaxSpdDigits": None, 
+        "MaxVeloTracks": None, 
+        "PionPIDK": 3, 
+        "Postscale": 1, 
+        "Prescale": 0.05, 
+        "Run2K2pi": True, 
+        "Run3Kpi": True, 
+        "Run4pi": True, 
+        "RunK3pi": True, 
         "SlowPionPt": 120.0, 
         "TrackChi2DOF": 3
     }, 
@@ -1395,49 +1463,3 @@ Xicc = {
     "WGs": [ "Charm" ]
 }
 
-DstarPromptWithD02HHMuMuControl = {
-        'BUILDERTYPE' : 'DstarPromptWithD02HHHHConf',
-         'CONFIG' : {
-            'CombDelmLower'     : -9.*MeV
-       ,'CombDelmUpper'    : 20*MeV
-       ,'DelmLower'        : -8*MeV
-       ,'DelmUpper'        : 18*MeV
-       ,'CombD0MassWin'    : 120*MeV
-       ,'D0MassWin'        : 100*MeV
-       ,'DstarDOCA'        : 0.3*mm
-       ,'D0MaxDOCA'        : 0.3*mm
-       ,'D0DauPt'          : 300*MeV
-       ,'D0DauP'           : 3*GeV
-       ,'D0Pt'             : 2.*GeV
-       ,'DstarPt'          : 2.*GeV
-       ,'SlowPionPt'       : 120*MeV
-       ,'DstarVtxChi2DOF'  : 20
-       ,'D0VtxChi2DOF'     : 20
-       ,'D0DauMaxIPChi2'   : 9
-       ,'D0DauIPChi2'      : 3.0 # !!!
-       ,'D0FDChi2'         : 30
-       ,'D0IPChi2'         : 36
-       ,'D0DIRA'           : 0.9998
-       ,'TrackChi2DOF'     : 3
-       ,'ApplyKaonPIDK'    : False
-       ,'KaonPIDK'         : 0.
-       ,'ApplyPionPIDK'    : False
-       ,'PionPIDK'         : 3 # not applied to the slow pion
-       ,'CheckPV'          : True # reject events with no PVs
-       ,'ApplyGECs'        : False # set to False to apply no GECs
-       ,'MaxLongTracks'    : 250
-       ,'MaxVeloTracks'    : None
-       ,'MaxSpdDigits'     : None
-       ,'MaxITClusters'    : None
-       ,'ApplyGhostProbCut': False # !!!
-       ,'GhostProbCut'     : 0.4 # !!!
-       ,'Prescale'         : 0.05
-       ,'Postscale'        : 1
-       ,'RunK3pi'          : True
-       ,'Run4pi'           : True
-       ,'Run2K2pi'         : True
-       ,'Run3Kpi'          : True
-       } ,
-       'WGs' : [ 'Charm' ],
-       'STREAMS' : [ 'Charm' ]
-}
