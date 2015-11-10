@@ -46,10 +46,10 @@ config_params = {
     '_3h_Psum'              : 22000.,   ## min of 3h tracks P sum 
     '_3h_PVIPCHI2sum'       : 200.,     ## min of the 3h tracks IP wrt best 3h PV
     '_3h_TRKCHIDOFmin'      : 3.0,       ## max track CHI2DOF for the track with smalest CHI2DOF
-    '_3h_Mmax'              : 6500.,     ## max 3h mass for exclusive lines
-    '_3h_Mmin'              : 6000.,     ## min 3h mass for exclusive KKK lines
-    '_bu3h_Mmax'            : 5500.,     ## min buto3h mass for exclusive lines
-    '_bu3h_Mmin'            : 5100.,     ## min buto3h mass for exclusive lines
+    '_3h_Mmax'              : 6502.,     ## max 3h mass for exclusive lines
+    '_3h_Mmin'              : 5998.,     ## min 3h mass for exclusive KKK lines
+    '_bu3h_Mmax'            : 5502.,     ## min buto3h mass for exclusive lines
+    '_bu3h_Mmin'            : 5098.,     ## min buto3h mass for exclusive lines
     '_probnnpi'             : .15,       ## PROBNNpi for pion tracks. WARNING: DO NOT APPLY THIS CUT FOR PIPIPI OR KPIPI LINES
     '_probnnk'              : .20,       ## PROBNNk for kaon tracks.
     '_probnnp'              : .05,       ## PROBNNp for proton tracks.
@@ -119,10 +119,10 @@ default_config = {
                       '_3h_Psum'              : 22000.,   ## min of 3h tracks P sum 
                       '_3h_PVIPCHI2sum'       : 200.,     ## min of the 3h tracks IP wrt best 3h PV
                       '_3h_TRKCHIDOFmin'      : 3.0,       ## max track CHI2DOF for the track with smalest CHI2DOF
-                      '_3h_Mmax'              : 6500.,     ## max 3h mass for exclusive lines
-                      '_3h_Mmin'              : 6000.,     ## min 3h mass for exclusive KKK lines
-                      '_bu3h_Mmax'            : 5500.,     ## min buto3h mass for exclusive lines
-                      '_bu3h_Mmin'            : 5100.,     ## min buto3h mass for exclusive lines
+                      '_3h_Mmax'              : 6502.,     ## max 3h mass for exclusive lines
+                      '_3h_Mmin'              : 5998.,     ## min 3h mass for exclusive KKK lines
+                      '_bu3h_Mmax'            : 5502.,     ## min buto3h mass for exclusive lines
+                      '_bu3h_Mmin'            : 5098.,     ## min buto3h mass for exclusive lines
                       '_probnnpi'             : .15,       ## PROBNNpi for pion tracks. WARNING: DO NOT APPLY THIS CUT FOR PIPIPI OR KPIPI LINES
                       '_probnnk'              : .20,       ## PROBNNk for kaon tracks.
                       '_probnnp'              : .05,       ## PROBNNp for proton tracks.
@@ -399,6 +399,14 @@ class Bc2hhhBuilder(LineBuilder) :
                                                  "[B_c+ -> pi+ pi- ^pi+]CC" : "ConeIso15pi3",
                                              }
 },
+                                       { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 2.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPASYM', 'CONEPTASYM'],
+                                              'Location'  : 'ConeIso20B',
+                                             "DaughterLocations" : {
+                                                 "[B_c+ -> ^pi+ pi- pi+]CC" : "ConeIso20pi1",
+                                                 "[B_c+ -> pi+ ^pi- pi+]CC" : "ConeIso20pi2",
+                                                 "[B_c+ -> pi+ pi- ^pi+]CC" : "ConeIso20pi3",
+                                             }
+},
                                            { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
                                               'Location'  : 'NConeIso05B',
                                              "DaughterLocations" : {
@@ -421,6 +429,14 @@ class Bc2hhhBuilder(LineBuilder) :
                                                  "[B_c+ -> ^pi+ pi- pi+]CC" : "NConeIso15pi1",
                                                  "[B_c+ -> pi+ ^pi- pi+]CC" : "NConeIso15pi2",
                                                  "[B_c+ -> pi+ pi- ^pi+]CC" : "NConeIso15pi3",
+                                             }
+                                           },
+                                       { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 2.0, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
+                                              'Location'  : 'NConeIso20B',
+                                             "DaughterLocations" : {
+                                                 "[B_c+ -> ^pi+ pi- pi+]CC" : "NConeIso20pi1",
+                                                 "[B_c+ -> pi+ ^pi- pi+]CC" : "NConeIso20pi2",
+                                                 "[B_c+ -> pi+ pi- ^pi+]CC" : "NConeIso20pi3",
                                              }
                                            }
                                      ]
@@ -457,6 +473,14 @@ class Bc2hhhBuilder(LineBuilder) :
                                                  "[B_c+ -> K+ pi- ^pi+]CC" : "ConeIso15pi2",
                                              }
 },
+                                       { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 2.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPASYM', 'CONEPTASYM'],
+                                              'Location'  : 'ConeIso20B',
+                                             "DaughterLocations" : {
+                                                 "[B_c+ -> ^K+ pi- pi+]CC" : "ConeIso20K",
+                                                 "[B_c+ -> K+ ^pi- pi+]CC" : "ConeIso20pi1",
+                                                 "[B_c+ -> K+ pi- ^pi+]CC" : "ConeIso20pi2",
+                                             }
+},
                                            { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
                                               'Location'  : 'NConeIso05B',
                                              "DaughterLocations" : {
@@ -479,6 +503,14 @@ class Bc2hhhBuilder(LineBuilder) :
                                                  "[B_c+ -> ^K+ pi- pi+]CC" : "NConeIso15K",
                                                  "[B_c+ -> K+ ^pi- pi+]CC" : "NConeIso15pi1",
                                                  "[B_c+ -> K+ pi- ^pi+]CC" : "NConeIso15pi2",
+                                             }
+                                           },
+                                       { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 2.0, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
+                                              'Location'  : 'NConeIso20B',
+                                             "DaughterLocations" : {
+                                                 "[B_c+ -> ^K+ pi- pi+]CC" : "NConeIso20K",
+                                                 "[B_c+ -> K+ ^pi- pi+]CC" : "NConeIso20pi1",
+                                                 "[B_c+ -> K+ pi- ^pi+]CC" : "NConeIso20pi2",
                                              }
                                            }
  ]
@@ -514,6 +546,14 @@ class Bc2hhhBuilder(LineBuilder) :
                                                  "[B_c+ -> K+ K- ^pi+]CC" : "ConeIso15pi",
                                              }
 },
+                                       { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 2.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPASYM', 'CONEPTASYM'],
+                                              'Location'  : 'ConeIso20B',
+                                             "DaughterLocations" : {
+                                                 "[B_c+ -> ^K+ K- pi+]CC" : "ConeIso20K1",
+                                                 "[B_c+ -> K+ ^K- pi+]CC" : "ConeIso20K2",
+                                                 "[B_c+ -> K+ K- ^pi+]CC" : "ConeIso20pi",
+                                             }
+},
                                            { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
                                               'Location'  : 'NConeIso05B',
                                              "DaughterLocations" : {
@@ -536,6 +576,14 @@ class Bc2hhhBuilder(LineBuilder) :
                                                  "[B_c+ -> ^K+ K- pi+]CC" : "NConeIso15K1",
                                                  "[B_c+ -> K+ ^K- pi+]CC" : "NConeIso15K2",
                                                  "[B_c+ -> K+ K- ^pi+]CC" : "NConeIso15pi",
+                                             }
+                                           },
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 2.0, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
+                                              'Location'  : 'NConeIso20B',
+                                             "DaughterLocations" : {
+                                                 "[B_c+ -> ^K+ K- pi+]CC" : "NConeIso20K1",
+                                                 "[B_c+ -> K+ ^K- pi+]CC" : "NConeIso20K2",
+                                                 "[B_c+ -> K+ K- ^pi+]CC" : "NConeIso20pi",
                                              }
                                            }
                                      ]
@@ -571,6 +619,14 @@ class Bc2hhhBuilder(LineBuilder) :
                                                  "[B_c+ -> K+ K- ^K+]CC" : "ConeIso15K3",
                                              }
 },
+                                       { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 2.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPASYM', 'CONEPTASYM'],
+                                              'Location'  : 'ConeIso20B',
+                                             "DaughterLocations" : {
+                                                 "[B_c+ -> ^K+ K- K+]CC" : "ConeIso20K1",
+                                                 "[B_c+ -> K+ ^K- K+]CC" : "ConeIso20K2",
+                                                 "[B_c+ -> K+ K- ^K+]CC" : "ConeIso20K3",
+                                             }
+},
                                            { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
                                               'Location'  : 'NConeIso05B',
                                              "DaughterLocations" : {
@@ -593,6 +649,14 @@ class Bc2hhhBuilder(LineBuilder) :
                                                  "[B_c+ -> ^K+ K- K+]CC" : "NConeIso15K1",
                                                  "[B_c+ -> K+ ^K- K+]CC" : "NConeIso15K2",
                                                  "[B_c+ -> K+ K- ^K+]CC" : "NConeIso15K3",
+                                             }
+                                           },
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 2.0, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
+                                              'Location'  : 'NConeIso20B',
+                                             "DaughterLocations" : {
+                                                 "[B_c+ -> ^K+ K- K+]CC" : "NConeIso20K1",
+                                                 "[B_c+ -> K+ ^K- K+]CC" : "NConeIso20K2",
+                                                 "[B_c+ -> K+ K- ^K+]CC" : "NConeIso20K3",
                                              }
                                            }
                                      ]
@@ -628,6 +692,14 @@ class Bc2hhhBuilder(LineBuilder) :
                                                  "[B_c+ -> p+ p~- ^pi+]CC" : "ConeIso15pi",
                                              }
 },
+                                       { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 2.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPASYM', 'CONEPTASYM'],
+                                              'Location'  : 'ConeIso20B',
+                                             "DaughterLocations" : {
+                                                 "[B_c+ -> ^p+ p~- pi+]CC" : "ConeIso20p1",
+                                                 "[B_c+ -> p+ ^p~- pi+]CC" : "ConeIso20p2",
+                                                 "[B_c+ -> p+ p~- ^pi+]CC" : "ConeIso20pi",
+                                             }
+},
                                            { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
                                               'Location'  : 'NConeIso05B',
                                              "DaughterLocations" : {
@@ -650,6 +722,14 @@ class Bc2hhhBuilder(LineBuilder) :
                                                  "[B_c+ -> ^p+ p~- pi+]CC" : "NConeIso15p1",
                                                  "[B_c+ -> p+ ^p~- pi+]CC" : "NConeIso15p2",
                                                  "[B_c+ -> p+ p~- ^pi+]CC" : "NConeIso15pi",
+                                             }
+                                           },
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 2.0, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
+                                              'Location'  : 'NConeIso20B',
+                                             "DaughterLocations" : {
+                                                 "[B_c+ -> ^p+ p~- pi+]CC" : "NConeIso20p1",
+                                                 "[B_c+ -> p+ ^p~- pi+]CC" : "NConeIso20p2",
+                                                 "[B_c+ -> p+ p~- ^pi+]CC" : "NConeIso20pi",
                                              }
                                            }
                                      ]
@@ -685,6 +765,14 @@ class Bc2hhhBuilder(LineBuilder) :
                                                  "[B_c+ -> p+ p~- ^K+]CC" : "ConeIso15K",
                                              }
 },
+                                       { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 2.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPASYM', 'CONEPTASYM'],
+                                              'Location'  : 'ConeIso20B',
+                                             "DaughterLocations" : {
+                                                 "[B_c+ -> ^p+ p~- K+]CC" : "ConeIso20p1",
+                                                 "[B_c+ -> p+ ^p~- K+]CC" : "ConeIso20p2",
+                                                 "[B_c+ -> p+ p~- ^K+]CC" : "ConeIso20K",
+                                             }
+},
                                            { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
                                               'Location'  : 'NConeIso05B',
                                              "DaughterLocations" : {
@@ -707,6 +795,14 @@ class Bc2hhhBuilder(LineBuilder) :
                                                  "[B_c+ -> ^p+ p~- K+]CC" : "NConeIso15p1",
                                                  "[B_c+ -> p+ ^p~- K+]CC" : "NConeIso15p2",
                                                  "[B_c+ -> p+ p~- ^K+]CC" : "NConeIso15K",
+                                             }
+                                           },
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 2.0, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
+                                              'Location'  : 'NConeIso20B',
+                                             "DaughterLocations" : {
+                                                 "[B_c+ -> ^p+ p~- K+]CC" : "NConeIso20p1",
+                                                 "[B_c+ -> p+ ^p~- K+]CC" : "NConeIso20p2",
+                                                 "[B_c+ -> p+ p~- ^K+]CC" : "NConeIso20K",
                                              }
                                            }
                                      ]

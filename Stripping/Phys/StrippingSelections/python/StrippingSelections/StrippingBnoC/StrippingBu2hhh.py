@@ -264,49 +264,65 @@ class Bu2hhhBuilder(LineBuilder) :
                                           { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPASYM', 'CONEPTASYM'],
                                               'Location'  : 'ConeIso05B',
                                              "DaughterLocations" : {
-                                                 "[B+ -> ^K+ K+ K-]CC" : "ConeIso05K1",
-                                                 "[B+ -> K+ ^K+ K-]CC" : "ConeIso05K2",
-                                                 "[B+ -> K+ K+ ^K-]CC" : "ConeIso05K3",
+                                                 "[B+ -> ^K+ K+ K-]CC" : "ConeIso05h1",
+                                                 "[B+ -> K+ ^K+ K-]CC" : "ConeIso05h2",
+                                                 "[B+ -> K+ K+ ^K-]CC" : "ConeIso05h3",
                                              }
 },
                                           { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPASYM', 'CONEPTASYM'],
                                               'Location'  : 'ConeIso10B',
                                              "DaughterLocations" : {
-                                                 "[B+ -> ^K+ K+ K-]CC" : "ConeIso10K1",
-                                                 "[B+ -> K+ ^K+ K-]CC" : "ConeIso10K2",
-                                                 "[B+ -> K+ K+ ^K-]CC" : "ConeIso10K3",
+                                                 "[B+ -> ^K+ K+ K-]CC" : "ConeIso10h1",
+                                                 "[B+ -> K+ ^K+ K-]CC" : "ConeIso10h2",
+                                                 "[B+ -> K+ K+ ^K-]CC" : "ConeIso10h3",
                                              }
 },
                                           { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPASYM', 'CONEPTASYM'],
                                               'Location'  : 'ConeIso15B',
                                              "DaughterLocations" : {
-                                                 "[B+ -> ^K+ K+ K-]CC" : "ConeIso15K1",
-                                                 "[B+ -> K+ ^K+ K-]CC" : "ConeIso15K2",
-                                                 "[B+ -> K+ K+ ^K-]CC" : "ConeIso15K3",
+                                                 "[B+ -> ^K+ K+ K-]CC" : "ConeIso15h1",
+                                                 "[B+ -> K+ ^K+ K-]CC" : "ConeIso15h2",
+                                                 "[B+ -> K+ K+ ^K-]CC" : "ConeIso15h3",
+                                             }
+},
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 2.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPASYM', 'CONEPTASYM'],
+                                              'Location'  : 'ConeIso20B',
+                                             "DaughterLocations" : {
+                                                 "[B+ -> ^K+ K+ K-]CC" : "ConeIso20h1",
+                                                 "[B+ -> K+ ^K+ K-]CC" : "ConeIso20h2",
+                                                 "[B+ -> K+ K+ ^K-]CC" : "ConeIso20h3",
                                              }
 },
                                            { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
                                               'Location'  : 'NConeIso05B',
                                              "DaughterLocations" : {
-                                                 "[B+ -> ^K+ K+ K-]CC" : "NConeIso05K1",
-                                                 "[B+ -> K+ ^K+ K-]CC" : "NConeIso05K2",
-                                                 "[B+ -> K+ K+ ^K-]CC" : "NConeIso05K3",
+                                                 "[B+ -> ^K+ K+ K-]CC" : "NConeIso05h1",
+                                                 "[B+ -> K+ ^K+ K-]CC" : "NConeIso05h2",
+                                                 "[B+ -> K+ K+ ^K-]CC" : "NConeIso05h3",
                                              }
                                            },
                                           { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
                                               'Location'  : 'NConeIso10B',
                                              "DaughterLocations" : {
-                                                 "[B+ -> ^K+ K+ K-]CC" : "NConeIso10K1",
-                                                 "[B+ -> K+ ^K+ K-]CC" : "NConeIso10K2",
-                                                 "[B+ -> K+ K+ ^K-]CC" : "NConeIso10K3",
+                                                 "[B+ -> ^K+ K+ K-]CC" : "NConeIso10h1",
+                                                 "[B+ -> K+ ^K+ K-]CC" : "NConeIso10h2",
+                                                 "[B+ -> K+ K+ ^K-]CC" : "NConeIso10h3",
                                              }
                                            },
                                           { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
                                               'Location'  : 'NConeIso15B',
                                              "DaughterLocations" : {
-                                                 "[B+ -> ^K+ K+ K-]CC" : "NConeIso15K1",
-                                                 "[B+ -> K+ ^K+ K-]CC" : "NConeIso15K2",
-                                                 "[B+ -> K+ K+ ^K-]CC" : "NConeIso15K3",
+                                                 "[B+ -> ^K+ K+ K-]CC" : "NConeIso15h1",
+                                                 "[B+ -> K+ ^K+ K-]CC" : "NConeIso15h2",
+                                                 "[B+ -> K+ K+ ^K-]CC" : "NConeIso15h3",
+                                             }
+                                           },
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 2.0, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
+                                              'Location'  : 'NConeIso20B',
+                                             "DaughterLocations" : {
+                                                 "[B+ -> ^K+ K+ K-]CC" : "NConeIso20h1",
+                                                 "[B+ -> K+ ^K+ K-]CC" : "NConeIso20h2",
+                                                 "[B+ -> K+ K+ ^K-]CC" : "NConeIso20h3",
                                              }
                                            }
                                      ]
@@ -321,49 +337,65 @@ class Bu2hhhBuilder(LineBuilder) :
                                           { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPASYM', 'CONEPTASYM'],
                                               'Location'  : 'ConeIso05B',
                                              "DaughterLocations" : {
-                                                 "[B+ -> ^K+ K+ K+]CC" : "ConeIso05K1",
-                                                 "[B+ -> K+ ^K+ K+]CC" : "ConeIso05K2",
-                                                 "[B+ -> K+ K+ ^K+]CC" : "ConeIso05K3",
+                                                 "[B+ -> ^K+ K+ K+]CC" : "ConeIso05h1",
+                                                 "[B+ -> K+ ^K+ K+]CC" : "ConeIso05h2",
+                                                 "[B+ -> K+ K+ ^K+]CC" : "ConeIso05h3",
                                              }
 },
                                           { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPASYM', 'CONEPTASYM'],
                                               'Location'  : 'ConeIso10B',
                                              "DaughterLocations" : {
-                                                 "[B+ -> ^K+ K+ K+]CC" : "ConeIso10K1",
-                                                 "[B+ -> K+ ^K+ K+]CC" : "ConeIso10K2",
-                                                 "[B+ -> K+ K+ ^K+]CC" : "ConeIso10K3",
+                                                 "[B+ -> ^K+ K+ K+]CC" : "ConeIso10h1",
+                                                 "[B+ -> K+ ^K+ K+]CC" : "ConeIso10h2",
+                                                 "[B+ -> K+ K+ ^K+]CC" : "ConeIso10h3",
                                              }
 },
                                           { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPASYM', 'CONEPTASYM'],
                                               'Location'  : 'ConeIso15B',
                                              "DaughterLocations" : {
-                                                 "[B+ -> ^K+ K+ K+]CC" : "ConeIso15K1",
-                                                 "[B+ -> K+ ^K+ K+]CC" : "ConeIso15K2",
-                                                 "[B+ -> K+ K+ ^K+]CC" : "ConeIso15K3",
+                                                 "[B+ -> ^K+ K+ K+]CC" : "ConeIso15h1",
+                                                 "[B+ -> K+ ^K+ K+]CC" : "ConeIso15h2",
+                                                 "[B+ -> K+ K+ ^K+]CC" : "ConeIso15h3",
+                                             }
+},
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 2.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPASYM', 'CONEPTASYM'],
+                                              'Location'  : 'ConeIso20B',
+                                             "DaughterLocations" : {
+                                                 "[B+ -> ^K+ K+ K+]CC" : "ConeIso20h1",
+                                                 "[B+ -> K+ ^K+ K+]CC" : "ConeIso20h2",
+                                                 "[B+ -> K+ K+ ^K+]CC" : "ConeIso20h3",
                                              }
 },
                                            { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
                                               'Location'  : 'NConeIso05B',
                                              "DaughterLocations" : {
-                                                 "[B+ -> ^K+ K+ K+]CC" : "NConeIso05K1",
-                                                 "[B+ -> K+ ^K+ K+]CC" : "NConeIso05K2",
-                                                 "[B+ -> K+ K+ ^K+]CC" : "NConeIso05K3",
+                                                 "[B+ -> ^K+ K+ K+]CC" : "NConeIso05h1",
+                                                 "[B+ -> K+ ^K+ K+]CC" : "NConeIso05h2",
+                                                 "[B+ -> K+ K+ ^K+]CC" : "NConeIso05h3",
                                              }
                                            },
                                           { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
                                               'Location'  : 'NConeIso10B',
                                              "DaughterLocations" : {
-                                                 "[B+ -> ^K+ K+ K+]CC" : "NConeIso10K1",
-                                                 "[B+ -> K+ ^K+ K+]CC" : "NConeIso10K2",
-                                                 "[B+ -> K+ K+ ^K+]CC" : "NConeIso10K3",
+                                                 "[B+ -> ^K+ K+ K+]CC" : "NConeIso10h1",
+                                                 "[B+ -> K+ ^K+ K+]CC" : "NConeIso10h2",
+                                                 "[B+ -> K+ K+ ^K+]CC" : "NConeIso10h3",
                                              }
                                            },
                                           { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
                                               'Location'  : 'NConeIso15B',
                                              "DaughterLocations" : {
-                                                 "[B+ -> ^K+ K+ K+]CC" : "NConeIso15K1",
-                                                 "[B+ -> K+ ^K+ K+]CC" : "NConeIso15K2",
-                                                 "[B+ -> K+ K+ ^K+]CC" : "NConeIso15K3",
+                                                 "[B+ -> ^K+ K+ K+]CC" : "NConeIso15h1",
+                                                 "[B+ -> K+ ^K+ K+]CC" : "NConeIso15h2",
+                                                 "[B+ -> K+ K+ ^K+]CC" : "NConeIso15h3",
+                                             }
+                                           },
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 2.0, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
+                                              'Location'  : 'NConeIso20B',
+                                             "DaughterLocations" : {
+                                                 "[B+ -> ^K+ K+ K+]CC" : "NConeIso20h1",
+                                                 "[B+ -> K+ ^K+ K+]CC" : "NConeIso20h2",
+                                                 "[B+ -> K+ K+ ^K+]CC" : "NConeIso20h3",
                                              }
                                            }
                                      ]
@@ -399,6 +431,14 @@ class Bu2hhhBuilder(LineBuilder) :
                                                  "[B+ -> p+ p~- ^K+]CC" : "ConeIso15h",
                                              }
 },
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 2.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPASYM', 'CONEPTASYM'],
+                                              'Location'  : 'ConeIso20B',
+                                             "DaughterLocations" : {
+                                                 "[B+ -> ^p+ p~- K+]CC" : "ConeIso20p1",
+                                                 "[B+ -> p+ ^p~- K+]CC" : "ConeIso20p2",
+                                                 "[B+ -> p+ p~- ^K+]CC" : "ConeIso20h",
+                                             }
+},
                                            { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
                                               'Location'  : 'NConeIso05B',
                                              "DaughterLocations" : {
@@ -421,6 +461,14 @@ class Bu2hhhBuilder(LineBuilder) :
                                                  "[B+ -> ^p+ p~- K+]CC" : "NConeIso15p1",
                                                  "[B+ -> p+ ^p~- K+]CC" : "NConeIso15p2",
                                                  "[B+ -> p+ p~- ^K+]CC" : "NConeIso15h",
+                                             }
+                                           },
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 2.0, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT', 'EWCONENVPT', 'EWCONENSPT', 'EWCONENVP', 'EWCONENSP'],
+                                              'Location'  : 'NConeIso20B',
+                                             "DaughterLocations" : {
+                                                 "[B+ -> ^p+ p~- K+]CC" : "NConeIso20p1",
+                                                 "[B+ -> p+ ^p~- K+]CC" : "NConeIso20p2",
+                                                 "[B+ -> p+ p~- ^K+]CC" : "NConeIso20h",
                                              }
                                            }
                                      ]
