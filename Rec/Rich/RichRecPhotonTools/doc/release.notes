@@ -4,6 +4,11 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-11-10 - Chris Jones
+ - Small CPU optimisation of QuarticSolver by vectorising three sqrt calculations 
+   into one using VectorClass' Vec4f implementation. 
+   Saves about 4% CPU time in QuarticSolver<TYPE>::solve.
+
 ! 2015-11-04 - Chris Jones
  - Add a work around when compiling with clang where the complex class from
    VectorClass was causing some compilation issues. Until resolved upstream

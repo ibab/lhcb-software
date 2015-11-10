@@ -73,7 +73,7 @@ void solve( const Data::Vector & dataV )
 int main ( int /*argc*/, char** /*argv*/ )
 {
 
-  const unsigned int nPhotons = 1e6;
+  const unsigned int nPhotons = 1e7;
   
   Data::Vector dataV;
   dataV.reserve( nPhotons );

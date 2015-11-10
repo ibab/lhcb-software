@@ -26,6 +26,9 @@
 // VDT
 #include "vdt/asin.h"
 
+// vector Class
+#include "VectorClass/vectorclass.h"
+
 // For complex classes. Use vector class with gcc, STL with clang
 #ifdef __clang__
 #include <complex>
@@ -156,7 +159,7 @@ namespace Rich
 #else
 
         // Vectorised implementation using VectorClass
-        // Currently causes problems with clang
+        // (Much) faster, but currently causes problems with clang
         const Complex4f  W = sqrt( Complex4f(u1,u2,u1,-u2) );
         const auto       V = W.get_low() * W.get_high();
         const Complex2f w3 = ( abs(V) != 0.0 ? ( qq * -0.125f ) / V : Complex2f(0,0) );
@@ -274,16 +277,21 @@ namespace Rich
 
           // various quantities needed to create quartic equation
           // see LHCB/98-040 section 3, equation 3
-          const auto e         = std::sqrt(e2);
-          const auto d         = std::sqrt(d2);
-          const auto cosgamma  = evec.dot(dvec) / (e*d);
-          const auto cosgamma2 = cosgamma * cosgamma;
-          const auto singamma  = ( cosgamma2 < 1.0f ? std::sqrt(1.0-cosgamma2) : 0.0f );
+          const auto cosgamma2 = std::pow( evec.dot(dvec), 2 ) / ( e2 * d2 );
+          // vectorise 4 square roots into 1
+          const auto tmp_sqrt = sqrt( Vec4f( e2, 
+                                             d2, 
+                                             cosgamma2 < 1.0f ? 1.0-cosgamma2 : 0.0f, 
+                                             cosgamma2 ) );
+          const auto e         = tmp_sqrt[0];
+          const auto d         = tmp_sqrt[1];
+          const auto singamma  = tmp_sqrt[2];
+          const auto cosgamma  = tmp_sqrt[3];
           const auto dx        = d * cosgamma;
-          const auto edx       = e + dx;
           const auto dy        = d * singamma;
-          const auto dy2       = dy * dy;
           const auto r2        = radius * radius;
+          const auto dy2       = dy * dy;
+          const auto edx       = e + dx;
 
           // Fill array for quartic equation
           const auto a0     =     4.0f * e2 * d2;
