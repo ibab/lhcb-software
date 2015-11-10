@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-10 - Ricardo Vazquez Gomez
+ - Added CharmToBeSwum stream to the users and liaisons tests for Incremental stripping scripts
+
 ! 2015-11-10 - Adlene Hicheur
  - Edited cone variables for StrippingBnoC/StrippingBu2hhh.py amd StrippingBnoC/StrippingBc2hhh_BnoC.py
 

@@ -42,7 +42,7 @@ charmMicroDSTname      = 'Charm'
 pidMicroDSTname        = 'PID'
 bhadronMicroDSTname    = 'Bhadron'
 mdstStreams = [ leptonicMicroDSTname,charmMicroDSTname,pidMicroDSTname,bhadronMicroDSTname ]
-dstStreams  = [ "BhadronCompleteEvent", "CharmCompleteEvent", "Dimuon",
+dstStreams  = [ "BhadronCompleteEvent", "CharmCompleteEvent", "CharmToBeSwum", "Dimuon",
                 "EW", "Semileptonic", "Calibration", "MiniBias", "Radiative" ]
 
 stripTESPrefix = 'Strip'
