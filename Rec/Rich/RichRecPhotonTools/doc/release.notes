@@ -11,6 +11,8 @@
  - Use std::conditional to switch between float and double VectorClass types 
    depending on template type used in QuarticSolver<TYPE>.
  - Remove old unused ROOT implementation of solve in QuarticSolver.
+ - Switch back to double for QuarticSolver<TYPE>, as profiling suggests its 
+   actually quicker...
 
 ! 2015-11-04 - Chris Jones
  - Add a work around when compiling with clang where the complex class from

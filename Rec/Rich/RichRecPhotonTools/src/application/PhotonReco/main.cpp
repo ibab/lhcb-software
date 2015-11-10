@@ -43,11 +43,11 @@ public:
 
 bool solve( const Data& data )
 {
-  return qSolver.solve<float>( data.emissPnt, 
-                               data.centOfCurv, 
-                               data.virtDetPoint,
-                               data.radius, 
-                               sphReflPoint );
+  return qSolver.solve<double>( data.emissPnt, 
+                                data.centOfCurv, 
+                                data.virtDetPoint,
+                                data.radius, 
+                                sphReflPoint );
 }
 
 void solve( const Data::Vector & dataV )

@@ -239,7 +239,7 @@ namespace Rich
 
         const Complex4x  W = sqrt( Complex4x(u1,u2,u1,-u2) );
         const auto       V = W.get_low() * W.get_high();
-        const Complex2x w3 = ( abs(V) != 0.0 ? ( qq * -0.125f ) / V : Complex2x(0,0) );
+        const auto      w3 = ( abs(V) != 0.0 ? ( qq * -0.125f ) / V : Complex2x(0,0) );
         const TYPE     res = W.extract(0) + W.extract(2) + w3.extract(0) - (r4*a);
 
 #endif

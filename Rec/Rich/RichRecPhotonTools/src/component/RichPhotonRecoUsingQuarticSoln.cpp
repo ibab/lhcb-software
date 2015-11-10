@@ -382,11 +382,11 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
       }
 
       // solve the quartic
-      if ( !m_quarticSolver.solve<float>( emissionPoint,
-                                          sphSegment->centreOfCurvature(),
-                                          virtDetPoint,
-                                          sphSegment->radius(),
-                                          sphReflPoint ) )
+      if ( !m_quarticSolver.solve<double>( emissionPoint,
+                                           sphSegment->centreOfCurvature(),
+                                           virtDetPoint,
+                                           sphSegment->radius(),
+                                           sphReflPoint ) )
       {
         _ri_debug << radiator << " : Failed to reconstruct photon using mirror segments" << endmsg;
         return StatusCode::FAILURE;
