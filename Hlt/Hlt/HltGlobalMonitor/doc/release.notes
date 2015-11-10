@@ -5,6 +5,10 @@
 !Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
+! 2015-11-10 - Sascha Stahl
+ - Hlt1TrackMonitor: Add additonal plots to check kinematic distributions of Velo
+   and fitted long tracks. Increased ranges of multiplcity plots for PbPb data taking.
+
 !========================= HltGlobalMonitor v5r2 2015-10-07 =========================
 
 ! 2015-10-20 - Matthew Kenzie

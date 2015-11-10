@@ -35,7 +35,8 @@ private:
   
   void monitorTracks(LHCb::Track::Range tracks);
   void monitorFittedTracks(LHCb::Track::Range tracks);
-    
+  void monitorKinematics(LHCb::Track::Range tracksVelo,LHCb::Track::Range tracksForward);
+  
   template < typename T > T* fetch(const std::string& location)
   {
     T* t = this->exist<T>( location ) ?  this->get<T>( location ) : 0;
@@ -62,12 +63,16 @@ private:
   AIDA::IHistogram1D* m_trackChi2DoF;
   AIDA::IHistogram1D* m_hitResidual;
   AIDA::IHistogram1D* m_hitResidualPull;
+  AIDA::IHistogram1D* m_VeloPhi;
+  AIDA::IHistogram1D* m_VeloEta;
+  AIDA::IHistogram1D* m_forwardPhi;
+  AIDA::IHistogram1D* m_forwardEta;
+  AIDA::IHistogram1D* m_forwardPt;
+  
 
-  struct EnumClassHash
-  {
+  struct EnumClassHash{
     template <typename T>
-    std::size_t operator()(T t) const
-    {
+    std::size_t operator()(T t) const{
       return static_cast<std::size_t>(t);
     }
   };
