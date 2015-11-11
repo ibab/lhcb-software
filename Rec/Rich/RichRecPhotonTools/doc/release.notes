@@ -4,21 +4,21 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-11-11 - Chris Jones
+ - Remove return type from QuarticSolver::solve<TYPE>, as it was never false.
+   Instead handle the 'in principle could but in practise never does' divide
+   by zero possibility internally.
+ - Various other small improvements.
+
 ! 2015-11-10 - Chris Jones
  - Small CPU optimisation of QuarticSolver by vectorising three sqrt calculations 
    into one using VectorClass' Vec4f implementation. 
-   Saves about 4% CPU time in QuarticSolver<TYPE>::solve.
+   Saves about 4% CPU time in QuarticSolver::solve<TYPE>.
  - Use std::conditional to switch between float and double VectorClass types 
-   depending on template type used in QuarticSolver<TYPE>.
+   depending on template type used in QuarticSolver::solve<TYPE>.
  - Remove old unused ROOT implementation of solve in QuarticSolver.
- - Switch back to double for QuarticSolver<TYPE>, as profiling suggests its 
+ - Switch back to double for QuarticSolver::solve<TYPE>, as profiling suggests its 
    actually quicker...
-
-! 2015-11-04 - Chris Jones
- - Add a work around when compiling with clang where the complex class from
-   VectorClass was causing some compilation issues. Until resolved upstream
-   (either by clang or VectorClass, its not completely clear where the issue 
-   is yet) use STL's complex number implementation when compiling with clang.
 
 !========================= RichRecPhotonTools v1r18 2015-10-13 =======================
 ! 2015-10-07 - Chris Jones

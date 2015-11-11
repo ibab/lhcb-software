@@ -8,6 +8,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <typeinfo>
 
 // Make an instance of the quartic solver
 Rich::Rec::QuarticSolver qSolver;
@@ -41,48 +42,44 @@ public:
   }
 };
 
-bool solve( const Data& data )
+template< class TYPE >
+void solve( const Data& data )
 {
-  return qSolver.solve<double>( data.emissPnt, 
-                                data.centOfCurv, 
-                                data.virtDetPoint,
-                                data.radius, 
-                                sphReflPoint );
+  qSolver.solve<TYPE>( data.emissPnt, 
+                       data.centOfCurv, 
+                       data.virtDetPoint,
+                       data.radius, 
+                       sphReflPoint );
 }
 
+template< class TYPE >
 void solve( const Data::Vector & dataV )
 {
 
-  std::cout << "Solving Quartic Equation for " << dataV.size() << " Photons ..." << std::endl;
+  std::cout << "Solving Quartic Equation for " << typeid(TYPE).name() 
+            << " Photons ..." << std::endl;
 
   // iterate over the data and solve it...
-  unsigned int ok(0);
-  for ( const auto& data : dataV )
-  {
-    if ( solve(data) ) 
-    {
-      ++ok;
-      //std::cout << sphReflPoint << std::endl;
-    }
-  }
-
-  std::cout << "Successfully solved " << ( 100.0 * ok ) / dataV.size() << "% of photons" << std::endl;
+  for ( const auto& data : dataV ) { solve<TYPE>(data); }
 
 }
 
 int main ( int /*argc*/, char** /*argv*/ )
 {
 
-  const unsigned int nPhotons = 1e7;
+  const unsigned int nPhotons = 1e6;
   
   Data::Vector dataV;
   dataV.reserve( nPhotons );
   // Construct the data to work on
-  std::cout << "Creating Random Photon Data ..." << std::endl;
+  std::cout << "Creating " << nPhotons << " random photons ..." << std::endl;
   for ( unsigned int i = 0; i < nPhotons; ++i ) { dataV.push_back( Data() ); }
 
-  // run the solver
-  solve( dataV );
+  // run the solver for floats
+  solve<float>( dataV );
+
+  // run the solver for doubles
+  solve<double>( dataV );
 
   return 0;
 }

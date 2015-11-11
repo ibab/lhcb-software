@@ -28,4 +28,6 @@ if(GAUDI_BUILD_TESTS)
                        LINK_LIBRARIES LHCbMathLib GSL GaudiKernel ROOT)
 endif()
 
-#set(CMAKE_CXX_FLAGS_RELEASE "-O3 -msse4")
+# Use fast math for quartic solving
+#set_property(SOURCE src/application/PhotonReco/main.cpp APPEND_STRING PROPERTY COMPILE_FLAGS " -ffast-math " )
+#set_property(SOURCE src/component/RichPhotonRecoUsingQuarticSoln.cpp APPEND_STRING PROPERTY COMPILE_FLAGS " -ffast-math " )

@@ -157,26 +157,6 @@ namespace Rich
         return m_deBeam[rich];
       }
 
-      /// Find the primary mirror data
-      inline bool findPrimMirrorData( const Rich::DetectorType rich,
-                                      const Rich::Side side,
-                                      const Gaudi::XYZPoint& virtDetPoint,
-                                      const Gaudi::XYZPoint& emissionPoint,
-                                      const DeRichSphMirror*& sphSegment,
-                                      Gaudi::XYZPoint& sphReflPoint ) const
-      {
-        // solve quartic equation with nominal values and find spherical mirror reflection point
-        const bool ok = m_quarticSolver.solve<float>( emissionPoint,
-                                                      m_rich[rich]->nominalCentreOfCurvature(side),
-                                                      virtDetPoint,
-                                                      m_rich[rich]->sphMirrorRadius(),
-                                                      sphReflPoint );
-        // find the spherical mirror segment
-        if (ok) sphSegment = m_mirrorSegFinder->findSphMirror( rich, side, sphReflPoint );
-        // return final status
-        return ok;
-      }
-
     private: // data
 
       /// Rich1 and Rich2 detector elements

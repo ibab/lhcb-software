@@ -19,6 +19,7 @@
 // STL
 #include <math.h>
 #include <type_traits>
+#include <complex>
 
 // Eigen
 #include "LHCbMath/EigenTypes.h"
@@ -29,13 +30,7 @@
 
 // VectorClass
 #include "VectorClass/vectorclass.h"
-
-// For complex classes. Use vector class with gcc, STL with clang
-#ifdef __clang__
-#include <complex>
-#else
 #include "VectorClass/complexvec.h"
-#endif
 
 // LHCb Maths
 #include "LHCbMath/FastRoots.h"
@@ -74,7 +69,7 @@ namespace Rich
        *  @retval false Calculation failed. sphReflPoint is not valid.
        */
       template< class TYPE >
-      inline bool solve( const Gaudi::XYZPoint& emissionPoint,
+      inline void solve( const Gaudi::XYZPoint& emissionPoint,
                          const Gaudi::XYZPoint& CoC,
                          const Gaudi::XYZPoint& virtDetPoint,
                          const TYPE radius,
@@ -86,8 +81,6 @@ namespace Rich
         typedef LHCb::Math::Eigen::XYZVector  Eigen4Vector;
         using Vec4x = typename std::conditional<std::is_same<TYPE,float>::value,Vec4f,Vec4d>::type;
 
-        bool OK = true;
-
         // vector from mirror centre of curvature to assumed emission point
         const Eigen4Vector evec( emissionPoint - CoC );
         const auto e2 = evec.dot(evec);
@@ -96,63 +89,55 @@ namespace Rich
         const Eigen4Vector dvec( virtDetPoint - CoC );
         const auto d2 = dvec.dot(dvec);
 
-        if ( UNLIKELY( (e2 < 1e-99) || (d2 < 1e-99) ) )
-        {
-          OK = false;
-        }
-        else
-        {
+        // various quantities needed to create quartic equation
+        // see LHCB/98-040 section 3, equation 3
+        const auto ed2 = e2 * d2;
+        const auto cosgamma2 = ( ed2 > 0 ? std::pow(evec.dot(dvec),2)/ed2 : 1.0 );
+        // vectorise 4 square roots into 1
+        const auto tmp_sqrt = sqrt( Vec4x( e2,
+                                           d2,
+                                           cosgamma2 < 1.0 ? 1.0-cosgamma2 : 0.0,
+                                           cosgamma2 ) );
+        const auto e         = tmp_sqrt[0];
+        const auto d         = tmp_sqrt[1];
+        const auto singamma  = tmp_sqrt[2];
+        const auto cosgamma  = tmp_sqrt[3];
+        const auto dx        = d * cosgamma;
+        const auto dy        = d * singamma;
+        const auto r2        = radius * radius;
+        const auto dy2       = dy * dy;
+        const auto edx       = e + dx;
 
-          // various quantities needed to create quartic equation
-          // see LHCB/98-040 section 3, equation 3
-          const auto cosgamma2 = std::pow( evec.dot(dvec), 2 ) / ( e2 * d2 );
-          // vectorise 4 square roots into 1
-          const auto tmp_sqrt = sqrt( Vec4x( e2, 
-                                             d2, 
-                                             cosgamma2 < 1.0 ? 1.0-cosgamma2 : 0.0, 
-                                             cosgamma2 ) );
-          const auto e         = tmp_sqrt[0];
-          const auto d         = tmp_sqrt[1];
-          const auto singamma  = tmp_sqrt[2];
-          const auto cosgamma  = tmp_sqrt[3];
-          const auto dx        = d * cosgamma;
-          const auto dy        = d * singamma;
-          const auto r2        = radius * radius;
-          const auto dy2       = dy * dy;
-          const auto edx       = e + dx;
+        // Fill array for quartic equation
+        const auto a0     =     4.0 * ed2;
+        const auto inv_a0 =   ( a0 > 0 ? 1.0 / a0 : std::numeric_limits<TYPE>::max() );
+        const auto dyrad2 =     2.0 * dy * radius;
+        const auto a1     = - ( 2.0 * dyrad2 * e2 ) * inv_a0;
+        const auto a2     =   ( (dy2 * r2) + ( edx * edx * r2 ) - a0 ) * inv_a0;
+        const auto a3     =   ( dyrad2 * e * (e-dx) ) * inv_a0;
+        const auto a4     =   ( ( e2 - r2 ) * dy2 ) * inv_a0;
 
-          // Fill array for quartic equation
-          const auto a0     =     4.0 * e2 * d2;
-          const auto inv_a0 =   ( 1.0 / a0 );
-          const auto a1     = - ( 4.0 * e2 * dy * radius ) * inv_a0;
-          const auto a2     =   ( (dy2 * r2) + ( edx * edx * r2 ) - a0 ) * inv_a0;
-          const auto a3     =   ( 2.0 * e * dy * (e-dx) * radius ) * inv_a0;
-          const auto a4     =   ( ( e2 - r2 ) * dy2 ) * inv_a0;
+        // use simplified RICH version of quartic solver
+        const auto sinbeta = solve_quartic_RICH<TYPE>( a1, // a
+                                                       a2, // b
+                                                       a3, // c
+                                                       a4  // d
+                                                       );
 
-          // use simplified RICH version of quartic solver
-          const auto sinbeta = solve_quartic_RICH<TYPE>( a1, // a
-                                                         a2, // b
-                                                         a3, // c
-                                                         a4  // d
-                                                         );
+        // (normalised) normal vector to reflection plane
+        auto n = evec.cross3(dvec);
+        n /= std::sqrt( n.dot(n) );
 
-          // (normalised) normal vector to reflection plane
-          auto n = evec.cross3(dvec);
-          n /= std::sqrt( n.dot(n) );
+        // construct rotation transformation
+        // Set vector magnitude to radius
+        // rotate vector and update reflection point
+        const Eigen::AngleAxis<TYPE> angleaxis( vdt::fast_asinf(sinbeta),
+                                                Eigen3Vector(n[0],n[1],n[2]) );
+        sphReflPoint = CoC +
+          Gaudi::XYZVector( angleaxis *
+                            Eigen3Vector(evec[0],evec[1],evec[2]) *
+                            ( radius / e ) );
 
-          // construct rotation transformation
-          // Set vector magnitude to radius
-          // rotate vector and update reflection point
-          const Eigen::AngleAxis<TYPE> angleaxis( vdt::fast_asinf(sinbeta),
-                                                  Eigen3Vector(n[0],n[1],n[2]) );
-          sphReflPoint = CoC +
-            Gaudi::XYZVector( angleaxis *
-                              Eigen3Vector(evec[0],evec[1],evec[2]) *
-                              ( radius / e ) );
-          
-        }
-
-        return OK;
       }
 
     private:
@@ -184,13 +169,12 @@ namespace Rich
                                        const TYPE& d ) const
       {
 
-        const auto r4 = 1.0 / 4.0;
-        const auto q2 = 1.0 / 2.0;
-        const auto q8 = 1.0 / 8.0;
-        const auto q1 = 3.0 / 8.0;
-        const auto q3 = 3.0 / 16.0;
-
-        const auto UU = -( std::sqrt(3.0) / 2.0 );
+        const TYPE r4 = 1.0 / 4.0;
+        const TYPE q2 = 1.0 / 2.0;
+        const TYPE q8 = 1.0 / 8.0;
+        const TYPE q1 = 3.0 / 8.0;
+        const TYPE q3 = 3.0 / 16.0;
+        const TYPE UU = -( std::sqrt(3.0) / 2.0 );
 
         const auto aa = a * a;
         const auto pp = b - q1 * aa;
@@ -212,46 +196,39 @@ namespace Rich
         const auto sgnR = ( R >= 0 ? -1 : 1 );
 
         const auto A = sgnR * my_cbrt( (TYPE)( fabs(R) + std::sqrt( fabs(R2-Q3) ) ) );
-        
+
         const auto B = Q / A;
 
         const auto u1 = -0.5 * (A + B) - rc / 3.0;
         const auto u2 = UU * fabs(A-B);
 
-#ifdef __clang__
-
-        // Implementation using STL classes
-
-        const auto w1 = std::sqrt( std::complex<TYPE>(u1, u2) );
-        const auto w2 = std::sqrt( std::complex<TYPE>(u1,-u2) );
-        const auto  V = w1 * w2;
-        const std::complex<TYPE> w3 = ( std::abs(V) != 0.0 ? ( qq * -0.125 ) / V : 
-                                        std::complex<TYPE>(0,0) );
-        const TYPE res = std::real(w1) + std::real(w2) + std::real(w3) - (r4*a);
-
-#else
+        // // Implementation using STL classes
+        // const auto w1 = std::sqrt( std::complex<TYPE>(u1, u2) );
+        // const auto w2 = std::sqrt( std::complex<TYPE>(u1,-u2) );
+        // const auto  V = w1 * w2;
+        // const std::complex<TYPE> w3 = ( std::abs(V) != 0.0 ? (TYPE)( qq * -0.125 ) / V :
+        //                                 std::complex<TYPE>(0,0) );
+        // const TYPE res = std::real(w1) + std::real(w2) + std::real(w3) - (r4*a);
 
         // Vectorised implementation using VectorClass
         // (Much) faster, but currently causes problems with clang
-
         using Complex4x = typename std::conditional<std::is_same<TYPE,float>::value,Complex4f,Complex4d>::type;
         using Complex2x = typename std::conditional<std::is_same<TYPE,float>::value,Complex2f,Complex2d>::type;
-
         const Complex4x  W = sqrt( Complex4x(u1,u2,u1,-u2) );
         const auto       V = W.get_low() * W.get_high();
-        const auto      w3 = ( abs(V) != 0.0 ? ( qq * -0.125 ) / V : Complex2x(0,0) );
+        //const auto      w3 = ( abs(V) != 0.0 ? ( qq * -0.125 ) / V : Complex2x(0,0) );
+        const auto      w3 = ( fabs(V.extract(0)) > 0 || fabs(V.extract(1)) > 0 ? 
+                               ( qq * -0.125 ) / V : Complex2x(0,0) );
         const TYPE     res = W.extract(0) + W.extract(2) + w3.extract(0) - (r4*a);
-
-#endif
 
         // return the final result
         return ( res >  1.0 ?  1.0 :
                  res < -1.0 ? -1.0 :
                  res );
-      }     
-      
+      }
+
     };
-    
+
   }
 }
 
