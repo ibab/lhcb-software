@@ -50,7 +50,7 @@ def BtoDlnuLine(module_name,
     B_combinationCut = "(AM > %(B_MassMin)s) & (AM < %(B_MassMax)s) & (ADOCACHI2CUT( %(B_DocaChi2Max)s, ''))" %CONFIG
     B_motherCut = " (MM>%(B_MassMin)s) & (MM<%(B_MassMax)s)"\
         "&(VFASPF(VCHI2/VDOF)< %(B_VCHI2DOF)s) & (BPVDIRA> %(B_DIRA)s)"\
-        "&(MINTREE(((ABSID=='D+')|(ABSID=='D0')|(ABSID=='Lambda_c+')|(ABSID=='Omega_c0')|(ABSID=='Xi_c+'))"\
+        "&(MINTREE(((ABSID=='D+')|(ABSID=='D0')|(ABSID=='Lambda_c+')|(ABSID=='Omega_c0')|(ABSID=='Xi_c+')|(ABSID=='Xi_c0'))"\
         ", VFASPF(VZ))-VFASPF(VZ) > %(B_D_DZ)s  ) " %CONFIG
     if "ExtraComboCuts" in CONFIG.keys():
         B_combinationCut += CONFIG["ExtraComboCuts"]

@@ -41,14 +41,16 @@ default_config = {
             ,"ProtonPIDpK"   : 0.0
             ,"ProtonP"       : 8.0*GeV
             ,"KaonPIDK"      : -2.0
-            ,"KaonP"         : 5.0*GeV
+            ,"KaonP"         : 2.0*GeV
             ,"PionPIDK"      : 20.0 
             ,"ElectronPIDe"  : 0.0  
             ,"ElectronPT"    : 1200*MeV
             ,"D_BPVDIRA"     : 0.99 
             ,"D_FDCHI2"      : 25.0 
-            ,"D_MassWin"     : 80.0*MeV
-            ,"D_AMassWin"    : 90.0*MeV
+            ,"D_AMassWin"    : 90.*MeV ## this should be 10 MeV wider than the widest D_MassWin
+            ,"D_MassWin"     : {"default":80*MeV,
+                                "Xic0": 60*MeV,
+                                "Omegac": 60*MeV}
             ,"D_VCHI2DOF"    : 6.0 
             ,"D_DocaChi2Max" : 20  
             ,"B_DIRA"         : 0.999 
@@ -110,8 +112,8 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         ,"ElectronPT"  
         ,"D_BPVDIRA"     
         ,"D_FDCHI2"      
+        ,"D_AMassWin" 
         ,"D_MassWin"     
-        ,"D_AMassWin"    
         ,"D_VCHI2DOF"    
         ,"D_DocaChi2Max" 
         ,"B_DIRA"        
@@ -187,74 +189,79 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         self.selMuonFakes = Selection( "FakeMuonsFor" + name,
                                        Algorithm = FilterDesktop(Code = self.cuts["fakemuons"]),
                                        RequiredSelections = [inputs["fakemuons"]])
-
-                                     
-        D0_CONFIG = config.copy()
-        D0_CONFIG["CharmComboCuts"] = "(ADAMASS('D0') < %(D_AMassWin)s )" % config
-        D0_CONFIG["CharmMotherCuts"] = "(ADMASS('D0') < %(D_MassWin)s )" % config
         
-        Dp_CONFIG = config.copy()
-        Dp_CONFIG["CharmComboCuts"] = "(DAMASS('D_s+') < %(D_AMassWin)s )"\
-            "& (DAMASS('D+')> -%(D_AMassWin)s )" %config
-        Dp_CONFIG["CharmMotherCuts"] = "(DMASS('D_s+') < %(D_MassWin)s )"\
-            "& (DMASS('D+')> -%(D_AMassWin)s )" %config
+        ### Dictionary containing special cuts for each charm mode
+        ### at this stage they are just the mass windows.
+        ### All other cuts are the same for all charm species
+        ### and will be specified later in the line building function
+        CharmCuts = {}
+        for mode in ["D0","Dp","Ds","Lc","Xic","Xic0","Omegac"]:
+            CharmCuts[mode] = config.copy()
         
-        Lc_CONFIG = config.copy()
-        Lc_CONFIG["CharmComboCuts"] = "(ADAMASS('Lambda_c+') < %(D_AMassWin)s )" %config
-        Lc_CONFIG["CharmMotherCuts"] = "(ADMASS('Lambda_c+') < %(D_MassWin)s )"%config
+        # the Dp (->Kpipi) and Ds (->KKpi) are special
+        # in that they each cover both the Ds and D+ mass peaks with the default sideband on either side.   
+        CharmCuts["Dp"]["CharmComboCuts"] = "(DAMASS('D_s+') < %s )"\
+            "& (DAMASS('D+')> -%s )" %(config["D_AMassWin"],config["D_AMassWin"])
+        CharmCuts["Dp"]["CharmMotherCuts"] = "(DMASS('D_s+') < %s )"\
+            "& (DMASS('D+')> -%s )" %(config["D_MassWin"]["default"],config["D_MassWin"]["default"])
+        # and Ds and Dp are the same in this regard
+        CharmCuts["Ds"] = CharmCuts["Dp"].copy()
         
-        Xic_CONFIG = config.copy()
-        Xic_CONFIG["CharmComboCuts"] = "(ADAMASS('Xi_c+') < %(D_AMassWin)s )" % config
-        Xic_CONFIG["CharmMotherCuts"] = "(ADMASS('Xi_c+') < %(D_MassWin)s )" % config
+        CharmCuts['D0']["CharmComboCuts"]  = "(ADAMASS('D0') < %s)" % config["D_AMassWin"]
+        CharmCuts['D0']["CharmMotherCuts"] = "(ADMASS('D0')  < %s)" % config["D_MassWin"]["default"]
         
-        Xic0_CONFIG = config.copy()
-        Xic0_CONFIG["CharmComboCuts"] = "(ADAMASS('Xi_c0') < %(D_AMassWin)s )" % config
-        Xic0_CONFIG["CharmMotherCuts"] = "(ADMASS('Xi_c0') < %(D_MassWin)s )" % config
+        CharmCuts["Lc"]["CharmComboCuts"] = "(ADAMASS('Lambda_c+') < %s )" %config["D_AMassWin"]
+        CharmCuts["Lc"]["CharmMotherCuts"] = "(ADMASS('Lambda_c+') < %s )" %config["D_MassWin"]["default"]
         
-        Omegac_CONFIG = config.copy()
-        Omegac_CONFIG["CharmComboCuts"] = "((ADAMASS('Omega_c0') < %(D_AMassWin)s ))" % config
-        Omegac_CONFIG["CharmMotherCuts"] = "((ADMASS('Omega_c0') < %(D_MassWin)s ))" % config
+        CharmCuts["Xic"]["CharmComboCuts"] = "(ADAMASS('Xi_c+') < %s )"  %config["D_AMassWin"]
+        CharmCuts["Xic"]["CharmMotherCuts"] = "(ADMASS('Xi_c+') < %s )"  %config["D_MassWin"]["default"]
+        
+        CharmCuts["Xic0"]["CharmComboCuts"] = "(ADAMASS('Xi_c0') < %s )" %config["D_AMassWin"]
+        CharmCuts["Xic0"]["CharmMotherCuts"] = "(ADMASS('Xi_c0') < %s )" %config["D_MassWin"]["Xic0"]
+        
+        CharmCuts["Omegac"]["CharmComboCuts"] = "(ADAMASS('Omega_c0') < %s )" %config["D_AMassWin"]
+        CharmCuts["Omegac"]["CharmMotherCuts"] = "(ADMASS('Omega_c0') < %s )" %config["D_MassWin"]["Omegac"]
 
         self.b2D0MuXLine = BtoDlnuLine(name,
                                        'D0',
                                        ['[B- -> D0 mu-]cc','[B+ -> D0 mu+]cc'],
                                        ['[D0 -> K- pi+]cc'],
-                                       D0_CONFIG,
+                                       CharmCuts["D0"],
                                        [self.selKaon, self.selPion],self.selMuon,self.selMuonFakes)
         
         self.b2D0eXLine = BtoDlnuLine(name,
-                                        'D0_Electron',
-                                        ['[B- -> D0 e-]cc'],
-                                        ['[D0 -> K- pi+]cc'],
-                                        D0_CONFIG,
-                                        [self.selKaon, self.selPion],self.selElectron)
+                                      'D0_Electron',
+                                      ['[B- -> D0 e-]cc'],
+                                      ['[D0 -> K- pi+]cc'],
+                                      CharmCuts["D0"],
+                                      [self.selKaon, self.selPion],self.selElectron)
         
         self.b2D0MuXKKLine = BtoDlnuLine(name,
                                          'D0_KK',
                                          ['[B- -> D0 mu-]cc','[B+ -> D0 mu+]cc'],
                                          ['D0 -> K- K+'],
-                                         D0_CONFIG,
+                                         CharmCuts["D0"],
                                          [self.selKaon],self.selMuon)
         
         self.b2D0MuXPiPiLine = BtoDlnuLine(name,
                                            'D0_PiPi',
                                            ['[B- -> D0 mu-]cc','[B+ -> D0 mu+]cc'],
                                            ['D0 -> pi- pi+'],
-                                           D0_CONFIG,
+                                           CharmCuts["D0"],
                                            [self.selPion],self.selMuon)
         
         self.b2DpMuXLine = BtoDlnuLine(name,
                                        'Dp',
                                        [ '[B0 -> D- mu+]cc', '[B0 -> D- mu-]cc' ],
                                        [ '[D+ -> K- pi+ pi+]cc' ],
-                                       Dp_CONFIG,
+                                       CharmCuts["Dp"],
                                        [self.selKaon, self.selPion],self.selMuon,self.selMuonFakes)
         
         self.b2DsMuXLine = BtoDlnuLine(name,
                                        'Ds',
                                        [ '[B0 -> D- mu+]cc', '[B0 -> D- mu-]cc' ],
                                        [ '[D+ -> K+ K- pi+]cc' ],
-                                       Dp_CONFIG,
+                                       CharmCuts["Ds"],
                                        [self.selKaon, self.selPion],self.selMuon,self.selMuonFakes)
         
         
@@ -262,27 +269,27 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                         "Lc",
                                         [ '[Lambda_b0 -> Lambda_c+ mu-]cc', '[Lambda_b0 -> Lambda_c+ mu+]cc'],
                                         [ '[Lambda_c+ -> K- p+ pi+]cc' ],
-                                        Lc_CONFIG,
+                                        CharmCuts["Lc"],
                                         [self.selProton,self.selKaon,self.selPion],self.selMuon,self.selMuonFakes)
         self.Xic_Line = BtoDlnuLine(name,
                                     "Xic",
                                     [ '[Xi_b0 -> Xi_c+ mu-]cc', '[Xi_b0 -> Xi_c+ mu+]cc'],
                                     [ '[Xi_c+ -> K- p+ pi+]cc' ],
-                                    Xic_CONFIG,
+                                    CharmCuts["Xic"],
                                     [self.selProton,self.selKaon,self.selPion],self.selMuon,self.selMuonFakes)
 
         self.Xic0_Line = BtoDlnuLine(name,
                                      "Xic0",
                                      [ '[Xi_b- -> Xi_c0 mu-]cc', '[Xi_b- -> Xi_c0 mu+]cc'],
                                      [ '[Xi_c0 -> p+ K- K- pi+]cc'],
-                                     Xic0_CONFIG,
+                                     CharmCuts["Xic0"],
                                      [self.selProton,self.selKaon,self.selPion],self.selMuon,self.selMuonFakes)
 
         self.Omegac_Line = BtoDlnuLine(name,
                                        "Omegac",
                                        [ '[Omega_b- -> Omega_c0 mu-]cc', '[Omega_b- -> Omega_c0 mu+]cc'],
                                        [ '[Omega_c0 -> p+ K- K- pi+]cc' ],
-                                       Omegac_CONFIG,
+                                       CharmCuts["Omegac"],
                                        [self.selProton,self.selKaon,self.selPion],self.selMuon,self.selMuonFakes)
 
         ##### line registration

@@ -3,6 +3,14 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2015-11-11 - Mika Vesterinen
+ - Implement a few suggestions from Steve Blusk on B2DMuNuX
+    - Tighter mass windows for the Xic0/Omegac -> pKKpi
+    - Looser kaon momentum cut
+    - Fix the fact that Xic0 wasn't getting the DeltaZ cut
+ - Remove a test module that I left in StrippingCalib/__init__.py
+
 ! 2015-11-11 - Basem Khanji 
   - Added the stripping line: B02DstDD02K3PiBeauty2CharmLine to StrippingB2OC/
     ,StrippingB2OC/StrippingBeauty2Charm.py & StrippingB2OC/Beauty2Charm_B2DXBuilder.py are updated accordingly
