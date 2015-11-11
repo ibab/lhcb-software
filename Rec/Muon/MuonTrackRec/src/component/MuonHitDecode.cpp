@@ -10,6 +10,16 @@
 #include "Kernel/MuonTileID.h"
 #include "MuonInterfaces/MuonLogHit.h"
 
+
+/** @class MuonHitDecode MuonHitDecode.h
+ *
+ *  interface standard decoding tool (MuonRawBuffer) to MuonLogHit objects
+ *
+ *  @author Giacomo Graziani
+ *  @date   2009-03-16
+ *
+ */
+
 using namespace LHCb;
 
 DECLARE_TOOL_FACTORY( MuonHitDecode )
