@@ -11,9 +11,10 @@
  *  @author Wouter HULSBERGEN
  *  @date   2007-10-08
  */
-class ITrajPoca ;
-class ITrackVertexer ;
-class ITrackStateProvider ;
+#include "Kernel/ITrajPoca.h"
+#include "TrackInterfaces/ITrackVertexer.h"
+#include "TrackInterfaces/ITrackStateProvider.h"
+
 
 #include "Event/TwoProngVertex.h"
 namespace LHCb {
@@ -89,9 +90,6 @@ private:
 #include "TrackKernel/TrackTraj.h"
 #include "Event/StateParameters.h"
 
-#include "Kernel/ITrajPoca.h"
-#include "TrackInterfaces/ITrackVertexer.h"
-#include "TrackInterfaces/ITrackStateProvider.h"
 #include <iterator>
 
 #ifdef _WIN32
