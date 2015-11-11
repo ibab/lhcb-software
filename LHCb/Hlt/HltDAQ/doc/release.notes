@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2015-11-11 - Sean Benson
+ - Unit test update (b_dumpafterreformat).
+
 ! 2015-11-08 - Tomasz Skwarnicki
  - Change HltSelReportsWriter to use substructureExtended() if set.
    Increase version numbers of the HltSelReports Writer and Decoder to 7

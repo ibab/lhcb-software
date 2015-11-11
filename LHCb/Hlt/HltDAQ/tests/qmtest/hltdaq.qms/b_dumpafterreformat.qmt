@@ -39,8 +39,8 @@ if prevstdout!=stdout:
   #exceptions: HltSelReports vary due to non-deterministic re-sorting
   exceptions=[p for p in stdout if p not in prevstdout and "[10] [1c445] [b] [c] [d] [e] [10]" in p]
   exceptions=exceptions+[p for p in prevstdout if p not in stdout and "[10] [1c445] [b] [c] [d] [e] [10]" in p]
-  # MCat-20150108 (+SB-20150715) Next two are temporary, in transition from version 2 (last Run 1) to version 6 (latest Run 2) of SelReports bank
-  exceptions=exceptions+[p for p in stdout if p not in prevstdout and "[64, 0, 6, cbcb]" in p]
+  # MCat-20150108 (+SB-20151111) Next two are temporary, in transition from version 2 (last Run 1) to version 7 (latest Run 2) of SelReports bank
+  exceptions=exceptions+[p for p in stdout if p not in prevstdout and "[64, 0, 7, cbcb]" in p]
   exceptions=exceptions+[p for p in prevstdout if p not in stdout and "[64, 0, 2, cbcb]" in p]
   newlines=[p for p in stdout if p not in prevstdout and p not in exceptions]
   missing=[p for p in prevstdout if p not in stdout and p not in exceptions]
