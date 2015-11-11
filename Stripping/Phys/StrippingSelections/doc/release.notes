@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-11-11 - Mika Vesterinen
+ - Add TISTOS and HLT filtering requirements to B2DMuNuX
+
+! 2015-11-11 - Mika Vesterinen
  - Implement a few suggestions from Steve Blusk on B2DMuNuX
     - Tighter mass windows for the Xic0/Omegac -> pKKpi
     - Looser kaon momentum cut
