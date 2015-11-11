@@ -154,7 +154,8 @@ class B2DXBuilder(object):
         #self._makeB02DD_FULLDST()
 
         self._makeB2D0D()   
-        self._makeB02DstD() 
+        self._makeB02DstD()
+        self._makeB02DstDD02K3Pi()
         self._makeB02D0D0()
         #Tighter selection Full DST lines
         #self._makeB02D0D0_FULLDST()
@@ -730,6 +731,13 @@ class B2DXBuilder(object):
         self.lines.append(ProtoLine(b2dstd_rs,1.0))
         self.lines.append(ProtoLine(b2dstd_ws,0.1))
 
+    def _makeB02DstDD02K3Pi(self):
+        '''Makes the B0 -> D*+- D-+ '''
+        decays = {'B02DstDD02K3Pi':["[B0 -> D*(2010)- D+]cc"]}
+        inputs = {'B02DstDD02K3Pi': self.dst.d0pi_k3pi + self.d.hhh_pid }
+        b2dstdd02k3pi = makeB2XSels(decays,'',inputs,self.config)
+        self.lines.append(ProtoLine(b2dstdd02k3pi,1.0))
+        
     def _makeB2DstD0(self):
         '''Makes B+- -> D*+- D0'''
         decays = {'B2DstD0':["B+ -> D*(2010)+ D0","B- -> D*(2010)- D0"]}

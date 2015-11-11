@@ -3,6 +3,9 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2015-11-11 - Basem Khanji 
+  - Added the stripping line: B02DstDD02K3PiBeauty2CharmLine to StrippingB2OC/
+    ,StrippingB2OC/StrippingBeauty2Charm.py & StrippingB2OC/Beauty2Charm_B2DXBuilder.py are updated accordingly
 
 ! 2015-11-10 - Chitsanu Khurewathanakul
  - QEE S24 Maintenance

@@ -318,7 +318,8 @@ default_config ={
     'B02DstKKPiWSDstar2D0PiPIDBeauty2CharmLine', 
     'B02DDBeauty2CharmLine', 
     'B02DDWSBeauty2CharmLine', 
-    'B02DstDBeauty2CharmLine', 
+    'B02DstDBeauty2CharmLine',
+    'B02DstDD02K3PiBeauty2CharmLine',
     'B02DstDWSBeauty2CharmLine', 
     'B02D0D0D02K3PiD02K3PiBeauty2CharmLine', 
     'B02D0D0D02HHD02K3PiBeauty2CharmLine', 
@@ -505,7 +506,7 @@ default_config ={
     'StrippingB2D0KD2Pi0HHResolvedoldBeauty2CharmLine',
     'StrippingB2D0PiD2Pi0HHMergedoldBeauty2CharmLine',
     'StrippingB2D0KD2Pi0HHMergedoldBeauty2CharmLine', 
-       
+    
 
     'StrippingB2D0KD2HHWSBeauty2CharmLine', 
     'StrippingB2D0PiD2HHWSBeauty2CharmLine', 
@@ -727,7 +728,8 @@ default_config ={
     'StrippingB02DDWSBeauty2CharmLine', 
     'StrippingB2D0DBeauty2CharmLine', 
     'StrippingB2D0DD02K3PiBeauty2CharmLine', 
-    'StrippingB02DstDBeauty2CharmLine', 
+    'StrippingB02DstDBeauty2CharmLine',
+    'StrippingB02DstDD02K3PiBeauty2CharmLine',
     'StrippingB02DstDWSBeauty2CharmLine', 
     'StrippingB02D0D0D02K3PiD02K3PiBeauty2CharmLine', 
     'StrippingB02D0D0D02HHD02K3PiBeauty2CharmLine', 
