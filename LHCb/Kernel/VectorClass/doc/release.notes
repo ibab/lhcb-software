@@ -4,6 +4,11 @@
 ! Purpose     : Copy of C++ vector class library (VCL) www.agner.org/optimize
 !-----------------------------------------------------------------------------
 
+! 2015-11-11 - Chris Jones
+ - Add private update from VectorClass maintainer to fix issues with complex
+   classes when compiled using clang. Will eventually be released as part of
+   version 1.19, but until that is done I suggest tagging as v1r18.
+
 ! 2015-10-29 - Ben Coutrier
  - Update to upstream 1.18. 
 
