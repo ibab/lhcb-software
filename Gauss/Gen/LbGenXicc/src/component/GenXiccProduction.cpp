@@ -14,7 +14,7 @@
 //-----------------------------------------------------------------------------
 //  Implementation file for class: BcVegPyProduction
 //
-//  2011-04-10 : F. Zhang, Philip Ilten
+//  2011-04-10 : F. Zhang, G. Graziani, Philip Ilten
 //-----------------------------------------------------------------------------
 
 // Declaration of the tool factory.
@@ -32,6 +32,8 @@ GenXiccProduction::GenXiccProduction(const std::string &type,
   declareInterface<IProductionTool>(this);
   declareProperty("BaryonState", m_baryon= "Xi_cc+",
 		  "The baryon to be produced");
+  declareProperty("AllowBaryonNumberViolation", m_allowBaryonNumberViolation = false,
+                  "allow baryon number violation in GenXicc");
 
   // Create the default settings.
   m_defaultSettings.push_back("mixevnt imix 0");
@@ -56,6 +58,7 @@ GenXiccProduction::GenXiccProduction(const std::string &type,
   m_defaultSettings.push_back("subopen subenergy 100.0");
   m_defaultSettings.push_back("subopen isubonly 0");
   m_defaultSettings.push_back("subopen ichange 0");
+  
   // Specify IDWTUP for weighting.
   m_defaultSettings.push_back("usertran idpp 3");
   m_defaultSettings.push_back("vegasinf number 10000");
@@ -67,6 +70,9 @@ GenXiccProduction::GenXiccProduction(const std::string &type,
   m_defaultSettings.push_back("vegasbin nvbin 100");   
   m_defaultSettings.push_back("valmatrix cmfactor 1.0");
 }
+
+
+
 
 //=============================================================================
 // Initialize the hard process tool.
@@ -122,6 +128,12 @@ StatusCode GenXiccProduction::hardInitialize() {
     m_defaultSettings.push_back("mtypeofxi mgenxi 1");
     m_defaultSettings.push_back("wbstate nbound 2");
   }
+
+  if(m_allowBaryonNumberViolation)
+    m_defaultSettings.push_back("subopen iconsbarnum 0");
+  else
+    m_defaultSettings.push_back("subopen iconsbarnum 1");
+
   StatusCode sc = parseSettings(m_defaultSettings , true);
   if (sc.isFailure()) return Error("Failed to parse default settings.");
   sc = parseSettings(m_userSettings);
@@ -134,7 +146,9 @@ StatusCode GenXiccProduction::hardInitialize() {
   double e1(sqrt(pBeam1.Mag2())), e2(sqrt(pBeam2.Mag2())),
     ecm(sqrt((e1 + e2)*(e1 + e2) - (pBeam1 + pBeam2).Mag2())/Gaudi::Units::GeV);
   GenXicc::upcom().ecm() = ecm;
+  verbose() << " calling GenXicc::SetXiccConsistentParameters"<<endmsg;
   GenXicc::SetXiccConsistentParameters();
+  verbose() << " calling GenXicc::EvntInit"<<endmsg;
   GenXicc::EvntInit();
   return sc;
 }
@@ -194,6 +208,7 @@ StatusCode GenXiccProduction::parseSettings(const CommandVector &settings,
       if      ("subenergy" == entry) GenXicc::subopen().subenergy() = fl1;
       else if ("isubonly"  == entry) GenXicc::subopen().isubonly()  = int1; 
       else if ("ichange"   == entry) GenXicc::subopen().ichange()   = int1; 
+      else if ("iconsbarnum" == entry) GenXicc::subopen().iconsbarnum() = int1;
       else return Error("Unknown subopen entry: " + entry);
     else if ("usertran" == block)
       if       ("idpp" == entry) GenXicc::usertran().idpp() = int1; 

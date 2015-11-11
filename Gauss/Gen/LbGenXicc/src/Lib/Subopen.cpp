@@ -34,6 +34,12 @@ int& Subopen::ichange() {
   return s_subopen->ichange;
 }
 
+// access iconsbarnum in common
+int& Subopen::iconsbarnum() {
+  init(); // check COMMON is initialized
+  return s_subopen->iconsbarnum;
+}
+
 
 
 

@@ -2,6 +2,11 @@
 ! Responsible : F. Zhang
 !=============================================================================
 
+! 2015-11-05 - Giacomo Graziani
+ - option GenXiccProduction.AllowBaryonNumberViolation added to switch on/off creation of light baryon 
+   in GenXicc output to conserve baryon number (dafault is False, needed by Pythia6, can be set to 
+   True for Pythia8)
+
 !======================== LbGenXicc v5r0p1 2015-08-05 ========================
 ! 2015-06-23 - Philip Ilten
  - Fixed typos in configuration

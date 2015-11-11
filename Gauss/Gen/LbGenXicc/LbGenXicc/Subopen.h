@@ -21,6 +21,7 @@ public:
   double& subenergy();
   int& isubonly();
   int& ichange();
+  int& iconsbarnum();
 
   inline void init(); // inlined for speed of access (small function)
 
@@ -33,6 +34,7 @@ private:
     double subenergy;
     int isubonly; 
     int ichange; 
+    int iconsbarnum;
   };
   int m_dummy;
   double m_realdummy;

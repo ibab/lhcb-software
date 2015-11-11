@@ -27,6 +27,7 @@
  * @class  GenXiccProduction
  * @file   GenXiccProduction.h 
  * @author F. Zhang
+ * @author G. Graziani
  * @author Philip Ilten
  * @date   2011-04-10
  */
@@ -47,8 +48,9 @@ class GenXiccProduction : public HardProduction, public QQqBaryons {
 
  private:
 
-  CommandVector m_defaultSettings;  ///< The default settings.
-  std::string m_baryon;             ///< The baryon state to be produced.
+  CommandVector m_defaultSettings;   ///< The default settings.
+  std::string m_baryon;              ///< The baryon state to be produced.
+  bool m_allowBaryonNumberViolation; ///< allow baryon number violation in GenXicc (default is not for Pythia6, is ok for Pythia8)
 };
 
 #endif // LBGENXICC_GENXICCPRODUCTION_H
