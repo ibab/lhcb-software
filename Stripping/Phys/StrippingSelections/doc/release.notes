@@ -14,7 +14,9 @@
     - Refactors several hard-coded value to default_config (especially `RequiredRawEvents`).
     - Clean more hard-coded units.
     - Fix regex typo in InclbJets.
-    - Fix naming typo in HighPtTopoJets.
+ - HighPtTopoJets
+    - Fix Line naming typo.
+    - Prepare Hlt requirement fix (for future Phys/TopologicalTools v1r1+)
 
 ! 2015-11-10 - Stefano Perazzini
  - Updated RelatedInfo syntax for StrippingBs2PhiPhi lines

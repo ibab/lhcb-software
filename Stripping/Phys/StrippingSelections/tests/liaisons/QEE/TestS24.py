@@ -142,7 +142,7 @@ ac = AlgorithmCorrelationsAlg(Algorithms = list(set(sc.selections())))
 #Configure DaVinci
 
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
-DaVinci().EvtMax = 1000
+DaVinci().EvtMax = 20000
 DaVinci().PrintFreq = 2000
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
