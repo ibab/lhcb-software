@@ -33,7 +33,7 @@ def configuredParticleListFromDST( ParticleLocation, FilterCode = "" ) :
     name = name.replace("/Phys","")
     name = name.replace("/Particles","")
     name = name.replace("/","")
-    fitter = TrackParticleRefitter( name + "Refitter", 
+    fitter = TrackParticleRefitter( name + "Refitter",
                                     TrackFitter = TrackMasterFitter(),
                                     ParticleLocation = ParticleLocation )
     ConfiguredMasterFitter( fitter.TrackFitter, SimplifiedGeometry = True )
@@ -42,8 +42,8 @@ def configuredParticleListFromDST( ParticleLocation, FilterCode = "" ) :
     if FilterCode != "":
         from Configurables import FilterDesktop
         newLocation = ParticleLocation.replace("/Particles","") + "Filtered"
-        newfilter = FilterDesktop( #name + "Filter",#Output = 
-                                   newLocation, 
+        newfilter = FilterDesktop( #name + "Filter",#Output =
+                                   newLocation,
                                    Inputs = [ParticleLocation],
                                    CloneFilteredParticles = False,
                                    Code = FilterCode )
@@ -73,7 +73,7 @@ def protoParticlesFromHLTSelSequence( Name, HltDecision,
     hltTrackConv.ReadHltLinesFrom1stEvent = HltDecision
     hltTrackConv.TrackDestination = 'Rec/Track/' + Name + 'All'
     if Escher().DataType in ['2015']: hltTrackConv.SelReportsLocation = 'Hlt1/SelReports'
-    
+
     ## TODO: Watch out for the HLT1/2 Split here!!
     ## probably the decoder DB will take care of it for you...
     from DAQSys.Decoders import DecoderDB
@@ -134,17 +134,17 @@ def ReviveHltTracks(TriggerLines=[]):
         lines = Escher().HltFilterCode.split('\'')
         for l in lines:
             if l.find('Hlt') != -1 and l.find('Decision') -1: HltLines.append(l)
-    
+
     # revive only particles used for trigger
     from Configurables import GaudiSequencer
     trackseq = GaudiSequencer("RecoAlignTrSeq")
-    
+
     from Configurables import HltTrackConverter
     hltTrackConv = HltTrackConverter("HltTrackConv")
     hltTrackConv.HltLinesToUse = HltLines
     hltTrackConv.TrackDestination = 'Rec/Track/AllBest'
     if Escher().DataType in ['2015']: hltTrackConv.SelReportsLocation = 'Hlt1/SelReports'
-    
+
     ## TODO: Watch out for the HLT1/2 Split here!!
     ## probably the decoder DB will take care of it for you...
     from DAQSys.Decoders import DecoderDB
@@ -161,12 +161,12 @@ def ReviveHltTracks(TriggerLines=[]):
 
     # create a sequence that fits the tracks and does the hit-adding
     from TAlignment.Utils import configuredFitAndHitAdderSequence
-    fitseq =  configuredFitAndHitAdderSequence( Name = 'HltBest', 
+    fitseq =  configuredFitAndHitAdderSequence( Name = 'HltBest',
                                                 InputLocation = hltTrackConv.TrackDestination,
                                                 OutputLocation = 'Rec/Track/Best' )
     trackseq.Members.append( fitseq )
     # now make sure that there are at least 2 tracks left
-    from Configurables import LoKi__VoidFilter as LokiFilter 
+    from Configurables import LoKi__VoidFilter as LokiFilter
     trackseq.Members.append( LokiFilter ( 'BestTrackFilter' ,
                                           Code = "1 < CONTAINS ( 'Rec/Track/Best' )" ) )
     return HltLines
@@ -191,7 +191,7 @@ def defaultHLTD0Selection():
     # retrieve the trigger lines from the hlt filter code
     print 'Hlt lines to be used: '
     print ReviveHltTracks()
-    
+
     # Tweak a little bit RICH
     MinimalRichSequence()
 
@@ -218,30 +218,30 @@ def defaultHLTD0Selection():
             " & (MINTREE('K+'==ABSID, PIDK) > 0)" \
             " & (MINTREE('pi+'==ABSID, PIDK) < 0)"
     AlignD02KPiWide = FilterDesktop("AlignD02KPiWide",
-                                    Inputs = ["Phys/StdLooseD02KPi"], 
+                                    Inputs = ["Phys/StdLooseD02KPi"],
                                     Code = AlignD02KPiWideCode )
-    
+
     # tighten the mass window for candidates used in alignment.
     AlignD02KPi = FilterDesktop("AlignD02KPi",
-                                Inputs = ["Phys/AlignD02KPiWide"], 
+                                Inputs = ["Phys/AlignD02KPiWide"],
                                 Code = "(ADMASS('D0') < 20.*MeV)" )
 
     # create the sequence that we pass to the alignment
     from Configurables import TrackParticleMonitor, GaudiSequencer
     recoD0Seq= GaudiSequencer("RecoD0Seq")
-    recoD0Seq.Members = [ 
+    recoD0Seq.Members = [
         ChargedProtoParticleMaker('ChargedProtoPMaker'),
         ChargedProtoParticleAddRichInfo('ChargedProtoPAddRich'),
         ChargedProtoCombineDLLsAlg('ChargedProtoPCombDLLs'),
-        TrackParticleMonitor('StdLooseD02KPiMonitor', 
+        TrackParticleMonitor('StdLooseD02KPiMonitor',
                               InputLocation = '/Event/Phys/StdLooseD02KPi/Particles',
                               MinMass = 1810, MaxMass = 1930),
         AlignD02KPiWide,
-        TrackParticleMonitor('AlignD02KPiWideMonitor', 
+        TrackParticleMonitor('AlignD02KPiWideMonitor',
                              InputLocation = '/Event/Phys/AlignD02KPiWide/Particles',
                              MinMass = 1810, MaxMass = 1930),
         AlignD02KPi,
-        TrackParticleMonitor('AlignD02KPiMonitor', 
+        TrackParticleMonitor('AlignD02KPiMonitor',
                              InputLocation = '/Event/Phys/AlignD02KPi/Particles',
                              MinMass = 1810, MaxMass = 1930)
                         ]
@@ -268,7 +268,7 @@ def defaultHLTDstarSelection():
     # retrieve the trigger lines from the hlt filter code
     print 'Hlt lines to be used: '
     print ReviveHltTracks()
-    
+
     # Tweak a little bit RICH
     MinimalRichSequence()
 
@@ -291,31 +291,31 @@ def defaultHLTDstarSelection():
     # add tight PID cuts basically toensure that we don't swap the
     # kaon and pion.
     AlignD02KPiWide = FilterDesktop("AlignD02KPiWide",
-                                    Inputs = ["Phys/StdLooseD02KPi"], 
+                                    Inputs = ["Phys/StdLooseD02KPi"],
                                     Code = "(ADMASS('D0') < 50.*MeV) & (VFASPF(VCHI2) < 9.)" )
-    
+
     # tighten the mass window for candidates used in alignment.
     AlignD02KPi = FilterDesktop("AlignD02KPi",
-                                Inputs = ["Phys/AlignD02KPiWide"], 
+                                Inputs = ["Phys/AlignD02KPiWide"],
                                 Code = "(ADMASS('D0') < 20.*MeV)" )
 
     # create the sequence that we pass to the alignment
     from Configurables import TrackParticleMonitor, GaudiSequencer
     recoDstarWithD0Seq= GaudiSequencer("RecoDstarWithD0Seq")
-    recoDstarWithD0Seq.Members = [ 
+    recoDstarWithD0Seq.Members = [
         ChargedProtoParticleMaker('ChargedProtoPMaker'),
         ChargedProtoParticleAddRichInfo('ChargedProtoPAddRich'),
         ChargedProtoCombineDLLsAlg('ChargedProtoPCombDLLs'),
-        TrackParticleMonitor('StdLooseD02KPiMonitor', 
+        TrackParticleMonitor('StdLooseD02KPiMonitor',
                               InputLocation = '/Event/Phys/StdLooseD02KPi/Particles',
                               MinMass = 1810, MaxMass = 1930),
         StdLooseDstarWithD02KPi, #apply Dstar cut
         AlignD02KPiWide,
-        TrackParticleMonitor('AlignD02KPiWideMonitor', 
+        TrackParticleMonitor('AlignD02KPiWideMonitor',
                              InputLocation = '/Event/Phys/AlignD02KPiWide/Particles',
                              MinMass = 1810, MaxMass = 1930),
         AlignD02KPi,
-        TrackParticleMonitor('AlignD02KPiMonitor', 
+        TrackParticleMonitor('AlignD02KPiMonitor',
                              InputLocation = '/Event/Phys/AlignD02KPi/Particles',
                              MinMass = 1810, MaxMass = 1930)
                         ]
@@ -329,7 +329,7 @@ def defaultHLTDstarSelection():
 ##################################################################
 # Create a selection based on HLT J/psi->mumu
 ##################################################################
-def defaultHLTJPsiSelection():
+def defaultHLTJPsiSelection(lines = []):
 
     # this still needs to be worked out
     from Configurables import Escher
@@ -340,38 +340,38 @@ def defaultHLTJPsiSelection():
     if not hasattr(Escher(),"HltFilterCode") or not Escher().HltFilterCode :
         Escher().HltFilterCode = "HLT_PASS_RE( 'Hlt2.*JPsi.*Decision' )"
 
-    # revive only particles used for trigger 
+    # revive only particles used for trigger
     print 'Hlt lines to be used: '
-    print ReviveHltTracks(['Hlt2ExpressJPsiDecision',
+    print ReviveHltTracks(lines if len(lines) else ['Hlt2ExpressJPsiDecision',
                            'Hlt2DiMuonDetachedJPsiDecision',
                            'Hlt2DiMuonJPsiDecision',
                            'Hlt2DiMuonJPsiHighPTDecision'])
-                             
+
     # Now create the J/psi candidates
     from Configurables import CombineParticles, FilterDesktop
     from CommonParticles.StdAllLooseMuons import StdAllLooseMuons
     from CommonParticles.StdLooseJpsi2MuMu import StdLooseJpsi2MuMu
     StdLooseJpsi2MuMu.DaughtersCuts = { "mu-": "(PIDmu-PIDK>5.0) & (PIDmu-PIDe>8.0)" }
-    
+
     ## tighten the mass window for candidates used in alignment
     AlignJpsi2MuMu = FilterDesktop("AlignJpsi2MuMu",
                                    Inputs = ["Phys/StdLooseJpsi2MuMu"],
                                    Code = "(ADMASS('J/psi(1S)') < 35.*MeV) & (VFASPF(VCHI2) < 7.)") # Tight requirements on vchi2 - test 18/5/2012
-    
+
     from Configurables import ChargedProtoParticleMaker, ChargedProtoParticleAddMuonInfo, ChargedProtoCombineDLLsAlg
     from Configurables import TrackParticleMonitor, GaudiSequencer
     recoJpsiSeq= GaudiSequencer("RecoJpsiSeq")
-    recoJpsiSeq.Members = [ 
+    recoJpsiSeq.Members = [
         ChargedProtoParticleMaker('ChargedProtoPMaker'),
         ChargedProtoParticleAddMuonInfo('ChargedProtoPAddMuon'),
         ChargedProtoCombineDLLsAlg('ChargedProtoPCombDLLs'),
         StdAllLooseMuons,  # we could also get this from the DoD
         StdLooseJpsi2MuMu, # we could also get this from the DoD
-        TrackParticleMonitor('StdLooseJpsi2MuMuMonitor', 
+        TrackParticleMonitor('StdLooseJpsi2MuMuMonitor',
                              InputLocation = '/Event/Phys/StdLooseJpsi2MuMu/Particles',
                              MinMass = 3000, MaxMass = 3190),
         AlignJpsi2MuMu,
-        TrackParticleMonitor('AlignJpsi2MuMuMonitor', 
+        TrackParticleMonitor('AlignJpsi2MuMuMonitor',
                              InputLocation = '/Event/Phys/AlignJpsi2MuMu/Particles',
                              MinMass = 3000, MaxMass = 3190),
         ]
@@ -392,7 +392,7 @@ def defaultMinBiasD0Selection():
     from Configurables import Escher
     Escher().RecoSequence = ["Decoding","VELO","Tr","Vertex","RICH" ]
     Escher().MoniSequence = ["Tr","OT"]
-        
+
     # Tweak a little bit RICH
     MinimalRichSequence()
 
@@ -414,33 +414,33 @@ def defaultMinBiasD0Selection():
     # add tight PID cuts basically to ensure that we don't swap the
     # kaon and pion.
     AlignD02KPiWide = FilterDesktop("AlignD02KPiWide",
-                                    Inputs = ["Phys/StdLooseD02KPi"], 
+                                    Inputs = ["Phys/StdLooseD02KPi"],
                                     Code = "(ADMASS('D0') < 50.*MeV) & (VFASPF(VCHI2) < 9.)" \
     #                                    " & (MINTREE((ABSID=='D0'), VFASPF(VZ))-VFASPF(VZ) > 0.09*mm )" \
                                     " & (MINTREE('K+'==ABSID, PIDK) > 0)" \
                                     " & (MINTREE('pi+'==ABSID, PIDK) < 0)" )
-    
+
     # tighten the mass window for candidates used in alignment.
     AlignD02KPi = FilterDesktop("AlignD02KPi",
-                                Inputs = ["Phys/AlignD02KPiWide"], 
+                                Inputs = ["Phys/AlignD02KPiWide"],
                                 Code = "(ADMASS('D0') < 20.*MeV)" )
 
     # create the sequence that we pass to the alignment
     from Configurables import TrackParticleMonitor, GaudiSequencer
     recoD0Seq= GaudiSequencer("RecoD0Seq")
-    recoD0Seq.Members = [ 
+    recoD0Seq.Members = [
         ChargedProtoParticleMaker('ChargedProtoPMaker'),
         ChargedProtoParticleAddRichInfo('ChargedProtoPAddRich'),
         ChargedProtoCombineDLLsAlg('ChargedProtoPCombDLLs'),
-        TrackParticleMonitor('StdLooseD02KPiMonitor', 
+        TrackParticleMonitor('StdLooseD02KPiMonitor',
                               InputLocation = '/Event/Phys/StdLooseD02KPi/Particles',
                               MinMass = 1810, MaxMass = 1930),
         AlignD02KPiWide,
-        TrackParticleMonitor('AlignD02KPiWideMonitor', 
+        TrackParticleMonitor('AlignD02KPiWideMonitor',
                              InputLocation = '/Event/Phys/AlignD02KPiWide/Particles',
                              MinMass = 1810, MaxMass = 1930),
         AlignD02KPi,
-        TrackParticleMonitor('AlignD02KPiMonitor', 
+        TrackParticleMonitor('AlignD02KPiMonitor',
                              InputLocation = '/Event/Phys/AlignD02KPi/Particles',
                              MinMass = 1810, MaxMass = 1930)
                         ]
@@ -465,7 +465,7 @@ def muonTracksFORmuonAlignment():
     if not hasattr(Escher(),"HltFilterCode") or not Escher().HltFilterCode :
         Escher().HltFilterCode = "HLT_PASS_RE( 'Hlt1DiMuonHighMass*Decision' )" # Hlt2-->Hlt1 requirement
 
-    # revive only particles used for trigger 
+    # revive only particles used for trigger
     print 'Hlt lines to be used: '
     print ReviveHltTracks(['Hlt1DiMuonHighMassDecision'])
 
@@ -475,27 +475,27 @@ def muonTracksFORmuonAlignment():
     from CommonParticles.StdLooseJpsi2MuMu import StdLooseJpsi2MuMu  # requires (ADAMASS('J/psi')<100.*MeV)&(ADOCACHI2CUT(30,'')) && "(VFASPF(VCHI2) < 25.)"
 
     StdLooseJpsi2MuMu.DaughtersCuts = { "mu-": "( P> 6000*MeV)" }  # momentum cut
-    
+
     ## tighten the mass window for candidates used in alignment
     AlignJpsi2MuMu = FilterDesktop("AlignJpsi2MuMu",
                                    Inputs = ["Phys/StdLooseJpsi2MuMu"],
                                    Code = "(ADMASS('J/psi(1S)') < 35.*MeV) & (VFASPF(VCHI2) < 10.)")  # tighter requirements
-    
+
     from Configurables import ChargedProtoParticleMaker, ChargedProtoParticleAddMuonInfo
     #####, ChargedProtoCombineDLLsAlg
     from Configurables import TrackParticleMonitor, GaudiSequencer
     recoJpsiSeq= GaudiSequencer("RecoJpsiSeq")
-    recoJpsiSeq.Members = [ 
+    recoJpsiSeq.Members = [
         ChargedProtoParticleMaker('ChargedProtoPMaker'),
         ChargedProtoParticleAddMuonInfo('ChargedProtoPAddMuon'),
         ###ChargedProtoCombineDLLsAlg('ChargedProtoPCombDLLs'),
-        StdAllLooseMuons,  
-        StdLooseJpsi2MuMu, 
-        TrackParticleMonitor('StdLooseJpsi2MuMuMonitor', 
+        StdAllLooseMuons,
+        StdLooseJpsi2MuMu,
+        TrackParticleMonitor('StdLooseJpsi2MuMuMonitor',
                              InputLocation = '/Event/Phys/StdLooseJpsi2MuMu/Particles',
                              MinMass = 3000, MaxMass = 3190),
         AlignJpsi2MuMu,
-        TrackParticleMonitor('AlignJpsi2MuMuMonitor', 
+        TrackParticleMonitor('AlignJpsi2MuMuMonitor',
                              InputLocation = '/Event/Phys/AlignJpsi2MuMu/Particles',
                              MinMass = 3000, MaxMass = 3190),
         ]
@@ -504,4 +504,3 @@ def muonTracksFORmuonAlignment():
                              Location = '/Event/Phys/AlignJpsi2MuMu/Particles',
                              Algorithm = recoJpsiSeq )
     return sel
-
