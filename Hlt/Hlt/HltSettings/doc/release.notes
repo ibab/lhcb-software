@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-11-11 - Dan Johnson
+ - Fix typo in name of Hlt2NoBiasNonBeamBeam prescale setting
+
 ! 2015-11-09 - Mika Vesterinen
  - First version of the settings for HeavyIon_November2015 and corresponding PID and TrackEffDiMuon
 
