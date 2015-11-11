@@ -140,8 +140,10 @@ private:
   DoubleTopoTool(const DoubleTopoTool&);
   DoubleTopoTool& operator=(const DoubleTopoTool&);
 
-  float m_minAngle, m_minDPhi;
+  float m_minAngle;
+  float m_minDPhi;
   float m_minMass;
+  std::string m_hltdecision;
   ITriggerTisTos *m_tistostool;
 
 
@@ -162,9 +164,10 @@ public:
 DoubleTopoTool::DoubleTopoTool(const std::string& type,const std::string& name,
                                const IInterface* parent)
   : base_class(type,name,parent), m_tistostool(0) {
-  declareProperty("minAngle", m_minAngle = 2/57.);
-  declareProperty("minDPhi", m_minDPhi = 0/57.);
-  declareProperty("minMass", m_minMass = 20000.0);
+  declareProperty("minAngle"    , m_minAngle = 2/57.);
+  declareProperty("minDPhi"     , m_minDPhi = 0/57.);
+  declareProperty("minMass"     , m_minMass = 20000.0);
+  declareProperty("hltdecision" , m_hltdecision = "Hlt2Topo.*BBDTDecision");
 }
 
 StatusCode DoubleTopoTool::initialize(){
@@ -178,7 +181,7 @@ StatusCode DoubleTopoTool::initialize(){
 
 bool DoubleTopoTool::accept() const {
   std::vector<const LHCb::HltObjectSummary*> hltObjs
-    = m_tistostool->hltObjectSummaries("Hlt2Topo.*BBDTDecision",2,2);
+    = m_tistostool->hltObjectSummaries(m_hltdecision,2,2);
   unsigned int num = hltObjs.size();
   //std::cout << "num HltObjs =" << num << std::endl;
   //std::vector<const LHCb::HltObjectSummary*>::const_iterator iter1,iter2;

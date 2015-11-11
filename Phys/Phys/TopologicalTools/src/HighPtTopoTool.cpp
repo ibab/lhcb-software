@@ -27,6 +27,7 @@ private:
   float m_minpT;
   float m_conesize;
   float m_minconepT;
+  std::string m_hltdecision;
   ITriggerTisTos *m_tistostool;
 
 
@@ -48,9 +49,10 @@ public:
 HighPtTopoTool::HighPtTopoTool(const std::string& type,const std::string& name,
                                const IInterface* parent)
   : base_class(type,name,parent), m_tistostool(0) {
-  declareProperty("minpT", m_minpT = 20000.);
-  declareProperty("conesize", m_conesize = -1);
-  declareProperty("minconepT", m_minconepT = 0.);
+  declareProperty("minpT"       , m_minpT = 20000.);
+  declareProperty("conesize"    , m_conesize = -1);
+  declareProperty("minconepT"   , m_minconepT = 0.);
+  declareProperty("hltdecision" , m_hltdecision = "Hlt2Topo.*BBDTDecision");
 }
 
 StatusCode HighPtTopoTool::initialize(){
@@ -64,7 +66,7 @@ StatusCode HighPtTopoTool::initialize(){
 
 bool HighPtTopoTool::accept() const {
   std::vector<const LHCb::HltObjectSummary*> hltObjs
-    = m_tistostool->hltObjectSummaries("Hlt2Topo.*BBDTDecision",2,2);
+    = m_tistostool->hltObjectSummaries(m_hltdecision,2,2);
   unsigned int num = hltObjs.size();
   std::vector<std::vector<int> > lhcbIDs(num);
   Gaudi::LorentzVector P4;

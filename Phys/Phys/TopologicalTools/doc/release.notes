@@ -3,6 +3,11 @@
 ! Responsible : Mike Williams
 ! Purpose     : Topological tools
 !-----------------------------------------------------------------------------
+
+! 2015-11-11 - Chitsanu Khurewathanakul
+ - Soft-code the Hlt requirement in DoubleTopoTool, HighPtTopoTool.
+   Such that it's compatible with Run2 S24.
+
 ! 2015-11-01 - Gerhard Raven
  - replace endreq with endmsg
 
