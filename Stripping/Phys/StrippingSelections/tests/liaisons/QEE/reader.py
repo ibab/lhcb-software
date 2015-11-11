@@ -23,7 +23,9 @@ def read_xml():
 
   for name,count in sorted(counter.iteritems()):
     frac = 1E4 * count / ntotal 
-    print '{name:40} {count:3} / {ntotal:6} --> {frac:5.2f} %%'.format(**locals())
+    print '{name:40} {count:6} / {ntotal:8} --> {frac:5.2f} %%'.format(**locals())
+
+  print '\n[ %% for per 10k ]'
 
 if __name__ == '__main__':
   read_xml()

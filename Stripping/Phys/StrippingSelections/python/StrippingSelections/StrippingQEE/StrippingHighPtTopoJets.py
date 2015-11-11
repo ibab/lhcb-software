@@ -70,7 +70,7 @@ class HighPtTopoJetsConf( LineBuilder ) :
         # Split HLT configuration
         config_split_HLT(dt)
         
-        sline = StrippingLine(name+'%(pT)s'%config,
+        sline = StrippingLine(name+'%(pT)i'%config,
                               prescale  = config[ 'HighPtTopo40000_Prescale' ],
                               postscale = config[ 'HighPtTopo_Postscale' ],
                               selection=sel,
@@ -88,7 +88,7 @@ class HighPtTopoJetsConf( LineBuilder ) :
         # Split HLT configuration
         config_split_HLT(dt)
 
-        sline = StrippingLine(name+'%(pT20)s'%config,
+        sline = StrippingLine(name+'%(pT20)i'%config,
                               prescale  = config[ 'HighPtTopo20000_Prescale' ],
                               postscale = config[ 'HighPtTopo_Postscale' ],
                               selection=sel,
@@ -106,7 +106,7 @@ class HighPtTopoJetsConf( LineBuilder ) :
         # Split HLT configuration
         config_split_HLT(dt)
 
-        sline = StrippingLine(name+'%(pT10)s'%config,
+        sline = StrippingLine(name+'%(pT10)i'%config,
                               prescale  = config[ 'HighPtTopo10000_Prescale' ],
                               postscale = config[ 'HighPtTopo_Postscale' ],
                               selection=sel,
@@ -124,7 +124,7 @@ class HighPtTopoJetsConf( LineBuilder ) :
         # Split HLT configuration
         config_split_HLT(dt)
 
-        sline = StrippingLine(name+'%(pT1)s'%config,
+        sline = StrippingLine(name+'%(pT1)i'%config,
                               prescale  = config[ 'HighPtTopo1000_Prescale' ],
                               postscale = config[ 'HighPtTopo_Postscale' ],
                               selection=sel,
@@ -143,7 +143,7 @@ class HighPtTopoJetsConf( LineBuilder ) :
         # Split HLT configuration
         config_split_HLT(dt)
 
-        sline = StrippingLine(name+'%(pT20)s_Cone55'%config,
+        sline = StrippingLine(name+'%(pT20)i_Cone55'%config,
                               prescale  = config[ 'HighPtTopo20000_Cone55_Prescale' ],
                               postscale = config[ 'HighPtTopo_Postscale' ],
                               selection=sel,

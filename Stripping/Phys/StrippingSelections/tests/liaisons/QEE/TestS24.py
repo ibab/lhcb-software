@@ -1,3 +1,5 @@
+#!/usr/bin/env gaudirun.py
+
 # $Id: $
 # Test your line(s) of the stripping
 #  
@@ -20,9 +22,6 @@ juggler = RawEventJuggler( DataOnDemand=True, Input=0.3, Output=4.2 )
 from Configurables import DecodeRawEvent
 DecodeRawEvent().setProp("OverrideInputs",4.2)
 
-# Specify the name of your configuration
-#confname='Bc2hhh' #FOR USERS
-# confname = 'DisplVertices'
 
 # NOTE: this will work only if you inserted correctly the 
 # default_config dictionary in the code where your LineBuilder 
@@ -31,15 +30,15 @@ from StrippingSelections import buildersConf
 confs = buildersConf()
 from StrippingSelections.Utils import lineBuilder, buildStreamsFromBuilder, buildStreams
 #confs[confname]["CONFIG"]["SigmaPPi0CalPrescale"] = 0.5 ## FOR USERS, YOU ONLY NEED TO QUICKLY MODIFY CutName and NewValue (no need to recompile the package but please update the default_config before committing)
-# streams = buildStreamsFromBuilder(confs,confname)
-streams = buildStreams( confs, WGs='QEE' )
+streams = buildStreamsFromBuilder(confs, 'HighPtTopoJets')
+# streams = buildStreams( confs, WGs='QEE' )
 
 #clone lines for CommonParticles overhead-free timing
 print "Creating line clones for timing"
 for s in streams:
     for l in s.lines:
         if "_TIMING" not in l.name():
-            cloned = l.clone(l.name().strip("Stripping")+"_TIMING")
+            cloned = l.clone(l.name().replace("Stripping",'')+"_TIMING")
             s.appendLines([cloned])
 
 #define stream names
