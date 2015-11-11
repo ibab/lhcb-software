@@ -60,7 +60,7 @@ c... note: bmxicc=baryon xicc mass; pmxicc=xicc diquark mass
 c... note: slqmass=small light quark mass that constitute baryon.
 
 c...whether to get the gg-subprocess information.
-	common/subopen/subfactor,subenergy,isubonly
+	common/subopen/subfactor,subenergy,isubonly,ichange,iconsbarnum
 
 	logical wronginput
 
@@ -128,7 +128,8 @@ c...sub-process information....only for check of most complex
 c...mechanism of gluon-gluon fusion.
 	isubonly =0      !switch on/off subprocess information
       subenergy=60.0d0 !c.m. energy (gev) of the sub-process
-
+c  iconsbarnum added by G.Graziani, Nov 5, 2015
+      iconsbarnum =1 ! by default, impose explicit baryon number conservation in generated process (required by Pythia6)
 
 c------------------------------------------
 c...kinematical variables
@@ -314,7 +315,7 @@ c... note: bmxicc=baryon xicc mass; pmxicc=xicc diquark mass
 c... note: slqmass=small light quark mass that constitute baryon.
 
 c...whether to get the gg-subprocess information.
-	common/subopen/subfactor,subenergy,isubonly,ichange
+	common/subopen/subfactor,subenergy,isubonly,ichange,iconsbarnum
 
 	logical wronginput
 

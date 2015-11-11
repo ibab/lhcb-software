@@ -20,7 +20,7 @@ c*************************************
 	common/outpdf/ioutpdf,ipdfnum
 	common/newpara/ncombine
 	common/mtypeofxi/mgenxi
-	common/subopen/subfactor,subenergy,isubonly
+	common/subopen/subfactor,subenergy,isubonly,ichange,iconsbarnum
 	common/wbstate/ratiou,ratiod,ratios,nbound
 	common/extramass/bmxicc,bmxibc,bmxibb,slqmass
 

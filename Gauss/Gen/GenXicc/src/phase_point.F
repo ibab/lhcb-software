@@ -21,7 +21,7 @@ c...pythia common block.
 	common/counter/ixiccstate,nev,xmaxwgt
 	common/mixevnt/imix,imixtype
 	common/mtypeofxi/mgenxi
-	common/subopen/subfactor,subenergy,isubonly
+	common/subopen/subfactor,subenergy,isubonly,ichange,iconsbarnum
 
       dimension zup(ndim),zzup(nextdim)
 

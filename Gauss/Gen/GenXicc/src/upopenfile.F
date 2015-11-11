@@ -12,7 +12,7 @@ c*******************************************************
 	common/counter/ixiccstate,nev,xmaxwgt
 	common/mixevnt/imix,imixtype
 	common/funtrans/npdfu
-	common/sub open/subfactor,subenergy,isubonly
+	common/sub open/subfactor,subenergy,isubonly,ichange,iconsbarnum
 	common/mtypeofxi/mgenxi
       common/wbstate/ratiou,ratiod,ratios,nbound
       common/loggrade/ievntdis,igenerate,ivegasopen,igrade,iusecurdir

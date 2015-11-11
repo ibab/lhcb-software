@@ -10,7 +10,7 @@ c**********************************************
       common/counter/ixiccstate,nev,xmaxwgt
 	common/mixevnt/imix,imixtype
 	common/mtypeofxi/mgenxi
-	common/subopen/subfactor,subenergy,isubonly
+	common/subopen/subfactor,subenergy,isubonly,ichange,iconsbarnum
 	common/loggrade/ievntdis,igenerate,ivegasopen,igrade,iusecurdir
 	common/vegcross/vegsec,vegerr,iveggrade
 

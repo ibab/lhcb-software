@@ -27,7 +27,7 @@ c...    pythia common block.
 	common/counter/ixiccstate,nev,xmaxwgt
 	common/mixevnt/imix,imixtype
 	common/mtypeofxi/mgenxi
-	common/subopen/subfactor,subenergy,isubonly
+	common/subopen/subfactor,subenergy,isubonly,ichange,iconsbarnum
 	common/wbstate/ratiou,ratiod,ratios,nbound
 	
 	logical ggsub,gcsub,ccsub
@@ -93,6 +93,7 @@ c...    choose which subprocess is used to generate events.
 	   ccsub=.false.
 	end if
 	
+
 	
 c       $-----$-----$-----$-----$-----$-----$-----$-----$-----$-----$
 c       $-----$-----$-----$-----$-----$-----$-----$-----$-----$-----$
@@ -104,7 +105,11 @@ c       $-----$-----$-----$-----$-----$-----$-----$-----$-----$-----$
 	
 	
 	
-c       GG 16/2/2012: compactify and include all processes
+c       G Graziani 16-Feb-2012: compactify and include all processes
+
+
+c       G Graziani 5-Nov-2015 switch on/off creation of light baryon according to option iconsbarnum
+
 	iCC = 1
 	xrandom = pyr(1)
 	if(xrandom.le.0.5d0) then
@@ -116,7 +121,9 @@ c...    xicc, xibc, xibb are all programmed for ggsub
 c...    while only xicc sub is programmed for gcsub and ccsub
 	if(ggsub) then
 c...    define number of partons
-	   nup=8
+	   nup=6
+	   if (iconsbarnum.eq.1) nup=8
+	   
 				!write(*,*)pup(3,7)
 c...    set up flavour and history of g + g -> xicc^+ +cbar +cbar (+dbar)
 	   idup(1)= 21		! gluon 1
@@ -125,21 +132,33 @@ c...    set up flavour and history of g + g -> xicc^+ +cbar +cbar (+dbar)
 	   if(mgenxi.eq.1) then
 	      if(nbound.eq.1) then
 		 idup(3)= 4422 * iCC ! xi_{cc}^++
-		 idup(6)=-2212 * iCC ! u-antiquark = antiproton + u + d
-		 idup(7)=1 * iCC
-		 idup(8)=2 * iCC
+		 if (iconsbarnum.eq.1) then
+		    idup(6)=-2212 * iCC ! u-antiquark = antiproton + u + d
+		    idup(7)=1 * iCC
+		    idup(8)=2 * iCC
+                 else
+		    idup(6)=-2 * iCC	! u-antiquark
+		 end if
 	      end if
 	      if(nbound.eq.2) then
 		 idup(3)= 4412	* iCC ! xi_{cc}^+
-		 idup(6)=-2212	* iCC ! d-antiquark = antiproton + u + u
-		 idup(7)=2 * iCC
-		 idup(8)=2 * iCC
+		 if (iconsbarnum.eq.1) then
+		    idup(6)=-2212	* iCC ! d-antiquark = antiproton + u + u
+		    idup(7)=2 * iCC
+		    idup(8)=2 * iCC
+		 else
+		    idup(6)=-1 * iCC	! d-antiquark
+		 end if
 	      end if
 	      if(nbound.eq.3) then
 		 idup(3)= 4432 * iCC ! omega_{cc}^+
-		 idup(6)=-3122 * iCC ! s-antiquark = antilambda + u + d
-		 idup(7)=1 * iCC
-		 idup(8)=2 * iCC
+		 if (iconsbarnum.eq.1) then
+		    idup(6)=-3122 * iCC ! s-antiquark = antilambda + u + d
+		    idup(7)=1 * iCC
+		    idup(8)=2 * iCC
+		 else
+		    idup(6)=-3 * iCC	! s-antiquark
+		 end if
 	      end if
 	      idup(4)=-4	* iCC ! c-antiquark
 	      idup(5)=-4	* iCC ! c-antiquark
@@ -150,21 +169,33 @@ c...    set up flavour and history of g + g -> xicc^+ +cbar +cbar (+dbar)
 	   if(mgenxi.eq.2) then
 	      if(nbound.eq.1) then
 		 idup(3)= 5242 * iCC ! xi_{bc}^+
-		 idup(6)=-2212 * iCC ! u-antiquark = antiproton + u + d
-		 idup(7)=1 * iCC
-		 idup(8)=2 * iCC
+		 if (iconsbarnum.eq.1) then
+		    idup(6)=-2212 * iCC ! u-antiquark = antiproton + u + d
+		    idup(7)=1 * iCC
+		    idup(8)=2 * iCC
+		 else
+		    idup(6)=-2 * iCC ! u-antiquark
+		 end if
 	      end if
 	      if(nbound.eq.2) then
 		 idup(3)= 5142 * iCC ! xi_{bc}^0
-		 idup(6)=-2212 * iCC ! d-antiquark = antiproton + u + u
-		 idup(7)=2 * iCC
-		 idup(8)=2 * iCC
+		 if (iconsbarnum.eq.1) then
+		    idup(6)=-2212 * iCC ! d-antiquark = antiproton + u + u
+		    idup(7)=2 * iCC
+		    idup(8)=2 * iCC
+		 else
+		    idup(6)=-1 * iCC ! d-antiquark
+		 end if
 	      end if
 	      if(nbound.eq.3) then
 		 idup(3)= 5342 * iCC ! omega_{bc}^0
-		 idup(6)=-3122 * iCC ! s-antiquark = antilambda + u + d
-		 idup(7)=1 * iCC
-		 idup(8)=2 * iCC 
+		 if (iconsbarnum.eq.1) then
+		    idup(6)=-3122 * iCC ! s-antiquark = antilambda + u + d
+		    idup(7)=1 * iCC
+		    idup(8)=2 * iCC 
+		 else
+		    idup(6)=-3 * iCC	! s-antiquark
+		 end if
 	      end if
 	      idup(4)=-5 * iCC	! b-antiquark
 	      idup(5)=-4 * iCC	! c-antiquark
@@ -172,21 +203,33 @@ c...    set up flavour and history of g + g -> xicc^+ +cbar +cbar (+dbar)
 	   if(mgenxi.eq.3) then
 	      if(nbound.eq.1) then
 		 idup(3)= 5522 * iCC ! xi_{bb}^0
-		 idup(6)=-2212 * iCC ! u-antiquark = antiproton + u + d
-		 idup(7)=1 * iCC
-		 idup(8)=2 * iCC
+		 if (iconsbarnum.eq.1) then
+		    idup(6)=-2212 * iCC ! u-antiquark = antiproton + u + d
+		    idup(7)=1 * iCC
+		    idup(8)=2 * iCC
+		 else
+		    idup(6)=-2 * iCC ! u-antiquark
+		 end if
 	      end if
 	      if(nbound.eq.2) then
 		 idup(3)= 5512 * iCC ! xi_{bb}^-
-		 idup(6)=-2212 * iCC ! d-antiquark = antiproton + u + u
-		 idup(7)=2 * iCC
-		 idup(8)=2 * iCC
+		 if (iconsbarnum.eq.1) then
+		    idup(6)=-2212 * iCC ! d-antiquark = antiproton + u + u
+		    idup(7)=2 * iCC
+		    idup(8)=2 * iCC
+		 else
+		    idup(6)=-1 * iCC ! d-antiquark
+		 end if
 	      end if
 	      if(nbound.eq.3) then
 		 idup(3)= 5532 * iCC ! omega_{bb}^-
-		 idup(6)=-3122 * iCC ! s-antiquark = antilambda + u + d
-		 idup(7)=1 * iCC
-		 idup(8)=2 * iCC 
+		 if (iconsbarnum.eq.1) then
+		    idup(6)=-3122 * iCC ! s-antiquark = antilambda + u + d
+		    idup(7)=1 * iCC
+		    idup(8)=2 * iCC 
+		 else
+		    idup(6)=-3 * iCC ! s-antiquark
+		 end if
 	      end if
 	      idup(4)=-5 * iCC	! b-antiquark
 	      idup(5)=-5 * iCC	! b-antiquark
@@ -199,8 +242,10 @@ c...    status codes.
 	   istup(4)= 1
 	   istup(5)= 1
 	   istup(6)= 1
-	   istup(7)= 1
-	   istup(8)= 1
+	   if (iconsbarnum.eq.1) then
+	      istup(7)= 1
+	      istup(8)= 1
+	   end if
 	   
 c...    mother codes.
 	   mothup(1,1)=0	! gluon 1
@@ -213,13 +258,17 @@ c...    mother codes.
 	   mothup(2,4)=2      
 	   mothup(1,5)=1	! cbar
 	   mothup(2,5)=2
-	   mothup(1,6)=1	! anti-proton  
-	   mothup(2,6)=2
-	   mothup(1,7)=1	! ~d, or ~u
-	   mothup(2,7)=2
-	   mothup(1,8)=1	! ~u
-	   mothup(2,8)=2
-	   
+	   if (iconsbarnum.eq.1) then
+	      mothup(1,6)=1	! anti-proton  
+	      mothup(2,6)=2
+	      mothup(1,7)=1	! ~d, or ~u
+	      mothup(2,7)=2
+	      mothup(1,8)=1	! ~u
+	      mothup(2,8)=2
+	   else
+	      mothup(1,6)=1	! ~d, or ~u, or ~s
+	      mothup(2,6)=2
+	   end if
 	end if
 	
 c------------------------------------------------
@@ -227,25 +276,38 @@ c...    for gc and cc, only xicc is programmed.
 c------------------------------------------------
 	if(gcsub) then
 c...    define number of partons
-	   nup=7
+	   nup=5
+	   if (iconsbarnum.eq.1) nup=7
 c...    set up flavour and history of g + c -> xicc +cbar
 	   if(nbound.eq.1) then
 	      idup(3)= 4422 * iCC ! xi_{cc}^++
-	      idup(5)=-2212 * iCC ! u-antiquark = antiproton + u + d
-	      idup(6)=1 * iCC
-	      idup(7)=2 * iCC
+	      if (iconsbarnum.eq.1) then
+		 idup(5)=-2212 * iCC ! u-antiquark = antiproton + u + d
+		 idup(6)=1 * iCC
+		 idup(7)=2 * iCC
+	      else
+		 idup(5)=-2 * iCC   ! u-antiquark
+	      end if
 	   end if
 	   if(nbound.eq.2) then
 	      idup(3)= 4412 * iCC ! xi_{cc}^+
-	      idup(5)=-2212 * iCC ! d-antiquark = antiproton + u + u
-	      idup(6)=2 * iCC
-	      idup(7)=2 * iCC
+	      if (iconsbarnum.eq.1) then
+		 idup(5)=-2212 * iCC ! d-antiquark = antiproton + u + u	      
+		 idup(6)=2 * iCC
+		 idup(7)=2 * iCC
+	      else
+		 idup(5)=-1 * iCC ! d-antiquark
+	      end if
 	   end if
 	   if(nbound.eq.3) then
 	      idup(3)= 4432 * iCC ! omega_{cc}^+
-	      idup(5)=-3122 * iCC ! s-antiquark = antilambda + u + d
-	      idup(6)=1 * iCC
-	      idup(7)=2 * iCC
+	      if (iconsbarnum.eq.1) then
+		 idup(5)=-3122 * iCC ! s-antiquark = antilambda + u + d
+		 idup(6)=1 * iCC
+		 idup(7)=2 * iCC
+	      else
+		 idup(5)=-3 * iCC ! s-antiquark
+	      end if
 	   end if
 	   idup(1)= 4	 * iCC	! c-quark
 	   idup(2)= 21 * iCC	! gluon 1
@@ -257,8 +319,10 @@ c...    status codes.
 	   istup(3)= 1
 	   istup(4)= 1
 	   istup(5)= 1	 
-	   istup(6)= 1	 
-	   istup(7)= 1	 
+	   if (iconsbarnum.eq.1) then
+	      istup(6)= 1	 
+	      istup(7)= 1	 
+	   end if
 	   
 c...    mother codes.
 	   mothup(1,1)=0	! c-quark
@@ -269,37 +333,54 @@ c...    mother codes.
 	   mothup(2,3)=2      
 	   mothup(1,4)=1	! cbar
 	   mothup(2,4)=2      
-	   mothup(1,5)=1	! antybaryon
-	   mothup(2,5)=2      
-	   mothup(1,6)=1	! light quark
-	   mothup(2,6)=2      
-	   mothup(1,7)=1	! light quark
-	   mothup(2,7)=2      
-	   
+	   if (iconsbarnum.eq.1) then
+	      mothup(1,5)=1	! antybaryon
+	      mothup(2,5)=2      
+	      mothup(1,6)=1	! light quark
+	      mothup(2,6)=2      
+	      mothup(1,7)=1	! light quark
+	      mothup(2,7)=2      
+	   else
+	      mothup(1,5)=1	! anti-light quark
+	      mothup(2,5)=2      
+	   end if
 	end if
 	
 	if(ccsub) then
 c...    define number of partons
-	   nup=7
+	   nup=5
+	   if (iconsbarnum.eq.1) nup=7
 	   
 c...    set up flavour and history of c + c -> xicc +g
 	   if(nbound.eq.1) then
 	      idup(3)= 4422 * iCC ! xi_{cc}^++
-	      idup(5)=-2212 * iCC ! u-antiquark = antiproton + u + d
-	      idup(6)=1 * iCC
-	      idup(7)=2 * iCC
+	      if (iconsbarnum.eq.1) then
+		 idup(5)=-2212 * iCC ! u-antiquark = antiproton + u + d
+		 idup(6)=1 * iCC
+		 idup(7)=2 * iCC
+	      else
+		 idup(5)=-2 * iCC ! u-antiquark
+	      end if
 	   end if
 	   if(nbound.eq.2) then
 	      idup(3)= 4412 * iCC ! xi_{cc}^+
-	      idup(5)=-2212 * iCC ! d-antiquark = antiproton + u + u
-	      idup(6)=2 * iCC
-	      idup(7)=2 * iCC
+	      if (iconsbarnum.eq.1) then
+		 idup(5)=-2212 * iCC ! d-antiquark = antiproton + u + u
+		 idup(6)=2 * iCC
+		 idup(7)=2 * iCC
+	      else
+		 idup(5)=-1 * iCC ! d-antiquark
+	      end if
 	   end if
 	   if(nbound.eq.3) then
 	      idup(3)= 4432 * iCC ! omega_{cc}^+
-	      idup(5)=-3122 * iCC ! s-antiquark = antilambda + u + d
-	      idup(6)=1 * iCC
-	      idup(7)=2 * iCC
+	      if (iconsbarnum.eq.1) then
+		 idup(5)=-3122 * iCC ! s-antiquark = antilambda + u + d
+		 idup(6)=1 * iCC
+		 idup(7)=2 * iCC
+	      else
+		 idup(5)=-3 * iCC ! s-antiquark
+	      end if
 	   end if
 	   
 	   idup(1)= 4 * iCC	! c-quark 1
@@ -312,9 +393,11 @@ c...    status codes.
 	   istup(3)= 1
 	   istup(4)= 1
 	   istup(5)= 1	 
-	   istup(6)= 1	 
-	   istup(7)= 1	 
-	   
+	   if (iconsbarnum.eq.1) then
+	      istup(6)= 1	 
+	      istup(7)= 1	 
+	   end if
+
 c...    mother codes.
 	   mothup(1,1)=0	! c-quark
 	   mothup(2,1)=0      
@@ -324,32 +407,37 @@ c...    mother codes.
 	   mothup(2,3)=2      
 	   mothup(1,4)=1	! gluon
 	   mothup(2,4)=2
-	   mothup(1,5)=1	! antybaryon
-	   mothup(2,5)=2      
-	   mothup(1,6)=1	! light quark
-	   mothup(2,6)=2      
-	   mothup(1,7)=1	! light quark
-	   mothup(2,7)=2      
+	   if (iconsbarnum.eq.1) then
+	      mothup(1,5)=1	! antybaryon
+	      mothup(2,5)=2      
+	      mothup(1,6)=1	! light quark
+	      mothup(2,6)=2      
+	      mothup(1,7)=1	! light quark
+	      mothup(2,7)=2      
+	   else
+	      mothup(1,5)=1	! anti-light quark
+	      mothup(2,5)=2      
+	   end if
 	   
 	end if
 	
 c--------------------------------------
 c       color flows 
-	iQu = (-iCC+3)/2	! swap (1,2) to (2,1) for charge coniugation
+	iQu = (-iCC+3)/2	! GG 16/2/2012:: swap (1,2) to (2,1) for charge coniugation
 	iQd = ( iCC+3)/2
 c...    g+g  ---checked----
 c...    there is only two independent color-flow.
 	if(ggsub) then
 	   if(pyr(0).ge.0.5d0) then
-	      icolup(iQu,1)=503
+	      icolup(iQu,1)=502
+	      icolup(iQd,1)=503
+	      icolup(iQu,2)=501
+	      icolup(iQd,2)=502
+	   else
+	      icolup(iQu,1)=501
 	      icolup(iQd,1)=502
 	      icolup(iQu,2)=502
-	      icolup(iQd,2)=501
-	   else
-	      icolup(iQu,1)=502
-	      icolup(iQd,1)=501
-	      icolup(iQu,2)=503
-	      icolup(iQd,2)=502
+	      icolup(iQd,2)=503
 	   end if
 	   
 	   icolup(1,3)=0
@@ -358,15 +446,20 @@ c...    there is only two independent color-flow.
 	   icolup(iQu,4)=0
 	   icolup(iQd,4)=504
 	   icolup(iQu,5)=0
-	   icolup(iQd,5)=501
+	   icolup(iQd,5)=503
 	   
-	   icolup(1,6)=0
-	   icolup(2,6)=0
-	   
-	   icolup(iQu,7)=503
-	   icolup(iQd,7)=0
-	   icolup(iQu,8)=504
-	   icolup(iQd,8)=0
+	   if (iconsbarnum.eq.1) then
+	      icolup(1,6)=0
+	      icolup(2,6)=0
+	      
+	      icolup(iQu,7)=501
+	      icolup(iQd,7)=0
+	      icolup(iQu,8)=504
+	      icolup(iQd,8)=0
+	   else 
+	      icolup(iQu,6)=0
+	      icolup(iQd,6)=505
+	   end if
 	end if
 	
 c....   g+c ----checked------ one independent color-flow.
@@ -381,15 +474,20 @@ c....   g+c ----checked------ one independent color-flow.
 	   
 	   icolup(iQu,4)=0
 	   icolup(iQd,4)=504
-	   
-	   icolup(1,5)=0
-	   icolup(2,5)=0
-	   
-	   icolup(iQu,6)=504
-	   icolup(iQd,6)=0
-	   
-	   icolup(iQu,7)=501
-	   icolup(iQd,7)=0
+
+	   if (iconsbarnum.eq.1) then
+	      icolup(1,5)=0
+	      icolup(2,5)=0
+	      
+	      icolup(iQu,6)=504
+	      icolup(iQd,6)=0
+	      
+	      icolup(iQu,7)=501
+	      icolup(iQd,7)=0
+	   else
+	      icolup(iQu,5)=0
+	      icolup(iQd,5)=505
+	   end if
 	end if
 	
 c....   c+c --- the following agree with pythia rules, but
@@ -399,7 +497,6 @@ c....   smoothly within pythia. So it should not be considered at the present.
 c....   however, this mechanism is small in comparison to g+g and g+c
 c....   mechanism, so it will not take much uncertainty for data analysis.
 c       
-c       ----- GG 16/2/2012: cheat also here to get 2 color lines
 c       
 	if(ccsub) then
 	   icolup(iQu,1)=502
@@ -413,14 +510,19 @@ c
 	   icolup(iQu,4)=502
 	   icolup(iQd,4)=504
 	   
-	   icolup(1,5)=0
-	   icolup(2,5)=0
-	   
-	   icolup(iQu,6)=504
-	   icolup(iQd,6)=0
-	   
-	   icolup(iQu,7)=501
-	   icolup(iQd,7)=0
+	   if (iconsbarnum.eq.1) then
+	      icolup(1,5)=0
+	      icolup(2,5)=0
+	      
+	      icolup(iQu,6)=504
+	      icolup(iQd,6)=0
+	      
+	      icolup(iQu,7)=501
+	      icolup(iQd,7)=0
+	   else
+	      icolup(1,5)=0
+	      icolup(2,5)=504
+	   end if
 	end if
 	
 	if(ntmb.eq.4) nbound=4

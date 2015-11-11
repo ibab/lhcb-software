@@ -42,7 +42,7 @@ c...user process event common block.
 	common/ptpass/ptmin,ptmax,crossmax,etamin,etamax,
      &	smin,smax,ymin,ymax,psetamin,psetamax
 	common/vegcross/vegsec,vegerr,iveggrade
-	common/subopen/subfactor,subenergy,isubonly
+	common/subopen/subfactor,subenergy,isubonly,ichange,iconsbarnum
 
 	character*8 begin_time,end_time
 

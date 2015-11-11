@@ -36,9 +36,21 @@ c-----------------------------------
       common/genefull/generate
       common/totcross/appcross
       common/mtypeofxi/mgenxi
-      common/subopen/subfactor,subenergy,isubonly
+      common/subopen/subfactor,subenergy,isubonly,ichange,iconsbarnum
 
       dimension x(10),ia(10)
+
+c     G Graziani 05-Nov-2015 initialize hepup block
+      do i=1,maxnup
+         icolup(1,i)=0
+         icolup(2,i)=0
+         vtimup(i)=0.
+         spinup(i)=0.
+         do j=1,5
+            pup(j,i)=0.
+         end do
+      end do
+
 
 c------------------
       ggsub=.false.

@@ -1,6 +1,14 @@
 ! Package     : Gen/GenXicc
 ! Responsible : F. Zhang
 
+
+! 2015-11-05 - Giacomo Graziani
+ - option iconsbarnum added (subopen block) to switch on/off creation of light baryon 
+   in the output to conserve baryon number (needed in Pythia6, but not in Pythia8)
+   Default behaviour is unchanged
+ - genxicc_upinit: added initialization of some output variables in hepup block 
+   that are not explicitly set in the code
+
 !======================== GenXicc v2r1p1 2014-12-16 ==========================
 ! 2014-11-19 - Marco Clemencic
  - Updated CMake configuration

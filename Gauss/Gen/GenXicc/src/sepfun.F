@@ -36,7 +36,7 @@ c...alphas used only in the function frag()---phase_point.F
 	common/newpara/ncombine
 	common/upalphas/alps
 	common/mtypeofxi/mgenxi
-	common/subopen/subfactor,subenergy,isubonly
+	common/subopen/subfactor,subenergy,isubonly,ichange,iconsbarnum
 c...transfer the matrix elements information: h1=h3*cmfactor
 	common/valmatrix/cmfactor
 

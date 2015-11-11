@@ -9,7 +9,7 @@ c********************
 
       common/vegasinf/number,nitmx
 	common/vegasbin/nvbin
-	common/subopen/subfactor,subenergy,isubonly
+	common/subopen/subfactor,subenergy,isubonly,ichange,iconsbarnum
 
        write(*,'(a,i5)') 'the used bin number in vegas:', nvbin
        !write(3,'(a,i5)') 'the used bin number in vegas:', nvbin

@@ -25,7 +25,7 @@ c...to its original form easily.
 	common/counter/ixiccstate,nev,xmaxwgt
 	common/mixevnt/imix,imixtype
 	common/mtypeofxi/mgenxi
-	common/subopen/subfactor,subenergy,isubonly
+	common/subopen/subfactor,subenergy,isubonly,ichange,iconsbarnum
 
       dimension xm(3),p(4,3),q(4,3),r(4),z(ny),
      &   b(3),p2(3),xm2(3),e(3),v(3),y(ny)

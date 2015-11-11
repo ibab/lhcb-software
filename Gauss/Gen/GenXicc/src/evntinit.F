@@ -68,7 +68,7 @@ c...to get the distribution of an extra factor z=(2(k1+k2).p_bc)/shat.
 	common/outpdf/ioutpdf,ipdfnum
       common/loggrade/ievntdis,igenerate,ivegasopen,igrade,iusecurdir
 	common/mtypeofxi/mgenxi
-	common/subopen/subfactor,subenergy,isubonly
+	common/subopen/subfactor,subenergy,isubonly,ichange,iconsbarnum
 
       character fn2*23, ffnew*24
       CHARACTER*472 BASENAME2,FULLPATHNAME,ENERGYNAME
