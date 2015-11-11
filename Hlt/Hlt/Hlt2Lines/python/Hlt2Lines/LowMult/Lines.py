@@ -64,7 +64,7 @@ theseSlots =      { 'Prescale' : { 'Hlt2LowMultL2pPi'       : 1.0
                                  , 'Hlt2LowMultDiElectron'    : 1.0
                                  , 'Hlt2LowMultDiElectron_noTrFilt': 1.0
                                  # Technical lines
-                                 , 'Hlt2LowMultTechnical_NoBias'        : 0.33 # Aim for 100 Hz from 300 Hz non-bb crossings
+                                 , 'Hlt2NoBiasNonBeamBeam'              : 0.33 # Aim for 100 Hz from 300 Hz non-bb crossings
                                  , 'Hlt2LowMultTechnical_MinBias'       : 1.0
                                  }
                     , 'HLT'               :   {"Hadron"     : "( HLT_PASS_RE('Hlt1LowMultPassThroughDecision') | HLT_PASS_RE('Hlt1LowMultDecision') | HLT_PASS_RE('Hlt1LowMultVeloCut_HadronsDecision') )",
