@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2015-11-12 - Eduardo Rodrigues
+ - Updated the reference file test_standardintermediate_reco14_run.qmt.
+
 !======================= DaVinciTests v3r0 2015-10-22 ========================
 
 ! 2015-10-15 - Andrea Contu

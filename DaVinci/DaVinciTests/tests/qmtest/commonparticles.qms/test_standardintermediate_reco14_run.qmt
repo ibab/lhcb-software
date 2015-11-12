@@ -26,8 +26,8 @@ CountParticles                                              SUCCESS Number of co
  | "# Phys/StdLambda2PPiDD"                        |       500 |         58 |    0.11600 |    0.35573 |      0.0000 |      3.0000 |
  | "# Phys/StdLambda2PPiLL"                        |       500 |        139 |    0.27800 |    0.61377 |      0.0000 |      4.0000 |
  | "# Phys/StdLooseD02KK"                          |       500 |        934 |     1.8680 |     6.0179 |      0.0000 |      64.000 |
- | "# Phys/StdLooseD02KPi"                         |       500 |       1131 |     2.2620 |     6.5294 |      0.0000 |      74.000 |
- | "# Phys/StdLooseD02KPiDCS"                      |       500 |       1131 |     2.2620 |     6.5294 |      0.0000 |      74.000 |
+ | "# Phys/StdLooseD02KPi"                         |       500 |       1130 |     2.2600 |     6.5297 |      0.0000 |      74.000 |
+ | "# Phys/StdLooseD02KPiDCS"                      |       500 |       1130 |     2.2600 |     6.5297 |      0.0000 |      74.000 |
  | "# Phys/StdLooseD02KsKK"                        |       500 |         56 |    0.11200 |     1.1115 |      0.0000 |      22.000 |
  | "# Phys/StdLooseD02PiPi"                        |       500 |       1128 |     2.2560 |     5.9651 |      0.0000 |      76.000 |
  | "# Phys/StdLooseDalitzPi0"                      |       500 |        117 |    0.23400 |    0.88501 |      0.0000 |      10.000 |
@@ -52,7 +52,7 @@ CountParticles                                              SUCCESS Number of co
  | "# Phys/StdLooseKsLD_NegLong"                   |       500 |       2013 |     4.0260 |     6.3757 |      0.0000 |      51.000 |
  | "# Phys/StdLooseKsLD_PosLong"                   |       500 |       1767 |     3.5340 |     4.9712 |      0.0000 |      42.000 |
  | "# Phys/StdLooseKsLL"                           |       500 |        381 |    0.76200 |     1.4823 |      0.0000 |      15.000 |
- | "# Phys/StdLooseKstar2Kpi"                      |       500 |     100983 |     201.97 |     250.87 |      0.0000 |      1949.0 |
+ | "# Phys/StdLooseKstar2Kpi"                      |       500 |     100960 |     201.92 |     250.84 |      0.0000 |      1949.0 |
  | "# Phys/StdLooseLambdaDD"                       |       500 |       1705 |     3.4100 |     4.3518 |      0.0000 |      31.000 |
  | "# Phys/StdLooseLambdaLD"                       |       500 |       1749 |     3.4980 |     6.8957 |      0.0000 |      75.000 |
  | "# Phys/StdLooseLambdaLDpDown"                  |       500 |         93 |    0.18600 |    0.51323 |      0.0000 |      4.0000 |
