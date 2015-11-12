@@ -52,6 +52,8 @@ default_config = {
 
 	  # GEC
 	  'SpdMult'             :  600,
+
+    'MisIDPrescale'       : 0.01,
 	 },
        'STREAMS'     : ['Semileptonic']	  
       }
@@ -83,10 +85,11 @@ class B23MuNuConf(LineBuilder) :
         'Muon_PIDmuK',
         'Muon_PT',
 
-        # Choose WS combinations
 
         #GEC
         'SpdMult',
+
+        'MisIDPrescale',
 
         )
     
@@ -107,15 +110,18 @@ class B23MuNuConf(LineBuilder) :
                                 "(M > %(LOWERMASS)s) & " \
                                 "(M < %(UPPERMASS)s) " %config
 
-        self.TrackCuts = "(TRCHI2DOF < %(Track_CHI2nDOF)s) & (TRGHP < %(Track_GhostProb)s)" %config
+        self.TrackCuts = "(TRCHI2DOF < %(Track_CHI2nDOF)s) & (TRGHP < %(Track_GhostProb)s)" \
+                         " & (MIPCHI2DV(PRIMARY) > %(Muon_MinIPCHI2)s) " \
+                         " & (PT > %(Muon_PT)s)" %config
         
-        self.MuonCut = self.TrackCuts + " & (MIPCHI2DV(PRIMARY) > %(Muon_MinIPCHI2)s) & " \
-                                             " (PIDmu> %(Muon_PIDmu)s) & " \
-                                             " (PIDmu-PIDK> %(Muon_PIDmuK)s) & "\
-                                             " (PT > %(Muon_PT)s)" %config
+        self.MuonCut = self.TrackCuts + "& (PIDmu> %(Muon_PIDmu)s) & " \
+                                        " (PIDmu-PIDK> %(Muon_PIDmuK)s)" %config
 
         self.Muons = self.__Muons__(config)
+        self.FakeMuons = self.__FakeMuons__(config)
+        self.Jpsi = self.__Jpsi__(config)
         self.Trimu = self.__Trimu__(config)
+        self.FakeTrimu = self.__FakeTrimu__(config)
 
         
 
@@ -133,7 +139,20 @@ class B23MuNuConf(LineBuilder) :
             algos=[self.Trimu]
             )
 
+        self.FakeTriMu_line =  StrippingLine(
+            self.name+"_TriFakeMuLine",
+            prescale = config['MisIDPrescale'],
+            FILTER = {
+            'Code' : " ( recSummary(LHCb.RecSummary.nSPDhits,'Raw/Spd/Digits') < %(SpdMult)s )" %config ,
+            'Preambulo' : [
+            "from LoKiNumbers.decorators import *", "from LoKiCore.basic import LHCb"
+            ]
+            },
+            algos=[self.FakeTrimu]
+            )
+
         self.registerLine( self.TriMu_line )
+        self.registerLine( self.FakeTriMu_line )
 
         # inclusive dimuon line around jpsi and psi2s
 
@@ -151,7 +170,35 @@ class B23MuNuConf(LineBuilder) :
         return _sel
  
         
+    def __FakeMuons__(self, conf):
+        """
+        Filter muons from StdLooseMuons
+        """  
+        from StandardParticles import StdAllNoPIDsMuons
+        _fakemuons = StdAllNoPIDsMuons
+        _filter = FilterDesktop(Code = self.TrackCuts)
+        _sel = Selection("Selection_"+self.name+"_FakeMuons",
+                         RequiredSelections = [ _fakemuons ] ,
+                         Algorithm = _filter)
+        return _sel
 
+    def __Jpsi__(self, conf):
+        """
+        Creates Jpsi as proxy for dimuon
+        """
+        from PhysSelPython.Wrappers import AutomaticData, Selection, SelectionSequence, DataOnDemand, MergedSelection
+        from  GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        #from Configurables import CombineParticles 
+
+        CombineJpsi= CombineParticles(DecayDescriptors = ["J/psi(1S) -> mu+ mu-","[J/psi(1S) -> mu+ mu+]cc"],       			    
+       			     MotherCut = "ALL")
+        
+        sel_name = "Jpsi"
+        
+        from PhysSelPython.Wrappers import Selection
+        SelJpsi = Selection("Sel_" + self.name + "_Jpsi", Algorithm = CombineJpsi,
+                              RequiredSelections = [ self.Muons ] )
+        return SelJpsi
 
     def __Trimu__(self, conf):
         '''
@@ -161,12 +208,36 @@ class B23MuNuConf(LineBuilder) :
         CombineTriMuon = CombineParticles()
         CombineTriMuon.DecayDescriptors = ["[B+ -> mu+ mu+ mu-]cc", "[B+ -> mu+ mu+ mu+]cc"]
         sel_name="TriMu"
-        #CombineTriMuon.CombinationCut = self.TriMuLowQ2CombCut
-        CombineTriMuon.MotherCut     = self.TriMuCut+"&"+self.TriMuCut
+        CombineTriMuon.MotherCut     = self.TriMuCut
         # choose
 
         from PhysSelPython.Wrappers import Selection
-        SelTriMuon = Selection("Sel_" + self.name + "_"+sel_name, Algorithm = CombineTriMuon,
+        SelTriMuon = Selection("Sel_" + self.name + "_"+sel_name, 
+                              Algorithm = CombineTriMuon,
                               RequiredSelections = [ self.Muons ] )
         return SelTriMuon
-    
+   
+
+    def __FakeTrimu__(self, conf):
+        """
+        Create trimuon
+        """
+
+        CombineTriMuon = CombineParticles()
+        CombineTriMuon.DecayDescriptor = "[B+ -> J/psi(1S) mu+]cc"
+        sel_name="FakeTriMu"
+        #CombineTriMuon.CombinationCut = self.TriMuLowQ2CombCut
+        #["[B+ ->mu+ mu+ mu-]cc", "[B+ ->mu+ mu+ mu+]cc"]
+        CombineTriMuon.MotherCut     = self.TriMuCut
+        # choose
+
+        from PhysSelPython.Wrappers import Selection
+        #SelTriMuon = Selection("Sel_" + self.name + "_"+sel_name, Algorithm = CombineTriMuon,
+        #                      RequiredSelections = [self.Jpsi, self.FakeMuon ])
+        SelTriMuon = Selection(sel_name,
+                 Algorithm = CombineTriMuon,
+                 RequiredSelections = [ self.FakeMuons, self.Jpsi ])
+
+
+        return SelTriMuon
+ 
