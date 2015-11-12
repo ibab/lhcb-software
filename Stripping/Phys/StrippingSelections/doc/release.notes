@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-12 - Brais Sanmartin Sedes
+ - Fixed import CombineParticles issue for StrippingBnoC/StrippingBs2Kst_0Kst_0.py
+
 ! 2015-11-12 - Chitsanu Khurewathanakul
   - Test & include QEE/StrippingTaggedJets
   - Depreciated QEE/StrippingHighPtTopoJets

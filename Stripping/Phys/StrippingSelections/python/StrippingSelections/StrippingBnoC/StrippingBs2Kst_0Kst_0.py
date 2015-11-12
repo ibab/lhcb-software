@@ -8,8 +8,8 @@ Exported symbols (use python help!):
 '''
 
 __author__ = ['Brais Sanmartin Sedes']
-__date__ = '13/05/2015'
-__version__= '5.0'
+__date__ = '12/11/2015'
+__version__= '5.1'
 
 __all__=('StrippingBs2Kst_0Kst_0Conf',
          'makeBs2Kst_0Kst_0',
@@ -48,7 +48,7 @@ default_config = {
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from CommonParticles.Utils import *
-from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter	
+from GaudiConfUtils.ConfigurableGenerators import CombineParticles
 from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
@@ -189,7 +189,7 @@ def makeKst_02Kpi(name,
     _stdPions = DataOnDemand(Location="Phys/StdLoosePions/Particles")
 
 
-    _Kstar_02Kpi = CombineParticles ("Combine"+name)
+    _Kstar_02Kpi = CombineParticles ()
 
     _Kstar_02Kpi.DecayDescriptor = "[K*_0(1430)0 -> K+ pi-]cc"
     _Kstar_02Kpi.DaughtersCuts = {"K+" : "(PT > %(KaonPT)s *MeV) & (PIDK > %(KaonPIDK)s) & (MIPCHI2DV(PRIMARY)> %(KaonIPCHI2)s) & (TRGHOSTPROB < %(MaxGHOSTPROB)s)"% locals()
@@ -233,7 +233,7 @@ def makeBs2Kst_0Kst_0(name,
        _combinationCut = "(ADAMASS('B_s0') < %(BMassWin)s *MeV) & (AMAXDOCA('',False)< %(BDOCA)s *mm) "\
                          "& ( (AMINCHILD(PT,ID=='K+') + AMINCHILD(PT,ID=='K-') + AMINCHILD(PT,ID=='pi-') + AMINCHILD(PT,ID=='pi+'))> %(SumPT)s *MeV)" % locals() 
 
-       _Bs = CombineParticles('_'+name)
+       _Bs = CombineParticles()
        _Bs.DecayDescriptor = "B_s0 -> K*_0(1430)0 K*_0(1430)~0"
        _Bs.CombinationCut = _combinationCut
        _Bs.MotherCut = _motherCuts
