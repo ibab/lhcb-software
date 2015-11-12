@@ -59,6 +59,8 @@ private:
   typedef std::map<std::string, ParticleInfoRelation> RelationLocationMap;
   mutable RelationLocationMap m_relMap;
 
+  bool m_ignoreUnmatchedDescriptors;
+
 };
 
 //=======================================================================//

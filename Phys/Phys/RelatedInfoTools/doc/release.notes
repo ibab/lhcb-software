@@ -4,6 +4,11 @@
 ! Purpose     : Related Info Tools
 !-----------------------------------------------------------------------------
 
+! 2015-11-12 - Anton Poluektov 
+ - Add flag "IgnoreUnmatchedDescriptors" to AddRelatedInfo. Setting it to "true"
+   will make AddRelatedInfo silently ignore the descriptors in DaughterLocations 
+   which do not match any daughter particles (rather than stopping with FAILURE). 
+
 ! 2015-11-01 - Gerhard Raven
  - replace endreq with endmsg
 

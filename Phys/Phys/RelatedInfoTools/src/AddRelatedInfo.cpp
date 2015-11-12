@@ -19,9 +19,12 @@ AddRelatedInfo::AddRelatedInfo( const std::string& name,
                                 ISvcLocator* pSvcLocator )
 : DaVinciAlgorithm ( name, pSvcLocator )
 {
+  m_ignoreUnmatchedDescriptors = false;
   declareProperty("Tool", m_toolName, "Name of RelatedInfoTool" );
   declareProperty("Location", m_topInfo, "Location of RelatedInfo objects for top-level particle");
   declareProperty("DaughterLocations", m_daughterInfo, "Locations of RelatedInfo objects for daughters");
+  declareProperty("IgnoreUnmatchedDescriptors", m_ignoreUnmatchedDescriptors, 
+                  "If set to true, silently ignore daughter descriptors not matching any particle");
 }
 
 //=======================================================================
@@ -77,7 +80,15 @@ StatusCode AddRelatedInfo::execute()
 
       for ( const auto & loc : m_daughterInfo ) {
         const Particle* daughter = m_childSelectors[loc.first]->child(c);
-        fill( c, daughter, tmpLoc + "/" + loc.second );
+        if (daughter) {
+          fill( c, daughter, tmpLoc + "/" + loc.second );
+        } else {
+          if (!m_ignoreUnmatchedDescriptors) {
+            if ( msgLevel(MSG::WARNING) ) warning() << "No daughter found in " << location << 
+                                          " matching " << loc.first << endmsg;
+            return StatusCode::FAILURE;
+          }
+        }
       }
     }
   }
