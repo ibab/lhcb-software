@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-12 - Greg Ciezarek
+ - Moved StrippingD0ForBXX.py and StrippingJPsiForSL.py from SL to Calib
+ 
 ! 2015-11-12 - Roberta Cardinale
  - Update StrippingBnoC/StrippingB2pphh.py lines
  - Fixed NBody-import issue for StrippingBandQ/StrippingLb2EtacKp.py
