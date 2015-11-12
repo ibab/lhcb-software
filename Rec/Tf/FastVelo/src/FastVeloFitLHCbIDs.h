@@ -36,7 +36,6 @@ protected:
 private:
   DeVelo* m_velo;
   FastVeloHitManager* m_hitManager;
-  double m_msFactor;
   bool   m_stateAtBeam;
   bool   m_useKalmanFit ;
   double m_kalmanPtForScattering ;

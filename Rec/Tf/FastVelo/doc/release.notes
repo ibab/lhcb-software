@@ -3,6 +3,10 @@
 ! Responsible : 
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
+
+! 2015-11-12 - Marco Cattaneo 
+ - Remove unused member variables
+
 ! 2015-10-15 - Gerhard Raven
  - remove #incldue of obsolete Gaudi header file
  - make sure there is no use of objects after they have been std::move-ed

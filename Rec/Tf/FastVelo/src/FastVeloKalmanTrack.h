@@ -14,7 +14,6 @@ class FastVeloKalmanTrack
 {
  private:
   const FastVeloTrack* m_track ;
-  bool m_hitsIncreasingZ ;
   std::vector<const FastVeloHit*> m_hits ;
   std::vector<double>  kalmanScatteringNoiseParameters;
 private:
