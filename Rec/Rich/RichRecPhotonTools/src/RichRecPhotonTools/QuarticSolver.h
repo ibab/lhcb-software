@@ -19,7 +19,7 @@
 // STL
 #include <math.h>
 #include <type_traits>
-#include <complex>
+//#include <complex>
 
 // Eigen
 #include "LHCbMath/EigenTypes.h"
@@ -54,6 +54,12 @@ namespace Rich
 
     public:
 
+      // Use eigen types
+      typedef LHCb::Math::Eigen::XYZPoint  Point;   ///< Point type
+      typedef LHCb::Math::Eigen::XYZVector Vector;  ///< vector type
+
+    public:
+
       /** Solves the characteristic quartic equation for the RICH optical system.
        *
        *  See note LHCB/98-040 RICH section 3 for more details
@@ -69,39 +75,38 @@ namespace Rich
        *  @retval false Calculation failed. sphReflPoint is not valid.
        */
       template< class TYPE >
-      inline void solve( const Gaudi::XYZPoint& emissionPoint,
-                         const Gaudi::XYZPoint& CoC,
-                         const Gaudi::XYZPoint& virtDetPoint,
+      inline void solve( const Point& emissionPoint,
+                         const Point& CoC,
+                         const Point& virtDetPoint,
                          const TYPE radius,
                          Gaudi::XYZPoint& sphReflPoint ) const
       {
 
         // typedefs vectorised types
         typedef Eigen::Matrix< TYPE , 3 , 1 > Eigen3Vector;
-        typedef LHCb::Math::Eigen::XYZVector  Eigen4Vector;
         using Vec4x = typename std::conditional<std::is_same<TYPE,float>::value,Vec4f,Vec4d>::type;
 
         // vector from mirror centre of curvature to assumed emission point
-        const Eigen4Vector evec( emissionPoint - CoC );
-        const auto e2 = evec.dot(evec);
+        const Vector evec( emissionPoint - CoC );
+        const TYPE e2 = evec.dot(evec);
 
         // vector from mirror centre of curvature to virtual detection point
-        const Eigen4Vector dvec( virtDetPoint - CoC );
-        const auto d2 = dvec.dot(dvec);
+        const Vector dvec( virtDetPoint - CoC );
+        const TYPE d2 = dvec.dot(dvec);
 
         // various quantities needed to create quartic equation
         // see LHCB/98-040 section 3, equation 3
         const auto ed2 = e2 * d2;
-        const auto cosgamma2 = ( ed2 > 0 ? std::pow(evec.dot(dvec),2)/ed2 : 1.0 );
+        const TYPE cosgamma2 = ( ed2 > 0 ? std::pow(evec.dot(dvec),2)/ed2 : 1.0 );
         // vectorise 4 square roots into 1
-        const auto tmp_sqrt = sqrt( Vec4x( e2,
-                                           d2,
+        const auto tmp_sqrt = sqrt( Vec4x( e2, d2,
                                            cosgamma2 < 1.0 ? 1.0-cosgamma2 : 0.0,
                                            cosgamma2 ) );
         const auto e         = tmp_sqrt[0];
         const auto d         = tmp_sqrt[1];
         const auto singamma  = tmp_sqrt[2];
         const auto cosgamma  = tmp_sqrt[3];
+
         const auto dx        = d * cosgamma;
         const auto dy        = d * singamma;
         const auto r2        = radius * radius;
@@ -109,13 +114,13 @@ namespace Rich
         const auto edx       = e + dx;
 
         // Fill array for quartic equation
-        const auto a0     =     4.0 * ed2;
-        const auto inv_a0 =   ( a0 > 0 ? 1.0 / a0 : std::numeric_limits<TYPE>::max() );
-        const auto dyrad2 =     2.0 * dy * radius;
-        const auto a1     = - ( 2.0 * dyrad2 * e2 ) * inv_a0;
-        const auto a2     =   ( (dy2 * r2) + ( edx * edx * r2 ) - a0 ) * inv_a0;
-        const auto a3     =   ( dyrad2 * e * (e-dx) ) * inv_a0;
-        const auto a4     =   ( ( e2 - r2 ) * dy2 ) * inv_a0;
+        const auto a0      =     4.0 * ed2;
+        const auto inv_a0  =   ( a0 > 0 ? 1.0 / a0 : std::numeric_limits<TYPE>::max() );
+        const auto dyrad2  =     2.0 * dy * radius;
+        const auto a1      = - ( 2.0 * dyrad2 * e2 ) * inv_a0;
+        const auto a2      =   ( (dy2 * r2) + ( edx * edx * r2 ) - a0 ) * inv_a0;
+        const auto a3      =   ( dyrad2 * e * (e-dx) ) * inv_a0;
+        const auto a4      =   ( ( e2 - r2 ) * dy2 ) * inv_a0;
 
         // use simplified RICH version of quartic solver
         const auto sinbeta = solve_quartic_RICH<TYPE>( a1, // a
@@ -133,11 +138,11 @@ namespace Rich
         // rotate vector and update reflection point
         const Eigen::AngleAxis<TYPE> angleaxis( vdt::fast_asinf(sinbeta),
                                                 Eigen3Vector(n[0],n[1],n[2]) );
-        sphReflPoint = CoC +
-          Gaudi::XYZVector( angleaxis *
-                            Eigen3Vector(evec[0],evec[1],evec[2]) *
-                            ( radius / e ) );
-
+        sphReflPoint = ( (Gaudi::XYZPoint)(CoC) + 
+                         Gaudi::XYZVector( angleaxis *
+                                           Eigen3Vector(evec[0],evec[1],evec[2]) *
+                                           ( radius / e ) ) );
+        
       }
 
     private:
@@ -166,7 +171,7 @@ namespace Rich
       inline TYPE solve_quartic_RICH ( const TYPE& a,
                                        const TYPE& b,
                                        const TYPE& c,
-                                       const TYPE& d ) const
+                                       const TYPE& d ) const 
       {
 
         const TYPE r4 = 1.0 / 4.0;
@@ -182,7 +187,7 @@ namespace Rich
         const auto rr = d - r4 * (a * c - r4 * aa * (b - q3 * aa));
         const auto rc = q2 * pp;
         const auto sc = r4 * (r4 * pp * pp - rr);
-        const auto tc = -(q8 * qq * q8 * qq);
+        const auto tc = - std::pow( q8 * qq, 2 );
 
         const auto qcub = (rc * rc - 3 * sc);
         const auto rcub = (2.0 * rc * rc * rc - 9 * rc * sc + 27.0 * tc);
@@ -195,7 +200,7 @@ namespace Rich
 
         const auto sgnR = ( R >= 0 ? -1 : 1 );
 
-        const auto A = sgnR * my_cbrt( (TYPE)( fabs(R) + std::sqrt( fabs(R2-Q3) ) ) );
+        const auto A = sgnR * my_cbrt( (TYPE)( fabs(R) + std::sqrt(fabs(R2-Q3)) ) );
 
         const auto B = Q / A;
 

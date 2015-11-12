@@ -4,6 +4,10 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-11-12 - Chris Jones
+ - Convert Gaudi XYZ types to Eigen types sooner, to avoid a few non-vectorised 
+   operations.
+
 ! 2015-11-11 - Chris Jones
  - Remove return type from QuarticSolver::solve<TYPE>, as it was never false.
    Instead handle the 'in principle could but in practise never does' divide
@@ -17,8 +21,6 @@
  - Use std::conditional to switch between float and double VectorClass types 
    depending on template type used in QuarticSolver::solve<TYPE>.
  - Remove old unused ROOT implementation of solve in QuarticSolver.
- - Switch back to double for QuarticSolver::solve<TYPE>, as profiling suggests its 
-   actually quicker...
 
 !========================= RichRecPhotonTools v1r18 2015-10-13 =======================
 ! 2015-10-07 - Chris Jones
