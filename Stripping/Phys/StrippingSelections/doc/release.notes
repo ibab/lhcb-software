@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-12 - Roberta Cardinale
+ - Update StrippingBnoC/StrippingB2pphh.py lines
+ - Fixed NBody-import issue for StrippingBandQ/StrippingLb2EtacKp.py
+
 ! 2015-11-12 - Nicola Skidmore
  - Update to lines in StrippingBeauty2Charm.py
 
