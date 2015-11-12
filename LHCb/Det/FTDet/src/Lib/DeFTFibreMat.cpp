@@ -204,42 +204,7 @@ StatusCode DeFTFibreMat::initialize(){
     m_quarter=dQ;
     m_layer=dL+4*(dT-1);
     if(dQ>1) m_mat=0;
-    else m_mat=1;   
-  
-    ///DBL
-    //std::cout<<"===== m_FibreMatID:"<<m_FibreMatID<<"   "<<bset<<"   "<<bset.to_string()<<std::endl;
-    //std::cout<<"===== m_FibreMatID:"<<m_FibreMatID<<"   "<<bT<<" "<<bL<<" "<<bQ<<" "<<bM<<std::endl;
-    //std::cout<<"===== m_FibreMatID:"<<m_FibreMatID<<"   "<<dT<<" "<<dL<<" "<<dQ<<" "<<dM<<std::endl;
-    //std::cout<<"=== module:"<<m_module<<" mq: "<<m_quarter<<" mat: "<<m_mat<<std::endl;
-    
-    /*
-    unsigned int layerv2    = m_layer;  //numbering v2 style: 0 -> 11
-    unsigned int modulev2 = m_module;   //numbering v2 style: 0,1,2,3,4,10,11,5,6,7,8,9 left(x>0) to right
-    unsigned int mat = m_mat;
-    
-    unsigned int station    = layerv2/4 + 1;   //4 layers per station, numbering start at 1...
-    unsigned int layer = layerv2%4;
-    unsigned int quarter;
-    if((modulev2<=4 || modulev2==10) && mat==0) quarter=3;
-    else if((modulev2>=5 || modulev2==11) && mat==0) quarter=2;
-    else if((modulev2<=4 || modulev2==10) && mat==1) quarter=1;
-    else quarter=0;
-    unsigned int module;    //numbering v5 style: 1,2,3,4,5,6 (left, L->R) and 6,5,4,3,2,1 (right, L->R)
-    if(modulev2==10||modulev2==11) module=6;
-    else if(modulev2<=4) module=modulev2+1;
-    else if(modulev2>=5) module=(9-modulev2)+1;
-    std::bitset<2> bbT(station);
-    std::bitset<2> bbL(layer);
-    std::bitset<2> bbQ(quarter);
-    std::bitset<3> bbM(module);
-    std::string sfid = bbT.to_string()+bbL.to_string()+bbQ.to_string()+bbM.to_string();
-    unsigned int fibreMatID=boost::lexical_cast<unsigned int>(bbT.to_string()+bbL.to_string()+bbQ.to_string()+bbM.to_string());
-    
-    std::cout<<"==lv2:"<<layerv2<<" m2:"<<modulev2<<" mat:"<<mat<<std::endl;
-    std::cout<<"==st:"<<station<<" l  :"<<layer<<" q:"<<quarter<<" m:"<<module<<std::endl;
-    std::cout<<"==fid:"<<bset<<" 2: "<<sfid<<std::endl;
-    if(bset.to_string()!=sfid) std::cout<<"WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"<<std::endl;
-    */
+    else m_mat=1;       
   }
   
   //derived numberings
@@ -1461,6 +1426,25 @@ FTChannelID DeFTFibreMat::nextChannelRight(const FTChannelID& channel) const {
 StatusCode DeFTFibreMat::findSolidBase(IDetectorElement *det, const std::string& pvolname, const SolidBase* &solidbase) {
   
   if(0==det) {
+    fatal() << "Null input detector element"<< endmsg;
+    return StatusCode::FAILURE;
+  }
+  
+  const IPVolume *pvol=det->geometry()->lvolume()->pvolume(pvolname);
+  if(0==pvol) return StatusCode::FAILURE;
+    
+  solidbase = dynamic_cast<const SolidBase*>(pvol->lvolume()->solid());
+  if(0==solidbase) {
+    fatal() << "Can't find SolidBase for PVolume: "<<pvolname<< endmsg;
+    return StatusCode::FAILURE;
+  }
+  return StatusCode::SUCCESS;
+}
+
+/*
+StatusCode DeFTFibreMat::findSolidBase(IDetectorElement *det, const std::string& pvolname, const SolidBase* &solidbase) {
+  
+  if(0==det) {
     throw GaudiException( "Null input detector element", "DeFTFibreMat.cpp", StatusCode::FAILURE );
   }
   
@@ -1475,8 +1459,7 @@ StatusCode DeFTFibreMat::findSolidBase(IDetectorElement *det, const std::string&
   }
   return StatusCode::SUCCESS;
 }
-
-
+*/
 
 
 //=============================================================================

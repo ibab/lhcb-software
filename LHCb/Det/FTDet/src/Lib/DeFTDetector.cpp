@@ -380,13 +380,7 @@ const DeFTFibreMat* DeFTDetector::findFibreMat ( const LHCb::FTChannelID id ) co
     std::bitset<2> bL(layer);
     std::bitset<2> bQ(quarter);
     std::bitset<3> bM(module);
-    fibreMatID=boost::lexical_cast<unsigned int>(bT.to_string()+bL.to_string()+bQ.to_string()+bM.to_string());
-    
-    /* DBL
-    std::cout<<"==lv2:"<<layerv2<<" m2:"<<modulev2<<" matv2:"<<matv2<<std::endl;
-    std::cout<<"==st:"<<station<<" l  :"<<layer<<" q:"<<quarter<<" m:"<<module<<std::endl;
-    std::cout<<"==fid:"<<fibreMatID<<std::endl;
-    */
+    fibreMatID=boost::lexical_cast<unsigned int>(bT.to_string()+bL.to_string()+bQ.to_string()+bM.to_string());    
   }
 
   /// Find the fibreMat using a binary search

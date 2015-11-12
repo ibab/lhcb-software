@@ -32,7 +32,7 @@ Boole().DataType = "Upgrade"
 ####
 
 #NTupleSvc().Output = ["FILE1 DATAFILE='/afs/cern.ch/work/d/delbuono/RootOutput/TestFT.root' TYP='ROOT' OPT='NEW'"]
-NTupleSvc().Output = ["FILE1 DATAFILE='/afs/cern.ch/user/d/delbuono/cmtuser/Boole_v29r8/Det/FTDet/tests/TestFT.root' TYP='ROOT' OPT='NEW'"]
+NTupleSvc().Output = ["FILE1 DATAFILE='/afs/cern.ch/user/d/delbuono/cmtuser/Boole_v29r9/Det/FTDet/tests/TestFT.root' TYP='ROOT' OPT='NEW'"]
 
 #DDDBConf().DbRoot = "/afs/cern.ch/user/f/fpolci/cmtuser/Brunel_v44r5_BeforeHolidays/static_DDDB_VP+UT+FT_v20/lhcb.xml"
 #DDDBConf().DbRoot = "/afs/cern.ch/user/s/seaso/public/Simulation/upgrade/Gauss-FT/Det/myDDDB-Upgrade-FTMod-July-2014/lhcb.xml"
@@ -41,7 +41,7 @@ NTupleSvc().Output = ["FILE1 DATAFILE='/afs/cern.ch/user/d/delbuono/cmtuser/Bool
 #DDDBConf().DbRoot = "/afs/cern.ch/user/d/delbuono/cmtuser/test_DDDBupgrade_FTv4/lhcb.xml"
 #DDDBConf().DbRoot = "/afs/cern.ch/user/d/delbuono/cmtuser/DDDB-20141016_SIM-20140204-vc-md100_42st5/lhcb.xml"
 #DDDBConf().DbRoot = "/afs/cern.ch/user/d/delbuono/cmtuser/DDDBupgrade_FTv5/lhcb.xml"
-DDDBConf().DbRoot = "/afs/cern.ch/user/d/delbuono/cmtuser/DDDB_FTv2_20150424_s20140204_lhcbv38r6/lhcb.xml"
+#DDDBConf().DbRoot = "/afs/cern.ch/user/d/delbuono/cmtuser/DDDB_FTv2_20150424_s20140204_lhcbv38r6/lhcb.xml"
 #DDDBConf().DbRoot = "/afs/cern.ch/user/d/delbuono/cmtuser/DDDB_FTv5_20150424_s20140204_lhcbv38r6/lhcb.xml"
 
 
@@ -99,7 +99,7 @@ Boole().MainSequence = [ testAlg ]
 Boole().OutputLevel = ERROR #ERROR
 Boole().Outputs = [] #no writing sequence
 
-Boole().EvtMax = 1000
+Boole().EvtMax = 10
 
 '''
 ### Remove irrelevant algorithms (not necessary when we set the 'MainSequence' of Boole) 

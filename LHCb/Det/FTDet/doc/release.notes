@@ -3,6 +3,12 @@
 ! Purpose     : Interface to the xml description
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
+! 2015-11-12 - Luigi Del Buono
+ - Clang warnings elimination (DeFTFibreMat.cpp)
+ - use exception throw where possible instead of simple fatal message (DeFTFibreMat.cpp)
+ - introduction of code for V5 Scifi geometry (DeFTFibreMat.cpp, and .h)
+ Note that these changes were in fact "distributed" over several code tags due
+ to missing releases notes updates...
 
 !========================= FTDet v2r10 2015-10-12 =========================
 ! 2015-09-21 - Luigi Del Buono
