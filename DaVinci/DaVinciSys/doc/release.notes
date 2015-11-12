@@ -3,6 +3,8 @@ Package             : DaVinciSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics analysis application
 
+! 2015-11-12 - Eduardo Rodrigues
+ - Test reference file updated.
 
 </PRE><H1><A NAME=v38r0>2015-10-25 DaVinci v38r0</A></H1><PRE>
 
