@@ -177,10 +177,11 @@ config_tau_h1 = {
   'min_TRPCHI2'     : 0.01,
   'min_ETA'         : 2.25,
   'max_ETA'         : 3.75,
+  'min_HCALFrac'    : 0.05,
+  #   
   # 'min_BPVDLS'      : -40,
   # 'max_BPVDLS'      : 40,
   # 'max_BPVIP'       : 1. * mm, 
-  'min_HCALFrac'    : 0.05,   
   # 'max_TRGHOSTPROB' : 0.1,
   'extracut'        : 'ALL'  
 }
@@ -242,9 +243,9 @@ config_tau_h3_iso = {
 # DITAU #
 #-------#
 
-# Blank default fallback. Remember the Zen: *Explicit is better than Implicit*
+## Blank default fallback. 
+# Remember the Zen: *Explicit is better than Implicit*
 pcuts0 = {'extracut': 'ALL'} 
-ccuts0 = {'extracut': 'ATRUE'}
 
 
 config_ditau_e_e = {
@@ -698,6 +699,7 @@ class DitauConf(LineBuilder):
       'e' : selection_filt( CONFIG['iso_e'] , preambulo, [sels_tau_noiso['e']] , 'SelTauIso_e'  ),
       'mu': selection_filt( CONFIG['iso_mu'], preambulo, [sels_tau_noiso['mu']], 'SelTauIso_mu' ),
       'h1': selection_filt( CONFIG['iso_h1'], preambulo, [sels_tau_noiso['h1']], 'SelTauIso_h1' ),
+      'h3': selection_filt( CONFIG['iso_h3'], preambulo, [sels_tau_noiso['h3']], 'SelTauIso_h3' ),
     }
 
     ## Merge these together (parallel, not sequential selection) for SS-Lines

@@ -30,7 +30,7 @@ from StrippingSelections import buildersConf
 confs = buildersConf()
 from StrippingSelections.Utils import lineBuilder, buildStreamsFromBuilder, buildStreams
 #confs[confname]["CONFIG"]["SigmaPPi0CalPrescale"] = 0.5 ## FOR USERS, YOU ONLY NEED TO QUICKLY MODIFY CutName and NewValue (no need to recompile the package but please update the default_config before committing)
-streams = buildStreamsFromBuilder(confs, 'HighPtTopoJets')
+streams = buildStreamsFromBuilder(confs, 'TaggedJets')
 # streams = buildStreams( confs, WGs='QEE' )
 
 #clone lines for CommonParticles overhead-free timing
@@ -142,7 +142,7 @@ ac = AlgorithmCorrelationsAlg(Algorithms = list(set(sc.selections())))
 #Configure DaVinci
 
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
-DaVinci().EvtMax = 20000
+DaVinci().EvtMax = 10000
 DaVinci().PrintFreq = 2000
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )

@@ -3,6 +3,11 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2015-11-12 - Chitsanu Khurewathanakul
+  - Test & include QEE/StrippingTaggedJets
+  - Depreciated QEE/StrippingHighPtTopoJets
+
 ! 2015-11-12 - Patrick Owen
   - Added Mis-ID line for B23Mu
 

@@ -7,6 +7,7 @@ from StrippingUtils.Utils import LineBuilder
 from StandardParticles import  StdJets
 from CommonParticles.Utils import *
 from Configurables import FilterJet
+from GaudiKernel.SystemOfUnits import GeV
 
 __author__=["Xabier Cid Vidal","Cedric Potterat"]
 __all__ = ["default_name","default_config","TaggedJetsConf"]
@@ -19,20 +20,20 @@ default_config = {
     'BUILDERTYPE'  : 'TaggedJetsConf',
     'WGs' : [ 'QEE' ],
     'STREAMS' : [ 'BhadronCompleteEvent' ],
-    'CONFIG':{'TaggedJetsPair_Prescale':1.0,
-              'TaggedJetsPair_Postscale':1.0,
+    'CONFIG':{'TaggedJetsPair_Prescale'   : 1.0,
+              'TaggedJetsPair_Postscale'  : 1.0,
               'TaggedJetsPairExclusiveDiJet_Prescale':1.0,
               'TaggedJetsPairExclusiveDiJet_Postscale':1.0,
-              'DiTaggedJetsPair_Prescale':1.0,
-              'DiTaggedJetsPair_Postscale':1.0,
-              'TaggedJetsFour_Prescale':1.0,
-              'TaggedJetsFour_Postscale':1.0,
-              'TaggedJetsSix_Prescale':1.0,
-              'TaggedJetsSix_Postscale':1.0,
-              'TaggedJetsEight_Prescale':1.0,
-              'TaggedJetsEight_Postscale':1.0,
-              'min_jet_pT'             : 25., # GeV/c
-              'min_jet_pT_ExclusiveDiJet'         : 20. # GeV/c
+              'DiTaggedJetsPair_Prescale' : 1.0,
+              'DiTaggedJetsPair_Postscale': 1.0,
+              'TaggedJetsFour_Prescale'   : 1.0,
+              'TaggedJetsFour_Postscale'  : 1.0,
+              'TaggedJetsSix_Prescale'    : 1.0,
+              'TaggedJetsSix_Postscale'   : 1.0,
+              'TaggedJetsEight_Prescale'  : 1.0,
+              'TaggedJetsEight_Postscale' : 1.0,
+              'min_jet_pT'                : 25. * GeV, # GeV/c
+              'min_jet_pT_ExclusiveDiJet' : 20. * GeV, # GeV/c
               }
     }
 
@@ -158,8 +159,8 @@ class TaggedJetsConf( LineBuilder ) :
         vfitter = getattr ( JetGroup , "LoKi::VertexFitter" )
         vfitter.Jets = ""
         
-        if ptcut==1: JetGroup.DaughtersCuts = { "CELLjet" :" (PT > %(min_jet_pT)s * GeV ) " %self._config }
-        elif ptcut==2: JetGroup.DaughtersCuts = { "CELLjet" :" (PT > %(min_jet_pT_ExclusiveDiJet)s * GeV ) " %self._config }    
+        if ptcut==1: JetGroup.DaughtersCuts = { "CELLjet" :" (PT > %(min_jet_pT)s ) " %self._config }
+        elif ptcut==2: JetGroup.DaughtersCuts = { "CELLjet" :" (PT > %(min_jet_pT_ExclusiveDiJet)s ) " %self._config }    
         
         JetGroup.CombinationCut = "AALLSAMEBPV "
         JetGroup.MotherCut = "ALL"

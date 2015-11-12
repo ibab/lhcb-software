@@ -6,24 +6,24 @@ for QEE WG.
 
 _selections = (
   ## These line has explicit request from users for Run-II measurement.
-  'StrippingDitau', 
+  'StrippingDitau',
   'StrippingDisplVertices',    
   'StrippingH24Mu',
   'StrippingInclbJets',
-  'StrippingLowMultINC',       
+  'StrippingLowMultINC',
   'StrippingMuMuSS',           
   'StrippingSingleTrackTIS',
+  'StrippingTaggedJets',          # Need Phys/JetTagging post-v1r9
   'StrippingWMu',
   'StrippingWmuAKTJets',
   'StrippingWeAKTJets',
   'StrippingZ02MuMu',
 
   ## These lines are recovered from S21 `just-in-case`, 
-  ## but there's no explicit request in S23 yet.
+  ## but there's no explicit request in S23+ yet.
   'StrippingDijets',
   'StrippingDY2ee',
   'StrippingDY2MuMu',
-  'StrippingHighPtTopoJets',
   'StrippingJets',
   'StrippingLLP2MuX',
   'StrippingSbarSCorrelations',
@@ -31,6 +31,9 @@ _selections = (
   'StrippingStrangeBaryonsNoPID',
   'StrippingWe',
   'StrippingZ02ee',
+
+  ## Depreciated
+  # 'StrippingHighPtTopoJets',
 )
 
 for _sel in _selections :  
