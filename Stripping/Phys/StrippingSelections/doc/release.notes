@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-12 - Nicola Skidmore
+ - Update to lines in StrippingBeauty2Charm.py
+
 ! 2015011011 - Jason Andrews
  - Added new lines B2Kpi0 and B2K0pi0 in StrippingBnoC/StrippingB2Kpi0.py
  - correspondingly updated StrippingBnoC/__init__.py
