@@ -3,6 +3,9 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2015-11-12 - Xabier Cid Vidal
+  - Added StrippingTaggedJets
+
 ! 2015-11-12 - Timothy Williams
 	-Changed WG setting for StrippingBnoC/StrippingB2Kpi0.py from 'Charmless' to 'BnoC'
 
