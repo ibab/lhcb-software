@@ -584,13 +584,15 @@ class StrippingLine(object):
                     relatedInfoAlg.Location = itool['Location']
                 if 'DaughterLocations' not in itool.keys() and 'Location' not in itool.keys() :
                     raise Exception('\n'+self.name()+': Neither "Location" nor "DaughterLocations" are defined in RelatedInfo dictionary')
+                if 'IgnoreUnmatchedDescriptors' in itool.keys() :
+                    relatedInfoAlg.IgnoreUnmatchedDescriptors = itool['IgnoreUnmatchedDescriptors']
 
                 toolType = itool["Type"]
 
                 # Extract the remaining properties specific for the tool from the overall list
                 toolprops = { }
                 for property,value in itool.iteritems() :
-                    if property not in ["Type", "Location", "DaughterLocations", "TopSelection" ] : 
+                    if property not in ["Type", "Location", "DaughterLocations", "TopSelection", "IgnoreUnmatchedDescriptors" ] : 
                         toolprops[property] = value
 
                 # make a hashable key from the properties dict
