@@ -42,15 +42,6 @@ namespace Tf{
     std::vector<double> m_YOffsetTop; ///< Y left/right box offset at top
     std::vector<double> m_YOffsetBottom; ///< Y left/right box offset 
 
-    /// Use correction for half boxes when looking for overlaps
-    bool m_OverlapCorrection;
-
-    /// Use different cuts for tracks in the overlap region
-    bool m_overlapSearch;
-
-    ///Window to make clusters in (abs(x)) if in overlap region
-    double m_overlapXWindow;
-
     class clusInPUSector{
     public:
       inline void addSensor(const unsigned int &nSens){

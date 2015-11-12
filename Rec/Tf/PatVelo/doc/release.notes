@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2015-11-12 - Marco Cattaneo
+ - AddPileupToTrack.h: remove unused member variables
+
 !========================= PatVelo v3r32p1 2015-10-13 =========================
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
