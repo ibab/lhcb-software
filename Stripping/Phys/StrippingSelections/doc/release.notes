@@ -3,6 +3,8 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2015-11-12 - Timothy Williams
+	-Changed WG setting for StrippingBnoC/StrippingB2Kpi0.py from 'Charmless' to 'BnoC'
 
 ! 2015-11-12 - Greg Ciezarek
  - Moved StrippingD0ForBXX.py and StrippingJPsiForSL.py from SL to Calib

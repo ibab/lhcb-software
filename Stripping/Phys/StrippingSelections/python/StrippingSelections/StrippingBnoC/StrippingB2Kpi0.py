@@ -31,7 +31,7 @@ from GaudiKernel.SystemOfUnits   import MeV
 ### :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 default_config = {
     "NAME"        : "B2Kpi0Lines",
-    "WGs"         : [ "Charmless" ],
+    "WGs"         : [ "BnoC" ],
     "BUILDERTYPE" : "B2Kpi0Lines",
     "STREAMS"     : [ "BhadronCompleteEvent" ],
     "CONFIG" : { "checkPV" : True,
