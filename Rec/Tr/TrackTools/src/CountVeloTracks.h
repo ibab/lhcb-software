@@ -1,5 +1,5 @@
 #ifndef TRACKTOOLS_CountVeloTracks_H
-#define TRACKTOOLS_CoutnVeloTracks_H
+#define TRACKTOOLS_CountVeloTracks_H
 
 //-----------------------------------------------------------------------------
 /** @class CountVeloTracks CountVeloTracks.h
@@ -23,7 +23,7 @@ class CountVeloTracks : public GaudiTool,
 
 public:
 
-  /// constructer
+  /// constructor
   CountVeloTracks( const std::string& type,
                    const std::string& name,
                    const IInterface* parent );
@@ -52,4 +52,5 @@ public:
 
 };
 
-#endif // TRACKTOOLS_VeloExpectation_H
+#endif // TRACKTOOLS_CountVeloTracks_H
+

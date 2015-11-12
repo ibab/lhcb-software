@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2015-11-12 - Marco Cattaneo
+ - Fix typo in header guard
+ - Add missing override specifier
+
 ! 2015-11-08 - Heinrich Schindler
  - VPExpectation: remove unused function and unnecessary includes. Use auto.
  - VPMeasurementProvider: use nullptr instead of NULL. Use auto.

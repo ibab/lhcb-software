@@ -50,7 +50,7 @@ public:
   
   ~StateThickMSCorrectionTool( ) override = default; ///< Destructor
   
-  virtual StatusCode initialize();
+  virtual StatusCode initialize() override;
 private:
   // Job options
   double m_msff2;    ///< fudge factor for multiple scattering errors
