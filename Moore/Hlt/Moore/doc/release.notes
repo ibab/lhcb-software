@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2015-10-10 - Mika Vesterinen
+ - Minor update to the rate nightly test
+
 ! 2015-10-26 - Sean Benson
  - Add PersistReco slot.
 

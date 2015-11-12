@@ -116,7 +116,10 @@ def main():
     #rates = json.load(json_data)
     #json_data.close()
     #pprint(rates)
-        
+    
+    #################################
+    ###### print the summary 
+    #################################
     import math
     iLine = 0
     #### order by inclusive rate
@@ -132,12 +135,10 @@ def main():
         eff_excl = line_stats[line_name]["passed_excl"]/float(line_stats[line_name]["processed"])
         if "Hlt1Global" in line_name:
             GlobalRate = 1.e3*eff_incl
-        print ('%s:%s' %(iLine,line_name.replace("Decision",""))).expandtabs(60),
-        print '\t%.2f+-%.2f\t%.2f+-%.2f' %(1.e3*eff_incl,
-                                           1.e3*math.sqrt((eff_incl-eff_incl**2)/float(line_stats[line_name]["processed"])),
-                                           1.e3*eff_excl,
-                                           1.e3*math.sqrt((eff_excl-eff_excl**2)/float(line_stats[line_name]["processed"]))
-                                           )
+        print ('%s:%s\t' %(iLine,line_name.replace("Decision",""))).expandtabs(40),
+        print ('%.2f+-%.2f\t' %(1.e3*eff_incl,1.e3*math.sqrt((eff_incl-eff_incl**2)/float(line_stats[line_name]["processed"])))).expandtabs(25),
+        print ('%.2f+-%.2f' %(1.e3*eff_excl,1.e3*math.sqrt((eff_excl-eff_excl**2)/float(line_stats[line_name]["processed"])))).expandtabs(25)
+
     print '-'*100
     ### give a large rate just to let things pass for now
     if GlobalRate > 400:
