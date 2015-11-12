@@ -3,6 +3,9 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2015-11-12 - Patrick Owen
+  - Added Mis-ID line for B23Mu
+
 ! 2015-11-12 - Xabier Cid Vidal
   - Added StrippingTaggedJets
 
