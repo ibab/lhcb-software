@@ -23,14 +23,14 @@ default_config =  {
   'PT_HAD_ALL_FINAL_STATE'        : '250',  # MeV
   'P_HAD_ALL_FINAL_STATE'         : '2000', # MeV
   'IPCHI2_HAD_ALL_FINAL_STATE'    : '16',    # dimensionless
-  'TRACKCHI2_HAD_ALL_FINAL_STATE' : '3',    # dimensionless
-  'TRGHOPROB_HAD_ALL_FINAL_STATE' : '0.3',    # dimensionless
+  'TRACKCHI2_HAD_ALL_FINAL_STATE' : '4',    # dimensionless
+  'TRGHOPROB_HAD_ALL_FINAL_STATE' : '0.4',    # dimensionless
   #
   'PT_MU'                         : '1000', # MeV
   'P_MU'                          : '6000', # MeV 
   'IPCHI2_MU'                     : '16',   # MeV
-  'TRACKCHI2_MU'                  : '3',    # dimensionless
-  'TRGHOPROB_MU'                  : '0.3', # dimensionless
+  'TRACKCHI2_MU'                  : '4',    # dimensionless
+  'TRGHOPROB_MU'                  : '0.4', # dimensionless
 
   #
   'PT_B_TT'                       : '1900', # MeV
@@ -102,51 +102,43 @@ default_config =  {
   'RelatedInfoTools'      : [
   #1
   { "Type" : "RelInfoBstautauMuonIsolationBDT"
-    ,"RecursionLevel" : 0
     , "Variables" : ['BSTAUTAUMUONISOBDTFIRSTVALUE', 'BSTAUTAUMUONISOBDTSECONDVALUE','BSTAUTAUMUONISOBDTTHIRDVALUE']
    , "Location"  : "MuonIsolationBDT"  
     },
   #2
   { "Type" : "RelInfoBstautauMuonIsolation"
-    ,"RecursionLevel" : 0
     , "Variables" : ['BSTAUTAUMUONISOFIRSTVALUE', 'BSTAUTAUMUONISOSECONDVALUE']
      , "Location"  : "MuonIsolation"  
     },
   #3
   { "Type" : "RelInfoBstautauTauIsolationBDT"
-    ,"RecursionLevel" : 0
     , "Variables" : ['BSTAUTAUTAUISOBDTFIRSTVALUETAUP', 'BSTAUTAUTAUISOBDTSECONDVALUETAUP','BSTAUTAUTAUISOBDTTHIRDVALUETAUP','BSTAUTAUTAUISOBDTFIRSTVALUETAUM', 'BSTAUTAUTAUISOBDTSECONDVALUETAUM','BSTAUTAUTAUISOBDTTHIRDVALUETAUM']
       , "Location"  : "TauIsolationBDT"  
     },
   #4
   { "Type" : "RelInfoBstautauTauIsolation"
-    ,"RecursionLevel" : 0
     , "Variables" : ['BSTAUTAUTAUISOFIRSTVALUETAUP', 'BSTAUTAUTAUISOSECONDVALUETAUP','BSTAUTAUTAUISOFIRSTVALUETAUM', 'BSTAUTAUTAUISOSECONDVALUETAUM']
      , "Location"  : "TauIsolation"  
     },
   #5
 
  { "Type" : "RelInfoBstautauTrackIsolationBDT" 
-    ,"RecursionLevel" : 0
     , "Variables" : ['BSTAUTAUTRACKISOBDTFIRSTVALUETAUPPIM', 'BSTAUTAUTRACKISOBDTSECONDVALUETAUPPIM','BSTAUTAUTRACKISOBDTTHIRDVALUETAUPPIM','BSTAUTAUTRACKISOBDTFIRSTVALUETAUPPIP1', 'BSTAUTAUTRACKISOBDTSECONDVALUETAUPPIP1','BSTAUTAUTRACKISOBDTTHIRDVALUETAUPPIP1','BSTAUTAUTRACKISOBDTFIRSTVALUETAUPPIP2', 'BSTAUTAUTRACKISOBDTSECONDVALUETAUPPIP2','BSTAUTAUTRACKISOBDTTHIRDVALUETAUPPIP2','BSTAUTAUTRACKISOBDTFIRSTVALUETAUMPIP','BSTAUTAUTRACKISOBDTSECONDVALUETAUMPIP','BSTAUTAUTRACKISOBDTTHIRDVALUETAUMPIP','BSTAUTAUTRACKISOBDTFIRSTVALUETAUMPIM1','BSTAUTAUTRACKISOBDTSECONDVALUETAUMPIM1','BSTAUTAUTRACKISOBDTTHIRDVALUETAUMPIM1','BSTAUTAUTRACKISOBDTFIRSTVALUETAUMPIM2', 'BSTAUTAUTRACKISOBDTSECONDVALUETAUMPIM2','BSTAUTAUTRACKISOBDTTHIRDVALUETAUMPIM2']
      , "Location"  : "TrackIsolationBDT"  
     },
 
   #6
   { "Type" : "RelInfoBstautauTrackIsolation" 
-    ,"RecursionLevel" : 0
     , "Variables" : ['BSTAUTAUTRACKISOFIRSTVALUETAUPPIM', 'BSTAUTAUTRACKISOFIRSTVALUETAUPPIP1','BSTAUTAUTRACKISOFIRSTVALUETAUPPIP2', 'BSTAUTAUTRACKISOFIRSTVALUETAUMPIP','BSTAUTAUTRACKISOFIRSTVALUETAUMPIM1', 'BSTAUTAUTRACKISOFIRSTVALUETAUMPIM2']
      , "Location"  : "TrackIsolation"  
     },
   #7
   { "Type" : "RelInfoBstautauCDFIso" 
-    ,"RecursionLevel" : 0
     #, "Variables" : ['BSTAUTAUCDFISO']
      , "Location"  : "CDFIso"  
     },
   #8
   { "Type" : "RelInfoBstautauZVisoBDT" 
-    ,"RecursionLevel" : 0
     , "Variables" : ['ZVISOTAUP','ZVISOTAUM']
       , "Location"  : "ZVisoBDT"
     },
@@ -347,17 +339,21 @@ class B2XTauConf(LineBuilder) :
                                            prescale    = config['B2TauTau_TOSLinePrescale'],
                                            postscale   = config['B2TauTau_TOSLinePostscale'],
                                            MDSTFlag = True,
-                                         
                                            RelatedInfoTools = [
-                                             { "Type" : "RelInfoBstautauMuonIsolationBDT","RecursionLevel" : 0,  "Location"  : "MuonIsolationBDT"},
-                                             { "Type" : "RelInfoBstautauMuonIsolation" ,"RecursionLevel" : 0,  "Location"  : "MuonIsolation" },
-                                             { "Type" : "RelInfoBstautauTauIsolationBDT","RecursionLevel" : 0, "Location"  : "TauIsolationBDT" },
-                                             { "Type" : "RelInfoBstautauTauIsolation","RecursionLevel" : 0,  "Location"  : "TauIsolation"  },
-                                             { "Type" : "RelInfoBstautauTrackIsolationBDT" ,"RecursionLevel" : 0,  "Location"  : "TrackIsolationBDT" },
-                                             { "Type" : "RelInfoBstautauTrackIsolation" ,"RecursionLevel" : 0, "Location"  : "TrackIsolation"},
-                                             { "Type" : "RelInfoBstautauCDFIso" ,"RecursionLevel" : 0, "Location"  : "CDFIso"  },
-                                             { "Type" : "RelInfoBstautauZVisoBDT" ,"RecursionLevel" : 0 , "Location"  : "ZVisoBDT"},
-                                             { "Type" : "RelInfoVertexIsolation","RecursionLevel" : 1, "Locations" : {"Phys/B2XTau_TauTau_TOSLine" : "BVars_VertexIsoInfo","Phys/B2XTau_TauFilter" : ["TauVars_VertexIsoInfo_0","TauVars_VertexIsoInfo_1"]}}
+                                             { "Type" : "RelInfoBstautauMuonIsolationBDT",  "Location"  : "MuonIsolationBDT"},
+                                             { "Type" : "RelInfoBstautauMuonIsolation" ,  "Location"  : "MuonIsolation" },
+                                             { "Type" : "RelInfoBstautauTauIsolationBDT", "Location"  : "TauIsolationBDT" },
+                                             { "Type" : "RelInfoBstautauTauIsolation",  "Location"  : "TauIsolation"  },
+                                             { "Type" : "RelInfoBstautauTrackIsolationBDT" ,  "Location"  : "TrackIsolationBDT" },
+                                             { "Type" : "RelInfoBstautauTrackIsolation" , "Location"  : "TrackIsolation"},
+                                             { "Type" : "RelInfoBstautauCDFIso" , "Location"  : "CDFIso"  },
+                                             { "Type" : "RelInfoBstautauZVisoBDT" , "Location"  : "ZVisoBDT"},
+                                             { "Type" : "RelInfoVertexIsolation", "Location" :  "BVars_VertexIsoInfo",
+                                               "DaughterLocations" : {
+                                                 "B0 -> ^tau+ tau-" : "TauVars_VertexIsoInfo_0",
+                                                 "B0 -> tau+ ^tau-" : "TauVars_VertexIsoInfo_1"
+                                               }
+                                             }
                                             ],
                                            selection   = self.selB2TauTauTOS
                                          )
@@ -370,15 +366,20 @@ class B2XTauConf(LineBuilder) :
                                            postscale   = config['B2TauTau_SameSign_TOSLinePostscale'],
                                            MDSTFlag = True,
                                            RelatedInfoTools = [
-                                             { "Type" : "RelInfoBstautauMuonIsolationBDT","RecursionLevel" : 0,  "Location"  : "MuonIsolationBDT"},
-                                             { "Type" : "RelInfoBstautauMuonIsolation" ,"RecursionLevel" : 0,  "Location"  : "MuonIsolation" },
-                                             { "Type" : "RelInfoBstautauTauIsolationBDT","RecursionLevel" : 0, "Location"  : "TauIsolationBDT" },
-                                             { "Type" : "RelInfoBstautauTauIsolation","RecursionLevel" : 0,  "Location"  : "TauIsolation"  },
-                                             { "Type" : "RelInfoBstautauTrackIsolationBDT" ,"RecursionLevel" : 0,  "Location"  : "TrackIsolationBDT" },
-                                             { "Type" : "RelInfoBstautauTrackIsolation" ,"RecursionLevel" : 0, "Location"  : "TrackIsolation"},
-                                             { "Type" : "RelInfoBstautauCDFIso" ,"RecursionLevel" : 0, "Location"  : "CDFIso"  },
-                                             { "Type" : "RelInfoBstautauZVisoBDT" ,"RecursionLevel" : 0 , "Location"  : "ZVisoBDT"},
-                                             { "Type" : "RelInfoVertexIsolation","RecursionLevel" : 1, "Locations" : {"Phys/B2XTau_TauTau_SameSign_TOSLine" : "BVars_VertexIsoInfo","Phys/B2XTau_TauFilter" : ["TauVars_VertexIsoInfo_0","TauVars_VertexIsoInfo_1"]}}                                            
+                                             { "Type" : "RelInfoBstautauMuonIsolationBDT",  "Location"  : "MuonIsolationBDT"},
+                                             { "Type" : "RelInfoBstautauMuonIsolation" ,  "Location"  : "MuonIsolation" },
+                                             { "Type" : "RelInfoBstautauTauIsolationBDT", "Location"  : "TauIsolationBDT" },
+                                             { "Type" : "RelInfoBstautauTauIsolation",  "Location"  : "TauIsolation"  },
+                                             { "Type" : "RelInfoBstautauTrackIsolationBDT" ,  "Location"  : "TrackIsolationBDT" },
+                                             { "Type" : "RelInfoBstautauTrackIsolation" , "Location"  : "TrackIsolation"},
+                                             { "Type" : "RelInfoBstautauCDFIso" , "Location"  : "CDFIso"  },
+                                             { "Type" : "RelInfoBstautauZVisoBDT" , "Location"  : "ZVisoBDT"},
+                                             { "Type" : "RelInfoVertexIsolation", "Location" :  "BVars_VertexIsoInfo",
+                                               "DaughterLocations" : {
+                                                 "[B0 -> ^tau+ tau+]CC" : "TauVars_VertexIsoInfo_0",
+                                                 "[B0 -> tau+ ^tau+]CC" : "TauVars_VertexIsoInfo_1"
+                                               }
+                                             }                                       
                                            ],
                                            selection   = self.selB2TauTauSSTOS
                                          )
@@ -391,15 +392,20 @@ class B2XTauConf(LineBuilder) :
                                                 postscale   = config['B2TauTau_SameSign_TOSLinePostscale'],
                                                 MDSTFlag = True,
                                                 RelatedInfoTools = [
-                                                  { "Type" : "RelInfoBstautauMuonIsolationBDT","RecursionLevel" : 0,  "Location"  : "MuonIsolationBDT"},
-                                                  { "Type" : "RelInfoBstautauMuonIsolation" ,"RecursionLevel" : 0,  "Location"  : "MuonIsolation" },
-                                                  { "Type" : "RelInfoBstautauTauIsolationBDT","RecursionLevel" : 0, "Location"  : "TauIsolationBDT" },
-                                                  { "Type" : "RelInfoBstautauTauIsolation","RecursionLevel" : 0,  "Location"  : "TauIsolation"  },
-                                                  { "Type" : "RelInfoBstautauTrackIsolationBDT" ,"RecursionLevel" : 0,  "Location"  : "TrackIsolationBDT" },
-                                                  { "Type" : "RelInfoBstautauTrackIsolation" ,"RecursionLevel" : 0, "Location"  : "TrackIsolation"},
-                                                  { "Type" : "RelInfoBstautauCDFIso" ,"RecursionLevel" : 0, "Location"  : "CDFIso"  },
-                                                  { "Type" : "RelInfoBstautauZVisoBDT" ,"RecursionLevel" : 0 , "Location"  : "ZVisoBDT"},
-                                                  { "Type" : "RelInfoVertexIsolation","RecursionLevel" : 1, "Locations" : {"Phys/B2XTau_TauTau_piSS_TOSLine" : "BVars_VertexIsoInfo","Phys/TauSSForB2XTau" : ["TauVars_VertexIsoInfo_0","TauVars_VertexIsoInfo_1"]}}
+                                                  { "Type" : "RelInfoBstautauMuonIsolationBDT",  "Location"  : "MuonIsolationBDT"},
+                                                  { "Type" : "RelInfoBstautauMuonIsolation" ,  "Location"  : "MuonIsolation" },
+                                                  { "Type" : "RelInfoBstautauTauIsolationBDT", "Location"  : "TauIsolationBDT" },
+                                                  { "Type" : "RelInfoBstautauTauIsolation",  "Location"  : "TauIsolation"  },
+                                                  { "Type" : "RelInfoBstautauTrackIsolationBDT" ,  "Location"  : "TrackIsolationBDT" },
+                                                  { "Type" : "RelInfoBstautauTrackIsolation" , "Location"  : "TrackIsolation"},
+                                                  { "Type" : "RelInfoBstautauCDFIso" , "Location"  : "CDFIso"  },
+                                                  { "Type" : "RelInfoBstautauZVisoBDT" , "Location"  : "ZVisoBDT"},
+                                                  { "Type" : "RelInfoVertexIsolation", "Location" :  "BVars_VertexIsoInfo",
+                                                    "DaughterLocations" : {
+                                                      "B0 -> ^tau+ tau-" : "TauVars_VertexIsoInfo_0",
+                                                      "B0 -> tau+ ^tau-" : "TauVars_VertexIsoInfo_1"
+                                                    }
+                                                }         
                                                 ],
                                                 selection   = self.selB2TauTaupiSSTOS
                                               )
@@ -412,15 +418,20 @@ class B2XTauConf(LineBuilder) :
                                         postscale   = config['B2DD_LinePostscale'],
                                         MDSTFlag = True,
                                         RelatedInfoTools = [
-                                          { "Type" : "RelInfoBstautauMuonIsolationBDT","RecursionLevel" : 0,  "Location"  : "MuonIsolationBDT"},
-                                          { "Type" : "RelInfoBstautauMuonIsolation" ,"RecursionLevel" : 0,  "Location"  : "MuonIsolation" },
-                                          { "Type" : "RelInfoBstautauTauIsolationBDT","RecursionLevel" : 0, "Location"  : "TauIsolationBDT" },
-                                          { "Type" : "RelInfoBstautauTauIsolation","RecursionLevel" : 0,  "Location"  : "TauIsolation"  },
-                                          { "Type" : "RelInfoBstautauTrackIsolationBDT" ,"RecursionLevel" : 0,  "Location"  : "TrackIsolationBDT" },
-                                          { "Type" : "RelInfoBstautauTrackIsolation" ,"RecursionLevel" : 0, "Location"  : "TrackIsolation"},
-                                          { "Type" : "RelInfoBstautauCDFIso" ,"RecursionLevel" : 0, "Location"  : "CDFIso"  },
-                                          { "Type" : "RelInfoBstautauZVisoBDT" ,"RecursionLevel" : 0 , "Location"  : "ZVisoBDT"},
-                                          { "Type" : "RelInfoVertexIsolation","RecursionLevel" : 1, "Locations" : {"Phys/B2XTau_DD_Line" : "BVars_VertexIsoInfo","Phys/DForB2XTau" : ["TauVars_VertexIsoInfo_0","TauVars_VertexIsoInfo_1"]}}
+                                          { "Type" : "RelInfoBstautauMuonIsolationBDT",  "Location"  : "MuonIsolationBDT"},
+                                          { "Type" : "RelInfoBstautauMuonIsolation" ,  "Location"  : "MuonIsolation" },
+                                          { "Type" : "RelInfoBstautauTauIsolationBDT", "Location"  : "TauIsolationBDT" },
+                                          { "Type" : "RelInfoBstautauTauIsolation",  "Location"  : "TauIsolation"  },
+                                          { "Type" : "RelInfoBstautauTrackIsolationBDT" ,  "Location"  : "TrackIsolationBDT" },
+                                          { "Type" : "RelInfoBstautauTrackIsolation" , "Location"  : "TrackIsolation"},
+                                          { "Type" : "RelInfoBstautauCDFIso" , "Location"  : "CDFIso"  },
+                                          { "Type" : "RelInfoBstautauZVisoBDT" , "Location"  : "ZVisoBDT"},
+                                          { "Type" : "RelInfoVertexIsolation", "Location" :  "BVars_VertexIsoInfo",
+                                                    "DaughterLocations" : {
+                                                      "B0 -> ^D+ D-" : "DVars_VertexIsoInfo_0",
+                                                      "B0 -> D+ ^D-" : "DVars_VertexIsoInfo_1"
+                                                    }
+                                          }       
                                         ],
                                         selection   = self.selB2DD
                                       )
@@ -433,15 +444,20 @@ class B2XTauConf(LineBuilder) :
                                         postscale   = config['B2DD_SameSign_LinePostscale'],
                                         MDSTFlag = True,
                                         RelatedInfoTools = [
-                                          { "Type" : "RelInfoBstautauMuonIsolationBDT","RecursionLevel" : 0,  "Location"  : "MuonIsolationBDT"},
-                                          { "Type" : "RelInfoBstautauMuonIsolation" ,"RecursionLevel" : 0,  "Location"  : "MuonIsolation" },
-                                          { "Type" : "RelInfoBstautauTauIsolationBDT","RecursionLevel" : 0, "Location"  : "TauIsolationBDT" },
-                                          { "Type" : "RelInfoBstautauTauIsolation","RecursionLevel" : 0,  "Location"  : "TauIsolation"  },
-                                          { "Type" : "RelInfoBstautauTrackIsolationBDT" ,"RecursionLevel" : 0,  "Location"  : "TrackIsolationBDT" },
-                                          { "Type" : "RelInfoBstautauTrackIsolation" ,"RecursionLevel" : 0, "Location"  : "TrackIsolation"},
-                                          { "Type" : "RelInfoBstautauCDFIso" ,"RecursionLevel" : 0, "Location"  : "CDFIso"  },
-                                          { "Type" : "RelInfoBstautauZVisoBDT" ,"RecursionLevel" : 0 , "Location"  : "ZVisoBDT"},
-                                             { "Type" : "RelInfoVertexIsolation","RecursionLevel" : 1, "Locations" : {"Phys/B2XTau_DD_SameSign_Line" : "BVars_VertexIsoInfo","Phys/DForB2XTau" : ["TauVars_VertexIsoInfo_0","TauVars_VertexIsoInfo_1"]}}
+                                          { "Type" : "RelInfoBstautauMuonIsolationBDT",  "Location"  : "MuonIsolationBDT"},
+                                          { "Type" : "RelInfoBstautauMuonIsolation" ,  "Location"  : "MuonIsolation" },
+                                          { "Type" : "RelInfoBstautauTauIsolationBDT", "Location"  : "TauIsolationBDT" },
+                                          { "Type" : "RelInfoBstautauTauIsolation",  "Location"  : "TauIsolation"  },
+                                          { "Type" : "RelInfoBstautauTrackIsolationBDT" ,  "Location"  : "TrackIsolationBDT" },
+                                          { "Type" : "RelInfoBstautauTrackIsolation" , "Location"  : "TrackIsolation"},
+                                          { "Type" : "RelInfoBstautauCDFIso" , "Location"  : "CDFIso"  },
+                                          { "Type" : "RelInfoBstautauZVisoBDT" , "Location"  : "ZVisoBDT"},
+                                          { "Type" : "RelInfoVertexIsolation", "Location" :  "BVars_VertexIsoInfo",
+                                                    "DaughterLocations" : {
+                                                      "[B0 -> ^D+ D+]CC" : "DVars_VertexIsoInfo_0",
+                                                      "[B0 -> D+ ^D+]CC" : "DVars_VertexIsoInfo_1"
+                                                    }
+                                          }    
                                         ],
                                         selection   = self.selB2DDSS
                                        )
@@ -454,15 +470,19 @@ class B2XTauConf(LineBuilder) :
                                            postscale   = config['B2TauMu_TOSLinePostscale'],
                                            MDSTFlag = True,
                                            RelatedInfoTools = [
-                                             { "Type" : "RelInfoBstautauMuonIsolationBDT","RecursionLevel" : 0,  "Location"  : "MuonIsolationBDT"},
-                                             { "Type" : "RelInfoBstautauMuonIsolation" ,"RecursionLevel" : 0,  "Location"  : "MuonIsolation" },
-                                             { "Type" : "RelInfoBstautauTauIsolationBDT","RecursionLevel" : 0, "Location"  : "TauIsolationBDT" },
-                                             { "Type" : "RelInfoBstautauTauIsolation","RecursionLevel" : 0,  "Location"  : "TauIsolation"  },
-                                             { "Type" : "RelInfoBstautauTrackIsolationBDT" ,"RecursionLevel" : 0,  "Location"  : "TrackIsolationBDT" },
-                                             { "Type" : "RelInfoBstautauTrackIsolation" ,"RecursionLevel" : 0, "Location"  : "TrackIsolation"},
-                                             { "Type" : "RelInfoBstautauCDFIso" ,"RecursionLevel" : 0, "Location"  : "CDFIso"  },
-                                             { "Type" : "RelInfoBstautauZVisoBDT" ,"RecursionLevel" : 0 , "Location"  : "ZVisoBDT"},
-                                             { "Type" : "RelInfoVertexIsolation","RecursionLevel" : 1, "Locations" : {"Phys/B2XTau_TauMu_TOSLine" : "BVars_VertexIsoInfo","Phys/B2XTau_TauFilter" : "TauVars_VertexIsoInfo_0"}}
+                                             { "Type" : "RelInfoBstautauMuonIsolationBDT",  "Location"  : "MuonIsolationBDT"},
+                                             { "Type" : "RelInfoBstautauMuonIsolation" ,  "Location"  : "MuonIsolation" },
+                                             { "Type" : "RelInfoBstautauTauIsolationBDT", "Location"  : "TauIsolationBDT" },
+                                             { "Type" : "RelInfoBstautauTauIsolation",  "Location"  : "TauIsolation"  },
+                                             { "Type" : "RelInfoBstautauTrackIsolationBDT" ,  "Location"  : "TrackIsolationBDT" },
+                                             { "Type" : "RelInfoBstautauTrackIsolation" , "Location"  : "TrackIsolation"},
+                                             { "Type" : "RelInfoBstautauCDFIso" , "Location"  : "CDFIso"  },
+                                             { "Type" : "RelInfoBstautauZVisoBDT" , "Location"  : "ZVisoBDT"},
+                                             { "Type" : "RelInfoVertexIsolation", "Location" :  "BVars_VertexIsoInfo",
+                                               "DaughterLocations" : {
+                                                 "[B0 -> ^tau+ mu-]CC" : "TauVars_VertexIsoInfo_0"
+                                               }
+                                             }
                                            ],
                                            selection   = self.selB2TauMuTOS
                                          )
@@ -475,15 +495,19 @@ class B2XTauConf(LineBuilder) :
                                                 postscale   = config['B2TauMu_SameSign_TOSLinePostscale'],
                                                 MDSTFlag = True,
                                                 RelatedInfoTools = [
-                                                  { "Type" : "RelInfoBstautauMuonIsolationBDT","RecursionLevel" : 0,  "Location"  : "MuonIsolationBDT"},
-                                                  { "Type" : "RelInfoBstautauMuonIsolation" ,"RecursionLevel" : 0,  "Location"  : "MuonIsolation" },
-                                                  { "Type" : "RelInfoBstautauTauIsolationBDT","RecursionLevel" : 0, "Location"  : "TauIsolationBDT" },
-                                                  { "Type" : "RelInfoBstautauTauIsolation","RecursionLevel" : 0,  "Location"  : "TauIsolation"  },
-                                                  { "Type" : "RelInfoBstautauTrackIsolationBDT" ,"RecursionLevel" : 0,  "Location"  : "TrackIsolationBDT" },
-                                                  { "Type" : "RelInfoBstautauTrackIsolation" ,"RecursionLevel" : 0, "Location"  : "TrackIsolation"},
-                                                  { "Type" : "RelInfoBstautauCDFIso" ,"RecursionLevel" : 0, "Location"  : "CDFIso"  },
-                                                  { "Type" : "RelInfoBstautauZVisoBDT" ,"RecursionLevel" : 0 , "Location"  : "ZVisoBDT"},
-                                             { "Type" : "RelInfoVertexIsolation","RecursionLevel" : 1, "Locations" : {"Phys/B2XTau_TauMu_piSS_TOSLine" : "BVars_VertexIsoInfo","Phys/TauSSForB2XTau" : "TauVars_VertexIsoInfo_0"}}
+                                                  { "Type" : "RelInfoBstautauMuonIsolationBDT",  "Location"  : "MuonIsolationBDT"},
+                                                  { "Type" : "RelInfoBstautauMuonIsolation" ,  "Location"  : "MuonIsolation" },
+                                                  { "Type" : "RelInfoBstautauTauIsolationBDT", "Location"  : "TauIsolationBDT" },
+                                                  { "Type" : "RelInfoBstautauTauIsolation",  "Location"  : "TauIsolation"  },
+                                                  { "Type" : "RelInfoBstautauTrackIsolationBDT" ,  "Location"  : "TrackIsolationBDT" },
+                                                  { "Type" : "RelInfoBstautauTrackIsolation" , "Location"  : "TrackIsolation"},
+                                                  { "Type" : "RelInfoBstautauCDFIso" , "Location"  : "CDFIso"  },
+                                                  { "Type" : "RelInfoBstautauZVisoBDT" , "Location"  : "ZVisoBDT"},
+                                                  { "Type" : "RelInfoVertexIsolation", "Location" :  "BVars_VertexIsoInfo",
+                                                    "DaughterLocations" : {
+                                                      "[B0 -> ^tau+ mu-]CC" : "TauVars_VertexIsoInfo_0"
+                                                    }
+                                                  }
                                                 ],
                                                 selection   = self.selB2TauMupiSSTOS
                                               )
@@ -496,15 +520,19 @@ class B2XTauConf(LineBuilder) :
                                            postscale   = config['B2TauMu_SameSign_TOSLinePostscale'],
                                            MDSTFlag = True,
                                            RelatedInfoTools = [
-                                             { "Type" : "RelInfoBstautauMuonIsolationBDT","RecursionLevel" : 0,  "Location"  : "MuonIsolationBDT"},
-                                             { "Type" : "RelInfoBstautauMuonIsolation" ,"RecursionLevel" : 0,  "Location"  : "MuonIsolation" },
-                                             { "Type" : "RelInfoBstautauTauIsolationBDT","RecursionLevel" : 0, "Location"  : "TauIsolationBDT" },
-                                             { "Type" : "RelInfoBstautauTauIsolation","RecursionLevel" : 0,  "Location"  : "TauIsolation"  },
-                                             { "Type" : "RelInfoBstautauTrackIsolationBDT" ,"RecursionLevel" : 0,  "Location"  : "TrackIsolationBDT" },
-                                             { "Type" : "RelInfoBstautauTrackIsolation" ,"RecursionLevel" : 0, "Location"  : "TrackIsolation"},
-                                             { "Type" : "RelInfoBstautauCDFIso" ,"RecursionLevel" : 0, "Location"  : "CDFIso"  },
-                                             { "Type" : "RelInfoBstautauZVisoBDT" ,"RecursionLevel" : 0 , "Location"  : "ZVisoBDT"},
-                                             { "Type" : "RelInfoVertexIsolation","RecursionLevel" : 1, "Locations" : {"Phys/B2XTau_TauMu_SameSign_TOSLine" : "BVars_VertexIsoInfo","Phys/B2XTau_TauFilter" : "TauVars_VertexIsoInfo_0"}}
+                                             { "Type" : "RelInfoBstautauMuonIsolationBDT",  "Location"  : "MuonIsolationBDT"},
+                                             { "Type" : "RelInfoBstautauMuonIsolation" ,  "Location"  : "MuonIsolation" },
+                                             { "Type" : "RelInfoBstautauTauIsolationBDT", "Location"  : "TauIsolationBDT" },
+                                             { "Type" : "RelInfoBstautauTauIsolation",  "Location"  : "TauIsolation"  },
+                                             { "Type" : "RelInfoBstautauTrackIsolationBDT" ,  "Location"  : "TrackIsolationBDT" },
+                                             { "Type" : "RelInfoBstautauTrackIsolation" , "Location"  : "TrackIsolation"},
+                                             { "Type" : "RelInfoBstautauCDFIso" , "Location"  : "CDFIso"  },
+                                             { "Type" : "RelInfoBstautauZVisoBDT" , "Location"  : "ZVisoBDT"},
+                                             { "Type" : "RelInfoVertexIsolation", "Location" :  "BVars_VertexIsoInfo",
+                                               "DaughterLocations" : {
+                                                 "[B0 -> ^tau+ mu+]CC" : "TauVars_VertexIsoInfo_0"
+                                               }
+                                             }
                                            ],
                                            selection   = self.selB2TauMuSSTOS
                                           )
@@ -517,16 +545,20 @@ class B2XTauConf(LineBuilder) :
                                         postscale   = config['B2DPi_LinePostscale'],
                                         MDSTFlag = True,
                                         RelatedInfoTools = [
-                                             { "Type" : "RelInfoBstautauMuonIsolationBDT","RecursionLevel" : 0,  "Location"  : "MuonIsolationBDT"},
-                                             { "Type" : "RelInfoBstautauMuonIsolation" ,"RecursionLevel" : 0,  "Location"  : "MuonIsolation" },
-                                             { "Type" : "RelInfoBstautauTauIsolationBDT","RecursionLevel" : 0, "Location"  : "TauIsolationBDT" },
-                                             { "Type" : "RelInfoBstautauTauIsolation","RecursionLevel" : 0,  "Location"  : "TauIsolation"  },
-                                             { "Type" : "RelInfoBstautauTrackIsolationBDT" ,"RecursionLevel" : 0,  "Location"  : "TrackIsolationBDT" },
-                                             { "Type" : "RelInfoBstautauTrackIsolation" ,"RecursionLevel" : 0, "Location"  : "TrackIsolation"},
-                                             { "Type" : "RelInfoBstautauCDFIso" ,"RecursionLevel" : 0, "Location"  : "CDFIso"  },
-                                             { "Type" : "RelInfoBstautauZVisoBDT" ,"RecursionLevel" : 0 , "Location"  : "ZVisoBDT"},
-                                             { "Type" : "RelInfoVertexIsolation","RecursionLevel" : 1, "Locations" : {"Phys/B2XTau_DPi_Line" : "BVars_VertexIsoInfo","Phys/DForB2XTau" : "TauVars_VertexIsoInfo_0"}}
-                                           ],
+                                             { "Type" : "RelInfoBstautauMuonIsolationBDT",  "Location"  : "MuonIsolationBDT"},
+                                             { "Type" : "RelInfoBstautauMuonIsolation" ,  "Location"  : "MuonIsolation" },
+                                             { "Type" : "RelInfoBstautauTauIsolationBDT", "Location"  : "TauIsolationBDT" },
+                                             { "Type" : "RelInfoBstautauTauIsolation",  "Location"  : "TauIsolation"  },
+                                             { "Type" : "RelInfoBstautauTrackIsolationBDT" ,  "Location"  : "TrackIsolationBDT" },
+                                             { "Type" : "RelInfoBstautauTrackIsolation" , "Location"  : "TrackIsolation"},
+                                             { "Type" : "RelInfoBstautauCDFIso" , "Location"  : "CDFIso"  },
+                                             { "Type" : "RelInfoBstautauZVisoBDT" , "Location"  : "ZVisoBDT"},
+                                             { "Type" : "RelInfoVertexIsolation", "Location" :  "BVars_VertexIsoInfo",
+                                               "DaughterLocations" : {
+                                                 "[B0 -> ^D+ pi-]CC" : "DVars_VertexIsoInfo_0"
+                                               }
+                                            }
+                                          ],
                                         selection   = self.selB2DPi
                                      )
   
@@ -538,15 +570,19 @@ class B2XTauConf(LineBuilder) :
                                         postscale   = config['B2DPi_SameSign_LinePostscale'],
                                         MDSTFlag = True,
                                         RelatedInfoTools = [
-                                             { "Type" : "RelInfoBstautauMuonIsolationBDT","RecursionLevel" : 0,  "Location"  : "MuonIsolationBDT"},
-                                             { "Type" : "RelInfoBstautauMuonIsolation" ,"RecursionLevel" : 0,  "Location"  : "MuonIsolation" },
-                                             { "Type" : "RelInfoBstautauTauIsolationBDT","RecursionLevel" : 0, "Location"  : "TauIsolationBDT" },
-                                             { "Type" : "RelInfoBstautauTauIsolation","RecursionLevel" : 0,  "Location"  : "TauIsolation"  },
-                                             { "Type" : "RelInfoBstautauTrackIsolationBDT" ,"RecursionLevel" : 0,  "Location"  : "TrackIsolationBDT" },
-                                             { "Type" : "RelInfoBstautauTrackIsolation" ,"RecursionLevel" : 0, "Location"  : "TrackIsolation"},
-                                             { "Type" : "RelInfoBstautauCDFIso" ,"RecursionLevel" : 0, "Location"  : "CDFIso"  },
-                                             { "Type" : "RelInfoBstautauZVisoBDT" ,"RecursionLevel" : 0 , "Location"  : "ZVisoBDT"},
-                                             { "Type" : "RelInfoVertexIsolation","RecursionLevel" : 1, "Locations" : {"Phys/B2XTau_DPi_SameSign_Line" : "BVars_VertexIsoInfo","Phys/DForB2XTau" : "TauVars_VertexIsoInfo_0"}}
+                                             { "Type" : "RelInfoBstautauMuonIsolationBDT",  "Location"  : "MuonIsolationBDT"},
+                                             { "Type" : "RelInfoBstautauMuonIsolation" ,  "Location"  : "MuonIsolation" },
+                                             { "Type" : "RelInfoBstautauTauIsolationBDT", "Location"  : "TauIsolationBDT" },
+                                             { "Type" : "RelInfoBstautauTauIsolation",  "Location"  : "TauIsolation"  },
+                                             { "Type" : "RelInfoBstautauTrackIsolationBDT" ,  "Location"  : "TrackIsolationBDT" },
+                                             { "Type" : "RelInfoBstautauTrackIsolation" , "Location"  : "TrackIsolation"},
+                                             { "Type" : "RelInfoBstautauCDFIso" , "Location"  : "CDFIso"  },
+                                             { "Type" : "RelInfoBstautauZVisoBDT" , "Location"  : "ZVisoBDT"},
+                                             { "Type" : "RelInfoVertexIsolation", "Location" :  "BVars_VertexIsoInfo",
+                                               "DaughterLocations" : {
+                                                 "[B0 -> ^D+ pi+]CC" : "DVars_VertexIsoInfo_0"
+                                               }
+                                            }
                                            ],
                                         selection   = self.selB2DPiSS
                                        )
