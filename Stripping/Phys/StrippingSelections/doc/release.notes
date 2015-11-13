@@ -7,6 +7,7 @@
 ! 2015-11-13 - Jibo He
  - Added stripping line for charmonium to p pbar pi pi
    . StrippingBandQ/StrippingCcbar2PPPiPi.py 
+ - Removed track chi2 cut for Bc2JpsiHBDT
    
 ! 2015-11-13 - Xabier Cid Vidal
  - Removed ALLSAMEPV requirement on StrippingTaggedJets

@@ -25,7 +25,7 @@ default_config =  {
     'LinePostscale'       :    1.   ,    
     'MuonCuts'            : "(MINTREE('mu+'==ABSID,PT)>500*MeV) & (MAXTREE('mu+'==ABSID,TRCHI2DOF)<3) & (MINTREE('mu+'==ABSID,PIDmu)>0.)",
     'JpsiCuts'            : '((MM>3.0*GeV) & (MM<3.2*GeV) & (VFASPF(VCHI2PDOF)<16))',
-    'PionCuts'            : '((TRCHI2DOF<3) & (TRGHOSTPROB<0.6) & (PT>1.0*GeV))',
+    'PionCuts'            : '((TRGHOSTPROB<0.6) & (PT>1.0*GeV))',
     'BcComCuts'           : '(in_range(5.8*GeV, AM, 7.0*GeV))',
     'BcMomCuts'           : """(VFASPF(VCHI2/VDOF)<16) 
                              & (in_range(6.0*GeV, DTF_FUN(M,True,strings( ['J/psi(1S)'])), 6.75*GeV))
