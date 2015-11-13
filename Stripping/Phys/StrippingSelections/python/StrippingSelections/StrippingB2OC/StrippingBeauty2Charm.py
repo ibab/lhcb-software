@@ -186,6 +186,9 @@ default_config ={
     'FlavourTagging':[
 
     'B02DstarMuNuDst2D0Pi_D2HHHHBeauty2CharmLine',
+    'B02DstarMuNuWSDst2D0Pi_D2HHHHBeauty2CharmLine',
+    'B02DstarMuNuDst2D0Pi_D2HHHHWSBeauty2CharmLine',
+    'B02DstarMuNuWSDst2D0Pi_D2HHHHWSBeauty2CharmLine', 
     'B2D0PiPiPiD2HHPIDBeauty2CharmLine',
     
     'B02D0KKD2HHBeauty2CharmLine', 

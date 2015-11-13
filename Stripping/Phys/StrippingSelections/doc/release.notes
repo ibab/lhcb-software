@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-13 - Nicola Skidmore
+ - Update StrippingBeauty2Charm.py
+
+
 ! 2015-11-13 - Pablo Ruiz (RD)
  - Added Beauty2XGammaNoBias
  - Adjustments to Lb2L0Gamma RelatedInfo
