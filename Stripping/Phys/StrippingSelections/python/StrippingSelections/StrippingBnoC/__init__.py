@@ -15,7 +15,8 @@ _selections = [ 'StrippingHb2Charged2Body',
                 'StrippingB2KShh',
                 'StrippingLb2V0hh',
                 'StrippingBs2PhiPhi',
-                'StrippingB2Kpi0']
+                'StrippingB2Kpi0',
+				'StrippingXb23ph']
 
 for _sel in _selections :
     try :
