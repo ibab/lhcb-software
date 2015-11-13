@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2015-11-13 - Chris Jones
+ - Add a new flag to the RichSmartID class for the Upgrade MaPMTs to save if
+   it represents a 'large' or 'small' PMT.
+
 ! 2015-11-05 - Marco Cattaneo
  - LbAppInit.cpp: fix clang warning, avoid stringstream
 

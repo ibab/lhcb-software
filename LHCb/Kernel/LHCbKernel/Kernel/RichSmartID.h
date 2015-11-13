@@ -203,6 +203,7 @@ namespace LHCb
       static const BitPackType BitsPDIsSet           = 1;
       static const BitPackType BitsPanelIsSet        = 1;
       static const BitPackType BitsRichIsSet         = 1;
+      static const BitPackType BitsLargePixel        = 1;
 
       // The shifts
       static const BitPackType ShiftPixelCol         = 0;
@@ -217,6 +218,7 @@ namespace LHCb
       static const BitPackType ShiftPDIsSet          = ShiftPixelRowIsSet    + BitsPixelRowIsSet;
       static const BitPackType ShiftPanelIsSet       = ShiftPDIsSet          + BitsPDIsSet;
       static const BitPackType ShiftRichIsSet        = ShiftPanelIsSet       + BitsPanelIsSet;
+      static const BitPackType ShiftLargePixel       = ShiftRichIsSet        + BitsRichIsSet;
 
       // The masks
       static const BitPackType MaskPixelCol          = (BitPackType) ((1 << BitsPixelCol)-1)         << ShiftPixelCol;
@@ -231,6 +233,7 @@ namespace LHCb
       static const BitPackType MaskPDIsSet           = (BitPackType) ((1 << BitsPDIsSet)-1)          << ShiftPDIsSet;
       static const BitPackType MaskPanelIsSet        = (BitPackType) ((1 << BitsPanelIsSet)-1)       << ShiftPanelIsSet;
       static const BitPackType MaskRichIsSet         = (BitPackType) ((1 << BitsRichIsSet)-1)        << ShiftRichIsSet;
+      static const BitPackType MaskLargePixel        = (BitPackType) ((1 << BitsLargePixel)-1)       << ShiftLargePixel;
 
       // Max Values
       static const BitPackType MaxPixelCol           = (BitPackType) ( 1 << BitsPixelCol     ) - 1;
@@ -704,6 +707,26 @@ namespace LHCb
                pixelRowIsSet() || pixelColIsSet() || pixelSubRowIsSet() );
     }
 
+  public:
+
+    /** Returns true if the SmartID is for a 'large' PMT.
+     *  @attention Will always return false for HPDs... */
+    inline bool isLargePMT() const
+    {
+      return ( HPDID == idType() ? false :
+               0 != ((key() & MaPMT::MaskLargePixel) >> MaPMT::ShiftLargePixel ) );
+    }
+    
+    /** Set the large PMT flag.
+     *  @attention Does nothing for HPDs */
+    inline void setLargePMT( const bool flag )
+    {
+      if ( MaPMTID == idType() )
+      {
+        setData( flag, MaPMT::ShiftLargePixel, MaPMT::MaskLargePixel );
+      }
+    }
+    
   public:
 
 //     // Implementation using a mutex for thread support
