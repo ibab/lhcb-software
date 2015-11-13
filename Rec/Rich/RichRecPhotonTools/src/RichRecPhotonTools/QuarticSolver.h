@@ -52,7 +52,7 @@ namespace Rich
     class QuarticSolver
     {
 
-    public:
+    private:
 
       // Use eigen types
       typedef LHCb::Math::Eigen::XYZPoint  Point;   ///< Point type
@@ -75,23 +75,27 @@ namespace Rich
        *  @retval false Calculation failed. sphReflPoint is not valid.
        */
       template< class TYPE >
-      inline void solve( const Point& emissionPoint,
-                         const Point& CoC,
-                         const Point& virtDetPoint,
+      inline void solve( const Gaudi::XYZPoint& emissionPoint,
+                         const Gaudi::XYZPoint& CoC,
+                         const Gaudi::XYZPoint& virtDetPoint,
                          const TYPE radius,
                          Gaudi::XYZPoint& sphReflPoint ) const
       {
 
         // typedefs vectorised types
         typedef Eigen::Matrix< TYPE , 3 , 1 > Eigen3Vector;
-        using Vec4x = typename std::conditional<std::is_same<TYPE,float>::value,Vec4f,Vec4d>::type;
+        using Vec4x = 
+          typename std::conditional<std::is_same<TYPE,float>::value,Vec4f,Vec4d>::type;
+        
+        // Cache Eigen version of CoC
+        const Point eCoC(CoC);
 
         // vector from mirror centre of curvature to assumed emission point
-        const Vector evec( emissionPoint - CoC );
+        const Vector evec( Point(emissionPoint) - eCoC );
         const TYPE e2 = evec.dot(evec);
 
         // vector from mirror centre of curvature to virtual detection point
-        const Vector dvec( virtDetPoint - CoC );
+        const Vector dvec( Point(virtDetPoint) - eCoC );
         const TYPE d2 = dvec.dot(dvec);
 
         // various quantities needed to create quartic equation
@@ -138,7 +142,7 @@ namespace Rich
         // rotate vector and update reflection point
         const Eigen::AngleAxis<TYPE> angleaxis( vdt::fast_asinf(sinbeta),
                                                 Eigen3Vector(n[0],n[1],n[2]) );
-        sphReflPoint = ( (Gaudi::XYZPoint)(CoC) + 
+        sphReflPoint = ( CoC + 
                          Gaudi::XYZVector( angleaxis *
                                            Eigen3Vector(evec[0],evec[1],evec[2]) *
                                            ( radius / e ) ) );
@@ -217,11 +221,12 @@ namespace Rich
 
         // Vectorised implementation using VectorClass
         // (Much) faster, but currently causes problems with clang
-        using Complex4x = typename std::conditional<std::is_same<TYPE,float>::value,Complex4f,Complex4d>::type;
-        using Complex2x = typename std::conditional<std::is_same<TYPE,float>::value,Complex2f,Complex2d>::type;
+        using Complex4x = 
+          typename std::conditional<std::is_same<TYPE,float>::value,Complex4f,Complex4d>::type;
+        using Complex2x = 
+          typename std::conditional<std::is_same<TYPE,float>::value,Complex2f,Complex2d>::type;
         const Complex4x  W = sqrt( Complex4x(u1,u2,u1,-u2) );
         const auto       V = W.get_low() * W.get_high();
-        //const auto      w3 = ( abs(V) != 0.0 ? ( qq * -0.125 ) / V : Complex2x(0,0) );
         const auto      w3 = ( fabs(V.extract(0)) > 0 || fabs(V.extract(1)) > 0 ? 
                                ( qq * -0.125 ) / V : Complex2x(0,0) );
         const TYPE     res = W.extract(0) + W.extract(2) + w3.extract(0) - (r4*a);
