@@ -27,6 +27,9 @@
 	  m_energyRefVec.push_back(energyRef);
 	  m_timeVec.push_back(time);
 	  m_timeRefVec.push_back(timeRef);
+    m_thNoiseCont = 0;
+    m_afterplCont = 0;
+    m_xtalkCont = 0;
 	</code>
       </constructor>
 
@@ -37,6 +40,7 @@
       <method    name   = "channelID"
                  desc   = "Retrieve the FTChannelID, key of the object"
                  type   = "const LHCb::FTChannelID&amp;"
+                 const  = "TRUE"
                  access = "PUBLIC">
         <code> return key(); </code>
       </method>
@@ -53,6 +57,18 @@
 	  m_timeVec.push_back(time);
 	  m_timeRefVec.push_back(timeRef);
 	</code>
+      </method>
+
+      <method    name    = "addNoise"
+                 desc    = "keep track of added Noise"
+                 type    = "void"
+                 argList = "int noiseType, int noiseValue"
+                 access  = "PUBLIC">
+          <code>
+            if(noiseType==0) { m_thNoiseCont += noiseValue; }
+            if(noiseType==1) { m_afterplCont += noiseValue; }
+            if(noiseType==2) { m_xtalkCont   += noiseValue; }
+          </code>
       </method>
 
       <attribute name   = "mcHitVec"
@@ -84,6 +100,22 @@
                  type   = "std::vector &lt; double &gt;"
 		 setMeth = "FALSE"
                  access = "PRIVATE"/>
+
+      <attribute name   = "thNoiseCont"
+                 desc   = "Counter for thermal noise PEs"
+                 type   = "int"
+                setMeth = "FALSE"
+                 access = "PRIVATE" />
+      <attribute name   = "afterplCont"
+                 desc   = "Counter for afterpulse PEs"
+                 type   = "int"
+                setMeth = "FALSE"
+                 access = "PRIVATE" />
+      <attribute name   = "xtalkCont"
+                 desc   = "Counter for xtalk PEs"
+                 type   = "int"
+                setMeth = "FALSE"
+                 access = "PRIVATE" />
 
     </class>
   </package>
