@@ -104,7 +104,7 @@ class B2XLLConf(LineBuilder) :
         from StandardParticles import StdLooseJpsi2MuMu as JPsis
         from StandardParticles import StdLoosePhotons as Gammas
 
-        # 1 : Make high IP, Pt kaons, K*'s and Phi's
+        # 1 : Make the particles we will be actually using
         SelKaons  = self._filterHadron( name = "KaonsFor" + self._name, sel = Kaons, params = config )
         SelPions  = self._filterHadron( name = "PionsFor" + self._name, sel = Pions, params = config )
         SelKstars = self._filterHadron( name = "KstarsFor"+ self._name, sel = Kstars,params = config )
@@ -118,8 +118,8 @@ class B2XLLConf(LineBuilder) :
         SelPi0s   = self._myPi0s("PiZeros")
         SelKs     = self._myKshort("KShorts")
         SelOmega  = self._omega2PiPiPi0( name="OmegasFor"+self._name, Pions=SelPions, Pi0=SelPi0s )
-        SKStPl1   = self._kstar2KsPi(name="KStarPlus1For"+self._name, Kshort=SelKs, Pions=SelPions)
-        SKStPl2   = self._kstar2KPi0(name="KStarPlus2For"+self._name, Kaons=SelKaons, Pi0=SelPi0s)
+        SKStPl1   = self._kstarPlus(name="KStarPlus1For"+self._name, Kaons=SelKs,    Pions=SelPions)
+        SKStPl2   = self._kstarPlus(name="KStarPlus2For"+self._name, Kaons=SelKaons, Pions=SelPi0s)
         SelKStarPlus=MergedSelection(name="KStarPlusFor"+self._name, RequiredSelections=[SKStPl1,SKStPl2])
         Self0s    = self._myf0(name="f0(980)sFor"+self._name, pions=SelPions)
         SelPsi2S  = self._psi2s2jpsihh( name="Psi2SFor"+self._name, jpsi=SelJPsis, pions=SelPions )
@@ -147,54 +147,29 @@ class B2XLLConf(LineBuilder) :
         SelEE_SS  = self._filterDiLepton("SelEESSFor"  + self._name, dilepton = EE_SS, params  = config, idcut = None )
 
         # 3 : Combine
-
-        SelmmX = self._makeB2LLX(mmXLine_name, dilepton = SelMuMu,
-                                 XPart = [ SelKaons, SelPions, SelKstars, SelRhos, SelPhis, SelJPsis, SelProtons, SelDZeros, SelDPlus, SelDStars, SelOmega, Self0s, SelKStarPlus, SelDsPlus, SelDsStars ],
-                                 params = config, masscut = "ADAMASS('B+') <  %(BMassWindow)s *MeV"% config)
-
-        SelmeX = self._makeB2LLX(meXLine_name, dilepton = SelMuE,
-                                 XPart = [ SelKaons, SelPions, SelKstars, SelRhos, SelPhis, SelJPsis, SelProtons, SelDZeros, SelDPlus, SelDStars, SelOmega, Self0s, SelKStarPlus, SelDsPlus, SelDsStars ],
-                                 params = config, masscut = "ADAMASS('B+') <  %(BMassWindow)s *MeV" % config )
-
-        SeleeX = self._makeB2LLX(eeXLine_name, dilepton = SelEE,
-                                 XPart = [ SelKaons, SelPions, SelKstars, SelRhos, SelPhis, SelJPsis, SelProtons, SelDZeros, SelDPlus, SelDStars, SelOmega, Self0s, SelKStarPlus, SelDsPlus, SelDsStars ],
-                                 params = config, masscut = "ADAMASS('B+') <  %(BMassWindow)s *MeV" % config )
-
-        SelmmX_SS = self._makeB2LLX(mmXSSLine_name, dilepton = SelMuMu_SS,
-                                    XPart = [ SelKaons, SelPions, SelKstars, SelRhos, SelPhis, SelJPsis, SelProtons, SelDZeros, SelDPlus, SelDStars, SelOmega, Self0s, SelKStarPlus, SelDsPlus, SelDsStars ],
-                                    params = config, masscut = "ADAMASS('B+') <  %(BMassWindow)s *MeV" % config )
-
-        SelmeX_SS = self._makeB2LLX(meXSSLine_name, dilepton = SelMuE_SS,
-                                    XPart = [ SelKaons, SelPions, SelKstars, SelRhos, SelPhis, SelJPsis, SelProtons, SelDZeros, SelDPlus, SelDStars, SelOmega, Self0s, SelKStarPlus, SelDsPlus, SelDsStars ],
-                                    params = config, masscut = "ADAMASS('B+') <  %(BMassWindow)s *MeV" % config )
-
-        SeleeX_SS = self._makeB2LLX(eeXSSLine_name, dilepton = SelEE_SS,
-                                    XPart = [ SelKaons, SelPions, SelKstars, SelRhos, SelPhis, SelJPsis, SelProtons, SelDZeros, SelDPlus, SelDStars, SelOmega, Self0s, SelKStarPlus, SelDsPlus, SelDsStars ],
-                                    params = config, masscut = "ADAMASS('B+') <  %(BMassWindow)s *MeV" % config )
-
+        Wanted = [ SelKaons, SelPions, SelKstars, SelRhos, SelPhis, SelJPsis, SelProtons, SelDZeros, SelDPlus, SelDStars, SelOmega, Self0s, SelKStarPlus, SelDsPlus, SelDsStars ]
+        SelmmX = self._makeB2LLX(mmXLine_name, dilepton=SelMuMu, XPart=Wanted, params=config, masscut="ADAMASS('B+') <  %(BMassWindow)s *MeV"% config)
+        SelmeX = self._makeB2LLX(meXLine_name, dilepton=SelMuE,  XPart=Wanted, params=config, masscut="ADAMASS('B+') <  %(BMassWindow)s *MeV" % config )
+        SeleeX = self._makeB2LLX(eeXLine_name, dilepton=SelEE,   XPart=Wanted, params=config, masscut="ADAMASS('B+') <  %(BMassWindow)s *MeV" % config )
+        SelmmX_SS = self._makeB2LLX(mmXSSLine_name, dilepton=SelMuMu_SS, XPart=Wanted, params=config, masscut="ADAMASS('B+') <  %(BMassWindow)s *MeV" % config )
+        SelmeX_SS = self._makeB2LLX(meXSSLine_name, dilepton=SelMuE_SS,  XPart=Wanted, params=config, masscut="ADAMASS('B+') <  %(BMassWindow)s *MeV" % config )
+        SeleeX_SS = self._makeB2LLX(eeXSSLine_name, dilepton=SelEE_SS,   XPart=Wanted, params=config, masscut="ADAMASS('B+') <  %(BMassWindow)s *MeV" % config )
        
         # 4 : Declare Lines
-
         SPDFilter = {
             'Code'      : " ( recSummary(LHCb.RecSummary.nSPDhits,'Raw/Spd/Digits') < 600 )" ,
             'Preambulo' : [ "from LoKiNumbers.decorators import *", "from LoKiCore.basic import LHCb" ]
             }
-
         self.eeXLine = StrippingLine(eeXLine_name+"Line", prescale = config['eeXLinePrescale'], postscale = 1, selection = SeleeX, RelatedInfoTools = self._RelInfoTools(SeleeX),
                                      FILTER = SPDFilter, RequiredRawEvents = [], MDSTFlag = True )
-
         self.mmXLine = StrippingLine(mmXLine_name+"Line", prescale = config['mmXLinePrescale'], postscale = 1, selection = SelmmX, RelatedInfoTools = self._RelInfoTools(SelmmX),
                                      FILTER = SPDFilter, RequiredRawEvents = [], MDSTFlag = True )
-        
         self.meXLine = StrippingLine(meXLine_name+"Line", prescale = config['meXLinePrescale'], postscale = 1, selection = SelmeX, RelatedInfoTools = self._RelInfoTools(SelmeX),
                                      FILTER = SPDFilter, RequiredRawEvents = [], MDSTFlag = True )
-
         self.mmX_SSLine = StrippingLine(mmXSSLine_name+"Line", prescale = config['mmXSSLinePrescale'], postscale = 1, selection = SelmmX_SS, RelatedInfoTools = self._RelInfoTools(SelmmX_SS),
                                         FILTER = SPDFilter, RequiredRawEvents = [], MDSTFlag = True )
-
         self.meX_SSLine = StrippingLine(meXSSLine_name+"Line", prescale = config['meXSSLinePrescale'], postscale = 1, selection = SelmeX_SS, RelatedInfoTools = self._RelInfoTools(SelmeX_SS),
                                         FILTER = SPDFilter, RequiredRawEvents = [], MDSTFlag = True )
-
         self.eeX_SSLine = StrippingLine(eeXSSLine_name+"Line", prescale = config['eeXSSLinePrescale'], postscale = 1, selection = SeleeX_SS, RelatedInfoTools = self._RelInfoTools(SeleeX_SS),
                                         FILTER = SPDFilter, RequiredRawEvents = [], MDSTFlag = True )
 
@@ -225,9 +200,12 @@ class B2XLLConf(LineBuilder) :
         # and hadron PT > KaonPT
         #need to add the ID here
         _Code = "(PT > %(KaonPT)s *MeV) & " \
-                "(M <  %(DiHadronMass)s*MeV) & " \
                 "((ISBASIC & (MIPCHI2DV(PRIMARY) > %(KaonIPCHI2)s)) | " \
                 "(NDAUGHTERS == NINTREE( ISBASIC &  (MIPCHI2DV(PRIMARY) > %(KaonIPCHI2)s))))" % params
+        if (name.startswith("JPsisFor")):
+            _Code += "& (M <  3200*MeV)" # Avoid psi(2S) resonance in the uppser sideband
+        else :
+            _Code += "& (M <  %(DiHadronMass)s*MeV) " % params
         _Filter = FilterDesktop(Code = _Code)
         return Selection( name, Algorithm = _Filter, RequiredSelections = [ sel ] )
 
@@ -342,33 +320,22 @@ class B2XLLConf(LineBuilder) :
         _dsstar = CombineParticles()
         _dsstar.DecayDescriptor = "[D*_s+ -> D_s+ gamma]cc"
         _dsstar.MotherCut = "(ADMASS('D*_s+') < 300 *MeV)"
+        _dsstar.DaughtersCuts = { 'gamma' : '(CL > 0.25)' }
         _dsstarConf = _dsstar.configurable("Combine_"+name+"_Dsstar")
         _selDsSTAR = Selection( "Selection_"+name+"_DsStar", Algorithm = _dsstarConf, RequiredSelections = [ DPlus, Gamma ] )
         return _selDsSTAR
 
 #####################################################
-    def _kstar2KPi0( self, name, Kaons, Pi0):
+    def _kstarPlus( self, name, Kaons, Pions):
         """
-        Make K*(892)+ -> K+ pi0 
+        Make K*(892)+ -> K+ pi0 or Kspi+
         """
-        _kstar2kpizero = CombineParticles()
-        _kstar2kpizero.DecayDescriptor = "[K*(892)+ -> K+ pi0]cc"
-        _kstar2kpizero.MotherCut = "(ADMASS('K*(892)+') < 300 *MeV)"
-        _kstarConf = _kstar2kpizero.configurable("Combine_"+name+"_KPi0")
-        _selKSTAR2KPIZERO = Selection( "Selection_"+name+"_Kstar2kpizero", Algorithm = _kstarConf, RequiredSelections = [ Kaons, Pi0 ] )
+        _kstar = CombineParticles()
+        _kstar.DecayDescriptors = ["[K*(892)+ -> K+ pi0]cc", "[K*(892)+ -> KS0 pi+]cc"]
+        _kstar.MotherCut = "(ADMASS('K*(892)+') < 300 *MeV)"
+        _kstarConf = _kstar.configurable("Combine_"+name+"_KPi")
+        _selKSTAR2KPIZERO = Selection( "Selection_"+name+"_Kstar2kaonpion", Algorithm = _kstarConf, RequiredSelections = [ Kaons, Pions ] )
         return _selKSTAR2KPIZERO
-
-#####################################################
-    def _kstar2KsPi(self, name, Kshort, Pions):
-        """
-        Make another kstarplus from Ks pi+
-        """      
-        _kstar2kspi = CombineParticles()
-        _kstar2kspi.DecayDescriptor = "[K*(892)+ -> KS0 pi+]cc"
-        _kstar2kspi.CombinationCut = "(AM > 0 *MeV) & (AM < 6200 *MeV) & (ADOCACHI2CUT(20.,''))"
-        _kstar2kspi.MotherCut = "(VFASPF(VCHI2/VDOF) < 12.0) & (BPVDIRA> -0.9) & (M > 0 *MeV) & (M < 6200 *MeV) & (BPVVDCHI2 > 9.0) & (MIPCHI2DV(PRIMARY) > 0.0) & (MAXTREE(ISBASIC,MIPCHI2DV(PRIMARY))> 9.0 )"
-        _selKSTAR2KSPI = Selection( "Selection_"+name+"_Kstar2kspi", Algorithm=_kstar2kspi, RequiredSelections=[Kshort,Pions] )
-        return _selKSTAR2KSPI
 
 #####################################################
     def _makeB2LLX( self, name, dilepton, XPart, params, masscut = "(ADAMASS('B+')<1500*MeV)" ):
