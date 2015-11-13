@@ -4,9 +4,14 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-13 - Rafael Coutinho
+ - Update on StrippingHb2V0V0h.py including HLT1/2 requirements and track-quality cuts 
+ - Added stripping line for B+->Kst(892)+ hh' and B0->Kst(892)0hh':
+   . StrippingBnoC/StrippingB2Ksthh.py 
+   . StrippingBnoC/StrippingBu2Ksthh.py
+
 ! 2015-11-13 - Nicola Skidmore
  - Update StrippingBeauty2Charm.py
-
 
 ! 2015-11-13 - Pablo Ruiz (RD)
  - Added Beauty2XGammaNoBias
