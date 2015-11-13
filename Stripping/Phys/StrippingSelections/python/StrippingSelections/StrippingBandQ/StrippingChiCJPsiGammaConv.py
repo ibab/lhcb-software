@@ -15,7 +15,7 @@ default_config =  {
     'ChiCJPsiGammaConv' : {
     'WGs'               : ['BandQ'],
     'BUILDERTYPE'       : 'StrippingChiCJPsiGammaConvConf',
-    'CONFIG'            : {'trackChi2'               :    3.0
+    'CONFIG'            : {'trackChi2'               :    100000 #disable
                            , 'MuPTMin'               :    400 #MeV #Can be tightened to 600 MeV
                            , 'MuPMin'               :    8000 #MeV
                            , 'JPsiMassMin'           :    3.0 # GeV

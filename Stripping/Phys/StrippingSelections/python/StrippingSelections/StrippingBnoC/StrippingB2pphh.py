@@ -56,9 +56,9 @@ default_config = {
     'B_CHI2'              : 30.0 ,    
     'B_PT'                 : 1000.,
     'B_MIPDV'              : 0.2,
-    'PionCuts' : "(TRCHI2DOF < 4.0) & HASRICH & (P > 1500*MeV) & (PT > 300*MeV) & (MIPCHI2DV(PRIMARY) > 4.0) & (TRGHOSTPROB < 0.5) & (PROBNNpi > 0.05)",
-    'KaonCuts' : "(TRCHI2DOF < 4.0) & HASRICH & (P > 1500*MeV) & (PT > 300*MeV) & (MIPCHI2DV(PRIMARY) > 3.0) & (TRGHOSTPROB < 0.5) & (PROBNNk > 0.05)",
-    'ProtonCuts' : "(TRCHI2DOF < 4.0) & HASRICH & (P > 1500*MeV) & (PT > 300*MeV) & (MIPCHI2DV(PRIMARY) > 2.0) & (TRGHOSTPROB < 0.5) & (PROBNNp > 0.05)",
+    'PionCuts' : "HASRICH & (P > 1500*MeV) & (PT > 300*MeV) & (MIPCHI2DV(PRIMARY) > 4.0) & (TRGHOSTPROB < 0.5) & (PROBNNpi > 0.05)",
+    'KaonCuts' : "HASRICH & (P > 1500*MeV) & (PT > 300*MeV) & (MIPCHI2DV(PRIMARY) > 3.0) & (TRGHOSTPROB < 0.5) & (PROBNNk > 0.05)",
+    'ProtonCuts' : "HASRICH & (P > 1500*MeV) & (PT > 300*MeV) & (MIPCHI2DV(PRIMARY) > 2.0) & (TRGHOSTPROB < 0.5) & (PROBNNp > 0.05)",
     'Prescaleppkk'  : 1.0,
     'Prescalepppipi'  : 1.0,
     'Prescaleppkpi'  : 1.0

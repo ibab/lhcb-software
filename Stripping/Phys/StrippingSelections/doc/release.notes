@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-13 - Roberta Cardinale
+ - Removed track chi2 cut for StrippingBandQ/StrippingChiCJpsiGammaConv.py
+ - Removed track chi2 cut for StrippingBnoC/StrippingB2pphh.py
+
 ! 2015-11-13 - Michael Kolpin
  - Updated B2KLine, B2KstarLine, and B2PhiLine in StrippingB2XuMuNu.py
  - Added Muon and Kaon fake lines for B2KMuNu to StrippingB2XuMuNu.py
