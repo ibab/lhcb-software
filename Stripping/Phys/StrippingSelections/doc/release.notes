@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-13 - Roberta Cardinale
+ - Changed track-quality cuts in StrippingBnoC/StrippingB2pphh.py
+
 ! 2015-11-13 - Lucio Anderlini
  - Removed track-quality cuts from StrippingBandQ/StrippingXibc
  - Removed track-chi2 cuts from StrippingBandQ/StrippingCC2DD
