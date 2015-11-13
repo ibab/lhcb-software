@@ -31,7 +31,7 @@ default_config = {
     'WGs'         : ['BnoC'],
     'BUILDERTYPE' : 'B2HHBDTLines',
     'CONFIG'      : { 'PrescaleB2HHBDT' : 1.,
-                      'TrChi2'          : 3,
+                      'TrChi2'          : 4,
                       'TrGhostProb'     : 3,
                       'PionPT'          : 1000,
                       'SumPT'           : 4500,

@@ -21,7 +21,6 @@ from StandardParticles                     import StdNoPIDsPions, StdLooseProton
 from PhysSelPython.Wrappers      import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils        import LineBuilder, checkConfig
-from Configurables               import SubstitutePID, FilterDesktop
 
 
 default_config = {
@@ -31,7 +30,7 @@ default_config = {
     'CONFIG'      : {'PrescaleB2Charged2Body'  : 1,
                      'MinPTB2Charged2Body'     : 1000,
                      'MinIPChi2B2Charged2Body' : 12,
-                     'TrChi2'                  : 3,
+                     'TrChi2'                  : 4,
                      'TrGhostProb'             : 0.5,
                      'MaxPTB2Charged2Body'     : 1400,
                      'MaxIPChi2B2Charged2Body' : 40,
