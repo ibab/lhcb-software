@@ -33,6 +33,7 @@ def setup_Target_GaussJob(physList,targetThick,targetMat,projEng,projID,nEvts = 
    Gauss()
 
    DDDBConf().DbRoot="conddb:/TargetsDet.xml"
+   CondDB().LoadCALIBDB = "HLT1" 
    CondDB().Upgrade = True
    LHCbApp().DDDBtag   = "dddb-20140120"
    LHCbApp().CondDBtag = "sim-20131108-vc-md100"

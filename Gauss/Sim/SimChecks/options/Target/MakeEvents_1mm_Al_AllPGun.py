@@ -13,7 +13,7 @@ parser.add_option("--physList", default=None, dest="physList", help="Specific si
 (opts, args) = parser.parse_args()
 
 version = re.search("GAUSS_v(.*?)/",os.environ["GAUSSROOT"]).groups(0)[0]
-path=os.environ['WORK']+'/TargetOutput_v'+version # where you want your output (absolute or relative path)
+path=os.environ['HOME']+'/TargetOutput_v'+version # where you want your output (absolute or relative path)
 
 models=['FTFP_BERT','QGSP_BERT']#any present in the version of Gauss you are using e.g. 'FTFP_BERT'
 if opts.physList :
