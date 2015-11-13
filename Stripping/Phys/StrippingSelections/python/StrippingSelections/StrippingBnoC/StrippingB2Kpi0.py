@@ -35,7 +35,7 @@ default_config = {
     "BUILDERTYPE" : "B2Kpi0Lines",
     "STREAMS"     : [ "BhadronCompleteEvent" ],
     "CONFIG" : { "checkPV" : True,
-                 "L0Filter"      : None,#"L0_CHANNEL('Photon')|L0_CHANNEL('Electron')",
+                 "L0Filter"      : "L0_CHANNEL('Photon')|L0_CHANNEL('Electron')",
                  "pi0VoidFilter" : "(CONTAINS('Phys/StdLooseMergedPi0/Particles')>0)",
                  "pi0Config"     :
                  { "pi0PT_min"     : 3500*MeV,
@@ -53,7 +53,7 @@ default_config = {
                    "KSIPChi2_min"  : 10 },
                  "B2Kpi0Config"  :
                  { "prescale"      : 1.0,
-                   "Hlt1Filter"    : None,#"HLT_PASS('Hlt1TrackMVADecision')",
+                   "Hlt1Filter"    : "HLT_PASS('Hlt1TrackMVADecision')",
                    "Hlt2Filter"    : None,#"HLT_PASS('Hlt2B2Kpi0Decision')",
                    "BMass_min"     : 4000*MeV,
                    "BMass_max"     : 6200*MeV,
@@ -62,7 +62,7 @@ default_config = {
                    "MTDOCAChi2_max": 8.0 },
                  "B2K0pi0Config" :
                  { "prescale"      : 1.0,
-                   "Hlt1Filter"    : None,#"HLT_PASS_RE('Hlt1(Two)?TrackMVADecision')",
+                   "Hlt1Filter"    : "HLT_PASS_RE('Hlt1(Two)?TrackMVADecision')",
                    "Hlt2Filter"    : None,#"HLT_PASS('Hlt2B2K0pi0Decision')",
                    "BMass_min"     : 4000*MeV,
                    "BMass_max"     : 6200*MeV,

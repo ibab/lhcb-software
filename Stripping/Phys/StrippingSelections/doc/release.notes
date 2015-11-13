@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-13 - Stefano Perazzini
+ - Corrected default_config for StrippingBnoC/StrippingB2Kpi0
+
 ! 2015-11-13 - Roberta Cardinale
  - Removed track chi2 cut for StrippingBandQ/StrippingChiCJpsiGammaConv.py
  - Removed track chi2 cut for StrippingBnoC/StrippingB2pphh.py
