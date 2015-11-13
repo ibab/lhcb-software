@@ -3,10 +3,10 @@ Module importing stripping selection line builder modules
 for BnoC WG.
 """
 
-_selections = [ 'StrippingHb2Charged2Body', 
-                'StrippingB2CharmlessQuasi2Body', 
+_selections = [ 'StrippingHb2Charged2Body',
+                'StrippingB2CharmlessQuasi2Body',
                 'StrippingB2HHBDT',
-                'StrippingD2HHBDT', 
+                'StrippingD2HHBDT',
                 'StrippingBc2hhh_BnoC',
                 'StrippingBu2hhh',
                 'StrippingB2pphh',
@@ -16,6 +16,7 @@ _selections = [ 'StrippingHb2Charged2Body',
                 'StrippingLb2V0hh',
                 'StrippingBs2PhiPhi',
                 'StrippingB2Kpi0',
+                'StrippingB2KShhh',
 				'StrippingXb23ph']
 
 for _sel in _selections :
@@ -31,4 +32,3 @@ _strippingKeys = filter ( lambda x : x[:9]=='Stripping',
                           locals().keys())
 
 _strippingModules = [getattr(_this, _k) for _k in _strippingKeys]
-

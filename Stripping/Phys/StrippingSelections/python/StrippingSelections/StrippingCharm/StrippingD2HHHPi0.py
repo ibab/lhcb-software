@@ -44,7 +44,7 @@ default_config = {
                       # Pi0 (M)
                       'MinPT_Pi0M'              : 2000 * MeV,
                       # D(s)+ -> HHHPi0
-                      'TrChi2'                  : 3,
+                      'TrChi2'                  : 4,
                       'TrGhostProb'             : 0.5,
                       'MinTrkPT'                : 300 * MeV,
                       'MinTrkIPChi2'            : 3,

@@ -56,7 +56,7 @@ default_config = {
                       'KSCutMass_LL'            : 35 * MeV,
                       'KSCutFDChi2_LL'          : 5,
                       # D(s)+ -> HHHKS
-                      'TrChi2'                  : 3,
+                      'TrChi2'                  : 4,
                       'TrGhostProb'             : 0.5,
                       'MinTrkPT'                : 250 * MeV,
                       'MinTrkIPChi2'            : 3,

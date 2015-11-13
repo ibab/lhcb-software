@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-13 - Maurizio Martinelli
+ - Changed track-quality cuts in StrippingCharm:
+    DstarD2HHHH,DstarD2KSHHPi0,DstarD2XGamma,D2HHHKs,D2HHHPi0
+ - Added B2KShhh lines in StrippingBnoC
+
 ! 2015-11-13 - Jinlin Fu
  - add StrippingBnoC/StrippingXb23ph.py
 
@@ -32,7 +37,7 @@
 
 ! 2015-11-12 - Greg Ciezarek
  - Moved StrippingD0ForBXX.py and StrippingJPsiForSL.py from SL to Calib
- 
+
 ! 2015-11-12 - Roberta Cardinale
  - Update StrippingBnoC/StrippingB2pphh.py lines
  - Fixed NBody-import issue for StrippingBandQ/StrippingLb2EtacKp.py
@@ -54,7 +59,7 @@
     - Fix the fact that Xic0 wasn't getting the DeltaZ cut
  - Remove a test module that I left in StrippingCalib/__init__.py
 
-! 2015-11-11 - Basem Khanji 
+! 2015-11-11 - Basem Khanji
   - Added the stripping line: B02DstDD02K3PiBeauty2CharmLine to StrippingB2OC/
     ,StrippingB2OC/StrippingBeauty2Charm.py & StrippingB2OC/Beauty2Charm_B2DXBuilder.py are updated accordingly
 

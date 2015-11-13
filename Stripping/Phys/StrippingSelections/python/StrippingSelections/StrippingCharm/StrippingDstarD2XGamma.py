@@ -48,7 +48,7 @@ default_config = {
                       'MaxVCHI2_CNV_DD'         : 9,
                       'MinPT_CNV_DD'            : 1000 * MeV,
                       # X -> HH
-                      'TrChi2'                  : 3,
+                      'TrChi2'                  : 4,
                       'TrGhostProb'             : 0.5,
                       'MinTrkPT'                : 250 * MeV,
                       'MinTrkIPChi2'            : 3,

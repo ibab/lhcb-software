@@ -33,7 +33,7 @@ default_config = {
                       'PrescaleDstarD2KKPiPi'   : 1,
                       'PrescaleDstarD2KKKPi'    : 1,
                       # D0 -> HHHH
-                      'TrChi2'                  : 3,
+                      'TrChi2'                  : 4,
                       'TrGhostProb'             : 0.5,
                       'MinTrkPT'                : 250 * MeV,
                       'MinTrkIPChi2'            : 3,
@@ -87,7 +87,7 @@ class DstarD2HHHHLines( LineBuilder ) :
 
             am34 = (139.57 + (493.677 if decay == 'KKKPi' else 139.57) ) * MeV
             am4 = 139.57 * MeV
-            inputs = [ StdNoPIDsPions] if decays == 'PiPiPiPi' else [ StdNoPIDsPions, StdNoPIDsKaons ]
+            inputs = [ StdNoPIDsPions] if decay == 'PiPiPiPi' else [ StdNoPIDsPions, StdNoPIDsKaons ]
 
             # Create the D0 candidate
             self.D2HHHH[decay] = self.makeD2HHHH(D2HHHHName,
