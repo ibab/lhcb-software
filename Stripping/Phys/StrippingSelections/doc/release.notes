@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-13 - Xabier Cid Vidal
+ - Removed ALLSAMEPV requirement on StrippingTaggedJets
+
 ! 2015-11-13 - Stefano Perazzini
  - Adjusted chi2/ndof cuts for B2HHBDT and Hb2Charged2BodyLines
 

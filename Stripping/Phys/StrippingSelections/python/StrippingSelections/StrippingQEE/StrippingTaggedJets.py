@@ -162,7 +162,6 @@ class TaggedJetsConf( LineBuilder ) :
         if ptcut==1: JetGroup.DaughtersCuts = { "CELLjet" :" (PT > %(min_jet_pT)s ) " %self._config }
         elif ptcut==2: JetGroup.DaughtersCuts = { "CELLjet" :" (PT > %(min_jet_pT_ExclusiveDiJet)s ) " %self._config }    
         
-        JetGroup.CombinationCut = "AALLSAMEBPV "
         JetGroup.MotherCut = "ALL"
         
         requiredSelections = [self.__taggedJets]
@@ -180,7 +179,6 @@ class TaggedJetsConf( LineBuilder ) :
         DiJetPair.ParticleCombiners = {"" : "LoKi::VertexFitter"}
         DiJetPair.addTool( LoKi__VertexFitter, name="LoKi::VertexFitter" )
         
-        DiJetPair.CombinationCut = "AALLSAMEBPV "
         DiJetPair.MotherCut = "ALL"
         
         requiredSelections = [self.sel_DiJet_noPT]
