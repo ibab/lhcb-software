@@ -58,7 +58,7 @@ default_config = {
         'BPVVDChi2'            : 121, 
         'daughter_IPChi2'            : 9,
         
-        'TrackGhostProb'          : 0.45,
+        'TrackGhostProb'          : 0.40,
         
         'DOCA'                   : 0.3,
         'DOCA_loose'             :0.5,
@@ -68,8 +68,8 @@ default_config = {
         'VCHI2_VDOF_LTUB'             :9,
         'VCHI2_VDOF_loose'             :25,
         
-        'daughter_TrChi2'                  :3,
-        'daughter_TrChi2_LTUB'                    :3,
+        'daughter_TrChi2'                  :4,
+        'daughter_TrChi2_LTUB'                    :4,
         
         'B_Pt'                           :350,
         'B_Pt_LTUB'                      :500,
@@ -957,16 +957,12 @@ def makeDefault(name, BPVVDChi2, Muon_MIPChi2DV, TrackGhostProb, DOCA, VCHI2_VDO
     name        : name of the Selection.
     """
     #from Configurables import OfflineVertexFitter
-    Bs2MuMuNoMuID = CombineParticles("Comine"+name)
+    Bs2MuMuNoMuID = CombineParticles("Combine"+name)
     Bs2MuMuNoMuID.DecayDescriptor = "B_s0 -> mu+ mu-"
     # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
     
-    #Bs2MuMuNoMuID.addTool( OfflineVertexFitter )['ParticleCombiners'] = { '' : 'LoKi::VertexFitter:PUBLIC' }
-    #Bs2MuMuNoMuID.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    
-    Bs2MuMuNoMuID.ParticleCombiners.update( { "" : "LoKi::VertexFitter:PUBLIC"} )
-
-    #Bs2MuMuNoMuID.OfflineVertexFitter.useResonanceVertex = False
+   
+  
     Bs2MuMuNoMuID.ReFitPVs = True
     Bs2MuMuNoMuID.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> %(Muon_MIPChi2DV)s )&(TRCHI2DOF < %(TrChi2)s)"\
                                     " & (0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1))"\
@@ -1006,11 +1002,7 @@ def makeBs2mmWide(name, BPVVDChi2, Muon_MIPChi2DV, DOCA, VCHI2_VDOF, TrChi2, BPV
     #from Configurables import OfflineVertexFitter
     Bs2MuMuWideMass = CombineParticles("Combine"+name)
     Bs2MuMuWideMass.DecayDescriptor = "B_s0 -> mu+ mu-"
-    #Bs2MuMuWideMass.addTool( OfflineVertexFitter )
-    #Bs2MuMuWideMass.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    Bs2MuMuWideMass.ParticleCombiners.update( { "" : "LoKi::VertexFitter:PUBLIC"} )
-
-    #Bs2MuMuWideMass.OfflineVertexFitter.useResonanceVertex = False
+  
     Bs2MuMuWideMass.ReFitPVs = True
     Bs2MuMuWideMass.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> %(Muon_MIPChi2DV)s)&(TRCHI2DOF < %(TrChi2)s)" \
                                     " & ( TRGHOSTPROB < %(TrackGhostProb)s )"% locals() }
@@ -1045,10 +1037,7 @@ def makeSS(name, BPVVDChi2, Muon_MIPChi2DV, DOCA, VCHI2_VDOF, TrChi2, BPVIPChi2,
     #from Configurables import OfflineVertexFitter
     Bs2MuMuSS = CombineParticles("Combine"+name)
     Bs2MuMuSS.DecayDescriptor = "[B_s0 -> mu+ mu+]cc"
-    #Bs2MuMuSS.addTool( OfflineVertexFitter )
-    #Bs2MuMuSS.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    #Bs2MuMuSS.OfflineVertexFitter.useResonanceVertex = False
-    Bs2MuMuSS.ParticleCombiners.update( { "" : "LoKi::VertexFitter:PUBLIC"} )
+  
     Bs2MuMuSS.ReFitPVs = True
     Bs2MuMuSS.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> %(Muon_MIPChi2DV)s )&(TRCHI2DOF < %(TrChi2)s )"\
                                     " & ( TRGHOSTPROB < %(TrackGhostProb)s )"% locals() }
@@ -1087,10 +1076,7 @@ def makeLoose(name, MuIPChi2, MuTrChi2, BIPChi2, BFDChi2, DOCA, VCHI2_VDOF, Trac
     Bs2MuMuNoMuIDLoose = CombineParticles("Combine"+name)
     Bs2MuMuNoMuIDLoose.DecayDescriptor = "B_s0 -> mu+ mu-"
 
-    #Bs2MuMuNoMuIDLoose.addTool( OfflineVertexFitter )
-    #Bs2MuMuNoMuIDLoose.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    #Bs2MuMuNoMuIDLoose.OfflineVertexFitter.useResonanceVertex = False
-    Bs2MuMuNoMuIDLoose.ParticleCombiners.update( { "" : "LoKi::VertexFitter:PUBLIC"} )
+   
     Bs2MuMuNoMuIDLoose.ReFitPVs = True
     Bs2MuMuNoMuIDLoose.DaughtersCuts = { "mu+" : "(TRCHI2DOF < %(MuTrChi2)s ) "\
                                          "& (MIPCHI2DV(PRIMARY)> %(MuIPChi2)s ) "\
@@ -1132,10 +1118,7 @@ def makeBu(name, K_MIPChi2DV,  Jpsi_BPVVDChi2, DOCA, TrChi2, BPVIPChi2, TrackGho
 
     PreselBu2JPsiKCommon = CombineParticles("PreselBu2JPsiKCommon")
     PreselBu2JPsiKCommon.DecayDescriptor =  " [B+ -> J/psi(1S) K+]cc ";
-    #PreselBu2JPsiKCommon.addTool( OfflineVertexFitter )
-    #PreselBu2JPsiKCommon.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    #PreselBu2JPsiKCommon.OfflineVertexFitter.useResonanceVertex = False
-    PreselBu2JPsiKCommon.ParticleCombiners.update( { "" : "LoKi::VertexFitter:PUBLIC"} )
+   
     PreselBu2JPsiKCommon.ReFitPVs = True
     PreselBu2JPsiKCommon.DaughtersCuts = { "K+" : "(ISLONG) & (TRCHI2DOF < %(TrChi2)s ) &(MIPCHI2DV(PRIMARY)>%(K_MIPChi2DV)s)& (PT>250*MeV) "\
                                     " & ( TRGHOSTPROB < %(TrackGhostProb)s )"% locals() }
@@ -1179,10 +1162,6 @@ def makeBs(name, Phi_MIPChi2DV,  Jpsi_BPVVDChi2, DOCA, TrChi2, BPVIPChi2, TrackG
 
     PreselBs2JPsiPhiCommon = CombineParticles("PreselBs2JPsiPhiCommon")
     PreselBs2JPsiPhiCommon.DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)"
-    #PreselBs2JPsiPhiCommon.addTool( OfflineVertexFitter )
-    #PreselBs2JPsiPhiCommon.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    #PreselBs2JPsiPhiCommon.OfflineVertexFitter.useResonanceVertex = False
-    PreselBs2JPsiPhiCommon.ParticleCombiners.update( { "" : "LoKi::VertexFitter:PUBLIC"} )
     PreselBs2JPsiPhiCommon.ReFitPVs = True
     PreselBs2JPsiPhiCommon.DaughtersCuts = {}
     PreselBs2JPsiPhiCommon.CombinationCut = "(ADAMASS('B_s0') < 500*MeV)"
@@ -1236,10 +1215,7 @@ def makeBd(name, Kst_MIPChi2DV,  Jpsi_BPVVDChi2, TrackGhostProb, DOCA, TrChi2, B
     ## make BtoJPsiKstar
     PreselBd2JPsiKstCommon = CombineParticles("PreselBd2JPsiKstCommon")
     PreselBd2JPsiKstCommon.DecayDescriptor = "[B0 -> J/psi(1S) K*(892)0]cc"
-    #PreselBd2JPsiKstCommon.addTool( OfflineVertexFitter )
-    #PreselBd2JPsiKstCommon.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    #PreselBd2JPsiKstCommon.OfflineVertexFitter.useResonanceVertex = False
-    PreselBd2JPsiKstCommon.ParticleCombiners.update( { "" : "LoKi::VertexFitter:PUBLIC"} )
+   
     PreselBd2JPsiKstCommon.ReFitPVs = True
     PreselBd2JPsiKstCommon.DaughtersCuts = {}
     PreselBd2JPsiKstCommon.CombinationCut = "(ADAMASS('B0') < 500*MeV)"
@@ -1266,11 +1242,7 @@ def makeDetachedJPsi(name, Jpsi_BPVVDChi2, DOCA, TrChi2, TrackGhostProb) :
     #from Configurables import OfflineVertexFitter
     DetachedJPsi = CombineParticles("Combine"+name)
     DetachedJPsi.DecayDescriptor = "J/psi(1S) -> mu+ mu-"
-    # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
-    #DetachedJPsi.addTool( OfflineVertexFitter )
-    #DetachedJPsi.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    #DetachedJPsi.OfflineVertexFitter.useResonanceVertex = False
-    DetachedJPsi.ParticleCombiners.update( { "" : "LoKi::VertexFitter:PUBLIC"} )
+  
     DetachedJPsi.ReFitPVs = True
     DetachedJPsi.DaughtersCuts = { "mu+" : "(TRCHI2DOF <  %(TrChi2)s) "\
                                     "& (MIPCHI2DV(PRIMARY)> 25.)"\
@@ -1301,12 +1273,9 @@ def makeBs2mmLTUB(name, TrackGhostProb, DOCA, VCHI2_VDOF, TrChi2, B_Pt, BPVIPChi
     name        : name of the Selection.
     """
     #from Configurables import OfflineVertexFitter
-    Bs2MuMuLTUB = CombineParticles("Comine"+name)
+    Bs2MuMuLTUB = CombineParticles("Combine"+name)
     Bs2MuMuLTUB.DecayDescriptor = "B_s0 -> mu+ mu-"
-    #Bs2MuMuLTUB.addTool( OfflineVertexFitter )
-    #Bs2MuMuLTUB.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    #Bs2MuMuLTUB.OfflineVertexFitter.useResonanceVertex = False
-    Bs2MuMuLTUB.ParticleCombiners.update( { "" : "LoKi::VertexFitter:PUBLIC"} )
+   
     Bs2MuMuLTUB.ReFitPVs = True
     Bs2MuMuLTUB.DaughtersCuts = { "mu+" : "(PT > 500*MeV) & (TRCHI2DOF < %(TrChi2)s )"\
                                     " & (0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1))"\
@@ -1343,10 +1312,6 @@ def makeBs2KKLTUB(name, TrackGhostProb, DOCA, VCHI2_VDOF, TrChi2, B_Pt, BPVIPChi
     #from Configurables import OfflineVertexFitter
     Bs2KKLTUB = CombineParticles("Comine"+name)
     Bs2KKLTUB.DecayDescriptor = "B_s0 -> K+ K-"
-    #Bs2KKLTUB.addTool( OfflineVertexFitter )
-    #Bs2KKLTUB.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    #Bs2KKLTUB.OfflineVertexFitter.useResonanceVertex = False
-    Bs2KKLTUB.ParticleCombiners.update( { "" : "LoKi::VertexFitter:PUBLIC"} )
     Bs2KKLTUB.ReFitPVs = True
     Bs2KKLTUB.DaughtersCuts = { "K+" : "(PT > 500*MeV) & (TRCHI2DOF < %(TrChi2)s )"\
                                     " & (0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1))"\
