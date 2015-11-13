@@ -22,6 +22,8 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
 
+  unsigned int QuarterModule(unsigned int module);  
+
 protected:
 
 private:

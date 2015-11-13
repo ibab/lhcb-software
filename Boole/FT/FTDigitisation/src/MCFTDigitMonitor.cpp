@@ -54,6 +54,14 @@ StatusCode MCFTDigitMonitor::initialize() {
 StatusCode MCFTDigitMonitor::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+  
+  // Set geometry
+  //int Nlayers = 4*3;  // layers * stations
+  //int NModule = 12;
+  //int NMat = 2;
+  //int Nsipms = 16;
+  //int Nchannels = 128;
+  //int Ntotchannels = Nlayers * NModule * NMat * Nsipms * Nchannels;
 
   // retrieve FTDigits
   const MCFTDigits* mcDigitsCont = get<MCFTDigits>(m_digitLocation);
@@ -97,10 +105,70 @@ StatusCode MCFTDigitMonitor::execute() {
          -1. ,1.);
 
     // deposits distribution in (x,y)
-    plot2D(mcDigit->deposit()->mcHitVec()[0]->midPoint().x(), mcDigit->deposit()->mcHitVec()[0]->midPoint().y(), "DigitsDistribution",
-	   "Digits Distribution; x[mm]; y[mm]" , 
-	   -3600. , 3600. , -2700. , 2700. , 100, 100);
+    if( mcDigit->deposit()->mcHitVec()[0] != 0 ) {
+      plot2D(mcDigit->deposit()->mcHitVec()[0]->midPoint().x(), mcDigit->deposit()->mcHitVec()[0]->midPoint().y(), "DigitsDistribution",
+       "Digits Distribution; x[mm]; y[mm]" , 
+       -3600. , 3600. , -2700. , 2700. , 100, 100);
+    }
+ 
+    // plot occupancy plot of ADC counts
+    const FTChannelID mcChannel = mcDigit -> channelID();
+    unsigned int mcCell = mcChannel.sipmCell(); // 128 = 2^7
+    unsigned int mcSipm = mcChannel.sipmId();   // 16  = 2^4
+    unsigned int mcModu = mcChannel.module();   // (0,1,2,3,4,10,11,5,6,7,8,9)
+    unsigned int mcQuar = mcChannel.quarter();  // 4
+    unsigned int quarterModule = QuarterModule( mcModu ); // (0,1,2,3,4,5,6,7,8,9,10,11)
+    unsigned int quarterCell = quarterModule * 128 * 16 + mcSipm * 128 + mcCell;
+    //plot2D(quarterCell, mcDigit->adcCount(), "adcCountPerQuarterCell",
+    //  "ADC count per quarterCell;quarterCell;ADC count", 0, 128*16*12, 0, 80, 128*16*12, 80); 
     
+    int Nthermal = mcDigit -> deposit() -> thNoiseCont();
+    int Nafterpl = mcDigit -> deposit() -> afterplCont();
+    int Nxtalk   = mcDigit -> deposit() -> xtalkCont();
+    
+    if ( msgLevel( MSG::DEBUG) )
+      debug() << "Noise PEs == Nthermal:" << Nthermal << "  Nafterpl:" << Nafterpl << "  Nxtalk:" << Nxtalk << endmsg;
+
+    plot(Nthermal, "NthermalPerChannel", "NthermalPerChannel;Nthermal", 0., 30., 30);
+    plot(Nafterpl, "NafterplPerChannel", "NafterplPerChannel;Nafterpl", 0., 30., 30);
+    plot(Nxtalk, "NxtalkPerChannel", "NxtalkPerChannel;Nxtalk", 0., 30., 30);
+
+    if(mcQuar==0) {
+      for(int count=0;count<mcDigit->adcCount();++count) {
+        plot(quarterCell, "adcCountsPerQuarterCellQ0", "ADC counts per quarterCell Q0;quarterCell;ADC counts", 0., 128*16*12., 128*16*12);
+        plot(quarterModule, "adcCountsPerQuarterModuleQ0", "ADC counts per quarterModule Q0;quarterModule;ADC counts", 0., 12., 12);
+        plot(mcSipm, "adcCountsPerSipmQ0", "ADC counts per SiPM Q0;SiPM;ADC counts", 0., 16., 16);
+        plot(mcCell, "adcCountsPerCellQ0", "ADC counts per Cell Q0;Cell;ADC counts", 0., 128., 128);
+        if(mcChannel.layer() == 0) {
+          plot(quarterCell, "adcCountsPerQuarterCellL0Q0", "ADC counts per quarterCell L0Q0;quarterCell;ADC counts", 0., 128*16*12., 128*16*12);
+        }
+      }
+      if(mcChannel.layer() == 0) {
+
+        // noise
+        int i;
+        for(i=0; i<Nthermal; i++) {
+          plot(quarterModule, "digitThNoise_QM_Q0L0", "digitThNoise_QM_Q0L0; quarterModule;PE", 0., 12., 12);
+          plot(quarterCell,   "digitThNoise_QC_Q0L0", "digitThNoise_QC_Q0L0; quarterModule;PE", 0., 128*16*12., 128*16*12);
+        }
+        for(i=0; i<Nafterpl; i++) {
+          plot(quarterModule, "digitAfterplCont_QM_Q0L0", "digitAfterplCont_QM_Q0L0; quarterModule;PE", 0., 12., 12);
+          plot(quarterCell,   "digitAfterplCont_QC_Q0L0", "digitAfterplCont_QC_Q0L0; quarterModule;PE", 0., 128*16*12., 128*16*12);
+        }
+        for(i=0; i<Nxtalk; i++) {
+          plot(quarterModule, "digitXtalkCont_QM_Q0L0", "digitXtalkCont_QM_Q0L0; quarterModule;PE", 0., 12., 12);
+          plot(quarterCell,   "digitXtalkCont_QC_Q0L0", "digitXtalkCont_QC_Q0L0; quarterModule;PE", 0., 128*16*12., 128*16*12);
+        }
+      }
+    }
+
+
+    //plot2D(mcDigit -> deposit() -> channelID(), mcDigit -> adcCount(), "digitADC", "digitADC; channelID; ADC", 0., float(Ntotchannels), 0., 120, Ntotchannels, 120);
+    //plot2D(mcDigit -> deposit() -> channelID(), mcDigit -> deposit() -> thNoiseCont(), "digitThNoise", "digitThNoise; channelID; PE", 0., float(Ntotchannels), 0., 30, Ntotchannels, 30);
+    //plot2D(mcDigit -> deposit() -> channelID(), mcDigit -> deposit() -> afterplCont(), "digitAfterpl", "digitAfterpl; channelID; PE", 0., float(Ntotchannels), 0., 30, Ntotchannels, 30);
+    //plot2D(mcDigit -> deposit() -> channelID(), mcDigit -> deposit() -> xtalkCont(), "digitXtalk", "digitXtalk; channelID; PE", 0., float(Ntotchannels), 0., 30, Ntotchannels, 30);
+    
+
     // profile plot of the adc counts vs time
     
 
@@ -122,4 +190,18 @@ StatusCode MCFTDigitMonitor::execute() {
 
   return StatusCode::SUCCESS;
 }
+
+unsigned int MCFTDigitMonitor::QuarterModule(unsigned int module)
+{
+  unsigned int quarterModuleNber = 9;
+  if(module < 5) quarterModuleNber = module;
+  else 
+  {
+    quarterModuleNber = module - 4;
+    if(module == 10) quarterModuleNber = 5;
+    if(module == 11) quarterModuleNber = 0;
+  }
+  return quarterModuleNber;
+}
+
 //=============================================================================

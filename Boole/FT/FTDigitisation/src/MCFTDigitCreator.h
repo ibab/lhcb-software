@@ -45,7 +45,7 @@ public:
 
   int deposit2ADC(const LHCb::MCFTDeposit* ftdeposit); ///< This function converts deposited energy in ADC Count
   std::pair<double,double> integrateResponse(const LHCb::MCFTDeposit* ftdeposit);
-  int averagePhotoElectrons(double energy);
+  int averagePhotoElectrons(double energy, LHCb::MCHit* noiseBypass);
   
   SiPMResponse* m_SiPMResponse; ///< pointer to SiPM integrated response function
   
@@ -66,15 +66,21 @@ private:
 
   bool m_force2bitADC;  ///< force 3-valued charges at the end
 
-  // Noise related
-  float  m_pedestal, m_clusterMinCharge;
-  float m_temperature, m_irradiation;
-  float m_thermalNoiseRateBase, m_crossTalkProbability, m_afterpulseProbability, m_nu;
-  bool  m_doNoise;
-
   Rndm::Numbers m_gauss;
   Rndm::Numbers m_flat;
-  Rndm::Numbers m_rndmLandau;
+  
+  
+  // Set geometry
+  int Nlayers   = 4*3;  // layers * stations
+  int NModule   = 12;   // per up/down
+  int NMat      = 2;    // up and down
+  int Nsipms    = 16;   // per module
+  int Nchannels = 128;  // per sipm array
+  int Ntotchannels = Nlayers * NModule * NMat * Nsipms * Nchannels;
+
+  int m_clusterLowThreshold;
+  int m_clusterMidThreshold;
+  int m_clusterHighThreshold;
 
   // tools
   

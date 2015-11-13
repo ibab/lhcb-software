@@ -221,6 +221,7 @@ StatusCode MCFTDepositMonitor::execute() {
   }
 
 
+  if ( msgLevel( MSG::DEBUG) ) debug() << "Done with monitoring" << endmsg;
   return StatusCode::SUCCESS;
 }
 

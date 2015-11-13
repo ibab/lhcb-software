@@ -30,6 +30,9 @@ class MCFTDepositCreator : public GaudiHistoAlg {
   typedef std::pair<LHCb::FTChannelID, double> FTDoublePair;
   typedef std::vector< FTDoublePair > FTDoublePairs;
 
+  typedef std::map<LHCb::FTChannelID, LHCb::MCFTDeposit*> FTchanDepMap;
+  typedef std::pair<LHCb::FTChannelID, LHCb::MCFTDeposit*> FTchanDep;
+
 public: 
   /// Standard constructor
   MCFTDepositCreator( const std::string& name, ISvcLocator* pSvcLocator );
@@ -72,6 +75,8 @@ private:
   //void calculateAttenuation(const LHCb::MCHit* ftHit, double& att, double& attRef);
   //void calculateTransmissionMap();
   void plotChannelProperties( const DeFTFibreMat* pL, FTDoublePairs channels, const LHCb::MCHit* ftHit);
+  void addNoiseDeposit(LHCb::FTChannelID noiseChannel, double Energy, double TOA, int type, int npe, LHCb::MCFTDeposits* depositCont);
+  std::pair<int,double> addXtalk(double Energy);
   
 
 
@@ -92,14 +97,34 @@ private:
   double       m_scintillationDecayTime; ///< Decay time of scintillation light release
  
   double       m_putMCParticlePcut;
+  bool         m_killSignal;
   
   DeFTDetector* m_deFT; ///< pointer to FT detector description
   Rndm::Numbers m_flatDist; ///< random number generator 
+  Rndm::Numbers m_rndmLandau;
   
   bool         m_useAttenuation;           ///< Use an attenuation map to attenuate the light according to a model?
 
   double       m_yMax;
   unsigned int m_numLayers;
+
+  bool         m_simulateNoise;
+  double       m_thermalNoiseRate;
+  int          m_rdwindows;
+  double       m_crossTalkProb;
+  double       m_afterpulseProb;
+  double       m_photoElectronsPerMeV;
+  
+  
+  
+  // Set geometry
+  int Nlayers   = 4*3;  // layers * stations
+  int NModule   = 12;   // per up/down
+  int NMat      = 2;    // up and down
+  int Nsipms    = 16;   // per module
+  int Nchannels = 128;  // per sipm array
+  int Ntotchannels = Nlayers * NModule * NMat * Nsipms * Nchannels;
+
   
 
 };

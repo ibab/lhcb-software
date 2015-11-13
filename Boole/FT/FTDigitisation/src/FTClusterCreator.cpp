@@ -41,8 +41,8 @@ FTClusterCreator::FTClusterCreator( const std::string& name,
   declareProperty("OutputLocation" ,    m_outputLocation    = LHCb::FTClusterLocation::Default, "Path to output Clusters");
   declareProperty("ADCThreshold" ,      m_adcThreshold      = 3 , "Minimal ADC Count to be added in cluster");
   declareProperty("ClusterMinWidth" ,   m_clusterMinWidth   = 1 , "Minimal allowed width for clusters");
-  declareProperty("ClusterMaxWidth" ,   m_clusterMaxWidth   = 4 , "Maximal allowed width for clusters");
-  declareProperty("ClusterMinCharge" ,  m_clusterMinCharge  = 8 , "Minimal charge to keep cluster ~4 p.e.");
+  declareProperty("ClusterMaxWidth" ,   m_clusterMaxWidth   = 8 , "Maximal allowed width for clusters");
+  declareProperty("ClusterMinCharge" ,  m_clusterMinCharge  = 9 , "Minimal charge to keep cluster ~4.5 p.e.");
   declareProperty("ClusterMinADCPeak" , m_clusterMinADCPeak = 5 , "Minimal ADC for cluster peaks, ~2.5 pe.");
   declareProperty("FixClusterWidth" ,   m_fixClusterWidth   = 0 , "Fix cluster width for tracking res. studies");
   declareProperty("FixClusterCharge" ,  m_fixClusterCharge  = 0 , "Fix cluster charge for tracking res. studies");
@@ -113,7 +113,9 @@ StatusCode FTClusterCreator::execute(){
     const MCFTDeposit* mcDeposit = mcDigit->deposit();
     if (mcDeposit != 0) {
       for (unsigned int idx = 0; idx<mcDeposit->mcHitVec().size(); ++idx) {
-        hitBoolMap[ mcDeposit->mcHitVec()[idx] ]=false;
+        if( mcDeposit->mcHitVec()[idx] != 0 ) {
+          hitBoolMap[ mcDeposit->mcHitVec()[idx] ]=false;
+        }
       }
     }
   }
@@ -143,7 +145,8 @@ StatusCode FTClusterCreator::execute(){
     if(seedDigit->adcCount() >= m_clusterMinADCPeak){ 
       // ADC above seed : start clustering
 
-      debug() << " ---> START NEW CLUSTER WITH SEED @ " << seedDigit->channelID() << endmsg;
+      if ( msgLevel( MSG::DEBUG) )
+        debug() << " ---> START NEW CLUSTER WITH SEED @ " << seedDigit->channelID() << endmsg;
       
       MCFTDigits::const_iterator startDigitIter = seedDigitIter; // begin channel of cluster
       MCFTDigits::const_iterator stopDigitIter  = seedDigitIter; // end   channel of cluster
@@ -185,7 +188,8 @@ StatusCode FTClusterCreator::execute(){
               
               seedDigitIter = stopDigitIter+1; // increment loop iterator
               seedDigit = *seedDigitIter;      // increment seed channel
-              debug() << "  ==> Redefined the seed @ " << seedDigit->channelID() << endmsg;
+              if ( msgLevel( MSG::DEBUG) )
+                debug() << "  ==> Redefined the seed @ " << seedDigit->channelID() << endmsg;
               
               // set min and max channel of cluster to the new seed (i.e. reset the cluster finding)
               startDigitIter = seedDigitIter; 
@@ -248,7 +252,8 @@ StatusCode FTClusterCreator::execute(){
       // Check if cluster size < maxWidth. If not: choose highest ADC sum for cluster and shrink
       // This is possible because we check the size, then extend right, then extend left, and repeat.
       while((stopDigitIter - startDigitIter) >= m_clusterMaxWidth) {
-        debug() << "Cluster size exceeded threshold, Shrinking cluster." << endmsg;
+        if ( msgLevel( MSG::DEBUG) )
+          debug() << "Cluster size exceeded threshold, Shrinking cluster." << endmsg;
         if((*stopDigitIter)->adcCount() > (*startDigitIter)->adcCount())   startDigitIter++;
         else stopDigitIter--;
       }
@@ -259,15 +264,19 @@ StatusCode FTClusterCreator::execute(){
 
       //
       // calculate the cluster charge / mean position
-      debug() << " ---> Done with cluster finding, now calculating charge / frac.pos" << endmsg;
+      if ( msgLevel( MSG::DEBUG) )
+        debug() << " ---> Done with cluster finding, now calculating charge / frac.pos" << endmsg;
 
       int      totalCharge  = 0;
       double   meanPosition = 0;
+
+      //std::vector<LHCb::MCFTDigit*> digitVec; //TODO
 
       for(MCFTDigits::const_iterator iterDigit = startDigitIter; iterDigit <(stopDigitIter+1); ++iterDigit) {
         // Loop over digits in to-be cluster
 
         MCFTDigit* digit = *iterDigit;
+        //digitVec.push_back(digit); //TODO
 
         // calculate channel ADC as seen by the hardware thresholds (2bits implementation: ADC linked to the 3 thresholds)
         int ChannelWeight = 0;
@@ -287,14 +296,16 @@ StatusCode FTClusterCreator::execute(){
           for (unsigned int idx = 0; idx<mcDeposit->mcHitVec().size(); ++idx) {
             // loop over all mcHits contributing to the deposit associated with the digit
 
-            // add dir+ref energy to total energy from MC
-            totalEnergyFromMC += mcDeposit->energyVec()[idx] + mcDeposit->energyRefVec()[idx];
-            // add the MCParticle that deposited the energy to the map
-            mcContributionMap[ mcDeposit->mcHitVec()[idx]->mcParticle() ]  +=  (mcDeposit->energyVec()[idx] + mcDeposit->energyRefVec()[idx]);
-            // add the MCHit that contributed energy to the map
-            mcHitContributionMap[ mcDeposit->mcHitVec()[idx] ]  +=  (mcDeposit->energyVec()[idx] + mcDeposit->energyRefVec()[idx]);
-            // add MCHit to clusterHitDistribution list
-            clusterHitDistribution.push_back(mcDeposit->mcHitVec()[idx]);
+            if(mcDeposit -> mcHitVec()[idx] != 0) {
+              // add dir+ref energy to total energy from MC
+              totalEnergyFromMC += mcDeposit->energyVec()[idx] + mcDeposit->energyRefVec()[idx];
+              // add the MCParticle that deposited the energy to the map
+              mcContributionMap[ mcDeposit->mcHitVec()[idx]->mcParticle() ]  +=  (mcDeposit->energyVec()[idx] + mcDeposit->energyRefVec()[idx]);
+              // add the MCHit that contributed energy to the map
+              mcHitContributionMap[ mcDeposit->mcHitVec()[idx] ]  +=  (mcDeposit->energyVec()[idx] + mcDeposit->energyRefVec()[idx]);
+              // add MCHit to clusterHitDistribution list
+              clusterHitDistribution.push_back(mcDeposit->mcHitVec()[idx]);
+            }
           }
         }
       } // end of loop over digits in 'cluster'
@@ -312,7 +323,7 @@ StatusCode FTClusterCreator::execute(){
         meanPosition =(*startDigitIter)->channelID() + meanPosition/totalCharge;
       } else {
         // THIS SHOULD NEVER BE REACHED!
-        debug() << "Warning: Cluster charge < 0! Cluster mean position not estimated correctly." << endmsg;
+        info() << "Warning: Cluster charge < 0! Cluster mean position not estimated correctly." << endmsg;
       }
 
         
@@ -321,8 +332,14 @@ StatusCode FTClusterCreator::execute(){
       //
       // Before Cluster is recorded, check that total ADC > threshold and size > minSize
 
-      if( ( totalCharge >= m_clusterMinCharge) &&
-          ((stopDigitIter-startDigitIter+1) >= m_clusterMinWidth) ){
+      //if( ( totalCharge >= m_clusterMinCharge) &&
+      //    ((stopDigitIter-startDigitIter+1) >= m_clusterMinWidth) ){
+      unsigned int width = (stopDigitIter-startDigitIter+1);
+      if(
+         ( (width==1 && totalCharge >= m_clusterMinCharge) ||
+           (width> 1 && totalCharge >= m_clusterMinADCPeak + m_adcThreshold) )
+         && (width >= m_clusterMinWidth)
+        ) {
         
         // update counters for clusters per SiPM
         if( ReferenceSiPMID == 0 ) ReferenceSiPMID = (*startDigitIter)->channelID().sipmId();
@@ -368,6 +385,7 @@ StatusCode FTClusterCreator::execute(){
         
         // Define new cluster
         //  FTCluster::FTCluster( LHCb::FTChannelID &id, double fraction, int size, int charge )
+        //FTCluster *newCluster = new FTCluster(meanChanPosition,fractionChanPosition,newClusSize,totalCharge,digitVec); // TODO
         FTCluster *newCluster = new FTCluster(meanChanPosition,fractionChanPosition,newClusSize,totalCharge);
         ++m_nCluster;
         m_sumCharge += totalCharge;
@@ -469,13 +487,13 @@ StatusCode FTClusterCreator::execute(){
             // draw current spill + no noise plots
             if( largestHit -> parent() == mcHits ) {
               // is no spillover
-              plot(largestHit -> midPoint().x(), "MCCluster_x_position", "MC Cluster x position (from MCHit) ; x [mm] ; Number of clusters",-3000,3000,200 ); 
-              plot(largestHit -> midPoint().y(), "MCCluster_y_position", "MC Cluster y position (from MCHit) ; y [mm] ; Number of clusters",-2500,2500,200 ); 
+              plot(largestHit -> midPoint().x(), "okspillCluster_x_position", "MC Cluster x position (from MCHit) ; x [mm] ; Number of clusters",-3000,3000,200 ); 
+              plot(largestHit -> midPoint().y(), "okspillCluster_y_position", "MC Cluster y position (from MCHit) ; y [mm] ; Number of clusters",-2500,2500,200 ); 
               plot2D(largestHit -> midPoint().x(), largestHit -> midPoint().y(), "MCCluster_xy_position", 
                   "MC Cluster xy position ; x [mm]; y[mm]", -3000,3000,-2500,2500,200,200);
-              plot(newCluster->size(),"MCClusSize","MC Cluster Size Distribution;Cluster Size;Nber of events" , 0. , 70., 70);
-              plot(newCluster->charge(),"MCClusCharge", "MC Cluster Charge Distribution;Cluster Charge;Nber of events" , 0 , 100);
-              plot(newCluster->channelID().sipmId(), "MCClusSiPMID", "MC Cluster SiPMID; Cluster SiPMID" , 0. , 96. ,96);
+              plot(newCluster->size(),"okspillClusSize","MC Cluster Size Distribution;Cluster Size;Nber of events" , 0. , 70., 70);
+              plot(newCluster->charge(),"okspillClusCharge", "MC Cluster Charge Distribution;Cluster Charge;Nber of events" , 0 , 100);
+              plot(newCluster->channelID().sipmId(), "okspillClusSiPMID", "MC Cluster SiPMID; Cluster SiPMID" , 0. , 96. ,96);
             } else {
               if(m_makeSpillPlots) {
                 if ( mcHitsNext == 0 || mcHitsPrev == 0 ) {
@@ -537,28 +555,38 @@ StatusCode FTClusterCreator::execute(){
           if( acceptCluster ) {
             clusterCont -> insert(newCluster);
 
-            plot(newCluster->size(),"NoiseClusSize","Cluster Size Distribution;Cluster Size;Nber of events" , 0. , 10., 10);
-            plot(newCluster->charge(),"NoiseClusCharge","Cluster Charge Distribution;Cluster Charge;Nber of events" , 0., 50., 50);
-            plot(newCluster->channelID().sipmCell(), "NoiseClusSiPMCell", "Cluster SiPM Cell; Cluster SiPM Cell", 0. , 130. ,130);
-            plot(newCluster->channelID().quarter(), "NoiseClusQuarter", "Cluster Quarter; Cluster Quarter" , 0. , 4. ,4);
-            plot(newCluster->channelID().layer(), "NoiseClusLayer", "Cluster Layer; Cluster layer" , 0. , 13. ,13);
-            plot(newCluster->channelID().sipmId(), "NoiseClusSiPMID", "Cluster SiPMID; Cluster SiPMID" , 0. , 96. ,96);
-            plot(newCluster->channelID().module(), "NoiseClusModule", "Cluster Module; Cluster Module" , 0. , 16. ,16);
-              
-            plot(newCluster->channelID(), "ClusChannelID", "Cluster ChannelID; Cluster ChannelID" , 0. , 589824. ,4608);
-            plot(newCluster->channelID().sipmCell(), "ClusSiPMCell", "Cluster SiPM Cell; Cluster SiPM Cell", 0. , 130. ,130);
-            plot(newCluster->channelID().sipmId(), "ClusSiPMID", "Cluster SiPMID; Cluster SiPMID" , 0. , 96. ,96);
-            plot(newCluster->channelID().module(), "ClusModule", "Cluster Module; Cluster Module" , 0. , 16. ,16);
-            plot(newCluster->channelID().mat(), "ClusMat", "Cluster Mat; Cluster Mat" , 0. , 2. ,2);
-            plot(newCluster->channelID().quarter(), "ClusQuarter", "Cluster Quarter; Cluster Quarter" , 0. , 4. ,4);
-            plot(newCluster->channelID().layer(), "ClusLayer", "Cluster Layer; Cluster layer" , 0. , 13. ,13);
+            plot(newCluster->size(),"NoiseClusSize","Noise Cluster Size Distribution;Cluster Size;Nber of events" , 0. , 10., 10);
+            plot(newCluster->charge(),"NoiseClusCharge","Noise Cluster Charge Distribution;Cluster Charge;Nber of events" , 0., 50., 50);
+            plot(newCluster->fraction(), "NoiseClusFraction", "Noise Cluster Fraction Pos;Cluster Fraction; Nber of events" , -.5, .5 , 100);
+            plot(newCluster->channelID(), "NoiseClusChannelID", "Noise Cluster ChannelID; Cluster ChannelID" , 0. , 589824. ,4608);
+            plot(newCluster->channelID().sipmCell(), "NoiseClusSiPMCell", "Noise Cluster SiPM Cell; Cluster SiPM Cell", 0. , 130. ,130);
+            plot(newCluster->channelID().sipmId(), "NoiseClusSiPMID", "Noise Cluster SiPMID; Cluster SiPMID" , 0. , 96. ,96);
+            plot(newCluster->channelID().module(), "NoiseClusModule", "Noise Cluster Module; Cluster Module" , 0. , 16. ,16);
+            plot(newCluster->channelID().mat(), "NoiseClusMat", "Noise Cluster Mat; Cluster Mat" , 0. , 2. ,2);
+            plot(newCluster->channelID().quarter(), "NoiseClusQuarter", "Noise Cluster Quarter; Cluster Quarter" , 0. , 4. ,4);
+            plot(newCluster->channelID().layer(), "NoiseClusLayer", "Noise Cluster Layer; Cluster layer" , 0. , 13. ,13);
 
-            plot(newCluster->size(),"ClusSize","Cluster Size Distribution;Cluster Size;Nber of events" , 0. , 10., 10);
-            plot(newCluster->charge(),"ClusCharge","Cluster Charge Distribution;Cluster Charge;Nber of events" , 0., 50., 50);
-            plot(newCluster->fraction(), "ClusFraction", "Cluster Fraction Pos;Cluster Fraction; Nber of events" , -.5, .5 , 100);
-            plot2D(newCluster->size(), newCluster->charge(), "ClusChargevsSize",
-                   "Cluster charge vs. size;Cluster size [Nb of Channels];Cluster Charge [ADC counts]",
+            plot2D(newCluster->size(), newCluster->charge(), "NoiseClusChargevsSize",
+                   "Noise Cluster charge vs. size;Cluster size [Nb of Channels];Cluster Charge [ADC counts]",
                    0. , 16. , 0. , 100.,16, 100);
+            plot2D(newCluster->size(),newCluster->fraction(), "NoiseClusterSizeVSFraction",  
+                   "Noise Cluster Size VS Cluster Fraction ; Cluster Size; Cluster Fraction" , 
+                   0. , 5., 0., 1.);
+
+            /* TODO 
+            if(msgLevel(MSG::DEBUG)) debug() << " >> accessing Digits" << endmsg;
+            auto digits = newCluster -> digits();
+            assert(digits);
+            for(auto digiter = digits.begin(); digiter!= digits.end(); ++digiter) {
+              LHCb::MCFTDigit* digit = *digiter;
+              const LHCb::MCFTDeposit* deposit = digit -> deposit();
+              if(msgLevel(MSG::DEBUG)) debug() << "Noise: " << deposit->thNoiseCont() << " " << deposit->afterplCont() << " " << deposit->xtalkCont() << endmsg;
+              plot(deposit->thNoiseCont(), "NoiseClusThermalPEs","NoiseClusThermalPEs;PE;", 0., 20., 20);
+              plot(deposit->afterplCont(), "NoiseClusAfterplPEs","NoiseClusAfterplPEs;PE;", 0., 20., 20);
+              plot(deposit->xtalkCont(), "NoiseClusXtalkPEs","NoiseClusXtalkPEs;PE;", 0., 20., 20);
+            }
+            if(msgLevel(MSG::DEBUG)) debug() << " << done accessing Digits" << endmsg;
+            */
           }
         }
 
@@ -603,8 +631,7 @@ StatusCode FTClusterCreator::execute(){
 
 
 
-
-
+  if(msgLevel(MSG::DEBUG)) debug() << "done with clustering!" << endmsg;
   return StatusCode::SUCCESS;
 }
 

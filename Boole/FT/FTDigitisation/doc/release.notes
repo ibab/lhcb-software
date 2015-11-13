@@ -4,6 +4,13 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2015-11-13 - Jacco de Vries
+ - BIG: Implemented new noise: at MCFTDepositCreator level (was MCFTDigitCreator level)
+ - Adapted some functionality to make this work. Needs head of Event/FTEvent!
+ - Adapted default max. cluster size from 4 to 8
+ - Adapted clustering max.charge check to match FPGA (& max threshold accordingly)
+ - Added / removed monitoring plots
+
 !========================= FTDigitisation v2r6 2015-07-10 =========================
 ! 2015-06-08 - Eric Cogneras
  - ntuple max sizes in FTNtupleMaker now changeable from joboption files.
