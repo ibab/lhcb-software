@@ -62,19 +62,19 @@ default_config = {
                                                },
     'CONFIG'                                : {
     'Pions4Lambdac_MINIPCHI2'             : 0.0
-    , 'Pion4Lambdac_TRPCHI2'              : 0.015
+    , 'Pion4Lambdac_TRPCHI2'              : 0#.015
     , 'Pion4Lambdac_ProbNNpi'             : 0.2
     , 'Pion4Lambdac_PT'                   : '250*MeV'
-    , 'Protons4Lambdac_TRPCHI2'           : 0.05
+    , 'Protons4Lambdac_TRPCHI2'           : 0#.05
     , 'Protons4Lambdac_minP'              : '0*GeV'
-    , 'Kaon4Lambdac_TRPCHI2'              : 0.05
+    , 'Kaon4Lambdac_TRPCHI2'              : 0#.05
     , 'Protons4Lambdac_ProbNNp'           : 0.05
     , 'Protons4Lambdac_PT'                : '450*MeV'
     , 'Kaon4Lambdac_PT'                   : '450*MeV'
     , 'Kaon4Lambdac_ProbNNk'              : 0.02
     , 'Kaon4Lambdac_minP'                 : '0*GeV'
     , 'Muon4Jpsi_PIDmu'                   : 0
-    , 'Muon4Jpsi_TRPCHI2'                 : 0.005
+    , 'Muon4Jpsi_TRPCHI2'                 : 0#.005
     , 'Lambdac_MassWindowLarge'           : '120*MeV'
     , 'Lambdac_MassWindowTight'           : '30*MeV'		
     , 'Lambdac_MinAPT'                    : '1500*MeV' 
@@ -125,7 +125,7 @@ default_config = {
     ####### 
     , 'HighMassBaryon_MassLowEdge'        : '4.5*GeV'
     , 'HighMassBaryon_MinAPT'             : '1*GeV'
-    , 'ProtonsForHighMassBaryon_TRPCHI2'  : 0.1
+    , 'ProtonsForHighMassBaryon_TRPCHI2'  : 0.#1
     , 'ProtonsForHighMassBaryon_PT'       : '1.5*GeV'
     , 'ProtonsForHighMassBaryon_P'        : '5*GeV'
     , 'ProtonsForHighMassBaryon_ProbNNp'  : 0.1
