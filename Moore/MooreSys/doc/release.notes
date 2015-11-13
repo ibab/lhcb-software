@@ -3,6 +3,19 @@ Package             : MooreSys
 Package Coordinator : R. Aaij
 Purpose             : LHCb HLT application
 
+</PRE><H1><A NAME=v24r3>2015-11-13 MooreSys v24r3</A></H1><PRE>
+
+Release for the lead-lead and the proton-proton (at 5 TeV) data taking.
+ 
+Release based on Hlt v24r2, plus
+Hlt/HltLuminosity
+Hlt/HltConf
+Hlt/HltTracking
+Hlt/Hlt1Lines
+Hlt/Hlt2Lines
+Hlt/HltSettings
+
+
 </PRE><H1><A NAME=v24r2>2015-10-08 MooreSys v24r2</A></H1><PRE>
 
 Release for the proton argon data taking and to include fixes
