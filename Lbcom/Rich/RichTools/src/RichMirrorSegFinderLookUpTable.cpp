@@ -30,9 +30,8 @@ Rich::MirrorSegFinderLookUpTable::MirrorSegFinderLookUpTable( const std::string&
   declareInterface<IMirrorSegFinder>(this);
 
   // job options
-  declareProperty( "TestFinding", m_testFinding = false );
+  //declareProperty( "TestFinding", m_testFinding = false );
   //                                              Rich1    Rich2
-  //declareProperty( "TableSize",   m_tableSize = { 2000,    4000    } );
   declareProperty( "TableSize",   m_tableSize = { 200,      400    } );
   declareProperty( "ExtraXY",     m_extraSize = { 100*mm,  2500*mm } );
 
@@ -53,10 +52,8 @@ StatusCode Rich::MirrorSegFinderLookUpTable::initialize( )
   StatusCode sc = Rich::ToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  if ( m_testFinding )
-  {
-    Warning( "Will run slow checks of mirror search", StatusCode::SUCCESS ).ignore();
-  }
+  //if ( m_testFinding )
+  //{ Warning( "Will run slow checks of mirror search", StatusCode::SUCCESS ).ignore(); }
 
   // Force an update of the cached mirror information
   // Also sets up the UMS service for future updates as needed
@@ -72,17 +69,17 @@ StatusCode Rich::MirrorSegFinderLookUpTable::initialize( )
 StatusCode Rich::MirrorSegFinderLookUpTable::finalize( )
 {
 
-  if ( UNLIKELY(m_testFinding) )
-  {
-    info() << "R1/R2 TableSize = " << m_tableSize << endmsg;
-    info() << "R1/R2 ExtraSize = " << m_extraSize << endmsg;
-    info() << "Max. R1/R2 mirror delta = " << m_maxDistDiff << endmsg;
-    const double R1FailRate = ( m_failRate[0].second > 0 ?
-                                (100.0*m_failRate[0].first)/m_failRate[0].second : 0.0 );
-    const double R2FailRate = ( m_failRate[1].second > 0 ?
-                                (100.0*m_failRate[1].first)/m_failRate[1].second : 0.0 );
-    info() << "Fail rate  R1=" << R1FailRate << "% R2=" << R2FailRate << "%" << endmsg;
-  }
+  // if ( UNLIKELY(m_testFinding) )
+  // {
+  //   info() << "R1/R2 TableSize = " << m_tableSize << endmsg;
+  //   info() << "R1/R2 ExtraSize = " << m_extraSize << endmsg;
+  //   info() << "Max. R1/R2 mirror delta = " << m_maxDistDiff << endmsg;
+  //   const double R1FailRate = ( m_failRate[0].second > 0 ?
+  //                               (100.0*m_failRate[0].first)/m_failRate[0].second : 0.0 );
+  //   const double R2FailRate = ( m_failRate[1].second > 0 ?
+  //                               (100.0*m_failRate[1].first)/m_failRate[1].second : 0.0 );
+  //   info() << "Fail rate  R1=" << R1FailRate << "% R2=" << R2FailRate << "%" << endmsg;
+  // }
 
   // unregister from UMS
   updMgrSvc()->unregister(this);
@@ -240,44 +237,44 @@ Rich::MirrorSegFinderLookUpTable::MirrorFinder::closestXY( const double& x,
   return minM;
 }
 
-//=========================================================================
-// test mirror from lookup table
-//=========================================================================
-void
-Rich::MirrorSegFinderLookUpTable::testFinding( const MirrorFinder& finder,
-                                               const Rich::DetectorType rich,
-                                               const Rich::Side side,
-                                               const Gaudi::XYZPoint& reflPoint ) const
-{
-  // Find the mirrors using lookup table and slow search
-  const DeRichSphMirror * mirror = finder.find(reflPoint);
-  const DeRichSphMirror * testM  = finder.closestXY( reflPoint.x(), reflPoint.y() );
+// //=========================================================================
+// // test mirror from lookup table
+// //=========================================================================
+// void
+// Rich::MirrorSegFinderLookUpTable::testFinding( const MirrorFinder& finder,
+//                                                const Rich::DetectorType rich,
+//                                                const Rich::Side side,
+//                                                const Gaudi::XYZPoint& reflPoint ) const
+// {
+//   // Find the mirrors using lookup table and slow search
+//   const DeRichSphMirror * mirror = finder.find(reflPoint);
+//   const DeRichSphMirror * testM  = finder.closestXY( reflPoint.x(), reflPoint.y() );
 
-  ++m_failRate[rich].second;
-  if ( mirror != testM )
-  {
-    ++m_failRate[rich].first;
-    const double dist1 = std::sqrt(MirrorFinder::distance2(reflPoint.x(),reflPoint.y(),mirror));
-    const double dist2 = std::sqrt(MirrorFinder::distance2(reflPoint.x(),reflPoint.y(),testM));
-    if ( msgLevel(MSG::DEBUG) )
-    {
-      debug() << Rich::text(rich,side) << " Lookup table gave different mirror to full search"
-              << endmsg;
-      debug() << " -> Lookup : #" << mirror->mirrorNumber()
-              << " Name=" << mirror->name()
-              << " Centre=" << mirror->mirrorCentre()
-              << " Dist=" << dist1
-              << endmsg;
-      debug() << " -> Full   : #" << testM->mirrorNumber()
-              << " Name=" << testM->name()
-              << " Centre=" << testM->mirrorCentre()
-              << " Dist=" << dist2
-              << endmsg;
-    }
-    const double diffDelta = fabs( dist1 - dist2 );
-    if ( m_maxDistDiff[rich] < diffDelta ) m_maxDistDiff[rich] = diffDelta;
-  }
-}
+//   ++m_failRate[rich].second;
+//   if ( mirror != testM )
+//   {
+//     ++m_failRate[rich].first;
+//     const double dist1 = std::sqrt(MirrorFinder::distance2(reflPoint.x(),reflPoint.y(),mirror));
+//     const double dist2 = std::sqrt(MirrorFinder::distance2(reflPoint.x(),reflPoint.y(),testM));
+//     if ( msgLevel(MSG::DEBUG) )
+//     {
+//       debug() << Rich::text(rich,side) << " Lookup table gave different mirror to full search"
+//               << endmsg;
+//       debug() << " -> Lookup : #" << mirror->mirrorNumber()
+//               << " Name=" << mirror->name()
+//               << " Centre=" << mirror->mirrorCentre()
+//               << " Dist=" << dist1
+//               << endmsg;
+//       debug() << " -> Full   : #" << testM->mirrorNumber()
+//               << " Name=" << testM->name()
+//               << " Centre=" << testM->mirrorCentre()
+//               << " Dist=" << dist2
+//               << endmsg;
+//     }
+//     const double diffDelta = fabs( dist1 - dist2 );
+//     if ( m_maxDistDiff[rich] < diffDelta ) m_maxDistDiff[rich] = diffDelta;
+//   }
+// }
 
 //=========================================================================
 //  find spherical mirror segment and return pointer
@@ -287,17 +284,17 @@ Rich::MirrorSegFinderLookUpTable::findSphMirror( const Rich::DetectorType rich,
                                                  const Rich::Side side,
                                                  const Gaudi::XYZPoint& reflPoint ) const
 {
-  if ( msgLevel(MSG::VERBOSE) )
-    verbose() << "Searching for Sph. mirror for point " << reflPoint << endmsg;
+  //if ( msgLevel(MSG::VERBOSE) )
+  //  verbose() << "Searching for Sph. mirror for point " << reflPoint << endmsg;
 
   // Most likely mirror is the last one found... So test this one first
   const DeRichSphMirror* mirror = m_sphMirrors[rich][side].find(reflPoint);
 
-  if ( UNLIKELY(m_testFinding) )
-  { testFinding( m_sphMirrors[rich][side], rich, side, reflPoint ); }
+  //if ( UNLIKELY(m_testFinding) )
+  //{ testFinding( m_sphMirrors[rich][side], rich, side, reflPoint ); }
 
-  if ( msgLevel(MSG::VERBOSE) && mirror )
-    verbose() << " -> Found mirror " << mirror->mirrorNumber() << endmsg;
+  //if ( msgLevel(MSG::VERBOSE) && mirror )
+  //  verbose() << " -> Found mirror " << mirror->mirrorNumber() << endmsg;
 
   // return found mirror
   return mirror;
@@ -311,17 +308,17 @@ Rich::MirrorSegFinderLookUpTable::findSecMirror( const Rich::DetectorType rich,
                                                  const Rich::Side side,
                                                  const Gaudi::XYZPoint& reflPoint ) const
 {
-  if ( msgLevel(MSG::VERBOSE) )
-    verbose() << "Searching for Sec. mirror for point " << reflPoint << endmsg;
+  //if ( msgLevel(MSG::VERBOSE) )
+  //  verbose() << "Searching for Sec. mirror for point " << reflPoint << endmsg;
 
   // Most likely mirror is the last one found... So test this one first
   const DeRichSphMirror* mirror = m_secMirrors[rich][side].find(reflPoint);
 
-  if ( UNLIKELY(m_testFinding) )
-  { testFinding( m_secMirrors[rich][side], rich, side, reflPoint ); }
+  //if ( UNLIKELY(m_testFinding) )
+  //{ testFinding( m_secMirrors[rich][side], rich, side, reflPoint ); }
 
-  if ( msgLevel(MSG::VERBOSE) && mirror )
-    verbose() << " -> Found mirror " << mirror->mirrorNumber() << endmsg;
+  //if ( msgLevel(MSG::VERBOSE) && mirror )
+  //  verbose() << " -> Found mirror " << mirror->mirrorNumber() << endmsg;
 
   // return found mirror
   return mirror;
@@ -338,18 +335,18 @@ void Rich::MirrorSegFinderLookUpTable::printMirrors() const
                           std::make_pair(Rich::Rich1,Rich::bottom),
                           std::make_pair(Rich::Rich2,Rich::left),
                           std::make_pair(Rich::Rich2,Rich::right) };
-  for ( DetSide::const_iterator iD = pairs.begin(); iD != pairs.end(); ++iD )
+  for ( const auto& D : pairs )
   {
-
-    debug() << "Found " << m_sphMirrors[iD->first][iD->second].mirrors.size()
-            << " primary mirrors for " << iD->first << " "
-            << Rich::text(iD->first,iD->second) << " :";
-    for ( const auto& M : m_sphMirrors[iD->first][iD->second].mirrors )
+    
+    debug() << "Found " << m_sphMirrors[D.first][D.second].mirrors.size()
+            << " primary mirrors for " << D.first << " "
+            << Rich::text(D.first,D.second) << " :";
+    for ( const auto& M : m_sphMirrors[D.first][D.second].mirrors )
     { debug() << " " << M->mirrorNumber(); }
     debug() << endmsg;
     if ( msgLevel(MSG::VERBOSE) )
     {
-      for ( const auto& M : m_sphMirrors[iD->first][iD->second].mirrors )
+      for ( const auto& M : m_sphMirrors[D.first][D.second].mirrors )
       {
         verbose() << " -> Spherical mirror " << M->mirrorNumber()
                   << " " << M->name()
@@ -358,15 +355,15 @@ void Rich::MirrorSegFinderLookUpTable::printMirrors() const
       }
     }
 
-    debug() << "Found " << m_secMirrors[iD->first][iD->second].mirrors.size()
-            << " secondary mirrors for " << iD->first << " "
-            << Rich::text(iD->first,iD->second) << " :";
-    for ( const auto& M : m_secMirrors[iD->first][iD->second].mirrors )
+    debug() << "Found " << m_secMirrors[D.first][D.second].mirrors.size()
+            << " secondary mirrors for " << D.first << " "
+            << Rich::text(D.first,D.second) << " :";
+    for ( const auto& M : m_secMirrors[D.first][D.second].mirrors )
     { debug() << " " << M->mirrorNumber(); }
     debug() << endmsg;
     if ( msgLevel(MSG::VERBOSE) )
     {
-      for ( const auto& M : m_secMirrors[iD->first][iD->second].mirrors )
+      for ( const auto& M : m_secMirrors[D.first][D.second].mirrors )
       {
         verbose() << " -> Secondary mirror " << M->mirrorNumber()
                   << " " << M->name()

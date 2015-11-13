@@ -205,11 +205,11 @@ namespace Rich
     /// Debug printout of the mirrors
     void printMirrors() const;
 
-    /// test mirror from lookup table
-    void testFinding( const MirrorFinder& finder,
-                      const Rich::DetectorType rich,
-                      const Rich::Side side,
-                      const Gaudi::XYZPoint& reflPoint ) const;
+    // /// test mirror from lookup table
+    // void testFinding( const MirrorFinder& finder,
+    //                   const Rich::DetectorType rich,
+    //                   const Rich::Side side,
+    //                   const Gaudi::XYZPoint& reflPoint ) const;
 
   private: // data
 
@@ -223,7 +223,7 @@ namespace Rich
     MirrorFinder m_secMirrors[Rich::NRiches][Rich::NPDPanelsPerRICH];
 
     /// job option to turn on testing of the mirror finding.
-    bool m_testFinding;
+    //bool m_testFinding;
 
     /// Flag for the first update
     bool m_firstUpdate;

@@ -4,6 +4,13 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2015-11-13 - Chris Jones
+ - Remove the verbose printout from findSphMirror and findSecMirror, as these
+   methods are very heavly used, and even the verbose level check costs a bit.
+ - In a similar vane, comment on the test code in MirrorSegFinderLookUpTable
+   as it is used infrequently, and when it is it can just be uncommented.
+   Avoids some more if statements in the very heavily used methods.
+
 !========================= RichTools v2r50 2015-10-12 =========================
 ! 2015-10-07 - Chris Jones
  - Pass RichSmartIDs by const reference in RichSmartIDTool.
