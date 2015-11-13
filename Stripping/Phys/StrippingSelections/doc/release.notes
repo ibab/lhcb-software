@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+
+! 2015-11-12 - Greg Ciezarek
+ - fixed semileptonic __init__ to not look for previously removed lines
+
+
 ! 2015-11-13 - Adlene Hicheur
  - Added changes in default_config as well
 
