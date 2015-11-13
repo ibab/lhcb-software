@@ -1,16 +1,35 @@
 import commands
 
+try:
+    from Gaudi.Configuration import DataObjectDescriptorCollection
+except ImportError:
+    # DataObjectDescriptorCollection comes with Gaudi v27r0
+    pass
+
 #extra locations known to be added
-known_extras=['Raw/Prs/Adcs', 'Hlt1/DecReports', 'Hlt2/DecReports', 'Hlt/SelReports', 'Raw/Velo/PUClustersNZS', 'Hlt1/VertexReports', 'Raw/Hcal/Adcs', 'Raw/Ecal/Adcs', 'Hlt/VertexReports', 'Raw/Spd/Adcs', 'Hlt2/SelReports', 'Hlt1/Track/Velo', 'Hlt/DecReports', 'Trig/L0/L0DUData', 'Hlt1/SelReports', 'Raw/Velo/PUClusters', 'Hlt2/VertexReports', 'Hlt/LumiSummary']
+known_extras=['Raw/Prs/Adcs', 'Hlt1/DecReports', 'Hlt2/DecReports',
+              'Hlt/SelReports', 'Raw/Velo/PUClustersNZS', 'Hlt1/VertexReports',
+              'Raw/Hcal/Adcs', 'Raw/Ecal/Adcs', 'Hlt/VertexReports',
+              'Raw/Spd/Adcs', 'Hlt2/SelReports', 'Hlt1/Track/Velo',
+              'Hlt/DecReports', 'Trig/L0/L0DUData', 'Hlt1/SelReports',
+              'Raw/Velo/PUClusters', 'Hlt2/VertexReports', 'Hlt/LumiSummary']
 
 #known differences, none :)
 known_diffs={}
 
 #options which are known to differ, very very few right now :)
-default_opts_diffs={'Raw/Ecal/Digits' : { 'CaloZSupAlg/EcalZSup': { 'Context': ['Offline', '-->', ''], 'OutputDigitData' : ['', '-->', 'Raw/Ecal/Digits'], 'OutputADCData' : ['', '-->', 'Raw/Ecal/Adcs']}},
-                    'Raw/Prs/Digits' : { 'CaloDigitsFromRaw/PrsFromRaw': { 'Context': ['Offline', '-->', ''], 'DigitsContainer' : ['Raw/Ecal/Digits', '-->', 'Raw/Prs/Digits'], 'AdcsContainer' : ['Raw/Ecal/Adcs', '-->', 'Raw/Prs/Adcs']}},
-                    'Raw/Hcal/Digits' : { 'CaloZSupAlg/HcalZSup': { 'Context': ['Offline', '-->', ''], 'OutputDigitData' : ['', '-->', 'Raw/Hcal/Digits'], 'OutputADCData' : ['', '-->', 'Raw/Hcal/Adcs']}},
-                    'Raw/Spd/Digits' : { 'CaloDigitsFromRaw/SpdFromRaw': { 'Context': ['Offline', '-->', ''], 'DigitsContainer' : ['Raw/Ecal/Digits', '-->', 'Raw/Spd/Digits'], 'AdcsContainer' : ['Raw/Ecal/Adcs', '-->', 'Raw/Spd/Adcs']}},
+default_opts_diffs={'Raw/Ecal/Digits' : { 'CaloZSupAlg/EcalZSup': {'Context': ['Offline', '-->', ''],
+                                                                   'OutputDigitData' : ['', '-->', 'Raw/Ecal/Digits'],
+                                                                   'OutputADCData' : ['', '-->', 'Raw/Ecal/Adcs']}},
+                    'Raw/Prs/Digits' : { 'CaloDigitsFromRaw/PrsFromRaw': {'Context': ['Offline', '-->', ''],
+                                                                          'DigitsContainer' : ['Raw/Ecal/Digits', '-->', 'Raw/Prs/Digits'],
+                                                                          'AdcsContainer' : ['Raw/Ecal/Adcs', '-->', 'Raw/Prs/Adcs']}},
+                    'Raw/Hcal/Digits' : { 'CaloZSupAlg/HcalZSup': {'Context': ['Offline', '-->', ''],
+                                                                   'OutputDigitData' : ['', '-->', 'Raw/Hcal/Digits'],
+                                                                   'OutputADCData' : ['', '-->', 'Raw/Hcal/Adcs']}},
+                    'Raw/Spd/Digits' : { 'CaloDigitsFromRaw/SpdFromRaw': {'Context': ['Offline', '-->', ''],
+                                                                          'DigitsContainer' : ['Raw/Ecal/Digits', '-->', 'Raw/Spd/Digits'],
+                                                                          'AdcsContainer' : ['Raw/Ecal/Adcs', '-->', 'Raw/Spd/Adcs']}},
                     'Trig/L0/MuonBCSU' : { 'L0MuonCandidatesFromRaw/L0MuonFromRaw' : { 'DAQMode': [0, '-->', 1]}},
                     'Trig/L0/MuonCtrl' : { 'L0MuonCandidatesFromRaw/L0MuonFromRaw' : { 'DAQMode': [0, '-->', 1]}},
                     'Trig/L0/MuonData' : { 'L0MuonCandidatesFromRaw/L0MuonFromRaw' : { 'DAQMode': [0, '-->', 1]}}
@@ -111,7 +130,8 @@ for dest,algs in diff.iteritems():
 
     for alg,props in algs.iteritems():
         for prop,val in props.iteritems():
-            if [dest,alg,prop] in found:
+            # note: DataInputs and DataOutputs are new in Gaudi v27r0
+            if [dest,alg,prop] in found or prop in ('DataInputs', 'DataOutputs'):
                 continue
             unknown.append([dest,alg,prop])
 
