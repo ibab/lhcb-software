@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-13 - Nicola Skidmore
+ - B2OC S24 LineConfig
+
 ! 2015-11-10 - Jinlin Fu
  - update Charm s24 LineConfig
 
