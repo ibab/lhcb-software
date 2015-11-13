@@ -31,7 +31,7 @@ default_config =  {
                    'D0daughterPT'           : "600*MeV",
                    'D0daughterP'            : "5*GeV",
                    'D0daughterTrkChi2'      : 100000, #disabled
-                   'D0daughterTrkGhostProb' : 0.3,
+                   'D0daughterTrkGhostProb' : 0.4,
 ### ProbNN conditions
                    'D0daughterKaonProbNNk'  : 0.1,
                    'D0daughterPionProbNNpi' : 0.1,
@@ -45,7 +45,7 @@ default_config =  {
                    'DpmdaughterPT'           : "500*MeV",
                    'DpmdaughterP'            : "5*GeV",
                    'DpmdaughterTrkChi2'      : 100000, #disabled
-                   'DpmdaughterTrkGhostProb' : 0.3,
+                   'DpmdaughterTrkGhostProb' : 0.4,
 ### ProbNN conditions
                    'DpmdaughterKaonProbNNk'  : 0.1,
                    'DpmdaughterPionProbNNpi' : 0.1,
