@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-11-13 - Adlene Hicheur
+ - Added changes in default_config as well
+
+! 2015-11-13 - Adlene Hicheur
  - Release chi2/DoF cut for tracks in StrippingBnoC/StrippingBc2hhh_BnoC.py, StrippingBu2hhh.py
 
 ! 2015-11-13 - Maurizio Martinelli
