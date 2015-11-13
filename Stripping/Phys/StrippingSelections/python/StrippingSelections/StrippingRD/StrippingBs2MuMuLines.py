@@ -37,52 +37,67 @@ default_config = {
     'WGs'  : ['RD'],
     'BUILDERTYPE' : 'Bs2MuMuLinesConf',
     'CONFIG'   : {
-        'DefaultLinePrescale'    : 1,
-        'DefaultPostscale'   : 1,
-        'Bs2mmWideLinePrescale'  : 1,
-        'LooseLinePrescale'      : 0.,
-        'BuPrescale'    : 1,
-        'BsPrescale'    : 1,
-        'BdPrescale'    : 1,
-        'JPsiLinePrescale'       : 1,
-        'JPsiLooseLinePrescale'  : 0.1,
-        'JPsiPromptLinePrescale' : 0.005,
-        'SSPrescale'             : 1 ,
-        'Bs2mmLTUBLinePrescale'  : 1 ,
-        'Bs2KKLTUBLinePrescale' : 1 ,
-        'MuIPChi2_loose'        :  9,
-        'MuTrChi2_loose'        : 10,
-        'BIPChi2_loose'         : 64,
-        'BFDChi2_loose'         : 100,
-        
-        'BPVVDChi2'            : 121, 
-        'daughter_IPChi2'            : 9,
-        
-        'TrackGhostProb'          : 0.40,
-        
-        'DOCA'                   : 0.3,
-        'DOCA_loose'             :0.5,
-        'DOCA_LTUB'              :0.3,
-        
-        'VCHI2_VDOF'             :9,
-        'VCHI2_VDOF_LTUB'             :9,
-        'VCHI2_VDOF_loose'             :25,
-        
-        'daughter_TrChi2'                  :4,
-        'daughter_TrChi2_LTUB'                    :4,
-        
-        'B_Pt'                           :350,
-        'B_Pt_LTUB'                      :500,
-        
-        'B_BPVIPChi2'                     :25,
-        'B_BPVIPChi2_LTUB'                :25,
+    'DefaultLinePrescale'    : 1,
+    'DefaultPostscale'   : 1,
+    'Bs2mmWideLinePrescale'  : 1,
+    'LooseLinePrescale'      : 0.,
+    'BuPrescale'    : 1,
+    'BsPrescale'    : 1,
+    'BdPrescale'    : 1,
+    'JPsiLinePrescale'       : 1,
+    'JPsiLooseLinePrescale'  : 0.1,
+    'JPsiPromptLinePrescale' : 0.005,
+    'SSPrescale'             : 1 ,
+    'Bs2mmLTUBLinePrescale'  : 1 ,
+    'Bs2KKLTUBLinePrescale' : 1 ,
+    'MuIPChi2_loose'        :  9,
+    'MuTrChi2_loose'        : 10,
+    'BIPChi2_loose'         : 64,
+    'BFDChi2_loose'         : 100,
 
-        'B_minimum_decaytime_LTUB'           :0.6,
-        'muon_PT_LTUB'                          :40
-        
-        },
-    'STREAMS' : ['Dimuon']
-        }                
+    'BPVVDChi2'            : 121,
+    'daughter_IPChi2'            : 9,
+
+    'TrackGhostProb'          : 0.40,
+
+    'DOCA'                   : 0.3,
+    'DOCA_loose'             :0.5,
+    'DOCA_LTUB'              :0.3,
+
+    'VCHI2_VDOF'             :9,
+    'VCHI2_VDOF_LTUB'             :9,
+    'VCHI2_VDOF_loose'             :25,
+
+    'daughter_TrChi2'                  :4,
+    'daughter_TrChi2_LTUB'                    :4,
+
+    'B_Pt'                           :350,
+    'B_Pt_LTUB'                      :500,
+
+    'B_BPVIPChi2'                     :25,
+    'B_BPVIPChi2_LTUB'                :25,
+
+    'B_minimum_decaytime_LTUB'           :0.6,
+    'muon_PT_LTUB'                          :40
+    
+    },
+    'STREAMS' : {
+    'Dimuon' : ['StrippingBs2MuMuLinesNoMuIDLine',
+                'StrippingBs2MuMuLinesWideMassLine',
+                'StrippingBs2MuMuLinesBu2JPsiKLine'
+                ],
+    'Leptonic' : ['StrippingBs2MuMuLinesWideMassLine',
+                  'StrippingBs2MuMuLinesBs2JPsiPhiLine',
+                  'StrippingBs2MuMuLinesBs2KKLTUBLine',
+                  'StrippingBs2MuMuLinesNoMuIDLine',
+                  'StrippingBs2MuMuLinesSSLine',
+                  'StrippingBs2MuMuLinesBd2JPsiKstLine',
+                  'StrippingBs2MuMuLinesLTUBLine',
+                  'StrippingBs2MuMuLinesBu2JPsiKLine'
+                  ]
+    },
+    
+    }
     
 ##########################################
 ## define local stdjets

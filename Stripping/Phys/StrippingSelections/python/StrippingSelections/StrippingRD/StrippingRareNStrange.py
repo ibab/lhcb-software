@@ -54,11 +54,25 @@ default_config = {
      'K0s2mmLinePostscale'  : 1,
      'K0s2mmSBLinePrescale'  : 0.1,
      'K0s2mmSBLinePostscale'  : 1,
-     'K0s2mmSBCut'  : 465  
+     'K0s2mmSBCut'  : 465,
+     'IP'         :   0.5 ,
+     'IPChi2Min'  :   1.5,
+     'IPChi2Max'  :   1500,
+     'TTHits'     :      -1,
+     'TRACK_TRGHOSTPROB_MAX': 0.3,
+     'MaxMass'    :   450 ,
+     'VertexChi2' :    9,
+     'Rho'        :     4,
+     'SVZ'        :   650,
+     'MinVDZ'     :     0,
+     'MinBPVDira' :     0,
+     'MaxIpDistRatio':  1./60,
+     'cosAngle'   :0.999998
+
               },
    
     'WGs'                       : [ 'RD' ],
-    'STREAMS'                   : [ 'Leptonic' ]
+    'STREAMS'                   : [ 'DiMuon' ]
     }
     
 
@@ -104,6 +118,7 @@ class RnSConf(LineBuilder) :
                                         )
         
         self.SelDiMuons = self._makePseudoJPsi("SelDiMuonsFor" + self._name)
+        self.SelTrigLikeDiMuons = self._makeTrigLikeDiMuons("SelTrigLikeDiMuonsFor" + self._name)
         
         self.SelDiElectrons = self._makePseudoPhi("SelDiElectronsFor" + self._name) 
         self.SelEMu = self._makePseudoKstar("SelEMuFor" + self._name) 
@@ -149,9 +164,15 @@ class RnSConf(LineBuilder) :
                                         postscale = self.config['NoMuIDLinePostscale'],
                                         algos = [ self.K0s2PiPi ],
                                         RequiredRawEvents = ["Muon"],
-                                        MDSTFlag = True
+                                        MDSTFlag = False
                                         )
-        
+        self._K0s2PiPiLine = StrippingLine("_Ks2PiPiForRnSLine",
+                                        prescale = self.config['NoMuIDLinePrescale'],
+                                        postscale = self.config['NoMuIDLinePostscale'],
+                                        algos = [ self.K0s2PiPi ],
+                                        RequiredRawEvents = ["Muon"],
+                                        MDSTFlag = False
+                                        )
 
         self.K0s2MuMuSBLine = StrippingLine("K0s2MuMuSBLine",
                                         prescale = config['K0s2mmSBLinePrescale'],
@@ -235,6 +256,22 @@ class RnSConf(LineBuilder) :
                                       #RequiredRawEvents = ["Muon"],
                                       MDSTFlag = True
                                                  )
+        self.TriggerTestLine = StrippingLine("TriggerTestLine",
+                                      prescale = config['K0s2mmLinePrescale'],
+                                      postscale = config['K0s2mmLinePostscale'],
+                                      algos = [ self.SelTrigLikeDiMuons ],
+                                      #RequiredRawEvents = ["Muon"],
+                                      MDSTFlag = False
+                                             )
+        self._TriggerTestLine = StrippingLine("_TriggerTestLine",
+                                      prescale = config['K0s2mmLinePrescale'],
+                                      postscale = config['K0s2mmLinePostscale'],
+                                      algos = [ self.SelTrigLikeDiMuons ],
+                                      #RequiredRawEvents = ["Muon"],
+                                      MDSTFlag = False
+                                                 )
+        
+        
           # 5 : register Line
 
     ## Add some fake lines to eat the timing of particle containers
@@ -243,23 +280,24 @@ class RnSConf(LineBuilder) :
         #self.registerLine(self._Lambda02PiMuLine)
         
 
-        self.registerLine(self.Pi0MMsignalLine)
-        self.registerLine(self.Pi0MMsidebandLine)
-
+        #self.registerLine(self.Pi0MMsignalLine)
+        #self.registerLine(self.Pi0MMsidebandLine)
+        #self.registerLine(self._K0s2PiPiLine)
         self.registerLine(self.K0s2PiPiLine)
-        self.registerLine(self.K0s2MuMuLine)
-        self.registerLine(self.K0s2MuMuSBLine)
-        self.registerLine(self.K0s24ProngLFVLine)
-        self.registerLine(self.K0s2e3MuLine)
-        self.registerLine(self.K0s2Mu3eLine)
-        self.registerLine(self.K0s2eMuLine)
+        #self.registerLine(self.K0s2MuMuLine)
+        #self.registerLine(self.K0s2MuMuSBLine)
+        #self.registerLine(self.K0s24ProngLFVLine)
+        #self.registerLine(self.K0s2e3MuLine)
+        #self.registerLine(self.K0s2Mu3eLine)
+        #self.registerLine(self.K0s2eMuLine)
         
-        self.registerLine(self.Lambda02PiMuLine)
-        self.registerLine(self.Lambda02Pi3MuLine)
-        self.registerLine(self.Lambda02PiMuMuELine)
-        self.registerLine(self.Lambda02pPiLine)
-        self.registerLine(self.Lambda02PiELine)
-        
+        #self.registerLine(self.Lambda02PiMuLine)
+        #self.registerLine(self.Lambda02Pi3MuLine)
+        #self.registerLine(self.Lambda02PiMuMuELine)
+        #self.registerLine(self.Lambda02pPiLine)
+        #self.registerLine(self.Lambda02PiELine)
+        #self.registerLine(self._TriggerTestLine)
+        self.registerLine(self.TriggerTestLine)
         
 #####################################################
     def _filterMuons( self, name, sel):
@@ -332,6 +370,37 @@ class RnSConf(LineBuilder) :
         return Selection (name,
                           Algorithm = PseudoJPsi,
                           RequiredSelections = [self.SelMuons])
+
+    def _makeTrigLikeDiMuons(self,name) :
+        """
+        Make PseudoJpsi (combination of two detached muons, inspired in Hlt2Soft)
+        Arguments:
+        name : name of the selection
+        """
+        
+        PseudoJPsi = CombineParticles(DecayDescriptor = "J/psi(1S) -> mu+ mu-")
+        PseudoJPsi.DecayDescriptor = "J/psi(1S) -> mu+ mu-"
+        PseudoJPsi.CombinationCut = "(AMAXDOCA('')<%(DiDOCA)s*mm)" %self.config
+        PseudoJPsi.MotherCut = ("(MINTREE('mu-' == ABSID, MIPDV(PRIMARY)) > %(IP)s)"
+        + " & (CHILDCUT((TRGHOSTPROB < %(TRACK_TRGHOSTPROB_MAX)s),1))"
+        + " & (CHILDCUT((TRGHOSTPROB < %(TRACK_TRGHOSTPROB_MAX)s),2))"
+        + " & (MINTREE('mu-' == ABSID, MIPCHI2DV(PRIMARY)) > %(IPChi2Min)s)"
+        + " & (MAXTREE('mu-' == ABSID, MIPCHI2DV(PRIMARY)) < %(IPChi2Max)s)"
+        + " & ( VFASPF (sqrt(VX*VX+VY*VY)) > %(Rho)s) "
+        + " & ( VFASPF ( VZ ) < %(SVZ)s) "
+        + " & ((MIPDV(PRIMARY)/BPVVDZ)< %(MaxIpDistRatio)s)"
+        + " & (MM < %(MaxMass)s)"
+        + " & (VFASPF(VCHI2PDOF)<%(VertexChi2)s )"
+        + " & (DOCAMAX < %(DiDOCA)s)"
+        + " & (BPVVDZ > %(MinVDZ)s) "
+        + " &  (BPVDIRA > %(MinBPVDira)s) " 
+        #+ " & (PCUTA (ALV (1,2) < %(cosAngle)s))"
+                                ) % self.config
+        return Selection (name,
+                          Algorithm = PseudoJPsi,
+                          RequiredSelections = [self.SelMuons])
+    
+                
     
     def _makePseudoPhi(self,name) :
         """

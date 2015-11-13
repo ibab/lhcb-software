@@ -13,6 +13,7 @@ _selections = [
     'StrippingRareNStrange',
     'StrippingBeauty2XGamma',
     'StrippingBeauty2XGammaExclusive',
+    'StrippingBeauty2XGammaNoBias',
     'StrippingLb2L0Gamma',
     'StrippingBs2gammagamma',
     'StrippingBd2eeKstarBDT',

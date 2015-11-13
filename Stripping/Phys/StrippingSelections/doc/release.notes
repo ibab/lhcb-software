@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-13 - Pablo Ruiz (RD)
+ - Added Beauty2XGammaNoBias
+ - Adjustments to Lb2L0Gamma RelatedInfo
+ - Adjustments to Beauty2XGamma Trigger Dictionaries
+ - Adjustments to Bs2MuMu dictionaries
+ - Added script to collect a specific subset of dictionaries from a WG
+
 ! 2015-11-13 - Jibo He
  - Added stripping line for charmonium to p pbar pi pi
    . StrippingBandQ/StrippingCcbar2PPPiPi.py 

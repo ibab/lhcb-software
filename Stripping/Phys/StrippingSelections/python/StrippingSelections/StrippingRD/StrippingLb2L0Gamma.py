@@ -15,6 +15,8 @@ __date__ = "20.08.2014"
 __version__ = "1.0"
 __all__ = ("default_config", "StrippingLb2L0GammaConf")
 
+import os
+
 from Gaudi.Configuration import *
 
 from Configurables import CombineParticles
@@ -198,34 +200,30 @@ class StrippingLb2L0GammaConf(LineBuilder):
         #################################################################################
         # Build lines
         #################################################################################
-        sels_line = {'Phys/StdLooseLambdaLL' : 'Lambda0',
-                     'Phys/StdLooseLambdaDD' : 'Lambda0'}
+        children = {'L0': '[Lambda_b0 -> ^Lambda0 gamma]CC'}
         self.line = StrippingLine("Lb2L0Gamma",
                                   prescale=config["Lb2L0GammaPrescale"],
                                   L0DU=l0,
                                   HLT1=hlt1,
                                   HLT2=hlt2,
                                   checkPV=True,
-                                  RelatedInfoTools=[self.get_cone_relinfo(sels_line, 1.7, 1),
-                                                    self.get_cone_relinfo(sels_line, 1.35, 1),
-                                                    self.get_cone_relinfo(sels_line, 1.0, 1),
+                                  RelatedInfoTools=[self.get_cone_relinfo(1.7, children=children),
+                                                    self.get_cone_relinfo(1.35, children=children),
+                                                    self.get_cone_relinfo(1.0, children=children),
                                                    ],
                                   RequiredRawEvents=['Calo'],
                                   MDSTFlag = True,
                                   selection=lambda_b)
         self.registerLine(self.line)
-        sels_line_cnv = {'Phys/StdLooseLambdaLL' : 'Lambda0',
-                         'Phys/StdLooseLambdaDD' : 'Lambda0',
-                         lambda_b_cnv: 'Lambdab'}
         self.line_cnv = StrippingLine("Lb2L0GammaConverted",
                                       prescale=config["Lb2L0GammaPrescale"],
                                       L0DU=l0,
                                       HLT1=hlt1,
                                       HLT2=hlt2,
                                       checkPV=True,
-                                      RelatedInfoTools=[self.get_cone_relinfo(sels_line_cnv, 1.7, 1),
-                                                        self.get_cone_relinfo(sels_line_cnv, 1.35, 1),
-                                                        self.get_cone_relinfo(sels_line_cnv, 1.0, 1),
+                                      RelatedInfoTools=[self.get_cone_relinfo(1.7, lambda_b_cnv, children),
+                                                        self.get_cone_relinfo(1.35, lambda_b_cnv, children),
+                                                        self.get_cone_relinfo(1.0, lambda_b_cnv, children),
                                                         self.get_vtxisol_relinfo(lambda_b_cnv),
                                                        ],
                                       RequiredRawEvents=['Calo'],
@@ -235,28 +233,30 @@ class StrippingLb2L0GammaConf(LineBuilder):
 
 
     @staticmethod
-    def get_cone_relinfo(selections, angle, recursion=0):
-        locations = {}
-        for selection, selection_prefix in selections.items():
-            locations[selection] = 'ConeVarsInfo/%s/%s' % (selection_prefix, angle)
-        return { 'Type'           : 'RelInfoConeVariables',
-                 'ConeAngle'      : angle,
-                 'Variables'      : [ 'CONEANGLE', 'CONEMULT',
-                                      'CONEP', 'CONEPASYM',
-                                      'CONEPT', 'CONEPTASYM' ],
-                 'RecursionLevel' : recursion,
-                 'Locations'      : locations,
-                }
+    def get_cone_relinfo(angle, head=None, children=None):
+        tool = {'Type'     : 'RelInfoConeVariables',
+                'ConeAngle': angle,
+                'Variables': ['CONEANGLE', 'CONEMULT', 'CONEP', 'CONEPASYM', 'CONEPT', 'CONEPTASYM']}
+        # Some shortcuts
+        base_location = 'ConeVarsInfo/%%s/%s' % angle
+        # Head
+        if head:
+            tool.update({'Location'    : base_location % 'Lb',
+                         'TopSelection': head})
+        if children:
+            tool.update({'DaughterLocations': dict([(sel_string, base_location % name)
+                                                    for name, sel_string in children.items()])})
+        return tool
+
 
     @staticmethod
-    def get_vtxisol_relinfo(selection, recursion=0):
-        return { 'Type'           : 'RelInfoVertexIsolation',
-                 'Variables'      : [ 'VTXISONUMVTX',
-                                      'VTXISODCHI2ONETRACK', 'VTXISODCHI2MASSONETRACK',
-                                      'VTXISODCHI2TWOTRACK', 'VTXISODCHI2MASSTWOTRACK' ],
-                 'RecursionLevel' : recursion,
-                 'Locations'      : {selection: 'VertexIsolInfo'},
-                }
+    def get_vtxisol_relinfo(selection):
+        return {'Type'        : 'RelInfoVertexIsolation',
+                'Variables'   : ['VTXISONUMVTX',
+                                 'VTXISODCHI2ONETRACK', 'VTXISODCHI2MASSONETRACK',
+                                 'VTXISODCHI2TWOTRACK', 'VTXISODCHI2MASSTWOTRACK'],
+                'Location'    : 'VertexIsolInfo',
+                'TopSelection': selection}
 
 # EOF
 

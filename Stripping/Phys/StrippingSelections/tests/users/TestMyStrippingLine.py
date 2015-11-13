@@ -21,8 +21,11 @@ from Configurables import DecodeRawEvent
 DecodeRawEvent().setProp("OverrideInputs",4.2)
 
 # Specify the name of your configuration
-confname='Bc2hhh' #FOR USERS
-
+#confname='Bs2MuMuLines' #FOR USERS
+confname='Beauty2XGamma'
+#confname ='Lb2L0Gamma'
+#confname ='Beauty2XGammaNoBias'
+    
 # NOTE: this will work only if you inserted correctly the 
 # default_config dictionary in the code where your LineBuilder 
 # is defined.
