@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-13 - Adlene Hicheur
+ - Release chi2/DoF cut for tracks in StrippingBnoC/StrippingBc2hhh_BnoC.py, StrippingBu2hhh.py
+
 ! 2015-11-13 - Maurizio Martinelli
  - Changed track-quality cuts in StrippingCharm:
     DstarD2HHHH,DstarD2KSHHPi0,DstarD2XGamma,D2HHHKs,D2HHHPi0

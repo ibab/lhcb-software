@@ -28,7 +28,7 @@ config_params = {
     '_h_PT'                 : 100. ,     ## tracks min PT
     '_h_P'                  : 1500. ,    ## tracks min P  
     '_h_IPCHI2'             : 1. ,       ## min tracks IP wrt OWNPV
-    '_h_TRCHI2DOF'          : 3.0 ,      ## max tracks CHI2DOF
+    '_h_TRCHI2DOF'          : 4.0 ,      ## max tracks CHI2DOF
     '_h_TRGHP'             : .5,       ## Track GhostProbability     
     '_3h_DOCA'              : .2 ,       ## max DOCA between h and 2h 
     '_3h_PTmax'             : 1500 ,     ## min PT of the 3h highest PT track
