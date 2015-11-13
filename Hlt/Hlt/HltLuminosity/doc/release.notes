@@ -4,6 +4,8 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+!========================= HltLuminosity v4r4 2015-11-13 =========================
+
 ! 2015-11-09 - Rosen Matev
  - Implement a trivial algorithm LumiStoreConstant, which always sets a constant
    value to a counter
