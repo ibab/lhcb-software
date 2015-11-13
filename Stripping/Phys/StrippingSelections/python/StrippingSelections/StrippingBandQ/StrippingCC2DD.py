@@ -30,7 +30,7 @@ default_config =  {
                    'D0daughterBpvIpChi2'    : 4.,
                    'D0daughterPT'           : "600*MeV",
                    'D0daughterP'            : "5*GeV",
-                   'D0daughterTrkChi2'      : 3,
+                   'D0daughterTrkChi2'      : 100000, #disabled
                    'D0daughterTrkGhostProb' : 0.3,
 ### ProbNN conditions
                    'D0daughterKaonProbNNk'  : 0.1,
@@ -44,7 +44,7 @@ default_config =  {
                    'DpmdaughterBpvIpChi2'    : 4.,
                    'DpmdaughterPT'           : "500*MeV",
                    'DpmdaughterP'            : "5*GeV",
-                   'DpmdaughterTrkChi2'      : 3,
+                   'DpmdaughterTrkChi2'      : 100000, #disabled
                    'DpmdaughterTrkGhostProb' : 0.3,
 ### ProbNN conditions
                    'DpmdaughterKaonProbNNk'  : 0.1,

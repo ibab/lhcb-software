@@ -6,6 +6,7 @@
 
 ! 2015-11-13 - Lucio Anderlini
  - Removed track-quality cuts from StrippingBandQ/StrippingXibc
+ - Removed track-chi2 cuts from StrippingBandQ/StrippingCC2DD
 
 ! 2015-11-12 - Brais Sanmartin Sedes
  - Fixed import CombineParticles issue for StrippingBnoC/StrippingBs2Kst_0Kst_0.py
