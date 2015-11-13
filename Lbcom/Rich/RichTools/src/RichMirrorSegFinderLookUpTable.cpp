@@ -280,14 +280,15 @@ Rich::MirrorSegFinderLookUpTable::MirrorFinder::closestXY( const double& x,
 //  find spherical mirror segment and return pointer
 //=========================================================================
 const DeRichSphMirror*
-Rich::MirrorSegFinderLookUpTable::findSphMirror( const Rich::DetectorType rich,
-                                                 const Rich::Side side,
-                                                 const Gaudi::XYZPoint& reflPoint ) const
+Rich::MirrorSegFinderLookUpTable::
+findSphMirror( const Rich::DetectorType rich,
+               const Rich::Side side,
+               const Gaudi::XYZPoint& reflPoint ) const
 {
   //if ( msgLevel(MSG::VERBOSE) )
   //  verbose() << "Searching for Sph. mirror for point " << reflPoint << endmsg;
 
-  // Most likely mirror is the last one found... So test this one first
+  // Find the mirror from the lookup map
   const DeRichSphMirror* mirror = m_sphMirrors[rich][side].find(reflPoint);
 
   //if ( UNLIKELY(m_testFinding) )
@@ -304,14 +305,15 @@ Rich::MirrorSegFinderLookUpTable::findSphMirror( const Rich::DetectorType rich,
 //  find secondary mirror segment and return pointer
 //=========================================================================
 const DeRichSphMirror*
-Rich::MirrorSegFinderLookUpTable::findSecMirror( const Rich::DetectorType rich,
-                                                 const Rich::Side side,
-                                                 const Gaudi::XYZPoint& reflPoint ) const
+Rich::MirrorSegFinderLookUpTable::
+findSecMirror( const Rich::DetectorType rich,
+               const Rich::Side side,
+               const Gaudi::XYZPoint& reflPoint ) const
 {
   //if ( msgLevel(MSG::VERBOSE) )
   //  verbose() << "Searching for Sec. mirror for point " << reflPoint << endmsg;
 
-  // Most likely mirror is the last one found... So test this one first
+  // Find the mirror from the lookup map
   const DeRichSphMirror* mirror = m_secMirrors[rich][side].find(reflPoint);
 
   //if ( UNLIKELY(m_testFinding) )
