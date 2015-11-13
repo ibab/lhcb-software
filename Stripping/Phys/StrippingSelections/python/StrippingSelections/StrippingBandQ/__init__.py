@@ -24,6 +24,7 @@ _selections = (
     'StrippingBc2JpsiMuXNew',
     'StrippingCcbar2PpbarNew',
     'StrippingCcbar2PhiPhi',
+    'StrippingCcbar2PPPiPi',
     'StrippingLb2EtacKp'
     )
 
