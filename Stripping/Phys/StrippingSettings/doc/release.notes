@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-14 - Stefano Perazzini
+ - Moved StrippingBetaSBs2PhiPhiLine and StrippingBetaSBs2PhiPhiUpLine to
+   BhadronCompleteEvent in BnoC
+
 ! 2015-11-14 - Jinlin Fu
  - update Charm s24 LineConfig
 

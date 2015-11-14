@@ -465,9 +465,9 @@ BetaSBs2PhiPhi = {
                      , 'BsMassWindow'        : 300      # MeV/cc
                      , 'WidePrescale'        : 0.15     # adimensional
                      },
-    'STREAMS'     : { 'Bhadron' : ['StrippingBetaSBs2PhiPhiLine',
-                                   'StrippingBetaSBs2PhiPhiUpLine',
-                                   'StrippingBetaSBs2PhiPhiWideLine']
+    'STREAMS'     : { 'BhadronCompleteEvent' : ['StrippingBetaSBs2PhiPhiLine',
+                                                'StrippingBetaSBs2PhiPhiUpLine'],
+                      'Bhadron'              : ['StrippingBetaSBs2PhiPhiWideLine']
                     }
     }
 
