@@ -8,6 +8,7 @@ Purpose             : LHCb HLT application
 Release for the lead-lead and the proton-proton (at 5 TeV) data taking.
  
 Release based on Hlt v24r2, plus
+Hlt/HltGlobalMonitors
 Hlt/HltLuminosity
 Hlt/HltConf
 Hlt/HltTracking

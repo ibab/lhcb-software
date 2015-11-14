@@ -10,6 +10,7 @@ use  Moore               v24r2    Hlt
 use  L0App               v2r4     L0
 
 # Additional packages only for v24r3
+use  HltGlobalMonitors  v5r3  Hlt
 use  HltLuminosity  v4r4    Hlt
 use  HltConf        v13r4   Hlt
 use  HltTracking    v13r13  Hlt

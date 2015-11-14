@@ -6,6 +6,7 @@ gaudi_subdir(MooreSys v24r3)
 gaudi_depends_on_subdirs(Hlt/Moore
                          L0/L0App
                          # Only for Moore v24r3
+                         Hlt/HltGlobalMonitors
                          Hlt/HltLuminosity
                          Hlt/HltConf
                          Hlt/HltTracking
