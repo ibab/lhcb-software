@@ -6,6 +6,8 @@
                 COPYING.LESSER. See README.md for more information.
 !-----------------------------------------------------------------------------
 
+!========================= ZeroMQ v4r1p4 2015-11-14 =========================
+
 ! 2015-11-05 - Roel Aaij
  - Added convenience methods to IZeroMQSvc.
 
