@@ -1,7 +1,7 @@
 ################################################################################
 # Package: IndependenceTests
 ################################################################################
-gaudi_subdir(IndependenceTests v1r13)
+gaudi_subdir(IndependenceTests v1r14)
 
 gaudi_depends_on_subdirs(Event/HltEvent
                          GaudiAlg
