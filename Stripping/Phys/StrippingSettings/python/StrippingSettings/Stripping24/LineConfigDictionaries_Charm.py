@@ -1,5 +1,5 @@
 ###########################################################################################
-##                          S T R I P P I N G  2 3                                       ##
+##                          S T R I P P I N G  2 4                                       ##
 ##                                                                                       ##
 ##  Configuration for Charm WG                                                           ##
 ##  Contact person: Eva Gersabeck & Jinlin Fu (evelina.gersabeck@cern.ch & j.fu@cern.ch) ##
@@ -7,7 +7,7 @@
 
 from GaudiKernel.SystemOfUnits import *
 
-
+#StrippingB2ppipiSigmacmm_Lcpi.py
 B2ppipiSigmacmm_Lcpi = {
     "BUILDERTYPE": "StrippingB2ppipiSigmacmm_Lcpi_Conf", 
     "CONFIG": {
@@ -78,6 +78,7 @@ B2ppipiSigmacmm_Lcpi = {
     "WGs": [ "Charm" ]
 }
 
+#StrippingChargedHyperons.py
 ChargedHyperons = {
     "BUILDERTYPE": "StrippingChargedHyperonsConf", 
     "CONFIG": {
@@ -111,6 +112,7 @@ ChargedHyperons = {
     "WGs": [ "Charm" ]
 }
 
+#StrippingCharmForVub.py
 CharmForVub = {
     "BUILDERTYPE": "CharmForVubConf", 
     "CONFIG": {
@@ -155,6 +157,7 @@ CharmForVub = {
     "WGs": [ "Charm" ]
 }
 
+#StrippingCharmFromBSemi.py
 CharmFromBSemi = {
     "BUILDERTYPE": "CharmFromBSemiAllLinesConf", 
     "CONFIG": {
@@ -257,6 +260,7 @@ CharmFromBSemi = {
     "WGs": [ "Charm" ]
 }
 
+#StrippingD02KSKS.py
 D02KSKS = {
     "BUILDERTYPE": "D02KSKSConf", 
     "CONFIG": {
@@ -320,6 +324,7 @@ D02KSKS = {
     "WGs": [ "Charm" ]
 }
 
+#StrippingD2PiPi0.py
 D2EtaEEGH = {
     "BUILDERTYPE": "StrippingD2EtaEEGHConf", 
     "CONFIG": {
@@ -357,6 +362,7 @@ D2EtaEEGH = {
     "WGs": [ "Charm" ]
 }
 
+#StrippingD2PiPi0.py
 D2EtaH = {
     "BUILDERTYPE": "StrippingD2EtaHConf", 
     "CONFIG": {
@@ -405,6 +411,7 @@ D2EtaH = {
     "WGs": [ "Charm" ]
 }
 
+#StrippingD2PiPi0.py
 D2EtaPrimeH = {
     "BUILDERTYPE": "StrippingD2EtaPrimeHConf", 
     "CONFIG": {
@@ -449,6 +456,7 @@ D2EtaPrimeH = {
     "WGs": [ "Charm" ]
 }
 
+#StrippingD2HHHKs.py
 D2HHHKs = {
     "BUILDERTYPE": "D2HHHKsLines", 
     "CONFIG": {
@@ -489,13 +497,14 @@ D2HHHKs = {
         "PrescaleD2KPiPiKsLL": 1, 
         "PrescaleD2PiPiPiKsDD": 1, 
         "PrescaleD2PiPiPiKsLL": 1, 
-        "TrChi2": 3, 
+        "TrChi2": 4, 
         "TrGhostProb": 0.5
     }, 
     "STREAMS": [ "Charm" ], 
     "WGs": [ "Charm" ]
 }
 
+#StrippingD2HHHPi0.py
 D2HHHPi0 = {
     "BUILDERTYPE": "D2HHHPi0Lines", 
     "CONFIG": {
@@ -524,13 +533,14 @@ D2HHHPi0 = {
         "PrescaleD2KPiPiPi0R": 1, 
         "PrescaleD2PiPiPiPi0M": 1, 
         "PrescaleD2PiPiPiPi0R": 1, 
-        "TrChi2": 3, 
+        "TrChi2": 4, 
         "TrGhostProb": 0.5
     }, 
     "STREAMS": [ "Charm" ], 
     "WGs": [ "Charm" ]
 }
 
+#StrippingD2KS0H_conf.py
 D2KS0H = {
     "BUILDERTYPE": "StrippingD2KS0HConf", 
     "CONFIG": {
@@ -591,6 +601,7 @@ D2KS0H = {
     "WGs": [ "Charm" ]
 }
 
+#StrippingD2PiPi0.py
 D2PhiH = {
     "BUILDERTYPE": "StrippingD2PhiHConf", 
     "CONFIG": {
@@ -635,6 +646,8 @@ D2PhiH = {
     "WGs": [ "Charm" ]
 }
 
+
+#StrippingD2PiPi0.py
 D2Pi0H = {
     "BUILDERTYPE": "StrippingD2Pi0HConf", 
     "CONFIG": {
@@ -678,6 +691,7 @@ D2Pi0H = {
     "WGs": [ "Charm" ]
 }
 
+#StrippingD2XMuMuSS.py
 D2XMuMuSS = {
     "BUILDERTYPE": "StrippingD2XMuMuSSConf", 
     "CONFIG": {
@@ -784,6 +798,7 @@ D2XMuMuSS = {
     "WGs": [ "Charm" ]
 }
 
+#StrippingD2hh.py
 D2hh = {
     "BUILDERTYPE": "D2hhBuilder", 
     "CONFIG": {
@@ -866,6 +881,7 @@ D2hh = {
     "WGs": [ "Charm" ]
 }
 
+#StrippingD2hhh_FTcalib.py
 D2hhhFTCalib = {
     "BUILDERTYPE": "D2hhhFTCalibConf", 
     "CONFIG": {
@@ -896,6 +912,7 @@ D2hhhFTCalib = {
     "WGs": [ "ALL" ]
 }
 
+#StrippingD2hhh_conf.py
 D2hhhLines = {
     "BUILDERTYPE": "D2hhhConf", 
     "CONFIG": {
@@ -942,6 +959,8 @@ D2hhhLines = {
     "WGs": [ "Charm" ]
 }
 
+
+#StrippingD2PiPi0.py
 Dst2PiD0EEG = {
     "BUILDERTYPE": "StrippingDst2PiD0EEGConf", 
     "CONFIG": {
@@ -970,6 +989,7 @@ Dst2PiD0EEG = {
     "WGs": [ "Charm" ]
 }
 
+#StrippingDstarD02xx.py
 DstarD02xx = {
     "BUILDERTYPE": "StrippingDstarD02xxConf", 
     "CONFIG": {
@@ -1033,6 +1053,7 @@ DstarD02xx = {
     "WGs": [ "Charm" ]
 }
 
+#StrippingDstarD0ToHHPi0.py
 DstarD0ToHHPi0 = {
     "BUILDERTYPE": "DstarD0ToHHPi0AllLinesBuilder", 
     "CONFIG": {
@@ -1064,6 +1085,7 @@ DstarD0ToHHPi0 = {
     "WGs": [ "Charm" ]
 }
 
+#StrippingDstarD2HHHH.py
 DstarD2HHHH = {
     "BUILDERTYPE": "DstarD2HHHHLines", 
     "CONFIG": {
@@ -1093,13 +1115,14 @@ DstarD2HHHH = {
         "PrescaleDstarD2KKPiPi": 1, 
         "PrescaleDstarD2KPiPiPi": 1, 
         "PrescaleDstarD2PiPiPiPi": 1, 
-        "TrChi2": 3, 
+        "TrChi2": 4, 
         "TrGhostProb": 0.5
     }, 
     "STREAMS": [ "Charm" ], 
     "WGs": [ "Charm" ]
 }
 
+#StrippingDstarD2KSHHPi0.py
 DstarD2KSHHPi0 = {
     "BUILDERTYPE": "DstarD2KSHHPi0Lines", 
     "CONFIG": {
@@ -1142,13 +1165,14 @@ DstarD2KSHHPi0 = {
         "PrescaleDstarD2KPiPi0KSLL": 1, 
         "PrescaleDstarD2PiPiPi0KSDD": 1, 
         "PrescaleDstarD2PiPiPi0KSLL": 1, 
-        "TrChi2": 3, 
+        "TrChi2": 4, 
         "TrGhostProb": 0.5
     }, 
     "STREAMS": [ "Charm" ], 
     "WGs": [ "Charm" ]
 }
 
+#StrippingDstarD2KShh.py
 DstarD2KShh = {
     "BUILDERTYPE": "DstarD2KShhBuilder", 
     "CONFIG": {
@@ -1208,6 +1232,7 @@ DstarD2KShh = {
     "WGs": [ "Charm" ]
 }
 
+#StrippingDstarD2XGamma.py
 DstarD2XGamma = {
     "BUILDERTYPE": "DstarD2XGammaLines", 
     "CONFIG": {
@@ -1253,7 +1278,7 @@ DstarD2XGamma = {
         "PrescaleDstarD2PiPiGamma": 1, 
         "PrescaleDstarD2PiPiGamma_CNVDD": 1, 
         "PrescaleDstarD2PiPiGamma_CNVLL": 1, 
-        "TrChi2": 3, 
+        "TrChi2": 4, 
         "TrGhostProb": 0.5, 
         "photonPT": 1800.0
     }, 
@@ -1261,6 +1286,7 @@ DstarD2XGamma = {
     "WGs": [ "Charm" ]
 }
 
+#StrippingDstarPromptWithD02HHMuMu.py
 DstarPromptWithD02HHLL = {
     "BUILDERTYPE": "DstarPromptWithD02HHLLConf", 
     "CONFIG": {
@@ -1318,6 +1344,7 @@ DstarPromptWithD02HHLL = {
     "WGs": [ "Charm" ]
 }
 
+#StrippingDstarPromptWithD02HHHH.py
 DstarPromptWithD02HHMuMuControl = {
     "BUILDERTYPE": "DstarPromptWithD02HHHHConf", 
     "CONFIG": {
@@ -1377,6 +1404,7 @@ DstarPromptWithD02HHMuMuControl = {
     "WGs": [ "Charm" ]
 }
 
+#StrippingLambdac2V0H.py
 Lambdac2V0H = {
     "BUILDERTYPE": "StrippingLambdac2V0HConf", 
     "CONFIG": {
@@ -1423,6 +1451,7 @@ Lambdac2V0H = {
     "WGs": [ "Charm" ]
 }
 
+#StrippingXicc.py
 Xicc = {
     "BUILDERTYPE": "XiccBuilder", 
     "CONFIG": {
