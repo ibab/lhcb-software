@@ -30,8 +30,8 @@ StdLooseDetachedDipion.Inputs = [ "Phys/StdLoosePions/Particles" ]
 StdLooseDetachedDipion.DecayDescriptors = ["rho(770)0 -> pi+ pi-",
                                            "[rho(770)+ -> pi+ pi+]cc"]
 StdLooseDetachedDipion.DaughtersCuts = {
-    "pi+"        : "(PT>150.*MeV) & (MIPCHI2DV(PRIMARY) > 4.0) & (TRCHI2DOF<3) & (TRGHOSTPROB<0.4) & (PIDK < 8)",
-    "pi-"        : "(PT>150.*MeV) & (MIPCHI2DV(PRIMARY) > 4.0) & (TRCHI2DOF<3) & (TRGHOSTPROB<0.4) & (PIDK < 8)"
+    "pi+"        : "(PT>150.*MeV) & (MIPCHI2DV(PRIMARY) > 4.0) & (TRCHI2DOF<4) & (TRGHOSTPROB<0.4) & (PIDK < 8)",
+    "pi-"        : "(PT>150.*MeV) & (MIPCHI2DV(PRIMARY) > 4.0) & (TRCHI2DOF<4) & (TRGHOSTPROB<0.4) & (PIDK < 8)"
     }
 
 #Need an upper mass window of 100 MeV for background estimation

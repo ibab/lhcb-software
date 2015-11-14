@@ -33,7 +33,7 @@ StdLooseDetachedTau3piNonPhys.Inputs = [ "Phys/StdLoosePions/Particles" ]
 #Build physical tau and tau+++
 StdLooseDetachedTau3piNonPhys.DecayDescriptors = ["[tau+ -> pi+ pi+ pi+]cc"]
 StdLooseDetachedTau3piNonPhys.DaughtersCuts = {
-    "pi+"        : "(PT>150.*MeV) & (MIPCHI2DV(PRIMARY) > 4.0) & (TRCHI2DOF<3) & (TRGHOSTPROB<0.4) & (PIDK < 8)"
+    "pi+"        : "(PT>150.*MeV) & (MIPCHI2DV(PRIMARY) > 4.0) & (TRCHI2DOF<4) & (TRGHOSTPROB<0.4) & (PIDK < 8)"
     }
 
 #Need an upper mass window of 100 MeV for background estimation
