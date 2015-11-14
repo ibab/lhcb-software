@@ -32,8 +32,8 @@ StdLooseDetachedTau3pi.Inputs = [ "Phys/StdLoosePions/Particles" ]
 #Build physical tau and tau+++
 StdLooseDetachedTau3pi.DecayDescriptors = ["[tau+ -> pi+ pi- pi+]cc"]
 StdLooseDetachedTau3pi.DaughtersCuts = {
-    "pi+"        : "(PT>150.*MeV) & (MIPCHI2DV(PRIMARY) > 4.0) & (TRCHI2DOF<4) & (TRGHOSTPROB<0.4) & (PIDK < 8)",
-    "pi-"        : "(PT>150.*MeV) & (MIPCHI2DV(PRIMARY) > 4.0) & (TRCHI2DOF<4) & (TRGHOSTPROB<0.4) & (PIDK < 8)"
+    "pi+"        : "(PT>150.*MeV) & (MIPCHI2DV(PRIMARY) > 4.0) & (TRCHI2DOF<3) & (TRGHOSTPROB<0.4) & (PIDK < 8)",
+    "pi-"        : "(PT>150.*MeV) & (MIPCHI2DV(PRIMARY) > 4.0) & (TRCHI2DOF<3) & (TRGHOSTPROB<0.4) & (PIDK < 8)"
     
     }
 
