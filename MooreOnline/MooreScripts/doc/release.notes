@@ -4,6 +4,8 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+!========================= MooreScripts v1r13 2015-11-14 =========================
+
 ! 2015-11-05 - Roel Aaij
  - Handle HltLevel properly in runOfflineOnline.
 
