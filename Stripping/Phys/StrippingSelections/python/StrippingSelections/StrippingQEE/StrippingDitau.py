@@ -20,27 +20,26 @@ PDG 2012 Data
 
 Tau decays with following branching ratio
 
-- 46.70 % : 1-Prong hadronic  ( h1 )
+- 49.16 % : 1-Prong hadronic  ( h1 )
 - 17.83 % : Electron          ( e  )
 - 17.41 % : Muon              ( mu )
-- 11.69 % : 3-Prongs hadronic ( h3 ) 
--  6.37 % : Others: K, 5-prongs, etc.
+- 15.20 % : 3-Prongs hadronic ( h3 ) 
+- < 0.4 % : Others: 5-prongs, etc.
 
 Ditau decays in major channels are thus (in alphebetical order):
 
-\%       e     mu     h1     h3    other
------ ------ ------ ------ ------ -------
-e       3.2     -      -      -     -
-mu      6.2    3.0     -      -     -
-h1     16.7   16.3   21.8     -     -
-h3      4.2    4.1   10.9    1.4    -
-other   2.3    2.2    5.9    1.5   0.4
+\%       e     mu     h1     h3
+----- ------ ------ ------ ------
+e      3.18      -      -      - 
+mu     6.21    3.03     -      - 
+h1    17.53   17.12  24.17     - 
+h3     5.42    5.29  14.94   2.31
 
 
 Structure
 ---------
 
-The selection is separated into 2 stages: Tau-candidates, and ditau-candidates.
+The selection is separated into 2 stages: Tau-candidates, and Ditau-candidates.
 
 At the first level, each 4 types of tau ( e / h1 / h3 / mu ) will have their
 own config dictionary. A selection cut will apply to this level before entering
@@ -62,19 +61,37 @@ HHLine: h1h1, h1h3, h3h3
 The selection is based entirely on FilterDesktop + Combine particle. The config 
 dictionary ( 14 of them in total ) is used to generate the cuts on-the-fly.
 This allow further flexibility for cutting (not to mention the usefulness during
-dev process) by omitting/adding key-val dynamically. ( For example, adding key
-'min_XXX':12345 will generate cut (XXX > 12345) dynamically to the `Code` ).
-The functor should be standard one, or otherwise put it in the preambulo section.
+dev process) by omitting/adding key-val dynamically. 
+
+For example, adding key:
+
+    { 'min_XXX' : 12345 } 
+
+will generate loki-ready cut:
+
+    '(XXX > 12345)' 
+
+dynamically to the `Code`
+
+    The functor should be standard one, or otherwise put it in the `preambulo` section.
+Alternatively, provide the loki-ready string to `extracut` which will also be used.
 
 
 Version history
 ---------------
 
-## 2.2 -- 151103 ( For S24 )
-> Restructure control lines (samesign) so that they don't have isolation,
-  ( which is used for data-driven background study ), in exchange for prescale.
-> Use `from GaudiConfUtils.ConfigurableGenerators`
-> RelatedInfo ?
+## 2.2 -- 2015-Nov ( For S24, S21rXp1 )
+- `default_config` tuned to S24 campaign.
+- Use `from GaudiConfUtils.ConfigurableGenerators` where applicable
+- Deleagated more tuning to default_config. Make better use of pythonic-dict unpacking.
+  - At tool level, e.g., PVReFitting in tau_h3
+  - At Line's constructor. Easing the development of RelatedInfoTools
+- Restructure of control lines: 
+  - Now there are 2 control Lines: 'XXnoiso', 'XXssnoiso'.
+  - Both are made like the signal lines, but with isolation removed, in exchange 
+    for prescale. This is planned to used for background such as QCD, V+jet
+- New `RelatedInfo::RelInfoConeVariables` in place, which can be used immediately
+  in the offline analysis.
 
 ## 2.1 -- 150729 (S23 Tuning period summer 2015)
 - Properly expand SS lines (*explicit is better than implicit*)
@@ -113,12 +130,14 @@ Derived from works of S.Farry & P. Ilten
 
 """
 
-from GaudiKernel.SystemOfUnits import MeV, GeV, mm
+from GaudiKernel.SystemOfUnits import MeV, GeV, mm, micrometer
 from PhysSelPython.Wrappers import Selection, SimpleSelection, MergedSelection, AutomaticData
 from StrippingUtils.Utils import LineBuilder
 from StrippingConf.StrippingLine import StrippingLine
 from StandardParticles import PFParticles
-from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+from GaudiConfUtils.ConfigurableGenerators import CombineParticles as GenCombineParticles
+from Configurables import CombineParticles, LoKi__PVReFitter
 
 
 __author__  = 'chitsanu.khurewathanakul@cern.ch'
@@ -136,13 +155,13 @@ config_tau_e = {
   'ABSID'         : 11,
   'min_PT'        : 4. * GeV,
   'min_TRPCHI2'   : 0.01,
-  'min_ETA'       : 2,
+  'min_ETA'       : 2.0,
   'max_ETA'       : 4.5,
-  # 'max_BPVIP'     : 1. * mm,
-  #
-  'min_ECALFrac'  : 0.1,  # Not good for e-conversion ??
-  'max_HCALFrac'  : 0.05,
   'min_CaloPrsE'  : 50 * MeV,
+  'min_ECALFrac'  : 0.1,  # Not good for e-conversion ??
+  #
+  # 'max_HCALFrac'  : 0.05,
+  # 'max_BPVIP'     : 1. * mm,
   #
   'extracut'      : 'ALL'
 }
@@ -175,10 +194,10 @@ config_tau_h1 = {
   'ISPIONORKAON'    : True,
   'min_PT'          : 4. * GeV,
   'min_TRPCHI2'     : 0.01,
-  'min_ETA'         : 2.25,
-  'max_ETA'         : 3.75,
-  'min_HCALFrac'    : 0.05,
+  'min_ETA'         : 2.0,
+  'max_ETA'         : 4.5,
   #   
+  # 'min_HCALFrac'    : 0.05,
   # 'min_BPVDLS'      : -40,
   # 'max_BPVDLS'      : 40,
   # 'max_BPVIP'       : 1. * mm, 
@@ -187,11 +206,12 @@ config_tau_h1 = {
 }
 
 config_tau_h1_iso = {
+  'min_PTFrac05C'   : 0.8,
+  #
   # 'max_ECone05C'    : 400 * GeV,
   # 'min_ECone02PN'   : 20 * GeV,
   # 'min_EFrac02PN05N': 0.7,
   # 'min_EFrac02PN05A': 0.7,
-  'min_PTFrac05C'   : 0.8,
 }
 
 
@@ -201,16 +221,17 @@ config_tau_h3 = {
     'ISPIONORKAON'    : True,
     'min_PT'          : 500 * MeV,
     'min_TRPCHI2'     : 0.01,
-    'min_ETA'         : 2.25, # 2.0,
-    'max_ETA'         : 3.75, # 4.5,
-    'min_HCALFrac'    : 0.05,
+    'min_ETA'         : 2.0, # 2.0,
+    'max_ETA'         : 4.5, # 4.5,
+    #
+    # 'min_HCALFrac'    : 0.05,
     # 'max_TRGHOSTPROB' : 0.1,
     'extracut'        : 'ALL',
   },
   'ccuts': {
     # 'max_ABPVIPMAX' : 2,  # suboptimal
-    'min_AM'        : 500.  * MeV,
-    'max_AM'        : 1600. * MeV,
+    'min_AM'        : 600.  * MeV,
+    'max_AM'        : 1500. * MeV,
   },
   'mcuts': {
     # 'min_ETA'       : 2.25,
@@ -221,14 +242,14 @@ config_tau_h3 = {
     # 'min_BPVDLS'    : 0,  # suboptimal
     # 'max_BPVIP'     : 1. * mm,
     # 'min_BPVVDZ'    : 0.1,
+    # 'max_DRTRIOMID' : 0.3,
+    # 'max_DRTRIOMIN' : 0.2,
+    # 'min_PTTRIOMID' : 1000 * MeV,
+    # 'min_PTTRIOMAX' : 2000 * MeV,
     #
     #
     'max_DRTRIOMAX' : 0.4,
-    'max_DRTRIOMID' : 0.3,
-    'max_DRTRIOMIN' : 0.2,
     'min_PTTRIOMIN' :  500 * MeV,
-    'min_PTTRIOMID' : 1000 * MeV,
-    'min_PTTRIOMAX' : 2000 * MeV,
     #
     'max_VCHI2PDOF' : 20.,
   }
@@ -251,8 +272,8 @@ pcuts0 = {'extracut': 'ALL'}
 config_ditau_e_e = {
   'dcuts': { 'e':pcuts0 },
   'ccuts': {
-    'min_APTMAX':  9 * GeV,
-    'min_AM'    : 12 * GeV,
+    'min_APTMAX':  4 * GeV,
+    'min_AM'    :  8 * GeV,
   },
   'mcuts': pcuts0,
 }
@@ -261,8 +282,8 @@ config_ditau_e_e = {
 config_ditau_e_h1 = {
   'dcuts': { 'e' : pcuts0, 'pi': pcuts0 },
   'ccuts': {
-    'min_APTMAX'          :   9 * GeV,
-    'min_AM'              :  12 * GeV,
+    'min_APTMAX'          :   4 * GeV,
+    'min_AM'              :   8 * GeV,
     # 'max_ADOCAMAX'        :   1 * mm,
     # 'max_AECone05CMAX'    : 200 * GeV,
     # 'max_APTCone05CMAX'   :  10 * GeV,
@@ -278,9 +299,8 @@ config_ditau_e_h1 = {
 config_ditau_e_h3 = {
   'dcuts': { 'e' : pcuts0, 'tau': pcuts0 },
   'ccuts': {
-    'min_APTMAX':  9 * GeV,
-    'min_AM'    : 12 * GeV,
-    # 'min_AM'    : 8 * GeV,
+    'min_APTMAX':  4 * GeV,
+    'min_AM'    :  8 * GeV,
   },
   'mcuts': pcuts0,
 }
@@ -288,8 +308,8 @@ config_ditau_e_h3 = {
 config_ditau_e_mu = {
   'dcuts': { 'e' : pcuts0, 'mu': pcuts0 },
   'ccuts': {
-    'min_APTMAX':  9 * GeV,
-    'min_AM'    : 12 * GeV,
+    'min_APTMAX':  4 * GeV,
+    'min_AM'    :  8 * GeV,
   },
   'mcuts': pcuts0,
 }
@@ -306,8 +326,8 @@ config_ditau_h1_h1 = {
 config_ditau_h1_h3 = {
   'dcuts': { 'pi' : pcuts0, 'tau': pcuts0 },
   'ccuts': {
-    'min_APTMAX': 9 * GeV,
-    'min_AM'    : 12 * GeV,
+    'min_APTMAX': 12 * GeV,
+    'min_AM'    : 16 * GeV,
   },
   'mcuts': pcuts0,
 }
@@ -315,7 +335,7 @@ config_ditau_h1_h3 = {
 config_ditau_h1_mu = {
   'dcuts': { 'pi' : pcuts0, 'mu': pcuts0 },
   'ccuts': {
-    # 'min_APTMAX':  9 * GeV,
+    'min_APTMAX': 4 * GeV,
     'min_AM'    : 8 * GeV,
   },
   'mcuts': pcuts0,
@@ -324,9 +344,8 @@ config_ditau_h1_mu = {
 config_ditau_h3_h3 = {
   'dcuts': { 'tau' : pcuts0 },
   'ccuts': {
-    # 'min_APTMAX':  9 * GeV,
-    # 'min_AM'    : 12 * GeV,
-    'min_AM'    :  8 * GeV,
+    'min_APTMAX': 12 * GeV,
+    'min_AM'    : 16 * GeV,
   },
   'mcuts': pcuts0,
 }
@@ -334,8 +353,7 @@ config_ditau_h3_h3 = {
 config_ditau_h3_mu = {
   'dcuts': { 'tau' : pcuts0, 'mu': pcuts0 },
   'ccuts': {
-    # 'min_APTMAX' :  9 * GeV,
-    # 'min_AM'     : 12 * GeV,
+    'min_APTMAX' :  4 * GeV,
     'min_AM'     :  8 * GeV,
   },
   'mcuts': pcuts0,
@@ -344,13 +362,49 @@ config_ditau_h3_mu = {
 config_ditau_mu_mu = {
   'dcuts': { 'mu': pcuts0 },
   'ccuts': {
-    # 'min_APTMAX'  :  9 * GeV,
+    'min_APTMAX'  :  4 * GeV,
     'min_AM'      :  8 * GeV,
   },
   'mcuts': pcuts0,
 }
 
+## Default config for the RelatedInfoTool framework.
+# Not part of the cut just yet...
+config_rit_default = [
+  {
+    'Type'      : 'RelInfoConeVariables',
+    'ConeAngle' : 0.5,
+    'IgnoreUnmatchedDescriptors': True,
+    'DaughterLocations': {
+      ## For those without multiplicity problem.
+      ' Z0 -> ^e-   X'      : 'taueminus',
+      ' Z0 -> ^e+   X'      : 'taueplus',
+      ' Z0 -> ^mu-  X'      : 'taumuminus',
+      ' Z0 -> ^mu+  X'      : 'taumuplus',
+      ' Z0 -> ^pi-  X'      : 'tauh1minus',
+      ' Z0 -> ^pi+  X'      : 'tauh1plus',
+      ' Z0 -> ^tau- X'      : 'tauh3minus',
+      ' Z0 -> ^tau+ X'      : 'tauh3plus',
+      #
+      ## For those with multiplicity (same-particle) problem.
+      '[Z0 -> ^e-    e-   ]CC' : 'taue1',
+      '[Z0 ->  e-   ^e-   ]CC' : 'taue2',
+      '[Z0 -> ^mu-   mu-  ]CC' : 'taumu1',
+      '[Z0 ->  mu-  ^mu-  ]CC' : 'taumu2',
+      '[Z0 -> ^pi-   pi-  ]CC' : 'tauh11',
+      '[Z0 ->  pi-  ^pi-  ]CC' : 'tauh12',
+      '[Z0 -> ^tau-  tau- ]CC' : 'tauh31',
+      '[Z0 ->  tau- ^tau- ]CC' : 'tauh32',
+    }
+  },
+]
+
 ## Specify how the decay is groupped into each line
+# Groupped by Line's name.
+# Note that each decay have selection name, this is quite special.
+# - Each has to be unique!
+# - The first half before '_' is used to pick the appropriate ditau-level config
+# - 
 lines_decays = {
   'EX': {
     'ee_os' : '  Z0 ->  e-    e+   ',
@@ -358,11 +412,17 @@ lines_decays = {
     'eh3_os': '[ Z0 ->  e-    tau+ ]cc',
     'emu_os': '[ Z0 ->  e-    mu+  ]cc',
   },
-  'EXss': {
-    'ee_ss' : '[ Z0 ->  e-    e-   ]cc',
-    'eh1_ss': '[ Z0 ->  e-    pi-  ]cc',
-    'eh3_ss': '[ Z0 ->  e-    tau- ]cc',
-    'emu_ss': '[ Z0 ->  e-    mu-  ]cc',  
+  'EXnoiso': {
+    'ee_os_noiso' : '  Z0 ->  e-    e+   ',
+    'eh1_os_noiso': '[ Z0 ->  e-    pi+  ]cc',
+    'eh3_os_noiso': '[ Z0 ->  e-    tau+ ]cc',
+    'emu_os_noiso': '[ Z0 ->  e-    mu+  ]cc',
+  },
+  'EXssnoiso': {
+    'ee_ss_noiso' : '[ Z0 ->  e-    e-   ]cc',
+    'eh1_ss_noiso': '[ Z0 ->  e-    pi-  ]cc',
+    'eh3_ss_noiso': '[ Z0 ->  e-    tau- ]cc',
+    'emu_ss_noiso': '[ Z0 ->  e-    mu-  ]cc',  
   },
   'MX': {
     'emu_os'  : '[ Z0 ->  e-    mu+  ]cc',
@@ -370,23 +430,35 @@ lines_decays = {
     'h3mu_os' : '[ Z0 ->  tau-  mu+  ]cc',
     'mumu_os' : '  Z0 ->  mu-   mu+     ',
   },
-  'MXss': {
-    'emu_ss'  : '[ Z0 ->  e-    mu-  ]cc',
-    'h1mu_ss' : '[ Z0 ->  pi-   mu-  ]cc',
-    'h3mu_ss' : '[ Z0 ->  tau-  mu-  ]cc',
-    'mumu_ss' : '[ Z0 ->  mu-   mu-  ]cc',
+  'MXnoiso': {
+    'emu_os_noiso'  : '[ Z0 ->  e-    mu+  ]cc',
+    'h1mu_os_noiso' : '[ Z0 ->  pi-   mu+  ]cc',
+    'h3mu_os_noiso' : '[ Z0 ->  tau-  mu+  ]cc',
+    'mumu_os_noiso' : '  Z0 ->  mu-   mu+     ',
+  },
+  'MXssnoiso': {
+    'emu_ss_noiso'  : '[ Z0 ->  e-    mu-  ]cc',
+    'h1mu_ss_noiso' : '[ Z0 ->  pi-   mu-  ]cc',
+    'h3mu_ss_noiso' : '[ Z0 ->  tau-  mu-  ]cc',
+    'mumu_ss_noiso' : '[ Z0 ->  mu-   mu-  ]cc',
   },
   'HH': {
     'h1h1_os' : '  Z0 ->  pi-   pi+     ',
     'h1h3_os' : '[ Z0 ->  pi-   tau+ ]cc',
     'h3h3_os' : '  Z0 ->  tau-  tau+    ',
   },
-  'HHss': {
-    'h1h1_ss' : '[ Z0 ->  pi-   pi-  ]cc',
-    'h1h3_ss' : '[ Z0 ->  pi-   tau- ]cc',
-    'h3h3_ss' : '[ Z0 ->  tau-  tau- ]cc',
+  'HHnoiso': {
+    'h1h1_os_noiso' : '  Z0 ->  pi-   pi+     ',
+    'h1h3_os_noiso' : '[ Z0 ->  pi-   tau+ ]cc',
+    'h3h3_os_noiso' : '  Z0 ->  tau-  tau+    ',
+  },
+  'HHssnoiso': {
+    'h1h1_ss_noiso' : '[ Z0 ->  pi-   pi-  ]cc',
+    'h1h3_ss_noiso' : '[ Z0 ->  pi-   tau- ]cc',
+    'h3h3_ss_noiso' : '[ Z0 ->  tau-  tau- ]cc',
   },
 }
+
 
 default_config = {
   'NAME'        : 'Ditau',
@@ -415,37 +487,73 @@ default_config = {
     'iso_h3'  : config_tau_h3_iso,
 
     ## Individual ditau
-    'ditau_ee'   : config_ditau_e_e,
-    'ditau_eh1'  : config_ditau_e_h1,
-    'ditau_eh3'  : config_ditau_e_h3,
-    'ditau_emu'  : config_ditau_e_mu,
-    'ditau_h1h1' : config_ditau_h1_h1,
-    'ditau_h1h3' : config_ditau_h1_h3,
-    'ditau_h1mu' : config_ditau_h1_mu,
-    'ditau_h3h3' : config_ditau_h3_h3,
-    'ditau_h3mu' : config_ditau_h3_mu,
-    'ditau_mumu' : config_ditau_mu_mu,
+    'DITAU': {
+      'ee'   : config_ditau_e_e,
+      'eh1'  : config_ditau_e_h1,
+      'eh3'  : config_ditau_e_h3,
+      'emu'  : config_ditau_e_mu,
+      'h1h1' : config_ditau_h1_h1,
+      'h1h3' : config_ditau_h1_h3,
+      'h1mu' : config_ditau_h1_mu,
+      'h3h3' : config_ditau_h3_h3,
+      'h3mu' : config_ditau_h3_mu,
+      'mumu' : config_ditau_mu_mu,
+    },
 
-    ## Prescale/Postscale
-    'EX_prescale'     : 1.,
-    'EX_postscale'    : 1.,
-    'EXss_prescale'   : 0.1,
-    'EXss_postscale'  : 1.,
-    'MX_prescale'     : 1.,
-    'MX_postscale'    : 1.,
-    'MXss_prescale'   : 0.1,
-    'MXss_postscale'  : 1.,
-    'HH_prescale'     : 1.,
-    'HH_postscale'    : 1.,
-    'HHss_prescale'   : 0.05,
-    'HHss_postscale'  : 1.,
+    ## StrippingLine constructors. To be auto-populated with **kwargs
+    'CONSTRUCTORS': {
+      'EX': {
+        'prescale'        : 1.,
+        'RelatedInfoTools': config_rit_default, 
+      },
+      'EXnoiso': {
+        'prescale'        : 0.04,
+        'RelatedInfoTools': config_rit_default, 
+      },
+      'EXssnoiso': {
+        'prescale'        : 0.04,
+        'RelatedInfoTools': config_rit_default, 
+      },
+      'HH': {
+        'prescale'        : 1.,
+        'RelatedInfoTools': config_rit_default, 
+      },
+      'HHnoiso': {
+        'prescale'        : 0.04,
+        'RelatedInfoTools': config_rit_default, 
+      },
+      'HHssnoiso': {
+        'prescale'        : 0.04,
+        'RelatedInfoTools': config_rit_default, 
+      },
+      'MX': {
+        'prescale'        : 1.,
+        'RelatedInfoTools': config_rit_default, 
+      },
+      'MXnoiso': {
+        'prescale'        : 0.07,
+        'RelatedInfoTools': config_rit_default, 
+      },
+      'MXssnoiso': {
+        'prescale'        : 0.07,
+        'RelatedInfoTools': config_rit_default, 
+      },
+    },
 
     ## For advance usage
-    # Extra preambulo, give me barestring with proper linebreak.
+    ## Extra preambulo, give me barestring with proper linebreak.
     'preambulo'   : '\n', 
-    # Choice of ParticleCombiner for ditau
+    ## Choice of ParticleCombiner for ditau
     'ditau_pcomb' : {'': 'MomentumCombiner:PUBLIC'},
-    # 'ditau_pcomb' : {},
+    ## Fine-tuning the BPV threshold for PVRefit.
+    # If this is null, then PV-Refitting in tau_h3 is not performed
+    # In general, disable me unless there's cut based on BPV.
+    'PVRefitter'  : None
+    #   {
+    #   'CheckTracksByLHCbIDs': True,
+    #   'DeltaChi2'           : 0.01,
+    #   'DeltaDistance'       : 5 * micrometer,
+    # }
   }
 }
 
@@ -636,20 +744,31 @@ def selection_filt( config, preambulo, sel, newname ):
 #     Code      = parse_cuts_auto(config),
 #   )
 
-def selection_tau_h3( config, preambulo, inputs ):
+def selection_tau_h3( Config, preambulo, inputs ):
+  config = Config['tau_h3']  ## Pickout tau_h3 config from big one.
+  #
   dcut = parse_cuts_auto(config['dcuts'])
-  return SimpleSelection( 'SelTauCand_h3', CombineParticles, inputs,
-    DecayDescriptor   = '[ tau- -> pi- pi- pi+ ]cc',
-    Preambulo         = preambulo0 + preambulo.split('\n'),
-    DaughtersCuts     = {'pi-':dcut, 'pi+':dcut},
-    CombinationCut    = parse_cuts_auto( config['ccuts'] ),
-    MotherCut         = parse_cuts_auto( config['mcuts'] ),
-  )
+  algo = CombineParticles('CombTauNoiso_h3')
+  algo.DecayDescriptor   = '[ tau- -> pi- pi- pi+ ]cc'
+  algo.Preambulo         = preambulo0 + preambulo.split('\n')
+  algo.DaughtersCuts     = {'pi-':dcut, 'pi+':dcut}
+  algo.CombinationCut    = parse_cuts_auto( config['ccuts'] )
+  algo.MotherCut         = parse_cuts_auto( config['mcuts'] )
+  #
+  config_refit = Config['PVRefitter']
+  if config_refit:
+    tool = LoKi__PVReFitter('PVRefitter_tauh3', **config_refit)
+    algo.ReFitPVs = True
+    algo.IgnoreP2PVFromInputLocations = True
+    algo.addTool( tool )
+    algo.PVReFitters.update({ '': 'LoKi::PVReFitter/PVRefitter_tauh3' })
+  #
+  return Selection( 'SelTauNoiso_h3', Algorithm=algo, RequiredSelections=inputs )
 
 def selection_ditau( config, preambulo, pcomb, dcname, decay , inputs ):
   ## dcuts are quite complicate since it's a-priori nested dict index by particle-name.
   dcuts = { key:parse_cuts_auto(val) for key,val in doubling_sign_dict(config['dcuts']).iteritems() }
-  return SimpleSelection( 'SelDitauCand_'+dcname, CombineParticles, inputs,
+  return SimpleSelection( 'SelDitauCand_'+dcname, GenCombineParticles, inputs,
     Preambulo         = preambulo0 + preambulo.split('\n'),
     DecayDescriptor   = decay,
     DaughtersCuts     = dcuts,
@@ -671,7 +790,7 @@ def selection_ditau( config, preambulo, pcomb, dcname, decay , inputs ):
 
 class DitauConf(LineBuilder):
 
-  __configuration_keys__ = default_config['CONFIG']  # Legacy field
+  __configuration_keys__ = default_config['CONFIG'].keys()  # Legacy field
 
   # Note: To be instantiated by LineBuilder( default_config['NAME'], default_config['CONFIG'] )
   def __init__(self, NAME, CONFIG):
@@ -686,13 +805,10 @@ class DitauConf(LineBuilder):
 
     ## Make pre-selection no-isolation of tau candidates first
     sels_tau_noiso = {
-      # 'e' : selection_tau_single( CONFIG['tau_e']  , preambulo, input_e , 'e'  ),
-      # 'mu': selection_tau_single( CONFIG['tau_mu'] , preambulo, input_mu, 'mu' ),
-      # 'h1': selection_tau_single( CONFIG['tau_h1'] , preambulo, input_pi, 'h1' ),
       'e' : selection_filt  ( CONFIG['tau_e']  , preambulo, input_e  , 'SelTauNoiso_e'  ),
       'mu': selection_filt  ( CONFIG['tau_mu'] , preambulo, input_mu , 'SelTauNoiso_mu' ),
       'h1': selection_filt  ( CONFIG['tau_h1'] , preambulo, input_pi , 'SelTauNoiso_h1' ),
-      'h3': selection_tau_h3( CONFIG['tau_h3'] , preambulo, input_pi ),
+      'h3': selection_tau_h3( CONFIG           , preambulo, input_pi ),
     }
 
     sels_tau_iso = {
@@ -710,27 +826,26 @@ class DitauConf(LineBuilder):
     sels_ditau = {}  # Selections, indexed by dcname (for emu sharing)
 
     ## Loop over all lines, make groupping
-    for linename, dcdict in lines_decays.iteritems():
-
+    for linename, condict in CONFIG['CONSTRUCTORS'].iteritems():
+      ## Get list of decay, indexed by Line's name      
+      dcdict = lines_decays[linename]  
       ## Make list of selections to be put in single line
       sels = []
       for dcname, decay in dcdict.iteritems():
         if dcname in sels_ditau:  # for emu case, use cache
           sel = sels_ditau[dcname]
         else:
-          dtype   = dcname.split('_')[0]   # eh1_ss --> eh1
-          config  = CONFIG['ditau_'+dtype] # Same ditau-level config for OS/SS
-          inputs  = [ tau_noiso ] if ('ss' in dcname) else [ tau_iso ] # For SS, use noiso tau
+          dtype   = dcname.split('_')[0]      # eh1_ss --> eh1
+          config  = CONFIG['DITAU'][dtype]    # Same ditau-level config for OS/SS
+          inputs  = [ tau_noiso if ('noiso' in dcname) else tau_iso ] # Use non-iso version if requested.
           sel     = selection_ditau( config, preambulo, ditau_pcomb, dcname, decay, inputs )
           sels_ditau[dcname] = sel
         sels.append(sel)
 
       ## Finally, compose a stripping line, register
       self.registerLine(StrippingLine( NAME + linename + 'Line', # e.g., 'Ditau' + 'EXss' + 'Line'
-        prescale    = CONFIG[linename+'_prescale'],
-        postscale   = CONFIG[linename+'_postscale'],
-        selection   = MergedSelection( 'Sel'+linename, sels ),
-        checkPV     = True,
+        selection = MergedSelection( 'Sel'+linename, sels ),
+        **CONFIG['CONSTRUCTORS'][linename]
       ))
 
 

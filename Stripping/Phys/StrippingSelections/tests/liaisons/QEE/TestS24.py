@@ -29,9 +29,10 @@ DecodeRawEvent().setProp("OverrideInputs",4.2)
 from StrippingSelections import buildersConf
 confs = buildersConf()
 from StrippingSelections.Utils import lineBuilder, buildStreamsFromBuilder, buildStreams
-#confs[confname]["CONFIG"]["SigmaPPi0CalPrescale"] = 0.5 ## FOR USERS, YOU ONLY NEED TO QUICKLY MODIFY CutName and NewValue (no need to recompile the package but please update the default_config before committing)
-streams = buildStreamsFromBuilder(confs, 'TaggedJets')
-# streams = buildStreams( confs, WGs='QEE' )
+
+
+# streams = buildStreamsFromBuilder(confs, 'Ditau')
+streams = buildStreams( confs, WGs='QEE' )
 
 #clone lines for CommonParticles overhead-free timing
 print "Creating line clones for timing"
@@ -142,12 +143,12 @@ ac = AlgorithmCorrelationsAlg(Algorithms = list(set(sc.selections())))
 #Configure DaVinci
 
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
-DaVinci().EvtMax = 10000
+DaVinci().EvtMax = 1000
 DaVinci().PrintFreq = 2000
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
 DaVinci().appendToMainSequence( [ ac ] )
-# DaVinci().appendToMainSequence( [ dstWriter.sequence() ] )
+DaVinci().appendToMainSequence( [ dstWriter.sequence() ] )
 DaVinci().ProductionType = "Stripping"
 DaVinci().DataType  = "2015"
 DaVinci().InputType = "RDST"

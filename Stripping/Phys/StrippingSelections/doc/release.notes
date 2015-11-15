@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-15 - Chisanu Khurewathanakul
+ - Tuned QEE/Ditau for S24.
+   Note: Used head of Phys/RelatedInfoTools to get `IgnoreUnmatchedDescriptors`
+
 ! 2015-11-15 - Wenbin Qian
  - Add new lines to B2OC
 
