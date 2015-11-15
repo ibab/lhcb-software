@@ -7,7 +7,7 @@ set(generators_versions
     alpgen      2.1.4
     herwig++    2.7.1
     hijing      1.383bs.2
-    lhapdf      6.1.4
+    lhapdf      6.1.4.cxxstd
     photos++    3.56
     powheg-box  r2092
     pythia6     427.2
