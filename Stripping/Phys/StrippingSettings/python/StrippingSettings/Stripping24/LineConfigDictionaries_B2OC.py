@@ -85,6 +85,17 @@ Beauty2Charm = {
     'AM_MAX'        : '6800*MeV',
     'B2CBBDT_MIN'   : -999.9
     },
+    "Bc2BX" : { # Cuts made on Bc -> BHH lines
+    'SUMPT_MIN'     : '1000*MeV',
+    'VCHI2DOF_MAX'  : 10,
+    'BPVIPCHI2_MAX' : 25,
+    'BPVLTIME_MIN'  : '0.05*ps',
+    'BPVDIRA_MIN'   : 0.999,
+    'AM_MIN'        : '6000*MeV',
+    'AM_MAX'        : '7200*MeV',
+    'DZ1_MIN'       : '-1.5*mm',
+    'B2CBBDT_MIN'   : -999.9
+    },
     "Dstar" : { # Cuts made on all D*'s used in all lines 
     'ADOCA12_MAX'  : '0.5*mm',
     'VCHI2DOF_MAX'  : 10,
@@ -446,6 +457,49 @@ Beauty2Charm = {
     
     ],  
     'Bhadron' : [
+    'StrippingUpsilon2BBBeauty2CharmLine',
+
+    'StrippingBc2BPiPiB2D0HD02HHBeauty2CharmLine',
+    'StrippingBc2BPiPiWSB2D0HD02HHBeauty2CharmLine',
+    'StrippingBc2BPiKB2D0HD02HHBeauty2CharmLine',
+    'StrippingBc2BPiKWSB2D0HD02HHBeauty2CharmLine',
+    'StrippingBc2BKPiB2D0HD02HHBeauty2CharmLine',
+    'StrippingBc2BKKB2D0HD02HHBeauty2CharmLine',
+    'StrippingBc2BKKWSB2D0HD02HHBeauty2CharmLine',
+
+    'StrippingBc2BPiPiB2D0HD02HHHHBeauty2CharmLine',
+    'StrippingBc2BPiPiWSB2D0HD02HHHHBeauty2CharmLine',
+    'StrippingBc2BPiKB2D0HD02HHHHBeauty2CharmLine',
+    'StrippingBc2BPiKWSB2D0HD02HHHHBeauty2CharmLine',
+    'StrippingBc2BKPiB2D0HD02HHHHBeauty2CharmLine',
+    'StrippingBc2BKKB2D0HD02HHHHBeauty2CharmLine',
+    'StrippingBc2BKKWSB2D0HD02HHHHBeauty2CharmLine',
+
+    'StrippingBc2BPiPiB2DHHD2HHHCFPIDBeauty2CharmLine',
+    'StrippingBc2BPiPiWSB2DHHD2HHHCFPIDBeauty2CharmLine',
+    'StrippingBc2BPiKB2DHHD2HHHCFPIDBeauty2CharmLine',
+    'StrippingBc2BPiKWSB2DHHD2HHHCFPIDBeauty2CharmLine',
+    'StrippingBc2BKPiB2DHHD2HHHCFPIDBeauty2CharmLine',
+    'StrippingBc2BKKB2DHHD2HHHCFPIDBeauty2CharmLine',
+    'StrippingBc2BKKWSB2DHHD2HHHCFPIDBeauty2CharmLine',
+
+    'StrippingBc2BPiPiB2D0HHHD02HHPIDBeauty2CharmLine',
+    'StrippingBc2BPiPiWSB2D0HHHD02HHPIDBeauty2CharmLine',
+    'StrippingBc2BPiKB2D0HHHD02HHPIDBeauty2CharmLine',
+    'StrippingBc2BPiKWSB2D0HHHD02HHPIDBeauty2CharmLine',
+    'StrippingBc2BKPiB2D0HHHD02HHPIDBeauty2CharmLine',
+    'StrippingBc2BKKB2D0HHHD02HHPIDBeauty2CharmLine',
+    'StrippingBc2BKKWSB2D0HHHD02HHPIDBeauty2CharmLine',
+
+    'StrippingBc2BPiPiB2D0DBeauty2CharmLine',
+    'StrippingBc2BPiPiWSB2D0DBeauty2CharmLine',
+    'StrippingBc2BPiKB2D0DBeauty2CharmLine',
+    'StrippingBc2BPiKWSB2D0DBeauty2CharmLine',
+    'StrippingBc2BKPiB2D0DBeauty2CharmLine',
+    'StrippingBc2BKKB2D0DBeauty2CharmLine',
+    'StrippingBc2BKKWSB2D0DBeauty2CharmLine',
+
+
     'StrippingB2D0PiD2HHHHoldBeauty2CharmLine',  
    
     'StrippingB2D0PiD2Pi0HHResolvedoldBeauty2CharmLine',
