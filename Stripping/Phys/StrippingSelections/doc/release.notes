@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-15 - Wenbin Qian
+ - Add new lines to B2OC
+
 ! 2015-11-13 - Stefano Perazzini
  - Corrected default_config for StrippingBnoC/StrippingB2Kpi0
 
