@@ -3,6 +3,8 @@
 ! Responsible : Jianchun Wang
 ! Purpose     : Velo UT tracking
 !-----------------------------------------------------------------------------
+! 2015-11-16 - Espen Eie Bowen
+ - New hit and slope tolerances in clustering
 
 !========================= PrVeloUT v2r2p1 2015-10-13 =========================
 ! 2015-08-12 - Gerhard Raven

@@ -1,5 +1,7 @@
 // Include files
 
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h"
 #include "TfKernel/RecoFuncs.h"
 
 // local
@@ -27,8 +29,8 @@ PrVeloUTTool::PrVeloUTTool( const std::string& type,
   declareInterface<IPrVeloUTTool>(this);
 
   // Momentum determination
-  declareProperty("minMomentum"        , m_minMomentum      = 2*Gaudi::Units::GeV);
-  declareProperty("minPT"              , m_minPT            = 0.2*Gaudi::Units::GeV);
+  declareProperty("minMomentum"        , m_minMomentum      = 0*Gaudi::Units::GeV);
+  declareProperty("minPT"              , m_minPT            = 0.1*Gaudi::Units::GeV);
   declareProperty("maxPseudoChi2"      , m_maxPseudoChi2    = 1280.);
   // Tolerances for extrapolation
   declareProperty("MaxXSlope"          , m_maxXSlope        = 0.350);
@@ -37,8 +39,11 @@ PrVeloUTTool::PrVeloUTTool( const std::string& type,
   declareProperty("YTolerance"         , m_yTol             = 0.8  * Gaudi::Units::mm);
   declareProperty("YTolSlope"          , m_yTolSlope        = 0.2);
   // Grouping tolerance
-  declareProperty("HitTol"             , m_hitTol           = 3.0 * Gaudi::Units::mm);
   declareProperty("IntraLayerDist"     , m_intraLayerDist   = 15.0 * Gaudi::Units::mm);
+  declareProperty("HitTol1"             , m_hitTol1           = 6.0 * Gaudi::Units::mm);
+  declareProperty("HitTol2"             , m_hitTol2           = 0.8 * Gaudi::Units::mm);
+  declareProperty("DeltaTx1"            , m_deltaTx1           = 0.035);
+  declareProperty("DeltaTx2"            , m_deltaTx2           = 0.02);
   declareProperty("PrintVariables"     , m_PrintVariables   = false);
   //Passing Velo tracks
   declareProperty("PassTracks"         , m_PassTracks   = false);
@@ -76,7 +81,10 @@ StatusCode PrVeloUTTool::initialize ( ) {
     info() << " centralHoleSize    = " << m_centralHoleSize  << " mm"  << endmsg;
     info() << " yTolerance         = " << m_yTol             << " mm"  << endmsg;
     info() << " YTolSlope          = " << m_yTolSlope                  << endmsg;
-    info() << " HitTol             = " << m_hitTol           << " mm " << endmsg;
+    info() << " HitTol1            = " << m_hitTol1       << " mm " << endmsg;
+    info() << " HitTol2            = " << m_hitTol2       << " mm " << endmsg;
+    info() << " DeltaTx1           = " << m_deltaTx1       << "  " << endmsg;
+    info() << " DeltaTx2           = " << m_deltaTx2       << "  " << endmsg;
     info() << " IntraLayerDist     = " << m_intraLayerDist   << " mm " << endmsg;
     info() << " PassTracks         = " << m_PassTracks                 << endmsg;
     info() << " passHoleSize       = " << m_passHoleSize     << " mm " << endmsg;
@@ -350,109 +358,89 @@ void PrVeloUTTool::formClusters(bool forward){
     std::reverse(m_allHits.begin(),m_allHits.end());
   }
   
-  bool hitsThirdLayer = !(m_allHits[2].empty());
-  bool hitsFourthLayer = !(m_allHits[3].empty());
-
   // Loop over First Layer
-  for(auto ilayer0 : m_allHits[0]){
+  for(auto hit0 : m_allHits[0]){
     
-    float xhitLayer0 = ilayer0->x();
-    float zhitLayer0 = ilayer0->z();
+    float xhitLayer0 = hit0->x();
+    float zhitLayer0 = hit0->z();
     
     // Loop over Second Layer
-    for(auto ilayer1 : m_allHits[1]){
+    for(auto hit1 : m_allHits[1]){
       
-      float xhitLayer1 = ilayer1->x();
-      float zhitLayer1 = ilayer1->z();
+      float xhitLayer1 = hit1->x();
+      float zhitLayer1 = hit1->z();
+
       float tx = (xhitLayer1 - xhitLayer0)/(zhitLayer1 - zhitLayer0);
 
-      if(fabs(tx)>0.3) continue;
-      
-      //Account for space between strips in layers => 15 mm
-      float hitTol = m_hitTol + fabs(tx)*m_intraLayerDist;
+      if(fabs(tx-m_txVelo)>m_deltaTx1) continue;
+
+      float hitTol1 = m_hitTol1;
+      float hitTol2 = m_hitTol2;
             
       m_clusterCandidate.clear();
-      m_clusterCandidate.push_back(ilayer0);
-      m_clusterCandidate.push_back(ilayer1);
+      m_clusterCandidate.push_back(hit0);
+      m_clusterCandidate.push_back(hit1);
       
-      
-      if(hitsThirdLayer){
-      
-        //Find upper and lower bounds of tolerance
-        float zhitLayer2 = (m_allHits[2].front())->z();
-        float xextrapLayer2 = xhitLayer1 + tx*(zhitLayer2-zhitLayer1);
-      
-        // Loop over Third Layer
-        auto ilayer2 =  
-          std::lower_bound(m_allHits[2].begin(),m_allHits[2].end(),xextrapLayer2-hitTol,lowerBoundX());
+      for( auto hit2 : m_allHits[2]){          
         
-        auto ilayer2_end = m_allHits[2].end();
-      
-        while(ilayer2!= ilayer2_end && (*ilayer2)->x() < xextrapLayer2+hitTol){
-        
-          m_clusterCandidate.push_back(*ilayer2);
-          if(!m_fourLayerSolution){  
-            m_allClusters.push_back(m_clusterCandidate);
-          }
+        float xhitLayer2 = hit2->x();
+        float zhitLayer2 = hit2->z();
 
-          if(!hitsFourthLayer){
-            m_clusterCandidate.pop_back();
-            ++ilayer2;
-            continue;
+        float xextrapLayer2 = xhitLayer1 + tx*(zhitLayer2-zhitLayer1);
+        
+        if(fabs(xhitLayer2 - xextrapLayer2) < hitTol1){
+          
+          m_clusterCandidate.push_back(hit2);
+          if(!m_fourLayerSolution){  
+          m_allClusters.push_back(m_clusterCandidate);
           }
-          
-          
-          //Find upper and lower bounds of tolerance
-          float zhitLayer3 = (m_allHits[3].front())->z();
-          float xextrapLayer3 = xhitLayer1 + tx*(zhitLayer3-zhitLayer1);
-          
-          // Loop over Fourth Layer
-          auto ilayer3 =  
-            std::lower_bound(m_allHits[3].begin(),m_allHits[3].end(),xextrapLayer3-hitTol,lowerBoundX());
-          
-          auto ilayer3_end = m_allHits[3].end();
-          
-          while(ilayer3!= ilayer3_end && (*ilayer3)->x() < xextrapLayer3+hitTol){
+   
+          for( auto hit3 : m_allHits[3]){   
+
+            float xhitLayer3 = hit3->x();
+            float zhitLayer3 = hit3->z();
             
-            if(!m_fourLayerSolution){  
-              m_fourLayerSolution = true;
-              m_allClusters.pop_back();
+            float tx2 = (xhitLayer2 - xhitLayer0)/(zhitLayer2 - zhitLayer0);
+            if(fabs(tx2-m_txVelo)>m_deltaTx2) continue;
+            
+            float xextrapLayer3 = xhitLayer2 + tx2*(zhitLayer3-zhitLayer2);
+            
+            if(fabs(xhitLayer3 - xextrapLayer3) < hitTol2){
+              
+              if(!m_fourLayerSolution){  
+                m_fourLayerSolution = true;
+                m_allClusters.pop_back();
+              }
+              
+              m_clusterCandidate.push_back(hit3);
+              m_allClusters.push_back(m_clusterCandidate);
+              m_clusterCandidate.pop_back();
             }
-            
-            m_clusterCandidate.push_back(*ilayer3);
-            m_allClusters.push_back(m_clusterCandidate);
-            m_clusterCandidate.pop_back();
-            
-            ++ilayer3;
           }//layer3
           m_clusterCandidate.pop_back();
-          ++ilayer2;
-        }//layer2
-      }
+        }
+      }//layer2
       // Loop over Fourth Layer
-      if(!m_fourLayerSolution && hitsFourthLayer){ 
+      
+      if(!m_fourLayerSolution){ 
         
-        //Find upper and lower bounds of tolerance
-        float zhitLayer3 = (m_allHits[3].front())->z();
-        float xextrapLayer3 = xhitLayer1 + tx*(zhitLayer3-zhitLayer1);
+        for( auto hit3 : m_allHits[3]){          
         
-        auto ilayer3 =  
-          std::lower_bound(m_allHits[3].begin(),m_allHits[3].end(),xextrapLayer3-hitTol,lowerBoundX());
+          float xhitLayer3 = hit3->x();
+          float zhitLayer3 = hit3->z();
 
-        auto ilayer3_end = m_allHits[3].end();
-        
-        while(ilayer3!= ilayer3_end && (*ilayer3)->x() < xextrapLayer3+hitTol){
+          float xextrapLayer3 = xhitLayer1 + tx*(zhitLayer3-zhitLayer1);
           
-          m_clusterCandidate.push_back(*ilayer3);
-          m_allClusters.push_back(m_clusterCandidate);
-          m_clusterCandidate.pop_back();
-          
-          ++ilayer3;
-        }//layer3
-      }//!m_fourLayerSolution
-    }//layer1
-  }//layer0
-}//form clusters
+          if(abs(xhitLayer3 - xextrapLayer3) < hitTol1){
+            m_clusterCandidate.push_back(hit3);
+            m_allClusters.push_back(m_clusterCandidate);      
+            m_clusterCandidate.pop_back();
+          }
+        }
+      }//layer3
+    }
+  }
+}
 
 
 

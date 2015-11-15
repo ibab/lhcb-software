@@ -76,7 +76,10 @@ private:
   float m_maxPseudoChi2;
   float m_yTol;
   float m_yTolSlope;
-  float m_hitTol;
+  float m_hitTol1;
+  float m_hitTol2;
+  float m_deltaTx1;
+  float m_deltaTx2;
   float m_maxXSlope;
   float m_maxYSlope;
   float m_centralHoleSize;
