@@ -28,12 +28,13 @@ class B2DXBuilder(object):
         self.lines = []        
         
         # B -> D0(HH) X
-        self._makeB2D0H('D2HH',self.d.hh)   # B+- -> D0(HH)  H+-
+        self.b2dhd2hh = self._makeB2D0H('D2HH',self.d.hh)   # B+- -> D0(HH)  H+-
         self._makeB2D0H('D2HHWS',self.d.hh_ws)
         self.lines[-1].pre = 0.1 # last line is WS D line
         self._makeB2D0H('D2HHUP',self.d.hh_up)   # B+- -> D0(HH)  H+-
         self._makeB2D0H('D2KPIPID',d.kpi_pid,False) # No IP line!
-        self._makeB02D0HH('D2HH',self.d.hh) # B0  -> D0(HH)  H+ H-
+        self._makeB2D0H('D2KMuNu',self.d.kmu)
+        self.b02dhhd2hh = self._makeB02D0HH('D2HH',self.d.hh) # B0  -> D0(HH)  H+ H-
         self._makeB02D0PPbar('D2HH',self.d.hh) # B0  -> D0(HH)  H+ H-
 
         #Tighter selection Full DST lines
@@ -51,12 +52,12 @@ class B2DXBuilder(object):
         self._makeB2D0HH('D2HHHHWS',self.d.hhhh_ws) # B+- -> D0(HHHH,WS) H+- H0
         self._makeB02DHD2PhiMu('D2PhiMuNu',self.d.phimu) # B0 -> D( phi mu nu) H+-
         # B -> D+-(HHH) X
-        self._makeB02DH('D2HHH',self.d.hhh) # B0  -> D+-(HHH) H-+   (+WS)
+        self.b02dhd2hhh = self._makeB02DH('D2HHH',self.d.hhh) # B0  -> D+-(HHH) H-+   (+WS)
         self._makeB02DH('D2HHHUP',self.d.hhh_up) # B0  -> D+-(HHH) H-+   (+WS)
         self._makeB02DH('D2HHHCFPID',self.d.hhh_cf_pid,False) # No IP line!
         self._makeB02DH('Ds2HHHPID',self.d.ds_hhh_pid_tight,False) # No IP line!
         self._makeB02DHH('D2HHHCFPID',self.d.hhh_cf_pid)# B0 -> D+- H-+ H0 (+WS)
-        self._makeB2DHH('D2HHHCFPID',self.d.hhh_cf_pid)#B+- ->D+-(HHH)H+H-(+WS)
+        self.b2dhhd2hhhcfpid = self._makeB2DHH('D2HHHCFPID',self.d.hhh_cf_pid)#B+- ->D+-(HHH)H+H-(+WS)
         self._makeB2DV('D2HHHPID',self.d.hhh_pid)#B+- ->D+-(HHH) V(HH)
         self._makeB2DKS('D2HHH',self.d.hhh,'DD') # B+-  -> D+-(HHH)  KS
         self._makeB2DKS('D2HHH',self.d.hhh,'LL') # B+-  -> D+-(HHH)  KS
@@ -93,7 +94,7 @@ class B2DXBuilder(object):
 
         self._makeB02DstKsH('Dst2D0Pi', self.dst.d0pi)
         # B -> D0(HHHH) X
-        self._makeB2D0H('D2HHHH',self.d.hhhh) # B+- -> D0(HHHH) H+-
+        self.b2dhd2hhhh = self._makeB2D0H('D2HHHH',self.d.hhhh) # B+- -> D0(HHHH) H+-
         self._makeB2D0H('D2HHHHold',self.d.hhhh_old) # B+- -> D0(HHHH) H+-
         self._makeB2D0H('D2HHHHWS',self.d.hhhh_ws)
         self.lines[-1].pre = 0.1 # last line is WS D line
@@ -131,7 +132,7 @@ class B2DXBuilder(object):
         #self._makeB02DH('D2Pi0HHHResolvedUP',self.d.pi0hhh_resolved_up)
         #self._makeB02DH('D2Pi0HHHMergedUP',self.d.pi0hhh_merged_up) 
         # B -> D0(HH) 3h
-        self._makeB2D0HHH('D2HHPID',self.d.hh_pid)   # B+- -> D0(HH)  H+H-H+
+        self.b2dhhhd2hhpid = self._makeB2D0HHH('D2HHPID',self.d.hh_pid)   # B+- -> D0(HH)  H+H-H+
         self._makeB2D0HHH('D2KSHHDD',self.d.kshh_dd)
         self._makeB2D0HHH('D2KSHHLL',self.d.kshh_ll)
         #lines going to full dst: B+- -> D0(Kpi)3pi and B+- -> D0(K3pi)pi
@@ -153,8 +154,8 @@ class B2DXBuilder(object):
         #Tighter selection Full DST lines
         #self._makeB02DD_FULLDST()
 
-        self._makeB2D0D()   
-        self._makeB02DstD()
+        self.b2dd = self._makeB2D0D()   
+        self._makeB02DstD() 
         self._makeB02DstDD02K3Pi()
         self._makeB02D0D0()
         #Tighter selection Full DST lines
@@ -224,6 +225,8 @@ class B2DXBuilder(object):
         b02dh_ws = makeB2XSels(decays,dname,inputs,self.config,useIP)
         self.lines.append(ProtoLine(b02dh_rs,1.0))
         self.lines.append(ProtoLine(b02dh_ws,0.1))
+        return [MergedSelection('B02DHForBc'+dname,RequiredSelections=b02dh_rs)]
+
 
     def _makeB02DHH(self,dname,d2x):
         '''Makes RS and WS B0 -> D + h- h0 + c.c.'''
@@ -335,6 +338,7 @@ class B2DXBuilder(object):
         b2dhh_os = makeB2XSels(decays,dname,inputs,self.config)
         self.lines.append(ProtoLine(b2dhh,1.0))
         self.lines.append(ProtoLine(b2dhh_os,1.0))
+        return [MergedSelection('B2DHHForBc'+dname,RequiredSelections=b2dhh)]
 
     def _makeB2DV(self,dname,d2x):
         '''Makes B+ -> D+ V(h+h-) + c.c.'''
@@ -367,6 +371,7 @@ class B2DXBuilder(object):
             inputs[tag%'K'] = d2x+self.topoKaons
         b2d0h = makeB2XSels(decays,dname,inputs,self.config,useIP)
         self.lines.append(ProtoLine(b2d0h,1.0))
+        return [MergedSelection('B2D0HForBc'+dname,RequiredSelections=b2d0h)]
 
     def _makeB2D0MuNu(self,dname,d2x):
         '''Makes RS B+ -> D0 mu nu + c.c.'''
@@ -492,6 +497,7 @@ class B2DXBuilder(object):
         b2d0hh_ws = makeB2XSels(decays,dname,inputs,self.config)
         self.lines.append(ProtoLine(b2d0hh,presc))
         self.lines.append(ProtoLine(b2d0hh_ws,0.1))        
+        return [MergedSelection('B02D0HHForBc'+dname,RequiredSelections=b2d0hh)]
 
     def _makeB02D0PPbar(self,dname,d2x):
         '''Makes RS B0 -> D0 p+p~- + c.c.'''
@@ -555,6 +561,7 @@ class B2DXBuilder(object):
         b02dhhh_ws = makeB2XSels(decays,dname,inputs,self.config)
         self.lines.append(ProtoLine(b02dhhh_rs,1.0))
         self.lines.append(ProtoLine(b02dhhh_ws,0.1))
+        
 
     def _makeB02DHHH_FULLDST(self,dname,d2x):
         '''Makes RS and WS B0 -> D + h- + c.c.  (Tighter selection for Full DST)'''
@@ -624,6 +631,7 @@ class B2DXBuilder(object):
         inputs = {'B2D0PiPiPi': d2x+pipipi,'B2D0KPiPi': d2x+kpipi, 'B2D0KKPi': d2x+kkpi}
         b2d03h = makeB2XSels(decays,dname,inputs,self.config)
         self.lines.append(ProtoLine(b2d03h,1.0))
+        return [MergedSelection('B2D0HHHForBc'+dname,RequiredSelections=b2d03h)]
 
     def _makeB2D0ppbarH(self, dname, d2x) : 
         '''Makes B+ -> D0 p pbar h+ (h=pi,K) + c.c.'''
@@ -685,11 +693,15 @@ class B2DXBuilder(object):
         '''Makes B+ -> D+ D0'''
         decays = {'B2D0D': ["B- -> D0 D-","B+ -> D0 D+"] }
         inputs = {'B2D0D': self.d.hhh_pid+self.d.hh_pid}
-        b2d0d = makeB2XSels(decays,'',inputs,self.config)
-        self.lines.append(ProtoLine(b2d0d,1.0))
+        b2d0dd02hh = makeB2XSels(decays,'',inputs,self.config)
+        self.lines.append(ProtoLine(b2d0dd02hh,1.0))
         inputs = {'B2D0D': self.d.hhh_pid+self.d.k3pi_pid}
-        b2d0d = makeB2XSels(decays,'D02K3Pi',inputs,self.config)
-        self.lines.append(ProtoLine(b2d0d,1.0))
+        b2d0dd02hhhh = makeB2XSels(decays,'D02K3Pi',inputs,self.config)
+        self.lines.append(ProtoLine(b2d0dd02hhhh,1.0))
+        inputs = {'B2D0D': self.d.hhh_cf_pid+self.d.hh_pid}
+        b2d0dd2hhhcfpid = makeB2XSels(decays,'D2HHHCFPID',inputs,self.config)
+        return [MergedSelection('B2D0DForBc',RequiredSelections=b2d0dd2hhhcfpid)]
+
 
     def _makeB02D0D0(self):
         '''Makes B0 -> D0 D0'''
@@ -737,7 +749,8 @@ class B2DXBuilder(object):
         inputs = {'B02DstDD02K3Pi': self.dst.d0pi_k3pi + self.d.hhh_pid }
         b2dstdd02k3pi = makeB2XSels(decays,'',inputs,self.config)
         self.lines.append(ProtoLine(b2dstdd02k3pi,1.0))
-        
+ 
+
     def _makeB2DstD0(self):
         '''Makes B+- -> D*+- D0'''
         decays = {'B2DstD0':["B+ -> D*(2010)+ D0","B- -> D*(2010)- D0"]}

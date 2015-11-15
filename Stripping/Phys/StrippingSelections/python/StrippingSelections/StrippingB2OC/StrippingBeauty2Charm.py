@@ -33,6 +33,7 @@ from Beauty2Charm_B2DXBuilder import *
 from Beauty2Charm_Lb2XBuilder import *
 from Beauty2Charm_LTUnbiased import *
 from Beauty2Charm_Bc2DDBuilder import *
+from Beauty2Charm_Bc2BXBuilder import *
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
@@ -114,6 +115,17 @@ default_config ={
     'BPVDIRA_MIN'   : 0.999,
     'AM_MIN'        : '4800*MeV', 
     'AM_MAX'        : '6800*MeV',
+    'B2CBBDT_MIN'   : -999.9
+    },
+    "Bc2BX" : { # Cuts made on Bc -> BHH lines
+    'SUMPT_MIN'     : '1000*MeV',
+    'VCHI2DOF_MAX'  : 10,
+    'BPVIPCHI2_MAX' : 25,
+    'BPVLTIME_MIN'  : '0.05*ps',
+    'BPVDIRA_MIN'   : 0.999,
+    'AM_MIN'        : '6000*MeV',
+    'AM_MAX'        : '7200*MeV',
+    'DZ1_MIN'       : '-1.5*mm',
     'B2CBBDT_MIN'   : -999.9
     },
     "Dstar" : { # Cuts made on all D*'s used in all lines 
@@ -499,6 +511,52 @@ default_config ={
     
     ],  
     'Bhadron' : [
+    'StrippingUpsilon2BBBeauty2CharmLine',
+
+    'StrippingBc2BPiPiB2D0HD02HHBeauty2CharmLine',
+    'StrippingBc2BPiPiWSB2D0HD02HHBeauty2CharmLine',
+    'StrippingBc2BPiKB2D0HD02HHBeauty2CharmLine',
+    'StrippingBc2BPiKWSB2D0HD02HHBeauty2CharmLine',
+    'StrippingBc2BKPiB2D0HD02HHBeauty2CharmLine',
+    'StrippingBc2BKKB2D0HD02HHBeauty2CharmLine',
+    'StrippingBc2BKKWSB2D0HD02HHBeauty2CharmLine',
+
+    'StrippingBc2BPiPiB2D0HD02HHHHBeauty2CharmLine',
+    'StrippingBc2BPiPiWSB2D0HD02HHHHBeauty2CharmLine',
+    'StrippingBc2BPiKB2D0HD02HHHHBeauty2CharmLine',
+    'StrippingBc2BPiKWSB2D0HD02HHHHBeauty2CharmLine',
+    'StrippingBc2BKPiB2D0HD02HHHHBeauty2CharmLine',
+    'StrippingBc2BKKB2D0HD02HHHHBeauty2CharmLine',
+    'StrippingBc2BKKWSB2D0HD02HHHHBeauty2CharmLine',
+
+    'StrippingBc2BPiPiB2DHHD2HHHCFPIDBeauty2CharmLine',
+    'StrippingBc2BPiPiWSB2DHHD2HHHCFPIDBeauty2CharmLine',
+    'StrippingBc2BPiKB2DHHD2HHHCFPIDBeauty2CharmLine',
+    'StrippingBc2BPiKWSB2DHHD2HHHCFPIDBeauty2CharmLine',
+    'StrippingBc2BKPiB2DHHD2HHHCFPIDBeauty2CharmLine',
+    'StrippingBc2BKKB2DHHD2HHHCFPIDBeauty2CharmLine',
+    'StrippingBc2BKKWSB2DHHD2HHHCFPIDBeauty2CharmLine',
+
+    'StrippingBc2BPiPiB2D0HHHD02HHPIDBeauty2CharmLine',
+    'StrippingBc2BPiPiWSB2D0HHHD02HHPIDBeauty2CharmLine',
+    'StrippingBc2BPiKB2D0HHHD02HHPIDBeauty2CharmLine',
+    'StrippingBc2BPiKWSB2D0HHHD02HHPIDBeauty2CharmLine',
+    'StrippingBc2BKPiB2D0HHHD02HHPIDBeauty2CharmLine',
+    'StrippingBc2BKKB2D0HHHD02HHPIDBeauty2CharmLine',
+    'StrippingBc2BKKWSB2D0HHHD02HHPIDBeauty2CharmLine',
+
+    'StrippingBc2BPiPiB2D0DBeauty2CharmLine',
+    'StrippingBc2BPiPiWSB2D0DBeauty2CharmLine',
+    'StrippingBc2BPiKB2D0DBeauty2CharmLine',
+    'StrippingBc2BPiKWSB2D0DBeauty2CharmLine',
+    'StrippingBc2BKPiB2D0DBeauty2CharmLine',
+    'StrippingBc2BKKB2D0DBeauty2CharmLine',
+    'StrippingBc2BKKWSB2D0DBeauty2CharmLine',
+
+    'StrippingB2D0KD2KMuNuBeauty2CharmLine',
+    'StrippingB2D0PiD2KMuNuBeauty2CharmLine',
+
+
     'StrippingB2D0PiD2HHHHoldBeauty2CharmLine',  
     #'StrippingB2D0KD2HHHHoldBeauty2CharmLine',
     #'StrippingB2D0PiD2KSHHLLoldBeauty2CharmLine',
@@ -1354,7 +1412,7 @@ default_config ={
 
 class Beauty2CharmConf(LineBuilder):
     
-    __configuration_keys__ = ('ALL','UPSTREAM','KS0','Lambda0','Pi0','gamma','D2X','B2X','Bc2DD',
+    __configuration_keys__ = ('ALL','UPSTREAM','KS0','Lambda0','Pi0','gamma','D2X','B2X','Bc2DD','Bc2BX',
                               'Dstar','HH','HHH','PID','FlavourTagging','RelatedInfoTools',
                               'RawEvents','MDSTChannels','2TOPO','BB','D0INC','Prescales','GECNTrkMax')
  
@@ -1403,6 +1461,7 @@ class Beauty2CharmConf(LineBuilder):
         topoPions = topoInputs('Pi',[pions])
         topoPionsLoose = topoInputsLoose('PiLoose',[pions])
         topoKaons = topoInputs('K',[kaons])
+        topoKaonsLoose = topoInputsLoose('KLoose',[kaons])
         topoProtons = topoInputs('P',[protons])
 
         # X -> hh
@@ -1429,6 +1488,10 @@ class Beauty2CharmConf(LineBuilder):
         # Bc -> DD lines
         bc2dd = Bc2DDBuilder( d, dst, config['Bc2DD'] )
         self._makeLines(bc2dd.lines,config)
+
+        # Bc->Buhh lines
+        bc2bx = Bc2BXBuilder(b2dx,topoPionsLoose,topoKaonsLoose,config['Bc2BX'])
+        self._makeLines(bc2bx.lines,config)
 
         # Lb -> X
         lb2x = Lb2XBuilder(lc,xicc,d,hh,topoPions,topoKaons,topoProtons,

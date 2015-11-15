@@ -315,6 +315,31 @@ def makeB2XSels(decays,xtag,inputs,config,useIP=True,resVert=True):
         sels.append(sel)
         
     return sels
+ 
+def makeBc2BX(name,decay,inputs,config):
+    from copy import deepcopy
+    config = deepcopy(config)
+    comboCuts = LoKiCuts(['SUMPT','AM'],config).code()
+    flightCuts = ['BPVLTIME','DZ1']
+    flightCuts += ['BPVIPCHI2','BPVDIRA']
+    momCuts = [LoKiCuts(['VCHI2DOF'],config).code(),
+               "INTREE( HASTRACK & ISBASIC & (P>5000*MeV) & (PT > 500*MeV) & (MIPCHI2DV(PRIMARY) > 10) & (MIPDV(PRIMARY) > 0.06*mm))",
+               LoKiCuts(flightCuts,config).code()]
+    momCuts = LoKiCuts.combine(momCuts)
+    bc2bx = CombineParticles(DecayDescriptors=decay,
+                             CombinationCut=comboCuts,
+                             MotherCut=momCuts)
+
+    return Selection(name,Algorithm=bc2bx,RequiredSelections=inputs)    
+
+def makeBc2BXSels(decays,xtag,inputs,config):
+    sels = []
+    for tag, decay in decays.iteritems():
+        sname = tag+xtag+'Beauty2Charm'
+        sel = makeBc2BX(sname,decay,inputs[tag],config)
+        sels.append(sel)
+    return sels
+
 
 def makeB2DstarX(sel,uppions,config):
     # change B to something that doesn't fly
