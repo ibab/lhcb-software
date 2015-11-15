@@ -136,7 +136,7 @@ B2Kpi0Lines = {
 B2KShh = {
     'WGs'         : ['BnoC'],
     'BUILDERTYPE' : 'B2KShhConf',
-    'CONFIG'      : {'Trk_Chi2'                : 3.0,
+    'CONFIG'      : {'Trk_Chi2'                : 4.0,
                      'Trk_GhostProb'           : 0.3,
                      'KS_DD_MassWindow'        : 30.0,
                      'KS_DD_VtxChi2'           : 12.0,
@@ -369,7 +369,7 @@ Hb2Charged2Body = {
 Lb2V0h = {
     'WGs'  : ['BnoC'],
     'BUILDERTYPE' : 'Lb2V0hhConf',
-    'CONFIG' : {'Trk_Chi2'                 : 3.0,
+    'CONFIG' : {'Trk_Chi2'                 : 4.0,
                 'Trk_GhostProb'            : 0.5,
                 'Lambda_DD_MassWindow'     : 25.0,
                 'Lambda_DD_VtxChi2'        : 15.0,

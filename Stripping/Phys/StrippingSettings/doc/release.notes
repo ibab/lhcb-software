@@ -3,6 +3,8 @@
 ! Responsible : Stripping coordinators
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
+! 2015-11-15 Tim Williams
+	- Changed track chi^2 cut in StrippingB2KShhLine and StrippingLb2V0hhLine within BnoC line config from 3.0 to 4.0 
 
 ! 2015-11-14 - Stefano Perazzini
  - Moved StrippingBetaSBs2PhiPhiLine and StrippingBetaSBs2PhiPhiUpLine to
