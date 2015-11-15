@@ -8,7 +8,7 @@
 from GaudiKernel.SystemOfUnits import *
 
 #########################################################
-### StrippingBc2Ds1Gamma
+### StrippingBc2sDs1Gamma
 ### -----------------------------------------------------
 ### Defined in:                 StrippingBc2Ds1Gamma.py
 ### Proponent:                  marco.pappagallo@cern.ch
@@ -58,7 +58,7 @@ Bc2JpsiHBDT =  {
     'LinePostscale'       :    1.   ,    
     'MuonCuts'            : "(MINTREE('mu+'==ABSID,PT)>500*MeV) & (MAXTREE('mu+'==ABSID,TRCHI2DOF)<3) & (MINTREE('mu+'==ABSID,PIDmu)>0.)",
     'JpsiCuts'            : '((MM>3.0*GeV) & (MM<3.2*GeV) & (VFASPF(VCHI2PDOF)<16))',
-    'PionCuts'            : '((TRCHI2DOF<3) & (TRGHOSTPROB<0.6) & (PT>1.0*GeV))',
+    'PionCuts'            : '((TRGHOSTPROB<0.6) & (PT>1.0*GeV))',
     'BcComCuts'           : '(in_range(5.8*GeV, AM, 7.0*GeV))',
     'BcMomCuts'           : """(VFASPF(VCHI2/VDOF)<16) 
                              & (in_range(6.0*GeV, DTF_FUN(M,True,strings( ['J/psi(1S)'])), 6.75*GeV))
@@ -112,7 +112,7 @@ Bc2JpsiMu = {
 
 
 #########################################################
-### StrippingBc3pppiForBc3h
+### StrippingBc3pppiForBc3h 
 ### StrippingBc3ppkForBc3h
 ### StrippingBc3piForBc3h
 ### StrippingBc3kForBc3h
@@ -246,6 +246,7 @@ Ccbar2Phi = {
         'KaonPIDK'         :     5.  ,
         'KaonPT'           :   650.  , # MeV
         'PhiVtxChi2'       :    16.  ,
+
         'PhiMassW'         :    12.  , 
         'CombMaxMass'      :  4100.  , # MeV, before Vtx fit
         'CombMinMass'      :  2750.  , # MeV, before Vtx fit
@@ -458,7 +459,7 @@ CharmAssociative = {
 ChiCJPsiGammaConv = {
     'WGs'               : ['BandQ'],
     'BUILDERTYPE'       : 'StrippingChiCJPsiGammaConvConf',
-    'CONFIG'            : {'trackChi2'               :    3.0
+    'CONFIG'            : {'trackChi2'               :    10000.0 #deactivate
                            , 'MuPTMin'               :    400 #MeV #Can be tightened to 600 MeV
                            , 'MuPMin'               :    8000 #MeV
                            , 'JPsiMassMin'           :    3.0 # GeV
@@ -593,8 +594,8 @@ CC2DD = {
     'D0daughterBpvIpChi2'    : 7.,
     'D0daughterPT'           : "600*MeV",
     'D0daughterP'            : "5*GeV",
-    'D0daughterTrkChi2'      : 3,
-    'D0daughterTrkGhostProb' : 0.3,
+    'D0daughterTrkChi2'      : 100000, #disabled
+    'D0daughterTrkGhostProb' : 0.4,
     ### ProbNN conditions
     'D0daughterKaonProbNNk'  : 0.1,
     'D0daughterPionProbNNpi' : 0.1,
@@ -607,8 +608,8 @@ CC2DD = {
     'DpmdaughterBpvIpChi2'    : 7.,
     'DpmdaughterPT'           : "500*MeV",
                    'DpmdaughterP'            : "5*GeV",
-    'DpmdaughterTrkChi2'      : 3,
-    'DpmdaughterTrkGhostProb' : 0.3,
+    'DpmdaughterTrkChi2'      : 100000, #disabled
+    'DpmdaughterTrkGhostProb' : 0.4,
     ### ProbNN conditions
     'DpmdaughterKaonProbNNk'  : 0.1,
     'DpmdaughterPionProbNNpi' : 0.1,
@@ -639,8 +640,8 @@ CC2DDcontrol = {
     'D0daughterBpvIpChi2'    : 3.,
     'D0daughterPT'           : "600*MeV",
                    'D0daughterP'            : "5*GeV",
-    'D0daughterTrkChi2'      : 3,
-    'D0daughterTrkGhostProb' : 0.3,
+    'D0daughterTrkChi2'      : 100000, #disabled
+    'D0daughterTrkGhostProb' : 0.4,
     ### ProbNN conditions
     'D0daughterKaonProbNNk'  : 0.0,
     'D0daughterPionProbNNpi' : 0.0,
@@ -653,8 +654,8 @@ CC2DDcontrol = {
                    'DpmdaughterBpvIpChi2'    : 3.,
                    'DpmdaughterPT'           : "500*MeV",
                    'DpmdaughterP'            : "5*GeV",
-                   'DpmdaughterTrkChi2'      : 3,
-                   'DpmdaughterTrkGhostProb' : 0.3,
+                   'DpmdaughterTrkChi2'      : 100000, #disabled
+                   'DpmdaughterTrkGhostProb' : 0.4,
 ### ProbNN conditions
                    'DpmdaughterKaonProbNNk'  : 0.0,
                    'DpmdaughterPionProbNNpi' : 0.0,
@@ -695,19 +696,19 @@ Xibc={
                                                },
     'CONFIG'                                : {
     'Pions4Lambdac_MINIPCHI2'             : 0.0
-    , 'Pion4Lambdac_TRPCHI2'              : 0.015
+    , 'Pion4Lambdac_TRPCHI2'              : 0#.015
     , 'Pion4Lambdac_ProbNNpi'             : 0.2
     , 'Pion4Lambdac_PT'                   : '250*MeV'
-    , 'Protons4Lambdac_TRPCHI2'           : 0.05
+    , 'Protons4Lambdac_TRPCHI2'           : 0#.05
     , 'Protons4Lambdac_minP'              : '0*GeV'
-    , 'Kaon4Lambdac_TRPCHI2'              : 0.05
+    , 'Kaon4Lambdac_TRPCHI2'              : 0#.05
     , 'Protons4Lambdac_ProbNNp'           : 0.05
     , 'Protons4Lambdac_PT'                : '450*MeV'
     , 'Kaon4Lambdac_PT'                   : '450*MeV'
     , 'Kaon4Lambdac_ProbNNk'              : 0.02
     , 'Kaon4Lambdac_minP'                 : '0*GeV'
     , 'Muon4Jpsi_PIDmu'                   : 0
-    , 'Muon4Jpsi_TRPCHI2'                 : 0.005
+    , 'Muon4Jpsi_TRPCHI2'                 : 0#.005
     , 'Lambdac_MassWindowLarge'           : '120*MeV'
     , 'Lambdac_MassWindowTight'           : '30*MeV'		
     , 'Lambdac_MinAPT'                    : '1500*MeV' 
@@ -720,7 +721,7 @@ Xibc={
     , 'Muon4Jpsi_PT'                      : '650*MeV'
     , 'Jpsi_ENDVERTEXCHI2'                : 10
     , 'Xibc_ENDVERTEXCHI2'                : 7
-    , 'Xibc_MassWindow'                   : '1.5*GeV'
+    , 'Xibc_MassWindow'                   : '2.0*GeV'
     , 'Xibc_MINPVIP'                      : 1e3			#DISABLED FOR INCLUSIVITY
     , 'Xibc2LcJpsiPrescale'               : 1.0
     ####### #
@@ -758,7 +759,7 @@ Xibc={
     ####### 
     , 'HighMassBaryon_MassLowEdge'        : '4.5*GeV'
     , 'HighMassBaryon_MinAPT'             : '1*GeV'
-    , 'ProtonsForHighMassBaryon_TRPCHI2'  : 0.1
+    , 'ProtonsForHighMassBaryon_TRPCHI2'  : 0.#1
     , 'ProtonsForHighMassBaryon_PT'       : '1.5*GeV'
     , 'ProtonsForHighMassBaryon_P'        : '5*GeV'
     , 'ProtonsForHighMassBaryon_ProbNNp'  : 0.1
@@ -1002,10 +1003,206 @@ DiMuonInherit={
 ### Documentation: https://indico.cern.ch/conferenceDisplay.py?confId=270130
 #########################################################
 
+#PromptCharm = {
+#    'WGs'           : ['BandQ'],
+#    'BUILDERTYPE'   : 'StrippingPromptCharmConf',
+#    'CONFIG'        : {
+#    #
+#    # use for simulation:
+#    'NOPIDHADRONS'   : False   , 
+#    #
+#    ## PT-cuts
+#    ## attention: with 1GeV pt-cut prescale is needed for D0,D+,D*+ and Ds
+#    #
+#    'pT(D0)'     :  1.0 * GeV ,    ## pt-cut for  prompt   D0
+#    'pT(D+)'     :  1.0 * GeV ,    ## pt-cut for  prompt   D+
+#    'pT(Ds+)'    :  1.0 * GeV ,    ## pt-cut for  prompt   Ds+
+#    'pT(Lc+)'    :  1.0 * GeV ,    ## pt-cut for  prompt   Lc+
+#    'pT(Xic0)'   :  1.0 * GeV ,    ## pt-cut for  prompt   Xic0/Omegac0
+#    'pT(Omgcc)'  :  2.0 * GeV ,    ## pt-cut for  prompt   Omegacc
+#    #
+#    'pT(D0->HH)' :  1.0 * GeV ,    ## pt-cut for  prompt   D0->KK,pipi models 
+#    #
+#    # Selection of basic particles
+#    #
+#    'TrackCut' : """
+#    ( CLONEDIST   > 5000      ) &
+#    ( TRGHOSTPROB < 0.5       ) &
+#    in_range ( 2  , ETA , 4.9 ) &
+#    HASRICH
+#    """ ,
+#    # 
+#    'PionCut'   : """
+#    ( PT          > 250 * MeV ) & 
+#    ( CLONEDIST   > 5000      ) & 
+#    ( TRGHOSTPROB < 0.5       ) &
+#    in_range ( 2          , ETA , 4.9       ) &
+#    in_range ( 3.2 * GeV  , P   , 150 * GeV ) &
+#    HASRICH                     &
+#    ( MIPCHI2DV()  > 9        )
+#    """ ,
+#    #
+#    'KaonCut'   : """
+#    ( PT          > 250 * MeV ) & 
+#    ( CLONEDIST   > 5000      ) & 
+#    ( TRGHOSTPROB < 0.5       ) &
+#    in_range ( 2          , ETA , 4.9       ) &
+#    in_range ( 3.2 * GeV  , P   , 150 * GeV ) &
+#    HASRICH                     &
+#    ( MIPCHI2DV()  > 9        )
+#    """ ,
+#    #
+#    'ProtonCut'   : """
+#    ( PT           > 250 * MeV ) & 
+#    ( CLONEDIST    > 5000      ) & 
+#    ( TRGHOSTPROB  < 0.5       ) & 
+#    in_range ( 2         , ETA , 4.9       ) &
+#    in_range ( 10 * GeV  , P   , 150 * GeV ) &
+#    HASRICH                      &
+#    ( MIPCHI2DV()  > 9         ) 
+#    """ ,
+#    ##
+#    'MuonCut'   : """
+#    ISMUON &
+#    in_range ( 2 , ETA , 4.9     ) &
+#    ( PT            >  550 * MeV ) &
+#    ( PIDmu - PIDpi >    0       ) &
+#    ( CLONEDIST     > 5000       )     
+#    """ ,
+#    ## cust for prompt kaon
+#    'PromptKaonCut'   : """
+#    ( CLONEDIST   > 5000         ) & 
+#    ( TRGHOSTPROB < 0.5          ) &
+#    in_range ( 2          , ETA , 4.9       ) &
+#    in_range ( 3.2 * GeV  , P   , 150 * GeV ) &
+#    HASRICH                     
+#    """ ,
+#    #
+#    ## PID-cuts for hadrons 
+#    #
+#    'PionPIDCut'   : " PROBNNpi > 0.1 " ,
+#    'KaonPIDCut'   : " PROBNNk  > 0.1 " ,
+#    'ProtonPIDCut' : " PROBNNp  > 0.1 " ,
+#    'PhotonCLCut'  : 0.05,
+#    ##
+#    #
+#    ## photons from chi_(c,b)
+#    #
+#    'GammaChi'        : " ( PT > 400 * MeV ) & ( CL > 0.05 ) " ,
+#    #
+#    ## W+- selection
+#    #
+#    'WCuts'           : " ( 'mu+'== ABSID ) & ( PT > 15 * GeV )" ,
+#    #
+#    # Global Event cuts
+#    #
+#    'CheckPV'         : True ,
+#    #
+#    # Technicalities:
+#    #
+#    'Preambulo'       : [
+#    # the D0 decay channels
+#    "pipi   = DECTREE ('[D0]cc -> pi- pi+   ') " ,
+#    "kk     = DECTREE ('[D0]cc -> K-  K+    ') " ,
+#    "kpi    = DECTREE ('[D0    -> K-  pi+]CC') " ,
+#    # number of kaons in final state (as CombinationCuts)
+#    "ak2    = 2 == ANUM( 'K+' == ABSID ) "       ,
+#    # shortcut for chi2 of vertex fit
+#    'chi2vx = VFASPF(VCHI2) '                    ,
+#    # shortcut for the c*tau
+#    "from GaudiKernel.PhysicalConstants import c_light" ,
+#    "ctau     = BPVLTIME (   9 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<9
+#    "ctau_9   = BPVLTIME (   9 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<9
+#    "ctau_16  = BPVLTIME (  16 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<16
+#    "ctau_25  = BPVLTIME (  25 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<25
+#    "ctau_100 = BPVLTIME ( 100 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<100
+#    "ctau_no  = BPVLTIME (     ) * c_light "  , ## no embedded cut for chi2(lifetimeFit)
+#    # dimuons:
+#    "psi           =   ADAMASS ('J/psi(1S)') < 150 * MeV"  ,
+#    "psi_prime     =   ADAMASS (  'psi(2S)') < 150 * MeV"  ,
+#    ] ,
+#    # Q Values:
+#    'QvalueXiCK'     :  500 * MeV ,
+#    'QvalueXiCprime' :  250 * MeV ,
+#    'QvalueXiCstar'  :  150 * MeV ,
+#    'QvalueXiCPiK'   :  500 * MeV ,
+#    'QvalueXiCprimeK':  500 * MeV ,
+#    'QvalueOmegaCC'  : 4100 * MeV ,
+#    ## monitoring ?
+#    'Monitor'     : False ,
+#    ## pescales
+#    'D0Prescale'             : 0.1,#0.05 ,
+#    'D+Prescale'             : 0.2,#0.05 ,
+#    'D*Prescale'             : 0.3,#0.1 ,
+#    'DsPrescale'             : 0.5 ,#0.5
+#    'LambdaCPrescale'          : 1.0 ,
+#    'XiC0Prescale'             : 1.0 ,
+#    'OmegaC0Prescale'          : 1.0 ,
+#    'LambdaCpKKPrescale'       : 1.0 ,
+#    'LambdaC*Prescale'         : 1.0 ,
+#    'OmegaC*Prescale'          : 1.0 ,
+#    'XiCprimePrescale'         : 1.0 ,
+#    'XiC*Prescale'             : 1.0 ,
+#    'OmegaC*2XiCPiKPrescale'   : 1.0 ,
+#    'OmegaC*2XiCprimeKPrescale': 1.0 ,
+#    'OmegaCCPrescale'          : 1.0 ,
+#    'SigmaCPrescale'           : 1.0 ,
+#    'Xic02LcPiPrescale'        : 1.0 ,
+#    #
+#    'OmegaCCKpiPrescale'       : 1.0 ,
+#    'OmegaCCKKPrescale'        : 1.0 ,
+#    ##
+#    'D02KKPrescale'          : 1.0 ,#0.1
+#    'D02pipiPrescale'        : 1.0, #0.1
+#    'D*CPPrescale'             : 1.0 ,
+#    ##
+#    'DiCharmPrescale'          : 1.0 ,
+#    'DiMu&CharmPrescale'       : 1.0 ,
+#    'DoubleDiMuPrescale'       : 1.0 ,
+#    'Chi&CharmPrescale'        : 1.0 ,
+#    'Charm&WPrescale'          : 1.0 ,
+#    'DiMuon&WPrescale'         : 1.0 ,
+#    'Chi&WPrescale'            : 1.0 ,
+#    ## ========================================================================
+#    },
+#    'STREAMS'     : { 'Charm'    : [ 'StrippingD02KpiForPromptCharm'           #   , 
+#                                     'StrippingDstarForPromptCharm'            #   , 
+#                                     'StrippingDForPromptCharm'                #   , 
+#                                     'StrippingDsForPromptCharm'               #   ,
+#                                     'StrippingLambdaCForPromptCharm'          #   ,
+#                                     'StrippingXiC0ForPromptCharm'             #   ,
+#                                     #'StrippingOmegaC0ForPromptCharm'         #    ,
+#                                     'StrippingLambdaC2pKKForPromptCharm'      #   ,
+#                                     'StrippingSigmaCForPromptCharm'           #   ,
+#                                     'StrippingLambdaCstarForPromptCharm'      #   ,
+#                                     'StrippingOmegaCstarForPromptCharm'       #   ,
+#                                     'StrippingXiCprimeForPromptCharm'         #   ,
+#                                     'StrippingXiCstarForPromptCharm'          #   ,
+#                                     'StrippingOmegaCstar2XiCPiKForPromptCharm'#   ,
+#                                     'StrippingOmegaCstar2XiCprimeKForPromptCharm',
+#                                     'StrippingOmegaCCKpiForPromptCharm'       #   ,
+#                                     'StrippingOmegaCCKKForPromptCharm'        #   ,
+#                                     'StrippingXic02LcPiForPromptCharm'        #   ,
+#                                     'StrippingDiCharmForPromptCharm'          #   , ## ? 
+#                                     'StrippingChiAndCharmForPromptCharm'      #   ,
+#                                     'StrippingCharmAndWForPromptCharm'        #   ,
+#                                     'StrippingDiMuonAndCharmForPromptCharm'   #   ,
+#                                     ## for Eva
+#                                     'StrippingD02KKForPromptCharm'            #   ,   ## prescale ?
+#                                     'StrippingD02pipiForPromptCharm'          #   ,   ## prescale ?
+#                                     'StrippingDstarCPForPromptCharm'          # ] ,
+#                      'CharmCompleteEvent' : [ 'StrippingOmegaC0ForPromptCharm'#],
+#                      ## 
+#                      'Leptonic' : [ 'StrippingDoubleDiMuonForPromptCharm'   , ### Full DST ?
+#                                     'StrippingDiMuonAndWForPromptCharm'     , ### Full DST ? 
+#                                     'StrippingChiAndWForPromptCharm'        ] #}
+ #   }
+
 PromptCharm = {
-    'WGs'           : ['BandQ'],
-    'BUILDERTYPE'   : 'StrippingPromptCharmConf',
-    'CONFIG'        : {
+    #
+    
+    'WGs'         : [ 'BandQ' , 'Charm' ] ,
+    'CONFIG'      : {
     #
     # use for simulation:
     'NOPIDHADRONS'   : False   , 
@@ -1018,7 +1215,7 @@ PromptCharm = {
     'pT(Ds+)'    :  1.0 * GeV ,    ## pt-cut for  prompt   Ds+
     'pT(Lc+)'    :  1.0 * GeV ,    ## pt-cut for  prompt   Lc+
     'pT(Xic0)'   :  1.0 * GeV ,    ## pt-cut for  prompt   Xic0/Omegac0
-    'pT(Omgcc)'  :  2.0 * GeV ,    ## pt-cut for  prompt   Omegacc
+    'pT(Omgcc)'  :  1.0 * GeV ,    ## pt-cut for  prompt   Omegacc
     #
     'pT(D0->HH)' :  1.0 * GeV ,    ## pt-cut for  prompt   D0->KK,pipi models 
     #
@@ -1115,25 +1312,27 @@ PromptCharm = {
     "ctau_16  = BPVLTIME (  16 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<16
     "ctau_25  = BPVLTIME (  25 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<25
     "ctau_100 = BPVLTIME ( 100 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<100
+    "ctau_400 = BPVLTIME ( 400 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<400
     "ctau_no  = BPVLTIME (     ) * c_light "  , ## no embedded cut for chi2(lifetimeFit)
     # dimuons:
     "psi           =   ADAMASS ('J/psi(1S)') < 150 * MeV"  ,
     "psi_prime     =   ADAMASS (  'psi(2S)') < 150 * MeV"  ,
     ] ,
     # Q Values:
-    'QvalueXiCK'     :  500 * MeV ,
+    'QvalueXiCK'     :  600 * MeV ,
     'QvalueXiCprime' :  250 * MeV ,
     'QvalueXiCstar'  :  150 * MeV ,
-    'QvalueXiCPiK'   :  500 * MeV ,
-    'QvalueXiCprimeK':  500 * MeV ,
-    'QvalueOmegaCC'  : 4100 * MeV ,
+    'QvalueXiCPiK'   :  600 * MeV ,
+    'QvalueXiCprimeK':  600 * MeV ,
+    'QvalueLcPiK'    :  700 * MeV ,
+    'QvalueOmegaCC'  : 4500 * MeV ,
     ## monitoring ?
     'Monitor'     : False ,
     ## pescales
-    'D0Prescale'             : 0.1,#0.05 ,
-    'D+Prescale'             : 0.2,#0.05 ,
-    'D*Prescale'             : 0.3,#0.1 ,
-    'DsPrescale'             : 0.5 ,#0.5
+    'D0Prescale'               : 1.0 ,
+    'D*Prescale'               : 1.0 ,
+    'DsPrescale'               : 1.0 ,
+    'D+Prescale'               : 1.0 ,
     'LambdaCPrescale'          : 1.0 ,
     'XiC0Prescale'             : 1.0 ,
     'OmegaC0Prescale'          : 1.0 ,
@@ -1144,15 +1343,16 @@ PromptCharm = {
     'XiC*Prescale'             : 1.0 ,
     'OmegaC*2XiCPiKPrescale'   : 1.0 ,
     'OmegaC*2XiCprimeKPrescale': 1.0 ,
-    'OmegaCCPrescale'          : 1.0 ,
+    'XiC**2LcPiKPrescale'      : 1.0 ,
+    #'OmegaCCPrescale'          : 1.0 ,
     'SigmaCPrescale'           : 1.0 ,
     'Xic02LcPiPrescale'        : 1.0 ,
     #
-    'OmegaCCKpiPrescale'       : 1.0 ,
-    'OmegaCCKKPrescale'        : 1.0 ,
+    'OmegaCC2XiCKpiPrescale'       : 1.0 ,
+    'OmegaCC2XiCKKPrescale'        : 1.0 ,
     ##
-    'D02KKPrescale'          : 1.0 ,#0.1
-    'D02pipiPrescale'        : 1.0, #0.1
+    'D02KKPrescale'            : 1.0 ,
+    'D02pipiPrescale'          : 1.0 ,
     'D*CPPrescale'             : 1.0 ,
     ##
     'DiCharmPrescale'          : 1.0 ,
@@ -1163,14 +1363,15 @@ PromptCharm = {
     'DiMuon&WPrescale'         : 1.0 ,
     'Chi&WPrescale'            : 1.0 ,
     ## ========================================================================
-    },
+    } , 
+    'BUILDERTYPE' :   'StrippingPromptCharmConf'            ,
     'STREAMS'     : { 'Charm'    : [ 'StrippingD02KpiForPromptCharm'              , 
                                      'StrippingDstarForPromptCharm'               , 
                                      'StrippingDForPromptCharm'                   , 
                                      'StrippingDsForPromptCharm'                  ,
                                      'StrippingLambdaCForPromptCharm'             ,
                                      'StrippingXiC0ForPromptCharm'                ,
-                                     #'StrippingOmegaC0ForPromptCharm'             ,
+#                                     'StrippingOmegaC0ForPromptCharm'             ,
                                      'StrippingLambdaC2pKKForPromptCharm'         ,
                                      'StrippingSigmaCForPromptCharm'              ,
                                      'StrippingLambdaCstarForPromptCharm'         ,
@@ -1179,8 +1380,9 @@ PromptCharm = {
                                      'StrippingXiCstarForPromptCharm'             ,
                                      'StrippingOmegaCstar2XiCPiKForPromptCharm'   ,
                                      'StrippingOmegaCstar2XiCprimeKForPromptCharm',
-                                     'StrippingOmegaCCKpiForPromptCharm'          ,
-                                     'StrippingOmegaCCKKForPromptCharm'           ,
+                                     'StrippingXiCstarstar2LambdaCPiKForPromptCharm',
+                                     'StrippingOmegaCC2XiCKpiForPromptCharm'      ,
+                                     'StrippingOmegaCC2XiCKKForPromptCharm'       ,
                                      'StrippingXic02LcPiForPromptCharm'           ,
                                      'StrippingDiCharmForPromptCharm'             , ## ? 
                                      'StrippingChiAndCharmForPromptCharm'         ,
@@ -1189,10 +1391,87 @@ PromptCharm = {
                                      ## for Eva
                                      'StrippingD02KKForPromptCharm'               ,   ## prescale ?
                                      'StrippingD02pipiForPromptCharm'             ,   ## prescale ?
-                                     'StrippingDstarCPForPromptCharm'           ] ,
+                                     'StrippingDstarCPForPromptCharm'           ] , 
+                      ##
                       'CharmCompleteEvent' : [ 'StrippingOmegaC0ForPromptCharm'],
-                      ## 
                       'Leptonic' : [ 'StrippingDoubleDiMuonForPromptCharm'   , ## Full DST ?
                                      'StrippingDiMuonAndWForPromptCharm'     , ## Full DST ? 
                                      'StrippingChiAndWForPromptCharm'        ] }
+    }
+
+######################################################################
+#
+# Lb->eta_c K p
+# Author: Liming Zhang
+#
+#####################################################################
+
+Lb2EtacKp = {
+    'WGs'               : ['BandQ'],
+    'BUILDERTYPE'       :  'Lb2EtacKpConf',
+    'CONFIG'    : {
+        'KaonCuts'      : "(PROBNNk > 0.1) & (PT > 300*MeV) & (TRGHOSTPROB<0.4)",
+        'ProtonCuts'    : "(PROBNNp > 0.1) & (PT > 300*MeV) & (P > 10*GeV) & (TRGHOSTPROB<0.4)",        
+        'PionCuts'      : "(PROBNNpi > 0.1) & (PT > 250*MeV) & (TRGHOSTPROB<0.4)",
+        'EtacComAMCuts' : "(AM<3.25*GeV)",
+        'EtacComN4Cuts' : """
+                          (in_range(2.75*GeV, AM, 3.25*GeV))
+                          & ( (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3)+ACHILD(PT,4) ) > 2.5 *GeV)
+                          & ( (ACHILD(MIPCHI2DV(), 1) + ACHILD(MIPCHI2DV(), 2) + ACHILD(MIPCHI2DV(), 3) + ACHILD(MIPCHI2DV(), 4))>30)
+                          """,
+        'EtacMomN4Cuts' : """
+                           (VFASPF(VCHI2/VDOF) < 9.) 
+                           & (in_range(2.8*GeV, MM, 3.2*GeV)) 
+                           & (MIPCHI2DV(PRIMARY) > 4.) 
+                           & (BPVVDCHI2>10) 
+                           & (BPVDIRA>0.9)
+                           """,
+        'EtacComCuts'   : "(in_range(2.75*GeV, AM, 3.25*GeV))",
+        'LambdaSComCuts': "(ACHILD(PT,1)+ACHILD(PT,2) > 900.*MeV) & (AM < 4.0 *GeV) & (ADOCACHI2CUT(20., ''))",
+        'LambdaSMomCuts': """
+                          (MIPCHI2DV(PRIMARY) > 4.)
+                          & (BPVVDCHI2 > 10.)
+                          & (VFASPF(VCHI2) < 9.)
+                          & (BPVDIRA>0.9)
+                          """,
+        'KsCuts'        : "(ADMASS('KS0') < 30.*MeV) & (BPVDLS>5)",
+        'LbComCuts'     : "(ADAMASS('Lambda_b0') < 500 *MeV)",
+        'LbMomCuts'     : """
+                          (VFASPF(VCHI2/VDOF) < 10.) 
+                          & (BPVDIRA> 0.9999) 
+                          & (BPVIPCHI2()<25) 
+                          & (BPVVDCHI2>250)
+                          & (BPVVDRHO>0.1*mm) 
+                          & (BPVVDZ>2.0*mm)
+                          """,
+        'Prescale'      : 1.
+        },
+    'STREAMS'           : ['Bhadron' ]  
+    }
+
+
+######################################################################
+#
+# CCbar -> p pbar pi pi line
+# Author: Jibo He
+#
+#####################################################################
+
+Ccbar2PPPiPi= {
+    'BUILDERTYPE'       :  'Ccbar2PPPiPiConf',
+    'CONFIG'    : {
+        'HLTCuts'       : "(HLT_PASS_RE('Hlt2Topo.*Decision'))",
+        'ProtonCuts'    : "(PROBNNp  > 0.1) & (PT > 300*MeV) & (TRGHOSTPROB<0.4) & (MIPCHI2DV(PRIMARY) > 9.)",
+        'PionCuts'      : "(PROBNNpi > 0.2) & (PT > 250*MeV) & (TRGHOSTPROB<0.4) & (MIPCHI2DV(PRIMARY) > 9.)",
+        'EtacComAMCuts' : "(AM<4.3*GeV)",
+        'EtacComN4Cuts' : """
+                          (AM > 2.7 *GeV)
+                          & ( (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3)+ACHILD(PT,4) ) > 2.5 *GeV)
+                          & ( (ACHILD(MIPCHI2DV(), 1) + ACHILD(MIPCHI2DV(), 2) + ACHILD(MIPCHI2DV(), 3) + ACHILD(MIPCHI2DV(), 4))>30)
+                          """,
+        'EtacMomN4Cuts' : "(VFASPF(VCHI2/VDOF) < 9.) & (in_range(2.8*GeV, MM, 4.2*GeV)) & (BPVDLS>5)",        
+        'Prescale'      : 1.
+        },
+    'STREAMS'           : ['Bhadron' ],
+    'WGs'               : ['BandQ'],
     }

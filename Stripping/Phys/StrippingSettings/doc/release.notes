@@ -3,6 +3,10 @@
 ! Responsible : Stripping coordinators
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2015-11-15 - Roberta Cardinale
+ - Update of BandQ s24 LineConfig
+
 ! 2015-11-15 Tim Williams
 	- Changed track chi^2 cut in StrippingB2KShhLine and StrippingLb2V0hhLine within BnoC line config from 3.0 to 4.0 
 
