@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-15 - Maurizio Martinelli
+ - Added Related info to D04Body in CharmFromBSemi
+
 ! 2015-11-15 - Chisanu Khurewathanakul
  - Tuned QEE/Ditau for S24.
    Note: Used head of Phys/RelatedInfoTools to get `IgnoreUnmatchedDescriptors`
@@ -23,9 +26,9 @@
  - Added Muon and Kaon fake lines for B2KMuNu to StrippingB2XuMuNu.py
 
 ! 2015-11-13 - Rafael Coutinho
- - Update on StrippingHb2V0V0h.py including HLT1/2 requirements and track-quality cuts 
+ - Update on StrippingHb2V0V0h.py including HLT1/2 requirements and track-quality cuts
  - Added stripping line for B+->Kst(892)+ hh' and B0->Kst(892)0hh':
-   . StrippingBnoC/StrippingB2Ksthh.py 
+   . StrippingBnoC/StrippingB2Ksthh.py
    . StrippingBnoC/StrippingBu2Ksthh.py
 
 ! 2015-11-13 - Nicola Skidmore
@@ -40,9 +43,9 @@
 
 ! 2015-11-13 - Jibo He
  - Added stripping line for charmonium to p pbar pi pi
-   . StrippingBandQ/StrippingCcbar2PPPiPi.py 
+   . StrippingBandQ/StrippingCcbar2PPPiPi.py
  - Removed track chi2 cut for Bc2JpsiHBDT
-   
+
 ! 2015-11-13 - Xabier Cid Vidal
  - Removed ALLSAMEPV requirement on StrippingTaggedJets
 

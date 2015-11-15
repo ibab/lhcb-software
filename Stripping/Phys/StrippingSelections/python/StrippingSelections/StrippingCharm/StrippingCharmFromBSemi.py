@@ -410,7 +410,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         self.sel_Dstar_to_2K2Pi = makeDstar('Dstar_2K2PiFor'+name,self.sel_D0_to_2K2Pi,self.selSlowPion,Dstar_cuts)
 
         self.sel_D0_to_3KPi = Selection( 'Sel_D0_to_3KPi_for' + name,
-                                         Algorithm = self._D02HHHHFilter(['[D0 -> K+ K- K- pi+]cc'],'D0_to_3KPi_for' + name),
+                                         Algorithm = self._D02HHHHFilter(['[D0 -> K- K+ K- pi+]cc'],'D0_to_3KPi_for' + name),
                                          RequiredSelections = [self.selPion,self.selKaon] )
         self.sel_Dstar_to_3KPi = makeDstar('Dstar_3KPiFor'+name,self.sel_D0_to_3KPi,self.selSlowPion,Dstar_cuts)
 
@@ -724,12 +724,16 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
                      ['b2D0MuXKsKKDD',self.selb2D0MuXKsKKDD],
                      ['b2D0MuXKsKPiLL',self.selb2D0MuXKsKPiLL],
                      ['b2D0MuXKsKPiDD',self.selb2D0MuXKsKPiDD],
-                     ['b2D0MuXK3Pi',self.selb2D0MuXK3Pi],
-                     ['b2D0MuX4Pi',self.selb2D0MuX4Pi],
-                     ['b2D0MuX2K2Pi',self.selb2D0MuX2K2Pi],
-                     ['b2D0MuX3KPi',self.selb2D0MuX3KPi],
-                     ['b2D0MuXKsKs',self.selb2D0MuXKsKs],
-                     ['b2D0MuXPiPiGamma',self.selb2D0MuXPiPiGamma],
+                     ['b2D0MuXKsKs',self.selb2D0MuXKsKs]
+                     ]:
+            self.registerLine( StrippingLine('%s%sLine'%(line[0],name),
+                                             prescale = 1,
+                                             FILTER = GECs,
+                                             HLT2 = config["HLT2"],
+                                             selection = line[1]))
+
+        ########### D0 radiative decays
+        for line in [['b2D0MuXPiPiGamma',self.selb2D0MuXPiPiGamma],
                      ['b2D0MuXKPiGamma',self.selb2D0MuXKPiGamma],
                      ['b2D0MuXKKGamma',self.selb2D0MuXKKGamma]
                      ]:
@@ -738,6 +742,20 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
                                              FILTER = GECs,
                                              HLT2 = config["HLT2"],
                                              selection = line[1]))
+
+        ########### D0 4Body decays
+        for line in [['b2D0MuXK3Pi',self.selb2D0MuXK3Pi],
+                     ['b2D0MuX4Pi',self.selb2D0MuX4Pi],
+                     ['b2D0MuX2K2Pi',self.selb2D0MuX2K2Pi],
+                     ['b2D0MuX3KPi',self.selb2D0MuX3KPi]
+                     ]:
+            self.registerLine( StrippingLine('%s%sLine'%(line[0],name),
+                                             prescale = 1,
+                                             FILTER = GECs,
+                                             HLT2 = config["HLT2"],
+                                             selection = line[1],
+                                             RelatedInfoTools = self._getRelInfoD4Body()))
+
         ########### D* decays
         for line in [['b2DstarMuXHHPi0',self.selb2DstarMuXHHPi0],
                      ['b2DstarMuXKsPiPiPi0MergedLL',self.selb2DstarMuXKsPiPiPi0MergedLL],
@@ -770,8 +788,14 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
                      ['b2DpMuXKKK',self.selb2DsMuXKKK],
                      ['b2DpMuXKsK',self.selb2DsMuXKsK],
                      ['b2DpMuXKsPi',self.selb2DsMuXKsPi],
-                     ['b2DpMuXHMuMu',self.selb2DsMuXHMuMu],
-                     ['b2DpMuXHHHKs',self.selb2DpMuX_HHHKs],
+                     ['b2DpMuXHMuMu',self.selb2DsMuXHMuMu]]:
+            self.registerLine( StrippingLine('%s%sLine'%(line[0],name),
+                                             prescale = 1,
+                                             FILTER = GECs,
+                                             HLT2 = config["HLT2"],
+                                             selection = line[1]))
+        ########### D(s)+ 4Body decays
+        for line in [['b2DpMuXHHHKs',self.selb2DpMuX_HHHKs],
                      ['b2DpMuXHHHPi0',self.selb2DpMuX_HHHPi0]]:
             self.registerLine( StrippingLine('%s%sLine'%(line[0],name),
                                              prescale = 1,
@@ -1153,6 +1177,24 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         return Selection(name = 'Sel'+name,
                          Algorithm = CombineD2XGamma,
                          RequiredSelections = _requiredSelections )
+
+    def _getRelInfoD4Body(self):
+        relInfo = []
+        for coneAngle in [0.8,1.0,1.3,1.7]:
+            conestr = str(coneAngle).replace('.','')
+            relInfo += [
+            { "Type"         : "RelInfoConeVariables",
+            "ConeAngle"    : coneAngle,
+            "Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+            "DaughterLocations" : {
+                "[Beauty -> (Charm -> ^X- X+ X- X+) mu+]CC" : 'P2ConeVar%s_1' % conestr,
+                "[Beauty -> (Charm -> X- ^X+ X- X+) mu+]CC" : 'P2ConeVar%s_2' % conestr,
+                "[Beauty -> (Charm -> X- X+ ^X- X+) mu+]CC" : 'P2ConeVar%s_3' % conestr,
+                "[Beauty -> (Charm -> X- X+ X- ^X+) mu+]CC" : 'P2ConeVar%s_4' % conestr,
+                "[Beauty -> (Charm -> X- X+ X- X+) ^mu+]CC" : 'P2ConeVar%s_Mu' % conestr } }
+                       ]
+        relInfo += [ { "Type" : "RelInfoVertexIsolation", "Location": "VertexIsoInfo" } ]
+        return relInfo
 
 def makeDstar(_name, inputD0,_softPi,Dstar_cuts,_isSelfConjFS=False) :
     _inputD0_conj = Selection("SelConjugateD0For"+_name,
