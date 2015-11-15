@@ -1,12 +1,14 @@
-! $Id: release.notes,v 1.75 2009-04-06 13:43:09 gcorti Exp $
 ! -----------------------------------------------------------------------------
 ! Package          : Sim/GaussCalo
 ! Contributors     : Vanya Belyaev, Grigori Rybkine, Alexei Berdiouguine,
 !                    Patrick Robbe, Olivier Deschamps
 ! Responsible	     : Patrick Robbe, Olivier Deschamps
-! Purpose          : collection of sensitive detectors, converters, 
+! Purpose          : collection of sensitive detectors, converters,
 !                  : G4 actions, etc for LHCb calorimeters
 ! -----------------------------------------------------------------------------
+
+! 2015-11-15 - Marco Clemencic
+ - Fixed compilation with CLHEP 2.
 
 !======================== GaussCalo v10r0p1 2015-01-16 ========================
 ! 2014-11-28 - Gloria Corti
@@ -52,7 +54,7 @@
 
 !===================== GaussCalo v9r0 2007-03-18 ============================
 ! 2007-03-18 - Gloria Corti
- - Modify requirements to put back creation of rootmap 
+ - Modify requirements to put back creation of rootmap
  - Remove commented lines of code
    . CaloSensDet.h
    . EHCalSensDet.h
@@ -61,47 +63,47 @@
 
 ! 2007-01-18 - Florence RANJARD for Gloria CORTI
  - Remove GiGaCaloHitCnv.{h,cpp} that is obsolete and prevents creation of
-   rootmap. 
+   rootmap.
 
 ! 2007-01-12 - Gloria CORTI
  - Update code to cope with Gaudi v19r0. Replace GiGaFactory with ToolFactory
     and use Gaudi macros for factory declarations. Remove friend declaration
-    of GiGaFactory no longer in use and make public the standard LHCb 
+    of GiGaFactory no longer in use and make public the standard LHCb
     constructor and destructor
     . CaloSensDet.h
     . EcalSensDet.{h,cpp}
     . EHCalSensDet.h
-    . GaussSensPlaneDet.{h,cpp} 
+    . GaussSensPlaneDet.{h,cpp}
     . HcalSensDet.{h,cpp}
-    . SpdPrsSensDet.{h,cpp} 
+    . SpdPrsSensDet.{h,cpp}
     . GaussCalo_load.cpp
     . GetCaloHitsAlg.cpp
 
 !===================== GaussCalo v8r4 2006-07-04 =============================
 ! 2006-07-04 - Gloria CORTI
- - Remove ^M at end of lines in EcalSensDet.h as remarked by Vanya. 
+ - Remove ^M at end of lines in EcalSensDet.h as remarked by Vanya.
 
 ! 2006-06-24 - Vanya BELYAEV
  - many minor fixes. mainly polishing code lines, in particular
      - remove Print( ,.... , MSG::VERBOSE )
-     - remove some redundant checks 
-          e.g. the validity of the cell is already checked in 
-          CaloSensDet::ProcessHit, and there is no need to check it 
-          again and again            
-     - remove code duplication inbetween different flavours 
-         of birksCorrection (now all of them ends in the same 
-         lines). Completely remove the "specific" but IDENTICAL 
+     - remove some redundant checks
+          e.g. the validity of the cell is already checked in
+          CaloSensDet::ProcessHit, and there is no need to check it
+          again and again
+     - remove code duplication inbetween different flavours
+         of birksCorrection (now all of them ends in the same
+         lines). Completely remove the "specific" but IDENTICAL
          implementation for Spd/Prs
-     - put the major crucial *AND* short fuctions as "inline" 
-     - use a bit more efficient functions from DeCalorimeter 
-     - make use of GaudiUtils::HashMap  and GaudiUtils::Hash 
-       instead of GiGaHashMap and GiGaHash 
-         [hopefully these utilities finally could be more efficient 
-          that their counterpartners form GiGa] 
-     - make use of the standard counters from GaudiCommon<XXX> 
-       instead of the local data-members dor statistics 
-     - substitute the "printf"-like format statement with 
-       boost::format for the printout . 
+     - put the major crucial *AND* short fuctions as "inline"
+     - use a bit more efficient functions from DeCalorimeter
+     - make use of GaudiUtils::HashMap  and GaudiUtils::Hash
+       instead of GiGaHashMap and GiGaHash
+         [hopefully these utilities finally could be more efficient
+          that their counterpartners form GiGa]
+     - make use of the standard counters from GaudiCommon<XXX>
+       instead of the local data-members dor statistics
+     - substitute the "printf"-like format statement with
+       boost::format for the printout .
     I guess that overall CPU gain could be up to 1-2 percent.
 
 ! 2006-06-23 - Gloria CORTI
@@ -114,7 +116,7 @@
 ! 2006-04-17 - Patrick Robbe
  - EcalSensDet: optimization of the non-uniformity calculations
  - EcalSensDet, HcalSensDet, SpdPrsSensDet: store only sub-hits with at
-       least 10^-5 of the total energy. 
+       least 10^-5 of the total energy.
 
 !===================== GaussCalo v8r2 2006-04-04 =============================
 ! 2006-04-04 - Gloria CORTI
@@ -130,13 +132,13 @@
  - Adapt to new Event Model & LHCb v20 migration.
  - requirement : CaloEvent dependancy replaced by MCEvent
  - src         : algorithms and tools adapted
-                 GaussSensPlaneHitCnv.cpp/h removed 
+                 GaussSensPlaneHitCnv.cpp/h removed
 
 !===================== GaussCalo v7r4 ===================================
 ! 2005-12-08 - Gloria CORTI
  - options/Ecal.opts, Hcal.opts, Prs.opts, Spd.opts
-   modify to remove execution of algorithms set instead in 
-   $GAUSSOPTS/Simulation.opts  
+   modify to remove execution of algorithms set instead in
+   $GAUSSOPTS/Simulation.opts
 
 ! 2005-11-14 - Patrick Robbe
  - GetCaloHitsAlg.cpp: new algorithm to replace GiGaCaloHitCnv converter.
@@ -157,22 +159,22 @@
 
 ! 2004-10-08 - Vanya BELYAEV
  - fix a bug in mapping G4 space points -> CaloCellID.
-   The problem is due to *DIFERENT* actual size of 
-   scintillate plate and *EFFECTIVE* cell size in DeCalorimeter 
+   The problem is due to *DIFERENT* actual size of
+   scintillate plate and *EFFECTIVE* cell size in DeCalorimeter
    description.
-   It results in the fact that 2-5% of single EM-showers has 
-   distorted shape (the energy is prescribed to wrong cell) 
+   It results in the fact that 2-5% of single EM-showers has
+   distorted shape (the energy is prescribed to wrong cell)
 
-  To restor ethe "old" behaviour one need to UNCOMMENT two lines 
-  in src/CaloSensDet.cpp file 
-  ( method  CaloCellID CaloSensDet::cell ( const G4StepPoint* point ) const ) 
+  To restor ethe "old" behaviour one need to UNCOMMENT two lines
+  in src/CaloSensDet.cpp file
+  ( method  CaloCellID CaloSensDet::cell ( const G4StepPoint* point ) const )
 
-  // current solution! 
+  // current solution!
   // CaloCellID id = calo() -> Cell ( point->GetPosition() ) ;
   // return id ;
 
- - cmt/requirements 
-   increment the version to v7r2 
+ - cmt/requirements
+   increment the version to v7r2
 
 !====================== GaussCalo v7r1 ===================================
 ! 2004-08-02 - Gloria CORTI
@@ -180,17 +182,17 @@
 
 !====================== GaussCalo v7r0 ===================================
 ! 2004-02-20 - Ivan BELYAEV
- - options/PGUN* remove all obsolete files 
+ - options/PGUN* remove all obsolete files
  - src/CaloSensDet.cpp
-        fix compilation warnings 
+        fix compilation warnings
  - src/HcalSensDet.cpp
-        fix compilation warnings 
+        fix compilation warnings
  - src/GaussSensPlaneDet.cpp
-        fix compilation warnings 
+        fix compilation warnings
  - src/GaussSensPlaneHitCnv.cpp
-        fix compilation warnings 
- - cmt/requirement 
-        increment the MAJOR version  -> v7r0 
+        fix compilation warnings
+ - cmt/requirement
+        increment the MAJOR version  -> v7r0
 
 !========================= GaussCalo v6r0 =================================
 ! 2004-01-09 - Florence RANJARD
@@ -203,7 +205,7 @@
 
 !========================== GaussCalo v4r3 ===============================
 ! 2003-12-09 - Ivan BELYAEV
- - src/CaloSubHit.h   fix for new LHCbKernel 
+ - src/CaloSubHit.h   fix for new LHCbKernel
    (new xml description of CalocellID class and the absence of != operator)
 
 ! 2003-12-05 - Patrick Robbe
@@ -211,14 +213,14 @@
     non-uniformity amplitude (for the sin-like term) is put equal
     to 0 for the time being.
 
-! 2003-12-03   Vanya Belyaev 
-  - add generator configuration options file to run ParticleGun 
+! 2003-12-03   Vanya Belyaev
+  - add generator configuration options file to run ParticleGun
     generator for special Calo productions
   - options/PGUN*
 
-! 2003-11-05 - Grigory Rybkine 
- - options/Sps.opts,Prs.opts   - modified IntegrationDelays values, 
-                                 added time units to them 
+! 2003-11-05 - Grigory Rybkine
+ - options/Sps.opts,Prs.opts   - modified IntegrationDelays values,
+                                 added time units to them
 
 !=========================== GaussCalo v4r2 ===============================
 ! 2003-10-17 - Florence RANJARD
@@ -239,109 +241,109 @@
  - options/Calo.opts - read gausscalo.hbook from ParamFiles package.
 
 ! 2003-07-22 - Vanya BELYAEV
- - src/CaloHit.h  
- - src/CaloSubHit.h   add few more doxygen documentation strings 
+ - src/CaloHit.h
+ - src/CaloSubHit.h   add few more doxygen documentation strings
 
-! 2003-07-17 - Grigory Rybkine 
+! 2003-07-17 - Grigory Rybkine
  - src/SpdPrsSensDet.cpp  - fix the increment of the slot variable
 
-! 2003-07-16 - Vanya BELYAEV 
- - src/SpdPrsSensDet.cpp    - fix the index of currect BX to be 0 
- - options/Spd.opts 
- - options/Prs.opts         - add tuned delays 
+! 2003-07-16 - Vanya BELYAEV
+ - src/SpdPrsSensDet.cpp    - fix the index of currect BX to be 0
+ - options/Spd.opts
+ - options/Prs.opts         - add tuned delays
 
 ! 2003-07-10 - Ivan BELYAEV
- - few minor fixes for gcc3.2  + copy of CaloSimHash.h from the branch 
+ - few minor fixes for gcc3.2  + copy of CaloSimHash.h from the branch
 
 ! 2003-07-09 - Vanya BELYAEV
- - src/SpdPrsSensDet.h,.cpp    - new Spd/Prs implementation by Grigory Rybkine  
- - options/Sps.opts,Prs.opts   - the new configuration options 
+ - src/SpdPrsSensDet.h,.cpp    - new Spd/Prs implementation by Grigory Rybkine
+ - options/Sps.opts,Prs.opts   - the new configuration options
 
 
 ! 2003-07-08 - Vanya BELYAEV
- - src/CaloHit.h  
-   1)CaloHit::entries()     : new method (alias to CaloHit::size() ) 
-   2)CaloHit::energy ()     : new method for evaluation of total energy of the hit 
- - src/CaloSubHit.h 
-   1)CaloSubHit::entries()  : new method (alias to CaloSubHit::size() ) 
-   2)CaloSubHit::energy ()  : new method for evaluation of total energy of the hit 
+ - src/CaloHit.h
+   1)CaloHit::entries()     : new method (alias to CaloHit::size() )
+   2)CaloHit::energy ()     : new method for evaluation of total energy of the hit
+ - src/CaloSubHit.h
+   1)CaloSubHit::entries()  : new method (alias to CaloSubHit::size() )
+   2)CaloSubHit::energy ()  : new method for evaluation of total energy of the hit
  - src/CalosensDet.h,.cpp
-   the class is instrumented with some simple printout of number of hits, 
+   the class is instrumented with some simple printout of number of hits,
    subhits, timeslots and total energy.
-   The printout is under the control of new property 'EvaluateStatistics' 
+   The printout is under the control of new property 'EvaluateStatistics'
    (the default value is 'true')
 
 ! 2003-07-08 - Vanya BELYAEV
- - src/GaussSensPlaneDet.h,.cpp 
+ - src/GaussSensPlaneDet.h,.cpp
    the implementation of sensitive detector for Calorimeter Sensitive Plane
- - options/CaloSP.opts 
-   the configuration file for calorimeter sensitive plane detector   
- - src/GaussCalo_load.cpp 
-   add new sensitive detector to the list of known detectors 
+ - options/CaloSP.opts
+   the configuration file for calorimeter sensitive plane detector
+ - src/GaussCalo_load.cpp
+   add new sensitive detector to the list of known detectors
 
 
 ! 2003-07-08 - Vanya BELYAEV
- - src/CaloSensDet.h  
-     1) move histoSvc() accessor from 'private' to 'protected' part 
-         - according  to requests from Grigory and Carlos  
-     2) provide protected const and *non-const* access to vector of histograms 
-     3) provide protected accessor (const) to vector of histogram names 
+ - src/CaloSensDet.h
+     1) move histoSvc() accessor from 'private' to 'protected' part
+         - according  to requests from Grigory and Carlos
+     2) provide protected const and *non-const* access to vector of histograms
+     3) provide protected accessor (const) to vector of histogram names
  - src/CaloSensDet.cpp
-     1) skip the 'invalid' cells from PRocessHit method 
-     2) change the comparion of doubles to comparison of 
-        integers in birkCorrection method 
+     1) skip the 'invalid' cells from PRocessHit method
+     2) change the comparion of doubles to comparison of
+        integers in birkCorrection method
 
 ! 2003-07-08 - Patrick Robbe
  - src/EcalSensDet.h,.cpp : Adaptation to the new interface
 
 ! 2003-07-07 - Vanya BELYAEV
- - substitute G4Material with G4MaterialCutsCouple for 
-   DEDX evaluation for all classes. 
+ - substitute G4Material with G4MaterialCutsCouple for
+   DEDX evaluation for all classes.
 
 
 ! 2003-07-07 - Vanya BELYAEV
  - src/GaussSensPlaneHit.h,.cpp    :
           new class for G4 hits in Calorimeter Sensitive plane
  - src/GaussSensPlaneHitCnv.h,.cpp :
-          converter for Calorimeter Sensitive Plane hits  
- - src/GaussCalo_load.cpp          : declare new converter 
+          converter for Calorimeter Sensitive Plane hits
+ - src/GaussCalo_load.cpp          : declare new converter
 
 
-! 2003-07-07 - Vanya BELYAEV 
-  src/CaloSensDet.cpp   - remove the bug from my stupid implementation of Birk's law
- 
 ! 2003-07-07 - Vanya BELYAEV
-  - options/Calo.opts    adjust the location of input histogram file to 
-                         $LHCBHOME/sim/data directory 
+  src/CaloSensDet.cpp   - remove the bug from my stupid implementation of Birk's law
+
+! 2003-07-07 - Vanya BELYAEV
+  - options/Calo.opts    adjust the location of input histogram file to
+                         $LHCBHOME/sim/data directory
 
 ! 2003-07-05 - Vanya BELYAEV
- - src/CaloSensDet.h,cpp: 
-     1) define and implement generic ProcessHit method 
+ - src/CaloSensDet.h,cpp:
+     1) define and implement generic ProcessHit method
      2) define abstract fillHitInfo method
-     3) add few modifications of birkCorrection method 
-     4) add possibility to load the input histograms 
-     5) define few birkCorrection methods, based on original 
-        implementation by Patrick 
- - src/EHCalSensDet.h,.cpp: 
+     3) add few modifications of birkCorrection method
+     4) add possibility to load the input histograms
+     5) define few birkCorrection methods, based on original
+        implementation by Patrick
+ - src/EHCalSensDet.h,.cpp:
      1) new class derived fro CaloSensDet
-     2) implement the generic timinig procedure 
-        (rewritten using Patrick's ideas), applicable 
-        both to Ecal ans Hcal with the usage of input 
-        histograms 
+     2) implement the generic timinig procedure
+        (rewritten using Patrick's ideas), applicable
+        both to Ecal ans Hcal with the usage of input
+        histograms
  - src/HcalSensDet.h,.cpp
-     1) new class for handling of Hcal sensitive detector, derived from 
-        EHCalSensDet  with new implementation of 
+     1) new class for handling of Hcal sensitive detector, derived from
+        EHCalSensDet  with new implementation of
         timing and Birk's law
- - src/EcalSensDet.h,.cpp 
-     1) new class for handling of Ecal sensitive detector, derived from 
+ - src/EcalSensDet.h,.cpp
+     1) new class for handling of Ecal sensitive detector, derived from
         EHCalSensDet
-     2) *ALL* functionality is kept as originally implemented by Patrick 
+     2) *ALL* functionality is kept as originally implemented by Patrick
 - src/SpdPrsSensDet.h,.cpp
      1) new class for handling of Spd/Prs sensitive detectors,
         derived directly from CaloSensDet
-     2) the timing need to be implemented properly 
+     2) the timing need to be implemented properly
 
-- cmt/requirements  version increase to v4r0 
+- cmt/requirements  version increase to v4r0
 
 
 !=========================== GaussCalo v3r0 2003-05-18 ======================
@@ -375,7 +377,7 @@
 !=========================== GaussCalo v2r1 2003-04-29 ========================
 ! 2003-04-29 - Witek Pokorski
  - requirements - put v* to avoid changing version numbers
- 
+
 !=========================== GaussCalo v2r0 2002-12-17 ========================
 
 ! 2002-12-17 - Witek Pokorski
@@ -385,19 +387,19 @@
 !=========================== GaussCalo v1r1 2002-12-16 ========================
 
 ! 2002-12-15 - Ivan Belyaev
- - src/GiGaCaloHitCnv.cpp      change the names of collection to suppress G4 
-                               warning about the ambiguouse name of 
-                               G4 collections 
+ - src/GiGaCaloHitCnv.cpp      change the names of collection to suppress G4
+                               warning about the ambiguouse name of
+                               G4 collections
 
 
 ! 2002-12-13 - Ivan Belyaev
  - move updated and modified versions from src/Calo subdirectory
-	of GaussTools package 
+	of GaussTools package
 
 
 !=========================== GaussCalo v1r0 2002-12-11 ========================
 ! 2002-12-11 - Witek Pokorski
   - New package: contains all calorimeter specific implementations of sensitive
-                  detectors and converters 
+                  detectors and converters
 
 !==============================================================================

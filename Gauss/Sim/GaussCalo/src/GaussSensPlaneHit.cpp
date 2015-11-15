@@ -1,6 +1,6 @@
 // $Id: GaussSensPlaneHit.cpp,v 1.4 2006-01-17 15:52:57 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // Revision 1.3  2004/12/14 14:53:18  gcorti
@@ -11,9 +11,9 @@
 //
 // Revision 1.1  2003/07/07 16:09:39  ibelyaev
 //  add Calorimeter Sensitive Palne hits and the converter
-// 
+//
 // ============================================================================
-// Include files 
+// Include files
 // ============================================================================
 // from GiGa
 #include "GiGa/GiGaUtil.h"
@@ -23,9 +23,10 @@
 #include "GaussSensPlaneHit.h"
 // ============================================================================
 
+using CLHEP::HepLorentzVector;
 
 // ============================================================================
-/** @file 
+/** @file
  *
  *  Implementation file for class : GaussSensPlaneHit
  *
@@ -38,21 +39,21 @@ namespace GaussSensPlaneHitLocal
 {
   // ==========================================================================
   /** @var  s_Allocator
-   *  allocator to make more efficient creation delete 
-   *  of GaussSensPlaneHits objects  
+   *  allocator to make more efficient creation delete
+   *  of GaussSensPlaneHits objects
    */
   // ==========================================================================
   G4Allocator<GaussSensPlaneHit>            s_Allocator ;
   // ==========================================================================
-  
+
   // ==========================================================================
-  /** @var s_Counter 
-   *  statsic instace counter for all functions 
+  /** @var s_Counter
+   *  statsic instace counter for all functions
    */
   // ==========================================================================
 #ifdef GIGA_DEBUG
   static GiGaUtil::InstanceCounter<GaussSensPlaneHit> s_Counter   ;
-#endif 
+#endif
   // ==========================================================================
 }
 
@@ -61,61 +62,61 @@ namespace GaussSensPlaneHitLocal
 /** Standard constructor
  *  @param track   trackID of th eparticle (or its parent particle!)
  *  @param position position(3D+time) of the hit
- *  @param momentum 4-momentum of the particle 
+ *  @param momentum 4-momentum of the particle
  */
 // ============================================================================
-GaussSensPlaneHit::GaussSensPlaneHit 
-( const TrackID&          track    , 
+GaussSensPlaneHit::GaussSensPlaneHit
+( const TrackID&          track    ,
   const LHCb::ParticleID&       pid      ,
   const HepLorentzVector& position ,
   const HepLorentzVector& momentum )
-  : GaussHitBase () 
-  , m_pid        ( pid      ) 
-  , m_position   ( position ) 
-  , m_momentum   ( momentum ) 
-{ 
+  : GaussHitBase ()
+  , m_pid        ( pid      )
+  , m_position   ( position )
+  , m_momentum   ( momentum )
+{
   setTrackID ( track ) ;
   // ==========================================================================
 #ifdef GIGA_DEBUG
   GaussSensPlaneHitLocal::s_Counter.increment () ;
-#endif  
+#endif
   // ==========================================================================
-} 
+}
 
 // ============================================================================
-/// destructor 
+/// destructor
 // ============================================================================
 GaussSensPlaneHit::~GaussSensPlaneHit()
 {
   // ==========================================================================
 #ifdef GIGA_DEBUG
   GaussSensPlaneHitLocal::s_Counter.decrement () ;
-#endif  
+#endif
   // ==========================================================================
 }
 
 // ============================================================================
-/** copy constructor 
- *  @param hit hit to be copied 
+/** copy constructor
+ *  @param hit hit to be copied
  */
 // ============================================================================
-GaussSensPlaneHit::GaussSensPlaneHit 
-( const GaussSensPlaneHit& hit ) 
-  : GaussHitBase ( hit             ) 
-  , m_pid        ( hit.pid      () ) 
-  , m_position   ( hit.position () ) 
-  , m_momentum   ( hit.momentum () ) 
+GaussSensPlaneHit::GaussSensPlaneHit
+( const GaussSensPlaneHit& hit )
+  : GaussHitBase ( hit             )
+  , m_pid        ( hit.pid      () )
+  , m_position   ( hit.position () )
+  , m_momentum   ( hit.momentum () )
 {
   // ==========================================================================
 #ifdef GIGA_DEBUG
   GaussSensPlaneHitLocal::s_Counter.increment () ;
-#endif  
+#endif
   // ==========================================================================
 }
 
 
 // ============================================================================
-/// overloaded 'new' oerator 
+/// overloaded 'new' oerator
 // ============================================================================
 void* GaussSensPlaneHit::operator new(size_t)
 {
@@ -126,13 +127,13 @@ void* GaussSensPlaneHit::operator new(size_t)
 
 
 // ============================================================================
-/// overloaded 'delete' oerator 
+/// overloaded 'delete' oerator
 // ============================================================================
 void GaussSensPlaneHit::operator delete( void *hit )
 { GaussSensPlaneHitLocal::s_Allocator.FreeSingle( (GaussSensPlaneHit*) hit ); }
 
 
 // ============================================================================
-// The END 
+// The END
 // ============================================================================
 

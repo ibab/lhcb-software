@@ -1,5 +1,5 @@
 // $Id: VariableLuminosity.cpp,v 1.6 2009-04-07 16:11:21 gcorti Exp $
-// Include files 
+// Include files
 
 // local
 #include "VariableLuminosity.h"
@@ -40,15 +40,17 @@ VariableLuminosity::VariableLuminosity( const std::string& type,
     m_numberOfZeroInteraction( 0 ) ,
     m_nEvents( 0 ),
     m_randSvc( 0 ) {
+
+    using CLHEP::s;
     declareInterface< IPileUpTool >( this ) ;
-    declareProperty( "BeamParameters" , 
+    declareProperty( "BeamParameters" ,
                      m_beamParameters = LHCb::BeamParametersLocation::Default ) ;
     declareProperty ( "FillDuration"  , m_fillDuration  = 7.0 * 3600 * s    ) ;
     declareProperty ( "BeamDecayTime" , m_beamDecayTime = 10.0 * 3600 * s   ) ;
 }
 
 //=============================================================================
-// Destructor 
+// Destructor
 //=============================================================================
 VariableLuminosity::~VariableLuminosity( ) { ; }
 
@@ -64,14 +66,15 @@ StatusCode VariableLuminosity::initialize( ) {
 
   // XML file
   m_xmlLogTool = tool< ICounterLogFile >( "XmlCounterLogFile" ) ;
-  
+
   sc = m_flatGenerator.initialize( m_randSvc , Rndm::Flat( 0 , 1 ) ) ;
-  if ( ! sc.isSuccess() ) 
+  if ( ! sc.isSuccess() )
     return Error( "Could not initialize flat random generator" ) ;
 
+  using CLHEP::s;
   info() << "Poisson distribution with 'LHCb mean'. " << endmsg ;
   info() << "Fill duration (hours): " << m_fillDuration / 3600 / s << endmsg ;
-  info() << "Beam decay time (hours): " << m_beamDecayTime / 3600 / s 
+  info() << "Beam decay time (hours): " << m_beamDecayTime / 3600 / s
          << endmsg ;
 
   return sc ;
@@ -88,7 +91,7 @@ unsigned int VariableLuminosity::numberOfPileUp( ) {
   double mean , currentLuminosity;
   while ( 0 == result ) {
     m_nEvents++ ;
-    currentLuminosity = beam -> luminosity() * m_fillDuration / m_beamDecayTime / 
+    currentLuminosity = beam -> luminosity() * m_fillDuration / m_beamDecayTime /
       ( 1.0 - exp( -m_fillDuration / m_beamDecayTime ) ) ;
 
     mean = currentLuminosity * beam -> totalXSec() / beam -> revolutionFrequency() ;
@@ -106,7 +109,7 @@ unsigned int VariableLuminosity::numberOfPileUp( ) {
 void VariableLuminosity::printPileUpCounters( ) {
   using namespace GenCounters ;
   printCounter( m_xmlLogTool , "all events (including empty events)" , m_nEvents ) ;
-  printCounter( m_xmlLogTool , "events with 0 interaction" , 
+  printCounter( m_xmlLogTool , "events with 0 interaction" ,
                 m_numberOfZeroInteraction ) ;
 }
 

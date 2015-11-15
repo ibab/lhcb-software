@@ -1,12 +1,15 @@
 !-----------------------------------------------------------------------------
 ! Package     : Sim/GaussRICH
-! Responsible	: Sajan Easo 
+! Responsible	: Sajan Easo
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
-!----------------------------------------------------------------------------- 
+!-----------------------------------------------------------------------------
+
+! 2015-11-15 - Marco Clemencic
+ - Fixed compilation with CLHEP 2.
 
 !======================== GaussRICH v14r2p2 2015-01-16 =======================
 ! 2014-12-04 - Sajan Easo
- - Fixes to avoid pedantic warnings during compilation. 
+ - Fixes to avoid pedantic warnings during compilation.
 
 ! 2014-11-19 - Marco Clemencic
  - Updated CMake configuration
@@ -18,19 +21,19 @@
 
 !========================= GaussRICH v14r2 2014-07-28 ========================
 ! 2014-07-21 - Sajan Easo
- - Added the option to have random hits in RICH2. By default this option is 
+ - Added the option to have random hits in RICH2. By default this option is
    switched off.
-   The fractionf random hits is a parameter adjustable in the options file. 
-   This is done by creating extra photons to each track at the Cherenkov 
+   The fractionf random hits is a parameter adjustable in the options file.
+   This is done by creating extra photons to each track at the Cherenkov
    production time, with random angle.
    This would make these extra hits created as correlated hits. This followed
-   from recent study for MC tuning which found too few hits in RICH2 and near 
+   from recent study for MC tuning which found too few hits in RICH2 and near
    by detectors; so the addition to random hits is a temporary solution to fix
    this issue.
 
-! 2014-05-08 - Sajan Easo 
+! 2014-05-08 - Sajan Easo
  - Increased the fraction of scintillation hits in RICH2 in Rich.opts.
- - A printout of the fraction set for scintillation yield is added 
+ - A printout of the fraction set for scintillation yield is added
 
 ! 2014-02-19 -Sajan Easo
  - Added options to remove or Aerogel.
@@ -46,25 +49,25 @@
 !========================= GaussRICH v14r0 2013-07-24 ========================
 ! 2013-07-19 - Sajan Easo
  - Adaptions for re-use in RICH upgrade. Several minor changes in different
-   parts so that they can be used in RICH upgrade studies. 
- - Several files re-arranged within source code 
-   sub directories to avoid compilation warnings. 
+   parts so that they can be used in RICH upgrade studies.
+ - Several files re-arranged within source code
+   sub directories to avoid compilation warnings.
    Created another source code subdirectory
-   named PhysPhotDet as part of re-organization of the source code locations. 
+   named PhysPhotDet as part of re-organization of the source code locations.
  - This is compatible with Gauss-v46r2p1 onwards.
 
 !========================= GaussRICH v13r1 2013-03-07 ========================
 ! 2013-02-15 - Patrick Robbe
  - Fix compilation with gcc46
 
-! 2013-02-05 - Patrick Robbe 
- - Make a linker library for objects used outside GaussRICH like in 
+! 2013-02-05 - Patrick Robbe
+ - Make a linker library for objects used outside GaussRICH like in
    GaussCherenkov
 
 !========================= GaussRICH v13r0 2012-11-27 ========================
 ! 2012-11-09 - Sajan Easo
  - Made some suggestions made at the code review so that Gausscherenkov can be
-   built without warnings. Moved some .h files to a newly created GaussRICH 
+   built without warnings. Moved some .h files to a newly created GaussRICH
    subdirectory and the requirements file updated
 
 ! 2012-10-17 - Sajan Easo
@@ -72,8 +75,8 @@
 
 ! 2012-10-02 - Sajan Easo
  - Adapations for Geant4.95 version in different physics processes,
-   mainly for the methods of G4MaterialPropertyVector. 
-   These are backward incompatible with previous verisons of Geant4 and 
+   mainly for the methods of G4MaterialPropertyVector.
+   These are backward incompatible with previous verisons of Geant4 and
    hence with previous versions of Gauss which use them.
 
 !========================= GaussRICH v12r1 2012-07-23 ========================
@@ -87,9 +90,9 @@
 
 !========================= GaussRICH v12r0 2012-05-14 ========================
 ! 2012-05-08 - Gloria Corti
- - Move content of constructor of SensDet/RichSensDet and 
+ - Move content of constructor of SensDet/RichSensDet and
    RichAction/RichG4EventAction to method initialize that has been introduced.
-   This should work correctly as the initialize is called immediately after 
+   This should work correctly as the initialize is called immediately after
    the constructor.
    The move is needed as services where called in the constructor and this was
    causing a crash when genConf was run to produce the configurable. This is
@@ -101,13 +104,13 @@
 ! 2012-03-26 - Sajan Easo
  - Added some histograms for occupancy studies.
 ! 2012-01-27 - Sajan Easo
-- Modif to reflect the minor changes in aerogel tile size for the analysis part. 
+- Modif to reflect the minor changes in aerogel tile size for the analysis part.
 ! 2012-01-12 - Sajan Easo
 - Addedd the modifications to use the new aerogel structure, essentially the paths to CO2 surrounding aerogel.
 ! 2011-11-20 - Sajan Easo
  - Couple of adaptations to be compatible new RichDet in RichHpdProperties and GetMCRichHitsAlg
 ! 2011-11-11 - Sajan Easo
-- Changed from using DeRichHPD to DeRichPD in RichHpdProperties for acquiring the QE, 
+- Changed from using DeRichHPD to DeRichPD in RichHpdProperties for acquiring the QE,
   in order to be  compatible with recent changes in RichDet
 
 !========================= GaussRICH v11r6 2011-10-17 ========================
@@ -127,35 +130,35 @@
 
 !2011-9-01 - Sajan Easo
 - RICH ReadOut hit efficiency activated. There is one number per radiator which
-  can be set from the options file. This is in addition to the SiDetEff (=0.85). 
+  can be set from the options file. This is in addition to the SiDetEff (=0.85).
   So the total efficiency is ReadOutEfficenyFromRadiator*SiDetEff. Added an
-  options file named RichEfficiency.opts where these can be set. This file is 
+  options file named RichEfficiency.opts where these can be set. This file is
   activated from Rich.opts
-- RICH Binary readout simplified simulation made available on an options file 
+- RICH Binary readout simplified simulation made available on an options file
   switch. There is one flag named RichFlagDuplicateHitsactivate which allows to
-  flag the duplicate hits in in event. There is a second flag named 
-  RichAviodDuplicateHitsActivate which allows to avoid creating the duplicate 
-  hits. This is implemented in RichSensDet.cpp by looking through the 
-  appropriate set of hits already created,  to see if any duplicate entries 
+  flag the duplicate hits in in event. There is a second flag named
+  RichAviodDuplicateHitsActivate which allows to avoid creating the duplicate
+  hits. This is implemented in RichSensDet.cpp by looking through the
+  appropriate set of hits already created,  to see if any duplicate entries
   exist. By default these flags are set to false in the C++ code, which means
-  the duplicate hits are created. These flags are also available in 
+  the duplicate hits are created. These flags are also available in
   RichEfficiency.opts and are switched off by default.
-- The Hit smearng capabiltity can be activated from the options file 
+- The Hit smearng capabiltity can be activated from the options file
   RichEfficiency.opts. By default the hit smearing is switched off.
 
 !2011-6-24 - Sajan Easo
  - Minor changes to monitoring and analysis while reconstructing aerogel sub tiles.
- - Modified GetMCRichHitsAlg.cpp to tag the aerogel sub tile ids using the latest 
+ - Modified GetMCRichHitsAlg.cpp to tag the aerogel sub tile ids using the latest
    MCRichHit class.
 
 !========================= GaussRICH v11r4 2011-07-12 ========================
 !2011-6-15 - Sajan Easo
- - Made the changes needed to simulate Aerogel sub tiles. This involves changes in 
-   several files.  
- - Radiator numbering scheme modified, including those needed for aerogel subtiles. 
+ - Made the changes needed to simulate Aerogel sub tiles. This involves changes in
+   several files.
+ - Radiator numbering scheme modified, including those needed for aerogel subtiles.
 
 !2011-5-24 - Sajan Easo
- - Removed couple of redundant include statements in GiGaPhysConstructorOp and 
+ - Removed couple of redundant include statements in GiGaPhysConstructorOp and
    GiGaPhysConstructorHpd
 
 !2011-5-10 - Sajan Easo
@@ -165,20 +168,20 @@
    of scintillation set is approximate, but it is the best estimate so far.
 
 !2011-5-10 - Sajan Easo
- - Added some histograms and modifications to RichAnalysis 
+ - Added some histograms and modifications to RichAnalysis
 
 
 !========================= GaussRICH v11r3 2011-04-13 ========================
 
 !2011-04-12 - Sajan Easo
-  - Added a few histograms to the RichAnalysis and updated the Counters used 
+  - Added a few histograms to the RichAnalysis and updated the Counters used
     histograms
 
 !2011-03-28 - Sajan Easo
- - Added couple of counters to plot few histograms for analysis and monitoring. 
+ - Added couple of counters to plot few histograms for analysis and monitoring.
    This is done in RichG4Counters.h,icpp and cpp.
  - Added a material name path for future monitoring using pmts. This is not
-   used at the moment. Modification in  RichG4GaussPathNames.h and 
+   used at the moment. Modification in  RichG4GaussPathNames.h and
    RichG4MatRadIdentifier.cpp
 
 ! 2011-02-10 - Sajan Easo
@@ -210,13 +213,13 @@
    the C++ code is to switch this off, but in Rich.opts it is now switch on.
    The amount of smearing is set as a tabulated property in DDDB and can be
    lated changed in SimCond. This is set as a backward compatible addition in
-   the sense that using old data bases would produce no extra smearing as 
+   the sense that using old data bases would produce no extra smearing as
    before.
  - Added  the capability to increase the amount scintillation photons to match
    the real data which seems to have more background tracks. Activating this
-   done in Rich.opts. This also contains the amount  which is now set for a 
+   done in Rich.opts. This also contains the amount  which is now set for a
    factor of 2 compared to the standard
-   amount of scintillation photons.  
+   amount of scintillation photons.
 
 ! 2010-11-13 - Chris Jones
  - Remove usage of G4cout from RichG4GeomProp. Use Gaudi MsgStream instead.
@@ -230,24 +233,24 @@
 ! 2010-04-19  Sajan Easo
   - In Rich.opts the CF4 scintillation is activated as default by commenting out
     GiGa.ModularPL.GiGaPhysConstructorOp.RichActivateCF4Scintillation=false
-  - Minor addition to RichG4Scintillation so that it can technically run even 
-    with old versions of the dddb database, although without creating any 
-    scintillation photons. The recent database (dddb rich-20100419 onwards) is 
+  - Minor addition to RichG4Scintillation so that it can technically run even
+    with old versions of the dddb database, although without creating any
+    scintillation photons. The recent database (dddb rich-20100419 onwards) is
     needed to create these type of photons.
 ! 2010-04-14  Sajan Easo
   - minor fixes in RichG4Scintillation.cc to avoid compilation warnings and
-    avoid creating too many photons well above the expectations causing 
-    excessive cpu time. 
+    avoid creating too many photons well above the expectations causing
+    excessive cpu time.
 ! 2010-04-12  Sajan Easo
   - Added the CF4 scintillation proces, with the name RichG4scintillation.
-  - This can be switched off for backward compatibility as described in 
-    options/Rich.opts. Temporarily this is switched off in Rich.opts until 
-    the corresponding DDDB inputs are available in the LHCb release area. 
-    Once these inputs are available this process is expected to be switched 
-    on by default. 
+  - This can be switched off for backward compatibility as described in
+    options/Rich.opts. Temporarily this is switched off in Rich.opts until
+    the corresponding DDDB inputs are available in the LHCb release area.
+    Once these inputs are available this process is expected to be switched
+    on by default.
   - The monitoring histograms set2 are updated to show the hits with
     and without the CF4 scintillation hits in RICH2.
-  - The output into the MCRichHit in GetMCRichHitsAlg.cpp is modified 
+  - The output into the MCRichHit in GetMCRichHitsAlg.cpp is modified
     so that an extra flag is added to MCRichHit to tag the Scintillation hits.
 
 !========================= GaussRICH v10r1 2010-03-23 =========================
@@ -256,7 +259,7 @@
    backward compatible. The changes are in the monotoring and identifying the
    radiator number.
    The radiator number is same as that for C4F10. Hence one can use this for
-   both C4F10 and C3F8 as the Rich1gas. 
+   both C4F10 and C3F8 as the Rich1gas.
    The files modified:   RichG4GaussPathNames.h, RichG4MatRadIdentifier.cpp
    RichG4CherenkovAnalysis.cpp,RichG4InputMon.cpp
 
@@ -265,16 +268,16 @@
  - Some minor fixes to better support spillover locations
 
 ! 2009-10-19 - Silvia Miglioranzi
-   - Fixed an error in compilation on slc5 (extra qualification 
+   - Fixed an error in compilation on slc5 (extra qualification
      'RichG4ReconFlatMirr::' on member 'FlatMirrorIntersection') for the:
      RichG4ReconFlatMirr.h
 
 ! 2009-09-13 - Sajan Easo
  - In order to be compatible with the recent G4.9.2, in RichG4Cerenkov.cc
-   and RichG4OpRayleigh.cc, the names of some G4 methods 
-   with '..PhotonMomentum' are changed to '..PhotonEnergy'. 
+   and RichG4OpRayleigh.cc, the names of some G4 methods
+   with '..PhotonMomentum' are changed to '..PhotonEnergy'.
    These changes are backward incompatible.
-   These modifications fix the compilation problems seen recently 
+   These modifications fix the compilation problems seen recently
    from using the new G4.
  - In order to be compatible with recent Gaudi, ITime.h is changed to
    Time.h in the include statements in some of the cpp files in RichAnalysis
@@ -285,21 +288,21 @@
  - Update the algorithms that create the various output data outputs to no
    longer rely on the implicit ordering of the RichG4Hits to assoicate them
    to MCRichHits. Instead, an explicit Relations object is created and used.
- - Add job option "RichDetectors" to allow hits in a given Rich to be 
+ - Add job option "RichDetectors" to allow hits in a given Rich to be
    suppressed.
 
 !======================== GaussRICH v9r4p2 2009-07-15 ========================
 ! 2009-07-03 - Sajan Easo
-    - Compilation warnings from several 'unused variables' fixed . 
+    - Compilation warnings from several 'unused variables' fixed .
 
 !======================== GaussRICH v9r4p1 2009-05-28 ========================
 ! 2009-04-24 - Sajan Easo
-    - Commented out some redundant printout lines from RichG4Cerenkov.cc. 
+    - Commented out some redundant printout lines from RichG4Cerenkov.cc.
 
 !========================= GaussRICH v9r4 2009-04-06 =========================
 ! 2009-03-26 - Patrick Robbe
  - GetMCRichHitsAlg, GetMCRichOpticalPhotons, GetMCRichTracksAlg:
-   . add the possibility to change location of hits, photons, ... to 
+   . add the possibility to change location of hits, photons, ... to
      allow generation of spill over in Gauss
 
 ! 2009-03-03 - Sajan Easo
@@ -317,8 +320,8 @@
          Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/Rich2"};
          Geo.StreamItems      += {"/dd/Geometry/AfterMagnetRegion/Rich2/Rich2Surfaces"};
          Geo.StreamItems      += {"/dd/Geometry/BeforeMagnetRegion/Rich1/RichHPDSurfaces"};
-   - Files modified for running without RICH are : 
-       GiGaPhysConstructorHpd.h, GiGaPhysConstructorHpd.cpp, 
+   - Files modified for running without RICH are :
+       GiGaPhysConstructorHpd.h, GiGaPhysConstructorHpd.cpp,
        GiGaPhysConstructorHpd.h,GiGaPhysConstructorHpd.cpp,RichG4EventHitCount.cpp
        The Rich.opts has two extra lines as indicated above.
 
@@ -329,23 +332,23 @@
 
 ! 2009-01-26 - Chris Jones
  - Import two algorithms from Boole to create linkers for extended information.
-   This is a temporary solution. Ideally they would be in a package in the 
-   Lbcom project, which might become possible with a future Gauss 
+   This is a temporary solution. Ideally they would be in a package in the
+   Lbcom project, which might become possible with a future Gauss
    reorganisation.
 
 !========================= GaussRICH v9r2 2008-12-08 =========================
 ! 2008-10-24 - Sajan Easo
    In RichSensDet fixed a bug related to storing mctracks corresponding to
    MIPs passing through the Hpd-Silicon, in order to avoid the occurance of
-   related mc hits without mc tracks. 
+   related mc hits without mc tracks.
 
 !========================= GaussRICH v9r1 2008-08-26 =========================
 ! 2008-08-08 - Sajan Easo
   Modified the RichG4Cerenkov to be a poststep process , similar to
-  what is suggested in the recent G4.9. This needed a modification in 
+  what is suggested in the recent G4.9. This needed a modification in
   GiGaPhysConstructorOp.cpp as well.
 
-! 2008-07-30 - Sajan Easo 
+! 2008-07-30 - Sajan Easo
   Updated the RichHpdProperties.cpp to be compatible with the latest RichDet
   when accesing the HPD QE info from the DataBase.
 
@@ -381,11 +384,11 @@
  - Fixed a problem in RichG4StepAnalysis5 for Rich2 mirror name.
 
 !2008-04-20 - Sajan Easo
- - Fixed a typo in RichG4StepAnalysis3.cpp , which was caught only with 
+ - Fixed a typo in RichG4StepAnalysis3.cpp , which was caught only with
    32-bit compilation.
 
 !2008-04-15 - Sajan Easo
- - Fixed a problem in RichG4StepAnalysis6.cpp and RichG4Analysis3.cpp 
+ - Fixed a problem in RichG4StepAnalysis6.cpp and RichG4Analysis3.cpp
    for the HpdSMaster names.
  - Fixed a problem in RichG4StepAnalysis5 for Rich2 mirror name.
 
@@ -397,15 +400,15 @@
 !2008-03-31 - Sajan Easo
  - Added a switch to Rich.opts to override the Hpd maxQE value in the DB.
    The RichG4TrackActionPhotOpt is modified to use this. The default of the
-   switch is 'false', which means the DB value is used. 
-   To override this, in Rich.opts, set RichHpdMaxQEOverRideDB=true and 
+   switch is 'false', which means the DB value is used.
+   To override this, in Rich.opts, set RichHpdMaxQEOverRideDB=true and
    assign the new value to RichHpdMaxQEValueWhenOverRideDB
 
-!2008-03-27 - Sajan Easo  
- - Made changes to accomodate the recent changes in xml geometry for RICH, 
-   which created one logical volume per hpd. This was to simulate the 
+!2008-03-27 - Sajan Easo
+ - Made changes to accomodate the recent changes in xml geometry for RICH,
+   which created one logical volume per hpd. This was to simulate the
    Silicon chip shifts inside the hpd.
-   The changes are in RichG4GaussPathNames.h and RichG4StepAnalysis3.cpp and 
+   The changes are in RichG4GaussPathNames.h and RichG4StepAnalysis3.cpp and
    in the part making a test analysis reconstruction of data from hpds.
  - cleanup of the way the sensitive detector name is used in RichSensDet
 
@@ -419,23 +422,23 @@
    for the track and hence into the RichG4hit.
 
 ! 2008-01-30 - Sajan Easo
- - Fixed a problem with transport of backscattered photoelectron and the hit 
+ - Fixed a problem with transport of backscattered photoelectron and the hit
    it creates by modifying RichHpdSiEnergyLoss.cpp
 
 ! 2008-01-29 - Sajan Easo, Marco Musy
  - Added the reading of HPD QE Tables from the conditions DB. This would read
-   one table per HPD. An switch is available in Rich.opts to activate the 
-   reading of the nominal QE table from sqldddb. 
+   one table per HPD. An switch is available in Rich.opts to activate the
+   reading of the nominal QE table from sqldddb.
    The default is set to reading the tables from Conditions DB.
  - The HPD Demag reading is modified to read from the Conditions Database
-   via the RichDet so that the magnetic field distortions can be applied 
+   via the RichDet so that the magnetic field distortions can be applied
    directly from the conditions database.
    A switch is available in Rich.opts to use the old cross-focussing parameters
    used for DC06 which are useful for the no-magetic field running.
  - The default for the HPD PSF is set to the new value set after DC06. This
-   would give a slightly worse resolution than that used for DC06. 
+   would give a slightly worse resolution than that used for DC06.
    A Switch is available in Rich.opts to use the DC06 compatible PSF value.
- - In RichG4StepAnalysis5.cpp modified the the mirror number assignment in 
+ - In RichG4StepAnalysis5.cpp modified the the mirror number assignment in
    accordance with the new Rich1 and Rich2 mirror configurations from Jan2008
    in the database. In Rich1, this means using the 4 CMA mirrors and
    in Rich2 this means using the envelope volumes of the mirror.
@@ -450,44 +453,44 @@
    Requires the head of Event/MCEvent
  - Tidy up things a little.
 
-! 2008-01-25 - Sajan Easo 
- - In RichHpdPhotoElectricEffect and HpdSiEnergyLoss processes, the 
+! 2008-01-25 - Sajan Easo
+ - In RichHpdPhotoElectricEffect and HpdSiEnergyLoss processes, the
    RichPhotoelectron is activated insted of the normal  G4Electron as the
    secondary particle created. This is seems to work ok with Gaussv30r5.
  - GetMCRichHitsAlg.cpp and GetMCRichOpticalPhotonsAlg.cpp are modified in
-   preparation for modifications in the MCRichHit and MCRichOpticalPhoton 
+   preparation for modifications in the MCRichHit and MCRichOpticalPhoton
    classes. The changes are commented out for now. The MCRichHit is expected
-   to have additional flags for the new HPD simulation. 
+   to have additional flags for the new HPD simulation.
    The MCRichOpticalPhoton class is expected to have the photon
    coordinate on the hpd quartz window.
 
-! 2008-01-23 - Sajan Easo 
- - In the RichG4Hit add the location of the Photon incidence point on the 
-   external surface of the HPD quartz window so that it can be copied to the 
+! 2008-01-23 - Sajan Easo
+ - In the RichG4Hit add the location of the Photon incidence point on the
+   external surface of the HPD quartz window so that it can be copied to the
    MCRichOpticalPhoton class for Hpd debugging studies. This is done from the
    Step action named RichG4StepAnalysis6.cpp and is activated only with the
-   RICH verbose output flag. 
+   RICH verbose output flag.
 
 ! 2008-01-21 - Sajan Easo, Rob Lambert
  - Changes in accordance with the new geometry changes in RICH in January 2008.
- - Change in RichHpdPhotoElectricEffect to account for an extra layer of 
+ - Change in RichHpdPhotoElectricEffect to account for an extra layer of
    containerof hpd array in RICH2.
  - New Hpd Simulation from Rob Lambert which addes chromium ring around each
-   hpdquartz window. It also has new values for the reflectivities for the 
+   hpdquartz window. It also has new values for the reflectivities for the
    various optical boundaries in the hpd,rescaling of QE table and an improved
-   simulation of the backscattering inside the hpds. These involves changes 
-   mainly in RichHpdPhotoElectricEffect.cpp,RichHpdEnergyLossProcess.cpp, 
+   simulation of the backscattering inside the hpds. These involves changes
+   mainly in RichHpdPhotoElectricEffect.cpp,RichHpdEnergyLossProcess.cpp,
    RichHpdProperties.cpp, RichG4OpBoundaryprocess.cc and the files related to
-   these. The photons which are reflected in the various hpd boundaries and 
-   the photoelectrons created by backscattering process are flagged in the 
+   these. The photons which are reflected in the various hpd boundaries and
+   the photoelectrons created by backscattering process are flagged in the
    RichG4hit class. One result of this is to add about 10% noise
    hits to the set of rich hits.
- - HPD Max QE is seto 0.45 in the new sqldddb. This has the effect of 
+ - HPD Max QE is seto 0.45 in the new sqldddb. This has the effect of
    increasing the CPU  Time.
 
 !========================= GaussRICH v7r3 2007-12-07 =========================
 ! 2007-11-30 - Marco Clemencic and Gloria Corti
- - Link with special code in GaussTools for genConf (to instanciate a dummy 
+ - Link with special code in GaussTools for genConf (to instanciate a dummy
    G4RunManager, see GaussTools v13r2)
    . requirements
 
@@ -496,7 +499,7 @@
  - Adapt to changes in method names in IGeometryInfo.h as in DetDesc v18r0
    (LHCb v22r9)
    . src/RichAnalysis/RichG4ReconTransformHpd.cpp
-   . src/RichAnalysis/RichG4TransformPhDet.cpp 
+   . src/RichAnalysis/RichG4TransformPhDet.cpp
 
 !========================= GaussRICH v7r1p1 2007-09-18 =======================
 ! 2007-09-04 - Sajan Easo
@@ -514,8 +517,8 @@
 
 !======================== GaussRICH v7r0 2007-03-18 ========================
 ! 2007-03-18 - Gloria Corti
- - Adapt to changes in RichStatDivFunctor.h with introduction of "Rich" 
-   namespace (RichKernel v7r1 in LHCb v22r1) 
+ - Adapt to changes in RichStatDivFunctor.h with introduction of "Rich"
+   namespace (RichKernel v7r1 in LHCb v22r1)
    . src/SensDet/GetMCRichHitsAlg.cpp
    .             GetMCRichOpticalPhotonsAlg.cpp
    .             GetMCRichSegmentsAlg.cpp
@@ -523,7 +526,7 @@
 
 ! 2007-01-12 - Florence RANJARD
  - Use pattern packageOpts
- - Replace obsolete "CLHEP/Units/PhysicalConstants.h" with 
+ - Replace obsolete "CLHEP/Units/PhysicalConstants.h" with
    "Kernel/SystemOfUnits.h" (Gaudi v19r0)
    . src/RichAnalysis/RichG4HistoDefineSet1.cpp
    .                  RichG4HistoDefineSet2.cpp
@@ -542,23 +545,23 @@
    . src/RichAction/Rich1G4TrackActionUpstrPhoton.{h,cpp}
    .                RichG4EventAction.{h,cpp}
    .                RichG4RunAction.{h,cpp}
-   .                RichG4TrackActionAerogelPhoton.{h,cpp}             
+   .                RichG4TrackActionAerogelPhoton.{h,cpp}
    .                RichG4TrackAction.{h,cpp}
    .                RichG4TrackActionPhotOpt.{h,cpp}
    . src/RichAnalysis/RichG4StepAnalysis3.cpp
-   .                  RichG4StepAnalysis4.cpp   
+   .                  RichG4StepAnalysis4.cpp
    .                  RichG4StepAnalysis5.cpp
    . src/SensDet/GetMCRichHitsAlg.cpp
    .             GetMCRichOpticalPhotonsAlg.cpp
    .             GetMCRichSegmentsAlg.cpp
    .             GetMCRichTracksAlg.cpp
-   .             RichG4GeomProp.cpp 
+   .             RichG4GeomProp.cpp
    .             RichSensDet.{h,cpp}
- - Make standard constructor and destructor public. 
+ - Make standard constructor and destructor public.
    . src/RichAction/Rich1G4TrackActionUpstrPhoton.h
    .                RichG4EventAction.h
    .                RichG4RunAction.h
-   .                RichG4TrackActionAerogelPhoton.h             
+   .                RichG4TrackActionAerogelPhoton.h
    .                RichG4TrackAction.{h,cpp}
    . src/SensDet/RichSensDet.{h,cpp}
  - Remove no longer existing include GiGaMACROs.h
@@ -571,7 +574,7 @@
 !======================== GaussRICH v6r8 2006-11-09 ===========================
 ! 2006-11-02 - Sajan Easo
  - For aerogel the Rayleigh scattering has a check on how many times a photon
-   gets scattered and if this is above a cut value from the options file, 
+   gets scattered and if this is above a cut value from the options file,
    the photon gets killed.
    Added a PreUsertrackaction in RichG4TrackActionAerogelPhoton which checks
    the momentum of the photons from aerogel and if above a cutoff value then
@@ -584,24 +587,24 @@
 ! 2006-10-30 - Sajan Easo
  - Integrated the Hpd Magnetic field Distortion implementations from M.Musy
    The parameters for this are read in from the XmlConditions DB.
-   This can be activated from a switch in Rich.opts, named 
+   This can be activated from a switch in Rich.opts, named
    RichUseHpdMagDistortions
-   The current default is to switch this off. To activate this the Rich xml 
-   parameter UseHpdMagDistortions need to be set to 1.0  as well. 
- - For the HPD PSF , made a switch in Rich.opts named RichPSFPreDc06Flag. 
+   The current default is to switch this off. To activate this the Rich xml
+   parameter UseHpdMagDistortions need to be set to 1.0  as well.
+ - For the HPD PSF , made a switch in Rich.opts named RichPSFPreDc06Flag.
    The default is 'true' which is to set to the parametrization set at the
    beginning of DC06.
    When it is set to false, the new parametrization is activated which
    worsens the resolution by a small amount as shown from recent testbeam
    results.
- - The RichAnalysis is fixed for the test reconstruction . The fixes included 
+ - The RichAnalysis is fixed for the test reconstruction . The fixes included
    changing the names of userparameters for the mirrors and the hpd numbering
-   scheme in accordance with the xmldddb. 
+   scheme in accordance with the xmldddb.
 
 !======================== GaussRICH v6r7 2006-10-11 ===========================
 ! 2006-10-26 - Sajan Easo
- - Hpd Numbering scheme made compatible with the recent changes for RICH2 
-   in XMLDDDB v30r11 in RichHpdPhotoElectricEffect.cpp              
+ - Hpd Numbering scheme made compatible with the recent changes for RICH2
+   in XMLDDDB v30r11 in RichHpdPhotoElectricEffect.cpp
 
 !======================== GaussRICH v6r6 2006-10-11 ===========================
 ! 2006-10-10 - Chris Jones
@@ -630,8 +633,8 @@
 
 ! 2006-03-01 - Chris Jones
  - More improvements to the end converters
-  + MCRichHit can now store radiator and detector enum types for all radiator 
-    and detector sources and  "invalid" radiators and detectors. 
+  + MCRichHit can now store radiator and detector enum types for all radiator
+    and detector sources and  "invalid" radiators and detectors.
   + Improvements to monitoring
   + Additions to RichG4Hit, so it can now return the enum types itself.
   + SensDetID now set as the pixel RichSmartID
@@ -651,8 +654,8 @@
 
 ! 2006-02-21  Sajan Easo
  - The Flag for MC particle creation for the case of charged particle hitting
-  the HPD Si Det activated in SensDet.cpp. 
- - Some histograms updated 
+  the HPD Si Det activated in SensDet.cpp.
+ - Some histograms updated
 
 !======================== GaussRICH v6r1 2006-02-17 ===========================
 
@@ -678,8 +681,8 @@
 
 ! 2006-02-10 Sajan Easo
  - Version compatible with xmlddbv30r0 with the envelope volumes.
- - Modified the RichAnalysis to be compatible with LHCB v20r0 onwards 
-   which uses MathCore.  
+ - Modified the RichAnalysis to be compatible with LHCB v20r0 onwards
+   which uses MathCore.
 ! 2006-02-06 - Chris Jones
  - Fix problem with MCRichTrack converter algorithm aborting production if
    empty MCRichSegment container is found.
@@ -690,14 +693,14 @@
    to run Gauss, otherwise there are unresolved symbols
 
 ! 2006-01-27 - Gloria CORTI
- - Temporarly  comment out compilation of RichAnalysis not yet migrated to 
+ - Temporarly  comment out compilation of RichAnalysis not yet migrated to
 	 new Event model
 
 ! 2006-01-06  - Sajan Easo
  - Richphotelectron particle definition modified to be compatible with G4.8
 
 ! 2005-12-22 - Chris Jones
- - Update converter algorithms for new Gaudi v18r0 and LHCb v20r0 
+ - Update converter algorithms for new Gaudi v18r0 and LHCb v20r0
    (namespaces, CLHEP->MathMore etc)
  - Split up GetExtendedMCRichInfoAlg into seperate algorithms for clarity
  - Introduce RICH specific base class for converter algorithms
@@ -708,17 +711,17 @@
 ! 2005-12-16 - Gloria CORTI
  - New options RichExtendedInfo.opts that allow to print info about and write
    on file additional MC classes.
- - Rich.opts, comment options about GiGaGetHitsAlg since default in GaussAlg 
-   v1r8 
+ - Rich.opts, comment options about GiGaGetHitsAlg since default in GaussAlg
+   v1r8
 
 2005-12-09  - Sajan Easo
   - The photons not converted at the photocathode are allowed to travel inside the HPD.
     This is the improve the simulation of various backgrounds inside HPD.
   - The fresnel loss at the aerogel exit boundary and  aerogel filter surfaces are activated in
-    the  RichG4OpBoundaryProcess.cpp. 
+    the  RichG4OpBoundaryProcess.cpp.
   - To avoid infinite loops due to total internal reflections in rectangular blocks like the filter
-    and aerogel, a maximum number of steps (default 5000) is set for the photons in the  RichG4OpBoundaryProcess. 
-  - The default Hpd anode efficiency changed from 0.9 to 0.85. 
+    and aerogel, a maximum number of steps (default 5000) is set for the photons in the  RichG4OpBoundaryProcess.
+  - The default Hpd anode efficiency changed from 0.9 to 0.85.
   - The hit convertor is changed to an algorithm named GetMCRichHitsAlg which is to be activated from
     Simulation.opts. The hit collection list labels modified to have the ability to do partial storage of hits
     for different of the RICHs. The default is to store all the hits.
@@ -733,10 +736,10 @@
 !======================== GaussRICH v5r1 ==================================
 ! 2005-12-09 - Gloria CORTI
  - Introduce options (defaultin Rich.opts) to use RichConditions for setting
-   the refractive index of the gases. 
+   the refractive index of the gases.
 
 ! 2005-11-07 - Chris Jones
- - Remove unneccessary "use" statement for RichCondition. Technically, 
+ - Remove unneccessary "use" statement for RichCondition. Technically,
    GaussRICH only requires the interfaces from RichCondition to compile so
    the use state for RichCondition is redundant.
 
@@ -745,7 +748,7 @@
    are to activate the RichCondition tool. The RichCondition tool
    interface is in Rich/RichKernel. Hence this version needs both the
    RichCondition and RichKernel packages. The requirements file is
-   modified accordingly. 
+   modified accordingly.
 
 ! 2005-09-02 - Chris Jones
  - Add some more counters to GiGa converter for MCRichHits to monitor for
@@ -763,15 +766,15 @@
 
 !======================== GaussRICH v4r15 ==================================
 !2005-06-16 - Sajan Easo
-  - The DetectorElement member functions userParameterAsInt and 
-    userParameterAsDouble replaced by param<int> and param<double> to be 
-    compatible with recent changes in DetDesc. 
+  - The DetectorElement member functions userParameterAsInt and
+    userParameterAsDouble replaced by param<int> and param<double> to be
+    compatible with recent changes in DetDesc.
   - All usage of IDetectorElement to DetectorElement to be compatible with
     recent DetDesc.
 
 !2005-05-10 - Sajan Easo
-  - In RichAnalysis/RichG4ReconFlatMirr.cpp the xml userparameter names 
-    refering to the direction of the flat mirrors changed in accordance 
+  - In RichAnalysis/RichG4ReconFlatMirr.cpp the xml userparameter names
+    refering to the direction of the flat mirrors changed in accordance
     with names in recent xml versions.
     Also the quartic equation solution now uses GSL based algorithm.
     This is not used in standard running, but only activated in verification
@@ -779,22 +782,22 @@
 
 !======================== GaussRICH v4r14 ==================================
 !2005-04-19  - Sajan Easo
-  - Added three montoring histograms for set2 to plot the 
+  - Added three montoring histograms for set2 to plot the
     number of  nonraditor hits.
   - Added counters to keep track of the number of nonradiator hits.
 
 !======================== GaussRICH v4r13 ==================================
 ! 2005-04-12 - Gloria Corti
- - options/RichAnalysis.opts 
+ - options/RichAnalysis.opts
    . switch off set 3 of histograms
 
 !2005-04-06  - Sajan Easo
-  -Upgrade of the Gauss Monitoring histograms: The set2 and set histograms have 
-    modified title and range and the set2  also include plots of 
+  -Upgrade of the Gauss Monitoring histograms: The set2 and set histograms have
+    modified title and range and the set2  also include plots of
     Cherenkov production theta vs track momentum.
-  - Modification of all the files under srcG4 area so that they 
-    are similar to the corresponding files in the 
-    recent versions (v4.7.*) of GEANT4. 
+  - Modification of all the files under srcG4 area so that they
+    are similar to the corresponding files in the
+    recent versions (v4.7.*) of GEANT4.
     These are only cosmetic changes like using std::sin(x) instead of sin(x).
 
 !======================== GaussRICH v4r12 ==================================
@@ -804,7 +807,7 @@
 !======================== GaussRICH v4r11 ==================================
 ! 2005-02-21 - Gloria Corti
  - Rename options according to new algorithm in RichAnalysis.opts for
-	 extended information 
+	 extended information
  - src/RichAnalysis/RichG4HistoFillSet2.cpp, RichG4EventHitCount.cpp
    . comment some debug print out (in G4cout)
 
@@ -821,11 +824,11 @@
 !========================= GaussRICH v4r9 =================================
 ! 2004-12-13 - Gloria CORTI
  - src/PhysProcess/RichHpdSiEnergyLoss.cpp
-	 . temporary fix for BUG seen with geant4.6.2.ref05: 
+	 . temporary fix for BUG seen with geant4.6.2.ref05:
      "ERROR Inadmisible Rich Det Sector=  1078  Current RichDetNum =   0"
-     due to killing of photoelectron in process not propagated to G4track 
+     due to killing of photoelectron in process not propagated to G4track
  - src/PhysProcess/RichHpdPhotoElectricEffect.cpp
-   src/PhysProcess/RichHpdSiEnergyLoss.cpp 
+   src/PhysProcess/RichHpdSiEnergyLoss.cpp
 	 src/srcG4/RichG4Cerenkov.cc
    src/srcG4/RichG4OpBoundaryProcess.{hh,cc}
    src/srcG4/RichG4OpRayleigh.cc
@@ -850,15 +853,15 @@
 ! 2004-06-29 - Sajan Easo
  - Add another option parameter in Rich.opts for the max number
    of steps for optical photon to be used Rayleigh scattering.
- - Fixed some compliation problems with convertor until the 
+ - Fixed some compliation problems with convertor until the
     the Rich event package is updated.
 
 ! 2004-06-24 - Chris Jones
- - Update GiGa converters for MCRichHits and MCRichOpticalPhotons to 
+ - Update GiGa converters for MCRichHits and MCRichOpticalPhotons to
    include more history information
 
-! 2004-06-04 - Sajan Easo 
-  - Added additional protection to photon step points 
+! 2004-06-04 - Sajan Easo
+  - Added additional protection to photon step points
     in RichG4StepAnalysis5.cpp for verbose mode running.
 ! 2004-06-04 - Chris Jones
  - Update GiGaMCRichOpticalPhotonCnv to use the mirror reflection points
@@ -867,22 +870,22 @@
   - Created RichPhotoelectron particle for transport inside HPD.
   - It still has 2 GeV/c momentum to ensure straight line tracking.
     A low momentum of 20 keV has devaition from straight line when
-    tracked by B=0 field tracking. 
+    tracked by B=0 field tracking.
   - the photoelectron has only transportation and hpdenergyloss process.
-  - Files modified are GiGaPhysConstructorHpd.cpp and .h, 
+  - Files modified are GiGaPhysConstructorHpd.cpp and .h,
      RichHpdPhotoElectricEffect.cpp, RichHpdSiEnergyLoss.cpp
   - Fixed the GiGaMCRichHitCnv.cpp to avoid the division by 10 for the
     the energy of the hit which is the energy deposted by photoelectron.
     Typcial energy of the hit is 20 keV.
   - Process Type created for all processes defined in GaussRICH.
-  - Coordinates of Photon Reflection points on spherical and flat Mirrors 
+  - Coordinates of Photon Reflection points on spherical and flat Mirrors
     added to RichG4Hit so that they can be accessed when running in 'Verbose Output' mode.
-  - Added the functionality to set different max number 
+  - Added the functionality to set different max number
     of Cherenkov photons created per step in the three different Radiators.
     These values can be set from Rich.opts file. The default setup is to use a single
     value for all radiators.
   - Further cleanup of Rich.opts, RichVerbose.opts and RichAnalysis.opts.
-    
+
 ! 2004-05-05 - Gloria CORTI
  - Clean up of Rich.opts so that commented options refer to tools instances
    as in standard simulation
@@ -895,9 +898,9 @@
 !========================= GaussRICH v4r7 =================================
 ! 2004-03-17 - Sajan Easo
  - Modified GiGaPhysConstructorOp.cpp to avoid suspending the
-   tracking of charged track which creates optical photons 
-   until those photons are tracked. This is to get around a 
-   problem in G4 and GiGa whereby the G4trajectory of the 
+   tracking of charged track which creates optical photons
+   until those photons are tracked. This is to get around a
+   problem in G4 and GiGa whereby the G4trajectory of the
    suspended charged track was lost and a new G4trajectory was created
    when its tracking resumed
 
@@ -909,22 +912,22 @@
 !========================= GaussRICH v4r5 =================================
 !2004-2-4 - Sajan Easo
  - Added more info to the UserTrackInformation of photons, photoelectrons
- - Added more user info data to the RichG4hit class. Description of 
- - these addtional variables are in the RichG4hit class definition. 
+ - Added more user info data to the RichG4hit class. Description of
+ - these addtional variables are in the RichG4hit class definition.
  - setup a VerboseMode Activation switch so that these additional user info data are
  -  switched off during normal production run. They can be switched on
- -  for special runs. options/Rich.opts is for standard run.  
+ -  for special runs. options/Rich.opts is for standard run.
  -  The options/RichVerbose.opts and RichAnalysis.opts are for special studies.
- -  Modified the PhysProcess/ RichG4OpBoundaryProcess.cpp and 
+ -  Modified the PhysProcess/ RichG4OpBoundaryProcess.cpp and
  -   RichG4OpRayleigh.cc to be compatible with G4.6.0, although the changes are
  -  only cosmetic.
  -  Added some of the Analysis software for verification of
- -  cherenkov angle resolutions, photoelectron yield  etc. 
+ -  cherenkov angle resolutions, photoelectron yield  etc.
  -  This Analysis software is switched off for standard runs.
  -  Modified the Simulation.opts for the optical processes in the line
  -  GiGa.ModularPL.PhysicsConstructors += {"GiGaPhysConstructorOp/OpPhysOptions"};
  -   This is to provide two variables through the Rich.opts to the Optical Physics
- -   process list. Default values are provided in the program for normal production runs.  
+ -   process list. Default values are provided in the program for normal production runs.
 ! 2003-12-15 - Witek Pokorski
  - RichG4OpBoundaryProcess - fixes for G4.6.0
 
@@ -954,7 +957,7 @@
    Modified the rich1 upstream photon killing to cope with the
    fact that at preuser tracking, the trackvertex is not available.
    Also photons created at and after the exit wall of the rich1 are
-   killed. 
+   killed.
 ! 2003-07-16 - Sajan Easo
  - convertor for the MCRichHit structure at the output.
  - Optimizations for reducing cpu time in Rayliegh.
@@ -967,19 +970,19 @@
      Added more info into RichG4Hit. Cleanup of how the
      hpd energy loss processes was activated.
      Checks for existence of Gausstracking info in
-       RichG4CherenkovPhotProdTag and  RichPEInfoAttach 
+       RichG4CherenkovPhotProdTag and  RichPEInfoAttach
        (By Witold).
 
 !========================== GaussRICH v3r0 2003-06-18 ========================
 
 ! 2003-06-02 - Sajan Easo
    For cpu optimization, the killing of photons which were going to be
-  killed in the HPDs, is implemented  in the preuser track action of  
+  killed in the HPDs, is implemented  in the preuser track action of
   dedicated user track action for photons.
 ! 2003-05-29 - Ivan BELYAEV
- - src/SensDet/GiGaRichHitCnv.cpp fix 'GiGaFlush problem' 
-                                  (explicit dependence on conversion order) 
- - cmt/requirements               increase the version 
+ - src/SensDet/GiGaRichHitCnv.cpp fix 'GiGaFlush problem'
+                                  (explicit dependence on conversion order)
+ - cmt/requirements               increase the version
 
 
 !=========================== GaussRICH v2r2 2003-04-29 ========================
@@ -989,9 +992,9 @@
 
 
 !=========================== GaussRICH v2r1 2003-03-05 ========================
-!2003-03-21 - SE  
+!2003-03-21 - SE
   - Modifed  various parts to make a running version with
-  - Gauss v9r1. 
+  - Gauss v9r1.
   - Activated the Rich2 by modifying RichHpdProperties
   - Implemented UserTrackinformation to optical photons and
   - photoelectrons so that the hits will have lot of informations
@@ -1004,24 +1007,24 @@
   - is used for photons and photoelectrons.
   - Also added a couple of paprameters in the options file
   - for the verbosity of output and histogram activation.
-  -  Three of the .cc files from G4 version 4.5.0.ref02 is 
+  -  Three of the .cc files from G4 version 4.5.0.ref02 is
   - copied and modifed for the optiomization and filling track related
   - UserInformation. These are in the src/srcG4 subdirectory.
 
 ! 2003-03-05 - Florence RANJARD
- - replace PhysicalConstants.h (from Geant4) with 
+ - replace PhysicalConstants.h (from Geant4) with
            CLHEP/Units/PhysicalConstants.h
 ! 2003-01-23 - Vanya Belyaev
-    few fixes for Win2K platform 
+    few fixes for Win2K platform
 
 !=========================== GaussRICH v2r0 2002-12-17 ========================
 ! 2002-12-17 - Witek Pokorski
- - use new GaussTools (new Geant4)  
+ - use new GaussTools (new Geant4)
 
 !=========================== GaussRICH v1r0 2002-12-11 ========================
 ! 2002-12-11 - Witek Pokorski
   - New package: contains all RICH specific implementations of sensitive
                   detectors, converters and physics process
-    
+
 
 !==============================================================================

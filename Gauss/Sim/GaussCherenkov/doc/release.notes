@@ -1,9 +1,12 @@
 !-----------------------------------------------------------------------------
 ! Package     : Sim/GaussCherenkov
-! Responsible	: Sajan Easo 
-! Purpose     : collection of sensitive detectors, G4 actions, 
+! Responsible	: Sajan Easo
+! Purpose     : collection of sensitive detectors, G4 actions,
 !               etc for RICH Upgrade
-!----------------------------------------------------------------------------- 
+!-----------------------------------------------------------------------------
+
+! 2015-11-15 - Marco Clemencic
+ - Fixed compilation with CLHEP 2.
 
 !===================== GaussCherenkov v4r5 2014-10-08 ========================
 ! 2014-12-04 - Sajan Easo
@@ -20,25 +23,25 @@
 
 !===================== GaussCherenkov v4r4 2014-10-08 ========================
 ! 2014-10-07 - Sajan Easo
- - Minor modifications to the Cherenkov analysis in booking and filling 
+ - Minor modifications to the Cherenkov analysis in booking and filling
    histograms with new collection set.
 
-! 2014-08-24  - Sajan Easo 
- - Added the file GetMCCkvTracksAlg  to avoid problems with collection 
+! 2014-08-24  - Sajan Easo
+ - Added the file GetMCCkvTracksAlg  to avoid problems with collection
    name in that file.
  - Kept some of the factories in Factories.cpp
 
 ! 2014-08-24  - Sajan Easo
  - For using the mixed set of PMTS, the sensitive detector and collection name
-  configurations are modified. The hits from large PMTS are in a separate 
+  configurations are modified. The hits from large PMTS are in a separate
   sensitive detector and are stored in two
-  extra collection sets. All this is made transparent to the rest of the 
+  extra collection sets. All this is made transparent to the rest of the
   program.
   Modified several files in the SensDet subdirectory and corresponding .h files.
 
 !===================== GaussCherenkov v4r3 2014-07-28 ========================
 ! 2014-06-06 - Jibo He
- - GiGaPhysConstructorOpCkv -> RichPmtPhotoElectricEffect -> RichPmtProperties 
+ - GiGaPhysConstructorOpCkv -> RichPmtPhotoElectricEffect -> RichPmtProperties
    . Added options to scale QE for Rich1 and Rich2 separately
  - CherenkovG4HistoFillSet5
    . Added Hists to store true reflection points on Rich2 Mirrors
@@ -58,12 +61,12 @@
  - Modifications to use mixed set of PMTS (large +standard pixel size) in RICH2
    in   RichPmtProperties,CkvGeometrySetupUtil,CkvSensDet,CherenkovG4CkvRecon,RichG4ReconTransformPmt,
    CherenkovG4HitRecon and CherenkovG4HistoFillSet4
- - Added some prints in RichPmtProperties for reduced set of pmts 
+ - Added some prints in RichPmtProperties for reduced set of pmts
 
 !===================== GaussCherenkov v4r1 2013-10-23 ========================
 ! 2013-10-18 - Jibo He
  - GiGaPhysConstructorOpCkv -> RichPmtPhotoElectricEffect -> RichPmtProperties
-  . Added option to "remove" a list of PMTs given in db (set0-2) 
+  . Added option to "remove" a list of PMTs given in db (set0-2)
  - CherenkovG4HistoDefineSet5.cpp
   . Changed the range of total occupancies histos to 15k to not trunate distributions
 
@@ -75,8 +78,8 @@
  - Added CMake configuration file.
 
 ! 2013-08-19 - Jibo He
- - GiGaPhysConstructorOpCkv -> RichPmtPhotoElectricEffect -> RichPmtProperties  
-  . Added option to scale overall PMT QE 
+ - GiGaPhysConstructorOpCkv -> RichPmtPhotoElectricEffect -> RichPmtProperties
+  . Added option to scale overall PMT QE
 
 ! 2013-08-09 - Sajan Easo
   - Fix couple of compilation warnings in CherenkovG4CkvRecon.cpp which seems to have occured in
@@ -87,18 +90,18 @@
    src/CherenkovAnalysis/CkvG4ReconFlatMirr.cpp
   . Added functions to calculate distance to flat mirror plane
  - src/CherenkovAnalysis/CherenkovG4CkvRecon
-  . Added functions to calculate distance to spherical mirror 
+  . Added functions to calculate distance to spherical mirror
  - src/CherenkovAnalysis/CherenkovG4Histo*Set2
-  . Added histos of numHits as function of track theta, phi 
+  . Added histos of numHits as function of track theta, phi
  - src/CherenkovAnalysis/CherenkovG4Histo*Set4
   . Added histos of emis reso as function of track theta, phi
 
 !===================== GaussCherenkov v4r0 2013-07-24 ========================
 ! 2013-07-19 - Sajan Easo
- - Adapations for RICH-2019 upgrade studies. Added new files mainly for the 
+ - Adapations for RICH-2019 upgrade studies. Added new files mainly for the
    analysis part.
- - Rearrangeed source code in different subdirectories to avoid compilation 
-   warnings. Created another source code subdirectory named CkvPhysPhotDet 
+ - Rearrangeed source code in different subdirectories to avoid compilation
+   warnings. Created another source code subdirectory named CkvPhysPhotDet
    as part of re-organization of source code.
  - This is all compatible with Gauss v46r1p1 onwards
 
@@ -113,18 +116,18 @@
 !======================== GaussCherenkov v3r0 2012-11-27 =====================
 ! 2012-11-09 - Sajan Easo
  - Made some of the modifications made in the code review. Moved some .h files
-   to a newly created GaussCherenkov subdirectory and requirements file also 
-   updated 
+   to a newly created GaussCherenkov subdirectory and requirements file also
+   updated
 
 ! 2012-10-18 - Sajan Easo
  - Modified options for scintillation process in RICH2.
 
 ! 2012-10-16 - Sajan Easo
- - Added couple of Step Analysis actions for verifying modified RICH optics. 
+ - Added couple of Step Analysis actions for verifying modified RICH optics.
    They are all deactivated by default and are for special studies only.
 
 ! 2012-10-03 - Sajan Easo
- - Made adaptations for Geant 4.95. 
+ - Made adaptations for Geant 4.95.
    These are backward incompatible changes for Geant4 and won't work with
    previous versions of Geant4 and Gauss which uses these earlier versions.
 
@@ -142,9 +145,9 @@
 
 !======================== GaussCherenkov v2r0 2012-05-14 =====================
 ! 2012-05-11 - Sajan Easo
- - Adaption for the recent  Gaudi v23. Moved parts of the constructor in 
-   CkvSensDet to its initialize method. 
-   Moved also parts of the constructor in CherenkovEventAction to its 
+ - Adaption for the recent  Gaudi v23. Moved parts of the constructor in
+   CkvSensDet to its initialize method.
+   Moved also parts of the constructor in CherenkovEventAction to its
    initialize method.  The initialize
    and finalize methods are installed in these two classes as well.
 
@@ -166,8 +169,8 @@
  - Comment out the obsolete G4MultipleScattering.hh which caused compilation issues
 !========================= GaussCherenkov v1r0 2011-07-24 ====================
 ! 2011-06-15 -Sajan Easo
- - Made the adaptations needed for the new Radiator number scheme setup in 
-   GaussRICH 
+ - Made the adaptations needed for the new Radiator number scheme setup in
+   GaussRICH
 
 ! 2011-05-10 - Sajan Easo
  - Adapted GetMCCkvInfoBase.cpp and .h to use the new base class configuration.
@@ -179,7 +182,7 @@
  - Added a few histograms on occupancy for monitoring.
 
 ! 2011-03-03 - Sajan EASO
- - First version 
+ - First version
  - Uses MAPMT as the photodetector
 ======================== GaussCherenkov v1r0 =================================
 

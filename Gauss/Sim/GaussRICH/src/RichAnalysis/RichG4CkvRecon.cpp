@@ -72,7 +72,7 @@ RichG4CkvRecon::RichG4CkvRecon()
   // the 2 is for the
   // the x,y, z coord of the center of curvature of each mirror.
   // 4 is the number of sectors corresponding to rich1 top,bootom
-  // rich2 left right. 
+  // rich2 left right.
 
 
 
@@ -106,20 +106,20 @@ RichG4CkvRecon::RichG4CkvRecon()
   m_AgelNominalTileRefIndex[14]=1.0342;
   m_AgelNominalTileRefIndex[15]=1.0376;
   double asum=0.0;
-  
+
   for (int i=0; i<16; ++i ) {
     asum+= m_AgelNominalTileRefIndex[i];
-    
+
     for (int j=0; j<50; ++j) {
       m_AgelNominalSubTileRefIndex[i] [j] =  m_AgelNominalTileRefIndex[i];
-      
+
     }
-    
+
   }
    m_AgelMeanNominalTileRefIndex=asum/16.0;
-  
-  
-  
+
+
+
 
   if( !Rich1DE ){
     RichG4CkvReconlog << MSG::ERROR
@@ -155,7 +155,7 @@ RichG4CkvRecon::RichG4CkvRecon()
     //    std::vector<double> r1NominalCoC = Rich1DE->param<std::vector<double> >("Rich1NominalCoC");
     std::vector<double> r1NominalCoC = Rich1DE->param<std::vector<double> >("NominalSphMirrorCoC");
 
-    
+
     m_SphMirrCC [0] [0]= r1NominalCoC[0];
     m_SphMirrCC [0] [1]= r1NominalCoC[1];
     m_SphMirrCC [0] [2]= r1NominalCoC[2];
@@ -177,7 +177,7 @@ RichG4CkvRecon::RichG4CkvRecon()
     //    m_SphMirrRad [0] =
     //  Rich1DE->userParameterAsDouble( "Rich1Mirror1NominalRadiusC");
 
-    
+
     m_SphMirrCC [1] [0]= m_SphMirrCC [0] [0];
     m_SphMirrCC [1] [1]= -1.0* m_SphMirrCC [0] [1];
     m_SphMirrCC [1] [2]=   m_SphMirrCC [0] [2];
@@ -275,17 +275,17 @@ RichG4CkvRecon::RichG4CkvRecon()
         m_HpdTransforms[idet][ih] = new RichG4ReconTransformHpd (idet, ih);
 
       }
-      
+
       for (int is=0 ;is < 2 ; is ++) {
-        
+
         int isect = idet*2 + is;
         m_PhDetTransforms[isect] = new RichG4TransformPhDet(idet, isect );
-      }     
-      
+      }
+
     }
-    
+
   }
-  
+
 
 
   m_RichG4ReconHpd = new RichG4ReconHpd();
@@ -318,8 +318,8 @@ Gaudi::XYZPoint RichG4CkvRecon::GetSiHitCoordFromPixelNum(int aPXNum,
 Gaudi::XYZPoint RichG4CkvRecon::ApplyQwRefrCorrAndGetGlobalPos(const Gaudi::XYZPoint & aPhCathPoint ){
 
 
-  Gaudi::XYZPoint acurGlobalHitPhCath (0.0,0.0,0.0);    
-     
+  Gaudi::XYZPoint acurGlobalHitPhCath (0.0,0.0,0.0);
+
   Gaudi::XYZPoint aLocalPointWithCorr= m_RichG4ReconHpd->GetLocalPointWithQwCorr(aPhCathPoint);
 
 
@@ -329,13 +329,13 @@ Gaudi::XYZPoint RichG4CkvRecon::ApplyQwRefrCorrAndGetGlobalPos(const Gaudi::XYZP
          Gaudi::Transform3D HpdtoGlobalTransform = CurHpdTransform->HpdLocalToGlobal();
 
           acurGlobalHitPhCath = HpdtoGlobalTransform *  aLocalPointWithCorr ;
-          
+
   }
 
   return acurGlobalHitPhCath;
-        
+
 }
-Gaudi::XYZPoint  
+Gaudi::XYZPoint
 RichG4CkvRecon::ReconPhDetPlaneCoordFromLocalCoord (const Gaudi::XYZPoint & aLocalHitCoord, bool applyQwRefCorr )
 {
   IMessageSvc*  msgSvc = RichG4SvcLocator::RichG4MsgSvc ();
@@ -380,18 +380,18 @@ RichG4CkvRecon::ReconPhDetPlaneCoordFromLocalCoord (const Gaudi::XYZPoint & aLoc
           HpdtoPhDetTransform * curLocalHitPhCath;
 
 
-        
+
       }
     }
   }
-  
+
 
   return   acurPhDetHitPhCath;
-  
+
 }
 
 
-Gaudi::XYZPoint  
+Gaudi::XYZPoint
 RichG4CkvRecon::ReconPhCoordFromLocalCoord (const Gaudi::XYZPoint & aLocalHitCoord, bool applyQwRefCorr )
 {
 
@@ -481,7 +481,7 @@ Gaudi::XYZPoint RichG4CkvRecon::getPhotAgelExitZ( double ex, double ey, double e
 {
   const Gaudi::XYZPoint aPhotTrueEmitPt(ex,ey,ez);
 
-  Hep3Vector TrackStepDir(
+  CLHEP::Hep3Vector TrackStepDir(
                           (m_ChTrackPostStepPosition.x()-m_ChTrackPreStepPosition.x()),
                           (m_ChTrackPostStepPosition.y()-m_ChTrackPreStepPosition.y()),
                           (m_ChTrackPostStepPosition.z()-m_ChTrackPreStepPosition.z()));
@@ -496,7 +496,7 @@ Gaudi::XYZPoint RichG4CkvRecon::getPhotAgelExitZ( double ex, double ey, double e
   double py= sint*sinp;
   double pz= cost;
 
-  Hep3Vector pDir( px,py,pz);
+  CLHEP::Hep3Vector pDir( px,py,pz);
   pDir.rotateUz( TrackStepDir);
   pDir.unit();
 
@@ -526,11 +526,11 @@ RichG4CkvRecon::ReconReflectionPointOnSPhMirror (const Gaudi::XYZPoint & aDetect
 
   m_curEmisPt=aEmissionPoint;
   m_curDetPoint=aDetectionPoint;
-  
+
   //  RichG4CkvReconlog<<MSG::INFO <<" current richdet and flat mirror "<<aRichDetNum<<"  "<<aFlatMirrNum
   //                << endreq;
 
-  
+
   Gaudi::XYZPoint curFlatMCoC =  m_CurReconFlatMirr-> FlatMirrorCoC(aRichDetNum,aFlatMirrNum);
 
   //  RichG4CkvReconlog<<MSG::INFO <<" current richdet and flat mirror flatmirrorcoc "<<aRichDetNum<<"  "<<aFlatMirrNum
@@ -539,7 +539,7 @@ RichG4CkvRecon::ReconReflectionPointOnSPhMirror (const Gaudi::XYZPoint & aDetect
   //    RichG4CkvReconlog<<MSG::INFO <<" current emission pt "<< m_curEmisPt<<endreq;
   //  RichG4CkvReconlog<<MSG::INFO <<" current detection pt "<<m_curDetPoint <<endreq;
 
-  
+
   Gaudi::XYZPoint aSphReflPt = ReconReflectionPointOnSPhMirrorStdInput() ;
   //  RichG4CkvReconlog<<" current Sph Mirror pt first iteration "<<aSphReflPt   <<endreq;
 
@@ -552,7 +552,7 @@ RichG4CkvRecon::ReconReflectionPointOnSPhMirror (const Gaudi::XYZPoint & aDetect
 										  aRichDetNum,
 										  aFlatMirrNum);
 
-    
+
     // create a plane at the flat mirr refl point
 
 
@@ -560,15 +560,15 @@ RichG4CkvRecon::ReconReflectionPointOnSPhMirror (const Gaudi::XYZPoint & aDetect
     // find the detection pt wrt this plane
 
 
-    
+
     double adist = aPlane.Distance(aQwPoint);
 
     Gaudi::XYZPoint  afrelPt = aQwPoint - 2.0*adist * aPlane.Normal();
     m_curDetPoint =  afrelPt;
     aSphReflPt = ReconReflectionPointOnSPhMirrorStdInput() ;
     ++aItr;
-  
-     
+
+
   }
 
 
@@ -598,7 +598,7 @@ Gaudi::XYZPoint RichG4CkvRecon::ReconReflectionPointOnSPhMirrorStdInput()
   const  double d2 = dvec.Mag2();
     double d  = pow(d2,0.5);
 
-    if( (e*d) != 0.0 ) {  
+    if( (e*d) != 0.0 ) {
 
   double gamma     = acos( evec.Dot(dvec) / (e*d) );
 
@@ -629,25 +629,25 @@ Gaudi::XYZPoint RichG4CkvRecon::ReconReflectionPointOnSPhMirrorStdInput()
       Gaudi::XYZVector delta[2] = { Gaudi::XYZVector(0.0,0.0,0.0),
                                Gaudi::XYZVector(0.0,0.0,0.0) };
 
-      
+
         for (int isol=0 ; isol< 4; isol++ ) {
           // now require real and physical solutions.
           if(GSL_IMAG (qsol[isol] ) == 0.0 && GSL_REAL(qsol[isol]) <= 1.0  ) {
             nrealsolnum++;
             if(nrealsolnum < 2) {
-              double beta = asin(GSL_REAL(qsol[isol]));                   
+              double beta = asin(GSL_REAL(qsol[isol]));
 	      Gaudi::XYZVector aa = evec;
               aa *= (r/e);
 	      const Gaudi::Rotation3D rotn( Gaudi::AxisAngle(nvec, beta));
- 	      Gaudi::XYZVector bb = rotn(aa);             
+ 	      Gaudi::XYZVector bb = rotn(aa);
 	      delta[ nrealsolnum] = bb;
 	    }
 
-            
+
 	  }
-          
+
         }
-  
+
         if( nrealsolnum >= 0 ) {
 
           const Gaudi::XYZVector deltaF =
@@ -715,9 +715,9 @@ void RichG4CkvRecon::SolveQuartic(  gsl_complex z[4],
     //  z[ii]= std::complex<double> (c[j],c[j+1]);
     //  j +=2;
     // }
-    
+
   }
-  
+
 
 }
 
@@ -755,18 +755,18 @@ double RichG4CkvRecon::CherenkovThetaInAerogel(const Gaudi::XYZPoint & aReflPoin
                                                const int tilenum, const int subtilenum )
 {
   double aTileRefIndexCorrectionFact=0.0;
-  
+
   if(subtilenum < 0 ) {
     aTileRefIndexCorrectionFact = acos(1.0/m_AgelMeanNominalTileRefIndex)-
       acos(1.0/(m_AgelNominalTileRefIndex[tilenum]));
-    
+
   }else {
     aTileRefIndexCorrectionFact=acos(1.0/m_AgelMeanNominalTileRefIndex)-
       acos(1.0/(m_AgelNominalSubTileRefIndex[tilenum] [subtilenum]));
-    
+
   }
-  
-  
+
+
   m_curEmisPt = aEmisPt;
 
   IMessageSvc*  msgSvc = RichG4SvcLocator::RichG4MsgSvc ();
@@ -814,9 +814,9 @@ double RichG4CkvRecon::CherenkovThetaInAerogel(const Gaudi::XYZPoint & aReflPoin
 
   const double angleCorrection= aPhotDirAgelExit-angleIncident;
 
-  const double aCkvWithCorrection= 
+  const double aCkvWithCorrection=
     (aCkvWithoutCorrection-angleCorrection) + aTileRefIndexCorrectionFact;
-  
+
   //     RichG4CkvReconlog<<MSG::INFO
   //                 <<"  Agel Ckv noCorr withcorr  "
   //                 <<  aCkvWithoutCorrection<<"   "

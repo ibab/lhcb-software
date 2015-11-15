@@ -4,6 +4,9 @@
 ! Purpose     : Hold converters between LHCb and Geant4
 !-----------------------------------------------------------------------------
 
+! 2015-11-15 - Marco Clemencic
+ - Fixed compilation with CLHEP 2.
+
 !======================== GiGaCnv v21r0p1 2015-01-16 =========================
 ! 2014-11-19 - Marco Clemencic
  - Updated CMake configuration
