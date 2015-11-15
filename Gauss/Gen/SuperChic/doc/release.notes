@@ -2,6 +2,9 @@
 ! Responsible : Philip Ilten
 !=============================================================================
 
+! 2015-11-15 - Marco Clemencic
+ - Fixed CMake configuration.
+
 !========================== SuperChic v1r0 2015-08-05 ========================
 ! 2015-08-05 - Gloria Corti
  - Add CMakeList.txt as I think it should be

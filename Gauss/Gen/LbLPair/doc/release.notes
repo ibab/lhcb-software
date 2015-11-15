@@ -2,6 +2,9 @@
 ! Responsible : Philip Ilten
 !=============================================================================
 
+! 2015-11-15 - Marco Clemencic
+ - Fixed CMake configuration.
+
 !========================== SuperChic v1r0 2015-08-03 ========================
 ! 2015-08-03 - Philip Ilten
  - Initial version created

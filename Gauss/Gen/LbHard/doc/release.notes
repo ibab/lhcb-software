@@ -4,6 +4,9 @@
 ! Purpose     : Base class adapter for hard processs generators
 !-----------------------------------------------------------------------------
 
+! 2015-11-15 - Marco Clemencic
+ - Fixed CMake configuration.
+
 !========================== LbHard v1r0 2015-06-02 ===========================
 ! 2015-05-12 - Philip Ilten
  - Changed default isSpecialParticle to false

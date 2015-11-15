@@ -9,7 +9,5 @@ gaudi_depends_on_subdirs(Gen/Generators
 
 gaudi_add_library(LbHardLib
                   src/Lib/*.cpp
+                  PUBLIC_HEADERS LbHard
                   LINK_LIBRARIES GeneratorsLib LbPythiaLib LbPythia8Lib)
-
-gaudi_install_headers(LbHard)
-

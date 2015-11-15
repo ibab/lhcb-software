@@ -4,6 +4,9 @@
 ! Purpose     : Implementation of the powheg-box in Gauss
 !-----------------------------------------------------------------------------
 
+! 2015-11-15 - Marco Clemencic
+ - Fixed CMake configuration.
+
 ! 2015-06-22 - Philip Ilten
  - Complete re-write to use Pythia 8 showering and proper matching.
 
@@ -13,17 +16,17 @@
 
 !========================== LbPowheg v2r0 2015-03-06 =========================
 ! 2015-03-06 - Gloria Corti
- - Increase major version number since some of the changes below rely on 
+ - Increase major version number since some of the changes below rely on
    powheg-box-v2. NOTE THAT THEY CANNOT BE USED YET!
 
 ! 2015-01-20 - Marcin Kucharczyk
  - change m_topdecaymode to be string variable (this easy allow to set
    topdecaymode = 02000 for muonic decays)
- - new decay modes options for WZ and ZZ (vdecaymodeWZ, vdecaymodeZZ) 
+ - new decay modes options for WZ and ZZ (vdecaymodeWZ, vdecaymodeZZ)
    that come from Powheg-BOX-V2
  - new ProductionTool: PowhegProductioncc
- - set number of events (pwhg_numevts = numevts*factor) to be produced within 
-   powheg mode on the level that allow process correct number of events at 
+ - set number of events (pwhg_numevts = numevts*factor) to be produced within
+   powheg mode on the level that allow process correct number of events at
    pythia mode (numevts) due to acceptance cuts
 
 !========================= LbPowheg v1r0p4 2014-12-16 ========================
@@ -43,7 +46,7 @@
  - Use powhegbox instead of powheg-box interface that cannot be used on bash
 
 ! 2013-07-31 - Gloria Corti
- - Fix setting of POWHEGEXE to match change in interface that did not resolve 
+ - Fix setting of POWHEGEXE to match change in interface that did not resolve
    correctly in tcsh
 
 !========================== LbPowheg v1r0 2013-07-24 =========================
@@ -53,7 +56,7 @@
 
 ! 2013-07-15 - Gloria Corti
  - Fix CTEQPDF environment variable to remove explicit version number of lhapdf
- - Use powheg=box interface package as it has been committed and adapt 
+ - Use powheg=box interface package as it has been committed and adapt
    POWHEGEXE environment variable accordingly
  - Remove directive for windows as no longer supported
 
