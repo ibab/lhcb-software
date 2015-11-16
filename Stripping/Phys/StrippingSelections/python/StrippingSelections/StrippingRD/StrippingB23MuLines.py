@@ -5,11 +5,12 @@ Performance:
 
 Full.dst
 ########
-StrippingReport                                                INFO Event 500000, Good event 500000
+StrippingReport                                                INFO Event 1000000, Good event 1000000
  |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
- |!StrippingB23MuB23MuLine                                     |  0.0002|         1|  1.000|   0.123|
- |!StrippingB23MuB2MueeLine                                    |  0.0002|         1|  1.000|   2.913|
- |!StrippingB23MuB23PiLine                                     |  0.0284|       142|  1.056|   0.351|  
+ |_StrippingGlobal_                                            |  0.0088|        88|       |  10.028|
+ |!StrippingB23MuB23MuLine_TIMING                              |  0.0001|         1|  1.000|   0.068|
+ |!StrippingB23MuB2MueeLine_TIMING                             |  0.0004|         4|  1.000|   0.079|
+ |!StrippingB23MuB23PiLine_TIMING                              |  0.0085|        85|  1.094|   0.146|
        
 MC: B23Pi (12103002)
 ####################
@@ -78,12 +79,10 @@ default_config = {
     "Postscale"            : 1,
     "B23MuPrescale"        : 1,
     "B2MueePrescale"       : 1,
-    "B2DMuPrescale"        : 1,
     "B23PiPrescale"        : 1,
     "CommonRelInfoTools"   : [ { "Type": "RelInfoVertexIsolation", "Location":"VtxIsoInfo" },
                                { "Type": "RelInfoVertexIsolationBDT", "Location":"VtxIsoInfoBDT" },
                                { "Type" : "RelInfoBs2MuMuBIsolations",
-                                 "RecursionLevel" : 0,
                                  "Variables" : [],
                                  "Location"  : "BsMuMuBIsolation",
                                  "tracktype" : 3,
@@ -116,7 +115,6 @@ class B23MuLinesConf(LineBuilder) :
                                "Postscale",
                                "B23MuPrescale",
                                "B2MueePrescale",
-                               "B2DMuPrescale",
                                "B23PiPrescale",
                                "CommonRelInfoTools", )
     
@@ -159,12 +157,10 @@ class B23MuLinesConf(LineBuilder) :
         B23Mu_name  = name+"B23Mu"
         B2Muee_name = name+"B2Muee"
         B23Pi_name  = name+"B23Pi"
-        #B2DMu_name  = name+"B2DMu"        
 
         self.selB23Mu  = self.makeB23Mu(B23Mu_name)
         self.selB2Muee = self.makeB2Muee(B2Muee_name)
         self.selB23Pi  = self.makeB23Pi(B23Pi_name)
-        #self.selB2DMu  = self.makeB2DMu(B2DMu_name)
         
 #############################################################################
 
@@ -177,35 +173,45 @@ class B23MuLinesConf(LineBuilder) :
                                            { "Type" : "RelInfoConeVariables",
                                              "ConeAngle" : 0.5,
                                              "Variables" : [],
-                                             "RecursionLevel" : 1,
-                                             "Locations"  : { self.selB23Mu : "ConeIso05Bp",
-                                                              "Phys/StdAllLooseMuons" :
-                                                              ["ConeIso05mu1","ConeIso05mu2","ConeIso05mu3"], }, },
+                                             "Location"  : 'ConeIso05Bp',
+                                             "DaughterLocations" : {
+                                             "[B+ -> ^mu+  mu+  l]CC"  : "ConeIso05mu1",
+                                             "[B+ ->  mu+ ^mu+  l]CC"  : "ConeIso05mu2",
+                                             "[B+ ->  mu+  mu+ ^l]CC"  : "ConeIso05mu3",
+                                             }, },
                                            { "Type" : "RelInfoConeVariables",
                                              "ConeAngle" : 1.0,
                                              "Variables" : [],
-                                             "RecursionLevel" : 1,
-                                             "Locations"  : { self.selB23Mu : "ConeIso10Bp",
-                                                              "Phys/StdAllLooseMuons" :
-                                                              ["ConeIso10mu1","ConeIso10mu2","ConeIso10mu3"], }, },
+                                             "Location"  : 'ConeIso10Bp',
+                                             "DaughterLocations" : {
+                                             "[B+ -> ^mu+  mu+  l]CC"  : "ConeIso10mu1",
+                                             "[B+ ->  mu+ ^mu+  l]CC"  : "ConeIso10mu2",
+                                             "[B+ ->  mu+  mu+ ^l]CC"  : "ConeIso10mu3",
+                                             }, },
                                            { "Type" : "RelInfoConeVariables",
                                              "ConeAngle" : 1.5,
                                              "Variables" : [],
-                                             "RecursionLevel" : 1,
-                                             "Locations"  : { self.selB23Mu : "ConeIso15Bp",
-                                                              "Phys/StdAllLooseMuons" :
-                                                              ["ConeIso15mu1","ConeIso15mu2","ConeIso15mu3"], }, },
+                                             "Location"  : 'ConeIso15Bp',
+                                             "DaughterLocations" : {
+                                             "[B+ -> ^mu+  mu+  l]CC"  : "ConeIso15mu1",
+                                             "[B+ ->  mu+ ^mu+  l]CC"  : "ConeIso15mu2",
+                                             "[B+ ->  mu+  mu+ ^l]CC"  : "ConeIso15mu3",
+                                             }, },
                                            { "Type": "RelInfoTrackIsolationBDT",
-                                             "RecursionLevel" : 1,
                                              "Variables" : 0,
-                                             "Locations": { "Phys/StdAllLooseMuons" :
-                                                            ["TrackIsoBDTmu1","TrackIsoBDTmu2","TrackIsoBDTmu3"], }, },
+                                             "DaughterLocations" : {
+                                             "[B+ -> ^mu+  mu+  l]CC"  : "TrackIsoBDTmu1",
+                                             "[B+ ->  mu+ ^mu+  l]CC"  : "TrackIsoBDTmu2",
+                                             "[B+ ->  mu+  mu+ ^l]CC"  : "TrackIsoBDTmu3",
+                                             }, },
                                           { "Type" : "RelInfoBs2MuMuTrackIsolations",
-                                             "RecursionLevel" : 1,
                                              "Variables" : [],
                                              "IsoTwoBody" : True,
-                                             "Locations" : { "Phys/StdAllLooseMuons" :
-                                                             ["BsMuMuTrackIsomu1","BsMuMuTrackIsomu2","BsMuMuTrackIsomu3"], }, }, 
+                                             "DaughterLocations" : {
+                                             "[B+ -> ^mu+  mu+  l]CC"  : "BsMuMuTrackIsomu1",
+                                             "[B+ ->  mu+ ^mu+  l]CC"  : "BsMuMuTrackIsomu2",
+                                             "[B+ ->  mu+  mu+ ^l]CC"  : "BsMuMuTrackIsomu3",
+                                             }, },
                                            ] + config["CommonRelInfoTools"] # end of RelatedInfoTools 
                                         )# closes Strippingline
 
@@ -218,36 +224,45 @@ class B23MuLinesConf(LineBuilder) :
                                            { "Type" : "RelInfoConeVariables",
                                              "ConeAngle" : 0.5,
                                              "Variables" : [],
-                                             "RecursionLevel" : 1,
-                                             "Locations"  : { self.selB2Muee : "ConeIso05Bp",
-                                                              "Phys/StdAllLooseMuons" : "ConeIso05mu",
-                                                              "Phys/StdAllLooseElectrons" : ["ConeIso05e1","ConeIso05e2"], }, },
+                                             "Location"  : 'ConeIso05Bp',
+                                             "DaughterLocations" : {
+                                             "[B+ -> ^l  l  l]CC"  : "ConeIso05mu",
+                                             "[B+ ->  l ^l  l]CC"  : "ConeIso05e1",
+                                             "[B+ ->  l  l ^l]CC"  : "ConeIso05e2",
+                                             }, },
                                            { "Type" : "RelInfoConeVariables",
                                              "ConeAngle" : 1.0,
                                              "Variables" : [],
-                                             "RecursionLevel" : 1,
-                                             "Locations"  : { self.selB2Muee : "ConeIso10Bp",
-                                                              "Phys/StdAllLooseMuons" : "ConeIso10mu",
-                                                              "Phys/StdAllLooseElectrons" : ["ConeIso10e1","ConeIso10e2"], }, },
+                                             "Location"  : 'ConeIso10Bp',
+                                             "DaughterLocations" : {
+                                             "[B+ -> ^l  l  l]CC"  : "ConeIso10mu",
+                                             "[B+ ->  l ^l  l]CC"  : "ConeIso10e1",
+                                             "[B+ ->  l  l ^l]CC"  : "ConeIso10e2",
+                                             }, },
                                            { "Type" : "RelInfoConeVariables",
                                              "ConeAngle" : 1.5,
                                              "Variables" : [],
-                                             "RecursionLevel" : 1,
-                                             "Locations"  : { self.selB2Muee : "ConeIso15Bp",
-                                                              "Phys/StdAllLooseMuons" : "ConeIso15mu",
-                                                              "Phys/StdAllLooseElectrons" : ["ConeIso15e1","ConeIso15e2"], }, },
+                                             "Location"  : 'ConeIso15Bp',
+                                             "DaughterLocations" : {
+                                             "[B+ -> ^l  l  l]CC"  : "ConeIso15mu",
+                                             "[B+ ->  l ^l  l]CC"  : "ConeIso15e1",
+                                             "[B+ ->  l  l ^l]CC"  : "ConeIso15e2",
+                                             }, },
                                            { "Type": "RelInfoTrackIsolationBDT",
-                                             "RecursionLevel" : 1,
                                              "Variables" : 0,
-                                             "Locations": { "Phys/StdAllLooseMuons" : "TrackIsoBDTmu",
-                                                            "Phys/StdAllLooseElectrons" : ["TrackIsoBDTe1","TrackIsoBDTe2"], }, },
+                                             "DaughterLocations" : {
+                                             "[B+ -> ^l  l  l]CC"  : "TrackIsoBDTmu",
+                                             "[B+ ->  l ^l  l]CC"  : "TrackIsoBDTe1",
+                                             "[B+ ->  l  l ^l]CC"  : "TrackIsoBDTe2",
+                                             }, },
                                           { "Type" : "RelInfoBs2MuMuTrackIsolations",
-                                             "RecursionLevel" : 1,
                                              "Variables" : [],
                                              "IsoTwoBody" : True,
-                                             "Locations" : { "Phys/StdAllLooseMuons" : "BsMuMuTrackIsomu",
-                                                             "Phys/StdAllLooseElectrons" :
-                                                             ["BsMuMuTrackIsoe1","BsMuMuTrackIsoe2"], }, },
+                                             "DaughterLocations" : {
+                                             "[B+ -> ^l  l  l]CC"  : "BsMuMuTrackIsomu1",
+                                             "[B+ ->  l ^l  l]CC"  : "BsMuMuTrackIsomu2",
+                                             "[B+ ->  l  l ^l]CC"  : "BsMuMuTrackIsomu3",
+                                             }, },
                                            ] + config["CommonRelInfoTools"] # end of RelatedInfoTools 
                                          ) # closes Strippingline
 
@@ -260,85 +275,53 @@ class B23MuLinesConf(LineBuilder) :
                                            { "Type" : "RelInfoConeVariables",
                                              "ConeAngle" : 0.5,
                                              "Variables" : [],
-                                             "RecursionLevel" : 1,
-                                             "Locations"  : { self.selB23Pi : "ConeIso05Bp",
-                                                              "Phys/StdAllLoosePions" :
-                                                              ["ConeIso05pi1", "ConeIso05pi2", "ConeIso05pi3"], }, },
+                                             "Location"  : 'ConeIso05Bp',
+                                             "DaughterLocations" : {
+                                             "[B+ -> ^pi+  pi+  pi-]CC"  : "ConeIso05pi1",
+                                             "[B+ ->  pi+ ^pi+  pi-]CC"  : "ConeIso05pi2",
+                                             "[B+ ->  pi+  pi+ ^pi-]CC"  : "ConeIso05pi3",
+                                             }, },
                                            { "Type" : "RelInfoConeVariables",
                                              "ConeAngle" : 1.0,
                                              "Variables" : [],
-                                             "RecursionLevel" : 1,
-                                             "Locations"  : { self.selB23Pi : "ConeIso10Bp",
-                                                              "Phys/StdAllLoosePions" :
-                                                              ["ConeIso10pi1", "ConeIso10pi2", "ConeIso10pi3"], }, },
+                                             "Location"  : 'ConeIso10Bp',
+                                             "DaughterLocations" : {
+                                             "[B+ -> ^pi+  pi+  pi-]CC"  : "ConeIso10pi1",
+                                             "[B+ ->  pi+ ^pi+  pi-]CC"  : "ConeIso10pi2",
+                                             "[B+ ->  pi+  pi+ ^pi-]CC"  : "ConeIso10pi3",
+                                             }, },
                                            { "Type" : "RelInfoConeVariables",
                                              "ConeAngle" : 1.5,
                                              "Variables" : [],
-                                             "RecursionLevel" : 1,
-                                             "Locations"  : { self.selB23Pi : "ConeIso15Bp",
-                                                              "Phys/StdAllLoosePions" :
-                                                              ["ConeIso15pi1", "ConeIso15pi2", "ConeIso15pi3"], }, },
+                                             "Location"  : 'ConeIso15Bp',
+                                             "DaughterLocations" : {
+                                             "[B+ -> ^pi+  pi+  pi-]CC"  : "ConeIso15pi1",
+                                             "[B+ ->  pi+ ^pi+  pi-]CC"  : "ConeIso15pi2",
+                                             "[B+ ->  pi+  pi+ ^pi-]CC"  : "ConeIso15pi3",
+                                             }, },
                                            { "Type": "RelInfoTrackIsolationBDT",
-                                             "RecursionLevel" : 1,
                                              "Variables" : 0,
-                                             "Locations": { "Phys/StdAllLoosePions" :
-                                                            ["TrackIsoBDTpi1","TrackIsoBDTpi2","TrackIsoBDTpi3"], }, },
+                                             "DaughterLocations" : {
+                                             "[B+ -> ^pi+  pi+  pi-]CC"  : "TrackIsoBDTpi1",
+                                             "[B+ ->  pi+ ^pi+  pi-]CC"  : "TrackIsoBDTpi2",
+                                             "[B+ ->  pi+  pi+ ^pi-]CC"  : "TrackIsoBDTpi3",
+                                             }, },
                                           { "Type" : "RelInfoBs2MuMuTrackIsolations",
-                                             "RecursionLevel" : 1,
                                              "Variables" : [],
                                              "IsoTwoBody" : True,
-                                             "Locations" : { "Phys/StdAllLoosePions" :
-                                                             ["BsMuMuTrackIsopi1","BsMuMuTrackIsopi2","BsMuMuTrackIsopi3"] ,}, },
+                                             "DaughterLocations" : {
+                                             "[B+ -> ^pi+  pi+  pi-]CC"  : "TrackIsoBDTpi1",
+                                             "[B+ ->  pi+ ^pi+  pi-]CC"  : "TrackIsoBDTpi2",
+                                             "[B+ ->  pi+  pi+ ^pi-]CC"  : "TrackIsoBDTpi3",
+                                             }, },
                                            ] + config["CommonRelInfoTools"] # end of RelatedInfoTools 
                                         ) # closes Strippingline 
-
-#        self.B2DMu_Line = StrippingLine(B2DMu_name+"Line",
-#                                        prescale = config["B2DMuPrescale"],
-#                                        postscale = config["Postscale"],
-#                                        MDSTFlag = True,
-#                                        selection = self.selB2DMu,
-#                                        RelatedInfoTools = [
-#                                           { "Type" : "RelInfoConeVariables",
-#                                             "ConeAngle" : 0.5,
-#                                             "Variables" : [],
-#                                             "RecursionLevel" : 2,
-#                                             "Locations"  : { self.selB2DMu : "ConeIso05Bp",
-#                                                              "Phys/StdAllLooseMuons" :
-#                                                              ["ConeIso05mu1", "ConeIso05mu2", "ConeIso05mu3"], }, },
-#                                           { "Type" : "RelInfoConeVariables",
-#                                             "ConeAngle" : 1.0,
-#                                             "Variables" : [],
-#                                             "RecursionLevel" : 2,
-#                                             "Locations"  : { self.selB2DMu : "ConeIso10Bp",
-#                                                              "Phys/StdAllLooseMuons" :
-#                                                              ["ConeIso10mu1", "ConeIso10mu2", "ConeIso10mu3"], }, },
-#                                           { "Type" : "RelInfoConeVariables",
-#                                             "ConeAngle" : 1.5,
-#                                             "Variables" : [],
-#                                             "RecursionLevel" : 2,
-#                                             "Locations"  : { self.selB2DMu : "ConeIso15Bp",
-#                                                              "Phys/StdAllLooseMuons" :
-#                                                              ["ConeIso15mu1", "ConeIso15mu2", "ConeIso15mu3"], }, },
-#                                           { "Type": "RelInfoTrackIsolationBDT",
-#                                             "RecursionLevel" : 2,
-#                                             "Variables" : 0,
-#                                             "Locations": { "Phys/StdAllLooseMuons" :
-#                                                            ["TrackIsoBDTmu1","TrackIsoBDTmu2","TrackIsoBDTmu3"], }, },
-#                                          { "Type" : "RelInfoBs2MuMuTrackIsolations",
-#                                             "RecursionLevel" : 2,
-#                                             "Variables" : [],
-#                                             "IsoTwoBody" : True,
-#                                             "Locations" : { "Phys/StdAllLooseMuons" :
-#                                                             ["BsMuMuTrackIsomu1","BsMuMuTrackIsomu2","BsMuMuTrackIsomu3"], }, },
-#                                           ] + config["CommonRelInfoTools"] # end of RelatedInfoTools
-#                                         ) # closes Strippingline
                                                              
 #############################################################################
 
         self.registerLine(self.B23Mu_Line)
         self.registerLine(self.B2Muee_Line)
         self.registerLine(self.B23Pi_Line)
-#        self.registerLine(self.B2DMu_Line)        
 
 #############################################################################
 
@@ -390,51 +373,4 @@ class B23MuLinesConf(LineBuilder) :
     
         return Selection (name, Algorithm = B23Pi, RequiredSelections = [ _myPions ])
 
-#############################################################################
-#
-#        def makeB2DMu(self,name):
-#
-#            DTrackCuts = "(MIPCHI2DV()>1.0) & (TRCHI2DOF<5.0) & (PT>1.0*GeV)"
-#            DCombinationCut = "(ADAMASS('D0') < 110*MeV)"
-#
-#            DMotherCut = """
-#                         (ADMASS('D0') < 100*MeV)
-#                         & (VFASPF(VCHI2)<16)
-#                         & (BPVLTIME(16) > 0.1*ps)
-#                         """
-#
-#
-#            BDTrackCuts = """
-#                          (MIPCHI2DV(PRIMARY)>25.0)
-#                          & (TRCHI2DOF<3.0)
-#                          & (TRGHP<0.3)
-#                          """
-#
-#            #BDCombinationCut = "(ADAMASS('B+') < 2000*MeV)"\
-#
-#            BDMotherCut = """
-#                          (BPVVDCHI2 > 25)
-#                          & (VFASPF(VCHI2/VDOF)<9)
-#                          & (BPVDIRA > 0.0)
-#                          """
-#
-#
-#            D2MuMu = CombineParticles("MyD2MuMuCombination")
-#            D2MuMu.DecayDescriptors = [ "[D0 -> mu+ mu-]cc","[D0 -> mu+ mu+]cc" ]
-#            D2MuMu.DaughtersCuts = { "mu+" : DTrackCuts }
-#            D2MuMu.CombinationCut = DCombinationCut
-#            D2MuMu.MotherCut = DMotherCut
-#
-#            _myMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
-#    
-#            D2MuMuSelection = Selection ("MyD2MuMuSelection", Algorithm = D2MuMu, RequiredSelections = [ _myMuons ])
-#
-#            B2DMu = CombineParticles("Combine"+name)
-#            B2DMu.DecayDescriptors = [ "[B+ -> D0 mu+]cc" ]
-#            B2DMu.DaughtersCuts = { "mu+" : self.TrackCuts }
-#            #B2DMu.CombinationCut = BDCombinationCut
-#            B2DMu.MotherCut = BDMotherCut
-#
-#            return Selection (name, Algorithm = B2DMu, RequiredSelections = [ D2MuMuSelection, _myMuons ])
-#
 #############################################################################

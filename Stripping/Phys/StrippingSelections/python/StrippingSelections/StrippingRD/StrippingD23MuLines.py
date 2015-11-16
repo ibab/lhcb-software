@@ -77,7 +77,6 @@ default_config = {
     "CommonRelInfoTools"   : [ { "Type": "RelInfoVertexIsolation", "Location":"VtxIsoInfo" },
                                { "Type": "RelInfoVertexIsolationBDT", "Location":"VtxIsoInfoBDT" },
                                { "Type" : "RelInfoBs2MuMuBIsolations",
-                                 "RecursionLevel" : 0,
                                  "Variables" : [],
                                  "Location"  : "BsMuMuBIsolation",
                                  "tracktype" : 3,
@@ -164,39 +163,49 @@ class D23MuLinesConf(LineBuilder) :
                                         postscale = config["Postscale"],
                                         MDSTFlag = True,
                                         selection = self.selD23Mu,
-                                        RelatedInfoTools = [ 
+                                        RelatedInfoTools = [
                                            { "Type" : "RelInfoConeVariables",
                                              "ConeAngle" : 0.5,
                                              "Variables" : [],
-                                             "RecursionLevel" : 1,
-                                             "Locations"  : { self.selD23Mu : "ConeIso05Dp",
-                                                              "Phys/StdAllLooseMuons" :
-                                                              ["ConeIso05mu1", "ConeIso05mu2", "ConeIso05mu3"], }, },
+                                             "Location"  : 'ConeIso05Dp',
+                                             "DaughterLocations" : {
+                                             "[D+ -> ^mu+  mu+  l]CC"  : "ConeIso05mu1",
+                                             "[D+ ->  mu+ ^mu+  l]CC"  : "ConeIso05mu2",
+                                             "[D+ ->  mu+  mu+ ^l]CC"  : "ConeIso05mu3",
+                                             }, },
                                            { "Type" : "RelInfoConeVariables",
                                              "ConeAngle" : 1.0,
                                              "Variables" : [],
-                                             "RecursionLevel" : 1,
-                                             "Locations"  : { self.selD23Mu : "ConeIso10Dp",
-                                                              "Phys/StdAllLooseMuons" :
-                                                              ["ConeIso10mu1", "ConeIso10mu2", "ConeIso10mu3"], }, },
+                                             "Location"  : 'ConeIso10Dp',
+                                             "DaughterLocations" : {
+                                             "[D+ -> ^mu+  mu+  l]CC"  : "ConeIso10mu1",
+                                             "[D+ ->  mu+ ^mu+  l]CC"  : "ConeIso10mu2",
+                                             "[D+ ->  mu+  mu+ ^l]CC"  : "ConeIso10mu3",
+                                             }, },
                                            { "Type" : "RelInfoConeVariables",
                                              "ConeAngle" : 1.5,
                                              "Variables" : [],
-                                             "RecursionLevel" : 1,
-                                             "Locations"  : { self.selD23Mu : "ConeIso15Dp",
-                                                              "Phys/StdAllLooseMuons" :
-                                                              ["ConeIso15mu1", "ConeIso15mu2", "ConeIso15mu3"], }, },
+                                             "Location"  : 'ConeIso15Dp',
+                                             "DaughterLocations" : {
+                                             "[D+ -> ^mu+  mu+  l]CC"  : "ConeIso15mu1",
+                                             "[D+ ->  mu+ ^mu+  l]CC"  : "ConeIso15mu2",
+                                             "[D+ ->  mu+  mu+ ^l]CC"  : "ConeIso15mu3",
+                                             }, },
                                            { "Type": "RelInfoTrackIsolationBDT",
-                                             "RecursionLevel" : 1,
                                              "Variables" : 0,
-                                             "Locations": { "Phys/StdAllLooseMuons" :
-                                                            ["TrackIsoBDTmu1","TrackIsoBDTmu2","TrackIsoBDTmu3"], }, },
+                                             "DaughterLocations" : {
+                                             "[D+ -> ^mu+  mu+  l]CC"  : "TrackIsoBDTmu1",
+                                             "[D+ ->  mu+ ^mu+  l]CC"  : "TrackIsoBDTmu2",
+                                             "[D+ ->  mu+  mu+ ^l]CC"  : "TrackIsoBDTmu3",
+                                             }, },
                                           { "Type" : "RelInfoBs2MuMuTrackIsolations",
-                                             "RecursionLevel" : 1,
                                              "Variables" : [],
                                              "IsoTwoBody" : True,
-                                             "Locations" : { "Phys/StdAllLooseMuons" :
-                                                             ["BsMuMuTrackIsomu1","BsMuMuTrackIsomu2","BsMuMuTrackIsomu3"] ,}, }, 
+                                             "DaughterLocations" : {
+                                             "[D+ -> ^mu+  mu+  l]CC"  : "BsMuMuTrackIsomu1",
+                                             "[D+ ->  mu+ ^mu+  l]CC"  : "BsMuMuTrackIsomu2",
+                                             "[D+ ->  mu+  mu+ ^l]CC"  : "BsMuMuTrackIsomu3",
+                                             }, },
                                            ] + config["CommonRelInfoTools"] # end of RelatedInfoTools 
                                         )# closes Strippingline 
 
@@ -209,36 +218,45 @@ class D23MuLinesConf(LineBuilder) :
                                            { "Type" : "RelInfoConeVariables",
                                              "ConeAngle" : 0.5,
                                              "Variables" : [],
-                                             "RecursionLevel" : 1,
-                                             "Locations"  : { self.selD2Muee : "ConeIso05Dp",
-                                                              "Phys/StdAllLooseMuons" : "ConeIso05mu",
-                                                              "Phys/StdAllLooseElectrons" : ["ConeIso05e1", "ConeIso05e2"], }, },
+                                             "Location"  : 'ConeIso05Dp',
+                                             "DaughterLocations" : {
+                                             "[D+ -> ^l  l  l]CC"  : "ConeIso05mu",
+                                             "[D+ ->  l ^l  l]CC"  : "ConeIso05e1",
+                                             "[D+ ->  l  l ^l]CC"  : "ConeIso05e2",
+                                             }, },
                                            { "Type" : "RelInfoConeVariables",
                                              "ConeAngle" : 1.0,
                                              "Variables" : [],
-                                             "RecursionLevel" : 1,
-                                             "Locations"  : { self.selD2Muee : "ConeIso10Dp",
-                                                              "Phys/StdAllLooseMuons" : "ConeIso10mu",
-                                                              "Phys/StdAllLooseElectrons" : ["ConeIso10e1", "ConeIso10e2"], }, },
+                                             "Location"  : 'ConeIso10Dp',
+                                             "DaughterLocations" : {
+                                             "[D+ -> ^l  l  l]CC"  : "ConeIso10mu",
+                                             "[D+ ->  l ^l  l]CC"  : "ConeIso10e1",
+                                             "[D+ ->  l  l ^l]CC"  : "ConeIso10e2",
+                                             }, },
                                            { "Type" : "RelInfoConeVariables",
                                              "ConeAngle" : 1.5,
                                              "Variables" : [],
-                                             "RecursionLevel" : 1,
-                                             "Locations"  : { self.selD2Muee : "ConeIso15Dp",
-                                                              "Phys/StdAllLooseMuons" : "ConeIso15mu",
-                                                              "Phys/StdAllLooseElectrons" : ["ConeIso15e1", "ConeIso15e2"], }, },
+                                             "Location"  : 'ConeIso15Dp',
+                                             "DaughterLocations" : {
+                                             "[D+ -> ^l  l  l]CC"  : "ConeIso15mu",
+                                             "[D+ ->  l ^l  l]CC"  : "ConeIso15e1",
+                                             "[D+ ->  l  l ^l]CC"  : "ConeIso15e2",
+                                             }, },
                                            { "Type": "RelInfoTrackIsolationBDT",
-                                             "RecursionLevel" : 1,
                                              "Variables" : 0,
-                                             "Locations": { "Phys/StdAllLooseMuons" : "TrackIsoBDTmu",
-                                                            "Phys/StdAllLooseElectrons" : ["TrackIsoBDTe1","TrackIsoBDTe2"], }, },
+                                             "DaughterLocations" : {
+                                             "[D+ -> ^l  l  l]CC"  : "TrackIsoBDTmu",
+                                             "[D+ ->  l ^l  l]CC"  : "TrackIsoBDTe1",
+                                             "[D+ ->  l  l ^l]CC"  : "TrackIsoBDTe2",
+                                             }, },
                                           { "Type" : "RelInfoBs2MuMuTrackIsolations",
-                                             "RecursionLevel" : 1,
                                              "Variables" : [],
                                              "IsoTwoBody" : True,
-                                             "Locations" : { "Phys/StdAllLooseMuons" : "BsMuMuTrackIsomu",
-                                                             "Phys/StdAllLooseElectrons" :
-                                                             ["BsMuMuTrackIsoe1","BsMuMuTrackIsoe2"] ,}, }, 
+                                             "DaughterLocations" : {
+                                             "[D+ -> ^l  l  l]CC"  : "BsMuMuTrackIsomu1",
+                                             "[D+ ->  l ^l  l]CC"  : "BsMuMuTrackIsomu2",
+                                             "[D+ ->  l  l ^l]CC"  : "BsMuMuTrackIsomu3",
+                                             }, },
                                            ] + config["CommonRelInfoTools"] # end of RelatedInfoTools 
                                          ) # closes Strippingline
 
@@ -251,35 +269,45 @@ class D23MuLinesConf(LineBuilder) :
                                            { "Type" : "RelInfoConeVariables",
                                              "ConeAngle" : 0.5,
                                              "Variables" : [],
-                                             "RecursionLevel" : 1,
-                                             "Locations"  : { self.selD23Pi : "ConeIso05Dp",
-                                                              "Phys/StdAllLoosePions" :
-                                                              ["ConeIso05pi1", "ConeIso05pi2", "ConeIso05pi3"], }, },
+                                             "Location"  : 'ConeIso05Dp',
+                                             "DaughterLocations" : {
+                                             "[D+ -> ^pi+  pi+  pi-]CC"  : "ConeIso05pi1",
+                                             "[D+ ->  pi+ ^pi+  pi-]CC"  : "ConeIso05pi2",
+                                             "[D+ ->  pi+  pi+ ^pi-]CC"  : "ConeIso05pi3",
+                                             }, },
                                            { "Type" : "RelInfoConeVariables",
                                              "ConeAngle" : 1.0,
                                              "Variables" : [],
-                                             "RecursionLevel" : 1,
-                                             "Locations"  : { self.selD23Pi : "ConeIso10Dp",
-                                                              "Phys/StdAllLoosePions" :
-                                                              ["ConeIso10pi1", "ConeIso10pi2", "ConeIso10pi3"], }, },
+                                             "Location"  : 'ConeIso10Dp',
+                                             "DaughterLocations" : {
+                                             "[D+ -> ^pi+  pi+  pi-]CC"  : "ConeIso10pi1",
+                                             "[D+ ->  pi+ ^pi+  pi-]CC"  : "ConeIso10pi2",
+                                             "[D+ ->  pi+  pi+ ^pi-]CC"  : "ConeIso10pi3",
+                                             }, },
                                            { "Type" : "RelInfoConeVariables",
                                              "ConeAngle" : 1.5,
                                              "Variables" : [],
-                                             "RecursionLevel" : 1,
-                                             "Locations"  : { self.selD23Pi : "ConeIso15Dp",
-                                                              "Phys/StdAllLoosePions" :
-                                                              ["ConeIso15pi1", "ConeIso15pi2", "ConeIso15pi3"], }, },
+                                             "Location"  : 'ConeIso15Dp',
+                                             "DaughterLocations" : {
+                                             "[D+ -> ^pi+  pi+  pi-]CC"  : "ConeIso15pi1",
+                                             "[D+ ->  pi+ ^pi+  pi-]CC"  : "ConeIso15pi2",
+                                             "[D+ ->  pi+  pi+ ^pi-]CC"  : "ConeIso15pi3",
+                                             }, },
                                            { "Type": "RelInfoTrackIsolationBDT",
-                                             "RecursionLevel" : 1,
                                              "Variables" : 0,
-                                             "Locations": { "Phys/StdAllLoosePions" :
-                                                            ["TrackIsoBDTpi1","TrackIsoBDTpi2","TrackIsoBDTpi3"], }, },
+                                             "DaughterLocations" : {
+                                             "[D+ -> ^pi+  pi+  pi-]CC"  : "TrackIsoBDTpi1",
+                                             "[D+ ->  pi+ ^pi+  pi-]CC"  : "TrackIsoBDTpi2",
+                                             "[D+ ->  pi+  pi+ ^pi-]CC"  : "TrackIsoBDTpi3",
+                                             }, },
                                           { "Type" : "RelInfoBs2MuMuTrackIsolations",
-                                             "RecursionLevel" : 1,
                                              "Variables" : [],
                                              "IsoTwoBody" : True,
-                                             "Locations" : { "Phys/StdAllLoosePions" :
-                                                             ["BsMuMuTrackIsopi1","BsMuMuTrackIsopi2","BsMuMuTrackIsopi3"] ,}, }, 
+                                             "DaughterLocations" : {
+                                             "[D+ -> ^pi+  pi+  pi-]CC"  : "TrackIsoBDTpi1",
+                                             "[D+ ->  pi+ ^pi+  pi-]CC"  : "TrackIsoBDTpi2",
+                                             "[D+ ->  pi+  pi+ ^pi-]CC"  : "TrackIsoBDTpi3",
+                                             }, },
                                            ] + config["CommonRelInfoTools"] # end of RelatedInfoTools 
                                         ) # closes Strippingline 
 

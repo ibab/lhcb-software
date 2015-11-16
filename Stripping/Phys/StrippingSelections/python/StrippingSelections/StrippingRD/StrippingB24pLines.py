@@ -5,36 +5,38 @@ Performance:
 
 Full.dst
 ########
-StrippingReport                                                INFO Event 100000, Good event 100000
+StrippingReport                                                INFO Event 1000000, Good event 1000000
  |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
- |!StrippingB24pB24pLine                                       |  0.0076|        38|  1.684|   6.642|
- |!StrippingB24pB2JpsiKpiLine                                  |  0.0162|        81|  1.667|   3.431|
- |!StrippingB24pB2PhiKhLine                                    |  0.0038|        19|  1.316|   0.492|
+ |_StrippingGlobal_                                            |  0.0055|        55|       |   8.185|
+ |!StrippingB24pB24pLine_TIMING                                |  0.0001|         1|  1.000|   0.102|
+ |!StrippingB24pB2JpsiKpiLine_TIMING                           |  0.0041|        41|  2.585|   0.249|
+ |!StrippingB24pB2PhiKhLine_TIMING                             |  0.0016|        16|  2.188|   0.169|
 
 MC: B2JpsiKpi (11134010)
 ########################
 StrippingReport                                                INFO Event 100000, Good event 100000
  |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
- |!StrippingB24pB2JpsiKpiLine                                  |  6.1830|      6183|  1.251|   5.817|
+ |!StrippingB24pB2JpsiKpiLine_TIMING                           |  6.1830|      6183|  1.251|   0.667|
 
-
-MC: B2JpsiPhi (13134010)
-########################
-StrippingReport                                                INFO Event 100000, Good event 100000
- |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
- |!StrippingB24pB2JpsiKpiLine                                  |  6.3410|      6341|  2.179|   5.827|
- 
 MC: B2PhiKst (11104020)
 #######################
 StrippingReport                                                INFO Event 100000, Good event 100000
  |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
- |!StrippingB24pB2PhiKhLine                                    |  7.7120|      7712|  1.323|   3.891|  
-      
+ |!StrippingB24pB2PhiKhLine_TIMING                             |  7.7120|      7712|  1.323|   0.564|
+
+MC: Bs2JpsiPhi (13134010)
+########################
+StrippingReport                                                INFO Event 100000, Good event 100000
+ |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
+ |!StrippingB24pB2JpsiKpiLine_TIMING                           |  6.3410|      6341|  2.179|   0.627|
+
 MC: Bs2PhiPhi (MC2011 13104012)
 ###############################
 StrippingReport                                                INFO Event 100000, Good event 100000
  |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
- |!StrippingB24pB2PhiKhLine                                    |  8.4740|      8474|  3.895|   4.305|
+ |!StrippingB24pB2PhiKhLine_TIMING                             |  8.4740|      8474|  3.895|   0.384|
+
+
     
 Exported symbols (use python help!):
    - 
@@ -92,7 +94,6 @@ default_config = {
     "CommonRelInfoTools" : [ { "Type": "RelInfoVertexIsolation", "Location":"VtxIsoInfo" },
                              { "Type": "RelInfoVertexIsolationBDT", "Location":"VtxIsoInfoBDT" },
                              { "Type" : "RelInfoBs2MuMuBIsolations",
-                               "RecursionLevel" : 0,
                                "Variables" : [],
                                "Location"  : "BsMuMuBIsolation",
                                "tracktype" : 3,
@@ -188,39 +189,52 @@ class B24pLinesConf(LineBuilder) :
                                            { "Type" : "RelInfoConeVariables",
                                              "ConeAngle" : 0.5,
                                              "Variables" : [],
-                                             "RecursionLevel" : 1,
-                                             "Locations"  : { self.selB24p : "ConeIso05B0",
-                                                              "Phys/StdAllLooseProtons" :
-                                                              ["ConeIso05p1", "ConeIso05p2", "ConeIso05p3", "ConeIso05p4"], }, },
+                                             "Location"  : 'ConeIso05B0',
+                                             "DaughterLocations" : {
+                                             "Beauty -> ^X  X  X  X"  : "ConeIso05p1",
+                                             "Beauty ->  X ^X  X  X"  : "ConeIso05p2",
+                                             "Beauty ->  X  X ^X  X"  : "ConeIso05p3",
+                                             "Beauty ->  X  X  X ^X"  : "ConeIso05p4", 
+                                             }, },
                                            { "Type" : "RelInfoConeVariables",
                                              "ConeAngle" : 1.0,
                                              "Variables" : [],
-                                             "RecursionLevel" : 1,
-                                             "Locations"  : { self.selB24p : "ConeIso10B0",
-                                                              "Phys/StdAllLooseProtons" :
-                                                              ["ConeIso10p1", "ConeIso10p2", "ConeIso10p3", "ConeIso10p4"], }, },
+                                             "Location"  : 'ConeIso10B0',
+                                             "DaughterLocations" : {
+                                             "Beauty -> ^X  X  X  X"  : "ConeIso10p1",
+                                             "Beauty ->  X ^X  X  X"  : "ConeIso10p2",
+                                             "Beauty ->  X  X ^X  X"  : "ConeIso10p3",
+                                             "Beauty ->  X  X  X ^X"  : "ConeIso10p4", 
+                                             }, },
                                            { "Type" : "RelInfoConeVariables",
                                              "ConeAngle" : 1.5,
                                              "Variables" : [],
-                                             "RecursionLevel" : 1,
-                                             "Locations"  : { self.selB24p : "ConeIso15B0",
-                                                              "Phys/StdAllLooseProtons" :
-                                                              ["ConeIso15p1", "ConeIso15p2", "ConeIso15p3", "ConeIso15p4"], }, },
+                                             "Location"  : 'ConeIso15B0',
+                                             "DaughterLocations" : {
+                                             "Beauty -> ^X  X  X  X"  : "ConeIso15p1",
+                                             "Beauty ->  X ^X  X  X"  : "ConeIso15p2",
+                                             "Beauty ->  X  X ^X  X"  : "ConeIso15p3",
+                                             "Beauty ->  X  X  X ^X"  : "ConeIso15p4",
+                                             }, }, 
                                            { "Type": "RelInfoTrackIsolationBDT",
-                                             "RecursionLevel" : 1,
                                              "Variables" : 0,
-                                             "Locations": { "Phys/StdAllLooseProtons" :
-                                                            ["TrackIsoBDTp1","TrackIsoBDTp2","TrackIsoBDTp3","TrackIsoBDTp4"], }, },
+                                             "DaughterLocations" : {
+                                             "Beauty -> ^X  X  X  X"  : "TrackIsoBDTp1",
+                                             "Beauty ->  X ^X  X  X"  : "TrackIsoBDTp2",
+                                             "Beauty ->  X  X ^X  X"  : "TrackIsoBDTp3",
+                                             "Beauty ->  X  X  X ^X"  : "TrackIsoBDTp4",
+                                             }, },
                                            { "Type" : "RelInfoBs2MuMuTrackIsolations",
-                                             "RecursionLevel" : 1,
                                              "Variables" : [],
                                              "IsoTwoBody" : True,
-                                             "Locations" : { "Phys/StdAllLooseProtons" :
-                                                             ["BsMuMuTrackIsop1","BsMuMuTrackIsop2",
-                                                              "BsMuMuTrackIsop3","BsMuMuTrackIsop4"] ,}, },
-                                           ] + config["CommonRelInfoTools"] # end of RelatedInfoTools 
+                                             "DaughterLocations" : {
+                                             "Beauty -> ^X  X  X  X"  : "BsMuMuTrackIsop1",
+                                             "Beauty ->  X ^X  X  X"  : "BsMuMuTrackIsop2",
+                                             "Beauty ->  X  X ^X  X"  : "BsMuMuTrackIsop3",
+                                             "Beauty ->  X  X  X ^X"  : "BsMuMuTrackIsop4",
+                                             }, },
+                                           ] + config["CommonRelInfoTools"] # end of RelatedInfoTools
                                        ) # closes Strippingline
-
         
         self.B2JpsiKpi_Line = StrippingLine(B2JpsiKpi_name+"Line",
                                             prescale = config["B2JpsiKpiPrescale"],
@@ -231,41 +245,50 @@ class B24pLinesConf(LineBuilder) :
                                                 { "Type" : "RelInfoConeVariables",
                                                   "ConeAngle" : 0.5,
                                                   "Variables" : [],
-                                                  "RecursionLevel" : 1,
-                                                  "Locations"  : { self.selB2JpsiKpi : "ConeIso05B0",
-                                                                   "Phys/StdAllLooseProtons" : ["ConeIso05p1", "ConeIso05p2"],
-                                                                   "Phys/StdAllLooseKaons"   : "ConeIso05K",
-                                                                   "Phys/StdAllNoPIDsPions"  : "ConeIso05pi", }, },
+                                                  "Location"  : "ConeIso05B0",
+                                                  "DaughterLocations" : {
+                                                  "[B0 -> ^p+  p~-  K+  pi-]CC" : "ConeIso05p1",
+                                                  "[B0 ->  p+ ^p~-  K+  pi-]CC" : "ConeIso05p2",
+                                                  "[B0 ->  p+  p~- ^K+  pi-]CC" : "ConeIso05K",
+                                                  "[B0 ->  p+  p~-  K+ ^pi-]CC" : "ConeIso05pi",
+                                                  }, },
                                                 { "Type" : "RelInfoConeVariables",
                                                   "ConeAngle" : 1.0,
                                                   "Variables" : [],
-                                                  "RecursionLevel" : 1,
-                                                  "Locations"  : { self.selB2JpsiKpi : "ConeIso10B0",
-                                                                   "Phys/StdAllLooseProtons" : ["ConeIso10p1", "ConeIso10p2"],
-                                                                   "Phys/StdAllLooseKaons"   : "ConeIso10K",
-                                                                   "Phys/StdAllNoPIDsPions"  : "ConeIso10pi", }, },
+                                                  "Location"  : "ConeIso10B0",
+                                                  "DaughterLocations" : {
+                                                  "[B0 -> ^p+  p~-  K+  pi-]CC" : "ConeIso10p1",
+                                                  "[B0 ->  p+ ^p~-  K+  pi-]CC" : "ConeIso10p2",
+                                                  "[B0 ->  p+  p~- ^K+  pi-]CC" : "ConeIso10K",
+                                                  "[B0 ->  p+  p~-  K+ ^pi-]CC" : "ConeIso10pi",
+                                                  }, },
                                                 { "Type" : "RelInfoConeVariables",
                                                   "ConeAngle" : 1.5,
                                                   "Variables" : [],
-                                                  "RecursionLevel" : 1,
-                                                  "Locations"  : { self.selB2JpsiKpi : "ConeIso15B0",
-                                                                   "Phys/StdAllLooseProtons" : ["ConeIso15p1", "ConeIso15p2"],
-                                                                   "Phys/StdAllLooseKaons"   : ["ConeIso15K"],
-                                                                   "Phys/StdAllNoPIDsPions"  : ["ConeIso15pi"], }, },
+                                                  "Location"  : "ConeIso15B0",
+                                                  "DaughterLocations" : {
+                                                  "[B0 -> ^p+  p~-  K+  pi-]CC" : "ConeIso15p1",
+                                                  "[B0 ->  p+ ^p~-  K+  pi-]CC" : "ConeIso15p2",
+                                                  "[B0 ->  p+  p~- ^K+  pi-]CC" : "ConeIso15K",
+                                                  "[B0 ->  p+  p~-  K+ ^pi-]CC" : "ConeIso15pi",
+                                                  }, },
                                                 { "Type": "RelInfoTrackIsolationBDT",
-                                                  "RecursionLevel" : 1,
                                                   "Variables" : 0,
-                                                  "Locations": { "Phys/StdAllLooseProtons" : ["TrackIsoBDTp1","TrackIsoBDTp2" ],
-                                                                 "Phys/StdAllLooseKaons"   : "TrackIsoBDTK",
-                                                                 "Phys/StdAllNoPIDsPions"  : "TrackIsoBDTpi", }, },
+                                                  "DaughterLocations" : {
+                                                  "[B0 -> ^p+  p~-  K+  pi-]CC" : "TrackIsoBDTp1",
+                                                  "[B0 ->  p+ ^p~-  K+  pi-]CC" : "TrackIsoBDTp2",
+                                                  "[B0 ->  p+  p~- ^K+  pi-]CC" : "TrackIsoBDTK",
+                                                  "[B0 ->  p+  p~-  K+ ^pi-]CC" : "TrackIsoBDTpi",
+                                                  }, },
                                                 { "Type" : "RelInfoBs2MuMuTrackIsolations",
-                                                  "RecursionLevel" : 1,
                                                   "Variables" : [],
                                                   "IsoTwoBody" : True,
-                                                  "Locations" : { "Phys/StdAllLooseKaons" : "BsMuMuTrackIsoK",
-                                                                  "Phys/StdAllNoPIDsPions" : "BsMuMuTrackIsopi",
-                                                                  "Phys/StdAllLooseProtons" :
-                                                                  ["BsMuMuTrackIsop1","BsMuMuTrackIsop2"] ,}, },
+                                                  "DaughterLocations" : {
+                                                  "[B0 -> ^p+  p~-  K+  pi-]CC" : "BsMuMuTrackIsop1",
+                                                  "[B0 ->  p+ ^p~-  K+  pi-]CC" : "BsMuMuTrackIsop2",
+                                                  "[B0 ->  p+  p~- ^K+  pi-]CC" : "BsMuMuTrackIsoK",
+                                                  "[B0 ->  p+  p~-  K+ ^pi-]CC" : "BsMuMuTrackIsopi",
+                                                  }, }, 
                                                 ] + config["CommonRelInfoTools"] # end of RelatedInfoTools 
                                             ) # closes Strippingline
 
@@ -278,41 +301,50 @@ class B24pLinesConf(LineBuilder) :
                                                 { "Type" : "RelInfoConeVariables",
                                                   "ConeAngle" : 0.5,
                                                   "Variables" : [],
-                                                  "RecursionLevel" : 1,
-                                                  "Locations"  : { self.selB2PhiKh : "ConeIso05B0",
-                                                                   "Phys/StdAllNoPIDsPions"  : "ConeIso05pi", 
-                                                                   "Phys/StdAllLooseKaons"   :
-                                                                   ["ConeIso05K1","ConeIso05K2","ConeIso05K3"],
-                                                                   }, },
+                                                  "Location"  : "ConeIso05B0",
+                                                  "DaughterLocations" : {
+                                                  "[B0 -> ^K+  K-  K+  pi-]CC" : "ConeIso05K1",
+                                                  "[B0 ->  K+ ^K-  K+  pi-]CC" : "ConeIso05K2",
+                                                  "[B0 ->  K+  K- ^K+  pi-]CC" : "ConeIso05K3",
+                                                  "[B0 ->  K+  K-  K+ ^pi-]CC" : "ConeIso05pi",
+                                                  }, },
                                                 { "Type" : "RelInfoConeVariables",
                                                   "ConeAngle" : 1.0,
                                                   "Variables" : [],
-                                                  "RecursionLevel" : 1,
-                                                  "Locations"  : { self.selB2PhiKh : "ConeIso10B0",
-                                                                   "Phys/StdAllNoPIDsPions"  : "ConeIso10pi",
-                                                                   "Phys/StdAllLooseKaons"   :
-                                                                   ["ConeIso10K1","ConeIso10K2","ConeIso10K3"], }, },
+                                                  "Location"  : "ConeIso10B0",
+                                                  "DaughterLocations" : {
+                                                  "[B0 -> ^K+  K-  K+  pi-]CC" : "ConeIso10K1",
+                                                  "[B0 ->  K+ ^K-  K+  pi-]CC" : "ConeIso10K2",
+                                                  "[B0 ->  K+  K- ^K+  pi-]CC" : "ConeIso10K3",
+                                                  "[B0 ->  K+  K-  K+ ^pi-]CC" : "ConeIso10pi",
+                                                  }, },
                                                 { "Type" : "RelInfoConeVariables",
                                                   "ConeAngle" : 1.5,
                                                   "Variables" : [],
-                                                  "RecursionLevel" : 1,
-                                                  "Locations"  : { self.selB2PhiKh : "ConeIso15B0",
-                                                                   "Phys/StdAllNoPIDsPions"  : ["ConeIso15pi"],
-                                                                   "Phys/StdAllLooseKaons"   :
-                                                                   ["ConeIso15K1","ConeIso15K2","ConeIso15K3"], }, },
+                                                  "Location"  : "ConeIso15B0",
+                                                  "DaughterLocations" : {
+                                                  "[B0 -> ^K+  K-  K+  pi-]CC" : "ConeIso15K1",
+                                                  "[B0 ->  K+ ^K-  K+  pi-]CC" : "ConeIso15K2",
+                                                  "[B0 ->  K+  K- ^K+  pi-]CC" : "ConeIso15K3",
+                                                  "[B0 ->  K+  K-  K+ ^pi-]CC" : "ConeIso15pi",
+                                                  }, },
                                                 { "Type": "RelInfoTrackIsolationBDT",
-                                                  "RecursionLevel" : 1,
                                                   "Variables" : 0,
-                                                  "Locations": { "Phys/StdAllNoPIDsPions"  : "TrackIsoBDTpi",
-                                                                 "Phys/StdAllLooseKaons"   :
-                                                                 ["TrackIsoBDTK1","TrackIsoBDTK2","TrackIsoBDTK3"], }, },
+                                                  "DaughterLocations" : {
+                                                  "[B0 -> ^K+  K-  K+  pi-]CC" : "TrackIsoBDTK1",
+                                                  "[B0 ->  K+ ^K-  K+  pi-]CC" : "TrackIsoBDTK2",
+                                                  "[B0 ->  K+  K- ^K+  pi-]CC" : "TrackIsoBDTK3",
+                                                  "[B0 ->  K+  K-  K+ ^pi-]CC" : "TrackIsoBDTpi",
+                                                  }, },                                               
                                                 { "Type" : "RelInfoBs2MuMuTrackIsolations",
-                                                  "RecursionLevel" : 1,
                                                   "Variables" : [],
                                                   "IsoTwoBody" : True,
-                                                  "Locations" : { "Phys/StdAllNoPIDsPions" : "BsMuMuTrackIsopi",
-                                                                  "Phys/StdAllLooseKaons"  :
-                                                                  ["BsMuMuTrackIsoK1","BsMuMuTrackIsoK2","BsMuMuTrackIsoK3"], }, },
+                                                  "DaughterLocations" : {
+                                                  "[B0 -> ^K+  K-  K+  pi-]CC" : "BsMuMuTrackIsoK1",
+                                                  "[B0 ->  K+ ^K-  K+  pi-]CC" : "BsMuMuTrackIsoK2",
+                                                  "[B0 ->  K+  K- ^K+  pi-]CC" : "BsMuMuTrackIsoK3",
+                                                  "[B0 ->  K+  K-  K+ ^pi-]CC" : "BsMuMuTrackIsopi",
+                                                  }, },
                                                 ] + config["CommonRelInfoTools"] # end of RelatedInfoTools 
                                             ) # closes Strippingline
 
@@ -327,7 +359,7 @@ class B24pLinesConf(LineBuilder) :
     def makeB24p(self,name): # to select B(s) -> p p p p 
 
         B24p = DaVinci__N4BodyDecays("Combine"+name)
-        B24p.DecayDescriptors = [ "[B0 -> p+ p+ p~- p~-]cc","[B0 -> p+ p+ p+ p~-]cc" ]    
+        B24p.DecayDescriptors = [ "B0 -> p+ p+ p~- p~-","[B0 -> p+ p+ p+ p~-]cc" ]
         B24p.DaughtersCuts = { "p+" : self.TrackCuts + " & ((PIDp-PIDpi)>0)" + " & ((PIDp-PIDK)>0)" }
             
         B24p.Combination12Cut  = self.CommonCombi12Cuts 
@@ -336,6 +368,7 @@ class B24pLinesConf(LineBuilder) :
         B24p.MotherCut         = self.MotherCuts
     
         _myProtons = DataOnDemand(Location = "Phys/StdLooseProtons/Particles")
+        #_myProtons = DataOnDemand(Location = "Phys/StdNoPIDsProtons/Particles")
     
         return Selection(name, Algorithm = B24p, RequiredSelections = [ _myProtons ])
 
