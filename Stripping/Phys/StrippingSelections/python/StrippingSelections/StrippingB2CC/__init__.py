@@ -9,6 +9,7 @@ _selections = ['StrippingB2JpsiXforBeta_s',
                'StrippingBd2JpsieeKS',
                'StrippingBs2JpsieePhi',
                'StrippingB2JpsiPi0',
+               #'StrippingB2JpsiPi0_Run1', # For S21rXp1
                'StrippingB2JpsiHH']
 
 for _sel in _selections :
