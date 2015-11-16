@@ -4,6 +4,9 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2015-11-16 - Gloria Corti
+ - Temporarily use lhapdf.6.1.4.cxxstd to compile with LCG_70
+
 ! 2015-10-08 - Gloria Corti
  - Revert back to use Pythia 6.427.2 due to problem with FS, see
    https://its.cern.ch/jira/browse/LHCBGAUSS-534

@@ -16,7 +16,7 @@ use GaudiPolicy  v*
 
 #-- LHAPDF
 #============================================================================
-macro lhapdf_native_version "6.1.4"
+macro lhapdf_native_version "6.1.4.cxxstd"
 use lhapdf     v* LCG_GeneratorsInterfaces
 use LHAPDFSets v*
 
