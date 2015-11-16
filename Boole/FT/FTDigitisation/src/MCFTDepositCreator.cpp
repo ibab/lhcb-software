@@ -126,7 +126,7 @@ StatusCode MCFTDepositCreator::initialize() {
 
   m_numLayers = m_deFT->layers().size();
   
-  if(m_deFT->version() == 20 ){
+  if(m_deFT->version() >= 20 ){
     // THIS HAS TO BE CHECKED, WHAT HAPPENS IF FIBRE MAT IS EMPTY???
     m_yMax = m_deFT->fibremats()[0]->layerMaxY();
     if ( msgLevel( MSG::DEBUG) ) debug() << "[initialize] RUN NEW GEOMETRY" << endmsg;
@@ -226,7 +226,7 @@ StatusCode MCFTDepositCreator::execute() {
       // Get the list of fired FTChannel from the (x,y,z) position of the hit, with, 
       // for each FTChannel, the relative distance to the middle of the cell of the barycentre 
       // of the (entry point, endpoint) system :
-      if(m_deFT->version() == 20 ){
+      if(m_deFT->version() >= 20 ){
  
         StatusCode sc;
         if( !m_killSignal ) 

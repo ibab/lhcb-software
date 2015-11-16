@@ -94,7 +94,7 @@ StatusCode MCFTDigitCreator::initialize() {
 
   // get the z position of the stations
   m_deFT = getDet<DeFTDetector>( DeFTDetectorLocation::Default );
-  if(m_deFT->version() == 20 ){
+  if(m_deFT->version() >= 20 ){
     m_stationsZ.push_back(m_deFT->fibremats()[0]->layerCenterZ());
     m_stationsZ.push_back(m_deFT->fibremats()[100]->layerCenterZ());
     m_stationsZ.push_back(m_deFT->fibremats()[200]->layerCenterZ());

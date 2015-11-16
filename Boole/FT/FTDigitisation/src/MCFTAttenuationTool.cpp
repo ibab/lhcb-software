@@ -110,7 +110,7 @@ StatusCode MCFTAttenuationTool::initializeTool(){
     debug() << "[initialize] Retrieve the dimensions of the layer/fibremat for the transmission map" << endmsg;
   }
   
-  if(m_deFT->version() == 20 ){
+  if(m_deFT->version() >= 20 ){
     // THIS HAS TO BE CHECKED, WHAT HAPPENS IF FIBRE MAT IS EMPTY???
     m_xMax = m_deFT->fibremats()[0]->layerMaxX();
     m_yMax = m_deFT->fibremats()[0]->layerMaxY();
