@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-16 - Chitsanu Khurewathanakul
+ - Depreciated QEE/StrippingJets
+
 ! 2015-11-16 - Jon Harrison
  - Added Related info and 6 new calibration channels to D2XMuMuSS
 

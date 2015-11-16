@@ -24,7 +24,6 @@ _selections = (
   'StrippingDijets',
   'StrippingDY2ee',
   'StrippingDY2MuMu',
-  'StrippingJets',
   'StrippingLLP2MuX',
   'StrippingSbarSCorrelations',
   'StrippingStrangeBaryons',
@@ -34,6 +33,7 @@ _selections = (
 
   ## Depreciated
   # 'StrippingHighPtTopoJets',
+  # 'StrippingJets',
 )
 
 for _sel in _selections :  
