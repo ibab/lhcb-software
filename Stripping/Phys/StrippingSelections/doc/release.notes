@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-16 - Carlos Vazquez Sierra
+ - Included a new B2CC builder, StrippingB2JpsiPi0_Run1.py, to not confuse this with StrippingB2JpsiPi0.py
+
 ! 2015-11-16 - Chitsanu Khurewathanakul
  - Depreciated QEE/StrippingJets
 
