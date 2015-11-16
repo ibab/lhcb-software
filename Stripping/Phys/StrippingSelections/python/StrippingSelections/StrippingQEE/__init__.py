@@ -18,7 +18,7 @@ _selections = (
   'StrippingWmuAKTJets',
   'StrippingWeAKTJets',
   'StrippingZ02MuMu',
-
+  'StrippingHighPtTau',
   ## These lines are recovered from S21 `just-in-case`, 
   ## but there's no explicit request in S23+ yet.
   'StrippingDijets',
