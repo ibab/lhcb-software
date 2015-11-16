@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-16 - Pablo Ruiz Valls (RD)
+ - Added RD S24 Dictionaries
+
 ! 2015-11-16 - Roberta Cardinale
  - update BandQ s24 LineConfig
 
