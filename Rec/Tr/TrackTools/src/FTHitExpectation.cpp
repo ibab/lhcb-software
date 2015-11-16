@@ -73,8 +73,8 @@ StatusCode FTHitExpectation::initialize()
 
   // need to know the z of T stations....
   m_ftDet = getDet<DeFTDetector>(DeFTDetectorLocation::Default);
-  if ( m_ftDet -> version() != 20 ){
-    return Error("FTDetector version not implemented (different than v2)",StatusCode::FAILURE);
+  if ( m_ftDet -> version() < 20 ){
+    return Error("FTDetector version not implemented (different than v2 or v5)",StatusCode::FAILURE);
   }
 
   m_layers    = m_ftDet -> layers();
