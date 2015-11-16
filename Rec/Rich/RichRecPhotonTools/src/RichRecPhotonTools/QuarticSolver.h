@@ -52,7 +52,7 @@ namespace Rich
     class QuarticSolver
     {
 
-    private:
+    public:
 
       // Use eigen types
       typedef LHCb::Math::Eigen::XYZPoint  Point;   ///< Point type
@@ -86,16 +86,13 @@ namespace Rich
         typedef Eigen::Matrix< TYPE , 3 , 1 > Eigen3Vector;
         using Vec4x = 
           typename std::conditional<std::is_same<TYPE,float>::value,Vec4f,Vec4d>::type;
-        
-        // Cache Eigen version of CoC
-        const Point eCoC(CoC);
 
         // vector from mirror centre of curvature to assumed emission point
-        const Vector evec( Point(emissionPoint) - eCoC );
+        const Vector evec( emissionPoint - CoC );
         const TYPE e2 = evec.dot(evec);
 
         // vector from mirror centre of curvature to virtual detection point
-        const Vector dvec( Point(virtDetPoint) - eCoC );
+        const Vector dvec( virtDetPoint - CoC );
         const TYPE d2 = dvec.dot(dvec);
 
         // various quantities needed to create quartic equation
