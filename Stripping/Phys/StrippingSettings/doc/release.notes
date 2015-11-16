@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-16 - Jinlin Fu
+ - update Charm s24 LineConfig with D2XMuMuSS
+
 ! 2015-11-15 - Roberta Cardinale
  - Update of BandQ s24 LineConfig
 
