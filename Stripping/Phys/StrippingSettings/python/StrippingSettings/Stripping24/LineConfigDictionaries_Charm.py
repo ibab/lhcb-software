@@ -804,7 +804,84 @@ D2XMuMuSS = {
         "ProtonMINIPCHI2": 6, 
         "ProtonP": 2000.0, 
         "ProtonPT": 300.0, 
-        "ProtonTRCHI2": 5
+        "ProtonTRCHI2": 5, 
+        "RelatedInfoTools": [
+            {
+                "Location": "RelInfoVertexIsolation", 
+                "Type": "RelInfoVertexIsolation"
+            }, 
+            {
+                "Location": "RelInfoVertexIsolationBDT", 
+                "Type": "RelInfoVertexIsolationBDT"
+            }, 
+            {
+                "ConeAngle": 1.0, 
+                "DaughterLocations": None, 
+                "Location": "RelInfoConeVariables_1.0", 
+                "Type": "RelInfoConeVariables"
+            }, 
+            {
+                "ConeAngle": 1.5, 
+                "DaughterLocations": None, 
+                "Location": "RelInfoConeVariables_1.5", 
+                "Type": "RelInfoConeVariables"
+            }, 
+            {
+                "ConeAngle": 2.0, 
+                "DaughterLocations": None, 
+                "Location": "RelInfoConeVariables_2.0", 
+                "Type": "RelInfoConeVariables"
+            }, 
+            {
+                "ConeAngle": 0.0, 
+                "DaughterLocations": None, 
+                "Location": "RelInfoConeVariablesForEW_0.0", 
+                "Type": "RelInfoConeVariablesForEW"
+            }, 
+            {
+                "ConeAngle": 0.5, 
+                "DaughterLocations": None, 
+                "Location": "RelInfoConeVariablesForEW_0.5", 
+                "Type": "RelInfoConeVariablesForEW"
+            }, 
+            {
+                "ConeAngle": 1.0, 
+                "DaughterLocations": None, 
+                "Location": "RelInfoConeVariablesForEW_1.0", 
+                "Type": "RelInfoConeVariablesForEW"
+            }, 
+            {
+                "ConeAngle": 1.5, 
+                "DaughterLocations": None, 
+                "Location": "RelInfoConeVariablesForEW_1.5", 
+                "Type": "RelInfoConeVariablesForEW"
+            }, 
+            {
+                "DaughterLocations": None, 
+                "Location": "RelInfoTrackIsolationBDT", 
+                "Type": "RelInfoTrackIsolationBDT"
+            }, 
+            {
+                "Location": "RelInfoBstautauCDFIso", 
+                "Type": "RelInfoBstautauCDFIso"
+            }, 
+            {
+                "DaughterLocations": None, 
+                "IsoTwoBody": False, 
+                "Location": "RelInfoBs2MuMuTrackIsolations", 
+                "Type": "RelInfoBs2MuMuTrackIsolations", 
+                "angle": 0.27, 
+                "doca_iso": 0.13, 
+                "fc": 0.6, 
+                "ips": 3.0, 
+                "makeTrackCuts": False, 
+                "pvdis": 0.5, 
+                "pvdis_h": 40.0, 
+                "svdis": -0.15, 
+                "svdis_h": 30.0, 
+                "tracktype": 3
+            }
+        ]
     }, 
     "STREAMS": [ "Charm" ], 
     "WGs": [ "Charm" ]
