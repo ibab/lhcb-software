@@ -6,7 +6,7 @@ __version__ = '$Revision: 1.7 $'
 '''
 D->Xu(Xu) mu mu , Xu=pi/K channels and control samples.
 '''
-__all__ = ('StrippingD2XMuMuSSConf', 'makeD2PiPiPi', 'makeD2PiMuMuOS','makeD2PiEEOS' , 'makeD2PiEMuOS', 'makeD2PiMuEOS', 'makeD2PiMuMuSS', 'makeD2PiEESS', 'makeD2PiMuESS', 'makeD2KMuMuOS', 'makeD2KEEOS' , 'makeD2KEMuOS', 'makeD2KMuEOS', 'makeD2KMuMuSS', 'makeD2KEESS', 'makeD2KMuESS', 'makeD2K2Pi', 'makeD22KPi', 'makeD02KKMuMu', 'makeD02PiPiMuMu', 'makeD02KPiMuMu', 'makeD02KKPiPi', 'makeD02K3Pi','makeD02PiPiPiPi','makeLambdac2PMuMu','makeLambdac2PEE','makeLambdac2PEMu','makeLambdac2PMuE','makeLambdac2PPiPi','default_config' )
+__all__ = ('StrippingD2XMuMuSSConf', 'makeD2PiPiPi', 'makeD2PiMuMuOS','makeD2PiEEOS' , 'makeD2PiEMuOS', 'makeD2PiMuEOS', 'makeD2PiMuMuSS', 'makeD2PiEESS', 'makeD2PiMuESS', 'makeD2KMuMuOS', 'makeD2KEEOS' , 'makeD2KEMuOS', 'makeD2KMuEOS', 'makeD2KMuMuSS', 'makeD2KEESS', 'makeD2KMuESS', 'makeD2K2Pi', 'makeD22KPi', 'makeD02KKMuMu', 'makeD02PiPiMuMu', 'makeD02KPiMuMu', 'makeD02KKPiPi', 'makeD02K3Pi','makeD02PiPiPiPi','makeLambdac2PMuMu','makeLambdac2PEE','makeLambdac2PEMu','makeLambdac2PMuE','makeLambdac2PPiPi','makeD2PiMuMuCal','makeD2PiEMuCal','makeD2PiEECal','makeD2KMuMuCal','makeD2KEMuCal','makeD2KEECal','default_config' )
 
 default_config =  {
     'NAME' : 'D2XMuMuSS',
@@ -73,46 +73,32 @@ default_config =  {
                   
                   'D2PiMuMuOSLinePrescale'     : 1 ,
                   'D2PiMuMuOSLinePostscale'    : 1 ,
-
                   'D2PiEEOSLinePrescale'     : 1 ,
                   'D2PiEEOSLinePostscale'    : 1 ,
-
                   'D2PiEMuOSLinePrescale'     : 1 ,
                   'D2PiEMuOSLinePostscale'    : 1 ,
-
                   'D2PiMuEOSLinePrescale'     : 1 ,
                   'D2PiMuEOSLinePostscale'    : 1 ,
-
                   'D2PiMuMuSSLinePrescale'     : 1 ,
                   'D2PiMuMuSSLinePostscale'    : 1 ,
-
                   'D2PiEESSLinePrescale'      : 1 ,
                   'D2PiEESSLinePostscale'     : 1 ,
-
                   'D2PiMuESSLinePrescale'       : 1 ,
                   'D2PiMuESSLinePostscale'      : 1 ,
-
                   'D2KMuMuOSLinePrescale'      : 1 ,
                   'D2KMuMuOSLinePostscale'     : 1 ,
-
                   'D2KEEOSLinePrescale'     : 1 ,
                   'D2KEEOSLinePostscale'    : 1 ,
-
                   'D2KEMuOSLinePrescale'     : 1 ,
                   'D2KEMuOSLinePostscale'    : 1 ,
-
                   'D2KMuEOSLinePrescale'     : 1 ,
                   'D2KMuEOSLinePostscale'    : 1 ,
-
                   'D2KMuMuSSLinePrescale'      : 1 ,
                   'D2KMuMuSSLinePostscale'     : 1 ,
-
                   'D2KEESSLinePrescale'      : 1 ,
                   'D2KEESSLinePostscale'     : 1 ,
-
                   'D2KMuESSLinePrescale'      : 1 ,
                   'D2KMuESSLinePostscale'     : 1 ,
-
                   'D2PiPiPiCalLinePrescale'    : 0.01 ,
                   'D2PiPiPiCalLinePostscale'   : 1 ,
                   'D2K2PiLinePrescale'         : 0.005 ,
@@ -131,20 +117,30 @@ default_config =  {
                   'D02K3PiLinePostscale'       : 1,
                   'D02PiPiPiPiLinePrescale'    : 0.01 ,
                   'D02PiPiPiPiLinePostscale'   : 1,
+                  
                   'Lambdac2PMuMuLinePrescale'  : 1 ,
                   'Lambdac2PMuMuLinePostscale' : 1 ,
-
                   'Lambdac2PEELinePrescale'  : 1 ,
                   'Lambdac2PEELinePostscale' : 1 ,
-
                   'Lambdac2PEMuLinePrescale'  : 1 ,
                   'Lambdac2PEMuLinePostscale' : 1 ,
-
                   'Lambdac2PMuELinePrescale'  : 1 ,
                   'Lambdac2PMuELinePostscale' : 1 ,
-
                   'Lambdac2PPiPiLinePrescale'  : 0.01 ,
-                  'Lambdac2PPiPiLinePostscale' : 1 
+                  'Lambdac2PPiPiLinePostscale' : 1 , 
+                  
+                  'D2PiMuMuCalLinePrescale'    : 1 ,
+                  'D2PiMuMuCalLinePostscale'   : 1 ,
+                  'D2PiEMuCalLinePrescale'    : 1 ,
+                  'D2PiEMuCalLinePostscale'   : 1 ,
+                  'D2PiEECalLinePrescale'    : 1 ,
+                  'D2PiEECalLinePostscale'   : 1 ,
+                  'D2KMuMuCalLinePrescale'    : 1 ,
+                  'D2KMuMuCalLinePostscale'   : 1 ,
+                  'D2KEMuCalLinePrescale'    : 1 ,
+                  'D2KEMuCalLinePostscale'   : 1 ,
+                  'D2KEECalLinePrescale'    : 1 ,
+                  'D2KEECalLinePostscale'   : 1 ,
                   }
 }
 
@@ -197,10 +193,14 @@ class StrippingD2XMuMuSSConf(LineBuilder) :
     Lambdac2PEELine = None
     Lambdac2PEMuLine = None
     Lambdac2PMuELine = None
-
-
     Lambdac2PPiPiLine = None
     
+    PiMuMuCalLine = None
+    PiEMuCalLine = None
+    PiEECalLine = None
+    KMuMuCalLine = None
+    KEMuCalLine = None
+    KEECalLine = None
         
     __configuration_keys__ = (  'MuonP'        ,    #MeV
                   'MuonPT'        ,    #MeV
@@ -261,43 +261,30 @@ class StrippingD2XMuMuSSConf(LineBuilder) :
                   
                   'D2PiMuMuOSLinePrescale'   ,
                   'D2PiMuMuOSLinePostscale'  ,
-
                   'D2PiEEOSLinePrescale'     ,
                   'D2PiEEOSLinePostscale'    ,
-
                   'D2PiEMuOSLinePrescale'    ,
                   'D2PiEMuOSLinePostscale'   ,
-
                   'D2PiMuEOSLinePrescale'    ,
                   'D2PiMuEOSLinePostscale'   ,
-
                   'D2PiMuMuSSLinePrescale'   ,
                   'D2PiMuMuSSLinePostscale'  ,
-
                   'D2PiEESSLinePrescale'     ,
                   'D2PiEESSLinePostscale'    ,
-
                   'D2PiMuESSLinePrescale'    ,
                   'D2PiMuESSLinePostscale'   ,
-
                   'D2KMuMuOSLinePrescale'    ,
                   'D2KMuMuOSLinePostscale'   ,
-
                   'D2KEEOSLinePrescale'      ,
                   'D2KEEOSLinePostscale'     ,
-
                   'D2KEMuOSLinePrescale'     ,
                   'D2KEMuOSLinePostscale'    ,
-
                   'D2KMuEOSLinePrescale'     ,
                   'D2KMuEOSLinePostscale'    ,
-
                   'D2KMuMuSSLinePrescale'     ,
                   'D2KMuMuSSLinePostscale'    ,
-
                   'D2KEESSLinePrescale'       ,
                   'D2KEESSLinePostscale'      ,
-
                   'D2KMuESSLinePrescale'      ,
                   'D2KMuESSLinePostscale'     ,
 
@@ -319,20 +306,30 @@ class StrippingD2XMuMuSSConf(LineBuilder) :
                   'D02K3PiLinePostscale'      ,
                   'D02PiPiPiPiLinePrescale'   ,
                   'D02PiPiPiPiLinePostscale'  ,
+                  
                   'Lambdac2PMuMuLinePrescale' ,
                   'Lambdac2PMuMuLinePostscale',
-
                   'Lambdac2PEELinePrescale'  ,
                   'Lambdac2PEELinePostscale' ,
-
                   'Lambdac2PEMuLinePrescale' ,
                   'Lambdac2PEMuLinePostscale',
-
                   'Lambdac2PMuELinePrescale'  ,
                   'Lambdac2PMuELinePostscale' ,
-
                   'Lambdac2PPiPiLinePrescale' ,
-                  'Lambdac2PPiPiLinePostscale'
+                  'Lambdac2PPiPiLinePostscale', 
+
+                  'D2PiMuMuCalLinePrescale',
+                  'D2PiMuMuCalLinePostscale',
+                  'D2PiEMuCalLinePrescale',
+                  'D2PiEMuCalLinePostscale',
+                  'D2PiEECalLinePrescale',
+                  'D2PiEECalLinePostscale',
+                  'D2KMuMuCalLinePrescale',
+                  'D2KMuMuCalLinePostscale',
+                  'D2KEMuCalLinePrescale',
+                  'D2KEMuCalLinePostscale',
+                  'D2KEECalLinePrescale',
+                  'D2KEECalLinePostscale'
                                 )
     
     def __init__(self, name, config):
@@ -371,8 +368,14 @@ class StrippingD2XMuMuSSConf(LineBuilder) :
         Lambdac2PEMuLine_name = name+"_Lambdac2PEMu"
         Lambdac2PMuELine_name = name+"_Lambdac2PMuE"
 
-
         Lambdac2PPiPiLine_name = name+"_Lambdac2PPiPi"
+        
+        PiMuMuCalLine_name = name+"_PiMuMuCal"
+        PiEMuCalLine_name = name+"_PiEMuCal"
+        PiEECalLine_name = name+"_PiEECal"
+        KMuMuCalLine_name = name+"_KMuMuCal"
+        KEMuCalLine_name = name+"_KEMuCal"
+        KEECalLine_name = name+"_KEECal"
         
         # 1 : Make kaons
         selKaons = makeKaons(name="KaonsFor"+name
@@ -641,15 +644,43 @@ class StrippingD2XMuMuSSConf(LineBuilder) :
                                              config = config)
 
 
-
-
         selLambdac2PPiPi   = self._makeLambdac2PPiPi(name=Lambdac2PPiPiLine_name,
                                                      protonSel = selProtonsFor3bodyCS,
                                                      muonSel = selPionsFor3bodyCS,
                                                      config = config)
         
 
+        selD2PiMuMuCal = self._makeD2PiMuMuCal(name=PiMuMuCalLine_name,
+                                             pionSel = selPions,
+                                             muonSel = selMuons,
+                                             config = config)
 
+        selD2PiEMuCal = self._makeD2PiEMuCal(name=PiEMuCalLine_name,
+                                             pionSel = selPions,
+                                             eleSel = selElectrons,
+                                             muonSel = selMuons,
+                                             config = config)
+
+        selD2PiEECal = self._makeD2PiEECal(name=PiEECalLine_name,
+                                             pionSel = selPions,
+                                             eleSel = selElectrons,
+                                             config = config)
+
+        selD2KMuMuCal = self._makeD2KMuMuCal(name=KMuMuCalLine_name,
+                                             kaonSel = selKaons,
+                                             muonSel = selMuons,
+                                             config = config)
+
+        selD2KEMuCal = self._makeD2KEMuCal(name=KEMuCalLine_name,
+                                             kaonSel = selKaons,
+                                             eleSel = selElectrons,
+                                             muonSel = selMuons,
+                                             config = config)
+
+        selD2KEECal = self._makeD2KEECal(name=KEECalLine_name,
+                                             kaonSel = selKaons,
+                                             eleSel = selElectrons,
+                                             config = config)
 
         
         # 8 : Declare Lines
@@ -815,13 +846,47 @@ class StrippingD2XMuMuSSConf(LineBuilder) :
 
 
 
-
         self.Lambdac2PPiPiLine = StrippingLine(Lambdac2PPiPiLine_name+"Line",
                                                prescale = config['Lambdac2PPiPiLinePrescale'],
                                                postscale = config['Lambdac2PPiPiLinePostscale'],
                                                selection = selLambdac2PPiPi
                                                )
         
+        self.PiMuMuCalLine = StrippingLine(PiMuMuCalLine_name+"Line",
+                                      prescale = config['D2PiMuMuCalLinePrescale'],
+                                      postscale = config['D2PiMuMuCalLinePostscale'],
+                                      selection = selD2PiMuMuCal
+                                       )
+        
+        self.PiEMuCalLine = StrippingLine(PiEMuCalLine_name+"Line",
+                                      prescale = config['D2PiEMuCalLinePrescale'],
+                                      postscale = config['D2PiEMuCalLinePostscale'],
+                                      selection = selD2PiEMuCal
+                                       )
+
+        self.PiEECalLine = StrippingLine(PiEECalLine_name+"Line",
+                                      prescale = config['D2PiEECalLinePrescale'],
+                                      postscale = config['D2PiEECalLinePostscale'],
+                                      selection = selD2PiEECal
+                                       )
+
+        self.KMuMuCalLine = StrippingLine(KMuMuCalLine_name+"Line",
+                                      prescale = config['D2KMuMuCalLinePrescale'],
+                                      postscale = config['D2KMuMuCalLinePostscale'],
+                                      selection = selD2KMuMuCal
+                                       )
+        
+        self.KEMuCalLine = StrippingLine(KEMuCalLine_name+"Line",
+                                      prescale = config['D2KEMuCalLinePrescale'],
+                                      postscale = config['D2KEMuCalLinePostscale'],
+                                      selection = selD2KEMuCal
+                                       )
+
+        self.KEECalLine = StrippingLine(KEECalLine_name+"Line",
+                                      prescale = config['D2KEECalLinePrescale'],
+                                      postscale = config['D2KEECalLinePostscale'],
+                                      selection = selD2KEECal
+                                       )
 
         # 9 : register Line
         self.registerLine( self.KSSLine )
@@ -857,7 +922,13 @@ class StrippingD2XMuMuSSConf(LineBuilder) :
         self.registerLine( self.Lambdac2PMuELine )
 
         self.registerLine( self.Lambdac2PPiPiLine )
-
+        
+        self.registerLine( self.PiMuMuCalLine )
+        self.registerLine( self.PiEMuCalLine )
+        self.registerLine( self.PiEECalLine )
+        self.registerLine( self.KMuMuCalLine )
+        self.registerLine( self.KEMuCalLine )
+        self.registerLine( self.KEECalLine )
 
 #####################################################
     def _makeD2PiPiPi(self, name, pionSel, muonSel, config):
@@ -1349,7 +1420,106 @@ class StrippingD2XMuMuSSConf(LineBuilder) :
                                  , LambdacMassWin = config['LambdacMassWin']
                                  , DimuonMass = config['DimuonMass'])
 
+#####################################################
+    def _makeD2PiMuMuCal(self, name, pionSel, muonSel, config):
+        """
+        Handy interface for D2PiMuMuCal
+        """
+        return makeD2PiMuMuCal(name
+                              , pionSel
+                              , muonSel
+                              , DMAXDOCA = config['DMAXDOCA']
+                              , DVCHI2DOF = config['DVCHI2DOF']
+                              , DDIRA = config['DDIRA']
+                              , DIPCHI2 = config['DIPCHI2']
+                              , DMassWin = config['DMassWin']
+                              , DMassLow = config['DMassLow']
+                              , DimuonMass = config['DimuonMass'])
 
+#####################################################
+    def _makeD2PiEMuCal(self, name, pionSel, eleSel, muonSel, config):
+        """
+        Handy interface for D2PiEMuCal
+        """
+        return makeD2PiEMuCal(name
+                              , pionSel
+                              , eleSel
+                              , muonSel
+                              , DMAXDOCA = config['DMAXDOCA']
+                              , DVCHI2DOF = config['DVCHI2DOF']
+                              , DDIRA = config['DDIRA']
+                              , DIPCHI2 = config['DIPCHI2']
+                              , DMassWin = config['DMassWin']
+                              , DMassLow = config['DMassLow']
+                              , DimuonMass = config['DimuonMass'])
+
+#####################################################
+    def _makeD2PiEECal(self, name, pionSel, eleSel, config):
+        """
+        Handy interface for D2PiEECal
+        """
+        return makeD2PiEECal(name
+                              , pionSel
+                              , eleSel
+                              , DMAXDOCA = config['DMAXDOCA']
+                              , DVCHI2DOF = config['DVCHI2DOF']
+                              , DDIRA = config['DDIRA']
+                              , DIPCHI2 = config['DIPCHI2']
+                              , DMassWin = config['DMassWin']
+                              , DMassLow = config['DMassLow']
+                              , DimuonMass = config['DimuonMass'])
+
+#####################################################
+    def _makeD2KMuMuCal(self, name, kaonSel, muonSel, config):
+        """
+        Handy interface for D2KMuMuCal
+        """
+        return makeD2KMuMuCal(name
+                              , kaonSel
+                              , muonSel
+                              , DMAXDOCA = config['DMAXDOCA']
+                              , DVCHI2DOF = config['DVCHI2DOF']
+                              , DDIRA = config['DDIRA']
+                              , DIPCHI2 = config['DIPCHI2']
+                              , DMassWin = config['DMassWin']
+                              , DMassLow = config['DMassLow']
+                              , DimuonMass = config['DimuonMass'])
+
+#####################################################
+    def _makeD2KEMuCal(self, name, kaonSel, eleSel, muonSel, config):
+        """
+        Handy interface for D2KEMuCal
+        """
+        return makeD2KEMuCal(name
+                              , kaonSel
+                              , eleSel
+                              , muonSel
+                              , DMAXDOCA = config['DMAXDOCA']
+                              , DVCHI2DOF = config['DVCHI2DOF']
+                              , DDIRA = config['DDIRA']
+                              , DIPCHI2 = config['DIPCHI2']
+                              , DMassWin = config['DMassWin']
+                              , DMassLow = config['DMassLow']
+                              , DimuonMass = config['DimuonMass'])
+
+#####################################################
+    def _makeD2KEECal(self, name, kaonSel, eleSel, config):
+        """
+        Handy interface for D2KEECal
+        """
+        return makeD2KEECal(name
+                              , kaonSel
+                              , eleSel
+                              , DMAXDOCA = config['DMAXDOCA']
+                              , DVCHI2DOF = config['DVCHI2DOF']
+                              , DDIRA = config['DDIRA']
+                              , DIPCHI2 = config['DIPCHI2']
+                              , DMassWin = config['DMassWin']
+                              , DMassLow = config['DMassLow']
+                              , DimuonMass = config['DimuonMass'])
+
+
+#####################################################
 #
 # Out of class
 #####################################################
@@ -2053,9 +2223,143 @@ def makeLambdac2PPiPi(name, protonSel, muonSel,DMAXDOCA, LambdacMassWin, DimuonM
 
 
 #####################################################
+def makeD2PiMuMuCal(name, pionSel, muonSel,DMAXDOCA, DMassWin, DMassLow, DimuonMass, DVCHI2DOF, DIPCHI2, DDIRA):
+    """
+    Makes the D+ -> pi+ mu+ mu+ 
+    """
 
+    _combcut = "(ADAMASS('D+') < %(DMassWin)s *MeV) & "\
+               "(AMAXDOCA('')<%(DMAXDOCA)s) & " \
+		           "(AM > %(DMassLow)s *MeV) &"\
+               "(AM23 > %(DimuonMass)s *MeV)" % locals()
 
+    _bcut   = "(VFASPF(VCHI2/VDOF) < %(DVCHI2DOF)s) & "\
+              "(BPVIPCHI2()< %(DIPCHI2)s) & "\
+              "(BPVDIRA > %(DDIRA)s)" % locals()
+
+    _Combine = CombineParticles(DecayDescriptor = "[D+ -> pi+ mu+ mu+]cc",
+                                CombinationCut = _combcut,
+                                MotherCut = _bcut)
+    _Combine.ReFitPVs = True
+    return Selection(name,
+                     Algorithm = _Combine,
+                     RequiredSelections = [ muonSel, pionSel ] )
+
+#####################################################
+def makeD2PiEMuCal(name, pionSel, eleSel, muonSel,DMAXDOCA, DMassWin, DMassLow, DimuonMass, DVCHI2DOF, DIPCHI2, DDIRA):
+    """
+    Makes the D+ -> pi+ e+ mu+ 
+    """
+
+    _combcut = "(ADAMASS('D+') < %(DMassWin)s *MeV) & "\
+               "(AMAXDOCA('')<%(DMAXDOCA)s) & " \
+		           "(AM > %(DMassLow)s *MeV) &"\
+               "(AM23 > %(DimuonMass)s *MeV)" % locals()
+
+    _bcut   = "(VFASPF(VCHI2/VDOF) < %(DVCHI2DOF)s) & "\
+              "(BPVIPCHI2()< %(DIPCHI2)s) & "\
+              "(BPVDIRA > %(DDIRA)s)" % locals()
+
+    _Combine = CombineParticles(DecayDescriptor = "[D+ -> pi+ e+ mu+]cc",
+                                CombinationCut = _combcut,
+                                MotherCut = _bcut)
+    _Combine.ReFitPVs = True
+    return Selection(name,
+                     Algorithm = _Combine,
+                     RequiredSelections = [ muonSel, eleSel, pionSel ] )
+
+#####################################################
+def makeD2PiEECal(name, pionSel, eleSel, DMAXDOCA, DMassWin, DMassLow, DimuonMass, DVCHI2DOF, DIPCHI2, DDIRA):
+    """
+    Makes the D+ -> pi+ e+ e+ 
+    """
+
+    _combcut = "(ADAMASS('D+') < %(DMassWin)s *MeV) & "\
+               "(AMAXDOCA('')<%(DMAXDOCA)s) & " \
+		           "(AM > %(DMassLow)s *MeV) &"\
+               "(AM23 > %(DimuonMass)s *MeV)" % locals()
+
+    _bcut   = "(VFASPF(VCHI2/VDOF) < %(DVCHI2DOF)s) & "\
+              "(BPVIPCHI2()< %(DIPCHI2)s) & "\
+              "(BPVDIRA > %(DDIRA)s)" % locals()
+
+    _Combine = CombineParticles(DecayDescriptor = "[D+ -> pi+ e+ e+]cc",
+                                CombinationCut = _combcut,
+                                MotherCut = _bcut)
+    _Combine.ReFitPVs = True
+    return Selection(name,
+                     Algorithm = _Combine,
+                     RequiredSelections = [ eleSel, pionSel ] )
                     
+#####################################################
+def makeD2KMuMuCal(name, kaonSel, muonSel, DMAXDOCA, DMassWin, DMassLow, DimuonMass, DVCHI2DOF, DIPCHI2, DDIRA):
+    """
+    Makes the D+ -> K+ mu+ mu+ 
+    """
+
+    _combcut = "(ADAMASS('D+') < %(DMassWin)s *MeV) & "\
+               "(AMAXDOCA('')<%(DMAXDOCA)s) & " \
+		           "(AM > %(DMassLow)s *MeV) &"\
+               "(AM23 > %(DimuonMass)s *MeV)" % locals()
+
+    _bcut   = "(VFASPF(VCHI2/VDOF) < %(DVCHI2DOF)s) & "\
+              "(BPVIPCHI2()< %(DIPCHI2)s) & "\
+              "(BPVDIRA > %(DDIRA)s)" % locals()
+
+    _Combine = CombineParticles(DecayDescriptor = "[D+ -> K+ mu+ mu+]cc",
+                                CombinationCut = _combcut,
+                                MotherCut = _bcut)
+    _Combine.ReFitPVs = True
+    return Selection(name,
+                     Algorithm = _Combine,
+                     RequiredSelections = [ kaonSel, muonSel ] )
+
+#####################################################
+def makeD2KEMuCal(name, kaonSel, eleSel, muonSel, DMAXDOCA, DMassWin, DMassLow, DimuonMass, DVCHI2DOF, DIPCHI2, DDIRA):
+    """
+    Makes the D+ -> K+ e+ mu+ 
+    """
+
+    _combcut = "(ADAMASS('D+') < %(DMassWin)s *MeV) & "\
+               "(AMAXDOCA('')<%(DMAXDOCA)s) & " \
+		           "(AM > %(DMassLow)s *MeV) &"\
+               "(AM23 > %(DimuonMass)s *MeV)" % locals()
+
+    _bcut   = "(VFASPF(VCHI2/VDOF) < %(DVCHI2DOF)s) & "\
+              "(BPVIPCHI2()< %(DIPCHI2)s) & "\
+              "(BPVDIRA > %(DDIRA)s)" % locals()
+
+    _Combine = CombineParticles(DecayDescriptor = "[D+ -> K+ e+ mu+]cc",
+                                CombinationCut = _combcut,
+                                MotherCut = _bcut)
+    _Combine.ReFitPVs = True
+    return Selection(name,
+                     Algorithm = _Combine,
+                     RequiredSelections = [ kaonSel, eleSel, muonSel ] )
+
+#####################################################
+def makeD2KEECal(name, kaonSel, eleSel, DMAXDOCA, DMassWin, DMassLow, DimuonMass, DVCHI2DOF, DIPCHI2, DDIRA):
+    """
+    Makes the D+ -> K+ e+ e+ 
+    """
+
+    _combcut = "(ADAMASS('D+') < %(DMassWin)s *MeV) & "\
+               "(AMAXDOCA('')<%(DMAXDOCA)s) & " \
+		           "(AM > %(DMassLow)s *MeV) &"\
+               "(AM23 > %(DimuonMass)s *MeV)" % locals()
+
+    _bcut   = "(VFASPF(VCHI2/VDOF) < %(DVCHI2DOF)s) & "\
+              "(BPVIPCHI2()< %(DIPCHI2)s) & "\
+              "(BPVDIRA > %(DDIRA)s)" % locals()
+
+    _Combine = CombineParticles(DecayDescriptor = "[D+ -> K+ e+ e+]cc",
+                                CombinationCut = _combcut,
+                                MotherCut = _bcut)
+    _Combine.ReFitPVs = True
+    return Selection(name,
+                     Algorithm = _Combine,
+                     RequiredSelections = [ kaonSel, eleSel ] )
+
 #####################################################
 def makeKaons(name, KaonP, KaonPT, KaonPIDK, KaonMINIPCHI2, KaonTRCHI2):
     """

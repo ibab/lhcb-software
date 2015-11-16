@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-16 - Jon Harrison
+ - Added Related info and 6 new calibration channels to D2XMuMuSS
+
 ! 2015-11-15 - Maurizio Martinelli
  - Added Related info to D04Body in CharmFromBSemi
 
