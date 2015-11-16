@@ -16,10 +16,14 @@ default_config =  {
   'BUILDERTYPE'       : 'B2KstTauXConf',
   'WGs'    : [ 'RD' ],
   'CONFIG'    : {
-  
+  'SpdMult'                       : '600',
   'PT_MU'                         : '1000', # MeV
-  'TRACKCHI2_MU'                  : '3',    # dimensionless
+  'TRACKCHI2_MU'                  : '4',    # dimensionless
   #
+  'FD_B_Max'                      : '70',
+  'FD_B_Max_KTT'                  : '40',
+  'PT_B_KTM'                      : '3000',#MeV
+  'PT_B_KTT'                      : '3000',#MeV
   'VCHI2_B'                       : '100', # dimensionless
   'VCHI2_B_Mu'                    : '150', # dimensionless
   'FDCHI2_B'                      : '80',
@@ -70,8 +74,8 @@ default_config =  {
   'PT_HAD_ALL_FINAL_STATE'        : '250',  # MeV
   'P_HAD_ALL_FINAL_STATE'         : '2000', # MeV
   'IPCHI2_HAD_ALL_FINAL_STATE'    : '16',    # dimensionless
-  'TRACKCHI2_HAD_ALL_FINAL_STATE' : '3',    # dimensionless
-  'TRGHOPROB_HAD_ALL_FINAL_STATE' : '0.3',    # dimensionless
+  'TRACKCHI2_HAD_ALL_FINAL_STATE' : '4',    # dimensionless
+  'TRGHOPROB_HAD_ALL_FINAL_STATE' : '0.4',    # dimensionless
   #
   'B2KstTauTau_LinePrescale'               : 1,
   'B2KstTauTau_LinePostscale'              : 1,
@@ -90,14 +94,12 @@ default_config =  {
   'RelatedInfoTools'      : [
   #1
   { "Type" : "RelInfoBKsttautauMuonIsolationBDT"
-    ,"RecursionLevel" : 0
     , "Variables" : [
        'BKSTTAUTAUMUONISOBDTFIRSTVALUETAUP', 'BKSTTAUTAUMUONISOBDTSECONDVALUETAUP','BKSTTAUTAUMUONISOBDTTHIRDVALUETAUP',
        'BKSTTAUTAUMUONISOBDTFIRSTVALUETAUM', 'BKSTTAUTAUMUONISOBDTSECONDVALUETAUM','BKSTTAUTAUMUONISOBDTTHIRDVALUETAUM']
     , "Location"  : "B2KstTauTau_MuonIsolationBDT"  
     },
   { "Type" : "RelInfoBKsttautauTauIsolationBDT"
-    ,"RecursionLevel" : 0
     , "Variables" : [
      'BKSTTAUTAUTAUISOBDTFIRSTVALUETAUP', 'BKSTTAUTAUTAUISOBDTSECONDVALUETAUP','BKSTTAUTAUTAUISOBDTTHIRDVALUETAUP',
      'BKSTTAUTAUTAUISOBDTFIRSTVALUETAUM', 'BKSTTAUTAUTAUISOBDTSECONDVALUETAUM','BKSTTAUTAUTAUISOBDTTHIRDVALUETAUM',
@@ -106,7 +108,6 @@ default_config =  {
     },
     
   { "Type" : "RelInfoBKsttautauTrackIsolationBDT" 
-    ,"RecursionLevel" : 0
     , "Variables" : [
       'BKSTTAUTAUTRKISOBDTFIRSTVALUETAUPPIM','BKSTTAUTAUTRKISOBDTSECONDVALUETAUPPIM','BKSTTAUTAUTRKISOBDTTHIRDVALUETAUPPIM',
       'BKSTTAUTAUTRKISOBDTFIRSTVALUETAUPPIP1','BKSTTAUTAUTRKISOBDTSECONDVALUETAUPPIP1','BKSTTAUTAUTRKISOBDTTHIRDVALUETAUPPIP1',
@@ -119,7 +120,6 @@ default_config =  {
     , "Location"  : "B2KstTauTau_TrackIsolationBDT"  
     },  
   { "Type" : "RelInfoBstautauCDFIso" 
-    ,"RecursionLevel" : 0
     #    , "Variables" : ['BKSTTAUTAUCDFISO']
     , "Location"  : "B2KstTauTau_CDFIso"  
     }
@@ -157,7 +157,8 @@ class B2KstTauXConf(LineBuilder) :
   MuMu_SS_Line  = None
 
   
-  __configuration_keys__ = ( 
+  __configuration_keys__ = (
+                                'SpdMult'              ,
                                 'PT_MU'                ,
                                 'TRACKCHI2_MU'          ,
                                 #
@@ -166,8 +167,12 @@ class B2KstTauXConf(LineBuilder) :
                                 'FDCHI2_B'               ,
                                 'FD_B_Mu'    ,
                                 'MASS_LOW_B'             , 
-                                'MASS_HIGH_B'            , 
+                                'MASS_HIGH_B'            ,
+                                'PT_B_KTM'                   ,
+                                'PT_B_KTT'                   ,
+                                'FD_B_Max_KTT'             ,
                                 #
+                                'FD_B_Max',
                                 'MASS_LOW_Kst'          ,  
                                 'MASS_HIGH_Kst'         ,  
                                 'VCHI2_Kst'             ,  
@@ -231,8 +236,13 @@ class B2KstTauXConf(LineBuilder) :
                                       config  = config)
     selKstar_KMM    = self._makeKstar_KMM(      name    = "Kstar_KMM"+name,
                                       config  = config)
-
-
+    
+    self.FilterSPD = {
+                'Code' : " ( recSummary(LHCb.RecSummary.nSPDhits,'Raw/Spd/Digits') < %(SpdMult)s )" %config ,
+                'Preambulo' : [
+                "from LoKiNumbers.decorators import *", "from LoKiCore.basic import LHCb"
+                ]
+                }
     
     rawTau          = DataOnDemand("Phys/StdTightDetachedTau3pi/Particles")
 
@@ -293,15 +303,17 @@ class B2KstTauXConf(LineBuilder) :
                                         prescale    = config['B2KstTauTau_LinePrescale'],
                                         postscale   = config['B2KstTauTau_LinePostscale'],
                                         MDSTFlag = True,
+                                        FILTER = self.FilterSPD,
                                         #RelatedInfoTools = config['RelatedInfoTools'],
                                         RelatedInfoTools      = [
-                                                  { "Type" : "RelInfoBKsttautauTauIsolationBDT" ,"RecursionLevel" : 0 , "Location"  : "B2KstTauTau_TauIsolationBDT" },
-                                                  { "Type" : "RelInfoBKsttautauTrackIsolationBDT","RecursionLevel" : 0, "Location"  : "B2KstTauTau_TrackIsolationBDT"},  
-                                                  { "Type" : "RelInfoBstautauCDFIso" ,"RecursionLevel" : 0, "Location"  : "B2KstTauTau_CDFIso"},
-                                                  { "Type" : "RelInfoVertexIsolation","RecursionLevel" : 1,
-                                                    "Locations" : {"Phys/B2KstTauTau_TauTau_Line" : "BVars_VertexIsoInfo",
-                                                                   "Phys/StdTightDetachedTau3pi" : ["TauVars_VertexIsoInfo_0","TauVars_VertexIsoInfo_1"],
-                                                                   "Phys/KstarB2KstTauTau":"KstarVars_VtxIsoInfo"
+                                                  { "Type" : "RelInfoBKsttautauTauIsolationBDT" , "Location"  : "B2KstTauTau_TauIsolationBDT" },
+                                                  { "Type" : "RelInfoBKsttautauTrackIsolationBDT", "Location"  : "B2KstTauTau_TrackIsolationBDT"},  
+                                                  { "Type" : "RelInfoBstautauCDFIso" , "Location"  : "B2KstTauTau_CDFIso"},
+                                                  { "Type" : "RelInfoVertexIsolation", "Location" :  "BVars_VertexIsoInfo",
+                                                    "DaughterLocations":{
+                                                                   "[B0 -> K*(892)0 ^tau+ tau-]CC" : "TauVars_VertexIsoInfo_0",
+                                                                   "[B0 -> K*(892)0 tau+ ^tau-]CC" : "TauVars_VertexIsoInfo_1",
+                                                                   "[B0 -> ^K*(892)0 tau+ tau-]CC" : "KstarVars_VertexIsoInfo"
                                                                    }
                                                   }
                                                   ],
@@ -313,17 +325,20 @@ class B2KstTauXConf(LineBuilder) :
                                         prescale    = config['B2KstTauTau_SameSign_LinePrescale'],
                                         postscale   = config['B2KstTauTau_SameSign_LinePostscale'],
                                         MDSTFlag = True,
+                                        FILTER = self.FilterSPD,
                                         #RelatedInfoTools = config['RelatedInfoTools'],
                                         RelatedInfoTools      = [
-                                                  { "Type" : "RelInfoBKsttautauTauIsolationBDT" ,"RecursionLevel" : 0 , "Location"  : "B2KstTauTau_TauIsolationBDT" },
-                                                  { "Type" : "RelInfoBKsttautauTrackIsolationBDT","RecursionLevel" : 0, "Location"  : "B2KstTauTau_TrackIsolationBDT"},  
-                                                  { "Type" : "RelInfoBstautauCDFIso" ,"RecursionLevel" : 0, "Location"  : "B2KstTauTau_CDFIso"},
-                                                  { "Type" : "RelInfoVertexIsolation","RecursionLevel" : 1,
-                                                    "Locations" : {"Phys/B2KstTauTau_TauTau_SS_Line" : "BVars_VertexIsoInfo",
-                                                                   "Phys/StdTightDetachedTau3pi" : ["TauVars_VertexIsoInfo_0","TauVars_VertexIsoInfo_1"],
-                                                                   "Phys/KstarB2KstTauTau":"KstarVars_VtxIsoInfo"
+                                                  { "Type" : "RelInfoBKsttautauTauIsolationBDT" , "Location"  : "B2KstTauTau_TauIsolationBDT" },
+                                                  { "Type" : "RelInfoBKsttautauTrackIsolationBDT", "Location"  : "B2KstTauTau_TrackIsolationBDT"},  
+                                                  { "Type" : "RelInfoBstautauCDFIso" , "Location"  : "B2KstTauTau_CDFIso"},
+                                                  { "Type" : "RelInfoVertexIsolation", "Location" : "BVars_VertexIsoInfo",
+                                                    "DaughterLocations":{
+                                                                   "[Beauty -> X0 ^tau+ tau+]CC" : "TauVars_VertexIsoInfo_0",
+                                                                   "[Beauty -> X0 tau+ ^tau+]CC" : "TauVars_VertexIsoInfo_1",
+                                                                   "[Beauty -> ^X0 tau+ tau+]CC" : "KstarVars_VertexIsoInfo"
                                                                    }
                                                   }
+                                                
                                                   ],
                                         selection   = selB2KstTauTauSS
                                         )
@@ -333,16 +348,17 @@ class B2KstTauXConf(LineBuilder) :
                                         prescale    = config['B2KstTauMu_LinePrescale'],
                                         postscale   = config['B2KstTauMu_LinePostscale'],
                                         MDSTFlag = True,
+                                        FILTER = self.FilterSPD,
                                         #RelatedInfoTools = config['RelatedInfoTools'],
                                         RelatedInfoTools      = [
-                                                  { "Type" : "RelInfoBKsttautauMuonIsolationBDT" , "RecursionLevel" : 0, "Location"  : "B2KstTauTau_MuonIsolationBDT"},
-                                                  { "Type" : "RelInfoBKsttautauTauIsolationBDT" ,"RecursionLevel" : 0 , "Location"  : "B2KstTauTau_TauIsolationBDT" },
-                                                  { "Type" : "RelInfoBKsttautauTrackIsolationBDT","RecursionLevel" : 0, "Location"  : "B2KstTauTau_TrackIsolationBDT"},  
-                                                  { "Type" : "RelInfoBstautauCDFIso" ,"RecursionLevel" : 0, "Location"  : "B2KstTauTau_CDFIso"},
-                                                  { "Type" : "RelInfoVertexIsolation","RecursionLevel" : 1,
-                                                    "Locations" : {"Phys/B2KstTauTau_TauMu_Line" : "BVars_VertexIsoInfo",
-                                                                   "Phys/StdTightDetachedTau3pi" : "TauVars_VertexIsoInfo_0",
-                                                                   "Phys/KstarB2KstTauTau":"KstarVars_VtxIsoInfo"
+                                                  { "Type" : "RelInfoBKsttautauMuonIsolationBDT" ,  "Location"  : "B2KstTauTau_MuonIsolationBDT"},
+                                                  { "Type" : "RelInfoBKsttautauTauIsolationBDT" , "Location"  : "B2KstTauTau_TauIsolationBDT" },
+                                                  { "Type" : "RelInfoBKsttautauTrackIsolationBDT", "Location"  : "B2KstTauTau_TrackIsolationBDT"},  
+                                                  { "Type" : "RelInfoBstautauCDFIso" , "Location"  : "B2KstTauTau_CDFIso"},
+                                                  { "Type" : "RelInfoVertexIsolation", "Location" :  "BVars_VertexIsoInfo",
+                                                    "DaughterLocations":{
+                                                                   "[Beauty -> X0 ^tau+ mu-]CC" : "TauVars_VertexIsoInfo_0",
+                                                                   "[Beauty -> ^X0 tau+ mu-]CC" : "KstarVars_VertexIsoInfo"
                                                                    }
                                                   }
                                                   ],
@@ -355,18 +371,19 @@ class B2KstTauXConf(LineBuilder) :
                                         #postscale   = config['B2KstTauMu_SameSign_LinePostscale'],
                                         #RelatedInfoTools = config['RelatedInfoTools'],
                                         RelatedInfoTools      = [
-                                                  { "Type" : "RelInfoBKsttautauMuonIsolationBDT" , "RecursionLevel" : 0, "Location"  : "B2KstTauTau_MuonIsolationBDT"},
-                                                  { "Type" : "RelInfoBKsttautauTauIsolationBDT" ,"RecursionLevel" : 0 , "Location"  : "B2KstTauTau_TauIsolationBDT" },
-                                                  { "Type" : "RelInfoBKsttautauTrackIsolationBDT","RecursionLevel" : 0, "Location"  : "B2KstTauTau_TrackIsolationBDT"},  
-                                                  { "Type" : "RelInfoBstautauCDFIso" ,"RecursionLevel" : 0, "Location"  : "B2KstTauTau_CDFIso"},
-                                                  { "Type" : "RelInfoVertexIsolation","RecursionLevel" : 1,
-                                                    "Locations" : {"Phys/B2KstTauTau_TauMu_SS_Line" : "BVars_VertexIsoInfo",
-                                                                   "Phys/StdTightDetachedTau3pi" : "TauVars_VertexIsoInfo_0",
-                                                                   "Phys/KstarB2KstTauTau":"KstarVars_VtxIsoInfo"
+                                                  { "Type" : "RelInfoBKsttautauMuonIsolationBDT" ,  "Location"  : "B2KstTauTau_MuonIsolationBDT"},
+                                                  { "Type" : "RelInfoBKsttautauTauIsolationBDT" , "Location"  : "B2KstTauTau_TauIsolationBDT" },
+                                                  { "Type" : "RelInfoBKsttautauTrackIsolationBDT", "Location"  : "B2KstTauTau_TrackIsolationBDT"},  
+                                                  { "Type" : "RelInfoBstautauCDFIso" , "Location"  : "B2KstTauTau_CDFIso"},
+                                                  { "Type" : "RelInfoVertexIsolation", "Location" :  "BVars_VertexIsoInfo",
+                                                    "DaughterLocations":{
+                                                                   "[Beauty -> X0 ^tau+ mu+]CC" : "TauVars_VertexIsoInfo_0",
+                                                                   "[Beauty -> ^X0 tau+ mu+]CC" : "KstarVars_VertexIsoInfo"
                                                                    }
                                                   }
                                                   ],
                                         MDSTFlag = True,
+                                        FILTER = self.FilterSPD,
                                         selection   = selB2KstTauMuSS
                                         )
 
@@ -376,17 +393,18 @@ class B2KstTauXConf(LineBuilder) :
                                         prescale    = config['B2KstMuMu_LinePrescale'],
                                         postscale   = config['B2KstMuMu_LinePostscale'],
                                         MDSTFlag = True,
+                                        FILTER = self.FilterSPD,
                                         #RelatedInfoTools = config['RelatedInfoTools'],
                                         RelatedInfoTools      = [
-                                                  { "Type" : "RelInfoBKsttautauMuonIsolationBDT" , "RecursionLevel" : 0, "Location"  : "B2KstTauTau_MuonIsolationBDT"},
-                                                  { "Type" : "RelInfoBKsttautauTauIsolationBDT" ,"RecursionLevel" : 0 , "Location"  : "B2KstTauTau_TauIsolationBDT" },
-                                                  { "Type" : "RelInfoBKsttautauTrackIsolationBDT","RecursionLevel" : 0, "Location"  : "B2KstTauTau_TrackIsolationBDT"},  
-                                                  { "Type" : "RelInfoBstautauCDFIso" ,"RecursionLevel" : 0, "Location"  : "B2KstTauTau_CDFIso"},
-                                                  { "Type" : "RelInfoVertexIsolation","RecursionLevel" : 1,
-                                                    "Locations" : {"Phys/B2KstTauTau_MuMu_Line" : "BVars_VertexIsoInfo",
-                                                                   "Phys/Kstar_KMMB2KstTauTau":"KstarVars_VtxIsoInfo"
+                                                  { "Type" : "RelInfoBKsttautauMuonIsolationBDT" ,  "Location"  : "B2KstTauTau_MuonIsolationBDT"},
+                                                  { "Type" : "RelInfoBKsttautauTauIsolationBDT" , "Location"  : "B2KstTauTau_TauIsolationBDT" },
+                                                  { "Type" : "RelInfoBKsttautauTrackIsolationBDT", "Location"  : "B2KstTauTau_TrackIsolationBDT"},  
+                                                  { "Type" : "RelInfoBstautauCDFIso" , "Location"  : "B2KstTauTau_CDFIso"},
+                                                  { "Type" : "RelInfoVertexIsolation", "Location" :  "BVars_VertexIsoInfo",
+                                                    "DaughterLocations":{
+                                                                   "[B0 -> ^K*(892)0 mu+ mu-]CC" :"KstarVars_VertexIsoInfo"
                                                                    }
-                                                    }
+                                                  }
                                                   ],
                                         selection   = selB2KstMuMu                                      
                                         )
@@ -396,17 +414,18 @@ class B2KstTauXConf(LineBuilder) :
                                         prescale    = config['B2KstMuMu_SameSign_LinePrescale'],
                                         postscale   = config['B2KstMuMu_SameSign_LinePostscale'],
                                         MDSTFlag = True,
+                                        FILTER = self.FilterSPD,
                                         #RelatedInfoTools = config['RelatedInfoTools'],
                                         RelatedInfoTools      = [
-                                                  { "Type" : "RelInfoBKsttautauMuonIsolationBDT" , "RecursionLevel" : 0, "Location"  : "B2KstTauTau_MuonIsolationBDT"},
-                                                  { "Type" : "RelInfoBKsttautauTauIsolationBDT" ,"RecursionLevel" : 0 , "Location"  : "B2KstTauTau_TauIsolationBDT" },
-                                                  { "Type" : "RelInfoBKsttautauTrackIsolationBDT","RecursionLevel" : 0, "Location"  : "B2KstTauTau_TrackIsolationBDT"},  
-                                                  { "Type" : "RelInfoBstautauCDFIso" ,"RecursionLevel" : 0, "Location"  : "B2KstTauTau_CDFIso"},
-                                                  { "Type" : "RelInfoVertexIsolation","RecursionLevel" : 1,
-                                                    "Locations" : {"Phys/B2KstTauTau_MuMu_SS_Line" : "BVars_VertexIsoInfo",
-                                                                   "Phys/Kstar_KMMB2KstTauTau":"KstarVars_VtxIsoInfo"
+                                                  { "Type" : "RelInfoBKsttautauMuonIsolationBDT" ,  "Location"  : "B2KstTauTau_MuonIsolationBDT"},
+                                                  { "Type" : "RelInfoBKsttautauTauIsolationBDT" , "Location"  : "B2KstTauTau_TauIsolationBDT" },
+                                                  { "Type" : "RelInfoBKsttautauTrackIsolationBDT", "Location"  : "B2KstTauTau_TrackIsolationBDT"},  
+                                                  { "Type" : "RelInfoBstautauCDFIso" , "Location"  : "B2KstTauTau_CDFIso"},
+                                                  { "Type" : "RelInfoVertexIsolation", "Location" :  "BVars_VertexIsoInfo",
+                                                    "DaughterLocations":{
+                                                                   "[Beauty -> ^X0 mu+ mu+]CC" :"KstarVars_VertexIsoInfo"
                                                                    }
-                                                    }
+                                                  }
                                                   ],
                                         selection   = selB2KstMuMuSS
                                         )
@@ -418,17 +437,17 @@ class B2KstTauXConf(LineBuilder) :
                                       MDSTFlag = True,
                                       #RelatedInfoTools = config['RelatedInfoTools'],
                                       RelatedInfoTools      = [
-                                                  { "Type" : "RelInfoBKsttautauMuonIsolationBDT" , "RecursionLevel" : 0, "Location"  : "B2KstTauTau_MuonIsolationBDT"},
-                                                  { "Type" : "RelInfoBKsttautauTauIsolationBDT" ,"RecursionLevel" : 0 , "Location"  : "B2KstTauTau_TauIsolationBDT" },
-                                                  { "Type" : "RelInfoBKsttautauTrackIsolationBDT","RecursionLevel" : 0, "Location"  : "B2KstTauTau_TrackIsolationBDT"},  
-                                                  { "Type" : "RelInfoBstautauCDFIso" ,"RecursionLevel" : 0, "Location"  : "B2KstTauTau_CDFIso"},
-                                                  { "Type" : "RelInfoVertexIsolation","RecursionLevel" : 1,
-                                                    "Locations" : {"Phys/B2KstTauTau_DDSL_Line" : "BVars_VertexIsoInfo",
-                                                                   "Phys/KstarB2KstTauTau":"KstaVars_VtxIsoInfo",
-                                                                   "Phys/DForB2KstTauTau" : "DDSLvars_VtxIsoInfo"
-                                                                   }
-                                                    }
+                                                  { "Type" : "RelInfoBKsttautauMuonIsolationBDT" ,  "Location"  : "B2KstTauTau_MuonIsolationBDT"},
+                                                  { "Type" : "RelInfoBKsttautauTauIsolationBDT" , "Location"  : "B2KstTauTau_TauIsolationBDT" },
+                                                  { "Type" : "RelInfoBKsttautauTrackIsolationBDT", "Location"  : "B2KstTauTau_TrackIsolationBDT"},  
+                                                  { "Type" : "RelInfoBstautauCDFIso" , "Location"  : "B2KstTauTau_CDFIso"},
+                                                  { "Type" : "RelInfoVertexIsolation", "Location" :  "BVars_VertexIsoInfo",
+                                                    "DaughterLocations":{
+                                                      "[B0 ->  ^K*(892)0 D+ mu-]CC" : "KstarVars_VertexIsoInfo",
+                                                      "[B0 ->  K*(892)0 ^D+ mu-]CC" : "DVars_VertexIsoInfo"}
+                                                  }
                                                   ],
+                                      FILTER = self.FilterSPD,
                                       selection = selB2DDSL
                                       )
 
@@ -452,10 +471,10 @@ class B2KstTauXConf(LineBuilder) :
                "(AM  < " + config['MASS_HIGH_B']   + "*MeV)"
     
     _bcut    = "(VFASPF(VCHI2)  <   "   + config['VCHI2_B']       + ")  &"\
-               "(BPVVDCHI2          >   "   + config['FDCHI2_B']      + ")  "
+               "(BPVVDCHI2          >   "   + config['FDCHI2_B']      + ") & (BPVVD < " +config['FD_B_Max_KTT'] +") & (PT > "+config['PT_B_KTT']+" * MeV ) "
    
     
-    _CombineTau = CombineParticles( DecayDescriptors = ["B0 -> K*(892)0 tau+ tau-"],
+    _CombineTau = CombineParticles( DecayDescriptors = ["[B0 -> K*(892)0 tau+ tau-]cc"],
                                    CombinationCut   = _combcut,
                                    MotherCut        = _bcut)
     
@@ -472,10 +491,10 @@ class B2KstTauXConf(LineBuilder) :
                "(AM  < " + config['MASS_HIGH_B']   + "*MeV)"
     
     _bcut    = "(VFASPF(VCHI2)  <   "   + config['VCHI2_B']       + ") & "\
-               "(BPVVDCHI2          >   "   + config['FDCHI2_B']      + ")  "
+               "(BPVVDCHI2          >   "   + config['FDCHI2_B']      + ") & (BPVVD < " +config['FD_B_Max_KTT'] +") & (PT > "+config['PT_B_KTT']+" * MeV ) "
 
     
-    _CombineTau = CombineParticles( DecayDescriptors = ["[B0 ->  K*(892)0 tau+ tau+]cc"],
+    _CombineTau = CombineParticles( DecayDescriptors = ["[B0 ->  K*(892)0 tau+ tau+]cc","[B0 ->  K*(892)0 tau- tau-]cc"],
                                    CombinationCut   = _combcut,
                                    MotherCut        = _bcut)
                                       
@@ -491,10 +510,10 @@ class B2KstTauXConf(LineBuilder) :
                "(AM  < " + config['MASS_HIGH_B']   + "*MeV)"
 
     _bcut    ="(VFASPF(VCHI2)  <   "   + config['VCHI2_B_Mu']       + ") & "\
-               "(BPVVD          >   "   + config['FD_B_Mu']      + ")  "
+               "(BPVVD          >   "   + config['FD_B_Mu']      + ") & (BPVVD < " +config['FD_B_Max'] +")"
          
     
-    _CombineTau = CombineParticles( DecayDescriptors = ["[B0 ->  K*(892)0 tau+ mu-]cc"],
+    _CombineTau = CombineParticles( DecayDescriptors = ["[B0 -> K*(892)0 tau+ mu-]cc","[B0 -> K*(892)0 tau- mu+]cc"],
                                    CombinationCut   = _combcut,
                                    MotherCut        = _bcut)
     
@@ -508,7 +527,7 @@ class B2KstTauXConf(LineBuilder) :
                "(AM  < " + config['MASS_HIGH_B']   + "*MeV)"
 
     _bcut    ="(VFASPF(VCHI2)  <   "   + config['VCHI2_B_Mu']       + ") & "\
-               "(BPVVD          >   "   + config['FD_B_Mu']      + ")  "
+               "(BPVVD          >   "   + config['FD_B_Mu']      + ")  & (BPVVD < " +config['FD_B_Max'] +")"
          
     
     _CombineD = CombineParticles( DecayDescriptors = ["[B0 ->  K*(892)0 D+ mu-]cc"],
@@ -527,10 +546,10 @@ class B2KstTauXConf(LineBuilder) :
                "(AM  < " + config['MASS_HIGH_B']   + "*MeV)"
     
     _bcut    ="(VFASPF(VCHI2)  <   "   + config['VCHI2_B_Mu']       + ") & "\
-               "(BPVVD          >   "   + config['FD_B_Mu']      + ")  "
+               "(BPVVD          >   "   + config['FD_B_Mu']      + ")   & (BPVVD < " +config['FD_B_Max'] +")"
     
  
-    _CombineTau = CombineParticles( DecayDescriptors = ["[B0 ->  K*(892)0 tau+ mu+]cc"],
+    _CombineTau = CombineParticles( DecayDescriptors = ["[B0 ->  K*(892)0 tau+ mu+]cc","[B0 ->  K*(892)0 tau- mu-]cc"],
                                    CombinationCut   = _combcut,
                                    MotherCut        = _bcut)
     
@@ -571,7 +590,7 @@ class B2KstTauXConf(LineBuilder) :
                " (BPVDIRA >"         + config['B_COSDIRA_KMM']   + ") "
       
     
-    _CombineTau = CombineParticles( DecayDescriptors = ["[B0 ->  K*(892)0 mu+ mu+]cc"],
+    _CombineTau = CombineParticles( DecayDescriptors = ["[B0 ->  K*(892)0 mu+ mu+]cc","[B0 ->  K*(892)0 mu- mu-]cc"],
                                    CombinationCut   = _combcut,
                                    MotherCut        = _bcut)
     
