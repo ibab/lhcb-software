@@ -451,14 +451,12 @@ Beauty2Charm = {
     'StrippingB2D0PiPiPiD2HHTIGHTBeauty2CharmLine',
     'StrippingB2D0PiD2HHHHTIGHTBeauty2CharmLine',
     'StrippingB2D0D0KD02HHD02HHBeauty2CharmLine',
-
     'StrippingB02DKWSD2HHHBeauty2CharmLine',
     'StrippingB02DPiWSD2HHHBeauty2CharmLine', 
     
     ],  
     'Bhadron' : [
     'StrippingUpsilon2BBBeauty2CharmLine',
-
     'StrippingBc2BPiPiB2D0HD02HHBeauty2CharmLine',
     'StrippingBc2BPiPiWSB2D0HD02HHBeauty2CharmLine',
     'StrippingBc2BPiKB2D0HD02HHBeauty2CharmLine',
@@ -466,7 +464,6 @@ Beauty2Charm = {
     'StrippingBc2BKPiB2D0HD02HHBeauty2CharmLine',
     'StrippingBc2BKKB2D0HD02HHBeauty2CharmLine',
     'StrippingBc2BKKWSB2D0HD02HHBeauty2CharmLine',
-
     'StrippingBc2BPiPiB2D0HD02HHHHBeauty2CharmLine',
     'StrippingBc2BPiPiWSB2D0HD02HHHHBeauty2CharmLine',
     'StrippingBc2BPiKB2D0HD02HHHHBeauty2CharmLine',
@@ -474,7 +471,6 @@ Beauty2Charm = {
     'StrippingBc2BKPiB2D0HD02HHHHBeauty2CharmLine',
     'StrippingBc2BKKB2D0HD02HHHHBeauty2CharmLine',
     'StrippingBc2BKKWSB2D0HD02HHHHBeauty2CharmLine',
-
     'StrippingBc2BPiPiB2DHHD2HHHCFPIDBeauty2CharmLine',
     'StrippingBc2BPiPiWSB2DHHD2HHHCFPIDBeauty2CharmLine',
     'StrippingBc2BPiKB2DHHD2HHHCFPIDBeauty2CharmLine',
@@ -482,7 +478,6 @@ Beauty2Charm = {
     'StrippingBc2BKPiB2DHHD2HHHCFPIDBeauty2CharmLine',
     'StrippingBc2BKKB2DHHD2HHHCFPIDBeauty2CharmLine',
     'StrippingBc2BKKWSB2DHHD2HHHCFPIDBeauty2CharmLine',
-
     'StrippingBc2BPiPiB2D0HHHD02HHPIDBeauty2CharmLine',
     'StrippingBc2BPiPiWSB2D0HHHD02HHPIDBeauty2CharmLine',
     'StrippingBc2BPiKB2D0HHHD02HHPIDBeauty2CharmLine',
@@ -490,7 +485,6 @@ Beauty2Charm = {
     'StrippingBc2BKPiB2D0HHHD02HHPIDBeauty2CharmLine',
     'StrippingBc2BKKB2D0HHHD02HHPIDBeauty2CharmLine',
     'StrippingBc2BKKWSB2D0HHHD02HHPIDBeauty2CharmLine',
-
     'StrippingBc2BPiPiB2D0DBeauty2CharmLine',
     'StrippingBc2BPiPiWSB2D0DBeauty2CharmLine',
     'StrippingBc2BPiKB2D0DBeauty2CharmLine',
@@ -498,19 +492,14 @@ Beauty2Charm = {
     'StrippingBc2BKPiB2D0DBeauty2CharmLine',
     'StrippingBc2BKKB2D0DBeauty2CharmLine',
     'StrippingBc2BKKWSB2D0DBeauty2CharmLine',
-
-
-    'StrippingB2D0PiD2HHHHoldBeauty2CharmLine',  
-   
+    
+    'StrippingB2D0PiD2HHHHoldBeauty2CharmLine',   
     'StrippingB2D0PiD2Pi0HHResolvedoldBeauty2CharmLine',
     'StrippingB2D0KD2Pi0HHResolvedoldBeauty2CharmLine',
     'StrippingB2D0PiD2Pi0HHMergedoldBeauty2CharmLine',
     'StrippingB2D0KD2Pi0HHMergedoldBeauty2CharmLine', 
-    
-
     'StrippingB2D0KD2HHWSBeauty2CharmLine', 
-    'StrippingB2D0PiD2HHWSBeauty2CharmLine', 
-   
+    'StrippingB2D0PiD2HHWSBeauty2CharmLine',   
     'StrippingB2D0PiD2HHUPBeauty2CharmLine', 
     'StrippingB02D0KKD2HHBeauty2CharmLine', 
     'StrippingB02D0PiPiD2HHBeauty2CharmLine', 
@@ -524,51 +513,33 @@ Beauty2Charm = {
     'StrippingB02DHHWSD2HHWSBeauty2CharmLine', 
     'StrippingB02D0KSDDD2HHBeauty2CharmLine', 
     'StrippingB02D0KSLLD2HHBeauty2CharmLine', 
-
     'StrippingB2D0KPi0MergedD2HHBeauty2CharmLine', 
     'StrippingB2D0PiPi0MergedD2HHBeauty2CharmLine', 
     'StrippingB2D0KsPiDDD2HHBeauty2CharmLine', 
     'StrippingB2D0KPi0ResolvedD2HHBeauty2CharmLine', 
     'StrippingB2D0KsPiLLD2HHBeauty2CharmLine', 
     'StrippingB2D0PiPi0ResolvedD2HHBeauty2CharmLine', 
-
-   
     'StrippingB2D0KsPiDDD2KSHHLLBeauty2CharmLine', 
-   
     'StrippingB2D0KsPiLLD2KSHHLLBeauty2CharmLine', 
- 
-    'StrippingB2D0KsPiDDD2KSHHDDBeauty2CharmLine', 
-  
-    'StrippingB2D0KsPiLLD2KSHHDDBeauty2CharmLine', 
- 
-    'StrippingB2D0KsPiDDD2HHHHBeauty2CharmLine', 
- 
-    'StrippingB2D0KsPiLLD2HHHHBeauty2CharmLine', 
- 
-    'StrippingB2D0KsPiDDD2HHHHWSBeauty2CharmLine',  
-  
+    'StrippingB2D0KsPiDDD2KSHHDDBeauty2CharmLine',   
+    'StrippingB2D0KsPiLLD2KSHHDDBeauty2CharmLine',  
+    'StrippingB2D0KsPiDDD2HHHHBeauty2CharmLine',  
+    'StrippingB2D0KsPiLLD2HHHHBeauty2CharmLine',  
+    'StrippingB2D0KsPiDDD2HHHHWSBeauty2CharmLine',   
     'StrippingB2D0KsPiLLD2HHHHWSBeauty2CharmLine',
-  
-
     'StrippingB02DKD2PhiMuNuBeauty2CharmLine', 
     'StrippingB02DPiD2PhiMuNuBeauty2CharmLine', 
     'StrippingB02DKWSD2PhiMuNuBeauty2CharmLine', 
-    'StrippingB02DPiWSD2PhiMuNuBeauty2CharmLine', 
-   
-    'StrippingB02DKD2HHHUPBeauty2CharmLine', 
-  
+    'StrippingB02DPiWSD2PhiMuNuBeauty2CharmLine',    
+    'StrippingB02DKD2HHHUPBeauty2CharmLine',   
     'StrippingB02DPiWSNoIPD2HHHCFPIDBeauty2CharmLine', 
     'StrippingB02DPiWSNoIPDs2HHHPIDBeauty2CharmLine', 
     'StrippingB02DKsKDDD2HHHCFPIDBeauty2CharmLine', 
     'StrippingB02DKsKLLD2HHHCFPIDBeauty2CharmLine', 
-
-    'StrippingB02DKsPiDDD2HHHCFPIDBeauty2CharmLine', 
- 
+    'StrippingB02DKsPiDDD2HHHCFPIDBeauty2CharmLine',  
     'StrippingB02DPiPi0ResolvedD2HHHCFPIDBeauty2CharmLine', 
-    'StrippingB02DKsPiLLD2HHHCFPIDBeauty2CharmLine', 
-  
-    'StrippingB02DKsPiDDWSD2HHHCFPIDBeauty2CharmLine', 
- 
+    'StrippingB02DKsPiLLD2HHHCFPIDBeauty2CharmLine',   
+    'StrippingB02DKsPiDDWSD2HHHCFPIDBeauty2CharmLine',  
     'StrippingB02DKsPiLLWSD2HHHCFPIDBeauty2CharmLine', 
     'StrippingB02DPiPi0ResolvedWSD2HHHCFPIDBeauty2CharmLine', 
     'StrippingB02DKsKLLWSD2HHHCFPIDBeauty2CharmLine', 
@@ -597,17 +568,13 @@ Beauty2Charm = {
     'StrippingB2D0KD2KSHHDDBeauty2CharmLine', 
     'StrippingB2D0PiD2KSHHDDBeauty2CharmLine', 
     'StrippingB2D0MuNuD2KSHHLLBeauty2CharmLine', 
-    'StrippingB2D0MuNuD2KSHHDDBeauty2CharmLine', 
-  
+    'StrippingB2D0MuNuD2KSHHDDBeauty2CharmLine',   
     'StrippingB02D0KPiD2KSHHLLBeauty2CharmLine', 
-    'StrippingB02DHHWSD2KSHHLLBeauty2CharmLine', 
-  
+    'StrippingB02DHHWSD2KSHHLLBeauty2CharmLine',   
     'StrippingB02D0KPiD2KSHHDDBeauty2CharmLine', 
-    'StrippingB02DHHWSD2KSHHDDBeauty2CharmLine', 
-   
+    'StrippingB02DHHWSD2KSHHDDBeauty2CharmLine',    
     'StrippingB02D0KPiD2KSHHLLWSBeauty2CharmLine', 
-    'StrippingB02DHHWSD2KSHHLLWSBeauty2CharmLine', 
-   
+    'StrippingB02DHHWSD2KSHHLLWSBeauty2CharmLine',    
     'StrippingB02D0KPiD2KSHHDDWSBeauty2CharmLine', 
     'StrippingB02DHHWSD2KSHHDDWSBeauty2CharmLine', 
     'StrippingB2D0KD2KSHHLLWSBeauty2CharmLine', 
@@ -618,17 +585,14 @@ Beauty2Charm = {
     'StrippingB02DstarPiDst2D0Pi_D2KSHHLLBeauty2CharmLine', 
     'StrippingB02DstarKDst2D0Pi_D2KSHHDDBeauty2CharmLine', 
     'StrippingB02DstarPiDst2D0Pi_D2KSHHDDBeauty2CharmLine', 
-
     'StrippingB02DstarMuNuDst2D0Pi_D2KSHHLLBeauty2CharmLine', 
     'StrippingB02DstarMuNuWSDst2D0Pi_D2KSHHLLBeauty2CharmLine', 
     'StrippingB02DstarMuNuDst2D0Pi_D2KSHHDDBeauty2CharmLine', 
     'StrippingB02DstarMuNuWSDst2D0Pi_D2KSHHDDBeauty2CharmLine',
-
     'StrippingB02DstarMuNuDst2D0Pi_D2HHHHBeauty2CharmLine',
     'StrippingB02DstarMuNuWSDst2D0Pi_D2HHHHBeauty2CharmLine',
     'StrippingB02DstarMuNuDst2D0Pi_D2HHHHWSBeauty2CharmLine',
     'StrippingB02DstarMuNuWSDst2D0Pi_D2HHHHWSBeauty2CharmLine', 
-
     'StrippingB02DstarKsPiDDDst2D0PiBeauty2CharmLine', 
     'StrippingB02DstarKsKDDDst2D0PiBeauty2CharmLine', 
     'StrippingB02DstarKsKLLDst2D0PiBeauty2CharmLine', 
@@ -640,8 +604,7 @@ Beauty2Charm = {
     'StrippingB2D0KD2HHHHBeauty2CharmLine', 
     'StrippingB2D0PiD2HHHHBeauty2CharmLine', 
     'StrippingB2D0KD2HHHHWSBeauty2CharmLine', 
-    'StrippingB2D0PiD2HHHHWSBeauty2CharmLine', 
- 
+    'StrippingB2D0PiD2HHHHWSBeauty2CharmLine',  
     'StrippingB02D0KKD2HHHHBeauty2CharmLine', 
     'StrippingB02D0PiPiD2HHHHBeauty2CharmLine', 
     'StrippingB02D0KPiD2HHHHBeauty2CharmLine', 
@@ -669,8 +632,7 @@ Beauty2Charm = {
     'StrippingB2D0KD2KSPi0HHDDMergedBeauty2CharmLine', 
     'StrippingB2D0PiD2KSPi0HHDDMergedBeauty2CharmLine', 
     'StrippingB02D0KKD2Pi0HHResolvedBeauty2CharmLine', 
-    'StrippingB02D0PiPiD2Pi0HHResolvedBeauty2CharmLine', 
-  
+    'StrippingB02D0PiPiD2Pi0HHResolvedBeauty2CharmLine',  
     'StrippingB02DHHWSD2Pi0HHResolvedBeauty2CharmLine', 
     'StrippingB02D0KKD2Pi0HHMergedBeauty2CharmLine', 
     'StrippingB02D0PiPiD2Pi0HHMergedBeauty2CharmLine', 
@@ -694,8 +656,7 @@ Beauty2Charm = {
     'StrippingB02DKPiPiSSWSD2HHHPIDBeauty2CharmLine', 
     'StrippingB02DKKPiWSD2HHHPIDBeauty2CharmLine', 
     'StrippingB02DKPiPiWSD2HHHPIDBeauty2CharmLine', 
-    'StrippingB02DPiPiPiWSD2HHHPIDBeauty2CharmLine', 
-  
+    'StrippingB02DPiPiPiWSD2HHHPIDBeauty2CharmLine',   
     'StrippingB02DstKKPiDstar2D0PiPIDBeauty2CharmLine', 
     'StrippingB02DstKPiPiDstar2D0PiPIDBeauty2CharmLine', 
     'StrippingB02DstPiPiPiDstar2D0PiPIDBeauty2CharmLine', 
@@ -730,16 +691,14 @@ Beauty2Charm = {
     'StrippingB02D0DKD02K3PiBeauty2CharmLine', 
     'StrippingB02D0DKWSBeauty2CharmLine', 
     'StrippingB02D0DKWSD02K3PiBeauty2CharmLine', 
-    'StrippingB2DstDKBeauty2CharmLine', 
-  
+    'StrippingB2DstDKBeauty2CharmLine',  
     'StrippingB2DstDKWSBeauty2CharmLine', 
     'StrippingB2DstDKWSDstarD02K3PiBeauty2CharmLine', 
     'StrippingB2D0D0KD02K3PiD02K3PiBeauty2CharmLine', 
     'StrippingB2D0D0KD02HHD02K3PiBeauty2CharmLine', 
     'StrippingB02DstD0KBeauty2CharmLine', 
     'StrippingB02DstD0KD02K3PiBeauty2CharmLine', 
-    'StrippingB02DstD0KDstarD02K3PiBeauty2CharmLine', 
-  
+    'StrippingB02DstD0KDstarD02K3PiBeauty2CharmLine',   
     'StrippingB02DstD0KWSBeauty2CharmLine', 
     'StrippingB02DstD0KWSD02K3PiBeauty2CharmLine', 
     'StrippingB02DstD0KWSDstarD02K3PiBeauty2CharmLine', 
@@ -749,17 +708,13 @@ Beauty2Charm = {
     'StrippingB2DstDstKDstarD02K3PiDstarD02K3PiBeauty2CharmLine', 
     'StrippingB2DstDstKWSBeauty2CharmLine', 
     'StrippingB2DstDstKWSDstarD02K3PiBeauty2CharmLine', 
-    'StrippingB2DstDstKWSDstarD02K3PiDstarD02K3PiBeauty2CharmLine', 
-  
-    'StrippingB02D0D0KstD02HHD02HHBeauty2CharmLine', 
-   
+    'StrippingB2DstDstKWSDstarD02K3PiDstarD02K3PiBeauty2CharmLine',   
+    'StrippingB02D0D0KstD02HHD02HHBeauty2CharmLine',   
     'StrippingB02DstDstKstBeauty2CharmLine', 
     'StrippingB02DstDstKstDstarD02K3PiBeauty2CharmLine', 
-    'StrippingB02DstDstKstDstarD02K3PiDstarD02K3PiBeauty2CharmLine', 
-   
+    'StrippingB02DstDstKstDstarD02K3PiDstarD02K3PiBeauty2CharmLine',   
     'StrippingB2DstD0KstBeauty2CharmLine', 
-    'StrippingB2DstD0KstDstarD02K3PiBeauty2CharmLine', 
-   
+    'StrippingB2DstD0KstDstarD02K3PiBeauty2CharmLine',    
     'StrippingB02DDKSDDBeauty2CharmLine', 
     'StrippingB02DDKSWSDDBeauty2CharmLine', 
     'StrippingB2D0DKSDDBeauty2CharmLine', 
@@ -801,11 +756,9 @@ Beauty2Charm = {
     'StrippingB02DstDstKSLLDstarD02K3PiDstarD02K3PiBeauty2CharmLine', 
     'StrippingB02DstDstKSWSLLBeauty2CharmLine', 
     'StrippingB02DstDstKSWSLLDstarD02K3PiBeauty2CharmLine', 
-    'StrippingB02DstDstKSWSLLDstarD02K3PiDstarD02K3PiBeauty2CharmLine', 
-    
+    'StrippingB02DstDstKSWSLLDstarD02K3PiDstarD02K3PiBeauty2CharmLine',     
     'StrippingB2D0DKPiBeauty2CharmLine', 
-    'StrippingB2D0DKPiD02K3PiBeauty2CharmLine', 
-   
+    'StrippingB2D0DKPiD02K3PiBeauty2CharmLine',    
     'StrippingB02DstDstKKBeauty2CharmLine', 
     'StrippingB02DstDstKKDstarD02K3PiBeauty2CharmLine', 
     'StrippingB02DstDstKKDstarD02K3PiDstarD02K3PiBeauty2CharmLine', 
@@ -836,8 +789,7 @@ Beauty2Charm = {
     'StrippingXib02XicKPiPiXic2PKPiBeauty2CharmLine', 
     'StrippingXib02XicPiPiPiXic2PKPiBeauty2CharmLine', 
     'StrippingXib02XicPiPiPiWSXic2PKPiBeauty2CharmLine', 
-    'StrippingXib02XicKPiPiWSXic2PKPiBeauty2CharmLine', 
-    
+    'StrippingXib02XicKPiPiWSXic2PKPiBeauty2CharmLine',     
     'StrippingSb2D0PD2HHPIDBeauty2CharmLine', 
     'StrippingSb02DPD2HHHPIDBeauty2CharmLine', 
     'StrippingSb02DPWSD2HHHPIDBeauty2CharmLine', 
@@ -862,8 +814,7 @@ Beauty2Charm = {
     'StrippingB02LcpbarKKWSLc2PKPiBeauty2CharmLine', 
     'StrippingB02LcpbarKPiWSLc2PKPiBeauty2CharmLine', 
     'StrippingLb2LcDD2HHHPIDBeauty2CharmLine', 
-    'StrippingLb2LcDWSD2HHHPIDBeauty2CharmLine', 
-   
+    'StrippingLb2LcDWSD2HHHPIDBeauty2CharmLine',    
     'StrippingX2LcD0D02KPiBeauty2CharmLine', 
     'StrippingX2LcD0PiD02KPiBeauty2CharmLine', 
     'StrippingX2LcD0KD02KPiBeauty2CharmLine', 
@@ -899,7 +850,6 @@ Beauty2Charm = {
     'StrippingLb2LcDstWSDstar2D0PiPIDBeauty2CharmLine', 
     'StrippingX2LcLcBeauty2CharmLine', 
     'StrippingX2LcLcWSBeauty2CharmLine', 
- 
     'StrippingLb2D0Lambda0DDD02HHBeauty2CharmLine', 
     'StrippingLb2D0Lambda0LLD02HHBeauty2CharmLine', 
     'StrippingLb2DpKKD2HHHBeauty2CharmLine', 
@@ -930,9 +880,7 @@ Beauty2Charm = {
     'StrippingB02LcLambda0PiLc2PKPiBeauty2CharmLine', 
     'StrippingB02LcLambda0PiWSLc2PKPiBeauty2CharmLine', 
     'StrippingB02LcLambda0KWSLc2PKPiBeauty2CharmLine', 
-    'StrippingB02DKLTUBD2HHHBeauty2CharmLine',
-    
-   
+    'StrippingB02DKLTUBD2HHHBeauty2CharmLine',   
     'StrippingDstarUPB02D0KPiD2HHBeauty2CharmLine', 
  
 
