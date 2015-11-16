@@ -1422,14 +1422,14 @@ Lb2EtacKp = {
         'EtacMomN4Cuts' : """
                            (VFASPF(VCHI2/VDOF) < 9.) 
                            & (in_range(2.8*GeV, MM, 3.2*GeV)) 
-                           & (MIPCHI2DV(PRIMARY) > 4.) 
+                           & (MIPCHI2DV(PRIMARY) > 0.) 
                            & (BPVVDCHI2>10) 
                            & (BPVDIRA>0.9)
                            """,
         'EtacComCuts'   : "(in_range(2.75*GeV, AM, 3.25*GeV))",
         'LambdaSComCuts': "(ACHILD(PT,1)+ACHILD(PT,2) > 900.*MeV) & (AM < 4.0 *GeV) & (ADOCACHI2CUT(20., ''))",
         'LambdaSMomCuts': """
-                          (MIPCHI2DV(PRIMARY) > 4.)
+                          (MIPCHI2DV(PRIMARY) > 0.)
                           & (BPVVDCHI2 > 10.)
                           & (VFASPF(VCHI2) < 9.)
                           & (BPVDIRA>0.9)
