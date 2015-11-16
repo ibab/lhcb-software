@@ -307,7 +307,7 @@ class B2XLLConf(LineBuilder) :
         """
         _dsPlus = CombineParticles()
         _dsPlus.DecayDescriptor = "[D_s+ -> K+ K- pi+]cc"
-        _dsPlus.MotherCut = "(ADMASS('D*_s+') < 300 *MeV)"
+        _dsPlus.MotherCut = "(ADMASS('D_s+') < 300 *MeV)"
         _dsPlusConf = _dsPlus.configurable("Combine_"+name+"_Dsplus")
         _selDsPlus = Selection( "Selection_"+name+"_DsPlus", Algorithm = _dsPlusConf, RequiredSelections = [ Pion, Kaons ] )
         return _selDsPlus
