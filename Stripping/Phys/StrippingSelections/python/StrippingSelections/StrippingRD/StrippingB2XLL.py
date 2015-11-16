@@ -127,16 +127,13 @@ class B2XLLConf(LineBuilder) :
         SelDsStars= self._dSStarPlus( name="DsStarFor"+self._name, DPlus=SelDsPlus, Gamma=Gammas )
 
         # 2 : Dileptons
-        ElecID = "(PIDe> %(PIDe)s)" % config
-        MuonID = "(HASMUON)&(ISMUON)"
+        MuMu = self._makeMuMu( "MuMuFor"+ self._name, params = config )
+        MuE  = self._makeMuE ( "MuEFor" + self._name, params = config )
+        EE   = self._makeEE  ( "EEFor"  + self._name, params = config )
 
-        MuMu = self._makeMuMu( "MuMuFor"+ self._name, params = config, muonid = MuonID )
-        MuE  = self._makeMuE ( "MuEFor" + self._name, params = config, electronid = ElecID, muonid = MuonID )
-        EE   = self._makeEE  ( "EEFor"  + self._name, params = config, electronid = ElecID )
-
-        MuMu_SS= self._makeMuMu( "MuMuSSFor"+ self._name, params = config, muonid = MuonID, samesign=True )
-        MuE_SS = self._makeMuE ( "MuESSFor" + self._name, params = config, electronid = ElecID, muonid = MuonID, samesign=True )
-        EE_SS  = self._makeEE  ( "EESSFor"  + self._name, params = config, electronid = ElecID, samesign=True )
+        MuMu_SS= self._makeMuMu( "MuMuSSFor"+ self._name, params = config, samesign=True )
+        MuE_SS = self._makeMuE ( "MuESSFor" + self._name, params = config, samesign=True )
+        EE_SS  = self._makeEE  ( "EESSFor"  + self._name, params = config, samesign=True )
 
         SelMuMu= self._filterDiLepton("SelMuMuFor"+ self._name, dilepton = MuMu,params = config, idcut = None )
         SelMuE = self._filterDiLepton("SelMuEFor" + self._name, dilepton = MuE, params = config, idcut = None )
@@ -276,12 +273,8 @@ class B2XLLConf(LineBuilder) :
         """
         _f0 = CombineParticles()
         _f0.DecayDescriptor = "f_0(980) -> pi+ pi-"
-        _f0.MotherCut = "(VFASPF(VCHI2) < 9.0) & (MIPCHI2DV(PRIMARY) > 5.0) & (VFASPF(VMINVDDV(PRIMARY)) > 2.0*mm)"
-        _f0.CombinationCut = "(ANUM(PT < 300*MeV) <= 1) & (ADOCAMAX('') < 0.25*mm) & (AM<1670.*MeV)"
-        _f0.DaughtersCuts = {
-            'pi+': '(PT>150.*MeV) & (MIPCHI2DV(PRIMARY) > 4.0) & (TRCHI2DOF<3) & (TRGHOSTPROB<0.4) & (PIDK < 8)',
-            'pi-': '(PT>150.*MeV) & (MIPCHI2DV(PRIMARY) > 4.0) & (TRCHI2DOF<3) & (TRGHOSTPROB<0.4) & (PIDK < 8)'
-            }
+        _f0.CombinationCut = "(AM<2700.0*MeV)"
+        _f0.MotherCut = "(M<2700.0*MeV)"
         _f0Conf = _f0.configurable("Combine_"+name)
         _self0 = Selection("SelectionOff0For"+name, RequiredSelections=[pions], Algorithm=_f0Conf)
         return _self0
@@ -293,8 +286,8 @@ class B2XLLConf(LineBuilder) :
         """  
         from StandardParticles import StdLooseKsDD as _ksdd
         from StandardParticles import StdLooseKsLL as _ksll
-        _filter_ksdd = FilterDesktop(Code = "(ADMASS('KS0') < 30*MeV) & (PT > 0.0*MeV) & (BPVLTIME() > 2*ps)")
-        _filter_ksll = FilterDesktop(Code = "(ADMASS('KS0') < 30*MeV) & (PT > 0.0*MeV) & (BPVLTIME() > 2*ps)")
+        _filter_ksdd = FilterDesktop(Code = "(ADMASS('KS0') < 30*MeV) & (BPVLTIME() > 0.5*ps)")
+        _filter_ksll = FilterDesktop(Code = "(ADMASS('KS0') < 30*MeV) & (BPVLTIME() > 0.5*ps)")
         _selksdd = Selection("Selection_"+name+"_Ksdd", RequiredSelections = [ _ksdd ], Algorithm = _filter_ksdd)
         _selksll = Selection("Selection_"+name+"_Ksll", RequiredSelections = [ _ksll ], Algorithm = _filter_ksll)
         _sel = MergedSelection("Selection_"+name+"_Kshort", RequiredSelections = [ _selksdd, _selksll ])
@@ -380,7 +373,7 @@ class B2XLLConf(LineBuilder) :
                          RequiredSelections = [ dilepton, _Merge ]) 
 
 #####################################################
-    def _makeMuE( self, name, params, electronid = None, muonid = None , samesign = False):
+    def _makeMuE( self, name, params, samesign = False):
         """
         Makes MuE combinations 
         """
@@ -403,10 +396,6 @@ class B2XLLConf(LineBuilder) :
 
         _ElectronCut = _DaughtersCut
         _MuonCut     = _DaughtersCut
-
-#        if electronid: _ElectronCut += ( "&" + electronid )
-#        if muonid    : _MuonCut     += ( "&" + muonid )
-        
         
         _Combine.DaughtersCuts   = {
             "e+"  : _ElectronCut,
@@ -417,7 +406,7 @@ class B2XLLConf(LineBuilder) :
                          Algorithm = _Combine,
                          RequiredSelections = [ Muons, Electrons ] )
 #####################################################
-    def _makeMuMu( self, name, params, muonid = None, samesign = False):
+    def _makeMuMu( self, name, params, samesign = False):
         """
         Makes MuMu combinations 
         """
@@ -438,8 +427,9 @@ class B2XLLConf(LineBuilder) :
         return Selection(name,
                          Algorithm = _Combine,
                          RequiredSelections = [ Muons ] )
+
 #####################################################
-    def _makeEE( self, name, params, electronid = None, samesign = False):
+    def _makeEE( self, name, params, samesign = False):
         """
         Makes EE combinations 
         """
