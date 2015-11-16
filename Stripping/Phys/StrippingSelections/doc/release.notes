@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-16 - Roberta Cardinale
+ - Updated StrippingBandQ/StrippingLb2EtacKp.py
+
 ! 2015-11-16 - Oliver Gruenberg
  - Updated RelatedInfo in StrippingRD/Stripping{B23Mu,B24p,BLV,D23Mu,Lc23Mu}Lines.py
  - Removed WS decay mode "[Lambda_b0 -> Lambda_c+ pi+]cc" for ControlCh. in BLVLines
