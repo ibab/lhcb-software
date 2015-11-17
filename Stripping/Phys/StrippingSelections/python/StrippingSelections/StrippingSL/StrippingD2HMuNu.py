@@ -1,5 +1,5 @@
 
-__author__ = ['Liang Sun']
+__author__ = ['Liang Sun','Adam Davis']
 __date__ = '09/11/2015'
 __version__ = '$Revision: 0.01 $'
 
@@ -30,50 +30,41 @@ __all__ = ('D2HLepNuBuilder',
 default_config = {
     'D2HMuNu' : {
         'WGs'         : ['Semileptonic','Charm'],
-	'BUILDERTYPE' : 'D2HLepNuBuilder',
+        'BUILDERTYPE' : 'D2HLepNuBuilder',
         'CONFIG'      :  {
-     "KLepMassLow" : 500 , #MeV
-     "KLepMassHigh" : 2000 , #MeV
-     "DELTA_MASS_MAX" : 400  , #MeV
-     "GEC_nLongTrk"        : 160.  , #adimensional
-     "TRGHOSTPROB"         : 0.35    ,#adimensional
-     #Muons
-     "MuonGHOSTPROB"       : 0.35  ,#adimensional
-#    "MuonTRCHI2"          : 4.    ,#adimensional
-#    "MuonP"               : 3000. ,#MeV
-     "MuonPT"              : 500. ,#MeV
-     "MuonPIDK"            : 0.    ,#adimensional
-     "MuonPIDmu"           : 3.    ,#adimensional
-     "MuonPIDp"            : 0.    ,#adimensional
-    "ElectronPIDe"  : 0.0 ,
-    "ElectronPT"    : 500,#MeV
-    #Xu
-    #K channel
-#   "KaonTRCHI2"          : 6.     ,#adimensional
-#   "KaonP"               : 3000.  ,#MeV
-    "KaonPT"              : 500.   ,#MeV
-    "KaonPIDK"            : 5.     ,#adimensional 
-    "KaonPIDmu"           : 5.     ,#adimensional
-    "KaonPIDp"            : 5.     ,#adimensional
-    "BVCHI2DOF"       : 20    ,#adminensional
-    "BDIRA"       : 0.99    ,#adminensional
-    "BFDCHI2HIGH"         : 100.  ,#adimensional
-    #
-#   "XMuMassUpper"        : 5500. ,#MeV
-#   "XMuMassUpperHigh"    : 6500. ,#MeV
-#   "Enu"                 : 1850. ,#MeV
-#   "EnuK"                : 2000. ,#MeV
+            "KLepMassLow" : 500 , #MeV
+            "KLepMassHigh" : 2000 , #MeV
+            "DELTA_MASS_MAX" : 400  , #MeV
+            "GEC_nLongTrk"        : 160.  , #adimensional
+            "TRGHOSTPROB"         : 0.35    ,#adimensional
+            #Muons
+            "MuonGHOSTPROB"       : 0.35  ,#adimensional
+            #	"MuonP"               : 3000. ,#MeV
+            "MuonPT"              : 500. ,#MeV
+            "MuonPIDK"            : 0.    ,#adimensional
+            "MuonPIDmu"           : 3.    ,#adimensional
+            "MuonPIDp"            : 0.    ,#adimensional
+            "ElectronPIDe"  : 0.0 ,
+            "ElectronPT"    : 500,#MeV
+            #Xu
+            #K channel
+            #	"KaonP"               : 3000.  ,#MeV
+            "KaonPT"              : 500.   ,#MeV
+            "KaonPIDK"            : 5.     ,#adimensional 
+            "KaonPIDmu"           : 5.     ,#adimensional
+            "KaonPIDp"            : 5.     ,#adimensional
+            "BVCHI2DOF"       : 20    ,#adminensional
+            "BDIRA"       : 0.99    ,#adminensional
+            "BFDCHI2HIGH"         : 100.  ,#adimensional
+            #slow pion
             "Slowpion_PT" : 200 #MeV 
             ,"Slowpion_TRGHOSTPROB" : 0.35 #adimensional
             ,"Slowpion_PIDe" : 5 #adimensional
             ,"useTOS" : True #adimensional
-            ,"useHLT2" : False  #adimensional
-     ,"TOSFilter" : { 'Hlt2.*TopoMu2Body.*Decision%TOS':0,'Hlt2.*SingleMuon.*Decision%TOS':0}  #adimensional
-            ,"Hlt2Filter" : "HLT_PASS_RE('Hlt2CharmHad.*HHX.*Decision%TOS')"  #adimensional
-
-	      },
-      'STREAMS'     : ['Semileptonic']	  
-      }
+            ,"TOSFilter" : { 'Hlt2CharmHad.*HHX.*Decision%TOS' : 0}  #adimensional
+            },
+        'STREAMS'     : ['Semileptonic']	  
+        }
     }
 from Gaudi.Configuration import *
 from StrippingUtils.Utils import LineBuilder
@@ -87,59 +78,54 @@ class D2HLepNuBuilder(LineBuilder):
     """
     
     __configuration_keys__ = [
-         "KLepMassLow"  
-         , "KLepMassHigh"  
-         , "DELTA_MASS_MAX"
+        "KLepMassLow"  
+        , "KLepMassHigh"  
+        , "DELTA_MASS_MAX"
         , "GEC_nLongTrk"
         ,"MuonGHOSTPROB"
         ,"TRGHOSTPROB"          
-#        ,"MuonTRCHI2"          
-#        ,"MuonP"
+        #        ,"MuonTRCHI2"          
+        #        ,"MuonP"
         ,"MuonPT"
         ,"MuonPIDK"            
         ,"MuonPIDmu"           
         ,"MuonPIDp"           
         ,"ElectronPIDe"
         ,"ElectronPT"
-#        ,"MuonMINIPCHI2"       
-#        ,"KaonTRCHI2"          
-#        ,"KaonP"               
+        #        ,"MuonMINIPCHI2"       
+        #        ,"KaonTRCHI2"          
+        #        ,"KaonP"               
         ,"KaonPT"              
         ,"KaonPIDK"             
         ,"KaonPIDmu"           
         ,"KaonPIDp"            
-#        ,"KaonMINIPCHI2"
-#        ,"Enu"                 
-#        ,"EnuK"                
+        #        ,"KaonMINIPCHI2"
         ,"Slowpion_PT"
         ,"Slowpion_TRGHOSTPROB"
         ,"Slowpion_PIDe"
-        ,"useHLT2" 
+        #        ,"useHLT2" 
         ,"useTOS"
         ,"TOSFilter"
-        ,"Hlt2Filter"
+        #        ,"Hlt2Filter"
         , "BVCHI2DOF"
         , "BDIRA"
         , "BFDCHI2HIGH"
         ]
-
+    
     def __init__(self,name,config):
         LineBuilder.__init__(self, name, config)
         self._config=config
         from PhysSelPython.Wrappers import Selection, DataOnDemand
-
+        
         self.GECs = { "Code":"( recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %(GEC_nLongTrk)s )" % config,
                       "Preambulo": ["from LoKiTracks.decorators import *"]}
         
         self._muonSel=None
         self._muonFilter()
-
-        self._muonSelTOS=None
-        self._muonFilterTOS()
-
+        
         self._electronSel=None
         self._electronFilter()
-
+        
         self._slowpionSel =None
         self._pionSel=None
         self._kaonSel=None
@@ -153,7 +139,7 @@ class D2HLepNuBuilder(LineBuilder):
         self.registerLine(self._D2KENuLine())
         
     def _NominalMuSelection( self ):
-#        return "(TRCHI2DOF < %(MuonTRCHI2)s ) &  (P> %(MuonP)s *MeV) &  (PT> %(MuonPT)s* MeV)"\
+        #        return "(TRCHI2DOF < %(MuonTRCHI2)s ) &  (P> %(MuonP)s *MeV) &  (PT> %(MuonPT)s* MeV)"\
         return " (PT> %(MuonPT)s* MeV)"\
                "& (TRGHOSTPROB < %(MuonGHOSTPROB)s)"\
                "& (PIDmu-PIDpi> %(MuonPIDmu)s )"\
@@ -162,21 +148,21 @@ class D2HLepNuBuilder(LineBuilder):
 #               "& (MIPCHI2DV(PRIMARY)> %(MuonMINIPCHI2)s )"
 
     def _NominalKSelection( self ):
-#        return "(TRCHI2DOF < %(KaonTRCHI2)s )&  (P> %(KaonPTight)s *MeV) &  (PT> %(KaonPT)s *MeV)"\
+        #        return "(TRCHI2DOF < %(KaonTRCHI2)s )&  (P> %(KaonPTight)s *MeV) &  (PT> %(KaonPT)s *MeV)"\
         return " (PT> %(KaonPT)s *MeV)"\
                "& (TRGHOSTPROB < %(TRGHOSTPROB)s)"\
                "& (PIDK-PIDpi> %(KaonPIDK)s )& (PIDK-PIDp> %(KaonPIDp)s )& (PIDK-PIDmu> %(KaonPIDmu)s ) "
 #               "& (MIPCHI2DV(PRIMARY)> %(KaonMINIPCHI2)s )"
 
     def _NominalPiSelection( self ):
-#        return "(TRCHI2DOF < %(KaonTRCHI2)s )&  (P> %(KaonP)s *MeV) &  (PT> %(KaonPT)s *MeV)"\
+        #        return "(TRCHI2DOF < %(KaonTRCHI2)s )&  (P> %(KaonP)s *MeV) &  (PT> %(KaonPT)s *MeV)"\
         return " (PT> %(KaonPT)s *MeV)"\
                "& (TRGHOSTPROB < %(TRGHOSTPROB)s)"\
                "& (PIDK-PIDpi< -%(KaonPIDK)s )& (PIDp < -%(KaonPIDp)s )& (PIDmu < -%(KaonPIDmu)s ) "
-#               "& (MIPCHI2DV(PRIMARY)> %(KaonMINIPCHI2)s )"
+    #               "& (MIPCHI2DV(PRIMARY)> %(KaonMINIPCHI2)s )"
 
     def _NominalSlowPiSelection( self ):
-#        return "(TRCHI2DOF < %(KaonTRCHI2)s )&  (P> %(KaonP)s *MeV) &  (PT> %(KaonPT)s *MeV)"\
+        #        return "(TRCHI2DOF < %(KaonTRCHI2)s )&  (P> %(KaonP)s *MeV) &  (PT> %(KaonPT)s *MeV)"\
         return " (PT> %(Slowpion_PT)s *MeV)"\
                "& (TRGHOSTPROB < %(Slowpion_TRGHOSTPROB)s)"\
                "& (PIDe < %(Slowpion_PIDe)s) & (MIPCHI2DV(PRIMARY)< 9.0) "
@@ -218,24 +204,6 @@ class D2HLepNuBuilder(LineBuilder):
         self._muonSel=_muSel
         
         return _muSel
-
-    ######--######
-    def _muonFilterTOS( self ):
-        if self._muonSelTOS is not None:
-            return self._muonSelTOS
-        
-        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
-        from PhysSelPython.Wrappers import Selection
-        from StandardParticles import StdLooseMuons
-        _muTOS = FilterDesktop( Code = self._NominalMuSelection() % self._config )
-        _muSelTOS=Selection("MuL0TOS_for"+self._name,
-                            Algorithm=_muTOS,
-                         RequiredSelections = [StdLooseMuons])
-        _muSelTOS = TOSFilter(_muSelTOS.name()+'TOS',_muSelTOS,{'L0.*Muon.*Decision%TOS':0})
-
-        self._muonSelTOS=_muSelTOS
-        
-        return _muSelTOS
 
     def _pionFilter( self ):
         if self._pionSel is not None:
@@ -285,10 +253,10 @@ class D2HLepNuBuilder(LineBuilder):
         return _kaSel
 
     def _D2PiMuNuLine( self ):
-        return self.DstarMaker("D2pimu", ["[D0 -> pi- mu+]cc"], self._pionFilter(), self._muonFilterTOS())
+        return self.DstarMaker("D2pimu", ["[D0 -> pi- mu+]cc"], self._pionFilter(), self._muonFilter())
 
     def _D2KMuNuLine( self ):
-        return self.DstarMaker("D2Kmu",["[D0 -> K- mu+]cc"], self._kaonFilter(), self._muonFilterTOS())
+        return self.DstarMaker("D2Kmu",["[D0 -> K- mu+]cc"], self._kaonFilter(), self._muonFilter())
 
     def _D2PiENuLine( self ):
         return self.DstarMaker("D2piE", ["[D0 -> pi- e+]cc"], self._pionFilter(), self._electronFilter())
@@ -305,8 +273,8 @@ class D2HLepNuBuilder(LineBuilder):
             DecayDescriptors = _D0Decays,
             CombinationCut = "(AM>%(KLepMassLow)s*MeV) & (AM<%(KLepMassHigh)s*MeV)" % self._config,
             MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s )"\
-            "& (BPVVDCHI2 >%(BFDCHI2HIGH)s)"\
-            " & (ratio > 0.0)"
+            "& (BPVVDCHI2 >%(BFDCHI2HIGH)s)"
+            #" & (ratio > 0.0)"
             % self._config,
             ReFitPVs = True
             )
@@ -338,7 +306,7 @@ class D2HLepNuBuilder(LineBuilder):
                          Algorithm=_KMu,
                          RequiredSelections = [lfilter, hfiler])
 
-#        _D0Sel = tosSelection(_KMuSel,{'Hlt2.*TopoMu2Body.*Decision%TOS':0,'Hlt2.*SingleMuon.*Decision%TOS':0})
+
         DstComb = CombineParticles( #name = "CombDst"+_name,
                 DecayDescriptors = ['[D*(2010)+ -> D0 pi+]cc'],
                 CombinationCut = "(AM - ACHILD(M,1) < %(DELTA_MASS_MAX)s+5 *MeV) & (ADOCACHI2CUT(20,''))" %self._config,
@@ -353,12 +321,8 @@ class D2HLepNuBuilder(LineBuilder):
                 ,DstSel
                 ,_tosFilter)
     
-        hlt2 = ""
-        if self._config["useHLT2"] == True and _name.find('E') < 0:
-            _hlt2 = "%(Hlt2Filter)s" %self._config
-            hlt2 = _hlt2
-        
-        if self._config["useTOS"] == True and _name.find('E') < 0:
+        hlt2 = ""        
+        if self._config["useTOS"] == True: # and _name.find('E') < 0:
             Line = StrippingLine(_name+'Line',
                     prescale = 1.0,
                     FILTER=self.GECs,
@@ -381,4 +345,4 @@ def TOSFilter( name, _input, _specs ) :
     return Selection( name
                       , Algorithm = _tisTosFilter
                       , RequiredSelections = [ _input ]
-                      )       
+                      )        

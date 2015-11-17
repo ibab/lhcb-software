@@ -9,6 +9,9 @@
  - Bugfix in StrippingRD/StrippingBLVLines.py
 
 ! 2015-11-17 - Adam Davis
+ - decreased rate of StrippingD2HMuNu.py
+
+! 2015-11-17 - Adam Davis
  - Added StrippingD2HMuNu.py
 
 ! 2015-11-17 - Mika Vesterinen
