@@ -5,22 +5,22 @@ Performance (prescaling included):
 
 Full.dst
 ########
-StrippingReport                                                INFO Event 500000, Good event 500000
- |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
- |_StrippingGlobal_                                            |  0.1294|       647|       |  48.457|
- |_StrippingSequenceStreamBhadron_                             |  0.1294|       647|       |  48.368|
- |!StrippingBLVLa2KmuLine                                      |  0.0270|       135|  1.007|   7.532|
- |!StrippingBLVLb2KmuLine                                      |  0.0086|        43|  1.000|   0.294|
- |!StrippingBLVXib2KhmuLine                                    |  0.0032|        16|  1.250|   2.189|
- |!StrippingBLVB2KhhLine                                       |  0.0130|        65|  1.046|   0.613|
- |!StrippingBLVLb2DmuLine                                      |  0.0110|        55|  1.291|  10.539|
- |!StrippingBLVLb2DsmuLine                                     |  0.0114|        57|  1.456|  12.617|
- |!StrippingBLVLb2LcpiLine                                     |  0.0070|        35|  1.286|   0.954|
- |!StrippingBLVB2LcmuLine                                      |  0.0230|       115|  1.400|   7.419|
- |!StrippingBLVB2DpiLine                                       |  0.0052|        26|  1.346|   0.056|
- |!StrippingBLVBs2DspiLine                                     |  0.0074|        37|  1.432|   0.051|
- |!StrippingBLVB2LcpLine                                       |  0.0290|       145|  1.697|   0.109|
 
+StrippingReport                                                INFO Event 750000, Good event 750000
+ |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
+ |_StrippingGlobal_                                            |  0.0320|       240|       |  10.818|
+ |!StrippingBLVLa2KmuLine_TIMING                               |  0.0064|        48|  1.000|   0.115|
+ |!StrippingBLVLb2KmuLine_TIMING                               |  0.0045|        34|  1.000|   0.105|
+ |!StrippingBLVXib2KhmuLine_TIMING                             |  0.0013|        10|  1.200|   0.162|
+ |!StrippingBLVB2KhhLine_TIMING                                |  0.0052|        39|  1.205|   0.202|
+ |!StrippingBLVLb2DmuLine_TIMING                               |  0.0016|        12|  1.000|   0.030|
+ |!StrippingBLVLb2DsmuLine_TIMING                              |  0.0011|         8|  1.000|   0.026|
+ |!StrippingBLVLb2LcpiLine_TIMING                              |  0.0011|         8|  1.000|   0.017|
+ |!StrippingBLVB2LcmuLine_TIMING                               |  0.0039|        29|  1.138|   0.022|
+ |!StrippingBLVB2DpiLine_TIMING                                |  0.0012|         9|  1.000|   0.017|
+ |!StrippingBLVBs2DspiLine_TIMING                              |  0.0007|         5|  1.200|   0.016|
+ |!StrippingBLVB2LcpLine_TIMING                                |  0.0019|        14|  1.143|   0.017|
+ 
 
 MC: Lambda -> K mu (MC11a/33112001)
 ###################################
@@ -100,8 +100,8 @@ default_config = {
     "BUILDERTYPE" : "BLVLinesConf",
     "CONFIG"      : { # TrackCuts
                       "MinTrIPChi2"         : 25.0,
-                      "MaxTrChi2Dof"        : 3.0,
-                      "MaxTrGhp"            : 0.3,
+                      "MaxTrChi2Dof"        : 4.0,
+                      "MaxTrGhp"            : 0.4,
                       # CombiCuts
                       "MaxDoca"             : 0.3,
                       # MassCuts 
@@ -515,42 +515,42 @@ class BLVLinesConf(LineBuilder) :
                                              "Variables" : [],
                                              "Location"  : 'ConeIso05Bp',
                                              "DaughterLocations" : {
-                                             "[B+ -> ^K+  pi-  pi-]CC"  : "ConeIso05K",
-                                             "[B+ ->  K+ ^pi-  pi-]CC"  : "ConeIso05pi1",
-                                             "[B+ ->  K+  pi- ^pi-]CC"  : "ConeIso05pi2",
+                                             "[B+ -> ^K+  pi-  pi+]CC"  : "ConeIso05K",
+                                             "[B+ ->  K+ ^pi-  pi+]CC"  : "ConeIso05pi1",
+                                             "[B+ ->  K+  pi- ^pi+]CC"  : "ConeIso05pi2",
                                              }, },
                                            { "Type" : "RelInfoConeVariables",
                                              "ConeAngle" : 1.0,
                                              "Variables" : [],
                                              "Location"  : 'ConeIso10Bp',
                                              "DaughterLocations" : {
-                                             "[B+ -> ^K+  pi-  pi-]CC"  : "ConeIso10K",
-                                             "[B+ ->  K+ ^pi-  pi-]CC"  : "ConeIso10pi1",
-                                             "[B+ ->  K+  pi- ^pi-]CC"  : "ConeIso10pi2",
+                                             "[B+ -> ^K+  pi-  pi+]CC"  : "ConeIso10K",
+                                             "[B+ ->  K+ ^pi-  pi+]CC"  : "ConeIso10pi1",
+                                             "[B+ ->  K+  pi- ^pi+]CC"  : "ConeIso10pi2",
                                              }, },
                                            { "Type" : "RelInfoConeVariables",
                                              "ConeAngle" : 1.5,
                                              "Variables" : [],
                                              "Location"  : 'ConeIso15Bp',
                                              "DaughterLocations" : {
-                                             "[B+ -> ^K+  pi-  pi-]CC"  : "ConeIso15K",
-                                             "[B+ ->  K+ ^pi-  pi-]CC"  : "ConeIso15pi1",
-                                             "[B+ ->  K+  pi- ^pi-]CC"  : "ConeIso15pi2",
+                                             "[B+ -> ^K+  pi-  pi+]CC"  : "ConeIso15K",
+                                             "[B+ ->  K+ ^pi-  pi+]CC"  : "ConeIso15pi1",
+                                             "[B+ ->  K+  pi- ^pi+]CC"  : "ConeIso15pi2",
                                              }, },
                                            { "Type": "RelInfoTrackIsolationBDT",
                                              "Variables" : 0,
                                              "DaughterLocations" : {
-                                             "[B+ -> ^K+  pi-  pi-]CC"  : "TrackIsoBDTK",
-                                             "[B+ ->  K+ ^pi-  pi-]CC"  : "TrackIsoBDTpi1",
-                                             "[B+ ->  K+  pi- ^pi-]CC"  : "TrackIsoBDTpi2",
+                                             "[B+ -> ^K+  pi-  pi+]CC"  : "TrackIsoBDTK",
+                                             "[B+ ->  K+ ^pi-  pi+]CC"  : "TrackIsoBDTpi1",
+                                             "[B+ ->  K+  pi- ^pi+]CC"  : "TrackIsoBDTpi2",
                                              }, },
                                            { "Type" : "RelInfoBs2MuMuTrackIsolations",
                                              "Variables"  : [],
                                              "IsoTwoBody" : True,
                                              "DaughterLocations" : {
-                                             "[B+ -> ^K+  pi-  pi-]CC"  : "BsMuMuTrackIsoK",
-                                             "[B+ ->  K+ ^pi-  pi-]CC"  : "BsMuMuTrackIsopi1",
-                                             "[B+ ->  K+  pi- ^pi-]CC"  : "BsMuMuTrackIsopi2",
+                                             "[B+ -> ^K+  pi-  pi+]CC"  : "BsMuMuTrackIsoK",
+                                             "[B+ ->  K+ ^pi-  pi+]CC"  : "BsMuMuTrackIsopi1",
+                                             "[B+ ->  K+  pi- ^pi+]CC"  : "BsMuMuTrackIsopi2",
                                              }, },
                                            ] + config["CommonRelInfoTools"] # end of RelatedInfoTools 
                                          ) # closes Strippingline 

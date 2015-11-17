@@ -6,13 +6,14 @@ Performance (with prescaling);
 Full.dst:
 #########
 
-StrippingReport                                                INFO Event 500000, Good event 500000
+StrippingReport                                                INFO Event 1000000, Good event 1000000
  |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
- |!StrippingLc23MuLc23muLine                                   |  0.0092|        46|  1.065|   0.119|
- |!StrippingLc23MuLc2mueeLine                                  |  0.0038|        19|  1.000|   0.135|
- |!StrippingLc23MuLc2pmumuLine                                 |  0.0236|       118|  1.051|   0.266|
- |!StrippingLc23MuLc2peeLine                                   |  0.0112|        56|  1.054|   1.445|
- |!StrippingLc23MuLc2pKpiLine                                  |  0.0044|        22|  1.091|   0.034|
+ |_StrippingGlobal_                                            |  0.0242|       242|       |   9.439|
+ |!StrippingLc23MuLc23muLine_TIMING                            |  0.0056|        56|  1.071|   0.056|
+ |!StrippingLc23MuLc2mueeLine_TIMING                           |  0.0041|        41|  1.073|   0.067|
+ |!StrippingLc23MuLc2pmumuLine_TIMING                          |  0.0036|        36|  1.028|   0.102|
+ |!StrippingLc23MuLc2peeLine_TIMING                            |  0.0075|        75|  1.027|   0.109|
+ |!StrippingLc23MuLc2pKpiLine_TIMING                           |  0.0019|        19|  1.158|   0.025|
               
 MC: Lc -> 3mu (25113002)
 ########################
@@ -72,8 +73,8 @@ default_config = {
     # TrackCuts
     "MinTrPT"             : 300, # (MeV)
     "MinTrIPChi2"         : 9,
-    "MaxTrChi2Dof"        : 3,
-    "MaxTrGhp"            : 0.3,
+    "MaxTrChi2Dof"        : 4.0,
+    "MaxTrGhp"            : 0.4,
     # CombinationCuts
     "MaxDoca"             : 0.3, # (mm)
     "mDiffLcLoose"        : 200, # (MeV) 

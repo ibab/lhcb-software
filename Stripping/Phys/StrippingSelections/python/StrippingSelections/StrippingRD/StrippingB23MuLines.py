@@ -9,8 +9,8 @@ StrippingReport                                                INFO Event 100000
  |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
  |_StrippingGlobal_                                            |  0.0088|        88|       |  10.028|
  |!StrippingB23MuB23MuLine_TIMING                              |  0.0001|         1|  1.000|   0.068|
- |!StrippingB23MuB2MueeLine_TIMING                             |  0.0004|         4|  1.000|   0.079|
- |!StrippingB23MuB23PiLine_TIMING                              |  0.0085|        85|  1.094|   0.146|
+ |!StrippingB23MuB2MueeLine_TIMING                             |  0.0005|         5|  1.000|   0.079|
+ |!StrippingB23MuB23PiLine_TIMING                              |  0.0103|       103|  1.097|   0.151|
        
 MC: B23Pi (12103002)
 ####################
@@ -63,8 +63,8 @@ default_config = {
     "CONFIG"      : {
     # TrackCuts
     "MinTrIPChi2"          : 25.0,
-    "MaxTrChi2Dof"         : 3.0,
-    "MaxTrGhp"             : 0.3,
+    "MaxTrChi2Dof"         : 4.0,
+    "MaxTrGhp"             : 0.4,
     # CombiCuts
     "MaxDoca"              : 0.3, # (mm)
     "mDiffBuLoose"         : 500, # (MeV)

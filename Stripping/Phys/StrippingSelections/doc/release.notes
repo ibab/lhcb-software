@@ -3,8 +3,14 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2015-11-17 - Oliver Gruenberg
+ - Changed Cuts on TrChi2DOF and PGhost from 3.0 and 0.3 to 4.0 and 0.4 in StrippingRD/Stripping{B23Mu,B24p,BLV,D23Mu,Lc23Mu}Lines.py
+ - Bugfix in StrippingRD/StrippingBLVLines.py
+
 ! 2015-11-17 - Adam Davis
  - Added StrippingD2HMuNu.py
+
 ! 2015-11-17 - Mika Vesterinen
  - Update to StrippingTrackEffD0ToKPi
 

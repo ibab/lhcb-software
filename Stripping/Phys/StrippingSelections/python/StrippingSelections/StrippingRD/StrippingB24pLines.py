@@ -7,10 +7,10 @@ Full.dst
 ########
 StrippingReport                                                INFO Event 1000000, Good event 1000000
  |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
- |_StrippingGlobal_                                            |  0.0055|        55|       |   8.185|
- |!StrippingB24pB24pLine_TIMING                                |  0.0001|         1|  1.000|   0.102|
- |!StrippingB24pB2JpsiKpiLine_TIMING                           |  0.0041|        41|  2.585|   0.249|
- |!StrippingB24pB2PhiKhLine_TIMING                             |  0.0016|        16|  2.188|   0.169|
+ |_StrippingGlobal_                                            |  0.0067|        67|       |   9.028|
+ |!StrippingB24pB24pLine_TIMING                                |  0.0002|         2|  1.000|   0.115|
+ |!StrippingB24pB2JpsiKpiLine_TIMING                           |  0.0050|        50|  2.600|   0.275|
+ |!StrippingB24pB2PhiKhLine_TIMING                             |  0.0018|        18|  2.278|   0.183|
 
 MC: B2JpsiKpi (11134010)
 ########################
@@ -71,8 +71,8 @@ default_config = {
     "CONFIG"      : {
     # TrackCuts
     "MinTrIPChi2"        : 25.0,
-    "MaxTrChi2Dof"       : 3.0,
-    "MaxTrGhp"           : 0.3,
+    "MaxTrChi2Dof"       : 4.0,
+    "MaxTrGhp"           : 0.4,
     # CommonCombiCuts
     "MaxDoca"            : 0.3, # (mm)
     "mDiffb"             : 500, # (MeV)

@@ -5,11 +5,12 @@ Performance
 
 Full.dst:
 ######### 
-StrippingReport                                                INFO Event 500000, Good event 500000
+StrippingReport                                                INFO Event 1000000, Good event 1000000
  |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
- |!StrippingD23MuD23MuLine                                     |  0.0014|         7|  1.000|   0.112|
- |!StrippingD23MuD2MueeLine                                    |  0.0030|        15|  1.000|   0.131|
- |!StrippingD23MuD23PiLine                                     |  0.0130|        65|  1.354|   0.033|
+ |_StrippingGlobal_                                            |  0.0142|       142|       |   8.622|
+ |!StrippingD23MuD23MuLine_TIMING                              |  0.0004|         4|  1.000|   0.065|
+ |!StrippingD23MuD2MueeLine_TIMING                             |  0.0029|        29|  1.103|   0.076|
+ |!StrippingD23MuD23PiLine_TIMING                              |  0.0058|        58|  1.328|   0.024|
 
      
 MC: D+ -> 3pi (21163012)
@@ -57,8 +58,8 @@ default_config = {
     "CONFIG"      : {
     # TrackCuts
     "MinTrIPChi2"          : 25.0,
-    "MaxTrChi2Dof"         : 3.0,
-    "MaxTrGhp"             : 0.3,
+    "MaxTrChi2Dof"         : 4.0,
+    "MaxTrGhp"             : 0.4,
     # CombiCuts
     "MaxDoca"              : 0.3, # (mm)
     "mDiffDLoose"          : 150, # (MeV)
