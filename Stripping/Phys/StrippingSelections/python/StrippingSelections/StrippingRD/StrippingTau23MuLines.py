@@ -96,15 +96,16 @@ class Tau23MuLinesConf(LineBuilder) :
                                      algos = [ self.selTau23Mu ],
                                      RelatedInfoTools = [{ 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.,
                                                                  'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPT', 'CONEPTASYM'],
-                                                                 'RecursionLevel' : 1,
-                                                                 'Location':'ConeIsoInfo' },
+                                                                 'Location':'ConeIsoInfo',
+							         'DaughterLocations':{'[tau+ -> ^mu+ mu+ mu-]CC' : 'MuonConeVarInfo1', '[tau+ -> mu+ ^mu+ mu-]CC' : 'MuonConeVarInfo2', '[tau+ -> mu+ mu+ ^mu-]CC' : 'MuonConeVarInfo3'} 
+							       },
                                                                {'Type': 'RelInfoVertexIsolation',
                                                                 'Location':'VtxIsoInfo' },
                                                                { 'Type': 'RelInfoTrackIsolationBDT',
-                                                                 'RecursionLevel' : 2,
                                                                  'Variables' : 0,
-                                                                 'Locations': {'Phys/StdAllLooseMuons' : ["MuonTrackIsoBDTInfo1","MuonTrackIsoBDTInfo2","MuonTrackIsoBDTInfo3"]},
-                                                               }
+                                                                 'Location':'TrackIsoInfo',
+							         'DaughterLocations':{'[tau+ -> ^mu+ mu+ mu-]CC' : 'MuonTrackIsoBDTInfo1', '[tau+ -> mu+ ^mu+ mu-]CC' : 'MuonTrackIsoBDTInfo2', '[tau+ -> mu+ mu+ ^mu-]CC' : 'MuonTrackIsoBDTInfo3'} 
+							       }
                                                                ]
                                      )
         
@@ -130,15 +131,16 @@ class Tau23MuLinesConf(LineBuilder) :
                                       algos = [ self.selDs2PhiPi ],
                                       RelatedInfoTools = [{ 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.,
                                                                  'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPT', 'CONEPTASYM'],
-                                                                 'RecursionLevel' : 1,
-                                                                 'Location':'ConeIsoInfo' },
+                                                                 'Location':'ConeIsoInfo',
+							         'DaughterLocations':{'[D_s+  -> ^pi+  mu+ mu-]CC' : 'PionConeVarInfo', '[D_s+  -> pi+  ^mu+ mu-]CC' : 'MuonConeVarInfo1', '[D_s+  -> pi+  mu+ ^mu-]CC' : 'MuonConeVarInfo2'} 
+                                                               },
                                                                {'Type': 'RelInfoVertexIsolation',
                                                                 'Location':'VtxIsoInfo' },
                                                                { 'Type': 'RelInfoTrackIsolationBDT',
-                                                                 'RecursionLevel' : 2,
                                                                  'Variables' : 0,
-                                                                 'Locations': {'Phys/StdAllLooseMuons' : ["MuonTrackIsoBDTInfo1","MuonTrackIsoBDTInfo2"],
-                                                                               'Phys/StdAllLoosePions' : ["PionTrackIsoBDTInfo"]},
+                                                                 'Location':'TrackIsoInfo',
+							         'DaughterLocations':{'[D_s+  -> ^pi+  mu+ mu-]CC' : 'PionTrackIsoBDTInfo', '[D_s+  -> pi+  ^mu+ mu-]CC' : 'MuonTrackIsoBDTInfo1', '[D_s+  -> pi+  mu+ ^mu-]CC' : 'MuonTrackIsoBDT_mu_2'} 
+
                                                                 }
                                                                ]
                                       )
@@ -159,15 +161,16 @@ class Tau23MuLinesConf(LineBuilder) :
                                            algos = [ self.selTau2PMuMu ] ,
                                            RelatedInfoTools = [{ 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.,
                                                                  'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPT', 'CONEPTASYM'],
-                                                                 'RecursionLevel' : 1,
-                                                                 'Location':'ConeIsoInfo' },
-                                                               {'Type': 'RelInfoVertexIsolation',
+                                                                 'Location':'ConeIsoInfo',
+							         'DaughterLocations':{"[[ tau+ -> ^p+ mu+ mu- ]CC, [ tau+ -> ^p~- mu+ mu+ ]CC, [ Lambda_c+ -> ^p+ mu+ mu- ]CC, [ Lambda_c+ -> ^p~- mu+ mu+ ]CC]" : 'ProtonConeVarInfo', "[[ tau+ -> p+ ^mu+ mu- ]CC, [ tau+ -> p~- ^mu+ mu+ ]CC, [ Lambda_c+ -> p+ ^mu+ mu- ]CC, [ Lambda_c+ -> p~- ^mu+ mu+ ]CC]" : 'MuonConeVarInfo1', "[[ tau+ -> p+ mu+ ^mu- ]CC, [ tau+ -> p~- mu+ ^mu+ ]CC, [ Lambda_c+ -> p+ mu+ ^mu- ]CC, [ Lambda_c+ -> p~- mu+ ^mu+ ]CC]" : 'MuonConeVarInfo2'} 
+                                                               },
+							         
+							       {'Type': 'RelInfoVertexIsolation',
                                                                 'Location':'VtxIsoInfo' },
                                                                { 'Type': 'RelInfoTrackIsolationBDT',
-                                                                 'RecursionLevel' : 2,
                                                                  'Variables' : 0,
-                                                                 'Locations': {'Phys/StdAllLooseMuons' : ["MuonTrackIsoBDTInfo1","MuonTrackIsoBDTInfo2"],
-                                                                               'Phys/StdAllLooseProtons' : ["ProtonTrackIsoBDTInfo"]},
+                                                                 'Location':'TrackIsoInfo',
+							         'DaughterLocations':{"[[ tau+ -> ^p+ mu+ mu- ]CC, [ tau+ -> ^p~- mu+ mu+ ]CC, [ Lambda_c+ -> ^p+ mu+ mu- ]CC, [ Lambda_c+ -> ^p~- mu+ mu+ ]CC]" : 'ProtonTrackIsoBDTInfo', "[[ tau+ -> p+ ^mu+ mu- ]CC, [ tau+ -> p~- ^mu+ mu+ ]CC, [ Lambda_c+ -> p+ ^mu+ mu- ]CC, [ Lambda_c+ -> p~- ^mu+ mu+ ]CC]" : 'MuonTrackIsoBDTInfo1', "[[ tau+ -> p+ mu+ ^mu- ]CC, [ tau+ -> p~- mu+ ^mu+ ]CC, [ Lambda_c+ -> p+ mu+ ^mu- ]CC, [ Lambda_c+ -> p~- mu+ ^mu+ ]CC]" : 'MuonTrackIsoBDTInfo2'} 
                                                                 }
                                                                ]
                                            )

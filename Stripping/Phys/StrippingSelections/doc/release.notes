@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-17 - Jon Harrison
+ - Updated RelatedInfo for StrippingTau23Mu
+
 ! 2015-11-17 - Andrea Contu
  - Commented relinfo for StrippingBu2LLK
 
