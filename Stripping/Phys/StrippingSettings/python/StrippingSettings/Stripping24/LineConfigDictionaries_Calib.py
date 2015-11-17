@@ -876,21 +876,16 @@ TrackEffD0ToKPi = {
         'BUILDERTYPE' : 'TrackEffD0ToKPiAllLinesConf',
         'STREAMS':["Calibration"],
         'CONFIG'      : {
-            "VeloLineForTiming":False,
-            "VeloFitter":"SimplifiedGeometry",
-            "HLT2" : None, #"HLT_PASS_RE('Hlt2.*Charm.*Decision')",
-            "TTSpecs" : {}, #{'Hlt2.*Charm.*Decision%TIS':0},
-            "Tag_MIN_PT":1500.,
-            "Tag_MIN_IP":0.1,
-            "Tag_MAX_GHPROB":0.35,
-            "VeloMINIP":0.05,#mm
-            "Probe_MIN_IP":0.05,
-            "Probe_MIN_ETA":1.9,
-            "Probe_MAX_ETA":4.9,
-            "Kaon_MIN_PIDK":2,
+            "Monitor":False,
+            "HLT1" :"HLT_PASS_RE('Hlt1TrackMVADecision')",
+            "HLT2" :"HLT_PASS_RE('Hlt2TrackEff_D0.*Decision')",
+            "TTSpecs" :{'Hlt1TrackMVADecision%TOS':0,'Hlt2TrackEff_D0.*Decision%TOS':0},
+            "Tag_MIN_PT":1000.,
+            "VeloMINIPCHI2":4.0,
+            "Kaon_MIN_PIDK":0,
             "Pion_MAX_PIDK":20,
-            "Dst_M_MAX":2030,
-            "Dst_DTFCHI2_MAX":3
+            "Dst_M_MAX":2100,
+            "Dst_DTFCHI2_MAX":10
             }
     }
 
