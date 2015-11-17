@@ -5,6 +5,10 @@
 !               etc for RICH Upgrade
 !-----------------------------------------------------------------------------
 
+! 2015-11-17 - Sajan Easo
+ - Introduced creation of the hit with new RichSmartID which has now a  flag which indicates if the hit is from a largePMT
+   Using this RichSmartid needs the latest version of Kernel/LHCbKernel as of this date.
+
 ! 2015-11-15 - Marco Clemencic
  - Fixed compilation with CLHEP 2.
 

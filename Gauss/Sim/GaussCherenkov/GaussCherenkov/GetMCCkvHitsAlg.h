@@ -119,7 +119,7 @@ private:
   void printStat( std::string name, RMap & a );
 
   //create  smartid 
-  LHCb::RichSmartID assembleMCPmtRichSmartID(const CkvG4Hit * aHit);
+  LHCb::RichSmartID assembleMCPmtRichSmartID(const CkvG4Hit * aHit, bool isAGrandPmtHitFlag);
   
   int m_NumPmtInAModule;
   
