@@ -270,7 +270,7 @@ class Bu2LLKConf(LineBuilder) :
                                        prescale = config['Bu2eeKLinePrescale'],
                                        postscale = 1,
                                        selection = SelB2eeX,
-                                       RelatedInfoTools = config['RelatedInfoTools'],
+                                       #RelatedInfoTools = config['RelatedInfoTools'],
                                        FILTER = SPDFilter, 
                                        RequiredRawEvents = [],
                                        MDSTFlag = True )
@@ -279,7 +279,7 @@ class Bu2LLKConf(LineBuilder) :
                                                  prescale = config['Bu2eeKLinePrescale'],
                                                  postscale = 1,
                                                  selection = SelB2eeXFromTracks,
-                                                 RelatedInfoTools = config['RelatedInfoTools'],
+                                                 #RelatedInfoTools = config['RelatedInfoTools'],
                                                  FILTER = SPDFilter, 
                                                  RequiredRawEvents = [],
                                                  MDSTFlag = True )
@@ -288,7 +288,7 @@ class Bu2LLKConf(LineBuilder) :
                                        prescale = config['Bu2mmKLinePrescale'],
                                        postscale = 1,
                                        selection = SelB2mmX,
-                                       RelatedInfoTools = config['RelatedInfoTools'],
+                                       #RelatedInfoTools = config['RelatedInfoTools'],
                                        FILTER = SPDFilter, 
                                        RequiredRawEvents = [],
                                        MDSTFlag = True )
@@ -297,7 +297,7 @@ class Bu2LLKConf(LineBuilder) :
                                         prescale       = config['Bu2meKLinePrescale'],
                                         postscale      = 1,
                                         selection      = SelB2meX,
-                                        RelatedInfoTools = config['RelatedInfoTools'],
+                                        #RelatedInfoTools = config['RelatedInfoTools'],
                                         FILTER = SPDFilter, 
                                         RequiredRawEvents = [],
                                         MDSTFlag = True )
@@ -307,7 +307,7 @@ class Bu2LLKConf(LineBuilder) :
                                         prescale       = config['Bu2meKSSLinePrescale'],
                                         postscale      = 1,
                                         selection      = SelB2meX_SS,
-                                        RelatedInfoTools = config['RelatedInfoTools'],
+                                        #RelatedInfoTools = config['RelatedInfoTools'],
                                         FILTER = SPDFilter, 
                                         RequiredRawEvents = [],
                                         MDSTFlag = True )
@@ -318,7 +318,7 @@ class Bu2LLKConf(LineBuilder) :
                                           postscale = 1,
                                           #selection = SelB2eeXFromTracks,
                                           selection = SelB2gammaX, 
-                                          RelatedInfoTools = config['RelatedInfoTools'],
+                                          #RelatedInfoTools = config['RelatedInfoTools'],
                                           FILTER = SPDFilter, 
                                           RequiredRawEvents = [],
                                           MDSTFlag = True )
