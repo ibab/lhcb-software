@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-17 - Mika Vesterinen
+ - Update to StrippingTrackEffD0ToKPi
+
 ! 2015-11-17 - Ricardo Vazquez Gomez
  - Modify StrippingTaggedJets to use LoKi::BDTTag instead of LoKi__BDTTag 
 

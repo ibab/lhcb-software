@@ -4,20 +4,15 @@ __version__ = '$Revision: 0.0 $'
 
 from Gaudi.Configuration import *
 from Configurables import FilterDesktop, CombineParticles
-from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
+from PhysSelPython.Wrappers import Selection 
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdLooseKaons, StdLoosePions, StdLooseProtons,StdAllLoosePions,StdAllNoPIDsPions
-from Configurables import ConjugateNeutralPID, FitDecayTrees
+from StandardParticles import StdLooseKaons, StdLoosePions, StdAllLoosePions,StdAllNoPIDsPions
 from SelPy.utils import ( UniquelyNamedObject,
                           ClonableObject,
                           SelectionBase )
-from Configurables import (DecodeVeloRawBuffer, FastVeloTracking, TrackPrepareVelo,
-                           NoPIDsParticleMaker, DataOnDemandSvc, ChargedProtoParticleMaker,
-                           PrTrackAssociator, DelegatingTrackSelector, TrackContainerCopy, TrackAssociator,
-                          TrackStateInitAlg, TrackStateInitTool)
-from TrackFitter.ConfiguredFitters import (ConfiguredEventFitter,
-                                           ConfiguredForwardStraightLineEventFitter)
+from Configurables import (NoPIDsParticleMaker, DataOnDemandSvc, ChargedProtoParticleMaker,
+                           DelegatingTrackSelector)
 
 __all__ = ('TrackEffD0ToKPiAllLinesConf',
            'TOSFilter',
@@ -29,42 +24,28 @@ default_config = {
     'BUILDERTYPE' : 'TrackEffD0ToKPiAllLinesConf',
     'STREAMS':["Calibration"],
     'CONFIG'      : {
-        "Monitor":True,
-        "VeloLineForTiming":False,
-        "VeloFitter":"SimplifiedGeometry",
+        "Monitor":False,
+        "HLT1" :"HLT_PASS_RE('Hlt1TrackMVADecision')",
         "HLT2" :"HLT_PASS_RE('Hlt2TrackEff_D0.*Decision')",
         "TTSpecs" :{'Hlt1TrackMVADecision%TOS':0,'Hlt2TrackEff_D0.*Decision%TOS':0},
         "Tag_MIN_PT":1000.,
-        "Tag_MIN_IP":0.02,
-        "Tag_MAX_GHPROB":0.35,
         "VeloMINIPCHI2":4.0,
-        "Probe_MIN_IP":0.02,
-        "Probe_MIN_ETA":1.9,
-        "Probe_MAX_ETA":4.9,
-        "Kaon_MIN_PIDK":7,
+        "Kaon_MIN_PIDK":0,
         "Pion_MAX_PIDK":20,
         "Dst_M_MAX":2100,
         "Dst_DTFCHI2_MAX":10
         }
     }
 
-
-
 class TrackEffD0ToKPiAllLinesConf(LineBuilder) :
     
     __configuration_keys__ = (
         "Monitor",
-        "VeloLineForTiming",
-        "VeloFitter",
+        "HLT1",
         "HLT2",
         "TTSpecs",
         "Tag_MIN_PT",
-        "Tag_MIN_IP",
-        "Tag_MAX_GHPROB",
         "VeloMINIPCHI2",
-        "Probe_MIN_IP",
-        "Probe_MIN_ETA",
-        "Probe_MAX_ETA",
         "Kaon_MIN_PIDK",
         "Pion_MAX_PIDK",
         "Dst_M_MAX",
@@ -78,10 +59,12 @@ class TrackEffD0ToKPiAllLinesConf(LineBuilder) :
         LineBuilder.__init__(self, name, config)
         self.__confdict__=config
         
-        ####################### BASIC FINAL STATE PARTICLE SELECTIONS ##########################
+        
+        self.TagCommonCuts = "(PT > %(Tag_MIN_PT)s*MeV)" %self.__confdict__
 
-        self.PionCuts = "(PIDK < %(Pion_MAX_PIDK)s) & (MIPDV(PRIMARY) > %(Tag_MIN_IP)s*mm) & (PT > %(Tag_MIN_PT)s*MeV) & (TRGHOSTPROB < %(Tag_MAX_GHPROB)s)" %self.__confdict__
-        self.KaonCuts = "(PIDK > %(Kaon_MIN_PIDK)s) & (MIPDV(PRIMARY) > %(Tag_MIN_IP)s*mm) & (PT > %(Tag_MIN_PT)s*MeV) & (TRGHOSTPROB < %(Tag_MAX_GHPROB)s)" %self.__confdict__
+        self.PionCuts = self.TagCommonCuts + "&(PIDK < %(Pion_MAX_PIDK)s)" %self.__confdict__
+        
+        self.KaonCuts = self.TagCommonCuts + "&(PIDK > %(Kaon_MIN_PIDK)s)" %self.__confdict__
         
         self.SelLongPions = Selection("SelLongPionsFor"+name,
                                       Algorithm = FilterDesktop(name="LongPionFilterFor"+name,
@@ -93,24 +76,20 @@ class TrackEffD0ToKPiAllLinesConf(LineBuilder) :
                                                                 Code=self.KaonCuts),
                                       RequiredSelections = [StdLooseKaons])
 
-        ###### the velo tracking
+        self.VeloTrackInputLocaton = 'Rec/Track/FittedHLT1VeloTracks'
         self.VeloProtoOutputLocation = 'Rec/ProtoP/VeloProtosFor%s'%self.name()
-        self.VeloTrackOutputLocation="Rec/Track/MyVeloFor%s"%self.name()
-        self.FittedVeloTrackOutputLocation = "Rec/Track/PreparedVeloFor%s"%self.name()
         
         self.VeloTracks = self.MakeVeloProtos([]) 
         self.VeloPions = self.MakeVeloParticles("VeloPions","pion",self.VeloTracks)
         self.VeloKaons = self.MakeVeloParticles("VeloKaons","kaon",self.VeloTracks)
         
-        ##################### MAKE THE LINES #############
         
-        self.MissingPion2BodyLine = self.MakeLine(name+"MissingPion2Body",
+        self.MissingPion2BodyLine = self.MakeLine(name+"_PionProbe",
                                                   ['[D0 -> K- pi+]cc','[D~0 -> K+ pi+]cc'], 
                                                   ["[D*(2010)+ -> D0 pi+]cc"],
                                                   [self.SelLongKaons,self.VeloPions])
-                                                  #[self.SelLongKaons,self.SelLongPions]) #VeloPions])
-        
-        self.MissingKaon2BodyLine = self.MakeLine(name+"MissingKaon2Body",
+
+        self.MissingKaon2BodyLine = self.MakeLine(name+"_KaonProbe",
                                                   ['[D0 -> K+ pi+]cc','[D~0 -> K+ pi-]cc'], 
                                                   ["[D*(2010)+ -> D0 pi+]cc"],
                                                   [self.SelLongPions,self.VeloKaons])
@@ -127,12 +106,9 @@ class TrackEffD0ToKPiAllLinesConf(LineBuilder) :
         D0CombinationCut = "(AM > 0.1*GeV) & (AM < 3.0*GeV)"
         D0CombinationCut += " & (AMAXDOCA('') < 0.05 * mm)"
         D0CombinationCut += " & (ACHILD(MIPDV(PRIMARY),1)+ACHILD(MIPDV(PRIMARY),2) > 0.2*mm)" 
-        D0MotherCut ="(VFASPF(VZ) > 3*mm) & (VFASPF(VCHI2/VDOF) < 3.5)" #& (abs(DTF_FUN(M,True)-1865) < 200*MeV) & (DTF_CHI2NDOF(True,'D0') < 3.0)"
-        SlowpionCuts = "(MIPCHI2DV(PRIMARY) < 9) & (PIDe < 5)" # & (PT > 200*MeV)"
-        DstMotherCut = "(PT > 1*MeV)" #(DTF_FUN( M ,True, 'D0') > 2000*MeV) & (DTF_FUN( M ,True, 'D0') <%(Dst_M_MAX)s*MeV) & (DTF_CHI2NDOF(True,'D0') < %(Dst_DTFCHI2_MAX)s)" %self.__confdict__
-        #DstMotherCut = "(DTF_FUN( M ,True, 'D0') > 2000*MeV) & (DTF_FUN( M ,True, 'D0') <%(Dst_M_MAX)s*MeV) & (DTF_CHI2NDOF(True,'D0') < %(Dst_DTFCHI2_MAX)s)" %self.__confdict__
-
-
+        D0MotherCut  = "(VFASPF(VZ) > 2*mm) & (VFASPF(VCHI2/VDOF) < 4.0)"
+        SlowpionCuts = "(MIPCHI2DV(PRIMARY) < 9)" 
+        DstMotherCut = "(PT > 1*MeV)" 
 
         CombD0 = CombineParticles(name="CombD0for"+name,
                                   DecayDescriptors = D0DecayDescriptor,
@@ -158,22 +134,22 @@ class TrackEffD0ToKPiAllLinesConf(LineBuilder) :
                                 self.__confdict__["TTSpecs"])
         
         MassFilter =FilterDesktop(name="MassFilter"+name, 
-                                  Code="(DTF_CHI2NDOF(True,'D0') < 3) & (DTF_FUN( M ,True,'D0') < 2080.)")
+                                  Code="(DTF_CHI2NDOF(True,'D0') < %(Dst_DTFCHI2_MAX)s) & (DTF_FUN( M ,True,'D0') < %(Dst_M_MAX)s)" %self.__confdict__)
      
         MassFilterSel = Selection("MassFilterSel"+name,
                                   Algorithm = MassFilter,
                                   RequiredSelections = [SelDstarTOS])
-        
-        MassFilter.Preambulo    = [
-            ## define historam type (shortcut)                                                                                                                                        
-            "Histo  = Gaudi.Histo1DDef"  ,
-            ## monitor LL-case                                                                                                                                                        
-            "mass     = monitor ( DTF_FUN( M ,True,'D0') ,             Histo ( 'Title' , 2000. , 2100. , 100 ) , 'HistoNameInMemory'    ) "
-            ]
-        MassFilter.Monitor      = True  ,
-        MassFilter.HistoProduce = True  ,
-        MassFilter.PostMonitor  = """ process ( mass ) >> EMPTY """                                                                                                        
-        LineDstar = StrippingLine(name+'_PionProbe', 
+
+        if self.__confdict__["Monitor"]:
+            MassFilter.Preambulo    = [
+                "Histo  = Gaudi.Histo1DDef"  ,
+                "mass     = monitor ( DTF_FUN( M ,True,'D0') ,             Histo ( 'Title' , 2000. , 2100. , 100 ) , 'HistoNameInMemory'    ) "
+                ]
+            MassFilter.Monitor      = True  ,
+            MassFilter.HistoProduce = True  ,
+            MassFilter.PostMonitor  = """ process ( mass ) >> EMPTY """                                                                                                        
+        LineDstar = StrippingLine(name, 
+                                  HLT1 = self.__confdict__["HLT1"],
                                   HLT2 = self.__confdict__["HLT2"],
                                   selection = MassFilterSel)
         
@@ -183,8 +159,7 @@ class TrackEffD0ToKPiAllLinesConf(LineBuilder) :
                     
         #### making the proto particles
         MakeVeloProtos = ChargedProtoParticleMaker('For%sVeloProtoMaker'%self.name())
-        MakeVeloProtos.Inputs = ['Rec/Track/FittedHLT1VeloTracks']
-        #MakeVeloProtos.Inputs=[self.FittedVeloTrackOutputLocation]
+        MakeVeloProtos.Inputs = [self.VeloTrackInputLocaton] 
         MakeVeloProtos.Output = self.VeloProtoOutputLocation
         MakeVeloProtos.addTool( DelegatingTrackSelector, name="TrackSelector" )
         MakeVeloProtos.TrackSelector.TrackTypes = [ "Velo" ]
