@@ -31,6 +31,8 @@ use   DecayTreeTupleANNPID      v*    Phys
 use   LoKiPhys                  v*    Phys
 use   HepMC                     v*    LCG_Interfaces
 
+use   TeslaTools                v*    Phys
+
 #============================================================================
 # Python
 #============================================================================

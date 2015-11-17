@@ -5,7 +5,7 @@
 #include "Kernel/ParticleProperty.h"
 #include "Kernel/IParticlePropertySvc.h"
 #include <cstdlib>
-
+#include "GaudiKernel/ToolFactory.h"
 //-----------------------------------------------------------------------------
 // Implementation file for class : TupleToolTwoParticleMatching
 //-----------------------------------------------------------------------------
@@ -34,11 +34,13 @@ TupleToolTwoParticleMatching::TupleToolTwoParticleMatching( const std::string& t
   declareProperty( "ToolList", m_toolNames = toolNames_default );
   declareProperty( "Prefix", m_headPrefix = "Matched_" );
   declareProperty( "Suffix", m_headSuffix = "");
+  declareProperty( "MatcherTool", m_teslaMatcherName = "TeslaMatcher:PUBLIC" );
   declareInterface<IParticleTupleTool>(this);
   
 // PROPERTY INCLUDED TO PRESERVE BACKWARD COMPATIBILITY  
   declareProperty( "MatchWith",  m_matching_location = "OBSOLETE" );
   declareProperty( "TupleTools", m_toolNames);
+
 }
 
 //=============================================================================
@@ -82,6 +84,8 @@ StatusCode TupleToolTwoParticleMatching::initialize()
       m_parsed_locations [ abs(property->pdgID().pid()) ] = matchLocation->second;
   }
 
+  m_matcher = tool<ITeslaMatcher>(m_teslaMatcherName, this);
+
   return sc;
 }
 
@@ -89,7 +93,7 @@ StatusCode TupleToolTwoParticleMatching::initialize()
 
 StatusCode TupleToolTwoParticleMatching::fill( const LHCb::Particle*
                                                , const LHCb::Particle* P
-                                               , const std::string&  head
+                                               , const std::string& head
                                                , Tuples::Tuple& tuple )
 {
   StatusCode sc = StatusCode::SUCCESS;
@@ -107,46 +111,29 @@ StatusCode TupleToolTwoParticleMatching::fill( const LHCb::Particle*
     const LHCb::Particle* best_particle = P;
     const std::string matching_location ( m_parsed_locations [ apid ] );
 
-    double best_overlap_original = 0;
-    double best_overlap_loaded = 0;
-    double m_counter = 0;
-    if (exist<LHCb::Particles>(matching_location))
+    double o1(-9999), o2(-9999), counter(-9999);
+    
+    sc = sc && m_matcher->findBestMatch (P, best_particle, matching_location);
+    if (sc && best_particle)
     {
-      LHCb::Particle::Range candidates_for_matching = get<LHCb::Particle::Range>(matching_location);
-      for(LHCb::Particle::Range::const_iterator iCand=candidates_for_matching.begin(); iCand!= candidates_for_matching.end(); ++iCand){
-//        if ((P->isBasicParticle()==(*iCand)->isBasicParticle())&&(P->charge()==(*iCand)->charge())){
-//        if ((*iCand)->particleID().pid() == pid ){
-          m_counter +=1;
-          std::pair< double, double > c_overlap = LHCb::HashIDs::overlap((*iCand), P);
-          double loaded_overlap = std::get<0>(c_overlap);
-          double original_overlap = std::get<1>(c_overlap);
-          if (std::max(loaded_overlap,original_overlap)>std::max(best_overlap_loaded,best_overlap_original))
-          {
-            best_particle = *iCand;
-            best_overlap_loaded = loaded_overlap;
-            best_overlap_original = original_overlap;
-          }
-//        }
-      }
+      std::pair<double,double> o = LHCb::HashIDs::overlap(best_particle, P);
+
+      o1 = o.first; o2 = o.second;
+      counter = 1;
     }
-    /*
-    const LHCb::Particle* clone_best_particle = best_particle->clone();
-    const SmartRefVector < LHCb::Particle> matched_daughters = clone_best_particle->daughters();
-    const SmartRefVector < LHCb::Particle> orig_daughters = P->daughters();
-    for( SmartRefVector<LHCb::Particle>::const_iterator matched_d= matched_daughters.begin(); matched_d!= matched_daughters.end(); ++matched_d){
-      //Here you can do something with daughters of matched particles
+    else 
+    {
+      best_particle = P;  //reset to P
+      Error("Matching failed.", StatusCode::SUCCESS);
     }
-    */
-    bool test = true;
-    test &= tuple->column( "NMatchingCand_"+fullName(head), m_counter);
-    test &= tuple->column( "Overlap_original_"+fullName(head), best_overlap_original);
-    test &= tuple->column( "Overlap_loaded_"+fullName(head), best_overlap_loaded);
-    sc = sc && StatusCode(test);
+
+    sc = sc&& tuple->column("NMatchingCand_"+fullName(head)+m_headSuffix, counter);
+    sc = sc&& tuple->column("Overlap_loaded_"+fullName(head)+m_headSuffix, o1);
+    sc = sc&& tuple->column("Overlap_original_"+fullName(head)+m_headSuffix, o2);
+    
 
     for(std::vector<IParticleTupleTool*>::const_iterator iTool = m_tuple.begin(); iTool != m_tuple.end(); ++iTool) 
-    {
-      sc = sc && (*iTool)->fill( NULL, best_particle, prefix, tuple);
-    }
+      sc = sc && (*iTool)->fill( best_particle, best_particle, prefix, tuple );
   }
   return sc;
 }

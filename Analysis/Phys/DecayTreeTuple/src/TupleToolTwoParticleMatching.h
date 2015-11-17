@@ -13,6 +13,10 @@
 #include "Kernel/IParticleTupleTool.h"
 #include "RecInterfaces/IChargedProtoANNPIDTupleTool.h"
 
+// TeslaTools
+#include "TeslaTools/ITeslaMatcher.h"
+
+
 /** @class TupleToolTwoParticleMatching TupleToolTwoParticleMatching.h
  *
  * \brief Find the best matching particle from given location and wfill information about it to nTuple
@@ -91,6 +95,9 @@ private:
 
   std::map <std::string, std::string> m_matching_locations;
   std::map <int, std::string>         m_parsed_locations;
+
+  std::string m_teslaMatcherName;
+  ITeslaMatcher* m_matcher;
   
 };
 

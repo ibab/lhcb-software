@@ -4,6 +4,12 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2015-11-17 - Lucio Anderlini
+  - Moved the Matching magic in TeslaToolTwoParticleMatching to the 
+    general tool TeslaMatcher (released under Phys/TeslaTools). 
+    Warning: this may break existing scripts running on MicroDST since
+      the RootInTes property is not propagated to tools.
+
 !======================= DecayTreeTuple v5r3 2015-10-19 ======================
 
 ! 2015-10-14 - Marian Stahl
