@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-16 - Roberta Cardinale
+ - update BandQ s24 LineConfig for PromptCharm.py
+
 ! 2015-11-17 - Michael Kolpin
  - Updated S24 dictionary for TrackEffD0ToKPi lines
 

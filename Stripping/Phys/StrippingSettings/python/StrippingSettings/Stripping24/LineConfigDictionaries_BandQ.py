@@ -1329,10 +1329,10 @@ PromptCharm = {
     ## monitoring ?
     'Monitor'     : False ,
     ## pescales
-    'D0Prescale'               : 1.0 ,
+    'D0Prescale'               : 0.7 ,
     'D*Prescale'               : 1.0 ,
     'DsPrescale'               : 1.0 ,
-    'D+Prescale'               : 1.0 ,
+    'D+Prescale'               : 0.8 ,
     'LambdaCPrescale'          : 1.0 ,
     'XiC0Prescale'             : 1.0 ,
     'OmegaC0Prescale'          : 1.0 ,
