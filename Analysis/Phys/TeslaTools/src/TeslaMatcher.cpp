@@ -71,28 +71,27 @@ StatusCode TeslaMatcher::finalize()
 //==============================================================================
 // Matching function -- loops on candidates and output best particle
 //==============================================================================
-StatusCode TeslaMatcher::findBestMatch ( const Particle* inputParticle,
-                                                 const Particle* &outputParticle,
-                                                 const std::string& tesLocation)
-                                                  const
+StatusCode TeslaMatcher::findBestMatch ( const Particle* inputP,
+                                         const Particle* &outputP,
+                                         const std::string& tesLocation)
+                                         const
 {
   LHCb::Particles *particles = getIfExists<LHCb::Particles> ( tesLocation ); 
-  outputParticle = NULL;
+  outputP = NULL;
   
   if ( particles == NULL) 
-    return StatusCode::SUCCESS;
+    return Warning("Failed to read TES " + tesLocation, StatusCode::SUCCESS);
 
   const LHCb::Particle *bestMatch = NULL;
   for (const LHCb::Particle* p : *particles)
   {
-    if (m_checkPid 
-        && inputParticle->particleID().abspid()!=p->particleID().abspid())
-          continue;
+    if (m_checkPid && inputP->particleID().abspid()!=p->particleID().abspid())
+      continue;
 
-      bestMatch = m_bestMatching ( inputParticle, p, bestMatch );
+      bestMatch = m_bestMatching ( inputP, p, bestMatch );
   }
 
-  outputParticle = bestMatch;
+  outputP = bestMatch;
 
   return StatusCode::SUCCESS;
 }

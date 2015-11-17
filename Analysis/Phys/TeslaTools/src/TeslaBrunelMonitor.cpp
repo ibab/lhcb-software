@@ -69,7 +69,7 @@ TeslaBrunelMonitor::TeslaBrunelMonitor( const std::string& name,
                   "Number of bins to plot each variable difference.");
 
 
-  declareProperty ( "MatchLocations" , m_matching_locations );                   
+  declareProperty ( "MatchLocations" , m_matching_locations ); 
 
 }
 //=============================================================================
@@ -181,7 +181,7 @@ StatusCode TeslaBrunelMonitor::execute() {
 
 
       const LHCb::Particle* matched;
-      sc = sc&& m_matcher->findBestMatch(part,matched,m_parsed_locations[apid]);
+      sc = sc && m_matcher->findBestMatch(part,matched,m_parsed_locations[apid]);
       if (!sc || !matched) continue;
 
 

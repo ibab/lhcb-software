@@ -3,6 +3,9 @@
 ! Responsible : Sean Benson
 !=============================================================================
 
+! 2015-11-08 - Lucio Anderlini
+ - Small fixes in TeslaMatcher  (better error handling and printing)
+
 ! 2015-11-08 - Sean Benson
  - Also look in extendedSubstructure.
 
