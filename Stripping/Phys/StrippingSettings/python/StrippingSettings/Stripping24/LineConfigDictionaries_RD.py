@@ -995,33 +995,6 @@ Bs2st2KKMuX = {
     "WGs": [ "RD" ]
 }
 
-Bu2LLK = {
-    "BUILDERTYPE": "Bu2LLKConf", 
-    "CONFIG": {
-        "BDIRA": 0.9995, 
-        "BFlightCHI2": 100, 
-        "BIPCHI2": 25, 
-        "BMassWindow": 1500, 
-        "BVertexCHI2": 9, 
-        "Bu2eeKLinePrescale": 1, 
-        "Bu2meKLinePrescale": 1, 
-        "Bu2meKSSLinePrescale": 1, 
-        "Bu2mmKLinePrescale": 1, 
-        "DiHadronMass": 2600, 
-        "DiLeptonFDCHI2": 16, 
-        "DiLeptonIPCHI2": 0, 
-        "DiLeptonPT": 0, 
-        "KaonIPCHI2": 9, 
-        "KaonPT": 400, 
-        "LeptonIPCHI2": 9, 
-        "LeptonPT": 300, 
-        "PIDe": 0, 
-        "UpperMass": 5500
-    }, 
-    "STREAMS": [ "Leptonic" ], 
-    "WGs": [ "RD" ]
-}
-
 Bu2MuNu = {
     "BUILDERTYPE": "Bu2MuNuConf", 
     "CONFIG": {
@@ -2081,6 +2054,165 @@ ZVTOP = {
         "VCHI2_TAU": "12"
     }, 
     "STREAMS": [ "Bhadron" ], 
+    "WGs": [ "RD" ]
+}
+
+Tau23Mu = {
+    "BUILDERTYPE": "Tau23MuLinesConf", 
+    "CONFIG": {
+        "Ds23PiPrescale": 0.0, 
+        "Ds23PiTISPrescale": 0.0, 
+        "Ds2PhiPiPrescale": 1.0, 
+        "Tau25Prescale": 1.0, 
+        "Tau2PMuMuPrescale": 1.0, 
+        "TauPostscale": 1.0, 
+        "TauPrescale": 1.0, 
+        "TrackGhostProb": 0.45
+    }, 
+    "STREAMS": {
+        "Leptonic": [
+            "StrippingTau23MuTau23MuLine", 
+            "StrippingTau23MuDs2PhiPiLine", 
+            "StrippingTau23MuTau2PMuMuLine", 
+            "StrippingTau23MuDs23PiLine", 
+            "StrippingTau23MuTau25MuLine"
+        ]
+    }, 
+    "WGs": [ "RD" ]
+}
+
+Bu2LLK = {
+    "BUILDERTYPE": "Bu2LLKConf", 
+    "CONFIG": {
+        "BDIRA": 0.9995, 
+        "BFlightCHI2": 100, 
+        "BIPCHI2": 25, 
+        "BMassWindow": 1500, 
+        "BVertexCHI2": 9, 
+        "Bu2eeKLinePrescale": 1, 
+        "Bu2meKLinePrescale": 1, 
+        "Bu2meKSSLinePrescale": 1, 
+        "Bu2mmKLinePrescale": 1, 
+        "DiHadronMass": 2600, 
+        "DiLeptonFDCHI2": 16, 
+        "DiLeptonIPCHI2": 0, 
+        "DiLeptonPT": 0, 
+        "KaonIPCHI2": 9, 
+        "KaonPT": 400, 
+        "LeptonIPCHI2": 9, 
+        "LeptonPT": 300, 
+        "PIDe": 0, 
+        "RelatedInfoTools": [
+            {
+                "Location": "VertexIsoInfo", 
+                "Type": "RelInfoVertexIsolation"
+            }, 
+            {
+                "Location": "VertexIsoBDTInfo", 
+                "Type": "RelInfoVertexIsolationBDT"
+            }, 
+            {
+                "ConeAngle": 1.0, 
+                "Location": "ConeIsoInfo", 
+                "Type": "RelInfoConeVariables"
+            }, 
+            {
+                "ConeAngle": 0.5, 
+                "Locations": {
+                    "Phys/StdAllLooseElectrons": [
+                        "ConeIsoInfoE1", 
+                        "ConeIsoInfoE2"
+                    ], 
+                    "Phys/StdAllLooseKaons": [
+                        "ConeIsoInfoK1", 
+                        "ConeIsoInfoK2"
+                    ], 
+                    "Phys/StdAllLooseMuons": [
+                        "ConeIsoInfoM1", 
+                        "ConeIsoInfoM2"
+                    ], 
+                    "Phys/StdAllLoosePions": [
+                        "ConeIsoInfoPi1", 
+                        "ConeIsoInfoPi2"
+                    ], 
+                    "Phys/StdAllLooseProtons": "ConeIsoInfoProton", 
+                    "Phys/StdDiElectronFromTracks": [
+                        "ConeIsoInfoE1", 
+                        "ConeIsoInfoE2"
+                    ]
+                }, 
+                "RecursionLevel": 2, 
+                "Type": "RelInfoConeVariables"
+            }, 
+            {
+                "Locations": {
+                    "Phys/StdAllLooseElectrons": [
+                        "TrackIsoBDTInfoE1", 
+                        "TrackIsoBDTInfoE2"
+                    ], 
+                    "Phys/StdAllLooseKaons": [
+                        "TrackIsoBDTInfoK1", 
+                        "TrackIsoBDTInfoK2"
+                    ], 
+                    "Phys/StdAllLooseMuons": [
+                        "TrackIsoBDTInfoM1", 
+                        "TrackIsoBDTInfoM2"
+                    ], 
+                    "Phys/StdAllLoosePions": [
+                        "TrackIsoBDTInfoPi1", 
+                        "TrackIsoBDTInfoPi2"
+                    ], 
+                    "Phys/StdAllLooseProtons": "TrackIsoBDTInfoProton", 
+                    "Phys/StdDiElectronFromTracks": [
+                        "TrackIsoBDTInfoE1", 
+                        "TrackIsoBDTInfoE2"
+                    ]
+                }, 
+                "RecursionLevel": 2, 
+                "Type": "RelInfoTrackIsolationBDT"
+            }, 
+            {
+                "IsoTwoBody": False, 
+                "Locations": {
+                    "Phys/StdAllLooseElectrons": [
+                        "TrackIsoBs2MMInfoE1", 
+                        "TrackIsoBs2MMInfoE2"
+                    ], 
+                    "Phys/StdAllLooseKaons": [
+                        "TrackIsoBs2MMInfoK1", 
+                        "TrackIsoBs2MMInfoK2"
+                    ], 
+                    "Phys/StdAllLooseMuons": [
+                        "TrackIsoBs2MMInfoM1", 
+                        "TrackIsoBs2MMInfoM2"
+                    ], 
+                    "Phys/StdAllLoosePions": [
+                        "TrackIsoBs2MMInfoPi1", 
+                        "TrackIsoBs2MMInfoPi2"
+                    ], 
+                    "Phys/StdAllLooseProtons": "TrackIsoBs2MMInfoProton", 
+                    "Phys/StdDiElectronFromTracks": [
+                        "TrackIsoBs2MMInfoE1", 
+                        "TrackIsoBs2MMInfoE2"
+                    ]
+                }, 
+                "RecursionLevel": 2, 
+                "Type": "RelInfoBs2MuMuTrackIsolations", 
+                "angle": 0.27, 
+                "doca_iso": 0.13, 
+                "fc": 0.6, 
+                "ips": 3.0, 
+                "makeTrackCuts": False, 
+                "pvdis": 0.5, 
+                "pvdis_h": 40.0, 
+                "svdis": -0.15, 
+                "svdis_h": 30.0, 
+                "tracktype": 3
+            }
+        ], 
+        "UpperMass": 5500
+    }, 
+    "STREAMS": [ "Leptonic" ], 
     "WGs": [ "RD" ]
 }
 
