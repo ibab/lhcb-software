@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-17 - Pablo Ruiz Valls (RD)
+ - Updated RD S24 Dictionaries - Still missing imminent Tau23Mu RelInfo lines fix.
+
 ! 2015-11-16 - Roberta Cardinale
  - update BandQ s24 LineConfig for PromptCharm.py
 

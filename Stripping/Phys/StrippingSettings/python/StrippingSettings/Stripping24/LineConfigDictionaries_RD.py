@@ -4,6 +4,7 @@
 ##  Configuration for RD WG                                                   ##
 ##  Contact person: Pablo Ruiz Valls pruizval@cern.ch                         ##
 ################################################################################
+
 B23Mu = {
     "BUILDERTYPE": "B23MuLinesConf", 
     "CONFIG": {
@@ -29,8 +30,8 @@ B23Mu = {
         ], 
         "MaxDoca": 0.3, 
         "MaxIPChi2": 25, 
-        "MaxTrChi2Dof": 3.0, 
-        "MaxTrGhp": 0.3, 
+        "MaxTrChi2Dof": 4.0, 
+        "MaxTrGhp": 0.4, 
         "MaxVtxChi2Dof": 9, 
         "MinDira": 0.0, 
         "MinTau": 0.0, 
@@ -69,8 +70,8 @@ B24p = {
         ], 
         "MaxDoca": 0.3, 
         "MaxIPChi2": 25, 
-        "MaxTrChi2Dof": 3.0, 
-        "MaxTrGhp": 0.3, 
+        "MaxTrChi2Dof": 4.0, 
+        "MaxTrGhp": 0.4, 
         "MaxVtxChi2Dof": 9, 
         "MinDira": 0.0, 
         "MinTau": 1.0, 
@@ -280,6 +281,128 @@ B2XLL = {
     "WGs": [ "RD" ]
 }
 
+B2XMuMu = {
+    "BUILDERTYPE": "B2XMuMuConf", 
+    "CONFIG": {
+        "A1_Comb_MassHigh": 5550.0, 
+        "A1_Comb_MassLow": 0.0, 
+        "A1_Dau_MaxIPCHI2": 9.0, 
+        "A1_FlightChi2": 25.0, 
+        "A1_MassHigh": 5500.0, 
+        "A1_MassLow": 0.0, 
+        "A1_MinIPCHI2": 4.0, 
+        "A1_VtxChi2": 10.0, 
+        "B_Comb_MassHigh": 7100.0, 
+        "B_Comb_MassLow": 4800.0, 
+        "B_DIRA": 0.9999, 
+        "B_Dau_MaxIPCHI2": 9.0, 
+        "B_FlightCHI2": 121.0, 
+        "B_IPCHI2": 16.0, 
+        "B_MassHigh": 7000.0, 
+        "B_MassLow": 4900.0, 
+        "B_VertexCHI2": 8.0, 
+        "DECAYS": [
+            "B0 -> J/psi(1S) phi(1020)", 
+            "[B0 -> J/psi(1S) K*(892)0]cc", 
+            "B0 -> J/psi(1S) rho(770)0", 
+            "[B+ -> J/psi(1S) rho(770)+]cc", 
+            "B0 -> J/psi(1S) f_2(1950)", 
+            "B0 -> J/psi(1S) KS0", 
+            "[B0 -> J/psi(1S) D~0]cc", 
+            "[B+ -> J/psi(1S) K+]cc", 
+            "[B+ -> J/psi(1S) pi+]cc", 
+            "[B+ -> J/psi(1S) K*(892)+]cc", 
+            "[B+ -> J/psi(1S) D+]cc", 
+            "[B+ -> J/psi(1S) D*(2010)+]cc", 
+            "[Lambda_b0 -> J/psi(1S) Lambda0]cc", 
+            "[Lambda_b0 -> J/psi(1S) Lambda(1520)0]cc", 
+            "B0 -> J/psi(1S) pi0", 
+            "[B+ -> J/psi(1S) a_1(1260)+]cc", 
+            "[B+ -> J/psi(1S) K_1(1270)+]cc", 
+            "[B+ -> J/psi(1S) K_2(1770)+]cc", 
+            "B0 -> J/psi(1S) K_1(1270)0", 
+            "[B+ -> J/psi(1S) K_1(1400)+]cc", 
+            "B0 -> J/psi(1S) K_1(1400)0"
+        ], 
+        "Dau_DIRA": -0.9, 
+        "Dau_VertexCHI2": 12.0, 
+        "Dimu_Dau_MaxIPCHI2": 9.0, 
+        "Dimu_FlightChi2": 9.0, 
+        "DimuonUPPERMASS": 7100.0, 
+        "DimuonWS": True, 
+        "DplusLOWERMASS": 1600.0, 
+        "DplusUPPERMASS": 2300.0, 
+        "HLT1_FILTER": None, 
+        "HLT2_FILTER": None, 
+        "HadronWS": True, 
+        "Hadron_MinIPCHI2": 6.0, 
+        "K12OmegaK_CombMassHigh": 2000, 
+        "K12OmegaK_CombMassLow": 400, 
+        "K12OmegaK_MassHigh": 2100, 
+        "K12OmegaK_MassLow": 300, 
+        "K12OmegaK_VtxChi2": 10, 
+        "KpiVXCHI2NDOF": 9.0, 
+        "KsWINDOW": 30.0, 
+        "Kstar_Comb_MassHigh": 6200.0, 
+        "Kstar_Comb_MassLow": 0.0, 
+        "Kstar_Dau_MaxIPCHI2": 9.0, 
+        "Kstar_FlightChi2": 9.0, 
+        "Kstar_MassHigh": 6200.0, 
+        "Kstar_MassLow": 0.0, 
+        "Kstar_MinIPCHI2": 0.0, 
+        "KstarplusWINDOW": 300.0, 
+        "L0DU_FILTER": None, 
+        "LambdaWINDOW": 30.0, 
+        "LongLivedPT": 0.0, 
+        "LongLivedTau": 2, 
+        "MuonNoPIDs_PIDmu": 0.0, 
+        "MuonPID": -3.0, 
+        "Muon_IsMuon": True, 
+        "Muon_MinIPCHI2": 9.0, 
+        "OmegaChi2Prob": 1e-05, 
+        "Omega_CombMassWin": 200, 
+        "Omega_MassWin": 100, 
+        "Pi0ForOmegaMINPT": 500.0, 
+        "Pi0MINPT": 800.0, 
+        "RelatedInfoTools": [
+            {
+                "Location": "ConeIsoInfo", 
+                "Type": "RelInfoConeVariables", 
+                "Variables": [
+                    "CONEANGLE", 
+                    "CONEMULT", 
+                    "CONEPTASYM", 
+                    "CONEPT", 
+                    "CONEP", 
+                    "CONEPASYM", 
+                    "CONEDELTAETA", 
+                    "CONEDELTAPHI"
+                ]
+            }, 
+            {
+                "Location": "VtxIsoInfo", 
+                "Type": "RelInfoVertexIsolation", 
+                "Variables": [
+                    "VTXISONUMVTX", 
+                    "VTXISODCHI2ONETRACK", 
+                    "VTXISODCHI2MASSONETRACK", 
+                    "VTXISODCHI2TWOTRACK", 
+                    "VTXISODCHI2MASSTWOTRACK"
+                ]
+            }, 
+            {
+                "Location": "VtxIsoBDTInfo", 
+                "Type": "RelInfoVertexIsolationBDT"
+            }
+        ], 
+        "SpdMult": 600, 
+        "Track_GhostProb": 0.5, 
+        "UseNoPIDsHadrons": True
+    }, 
+    "STREAMS": [ "Leptonic" ], 
+    "WGs": [ "RD" ]
+}
+
 B2XTau = {
     "BUILDERTYPE": "B2XTauConf", 
     "CONFIG": {
@@ -482,8 +605,8 @@ BLV = {
         "Lb2LcpiPrescale": 0.1, 
         "MaxDoca": 0.3, 
         "MaxIPChi2": 25, 
-        "MaxTrChi2Dof": 3.0, 
-        "MaxTrGhp": 0.3, 
+        "MaxTrChi2Dof": 4.0, 
+        "MaxTrGhp": 0.4, 
         "MaxVtxChi2Dof": 9, 
         "MinDira": 0.0, 
         "MinTauLambda": 10.0, 
@@ -501,6 +624,86 @@ BLV = {
         "mDiffbStand": 400.0, 
         "mDiffbTight": 300.0, 
         "mKst": 1200.0
+    }, 
+    "STREAMS": [ "Bhadron" ], 
+    "WGs": [ "RD" ]
+}
+
+Bd2eeKstarBDT = {
+    "BUILDERTYPE": "Bd2eeKstarBDTConf", 
+    "CONFIG": {
+        "BComMassW": 1200.0, 
+        "BDIRA": 0.999, 
+        "BDTCutValue": -0.95, 
+        "BDTWeightsFile": "$TMVAWEIGHTSROOT/data/Bd2eeKstar_BDTG_v1r0.xml", 
+        "BMassW": 1000.0, 
+        "BVertexCHI2": 16.0, 
+        "ElectronGhostProb": 0.5, 
+        "ElectronIPCHI2": 1.0, 
+        "ElectronPIDepi": -2.0, 
+        "ElectronPT": 200.0, 
+        "ElectronTrackCHI2pNDOF": 5.0, 
+        "KaonGhostProb": 0.35, 
+        "KaonIPCHI2": 4.0, 
+        "KaonP": 3000.0, 
+        "KaonPIDKpi": -5.0, 
+        "KaonPT": 400.0, 
+        "KaonTrackCHI2pNDOF": 5.0, 
+        "KstarMassW": 150.0, 
+        "KstarVertexCHI2": 16.0, 
+        "LinePostscale": 1.0, 
+        "LinePrescale": 1.0, 
+        "PionGhostProb": 0.35, 
+        "PionIPCHI2": 4.0, 
+        "PionP": 2000.0, 
+        "PionPIDpiK": 10.0, 
+        "PionPT": 250.0, 
+        "PionTrackCHI2pNDOF": 5.0, 
+        "RelatedInfoTools": [
+            {
+                "DaughterLocations": {
+                    "[B0 -> ( K*(892)0 -> K+ pi-) ( J/psi(1S) ->  e+^e-) ]CC": "Electron2ISO", 
+                    "[B0 -> ( K*(892)0 -> K+ pi-) ( J/psi(1S) -> ^e+ e-) ]CC": "Electron1ISO", 
+                    "[B0 -> ( K*(892)0 -> K+^pi-) ( J/psi(1S) ->  e+ e-) ]CC": "PionISO", 
+                    "[B0 -> ( K*(892)0 ->^K+ pi-) ( J/psi(1S) ->  e+ e-) ]CC": "KaonISO"
+                }, 
+                "IsoTwoBody": False, 
+                "Type": "RelInfoBs2MuMuTrackIsolations", 
+                "angle": 0.27, 
+                "doca_iso": 0.13, 
+                "fc": 0.6, 
+                "ips": 3.0, 
+                "makeTrackCuts": False, 
+                "pvdis": 0.5, 
+                "pvdis_h": 40.0, 
+                "svdis": -0.15, 
+                "svdis_h": 30.0, 
+                "tracktype": 3
+            }
+        ], 
+        "RelatedInfoTools2": [
+            {
+                "DaughterLocations": {
+                    "[B0 -> ( K*(892)0 -> K+ pi-) ( J/psi(1S) ->  e+^e-) ]CC": "Electron2ISO", 
+                    "[B0 -> ( K*(892)0 -> K+ pi-) ( J/psi(1S) -> ^e+ e-) ]CC": "Electron1ISO", 
+                    "[B0 -> ( K*(892)0 -> K+^pi-) ( J/psi(1S) ->  e+ e-) ]CC": "PionISO", 
+                    "[B0 -> ( K*(892)0 ->^K+ pi-) ( J/psi(1S) ->  e+ e-) ]CC": "KaonISO"
+                }, 
+                "IsoTwoBody": False, 
+                "Type": "RelInfoBs2MuMuTrackIsolations", 
+                "angle": 0.27, 
+                "doca_iso": 0.13, 
+                "fc": 0.6, 
+                "ips": 3.0, 
+                "makeTrackCuts": False, 
+                "pvdis": 0.5, 
+                "pvdis_h": 40.0, 
+                "svdis": -0.15, 
+                "svdis_h": 30.0, 
+                "tracktype": 3
+            }
+        ], 
+        "eeCuts": "(HASVERTEX) & (VFASPF(VCHI2)<16) & (((MM<1.5*GeV)) | ((MM>2.2*GeV) & (MM<4.2*GeV)))"
     }, 
     "STREAMS": [ "Bhadron" ], 
     "WGs": [ "RD" ]
@@ -575,6 +778,35 @@ Beauty2XGamma = {
         "TrackGhostProb": 0.4
     }, 
     "STREAMS": [ "Leptonic" ], 
+    "WGs": [ "RD" ]
+}
+
+Beauty2XGammaExclusive = {
+    "BUILDERTYPE": "Beauty2XGammaExclusiveConf", 
+    "CONFIG": {
+        "B0DirAngle": 0.02, 
+        "B0MassWin": 1000.0, 
+        "B0PVIPchi2": 15.0, 
+        "B_PT": 3000.0, 
+        "Bd2KstGammaPostScale": 1.0, 
+        "Bd2KstGammaPreScale": 1.0, 
+        "Bs2PhiGammaPostScale": 1.0, 
+        "Bs2PhiGammaPreScale": 1.0, 
+        "BsDirAngle": 0.02, 
+        "BsMassWin": 1000.0, 
+        "BsPVIPchi2": 15.0, 
+        "KstMassWin": 100.0, 
+        "KstVCHI2": 9.0, 
+        "PhiMassWin": 15.0, 
+        "PhiVCHI2": 9.0, 
+        "TrChi2": 5.0, 
+        "TrIPchi2": 25.0, 
+        "photonPT": 2600.0
+    }, 
+    "STREAMS": {
+        "Calibration": [ "StrippingBeauty2XGammaExclusiveBd2KstGammaLine" ], 
+        "Radiative": [ "StrippingBeauty2XGammaExclusiveBs2PhiGammaLine" ]
+    }, 
     "WGs": [ "RD" ]
 }
 
@@ -763,6 +995,162 @@ Bs2st2KKMuX = {
     "WGs": [ "RD" ]
 }
 
+Bu2LLK = {
+    "BUILDERTYPE": "Bu2LLKConf", 
+    "CONFIG": {
+        "BDIRA": 0.9995, 
+        "BFlightCHI2": 100, 
+        "BIPCHI2": 25, 
+        "BMassWindow": 1500, 
+        "BVertexCHI2": 9, 
+        "Bu2eeKLinePrescale": 1, 
+        "Bu2meKLinePrescale": 1, 
+        "Bu2meKSSLinePrescale": 1, 
+        "Bu2mmKLinePrescale": 1, 
+        "DiHadronMass": 2600, 
+        "DiLeptonFDCHI2": 16, 
+        "DiLeptonIPCHI2": 0, 
+        "DiLeptonPT": 0, 
+        "KaonIPCHI2": 9, 
+        "KaonPT": 400, 
+        "LeptonIPCHI2": 9, 
+        "LeptonPT": 300, 
+        "PIDe": 0, 
+        "RelatedInfoTools": [
+            {
+                "Location": "VertexIsoInfo", 
+                "Type": "RelInfoVertexIsolation"
+            }, 
+            {
+                "Location": "VertexIsoBDTInfo", 
+                "Type": "RelInfoVertexIsolationBDT"
+            }, 
+            {
+                "ConeAngle": 1.0, 
+                "Location": "ConeIsoInfo", 
+                "Type": "RelInfoConeVariables"
+            }, 
+            {
+                "ConeAngle": 0.5, 
+                "Locations": {
+                    "Phys/StdAllLooseElectrons": [
+                        "ConeIsoInfoE1", 
+                        "ConeIsoInfoE2"
+                    ], 
+                    "Phys/StdAllLooseKaons": [
+                        "ConeIsoInfoK1", 
+                        "ConeIsoInfoK2"
+                    ], 
+                    "Phys/StdAllLooseMuons": [
+                        "ConeIsoInfoM1", 
+                        "ConeIsoInfoM2"
+                    ], 
+                    "Phys/StdAllLoosePions": [
+                        "ConeIsoInfoPi1", 
+                        "ConeIsoInfoPi2"
+                    ], 
+                    "Phys/StdAllLooseProtons": "ConeIsoInfoProton", 
+                    "Phys/StdDiElectronFromTracks": [
+                        "ConeIsoInfoE1", 
+                        "ConeIsoInfoE2"
+                    ]
+                }, 
+                "RecursionLevel": 2, 
+                "Type": "RelInfoConeVariables"
+            }, 
+            {
+                "Locations": {
+                    "Phys/StdAllLooseElectrons": [
+                        "TrackIsoBDTInfoE1", 
+                        "TrackIsoBDTInfoE2"
+                    ], 
+                    "Phys/StdAllLooseKaons": [
+                        "TrackIsoBDTInfoK1", 
+                        "TrackIsoBDTInfoK2"
+                    ], 
+                    "Phys/StdAllLooseMuons": [
+                        "TrackIsoBDTInfoM1", 
+                        "TrackIsoBDTInfoM2"
+                    ], 
+                    "Phys/StdAllLoosePions": [
+                        "TrackIsoBDTInfoPi1", 
+                        "TrackIsoBDTInfoPi2"
+                    ], 
+                    "Phys/StdAllLooseProtons": "TrackIsoBDTInfoProton", 
+                    "Phys/StdDiElectronFromTracks": [
+                        "TrackIsoBDTInfoE1", 
+                        "TrackIsoBDTInfoE2"
+                    ]
+                }, 
+                "RecursionLevel": 2, 
+                "Type": "RelInfoTrackIsolationBDT"
+            }, 
+            {
+                "IsoTwoBody": False, 
+                "Locations": {
+                    "Phys/StdAllLooseElectrons": [
+                        "TrackIsoBs2MMInfoE1", 
+                        "TrackIsoBs2MMInfoE2"
+                    ], 
+                    "Phys/StdAllLooseKaons": [
+                        "TrackIsoBs2MMInfoK1", 
+                        "TrackIsoBs2MMInfoK2"
+                    ], 
+                    "Phys/StdAllLooseMuons": [
+                        "TrackIsoBs2MMInfoM1", 
+                        "TrackIsoBs2MMInfoM2"
+                    ], 
+                    "Phys/StdAllLoosePions": [
+                        "TrackIsoBs2MMInfoPi1", 
+                        "TrackIsoBs2MMInfoPi2"
+                    ], 
+                    "Phys/StdAllLooseProtons": "TrackIsoBs2MMInfoProton", 
+                    "Phys/StdDiElectronFromTracks": [
+                        "TrackIsoBs2MMInfoE1", 
+                        "TrackIsoBs2MMInfoE2"
+                    ]
+                }, 
+                "RecursionLevel": 2, 
+                "Type": "RelInfoBs2MuMuTrackIsolations", 
+                "angle": 0.27, 
+                "doca_iso": 0.13, 
+                "fc": 0.6, 
+                "ips": 3.0, 
+                "makeTrackCuts": False, 
+                "pvdis": 0.5, 
+                "pvdis_h": 40.0, 
+                "svdis": -0.15, 
+                "svdis_h": 30.0, 
+                "tracktype": 3
+            }
+        ], 
+        "UpperMass": 5500
+    }, 
+    "STREAMS": [ "Leptonic" ], 
+    "WGs": [ "RD" ]
+}
+
+Bu2MuNu = {
+    "BUILDERTYPE": "Bu2MuNuConf", 
+    "CONFIG": {
+        "IPchi2Mu": 400.0, 
+        "IPchi2MuControl": 100.0, 
+        "PostscaleControl": 1.0, 
+        "PostscaleSignal": 1.0, 
+        "PrescaleControl": 0.03, 
+        "PrescaleSignal": 1.0, 
+        "TrChi2Mu": 3, 
+        "maxNTracks": 150, 
+        "pTmaxMu": 40.0, 
+        "pTminMu": 5.0, 
+        "pTminMuControl": 2.5, 
+        "pmaxMu": 500.0, 
+        "useNN": True
+    }, 
+    "STREAMS": [ "Leptonic" ], 
+    "WGs": [ "RD" ]
+}
+
 D23Mu = {
     "BUILDERTYPE": "D23MuLinesConf", 
     "CONFIG": {
@@ -788,8 +1176,8 @@ D23Mu = {
         "D2MueePrescale": 1, 
         "MaxDoca": 0.3, 
         "MaxIPChi2": 25, 
-        "MaxTrChi2Dof": 3.0, 
-        "MaxTrGhp": 0.3, 
+        "MaxTrChi2Dof": 4.0, 
+        "MaxTrGhp": 0.4, 
         "MaxVtxChi2Dof": 9, 
         "MinDira": 0.0, 
         "MinTau": 0.1, 
@@ -798,6 +1186,262 @@ D23Mu = {
         "Postscale": 1, 
         "mDiffDLoose": 150, 
         "mDiffDTight": 150
+    }, 
+    "STREAMS": [ "Leptonic" ], 
+    "WGs": [ "RD" ]
+}
+
+DarkBoson = {
+    "BUILDERTYPE": "DarkBosonConf", 
+    "CONFIG": {
+        "B2HHX": {
+            "AM_MAX": "5800*MeV", 
+            "AM_MIN": "4800*MeV", 
+            "BPVIPCHI2_MAX": 10, 
+            "BPVLTIME_MIN": "0.2*ps", 
+            "HAD_MINIPCHI2_MIN": 9, 
+            "PT_MIN": "1000*MeV", 
+            "SUMPT_MIN": "0*MeV", 
+            "VCHI2DOF_MAX": 15
+        }, 
+        "B2KX": {
+            "AM_MAX": "5800*MeV", 
+            "AM_MIN": "4800*MeV", 
+            "BPVIPCHI2_MAX": 10, 
+            "BPVLTIME_MIN": "0.2*ps", 
+            "HAD_MINIPCHI2_MIN": 25, 
+            "PT_MIN": "1000*MeV", 
+            "SUMPT_MIN": "0*MeV", 
+            "VCHI2DOF_MAX": 15
+        }, 
+        "E": {
+            "MIPCHI2DV_MIN": 9, 
+            "PIDe_MIN": 0, 
+            "PT_MIN": "100*MeV", 
+            "TRCHI2DOF_MAX": 5, 
+            "TRGHP_MAX": 0.4
+        }, 
+        "GECNTrkMax": 250, 
+        "J": {
+            "ADAMASS_MAX": "100*MeV", 
+            "VCHI2DOF_MAX": 12
+        }, 
+        "KB": {
+            "MIPCHI2DV_MIN": 9, 
+            "PROBNNK_MIN": 0.1, 
+            "PT_MIN": "250*MeV", 
+            "P_MIN": "2000*MeV", 
+            "TRCHI2DOF_MAX": 3, 
+            "TRGHP_MAX": 0.3
+        }, 
+        "KBhard": {
+            "MIPCHI2DV_MIN": 36, 
+            "PROBNNK_MIN": 0.2, 
+            "PT_MIN": "250*MeV", 
+            "P_MIN": "3000*MeV", 
+            "TRCHI2DOF_MAX": 3, 
+            "TRGHP_MAX": 0.3
+        }, 
+        "KDX": {
+            "MIPCHI2DV_MIN": 25, 
+            "PROBNNK_MIN": 0.1, 
+            "PT_MIN": "125*MeV", 
+            "P_MIN": "0*MeV", 
+            "TRCHI2DOF_MAX": 4, 
+            "TRGHP_MAX": 0.3
+        }, 
+        "KX": {
+            "MIPCHI2DV_MIN": 25, 
+            "PROBNNK_MIN": 0.1, 
+            "PT_MIN": "250*MeV", 
+            "P_MIN": "3000*MeV", 
+            "TRCHI2DOF_MAX": 3, 
+            "TRGHP_MAX": 0.3
+        }, 
+        "MuJ": {
+            "MIPCHI2DV_MIN": 25, 
+            "PIDmu_MIN": -4, 
+            "PT_MIN": "125*MeV", 
+            "P_MIN": "0*MeV", 
+            "TRCHI2DOF_MAX": 4, 
+            "TRGHP_MAX": 0.3
+        }, 
+        "MuX": {
+            "MIPCHI2DV_MIN": 9, 
+            "PIDmu_MIN": -5, 
+            "PT_MIN": "100*MeV", 
+            "P_MIN": "0*MeV", 
+            "TRCHI2DOF_MAX": 3, 
+            "TRGHP_MAX": 0.3
+        }, 
+        "PiB": {
+            "MIPCHI2DV_MIN": 9, 
+            "PROBNNpi_MIN": 0.2, 
+            "PT_MIN": "250*MeV", 
+            "P_MIN": "2000*MeV", 
+            "TRCHI2DOF_MAX": 3, 
+            "TRGHP_MAX": 0.3
+        }, 
+        "PiDX": {
+            "MIPCHI2DV_MIN": 25, 
+            "PROBNNpi_MIN": 0.1, 
+            "PT_MIN": "125*MeV", 
+            "P_MIN": "0*MeV", 
+            "TRCHI2DOF_MAX": 4, 
+            "TRGHP_MAX": 0.3
+        }, 
+        "PiX": {
+            "MIPCHI2DV_MIN": 36, 
+            "PROBNNpi_MIN": 0.6, 
+            "PT_MIN": "250*MeV", 
+            "P_MIN": "3000*MeV", 
+            "TRCHI2DOF_MAX": 3, 
+            "TRGHP_MAX": 0.3
+        }, 
+        "Prescales": {
+            "DD": 0.5, 
+            "KK": 0.25, 
+            "SS": 0.1
+        }, 
+        "XDD": {
+            "BPVVDCHI2_MIN": 25, 
+            "PT_MIN": "0*MeV", 
+            "VCHI2DOF_MAX": 15
+        }, 
+        "XLL": {
+            "BPVVDCHI2_MIN": 25, 
+            "PT_MIN": "250*MeV", 
+            "VCHI2DOF_MAX": 10
+        }, 
+        "XLLhard": {
+            "BPVVDCHI2_MIN": 25, 
+            "PT_MIN": "250*MeV", 
+            "VCHI2DOF_MAX": 5
+        }
+    }, 
+    "STREAMS": {
+        "Dimuon": [
+            "StrippingB2KpiX2MuMuDDDarkBosonLine", 
+            "StrippingB2KpiX2MuMuDDSSDarkBosonLine", 
+            "StrippingB2KKX2MuMuDDDarkBosonLine", 
+            "StrippingB2KKX2MuMuDDSSDarkBosonLine", 
+            "StrippingB2KX2MuMuDDDarkBosonLine", 
+            "StrippingB2KX2MuMuDDSSDarkBosonLine", 
+            "StrippingB2KpiX2PiPiDDDarkBosonLine", 
+            "StrippingB2KKX2PiPiDDDarkBosonLine", 
+            "StrippingB2KX2PiPiDDDarkBosonLine", 
+            "StrippingB2KX2PiPiDDSSDarkBosonLine", 
+            "StrippingB2RhoX2MuMuDDDarkBosonLine", 
+            "StrippingB2KpiX2KKDDDarkBosonLine", 
+            "StrippingB2KKX2KKDDDarkBosonLine", 
+            "StrippingB2KX2KKDDDarkBosonLine", 
+            "StrippingB2KX2KKDDSSDarkBosonLine"
+        ], 
+        "Leptonic": [
+            "StrippingB2KpiX2MuMuDarkBosonLine", 
+            "StrippingB2KpiX2MuMuSSDarkBosonLine", 
+            "StrippingB2KKX2MuMuDarkBosonLine", 
+            "StrippingB2KKX2MuMuSSDarkBosonLine", 
+            "StrippingB2KX2MuMuDarkBosonLine", 
+            "StrippingB2KX2MuMuSSDarkBosonLine", 
+            "StrippingB2KpiX2PiPiDarkBosonLine", 
+            "StrippingB2KKX2PiPiDarkBosonLine", 
+            "StrippingB2KX2PiPiDarkBosonLine", 
+            "StrippingB2KX2PiPiSSDarkBosonLine", 
+            "StrippingB2RhoX2MuMuDarkBosonLine", 
+            "StrippingB2KpiX2KKDarkBosonLine", 
+            "StrippingB2KKX2KKDarkBosonLine", 
+            "StrippingB2KX2KKDarkBosonLine", 
+            "StrippingB2KX2KKSSDarkBosonLine", 
+            "StrippingB2KpiX2EEDarkBosonLine", 
+            "StrippingB2KpiX2EESSDarkBosonLine", 
+            "StrippingB2KKX2EEDarkBosonLine", 
+            "StrippingB2KKX2EESSDarkBosonLine", 
+            "StrippingB2KX2EEDarkBosonLine", 
+            "StrippingB2KX2EESSDarkBosonLine", 
+            "StrippingB2JKDarkBosonLine", 
+            "StrippingB2JKstDarkBosonLine"
+        ]
+    }, 
+    "WGs": [ "RD" ]
+}
+
+Kshort2MuMuMuMu = {
+    "BUILDERTYPE": "Kshort2MuMuMuMuConf", 
+    "CONFIG": {
+        "DDIRA": 0.9999, 
+        "DFDCHI2_mumumumu": 9, 
+        "DIPCHI2_mumumumu": 20, 
+        "DMAXDOCA_mumumumu": 0.2, 
+        "DPT_mumumumu": 2500.0, 
+        "DVCHI2DOF_mumumumu": 8, 
+        "KsDauMAXIPCHI2_mumumumu": 15, 
+        "KsMotherMassCut": 540.0, 
+        "Kshort2MuMuMuMuLinePostscale": 1, 
+        "Kshort2MuMuMuMuLinePrescale": 1, 
+        "MINIPCHI2_mumumumu": 4.0, 
+        "MaxDimuonMass": 260.0, 
+        "MaxKsMass": 550.0, 
+        "MuonMINIPCHI2": 2, 
+        "MuonP": 3000.0, 
+        "MuonPIDmu_mumumumu": -1, 
+        "MuonPT": 500.0, 
+        "MuonTRCHI2": 5, 
+        "PT_mumumumu": 300
+    }, 
+    "STREAMS": [ "Leptonic" ], 
+    "WGs": [ "RD" ]
+}
+
+Kshort2PiPiMuMu = {
+    "BUILDERTYPE": "Kshort2PiPiMuMuConf", 
+    "CONFIG": {
+        "DDIRA": 0.9999, 
+        "DFDCHI2_hhmumu": 9, 
+        "DIPCHI2_hhmumu": 20, 
+        "DMAXDOCA_hhmumu": 0.2, 
+        "DPT_hhmumu": 300.0, 
+        "DVCHI2DOF_hhmumu": 8, 
+        "KsDauMAXIPCHI2_hhmumu": 15, 
+        "KsMotherMassCut": 540.0, 
+        "Kshort2PiPiMuMuLinePostscale": 1, 
+        "Kshort2PiPiMuMuLinePrescale": 1, 
+        "MINIPCHI2_hhmumu": 4.0, 
+        "MaxDimuonMass": 260.0, 
+        "MaxKsMass": 550.0, 
+        "MuonMINIPCHI2": 2, 
+        "MuonP": 3000.0, 
+        "MuonPIDmu_hhmumu": -1, 
+        "MuonPT": 500.0, 
+        "MuonTRCHI2": 5, 
+        "PT_hhmumu": 300, 
+        "PionMINIPCHI2": 2, 
+        "PionP": 2000.0, 
+        "PionPT": 300.0, 
+        "PionTRCHI2": 5
+    }, 
+    "STREAMS": [ "Leptonic" ], 
+    "WGs": [ "RD" ]
+}
+
+Kshort2eePiPi = {
+    "BUILDERTYPE": "Kshort2eePiPiConf", 
+    "CONFIG": {
+        "KsIP": 1, 
+        "KsLifetime": 0.8953, 
+        "KsMAXDOCA": 1.0, 
+        "KsVtxChi2": 50, 
+        "Kshort2eePiPiLinePostscale": 1, 
+        "Kshort2eePiPiLinePrescale": 1, 
+        "MaxKsMass": 800.0, 
+        "PionGhostProb": 0.5, 
+        "PionMINIPCHI2": 16, 
+        "PionPIDK": 5, 
+        "PionPT": 100, 
+        "eGhostProb": 0.5, 
+        "eMINIPCHI2": 16, 
+        "ePIDe": -4, 
+        "ePT": 100.0
     }, 
     "STREAMS": [ "Leptonic" ], 
     "WGs": [ "RD" ]
@@ -1166,8 +1810,8 @@ Lc23Mu = {
         "Lc2pmumuPrescale": 1, 
         "MaxDoca": 0.3, 
         "MaxIPChi2": 100, 
-        "MaxTrChi2Dof": 3, 
-        "MaxTrGhp": 0.3, 
+        "MaxTrChi2Dof": 4.0, 
+        "MaxTrGhp": 0.4, 
         "MaxVtxChi2": 15, 
         "MinTrIPChi2": 9, 
         "MinTrPT": 300, 
@@ -1177,6 +1821,68 @@ Lc23Mu = {
         "mDiffLcTight": 150
     }, 
     "STREAMS": [ "Leptonic" ], 
+    "WGs": [ "RD" ]
+}
+
+PhiToKSKS = {
+    "BUILDERTYPE": "PhiToKSKSAllLinesConf", 
+    "CONFIG": {
+        "D0_DOCACHI2_MAX": 20, 
+        "D0_IPCHI2_MAX": 9, 
+        "D0_MASS_WIN": 40, 
+        "D0_PT_MIN": 800, 
+        "D0_VCHI2NDOF_MAX": 6, 
+        "DoDTF": True, 
+        "GEC_nLongTrk": 250, 
+        "GHOSTPROB_MAX": 0.35, 
+        "JPsi_DOCACHI2_MAX": 20, 
+        "JPsi_IPCHI2_MAX": 9, 
+        "JPsi_MASS_WIN": 120, 
+        "JPsi_PT_MIN": 500, 
+        "JPsi_VCHI2NDOF_MAX": 6, 
+        "KS_DD_DIRA_MIN": 0.999, 
+        "KS_DD_FDCHI2_MIN": 100, 
+        "KS_DD_FD_MIN": 10.0, 
+        "KS_DD_MASS_WINDOW": 20, 
+        "KS_DD_PTMIN": 400, 
+        "KS_DD_VCHI2NDOF_MAX": 4, 
+        "KS_LL_DIRA_MIN": 0.9999, 
+        "KS_LL_FDCHI2_MIN": 100, 
+        "KS_LL_FD_MIN": 10.0, 
+        "KS_LL_MASS_WINDOW": 20, 
+        "KS_LL_PTMIN": 400, 
+        "KS_LL_VCHI2NDOF_MAX": 4, 
+        "K_IPCHI2_MAX": 9, 
+        "K_PIDK_MIN": 7, 
+        "K_PTMIN": 200, 
+        "Lambda_DIRA_MIN": 0.999, 
+        "Lambda_FDCHI2_MIN": 100, 
+        "Lambda_FD_MIN": 10.0, 
+        "Lambda_MASS_WINDOW": 50, 
+        "Lambda_PTMIN": 400, 
+        "Lambda_VCHI2NDOF_MAX": 4, 
+        "Mu_IPCHI2_MAX": 9, 
+        "Mu_PIDmu_MIN": 0, 
+        "Mu_PTMIN": 200, 
+        "Phi_DOCACHI2_MAX": 20, 
+        "Phi_IPCHI2_MAX": 9, 
+        "Phi_MASS_MAX": 1100, 
+        "Phi_PT_MIN": 800, 
+        "Phi_VCHI2NDOF_MAX": 6, 
+        "etaC_DOCACHI2_MAX": 20, 
+        "etaC_IPCHI2_MAX": 9, 
+        "etaC_MASS_WIN": 200, 
+        "etaC_PT_MIN": 400, 
+        "etaC_VCHI2NDOF_MAX": 6, 
+        "prescale_D0ToKsKs": 0.25, 
+        "prescale_EtaCToLL": 1.0, 
+        "prescale_JPsiToKK": 0.002, 
+        "prescale_JPsiToKsKs": 1.0, 
+        "prescale_PhiToKK": 0.001, 
+        "prescale_PhiToKsKs": 1.0, 
+        "prescale_PhiToMuMu": 0.01
+    }, 
+    "STREAMS": [ "Charm" ], 
     "WGs": [ "RD" ]
 }
 
@@ -1281,10 +1987,7 @@ RareStrange = {
         "protonPIDp": 5.0, 
         "protonPIDpTight": 15.0
     }, 
-    "STREAMS": { "Leptonic" :
-                 ['StrippingRareStrangeSigmaMuMuMuLine',
-                  'StrippingRareStrangeSigmaMuMuMuDownLine']
-                 }, 
+    "STREAMS": [ "Leptonic" ], 
     "WGs": [ "RD" ]
 }
 
@@ -1336,125 +2039,156 @@ RnS = {
     "WGs": [ "RD" ]
 }
 
-B2XMuMu = {
-    "BUILDERTYPE": "B2XMuMuConf", 
+Tau2LambdaMu = {
+    "BUILDERTYPE": "Tau2LambdaMuLinesConf", 
     "CONFIG": {
-        "A1_Comb_MassHigh": 5550.0, 
-        "A1_Comb_MassLow": 0.0, 
-        "A1_Dau_MaxIPCHI2": 9.0, 
-        "A1_FlightChi2": 25.0, 
-        "A1_MassHigh": 5500.0, 
-        "A1_MassLow": 0.0, 
-        "A1_MinIPCHI2": 4.0, 
-        "A1_VtxChi2": 10.0, 
-        "B_Comb_MassHigh": 7100.0, 
-        "B_Comb_MassLow": 4800.0, 
-        "B_DIRA": 0.9999, 
-        "B_Dau_MaxIPCHI2": 9.0, 
-        "B_FlightCHI2": 121.0, 
-        "B_IPCHI2": 16.0, 
-        "B_MassHigh": 7000.0, 
-        "B_MassLow": 4900.0, 
-        "B_VertexCHI2": 8.0, 
-        "DECAYS": [
-            "B0 -> J/psi(1S) phi(1020)", 
-            "[B0 -> J/psi(1S) K*(892)0]cc", 
-            "B0 -> J/psi(1S) rho(770)0", 
-            "[B+ -> J/psi(1S) rho(770)+]cc", 
-            "B0 -> J/psi(1S) f_2(1950)", 
-            "B0 -> J/psi(1S) KS0", 
-            "[B0 -> J/psi(1S) D~0]cc", 
-            "[B+ -> J/psi(1S) K+]cc", 
-            "[B+ -> J/psi(1S) pi+]cc", 
-            "[B+ -> J/psi(1S) K*(892)+]cc", 
-            "[B+ -> J/psi(1S) D+]cc", 
-            "[B+ -> J/psi(1S) D*(2010)+]cc", 
-            "[Lambda_b0 -> J/psi(1S) Lambda0]cc", 
-            "[Lambda_b0 -> J/psi(1S) Lambda(1520)0]cc", 
-            "B0 -> J/psi(1S) pi0", 
-            "[B+ -> J/psi(1S) a_1(1260)+]cc", 
-            "[B+ -> J/psi(1S) K_1(1270)+]cc", 
-            "[B+ -> J/psi(1S) K_2(1770)+]cc", 
-            "B0 -> J/psi(1S) K_1(1270)0", 
-            "[B+ -> J/psi(1S) K_1(1400)+]cc", 
-            "B0 -> J/psi(1S) K_1(1400)0"
-        ], 
-        "Dau_DIRA": -0.9, 
-        "Dau_VertexCHI2": 12.0, 
-        "Dimu_Dau_MaxIPCHI2": 9.0, 
-        "Dimu_FlightChi2": 9.0, 
-        "DimuonUPPERMASS": 7100.0, 
-        "DimuonWS": True, 
-        "DplusLOWERMASS": 1600.0, 
-        "DplusUPPERMASS": 2300.0, 
-        "HLT1_FILTER": None, 
-        "HLT2_FILTER": None, 
-        "HadronWS": True, 
-        "Hadron_MinIPCHI2": 6.0, 
-        "K12OmegaK_CombMassHigh": 2000, 
-        "K12OmegaK_CombMassLow": 400, 
-        "K12OmegaK_MassHigh": 2100, 
-        "K12OmegaK_MassLow": 300, 
-        "K12OmegaK_VtxChi2": 10, 
-        "KpiVXCHI2NDOF": 9.0, 
-        "KsWINDOW": 30.0, 
-        "Kstar_Comb_MassHigh": 6200.0, 
-        "Kstar_Comb_MassLow": 0.0, 
-        "Kstar_Dau_MaxIPCHI2": 9.0, 
-        "Kstar_FlightChi2": 9.0, 
-        "Kstar_MassHigh": 6200.0, 
-        "Kstar_MassLow": 0.0, 
-        "Kstar_MinIPCHI2": 0.0, 
-        "KstarplusWINDOW": 300.0, 
-        "L0DU_FILTER": None, 
-        "LambdaWINDOW": 30.0, 
-        "LongLivedPT": 0.0, 
-        "LongLivedTau": 2, 
-        "MuonNoPIDs_PIDmu": 0.0, 
-        "MuonPID": -3.0, 
-        "Muon_IsMuon": True, 
-        "Muon_MinIPCHI2": 9.0, 
-        "OmegaChi2Prob": 1e-05, 
-        "Omega_CombMassWin": 200, 
-        "Omega_MassWin": 100, 
-        "Pi0ForOmegaMINPT": 500.0, 
-        "Pi0MINPT": 800.0, 
-        "RelatedInfoTools": [
-            {
-                "Location": "ConeIsoInfo", 
-                "Type": "RelInfoConeVariables", 
-                "Variables": [
-                    "CONEANGLE", 
-                    "CONEMULT", 
-                    "CONEPTASYM", 
-                    "CONEPT", 
-                    "CONEP", 
-                    "CONEPASYM", 
-                    "CONEDELTAETA", 
-                    "CONEDELTAPHI"
-                ]
-            }, 
-            {
-                "Location": "VtxIsoInfo", 
-                "Type": "RelInfoVertexIsolation", 
-                "Variables": [
-                    "VTXISONUMVTX", 
-                    "VTXISODCHI2ONETRACK", 
-                    "VTXISODCHI2MASSONETRACK", 
-                    "VTXISODCHI2TWOTRACK", 
-                    "VTXISODCHI2MASSTWOTRACK"
-                ]
-            }, 
-            {
-                "Location": "VtxIsoBDTInfo", 
-                "Type": "RelInfoVertexIsolationBDT"
-            }
-        ], 
-        "SpdMult": 600, 
-        "Track_GhostProb": 0.5, 
-        "UseNoPIDsHadrons": True
+        "Tau2LambdaMuPrescale": 1.0, 
+        "TauPostscale": 1.0, 
+        "TauPrescale": 1.0
     }, 
     "STREAMS": [ "Leptonic" ], 
+    "WGs": [ "RD" ]
+}
+
+ZVTOP = {
+    "BUILDERTYPE": "ZVTOP_Conf", 
+    "CONFIG": {
+        "B2TauTauSS_LinePostscale": 1, 
+        "B2TauTauSS_LinePrescale": 1, 
+        "B2TauTau_LinePostscale": 1, 
+        "B2TauTau_LinePrescale": 1, 
+        "B_TAUPI_2NDMINIPS": "20", 
+        "DIRA_B": "0.99", 
+        "DIRA_TAU": "0.98", 
+        "DOCA_TAU": "0.4", 
+        "FDCHI2_B": "225", 
+        "FDCHI2_TAU": "16", 
+        "FDRHO_TAU": "0.1", 
+        "FDZ_TAU": "2.0", 
+        "FD_B": "90", 
+        "High_LinePostscale": 1, 
+        "High_LinePrescale": 1, 
+        "IPCHI2_B_CHILD_BEST": "16", 
+        "IPCHI2_B_TAU_CHILD_BEST": "150", 
+        "IPCHI2_B_TAU_CHILD_WORSE": "16", 
+        "IPCHI2_HAD_ALL_FINAL_STATE": "40", 
+        "IPCHI2_TAU": "9", 
+        "MASS_HIGH_B": "7000", 
+        "MASS_HIGH_TAU": "1800", 
+        "MASS_LOW_B": "2000", 
+        "MASS_LOW_TAU": "500", 
+        "MCOR_HIGH_B": "10000", 
+        "MCOR_LOW_B": "0", 
+        "MIPCHI2_B": "16", 
+        "MIPCHI2_B_HIGH": "16", 
+        "PID_HAD_ALL_FINAL_STATE": "5", 
+        "PTMAX_HAD_ALL_FINAL_STATE": "500", 
+        "PT_B_CHILD_BEST": "2000", 
+        "PT_B_PIONS_TOTAL": "7000", 
+        "PT_B_TAU_CHILD_BEST": "4000", 
+        "PT_B_TM": "1900", 
+        "PT_B_TM_HIGH": "2000", 
+        "PT_B_TT": "1900", 
+        "PT_B_TT_HIGH": "2000", 
+        "PT_HAD_ALL_FINAL_STATE": "1200", 
+        "PT_TAU": "1250", 
+        "P_B_CHILD_BEST": "10000", 
+        "P_HAD_ALL_FINAL_STATE": "6000", 
+        "RelatedInfoTools": [
+            {
+                "Location": "MuonIsolationBDT", 
+                "Type": "RelInfoBstautauMuonIsolationBDT", 
+                "Variables": [
+                    "BSTAUTAUMUONISOBDTFIRSTVALUE", 
+                    "BSTAUTAUMUONISOBDTSECONDVALUE", 
+                    "BSTAUTAUMUONISOBDTTHIRDVALUE"
+                ]
+            }, 
+            {
+                "Location": "MuonIsolation", 
+                "Type": "RelInfoBstautauMuonIsolation", 
+                "Variables": [
+                    "BSTAUTAUMUONISOFIRSTVALUE", 
+                    "BSTAUTAUMUONISOSECONDVALUE"
+                ]
+            }, 
+            {
+                "Location": "TauIsolationBDT", 
+                "Type": "RelInfoBstautauTauIsolationBDT", 
+                "Variables": [
+                    "BSTAUTAUTAUISOBDTFIRSTVALUETAUP", 
+                    "BSTAUTAUTAUISOBDTSECONDVALUETAUP", 
+                    "BSTAUTAUTAUISOBDTTHIRDVALUETAUP", 
+                    "BSTAUTAUTAUISOBDTFIRSTVALUETAUM", 
+                    "BSTAUTAUTAUISOBDTSECONDVALUETAUM", 
+                    "BSTAUTAUTAUISOBDTTHIRDVALUETAUM"
+                ]
+            }, 
+            {
+                "Location": "TauIsolation", 
+                "Type": "RelInfoBstautauTauIsolation", 
+                "Variables": [
+                    "BSTAUTAUTAUISOFIRSTVALUETAUP", 
+                    "BSTAUTAUTAUISOSECONDVALUETAUP", 
+                    "BSTAUTAUTAUISOFIRSTVALUETAUM", 
+                    "BSTAUTAUTAUISOSECONDVALUETAUM"
+                ]
+            }, 
+            {
+                "Location": "TrackIsolationBDT", 
+                "Type": "RelInfoBstautauTrackIsolationBDT", 
+                "Variables": [
+                    "BSTAUTAUTRACKISOBDTFIRSTVALUETAUPPIM", 
+                    "BSTAUTAUTRACKISOBDTSECONDVALUETAUPPIM", 
+                    "BSTAUTAUTRACKISOBDTTHIRDVALUETAUPPIM", 
+                    "BSTAUTAUTRACKISOBDTFIRSTVALUETAUPPIP1", 
+                    "BSTAUTAUTRACKISOBDTSECONDVALUETAUPPIP1", 
+                    "BSTAUTAUTRACKISOBDTTHIRDVALUETAUPPIP1", 
+                    "BSTAUTAUTRACKISOBDTFIRSTVALUETAUPPIP2", 
+                    "BSTAUTAUTRACKISOBDTSECONDVALUETAUPPIP2", 
+                    "BSTAUTAUTRACKISOBDTTHIRDVALUETAUPPIP2", 
+                    "BSTAUTAUTRACKISOBDTFIRSTVALUETAUMPIP", 
+                    "BSTAUTAUTRACKISOBDTSECONDVALUETAUMPIP", 
+                    "BSTAUTAUTRACKISOBDTTHIRDVALUETAUMPIP", 
+                    "BSTAUTAUTRACKISOBDTFIRSTVALUETAUMPIM1", 
+                    "BSTAUTAUTRACKISOBDTSECONDVALUETAUMPIM1", 
+                    "BSTAUTAUTRACKISOBDTTHIRDVALUETAUMPIM1", 
+                    "BSTAUTAUTRACKISOBDTFIRSTVALUETAUMPIM2", 
+                    "BSTAUTAUTRACKISOBDTSECONDVALUETAUMPIM2", 
+                    "BSTAUTAUTRACKISOBDTTHIRDVALUETAUMPIM2"
+                ]
+            }, 
+            {
+                "Location": "TrackIsolation", 
+                "Type": "RelInfoBstautauTrackIsolation", 
+                "Variables": [
+                    "BSTAUTAUTRACKISOFIRSTVALUETAUPPIM", 
+                    "BSTAUTAUTRACKISOFIRSTVALUETAUPPIP1", 
+                    "BSTAUTAUTRACKISOFIRSTVALUETAUPPIP2", 
+                    "BSTAUTAUTRACKISOFIRSTVALUETAUMPIP", 
+                    "BSTAUTAUTRACKISOFIRSTVALUETAUMPIM1", 
+                    "BSTAUTAUTRACKISOFIRSTVALUETAUMPIM2"
+                ]
+            }, 
+            {
+                "Location": "CDFIso", 
+                "Type": "RelInfoBstautauCDFIso"
+            }, 
+            {
+                "Location": "ZVisoBDT", 
+                "Type": "RelInfoBstautauZVisoBDT", 
+                "Variables": [
+                    "ZVISOTAUP", 
+                    "ZVISOTAUM"
+                ]
+            }
+        ], 
+        "TRACKCHI2_HAD_ALL_FINAL_STATE": "4", 
+        "TRGHOPROB_HAD_ALL_FINAL_STATE": "0.4", 
+        "VCHI2_B": "90", 
+        "VCHI2_TAU": "12"
+    }, 
+    "STREAMS": [ "Bhadron" ], 
     "WGs": [ "RD" ]
 }
 
