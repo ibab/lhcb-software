@@ -1,9 +1,9 @@
-##########################################################################################################################
-##                          S T R I P P I N G  2 3                                                                      ##
-##                                                                                                                      ##
-##  Configuration for QEE WG                                                                                            ##
-##  Contact person: Ronan Wallace & Chitsanu Khurewathanakul (ronan.wallace@cern.ch & chitsanu.khurewathanakul@cern.ch) ##
-##########################################################################################################################
+##################################################################################
+##                          S T R I P P I N G  2 4                              ##
+##                                                                              ##
+##  Configuration for QEE WG                                                    ##
+##  Contact person: Chitsanu Khurewathanakul (chitsanu.khurewathanakul@cern.ch) ##
+##################################################################################
 
 from GaudiKernel.SystemOfUnits import *
 
@@ -28,6 +28,13 @@ DY2MuMu = {
         "DY3MinMass": 10000.0, 
         "DY4MaxMass": 40000.0, 
         "DY4MinMass": 20000.0, 
+        "RawEvents": [
+            "Muon", 
+            "Calo", 
+            "Rich", 
+            "Velo", 
+            "Tracker"
+        ], 
         "p": 10000.0, 
         "pT1": 1500.0, 
         "pT2": 3000.0, 
@@ -74,7 +81,7 @@ Dijets = {
             "MIN_SUM_PT": 10000.0
         }, 
         "HLT": {
-            "LINE": "Hlt1TrackMuon"
+            "LINE": "Hlt1TrackMuon.*Decision"
         }, 
         "JET": {
             "JEC": False, 
@@ -355,178 +362,439 @@ DisplVertices = {
 Ditau = {
     "BUILDERTYPE": "DitauConf", 
     "CONFIG": {
-        "EX_postscale": 1.0, 
-        "EX_prescale": 1.0, 
-        "EXss_postscale": 1.0, 
-        "EXss_prescale": 1.0, 
-        "HH_postscale": 1.0, 
-        "HH_prescale": 1.0, 
-        "HHss_postscale": 0.5, 
-        "HHss_prescale": 1.0, 
-        "MX_postscale": 1.0, 
-        "MX_prescale": 1.0, 
-        "MXss_postscale": 1.0, 
-        "MXss_prescale": 1.0, 
+        "CONSTRUCTORS": {
+            "EX": {
+                "RelatedInfoTools": [
+                    {
+                        "ConeAngle": 0.5, 
+                        "DaughterLocations": {
+                            " Z0 -> ^e+   X": "taueplus", 
+                            " Z0 -> ^e-   X": "taueminus", 
+                            " Z0 -> ^mu+  X": "taumuplus", 
+                            " Z0 -> ^mu-  X": "taumuminus", 
+                            " Z0 -> ^pi+  X": "tauh1plus", 
+                            " Z0 -> ^pi-  X": "tauh1minus", 
+                            " Z0 -> ^tau+ X": "tauh3plus", 
+                            " Z0 -> ^tau- X": "tauh3minus", 
+                            "[Z0 ->  e-   ^e-   ]CC": "taue2", 
+                            "[Z0 ->  mu-  ^mu-  ]CC": "taumu2", 
+                            "[Z0 ->  pi-  ^pi-  ]CC": "tauh12", 
+                            "[Z0 ->  tau- ^tau- ]CC": "tauh32", 
+                            "[Z0 -> ^e-    e-   ]CC": "taue1", 
+                            "[Z0 -> ^mu-   mu-  ]CC": "taumu1", 
+                            "[Z0 -> ^pi-   pi-  ]CC": "tauh11", 
+                            "[Z0 -> ^tau-  tau- ]CC": "tauh31"
+                        }, 
+                        "IgnoreUnmatchedDescriptors": True, 
+                        "Type": "RelInfoConeVariables"
+                    }
+                ], 
+                "prescale": 1.0
+            }, 
+            "EXnoiso": {
+                "RelatedInfoTools": [
+                    {
+                        "ConeAngle": 0.5, 
+                        "DaughterLocations": {
+                            " Z0 -> ^e+   X": "taueplus", 
+                            " Z0 -> ^e-   X": "taueminus", 
+                            " Z0 -> ^mu+  X": "taumuplus", 
+                            " Z0 -> ^mu-  X": "taumuminus", 
+                            " Z0 -> ^pi+  X": "tauh1plus", 
+                            " Z0 -> ^pi-  X": "tauh1minus", 
+                            " Z0 -> ^tau+ X": "tauh3plus", 
+                            " Z0 -> ^tau- X": "tauh3minus", 
+                            "[Z0 ->  e-   ^e-   ]CC": "taue2", 
+                            "[Z0 ->  mu-  ^mu-  ]CC": "taumu2", 
+                            "[Z0 ->  pi-  ^pi-  ]CC": "tauh12", 
+                            "[Z0 ->  tau- ^tau- ]CC": "tauh32", 
+                            "[Z0 -> ^e-    e-   ]CC": "taue1", 
+                            "[Z0 -> ^mu-   mu-  ]CC": "taumu1", 
+                            "[Z0 -> ^pi-   pi-  ]CC": "tauh11", 
+                            "[Z0 -> ^tau-  tau- ]CC": "tauh31"
+                        }, 
+                        "IgnoreUnmatchedDescriptors": True, 
+                        "Type": "RelInfoConeVariables"
+                    }
+                ], 
+                "prescale": 0.04
+            }, 
+            "EXssnoiso": {
+                "RelatedInfoTools": [
+                    {
+                        "ConeAngle": 0.5, 
+                        "DaughterLocations": {
+                            " Z0 -> ^e+   X": "taueplus", 
+                            " Z0 -> ^e-   X": "taueminus", 
+                            " Z0 -> ^mu+  X": "taumuplus", 
+                            " Z0 -> ^mu-  X": "taumuminus", 
+                            " Z0 -> ^pi+  X": "tauh1plus", 
+                            " Z0 -> ^pi-  X": "tauh1minus", 
+                            " Z0 -> ^tau+ X": "tauh3plus", 
+                            " Z0 -> ^tau- X": "tauh3minus", 
+                            "[Z0 ->  e-   ^e-   ]CC": "taue2", 
+                            "[Z0 ->  mu-  ^mu-  ]CC": "taumu2", 
+                            "[Z0 ->  pi-  ^pi-  ]CC": "tauh12", 
+                            "[Z0 ->  tau- ^tau- ]CC": "tauh32", 
+                            "[Z0 -> ^e-    e-   ]CC": "taue1", 
+                            "[Z0 -> ^mu-   mu-  ]CC": "taumu1", 
+                            "[Z0 -> ^pi-   pi-  ]CC": "tauh11", 
+                            "[Z0 -> ^tau-  tau- ]CC": "tauh31"
+                        }, 
+                        "IgnoreUnmatchedDescriptors": True, 
+                        "Type": "RelInfoConeVariables"
+                    }
+                ], 
+                "prescale": 0.04
+            }, 
+            "HH": {
+                "RelatedInfoTools": [
+                    {
+                        "ConeAngle": 0.5, 
+                        "DaughterLocations": {
+                            " Z0 -> ^e+   X": "taueplus", 
+                            " Z0 -> ^e-   X": "taueminus", 
+                            " Z0 -> ^mu+  X": "taumuplus", 
+                            " Z0 -> ^mu-  X": "taumuminus", 
+                            " Z0 -> ^pi+  X": "tauh1plus", 
+                            " Z0 -> ^pi-  X": "tauh1minus", 
+                            " Z0 -> ^tau+ X": "tauh3plus", 
+                            " Z0 -> ^tau- X": "tauh3minus", 
+                            "[Z0 ->  e-   ^e-   ]CC": "taue2", 
+                            "[Z0 ->  mu-  ^mu-  ]CC": "taumu2", 
+                            "[Z0 ->  pi-  ^pi-  ]CC": "tauh12", 
+                            "[Z0 ->  tau- ^tau- ]CC": "tauh32", 
+                            "[Z0 -> ^e-    e-   ]CC": "taue1", 
+                            "[Z0 -> ^mu-   mu-  ]CC": "taumu1", 
+                            "[Z0 -> ^pi-   pi-  ]CC": "tauh11", 
+                            "[Z0 -> ^tau-  tau- ]CC": "tauh31"
+                        }, 
+                        "IgnoreUnmatchedDescriptors": True, 
+                        "Type": "RelInfoConeVariables"
+                    }
+                ], 
+                "prescale": 1.0
+            }, 
+            "HHnoiso": {
+                "RelatedInfoTools": [
+                    {
+                        "ConeAngle": 0.5, 
+                        "DaughterLocations": {
+                            " Z0 -> ^e+   X": "taueplus", 
+                            " Z0 -> ^e-   X": "taueminus", 
+                            " Z0 -> ^mu+  X": "taumuplus", 
+                            " Z0 -> ^mu-  X": "taumuminus", 
+                            " Z0 -> ^pi+  X": "tauh1plus", 
+                            " Z0 -> ^pi-  X": "tauh1minus", 
+                            " Z0 -> ^tau+ X": "tauh3plus", 
+                            " Z0 -> ^tau- X": "tauh3minus", 
+                            "[Z0 ->  e-   ^e-   ]CC": "taue2", 
+                            "[Z0 ->  mu-  ^mu-  ]CC": "taumu2", 
+                            "[Z0 ->  pi-  ^pi-  ]CC": "tauh12", 
+                            "[Z0 ->  tau- ^tau- ]CC": "tauh32", 
+                            "[Z0 -> ^e-    e-   ]CC": "taue1", 
+                            "[Z0 -> ^mu-   mu-  ]CC": "taumu1", 
+                            "[Z0 -> ^pi-   pi-  ]CC": "tauh11", 
+                            "[Z0 -> ^tau-  tau- ]CC": "tauh31"
+                        }, 
+                        "IgnoreUnmatchedDescriptors": True, 
+                        "Type": "RelInfoConeVariables"
+                    }
+                ], 
+                "prescale": 0.04
+            }, 
+            "HHssnoiso": {
+                "RelatedInfoTools": [
+                    {
+                        "ConeAngle": 0.5, 
+                        "DaughterLocations": {
+                            " Z0 -> ^e+   X": "taueplus", 
+                            " Z0 -> ^e-   X": "taueminus", 
+                            " Z0 -> ^mu+  X": "taumuplus", 
+                            " Z0 -> ^mu-  X": "taumuminus", 
+                            " Z0 -> ^pi+  X": "tauh1plus", 
+                            " Z0 -> ^pi-  X": "tauh1minus", 
+                            " Z0 -> ^tau+ X": "tauh3plus", 
+                            " Z0 -> ^tau- X": "tauh3minus", 
+                            "[Z0 ->  e-   ^e-   ]CC": "taue2", 
+                            "[Z0 ->  mu-  ^mu-  ]CC": "taumu2", 
+                            "[Z0 ->  pi-  ^pi-  ]CC": "tauh12", 
+                            "[Z0 ->  tau- ^tau- ]CC": "tauh32", 
+                            "[Z0 -> ^e-    e-   ]CC": "taue1", 
+                            "[Z0 -> ^mu-   mu-  ]CC": "taumu1", 
+                            "[Z0 -> ^pi-   pi-  ]CC": "tauh11", 
+                            "[Z0 -> ^tau-  tau- ]CC": "tauh31"
+                        }, 
+                        "IgnoreUnmatchedDescriptors": True, 
+                        "Type": "RelInfoConeVariables"
+                    }
+                ], 
+                "prescale": 0.04
+            }, 
+            "MX": {
+                "RelatedInfoTools": [
+                    {
+                        "ConeAngle": 0.5, 
+                        "DaughterLocations": {
+                            " Z0 -> ^e+   X": "taueplus", 
+                            " Z0 -> ^e-   X": "taueminus", 
+                            " Z0 -> ^mu+  X": "taumuplus", 
+                            " Z0 -> ^mu-  X": "taumuminus", 
+                            " Z0 -> ^pi+  X": "tauh1plus", 
+                            " Z0 -> ^pi-  X": "tauh1minus", 
+                            " Z0 -> ^tau+ X": "tauh3plus", 
+                            " Z0 -> ^tau- X": "tauh3minus", 
+                            "[Z0 ->  e-   ^e-   ]CC": "taue2", 
+                            "[Z0 ->  mu-  ^mu-  ]CC": "taumu2", 
+                            "[Z0 ->  pi-  ^pi-  ]CC": "tauh12", 
+                            "[Z0 ->  tau- ^tau- ]CC": "tauh32", 
+                            "[Z0 -> ^e-    e-   ]CC": "taue1", 
+                            "[Z0 -> ^mu-   mu-  ]CC": "taumu1", 
+                            "[Z0 -> ^pi-   pi-  ]CC": "tauh11", 
+                            "[Z0 -> ^tau-  tau- ]CC": "tauh31"
+                        }, 
+                        "IgnoreUnmatchedDescriptors": True, 
+                        "Type": "RelInfoConeVariables"
+                    }
+                ], 
+                "prescale": 1.0
+            }, 
+            "MXnoiso": {
+                "RelatedInfoTools": [
+                    {
+                        "ConeAngle": 0.5, 
+                        "DaughterLocations": {
+                            " Z0 -> ^e+   X": "taueplus", 
+                            " Z0 -> ^e-   X": "taueminus", 
+                            " Z0 -> ^mu+  X": "taumuplus", 
+                            " Z0 -> ^mu-  X": "taumuminus", 
+                            " Z0 -> ^pi+  X": "tauh1plus", 
+                            " Z0 -> ^pi-  X": "tauh1minus", 
+                            " Z0 -> ^tau+ X": "tauh3plus", 
+                            " Z0 -> ^tau- X": "tauh3minus", 
+                            "[Z0 ->  e-   ^e-   ]CC": "taue2", 
+                            "[Z0 ->  mu-  ^mu-  ]CC": "taumu2", 
+                            "[Z0 ->  pi-  ^pi-  ]CC": "tauh12", 
+                            "[Z0 ->  tau- ^tau- ]CC": "tauh32", 
+                            "[Z0 -> ^e-    e-   ]CC": "taue1", 
+                            "[Z0 -> ^mu-   mu-  ]CC": "taumu1", 
+                            "[Z0 -> ^pi-   pi-  ]CC": "tauh11", 
+                            "[Z0 -> ^tau-  tau- ]CC": "tauh31"
+                        }, 
+                        "IgnoreUnmatchedDescriptors": True, 
+                        "Type": "RelInfoConeVariables"
+                    }
+                ], 
+                "prescale": 0.07
+            }, 
+            "MXssnoiso": {
+                "RelatedInfoTools": [
+                    {
+                        "ConeAngle": 0.5, 
+                        "DaughterLocations": {
+                            " Z0 -> ^e+   X": "taueplus", 
+                            " Z0 -> ^e-   X": "taueminus", 
+                            " Z0 -> ^mu+  X": "taumuplus", 
+                            " Z0 -> ^mu-  X": "taumuminus", 
+                            " Z0 -> ^pi+  X": "tauh1plus", 
+                            " Z0 -> ^pi-  X": "tauh1minus", 
+                            " Z0 -> ^tau+ X": "tauh3plus", 
+                            " Z0 -> ^tau- X": "tauh3minus", 
+                            "[Z0 ->  e-   ^e-   ]CC": "taue2", 
+                            "[Z0 ->  mu-  ^mu-  ]CC": "taumu2", 
+                            "[Z0 ->  pi-  ^pi-  ]CC": "tauh12", 
+                            "[Z0 ->  tau- ^tau- ]CC": "tauh32", 
+                            "[Z0 -> ^e-    e-   ]CC": "taue1", 
+                            "[Z0 -> ^mu-   mu-  ]CC": "taumu1", 
+                            "[Z0 -> ^pi-   pi-  ]CC": "tauh11", 
+                            "[Z0 -> ^tau-  tau- ]CC": "tauh31"
+                        }, 
+                        "IgnoreUnmatchedDescriptors": True, 
+                        "Type": "RelInfoConeVariables"
+                    }
+                ], 
+                "prescale": 0.07
+            }
+        }, 
+        "DITAU": {
+            "ee": {
+                "ccuts": {
+                    "min_AM": 8000.0, 
+                    "min_APTMAX": 4000.0
+                }, 
+                "dcuts": {
+                    "e": {
+                        "extracut": "ALL"
+                    }
+                }, 
+                "mcuts": {
+                    "extracut": "ALL"
+                }
+            }, 
+            "eh1": {
+                "ccuts": {
+                    "extracut": "ATRUE", 
+                    "min_AM": 8000.0, 
+                    "min_APTMAX": 4000.0
+                }, 
+                "dcuts": {
+                    "e": {
+                        "extracut": "ALL"
+                    }, 
+                    "pi": {
+                        "extracut": "ALL"
+                    }
+                }, 
+                "mcuts": {
+                    "extracut": "ALL"
+                }
+            }, 
+            "eh3": {
+                "ccuts": {
+                    "min_AM": 8000.0, 
+                    "min_APTMAX": 4000.0
+                }, 
+                "dcuts": {
+                    "e": {
+                        "extracut": "ALL"
+                    }, 
+                    "tau": {
+                        "extracut": "ALL"
+                    }
+                }, 
+                "mcuts": {
+                    "extracut": "ALL"
+                }
+            }, 
+            "emu": {
+                "ccuts": {
+                    "min_AM": 8000.0, 
+                    "min_APTMAX": 4000.0
+                }, 
+                "dcuts": {
+                    "e": {
+                        "extracut": "ALL"
+                    }, 
+                    "mu": {
+                        "extracut": "ALL"
+                    }
+                }, 
+                "mcuts": {
+                    "extracut": "ALL"
+                }
+            }, 
+            "h1h1": {
+                "ccuts": {
+                    "min_AM": 12000.0, 
+                    "min_APTMAX": 9000.0
+                }, 
+                "dcuts": {
+                    "pi": {
+                        "extracut": "ALL"
+                    }
+                }, 
+                "mcuts": {
+                    "extracut": "ALL"
+                }
+            }, 
+            "h1h3": {
+                "ccuts": {
+                    "min_AM": 16000.0, 
+                    "min_APTMAX": 12000.0
+                }, 
+                "dcuts": {
+                    "pi": {
+                        "extracut": "ALL"
+                    }, 
+                    "tau": {
+                        "extracut": "ALL"
+                    }
+                }, 
+                "mcuts": {
+                    "extracut": "ALL"
+                }
+            }, 
+            "h1mu": {
+                "ccuts": {
+                    "min_AM": 8000.0, 
+                    "min_APTMAX": 4000.0
+                }, 
+                "dcuts": {
+                    "mu": {
+                        "extracut": "ALL"
+                    }, 
+                    "pi": {
+                        "extracut": "ALL"
+                    }
+                }, 
+                "mcuts": {
+                    "extracut": "ALL"
+                }
+            }, 
+            "h3h3": {
+                "ccuts": {
+                    "min_AM": 16000.0, 
+                    "min_APTMAX": 12000.0
+                }, 
+                "dcuts": {
+                    "tau": {
+                        "extracut": "ALL"
+                    }
+                }, 
+                "mcuts": {
+                    "extracut": "ALL"
+                }
+            }, 
+            "h3mu": {
+                "ccuts": {
+                    "min_AM": 8000.0, 
+                    "min_APTMAX": 4000.0
+                }, 
+                "dcuts": {
+                    "mu": {
+                        "extracut": "ALL"
+                    }, 
+                    "tau": {
+                        "extracut": "ALL"
+                    }
+                }, 
+                "mcuts": {
+                    "extracut": "ALL"
+                }
+            }, 
+            "mumu": {
+                "ccuts": {
+                    "min_AM": 8000.0, 
+                    "min_APTMAX": 4000.0
+                }, 
+                "dcuts": {
+                    "mu": {
+                        "extracut": "ALL"
+                    }
+                }, 
+                "mcuts": {
+                    "extracut": "ALL"
+                }
+            }
+        }, 
+        "PVRefitter": None, 
         "TES_e": "Phys/StdAllNoPIDsElectrons/Particles", 
         "TES_mu": "Phys/StdAllLooseMuons/Particles", 
         "TES_pi": "Phys/StdAllNoPIDsPions/Particles", 
-        "ditau_ee": {
-            "ccuts": {
-                "min_AM": 12000.0, 
-                "min_APTMAX": 9000.0
-            }, 
-            "dcuts": {
-                "e": {
-                    "extracut": "ALL"
-                }
-            }, 
-            "mcuts": {
-                "extracut": "ALL"
-            }
-        }, 
-        "ditau_eh1": {
-            "ccuts": {
-                "extracut": "ATRUE", 
-                "min_AM": 12000.0, 
-                "min_APTMAX": 9000.0
-            }, 
-            "dcuts": {
-                "e": {
-                    "extracut": "ALL"
-                }, 
-                "pi": {
-                    "extracut": "ALL"
-                }
-            }, 
-            "mcuts": {
-                "extracut": "ALL"
-            }
-        }, 
-        "ditau_eh3": {
-            "ccuts": {
-                "min_AM": 12000.0, 
-                "min_APTMAX": 9000.0
-            }, 
-            "dcuts": {
-                "e": {
-                    "extracut": "ALL"
-                }, 
-                "tau": {
-                    "extracut": "ALL"
-                }
-            }, 
-            "mcuts": {
-                "extracut": "ALL"
-            }
-        }, 
-        "ditau_emu": {
-            "ccuts": {
-                "min_AM": 12000.0, 
-                "min_APTMAX": 9000.0
-            }, 
-            "dcuts": {
-                "e": {
-                    "extracut": "ALL"
-                }, 
-                "mu": {
-                    "extracut": "ALL"
-                }
-            }, 
-            "mcuts": {
-                "extracut": "ALL"
-            }
-        }, 
-        "ditau_h1h1": {
-            "ccuts": {
-                "min_AM": 12000.0, 
-                "min_APTMAX": 9000.0
-            }, 
-            "dcuts": {
-                "pi": {
-                    "extracut": "ALL"
-                }
-            }, 
-            "mcuts": {
-                "extracut": "ALL"
-            }
-        }, 
-        "ditau_h1h3": {
-            "ccuts": {
-                "min_AM": 12000.0, 
-                "min_APTMAX": 9000.0
-            }, 
-            "dcuts": {
-                "pi": {
-                    "extracut": "ALL"
-                }, 
-                "tau": {
-                    "extracut": "ALL"
-                }
-            }, 
-            "mcuts": {
-                "extracut": "ALL"
-            }
-        }, 
-        "ditau_h1mu": {
-            "ccuts": {
-                "min_AM": 8000.0
-            }, 
-            "dcuts": {
-                "mu": {
-                    "extracut": "ALL"
-                }, 
-                "pi": {
-                    "extracut": "ALL"
-                }
-            }, 
-            "mcuts": {
-                "extracut": "ALL"
-            }
-        }, 
-        "ditau_h3h3": {
-            "ccuts": {
-                "min_AM": 8000.0
-            }, 
-            "dcuts": {
-                "tau": {
-                    "extracut": "ALL"
-                }
-            }, 
-            "mcuts": {
-                "extracut": "ALL"
-            }
-        }, 
-        "ditau_h3mu": {
-            "ccuts": {
-                "min_AM": 8000.0
-            }, 
-            "dcuts": {
-                "mu": {
-                    "extracut": "ALL"
-                }, 
-                "tau": {
-                    "extracut": "ALL"
-                }
-            }, 
-            "mcuts": {
-                "extracut": "ALL"
-            }
-        }, 
-        "ditau_mumu": {
-            "ccuts": {
-                "min_AM": 8000.0
-            }, 
-            "dcuts": {
-                "mu": {
-                    "extracut": "ALL"
-                }
-            }, 
-            "mcuts": {
-                "extracut": "ALL"
-            }
-        }, 
         "ditau_pcomb": {
-            "": "MomentumCombiner"
+            "": "MomentumCombiner:PUBLIC"
+        }, 
+        "iso_e": {
+            "min_PTFrac05C": 0.7
+        }, 
+        "iso_h1": {
+            "min_PTFrac05C": 0.8
+        }, 
+        "iso_h3": {
+            "min_PTFrac05C": 0.8
+        }, 
+        "iso_mu": {
+            "min_PTFrac05C": 0.8
         }, 
         "preambulo": "\n", 
         "tau_e": {
@@ -534,47 +802,38 @@ Ditau = {
             "ISMUONLOOSE": False, 
             "extracut": "ALL", 
             "max_ETA": 4.5, 
-            "max_HCALFrac": 0.1, 
             "min_CaloPrsE": 50.0, 
-            "min_ETA": 2, 
+            "min_ECALFrac": 0.1, 
+            "min_ETA": 2.0, 
             "min_PT": 4000.0, 
-            "min_PTFrac05C": 0.7, 
             "min_TRPCHI2": 0.01
         }, 
         "tau_h1": {
             "ISMUONLOOSE": False, 
             "ISPIONORKAON": True, 
             "extracut": "ALL", 
-            "max_ETA": 3.75, 
-            "min_ETA": 2.25, 
-            "min_HCALFrac": 0.05, 
+            "max_ETA": 4.5, 
+            "min_ETA": 2.0, 
             "min_PT": 4000.0, 
-            "min_PTFrac05C": 0.8, 
             "min_TRPCHI2": 0.01
         }, 
         "tau_h3": {
             "ccuts": {
-                "max_AM": 1600.0, 
-                "min_AM": 500.0
+                "max_AM": 1500.0, 
+                "min_AM": 600.0
             }, 
             "dcuts": {
                 "ISMUONLOOSE": False, 
                 "ISPIONORKAON": True, 
                 "extracut": "ALL", 
-                "max_ETA": 3.75, 
-                "min_ETA": 2.25, 
-                "min_HCALFrac": 0.05, 
+                "max_ETA": 4.5, 
+                "min_ETA": 2.0, 
                 "min_PT": 500.0, 
                 "min_TRPCHI2": 0.01
             }, 
             "mcuts": {
                 "max_DRTRIOMAX": 0.4, 
-                "max_DRTRIOMID": 0.3, 
-                "max_DRTRIOMIN": 0.2, 
                 "max_VCHI2PDOF": 20.0, 
-                "min_PTFrac05C": 0.8, 
-                "min_PTTRIOMAX": 2000.0, 
-                "min_PTTRIOMID": 1000.0, 
                 "min_PTTRIOMIN": 500.0
             }
         }, 
@@ -585,7 +844,6 @@ Ditau = {
             "max_ETA": 4.5, 
             "min_ETA": 2.0, 
             "min_PT": 4000.0, 
-            "min_PTFrac05C": 0.8, 
             "min_TRPCHI2": 0.01
         }
     }, 
@@ -636,22 +894,40 @@ H24Mu = {
     "WGs": [ "QEE" ]
 }
 
-HighPtTopoJets = {
-    "BUILDERTYPE": "HighPtTopoJetsConf", 
+HighPtTau = {
+    "BUILDERTYPE": "HighPtTauConf", 
     "CONFIG": {
-        "HLT2": "HLT_PASS_RE('Hlt2Topo.*Decision')", 
-        "HighPtTopo10000_Prescale": 0.0014, 
-        "HighPtTopo1000_Prescale": 0.00017, 
-        "HighPtTopo20000_Cone55_Prescale": 0.1, 
-        "HighPtTopo20000_Prescale": 1.0, 
-        "HighPtTopo40000_Prescale": 1.0, 
-        "HighPtTopo_Postscale": 1.0, 
-        "conesize": 0.3, 
-        "pT": 40000, 
-        "pT1": 1000, 
-        "pT10": 10000, 
-        "pT20": 20000, 
-        "pTcone": 55000
+        "2p_pi_PT": 5000.0, 
+        "2p_sumPT": 8000.0, 
+        "3p_pi_PT": 2000.0, 
+        "3p_sumPT": 8000.0, 
+        "CORRM_MAX": 2000.0, 
+        "CORRM_MIN": 1200.0, 
+        "DOCA_MAX": 0.1, 
+        "FDCHI2_MIN": 10, 
+        "FDT_MIN": 0.5, 
+        "HLT2_2Prong": "HLT_PASS_RE('Hlt2EWSingleTauHighPt2ProngDecision')", 
+        "HLT2_3Prong": "HLT_PASS_RE('Hlt2EWSingleTauHighPt3ProngDecision')", 
+        "HighPtTau2ProngLoose_Postscale": 1.0, 
+        "HighPtTau2ProngLoose_Prescale": 0.1, 
+        "HighPtTau2Prong_Postscale": 1.0, 
+        "HighPtTau2Prong_Prescale": 1.0, 
+        "HighPtTau3ProngLoose_Postscale": 1.0, 
+        "HighPtTau3ProngLoose_Prescale": 0.1, 
+        "HighPtTau3Prong_Postscale": 1.0, 
+        "HighPtTau3Prong_Prescale": 1.0, 
+        "ISO_MAX": 4000.0, 
+        "M_MAX": 2000.0, 
+        "M_MIN": 0.0, 
+        "PT_2Prong": 15000.0, 
+        "PT_3Prong": 15000.0, 
+        "RHO_M_MAX": 2000.0, 
+        "RHO_M_MIN": 0.0, 
+        "RHO_PT_MIN": 0.0, 
+        "VCHI2_NDOF_MAX": 20, 
+        "maxchildPT": 5000.0, 
+        "nJets_MAX": -1, 
+        "pi0_PT": 5000.0
     }, 
     "STREAMS": [ "EW" ], 
     "WGs": [ "QEE" ]
@@ -661,7 +937,7 @@ InclbJets = {
     "BUILDERTYPE": "InclbJetsConf", 
     "CONFIG": {
         "DZSVPVCut": 1.0, 
-        "HLT2": "HLT_PASS_RE('Hlt2*.Topo.*Decision')", 
+        "HLT2": "HLT_PASS_RE('Hlt2.*Topo.*Decision')", 
         "NrPVsCut": 1, 
         "NrSeedsCut": 2, 
         "PrtIPSCut": 2.5, 
@@ -669,62 +945,9 @@ InclbJets = {
         "PrtPtCut": 0.6, 
         "SumMomSVCut": 1.0, 
         "TrkChi2Cut": 3.0, 
-        "VertexFitter": "LoKi::VertexFitter", 
+        "VertexFitter": "LoKi::VertexFitter:PUBLIC", 
         "VtxChi2Cut": 20.0, 
         "scale": 0.05
-    }, 
-    "STREAMS": [ "EW" ], 
-    "WGs": [ "QEE" ]
-}
-
-Jets = {
-    "BUILDERTYPE": "JetsConf", 
-    "CONFIG": {
-        "DIJET": {
-            "MAX_COSDPHI": -0.8
-        }, 
-        "HLT": {
-            "LINEMB": "Hlt1MBNoBiasDecision", 
-            "LINETOPO": "Hlt2Topo"
-        }, 
-        "JET": {
-            "EXTLOW_PT": 7000.0, 
-            "HIGH_PT": 90000.0, 
-            "JEC": False, 
-            "LOW_PT": 17000.0, 
-            "MEDIUM_PT": 50000.0, 
-            "MIN_PT": 5000.0, 
-            "R": 0.5, 
-            "VERYLOW_PT": 15000.0
-        }, 
-        "PRESCALE": {
-            "DIFF": 1.0, 
-            "MB": 1.0, 
-            "_3jets_Pt7_3sv": 1.0, 
-            "_4jets_Pt5_0sv_Prescaled": 0.01, 
-            "_4jets_Pt5_3sv": 1.0, 
-            "bJetPT15": 0.005, 
-            "bJetPT50": 0.1, 
-            "bJetPT90": 1.0, 
-            "dibJetT6A": 0.05, 
-            "dibJetT6PS": 1.0
-        }, 
-        "SVR": {
-            "MAX_CHI2": 8, 
-            "MAX_CHI2DOCA": 8, 
-            "MAX_M": 7000.0, 
-            "MIN_BPVDIRA": 0, 
-            "MIN_BPVVDCHI2": 100, 
-            "MIN_SUM_PT": 2000.0
-        }, 
-        "TRK": {
-            "MAX_GHP": 0.4, 
-            "MAX_MULT": 2500, 
-            "MAX_PROBNNGHOST": 0.7, 
-            "MIN_MIPCHI2DV": 16, 
-            "MIN_P": 5000.0, 
-            "MIN_PT": 500.0
-        }
     }, 
     "STREAMS": [ "EW" ], 
     "WGs": [ "QEE" ]
@@ -734,10 +957,16 @@ LLP2MuX = {
     "BUILDERTYPE": "LLP2MuXConf", 
     "CONFIG": {
         "HLT1": "HLT_PASS_RE('Hlt1.*SingleMuonHighPTDecision')", 
-        "HLT2": "HLT_PASS_RE('Hlt2.*SingleMuonHighPTDecision')", 
+        "HLT2": "HLT_PASS_RE('Hlt2.*SingleMuon.*High.*Decision')", 
         "L0DU": "L0_CHANNEL('Muon')", 
         "MinIP": 0.25, 
-        "MinPT": 12000.0
+        "MinPT": 12000.0, 
+        "RawEvents": [
+            "Trigger", 
+            "Muon", 
+            "Calo", 
+            "Rich"
+        ]
     }, 
     "STREAMS": [ "EW" ], 
     "WGs": [ "QEE" ]
@@ -746,6 +975,8 @@ LLP2MuX = {
 LowMultINC = {
     "BUILDERTYPE": "LowMultINCLines", 
     "CONFIG": {
+        "DecisionHlt1NoBiasNonBeamBeam": "HLT_PASS_RE('Hlt1NoBiasNonBeamBeamDecision')", 
+        "DecisionHlt2PassThrough": "HLT_PASS_RE('Hlt2PassThroughDecision')", 
         "DecisionL0DiEM": None, 
         "DecisionL0DiHadron": None, 
         "DecisionL0DiMuon": None, 
@@ -774,15 +1005,29 @@ LowMultINC = {
         "DecisionLowMultLMR2HH_heavyPS": "HLT_PASS_RE('Hlt2LowMultLMR2HH_heavyPSDecision') | HLT_PASS_RE('Hlt2LowMultLMR2HHWS_heavyPSDecision')", 
         "DecisionLowMultLMR2HH_mediumPS": "HLT_PASS_RE('Hlt2LowMultLMR2HH_mediumPSDecision') | HLT_PASS_RE('Hlt2LowMultLMR2HHWS_mediumPSDecision')", 
         "DecisionLowMultMuon": "HLT_PASS('Hlt2LowMultMuonDecision')", 
+        "DecisionLowMultNonBeamBeamNoBias": "HLT_PASS_RE('Hlt2NoBiasNonBeamBeamDecision')", 
         "DecisionLowMultPi0": "HLT_PASS_RE('Hlt2LowMultPi0Decision')", 
-        "DecisionLowMultTMP": "HLT_PASS_RE('Hlt2NonBeamBeamNoBiasDecision')  | HLT_PASS_RE('Hlt2LowMultTechnical_MinBiasDecision')", 
-        "LowMultRequiredRawEvents": None, 
+        "DecisionLowMultTMP1": None, 
+        "DecisionLowMultTMP2": None, 
+        "DecisionLowMultTechnical": "HLT_PASS_RE('Hlt2LowMultTechnical_MinBiasDecision')", 
+        "LowMultRequiredRawEvents": [
+            "Velo", 
+            "Calo", 
+            "HC", 
+            "Trigger", 
+            "Muon", 
+            "Rich", 
+            "Tracker"
+        ], 
+        "PrescaleHlt1NoBiasNonBeamBeam": 1, 
+        "PrescaleHlt2PassThrough": 1, 
         "PrescaleL0DiEM": 0, 
         "PrescaleL0DiHadron": 0, 
         "PrescaleL0DiMuon": 0, 
         "PrescaleL0Electron": 0, 
         "PrescaleL0Muon": 0, 
         "PrescaleL0Photon": 0, 
+        "PrescaleLowMultBXTYPE": 1, 
         "PrescaleLowMultChiC2HH": 1, 
         "PrescaleLowMultChiC2HHHH": 1, 
         "PrescaleLowMultChiC2PP": 1, 
@@ -805,10 +1050,13 @@ LowMultINC = {
         "PrescaleLowMultLMR2HH_heavyPS": 1, 
         "PrescaleLowMultLMR2HH_mediumPS": 1, 
         "PrescaleLowMultMuon": 1, 
+        "PrescaleLowMultNonBeamBeamNoBias": 1, 
         "PrescaleLowMultPi0": 1, 
-        "PrescaleLowMultTMP": 1
+        "PrescaleLowMultTMP1": 0, 
+        "PrescaleLowMultTMP2": 0, 
+        "PrescaleLowMultTechnical": 1
     }, 
-    "STREAMS": [ "BhadronCompleteEvent" ], 
+    "STREAMS": [ "EW" ], 
     "WGs": [ "QEE" ]
 }
 
@@ -840,21 +1088,21 @@ SbarSCorrelations = {
     "CONFIG": {
         "F2prescale": 1.0, 
         "Fisher": 10, 
-        "HLT": "HLT_PASS('Hlt1MBNoBiasDecision')|HLT_PASS('Hlt1MBMicroBiasTStationDecision')|HLT_PASS('Hlt1MBMicroBiasVeloDecision')|HLT_PASS('Hlt1MBMicroBiasTStationRateLimitedDecision')|HLT_PASS('Hlt1MBMicroBiasVeloRateLimitedDecision')", 
+        "HLT": "HLT_PASS_RE('Hlt1.*NoBias.*Decision')|HLT_PASS_RE('Hlt1.*MB.*Bias.*Decision')|HLT_PASS_RE('Hlt1.*MicroBias.*Decision')", 
         "KAON_PIDK_MIN": 8, 
         "KAON_PIDKp_MIN": 0, 
         "KAON_ipChi2_MAX": 49, 
         "LambdaCprescale": 1.0, 
-        "Lambda_Adamass": 50, 
+        "Lambda_Adamass": 50.0, 
         "Lambda_V_Chi2_Max": 9, 
         "Lambda_ipChi2_MAX": 49, 
         "LongTrackGEC": 1000, 
-        "PION_P_MIN": 2000, 
+        "PION_P_MIN": 2000.0, 
         "PION_ipChi2_MIN": 9, 
-        "PROTON_P_MIN": 2000, 
+        "PROTON_P_MIN": 2000.0, 
         "PROTON_ipChi2_MIN": 9, 
         "Phiprescale": 0.05, 
-        "Trk_P_MIN": 5000, 
+        "Trk_P_MIN": 5000.0, 
         "isLong": "(ISLONG)", 
         "postscale": 1.0
     }, 
@@ -883,7 +1131,7 @@ StrangeBaryons = {
         "CHI2VTX_Xi": 25.0, 
         "COS_L_Omega": 0.9996, 
         "COS_L_Xi": 0.9996, 
-        "HLT": "HLT_PASS('Hlt1MBNoBiasDecision')|HLT_PASS('Hlt1MBMicroBiasTStationDecision')|HLT_PASS('Hlt1MBMicroBiasVeloDecision')|HLT_PASS('Hlt1MBMicroBiasTStationRateLimitedDecision')|HLT_PASS('Hlt1MBMicroBiasVeloRateLimitedDecision')", 
+        "HLT1": "HLT_PASS_RE('Hlt1.*NoBias.*Decision')|HLT_PASS_RE('Hlt1.*MB.*Bias.*Decision')|HLT_PASS_RE('Hlt1.*MicroBias.*Decision')", 
         "L_FDCHI2_OWNPV": 100.0, 
         "L_FDCHI2_OWNPV_LL": 150.0, 
         "L_FDCHI2_OWNPV_LL_Omega": 70.0, 
@@ -895,6 +1143,11 @@ StrangeBaryons = {
         "PionPIDpiK": 0.0, 
         "PreScale": 1, 
         "ProtonPIDppi": -5.0, 
+        "RawEvents": [
+            "Muon", 
+            "Calo", 
+            "Rich"
+        ], 
         "TRCHI2DOF": 4.0, 
         "XiMassWindow": 50.0, 
         "Xi_FDCHI2_OWNPV": 5.0, 
@@ -923,7 +1176,7 @@ StrangeBaryonsNoPID = {
         "CHI2VTX_Xi": 25.0, 
         "COS_L_Omega": 0.9996, 
         "COS_L_Xi": 0.9996, 
-        "HLT1": "HLT_PASS('Hlt1MBNoBiasDecision')|HLT_PASS('Hlt1MBMicroBiasTStationDecision')|HLT_PASS('Hlt1MBMicroBiasVeloDecision')|HLT_PASS('Hlt1MBMicroBiasTStationRateLimitedDecision')|HLT_PASS('Hlt1MBMicroBiasVeloRateLimitedDecision')", 
+        "HLT1": "HLT_PASS_RE('Hlt1.*NoBias.*Decision')|HLT_PASS_RE('Hlt1.*MB.*Bias.*Decision')|HLT_PASS_RE('Hlt1.*MicroBias.*Decision')", 
         "L_FDCHI2_OWNPV": 100.0, 
         "L_FDCHI2_OWNPV_LL": 150.0, 
         "L_FDCHI2_OWNPV_LL_Omega": 70.0, 
@@ -935,6 +1188,11 @@ StrangeBaryonsNoPID = {
         "PionPIDpiK": 0.0, 
         "PreScale": 1, 
         "ProtonPIDppi": -5.0, 
+        "RawEvents": [
+            "Muon", 
+            "Calo", 
+            "Rich"
+        ], 
         "TRCHI2DOF": 4.0, 
         "XiMassWindow": 50.0, 
         "Xi_FDCHI2_OWNPV": 5.0, 
@@ -955,12 +1213,41 @@ StrangeBaryonsNoPID = {
     "WGs": [ "QEE" ]
 }
 
+TaggedJets = {
+    "BUILDERTYPE": "TaggedJetsConf", 
+    "CONFIG": {
+        "DiTaggedJetsPair_Postscale": 1.0, 
+        "DiTaggedJetsPair_Prescale": 1.0, 
+        "TaggedJetsEight_Postscale": 1.0, 
+        "TaggedJetsEight_Prescale": 1.0, 
+        "TaggedJetsFour_Postscale": 1.0, 
+        "TaggedJetsFour_Prescale": 1.0, 
+        "TaggedJetsPairExclusiveDiJet_Postscale": 1.0, 
+        "TaggedJetsPairExclusiveDiJet_Prescale": 1.0, 
+        "TaggedJetsPair_Postscale": 1.0, 
+        "TaggedJetsPair_Prescale": 1.0, 
+        "TaggedJetsSix_Postscale": 1.0, 
+        "TaggedJetsSix_Prescale": 1.0, 
+        "min_jet_pT": 25000.0, 
+        "min_jet_pT_ExclusiveDiJet": 20000.0
+    }, 
+    "STREAMS": [ "BhadronCompleteEvent" ], 
+    "WGs": [ "QEE" ]
+}
+
 WMu = {
     "BUILDERTYPE": "WMuConf", 
     "CONFIG": {
         "HLT1_SingleTrackNoBias": "HLT_PASS( 'Hlt1MBNoBiasDecision' )", 
-        "HLT2_Control10": "HLT_PASS_RE('Hlt2.*SingleMuonHighPTDecision')", 
-        "HLT2_Control4800": "HLT_PASS_RE('Hlt2.*SingleMuonLowPTDecision')", 
+        "HLT2_Control10": "HLT_PASS_RE('Hlt2.*SingleMuon.*High.*Decision')", 
+        "HLT2_Control4800": "HLT_PASS_RE('Hlt2.*SingleMuonLow.*Decision')", 
+        "RawEvents": [
+            "Muon", 
+            "Calo", 
+            "Rich", 
+            "Velo", 
+            "Tracker"
+        ], 
         "STNB_Prescale": 0.2, 
         "SingMuon10_Prescale": 0.01, 
         "SingMuon10_pT": 10000.0, 
