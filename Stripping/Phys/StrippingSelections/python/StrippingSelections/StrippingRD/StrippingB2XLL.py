@@ -286,8 +286,8 @@ class B2XLLConf(LineBuilder) :
         """  
         from StandardParticles import StdLooseKsDD as _ksdd
         from StandardParticles import StdLooseKsLL as _ksll
-        _filter_ksdd = FilterDesktop(Code = "(ADMASS('KS0') < 30*MeV) & (BPVLTIME() > 0.5*ps)")
-        _filter_ksll = FilterDesktop(Code = "(ADMASS('KS0') < 30*MeV) & (BPVLTIME() > 0.5*ps)")
+        _filter_ksdd = FilterDesktop(Code = "(ADMASS('KS0') < 50*MeV) & (BPVLTIME() > 0.5*ps)")
+        _filter_ksll = FilterDesktop(Code = "(ADMASS('KS0') < 50*MeV) & (BPVLTIME() > 0.5*ps)")
         _selksdd = Selection("Selection_"+name+"_Ksdd", RequiredSelections = [ _ksdd ], Algorithm = _filter_ksdd)
         _selksll = Selection("Selection_"+name+"_Ksll", RequiredSelections = [ _ksll ], Algorithm = _filter_ksll)
         _sel = MergedSelection("Selection_"+name+"_Kshort", RequiredSelections = [ _selksdd, _selksll ])
