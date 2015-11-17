@@ -18,9 +18,9 @@ config_params =  {
   'PTMAX_HAD_ALL_FINAL_STATE'     : '500',#MeV
   'P_HAD_ALL_FINAL_STATE'         : '6000', # MeV
   'IPCHI2_HAD_ALL_FINAL_STATE'    : '40',    # dimensionless
-  'TRACKCHI2_HAD_ALL_FINAL_STATE' : '3',    # dimensionless
+  'TRACKCHI2_HAD_ALL_FINAL_STATE' : '4',    # dimensionless
   'PID_HAD_ALL_FINAL_STATE'       : '5',    # dimensionless
-  'TRGHOPROB_HAD_ALL_FINAL_STATE' : '0.3',    # dimensionless
+  'TRGHOPROB_HAD_ALL_FINAL_STATE' : '0.4',    # dimensionless
   #
   'PT_B_TT'                       : '1900', # MeV
   'PT_B_TT_HIGH'                  : '2000',# MeV 
@@ -60,51 +60,43 @@ config_params =  {
   'RelatedInfoTools'      : [
   #1
   { "Type" : "RelInfoBstautauMuonIsolationBDT"
-    ,"RecursionLevel" : 0
     , "Variables" : ['BSTAUTAUMUONISOBDTFIRSTVALUE', 'BSTAUTAUMUONISOBDTSECONDVALUE','BSTAUTAUMUONISOBDTTHIRDVALUE']
      , "Location"  : "MuonIsolationBDT"  
     },
   #2
   { "Type" : "RelInfoBstautauMuonIsolation"
-    ,"RecursionLevel" : 0
     , "Variables" : ['BSTAUTAUMUONISOFIRSTVALUE', 'BSTAUTAUMUONISOSECONDVALUE']
      , "Location"  : "MuonIsolation"  
     },
   #3
   { "Type" : "RelInfoBstautauTauIsolationBDT"
-    ,"RecursionLevel" : 0
     , "Variables" : ['BSTAUTAUTAUISOBDTFIRSTVALUETAUP', 'BSTAUTAUTAUISOBDTSECONDVALUETAUP','BSTAUTAUTAUISOBDTTHIRDVALUETAUP','BSTAUTAUTAUISOBDTFIRSTVALUETAUM', 'BSTAUTAUTAUISOBDTSECONDVALUETAUM','BSTAUTAUTAUISOBDTTHIRDVALUETAUM']
      , "Location"  : "TauIsolationBDT"  
     },
   #4
   { "Type" : "RelInfoBstautauTauIsolation"
-    ,"RecursionLevel" : 0
     , "Variables" : ['BSTAUTAUTAUISOFIRSTVALUETAUP', 'BSTAUTAUTAUISOSECONDVALUETAUP','BSTAUTAUTAUISOFIRSTVALUETAUM', 'BSTAUTAUTAUISOSECONDVALUETAUM']
      , "Location"  : "TauIsolation"  
     },
   #5
 
  { "Type" : "RelInfoBstautauTrackIsolationBDT" 
-    ,"RecursionLevel" : 0
     , "Variables" : ['BSTAUTAUTRACKISOBDTFIRSTVALUETAUPPIM', 'BSTAUTAUTRACKISOBDTSECONDVALUETAUPPIM','BSTAUTAUTRACKISOBDTTHIRDVALUETAUPPIM','BSTAUTAUTRACKISOBDTFIRSTVALUETAUPPIP1', 'BSTAUTAUTRACKISOBDTSECONDVALUETAUPPIP1','BSTAUTAUTRACKISOBDTTHIRDVALUETAUPPIP1','BSTAUTAUTRACKISOBDTFIRSTVALUETAUPPIP2', 'BSTAUTAUTRACKISOBDTSECONDVALUETAUPPIP2','BSTAUTAUTRACKISOBDTTHIRDVALUETAUPPIP2','BSTAUTAUTRACKISOBDTFIRSTVALUETAUMPIP','BSTAUTAUTRACKISOBDTSECONDVALUETAUMPIP','BSTAUTAUTRACKISOBDTTHIRDVALUETAUMPIP','BSTAUTAUTRACKISOBDTFIRSTVALUETAUMPIM1','BSTAUTAUTRACKISOBDTSECONDVALUETAUMPIM1','BSTAUTAUTRACKISOBDTTHIRDVALUETAUMPIM1','BSTAUTAUTRACKISOBDTFIRSTVALUETAUMPIM2', 'BSTAUTAUTRACKISOBDTSECONDVALUETAUMPIM2','BSTAUTAUTRACKISOBDTTHIRDVALUETAUMPIM2']
      , "Location"  : "TrackIsolationBDT"  
     },
 
   #6
   { "Type" : "RelInfoBstautauTrackIsolation" 
-    ,"RecursionLevel" : 0
     , "Variables" : ['BSTAUTAUTRACKISOFIRSTVALUETAUPPIM', 'BSTAUTAUTRACKISOFIRSTVALUETAUPPIP1','BSTAUTAUTRACKISOFIRSTVALUETAUPPIP2', 'BSTAUTAUTRACKISOFIRSTVALUETAUMPIP','BSTAUTAUTRACKISOFIRSTVALUETAUMPIM1', 'BSTAUTAUTRACKISOFIRSTVALUETAUMPIM2']
      , "Location"  : "TrackIsolation"  
     },
   #7
   { "Type" : "RelInfoBstautauCDFIso" 
-    ,"RecursionLevel" : 0
     #, "Variables" : ['BSTAUTAUCDFISO']
      , "Location"  : "CDFIso"  
     },
   #8
   { "Type" : "RelInfoBstautauZVisoBDT" 
-    ,"RecursionLevel" : 0
     , "Variables" : ['ZVISOTAUP','ZVISOTAUM']
     , "Location"  : "ZVisoBDT"
     }
@@ -237,13 +229,18 @@ class ZVTOP_Conf(LineBuilder) :
                                         #                                           selection   = self._makeTOS(name+"_TOSForTauTau",selB2TauTau)
                                         MDSTFlag = True,
                                         RelatedInfoTools = [
-                                             { "Type" : "RelInfoBstautauTauIsolationBDT","RecursionLevel" : 0, "Location"  : "TauIsolationBDT" },
-                                             { "Type" : "RelInfoBstautauTauIsolation","RecursionLevel" : 0,  "Location"  : "TauIsolation"  },
-                                             { "Type" : "RelInfoBstautauTrackIsolationBDT" ,"RecursionLevel" : 0,  "Location"  : "TrackIsolationBDT" },
-                                             { "Type" : "RelInfoBstautauTrackIsolation" ,"RecursionLevel" : 0, "Location"  : "TrackIsolation"},
-                                             { "Type" : "RelInfoBstautauCDFIso" ,"RecursionLevel" : 0, "Location"  : "CDFIso"  },
-                                             { "Type" : "RelInfoBstautauZVisoBDT" ,"RecursionLevel" : 0 , "Location"  : "ZVisoBDT"},
-                                             { "Type" : "RelInfoVertexIsolation","RecursionLevel" : 1, "Locations" : {"Phys/ZVTOP_TauTau_Line" : "BVars_VertexIsoInfo","Phys/ZVTOP_TauFilter" : ["TauVars_VertexIsoInfo_0","TauVars_VertexIsoInfo_1"]}}
+                                             { "Type" : "RelInfoBstautauTauIsolationBDT", "Location"  : "TauIsolationBDT" },
+                                             { "Type" : "RelInfoBstautauTauIsolation",  "Location"  : "TauIsolation"  },
+                                             { "Type" : "RelInfoBstautauTrackIsolationBDT" ,  "Location"  : "TrackIsolationBDT" },
+                                             { "Type" : "RelInfoBstautauTrackIsolation" , "Location"  : "TrackIsolation"},
+                                             { "Type" : "RelInfoBstautauCDFIso" , "Location"  : "CDFIso"  },
+                                             { "Type" : "RelInfoBstautauZVisoBDT" , "Location"  : "ZVisoBDT"},
+                                             { "Type" : "RelInfoVertexIsolation", "Location" : "BVars_VertexIsoInfo",
+                                                 "DaughterLocations" : {
+                                                 "[B0 -> ^tau+ tau-]CC" : "TauVars_VertexIsoInfo_0",
+                                                 "[B0 -> tau+ ^tau-]CC" : "TauVars_VertexIsoInfo_1"
+                                               }
+                                             }
                                             ],
                                         selection   = self.selB2TauTau
                                         )
@@ -255,13 +252,18 @@ class ZVTOP_Conf(LineBuilder) :
                                         #                                           selection   = self._makeTOS(name+"_TOSForTauTau",selB2TauTau)
                                         MDSTFlag = True,
                                         RelatedInfoTools = [
-                                             { "Type" : "RelInfoBstautauTauIsolationBDT","RecursionLevel" : 0, "Location"  : "TauIsolationBDT" },
-                                             { "Type" : "RelInfoBstautauTauIsolation","RecursionLevel" : 0,  "Location"  : "TauIsolation"  },
-                                             { "Type" : "RelInfoBstautauTrackIsolationBDT" ,"RecursionLevel" : 0,  "Location"  : "TrackIsolationBDT" },
-                                             { "Type" : "RelInfoBstautauTrackIsolation" ,"RecursionLevel" : 0, "Location"  : "TrackIsolation"},
-                                             { "Type" : "RelInfoBstautauCDFIso" ,"RecursionLevel" : 0, "Location"  : "CDFIso"  },
-                                             { "Type" : "RelInfoBstautauZVisoBDT" ,"RecursionLevel" : 0 , "Location"  : "ZVisoBDT"},
-                                             { "Type" : "RelInfoVertexIsolation","RecursionLevel" : 1, "Locations" : {"Phys/ZVTOP_TauTauSS_Line" : "BVars_VertexIsoInfo","Phys/ZVTOP_TauFilter" : ["TauVars_VertexIsoInfo_0","TauVars_VertexIsoInfo_1"]}}
+                                             { "Type" : "RelInfoBstautauTauIsolationBDT", "Location"  : "TauIsolationBDT" },
+                                             { "Type" : "RelInfoBstautauTauIsolation",  "Location"  : "TauIsolation"  },
+                                             { "Type" : "RelInfoBstautauTrackIsolationBDT" ,  "Location"  : "TrackIsolationBDT" },
+                                             { "Type" : "RelInfoBstautauTrackIsolation" , "Location"  : "TrackIsolation"},
+                                             { "Type" : "RelInfoBstautauCDFIso" , "Location"  : "CDFIso"  },
+                                             { "Type" : "RelInfoBstautauZVisoBDT" , "Location"  : "ZVisoBDT"},
+                                             { "Type" : "RelInfoVertexIsolation", "Location" : "BVars_VertexIsoInfo",
+                                                 "DaughterLocations" : {
+                                                 "[B0 -> ^tau+ tau+]CC" : "TauVars_VertexIsoInfo_0",
+                                                 "[B0 -> tau+ ^tau+]CC" : "TauVars_VertexIsoInfo_1"
+                                               }
+                                             }
                                             ],
                                         selection   = self.selB2TauTauSS
                                         ) 
@@ -272,13 +274,13 @@ class ZVTOP_Conf(LineBuilder) :
                                       #                                           selection   = self._makeTOS(name+"_TOSForTauTau",selB2TauTau)
                                       MDSTFlag = True,
                                         RelatedInfoTools = [
-                                             { "Type" : "RelInfoBstautauTauIsolationBDT","RecursionLevel" : 0, "Location"  : "TauIsolationBDT" },
-                                             { "Type" : "RelInfoBstautauTauIsolation","RecursionLevel" : 0,  "Location"  : "TauIsolation"  },
-                                             { "Type" : "RelInfoBstautauTrackIsolationBDT" ,"RecursionLevel" : 0,  "Location"  : "TrackIsolationBDT" },
-                                             { "Type" : "RelInfoBstautauTrackIsolation" ,"RecursionLevel" : 0, "Location"  : "TrackIsolation"},
-                                             { "Type" : "RelInfoBstautauCDFIso" ,"RecursionLevel" : 0, "Location"  : "CDFIso"  },
-                                             { "Type" : "RelInfoBstautauZVisoBDT" ,"RecursionLevel" : 0 , "Location"  : "ZVisoBDT"},
-                                             { "Type" : "RelInfoVertexIsolation","RecursionLevel" : 1, "Locations" : {"Phys/ZVTOP_High_Line" : "BVars_VertexIsoInfo","Phys/ZVTOP_IncTopoVtxFor" : ["TauVars_VertexIsoInfo_0","TauVars_VertexIsoInfo_1"]}}
+                                             { "Type" : "RelInfoBstautauTauIsolationBDT", "Location"  : "TauIsolationBDT" },
+                                             { "Type" : "RelInfoBstautauTauIsolation",  "Location"  : "TauIsolation"  },
+                                             { "Type" : "RelInfoBstautauTrackIsolationBDT" ,  "Location"  : "TrackIsolationBDT" },
+                                             { "Type" : "RelInfoBstautauTrackIsolation" , "Location"  : "TrackIsolation"},
+                                             { "Type" : "RelInfoBstautauCDFIso" , "Location"  : "CDFIso"  },
+                                             { "Type" : "RelInfoBstautauZVisoBDT" , "Location"  : "ZVisoBDT"},
+                                             { "Type" : "RelInfoVertexIsolation", "Location" :  "Vars_VertexIsoInfo"}
                                             ],
                                       selection   = self.selHigh
                                       )
