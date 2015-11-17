@@ -3,7 +3,6 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
-
 ! 2015-11-17 - Mika Vesterinen
  - Update to StrippingTrackEffD0ToKPi
 
@@ -18,7 +17,10 @@
  - Removed WS decay mode "[Lambda_b0 -> Lambda_c+ pi+]cc" for ControlCh. in BLVLines
 
 ! 2015-11-16 - Alessandro Mordà
- - Changes in decay descriptors, new syntax for RelatedInfo, new cuts for candidate multiplicity
+ - ZVTOP lines: changes in syntax for RelatedInfo
+ 
+! 201511-16 - Alessandro Mordà
+ - B2KstTaTau: Changes in decay descriptors, new syntax for RelatedInfo, new cuts for candidate multiplicity
 
 ! 2015-11-16 - Carlos Vazquez Sierra
  - Included a new B2CC builder, StrippingB2JpsiPi0_Run1.py, to not confuse this with StrippingB2JpsiPi0.py
