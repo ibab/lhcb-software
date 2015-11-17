@@ -3,6 +3,8 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2015-11-17 - Adam Davis
+ - Added StrippingD2HMuNu.py
 ! 2015-11-17 - Mika Vesterinen
  - Update to StrippingTrackEffD0ToKPi
 
