@@ -66,7 +66,7 @@ class TaggedJetsConf( LineBuilder ) :
         ## B TAGGING!!
         filterJet = FilterJet('BDTTagJets')
         filterJet.Inputs = ["Phys/StdJets/Particles"]
-        filterJet.tagToolName = 'LoKi__BDTTag'
+        filterJet.tagToolName = 'LoKi::BDTTag'
         filterJet.Cut = 0
         taggedJetsLocation = updateDoD ( filterJet )
         self.__taggedJets = DataOnDemand(Location = taggedJetsLocation.keys()[0])
