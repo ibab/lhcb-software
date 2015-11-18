@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2015-11-18 - Luca Pescatore
+  - The line added to bix the CALIBOFF bug breaks and is not needed in v45.
+    Version check added to adapt the setup.  
+
 ! 2015-11-13 - Luca Pescatore
  - Bug fix due to database CALIBOFF problem
 
