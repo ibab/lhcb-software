@@ -8,6 +8,10 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-11-18  Ivan Polyakov 
+
+ - Fix deleting the weight directory for the PyTMVA.Trainer
+
 ! 2015-11-04  Vanya BELYAEV- 
 
  - Fix mix of varibales inn Voigt_pdf 

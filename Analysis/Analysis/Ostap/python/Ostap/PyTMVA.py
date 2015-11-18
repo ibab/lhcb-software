@@ -294,7 +294,7 @@ class Trainer(object):
             outWeight  = os.path.splitext(outputfile)[0] + '_%s_weights.xml' % typeWeight
             shutil.move   ( weightFile, outWeight)
             logger.info   ( "Trainer(%s): Weights file is created: %s" % ( name , outWeight ) ) 
-            shutil.rmtree ( 'weights')
+        shutil.rmtree ( 'weights')
 
         ## return the name of weigth file w
         return outWeight 
