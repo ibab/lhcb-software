@@ -5,6 +5,9 @@
 ! Purpose     : read ALPGEN-generated partonic level events
 ! -----------------------------------------------------------------------------
 
+! 2015-11-18 - Marco Clemencic
+ - Disabled warnings for FORTRAN code.
+
 !========================== LbAlpGen v6r1 2015-08-05 ==========================
 ! 2015-08-05 - Gloria Corti
  - Really add the AlpGen.py options that had not bee added.

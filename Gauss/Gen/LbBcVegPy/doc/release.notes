@@ -2,6 +2,9 @@
 ! Responsible : Patrick ROBBE
 !=============================================================================
 
+! 2015-11-18 - Marco Clemencic
+ - Disabled warnings for FORTRAN code.
+
 !========================= LbBcVegPy v6r0 2015-06-02 =========================
 ! 2015-06-02 - Gloria Corti
  - Fixed mistyping in BcVegPyPythia{,8}.py
@@ -28,7 +31,7 @@
 
 !========================= LbBcVegPy v5r1 2013-10-10 =========================
 ! 2013-10-01 - Patrick Robbe
- - remove setting of cut tool in BcVegPy Pythia8 option 
+ - remove setting of cut tool in BcVegPy Pythia8 option
 
 ! 2013-09-23 - Marco Clemencic
  - Added CMake configuration file.
@@ -65,7 +68,7 @@
  . src/Lib/Intinip.cpp
  . src/Lib/Octmatrix.cpp
  . src/Lib/Counter.cpp
- . src/Lib/Confine.cpp 
+ . src/Lib/Confine.cpp
  . src/Lib/Grade.cpp
  . src/Lib/Coloct.cpp
  . src/Lib/Upcom.cpp
@@ -119,9 +122,9 @@
    . src/BcVegPyProduction.cpp
  - Add one variable IUSECURDIR accordingly (as BcVegPy) in
    . src/Lib/gloggrade.F
-   . src/Lib/Loggrade.cpp 
+   . src/Lib/Loggrade.cpp
    . LbBcVegPy/Loggrade.h
- - This version should use BcVegPy data v2r0 or above. 
+ - This version should use BcVegPy data v2r0 or above.
 
 
 !===================== LbBcVegPy v2r1 2009-05-26 =====================
@@ -131,13 +134,13 @@
 
 !===================== LbBcVegPy v2r0 2008-09-01 =====================
 ! 2008-08-31 - Gloria CORTI
- - Retrieve DecayTool at initialization rather that at construction, 
+ - Retrieve DecayTool at initialization rather that at construction,
    otherwise ERROR instantiating BcDaughtersInLHCb from LbBcVegPy when
-   building LbBcVegPyConf. Introduced both initialize and finalize 
-   methods. 
+   building LbBcVegPyConf. Introduced both initialize and finalize
+   methods.
 
 ! 2008-07-25 - Patrick Robbe
- - BcDaughtersInLHCb: use units from Gaudi 
+ - BcDaughtersInLHCb: use units from Gaudi
 
 !===================== LbBcVegPy v1r5 2007-05-10 =====================
 ! 2007-05-08 - Patrick Robbe for Jibo He
@@ -147,7 +150,7 @@
 
 !===================== LbBcVegPy v1r4 2007-02-08 =====================
 ! 2007-02-08 - Gloria Corti
- - include files are private, so use include_dirs. This makes it 
+ - include files are private, so use include_dirs. This makes it
    usable both with/without install area
 
 ! 2007-01-08 - Florence Ranjard
@@ -163,7 +166,7 @@
    loading and declaration file.
    . factories declared in LbBcVegPy_load.cpp (modified)
    . remove LbBcVegPy_entries.cpp and add LbBcVegPy_dll.cpp
- 
+
 !====================== LbBcGen v1r1 2006-05-31 ======================
 ! 2006-05-02 - Patrick Robbe
   - requirements: remove -fno-second-underscore flag and add second
@@ -171,6 +174,6 @@
 
 ! 2006-03-13 - Jibo He
   -New Package: this package contains all functions related to the use
-   of BcGen (BCVEGPY 2.0) in LHCb, functions to access BCVEGPY fortran 
+   of BcGen (BCVEGPY 2.0) in LHCb, functions to access BCVEGPY fortran
    common block and to set the parameters required by BcGen.
 ! ====================================================================

@@ -4,6 +4,8 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2015-11-18 - Marco Clemencic
+ - Disabled warnings for FORTRAN code.
 
 ! 2015-10-08 - Gloria Corti
  - Revert back to use Pythia 6.427.2 due to problem with FS, see
@@ -24,7 +26,7 @@
 !========================== GENSER v16r0 2015-03-13 ==========================
 ! 2014-11-20 - Gloria Corti
  - Use of lhapdf 6 is now as a version of lhapdf and not a separate package
- - Use newer versions of herig++ and thepeg as they are the only one in 
+ - Use newer versions of herig++ and thepeg as they are the only one in
    LCG_70
 
 ! 2014-11-19 - Marco Clemencic
@@ -55,10 +57,10 @@
 
 !========================== GENSER v14r0 2014-07-28 ==========================
 ! 2014-07-14 - Gloria Corti
- - Change version of photos++ to latest 3.56 version. 
-   Note that 3.54 (3.52) stops (may give undefined results) on gcc 4.8. 
+ - Change version of photos++ to latest 3.56 version.
+   Note that 3.54 (3.52) stops (may give undefined results) on gcc 4.8.
    See details at https://its.cern.ch/jira/browse/LHCBGAUSS-280
-   
+
 !========================= GENSER v13r0p1 2013-12-03 =========================
 ! 2013-12-03 - Gloria Corti
  - Change the version of LHAPDFSet to v* as it should be fixed in Gauss itself
@@ -74,7 +76,7 @@
  - Added CMake configuration file.
 
 ! 2013-08-29 - Gloria Corti
- - Use herwig++ 2.6.1b for Gauss v46 as needed by MCGenerators_lcgcmt65 and 
+ - Use herwig++ 2.6.1b for Gauss v46 as needed by MCGenerators_lcgcmt65 and
    higher. Will only be used by Gauss >= v46r5 and not for Sim08
 
 !========================== GENSER v12r7 2013-08-29 ==========================
@@ -83,7 +85,7 @@
    in MCGenerators_lcgcmt64c
 
 ! 2013-08-07 - Gloria Corti
- - Adapt to change in interface package name for powhegbox instead of 
+ - Adapt to change in interface package name for powhegbox instead of
    powheg-box that causes problems on bash
 
 ! 2013-08-06 - Gloria Corti
@@ -108,7 +110,7 @@
  - requirements: remove definition of LHAPATH
 
 ! 2013-06-13 - Gloria Corti
- - Change version of herwigpp from 2.6.1a to 2.6.1b as not yet used in 
+ - Change version of herwigpp from 2.6.1a to 2.6.1b as not yet used in
    production
 
 ! 2013-06-02 - Patrick Robbe
@@ -117,7 +119,7 @@
 
 !========================= GENSER v12r4p1 2013-04-04 =========================
 ! 2013-04-04 - Gloria Corti
- - Make a patch release with no difference with respect to v12r4 to allow 
+ - Make a patch release with no difference with respect to v12r4 to allow
    picking up the generators distributions from the MCGenerators_lcgcmt64d
    area as needed by LHCB v35r5 and Gaudi v23r7
 
@@ -138,17 +140,17 @@
  - Merge changes to remove hijing code from v10r2b branch. See below.
 
 ! 2013-02-14 - Gloria Corti (merged r152263)
- - Now physically remove the line commented in the requirement and the rlu.F 
+ - Now physically remove the line commented in the requirement and the rlu.F
    and ran.F code from src/hijing since the tests are successful
 
 ! 2013-02-11 - Gloria Corti (merged r151897, r151988)
- - Comment out making the library for hijing, since the code is now in 
+ - Comment out making the library for hijing, since the code is now in
    LbHijing itself
 
 !========================== GENSER v12r1 2013-02-07 ==========================
 ! 2013-02-07 - Gloria Corti
- - Put back the version of hijing as in MC10 1.383bs.2 and change the rlu.F 
-   function in src/hijing to adapt back to it. 
+ - Put back the version of hijing as in MC10 1.383bs.2 and change the rlu.F
+   function in src/hijing to adapt back to it.
    Remove all linking appended to those of GENSER from here to remove tying
    all generators to hijing as in link library symbols
 
@@ -171,11 +173,11 @@
    . Modify macro to pick native version of alpgen 2.1.4
    . Add macro to pick up rivet for the first time
    . Modify macro to pick up pythia8 latest release 170
-     Note from pythia8 release note for 165: 
-     "Bug fix, that 'ParticleDecays:mixB = off' did not switch off B0-B0bar 
+     Note from pythia8 release note for 165:
+     "Bug fix, that 'ParticleDecays:mixB = off' did not switch off B0-B0bar
       and Bs0-Bs0bar mixing".
    . Use interface packages for herwig++ and thepeg privately defined and not
-     from LCG_interfaces to replace '++' with 'pp', needed on bash, and to 
+     from LCG_interfaces to replace '++' with 'pp', needed on bash, and to
      redefine linking statements.
  - Merge change r143057 from v9r3b by Patrick Robbe (2012-07-23)
    . Add UPVETO function (mainly for ALPGEN)
@@ -188,7 +190,7 @@
    . rivet native version 1.8.1 (build with fastjet 2.4.4 as in LCGCMT_64a)
  - Move from EvtGen definition of PYTHIA8DATA
  - Move from EvtGen macro definitions for tauola++ and photos++
- - The use of private interfaces to replace those of LCG requires LCG_Settings 
+ - The use of private interfaces to replace those of LCG requires LCG_Settings
    that has to be in sync with LCGCMT. The private interfaces will be forwarded
    to LCG to be included in their release once validated for remote usage
 
@@ -213,7 +215,7 @@
 
 !========================= GENSER v9r2p1 2011-10-14 ==========================
 ! 2011-10-14 - Gloria Corti
- - Remove definitions of macros but for version for AlpGen as an interface 
+ - Remove definitions of macros but for version for AlpGen as an interface
    package now exist in LCG_GeneratorsInterfaces
  - Redifine LHAPATH from macros defined in LCG_GeneratorsInterfaces package
    for lhapdf, so that correct dependency from HepMC is taken
@@ -224,7 +226,7 @@
    For now use 5.8.5
 
 ! 2011-09-15 - Gloria Corti
- - Move to latest versions of 
+ - Move to latest versions of
    Pythia6 6.424.2 -> 6.425.2
    LHAPDF  5.7.1   -> 5.8.6
    Pythia8 150     -> 153
@@ -243,23 +245,23 @@
    removed from GaussSys
 
 ! 2011-06-09 - Vanya Belyaev
- - improve the reading of LHA/LHE events 
+ - improve the reading of LHA/LHE events
 
 ! 2011-05-30 - Vanya Belyaev
  - src/pythia6/GaussUserProcess.inc
    src/pythia6/upevnt.F
-   src/pythia6/upinit.F 
-    add user process for Onia-pairs production 
+   src/pythia6/upinit.F
+    add user process for Onia-pairs production
  - cmt/requirements
-    version increment to v9r1 
- 
+    version increment to v9r1
+
 !========================== GENSER v9r0 2011-04-12 ===========================
 ! 2011-02-11 - Patrick Robbe
  - requirements: move use hijing in GENSER to force preloading of the
    HIJING data blocks
 
 ! 2011-01-31 - Gloria CORTI
- - Put back changes in requirements and hijing directory (see entry of 
+ - Put back changes in requirements and hijing directory (see entry of
    2010-09-14 and 2010-09-17) to commission the use of Hijing 1.36.a.2
    from the LCG release area
 
@@ -273,13 +275,13 @@
  - Set version to v8r0 to indicate series for MC10.
 
 ! 2010-12-07 - Gloria CORTI
- - Use latest version of LHAPDF 5.8.4 
+ - Use latest version of LHAPDF 5.8.4
 
 ! 2010-12-01 - Gloria CORTI
  - Use latest version of Pythia6 424.2 to check it for possibly adopting it
    for MC10
  - Use latest version of Pythia8: recommendation from P.Skands is to use at
-   least 412 as it has bug fixes and that 415 was only a minor update. 
+   least 412 as it has bug fixes and that 415 was only a minor update.
    Take 415 as it is the latest.
  - Go back to use hijing 1.383bs.2 for next release of Gauss as it does not
    work out of the box. Will need to review the interface algorithm.
@@ -294,12 +296,12 @@
  - requirements: increase version of pythia6 to 423.2 to allow to check it
    against 421.2
  - Noticed that the new version of hijing is calling "rlu_hijing" instead or
-   "rlu". Modified name of function in file in src/hijing/rlu.F. Function 
+   "rlu". Modified name of function in file in src/hijing/rlu.F. Function
    "ran" instead does not seem to be called, so do not touch it.
 
 ! 2010-09-14 - Gloria CORTI
- - requirements: use hijing 1.36.a.2 newly installed in LCG MCGenerators. 
-   This version is orginally from Alice.  
+ - requirements: use hijing 1.36.a.2 newly installed in LCG MCGenerators.
+   This version is orginally from Alice.
    Routines and common blocks from pythia and jetset are renamed:
    "_hijing" added to the names. This way hijing hopefully can be used
    together with pythia.
@@ -317,15 +319,15 @@
 
 !========================== GENSER v6r1 2009-12-04 ===========================
 ! 2009-11-30 - Gloria CORTI
- - In the LHAPDF LCG_Generators distribution the data files directory path has 
-   changed with an additional 'lhapdf' introduced. The old one now has a 
+ - In the LHAPDF LCG_Generators distribution the data files directory path has
+   changed with an additional 'lhapdf' introduced. The old one now has a
    soft link to the new area.
-   Change the LHAPATH to point directly to the new area, to facilitate 
+   Change the LHAPATH to point directly to the new area, to facilitate
    distribution via tarbal.
 
 !========================== GENSER v6r0 2009-11-04 ===========================
-! 2009-10-22 - Hubert Degaudenzi 
- - changed the target-slc5 switching into target-gcc4 for the gfortran flags 
+! 2009-10-22 - Hubert Degaudenzi
+ - changed the target-slc5 switching into target-gcc4 for the gfortran flags
 
 ! 2009-10-22 - Patrick Robbe
  - Add "-fsecond-underscore" for slc5 gFortran compilation
@@ -368,7 +370,7 @@
  - pyrand.F: call pyevwt even if minimum bias processes activated
 
 ! 2008-09-20 - Patrick Robbe
- - Add temporary fixes in pyevnw.F and pyptfs.F which will be 
+ - Add temporary fixes in pyevnw.F and pyptfs.F which will be
    incorporated in pythia 6.4.19
 
 !========================== GENSER v4r2 2008-09-01 ===========================
@@ -391,8 +393,8 @@
 
 !========================== GENSER v4r0 2008-04-28 ===========================
 ! 2008-04-28 - Gloria CORTI
- - cmt/requirements: move to use latest version of pythia8 compiled with 
-   HepMC 1.26 in LCG as from our request (107.1) 
+ - cmt/requirements: move to use latest version of pythia8 compiled with
+   HepMC 1.26 in LCG as from our request (107.1)
 
 ! 2008-04-14 - Gloria CORTI, Hubert DEGAUDENZI, Patrick ROBBE
  - cmt/requirements: take latest version of pythia6 (416.2) and change linking
@@ -450,7 +452,7 @@
                   generators used
                   Redefine macro lhapdf_linkopts to add lhapdf_dummy missing
                   from LCGCMT_49 generators interface
-                  Set LHAPATH variable also missing in LCGCMT_49 generators 
+                  Set LHAPATH variable also missing in LCGCMT_49 generators
                   interface
                   Remove cernlib.f since now all LHCb generators package
                   define the necessary subroutines
@@ -470,7 +472,7 @@
                   compile src/cernlib.f ans make a library called libcern.so
                   which is appended to GENSER_linkopts
                   This file contains several cernlib routines (i.e. ddilog)
-                  change the lhapdf path name from LHAPDFPATH to LHAPATH to 
+                  change the lhapdf path name from LHAPDFPATH to LHAPATH to
                   cope with lhapdf 5_2_2
 
 !===================== GENSER v1r130p1 2006-04-06 ============================
@@ -494,7 +496,7 @@
 ! 2006-02-06 - Florence RANJARD
  - requirements - link with liblhapdfdummy.a instead of lhaglue.o
                   put lhapdf_linkopts before pythia_linkopts
- 
+
 !====================== GENSER v1r121p1 =================================
 ! 2006-02-01 - Florence Ranjard
  - src - move lhaglue.f to lhaglue.F to include lhapdfc.h
@@ -562,4 +564,4 @@
  - requirements - use GENSER_0_1_2
                   add the GENSER path to LD_LIBRARY_PATH
 
-!============================================================================ 
+!============================================================================

@@ -17,6 +17,10 @@ if(EXISTS "${PYTHIA8_INCLUDE_DIR}/Pythia8/Pythia.h")
   include_directories(${PYTHIA8_INCLUDE_DIR}/Pythia8)
 endif()
 
+string(REPLACE "-pedantic" "" CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}")
+string(REPLACE "-Wall" "" CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}")
+string(REPLACE "-Wextra" "" CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}")
+string(REPLACE "-Werror=return-type" "" CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}")
 gaudi_add_library(EvtGen
                   src/*.cpp
                   src/*.F

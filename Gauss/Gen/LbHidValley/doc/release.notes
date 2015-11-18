@@ -1,23 +1,26 @@
-! $Id: release.notes,v 1.13 2009-12-02 09:04:40 gcorti Exp $ 
+! $Id: release.notes,v 1.13 2009-12-02 09:04:40 gcorti Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Gen/LbHidValley
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
-! Purpose     : Hidden Valley production 
+! Purpose     : Hidden Valley production
 !
 !  Matt Strassler <strasslr@noether.phys.washington.edu>:
 !
 !  "This program simulates q qbar -> Z' -> v-quarks, followed by
 !  v-showering and v-hadronization to v-pions.  The current program
-!  makes various approximations and is not suitable for precision 
+!  makes various approximations and is not suitable for precision
 !  studies, but should be good at the factor-of-two level.
 !  In particular, the v-hadronization code uses Pythias QCD
-!  hadronization code, scaled up in energy, and this is not a perfect 
-!  simulation of the real model. Also, the Z' charges are not precisely 
-!  those discussed in ref [1]; but in any case the model of [1] was 
-!  just an example, and many other models exist.  Updates to this 
+!  hadronization code, scaled up in energy, and this is not a perfect
+!  simulation of the real model. Also, the Z' charges are not precisely
+!  those discussed in ref [1]; but in any case the model of [1] was
+!  just an example, and many other models exist.  Updates to this
 !  program will gradually correct these issues."
 !
 ! -----------------------------------------------------------------------------
+
+! 2015-11-18 - Marco Clemencic
+ - Disabled warnings for FORTRAN code.
 
 !========================= LbHidValley v4r0p1 2014-12-19 ======================
 ! 2014-12-02 - Gloria Corti
@@ -59,24 +62,24 @@
    from Gen/Generators
 
 ! 2011-05-30 - Vanya Belyaev
- - final check 
+ - final check
 
 ! 2011-04-17 - Vanya Belyaev
- - I think fianlly it works now :-) 
+ - I think fianlly it works now :-)
 
 ! 2011-04-16 - Vanya Belyaev
  - allow change the energy
-   set the default energy 3.5 TeV/beam 
- - cmt/requirements 
-   version increment to v2r5 
+   set the default energy 3.5 TeV/beam
+ - cmt/requirements
+   version increment to v2r5
 
 !========================= LbHidValley v2r4 2011-04-13 ========================
 ! 2011-03-12 - Vanya Belyaev
 
- - resurrect standalone application 
-   (Add few empty dummy functions) 
- - cmt/requirements 
-   version increment to v2r4 
+ - resurrect standalone application
+   (Add few empty dummy functions)
+ - cmt/requirements
+   version increment to v2r4
 
 !========================= LbHidValley v2r3 2009-12-02 ========================
 ! 2009-12-02 - Gloria CORTI
@@ -89,19 +92,19 @@
 
 ! 2008-06-24 - Vanya BELYAEV
 
- - some minor almost decorative fixes: 
-      - force the verification of HEPEVT structure 
-      - force the specific printout from UPINIT and UPEVNT 
- - cmt/requirements 
-   version increment to v2r2 
+ - some minor almost decorative fixes:
+      - force the verification of HEPEVT structure
+      - force the specific printout from UPINIT and UPEVNT
+ - cmt/requirements
+   version increment to v2r2
 
 !========================= LbHidValley v2r1 2008-06-10 ========================
 ! 2008-05-06 - Vanya BELYAEV
  - clear *_load* and *_dll* files.
- - cmt/requirement 
-    uncoment the component library 
-    version increment to v2r1 
- 
+ - cmt/requirement
+    uncoment the component library
+    version increment to v2r1
+
 
 !========================= LbHidValley v2r0 2007-03-07 ========================
 ! 2007-03-07 - Gloria CORTI
@@ -115,18 +118,18 @@
 
  - src/Lib/lenocchv.F
     new function ( copy of lenocc.F from CERNLIB)
- - src/Lib/hvgetpar.F 
+ - src/Lib/hvgetpar.F
    src/Lib/hvsetpar.F
-    make use of LENOCCHV instead of LENOCC 
- 
+    make use of LENOCCHV instead of LENOCC
+
 
 ! 2007-01-19 - Vanya BELYAEV
 
-   - remove the obsolete *.opts file 
-   - options/HidValley.opts 
-       new file, required to minimize the modification in production tools 
-   - cmt/requirements 
-       version increment to v1r2 
+   - remove the obsolete *.opts file
+   - options/HidValley.opts
+       new file, required to minimize the modification in production tools
+   - cmt/requirements
+       version increment to v1r2
 
 !========================= LbHidValley v1r1 2006-12-04 ========================
 
@@ -135,20 +138,20 @@
 
 Multi v-particle:
 
-  at least 3 b-quarks in acceptance 
+  at least 3 b-quarks in acceptance
 
  * ===========================================
  * "Hidden Valley: multi v-pions production"
  * ===========================================
  * event type  m(Z')  m(vp0)  t(vpi0) t(vpi+)
  * ===========================================
- * 44900001    3000    35      100.0ps   inf 
- * 44900002    3000    50       10.0ps   inf 
- * 44900003    3000    70        1.0ps   inf 
- * 44900004    3000   120        0.1ps   10ps  
+ * 44900001    3000    35      100.0ps   inf
+ * 44900002    3000    50       10.0ps   inf
+ * 44900003    3000    70        1.0ps   inf
+ * 44900004    3000   120        0.1ps   10ps
  * ===========================================
 
-Higgses, at least 4 b-quarks in acceptance 
+Higgses, at least 4 b-quarks in acceptance
 
  *  ==================================
  *  "Hidden Valley through Higgses"
@@ -166,21 +169,21 @@ Higgses, at least 4 b-quarks in acceptance
 
  - add a proper comments from Matt Strassler to all files
  - option/HidValleyPI.opts
-    remove the pile-up tool 
- - cmt/requirements 
-   version increment to v1r1 
+    remove the pile-up tool
+ - cmt/requirements
+   version increment to v1r1
 
 ! -----------------------------------------------------------------------------
 
 ! 2006-10-28 - Vanya BELYAEV
  - new package.
 
-   The actual lines are extracted from the original code HV4.403 by 
+   The actual lines are extracted from the original code HV4.403 by
    Matt Strassler <strasslr@noether.phys.washington.edu>
 
   Short description by Matt Strassler:
   ====================================
-  """ 
+  """
 
    My new program is aimed at the types of events that occur in
 
@@ -189,30 +192,30 @@ Higgses, at least 4 b-quarks in acceptance
    2006. 5pp.  e-Print Archive: hep-ph/0604261
 
    These events are much richer in structure -- the number of displaced vertices
-   per event can be much larger than two, though the total number 
+   per event can be much larger than two, though the total number
    of events might be quite abit smaller.
 
-   The experimental techniques you are developing would ideally be 
-   sensitive to many types of new physics, including both the physics of 
-   these two papers above, and the physics discussed (and earlier 
+   The experimental techniques you are developing would ideally be
+   sensitive to many types of new physics, including both the physics of
+   these two papers above, and the physics discussed (and earlier
    papers briefly reviewed) in
 
    Possible effects of a hidden valley on supersymmetric phenomenology.
    Matthew J. Strassler (Washington U., Seattle) . Jul 2006. 10pp.
    e-Print Archive: hep-ph/0607160
 
-   whereby LHCb can discover supersymmetry. 
+   whereby LHCb can discover supersymmetry.
 
    """
 
    The package contains 2 constitients
 
    - standalone executable HidValley.exe  [depends only on Pythia]
-     with comman-dline interfaces,  
-     which is able to produce the partonic events in 
+     with comman-dline interfaces,
+     which is able to produce the partonic events in
      new LHE-output (xml-like) format
 
-   - Gaudi component "HidValleyProduction" to perform the actual 
+   - Gaudi component "HidValleyProduction" to perform the actual
      simulation within Gauss framework
-    
+
 !==============================================================================

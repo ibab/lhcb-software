@@ -1,13 +1,16 @@
 !-----------------------------------------------------------------------------
 ! Package     : EvtGen
 ! Responsible : Michal Kreps, Tom Latham, John Back
-! Purpose     : 
+! Purpose     :
 !-----------------------------------------------------------------------------
+
+! 2015-11-18 - Marco Clemencic
+ - Disabled warnings for FORTRAN code.
 
 !========================== EvtGen v14r3 2015-10-21 ==========================
 
 ! 2015-10-07 - John Back
-  - Updated EvtPhotosEngine to check that additional particles from the 
+  - Updated EvtPhotosEngine to check that additional particles from the
     outgoing vertex are indeed (FSR) photons, since later versions of Photos++
     introduce pair emission, where particles may not always be photons.
 
@@ -31,17 +34,17 @@
 ! 2015-09-23 - Michal Kreps
   - Reimplement real Spence function in C++ and remove EvtLi2Spence.F.
 
-! 2015-09-10 - Christoph Langenbruch 
-  - Fixed form-factor calculations for the BTOSLLBALL model 6 used to generate 
-    b->sll decays. Affects B->K*ll, B->rholl and B->omegall, particularly the 
+! 2015-09-10 - Christoph Langenbruch
+  - Fixed form-factor calculations for the BTOSLLBALL model 6 used to generate
+    b->sll decays. Affects B->K*ll, B->rholl and B->omegall, particularly the
     electron modes
 
 !========================== EvtGen v14r2 2015-08-05 ==========================
 
-! 2015-06-29 - Jordi Tico 
+! 2015-06-29 - Jordi Tico
   - Cleanup of EvtD0mixDalitz code and fix bug with y parameter in
     EvtD0mixDalitz.
- 
+
 ! 2015-05-01 - Michal Kreps
   - Remove unnecessary includes from EvtXPsiGamma model.
 
@@ -83,7 +86,7 @@
     transitions.
 
 ! 2014-10-20 - C Langenbruch
- - Fix for the form factors of the Bs->phill modes in EvtbTosllBallFF.cc.  
+ - Fix for the form factors of the Bs->phill modes in EvtbTosllBallFF.cc.
    T3 showed a non-physical pole at very low q2 which significantly affected the electron mode.
 
 ! 2014-10-17 - T Blake
@@ -93,7 +96,7 @@
 
 ! 2014-10-14 - Michal Kreps
  - Update Lb2Lll decay model to correctly compare IDs of particles to allow
-   use of aliases. 
+   use of aliases.
 
 !========================== EvtGen v14r0 2014-10-08 ==========================
 ! 2014-09-01 - John Back
@@ -104,7 +107,7 @@
 
 !========================== EvtGen v13r13 2014-04-18 ==========================
 ! 2014-01-29 - John Back
- - Removed mass assertion on GS shape in EvtDalitzReso to allow it to 
+ - Removed mass assertion on GS shape in EvtDalitzReso to allow it to
    also be used for charged rho resonances (from Daniel Craik).
 
 !========================== EvtGen v13r12 2014-01-24 ==========================
@@ -114,7 +117,7 @@
 !========================== EvtGen v13r11 2014-01-10 ==========================
 ! 2014-01-08 - John Back
  - Corrected parameter checks in EvtSVSCPiso and EvtBto2piCPiso.
-   Added getPDGId() to EvtParticle. Added Blatt-Weisskopf barrier factors up 
+   Added getPDGId() to EvtParticle. Added Blatt-Weisskopf barrier factors up
    to L=5 in EvtBlattWeisskopf.
 
 ! 2013-12-21 - Jack Wimberley
@@ -125,12 +128,12 @@
 
 !========================== EvtGen v13r10 2013-11-21 ==========================
 ! 2013-11-21 - John Back
- - Modified EvtDalitzTable used by the EvtGenericDalitz model to warn 
+ - Modified EvtDalitzTable used by the EvtGenericDalitz model to warn
    if an unknown shape is used (and reverts to use a non-relativistic BW).
 
 !========================== EvtGen v13r9 2013-11-11 ==========================
 ! 2013-11-11 - John Back
- - Added Gounaris-Sakurai and Gaussian shapes to EvtGenericDalitz 
+ - Added Gounaris-Sakurai and Gaussian shapes to EvtGenericDalitz
    and set sensible defaults for LASS parameters (from Daniel Craik).
 
 !========================== EvtGen v13r8 2013-10-11 ==========================
@@ -139,16 +142,16 @@
 
 ! 2013-09-20 - John Back
  - Modified EvtGenModels/EvtPythiaEngine to keep track of any new
-   particles (such as Xsu, Xu+-, Xsd) that are added to the default Pythia 
-   database to avoid duplicating particle/anti-particle entries that could 
+   particles (such as Xsu, Xu+-, Xsd) that are added to the default Pythia
+   database to avoid duplicating particle/anti-particle entries that could
    override previously defined Pythia decay chains (for these new particles).
 
 !========================== EvtGen v13r7 2013-07-16 ==========================
 ! 2013-07-16 - John Back
  - Code changes from Daniel Craik:
    EvtParserXml now accepts file names containing environment variables;
-   exponential non-resonant shape in EvtDalitzReso now defined as 
-   exp(-alpha*m^2); LASS shape in EvtDalitzReso now takes a cutoff parameter. 
+   exponential non-resonant shape in EvtDalitzReso now defined as
+   exp(-alpha*m^2); LASS shape in EvtDalitzReso now takes a cutoff parameter.
    Added flag to turn on scaling of LASS amplitude by M/q in EvtDalitzReso.
 
 ! 2013-06-28 - Patrick Robbe
@@ -156,8 +159,8 @@
 
 !========================== EvtGen v13r6 2013-03-14 ==========================
 ! 2013-03-14 - John Back
- - Added a check in EvtPhotosEngine::doDecay to skip Photos if a given particle 
-   has too many daughters (>= 10) to avoid a problem with a hard coded upper 
+ - Added a check in EvtPhotosEngine::doDecay to skip Photos if a given particle
+   has too many daughters (>= 10) to avoid a problem with a hard coded upper
    limit in the Photos PHOENE subroutine.
 
 !========================== EvtGen v13r5 2013-03-07 ==========================
@@ -166,7 +169,7 @@
 
 !========================== EvtGen v13r4 2013-02-01 ==========================
 ! 2013-02-01 - John Back
-  - Modified the default settings for the Photos++ engine to be the same as 
+  - Modified the default settings for the Photos++ engine to be the same as
     the original settings used in the old fortran version. New tag.
 
 ! 2013-01-31 - John Back
@@ -189,7 +192,7 @@
    engine.
 
 ! 2013-01-23 - John Back
- - Added EvtGenModels/EvtPythiaRandom to allow the EvtGen random number 
+ - Added EvtGenModels/EvtPythiaRandom to allow the EvtGen random number
    engine to also be used as the random engine for Pythia 8.
 
 !========================== EvtGen v13r2 2013-01-16 ==========================
@@ -204,12 +207,12 @@
  - Created new tag containing the recent changes to the Dalitz decay models.
 
 ! 2012-12-18 - John Back
- - Corrected some wrong daughter assignments for EvtDDalitz modes 5 
+ - Corrected some wrong daughter assignments for EvtDDalitz modes 5
    (D0 -> K0 K+ K-) and 12 (D0 -> pi- pi+ pi0).
 
 ! 2012-12-17 - John Back
  - Updated some of the xml generic Dalitz plot code to incorporate extra
-   additions from Daniel Craik. 
+   additions from Daniel Craik.
    Make EvtSimpleRandomEngine inherit from EvtRandomEngine.
 
 ! 2012-12-14 - John Back
@@ -230,19 +233,19 @@
 
 ! 2012-10-08 - John Back
  - Provide default constructors for EvtVector4R and EvtPhotonParticle.
-   Corrected the t3 vector form factor values for the Ball-Zwicky '05 model 
-   (modelId = 6) in EvtbTosllBallFF::getVectorFF(), which were set to t3tilde 
+   Corrected the t3 vector form factor values for the Ball-Zwicky '05 model
+   (modelId = 6) in EvtbTosllBallFF::getVectorFF(), which were set to t3tilde
    instead.
 
-   From Michal Kreps: fixed the calculation of the angle between decay planes 
-   in the function EvtKine::EvtDecayAngleChi. Fixed typo in the EvtLb2Lll 
-   decay model. Only some NP scenarios could be affected, SM one is definitely 
+   From Michal Kreps: fixed the calculation of the angle between decay planes
+   in the function EvtKine::EvtDecayAngleChi. Fixed typo in the EvtLb2Lll
+   decay model. Only some NP scenarios could be affected, SM one is definitely
    unaffected.
 
 ! 2012-09-11 - John Back
- - Added missing EvtBCVFF class. Updated photos++ and tauola++ required 
-   versions to be 3.51 and 1.0.7, respectively. Added the use of the 
-   namespaces Photospp and Tauolapp in the classes EvtPhotosEngine 
+ - Added missing EvtBCVFF class. Updated photos++ and tauola++ required
+   versions to be 3.51 and 1.0.7, respectively. Added the use of the
+   namespaces Photospp and Tauolapp in the classes EvtPhotosEngine
    and EvtTauolaEngine.
 
 ! 2012-07-11 - John Back
@@ -253,11 +256,11 @@
  - Updated EvtDDalitz to contain Dalitz model for D0-->pi-pi+pi0.
 
 ! 2012-05-15 - John Back
- - Updated EvtD0gammaDalitz to deal with D mesons from neutral B->DK, 
+ - Updated EvtD0gammaDalitz to deal with D mesons from neutral B->DK,
    from Daniel Craik.
 
 ! 2012-05-14 - John Back
- - Replaced BaBar specific configuration for BlattWeisskopf birth factors, 
+ - Replaced BaBar specific configuration for BlattWeisskopf birth factors,
    from Daniel Craik.
 
 ! 2012-05-04 - John Back
@@ -271,7 +274,7 @@
 ! 2012-04-21 - John Back
  - Added code from Daniel Craik to allow the use of xml decay.dec files
    and to use a more general Dalitz plot model interface, again using
-   xml syntax to specify resonances, dynamics terms and amplitude 
+   xml syntax to specify resonances, dynamics terms and amplitude
    coefficients. This will eventually replace the EvtDDalitz model,
    avoiding the need for hardcoded resonance setttings/parameters.
 
@@ -283,63 +286,63 @@
 
 ! 2012-03-21 - John Back
  - Added EvtD0gammaDalitz model from Jordi Tico.
-   Added K_1+/- vector modes for EvtbTosllBallFF::getVectorFF. 
-   Added check for null pointers when printing debug info when checking the 
+   Added K_1+/- vector modes for EvtbTosllBallFF::getVectorFF.
+   Added check for null pointers when printing debug info when checking the
    spin density matrix rho in EvtDecayAmp.
 
 ! 2012-02-10 - John Back
- - Change EvtTauolaEngine to use the "lab" frame (first mother) for all 
-   4-momentum calculations, since there were problems for 4-momentum 
+ - Change EvtTauolaEngine to use the "lab" frame (first mother) for all
+   4-momentum calculations, since there were problems for 4-momentum
    conservation at the HepMC vertex when the mother of the given
-   tau particle was not at rest. 
+   tau particle was not at rest.
    Reinstate PYTHIA8DATA variable in cmt/requirements.
 
 ! 2011-11-18 - John Back
- - Reinstated the Pythia6 code, now called EvtPythia6, that is needed for the 
-   EvtGenDecay.cpp class within Gen/Generators. Also reinstated the old fortran 
+ - Reinstated the Pythia6 code, now called EvtPythia6, that is needed for the
+   EvtGenDecay.cpp class within Gen/Generators. Also reinstated the old fortran
    routines Pythia.F and EvtPythiaPart.F.
-   EvtGenDecay.cpp needs to use EvtPythia6::pythiaInit(), or needs to be 
+   EvtGenDecay.cpp needs to use EvtPythia6::pythiaInit(), or needs to be
    changed to be fully Pythia8 compliant...
    EvtGen uses Pythia8 for its own PYTHIA decay model.
    Added the PYTHIA8DATA environment variable to cmt/requirements
    for specifying the location of the Pythia8 xml data files.
-   At the moment, the external LCG Photos++ libraries are broken; somehow 
-   they are split up into separate C++ and Fortran parts, which gives memory 
+   At the moment, the external LCG Photos++ libraries are broken; somehow
+   they are split up into separate C++ and Fortran parts, which gives memory
    corruption; a default installation should only have the one library
    libPhotosCxxInterface.so (tested OK with a standalone version).
 
 ! 2011-10-05 - John Back
  - Update various classes to include recent fixes and changes made to the
-   v12r2b branch (see below). Also update the versions of the external 
-   generators in the cmt/requirements file. 
+   v12r2b branch (see below). Also update the versions of the external
+   generators in the cmt/requirements file.
   1) Changes to EvtParticle::generateMassTree() to not abort the code if
      the parent mass is below the threshold to generate the required decay.
      Now it just stops the particle decay; before there was an abort.
      This keeps the EvtParticle::isDecayed() boolean set to false.
-  2) Protection against negative square-root values in EvtGenKine p3 momentum 
-     component which was giving NaN values to boost/spin matrix calculations. 
+  2) Protection against negative square-root values in EvtGenKine p3 momentum
+     component which was giving NaN values to boost/spin matrix calculations.
   3) Fixed array index increments in various initialisation assert checks
      in the EvtMultiChannelParser and EvtPto3PAmpFactory classes for the
      Pto3P Dalitz plot model (a specific problem for optimised builds).
-  4) Added getName() to EvtParticle and EvtId classes to help identify 
+  4) Added getName() to EvtParticle and EvtId classes to help identify
      EvtParticles during testing instead of relying on EvtId numbers.
   5) Updated various D Dalitz decay models in EvtDDalitz.
   6) Some changes to debug/error output report levels in a few classes.
 
 ! 2011-08-11 - John Back
  - Major changes to use Pythia 8 instead of Pythia 6, including the use of
-   the new C++ interfaced packages of Photos and Tauola (with the new model 
-   name TAUOLA available). The Pythia and Photos model names are unchanged 
-   (they are still called PYTHIA and PHOTOS). See doc/Pythia8_README.txt and 
+   the new C++ interfaced packages of Photos and Tauola (with the new model
+   name TAUOLA available). The Pythia and Photos model names are unchanged
+   (they are still called PYTHIA and PHOTOS). See doc/Pythia8_README.txt and
    doc/Tauola_README.txt for more details about the use of the new external
-   generators. 
-   EvtGen can now also write out generated decay tree(s) as an HepMC event 
-   structure using EvtGenBase/EvtHepMCEvent. Modified the static class 
+   generators.
+   EvtGen can now also write out generated decay tree(s) as an HepMC event
+   structure using EvtGenBase/EvtHepMCEvent. Modified the static class
    interface of EvtGenBase/EvtDecayTable to use the singleton pattern.
 
 !========================== EvtGen v12r2 2011-08-18 ==========================
 ! 2011-08-11 - John Back
- - Added Bc -> V + npi and Bc -> P + npi decay models 
+ - Added Bc -> V + npi and Bc -> P + npi decay models
   (from Alexey Luchinsky et al.)
 
 !========================== EvtGen v12r1 2011-07-15 ==========================
@@ -360,7 +363,7 @@
 
 !========================== EvtGen v12r0 2011-04-13 ==========================
 ! 2011-02-28 - John Back
- - EvtDDalitz.cpp: Added the D -> KKPi mode. 
+ - EvtDDalitz.cpp: Added the D -> KKPi mode.
 
 ! 2011-01-05 - John Back
  - EvtPythia.cpp: Use mkstemp instead of tmpnam for temp Pythia data file
@@ -370,25 +373,25 @@
 ! 2010-12-09 - John Back
  Below is a summary of the merge between the latest BaBar & LHCb EvtGen code.
  - EvtCPUtil.cpp: Class interface changed to use static instance and not
-   static functions. There are now two OtherB functions for coherent and 
+   static functions. There are now two OtherB functions for coherent and
    incoherent B pairs (set to incoherent by default for LHCb).
- - EvtGen.cpp: Added extra integer argument in constructor to choose 
+ - EvtGen.cpp: Added extra integer argument in constructor to choose
    EvtCPUtil OtherB function type. Default is set to incoherent B pairs.
    Removed CLHEP includes.
  - All CP violation model classes: changes for new EvtCPUtil::OtherB()
    interface.
- - EvtLASSAmp.cpp: Added two sub-amplitude types LASS_ELASTIC and 
+ - EvtLASSAmp.cpp: Added two sub-amplitude types LASS_ELASTIC and
    LASS_RESONANT. The constructor takes an additional string to specify
    what amplitude is used (default is set to LASS, the original version).
- - Added EvtBaryonPCR and EvtBaryonPCRFF models for baryonic semileptonic 
+ - Added EvtBaryonPCR and EvtBaryonPCRFF models for baryonic semileptonic
    decays using more realistic dynamics.
  - EvtModelReg.cpp: Added EvtBaryonPCR model.
  - Added EvtSemiLeptonicBaryonAmp.cpp for the above baryon models.
- - EvtSemiLeptonicFF.hh: Added getdiracff() and getraritaff() methods for 
-   the new baryon models. Since other semileptonic models (ModelNameFF.cpp) 
+ - EvtSemiLeptonicFF.hh: Added getdiracff() and getraritaff() methods for
+   the new baryon models. Since other semileptonic models (ModelNameFF.cpp)
    use this class, they also need to implement these new methods (which
    actually do no extra calculations).
- - Changed EvtWilsonCoeficients to EvtWilsonCoefficients, used in 
+ - Changed EvtWilsonCoeficients to EvtWilsonCoefficients, used in
    EvtGenModels/EvtLb2Lll.hh.
 
 !========================= EvtGen v11r10 2010-10-12 ==========================
@@ -417,19 +420,19 @@
 !========================== EvtGen v11r7 2009-12-17 ==========================
 ! 2009-12-17 - Mark Whitehead
  - CPV Fix moved from EvtIncoherentMixing.cpp to EvtCPUtil.cpp so
-   calls to the 4 paramater EvtCPUtil::OtherB from all decay models 
-   can be tested.     
+   calls to the 4 paramater EvtCPUtil::OtherB from all decay models
+   can be tested.
 
 ! 2009-11-27 - Mark Whitehead
  - Fix to EvtIncoherentMixing.cpp for slc5: <stdlib.h> included.
 
 ! 2009-11-24 - Mark Whitehead
  - Reintroduce file EvtIncoherentMixing.cpp to fix CPV problems.
- - EvtSSDCP.cpp: Swap EvtCPUtils::OtherB for EvtIncoherentMixing::OtherB. 
+ - EvtSSDCP.cpp: Swap EvtCPUtils::OtherB for EvtIncoherentMixing::OtherB.
  - EvtSSDCP.cpp: Changes by Liming to fix CPV behaviour.
 
 !========================== EvtGen v11r6 2009-11-04 ==========================
-! 2009-10-19 - Patrick Robbe 
+! 2009-10-19 - Patrick Robbe
  - Fix gcc4.3 compilation, mainly dealing with scope of friend functions
 
 !========================== EvtGen v11r5 2009-10-05 ==========================
@@ -447,7 +450,7 @@
 !========================== EvtGen v11r3 2009-07-15 ==========================
 ! 2009-07-13 - Greig Cowan
  - Fixed EvtPVVCPLH model to use the new framework. Added getDeltaGamma() and
-   getDeltaM() methods to EvtCPUtil.cpp. Added EvtPVVCPLH into the list of 
+   getDeltaM() methods to EvtCPUtil.cpp. Added EvtPVVCPLH into the list of
    allowed decay models.
 
 !========================== EvtGen v11r2 2009-06-03 ==========================
@@ -473,7 +476,7 @@
 
 ! 2009-03-16 - Patrick Robbe
  - Move to new EvtGen version from Anders Ryd after merging BaBar
-   and LHCb changes. 
+   and LHCb changes.
 
 ! 2009-02-26 - Patrick Robbe
  - EvtParticleDecayList.cpp: fix case when decay mode is forced
@@ -490,17 +493,17 @@
 ! 2008-12-11 - Patrick Robbe
  - EvtRanf: use double instead of float to be able to run in debug
    mode on 64 bit machines
- - EvtBTo3Pi.F: use double precision evtranf function for 64 bit 
+ - EvtBTo3Pi.F: use double precision evtranf function for 64 bit
    computers
 
 !========================== EvtGen v10r0 2008-10-10 ==========================
 ! 2008-09-20 - Patrick Robbe
- - EvtGen/EvtGen.hh, src/EvtGen.cpp: remove CLHEP dependancy (remove 2 
+ - EvtGen/EvtGen.hh, src/EvtGen.cpp: remove CLHEP dependancy (remove 2
    obsolete functions)
  - src/EvtConst.cpp: update pi value to be equal to the GAUDI one
- - src/EvtPythiaPart.F: remove "external pydata" since it is done in GENSER 
+ - src/EvtPythiaPart.F: remove "external pydata" since it is done in GENSER
    package
- - src/EvtVub.cpp, EvtVubdGamma.cpp: start to remove CLHEP dependancy (usage 
+ - src/EvtVub.cpp, EvtVubdGamma.cpp: start to remove CLHEP dependancy (usage
    of CLHEP physical constants replaced by EvtConst::pi)
  - src/Pythia.F: update for Pythia6.4
 
@@ -516,7 +519,7 @@
 
 !========================== EvtGen v9r0 2008-02-08 ===========================
 ! 2008-01-08 - Patrick Robbe
- - Pythia.F: Add dummy subroutine calling PYTIME to force loading of 
+ - Pythia.F: Add dummy subroutine calling PYTIME to force loading of
    libpythia6_dummy.so in Gauss, with the new compilation options in
    CMT.
 
@@ -528,7 +531,7 @@
  - Adapt static classes to windows compilation
 
 ! 2007-10-11 - Patrick Robbe
- - EvtIncoherentMixing: move inline access functions to static member 
+ - EvtIncoherentMixing: move inline access functions to static member
    variables to .cpp files
 
 !======================== EvtGen v8r16 2007-10-04 =========================
@@ -540,7 +543,7 @@
 ! 2007-01-24 - Patrick Robbe
  - Add new class EvtDiLog to replace di-logarithm function DDILOG from
    the CERNLIB.
- - Modify code to use this new class: 
+ - Modify code to use this new class:
    . EvtGenModels/EvtbTosllAmp.hh
    . src/EvtBtoXsllUtil.cpp
    . src/EvtVubdGamma.cpp
@@ -570,7 +573,7 @@
 
 !======================== EvtGen v8r10 2006-08-28 =========================
 ! 2006-08-28 - Florence RANJARD
- - src/Pythia.F - fix the bug in pythiadec : when mstg(92) < 0 
+ - src/Pythia.F - fix the bug in pythiadec : when mstg(92) < 0
    call pyshow (ip1,-3,p(1,5)) intead of call pyshow(ip1,-3,p(ip,5))
 
 !======================== EvtGen v8r9 2006-05-19  ==========================
@@ -579,13 +582,13 @@
 
 !======================== EvtGen v8r8 2006-03-28  ==========================
 ! 2006-03-28 - Florence RANJARD
- - cmt/requirements: remove special compilation flags now introduced in 
+ - cmt/requirements: remove special compilation flags now introduced in
    GaudiPolicy
 
 !======================== EvtGen v8r7 2006-03-12  ==========================
 ! 2006-03-12 - Patrick Robbe
- - cmt/requirements: build shared library for EvtGen and uses -O2 
-   flag to compile FORTRAN files (to be compatible with GENSER 
+ - cmt/requirements: build shared library for EvtGen and uses -O2
+   flag to compile FORTRAN files (to be compatible with GENSER
     compilation flags)
 
 ! 2006-02-07 - Patrick Robbe
@@ -685,11 +688,11 @@
 !================== EvtGen v5r3 ====================================
 ! 2004-05-06 - Patrick Robbe
  - EvtPHOTOS: fix use of PHOTOS
- - begevtgen*.F, EvtGen.cpp, common_hepevt.inc, stdhep.inc : use correct 
+ - begevtgen*.F, EvtGen.cpp, common_hepevt.inc, stdhep.inc : use correct
    up-to-date HEPEVT common block and remove reference to old STDHEP common
    block
  - cmt/requirements: increase version number to v5r3 and use recent
-   photos202.lib instead of photos.lib which contains old HEPEVT 
+   photos202.lib instead of photos.lib which contains old HEPEVT
    common block definitions.
 
 !=================== EvtGen v5r2 ====================================
@@ -700,19 +703,19 @@
  - Fix memory leaks in EvtBToXsll.cpp
 
 ! 2004-03-09 - Patrick Robbe
- - EvtSLN : give a probmax for decays B_c -> tau nu_tau to avoid 
-   warnings at EvtGEn initialization. 
+ - EvtSLN : give a probmax for decays B_c -> tau nu_tau to avoid
+   warnings at EvtGEn initialization.
  - cmt/requirements : increase version to v5r2
 
 !===================== EvtGen v5r1 ===================================
 ! 2004-03-08 - Patrick Robbe
  - EvtIncoherentMixing : put PDG 2004 mixing parameters as default values
     for the mixing (Delta m_s, Delta m_d, Delta Gamma_s, Delta Gamma_d)
- - EvtPDL : add evtIdFromLundKC to be able to retrieve a particle ID 
+ - EvtPDL : add evtIdFromLundKC to be able to retrieve a particle ID
     from the Pythia ID
  - EvtBTo3piCP, EvtBTo4piCP, EvtBToKpipiCP, EvtBto2piCPiso,
    EvtSSSCP, EvtSSSCPT, EvtSTSCP, EvtSVPCP, EvtSVSCP, EvtSVSCPiso,
-   EvtSVSNONCPEIGEN, EvtSVVCP, EvtSVVCPLH, EvtSVVNONCPEIGEN : 
+   EvtSVSNONCPEIGEN, EvtSVVCP, EvtSVVCPLH, EvtSVVNONCPEIGEN :
     add the possibility to flip the event to generate CP violation
     in a Incoherent B-Bbar production environment.
  - EvtISGW2 : adjust max prob for B_s -> D's1 tau nu_tau decays
@@ -764,7 +767,7 @@
     evtranf instead of ranf to ensure reproducibility
  - cranf.cpp, ranf.F : remove and use EvtRanf.cpp instead
  - EvtBTo3piCP.cpp, EvtBToKpipiCP.cpp, EvtCBTo3piMPP.cpp, EvtCBTo3piP00.cpp,
-   EvtGen.cpp : changes to reproduce all events in B->3 pi decays 
+   EvtGen.cpp : changes to reproduce all events in B->3 pi decays
    (and similar decay modes).
 
 ! 2003-11-06 - Patrick Robbe
@@ -806,7 +809,7 @@
 !===================== EvtGen v4r0 ======================================
 ! 2003-10-10 - Patrick Robbe
  - EvtPythia : do not update diquark masses in Pythia
- - EvtIncoherentMixing : add incoherent B0/B0bar and Bs/Bsbar mixing. 
+ - EvtIncoherentMixing : add incoherent B0/B0bar and Bs/Bsbar mixing.
 
 ! 2003-10-09 - Patrick Robbe
  - Fixes in EvtParticle for B0s mixing
@@ -816,7 +819,7 @@
    number instead of EvtPDL::getLundKC, in EvtPythia.cpp
 
 ! 2003-10-02 - Patrick Robbe
- - new version of the package EvtGen, version alpha-00-10-22 (July 3, 2003) 
+ - new version of the package EvtGen, version alpha-00-10-22 (July 3, 2003)
    taken from www.slac.stanford.edu/~lange/EvtGen
  - two new header directories EvtGenModels and EvtGenBase
  - some changes to compile on Windows
@@ -861,15 +864,15 @@ from the PDT table file
 !=================== EvtGen v2r0 ============================================
 ! 2002-07-15 - Florence Ranjard
   requirements - use CLHEP 1.8.0.0
- 
+
 ! ================== EvtGen v1r0 ============================================
 
 ! 20020411 - EvtGen v1r0 Witek Pokorski
 - New package
 
-  B-decay package developed by D.Lange and A.Ryd. 
+  B-decay package developed by D.Lange and A.Ryd.
   Provides a framework for the implementation of processes relevant to B-mesons
-  decays and other resonances (see http://www.slac.stanford.edu/~lange/EvtGen/). 
+  decays and other resonances (see http://www.slac.stanford.edu/~lange/EvtGen/).
 
 ! ================== EvtGen v0r0 ===========================================
 

@@ -1,10 +1,13 @@
-! $Id:$ 
+! $Id:$
 ! -----------------------------------------------------------------------------
 ! Package     : Gen/LbOniaPairs
 ! Author      : Alexey Novoselov Alexey.Novoselov@cern.ch
 ! Responsible : Vanya Belyaev    Ivan.Belyaev@cern.ch
-! Purpose     : Generator for onia pairs production 
+! Purpose     : Generator for onia pairs production
 ! -----------------------------------------------------------------------------
+
+! 2015-11-18 - Marco Clemencic
+ - Disabled warnings for FORTRAN code.
 
 !======================= LbOniaPairs v2r1p1 2014-10-16 ========================
 ! 2014-12-02 - Gloria Corti
@@ -15,18 +18,18 @@
 
 !======================== LbOniaPairs v2r1 2014-08-01 =========================
 ! 2014-06-24 - Gloria Corti
- - Fix OniaPairs.py options that were missing import of OniaPairsProduction 
+ - Fix OniaPairs.py options that were missing import of OniaPairsProduction
    configurable
 
 ! 2014-06-24 - Gloria Corti
  - Add OniaPairs.py options to switch on this generator in production. In this
    case it is only foreseen for the Special sampling method, so force to use it.
    Here only 'generic options' are set
- 
+
 ! 2014-05-15 - Vanya Belyaev
  - minor reshulffling of files
-   move the header fikle for production tool form 
-   "public" area to internal area 
+   move the header fikle for production tool form
+   "public" area to internal area
 
 ! 2014-03-20 - Alexey Novoselov
  - Added Psi1S1S.py opts file in /options/ subfolder
@@ -38,7 +41,7 @@
 ! 2013-12-19 - Alexey Novoselov
  - Ecm taken from Gauss
  - Do not rely on default Pythia configuration from LbPythia
- - Use Perugia-2012 tune by default 
+ - Use Perugia-2012 tune by default
  - Scales in AlpS, PDF, Pythia showers can be tuned from job-options
  - Cross section summary after run
  - Generator level efficiency improved
@@ -63,6 +66,6 @@
  - Do not build the package on WinXp as pythia6 itself is not built on it.
 
 ! 2011-05-30 - Vanya Belyaev
- - the first import 
-   
+ - the first import
+
 !==============================================================================

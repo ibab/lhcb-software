@@ -8,6 +8,10 @@ gaudi_depends_on_subdirs(Gen/GENSER
 
 find_package(Boost)
 
+string(REPLACE "-pedantic" "" CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}")
+string(REPLACE "-Wall" "" CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}")
+string(REPLACE "-Wextra" "" CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}")
+string(REPLACE "-Werror=return-type" "" CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}")
 gaudi_add_library(LbOniaPairsLib
                   src/Lib/*.cpp
                   src/Lib/*.F

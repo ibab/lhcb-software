@@ -4,6 +4,9 @@
 ! Purpose     : Package for Pythia 6 in Gauss
 !-----------------------------------------------------------------------------
 
+! 2015-11-18 - Marco Clemencic
+ - Disabled warnings for FORTRAN code.
+
 !========================= LbPythia v15r0 2015-06-02 =========================
 ! 2015-05-01 - Philip Ilten
  - Exposed members for HardProduction tool
@@ -51,13 +54,13 @@
  - Move Beam tool to protected PythiaProduction section
 
 ! 2012-07-20 - Gloria Corti
- - Also remove the factory declaration that was in PythiaProduction itself, 
+ - Also remove the factory declaration that was in PythiaProduction itself,
    otherwise it will be found twice
 
 ! 2012-07-19 - Gloria Corti
- - Add factory declaration for PythiaProduction in component library to force 
+ - Add factory declaration for PythiaProduction in component library to force
    its loading since the tool is in the linker library (it is specialized by
-   other tools in other libraries). This is needed otherwise the class cannot 
+   other tools in other libraries). This is needed otherwise the class cannot
    be instanciated as configurable.
 
 ! 2012-07-13 - Patrick Robbe
@@ -72,7 +75,7 @@
 !========================= LbPythia v11r0 2012-05-14 =========================
 ! 2012-05-09 - Gloria Corti
  - Fix run time problem with finding of ParticlePropertySvc that in Gaudi
-   v23 is in the Gaudi:: namespace. 
+   v23 is in the Gaudi:: namespace.
 
 ! 2012-05-08 - Gloria Corti
  - Fix for new version of boost as taken from Gaudi v23r2
@@ -82,7 +85,7 @@
  - Pysubs.cpp: fix bug in accessing the KFIN Pythia common block
 
 !========================= LbPythia v10r2 2011-11-11 =========================
-! 2011-10-20 - Patrick Robbe 
+! 2011-10-20 - Patrick Robbe
  - JetProduction.cpp
  - Pyssmt.cpp
  - PythiaProduction.cpp
@@ -116,7 +119,7 @@
  - patch component/JetProduction.cpp: comment IO_Ascii include as not used
 
 ! 2011-06-09 - Vanya Belyaev
- - resurect the reading of LHA/LHE events 
+ - resurect the reading of LHA/LHE events
  - increase version to v9r2
 
 !========================= LbPythia v9r1 2011-05-31 ==========================
@@ -124,12 +127,12 @@
  - Increase version to v9r1. New feature not a bug fix!
 
 ! 2011-05-11 - Cedric Potterat
- - patch on PythiaProduction.cpp: add an option to cut on Z/gamma* invariance mass, default value (-1) do not change the normal behaviour. 
+ - patch on PythiaProduction.cpp: add an option to cut on Z/gamma* invariance mass, default value (-1) do not change the normal behaviour.
  - increase to v9r0p2
 
 !======================== LbPythia v9r0p1 2011-01-31 =========================
 ! 2011-01-21 - Victor Coco
- - PythiaProduction.cpp: set printing of inconsistency errors only in debug 
+ - PythiaProduction.cpp: set printing of inconsistency errors only in debug
    level
 
 !========================= LbPythia v9r0 2010-02-05 ==========================
@@ -144,7 +147,7 @@
  - Fixes for SLC5 compilation with GCC4.3
 
 !========================= LbPythia v8r5 2009-10-05 ==========================
-! 2009-09-02 - Neal Gauvin 
+! 2009-09-02 - Neal Gauvin
   - PythiaHiggsType : new option for subsituting the b quark with any particle.
 
 !========================= LbPythia v8r4 2009-09-18 ==========================
@@ -163,7 +166,7 @@
 !========================= LbPythia v8r3 2009-02-09 ==========================
 ! 2009-01-26 - Patrick Robbe
  - PythiaProduction.cpp: re-activate extra charmonium processes which had
-   been desactivated by mistake 
+   been desactivated by mistake
 
 !========================= LbPythia v8r2 2008-12-08 ==========================
 ! 2008-12-03 - Gloria CORTI
@@ -178,7 +181,7 @@
  - PythiaLSP: add cut tool
 
 ! 2008-11-25 - Patrick Robbe
- - PythiaProduction: add and activate in minimum bias psi(3770) 
+ - PythiaProduction: add and activate in minimum bias psi(3770)
    production
 
 ! 2008-11-12 - Patrick Robbe
@@ -186,7 +189,7 @@
    default.
 
 ! 2008-11-11 - Patrick Robbe
- - PythiaProduction: add definition of new charmonium processes (color 
+ - PythiaProduction: add definition of new charmonium processes (color
    singlet psi(2S), Upsilon(1S), Upsilon(2S), Upsilon(3S), Upsilon(4S)
    Upsilon(5S)
 
@@ -226,7 +229,7 @@
  - options/Pythia64.opts: add COM charmonium processes
 
 ! 2008-07-10 - Patrick Robbe
- - Remove usage of SEAL for file: 
+ - Remove usage of SEAL for file:
    . src/Lib/PythiaProduction.cpp
 
 ! 2008-07-09 - Patrick ROBBE and Gloria CORTI
@@ -236,21 +239,21 @@
 !========================= LbPythia v7r3 2008-07-06 ==========================
 ! 2008-06-24 - Vanya  BELYAEV
  - PythiaProduction
-    add new property "Inconsistencies", 
-    it is a name of the file where to dump HEPEVT inconsistencies, 
+    add new property "Inconsistencies",
+    it is a name of the file where to dump HEPEVT inconsistencies,
     detected if the property "ValidateHEPEVT" is activated
-    For empty file name, inconsistencies are dumped on the 
-    WARNING 
- - cmt/requirements 
-    version increment to v7r3 
+    For empty file name, inconsistencies are dumped on the
+    WARNING
+ - cmt/requirements
+    version increment to v7r3
 
 !========================= LbPythia v7r2 2008-06-09 ==========================
 ! 2008-05-06 - Vanya BELYAEV
- - LbPythia/PythiaProduction.h 
+ - LbPythia/PythiaProduction.h
    src/Lib/PythiaProduction.cpp
-   - add new boolean property "ValidateHEPEVT" (the default value s false) 
-   If this property is activated the conversion policy 
-     "set_trust_both_mothers_and_daughters( true )" for HEPEVT -> HepMC 
+   - add new boolean property "ValidateHEPEVT" (the default value s false)
+   If this property is activated the conversion policy
+     "set_trust_both_mothers_and_daughters( true )" for HEPEVT -> HepMC
    is activated. Such trick is *MANDATORY* for "Hidden Valley" production..
 
 !========================= LbPythia v7r1 2008-04-29 ==========================
@@ -265,13 +268,13 @@
 
 ! 2008-01-24 - Patrick Robbe
  - Allow to choose the limit to apply to a particle to consider it as
-   a zero lifetime particle: New job option "WidthLimit" for 
+   a zero lifetime particle: New job option "WidthLimit" for
    PythiaProduction tool.
 
 !========================= LbPythia v6r0 2008-01-08 ==========================
 ! 2008-01-08 - Gloria CORTI for Victor COCO
  - Allow to chose the type of leptons, their mother and the higgs via options,
-   passing their names. 
+   passing their names.
    The corresponding modified decay files are in DecFiles v14r0.
    . src/component/PythiaHiggsType.{h,cpp}
 
@@ -280,7 +283,7 @@
  - Convert file from DOS to Unix, to allow options to be parsed by python
    . options/Pythia64.opts
 
-! 2007-11-30 - Patrick Robbe 
+! 2007-11-30 - Patrick Robbe
  - New options for Pythia 6.4 (with new MI)
    + options/Pythia64.opts
 
@@ -289,17 +292,17 @@
  - Replace flavour with particles in both code and options, use Gaudi units
    in options (GeV) and covert them when passing them to Pythia (MeV).
    . src/component/JetProduction.{h,cpp}
- - Introduce example file for the JetProduction tool (jets as "guns") 
+ - Introduce example file for the JetProduction tool (jets as "guns")
    . JetGuns.opts
 
 ! 2007-10-08 - Gloria Corti for Neal Guiessaz
  - Introduce new code to generate specific particle decays related to Jet
    production. The code uses pythia6 and for this a new fortran subroutine
-   has been made (PyAddp) to add information to Pythia regarding the 
+   has been made (PyAddp) to add information to Pythia regarding the
    event before processing it. A new IProductionTool called JetProduction
-   has been introduced. 
+   has been introduced.
  - A description on how to use the JetProduction tool and why can be found
-   in 
+   in
    <a href="https://twiki.cern.ch/twiki/bin/view/LHCb/FAQ/JetProduction">this
    web page</a>
  - Code affected
@@ -310,7 +313,7 @@
                                            routine
 
 !========================= LbPythia v5r2 2007-08-22 ==========================
-! 2007-07-31 - Vanya BELYAEV 
+! 2007-07-31 - Vanya BELYAEV
  - Couple of tiny fixes to allow to read ALPGEN partonic events:
    src/component/ReadAlpGen.cpp
    src/component/ReadFile.cpp
@@ -324,28 +327,28 @@
    . src/component/ReadAlpGen.cpp
 
 ! 2007-06-29 - Vanya BELYAEV
- - Put few modificationto be able to read ALPGEN partonic events 
+ - Put few modificationto be able to read ALPGEN partonic events
    and process them through Pythia for showering
 
   src/Lib/GaussUserProcess.inc
-     define new "process type": ALPGENREADPROCESS 
+     define new "process type": ALPGENREADPROCESS
   src/Lib/upevnt.F,src/Lib/upinit.F
-     add a branches for ALPGENREADPROCESS to call 
-     (dummy) routines ALPGEN_UPINIT and ALPGEN_UPEVNT 
+     add a branches for ALPGENREADPROCESS to call
+     (dummy) routines ALPGEN_UPINIT and ALPGEN_UPEVNT
 
   Split the concrete tool ReadLHEfileProduction into several pieces
   to allow flexible manipulation with various input files/generators
 
   src/component/ReadFile.h,src/component/ReadFile.cpp
-     new base class LbPythia::ReadFile for reading of 
-     partonic events from arbitrary geenrator 
+     new base class LbPythia::ReadFile for reading of
+     partonic events from arbitrary geenrator
   src/component/ReadLHE.cpp, src/component/ReadLHE.h
      concrete tool LbPythia::ReadLHE to read "Les Houches  Events" (xml-format)
   src/component/ReadLHEfileProduction.cpp
      concrete tool ReadLHEfileProduction to read "Les Houches  Events" (xml-format)
   src/component/ReadAlpGen.cpp, src/component/ReadAlpGen.h
      concrete tool LbPythia::ReadAlpGen to read ALPGEN partonic files
- 
+
 
 !===================== LbPythia v5r1 2007-05-16 ============================
 ! 2007-05-16 - Gloria CORTI
@@ -370,7 +373,7 @@
 
 !===================== LbPythia v4r10 2007-02-08 ===========================
 ! 2007-02-08 - Gloria Corti
- - to use with Gauss v25 series use include_dir in requirements 
+ - to use with Gauss v25 series use include_dir in requirements
 
 ! 2007-01-08 - Florence Ranjard
  - move GaussUserProcess.inc from LbPythia/ to src/Lib
@@ -386,67 +389,67 @@
 ! 2006-10-25 - Vanya BELYAEV
  - src/component/PythiaProduction.cpp
     remove stupid bug, introduced in a rush
-     during merging procedure 
+     during merging procedure
 
 ! 2006-10-25 - Vanya BELYAEV
   - LbPythia/PythiaProduction.h
   - src/component/PythiaProduction.cpp
-      1) move few members from private to protected area 
-      2) introduce new method (protected) toHepMC 
-         to allow an easy reimplementation of generateEvent 
+      1) move few members from private to protected area
+      2) introduce new method (protected) toHepMC
+         to allow an easy reimplementation of generateEvent
          method for derived classes
-      3) make use of this new method in 
+      3) make use of this new method in
               PythiaProduction::generateEvent
-              PythiaProduction::hadronize 
+              PythiaProduction::hadronize
   - LbPythia/GaussUserProcess.inc
-      add new process type: 
+      add new process type:
       C*    Use Hidden Valley production
             INTEGER HIDVALLEYPROCESS
             PARAMETER(HIDVALLEYPROCESS=4)
   - src/Lib/upevnt.F, src/Lib/upinit.F
-      take care about existence of HIDVALLEYPROCESS generator 
+      take care about existence of HIDVALLEYPROCESS generator
 
 ! ==================== LbPythia v4r8 2006-10-23 ===========================
 ! 2006-10-22 - Vanya BELYAEV
  - LbPythia/PythiaProduction.h
  - src/component/PythiaProduction.cpp
     introduce new property "PDTlist" (default is empty list)
-    to print (using PYLIST(12)) the particle data tables for 
+    to print (using PYLIST(12)) the particle data tables for
     certain particles
  -  move few lines from "initialize" to "printRunningConditions"
 
 ! ==================== LbPythia v4r7 2006-10-09 ===========================
 ! 2006-10-04 - Patrick Robbe
- - src/component/PythiaProduction.cpp: fix bug, uninitialized variable. 
+ - src/component/PythiaProduction.cpp: fix bug, uninitialized variable.
 
 ! 2006-10-04 - Patrick Robbe
  - src/component/ReadLHEfile.cpp: rename as ReadLHEfileProduction
    to follow Gauss production generators naming conventions.
 
 ! 2006-10-04 - Vanya BELYAEV
- - src/component/PythiaProduction.cpp 
+ - src/component/PythiaProduction.cpp
      Fix bugs, kindly pointed by Patrick ROBBE:
-     PythiaProduction::hadronize 
+     PythiaProduction::hadronize
       - fix a stupid bug (duplication of lines for rescaling of momentum)
       - fix a listing level for PyList call from PythiaProdyction::hadronize
 
 ! 2006-10-04 - Vanya BELYAEV
  - LbPythia/GaussUserProcess.inc
       common block /GAUSSUSERPROCESS/ + numerical defintion of processes
-      as fortran PARAMETERS, in particular LHEREADPROCESS=3  
- 
+      as fortran PARAMETERS, in particular LHEREADPROCESS=3
+
     Modification to read LHE (Les Houches Event) parton level file:
 
  - src/Lib/upevnt.F,  src/Lib/upinit.F
-      - modification to use LHEUPINIT and LHEUPEVNT in the case 
-        of LHEREADPROCESS 
-      - make use of common block fomr include-file 
+      - modification to use LHEUPINIT and LHEUPEVNT in the case
+        of LHEREADPROCESS
+      - make use of common block fomr include-file
  - src/Lib/lheupevnt.F, src/Lib/lheupinit.F
       new routines to be used to reading of LHE file
  - src/component/ReadLHEfile.cpp
-      new "production tool" for reading LHE file 
+      new "production tool" for reading LHE file
  - src/Lib/SetUserProcess.F
-      make use of common block fomr include-file 
+      make use of common block fomr include-file
 
 
  - LbPythia/Pythia.h,src/Lib/Pythia.cpp
@@ -455,62 +458,62 @@
 
 
  - LbPythia/PythiaProduction.h, src/component/PythiaProduction.cpp
-     1) Add new property "PYTHIA", which includes the PYTHIA commands 
+     1) Add new property "PYTHIA", which includes the PYTHIA commands
         in a format used by PYGIVE routine, e.g.
-     
+
           XXX.YYY.ZZZ.PythiaProduction.PYGIVE = {
-            "MSTP(10)=10;MSPT(20)=20:MSTP(30)=30" , 
+            "MSTP(10)=10;MSPT(20)=20:MSTP(30)=30" ,
             "MSTP(10)=10;MSPT(20)=20:MSTP(30)=30" } ;
         Note: program PYGIVE prints the changed/modified variables.
 
      2) add possibility to read and write particle decay data:
-     
+
         A) to write particle decay data:
            XXX.YYY.ZZZ.PythiaProduction.Commands +=
              { "pyinit pdtoutput pdt.out" } ;
-           It will dump the whole particle decay data 
+           It will dump the whole particle decay data
           (Using PYUPDA(1,LUN) routine) into the file pdt.out
 
-        B1) to read the whole particle data table 
+        B1) to read the whole particle data table
            XXX.YYY.ZZZ.PythiaProduction.Commands +=
-             { "pyinit pdtinput pdt.in" , 
+             { "pyinit pdtinput pdt.in" ,
                "pyinit pdtlevel 2" } ; // PYUPDA(2,LUN)
-        B2) to read only modified partice data entries: 
+        B2) to read only modified partice data entries:
            XXX.YYY.ZZZ.PythiaProduction.Commands +=
-             { "pyinit pdtinput pdt.in" , 
+             { "pyinit pdtinput pdt.in" ,
                "pyinit pdtlevel 3" } ; // PYUPDA(3,LUN)
-        
-          The default unit(LUN) for A&B is 59 could be changed 
+
+          The default unit(LUN) for A&B is 59 could be changed
            XXX.YYY.ZZZ.PythiaProduction.Commands +=
              { "pyinit pdtunit 15" } ;
-   
-          As ususla setting unit to 0 switches off both input 
+
+          As ususla setting unit to 0 switches off both input
          and output of the PYUPDA)
-  
-       3) "Event" listing is split into 2 parts 
-           "Event" listing and "Hanronization" listing and could 
-           be controlled independently 
-          "event" listing corresponds to directive: 
+
+       3) "Event" listing is split into 2 parts
+           "Event" listing and "Hanronization" listing and could
+           be controlled independently
+          "event" listing corresponds to directive:
 
          XXX.YYY.ZZZ.PythiaProduction.Commands +=
              { "pyinit pyliste 3" } ;
 
-          and "hadronize" listing corresponds to directive 
+          and "hadronize" listing corresponds to directive
 
          XXX.YYY.ZZZ.PythiaProduction.Commands +=
              { "pyinit pylisth 3" } ;
 
-         (The first listing is perfored in PythiaProduction::generateEvent 
+         (The first listing is perfored in PythiaProduction::generateEvent
           method and the second one in PythisProduction::hadronize"
-         
-         4) For "initialize/event/hadronize" listings one can specify a 
+
+         4) For "initialize/event/hadronize" listings one can specify a
             range of the entries to be used, e.g.
-         
+
            - print the whole table:
 
            XXX.YYY.ZZZ.PythiaProduction.Commands +=
              { "pyinit pylisti 12" } ;
-         
+
            - print only properties of particles from 1 to 10:
 
            XXX.YYY.ZZZ.PythiaProduction.Commands +=
@@ -522,30 +525,30 @@
              { "pyinit pylisti 12 35 35" } ;
 
            - print only first 4 partons (inclusing iniial protons):
- 
+
            XXX.YYY.ZZZ.PythiaProduction.Commands +=
              { "pyinit pyliste 3 1 4" } ;
 
            - print only first 100 entries:
- 
+
            XXX.YYY.ZZZ.PythiaProduction.Commands +=
              { "pyinit pylisth 1 1 100" } ;
- 
+
    Just for clarity (ordering rule):
 
    Pythia parameters are set in the following order
 
-      - default setting 
-      - explict command vector (property "Commamds") 
-      - read the table         (command   "pyinit pdtinput pdt.in" ) 
-      - commands  from PYGIVE  (property "PYGIVE") 
-      - any possible configuration done through UPINIT 
-   
-   The dump of the output particle data table 
+      - default setting
+      - explict command vector (property "Commamds")
+      - read the table         (command   "pyinit pdtinput pdt.in" )
+      - commands  from PYGIVE  (property "PYGIVE")
+      - any possible configuration done through UPINIT
+
+   The dump of the output particle data table
    (command "pyinit pdtoutput pdt.out")
-   is performed *AFTER* call for PYINIT, and includes *ALL* 
-   possible modifications, *EXCEPT* for modification done 
-   for particle property service        
+   is performed *AFTER* call for PYINIT, and includes *ALL*
+   possible modifications, *EXCEPT* for modification done
+   for particle property service
 
 
 ! 2006-10-03 - Patrick Robbe
@@ -565,7 +568,7 @@
 ! ==================== LbPythia v4r5 2006-06-22 ======================
 ! 2006-06-22 - Gloria CORTI
  - Print message of production engine used at initialization.
-   . PythiaProduction.cpp 
+   . PythiaProduction.cpp
 
 ! ==================== LbPythia v4r4 2006-06-07 ======================
 ! 2006-06-07 - Patrick Robbe
@@ -600,7 +603,7 @@
  - Remove old structure
 
 ! 2005-11-29 - Patrick Robbe
- - PythiaHiggs: add specific tool to cut at generator level on Higgs 
+ - PythiaHiggs: add specific tool to cut at generator level on Higgs
    events (two b quarks in 400 mrad).
  - PythiaProduction: do not change Higgs, top, W, Z widths in Pythia
    which are computed at init, and add default Pythia settings in software
@@ -610,7 +613,7 @@
 
 ! ========================= LbPythia v2r1 ============================
 ! 2005-11-07 - Patrick Robbe
- - PythiaProduction: set particle properties of Pythia from 
+ - PythiaProduction: set particle properties of Pythia from
    ParticlePropertySvc.
 
 ! 2005-11-04 - Patrick Robbe
@@ -642,8 +645,8 @@
 
 ! ========================== LbPythia v1r0 ============================
 ! 2005-06-21 - Patrick Robbe
- - New package: this package contains all functions related to the 
-   use of Pythia in LHCb (PythiaAlg, HiggsPythiaAlg, TTbarPythiaAlg), 
+ - New package: this package contains all functions related to the
+   use of Pythia in LHCb (PythiaAlg, HiggsPythiaAlg, TTbarPythiaAlg),
    functions to access Pythia Fortran common block and reimplementation
    of some Pythia functions for specific action in LHCb (forced fragmentation
    mechanism).

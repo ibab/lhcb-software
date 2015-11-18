@@ -1,14 +1,17 @@
 ! $Id: release.notes,v 1.16 2009-11-04 14:09:17 silviam Exp $
 ! Package     : Gen/BcVegPy
-! Responsible : 
+! Responsible :
+
+! 2015-11-18 - Marco Clemencic
+ - Disabled warnings for FORTRAN code.
 
 !========================= BcVegPy v4r0 2015-03-13 ===========================
 ! 2015-03-13 - Gloria Corti
  - Remove dependency from GenXicc in cmake configuration, since it should now
    work with Jibo fixes
 
-! 2015-03-05 - Jibo He 
- - To switch to LHAPDF6, removed MRST PDF related things from 
+! 2015-03-05 - Jibo He
+ - To switch to LHAPDF6, removed MRST PDF related things from
   . src/genevnt_mod.F
   . src/outerpdf.F
 
@@ -57,14 +60,14 @@
    . src/bcvegpy_upevnt.f
 
 ! 2009-09-28 - Jibo He
- - Multiple defined funtions/subroutines (already in LHAPDF) are removed 
+ - Multiple defined funtions/subroutines (already in LHAPDF) are removed
    to avoid potential conflicts: qwikalf, jeppe1, jeppe2, polderiv, locx
    . src/outpdf.f
 
  - Following AcerMC, one argument is added for bcvegpy_upinit:
-   "1" is for initilization of beam parameters, "2 or others" for the rest of 
+   "1" is for initilization of beam parameters, "2 or others" for the rest of
    the initilization.
-   . src/bcvegpy_upinit.f 
+   . src/bcvegpy_upinit.f
 
  - Center of mass energy is set by configurable of Gauss, the previous changes
    is removed.
@@ -72,7 +75,7 @@
 
 ! 2009-07-23 - Jibo He
  - Now get the center of mass energy from "P(1,4)+P(2,4)" so that there is
-   no changes needed in BcVegPy.opts for different energies. 
+   no changes needed in BcVegPy.opts for different energies.
    . src/parameter.f
  - Make it possible to read in the grade files corresponding to different
    center of mass energy: 14 TeV, 10 TeV; it requires BcVegPyData
@@ -82,13 +85,13 @@
  - Now it prints out the total cross section of Bc+ and Bc-: XSECUP(1) value doubled.
    The former versions only print out the cross sectoin of Bc+.
    . src/bcvegpy_upinit.f
- - MRST 2001 PDF file src/lo2002.dat is useless and removed. 
- - One variable IUSECURDIR added in the common block LOGGRADE to ease the usage 
+ - MRST 2001 PDF file src/lo2002.dat is useless and removed.
+ - One variable IUSECURDIR added in the common block LOGGRADE to ease the usage
    of the private grade files
    . src/bcvegpy_upinit.f
    . src/bcvegpy_upevnt.f
    . src/parameter.f
- 	
+
 ! ====================== BcVegPy v1r1p3 2009-02-09 ===========================
 ! 2009-01-19 - Chris Jones
  - Fixes for line-too-long compilation errors in various files using gfortran
@@ -100,7 +103,7 @@
    directory name has to be increased from CHARACTER*100 to CHARACTER*472
    in two more files:
    . src/bcvegpy_upinit.f
-   . src/bcvegpy_upevnt.f 
+   . src/bcvegpy_upevnt.f
 
 ! 2007-09-28 - Gloria Corti
  - Fix problem in production on the grid due to character lenght: also
@@ -115,7 +118,7 @@
 
 ! ====================== BcVegPy v1r1 2007-06-22 ==========================
 ! 2007-05-10 - Patrick Robbe for Jibo He
- - bcvegpy_upinit: remove messages printed during initialization 
+ - bcvegpy_upinit: remove messages printed during initialization
    and correct cross section printout.
 
 ! ====================== BcVegPy v1r0p1 2007-01-22 ========================
@@ -129,5 +132,5 @@
    CMT format.
  - To interface with LbBcVegPy and LbPythia easily, we made some modification
    on the program structure.
- - To generate both B_c+ and B_c-, we modified the color flow subroutine. 	  
+ - To generate both B_c+ and B_c-, we modified the color flow subroutine.
 ! =========================================================================

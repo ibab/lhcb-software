@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+! 2015-11-18 - Marco Clemencic
+ - Disabled warnings for FORTRAN code.
+
 ! 2015-11-15 - Marco Clemencic
  - Fixed compilation with CLHEP 2.
 

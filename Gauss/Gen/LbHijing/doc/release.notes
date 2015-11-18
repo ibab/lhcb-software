@@ -1,8 +1,11 @@
 !-----------------------------------------------------------------------------
 ! Package     : Gen/LbHijing
-! Responsible : Zhenwei Yang   
-! Purpose     : "Interface" to Hijing 
+! Responsible : Zhenwei Yang
+! Purpose     : "Interface" to Hijing
 !-----------------------------------------------------------------------------
+
+! 2015-11-18 - Marco Clemencic
+ - Disabled warnings for FORTRAN code.
 
 !======================= LbHijing v10r0p1 2014-12-19 =========================
 ! 2014-12-02 - Gloria Corti
@@ -23,14 +26,14 @@
 ! 2013-05-01 - Patrick Robbe
  - src/Lib: import all HIJING source code from GENSER (version 1.383bs2)
    and convert everything to double precision. Change LUJETS common
-   block to HILUJETS and RANSEED to HIRANSEED. 
+   block to HILUJETS and RANSEED to HIRANSEED.
  - options: add options to configure Hijing for pA and Ap collisions and
    add options to set up beam parameters
 
 !======================== LbHijing v8r2p1 2013-04-10 =========================
 ! 2013-03-05 - Zhenwei Yang
  - Fix bug in Lorentz boost from proton-nucleon center-of-mass frame to lab
-   frame 
+   frame
 
 !========================= LbHijing v8r2 2013-03-07 ==========================
 ! 2013-03-05 - Zhenwei Yang
@@ -48,11 +51,11 @@
  - Introduce hijing 1.383bs.2 routines modified by Zhenwei to replace call to
    "rlu" and "ran" functions by "hijing_rlu" and "hijing_ran" to avoid conflicts
    with system calls that seems to be call anyway instead of our implementation.
- - Move from GENSER/hijing the routines "rlu" and "ran" and rename them 
+ - Move from GENSER/hijing the routines "rlu" and "ran" and rename them
    "hijing_rlu" and hijing_ran"
 
 ! 2013-02-07 - Patrick Robbe
- - cmt/requirements: remove link statement to absent library and 
+ - cmt/requirements: remove link statement to absent library and
    put it back
 
 !========================= LbHijing v8r0 2013-02-06 ==========================
@@ -72,7 +75,7 @@
      is not used
 
 !========================= LbHijing v7r0 2012-07-23 ==========================
-! 2012-05-29 - Patrick Robbe  
+! 2012-05-29 - Patrick Robbe
  - HijingProduction: use new particle property service
 
 !========================= LbHijing v6r2 2011-11-11 ==========================
@@ -85,7 +88,7 @@
    removed from GaussSys and Gauss
 
 ! 2011-06-19 - Alex GRECU
- - comment #include <IO_Ascii.h> in component/HijingProduction.cpp. Fix 
+ - comment #include <IO_Ascii.h> in component/HijingProduction.cpp. Fix
    compilation against HepMC 2.06
 
 !========================= LbHijing v6r0 2011-04-13 ==========================
@@ -102,8 +105,8 @@
 
 !========================= LbHijing v5r1 2009-11-04 ==========================
 ! 2009-10-23 - Silvia Miglioranzi
- - Fixed an error on compilation on slc5 ("Error: 'i' argument of 'ran' 
-   intrinsic at (1) must be INTEGER") in: 
+ - Fixed an error on compilation on slc5 ("Error: 'i' argument of 'ran'
+   intrinsic at (1) must be INTEGER") in:
    - hilunhep.F
 
 !========================= LbHijing v5r0 2009-04-06 ==========================
@@ -121,7 +124,7 @@
  - add rlu.F, another random function used in Hijing to override it.
 
 ! 2009-02-26 - Patrick Robbe
- - ran.F: revert to original function name (ran) to allow overriding of 
+ - ran.F: revert to original function name (ran) to allow overriding of
    HIJING random generator
  - requirement: remove ran.F when compiling on OSX
  - HijingProduction: remove beam particles from HepMC event to prevent wrong
@@ -129,7 +132,7 @@
 
 !========================= LbHijing v4r1 2009-02-09 ==========================
 ! 2009-01-19 - Chris Jones
- - Fix for name conflicit between local ran function and implicit function 
+ - Fix for name conflicit between local ran function and implicit function
    with gfortran gcc 4.3 (OSX).
 
 !========================= LbHijing v4r0 2008-09-09 ==========================
@@ -137,7 +140,7 @@
  - Fix bug introduced with latest changes, i.e. reset momentum in particle
    with Gaudi units
 
-! 2008-08-06 - Patrick Robbe 
+! 2008-08-06 - Patrick Robbe
  - Move to HEPMC2
 
 !========================= LbHijing v3r2 2008-04-11 ==========================
@@ -146,8 +149,8 @@
 
 !========================= LbHijing v3r1 2007-05-22 ==========================
 ! 2007-06-22 - Gloria Corti
- - Use LbPythia instead of Generators otherwise problems for undefined 
-   reference to "lutran" 
+ - Use LbPythia instead of Generators otherwise problems for undefined
+   reference to "lutran"
 
 !========================= LbHijing v3r0 2007-03-23 ==========================
 ! 2007-03-23 - Gloria Corti
@@ -158,7 +161,7 @@
    stops
  - Fix compilation warning for unused variables as argumnets of methods
    . HijingProduction.cpp
- 
+
 !========================= LbHijing v2r0 2007-03-09 =======================
 ! 2007-03-09 - Gloria CORTI
  - Adapt to changes in IProduction interface. Implementation of new method
@@ -180,7 +183,7 @@
 
 ! 2006-10-06 - Gloria CORTI
  - Move options to switch on use of Hijing from Gauss package.
- - Fix bug in example of options for specifying atomic number of the target 
+ - Fix bug in example of options for specifying atomic number of the target
    (iaz --> izt) as pointed out by D.Gregori
 
 ! 2006-10-03 - Vincenzo VAGNONI
@@ -202,14 +205,14 @@
    filling of HepEvt event.
  - The code allow to produce beam gas events with different target nuclei:
    by default beam 1 is generated on Xenon.
-   The choice of beam1 or beam2 or both can be done setting directly the 
+   The choice of beam1 or beam2 or both can be done setting directly the
    Hijing options via the Command options of the tool.
    Below is the default behaviour with explanation of what is possible to
    set:
     Generation.MinimumBias.HijingProduction.Commands = {
        "hijinginit efrm 7000.",  // energy in GeV
-       "hijinginit frame LAB",   // LAB or CMS   
-       "hijinginit proj P",      // projectile particle, P or A 
+       "hijinginit frame LAB",   // LAB or CMS
+       "hijinginit proj P",      // projectile particle, P or A
        "hijinginit targ A",      // target particl, P or A
        "hijinginit beam1",       // beam1 (beam 1 is the projectile particle)
                                  // or beam2 (beam2 is the projectile particle)
