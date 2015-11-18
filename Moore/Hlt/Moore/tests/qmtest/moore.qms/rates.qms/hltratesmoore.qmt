@@ -6,8 +6,9 @@
   </argument>
   <!--<argument name="use_temp_dir"><enumeral>true</enumeral></argument>-->
   <argument name="args"><set>
-      <text>--evtmax=25000</text>
-      <text>--settings=Physics_25ns_October2015</text>
+      <text>--evtmax=500</text>
+      <text>--inputdata=Physics1600EOS</text>
+      <text>--settings=Physics_25ns_September2015</text>
   </set></argument>
   <argument name="unsupported_platforms"><set><text>.*dbg</text></set></argument>
 <argument name="validator"><text>
