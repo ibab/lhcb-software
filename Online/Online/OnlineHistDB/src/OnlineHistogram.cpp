@@ -1292,7 +1292,7 @@ void OnlineHistogram::OnlineDisplayOption::set(void *option){
       m_locString = true;
     }
     cont = static_cast<std::string*>(option);
-    OCIStringAssignText(m_env->envhp(), m_env->errhp(), (CONST OraText *) cont->c_str(),
+    OCIStringAssignText(m_env->envhp(), m_env->errhp(), (const_ora_oratext *) cont->c_str(),
                         (ub2) ( strlen(cont->c_str())), (OCIString **) m_value);
     break;
   case FLOAT :

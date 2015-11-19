@@ -6,6 +6,9 @@
 ! or using makedoc script in this folder
 !
 
+! 2015-11-19 - Alex Pearce
+- Use workaround for Gaudi CONST definition.
+
 ! 2015-11-04 - Alex Pearce
 - Better separation between histograms and visible histogram objects
 

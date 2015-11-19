@@ -139,55 +139,55 @@ void OnlineHistDBEnv::getOCITypes() {
   checkerr(OCITypeByName(m_envhp, m_errhp, m_svchp, (const text *) 0,
 			 (ub4) 0, (const text *) "VTHRESHOLDS",
 			 (ub4) strlen((const char *) "VTHRESHOLDS"),
-			 (CONST text *) 0, (ub4) 0,
+			 (const_ora_text *) 0, (ub4) 0,
 			 OCI_DURATION_SESSION,  OCI_TYPEGET_HEADER,
 			 &OCIthresholds)); 
   checkerr(OCITypeByName(m_envhp, m_errhp, m_svchp, (const text *) 0,
 			 (ub4) 0, (const text *) "VPARAMETERS",
 			 (ub4) strlen((const char *) "VPARAMETERS"),
-			 (CONST text *) 0, (ub4) 0,
+			 (const_ora_text *) 0, (ub4) 0,
 			 OCI_DURATION_SESSION,  OCI_TYPEGET_HEADER,
 			 &OCIparameters)); 
   checkerr(OCITypeByName(m_envhp, m_errhp, m_svchp, (const text *) 0,
 			 (ub4) 0, (const text *) "LABELS",
 			 (ub4) strlen((const char *) "LABELS"),
-			 (CONST text *) 0, (ub4) 0,
+			 (const_ora_text *) 0, (ub4) 0,
 			 OCI_DURATION_SESSION,  OCI_TYPEGET_HEADER,
 			 &OCIlabels)); 
   checkerr(OCITypeByName(m_envhp, m_errhp, m_svchp, (const text *) 0,
 			 (ub4) 0, (const text *) "INTLIST",
 			 (ub4) strlen((const char *) "INTLIST"),
-			 (CONST text *) 0, (ub4) 0,
+			 (const_ora_text *) 0, (ub4) 0,
 			 OCI_DURATION_SESSION,  OCI_TYPEGET_HEADER,
 			 &OCIintlist)); 
   checkerr(OCITypeByName(m_envhp, m_errhp, m_svchp, (const text *) 0,
 			 (ub4) 0, (const text *) "INTTLIST",
 			 (ub4) strlen((const char *) "INTTLIST"),
-			 (CONST text *) 0, (ub4) 0,
+			 (const_ora_text *) 0, (ub4) 0,
 			 OCI_DURATION_SESSION,  OCI_TYPEGET_HEADER,
 			 &OCIinttlist));
   checkerr(OCITypeByName(m_envhp, m_errhp, m_svchp, (const text *) 0,
 			 (ub4) 0, (const text *) "ANALIST",
 			 (ub4) strlen((const char *) "ANALIST"),
-			 (CONST text *) 0, (ub4) 0,
+			 (const_ora_text *) 0, (ub4) 0,
 			 OCI_DURATION_SESSION,  OCI_TYPEGET_HEADER,
 			 &OCIanalist)); 
   checkerr(OCITypeByName(m_envhp, m_errhp, m_svchp, (const text *) 0,
 			 (ub4) 0, (const text *) "HNALIST",
 			 (ub4) strlen((const char *) "HNALIST"),
-			 (CONST text *) 0, (ub4) 0,
+			 (const_ora_text *) 0, (ub4) 0,
 			 OCI_DURATION_SESSION,  OCI_TYPEGET_HEADER,
 			 &OCIhnalist)); 
   checkerr(OCITypeByName(m_envhp, m_errhp, m_svchp, (const text *) 0,
 			 (ub4) 0, (const text *) "FLOLIST",
 			 (ub4) strlen((const char *) "FLOLIST"),
-			 (CONST text *) 0, (ub4) 0,
+			 (const_ora_text *) 0, (ub4) 0,
 			 OCI_DURATION_SESSION,  OCI_TYPEGET_HEADER,
 			 &OCIflolist)); 
   checkerr(OCITypeByName(m_envhp, m_errhp, m_svchp, (const text *) 0,
 			 (ub4) 0, (const text *) "DISPOPT",
 			 (ub4) strlen((const char *) "DISPOPT"),
-			 (CONST text *) 0, (ub4) 0,
+			 (const_ora_text *) 0, (ub4) 0,
 			 OCI_DURATION_SESSION,  OCI_TYPEGET_ALL,
 			 &OCIdispopt)); 
 }
@@ -282,7 +282,7 @@ sword OnlineHistDBEnv::prepareOCIStatement(OCIStmt* & stmt,
   if (OCI_SUCCESS == out) {
     if (m_debug>3) std::cout << "preparing untagged statement "<<sqlcommand<<std::endl;
     out = checkerr(OCIStmtPrepare2(m_svchp, &stmt, m_errhp, (text *) sqlcommand,
-				   (ub4) strlen((char *) sqlcommand), (CONST OraText  *) NULL, (ub4) 0,
+				   (ub4) strlen((char *) sqlcommand), (const_ora_oratext  *) NULL, (ub4) 0,
 				   (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT) );
   }
   return out;
@@ -306,7 +306,7 @@ sword OnlineHistDBEnv::prepareOCITaggedStatement(OCIStmt* & stmt,
   else {// first call of this statement
     if (m_debug>3) std::cout << "first call for statement "<<StmtKey<<std::endl;
     out = checkerr(OCIStmtPrepare2(m_svchp, &stmt, m_errhp, (text *) sqlcommand,
-				   (ub4) strlen((char *) sqlcommand), (CONST OraText  *) NULL, (ub4) 0,
+				   (ub4) strlen((char *) sqlcommand), (const_ora_oratext  *) NULL, (ub4) 0,
 				   (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT));
   }
   return out;
@@ -458,7 +458,7 @@ sword OnlineHistDBEnv::myOCISelectExecute(OCIStmt* stmt,
                                        OCIErrorLevel level) {
   return
     checkerr (OCIStmtExecute(m_svchp, stmt, m_errhp, (ub4) 0, (ub4) 0,
-                             (CONST OCISnapshot *) NULL, (OCISnapshot *) NULL, OCI_STMT_SCROLLABLE_READONLY),
+                             (const_ora_ocisnapshot *) NULL, (OCISnapshot *) NULL, OCI_STMT_SCROLLABLE_READONLY),
               level);
 }
 
@@ -466,7 +466,7 @@ sword OnlineHistDBEnv::myOCIStmtExecute(OCIStmt* stmt,
 					OCIErrorLevel level) {
   return
     checkerr (OCIStmtExecute(m_svchp, stmt, m_errhp, (ub4) 1, (ub4) 0,
-			     (CONST OCISnapshot *) NULL, (OCISnapshot *) NULL, OCI_DEFAULT),
+			     (const_ora_ocisnapshot *) NULL, (OCISnapshot *) NULL, OCI_DEFAULT),
 	      level);
 }
 

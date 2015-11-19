@@ -14,6 +14,29 @@
 #include <set>
 #include <vector>
 #include <oci.h>
+
+/*
+ * This is quite a nasty hack.
+ * oci.h imports oratypes.h, which includes a preprocessor directive that
+ * declares CONST as const, and the Gaudi header IInspector.h uses CONST as the
+ * name of a variable. If one happens to use this class before using a Gaudi
+ * class, things will break because 'const' is not a valid variable name, it is
+ * a reserved word.
+ * So, to preserve compatibility with the Oracle library we make typedefs of
+ * all the types we need that use the CONST definition and then undefine CONST.
+ * We don't just replace CONST with const as the definition of CONST may change
+ * in the future.
+ * For more information, see the thread "Conflict between Oracle header
+ * definition and GaudiKernel" on lhcb-core-soft@cern.ch:
+ *   http://cern.ch/go/8RcM
+ * See JIRA task GAUDI-1128 for the fix. This workaround can be removed once
+ * a Gaudi version with the patch is released.
+ */
+typedef CONST text const_ora_text;
+typedef CONST OraText const_ora_oratext;
+typedef CONST OCISnapshot const_ora_ocisnapshot;
+#undef CONST
+
 class OnlineTaskStorage;
 class OnlineHistogramStorage;
 class OnlinePageStorage;
