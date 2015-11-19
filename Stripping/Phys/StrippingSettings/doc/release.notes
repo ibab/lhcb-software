@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-17 - Greg Ciezarek (SL)
+ - SL S24 Dictionaries 
+
 ! 2015-11-19 - Ricardo Vazquez Gomez
  - Add dbase for stripping24
 

@@ -1,12 +1,11 @@
 ################################################################################
-##                          S T R I P P I N G  2 3                            ##
+##                          S T R I P P I N G  2 4                            ##
 ##                                                                            ##
 ##  Configuration for SL WG                                                   ##
 ##  Contact person: Greg Ciezarek (gregory.max.ciezarek@cern.ch)              ##
 ################################################################################
 
 from GaudiKernel.SystemOfUnits import *
-
 B23MuNu = {
     "BUILDERTYPE": "B23MuNuConf", 
     "CONFIG": {
@@ -16,6 +15,7 @@ B23MuNu = {
         "DIRA": 0.999, 
         "FlightChi2": 50.0, 
         "LOWERMASS": 0.0, 
+        "MisIDPrescale": 0.01, 
         "Muon_MinIPCHI2": 9.0, 
         "Muon_PIDmu": 0.0, 
         "Muon_PIDmuK": 0.0, 
@@ -42,12 +42,15 @@ B2DMuForTauMu = {
         "DsMassWin": 80.0, 
         "DsVCHI2DOF": 4.0, 
         "GhostProb": 0.5, 
+        "Hlt2Line": "HLT_PASS_RE('Hlt2XcMuXForTauB2XcMuDecision')", 
+        "Hlt2LineFake": "HLT_PASS_RE('Hlt2XcMuXForTauB2XcFakeMuDecision')", 
         "KPiPT": 300.0, 
         "KaonPIDK": 4.0, 
         "MINIPCHI2": 9.0, 
         "MuonIPCHI2": 16.0, 
-        "PIDmu": 2.0, 
+        "PIDmu": -200.0, 
         "PionPIDKTight": 2.0, 
+        "ProtonPIDp": 0.0, 
         "SPDmax": 600
     }, 
     "STREAMS": [ "Semileptonic" ], 
@@ -67,17 +70,21 @@ B2DMuNuX = {
         "D_BPVDIRA": 0.99, 
         "D_DocaChi2Max": 20, 
         "D_FDCHI2": 25.0, 
-        "D_MassWin": 80.0, 
+        "D_MassWin": {
+            "Omegac": 60.0, 
+            "Xic0": 60.0, 
+            "default": 80.0
+        }, 
         "D_VCHI2DOF": 6.0, 
         "ElectronPIDe": 0.0, 
         "ElectronPT": 1200.0, 
         "GEC_nLongTrk": 250, 
         "HLT1": "HLT_PASS_RE('Hlt1.*Decision')", 
-        "HLT2": "HLT_PASS_RE('Hlt2.*Decision')", 
+        "HLT2": "HLT_PASS_RE('Hlt2(SingleMuon|Topo).*Decision')", 
         "HadronIPCHI2": 4.0, 
         "HadronP": 2000.0, 
         "HadronPT": 250.0, 
-        "KaonP": 5000.0, 
+        "KaonP": 2000.0, 
         "KaonPIDK": -2.0, 
         "Monitor": False, 
         "MuonIPCHI2": 9.0, 
@@ -173,8 +180,8 @@ B2XTauNuAllLines = {
         "D_VCHI2": 10.0, 
         "Dplus_K_PIDK": 3, 
         "Dplus_K_PT": 1500.0, 
-        "Dplus_K_TRPCHI2": 1e-9, 
-        "Dplus_Pi_TRPCHI2": 1e-9, 
+        "Dplus_K_TRPCHI2": 0.1, 
+        "Dplus_Pi_TRPCHI2": 0.1, 
         "Ds_BPVVDCHI2": 36.0, 
         "Ds_K_PT": 1500.0, 
         "Dstar_DeltaM_high": 160.0, 
@@ -192,7 +199,7 @@ B2XTauNuAllLines = {
         "Lc_K_PIDK": 3.0, 
         "Lc_K_PT": 150.0, 
         "Lc_K_TRCHI2DOF": 3.0, 
-        "Lc_K_TRPCHI2": 1e-9, 
+        "Lc_K_TRPCHI2": 0.01, 
         "Lc_MIPCHI2": 10.0, 
         "Lc_MassW": 30.0, 
         "Lc_PT": 1200.0, 
@@ -200,13 +207,13 @@ B2XTauNuAllLines = {
         "Lc_Pi_PIDK": 50.0, 
         "Lc_Pi_PT": 150.0, 
         "Lc_Pi_TRCHI2": 3.0, 
-        "Lc_Pi_TRPCHI2": 1e-9, 
+        "Lc_Pi_TRPCHI2": 0.01, 
         "Lc_VCHI2": 10.0, 
         "Lc_p_IPCHI2": 10.0, 
         "Lc_p_PIDp": 5.0, 
         "Lc_p_PT": 150.0, 
         "Lc_p_TRCHI2DOF": 3.0, 
-        "Lc_p_TRPCHI2": 1e-9, 
+        "Lc_p_TRPCHI2": 0.01, 
         "Muon_PT": 1000.0, 
         "Muon_TRCHI2DOF": 3.0, 
         "Postscale": 1.0, 
@@ -233,6 +240,8 @@ B2XTauNuAllLines = {
 B2XuMuNu = {
     "BUILDERTYPE": "B2XuMuNuBuilder", 
     "CONFIG": {
+        "BCorrMHigh": 7000.0, 
+        "BCorrMLow": 2500.0, 
         "BDIRA": 0.99, 
         "BDIRAMed": 0.994, 
         "BDIRATight": 0.999, 
@@ -264,7 +273,7 @@ B2XuMuNu = {
         "KaonPIDmu_phi": -2.0, 
         "KaonPIDp": 5.0, 
         "KaonPIDp_phi": -2.0, 
-        "KaonPT": 800.0, 
+        "KaonPT": 500.0, 
         "KaonPTight": 10000.0, 
         "KaonTRCHI2": 6.0, 
         "KsLLCutFD": 20.0, 
@@ -288,10 +297,10 @@ B2XuMuNu = {
         "MuonPTight": 6000.0, 
         "MuonTRCHI2": 4.0, 
         "PhiDIRA": 0.9, 
-        "PhiMINIPCHI2": 4, 
-        "PhiMassWindow": 20.0, 
+        "PhiMINIPCHI2": 9, 
         "PhiMu_MCORR": 2500.0, 
         "PhiPT": 500.0, 
+        "PhiUpperMass": 1500.0, 
         "PhiVCHI2DOF": 6, 
         "PiMuNu_prescale": 0.1, 
         "RhoChPionMINIPCHI2": 9.0, 
@@ -361,63 +370,41 @@ Bd2DstarMuNu = {
     "WGs": [ "Semileptonic" ]
 }
 
-D0forBXX = {
-    "BUILDERTYPE": "D0forBXXLinesConf", 
+D2HMuNu = {
+    "BUILDERTYPE": "D2HLepNuBuilder", 
     "CONFIG": {
-        "D0AMassWin": 100.0, 
-        "D0DIRA": 0.9999, 
-        "D0DIRAK3Pi": 0.9999, 
-        "D0IP": 0.2, 
-        "D0K3PiIP": 0.2, 
-        "D0MassWin": 80.0, 
-        "D0VCHI2DOF": 6.0, 
-        "DDocaChi2Max": 20, 
-        "FDCHI2": 100.0, 
-        "KaonPIDK": 4.0, 
-        "MINIPCHI2": 9.0, 
-        "PT": 300.0, 
-        "PionPIDK": 10.0, 
-        "PreScale": 0.005, 
-        "PreScaleRS": 1.0, 
-        "PreScaleWS": 0.2, 
-        "TRCHI2": 3.0
+        "BDIRA": 0.99, 
+        "BFDCHI2HIGH": 100.0, 
+        "BVCHI2DOF": 20, 
+        "DELTA_MASS_MAX": 400, 
+        "ElectronPIDe": 0.0, 
+        "ElectronPT": 500, 
+        "GEC_nLongTrk": 160.0, 
+        "KLepMassHigh": 2000, 
+        "KLepMassLow": 500, 
+        "KaonPIDK": 5.0, 
+        "KaonPIDmu": 5.0, 
+        "KaonPIDp": 5.0, 
+        "KaonPT": 500.0, 
+        "MuonGHOSTPROB": 0.35, 
+        "MuonPIDK": 0.0, 
+        "MuonPIDmu": 3.0, 
+        "MuonPIDp": 0.0, 
+        "MuonPT": 500.0, 
+        "Slowpion_PIDe": 5, 
+        "Slowpion_PT": 200, 
+        "Slowpion_TRGHOSTPROB": 0.35, 
+        "TOSFilter": {
+            "Hlt2CharmHad.*HHX.*Decision%TOS": 0
+        }, 
+        "TRGHOSTPROB": 0.35, 
+        "useTOS": True
     }, 
     "STREAMS": [ "Semileptonic" ], 
-    "WGs": [ "Semileptonic" ]
-}
-
-JPsiForSL = {
-    "BUILDERTYPE": "JPsiForSLAllLinesConf", 
-    "CONFIG": {
-        "BCombMassMax": 6000, 
-        "BCombMassMin": 3400, 
-        "BDIRAMin": 0.9995, 
-        "BDocaChi2Max": 10.0, 
-        "BFDChi2Min": 200.0, 
-        "BPTMin": 800.0, 
-        "BVChi2NdofMax": 3.0, 
-        "MuonChi2": 3.0, 
-        "MuonGhostProbMax": 0.5, 
-        "MuonIPChi2": 4.0, 
-        "MuonP": 6000.0, 
-        "MuonPT": 1200.0, 
-        "PrescaleSemiIncJpsi2mumu": 1.0, 
-        "PsiDIRAMin": 0.99, 
-        "PsiDocaChi2Max": 10, 
-        "PsiFDChi2Min": 100, 
-        "PsiMasswin": 140, 
-        "PsiMasswinPreFit": 150, 
-        "PsiPT": 500, 
-        "PsiVChi2NdofMax": 4.0, 
-        "TrackChi2": 3.0, 
-        "TrackGhostProbMax": 0.35, 
-        "TrackIPChi2": 9.0, 
-        "TrackP": 3000.0, 
-        "TrackPT": 500.0, 
-        "nLongTrackMax": 250
-    }, 
-    "STREAMS": [ "Semileptonic" ], 
-    "WGs": [ "Semileptonic" ]
+    "WGs": [
+        "Semileptonic", 
+        "Charm"
+    ]
 }
 
 Lb2pMuNuVub = {
@@ -445,5 +432,4 @@ Lb2pMuNuVub = {
     "STREAMS": [ "Semileptonic" ], 
     "WGs": [ "Semileptonic" ]
 }
-
 
