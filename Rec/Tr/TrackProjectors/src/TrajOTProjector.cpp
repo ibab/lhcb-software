@@ -47,7 +47,7 @@ StatusCode TrajOTProjector::project( const LHCb::StateVector& statevector,
   bool prefit = m_prefitStrategy!=NoPrefit && meas.ambiguity() == 0 ;
 
   // is the ambiguity set by the LR sign tool?
-  bool ambiguityIsFixed = std::abs( meas.ambiguity() == 2 ) ;
+  bool ambiguityIsFixed = std::abs( meas.ambiguity() ) == 2 ;
 
   // if not, set the ambiguity "on the fly"
   if( !ambiguityIsFixed && m_updateAmbiguity )
