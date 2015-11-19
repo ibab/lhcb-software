@@ -172,8 +172,8 @@ protected:
 private:
   int           m_downTime;
   int           m_buildTime;
-  int           m_fitTime;
-  int           m_cleanTime;
+  //  int           m_fitTime;
+  //  int           m_cleanTime;
   bool          m_printing;
   bool          m_magnetOff;
 
@@ -196,8 +196,8 @@ private:
   bool          m_removeUsed;
   bool          m_removeAll;
 
-  bool           m_mode;
-  unsigned int           m_tracksToKeep;
+  //  bool           m_mode;
+  unsigned int  m_tracksToKeep;
   bool          m_removeHits;
 
   double        m_longChi2;

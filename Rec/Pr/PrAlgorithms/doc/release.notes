@@ -4,7 +4,10 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
-!========================= PrAlgorithms v1r16p1 2015-10-13 =========================
+! 2015-11-19 - Marco Cattaneo
+ - Remove unused variables
+
+!========================= PrAlgorithms v1r16p1 2015-10-13 =======================
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
