@@ -4,6 +4,10 @@
 # NOTE: Please make a copy of this file for your testing, and do NOT change this one!
 #
 
+#use CommonParticlesArchive
+from CommonParticlesArchive import CommonParticlesArchiveConf
+CommonParticlesArchiveConf().redirect("stripping21r0p1")
+
 from Gaudi.Configuration import *
 from Configurables import DaVinci
 from StrippingConf.Configuration import StrippingConf

@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-19 - Andrea Contu
+ - Run1 test scripts now get CommonParticles from Archive
+
 ! 2015-11-17 - Jon Harrison
  - Updated RelatedInfo for StrippingTau23Mu
 
