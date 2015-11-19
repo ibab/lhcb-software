@@ -179,12 +179,13 @@ class AccessSvcSingleton(object) :
          return self._cas().configTreeNodeAliases( alias )
     def writeConfigTreeNodeAlias(self,alias) :
          return self._cas().writeConfigTreeNodeAlias(alias)
-    def updateAndWrite(self, id, updates, label) :
-        if not updates:
+    def updateAndWrite(self, id, updates, label, copy = False) :
+        # For copy we still need the next bit, but the updates are empty
+        if not updates and not copy:
             return
-
-        print 'updateAndWrite updates:'
-        pprint(dict(updates))
+        if updates:
+            print 'updateAndWrite updates:'
+            pprint(dict(updates))
         mod_map = cppyy.gbl.std.multimap('std::string', 'std::pair<std::string, std::string>')
         value_pair = cppyy.gbl.std.pair('std::string', 'std::string')
         insert_pair = cppyy.gbl.std.pair('const std::string', 'std::pair<std::string, std::string>')
@@ -580,7 +581,7 @@ class RemoteAccess(object) :
             for k in info.values() :
                 if k.info['id'] == id : k.update( { 'TAG' : tag } )
         return info
-    def rupdateProperties(self, id, updates, label ) :
+    def rupdateProperties(self, id, updates, label, copy = False ) :
         if not label :
             print 'please provide a reasonable label for the new configuration'
             return None
@@ -601,7 +602,7 @@ class RemoteAccess(object) :
                 return
             a = a[0]
         (release,hlttype) = a.split('/',3)[1:3]
-        newId = svc.updateAndWrite(id, updates, label)
+        newId = svc.updateAndWrite(id, updates, label, copy)
         noderef = svc.resolveConfigTreeNode( newId )
         top = topLevelAlias( release, hlttype, noderef )
         svc.writeConfigTreeNodeAlias(top)
@@ -712,7 +713,7 @@ class RemoteAccess(object) :
             print '[%s/%s] copying tree %s' % (k,l, i.alias())
             empty = dict()
             node = svc.resolveConfigTreeNode( i.ref() )
-            newid = self.rupdateProperties(i,empty,node.label())
+            newid = self.rupdateProperties(i,empty,node.label(), True)
             assert newid == i.ref().str()
         for i in  other:
             print 'copying alias %s -> %s ' % (i.alias().str(),i.ref() )
