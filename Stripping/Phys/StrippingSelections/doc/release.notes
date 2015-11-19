@@ -3,6 +3,9 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2015-11-19 - Marianna Fontana
+ - Updated StrippingCharm/StrippingDstD02xx.py
+
 ! 2015-11-19 - Tim Williams
 	-Added scripts for testing correlations between lines to tests/liaisons/BnoC
 

@@ -209,6 +209,7 @@ class StrippingDstarD02xxConf(LineBuilder):
             line_box = StrippingLine(name+config['prefix']+"Dst2PiD02"+combname+"Box",
                                      algos = [ _tag_sel ],
                                      prescale = config[ pres ],
+                                     RequiredRawEvents = ["Muon"],                                   
                                      RelatedInfoTools = coneinfo
                                      )
             
@@ -220,7 +221,8 @@ class StrippingDstarD02xxConf(LineBuilder):
                                      HLT2 = "HLT_PASS_RE('"+hltname+"')",
                                      algos = [ _tag_sel ], 
                                      prescale = config[ pres ],
-                                      RelatedInfoTools = coneinfo
+                                     RequiredRawEvents = ["Muon"],
+                                     RelatedInfoTools = coneinfo
                                       )
         
         return line_box
