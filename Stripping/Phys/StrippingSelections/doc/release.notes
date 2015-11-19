@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-11-19 - Andrea Contu
+ - Updated tests for coordinators
+
+! 2015-11-19 - Andrea Contu
  - Run1 test scripts now get CommonParticles from Archive
 
 ! 2015-11-17 - Jon Harrison
