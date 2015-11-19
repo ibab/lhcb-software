@@ -8,7 +8,6 @@
 #include "Event/STMeasurement.h"
 #include "STDet/DeSTLayer.h"
 
-class ISTClusterCollector;
 class IHitExpectation;
 class DeSTDetector;
 class DeSTSector;
@@ -115,10 +114,6 @@ private:
    * Size of the m_spacialCut container
    */
   unsigned int m_NbrOfCuts;
-  /**
-   * Min number of expected hits for the track to be accepted.
-   */
-  unsigned int m_minHits;
   /**
    * Detector type, can be either IT or TT.
    */
