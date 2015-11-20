@@ -3,6 +3,8 @@
 ! Responsible : Stripping coordinators
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
+! 2015-11-20 - Tim Williams
+	- Updated python/StrippingSettings/Stripping24/LineConfigDictionaries_Charmless.py to include changes to StrippingBnoC/StrippingB2KShh dictionary. Still waiting for Relinfo fix in StrippingXb23ph.py 
 
 ! 2015-11-17 - Pablo Ruiz Valls (RD)
  - HLT syntax fix in Bs2GammaGamma dictionaries

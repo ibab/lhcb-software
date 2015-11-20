@@ -130,8 +130,6 @@ B2Kpi0Lines = {
                  }
     }
 
-
-
 ## StrippingB2KShh.py
 B2KShh = {
     'WGs'         : ['BnoC'],
@@ -169,7 +167,9 @@ B2KShh = {
                      'B_LL_MVA'                : -0.20,   
                      'B_LD_MVA'                : -0.20,
                      'GEC_MaxTracks'           : 250,
-                     'ConeAngle'               : 1.5, 
+                     'ConeAngle10'             : 1.0, 
+                     'ConeAngle15'             : 1.5, 
+                     'ConeAngle17'             : 1.7, 
                      # 2012 Triggers
                      #'HLT1Dec'                 : 'Hlt1TrackAllL0Decision',
                      #'HLT2Dec'                 : 'Hlt2Topo[234]Body.*Decision',
