@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-17 - Pablo Ruiz Valls (RD)
+ - HLT syntax fix in Bs2GammaGamma dictionaries
+
 ! 2015-11-17 - Greg Ciezarek (SL)
  - SL S24 Dictionaries 
 
