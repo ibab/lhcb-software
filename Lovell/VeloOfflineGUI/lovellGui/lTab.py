@@ -6,7 +6,7 @@ import os
 
 
 def numeric_compare(x, y):
-    return x[0:6] - y[0:6]
+    return int(x[0:6]) - int(y[0:6])
 
 class lTab(QWidget):
     def __init__(self, params, parent=None):
