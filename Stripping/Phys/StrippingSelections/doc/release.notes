@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-20 - Tim Williams
+	-Made defualt config of StrippingBnoC/StrippingB2KShh consistent with strippingsettings
+
 ! 2015-11-20 - Rafael Coutinho
  - Updated StrippingBnoC/StrippingB2KShh using the correct RelatedInfo tools framework 
 

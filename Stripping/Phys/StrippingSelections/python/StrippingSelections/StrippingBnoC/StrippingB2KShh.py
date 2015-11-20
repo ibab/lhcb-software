@@ -33,7 +33,7 @@ default_config = {
     'NAME'        : 'B2KShh',
     'WGs'         : ['BnoC'],
     'BUILDERTYPE' : 'B2KShhConf',
-    'CONFIG'      : {'Trk_Chi2'                : 3.0,
+    'CONFIG'      : {'Trk_Chi2'                : 4.0,
                      'Trk_GhostProb'           : 0.3,
                      'KS_DD_MassWindow'        : 30.0,
                      'KS_DD_VtxChi2'           : 12.0,

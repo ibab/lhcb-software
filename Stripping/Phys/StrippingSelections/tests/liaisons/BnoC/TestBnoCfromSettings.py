@@ -27,7 +27,7 @@ DecodeRawEvent().setProp("OverrideInputs",4.2)
 
 # Specify the name of your configuration
 my_wg='BnoC' #FOR LIAISONS
-stripping='stripping23'
+stripping='stripping24'
 
 
 # NOTE: this will work only if you inserted correctly the 
