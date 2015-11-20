@@ -33,7 +33,7 @@ class lTabOptions(QGroupBox):
 		self.run_data_dir = run_data_dir
 		QGroupBox.__init__(self, "Global Tab Options", parent)
 		self.grid_layout = QGridLayout(self)
-		title = QLabel('LovellGUI')
+		title = QLabel('Lovell')
 		font = QFont()
 		title.setAlignment(Qt.AlignHCenter)
 		font.setPointSize(20)

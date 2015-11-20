@@ -4,6 +4,10 @@ import glob
 import pickle
 import os
 
+
+def numeric_compare(x, y):
+    return x[0:6] - y[0:6]
+
 class lTab(QWidget):
     def __init__(self, params, parent=None):
         QWidget.__init__(self, parent)
@@ -64,7 +68,10 @@ class lTab(QWidget):
             msg = 'No IV files found'
             self.parent().tab_options.notify(msg, 'No IV files found')
             print msg
-        for file in fileNames:
+            
+        # Sort them.
+        fileNameSorted = sorted(fileNames, cmp=numeric_compare)
+        for file in fileNameSorted:
             self.dataIvBox.addItem(file)
             self.refIvBox.addItem(file)
         
