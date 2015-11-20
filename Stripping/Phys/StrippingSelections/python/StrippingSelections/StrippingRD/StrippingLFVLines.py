@@ -397,13 +397,13 @@ class LFVLinesConf(LineBuilder) :
                                         RequiredRawEvents = ['Calo'],
                                         RelatedInfoTools = config['RelatedInfoTools_Bu2KJPsiee']
                                         )
-            '''
+            
             self.registerLine(self.tau2PhiMuLine)
             self.registerLine(self.tau2eMuMuLine)
             self.registerLine(self.b2eMuLine)
             self.registerLine(self.b2eeLine)
             self.registerLine(self.b2heMuLine)
-            self.registerLine(self.b2pMuLine)'''
+            self.registerLine(self.b2pMuLine)
             self.registerLine(self.buLine)
             ##self.registerLine(self.b2TauMuLine)
 #self.registerLine(self.b2hTauMuLine)
