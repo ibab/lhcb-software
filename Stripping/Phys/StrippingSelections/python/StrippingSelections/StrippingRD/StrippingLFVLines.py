@@ -406,7 +406,7 @@ class LFVLinesConf(LineBuilder) :
             self.registerLine(self.b2pMuLine)
             self.registerLine(self.buLine)
             ##self.registerLine(self.b2TauMuLine)
-#self.registerLine(self.b2hTauMuLine)
+            self.registerLine(self.b2hTauMuLine)
 
 
 
