@@ -71,7 +71,7 @@ class lTab(QWidget):
             print msg
             
         # Sort them.
-        fileNameSorted = sorted(fileNames)
+        fileNameSorted = sorted(fileNames, reverse=True)
         for file in fileNameSorted:
             self.dataIvBox.addItem(file)
             self.refIvBox.addItem(file)
