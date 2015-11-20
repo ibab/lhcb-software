@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+
+! 2015-11-20 - Greg Ciezarek
+ - fixed semileptonic __init__ to not look for previously removed lines
+
 ! 2015-11-20 - Pablo Ruiz Valls (RD)
  - Fixed charge symmetric final state duplicates in B2XLL
  - Fixed Hlt syntax in Bs2GammaGamma
