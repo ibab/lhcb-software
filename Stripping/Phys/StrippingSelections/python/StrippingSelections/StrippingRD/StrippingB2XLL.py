@@ -414,7 +414,7 @@ class B2XLLConf(LineBuilder) :
         _DaughtersCut = "(PT > %(LeptonPT)s) & " \
                         "(MIPCHI2DV(PRIMARY)>%(LeptonIPCHI2)s)" % params
         _MassCut = "(AM > 100*MeV)"
-        _DecayDescriptor = "[J/psi(1S) -> mu+ mu-]cc"
+        _DecayDescriptor = "[J/psi(1S) -> mu+ mu-]"
         if samesign: _DecayDescriptor = "[J/psi(1S) -> mu+ mu+]cc"
         _Combine = CombineParticles( DecayDescriptor = _DecayDescriptor,
                                      CombinationCut  = _MassCut,
@@ -437,7 +437,7 @@ class B2XLLConf(LineBuilder) :
         _DaughtersCut = "(PT > %(LeptonPT)s) & " \
                         "(MIPCHI2DV(PRIMARY)>%(LeptonIPCHI2)s)" % params
         _MassCut = "(AM > 100*MeV)"
-        _DecayDescriptor = "[J/psi(1S) -> e+ e-]cc"
+        _DecayDescriptor = "[J/psi(1S) -> e+ e-]"
         if samesign: _DecayDescriptor = "[J/psi(1S) -> e+ e+]cc"
         _Combine = CombineParticles( DecayDescriptor = _DecayDescriptor,
                                      CombinationCut  = _MassCut,

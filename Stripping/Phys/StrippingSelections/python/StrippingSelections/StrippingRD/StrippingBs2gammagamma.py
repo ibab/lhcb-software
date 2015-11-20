@@ -60,7 +60,8 @@ default_config = {
                      ,'HLT2Double'          : "HLT_PASS_RE('Hlt2RadiativeB2GammaGammaDoubleDecision')"
                      ,'HLT2LL'              : "HLT_PASS_RE('Hlt2RadiativeB2GammaGammaLLDecision')"
                      ,'HLT2DD'              : "HLT_PASS_RE('Hlt2RadiativeB2GammaGammaDDDecision')"
-                     ,'HLTNone'             : "HLT_PASS_RE('.*GammaGammaDecision')"
+                     ,'HLT1None'            : "HLT_PASS_RE('Hlt1.*GammaGammaDecision')"
+                     ,'HLT2None'            : "HLT_PASS_RE('Hlt2.*GammaGammaDecision')"
                     },
     'STREAMS'     : ['Leptonic']
     }
@@ -80,10 +81,10 @@ class StrippingBs2gammagammaConf(LineBuilder):
         , 'gammaNoneP'                     # MeV/c
         , 'gammaNoneCL'                    # adimensional
         , 'NoConvHCAL2ECAL'                # adimensional
-        , 'LLProbNNe'                      # 
-        , 'DDProbNNe'                      # 
-        , 'ConvGhostLL'                    # 
-        , 'ConvGhostDD'                    # 
+        , 'LLProbNNe'                      #
+        , 'DDProbNNe'                      #
+        , 'ConvGhostLL'                    #
+        , 'ConvGhostDD'                    #
         , 'BsPT'                           # MeV/c
         , 'BsVertexCHI2pDOF'               # adimensional
         , 'BsLowMass'                      # MeV/cc
@@ -98,7 +99,8 @@ class StrippingBs2gammagammaConf(LineBuilder):
         , 'HLT2Double'
         , 'HLT2LL'
         , 'HLT2DD'
-        , 'HLTNone'
+        , 'HLT1None'
+        , 'HLT2None'
     )
 
     def __init__(self, name, config) :
@@ -166,7 +168,7 @@ class StrippingBs2gammagammaConf(LineBuilder):
                 name+"_LL",
                 Algorithm = _Bs2gammagamma_LL,
                 RequiredSelections = [self.convPhotons_LL_clean,self.stdPhotons_clean])
-        
+
         return StrippingLine(name+"_LLLine"
                      , prescale = 1
                      , postscale = 1
@@ -262,8 +264,8 @@ class StrippingBs2gammagammaConf(LineBuilder):
         return StrippingLine(name+"_NoConvLine"
                 , prescale = scaleWide
                 , postscale = 1
-                , HLT1 = config["HLTNone"]
-                , HLT2 = config["HLTNone"]
+                , HLT1 = config["HLT1None"]
+                , HLT2 = config["HLT2None"]
                 #, selection = self.TOSFilter(name+"_NoConvTOSLine",[Bs2gammagamma_none],"L0(Photon|Electron)Decision")
                 , selection = self.TOSFilter(name+"_NoConvTOSLine",[Bs2gammagamma_none],"Hlt2RadiativeB2GammaGammaDecision") # HLT2 lines require L0 anyway
                                 , L0DU = self.L0cut

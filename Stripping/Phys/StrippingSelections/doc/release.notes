@@ -3,6 +3,11 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2015-11-20 - Pablo Ruiz Valls (RD)
+ - Fixed charge symmetric final state duplicates in B2XLL
+ - Fixed Hlt syntax in Bs2GammaGamma
+
 ! 2015-11-19 - Marianna Fontana
  - Updated StrippingCharm/StrippingDstD02xx.py
 
