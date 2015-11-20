@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-20 - Rafael Coutinho
+ - Updated StrippingBnoC/StrippingB2KShh using the correct RelatedInfo tools framework 
 
 ! 2015-11-20 - Greg Ciezarek
  - fixed semileptonic __init__ to not look for previously removed lines

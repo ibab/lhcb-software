@@ -66,7 +66,9 @@ default_config = {
                      'B_LL_MVA'                : -0.20,   
                      'B_LD_MVA'                : -0.20,
                      'GEC_MaxTracks'           : 250,
-                     'ConeAngle'               : 1.5, 
+                     'ConeAngle10'             : 1.0, 
+                     'ConeAngle15'             : 1.5, 
+                     'ConeAngle17'             : 1.7, 
                      # 2012 Triggers
                      #'HLT1Dec'                 : 'Hlt1TrackAllL0Decision',
                      #'HLT2Dec'                 : 'Hlt2Topo[234]Body.*Decision',
@@ -154,7 +156,9 @@ class B2KShhConf(LineBuilder) :
                               'B_LL_MVA',
                               'B_LD_MVA', 
                               'GEC_MaxTracks',
-                              'ConeAngle', 
+                              'ConeAngle10',
+                              'ConeAngle15',
+                              'ConeAngle17',
                               'HLT1Dec',
                               'HLT2Dec',
                               'Prescale',
@@ -178,26 +182,62 @@ class B2KShhConf(LineBuilder) :
                           
         Hlt2Filter = {'Code' : "HLT_PASS_RE('%s')" % config['HLT2Dec'],
                      'Preambulo' : ["from LoKiCore.functions import *"]}
-                          
 
-        relinfo = [ { "Type" : "RelInfoConeVariables" 
-                    , "ConeAngle" : config['ConeAngle']
-                    , "TracksLocation" : "/Event/Phys/StdNoPIDsPions"
-                    , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'] 
-                    , "Location"  : 'P2ConeVar' },
-                    { "Type" : "RelInfoConeVariables"
-                    , "ConeAngle" : 1.0
-                    , "TracksLocation" : "/Event/Phys/StdNoPIDsPions"
-                    , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
-                    , "Location"  : 'P2ConeVar10' },
-                    { "Type" : "RelInfoConeVariables"
-                    , "ConeAngle" : 1.7
-                    , "TracksLocation" : "/Event/Phys/StdNoPIDsPions"
-                    , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
-                    , "Location"  : 'P2ConeVar17' },
-                    { "Type"      : "RelInfoVertexIsolation"
-                    , "Location"  : 'VtxIsolationVar'}
-                  ]
+        relinfo_OS = [ { "Type" : "RelInfoConeVariables" 
+                      , "ConeAngle" : config['ConeAngle10']
+                      , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'] 
+                      , 'Location'  : 'P2ConeVar10_B'
+                      , "DaughterLocations" : { "B0 -> ^pi+ pi- (KS0 -> pi+ pi-)" : 'P2ConeVar10_1',
+                                                "B0 -> pi+ ^pi- (KS0 -> pi+ pi-)" : 'P2ConeVar10_2',
+                                                "B0 -> pi+ pi- (KS0 -> ^pi+ pi-)" : 'P2ConeVar10_3',
+                                                "B0 -> pi+ pi- (KS0 -> pi+ ^pi-)" : 'P2ConeVar10_4'} },
+                      { "Type" : "RelInfoConeVariables"
+                      , "ConeAngle" : config['ConeAngle15'] 
+                      , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
+                      , 'Location'  : 'P2ConeVar15_B'
+                      , "DaughterLocations" : { "B0 -> ^pi+ pi- (KS0 -> pi+ pi-)" : 'P2ConeVar15_1',
+                                                "B0 -> pi+ ^pi- (KS0 -> pi+ pi-)" : 'P2ConeVar15_2',
+                                                "B0 -> pi+ pi- (KS0 -> ^pi+ pi-)" : 'P2ConeVar15_3',
+                                                "B0 -> pi+ pi- (KS0 -> pi+ ^pi-)" : 'P2ConeVar15_4'} },
+                      { "Type" : "RelInfoConeVariables"
+                      , "ConeAngle" : config['ConeAngle17'] 
+                      , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
+                      , 'Location'  : 'P2ConeVar17_B'
+                      , "DaughterLocations" : { "B0 -> ^pi+ pi- (KS0 -> pi+ pi-)" : 'P2ConeVar17_1',
+                                                "B0 -> pi+ ^pi- (KS0 -> pi+ pi-)" : 'P2ConeVar17_2',
+                                                "B0 -> pi+ pi- (KS0 -> ^pi+ pi-)" : 'P2ConeVar17_3',
+                                                "B0 -> pi+ pi- (KS0 -> pi+ ^pi-)" : 'P2ConeVar17_4'} },
+                      { "Type"      : "RelInfoVertexIsolation"
+                      , "Location"  : 'VtxIsolationVar'}
+                     ]
+
+        relinfo_SS = [ { "Type" : "RelInfoConeVariables" 
+                      , "ConeAngle" : config['ConeAngle10']
+                      , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'] 
+                      , 'Location'  : 'P2ConeVar10_B'
+                      , "DaughterLocations" : { "B0 -> ^[pi+]cc [pi+]cc (KS0 -> pi+ pi-)" : 'P2ConeVar10_1',
+                                                "B0 -> [pi+]cc ^[pi+]cc (KS0 -> pi+ pi-)" : 'P2ConeVar10_2',
+                                                "B0 -> [pi+]cc [pi+]cc (KS0 -> ^pi+ pi-)" : 'P2ConeVar10_3',
+                                                "B0 -> [pi+]cc [pi+]cc (KS0 -> pi+ ^pi-)" : 'P2ConeVar10_4'} },
+                      { "Type" : "RelInfoConeVariables"
+                      , "ConeAngle" : config['ConeAngle15'] 
+                      , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
+                      , 'Location'  : 'P2ConeVar15_B'
+                      , "DaughterLocations" : { "B0 -> ^[pi+]cc [pi+]cc (KS0 -> pi+ pi-)" : 'P2ConeVar10_1',
+                                                "B0 -> [pi+]cc ^[pi+]cc (KS0 -> pi+ pi-)" : 'P2ConeVar10_2',
+                                                "B0 -> [pi+]cc [pi+]cc (KS0 -> ^pi+ pi-)" : 'P2ConeVar10_3',
+                                                "B0 -> [pi+]cc [pi+]cc (KS0 -> pi+ ^pi-)" : 'P2ConeVar10_4'} },
+                      { "Type" : "RelInfoConeVariables"
+                      , "ConeAngle" : config['ConeAngle17'] 
+                      , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
+                      , 'Location'  : 'P2ConeVar17_B'
+                      , "DaughterLocations" : { "B0 -> ^[pi+]cc [pi+]cc (KS0 -> pi+ pi-)" : 'P2ConeVar10_1',
+                                                "B0 -> [pi+]cc ^[pi+]cc (KS0 -> pi+ pi-)" : 'P2ConeVar10_2',
+                                                "B0 -> [pi+]cc [pi+]cc (KS0 -> ^pi+ pi-)" : 'P2ConeVar10_3',
+                                                "B0 -> [pi+]cc [pi+]cc (KS0 -> pi+ ^pi-)" : 'P2ConeVar10_4'} },
+                      { "Type"      : "RelInfoVertexIsolation"
+                      , "Location"  : 'VtxIsolationVar'}
+                     ]
 
         # the input charged particles
         self.pions = Pions
@@ -254,7 +294,7 @@ class B2KShhConf(LineBuilder) :
                         ,"B_DIRA_OWNPV!=1.0?log10(1.0-TMath::Abs(B_DIRA_OWNPV)):-10.0" : "(log10(1-BPVDIRA) if (BPVDIRA != 1.0) else -10.0)"
                         ,"log10(B_ENDVERTEX_CHI2)"                                     : "log10(VFASPF(VCHI2))"
                         ,"log10(B_SMALLESTDELTACHI2)"                                  : "log10(RELINFO('/Event/Phys/"+_linename+"/VtxIsolationVar', 'VTXISODCHI2ONETRACK', -1.1))"
-                        ,"B_PTASYM_1_5"                                                : "RELINFO('/Event/Phys/"+_linename+"/P2ConeVar', 'CONEPTASYM', -1.1)"
+                        ,"B_PTASYM_1_5"                                                : "RELINFO('/Event/Phys/"+_linename+"/P2ConeVar15_B', 'CONEPTASYM', -1.1)"
                         ,"log10(h1_IPCHI2_OWNPV+h2_IPCHI2_OWNPV)"                      : "log10(CHILD(BPVIPCHI2(),1) + CHILD(BPVIPCHI2(),2))"
                     }
                     if ks_type == 'LL' :
@@ -268,6 +308,11 @@ class B2KShhConf(LineBuilder) :
                     _flavourFlag = True
                     if sign == 'SS' : 
                         _flavourFlag = False
+
+                    # Related info configuration
+                    relinfo = relinfo_OS
+                    if sign == 'SS' :
+                        relinfo = relinfo_SS
 
                     _mylines[ks_type][year][sign] = StrippingLine(_linename,
                                            prescale = config['Prescale'],
