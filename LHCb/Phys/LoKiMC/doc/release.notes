@@ -13,6 +13,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+! 2015-11-20 - Thomas Blake
+ - Fix of LoKi::MCAlg::accumulate for LHCb::MCParticle* 
+ 	 		
 ! 2015-11-01 - Gerhard Raven
  - replace LoKi::select with std::copy_if
 

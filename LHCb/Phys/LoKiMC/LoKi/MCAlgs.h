@@ -611,7 +611,7 @@ namespace LoKi
       {
         result = LoKi::MCAlgs::accumulate 
           ( particle -> endVertices().begin() , 
-            particle -> endVertices().begin() , 
+            particle -> endVertices().end() , 
             fun , cut , result , binop , decayOnly ) ;              // RECURSION
       }
       // (2) check itself 
