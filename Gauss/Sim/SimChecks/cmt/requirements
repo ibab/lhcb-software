@@ -3,7 +3,7 @@
 # Maintainer : Luca Pescatore
 #============================================================================
 package           SimChecks
-version           v1r6
+version           v1r6p1
 
 #macro_append ROOT_linkopts " -lMLP -lTMVA -lGraf -lHist -lMatrix -lTreePlayer -lGpad -lGraf3d -lPhysics"
 
