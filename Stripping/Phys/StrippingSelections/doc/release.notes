@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-22 - Jinlin Fu
+ - update StrippingBnoC/StrippingXb23ph.py
+
 ! 2015-11-20 - Tim Williams
 	-Made defualt config of StrippingBnoC/StrippingB2KShh consistent with strippingsettings
 

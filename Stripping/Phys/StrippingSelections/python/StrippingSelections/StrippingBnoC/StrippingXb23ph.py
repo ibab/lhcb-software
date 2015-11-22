@@ -122,43 +122,38 @@ class Xb23phConf(LineBuilder) :
 										
                                          RelatedInfoTools = [ { "Type"           : "RelInfoConeVariables",
                                                                 "ConeAngle"      : 0.8,
-                                                                "TracksLocation" : '/Event/Phys/StdNoPIDsPions',
                                                                 "Variables"      : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-                                                                "TopSelection"   : self.selXb2ppph,
-                                                                "Location"       : 'P2ConeVar1',
-																"DaughterLocations" : {'[Lambda_b0 -> p+ p~- p+ ^pi-]CC' : 'P2ConeVar1pi'}
+																"DaughterLocations" : {'[Lambda_b0 -> ^p+ p~- p+ pi-]CC' : 'P2ConeVar08_1',
+																					   '[Lambda_b0 -> p+ ^p~- p+ pi-]CC' : 'P2ConeVar08_2',
+																					   '[Lambda_b0 -> p+ p~- ^p+ pi-]CC' : 'P2ConeVar08_3',
+																					   '[Lambda_b0 -> p+ p~- p+ ^pi-]CC' : 'P2ConeVar08_4'}
 																 },
                                                               { "Type"           : "RelInfoConeVariables",
                                                                 "ConeAngle"      : 1.0,
-                                                                "TracksLocation" : '/Event/Phys/StdNoPIDsPions',
                                                                 "Variables"      : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-                                                                "TopSelection"   : self.selXb2ppph,
-                                                                "Location"       : 'P2ConeVar2',
-																"DaughterLocations" : {'[Lambda_b0 -> p+ p~- p+ ^pi-]CC' : 'P2ConeVar2pi'}
+																"DaughterLocations" : {'[Lambda_b0 -> ^p+ p~- p+ pi-]CC' : 'P2ConeVar10_1',
+																					   '[Lambda_b0 -> p+ ^p~- p+ pi-]CC' : 'P2ConeVar10_2',
+																					   '[Lambda_b0 -> p+ p~- ^p+ pi-]CC' : 'P2ConeVar10_3',
+																					   '[Lambda_b0 -> p+ p~- p+ ^pi-]CC' : 'P2ConeVar10_4'}
 																 },
                                                               { "Type"           : "RelInfoConeVariables",
                                                                 "ConeAngle"      : 1.3,
-                                                                "TracksLocation" : '/Event/Phys/StdNoPIDsPions',
                                                                 "Variables"      : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-                                                                "TopSelection"   : self.selXb2ppph,
-                                                                "Location"       : 'P2ConeVar3',
-																"DaughterLocations" : {'[Lambda_b0 -> p+ p~- p+ ^pi-]CC' : 'P2ConeVar3pi'}
+																"DaughterLocations" : {'[Lambda_b0 -> ^p+ p~- p+ pi-]CC' : 'P2ConeVar13_1',
+																					   '[Lambda_b0 -> p+ ^p~- p+ pi-]CC' : 'P2ConeVar13_2',
+																					   '[Lambda_b0 -> p+ p~- ^p+ pi-]CC' : 'P2ConeVar13_3',
+																					   '[Lambda_b0 -> p+ p~- p+ ^pi-]CC' : 'P2ConeVar13_4'}
 																},
                                                               { "Type"           : "RelInfoConeVariables",
                                                                 "ConeAngle"      : 1.7,
-                                                                "TracksLocation" : '/Event/Phys/StdNoPIDsPions',
                                                                 "Variables"      : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-                                                                "TopSelection"   : self.selXb2ppph,
-                                                                "Location"       : 'P2ConeVar4',
-																"DaughterLocations" : {'[Lambda_b0 -> p+ p~- p+ ^pi-]CC' : 'P2ConeVar4pi'}
+																"DaughterLocations" : {'[Lambda_b0 -> ^p+ p~- p+ pi-]CC' : 'P2ConeVar17_1',
+																					   '[Lambda_b0 -> p+ ^p~- p+ pi-]CC' : 'P2ConeVar17_2',
+																					   '[Lambda_b0 -> p+ p~- ^p+ pi-]CC' : 'P2ConeVar17_3',
+																					   '[Lambda_b0 -> p+ p~- p+ ^pi-]CC' : 'P2ConeVar17_4'}
 																},
                                                               { "Type"           : "RelInfoVertexIsolation",
-                                                                "Location"       : "VertexIsoInfo",
-																"DaughterLocations" : {'[Lambda_b0 -> ^p+ p~- p+ pi-]CC' : 'VertexIsoInfop1',
-																					   '[Lambda_b0 -> p+ ^p~- p+ pi-]CC' : 'VertexIsoInfop2',
-																					   '[Lambda_b0 -> p+ p~- ^p+ pi-]CC' : 'VertexIsoInfop3',
-																					   '[Lambda_b0 -> p+ p~- p+ ^pi-]CC' : 'VertexIsoInfopi'
-																					  }
+                                                                "Location"       : "VertexIsoInfo"
 																 }]
 										)
 
