@@ -3,7 +3,7 @@
 # Maintainer : Massimiliano Ferro-Luzzi
 #=====================================================================
 package           LumiEvent
-version           v3r8p1
+version           v3r9
 
 #=====================================================================
 # Structure, i.e. directories to process.
