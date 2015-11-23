@@ -1,7 +1,7 @@
 ################################################################################
 # Package: VPCheckers
 ################################################################################
-gaudi_subdir(VPCheckers v1r0p1)
+gaudi_subdir(VPCheckers v1r1)
 
 gaudi_depends_on_subdirs(Det/VPDet
                          Event/DigiEvent
