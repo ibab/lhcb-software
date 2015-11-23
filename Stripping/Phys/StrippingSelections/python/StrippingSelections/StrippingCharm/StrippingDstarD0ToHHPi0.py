@@ -1,6 +1,6 @@
 __author__ = ['Kevin Maguire','Mika Vesterinen']
-__date__ = '20/08/2013'
-__version__ = '$Revision: 0.1 $'
+__date__ = '23/11/2015'
+__version__ = '$Revision: 0.2 $'
 
 """
 Module for D* tagged D0 -> hhpi0.
@@ -44,9 +44,9 @@ default_config = {
             ,"Slowpion_PIDe" : 5 #adimensional
             ,"D0_APT" : 1400  #MeV
             ,"useTOS" : True  #adimensional
-            ,"useHLT2" : True  #adimensional
-            ,"TOSFilter" : { 'Hlt2CharmHad.*HHX.*Decision%TOS' : 0}  #adimensional
-            ,"Hlt2Filter" : "HLT_PASS_RE('Hlt2CharmHad.*HHX.*Decision%TOS')"  #adimensional
+            ,"useHLT2" : False  #adimensional
+            ,"TOSFilter" : { 'Hlt2CharmHadInclDst2PiD02HHXBDTDecision%TOS' : 0 }  #adimensional
+            ,"Hlt2Filter" : ""  #adimensional
             }
         }
 
@@ -82,7 +82,7 @@ class DstarD0ToHHPi0AllLinesBuilder(LineBuilder) :
     
     
     def __init__(self, _name, config) :
-        
+
         LineBuilder.__init__(self, _name, config)
         self.__confdict__=config
         
@@ -259,7 +259,7 @@ def DstarMaker(_name,_KstDecays,_D0Decays,_DstDecays,_ChargedTracks,_Pi0s,_Slowp
     
     hlt2 = ""
     if config["useHLT2"] == True:
-        _hlt2 = "%(Hlt2Filter)s" %config
+        _hlt2 =  "%(Hlt2Filter)s" %config
         hlt2 = _hlt2
         
     if config["useTOS"] == True:
@@ -277,6 +277,7 @@ def DstarMaker(_name,_KstDecays,_D0Decays,_DstDecays,_ChargedTracks,_Pi0s,_Slowp
     return Line
                                                     
 def TOSFilter( name, _input, _specs ) :
+
     from Configurables import TisTosParticleTagger
     _tisTosFilter = TisTosParticleTagger( name + "Tagger" )
     _tisTosFilter.TisTosSpecs = _specs 
