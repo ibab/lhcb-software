@@ -3,6 +3,8 @@
 ! Responsible : 
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
+
+!========================= LinkerEvent v3r11 2015-11-23 =========================
 ! 2015-11-08 - Gerhard Raven
  - avoid comparing (smart)pointers to 0 or NULL
  - replace NULL by nullptr

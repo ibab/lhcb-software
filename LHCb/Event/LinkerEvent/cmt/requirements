@@ -3,7 +3,7 @@
 # Maintainer : 
 #=========================================================================
 package           LinkerEvent
-version           v3r10p1
+version           v3r11
 
 branches          cmt doc src Event Linker xml
 
