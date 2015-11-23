@@ -2,7 +2,7 @@
 # Maintainer : Marco Cattaneo
 #
 package           RecEvent
-version           v2r54
+version           v2r55
 
 # Structure, i.e. directories to process. 
 #=====================================================================
