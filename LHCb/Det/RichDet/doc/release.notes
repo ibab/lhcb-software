@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v17r6 2015-11-23 =========================
 ! 2015-10-21 - Chris Jones
  - Pass some more RichSmartIDs by const reference instead of by value.
 
