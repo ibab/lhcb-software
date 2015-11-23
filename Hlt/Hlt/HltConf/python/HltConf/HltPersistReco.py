@@ -42,7 +42,9 @@ class HltPersistRecoConf(LHCbConfigurableUser):
         writer = InputCopyStream(self.getProp("WriterName"))
         for alg in algs:
             writer.OptItemList+=[alg.OutputName+'#99']
-        
+        # also save calo digits
+        writer.OptItemList+=["Hlt/Calo/Digits#99"]
+
         # Add packer algorithms to the afterburner
         persistReco.Members+= algs
         Afterburner = GaudiSequencer("HltAfterburner")
@@ -84,30 +86,17 @@ class HltPersistRecoConf(LHCbConfigurableUser):
                                 DeleteInput        = False,
                                 OutputLevel        = debugLevel,
                                 InputName          = Hlt2BiKalmanFittedForwardTracking().hlt2RICHID().outputSelection(),
-                                OutputName         = "Hlt2/pRec/long/RichPIDs" ),
-                PackRichPIDs( name = "Hlt2PackDownRichPIDs",
-                                AlwaysCreateOutput = True,
-                                DeleteInput        = False,
-                                OutputLevel        = debugLevel,
-                                InputName          = Hlt2BiKalmanFittedDownstreamTracking().hlt2RICHID().outputSelection(),
-                                OutputName         = "Hlt2/pRec/down/RichPIDs" )
+                                OutputName         = "Hlt2/pRec/long/RichPIDs" )
                   ]
         
-        # MUON PIDs (long)
+        # MUON PIDs 
         from Configurables import DataPacking__Pack_LHCb__MuonPIDPacker_ as PackMuonPIDs
         algs += [ PackMuonPIDs( name = "Hlt2PackMuonPIDs",
                                 AlwaysCreateOutput = True,
                                 DeleteInput        = False,
                                 OutputLevel        = debugLevel,
                                 InputName          = Hlt2BiKalmanFittedForwardTracking().hlt2MuonID().outputSelection(),
-                                OutputName         = "Hlt2/pRec/long/MuonIDs" ),
-                  # MUON PIDs (downstream)
-                  PackMuonPIDs( name = "Hlt2PackDownMuonPIDs",
-                                AlwaysCreateOutput = True,
-                                DeleteInput        = False,
-                                OutputLevel        = debugLevel,
-                                InputName          = Hlt2BiKalmanFittedDownstreamTracking().hlt2MuonID().outputSelection(),
-                                OutputName         = "Hlt2/pRec/down/MuonIDs" )
+                                OutputName         = "Hlt2/pRec/long/MuonIDs" )
                   ]
 
         # Tracks
@@ -132,7 +121,8 @@ class HltPersistRecoConf(LHCbConfigurableUser):
                              AlwaysCreateOutput = True,
                              DeleteInput        = False,
                              OutputLevel        = debugLevel,
-                             InputName          = "/Event/Hlt2/ProtoP/Fitted/Long/Neutrals",
+                             #InputName          = "/Event/Hlt2/ProtoP/Fitted/Long/Neutrals",
+                             InputName          = Hlt2BiKalmanFittedForwardTracking().hlt2NeutralProtos().outputSelection(),
                              OutputName         = "Hlt2/pRec/neutral/Protos" )
                   ]
         
