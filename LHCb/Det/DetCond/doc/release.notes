@@ -4,6 +4,7 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+!========================= DetCond v12r45 2015-11-23 =========================
 ! 2015-11-02 - Gerhard Raven
  - pass sink arguments by value, and std::move them
  - replace deprecated std::auto_ptr with std::unique_ptr
