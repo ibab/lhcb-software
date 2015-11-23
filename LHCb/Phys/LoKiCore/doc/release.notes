@@ -13,6 +13,7 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiCore v11r28 2015-11-23 =========================
 ! 2015-11-03 - Gerhard Raven
  - add deprecation warning to LoKi::select and LoKi::transform
 
