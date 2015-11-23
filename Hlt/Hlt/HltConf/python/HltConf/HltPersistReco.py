@@ -41,7 +41,7 @@ class HltPersistRecoConf(LHCbConfigurableUser):
         algs = self.Packers()
         writer = InputCopyStream(self.getProp("WriterName"))
         for alg in algs:
-            writer.OptItemList+=[alg.OutputName]
+            writer.OptItemList+=[alg.OutputName+'#99']
         
         # Add packer algorithms to the afterburner
         persistReco.Members+= algs
@@ -52,25 +52,27 @@ class HltPersistRecoConf(LHCbConfigurableUser):
         algs = [ ]
 
         debugLevel=4
-        
+
         from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
         from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
         tracks = Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks()
         tracksDown = Hlt2BiKalmanFittedDownstreamTracking().hlt2PrepareTracks()
         from HltTracking.HltTrackNames import Hlt2NeutralProtoParticleSuffix
+        from HltTracking.HltTrackNames import Hlt2ChargedProtoParticleSuffix
+        
         # ProtoParticles
         from Configurables import PackProtoParticle
         algs += [ PackProtoParticle( name = "Hlt2PackChargedProtos",
                                      AlwaysCreateOutput = True,
                                      DeleteInput        = False,
                                      OutputLevel        = debugLevel,
-                                     InputName          = Hlt2BiKalmanFittedForwardTracking().hlt2ChargedNoPIDsProtos().outputSelection(),
+                                     InputName          = Hlt2BiKalmanFittedForwardTracking().hlt2ChargedAllPIDsProtos().outputSelection(),
                                      OutputName         = "Hlt2/pRec/long/Protos" ),
                   PackProtoParticle( name = "Hlt2PackChargedDownProtos",
                                      AlwaysCreateOutput = True,
                                      DeleteInput        = False,
                                      OutputLevel        = debugLevel,
-                                     InputName          = Hlt2BiKalmanFittedDownstreamTracking().hlt2ChargedNoPIDsProtos().outputSelection(),
+                                     InputName          = Hlt2BiKalmanFittedDownstreamTracking().hlt2ChargedAllPIDsProtos().outputSelection(),
                                      OutputName         = "Hlt2/pRec/down/Protos" )
                   ]
 
@@ -114,15 +116,46 @@ class HltPersistRecoConf(LHCbConfigurableUser):
                              AlwaysCreateOutput = True,
                              DeleteInput        = False,
                              OutputLevel        = debugLevel,
-                             InputName          = Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks().outputSelection(),
+                             InputName          = tracks.outputSelection(),
                              OutputName         = "Hlt2/pRec/long/Tracks" ),
-                  PackTrack( name = "PackMuonTracks",
+                  PackTrack( name = "PackDownTracks",
                              AlwaysCreateOutput = True,
                              DeleteInput        = False,
                              OutputLevel        = debugLevel,
-                             InputName          = Hlt2BiKalmanFittedDownstreamTracking().hlt2PrepareTracks().outputSelection(),
+                             InputName          = tracksDown.outputSelection(),
                              OutputName         = "Hlt2/pRec/down/Tracks" )
                   ]
 
+        # Neutral protoparticles are in the same place as the charged with "Neutrals" replacing "Charged"
+        from Configurables import PackProtoParticle
+        algs += [ PackProtoParticle( name = "PackNeutralProtoP",
+                             AlwaysCreateOutput = True,
+                             DeleteInput        = False,
+                             OutputLevel        = debugLevel,
+                             InputName          = "/Event/Hlt2/ProtoP/Fitted/Long/Neutrals",
+                             OutputName         = "Hlt2/pRec/neutral/Protos" )
+                  ]
+        
+        # Neutral CaloClusters
+        from Configurables import DataPacking__Pack_LHCb__CaloClusterPacker_ as PackCaloClusters
+        algs += [ PackCaloClusters( name = "PackCaloClusters",
+                             AlwaysCreateOutput = True,
+                             DeleteInput        = False,
+                             OutputLevel        = debugLevel,
+                             InputName          = "Hlt/Calo/Clusters", 
+                             OutputName         = "Hlt2/pRec/neutral/CaloClusters" )
+                  ]
+        
+        # Neutral Calo Hypos
+        #from Configurables import DataPacking__Pack_LHCb__CaloHypoPacker_ as PackCaloHypos
+        from Configurables import PackCaloHypo as PackCaloHypos
+        algs += [ PackCaloHypos( name = "PackCaloHypos",
+                             AlwaysCreateOutput = True,
+                             DeleteInput        = False,
+                             OutputLevel        = debugLevel,
+                             InputName          = "Hlt/Calo/Hypos",
+                             OutputName         = "Hlt2/pRec/neutral/CaloHypos" )
+                  ]
+        
         # Finally return all the packers
         return algs
