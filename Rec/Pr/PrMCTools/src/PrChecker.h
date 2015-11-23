@@ -21,6 +21,24 @@ class IHistoTool ;
 /** @class PrChecker PrChecker.h
  *  Check the quality of the pattern recognition, by comparing to MC information
  *  Produces efficiency, ghost rate and clone rate numbers.
+ *
+ *  The output looks like:
+ *
+ *  prChecker.TrackType      INFO **** TrackType                        "nRecod tracks" tracks including                                                  "nGhosts" ghosts ["ghost rate" %], Event average   "ghost rate" % ****
+ *  prChecker.TrackType      INFO                             type :    "nRecod & rectible tracks" from     "nRectible tracks" ["track efficiency" %]     "nClones" clones [ "cloneRate" %], purity: abc %, hitEff:  xzy %
+ *
+ *  with:
+ *  - nRecod tracks: number of reconstructed tracks
+ *  - nGhosts: number of reconstructed ghost tracks (tracks not matched to MC truth)
+ *  - ghoste rate = nGhosts/nRecod (event average: average ghost rate per event, insensitive to busy or empty events)
+ *  - nRecod & rectible tracks: number of reconstructed tracks that are considered reconstructible i.e. can be matched to MC truth, and left enough clusters in the detector to be considered reconstructible.
+ *  - nRectible tracks: charged MCParticles that left enough clusters in the detector to be considered reconstructible.
+ *  - efficiency: nRecod & rectible tracks / nRectible tracks
+ *  - nClones: Number of tracks that share link to MCParticle
+ *  - cloneRate: nClones / (nRecod & rectible tracks + nClones)
+ *  - purity: Fraction of hits on the track belonging to the matched MCParticle
+ *  - hitEff: Fraction of hits on the track of all hits belonging to the matched MCParticle
+ * 
  *  Parameters:
  *   - Eta25Cut: Only consider particles with 2 < eta < 5? (default: false)
  *   - TriggerNumbers: Give numbers for p > 3GeV, pT > 500 MeV? (default: false)
