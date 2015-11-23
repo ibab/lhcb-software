@@ -12,6 +12,8 @@
 !   contributions and advices from G.Raven, J.van Tilburg,
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
+
+!========================= LoKiGen v10r22 2015-11-23 =========================
 ! 2015-11-01 - Gerhard Raven
  - replace LoKi::select with std::copy_if
 
