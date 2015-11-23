@@ -4,6 +4,7 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!========================= LHCbAlgs v3r7 2015-11-23 =========================
 ! 2015-10-25 - Gerhard Raven
  - replace std::auto_ptr with std::unique_ptr
  - avoid using protected m_statEntityList, use setProperty instead
