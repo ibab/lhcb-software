@@ -1,6 +1,8 @@
 ! Package         : ST/STAlgorithms
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
+
+!========================= STAlgorithms v4r7p2 2015-11-23 =========================
 ! 2015-10-24 - Gerhard Raven
  - replace endreq with endmsg
 
