@@ -464,12 +464,15 @@ def getTCKList( cas = ConfigAccessSvc() ) :
     return result
 def getRoutingBits( id , cas = ConfigAccessSvc() ) :
     # should be a map... so we try to 'eval' it
-    for p in ['RoutingBits','routingBitDefinitions'] :
-        try :
-            return eval(getProperty(id,'Hlt1RoutingBitsWriter',p,cas))
-        except KeyError :
-            continue
-    return None
+    rbs = {}
+    for stage in ('Hlt1', 'Hlt2', 'Hlt'):
+        for p in ['RoutingBits','routingBitDefinitions'] :
+            try :
+                prop = getProperty(id, '%sRoutingBitsWriter' % stage, p, cas)
+            except KeyError :
+                continue
+            rbs.update(eval(prop))
+    return rbs if rbs else None
 
 ## TODO:  is a string the best thing to return???
 def getAlgorithms( id, cas = ConfigAccessSvc() ) :
