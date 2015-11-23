@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Utilities for GUI run view pages."""
 from veloview.config import Config
 from veloview.runview.reference_database import ReferenceDatabase
@@ -44,11 +45,20 @@ def run_file_path(run):
 def run_file(run):
     """Return latest run file path from run number. Prefer merged files."""
     base = run_file_path(run)
+
+    # first choice: NZS + Clusters + Online Brunel merged files
     merged_files = glob.glob("{0}/*_Clusters_Brunel.root".format(base))
     if merged_files:
         # Return latest merged file if available
         return max(merged_files, key = os.path.getctime)
 
+    # second choice: NZS + Clusters merged files
+    merged_files = glob.glob("{0}/*NZS_Clusters.root".format(base))
+    if merged_files:
+        # Return latest merged file if available
+        return max(merged_files, key = os.path.getctime)
+
+    # third choice: any other root file
     files = glob.glob("{0}/*.root".format(base))
     try:
         # Otherwise, return normal file

@@ -35,14 +35,12 @@ def get_run_plot(name, run, reference=False, formatter=dictionary_formatter,
     elif reference: run = refRun
 
     # Get the latest run file in the run's directory
-    base = utils.run_file_path(run)
-    files = sorted(glob.glob('{0}/*_NZS_Clusters_Brunel.root'.format(base)))    # Filter to get merged files only.
     try:
-        path = files[-1]
-    except IndexError:
+        path = utils.run_file(run)
+    except IOError:
         if notifyBox != None:
-            notifyBox.notify("Merged run file not found for run {0}".format(run), 'run file not found')
-        raise IOError("Merged run file not found for run {0}".format(run))
+            notifyBox.notify("Run file not found for run {0}".format(run), 'run file not found')
+        raise IOError("Run file not found for run {0}".format(run))
 
     # Try to open the file
     f = ROOT.TFile(path)
