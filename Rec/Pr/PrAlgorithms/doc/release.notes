@@ -4,6 +4,7 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrAlgorithms v1r16p2 2015-11-23 =========================
 ! 2015-11-19 - Marco Cattaneo
  - Remove unused variables
 

@@ -3,7 +3,7 @@
 # Maintainer : Sascha Stahl
 #=====================================================================
 package           PrAlgorithms
-version           v1r16p1
+version           v1r16p2
 
 #=====================================================================
 # Structure, i.e. directories to process. 
