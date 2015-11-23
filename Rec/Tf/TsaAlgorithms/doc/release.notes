@@ -3,6 +3,8 @@
 ! Responsible : M Needham
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
+
+!========================= TsaAlgorithms v3r31 2015-11-23 =========================
 ! 2015-11-01 - Gerhard Raven
  - replace LoKi::select with std::copy_if
  - replace BOOST_FOREACH with range-based for
