@@ -3,6 +3,7 @@
 ! Responsible : Daniel Hynds
 !--------------------------------------------------------------------------
 
+!========================= VPAlgorithms v4r5 2015-11-23 =========================
 ! 2015-10-23 - Heinrich Schindler
  - Bugfix in VPClustering (subtraction of two unsigned ints).
 
