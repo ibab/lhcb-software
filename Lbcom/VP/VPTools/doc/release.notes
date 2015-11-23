@@ -4,6 +4,7 @@
 ! Purpose     : Tools used in VP reconstruction
 !--------------------------------------------------------------------------
 
+!========================= VPTools v2r6 2015-11-23 =========================
 ! 2015-11-08 - Heinrich Schindler
  - VPClusterPosition: use DeVP::sensors getter instead of sensorsBegin/End.
  - Remove dependency on GaudiGSL.

@@ -1,7 +1,7 @@
 ################################################################################
 # Package: VPTools
 ################################################################################
-gaudi_subdir(VPTools v2r5p1)
+gaudi_subdir(VPTools v2r6)
 
 gaudi_depends_on_subdirs(Det/VPDet
                          Event/DigiEvent

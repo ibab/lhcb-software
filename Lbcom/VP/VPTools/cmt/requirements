@@ -2,7 +2,7 @@
 # Maintainer : Heinrich Schindler
 #
 package           VPTools
-version           v2r5p1
+version           v2r6
 
 # Structure, i.e. directories to process. 
 #=====================================================================
