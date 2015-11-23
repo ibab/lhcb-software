@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v4r44 2015-11-23 =========================
 ! 2015-11-2 - Michel De Cian
  - Add counter to PatLongLivedTracking.cpp
 
