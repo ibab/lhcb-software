@@ -4,6 +4,7 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!========================= RichTools v2r51 2015-11-23 =========================
 ! 2015-11-13 - Chris Jones
  - Remove the verbose printout from findSphMirror and findSecMirror, as these
    methods are very heavly used, and even the verbose level check costs a bit.
