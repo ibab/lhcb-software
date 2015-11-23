@@ -4,6 +4,10 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrMCTools v2r11p1 2015-11-23 =========================
+! 2015-11-23 - Michel De Cian
+ - Add doxygen documentation to PrChecker
+
 !========================= PrMCTools v2r11 2015-10-13 =========================
 ! 2015-09-24 - Michel De Cian
  - Code cleaning in PrChecker2.

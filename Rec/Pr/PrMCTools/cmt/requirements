@@ -3,7 +3,7 @@
 # Maintainer : Michel De Cian
 #=====================================================================
 package           PrMCTools
-version           v2r11
+version           v2r11p1
 
 #=====================================================================
 # Structure, i.e. directories to process. 
