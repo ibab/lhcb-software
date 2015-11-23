@@ -3,7 +3,7 @@
 # Maintainer : Tomasz Skwarnicki
 #=====================================================================
 package           HltEvent
-version           v9r5
+version           v9r6
 
 # Structure, i.e. directories to process.
 #=====================================================================
