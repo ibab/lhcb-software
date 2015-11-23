@@ -1149,7 +1149,7 @@ DstarD0ToHHPi0 = {
         "D0_APT": 1400, 
         "D0_M_WINDOW": 150, 
         "DELTA_MASS_MAX": 180, 
-        "Hlt2Filter": "HLT_PASS_RE('Hlt2CharmHad.*HHX.*Decision%TOS')", 
+        "Hlt2Filter": "", 
         "Kaon_PIDK": 7, 
         "Kaon_PT": 500, 
         "Kaon_TRGHOSTPROB": 0.35, 
@@ -1164,10 +1164,10 @@ DstarD0ToHHPi0 = {
         "Slowpion_PT": 300, 
         "Slowpion_TRGHOSTPROB": 0.35, 
         "TOSFilter": {
-            "Hlt2CharmHad.*HHX.*Decision%TOS": 0
+            "Hlt2CharmHadInclDst2PiD02HHXBDTDecision%TOS": 0
         }, 
         "prescale_Pi0R_WIDEMASS": 1.0, 
-        "useHLT2": True, 
+        "useHLT2": False, 
         "useTOS": True
     }, 
     "STREAMS": [ "Charm" ], 
