@@ -2,6 +2,8 @@
 ! Package         : OTMonitor
 ! Package manager : Wouter Hulsbergen
 !---------------------------------------------------------------------------
+
+!========================= OTMonitor v3r9 2015-11-23 =========================
 ! 2015-10-24 - Gerhard Raven
  - replace boost::lexical_cast with std::to_string
  - replace BOOST_FOREACH with range-based for loop
