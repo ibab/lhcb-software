@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+!========================= LHCbKernel v15r13 2015-11-23 =========================
 ! 2015-11-13 - Chris Jones
  - Add a new flag to the RichSmartID class for the Upgrade MaPMTs to save if
    it represents a 'large' or 'small' PMT.
