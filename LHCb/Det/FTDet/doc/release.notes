@@ -3,6 +3,8 @@
 ! Purpose     : Interface to the xml description
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
+
+!========================= FTDet v2r11 2015-11-23 =========================
 ! 2015-11-12 - Luigi Del Buono
  - Clang warnings elimination (DeFTFibreMat.cpp)
  - use exception throw where possible instead of simple fatal message (DeFTFibreMat.cpp)
