@@ -3,7 +3,7 @@
 # Maintainer : Marco Cattaneo
 #=====================================================================
 package           RecAlgs
-version           v3r3p2
+version           v3r3p3
 
 branches        cmt doc src
 include_path    none
