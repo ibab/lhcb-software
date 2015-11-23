@@ -4,6 +4,7 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+!========================= RecConf v2r23 2015-11-23 =========================
 ! 2015-11-09 - Chris Jones
  - Only set RichRecSysConf track and pid locations if not previously set.
    Allows for custom studies using non standard locations, configured at 
