@@ -4,6 +4,7 @@
 ! Purpose     : Generic FSR manipulation and creation algorithms
 !-----------------------------------------------------------------------------
 
+!========================= FSRAlgs v1r9 2015-11-23 =========================
 ! 2015-10-29 - Marco Cattaneo
  - mergesmallfiles.qmt: add temporary exclusion for printout of Algorithm
    RootOnTES property, removed after Gaudi v26r4
