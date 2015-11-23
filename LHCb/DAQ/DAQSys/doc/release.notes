@@ -4,6 +4,7 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+!========================= DAQSys v8r10 2015-11-23 =========================
 ! 2015-11-12 - Marco Clemencic
  - Updated test for Gaudi v27r0.
 

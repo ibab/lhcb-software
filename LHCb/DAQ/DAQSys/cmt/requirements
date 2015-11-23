@@ -1,5 +1,5 @@
 package DAQSys
-version           v8r9
+version           v8r10
 
 branches doc cmt python tests
 
