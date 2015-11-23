@@ -5,6 +5,162 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v39r2>2015-11-24 LHCbSys v39r2</A></H1><PRE>
+This version uses Gaudi v26r4 and LCG_79 with ROOT 6.04.02.
+
+- Packages modified: DAQSys v8r10, DAQUtils v1r13p3, MDF v3r43,
+    RawEventCompat v1r6p2, DDDB v1r82, DetCond v12r45, DetDescSvc v3r8p2,
+    FTDet v2r11, OTDet v8r18, RichDet v17r6, VPDet v3r3, EventPacker v5r8,
+    FTEvent v1r8, HltEvent v9r6, LinkerEvent v3r11, LumiEvent v3r9,
+    RecEvent v2r55, TrackEvent v6r4, IOExample v4r17, GaudiConf v19r15,
+    HltDAQ v4r21, HltServices v2r11, FSRAlgs v1r9, HltInterfaces v6r3,
+    LHCbAlgs v3r7, LHCbKernel v15r13, LHCbMath v3r60, VectorClass v1r19,
+    LoKiCore v11r28, LoKiGen v10r22, LoKiMC v10r20, RichKernel v7r61
+
+- In DAQSys v8r10
+  . Updated test for Gaudi v27r0.
+
+- In MDF v3r43
+  . Fix a format-pedantic warning from clang
+  . prefer emplace over insert
+  . prefer algorithms over loops
+
+- In MDF v3r43,  LinkerEvent v3r11, LHCbAlgs v3r7
+  . prefer nullptr over 0 or NULL
+
+- In DDDB v1r82
+  . Update default database tags to the latest ones:
+    o LHCBCOND, 2015: cond-20151016
+
+- In DetCond v12r45
+  . pass sink arguments by value, and std::move them
+
+- In DetCond v12r45, LinkerEvent v3r11
+  . prefer emplace_back over push_back
+
+- In MDF v3r43, DetCond v12r45, LHCbAlgs v3r7, LHCbMath v3r60
+  . replace deprecated std::auto_ptr with std::unique_ptr
+  . prefer range-based for loops
+
+- In DetDescSvc v3r8p2
+  . Remove an unused member variable
+
+- In FTDet v2r11
+  . DeFTFibreMat:
+    o Introduction of code for V5 Scifi geometry
+    o use exception throw where possible instead of simple fatal message
+
+- In OTDet v8r18
+  . Fix use of uninitialised variable in WalkRelation constructor
+  . Use VectorClass in walk relation SIMD code to make it portable to clang
+
+- In RichDet v17r6
+  . Pass some more RichSmartIDs by const reference instead of by value.
+
+- In  VPDet v3r3
+  . Add getter function to access directly the vector of sensors.
+  . Remove unnecessary includes.
+
+- In EventPacker v5r8
+  . Added (un)packer for PrimaryVertex
+  . Added RecToPVConverter and PVToRecConverter
+
+- In FTEvent v1r8
+  . Added properties and methods to MCFTDeposit to keep track of noise.
+  . Made channelID method const.
+
+- In HltEvent v9r6
+  . HltObjectSummary: add substructureExtended() to be used in Turbo stream
+    substructure() will only return objects used in TisTos, restores its Run I
+    functionality
+
+- In LinkerEvent v3r11
+  . prefer std::string::compare over std::string::substr = " ... " 
+    (avoids the creation of a temporary string)
+
+- In LumiEvent v3r9
+  . HltLumiSummaryDecoder: call correct base class finalize()
+
+- In RecEvent v2r55
+  . Added new class 'PrimaryVertex'
+
+- In TrackEvent v6r4
+  . Make pre-defined z-positions of states constexpr
+
+- In IOExample v4r17
+  . Add tests to copy and read Stripping21 MDST
+
+- In GaudiConf v19r14, v19r15
+  . LHCbExclusions.py: 
+    o Add temporary exclusions for printout of new Algorithm properties to be
+      introduced by GaudiHive merge
+    o Add temporary exclusion for printout of Algorithm RootOnTES property, to be
+      removed after Gaudi v26r4
+  . Added flag 'PVPersistence' to DstConf to steer between old/new PV persistence.
+
+- In HltDAQ v4r21
+  . Change HltSelReportsWriter to use substructureExtended() if set.
+    Increase version numbers of the HltSelReports Writer and Decoder to 7
+    (will be saved in RawBank) even though bank itself is not changed and
+    update unit test accordingly
+  . Modify HltSelReportsDecoder to split substructure saved in RawBanks
+    to the one needed by TisTos, returned by substructure(), and the one
+    needed by Turbo stream, returned by substructureExtended() of
+    mofified HltObjectSummary
+  . Add RelatedInfo support.
+
+- In HltServices v2r11, LHCbMath v3r60, LoKiCore v11r28
+  . Fix clang compilation errors
+
+- In HltServices v2r11
+  . New dictionary for related info.
+
+- In HltInterfaces v6r3
+  . Workaround for Boost bug https://svn.boost.org/trac/boost/ticket/11743
+
+- In LHCbAlgs v3r7
+  . LHCBPS-1434: Added to LHCbApp() assignment of OdinTimeDecoder as 
+    EventClockSvc().EventTimeDecoder when processing real data.
+  . Avoid using protected m_statEntityList, use setProperty instead
+  . Prefer SmartIF to raw pointers to services
+  . Qualify virtual function implementations as override
+
+- In DAQUtils v1r13p3, RawEventCompat v1r6p2, IOExample v4r17, FSRAlgs v1r9
+  . Fix test reference following LHCBPS-1434 patch
+
+- In LHCbKernel v15r13
+  . Add a new flag to the RichSmartID class for the Upgrade MaPMTs to save if
+    it represents a 'large' or 'small' PMT.
+  . LbAppInit.cpp: fix clang warning, avoid stringstream
+
+- In LHCbMath v3r60
+  . ValueWithError: two more functions are added
+  . enable several default constructors
+  . Add explicitly the dictionaries for std::unary_function<double,double> and
+    binary_function
+  . Remove unneeded gcc specific pragmas
+  . LHCbMath.xml: remove duplicated selections
+  . Improve and speedup some functions 
+
+- In VectorClass v1r19
+  . Update to official upstream 1.19 release.
+
+- In LoKiCore v11r28
+  . Add deprecation warning to LoKi::select and LoKi::transform
+  . Augment LoKi::Interface so that it supports the same semantics as 
+    regular smartpointers, i.e. add explicit operator bool and get
+  . Avoid use of stringstream
+  . LoKiCore.xml: remove duplicated selection 
+
+- In LoKiCore v11r28, LoKiGen v10r22, LoKiMC v10r20
+  . Replace LoKi::select with std::copy_if
+
+- In LoKiMC v10r20
+  . Fix of LoKi::MCAlg::accumulate for LHCb::MCParticle* 
+
+- In RichKernel v7r61
+  . RichCommonBase.icpp: fix unprotected debug()
+
 </PRE><H1><A NAME=v39r1>2015-10-13 LHCbSys v39r1</A></H1><PRE>
 This version uses Gaudi v26r4 and LCG_79 with ROOT 6.04.02.
 
