@@ -3,7 +3,7 @@
 # Maintainer : Eric Cogneras
 #=====================================================================
 package           FT/FTEvent
-version           v1r7
+version           v1r8
 
 # Structure, i.e. directories to process.
 #=====================================================================

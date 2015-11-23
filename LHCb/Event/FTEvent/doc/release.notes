@@ -4,6 +4,7 @@
 ! Purpose     : Event model for FT digitisation and reconstruction
 !-----------------------------------------------------------------------------
 
+!========================= FTEvent v1r8 2015-11-23 =========================
 ! 2015-11-13 - Jacco de Vries
  - Added properties and methods to MCFTDeposit to keep track of noise.
  - Made channelID method const.
