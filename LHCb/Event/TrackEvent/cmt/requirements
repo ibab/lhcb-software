@@ -3,7 +3,7 @@
 # Maintainer : Wouter Hulsbergen
 #=====================================================================
 package           TrackEvent
-version           v6r3
+version           v6r4
 
 # Structure, i.e. directories to process. 
 #=====================================================================
