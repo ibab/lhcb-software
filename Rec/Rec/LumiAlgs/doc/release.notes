@@ -4,6 +4,7 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================= LumiAlgs v9r10 2015-11-23 =========================
 ! 2015-10-29 - Marco Cattaneo
  - lumi9mergesmallfiles.qmt: add temporary exclusion for printout of Algorithm
    RootOnTES property, removed after Gaudi v26r4
