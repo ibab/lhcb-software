@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-23 - Andrea Contu
+ - Updated S24 dbase
+
 ! 2015-11-16 - Jinlin Fu
  - update Charm s24 LineConfig with StrippingDstarD0ToHHPi0.py
 
