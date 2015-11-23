@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecSys v5r8 2015-11-23 =========================
 ! 2015-10-26 - Chris Jones
  - Fix a minor bug where custom options for RichTools where not properly
    propagated to the track group configurables. No impact on normal processing,
