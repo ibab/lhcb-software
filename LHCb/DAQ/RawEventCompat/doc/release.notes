@@ -4,6 +4,7 @@
 ! Purpose     : To hold configurables for splitting/joining raw events
 !-----------------------------------------------------------------------------
 
+!========================= RawEventCompat v1r6p2 2015-11-23 =========================
 ! 2015-10-21 - Marco Cattaneo
  - Fix raweventcompat.gaudiread test following LHCBPS-1434 patch: LHCbApp()
    now assigns OdinTimeDecoder as EventClockSvc().EventTimeDecoder when
