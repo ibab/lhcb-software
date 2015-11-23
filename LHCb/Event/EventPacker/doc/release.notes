@@ -4,6 +4,7 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!========================= EventPacker v5r8 2015-11-23 =========================
 ! 2015-11-03 - Wouter Hulsbergen
  - Added (un)packer for PrimaryVertex
  - Added RecToPVConverter and PVToRecConverter
