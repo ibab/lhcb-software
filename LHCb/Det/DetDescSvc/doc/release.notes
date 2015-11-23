@@ -4,6 +4,7 @@
 ! purpose:          Component library for Detector Description Services
 ! ====================================================================
 
+!========================= DetDescSvc v3r8p2 2015-11-23 =========================
 ! 2015-11-06 Marco Cattaneo
  - RunChangeHandlerSvc.h: Remove an unused member variable
 
