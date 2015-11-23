@@ -1,8 +1,9 @@
 !-------------------------------------------------------------------------------
-! Package     : CaloUtils
+! Package     : CaloTools
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !-------------------------------------------------------------------------------
 
+!========================= CaloTools v6r11 2015-11-23 =========================
 ! 2015-11-06 - O. Deschamps
  - fix clang compilation warnings
 
