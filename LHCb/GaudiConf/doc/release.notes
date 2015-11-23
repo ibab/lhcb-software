@@ -3,6 +3,7 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+!========================= GaudiConf v19r15 2015-11-23 =========================
 ! 2015-11-04 - Marco Cattaneo
  - LHCbExclusions.py: add temporary exclusions for printout of new Algorithm
    properties introduced by GaudiHive merge
