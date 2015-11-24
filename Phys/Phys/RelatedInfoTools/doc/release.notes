@@ -4,6 +4,13 @@
 ! Purpose     : Related Info Tools
 !-----------------------------------------------------------------------------
 
+! 2015-11-24 - Anton Poluektov 
+ - Add RelInfoConeIsolation tool: converted from TupleToolConeIsolation. 
+   There is some overlap of functionality with RelInfoConeVariables, but 
+   ConeIsolation offers additional variables and also neutral cones. 
+   After making sure that ConeVariables and ConeIsolation produce the same 
+   results on charged cones, we need to migrate to ConeIsolation. 
+
 ! 2015-11-12 - Anton Poluektov 
  - Add flag "IgnoreUnmatchedDescriptors" to AddRelatedInfo. Setting it to "true"
    will make AddRelatedInfo silently ignore the descriptors in DaughterLocations 
