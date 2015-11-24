@@ -1,5 +1,5 @@
 package BooleSys
-version           v29r11
+version           v29r12
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Boole application                      # Maintainer  
-use Boole               v29r11  Digi     # Marco Cattaneo
+use Boole               v29r12  Digi     # Marco Cattaneo
 use BooleUMC            v3r0    Digi     # Tomasz Skwarnicki
 use DigiAlg             v5r4    Digi     # Marco Cattaneo
 
@@ -20,10 +20,10 @@ use CaloDigit           v3r4p1  Calo     # Olivier Deschamps
 use CaloMoniDigi        v2r6p2  Calo     # Olivier Deschamps
 
 # Fibre Tracker
-use FTDigitisation      v2r6    FT       # Eric Cogneras
+use FTDigitisation      v3r0    FT       # Eric Cogneras
 
 # Herschel 
-use HCDigitisation      v1r1    HC       # Heinrich Schindler
+use HCDigitisation      v1r2    HC       # Heinrich Schindler
 
 # Muon
 use MuonAlgs            v6r13   Muon     # Alessia Satta
@@ -40,10 +40,10 @@ use RichMCAssociators   v2r9    Rich     # Chris Jones
 use RichReadout         v2r16   Rich     # Chris Jones
 
 # Silicon Tracker
-use STDigiAlgorithms    v2r6    ST       # Jeroen van Tilburg
+use STDigiAlgorithms    v2r7    ST       # Jeroen van Tilburg
 
 # VP
-use VPDigitisation      v1r6    VP       # Heinrich Schindler
+use VPDigitisation      v1r7    VP       # Heinrich Schindler
 
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest
@@ -55,4 +55,3 @@ apply_pattern container_package
 apply_pattern QMTestSummarize
 
 # Packages from other projects updated temporarily in this release
-use GaudiConf v19r14

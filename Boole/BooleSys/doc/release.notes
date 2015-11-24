@@ -3,6 +3,38 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v29r12>2015-11-25 Boole v29r12</A></H1><PRE>
+This version uses projects:
+ LCG_79 (ROOT 6.04.02), Gaudi v26r4, LHCb v39r2, Lbcom v17r2
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+- New functionality
+  . Added support for FT geometry v5 (FTDigitisation v3r0, FTDet v2r11)
+  . Added HC channel mapping (HCDigitisation v1r2)
+  . Add a new flag to the RichSmartID class for the Upgrade MaPMTs to save if
+    it represents a 'large' or 'small' PMT (LHCbKernel v15r13)
+
+- New physics tuning
+  . New noise implementation for FT, at MCFTDepositCreator level
+    (was MCFTDigitCreator level) (FTDigitisation v3r0, FTEvent v1r8)
+  . Adapted default FT max. cluster size from 4 to 8 (FTDigitisation v3r0)
+  . Adapted clustering FT max.charge check to match FPGA (& max threshold
+    accordingly) (FTDigitisation v3r0)
+
+- Bug fixes
+  . Bugfix in VPClustering (subtraction of two unsigned ints) (VPAlgorithms v4r5)
+  . Add check whether the detector element is found
+    (VPDigitisation v1r7, VPCheckers v1r1)
+  . RichCommonBase.icpp: fix unprotected debug() (RichKernel v7r61)
+
+- Monitoring changes
+  . Added / removed monitoring plots (FTDigitisation v3r0)
+  . Added monitoring plots (HCDigitisation v1r2)
+
+- Code modernisations and cleanups: STDigiAlgorithms v2r7, VPDigitisation v1r7,
+   - See also Lbcom v17r2 and LHCb v39r2 release notes. 
+
+
 </PRE><H1><A NAME=v29r11>2015-10-22 Boole v29r11</A></H1><PRE>
 This version uses projects:
  LCG_79 (ROOT 6.04.02), Gaudi v26r4, LHCb v39r1, Lbcom v17r1
