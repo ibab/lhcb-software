@@ -3,6 +3,11 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v29r12>2015-11-25 Boole v29r12</A></H1><PRE>
+This version uses projects:
+ LCG_79 (ROOT 6.04.02), Gaudi v26r4, LHCb v39r2, Lbcom v17r2
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
 - Changes to references to follow changes since Boole v29r11
   . Follow change to noise implementation in FTDigitisation
 
