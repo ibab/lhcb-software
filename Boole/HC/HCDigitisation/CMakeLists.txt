@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HCDigitisation
 ################################################################################
-gaudi_subdir(HCDigitisation v1r1)
+gaudi_subdir(HCDigitisation v1r2)
 
 gaudi_depends_on_subdirs(Event/DAQEvent
                          Event/MCEvent
