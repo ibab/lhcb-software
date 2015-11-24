@@ -14,6 +14,7 @@ Purpose: LHCb reconstruction program
   . Changes in FTHitExpectation
   . Changes in PrimaryVertex class packing
   . Changes in RichRecPhotonTools
+  . New hit and slope tolerances in UT clustering (PrVeloUT)
 
 - Changes to tests
   . Add 2015magdown test, reco of 2015 pp 25ns data

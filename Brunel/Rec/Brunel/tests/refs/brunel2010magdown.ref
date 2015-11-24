@@ -107,7 +107,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version HEAD
-                                          running on lbbuild05.cern.ch on Fri Nov 13 07:47:28 2015
+                                          running on lbbuild00.cern.ch on Tue Nov 24 15:20:23 2015
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -116,7 +116,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   2.64 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   2.58 times the speed of a 2.8 GHz Xeon.
 ChronoStatSvc        INFO  Number of skipped events for MemStat-1
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
@@ -471,7 +471,7 @@ EventPersistenc...   INFO Added successfully Conversion service:LHCb::RawDataCnv
 BrunelInit           INFO Evt 809569009,  Run 81684,  Nr. in job = 1
 BrunelInit           INFO Evt 809512257,  Run 81684,  Nr. in job = 2
 PropertyConfigSvc    INFO  resolving alias TCK/0x002e002a
-ConfigCDBAccessSvc   INFO  opening /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/TCK/HltTCK/v3r15p4/config.cdb in mode ReadOnly
+ConfigCDBAccessSvc   INFO  opening /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/TCK/HltTCK/v3r15p5/config.cdb in mode ReadOnly
 PropertyConfigSvc    INFO  resolved TCK/0x002e002a to 4ba57b5c9c269dffb74ccfa86ca39f94
 ToolSvc.L0DUCon...   INFO --------------- TCK = 0x002A------------------
 ToolSvc.L0DUCon...   INFO **** L0DU Config loading : L0TCK = 0x002A for slot T0 ==> OK
@@ -575,7 +575,7 @@ BrunelInit           INFO Evt 809591209,  Run 81684,  Nr. in job = 96
 BrunelInit           INFO Evt 809556749,  Run 81684,  Nr. in job = 97
 BrunelInit           INFO Evt 809584211,  Run 81684,  Nr. in job = 98
 BrunelInit           INFO Evt 809555689,  Run 81684,  Nr. in job = 99
-BrunelInit           INFO Memory has changed from 1945420 to 2132680 KB (187260KB, 9.62568%) in last 100 events
+BrunelInit           INFO Memory has changed from 1944992 to 2132704 KB (187712KB, 9.65104%) in last 100 events
 BrunelInit           INFO RecInit:: The INFO message is suppressed : 'Memory exceeds limit of 2000000 KB -> Purging pools'
 BrunelInit           INFO Evt 809509247,  Run 81684,  Nr. in job = 100
 BrunelInit           INFO Evt 809473631,  Run 81684,  Nr. in job = 101
@@ -583,10 +583,12 @@ BrunelInit           INFO Evt 809575449,  Run 81684,  Nr. in job = 102
 RichHotPixels     WARNING Rich::HPDAnalysisAlg:: { HPD Rich1 Bottom   PDCol  1 PDNumInCol  7 pixCol  3 pixRow  6 } (4236568088) At least 50% hot in 100 events
 BrunelInit           INFO Evt 809581245,  Run 81684,  Nr. in job = 103
 BrunelInit           INFO Evt 809596965,  Run 81684,  Nr. in job = 104
+ONLINE_2010.Tim...   INFO Disconnect from database after being idle for 120s (will reconnect if needed)
 BrunelInit           INFO Evt 809609330,  Run 81684,  Nr. in job = 105
 BrunelInit           INFO Evt 809588267,  Run 81684,  Nr. in job = 106
 BrunelInit           INFO Evt 809609690,  Run 81684,  Nr. in job = 107
 BrunelInit           INFO Evt 809584702,  Run 81684,  Nr. in job = 108
+LHCBCOND.TimeOu...   INFO Disconnect from database after being idle for 120s (will reconnect if needed)
 BrunelInit           INFO Evt 809608221,  Run 81684,  Nr. in job = 109
 BrunelInit           INFO Evt 809502096,  Run 81684,  Nr. in job = 110
 BrunelInit           INFO Evt 809601911,  Run 81684,  Nr. in job = 111
@@ -619,8 +621,6 @@ BrunelInit           INFO Evt 809607124,  Run 81684,  Nr. in job = 137
 BrunelInit           INFO Evt 809576338,  Run 81684,  Nr. in job = 138
 BrunelInit           INFO Evt 809602658,  Run 81684,  Nr. in job = 139
 BrunelInit           INFO Evt 809506470,  Run 81684,  Nr. in job = 140
-ONLINE_2010.Tim...   INFO Disconnect from database after being idle for 120s (will reconnect if needed)
-LHCBCOND.TimeOu...   INFO Disconnect from database after being idle for 120s (will reconnect if needed)
 BrunelInit           INFO Evt 809603728,  Run 81684,  Nr. in job = 141
 BrunelInit           INFO Evt 809602281,  Run 81684,  Nr. in job = 142
 BrunelInit           INFO Evt 809621715,  Run 81684,  Nr. in job = 143
@@ -683,7 +683,7 @@ BrunelInit           INFO Evt 809611947,  Run 81684,  Nr. in job = 196
 BrunelInit           INFO Evt 809635150,  Run 81684,  Nr. in job = 197
 BrunelInit           INFO Evt 809636327,  Run 81684,  Nr. in job = 198
 BrunelInit           INFO Evt 809623738,  Run 81684,  Nr. in job = 199
-BrunelInit           INFO Memory has changed from 2132680 to 2273016 KB (140336KB, 6.58027%) in last 100 events
+BrunelInit           INFO Memory has changed from 2132704 to 2269988 KB (137284KB, 6.43709%) in last 100 events
 BrunelInit           INFO Evt 809642066,  Run 81684,  Nr. in job = 200
 ApplicationMgr       INFO Application Manager Stopped successfully
 BrunelInit        SUCCESS ==================================================================
@@ -1373,23 +1373,23 @@ ChargedProtoPMoni SUCCESS Booked 29 Histogram(s) : 1DProf=29
 ChargedProtoANN...SUCCESS Booked 18 Histogram(s) : 1D=18
 ChargedProtoANN...SUCCESS List of booked 1D histograms in directory         "PROTO/ChargedProtoANNPIDMoni" :-
  | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
- | Downstream/ElectronANN    | "Downstream Electron ANN PID"                 |   2205  |   0.099569 | 0.22739    |     2.7749 |     6.7078 |
- | Downstream/GhostANN       | "Downstream Ghost ANN PID"                    |   2205  |    0.74625 | 0.32431    |    -1.2131 |   -0.05142 |
- | Downstream/KaonANN        | "Downstream Kaon ANN PID"                     |   2205  |  0.0093177 | 0.035742   |      13.24 |     238.34 |
+ | Downstream/ElectronANN    | "Downstream Electron ANN PID"                 |   2205  |    0.09957 | 0.2274     |     2.7749 |     6.7078 |
+ | Downstream/GhostANN       | "Downstream Ghost ANN PID"                    |   2205  |    0.74625 | 0.32431    |    -1.2132 |  -0.051424 |
+ | Downstream/KaonANN        | "Downstream Kaon ANN PID"                     |   2205  |  0.0093178 | 0.035745   |     13.237 |     238.25 |
  | Downstream/MuonANN        | "Downstream Muon ANN PID"                     |   2205  |  0.0029218 | 0.03854    |     17.761 |     336.09 |
  | Downstream/PionANN        | "Downstream Pion ANN PID"                     |   2205  |    0.12915 | 0.24098    |     2.3694 |     4.5805 |
- | Downstream/ProtonANN      | "Downstream Proton ANN PID"                   |   2205  |   0.017757 | 0.056807   |     7.5664 |     75.858 |
- | Long/ElectronANN          | "Long Electron ANN PID"                       |   5429  |   0.047997 | 0.16186    |     4.2548 |     18.169 |
+ | Downstream/ProtonANN      | "Downstream Proton ANN PID"                   |   2205  |   0.017757 | 0.056806   |     7.5667 |     75.862 |
+ | Long/ElectronANN          | "Long Electron ANN PID"                       |   5429  |   0.047997 | 0.16186    |     4.2547 |     18.169 |
  | Long/GhostANN             | "Long Ghost ANN PID"                          |   5429  |    0.29695 | 0.37519    |    0.96475 |   -0.78351 |
- | Long/KaonANN              | "Long Kaon ANN PID"                           |   5429  |   0.059216 | 0.1637     |     3.8945 |     15.391 |
+ | Long/KaonANN              | "Long Kaon ANN PID"                           |   5429  |   0.059216 | 0.1637     |     3.8944 |     15.391 |
  | Long/MuonANN              | "Long Muon ANN PID"                           |   5429  |  0.0088792 | 0.07236    |     10.242 |      111.9 |
- | Long/PionANN              | "Long Pion ANN PID"                           |   5429  |    0.55959 | 0.3984     |   -0.31259 |      -1.62 |
- | Long/ProtonANN            | "Long Proton ANN PID"                         |   5429  |   0.026171 | 0.082244   |     6.7442 |     58.229 |
- | Upstream/ElectronANN      | "Upstream Electron ANN PID"                   |   1184  |   0.098956 | 0.17292    |      2.641 |     7.2579 |
+ | Long/PionANN              | "Long Pion ANN PID"                           |   5429  |    0.55959 | 0.3984     |   -0.31262 |    -1.6199 |
+ | Long/ProtonANN            | "Long Proton ANN PID"                         |   5429  |    0.02617 | 0.082244   |      6.739 |     58.168 |
+ | Upstream/ElectronANN      | "Upstream Electron ANN PID"                   |   1184  |   0.098956 | 0.17292    |     2.6409 |     7.2576 |
  | Upstream/GhostANN         | "Upstream Ghost ANN PID"                      |   1184  |    0.40356 | 0.34926    |    0.34506 |    -1.4702 |
- | Upstream/KaonANN          | "Upstream Kaon ANN PID"                       |   1184  |   0.040894 | 0.049839   |     4.2283 |     29.341 |
- | Upstream/MuonANN          | "Upstream Muon ANN PID"                       |   1184  |  0.0042587 | 0.029555   |       31.9 |     1063.7 |
- | Upstream/PionANN          | "Upstream Pion ANN PID"                       |   1184  |    0.32396 | 0.2705     |    0.59795 |   -0.86255 |
+ | Upstream/KaonANN          | "Upstream Kaon ANN PID"                       |   1184  |   0.040894 | 0.049838   |     4.2284 |     29.342 |
+ | Upstream/MuonANN          | "Upstream Muon ANN PID"                       |   1184  |  0.0042587 | 0.029555   |     31.901 |     1063.8 |
+ | Upstream/PionANN          | "Upstream Pion ANN PID"                       |   1184  |    0.32396 | 0.2705     |    0.59795 |   -0.86254 |
  | Upstream/ProtonANN        | "Upstream Proton ANN PID"                     |   1184  |   0.053425 | 0.075153   |      2.801 |     10.823 |
 MuMonitor         SUCCESS Booked 4 Histogram(s) : 1D=3 1DProf=1
 EventTimeMonitor  SUCCESS Booked 4 Histogram(s) : 1D=4
@@ -1405,7 +1405,7 @@ PackMuonPIDs      SUCCESS Number of counters : 1
 PackMuonTracks    SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "# PackedTracks"                                |       119 |        594 |     4.9916 |     5.4302 |      0.0000 |      29.000 |
-MdfWriter            INFO Size: 6402936 Output:Brunel-200ev.mdf MD5 sum:970ce140c2ba1ac4400215b4da8f554f
+MdfWriter            INFO Size: 6402936 Output:Brunel-200ev.mdf MD5 sum:9f6a5bfe73880c40ecdf7996ac0a2df0
 EventLoopMgr         INFO Histograms converted successfully according to request.
 TransportSvc      SUCCESS  GEOMETRY ERRORS: 'Skip'     map has the size 4
    |                      Logical Volume                     |    |  #          mean             RMS          min              max    |
@@ -1760,11 +1760,11 @@ ToolSvc.Hlt1Hlt...SUCCESS Number of counters : 1
 BrunelInit.Brun...SUCCESS Booked 4 Histogram(s) : 1D=4
 BrunelInit.Brun...SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "Delta Memory/MB"                               |       190 |    175.028 |    0.92120 |     9.6249 |      0.0000 |      131.07 |
- | "Total Memory/MB"                               |       200 |   433421.7 |     2167.1 |     69.697 |      1945.4 |      2273.0 |
+ | "Delta Memory/MB"                               |       190 |    171.976 |    0.90514 |     6.8769 |      0.0000 |      65.536 |
+ | "Total Memory/MB"                               |       200 |   437837.2 |     2189.2 |     75.769 |      1945.0 |      2270.0 |
 BrunelInit.Brun...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/2/0
-BrunelInit.Brun...SUCCESS  #WARNINGS   = 1        Message = 'Delta Memory for the event exceeds 3*sigma'
-BrunelInit.Brun...SUCCESS  #WARNINGS   = 10       Message = 'Total Memory for the event exceeds 3*sigma'
+BrunelInit.Brun...SUCCESS  #WARNINGS   = 2        Message = 'Delta Memory for the event exceeds 3*sigma'
+BrunelInit.Brun...SUCCESS  #WARNINGS   = 5        Message = 'Total Memory for the event exceeds 3*sigma'
 SingleElectronR...SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "selected clusters"                             |      5720 |       1889 |    0.33024 |    0.47030 |      0.0000 |      1.0000 |
@@ -1891,7 +1891,7 @@ ToolSvc.Offline...   INFO ======================================================
 ToolSvc.Offline...   INFO   Photon candidate summary : 109 events :-
 ToolSvc.Offline...   INFO     Aerogel   :    1300.35 +-   3.45  photons/event
 ToolSvc.Offline...   INFO     Rich1Gas  :    2528.98 +-   4.82  photons/event
-ToolSvc.Offline...   INFO     Rich2Gas  :     516.62 +-   2.18  photons/event
+ToolSvc.Offline...   INFO     Rich2Gas  :     516.65 +-   2.18  photons/event
 ToolSvc.Offline...   INFO =================================================================
 ToolSvc.Offline...SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
@@ -1933,9 +1933,9 @@ ToolSvc.Offline...   INFO  Rejected         :  RICH1 =    21.20 +-  0.42  RICH2 
 ToolSvc.Offline...   INFO =====================================================================================================
 ToolSvc.Offline...   INFO =================================================================
 ToolSvc.Offline...   INFO   Photon candidate summary : 116 events :-
-ToolSvc.Offline...   INFO     Aerogel   :    2303.95 +-   4.46  photons/event
-ToolSvc.Offline...   INFO     Rich1Gas  :    5373.69 +-   6.81  photons/event
-ToolSvc.Offline...   INFO     Rich2Gas  :    2619.74 +-   4.75  photons/event
+ToolSvc.Offline...   INFO     Aerogel   :    2303.97 +-   4.46  photons/event
+ToolSvc.Offline...   INFO     Rich1Gas  :    5373.65 +-   6.81  photons/event
+ToolSvc.Offline...   INFO     Rich2Gas  :    2619.73 +-   4.75  photons/event
 ToolSvc.Offline...   INFO =================================================================
 ToolSvc.Offline...SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
@@ -1984,403 +1984,403 @@ ToolSvc.RichSma...   INFO  Rich1 Average                   | L1 size = 160.82 +-
 ToolSvc.RichSma...   INFO  Rich2 Average                   | L1 size = 230.54 +- 1.39 pds : 1731.34 +- 3.81 words : 3282.35 +- 5.25 hits / event
 ToolSvc.RichSma...   INFO ========================================================================================================================
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   2.64 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   2.58 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO EVENT LOOP                    |   764.764 |   807.586 |    0.453    6034.4 |     200 |   161.517 |
-TimingAuditor.T...   INFO  BrunelSequencer              |   746.152 |   788.688 |    0.231    6033.4 |     200 |   157.738 |
-TimingAuditor.T...   INFO   Init                        |     0.585 |     0.305 |    0.167       2.6 |     200 |     0.061 |
-TimingAuditor.T...   INFO    InitBrunelSeq              |     0.560 |     0.279 |    0.156       2.5 |     200 |     0.056 |
-TimingAuditor.T...   INFO     BrunelInit                |     0.560 |     0.239 |    0.129       2.5 |     200 |     0.048 |
-TimingAuditor.T...   INFO     BrunelEventCount          |     0.000 |     0.009 |    0.006       0.0 |     200 |     0.002 |
-TimingAuditor.T...   INFO   LumiSeq                     |     0.025 |     0.048 |    0.018       0.9 |     200 |     0.010 |
-TimingAuditor.T...   INFO    LumiFilter                 |     0.000 |     0.015 |    0.008       0.1 |     200 |     0.003 |
-TimingAuditor.T...   INFO    PhysFilter                 |     0.005 |     0.016 |    0.006       1.1 |     200 |     0.003 |
-TimingAuditor.T...   INFO   NotPhysicsSeq               |     0.010 |     0.031 |    0.005       1.5 |     200 |     0.006 |
-TimingAuditor.T...   INFO   HltErrorSeq                 |     2.563 |     4.112 |    0.226     383.7 |     119 |     0.489 |
-TimingAuditor.T...   INFO    HltFilterSeq               |     2.563 |     4.096 |    0.214     383.7 |     119 |     0.487 |
-TimingAuditor.T...   INFO     Hlt1DecReportsDecoder     |     2.344 |     3.830 |    0.057     381.1 |     119 |     0.456 |
-TimingAuditor.T...   INFO     Hlt1ErrorFilter           |     0.025 |     0.033 |    0.020       0.2 |     119 |     0.004 |
-TimingAuditor.T...   INFO     Hlt2DecReportsDecoder     |     0.134 |     0.160 |    0.079       2.3 |     119 |     0.019 |
-TimingAuditor.T...   INFO     Hlt2ErrorFilter           |     0.017 |     0.019 |    0.012       0.1 |     119 |     0.002 |
+TimingAuditor.T...   INFO EVENT LOOP                    |   916.996 |   982.578 |    0.620    9674.1 |     200 |   196.516 |
+TimingAuditor.T...   INFO  BrunelSequencer              |   893.609 |   955.891 |    0.260    9672.7 |     200 |   191.178 |
+TimingAuditor.T...   INFO   Init                        |     0.655 |     0.383 |    0.188       4.0 |     200 |     0.077 |
+TimingAuditor.T...   INFO    InitBrunelSeq              |     0.620 |     0.352 |    0.175       3.9 |     200 |     0.070 |
+TimingAuditor.T...   INFO     BrunelInit                |     0.590 |     0.289 |    0.144       3.8 |     200 |     0.058 |
+TimingAuditor.T...   INFO     BrunelEventCount          |     0.000 |     0.015 |    0.007       0.4 |     200 |     0.003 |
+TimingAuditor.T...   INFO   LumiSeq                     |     0.055 |     0.077 |    0.020       1.2 |     200 |     0.015 |
+TimingAuditor.T...   INFO    LumiFilter                 |     0.010 |     0.022 |    0.008       0.4 |     200 |     0.004 |
+TimingAuditor.T...   INFO    PhysFilter                 |     0.025 |     0.020 |    0.008       0.6 |     200 |     0.004 |
+TimingAuditor.T...   INFO   NotPhysicsSeq               |     0.010 |     0.026 |    0.006       0.7 |     200 |     0.005 |
+TimingAuditor.T...   INFO   HltErrorSeq                 |     4.445 |     5.360 |    0.242     475.2 |     119 |     0.638 |
+TimingAuditor.T...   INFO    HltFilterSeq               |     4.445 |     5.339 |    0.230     475.1 |     119 |     0.635 |
+TimingAuditor.T...   INFO     Hlt1DecReportsDecoder     |     4.117 |     4.999 |    0.064     471.1 |     119 |     0.595 |
+TimingAuditor.T...   INFO     Hlt1ErrorFilter           |     0.034 |     0.041 |    0.025       0.4 |     119 |     0.005 |
+TimingAuditor.T...   INFO     Hlt2DecReportsDecoder     |     0.202 |     0.200 |    0.089       3.4 |     119 |     0.024 |
+TimingAuditor.T...   INFO     Hlt2ErrorFilter           |     0.025 |     0.025 |    0.013       0.1 |     119 |     0.003 |
 TimingAuditor.T...   INFO    HltErrorProc               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO   PhysicsSeq                  |  1244.710 |  1314.282 |   21.482    5591.6 |     119 |   156.400 |
-TimingAuditor.T...   INFO    CaloBanksHandler           |     2.378 |     2.549 |    1.169      15.4 |     119 |     0.303 |
-TimingAuditor.T...   INFO     CaloDigits                |     2.361 |     2.535 |    1.158      15.4 |     119 |     0.302 |
-TimingAuditor.T...   INFO      SpdFromRaw               |     0.336 |     0.379 |    0.172       1.6 |     119 |     0.045 |
-TimingAuditor.T...   INFO      PrsDigitsSeq             |     0.580 |     0.652 |    0.180      11.7 |     119 |     0.078 |
-TimingAuditor.T...   INFO       PrsFromRaw              |     0.529 |     0.597 |    0.140      11.6 |     119 |     0.071 |
-TimingAuditor.T...   INFO       PrsProcStatus           |     0.017 |     0.022 |    0.014       0.2 |     119 |     0.003 |
-TimingAuditor.T...   INFO      EcalDigitsSeq            |     1.059 |     1.110 |    0.520       2.3 |     119 |     0.132 |
-TimingAuditor.T...   INFO       EcalZSup                |     0.975 |     1.058 |    0.480       2.2 |     119 |     0.126 |
-TimingAuditor.T...   INFO       EcalProcStatus          |     0.017 |     0.018 |    0.012       0.0 |     119 |     0.002 |
-TimingAuditor.T...   INFO      HcalDigitsSeq            |     0.370 |     0.348 |    0.195       0.6 |     119 |     0.041 |
-TimingAuditor.T...   INFO       HcalZSup                |     0.319 |     0.300 |    0.159       0.5 |     119 |     0.036 |
-TimingAuditor.T...   INFO       HcalProcStatus          |     0.008 |     0.016 |    0.011       0.0 |     119 |     0.002 |
-TimingAuditor.T...   INFO    DecodeTriggerSeq           |     0.412 |     0.447 |    0.279       7.3 |     119 |     0.053 |
-TimingAuditor.T...   INFO     L0TriggerSeq              |     0.403 |     0.431 |    0.268       7.2 |     119 |     0.051 |
-TimingAuditor.T...   INFO      L0DUFromRaw              |     0.378 |     0.408 |    0.252       7.2 |     119 |     0.049 |
-TimingAuditor.T...   INFO    Reco                       |  1059.688 |  1121.930 |   16.223    4649.1 |     119 |   133.510 |
-TimingAuditor.T...   INFO     RecoDecodingSeq           |     4.352 |     5.056 |    0.382      24.4 |     119 |     0.602 |
-TimingAuditor.T...   INFO      createBothVeloClusters   |     1.647 |     1.862 |    0.086      12.4 |     119 |     0.222 |
-TimingAuditor.T...   INFO      createTTClusters         |     1.202 |     1.274 |    0.096      13.0 |     119 |     0.152 |
-TimingAuditor.T...   INFO      createTTLiteClusters     |     0.260 |     0.327 |    0.053      11.3 |     119 |     0.039 |
-TimingAuditor.T...   INFO      createITLiteClusters     |     0.202 |     0.362 |    0.043      19.3 |     119 |     0.043 |
-TimingAuditor.T...   INFO      createITClusters         |     0.907 |     1.140 |    0.054      12.6 |     119 |     0.136 |
-TimingAuditor.T...   INFO     RecoVELOSeq               |     3.436 |     3.561 |    0.210      27.3 |     119 |     0.424 |
-TimingAuditor.T...   INFO      FastVeloTracking         |     3.411 |     3.530 |    0.190      27.2 |     119 |     0.420 |
-TimingAuditor.T...   INFO     RecoTTSeq                 |     0.008 |     0.009 |    0.006       0.0 |     119 |     0.001 |
-TimingAuditor.T...   INFO     RecoITSeq                 |     0.000 |     0.007 |    0.005       0.0 |     119 |     0.001 |
-TimingAuditor.T...   INFO     RecoOTSeq                 |     0.017 |     0.007 |    0.005       0.0 |     119 |     0.001 |
-TimingAuditor.T...   INFO     RecoTrSeq                 |   594.053 |   629.145 |    0.904    3608.2 |     119 |    74.868 |
-TimingAuditor.T...   INFO      Track                    |   594.027 |   629.128 |    0.893    3608.1 |     119 |    74.866 |
-TimingAuditor.T...   INFO       TrackForwardPatSeq      |    51.505 |    57.071 |    0.061     234.8 |     119 |     6.791 |
-TimingAuditor.T...   INFO        PatForward             |    51.480 |    57.028 |    0.045     234.8 |     119 |     6.786 |
-TimingAuditor.T...   INFO       TrackSeedPatSeq         |    51.572 |    56.182 |    0.239     367.8 |     119 |     6.686 |
-TimingAuditor.T...   INFO        PatSeeding             |    51.522 |    56.139 |    0.220     367.7 |     119 |     6.681 |
-TimingAuditor.T...   INFO       TrackMatchPatSeq        |     1.227 |     1.293 |    0.035       6.0 |     119 |     0.154 |
-TimingAuditor.T...   INFO        PatMatch               |     1.168 |     1.262 |    0.021       5.9 |     119 |     0.150 |
-TimingAuditor.T...   INFO       TrackDownstreamPatSeq   |    12.653 |    13.565 |    0.062      81.3 |     119 |     1.614 |
-TimingAuditor.T...   INFO        PatDownstream          |    12.603 |    13.526 |    0.046      81.3 |     119 |     1.610 |
-TimingAuditor.T...   INFO       TrackVeloTTPatSeq       |    30.718 |    32.411 |    0.036     746.6 |     119 |     3.857 |
-TimingAuditor.T...   INFO        PatVeloTT              |    30.684 |    32.369 |    0.023     746.6 |     119 |     3.852 |
-TimingAuditor.T...   INFO       TrackFitSeq             |   324.858 |   342.085 |    0.043    2563.5 |     119 |    40.708 |
-TimingAuditor.T...   INFO        TrackBestTrackCreator  |   324.808 |   342.029 |    0.028    2563.4 |     119 |    40.701 |
-TimingAuditor.T...   INFO       TrackAddExtraInfoSeq    |   121.242 |   126.316 |    0.120     470.2 |     119 |    15.032 |
-TimingAuditor.T...   INFO        TrackClonesSeq         |     8.368 |     8.562 |    0.079      53.0 |     119 |     1.019 |
-TimingAuditor.T...   INFO         FindTrackClones       |     8.251 |     8.437 |    0.041      52.8 |     119 |     1.004 |
-TimingAuditor.T...   INFO         FlagTrackClones       |     0.034 |     0.074 |    0.019       1.7 |     119 |     0.009 |
-TimingAuditor.T...   INFO        TrackAddLikelihood     |    31.289 |    32.383 |    0.009      96.5 |     119 |     3.854 |
-TimingAuditor.T...   INFO        TrackAddNNGhostId      |    81.509 |    85.272 |    0.008     320.5 |     119 |    10.147 |
-TimingAuditor.T...   INFO       TrackEraseExtraInformati|     0.092 |     0.094 |    0.021       0.3 |     119 |     0.011 |
-TimingAuditor.T...   INFO        TrackEraseExtraInfo    |     0.050 |     0.072 |    0.008       0.2 |     119 |     0.009 |
-TimingAuditor.T...   INFO     RecoVertexSeq             |     6.503 |     6.564 |    0.067      30.9 |     119 |     0.781 |
-TimingAuditor.T...   INFO      PatPVOffline             |     1.538 |     1.522 |    0.028      11.3 |     119 |     0.181 |
-TimingAuditor.T...   INFO      TrackV0Finder            |     4.915 |     4.992 |    0.018      19.5 |     119 |     0.594 |
-TimingAuditor.T...   INFO     RecoRICHSeq               |   378.648 |   400.598 |    3.641    1702.9 |     119 |    47.671 |
-TimingAuditor.T...   INFO      DecodeRawRichOffline     |     0.630 |     0.718 |    0.095      11.6 |     119 |     0.085 |
-TimingAuditor.T...   INFO      RichRecOfflineLongSeq    |   249.794 |   265.286 |    1.281    1234.3 |     119 |    31.569 |
-TimingAuditor.T...   INFO       RichRecInitOfflineLongSe|   156.002 |   166.322 |    0.519     884.3 |     119 |    19.792 |
-TimingAuditor.T...   INFO        RichOfflineLongPixelsSe|    12.662 |    13.278 |    0.406      41.3 |     119 |     1.580 |
-TimingAuditor.T...   INFO         CreateOfflineLongPixel|    12.645 |    13.232 |    0.385      41.2 |     119 |     1.575 |
-TimingAuditor.T...   INFO        RichOfflineLongTracksSe|    33.272 |    35.819 |    0.056     229.1 |     119 |     4.262 |
-TimingAuditor.T...   INFO         CreateOfflineLongTrack|    33.247 |    35.769 |    0.038     229.0 |     119 |     4.257 |
-TimingAuditor.T...   INFO        RichOfflineLongPhotonsS|   110.017 |   117.177 |    0.023     616.2 |     119 |    13.944 |
-TimingAuditor.T...   INFO         CreateOfflineLongPhoto|   109.941 |   117.122 |    0.010     616.1 |     119 |    13.938 |
-TimingAuditor.T...   INFO       RichOfflineLongENNRingFi|     1.924 |     2.245 |    0.512      12.6 |     119 |     0.267 |
-TimingAuditor.T...   INFO        OfflineLongENNFinderR1G|     0.252 |     0.367 |    0.038       2.3 |     119 |     0.044 |
-TimingAuditor.T...   INFO        OfflineLongENNFinderR1G|     0.353 |     0.322 |    0.014       2.2 |     119 |     0.038 |
-TimingAuditor.T...   INFO        OfflineLongENNFinderR2G|     0.521 |     0.597 |    0.050      10.6 |     119 |     0.071 |
-TimingAuditor.T...   INFO        OfflineLongENNFinderR2G|     0.513 |     0.639 |    0.028      11.5 |     119 |     0.076 |
-TimingAuditor.T...   INFO        OfflineLongENNRingsSegA|     0.017 |     0.028 |    0.012       0.5 |     119 |     0.003 |
-TimingAuditor.T...   INFO        OfflineLongBestENNRings|     0.042 |     0.041 |    0.022       0.5 |     119 |     0.005 |
-TimingAuditor.T...   INFO        OfflineLongIsolatedENNR|     0.084 |     0.067 |    0.018       0.5 |     119 |     0.008 |
-TimingAuditor.T...   INFO       RichOfflineLongPIDSeq   |    91.826 |    96.676 |    0.205     494.9 |     119 |    11.504 |
-TimingAuditor.T...   INFO        RichOfflineLongGPIDSeq |    91.692 |    96.570 |    0.159     494.8 |     119 |    11.492 |
-TimingAuditor.T...   INFO         RichOfflineLongGPIDIni|     0.260 |     0.283 |    0.085       1.3 |     119 |     0.034 |
-TimingAuditor.T...   INFO          RichOfflineLongGPIDIn|     0.017 |     0.007 |    0.005       0.0 |     119 |     0.001 |
-TimingAuditor.T...   INFO          RichOfflineLongGPIDDi|     0.017 |     0.019 |    0.012       0.2 |     119 |     0.002 |
-TimingAuditor.T...   INFO          RichOfflineLongGPIDTr|     0.202 |     0.218 |    0.040       1.2 |     119 |     0.026 |
-TimingAuditor.T...   INFO         RichOfflineLongGPIDLLS|    91.331 |    96.209 |    0.047     494.3 |     119 |    11.449 |
-TimingAuditor.T...   INFO          RichOfflineLongBckEst|     1.445 |     1.651 |    0.006      14.4 |     119 |     0.196 |
-TimingAuditor.T...   INFO          RichOfflineLongGPIDLL|    51.572 |    54.500 |    0.006     246.3 |     119 |     6.486 |
-TimingAuditor.T...   INFO          RichOfflineLongBckEst|     2.168 |     2.362 |    0.005      15.9 |     119 |     0.281 |
-TimingAuditor.T...   INFO          RichOfflineLongGPIDLL|    35.953 |    37.569 |    0.005     253.6 |     119 |     4.471 |
-TimingAuditor.T...   INFO         RichOfflineLongGPIDFin|     0.050 |     0.041 |    0.006       0.3 |     119 |     0.005 |
-TimingAuditor.T...   INFO        MergeOfflineLongRichPID|     0.109 |     0.078 |    0.028       0.6 |     119 |     0.009 |
-TimingAuditor.T...   INFO      RichRecOfflineVeloTTSeq  |    40.238 |    43.244 |    1.091     125.5 |     119 |     5.146 |
-TimingAuditor.T...   INFO       RichRecInitOfflineVeloTT|    30.819 |    33.066 |    0.419      96.4 |     119 |     3.935 |
-TimingAuditor.T...   INFO        RichOfflineVeloTTPixels|    11.637 |    12.598 |    0.299      46.6 |     119 |     1.499 |
-TimingAuditor.T...   INFO         CreateOfflineVeloTTPix|    11.561 |    12.553 |    0.279      46.5 |     119 |     1.494 |
-TimingAuditor.T...   INFO        RichOfflineVeloTTTracks|     5.613 |     5.935 |    0.048      20.2 |     119 |     0.706 |
-TimingAuditor.T...   INFO         CreateOfflineVeloTTTra|     5.579 |     5.899 |    0.034      20.2 |     119 |     0.702 |
-TimingAuditor.T...   INFO        RichOfflineVeloTTPhoton|    13.536 |    14.489 |    0.021      55.6 |     119 |     1.724 |
-TimingAuditor.T...   INFO         CreateOfflineVeloTTPho|    13.485 |    14.447 |    0.010      55.6 |     119 |     1.719 |
-TimingAuditor.T...   INFO       RichOfflineVeloTTENNRing|     1.638 |     1.763 |    0.406      14.6 |     119 |     0.210 |
-TimingAuditor.T...   INFO        OfflineVeloTTENNFinderR|     0.260 |     0.289 |    0.032       1.8 |     119 |     0.034 |
-TimingAuditor.T...   INFO        OfflineVeloTTENNFinderR|     0.269 |     0.281 |    0.013       2.1 |     119 |     0.033 |
-TimingAuditor.T...   INFO        OfflineVeloTTENNFinderR|     0.445 |     0.504 |    0.045      12.5 |     119 |     0.060 |
-TimingAuditor.T...   INFO        OfflineVeloTTENNFinderR|     0.487 |     0.470 |    0.024       3.8 |     119 |     0.056 |
-TimingAuditor.T...   INFO        OfflineVeloTTENNRingsSe|     0.025 |     0.022 |    0.011       0.2 |     119 |     0.003 |
-TimingAuditor.T...   INFO        OfflineVeloTTBestENNRin|     0.017 |     0.035 |    0.019       0.1 |     119 |     0.004 |
-TimingAuditor.T...   INFO        OfflineVeloTTIsolatedEN|     0.050 |     0.066 |    0.017       0.4 |     119 |     0.008 |
-TimingAuditor.T...   INFO       RichOfflineVeloTTPIDSeq |     7.747 |     8.378 |    0.183      30.9 |     119 |     0.997 |
-TimingAuditor.T...   INFO        RichOfflineVeloTTGPIDSe|     7.671 |     8.305 |    0.140      30.8 |     119 |     0.988 |
-TimingAuditor.T...   INFO         RichOfflineVeloTTGPIDI|     0.168 |     0.152 |    0.071       0.3 |     119 |     0.018 |
-TimingAuditor.T...   INFO          RichOfflineVeloTTGPID|     0.025 |     0.008 |    0.005       0.0 |     119 |     0.001 |
-TimingAuditor.T...   INFO          RichOfflineVeloTTGPID|     0.000 |     0.016 |    0.010       0.1 |     119 |     0.002 |
-TimingAuditor.T...   INFO          RichOfflineVeloTTGPID|     0.076 |     0.092 |    0.031       0.2 |     119 |     0.011 |
-TimingAuditor.T...   INFO         RichOfflineVeloTTGPIDL|     7.444 |     8.101 |    0.043      30.4 |     119 |     0.964 |
-TimingAuditor.T...   INFO          RichOfflineVeloTTBckE|     1.277 |     1.409 |    0.005      13.1 |     119 |     0.168 |
-TimingAuditor.T...   INFO          RichOfflineVeloTTGPID|     3.941 |     4.156 |    0.005      26.6 |     119 |     0.495 |
-TimingAuditor.T...   INFO          RichOfflineVeloTTBckE|     1.428 |     1.541 |    0.005      20.2 |     119 |     0.183 |
-TimingAuditor.T...   INFO          RichOfflineVeloTTGPID|     0.697 |     0.909 |    0.005      11.8 |     119 |     0.108 |
-TimingAuditor.T...   INFO         RichOfflineVeloTTGPIDF|     0.025 |     0.020 |    0.005       0.1 |     119 |     0.002 |
-TimingAuditor.T...   INFO        MergeOfflineVeloTTRichP|     0.050 |     0.047 |    0.024       0.1 |     119 |     0.006 |
-TimingAuditor.T...   INFO      RichRecOfflineKsTrackSeq |    87.886 |    91.211 |    1.103     396.5 |     119 |    10.854 |
-TimingAuditor.T...   INFO       RichRecInitOfflineKsTrac|    62.940 |    65.551 |    0.432     277.4 |     119 |     7.801 |
-TimingAuditor.T...   INFO        RichOfflineKsTrackPixel|    11.334 |    11.921 |    0.312      39.9 |     119 |     1.419 |
-TimingAuditor.T...   INFO         CreateOfflineKsTrackPi|    11.318 |    11.878 |    0.292      39.8 |     119 |     1.414 |
-TimingAuditor.T...   INFO        RichOfflineKsTrackTrack|    13.275 |    13.871 |    0.048      52.6 |     119 |     1.651 |
-TimingAuditor.T...   INFO         CreateOfflineKsTrackTr|    13.216 |    13.831 |    0.033      52.5 |     119 |     1.646 |
-TimingAuditor.T...   INFO        RichOfflineKsTrackPhoto|    38.271 |    39.714 |    0.021     191.8 |     119 |     4.726 |
-TimingAuditor.T...   INFO         CreateOfflineKsTrackPh|    38.229 |    39.667 |    0.010     191.7 |     119 |     4.720 |
-TimingAuditor.T...   INFO       RichOfflineKsTrackENNRin|     1.672 |     1.768 |    0.400      11.4 |     119 |     0.210 |
-TimingAuditor.T...   INFO        OfflineKsTrackENNFinder|     0.361 |     0.312 |    0.061       1.8 |     119 |     0.037 |
-TimingAuditor.T...   INFO        OfflineKsTrackENNFinder|     0.235 |     0.283 |    0.020       2.1 |     119 |     0.034 |
-TimingAuditor.T...   INFO        OfflineKsTrackENNFinder|     0.479 |     0.407 |    0.054       2.8 |     119 |     0.048 |
-TimingAuditor.T...   INFO        OfflineKsTrackENNFinder|     0.412 |     0.551 |    0.023      10.5 |     119 |     0.066 |
-TimingAuditor.T...   INFO        OfflineKsTrackENNRingsS|     0.017 |     0.022 |    0.011       0.2 |     119 |     0.003 |
-TimingAuditor.T...   INFO        OfflineKsTrackBestENNRi|     0.042 |     0.035 |    0.019       0.1 |     119 |     0.004 |
-TimingAuditor.T...   INFO        OfflineKsTrackIsolatedE|     0.067 |     0.062 |    0.016       0.4 |     119 |     0.007 |
-TimingAuditor.T...   INFO       RichOfflineKsTrackPIDSeq|    23.223 |    23.853 |    0.187     115.6 |     119 |     2.839 |
-TimingAuditor.T...   INFO        RichOfflineKsTrackGPIDS|    23.173 |    23.772 |    0.144     115.5 |     119 |     2.829 |
-TimingAuditor.T...   INFO         RichOfflineKsTrackGPID|     0.193 |     0.180 |    0.070       0.6 |     119 |     0.021 |
-TimingAuditor.T...   INFO          RichOfflineKsTrackGPI|     0.008 |     0.007 |    0.005       0.0 |     119 |     0.001 |
-TimingAuditor.T...   INFO          RichOfflineKsTrackGPI|     0.017 |     0.016 |    0.010       0.1 |     119 |     0.002 |
-TimingAuditor.T...   INFO          RichOfflineKsTrackGPI|     0.118 |     0.121 |    0.031       0.3 |     119 |     0.014 |
-TimingAuditor.T...   INFO         RichOfflineKsTrackGPID|    22.879 |    23.532 |    0.045     115.0 |     119 |     2.800 |
-TimingAuditor.T...   INFO          RichOfflineKsTrackBck|     1.252 |     1.211 |    0.005       3.6 |     119 |     0.144 |
-TimingAuditor.T...   INFO          RichOfflineKsTrackGPI|    13.905 |    14.383 |    0.005      69.9 |     119 |     1.712 |
-TimingAuditor.T...   INFO          RichOfflineKsTrackBck|     1.638 |     1.757 |    0.005      12.8 |     119 |     0.209 |
-TimingAuditor.T...   INFO          RichOfflineKsTrackGPI|     5.923 |     6.074 |    0.005      36.9 |     119 |     0.723 |
-TimingAuditor.T...   INFO         RichOfflineKsTrackGPID|     0.059 |     0.027 |    0.006       0.1 |     119 |     0.003 |
-TimingAuditor.T...   INFO        MergeOfflineKsTrackRich|     0.042 |     0.056 |    0.025       0.1 |     119 |     0.007 |
-TimingAuditor.T...   INFO      MergeOfflineRichPIDs     |     0.050 |     0.069 |    0.022       0.8 |     119 |     0.008 |
-TimingAuditor.T...   INFO     RecoCALOSeq               |    50.807 |    54.379 |    5.370     353.5 |     119 |     6.471 |
-TimingAuditor.T...   INFO      CaloProcessorCaloSeq     |    50.807 |    54.362 |    5.357     353.5 |     119 |     6.469 |
-TimingAuditor.T...   INFO       CaloRecoForCaloProcessor|    35.574 |    38.025 |    4.501     187.1 |     119 |     4.525 |
-TimingAuditor.T...   INFO        ClusterReco            |    18.846 |    20.244 |    2.080      80.6 |     119 |     2.409 |
-TimingAuditor.T...   INFO         CaloDigitFilter       |     2.890 |     3.248 |    1.375      26.2 |     119 |     0.387 |
-TimingAuditor.T...   INFO         EcalClust             |     3.184 |     3.237 |    0.609      14.3 |     119 |     0.385 |
-TimingAuditor.T...   INFO         EcalShare             |    12.116 |    13.166 |    0.017      55.2 |     119 |     1.567 |
-TimingAuditor.T...   INFO         EcalCovar             |     0.487 |     0.444 |    0.010       1.4 |     119 |     0.053 |
-TimingAuditor.T...   INFO        PhotonReco             |    11.586 |    12.461 |    0.176      75.8 |     119 |     1.483 |
-TimingAuditor.T...   INFO         CaloTrackMatch        |     3.596 |     3.807 |    0.132      44.7 |     119 |     0.453 |
-TimingAuditor.T...   INFO          InECAL               |     0.605 |     0.642 |    0.058       3.1 |     119 |     0.076 |
-TimingAuditor.T...   INFO          ClusterMatch         |     2.924 |     3.129 |    0.050      42.5 |     119 |     0.372 |
-TimingAuditor.T...   INFO         SinglePhotonRec       |     7.932 |     8.604 |    0.020      34.7 |     119 |     1.024 |
-TimingAuditor.T...   INFO        MergedPi0Reco          |     1.302 |     1.435 |    0.058      14.8 |     119 |     0.171 |
-TimingAuditor.T...   INFO         MergedPi0Rec          |     1.285 |     1.410 |    0.038      14.7 |     119 |     0.168 |
-TimingAuditor.T...   INFO        ElectronReco           |     3.815 |     3.839 |    0.029      27.3 |     119 |     0.457 |
-TimingAuditor.T...   INFO         SingleElectronRec     |     3.773 |     3.810 |    0.015      27.2 |     119 |     0.453 |
-TimingAuditor.T...   INFO       CaloPIDsCaloPIDsForCaloP|    15.216 |    16.311 |    0.790     166.4 |     119 |     1.941 |
-TimingAuditor.T...   INFO        ChargedPIDsCaloPIDsForC|    12.267 |    13.304 |    0.667     161.0 |     119 |     1.583 |
-TimingAuditor.T...   INFO         InCaloAcceptance      |     1.546 |     1.726 |    0.114      29.4 |     119 |     0.205 |
-TimingAuditor.T...   INFO          InHCAL               |     0.538 |     0.530 |    0.026       2.0 |     119 |     0.063 |
-TimingAuditor.T...   INFO          InBREM               |     0.134 |     0.154 |    0.020       0.4 |     119 |     0.018 |
-TimingAuditor.T...   INFO          InSPD                |     0.361 |     0.587 |    0.019      25.3 |     119 |     0.070 |
-TimingAuditor.T...   INFO          InPRS                |     0.429 |     0.397 |    0.018       1.6 |     119 |     0.047 |
-TimingAuditor.T...   INFO         CaloMatch             |     8.352 |     9.169 |    0.086     121.7 |     119 |     1.091 |
-TimingAuditor.T...   INFO          ElectronMatch        |     6.386 |     7.176 |    0.035     111.1 |     119 |     0.854 |
-TimingAuditor.T...   INFO          BremMatch            |     1.924 |     1.953 |    0.031      10.4 |     119 |     0.232 |
-TimingAuditor.T...   INFO         CaloEnergy            |     1.714 |     1.680 |    0.147       8.5 |     119 |     0.200 |
-TimingAuditor.T...   INFO          EcalE                |     0.513 |     0.601 |    0.043       5.9 |     119 |     0.071 |
-TimingAuditor.T...   INFO          HcalE                |     0.639 |     0.541 |    0.024       1.5 |     119 |     0.064 |
-TimingAuditor.T...   INFO          SpdE                 |     0.218 |     0.244 |    0.022       0.7 |     119 |     0.029 |
-TimingAuditor.T...   INFO          PrsE                 |     0.277 |     0.237 |    0.020       0.8 |     119 |     0.028 |
-TimingAuditor.T...   INFO         CaloChi2              |     0.202 |     0.266 |    0.084       1.0 |     119 |     0.032 |
-TimingAuditor.T...   INFO          EcalChi22ID          |     0.067 |     0.078 |    0.022       0.5 |     119 |     0.009 |
-TimingAuditor.T...   INFO          BremChi22ID          |     0.017 |     0.064 |    0.019       0.2 |     119 |     0.008 |
-TimingAuditor.T...   INFO          ClusChi22ID          |     0.067 |     0.086 |    0.017       0.4 |     119 |     0.010 |
-TimingAuditor.T...   INFO         CaloDLLe              |     0.244 |     0.279 |    0.091       0.6 |     119 |     0.033 |
-TimingAuditor.T...   INFO          EcalPIDe             |     0.076 |     0.075 |    0.016       0.4 |     119 |     0.009 |
-TimingAuditor.T...   INFO          BremPIDe             |     0.050 |     0.056 |    0.014       0.1 |     119 |     0.007 |
-TimingAuditor.T...   INFO          HcalPIDe             |     0.067 |     0.051 |    0.014       0.4 |     119 |     0.006 |
-TimingAuditor.T...   INFO          PrsPIDe              |     0.034 |     0.049 |    0.014       0.1 |     119 |     0.006 |
-TimingAuditor.T...   INFO         CaloDLLmu             |     0.134 |     0.129 |    0.049       0.3 |     119 |     0.015 |
-TimingAuditor.T...   INFO          EcalPIDmu            |     0.042 |     0.053 |    0.016       0.2 |     119 |     0.006 |
-TimingAuditor.T...   INFO          HcalPIDmu            |     0.059 |     0.049 |    0.014       0.2 |     119 |     0.006 |
-TimingAuditor.T...   INFO        NeutralPIDsCaloPIDsForC|     2.924 |     2.980 |    0.103      14.4 |     119 |     0.355 |
-TimingAuditor.T...   INFO         PhotonID              |     2.521 |     2.547 |    0.032      13.8 |     119 |     0.303 |
-TimingAuditor.T...   INFO         MergedID              |     0.143 |     0.167 |    0.022       1.2 |     119 |     0.020 |
-TimingAuditor.T...   INFO         PhotonFromMergedID    |     0.235 |     0.221 |    0.018       1.4 |     119 |     0.026 |
-TimingAuditor.T...   INFO     RecoMUONSeq               |     1.706 |     1.835 |    0.302      11.9 |     119 |     0.218 |
-TimingAuditor.T...   INFO      MuonRec                  |     0.496 |     0.544 |    0.142       2.7 |     119 |     0.065 |
-TimingAuditor.T...   INFO      MuonProcStatus           |     0.042 |     0.023 |    0.017       0.1 |     119 |     0.003 |
-TimingAuditor.T...   INFO      MuonROFilter             |     0.008 |     0.012 |    0.008       0.1 |     119 |     0.001 |
-TimingAuditor.T...   INFO      MuonIDSeq                |     1.109 |     1.118 |    0.062       6.0 |     119 |     0.133 |
-TimingAuditor.T...   INFO       MuonIDAlgLite           |     1.101 |     1.095 |    0.049       5.9 |     119 |     0.130 |
-TimingAuditor.T...   INFO     RecoPROTOSeq              |    19.837 |    20.258 |    0.510      62.0 |     119 |     2.411 |
-TimingAuditor.T...   INFO      ChargedProtoParticles    |    13.032 |    13.397 |    0.428      44.6 |     119 |     1.594 |
-TimingAuditor.T...   INFO       ChargedProtoPMaker      |     0.218 |     0.225 |    0.028       2.1 |     119 |     0.027 |
-TimingAuditor.T...   INFO       ChargedProtoPAddEcal    |     5.974 |     6.137 |    0.022      24.8 |     119 |     0.730 |
-TimingAuditor.T...   INFO       ChargedProtoPAddBrem    |     2.378 |     2.426 |    0.014      12.1 |     119 |     0.289 |
-TimingAuditor.T...   INFO       ChargedProtoPAddHcal    |     0.092 |     0.099 |    0.013       0.4 |     119 |     0.012 |
-TimingAuditor.T...   INFO       ChargedProtoPAddPrs     |     0.050 |     0.076 |    0.012       0.3 |     119 |     0.009 |
-TimingAuditor.T...   INFO       ChargedProtoPAddSpd     |     0.059 |     0.057 |    0.011       0.3 |     119 |     0.007 |
-TimingAuditor.T...   INFO       ChargedProtoPAddVeloDEDX|     0.605 |     0.575 |    0.008       1.6 |     119 |     0.068 |
-TimingAuditor.T...   INFO       ChargedProtoPAddRich    |     0.109 |     0.133 |    0.018       0.8 |     119 |     0.016 |
-TimingAuditor.T...   INFO       ChargedProtoPAddMuon    |     0.101 |     0.084 |    0.015       0.9 |     119 |     0.010 |
-TimingAuditor.T...   INFO       ChargedProtoPCombDLLs   |     0.176 |     0.170 |    0.008       0.5 |     119 |     0.020 |
-TimingAuditor.T...   INFO       ANNGPIDSeq              |     3.151 |     3.277 |    0.210      14.0 |     119 |     0.390 |
-TimingAuditor.T...   INFO        ANNGPIDLongElectron    |     0.336 |     0.376 |    0.009       1.2 |     119 |     0.045 |
-TimingAuditor.T...   INFO        ANNGPIDLongMuon        |     0.034 |     0.043 |    0.007       0.1 |     119 |     0.005 |
-TimingAuditor.T...   INFO        ANNGPIDLongPion        |     0.378 |     0.386 |    0.006       1.1 |     119 |     0.046 |
-TimingAuditor.T...   INFO        ANNGPIDLongKaon        |     0.462 |     0.408 |    0.006       1.2 |     119 |     0.049 |
-TimingAuditor.T...   INFO        ANNGPIDLongProton      |     0.395 |     0.375 |    0.007       1.1 |     119 |     0.045 |
-TimingAuditor.T...   INFO        ANNGPIDLongGhost       |     0.277 |     0.349 |    0.006       1.1 |     119 |     0.042 |
-TimingAuditor.T...   INFO        ANNGPIDDownstreamElectr|     0.202 |     0.151 |    0.007       0.5 |     119 |     0.018 |
-TimingAuditor.T...   INFO        ANNGPIDDownstreamMuon  |     0.025 |     0.021 |    0.006       0.1 |     119 |     0.003 |
-TimingAuditor.T...   INFO        ANNGPIDDownstreamPion  |     0.151 |     0.128 |    0.006       0.4 |     119 |     0.015 |
-TimingAuditor.T...   INFO        ANNGPIDDownstreamKaon  |     0.109 |     0.133 |    0.006       0.5 |     119 |     0.016 |
-TimingAuditor.T...   INFO        ANNGPIDDownstreamProton|     0.109 |     0.242 |    0.006      11.2 |     119 |     0.029 |
-TimingAuditor.T...   INFO        ANNGPIDDownstreamGhost |     0.176 |     0.147 |    0.006       0.6 |     119 |     0.017 |
-TimingAuditor.T...   INFO        ANNGPIDUpstreamElectron|     0.101 |     0.060 |    0.006       0.2 |     119 |     0.007 |
-TimingAuditor.T...   INFO        ANNGPIDUpstreamMuon    |     0.092 |     0.055 |    0.006       0.2 |     119 |     0.007 |
-TimingAuditor.T...   INFO        ANNGPIDUpstreamPion    |     0.050 |     0.053 |    0.006       0.1 |     119 |     0.006 |
-TimingAuditor.T...   INFO        ANNGPIDUpstreamKaon    |     0.034 |     0.059 |    0.006       0.2 |     119 |     0.007 |
-TimingAuditor.T...   INFO        ANNGPIDUpstreamProton  |     0.050 |     0.050 |    0.006       0.1 |     119 |     0.006 |
-TimingAuditor.T...   INFO        ANNGPIDUpstreamGhost   |     0.017 |     0.055 |    0.006       0.1 |     119 |     0.007 |
-TimingAuditor.T...   INFO      NeutralProtoParticles    |     6.772 |     6.836 |    0.051      17.9 |     119 |     0.814 |
-TimingAuditor.T...   INFO       NeutralProtoPMaker      |     6.747 |     6.812 |    0.037      17.8 |     119 |     0.811 |
-TimingAuditor.T...   INFO     RecoSUMMARYSeq            |     0.210 |     0.397 |    0.091      22.3 |     119 |     0.047 |
-TimingAuditor.T...   INFO      RecSummary               |     0.185 |     0.374 |    0.075      22.2 |     119 |     0.044 |
-TimingAuditor.T...   INFO    Moni                       |   182.199 |   189.314 |    3.605    1220.8 |     119 |    22.528 |
-TimingAuditor.T...   INFO     MoniCALOSeq               |    14.359 |    14.523 |    0.568      38.2 |     119 |     1.728 |
-TimingAuditor.T...   INFO      CaloDigitsMoni           |     8.696 |     8.853 |    0.251      21.5 |     119 |     1.053 |
-TimingAuditor.T...   INFO       EcalDigitMon            |     2.529 |     2.527 |    0.011       6.7 |     119 |     0.301 |
-TimingAuditor.T...   INFO       HcalDigitMon            |     0.655 |     0.700 |    0.073       1.7 |     119 |     0.083 |
-TimingAuditor.T...   INFO       PrsDigitMon             |     1.546 |     1.610 |    0.063      11.6 |     119 |     0.192 |
-TimingAuditor.T...   INFO       SpdDigitMon             |     0.672 |     0.675 |    0.012       1.6 |     119 |     0.080 |
-TimingAuditor.T...   INFO       SpdMon                  |     3.159 |     3.259 |    0.008      14.7 |     119 |     0.388 |
-TimingAuditor.T...   INFO      CaloEFlowMoni            |     0.756 |     0.729 |    0.021       1.8 |     119 |     0.087 |
-TimingAuditor.T...   INFO       EcalEFlowMon            |     0.731 |     0.709 |    0.009       1.8 |     119 |     0.084 |
-TimingAuditor.T...   INFO      CaloClustersMoni         |     0.328 |     0.359 |    0.023       0.9 |     119 |     0.043 |
-TimingAuditor.T...   INFO       EcalClusterMon          |     0.311 |     0.339 |    0.010       0.8 |     119 |     0.040 |
-TimingAuditor.T...   INFO      CaloHyposMoni            |     0.597 |     0.617 |    0.062       1.7 |     119 |     0.073 |
-TimingAuditor.T...   INFO       ElectronMon             |     0.176 |     0.209 |    0.010       0.8 |     119 |     0.025 |
-TimingAuditor.T...   INFO       PhotonMon               |     0.328 |     0.306 |    0.009       0.9 |     119 |     0.036 |
-TimingAuditor.T...   INFO       SplitPhotonMon          |     0.017 |     0.034 |    0.008       0.2 |     119 |     0.004 |
-TimingAuditor.T...   INFO       MergedPi0Mon            |     0.034 |     0.025 |    0.008       0.1 |     119 |     0.003 |
-TimingAuditor.T...   INFO      DiPhotonMoni             |     1.311 |     1.306 |    0.036       3.8 |     119 |     0.155 |
-TimingAuditor.T...   INFO       ResolvedPi0Mon          |     0.697 |     0.662 |    0.010       2.0 |     119 |     0.079 |
-TimingAuditor.T...   INFO       EtaMon                  |     0.580 |     0.607 |    0.008       1.9 |     119 |     0.072 |
-TimingAuditor.T...   INFO      ProtoElectronMon         |     0.639 |     0.673 |    0.014       2.5 |     119 |     0.080 |
-TimingAuditor.T...   INFO      CaloPIDsMoni             |     1.949 |     1.919 |    0.119       7.0 |     119 |     0.228 |
-TimingAuditor.T...   INFO       PhotonMatchMon          |     0.739 |     0.722 |    0.020       3.4 |     119 |     0.086 |
-TimingAuditor.T...   INFO       ElectronMatchMon        |     0.311 |     0.262 |    0.017       1.6 |     119 |     0.031 |
-TimingAuditor.T...   INFO       BremMatchMon            |     0.471 |     0.543 |    0.014       1.5 |     119 |     0.065 |
-TimingAuditor.T...   INFO       CaloEMuPIDMonUncut      |     0.294 |     0.244 |    0.010       0.9 |     119 |     0.029 |
-TimingAuditor.T...   INFO       CaloEMuPIDMonSoft       |     0.017 |     0.043 |    0.008       0.1 |     119 |     0.005 |
-TimingAuditor.T...   INFO       CaloEMuPIDMonHard       |     0.034 |     0.030 |    0.008       0.1 |     119 |     0.004 |
-TimingAuditor.T...   INFO     MoniRICHSeq               |    68.771 |    71.336 |    1.362     265.0 |     119 |     8.489 |
-TimingAuditor.T...   INFO      RichRawMoni              |     3.823 |     4.162 |    0.860      15.1 |     119 |     0.495 |
-TimingAuditor.T...   INFO       RichRawDataSize         |     0.546 |     0.640 |    0.399      11.6 |     119 |     0.076 |
-TimingAuditor.T...   INFO       RichRawDataSizeL0Seq    |     0.050 |     0.058 |    0.028       0.2 |     119 |     0.007 |
-TimingAuditor.T...   INFO        RichL0Filter           |     0.000 |     0.020 |    0.014       0.1 |     119 |     0.002 |
-TimingAuditor.T...   INFO        RichHlt1Filter         |     0.038 |     0.019 |    0.014       0.1 |     104 |     0.002 |
+TimingAuditor.T...   INFO   PhysicsSeq                  |  1489.496 |  1588.069 |   18.374    8597.5 |     119 |   188.980 |
+TimingAuditor.T...   INFO    CaloBanksHandler           |     2.915 |     2.988 |    1.181       7.2 |     119 |     0.356 |
+TimingAuditor.T...   INFO     CaloDigits                |     2.899 |     2.966 |    1.167       7.1 |     119 |     0.353 |
+TimingAuditor.T...   INFO      SpdFromRaw               |     0.429 |     0.473 |    0.171       2.8 |     119 |     0.056 |
+TimingAuditor.T...   INFO      PrsDigitsSeq             |     0.723 |     0.706 |    0.183       1.9 |     119 |     0.084 |
+TimingAuditor.T...   INFO       PrsFromRaw              |     0.622 |     0.631 |    0.138       1.4 |     119 |     0.075 |
+TimingAuditor.T...   INFO       PrsProcStatus           |     0.042 |     0.029 |    0.016       0.4 |     119 |     0.003 |
+TimingAuditor.T...   INFO      EcalDigitsSeq            |     1.294 |     1.296 |    0.518       2.9 |     119 |     0.154 |
+TimingAuditor.T...   INFO       EcalZSup                |     1.218 |     1.224 |    0.476       2.8 |     119 |     0.146 |
+TimingAuditor.T...   INFO       EcalProcStatus          |     0.025 |     0.025 |    0.014       0.1 |     119 |     0.003 |
+TimingAuditor.T...   INFO      HcalDigitsSeq            |     0.395 |     0.428 |    0.198       1.8 |     119 |     0.051 |
+TimingAuditor.T...   INFO       HcalZSup                |     0.319 |     0.361 |    0.159       1.7 |     119 |     0.043 |
+TimingAuditor.T...   INFO       HcalProcStatus          |     0.017 |     0.023 |    0.013       0.1 |     119 |     0.003 |
+TimingAuditor.T...   INFO    DecodeTriggerSeq           |     0.580 |     0.554 |    0.313      12.0 |     119 |     0.066 |
+TimingAuditor.T...   INFO     L0TriggerSeq              |     0.529 |     0.529 |    0.299      11.9 |     119 |     0.063 |
+TimingAuditor.T...   INFO      L0DUFromRaw              |     0.487 |     0.499 |    0.280      11.9 |     119 |     0.059 |
+TimingAuditor.T...   INFO    Reco                       |  1258.313 |  1347.336 |   13.259    7056.2 |     119 |   160.333 |
+TimingAuditor.T...   INFO     RecoDecodingSeq           |     5.293 |     5.960 |    0.359      20.6 |     119 |     0.709 |
+TimingAuditor.T...   INFO      createBothVeloClusters   |     2.059 |     2.232 |    0.078      14.6 |     119 |     0.266 |
+TimingAuditor.T...   INFO      createTTClusters         |     1.496 |     1.454 |    0.084       3.9 |     119 |     0.173 |
+TimingAuditor.T...   INFO      createTTLiteClusters     |     0.286 |     0.281 |    0.053       1.1 |     119 |     0.033 |
+TimingAuditor.T...   INFO      createITLiteClusters     |     0.269 |     0.239 |    0.043       0.5 |     119 |     0.028 |
+TimingAuditor.T...   INFO      createITClusters         |     1.092 |     1.639 |    0.052      13.8 |     119 |     0.195 |
+TimingAuditor.T...   INFO     RecoVELOSeq               |     4.218 |     4.594 |    0.168      26.0 |     119 |     0.547 |
+TimingAuditor.T...   INFO      FastVeloTracking         |     4.184 |     4.552 |    0.147      25.9 |     119 |     0.542 |
+TimingAuditor.T...   INFO     RecoTTSeq                 |     0.000 |     0.014 |    0.007       0.0 |     119 |     0.002 |
+TimingAuditor.T...   INFO     RecoITSeq                 |     0.017 |     0.012 |    0.006       0.0 |     119 |     0.001 |
+TimingAuditor.T...   INFO     RecoOTSeq                 |     0.000 |     0.011 |    0.005       0.0 |     119 |     0.001 |
+TimingAuditor.T...   INFO     RecoTrSeq                 |   710.270 |   759.200 |    0.775    5897.2 |     119 |    90.345 |
+TimingAuditor.T...   INFO      Track                    |   710.253 |   759.178 |    0.764    5897.2 |     119 |    90.342 |
+TimingAuditor.T...   INFO       TrackForwardPatSeq      |    60.344 |    65.474 |    0.063     299.1 |     119 |     7.791 |
+TimingAuditor.T...   INFO        PatForward             |    60.285 |    65.425 |    0.047     299.1 |     119 |     7.786 |
+TimingAuditor.T...   INFO       TrackSeedPatSeq         |    58.697 |    62.119 |    0.283     362.7 |     119 |     7.392 |
+TimingAuditor.T...   INFO        PatSeeding             |    58.663 |    62.070 |    0.245     362.6 |     119 |     7.386 |
+TimingAuditor.T...   INFO       TrackMatchPatSeq        |     1.638 |     1.769 |    0.035      22.8 |     119 |     0.210 |
+TimingAuditor.T...   INFO        PatMatch               |     1.596 |     1.730 |    0.020      22.7 |     119 |     0.206 |
+TimingAuditor.T...   INFO       TrackDownstreamPatSeq   |    14.015 |    14.868 |    0.059      90.3 |     119 |     1.769 |
+TimingAuditor.T...   INFO        PatDownstream          |    13.956 |    14.821 |    0.043      90.3 |     119 |     1.764 |
+TimingAuditor.T...   INFO       TrackVeloTTPatSeq       |    38.818 |    41.289 |    0.039    1280.8 |     119 |     4.913 |
+TimingAuditor.T...   INFO        PatVeloTT              |    38.776 |    41.239 |    0.024    1280.7 |     119 |     4.907 |
+TimingAuditor.T...   INFO       TrackFitSeq             |   400.468 |   427.472 |    0.039    4164.3 |     119 |    50.869 |
+TimingAuditor.T...   INFO        TrackBestTrackCreator  |   400.426 |   427.406 |    0.025    4164.2 |     119 |    50.861 |
+TimingAuditor.T...   INFO       TrackAddExtraInfoSeq    |   136.021 |   145.921 |    0.118     630.1 |     119 |    17.365 |
+TimingAuditor.T...   INFO        TrackClonesSeq         |    10.166 |    10.794 |    0.075      62.3 |     119 |     1.284 |
+TimingAuditor.T...   INFO         FindTrackClones       |     9.982 |    10.529 |    0.037      58.9 |     119 |     1.253 |
+TimingAuditor.T...   INFO         FlagTrackClones       |     0.092 |     0.195 |    0.017      12.2 |     119 |     0.023 |
+TimingAuditor.T...   INFO        TrackAddLikelihood     |    36.171 |    39.520 |    0.009     167.7 |     119 |     4.703 |
+TimingAuditor.T...   INFO        TrackAddNNGhostId      |    89.566 |    95.497 |    0.009     422.3 |     119 |    11.364 |
+TimingAuditor.T...   INFO       TrackEraseExtraInformati|     0.109 |     0.117 |    0.020       0.3 |     119 |     0.014 |
+TimingAuditor.T...   INFO        TrackEraseExtraInfo    |     0.084 |     0.087 |    0.008       0.3 |     119 |     0.010 |
+TimingAuditor.T...   INFO     RecoVertexSeq             |     7.285 |     7.616 |    0.063      28.1 |     119 |     0.906 |
+TimingAuditor.T...   INFO      PatPVOffline             |     1.697 |     1.885 |    0.026      12.1 |     119 |     0.224 |
+TimingAuditor.T...   INFO      TrackV0Finder            |     5.554 |     5.669 |    0.017      21.1 |     119 |     0.675 |
+TimingAuditor.T...   INFO     RecoRICHSeq               |   436.917 |   470.695 |    3.739    2198.2 |     119 |    56.013 |
+TimingAuditor.T...   INFO      DecodeRawRichOffline     |     0.706 |     0.706 |    0.099       6.0 |     119 |     0.084 |
+TimingAuditor.T...   INFO      RichRecOfflineLongSeq    |   285.352 |   306.341 |    1.289    1635.5 |     119 |    36.455 |
+TimingAuditor.T...   INFO       RichRecInitOfflineLongSe|   174.259 |   185.547 |    0.522     854.4 |     119 |    22.080 |
+TimingAuditor.T...   INFO        RichOfflineLongPixelsSe|    14.485 |    15.114 |    0.407      41.8 |     119 |     1.799 |
+TimingAuditor.T...   INFO         CreateOfflineLongPixel|    14.418 |    15.063 |    0.384      41.7 |     119 |     1.792 |
+TimingAuditor.T...   INFO        RichOfflineLongTracksSe|    37.717 |    40.459 |    0.052     193.7 |     119 |     4.815 |
+TimingAuditor.T...   INFO         CreateOfflineLongTrack|    37.683 |    40.406 |    0.037     193.6 |     119 |     4.808 |
+TimingAuditor.T...   INFO        RichOfflineLongPhotonsS|   122.040 |   129.913 |    0.023     635.0 |     119 |    15.460 |
+TimingAuditor.T...   INFO         CreateOfflineLongPhoto|   121.990 |   129.859 |    0.010     634.9 |     119 |    15.453 |
+TimingAuditor.T...   INFO       RichOfflineLongENNRingFi|     2.319 |     2.388 |    0.463      14.4 |     119 |     0.284 |
+TimingAuditor.T...   INFO        OfflineLongENNFinderR1G|     0.462 |     0.421 |    0.058       3.1 |     119 |     0.050 |
+TimingAuditor.T...   INFO        OfflineLongENNFinderR1G|     0.344 |     0.371 |    0.015       2.2 |     119 |     0.044 |
+TimingAuditor.T...   INFO        OfflineLongENNFinderR2G|     0.630 |     0.693 |    0.056      12.1 |     119 |     0.082 |
+TimingAuditor.T...   INFO        OfflineLongENNFinderR2G|     0.563 |     0.618 |    0.027       3.2 |     119 |     0.074 |
+TimingAuditor.T...   INFO        OfflineLongENNRingsSegA|     0.034 |     0.034 |    0.014       0.7 |     119 |     0.004 |
+TimingAuditor.T...   INFO        OfflineLongBestENNRings|     0.050 |     0.048 |    0.024       0.7 |     119 |     0.006 |
+TimingAuditor.T...   INFO        OfflineLongIsolatedENNR|     0.092 |     0.081 |    0.019       0.8 |     119 |     0.010 |
+TimingAuditor.T...   INFO       RichOfflineLongPIDSeq   |   108.673 |   118.352 |    0.221     871.8 |     119 |    14.084 |
+TimingAuditor.T...   INFO        RichOfflineLongGPIDSeq |   108.530 |   118.132 |    0.164     871.7 |     119 |    14.058 |
+TimingAuditor.T...   INFO         RichOfflineLongGPIDIni|     0.286 |     0.318 |    0.085       1.8 |     119 |     0.038 |
+TimingAuditor.T...   INFO          RichOfflineLongGPIDIn|     0.008 |     0.010 |    0.006       0.0 |     119 |     0.001 |
+TimingAuditor.T...   INFO          RichOfflineLongGPIDDi|     0.025 |     0.022 |    0.012       0.3 |     119 |     0.003 |
+TimingAuditor.T...   INFO          RichOfflineLongGPIDTr|     0.193 |     0.238 |    0.039       1.2 |     119 |     0.028 |
+TimingAuditor.T...   INFO         RichOfflineLongGPIDLLS|   108.110 |   117.719 |    0.051     871.2 |     119 |    14.009 |
+TimingAuditor.T...   INFO          RichOfflineLongBckEst|     1.613 |     1.588 |    0.005       3.7 |     119 |     0.189 |
+TimingAuditor.T...   INFO          RichOfflineLongGPIDLL|    59.285 |    62.959 |    0.006     340.6 |     119 |     7.492 |
+TimingAuditor.T...   INFO          RichOfflineLongBckEst|     2.252 |     2.431 |    0.005      24.7 |     119 |     0.289 |
+TimingAuditor.T...   INFO          RichOfflineLongGPIDLL|    44.699 |    50.462 |    0.006     575.5 |     119 |     6.005 |
+TimingAuditor.T...   INFO         RichOfflineLongGPIDFin|     0.050 |     0.047 |    0.006       0.3 |     119 |     0.006 |
+TimingAuditor.T...   INFO        MergeOfflineLongRichPID|     0.084 |     0.182 |    0.028      11.1 |     119 |     0.022 |
+TimingAuditor.T...   INFO      RichRecOfflineVeloTTSeq  |    47.161 |    51.075 |    1.125     214.6 |     119 |     6.078 |
+TimingAuditor.T...   INFO       RichRecInitOfflineVeloTT|    35.995 |    39.182 |    0.430     169.1 |     119 |     4.663 |
+TimingAuditor.T...   INFO        RichOfflineVeloTTPixels|    13.401 |    14.828 |    0.324      60.9 |     119 |     1.765 |
+TimingAuditor.T...   INFO         CreateOfflineVeloTTPix|    13.368 |    14.779 |    0.302      60.8 |     119 |     1.759 |
+TimingAuditor.T...   INFO        RichOfflineVeloTTTracks|     6.579 |     6.853 |    0.049      25.4 |     119 |     0.815 |
+TimingAuditor.T...   INFO         CreateOfflineVeloTTTra|     6.503 |     6.807 |    0.035      25.4 |     119 |     0.810 |
+TimingAuditor.T...   INFO        RichOfflineVeloTTPhoton|    15.947 |    17.442 |    0.022      94.5 |     119 |     2.076 |
+TimingAuditor.T...   INFO         CreateOfflineVeloTTPho|    15.905 |    17.393 |    0.010      94.4 |     119 |     2.070 |
+TimingAuditor.T...   INFO       RichOfflineVeloTTENNRing|     2.101 |     2.276 |    0.436      15.7 |     119 |     0.271 |
+TimingAuditor.T...   INFO        OfflineVeloTTENNFinderR|     0.387 |     0.359 |    0.031       1.9 |     119 |     0.043 |
+TimingAuditor.T...   INFO        OfflineVeloTTENNFinderR|     0.361 |     0.348 |    0.015       2.2 |     119 |     0.041 |
+TimingAuditor.T...   INFO        OfflineVeloTTENNFinderR|     0.462 |     0.521 |    0.059       2.9 |     119 |     0.062 |
+TimingAuditor.T...   INFO        OfflineVeloTTENNFinderR|     0.647 |     0.672 |    0.024      12.5 |     119 |     0.080 |
+TimingAuditor.T...   INFO        OfflineVeloTTENNRingsSe|     0.034 |     0.029 |    0.015       0.2 |     119 |     0.003 |
+TimingAuditor.T...   INFO        OfflineVeloTTBestENNRin|     0.017 |     0.043 |    0.020       0.2 |     119 |     0.005 |
+TimingAuditor.T...   INFO        OfflineVeloTTIsolatedEN|     0.059 |     0.079 |    0.018       0.7 |     119 |     0.009 |
+TimingAuditor.T...   INFO       RichOfflineVeloTTPIDSeq |     9.007 |     9.566 |    0.211      42.8 |     119 |     1.138 |
+TimingAuditor.T...   INFO        RichOfflineVeloTTGPIDSe|     8.923 |     9.468 |    0.164      42.7 |     119 |     1.127 |
+TimingAuditor.T...   INFO         RichOfflineVeloTTGPIDI|     0.252 |     0.202 |    0.078       0.5 |     119 |     0.024 |
+TimingAuditor.T...   INFO          RichOfflineVeloTTGPID|     0.017 |     0.010 |    0.006       0.0 |     119 |     0.001 |
+TimingAuditor.T...   INFO          RichOfflineVeloTTGPID|     0.042 |     0.023 |    0.011       0.1 |     119 |     0.003 |
+TimingAuditor.T...   INFO          RichOfflineVeloTTGPID|     0.160 |     0.120 |    0.034       0.4 |     119 |     0.014 |
+TimingAuditor.T...   INFO         RichOfflineVeloTTGPIDL|     8.604 |     9.196 |    0.049      42.3 |     119 |     1.094 |
+TimingAuditor.T...   INFO          RichOfflineVeloTTBckE|     1.319 |     1.501 |    0.006      13.7 |     119 |     0.179 |
+TimingAuditor.T...   INFO          RichOfflineVeloTTGPID|     4.487 |     4.684 |    0.006      22.6 |     119 |     0.557 |
+TimingAuditor.T...   INFO          RichOfflineVeloTTBckE|     1.672 |     1.847 |    0.005      15.3 |     119 |     0.220 |
+TimingAuditor.T...   INFO          RichOfflineVeloTTGPID|     1.000 |     1.056 |    0.006      11.1 |     119 |     0.126 |
+TimingAuditor.T...   INFO         RichOfflineVeloTTGPIDF|     0.017 |     0.026 |    0.006       0.1 |     119 |     0.003 |
+TimingAuditor.T...   INFO        MergeOfflineVeloTTRichP|     0.042 |     0.061 |    0.027       0.1 |     119 |     0.007 |
+TimingAuditor.T...   INFO      RichRecOfflineKsTrackSeq |   103.480 |   112.400 |    1.128     712.9 |     119 |    13.376 |
+TimingAuditor.T...   INFO       RichRecInitOfflineKsTrac|    75.014 |    81.874 |    0.450     518.9 |     119 |     9.743 |
+TimingAuditor.T...   INFO        RichOfflineKsTrackPixel|    13.208 |    14.043 |    0.328      73.9 |     119 |     1.671 |
+TimingAuditor.T...   INFO         CreateOfflineKsTrackPi|    13.124 |    13.993 |    0.305      73.9 |     119 |     1.665 |
+TimingAuditor.T...   INFO        RichOfflineKsTrackTrack|    15.645 |    16.781 |    0.051      95.8 |     119 |     1.997 |
+TimingAuditor.T...   INFO         CreateOfflineKsTrackTr|    15.594 |    16.732 |    0.036      95.7 |     119 |     1.991 |
+TimingAuditor.T...   INFO        RichOfflineKsTrackPhoto|    46.111 |    50.990 |    0.023     349.1 |     119 |     6.068 |
+TimingAuditor.T...   INFO         CreateOfflineKsTrackPh|    46.052 |    50.938 |    0.010     349.0 |     119 |     6.062 |
+TimingAuditor.T...   INFO       RichOfflineKsTrackENNRin|     1.991 |     2.208 |    0.432      15.7 |     119 |     0.263 |
+TimingAuditor.T...   INFO        OfflineKsTrackENNFinder|     0.269 |     0.354 |    0.032       1.9 |     119 |     0.042 |
+TimingAuditor.T...   INFO        OfflineKsTrackENNFinder|     0.370 |     0.338 |    0.016       2.2 |     119 |     0.040 |
+TimingAuditor.T...   INFO        OfflineKsTrackENNFinder|     0.563 |     0.593 |    0.090      11.6 |     119 |     0.071 |
+TimingAuditor.T...   INFO        OfflineKsTrackENNFinder|     0.462 |     0.647 |    0.025      12.5 |     119 |     0.077 |
+TimingAuditor.T...   INFO        OfflineKsTrackENNRingsS|     0.034 |     0.028 |    0.014       0.2 |     119 |     0.003 |
+TimingAuditor.T...   INFO        OfflineKsTrackBestENNRi|     0.025 |     0.043 |    0.021       0.2 |     119 |     0.005 |
+TimingAuditor.T...   INFO        OfflineKsTrackIsolatedE|     0.076 |     0.077 |    0.018       0.6 |     119 |     0.009 |
+TimingAuditor.T...   INFO       RichOfflineKsTrackPIDSeq|    26.408 |    28.266 |    0.199     190.6 |     119 |     3.364 |
+TimingAuditor.T...   INFO        RichOfflineKsTrackGPIDS|    26.324 |    28.161 |    0.154     190.5 |     119 |     3.351 |
+TimingAuditor.T...   INFO         RichOfflineKsTrackGPID|     0.235 |     0.230 |    0.074       0.7 |     119 |     0.027 |
+TimingAuditor.T...   INFO          RichOfflineKsTrackGPI|     0.008 |     0.010 |    0.006       0.0 |     119 |     0.001 |
+TimingAuditor.T...   INFO          RichOfflineKsTrackGPI|     0.017 |     0.021 |    0.011       0.1 |     119 |     0.003 |
+TimingAuditor.T...   INFO          RichOfflineKsTrackGPI|     0.143 |     0.150 |    0.032       0.6 |     119 |     0.018 |
+TimingAuditor.T...   INFO         RichOfflineKsTrackGPID|    26.004 |    27.850 |    0.050     189.9 |     119 |     3.314 |
+TimingAuditor.T...   INFO          RichOfflineKsTrackBck|     1.395 |     1.476 |    0.006      12.5 |     119 |     0.176 |
+TimingAuditor.T...   INFO          RichOfflineKsTrackGPI|    15.729 |    16.859 |    0.006     132.2 |     119 |     2.006 |
+TimingAuditor.T...   INFO          RichOfflineKsTrackBck|     1.849 |     2.003 |    0.005      14.1 |     119 |     0.238 |
+TimingAuditor.T...   INFO          RichOfflineKsTrackGPI|     6.906 |     7.388 |    0.005      51.1 |     119 |     0.879 |
+TimingAuditor.T...   INFO         RichOfflineKsTrackGPID|     0.059 |     0.034 |    0.006       0.2 |     119 |     0.004 |
+TimingAuditor.T...   INFO        MergeOfflineKsTrackRich|     0.067 |     0.070 |    0.026       0.1 |     119 |     0.008 |
+TimingAuditor.T...   INFO      MergeOfflineRichPIDs     |     0.084 |     0.084 |    0.022       0.7 |     119 |     0.010 |
+TimingAuditor.T...   INFO     RecoCALOSeq               |    65.267 |    68.757 |    5.447     273.2 |     119 |     8.182 |
+TimingAuditor.T...   INFO      CaloProcessorCaloSeq     |    65.234 |    68.733 |    5.433     273.1 |     119 |     8.179 |
+TimingAuditor.T...   INFO       CaloRecoForCaloProcessor|    44.439 |    47.230 |    4.543     201.0 |     119 |     5.620 |
+TimingAuditor.T...   INFO        ClusterReco            |    22.996 |    24.663 |    2.839     117.0 |     119 |     2.935 |
+TimingAuditor.T...   INFO         CaloDigitFilter       |     3.109 |     3.415 |    1.306      26.2 |     119 |     0.406 |
+TimingAuditor.T...   INFO         EcalClust             |     3.638 |     3.908 |    0.776      21.2 |     119 |     0.465 |
+TimingAuditor.T...   INFO         EcalShare             |    15.468 |    16.610 |    0.017      92.7 |     119 |     1.977 |
+TimingAuditor.T...   INFO         EcalCovar             |     0.555 |     0.543 |    0.011       1.6 |     119 |     0.065 |
+TimingAuditor.T...   INFO        PhotonReco             |    14.687 |    15.676 |    0.158      59.7 |     119 |     1.865 |
+TimingAuditor.T...   INFO         CaloTrackMatch        |     4.428 |     4.846 |    0.117      29.8 |     119 |     0.577 |
+TimingAuditor.T...   INFO          InECAL               |     0.630 |     0.681 |    0.054       3.6 |     119 |     0.081 |
+TimingAuditor.T...   INFO          ClusterMatch         |     3.731 |     4.116 |    0.042      28.1 |     119 |     0.490 |
+TimingAuditor.T...   INFO         SinglePhotonRec       |    10.225 |    10.768 |    0.018      36.6 |     119 |     1.281 |
+TimingAuditor.T...   INFO        MergedPi0Reco          |     1.706 |     1.785 |    0.054      17.7 |     119 |     0.212 |
+TimingAuditor.T...   INFO         MergedPi0Rec          |     1.655 |     1.751 |    0.038      17.7 |     119 |     0.208 |
+TimingAuditor.T...   INFO        ElectronReco           |     4.949 |     5.039 |    0.029      20.5 |     119 |     0.600 |
+TimingAuditor.T...   INFO         SingleElectronRec     |     4.907 |     5.000 |    0.014      20.4 |     119 |     0.595 |
+TimingAuditor.T...   INFO       CaloPIDsCaloPIDsForCaloP|    20.778 |    21.465 |    0.741      96.5 |     119 |     2.554 |
+TimingAuditor.T...   INFO        ChargedPIDsCaloPIDsForC|    16.703 |    17.120 |    0.622      84.8 |     119 |     2.037 |
+TimingAuditor.T...   INFO         InCaloAcceptance      |     1.790 |     1.787 |    0.121       5.5 |     119 |     0.213 |
+TimingAuditor.T...   INFO          InHCAL               |     0.630 |     0.613 |    0.027       2.0 |     119 |     0.073 |
+TimingAuditor.T...   INFO          InBREM               |     0.202 |     0.191 |    0.021       0.4 |     119 |     0.023 |
+TimingAuditor.T...   INFO          InSPD                |     0.336 |     0.446 |    0.020       1.4 |     119 |     0.053 |
+TimingAuditor.T...   INFO          InPRS                |     0.487 |     0.462 |    0.019       1.6 |     119 |     0.055 |
+TimingAuditor.T...   INFO         CaloMatch             |    11.755 |    12.137 |    0.087      70.9 |     119 |     1.444 |
+TimingAuditor.T...   INFO          ElectronMatch        |     9.150 |     9.469 |    0.035      60.1 |     119 |     1.127 |
+TimingAuditor.T...   INFO          BremMatch            |     2.537 |     2.614 |    0.031      18.7 |     119 |     0.311 |
+TimingAuditor.T...   INFO         CaloEnergy            |     2.218 |     2.210 |    0.139       6.8 |     119 |     0.263 |
+TimingAuditor.T...   INFO          EcalE                |     0.714 |     0.746 |    0.028       3.7 |     119 |     0.089 |
+TimingAuditor.T...   INFO          HcalE                |     0.756 |     0.714 |    0.034       2.3 |     119 |     0.085 |
+TimingAuditor.T...   INFO          SpdE                 |     0.319 |     0.345 |    0.023       1.1 |     119 |     0.041 |
+TimingAuditor.T...   INFO          PrsE                 |     0.344 |     0.330 |    0.021       1.0 |     119 |     0.039 |
+TimingAuditor.T...   INFO         CaloChi2              |     0.344 |     0.356 |    0.088       1.3 |     119 |     0.042 |
+TimingAuditor.T...   INFO          EcalChi22ID          |     0.067 |     0.101 |    0.023       0.5 |     119 |     0.012 |
+TimingAuditor.T...   INFO          BremChi22ID          |     0.059 |     0.087 |    0.020       0.2 |     119 |     0.010 |
+TimingAuditor.T...   INFO          ClusChi22ID          |     0.151 |     0.112 |    0.019       0.5 |     119 |     0.013 |
+TimingAuditor.T...   INFO         CaloDLLe              |     0.277 |     0.369 |    0.091       0.9 |     119 |     0.044 |
+TimingAuditor.T...   INFO          EcalPIDe             |     0.101 |     0.096 |    0.016       0.4 |     119 |     0.011 |
+TimingAuditor.T...   INFO          BremPIDe             |     0.034 |     0.072 |    0.014       0.1 |     119 |     0.009 |
+TimingAuditor.T...   INFO          HcalPIDe             |     0.042 |     0.064 |    0.014       0.2 |     119 |     0.008 |
+TimingAuditor.T...   INFO          PrsPIDe              |     0.050 |     0.066 |    0.015       0.2 |     119 |     0.008 |
+TimingAuditor.T...   INFO         CaloDLLmu             |     0.202 |     0.178 |    0.050       0.4 |     119 |     0.021 |
+TimingAuditor.T...   INFO          EcalPIDmu            |     0.076 |     0.069 |    0.015       0.2 |     119 |     0.008 |
+TimingAuditor.T...   INFO          HcalPIDmu            |     0.050 |     0.066 |    0.015       0.2 |     119 |     0.008 |
+TimingAuditor.T...   INFO        NeutralPIDsCaloPIDsForC|     4.050 |     4.307 |    0.096      20.8 |     119 |     0.513 |
+TimingAuditor.T...   INFO         PhotonID              |     3.478 |     3.656 |    0.027      18.9 |     119 |     0.435 |
+TimingAuditor.T...   INFO         MergedID              |     0.168 |     0.208 |    0.020       1.4 |     119 |     0.025 |
+TimingAuditor.T...   INFO         PhotonFromMergedID    |     0.311 |     0.379 |    0.021      11.7 |     119 |     0.045 |
+TimingAuditor.T...   INFO     RecoMUONSeq               |     2.075 |     2.594 |    0.278      46.9 |     119 |     0.309 |
+TimingAuditor.T...   INFO      MuonRec                  |     0.664 |     1.028 |    0.145      45.0 |     119 |     0.122 |
+TimingAuditor.T...   INFO      MuonProcStatus           |     0.025 |     0.030 |    0.019       0.1 |     119 |     0.004 |
+TimingAuditor.T...   INFO      MuonROFilter             |     0.008 |     0.018 |    0.010       0.1 |     119 |     0.002 |
+TimingAuditor.T...   INFO      MuonIDSeq                |     1.277 |     1.453 |    0.064      13.4 |     119 |     0.173 |
+TimingAuditor.T...   INFO       MuonIDAlgLite           |     1.252 |     1.421 |    0.050      13.4 |     119 |     0.169 |
+TimingAuditor.T...   INFO     RecoPROTOSeq              |    26.433 |    27.449 |    0.568      96.9 |     119 |     3.266 |
+TimingAuditor.T...   INFO      ChargedProtoParticles    |    16.628 |    17.024 |    0.499      54.9 |     119 |     2.026 |
+TimingAuditor.T...   INFO       ChargedProtoPMaker      |     0.269 |     0.260 |    0.026       3.1 |     119 |     0.031 |
+TimingAuditor.T...   INFO       ChargedProtoPAddEcal    |     7.680 |     7.791 |    0.023      31.0 |     119 |     0.927 |
+TimingAuditor.T...   INFO       ChargedProtoPAddBrem    |     3.193 |     3.269 |    0.014      14.3 |     119 |     0.389 |
+TimingAuditor.T...   INFO       ChargedProtoPAddHcal    |     0.160 |     0.130 |    0.013       0.6 |     119 |     0.015 |
+TimingAuditor.T...   INFO       ChargedProtoPAddPrs     |     0.076 |     0.099 |    0.012       0.4 |     119 |     0.012 |
+TimingAuditor.T...   INFO       ChargedProtoPAddSpd     |     0.092 |     0.078 |    0.011       0.4 |     119 |     0.009 |
+TimingAuditor.T...   INFO       ChargedProtoPAddVeloDEDX|     0.605 |     0.855 |    0.009      12.2 |     119 |     0.102 |
+TimingAuditor.T...   INFO       ChargedProtoPAddRich    |     0.193 |     0.166 |    0.024       1.1 |     119 |     0.020 |
+TimingAuditor.T...   INFO       ChargedProtoPAddMuon    |     0.134 |     0.102 |    0.017       1.0 |     119 |     0.012 |
+TimingAuditor.T...   INFO       ChargedProtoPCombDLLs   |     0.252 |     0.208 |    0.009       0.8 |     119 |     0.025 |
+TimingAuditor.T...   INFO       ANNGPIDSeq              |     3.789 |     3.867 |    0.249      12.1 |     119 |     0.460 |
+TimingAuditor.T...   INFO        ANNGPIDLongElectron    |     0.361 |     0.435 |    0.010       1.2 |     119 |     0.052 |
+TimingAuditor.T...   INFO        ANNGPIDLongMuon        |     0.067 |     0.057 |    0.008       0.2 |     119 |     0.007 |
+TimingAuditor.T...   INFO        ANNGPIDLongPion        |     0.512 |     0.439 |    0.007       1.2 |     119 |     0.052 |
+TimingAuditor.T...   INFO        ANNGPIDLongKaon        |     0.361 |     0.460 |    0.007       1.3 |     119 |     0.055 |
+TimingAuditor.T...   INFO        ANNGPIDLongProton      |     0.445 |     0.483 |    0.007       5.9 |     119 |     0.057 |
+TimingAuditor.T...   INFO        ANNGPIDLongGhost       |     0.445 |     0.410 |    0.007       1.1 |     119 |     0.049 |
+TimingAuditor.T...   INFO        ANNGPIDDownstreamElectr|     0.168 |     0.178 |    0.008       0.6 |     119 |     0.021 |
+TimingAuditor.T...   INFO        ANNGPIDDownstreamMuon  |     0.017 |     0.031 |    0.007       0.1 |     119 |     0.004 |
+TimingAuditor.T...   INFO        ANNGPIDDownstreamPion  |     0.143 |     0.152 |    0.007       0.5 |     119 |     0.018 |
+TimingAuditor.T...   INFO        ANNGPIDDownstreamKaon  |     0.151 |     0.161 |    0.007       0.5 |     119 |     0.019 |
+TimingAuditor.T...   INFO        ANNGPIDDownstreamProton|     0.176 |     0.175 |    0.007       0.5 |     119 |     0.021 |
+TimingAuditor.T...   INFO        ANNGPIDDownstreamGhost |     0.193 |     0.179 |    0.007       0.6 |     119 |     0.021 |
+TimingAuditor.T...   INFO        ANNGPIDUpstreamElectron|     0.118 |     0.073 |    0.008       0.2 |     119 |     0.009 |
+TimingAuditor.T...   INFO        ANNGPIDUpstreamMuon    |     0.050 |     0.066 |    0.007       0.2 |     119 |     0.008 |
+TimingAuditor.T...   INFO        ANNGPIDUpstreamPion    |     0.067 |     0.068 |    0.007       0.2 |     119 |     0.008 |
+TimingAuditor.T...   INFO        ANNGPIDUpstreamKaon    |     0.042 |     0.074 |    0.007       0.2 |     119 |     0.009 |
+TimingAuditor.T...   INFO        ANNGPIDUpstreamProton  |     0.076 |     0.065 |    0.007       0.2 |     119 |     0.008 |
+TimingAuditor.T...   INFO        ANNGPIDUpstreamGhost   |     0.076 |     0.069 |    0.007       0.2 |     119 |     0.008 |
+TimingAuditor.T...   INFO      NeutralProtoParticles    |     9.746 |    10.385 |    0.050      45.9 |     119 |     1.236 |
+TimingAuditor.T...   INFO       NeutralProtoPMaker      |     9.688 |    10.347 |    0.035      45.8 |     119 |     1.231 |
+TimingAuditor.T...   INFO     RecoSUMMARYSeq            |     0.277 |     0.266 |    0.076       2.0 |     119 |     0.032 |
+TimingAuditor.T...   INFO      RecSummary               |     0.260 |     0.233 |    0.060       2.0 |     119 |     0.028 |
+TimingAuditor.T...   INFO    Moni                       |   227.587 |   237.128 |    3.481    1522.0 |     119 |    28.218 |
+TimingAuditor.T...   INFO     MoniCALOSeq               |    17.955 |    18.932 |    0.617      78.8 |     119 |     2.253 |
+TimingAuditor.T...   INFO      CaloDigitsMoni           |    10.830 |    11.314 |    0.260      42.6 |     119 |     1.346 |
+TimingAuditor.T...   INFO       EcalDigitMon            |     3.201 |     3.411 |    0.013      17.7 |     119 |     0.406 |
+TimingAuditor.T...   INFO       HcalDigitMon            |     0.891 |     0.891 |    0.066       2.2 |     119 |     0.106 |
+TimingAuditor.T...   INFO       PrsDigitMon             |     1.924 |     2.039 |    0.075      10.9 |     119 |     0.243 |
+TimingAuditor.T...   INFO       SpdDigitMon             |     0.907 |     0.949 |    0.018      12.6 |     119 |     0.113 |
+TimingAuditor.T...   INFO       SpdMon                  |     3.789 |     3.908 |    0.010      14.6 |     119 |     0.465 |
+TimingAuditor.T...   INFO      CaloEFlowMoni            |     0.714 |     0.762 |    0.022       1.9 |     119 |     0.091 |
+TimingAuditor.T...   INFO       EcalEFlowMon            |     0.689 |     0.732 |    0.010       1.9 |     119 |     0.087 |
+TimingAuditor.T...   INFO      CaloClustersMoni         |     0.437 |     0.560 |    0.023      12.0 |     119 |     0.067 |
+TimingAuditor.T...   INFO       EcalClusterMon          |     0.412 |     0.531 |    0.011      11.9 |     119 |     0.063 |
+TimingAuditor.T...   INFO      CaloHyposMoni            |     0.832 |     0.817 |    0.069       2.4 |     119 |     0.097 |
+TimingAuditor.T...   INFO       ElectronMon             |     0.319 |     0.271 |    0.011       1.3 |     119 |     0.032 |
+TimingAuditor.T...   INFO       PhotonMon               |     0.353 |     0.398 |    0.009       1.1 |     119 |     0.047 |
+TimingAuditor.T...   INFO       SplitPhotonMon          |     0.067 |     0.046 |    0.010       0.2 |     119 |     0.005 |
+TimingAuditor.T...   INFO       MergedPi0Mon            |     0.034 |     0.035 |    0.008       0.1 |     119 |     0.004 |
+TimingAuditor.T...   INFO      DiPhotonMoni             |     1.806 |     2.060 |    0.039      18.2 |     119 |     0.245 |
+TimingAuditor.T...   INFO       ResolvedPi0Mon          |     0.899 |     1.013 |    0.011      11.9 |     119 |     0.121 |
+TimingAuditor.T...   INFO       EtaMon                  |     0.840 |     0.995 |    0.009      18.0 |     119 |     0.118 |
+TimingAuditor.T...   INFO      ProtoElectronMon         |     0.916 |     0.918 |    0.014       3.4 |     119 |     0.109 |
+TimingAuditor.T...   INFO      CaloPIDsMoni             |     2.294 |     2.400 |    0.127      15.8 |     119 |     0.286 |
+TimingAuditor.T...   INFO       PhotonMatchMon          |     0.983 |     0.948 |    0.021       4.7 |     119 |     0.113 |
+TimingAuditor.T...   INFO       ElectronMatchMon        |     0.218 |     0.263 |    0.018       1.2 |     119 |     0.031 |
+TimingAuditor.T...   INFO       BremMatchMon            |     0.546 |     0.547 |    0.014       2.9 |     119 |     0.065 |
+TimingAuditor.T...   INFO       CaloEMuPIDMonUncut      |     0.336 |     0.432 |    0.011      11.8 |     119 |     0.051 |
+TimingAuditor.T...   INFO       CaloEMuPIDMonSoft       |     0.050 |     0.058 |    0.010       0.1 |     119 |     0.007 |
+TimingAuditor.T...   INFO       CaloEMuPIDMonHard       |     0.059 |     0.043 |    0.009       0.1 |     119 |     0.005 |
+TimingAuditor.T...   INFO     MoniRICHSeq               |    89.919 |    94.427 |    1.422     422.0 |     119 |    11.237 |
+TimingAuditor.T...   INFO      RichRawMoni              |     4.512 |     4.698 |    0.867      16.9 |     119 |     0.559 |
+TimingAuditor.T...   INFO       RichRawDataSize         |     0.613 |     0.702 |    0.442       7.4 |     119 |     0.084 |
+TimingAuditor.T...   INFO       RichRawDataSizeL0Seq    |     0.076 |     0.085 |    0.032       0.3 |     119 |     0.010 |
+TimingAuditor.T...   INFO        RichL0Filter           |     0.034 |     0.027 |    0.017       0.1 |     119 |     0.003 |
+TimingAuditor.T...   INFO        RichHlt1Filter         |     0.019 |     0.026 |    0.017       0.1 |     104 |     0.003 |
 TimingAuditor.T...   INFO        RichRawDataSizeL0      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       RichRawDataDBCheck      |     0.664 |     0.628 |    0.095       1.6 |     119 |     0.075 |
-TimingAuditor.T...   INFO       RichHotPixels           |     2.302 |     2.348 |    0.096       9.1 |     119 |     0.279 |
-TimingAuditor.T...   INFO       RichDecodingErrors      |     0.244 |     0.252 |    0.093       1.7 |     119 |     0.030 |
-TimingAuditor.T...   INFO      RichPixelMoni            |     3.672 |     3.677 |    0.028       9.3 |     119 |     0.438 |
-TimingAuditor.T...   INFO       RichRecPixelQC          |     1.369 |     1.408 |    0.007       3.6 |     119 |     0.168 |
-TimingAuditor.T...   INFO       RichRecPixelClusters    |     2.243 |     2.228 |    0.005       5.5 |     119 |     0.265 |
-TimingAuditor.T...   INFO      RichTrackMoni            |     0.924 |     0.934 |    0.056       3.0 |     119 |     0.111 |
-TimingAuditor.T...   INFO       RiLongTrkEff            |     0.328 |     0.334 |    0.006       1.1 |     119 |     0.040 |
-TimingAuditor.T...   INFO       RiForwardTrkEff         |     0.193 |     0.208 |    0.005       0.8 |     119 |     0.025 |
-TimingAuditor.T...   INFO       RiMatchTrkEff           |     0.126 |     0.100 |    0.005       0.3 |     119 |     0.012 |
-TimingAuditor.T...   INFO       RiKsTrackTrkEff         |     0.126 |     0.141 |    0.005       0.6 |     119 |     0.017 |
-TimingAuditor.T...   INFO       RiVeloTTTrkEff          |     0.067 |     0.092 |    0.006       0.3 |     119 |     0.011 |
-TimingAuditor.T...   INFO      RichRecoMoni             |    27.735 |    28.829 |    0.055     118.6 |     119 |     3.431 |
-TimingAuditor.T...   INFO       RiCKResLong             |    19.678 |    20.393 |    0.006      86.4 |     119 |     2.427 |
-TimingAuditor.T...   INFO       RiCKResForward          |     5.344 |     5.418 |    0.006      22.6 |     119 |     0.645 |
-TimingAuditor.T...   INFO       RiCKResMatch            |     0.958 |     1.236 |    0.006      14.0 |     119 |     0.147 |
-TimingAuditor.T...   INFO       RiCKResKsTrack          |     1.454 |     1.437 |    0.005       6.7 |     119 |     0.171 |
-TimingAuditor.T...   INFO       RiCKResVeloTT           |     0.210 |     0.246 |    0.005       1.7 |     119 |     0.029 |
-TimingAuditor.T...   INFO      RichRecoMoniTight        |    16.737 |    17.398 |    0.055      72.1 |     119 |     2.070 |
-TimingAuditor.T...   INFO       RiCKResLongTight        |    11.939 |    12.382 |    0.005      53.1 |     119 |     1.473 |
-TimingAuditor.T...   INFO       RiCKResForwardTight     |     3.294 |     3.455 |    0.005      14.6 |     119 |     0.411 |
-TimingAuditor.T...   INFO       RiCKResMatchTight       |     0.639 |     0.666 |    0.005       3.4 |     119 |     0.079 |
-TimingAuditor.T...   INFO       RiCKResKsTrackTight     |     0.664 |     0.656 |    0.006       3.5 |     119 |     0.078 |
-TimingAuditor.T...   INFO       RiCKResVeloTTTight      |     0.134 |     0.150 |    0.005       1.4 |     119 |     0.018 |
-TimingAuditor.T...   INFO      RichPIDMoni              |     0.504 |     0.466 |    0.056       6.0 |     119 |     0.055 |
-TimingAuditor.T...   INFO       RiPIDMonLong2To100      |     0.193 |     0.186 |    0.009       3.8 |     119 |     0.022 |
-TimingAuditor.T...   INFO       RiPIDMonLong2To10       |     0.084 |     0.096 |    0.007       0.8 |     119 |     0.011 |
-TimingAuditor.T...   INFO       RiPIDMonLong10To70      |     0.067 |     0.082 |    0.007       0.9 |     119 |     0.010 |
-TimingAuditor.T...   INFO       RiPIDMonLong70To100     |     0.092 |     0.052 |    0.006       0.5 |     119 |     0.006 |
-TimingAuditor.T...   INFO      RichENNTracklessRingsMoni|     0.126 |     0.103 |    0.036       0.7 |     119 |     0.012 |
-TimingAuditor.T...   INFO       ENNRingMoniAll          |     0.050 |     0.039 |    0.006       0.5 |     119 |     0.005 |
-TimingAuditor.T...   INFO       ENNRingMoniBest         |     0.050 |     0.019 |    0.006       0.1 |     119 |     0.002 |
-TimingAuditor.T...   INFO       ENNRingMoniIsolated     |     0.008 |     0.014 |    0.005       0.1 |     119 |     0.002 |
-TimingAuditor.T...   INFO      RichMirrAlignMoni        |    13.015 |    13.330 |    0.026      62.0 |     119 |     1.586 |
-TimingAuditor.T...   INFO       RichAlignMoniR1Gas      |     5.033 |     5.189 |    0.005      18.4 |     119 |     0.618 |
-TimingAuditor.T...   INFO       RichAlignMoniR2Gas      |     7.923 |     8.099 |    0.005      55.5 |     119 |     0.964 |
-TimingAuditor.T...   INFO      RichHPDIonFeedback       |     2.126 |     2.352 |    0.137      13.6 |     119 |     0.280 |
-TimingAuditor.T...   INFO       RichHPDIFBMoni          |     2.117 |     2.325 |    0.121      13.5 |     119 |     0.277 |
-TimingAuditor.T...   INFO     MoniMUONSeq               |    14.477 |    14.715 |    0.076     877.5 |     119 |     1.751 |
-TimingAuditor.T...   INFO      MuonPIDMonitorLong       |     0.521 |     0.488 |    0.028       2.8 |     119 |     0.058 |
-TimingAuditor.T...   INFO      MuonTrackFitter          |     5.898 |     6.054 |    0.013     314.4 |     119 |     0.720 |
-TimingAuditor.T...   INFO      MuonTrackAligMonitor     |     8.016 |     8.119 |    0.009     560.3 |     119 |     0.966 |
-TimingAuditor.T...   INFO     MoniVELOSeq               |    15.216 |    15.854 |    0.063      45.1 |     119 |     1.887 |
-TimingAuditor.T...   INFO      VeloClusterMonitor       |     2.227 |     2.350 |    0.017       9.4 |     119 |     0.280 |
-TimingAuditor.T...   INFO      VeloTrackMonitor         |    12.141 |    12.621 |    0.011      35.3 |     119 |     1.502 |
-TimingAuditor.T...   INFO      VeloIPResolutionMonitor  |     0.781 |     0.811 |    0.009      11.0 |     119 |     0.096 |
-TimingAuditor.T...   INFO     MoniOTSeq                 |    13.132 |    13.576 |    0.281      56.8 |     119 |     1.616 |
-TimingAuditor.T...   INFO      OTTimeMonitor            |     0.798 |     0.744 |    0.065       1.7 |     119 |     0.088 |
-TimingAuditor.T...   INFO      OTTrackMonitor           |     8.772 |     9.086 |    0.086      27.7 |     119 |     1.081 |
-TimingAuditor.T...   INFO      OTHitEfficiencyMonitor   |     3.520 |     3.670 |    0.083      27.9 |     119 |     0.437 |
-TimingAuditor.T...   INFO     MoniSTSeq                 |     1.975 |     2.140 |    0.077      13.6 |     119 |     0.255 |
-TimingAuditor.T...   INFO      TTClusterMonitor         |     1.151 |     1.205 |    0.044      10.8 |     119 |     0.143 |
-TimingAuditor.T...   INFO      ITClusterMonitor         |     0.781 |     0.893 |    0.013      12.4 |     119 |     0.106 |
-TimingAuditor.T...   INFO     MoniGENERALSeq            |     0.092 |     0.158 |    0.116       0.4 |     119 |     0.019 |
-TimingAuditor.T...   INFO      OverallEventProcTime     |     0.025 |     0.016 |    0.011       0.1 |     119 |     0.002 |
-TimingAuditor.T...   INFO      TrackEventProcTime       |     0.008 |     0.015 |    0.011       0.1 |     119 |     0.002 |
-TimingAuditor.T...   INFO      VertexEventProcTime      |     0.000 |     0.012 |    0.008       0.0 |     119 |     0.001 |
-TimingAuditor.T...   INFO      RichEventProcTime        |     0.008 |     0.012 |    0.008       0.0 |     119 |     0.001 |
-TimingAuditor.T...   INFO      CaloEventProcTime        |     0.000 |     0.011 |    0.008       0.0 |     119 |     0.001 |
-TimingAuditor.T...   INFO      MuonEventProcTime        |     0.008 |     0.010 |    0.007       0.0 |     119 |     0.001 |
-TimingAuditor.T...   INFO      ProtoEventProcTime       |     0.000 |     0.010 |    0.007       0.0 |     119 |     0.001 |
-TimingAuditor.T...   INFO      ProcStatAbortMoni        |     0.000 |     0.016 |    0.011       0.1 |     119 |     0.002 |
-TimingAuditor.T...   INFO     MoniTrSeq                 |    52.975 |    55.776 |    0.345     207.9 |     119 |     6.637 |
-TimingAuditor.T...   INFO      TrackMonitor             |    27.517 |    28.980 |    0.035     116.7 |     119 |     3.449 |
-TimingAuditor.T...   INFO      TrackDiMuonMonitor       |     0.160 |     0.161 |    0.028       1.4 |     119 |     0.019 |
-TimingAuditor.T...   INFO      TrackVertexMonitor       |     0.840 |     0.915 |    0.018       4.2 |     119 |     0.109 |
-TimingAuditor.T...   INFO      AlignmentOnlineMonitor   |     0.781 |     0.985 |    0.011      13.6 |     119 |     0.117 |
-TimingAuditor.T...   INFO      TrackV0Monitor           |     0.034 |     0.059 |    0.014       0.8 |     119 |     0.007 |
-TimingAuditor.T...   INFO      TrackFitMatchMonitor     |     1.722 |     1.747 |    0.009       5.5 |     119 |     0.208 |
-TimingAuditor.T...   INFO      TrackAlignMonitor        |     2.479 |     2.442 |    0.010      12.6 |     119 |     0.291 |
-TimingAuditor.T...   INFO      TrackITOverlapMonitor    |     3.092 |     3.220 |    0.011      14.1 |     119 |     0.383 |
-TimingAuditor.T...   INFO      TrackVeloOverlapMonitor  |     0.597 |     0.513 |    0.007       5.5 |     119 |     0.061 |
-TimingAuditor.T...   INFO      TTTrackMonitor           |     2.227 |     2.644 |    0.018      36.3 |     119 |     0.315 |
-TimingAuditor.T...   INFO      ITTrackMonitor           |     4.705 |     4.809 |    0.011      15.9 |     119 |     0.572 |
-TimingAuditor.T...   INFO      TrackPV2HalfAlignMonitor |     1.647 |     2.030 |    0.012      23.0 |     119 |     0.242 |
-TimingAuditor.T...   INFO      TrackEcalMatchMonitor    |     1.512 |     1.483 |    0.014       3.9 |     119 |     0.177 |
-TimingAuditor.T...   INFO      TrackSpdMatchMonitor     |     1.857 |     1.917 |    0.012       6.2 |     119 |     0.228 |
-TimingAuditor.T...   INFO      TrackPrsMatchMonitor     |     2.571 |     2.468 |    0.023       8.1 |     119 |     0.294 |
-TimingAuditor.T...   INFO      TrackMuonMatchMonitor    |     0.966 |     1.088 |    0.009      11.9 |     119 |     0.129 |
-TimingAuditor.T...   INFO     MoniPROTOSeq              |     0.958 |     0.973 |    0.038       3.9 |     119 |     0.116 |
-TimingAuditor.T...   INFO      ChargedProtoPMoni        |     0.605 |     0.647 |    0.011       2.5 |     119 |     0.077 |
-TimingAuditor.T...   INFO      ChargedProtoANNPIDMoni   |     0.302 |     0.290 |    0.009       1.4 |     119 |     0.035 |
-TimingAuditor.T...   INFO     MoniHltSeq                |     0.160 |     0.159 |    0.116       0.6 |     119 |     0.019 |
-TimingAuditor.T...   INFO      HltRateMonitor           |     0.042 |     0.026 |    0.016       0.2 |     119 |     0.003 |
-TimingAuditor.T...   INFO      HltRateMonitorMB         |     0.008 |     0.012 |    0.009       0.0 |     119 |     0.001 |
-TimingAuditor.T...   INFO      HltCompositionMonitor    |     0.017 |     0.013 |    0.010       0.0 |     119 |     0.002 |
-TimingAuditor.T...   INFO      MuMonitor                |     0.034 |     0.041 |    0.030       0.2 |     119 |     0.005 |
-TimingAuditor.T...   INFO      EventTimeMonitor         |     0.008 |     0.019 |    0.014       0.1 |     119 |     0.002 |
-TimingAuditor.T...   INFO   Output                      |     5.655 |     6.359 |    0.813      57.8 |     119 |     0.757 |
-TimingAuditor.T...   INFO    OutputDSTSeq               |     5.655 |     6.343 |    0.800      57.8 |     119 |     0.755 |
-TimingAuditor.T...   INFO     FilterBestTrackStates     |     0.252 |     0.217 |    0.011       1.2 |     119 |     0.026 |
-TimingAuditor.T...   INFO     FilterMuonTrackStates     |     0.008 |     0.018 |    0.008       0.0 |     119 |     0.002 |
-TimingAuditor.T...   INFO     PackDST                   |     5.352 |     6.071 |    0.757      57.3 |     119 |     0.722 |
-TimingAuditor.T...   INFO      PackTracks               |     0.353 |     0.459 |    0.048      11.5 |     119 |     0.055 |
-TimingAuditor.T...   INFO      PackRichPIDs             |     0.059 |     0.055 |    0.026       0.5 |     119 |     0.007 |
-TimingAuditor.T...   INFO      PackMuonPIDs             |     0.025 |     0.040 |    0.021       0.5 |     119 |     0.005 |
-TimingAuditor.T...   INFO      CaloPacking              |     0.210 |     0.206 |    0.103       0.7 |     119 |     0.024 |
-TimingAuditor.T...   INFO       PackPhotons             |     0.042 |     0.069 |    0.023       0.5 |     119 |     0.008 |
-TimingAuditor.T...   INFO       PackElectrons           |     0.034 |     0.047 |    0.016       0.1 |     119 |     0.006 |
-TimingAuditor.T...   INFO       PackMergedPi0s          |     0.042 |     0.023 |    0.015       0.1 |     119 |     0.003 |
-TimingAuditor.T...   INFO       PackSplitPhotons        |     0.025 |     0.022 |    0.014       0.1 |     119 |     0.003 |
-TimingAuditor.T...   INFO      ProtoParticlePIDClean    |     0.109 |     0.109 |    0.009       0.4 |     119 |     0.013 |
-TimingAuditor.T...   INFO      PackChargedProtos        |     0.084 |     0.108 |    0.017       0.8 |     119 |     0.013 |
-TimingAuditor.T...   INFO      PackNeutralProtos        |     0.042 |     0.058 |    0.013       0.1 |     119 |     0.007 |
-TimingAuditor.T...   INFO      PackRecVertex            |     0.025 |     0.033 |    0.020       0.5 |     119 |     0.004 |
-TimingAuditor.T...   INFO      PackTwoProngVertex       |     0.025 |     0.029 |    0.015       0.5 |     119 |     0.003 |
-TimingAuditor.T...   INFO      PackMuonTracks           |     0.025 |     0.034 |    0.018       0.1 |     119 |     0.004 |
-TimingAuditor.T...   INFO      WriteMDFSeq              |     4.243 |     4.819 |    0.349      52.1 |     119 |     0.573 |
-TimingAuditor.T...   INFO       MdfPacker               |     0.311 |     0.450 |    0.113      23.4 |     119 |     0.053 |
-TimingAuditor.T...   INFO       MdfWriter               |     3.890 |     4.325 |    0.198      28.7 |     119 |     0.515 |
+TimingAuditor.T...   INFO       RichRawDataDBCheck      |     0.874 |     0.955 |    0.081      12.3 |     119 |     0.114 |
+TimingAuditor.T...   INFO       RichHotPixels           |     2.546 |     2.530 |    0.106       6.6 |     119 |     0.301 |
+TimingAuditor.T...   INFO       RichDecodingErrors      |     0.319 |     0.318 |    0.094       2.7 |     119 |     0.038 |
+TimingAuditor.T...   INFO      RichPixelMoni            |     4.621 |     4.792 |    0.031      19.6 |     119 |     0.570 |
+TimingAuditor.T...   INFO       RichRecPixelQC          |     1.714 |     1.670 |    0.007       4.3 |     119 |     0.199 |
+TimingAuditor.T...   INFO       RichRecPixelClusters    |     2.840 |     3.064 |    0.006      16.7 |     119 |     0.365 |
+TimingAuditor.T...   INFO      RichTrackMoni            |     1.134 |     1.141 |    0.061       2.9 |     119 |     0.136 |
+TimingAuditor.T...   INFO       RiLongTrkEff            |     0.386 |     0.388 |    0.007       1.4 |     119 |     0.046 |
+TimingAuditor.T...   INFO       RiForwardTrkEff         |     0.210 |     0.252 |    0.005       0.7 |     119 |     0.030 |
+TimingAuditor.T...   INFO       RiMatchTrkEff           |     0.185 |     0.126 |    0.006       0.4 |     119 |     0.015 |
+TimingAuditor.T...   INFO       RiKsTrackTrkEff         |     0.126 |     0.171 |    0.006       0.5 |     119 |     0.020 |
+TimingAuditor.T...   INFO       RiVeloTTTrkEff          |     0.126 |     0.112 |    0.005       0.3 |     119 |     0.013 |
+TimingAuditor.T...   INFO      RichRecoMoni             |    37.540 |    39.076 |    0.063     187.0 |     119 |     4.650 |
+TimingAuditor.T...   INFO       RiCKResLong             |    26.727 |    27.652 |    0.007     147.3 |     119 |     3.291 |
+TimingAuditor.T...   INFO       RiCKResForward          |     7.276 |     7.700 |    0.006      55.2 |     119 |     0.916 |
+TimingAuditor.T...   INFO       RiCKResMatch            |     1.286 |     1.319 |    0.006       7.4 |     119 |     0.157 |
+TimingAuditor.T...   INFO       RiCKResKsTrack          |     1.748 |     1.858 |    0.006      10.1 |     119 |     0.221 |
+TimingAuditor.T...   INFO       RiCKResVeloTT           |     0.344 |     0.319 |    0.006       2.5 |     119 |     0.038 |
+TimingAuditor.T...   INFO      RichRecoMoniTight        |    22.249 |    23.471 |    0.063     140.7 |     119 |     2.793 |
+TimingAuditor.T...   INFO       RiCKResLongTight        |    16.098 |    17.003 |    0.006      94.5 |     119 |     2.023 |
+TimingAuditor.T...   INFO       RiCKResForwardTight     |     4.092 |     4.324 |    0.006      20.6 |     119 |     0.515 |
+TimingAuditor.T...   INFO       RiCKResMatchTight       |     0.874 |     0.866 |    0.006       4.4 |     119 |     0.103 |
+TimingAuditor.T...   INFO       RiCKResKsTrackTight     |     0.849 |     0.958 |    0.006      21.3 |     119 |     0.114 |
+TimingAuditor.T...   INFO       RiCKResVeloTTTight      |     0.176 |     0.196 |    0.006       2.2 |     119 |     0.023 |
+TimingAuditor.T...   INFO      RichPIDMoni              |     0.597 |     0.603 |    0.062       6.2 |     119 |     0.072 |
+TimingAuditor.T...   INFO       RiPIDMonLong2To100      |     0.210 |     0.228 |    0.012       3.8 |     119 |     0.027 |
+TimingAuditor.T...   INFO       RiPIDMonLong2To10       |     0.126 |     0.128 |    0.008       0.9 |     119 |     0.015 |
+TimingAuditor.T...   INFO       RiPIDMonLong10To70      |     0.118 |     0.108 |    0.007       0.9 |     119 |     0.013 |
+TimingAuditor.T...   INFO       RiPIDMonLong70To100     |     0.076 |     0.067 |    0.007       0.4 |     119 |     0.008 |
+TimingAuditor.T...   INFO      RichENNTracklessRingsMoni|     0.227 |     0.232 |    0.040      10.6 |     119 |     0.028 |
+TimingAuditor.T...   INFO       ENNRingMoniAll          |     0.084 |     0.049 |    0.007       0.7 |     119 |     0.006 |
+TimingAuditor.T...   INFO       ENNRingMoniBest         |     0.050 |     0.027 |    0.005       0.2 |     119 |     0.003 |
+TimingAuditor.T...   INFO       ENNRingMoniIsolated     |     0.017 |     0.021 |    0.005       0.1 |     119 |     0.003 |
+TimingAuditor.T...   INFO      RichMirrAlignMoni        |    16.519 |    17.616 |    0.029      84.4 |     119 |     2.096 |
+TimingAuditor.T...   INFO       RichAlignMoniR1Gas      |     6.310 |     6.754 |    0.006      56.0 |     119 |     0.804 |
+TimingAuditor.T...   INFO       RichAlignMoniR2Gas      |    10.108 |    10.801 |    0.005      78.5 |     119 |     1.285 |
+TimingAuditor.T...   INFO      RichHPDIonFeedback       |     2.395 |     2.671 |    0.129      15.1 |     119 |     0.318 |
+TimingAuditor.T...   INFO       RichHPDIFBMoni          |     2.386 |     2.635 |    0.111      15.0 |     119 |     0.314 |
+TimingAuditor.T...   INFO     MoniMUONSeq               |    17.678 |    17.838 |    0.077    1125.9 |     119 |     2.123 |
+TimingAuditor.T...   INFO      MuonPIDMonitorLong       |     0.563 |     0.520 |    0.026       3.0 |     119 |     0.062 |
+TimingAuditor.T...   INFO      MuonTrackFitter          |     8.360 |     8.466 |    0.015     519.5 |     119 |     1.007 |
+TimingAuditor.T...   INFO      MuonTrackAligMonitor     |     8.646 |     8.779 |    0.010     603.3 |     119 |     1.045 |
+TimingAuditor.T...   INFO     MoniVELOSeq               |    17.905 |    18.841 |    0.085      66.7 |     119 |     2.242 |
+TimingAuditor.T...   INFO      VeloClusterMonitor       |     2.403 |     2.490 |    0.025      15.3 |     119 |     0.296 |
+TimingAuditor.T...   INFO      VeloTrackMonitor         |    14.452 |    15.218 |    0.013      62.6 |     119 |     1.811 |
+TimingAuditor.T...   INFO      VeloIPResolutionMonitor  |     0.941 |     1.041 |    0.010      15.8 |     119 |     0.124 |
+TimingAuditor.T...   INFO     MoniOTSeq                 |    17.476 |    18.218 |    0.306      95.2 |     119 |     2.168 |
+TimingAuditor.T...   INFO      OTTimeMonitor            |     0.807 |     0.813 |    0.076       1.8 |     119 |     0.097 |
+TimingAuditor.T...   INFO      OTTrackMonitor           |    11.410 |    12.054 |    0.081      45.0 |     119 |     1.434 |
+TimingAuditor.T...   INFO      OTHitEfficiencyMonitor   |     5.142 |     5.251 |    0.090      48.4 |     119 |     0.625 |
+TimingAuditor.T...   INFO     MoniSTSeq                 |     2.378 |     2.398 |    0.100       6.1 |     119 |     0.285 |
+TimingAuditor.T...   INFO      TTClusterMonitor         |     1.353 |     1.382 |    0.040       4.1 |     119 |     0.164 |
+TimingAuditor.T...   INFO      ITClusterMonitor         |     0.941 |     0.961 |    0.026       3.2 |     119 |     0.114 |
+TimingAuditor.T...   INFO     MoniGENERALSeq            |     0.252 |     0.240 |    0.140       0.4 |     119 |     0.029 |
+TimingAuditor.T...   INFO      OverallEventProcTime     |     0.000 |     0.021 |    0.013       0.1 |     119 |     0.002 |
+TimingAuditor.T...   INFO      TrackEventProcTime       |     0.025 |     0.021 |    0.013       0.1 |     119 |     0.003 |
+TimingAuditor.T...   INFO      VertexEventProcTime      |     0.025 |     0.017 |    0.009       0.1 |     119 |     0.002 |
+TimingAuditor.T...   INFO      RichEventProcTime        |     0.000 |     0.016 |    0.009       0.0 |     119 |     0.002 |
+TimingAuditor.T...   INFO      CaloEventProcTime        |     0.017 |     0.017 |    0.009       0.1 |     119 |     0.002 |
+TimingAuditor.T...   INFO      MuonEventProcTime        |     0.000 |     0.016 |    0.009       0.0 |     119 |     0.002 |
+TimingAuditor.T...   INFO      ProtoEventProcTime       |     0.017 |     0.015 |    0.008       0.0 |     119 |     0.002 |
+TimingAuditor.T...   INFO      ProcStatAbortMoni        |     0.017 |     0.022 |    0.013       0.1 |     119 |     0.003 |
+TimingAuditor.T...   INFO     MoniTrSeq                 |    62.554 |    64.694 |    0.373     203.8 |     119 |     7.699 |
+TimingAuditor.T...   INFO      TrackMonitor             |    33.020 |    34.060 |    0.030     111.4 |     119 |     4.053 |
+TimingAuditor.T...   INFO      TrackDiMuonMonitor       |     0.134 |     0.275 |    0.027      11.1 |     119 |     0.033 |
+TimingAuditor.T...   INFO      TrackVertexMonitor       |     1.008 |     1.008 |    0.016       3.7 |     119 |     0.120 |
+TimingAuditor.T...   INFO      AlignmentOnlineMonitor   |     0.891 |     0.880 |    0.011       2.4 |     119 |     0.105 |
+TimingAuditor.T...   INFO      TrackV0Monitor           |     0.050 |     0.073 |    0.014       0.8 |     119 |     0.009 |
+TimingAuditor.T...   INFO      TrackFitMatchMonitor     |     2.210 |     2.204 |    0.010       6.4 |     119 |     0.262 |
+TimingAuditor.T...   INFO      TrackAlignMonitor        |     2.437 |     2.543 |    0.009       6.7 |     119 |     0.303 |
+TimingAuditor.T...   INFO      TrackITOverlapMonitor    |     3.773 |     3.877 |    0.011      15.0 |     119 |     0.461 |
+TimingAuditor.T...   INFO      TrackVeloOverlapMonitor  |     0.664 |     0.648 |    0.009       6.1 |     119 |     0.077 |
+TimingAuditor.T...   INFO      TTTrackMonitor           |     3.151 |     3.279 |    0.017      18.0 |     119 |     0.390 |
+TimingAuditor.T...   INFO      ITTrackMonitor           |     5.403 |     5.638 |    0.012      18.5 |     119 |     0.671 |
+TimingAuditor.T...   INFO      TrackPV2HalfAlignMonitor |     1.974 |     2.117 |    0.014      17.6 |     119 |     0.252 |
+TimingAuditor.T...   INFO      TrackEcalMatchMonitor    |     1.521 |     1.466 |    0.013       4.7 |     119 |     0.174 |
+TimingAuditor.T...   INFO      TrackSpdMatchMonitor     |     1.941 |     2.247 |    0.015      19.1 |     119 |     0.267 |
+TimingAuditor.T...   INFO      TrackPrsMatchMonitor     |     2.705 |     2.799 |    0.023      16.4 |     119 |     0.333 |
+TimingAuditor.T...   INFO      TrackMuonMatchMonitor    |     1.168 |     1.183 |    0.009       4.6 |     119 |     0.141 |
+TimingAuditor.T...   INFO     MoniPROTOSeq              |     1.168 |     1.186 |    0.040       4.1 |     119 |     0.141 |
+TimingAuditor.T...   INFO      ChargedProtoPMoni        |     0.706 |     0.752 |    0.012       2.5 |     119 |     0.089 |
+TimingAuditor.T...   INFO      ChargedProtoANNPIDMoni   |     0.395 |     0.385 |    0.009       1.6 |     119 |     0.046 |
+TimingAuditor.T...   INFO     MoniHltSeq                |     0.185 |     0.211 |    0.126       0.6 |     119 |     0.025 |
+TimingAuditor.T...   INFO      HltRateMonitor           |     0.034 |     0.032 |    0.017       0.2 |     119 |     0.004 |
+TimingAuditor.T...   INFO      HltRateMonitorMB         |     0.017 |     0.019 |    0.010       0.1 |     119 |     0.002 |
+TimingAuditor.T...   INFO      HltCompositionMonitor    |     0.017 |     0.019 |    0.011       0.1 |     119 |     0.002 |
+TimingAuditor.T...   INFO      MuMonitor                |     0.050 |     0.048 |    0.032       0.2 |     119 |     0.006 |
+TimingAuditor.T...   INFO      EventTimeMonitor         |     0.008 |     0.024 |    0.015       0.1 |     119 |     0.003 |
+TimingAuditor.T...   INFO   Output                      |     6.621 |    12.145 |    0.793     599.4 |     119 |     1.445 |
+TimingAuditor.T...   INFO    OutputDSTSeq               |     6.596 |    12.122 |    0.780     599.3 |     119 |     1.443 |
+TimingAuditor.T...   INFO     FilterBestTrackStates     |     0.235 |     0.249 |    0.011       0.8 |     119 |     0.030 |
+TimingAuditor.T...   INFO     FilterMuonTrackStates     |     0.008 |     0.023 |    0.009       0.1 |     119 |     0.003 |
+TimingAuditor.T...   INFO     PackDST                   |     6.285 |    11.798 |    0.736     598.9 |     119 |     1.404 |
+TimingAuditor.T...   INFO      PackTracks               |     0.479 |     0.432 |    0.053       1.3 |     119 |     0.051 |
+TimingAuditor.T...   INFO      PackRichPIDs             |     0.059 |     0.068 |    0.028       0.4 |     119 |     0.008 |
+TimingAuditor.T...   INFO      PackMuonPIDs             |     0.050 |     0.054 |    0.023       0.5 |     119 |     0.006 |
+TimingAuditor.T...   INFO      CaloPacking              |     0.193 |     0.366 |    0.114      11.5 |     119 |     0.044 |
+TimingAuditor.T...   INFO       PackPhotons             |     0.084 |     0.177 |    0.026      11.2 |     119 |     0.021 |
+TimingAuditor.T...   INFO       PackElectrons           |     0.042 |     0.061 |    0.017       0.2 |     119 |     0.007 |
+TimingAuditor.T...   INFO       PackMergedPi0s          |     0.000 |     0.031 |    0.015       0.1 |     119 |     0.004 |
+TimingAuditor.T...   INFO       PackSplitPhotons        |     0.008 |     0.031 |    0.015       0.1 |     119 |     0.004 |
+TimingAuditor.T...   INFO      ProtoParticlePIDClean    |     0.193 |     0.233 |    0.010      11.3 |     119 |     0.028 |
+TimingAuditor.T...   INFO      PackChargedProtos        |     0.126 |     0.126 |    0.017       0.7 |     119 |     0.015 |
+TimingAuditor.T...   INFO      PackNeutralProtos        |     0.084 |     0.164 |    0.013      10.8 |     119 |     0.019 |
+TimingAuditor.T...   INFO      PackRecVertex            |     0.042 |     0.042 |    0.021       0.4 |     119 |     0.005 |
+TimingAuditor.T...   INFO      PackTwoProngVertex       |     0.000 |     0.035 |    0.016       0.5 |     119 |     0.004 |
+TimingAuditor.T...   INFO      PackMuonTracks           |     0.042 |     0.045 |    0.019       0.1 |     119 |     0.005 |
+TimingAuditor.T...   INFO      WriteMDFSeq              |     4.840 |    10.063 |    0.321     594.1 |     119 |     1.198 |
+TimingAuditor.T...   INFO       MdfPacker               |     0.328 |     0.309 |    0.100       1.8 |     119 |     0.037 |
+TimingAuditor.T...   INFO       MdfWriter               |     4.436 |     9.697 |    0.188     592.2 |     119 |     1.154 |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 ChronoStatSvc.f...   INFO  Service finalized successfully
 ApplicationMgr       INFO Application Manager Finalized successfully
