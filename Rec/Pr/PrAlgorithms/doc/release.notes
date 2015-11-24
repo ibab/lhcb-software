@@ -3,6 +3,14 @@
 ! Responsible : Yasmine Amhis
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
+                
+! 2015-11-24 - Renato Quagliani
+ - Add the PrHybridSeeding algorithm (.cpp .h) : New seeding algorithm for the upgrade.
+ - Add the PrPlaneHybridCounter.h to count the number of layers on track.
+ - Add the PrLineFitterY.h to fit lines using only u/v stereo hits based on a x-z projection.
+ - Add the PrHybridSeedTrack class being the track object handled by the Hybrid Seeding.
+ - Add method to the PrGeometryTool.h to accept PrHybridSeedTrack as input.
+
 
 !========================= PrAlgorithms v1r16p2 2015-11-23 =========================
 ! 2015-11-19 - Marco Cattaneo

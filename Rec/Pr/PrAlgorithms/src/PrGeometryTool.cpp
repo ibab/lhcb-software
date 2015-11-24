@@ -1,5 +1,8 @@
 // Include files
 
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h"
+
 // local
 #include "PrGeometryTool.h"
 
@@ -213,6 +216,45 @@ float PrGeometryTool::qOverP ( const PrSeedTrack& track) {
   }
   return qop ;
 }
+float PrGeometryTool::qOverP ( const PrHybridSeedTrack& track) {
+  float qop(1.0/Gaudi::Units::GeV) ;
+  float magscalefactor = m_magFieldSvc->signedRelativeCurrent() ;
+  if( std::abs(magscalefactor) > 1e-6 ){
+    float bx   = track.xSlope( 0. );
+    float bx2  = bx * bx;
+    //== Compute the slopes before the magnet: Assume the track comes from (0,0,0) and
+    //== crosses the T station part at zMagnet
+    float zMagnet = ( m_zMagnetParams[0] );
+    float xMagnet = track.x( zMagnet );
+    float yMagnet = track.y( zMagnet );
+    float slXFront = xMagnet / zMagnet;
+    float slYFront = yMagnet / zMagnet;
+    float slX2 = slXFront * slXFront;
+    float slY2 = slYFront * slYFront;
+    float dSlope = slXFront - bx;
+    //== Iterate as ZMagnet depends on the slope before...
+    zMagnet = ( m_zMagnetParams[0] +
+                m_zMagnetParams[1] * dSlope * dSlope +
+                m_zMagnetParams[2] * slX2 +
+                m_zMagnetParams[3] * slY2 );
+    xMagnet = track.x( zMagnet );
+    yMagnet = track.y( zMagnet );
+    slXFront = xMagnet / zMagnet;
+    slYFront = yMagnet / zMagnet;
+    slX2 = slXFront * slXFront;
+    slY2 = slYFront * slYFront;
+    float coef = ( m_momentumParams[0] +
+                   m_momentumParams[1] * bx2 +
+                   m_momentumParams[2] * bx2 * bx2 +
+                   m_momentumParams[3] * bx * slXFront +
+                   m_momentumParams[4] * slY2 +
+                   m_momentumParams[5] * slX2 * slY2 );
+    float proj = sqrt( ( 1. + slX2 + slY2 ) / ( 1. + slX2 ) );
+    qop = dSlope / ( coef * Gaudi::Units::GeV * proj * magscalefactor ) ;
+  }
+  return qop ;
+}
+
 
 //=========================================================================
 //  Default covariance matrix: Large errors as input to Kalman fitter.
