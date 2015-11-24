@@ -3,6 +3,11 @@
 ! Responsible : Michel De Cian
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
+ 
+! 2015-11-24 
+ - Add option to PrPlotFTHits to plot the residual state for Seed and Forward Tracks ( Residual x, y, tx, ty) activable with PrPlotFTHit.PlotStates = True (False by Default)
+ - Add option to PrPlotFTHits to plot the Occupancy in the detector splitting contributions from Noise / SpillOver / MCParticle activable with PrPlotFTHits.PlotOccupancy = True
+ - Add the PrClustersResidual tool which produce different nTuples to check the residual between Clusters and MCHits and provides some branches filled for further studies in a ROOT environment to study the track behavior in the SciFi.
 
 !========================= PrMCTools v2r11p1 2015-11-23 =========================
 ! 2015-11-23 - Michel De Cian
