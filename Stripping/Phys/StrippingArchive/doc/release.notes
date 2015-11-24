@@ -4,6 +4,9 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-24 - Ricardo Vazquez Gomez
+ - Add Stripping24 to the archive
+
 !========================= StrippingArchive v1r34 2015-10-22 =========================
 
 ! 2015-09-25 - Ricardo Vazquez Gomez
