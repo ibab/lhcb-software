@@ -7,7 +7,7 @@ distribution_url   = "http://cern.ch/lhcbproject/dist"
 
 Python_version     = "2.5"
 CMT_version        = "v1r20p20090520"
-CMake_version      = "2.8.9"
+CMake_version      = "3.3.2"
 tbroadcast_version = "v2.0.5"
 doxygen_version    = "1.8.2"
 

@@ -520,7 +520,7 @@ class LbLoginScript(SourceScript):
             appversion = opts.cmakevers[:lastdot-1] + '-' + opts.cmakevers[lastdot+1:]
             subdir = "CMake/%s/Darwin/CMake %s.app/Contents/bin" % (opts.cmakevers, appversion)
         elif sys.platform.startswith('linux'):
-            subdir = "CMake/%s/Linux-i386/bin" % opts.cmakevers
+            subdir = "CMake/%s/Linux-x86_64/bin" % opts.cmakevers
         else:
             log.debug('CMake is not provided for platform %s', sys.platform)
             return
