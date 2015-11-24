@@ -1,10 +1,10 @@
-ifeq ($(wildcard CMakeLists.txt),) 
-# we cannot use the CMake version if we do not have a CMakeLists.txt
-override USE_CMAKE =
+ifeq ($(wildcard cmt/project.cmt),) 
+# we cannot use the CMT version if we do not have a cmt/project.cmt
+override USE_CMT =
 endif
 
-ifeq ($(USE_CMAKE),)
-include $(LBCONFIGURATIONROOT)/data/Makefile-cmt.mk
-else
+ifeq ($(USE_CMT),)
 include $(LBUTILSROOT)/data/Makefile-cmake.mk
+else
+include $(LBCONFIGURATIONROOT)/data/Makefile-cmt.mk
 endif
