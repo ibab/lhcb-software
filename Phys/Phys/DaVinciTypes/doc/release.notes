@@ -5,6 +5,9 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+! 2015-11-24 - Anton Poluektov 
+ - Add new variables to RelatedInfoNamed enum
+
 !======================== DaVinciTypes v2r14 2015-10-16 ======================
 
 ! 2015-10-15 - Vanya BELYAEV
