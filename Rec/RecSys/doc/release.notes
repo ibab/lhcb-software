@@ -5,6 +5,176 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v18r3>2015-11-25 RecSys v18r3</A></H1><PRE>
+This version uses Gaudi v26r4, LHCb v39r2 and Lbcom v17r2 (and ROOT 6.04.02)
+
+- Packages modified: Calo/CaloMoniDst v5r20, Calo/CaloReco v5r26,
+    Calo/CaloTools v6r11, Muon/MuonTrackRec v3r15, Pr/PrAlgorithms v1r16p2,
+    Pr/PrMCTools v2r11p1, Pr/PrVeloUT v2r3, Rec/LumiAlgs v9r10, 
+    Rec/RecAlgs v3r3p3, Rec/RecConf v2r23, Rich/RichRecBase v4r22,
+    Rich/RichRecPhotonTools v1r19, Rich/RichRecSys v5r8, Tf/FastVelo v1r24,
+    Tf/PatAlgorithms v4r44, Tf/PatVelo v3r32p2, Tf/TfKernel v2r34,
+    Tf/TsaAlgorithms v3r31, Tr/TrackKernel v2r4, Tr/TrackMCTools v3r12p2,
+    Tr/TrackMonitors v2r11, Tr/TrackProjectors v3r3, Tr/TrackTools v5r13,
+    Tr/TrackUtils v1r62, Tr/PatPV v3r29, Velo/VeloRecMonitors v2r33
+
+- In Calo/CaloMoniDst v5r20, Calo/CaloTools v6r11
+  . Fix clang compilation warnings
+
+- In Calo/CaloMoniDst v5r20
+  . Initialize base-class (CaloMoniAlg) everywhere 
+
+- In Calo/CaloReco v5r26
+  . python configurable : propagate same Et threshold for mergedPi0 and for
+    splitCluster production
+
+- In Muon/MuonTrackRec v3r15
+  . Add timing information to MuonPadFromCoord 
+  . Fix some compilation warnings and some cleanup in MuonHitDecode
+
+- In Pr/PrAlgorithms v1r16p2, Rec/RecAlgs v3r3p3, Tf/FastVelo v1r24,
+     Tf/PatVelo v3r32p2, Tr/TrackMonitors v2r11
+  . Remove unused variables
+
+- In Pr/PrMCTools v2r11p1
+  . Add doxygen documentation to PrChecker
+
+- In Pr/PrVeloUT v2r3
+  . New hit and slope tolerances in clustering
+
+- In Rec/LumiAlgs v9r10
+  . lumi9mergesmallfiles.qmt: add temporary exclusion for printout of Algorithm
+    RootOnTES property, to be removed after Gaudi v26r4
+  . Update test references to follow LHCBPS-1434 patch: LHCbApp() now assigns 
+    OdinTimeDecoder as EventClockSvc().EventTimeDecoder when processing real data
+
+- In Rec/RecConf v2r23
+  . Only set RichRecSysConf track and pid locations if not previously set.
+    Allows for custom studies using non standard locations, configured at 
+    the top level options file level.
+  . Configured PatPV3D such that it also creates list of new type PrimaryVertices
+
+- In Rich/RichRecBase v4r22
+  . Add 'MuonID' to the list of known track types.
+  . Various minor cleanups to base classes.
+
+- In Rich/RichRecPhotonTools v1r19
+  . Convert Gaudi XYZ types to Eigen types sooner, to avoid a few non-vectorised 
+    operations.
+  . Remove return type from QuarticSolver::solve<TYPE>, as it was never false.
+    Instead handle the 'in principle could but in practice never does' divide
+    by zero possibility internally.
+  . Various other small improvements.
+  . Small CPU optimisation of QuarticSolver by vectorising three sqrt 
+    calculations into one using VectorClass' Vec4f implementation. 
+    Saves about 4% CPU time in QuarticSolver::solve<TYPE>.
+  . Use std::conditional to switch between float and double VectorClass types 
+    depending on template type used in QuarticSolver::solve<TYPE>.
+  . Remove old unused ROOT implementation of solve in QuarticSolver.
+
+- In Rich/RichRecSys v5r8
+  . Fix a minor bug where custom options for RichTools where not properly
+    propagated to the track group configurables. No impact on normal processing,
+    only when running with special custom options.
+
+- In Tf/FastVelo v1r24
+  . Remove #include of obsolete Gaudi header file
+  . Make sure there is no use of objects after they have been std::move-ed
+
+- In Tf/PatAlgorithms v4r44
+  . PatLongLivedTracking: Add counter
+  . PatAddTTCoord: be smarter with memory (std::vector as member variable) and
+    chi2 calculation
+  . PatAddTTCoord and PatLongLivedTracking
+    o adapt for new access method of hits.
+    o adapt to new name of hit-sorting function.
+    o Exploit new hit sorting in TTStationHitManager.
+
+- In Tf/TfKernel v2r34
+  . VeloHitManager:
+    o replace the type ZLessThan by the instance ZLessThan
+    o use direct member initialization 
+    o use auto and range-based for loops
+  . Simplify VeloSensorHits.h   
+  . Minimal change to make SIMDChi2Fit compile with clang
+  . Add method in IndexedHitContainer to return hits in a given layer non-const.
+  . Add sorting in station and layer in TTStationHitManager.
+  . Split between hits in regions and sorted hits in layers
+
+- In Tf/TsaAlgorithms v3r31, Tr/TrackMonitors v2r11, Tr/TrackTools v5r13
+  . Replace LoKi::select with std::copy_if
+  . Replace BOOST_FOREACH with range-based for
+  . Replace boost::assign::list_of with std::initializer_list
+  . Prefer STL algorithms over raw loops
+  . Prefer range-based for loops
+
+- In Tf/TsaAlgorithms v3r31, Tr/TrackTools v5r13
+  . Prefer lambda over bind (the latter will prevent inlining)
+
+- In Tf/TsaAlgorithms v3r31
+  . Use move semantics when possible to avoid copying of vectors
+
+- In Tr/TrackKernel v2r4
+  . Remove static 
+
+- In Tr/TrackMCTools v3r12p2, Velo/VeloRecMonitors v2r33
+  . Replace endreq with endmsg
+
+- In Tr/TrackMonitors v2r11
+  . Add VPTrackMonitor
+  . Add ghost probability histogram to TrackMonitor.
+  . Replace boost::array with std::array
+  . Do not compare bool to false or true
+  . Replace boost lambda and bind with regular lambda
+  . Replace explicit delete with use std::unique_ptr
+  . Prefer string::empty over == ""
+  . Hoist if statements out of loops
+  . Prefer range-based insert over loop with push_back
+  . Make sure static objects are always const
+  . Prefer loops over cut-and-paste
+  . Replace boost::lexical_cast<std::string> with std::to_string
+  . Replace boost::assign::list_of with use of std::initializer_list
+  . TrackITOverlapMonitor:
+    o Remove unnecessary forward declaration to fix clang compilation
+    o Remove unnecessary includes
+
+- In Tr/TrackMonitors v2r11, Tr/TrackTools v5r13
+  . Use auto to simplify code
+  . Various const-correctness fixes
+
+- In Tr/TrackProjectors v3r3
+  . Fix bug in TrajOTProjector, dealing with 'pre-fixed' OT ambiguities.
+    Not exposed in normal Brunel running.
+
+- In Tr/TrackTools v5r13
+  . Replace all tests about FT geometry being v2 version to allow for version v5
+  . Fix typo in header guard
+  . Add missing override specifier
+  . VPExpectation: remove unused function and unnecessary includes. Use auto.
+  . VPMeasurementProvider: use nullptr instead of NULL. Use auto.
+  . Prefer std::unique_ptr over deprecated std::auto_ptr
+  . Do not check against 0 before deleting a pointer
+    (deleting a nullptr is a no-op)
+  . Prefer not the compare (smart)pointers to 0
+  . Prefer std::hypot over sqrt( gsl_pow2(...) + gsl_pow2(...)  )
+  . Prefer std::shared_ptr over boost::shared_ptr
+  . Preferably put objects on the stack
+  . Fixed memory leak in FTHitExpectation::collectHits
+  . Fixed unitiliased use of variable and naming conventions in VeloMuonBuilder 
+  . Removed distanceCut property from VeloMuonBuilder, as the value is hardcoded
+    during execute
+
+- In Tr/TrackUtils v1r62
+  . Fix forward declaration broken in Gaudi HEAD build 
+
+- In Tr/PatPV v3r29
+  . Added AdaptivePV3DFitter
+  . Added option to PatPV3D to write also new PV list
+
+- In Velo/VeloRecMonitors v2r33
+  . Replace auto_ptr with auto so that code will be forward-compatible 
+    in case trajectory starts to run unique_ptr instead...
+
 </PRE><H1><A NAME=v18r2>2015-10-13 RecSys v18r2</A></H1><PRE>
 This version uses Gaudi v26r4, LHCb v39r1 and Lbcom v17r1 (and ROOT 6.04.02)
 
