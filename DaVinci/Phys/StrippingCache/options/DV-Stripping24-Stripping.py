@@ -12,11 +12,6 @@ CommonParticlesArchiveConf().redirect(stripping)
 from Gaudi.Configuration import *
 MessageSvc().Format = "% F%30W%S%7W%R%T %0W%M"
 
-# Tighten Trk Chi2 to <3
-from CommonParticles.Utils import DefaultTrackingCuts
-DefaultTrackingCuts().Cuts  = { "Chi2Cut" : [ 0, 4 ],
-                                "CloneDistCut" : [5000, 9e+99 ] }
-
 #
 #Fix for TrackEff lines
 #
