@@ -1,3 +1,26 @@
+2015-11-24 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v8r4p3
+
+	LbConfiguration
+	* Upgraded version of CMake to 3.2.3 (LBCORE-980)
+		- python/LbConfiguration/External.py
+		- python/LbConfiguration/LbLogin.py
+	* data/Makefile: use CMake by default and CMT if USE_CMT is set (LBCORE-876)
+	* data/Makefile-cmt.mk: fixed detection of container package
+	* lb-run/lb-dev: use 'latest' as default version for Compat
+	* lb-run/lb-dev: improved version alias mapping (LBCORE-938)
+	* Cleaned up LbScripts to remove creation of .rhosts files by default (LBCORE-968)
+
+	LbRelease
+	* getNightlyRefs: fixed LBCORE-816 (remove dependency on ssh to lhcb-archive)
+	* lb-deployment-checklist: updated for the new path to artifacts (on lhcb-archive)
+	* lb-sdb commands keep SSO cookie for a couple of hours (LBCORE-962)
+
+	LbUtils
+	* cmake: updated CMake support modules
+	* scripts/lcg-clang-37: added wrappers for clang 3.7 
+
 2015-09-01 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v8r4p2
