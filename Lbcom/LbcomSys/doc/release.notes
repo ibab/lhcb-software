@@ -6,6 +6,49 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v17r2>2015-11-25 LbcomSys v17r2</A></H1><PRE>
+This version uses Gaudi v26r4 and LHCb v39r2 (and ROOT 6.04.02)
+
+- Packages modified: HC/HCMonitors v1r2, OT/OTMonitor v3r9, Rich/RichTools v2r51,
+    ST/STAlgorithms v4r7p2, Velo/VeloAlgorithms v5r8, VP/VPAlgorithms v4r5,
+    VP/VPCheckers v1r1, VP/VPTools v2r6
+
+- In HC/HCMonitors v1r2
+  . Bug fix in HCMonitorBase and HCDigitCorrector to update conditions 
+    at every change (not only once at initialization). 
+  . Remove unused class members.
+  . HCDelayScan: remove duplicated (and unused) property ParametersADC.
+  . Add parameter for ADC binning.
+  . Bug fix (ADCs are int, not unsigned int). 
+  . Retrieve calibration constants from conditions database.
+  . Retrieve channel mapping from conditions database.
+
+- In OT/OTMonitor v3r9, Velo/VeloAlgorithms v5r8
+  . replace boost::lexical_cast with std::to_string
+
+- In OT/OTMonitor v3r9
+  . replace BOOST_FOREACH with range-based for loop
+
+- In Rich/RichTools v2r51
+  . Remove the verbose printout from findSphMirror and findSecMirror, as these
+    methods are very heavly used, and even the verbose level check costs a bit.
+  . In a similar vein, comment on the test code in MirrorSegFinderLookUpTable
+    as it is used infrequently, and when it is it can just be uncommented.
+    Avoids some more if statements in the very heavily used methods.
+
+- In ST/STAlgorithms v4r7p2
+  . Replace endreq with endmsg
+
+- In VP/VPAlgorithms v4r5
+  . Bugfix in VPClustering (subtraction of two unsigned ints).
+
+- In VP/VPCheckers v1r1
+  . Add check whether the detector element is found.
+
+- In VP/VPTools v2r6
+  . VPClusterPosition: use DeVP::sensors getter instead of sensorsBegin/End.
+  . Remove dependency on GaudiGSL.
+
 </PRE><H1><A NAME=v17r1>2015-10-13 LbcomSys v17r1</A></H1><PRE>
 This version uses Gaudi v26r4 and LHCb v39r1 (and ROOT 6.04.02)
 
