@@ -1,6 +1,7 @@
 2015-11-24  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: LBCORE-978 release of version v8r4p3
+        * LBCORE-968 Cleaned up LbScripts to remove creation of .rhosts files
 
 2015-10-29  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
