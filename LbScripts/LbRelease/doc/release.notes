@@ -1,3 +1,7 @@
+2015-11-24  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v5r4p3
+
 2015-11-09  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* getNightlyRefs: fixed LBCORE-816 (remove dependency on ssh to lhcb-archive)
