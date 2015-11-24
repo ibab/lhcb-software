@@ -1,3 +1,7 @@
+2015-11-24  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: LBCORE-978 release of version v8r4p3
+
 2015-10-29  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* data/Makefile-cmt.mk: fixed detection of container package
