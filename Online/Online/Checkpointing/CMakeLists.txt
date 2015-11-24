@@ -5,8 +5,10 @@ gaudi_subdir(Checkpointing v0r25)
 
 # this package works only on 64 bits platforms
 if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+
   # Ignore variadic macros warnings (unavoidable)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wvariadic-macros")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-variadic-macros")
+
   # Ignore pedantic warnings (unavoidable)
   string(REPLACE "-pedantic" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
 
@@ -22,8 +24,12 @@ if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
 
   string(REPLACE "-pthread" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
   gaudi_add_executable(restore aux/main.cpp)
-  set_property(TARGET restore APPEND PROPERTY COMPILE_FLAGS " -g -O0")
-  set_property(TARGET restore APPEND PROPERTY LINK_FLAGS " -g -O0 -static")
+  set_property(TARGET restore APPEND PROPERTY COMPILE_FLAGS " -g -O0" )
+  set_property(TARGET restore APPEND PROPERTY LINK_FLAGS " -g -O0 -static" )
+  get_property(link_flg TARGET restore PROPERTY LINK_FLAGS )
+  string(REPLACE "-rdynamic" "" link_flg ${link_flg} )
+  set_property(TARGET restore PROPERTY LINK_FLAGS ${link_flg} )
+
   gaudi_install_scripts()
   gaudi_add_test(QMTest QMTEST)
 endif()
