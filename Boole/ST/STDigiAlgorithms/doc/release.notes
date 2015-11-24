@@ -3,6 +3,8 @@
 ! Responsible : Matt Needham
 ! Purpose     : Algorithms for ST Digitization
 !-----------------------------------------------------------------------------
+
+!========================= STDigiAlgorithms v2r7 2015-11-24 =========================
 ! 2015-10-25 - Gerhard Raven
  - avoid calling SmartIF::pRef
 
