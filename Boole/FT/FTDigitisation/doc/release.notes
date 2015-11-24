@@ -3,6 +3,8 @@
 ! Responsible : Eric Cogneras
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
+
+!========================= FTDigitisation v3r0 2015-11-24 =========================
 ! 2015-11-16 - Luigi Del Buono
  - replacing all tests about geometry being v2 version to allow for version v5
    (i.e: simply replaced "version==20" by "version>=20", not ideal but will do for now)
