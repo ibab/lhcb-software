@@ -4,6 +4,8 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingConf v4r21 2015-11-24 =========================
+
 ! 2015-11-12 - Anton Poluektov 
  - Add "IgnoreUnmatchedDescriptors" key to RelatedInfoTools dictionary. Setting it to "true"
    will make AddRelatedInfo silently ignore the descriptors in DaughterLocations
