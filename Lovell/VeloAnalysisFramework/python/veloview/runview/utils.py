@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Utilities for GUI run view pages."""
 from veloview.config import Config
 from veloview.runview.reference_database import ReferenceDatabase
@@ -52,7 +51,7 @@ def run_file(run):
         # Return latest merged file if available
         return max(merged_files, key = os.path.getctime)
 
-    # second choice: NZS + Clusters merged files
+    # second choice: NZS + Clusters merged files
     merged_files = glob.glob("{0}/*NZS_Clusters.root".format(base))
     if merged_files:
         # Return latest merged file if available
