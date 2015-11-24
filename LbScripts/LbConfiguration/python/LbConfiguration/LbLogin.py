@@ -660,60 +660,13 @@ class LbLoginScript(SourceScript):
             ev["HOME"] = os.path.join(ev["HOMEDRIVE"], ev["HOMEPATH"])
             log.debug("Setting HOME to %s" % ev["HOME"])
         homedir = ev["HOME"]
-        rhostfile = os.path.join(homedir, ".rhosts")
+
         if sys.platform != "win32" :
             username = ev["USER"]
         else :
             username = ev["USERNAME"]
         log.debug("User name is %s" % username)
-        if not os.path.exists(rhostfile) and sys.platform != "win32" :
-            self.addEcho("Creating a %s file to use CMT" % rhostfile)
-            self.addEcho("Joel.Closier@cern.ch")
-            try :
-                f = open(rhostfile, "w")
-                f.write("+ %s\n" % username)
-                f.close()
-            except IOError:
-                log.warning("Can't create the file %s" % rhostfile)
-        # remove any .cmtrc file stored in the $HOME directory
-        cmtrcfile = os.path.join(homedir, ".cmtrc")
-        if os.path.exists(cmtrcfile) :
-            os.remove(cmtrcfile)
-            log.debug("Removing %s" % cmtrcfile)
-        # to work with rootd the .rootauthrc file is required
-        rootrcfile = os.path.join(homedir, ".rootauthrc")
-        if not os.path.exists(rootrcfile) and opts.cmtsite != "standalone" :
-            srcrootrcfile = os.path.join(_lbs_home_dir, "LbConfiguration", "data", ".rootauthrc")
-            if os.path.exists(srcrootrcfile) :
-                try :
-                    shutil.copy(srcrootrcfile, rootrcfile)
-                    log.debug("Copying %s to %s" % (srcrootrcfile, rootrcfile))
-                except IOError :
-                    log.warning("Failed to copy %s to %s" % (srcrootrcfile, rootrcfile) )
 
-        if sys.platform != "win32" and self.targetShell() == "sh" and ev.has_key("HOME"):
-            hprof = os.path.join(ev["HOME"], ".bash_profile")
-            sprof = os.path.join("/etc", "skel", ".bash_profile")
-            hlist = []
-            hlist.append(hprof)
-            hlist.append(os.path.join(ev["HOME"], ".bash_login"))
-            hlist.append(os.path.join(ev["HOME"], ".profile"))
-            if not [ x for x in hlist if os.path.exists(x) ] :
-                if os.path.exists(sprof) :
-                    try :
-                        shutil.copy(sprof, hprof)
-                        log.warning("Copying %s to %s" % (sprof, hprof))
-                    except IOError :
-                        log.warning("Failed to copy %s to %s" % (sprof, hprof) )
-            hbrc = os.path.join(ev["HOME"], ".bashrc")
-            sbrc = os.path.join("/etc", "skel", ".bashrc")
-            if not os.path.exists(hbrc) :
-                if os.path.exists(sbrc) :
-                    try :
-                        shutil.copy(sbrc, hbrc)
-                        log.warning("Copying %s to %s" % (sbrc, hbrc))
-                    except IOError :
-                        log.warning("Failed to copy %s to %s" % (sbrc, hbrc) )
         if not ev.has_key("LD_LIBRARY_PATH") :
             ev["LD_LIBRARY_PATH"] = ""
             log.debug("Setting a default LD_LIBRARY_PATH")
@@ -732,58 +685,9 @@ class LbLoginScript(SourceScript):
         if not opts.remove_userarea :
             newdir = False
             if not opts.userarea :
-                opts.userarea = os.path.join(ev["HOME"], "cmtuser") # @todo: use something different for window
+                opts.userarea = os.path.join(ev["HOME"], "cmtuser") 
             ev["User_release_area"] = opts.userarea
             log.debug("User_release_area is set to %s" % ev["User_release_area"])
-
-            rename_cmtuser = False
-            if os.path.exists(opts.userarea) : # is a file, a directory or a valid link
-                if os.path.isfile(opts.userarea) : # is a file or a link pointing to a file
-                    log.warning("%s is a file"  % opts.userarea)
-                    rename_cmtuser = True
-                    newdir = True
-                else : # is a directory or a link pointing to a directory. Nothing to do
-                    log.debug("%s is a directory" % opts.userarea)
-            else : # doesn't exist or is an invalid link
-                if os.path.islink(opts.userarea) : # broken link
-                    log.warning("%s is a broken link"  % opts.userarea)
-                    rename_cmtuser = True
-                newdir = True
-            if rename_cmtuser :
-                bak_userarea = opts.userarea + "_bak"
-                if not os.path.exists(bak_userarea) :
-                    if os.path.islink(bak_userarea) :
-                        try :
-                            os.remove(bak_userarea) # remove broken link
-                        except IOError:
-                            log.warning("Can't remove %s" % bak_userarea)
-                    try :
-                        os.rename(opts.userarea, opts.userarea + "_bak")
-                        log.warning("Renamed %s into %s" % (opts.userarea, opts.userarea + "_bak"))
-                    except IOError:
-                        log.warning("Can't rename %s into %s" % (opts.userarea, opts.userarea + "_bak"))
-                else :
-                    log.warning("Can't backup %s because %s is in the way" % (opts.userarea, bak_userarea))
-                    log.warning("No %s directory created" % opts.userarea)
-                    newdir = False
-            if newdir :
-                try :
-                    os.makedirs(opts.userarea)
-                    self.addEcho(" --- a new cmtuser directory has been created in your HOME directory")
-                except IOError:
-                    log.warning("Can't create %s" % opts.userarea)
-            if opts.cmtsite == "CERN" and sys.platform != "win32" and self.hasCommand("fs"):
-                if newdir :
-                    try :
-                        os.system("fs setacl %s system:anyuser l" % opts.userarea)
-                        os.system("fs setacl %s cern:z5 rl" % opts.userarea)
-                    except IOError:
-                        log.warning("Can't change ACL of %s" % opts.userarea)
-                    self.addEcho(" --- with LHCb public access (readonly)")
-                    self.addEcho(" --- use mkprivate to remove public access to the current directory")
-                    self.addEcho(" --- use mkpublic to give public access to the current directory")
-                al["mkprivate"] = "find . -type d -print -exec fs setacl {} system:anyuser l \\; ; find . -type d -print -exec fs setacl {} cern:z5 l \\;"
-                al["mkpublic"] = "find . -type d -print -exec fs setacl {} system:anyuser l \\; ; find . -type d -print -exec fs setacl {} cern:z5 rl \\;"
         elif ev.has_key("User_release_area") :
             del ev["User_release_area"]
             log.debug("Removed User_release_area from the environment")
