@@ -20,14 +20,14 @@ static void fill (char *buff,int len)    {
 static void check (char *buff1,char *buff2,int len1,int len2)    {
   int nerr = 0;
   if (len1 != len2)
-    printf ("Length mismatch: sent %d received %d bytes\n", len2, len1);
+    ::printf ("Length mismatch: sent %d received %d bytes\n", len2, len1);
   else
     for (int i = 0; i < len1; i++)    {
       if (nerr++ > 10)
         break;
       if (buff1 [i] != buff2 [i])
-        printf ("Mismatch: sent 0x%X received 0x%X at %d\n",
-                buff2 [i], buff1 [i], i);
+        ::printf ("Mismatch: sent 0x%X received 0x%X at %d\n",
+		  buff2 [i], buff1 [i], i);
     }
 }
 static void help() {
@@ -60,7 +60,8 @@ extern "C" int amsc_bounce(int argc, char **argv)  {
   ::printf (" Starting ams test task (%s) %s for %d turns\n",
             (fanout) ? "Sender" : "Reader", amsname.c_str(),loop);
   if (fanout)  {
-    ::snprintf(source,sizeof(source),target.c_str());
+    ::strncpy(source,target.c_str(),sizeof(source));
+    source[sizeof(source)-1] = 0;
     ::printf(" task %s: size %d\n",source,length);
   }
   int ams_status = amsc_init (amsname.c_str());

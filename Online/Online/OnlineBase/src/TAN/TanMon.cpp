@@ -7,7 +7,7 @@
 
 #define dbl_hi_top      printf("\033#3")
 #define dbl_hi_botm     printf("\033#4")
-#define double          printf("\033#6")
+#define double_width    printf("\033#6")
 #define single          printf("\033#5")
 #define bold            printf("\033[1m")
 #define flashing        printf("\033[5m")

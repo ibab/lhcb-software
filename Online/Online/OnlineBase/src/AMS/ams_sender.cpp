@@ -35,7 +35,8 @@ extern "C" int amsc_sender(int argc, char **argv)  {
   if ( length<=0 ) length=10;
   wmessage = new char[length];
   ::printf (" Starting ams test task (%s) \n",amsname.c_str());
-  ::snprintf(source,sizeof(source),target.c_str());
+  ::strncpy(source,target.c_str(),sizeof(source));
+  source[sizeof(source)-1] = 0;
   ::printf(" task %s: size %d  facility:%d turns:%d\n",source,length,int(facility),loop);
   int sc = ::amsc_init (amsname.c_str());
   if (sc != AMS_SUCCESS)  {

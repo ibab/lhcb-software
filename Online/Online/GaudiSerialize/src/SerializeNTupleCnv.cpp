@@ -248,6 +248,8 @@ template <class T> static inline void putRange(ostream& os, NTuple::_Data<T>* it
   os << x.lower() << ';' << x.upper() << ';';
 }
 
+#if 0
+/// Debug dump ....
 static inline string _tr(const string& s) {
   string local = s;
   char* p = (char*)local.c_str();
@@ -256,6 +258,7 @@ static inline string _tr(const string& s) {
     if ( !isalnum(*p) ) *p = '_';
   return local;
 }
+#endif
 
 // Converter overrides: Update the references of an updated transient object.
 StatusCode
