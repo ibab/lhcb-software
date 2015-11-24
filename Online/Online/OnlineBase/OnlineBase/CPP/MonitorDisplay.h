@@ -6,7 +6,7 @@
 #include <string>
 
 // Forward declarations
-class Interactor;
+namespace CPP { class Interactor;  }
 
 class Position {
 public:
@@ -27,9 +27,12 @@ public:
  * @author M.Frank
  */
 class MonitorDisplay {
+ public:
+  typedef CPP::Interactor Interactor;
+
 protected:
   /// Display Client to handle interface callbacks
-  Interactor*        m_client;
+  Interactor*   m_client;
   /// Currentl ine when drawing display
   size_t             m_currLine;
   /// Display position in global window (if applicable)

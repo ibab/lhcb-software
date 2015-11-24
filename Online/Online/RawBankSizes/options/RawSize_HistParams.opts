@@ -11,6 +11,7 @@ RawBankSizes.FileID=(100,0.0,10000.0,0,128,"LHCb");
 RawBankSizes.GaudiHeader=(100,0.0,10000.0,0,128,"LHCb");
 RawBankSizes.GaudiSerialize=(100,0.0,10000.0,0,128,"LHCb");
 RawBankSizes.HC=(100,0.0,10000.0,0,1024,"Unknown");
+RawBankSizes.HCError=(100,0.0,10000.0,0,1024,"Unknown");
 RawBankSizes.HLTRatio=(100,0.0,1.0,0,-1,"LHCb");
 RawBankSizes.HcalE=(100,0.0,10000.0,0,128,"HCal");
 RawBankSizes.HcalPacked=(100,1000.0,3000.0,0,10,"HCal");

@@ -1412,7 +1412,7 @@ void get_new_dns_server_info(int *tag, int **bufp, int *size, int *first_time)
 	ENABLE_AST
 }
 
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
 	int i, protocol, dns_port;
 	int *bufp;

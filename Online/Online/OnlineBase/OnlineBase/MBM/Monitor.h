@@ -39,7 +39,16 @@ namespace MBM {
     CONTROL *ctrl;
   } ShadowBMs_t;
   typedef std::map<std::string,BMSTAT*> BMMap_t;
-  class Monitor : public Interactor  {
+
+  /// MBM Monitoring class
+  /**
+   *  @author  M.Frank
+   *  @version 1.0
+   */
+  class Monitor : public CPP::Interactor  {
+  public:
+    typedef CPP::Interactor Interactor;
+
   protected:
     DisplayDescriptor*  m_bms;
     int                 m_numBM;

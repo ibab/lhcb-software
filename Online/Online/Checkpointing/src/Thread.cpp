@@ -9,6 +9,7 @@
 #include <cstring>
 #include <cerrno>
 #include <cstdio>
+#include <sched.h>
 #include <unistd.h>
 
 using namespace Checkpointing;
