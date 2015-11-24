@@ -46,10 +46,6 @@ sc = StrippingConf( Streams = [stream],
                     BadEventSelection = filterBadEvents, 
                     TESPrefix = 'Strip' )
 
-## Configure PV refitter
-from Configurables import LoKi__PVReFitter
-LoKi__PVReFitter("ToolSvc.LoKi::PVReFitter").CheckTracksByLHCbIDs = True
-
 appMgr = ApplicationMgr()
 appMgr.OutputLevel = 6
 appMgr.ExtSvc += [ 'ToolSvc', 'AuditorSvc' ]
