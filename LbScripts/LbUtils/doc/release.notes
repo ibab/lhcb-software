@@ -1,3 +1,7 @@
+2015-11-24  Ben Couturier  <ben.couturier@cern.ch>
+
+	* cmt/requirements: LBCORE-978: Release of LbScripts v8r4p3
+
 2015-10-29  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* cmake: updated CMake support modules
