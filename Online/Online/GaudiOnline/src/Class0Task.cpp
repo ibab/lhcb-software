@@ -2,7 +2,7 @@
 #include "CPP/IocSensor.h"
 
 /// Standard constructor
-LHCb::Class0Task::Class0Task(IInterface* svc) : GaudiTask(svc) {
+LHCb::Class0Task::Class0Task(IInterface* svc) : GaudiTask(svc, false) {
   m_configured = false;
   IOCSENSOR.send(this,CONFIGURE);
 }
@@ -28,6 +28,7 @@ StatusCode LHCb::Class0Task::configure()  {
         }
       }
     }
+    connectDIM(0).ignore();
     declareState(ST_ERROR);
     return StatusCode::FAILURE;
   }

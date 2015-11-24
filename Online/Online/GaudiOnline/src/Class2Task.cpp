@@ -2,7 +2,7 @@
 #include "CPP/IocSensor.h"
 
 /// Standard constructor
-LHCb::Class2Task::Class2Task(IInterface* svc) : GaudiTask(svc) {
+LHCb::Class2Task::Class2Task(IInterface* svc) : GaudiTask(svc, false) {
   IOCSENSOR.send(this, STARTUP_DONE);
 }
 

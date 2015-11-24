@@ -116,7 +116,7 @@ namespace LHCb  {
 
   public:
     /// Initializing constructor                       (OFFLINE     -> Inactive)
-    DimTaskFSM(IInterface*);
+    DimTaskFSM(IInterface*, bool connect_dim=true);
     /// Standard destructor
     virtual ~DimTaskFSM();
     /// Print overload

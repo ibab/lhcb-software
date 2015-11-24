@@ -18,7 +18,7 @@ namespace {
 }
 
 /// Standard constructor
-Class1Task::Class1Task(IInterface* svc) : GaudiTask(svc) {
+Class1Task::Class1Task(IInterface* svc) : GaudiTask(svc, false) {
   IOCSENSOR.send(this, STARTUP_DONE);
   m_myState = TASK_OFFLINE;
 }

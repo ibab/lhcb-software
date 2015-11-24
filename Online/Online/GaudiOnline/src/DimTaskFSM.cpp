@@ -151,7 +151,7 @@ namespace  {
   }
 }
 
-DimTaskFSM::DimTaskFSM(IInterface*)
+DimTaskFSM::DimTaskFSM(IInterface*, connect_dim)
   : m_name(RTL::processName()), m_stateName(ST_NAME_UNKNOWN), m_prevStateName(ST_NAME_UNKNOWN),
     m_command(0), m_service(0), m_fsmService(0), m_haveEventLoop(false), m_refCount(1)
 {
@@ -166,7 +166,9 @@ DimTaskFSM::DimTaskFSM(IInterface*)
   propertyMgr().declareProperty("HaveEventLoop",m_haveEventLoop);
   propertyMgr().declareProperty("Name",m_name);
   ::lib_rtl_install_printer(printout,this);
-  connectDIM().ignore();
+  if ( connect_dim )   {
+    connectDIM().ignore();
+  }
 }
 
 DimTaskFSM::~DimTaskFSM()  {
@@ -176,19 +178,21 @@ DimTaskFSM::~DimTaskFSM()  {
 }
 
 StatusCode DimTaskFSM::connectDIM(DimCommand* cmd) {
-  std::string svcname;
-  m_name        = RTL::processName();
-  m_monitor.pid = ::lib_rtl_pid();
-  svcname       = m_name+"/status";
+  if ( !m_command )  {
+    std::string svcname;
+    m_name        = RTL::processName();
+    m_monitor.pid = ::lib_rtl_pid();
+    svcname       = m_name+"/status";
 
-  dim_init();
-  DimServer::autoStartOff();
-  m_command = cmd ? cmd : new Command(m_name, this);
-  m_service = new DimService(svcname.c_str(),(char*)m_stateName.c_str());
-  svcname   = m_name+"/fsm_status";
-  m_fsmService = new DimService(svcname.c_str(),(char*)"L:2;I:1;C",&m_monitor,sizeof(m_monitor));
-  DimServer::autoStartOn();
-  DimServer::start(m_name.c_str());
+    dim_init();
+    DimServer::autoStartOff();
+    m_command = cmd ? cmd : new Command(m_name, this);
+    m_service = new DimService(svcname.c_str(),(char*)m_stateName.c_str());
+    svcname   = m_name+"/fsm_status";
+    m_fsmService = new DimService(svcname.c_str(),(char*)"L:2;I:1;C",&m_monitor,sizeof(m_monitor));
+    DimServer::autoStartOn();
+    DimServer::start(m_name.c_str());
+  }
   return StatusCode::SUCCESS;
 }
 
@@ -414,9 +418,9 @@ void DimTaskFSM::handle(const Event& ev)  {
 
 StatusCode DimTaskFSM::startupDone()  {
   m_stateName = ST_NAME_NOT_READY;
-  //  DimServer::autoStartOn();
-  //  DimServer::start(m_name.c_str());
-  //  ::dis_start_serving((char*)m_name.c_str());
+  if ( !m_command )  {
+    connectDIM(0).ignore();
+  }
   declareState(ST_NOT_READY);
   return StatusCode::SUCCESS;
 }

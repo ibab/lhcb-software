@@ -148,8 +148,9 @@ int GaudiTask::execRunable(void* arg)  {
   return 0;
 }
 
-GaudiTask::GaudiTask(IInterface*)
-  : DimTaskFSM(0), m_handle(0), m_appMgr(0), m_subMgr(0), m_incidentSvc(0), m_msgSvc(0), 
+GaudiTask::GaudiTask(IInterface*, bool connect_dim)
+  : DimTaskFSM(0, connect_dim), m_handle(0), m_appMgr(0), 
+    m_subMgr(0), m_incidentSvc(0), m_msgSvc(0), 
     m_nerr(0), m_ignoreIncident(false)
 {
   const char* call_finalize = ::getenv("DAQ_INHIBIT_FINALIZE");

@@ -145,7 +145,7 @@ namespace LHCb  {
 
   public:
     /// Standard constructor
-    GaudiTask(IInterface* svc);
+    GaudiTask(IInterface* svc, bool connect_dim=true);
     /// Default destructor
     virtual ~GaudiTask();
 
