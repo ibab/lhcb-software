@@ -8,6 +8,8 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================= CommonParticles v8r23 2015-11-24 =========================
+
 ! 2015-11-14 - Ricardo Vazquez Gomez
  - Change the chi2 and ghostprob cut to Reco15 values for Taus and Dipion.
 

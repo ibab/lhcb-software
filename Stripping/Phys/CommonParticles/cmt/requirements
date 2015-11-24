@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           CommonParticles
-version           v8r22
+version           v8r23
 
 #============================================================================
 # Structure, i.e. directories to process.
