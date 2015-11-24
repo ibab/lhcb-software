@@ -4,6 +4,8 @@
 ! Purpose     : Archive of CommonParticle releases
 !-----------------------------------------------------------------------------
 
+!========================= CommonParticlesArchive v1r7 2015-11-24 ====================
+
 ! 2015-11-14 - Ricardo Vazquez Gomez
  - Created archives for S24 and S21r0,1p1 with the correct versions of chi2 and ghostprob for Reco15 and Reco14, respectively
 
