@@ -22,6 +22,7 @@
 #include "MCInterfaces/ILHCbIDsToMCParticles.h"
 #include "MCInterfaces/ILHCbIDsToMCHits.h"
 #include "Event/FTCluster.h"
+#include "Event/FTLiteCluster.h"
 #include "Event/MCHit.h"
 #include "GaudiAlg/GaudiHistoTool.h"
 
@@ -35,7 +36,8 @@
  *  - PlotTrackingEfficiency: Plot the tracking efficiency in 2D.
  *  - PlotMCHits: Plot the MC hits belonging to FT hits
  *  - OnlyLongAndDownForMCHits: Only plot MCHits that belong to long and downstream reconstructible tracks?
- *
+ *  - PlottaOccupancy: Plot the occupancy in the different layers disentangling noise/spill(next and prev)/from MCParticle
+ *  - PlotStates: Plot the Delta state x,y,tx,ty for all the Track state wrt to the IdealStateCreator of the associated MCParticle from forward and seeding output containers
  *  Note that this tool needs MCHits and may therfore not run on all input files.
  *  Furthermore note that the location of MCHits has to be mapped correctly, like:
  *  
@@ -82,7 +84,15 @@ protected:
 
 
 private:
-
+  /** @brief Plot the occupancy in the detector layer by layer 
+   */
+  void plotOccupancy();
+  
+  
+  /** @brief Plot the Track state distance in x,y,tx,ty
+   */
+  void plotState();
+      
   /** @brief Plot the hit efficiency in the FT.
    */
   void plotHitEfficiency();
@@ -122,7 +132,7 @@ private:
    *  @return LHCb::FTCluster The FT cluster
    */
   LHCb::FTCluster* getCluster(const LHCb::LHCbID id);
-  
+  LHCb::FTLiteCluster getLiteCluster(const LHCb::LHCbID id);
 
   const IHistoTool* m_histoTool;
   GaudiHistoTool* m_ghtool;
@@ -137,7 +147,8 @@ private:
   IIdealStateCreator* m_idealStateCreator;
   
   unsigned int m_zone;
-
+  
+  bool m_plotOccupancy;
   bool m_excludeElectrons;
   bool m_plotHitEfficiency;
   bool m_plotAllFTHits;
@@ -145,18 +156,14 @@ private:
   bool m_plotTrackingEfficiency;
   bool m_plotMCHits;
   bool m_onlyLongDownForMCHits;
-  
-  
-  
-  
-
+  bool m_plotState;
   /// Type for container of Hits
   typedef std::vector< PrHit* > Hits;
-  
   /// range of object for Hits
   typedef Gaudi::Range_< Hits > HitRange;
-
-  
+  // Clusters container
+  typedef FastClusterContainer<LHCb::FTLiteCluster,int> FTLiteClusters;
+     
 };
 
 #endif // PRPLOTFTHITS_H
