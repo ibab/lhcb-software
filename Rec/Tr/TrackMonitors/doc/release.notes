@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-11-25 - Elena Graverini
+ - Add STADCTrackMonitor (analysis of ST CCE scans)
+
 !========================= TrackMonitors v2r11 2015-11-23 =========================
 ! 2015-11-19 - Marco Cattaneo
  - Remove an unused member variable

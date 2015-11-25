@@ -23,6 +23,7 @@ use   TrackFitEvent     v*	Tr
 use   TrackInterfaces 	v*	Tr
 use   TrackKernel	v*	Tr
 use   STKernel          v*      ST
+use   STTELL1Event	v*	ST
 use   PartProp          v*      Kernel
 use   CaloDet           v*      Det
 use   PhysEvent         v*      Event
