@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-25 - Ricardo Vazquez Gomez
+ - Update dbase for S24
+
 ! 2015-11-25 - Michael Kolpin
  - Removed PID Calib lines from S24 LineConfigDictionary_Calib
 
