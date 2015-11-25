@@ -784,12 +784,6 @@ run_view_pages = OrderedDict([
                         'title': 'FEM PCN errors',
                         'name': 'Velo/PCNErrorMon/hFEMPCNsync',
                         'axis_titles': ['Sensor number', 'Desync frequency']
-                        },
-                        {
-                        'title': 'Per-sensor PCN error map',
-                        'name': 'Velo/PCNErrorMon/hperBeetleBitMap_{0}_0',
-                        'sensor_dependent': True,
-                        'axis_titles': ['PCN bit', 'Correct value for PCN bit']
                         }
                     ]
                 }
