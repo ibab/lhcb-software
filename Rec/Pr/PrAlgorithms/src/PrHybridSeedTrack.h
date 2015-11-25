@@ -86,22 +86,11 @@ public:
   void setValid( bool v )               { m_valid = v; }
   bool   valid()                 const { return m_valid; }
   //dRatio
+
   void setdRatio( double dRatio )       { m_dRatio = dRatio;}
   double dRatio()                 const{return m_dRatio;}
-  //Chi2 & DoF
-  // void setChi2LineY( double chi2DoF, int nUV){
-  //   m_chi2Line = chi2DoF;
-  //   m_nUVLine = nUV;
-  // }
-  // double chi2DoFLine() const
-  // {
-  //   if( m_nUVLine>1)
-  //     return m_chi2Line;
-  //   return 1e30;
-  // }
-  // int nUV() const{
-  //   return m_nUVLine;
-  // }
+  
+  // chi2
   void setChi2(double chi2, int nDoF) { m_chi2 = chi2;m_nDoF = nDoF;m_chi2DoF = m_chi2/m_nDoF; }
   double chi2()                   const { return m_chi2; }
   double chi2PerDoF()         const { return m_chi2DoF;}//m_chi2 / m_nDoF;}
@@ -221,8 +210,6 @@ private:
     m_case = -1;
     m_nx = 0;
     m_ny = 0;
-    // m_nUVLine = 0;
-    // m_chi2Line = 1.e30;
     //track params
     m_ax = 0.;
     m_bx = 0.;
@@ -233,14 +220,9 @@ private:
     m_chi2 = 0.;
     m_chi2DoF = 0.;
     m_nDoF = -1;
-    //m_dXCoord = 0.;
-    // m_meanDy  = 0.;
     m_dRatio = 0.;
     m_X0 = -99999.;
     m_maxChi2 = -99999.;
-    //m_xPredT1 = 0.;
-    //m_xPredT2 = 0.;
-    //m_xPredT3 = 0.;
   }
   //Global Private variables
 private:
@@ -249,9 +231,7 @@ private:
   bool m_slopeCorr;
   unsigned int m_nx;
   unsigned int m_ny;
-  // int m_nUVLine;
-  double m_chi2Line;
-  
+  // int m_nUVLine;  
   unsigned int m_zone;
   double       m_zRef;
   PrHits       m_hits;
@@ -264,14 +244,8 @@ private:
   double       m_ay;
   double       m_by;
   double       m_dRatio;
-  // double       m_meanDy;
   double       m_maxChi2;
   double       m_X0;
-  // int          m_RefitX;
-  // double       m_dXCoord;
-  // double       m_xPredT1;
-  // double       m_xPredT2;
-  // double       m_xPredT3;
   unsigned int m_case;
 };
 

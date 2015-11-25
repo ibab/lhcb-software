@@ -315,7 +315,6 @@ StatusCode PrHybridSeeding::initialize() {
   if( m_removeClones)      info()<<"Will Remove Clones"<<endmsg;
   if( m_xOnly) info()<<"Will use Only X Layers" <<endmsg;
   if( m_useFix && !m_xOnly) info()<<"WIll Use the triangle Fix"<<endmsg;
-  if( m_recoverTrack) info()<<"Will Recover the track at the end (to be implemented)"<<endmsg;
 
   if( m_printSettings){
     info() <<"==================================================="<<endmsg
@@ -537,9 +536,6 @@ StatusCode PrHybridSeeding::execute() {
   //for( unsigned int part= 0; 2 > part; ++part ){
   //----- Loop For difference Cases
   //Swap them ? externally icase & inner loop part? m_xCandidates
-  //for( unsigned int part = 0 ; 2>part; ++part){
-  //if(m_OnlyUp && part ==1) continue;
-  //if(m_OnlyDown && part ==0) continue;
   for(unsigned int icase = 0; m_nCases>icase ; ++icase){
     for(unsigned int part =0; 2>part;++part){
       if( m_doTiming){
@@ -1581,30 +1577,8 @@ void PrHybridSeeding::removeClonesX(unsigned int part,unsigned int icase, bool x
         (*itT1).setValid(false);
         break;
       }
-      //if((*itT1).hits().size() > (*itT2).hits().size()){
-      //   (*itT2).setValid( false );
-      // }else if((*itT1).hits().size() < (*itT2).hits().size()){
-      //   (*itT1).setValid( false );
-      //   break;
-      // }else if((*itT1).chi2PerDoF() < (*itT2).chi2PerDoF()){
-      //   (*itT2).setValid( false );
-      // }else{
-      //   (*itT1).setValid( false );
-      //   break;
-      // }
     }
-    // if( !(*itT1).valid() ) break; //has beed invalidated
-    // if(m_xOnly && (*itT1).valid() && (*itT1).zone() == part && icase==(m_nCases-1)){
-    //   m_trackCandidates.push_back(*itT1);
-    // }
   }
-  // if(m_xOnly && icase == m_nCases-1 && part ==1){
-  //   for( PrHybridSeedTracks::iterator itT1 = m_xCandidates[(int)part].begin();m_xCandidates[(int)part].end()!= itT1;++itT1){
-  //     if( (*itT1).valid()){
-  //       m_trackCandidates[part].push_back( (*itT1) );
-  //     }
-  //   }
-  // }
 }
 
 void PrHybridSeeding::removeClones(unsigned int maxCommon, unsigned int part){

@@ -275,14 +275,9 @@ protected:
   
 private:
   //-------------Names for input container(if forward as input), output container name, HitManager name
-  bool m_recoverTrack;
-  double m_chi2Recover ;
   bool m_SlopeCorr;
   bool m_stereo2;
   
-  bool m_OnlyUp;
-  bool m_OnlyDown;
-  bool m_useType;
   
   std::string        m_inputName;
   std::string        m_outputName;
@@ -379,9 +374,6 @@ private:
   std::vector<double>          m_maxChi2PerDoF;
   //Clone removal setting
   unsigned int              m_nCommonUV;
-  bool                      m_ClonesUpDown;
-  unsigned int              m_nCommonUVTriangle;
-  unsigned int              m_nUsed;
   //Flag Hits Settings
     
   std::vector<double>         m_MaxChi2Flag;
