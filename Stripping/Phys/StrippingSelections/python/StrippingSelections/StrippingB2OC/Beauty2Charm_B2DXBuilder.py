@@ -149,6 +149,10 @@ class B2DXBuilder(object):
         
         # B+- -> D0(HH)  H+H-H+
         self._makeB02DstHHH('Dstar2D0PiPID',self.dst.d0pi_pid)
+
+        # B -> D*H, D*(Dgamma), D(HHH) CPV
+        self._makeB02DsstH('Dsstar2DGammaD2HHH',self.dst.dsgammacpv_hhh)
+
         # B -> D D 
         self._makeB02DD()
         #Tighter selection Full DST lines
@@ -1154,5 +1158,16 @@ class B2DXBuilder(object):
         b02dh_ws = makeB2XSels(decays,dname,inputs,config,useIP)
         self.lines.append(ProtoLine(b02dh_rs,1.0))
         self.lines.append(ProtoLine(b02dh_ws,0.1))
+
+    def _makeB02DsstH(self,dname,d2x):
+        '''Makes B0 -> D*_s-+ H+-'''
+        config = deepcopy(self.config)
+        config['AM_MIN'       ] = '5000*MeV'
+        decays = {'B02DsstarPi': ["B0 -> D*_s- pi+","B0 -> D*_s+ pi-"],
+                  'B02DsstarK' : ["B0 -> D*_s- K+","B0 -> D*_s- K-"]}
+        inputs = {'B02DsstarPi': d2x+self.topoPions,
+                  'B02DsstarK': d2x+self.topoKaons}
+        b02dssth = makeB2XSels(decays,dname,inputs,self.config,True)
+        self.lines.append(ProtoLine(b02dssth,1.0))
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#

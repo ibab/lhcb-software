@@ -1773,12 +1773,13 @@ class DBuilder(object):
 class DstarBuilder(object):
      '''Makes D* mesons for Beauty2Charm.'''
 
-     def __init__(self,d,pions,uppions,pi0,photons,config,config_pid):
+     def __init__(self,d,pions,uppions,pi0,photons,vlaphotons,config,config_pid):
           self.d              = d
           self.pions          = pions
           self.uppions        = uppions
           self.pi0            = pi0
           self.photons        = photons
+          self.vlaphotons     = vlaphotons
           self.config         = config
           self.d0pi           = self._makeDstar2D0pi('',self.d.hh)
           self.d0pi           = self._makeDstar2D0pi('D2HHPID',self.d.hh_pid)
@@ -1957,6 +1958,9 @@ class DstarBuilder(object):
           self.dpi_2460_pid = [filterPID('D0star24602DPiPID',dpi_2460,
                                          config_pid,2)]
 
+          # Alessandro Bertolin: Ds*K CPV
+          self.dsgammacpv_hhh = self._makeDsst2DGammaCPV( 'D2HHH', self.d.hhh )
+
      def _makeHc2Dpi(self,name,massCut,momCut,decays,inputs):
           comboCuts = [massCut,LoKiCuts(['ADOCA12'],self.config).code()]
           comboCuts = LoKiCuts.combine(comboCuts)
@@ -2066,5 +2070,23 @@ class DstarBuilder(object):
           return [ Selection( 'Dstar2DGamma' + name + 'Beauty2Charm'        ,
                               Algorithm          = cp                    ,
                               RequiredSelections = d2x + [ self.photons ] ) ]
+
+     # Alessandro Bertolin for Ds*K CPV
+     def _makeDsst2DGammaCPV( self, name, d2x ):
+          decays = [ "[D*_s+ -> D+ gamma]cc" ]
+
+          combinationCuts = "(AALL)"
+          motherCuts      = "(M-MAXTREE(ABSID=='D+',M) > %(DELTAMASS_MIN)s) & (M-MAXTREE(ABSID=='D+',M) < %(DELTAMASS_MAX)s)" % self.config
+          # daughtersCuts   = "(ACHILD(M,1) > %(CHARMMASS_MIN)s)" % self.config
+
+          cp = CombineParticles( CombinationCut   = combinationCuts,
+                                 MotherCut        = motherCuts     , # DaughtersCuts    = daughtersCuts  ,
+                                 DecayDescriptors = decays          )
+
+          cp = cp.configurable( name + 'Beauty2CharmCombiner' )
+
+          return [ Selection( 'Dsst2DGammaCPV' + name + 'Beauty2Charm',
+                              Algorithm          = cp                 ,
+                              RequiredSelections = d2x + [ self.vlaphotons ] ) ]
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#

@@ -25,7 +25,7 @@ from StandardParticles import ( StdAllNoPIDsPions, StdAllNoPIDsKaons,
                                 StdAllNoPIDsProtons, StdNoPIDsUpPions,
                                 StdLooseMuons, StdNoPIDsUpKaons,
                                 StdLooseResolvedPi0, StdLooseMergedPi0 )
-from StandardParticles import StdLooseAllPhotons
+from StandardParticles import StdLooseAllPhotons, StdVeryLooseAllPhotons
 from Beauty2Charm_DBuilder import *
 from Beauty2Charm_HHBuilder import *
 from Beauty2Charm_HHHBuilder import *
@@ -78,7 +78,8 @@ default_config ={
     "gamma" : { # Cuts made on all photons
     'PT_MIN'     : '800*MeV',
     'CL_MIN'     : 0.25,
-    'ISNOTE_MIN' : -999.0
+    'ISNOTE_MIN' : -999.0,
+    'PT_VLAPH'   : '90*MeV'
     },
     "D2X" : { # Cuts made on all D's and Lc's used in all lines 
     'ASUMPT_MIN'    : '1800*MeV',
@@ -134,7 +135,8 @@ default_config ={
     'BPVVDCHI2_MIN' : 36,
     'BPVDIRA_MIN'   : 0, 
     'MASS_WINDOW'   : '600*MeV', # was 50MeV
-    'DELTAMASS_MAX' : '200*MeV'
+    'DELTAMASS_MAX' : '200*MeV',
+    'DELTAMASS_MIN' : '90*MeV'
     },
     "HH": { # Cuts for rho, K*, phi, XHH Dalitz analyese, etc.
     'MASS_WINDOW'   : {'KST':'150*MeV','RHO':'150*MeV','PHI':'150*MeV'},
@@ -424,7 +426,9 @@ default_config ={
     'B02DKD2Pi0HHHResolvedBeauty2CharmLine',
     'B02DPiD2HHHBeauty2CharmLine',
     'B02DPiD2Pi0HHHMergedBeauty2CharmLine',
-    'B02DPiD2Pi0HHHResolvedBeauty2CharmLine'
+    'B02DPiD2Pi0HHHResolvedBeauty2CharmLine',
+    'B02DsstarPiDsstar2DGammaD2HHHBeauty2CharmLine',
+    'B02DsstarKDsstar2DGammaD2HHHBeauty2CharmLine'
     ],
     'MDSTChannels':[
     'B02D0PiPiD2HHBeauty2CharmLine',
@@ -508,7 +512,10 @@ default_config ={
 
     'StrippingB02DKWSD2HHHBeauty2CharmLine', ##Potentially DST move back to Bhadron if not
     'StrippingB02DPiWSD2HHHBeauty2CharmLine', ##Potentially DST 
-    
+
+    'StrippingB02DsstarPiDsstar2DGammaD2HHHBeauty2CharmLine',
+    'StrippingB02DsstarKDsstar2DGammaD2HHHBeauty2CharmLine'
+
     ],  
     'Bhadron' : [
     'StrippingUpsilon2BBBeauty2CharmLine',
@@ -1456,6 +1463,9 @@ class Beauty2CharmConf(LineBuilder):
         # Jordi: photon selection.
         gammacut = '(PT > %(PT_MIN)s) & (CL > %(CL_MIN)f) & (PPINFO(LHCb.ProtoParticle.IsNotE,-1) > %(ISNOTE_MIN)f)' % config['gamma']
         photons = filterSelection( 'Gamma', gammacut, [ StdLooseAllPhotons ] )
+        # Alessandro Bertolin: very loose all photons.
+        vlagammacut = '(PT > %(PT_VLAPH)s) & (CL > %(CL_MIN)f) & (PPINFO(LHCb.ProtoParticle.IsNotE,-1) > %(ISNOTE_MIN)f)' % config['gamma']
+        vlaphotons = filterSelection( 'VLAGamma', vlagammacut, [ StdVeryLooseAllPhotons ] )
 
         # pre-filter hard inputs (these could have been used in HLT2)
         topoPions = topoInputs('Pi',[pions])
@@ -1473,7 +1483,7 @@ class Beauty2CharmConf(LineBuilder):
 
         # make D->X, etc. inputs
         d = DBuilder(pions,kaons,ks,pi0,uppions,upkaons,muons,hh,config['D2X'],config['PID'],config['Pi0'])
-        dst = DstarBuilder(d,pions,uppions,pi0,photons,config['Dstar'],config['PID'])
+        dst = DstarBuilder(d,pions,uppions,pi0,photons,vlaphotons,config['Dstar'],config['PID'])
 
         # Lc -> X
         lc = LcBuilder(pions,kaons,protons,config['D2X'],config['PID'])
