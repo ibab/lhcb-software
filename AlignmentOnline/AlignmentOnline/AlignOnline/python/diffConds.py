@@ -77,12 +77,12 @@ def diffOnlineOffline(run, delCond = True):
 
     run_cond_dir = '/group/online/hlt/conditions/LHCb/{0}/{1}'.format(year, run)
     try:
-        sys.path.append(run_cond_dir)
-        import HLT2Params
-        DDDBTag, CondDBTag = HLT2Params.DDDBTag, HLT2Params.CondDBTag
-    except (ImportError, AttributeError):
+        execfile(os.path.join(run_cond_dir, 'HLT2Params.py'))
+        locals()['DDDBTag'], locals()['CondDBTag']
+    except (IOError, KeyError):
         print 'WARNING: Skipping due to missing HLT2Params'
         raise AssertionError('WARNING: Skipping due to missing HLT2Params')
+
 
     env = os.environ.copy()
     env['PYTHONPATH'] = (env['PYTHONPATH']
