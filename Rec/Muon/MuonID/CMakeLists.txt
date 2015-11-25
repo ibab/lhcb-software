@@ -6,10 +6,13 @@ gaudi_subdir(MuonID v9r18)
 gaudi_depends_on_subdirs(Det/MuonDet
                          Event/RecEvent
                          Event/TrackEvent
+                         Muon/MuonInterfaces
+                         Muon/MuonTrackRec
                          Tr/TrackInterfaces
+                         Tr/TrackFitEvent
                          GaudiAlg)
 
-find_package(ROOT COMPONENTS Hist Gpad Graf)
+find_package(ROOT COMPONENTS Hist Gpad Graf Matrix)
 find_package(VDT)
 
 gaudi_add_library(MuonIDLib

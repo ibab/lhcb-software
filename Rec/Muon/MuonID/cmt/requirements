@@ -11,7 +11,10 @@ use GaudiAlg           v*
 use RecEvent           v* Event
 use TrackEvent         v* Event
 use MuonDet            v* Det
+use MuonInterfaces     v* Muon
+use MuonTrackRec       v* Muon
 use TrackInterfaces    v* Tr
+use TrackFitEvent      v* Tr
 use ROOT               v* LCG_Interfaces
 use vdt                v* LCG_Interfaces
 
@@ -25,7 +28,7 @@ apply_pattern linker_library library=MuonIDLib
 apply_pattern component_library library=MuonID
 apply_pattern install_python_modules
 
-macro_append ROOT_linkopts " -lHist -lGpad -lGraf" \
+macro_append ROOT_linkopts " -lHist -lGpad -lGraf -lMatrix" \
                      WIN32 " libHist.lib libGpad.lib libGraf.lib" \
                     osx104 " -lHist -lMatrix -lGpad -lGraf"
 macro_append ROOT_linkopts "" \

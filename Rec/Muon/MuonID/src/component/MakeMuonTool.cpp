@@ -2,11 +2,13 @@
 
 // local
 #include "MakeMuonTool.h"
+#include "MuonID/IMuonMatchTool.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MakeMuonTool
 //
 // 2015-04-15 : Ricardo Vazquez Gomez
+// 2015-11-18 : Giacomo Graziani - add the possibility to add proper (correlated) chi2 to muon track
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
@@ -18,10 +20,11 @@ DECLARE_TOOL_FACTORY(MakeMuonTool)
 MakeMuonTool::MakeMuonTool(const std::string& type, const std::string& name,
                            const IInterface* parent)
     : GaudiTool(type, name, parent),
-      m_NStation(0){
+      matchTool(NULL), m_NStation(0){
   declareInterface<MakeMuonTool>(this);
 
   declareProperty("FindQuality", m_FindQuality = false);
+  declareProperty("ComputeChi2Properly", m_ComputeChi2Properly = false);
 }
 
 StatusCode MakeMuonTool::initialize() {
@@ -46,6 +49,9 @@ StatusCode MakeMuonTool::initialize() {
   for (unsigned i = 0; i != m_NStation; ++i) {
     m_zstations.push_back(m_mudet->getStationZ(i));
   }
+
+  if(m_ComputeChi2Properly)
+    matchTool = tool<IMuonMatchTool>("MuonChi2MatchTool", this);
 
   return sc;
 }
@@ -272,10 +278,23 @@ void MakeMuonTool::addLHCbIDsToMuTrack(LHCb::Track& muTrack, const std::vector<L
     debug() << "Number of LHCbIDs added =" << idCounter << endmsg;
 }
 
+
+LHCb::Track* MakeMuonTool::makeMuonTrack(
+                                         LHCb::MuonPID* mupid,
+                                         CommonConstMuonHits &hits,
+                                         const ICommonMuonTool::MuonTrackExtrapolation& extrapolation) {
+  if ( m_FindQuality && m_ComputeChi2Properly )
+    return makeMuonTrackWithProperChi2(mupid, hits, extrapolation);
+  else
+    return makeLegacyMuonTrack(mupid, hits, extrapolation);
+}
+
+
+
 /**
  * Function to make the muon track. Modified from the original MuonIDAlg.cpp
 */
-LHCb::Track* MakeMuonTool::makeMuonTrack(
+LHCb::Track* MakeMuonTool::makeLegacyMuonTrack(
     LHCb::MuonPID* mupid,
     CommonConstMuonHits &hits,
     const ICommonMuonTool::MuonTrackExtrapolation& extrapolation){
@@ -332,4 +351,42 @@ LHCb::Track* MakeMuonTool::makeMuonTrack(
 } 
 
 
+
+LHCb::Track* MakeMuonTool::makeMuonTrackWithProperChi2(LHCb::MuonPID* mupid,
+                                                       CommonConstMuonHits &hits,
+                                                       const ICommonMuonTool::MuonTrackExtrapolation& extrapolation){
+  const LHCb::Track* mother = mupid->idTrack();
+  LHCb::Track* mtrack;
+
+  mtrack = new LHCb::Track(mupid->key());
+  // add mother track to ancestors
+  mtrack->addToAncestors(*mother);
+  mtrack->addToStates(mother->closestState(m_mudet->getStationZ(0)));
+
+  CommonConstMuonHits::iterator ih;
+  for (ih= hits.begin(); ih != hits.end(); ih++) 
+    mtrack->addToLhcbIDs((*ih)->tile());
+
+  if(hits.size()>0) {
+    // put match information in IMuonMatchTool format
+    std::vector<TrackMuMatch> matches;
+    for (ih= hits.begin(); ih != hits.end(); ih++) {
+      const std::pair<double, double>& trackxy = extrapolation[(*ih)->station()];
+      matches.push_back( std::make_tuple(*ih, 0., trackxy.first, trackxy.second ) );
+    }
+
+    // run Cagliari algorithm
+    StatusCode matchStatus = matchTool->run(mother, &matches);
+    if(matchStatus.isFailure()) {
+      warning() << " Failed to run the matchTool for proper chi2 computation! " << endreq; 
+    }
+    else {
+      int ndof;
+      double chi2= matchTool->getChisquare(ndof);
+      mtrack->setChi2AndDoF (chi2, ndof);
+    }
+  }
+
+  return mtrack;
+}
 

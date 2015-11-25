@@ -17,6 +17,8 @@
 #include "MuonID/CommonMuonHitManager.h"
 #include "MuonID/ICommonMuonTool.h"
 
+class IMuonMatchTool;
+
 static const InterfaceID IID_MakeMuonTool("MakeMuonTool", 1, 0);
 
 /** @class MakeMuonTool MakeMuonTool.h
@@ -53,10 +55,12 @@ class MakeMuonTool final : public GaudiTool {
   ITrackExtrapolator* m_extrapolator;
   IMeasurementProvider* m_measProvider;
   ICommonMuonTool *muonTool_;
+  IMuonMatchTool *matchTool;
 
   DeMuonDetector* m_mudet;
 
   bool m_FindQuality;
+  bool m_ComputeChi2Properly;
 
   unsigned m_NStation;
 
@@ -65,6 +69,11 @@ class MakeMuonTool final : public GaudiTool {
   std::vector<double> m_zstations;
 
   std::vector<LHCb::State> m_states;
+
+  LHCb::Track* makeLegacyMuonTrack(LHCb::MuonPID*, CommonConstMuonHits &,     
+                                   const ICommonMuonTool::MuonTrackExtrapolation&);
+  LHCb::Track* makeMuonTrackWithProperChi2(LHCb::MuonPID*, CommonConstMuonHits &,     
+                                           const ICommonMuonTool::MuonTrackExtrapolation&);
 
 };
 
