@@ -3,6 +3,46 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v49r1>2015-11-25 Brunel v49r1</A></H1><PRE>
+This version uses projects LHCb v39r2, Lbcom v17r2, Rec v18r3, Gaudi v26r4
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Development release post-2015 data-taking
+
+- New functionality
+  . Preliminary support for new PrimaryVertex class (not used by default)
+    (RecConf v2r23, PatPV v3r29, EventPacker v5r8, RecEvent v2r55,
+     GaudiConf v19r15)
+  . Add 'MuonID' to the list of known track types (RichRecBase v4r22)
+  . Added support for FT geometry v5 (TrackTools v5r13, FTDet v2r11)
+  . Added a new flag to the RichSmartID class for the Upgrade MaPMTs to save if
+    it represents a 'large' or 'small' PMT (LHCbKernel v15r13)
+
+- New reconstruction tuning
+  . New hit and slope tolerances in UT clustering (PrVeloUT v2r3)
+  . By default, use "Stripping20" Calo settings for 2015 data prior to TS2 to
+    match HLT setting, see LHCBCNDB-567. CondDB tag cond-20151016 (DDDB v1r82)
+
+- New CPU optimisations
+  . Multiple improvements to QuarticSolver (RichRecPhotonTools v1r19)
+  . New hit sorting for TT (TfKernel v2r34, PatAlgorithms v4r44)
+
+- Code modernisations
+  . Multiple improvements. 
+    See RecSys v18r3, LbcomSys v17r2, LHCb v39r2 release notes
+
+- Bug fixes
+  . Fixed memory leak in FTHitExpectation::collectHits (TrackTools v5r13)
+
+- New monitoring
+  . Add ghost probability histogram to TrackMonitor (TrackMonitors v2r11)
+
+- Changes to tests
+  . Add 2015magdown test, reco of 2015 pp 25ns data
+  . Remove obsolete inclusion of $APPCONFIGOPTS/Brunel/saveFittedVeloTracks.py
+    in 2015-em, 2015-em-rdst tests, already done by default for 2015 DataType
+  . Remove temporary RegexpReplacers for forward compatibility with GAUDI-1078
+
 </PRE><H1><A NAME=v49r0>2015-10-13 Brunel v49r0</A></H1><PRE>
 This version uses projects:
  LCG_79 (ROOT 6.04.02), Gaudi v26r4, LHCb v39r1, Lbcom v17r1, Rec v18r2
