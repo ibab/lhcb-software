@@ -73,7 +73,7 @@ def reference_run_file(run):
     return run_file(ref_run)
 
 def is_in_grf(run):
-    f = open(Config().grf_runs_file, 'r')
+    f = open(Config().grf_runs_file_path, 'r')
     runs = f.readlines()
     f.close()
     return str(run) in map(lambda x: x.strip(), runs)
@@ -81,6 +81,6 @@ def is_in_grf(run):
 def add_to_grf(run):
     if (is_in_grf(run)): return
 
-    f = open(Config().grf_runs_file, 'a')
+    f = open(Config().grf_runs_file_path, 'a')
     f.write(str(run) + "\n")
     f.close()

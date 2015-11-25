@@ -34,7 +34,7 @@ DEFAULTS = {
     'analysis_config': (analysis_config.analysis_config_branches, analysis_config.analysis_config_leaves),
     'grf_file_name': 'GRF.root',
     'grf_tree_name': 'DQTree',
-    'grf_runs_file': '/calib/velo/dqm/VeloView/VetraOutput/RunList_GRF.txt',
+    'grf_runs_file': 'RunList_GRF.txt',
 }
 
 # Only export the Config class
@@ -107,3 +107,9 @@ class Config(object):
     def grf_file_path(self):
         """Return the full path of the GRF."""
         return os.path.join(self.run_data_dir, self.grf_file_name)
+
+    @property
+    def grf_runs_file_path(self):
+        """Return the full path of the file containing run numbers present in
+        the GRF."""
+        return os.path.join(self.run_data_dir, self.grf_runs_file)
