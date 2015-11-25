@@ -3,6 +3,9 @@
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+!======================= VertexFit v6r23 2015-11-25 ========================
+
 ! 2015-11-01 - Gerhard Raven
  - replace endreq with endmsg
 
