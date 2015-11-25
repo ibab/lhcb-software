@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """Get a list of trending variables.
 """
 
