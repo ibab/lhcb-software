@@ -21,8 +21,8 @@ from Configurables import DecodeRawEvent
 DecodeRawEvent().setProp("OverrideInputs",4.2)
 
 # Specify the name of your configuration
-my_wg='B2CC' #FOR LIAISONS
-stripping='stripping23r1'
+my_wg='ALL' #FOR LIAISONS
+stripping='stripping24'
 
 
 # NOTE: this will work only if you inserted correctly the 

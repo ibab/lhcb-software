@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-25 - Michael Kolpin
+ - Removed PID Calib lines from StrippingCalib init
+
 ! 2015-11-25 - Alessandro Bertolin
 - added 2 stripping lines to the B2OC module:
   StrippingB02DsstarPiDsstar2DGammaD2HHHBeauty2CharmLine
