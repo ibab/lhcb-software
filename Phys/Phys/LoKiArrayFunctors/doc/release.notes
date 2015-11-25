@@ -5,6 +5,8 @@
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+!=================== LoKiArrayFunctors v11r5 2015-11-25 =======================
+
 ! 2015-11-01 - Gerhard Raven
  - replace endreq with endmsg
  - replace LoKi::select with std::copy_if
