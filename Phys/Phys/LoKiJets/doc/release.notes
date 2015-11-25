@@ -6,6 +6,9 @@
 ! Responsible : Victor Coco victor.coco@cern.ch
 ! Purpose     : Jet finding algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
+
+!========================= LoKiJets v6r14 2015-11-25 ==========================
+
 ! 2015-11-01 - Gerhard Raven
  - replace endreq with endmsg
 
