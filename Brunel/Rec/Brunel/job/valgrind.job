@@ -40,7 +40,7 @@ while ($i < $nar)
   echo ${options}  
 end
 
-set Bversion = "v49r0"
+set Bversion = "v49r1"
 echo "Executing valgrind for Brunel $Bversion using options $options"
 
 # If not set (interactive and CAF), set WORKDIR to submission directory
