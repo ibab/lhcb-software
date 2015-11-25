@@ -530,7 +530,7 @@ void PrClustersResidual::TrackStudy(){
         PrHit_dxDy.push_back(-999999.);
         PrHit_planeCode.push_back(-999999.);
         PrHit_zone.push_back(-999999.);
-        PrHit_isX.push_back(-999999.);
+        PrHit_isX.push_back(false);
         PrHit_yMin.push_back(-999999.);
         PrHit_yMax.push_back(-999999.);
         PrHit_w2.push_back(-999999.);
