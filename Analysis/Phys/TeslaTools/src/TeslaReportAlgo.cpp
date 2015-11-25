@@ -376,6 +376,10 @@ StatusCode TeslaReportAlgo::execute()
         if( calo->clID() == LHCb::CLID_CaloCluster ) cont_CaloClust->insert( dynamic_cast<LHCb::CaloCluster*>( calo ) );
       }
 
+
+      if( motherBasic == false ) ProcessObject( 0, Part, Obj, cont_PV, cont_Vert, cont_Part,
+                    cont_Proto, cont_RPID, cont_MPID, cont_Track, cont_CaloHypo, cont_CaloClust, cont_P2PV);
+      
       if( m_PV3D || m_refitted ) {
         cont_P2PV->relate( Part , bestPV( Part, cont_PV ) );
         if( msgLevel(MSG::DEBUG) ){
@@ -385,9 +389,6 @@ StatusCode TeslaReportAlgo::execute()
           }
         }
       }
-
-      if( motherBasic == false ) ProcessObject( 0, Part, Obj, cont_PV, cont_Vert, cont_Part,
-                    cont_Proto, cont_RPID, cont_MPID, cont_Track, cont_CaloHypo, cont_CaloClust, cont_P2PV);
     } // candidate (loop)
   } // report exists (if)
 

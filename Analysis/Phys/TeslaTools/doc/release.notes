@@ -3,6 +3,10 @@
 ! Responsible : Sean Benson
 !=============================================================================
 
+! 2015-11-25 - Sean Benson
+ - Make sure IP chi^2 for PV association is calculated after resurrection
+ of decay chain, so that harmless ParticleTransporter warning is avoided.
+
 ! 2015-11-08 - Lucio Anderlini
  - Small fixes in TeslaMatcher  (better error handling and printing)
 
