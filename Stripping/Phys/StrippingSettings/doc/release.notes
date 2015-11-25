@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-25 - Andrea Contu
+ - Fix inconsistency in raw banks for LowMult lines in s23r1
+
 ! 2015-11-23 - Andrea Contu
  - Updated S24 dbase
 

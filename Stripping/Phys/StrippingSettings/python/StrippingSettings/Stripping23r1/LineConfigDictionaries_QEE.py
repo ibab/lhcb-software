@@ -776,7 +776,7 @@ LowMultINC = {
         "DecisionLowMultMuon": "HLT_PASS('Hlt2LowMultMuonDecision')", 
         "DecisionLowMultPi0": "HLT_PASS_RE('Hlt2LowMultPi0Decision')", 
         "DecisionLowMultTMP": "HLT_PASS_RE('Hlt2NonBeamBeamNoBiasDecision')  | HLT_PASS_RE('Hlt2LowMultTechnical_MinBiasDecision')", 
-        "LowMultRequiredRawEvents": None, 
+        "LowMultRequiredRawEvents": ["Velo", "Calo", "HC", "Trigger", "Muon", "Rich", "Tracker"], 
         "PrescaleL0DiEM": 0, 
         "PrescaleL0DiHadron": 0, 
         "PrescaleL0DiMuon": 0, 
