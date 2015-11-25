@@ -151,7 +151,7 @@ namespace  {
   }
 }
 
-DimTaskFSM::DimTaskFSM(IInterface*, connect_dim)
+DimTaskFSM::DimTaskFSM(IInterface*, bool connect_dim)
   : m_name(RTL::processName()), m_stateName(ST_NAME_UNKNOWN), m_prevStateName(ST_NAME_UNKNOWN),
     m_command(0), m_service(0), m_fsmService(0), m_haveEventLoop(false), m_refCount(1)
 {
