@@ -6,8 +6,8 @@ for Calib WG.
 _selections = [
     #"StrippingElectronID", #now part of StrippingPIDCalib
     #"StrippingMuIDCalib",#now part of StrippingPIDCalib
-    "StrippingNoPIDDstarWithD02RSKPi",
-    "StrippingPIDCalib",
+    #"StrippingNoPIDDstarWithD02RSKPi", #deactivated, might run in Run 1 restripping
+    #"StrippingPIDCalib", #deactivated, might run in Run 1 restripping
     #"StrippingV0ForPID",#now part of StrippingPIDCalib
     "StrippingCharmFromBSemiForHadronAsy",
     "StrippingCharmFromBSemiForProtonPID",

@@ -4,6 +4,9 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-25 - Michael Kolpin
+ - Fix to S24 StrippingCalib init
+
 ! 2015-11-24 - Ricardo Vazquez Gomez
  - Add Stripping24 to the archive
 
