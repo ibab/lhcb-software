@@ -3,7 +3,7 @@
 # Maintainer : Chris Jones
 #============================================================================
 package           DaVinciDecayFinder
-version           v1r1
+version           v1r3
 
 #============================================================================
 # Structure, i.e. directories to process. 

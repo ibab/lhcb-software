@@ -4,7 +4,9 @@
 ! Purpose     : Depreciated Decay Finder
 !-----------------------------------------------------------------------------
 
-! 2015-11=01 - Gerhard Raven
+!==================== DaVinciDecayFinder v1r3 2015-11-25 =====================
+
+! 2015-11-01 - Gerhard Raven
  - replace endreq with endmsg
 
 !==================== DaVinciDecayFinder v1r2 2015-10-05 =====================
