@@ -5,6 +5,9 @@
 ! Responsible : Vanya Belyaev Ivan.Belyaev@nikhef.nl
 ! Purpose     : New package to deal with ProtoParticles 
 ! -----------------------------------------------------------------------------
+
+!====================== LoKiProtoParticles v3r2 2015-11-25 ====================
+
 ! 2015-11-02 - Gerhard Raven
  - replace LoKi::select with std::copy_if
  - avoid comparing (smart)pointers to 0
