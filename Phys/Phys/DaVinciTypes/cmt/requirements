@@ -4,7 +4,7 @@
 # Maintainer : DaVinci coordinator
 # =============================================================================
 package           DaVinciTypes
-version           v2r14
+version           v2r15
 
 # =============================================================================
 # Structure, i.e. directories to process. 
