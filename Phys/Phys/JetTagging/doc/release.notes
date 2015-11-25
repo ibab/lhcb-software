@@ -4,6 +4,8 @@
 ! Purpose     : Jet Tagging Package
 ! -----------------------------------------------------------------------------
 
+!========================= JetTagging v1r10 2015-11-25 ========================
+
 ! 2015-11-10 - Cedric Potterat
  - modification in BDTTag, remvoing the "erase" of Particle from the TES..
 
@@ -17,6 +19,8 @@
  - preapre tht move  ANALYSIS to PHYS:
   . move all Truth Tagger to JetAccessoresMC
   . remove all MC related package
+
+!========================= JetTagging v1r9 2015-10-24 =========================
 
 ! 2015-08-20 - Gerhard Raven
  - prefer std::isfinite and std::isnan over GaudiAlg/CheckForNaN.h
