@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-25 - Michael Kolpin
+ - Removed PID Calib lines from S24 LineConfigDictionary_Calib
+
 ! 2015-11-25 - Andrea Contu
  - Fix inconsistency in raw banks for LowMult lines in s23r1
 
