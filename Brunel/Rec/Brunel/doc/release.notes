@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v49r1>2015-11-25 Brunel v49r1</A></H1><PRE>
+This version uses projects LHCb v39r2, Lbcom v17r2, Rec v18r3, Gaudi v26r4
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
 - Changes to references to reflect changes since v49r0
   . In brunel-lumiconddbchecker.ref and test-FSR.ref, follow LHCBPS-1434 patch:
     LHCbApp() now assigns OdinTimeDecoder as EventClockSvc().EventTimeDecoder
