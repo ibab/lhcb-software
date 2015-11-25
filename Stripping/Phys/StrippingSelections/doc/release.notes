@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-25 - Alessandro Bertolin
+- added 2 stripping lines to the B2OC module:
+  StrippingB02DsstarPiDsstar2DGammaD2HHHBeauty2CharmLine
+  StrippingB02DsstarKDsstar2DGammaD2HHHBeauty2CharmLine
+
 ! 2015-11-22 - Jinlin Fu
  - update StrippingBnoC/StrippingXb23ph.py
 
