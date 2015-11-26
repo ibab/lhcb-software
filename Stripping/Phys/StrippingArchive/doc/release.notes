@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-11-26 - Andrea Contu
+ - Updated test references
+
+! 2015-11-26 - Andrea Contu
  - Remove strippings with olf relinfo convention from tests
 
 ! 2015-11-25 - Michael Kolpin
