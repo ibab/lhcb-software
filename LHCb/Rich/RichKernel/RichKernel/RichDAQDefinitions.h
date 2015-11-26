@@ -1,4 +1,3 @@
-
 //---------------------------------------------------------------------------------
 /** @file RichDAQDefinitions.h
  *
@@ -251,42 +250,42 @@ namespace Rich
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
      *  @date   24/01/2007
      */
-    class EventID : public NumericType<ulonglong>
+    class EventID : public NumericType<unsigned long long>
     {
     public:
       /// Default constructor
-      EventID( ) : NumericType<ulonglong>(0), m_nActiveBits(8*sizeof(ulonglong)) { }
+      EventID( ) : NumericType<unsigned long long>(0), m_nActiveBits(8*sizeof(unsigned long long)) { }
       /// Copy Constructor
-      EventID( const EventID& id ) 
-        : NumericType<ulonglong> ( id.data()       ), 
+      EventID( const EventID& id )
+        : NumericType<unsigned long long> ( id.data()       ),
           m_nActiveBits          ( id.activeBits() ) { }
       /// Constructor from value and number of bits
       template<class NUMTYPE>
       EventID ( const NUMTYPE   id,
                 const ShortType aBits )
-        : NumericType<ulonglong> ( (ulonglong)id ),
+        : NumericType<unsigned long long> ( (unsigned long long)id ),
           m_nActiveBits          ( aBits         ) { }
       /// Constructor from value
       template<class NUMTYPE>
       explicit EventID ( const NUMTYPE id )
-        : NumericType<ulonglong> ( (ulonglong)id     ),
+        : NumericType<unsigned long long> ( (unsigned long long)id     ),
           m_nActiveBits          ( 8*sizeof(NUMTYPE) ) { }
       /// Return the number of active bits
       inline ShortType activeBits() const { return m_nActiveBits; }
       /// Set the number of active bits
       inline void setActiveBits(const ShortType bits) { m_nActiveBits = bits; }
     public:
-      /// Operator ulonglong
-      inline operator ulonglong() const { return data(); }
+      /// Operator unsigned long long
+      inline operator unsigned long long() const { return data(); }
     public:
       /// Overloaded output to ostream
       friend inline std::ostream & operator << ( std::ostream & evtID_os, const EventID & id )
       {
         evtID_os << "[ ID=" << id.data();
         evtID_os << " Hex="; id.hexDump(evtID_os);
-        evtID_os << " Bits("<< id.activeBits() <<")="; 
+        evtID_os << " Bits("<< id.activeBits() <<")=";
         id.bitsDump(evtID_os,id.activeBits(),"");
-        return evtID_os << " ]"; 
+        return evtID_os << " ]";
       }
     public:
       /// Operator == that takes into account the correct number of bits
@@ -322,12 +321,12 @@ namespace Rich
       /// Default constructor
       BXID( ) : NumericType<LongType>(0), m_nActiveBits(8*sizeof(LongType)) { }
       /// Copy Constructor
-      BXID( const BXID& id ) 
-        : NumericType<LongType> ( id.data()       ), 
+      BXID( const BXID& id )
+        : NumericType<LongType> ( id.data()       ),
           m_nActiveBits         ( id.activeBits() ) { }
       /// Constructor from value
       template<class NUMTYPE>
-      explicit BXID ( const NUMTYPE id ) 
+      explicit BXID ( const NUMTYPE id )
         : NumericType<LongType> ( (LongType)id      ),
           m_nActiveBits         ( 8*sizeof(NUMTYPE) ) { }
       /// Constructor from value and number of bits
@@ -346,12 +345,12 @@ namespace Rich
     public:
       /// Overloaded output to ostream
       friend inline std::ostream & operator << ( std::ostream & os, const BXID & id )
-      { 
+      {
         os << "[ ID=" << id.data();
         os << " Hex="; id.hexDump(os);
-        os << " Bits("<< id.activeBits() <<")="; 
+        os << " Bits("<< id.activeBits() <<")=";
         id.bitsDump(os,id.activeBits(),"");
-        return os << " ]"; 
+        return os << " ]";
       }
     public:
       /// Operator == that takes into account the correct number of bits

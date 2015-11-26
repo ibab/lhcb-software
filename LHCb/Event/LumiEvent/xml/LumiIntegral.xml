@@ -56,7 +56,7 @@
 	/> 
   
       <typedef
-        type="std::pair&lt;  int, longlong &gt;"
+        type="std::pair&lt;  int, long long &gt;"
         def="LongValuePair"
         desc="For User information"
         access="PUBLIC"

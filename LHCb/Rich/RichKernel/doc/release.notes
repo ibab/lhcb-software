@@ -4,6 +4,9 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2015-11-26 - Marco Clemencic
+ - Removed (u)longlong typedef (see GAUDI-1125).
+
 !========================= RichKernel v7r61 2015-11-23 =========================
 ! 2015-10-28 - Marco Cattaneo
  - RichCommonBase.icpp: fix unprotected debug()
@@ -12,7 +15,7 @@
 ! 2015-10-07 - Chris Jones
  - Fine tune the implementation of RichObjPtn for better CPU performance
    on object lookup.
- - Remove some more unused data members and methods from the HPD pixel 
+ - Remove some more unused data members and methods from the HPD pixel
    cluster class.
  - Pass RichSmartID by const reference in IRichSmartIDTool.h
 
@@ -62,11 +65,11 @@
 !========================= RichKernel v7r58 2015-02-23 =========================
 ! 2015-02-08 - Chris Jones
  - Update RichHypoData to use std::array instead of boost::array.
- - Fix a bug in RichHypoData::resetData( const TYPE & value ) that was 
+ - Fix a bug in RichHypoData::resetData( const TYPE & value ) that was
    incorrectly setting the valid flag to true instead of false.
 
 ! 2015-02-06 - Chris Jones
- - Update the default tool mappings in the tool registry to use new 
+ - Update the default tool mappings in the tool registry to use new
    implementations of the mirror finder and ray tracing.
  - Add RichKernel/FastRoots.h that contains various methods for the fast
    calculation of square and cube roots.
@@ -76,7 +79,7 @@
 
 !========================= RichKernel v7r57 2015-01-14 =========================
 ! 2015-01-14 - Chris Jones
- - Update the default tool types in RichTools Configurable to make the HLT 
+ - Update the default tool types in RichTools Configurable to make the HLT
    defaults the same as Offline.
 
 !========================= RichKernel v7r56 2014-09-08 =========================
@@ -105,7 +108,7 @@
 
 !========================= RichKernel v7r52 2013-02-04 =========================
 ! 2013-02-03 Chris Jones
- - Minor clean up. Add missing preprocessor directives and remove some CVS 
+ - Minor clean up. Add missing preprocessor directives and remove some CVS
    comments.
 
 !========================= RichKernel v7r51 2012-11-26 =========================

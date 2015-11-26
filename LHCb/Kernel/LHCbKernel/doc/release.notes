@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2015-11-26 - Marco Clemencic
+ - Removed (u)longlong typedef (see GAUDI-1125).
+
 !========================= LHCbKernel v15r13 2015-11-23 =========================
 ! 2015-11-13 - Chris Jones
  - Add a new flag to the RichSmartID class for the Upgrade MaPMTs to save if
@@ -25,19 +28,19 @@
 
 ! 2015-09-18 - Chris Jones
  - Disable mutex (thread) support in MemPoolAlloc.h as well ...
- - Switch FastAllocVector to use boost::pool_allocator instead of gcc mt 
+ - Switch FastAllocVector to use boost::pool_allocator instead of gcc mt
    allocator. Seemingly much faster.
 
 ! 2015-09-02 - Gerhard Raven
- - replace ListItem with Gaudi::Utils::TypeNameString 
+ - replace ListItem with Gaudi::Utils::TypeNameString
 
 ! 2015-08-11 - Chris Jones
- - Update hand written RichSmartID class to use Null Mutex Boost pool (similarly 
+ - Update hand written RichSmartID class to use Null Mutex Boost pool (similarly
    to the GOD generated event model classes).
 
 ! 2015-07-31 - Gerhard Raven
  - add specialization of std::hash for RichSmartID, and explicitly include
-   ext/hash_map prior to the existing specializations in the __gnu_cxx 
+   ext/hash_map prior to the existing specializations in the __gnu_cxx
    namespace.
 
 !========================= LHCbKernel v15r11 2015-07-20 =========================
@@ -53,7 +56,7 @@
 
 !========================= LHCbKernel v15r9 2015-04-20 =========================
 ! 2015-03-17 - Vanya Belyaev
- - move count_iterator form Phys/DaVinciTypes 
+ - move count_iterator form Phys/DaVinciTypes
 
 ! 2015-02-26 - Manuel Tobias Schiller
  - CircleTraj: speed up distTo2ndError by factor 3 (fast cube root)
@@ -70,7 +73,7 @@
  - change LHCb::LHCbID::channelIDype -> LHCb::LHCbID::channelIDtype
 
 ! 2015-01-23 - Gerhard Raven
- - Replace usage of boost with C++11 constructs. 
+ - Replace usage of boost with C++11 constructs.
    Replace some loops by STL algorithms.
    Use C++11 to simplify a few things.
 

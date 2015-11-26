@@ -4,6 +4,9 @@
 ! Purpose     : FSRs common to applications
 !---------------------------------------------------------------------------
 
+! 2015-11-26 - Marco Clemencic
+ - Removed (u)longlong typedef (see GAUDI-1125).
+
 !========================= FSREvent v1r1 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.

@@ -3,6 +3,9 @@
 ! package coordinator: G.Corti
 !------------------------------------------------------------------------------
 
+! 2015-11-26 - Marco Clemencic
+ - Removed (u)longlong typedef (see GAUDI-1125).
+
 !========================= GenEvent v6r11 2014-05-12 =========================
 ! 2014-04-24 - Marco Cattaneo
  - Remove duplicate dictionary HepMC::GenVertex::particles_in_const_iterator,

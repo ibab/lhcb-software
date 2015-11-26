@@ -13,8 +13,8 @@ class tools:
                                'unsigned short int', 'unsigned short', 'short unsigned',
                                'short unsigned int', 'unsigned int', 'unsigned',
                                'unsigned long int', 'unsigned long', 'long unsigned',
-                               'long unsigned int', 'longlong', 'long long',
-                               'long long int', 'ulonglong', 'long long unsigned',
+                               'long unsigned int', 'long long',
+                               'long long int', 'long long unsigned',
                                'unsigned long long',  'unsigned long long int',
                                'long long unsigned int']
         self.floatingPointT = ['float', 'double', 'long double']

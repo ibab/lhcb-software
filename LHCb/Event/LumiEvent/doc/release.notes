@@ -4,6 +4,9 @@
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
 
+! 2015-11-26 - Marco Clemencic
+ - Removed (u)longlong typedef (see GAUDI-1125).
+
 !========================= LumiEvent v3r9 2015-11-23 =========================
 ! 2015-11-09 - Marco Cattaneo
  - HltLumiSummaryDecoder: call correct base class finalize()

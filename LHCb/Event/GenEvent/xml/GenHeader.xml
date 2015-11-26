@@ -41,7 +41,7 @@
        <attribute
         desc="Event number"
         name="evtNumber"
-        type="longlong"
+        type="long long"
         init="0"
        />
        <attribute 

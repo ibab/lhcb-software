@@ -22,13 +22,13 @@
        <attribute
         desc="Event number"
         name="evtNumber"
-        type="longlong"
+        type="long long"
         init="0"
        />
        <attribute
         desc="Event time"
         name="evtTime"
-        type="ulonglong"
+        type="unsigned long long"
         init="0"
        />
        <relation

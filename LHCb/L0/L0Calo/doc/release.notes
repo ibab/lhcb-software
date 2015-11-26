@@ -3,6 +3,9 @@
 ! Package Manager : Patrick Robbe & M-H. Schune
 !----------------------------------------------------------------------------
 
+! 2015-11-26 - Marco Clemencic
+ - Removed (u)longlong typedef (see GAUDI-1125).
+
 !========================= L0Calo v11r14p1 2015-10-12 =========================
 ! 2015-08-03 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
@@ -51,12 +54,12 @@
 
 !========================= L0Calo v11r8 2012-06-25 =========================
 ! 2012-05-29 - Patrick Robbe
- - L0CaloCandidatesFromRawBank.cpp: sort the L0CaloCandidates containers 
+ - L0CaloCandidatesFromRawBank.cpp: sort the L0CaloCandidates containers
    according to their Et before storing them in the data store.
 
 !========================= L0Calo v11r7 2012-05-02 =========================
 ! 2012-04-04 - Patrick Robbe
- - L0CaloCheckCalibCte.cpp: correct ADC -> L0ADC conversion for 
+ - L0CaloCheckCalibCte.cpp: correct ADC -> L0ADC conversion for
    large calibration constas (>255)
 
 ! 2012-03-28 - Patrick Robbe
@@ -65,12 +68,12 @@
 
 !========================= L0Calo v11r6 2011-12-14 =========================
 ! 2011-11-14 - Julien Cogan
- - L0CaloCandidatesFromRaw : add possibility to use rootIInTES using 
- recently added flag in L0FromRawBase (m_useRootInTES)  
+ - L0CaloCandidatesFromRaw : add possibility to use rootIInTES using
+ recently added flag in L0FromRawBase (m_useRootInTES)
 
 ! 2011-11-08 - Julien Cogan
- - L0CaloCandidatesFromRaw : configure the raw event location using the 
- new property defined in L0/L0Base/L0FromRaw. Protect against rootintes when 
+ - L0CaloCandidatesFromRaw : configure the raw event location using the
+ new property defined in L0/L0Base/L0FromRaw. Protect against rootintes when
  accessing this location ; Write bank read status only if the raw event is
  in the default location.
 
@@ -101,7 +104,7 @@
   - fix coverity (non) problems
 
 ! 2011-04-06 - Patrick Robbe
- - Change definition of L0Photon and L0Electron in the L0Calo trigger, 
+ - Change definition of L0Photon and L0Electron in the L0Calo trigger,
    is set by option for the moment (UseNewElectron, false by default)
 
 !========================= L0Calo v11r2p1 2010-06-21 ========================
@@ -114,12 +117,12 @@
 
 !========================= L0Calo v11r1 2010-03-18 ========================
 ! 2010-03-02 - Patrick Robbe
- - L0CaloCandidatesFromRaw.cpp: protect against missing magic pattern in 
+ - L0CaloCandidatesFromRaw.cpp: protect against missing magic pattern in
    RAW banks. In this case, do not decode the bank.
 
 !========================= L0Calo v11r0 2010-02-03 ========================
 ! 2010-01-22 - Patrick Robbe
- - L0CaloAlg.h/.cpp: use condition database to decide if we use ECAL in 
+ - L0CaloAlg.h/.cpp: use condition database to decide if we use ECAL in
    the Hadron trigger, and PS/SPD in the ECAL triggers.
  - L0CaloCheckCalibCte.cpp: move from int to unsigned long
 
@@ -153,7 +156,7 @@
 !========================= L0Calo v10r0 2009-11-13 ========================
 ! 2009-10-29 - Patrick Robbe
  - requirements: use new base package L0/L0Base
- - L0CaloAlg, L0CaloCandidatesFromRaw: use new structure (common 
+ - L0CaloAlg, L0CaloCandidatesFromRaw: use new structure (common
    options amongst all L0 packages, defined in L0Base)
  - L0CaloCandidatesFromRawBank: do not write candidates in TES in the tool
    but move it outside
@@ -193,10 +196,10 @@
 
 !========================= L0Calo v9r19 2008-11-21 ========================
 ! 2008-10-31 - Patrick Robbe
- - src/L0CaloAlg.cpp: in the trigger emulation, do not add ECAL 
-   to HCAL 0 energies when the default HCAL address is not 
+ - src/L0CaloAlg.cpp: in the trigger emulation, do not add ECAL
+   to HCAL 0 energies when the default HCAL address is not
    physical (to reflect electronics behaviour)
- - src/L0CaloCompare: add an histogram to plot the position 
+ - src/L0CaloCompare: add an histogram to plot the position
    of all candidates (not only errors) and the BCId where the
    errors occur.
 
@@ -218,18 +221,18 @@
 !========================= L0Calo v9r16 2008-07-29 ========================
 ! 2008-07-30 - Marco Cattaneo
  - Fix L0CaloMonit compilation on Windows
- 
+
 ! 2008-07-25 - Patrick Robbe
  - L0CaloMonit: do not fill histograms when not booked
 
 ! 2008-07-24 - Patrick Robbe
- - L0CaloMonit: do not book histograms to look for hot cells if 
+ - L0CaloMonit: do not book histograms to look for hot cells if
    search of hot cells is not activated
  - L0CaloAlg: gives correct address in case of saturated cells
    with equal energies in global pi0 candidate
 
 ! 2008-07-22 - Patrick Robbe for Marie-Helene Schune
- - L0CaloMonit: add possibility to detect automatically hot cells in 
+ - L0CaloMonit: add possibility to detect automatically hot cells in
    the calo trigger
 
 ! 2008-07-17 - Patrick Robbe
@@ -263,7 +266,7 @@
  - src/L0CaloAlg:
    . add the possibility to create LUT for the TVB, which will be loaded
      in the real electronics
-   . use left address instead of right address for the global pi0 
+   . use left address instead of right address for the global pi0
  - src/DumpL0CaloBanks: new algorithm to dump the content of the L0Calo
    banks for debugging
 
@@ -280,7 +283,7 @@
  - src/L0CaloAlg: add options to use or not PS/SPD and ECAL information
    resp. to build electromagnetic and hadron candidates. Default is to
    use it.
- - src/L0CaloCandidatesFromRawBank.cpp: protect against null pointer 
+ - src/L0CaloCandidatesFromRawBank.cpp: protect against null pointer
    in debugging output.
 
 ! 2008-04-02 - Patrick Robbe
@@ -321,19 +324,19 @@
 ! 2007-10-31 - Patrick Koppenburg
  - increment to v9r10
 
-! 2007-10-31 - Olivier Deschamps 	
- - adapt to change in L0DUBase.h 
+! 2007-10-31 - Olivier Deschamps
+ - adapt to change in L0DUBase.h
 
 !========================= L0Calo v9r9 2007-07-18 =========================
 ! 2007-07-02 - Patrick Robbe
- - L0CaloAlg.cpp: 
+ - L0CaloAlg.cpp:
     * update HCAL energy with ECAL in front also if HCAL Et=0
     * for particular cases where Front-End boards are partially used
       (HCAL for example), only transmit data to neighbour cards if
-      the connection is physically present and not masked in the 
+      the connection is physically present and not masked in the
       hardware.
-    * if the candidate's cellID is not valid, use (in this order) the top 
-      cellID, the right cellID (if the top is not valid) or the corner cellID 
+    * if the candidate's cellID is not valid, use (in this order) the top
+      cellID, the right cellID (if the top is not valid) or the corner cellID
       (it the right is not valid) instead, to follow what is done in the
       hardware
  - TriggerCard.cpp: use left bottom valid cell of the board as default address
@@ -359,7 +362,7 @@
 
 !========================= L0Calo v9r5 2006-11-07 =========================
 ! 2006-11-07 - Olivier Callot
- - Remove the hardcoding of the Et scale, get it from condb in 
+ - Remove the hardcoding of the Et scale, get it from condb in
    L0CaloCandidateFromRawBank. Remove its unused computation in L0CaloAlg
 
 ! 2006-11-07 - Marco Cattaneo
@@ -370,12 +373,12 @@
  - Split L0CaloCandidatesFromRaw into a simple algorithm and a tool doing the
    real copnversion from Raw Bank to TES objects.
  - Use this tool to put the result of L0CaloAlg directly on TES if the option
-   StoreInBuffer is false (default true). This allows to re-process L0Calo 
+   StoreInBuffer is false (default true). This allows to re-process L0Calo
    without modifying the Raw Event.
 
 !========================= L0Calo v9r4 2006-08-31 =========================
 ! 2006-08-31 - Olivier Callot
- - Fix a nasty problem in connecting HCAL to ECAL cards: The first cell of the 
+ - Fix a nasty problem in connecting HCAL to ECAL cards: The first cell of the
    first HCAL card doesn't exist -> its size was zero, and then no ECAL-HCAL
    connection was made. Found by Valgrind! Not, warning message if the cards
    are not all connected.
@@ -386,12 +389,12 @@
 
 !========================= L0Calo v9r2 2006-04-12 =========================
 ! 2006-04-12 - Olivier Callot
- - Split the Raw Bank produced by L0CaloCandidate into two banks, one for 
+ - Split the Raw Bank produced by L0CaloCandidate into two banks, one for
    HCAL and one for the rest
 
 !========================= L0Calo v9r1 2006-03-22 =========================
 ! 2006-03-22 - Olivier Deschamps
- - Fix bug in L0CaloCandidateFromRaw.cpp : CaloCandidate type 
+ - Fix bug in L0CaloCandidateFromRaw.cpp : CaloCandidate type
     from L0DUBase::Fiber enum (L0Calo enum removed in L0Event).
  - Update L0CaloMonit.cpp & L0CaloToMCParticleAsct.cpp as well
  - Remove L0Calo.h include in L0CaloAlg.cpp
@@ -456,7 +459,7 @@
    the float Et to the integer EtCode to get the highest candidate...
 
 ! 2004-03-22 - Olivier Callot
- - Recreate L0CaloCandidates default container from the Full container in 
+ - Recreate L0CaloCandidates default container from the Full container in
    L0CaloCandidatesFromRaw
 
 !========================= L0Calo v7r3 2004-02-05 =========================
@@ -478,8 +481,8 @@
 
    Writing to L1 and HLT buffer can be switched off by setting the option
    'StoreInBuffer = false;'
- - New algorithm L0CaloCandidateFromRaw to restore the L0CaloCandidate (full). 
-   Note that the restored full container includes also SPD multiplicity and 
+ - New algorithm L0CaloCandidateFromRaw to restore the L0CaloCandidate (full).
+   Note that the restored full container includes also SPD multiplicity and
    SumEt which are not available in the usual container.
 
 !========================= L0Calo v7r1 2003-07-16 =========================
@@ -495,7 +498,7 @@
  - Move MC truth relations factories to Associators package, to avoid dependency
    on L0Calo when reading DSTs. To find the relations in an application:
    . add to the requirements:  use Associators v2r* Associators
-   . add to the job options:   ApplicationMgr.DLLs += { "Associators" };  
+   . add to the job options:   ApplicationMgr.DLLs += { "Associators" };
 
 !========================= L0Calo v6r6 2003-01-17 =========================
 ! 2003-01-16 - Olivier Callot
@@ -527,8 +530,8 @@
    may be a good candidate, as the next may have no neighbour. Small effect !
  - Technical changes: log->msg, use 'format' instead of msg.width().
  - Photon trigger was and is EXCLUSIVE from electron trigger, i.e. when the Prs
-   is ON, the candidate is either an electron (SPD ok) or a photon. As the 
-   electron trigger has a lower threshold, this doesn't change the trigger 
+   is ON, the candidate is either an electron (SPD ok) or a photon. As the
+   electron trigger has a lower threshold, this doesn't change the trigger
    rate. But do not select photon trigger exclusively for photon physics !
 
 ! 2002-11-19 - Olivier Callot
@@ -548,8 +551,8 @@
 !========================= L0Calo v6r0 2002-07-09 =======================
 ! 2002-07-01 - Olivier Callot
  - New algorithm L0CaloToMCParticleAsct to build the relation between the
-   L0CaloCandidates (electron, photon, pi0local, hadron and hadron2) and 
-   MCParticle. This is based on the activeE from the hits, and a minimal 
+   L0CaloCandidates (electron, photon, pi0local, hadron and hadron2) and
+   MCParticle. This is based on the activeE from the hits, and a minimal
    fraction of the sum is needed, default 10%, jobOption MinimalFraction
    The relation is stored in Rec/Relations/L0CaloCandidates which can be
    changed by jobOption OutputTable.
@@ -582,7 +585,7 @@
 ! 30/01/2002 - Olivier Callot
   - Modified to use the new L0Event v10, based on xml.
   - Split the L0Calo algorithm :
-    o L0CaloDigit (new) which produces the 8 bit Et and 1 bit Prs/Spd, in the 
+    o L0CaloDigit (new) which produces the 8 bit Et and 1 bit Prs/Spd, in the
       new event classes L0CaloAdc and L0PrsSpdHit
     o L0CaloAlg uses these classes to perfrom the same job as before.
   - Updated options/Brunel.opts for this new algorithm
@@ -601,7 +604,7 @@
   L0CaloMonit.h     - get IHistogram1D.h from AIDA instead of GaudiKernel
 !=============================================================================
 ! 12/07/2001 - Olivier Callot ** v2 **
-  - Adapt to the new Gaudi/LHCb/Calo release: Increase version numbers and 
+  - Adapt to the new Gaudi/LHCb/Calo release: Increase version numbers and
     remove buildCells / buildCards calls as this is now done automatically
 
 !=============================================================================
@@ -614,19 +617,19 @@
 !==============================================================================
 ! 10/05/2001 - Olivier Callot
   Remove the HCAL clusters, no longer needed for Super-L1
-  Correct some misuse of MsgStream, 
-  provide a << operator to print L0CaloCandidate 
+  Correct some misuse of MsgStream,
+  provide a << operator to print L0CaloCandidate
 
 ! 2001/04/30 - Olivier Callot
   Modified requirements to use Event/CaloEvent v5* which is already in DEV
- 
+
 ! 2001/04/25 - Olivier Callot
   A cluster ID may be one of a non-existent cell. In this case the conversion
   to position is done with the other corner of the cluster
 
 ! 2001/04/19 - Olivier Callot
   Added the HCAL candidates in the output container, with a new type
-  Fixed Windows NT incompatibilities, mainly loop indices are defined outside 
+  Fixed Windows NT incompatibilities, mainly loop indices are defined outside
         the loop
 
 ! 2001/03/20 - Olivier Callot

@@ -24,13 +24,13 @@
        <attribute
         desc="Event number (same as in ODIN)"
         name="evtNumber"
-        type="longlong"
+        type="long long"
         init="0"
        />
        <attribute
         name="gpsTime"
         desc="GPS Time (same as in ODIN, microseconds)"
-        type="ulonglong"
+        type="unsigned long long"
         init="0"
        />
        <attribute

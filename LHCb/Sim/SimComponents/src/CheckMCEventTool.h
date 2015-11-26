@@ -31,7 +31,7 @@ public:
 protected:
 
 private:
-  longlong m_event;    ///< last event number
+  long long m_event;    ///< last event number
   StatusCode m_status; ///< Status of last check
 };
 #endif // CHECKMCEVENTTOOL_H

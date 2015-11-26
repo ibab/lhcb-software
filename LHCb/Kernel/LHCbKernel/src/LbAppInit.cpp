@@ -182,7 +182,7 @@ StatusCode LbAppInit::finalize()
 }
 
 //=============================================================================
-void LbAppInit::printEventRun( longlong event, int run,
+void LbAppInit::printEventRun( long long event, int run,
                                std::vector<long int>* seeds,
                                Gaudi::Time time ) const
 {
@@ -237,7 +237,7 @@ StatusCode LbAppInit::initRndm( std::vector<long int>& seeds )
 //=============================================================================
 // Get the random number seeds vector to be used for this event
 //=============================================================================
-std::vector<long int> LbAppInit::getSeeds( unsigned int seed1, ulonglong seed2 )
+std::vector<long int> LbAppInit::getSeeds( unsigned int seed1, unsigned long long seed2 )
 {
 
   std::vector<long int> seeds;

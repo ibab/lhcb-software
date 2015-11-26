@@ -200,19 +200,19 @@
       <attribute
         name="eventNumber"
         desc="L0 Event ID"
-        type="ulonglong"
+        type="unsigned long long"
         init="0" />
 
       <attribute
         name="gpsTime"
         desc="GPS Time (microseconds)"
-        type="ulonglong"
+        type="unsigned long long"
         init="0" />
 
       <attribute
         name="detectorStatus"
         desc="Detector Status"
-        type="ulonglong"
+        type="unsigned long long"
         init="0" />
 
       <attribute

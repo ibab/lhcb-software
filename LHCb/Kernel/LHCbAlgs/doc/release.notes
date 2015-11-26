@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2015-11-26 - Marco Clemencic
+ - Removed (u)longlong typedef (see GAUDI-1125).
+
 !========================= LHCbAlgs v3r7 2015-11-23 =========================
 ! 2015-10-25 - Gerhard Raven
  - replace std::auto_ptr with std::unique_ptr
@@ -13,7 +16,7 @@
  - prefer nullptr over 0
 
 ! 2015-10-20 - Marco Cattaneo
- - LHCBPS-1434: Added to LHCbApp() assignment of OdinTimeDecoder as 
+ - LHCBPS-1434: Added to LHCbApp() assignment of OdinTimeDecoder as
    EventClockSvc().EventTimeDecoder when processing real data.
 
 !========================= LHCbAlgs v3r6p1 2015-10-12 =========================

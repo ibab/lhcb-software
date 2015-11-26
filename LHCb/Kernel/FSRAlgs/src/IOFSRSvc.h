@@ -89,14 +89,14 @@ public:
   std::vector< std::string > parents();
   
   // Return list of GUIDs as input for this job
-  ulonglong eventsSeen() {return m_eventCount; };
+  unsigned long long eventsSeen() {return m_eventCount; };
   
   // Return list of GUIDs as input for this job, and events read from them
   LHCb::IOFSR::FileEventMap jobInputMap();
   
   
   // return number of events output into a given file in this job
-  ulonglong jobOutput(const std::string & PFN);
+  unsigned long long jobOutput(const std::string & PFN);
   
   
   //merge existing IOFSRs into the maps of this service
@@ -178,7 +178,7 @@ private:
   FidMap   m_fidMap;
   
   //total number of events seen so far.
-  ulonglong m_eventCount;
+  unsigned long long m_eventCount;
   
   
   std::string m_FileRecordName;                 ///< location of FileRecords

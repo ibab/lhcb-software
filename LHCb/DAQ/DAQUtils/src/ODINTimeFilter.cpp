@@ -82,7 +82,7 @@ StatusCode ODINTimeFilter::execute() {
 
   // get time & eventID 
   Gaudi::Time time = odin->eventTime();
-  ulonglong event  = odin->eventNumber();
+  unsigned long long event  = odin->eventNumber();
   int       run  = odin->runNumber();
   int       bx  = odin->bunchId();
   
@@ -188,9 +188,9 @@ void ODINTimeFilter::criteriaPrintOut(){
   }
 }
 
-bool ODINTimeFilter::check(ulonglong val, std::pair<double,double> range){
+bool ODINTimeFilter::check(unsigned long long val, std::pair<double,double> range){
   if( !def(range) )return true;
-  if( val >= (ulonglong) range.first && val <= (ulonglong) range.second )return true;
+  if( val >= (unsigned long long) range.first && val <= (unsigned long long) range.second )return true;
   return false;
 }
     

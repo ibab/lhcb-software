@@ -32,7 +32,7 @@
 
 
       <typedef
-        type="std::pair&lt;  int, longlong &gt;"
+        type="std::pair&lt;  int, long long &gt;"
         def="ValuePair"
         desc="For User information"
         access="PUBLIC"
@@ -228,7 +228,7 @@
       <method
         name="addInfo"
         desc=" Add new information associated with the specified key. This method cannot be used to modify information for a pre-existing key."
-        argList="const int key, const int incr, const longlong count"
+        argList="const int key, const int incr, const long long count"
         type="bool"
 	> 
 	<code>
@@ -286,7 +286,7 @@
       <method
         desc="increments the values for existing keys and inserts a new key if needed"
         name="incrementInfo"
-        argList="const int key, const longlong count"
+        argList="const int key, const long long count"
         type="ExtraInfo"
 	>
         <code> 
@@ -398,7 +398,7 @@
       int key = infoIter->first;
       LumiFSR::ValuePair values = infoIter->second;
       int incr = values.first;
-      longlong count = values.second;
+      long long count = values.second;
       ss &lt;&lt; key &lt;&lt; " " 
          &lt;&lt; incr &lt;&lt; " " 
          &lt;&lt; count &lt;&lt; " / ";

@@ -4,6 +4,9 @@
 ! Purpose     : Various utilities for manipulating RawEvent
 !-----------------------------------------------------------------------------
 
+! 2015-11-26 - Marco Clemencic
+ - Removed (u)longlong typedef (see GAUDI-1125).
+
 !========================= DAQUtils v1r13p3 2015-11-23 =========================
 ! 2015-10-21 - Marco Cattaneo
  - Fix DAQUtils.dumpmultievents reference following LHCBPS-1434 patch: LHCbApp()
@@ -38,7 +41,7 @@
 
 !========================= DAQUtils v1r11 2013-04-29 =========================
 ! 2013-04-18 - Rob Lambert
- - Merge in RawEventCombiners from the swimming branch. 
+ - Merge in RawEventCombiners from the swimming branch.
  - move to getIfExists.
 
 !========================= DAQUtils v1r10 2012-11-26 =========================
@@ -82,7 +85,7 @@
 !========================= DAQUtils v1r5 2011-07-25 =========================
 ! 2011-07-20 - Marco Cattaneo
  - In daqutils.basictest:
-   use GaudiConf.QMTest.LHCbExclusions in validateWithReference 
+   use GaudiConf.QMTest.LHCbExclusions in validateWithReference
 
 !========================= DAQUtils v1r4 2010-05-24 ==========================
 ! 2010-05-22 - Olivier Deschamps
@@ -103,10 +106,10 @@
  - Add .ignore() to all Warning()
 
 ! 2010-03-08 - Patrick Koppenburg
- - bankKiller: 
+ - bankKiller:
   . Bug fix: when a bank name with  typo was given it killed the last bank
   . Add doxygen comments for bankKiller
-  . Reduce verbosity (Warning...) 
+  . Reduce verbosity (Warning...)
 
 !========================= DAQUtils v1r1 2010-02-12 ==========================
 ! 2010-01-28 - Olivier Deschamps

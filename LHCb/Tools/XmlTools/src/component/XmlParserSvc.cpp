@@ -242,8 +242,8 @@ IOVDOMDocument* XmlParserSvc::parse (const char* fileName) {
     // parses the file
     try {
       if( msgLevel(MSG::DEBUG) ) debug() << "parsing file " << fileName << endmsg;
-      longlong start1 = 0;
-      longlong start2 = 0;
+      long long start1 = 0;
+      long long start2 = 0;
       if ( m_measureTime ) {
         start1 = System::cpuTime( System::microSec );
         start2 = System::currentTime( System::microSec );

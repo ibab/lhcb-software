@@ -47,13 +47,13 @@ class DAQCondDBAlgorithm : public GaudiAlgorithm {
   long m_daqEventNumber;
 
   /// System time at the end of initialization 
-  longlong m_nsInitialized;
+  long long m_nsInitialized;
 
   /// Total time (ns) spent in event processing
-  longlong m_nsExec;
+  long long m_nsExec;
 
   /// Total time (ns) spent in writing to the DB
-  longlong m_nsDBIO;
+  long long m_nsDBIO;
 
   /// Handle to the CondDBEditor (retrieved during the initialization)
   ICondDBEditor* m_dbEditor;

@@ -191,7 +191,7 @@ StatusCode L0CaloMonit::execute() {
   m_nEvents++ ;
 
   // Read ODIN bank to obtain BCId and event number
-  ulonglong event( 0 ) ;
+  unsigned long long event( 0 ) ;
   unsigned int BCId( 4000 ) ;
 
   LHCb::ODIN * odin = getIfExists< LHCb::ODIN >( LHCb::ODINLocation::Default ) ;

@@ -246,8 +246,8 @@ void DumpFSR::dump_file( std::string txt ) {
         LHCb::TimeSpanFSRs::iterator tsfsr;
         for ( tsfsr = timeSpanFSRs->begin(); tsfsr != timeSpanFSRs->end(); tsfsr++ ) {
           info() << timeSpanRecordAddress << ": TimeSpanFSR: " << *(*tsfsr) << endmsg;
-          ulonglong t0 = (*tsfsr)->earliest();
-          ulonglong t1 = (*tsfsr)->latest();
+          unsigned long long t0 = (*tsfsr)->earliest();
+          unsigned long long t1 = (*tsfsr)->latest();
           if ( msgLevel(MSG::DEBUG) ) debug() << timeSpanRecordAddress << "interval: " << t0 << "-" << t1 << endmsg;
         }
       }

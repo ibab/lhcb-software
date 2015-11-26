@@ -206,7 +206,7 @@ class genSrcUtils(importUtils.importUtils):
                         if   attType in ['bitfield8']             : attAtt['type'] = 'unsigned char'
                         elif attType in ['bitfield16']            : attAtt['type'] = 'unsigned short int'
                         elif attType in ['bitfield','bitfield32'] : attAtt['type'] = 'unsigned int'
-                        elif attType in ['bitfield64']            : attAtt['type'] = 'ulonglong'
+                        elif attType in ['bitfield64']            : attAtt['type'] = 'unsigned long long'
                     name = attAtt['name']
                     namespaceInit = ''
                     if namespace :

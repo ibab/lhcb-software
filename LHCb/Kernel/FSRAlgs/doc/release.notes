@@ -4,6 +4,9 @@
 ! Purpose     : Generic FSR manipulation and creation algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-11-26 - Marco Clemencic
+ - Removed (u)longlong typedef (see GAUDI-1125).
+
 !========================= FSRAlgs v1r9 2015-11-23 =========================
 ! 2015-10-29 - Marco Cattaneo
  - mergesmallfiles.qmt: add temporary exclusion for printout of Algorithm

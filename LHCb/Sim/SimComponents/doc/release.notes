@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-11-26 - Marco Clemencic
+ - Removed (u)longlong typedef (see GAUDI-1125).
+
+! 2015-11-26 - Marco Clemencic
  - Fixed compilation problem with gcc 5.2.
 
 !========================= SimComponents v3r0 2015-08-05 =========================

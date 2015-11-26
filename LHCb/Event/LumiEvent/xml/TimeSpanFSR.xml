@@ -26,20 +26,20 @@
 
 
 
-      <location name="Default"   
+      <location name="Default"
 		place="/FileRecords/TimeSpanFSR"/>
-      
+
       <attribute
         desc="Earliest time found on a file"
         name="earliest"
-        type="ulonglong"
+        type="unsigned long long"
         init="0"
        />
 
       <attribute
         desc="Latest time found on a file"
         name="latest"
-        type="ulonglong"
+        type="unsigned long long"
         init="0"
        />
 
@@ -50,13 +50,13 @@
         name="operator="
         type="LHCb::TimeSpanFSR&amp;"
 	>
-	<arg name="rhs" type="LHCb::TimeSpanFSR" const="TRUE"/>   
+	<arg name="rhs" type="LHCb::TimeSpanFSR" const="TRUE"/>
         <code>
    if ( this != &amp;rhs ) {
      m_earliest = rhs.m_earliest;
      m_latest = rhs.m_latest;
    }
-     
+
    return *this;
         </code>
       </method>
@@ -66,7 +66,7 @@
 	type = "void"
 	name = "addTime"
 	desc = "add a time and store the earliest/latest times">
-	<arg type = "ulonglong" name = "present"/> 
+	<arg type = "unsigned long long" name = "present"/>
 	<code>
 	  if ( m_earliest > 0 ) {
              m_earliest = std::min(present, m_earliest);
@@ -83,12 +83,12 @@
         name="operator+="
         type="LHCb::TimeSpanFSR&amp;"
 	>
-	<arg name="rhs" type="ulonglong" const="TRUE"/>   
-        <code>   
+	<arg name="rhs" type="unsigned long long" const="TRUE"/>
+        <code>
           addTime (rhs);
           return *this;
         </code>
-      </method> 
+      </method>
 
       <!-- add two timeSpanFSRs and calculate span that overlaps both -->
       <method
@@ -96,7 +96,7 @@
 	name="operator+="
         type="LHCb::TimeSpanFSR&amp;"
         >
-	<arg name="rhs" type="LHCb::TimeSpanFSR" const="TRUE"/>   
+	<arg name="rhs" type="LHCb::TimeSpanFSR" const="TRUE"/>
         <code>
 	  if ( rhs.m_earliest > 0 ) addTime (rhs.m_earliest);
           addTime (rhs.m_latest);
@@ -109,7 +109,7 @@
 	desc = "add two FSRs and store the earliest/latest times"
 	name = "operator+="
         type = "LHCb::TimeSpanFSR&amp;"
-        >   
+        >
 	<arg name="rhs" type="LHCb::TimeSpanFSR*" const="TRUE"/>
         <code>
           return *this += *rhs;
@@ -123,14 +123,14 @@
         type='std::ostream&amp;'
         desc='readable printout'
         const='TRUE'>
-	<arg name="s" type="std::ostream" const="FALSE"/>   
+	<arg name="s" type="std::ostream" const="FALSE"/>
         <code>
 
     std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);
     ss &lt;&lt; "{ "
-       &lt;&lt; " earliest : " &lt;&lt;  m_earliest  
-       &lt;&lt; " - latest : " &lt;&lt;  m_latest  
-       &lt;&lt; " }"; 
+       &lt;&lt; " earliest : " &lt;&lt;  m_earliest
+       &lt;&lt; " - latest : " &lt;&lt;  m_latest
+       &lt;&lt; " }";
 
     return ss;
         </code>

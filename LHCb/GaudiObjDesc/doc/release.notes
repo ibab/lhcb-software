@@ -5,6 +5,9 @@
 ! Package manager: Stefan Roiser
 !--------------------------------------------------------------------------------
 
+! 2015-11-26 - Marco Clemencic
+ - Removed (u)longlong typedef (see GAUDI-1125).
+
 !========================= GaudiObjDesc v11r23 2015-05-26 =========================
 ! 2015-05-05 - Chris Jones
  - Add back the previously removed placement operators, as it turns out these
@@ -17,7 +20,7 @@
 
 ! 2015-03-06 - Chris Jones
  - Add new option to genClasses.py to generate boost pool allocators with
-   threading support disabled. Avoids some mutex lock calls during new/delete 
+   threading support disabled. Avoids some mutex lock calls during new/delete
    that are unneccessary as long as threading is not fully supported.
    New option is the default.
  - Remove the placement operators from the pool allocator definitions.

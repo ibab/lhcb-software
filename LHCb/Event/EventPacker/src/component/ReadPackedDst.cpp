@@ -233,7 +233,7 @@ StatusCode ReadPackedDst::execute() {
       LHCb::RecHeader* recHeader = new LHCb::RecHeader();
       put( recHeader, name + m_postfix );
       processLinks( recHeader, version );
-      longlong eventNumber = nextInt();
+      long long eventNumber = nextInt();
       eventNumber = (eventNumber << 32) + nextInt();
       recHeader->setEvtNumber( eventNumber );
       // Dummy reads from old data when RecHeader contained random seeds.

@@ -104,12 +104,12 @@ StatusCode DAQCondDBAlgorithm::execute( ) {
 
   // At every event store a new condition
   try {
-    longlong startIO = System::currentTime(System::nanoSec);
+    long long startIO = System::currentTime(System::nanoSec);
     m_dbEditor->storeXMLData("/" + m_daqFolderName,
                              m_daqRecord,
                              Gaudi::Time(System::currentTime(System::nanoSec)-m_nsInitialized),
                              Gaudi::Time(cool::ValidityKeyMax));
-    longlong endIO = System::currentTime(System::nanoSec);
+    long long endIO = System::currentTime(System::nanoSec);
     if ( m_daqShowProgress > 0 ) {
       if ( m_daqEventNumber == 
            (m_daqEventNumber/m_daqShowProgress)*m_daqShowProgress ) {

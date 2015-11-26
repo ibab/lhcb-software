@@ -63,7 +63,7 @@ protected:
 private:
 
   std::vector<std::pair<int,int> > m_events; ///< Run/event number pairs
-  //FIXME: needs to be: std::vector<std::pair<unsigned int,ulonglong> > m_events; ///< Run/event number pairs
+  //FIXME: needs to be: std::vector<std::pair<unsigned int,unsigned long long> > m_events; ///< Run/event number pairs
   bool m_passSelect;		///< If true, will pass list events; false, fail
 
 };

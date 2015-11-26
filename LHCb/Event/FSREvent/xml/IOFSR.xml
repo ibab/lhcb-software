@@ -42,9 +42,9 @@
        <import name="string" std="TRUE"/>
       
       <typedef
-        type="std::map&lt; std::string, ulonglong &gt;"
+        type="std::map&lt; std::string, unsigned long long &gt;"
         def="FileEventMap"
-        desc="File Input Events, {GUID:ulonglong}"
+        desc="File Input Events, {GUID:unsigned long long}"
         access="PUBLIC"
 	/> 
 
@@ -58,14 +58,14 @@
       <attribute
         desc="Number of events this output file should contain"
         name="eventsOutput"
-        type="ulonglong"
+        type="unsigned long long"
         init="0"
        />
       
       <attribute
         desc="Number of events read over to produce this file"
         name="eventsSeen"
-        type="ulonglong"
+        type="unsigned long long"
         init="0"
        />
       

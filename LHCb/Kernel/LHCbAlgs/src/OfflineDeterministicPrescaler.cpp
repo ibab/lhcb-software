@@ -103,7 +103,7 @@ bool OfflineDeterministicPrescaler::accept(const LHCb::RecHeader& header)  const
   uint32_t x = m_initial;
   x = mix64( x, header.gpsTime() );
   x = mix32( x, header.runNumber() );
-  x = mix64( x, (ulonglong)header.evtNumber() );
+  x = mix64( x, (unsigned long long)header.evtNumber() );
 
   if (msgLevel(MSG::DEBUG)) debug() << "  gpsTime: " << header.gpsTime() 
                                     << "  run#: "    << header.runNumber()

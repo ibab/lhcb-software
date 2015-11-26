@@ -67,7 +67,7 @@ protected:
    *  @param[in] seeds (optional) vector of seeds
    *  @param[in] time (optional) time of the event
    */
-  void printEventRun( longlong evt,
+  void printEventRun( long long evt,
                       int run,
                       std::vector<long int> *seeds = 0,
                       Gaudi::Time time = 0              ) const;
@@ -85,7 +85,7 @@ protected:
    *  @param[in] seed2 Second seed (typically event number)
    *  @return    vector of seeds
    */
-  std::vector<long int> getSeeds( unsigned int seed1, ulonglong seed2 );
+  std::vector<long int> getSeeds( unsigned int seed1, unsigned long long seed2 );
 
   /** Is printing OK for this event ?
    *  Checks the PrintFreq option to see how frequently mesages should be printed

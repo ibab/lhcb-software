@@ -6,6 +6,9 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2015-11-26 - Marco Clemencic
+ - Removed (u)longlong typedef (see GAUDI-1125).
+
 !========================= MDF v3r43 2015-11-23 =========================
 ! 2015-11-10 - Marco Cattaneo
  - Fix a format-pedantic warning from clang

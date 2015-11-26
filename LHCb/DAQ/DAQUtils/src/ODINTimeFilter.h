@@ -30,7 +30,7 @@ protected:
 private:
   void criteriaPrintOut();
   int  val(int v1,int v2,int v3=0);
-  bool check(ulonglong  val, std::pair<double,double> range);
+  bool check(unsigned long long  val, std::pair<double,double> range);
   bool check(int  val, std::pair<int,int> range);
   bool def(std::pair<double,double> range);
   bool def(std::pair<int,int> range);

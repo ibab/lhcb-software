@@ -329,7 +329,7 @@ LHCb::IOFSR::FileEventMap IOFSRSvc::jobInputMap()
 
 
 // Return list of GUIDs as input for this job, and events read from them
-ulonglong IOFSRSvc::jobOutput(const std::string & PFN)
+unsigned long long IOFSRSvc::jobOutput(const std::string & PFN)
 {
   LHCb::IOFSR::FileEventMap::iterator j = m_jobOutputMap.find(AFN2name(PFN));
   if (j != m_jobOutputMap.end() ) return j->second;
@@ -548,7 +548,7 @@ LHCb::IOFSR::StatusFlag IOFSRSvc::traceCountsFlag()
   //check that the seen counts are the sum of the daughter counts right now.
   //Will be done at every level, so I only need to check this top level.
   
-  ulonglong expected=0;
+  unsigned long long expected=0;
   
   if(m_writtenToMap.size()==0)
   {

@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+! 2015-11-26 - Marco Clemencic
+ - Removed (u)longlong typedef (see GAUDI-1125).
+
 !========================= DAQEvent v9r20 2015-07-20 =========================
 ! 2015-06-12 - Heinrich Schindler
  - Add HCError raw bank type.

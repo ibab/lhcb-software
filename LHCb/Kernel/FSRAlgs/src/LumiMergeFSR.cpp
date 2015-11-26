@@ -119,16 +119,16 @@ StatusCode LumiMergeFSR::merge() {
     }
   }
   // get timespans for later removal - and store earliest and latest times
-  ulonglong all_earliest = 0;                         // earliest time seen
-  ulonglong all_latest = 0;                           // latest time seen
+  unsigned long long all_earliest = 0;                         // earliest time seen
+  unsigned long long all_latest = 0;                           // latest time seen
   std::vector< std::string > tsAddresses = m_navigatorTool->navigate(fileRecordRoot, m_TimeSpanFSRName);
   for(std::vector< std::string >::iterator iAddr = tsAddresses.begin() ; iAddr != tsAddresses.end() ; ++iAddr ){
     LHCb::TimeSpanFSRs* timeSpanFSRs = getIfExists<LHCb::TimeSpanFSRs>(m_fileRecordSvc, *iAddr);    
     LHCb::TimeSpanFSRs::iterator tsfsr;
     for ( tsfsr = timeSpanFSRs->begin(); tsfsr != timeSpanFSRs->end(); tsfsr++ ) {
       // take earliest and latest
-      ulonglong t0 = (*tsfsr)->earliest();
-      ulonglong t1 = (*tsfsr)->latest();
+      unsigned long long t0 = (*tsfsr)->earliest();
+      unsigned long long t1 = (*tsfsr)->latest();
       if ( all_earliest == 0 ) all_earliest = t0;     
       all_latest = std::max(t1, all_latest);
     }

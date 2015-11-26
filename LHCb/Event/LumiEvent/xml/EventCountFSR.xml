@@ -36,14 +36,14 @@
       <attribute
         desc="Number of events this output file should contain"
         name="output"
-        type="longlong"
+        type="long long"
         init="0"
        />
 
       <attribute
         desc="Number of events read from all input files"
         name="input"
-        type="longlong"
+        type="long long"
         init="0"
        />
 

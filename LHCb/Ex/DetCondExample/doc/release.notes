@@ -3,6 +3,9 @@
 ! package manager : Marco Clemencic
 ! =====================================================================
 
+! 2015-11-26 - Marco Clemencic
+ - Removed (u)longlong typedef (see GAUDI-1125).
+
 !========================= DetCondExample v11r14p1 2015-10-12 ======================
 ! 2015-08-03 - Gerhard Raven
  - remove #include of obsolete Gaudi headers

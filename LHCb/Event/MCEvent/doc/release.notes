@@ -3,12 +3,15 @@
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output)
 !-----------------------------------------------------------------------------
 
+! 2015-11-26 - Marco Clemencic
+ - Removed (u)longlong typedef (see GAUDI-1125).
+
 !========================= MCEvent v3r3 2015-04-20 =========================
 ! 2015-03-24 - Chris Jones
  - Add a new bitfield 'flags' data member to the MCParticle class.
    Currently only a single bit is used to define a 'fromSignal' flag that
    indicates if a particle was produced as part of the MC signal decay tree
-   or not. Used in MC stripping productions to make sure signal is always 
+   or not. Used in MC stripping productions to make sure signal is always
    saved to uDST streams.
 
 !========================= MCEvent v3r2 2015-02-23 =========================
@@ -43,7 +46,7 @@
  - Improve the fillstream methods for MCParticle and MCVertex to also include
    information on their associated SmartRefs. Added two new cpp files for
    these classes to implement the new methods, as they are unlikely to be
-   properly inlined anyway (too long). Moved MCParticle::hasOscillated() to 
+   properly inlined anyway (too long). Moved MCParticle::hasOscillated() to
    the cpp file, as to was also unlikely to be inlined.
 
 ! 2012-11-15 - Marco Clemencic

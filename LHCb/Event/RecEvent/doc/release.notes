@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output)
 !-----------------------------------------------------------------------------
 
+! 2015-11-26 - Marco Clemencic
+ - Removed (u)longlong typedef (see GAUDI-1125).
+
 !========================= RecEvent v2r55 2015-11-23 =========================
 ! 2015-10-15 - Wouter Hulsbergen
  - Added new class 'PrimaryVertex'
