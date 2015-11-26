@@ -13,10 +13,12 @@ def configureTop(appMgr, node_info):
     ## Additional Services
     appMgr.ExtSvc += ["Hlt2AdderSvc", "Hlt2MonInfoSvc", "Hlt2RootPublishSvc", "Hlt2SaverSvc"]
 
+    ports = node_info['ports']
+
     ## The top info relay ports
     from Configurables import Hlt2MonRelaySvc
     infoRelay = Hlt2MonRelaySvc("InfoRelay")
-    infoRelay.FrontConnection = "tcp://*:%d" % __ports['InfoRelay']['in']
+    infoRelay.FrontConnection = "tcp://*:%d" % ports['InfoRelay']['in']
     infoRelay.BackConnection  = "ipc:///tmp/hlt2MonInfo_0"
     infoRelay.Capture = True
     infoRelay.OutputLevel = 3
@@ -24,7 +26,7 @@ def configureTop(appMgr, node_info):
     ## The top histo relay ports
     from Configurables import Hlt2MonRelaySvc
     histoRelay = Hlt2MonRelaySvc("HistoRelay")
-    histoRelay.FrontConnection = "tcp://*:%d" % __ports['HistoRelay']['in']
+    histoRelay.FrontConnection = "tcp://*:%d" % ports['HistoRelay']['in']
     histoRelay.BackConnection  = "ipc:///tmp/hlt2MonData_0"
     histoRelay.Capture = True
     histoRelay.OutputLevel = 3
@@ -33,21 +35,21 @@ def configureTop(appMgr, node_info):
     from Configurables import Hlt2AdderSvc
     adderSvc = Hlt2AdderSvc()
     adderSvc.FrontConnection = histoRelay.BackConnection
-    adderSvc.BackConnection  = connections['Hlt2AdderSvc']['back']
+    adderSvc.BackConnection  = "ipc:///tmp/hlt2MonData_1"
     adderSvc.OutputLevel = 3
 
     ## The info svc ports
     from Configurables import Hlt2MonInfoSvc
     infoSvc = Hlt2MonInfoSvc()
     infoSvc.FrontConnection = infoRelay.BackConnection
-    infoSvc.BackConnection  = connections['Hlt2MonInfoSvc']['back']
+    infoSvc.BackConnection  = "ipc:///tmp/hlt2MonInfo_1"
     infoSvc.OutputLevel = 3
 
     ## The root conversion service
     from Configurables import Hlt2RootPublishSvc
     rootSvc = Hlt2RootPublishSvc()
     rootSvc.FrontConnection = adderSvc.BackConnection
-    rootSvc.BackConnection  = connections['Hlt2RootPublishSvc']['back']
+    rootSvc.BackConnection  = "ipc:///tmp/hlt2MonData_2"
     rootSvc.InfoConnection  = infoSvc.BackConnection
     rootSvc.OutputLevel = 3
 
@@ -56,6 +58,8 @@ def configureTop(appMgr, node_info):
     saverSvc = Hlt2SaverSvc()
     saverSvc.DataConnection = rootSvc.BackConnection
     saverSvc.InfoConnection = infoSvc.BackConnection
+    if 'HistogramDirectory' in node_info:
+        saverSvc.BaseDirectory = node_info['HistogramDirectory']
     saverSvc.OutputLevel = 3
 
     return (infoRelay, histoRelay, adderSvc, infoSvc, rootSvc, saverSvc)
@@ -64,12 +68,12 @@ def configureSubfarm(appMgr, node_info):
     ## The info relay ports
     from Configurables import Hlt2MonRelaySvc
     infoRelay = Hlt2MonRelaySvc("InfoRelay")
-    infoRelay.InPort  = __ports['InfoRelay']['in']
+    infoRelay.InPort  = ports['InfoRelay']['in']
 
     ## The histo relay ports are the same, but on different nodes
     from Configurables import Hlt2MonRelaySvc
     histoRelay = Hlt2MonRelaySvc("HistoRelay")
-    histoRelay.InPort  = __ports['HistoRelay']['in']
+    histoRelay.InPort  = ports['HistoRelay']['in']
 
     return (infoRelay, histoRelay)
 
@@ -78,25 +82,36 @@ def configureNode(appMgr, node_info):
     from Configurables import Hlt2MonRelaySvc
     infoRelay = Hlt2MonRelaySvc("InfoRelay")
     infoRelay.FrontConnection = "ipc:///tmp/hlt2MonInfo_0"
-    infoRelay.BackConnection  = 'tcp://hlt%s:%d' % (node_info['subfarm'], __ports['InfoRelay']['in'])
+    infoRelay.BackConnection  = 'tcp://hlt%s:%d' % (node_info['subfarm'], ports['InfoRelay']['in'])
 
     ## The histo relay port to connect to on the subfarm relay
     from Configurables import Hlt2MonRelaySvc
     histoRelay = Hlt2MonRelaySvc("HistoRelay")
-    histoRelay.InPort = __ports['HistoRelay']['in']
+    histoRelay.InPort = ports['HistoRelay']['in']
 
     return (infoRelay, histoRelay)
 
-def configure(host_type = None):
+def configure(host_type = None, directory = None, ports = None):
 
     from Configurables import ApplicationMgr
     appMgr = ApplicationMgr()
+
+    ## configure services
+    configs = {'node' : configureNode,
+               'subfarm' : configureSubfarm,
+               'top' : configureTop}
+    node_info = {}
+
+    if not ports:
+        node_info['ports'] = __ports
+    else:
+        node_info['ports'] = ports
 
     hostname = socket.gethostname()
     host_regex = re.compile(r"hlt(0[12]|(?P<subfarm>[a-f]{1}[0-9]{2})(?P<node>[0-9]{2})?)")
     r = host_regex.match(hostname)
     ht = ''
-    if host_type and host_type in services:
+    if host_type and host_type in configs:
         ht = host_type
     elif r:
         if r.group(1) in ('01', '02'):
@@ -109,19 +124,18 @@ def configure(host_type = None):
         info = {'top' : lambda r: r.group(1) == '01',
                 'subfarm' : lambda r: r.group('subfarm'),
                 'node' : lambda r: r.group('node')}
-        node_info = {k : v(r) for k, v in info.iteritems()}
+        node_info.update({k : v(r) for k, v in info.iteritems()})
 
     if not ht:
         print '[ERROR] cannot determine type of host for running.'
         return
 
+    if directory and host_type == 'top':
+        node_info['HistogramDirectory'] = directory
+
     ## IncidentSvc and relay services are needed everywhere
     appMgr.ExtSvc += ["IncidentSvc", "Hlt2MonRelaySvc/HistoRelay", "Hlt2MonRelaySvc/InfoRelay"]
 
-    ## Now configure services specific to levels
-    configs = {'node' : configureNode,
-               'subfarm' : configureSubfarm,
-               'top' : configureTop}
     svcConfs = configs[ht](appMgr, node_info)
 
     ## Set the partition we are running in
