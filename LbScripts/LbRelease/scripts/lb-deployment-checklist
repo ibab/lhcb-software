@@ -112,11 +112,11 @@ def rpm_copied(project, version):
     '''
     You need to add the RPMs to the RPM repository with
 
-      lb-release-rpm /data/archive/artifacts/release/lhcb-release/${build_id}
+      ssh lhcb-archive lb-release-rpm /data/archive/artifacts/release/lhcb-release/${build_id}
 
     and
 
-      lb-release-rpm --copy /data/archive/artifacts/release/lhcb-release/${build_id}
+      ssh lhcb-archive lb-release-rpm --copy /data/archive/artifacts/release/lhcb-release/${build_id}
 
     if the check was successful.
 
@@ -162,11 +162,11 @@ def rpm_copied_pkg(project, version):
     '''
     You need to add the RPMs to the RPM repository with
 
-      lb-release-rpm /data/archive/artifacts/release/lhcb-release/${build_id}
+      ssh lhcb-archive lb-release-rpm /data/archive/artifacts/release/lhcb-release/${build_id}
 
     and
 
-      lb-release-rpm --copy /data/archive/artifacts/release/lhcb-release/${build_id}
+      ssh lhcb-archive lb-release-rpm --copy /data/archive/artifacts/release/lhcb-release/${build_id}
 
     if the check was successful.
 
@@ -273,7 +273,7 @@ def pkg_installation(pkgdir, package):
 @check
 def afs_installation(project, version):
     '''
-    You need to install on AFS (from lxplus).
+    You need to install on AFS (must be run from lxplus).
 
       lb-deployment-afs-install <project> <version> <platforms>
 
@@ -287,7 +287,7 @@ def afs_installation(project, version):
 @check_pkg
 def pkg_afs_installation(package, version):
     '''
-    You need to install on AFS (from lxplus).
+    You need to install on AFS (must be run from lxplus).
 
       /afs/cern.ch/lhcb/software/rpmrel/afslbpkr install <pkg_rpm_name>
 

@@ -1,3 +1,7 @@
+2015-11-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* lb-deployment-checklist: changed rpm release instructions (see LBCORE-982)
+
 2015-11-25  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* getpack: touch the top level CMakeLists.txt to force reconfigure (LBCORE-882)
