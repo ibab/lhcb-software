@@ -20,22 +20,22 @@ static const char* Options[] = {
 
 //---------------------------------------------------------------------------
 int upic_open_menu (int id, int f, int fc, const char* title_0, const char* title_1, const char* title_2) {
-  return upic_open_menus (id, f, fc, title_0, title_1, title_2, NORMAL_MENU);
+  return upic_open_menus (id, f, fc, title_0, title_1, title_2, UPI_NORMAL_MENU);
 }
 
 //---------------------------------------------------------------------------
 int upic_open_pulldown_menu (int id, int f, int fc, const char* title_0, const char* title_1, const char* title_2) {
-  return upic_open_menus (id, f, fc, title_0, title_1, title_2, PULLDOWN_MENU);
+  return upic_open_menus (id, f, fc, title_0, title_1, title_2, UPI_PULLDOWN_MENU);
 }
 
 //---------------------------------------------------------------------------
 int upic_open_detached_menu (int id, int f, int fc, const char* title_0, const char* title_1, const char* title_2) {
-  return upic_open_menus (id, f, fc, title_0, title_1, title_2, DETACHED_MENU);
+  return upic_open_menus (id, f, fc, title_0, title_1, title_2, UPI_DETACHED_MENU);
 }
 
 //---------------------------------------------------------------------------
 int upic_open_param (int id, int f, int fc, const char* title_0, const char* title_1, const char* title_2) {
-  return upic_open_menus (id, f, fc, title_0, title_1, title_2, PARAMETER_PAGE);
+  return upic_open_menus (id, f, fc, title_0, title_1, title_2, UPI_PARAMETER_PAGE);
 }
 
 //---------------------------------------------------------------------------
@@ -48,10 +48,10 @@ int upic_close_menu ()  {
   Menu* m = Sys.menu.last;
   if (!m) return UPI_SS_NOOPENMENU;
 
-  if (m->type == PARAMETER_PAGE)  {
-    upic_set_param((int*)Sys.result,ACCEPT_OPTION,"A7","ACCEPT ",0,0,Options,  1,1);
-    upic_set_param((int*)Sys.result,CANCEL_OPTION,"A7","CANCEL ",0,0,Options+1,1,1);
-    upic_set_param((int*)Sys.result,RESET_OPTION, "A7","RESET  ",0,0,Options+2,1,1);
+  if (m->type == UPI_PARAMETER_PAGE)  {
+    upic_set_param((int*)Sys.result,UPI_ACCEPT_OPTION,"A7","ACCEPT ",0,0,Options,  1,1);
+    upic_set_param((int*)Sys.result,UPI_CANCEL_OPTION,"A7","CANCEL ",0,0,Options+1,1,1);
+    upic_set_param((int*)Sys.result,UPI_RESET_OPTION, "A7","RESET  ",0,0,Options+2,1,1);
     upic_add_param_line (-1, "[^^^^^^^]   [^^^^^^^]   [^^^^^^^]", "");
   }
 #ifdef SCREEN
@@ -170,7 +170,7 @@ int upic_open_menus (int id, int f, int fc, const char* title_0, const char* tit
   if (upic_find_menu(id)) return UPI_SS_INVMENU;
   Menu* m = (Menu*) list_add_entry (&Sys.menu, sizeof(Menu));
   m->id = id;
-  if (type == NORMAL_MENU)  {
+  if (type == UPI_NORMAL_MENU)  {
     if (!(w = Sys.window))    {
 #ifdef SCREEN
       upic_open_window();
@@ -178,7 +178,7 @@ int upic_open_menus (int id, int f, int fc, const char* title_0, const char* tit
 #endif
     }
   }
-  else if (type == PULLDOWN_MENU)  {
+  else if (type == UPI_PULLDOWN_MENU)  {
     upic_open_pulldown_window();
     w = Sys.window;
   }
@@ -194,9 +194,9 @@ int upic_open_menus (int id, int f, int fc, const char* title_0, const char* tit
   upic_open_page (&m->page);
 
   len0 = max_len = upic_non_blanks (title_0);
-  if ((len1 = upic_non_blanks (title_1) + 2*PAGE_MARKER_SIZE) > max_len)
+  if ((len1 = upic_non_blanks (title_1) + 2*UPI_PAGE_MARKER_SIZE) > max_len)
     max_len = len1;
-  if ((len2 = upic_non_blanks (title_2) + 2*PAGE_MARKER_SIZE) > max_len)
+  if ((len2 = upic_non_blanks (title_2) + 2*UPI_PAGE_MARKER_SIZE) > max_len)
     max_len = len2;
   m->width = max_len;
   m->items = 0;
@@ -239,7 +239,7 @@ int upic_connect_menu (Menu* m, int f_menu, int f_item) {
   if (!(f = upic_find_menu(f_menu))) return 0;
   d = f->page.first;
   if (!(i = upic_find_item_row(d->item.first, f_item, &row))) return 0;
-  if (i->type == COMMENT) return 0;
+  if (i->type == UPI_COMMENT) return 0;
 
 #ifdef SCREEN
   scrc_begin_pasteboard_update (Sys.pb);

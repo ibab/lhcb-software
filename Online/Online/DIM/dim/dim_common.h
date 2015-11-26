@@ -1,9 +1,24 @@
-#ifndef __COMMONDEFS
-#define __COMMONDEFS
+#ifndef __DIM_COMMONDEFS
+#define __DIM_COMMONDEFS
 
 /* Service type definition */
 
-#ifndef ONCE_ONLY
+#ifndef DIM_DEFINITIONS_DECLARED
+#define DIM_DEFINITIONS_DECLARED
+
+#ifdef __cplusplus
+static const int ONCE_ONLY=	0x01;
+static const int TIMED=		0x02;
+static const int MONITORED=	0x04;
+static const int COMMAND=	0x08;
+static const int DIM_DELETE=	0x10;
+static const int MONIT_ONLY=	0x20;
+static const int UPDATE=	0x40;
+static const int TIMED_ONLY=	0x80;
+static const int MONIT_FIRST=   0x100;
+static const int MAX_TYPE_DEF=  0x100;
+static const int STAMPED=       0x1000;
+#else
 #define ONCE_ONLY	0x01
 #define TIMED		0x02
 #define MONITORED	0x04
@@ -15,6 +30,7 @@
 #define MONIT_FIRST 0x100
 #define MAX_TYPE_DEF    0x100
 #define STAMPED       0x1000
+#endif
 
 typedef enum { SRC_NONE, SRC_DIS, SRC_DIC, SRC_DNS, SRC_DNA, SRC_USR }SRC_TYPES;
 

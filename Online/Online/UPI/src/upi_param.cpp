@@ -22,10 +22,10 @@ static int upic_count_store_bytes(Item* i) {
   for (Param* p = i->param.first; p; p = p->next)  {
     n += sizeof(int);
     switch (p->type)    {
-    case ASC_FMT :
+    case UPI_ASC_FMT :
       n += strlen(p->val.c) + 1;
       break;
-    case REAL_FMT :
+    case UPI_REAL_FMT :
       n += sizeof(double);
       break;
     default :
@@ -44,11 +44,11 @@ static char* upic_store_params_of_line(Item* i, char* buffer) {
     *n = p->id;
     buffer += sizeof(int);
     switch (p->type)    {
-    case ASC_FMT :
+    case UPI_ASC_FMT :
       strcpy (buffer, p->val.c);
       buffer += strlen(buffer) + 1;
       break;
-    case REAL_FMT :
+    case UPI_REAL_FMT :
       d = (double*) buffer;
       *d = p->val.d;
       buffer += sizeof(double);
@@ -72,11 +72,11 @@ static char* upic_retreive_params_of_line(Item* i, char* buffer)   {
     buffer += sizeof(int);
     
     switch (p->type)    {
-    case ASC_FMT :
+    case UPI_ASC_FMT :
       strcpy (p->val.c, buffer);
       buffer += strlen(buffer) + 1;
       break;
-    case REAL_FMT :  {
+    case UPI_REAL_FMT :  {
       double* d = (double*) buffer;
       p->val.d = *d;
       buffer += sizeof(double);
@@ -115,12 +115,12 @@ int upic_set_param(const void *var, int id, const char *format, ...) {
 
   va_start (args, format);
   switch (p->type)  {
-  case ASC_FMT :
+  case UPI_ASC_FMT :
     def.c = va_arg (args, char*);
     min.c = va_arg (args, char*);
     max.c = va_arg (args, char*);
     break;
-  case REAL_FMT :
+  case UPI_REAL_FMT :
     def.d = va_arg (args, double);
     min.d = va_arg (args, double);
     max.d = va_arg (args, double);
@@ -144,7 +144,7 @@ int upic_set_param(const void *var, int id, const char *format, ...) {
   p->list_pos = 0;
 
   switch (p->type)    {
-  case ASC_FMT:    {
+  case UPI_ASC_FMT:    {
     char **q, **add = (char**)list;
     p->def.c = (char*) list_malloc (width + 1);
     p->val.c = (char*) list_malloc (width + 1);
@@ -156,7 +156,7 @@ int upic_set_param(const void *var, int id, const char *format, ...) {
       *q = ::strcpy((char*)list_malloc(strlen(*add)+1), *add);
     break;
   }
-  case REAL_FMT:    {
+  case UPI_REAL_FMT:    {
     p->def.d = def.d;
     p->val.d = def.d;
     p->min.d = min.d;
@@ -198,12 +198,12 @@ int upic_modify_param (int menu_id, int item_id, int param_id, ...) {
 
   va_start (args, param_id);
   switch (p->type)  {
-  case ASC_FMT :
+  case UPI_ASC_FMT :
     def.c = va_arg (args, char*);
     min.c = va_arg (args, char*);
     max.c = va_arg (args, char*);
     break;
-  case REAL_FMT :
+  case UPI_REAL_FMT :
     def.d = va_arg (args, double);
     min.d = va_arg (args, double);
     max.d = va_arg (args, double);
@@ -220,7 +220,7 @@ int upic_modify_param (int menu_id, int item_id, int param_id, ...) {
   va_end (args);
 
   switch (p->type)  {
-  case ASC_FMT:    {
+  case UPI_ASC_FMT:    {
     char **q, **add;
     if (def.c)  {
       ::sprintf (p->def.c, p->format, def.c);
@@ -240,7 +240,7 @@ int upic_modify_param (int menu_id, int item_id, int param_id, ...) {
     }
     break;
   }
-  case REAL_FMT :    {
+  case UPI_REAL_FMT :    {
     if (def.i) p->val.d = p->def.d = def.d;
     if (min.i) p->min.d = min.d;
     if (max.i) p->max.d = max.d;
@@ -298,7 +298,7 @@ int upic_refresh_param_page (int page)  {
     Item* i = d->item.first;
     int row = 1;
     while (i) {
-      if (i->type == PARAM && i->id != -1)    {
+      if (i->type == UPI_PARAM && i->id != -1)    {
         if (Sys.menu.cur == m) upic_wakeup();
         upic_refresh_params_in_line (i->param.first);
 #ifdef SCREEN
@@ -327,7 +327,7 @@ int upic_refresh_param_line (int page, int item_id) {
   Page* d = m->page.first;
   if (!d || !(i = upic_find_item_row (d->item.first, item_id, &row)))
     return UPI_SS_INVCOMMAND;
-  if (i->type == PARAM && i->id != -1)  {
+  if (i->type == UPI_PARAM && i->id != -1)  {
     if (Sys.item.cur == i) upic_wakeup();
     upic_refresh_params_in_line (i->param.first);
 #ifdef SCREEN
@@ -361,7 +361,7 @@ void upic_drop_params (Param* p)  {
 //---------------------------------------------------------------------------
 void upic_drop_param (Param* p)   {
   ::free (p->buf);
-  if (p->type == ASC_FMT)  {
+  if (p->type == UPI_ASC_FMT)  {
     char** qc = (char**)p->list;
     free (p->def.c);
     free (p->val.c);
@@ -382,7 +382,7 @@ void upic_refresh_params_in_line (Param* first) {
 //---------------------------------------------------------------------------
 void upic_refresh_param (Param* p)    {
   switch (p->type)  {
-  case ASC_FMT :
+  case UPI_ASC_FMT :
     if (p->fortran)  {
       char* c = p->val.c;
       strncpy (c, (char *)p->var, p->size);
@@ -392,7 +392,7 @@ void upic_refresh_param (Param* p)    {
     else strcpy (p->val.c, (char *)p->var);
     strcpy (p->def.c, p->val.c);
     break;
-  case REAL_FMT :
+  case UPI_REAL_FMT :
     p->def.d = *((double*) p->var);
     p->val.d = p->def.d;
     break;
@@ -431,42 +431,42 @@ int upic_build_format (const char* format, Param* p)    {
   switch (c)  {
     case 'A' :
     case 'S' :
-      p->type = ASC_FMT;
+      p->type = UPI_ASC_FMT;
       *fmt++ = 's';
       *conv++ = 's';
       break;
     case 'I' :
     case 'D' :
-      p->type = DEC_FMT;
+      p->type = UPI_DEC_FMT;
       *fmt++ = 'd';
       *conv++ = 'd';
       if (width < 14) width = 14;
       break;
     case 'M' :
-      p->type = BIN_FMT;
+      p->type = UPI_BIN_FMT;
       *fmt++ = 'd';
       *conv++ = 'd';
       break;
     case 'L' :
-      p->type = LOG_FMT;
+      p->type = UPI_LOG_FMT;
       *fmt++ = 'l';
       *conv++ = 'l';
       break;
     case 'Z' :
     case 'X' :
-      p->type = HEX_FMT;
+      p->type = UPI_HEX_FMT;
       *fmt++ = 'x';
       *conv++ = 'x';
       if (width < 9) width = 9;
       break;
     case 'O' :
-      p->type = OCT_FMT;
+      p->type = UPI_OCT_FMT;
       *fmt++ = 'o';
       *conv++ = 'o';
       if (width < 11) width = 11;
       break;
     case 'F' :
-      p->type = REAL_FMT;
+      p->type = UPI_REAL_FMT;
       *fmt++ = 'l';
       *fmt++ = 'f';
       *conv++ = 'l';
@@ -475,7 +475,7 @@ int upic_build_format (const char* format, Param* p)    {
       break;
     case 'E' :
     case 'G' :
-      p->type = REAL_FMT;
+      p->type = UPI_REAL_FMT;
       *fmt++ = 'l';
       *fmt++ = 'e';
       *conv++ = 'l';
@@ -517,27 +517,27 @@ int upic_valid_numeric (int type, char c)   {
   int result = 0;
   c = char(toupper(c));
   switch (type)  {
-    case REAL_FMT :
+    case UPI_REAL_FMT :
       if ((c >= '0' && c <= '9') ||
            c == '.' ||
            c == '-' ||
            c == 'E' ||
            c == '+') result = 1;
       break;
-    case DEC_FMT :
+    case UPI_DEC_FMT :
       if ((c >= '0' && c <= '9') || c == '-' ) result = 1;
       break;
-    case OCT_FMT :
+    case UPI_OCT_FMT :
       if (c >= '0' && c <= '7') result = 1;
       break;
-    case HEX_FMT :
+    case UPI_HEX_FMT :
       if ((c >= '0' && c <= '9') ||
           (c >= 'A' && c <= 'F')) result = 1;
       break;
-    case BIN_FMT :
+    case UPI_BIN_FMT :
       if (c == '.' || c == 'L') result = 1;
       break;
-    case LOG_FMT :
+    case UPI_LOG_FMT :
       if (c == 'T' || c == 'F') result = 1;
       break;
   }
@@ -548,14 +548,14 @@ int upic_valid_numeric (int type, char c)   {
 void upic_update_var_of_param (Param* p)    {
   int fortran = p->fortran;
   switch (p->type)  {
-  	case ASC_FMT :
+  	case UPI_ASC_FMT :
       if (fortran)    {
         memset (p->var, ' ', p->size);
         strncpy ((char *)p->var, p->val.c, strlen(p->val.c));
       }
       else strcpy ((char*)p->var, p->val.c);
       break;
-    case REAL_FMT :
+    case UPI_REAL_FMT :
       if (fortran) *((float*) p->var) = float(p->val.d);
       else *((double*) p->var) = p->val.d;
       break;
@@ -632,12 +632,12 @@ int upic_store_vars (int menu_id, int item_id, char** buffer, int *length)
   *buffer = 0;
   if (!(m = upic_find_menu(menu_id))) return UPI_SS_INVMENU;
   bytes = 0;
-  if (m->type == PARAMETER_PAGE || !item_id)  {
+  if (m->type == UPI_PARAMETER_PAGE || !item_id)  {
     d = m->page.first;
     while (d)  {
       i = d->item.first;
       while (i)   {
-        if (i->type == PARAM && i->id != -1)      {
+        if (i->type == UPI_PARAM && i->id != -1)      {
           bytes += sizeof(int);  /* for item_id */
           bytes += upic_count_store_bytes (i);
         }
@@ -652,7 +652,7 @@ int upic_store_vars (int menu_id, int item_id, char** buffer, int *length)
     while (d)  {
       i = d->item.first;
       while (i)   {
-        if (i->type == PARAM && i->id != -1)  {
+        if (i->type == UPI_PARAM && i->id != -1)  {
           n = (int*) buf;
           *n = i->id;
           buf += sizeof(int);
@@ -667,7 +667,7 @@ int upic_store_vars (int menu_id, int item_id, char** buffer, int *length)
     d = m->page.first;
     if (!d || !(i = upic_find_item (d->item.first, item_id)))
       return UPI_SS_INVCOMMAND;
-    if (i->type == PARAM && i->id != -1)    {
+    if (i->type == UPI_PARAM && i->id != -1)    {
       bytes = upic_count_store_bytes (i);
       buf = (char*) list_malloc (bytes);
       *buffer = buf;
@@ -692,12 +692,12 @@ int upic_retreive_vars (int menu_id, int item_id, char* buffer)
   int* n;
 
   if (!(m = upic_find_menu(menu_id))) return UPI_SS_INVMENU;
-  if (m->type == PARAMETER_PAGE || !item_id)  {
+  if (m->type == UPI_PARAMETER_PAGE || !item_id)  {
     d = m->page.first;
     while (d)    {
       i = d->item.first;
       while (i)      {
-        if (i->type == PARAM && i->id != -1)   {
+        if (i->type == UPI_PARAM && i->id != -1)   {
           n = (int*) buffer;
           if (*n != i->id) return (UPI_SS_INVCOMMAND);
           buffer += sizeof(int);
@@ -713,7 +713,7 @@ int upic_retreive_vars (int menu_id, int item_id, char* buffer)
     d = m->page.first;
     if (!d || !(i = upic_find_item (d->item.first, item_id)))
       return UPI_SS_INVCOMMAND;
-    if (i->type == PARAM && i->id != -1)    {
+    if (i->type == UPI_PARAM && i->id != -1)    {
       buffer = upic_retreive_params_of_line (i, buffer);
       if (!buffer) return (UPI_SS_INVPARAM);
     }
@@ -787,22 +787,22 @@ int upic_ltoi ( char* buffer, int /* digits */ )   {
 //---------------------------------------------------------------------------
 void upic_print_param (Param* p, char* buf, Convert source) {
   switch (p->type)  {
-    case BIN_FMT :
+    case UPI_BIN_FMT :
       upic_itom (buf, p->chars, source.i);
       break;
-    case LOG_FMT:
+    case UPI_LOG_FMT:
       upic_itol (buf, p->chars, source.i);
       break;
-    case REAL_FMT:
+    case UPI_REAL_FMT:
       ::sprintf (buf, p->format, source.d);
       break;
-    case ASC_FMT:
+    case UPI_ASC_FMT:
       ::sprintf (buf, p->format, source.c);
       break;
-    case OCT_FMT:
-    case DEC_FMT:
-    case HEX_FMT:
-      sprintf (buf, p->format, source.i);
+    case UPI_OCT_FMT:
+    case UPI_DEC_FMT:
+    case UPI_HEX_FMT:
+      ::sprintf (buf, p->format, source.i);
       break;
   }
 }
@@ -818,7 +818,7 @@ int upic_find_list_elem (int menu_id, int item_id, int param_id)  {
   
   int list_size = p->list_size;
   if (!list_size) return (-1);
-  if (p->type == ASC_FMT)  {
+  if (p->type == UPI_ASC_FMT)  {
     int len1 = upic_non_blanks (p->val.c);
     char** q = (char **)p->list;
     for (int j=0; j<p->list_size; j++, q++)    {
@@ -828,7 +828,7 @@ int upic_find_list_elem (int menu_id, int item_id, int param_id)  {
       }
     }
   }
-  else if (p->type == REAL_FMT)  {
+  else if (p->type == UPI_REAL_FMT)  {
     double* q = (double*)p->list;
     for (int j=0; j<list_size; j++, q++)    {
       if ( fabs(*q-p->val.d) < std::numeric_limits<double>::epsilon() ) return (j);
@@ -855,12 +855,12 @@ int upic_set_value_from_list (int menu_id, int item_id, int param_id, int elem) 
   int list_size = p->list_size;
   if (!list_size && elem >= list_size) return (UPI_SS_INVPARAM);
 
-  if (p->type == ASC_FMT)  {
+  if (p->type == UPI_ASC_FMT)  {
     char** q = (char **)p->list;
     q += elem;
     strcpy (p->val.c, *q);
   }
-  else if (p->type == REAL_FMT)  {
+  else if (p->type == UPI_REAL_FMT)  {
     double* q = (double *)p->list;
     q += elem;
     p->val.d = *q;

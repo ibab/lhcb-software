@@ -40,10 +40,10 @@ int upic_change_titles (int menu_id, const char* title_1, const char* title_2, c
   if ((len0 = upic_non_blanks (title_0)) > max_len)
     max_len = len0;
   if (!title_1) title_1 = m->up_title;
-  if ((len1 = upic_non_blanks (title_1) + 2*PAGE_MARKER_SIZE) > max_len)
+  if ((len1 = upic_non_blanks (title_1) + 2*UPI_PAGE_MARKER_SIZE) > max_len)
     max_len = len1;
   if (!title_2) title_2 = m->bt_title;
-  if ((len2 = upic_non_blanks (title_2) + 2*PAGE_MARKER_SIZE) > max_len)
+  if ((len2 = upic_non_blanks (title_2) + 2*UPI_PAGE_MARKER_SIZE) > max_len)
     max_len = len2;
 
   char* t = m->mn_title;
@@ -117,14 +117,14 @@ void upic_init_page (Menu* m, Page* d, int width) {
   
   Display* id = d->id;
   if (d->prev)
-    upic_draw_title_bar (id, m->up_title, width, 1, PREV_PAGE);
+    upic_draw_title_bar (id, m->up_title, width, 1, UPI_PREV_PAGE);
   else
-    upic_draw_title_bar (id, m->up_title, width, 1, ONLY_PAGE);
+    upic_draw_title_bar (id, m->up_title, width, 1, UPI_ONLY_PAGE);
     
   if (d->next)
-    upic_draw_title_bar (id, m->bt_title, width, d->lines+2, NEXT_PAGE);
+    upic_draw_title_bar (id, m->bt_title, width, d->lines+2, UPI_NEXT_PAGE);
   else
-    upic_draw_title_bar (id, m->bt_title, width, d->lines+2, ONLY_PAGE);
+    upic_draw_title_bar (id, m->bt_title, width, d->lines+2, UPI_ONLY_PAGE);
     
   scrc_put_display_on_window (id, m->window);
 }
@@ -136,17 +136,17 @@ void upic_change_page (Menu* m, Page* d, int width)    {
   if (!(id = d->id)) return;
   scrc_change_display (id, d->lines+2, width);
   if (d->prev)  {
-    upic_draw_title_bar (id, m->up_title, width, 1, PREV_PAGE);
+    upic_draw_title_bar (id, m->up_title, width, 1, UPI_PREV_PAGE);
   }
   else  {
-    upic_draw_title_bar (id, m->up_title, width, 1, ONLY_PAGE);
+    upic_draw_title_bar (id, m->up_title, width, 1, UPI_ONLY_PAGE);
   }
     
   if (d->next)  {
-    upic_draw_title_bar (id, m->bt_title, width, d->lines+2, NEXT_PAGE);
+    upic_draw_title_bar (id, m->bt_title, width, d->lines+2, UPI_NEXT_PAGE);
   }
   else  {
-    upic_draw_title_bar (id, m->bt_title, width, d->lines+2, ONLY_PAGE);
+    upic_draw_title_bar (id, m->bt_title, width, d->lines+2, UPI_ONLY_PAGE);
   }
 }
 
@@ -154,17 +154,17 @@ void upic_change_page (Menu* m, Page* d, int width)    {
 void upic_draw_title_bar (Display* d, const char* title, int width, int row, const char* head)  {
   if (row == 1)  {
     scrc_put_chars (d, head, SCR::INVERSE, row, 1, 1);
-    scrc_put_chars (d, ONLY_PAGE, SCR::INVERSE,
-    	            row, width - PAGE_MARKER_SIZE + 1, 0);
+    scrc_put_chars (d, UPI_ONLY_PAGE, SCR::INVERSE,
+    	            row, width - UPI_PAGE_MARKER_SIZE + 1, 0);
   }
   else  {
-    scrc_put_chars (d, ONLY_PAGE, SCR::INVERSE, row, 1, 1);
-    scrc_put_chars (d, head, SCR::INVERSE, row, width - PAGE_MARKER_SIZE + 1, 0);
+    scrc_put_chars (d, UPI_ONLY_PAGE, SCR::INVERSE, row, 1, 1);
+    scrc_put_chars (d, head, SCR::INVERSE, row, width - UPI_PAGE_MARKER_SIZE + 1, 0);
   }
   int ttl_len = strlen(title);
   if ( ttl_len )  {
-    int margin = (width - 2*PAGE_MARKER_SIZE - ttl_len) >> 1;
-    scrc_put_chars (d, title, SCR::INVERSE, row, margin + PAGE_MARKER_SIZE + 1, 0);
+    int margin = (width - 2*UPI_PAGE_MARKER_SIZE - ttl_len) >> 1;
+    scrc_put_chars (d, title, SCR::INVERSE, row, margin + UPI_PAGE_MARKER_SIZE + 1, 0);
   }
 }
 int upic_change_pasteboard(int width,int height)  {

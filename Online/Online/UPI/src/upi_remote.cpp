@@ -423,7 +423,7 @@ void upir_show_notice (const char* title, int lines, const char** text)   {
   UpiBufferSetCommand (SendBuffer, UPIF_SHOW_NOTICE);  
   UpiBufferPutText (SendBuffer, title);
   UpiBufferPutInt (SendBuffer, lines);
-  UpiBufferPutList (SendBuffer, ASC_FMT, text, lines);
+  UpiBufferPutList (SendBuffer, UPI_ASC_FMT, text, lines);
   UpiBufferSend (SendBuffer);
 }
 
@@ -431,7 +431,7 @@ void upir_show_notice (const char* title, int lines, const char** text)   {
 int upir_show_warning (int lines, const char** text)    {
   UpiBufferSetCommand (SendBuffer, UPIF_SHOW_WARNING);
   UpiBufferPutInt (SendBuffer, lines);
-  UpiBufferPutList (SendBuffer, ASC_FMT, text, lines);
+  UpiBufferPutList (SendBuffer, UPI_ASC_FMT, text, lines);
   UpiBufferSend (SendBuffer);
   Queue* q = upi_int_wait (UPIF_SHOW_WARNING);
   return upir_remove_entry(q);

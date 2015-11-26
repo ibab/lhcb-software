@@ -437,7 +437,7 @@ extern "C" int upi_server (int argc, char** argv)  {
   //wtc_subscribe (EVENT_SCR, (wt_callback_t)rearm_scr_mbx, 0);
   upic_attach_terminal();
   UPIsystem = upic_get_system();
-  upic_set_mode (WAKE_UP_ON_CHANGE);
+  upic_set_mode (UPI_WAKE_UP_ON_CHANGE);
   upic_get_info (&Pb);
   upic_set_drag_histo_action((Routine)drag_histo);
   upic_declare_exit_handler ((Routine)exit_handler);
@@ -468,11 +468,11 @@ extern "C" int upi_server (int argc, char** argv)  {
   upic_close_menu ();
 
   upic_attach_pf1 (MAIN_MENU);
-  upic_declare_callback(0,CALL_ON_PF1, (Routine)PF1_callback, 0);
+  upic_declare_callback(0,UPI_CALL_ON_PF1, (Routine)PF1_callback, 0);
   upic_declare_callback(0,CALL_ON_DRAG, (Routine)PF1_callback, 0);
-  upic_declare_callback(0,CALL_ON_ANY_BACKSPACE, (Routine)AnyBSCallback, 0);
-  upic_declare_callback(0,CALL_ON_MOVE_LEFT, (Routine)AnyBSCallback, 0);
-  upic_declare_callback(0,CALL_ON_MOVE_RIGHT, (Routine)AnyBSCallback, 0);
+  upic_declare_callback(0,UPI_CALL_ON_ANY_BACKSPACE, (Routine)AnyBSCallback, 0);
+  upic_declare_callback(0,UPI_CALL_ON_MOVE_LEFT, (Routine)AnyBSCallback, 0);
+  upic_declare_callback(0,UPI_CALL_ON_MOVE_RIGHT, (Routine)AnyBSCallback, 0);
 
   upic_open_param (PARAMS_MENU, MAIN_MENU, C_PARAMS, "Start parameters", "", "");
   for (int i=0; i<4; i++)  {
@@ -970,7 +970,7 @@ int check_first_menu (SrvConnect* connect, Menu* menu) {
       c, "");
     menu->from.menu = 0;
     menu->from.item = 0;
-    if (menu->type == NORMAL_MENU) upic_open_window();
+    if (menu->type == UPI_NORMAL_MENU) upic_open_window();
     return 1;
   }
   return 0;
@@ -1299,13 +1299,13 @@ void modify_param (SrvConnect* connect)   {
   UpiBufferGetParam (GetBuffer, &p);
 
   switch (p->type)  {
-  case REAL_FMT:
+  case UPI_REAL_FMT:
     upic_modify_param (menu_id, item_id, p->id,
       p->val.d, p->min.d, p->max.d,
       p->list, p->list_size, p->flag);
     break;
   default:
-    if (p->type == ASC_FMT) p->val.c = p->buf;
+    if (p->type == UPI_ASC_FMT) p->val.c = p->buf;
     upic_modify_param (menu_id, item_id, p->id,
       p->val.i, p->min.i, p->max.i,
       p->list, p->list_size, p->flag);
@@ -1420,7 +1420,7 @@ void quit (SrvConnect* connect)  {
   snprintf (temp, sizeof(temp), "SERVER> Disconnecting source [%s]", connect->source);
   upic_write_message (temp, "");
   while ((v = connect->var.first))  {
-    if (v->type == ASC_FMT) free (v->value.c);
+    if (v->type == UPI_ASC_FMT) free (v->value.c);
     list_remove_entry ((Link*) v);
   }
 
@@ -1550,7 +1550,7 @@ void show_notice (SrvConnect* /* connect */ )  {
   const char** text;
   UpiBufferGetText (GetBuffer, &title);
   UpiBufferGetInt (GetBuffer, &lines);
-  UpiBufferGetList (GetBuffer, ASC_FMT, (void**) &text, lines);
+  UpiBufferGetList (GetBuffer, UPI_ASC_FMT, (void**) &text, lines);
   upic_show_notice (title, lines, text);
 }
 
@@ -1559,7 +1559,7 @@ void show_warning (SrvConnect* /* connect */ )   {
   int lines;
   const char** text;
   UpiBufferGetInt (GetBuffer, &lines);
-  UpiBufferGetList (GetBuffer, ASC_FMT, (void**) &text, lines);
+  UpiBufferGetList (GetBuffer, UPI_ASC_FMT, (void**) &text, lines);
   upic_show_warning (lines, text);
   UpiBufferPutInt (AckBuffer, UPIF_SHOW_WARNING);
 }
@@ -1984,7 +1984,7 @@ void fetch_menu (Menu* menu, SrvConnect* connect) {
   Page* page = 0;
   Item* item = 0;
   int old = 0, father, first;
-  if (menu->type == NORMAL_MENU) 
+  if (menu->type == UPI_NORMAL_MENU) 
     old = find_menu_from_window (connect, menu->window);
 
   if (!(menu->id = new_remote_id (connect, menu->id, menu->window))) return;
@@ -1995,7 +1995,7 @@ void fetch_menu (Menu* menu, SrvConnect* connect) {
 
   first = check_first_menu (connect, menu);
   switch (menu->type)  {
-  case NORMAL_MENU:
+  case UPI_NORMAL_MENU:
     if (!first)    {
       if (old) upic_open_old_window(old);
       else upic_open_window();
@@ -2003,15 +2003,15 @@ void fetch_menu (Menu* menu, SrvConnect* connect) {
     upic_open_menu (menu->id, menu->from.menu, menu->from.item,
       menu->mn_title, menu->up_title, menu->bt_title);
     break;
-  case DETACHED_MENU:
+  case UPI_DETACHED_MENU:
     upic_open_detached_menu (menu->id, menu->from.menu, menu->from.item,
       menu->mn_title, menu->up_title, menu->bt_title);
     break;
-  case PARAMETER_PAGE:
+  case UPI_PARAMETER_PAGE:
     upic_open_param (menu->id, menu->from.menu, menu->from.item,
       menu->mn_title, menu->up_title, menu->bt_title);
     break;
-  case PULLDOWN_MENU:
+  case UPI_PULLDOWN_MENU:
     upic_open_pulldown_menu (menu->id, menu->from.menu, menu->from.item,
       menu->mn_title, menu->up_title, menu->bt_title);
     break;
@@ -2075,14 +2075,14 @@ void fetch_param (Param* param, SrvConnect* connect)  {
   v->type = param->type;
   switch (param->type)
   {
-  case ASC_FMT:
+  case UPI_ASC_FMT:
     v->size = param->size;
     v->value.c = (char*) list_malloc (param->size + 1);
     strcpy (v->value.c, param->buf);
     varAddress = v->value.c;
     param->val.c = (char*)varAddress;
     break;
-  case REAL_FMT:
+  case UPI_REAL_FMT:
     v->size = sizeof (double);
     v->value.d = param->val.d;
     varAddress = &v->value.d;
@@ -2095,7 +2095,7 @@ void fetch_param (Param* param, SrvConnect* connect)  {
   }
 
   switch (param->type)  {
-  case REAL_FMT:
+  case UPI_REAL_FMT:
     upic_set_param (varAddress, param->id, param->format,
       param->val.d, param->min.d, param->max.d,
       param->list, param->list_size, param->flag);
@@ -2350,8 +2350,8 @@ void database_dump ()   {
       fprintf (f, "    Address : %p Type : %d Size : %6.6d ",
         var->reference, var->type, var->size);
       fprintf (f, "Value : ");
-      if (var->type == ASC_FMT) fprintf (f, "\"%s\"", var->value.c);
-      else if (var->type == REAL_FMT) fprintf (f, "%g", var->value.d);
+      if (var->type == UPI_ASC_FMT) fprintf (f, "\"%s\"", var->value.c);
+      else if (var->type == UPI_REAL_FMT) fprintf (f, "%g", var->value.d);
       else fprintf (f, "%d", var->value.i);
       fprintf (f, "\n");
     }

@@ -38,8 +38,8 @@ int upic_dlinput ()  {
 int upic_dlhead (const char* title, int lines, int cols)  {
 #ifdef SCREEN
   int len, i;  
-  if (Lines) upic_delete_menu (DLPACK);
-  upic_open_detached_menu (DLPACK, 0, 0, " ", title, " ");
+  if (Lines) upic_delete_menu (UPI_DLPACK);
+  upic_open_detached_menu (UPI_DLPACK, 0, 0, " ", title, " ");
   if (!lines) lines = 5;
   if (!cols) cols = 60;
   if (cols < 10) cols = 10;
@@ -69,14 +69,14 @@ void upic_dlcheck()  {
 
 //---------------------------------------------------------------------------
 void upic_install_dl_line (const char* text) {
-  upic_replace_command (DLPACK, Cursor, text, " ");
-  upic_enable_command (DLPACK, Cursor);
+  upic_replace_command (UPI_DLPACK, Cursor, text, " ");
+  upic_enable_command (UPI_DLPACK, Cursor);
   if (Was_param)  {
     int i = Cursor - 1;
     if (i <= 0) i = Lines;
-    upic_disable_command (DLPACK, i);
+    upic_disable_command (UPI_DLPACK, i);
   }
-  upic_set_cursor (DLPACK, Cursor, 0);
+  upic_set_cursor (UPI_DLPACK, Cursor, 0);
   Cursor++;
   if (Cursor > Lines) Cursor = 1;
 }
@@ -286,7 +286,7 @@ int upic_dlyeno ( const char* prompt, int def, int* value)  {
 //---------------------------------------------------------------------------
 int upic_dlend ()   {
 #ifdef SCREEN
-  upic_delete_menu (DLPACK);
+  upic_delete_menu (UPI_DLPACK);
   Lines = 0;
 #else
   upir_dlend ();

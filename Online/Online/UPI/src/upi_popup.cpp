@@ -27,8 +27,8 @@ void upic_open_pop_up (Menu* m, Param* p, int row, int col)   {
 
   scrc_create_display (&d->id, d->lines, d->cols, SCR::NORMAL, ON, "List");
   for (int r=0; r<d->lines; )  {
-    if (p->type == REAL_FMT) val.d = *((double*) p->list + r);
-    else if (p->type == ASC_FMT) val.c = *((char**) p->list + r);
+    if (p->type == UPI_REAL_FMT) val.d = *((double*) p->list + r);
+    else if (p->type == UPI_ASC_FMT) val.c = *((char**) p->list + r);
     else val.i = *((int*)p->list + r);
     upic_print_param (p, s, val);
     scrc_put_chars (d->id, s, SCR::NORMAL, ++r, 1, 0);

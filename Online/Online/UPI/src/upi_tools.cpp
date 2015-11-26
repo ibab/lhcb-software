@@ -12,21 +12,21 @@ extern System Sys;
 //---------------------------------------------------------------------------
 int upic_show_notice (const char* title, int lines, const char** text)    {
 #ifdef SCREEN
-  Menu* m = upic_find_menu (NOTICE);
+  Menu* m = upic_find_menu (UPI_NOTICE);
   if (!m)  {
-    upic_open_detached_menu (NOTICE, 0, 0, "", "", "");
+    upic_open_detached_menu (UPI_NOTICE, 0, 0, "", "", "");
     upic_add_command (1, "", "");
     upic_close_menu ();
-    m = upic_find_menu (NOTICE);
+    m = upic_find_menu (UPI_NOTICE);
   }
-  upic_change_titles (NOTICE, title, "Notice --- Notice --- Notice", 0);  
+  upic_change_titles (UPI_NOTICE, title, "Notice --- Notice --- Notice", 0);  
   int i, n = m->items;
-  for (i=lines+1; i<=n; i++) upic_delete_command (NOTICE, i);
+  for (i=lines+1; i<=n; i++) upic_delete_command (UPI_NOTICE, i);
   for (i=1; i<=n; i++,text++)
-    upic_replace_command (NOTICE, i, *text, "");
+    upic_replace_command (UPI_NOTICE, i, *text, "");
   for (; i<=lines; i++,text++)
-    upic_insert_command (NOTICE, 1000, i, *text, "");
-  upic_set_cursor (NOTICE, 1, 0);
+    upic_insert_command (UPI_NOTICE, 1000, i, *text, "");
+  upic_set_cursor (UPI_NOTICE, 1, 0);
 #else
   upir_show_notice (title, lines, text);
 #endif
@@ -36,7 +36,7 @@ int upic_show_notice (const char* title, int lines, const char** text)    {
 //---------------------------------------------------------------------------
 int upic_cancel_notice ()   {
 #ifdef SCREEN
-  Menu* m = upic_find_menu (NOTICE);
+  Menu* m = upic_find_menu (UPI_NOTICE);
   if (m) upic_go_backward (m);
 #else
   upir_cancel_notice ();
@@ -48,25 +48,25 @@ int upic_cancel_notice ()   {
 int upic_show_warning (int lines, const char** text)    {
 #ifdef SCREEN
   int menu, command, param;  
-  Menu* m = upic_find_menu (WARNING);
+  Menu* m = upic_find_menu (UPI_WARNING);
   if (!m)  {
-    upic_open_detached_menu (WARNING, 0, 0,
+    upic_open_detached_menu (UPI_WARNING, 0, 0,
       "Warning --- Warning --- Warning", "", "");
     upic_add_command (1000, "          OK ? ", "");
     upic_close_menu ();
-    m = upic_find_menu (WARNING);
+    m = upic_find_menu (UPI_WARNING);
   }
   
   int i, n = m->items - 1;
-  for (i=lines+1; i<=n; i++) upic_delete_command (WARNING, i);
+  for (i=lines+1; i<=n; i++) upic_delete_command (UPI_WARNING, i);
   for (i=1; i<=n; i++, text++)
-    upic_replace_command (WARNING, i, *text, "");
+    upic_replace_command (UPI_WARNING, i, *text, "");
   for (; i<=lines; i++, text++)
-    upic_insert_command (WARNING, 1000, i, *text, "");
+    upic_insert_command (UPI_WARNING, 1000, i, *text, "");
   do  {
-    upic_set_cursor (WARNING, 1000, 0);
+    upic_set_cursor (UPI_WARNING, 1000, 0);
     upic_get_input(&menu, &command, &param);
-  } while (menu != WARNING);
+  } while (menu != UPI_WARNING);
   upic_go_backward (m);
 #else
   upir_show_warning (lines, text);
@@ -138,28 +138,28 @@ int upic_attach_pf1 (int menu)  {
 //---------------------------------------------------------------------------
 int upic_declare_callback (int menu_id,int condition, Routine user_routine, void* user_arg) {
 #define CONDITIONS (CALL_ON_BACK_SPACE | CALL_ON_ENTER | \
-CALL_ON_DRAG | CALL_ON_PF1 | CALL_ON_ANY_BACKSPACE |\
-CALL_ON_MOVE_LEFT | CALL_ON_MOVE_RIGHT)
+CALL_ON_DRAG | UPI_CALL_ON_PF1 | UPI_CALL_ON_ANY_BACKSPACE |\
+UPI_CALL_ON_MOVE_LEFT | UPI_CALL_ON_MOVE_RIGHT)
 #ifdef SCREEN
-  if (condition & CALL_ON_PF1)
+  if (condition & UPI_CALL_ON_PF1)
   {
     Sys.PF1CallBack = user_routine;
     Sys.PF1Arg  = user_arg;
     return (UPI_SS_NORMAL);
   }
-  if (condition & CALL_ON_ANY_BACKSPACE)
+  if (condition & UPI_CALL_ON_ANY_BACKSPACE)
   {
     Sys.GlobBSCallBack  = user_routine;
     Sys.GlobBSArg       = user_arg;
     return (UPI_SS_NORMAL);
   }
-  if (condition & CALL_ON_MOVE_RIGHT)
+  if (condition & UPI_CALL_ON_MOVE_RIGHT)
   {
     Sys.MRCallback      = user_routine;
     Sys.MRArg           = user_arg;
     return (UPI_SS_NORMAL);
   }
-  if (condition & CALL_ON_MOVE_LEFT)
+  if (condition & UPI_CALL_ON_MOVE_LEFT)
   {
     Sys.MLCallback      = user_routine;
     Sys.MLArg           = user_arg;

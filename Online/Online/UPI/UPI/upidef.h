@@ -5,10 +5,10 @@
 #include "SCR/lists.h"
 
 /* Constants for building pages */
-#define PREV_PAGE	"<- "
-#define NEXT_PAGE	" ->"
-#define ONLY_PAGE	"   "
-#define PAGE_MARKER_SIZE 3
+#define UPI_PREV_PAGE	"<- "
+#define UPI_NEXT_PAGE	" ->"
+#define UPI_ONLY_PAGE	"   "
+#define UPI_PAGE_MARKER_SIZE 3
 
 namespace SCR {
 #if !defined(ON_OFF_DEFINED)
@@ -33,60 +33,60 @@ typedef unsigned Unsigned;
 typedef void (*Routine)(int,int,...);
 typedef int  (*WtRoutine)(unsigned int,void*);
 
-#define RETURN_ON_ACCEPT   0
-#define WAKE_UP_ON_CHANGE  1
+#define UPI_RETURN_ON_ACCEPT   0
+#define UPI_WAKE_UP_ON_CHANGE  1
 
 #define UPI_K_MESSAGE  0
 #define UPI_K_OPERATOR 1
 #define UPI_K_USER     2
 
 /*  Callback conditions.  */
-#define CALL_ON_PF1           0x08
-#define CALL_ON_ANY_BACKSPACE 0x10
-#define CALL_ON_MOVE_LEFT     0x20
-#define CALL_ON_MOVE_RIGHT    0x40
+#define UPI_CALL_ON_PF1           0x08
+#define UPI_CALL_ON_ANY_BACKSPACE 0x10
+#define UPI_CALL_ON_MOVE_LEFT     0x20
+#define UPI_CALL_ON_MOVE_RIGHT    0x40
 
 /* menu_item.enabled field */
-#define DISABLED   0
-#define ENABLED    1
+#define UPI_DISABLED   0
+#define UPI_ENABLED    1
  
 /* menu_item.type field */
 typedef enum {
-  COMMENT,
-  COMMAND,
-  PARAM
-} Item_types;
+  UPI_COMMENT,
+  UPI_COMMAND,
+  UPI_PARAM
+} UPI_Item_types;
 
 /* menu.type field */
 typedef enum {
-  NORMAL_MENU,
-  PULLDOWN_MENU,
-  DETACHED_MENU,
-  PARAMETER_PAGE
-} Menu_types;
+  UPI_NORMAL_MENU,
+  UPI_PULLDOWN_MENU,
+  UPI_DETACHED_MENU,
+  UPI_PARAMETER_PAGE
+} UPI_Menu_types;
 
 /* Special predefined menus */
-#define WARNING (-1)
-#define NOTICE  (-2)
-#define DLPACK  (-3)
+#define UPI_WARNING (-1)
+#define UPI_NOTICE  (-2)
+#define UPI_DLPACK  (-3)
 
 /* parameter page options */
 typedef enum {
-  ACCEPT_OPTION,
-  CANCEL_OPTION,
-  RESET_OPTION
-} Parameter_page_options;
+  UPI_ACCEPT_OPTION,
+  UPI_CANCEL_OPTION,
+  UPI_RESET_OPTION
+} UPI_Parameter_page_options;
  
 /* item.type field */
 typedef enum {
-  ASC_FMT,
-  OCT_FMT,
-  DEC_FMT,
-  HEX_FMT,
-  REAL_FMT,
-  BIN_FMT,
-  LOG_FMT
-} Parameter_types;
+  UPI_ASC_FMT,
+  UPI_OCT_FMT,
+  UPI_DEC_FMT,
+  UPI_HEX_FMT,
+  UPI_REAL_FMT,
+  UPI_BIN_FMT,
+  UPI_LOG_FMT
+} UPI_Parameter_types;
 
 typedef union {
   int i;
@@ -154,7 +154,7 @@ struct PARAMETER
   Param Link_items;
   int   id;
   
-  Parameter_types type;
+  UPI_Parameter_types type;
   size_t pos;                 /*  The position within the line      */
   size_t offset;              /*  The field offset to beg. of buffer  */
   size_t size;                /*  The size of the buffer            */

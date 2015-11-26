@@ -18,32 +18,32 @@ extern System Sys;
 
 //---------------------------------------------------------------------------
 int upic_add_command (int id,  const char* text_0, const char* text_1)  {
-  return upic_add_item (id, text_0, text_1, COMMAND);
+  return upic_add_item (id, text_0, text_1, UPI_COMMAND);
 }
 
 //---------------------------------------------------------------------------
 int upic_add_comment ( int id, const char* text_0, const char* text_1)  {
-  return upic_add_item (id, text_0, text_1, COMMENT);
+  return upic_add_item (id, text_0, text_1, UPI_COMMENT);
 }
 
 //---------------------------------------------------------------------------
 int upic_add_param_line ( int id, const char* text_0, const char* text_1) {
-  return upic_add_item (id, text_0, text_1, COMMAND);
+  return upic_add_item (id, text_0, text_1, UPI_COMMAND);
 }
 
 //---------------------------------------------------------------------------
 int upic_replace_command ( int menu_id, int id, const char* text_0, const char* text_1)  {
-  return upic_replace_item (menu_id, id, text_0, text_1, COMMAND);
+  return upic_replace_item (menu_id, id, text_0, text_1, UPI_COMMAND);
 }
 
 //---------------------------------------------------------------------------
 int upic_replace_comment (int menu_id, int id, const char* text_0, const char* text_1) {
-  return upic_replace_item (menu_id, id, text_0, text_1, COMMENT);
+  return upic_replace_item (menu_id, id, text_0, text_1, UPI_COMMENT);
 }
 
 //---------------------------------------------------------------------------
 int upic_replace_param_line ( int menu_id, int id, const char* text_0, const char* text_1)  {
-  return upic_replace_item (menu_id, id, text_0, text_1, COMMAND);
+  return upic_replace_item (menu_id, id, text_0, text_1, UPI_COMMAND);
 }
 
 //---------------------------------------------------------------------------
@@ -131,17 +131,17 @@ int upic_delete_command (int menu_id, int item_id)  {
 
 //---------------------------------------------------------------------------
 int upic_insert_command (int menu_id, int position, int id, const char* text_0, const char* text_1) {
-  return upic_insert_item (menu_id, position, id, text_0, text_1, COMMAND);
+  return upic_insert_item (menu_id, position, id, text_0, text_1, UPI_COMMAND);
 }
 
 //---------------------------------------------------------------------------
 int upic_insert_comment (int menu_id, int position, int id, const char* text_0, const char* text_1) {
-  return upic_insert_item (menu_id, position, id, text_0, text_1, COMMENT);
+  return upic_insert_item (menu_id, position, id, text_0, text_1, UPI_COMMENT);
 }
 
 //---------------------------------------------------------------------------
 int upic_insert_param_line (int menu_id, int position, int id, const char* text_0, const char* text_1) {
-  return upic_insert_item (menu_id, position, id, text_0, text_1, COMMAND);
+  return upic_insert_item (menu_id, position, id, text_0, text_1, UPI_COMMAND);
 }
 
 //---------------------------------------------------------------------------
@@ -156,7 +156,7 @@ int upic_enable_command (int menu_id, int item_id)  {
   if (!d || !(i = (Item*) upic_find_item_row (d->item.first, item_id, &row)))
     return UPI_SS_INVCOMMAND;
 
-  i->enabled = ENABLED;
+  i->enabled = UPI_ENABLED;
 
 #ifdef SCREEN
   upic_draw_item (i, row);
@@ -178,7 +178,7 @@ int upic_disable_command (int menu_id, int item_id)  {
   if (!d || !(i = (Item*) upic_find_item_row(d->item.first, item_id, &row)))
     return UPI_SS_INVCOMMAND;
 
-  i->enabled = DISABLED;
+  i->enabled = UPI_DISABLED;
   if (Sys.item.cur == i) upic_wakeup();
 
 #ifdef SCREEN
@@ -258,7 +258,7 @@ int upic_add_item (int id, const char* text_0, const char* text_1, int type)  {
 
   d->lines++;
   if (!d->item.cur)  {
-    if (type != COMMENT)  {
+    if (type != UPI_COMMENT)  {
       d->cur_line = d->lines;
       d->item.cur = i;
       if (!m->page.cur) m->page.cur = d;
@@ -270,7 +270,7 @@ int upic_add_item (int id, const char* text_0, const char* text_1, int type)  {
   i->string    = 0;
   upic_init_item_strings (i, text_0, text_1);
   i->type      = char(type);
-  i->enabled   = char((type == COMMENT)?DISABLED:ENABLED);
+  i->enabled   = char((type == UPI_COMMENT)?UPI_DISABLED:UPI_ENABLED);
   i->to        = 0;
 
   int len = strlen(i->string);
@@ -280,7 +280,7 @@ int upic_add_item (int id, const char* text_0, const char* text_1, int type)  {
     list_transfer (&Sys.param, &i->param);
     upic_install_params (i->param.first, i->string);
     i->param.cur = i->param.first;
-    i->type      = PARAM;
+    i->type      = UPI_PARAM;
   }
   i->action = 0;
   return UPI_SS_NORMAL;
@@ -311,7 +311,7 @@ int upic_replace_item (int menu_id, int id, const char* text_0, const char* text
     else p = i->param.first;
     upic_install_params (p, i->string);    
     i->param.cur = p;
-    i->type      = PARAM;
+    i->type      = UPI_PARAM;
   }
 
 #ifdef SCREEN
@@ -342,7 +342,7 @@ int upic_insert_item (int menu_id, int position, int id, const char* text_0, con
   Item* i = 0;
 
   if ( !m ) return UPI_SS_INVMENU;
-  if (position == -1 && m->type != PARAMETER_PAGE) to_the_end = 1;
+  if (position == -1 && m->type != UPI_PARAMETER_PAGE) to_the_end = 1;
   Page* d = m->page.first;
   if (!position)  {
     i = d->item.first;
@@ -383,14 +383,14 @@ int upic_insert_item (int menu_id, int position, int id, const char* text_0, con
   upic_init_item_strings (i, text_0, text_1);
 
   i->type    = char(type);
-  i->enabled = char((type == COMMENT)?DISABLED:ENABLED);
+  i->enabled = char((type == UPI_COMMENT)?UPI_DISABLED:UPI_ENABLED);
   i->to      = 0;
 
   if (Sys.param.first)  {
     list_transfer (&Sys.param, &i->param);
     upic_install_params (i->param.first, i->string);
     i->param.cur = i->param.first;
-    i->type      = PARAM;
+    i->type      = UPI_PARAM;
   }
   i->action = 0;
   if (Sys.menu.cur == m)  {
@@ -576,7 +576,7 @@ void upic_draw_item (Item* i, int row)  {
   scrc_put_chars (disp, i->string, attr, row, 1, 1);
   if (i->to)
     scrc_put_char (disp, '>', attr, row, strlen(i->string)+1);
-  if (i->type == PARAM)  {
+  if (i->type == UPI_PARAM)  {
     attr |= SCR::UNDERLINE;
     Param* p = i->param.first;
     while (p)      {

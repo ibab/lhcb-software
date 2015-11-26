@@ -21,10 +21,10 @@ static Routine User_exit_handler = 0;
 static int upic_memory_of_param (Param* p)    {
   int n;
   int memory = sizeof (Param) + p->size + 1;  /* for p->buf  */
-  if (p->type == ASC_FMT) memory += p->size + 1; /* for p->def */
+  if (p->type == UPI_ASC_FMT) memory += p->size + 1; /* for p->def */
   if ((n = p->list_size))  {
     switch (p->type)    {
-      case ASC_FMT:
+      case UPI_ASC_FMT:
         {
           char** list = (char **)p->list;
           memory += n * sizeof (char*);
@@ -32,7 +32,7 @@ static int upic_memory_of_param (Param* p)    {
             memory += strlen (*list) + 1;
         }
         break;
-      case REAL_FMT :
+      case UPI_REAL_FMT :
         memory += n * sizeof (double);
         break;
       default :
@@ -162,7 +162,7 @@ int upic_quit ()    {
 int upic_set_mode (int mode)  {
 #ifdef SCREEN
   Sys.mode = mode;
-  if ((mode & WAKE_UP_ON_CHANGE)) upic_set_wakeup();
+  if ((mode & UPI_WAKE_UP_ON_CHANGE)) upic_set_wakeup();
   else upic_reset_wakeup();
 #else
   upir_set_mode (mode);

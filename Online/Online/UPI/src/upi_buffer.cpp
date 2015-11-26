@@ -401,23 +401,23 @@ void UpiBufferPutList (UpiBuffer buffer, int type, void* list, int size)  {
     fprintf (buffer_log_file,"Buffer: %p, Bytes %d\n",(void*)buffer, size);
   }
   switch (type)  {
-  case ASC_FMT :     {
+  case UPI_ASC_FMT :     {
     char** s = (char**)list;
     for (int i=0; i<size; i++,s++) UpiBufferPutText (buffer, *s);
     break;
   }
-  case DEC_FMT :
-  case HEX_FMT :
-  case OCT_FMT :
-  case BIN_FMT :
-  case LOG_FMT :    {
+  case UPI_DEC_FMT :
+  case UPI_HEX_FMT :
+  case UPI_OCT_FMT :
+  case UPI_BIN_FMT :
+  case UPI_LOG_FMT :    {
     int* s = (int*)list;
     int bytes = size * sizeof(int);
     int* p = (int*) UpiBufferExtend (buffer, bytes);
     for (int i=0; i<size; i++,p++,s++) *p = *s;
     break;
   }
-  case REAL_FMT :    {
+  case UPI_REAL_FMT :    {
     double* s = (double*)list;
     int bytes = size * sizeof(double);
     double *p = (double*) UpiBufferExtend (buffer, bytes);
@@ -434,21 +434,21 @@ void UpiBufferGetList (UpiBuffer buffer, int type, void** list, int size) {
     ::fprintf (buffer_log_file,"Buffer: %p, Bytes %d\n",(void*)buffer, size);
   }
   switch (type)  {
-  case ASC_FMT :
+  case UPI_ASC_FMT :
     {
       char** ptr = (char**) list_malloc (size * sizeof(char**));
       *list = ptr;
       for (int i=0; i<size; i++, ptr++) UpiBufferGetText (buffer, ptr);
     }
     break;
-  case DEC_FMT :
-  case HEX_FMT :
-  case OCT_FMT :
-  case BIN_FMT :
-  case LOG_FMT :
+  case UPI_DEC_FMT :
+  case UPI_HEX_FMT :
+  case UPI_OCT_FMT :
+  case UPI_BIN_FMT :
+  case UPI_LOG_FMT :
     *list = UpiBufferMove (buffer, size * sizeof(int));
     break;
-  case REAL_FMT :
+  case UPI_REAL_FMT :
     *list = UpiBufferMove (buffer, size * sizeof(double));
     break;
   }

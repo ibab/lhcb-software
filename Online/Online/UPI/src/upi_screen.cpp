@@ -71,7 +71,7 @@ int upic_set_cursor_and_mark (int menu_id, int item_id, int param_id, int /* mar
   }
 
   Param* p = 0;
-  if (i->type == PARAM)  {
+  if (i->type == UPI_PARAM)  {
     if (param_id)    {
       if (!(p = (Param*)upic_find_param(i->param.first, param_id)))
 	return UPI_SS_INVPARAM;
@@ -94,7 +94,7 @@ int upic_set_cursor_and_mark (int menu_id, int item_id, int param_id, int /* mar
     upic_draw_cursor (OFF);
     upic_wakeup();
   }
-  if (i->type == PARAM) i->param.cur = p;
+  if (i->type == UPI_PARAM) i->param.cur = p;
   upic_move_cursor (m, d, i, row);
   upic_draw_cursor (ON);
 #else
@@ -376,7 +376,7 @@ int upic_draw_cursor (FLAG mode)    {
 
   if (i)  {
     row++;
-    if (i->type == PARAM)
+    if (i->type == UPI_PARAM)
       upic_draw_param (d, i->param.cur, row, attr, 0);
     else if ( d )   {
       col = 1;
@@ -413,20 +413,20 @@ int upic_move_left (Menu* m)    {
   if (!d) return 0;
   Item* i = d->item.cur;
   
-  if (i && (i->type == PARAM))  {
+  if (i && (i->type == UPI_PARAM))  {
     Param* p = i->param.cur;
     if ( (p = p->prev) )    {
       i->param.cur = p;
       Sys.param.cur = p;
       return 1;
     }
-    else if (m->type == PARAMETER_PAGE)    {
+    else if (m->type == UPI_PARAMETER_PAGE)    {
       return (upic_move_up (m));
     }
   }
   
   if (Sys.MLCallback) {
-    (*Sys.MLCallback)(m->id, i->id, CALL_ON_MOVE_LEFT, Sys.MLArg);
+    (*Sys.MLCallback)(m->id, i->id, UPI_CALL_ON_MOVE_LEFT, Sys.MLArg);
   }
   Window* w = m->window;
   while ((w = scrc_prev_window(w)))  {
@@ -460,19 +460,19 @@ int upic_move_right (Menu* m)   {
   if (!d) return 0;
   
   Item* i = d->item.cur;  
-  if (i && (i->type == PARAM))  {
+  if (i && (i->type == UPI_PARAM))  {
     Param* p = i->param.cur;
     if ( (p = p->next) )    {
       i->param.cur = p;
       Sys.param.cur = p;
       return 1;
     }
-    else if (m->type == PARAMETER_PAGE)    {
+    else if (m->type == UPI_PARAMETER_PAGE)    {
       return (upic_move_down (m));
     }
   }
   if (Sys.MRCallback)  {
-    (*Sys.MRCallback)(m->id, i->id, CALL_ON_MOVE_LEFT, Sys.MRArg);
+    (*Sys.MRCallback)(m->id, i->id, UPI_CALL_ON_MOVE_LEFT, Sys.MRArg);
   }  
   Window* w = m->window;
   while ( (w = scrc_next_window(w)) )  {

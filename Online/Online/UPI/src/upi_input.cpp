@@ -94,7 +94,7 @@ int upic_get_input_with_index (int* menu_id, int* item_id, int* param_id, int* l
         if ((i = d->item.cur))     {
           if ((p = i->param.cur))    {
             Sys.param.cur = p;
-            if (m->type == PARAMETER_PAGE && i->id == -1)  {
+            if (m->type == UPI_PARAMETER_PAGE && i->id == -1)  {
               if (upic_go_backward (m) == UPI_SS_NORMAL)
                 scrc_hide_window (m->window);
             }
@@ -157,7 +157,7 @@ int upic_get_input (int* menu_id, int* item_id, int* param_id)  {
           if ((p = i->param.cur))      {
             list_index = p->list_pos;
             Sys.param.cur = p;
-            if (m->type == PARAMETER_PAGE && i->id == -1)   {
+            if (m->type == UPI_PARAMETER_PAGE && i->id == -1)   {
               if (upic_go_backward (m) == UPI_SS_NORMAL)
                 scrc_hide_window (m->window);
             }
@@ -293,7 +293,7 @@ int upic_key_action (unsigned int /* event */, void*)
     int input = p->input;
     col = p->pos + pos;
 
-    param_page = (m->type == PARAMETER_PAGE);
+    param_page = (m->type == UPI_PARAMETER_PAGE);
     input = p->input;
     type  = p->type;
     list_elem = p->val;
@@ -302,8 +302,8 @@ int upic_key_action (unsigned int /* event */, void*)
     if (Sys.pop_up)    {
       upic_act_on_pop_up (&list_pos, key, 0);
       if (key == SCR::RETURN_KEY || key == SCR::ENTER)  {
-        if (type == REAL_FMT) list_elem.d  = *((double*)p->list + list_pos);
-        else if (type == ASC_FMT) list_elem.c  = *((char**)p->list + list_pos);
+        if (type == UPI_REAL_FMT) list_elem.d  = *((double*)p->list + list_pos);
+        else if (type == UPI_ASC_FMT) list_elem.c  = *((char**)p->list + list_pos);
         else list_elem.i = *((int*)p->list + list_pos);
         upic_print_param (p, buf, list_elem);
         upic_draw_param (d, p, row, SCR::INVERSE, 0);
@@ -410,13 +410,13 @@ int upic_key_action (unsigned int /* event */, void*)
           if (m->callback) (*m->callback)(m->id, i->id, CALL_ON_ENTER, m->arg);
         }
       case SCR::RETURN_KEY :
-        if (type == ASC_FMT) 
+        if (type == UPI_ASC_FMT) 
           strcpy (p->val.c, p->buf);
         else    {
-          if ( type == BIN_FMT ) val.i = upic_mtoi (p->buf, p->chars);
-          else if ( type == LOG_FMT ) val.i = upic_ltoi (p->buf, p->chars);
+          if ( type == UPI_BIN_FMT ) val.i = upic_mtoi (p->buf, p->chars);
+          else if ( type == UPI_LOG_FMT ) val.i = upic_ltoi (p->buf, p->chars);
           else sscanf (p->buf, p->convert, &val.d);
-          if ( type == REAL_FMT )    {
+          if ( type == UPI_REAL_FMT )    {
             if (upic_check_double (val.d, p->min.d, p->max.d)) 
               p->val.d = val.d;
             else     {
@@ -441,7 +441,7 @@ int upic_key_action (unsigned int /* event */, void*)
         if (!p->flag)  {
           if (!input)    {
             buf = p->buf;
-            if (type != ASC_FMT && type != BIN_FMT && type != LOG_FMT)    {
+            if (type != UPI_ASC_FMT && type != UPI_BIN_FMT && type != UPI_LOG_FMT)    {
               for (size_t n = 0; n < p->size; n++) *buf++ = ' ';
               *buf = '\0';
             }
@@ -451,14 +451,14 @@ int upic_key_action (unsigned int /* event */, void*)
             buf_pos = 0;
             buf = p->buf;
           }
-          if (type == BIN_FMT) {
+          if (type == UPI_BIN_FMT) {
             if (key != '.' && key != 'l')  {
               key = *buf;
               if (key == 'l') key = '.';
               else key = 'l';
             }
           }
-          else if (type == LOG_FMT)
+          else if (type == UPI_LOG_FMT)
           {
             if (key != 'F' && key != 'T')
             {
@@ -467,7 +467,7 @@ int upic_key_action (unsigned int /* event */, void*)
               else key = 'F';
             }
           }
-          if (type != ASC_FMT && !upic_valid_numeric(type,char(key)))
+          if (type != UPI_ASC_FMT && !upic_valid_numeric(type,char(key)))
           {
             scrc_ring_bell (d->id);
             break;
@@ -499,8 +499,8 @@ int upic_key_action (unsigned int /* event */, void*)
         if (p->list_size)   {
           list_pos++;
           if (list_pos >= p->list_size) list_pos = 0;
-          if (type == REAL_FMT) list_elem.d  = *((double*) p->list + list_pos);
-          else if (type == ASC_FMT) list_elem.c  = *((char**) p->list + list_pos);
+          if (type == UPI_REAL_FMT) list_elem.d  = *((double*) p->list + list_pos);
+          else if (type == UPI_ASC_FMT) list_elem.c  = *((char**) p->list + list_pos);
           else list_elem.i = *((int*)p->list + list_pos);
           buf = p->buf;
           upic_print_param (p, p->buf, list_elem);
@@ -529,7 +529,7 @@ int upic_key_action (unsigned int /* event */, void*)
   case SCR::KPD_PF1 :
 #ifdef SCREEN
         if (Sys.PF1CallBack != 0) {
-          if (Sys.PF1CallBack) (*Sys.PF1CallBack)(m->id, i->id,CALL_ON_PF1, Sys.PF1Arg);
+          if (Sys.PF1CallBack) (*Sys.PF1CallBack)(m->id, i->id,UPI_CALL_ON_PF1, Sys.PF1Arg);
         }
 #endif /* SCREEN */
   case SCR::KPD_0 :
@@ -545,7 +545,7 @@ int upic_key_action (unsigned int /* event */, void*)
     if (upic_valid_keypad (key)) upic_branch_on_keypad (key);
     break;
   case SCR::RETURN_KEY :
-    if (m->type == PARAMETER_PAGE)    {
+    if (m->type == UPI_PARAMETER_PAGE)    {
       if (i->id != -1)   {
         if ((action = i->action))     {
           int item_id = i ? i->id : 0;
@@ -554,18 +554,18 @@ int upic_key_action (unsigned int /* event */, void*)
           upic_update_vars_of_page (m);
           (*action) (m->id, item_id, param_id, list_index);
         }
-        upic_set_cursor (m->id, -1, ACCEPT_OPTION);
+        upic_set_cursor (m->id, -1, UPI_ACCEPT_OPTION);
         key = SCR::INVALID;
       }
       else switch (p->id)
       {
-  case ACCEPT_OPTION :
+  case UPI_ACCEPT_OPTION :
     upic_update_vars_of_page (m);
     break;
-  case CANCEL_OPTION :
+  case UPI_CANCEL_OPTION :
     upic_restore_params_in_page (m);
     break;
-  case RESET_OPTION :
+  case UPI_RESET_OPTION :
     key = SCR::INVALID;
     upic_restore_params_in_page (m);
     break;
@@ -582,15 +582,15 @@ int upic_key_action (unsigned int /* event */, void*)
   case SCR::BACK_SPACE :
     {
       int status;
-      if (m->type == PARAMETER_PAGE) upic_restore_params_in_page (m);
+      if (m->type == UPI_PARAMETER_PAGE) upic_restore_params_in_page (m);
       else if (i->param.first) upic_restore_params_in_line (i);
       status = upic_go_backward (m);
-      if (m->type == PARAMETER_PAGE || m->type == DETACHED_MENU)
+      if (m->type == UPI_PARAMETER_PAGE || m->type == UPI_DETACHED_MENU)
       {
         if (status == UPI_SS_NORMAL) scrc_hide_window (m->window);
       }
       if (Sys.GlobBSCallBack)    {
-        (*Sys.GlobBSCallBack)(m->id, i->id,CALL_ON_ANY_BACKSPACE, Sys.GlobBSArg);
+        (*Sys.GlobBSCallBack)(m->id, i->id,UPI_CALL_ON_ANY_BACKSPACE, Sys.GlobBSArg);
       }
       if ((m->condition & CALL_ON_BACK_SPACE))
       {
@@ -669,7 +669,7 @@ int upic_key_action (unsigned int /* event */, void*)
     list_index = p ? p->list_pos : 0;
     if (i && (action = i->action))    {
       (*action) (menu_id, item_id, param_id, list_index);
-      if (m->type == PARAMETER_PAGE && i->id == -1)      {
+      if (m->type == UPI_PARAMETER_PAGE && i->id == -1)      {
         if (upic_go_backward (m) == UPI_SS_NORMAL)
           scrc_hide_window (m->window);
       }
