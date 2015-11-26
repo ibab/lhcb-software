@@ -11,6 +11,16 @@ class DeMuonDetector;
 
 /** @class MuonChi2MatchTool MuonChi2MatchTool.h component/MuonChi2MatchTool.h
  *  
+ * 
+ *  the tool chooses the combination of muon detector hits (1 per station) that best fits a track extrapolation
+ *  based on a global chi^2 that takes properly into account correlations in the track extrapolation errors
+ *
+ *  input hits are given through a vector of TrackMuMatch, containing a CommonMuonHit and related track extrapolation position
+ *  optionally, a second list of "low-quality" hits (uncrossed or from large clusters) can be given if no matches are found in the first list
+ *
+ *  use run() to perform the calculation, and then:
+ *    getChisquare() to get the best chi2
+ *    getListofCommonMuonHits() or getListofMuonTiles() to get the associated muon hits
  *
  *  @author Violetta Cogoni, Marianna Fontana, Rolf Odeman, ported here by Giacomo Graziani
  *  @date   2015-11-11

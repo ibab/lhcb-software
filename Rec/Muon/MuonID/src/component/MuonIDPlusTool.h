@@ -27,6 +27,21 @@ class IMuonClusterRec;
 
 /** @class MuonIDPlusTool MuonIDPlusTool.h
  *
+ *  /brief Generic tool for MuonID, returning a MuonID object from a Track object
+ *
+ *  on the first call per event, this tool makes association tables between all tracks passing
+ *  some preselction cuts (defined by options MinTrackMomentum, MaxGhostProb, MaxTrackChi2) and all muon hits.
+ *  Matches within Nsigma < SearchSigmaCut are kept
+ *
+ *  Subsequent steps in muonID (association of best muon hits, chi^2 calculations, DLL, etc) are 
+ *  delegated to dedicated tools
+ *
+ *  Use ReleaseObjectOwnership = false
+ *  if you want the tool to delete all created MuonID and Track objects (by default the tool assumes these objects will  
+ *  be stored in a container)
+ *
+ *
+ *
  *  @author Giacomo Graziani
  *  @date   2015-11-10
  *
@@ -115,7 +130,6 @@ private:
   double m_maxGhostProb;
   double m_minTrackMomentum;
   int m_maxCluSize;
-  int m_maxMatches;
   std::string m_matchToolName;
   std::string m_BestTrackLocation;
   bool m_ReleaseObjectOwnership;

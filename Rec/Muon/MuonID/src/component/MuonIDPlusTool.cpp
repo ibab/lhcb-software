@@ -48,8 +48,6 @@ MuonIDPlusTool::MuonIDPlusTool( const std::string& type,
 
   declareProperty("MaxCluSize", m_maxCluSize=8,
                   "do not consider cluster above this size for track fitting (just attach after fit)");  
-  declareProperty("MaxMatches", m_maxMatches=100,
-                  "do not consider tracks with more than these matches in M2-M5");
 
   declareProperty("InputTracksLocation", m_BestTrackLocation =LHCb::TrackLocation::Default,
                   "address of best tracks container");
@@ -480,8 +478,8 @@ StatusCode MuonIDPlusTool::matchHitsToTracks()
           trackMatch.first = trk; 
           std::get<0>(muhitMatch) =hit;
           std::get<1>(muhitMatch)= trackMatch.second= (float) sqrt(mtcSigmax*mtcSigmax + mtcSigmay*mtcSigmay);
-          std::get<2>(muhitMatch)= ExtraState.x();
-          std::get<3>(muhitMatch)= ExtraState.y();
+          std::get<2>(muhitMatch)= ExtraState.x() + ExtraState.tx()*(hit->z()-ExtraState.z());
+          std::get<3>(muhitMatch)= ExtraState.y() + ExtraState.ty()*(hit->z()-ExtraState.z());
           m_mutrkmatchTable[hit].push_back(trackMatch);
           if(spare)
             m_trkmumatchTableSpares[trk].push_back(muhitMatch);

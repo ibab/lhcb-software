@@ -20,7 +20,18 @@ namespace LHCb {
 
 /** @class MuonKalmanMatchTool MuonKalmanMatchTool.h component/MuonKalmanMatchTool.h
  *  
- *  muon match tool based on Kalman filter through Muon stations
+ *  /brief muon match tool based on Kalman filter through Muon stations
+ *
+ *  the tool extends the track Kalman filter through muon stations.
+ *
+ *  input hits are given through a vector of TrackMuMatch, containing a CommonMuonHit and related track extrapolation position
+ *  optionally, a second list of "low-quality" hits (uncrossed or from large clusters) can be given if no matches are found in the first list
+ *
+ *  the fit is repeated iteratively, excluding muon hits outside OutlierCut number of sigma from the refitted track
+ *
+ *  use run() to perform the calculation, and then:
+ *    getChisquare() to get the fit chi2 (using only best muon hit per station)
+ *    getListofCommonMuonHits() or getListofMuonTiles() to get the associated muon hits (all or best per station)
  *
  *  @author Giacomo Graziani
  *  @date   2015-11-11

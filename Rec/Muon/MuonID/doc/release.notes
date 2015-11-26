@@ -3,6 +3,21 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2015-11-26 - Giacomo Graziani
+ - fix CMakeLists.txt
+ - some cleanup and documentation
+
+! 2015-11-25 - Giacomo Graziani
+ - new IMuonMatchTool interface for track/muon matching with 2 implementations:
+     MuonChi2MatchTool  (computes chi2 properly, taking correlations into account,
+                       and chooses best muon hits combination based on this chi2)
+     MuonKalmanMatchTool (extends Kalman fit through muon stations)
+ - new generic IMuonIDTool with implementation MuonIDPlusTool, to start developing new approaches to muonID
+ - new MuonIDPlusAlg algorithm, using MuonIDPlusTool
+ - add option to MakeMuonTool to compute chi2 properly (using MuonChi2MatchTool)
+
+
+
 !========================= MuonID v9r18 2015-10-13 =========================
 ! 2015-09-16 - Kevin Dungs
  - Remove container for pad sizes in CommonMuonTool. The pad sizes are obtained from the hit via dx and dy. That way it is ensured, that uncrossed hits are associated with the correct pad sizes.
