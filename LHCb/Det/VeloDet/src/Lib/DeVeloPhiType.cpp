@@ -199,7 +199,7 @@ void DeVeloPhiType::calcStripLines()
       rInner=m_middleRadius+m_rGap/2;
       rOuter=outerRadius();
     }
-    double sin, cos;
+    double sin(0), cos(0);
     vdt::fast_sincos(phiOfStrip(strip,0.,rInner), sin, cos);
     x1 = rInner * cos;
     y1 = rInner * sin;
@@ -294,7 +294,7 @@ StatusCode DeVeloPhiType::pointToChannel(const Gaudi::XYZPoint& point,
   double phi=vdt::fast_atan2(localPoint.y(), localPoint.x());
 
   // Calculate nearest channel....
-  unsigned int closestStrip;
+  unsigned int closestStrip(0);
   double strip=0;
   phi -= phiOffset(radius);
   if(m_middleRadius > radius) {
@@ -649,7 +649,7 @@ StatusCode DeVeloPhiType::updatePhiCache()
     for (unsigned int s=0; s<m_stripsInZone[zone]; ++s) {
 
       unsigned int strip = s + m_nbInner*zone;
-      double sin, cos;
+      double sin(0), cos(0);
       vdt::fast_sincos(phiOfStrip(strip,0.0,r0), sin, cos);
       double x = r0*cos;
       double y = r0*sin;

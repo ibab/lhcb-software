@@ -250,7 +250,7 @@ StatusCode DeVeloRType::pointToChannel(const Gaudi::XYZPoint& point,
 
   // work out closet channel....
   unsigned int closestStrip=0;
-  double logarithm, strip;
+  double logarithm(0), strip(0);
   double radius=localPoint.Rho();
   logarithm = (m_pitchSlope*(radius - m_innerR)+m_innerPitch) /
     m_innerPitch;
@@ -319,7 +319,7 @@ bool DeVeloRType::isCutOff(double x, double y) const
 /// Returns the minimum phi in a zone at given radius
 //==============================================================================
 double DeVeloRType::phiMinZone(unsigned int zone, double radius) const {
-  double phiMin;
+  double phiMin(0);
   if(0 == zone){
     phiMin = -vdt::fast_acos(m_overlapInX/radius);
     double y=radius*vdt::fast_sin(phiMin);
@@ -340,7 +340,7 @@ double DeVeloRType::phiMinZone(unsigned int zone, double radius) const {
 /// Returns the maximum phi in a zone at given radius
 //==============================================================================
 double DeVeloRType::phiMaxZone(unsigned int zone, double radius) const {
-  double phiMax;
+  double phiMax(0);
   if(1 == zone){
     phiMax = vdt::fast_asin(-m_phiGap/radius);
   } else if(3 == zone){
@@ -481,7 +481,7 @@ void DeVeloRType::calcStripLimits()
         pitch = vdt::fast_exp(m_pitchSlope*istrip)*m_innerPitch;
         double phiMin=phiMinZone(zone,radius);
         double phiMax=phiMaxZone(zone,radius);
-	double sin, cos;
+	double sin(0), cos(0);
 	vdt::fast_sincos(phiMin, sin, cos);
         double x1 = radius*cos;
         double y1 = radius*sin;
@@ -513,7 +513,7 @@ void DeVeloRType::calcStripLimits()
       double phiMin = spli->first;
       double phiMax = spli->second;
       double radius = *ri;
-      double sin, cos;
+      double sin(0), cos(0);
       vdt::fast_sincos(phiMin, sin, cos);
       double x1 = radius*cos;
       double y1 = radius*sin;
@@ -669,7 +669,7 @@ unsigned int DeVeloRType::RoutingLineArea(unsigned int routingLine){
 // Return strip from routing line area (first 1024 strips only)
 //=============================================================================
 unsigned int DeVeloRType::RoutLineToStrip(unsigned int routLine, unsigned int routArea){
-  unsigned int strip;
+  unsigned int strip(0);
   if(0 == routArea){
     strip = (m_nChan1+routLine-1);
   } else if(1 == routArea) {
@@ -702,7 +702,7 @@ std::auto_ptr<LHCb::Trajectory> DeVeloRType::trajectory(const LHCb::VeloChannelI
 
   // start with coords of center and both ends in local frame
   Gaudi::XYZPoint lOrigin(0.,0.,0.);
-  double sin, cos;
+  double sin(0), cos(0);
   vdt::fast_sincos(phiMin, sin, cos);
   Gaudi::XYZPoint lBegin(radius*cos,radius*sin,z);
   vdt::fast_sincos(phiMax, sin, cos);
@@ -753,7 +753,7 @@ StatusCode DeVeloRType::updateStripRCache()
 
     // integrate over strip
     for ( ; phiLocal < phiMax; phiLocal += dphi) {
-      double sin, cos;
+      double sin(0), cos(0);
       vdt::fast_sincos(phiLocal, sin, cos);
       Gaudi::XYZPoint lp(rLocal*cos,rLocal*sin,0.0);
 
@@ -770,7 +770,7 @@ StatusCode DeVeloRType::updateStripRCache()
     dphi = phiMax - phiLocal + dphi;
     num += dphi;
 
-    double sin, cos;
+    double sin(0), cos(0);
     vdt::fast_sincos(phiMax, sin, cos);
     Gaudi::XYZPoint lp(rLocal*cos,rLocal*sin,0.0);
 
