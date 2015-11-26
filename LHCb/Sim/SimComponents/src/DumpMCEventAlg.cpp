@@ -1,5 +1,5 @@
 // $Id: DumpMCEventAlg.cpp,v 1.2 2007-01-12 10:01:00 cattanem Exp $
-// Include files 
+// Include files
 // Tools
 #include "Kernel/ICheckTool.h"
 
@@ -52,31 +52,32 @@ StatusCode DumpMCEventAlg::initialize() {
 //=============================================================================
 StatusCode DumpMCEventAlg::execute() {
 
-  LHCb::MCHeader* evt = 
+  LHCb::MCHeader* evt =
     get<LHCb::MCHeader>( LHCb::MCHeaderLocation::Default );
-  info() << "++++++++++++++++++++++++++++++++++++++++++++++++++++" 
-         << std::endl 
+  info() << "++++++++++++++++++++++++++++++++++++++++++++++++++++"
+         << std::endl
          << *evt << endmsg;
-  
+
   StatusCode sc = m_checker->check();
   if( sc.isFailure() ) return sc;
   info() << "MCVertex/MCParticle tree structure is OK" << endmsg;
-  
-  LHCb::MCVertices* verts = 
+
+  LHCb::MCVertices* verts =
     get<LHCb::MCVertices>( LHCb::MCVertexLocation::Default );
   info() << "There are " << verts->size() << " Vertices:" << endmsg;
-  
+
   if( 0 < m_numObjects && msgLevel( MSG::DEBUG ) ) {
     unsigned int count = 0;
     LHCb::MCVertices::iterator iVert;
     for( iVert = verts->begin(); iVert != verts->end(); iVert++ ) {
       if( !msgLevel(MSG::VERBOSE) && m_numObjects < ++count ) break;
-      debug() << "MCVertex " << (*iVert)->key() << ":" << std::endl
-              << (*iVert)->fillStream(debug().stream()) << endmsg;
+      debug() << "MCVertex " << (*iVert)->key() << ":" << std::endl;
+      (*iVert)->fillStream(debug().stream());
+      debug() << endmsg;
     }
   }
-  
-  LHCb::MCParticles* parts = 
+
+  LHCb::MCParticles* parts =
     get<LHCb::MCParticles>( LHCb::MCParticleLocation::Default );
   info() << "There are " << parts->size() << " Particles:" << endmsg;
 
@@ -85,8 +86,9 @@ StatusCode DumpMCEventAlg::execute() {
     LHCb::MCParticles::iterator iPart;
     for( iPart = parts->begin(); iPart != parts->end(); iPart++ ) {
       if( !msgLevel(MSG::VERBOSE) && m_numObjects < ++count ) break;
-      debug() << "MCParticle " << (*iPart)->key() << ":" << std::endl
-              << (*iPart)->fillStream(debug().stream()) << endmsg;
+      debug() << "MCParticle " << (*iPart)->key() << ":" << std::endl;
+      (*iPart)->fillStream(debug().stream());
+      debug() << endmsg;
     }
   }
 

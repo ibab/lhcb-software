@@ -5,6 +5,8 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2015-11-26 - Marco Clemencic
+ - Fixed compilation problem with gcc 5.2.
 
 !========================= SimComponents v3r0 2015-08-05 =========================
 ! 2015-08-03 - Gerhard Raven
@@ -13,7 +15,7 @@
 ! 2015-07-24 - Gloria Corti
  - New tool to flag children from a signal particle propagating the relevant
    flag
- 
+
 !========================= SimComponents v2r25 2015-07-20 =========================
 ! 2015-07-17 - Gloria Corti
  - Add printing of signal flag value in PrintMCDecayTreeTool when specified in
@@ -26,7 +28,7 @@
 !========================= SimComponents v2r24 2013-01-20 ========================
 
 ! 2012-12-10 - Marco Clemencic
- - Modified the CMake configuration for the use of Gen/DecFiles (it must be 
+ - Modified the CMake configuration for the use of Gen/DecFiles (it must be
    declared in the project CMakeLists.txt).
 
 ! 2012-12-10 - Chris Jones

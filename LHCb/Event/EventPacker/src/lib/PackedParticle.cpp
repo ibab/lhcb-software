@@ -163,10 +163,10 @@ void ParticlePacker::unpack( const PackedData       & ppart,
 
     // Lorentz momentum vector
     const double pz = m_pack.energy( ppart.lv_pz );
-    const double px = ( isVZero ? 
+    const double px = ( isVZero ?
                         m_pack.slope ( ppart.lv_px ) * pz :
                         m_pack.energy( ppart.lv_px ) );
-    const double py = ( isVZero ? 
+    const double py = ( isVZero ?
                         m_pack.slope ( ppart.lv_py ) * pz :
                         m_pack.energy( ppart.lv_py ) );
     const double mass = ppart.lv_mass;
@@ -180,10 +180,10 @@ void ParticlePacker::unpack( const PackedData       & ppart,
 
     // Mom Cov
     Gaudi::SymMatrix4x4 & momCov = *(const_cast<Gaudi::SymMatrix4x4*>(&part.momCovMatrix()));
-    const double merr00 = ( isVZero ? 
+    const double merr00 = ( isVZero ?
                             m_pack.slope ( ppart.momCov00 ) * px :
                             m_pack.energy( ppart.momCov00 ) );
-    const double merr11 = ( isVZero ? 
+    const double merr11 = ( isVZero ?
                             m_pack.slope ( ppart.momCov11 ) * py :
                             m_pack.energy( ppart.momCov11 ) );
     const double merr22 = m_pack.energy( ppart.momCov22 );
@@ -373,7 +373,7 @@ StatusCode ParticlePacker::check( const Data & dataA,
       std::ostringstream mess;
       mess << "ExtraInfo:" << (LHCb::Particle::additionalInfo)iEA->first;
       const bool keyOK   = iEA->first == iEB->first;
-      if ( !keyOK ) parent().warning() << mess << " Different Keys" << endmsg;
+      if ( !keyOK ) parent().warning() << mess.str() << " Different Keys" << endmsg;
       ok &= keyOK;
       const double relTol = 1.0e-3;
       double tol = relTol * fabs(iEA->second);
@@ -421,7 +421,7 @@ StatusCode ParticlePacker::check( const Data & dataA,
     const std::string loc = ( dataA.parent() && dataA.parent()->registry() ?
                               dataA.parent()->registry()->identifier() : "Not in TES" );
     parent().warning() << "Problem with Particle data packing :-" << endmsg
-                       << "  Original Particle key=" << dataA.key() 
+                       << "  Original Particle key=" << dataA.key()
                        << " in '" << loc << "'" << endmsg
                        << dataA << endmsg
                        << "  Unpacked Particle" << endmsg

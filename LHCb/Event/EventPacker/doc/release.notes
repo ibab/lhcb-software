@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2015-11-26 - Marco Clemencic
+ - Fixed compilation problem with gcc 5.2.
+
 !========================= EventPacker v5r8 2015-11-23 =========================
 ! 2015-11-03 - Wouter Hulsbergen
  - Added (un)packer for PrimaryVertex
@@ -12,7 +15,7 @@
 !========================= EventPacker v5r7 2015-10-12 =========================
 ! 2015-08-28 - Chris Jones
  - Fix another bug in PackedProtoParticle::check where the use of data() to
-   access the pointer was causing it to not be properly created. Should use 
+   access the pointer was causing it to not be properly created. Should use
    target() instead which makes sure the pointer is created on-demand.
  - Improve the debug information printed with various checks.
 
@@ -36,8 +39,8 @@
  - remove #include of obsolete Gaudi headers
 
 ! 2015-08-07 - Chris Jones
- - Add some protection to ProtoParticlePacker::check to prevent potential out 
-   of range loop access in cases where the data containers in the two objects 
+ - Add some protection to ProtoParticlePacker::check to prevent potential out
+   of range loop access in cases where the data containers in the two objects
    have different sizes.
 
 !======================== EventPacker v5r4 2015-07-07 ========================

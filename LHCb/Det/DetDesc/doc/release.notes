@@ -3,6 +3,9 @@
 ! package manager : Marco Clemencic
 ! =====================================================================
 
+! 2015-11-26 - Marco Clemencic
+ - Fixed compilation problem with gcc 5.2.
+
 !========================= DetDesc v18r38 2015-10-12 =========================
 ! 2015-08-09 - Gerhard Raven
  - replace Gaudi::Math::cbrt with std::cbrt
@@ -41,13 +44,13 @@
 ! 2015-02-06 - Chris Jones
  - Add new a new data member to MagneticFieldGrid to cache the inverse of
    the step sizes. Allows the replacement of all divisons by multiplications
-   (and the removal of one) leading to for instance around an 8% speed 
+   (and the removal of one) leading to for instance around an 8% speed
    improvement in the fieldVector method.
 
 !========================= DetDesc v18r35 2015-01-14 =========================
 ! 2014-12-18 - Gerhard Raven
  - switch the internal representation of the magnetic field to single precision
-   (which has 24 bits of precision, i.e. about 1 part in 10^7) which is sufficient 
+   (which has 24 bits of precision, i.e. about 1 part in 10^7) which is sufficient
    given that the numbers are read from files where the are in base 10, with
    6 digits... This significantly reduces the memory (and cache) requirements
 
