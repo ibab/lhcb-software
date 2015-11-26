@@ -1142,7 +1142,8 @@ void ReportConvertTool::RecSummaryObjectFromSummary( const HltObjectSummary::Inf
 
 // Convert generic Gaudi::VectorMap summary back into the object
 void ReportConvertTool::GenericMapObjectFromSummary( const HltObjectSummary::Info* info , GaudiUtils::VectorMap<short,float>* map) {
-  for( unsigned int n=0;n<info->size();n++){
+  unsigned int n=0;
+  while(n < (info->size()) ){
     // First put the map key inside
     std::stringstream key;
     int len = snprintf(nullptr, 0, "%d", n);

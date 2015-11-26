@@ -4,7 +4,11 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2015-11-26 - Sean Benson
+ - Fix for Tesla related info. resurrection.
+
 !========================= HltDAQ v4r21 2015-11-23 =========================
+
 ! 2015-11-11 - Sean Benson
  - Unit test update (b_dumpafterreformat).
 
