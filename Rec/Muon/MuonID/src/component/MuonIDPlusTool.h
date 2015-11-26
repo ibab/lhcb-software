@@ -89,7 +89,6 @@ private:
 
   bool m_largeClusters;
   std::vector<bool> m_stationHasLargeCluster;
-  bool m_muqueried;
   int m_nStationsWithMatch;
 
   void initVariables();
