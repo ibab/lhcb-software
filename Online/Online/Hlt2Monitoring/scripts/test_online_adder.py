@@ -10,10 +10,10 @@ utgid = 'TEST_ADDER_00'
 cmd = ("import GaudiKernel.ProcessJobOptions; " +
        "from Gaudi.Configuration import importOptions; " +
        "GaudiKernel.ProcessJobOptions.printing_level=3; " +
-       "from Hlt2Monitoring import Hlt2Adder; Hlt2Adder.configure('top', '/home/raaij/histograms', ports = {'HistoRelay' : {'in' : 41337, 'out' : 41338}, 'InfoRelay' : {'in' : 41339, 'out' : 41340}, 'Adder' : {'out' :41341}, 'InfoSvc' : {'out' : 41342}})")
+       "from Hlt2Monitoring import Hlt2Adder; Hlt2Adder.configure('top', '/tmp/histograms', ports = {'HistoRelay' : {'in' : 41337, 'out' : 41338}, 'InfoRelay' : {'in' : 41339, 'out' : 41340}, 'Adder' : {'out' :41341}, 'InfoSvc' : {'out' : 41342}})")
 env = {'LC_ALL' : 'C', 'DIM_DNS_NODE' : 'hlt01',
        'UTGID' : utgid, 'TEMPDIR' : '/tmp/testAdder', 'PARTITION' : 'LHCb2',
-       'PARTITION_NAME' : 'LHCb2', 'RUNINFO' : '/home/raaij/cmtuser/MooreOnlineDev_v24r2/scripts/OnlineEnvBase.py'}
+       'PARTITION_NAME' : 'LHCb2', 'RUNINFO' : '%s/scripts/OnlineEnvBase.py' % os.environ['HLT2MONITORINGROOT']}
 
 ## 'LOGFIFO' : "/tmp/test_3K_3g5/logTest_TEST.fifo",
 os_env = copy.copy(os.environ)
