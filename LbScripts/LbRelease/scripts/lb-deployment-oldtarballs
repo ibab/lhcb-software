@@ -12,6 +12,8 @@ version=$2
 
 cd $LHCBRELEASES
 mkLHCbtar -p $project -v $version
-for platform in `ls $LHCBRELEASES/${project^^}/${project^^}_${version}/InstallArea | grep -v doc` ; do
-  mkLHCbtar -p $project -v $version -b $platform
-done
+if [ -e $LHCBRELEASES/${project^^}/${project^^}_${version}/InstallArea ] ; then
+  for platform in `ls $LHCBRELEASES/${project^^}/${project^^}_${version}/InstallArea | grep -v doc` ; do
+    mkLHCbtar -p $project -v $version -b $platform
+  done
+fi

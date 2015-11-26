@@ -1,3 +1,7 @@
+2015-11-25  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* lb-deployment-*: added support for data packages (LBCORE-877)
+
 2015-11-24  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v5r4p3

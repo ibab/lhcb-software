@@ -12,6 +12,8 @@ if IS_CGI:
     import cgitb
     cgitb.enable()
 
+from LbConfiguration.Package import getPackage
+
 import sys
 import re
 import tempfile
@@ -29,10 +31,20 @@ def check(func):
     all_checks.append(func)
     return func
 
+all_checks_pkgs = []
+def check_pkg(func):
+    '''
+    Small decorator to distinguish "check" functions for packages from internal functions.
+    '''
+    if func in all_checks_pkgs:
+        all_checks_pkgs.remove(func)
+    all_checks_pkgs.append(func)
+    return func
 
 # Global variables and constant
 rpm_platforms = []
 installed_platforms = []
+pkg_rpm_name = None
 
 LHCBRELEASEAREA = '/afs/cern.ch/lhcb/software/releases'
 LHCBDOC = join(LHCBRELEASEAREA, 'DOC')
@@ -145,31 +157,70 @@ def rpm_copied(project, version):
         f.write(repr((rpms, rpm_platforms)))
     return '%d rpms, %d platforms' % (rpms, platforms)
 
+@check_pkg
+def rpm_copied_pkg(project, version):
+    '''
+    You need to add the RPMs to the RPM repository with
+
+      lb-release-rpm /data/archive/artifacts/release/lhcb-release/${build_id}
+
+    and
+
+      lb-release-rpm --copy /data/archive/artifacts/release/lhcb-release/${build_id}
+
+    if the check was successful.
+
+    where build_id should have been specified in the release request.
+
+    See https://twiki.cern.ch/twiki/bin/view/LHCb/ProjectRelease#Data_packages
+    '''
+    global pkg_rpm_name
+    digits = re.findall(r'\d+', version)
+    digits.extend(['0'] * (3 - len(digits))) # we want always 3 digits
+    dotted_version = '.'.join(digits)
+    rex = '%s-%s' % (project.replace('/', '_'), dotted_version)
+    cache_file = os.path.join(os.environ.get('HOME', os.getcwd()),
+                              '.cache', 'lb-deployment', rex + '.rpm_copied')
+    if os.path.exists(cache_file):
+        rpms, pkg_rpm_name = eval(open(cache_file).read())
+        return '%d rpm: %s (cached)' % (rpms, pkg_rpm_name)
+    with TemporaryDir() as tmp:
+        out = check_output([LBPKR, 'list', '-siteroot', tmp, project.replace('/', '_')])
+    out = [l for l in out.splitlines() if re.match('(DBASE|PARAM)_' + rex + '[-_]', l)]
+    assert out
+    rpms = len(out)
+    assert rpms == 1, \
+        'wrong rpm count: %d rpms' % rpms
+    pkg_rpm_name = out.pop()
+    if not os.path.isdir(os.path.dirname(cache_file)):
+        os.makedirs(os.path.dirname(cache_file))
+    with open(cache_file, 'w') as f:
+        f.write(repr((rpms, pkg_rpm_name)))
+    return '%d rpm: %s' % (rpms, pkg_rpm_name)
+
+def _rel_dir(project=None, version=None, base=LHCBRELEASEAREA):
+    '''
+    Helper function to get the release directory of a project/package on AFS/CVMFS.
+    '''
+    if pkg_rpm_name:
+        package = project
+        pkg_version = version
+        project = pkg_rpm_name.split('_', 1)[0]
+        version = None
+    else:
+        package = pkg_version = None
+        if project and version:
+            version = '{0}_{1}'.format(project.upper(), version)
+        else:
+            version = None
+    return join(*filter(None, [base, project and project.upper(), version,
+                               package, pkg_version]))
 
 def rel_dir(project=None, version=None):
-    '''
-    Helper function to get the release directory of a project.
-    '''
-    dirname = LHCBRELEASEAREA
-    if project is not None:
-        if version is not None:
-            dirname += '/{0}/{0}_{1}'.format(project.upper(), version)
-        else:
-            dirname += '/{0}'.format(project.upper())
-    return dirname
-
+    return _rel_dir(project, version, base=LHCBRELEASEAREA)
 
 def cvmfs_dir(project=None, version=None):
-    '''
-    Helper function to get the release directory of a project on CVMFS.
-    '''
-    dirname = CVMFSRELEASEAREA
-    if project is not None:
-        if version is not None:
-            dirname += '/{0}/{0}_{1}'.format(project.upper(), version)
-        else:
-            dirname += '/{0}'.format(project.upper())
-    return dirname
+    return _rel_dir(project, version, base=CVMFSRELEASEAREA)
 
 
 def dist_dir(project):
@@ -211,11 +262,18 @@ def installation(basedir):
 
     assert exists(join(basedir, '.glimpse_index')), 'index not installed'
 
+def pkg_installation(pkgdir, package):
+    '''
+    Common checks for package installation on AFS and CVMFS.
+    '''
+    assert exists(pkgdir)
+    assert exists(join(pkgdir, package.replace('/', '_') + '.xenv')), 'missing .xenv file'
+
 
 @check
 def afs_installation(project, version):
     '''
-    You need to install on AFS.
+    You need to install on AFS (from lxplus).
 
       lb-deployment-afs-install <project> <version> <platforms>
 
@@ -226,6 +284,31 @@ def afs_installation(project, version):
         assert exists(join(rel_dir(project, version),
                            'InstallArea', 'doc', 'html')), 'Gaudi doxygen doc missing'
 
+@check_pkg
+def pkg_afs_installation(package, version):
+    '''
+    You need to install on AFS (from lxplus).
+
+      /afs/cern.ch/lhcb/software/rpmrel/afslbpkr install <pkg_rpm_name>
+
+    See https://twiki.cern.ch/twiki/bin/view/LHCb/ProjectRelease#Data_packages
+    '''
+    pkg_installation(rel_dir(package, version), package)
+
+def _volume_released(project, version):
+    '''
+    Common check for released volume.
+    '''
+    path = rel_dir(project, version)
+    acls = check_output(['fs', 'la', path])
+    assert 'system:anyuser rl' in acls, 'volume not public'
+    assert not exists(join(path, 'NOT_READY')), 'NOT_READY lock still present'
+    writers = [l.split()[0] for l in acls.splitlines()
+               if l.startswith(' ') and ('system:administrators' not in l) and ('w' in l.split()[-1])]
+    assert not writers, 'volume still writeable %s' % writers
+    if not pkg_rpm_name:
+        quota, used = check_output(['fs', 'lq', path]).splitlines()[-1].split()[1:3]
+        assert quota == used, 'volume not shrinked'
 
 @check
 def volume_released(project, version):
@@ -238,15 +321,16 @@ def volume_released(project, version):
 
       lb-project-manage-volume -l <project> <version>
     '''
-    path = rel_dir(project, version)
-    acls = check_output(['fs', 'la', path])
-    assert 'system:anyuser rl' in acls, 'volume not public'
-    assert not exists(join(path, 'NOT_READY')), 'NOT_READY lock still present'
-    assert [l for l in acls.splitlines()
-            if 'system:administrators' not in l and 'w' not in l.split()[-1]], \
-           'volume still writeable'
-    quota, used = check_output(['fs', 'lq', path]).splitlines()[-1].split()[1:3]
-    assert quota == used, 'volume not shrinked'
+    return _volume_released(project, version)
+
+@check_pkg
+def pkg_dir_released(project, version):
+    '''
+    Lock the package directory with:
+
+      lockAFSDir -R $LHCBRELEASES/<pkg_project>/<project>/<version>
+    '''
+    return _volume_released(project, version)
 
 
 @check
@@ -286,6 +370,22 @@ def tarballs(project, version):
     assert not missing, 'missing some md5 files'
 
 
+@check_pkg
+def pkg_tarballs(package, version):
+    '''
+    You need to generate the old-style distribution tarballs:
+
+      lb-deployment-oldtarballs <pkg_name> <version>
+
+    See https://twiki.cern.ch/twiki/bin/view/LHCb/ProjectRelease#OldTarballs
+    '''
+    project= pkg_rpm_name.split('_')[0]
+    basefile = join(dist_dir(project),
+                    '{0}_{1}_{2}'.format(project, package.replace('/', '_'), version))
+    for ext in ('.tar.gz', '.md5'):
+        assert exists(basefile + ext), 'missing tar file (%s)' % (basefile + ext)
+
+
 @check
 def soft_db(project, version):
     '''
@@ -306,6 +406,11 @@ def soft_db(project, version):
 @check
 def cvmfs_installation(project, version):
     return installation(cvmfs_dir(project, version))
+
+
+@check_pkg
+def pkg_cvmfs_installation(package, version):
+    return pkg_installation(cvmfs_dir(package, version), package)
 
 
 @check
@@ -336,8 +441,18 @@ def script_main():
         # FIXME: Gaudi requires very special operations for the web pages
         all_checks.remove(web_updated)
 
+    pkg = getPackage(project.split('/')[-1], raise_exception=False)
+    if pkg:
+        fullname = pkg.FullName()
+        if project != fullname:
+            print '*** WARNING: using %s instead of %s ***' % (fullname, project)
+            project = fullname
+        checks = all_checks_pkgs
+    else:
+        checks = all_checks
+
     stdout = sys.stdout
-    for f in all_checks:
+    for f in checks:
         stdout.write(f.__name__ + ' ')
         stdout.flush()
         fmt = ('%%%ds\n' % (80 - (len(f.__name__) + 1)))
@@ -355,6 +470,10 @@ def script_main():
             if f.__doc__:
                 msg = f.__doc__.replace('<project>', project).replace('<version>', version)
                 msg = msg.replace('<platforms>', ' '.join(fix_platforms(rpm_platforms)))
+                if pkg_rpm_name:
+                    msg = msg.replace('<pkg_rpm_name>', pkg_rpm_name)
+                    msg = msg.replace('<pkg_project>', pkg_rpm_name.split('_')[0])
+                    msg = msg.replace('<pkg_name>', project.split('/')[-1])
                 print msg
             sys.exit(1)
 
