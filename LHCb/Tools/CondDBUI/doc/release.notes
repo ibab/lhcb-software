@@ -3,6 +3,9 @@
 ! package manager : Marco Clemencic
 ! ====================================================================
 
+! 2015-11-26 - Marco Clemencic
+ - Fixed minor mistake in CondDBUI::Helpers that was triggering ROOT-7825.
+
 !========================= CondDBUI v3r35 2015-07-20 =========================
 ! 2015-06-23 - Marco Clemencic
  - Fixed a flow in the logic of CondDB.Admin.CompareDBToFiles.

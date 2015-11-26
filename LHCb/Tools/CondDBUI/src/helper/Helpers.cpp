@@ -150,7 +150,7 @@ namespace CondDBUI {
       }
       return true;
     }
-    cool::IDatabasePtr Helpers::openDatabase(const cool::IDatabaseSvc* &ptr, const cool::DatabaseId &dbId, bool readOnly ) {
+    cool::IDatabasePtr Helpers::openDatabase(const cool::IDatabaseSvc &ptr, const cool::DatabaseId &dbId, bool readOnly ) {
       try {
           return ptr->openDatabase(dbId, readOnly);
       }
