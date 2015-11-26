@@ -1014,6 +1014,11 @@ class GetPack(Script):
                 print "\t%s\t%s" % (p, skipped_packages[p])
             self.retval = 1 # this is a failure
 
+        # touch the CMakeLists.txt file, if there, to ensure that the project is
+        # re-configured
+        if os.path.exists('CMakeLists.txt'):
+            os.utime('CMakeLists.txt', None)
+
     def _fixProjectNameCase(self, name):
         # Check if the project is known using a case insensitive comparison
         for known_proj in self.projects:
