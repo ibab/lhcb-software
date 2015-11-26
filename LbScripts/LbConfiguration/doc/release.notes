@@ -1,10 +1,15 @@
+2015-11-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* lb-dev: initialize git repository for created local projects and commit
+	first version of files (LBCORE-956)
+
 2015-11-24  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: LBCORE-978 release of version v8r4p3
 	* LBCORE-980: Upgraded version of CMake to 3.2.3
 	* python/LbConfiguration/External.py
 	* python/LbConfiguration/LbLogin.py
- 
+
 2015-11-24  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* data/Makefile: use CMake by default and CMT if USE_CMT is set (LBCORE-876)

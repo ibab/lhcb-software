@@ -13,6 +13,7 @@ __author__ = 'Marco Clemencic <marco.clemencic@cern.ch>'
 import os
 import logging
 import stat
+import sys
 
 import LbConfiguration.SP2
 
@@ -29,6 +30,7 @@ def main():
     from optparse import OptionParser
     from options import addSearchPath, addOutputLevel, addPlatform, addListing
     from lookup import findProject, MissingProjectError
+    from subprocess import call
 
     parser = OptionParser(usage='%prog [options] Project [version]')
 
@@ -44,12 +46,27 @@ def main():
                       help='Where to create the local project '
                            '[default: %default].')
 
+    parser.add_option('--git', action='store_true',
+                      help='Initialize git repository in the generated directory'
+                           '[default, if git is available].')
+
+    parser.add_option('--no-git', action='store_false',
+                      dest='git',
+                      help='Do not initialize the git local repository.')
+
     # Note: the profile is not used in the script class, but in the wrapper
     #       it is added to the parser to appear in the help and for checking
     parser.add_option('--profile', action='store_true',
                       help='Print some profile informations about the execution.')
 
-    parser.set_defaults(dest_dir=os.curdir)
+    try:
+        from LbUtils import which
+        has_git = bool(which('git'))
+    except ImportError:
+        has_git = True
+
+    parser.set_defaults(dest_dir=os.curdir,
+                        git=has_git)
 
     opts, args = parser.parse_args()
 
@@ -77,7 +94,6 @@ def main():
         from lookup import listVersions
         for entry in listVersions(project, opts.platform):
             print '%s in %s' % entry
-        import sys
         sys.exit(0)
 
     if not opts.name:
@@ -118,7 +134,10 @@ def main():
         os.makedirs(opts.dest_dir)
 
     logging.debug('creating directory "%s"', devProjectDir)
-    os.makedirs(devProjectDir)
+    if opts.git:
+        call(['git', 'init', '--quiet', devProjectDir])
+    else:
+        os.makedirs(devProjectDir)
 
     data = dict(project=project,
                 version=version,
@@ -191,6 +210,13 @@ def main():
                                    'CMakeLists.txt'), 'w') as cml:
                 cml.write('gaudi_subdir({0} {1})\n'
                           .format(local_project + 'Sys', local_version))
+
+    if opts.git:
+        call(['git', 'add', '.'], cwd=devProjectDir)
+        call(['git', 'commit', '--quiet', '-m',
+              'initial version of satellite project\n\n'
+              'generated with:\n\n'
+              '    %s\n' % ' '.join(sys.argv)], cwd=devProjectDir)
 
     # Success report
     msg = '''
