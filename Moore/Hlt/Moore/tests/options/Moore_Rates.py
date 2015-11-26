@@ -2,7 +2,7 @@
 # Script to test the rates of a HLT configuration
 # Mika Vesterinen
 
-import os, sys, subprocess, re, optparse
+import os, sys, subprocess, re, optparse, math
 
 # Configuration
 import Gaudi.Configuration
@@ -43,6 +43,9 @@ def main():
     
     parser = optparse.OptionParser( usage = "usage: %prog [options]" )
 
+    parser.add_option( "--debug", action="store_true", dest="debug",
+                       default=False, help="Debug?")
+    
     parser.add_option( "-d", "--datatype", action="store", dest="DataType", 
                        default="2015", help="DataType to run on.")
     
@@ -73,7 +76,7 @@ def main():
                        default="",help="Output root file")
 
     parser.add_option( "--inputdata",action="store",dest="inputdata",
-                       default="Physics1600EOS",help="Name of inputdata")
+                       default="Physics1600TestNode",help="Name of inputdata")
 
     # Parse the arguments
     (options, args) = parser.parse_args()
@@ -111,14 +114,22 @@ def main():
     DataOnDemandSvc().AlgMap['Hlt/DecReports'] =  "HltDecReportsDecoder"
     
     from GaudiConf import IOHelper
-    if options.inputdata == "Physics1600EOS":
-        IOHelper("MDF").inputFiles(["mdf://root://eoslhcb.cern.ch//eos/lhcb/wg/HLT/BWdivData/Run164440_L0Filtered_0x00A2_Mika/2015NB_25ns_0x00A2_0.mdf",
-                                    "mdf://root://eoslhcb.cern.ch//eos/lhcb/wg/HLT/BWdivData/Run164440_L0Filtered_0x00A2_Mika/2015NB_25ns_0x00A2_1.mdf",
-                                    "mdf://root://eoslhcb.cern.ch//eos/lhcb/wg/HLT/BWdivData/Run164440_L0Filtered_0x00A2_Mika/2015NB_25ns_0x00A2_2.mdf"])
+    if options.inputdata == "Physics1600":
+        IOHelper("MDF").inputFiles(["mdf:root://eoslhcb.cern.ch//eos/lhcb/wg/HLT/BWdivData/Run164440_L0Filtered_0x00A2_Mika/2015NB_25ns_0x00A2_0.mdf"])
     elif options.inputdata == "Physics1600TestNode":
         IOHelper("MDF").inputFiles(["/localdisk/bw_division/run164440_L0Filtered_0x00A2_Mika/2015NB_25ns_0x00A2_0.mdf",
                                     "/localdisk/bw_division/run164440_L0Filtered_0x00A2_Mika/2015NB_25ns_0x00A2_1.mdf",
-                                    "/localdisk/bw_division/run164440_L0Filtered_0x00A2_Mika/2015NB_25ns_0x00A2_1.mdf"])
+                                    "/localdisk/bw_division/run164440_L0Filtered_0x00A2_Mika/2015NB_25ns_0x00A2_2.mdf",
+                                    "/localdisk/bw_division/run164440_L0Filtered_0x00A2_Mika/2015NB_25ns_0x00A2_3.mdf",
+                                    "/localdisk/bw_division/run164440_L0Filtered_0x00A2_Mika/2015NB_25ns_0x00A2_4.mdf"])
+        
+        
+    ### getting ready for the event loop
+    gaudi = AppMgr(outputlevel=4)
+    gaudi.ExtSvc += ['ToolSvc']                                                                               
+    gaudi.ExtSvc.append( 'DataOnDemandSvc' )    
+    gaudi.initialize()
+
     ### get the list of active line names
     Lines = {}
     for level in ["Hlt1","Hlt2"]:
@@ -151,9 +162,6 @@ def main():
                 DecMaps[level][l] = array( 'i', [ 0 ] )
                 DecTrees[level].Branch(l,DecMaps[level][l], '%sDecision/I'%l)
     
-
-                
-    
     ### this will be dictionary of lines and their counters for the rates
     line_stats = {}
     for line in Lines["Hlt1"].union(Lines["Hlt2"]).union(set(["Hlt1Global","Hlt2Global"])):
@@ -168,21 +176,23 @@ def main():
         v["pass_this_event"] = False
         v["passed"] = 0
 
-    ### getting ready for the event loop
-    gaudi = AppMgr(outputlevel=4)
-    gaudi.ExtSvc += ['ToolSvc']                                                                               
-    gaudi.ExtSvc.append( 'DataOnDemandSvc' )    
-    gaudi.initialize()
-    evtmax = Moore().EvtMax
+    print '*'*100
+    print Lines
+    print line_stats
+    print stream_stats
+    print '*'*100
+    
+    
     i = 0
     processed = 0
     #### start of the event loop
-    while i < evtmax:
+    while i < Moore().EvtMax:
         i+=1
         # run the sequences on this event
         gaudi.run(1)
         processed +=1
-
+        if not gaudi.evtsvc()['Hlt1/DecReports']: break
+            
         ### reset the stream counters
         for s in stream_stats.keys():
             stream_stats[s]["pass_this_event"] = False
@@ -211,34 +221,49 @@ def main():
                 nPassed = 0
                 # loop over all lines
                 for line in Lines[level]:
-                    if reps.decReport(line).decision():PassMyGlobal[level] = True
+                    # protection. why is this needed though?
+                    if not line+"Decision" in reps.decReports().keys(): 
+                        print '%s not in %s' %(line,reps.decReports().keys())
+                        continue
+                    
+                    # just check this once
+                    LINE_FIRED = reps.decReport(line+"Decision").decision()
+                    
+                    # my global counter
+                    if LINE_FIRED: PassMyGlobal[level] = True
                         
                     # does this event fire any lines that match my "streams"?
-                    if level == "Hlt2" and not line == "Hlt2Global" and not line in remove:
+                    if LINE_FIRED and level == "Hlt2" and not line == "Hlt2Global": # and not line in remove:
                         for s in stream_stats.keys():
                             if re.match(stream_stats[s]["filter"], line, flags=0):
                                 stream_stats[s]["pass_this_event"] = True
                     
                     # set the variable to be stored in the tuple
                     if options.tuplefile != "":
-                        DecMaps[level][line] = reps.decReport(line).decision()
+                        if LINE_FIRED:
+                            DecMaps[level][line][0] = 1
+                        else:
+                            DecMaps[level][line][0] = 0
+
                     # if this is the first fired event then 
                     # need to initialise the dictionary entry
-                    if not line in line_stats.keys():
-                        line_stats[line] = {"passed_incl":0,
-                                            "passed_excl":0}
+                    #if not line in line_stats.keys():
+                    #    line_stats[line] = {"passed_incl":0,
+                    #                        "passed_excl":0}
                     # increment the counter for this line
-                    if reps.decReport(line).decision():
+                    if LINE_FIRED:
                         line_stats[line]["passed_incl"]  += 1
                         if not "Global" in line:
-                            nPassed +=1 
+                            nPassed +=1 ### for the exclusives
+
                 # my own global counter
                 if PassMyGlobal[level]:
                     line_stats["%sGlobal"%level]["passed_incl"] += 1
                 # now go back and count the number of exclusive fires of this line
                 # just need to ignore HltXGlobal
                 for line in Lines[level]:
-                    if reps.decReport(line).decision() and nPassed == 1:
+                    if not line+"Decision" in reps.decReports().keys(): continue # protection
+                    if reps.decReport(line+"Decision").decision() and nPassed == 1:
                         if not "Global" in line:
                             line_stats[line]["passed_excl"]  += 1
                 
@@ -261,7 +286,7 @@ def main():
     # Apparently this doesn't work, but it's only really a cosmetic thing.
     #gaudi.finalize()
 
-    
+    sys.stdout.flush()    
     #############################################
     ###### print the summary tables #############
     #############################################
@@ -270,7 +295,7 @@ def main():
     for k,v in stream_stats.iteritems():
         v["processed"] = processed
     
-    import math
+        
     
     GlobalRates = {}
     print '-'*100
@@ -278,6 +303,9 @@ def main():
     print '-'*100
     #### print the global rates
     print 'removed lines: %s' %remove
+    print 'processed: %s' %processed
+    print '%s Hlt1Lines' %(len(Lines['Hlt1']))
+    print '%s Hlt2Lines' %(len(Lines['Hlt2']))
     for level in ['Hlt1','Hlt2']:
         rate = getrate(1.e-3*input_rate,line_stats["%sGlobal"%level]["passed_incl"],line_stats["%sGlobal"%level]["processed"])
         print '%sGlobal rate = (%s+-%s)kHz' %(level,rate[0],rate[1])
@@ -314,6 +342,7 @@ def main():
     print '-'*100
     print 'HLT rates summary ends here'
     print '-'*100
+    sys.stdout.flush()    
     
 if __name__ == "__main__":
     sys.exit( main() )

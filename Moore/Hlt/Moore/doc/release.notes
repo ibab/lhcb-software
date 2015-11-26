@@ -5,6 +5,9 @@
 !============================================
 
 ! 2015-10-10 - Mika Vesterinen
+ - hltratesmoore.qmt  uses Physics_25ns_October2015
+
+! 2015-10-10 - Mika Vesterinen
  - Update the rate script to cover hlt2
 
 ! 2015-10-10 - Mika Vesterinen
