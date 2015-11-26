@@ -33,6 +33,31 @@ _known_strippings = [
   "Stripping24"
 ]
 
+_relinfo_obsolete_strippings = [
+  "Stripping13",
+  "Stripping14",
+  "Stripping15",
+  "Stripping16",
+  "Stripping17",
+  "Stripping17b",
+  "PreStripping18",
+  "Stripping18",
+  "Stripping19",
+  "Stripping19b",
+  "Stripping19c",
+  "Stripping20",
+  "Stripping20r1",
+  "Stripping20r0p1",
+  "Stripping20r0p2",
+  "Stripping20r0p3",
+  "Stripping20r2",
+  "Stripping20r3",
+  "Stripping21",
+  "Stripping23",
+  "Stripping23r1"
+]
+
+
 #give a dictionary of strippings which use the same line builders
 _duplicate_strippings={ "Stripping13b"        : "Stripping13",
                         "Stripping13Calib"    : "Stripping13",
