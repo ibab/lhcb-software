@@ -58,19 +58,21 @@ HistoWrapper::HistoWrapper( HltMassMonitor* algo, const std::string& histoName,
    // m_initial = QuasiRandom::mixString(initial.size(), initial);
 
    auto monSvc = algo->hltMonSvc();
+   HltHistogram* hltMass{nullptr};
+   HltHistogram* hltPt{nullptr};
+
    if (monSvc.isValid()) {
       auto bins = boost::numeric_cast<size_t>(massDef[2]);
       HltHistogram& mass = monSvc->histogram(algo->name() + "/" + name() + "_mass",
                                              massDef[0], massDef[1], bins);
-      m_mass = Wrapper(&mass);
+      hltMass = &mass;
       HltHistogram& pt = monSvc->histogram(algo->name() + "/" + name() + "_pT",
                                            0., 6000., 100);
-      m_pT = Wrapper(&pt);
-   } else {
-      m_mass = Wrapper(algo->book1D(name() + "_mass", name() + " invariant mass",
-                                     left(), right(), bins()));
-      m_pT   = Wrapper(algo->book1D(name() + "_pT",  0., 6000., 100));
+      hltPt = &pt;
    }
+   m_mass = Wrapper(algo->book1D(name() + "_mass", name() + " invariant mass",
+                                 left(), right(), bins()), hltMass);
+   m_pT   = Wrapper(algo->book1D(name() + "_pT",  0., 6000., 100), hltPt);
 }
 
 //=============================================================================

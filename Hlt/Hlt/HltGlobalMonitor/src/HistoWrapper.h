@@ -82,9 +82,8 @@ private:
    class Wrapper {
    public:
 
-      Wrapper() {}
-      Wrapper(HltHistogram* h) : m_hlt(h) {}
-      Wrapper(AIDA::IHistogram1D* h) : m_aida{h} {}
+      Wrapper() = default;
+      Wrapper(AIDA::IHistogram1D* a, HltHistogram* h) : m_hlt(h), m_aida(a) {}
       Wrapper(const Wrapper& other) : m_hlt(other.m_hlt),
                                       m_aida(other.m_aida) {}
 
@@ -101,7 +100,8 @@ private:
       {
          if (m_hlt) {
             m_hlt->fill(value);
-         } else if (m_aida) {
+         }
+         if (m_aida) {
             m_aida->fill(value);
          }
       }
