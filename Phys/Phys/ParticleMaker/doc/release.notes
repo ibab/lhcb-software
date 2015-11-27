@@ -3,6 +3,11 @@
 ! Responsible : DaVinci coordinator
 !==============================================================================
 
+!======================= ParticleMaker v6r17 2015-11-27 =======================
+
+! 2015-11-01 - Gerhard Raven
+ - replace endreq with endmsg
+
 !======================= ParticleMaker v6r16 2015-10-05 =======================
 
 ! 2015-08-27 - Gerhard Raven

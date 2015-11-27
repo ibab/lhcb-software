@@ -2,7 +2,7 @@
 # Maintainer : DaVinci coordinator
 
 package           ParticleMaker
-version           v6r16
+version           v6r17
 
 # Structure, i.e. directories to process. 
 #============================================================================
