@@ -4,6 +4,8 @@
 ! Purpose     : Related Info Tools
 !-----------------------------------------------------------------------------
 
+!======================= RelatedInfoTools v1r4 2015-11-27 ====================
+
 ! 2015-11-24 - Anton Poluektov 
  - Add RelInfoConeIsolation tool: converted from TupleToolConeIsolation. 
    There is some overlap of functionality with RelInfoConeVariables, but 
