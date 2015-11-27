@@ -3,6 +3,9 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2015-11-27 - Marco Clemencic
+ - Removed (invalid) link to component library MuonTrackRec.
+
 ! 2015-11-26 - Giacomo Graziani
  - fix CMakeLists.txt
  - some cleanup and documentation
@@ -25,14 +28,14 @@
 !========================= MuonID v9r17 2015-08-27 =========================
 ! 2015-08-27 - Francesco Dettori
  - Fixing bug in DLLMuonTool, see Jira task: https://its.cern.ch/jira/browse/LHCBPS-1431
-   Added two functions to be sure a valid region is always used in the DLL calculation and consequentely changed two GaudiExceptions into Error messages (which shold never happen, given the new code). 
-     
+   Added two functions to be sure a valid region is always used in the DLL calculation and consequentely changed two GaudiExceptions into Error messages (which shold never happen, given the new code).
+
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
 !========================= MuonID v9r16 2015-07-20 =========================
 ! 2015-07-16 - Ricardo Vazquez Gomez
- - Adapt the algorithm to take several inputLocations and remove the insertion of the muonPID and muonTrack using the key of the mother track. This change is necessary to produce the same value of nShared online and offline, which will reduce the differences in ProbNN outputs. 
+ - Adapt the algorithm to take several inputLocations and remove the insertion of the muonPID and muonTrack using the key of the mother track. This change is necessary to produce the same value of nShared online and offline, which will reduce the differences in ProbNN outputs.
 
 ! 2015-07-15 - Ricardo Vazquez Gomez
  - Modify the Configuration file so as not to use the new MuonID in 2008, 2009, MC09 and Upgrade datatypes
@@ -48,8 +51,8 @@
    2015 data.
 
 ! 2015-07-10 - Francesco Dettori
- - Merging from branch MuIDDev. Changes are detailed below. 
-   
+ - Merging from branch MuIDDev. Changes are detailed below.
+
 ! 2015-06-25 - Ricardo Vazquez Gomez
  - Change syntax in loops to speed up
 
@@ -57,10 +60,10 @@
  - Update the ConfiguredMuonIDs.py so as not to perform the muon track fit.
 
 ! 2015-06-03 - Francesco Dettori
- - Various changes in MakeMuonTool, DLLMuonTool and MuonIDAlgLite in order to speed up the running for Moore. 
- - The m_muonMap is now moved to DLLMuonTool 
- - Various little modifications to avoid repeated calculations: introduced a map of the distances, global variables instead of local assignments, optimization of some for loops 
- - The variable chi2 of the muon track is now changed from the chi2 of the fit of this track to the chi2 of the track extrapolation w.r.t. the muonHits. 
+ - Various changes in MakeMuonTool, DLLMuonTool and MuonIDAlgLite in order to speed up the running for Moore.
+ - The m_muonMap is now moved to DLLMuonTool
+ - Various little modifications to avoid repeated calculations: introduced a map of the distances, global variables instead of local assignments, optimization of some for loops
+ - The variable chi2 of the muon track is now changed from the chi2 of the fit of this track to the chi2 of the track extrapolation w.r.t. the muonHits.
 
 ! 2015-05-28 - Ricardo Vazquez Gomez
  - add the cleaning of m_muonMap after each event
@@ -78,8 +81,8 @@
    an error.
 
 ! 2015-05-25 - Ricardo Vazquez Gomez
- - Change in the fill of the muonPIDs to do it for all tracks passing 
-   InAcceptance to match the original criteria. 
+ - Change in the fill of the muonPIDs to do it for all tracks passing
+   InAcceptance to match the original criteria.
  - Modify the ConfiguredMuonIDs.py with a panic swithc between the new and
    old algorithm.
 
@@ -88,8 +91,8 @@
 
 ! 2015-05-24 - Ricardo Vazquez Gomez
  - Bugfix in the foiYDim for MuonIDAlg that was used the dx coordinate.
- - Bugfix in the NShared computation that was comparing a distance with a 
-   distance squared 
+ - Bugfix in the NShared computation that was comparing a distance with a
+   distance squared
 
 ! 2015-05-24 - Ricardo Vazquez Gomez
  - Add the distSquare in the muonPID. Revise the logic in crossedHits
@@ -125,12 +128,12 @@
 
 ! 2015-04-29 - Ricardo Vazquez Gomez
  - Modify the algorithms to use DLLflag = 5 corresponding to the new calibration.
-   The algorithms are configured to run with either DLLflag = 4 or DLLflag = 5 
+   The algorithms are configured to run with either DLLflag = 4 or DLLflag = 5
  - Add the files Muon_2015_def.py and tanh_2015.py from the new calibration by Helder.
 
 ! 2015-04-28 - Ricardo Vazquez Gomez
- - Add the makeMuonTrack part to the code. 
- - Add the possibility to use DLLflag == 3 as the new DLL calibration would use 
+ - Add the makeMuonTrack part to the code.
+ - Add the possibility to use DLLflag == 3 as the new DLL calibration would use
    the cumulative histograms for muons and non-muons.
  - Clean up a bit unnecessary properties and functions.
  - Compiled against CMake.
@@ -140,7 +143,7 @@
  - Fix requirements after reorganisation of code.
 
 ! 2015-03-11 - Ricardo Vazquez Gomez
- - Bug fix the NShared computation in the DLLMuonTool. 
+ - Bug fix the NShared computation in the DLLMuonTool.
 
 ! 2015-03-11 - Kevin Dungs
  - Merge efforts of the MuonID task force from branch LHCbPS-1372.
@@ -154,7 +157,7 @@
 !========================= MuonID v9r13 2015-02-23 =========================
 ! 2015-01-15 - Gerhard Raven
  - speed up MuonIDAlg by a factor of 1.8 by only computing the FOI once per
-   station/region/candidate momentum, and factorizing out the hit (i.e. 'dx' 
+   station/region/candidate momentum, and factorizing out the hit (i.e. 'dx'
    and 'dy') dependence
 
 !========================= MuonID v9r12 2014-12-12 =========================

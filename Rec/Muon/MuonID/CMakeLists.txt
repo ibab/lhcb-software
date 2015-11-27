@@ -24,6 +24,6 @@ gaudi_add_library(MuonIDLib
 gaudi_add_module(MuonID
                  src/component/*.cpp
                  INCLUDE_DIRS ROOT Tr/TrackInterfaces VDT
-                 LINK_LIBRARIES ROOT MuonDetLib RecEvent TrackEvent MuonInterfacesLib MuonTrackRec TrackFitEvent GaudiAlgLib MuonIDLib)
+                 LINK_LIBRARIES ROOT MuonDetLib RecEvent TrackEvent MuonInterfacesLib TrackFitEvent GaudiAlgLib MuonIDLib)
 
 gaudi_install_python_modules()
