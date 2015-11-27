@@ -54,7 +54,6 @@ public:
   
 
   /** Update values for additional hit
-   *  @brief Update values for additional hit
    *  @param hit Hit to be added
    *  @return int number of different planes
    */
@@ -72,7 +71,6 @@ public:
   }
 
   /** Update values for removed hit
-   *  @brief Update values for removed hit
    *  @param hit Hit to be removed
    *  @return int number of different planes
    */
@@ -80,10 +78,10 @@ public:
     if ( hit->isUsed() ) return m_nbVals[0];
     if ( 0 == --m_planeList[hit->planeCode()] ){
       --m_nbVals[0];
-      ++m_nbVals[1];
+      --m_nbVals[1];
     }else{
-      if( 0 == m_planeList[hit->planeCode()]){
-        --m_nbVals[1];
+      if( 1 == m_planeList[hit->planeCode()]){
+        ++m_nbVals[1];
       }
     }
     return m_nbVals[0];

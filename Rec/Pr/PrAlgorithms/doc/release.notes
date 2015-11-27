@@ -3,6 +3,10 @@
 ! Responsible : Yasmine Amhis
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
+
+! 2015-11-27 - Michel De Cian
+ - Fix bug in PrPlaneCounter
+
 ! 2015-11-25 - Renato Quagliani
  - Fix unusued private variables to suppress clang warnings                
 ! 2015-11-24 - Renato Quagliani
