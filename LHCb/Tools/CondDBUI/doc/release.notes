@@ -3,6 +3,9 @@
 ! package manager : Marco Clemencic
 ! ====================================================================
 
+! 2015-11-27 - Marco Clemencic
+ - Added missing bit of the fix.
+
 ! 2015-11-26 - Marco Clemencic
  - Fixed minor mistake in CondDBUI::Helpers that was triggering ROOT-7825.
 

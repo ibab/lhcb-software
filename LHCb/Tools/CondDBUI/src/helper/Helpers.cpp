@@ -152,7 +152,7 @@ namespace CondDBUI {
     }
     cool::IDatabasePtr Helpers::openDatabase(const cool::IDatabaseSvc &ptr, const cool::DatabaseId &dbId, bool readOnly ) {
       try {
-          return ptr->openDatabase(dbId, readOnly);
+          return ptr.openDatabase(dbId, readOnly);
       }
       catch(coral::ConnectionNotAvailableException&){
           // Will not do anything in c++
