@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingSelections v4r9 2015-11-27 ===============
+
 ! 2015-11-25 - Michael Kolpin
  - Removed PID Calib lines from StrippingCalib init
 
