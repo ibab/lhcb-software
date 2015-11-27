@@ -4,6 +4,8 @@
 ! Purpose     : Extra Info Tools
 !-----------------------------------------------------------------------------
 
+!====================== ExtraInfoTools v1r2 2015-11-27 =======================
+
 ! 2015-11-07 - Pieter David
  - ConeVariablesForEW: use LHCb::Particle::Range instead of LHCb::Particles to
    read from the TES (and range-based for loop to iterate over the container)
