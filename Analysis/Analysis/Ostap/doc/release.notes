@@ -8,19 +8,17 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
-! 2015-11-18  Ivan Polyakov 
+!=========================== Ostap v1r12 2015-11-27 ===========================
 
+! 2015-11-18  Ivan Polyakov
  - Fix deleting the weight directory for the PyTMVA.Trainer
 
-! 2015-11-04  Vanya BELYAEV- 
-
+! 2015-11-04  Vanya BELYAEV
  - Fix mix of varibales inn Voigt_pdf 
    remove "sigma" from BreitWigner_pdf 
 
 ! 2015-11-03 - Vanya Belyaev
-
  - fix in HepDATA formatting 
-
 
 !=========================== Ostap v1r11 2015-11-02 ===========================
 
