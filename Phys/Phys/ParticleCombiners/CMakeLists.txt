@@ -1,7 +1,7 @@
 ################################################################################
 # Package: ParticleCombiners
 ################################################################################
-gaudi_subdir(ParticleCombiners v1r4)
+gaudi_subdir(ParticleCombiners v1r5)
 
 gaudi_depends_on_subdirs(Phys/DaVinciKernel
                          Phys/LoKiArrayFunctors
