@@ -1,8 +1,13 @@
+
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingSelections
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2015-11-27- Yasmine amhis 
+ - Update related info : 
+   StrippingRD/StrippingBu2LLK
 
 !========================== StrippingSelections v4r9 2015-11-27 ===============
 
@@ -71,11 +76,9 @@
  - Updated RelatedInfo in StrippingRD/Stripping{B23Mu,B24p,BLV,D23Mu,Lc23Mu}Lines.py
  - Removed WS decay mode "[Lambda_b0 -> Lambda_c+ pi+]cc" for ControlCh. in BLVLines
 
-! 2015-11-16 - Alessandro Mordà
- - ZVTOP lines: changes in syntax for RelatedInfo
+! 2015-11-16 - Alessandro Mord? - ZVTOP lines: changes in syntax for RelatedInfo
  
-! 201511-16 - Alessandro Mordà
- - B2KstTaTau: Changes in decay descriptors, new syntax for RelatedInfo, new cuts for candidate multiplicity
+! 201511-16 - Alessandro Mord? - B2KstTaTau: Changes in decay descriptors, new syntax for RelatedInfo, new cuts for candidate multiplicity
 
 ! 2015-11-16 - Carlos Vazquez Sierra
  - Included a new B2CC builder, StrippingB2JpsiPi0_Run1.py, to not confuse this with StrippingB2JpsiPi0.py

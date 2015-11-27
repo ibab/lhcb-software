@@ -11,7 +11,7 @@ __all__ = ( 'Bu2LLKConf', 'default_config' )
   B --> ee phi versus B --> mumu phi
   Lb --> ee Lambda(*) versus Lb --> mumu Lambda(*)
   B --> gamma K* , B --> gamma phi  and  Lb --> gamma Lambda(*)   with converted photons
-  B --> emu K, B--> emu K* and B--> emu Phi with OS and SS leptons
+  B --> emu K, B--> emu K* and B--> emu Phi, Lb--> Lambda(*) emu with OS and SS leptons
 """
 
 default_config = {
@@ -38,6 +38,8 @@ default_config = {
         , 'Bu2mmKLinePrescale'  : 1
         , 'Bu2meKLinePrescale'  : 1
         , 'Bu2meKSSLinePrescale': 1
+       
+    
         , 'RelatedInfoTools'    : [
             {'Type'             : 'RelInfoVertexIsolation',
              'Location'         : 'VertexIsoInfo'},
@@ -48,29 +50,68 @@ default_config = {
              'Location'         : 'ConeIsoInfo'},
             {'Type'             : 'RelInfoConeVariables',
              'ConeAngle'        : 0.5,
-             'RecursionLevel'   : 2,
-             'Locations'        : {'Phys/StdAllLooseElectrons'    : ['ConeIsoInfoE1',  'ConeIsoInfoE2'],
-                                   'Phys/StdDiElectronFromTracks' : ['ConeIsoInfoE1',  'ConeIsoInfoE2'],
-                                   'Phys/StdAllLooseMuons'        : ['ConeIsoInfoM1',  'ConeIsoInfoM2'],
-                                   'Phys/StdAllLooseKaons'        : ['ConeIsoInfoK1',  'ConeIsoInfoK2'],
-                                   'Phys/StdAllLoosePions'        : ['ConeIsoInfoPi1', 'ConeIsoInfoPi2'],
-                                   'Phys/StdAllLooseProtons'      : 'ConeIsoInfoProton'}},
-            {'Type'             : 'RelInfoTrackIsolationBDT',
-             'RecursionLevel'   : 2,
-             'Locations'        : {'Phys/StdAllLooseElectrons'    : ['TrackIsoBDTInfoE1',  'TrackIsoBDTInfoE2'],
-                                   'Phys/StdDiElectronFromTracks' : ['TrackIsoBDTInfoE1',  'TrackIsoBDTInfoE2'],
-                                   'Phys/StdAllLooseMuons'        : ['TrackIsoBDTInfoM1',  'TrackIsoBDTInfoM2'],
-                                   'Phys/StdAllLooseKaons'        : ['TrackIsoBDTInfoK1',  'TrackIsoBDTInfoK2'],
-                                   'Phys/StdAllLoosePions'        : ['TrackIsoBDTInfoPi1', 'TrackIsoBDTInfoPi2'],
-                                   'Phys/StdAllLooseProtons'      : 'TrackIsoBDTInfoProton'}},
+             'IgnoreUnmatchedDescriptors': True, 
+             'DaughterLocations'   :{ 
+                    "[Beauty -> (X0-> X+ X-) (X0-> ^l+ l-)]CC ":"ConeIsoInfoL1",
+                    "[Beauty -> (X0-> X+ X-) (X0-> l+ ^l-)]CC ":"ConeIsoInfoL2",
+                    "[Beauty -> (X0-> ^X+ X-) (X0-> l+ l-)]CC ":"ConeIsoInfoH1",
+                    "[Beauty -> (X0-> X+ ^X-) (X0-> l+ l-)]CC ":"ConeIsoInfoH2",
+                    "[Beauty ->  ^X+  (X0-> l+ l-)]CC ":"ConeIsoInfoH",
+                    "[Beauty ->  X+  (X0-> ^l+ l-)]CC ":"ConeIsoInfoL1" ,
+                    "[Beauty ->  X+  (X0-> l+ ^l-)]CC ":"ConeIsoInfoL2",
+
+
+                    "[Beauty -> (X0-> X+ X-) (X0-> ^l+ l+)]CC ":"ConeIsoInfoL1",
+                    "[Beauty -> (X0-> X+ X-) (X0-> l+ ^l+)]CC ":"ConeIsoInfoL2",
+                    "[Beauty -> (X0-> ^X+ X-) (X0-> l+ l+)]CC ":"ConeIsoInfoH1",
+                    "[Beauty -> (X0-> X+ ^X-) (X0-> l+ l+)]CC ":"ConeIsoInfoH2",
+                    "[Beauty ->  ^X+  (X0-> l+ l+)]CC ":"ConeIsoInfoH",
+                    "[Beauty ->  X+  (X0-> ^l+ l+)]CC ":"ConeIsoInfoL1" ,
+                    "[Beauty ->  X+  (X0-> l+ ^l+)]CC ":"ConeIsoInfoL2" 
+
+                    }
+             },
+             {'Type'             : 'RelInfoTrackIsolationBDT',
+              'IgnoreUnmatchedDescriptors': True,
+              'DaughterLocations'   :{ 
+                        "[Beauty -> (X0-> X+ X-) (X0-> ^l+ l-)]CC ":"TrackIsoBDTInfoL1",
+                        "[Beauty -> (X0-> X+ X-) (X0-> l+ ^l-)]CC ":"TrackIsoBDTInfoL2",
+                        "[Beauty -> (X0-> ^X+ X-) (X0-> l+ l-)]CC ":"TrackIsoBDTInfoH1",
+                        "[Beauty -> (X0-> X+ ^X-) (X0-> l+ l-)]CC ":"TrackIsoBDTInfoH2",
+                        "[Beauty ->  ^X+  (X0-> l+ l-)]CC ":"TrackIsoBDTInfoH" ,
+                        "[Beauty ->  X+  (X0-> ^l+ l-)]CC ":"TrackIsoBDTInfoL1" ,
+                        "[Beauty ->  X+  (X0-> l+ ^l-)]CC ":"TrackIsoBDTInfoL2",
+ 
+                        "[Beauty -> (X0-> X+ X-) (X0-> ^l+ l+)]CC ":"TrackIsoBDTInfoL1",
+                        "[Beauty -> (X0-> X+ X-) (X0-> l+ ^l+)]CC ":"TrackIsoBDTInfoL2",
+                        "[Beauty -> (X0-> ^X+ X-) (X0-> l+ l+)]CC ":"TrackIsoBDTInfoH1",
+                        "[Beauty -> (X0-> X+ ^X-) (X0-> l+ l+)]CC ":"TrackIsoBDTInfoH2",
+                        "[Beauty ->  ^X+  (X0-> l+ l+)]CC ":"TrackIsoBDTInfoH" ,
+                        "[Beauty ->  X+  (X0-> ^l+ l+)]CC ":"TrackIsoBDTInfoL1" ,
+                        "[Beauty ->  X+  (X0-> l+ ^l+)]CC ":"TrackIsoBDTInfoL2"
+                        }
+              },
             {'Type'             : 'RelInfoBs2MuMuTrackIsolations',
-             'RecursionLevel'   : 2,
-             'Locations'        : {'Phys/StdAllLooseElectrons'    : ['TrackIsoBs2MMInfoE1',  'TrackIsoBs2MMInfoE2'],
-                                   'Phys/StdDiElectronFromTracks' : ['TrackIsoBs2MMInfoE1',  'TrackIsoBs2MMInfoE2'],
-                                   'Phys/StdAllLooseMuons'        : ['TrackIsoBs2MMInfoM1',  'TrackIsoBs2MMInfoM2'],
-                                   'Phys/StdAllLooseKaons'        : ['TrackIsoBs2MMInfoK1',  'TrackIsoBs2MMInfoK2'],
-                                   'Phys/StdAllLoosePions'        : ['TrackIsoBs2MMInfoPi1', 'TrackIsoBs2MMInfoPi2'],
-                                   'Phys/StdAllLooseProtons'      : 'TrackIsoBs2MMInfoProton'},
+             'IgnoreUnmatchedDescriptors': True,
+             'DaughterLocations'   :{ 
+                        "[Beauty -> (X0-> X+ X-) (X0-> ^l+ l-)]CC ":"TrackIsoBs2MMInfoL1",
+                        "[Beauty -> (X0-> X+ X-) (X0-> l+ ^l-)]CC ":"TrackIsoBs2MMInfoL2",
+                        "[Beauty -> (X0-> ^X+ X-) (X0-> l+ l-)]CC ":"TrackIsoBs2MMInfoH1",
+                        "[Beauty -> (X0-> X+ ^X-) (X0-> l+ l-)]CC ":"TrackIsoBs2MMInfoH2",
+                        "[Beauty ->  ^X+  (X0-> l+ l-)]CC ":"TrackIsoBs2MMInfoH" ,
+                        "[Beauty ->  X+  (X0-> ^l+ l-)]CC ":"TrackIsoBs2MMInfoL1" ,
+                        "[Beauty ->  X+  (X0-> l+ ^l-)]CC ":"TrackIsoBs2MMInfoL2" ,
+
+                        "[Beauty -> (X0-> X+ X-) (X0-> ^l+ l+)]CC ":"TrackIsoBs2MMInfoL1",
+                        "[Beauty -> (X0-> X+ X-) (X0-> l+ ^l+)]CC ":"TrackIsoBs2MMInfoL2",
+                        "[Beauty -> (X0-> ^X+ X-) (X0-> l+ l+)]CC ":"TrackIsoBs2MMInfoH1",
+                        "[Beauty -> (X0-> X+ ^X-) (X0-> l+ l+)]CC ":"TrackIsoBs2MMInfoH2",
+                        "[Beauty ->  ^X+  (X0-> l+ l+)]CC ":"TrackIsoBs2MMInfoH" ,
+                        "[Beauty ->  X+  (X0-> ^l+ l+)]CC ":"TrackIsoBs2MMInfoL1" ,
+                        "[Beauty ->  X+  (X0-> l+ ^l+)]CC ":"TrackIsoBs2MMInfoL2"
+
+                        },
+             
              'tracktype'        : 3,
              'angle'            : 0.27,
              'fc'               : 0.60,
@@ -142,17 +183,17 @@ class Bu2LLKConf(LineBuilder) :
         from StandardParticles import StdLooseLambdaLL as LambdasLL
         from StandardParticles import StdLooseLambdaDD as LambdasDD  
         from StandardParticles import StdLooseLambdastar2pK as Lambdastars  
-        # 1 : Make high IP, Pt kaons, K*'s and Phi's
+        # 1 : Make high IP, Pt kaons, K*'s and Phi's add Lambda(*) and Ks
         SelKaons  = self._filterHadron( name   = "KaonsFor" + self._name,
-                                        sel    = Kaons # "Phys/StdLooseKaons/Particles",
+                                        sel    = Kaons 
                                         ,params = config )
 
         SelKstars = self._filterHadron( name   = "KstarsFor"+ self._name,
-                                        sel    =  Kstars # "Phys/StdLooseKstar2Kpi/Particles",
+                                        sel    =  Kstars 
                                         ,params = config )
 
         SelPhis   = self._filterHadron( name = "PhisFor" + self._name,
-                                        sel  =  Phis # "Phys/StdLoosePhi3KK/Particles",
+                                        sel  =  Phis
                                         ,params = config )
    
         SelKshortsLL = self._filterHadron( name   = "KshortsLLFor"+ self._name,
@@ -422,9 +463,9 @@ class Bu2LLKConf(LineBuilder) :
                  "& (BPVDIRA> %(BDIRA)s ) "\
                  "& (BPVVDCHI2> %(BFlightCHI2)s ))" % params
         
-        _Decays =  [ "[ B0 -> gamma K*(892)0 ]cc",
-                     "[ B_s0 -> gamma phi(1020)]cc", 
-                     "[ Lambda_b0 -> gamma  Lambda0]cc",                   
+        _Decays =  [ "[ B0  -> gamma K*(892)0 ]cc",
+                     "[ B_s0  -> gamma phi(1020)]cc", 
+                     "[ Lambda_b0  -> gamma  Lambda0]cc",                   
                      "[ Lambda_b0 -> gamma Lambda(1520)0]cc" ]
 
         
