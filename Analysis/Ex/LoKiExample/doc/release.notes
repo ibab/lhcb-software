@@ -7,6 +7,8 @@
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
 
+!======================== LoKiExample v8r10 2015-11-27 ========================
+
 ! 2015-11-01 - Gerhard Raven
  - replace endreq with endmsg
  - avoid comparing pointers to 0

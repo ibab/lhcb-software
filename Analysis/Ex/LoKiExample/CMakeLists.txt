@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LoKiExample
 ################################################################################
-gaudi_subdir(LoKiExample v8r9)
+gaudi_subdir(LoKiExample v8r10)
 
 gaudi_depends_on_subdirs(Kernel/LHCbMath
                          Phys/LoKi
