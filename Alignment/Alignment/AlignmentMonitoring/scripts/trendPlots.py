@@ -1,38 +1,39 @@
 #!/usr/bin/env python
 
-import os
 AligWork_dir = '/group/online/AligWork/'
 alignment_dir = '/group/online/alignment/'
-this_files_dir = os.path.dirname(os.path.realpath(__file__))
-references = os.path.join(this_files_dir, '../files/ConstantsReferences.txt')
+references = '../files/ConstantsReferences.txt'
 
+#alignment_dir = 'alignment_miei'
 
 ##########################
 ###   Options parser   ###
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description ="Macro to make trend plots alignments")
-    parser.add_argument('-a','--alignables', help='eg. VeloLeft.Tx Module01.Rz, for having all 6 dof for an alignable: VeloLeft.*', default= ['VeloLeft.*'],nargs='+')
-    parser.add_argument('-r','--runs', help='run range to plot, default is all', nargs=2, type=int,default=[0, 1e20])
-    parser.add_argument('--activity', help='eg. Velo, Tracker ...', default= 'Velo')
+    parser.add_argument('-a','--alignables', help='eg. VeloLeft.Tx Module01.Rz, for having all 6 dof for an alignable: VeloLeft.*', default= ['VeloLeft.Tx', 'VeloLeft.Ty'],nargs='+')
+    parser.add_argument('-r','--runs', help='run numbers, default is all the availables', nargs=2, type=int,default=[0, 1e20])
+    parser.add_argument('--activity', help='choose between Velo, Tracker, Muon, default is Velo', choices = ['Velo', 'Tracker', 'Muon'] ,default= 'Velo')
     parser.add_argument('-o','--outName',help='output file name without extension, make both pdf and directory', default='trendPlots')
+    parser.add_argument('-s', '--samePlot', help='Plot all the alignables in the same plot', action='store_true')
+    parser.add_argument('-u', '--diffUpdate', help='Plot difference wrt update', action='store_true')
+    parser.add_argument('-n', '--noUpdate', help='Do not plot with empty dots alignments that did not trigger update', action='store_true')
+    parser.add_argument('-p', '--projection', help='Make histogram with projection instead of trend', action='store_true')
+    parser.add_argument('-l', '--labelAU', help='Use label in AU as x axis', action='store_true')
+    parser.add_argument('-y', '--freeY', help='Leave Y axis range free, implies -l', action='store_true') # not yet implemented
+    parser.add_argument('-c', '--canvasSize', help='Canvas dimensions in pixels, default is 900, 500', nargs=2, type=int, default=[900, 500]) # not yet implemented
     args = parser.parse_args()
-
+    if args.freeY: args.labelAU = True
+    if args.activity == 'Muon': args.noUpdate = True
+        
 ##########################
 
-import  re
+import os, sys, re, math
 import ROOT as r
 from AlignmentMonitoring.MultiPlot import MultiPlot
 
-
-#r.gROOT.ProcessLine('.L LHCbStyle.C')
-r.gStyle.SetTitleOffset(0.7,"y")
-r.gStyle.SetTitleOffset(-0.5,"x")
-r.gStyle.SetLabelSize(0,"x")
-r.gStyle.SetTitleSize(0.06,"x")
-r.gStyle.SetTitleSize(0.06,"y")
-r.gStyle.SetNdivisions(505,"x");
-r.gStyle.SetNdivisions(510,"y");
+import AlignmentMonitoring.LHCbStyle # process macro that sets LHCb style
+r.gStyle.SetTitleOffset(0.7,"Y")
 
 r.gROOT.SetBatch(True)
 
@@ -107,6 +108,8 @@ def getAllConstants(runs, activity):
         detectors = ['Velo']
     elif activity == 'Tracker':
         detectors = ['TT', 'IT', 'OT']
+    elif activity == 'Muon':
+        detectors = ['Muon']
     for run in runs:
         dictConstants = {}    
         for detector in detectors:
@@ -115,15 +118,19 @@ def getAllConstants(runs, activity):
                 dictConstants.update(readXML(os.path.join(directory, xml_file)))
         all_constants.append((run, dictConstants))
     return sorted(all_constants, key=lambda x: x[0])
+    
 
 
 def getConstants(dof, alignable, all_constants):
     '''
-    given all_constatns prodced with previous function
+    given all_constatns produced with previous function
     return list of pairs (runNumber, constant)
     '''
     dofs = ['Tx', 'Ty', 'Tz', 'Rx', 'Ry', 'Rz']
-    return [(run, dictConstants[alignable][dofs.index(dof)]) for run, dictConstants in all_constants]
+    try:
+        return [(run, dictConstants[alignable][dofs.index(dof)]) for run, dictConstants in all_constants]
+    except KeyError as e:
+        raise KeyError('Cannot find alignable "{0}", are you sure you selected the correct activity?'.format(e.message))
 
 
 def subtractMean(values):
@@ -133,6 +140,20 @@ def subtractMean(values):
     runs, constants = [i[0] for i in values],  [i[1] for i in values]
     mean_const = float(sum(constants))/len(constants)
     return [(run, const-mean_const) for run, const in zip(runs, constants)]
+
+
+
+def diffWRTUpdate(values, runsUpdated):
+    valuesUsed = [[i,j] for i,j in values]
+    currentValue = valuesUsed[0]
+    for i in range(len(valuesUsed)):
+        tmp = valuesUsed[i][:]
+        valuesUsed[i][1] = currentValue[1]
+        try:
+            if valuesUsed[i][0] in runsUpdated: currentValue = tmp
+        except IndexError:
+            pass
+    return [(i[0], i[1]-j[1]) for i, j in zip(values, valuesUsed)]
 
 
 def makeHisto(name, values, title='', y_errors=None,):
@@ -151,6 +172,21 @@ def makeHisto(name, values, title='', y_errors=None,):
     return histo.Clone(name)
 
 
+def makeHistoProjection(name, values, title = None, range = [None, None], nBins = None):
+    '''
+    value is a list of pairs (runNumber, constant)
+    '''
+    values = [i[1] for i in values]
+    if range[0] == None: range[0] = min(values)
+    if range[1] == None: range[1] = max(values)+1
+    if nBins == None: nBins = int(2*math.sqrt(len(values)))
+    if title == None: title = name
+    histo = r.TH1D(name+'_tmp', title, nBins, *range)
+    for i in values:
+        histo.Fill(i)
+    return histo.Clone(name)
+
+
 def addXLabels(mp, maxim, runs):
     text = r.TText()
     text.SetTextAlign(32)
@@ -164,8 +200,24 @@ def addXLabels(mp, maxim, runs):
         text.DrawText(xmid,-1.2*maxim,str(int(fillID)))
 
                
-def drawPlot(dof, alignable):
+def drawPlot(aligndofs, diffUpdate = False, noUpdate = False, labelAU = False, freeY = False, isProjection = False):
+    '''
+    aligndof is a list of alignables and dof eg [VeloLeft.Tx, ]
+    '''
+
+    if not labelAU and not isProjection:
+        r.gStyle.SetLabelSize(0,"x")
+        r.gStyle.SetTitleOffset(1.1,"X")
+    else:
+        r.gStyle.SetTitleOffset(1,"X")
+
+    if isinstance(aligndofs, basestring):
+        aligndofs = [aligndofs]
+
+
+    alignable, dof = aligndofs[0].split('.')
     line, maxim = getLimits(dof, alignable)
+    
     if 'T' in dof:
         if maxim < 1e-1:
             mult = 1000
@@ -184,22 +236,52 @@ def drawPlot(dof, alignable):
             mult = 1
             unit = 'rad'
     line, maxim = line*mult, maxim*mult
-    values = subtractMean(getConstants(dof, alignable, allConstants))
-    values = [(i,j*mult) for i,j in values]
-    valuesUpdated = [[i,j] for i,j in values]
-    for value in valuesUpdated:
-        if value[0] not in runsUpdated: value[1] = None
-    histo = makeHisto(dof, values)
-    histoUpdated = makeHisto(dof, valuesUpdated)          
-    mp = MultiPlot('VeloHalf', title = 'Trend plot {alignable} {dof};Run number;Variation [{unit}]'.format(**locals()),
+
+    lines = [0,-1*line,line] if diffUpdate else [0]
+    if isProjection:
+        vlines, hlines = lines, []
+        vlines_styles, hlines_styles = {i : (1 if i == 0 else 7) for i in lines}, {}
+        rangeY = (None, None)
+        xLabel = ('Variation' if diffUpdate else 'Value') + ' [{0}]'.format(unit)
+        yLabel = 'Entries'
+    else:
+        vlines, hlines = [], lines
+        vlines_styles, hlines_styles = {},  {i : (1 if i == 0 else 7) for i in lines}
+        rangeY = (None, None) if freeY else (-1*maxim, maxim)
+        xLabel = 'Alignment number [AU]' if labelAU else 'Run number'
+        yLabel = ('Variation' if diffUpdate else 'Value') + ' [{0}]'.format(unit)
+    
+
+    mp = MultiPlot('VeloHalf', title = 'Trend plot {alignable} {dof};{xLabel};{yLabel}'.format(**locals()),
     kind='h', legMarker='p',
-    hlines=[0,-1*line,line],
-    rangeY = (-1*maxim, maxim),
-    drawLegend=False)
-    mp.Add(histo,style=-1)
-    mp.Add(histoUpdated,style=1)
-    mp.Draw()
-    addXLabels(mp, maxim, [i[0] for i in values])
+    hlines=hlines, vlines = vlines,
+    vlines_styles = vlines_styles, hlines_styles = hlines_styles,
+    rangeY = rangeY,
+    drawLegend=len(aligndofs) != 1)
+
+    for style, aligndof in enumerate(aligndofs, 1):
+        alignable, dof = aligndof.split('.')
+        if diffUpdate:
+            values = diffWRTUpdate(getConstants(dof, alignable, allConstants), runsUpdated)
+        else:
+            values = subtractMean(getConstants(dof, alignable, allConstants))
+        values = [(i,j*mult) for i,j in values]
+        valuesUpdated = [[i,j] for i,j in values]
+        if not noUpdate:
+            for value in valuesUpdated:
+                if value[0] not in runsUpdated: value[1] = None
+        if isProjection:
+            histo = makeHistoProjection(dof, values, range=(-1*maxim, maxim))
+            mp.Add(histo, '{0} {1}'.format(alignable, dof) ,style=style)
+            mp.Draw()
+        else:
+            histo = makeHisto(dof, values)
+            histoUpdated = makeHisto(dof, valuesUpdated)          
+            mp.Add(histo,style=-1*style)
+            mp.Add(histoUpdated, '{0} {1}'.format(alignable, dof) ,style=style)
+            mp.Draw()
+            if not labelAU:
+                addXLabels(mp, maxim, [i[0] for i in values])
     return mp
     
   
@@ -210,7 +292,7 @@ if __name__ == '__main__':
     runs = getListRuns(args.activity)
     runs = [i for i in runs if i >= args.runs[0] and i <= args.runs[1]]
     runsUpdated = getListRunsUpdated(args.activity)
-    runsUpdated = [i for i in runsUpdated if i in runs]
+    runsUpdated = [i for i in runsUpdated if i in runs]  
 
     outFile_name = args.outName+'.pdf'
     outDir = args.outName
@@ -218,17 +300,23 @@ if __name__ == '__main__':
 
     allConstants = getAllConstants(runs, args.activity)
 
-    c = r.TCanvas('c', 'c')
+    c = r.TCanvas('c', 'c', *args.canvasSize)
     c.Print(outFile_name+'[')
 
-    for align in args.alignables:
-        alignable, dof = align.split('.')
-        dofs = ['Tx', 'Ty', 'Tz', 'Rx', 'Ry', 'Rz'] if dof == '*' else [dof]
+    if args.samePlot:
+        mp=drawPlot(args.alignables, args.diffUpdate, args.noUpdate, args.labelAU, args.freeY, args.projection)
+        c.Print(outFile_name)
+        c.Print(os.path.join(outDir,'{0}_{1}.pdf'.format(*args.alignables[0].split('.'))))
 
-        for dof in dofs:
-            mp=drawPlot(dof, alignable)
-            c.Print(outFile_name)
-            c.Print(os.path.join(outDir,'{alignable}_{dof}.pdf'.format(**locals())))
+    else:
+        for align in args.alignables:
+            alignable, dof = align.split('.')
+            dofs = ['Tx', 'Ty', 'Tz', 'Rx', 'Ry', 'Rz'] if dof == '*' else [dof]
+
+            for dof in dofs:
+                mp=drawPlot('{0}.{1}'.format(alignable, dof), args.diffUpdate, args.noUpdate, args.labelAU, args.freeY, args.projection)
+                c.Print(outFile_name)
+                c.Print(os.path.join(outDir,'{alignable}_{dof}.pdf'.format(**locals())))
 
     c.Print(outFile_name+']')
 

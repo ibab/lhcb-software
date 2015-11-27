@@ -4,6 +4,9 @@
 !------------------------------------------------------------------------------
 
 ! 2015-11-02 - Giulio Dujany
+ - new options for script trendPots.py
+
+! 2015-11-02 - Giulio Dujany
  - Turned on automatic Tracker alignment monitoring 
 
 ! 2015-10-31 - Maurizio Martinelli
