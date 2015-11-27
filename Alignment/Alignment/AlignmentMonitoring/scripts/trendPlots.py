@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
+import os, sys, re, math
+
 AligWork_dir = '/group/online/AligWork/'
 alignment_dir = '/group/online/alignment/'
-references = '../files/ConstantsReferences.txt'
+references = os.path.expandvars('$ALIGNMENTMONITORINGROOT/files/ConstantsReferences.txt')
 
 #alignment_dir = 'alignment_miei'
 
@@ -28,7 +30,6 @@ if __name__ == '__main__':
         
 ##########################
 
-import os, sys, re, math
 import ROOT as r
 from AlignmentMonitoring.MultiPlot import MultiPlot
 
