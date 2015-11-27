@@ -1,3 +1,7 @@
+2015-11-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbUtils: added "which" function (to find a file in $PATH)
+
 2015-11-24  Ben Couturier  <ben.couturier@cern.ch>
 
 	* cmt/requirements: LBCORE-978: Release of LbScripts v8r4p3
@@ -12,7 +16,7 @@
 
 2015-10-08  Ben Couturier  <ben.couturier@cern.ch>
 
-	* scripts/lcg-clang-37: added wrappers for clang 3.7 
+	* scripts/lcg-clang-37: added wrappers for clang 3.7
 
 2015-09-01  Ben Couturier  <ben.couturier@cern.ch>
 

@@ -1,4 +1,5 @@
 import re
+import os
 
 def stringVersion2Tuple(strver):
     """ convert string into a tuple of number and strings """
@@ -32,3 +33,18 @@ def createProjectMakefile(dest, overwrite = False):
         f = open(dest, "w")
         f.write("include ${LBUTILSROOT}/data/Makefile\n")
         f.close()
+
+
+def which(cmd, path = None):
+    """
+    Locate a file in the path.
+    """
+    if path is None:
+        path = os.environ["PATH"]
+    if type(path) is str:
+        path = path.split(os.path.pathsep)
+    for p in path:
+        fp = os.path.join(p, cmd)
+        if os.path.exists(fp):
+            return fp
+    return None

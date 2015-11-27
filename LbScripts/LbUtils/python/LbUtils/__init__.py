@@ -28,9 +28,9 @@ try:
 except ImportError:
     pass
 
-
 from Common import createProjectMakefile
 from Common import stringVersion2Tuple
 from Common import versionSort
+from Common import which
 
 from Thread import LockOnPrintThread

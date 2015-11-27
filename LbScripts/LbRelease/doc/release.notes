@@ -1,3 +1,7 @@
+2015-11-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* LHCbDoc.py: use the "which" function from LbUtils
+
 2015-11-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* lb-deployment-checklist: changed rpm release instructions (see LBCORE-982)

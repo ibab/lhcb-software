@@ -11,6 +11,7 @@ from subprocess import Popen, PIPE, call
 from stat import ST_SIZE
 from LbUtils.afs.directory import isAFSDir, isMountPoint
 from LbConfiguration.External import doxygen_version as doxygen_default_version
+from LbUtils import which as _which
 
 import __builtin__
 if "set" not in dir(__builtin__):
@@ -61,20 +62,6 @@ def _diskUsage(root):
             size += os.stat(os.path.join(dirpath, f))[ST_SIZE]
     return size
 
-
-def _which(cmd, path = None):
-    """
-    Locate a file in the path.
-    """
-    if path is None:
-        path = os.environ["PATH"]
-    if type(path) is str:
-        path = path.split(os.path.pathsep)
-    for p in path:
-        fp = os.path.join(p, cmd)
-        if os.path.exists(fp):
-            return fp
-    return None
 
 _has_AFS = bool(_which("afs_admin"))
 _has_kinit = bool(_which('kinit'))
