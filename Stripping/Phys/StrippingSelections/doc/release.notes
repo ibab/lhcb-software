@@ -5,7 +5,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
-! 2015-11-27- Yasmine amhis 
+
+! 2015-11-27 - Yasmine Amhis
+ - Uncomment related info config. 
+   StrippingRD/StrippingBu2LLK 
+
+! 2015-11-27 - Yasmine Amhis 
  - Update related info : 
    StrippingRD/StrippingBu2LLK
 
