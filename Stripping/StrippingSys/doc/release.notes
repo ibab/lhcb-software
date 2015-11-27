@@ -3,6 +3,214 @@ Package     : StrippingSys
 Package Coordinator : Andrea.Contu@cern.ch, Ricardo.Vazquez.Gomez@cern.ch
 Purpose     : LHCb stripping packages
 
+!========================= StrippingSys v9r12 2015-11-27 ===========================
+Phys/CommonParticles
+- Change the chi2 and ghostprob cut to Reco15 values for Taus and Dipion.
+
+Phys/CommonParticlesArchive
+- Created archives for S24 and S21r0,1p1 with the correct versions of chi2 and ghostprob for Reco15 and Reco14, respectively
+
+Phys/IsolationTools
+ - null pointer check of bestVertex result in RelInfoBs2MuMuTrackIsolations
+
+Phys/StrippingConf
+ - Add "IgnoreUnmatchedDescriptors" key to RelatedInfoTools dictionary. Setting it to "true"
+   will make AddRelatedInfo silently ignore the descriptors in DaughterLocations
+   which do not match any daughter particles (rather than stopping with FAILURE).
+
+Phys/StrippingArchive
+ - Updated test references
+ - Remove strippings with olf relinfo convention from tests
+ - Fix to S24 StrippingCalib init
+ - Add Stripping24 to the archive
+
+Phys/StrippingSettings
+ - Updated dbase for S24
+ - Update dbase for S24
+ - Removed PID Calib lines from S24 LineConfigDictionary_Calib
+ - Fix inconsistency in raw banks for LowMult lines in s23r1
+ - Updated S24 dbase
+ - update Charm s24 LineConfig with StrippingDstarD0ToHHPi0.py
+ - Updated S24 dbase
+ - Updated Stripping24/LineConfigDictionaries_Charmless.py 
+   to include changes to StrippingB2KShh dictionary 
+ - HLT syntax fix in Bs2GammaGamma dictionaries
+ - SL S24 Dictionaries 
+ - Add dbase for stripping24
+ - RD S24 Dictionaries with Tau23Mu fix.
+ - Updated RD S24 Dictionaries - Still missing imminent Tau23Mu RelInfo lines fix.
+ - update BandQ s24 LineConfig for PromptCharm.py
+ - Updated S24 dictionary for TrackEffD0ToKPi lines
+ - Update QEE S24 configs
+ - Added RD S24 Dictionaries
+ - update BandQ s24 LineConfig
+ - update Charm s24 LineConfig with D2XMuMuSS
+ - update B2OC LineConfig for S24
+ - update Charm s24 LineConfig with D2XMuMuSS
+ - Update of BandQ s24 LineConfig
+ - Changed track chi^2 cut in StrippingB2KShhLine and StrippingLb2V0hhLine within BnoC line config from 3.0 to 4.0 
+ - Moved StrippingBetaSBs2PhiPhiLine and StrippingBetaSBs2PhiPhiUpLine to
+   BhadronCompleteEvent in BnoC
+ - update Charm s24 LineConfig
+ - Update of BnoC lines for S24
+ - B2OC S24 LineConfig
+ - update Charm s24 LineConfig
+ - Added folders for S21rXp1
+ - B2CC dictionaries updated
+ - Added S24 folder
+
+Phys/StrippingSelections
+ - Removed PID Calib lines from StrippingCalib init
+ - added 2 stripping lines to the B2OC module:
+   StrippingB02DsstarPiDsstar2DGammaD2HHHBeauty2CharmLine
+   StrippingB02DsstarKDsstar2DGammaD2HHHBeauty2CharmLine
+ - update StrippingBnoC/StrippingXb23ph.py
+ - Made defualt config of StrippingBnoC/StrippingB2KShh consistent with strippingsettings
+ - Updated StrippingBnoC/StrippingB2KShh using the correct RelatedInfo tools framework
+ - fixed semileptonic __init__ to not look for previously removed lines
+ - Fixed charge symmetric final state duplicates in B2XLL
+ - Fixed Hlt syntax in Bs2GammaGamma
+ - Updated StrippingCharm/StrippingDstD02xx.py
+ - Added scripts for testing correlations between lines to tests/liaisons/BnoC
+ - Updated tests for coordinators
+ - Run1 test scripts now get CommonParticles from Archive
+ - Updated RelatedInfo for StrippingTau23Mu
+ - Commented relinfo for StrippingBu2LLK
+ - Changed Cuts on TrChi2DOF and PGhost from 3.0 and 0.3 to 4.0 and 0.4 in StrippingRD/Stripping{B23Mu,B24p,BLV,D23Mu,Lc23Mu}Lines.py
+ - Bugfix in StrippingRD/StrippingBLVLines.py
+ - decreased rate of StrippingD2HMuNu.py
+ - Added StrippingD2HMuNu.py
+ - Update to StrippingTrackEffD0ToKPi
+ - Modify StrippingTaggedJets to use LoKi::BDTTag instead of LoKi__BDTTag
+ - Updated StrippingBandQ/StrippingLb2EtacKp.py
+ - Updated RelatedInfo in StrippingRD/Stripping{B23Mu,B24p,BLV,D23Mu,Lc23Mu}Lines.py
+ - Removed WS decay mode "[Lambda_b0 -> Lambda_c+ pi+]cc" for ControlCh. in BLVLines
+ - ZVTOP lines: changes in syntax for RelatedInfo
+ - B2KstTaTau: Changes in decay descriptors, new syntax for RelatedInfo, new cuts for candidate multiplicity
+ - Included a new B2CC builder, StrippingB2JpsiPi0_Run1.py, to not confuse this with StrippingB2JpsiPi0.py
+ - Depreciated QEE/StrippingJets
+ - Added Related info and 6 new calibration channels to D2XMuMuSS
+ - Added Related info to D04Body in CharmFromBSemi
+ - Tuned QEE/Ditau for S24.
+   Note: Used head of Phys/RelatedInfoTools to get `IgnoreUnmatchedDescriptors`
+ - Add new lines to B2OC
+ - Corrected default_config for StrippingBnoC/StrippingB2Kpi0
+ - Removed track chi2 cut for StrippingBandQ/StrippingChiCJpsiGammaConv.py
+ - Removed track chi2 cut for StrippingBnoC/StrippingB2pphh.py
+ - Updated B2KLine, B2KstarLine, and B2PhiLine in StrippingB2XuMuNu.py
+ - Added Muon and Kaon fake lines for B2KMuNu to StrippingB2XuMuNu.py
+ - Update on StrippingHb2V0V0h.py including HLT1/2 requirements and track-quality cuts
+ - Added stripping line for B+->Kst(892)+ hh' and B0->Kst(892)0hh':
+   . StrippingBnoC/StrippingB2Ksthh.py
+   . StrippingBnoC/StrippingBu2Ksthh.py
+ - Update StrippingBeauty2Charm.py
+ - Added Beauty2XGammaNoBias
+ - Adjustments to Lb2L0Gamma RelatedInfo
+ - Adjustments to Beauty2XGamma Trigger Dictionaries
+ - Adjustments to Bs2MuMu dictionaries
+ - Added script to collect a specific subset of dictionaries from a WG
+ - Added stripping line for charmonium to p pbar pi pi
+   . StrippingBandQ/StrippingCcbar2PPPiPi.py
+ - Removed track chi2 cut for Bc2JpsiHBDT
+ - Removed ALLSAMEPV requirement on StrippingTaggedJets
+ - Adjusted chi2/ndof cuts for B2HHBDT and Hb2Charged2BodyLines
+ - fixed semileptonic __init__ to not look for previously removed lines
+ - Added changes in default_config as well
+ - Release chi2/DoF cut for tracks in StrippingBnoC/StrippingBc2hhh_BnoC.py, StrippingBu2hhh.py
+ - Changed track-quality cuts in StrippingCharm:
+    DstarD2HHHH,DstarD2KSHHPi0,DstarD2XGamma,D2HHHKs,D2HHHPi0
+ - Added B2KShhh lines in StrippingBnoC
+ - add StrippingBnoC/StrippingXb23ph.py
+ - Changed track-quality cuts in StrippingBnoC/StrippingB2pphh.py
+ - Removed track-quality cuts from StrippingBandQ/StrippingXibc
+ - Removed track-chi2 cuts from StrippingBandQ/StrippingCC2DD
+ - Fixed import CombineParticles issue for StrippingBnoC/StrippingBs2Kst_0Kst_0.py
+ - Test & include QEE/StrippingTaggedJets
+ - Depreciated QEE/StrippingHighPtTopoJets
+ - Added Mis-ID line for B23Mu
+ - Added StrippingTaggedJets
+ - Changed WG setting for StrippingBnoC/StrippingB2Kpi0.py from 'Charmless' to 'BnoC'
+ - Moved StrippingD0ForBXX.py and StrippingJPsiForSL.py from SL to Calib
+ - Update StrippingBnoC/StrippingB2pphh.py lines
+ - Fixed NBody-import issue for StrippingBandQ/StrippingLb2EtacKp.py
+ - Update to lines in StrippingBeauty2Charm.py
+ - Added new lines B2Kpi0 and B2K0pi0 in StrippingBnoC/StrippingB2Kpi0.py
+ - correspondingly updated StrippingBnoC/__init__.py
+ - Add TISTOS and HLT filtering requirements to B2DMuNuX
+ - Implement a few suggestions from Steve Blusk on B2DMuNuX
+    - Tighter mass windows for the Xic0/Omegac -> pKKpi
+    - Looser kaon momentum cut
+    - Fix the fact that Xic0 wasn't getting the DeltaZ cut
+ - Remove a test module that I left in StrippingCalib/__init__.py
+ - Added the stripping line: B02DstDD02K3PiBeauty2CharmLine to StrippingB2OC/
+   ,StrippingB2OC/StrippingBeauty2Charm.py & StrippingB2OC/Beauty2Charm_B2DXBuilder.py are updated accordingly
+ - QEE S24 Maintenance
+    - Fix import statements to use `ConfigurableGenerators` instead of `Configurables` wherever applicable.
+    - Scan usage of HLT to conform with Run-II name changes.
+    - Refactors several hard-coded value to default_config (especially `RequiredRawEvents`).
+    - Clean more hard-coded units.
+    - Fix regex typo in InclbJets.
+ - HighPtTopoJets
+    - Fix Line naming typo.
+    - Prepare Hlt requirement fix (for future Phys/TopologicalTools v1r1+)
+ - Updated RelatedInfo syntax for StrippingBs2PhiPhi lines
+ - Updated test script for BnoC liaison
+ - Added CharmToBeSwum stream to the users and liaisons tests for Incremental stripping scripts
+ - Edited cone variables for StrippingBnoC/StrippingBu2hhh.py amd StrippingBnoC/StrippingBc2hhh_BnoC.py
+ - Added test scripts for Run1 incremental
+ - Small change of names for StrippingDstarPromptWithD02HHMuMu.py and StrippingDstarPromptWithD02HHHH.py
+ - Updates StrippingDstarPromptWithD02HHMuMu.py and StrippingDstarPromptWithD02HHHH.py
+ - Updating lines in StrippingBeauty2Charm.py
+ - Updates to StrippingTrackEffD0ToKPi.py
+ - Added Sigma3Mu and Sigma3MuDownstream lines to RareStrange
+ - Fix to relinfo for DstarD02xx, DstarPromptWithD02HHLL and RareStrange
+ - Fixed TestMyWGfromSettings.py
+ - Updated TestMyWGfromSettings.py
+ - Updated some B2CC lines (minor modifications on dictionaries) and added B2CC tests scripts to tests/liaisons
+ - Updated RelatedInfo for StrippingBd2eeKstarBDT
+ - StrippingB2DMuForTauMu.py updated
+   New lines for D0 -> K pi pi pi, D+ -> K pi pi, Ds -> K K pi, /\c -> p k pi, matching fake lines
+   All selection requirements aligned with 2015 trigger
+ - StrippingCharm/StrippingPromptCharm.py updated
+   New line for Xic** -> Lc K pi
+   Pi0 veto added to Xic' -> Xic gamma and Omegac** -> Xic' K
+ - Updated StrippingDstarD02xx to be compatible with RelatedInfoTool and swith to ConfigurableGenerators
+ - Update RelatedInfoTool configuration in StrippingQEE/StrippingDisplVertices.py
+ - Fix RelatedInfoTool in StrippingRD/StrippingBs2st2KKMuX.py
+ - Removed MINIPCHI2 cut on D candidates in CharmFromBSemi
+ - Fixed a bug in DstarD2KSHHPi0, DstarD2XGamma lines (wrong soft pion container)
+ - Lower the gamma pt cut in the B2OC module from 1200MeV to 800MeV. It was
+   previously increased to help with rententions in D* modes, but now with a
+   better selection using a delta(m) cut, this is no longer neccesary.
+ - Add a B2OC 'liasion' test for for running over an MC sample.
+ - Fixed NBody-import issue for StrippingBnoC/StrippingB2pphh.py
+ - Chages to to the Bc->DD lines in the B2OC module.
+  + Add missing Bc+ -> D+ D*0 modes
+  + Remove lines with K*'s as these had very poor rates and high overlap with
+    other modes
+  + Change D->KHH to D->HHH to pick up the 3pi mode
+  + Improvements to the cuts for D* candidates, adding a delta(M) cut and thus
+    loosening off the D* mass window cut.
+  + Add D->HHpi0 modes, with tigher pt>1GeV cut on the pi0.
+ - Change StrippingLb2EtacKp selection
+ - Fixed new cone variables format for StrippingBnoC/StrippingBu2hhh.py
+ - Fixed new cone variables format for StrippingBnoC/StrippingBc2hhh_BnoC.py
+ - Added few more cone variables by the same occasion
+ - Fixed NBody-import issue for DstarD2HHHH, DstarD2KSHHPi0, DstarD2XGamma,
+     D2HHHKs, D2HHHPi0
+ - Fixed NBody-import issue for Beauty2XGamma
+ - Added Run II trigger lines to Beauty2XGamma dictionary for S24
+ - Fixed NBody-import issue for StrippingB2OC
+   Beauty2Charm_DBuilder, Beauty2Charm_HHHBuilder and
+   Beauty2Charm_Lb2XBuilder
+ - Fixed NBody-import issue for CharmFromBSemi
+ - Fixed NBody-import issue for Bs2EtacPhiBDT
+ - Added a Line to StrippingD2PiPi0
+ - Add StrippingLb2EtacKp to BandQ
+ - Add StrippingB2JpsiHH to B2CC
+ - Updates to StrippingBs2GammaGamma to reflect 2015 trigger changes.
+
+
 !========================= StrippingSys v9r11p2 2015-10-22 ===========================
 Phys/StrippingSelections 
  - Updated test scripts

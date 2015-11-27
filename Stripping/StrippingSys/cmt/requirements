@@ -1,35 +1,34 @@
 package  StrippingSys
-version  v9r11p2
+version  v9r12
 
 branches doc cmt tests
 
 ####################################################################
 # Framework
-use  CommonParticles             v8r22    Phys   # Patrick Koppenburg, WGs
-use  CommonParticlesArchive      v1r6     Phys   # Stripping coordinators
+use  CommonParticles             v8r23    Phys   # Patrick Koppenburg, WGs
+use  CommonParticlesArchive      v1r7     Phys   # Stripping coordinators
 use  StandardParticles           v2r3     Phys   # Juan Palacios
 
 ####################################################################
 # Internal Packages
 use  DisplVertices 		 v7r24	  Phys	 # Neal Gauvin
 use  IncTopoVert                 v1r6     Phys   # Mathieu Perrin-Terrin
-use  IsolationTools              v1r6     Phys   # Alex Shires
+use  IsolationTools              v1r7     Phys   # Alex Shires
 
 ####################################################################
 # Stripping packages
 use  StrippingAlgs               v1r15    Phys   # Anton Poluektov
-use  StrippingArchive            v1r34    Phys   # Stripping coordinators
-use  StrippingConf               v4r20    Phys   # Anton Poluektov
+use  StrippingArchive            v1r35    Phys   # Stripping Coordinators
+use  StrippingConf               v4r21    Phys   # Anton Poluektov
 use  StrippingNeuroBayes         v1r10     Phys   # Ulrich Kerzel
-use  StrippingSelections         v4r8     Phys   # Stripping coordinators
-use  StrippingSettings           v2r41p1    Phys   # Stripping coordinators
+use  StrippingSelections         v4r9     Phys   # Stripping Coordinators
+use  StrippingSettings           v2r42    Phys   # Stripping Coordinators
 use  StrippingTCK                v1r4     Phys   # Anton Poluektov
 use  StrippingUtils              v1r11    Phys   # Stripping Coordinators
-#use  StrippingCache              v1r0     Phys   # Stripping Coordinators
 
 ####################################################################
 
-use  TMVASelections              v1r8     Phys   # Stripping coordinators
+use  TMVASelections              v1r8     Phys   # Stripping Coordinators
 
 ####################################################################
 
