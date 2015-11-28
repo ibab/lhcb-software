@@ -1205,15 +1205,17 @@ int LoKi::KalmanFilter::nDoF
 ( const LoKi::KalmanFilter::Entries& entries ) 
 {
   //
-  if ( rhoPlusLike ( entries ) ) { return 0 ; }
+  if ( rhoPlusLike ( entries ) ) { return -1  ; }  // NB!!! 
   //
   int result = -3 ;
   //
   for ( Entries::const_iterator ientry = entries.begin() ; 
         entries.end() != ientry ; ++ientry ) 
   {
-    // 3 DoFs per vertex + dofs from the vertex 
-    if      ( ientry->m_type == ShortLivedParticle ) 
+    // 2 DoFs for track 
+    if      ( ientry->m_type == LongLivedParticle  ) { result += 2 ; }
+    // 3 DoFs per vertex + dofs from the vertex
+    else if ( ientry->m_type == ShortLivedParticle ) 
     { 
       result += 3 ;
       // add nDoF form the vertex 
@@ -1221,8 +1223,6 @@ int LoKi::KalmanFilter::nDoF
       if ( 0 != ientry->m_p0 ) { ev      = ientry->m_p0 -> endVertex () ; }
       if ( 0 != ev           ) { result += ev->nDoF() ; }   
     }
-    // 2 DoFs for track 
-    else if ( ientry->m_type == LongLivedParticle  ) { result += 2 ; }
   }
   //
   return result ;

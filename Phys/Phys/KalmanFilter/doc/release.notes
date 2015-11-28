@@ -5,6 +5,11 @@
 ! Purpose     : Kalman filter Utilities for Vertex fit
 ! -----------------------------------------------------------------------------
 
+! 2015-11-28 - Vanya Belyaev
+
+ - fix (thanks to Michel)
+   nDoF for "rho+"-like particles was set to zero.. formally should be -1 
+
 !========================= KalmanFilter v1r15 2015-11-25 ======================
 
 ! 2015-11-08 - Gerhard Raven
