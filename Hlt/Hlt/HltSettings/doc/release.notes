@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-11-28 - Dan Johnson
+ - Update track chi2 cut for low mult hadron lines
+
 ! 2015-11-11 - Dan Johnson
  - Fix typo in name of Hlt2NoBiasNonBeamBeam prescale setting
 
