@@ -719,7 +719,7 @@ class PDF2 (PDF) :
             return result , None
         
         ## 2D 
-        if 1< nbins and isinstane ( ybins , ( int , long ) ) and 1<ybins :
+        if 1< nbins and isinstance ( ybins , ( int , long ) ) and 1<ybins :
             return result, self.draw ( None , dataset , nbins , ybins , silent = silent )
         
         if     1<= nbins : return result, self.draw1 ( dataset ,  nbins , silent = silent )
