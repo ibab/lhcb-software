@@ -75,7 +75,7 @@ theseSlots =      { 'Prescale' : { 'Hlt2LowMultL2pPi'       : 1.0
                                                }
                     , 'Common'    : {'H_PTmin'        :     100.0 * MeV,
                                      'H_Pmin'         :     5000.0 * MeV,
-                                     'H_TrkChi2max'   :     3.0}
+                                     'H_TrkChi2max'   :     4.0}
                     , 'L0Channels'         : {'Hadron'  : ['DiHadron,lowMult'],
                                               'Muon'    : ['Muon,lowMult','DiMuon,lowMult'],
                                               'Photon'  : ['Photon,lowMult','DiEM,lowMult'],

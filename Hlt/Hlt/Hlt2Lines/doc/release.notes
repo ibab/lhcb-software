@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-11-28 - Dan Johnson
+ - Update default track chi2 cut for hadrons in LowMult lines
+
 ! 2015-11-11 - Dan Johnson
  - Fix a typo in the defaults for a prescale for an extremely under-used line in LowMult/Lines.py, for completeness. 
    Was always superseded by the correct version in the Settings
