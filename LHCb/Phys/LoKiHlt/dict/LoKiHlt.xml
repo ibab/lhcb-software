@@ -68,22 +68,19 @@
   <class name=            "LoKi::Interface<IAlgorithm>"   />
   <class name="std::vector<LoKi::Interface<IAlgorithm> >" />
     
-  <class    name = "LoKi::Numbers::EvtNum"   /> 
-  <class    name = "LoKi::Numbers::EvtNumList">
-    <field  name = "m_list" transient="true" />
-  </class>
-  <class    name = "LoKi::Numbers::RunEvt"    >
-    <field  name = "m_pair" transient="true" />
-  </class>
-  <class    name = "LoKi::Numbers::RunEvtList">
-    <field  name = "m_list" transient="true" />
-  </class> 
-  <function name = "LoKi::Numbers::add1"       /> 
-  <function name = "LoKi::Numbers::add2"       /> 
+  <class    name = "LoKi::Numbers::EvtNum"    /> 
+  <class    name = "LoKi::Numbers::EvtNumList"/>
+  <class    name = "LoKi::Numbers::RunEvt"    />
+  <class    name = "LoKi::Numbers::RunEvtList"/>
+  <function name = "LoKi::Numbers::add1"      /> 
+  <function name = "LoKi::Numbers::add2"      /> 
 
   <class    name = "LoKi::TES::TESGet" /> 
   
   <exclusion>
+
+
+
     
     <class name="LoKi::HLT::RoutingBits::Bits"     />
     <class name="LoKi::HLT::HasSelection::Names"   />

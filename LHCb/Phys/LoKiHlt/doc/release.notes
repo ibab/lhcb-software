@@ -4,6 +4,10 @@
 ! Purpose     : collection of functors&factory for HLT
 ! -----------------------------------------------------------------------------
 
+! 2015-11-29 - Vanya Belyaev
+ - fix warnings for duplicate selection rules (new ROOT)
+ - add swap functions to event and run-lists 
+
 !========================= LoKiHlt v3r20p1 2015-10-12 =========================
 ! 2015-08-03 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
