@@ -6,6 +6,8 @@
 ! -----------------------------------------------------------------------------
 
 !========================== LoKiPhys v11r5 2015-11-27 =========================
+! 2015-11-30 - Wenbin Qian
+  Add class MissingDNeutrino in LoKi cuts
 
 ! 2015-11-01 - Gerhard Raven
  - replace LoKi::select with std::copy_if

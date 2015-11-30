@@ -154,6 +154,39 @@ namespace LoKi
       MP_nSolutions () ; // default constructor is disabled
       // ======================================================================
     } ;
+      // ========================================================================
+    /** @class MissingDNeutrinoDOCA 
+     *  The class is only for decays like B->DX, with D decaying into semi-leptonic decays
+     *  For this decay topology, the PV, D vertex and that of X particle should be in the same plane
+     *  This class is used to calulate the distance between (PV,DV) and X particles to quantify this requirement
+     *  @author Wenbin Qian
+     *  @date   2015-11-30
+     */
+    class GAUDI_API MissingDNeutrinoDOCA 
+      : public virtual LoKi::BasicFunctors<const LHCb::Particle*>::Function
+      , public LoKi::Particles::MissingParticle
+    {
+    public:
+      // =======================================================================
+      /** constructor with all parameters 
+       *  @param mother   nominal mass of mother  particle 
+       *  @param missing  nominal mass of missing particle 
+       *  @param onlygood count only good solutions        
+       */
+      MissingDNeutrinoDOCA( const double mother, const double missing, const bool only_good = false);
+      MissingDNeutrinoDOCA( const std::string& mother, const std::string& missing, const bool only_good = false);
+      // MANDATORY: clone method ('virtual constructor')
+      virtual  MissingDNeutrinoDOCA* clone() const { return new MissingDNeutrinoDOCA(*this) ; }
+      /// MANDATORY: the only one essential method
+      virtual result_type operator() ( argument p ) const ;
+      /// MANDATORY: virtual destructor
+      virtual ~MissingDNeutrinoDOCA() ;
+      // ======================================================================
+    private:
+      MissingDNeutrinoDOCA();
+      // ======================================================================
+      // ======================================================================
+    } ;
     // ========================================================================
   } //                                         end of namespace LoKi::Particles 
   // ==========================================================================

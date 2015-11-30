@@ -12,6 +12,9 @@
 #include "LoKi/ParticleProperties.h"
 #include "LoKi/MissingParticle.h"
 #include "LoKi/Particles46.h"
+#include "LoKi/Child.h"
+#include "LHCbMath/Line.h"
+#include "LHCbMath/GeomFun.h"
 // ============================================================================
 /** @file 
  *  Implementation file for functioonf from the file LoKi/Particles46.h
@@ -215,6 +218,98 @@ LoKi::Particles::MP_nSolutions::operator()
     ok1 && ok2 ? 2 : 
     ok1        ? 1 :
     ok2        ? 1 : 0 ;
+}
+LoKi::Particles::MissingDNeutrinoDOCA::MissingDNeutrinoDOCA(
+    const double mother,
+    const double missing,
+    const bool   only_good
+  )
+  : LoKi::AuxFunBase( std::tie(mother,missing, only_good) )
+  , LoKi::Particles::MissingParticle(mother,missing, only_good)
+{}
+
+LoKi::Particles::MissingDNeutrinoDOCA::MissingDNeutrinoDOCA( 
+    const std::string& mother,
+    const std::string& missing,
+    const bool   only_good
+  )
+  : LoKi::AuxFunBase( std::tie(mother,missing, only_good) )
+  , LoKi::Particles::MissingParticle(mother,missing, only_good)
+{}
+
+LoKi::Particles::MissingDNeutrinoDOCA::~MissingDNeutrinoDOCA(){}
+// ============================================================================
+// MANDARORY: the only interesitng method 
+// ============================================================================
+LoKi::Particles::MissingDNeutrinoDOCA::result_type 
+LoKi::Particles::MissingDNeutrinoDOCA::operator() 
+  ( LoKi::Particles::MissingDNeutrinoDOCA::argument p ) const 
+{
+  //
+  if ( 0 == p ) 
+  {
+    Error ( "Invalid particle, return -10" ) ;
+    return -10 ;                                            // RETURN 
+  }
+  // get D and X
+  const LHCb::Particle* rec_d = LoKi::Child::child( p , 1);
+  
+  if ( 0 == rec_d ) 
+  {
+    Error ("Invalid D0 particle, return -10") ;
+    return -10 ;
+  }
+
+  const LHCb::Particle* rec_x = LoKi::Child::child( p , 2);
+
+  if ( 0 == rec_x )
+  {
+    Error ("Invalid X particle, return -10") ;
+    return -10 ;
+  }
+
+  if(rec_d->particleID().abspid() != 421 )
+  {
+    Error ("D particle not in the first of decay, return -10") ;
+    return -10 ;                                            
+  }
+  const LHCb::VertexBase* dv = rec_d->endVertex();
+  if ( 0 == dv )
+  {
+    Error ( "Invalid end-vertex, return -9" ) ;
+    return -9 ;  
+  }  
+
+  Gaudi::XYZPoint xp;
+  if(rec_x->isBasicParticle()) xp = rec_x->referencePoint();
+  else{
+    const LHCb::VertexBase* xv = rec_x->endVertex();
+    if ( 0 == dv )
+    { 
+      Error ( "Invalid end-vertex, return -9" ) ;
+      return -9 ;
+    } 
+    xp = xv->position();
+  }
+
+  //
+  if ( !desktop() ) { loadDesktop() ; }
+  Assert ( 0 != desktop() , "Unable to load IPhysDesktop!" ) ;
+  //
+  const LHCb::VertexBase* pv = bestVertex( p ) ;
+  if ( 0 == pv ) 
+  {
+    Warning ( "No primary vertex is available, reutrn -9") ;
+    return -9 ;                                               // RETURN 
+  }
+
+  typedef Gaudi::Math::Line<Gaudi::XYZPoint, Gaudi::XYZVector> LINE;
+
+  LINE line1(xp, Gaudi::XYZVector(rec_x->momentum().x(),rec_x->momentum().y(),rec_x->momentum().z()));
+  LINE line2(pv->position(),dv->position()-pv->position());
+  
+  const double d = Gaudi::Math::distance(line1,line2);
+  return d;
 }
 // ============================================================================
 // The END 

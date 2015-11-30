@@ -1049,6 +1049,7 @@ MTDOCACHI2 = LoKi.Particles.MTDOCAChi2
 
 RELINFO    = LoKi.Particles.RelatedInfo
 
+MDNDOCA      = LoKi.Particles.MissingDNeutrinoDOCA
 # =============================================================================
 ## Tis/Tos stuff 
 # =============================================================================
@@ -1174,7 +1175,6 @@ MAXOVERLAP  = LoKi.Particles.MaxOverlap
 SUMINR2CONE  = LoKi.Particles.SumInR2Cone
 ## @see LoKi::Cuts:::SUMINCONE 
 SUMCONE      = LoKi.Particles.SumInR2ConeWithSource
-
 
 
 FAKESOURCE  = LoKi.Functors.FakeSource( _RCP )
