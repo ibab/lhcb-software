@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-11-30 - Sascha Stahl
+ - Protect TrackMonitor with a GEC cut.
+
 ! 2015-11-23 - Sean Benson
  - Updates and fixes to PersistReco.
 

@@ -42,7 +42,8 @@ class HltMonitoringConf(LHCbConfigurableUser):
                  "EnableL0Monitor"          : True,
                  "EnableHltMonitor"         : True,
                  "EnableHlt1TrackMonitor"   : True,
-                 'Hlt1TrackMonitorPrescale' : 0.005,
+                 'Hlt1TrackMonitorPrescale' : 0.001,
+                 'Hlt1TrackMonitorGEC'      : "Loose",
                  "HistogrammingLevel"       : "Line",
                  "OutputFile"               : "",
                  "ActiveHlt1Lines"          : [],
@@ -159,9 +160,11 @@ class HltMonitoringConf(LHCbConfigurableUser):
         from HltTracking.HltTrackNames import HltDefaultFitSuffix
         trackMon.FittedTrackLocation = Hlt1TrackLoc["FitTrack"]
 
+        from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
+        gecUnit = Hlt1GECUnit( self.getProp("Hlt1TrackMonitorGEC") )
         prescaler = DeterministicPrescaler("Hlt1TrackMonitorPrescaler", AcceptFraction = self.getProp("Hlt1TrackMonitorPrescale") )
         trackMonSeq = Sequence('Hlt1TrackMonitorSequence',
-                               Members = [ prescaler ] + HltHPTTracking.members() + [ trackMon ])
+                               Members = [ gecUnit, prescaler ] + HltHPTTracking.members() + [ trackMon ])
 
         # Sequence
         monSeq = Sequence("Hlt1MonitorSequence", IgnoreFilterPassed = True)
