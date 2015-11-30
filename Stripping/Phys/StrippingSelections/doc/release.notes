@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-11-30 - Lucio Anderlini (for Andrea Bizzeti)
+  - Added baryons to StrippingBandQ/StrippingCC2DD.py. 
+    Possibly need further tuning.
 
 ! 2015-11-30 - Nicola Skidmore
  - Add WS lines in B2DX builder and implement in StrippingBeauty2Charm.py
