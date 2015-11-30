@@ -3,7 +3,7 @@ Module importing stripping selection line builder modules
 for B2OC WG.
 """
 
-_selections = [ "StrippingBeauty2Charm", "StrippingDstarD02Kpipi0" , "StrippingB2DDphi", "StrippingB2nbody" ]
+_selections = [ "StrippingBeauty2Charm", "StrippingDstarD02Kpipi0" , "StrippingB2DDphi", "StrippingB2nbody", 'StrippingB2DXD2HMuNu' ]
 
 for _sel in _selections :
     try :
