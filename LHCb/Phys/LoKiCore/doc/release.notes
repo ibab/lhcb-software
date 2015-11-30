@@ -13,6 +13,12 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2015-11-30 - Vanya Belyaev
+
+ - FilterAlg.cpp
+   improve a little bit usage of double lock pattern 
+
+
 !========================= LoKiCore v11r28 2015-11-23 =========================
 ! 2015-11-03 - Gerhard Raven
  - add deprecation warning to LoKi::select and LoKi::transform
