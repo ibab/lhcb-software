@@ -88,6 +88,15 @@ class Score(object):
     def __str__(self):
         return repr(self)
 
+    def __call__(self):
+        return self.value
+
+    def __int__(self):
+        return int(self.value)
+
+    def __float__(self):
+        return float(self.value)
+
     @staticmethod
     def isInRange(value):
         return Score.isNumeric(value) and 0.0 <= value <= 100.0

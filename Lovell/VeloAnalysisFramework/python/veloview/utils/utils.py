@@ -52,6 +52,12 @@ def enum(*names):
         def __repr__(self):
             return str(names[self.__value])
 
+        def __call__(self):
+            return self.__value
+
+        def __int__(self):
+            return int(self.__value)
+
     maximum = len(names) - 1
     constants = [None] * len(names)
     for i, each in enumerate(names):
