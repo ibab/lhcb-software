@@ -166,7 +166,7 @@ StatusCode SelectVeloTracksNotFromPVS20p3::execute()
     } else {
       const LHCb::Track::Range trackContainer = get<LHCb::Track::Range>(iLocation);
       if (m_verbose) { verbose() << "Number of tracks at " << iLocation << " : " << trackContainer.size() << endmsg; }
-      LoKi::select( trackContainer.begin(), trackContainer.end(), std::back_inserter(m_inputTracks), sel ); // std::copy_if
+      std::copy_if( trackContainer.begin(), trackContainer.end(), std::back_inserter(m_inputTracks), sel );
     }
   }
   counter("# input tracks with Velo segment") += m_inputTracks.size();
