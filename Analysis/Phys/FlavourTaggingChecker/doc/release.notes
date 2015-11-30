@@ -4,6 +4,9 @@
 ! Purpose     : Checker package for Phys/FlavourTagging
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
+
+!================== FlavourTaggingChecker v7r10 2015-11-30 ===================
+
 ! 2015-11-01 - Gerhard Raven
  - replace endreq with endmsg
 

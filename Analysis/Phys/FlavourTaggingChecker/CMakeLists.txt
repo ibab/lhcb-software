@@ -1,7 +1,7 @@
 ################################################################################
 # Package: FlavourTaggingChecker
 ################################################################################
-gaudi_subdir(FlavourTaggingChecker v7r9)
+gaudi_subdir(FlavourTaggingChecker v7r10)
 
 gaudi_depends_on_subdirs(Event/GenEvent
                          Event/HltEvent
