@@ -1901,7 +1901,7 @@ RnS = {
         "piIpChi2": 100, 
         "protonIpChi2": 16
     }, 
-    "STREAMS": [ "DiMuon" ], 
+    "STREAMS": [ "Dimuon" ], 
     "WGs": [ "RD" ]
 }
 

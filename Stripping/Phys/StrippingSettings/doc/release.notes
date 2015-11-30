@@ -6,6 +6,9 @@
 
 !========================= StrippingSettings v2r42 2015-11-26 =========================
 
+! 2015-11-30 - Ricardo Vazquez Gomez
+ - Bug fix in name of Stream: DiMuon -> Dimuon
+
 ! 2015-11-26 - Andrea Contu
  - Updated dbase for S24
 
