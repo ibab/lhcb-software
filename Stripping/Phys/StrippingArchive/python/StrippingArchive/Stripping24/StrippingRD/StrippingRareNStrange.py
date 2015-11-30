@@ -72,7 +72,7 @@ default_config = {
               },
    
     'WGs'                       : [ 'RD' ],
-    'STREAMS'                   : [ 'DiMuon' ]
+    'STREAMS'                   : [ 'Dimuon' ]
     }
     
 
