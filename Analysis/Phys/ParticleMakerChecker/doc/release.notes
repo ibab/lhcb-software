@@ -4,6 +4,9 @@
 ! Responsible : Chris Jones
 ! Purpose     : MC checker algorithms for ParticleMakers
 !-----------------------------------------------------------------------------
+
+!=================== ParticleMakerChecker v1r6 2015-11-30 ====================
+
 ! 2015-11-02 - Gerhard Raven
  - replace endreq with endmsg
 

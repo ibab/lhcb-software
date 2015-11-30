@@ -1,7 +1,7 @@
 ################################################################################
 # Package: ParticleMakerChecker
 ################################################################################
-gaudi_subdir(ParticleMakerChecker v1r5p1)
+gaudi_subdir(ParticleMakerChecker v1r6)
 
 gaudi_depends_on_subdirs(Kernel/MCInterfaces
                          Phys/DaVinciKernel
