@@ -6,6 +6,17 @@
 ! -----------------------------------------------------------------------------
 
 
+! 2015-11-30 - Nicola Skidmore
+ - Add WS lines in B2DX builder and implement in StrippingBeauty2Charm.py
+	StrippingB2D0KsPiLLD2HHWSBeauty2CharmLine
+	StrippingB2D0KsPiDDD2HHWSBeauty2CharmLine
+	StrippingB2D0KsPiLLD2KSHHLLWSBeauty2CharmLine
+	StrippingB2D0KsPiLLD2KSHHDDWSBeauty2CharmLine
+	StrippingB2D0KsPiDDD2KSHHLLWSBeauty2CharmLine
+	StrippingB2D0KsPiDDD2KSHHDDWSBeauty2CharmLine
+ -  Add prescale for StrippingB2D0KsPiD2HHHHWSBeauty2CharmLine in B2DX builder
+
+
 ! 2015-11-27 - Yasmine Amhis
  - Uncomment related info config. 
    StrippingRD/StrippingBu2LLK 
