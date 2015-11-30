@@ -12,6 +12,7 @@ from Configurables import ( Rich__MC__Digi__Signal,
                             Rich__MC__Digi__CopySummedDepositsToDigits,
                             Rich__MC__Digi__SimpleChargeSharing,
                             Rich__MC__Digi__DetailedFrontEndResponse,
+                            Rich__MC__Digi__DetailedFrontEndResponsePMT,
                             Rich__MC__Digi__SimpleFrontEndResponse,
                             Rich__MC__Digi__MCRichDigitsToRawBufferAlg,
                             Rich__MC__Digi__SummedDeposits )
@@ -76,6 +77,8 @@ class RichDigiSysConf(LHCbConfigurableUser):
             response = self.makeComponent(Rich__MC__Digi__SimpleFrontEndResponse,"RichPDResponse")
         elif hpdModel == "Copy" :
             response = self.makeComponent(Rich__MC__Digi__CopySummedDepositsToDigits,"RichPDResponse")
+        elif hpdModel == "DetailedPMT" :
+            response = self.makeComponent(Rich__MC__Digi__DetailedFrontEndResponsePMT,"RichPDResponse")
         else :
             raise RuntimeError("ERROR : Unknown HPD Response model '%s'"%hpdModel)
         sequence.Members += [response]

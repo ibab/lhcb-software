@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 !========================= RichDigiSys v1r3p1 2013-10-02 =========================
+
+! 2015-11-30 - Marcin Kucharczyk
+  - Add options for RICH upgrade (PMTs)
+  - RichDetailedFrontEndResponsePMT
+
 ! 2013-10-02 - Marco Cattaneo
  - Add missing __init__.py file for CMake
 
