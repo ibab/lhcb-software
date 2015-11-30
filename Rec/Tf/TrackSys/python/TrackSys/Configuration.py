@@ -37,6 +37,7 @@ class TrackSys(LHCbConfigurableUser):
         ,"OldCloneKiller" : False # Switch between old and new (in 2012) clone killers
         ,"Simulation" : False # True if using simulated data/SIMCOND
         ,"TrackTypes" : [] 
+        ,"ExcludedLayers": [] # Layers from which to exclude clusters
         }
     
     ## Possible expert options

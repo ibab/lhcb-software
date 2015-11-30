@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2015-11-30 - Elena Graverini
+ - Added RecoExcludeSTLayers.py to ignore certains layers during the tracking. Added the "ExcludedLayers" prop to the TrackSys configurable. Modified RecoTrackingRun2.py in order to enable layers exclusion.
+
 !========================= TrackSys v9r11 2015-10-13 =========================
 ! 2015-10-05 - Michel De Cian
  - Put upstream tracking before forward in RecoUpgradeTracking.py

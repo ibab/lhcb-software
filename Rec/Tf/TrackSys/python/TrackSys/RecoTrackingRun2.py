@@ -5,7 +5,7 @@ from TrackSys.Configuration import *
 from GaudiKernel.SystemOfUnits import mm
 
 
-def DecodeTracking(trackAlgs):
+def DecodeTracking(trackAlgs, ExcludedLayers = []):
 
    #configure the decoding
    from DAQSys.Decoders import DecoderDB
@@ -31,6 +31,11 @@ def DecodeTracking(trackAlgs):
    decs=decs+decodersForBank(DecoderDB,"TT")
    decs=decs+decodersForBank(DecoderDB,"IT")
    GaudiSequencer("RecoDecodingSeq").Members += [d.setup() for d in decs ]
+
+   # Exclude ST layers:
+   if len(ExcludedLayers) > 0:
+      from TrackSys.RecoExcludeSTLayers import ExcludeSTLayers
+      ExcludeSTLayers(ExcludedLayers)
    
    ## Special OT decoder for cosmics to merge spills.
    if TrackSys().cosmics():
@@ -65,7 +70,8 @@ def RecoTrackingHLT1(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
    dataType = TrackSys().getProp("DataType")
 
    # Decode the RAW banks
-   DecodeTracking(trackAlgs)
+   ExcludedLayers = TrackSys().getProp("ExcludedLayers")
+   DecodeTracking(trackAlgs, ExcludedLayers)
    
    from Configurables import STOfflinePosition
    IT = STOfflinePosition('ITClusterPosition')
