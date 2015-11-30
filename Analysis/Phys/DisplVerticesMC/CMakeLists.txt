@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DisplVerticesMC
 ################################################################################
-gaudi_subdir(DisplVerticesMC v1r4p5)
+gaudi_subdir(DisplVerticesMC v1r5)
 
 gaudi_depends_on_subdirs(Det/CaloDet
                          Event/GenEvent
