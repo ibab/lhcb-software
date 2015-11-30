@@ -4,7 +4,7 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
-! 2015-08-20 - Elena Graverini
+! 2015-11-30 - Elena Graverini
  - Add the STLayerSelector algorithm to remove clusters from certain layers
 
 !========================= STDAQ v4r7 2015-10-12 =========================
