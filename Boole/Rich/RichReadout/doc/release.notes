@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 !========================= RichReadout v2r16 2013-07-18 =========================
+
+! 2015-11-30 - Marcin Kucharczyk
+  - Add algorithms for RICHupgrade (PMTs)
+  - RichDetailedFrontEndResponsePMT, RichChannelPropertiesPMT
+
 ! 2013-07-10 - Chris Jones
  - Fix gcc warning about possibly uninitialized pointer in 
    RichSimpleFrontEndResponse.cpp
