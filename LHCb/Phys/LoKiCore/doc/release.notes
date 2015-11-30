@@ -15,7 +15,7 @@
 
 ! 2015-11-30 - Vanya Belyaev
 
- - FilterAlg.cpp
+ - FilterAlg.cpp: 
    improve a little bit usage of double lock pattern 
 
 
