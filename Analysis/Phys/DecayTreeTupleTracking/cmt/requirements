@@ -3,7 +3,7 @@
 # Maintainer : Chris Jones
 #============================================================================
 package           DecayTreeTupleTracking
-version           v1r3
+version           v1r4
 
 #============================================================================
 # Structure, i.e. directories to process. 
