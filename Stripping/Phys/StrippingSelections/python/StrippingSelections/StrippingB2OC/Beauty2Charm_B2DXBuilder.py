@@ -180,6 +180,11 @@ class B2DXBuilder(object):
         self._makeB2Dst0H( 'Dst02D0GammaD2KSHHLL', self.dst.d0gamma_kshh_ll )
         self._makeB2Dst0H( 'Dst02D0GammaD2KSHHDD', self.dst.d0gamma_kshh_dd )
 
+        self._makeB2Dst0H('Dst02D0Pi0D2HHHHMerged', self.dst.d0pi0_hhhh_merged)
+        self._makeB2Dst0H('Dst02D0Pi0D2HHHHResolved', self.dst.d0pi0_hhhh_resolved)
+        self._makeB2Dst0H('Dst02D0GammaD2HHHH',self.dst.d0gamma_hhhh)
+
+
         self._makeB2DstD0()
         self._makeB02DstDst()
         # B -> D D K

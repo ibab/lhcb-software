@@ -1934,6 +1934,8 @@ class DstarBuilder(object):
           self.d0gamma_hh_pid  = self._makeDstar02D0Gamma( 'HHPID', self.d.hh_pid )
           self.d0gamma_k3h_pid = self._makeDstar02D0Gamma( 'K3HPID', self.d.k3h_pid )
 
+          self.d0gamma_hhhh = self._makeDstar02D0Gamma('HHHH',self.d.hhhh)
+
           d0pi_2460 = self._makeDstar24602D0pi()
           self.d0pi_2460_pid = [filterPID('Dstar24602D0PiPID',d0pi_2460,
                                           config_pid,2)]

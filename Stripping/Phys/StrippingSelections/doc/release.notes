@@ -5,6 +5,13 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+
+! 2015-12-01 - Nicola Skidmore
+  - Added B2Dst0H lines B2OC _B2DXBuilder.py
+  - Added Dstar02D0Gamma line to B2OC _DBuilder.py
+  - 6 lines added to StrippingBeauty2Charm.py module
+
+
 ! 2015-11-30 - Lucio Anderlini (for Andrea Bizzeti)
   - Added baryons to StrippingBandQ/StrippingCC2DD.py. 
     Possibly need further tuning.

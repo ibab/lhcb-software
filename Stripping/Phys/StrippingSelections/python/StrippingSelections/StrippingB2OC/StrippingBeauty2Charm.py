@@ -520,6 +520,13 @@ default_config ={
     'Bhadron' : [
 
 
+    'StrippingB2Dstar0KDst02D0Pi0D2HHHHMergedBeauty2CharmLine',
+    'StrippingB2Dstar0PiDst02D0Pi0D2HHHHMergedBeauty2CharmLine',
+    'StrippingB2Dstar0KDst02D0Pi0D2HHHHResolvedBeauty2CharmLine',
+    'StrippingB2Dstar0PiDst02D0Pi0D2HHHHResolvedBeauty2CharmLine',
+    'StrippingB2Dstar0KDst02D0GammaD2HHHHBeauty2CharmLine',
+    'StrippingB2Dstar0PiDst02D0GammaD2HHHHBeauty2CharmLine',
+
     'StrippingB2D0KsPiLLD2HHWSBeauty2CharmLine',
     'StrippingB2D0KsPiDDD2HHWSBeauty2CharmLine',
     'StrippingB2D0KsPiLLD2KSHHLLWSBeauty2CharmLine',
@@ -527,7 +534,6 @@ default_config ={
     'StrippingB2D0KsPiDDD2KSHHLLWSBeauty2CharmLine',
     'StrippingB2D0KsPiDDD2KSHHDDWSBeauty2CharmLine',
     
-
     'StrippingUpsilon2BBBeauty2CharmLine',
 
     'StrippingBc2BPiPiB2D0HD02HHBeauty2CharmLine',
