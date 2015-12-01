@@ -13,6 +13,7 @@ import matplotlib
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
+from veloview.config.run_view import DEFAULT_DRAW_OPTIONS
 import colormaps as newMaps
 import lInterfaces
 matplotlib.rcParams.update({'axes.titlesize': 'medium'})
@@ -24,16 +25,6 @@ class NavigationToolbar_mod(NavigationToolbar):
     # only display the buttons we need
     toolitems = [t for t in NavigationToolbar.toolitems if
                  t[0] in ('Home', 'Pan', 'Zoom', 'Save')]
-
-
-# Default values in the plot options dictionary if a key isn't present
-# TODO would this make more sense in the central run view configuration?
-DEFAULT_DRAW_OPTIONS = {
-    'uncertainties': False,
-    'legend': False,
-    'yAxisZeroSuppressed': True,
-    'style': 0
-}
 
 
 class lPlottable():
@@ -63,8 +54,8 @@ class lPlottable():
             norm = True
         else: norm = False
         moduleID = tabOpsState.moduleID
-        if 'sensorShift' in self.params: 
-            moduleID += self.params['sensorShift']
+        # TODO(AP) I have no idea what this means, why is the number shifted?
+        moduleID += self.options['sensorShift']
         if tabOpsState.displayRefs:
             if 'isIV' in self.params and self.params['isIV']:
                 self.plot.ext = ' - sensor ' + str(moduleID)
@@ -110,7 +101,7 @@ class lPlottable():
             
             
         elif 'xbinning' in nominal['data']['data'] and len(nominal['data']['data']['xbinning']) > 0: 
-            if 'asText' in self.params and self.params['asText']: self.runview_2d_text(nominal)
+            if self.options['asText']: self.runview_2d_text(nominal)
             elif tabOpsState.refDiff and tabOpsState.displayRefs: self.runview_2d_dataMinusRef(nominal, reference)
             elif tabOpsState.refRatio and tabOpsState.displayRefs: self.runview_2d_dataMinusRef(nominal, reference, True)
             else: self.runview_2d(nominal)
@@ -196,16 +187,16 @@ class lPlottable():
             style = 3
             col = 'r'
         else: 
-            if 'color' in self.params: 
-                if self.params['color'] == 'r' and style == 0:
+            if self.options['color'] is not None: 
+                if self.options['color'] == 'r' and style == 0:
                     msg = 'Red bars are reserved for references - defaulting to blue'
                     print msg
                     self.tab().notify(msg)
-                elif self.params['color'] == 'g' and style == 0:
+                elif self.options['color'] == 'g' and style == 0:
                     msg = 'Green bars are reserved for references - defaulting to blue'
                     print msg
                     self.tab().notify(msg)
-                else: col = self.params['color']
+                else: col = self.options['color']
                 
         ys = nominal['data']['data']['values']
         self.add_1d_plot(xs, ys, style, col)
@@ -338,8 +329,8 @@ class lPlottable():
 
     def add_1d_plot(self, xs, ys, style, col = 'b'):
         lab = 'Default'
-        if 'legend' in self.params: 
-            lab = self.params['legend']
+        if 'title' in self.params:
+            lab = self.params['title']
         if style == 0:
             # Defaut - blue bars with black line on top.
             # Need slightly different format to fill.
@@ -363,13 +354,11 @@ class lPlottable():
             self.axes.step(xs, ys, where = 'mid', linewidth = 1.5, c = col, label = lab)
 
         elif style == 2:
-            m = '^'
-            if 'marker' in self.params: m = self.params['marker']
+            m = self.options['marker']
             self.axes.plot(xs, ys, '-o', marker = m, markerfacecolor = col, markeredgecolor='none', markersize = 8, label = lab)
 
         elif style == 3:
-            m = '^'
-            if 'marker' in self.params: m = self.params['marker']
+            m = self.options['marker']
             self.axes.plot(xs, ys, 'o', marker = m, markerfacecolor = col, markeredgecolor='none', markersize = 8, label = lab)
             
         elif style == 4:
