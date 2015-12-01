@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-01 - Paula Alvarez Cartelle
+  - Added Lb2dp and Lb2dppipi lines to StrippingQEE/StrippingLb2dp.py
+
 ! 2015-12-01 - Guido Andreassi
   - Changed location of BDT isolation variabiles in LFV lines, RD
 

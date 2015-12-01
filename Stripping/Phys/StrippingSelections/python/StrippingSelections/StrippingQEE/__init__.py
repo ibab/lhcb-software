@@ -30,7 +30,7 @@ _selections = (
   'StrippingStrangeBaryonsNoPID',
   'StrippingWe',
   'StrippingZ02ee',
-
+  'StrippingLb2dp'
   ## Depreciated
   # 'StrippingHighPtTopoJets',
   # 'StrippingJets',
