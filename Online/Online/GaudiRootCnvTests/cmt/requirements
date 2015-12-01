@@ -1,0 +1,20 @@
+package GaudiRootCnvTests
+author  Markus Frank
+version v1r14
+
+branches  cmt tests
+
+use GaudiPolicy        v*
+use RootCnv            v* Online
+use ROOT               v* LCG_Interfaces
+
+apply_pattern QMTest
+
+private
+use GaudiCheckpointing v* Online
+use GaudiExamples      v*
+
+macro_append ROOT_linkopts " -lCintex -lTreePlayer -lMathCore " \
+             target-winxp  " libCintex.lib libTreePlayer.lib libMathCore.lib "
+macro_append ROOT_cppflags '' \
+             target-winxp '-FI"$(ROOTSYS)/include/w32pragma.h"'

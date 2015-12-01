@@ -1,0 +1,12 @@
+package XML
+version v0r6
+
+branches cmt doc src
+use GaudiPolicy v*
+apply_pattern install_more_includes more=XML
+#
+library XML *.cpp ../Evaluator/*.cpp
+#
+macro_append XML_cppflags ' -DDD4HEP_USE_TINYXML '
+apply_pattern ld_library_path
+apply_pattern linker_library          library=XML

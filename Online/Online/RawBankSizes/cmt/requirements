@@ -1,0 +1,39 @@
+package RawBankSizes
+version v2r21
+
+branches cmt doc src
+use GaudiKernel v*
+use AIDA v* LCG_Interfaces
+use GaudiAlg v*
+use DAQEvent v* Event
+use MDF    v* DAQ
+use OnlineHistDB v* Online
+#
+# Only for testing:
+#use GaudiSvc v*
+#use OnlineKernel v* Online
+#use Gaucho v* Online
+#use GaudiOnline v* Online
+
+include_dirs "$(RAWBANKSIZESROOT)/RawBankSizes"
+#SRC = "$(RAWBANKSIZESROOT)/src"
+
+library RawBankSizes RawBankSizes.cpp Structure.cpp
+apply_pattern component_library library=RawBankSizes
+
+private
+
+application MakePages MakePages.cpp
+macro_append target_MakePagess
+
+application MakeOptions MakeOptions.cpp
+macro_append target_MakeOptions
+
+action runMakeOptions "cmt run $(RAWBANKSIZESROOT)/$(tag)/MakeOptions.exe"
+macro_append constituents " runMakeOptions "
+macro_append runMakeOptions_dependencies " MakeOptions "
+
+action WriteOptions "python $(RAWBANKSIZESROOT)/src/WriteOptions.py"
+macro_append constituents " WriteOptions "
+macro_append WriteOptions_dependencies " runMakeOptions "
+end_private

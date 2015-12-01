@@ -1,0 +1,38 @@
+# =============================================================================
+# Created    : 21/12/2006
+# Maintainer : Giacomo Graziani 
+# =============================================================================
+package             OnlineHistDB
+version             v8r4
+
+branches            cmt doc src OnlineHistDB sql www main
+use GaudiPolicy    v*
+use oracle         v*  LCG_Interfaces
+#
+
+
+apply_pattern install_more_includes more=OnlineHistDB
+#
+library             OnlineHistDB    *.cpp
+
+application  FixDoubleAlgName ../main/FixDoubleAlgName.cpp
+macro_append FixDoubleAlgName_dependencies " OnlineHistDB "
+application  ChangeTaskName ../main/ChangeTaskName.cpp
+macro_append ChangeTaskName_dependencies " OnlineHistDB "
+application  ChangeAlgorithmName ../main/ChangeAlgorithmName.cpp
+macro_append ChangeAlgorithmName_dependencies " OnlineHistDB "
+application  ClonePageTree ../main/ClonePageTree.cpp
+macro_append ClonePageTree_dependencies " OnlineHistDB "
+
+macro_prepend   oracle_linkopts " -Wl,--no-as-needed " WIN32 ""
+macro_append    oracle_linkopts " -Wl,--as-needed "    WIN32 ""
+
+apply_pattern  linker_library library=OnlineHistDB 
+apply_pattern application_path 
+
+macro_append  cppflags     "" \
+	target-vc9 " -wd4996 " \
+	target-vc7 ""
+
+macro_append OnlineHistDB_shlibflags  "" \
+  WIN32                              " oci.lib ociw32.lib "

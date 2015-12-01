@@ -1,0 +1,9 @@
+package ControllerTests
+version v0r3
+author "Markus Frank"
+
+branches cmt doc scripts
+use Gaucho             v* Online
+use GaudiOnline        v* Online
+use Controller         v* Online
+use GaudiCheckpointing v* Online

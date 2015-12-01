@@ -1,0 +1,40 @@
+package  DefHLTUtils
+version  v1r16
+
+branches src cmt doc
+
+# add "use" statements
+#use GaudiKernel  v*
+#use AIDA         v* LCG_Interfaces
+use ROMon        v* Online
+use DIM          v* Online
+use OnlineBase   v* Online
+use Gaucho		 v* Online
+#use GaudiAlg     v*
+#use Boost        v* LCG_Interfaces
+use ROOT         v* LCG_Interfaces
+#use XercesC       v* LCG_Interfaces -no_auto_imports
+use XercesC       v* LCG_Interfaces
+
+macro_append ROOT_linkopts " -lGpad -lRint -lHist " WIN32 " libHist.lib "
+
+# linker library
+library DefUtil HLTPerfFormatter.cpp FileTestSvc.cpp
+apply_pattern linker_library library=DefUtil
+macro_append  DefUtil_shlibflags ${ROOT_linkopts}
+
+application   DiracMon ../src/DiracMon.cpp
+macro_append  DiracMon_dependencies    " DefUtil "
+
+application   FarmStatus ../src/FarmStatus.cpp
+macro_append  FarmStatus_dependencies    " DefUtil "
+
+application   HLTFileEqualizer ../src/HLTFileEqualizer.cpp
+macro_append  HLTFileEqualizer_dependencies    " DefUtil "
+
+application   HLTDefBridge ../src/HLTDefBridge.cpp
+macro_append  HLTDefBridge_dependencies    " DefUtil "
+
+application   DefHltPlot ../src/DefHltPlot.cpp
+macro_append  DefHltPlot_dependencies    " DefUtil "
+

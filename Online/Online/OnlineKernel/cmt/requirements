@@ -1,0 +1,59 @@
+package OnlineKernel
+version v2r24
+
+branches  cmt doc src
+use GaudiPolicy v*
+use OnlineBase  v* Online
+use Reflex      v* LCG_Interfaces -no_auto_imports
+
+apply_pattern install_more_includes more=OnlineKernel
+
+library OnlineKernel       ../src/CPP/*.cpp     \
+                           ../src/RTL/*.cpp     \
+                           ../src/SCR/*.cpp     \
+                           ../src/MBM/*.cpp
+###include_path none
+macro_append  OnlineKernel_shlibflags ' -lpthread -lrt ' WIN32 ' '
+apply_pattern ld_library_path
+apply_pattern linker_library          library=OnlineKernel
+#
+#  Applications:
+#
+application   test                    ../main/wt.cpp
+application   gentest                 ../main/gentest.cpp
+application   checkpoint              ../main/checkpoint.cpp
+application   mbm_remove              ../main/mbm_remove.cpp
+macro_append  test_dependencies       " OnlineKernel "
+macro_append  gentest_dependencies    " OnlineKernel "
+macro_append  checkpoint_dependencies " OnlineKernel "
+macro_append  mbm_remove_dependencies " OnlineKernel "
+macro_append  use_includes            ' $(ppcmd)"$(OnlineKernel_cmtpath)/$(cmt_installarea_prefix)$(shared_install_subdir)/include/OnlineKernel" '
+macro_append  use_linkopts            ' -ldl ' WIN32 ''
+path_remove PYTHONPATH                '/OnlineKernel/'    WIN32 '\OnlineKernel\'
+path_append PYTHONPATH                $(ONLINEKERNELROOT)/python
+set           GENTEST_EXE             $(ONLINEKERNELROOT)/$(CMTCONFIG)/gentest.exe
+###  macro cpp 'gcc32 -m32 '
+###  macro shlibbuilder 'g++32 -m32 $(cmt_installarea_linkopts) '
+
+apply_pattern reflex_dictionary dictionary=OnlineKernel \
+                                headerfiles=$(ONLINEKERNELROOT)/dict/dictionary.h \
+                                selectionfile=$(ONLINEKERNELROOT)/dict/dictionary.xml \
+                                imports=Python
+macro_append OnlineKernel_reflex_options    " -D__GCCXML"
+macro_append OnlineKernelDict_dependencies  " OnlineKernel "
+macro_append OnlineKernelDict_cppflags      " $(OnlineDictionary_cppflags) " 
+
+# Gnerate dictionary rootmap file
+#apply_pattern generate_rootmap library=OnlineKernelDict
+apply_pattern install_python_modules
+
+apply_pattern QMTest
+apply_pattern QMTestSummarize
+
+private
+macro_append use_includes     ' $(ppcmd)"$(ONLINEKERNELROOT)/OnlineKernel" '
+macro_append cppflags         ' $(ONLINE_CPPFLAGS) '
+macro_append test_use_linkopts           " -ldl " WIN32 "" target-icc " -Wl,--no-as-needed "
+macro_append gentest_use_linkopts        " -ldl " WIN32 "" target-icc " -Wl,--no-as-needed "
+macro_append checkpoint_use_linkopts     " -ldl " WIN32 "" target-icc " -Wl,--no-as-needed "
+macro_append mbm_remove_use_linkopts     " -ldl " WIN32 "" target-icc " -Wl,--no-as-needed "

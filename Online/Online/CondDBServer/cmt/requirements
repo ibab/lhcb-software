@@ -1,0 +1,86 @@
+#============================================================================
+# Created    : 2006-10-06
+# Maintainer : Maria del Carmen Barandela
+#============================================================================
+package           CondDBServer
+version           v1r6
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+# use   Package      v1r*    Hat
+
+use GaudiPolicy v*
+
+use sqlite      v* LCG_Interfaces -no_auto_imports
+
+use oracle      v* LCG_Interfaces -no_auto_imports
+
+use Boost       v* LCG_Interfaces
+
+use COOL        v* LCG_Interfaces
+
+apply_tag NEEDS_COOL_FACTORY
+
+apply_tag NEEDS_PYCOOL
+
+use Python      v* LCG_Interfaces -no_auto_imports
+use Reflex      v* LCG_Interfaces -no_auto_imports
+private
+use ROOT        v* LCG_Interfaces
+end_private
+use XercesC     v* LCG_Interfaces -no_auto_imports
+
+use DIM v* Online
+
+include_path      none
+#============================================================================
+# Application building rule
+#============================================================================
+application          condDBServer    ../src/*.cpp 
+#============================================================================
+# define application environment
+#============================================================================
+apply_pattern    application_path
+
+apply_pattern install_scripts
+
+# Avoid possible conflicts with other projects
+private
+
+# PIT-specific
+#set TNS_ADMIN $(CONDDBSERVERROOT)/cmt
+
+set CORAL_DBLOOKUP_PATH $(CONDDBSERVERROOT)/cmt
+set CORAL_AUTH_PATH     $(HOME)/private
+
+#============================================================================
+# DIM requirements
+#============================================================================
+#macro DIM_native_version "v16r5"
+#set DIM_release_area "$(DIM_release_area)"
+#macro DIM_home       $(DIM_release_area)/DIM/$(DIM_native_version)/$(LCG_system)5 \
+#	slc4 $(DIM_release_area)/DIM/$(DIM_native_version)/$(LCG_system)5
+
+#include_dirs $(DIM_home)/include
+
+#macro_append use_linkopts "-L$(DIM_home)/bin -ldim -lpthread" \
+#      WIN32        "/LIBPATH:$(DIM_home)\bin dim.lib "
+
+#path_remove  LD_LIBRARY_PATH "/DIM/"   WIN32 ""
+#path_prepend LD_LIBRARY_PATH "$(DIM_home)/bin" WIN32 ""
+#path_remove  PATH "/DIM/" WIN32 "\DIM\"
+#path_prepend PATH "$(DIM_home)\bin"
+
+# PIT-specific
+set DIM_DNS_NODE ecs01.lbdaq.cern.ch
+
+action startServer 'condDBServer.exe $(CONDDBSERVERROOT)/cmt/partitions.txt'
+macro_remove cmt_actions_constituents 'startServer'
+
+apply_pattern disable_package_on platform=WIN32

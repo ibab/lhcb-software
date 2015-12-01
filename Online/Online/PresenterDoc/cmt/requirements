@@ -1,0 +1,28 @@
+#============================================================================
+# Created    : 2012-03-30
+# Maintainer : Olivier Callot
+#============================================================================
+package           PresenterDoc
+version           v1r1
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src PresenterDoc
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use GaudiAlg v*
+#============================================================================
+#  declares an include directory
+#============================================================================
+apply_pattern install_more_includes more=PresenterDoc
+#============================================================================
+# Component library building rule
+#============================================================================
+library          PresenterDoc    ../src/*.cpp 
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=PresenterDoc

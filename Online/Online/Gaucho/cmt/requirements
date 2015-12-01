@@ -1,0 +1,34 @@
+#=======================================================
+package  Gaucho
+version  v7r46
+#=======================================================
+
+branches Gaucho src cmt doc
+
+# add "use" statements
+use GaudiKernel  v*
+use AIDA         v* LCG_Interfaces
+use DIM          v* Online
+use GaudiAlg     v*
+use Boost        v* LCG_Interfaces
+use ROOT         v* LCG_Interfaces
+use DAQEvent     v* Event
+use MDF          v* DAQ
+use OnlineKernel v* Online
+use Trending     v* Online
+
+macro_append ROOT_linkopts ' -lHist' WIN32 " libHist.lib "
+
+apply_pattern install_more_includes more=Gaucho
+
+# linker library
+library GauchoLib *.cpp
+apply_pattern linker_library library=GauchoLib
+macro_append GauchoLib_shlibflags " $(Boost_linkopts_regex) "
+
+# component library
+library Gaucho components/*.cpp
+apply_pattern component_library library=Gaucho
+macro_append Gaucho_dependencies  " GauchoLib "
+macro_append Gaucho_shlibflags " $(Boost_linkopts_regex) "
+
