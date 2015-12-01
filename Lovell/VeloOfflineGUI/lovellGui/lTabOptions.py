@@ -1,6 +1,19 @@
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from lFuncs import *
+from PyQt4.QtCore import Qt, pyqtSignal
+from PyQt4.QtGui import (
+    QCheckBox,
+    QColor,
+    QComboBox,
+    QGroupBox,
+    QGridLayout,
+    QFont,
+    QLabel,
+    QPushButton,
+    QRadioButton,
+    QTextCharFormat,
+    QTextCursor,
+    QTextEdit
+)
+from lFuncs import setPadding
 import lInterfaces
 
 class lTabOpsState():

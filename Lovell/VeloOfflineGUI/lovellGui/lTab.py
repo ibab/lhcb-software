@@ -1,8 +1,19 @@
-from mplWidget import *
-from lFuncs import *
 import glob
-import pickle
 import os
+import pickle
+
+from PyQt4.QtCore import Qt
+from PyQt4.QtGui import (
+    QComboBox,
+    QGridLayout,
+    QGroupBox,
+    QLabel,
+    QTabWidget,
+    QWidget,
+)
+
+from lFuncs import setPadding
+from mplWidget import mplWidget
 
 
 def numeric_compare(x, y):

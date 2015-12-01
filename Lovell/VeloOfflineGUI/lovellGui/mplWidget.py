@@ -1,10 +1,13 @@
-print '\tLoading ROOT...'
-import ROOT
-print '\tDone'
 import numpy as np
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-import json
+
+from PyQt4.QtGui import (
+    QGridLayout,
+    QHBoxLayout,
+    QPalette,
+    QPushButton,
+    QMessageBox,
+    QWidget
+)
 
 import matplotlib
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
@@ -12,7 +15,6 @@ from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as Navigatio
 from matplotlib.figure import Figure
 import colormaps as newMaps
 import lInterfaces
-from numpy.ma.bench import xs
 matplotlib.rcParams.update({'axes.titlesize': 'medium'})
 matplotlib.rcParams.update({'legend.fontsize': 'medium'})
 matplotlib.rcParams.update({'legend.framealpha': '0.5'})

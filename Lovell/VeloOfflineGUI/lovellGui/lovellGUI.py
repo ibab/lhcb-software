@@ -1,12 +1,18 @@
 print 'Starting the Lovell GUI (~10secs)' 
 print 'Loading modules'
 import sys
-from lTab import *
-from lTabOptions import *
-from lFuncs import *
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt4.QtGui import (
+    QApplication,
+    QGridLayout,
+    QMainWindow,
+    QTabWidget,
+    QWidget,
+)
+
+import lFuncs
 import lInterfaces
+import lTab
+import lTabOptions
 
 
 class lovellGui(QMainWindow):
@@ -31,7 +37,7 @@ class run_view(QWidget):
         print 'IV_directory set to:', self.IV_directory
         self.run_data_dir = run_data_dir
         self.grid_layout = QGridLayout()
-        setPadding(self.grid_layout)
+        lFuncs.setPadding(self.grid_layout)
         self.setLayout(self.grid_layout)
         self.pages = [] 
         self.setup_tabs()
@@ -44,12 +50,12 @@ class run_view(QWidget):
         # Do the sensor overview adjustments here.
         self.prepSensorOverview(runview_config)
         i=1
-        self.tab_options = lTabOptions(self, self.run_data_dir)
+        self.tab_options = lTabOptions.lTabOptions(self, self.run_data_dir)
         nTabs = len(runview_config)
         for key, val in runview_config.iteritems():
             msg = 'Preparing tab (' + str(i) + '/' + str(nTabs) + '): ' + val['title']
-            print msg 
-            page = lTab(val, self)
+            print msg
+            page = lTab.lTab(val, self)
             if val['title'] == 'IV': page.modifyPageForIV(self.IV_directory)
             self.top_tab.addTab(page, val['title'])
             self.pages.append(page)
