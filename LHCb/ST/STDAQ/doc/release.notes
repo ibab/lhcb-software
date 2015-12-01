@@ -4,6 +4,9 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2015-12-01 - Elena Graverini
+ - Fix compiler warnings and remove unnecessary includes
+
 ! 2015-11-30 - Elena Graverini
  - Add the STLayerSelector algorithm to remove clusters from certain layers
 

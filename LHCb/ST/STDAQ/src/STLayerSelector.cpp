@@ -1,19 +1,15 @@
 // $Id: STLayerSelector.cpp,v 1.0 2012-05-12 15:16:34 elsasser Exp $
-// Include files
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
- 
+// Include files
 // local
 #include "STLayerSelector.h"
-
 // kernel
 #include "Kernel/STChannelID.h"
 
 // ====================================================================
 // ====================================================================
 
-DECLARE_TOOL_FACTORY( STLayerSelector );
+DECLARE_TOOL_FACTORY( STLayerSelector )
 
 // ====================================================================
 // ====================================================================
@@ -49,13 +45,13 @@ STLayerSelector::STLayerSelector
   m_layerMap.insert(std::pair<std::string, unsigned int>("T3V", 27));
   m_layerMap.insert(std::pair<std::string, unsigned int>("T3X2",28));
   
-};
+}
 
 // ====================================================================
 
 // ====================================================================
 // ====================================================================
-STLayerSelector::~STLayerSelector(){};
+STLayerSelector::~STLayerSelector(){}
 // ====================================================================
 
 // ====================================================================
@@ -68,7 +64,7 @@ StatusCode STLayerSelector::initialize ()
     return Error("Could not initialize the base class GaudiTool",sc);
   }
   return StatusCode::SUCCESS;
-};
+}
 // ====================================================================
 
 // ====================================================================
@@ -89,7 +85,7 @@ bool STLayerSelector::operator() ( const LHCb::STChannelID& id) const
   // Checks detector
   if ((m_detType == "TT" && id.isIT()) || (m_detType == "IT" && id.isTT()))
   {
-    debug() << "Excluded layers are in " << m_detType << ". Cluster is in other detector." <<endmsg;
+    if( msgLevel(MSG::DEBUG) ) debug() << "Excluded layers are in " << m_detType << ". Cluster is in other detector." <<endmsg;
     
     return false;
   }
@@ -97,7 +93,7 @@ bool STLayerSelector::operator() ( const LHCb::STChannelID& id) const
   // Checks layer
   std::vector<std::string>::const_iterator it = m_ignoredLayers.begin();
   for (;it!=m_ignoredLayers.end();it++){
-    if ((*it).find(m_detType)==-1){ // Checks if detector and layer agree
+    if ( (int)((*it).find(m_detType)) == -1){ // Checks if detector and layer agree
       continue;
     } 
     std::map<std::string,unsigned int>::const_iterator jt = m_layerMap.begin();
@@ -105,12 +101,12 @@ bool STLayerSelector::operator() ( const LHCb::STChannelID& id) const
       unsigned int layerNumb  =  (*jt).second; 
       std::string  layerName  =  (*jt).first;
       if( (id.uniqueLayer() == layerNumb) && (layerName==(*it)) ){
-        debug() << "Cluster is in "<< m_detType <<" layer "<< (*it) <<" and will be removed!" << endmsg;
+        if( msgLevel(MSG::DEBUG) ) debug() << "Cluster is in "<< m_detType <<" layer "<< (*it) <<" and will be removed!" << endmsg;
         return true;
       }
     }
     
-    debug() << "Cluster will not be removed!"<<endmsg;
+    if( msgLevel(MSG::DEBUG) ) debug() << "Cluster will not be removed!"<<endmsg;
   }
   
     
