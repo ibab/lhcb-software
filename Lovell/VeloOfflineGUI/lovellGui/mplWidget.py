@@ -24,6 +24,16 @@ class NavigationToolbar_mod(NavigationToolbar):
                  t[0] in ('Home', 'Pan', 'Zoom', 'Save')]
 
 
+# Default values in the plot options dictionary if a key isn't present
+# TODO would this make more sense in the central run view configuration?
+DEFAULT_DRAW_OPTIONS = {
+    'uncertainties': False,
+    'legend': False,
+    'yAxisZeroSuppressed': True,
+    'style': 0
+}
+
+
 class lPlottable():
     def __init__(self, axes, fig, params, lPlot):
         self.axes = axes
@@ -31,6 +41,16 @@ class lPlottable():
         self.cbar_set = False
         self.params = params
         self.plot = lPlot
+        # Set an empty options dictionary if one isn't present
+        self.options = self.params.get('options', {})
+
+        self._initialise_default_options()
+
+    def _initialise_default_options(self):
+        """Set default values for any missing cosmetic option keys."""
+        for key, default_value in DEFAULT_DRAW_OPTIONS.iteritems():
+            if key not in self.options:
+                self.options[key] = default_value
 
     def tab(self):
         return self.plot.parent()
@@ -167,8 +187,7 @@ class lPlottable():
         binwidth = nominal['data']['data']['binning'][0][1] - nominal['data']['data']['binning'][0][0]
         xs = []
         for bin in nominal['data']['data']['binning']: xs.append(0.5*(bin[0] + bin[1]))
-        style = 0
-        if 'style' in self.params: style = self.params['style']
+        style = self.options['style']
 
         col = 'b'
         if isRef: 
@@ -309,11 +328,9 @@ class lPlottable():
             xs.append(g.GetXaxis().GetBinCenter(i))
             ys.append(g.GetBinContent(i))
 
-        if 'style' in self.params: style = self.params['style']
-        elif 'options' in self.params: 
-            if 'asPoints' in self.params['options']: 
-                style = 3
-        else: style = 0
+        style = self.options['style']
+        if 'asPoints' in self.options:
+            style = 3
         self.add_1d_plot(xs, ys, style)
 
 
@@ -403,6 +420,8 @@ class mplWidget(QWidget):
         QWidget.__init__(self, parent)
         self.ext = ""
         self.params = params
+        # Set an empty options dictionary if one isn't present
+        self.options = self.params.get('options', {})
         self.create_main_frame()
         self.plottables = []
         self.setup_plottables()
@@ -410,6 +429,14 @@ class mplWidget(QWidget):
         self.yLims = []
         self.zLims = []
         # self.on_draw() # Drawn on call. Consider threading.
+
+        self._initialise_default_options()
+
+    def _initialise_default_options(self):
+        """Set default values for any missing cosmetic option keys."""
+        for key, default_value in DEFAULT_DRAW_OPTIONS.iteritems():
+            if key not in self.options:
+                self.options[key] = default_value
 
 
     def setup_plottables(self):
@@ -460,7 +487,7 @@ class mplWidget(QWidget):
         else: print 'Automatically setting y axis range (using matplotlib).'
         
         self.fig.tight_layout()
-        if 'showLegend' in self.params and self.params['showLegend']:
+        if self.options['legend']:
             if manSetY: self.axes.legend(loc = 'best')
         self.canvas.draw()
         self.fig.tight_layout()
