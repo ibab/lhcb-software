@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Analyse a run by comparing it to reference values.
+"""Analyse runs by comparing it to reference values.
 
 A run number is valid if it is present in the run list.
 """
@@ -15,7 +15,7 @@ def create_parser():
     parser = argparse.ArgumentParser(
         description=__doc__.split("\n")[0],
         epilog="\n".join(__doc__.split("\n")[1:]))
-    parser.add_argument("runs", type=int, nargs='+', help="Run number")
+    parser.add_argument("runs", type=int, nargs='+', help="Run numbers")
     parser.add_argument("--run-data-dir", default=Config().run_data_dir,
                         help="Directory to search for run list and data")
     parser.add_argument("--output-dir", default=None,
