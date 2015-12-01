@@ -58,8 +58,8 @@ class TestAnalysisConfigWrapper(unittest.TestCase):
                  "input": "VetraRef1",
                  "errThreshold": 30,
                  "warnThreshold": 60,
-                 "test": "Chi2Test",
-                 "testarg": "myArg",
+                 "function": "Chi2Test",
+                 "functionarg": "myArg",
                  "weight": .5,
                 },
                 {
@@ -68,8 +68,8 @@ class TestAnalysisConfigWrapper(unittest.TestCase):
                  "errThreshold": 40,
                  "warnThreshold": 55,
                  "tell1": "R",
-                 "test": "MeanWidthDiffRef",
-                 "testarg": ".1",
+                 "function": "MeanWidthDiffRef",
+                 "functionarg": ".1",
                  "weight": .5,
                 },
                 {
@@ -78,8 +78,8 @@ class TestAnalysisConfigWrapper(unittest.TestCase):
                  "errThreshold": 0,
                  "warnThreshold": 80,
                  "tell1": "Phi",
-                 "test": "MeanWidthDiffRef",
-                 "testarg": None,
+                 "function": "MeanWidthDiffRef",
+                 "functionarg": None,
                  "weight": .8,
                 },
                 {
@@ -88,8 +88,8 @@ class TestAnalysisConfigWrapper(unittest.TestCase):
                  "errThreshold": 20,
                  "warnThreshold": 10,
                  "tell1": "Both",
-                 "test": "FloorThreshold",
-                 "testarg": 10.,
+                 "function": "FloorThreshold",
+                 "functionarg": 10.,
                  "weight": 12.,
                 },
                 ]

@@ -10,7 +10,7 @@ import ROOT
 
 from ..config import Config
 from .io import GRFIO
-from .interface import ComparisonFunction
+from .interface import ComparisonFunction, VERSIONED_DOUBLE_TYPE, VERSIONED_USHORT_TYPE
 from .score_manipulation import Score, ERROR_LEVELS
 from .exceptions import DescriptionDictionaryKeyException, \
         ComparisonFunctionNotFoundInEvalDictException, ComparisonFunctionNotCollableException, \
@@ -34,9 +34,6 @@ class Combiner(object):
     # Static class variables
     WARNING_LIMITS = ["minWW", "minWE"]  # keys for warning limits
     ERROR_LIMITS   = ["minEW", "minEE"]  # keys for error limit
-    # Types for versioned tree branches
-    SCORE_TYPE     = "VersionedObject<Double_t, TimeStamp, std::greater<TimeStamp> >"
-    LVL_TYPE       = "VersionedObject<UShort_t, TimeStamp, std::greater<TimeStamp> >"
 
     def __init__(self, name, desc_dict, data_file_path, ref_file_path):
         """
@@ -50,7 +47,6 @@ class Combiner(object):
             ref_file_path : a path to a root file that serves as reference
         """
         self.__name = name
-        self.score = None
         self.warnings = 0
         self.errors = 0
         self.data_file_path = data_file_path
@@ -127,6 +123,13 @@ class Combiner(object):
         """
         pass
 
+    @abstractmethod
+    def isComparison(self):
+        """
+        Whether this Combiner instance is relevant for score/level determination.
+        """
+        pass
+
     def getLevel(self):
         self.evaluate()
         return self.results["lvl"]
@@ -156,17 +159,16 @@ class Combiner(object):
         Get a dictionary containing the score and level values. First evaluates
         this Combiner if necessary.
         """
-        return {\
-            "score": self.getScore().value,\
-            "lvl":   self.getLevel().Value\
-        }
+        self.evaluate()
+        return {k: (v() if hasattr(v, '__call__') else v) for k,v in self.results.iteritems()}
 
+    @abstractmethod
     def getBranches(self):
         """
         Get a dictionary mapping branches required by this Combiner to the
         respective ROOT types of those branches.
         """
-        return {"score": self.SCORE_TYPE, "lvl": self.LVL_TYPE}
+        pass
 
     def get_combiner_summary(self):
         """Returns summary information (score, lvl, summary data)"""
@@ -273,9 +275,14 @@ class BranchCombiner(Combiner):
         return results
 
     def getBranches(self):
-        results = super(BranchCombiner, self).getBranches()
+        if self.isComparison():
+            results = {"score": VERSIONED_DOUBLE_TYPE, "lvl": VERSIONED_USHORT_TYPE}
+        else:
+            results = {}
+
         for child in self.children:
             results[child.getName()] = child.getBranches()
+
         return results
 
     def evaluate(self):
@@ -290,10 +297,19 @@ class BranchCombiner(Combiner):
         for child in self.children:
             child.evaluate()
 
-        self.results = self.__calcResults()
+        if self.isComparison():
+            self.results = self.__calcResults()
+        else:
+            self.results = {}
 
     def isRelevant(self):
         return bool(self.children)
+
+    def isComparison(self):
+        for child in self.children:
+            if child.isComparison():
+                return True
+        return False
 
 class RootCombiner(BranchCombiner):
     MASTER_COMBINER_NAME = "MasterCombiner"    # name of the root combiner
@@ -363,12 +379,19 @@ class LeafCombiner(Combiner):
         """
         return self.__path
 
+    def getBranches(self):
+        """
+        Get a dictionary mapping branches required by this Combiner to the
+        respective ROOT types of those branches.
+        """
+        return self.compare_class.vars()
+
     def __setCompareFunc(self, myEval):
         """
         Read the compare function and its arguments from the eval dictionary.
         """
-        compClass = myEval[LeafCombiner.FUNC_KEY]
-        function = compClass.compare
+        self.compare_class = myEval[LeafCombiner.FUNC_KEY]
+        function = self.compare_class.compare
         if not callable(function):
             raise ComparisonFunctionNotCollableException(self.getName(), function.__name__)
         self.compare_func = function
@@ -404,17 +427,18 @@ class LeafCombiner(Combiner):
         if self.results:
             return
 
-        data_file = ROOT.TFile(self.data_file_path)
-        ref_file = ROOT.TFile(self.ref_file_path)
+        data_file = ROOT.TFile.Open(self.data_file_path, "READ")
+        ref_file = ROOT.TFile.Open(self.ref_file_path, "READ")
         data_file, ref_file = detect_zombies(data_file, ref_file)
 
         data_hist, ref_hist = self.__getHistos(data_file, ref_file)
         self.results = self.compare_func(data_hist, ref_hist, self.compare_arg)
-        lvl = self.getLevel()
-        if lvl == ERROR_LEVELS.WARNING:
-            self.warnings = 1
-        elif lvl == ERROR_LEVELS.ERROR:
-            self.errors = 1
+        if self.isComparison():
+            lvl = self.getLevel()
+            if lvl == ERROR_LEVELS.WARNING:
+                self.warnings = 1
+            elif lvl == ERROR_LEVELS.ERROR:
+                self.errors = 1
 
         #self.results = self.update_with_expected_state(result)  # TODO Uncomment when update_with-expected_state will be implemented
         #self.summary_data = self.get_summary_data_from_hist(data_hist)  # TODO Uncomment when get_summary_data_from_hist will be implemented
@@ -424,3 +448,7 @@ class LeafCombiner(Combiner):
 
     def isRelevant(self):
         return True # Leaf nodes are always relevant
+
+    def isComparison(self):
+        return isinstance(self.compare_class, ComparisonFunction) or issubclass(self.compare_class, ComparisonFunction)
+

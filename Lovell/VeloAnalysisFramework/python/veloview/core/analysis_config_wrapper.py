@@ -4,7 +4,7 @@ import types
 import veloview.analysis
 from ..config import Config
 from .combiners import RootCombiner
-from .interface import ComparisonFunction
+from .interface import ComparisonFunction, ValueFunction
 from ..runview.utils import run_file, reference_run_file
 
 class AnalysisConfigWrapper(object):
@@ -96,14 +96,14 @@ class AnalysisConfigWrapper(object):
         @type  leafDict: dictionary
         @param leafDict: Leaf description dictionary, containing at least the
                          keys "weight", "input", "errThreshold",
-                         "warnThreshold", "test", and "testarg"
+                         "warnThreshold", "function", and "functionarg"
         @return          A list of tuples.
         """
         path       = leafDict["input"]
         maxError   = leafDict.get("errThreshold",  50)
         maxWarning = leafDict.get("warnThreshold", 80)
-        function   = self.__class__._getCompFunction(leafDict["test"])
-        arg        = leafDict.get("testarg", None)
+        function   = self.__class__._getCompFunction(leafDict["function"])
+        arg        = leafDict.get("functionarg", None)
 
         rOrPhi = leafDict.get('tell1', None)
         tell1s = []
@@ -168,7 +168,7 @@ class AnalysisConfigWrapper(object):
         @type  branchDict: dictionary
         @param branchDict: Branch description dictionary, containing the keys
                            "weight", "input", "errThreshold", "warnThreshold",
-                           "test", and "testarg"
+                           "function", and "functionarg"
         """
         return\
             {\
@@ -197,8 +197,8 @@ class AnalysisConfigWrapper(object):
         value = getattr(veloview.analysis, className)
         if not type(value) is types.TypeType:
             raise ValueError("Class {} not found in \"veloview.analysis\", found a {} instead".format(className, type(value)))
-        if not issubclass(value, ComparisonFunction):
-            raise Valueerror("Class {} should inherit from ComparisonFunction".format(className))
+        if not (issubclass(value, ComparisonFunction) or issubclass(value, ValueFunction)):
+            raise ValueError("Class {} should inherit from ComparisonFunction or ValueFunction".format(className))
         return value
 
     @staticmethod

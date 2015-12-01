@@ -48,10 +48,10 @@ Dictionary leaf name -> leaf, where leaf is a dictionary as follows:
                    replaced with a tell1 board name (string)
     tell1:         Which tell1 boards to loop over: R, Phi or Both (optional,
                    string)
-    test:          One of FloorThreshold, CeilingThreshold, MeanWidthDiffRef,
+    function:          One of FloorThreshold, CeilingThreshold, MeanWidthDiffRef,
                    AbsoluteBandRef, ZeroCentredBandRef, KolmogorovSmirnovTest,
                    Chi2Test (string)
-    testarg:       argument passed to the test function (any or None,
+    functionarg:       argument passed to the function function (any or None,
                    default None)
     errThreshold:  score below this is considered error (int in range
                    [0, warnThreshold], default 50)
@@ -67,74 +67,74 @@ analysis_config_leaves = {
         {
             'title':         'Sensor Occupancy',
             'input':         'Velo/VeloOccupancyMonitor/OccAvrgSens',
-            'test':          'Chi2Test',
-            'testarg':       'chi2/ndf',
+            'function':      'Chi2Test',
+            'functionarg':   'chi2/ndf',
         },
         'occupancy_spectrum':
         {
             'title':         'Occupancy Spectrum',
             'input':         'Velo/VeloOccupancyMonitor/OccSpectAll',
-            'test':          'Chi2Test',
-            'testarg':       'chi2/ndf',
+            'function':      'Chi2Test',
+            'functionarg':   'chi2/ndf',
         },
         'crosstalk':
         {
             'title':         'Crosstalk',
             'input':         'Vetra/VeloBeetleHeaderXTalkCorrectionMoni/BHXT_SummaryPlot_1D',
-            'test':          'Chi2Test',
-            'testarg':       'chi2/ndf',
+            'function':      'Chi2Test',
+            'functionarg':   'chi2/ndf',
         },
         'pedestal_quality':
         {
             'title':         'Pedestal Quality Check',
             'input':         'Vetra/VeloPedestalSubtractorMoni/Quality_Check',
-            'test':          'MeanWidthDiffRef',
-            'testarg': 1.,
+            'function':      'MeanWidthDiffRef',
+            'functionarg':   1.,
         },
         'pedestal_data':
         {
             'title':         'Pedestal Proj Data',
             'input':         'Vetra/VeloPedestalSubtractorMoni/Proj_All_Data_Ped',
-            'test':          'Chi2Test',
-            'testarg':       'chi2/ndf',
+            'function':      'Chi2Test',
+            'functionarg':   'chi2/ndf',
         },
         'cluster_count':
         {
             'title':         'Number of Clusters per Event',
             'input':         'Velo/VeloClusterMonitor/# VELO clusters',
-            'test':          'Chi2Test',
-            'testarg':       'chi2/ndf',
+            'function':      'Chi2Test',
+            'functionarg':   'chi2/ndf',
         },
         'cluster_active_chips':
         {
             'title':         'Number of Active Chip Links per Sensor ',
             'input':         'Velo/VeloClusterMonitor/Active chip links vs sensor',
-            'test':          'Chi2Test',
-            'testarg':       'chi2/ndf',
+            'function':      'Chi2Test',
+            'functionarg':   'chi2/ndf',
         },
         'cluster_size':
         {
             'title':         'Cluster Size',
             'input':         'Velo/VeloClusterMonitor/Cluster size',
-            'test':          'Chi2Test',
+            'function':      'Chi2Test',
         },
         'noise_r':
         {
             'title':         'Noise (R)',
             'input':         'Vetra/NoiseMon/ADCCMSuppressed/{}/RMSNoise_vs_Strip',
             'tell1':         'R',
-            'test':          'MeanWidthDiffRef',
-            'testarg':        0.1,
-            'weight':         0.5,
+            'function':      'MeanWidthDiffRef',
+            'functionarg':   0.1,
+            'weight':        0.5,
         },
         'noise_phi':
         {
             'title':         'Noise (Phi)',
             'input':         'Vetra/NoiseMon/ADCCMSuppressed/{}/RMSNoise_vs_Strip',
             'tell1':         'Phi',
-            'test':          'MeanWidthDiffRef',
-            'testarg':        0.1,
-            'weight':         0.5,
+            'function':      'MeanWidthDiffRef',
+            'functionarg':   0.1,
+            'weight':        0.5,
         },
     }
 
@@ -143,21 +143,21 @@ analysis_config_leaves = {
         {
             'title':         'Noise lower bound',
             'input':         'Vetra/NoiseMon/ADCCMSuppressed/AvgRMSNoise_trend',
-            'test':          'FloorThreshold',
-            'testarg':        1.5,
+            'function':      'FloorThreshold',
+            'functionarg':   1.5,
         },
         'noise_ceiling':
         {
             'title':         'Noise upper bound',
             'input':         'Vetra/NoiseMon/ADCCMSuppressed/AvgRMSNoise_trend',
-            'test':          'CeilingThreshold',
-            'testarg':        2.5,
+            'function':      'CeilingThreshold',
+            'functionarg':   2.5,
         },
         'noise_rphi':
         {
             'title':         'Noise (all)',
             'input':         'Vetra/NoiseMon/ADCCMSuppressed/AvgRMSNoise_all',
-            'test':          'MeanWidthDiffRef',
-            'testarg':        0.1,
+            'function':      'MeanWidthDiffRef',
+            'functionarg':   0.1,
         },
 """
