@@ -69,11 +69,11 @@ related_info_tools_B2eMu = [{'Type' : 'RelInfoBs2MuMuBIsolations',
                             },
                             
                             {'Type': 'RelInfoVertexIsolationBDT',
-                            'Location':'VtxIsoInfo',
+                            'Location':'VtxIsoInfoBDT',
                             },
                             
                             {'Type': 'RelInfoTrackIsolationBDT',
-                            'Location':'ConeIsoInfo',
+                            'Location':'ConeIsoInfoBDT',
                             },
                             ] ## matches 'RelatedInfoTools'
 
@@ -125,11 +125,11 @@ related_info_tools_B2ee = [{'Type' : 'RelInfoBs2MuMuBIsolations',
                            },
                            
                            {'Type': 'RelInfoVertexIsolationBDT',
-                           'Location':'VtxIsoInfo',
+                           'Location':'VtxIsoInfoBDT',
                            },
                            
                            {'Type': 'RelInfoTrackIsolationBDT',
-                           'Location':'ConeIsoInfo',
+                           'Location':'ConeIsoInfoBDT',
                            },
                            ] ## matches 'RelatedInfoTools'
 
@@ -239,11 +239,11 @@ related_info_tools_Bu2KJPsiee = [{'Type' : 'RelInfoBs2MuMuBIsolations',
                            },
                                  
                             {'Type': 'RelInfoVertexIsolationBDT',
-                            'Location':'VtxIsoInfo',
+                            'Location':'VtxIsoInfoBDT',
                             },
                                  
                             {'Type': 'RelInfoTrackIsolationBDT',
-                            'Location':'ConeIsoInfo',
+                            'Location':'ConeIsoInfoBDT',
                             },
                            ] ## matches 'RelatedInfoTools'
 

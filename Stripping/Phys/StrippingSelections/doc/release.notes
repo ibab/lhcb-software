@@ -5,6 +5,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-01 - Guido Andreassi
+  - Changed location of BDT isolation variabiles in LFV lines, RD
 
 ! 2015-12-01 - Nicola Skidmore
   - Added B2Dst0H lines B2OC _B2DXBuilder.py
