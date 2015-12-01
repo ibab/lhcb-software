@@ -115,7 +115,7 @@ void ErrorLog::shutdown() {
   m_historyLog = 0;
 }
 
-void ErrorLog::handle(const Event& ev) {
+void ErrorLog::handle(const CPP::Event& ev) {
   IocSensor& ioc = IocSensor::instance();
   switch(ev.eventtype) {
   case IocEvent:

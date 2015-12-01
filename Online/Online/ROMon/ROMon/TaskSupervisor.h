@@ -246,7 +246,7 @@ namespace ROMon {
     const std::string& name() const {  return m_name; }
   };
 
-  class NodeTaskMon : public InventoryClient, public Interactor  {
+  class NodeTaskMon : public InventoryClient, public CPP::Interactor  {
   public:
     enum State { DEAD, ALIVE };
   protected:
@@ -256,7 +256,7 @@ namespace ROMon {
     typedef Inventory::ProjectList     ProjectList;
     typedef Inventory::ConnectionList  ConnectionList;
     /// Interactor parent object
-    Interactor*         m_parent;
+    CPP::Interactor*    m_parent;
     /// CLient type
     std::string         m_type;
     /// Error information
@@ -295,7 +295,7 @@ namespace ROMon {
 
   public:
     /// Initializing constructor
-    NodeTaskMon(Interactor* parent, const std::string& nam, const std::string& typ, Inventory* inv);
+    NodeTaskMon(CPP::Interactor* parent, const std::string& nam, const std::string& typ, Inventory* inv);
     /// Default destructor
     virtual ~NodeTaskMon();
     /// DimInfo overload to process messages
@@ -309,7 +309,7 @@ namespace ROMon {
     /// Set error information
     void setError(const std::string& e)        {  m_error = e;                }
     /// Parent interactor object
-    Interactor* parent() const                 {  return m_parent;            }
+    CPP::Interactor* parent() const            {  return m_parent;            }
     /// Last task update
     const time_t& taskUpdate() const           {  return m_taskUpdate;        }
     /// Encode connection status information in XML
@@ -336,14 +336,14 @@ namespace ROMon {
     /// Encode connection status information in XML
     const std::string& updateConnections();
     /// Interactor overload: Display callback handler
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
     /// Update task information
     void updateTaskInfo(const char* ptr, size_t len);
     /// Update connection information
     void updatePingInfo(const char* ptr, size_t len);
   };
 
-  class SubfarmTaskMon : public InventoryClient, public Interactor  {
+  class SubfarmTaskMon : public InventoryClient, public CPP::Interactor  {
   protected:
     typedef std::map<std::string,NodeTaskMon*> Monitors;
     typedef Inventory::NodeCollection::NodeList NodeList;
@@ -372,7 +372,7 @@ namespace ROMon {
     /// Publish monitoring information
     int publish();
     /// Interactor overload: Display callback handler
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
     /// DIM callback on dis_update_service
     static void feedData(void* tag, void** buf, int* size, int* first);
     /// DIM callback on dis_update_service

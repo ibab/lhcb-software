@@ -18,7 +18,7 @@ namespace ROMon {
   /** @class NodePinger
    *
    */
-  class NodePinger : public Interactor  {
+  class NodePinger : public CPP::Interactor  {
   protected:
     typedef Connectionset::Connections Connections;
 
@@ -43,13 +43,13 @@ namespace ROMon {
     /// Access to own name
     const std::string& name() const { return m_name; }
     /// Access to connections container
-    Connections& connections() { return m_connections->connections; }
+    Connections& connections()      { return m_connections->connections; }
     /// Start the monitoring object
     int start();
     /// Stop the monitoring object
     int stop();
     /// Interactor overload: Display callback handler
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
     /// DIM callback on dis_update_service
     static void feedData(void* tag, void** buf, int* size, int* first);
     /// Thread handler
@@ -189,7 +189,7 @@ int NodePinger::runThread(void* arg) {
 }
 
 /// Handle interaction event
-void NodePinger::handle(const Event& ev) {
+void NodePinger::handle(const CPP::Event& ev) {
   try {
     switch(ev.eventtype) {
     case TimeEvent:

@@ -88,8 +88,8 @@ FilterDisplay::~FilterDisplay()  {
 void FilterDisplay::addCommands() {
   int cmd_id = CMD_COMLAST;
   ::snprintf(m_node[0],sizeof(m_node[0]),"*");
-  ::snprintf(m_node[1],sizeof(m_node[1]),s_filterType[3]);
-  ::snprintf(m_node[2],sizeof(m_node[2]),s_matchType[0]);
+  ::snprintf(m_node[1],sizeof(m_node[1]),"%s",s_filterType[3]);
+  ::snprintf(m_node[2],sizeof(m_node[2]),"%s",s_matchType[0]);
   ::upic_set_param(m_node[0], 1, "A37", m_node,  0,0,0,0,0);
   ::upic_insert_command(m_id,CMD_COM2,++cmd_id, " Node      match:^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^","");
   ::upic_set_param(m_node[1], 1, "A37", s_filterType[3],0,0,s_filterType,sizeof(s_filterType)/sizeof(s_filterType[0]),1);
@@ -98,9 +98,9 @@ void FilterDisplay::addCommands() {
   ::upic_insert_command(m_id,CMD_COM2,++cmd_id, "           logic ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^","");
 
   ::memset(m_utgid,0,sizeof(m_utgid));
-  ::snprintf(m_utgid[0],sizeof(m_utgid[0]),"*");
-  ::snprintf(m_utgid[1],sizeof(m_utgid[1]),s_filterType[3]);
-  ::snprintf(m_utgid[2],sizeof(m_utgid[2]),s_matchType[0]);
+  ::snprintf(m_utgid[0],sizeof(m_utgid[0]),"%s","*");
+  ::snprintf(m_utgid[1],sizeof(m_utgid[1]),"%s",s_filterType[3]);
+  ::snprintf(m_utgid[2],sizeof(m_utgid[2]),"%s",s_matchType[0]);
   ::upic_set_param(m_utgid[0], 1, "A37", m_utgid,  0,0,0,0,0);
   ::upic_insert_command(m_id,CMD_COM2,++cmd_id, " UTGID     match:^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^","");
   ::upic_set_param(m_utgid[1], 1, "A37", s_filterType[3],0,0,s_filterType,sizeof(s_filterType)/sizeof(s_filterType[0]),1);
@@ -121,8 +121,8 @@ void FilterDisplay::addCommands() {
 
   ::memset(m_mess,0,sizeof(m_mess));
   ::snprintf(m_mess[0],sizeof(m_mess[0]),"*");
-  ::snprintf(m_mess[1],sizeof(m_mess[1]),s_filterType[3]);
-  ::snprintf(m_mess[2],sizeof(m_mess[2]),s_matchType[0]);
+  ::snprintf(m_mess[1],sizeof(m_mess[1]),"%s",s_filterType[3]);
+  ::snprintf(m_mess[2],sizeof(m_mess[2]),"%s",s_matchType[0]);
   ::upic_set_param(m_mess[0], 1, "A37", m_mess,  0,0,0,0,0);
   ::upic_insert_command(m_id,CMD_COM2,++cmd_id, " MESSAGE   match:^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^","");
   ::upic_set_param(m_mess[1], 1, "A37", s_filterType[3],0,0,s_filterType,sizeof(s_filterType)/sizeof(s_filterType[0]),1);

@@ -32,7 +32,7 @@ namespace BitTorrent  {
    *
    *   @author M.Frank
    */
-  class TorrentClusterLine : public ROMon::ClusterLine, public Interactor  {
+  class TorrentClusterLine : public ROMon::ClusterLine, public CPP::Interactor  {
     typedef std::set<std::string> StrSet;
     /// Set of excluded nodes
     StrSet              m_excluded;
@@ -48,7 +48,7 @@ namespace BitTorrent  {
     /// Default destructor
     virtual ~TorrentClusterLine();
     /// Interactor overload: Display callback handler
-    void handle(const Event& ev);
+    void handle(const CPP::Event& ev);
     /// Display function drawing on pasteboard the initial display
     virtual void initialDisplay();
     /// Display function drawing on pasteboard of current display
@@ -127,7 +127,7 @@ void TorrentClusterLine::excludedHandler(void* tag, void* address, int* size) {
 }
 
 /// Interactor overload: Display callback handler
-void TorrentClusterLine::handle(const Event& ev) {
+void TorrentClusterLine::handle(const CPP::Event& ev) {
   switch(ev.eventtype) {
   case IocEvent:
     switch(ev.type) {

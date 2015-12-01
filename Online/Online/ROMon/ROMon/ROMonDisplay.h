@@ -39,7 +39,7 @@ namespace ROMon {
    *
    *   @author M.Frank
    */
-  class ROMonDisplay : public ScrDisplay, public Interactor  {
+  class ROMonDisplay : public ScrDisplay, public CPP::Interactor  {
 
   public:
     typedef Nodeset::Nodes Nodes;
@@ -109,7 +109,7 @@ namespace ROMon {
     virtual void run();
 
     /// Interactor overload: Display callback handler
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
 
     /// DimInfoHandler overload
     static void infoHandler(void* tag, void* address, int* size);

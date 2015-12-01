@@ -28,8 +28,6 @@
 #include <vector>
 #include <memory>
 
-class Interactor;
-
 /*
  *   ROMon namespace declaration
  */
@@ -46,7 +44,7 @@ namespace ROMon {
    *
    *   @author M.Frank
    */
-  class InternalMonitor : public Interactor   {
+  class InternalMonitor : public CPP::Interactor   {
   protected:
     FarmMonitor*      m_parent;
     std::string       m_name;
@@ -150,7 +148,7 @@ namespace ROMon {
     static void dataHandler(void* tag, void* address, int* size);
 
     /// Interactor overload: Monitor callback handler
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
   };
 
   /**@class FarmMonitor ROMon.h GaudiOnline/FarmMonitor.h
@@ -244,7 +242,7 @@ namespace ROMon {
     SubMonitors& subMonitors() {  return m_farmMonitors; }
 
     /// Interactor overload: Monitor callback handler
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
 
     /// Connect to data sources
     void connect(const std::vector<std::string>& farms);

@@ -43,7 +43,7 @@ namespace Gaudi  {
     Lines          m_defaults;
   public:
     /// Initializing constructor
-    PropertyEditor(const std::string& nam, Property* p, Interactor* parent);
+    PropertyEditor(const std::string& nam, Property* p, CPP::Interactor* parent);
     /// Default destructor
     virtual ~PropertyEditor();
     void updateParams();
@@ -53,7 +53,7 @@ namespace Gaudi  {
     void setCurrent();
     void setProperties();
     /// Interactor overload: handle menu interupts
-    void handle (const Event& event);
+    void handle (const CPP::Event& event);
   };
 }      // Enad namespace Gaudi
 #endif // GAUDIUPI_PROPERTYEDITOR_H

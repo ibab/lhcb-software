@@ -44,7 +44,7 @@ HltSummaryDisplay::HltSummaryDisplay(InternalDisplay* parent)
 }
 
 /// Interactor overload: Display callback handler
-void HltSummaryDisplay::handle(const Event& ev)    {
+void HltSummaryDisplay::handle(const CPP::Event& ev)    {
   switch(ev.eventtype) {
   case IocEvent:
     switch(ev.type) {

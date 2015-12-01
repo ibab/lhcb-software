@@ -459,19 +459,19 @@ int FarmLineDisplay::handleKeyboard(int key)    {
 }
 
 /// Interactor overload: Display callback handler
-void FarmLineDisplay::handle(const Event& ev) {
+void FarmLineDisplay::handle(const CPP::Event& ev) {
   typedef vector<string> StringV;
   int cnt = 0;
   time_t now = time(0);
   ClusterLine* d = 0;
   SubDisplays::iterator k;
-  const MouseEvent* m = 0;
+  const SCR::MouseEvent* m = 0;
 
   DimLock dim_lock;
   RTL::Lock lock(screenLock());
   switch(ev.eventtype) {
   case ScrMouseEvent:
-    m = ev.get<MouseEvent>();
+    m = ev.get<SCR::MouseEvent>();
     if ( handleMouseEvent(m) ) {
     }
     else if ( 0 == m_nodeSelector )    {

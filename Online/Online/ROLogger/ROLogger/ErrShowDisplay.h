@@ -31,7 +31,7 @@ namespace ROLogger {
    *
    *   @author M.Frank
    */
-  class ErrShowDisplay : public Interactor {
+  class ErrShowDisplay : public CPP::Interactor {
 
   protected:
     typedef std::vector<std::string> Files;
@@ -82,11 +82,11 @@ namespace ROLogger {
 
   public:
     /// Standard constructor with object setup through parameters
-    ErrShowDisplay(Interactor* parent, Interactor* msg, const std::string& part="");
+    ErrShowDisplay(CPP::Interactor* parent, CPP::Interactor* msg, const std::string& part="");
     /// Standard destructor
     virtual ~ErrShowDisplay();
     /// Display callback handler
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
   };
 }      /* End namespace ROLogger */
 #endif /* ROLOGGER_ERRSHOWDISPLAY_H */

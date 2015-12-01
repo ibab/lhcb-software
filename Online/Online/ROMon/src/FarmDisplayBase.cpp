@@ -56,7 +56,7 @@ namespace BitTorrent {
 }
 
 namespace {
-  ScrDisplay* swapMouseSelector(Interactor* ia, ClusterDisplay* from, ClusterDisplay* to) {
+  ScrDisplay* swapMouseSelector(CPP::Interactor* ia, ClusterDisplay* from, ClusterDisplay* to) {
     if ( from ) {
       MouseSensor::instance().remove(from->display());
       ScrDisplay* d = dynamic_cast<ScrDisplay*>(from->nodeDisplay());
@@ -506,7 +506,7 @@ int FarmDisplayBase::showBenchmarkWindow() {
 }
 
 /// Handle Mouse interrupt
-bool FarmDisplayBase::handleMouseEvent(const MouseEvent* m) {
+bool FarmDisplayBase::handleMouseEvent(const SCR::MouseEvent* m) {
   if ( m->button == 2 ) {
     IocSensor::instance().send(this,CMD_SHOWHELP,this);
     return true;
@@ -542,7 +542,7 @@ bool FarmDisplayBase::handleMouseEvent(const MouseEvent* m) {
 }
 
 /// Handle IOC interrupt
-bool FarmDisplayBase::handleIocEvent(const Event& ev) {
+bool FarmDisplayBase::handleIocEvent(const CPP::Event& ev) {
   switch(ev.type) {
   case CMD_SHOWSUBFARM:
     showSubfarm();

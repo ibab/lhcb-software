@@ -24,9 +24,6 @@
 #include <ctime>
 #include <vector>
 
-// Forward declarations
-class Interactor;
-
 /*
  *   ROMon namespace declaration
  */
@@ -44,7 +41,7 @@ namespace ROMon {
    *
    *   @author M.Frank
    */
-  class SubfarmStatCollector : public Interactor   {
+  class SubfarmStatCollector : public CPP::Interactor   {
   protected:
     FarmStatSrv*      m_parent;
     std::string       m_name;
@@ -57,7 +54,7 @@ namespace ROMon {
     bool              m_cpuChanged;
   public:
     /// Access to parent to send interrupts
-    FarmStatSrv* parent() const          { return m_parent;       }
+    FarmStatSrv* parent() const         { return m_parent;       }
 
     /// Access subfarm name
     const std::string& name() const     { return m_name;         }
@@ -95,7 +92,7 @@ namespace ROMon {
     static void cpuHandler(void* tag, void* address, int* size);
 
     /// Interactor overload: Monitor callback handler
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
 
     /// DIM command service callback
     static void feedString(void* tag, void** address, int* size, int* first);
@@ -107,7 +104,7 @@ namespace ROMon {
    *
    *   @author M.Frank
    */
-  class FarmStatSrv : public Interactor  {
+  class FarmStatSrv : public CPP::Interactor  {
   protected:
     typedef std::map<std::string, SubfarmStatCollector*> SubfarmMonitors;
     typedef std::vector<std::string>  Farms;
@@ -139,7 +136,7 @@ namespace ROMon {
     bool haveCPU() const                { return m_haveCPU;  }
 
     /// Interactor overload: Monitor callback handler
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
 
     /// Connect to data sources
     void connect(const std::vector<std::string>& farms);

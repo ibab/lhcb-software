@@ -15,7 +15,7 @@
 using namespace std;
 
 /// Initializing constructor
-Gaudi::AlgorithmMenu::AlgorithmMenu(ISvcLocator* svc, Interactor* par) 
+Gaudi::AlgorithmMenu::AlgorithmMenu(ISvcLocator* svc, CPP::Interactor* par) 
 : SubMenu("Hit return on algorithm for properties", par), m_svcLoc(svc)
 {
   SmartIF<IAlgManager> mgr(svc);
@@ -49,7 +49,7 @@ Gaudi::AlgorithmMenu::~AlgorithmMenu()  {
 }
 
 /// Interactor overload: handle menu interupts
-void Gaudi::AlgorithmMenu::handle (const Event& event)   {
+void Gaudi::AlgorithmMenu::handle (const CPP::Event& event)   {
   if ( event.eventtype == UpiEvent )  {
     int cmd = event.command_id;
     if ( cmd > CMD_SHOW )  {

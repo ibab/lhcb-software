@@ -54,7 +54,7 @@ namespace ROMon {
    *
    * @author M.Frank
    */
-  class ROMonBridge : public Interactor {
+  class ROMonBridge : public CPP::Interactor {
   protected:
     /// Cluster container type definition
     typedef std::vector<RODimListener*> Servers;
@@ -82,7 +82,7 @@ namespace ROMon {
     /// Help printout in case of -h /? or wrong arguments
     static void help();
     /// Interactor override ....
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
   };
 }      // End namespace ROMon
 #endif /* ROMON_ROMONBRIDGE_H */
@@ -226,7 +226,7 @@ void ROMonBridge::addCluster(const string& sf) {
 }
 
 /// Interactor override ....
-void ROMonBridge::handle(const Event& ev) {
+void ROMonBridge::handle(const CPP::Event& ev) {
   typedef vector<string> StringV;
   switch(ev.eventtype) {
   case TimeEvent:

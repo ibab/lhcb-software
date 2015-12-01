@@ -56,21 +56,21 @@ static void clean_str(char* n,size_t len)  {
 }
 
 /// Standard constructor
-ErrShowDisplay::ErrShowDisplay(Interactor* parent, Interactor* msg, const string& part) 
+ErrShowDisplay::ErrShowDisplay(CPP::Interactor* parent, CPP::Interactor* msg, const string& part) 
 : m_parent(parent), m_msg(msg), m_numMsg(200)
 {
   ::tzset();
   time_t tim = ::time(0);
   tm* now = ::localtime(&tim);
   m_id = UpiSensor::instance().newID();
-  ::snprintf(m_name,sizeof(m_name),part.empty() ? "LHCb" : part.c_str());
-  ::snprintf(m_node,sizeof(m_node),"*");
-  ::snprintf(m_process,sizeof(m_process),"*");
-  ::snprintf(m_component,sizeof(m_component),"*");
-  ::snprintf(m_message,sizeof(m_message),"*");
-  ::snprintf(m_severity,sizeof(m_severity),s_SevList[2]);
-  ::snprintf(m_logDir,sizeof(m_logDir),LOG_DIR);
-  ::snprintf(m_outFileName,sizeof(m_outFileName),"Output.dat");
+  ::snprintf(m_name,sizeof(m_name),"%s",part.empty() ? "LHCb" : part.c_str());
+  ::snprintf(m_node,sizeof(m_node),"%s","*");
+  ::snprintf(m_process,sizeof(m_process),"%s","*");
+  ::snprintf(m_component,sizeof(m_component),"%s","*");
+  ::snprintf(m_message,sizeof(m_message),"%s","*");
+  ::snprintf(m_severity,sizeof(m_severity),"%s",s_SevList[2]);
+  ::snprintf(m_logDir,sizeof(m_logDir),"%s",LOG_DIR);
+  ::snprintf(m_outFileName,sizeof(m_outFileName),"%s","Output.dat");
   ::strftime(m_endTime,sizeof(m_endTime),s_timeFmt,now);
   ::strftime(m_startTime,sizeof(m_startTime),s_timeFmt,now);
 
@@ -253,7 +253,7 @@ void ErrShowDisplay::saveMessages() {
   ::upic_write_message2(txt);
 }
 
-void ErrShowDisplay::handle(const Event& ev) {
+void ErrShowDisplay::handle(const CPP::Event& ev) {
   IocSensor& ioc = IocSensor::instance();
   ioc_data data(ev.data);
   switch(ev.eventtype) {

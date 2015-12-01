@@ -119,7 +119,7 @@ void ROMonDisplay::run()   {
 }
 
 /// Interactor overload: Display callback handler
-void ROMonDisplay::handle(const Event& ev) {
+void ROMonDisplay::handle(const CPP::Event& ev) {
   switch(ev.eventtype) {
   case TimeEvent:
     if ( ev.timer_data == (void*)CMD_UPDATEDISPLAY ) 

@@ -28,7 +28,6 @@
 #include <map>
 #include <ctime>
 
-class Interactor;
 namespace SCR {
   struct Display;
   struct Pasteboard;
@@ -247,7 +246,7 @@ namespace ROMon {
     /// Handle common Mouse interrupt
     virtual bool handleMouseEvent(const SCR::MouseEvent* m);
     /// Handle common IOC interrupt
-    virtual bool handleIocEvent(const Event& ev);
+    virtual bool handleIocEvent(const CPP::Event& ev);
     /// Handle common keyboard interrupts
     virtual int handleKeyboard(int key);
   };

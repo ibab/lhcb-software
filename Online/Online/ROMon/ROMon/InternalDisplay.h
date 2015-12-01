@@ -17,14 +17,12 @@
 #define ROMON_INTERNALDISPLAY_H 1
 
 // Framework includes
-#include "ROMon/InternalDisplay.h"
 #include "CPP/Interactor.h"
 #include "RTL/rtl.h"
 
 // C++ include files
 #include <ctime>
 
-class Interactor;
 namespace SCR {
   struct Display;
   struct Pasteboard;
@@ -41,7 +39,7 @@ namespace ROMon {
    *
    *   @author M.Frank
    */
-  class InternalDisplay : public Interactor   {
+  class InternalDisplay : public CPP::Interactor   {
   protected:
     /// Reference to SCR pasteboard structure
     SCR::Pasteboard*  m_pasteboard;
@@ -125,7 +123,7 @@ namespace ROMon {
     /// Release the focus of this display
     virtual void releaseFocus() {}
     /// Interactor overload: Display callback handler
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
     /// DIM command service callback
     static void dataHandler(void* tag, void* address, int* size);
     /// DIM command service callback

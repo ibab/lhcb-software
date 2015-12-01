@@ -7,7 +7,6 @@
 
 class DialogDisplayFactory;
 class DialogMainDisplay;
-class Event;
 
 /**@class DialogMainDisplay DialogDisplay.h Gaudi/DialogDisplay.h
  *
@@ -56,7 +55,7 @@ class DialogSubDisplay : public AbstractSubDisplay   {
  * @version  1.0
  * @date     20/04/2006
  */
-class DialogMainDisplay : public AbstractMainDisplay, public Interactor   {
+class DialogMainDisplay : public AbstractMainDisplay, public CPP::Interactor   {
   friend class DialogDisplayFactory;
   friend class DialogSubDisplay;
  public:
@@ -67,7 +66,7 @@ class DialogMainDisplay : public AbstractMainDisplay, public Interactor   {
   DialogMainDisplay (DialogMenu *parent);
  protected:
   DialogMainDisplay (const AbstractMainDisplay& source);
-  void handle (const Event& ev);
+  void handle (const CPP::Event& ev);
   DialogMenu* window() {     return m_window;   }
  private:
   /// Private copy constructor

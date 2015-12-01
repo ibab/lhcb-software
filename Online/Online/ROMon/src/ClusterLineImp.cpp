@@ -91,7 +91,7 @@ namespace ROMon {
    *
    *   @author M.Frank
    */
-  class HltDeferLine : public ClusterLine, public Interactor  {
+  class HltDeferLine : public ClusterLine, public CPP::Interactor  {
     typedef std::set<std::string> StrSet;
     /// Number of nodes in this subfarm
     int                 m_numNodes;
@@ -122,7 +122,7 @@ namespace ROMon {
     /// Collect summary data
     virtual void collect(Summary& summary)  const;
     /// Interactor overload: Display callback handler
-    void handle(const Event& ev);
+    void handle(const CPP::Event& ev);
   };
 
   /**@class MonitoringClusterLine ROMon.h GaudiOnline/FarmDisplay.h
@@ -187,7 +187,7 @@ namespace ROMon {
    *
    *   @author M.Frank
    */
-  class CtrlFarmClusterLine : public ClusterLine, public Interactor   {
+  class CtrlFarmClusterLine : public ClusterLine, public CPP::Interactor   {
     typedef std::set<std::string> StrSet;
     /// Flag to indicate probles with entity
     bool                m_hasProblems;
@@ -213,7 +213,7 @@ namespace ROMon {
     /// Display function drawing on pasteboard of current display
     void display();
     /// Interactor overload: Display callback handler
-    void handle(const Event& ev);
+    void handle(const CPP::Event& ev);
   };
 }
 
@@ -406,7 +406,7 @@ void CtrlFarmClusterLine::updateContent(XML::TaskSupervisorParser& ts) {
 }
 
 /// Interactor overload: Display callback handler
-void CtrlFarmClusterLine::handle(const Event& ev) {
+void CtrlFarmClusterLine::handle(const CPP::Event& ev) {
   switch(ev.eventtype) {
   case IocEvent:
     switch(ev.type) {
@@ -905,7 +905,7 @@ HltDeferLine::~HltDeferLine() {
 }
 
 /// Interactor overload: Display callback handler
-void HltDeferLine::handle(const Event& ev) {
+void HltDeferLine::handle(const CPP::Event& ev) {
   switch(ev.eventtype) {
   case IocEvent:
     switch(ev.type) {

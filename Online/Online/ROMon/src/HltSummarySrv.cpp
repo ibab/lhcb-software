@@ -30,10 +30,10 @@ namespace ROMon {
   class HltSummaryListener : public FMCMonListener, public ROUpdateHandler {
   protected:
     /// Pointer to parent
-    Interactor* m_parent;
+    CPP::Interactor* m_parent;
   public:
     /// Standard constructor with initialization
-    HltSummaryListener(Interactor* parent, const std::string& name, const std::string& svn_name, bool verbose);
+    HltSummaryListener(CPP::Interactor* parent, const std::string& name, const std::string& svn_name, bool verbose);
     /// Default destructor    
     virtual ~HltSummaryListener();
     /// Update handler
@@ -48,7 +48,7 @@ namespace ROMon {
    *
    * @author M.Frank
    */
-  class HltSummarySrv : public Interactor {
+  class HltSummarySrv : public CPP::Interactor {
   protected:
     /// Cluster container type definition
     typedef std::vector<HltSummaryListener*> Servers;
@@ -90,7 +90,7 @@ namespace ROMon {
     /// Help printout in case of -h /? or wrong arguments
     static void help();
     /// Interactor override ....
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
   };
 }      // End namespace ROMon
 #endif /* ROMON_HLTSUMMARYSRV_H */
@@ -139,7 +139,7 @@ typedef FMCMonListener::Descriptor DSC;
 typedef RODimListener::Clients     Clients;
 
 /// Standard constructor with initialization
-HltSummaryListener::HltSummaryListener(Interactor* parent, const std::string& sf, const string& svc, bool verbose)
+HltSummaryListener::HltSummaryListener(CPP::Interactor* parent, const std::string& sf, const string& svc, bool verbose)
   : FMCMonListener(verbose), m_parent(parent)
 {
   m_infoTMO = 0;
@@ -270,7 +270,7 @@ void HltSummarySrv::collectData() {
 }
 
 /// Interactor override ....
-void HltSummarySrv::handle(const Event& ev) {
+void HltSummarySrv::handle(const CPP::Event& ev) {
   typedef vector<string> StringV;
   switch(ev.eventtype) {
   case TimeEvent:

@@ -15,11 +15,9 @@ class Property;
  */
 namespace Gaudi  {
 
-  /** @class PropertyMenu PropertyMenu.h GaudiUPI/PropertyMenu.h
+  /// Dialog class to show the properties of an object with an IProperty interface
+  /** 
     *
-    * Dialog class to show the properties of an object 
-    * with an IProperty interface
-    * 
     * @author  M.Frank
     * @version 1.0
     */
@@ -34,11 +32,11 @@ namespace Gaudi  {
     Lines          m_lines;
   public:
     /// Initializing constructor
-    PropertyMenu(const std::string& nam, IInterface* p, Interactor* parent);
+    PropertyMenu(const std::string& nam, IInterface* p, CPP::Interactor* parent);
     /// Default destructor
     virtual ~PropertyMenu();
     /// Interactor overload: handle menu interupts
-    void handle (const Event& event);
+    void handle (const CPP::Event& event);
   };
 }      // Enad namespace Gaudi
 #endif // GAUDIUPI_PROPERTYMENU_H

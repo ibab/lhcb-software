@@ -96,7 +96,7 @@ namespace ROMon {
     /// Set cursor to line position
     virtual void pos_cursor(const BootClusterLine* line);
     /// Interactor overload: Display callback handler
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
     /// DIM command service callback
     virtual void update(const void* data);
     /// Update display content
@@ -455,7 +455,7 @@ int BootDisplay::handleKeyboard(int key)    {
 }
 
 /// Interactor overload: Display callback handler
-void BootDisplay::handle(const Event& ev) {
+void BootDisplay::handle(const CPP::Event& ev) {
   const MouseEvent* m = 0;
 
   RTL::Lock lock(screenLock());

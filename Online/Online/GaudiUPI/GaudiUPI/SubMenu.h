@@ -9,7 +9,6 @@
 // Forward declarations
 class DialogMenu;
 class Property;
-class Event;
 
 /*
  *  Gaudi namespace
@@ -23,7 +22,7 @@ namespace Gaudi  {
     * @author  M.Frank
     * @version 1.0
     */
-  class SubMenu : public Interactor {
+  class SubMenu : public CPP::Interactor {
   public:
     enum SubMenuItems  {
       COM_CLOSE = 1000000,
@@ -33,16 +32,16 @@ namespace Gaudi  {
     };
   protected:
     /// Main dialog window
-    DialogMenu*    m_window;
+    DialogMenu*      m_window;
     /// Parent to be notified on window close
-    Interactor*    m_parent;
+    CPP::Interactor* m_parent;
     /// Sub- dialog window
-    Interactor*    m_child;
+    CPP::Interactor* m_child;
     /// Current cursor position
-    int            m_cursor;
+    int              m_cursor;
   public:
     /// Initializing constructor
-    SubMenu(const std::string& title, Interactor* parent);
+    SubMenu(const std::string& title, CPP::Interactor* parent);
     /// Default destructor
     virtual ~SubMenu();
     /// Map the window
@@ -50,7 +49,7 @@ namespace Gaudi  {
     /// Show message in the message window
     void print(const char* fmt, ...);
     /// Interactor overload: handle menu interupts
-    void handle (const Event& event);
+    void handle (const CPP::Event& event);
   };
 }      // End namespace Gaudi
 #endif // GAUDIUPI_SUBMENU_H

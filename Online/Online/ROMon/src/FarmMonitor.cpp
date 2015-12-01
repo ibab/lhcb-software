@@ -365,7 +365,7 @@ void InternalMonitor::dataHandler(void* tag, void* address, int* size) {
 }
 
 /// Interactor overload: Monitor callback handler
-void InternalMonitor::handle(const Event& ev)    {
+void InternalMonitor::handle(const CPP::Event& ev)    {
   switch(ev.eventtype) {
   case IocEvent: {
     switch(ev.type) {
@@ -831,7 +831,7 @@ bool FarmMonitor::isRunning() const {
 }
 
 /// Interactor overload: Monitor callback handler
-void FarmMonitor::handle(const Event& ev) {
+void FarmMonitor::handle(const CPP::Event& ev) {
   RTL::Lock lock(s_lock);
   switch(ev.eventtype) {
   case TimeEvent:

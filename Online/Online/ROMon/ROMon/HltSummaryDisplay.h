@@ -39,7 +39,7 @@ namespace ROMon {
     /// Standard destructor
     virtual ~HltSummaryDisplay() {}
     /// Interactor overload: Display callback handler
-    void handle(const Event& ev);
+    void handle(const CPP::Event& ev);
     /// Update display content
     virtual void update(const void*);
     /// Update display content

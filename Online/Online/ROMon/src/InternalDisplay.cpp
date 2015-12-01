@@ -162,7 +162,7 @@ void InternalDisplay::excludedHandler(void* tag, void* address, int* size) {
 }
 
 /// Interactor overload: Display callback handler
-void InternalDisplay::handle(const Event& ev)    {
+void InternalDisplay::handle(const CPP::Event& ev)    {
   switch(ev.eventtype) {
   case IocEvent: {
     switch(ev.type) {

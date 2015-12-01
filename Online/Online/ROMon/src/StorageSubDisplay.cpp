@@ -44,7 +44,7 @@ namespace ROMon {
     /// Release the focus of this display
     virtual void releaseFocus();
     /// Interactor overload: Display callback handler
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
     /// Update display content
     virtual void updateContent(const Nodeset& ns);
   };
@@ -144,7 +144,7 @@ void StorageSubDisplay::releaseFocus() {
 }
 
 /// Interactor overload: Display callback handler
-void StorageSubDisplay::handle(const Event& ev) {
+void StorageSubDisplay::handle(const CPP::Event& ev) {
   switch(ev.eventtype) {
   case ScrMouseEvent: {
     const MouseEvent* m = ev.get<MouseEvent>();

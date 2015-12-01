@@ -83,7 +83,7 @@ static string cleanType(const type_info* t)  {
 template<class T> inline const char* yesno(T o)  {  return o ? "YES" : "NO"; }
 
 /// Initializing constructor
-Gaudi::PropertyMenu::PropertyMenu(const string& nam, IInterface* iface, Interactor* parent)
+Gaudi::PropertyMenu::PropertyMenu(const string& nam, IInterface* iface, CPP::Interactor* parent)
 : SubMenu("Properties of:"+nam, parent), m_name(nam), m_property(0)
 {
   SmartIF<IProperty> iprp(iface);
@@ -125,7 +125,7 @@ Gaudi::PropertyMenu::~PropertyMenu()  {
 }
 
 /// Interactor overload: handle menu interupts
-void Gaudi::PropertyMenu::handle (const Event& event)   {
+void Gaudi::PropertyMenu::handle (const CPP::Event& event)   {
   if ( event.eventtype == UpiEvent )  {
     int cmd = event.command_id;
     if ( cmd > CMD_SHOW )  {

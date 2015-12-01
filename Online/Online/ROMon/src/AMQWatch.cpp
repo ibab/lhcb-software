@@ -35,7 +35,7 @@ namespace ROMon {
    *
    * @author M.Frank
    */
-  class AMQWatch : public Interactor {
+  class AMQWatch : public CPP::Interactor {
     struct ErrCount {
       time_t     stamp;
       size_t     count, errors;
@@ -90,7 +90,7 @@ namespace ROMon {
     /// Invoke corrective action
     virtual int executeAction();
     /// Interactor overload: Handle interaction event
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
   };
 
 }
@@ -208,7 +208,7 @@ int AMQWatch::executeAction() {
 }
 
 /// Handle interaction event
-void AMQWatch::handle(const Event& ev) {
+void AMQWatch::handle(const CPP::Event& ev) {
   try {
     switch(ev.eventtype) {
     case TimeEvent:

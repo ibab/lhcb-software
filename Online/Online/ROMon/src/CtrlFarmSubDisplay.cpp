@@ -60,7 +60,7 @@ namespace ROMon {
     /// Release the focus of this display
     virtual void releaseFocus();
     /// Interactor overload: Display callback handler
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
   };
   InternalDisplay* createCtrlFarmSubDisplay(InternalDisplay* parent, const string& title, int height) {
     return new CtrlFarmSubDisplay(parent,title,height);
@@ -255,7 +255,7 @@ void CtrlFarmSubDisplay::releaseFocus() {
 }
 
 /// Interactor overload: Display callback handler
-void CtrlFarmSubDisplay::handle(const Event& ev) {
+void CtrlFarmSubDisplay::handle(const CPP::Event& ev) {
   const MouseEvent* m;
   switch(ev.eventtype) {
   case ScrMouseEvent:

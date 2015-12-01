@@ -88,7 +88,7 @@ namespace ROMon {
     /// Handle common Mouse interrupt
     virtual bool handleMouseEvent(const SCR::MouseEvent* m);
     /// Handle common IOC interrupt
-    virtual bool handleIocEvent(const Event& ev);
+    virtual bool handleIocEvent(const CPP::Event& ev);
     /// Handle common keyboard interrupts
     virtual int handleKeyboard(int key);
   };
@@ -155,7 +155,7 @@ namespace ROMon {
     /// Set cursor to position
     virtual void set_cursor(InternalDisplay* updater);
     /// Interactor overload: Display callback handler
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
     /// Connect to data resources
     virtual void connect()  {  InternalDisplay::connect(); }
     /// Connect to data sources

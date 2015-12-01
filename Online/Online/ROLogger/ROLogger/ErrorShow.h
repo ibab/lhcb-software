@@ -18,9 +18,6 @@
 // Framework include files
 #include "CPP/Interactor.h"
 
-// Forward declarations
-class Event;
-
 /*
  *   ROLogger namespace declaration
  */
@@ -35,7 +32,7 @@ namespace ROLogger {
    *
    *   @author M.Frank
    */
-  class ErrorShow : public Interactor {
+  class ErrorShow : public CPP::Interactor {
   protected:
     /// Reference to message logger
     Interactor* m_msg;
@@ -51,7 +48,7 @@ namespace ROLogger {
     /// Shutdown client windows
     void shutdown();
     /// Display callback handler
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
     /// Help printout for RTL CLI
     static void help_fun();
   };

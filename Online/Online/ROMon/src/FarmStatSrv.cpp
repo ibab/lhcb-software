@@ -203,7 +203,7 @@ void SubfarmStatCollector::publish() {
 }
 
 /// Interactor overload: Monitor callback handler
-void SubfarmStatCollector::handle(const Event& ev)    {
+void SubfarmStatCollector::handle(const CPP::Event& ev)    {
   switch(ev.eventtype) {
   case IocEvent: {
     switch(ev.type) {
@@ -319,7 +319,7 @@ void FarmStatSrv::updateDns(const void* address) {
 }
 
 /// Interactor overload: Monitor callback handler
-void FarmStatSrv::handle(const Event& ev) {
+void FarmStatSrv::handle(const CPP::Event& ev) {
   RTL::Lock lock(m_lock);
   switch(ev.eventtype) {
   case TimeEvent:

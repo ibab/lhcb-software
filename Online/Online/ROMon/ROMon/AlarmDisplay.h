@@ -20,7 +20,6 @@
 #include "ROMon/InternalDisplay.h"
 #include "ROMon/Constants.h"
 
-class Interactor;
 namespace SCR {
   struct Display;
   struct Pasteboard;
@@ -63,7 +62,7 @@ namespace ROMon {
    *
    *   @author M.Frank
    */
-  class AlarmPrinter : public Interactor  {
+  class AlarmPrinter : public CPP::Interactor  {
   public:
     typedef std::map<int,Alarm*>     DisplayAlarms;
 
@@ -77,7 +76,7 @@ namespace ROMon {
     /// Standard destructor
     virtual ~AlarmPrinter();
     /// Interactor overload: Display callback handler
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
     /// Handle new incoming alarm
     void handleAlarm(const std::string& alarm);
 
@@ -132,7 +131,7 @@ namespace ROMon {
     int showHelpWindow();
 
     /// Interactor overload: Display callback handler
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
 
     /// InternalDisplay overload: update method: DIM command service callback
     virtual void update(const void* /* data */ ) {}

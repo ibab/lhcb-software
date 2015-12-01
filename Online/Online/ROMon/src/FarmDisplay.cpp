@@ -73,7 +73,7 @@ namespace ROMon {
 
 namespace {
 #if 0
-  ScrDisplay* swapMouseSelector(Interactor* ia, ClusterDisplay* from, ClusterDisplay* to) {
+  ScrDisplay* swapMouseSelector(CPP::Interactor* ia, ClusterDisplay* from, ClusterDisplay* to) {
     if ( from ) {
       MouseSensor::instance().remove(from->display());
       ScrDisplay* d = dynamic_cast<ScrDisplay*>(from->nodeDisplay());
@@ -437,7 +437,7 @@ int FarmDisplay::handleKeyboard(int key)    {
 }
 
 /// Interactor overload: Display callback handler
-void FarmDisplay::handle(const Event& ev) {
+void FarmDisplay::handle(const CPP::Event& ev) {
   int cnt = 0;
   time_t now = time(0);
   InternalDisplay* d = 0;

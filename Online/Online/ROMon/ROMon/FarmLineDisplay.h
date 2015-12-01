@@ -94,7 +94,7 @@ namespace ROMon {
     void connect(const std::string& section, const std::vector<std::string>& farms);
 
     /// Interactor overload: Display callback handler
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
     /// Connect to data resources
     virtual void connect()  {  InternalDisplay::connect(); }
     /// DIM command service callback

@@ -30,7 +30,7 @@ namespace {
 }
 
 /// Initializing constructor
-Gaudi::ServiceMenu::ServiceMenu(ISvcLocator* svc, Interactor* par) 
+Gaudi::ServiceMenu::ServiceMenu(ISvcLocator* svc, CPP::Interactor* par) 
 : SubMenu("Hit return on service for properties",par), m_svcLoc(svc)  {
   const list<IService*>& svcs = m_svcLoc->getServices();
   if ( !svcs.empty() )  {
@@ -55,7 +55,7 @@ Gaudi::ServiceMenu::~ServiceMenu()  {
 }
 
 /// Interactor overload: handle menu interupts
-void Gaudi::ServiceMenu::handle (const Event& event)   {
+void Gaudi::ServiceMenu::handle (const CPP::Event& event)   {
   if ( event.eventtype == UpiEvent )  {
     int cmd = event.command_id;
     if ( cmd > CMD_SHOW )  {

@@ -12,7 +12,7 @@ using namespace std;
 extern "C" void upic_write_message(const char*, const char*);
 
 /// Initializing constructor
-Gaudi::SubMenu::SubMenu(const string& title, Interactor* parent)
+Gaudi::SubMenu::SubMenu(const string& title, CPP::Interactor* parent)
 : m_window(0), m_parent(parent), m_child(0)
 {
   DialogMenuCreator win(this);
@@ -53,7 +53,7 @@ void Gaudi::SubMenu::print(const char* fmt, ...)   {
 }
 
 /// Interactor overload: handle menu interupts
-void Gaudi::SubMenu::handle (const Event& event)   {
+void Gaudi::SubMenu::handle (const CPP::Event& event)   {
   if ( event.eventtype == UpiEvent )  {
     int cmd = event.command_id;
     if ( cmd == CMD_CLOSE || cmd == DIALOGMENU_BACK_SPACE )   {

@@ -298,7 +298,7 @@ int AlarmDisplay::handleKeyboard(int key)    {
 }
 
 /// Interactor overload: Display callback handler
-void AlarmDisplay::handle(const Event& ev) {
+void AlarmDisplay::handle(const CPP::Event& ev) {
   int h;
   //const MouseEvent* m = 0;
   RTL::Lock lock(screenLock());
@@ -352,7 +352,7 @@ void AlarmDisplay::handle(const Event& ev) {
 }
 
 /// Standard constructor
-AlarmPrinter::AlarmPrinter(int argc, char** argv) : Interactor()    {
+AlarmPrinter::AlarmPrinter(int argc, char** argv) : CPP::Interactor()    {
   char txt[128];
   time_t tm = time(0);
   RTL::CLI cli(argc,argv,help);
@@ -396,7 +396,7 @@ void AlarmPrinter::handleAlarm(const std::string& alarm) {
 }
 
 /// Interactor overload: Display callback handler
-void AlarmPrinter::handle(const Event& ev) {
+void AlarmPrinter::handle(const CPP::Event& ev) {
   switch(ev.eventtype) {
   case IocEvent:
     switch(ev.type) {

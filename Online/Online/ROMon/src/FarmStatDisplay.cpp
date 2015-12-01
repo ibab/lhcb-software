@@ -70,7 +70,7 @@ namespace ROMon {
     /// Set cursor position
     virtual void set_cursor(InternalDisplay* d) { this->InternalDisplay::set_cursor(d); }
     /// Interactor overload: Display callback handler
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
     /// DIM command service callback
     virtual void update(const void* data);
     /// Update display content
@@ -189,7 +189,7 @@ namespace {
 
 
 // Standard constructor
-FarmStatClusterLine::FarmStatClusterLine(Interactor* p, int pos, const std::string& n)
+FarmStatClusterLine::FarmStatClusterLine(CPP::Interactor* p, int pos, const std::string& n)
   : m_mbm(0), m_cpu(0), m_position(pos), m_parent(p), m_name(n)
 {
 }
@@ -215,7 +215,7 @@ int FarmStatClusterLine::start() {
 }
 
 /// Interactor overload: Display callback handler
-void FarmStatClusterLine::handle(const Event& ev) {
+void FarmStatClusterLine::handle(const CPP::Event& ev) {
   switch(ev.eventtype) {
   case IocEvent:
     switch(ev.type) {
@@ -456,7 +456,7 @@ int FarmStatDisplay::handleKeyboard(int key)    {
 }
 
 /// Interactor overload: Display callback handler
-void FarmStatDisplay::handle(const Event& ev) {
+void FarmStatDisplay::handle(const CPP::Event& ev) {
   const MouseEvent* m = 0;
   Clusters::iterator i;
   RTL::Lock lock(screenLock());

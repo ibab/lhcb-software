@@ -84,7 +84,7 @@ static string cleanType(const type_info* t)  {
 template<class T> inline const char* yesno(T o)  {  return o ? "YES" : "NO"; }
 
 /// Initializing constructor
-Gaudi::PropertyEditor::PropertyEditor(const string& nam, Property* prop, Interactor* parent)
+Gaudi::PropertyEditor::PropertyEditor(const string& nam, Property* prop, CPP::Interactor* parent)
 : SubMenu("Property "+prop->name()+" of:"+nam, parent), m_property(prop), m_isVector(false),
   m_isString(false)
 {
@@ -210,7 +210,7 @@ Gaudi::PropertyEditor::~PropertyEditor()  {
 }
 
 /// Interactor overload: handle menu interupts
-void Gaudi::PropertyEditor::handle (const Event& e)   {
+void Gaudi::PropertyEditor::handle (const CPP::Event& e)   {
   if ( e.eventtype == UpiEvent )  {
     // print("Menu:%d Command:%d Param:%d Item:%d",e.menu_id, e.command_id, e.param_id, e.index_id);
     Lines::iterator i;

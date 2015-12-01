@@ -24,7 +24,6 @@
 #include <string>
 
 // Forward declarations
-class Interactor;
 namespace BitTorrent  {
   class TorrentStatus;
   class SubfarmTorrentStatus;

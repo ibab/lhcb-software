@@ -91,7 +91,7 @@ namespace ROMon {
    *
    * @author M.Frank
    */
-  class BootMonitor : public Interactor {
+  class BootMonitor : public CPP::Interactor {
   public:
     typedef std::map<std::string,SubfarmBootStatus*> Clusters;
 
@@ -117,7 +117,7 @@ namespace ROMon {
     /// Scan subfarms for new information
     virtual void scan();
     /// Handle interaction event
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
     /// Access to object name
     const std::string& name() const {  return m_name;  }
     /// Access to last scan timestamp
@@ -612,7 +612,7 @@ void BootMonitor::scan() {
 }
 
 /// Handle interaction event
-void BootMonitor::handle(const Event& ev) {
+void BootMonitor::handle(const CPP::Event& ev) {
   try {
     switch(ev.eventtype) {
     case TimeEvent:

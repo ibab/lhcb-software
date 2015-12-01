@@ -33,11 +33,11 @@ namespace Gaudi  {
 
   public:
     /// Initializing constructor
-    AlgorithmMenu(ISvcLocator* svc, Interactor* par);
+    AlgorithmMenu(ISvcLocator* svc, CPP::Interactor* par);
     /// Default destructor
     virtual ~AlgorithmMenu();
     /// Interactor overload: handle menu interupts
-    void handle (const Event& event);
+    void handle (const CPP::Event& event);
   };
 }      // End namespace Gaudi
 #endif // GAUDIUPI_SERVICEMENU_H

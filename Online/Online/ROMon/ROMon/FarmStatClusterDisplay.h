@@ -38,21 +38,21 @@ namespace ROMon {
    *
    *   @author M.Frank
    */
-  class FarmStatClusterLine : public Interactor  {
+  class FarmStatClusterLine : public CPP::Interactor  {
   public:
     typedef std::map<std::string,std::map<std::string,std::vector<float> > > _CI;
     typedef std::map<std::string,std::map<std::string,std::vector<int> > >   _MI;
   protected:
     int                m_mbm, m_cpu;
     size_t             m_position;
-    Interactor*        m_parent;
+    CPP::Interactor*   m_parent;
     std::string        m_name;
     _CI                m_cpuData;
     _MI                m_mbmData;
 
   public:
     /// Initializing constructor
-    FarmStatClusterLine(Interactor* p, int pos, const std::string& n);
+    FarmStatClusterLine(CPP::Interactor* p, int pos, const std::string& n);
     /// Standard destructor
     virtual ~FarmStatClusterLine();
     /// Access to cluster name
@@ -64,11 +64,11 @@ namespace ROMon {
     /// The line position in the display
     int position() const                      { return m_position;  }
     /// Access to parent
-    Interactor* parent() const                {  return m_parent;   }
+    CPP::Interactor* parent() const           {  return m_parent;   }
     /// Start DIM services for this subfarm line
     int start();
     /// Interactor overload: Display callback handler
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
     /// DIM command service callback
     static void mbmHandler(void* tag, void* address, int* size);
     /// DIM command service callback
@@ -101,7 +101,7 @@ namespace ROMon {
     /// Explicit connect to data services
     virtual void connect();
     /// Interactor overload: Display callback handler
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
     /// Update display content
     virtual void update(const void* data);
     /// Update display content

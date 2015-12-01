@@ -52,7 +52,7 @@ void ErrorShow::shutdown() {
   m_msg = 0;
 }
 
-void ErrorShow::handle(const Event& ev) {
+void ErrorShow::handle(const CPP::Event& ev) {
   switch(ev.eventtype) {
   case IocEvent:
     switch(ev.type) {

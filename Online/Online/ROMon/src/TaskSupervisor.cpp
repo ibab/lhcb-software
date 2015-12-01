@@ -184,7 +184,7 @@ ostream& Inventory::print(ostream& os)   const  {
 }
 
 /// Initializing constructor
-NodeTaskMon::NodeTaskMon(Interactor* parent, const string& nam, const string& typ, Inventory* inv) 
+NodeTaskMon::NodeTaskMon(CPP::Interactor* parent, const string& nam, const string& typ, Inventory* inv) 
   : InventoryClient(nam,inv), m_parent(parent), m_type(typ), m_infoId(0), 
     m_changed(true), m_taskUpdate(0), m_connUpdate(0), m_numBadTasks(1), m_numBadConnections(1)
 {
@@ -506,7 +506,7 @@ int NodeTaskMon::publish()   {
 }
 
 /// Handle interaction event
-void NodeTaskMon::handle(const Event& ev) {
+void NodeTaskMon::handle(const CPP::Event& ev) {
   switch(ev.eventtype) {
   case TimeEvent:
     if (ev.timer_data == (void*)CMD_DATA ) {
@@ -669,7 +669,7 @@ void SubfarmTaskMon::feedSummary(void* tag, void** buf, int* size, int* /* first
 }
 
 /// Handle interaction event
-void SubfarmTaskMon::handle(const Event& ev) {
+void SubfarmTaskMon::handle(const CPP::Event& ev) {
   try {
     switch(ev.eventtype) {
     case TimeEvent:
