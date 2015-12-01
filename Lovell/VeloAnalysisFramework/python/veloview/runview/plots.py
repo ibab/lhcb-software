@@ -143,7 +143,7 @@ def get_2d_trending_plot(nameX, nameY, runRange, binsX = 10, minX = 0., maxX = 1
     t = Tree(Config().grf_tree_name)
     h = t.Plot( 
             ( # functions projecting out coordinates to plot
-                lambda t: getattr(t, nameX).value()
+                lambda t: getattr(t, nameX).value(),
                 lambda t: getattr(t, nameY).value()
                 ),
             ( # cut(s) to apply
