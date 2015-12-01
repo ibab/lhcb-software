@@ -1,9 +1,6 @@
 // $Id: TupleToolPid.cpp,v 1.6 2010-03-04 14:02:03 xieyu Exp $
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // local
 #include "TupleToolPid.h"
 

@@ -1,9 +1,6 @@
 // $Id: TupleToolGeometry.cpp,v 1.17 2010-05-12 20:01:40 jpalac Exp $
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // local
 #include "TupleToolGeometry.h"
 

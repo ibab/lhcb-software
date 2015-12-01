@@ -1,8 +1,6 @@
 // $Id: TupleToolBremInfo.cpp
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 // local
 #include "TupleToolBremInfo.h"
 #include "GaudiAlg/Tuple.h"

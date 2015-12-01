@@ -1,9 +1,6 @@
 // $Id: TupleToolSelResults.cpp,v 1.2 2010-01-26 15:39:26 rlambert Exp $
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // local
 #include "TupleToolSelResults.h"
 #include "Kernel/ICheckSelResults.h"            // Interface

@@ -5,9 +5,6 @@
 #include <boost/foreach.hpp>
 #include <boost/algorithm/string/replace.hpp>
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // local
 #include "TupleToolSwimmingInfo.h"
 

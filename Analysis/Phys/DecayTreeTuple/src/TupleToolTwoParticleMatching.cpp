@@ -5,7 +5,6 @@
 #include "Kernel/ParticleProperty.h"
 #include "Kernel/IParticlePropertySvc.h"
 #include <cstdlib>
-#include "GaudiKernel/ToolFactory.h"
 //-----------------------------------------------------------------------------
 // Implementation file for class : TupleToolTwoParticleMatching
 //-----------------------------------------------------------------------------

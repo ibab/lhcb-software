@@ -82,6 +82,7 @@
 #include "DecayTreeTupleBase/TupleToolBase.h"
 #include "Kernel/IParticleTupleTool.h"
 #include "Kernel/ISubstitutePID.h"
+#include "TrackInterfaces/ITrackStateProvider.h"
 
 // STL
 #include <vector>
@@ -89,7 +90,6 @@
 #include <sstream>
 
 class IParticleDescendants;
-class ITrackStateProvider ;
 
 namespace LHCb
 {

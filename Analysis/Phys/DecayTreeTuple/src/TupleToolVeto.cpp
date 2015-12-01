@@ -1,8 +1,6 @@
 // $Id: TupleToolVeto.cpp
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 // local
 #include "TupleToolVeto.h"
 #include "GaudiAlg/Tuple.h"

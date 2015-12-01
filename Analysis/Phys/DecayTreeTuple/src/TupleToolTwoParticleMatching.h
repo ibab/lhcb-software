@@ -2,9 +2,6 @@
 #ifndef _TupleToolTwoParticleMatching_H
 #define _TupleToolTwoParticleMatching_H 1
 
-// Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // Base class
 #include "DecayTreeTupleBase/TupleToolBase.h"
 #include "TupleToolKinematic.h"

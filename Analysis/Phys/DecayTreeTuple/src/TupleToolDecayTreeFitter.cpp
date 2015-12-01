@@ -1,8 +1,6 @@
 // $Id: $
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 // local
 #include "TupleToolDecayTreeFitter.h"
 #include "Kernel/GetIDVAlgorithm.h"
@@ -17,7 +15,7 @@
 #include "DecayTreeFitter/Fitter.h"
 #include "Kernel/IParticlePropertySvc.h"
 #include "LoKi/ParticleProperties.h"
-#include "TrackInterfaces/ITrackStateProvider.h"
+
 
 // boost
 #include <boost/foreach.hpp>

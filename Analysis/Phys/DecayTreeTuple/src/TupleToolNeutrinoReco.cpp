@@ -1,9 +1,6 @@
 // $Id: TupleToolNeutrinoReco.cpp,v 1.6 2010-04-12 12:34:58 rlambert Exp $
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
 

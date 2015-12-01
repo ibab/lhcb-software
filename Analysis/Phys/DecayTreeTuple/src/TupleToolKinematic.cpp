@@ -1,9 +1,6 @@
 // $Id: TupleToolKinematic.cpp,v 1.6 2010-04-12 12:34:58 rlambert Exp $
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // local
 #include "TupleToolKinematic.h"
 

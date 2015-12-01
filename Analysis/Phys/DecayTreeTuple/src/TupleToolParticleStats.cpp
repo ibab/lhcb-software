@@ -1,7 +1,6 @@
 // Include files
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "TupleToolParticleStats.h"
 #include "Event/Track.h"
 #include "Event/VeloCluster.h"

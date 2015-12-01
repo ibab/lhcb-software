@@ -1,8 +1,5 @@
 // $Id: TupleToolIsolationTwoBody.cpp
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/DeclareFactoryEntries.h"
-//#include "GaudiKernel/INTupleSvc.h"
 #include "Kernel/Particle2MCLinker.h"
 #include "Kernel/IParticle2MCAssociator.h"
 #include "LoKi/LoKi.h"
@@ -24,7 +21,6 @@
 #include "TupleToolIsolationTwoBody.h"
 #include "Kernel/IParticleCombiner.h"
 // Include files
-#include "GaudiKernel/ToolFactory.h"
 #include "Event/Particle.h"
 // kernel
 #include "GaudiAlg/Tuple.h"

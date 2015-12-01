@@ -1,24 +1,18 @@
 // $Id: TupleToolCaloDigits.cpp,v 0.1 2015-08-05 13:50:45 bursche $
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // local
 #include "TupleToolCaloDigits.h"
 
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/ITupleTool.h"
-//#include "GaudiKernel/Memory.h"
-//nclude "GaudiAlg/ISequencerTimerTool.h"
 
 #include "Event/CaloDigit.h"
 
 #include "GaudiKernel/IRegistry.h" // IOpaqueAddress
 
-#include  "CaloDet/DeCalorimeter.h"
+#include "CaloDet/DeCalorimeter.h"
 
-//#include "TArrayL.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TupleToolCaloDigits

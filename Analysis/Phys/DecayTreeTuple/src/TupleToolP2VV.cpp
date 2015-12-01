@@ -1,9 +1,6 @@
 // $Id: TupleToolP2VV.cpp,v 1.5 2010-01-26 15:39:26 rlambert Exp $
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 #include "Event/Particle.h"
 // kernel
 #include "Kernel/IP2VVPartAngleCalculator.h"            // Interface

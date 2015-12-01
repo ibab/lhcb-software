@@ -1,8 +1,6 @@
 // $Id: TupleToolPhotonInfo.cpp,v 1.1 2010-05-21 17:03:11 odescham Exp $
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 // local
 #include "TupleToolPhotonInfo.h"
 #include "GaudiAlg/Tuple.h"

@@ -1,8 +1,6 @@
 // $Id: TupleToolSubMass.cpp,v 1.12 2010-04-23 12:01:26 jhe Exp $
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 // local
 #include "TupleToolSubMass.h"
 #include "GaudiAlg/Tuple.h"

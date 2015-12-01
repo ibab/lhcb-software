@@ -1,7 +1,6 @@
 // $Id: TupleToolCaloHypo.cpp,v 1.1 2010-05-21 17:03:11 odescham Exp $
 // Include files
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
+
 // local
 #include "TupleToolCaloHypo.h"
 #include "GaudiAlg/Tuple.h"
