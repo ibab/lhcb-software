@@ -4,6 +4,9 @@ from functools import wraps
 from logging import getLogger, warning
 logger = getLogger(__name__)
 
+# Types for versioned tree branches
+VERSIONED_DOUBLE_TYPE = "VersionedObject<Double_t, TimeStamp, std::greater<TimeStamp> >"
+VERSIONED_USHORT_TYPE = "VersionedObject<UShort_t, TimeStamp, std::greater<TimeStamp> >"
 
 def check_hists1(comparefn):
     """Decorator for comparison functions.
@@ -59,7 +62,6 @@ def check_binning(comparefn):
             return ComparisonFunction.create_error_dict()
     return wrapper
 
-
 class ComparisonFunction(object):
     """
     This is an interface for all comparison functions. It mimics a normal
@@ -71,6 +73,12 @@ class ComparisonFunction(object):
     def compare(cls, data_hist, ref_hist, param):
         """This method needs to be implemented for every single function and will need to return (score, lvl)"""
         raise NotImplementedError("This is an abstract function that needs to be implemented for each comparison function")
+
+    @classmethod
+    def vars(cls):
+        """This method returns a dictionary mapping variable names output by this
+        function to their respective types."""
+        return {"score": VERSIONED_DOUBLE_TYPE, "lvl": VERSIONED_USHORT_TYPE}
 
     @classmethod
     def check_if_hist_exists(cls, hist):
@@ -93,3 +101,19 @@ class ComparisonFunction(object):
     @classmethod
     def create_error_dict(cls):
         return cls.create_final_dict(Score(0), ERROR_LEVELS.ERROR)
+
+class ValueFunction(object):
+    """
+    Interface for all value-functions, that is, functions that yield a single
+    value.
+    """
+
+    @classmethod
+    def vars(cls):
+        """This method returns a dictionary mapping variable names output by this
+        function to their respective types."""
+        return {"value": VERSIONED_DOUBLE_TYPE}
+
+    @classmethod
+    def create_final_dict(cls, value):
+        return {"value": value}
