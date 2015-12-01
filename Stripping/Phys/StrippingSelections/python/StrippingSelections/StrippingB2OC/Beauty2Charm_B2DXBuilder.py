@@ -33,7 +33,6 @@ class B2DXBuilder(object):
         self.lines[-1].pre = 0.1 # last line is WS D line
         self._makeB2D0H('D2HHUP',self.d.hh_up)   # B+- -> D0(HH)  H+-
         self._makeB2D0H('D2KPIPID',d.kpi_pid,False) # No IP line!
-        self._makeB2D0H('D2KMuNu',self.d.kmu)
         self.b02dhhd2hh = self._makeB02D0HH('D2HH',self.d.hh) # B0  -> D0(HH)  H+ H-
         self._makeB02D0PPbar('D2HH',self.d.hh) # B0  -> D0(HH)  H+ H-
 

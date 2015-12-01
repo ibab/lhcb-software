@@ -570,9 +570,6 @@ default_config ={
     'StrippingBc2BKKB2D0DBeauty2CharmLine',
     'StrippingBc2BKKWSB2D0DBeauty2CharmLine',
 
-    'StrippingB2D0KD2KMuNuBeauty2CharmLine',
-    'StrippingB2D0PiD2KMuNuBeauty2CharmLine',
-
 
     'StrippingB2D0PiD2HHHHoldBeauty2CharmLine',  
     #'StrippingB2D0KD2HHHHoldBeauty2CharmLine',

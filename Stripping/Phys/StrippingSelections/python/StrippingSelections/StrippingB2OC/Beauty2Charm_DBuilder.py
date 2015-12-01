@@ -251,9 +251,6 @@ class DBuilder(object):
           # phi mu nu
           self.phimu = self._makeD2PhiMuNu()
 
-          # K mu nu
-          self.kmu = self._makeD2KMuNu()
-
           #Different subsets or selections for FULL DST lines
           #Different PID filtering
           self.hhh_pid_tightpi = [filterPID('D2HHHPIDTIGHTPI',self.hhh_pid,config_pid['TIGHTPI'])]
@@ -1753,20 +1750,6 @@ class DBuilder(object):
                                       RequiredSelections=[phi,self.muons])
           return [protoD2PhiMuNu]
 
-     def _makeD2KMuNu(self,up=False):
-          '''make D0->Kmunu'''
-          comboCuts = LoKiCuts(['ADOCA12'],self.config).code()
-          momCuts = [LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVDIRA'],self.config).code()]  
-          momCuts.append( '(MM < 2000)' )
-          momCuts = LoKiCuts.combine(momCuts)
-          cp = CombineParticles(  CombinationCut=comboCuts,
-                                  MotherCut=momCuts,
-                                  DecayDescriptors=['[D0 -> K- mu+]cc'])
-
-          protoD02KMuNu  = Selection('ProtoD02KMuNuBeauty2Charm',   
-                                      Algorithm=cp,
-                                      RequiredSelections=[self.kaons,self.muons])
-          return [protoD02KMuNu]
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
