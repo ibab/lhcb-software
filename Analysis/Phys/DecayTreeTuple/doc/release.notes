@@ -4,11 +4,11 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+!======================= DecayTreeTuple v5r4 2015-12-02 ======================
+
 ! 2015-12-01 - Marco Cattaneo
  - Fix forward declaration broken in Gaudi HEAD build 
  - Remove obsolete Gaudi includes
-
-!======================= DecayTreeTuple v5r4 2015-11-27 ======================
 
 ! 2015-11-20 - Lucio Anderlini
   - Fixed CMakeLists.txt (hopefully)
