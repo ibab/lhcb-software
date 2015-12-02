@@ -4,6 +4,10 @@
 ! Purpose     : Tools for Herschel
 !-----------------------------------------------------------------------------
 
+! 2015-12-02 - Dan Johnson
+ - Update the tuple tool to use the corrected Herschel digits, after
+   common mode subtraction
+
 !================= DecayTreeTupleHerschel v1r0 2015-08-06 ====================
 
 ! 2015-08-06 - Dan Johnson
