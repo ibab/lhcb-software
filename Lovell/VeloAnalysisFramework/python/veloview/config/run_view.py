@@ -450,7 +450,7 @@ CLUSTERS = (
                         'title': 'Cluster ADC values vs sensor',
                         'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC values vs sensor',
                         'tip': (
-                            'For all of the sensors the majority of the clusters should have around 50 ADC counts. This results in a narrow band of colour near the bottom of the plot.'
+                            'For all of the sensors the majority of the clusters should have below 50 ADC counts. This results in a narrow band of colour near the bottom of the plot.'
                         ),
                         'axis_titles': ['Sensor number', 'ADC of cluster']
                     },
