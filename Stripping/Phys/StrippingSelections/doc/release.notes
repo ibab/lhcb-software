@@ -5,8 +5,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
-! 2015-12-02 - Brais Sanmartin Sedes
-  - added StrippingBs2PhiKst0.py module
+! 2015-12-02 - Brais Sanmartin Sedes 
+  - added StrippingBnoC/StrippingBs2PhiKst0.py module
 
 ! 2015-12-02 - Chitsanu Khurewathanakul
   - Prepare QEE's __init__ for S21rXp1
