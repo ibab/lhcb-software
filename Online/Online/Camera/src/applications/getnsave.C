@@ -7,7 +7,6 @@
 
 #ifndef THREADCNT
 #define THREADCNT
-const int MAXTH=10;
 //static int BUSYTHREAD;
 #endif
 

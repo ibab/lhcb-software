@@ -725,7 +725,7 @@ int CameraTool::Append(TH1D * H, const char * opts)
     const std::string s = ( opts != NULL ? (std::string)"."+opts : "" );
     const int nXBins = H->GetNbinsX();
     const int size = (5+2*(nXBins+2));
-    float * data = new float[size];
+    float* data = new float[size];
 
     data[0] = 1.f;
     data[1]=float(nXBins);
@@ -748,7 +748,7 @@ int CameraTool::Append(TH1D * H, const char * opts)
 
     m_out.add("DIM1D"+s,data,size*sizeof(float));
 
-    delete data;
+    delete[] data;
 
     // String for histo ID
     const std::string& rootH = "H" + boost::lexical_cast<std::string>(m_lastHistoNum++);
@@ -851,7 +851,7 @@ int CameraTool::Append( TH2D * H, const char * opts )
 
     m_out.add( "DIM2D"+s, (void *)data, size*sizeof(float) );
 
-    delete data;
+    delete[] data;
 
     // Histo ID
     const std::string& rootH = "H" + boost::lexical_cast<std::string>(m_lastHistoNum++);

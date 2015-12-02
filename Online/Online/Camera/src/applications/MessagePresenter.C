@@ -392,8 +392,8 @@ void MessagePresenter::addwarning(const std::string & msg,const int ref)
   if (ilevel==3 && FLITEOUT && ref==1)
   {
     std::string cmd = "flite/bin/flite -t \""+ sstr.substr(position1+3) + "\" -o msg.wav && play msg.wav &";
-    printf(cmd.c_str());
-    system(cmd.c_str());
+    printf( "%s", cmd.c_str() );
+    system( cmd.c_str() );
     //system("play msg.wav");
 
   }
