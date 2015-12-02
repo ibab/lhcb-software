@@ -12,6 +12,7 @@
 
 EoEIncidentListener::EoEIncidentListener(const std::string& , ISvcLocator* svcloc, long  )
 {
+  m_endTime=m_startTime=m_proclimit=m_EvtNr=m_RunNr=0;
   m_MonSvc = 0;
   m_executing = false;
   svcloc->service("IncidentSvc",incs,true);
@@ -34,6 +35,14 @@ void EoEIncidentListener::handle(const Incident &i)
     if (!m_executing)
     {
 //      printf("-----------------EoE Handler called without executing event... NOT unlocking Monitor system\n");
+      m_endTime = time(0);
+      time_t proctime;
+      proctime = m_endTime-m_startTime;
+      if (proctime > m_proclimit)
+      {
+        ::lib_rtl_output(LIB_RTL_INFO,"+++++Very long processing time %d seconds(>%d) RunNr %d, L0EvtNr %d\n",
+            proctime, m_proclimit,this->m_RunNr,this->m_EvtNr);
+      }
       m_executing = false;
       return;
     }

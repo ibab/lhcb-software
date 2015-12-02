@@ -23,6 +23,11 @@ public:
   virtual ~EoEIncidentListener();
   void handle(const Incident&);
   bool m_executing;
+  time_t m_startTime;
+  time_t m_endTime;
+  time_t m_proclimit;
+  int m_RunNr;
+  long long int m_EvtNr;
 private:
   IGauchoMonitorSvc *m_MonSvc;
   IIncidentSvc *incs;

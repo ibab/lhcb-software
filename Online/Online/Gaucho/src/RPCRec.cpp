@@ -47,7 +47,7 @@ int RPCRec::analyseReply()
       {
         int namoff;
         char *nam;
-        if ((p1->type == (int)H_1DIM) || (p1->type == (int)H_PROFILE))
+        if ((p1->type == H_1DIM) || (p1->type == H_PROFILE))
         {
           namoff = p1->nameoff;//sizeof(DimHistbuff1);
         }

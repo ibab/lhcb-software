@@ -79,6 +79,7 @@ UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   declareProperty("MyName",m_MyName=""); //partition_TaskName
   declareProperty("DoRunChangeInc",m_doRunChangeInc = false);
   declareProperty("ResetonStart",m_ResetonStart = false);
+  declareProperty("ProcLimit",m_ProcLimit = 30);
 
   m_timerCycle = m_desiredDeltaTCycle - 1;
   m_firstExecute = true;
@@ -114,6 +115,7 @@ StatusCode UpdateAndReset::initialize() {
   }
   serviceLocator()->service("IncidentSvc",m_incs,true);
   EoEInc = new EoEIncidentListener("",serviceLocator(),-1);
+  EoEInc->m_proclimit = m_ProcLimit;
   m_stopdone = false;
   //const std::string& utgid = RTL::processName();
    return StatusCode::SUCCESS;
@@ -121,6 +123,7 @@ StatusCode UpdateAndReset::initialize() {
 
 StatusCode UpdateAndReset::start()
 {
+  m_one = 1;
 
   MsgStream msg( msgSvc(), name() );
   m_utgid = RTL::processName();
@@ -239,10 +242,13 @@ StatusCode UpdateAndReset::execute()
   int runno;
   unsigned int tck;
   ulonglong gps;
+  EoEInc->m_startTime = time(0);
   m_pGauchoMonitorSvc->Lock();
   this->EoEInc->m_executing = true;
 //  printf("+++++++++++++++++++++++++++++ UPDATE AND RESET Monitor System LockED\n");
-  getEventChar(runno,tck,gps);
+  getEventChar(runno,tck,gps,m_L0EvtNr);
+  EoEInc->m_RunNr = runno;
+  EoEInc->m_EvtNr=m_L0EvtNr;
   if (m_runNumber == 0)
   {
 //    printf ("================================> FIRST EVENT ... Run number %d\n",runno);
@@ -271,7 +277,6 @@ StatusCode UpdateAndReset::execute()
       this->m_incs->fireIncident(Incident(name(),IncidentType::EndRun));
     }
     m_pGauchoMonitorSvc->resetHistos( this  );
-    m_one = 1;
     m_pGauchoMonitorSvc->setRunNo(runno);
     m_runNumber = runno;
   }
@@ -284,6 +289,7 @@ StatusCode UpdateAndReset::execute()
     }
   }
 
+  m_one = 1;
   m_gpsTimeLastEvInCycle = (double)gps;
 //  printf("GPS Time %f\n",m_gpsTimeLastEvInCycle);
 //  m_pGauchoMonitorSvc->UnLock();
@@ -318,6 +324,7 @@ StatusCode UpdateAndReset::stop() {
     }
 //    this->m_pGauchoMonitorSvc->UnLock();
 //    printf("======================UpdateAndReset Updating EOR DONE...... \n");
+    m_one = 0;
     m_pGauchoMonitorSvc->release();
     m_pGauchoMonitorSvc = 0;
   }
@@ -370,7 +377,7 @@ StatusCode UpdateAndReset::finalize() {
 
 //------------------------------------------------------------------------------
 // std::pair<int, bool> UpdateAndReset::currentRunNumber() {
-void UpdateAndReset::getEventChar(int &runno, unsigned int &tck, ulonglong &gps)
+void UpdateAndReset::getEventChar(int &runno, unsigned int &tck, ulonglong &gps,long long int &L0EvtNr)
 //------------------------------------------------------------------------------
 {
   MsgStream msg( msgSvc(), name() );
@@ -400,6 +407,7 @@ void UpdateAndReset::getEventChar(int &runno, unsigned int &tck, ulonglong &gps)
            tck=ori->TCK;
            gps=ori->GPSTime;
            runno=ori->Run;
+           L0EvtNr=ori->L0ID;
         }
       }
     }

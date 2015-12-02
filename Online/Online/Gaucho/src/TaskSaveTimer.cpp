@@ -21,8 +21,8 @@ TaskSaveTimer::TaskSaveTimer(MonSubSys *add, int period) : GenTimer((void*)add,p
   m_EOR=false;
   m_prevbuff  = 0;
   m_prevsiz = 0;
-  m_prevmap = new HISTMAP();
-  m_prevmap->clear();
+//  m_prevmap = new HISTMAP();
+//  m_prevmap->clear();
   TH1D::SetDefaultSumw2();
   TH2D::SetDefaultSumw2();
   TProfile::SetDefaultSumw2();
@@ -31,11 +31,11 @@ TaskSaveTimer::TaskSaveTimer(MonSubSys *add, int period) : GenTimer((void*)add,p
 
 TaskSaveTimer::~TaskSaveTimer( )
 {
-  if (m_prevmap != 0)
-  {
-    delete m_prevmap;
-    m_prevmap = 0;
-  }
+//  if (m_prevmap != 0)
+//  {
+//    delete m_prevmap;
+//    m_prevmap = 0;
+//  }
 }
 
 void TaskSaveTimer::timerHandler ( void )

@@ -47,13 +47,14 @@ public:
   void verifyAndProcessRunChange();
   void verifyAndProcessCycleChange(bool isFromTimerHandler);
   double offsetToBoundary(int cycleNumber, ulonglong time, bool inferior);
+  time_t m_ProcLimit;
 private:
   bool isSaveCycle(int m_cycleNumber);
   void manageTESHistos(bool list, bool reset, bool save, bool isFromEndOfRun);
   void histogramIdentifier(IRegistry* object, std::vector<std::string> &idList, bool reset, bool save, int &level,
                            TDirectory* rootdir);
   IRegistry* rootObject();
-  void getEventChar(int &runno, unsigned int &tck, ulonglong &gps);
+  void getEventChar(int &runno, unsigned int &tck, ulonglong &gps,long long int &EvtNr);
 private:
   EoEIncidentListener *EoEInc;
   IGauchoMonitorSvc* m_pGauchoMonitorSvc; ///< Online Gaucho Monitoring Service
@@ -68,6 +69,7 @@ private:
   int m_one;
   int m_runNumber;
   int m_eorNumber;
+  long long int m_L0EvtNr;
   unsigned int m_triggerConfigurationKey;
   unsigned int tck;
   ulonglong gpstime;

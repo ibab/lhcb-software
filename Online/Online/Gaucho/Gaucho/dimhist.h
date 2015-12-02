@@ -19,7 +19,7 @@ public:
     flags = 0;
   }
   int reclen;
-  int type;
+  unsigned int type;
   int flags;
   int nameoff;
   int namelen;

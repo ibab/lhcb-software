@@ -17,8 +17,8 @@ class TaskSaveTimer : public GenTimer
   std::string m_partname;
   std::string m_taskname;
   bool m_EOR;
-  HISTMAP *m_prevmap;
-  HISTMAP *m_currmap;
+//  HISTMAP *m_prevmap;
+//  HISTMAP *m_currmap;
   MonSys *m_MonSys;
 //  void fillmap(void *buff, HISTMAP *m);
 //  void diffblock(void *a, void *b, void *a_b);
