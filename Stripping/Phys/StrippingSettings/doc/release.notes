@@ -6,6 +6,9 @@
 
 !========================= StrippingSettings v2r42 2015-11-26 =========================
 
+! 2015-12-02 - Andrea Contu
+ - new dbase for s24
+
 ! 2015-12-02 - Greg Ciezarek
  - HLT requirements fixed in SL StrippingB2DMuNuX settings
 
