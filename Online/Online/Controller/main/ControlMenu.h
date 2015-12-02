@@ -44,7 +44,7 @@ namespace UPI {
     /// Start the controller task
     virtual void startControllerNoConfig(std::vector<std::string>& tasks);
     /// Display callback handler
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
   };   //  End class ControlMenu
 }      //  End namespace 
 #endif //  ONLINE_FINITESTATEMACHINE_CONTROLMENU_H

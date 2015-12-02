@@ -32,7 +32,7 @@ namespace OnlineTools {
    *
    *   @author M.Frank
    */
-  class ProcessorDisplay : public Interactor {
+  class ProcessorDisplay : public CPP::Interactor {
 
   protected:
     int              m_id;
@@ -46,11 +46,11 @@ namespace OnlineTools {
     int              m_cursor;
   public:
     /// Standard constructor with object setup through parameters
-    ProcessorDisplay(Interactor* parent, Interactor* msg, NodeManipulator* manip);
+    ProcessorDisplay(CPP::Interactor* parent, CPP::Interactor* msg, NodeManipulator* manip);
     /// Standard destructor
     virtual ~ProcessorDisplay();
     /// Display callback handler
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
   };
 
 }      /* End namespace OnlineTools */

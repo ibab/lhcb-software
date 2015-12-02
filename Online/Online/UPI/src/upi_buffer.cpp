@@ -90,9 +90,9 @@ UpiBuffer UpiBufferNew ()
 /*--------------------------------------------------------------------------*/
 void UpiBufferInit (UpiBuffer buffer, char* data, int dataBytes)  {
   if (upibufferlog == 1)  {
-    fprintf (buffer_log_file, "UpiBufferInit: ");
-    fprintf (buffer_log_file,"Buffer: %p, Address: %p, Bytes %d\n",
-      (void*)buffer, data, dataBytes);
+    ::fprintf (buffer_log_file, "UpiBufferInit: ");
+    ::fprintf (buffer_log_file,"Buffer: %p, Address: %p, Bytes %d\n",
+	       (void*)buffer, (void*)data, dataBytes);
   }
   if (!buffer) return;
   buffer->data = data;

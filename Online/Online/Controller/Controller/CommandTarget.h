@@ -34,7 +34,7 @@ namespace FiniteStateMachine {
    * @date    01/03/2013
    * @version 0.1
    */
-  class CommandTarget : public DimCommand, public Interactor, public TypedObject  {
+  class CommandTarget : public DimCommand, public CPP::Interactor, public TypedObject  {
   public:
     typedef FSM::ErrCond ErrCond;
 
@@ -82,7 +82,7 @@ namespace FiniteStateMachine {
     virtual void commandHandler() = 0;
 
     /// Interrupt handling routine
-    virtual void handle(const Event& ev) = 0;
+    virtual void handle(const CPP::Event& ev) = 0;
 
     /// Run the object
     CommandTarget& run();
@@ -113,7 +113,7 @@ namespace FiniteStateMachine {
     virtual void commandHandler();
 
     /// Interrupt handling routine
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
   };   //  End class State
 
 }      //  End namespace 

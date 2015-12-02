@@ -437,7 +437,7 @@ void Control::execDimCommand(const string& dp, const string& data)  {
 }
 
 /// Display callback handler
-void Control::handle(const Event& ev)   {
+void Control::handle(const CPP::Event& ev)   {
   int which;
   switch(ev.eventtype) {
   case IocEvent:

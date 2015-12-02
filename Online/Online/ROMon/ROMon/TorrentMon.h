@@ -158,7 +158,8 @@ namespace BitTorrent {
    *  @author  M.Frank
    *  @version 1.0
    */
-  PACK_DATA(struct) SubfarmTorrentStatus {
+  PACK_DATA(class) SubfarmTorrentStatus {
+  public:
     typedef VarItems<SessionStatus> Sessions;    
     enum { TYPE = 1 };
     /// First word: Data type descriptor (MUST always be 1)
@@ -188,7 +189,8 @@ namespace BitTorrent {
    *  @author  M.Frank
    *  @version 1.0
    */
-  PACK_DATA(struct) FarmTorrentStatus {
+  PACK_DATA(class) FarmTorrentStatus {
+  public:
     typedef VarItems<SubfarmTorrentStatus> Subfarms;    
     enum { TYPE = 2 };
     /// First word: Data type descriptor (MUST always be 2)

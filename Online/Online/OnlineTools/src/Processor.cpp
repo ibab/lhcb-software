@@ -48,7 +48,7 @@ NodeManipulator::Children ProcessorGroup::children() {
 }
 
 /// Standard constructor
-Processor::Processor(const string& n,Interactor* i)  : NodeManipulator(n,i)
+Processor::Processor(const string& n,CPP::Interactor* i)  : NodeManipulator(n,i)
 {
 }
 

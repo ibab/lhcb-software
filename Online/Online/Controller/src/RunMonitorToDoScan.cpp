@@ -28,7 +28,7 @@ using namespace FiniteStateMachine;
 
 /// Standard constructor
 RunMonitorToDoScan::RunMonitorToDoScan(const RunMonitorConfig* cfg)
-  : Interactor(), TypedObject(0, "Scanner_"+cfg->name), m_config(cfg)
+  : CPP::Interactor(), TypedObject(0, "Scanner_"+cfg->name), m_config(cfg)
 {
 }
 
@@ -37,7 +37,7 @@ RunMonitorToDoScan::~RunMonitorToDoScan()   {
 }
 
 /// Interactor callback to handle external interrupts
-void RunMonitorToDoScan::handle(const Event& event)   {
+void RunMonitorToDoScan::handle(const CPP::Event& event)   {
   switch(event.eventtype) {
   case IocEvent:
     switch(event.type)  {
@@ -47,7 +47,7 @@ void RunMonitorToDoScan::handle(const Event& event)   {
     case CMD_SCAN:
     case CMD_EXECUTE:
       display(ALWAYS,"CMD_CLEAR","Re-scanning todo directory %s.",m_config->todo.c_str());
-      scan(event.iocPtr<Interactor>());
+      scan(event.iocPtr<CPP::Interactor>());
       break;
     default:
       break;
@@ -59,7 +59,7 @@ void RunMonitorToDoScan::handle(const Event& event)   {
 }
 
 /// Scan the work directory and send the work to the master
-void RunMonitorToDoScan::scan(Interactor* requestor)  {
+void RunMonitorToDoScan::scan(CPP::Interactor* requestor)  {
   DIR* dir = ::opendir(m_config->todo.c_str());
   try  {
     for(dirent* dp = dir ? readdir(dir) : 0; dp; dp = readdir(dir))  {

@@ -66,7 +66,7 @@ namespace FiniteStateMachine   {
     /// DimCommand overload: handle DIM commands
     void commandHandler();
     /// Interactor Interrupt handling routine
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
 
     /// Publish state information when transition failed. 
     virtual ErrCond fail();

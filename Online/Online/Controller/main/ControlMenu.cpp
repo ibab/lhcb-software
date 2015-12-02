@@ -33,8 +33,8 @@ enum  _commands {
 };
 
 static void backSpaceCallBack (int menu,int /* cmd */,int par,const void* param)  {
-  Event ev;
-  ev.target     = (Interactor*)param;
+  CPP::Event ev;
+  ev.target     = (CPP::Interactor*)param;
   ev.eventtype  = UpiEvent;
   ev.menu_id    = menu;
   ev.command_id = CMD_BACKSPACE;
@@ -163,7 +163,7 @@ void UPI::ControlMenu::startControllerConfig(vector<string>& tasks)   {
 }
 
 /// Display callback handler
-void UPI::ControlMenu::handle(const Event& ev)   {
+void UPI::ControlMenu::handle(const CPP::Event& ev)   {
   switch(ev.eventtype) {
   case IocEvent:
     Control::handle(ev);

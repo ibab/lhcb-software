@@ -24,7 +24,7 @@ using namespace FiniteStateMachine;
 
 /// Standard constructor
 RunMonitorMessenger::RunMonitorMessenger(RunMonitorCoordinator* coord, const RunMonitorConfig* cfg)
-  : Interactor(), m_coordinator(coord), m_config(cfg)
+  : CPP::Interactor(), m_coordinator(coord), m_config(cfg)
 {
   string nam = cfg->name;
   m_run          = make_pair(0, make_pair(string(), &coord->m_running));
@@ -75,7 +75,7 @@ void RunMonitorMessenger::commandHandler(void* tag, void* address, int* size)   
 }
 
 /// Interactor callback to handle external interrupts
-void RunMonitorMessenger::handle(const Event& event)   {
+void RunMonitorMessenger::handle(const CPP::Event& event)   {
   switch(event.eventtype) {
   case IocEvent:
     switch(event.type)  {

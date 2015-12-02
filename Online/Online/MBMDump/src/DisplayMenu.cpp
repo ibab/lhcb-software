@@ -397,9 +397,10 @@ int DisplayMenu::format_line(int first_word, char *c)  {
     if(i < m_fmt.words_per_line)
       for(j=i*10+6;j<46;j++) *(tmp+j)=' ';
   }
+  asc[sizeof(asc)-1]=0;
   ::strncpy(c,tmp,sizeof(tmp));
   ::strncat(c,"   ",4);
-  ::strncat(c,asc,sizeof(asc));
+  ::strncat(c,asc,sizeof(asc)-1);
   return i;                 // Return no. words read
 }
 

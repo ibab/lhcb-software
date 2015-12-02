@@ -173,11 +173,11 @@ namespace FiniteStateMachine {
    * \date    01/03/2013
    * \version 0.1
    */
-  class RunMonitorController : public Interactor, public TypedObject   {
+  class RunMonitorController : public CPP::Interactor, public TypedObject   {
   public:
     typedef FSM::ErrCond ErrCond;
   protected:
-    Interactor*        m_master;
+    CPP::Interactor*   m_master;
     RunMonitorItem*    m_work;
 
     /// Static cache of the pointer to the error state
@@ -192,7 +192,7 @@ namespace FiniteStateMachine {
     const RunMonitorConfig* m_config;
   public:
     /// Standard constructor
-    RunMonitorController(Interactor* master, Machine* mach, const RunMonitorConfig* config);
+    RunMonitorController(CPP::Interactor* master, Machine* mach, const RunMonitorConfig* config);
     /// Standard destructor
     virtual ~RunMonitorController();
 
@@ -216,7 +216,7 @@ namespace FiniteStateMachine {
     void prepareTask(RunMonitorItem* w);
 
     /// Interactor Interrupt handling routine
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
 
     /// Invoke a transition from the current state (if exists) by name
     ErrCond invoke_transition(const std::string& transition);
@@ -265,7 +265,7 @@ namespace FiniteStateMachine {
    * \date    01/03/2013
    * \version 0.1
    */
-  class RunMonitorCoordinator : public Interactor, public TypedObject   {
+  class RunMonitorCoordinator : public CPP::Interactor, public TypedObject   {
   public:
     friend class RunMonitorMessenger;
 
@@ -334,13 +334,13 @@ namespace FiniteStateMachine {
     /// Interactor callback to handle external interrupts
     /**  @arg  ev    [Event,read-only]   Event structure to be handled
      */
-    virtual void handle(const Event& event);
+    virtual void handle(const CPP::Event& event);
     /// IOC handler
-    virtual void handleIoc(const Event& event);
+    virtual void handleIoc(const CPP::Event& event);
     /// Network handler
-    virtual void handleNetEvent(const Event& event);
+    virtual void handleNetEvent(const CPP::Event& event);
     /// Timer handler
-    virtual void handleTimeEvent(const Event& event);
+    virtual void handleTimeEvent(const CPP::Event& event);
 
     /// Run the entire object (never returns)
     void run(bool start_timer);
@@ -353,7 +353,7 @@ namespace FiniteStateMachine {
    * \date    01/03/2013
    * \version 0.1
    */
-  class RunMonitorRestore : public Interactor, public TypedObject  {
+  class RunMonitorRestore : public CPP::Interactor, public TypedObject  {
   public:
   protected:
     /// Main coordination object between the controllers, the slaves and other collaborating objects
@@ -369,9 +369,9 @@ namespace FiniteStateMachine {
     /// Interactor callback to handle external interrupts
     /**  @arg  ev    [Event,read-only]   Event structure to be handled
      */
-    virtual void handle(const Event& event);
+    virtual void handle(const CPP::Event& event);
     /// Interactor callback to handle IocSensor interrupts
-    virtual void handleIoc(const Event& event);
+    virtual void handleIoc(const CPP::Event& event);
     /// Scan the work directory and re-establish work items
     virtual void scan();
   };
@@ -383,7 +383,7 @@ namespace FiniteStateMachine {
    * \date    01/03/2013
    * \version 0.1
    */
-  class RunMonitorToDoScan : public Interactor, public TypedObject  {
+  class RunMonitorToDoScan : public CPP::Interactor, public TypedObject  {
   public:
   protected:
     /// General configuration object
@@ -400,9 +400,9 @@ namespace FiniteStateMachine {
     /// Interactor callback to handle external interrupts
     /**  @arg  ev    [Event,read-only]   Event structure to be handled
      */
-    virtual void handle(const Event& event);
+    virtual void handle(const CPP::Event& event);
     /// Scan the work directory and send the work to the master
-    virtual void scan(Interactor* requestor);
+    virtual void scan(CPP::Interactor* requestor);
   };
 
   /// Class to handle external request interrupts 
@@ -412,7 +412,7 @@ namespace FiniteStateMachine {
    * \date    01/03/2013
    * \version 0.1
    */
-  class RunMonitorMessenger : public Interactor  {
+  class RunMonitorMessenger : public CPP::Interactor  {
   public:
     typedef std::list<RunMonitorItem*> RunMonitorItems;
     typedef std::pair<int, std::pair< std::string, const RunMonitorItems*> > PubItem;
@@ -440,7 +440,7 @@ namespace FiniteStateMachine {
     /// Interactor callback to handle external interrupts
     /**  @arg  ev    [Event,read-only]   Event structure to be handled
      */
-    virtual void handle(const Event& event);
+    virtual void handle(const CPP::Event& event);
   };
 
 

@@ -37,11 +37,11 @@ typedef DialogMenu DialogSubMenu;
 class DialogMenu : public CPP::Interactor
 {
 public:
-  DialogMenu (Interactor* actor = 0,DialogMenu* parent = 0,ClientData /* data */ = 0) 
+  DialogMenu (CPP::Interactor* actor = 0,DialogMenu* parent = 0,ClientData /* data */ = 0) 
     : m_actor(actor), m_parent(parent) {}
     virtual ~DialogMenu() {}
     virtual int          id() {return (-1);}
-    virtual void         handle (const Event& event);
+    virtual void         handle (const CPP::Event& event);
     virtual DialogStatus installBackspaceCall() {return DIALOG_SUCCESS;}
     virtual Interactor*  actor() {return m_actor;}
     virtual DialogStatus window() {return DIALOG_ERROR;}
@@ -91,8 +91,8 @@ protected:
 public:
   virtual ~DialogFactory();
   static DialogFactory* instance ();
-  virtual DialogMenu* createMenu (Interactor* actor = 0,DialogMenu* parent = 0,ClientData data = 0) = 0;
-  virtual DialogSubMenu* createSubMenu (Interactor* actor = 0,DialogMenu* master = 0,ClientData data = 0) = 0;
+  virtual DialogMenu* createMenu (CPP::Interactor* actor = 0,DialogMenu* parent = 0,ClientData data = 0) = 0;
+  virtual DialogSubMenu* createSubMenu (CPP::Interactor* actor = 0,DialogMenu* master = 0,ClientData data = 0) = 0;
 };
 
 class DialogSubMenuCreator    {
@@ -109,7 +109,7 @@ class DialogMenuCreator   {
 protected:
   DialogMenu* m_menu;
 public:
-  DialogMenuCreator (Interactor* actor = 0,DialogMenu* parent = 0,ClientData data = 0) 
+  DialogMenuCreator (CPP::Interactor* actor = 0,DialogMenu* parent = 0,ClientData data = 0) 
   { m_menu = DialogFactory::instance()->createMenu(actor,parent,data);  }
   virtual ~DialogMenuCreator()            {                             }
   virtual DialogMenu* operator->() const  {    return m_menu;           }

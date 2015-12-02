@@ -240,10 +240,11 @@ void ErrShowDisplay::saveMessages() {
   if ( outFile ) {
     time_t tim = ::time(0);
     tm* now = ::localtime(&tim);
+    txt[sizeof(txt)-1] = 0;
     showMessages(outFile);
     ::fclose(outFile);
     ::strftime(txt,sizeof(txt),"%b%d-%H%M%S [ALWAYS] Output file written:",now);
-    ::strncat(txt,m_outFileName,sizeof(txt)-strlen(txt));
+    ::strncat(txt,m_outFileName,sizeof(txt)-strlen(txt)-1);
     txt[sizeof(txt)-1]=0;
     IocSensor::instance().send(m_msg,CMD_SHOW,new string(txt));
     return;

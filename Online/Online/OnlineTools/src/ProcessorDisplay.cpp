@@ -46,7 +46,7 @@ static string setupParams(const string& name, bool flag=false) {
 }
 
 /// Standard constructor
-ProcessorDisplay::ProcessorDisplay(Interactor* par, Interactor* msg, NodeManipulator* items) 
+ProcessorDisplay::ProcessorDisplay(CPP::Interactor* par, CPP::Interactor* msg, NodeManipulator* items) 
   : m_parent(par), m_msg(msg), m_nodes(items), m_cursor(CMD_CLOSE)
 {
   char txt[128];
@@ -81,7 +81,7 @@ ProcessorDisplay::~ProcessorDisplay()  {
   ::upic_write_message("Close window.","");
 }
 
-void ProcessorDisplay::handle(const Event& ev) {
+void ProcessorDisplay::handle(const CPP::Event& ev) {
   IocSensor& ioc = IocSensor::instance();
   NodeManipulator::Children::iterator i;
   NodeManipulator::Children c;

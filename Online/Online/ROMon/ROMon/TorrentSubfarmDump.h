@@ -23,7 +23,7 @@
 namespace BitTorrent {
 
   // Forward declarations
-  struct SubfarmTorrentStatus;
+  class SubfarmTorrentStatus;
 
   /**@class SubfarmDump SubfarmDump.h GaudiOnline/SubfarmDump.h
    *

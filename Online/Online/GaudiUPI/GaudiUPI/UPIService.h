@@ -8,7 +8,6 @@
 
 class DialogMenu;
 class IAppMgrUI;
-class Event;
 
 /*
  *  Gaudi namespace
@@ -22,7 +21,7 @@ namespace Gaudi  {
       * @author  M.Frank
       * @version 1.0
       */
-  class UPIService : public Service, public Interactor  {
+  class UPIService : public Service, public CPP::Interactor  {
     /// Main dialog window
     DialogMenu* m_window;
     Interactor* m_child;
@@ -31,7 +30,7 @@ namespace Gaudi  {
     void setNewChild(Interactor* c);
     void showTopMenu();
     /// Interactor overload: handle menu interupts
-    void handle (const Event& event);
+    void handle (const CPP::Event& event);
     /// Show message in the message window
     void print(const char* fmt, ...);
     /// Update state on display

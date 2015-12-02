@@ -36,7 +36,7 @@ static void load(const string& name,
 		 const string& group,
 		 size_t flag, 
 		 ProcessorGroup& items,
-		 Interactor* m)
+		 CPP::Interactor* m)
 {
   char txt[128];
   ifstream input(name.c_str());
@@ -57,13 +57,13 @@ static void load(const string& name,
   }
 }
 
-static void load_geo(ProcessorGroup& items,Interactor* msg) {
+static void load_geo(ProcessorGroup& items,CPP::Interactor* msg) {
   load("/group/online/piquet/nodelists/d1allpc.txt","D1",4,items,msg);
   load("/group/online/piquet/nodelists/d2allpc.txt","D2",2,items,msg);
   load("/group/online/piquet/nodelists/d3allpc.txt","D3",0,items,msg);
 }
 
-static void load_hlt(ProcessorGroup& items,Interactor* msg) {
+static void load_hlt(ProcessorGroup& items,CPP::Interactor* msg) {
   load("/group/online/piquet/nodelists/farmcontrolC.txt","FarmControlC",4,items,msg);
   load("/group/online/piquet/nodelists/farmcontrolD.txt","FarmControlD",4,items,msg);
   load("/group/online/piquet/nodelists/farmnodesA.txt","A",6,items,msg);
@@ -116,7 +116,7 @@ void PowercutRecovery::shutdown() {
   m_messageLog = 0;
 }
 
-void PowercutRecovery::handle(const Event& ev) {
+void PowercutRecovery::handle(const CPP::Event& ev) {
   switch(ev.eventtype) {
   case IocEvent:
     switch(ev.type) {

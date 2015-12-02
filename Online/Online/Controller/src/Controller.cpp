@@ -222,7 +222,7 @@ FSM::ErrCond Controller::start()  {
 }
 
 /// Interrupt handling routine
-void Controller::handle(const Event& ev)    {
+void Controller::handle(const CPP::Event& ev)    {
   switch(ev.eventtype) {
   case IocEvent:
     switch(ev.type)  {

@@ -84,7 +84,7 @@ namespace {
       return Slave::send(cmd,state);
     }
     /// IOC handler
-    virtual void handle(const Event& event)   {
+    virtual void handle(const CPP::Event& event)   {
       switch(event.eventtype) {
       case TimeEvent:   {
 	handleState(ST_NAME_PAUSED);

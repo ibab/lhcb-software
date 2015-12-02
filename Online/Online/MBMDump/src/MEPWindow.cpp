@@ -48,7 +48,8 @@ MEPWindow::MEPWindow(DisplayMenu* par,int cmd_id, const Format& f)
       addComment(C_COM8,"+--------------------------------------------------+");
     }
     snprintf(txt,sizeof(txt),"%3u:%7ld %7ld %5u %10p %10p",
-	    cnt,long(mf->size()),long(mf->packing()),eid_h,mf->start(),mf->end());
+	    cnt,long(mf->size()),long(mf->packing()),eid_h,
+	     (const void*)mf->start(),(const void*)mf->end());
     addCommand(C_MULTIFRAGS+cnt,txt);
   }
   closeMenu();

@@ -35,7 +35,7 @@ namespace FiniteStateMachine {
    * @date    01/03/2013
    * @version 0.1
    */
-  class Slave : public TypedObject, public Interactor  {
+  class Slave : public TypedObject, public CPP::Interactor  {
   public:
     typedef FSM::ErrCond ErrCond;
     enum SlaveState  {
@@ -157,7 +157,7 @@ namespace FiniteStateMachine {
     /** Specific Interactor handle to act on sensor interrupts
      *  @arg  ev    [Event,read-only]   Event structure to be handled
      */
-    virtual void handle(const Event& event);
+    virtual void handle(const CPP::Event& event);
     /// Handle timeout according to timer ID
     virtual void handleTimeout();
     /// Handle timeout on unload transition according to timer ID

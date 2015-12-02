@@ -40,7 +40,7 @@ namespace {
 
 /// Standard constructor
 RunMonitorCoordinator::RunMonitorCoordinator(const Type* typ, RunMonitorConfig* cfg) 
-  : Interactor(), TypedObject(typ,cfg->name),
+  : CPP::Interactor(), TypedObject(typ,cfg->name),
     m_scanner(0), m_messenger(0), m_restore(0), m_config(cfg)
 {
   char text[256];
@@ -154,7 +154,7 @@ bool RunMonitorCoordinator::useMonitorItem(RunMonitorItem* w)    {
 /// Interactor callback to handle external interrupts
 /**  @arg  ev    [Event,read-only]   Event structure to be handled
  */
-void RunMonitorCoordinator::handle(const Event& event)    {
+void RunMonitorCoordinator::handle(const CPP::Event& event)    {
   try {
     dim_lock();
     switch(event.eventtype) {
@@ -177,11 +177,11 @@ void RunMonitorCoordinator::handle(const Event& event)    {
 }
 
 /// Network handler
-void RunMonitorCoordinator::handleNetEvent(const Event& /* event */)   {
+void RunMonitorCoordinator::handleNetEvent(const CPP::Event& /* event */)   {
 }
 
 /// Timer handler
-void RunMonitorCoordinator::handleTimeEvent(const Event& event)   {
+void RunMonitorCoordinator::handleTimeEvent(const CPP::Event& event)   {
   if ( event.timer_data == (void*)CMD_SCAN )   {
     IocSensor::instance().send(this,CMD_SCAN);
     TimeSensor::instance().add(this,m_config->scanInterval,(void*)CMD_SCAN);
@@ -189,7 +189,7 @@ void RunMonitorCoordinator::handleTimeEvent(const Event& event)   {
 }
 
 /// IOC handler
-void RunMonitorCoordinator::handleIoc(const Event& event)    {
+void RunMonitorCoordinator::handleIoc(const CPP::Event& event)    {
   char text[64];
   static int w_id = 0;
   switch(event.type)  {

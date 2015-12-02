@@ -29,14 +29,14 @@
 namespace OnlineTools {
 
 
-  class NodeManipulator : public Interactor {
+  class NodeManipulator : public CPP::Interactor {
   protected:
     typedef std::string _S;
     _S          m_name;
-    Interactor* m_exec;
+    CPP::Interactor* m_exec;
   public:
     typedef std::vector<NodeManipulator*> Children;
-    NodeManipulator(const _S& n, Interactor* i) : m_name(n), m_exec(i) {}
+    NodeManipulator(const _S& n, CPP::Interactor* i) : m_name(n), m_exec(i) {}
     virtual ~NodeManipulator()               {                    }
     const _S& name() const                   { return m_name;     }
     void setName(const _S& n)                { m_name = n;        }
@@ -62,7 +62,7 @@ namespace OnlineTools {
       return 1;
     }
   public:
-    ProcessorGroup(const std::string& n,Interactor* i) : NodeManipulator(n,i) {}
+    ProcessorGroup(const std::string& n,CPP::Interactor* i) : NodeManipulator(n,i) {}
     virtual ~ProcessorGroup() {}
     virtual size_t numChildren() const       { return m_groups.size();        }
     virtual bool hasChildren()  const        { return m_groups.size()>0;      }
@@ -87,7 +87,7 @@ namespace OnlineTools {
   class Processor : public NodeManipulator {
   public:
     /// Standard constructor with object setup through parameters
-    Processor(const std::string& name, Interactor* i);
+    Processor(const std::string& name, CPP::Interactor* i);
     /// Standard destructor
     virtual ~Processor();
     virtual int doPing();

@@ -58,7 +58,7 @@ private:
   std::string m_passwordFile;
   
   // variable for temporary storage of histograms
-  OnlineHistogram* tmpActiveHisto;
+  //OnlineHistogram* tmpActiveHisto;
 
   // Fixed part of the histogram names (e.g. Task and Algorithm)
   std::string m_taskName;

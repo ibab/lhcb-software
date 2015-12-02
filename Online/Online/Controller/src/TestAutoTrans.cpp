@@ -92,7 +92,7 @@ ErrCond TestAutoTrans::unload()    {
   return do_sleep("unload").go_to(ST_NAME_OFFLINE);   
 }
 
-void TestAutoTrans::handle(const Event& event) {
+void TestAutoTrans::handle(const CPP::Event& event) {
   switch(event.eventtype) {
   case IocEvent:
     switch(event.type)   {

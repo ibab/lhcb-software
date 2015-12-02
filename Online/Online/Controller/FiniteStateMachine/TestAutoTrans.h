@@ -32,7 +32,7 @@ namespace FiniteStateMachine   {
    * @date    01/03/2013
    * @version 0.1
    */
-  struct TestAutoTrans : public Interactor {
+  struct TestAutoTrans : public CPP::Interactor {
   public:
     typedef FSM::ErrCond ErrCond;
   protected:
@@ -61,7 +61,7 @@ namespace FiniteStateMachine   {
     ErrCond reset();
     ErrCond load();
     ErrCond unload();
-    void    handle(const Event& event);
+    void    handle(const CPP::Event& event);
   };   //  End class TestAutoTrans
 }      //  End namespace 
 #endif //  ONLINE_CONTROLLER_TESTAUTOTRANS_H

@@ -24,8 +24,6 @@
 #include <map>
 #include <set>
 
-class Event;
-
 /* 
  *  FiniteStateMachine namespace declaration
  */
@@ -40,7 +38,7 @@ namespace FiniteStateMachine {
    * @date    01/03/2013
    * @version 0.1
    */
-  class Machine : public TypedObject, public Interactor    {
+  class Machine : public TypedObject, public CPP::Interactor    {
   public:
     typedef FSM::ErrCond ErrCond;
     /// StateActions container definition
@@ -136,13 +134,13 @@ namespace FiniteStateMachine {
     /** Specific Interactor handle to act on sensor interrupts
      *  @arg  ev    [Event,read-only]   Event structure to be handled
      */
-    virtual void handle(const Event& event);
+    virtual void handle(const CPP::Event& event);
     /** Handle network events for the Machine object
      *  @arg  ev    [Event,read-only]   Event structure to be handled
      */
-    virtual void handleNetEvent(const Event& event);
+    virtual void handleNetEvent(const CPP::Event& event);
     /// IOC handler
-    virtual void handleIoc(const Event& event);
+    virtual void handleIoc(const CPP::Event& event);
     
     /// Invoke meta transition on FSM object
     ErrCond invokeMetaTransition(unsigned int target, const void* param);

@@ -3,7 +3,7 @@
 #include <vector>
 #include <map>
 
-class ControllerDump : public Interactor {
+class ControllerDump : public CPP::Interactor {
 public:
   class DimStatus {
   public:
@@ -121,7 +121,7 @@ void ControllerDump::start(int interval)  {
 }
 
 /// Event handler routine
-void ControllerDump::handle(const Event& event)   {
+void ControllerDump::handle(const CPP::Event& event)   {
   switch(event.eventtype) {
   case TimeEvent:
     handleTimer(event);
@@ -135,7 +135,7 @@ void ControllerDump::handle(const Event& event)   {
 }
 
 /// Interrupt event handler routine
-int ControllerDump::handleIoc(const Event& event)   {
+int ControllerDump::handleIoc(const CPP::Event& event)   {
   switch(event.type)  {
   case CMD_UPDATE_STATE:
     break;
@@ -152,7 +152,7 @@ int ControllerDump::handleIoc(const Event& event)   {
 }
 
 /// Timer event handler routine
-void ControllerDump::handleTimer(const Event& event)   {
+void ControllerDump::handleTimer(const CPP::Event& event)   {
   if (event.timer_id)  {
     dim_lock();
     show();

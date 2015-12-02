@@ -26,8 +26,8 @@ Requirement::Requirement()
 : m_reqActive(false),m_bmID(MBM_INV_DESC),m_evType(2),m_trMask(~0x0),m_veto(0),
   m_reqTyp(BM_MASK_ANY), m_reqMode(BM_NOTALL)
 {
-  ::snprintf(m_mode_c,sizeof(m_mode_c),mode_list[0]);
-  ::snprintf(m_rtype_c,sizeof(m_rtype_c),rtype_list[0]);
+  ::snprintf(m_mode_c,sizeof(m_mode_c),"%s",mode_list[0]);
+  ::snprintf(m_rtype_c,sizeof(m_rtype_c),"%s",rtype_list[0]);
 }
 
 void Requirement::build(int pg, int menu_id, int cmd_id)   {

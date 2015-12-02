@@ -109,9 +109,9 @@ void FilterDisplay::addCommands() {
   ::upic_insert_command(m_id,CMD_COM2,++cmd_id, "           logic ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^","");
 
   ::memset(m_comp,0,sizeof(m_comp));
-  ::snprintf(m_comp[0],sizeof(m_comp[0]),"*");
-  ::snprintf(m_comp[1],sizeof(m_comp[1]),s_filterType[3]);
-  ::snprintf(m_comp[2],sizeof(m_comp[2]),s_matchType[0]);
+  ::snprintf(m_comp[0],sizeof(m_comp[0]),"%s","*");
+  ::snprintf(m_comp[1],sizeof(m_comp[1]),"%s",s_filterType[3]);
+  ::snprintf(m_comp[2],sizeof(m_comp[2]),"%s",s_matchType[0]);
   ::upic_set_param(m_comp[0], 1, "A37", m_comp,  0,0,0,0,0);
   ::upic_insert_command(m_id,CMD_COM2,++cmd_id, " COMPONENT match:^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^","");
   ::upic_set_param(m_comp[1], 1, "A37", s_filterType[3],0,0,s_filterType,sizeof(s_filterType)/sizeof(s_filterType[0]),1);

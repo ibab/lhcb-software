@@ -25,8 +25,8 @@ using namespace FiniteStateMachine::DAQ;
 #define LINE_MARKS "==========================================================================================================="
 
 /// Constructor
-RunMonitorController::RunMonitorController(Interactor* master, Machine* mach, const RunMonitorConfig* config)
-  : Interactor(), TypedObject(0,mach->name()), m_master(master), m_errorState(0),
+RunMonitorController::RunMonitorController(CPP::Interactor* master, Machine* mach, const RunMonitorConfig* config)
+  : CPP::Interactor(), TypedObject(0,mach->name()), m_master(master), m_errorState(0),
     m_machine(mach), m_current(0), m_slave(0), m_config(config)
 {
   const Type* typ = m_machine->type();
@@ -208,7 +208,7 @@ void RunMonitorController::printOutgoingTransitions()   const  {
 }
 
 /// Interrupt handling routine
-void RunMonitorController::handle(const Event& event) {
+void RunMonitorController::handle(const CPP::Event& event) {
   switch(event.eventtype) {
   case TimeEvent:
     break;

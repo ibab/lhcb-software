@@ -25,11 +25,11 @@ using namespace FiniteStateMachine;
 using namespace std;
 
 namespace {
-  int _execDim(const string& datapoint, const string& fmt, ...)   {
+  int _execDim(const string& datapoint, const char* fmt, ...)   {
     va_list args;
     va_start( args, fmt);
     char str[4096];
-    size_t len = ::vsnprintf(str,sizeof(str),fmt.c_str(),args);
+    size_t len = ::vsnprintf(str,sizeof(str),fmt,args);
     va_end (args);
     str[len]=0;
     int ret = ::dic_cmnd_service((char*)datapoint.c_str(),str,len+1);

@@ -183,7 +183,7 @@ void DAQCommandTarget::commandHandler()   {
 }
 
 /// Interrupt handling routine
-void DAQCommandTarget::handle(const Event& ev)   {
+void DAQCommandTarget::handle(const CPP::Event& ev)   {
   switch(ev.eventtype) {
   case IocEvent:
     switch(ev.type)  {

@@ -54,7 +54,6 @@ namespace ROMon {
 using namespace ROMon;
 using namespace std;
 static const char *sstat[17] = {" nl","   ","*SL","*EV","*SP","WSL","WEV","WSP","wsl","wev","wsp"," ps"," ac","SPR","WER","   "};
-static const size_t NUM_STORE_NODES = 4;
 
 typedef Nodeset::Nodes               Nodes;
 typedef Node::Buffers                Buffers;

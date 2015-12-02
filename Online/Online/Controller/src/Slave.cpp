@@ -90,14 +90,14 @@ const char* Slave::c_machine ()  const
 
 /// Send IOC interrupt to slave
 FSM::ErrCond Slave::send(int code, const State* state)   const {
-  const Interactor* actor = this;
-  IocSensor::instance().send(const_cast<Interactor*>(actor),code,(void*)state); 
+  const CPP::Interactor* actor = this;
+  IocSensor::instance().send(const_cast<CPP::Interactor*>(actor),code,(void*)state); 
   return FSM::SUCCESS;
 }
 
 FSM::ErrCond Slave::notifyMachine(int meta_state)  {
   display(DEBUG,c_name(),"Slave [%s] notify machine: %s",metaStateName(),m_machine->c_name());
-  IocSensor::instance().send((Interactor*)m_machine,meta_state,(void*)this); 
+  IocSensor::instance().send((CPP::Interactor*)m_machine,meta_state,(void*)this); 
   return FSM::SUCCESS;
 }
 
@@ -351,7 +351,7 @@ void Slave::publishTag(const string& /* tag */)   {
 }
 
 /// IOC handler
-void Slave::handle(const Event& event)   {
+void Slave::handle(const CPP::Event& event)   {
   const State* state = (const State*)event.data;
   Publish pub(this);
   switch(event.type)  {

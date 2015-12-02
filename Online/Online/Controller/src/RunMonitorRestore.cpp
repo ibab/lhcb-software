@@ -28,7 +28,7 @@ using namespace FiniteStateMachine;
 
 /// Standard constructor
 RunMonitorRestore::RunMonitorRestore(RunMonitorCoordinator* coord, const RunMonitorConfig* cfg)
-  : Interactor(), TypedObject(0,"Restore_"+cfg->name), m_coordinator(coord), m_config(cfg)
+  : CPP::Interactor(), TypedObject(0,"Restore_"+cfg->name), m_coordinator(coord), m_config(cfg)
 {
 }
 
@@ -37,7 +37,7 @@ RunMonitorRestore::~RunMonitorRestore()   {
 }
 
 /// Interactor callback to handle external interrupts
-void RunMonitorRestore::handle(const Event& event)   {
+void RunMonitorRestore::handle(const CPP::Event& event)   {
   try {
     switch(event.eventtype) {
     case TimeEvent:
@@ -56,7 +56,7 @@ void RunMonitorRestore::handle(const Event& event)   {
 }
 
 /// Interactor callback to handle IocSensor interrupts
-void RunMonitorRestore::handleIoc(const Event& event)   {
+void RunMonitorRestore::handleIoc(const CPP::Event& event)   {
   switch(event.type)  {
   case CMD_EXIT:
     ::exit(event.iocData<long>());

@@ -123,7 +123,7 @@ const char* Machine::targetMetaName()  const   {
 }
 
 /// IOC and network handler
-void Machine::handle(const Event& event)  {
+void Machine::handle(const CPP::Event& event)  {
   switch(event.eventtype) {
   case NetEvent:
     handleNetEvent(event);
@@ -137,11 +137,11 @@ void Machine::handle(const Event& event)  {
 }
 
 /// Network handler
-void Machine::handleNetEvent(const Event& /* event */)   {
+void Machine::handleNetEvent(const CPP::Event& /* event */)   {
 }
 
 /// IOC handler
-void Machine::handleIoc(const Event& event)   {
+void Machine::handleIoc(const CPP::Event& event)   {
   ErrCond status = FSM::SUCCESS;
   switch(event.type)  {
   case Slave::SLAVE_ALIVE:

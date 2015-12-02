@@ -160,7 +160,6 @@ void TorrentSubfarmDisplay::showNodes(const SubfarmTorrentStatus& sf)   {
                float(s.upload_rate)/1024.f,float(s.download_rate)/1024.f);
     ::sprintf(text2,"---- No explicit torrents found. ----");
 
-    Torrents::const_iterator ti = s.torrents.end();
     for(Torrents::const_iterator j=s.torrents.begin(); j!=s.torrents.end();j=s.torrents.next(j))
       tmap[(*j).name] +=  1;
 

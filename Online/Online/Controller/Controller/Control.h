@@ -63,7 +63,7 @@ namespace FiniteStateMachine {
 
     CMD_LAST = 2000
   };
-  struct Control : public Interactor  {
+  struct Control : public CPP::Interactor  {
   public:
 
   protected:
@@ -159,7 +159,7 @@ namespace FiniteStateMachine {
     /// Update function when FSM machine completes transitions
     FSM::ErrCond update();
     /// Display callback handler
-    virtual void handle(const Event& ev);
+    virtual void handle(const CPP::Event& ev);
     /// Static routine to execute the I/O Thread
     static int   ctrl_thread_routine(void* arg);
     /// DimInfo overload to process slave states

@@ -140,7 +140,7 @@ void Gaudi::UPIService::print(const char* fmt, ...)   {
 }
 
 /// Interactor overload: handle menu interupts
-void Gaudi::UPIService::handle (const Event& event)   {
+void Gaudi::UPIService::handle (const CPP::Event& event)   {
   StatusCode sc = StatusCode::SUCCESS;
   string to;
   Gaudi::StateMachine::State state = m_appMgr->FSMState();
