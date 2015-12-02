@@ -5,10 +5,10 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+!======================== DaVinciTypes v2r15 2015-12-02 ======================
+
 ! 2015-12-01 - Giacomo Graziani
  - new variables in RelatedInfoNamed enum for Muon isolation
-
-!======================== DaVinciTypes v2r15 2015-11-25 ======================
 
 ! 2015-11-24 - Anton Poluektov 
  - Add new variables to RelatedInfoNamed enum
