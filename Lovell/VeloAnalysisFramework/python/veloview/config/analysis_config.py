@@ -30,7 +30,7 @@ analysis_config_branches = {
         'noise':
         {
             'title':    'Noise',
-            'children': ['noise_r', 'noise_phi'],
+            'children': ['noise_r', 'noise_r_mean', 'noise_phi', 'noise_phi_mean'],
         },
     }
 
@@ -47,6 +47,7 @@ Dictionary leaf name -> leaf, where leaf is a dictionary as follows:
                    AbsoluteBandRef, ZeroCentredBandRef, KolmogorovSmirnovTest,
                    Chi2Test (string)
     functionarg:   argument passed to the function (any or None, default None)
+    trending:      Whether to include this for trending (bool, default False)
     errThreshold:  score below this is considered error (int in range
                    [0, warnThreshold], default 50)
     warnThreshold: score below this is considered warning (int in range
@@ -90,6 +91,7 @@ analysis_config_leaves = {
             'title':         'Mean number of clusters',
             'input':         'Velo/VeloClusterMonitor/# VELO clusters',
             'function':      'Mean',
+            'trending':      True,
         },
         'cluster_active_chips':
         {
@@ -113,6 +115,14 @@ analysis_config_leaves = {
             'functionarg':   0.1,
             'weight':        0.5,
         },
+        'noise_r_mean':
+        {
+            'title':         'Mean Noise (R)',
+            'input':         'Vetra/NoiseMon/ADCCMSuppressed/{}/RMSNoise_vs_Strip',
+            'tell1':         'R',
+            'function':      'Mean',
+            'trending':      True,
+        },
         'noise_phi':
         {
             'title':         'Noise (Phi)',
@@ -121,6 +131,14 @@ analysis_config_leaves = {
             'function':      'MeanWidthDiffRef',
             'functionarg':   0.1,
             'weight':        0.5,
+        },
+        'noise_phi_mean':
+        {
+            'title':         'Mean Noise (Phi)',
+            'input':         'Vetra/NoiseMon/ADCCMSuppressed/{}/RMSNoise_vs_Strip',
+            'tell1':         'Phi',
+            'function':      'Mean',
+            'trending':      True,
         },
     }
 
