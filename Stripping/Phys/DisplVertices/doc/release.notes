@@ -5,10 +5,13 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+!========================= DisplVertices v7r24 2015-09-08 =========================
+
+! 2015-12-02 - Ricardo Vazquez Gomez
+ -retag
+
 ! 2015-11-30 - Pieter David
  - Replace deprecated LoKi::select by std::copy_if
-
-!========================= DisplVertices v7r24 2015-09-08 =========================
 
 ! 2015-09-10 - Pieter David
  - Catch another case (muon track segment) in HltVertexConverter
