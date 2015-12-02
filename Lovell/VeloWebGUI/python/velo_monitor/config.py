@@ -26,7 +26,7 @@ DEFAULT_CHILDREN = {
     'velo_view': 'velo_view/overview',
     'velo_view/trends': 'velo_view/trends/nzs',
     # Run view
-    'run_view': 'run_view/dqs',
+    'run_view': 'run_view/dq',
     # Special analysis
     'special_analyses': 'special_analyses/iv_scans',
 }

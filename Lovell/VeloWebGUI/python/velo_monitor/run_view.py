@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from flask import (
     Blueprint,
     current_app,
@@ -92,17 +93,22 @@ def run_view_builder(run, page, sensor):
                       sensor=sensor)
         return redirect(url)
 
+    # Add the dummy DQ page
+    pages = VeloConfig().run_view_pages.items()
+    pages.insert(0, ('dq', {'title': 'Data quality'}))
+    pages = OrderedDict(pages)
+
     # Load the default page from the configuration if we're at the root
     if page == '':
         page = current_app.config['DEFAULT_CHILDREN'].get('run_view', None)
         if page is not None:
             page = page[len('run_view/'):]
     # Else load the page data associated with the route's page
-    page_data = VeloConfig().run_view_pages.get(page, None)
+    page_data = pages.get(page, None)
 
     # Set up the required template variables and render the page
     g.page = page
-    g.pages = VeloConfig().run_view_pages
+    g.pages = pages
     g.page_data = page_data
     g.run = run
     g.runs = runview_utils.run_list()
