@@ -70,12 +70,6 @@ sidebar .sensor-detail {
   font-size: 1.2em;
 }
 
-/* Part of the $('.run-view-pane').children().hide() hack to get plots to
- * be full-size when display: none */
-.run-view-pane, .plot {
-  width: 100%;
-}
-
 .run-view-pane .plot {
   height: 400px;
 }

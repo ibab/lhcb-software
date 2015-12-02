@@ -213,8 +213,7 @@ NOISE = (
                             }
                         ]
                     }
-                ],
-                'layout': (2, 1)
+                ]
             },
             {
                 'title': 'Per Sensor (Channels)',

@@ -1,6 +1,5 @@
 {#
-  Define the basic run view layout, a two column sidebar with block
-  `run_view_body` available for children to override.
+  Define the basic run view layout (two column with sidebar).
   A run selector is appended to any child content, as including it in the
   sidebar container will not allow the modal to show correctly, due to it
   inheriting the sidebar's low z-index value.
@@ -28,7 +27,6 @@
   </ul>
 {% endblock %}
 {% block body %}
-  {% block run_view_body %}{% endblock %}
   {# Run select modal, shown when the 'Select' link is clicked #}
   <div class="modal fade run-selector" id="run-selector" tabindex="-1" role="dialog" aria-labelledBy="run-selector-label" aria-hidden="true">
     <div class="modal-dialog">

@@ -226,9 +226,6 @@ var VeloMonitor = (function(window, undefined) {
   var runView = {
     init: function() {
       JobMonitor.log('runView.init');
-      // Before hiding the plot DOM elements, set their dimensions explicitly
-      // Dimensions are lost when using `display: none`, so this allows us
-      // to retrieve them even when the element is hidden
       this.persistPlotDimensions();
       this.setupTabs();
       this.setupRunSelector();
@@ -270,16 +267,19 @@ var VeloMonitor = (function(window, undefined) {
     // Explicitly set the plot container's dimensions.
     //
     // As the .run-view-pane elements are hidden with display: none for the
-    // tabbing feature, their dimensions cannot be retrieved by default
-    // Instead, set their width and height inline equal to that of a non-hidden
+    // tabbing feature, their dimensions are not correctly set by the time the 
+    // plots are initialised.
+    // Set their width and height inline here, before the tabbing is enabled.
     // ancestor.
     // Returns:
     //   undefined
     persistPlotDimensions: function() {
-      var $plots = $('.run-view-pane').children('.plot');
-      $plots.each(function(idx, el) {
+      $('.plot').each(function(idx, el) {
         var $el = $(el);
-        $el.css({width: $el.closest('.tab-content').width(), height: $el.height()});
+        $el.css({
+          width: $el.width(),
+          height: $el.height()
+        });
       });
     },
     // Set up the tab switching mechanism.
@@ -291,13 +291,17 @@ var VeloMonitor = (function(window, undefined) {
     setupTabs: function() {
       var $tabs = $('.run-view-tab'),
           $panes = $('.run-view-pane');
+
+      // Enable the pane-hiding class
+      $('.to-be-tab-content').attr('class', 'tab-content');
+
       // Update the URL hash on tab change
       // Append a '/' to the ID value so the page doesn't jump to the pane's
       // location
       $tabs.children('a').on('shown.bs.tab', function(e) {
         e.preventDefault();
-        var id = $(e.target).attr('href').substr(1);
-        window.location.hash = '/{0}'.format(id);
+        var tabID = $(e.target).attr('href').substr(1);
+        window.location.hash = '/{0}'.format(tabID);
       });
 
       // Make the tab specified by the window hash active, or activate the

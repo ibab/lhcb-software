@@ -1,6 +1,8 @@
 {% extends "run_view/layout.html" %}
 {% block pageheader %}{{ g.page_data.title }}{% endblock %}
-{% block run_view_body %}
+{% block body %}
+  {{ super() }}
+
   {# Show flash messages, for which we only have 'error' types, so show them red #}
   {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -16,46 +18,56 @@
     {% endif %}
   {% endwith %}
 
-  {#
-    If a layout is specified, place each plot within its own col-sm-X div,
-    where X = layout[0]/12, as there are 12 'columns' in Bootstrap. If not,
-    place each plot in its own container and use a tabbed interface.
-    TODO What about where the AxB > number of plots?
-    TODO This is actually not supported since the introduction of 'subpages',
-         where pages can have many tabs, each of which can specify a layout.
-  #}
-  {% set has_subpages = 'subpages' in g.page_data %}
-  {% set subpages = g.page_data.subpages %}
-  {% set nhorizontal = 1 %}
+  {% set subpages = g.page_data.get('subpages', [g.page_data]) %}
 
   {# One tab per subpage #}
-  {% if subpages %}
-    <ul class="nav nav-tabs nav-justified" role="tablist">
-      {% for subpage in subpages %}
-        {# Sanitise subplot.title in to a valid URL hash value #}
-        <li class="run-view-tab"><a href="#{{ subpage.title | sanitise }}" role="tab" data-toggle="tab">{{ subpage.title }}</a></li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-  {% if subpages %}
-    <div class="tab-content">
-      {% for subpage in subpages %}
-        <div class="tab-pane run-view-pane" id="{{ subpage.title | sanitise }}">
-        {% for plot in subpage.plots %}
-          {% if use_grid %}<div class="col-sm-{{ 12//nhorizontal }}">{% endif %}
-            {% include "_plot.html" %}
-          {% if use_grid %}</div>{% endif %}
-        {% endfor %}
-        </div>
-      {% endfor %}
-    </div>
-  {% else %}
-    {% for plot in g.page_data.plots %}
-      {% if use_grid %}<div class="col-sm-{{ 12//nhorizontal }}">{% endif %}
-        {% include "_plot.html" %}
-      {% if use_grid %}</div>{% endif %}
+  <ul class="nav nav-tabs nav-justified" role="tablist">
+    {% for subpage in subpages %}
+      {# Sanitise subplot.title in to a valid URL hash value #}
+      <li class="run-view-tab"><a href="#{{ subpage.title | sanitise }}" role="tab" data-toggle="tab">{{ subpage.title }}</a></li>
     {% endfor %}
-  {% endif %}
+  </ul>
+  {#
+  This is a hack to properly size plots.
+
+  The problem is that .tab-content hides .tab-pane children with display: none,
+  and so the .plot divs have no dimensions. The plotting library uses the
+  container dimensions on initialisation, so this causes tiny plots to be made.
+
+  The fix is to use this dummy class, .to-be-tab-content, then explicitly set
+  the width and height of the plots in the JavaScript, then hide the .tab-pane
+  children by renaming the dummy class to .tab-content.
+
+  See the setup persistPlotDimensions and setupTabs JS functions.
+  #}
+  <div class="to-be-tab-content">
+    {% for subpage in subpages %}
+      {#
+      Loop over all subpages, wrapping each plot in a .col-sm-X, and wrapping
+      every `nhorizontal` plots in a .row.
+      If no layout is specified, we take the default as 1x1.
+      #}
+      {% set nhorizontal, nvertical = subpage.get('layout', (1, 1)) %}
+      {# Keep track of whether we need to insert a new .row wrapper #}
+      {% set row_counter = 1 %}
+      <div class="tab-pane run-view-pane" id="{{ subpage.title | sanitise }}">
+        {% for plot in subpage.plots %}
+          {% if row_counter == 1 %}
+            <div class="row">
+          {% endif %}
+            <div class="col-sm-{{ 12//nhorizontal }}">
+              {% include "_plot.html" %}
+            </div>
+          {% if row_counter == nhorizontal or loop.last %}
+          </div>
+          {% set row_counter = 1 %}
+          {% else %}
+            {% set row_counter = row_counter + 1 %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
 
   {% include "_sensor_selector.html" %}
 

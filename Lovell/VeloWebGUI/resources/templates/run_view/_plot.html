@@ -1,47 +1,45 @@
 {# Run view plot, diplaying the title, the plot container, and the sensor selector if required. #}
-<div class="run-view-pane" id="{{ plot.name | sanitise }}">
-  <h1>{{ plot.title }}</h1>
-  <div class="plot"
-       data-name="{{ plot.name }}"
-       data-sensor-dependent="{{ plot.sensor_dependent }}"
-       data-sensor="{{ g.sensor }}"
-       {# If an options dict is present, we need to wrap in single quotes as JSON uses double #}
-       {% if 'options' in plot %}data-plot-options='{{ plot.options | tojson }}'{% endif %}>
-  </div>
-
-  {# Sensor selector template, only shown if a plot is sensor-dependent #}
-  {% if 'sensor_dependent' in plot and plot.sensor_dependent == True %}
-    <form class="sensor-selector form-inline" action="{{ url_for('run_view.run_view_builder', run=g.run, page=g.page) }}" method="GET">
-      <div class="input-group">
-        {#
-          Add autocomplete="off" to work around Firefox persisting disabled state across refreshes
-          https://bugzilla.mozilla.org/show_bug.cgi?id=654072
-        #}
-        <button type="submit" autocomplete="off" class="previous btn btn-default">Previous</button>
-      </div>
-      <div class="input-group">
-        <div class="input-group-btn dropup">
-          <button type="submit" autocomplete="off" class="btn btn-primary">Choose sensor</button>
-          <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-            <span class="caret"></span>
-            <span class="sr-only">Toggle dropdown</span>
-          </button>
-          <ul class="dropdown-menu" role="menu">
-            {# Compute what the opposite sensor to the current one is #}
-            {% set corresponding_name = 'R' if g.sensor > 41 else 'Φ' %}
-            {% set corresponding_num = g.sensor - 64 if g.sensor > 41 else g.sensor + 64 %}
-            <li><a href="{{ url_for('run_view.run_view_builder', run=g.run, page=g.page, sensor=corresponding_num) }}">
-              Corresponding {{ corresponding_name }} sensor (#<span id="corresponding-sensor">{{ corresponding_num }}</span>)
-            </a></li>
-            {# Show the VELO layout graphic when this anchor is clicked #}
-            <li><a href="#" data-toggle="modal" data-target="#velo-layout">See VELO layout</a></li>
-          </ul>
-        </div>
-        <input type="text" class="form-control" name="sensor" min="0" max="105" step="1" list="sensors" placeholder="Sensor number" value="{{ g.sensor }}">
-      </div>
-      <div class="input-group">
-        <button type="submit" autocomplete="off" class="next btn btn-default">Next</button>
-      </div>
-    </form>
-  {% endif %}
+<h1>{{ plot.title }}</h1>
+<div class="plot"
+   data-name="{{ plot.name }}"
+   data-sensor-dependent="{{ plot.sensor_dependent }}"
+   data-sensor="{{ g.sensor }}"
+   {# If an options dict is present, we need to wrap in single quotes as JSON uses double #}
+   {% if 'options' in plot %}data-plot-options='{{ plot.options | tojson }}'{% endif %}>
 </div>
+
+{# Sensor selector template, only shown if a plot is sensor-dependent #}
+{% if 'sensor_dependent' in plot and plot.sensor_dependent == True %}
+<form class="sensor-selector form-inline" action="{{ url_for('run_view.run_view_builder', run=g.run, page=g.page) }}" method="GET">
+  <div class="input-group">
+    {#
+      Add autocomplete="off" to work around Firefox persisting disabled state across refreshes
+      https://bugzilla.mozilla.org/show_bug.cgi?id=654072
+    #}
+    <button type="submit" autocomplete="off" class="previous btn btn-default">Previous</button>
+  </div>
+  <div class="input-group">
+    <div class="input-group-btn dropup">
+      <button type="submit" autocomplete="off" class="btn btn-primary">Choose sensor</button>
+      <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+        <span class="sr-only">Toggle dropdown</span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        {# Compute what the opposite sensor to the current one is #}
+        {% set corresponding_name = 'R' if g.sensor > 41 else 'Φ' %}
+        {% set corresponding_num = g.sensor - 64 if g.sensor > 41 else g.sensor + 64 %}
+        <li><a href="{{ url_for('run_view.run_view_builder', run=g.run, page=g.page, sensor=corresponding_num) }}">
+          Corresponding {{ corresponding_name }} sensor (#<span id="corresponding-sensor">{{ corresponding_num }}</span>)
+        </a></li>
+        {# Show the VELO layout graphic when this anchor is clicked #}
+        <li><a href="#" data-toggle="modal" data-target="#velo-layout">See VELO layout</a></li>
+      </ul>
+    </div>
+    <input type="text" class="form-control" name="sensor" min="0" max="105" step="1" list="sensors" placeholder="Sensor number" value="{{ g.sensor }}">
+  </div>
+  <div class="input-group">
+    <button type="submit" autocomplete="off" class="next btn btn-default">Next</button>
+  </div>
+</form>
+{% endif %}
