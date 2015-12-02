@@ -1,4 +1,3 @@
-// $Id: IPropertyConfigSvc.h,v 1.2 2010-05-05 14:04:43 graven Exp $
 #ifndef IPROPERTYCONFIGSVC_H 
 #define IPROPERTYCONFIGSVC_H 1
 
@@ -22,11 +21,10 @@
  */
 
 
-class IPropertyConfigSvc : virtual public INamedInterface  {
+class IPropertyConfigSvc : virtual public extend_interfaces<INamedInterface>  {
 public:
-  /// Return the interface ID
-  static const InterfaceID& interfaceID();
-  virtual ~IPropertyConfigSvc();
+  DeclareInterfaceID(IPropertyConfigSvc,2,0);
+  virtual ~IPropertyConfigSvc() = default;
 
   // Return the configuration object for this object...
   virtual PropertyConfig currentConfiguration(const INamedInterface& obj) const = 0;

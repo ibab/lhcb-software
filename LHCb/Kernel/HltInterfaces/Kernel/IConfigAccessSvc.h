@@ -1,4 +1,3 @@
-// $Id: IConfigAccessSvc.h,v 1.1 2010-05-05 14:05:46 graven Exp $
 #ifndef ICONFIGACCESSSVC_H 
 #define ICONFIGACCESSSVC_H 1
 
@@ -26,11 +25,10 @@
  */
 
 
-class IConfigAccessSvc : virtual public INamedInterface  {
+class IConfigAccessSvc : virtual public extend_interfaces<INamedInterface>  {
 public:
-  /// Return the interface ID
-  static const InterfaceID& interfaceID();
-  virtual ~IConfigAccessSvc();
+  DeclareInterfaceID(IConfigAccessSvc,3,0);
+  virtual ~IConfigAccessSvc() = default;
 
   // read & write PropertyConfig instances: vertices (aka leafs) in the configuration graph
   virtual boost::optional<PropertyConfig> readPropertyConfig(const PropertyConfig::digest_type& ref) = 0;

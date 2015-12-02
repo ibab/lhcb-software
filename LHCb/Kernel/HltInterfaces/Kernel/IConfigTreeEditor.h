@@ -1,4 +1,3 @@
-// $Id: IConfigTreeEditor.h,v 1.4 2010-05-05 20:35:27 graven Exp $
 #ifndef ICONFIGTREEEDITOR_H 
 #define ICONFIGTREEEDITOR_H 1
 
@@ -26,11 +25,10 @@
  */
 
 
-class IConfigTreeEditor : virtual public INamedInterface  {
+class IConfigTreeEditor : virtual public extend_interfaces<INamedInterface>  {
 public:
-  /// Return the interface ID
-  static const InterfaceID& interfaceID();
-  virtual ~IConfigTreeEditor();
+  DeclareInterfaceID(IConfigTreeEditor,4,0);
+  virtual ~IConfigTreeEditor() = default;
 
   // given a configuration tree identified by 'in', apply the changes 
   // defined by 'updates' (which is a multimap of 'component' -> 'key','value'),

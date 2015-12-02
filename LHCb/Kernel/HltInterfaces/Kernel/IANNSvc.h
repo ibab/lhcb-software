@@ -1,4 +1,3 @@
-// $Id: IANNSvc.h,v 1.2 2008-06-25 14:14:17 graven Exp $
 #ifndef IANNSVC_H 
 #define IANNSVC_H 1
 
@@ -34,11 +33,11 @@
  */
 
 
-class IANNSvc : virtual public IANSvc  {
+class IANNSvc : virtual public extend_interfaces<IANSvc>  {
 public:
+  DeclareInterfaceID(IANNSvc,3,0);
   /// Return the interface ID
-  static const InterfaceID& interfaceID();
-  virtual ~IANNSvc();
+  virtual ~IANNSvc() = default;
 
   typedef IANSvc::major_key_type                      major_key_type;
   typedef IANSvc::minor_key_type                      minor_key_type;

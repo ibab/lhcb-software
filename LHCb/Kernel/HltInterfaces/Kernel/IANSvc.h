@@ -25,11 +25,11 @@
  */
 
 
-class IANSvc : virtual public INamedInterface  {
+class IANSvc : virtual public extend_interfaces<INamedInterface>  {
 public:
   /// Return the interface ID
-  static const InterfaceID& interfaceID();
-  virtual ~IANSvc();
+  DeclareInterfaceID(IANSvc,3,0);
+  virtual ~IANSvc() = default;
 
   typedef Gaudi::StringKey                                major_key_type;
   typedef Gaudi::StringKey                                minor_key_type;

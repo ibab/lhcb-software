@@ -1,4 +1,3 @@
-// $Id: IANSvc.h,v 1.1 2008-06-25 14:14:17 graven Exp $
 #ifndef IINDEXEDANNSVC_H 
 #define IINDEXEDANNSVC_H 1
 
@@ -26,11 +25,11 @@
  */
 
 
-class IIndexedANNSvc : virtual public INamedInterface  {
+class IIndexedANNSvc : virtual public extend_interfaces<INamedInterface>  {
 public:
   /// Return the interface ID
-  static const InterfaceID& interfaceID();
-  virtual ~IIndexedANNSvc() ;
+  DeclareInterfaceID(IIndexedANNSvc,2,0);
+  virtual ~IIndexedANNSvc() = default;
 
   virtual GaudiUtils::VectorMap<unsigned int, Gaudi::StringKey> i2s(unsigned int index, const Gaudi::StringKey& major) const = 0;
 };
