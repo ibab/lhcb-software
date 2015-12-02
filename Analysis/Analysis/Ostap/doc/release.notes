@@ -8,10 +8,10 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
-! 2015-11-28 - Vanya Belyaev
- - fit stupid typo 
+!=========================== Ostap v1r12 2015-12-02 ===========================
 
-!=========================== Ostap v1r12 2015-11-27 ===========================
+! 2015-11-28 - Vanya Belyaev
+ - fix stupid typo 
 
 ! 2015-11-18  Ivan Polyakov
  - Fix deleting the weight directory for the PyTMVA.Trainer
