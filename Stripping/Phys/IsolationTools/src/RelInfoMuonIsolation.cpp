@@ -40,9 +40,8 @@ StatusCode RelInfoMuonIsolation::initialize()
   return StatusCode::SUCCESS;
 }
 
-StatusCode RelInfoMuonIsolation::calculateRelatedInfo( const LHCb::Particle* P,
-                                                       const LHCb::Particle*) {
-
+StatusCode RelInfoMuonIsolation::calculateRelatedInfo( const LHCb::Particle* ,
+                                                       const LHCb::Particle* P) {
   // check that we have a track
   if ( !P ) return StatusCode::FAILURE;
   if ( !P->isBasicParticle() ) return StatusCode::SUCCESS;
@@ -60,7 +59,7 @@ StatusCode RelInfoMuonIsolation::calculateRelatedInfo( const LHCb::Particle* P,
   for (int station = firstStation ; station < m_nStations; station++) {
     float isoMu = (float) m_muIDtool->muonIDPropertyD(track, "iso", station);
     int M = station - firstStation +2; // must be 2 to 5
-
+    debug()<< "iso variable for M"<<M<<" is "<<isoMu<< endmsg;
     switch (M) {
     case 2:
       m_map.insert( std::make_pair(RelatedInfoNamed::ISOMUM2, isoMu) );
@@ -76,6 +75,8 @@ StatusCode RelInfoMuonIsolation::calculateRelatedInfo( const LHCb::Particle* P,
       break;
     }
   }
+  if(mTrack)
+    debug() << "GGDEBUG chi2 is "<<mTrack->chi2()<<"/"<<  mTrack->nDoF()<<endmsg;
   m_map.insert( std::make_pair(RelatedInfoNamed::MUONCORRCHI2PERDOF, (float) (mTrack ? mTrack->chi2PerDoF() : -1.)) );
                 
   return StatusCode::SUCCESS;

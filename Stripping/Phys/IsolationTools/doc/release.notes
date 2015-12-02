@@ -3,6 +3,9 @@
 ! Responsible : Alex Shires
 !============================================================================
 
+! 2015-12-02 - Giacomo Graziani
+ - bug fix in RelInfoMuonIsolation
+
 !========================= IsolationTools v1r7 2015-11-24 =========================
 
 ! 2015-12-02 - Ricardo Vazquez Gomez
