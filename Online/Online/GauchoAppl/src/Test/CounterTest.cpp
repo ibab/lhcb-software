@@ -52,33 +52,33 @@ int main(int , char *argv[]) // Taskname, DNS Node
     {
       case   C_INT:
       {
-        printf ("%d\n",objs[i]->i_data);
+        printf ("(INT) %d\n",objs[i]->i_data);
         break;
       }
       case C_LONGLONG:
       {
-        printf ("%lld\n",objs[i]->l_data);
+        printf ("(LONGLONG) %lld\n",objs[i]->l_data);
         break;
 
       }
       case C_FLOAT:
       {
-        printf ("%f\n",objs[i]->f_data);
+        printf ("(FLOAT) %f\n",objs[i]->f_data);
         break;
       }
       case C_DOUBLE:
       {
-        printf ("%f\n",objs[i]->d_data);
+        printf ("(DOUBLE) %f\n",objs[i]->d_data);
         break;
       }
       case C_RATEDOUBLE:
       {
-        printf ("%f Hz\n",objs[i]->d_data);
+        printf ("(RATEDOUBLE) %f Hz\n",objs[i]->d_data);
         break;
       }
       case C_RATEFLOAT:
       {
-        printf ("%f Hz\n",objs[i]->f_data);
+        printf ("(RATEFLOAT) %f Hz\n",objs[i]->f_data);
         break;
       }
       case C_INTSTAR:
@@ -87,7 +87,7 @@ int main(int , char *argv[]) // Taskname, DNS Node
         int nel = objs[i]->nel;
         for (int j=0;j<nel;j++)
         {
-          printf("index %d value %d\n",j,p[j]);
+          printf("(INT*) index %d value %d\n",j,p[j]);
         }
         break;
       }
@@ -97,7 +97,7 @@ int main(int , char *argv[]) // Taskname, DNS Node
         int nel = objs[i]->nel;
         for (int j=0;j<nel;j++)
         {
-          printf("index %d value %li\n",j,p[j]);
+          printf("(LONG*) index %d value %li\n",j,p[j]);
         }
         break;
       }
@@ -107,7 +107,7 @@ int main(int , char *argv[]) // Taskname, DNS Node
         int nel = objs[i]->nel;
         for (int j=0;j<nel;j++)
         {
-          printf("index %d value %f\n",j,p[j]);
+          printf("(FLOAT*) index %d value %f\n",j,p[j]);
         }
         break;
       }
@@ -119,7 +119,7 @@ int main(int , char *argv[]) // Taskname, DNS Node
         for (int j=0;j<nel;j++)
         {
           double p = pp[j];
-          printf("index %d value %f\n",j,p);
+          printf("(DOUBLE*) index %d value %f\n",j,p);
         }
         break;
       }

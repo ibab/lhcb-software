@@ -51,8 +51,23 @@ MonAdder::MonAdder()
   m_parentAdderSvc = 0;
   m_doPause = false;
   m_SaveonUpdate = false;
+  m_isSaver = false;
+  m_expected = 0;
+  m_timeout = 0;
+  m_monsvc = 0;
+  m_DebugOn = false;
+  PauseArg = 0;
+  m_type = 0;
+  m_RateBuff=0;
+  CycleCBarg = 0;
+  m_time0 = 0;
+  m_locked = false;
+  m_lockid = 0;
+  m_dohisto = false;
+  m_rectmo = 0;
+  m_oldProf = 0;
+  m_updateStamp = 0;
 }
-
 MonAdder::~MonAdder()
 {
   for (TaskServIter i = m_TaskServiceMap.begin();i!= m_TaskServiceMap.end();i++)
@@ -437,7 +452,8 @@ void MonAdder::stop()
 void MonAdder::TimeoutHandler()
 {
   INServIter i;
-  ::lib_rtl_output(LIB_RTL_INFO,"MonAdder Timeout handler for expected time %lli\n",m_reference);
+  ::lib_rtl_output(LIB_RTL_INFO,"MonAdder Timeout handler for service %s for expected time %lli\n",
+      m_name.c_str(),m_reference);
 //  printf("MonAdder Timeout handler for expected time %lli\n",m_reference);
   DimLock l;
   for (i=this->m_inputServicemap.begin();i!=m_inputServicemap.end();i++)
@@ -469,51 +485,43 @@ void MonAdder::TimeoutHandler()
   }
 //  printf("called Update...\n");
 }
-void MonAdder::i_update()
+void MonAdder::i_update(bool force)
 {
   if (m_DebugOn)
   {
-    ::lib_rtl_output(LIB_RTL_INFO,"MonAdder::i_update: Expected Number %d received %d\n",
-        m_expected,m_received);
+    ::lib_rtl_output(LIB_RTL_INFO,"MonAdder::i_update: Expected Number: %d received: %d force: %s\n",
+        m_expected,m_received,force?"true":"false");
   }
-
-  if (m_received >= m_expected)
+  if ((m_received >= m_expected) || force)
   {
     if (!m_timeout)
     {
       this->m_timer->Stop();
     }
     //    //printf("Finished one cycle. Updating our service... %d %d\n", m_received,expected);
-    Update();
-    if (m_isSaver && m_SaveonUpdate)
+    if (m_reference != m_updateStamp)
     {
-      this->m_parentAdderSvc->m_SaveTimer->timerHandler();
+      Update();
+      m_updateStamp = m_reference;
+      if (m_isSaver && m_SaveonUpdate)
+      {
+        this->m_parentAdderSvc->m_SaveTimer->timerHandler();
+      }
+      if (CycleFn != 0)
+      {
+        (*CycleFn)(CycleCBarg, m_buffer, m_usedSize, &m_hmap, this);
+      }
+      if (m_doPause)
+      {
+        if (PauseFn != 0)
+        {
+          (*PauseFn)(PauseArg);
+        }
+      }
     }
     m_added = 0;
     m_received = 0;
     m_reference = 0;
-    if (CycleFn != 0)
-    {
-//      fprintf(logFile,"Histograms in Serialize Buffer before Saving to File\n");
-//      void *bend = AddPtr(m_buffer,m_usedSize);
-//      void *hstart = AddPtr(m_buffer,sizeof(SerialHeader));
-//      DimHistbuff1 *pp = (DimHistbuff1*)hstart;
-//      while (pp<bend)
-//      {
-//        if (pp->reclen == 0) break;
-//        char *nam = (char*)AddPtr(pp,pp->nameoff);
-//        fprintf(logFile,"Buffer Histogram: %s\n",nam);
-//        pp=(DimHistbuff1*)AddPtr(pp,pp->reclen);
-//      }
-      (*CycleFn)(CycleCBarg, m_buffer, m_usedSize, &m_hmap, this);
-    }
-    if (m_doPause)
-    {
-      if (PauseFn != 0)
-      {
-        (*PauseFn)(PauseArg);
-      }
-    }
   }
 }
 void MonAdder::basicAdd(void *buff, int siz, MonInfo *h)
@@ -579,6 +587,15 @@ void MonAdder::basicAdd(void *buff, int siz, MonInfo *h)
     if (m_DebugOn)
     {
       ::lib_rtl_output(LIB_RTL_INFO,"MonAdder: First Fragment from %s...\n",h->m_TargetService.c_str());
+    }
+    if ((m_received>0) && (m_received < m_expected) && !m_timeout)
+    {
+      if (m_DebugOn)
+      {
+        ::lib_rtl_output(LIB_RTL_INFO,"MonAdder: Previous period didn't finish. Expected: %d, received:%d. Forcing update\n",
+            m_expected, m_received);
+      }
+      i_update(true);
     }
 //    printf("First fragment received from %s... starting timer...\n",h->m_TargetService.c_str());
     m_timeout = false;

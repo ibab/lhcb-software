@@ -89,7 +89,7 @@ void HistAdder::addBuffer(void *buff, int siz,MonInfo* /* HTsk */)
       DimHistbuff1 *srch = (DimHistbuff1*)(i->second);
       ps = (double*)AddPtr(sumh,sumh->dataoff);
       ph = (double*)AddPtr(srch,srch->dataoff);
-      if (srch->type == (int)C_STATENT)
+      if (srch->type == C_STATENT)
       {
 #define MIN(X,Y) ((X) < (Y) ?  (X) : (Y))
 #define MAX(X,Y) ((X) > (Y) ?  (X) : (Y))

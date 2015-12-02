@@ -202,6 +202,7 @@ public:
   boost::regex  m_taskexp;
   boost::regex  m_serviceexp;
   long long     m_reference;
+  long long 	  m_updateStamp;
   MonMap        m_hmap;
   size_t        m_received;
   int           m_added;
@@ -300,7 +301,7 @@ public:
   void start();
   void stop();
   virtual void Update()=0;
-  virtual void i_update();
+  virtual void i_update(bool force=false);
 };
 
 
