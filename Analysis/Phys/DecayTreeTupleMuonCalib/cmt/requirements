@@ -14,11 +14,26 @@ branches          cmt doc src
 # Used packages.
 #============================================================================
 use   DecayTreeTupleBase  v*    Phys
+use   DecayTreeFitter     v*    Phys
 use   MuonDet             v*    Det
+
+use   LoKiPhys            v*    Phys
 use   HepMC               v*    LCG_Interfaces
+
+#============================================================================
+# Python
+#============================================================================
+apply_pattern    install_python_modules
+macro_append DecayTreeTupleMuonCalibGenConfUser_dependencies DecayTreeTupleMuonCalibConfDbMerge
+
 
 #============================================================================
 # Component library building rule
 #============================================================================
 library          DecayTreeTupleMuonCalib    ../src/*.cpp 
 apply_pattern    component_library  library=DecayTreeTupleMuonCalib
+
+macro_append   ROOT_linkopts   " -lMLP -lTMVA -lGraf -lHist -lMatrix -lTreePlayer -lGpad -lGraf3d -lPhysics"
+
+apply_pattern    linker_library    library=LoKiArrayFunctorsLib
+#apply_pattern    component_library library=LoKiArrayFunctors
