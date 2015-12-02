@@ -210,7 +210,7 @@ StatusCode TupleToolHerschel::fill( Tuples::Tuple& tup )
         warning() << "Cannot retrieve digit for " << ch << endmsg;
         continue;
       }
-      unsigned int adc = digit->adc();
+      int adc = digit->adc();
       test &= tup->column(ch, adc);
      }
   }

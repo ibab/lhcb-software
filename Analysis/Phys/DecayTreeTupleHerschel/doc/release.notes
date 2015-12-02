@@ -7,6 +7,10 @@
 !================= DecayTreeTupleHerschel v1r1 2015-11-02 ====================
 
 ! 2015-12-02 - Dan Johnson
+ - change 'adc' from 'unsigned int' to 'int' because with pedestal subtraction
+   the adc can be negative
+
+! 2015-12-02 - Dan Johnson
  - Update the tuple tool to use the corrected Herschel digits, after
    common mode subtraction
 
