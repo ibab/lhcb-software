@@ -1040,27 +1040,31 @@ StatusCode MEPRxSvc::run()
         }
         m_rxPkt[srcid]++; // recieved packets per source
         int rc = (*rxit)->addMEP(m_dataSock, mephdr, srcid, tsc, m_tLastRx);
-        if ((*rxit)->m_runNumber > m_runNumber) {
-            if (m_runNumber != 0)
-            {
-              int runo;
-              runo = int(m_runNumber);
-              log << MSG::INFO << "run-change detected - updating EOR services for run# " << m_runNumber
-                  << endmsg;
-              m_monSvc->updateSvc("this",runo,this);
-              m_monSvc->resetHistos(0);
-            }
-            m_runNumber = (*rxit)->m_runNumber;
-            log << MSG::DEBUG << "run-change detected - new run# " << m_runNumber
-                << endmsg;
-            if (m_resetCounterOnRunChange)
-                clearCounters();
-        }
-        else if ((*rxit)->m_runNumber < m_runNumber)
+        if (m_srcFlags[srcid] & IS_ODIN)
         {
-          log << MSG::INFO << "Received Run Number (" << (*rxit)->m_runNumber
-              << ") inferior to current Run number (" << m_runNumber << ")"
-              << endmsg;
+          if ((*rxit)->m_runNumber > m_runNumber) {
+              if (m_runNumber != 0)
+              {
+                int runo;
+                runo = int(m_runNumber);
+                log << MSG::INFO << "run-change detected - updating EOR services for run# " << m_runNumber
+                    << " new run# is " << (*rxit)->m_runNumber << endmsg;
+                m_monSvc->updateSvc("this",runo,this);
+                m_monSvc->resetHistos(0);
+              }
+              m_runNumber = (*rxit)->m_runNumber;
+              log << MSG::DEBUG << "run-change detected - new run# " << m_runNumber
+                  << endmsg;
+              if (m_resetCounterOnRunChange)
+                  clearCounters();
+          }
+          else if ((*rxit)->m_runNumber < m_runNumber)
+          {
+            log << MSG::INFO << "Received Run Number (" << (*rxit)->m_runNumber
+                << ") inferior to current Run number (" << m_runNumber << ")"
+                << " L0ID = "<< (*rxit)->m_l0ID <<endmsg;
+
+          }
         }
         if (rc == MEP_SENT) {
             rx = *rxit;
