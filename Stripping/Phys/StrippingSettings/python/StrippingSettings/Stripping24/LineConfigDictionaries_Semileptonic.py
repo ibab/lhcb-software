@@ -97,7 +97,7 @@ B2DMuNuX = {
         "ProtonPIDpK": 0.0, 
         "TRCHI2": 3.0, 
         "TRGHOSTPROB": 0.35, 
-        "TTSpecs": {}, 
+        "TTSpecs" : {'Hlt1.*Track.*Decision%TOS':0,'Hlt2Topo.*Decision%TOS':0,'Hlt2SingleMuon.*Decision%TOS':0,"Hlt2Global%TIS":0},
         "UseNoPIDsInputs": False, 
         "prescaleFakes": 0.02, 
         "prescales": {
