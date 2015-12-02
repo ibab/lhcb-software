@@ -23,8 +23,9 @@ OPTIONS=${DYNAMIC_OPTS}/${PARTITION}/${1};
 #export PREAMBLE_OPTS=${ONLINETASKS}/options/Preamble.opts;
 export ONLINE_ENV_DIR=/group/online/dataflow/options/${PARTITION}/MONITORING
 export PYTHONPATH=${ONLINE_ENV_DIR}:${PYTHONPATH}
-export AdderOptsFile=/tmp/${PARTITION}_MonAdderOpts.opts
-cd /group/online/dataflow/cmtuser/OnlineRelease/Online/FarmConfig/job
+export AdderOptsFile=/tmp/${PARTITION}_MonAdderOpts.opts;
+export AdderStaticOpts=../options/NodeAdderStatic.opts;
+cd /group/online/dataflow/cmtuser/OnlineRelease/Online/FarmConfig/job;
 python ./MonAdderOpts.py ${AdderOptsFile}
 #
 ###export LD_LIBRARY_PATH=/home/beat/cmtuser/myOnline/InstallArea/${CMTCONFIG}/lib:$LD_LIBRARY_PATH

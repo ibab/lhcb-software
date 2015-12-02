@@ -382,12 +382,12 @@ def configureForCheckpoint(runinfo):
   print 'export PYTHONPATH=${CHECKPOINT_DIR}:${PYTHONPATH};'
   print 'export MBM_SETUP_OPTIONS='+checkpoint_dir+'/cmds/MBM_setup.opts;'
   print 'export CHECKPOINT_SETUP_OPTIONS='+checkpoint_dir+'/cmds/Checkpoint.opts;'
-  print 'echo "[ERROR] '+line+'";'
-  print 'echo "[ERROR] == Running in checkkpoint PRODUCTION mode....";'
-  print 'echo "[ERROR] == File:  ${CHECKPOINT_FILE} MBM setup:${MBM_SETUP_OPTIONS}";'
-  print 'echo "[ERROR] == Producing CHECKPOINT file......Please be patient. RunInfo:'+runinfo+'";'
-  print 'echo "[ERROR] == LD_PRELOAD=libCheckpointing.so";'
-  print 'echo "[ERROR] '+line+'";'
+  print 'echo "[INFO] '+line+'";'
+  print 'echo "[INFO] == Running in checkkpoint PRODUCTION mode....";'
+  print 'echo "[INFO] == File:  ${CHECKPOINT_FILE} MBM setup:${MBM_SETUP_OPTIONS}";'
+  print 'echo "[INFO] == Producing CHECKPOINT file......Please be patient. RunInfo:'+runinfo+'";'
+  print 'echo "[INFO] == LD_PRELOAD=libCheckpointing.so";'
+  print 'echo "[INFO] '+line+'";'
   # Note: This is the VERY LAST statement. Afterwards the executable MUST run!
   print 'export LD_PRELOAD=libCheckpointing.so;'
 

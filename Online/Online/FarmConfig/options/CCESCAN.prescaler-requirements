@@ -1,0 +1,3 @@
+Prescaler.Requirements = {
+"Name=All;EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=1.0"
+};

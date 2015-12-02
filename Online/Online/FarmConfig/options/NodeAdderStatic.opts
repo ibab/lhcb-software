@@ -6,5 +6,5 @@ Moore2CountAdder.MyName  = "<part>_<node>_Moore2";
 Moore2CountAdder.TaskPattern = "LHCb2_<node>_Moore2_(.*)";
 Moore2CountAdder.ServicePattern  = "MON_LHCb2_<node>_Moore2_(.*)/Counter/";
 Moore2CountAdder.AdderClass  = "Counter";
-Moore2CountAdder.ReceiveTimeout = 2;
+Moore2CountAdder.ReceiveTimeout = 7;
 

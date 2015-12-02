@@ -34,5 +34,10 @@ if test "${APP_STARTUP_OPTS}" = "-restore";      ## RunInfo flag=2
     #eval "python -c \"import ConfigureFromCheckpoint\" | ${RESTORE_CMD}";
 else
     echo "+++ [INFO] ${ONLINE_PROJECT_ROOT} ==> exec -a ${UTGID} ${Checkpoint_task} ${OPTIONS}";
+#    HH=`hostname -s | tr a-z A-Z`;
+#    if test "${HH}" = "HLTA0328"; then
+#	echo "+++ [INFO] Executing modified online version from frankm.";
+#	. /home/frankm/cmtuser/OnlineDev_v5r24/setup.x86_64-slc6-gcc48-dbg.vars;
+#    fi;
     exec -a ${UTGID} ${Checkpoint_task} ${OPTIONS} ${APP_STARTUP_OPTS};
 fi;

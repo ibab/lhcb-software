@@ -21,6 +21,7 @@ WrManager.WriterList                += { "LHCb::FileWriterSvc/AlignDataWriter_Ri
 WrManager.WriterList                += { "LHCb::FileWriterSvc/AlignDataWriter_Muon"};
 WrManager.WriterList                += { "LHCb::FileWriterSvc/AlignDataWriter_Calo"};
 WrManager.WriterList                += { "LHCb::FileWriterSvc/AlignDataWriter_BWDivision"};
+WrManager.WriterList                += { "LHCb::FileWriterSvc/AlignDataWriter_HLTTiming"};
 Param.FileSizeLimit = 1000;
 MessageSvc.fifoPath              = "$LOGFIFO";
 MessageSvc.OutputLevel           = @OnlineEnv.OutputLevel;
@@ -64,7 +65,7 @@ AlignDataWriter_Velo.DIMSteering = 1;
 //
 AlignDataWriter_Velo.Requirements         = {
 "EvType=2;TriggerMask=0x0,0x00000008,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
-,"EvType=2;TriggerMask=0x0,0x00004000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=0.001"
+,"EvType=2;TriggerMask=0x0,0x00004000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
 AlignDataWriter_Velo.MEPFilePrefix        = "/localdisk/Alignment/Velo/Run_";
 AlignDataWriter_Velo.EvtFilePrefix        = "/localdisk/Alignment/Velo/Run_";
@@ -133,6 +134,6 @@ AlignDataWriter_HLTTiming.Requirements         = {
 };
 AlignDataWriter_HLTTiming.MEPFilePrefix        = "/localdisk/Alignment/HLTTiming/Run_";
 AlignDataWriter_HLTTiming.EvtFilePrefix        = "/localdisk/Alignment/HLTTiming/Run_";
-AlignDataWriter_HLTTiming.MaxEvents            = 1000;
-AlignDataWriter_HLTTiming.DIMSteering = 1;
+AlignDataWriter_HLTTiming.MaxEvents            = 100;
+AlignDataWriter_HLTTiming.DIMSteering = 0;
 AlignDataWriter_HLTTiming.PartitionName             = @OnlineEnv.PartitionName;

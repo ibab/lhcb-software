@@ -40,12 +40,21 @@ if test "${PARTITION_NAME}" = "LHCb2"; then
     #PRINT_LEVEL=4;
     #ctrl_args="-fsm=DAQPause";
     echo "[INFO] ${UTGID} Partition:${PARTITION_NAME} FSM protocol: ${ctrl_args} Print-Level:${PRINT_LEVEL}";
-    if test "${HH}" = "HLTC0411"; then
-	ctrl_args="-count=22 -bindcpu=0";
-    fi;
+#    if test "${HH}" = "HLTC0411"; then
+#	ctrl_args="-count=22 -bindcpu=0";
+#    fi;
 fi;
-cd /group/online/dataflow/cmtuser/OnlineDev_v5r25;
-. setup.x86_64-slc6-gcc48-dbg.vars;
+#cd /group/online/dataflow/cmtuser/OnlineDev_v5r25;
+#
+#if test "${HH}" = "HLTA0328"; then
+#  if test "${PARTITION_NAME}" = "LHCb"; then
+#    cd /home/frankm/cmtuser/OnlineDev_v5r24;
+#    . setup.x86_64-slc6-gcc48-dbg.vars;
+#    ctrl_args="$ctrl_args -service=/${HH}/num_tasks";
+#    #PRINT_LEVEL=2;
+#    echo "[INFO] ${UTGID} `pwd`";
+#  fi;
+#fi;
 #
 #
 #

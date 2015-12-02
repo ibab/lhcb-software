@@ -27,6 +27,12 @@ ApplicationMgr.ExtSvc               += {
 ApplicationMgr.ExtSvc               += {
           "CntrPub/HLT1Sender"
                                        };
+ApplicationMgr.ExtSvc               += {
+          "MoorePub/Moore1s"
+                                       };
+ApplicationMgr.ExtSvc               += {
+          "MoorePub/Moore2s"
+                                       };
 
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
@@ -128,4 +134,24 @@ HLT1Sender.TrendingOn          = true;
 //OvrPub.AdderClass          = "Counter";
 //OvrPub.InDNS               = "mona08";
 //OvrPub.TrendingOn          = true;
+
+Moore1s.MyName              = "<part>_X_Moore1s";
+Moore1s.PartitionName       = @OnlineEnv.PartitionName;
+Moore1s.TaskPattern         = "MON_<part>_HLT02_PartAdder_(.*)";
+Moore1s.ServicePattern      = "MON_<part>_Moore1_00/Counter/";
+Moore1s.AdderClass          = "Counter";
+Moore1s.TrendName           = "Moore1s";
+Moore1s.InDNS               = "mona08";
+Moore1s.OutDNS              = "mona08";
+Moore1s.TrendingOn          = true;
+
+Moore2s.MyName              = "<part>_X_Moore2s";
+Moore2s.PartitionName       = @OnlineEnv.PartitionName;
+Moore2s.TaskPattern         = "MON_<part>_HLT02_PartAdder_(.*)";
+Moore2s.ServicePattern      = "MON_<part>_Moore2_00/Counter/";
+Moore2s.AdderClass          = "Counter";
+Moore2s.TrendName           = "Moore2s";
+Moore2s.InDNS               = "mona08";
+Moore2s.OutDNS              = "mona08";
+Moore2s.TrendingOn          = true;
 
