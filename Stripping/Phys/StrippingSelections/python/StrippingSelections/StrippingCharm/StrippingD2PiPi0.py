@@ -1179,7 +1179,7 @@ def makeResonance( name, config, inputSel, decDescriptors):
     
     pizeroCuts = (
         "(PT > {0[Neut_PT_MIN]})"
-        "& (ADMASS('pi0') > {0[Neut_Mass_Win]})"
+        "& (ADMASS('pi0') < {0[Neut_Mass_Win]})"
         ).format(config)
     
     gammaCuts = (

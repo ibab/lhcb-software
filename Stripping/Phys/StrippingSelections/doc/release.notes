@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-02 - Simone Stracka
+  - bug fix in StrippingCharm/StrippingD2PiPi0.py
+
 ! 2015-12-02 - Brais Sanmartin Sedes 
   - added StrippingBnoC/StrippingBs2PhiKst0.py module
 
