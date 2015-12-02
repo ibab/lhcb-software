@@ -3,6 +3,9 @@
 ! Responsible : Alex Shires
 !============================================================================
 
+! 2015-12-01 - Giacomo Graziani
+- new RelatedInfoTool RelInfoMuonIsolation
+
 !========================= IsolationTools v1r7 2015-11-24 =========================
 
 ! 2015-11-07 - Pieter David
