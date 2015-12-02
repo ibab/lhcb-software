@@ -15,7 +15,7 @@ DaVinci().EvtMax = 1000
 # ds = LHCbDataset.new('../../data/Reco15a_Run164668.py', catalog=False)[0:100]
 # ds.XMLCatalogueSlice = '../../data/Reco15a_Run164668.xml'
 
-## S20r0p1
+## S21rXp1
 ds = app.readInputData('TestS21r0p1.py')
 ds.XMLCatalogueSlice = '../../data/pool_xml_catalog_Reco14_Run125113.xml'
 
@@ -25,7 +25,7 @@ j.comment     = 'Deletable'
 j.backend     = PBS(extraopts='--mem=2900 -t 1-0:0:0')
 j.application = app
 j.inputdata   = ds
-j.splitter    = SplitByFiles( filesPerJob=1 )
+j.splitter    = SplitByFiles( filesPerJob=1, maxFiles=100 )
 j.outputfiles = [ MassStorageFile('*.root'), 'summary.xml' ]
 
 j.submit()

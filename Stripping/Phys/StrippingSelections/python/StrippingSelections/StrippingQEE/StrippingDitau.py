@@ -80,6 +80,9 @@ Alternatively, provide the loki-ready string to `extracut` which will also be us
 Version history
 ---------------
 
+## 2.3 -- 2015-Dec ( For S21rXp1 )
+- Tuned for Run-I incremental stripping. S21 had problem of Cone-radius-square.
+
 ## 2.2 -- 2015-Nov ( For S24, S21rXp1 )
 - `default_config` tuned to S24 campaign.
 - Use `from GaudiConfUtils.ConfigurableGenerators` where applicable
@@ -141,8 +144,8 @@ from Configurables import CombineParticles, LoKi__PVReFitter
 
 
 __author__  = 'chitsanu.khurewathanakul@cern.ch'
-__date__    = '2015-11-03'
-__version__ = 2.2
+__date__    = '2015-12-02'
+__version__ = 2.3
 __all__     = [ 'DitauConf', 'default_config' ]
 
 
@@ -194,10 +197,10 @@ config_tau_h1 = {
   'ISPIONORKAON'    : True,
   'min_PT'          : 4. * GeV,
   'min_TRPCHI2'     : 0.01,
-  'min_ETA'         : 2.0,
-  'max_ETA'         : 4.5,
-  #   
-  # 'min_HCALFrac'    : 0.05,
+  'min_ETA'         : 2.25,
+  'max_ETA'         : 3.75,
+  'min_HCALFrac'    : 0.05,
+  #
   # 'min_BPVDLS'      : -40,
   # 'max_BPVDLS'      : 40,
   # 'max_BPVIP'       : 1. * mm, 
@@ -244,13 +247,13 @@ config_tau_h3 = {
     # 'min_BPVVDZ'    : 0.1,
     # 'max_DRTRIOMID' : 0.3,
     # 'max_DRTRIOMIN' : 0.2,
+    # 'min_PTTRIOMIN' :  500 * MeV,
     # 'min_PTTRIOMID' : 1000 * MeV,
     # 'min_PTTRIOMAX' : 2000 * MeV,
     #
     #
+    'min_PT'        : 4 * GeV,
     'max_DRTRIOMAX' : 0.4,
-    'min_PTTRIOMIN' :  500 * MeV,
-    #
     'max_VCHI2PDOF' : 20.,
   }
 }
@@ -272,8 +275,8 @@ pcuts0 = {'extracut': 'ALL'}
 config_ditau_e_e = {
   'dcuts': { 'e':pcuts0 },
   'ccuts': {
-    'min_APTMAX':  4 * GeV,
-    'min_AM'    :  8 * GeV,
+    'min_APTMAX':  9 * GeV,
+    'min_AM'    : 12 * GeV,
   },
   'mcuts': pcuts0,
 }
@@ -282,8 +285,8 @@ config_ditau_e_e = {
 config_ditau_e_h1 = {
   'dcuts': { 'e' : pcuts0, 'pi': pcuts0 },
   'ccuts': {
-    'min_APTMAX'          :   4 * GeV,
-    'min_AM'              :   8 * GeV,
+    'min_APTMAX'          :   9 * GeV,
+    'min_AM'              :  12 * GeV,
     # 'max_ADOCAMAX'        :   1 * mm,
     # 'max_AECone05CMAX'    : 200 * GeV,
     # 'max_APTCone05CMAX'   :  10 * GeV,
@@ -299,8 +302,8 @@ config_ditau_e_h1 = {
 config_ditau_e_h3 = {
   'dcuts': { 'e' : pcuts0, 'tau': pcuts0 },
   'ccuts': {
-    'min_APTMAX':  4 * GeV,
-    'min_AM'    :  8 * GeV,
+    'min_APTMAX':  9 * GeV,
+    'min_AM'    : 12 * GeV,
   },
   'mcuts': pcuts0,
 }
@@ -308,8 +311,8 @@ config_ditau_e_h3 = {
 config_ditau_e_mu = {
   'dcuts': { 'e' : pcuts0, 'mu': pcuts0 },
   'ccuts': {
-    'min_APTMAX':  4 * GeV,
-    'min_AM'    :  8 * GeV,
+    'min_APTMAX':  9 * GeV,
+    'min_AM'    : 12 * GeV,
   },
   'mcuts': pcuts0,
 }
@@ -335,8 +338,8 @@ config_ditau_h1_h3 = {
 config_ditau_h1_mu = {
   'dcuts': { 'pi' : pcuts0, 'mu': pcuts0 },
   'ccuts': {
-    'min_APTMAX': 4 * GeV,
-    'min_AM'    : 8 * GeV,
+    'min_APTMAX':  9 * GeV,
+    'min_AM'    : 12 * GeV,
   },
   'mcuts': pcuts0,
 }
@@ -353,8 +356,8 @@ config_ditau_h3_h3 = {
 config_ditau_h3_mu = {
   'dcuts': { 'tau' : pcuts0, 'mu': pcuts0 },
   'ccuts': {
-    'min_APTMAX' :  4 * GeV,
-    'min_AM'     :  8 * GeV,
+    'min_APTMAX' :  9 * GeV,
+    'min_AM'     : 12 * GeV,
   },
   'mcuts': pcuts0,
 }
@@ -507,11 +510,11 @@ default_config = {
         'RelatedInfoTools': config_rit_default, 
       },
       'EXnoiso': {
-        'prescale'        : 0.04,
+        'prescale'        : 0.05,
         'RelatedInfoTools': config_rit_default, 
       },
       'EXssnoiso': {
-        'prescale'        : 0.04,
+        'prescale'        : 0.05,
         'RelatedInfoTools': config_rit_default, 
       },
       'HH': {
@@ -519,11 +522,11 @@ default_config = {
         'RelatedInfoTools': config_rit_default, 
       },
       'HHnoiso': {
-        'prescale'        : 0.04,
+        'prescale'        : 0.05,
         'RelatedInfoTools': config_rit_default, 
       },
       'HHssnoiso': {
-        'prescale'        : 0.04,
+        'prescale'        : 0.05,
         'RelatedInfoTools': config_rit_default, 
       },
       'MX': {
@@ -531,11 +534,11 @@ default_config = {
         'RelatedInfoTools': config_rit_default, 
       },
       'MXnoiso': {
-        'prescale'        : 0.07,
+        'prescale'        : 0.1,
         'RelatedInfoTools': config_rit_default, 
       },
       'MXssnoiso': {
-        'prescale'        : 0.07,
+        'prescale'        : 0.1,
         'RelatedInfoTools': config_rit_default, 
       },
     },
@@ -617,9 +620,10 @@ PTFrac05C   = PT / ( PT + PTCone05C )  # core -- charged
 PTFrac05A   = PT / ( PT + PTCone05A )  # core -- all
 
 ## Calo
-HCALFrac = PPFUN(PP_CaloHcalE)/P
-ECALFrac = PPFUN(PP_CaloEcalE)/P
-CaloPrsE = PPFUN(PP_CaloPrsE)
+CaloHcalE = PPFUN(PP_CaloHcalE, -1)     # For lowerbound req
+HCALFrac  = PPFUN(PP_CaloHcalE, -1)/P
+ECALFrac  = PPFUN(PP_CaloEcalE)/P
+CaloPrsE  = PPFUN(PP_CaloPrsE)
 
 ## Combinations
 ABPVCORRMMAX  = AMAXCHILD(BPVCORRM)
