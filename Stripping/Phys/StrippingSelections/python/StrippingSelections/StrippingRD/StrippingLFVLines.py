@@ -17,7 +17,7 @@ from Gaudi.Configuration import *
 #from Configurables import FilterDesktop, CombineParticles
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 
-from PhysSelPython.Wrappers import Selection, DataOnDemand
+from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from GaudiKernel.PhysicalConstants import c_light
@@ -130,6 +130,17 @@ related_info_tools_B2ee = [{'Type' : 'RelInfoBs2MuMuBIsolations',
                            
                            {'Type': 'RelInfoTrackIsolationBDT',
                            'Location':'ConeIsoInfoBDT',
+                           },
+                           ] ## matches 'RelatedInfoTools'
+
+
+
+related_info_tools_Tau2MuEtaPrime = [{'Type': 'RelInfoVertexIsolation',
+                           'Location':'VtxIsoInfo',
+                           },
+                           
+                           {'Type': 'RelInfoVertexIsolationBDT',
+                           'Location':'VtxIsoInfoBDT',
                            },
                            ] ## matches 'RelatedInfoTools'
 
@@ -248,27 +259,28 @@ related_info_tools_Bu2KJPsiee = [{'Type' : 'RelInfoBs2MuMuBIsolations',
                            ] ## matches 'RelatedInfoTools'
 
 
-
 default_config = {
     'NAME' : 'LFV',
     'BUILDERTYPE' : 'LFVLinesConf' ,
     'STREAMS' : [ 'Leptonic' ],
     'WGs'     : [ 'RD' ],
     'CONFIG'  : {
-    'Postscale'           :1,
-    'TauPrescale'         :1,
-    'Tau2MuMuePrescale'   :1,
-    'B2eMuPrescale'       :1,
-    'B2eePrescale'        :1,
-    'B2heMuPrescale'      :1,
-    'B2pMuPrescale'       :1,
-    'Bu2KJPsieePrescale'  :1,
-    'B2TauMuPrescale'     :1,
-    'B2hTauMuPrescale'    :1,
+    'Postscale'             :1,
+    'TauPrescale'           :1,
+    'Tau2MuMuePrescale'     :1,
+    'B2eMuPrescale'         :1,
+    'B2eePrescale'          :1,
+    'B2heMuPrescale'        :1,
+    'B2pMuPrescale'         :1,
+    'Bu2KJPsieePrescale'    :1,
+    'B2TauMuPrescale'       :1,
+    'B2hTauMuPrescale'      :1,
+    'Tau2MuEtaPrimePrescale':1,
     'RelatedInfoTools_B2eMu': related_info_tools_B2eMu,
     'RelatedInfoTools_B2ee' : related_info_tools_B2ee,
     'RelatedInfoTools_Tau2PhiMu' : related_info_tools_Tau2PhiMu,
     'RelatedInfoTools_Bu2KJPsiee' : related_info_tools_Bu2KJPsiee,
+    'RelatedInfoTools_Tau2MuEtaPrime' : related_info_tools_Tau2MuEtaPrime,
     'config_B2eMu'          : {
     'min_MIPCHI2DV': 25.,
     'max_ADAMASS'  : 1200*MeV,
@@ -279,7 +291,31 @@ default_config = {
     'min_BPVVDCHI2': 225,
     'max_BPVIPCHI2': 25,
     },
-    } # matches 'CONFIG'
+    
+    
+    'config_Tau2MuEtaPrime' : {
+        'muplus_cuts'       : '(ISLONG) & (TRCHI2DOF < 3 )  & (MIPCHI2DV(PRIMARY) >  9.) & (PT > 300*MeV) & (TRGHOSTPROB < 0.3)',
+        'tau_mass_window'   : "(ADAMASS('tau+')<150*MeV)",
+        'tau_cuts'          : "(BPVIPCHI2()< 100) & (VFASPF(VCHI2/VDOF)<6.) & (BPVLTIME()*c_light > 50.*micrometer) & (BPVLTIME()*c_light < 400.*micrometer) & (PT>500*MeV)"\
+        " & (D2DVVD(2) < 80*micrometer)", #maybe PT 1000
+        
+        'config_EtaPrime2pipigamma'   : {
+            'gamma_cuts'        :   '(PT > 300*MeV) & (CL > 0.1)',  #CL might exclude pi0?
+            'piplus_cuts'       :   "(PROBNNpi > 0.1) & (PT > 250*MeV) & (TRGHOSTPROB < 0.3) & (TRCHI2DOF < 3.0) & (MIPCHI2DV(PRIMARY) > 9.)",
+            'piminus_cuts'      :   "(PROBNNpi > 0.1) & (PT > 250*MeV) & (TRGHOSTPROB < 0.3) & (TRCHI2DOF < 3.0) & (MIPCHI2DV(PRIMARY) > 9.)",
+            'etap_mass_window'   :  "(ADAMASS('eta') < 80*MeV) | (ADAMASS('eta_prime') < 80*MeV)",
+            'etap_cuts'          :  '(PT > 500*MeV) & (VFASPF(VCHI2/VDOF) < 6.0)',# & (MIPCHI2DV(PRIMARY)> 9)',
+        }, #matches config_EtaPrime2pipigamma
+    
+        'config_EtaPrime2pipipi'   : {
+            'pi0_cuts'        :     "(PT > 250*MeV)",
+            'piplus_cuts'       :   "(PROBNNpi > 0.1) & (PT > 250*MeV) & (TRGHOSTPROB < 0.3) & (TRCHI2DOF < 3.0) & (MIPCHI2DV(PRIMARY) > 9.)",
+            'piminus_cuts'      :   "(PROBNNpi > 0.1) & (PT > 250*MeV) & (TRGHOSTPROB < 0.3) & (TRCHI2DOF < 3.0) & (MIPCHI2DV(PRIMARY) > 9.)",
+            'etap_mass_window'   :  "(ADAMASS('eta') < 80*MeV) | (ADAMASS('eta_prime') < 80*MeV)", #"(in_range(450, AM, 1050))",
+            'etap_cuts'          :  '(PT > 500*MeV) & (VFASPF(VCHI2/VDOF) < 6.0)',# & (MIPCHI2DV(PRIMARY)> 9)',
+        }, #matches config_EtaPrime2pipipi
+    }, #matches config_Tau2MuEtaPrime
+} #matches 'CONFIG'
 }
 
 class LFVLinesConf(LineBuilder) :
@@ -295,11 +331,14 @@ class LFVLinesConf(LineBuilder) :
                               'Bu2KJPsieePrescale',
                               'B2TauMuPrescale',
                               'B2hTauMuPrescale',
+                              'Tau2MuEtaPrimePrescale',
                               'RelatedInfoTools_B2eMu',
                               'RelatedInfoTools_B2ee',
                               'RelatedInfoTools_Tau2PhiMu',
                               'RelatedInfoTools_Bu2KJPsiee',
+                              'RelatedInfoTools_Tau2MuEtaPrime',
                               'config_B2eMu',
+                              'config_Tau2MuEtaPrime',
                               )
         
         
@@ -318,6 +357,9 @@ class LFVLinesConf(LineBuilder) :
             bu_name=name+'Bu2KJPsiee'
             taumu_name=name+'B2TauMu'
             htaumu_name=name+'B2hTauMu'
+            muetap_gamma_name = name+'Tau2MuEtaP2pipig'
+            muetap_pi_name = name+'Tau2MuEtaP2pipipi'
+
 
             self.selTau2PhiMu = makeTau2PhiMu(tau_name)
             self.selTau2eMuMu = makeTau2eMuMu(mme_name)
@@ -328,6 +370,9 @@ class LFVLinesConf(LineBuilder) :
             self.selBu        = makeBu(bu_name)
             #self.selB2TauMu  = makeB2TauMu(taumu_name)
             self.selB2hTauMu  = makeB2hTauMu(htaumu_name)
+            self.selTau2MuEtaPrime_gamma  = makeTau2MuEtaPrime(self, muetap_gamma_name, config['config_Tau2MuEtaPrime'], 'gamma')
+            self.selTau2MuEtaPrime_pi  = makeTau2MuEtaPrime(self, muetap_pi_name, config['config_Tau2MuEtaPrime'], 'pi0')
+
 
 
             self.tau2PhiMuLine = StrippingLine(tau_name+'Line',
@@ -397,6 +442,25 @@ class LFVLinesConf(LineBuilder) :
                                         RequiredRawEvents = ['Calo'],
                                         RelatedInfoTools = config['RelatedInfoTools_Bu2KJPsiee']
                                         )
+                                        
+            self.Tau2MuEtaPrime_gamma = StrippingLine(muetap_gamma_name+'Line',
+                                        prescale = config['Tau2MuEtaPrimePrescale'],
+                                        postscale = config['Postscale'],
+                                        algos = [ self.selTau2MuEtaPrime_gamma ],
+                                        MDSTFlag = True,
+                                        RelatedInfoTools = config['RelatedInfoTools_Tau2MuEtaPrime'],
+                                        RequiredRawEvents = ['Calo'],
+                                        )
+                                        
+            self.Tau2MuEtaPrime_pi = StrippingLine(muetap_pi_name+'Line',
+                                                prescale = config['Tau2MuEtaPrimePrescale'],
+                                                postscale = config['Postscale'],
+                                                algos = [ self.selTau2MuEtaPrime_pi ],
+                                                MDSTFlag = True,
+                                                RelatedInfoTools = config['RelatedInfoTools_Tau2MuEtaPrime'],
+                                                RequiredRawEvents = ['Calo'],
+                                                )
+                                        
             
             self.registerLine(self.tau2PhiMuLine)
             self.registerLine(self.tau2eMuMuLine)
@@ -407,6 +471,10 @@ class LFVLinesConf(LineBuilder) :
             self.registerLine(self.buLine)
             ##self.registerLine(self.b2TauMuLine)
             self.registerLine(self.b2hTauMuLine)
+            self.registerLine(self.Tau2MuEtaPrime_gamma)
+            self.registerLine(self.Tau2MuEtaPrime_pi)
+
+
 
 
 
@@ -813,4 +881,96 @@ def makeDetachedJPsi(name) :
     return Selection (name,
                       Algorithm = DetachedJPsi,
                       RequiredSelections = [ _stdLooseElectrons ])
+
+
+
+def makeTau2MuEtaPrime(self, name, config, setEtaPrime) :
+    
+    """
+    tau -> mu eta' selection
+        
+    Please contact Guido Andreassi if you think of prescaling this line!
+        
+    Arguments:
+    name        : name of the Selection, configuration dictionary.
+    """
+            
+    if setEtaPrime == 'gamma':
+        self.SelEtaPrime = makeEtaPrime2pipigamma("selEtap_gamma", config['config_EtaPrime2pipigamma'])
+    
+    if setEtaPrime == 'pi0':
+        self.SelEtaPrime = makeEtaPrime2pipipi("selEtap_pi0", config['config_EtaPrime2pipipi'])
+
+
+    Tau2MuEtaPrime = CombineParticles()
+    Tau2MuEtaPrime.DecayDescriptor =  "[tau+ -> mu+ eta_prime]cc ";
+    Tau2MuEtaPrime.ReFitPVs = True
+    Tau2MuEtaPrime.DaughtersCuts = { "mu+" : "{muplus_cuts}".format(**config)}
+    Tau2MuEtaPrime.CombinationCut = "{tau_mass_window}".format(**config)
+    Tau2MuEtaPrime.MotherCut = "{tau_cuts}".format(**config)
+                
+    _muons = DataOnDemand(Location="Phys/StdLooseMuons/Particles")
+                    
+    return Selection( name,
+                        Algorithm = Tau2MuEtaPrime,
+                        RequiredSelections=[self.SelEtaPrime,_muons] )
+
+
+
+
+def makeEtaPrime2pipigamma(name, config) :
+    """
+        eta' selection for tau -> mu eta'
+        Please contact Guido Andreassi if you think of prescaling this line!
+        
+        Arguments:
+        name        : name of the Selection , configuration dictionary.
+        """
+    EtaPrime2pipigamma = CombineParticles()
+    EtaPrime2pipigamma.DecayDescriptor = "eta_prime -> pi+ pi- gamma"
+    EtaPrime2pipigamma.ReFitPVs = True
+                        
+    EtaPrime2pipigamma.DaughtersCuts = {"pi+"     : "{piplus_cuts}".format(**config),
+                              "pi-"     : "{piminus_cuts}".format(**config),
+                              "gamma"   : "{gamma_cuts}".format(**config)}
+                                    
+    EtaPrime2pipigamma.CombinationCut = "{etap_mass_window}".format(**config)
+    EtaPrime2pipigamma.MotherCut = "{etap_cuts}".format(**config)
+                                            
+    _stdLoosePions = DataOnDemand (Location = "Phys/StdLoosePions/Particles")
+    _stdLooseAllPhotons = DataOnDemand (Location = "Phys/StdLooseAllPhotons/Particles")
+    
+    return Selection (name,
+                        Algorithm = EtaPrime2pipigamma,
+                        RequiredSelections = [ _stdLoosePions, _stdLooseAllPhotons ])
+
+
+
+def makeEtaPrime2pipipi(name, config) :
+    """
+        eta' selection for tau -> mu eta'
+        Please contact Guido Andreassi if you think of prescaling this line!
+        
+        Arguments:
+        name        : name of the Selection , configuration dictionary.
+        """
+    EtaPrime2pipipi = CombineParticles()
+    EtaPrime2pipipi.DecayDescriptor = "eta_prime -> pi+ pi- pi0"
+    EtaPrime2pipipi.ReFitPVs = True
+    
+    EtaPrime2pipipi.DaughtersCuts = {"pi+"     : "{piplus_cuts}".format(**config),
+                                     "pi-"     : "{piminus_cuts}".format(**config),
+                                     "pi0"     : "{pi0_cuts}".format(**config)}
+
+    EtaPrime2pipipi.CombinationCut = "{etap_mass_window}".format(**config)
+    EtaPrime2pipipi.MotherCut = "{etap_cuts}".format(**config)
+    
+    _stdLoosePions = DataOnDemand (Location = "Phys/StdLoosePions/Particles")
+    _stdLooseResolvedPi0 = DataOnDemand (Location = "Phys/StdLooseResolvedPi0/Particles")
+    _stdLooseMergedPi0 = DataOnDemand (Location = "Phys/StdLooseMergedPi0/Particles")
+    _stdPi0 = MergedSelection("Pi0For" + name, RequiredSelections = [ _stdLooseResolvedPi0, _stdLooseMergedPi0 ])
+
+    return Selection (name,
+                      Algorithm = EtaPrime2pipipi,
+                      RequiredSelections = [ _stdLoosePions, _stdPi0])
 

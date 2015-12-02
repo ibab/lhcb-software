@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-02 - Guido Andreassi
+  - Added LFVTau2MuEtaP2pipigLine and Tau2MuEtaP2pipipiLine in LFV lines, RD
+
 ! 2015-12-02 - Lucio Anderlini (for Andrea Bizzeti)
   - Further tuning StrippingBandQ/StrippingCC2DD.py for Lambda_c+ and Xi_c0 
 
