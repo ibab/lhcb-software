@@ -72,6 +72,14 @@ HLTFileEqualizer::HLTFileEqualizer()
     m_infoMap.insert(std::make_pair(std::string(sf),sfinfo));
     fprintf(outf,"%s\n",sf);
   }
+  sprintf(sf,"/RO/storectl01/ROpublish");
+  sfinfo = new DimUpdatedInfo(sf,(void*)&NoLink,sizeof(int),m_MBMInfoHandler);
+  m_infoMap.insert(std::make_pair(std::string(sf),sfinfo));
+  fprintf(outf,"%s\n",sf);
+  sprintf(sf,"/RO/storectl01/ROpublish/HLT1");
+  sfinfo = new DimUpdatedInfo(sf,(void*)&NoLink,sizeof(int),m_MBMInfoHandler);
+  m_infoMap.insert(std::make_pair(std::string(sf),sfinfo));
+  fprintf(outf,"%s\n",sf);
 //  m_enabledFarm.insert(std::string("hltb01"));
 //  m_enabledFarm.insert(std::string("hltb02"));
 }
@@ -91,6 +99,54 @@ namespace
       s[i] = toupper(s[i]);
     }
   }
+}
+void HLTFileEqualizer::FillMBMBufferOccs(char *Line, std::string &nodn,PartMBMs &part)
+{
+  int lpos = 0;
+  lpos += sprintf(&Line[lpos],"%s ",nodn.c_str());
+  if (part.Events.name != "undefined")
+  {
+    lpos += sprintf(&Line[lpos],"%s/%d/%d/%d/%d,",
+        part.Events.name.c_str(),part.Events.spused,part.Events.sptot,part.Events.evused,part.Events.evtot);
+  }
+  if (part.Send.name != "undefined")
+  {
+    lpos += sprintf(&Line[lpos],"%s/%d/%d/%d/%d",
+        part.Send.name.c_str(),part.Send.spused,part.Send.sptot,part.Send.evused,part.Send.evtot);
+  }
+  Line[lpos]= '|';lpos++;
+  Line[lpos] = 0;
+}
+void HLTFileEqualizer::FillMBMBufferRates(char *Line,std::string &nodn,PartMBMs &part)
+{
+  int lpos = 0;
+  lpos += sprintf(&Line[lpos],"%s ",nodn.c_str());
+//  if (part.Events.name != "undefined")
+  {
+    lpos += sprintf(&Line[lpos],"%s/%d/%d/%0.4f/%0.4f,",
+        part.Events.name.c_str(),part.Events.produced,part.Events.seen,
+        part.Events.p_rate,part.Events.s_rate);
+  }
+//  if (part.Overflow.name != "undefined")
+  {
+    lpos += sprintf(&Line[lpos],"%s/%d/%d/%0.4f/%0.4f,",
+        part.Overflow.name.c_str(),part.Overflow.produced,part.Overflow.seen,
+        part.Overflow.p_rate,part.Overflow.s_rate);
+  }
+//  if (part.Send.name != "undefined")
+  {
+    lpos += sprintf(&Line[lpos],"%s/%d/%d/%0.4f/%0.4f,",
+        part.Send.name.c_str(),part.Send.produced,part.Send.seen,
+        part.Send.p_rate,part.Send.s_rate);
+  }
+//  if (part.ProcPerf.name != "undefined")
+  {
+    lpos += sprintf(&Line[lpos],"%s/%d/%d/%0.4f/%0.4f,",
+        part.ProcPerf.name.c_str(),part.ProcPerf.produced,part.ProcPerf.seen,
+        part.ProcPerf.p_rate,part.ProcPerf.s_rate);
+  }
+  Line[lpos]= '|';lpos++;
+  Line[lpos] = 0;
 }
 void HLTFileEqualizer::Analyze()
 {
@@ -418,7 +474,7 @@ void HLTFileEqualizer::Analyze()
     nname = *nit;
     myNodeMap::iterator nodeit = m_AllNodes.find(nname);
     myNode *nod = (*nodeit).second;
-    char Line[1024];
+    char Line[2048];
     long dtime = nod->m_DefQ.ReadTime-nod->m_DefQ.ReadTime_prev;
     nod->AnyPart.ProcPerf.name = "Input";
     nod->AnyPart.ProcPerf.produced = nod->AnyPart.Events.produced+nod->AnyPart.Overflow.produced;
@@ -427,13 +483,14 @@ void HLTFileEqualizer::Analyze()
     nod->AnyPart.Overflow.calcRate(nod->AnyPart.Overflow_prev,dtime);
     nod->AnyPart.Send.calcRate(nod->AnyPart.Send_prev,dtime);
     nod->AnyPart.ProcPerf.calcRate(nod->AnyPart.ProcPerf_prev,dtime);
-    sprintf(Line,"%s %s/%d/%d/%0.4f/%0.4f,%s/%d/%d/%0.4f/%0.4f,%s/%d/%d/%0.4f/%0.4f,%s/%d/%d/%0.4f/%0.4f|",
-        nod->m_name.c_str(),
-        nod->AnyPart.Events.name.c_str(),nod->AnyPart.Events.produced,nod->AnyPart.Events.seen,nod->AnyPart.Events.p_rate,nod->AnyPart.Events.s_rate,
-        nod->AnyPart.Overflow.name.c_str(),nod->AnyPart.Overflow.produced,nod->AnyPart.Overflow.seen,nod->AnyPart.Overflow.p_rate,nod->AnyPart.Overflow.s_rate,
-        nod->AnyPart.Send.name.c_str(),nod->AnyPart.Send.produced,nod->AnyPart.Send.seen,nod->AnyPart.Send.p_rate,nod->AnyPart.Send.s_rate,
-        nod->AnyPart.ProcPerf.name.c_str(),nod->AnyPart.ProcPerf.produced,nod->AnyPart.ProcPerf.seen,nod->AnyPart.ProcPerf.p_rate,nod->AnyPart.ProcPerf.s_rate
-        );
+    FillMBMBufferRates(Line,nod->m_name,nod->AnyPart);
+//    sprintf(Line,"%s %s/%d/%d/%0.4f/%0.4f,%s/%d/%d/%0.4f/%0.4f,%s/%d/%d/%0.4f/%0.4f,%s/%d/%d/%0.4f/%0.4f|",
+//        nod->m_name.c_str(),
+//        nod->AnyPart.Events.name.c_str(),nod->AnyPart.Events.produced,nod->AnyPart.Events.seen,nod->AnyPart.Events.p_rate,nod->AnyPart.Events.s_rate,
+//        nod->AnyPart.Overflow.name.c_str(),nod->AnyPart.Overflow.produced,nod->AnyPart.Overflow.seen,nod->AnyPart.Overflow.p_rate,nod->AnyPart.Overflow.s_rate,
+//        nod->AnyPart.Send.name.c_str(),nod->AnyPart.Send.produced,nod->AnyPart.Send.seen,nod->AnyPart.Send.p_rate,nod->AnyPart.Send.s_rate,
+//        nod->AnyPart.ProcPerf.name.c_str(),nod->AnyPart.ProcPerf.produced,nod->AnyPart.ProcPerf.seen,nod->AnyPart.ProcPerf.p_rate,nod->AnyPart.ProcPerf.s_rate
+//        );
     m_DefservdatNodesBuffersEvents += Line;
     nod->m_DefQ.ReadTime_prev = nod->m_DefQ.ReadTime;
     nod->AnyPart.Events_prev = nod->AnyPart.Events;
@@ -467,13 +524,14 @@ void HLTFileEqualizer::Analyze()
     nod->LHCb2.Overflow.calcRate(nod->LHCb2.Overflow_prev,dtime);
     nod->LHCb2.Send.calcRate(nod->LHCb2.Send_prev,dtime);
     nod->LHCb2.ProcPerf.calcRate(nod->LHCb2.ProcPerf_prev,dtime);
-    sprintf(Line,"%s %s/%d/%d/%0.4f/%0.4f,%s/%d/%d/%0.4f/%0.4f,%s/%d/%d/%0.4f/%0.4f,%s/%d/%d/%0.4f/%0.4f|",
-        nod->m_name.c_str(),
-        nod->LHCb2.Events.name.c_str(),nod->LHCb2.Events.produced,nod->LHCb2.Events.seen,nod->LHCb2.Events.p_rate,nod->LHCb2.Events.s_rate,
-        nod->LHCb2.Overflow.name.c_str(),nod->LHCb2.Overflow.produced,nod->LHCb2.Overflow.seen,nod->LHCb2.Overflow.p_rate,nod->LHCb2.Overflow.s_rate,
-        nod->LHCb2.Send.name.c_str(),nod->LHCb2.Send.produced,nod->LHCb2.Send.seen,nod->LHCb2.Send.p_rate,nod->LHCb2.Send.s_rate,
-        nod->LHCb2.ProcPerf.name.c_str(),nod->LHCb2.ProcPerf.produced,nod->LHCb2.ProcPerf.seen,nod->LHCb2.ProcPerf.p_rate,nod->LHCb2.ProcPerf.s_rate
-        );
+    FillMBMBufferRates(Line,nod->m_name,nod->LHCb2);
+//    sprintf(Line,"%s %s/%d/%d/%0.4f/%0.4f,%s/%d/%d/%0.4f/%0.4f,%s/%d/%d/%0.4f/%0.4f,%s/%d/%d/%0.4f/%0.4f|",
+//        nod->m_name.c_str(),
+//        nod->LHCb2.Events.name.c_str(),nod->LHCb2.Events.produced,nod->LHCb2.Events.seen,nod->LHCb2.Events.p_rate,nod->LHCb2.Events.s_rate,
+//        nod->LHCb2.Overflow.name.c_str(),nod->LHCb2.Overflow.produced,nod->LHCb2.Overflow.seen,nod->LHCb2.Overflow.p_rate,nod->LHCb2.Overflow.s_rate,
+//        nod->LHCb2.Send.name.c_str(),nod->LHCb2.Send.produced,nod->LHCb2.Send.seen,nod->LHCb2.Send.p_rate,nod->LHCb2.Send.s_rate,
+//        nod->LHCb2.ProcPerf.name.c_str(),nod->LHCb2.ProcPerf.produced,nod->LHCb2.ProcPerf.seen,nod->LHCb2.ProcPerf.p_rate,nod->LHCb2.ProcPerf.s_rate
+//        );
     m_DefservdatNodesBuffersEvents_LHCb2 += Line;
     nod->m_DefQ.ReadTime_prev = nod->m_DefQ.ReadTime;
     nod->LHCb2.Events_prev = nod->LHCb2.Events;
@@ -510,6 +568,70 @@ void HLTFileEqualizer::Analyze()
   m_NodesBuffersEvents->updateService();
   m_NodesBuffersEvents_LHCb2->setData((void*)m_DefservdatNodesBuffersEvents_LHCb2.c_str(),m_DefservdatNodesBuffersEvents_LHCb2.size());
   m_NodesBuffersEvents_LHCb2->updateService();
+//========================================================================
+  m_DefservdatNodesBuffersOcc.erase();
+  m_DefservdatNodesBuffersOcc_LHCb2.erase();
+  for (NodeSet::iterator nit=m_BufferrecvNodes.begin();nit != m_BufferrecvNodes.end();nit++)
+  {
+    std::string nname;
+    nname = *nit;
+    myNodeMap::iterator nodeit = m_AllNodes.find(nname);
+    myNode *nod = (*nodeit).second;
+    char Line[2048];
+    FillMBMBufferOccs(Line,nod->m_name,nod->AnyPart);
+//    int lpos = 0;
+//    lpos += sprintf(&Line[lpos],"%s ",
+//        nod->m_name.c_str());
+//    if (nod->AnyPart.Events.name != "undefined")
+//    {
+//      lpos += sprintf(&Line[lpos],"%s/%d/%d/%d/%d",
+//          nod->AnyPart.Events.name.c_str(),nod->AnyPart.Events.spused,nod->AnyPart.Events.sptot,nod->AnyPart.Events.evused,nod->AnyPart.Events.evtot);
+//    }
+//    Line[lpos] = ',';
+//    if (nod->AnyPart.Send.name != "undefined")
+//    {
+//      lpos++;
+//      lpos += sprintf(&Line[lpos],"%s/%d/%d/%d/%d",
+//          nod->AnyPart.Send.name.c_str(),nod->AnyPart.Send.spused,nod->AnyPart.Send.sptot,nod->AnyPart.Send.evused,nod->AnyPart.Send.evtot);
+//    }
+//    Line[lpos]= '|';lpos++;
+//    Line[lpos] = 0;
+    m_DefservdatNodesBuffersOcc += Line;
+
+
+    FillMBMBufferOccs(Line,nod->m_name,nod->LHCb2);
+//    lpos = 0;
+//    lpos += sprintf(&Line[lpos],"%s ",
+//        nod->m_name.c_str());
+//    if (nod->LHCb2.Events.name != "undefined")
+//    {
+//      lpos += sprintf(&Line[lpos],"%s/%d/%d/%d/%d",
+//          nod->LHCb2.Events.name.c_str(),nod->LHCb2.Events.spused,nod->LHCb2.Events.sptot,nod->LHCb2.Events.evused,nod->LHCb2.Events.evtot);
+//    }
+//    Line[lpos] = ',';
+//    if (nod->LHCb2.Send.name != "undefined")
+//    {
+//      lpos++;
+//      lpos += sprintf(&Line[lpos],"%s/%d/%d/%d/%d",
+//          nod->LHCb2.Send.name.c_str(),nod->LHCb2.Send.spused,nod->LHCb2.Send.sptot,nod->LHCb2.Send.evused,nod->LHCb2.Send.evtot);
+//    }
+//    Line[lpos]= '|';lpos++;
+//    Line[lpos] = 0;
+//    sprintf(Line,"%s %s/%d/%d/%d/%d,%s/%d/%d/%d/%d|",
+//        nod->m_name.c_str(),
+//        nod->LHCb2.Events.name.c_str(),nod->AnyPart.Events.spused,nod->AnyPart.Events.sptot,nod->AnyPart.Events.evused,nod->AnyPart.Events.evtot,
+//        nod->LHCb2.Send.name.c_str(),nod->AnyPart.Send.spused,nod->AnyPart.Send.sptot,nod->AnyPart.Send.evused,nod->AnyPart.Send.evtot
+//        );
+    m_DefservdatNodesBuffersOcc_LHCb2 += Line;
+  }
+  m_DefservdatNodesBuffersOcc_LHCb2 += '\0';
+  m_DefservdatNodesBuffersOcc += '\0';
+  m_NodesBuffersOcc->setData((void*)m_DefservdatNodesBuffersOcc.c_str(),m_DefservdatNodesBuffersOcc.size());
+  m_NodesBuffersOcc->updateService();
+  m_NodesBuffersOcc_LHCb2->setData((void*)m_DefservdatNodesBuffersOcc_LHCb2.c_str(),m_DefservdatNodesBuffersOcc_LHCb2.size());
+  m_NodesBuffersOcc_LHCb2->updateService();
+//========================================================================
+
   float av_perf=0.0;
   float rms_perf=1000.0;
   float max_perf=0.0;
@@ -608,18 +730,26 @@ void HLTFileEqualizer::BufferDump()
 }
 DefHltInfoHandler::DefHltInfoHandler(HLTFileEqualizer *e)
 {
+  m_subfarm = 0;
+  m_sfstatus = 0;
+  m_bufsiz = 0;
   m_Equalizer = e;
 //      m_subfarm = sf;
 }
 
 HLT1InfoHandler::HLT1InfoHandler(HLTFileEqualizer *e)
 {
+  m_subfarm = 0;
+  m_sfstatus = 0;
+  m_bufsiz = 0;
   m_Equalizer = e;
 //      m_subfarm = sf;
 }
 
 MBMInfoHandler::MBMInfoHandler(HLTFileEqualizer *e)
 {
+  m_sfstatus = 0;
+  m_bufsiz = 0;
   m_Equalizer = e;
 }
 using namespace ROMon;
@@ -633,12 +763,15 @@ void MBMInfoHandler::infoHandler()
   siz = this->itsService->getSize();
 //      gettimeofday()
   if (siz == sizeof(int)) return;
+  const char *psname, *pnname;
   m_sfstatus = (_MBMSF *)itsService->getData();
   const _MBMSF *ns = m_sfstatus;
+  psname = ns->name;
   Nodes::const_iterator n;
     for (n=ns->nodes.begin();n!=ns->nodes.end(); n=ns->nodes.next(n))
     {
       std::string nname = (*n).name;
+      pnname = nname.c_str();
       m_Equalizer->m_BufferrecvNodes.insert(nname);
       myNodeMap::iterator anit;
       anit = m_Equalizer->m_AllNodes.find(nname);
@@ -682,6 +815,10 @@ void MBMInfoHandler::infoHandler()
             nod->AnyPart.Events.name = bnam;
             nod->AnyPart.Events.produced = c.tot_produced;
             nod->AnyPart.Events.seen  = c.tot_seen;
+            nod->AnyPart.Events.evtot = c.p_emax;
+            nod->AnyPart.Events.evused = c.i_events;
+            nod->AnyPart.Events.sptot  = c.buff_size;
+            nod->AnyPart.Events.spused = c.buff_size-c.i_space;
           }
           else if (bnam.find("Overflow") != std::string::npos)
           {
@@ -689,6 +826,10 @@ void MBMInfoHandler::infoHandler()
             nod->AnyPart.Overflow.name = bnam;
             nod->AnyPart.Overflow.produced = c.tot_produced;
             nod->AnyPart.Overflow.seen  = c.tot_seen;
+            nod->AnyPart.Overflow.evtot = c.p_emax;
+            nod->AnyPart.Overflow.evused = c.i_events;
+            nod->AnyPart.Overflow.sptot  = c.buff_size;
+            nod->AnyPart.Overflow.spused = c.buff_size-c.i_space;
           }
           else if (bnam.find("Output") != std::string::npos)
           {
@@ -696,6 +837,10 @@ void MBMInfoHandler::infoHandler()
             nod->AnyPart.Send.name = bnam;
             nod->AnyPart.Send.produced = c.tot_produced;
             nod->AnyPart.Send.seen  = c.tot_seen;
+            nod->AnyPart.Send.evtot = c.p_emax;
+            nod->AnyPart.Send.evused = c.i_events;
+            nod->AnyPart.Send.sptot  = c.buff_size;
+            nod->AnyPart.Send.spused = c.buff_size-c.i_space;
           }
         }
         else
@@ -706,6 +851,10 @@ void MBMInfoHandler::infoHandler()
             nod->LHCb2.Events.name = bnam;
             nod->LHCb2.Events.produced = c.tot_produced;
             nod->LHCb2.Events.seen  = c.tot_seen;
+            nod->LHCb2.Events.evtot = c.p_emax;
+            nod->LHCb2.Events.evused = c.i_events;
+            nod->LHCb2.Events.sptot  = c.buff_size;
+            nod->LHCb2.Events.spused = c.buff_size-c.i_space;
           }
           else if (bnam.find("Overflow") != std::string::npos)
           {
@@ -713,6 +862,10 @@ void MBMInfoHandler::infoHandler()
             nod->LHCb2.Overflow.name = bnam;
             nod->LHCb2.Overflow.produced = c.tot_produced;
             nod->LHCb2.Overflow.seen  = c.tot_seen;
+            nod->LHCb2.Overflow.evtot = c.p_emax;
+            nod->LHCb2.Overflow.evused = c.i_events;
+            nod->LHCb2.Overflow.sptot  = c.buff_size;
+            nod->LHCb2.Overflow.spused = c.buff_size-c.i_space;
           }
           else if (bnam.find("Output") != std::string::npos)
           {
@@ -720,6 +873,10 @@ void MBMInfoHandler::infoHandler()
             nod->LHCb2.Send.name = bnam;
             nod->LHCb2.Send.produced = c.tot_produced;
             nod->LHCb2.Send.seen  = c.tot_seen;
+            nod->LHCb2.Send.evtot = c.p_emax;
+            nod->LHCb2.Send.evused = c.i_events;
+            nod->LHCb2.Send.sptot  = c.buff_size;
+            nod->LHCb2.Send.spused = c.buff_size-c.i_space;
           }
         }
       }
@@ -1148,6 +1305,10 @@ int main(int argc, char **argv)
   elz.m_HLT1NodesRunsFiles = m_NodesRunsFiles;
   DimService *m_NodesBuffersEvents_LHCb2 = new DimService("HLTFileEqualizer/LHCb2/NodesBuffersEvents", "C",(void*)"\0",1);
   elz.m_NodesBuffersEvents_LHCb2 = m_NodesBuffersEvents_LHCb2;
+  DimService *m_NodesBuffersOcc_LHCb2 = new DimService("HLTFileEqualizer/LHCb2/NodesBuffersOccupancies", "C",(void*)"\0",1);
+  elz.m_NodesBuffersOcc_LHCb2 = m_NodesBuffersOcc_LHCb2;
+  DimService *m_NodesBuffersOcc = new DimService("HLTFileEqualizer/NodesBuffersOccupancies", "C",(void*)"\0",1);
+  elz.m_NodesBuffersOcc = m_NodesBuffersOcc;
   float stat[2];
   stat[0] = -1.0;
   stat[1] = 0.0;

@@ -97,13 +97,13 @@ namespace
 //      s[i] = tolower(s[i]);
 //    }
 //  }
-  inline void toUpperCase(string &s)
-  {
-    for (unsigned int i=0;i<s.size();i++)
-    {
-      s[i] = toupper(s[i]);
-    }
-  }
+//  inline void toUpperCase(string &s)
+//  {
+//    for (unsigned int i=0;i<s.size();i++)
+//    {
+//      s[i] = toupper(s[i]);
+//    }
+//  }
 }
 void FarmStatus::Analyze()
 {

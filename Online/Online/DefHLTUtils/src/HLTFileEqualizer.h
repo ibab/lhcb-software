@@ -28,14 +28,27 @@ class MBMStat
     std::string name;
     int produced;
     int seen;
+    int evtot;
+    int sptot;
+    int evused;
+    int spused;
     float p_rate;
     float s_rate;
+    float spocc;
+    float evocc;
     MBMStat()
     {
+      name = "undefined";
       produced = 0;
       seen = 0;
+      evtot = 0;
+      sptot = 0;
+      evused = 0;
+      spused = 0;
       p_rate = 0.0;
       s_rate = 0.0;
+      spocc = 0.0;
+      evocc = 0.0;
     };
     MBMStat(const MBMStat & c): name(c.name),produced(c.produced),seen(c.seen),p_rate(c.p_rate),s_rate(c.s_rate)
     {
@@ -58,6 +71,16 @@ class MBMStat
       else
       {
         s_rate = 0.0;
+      }
+      evocc = 0.0;
+      if (evtot >0)
+      {
+        evocc = float(evused)/float(evtot);
+      }
+      spocc = 0.0;
+      if (sptot >0)
+      {
+        evocc = float(spused)/float(sptot);
       }
     }
 };
@@ -166,6 +189,8 @@ class HLTFileEqualizer
     DimService *m_DefStatServ;
     DimService *m_NodesBuffersEvents;
     DimService *m_NodesBuffersEvents_LHCb2;
+    DimService *m_NodesBuffersOcc;
+    DimService *m_NodesBuffersOcc_LHCb2;
     DimService *m_HLT1NodeList;
     DimService *m_HLT1NodeListDiff;
     DimService *m_HLT1NodesRunsFiles;
@@ -177,6 +202,8 @@ class HLTFileEqualizer
     std::string m_HLT1servdatNodesRunsFiles;
     std::string m_DefservdatNodesBuffersEvents;
     std::string m_DefservdatNodesBuffersEvents_LHCb2;
+    std::string m_DefservdatNodesBuffersOcc;
+    std::string m_DefservdatNodesBuffersOcc_LHCb2;
     NodeSet m_enabledFarm;
     NodeSet m_recvNodes;
     NodeSet m_BufferrecvNodes;
@@ -188,6 +215,8 @@ class HLTFileEqualizer
     void Analyze();
     void Dump();
     void BufferDump();
+    void FillMBMBufferRates(char *,std::string &,PartMBMs &);
+    void FillMBMBufferOccs(char *,std::string &,PartMBMs &);
 };
 typedef ROMon::DeferredHLTSubfarmStats _DHLTSF;
 typedef ROMon::Nodeset _MBMSF;
