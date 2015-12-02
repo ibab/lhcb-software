@@ -460,7 +460,7 @@ CLUSTERS = (
                         'name': 'Velo/VeloPrivateClusterMonitor/# clusters sensor {0}',
                         'sensor_dependent': True,
                         'tip': (
-                            'Per-sensor plot. The distribution should peak extremely sharply at low cluster numbers.'
+                            'Per-sensor plot. The distribution should peak extremely sharply at low cluster numbers (below 50).'
                         ),
                         'axis_titles': ['Number of clusters', 'Entries']
                     },
