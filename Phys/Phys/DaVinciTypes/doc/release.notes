@@ -5,6 +5,9 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+! 2015-12-01 - Giacomo Graziani
+ - new variables in RelatedInfoNamed enum for Muon isolation
+
 !======================== DaVinciTypes v2r15 2015-11-25 ======================
 
 ! 2015-11-24 - Anton Poluektov 
@@ -46,8 +49,7 @@
 ! 2014-10-24 - Anton Poluektov 
  - New variables for RelInfoVertexIsolationDetached
 
-! 2014-10-07 - Alessandro Mordà
- - Added new variables for Bs->tautau selection
+! 2014-10-07 - Alessandro Mord? - Added new variables for Bs->tautau selection
 
 ! 2014-10-05 - Anton Poluektov 
  - Add new variables to RelatedInfoNamed for Fatima Soomro

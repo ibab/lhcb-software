@@ -350,7 +350,16 @@ class RelatedInfoNamed : public LHCb::RelatedInfoMap {
       NC_MAXPT_PY = BKSTTAUTAUMUONISOBDTTHIRDVALUETAUM+40, 
       NC_MAXPT_PZ = BKSTTAUTAUMUONISOBDTTHIRDVALUETAUM+41, 
       NC_MAXPT_PE = BKSTTAUTAUMUONISOBDTTHIRDVALUETAUM+42, 
-      CCNC_IT     = BKSTTAUTAUMUONISOBDTTHIRDVALUETAUM+43, 
+      CCNC_IT     = BKSTTAUTAUMUONISOBDTTHIRDVALUETAUM+43,     
+  
+      // muon candidate track isolation in muon detector     
+      ISOMUM2 = CCNC_IT +1,
+      ISOMUM3 = CCNC_IT +2,
+      ISOMUM4 = CCNC_IT +3,
+      ISOMUM5 = CCNC_IT +4,
+
+      // muon chi2 with correlation
+      MUONCORRCHI2PERDOF = ISOMUM5 +1
 
     };
 
@@ -672,6 +681,13 @@ class RelatedInfoNamed : public LHCb::RelatedInfoMap {
       case RelatedInfoNamed::NC_MAXPT_PE : return "NC_MAXPT_PE";  
       case RelatedInfoNamed::CCNC_IT     : return "CCNC_ANGLE";  
 
+      case RelatedInfoNamed::ISOMUM2     : return "ISOMUM2";
+      case RelatedInfoNamed::ISOMUM3     : return "ISOMUM3";
+      case RelatedInfoNamed::ISOMUM4     : return "ISOMUM4";
+      case RelatedInfoNamed::ISOMUM5     : return "ISOMUM5";
+        
+      case RelatedInfoNamed::MUONCORRCHI2PERDOF : return "MUONCORRCHI2PERDOF";
+        
       default : return "UNKNOWN"; 
       }
     }
