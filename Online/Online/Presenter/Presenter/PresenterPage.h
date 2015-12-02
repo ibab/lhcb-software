@@ -132,6 +132,7 @@ public:
   void updateBanner( std::string source="" );
 
   bool hasBanner() { return NULL != m_bannerPad; }
+  void rescaleHists();
 
 protected:
 

@@ -4732,6 +4732,8 @@ void PresenterMainFrame::refreshPageForced() {
   m_presenterPage.buildAnalysisHistos( m_analysisLib, true );  // Only after histos are loaded...
   m_presenterPage.updateBanner();
   m_presenterPage.updateDrawingOptions();
+//  m_presenterPage.drawPage(editorCanvas, m_analysisLib, m_fastHitMapDraw);
+  editorCanvas->Dump();
   editorCanvas->Update();
 
   if ( "" != message && !isBatch() ) {
@@ -4745,6 +4747,8 @@ void PresenterMainFrame::refreshPageForced() {
   m_loadingPage = false;
   std::cout << "=== Page refreshed." << std::endl;
   if ( m_reAccess ) reAccessPage();
+//  reAccessPage();
+//  startPageRefresh();
 }
 
 //==============================================================================
