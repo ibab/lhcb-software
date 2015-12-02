@@ -6,8 +6,12 @@ Summarize info from merged job
 
 import re
 
+def valid(line):
+  """Return True if this line looks like a stirppingline."""
+  return '#accept' in line and 'Stripping' in line and 'Scaler' not in line
+
 def process(line):
-  name,count = re.findall(r'name="(\S+)_TIMING.*>(\d+)<', line)[0]
+  name,count = re.findall(r'name="Stripping(\S+)#accept">(\d+)<', line)[0]
   return name, int(count)
 
 def read_xml():
@@ -15,7 +19,7 @@ def read_xml():
   ntotal  = 0
   with open('summary.xml') as fin:
     for line in fin:
-      if '_TIMING/#accept' in line and 'Stripping' in line:
+      if valid(line):
         name, count   = process(line)
         counter[name] = count
       if 'checkPVmin0/Events' in line:

@@ -18,79 +18,50 @@ from GaudiConfUtils.ConfigurableGenerators import CombineParticles, FilterDeskto
 from GaudiConfUtils.ConfigurableGenerators import DaVinci__N4BodyDecays
 
 from StandardParticles import StdAllNoPIDsPions, StdAllNoPIDsProtons,  StdAllNoPIDsKaons
-from PhysSelPython.Wrappers import Selection, DataOnDemand
+from PhysSelPython.Wrappers import Selection, DataOnDemand, SimpleSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from Configurables import LoKi__VoidFilter as VoidFilter
 
 default_config = {
-    'NAME' : 'Lb2dp',
-    'WGs'  : ['QEE'],
+    'NAME'        : 'Lb2dp',
     'BUILDERTYPE' : 'Lb2dpConf',
-    'CONFIG' : {
-    'Prescale'             : 1.0 ,      
-    'Prescale_pipi'        : 1.0 ,
+    'WGs'         : ['QEE'],
+    'STREAMS'     : ['BhadronCompleteEvent'],
+    'CONFIG'      : {
+        'Prescale'             : 1.0 ,      
+        'Prescale_pipi'        : 1.0 ,
 
-    'TrackChi2Ndof'        : 3.0,
-    'TrackGhostProb'       : 0.5,
-    'TrackIPChi2'          : 16.,
+        'TrackChi2Ndof'        : 3.0,
+        'TrackGhostProb'       : 0.5,
+        'TrackIPChi2'          : 16.,
 
-    'PionPT'               : 500,
-    'PionPIDKpi'          : 2,
-    # 'PionProbNNpi'         : 0.05,
-    
-    'ProtonPT'             : 1000,
-    'ProtonP'              : 15000,
-    'ProtonPIDppi'         : 10,
-    'ProtonPIDpK'          : 10,
+        'PionPT'               : 500,
+        'PionPIDKpi'          : 2,
+        # 'PionProbNNpi'         : 0.05,
+        
+        'ProtonPT'             : 1000,
+        'ProtonP'              : 15000,
+        'ProtonPIDppi'         : 10,
+        'ProtonPIDpK'          : 10,
 
-    'KaonPT'               : 1000,
-    'KaonP'                : 25000,
-    
-    'SumPT'                : 3000,
+        'KaonPT'               : 1000,
+        'KaonP'                : 25000,
+        
+        'SumPT'                : 3000,
 
-    'LbMassMin'            : 5200. ,
-    'LbMassMax'            : 6000. ,
-    'LbVtxChi2'            : 10. ,
-    'LbVtxChi2_pipi'       : 10. ,
-    'LbDIRA'               : 0.9999,
-    'LbFDChi2'             : 150,
-    'LbPT'                 : 1500
-
+        'LbMassMin'            : 5200. ,
+        'LbMassMax'            : 6000. ,
+        'LbVtxChi2'            : 10. ,
+        'LbVtxChi2_pipi'       : 10. ,
+        'LbDIRA'               : 0.9999,
+        'LbFDChi2'             : 150,
+        'LbPT'                 : 1500,
     },
-    'STREAMS' : {'BhadronCompleteEvent' : ['StrippingLb2dp_Line' ,
-                                           'StrippingLb2dp_pipiLine']}
-    }
-
-
-
-default_name = "Lb2dp"
+}
 
 class Lb2dpConf(LineBuilder) :
-    __configuration_keys__ = (
-        'Prescale',   
-        'Prescale_pipi',
-        'TrackChi2Ndof',
-        'TrackGhostProb',
-        'TrackIPChi2',
-        'PionPT',
-        # 'PionProbNNpi',
-        'PionPIDKpi',
-        'ProtonPT',
-        'ProtonP',
-        'ProtonPIDppi',
-        'ProtonPIDpK',
-        'KaonPT',
-        'KaonP',
-        'LbMassMin',
-        'LbMassMax',
-        'LbVtxChi2' ,
-        'LbVtxChi2_pipi' ,
-        'LbDIRA',        
-        'LbFDChi2',
-        'LbPT',
-        'SumPT'
-        )
+    __configuration_keys__ = default_config['CONFIG'].keys()
 
     def __init__(self, name, config) :
         LineBuilder.__init__(self, name, config)
@@ -110,28 +81,31 @@ class Lb2dpConf(LineBuilder) :
         _protonCuts += " & ((PIDp-PIDpi)> %(ProtonPIDppi)s) & ((PIDp-PIDK)> %(ProtonPIDpK)s) & (P> %(ProtonP)s *MeV)) & (PT> %(ProtonPT)s *MeV)"%self.config
 
 
+        self.PionForLb2Dp = SimpleSelection( "PionFor" + self.name, FilterDesktop, 
+          [ DataOnDemand(Location = 'Phys/StdAllLoosePions/Particles') ],
+          Code  = _pionCuts,
+        )
 
-        self.PionForLb2Dp = self.createSubSel( OutputList = "PionFor" + self.name,
-                                                InputList = DataOnDemand(Location = 'Phys/StdAllLoosePions/Particles'),
-                                                Cuts = _pionCuts)
+        self.ProtonForLb2Dp = SimpleSelection( "ProtonFor" + self.name, FilterDesktop,
+          [ DataOnDemand(Location = 'Phys/StdAllNoPIDsProtons/Particles') ],
+          Code  = _protonCuts,
+        )
 
-        self.ProtonForLb2Dp = self.createSubSel( OutputList = "ProtonFor" + self.name,
-                                                  InputList = DataOnDemand(Location = 'Phys/StdAllNoPIDsProtons/Particles'),
-                                                  Cuts = _protonCuts)
-
-        self.DeuteronForLb2Dp = self.createSubSel( OutputList = "KaonFor" + self.name,
-                                                   InputList = DataOnDemand(Location = 'Phys/StdAllNoPIDsKaons/Particles'),
-                                                   Cuts = _kaonCuts)
+        self.DeuteronForLb2Dp = SimpleSelection( "KaonFor" + self.name, FilterDesktop, 
+          [ DataOnDemand(Location = 'Phys/StdAllNoPIDsKaons/Particles') ],
+          Code  = _kaonCuts,
+        )
         
         self.makeLb2Dp()
         self.makeLb2Dppipi()
-        
-    def createSubSel( self, OutputList, InputList, Cuts ) :
-        '''create a selection using a FilterDesktop'''
-        filter = FilterDesktop(Code = Cuts)
-        return Selection( OutputList,
-                          Algorithm = filter,
-                          RequiredSelections = [ InputList ] )
+
+    ## Note: This functionality is already available in SimpleSelection     
+    # def createSubSel( self, OutputList, InputList, Cuts ) :
+    #     '''create a selection using a FilterDesktop'''
+    #     filter = FilterDesktop(Code = Cuts)
+    #     return Selection( OutputList,
+    #                       Algorithm = filter,
+    #                       RequiredSelections = [ InputList ] )
     
 
     def makeLb2Dp(self):

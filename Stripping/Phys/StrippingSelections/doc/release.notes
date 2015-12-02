@@ -4,6 +4,10 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2015-12-02 - Chitsanu Khurewathanakul
+  - Prepare QEE's __init__ for S21rXp1
+
 ! 2015-12-02 - Liming Zhang
   - Added XB2DPiPLine
   - Added RelatedInfo to Lb2EtacKpLine
