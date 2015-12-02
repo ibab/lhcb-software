@@ -24,7 +24,6 @@ default_config = {
             ,"prescales":{'StrippingB2DMuNuX_D0_Electron':0.1}
             ,"GEC_nLongTrk" : 250 
             ,"TTSpecs"      : {'Hlt1.*Track.*Decision%TOS':0,'Hlt2Topo.*Decision%TOS':0,'Hlt2SingleMuon.*Decision%TOS':0,"Hlt2Global%TIS":0}
-            ,"TTSpecs"      : {}
             ,"HLT1"   : "HLT_PASS_RE('Hlt1.*Decision')"
             ,"HLT2"   : "HLT_PASS_RE('Hlt2(SingleMuon|Topo).*Decision')"
             ,"Monitor"      : False
