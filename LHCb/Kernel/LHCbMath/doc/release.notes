@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-12-02 - Manuel Tobias Schiller
+ - BloomFilter: add comparison for (in)equality, ability to get/set 32-bit
+   words of internal representation
 
 !========================= LHCbMath v3r60 2015-11-02 =========================
 

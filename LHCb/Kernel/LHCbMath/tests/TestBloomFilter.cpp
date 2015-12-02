@@ -77,6 +77,16 @@ int main()
 	s2 += filter.size() * filter.size();
 	myassert(std::abs(ssize_t(filter.size()) - 24) < 5. * std::sqrt(24.));
 	myassert(std::abs(r - BF::pFalsePositive()) < 5. / 64.);
+	// test the getword/setword methods by using it to make a copy,
+	// testing the comparison operators while we're at it
+	BF copy;
+	copy.setword(1, filter.getword(1));
+	copy.setword(2, filter.getword(2));
+	copy.setword(3, filter.getword(3));
+	copy.setword(4, filter.getword(4));
+	myassert(filter != copy); // incomplete copy
+	copy.setword(0, filter.getword(0));
+	myassert(filter == copy); // complete copy
     }
     rr *= 1e-2;
     rr2 *= 1e-2;

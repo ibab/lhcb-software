@@ -626,6 +626,157 @@ class BloomFilter
 	 */
 	inline bool empty() const { return m_bits.none(); }
 
+	/** @brief get integer representation of Bloom filter
+	 *
+	 * @param nword 32-bit word of the Bloom filter to get
+	 * @returns 32-bit word containing bits 32 * nword to 32 * nword + 31
+	 */
+	inline constexpr uint32_t getword(unsigned nword) const
+	{
+	    return (32 * nword >= nBits) ? 0 : /* read past the end of the bitset */
+		((32 * (nword + 1) <= nBits) ? /* word fully contained in bitset */
+		 ((uint32_t(m_bits[32 * nword +  0]) <<  0)
+		  | (uint32_t(m_bits[32 * nword +  1]) <<  1)
+		  | (uint32_t(m_bits[32 * nword +  2]) <<  2)
+		  | (uint32_t(m_bits[32 * nword +  3]) <<  3)
+		  | (uint32_t(m_bits[32 * nword +  4]) <<  4)
+		  | (uint32_t(m_bits[32 * nword +  5]) <<  5)
+		  | (uint32_t(m_bits[32 * nword +  6]) <<  6)
+		  | (uint32_t(m_bits[32 * nword +  7]) <<  7)
+		  | (uint32_t(m_bits[32 * nword +  8]) <<  8)
+		  | (uint32_t(m_bits[32 * nword +  9]) <<  9)
+		  | (uint32_t(m_bits[32 * nword + 10]) << 10)
+		  | (uint32_t(m_bits[32 * nword + 11]) << 11)
+		  | (uint32_t(m_bits[32 * nword + 12]) << 12)
+		  | (uint32_t(m_bits[32 * nword + 13]) << 13)
+		  | (uint32_t(m_bits[32 * nword + 14]) << 14)
+		  | (uint32_t(m_bits[32 * nword + 15]) << 15)
+		  | (uint32_t(m_bits[32 * nword + 16]) << 16)
+		  | (uint32_t(m_bits[32 * nword + 17]) << 17)
+		  | (uint32_t(m_bits[32 * nword + 18]) << 18)
+		  | (uint32_t(m_bits[32 * nword + 19]) << 19)
+		  | (uint32_t(m_bits[32 * nword + 20]) << 20)
+		  | (uint32_t(m_bits[32 * nword + 21]) << 21)
+		  | (uint32_t(m_bits[32 * nword + 22]) << 22)
+		  | (uint32_t(m_bits[32 * nword + 23]) << 23)
+		  | (uint32_t(m_bits[32 * nword + 24]) << 24)
+		  | (uint32_t(m_bits[32 * nword + 25]) << 25)
+		  | (uint32_t(m_bits[32 * nword + 26]) << 26)
+		  | (uint32_t(m_bits[32 * nword + 27]) << 27)
+		  | (uint32_t(m_bits[32 * nword + 28]) << 28)
+		  | (uint32_t(m_bits[32 * nword + 29]) << 29)
+		  | (uint32_t(m_bits[32 * nword + 30]) << 30)
+		  | (uint32_t(m_bits[32 * nword + 31]) << 31)) : /* partially contained word */
+		  (((32 * nword +  0 < nBits) ? (uint32_t(m_bits[32 * nword +  0]) <<  0) : 0)
+		   | ((32 * nword +  1 < nBits) ? (uint32_t(m_bits[32 * nword +  1]) <<  1) : 0)
+		   | ((32 * nword +  2 < nBits) ? (uint32_t(m_bits[32 * nword +  2]) <<  2) : 0)
+		   | ((32 * nword +  3 < nBits) ? (uint32_t(m_bits[32 * nword +  3]) <<  3) : 0)
+		   | ((32 * nword +  4 < nBits) ? (uint32_t(m_bits[32 * nword +  4]) <<  4) : 0)
+		   | ((32 * nword +  5 < nBits) ? (uint32_t(m_bits[32 * nword +  5]) <<  5) : 0)
+		   | ((32 * nword +  6 < nBits) ? (uint32_t(m_bits[32 * nword +  6]) <<  6) : 0)
+		   | ((32 * nword +  7 < nBits) ? (uint32_t(m_bits[32 * nword +  7]) <<  7) : 0)
+		   | ((32 * nword +  8 < nBits) ? (uint32_t(m_bits[32 * nword +  8]) <<  8) : 0)
+		   | ((32 * nword +  9 < nBits) ? (uint32_t(m_bits[32 * nword +  9]) <<  9) : 0)
+		   | ((32 * nword + 10 < nBits) ? (uint32_t(m_bits[32 * nword + 10]) << 10) : 0)
+		   | ((32 * nword + 11 < nBits) ? (uint32_t(m_bits[32 * nword + 11]) << 11) : 0)
+		   | ((32 * nword + 12 < nBits) ? (uint32_t(m_bits[32 * nword + 12]) << 12) : 0)
+		   | ((32 * nword + 13 < nBits) ? (uint32_t(m_bits[32 * nword + 13]) << 13) : 0)
+		   | ((32 * nword + 14 < nBits) ? (uint32_t(m_bits[32 * nword + 14]) << 14) : 0)
+		   | ((32 * nword + 15 < nBits) ? (uint32_t(m_bits[32 * nword + 15]) << 15) : 0)
+		   | ((32 * nword + 16 < nBits) ? (uint32_t(m_bits[32 * nword + 16]) << 16) : 0)
+		   | ((32 * nword + 17 < nBits) ? (uint32_t(m_bits[32 * nword + 17]) << 17) : 0)
+		   | ((32 * nword + 18 < nBits) ? (uint32_t(m_bits[32 * nword + 18]) << 18) : 0)
+		   | ((32 * nword + 19 < nBits) ? (uint32_t(m_bits[32 * nword + 19]) << 19) : 0)
+		   | ((32 * nword + 20 < nBits) ? (uint32_t(m_bits[32 * nword + 20]) << 20) : 0)
+		   | ((32 * nword + 21 < nBits) ? (uint32_t(m_bits[32 * nword + 21]) << 21) : 0)
+		   | ((32 * nword + 22 < nBits) ? (uint32_t(m_bits[32 * nword + 22]) << 22) : 0)
+		   | ((32 * nword + 23 < nBits) ? (uint32_t(m_bits[32 * nword + 23]) << 23) : 0)
+		   | ((32 * nword + 24 < nBits) ? (uint32_t(m_bits[32 * nword + 24]) << 24) : 0)
+		   | ((32 * nword + 25 < nBits) ? (uint32_t(m_bits[32 * nword + 25]) << 25) : 0)
+		   | ((32 * nword + 26 < nBits) ? (uint32_t(m_bits[32 * nword + 26]) << 26) : 0)
+		   | ((32 * nword + 27 < nBits) ? (uint32_t(m_bits[32 * nword + 27]) << 27) : 0)
+		   | ((32 * nword + 28 < nBits) ? (uint32_t(m_bits[32 * nword + 28]) << 28) : 0)
+		   | ((32 * nword + 29 < nBits) ? (uint32_t(m_bits[32 * nword + 29]) << 29) : 0)
+		   | ((32 * nword + 30 < nBits) ? (uint32_t(m_bits[32 * nword + 30]) << 30) : 0)
+		   | ((32 * nword + 31 < nBits) ? (uint32_t(m_bits[32 * nword + 31]) << 31) : 0)));
+	}
+
+	/** @brief set integer representation of Bloom filter
+	 *
+	 * @param nword which 32-bit word of the Bloom filter to set
+	 * @param word value of 32-bit word of the Bloom filter to set
+	 */
+	inline void setword(unsigned nword, uint32_t word)
+	{
+	    if (32 * (nword + 1) <= nBits) {
+		m_bits[nword * 32 +  0] = bool((word >>  0) & 1),
+		    m_bits[nword * 32 +  1] = bool((word >>  1) & 1),
+		    m_bits[nword * 32 +  2] = bool((word >>  2) & 1),
+		    m_bits[nword * 32 +  3] = bool((word >>  3) & 1),
+		    m_bits[nword * 32 +  4] = bool((word >>  4) & 1),
+		    m_bits[nword * 32 +  5] = bool((word >>  5) & 1),
+		    m_bits[nword * 32 +  6] = bool((word >>  6) & 1),
+		    m_bits[nword * 32 +  7] = bool((word >>  7) & 1),
+		    m_bits[nword * 32 +  8] = bool((word >>  8) & 1),
+		    m_bits[nword * 32 +  9] = bool((word >>  9) & 1),
+		    m_bits[nword * 32 + 10] = bool((word >> 10) & 1),
+		    m_bits[nword * 32 + 11] = bool((word >> 11) & 1),
+		    m_bits[nword * 32 + 12] = bool((word >> 12) & 1),
+		    m_bits[nword * 32 + 13] = bool((word >> 13) & 1),
+		    m_bits[nword * 32 + 14] = bool((word >> 14) & 1),
+		    m_bits[nword * 32 + 15] = bool((word >> 15) & 1),
+		    m_bits[nword * 32 + 16] = bool((word >> 16) & 1),
+		    m_bits[nword * 32 + 17] = bool((word >> 17) & 1),
+		    m_bits[nword * 32 + 18] = bool((word >> 18) & 1),
+		    m_bits[nword * 32 + 19] = bool((word >> 19) & 1),
+		    m_bits[nword * 32 + 20] = bool((word >> 20) & 1),
+		    m_bits[nword * 32 + 21] = bool((word >> 21) & 1),
+		    m_bits[nword * 32 + 22] = bool((word >> 22) & 1),
+		    m_bits[nword * 32 + 23] = bool((word >> 23) & 1),
+		    m_bits[nword * 32 + 24] = bool((word >> 24) & 1),
+		    m_bits[nword * 32 + 25] = bool((word >> 25) & 1),
+		    m_bits[nword * 32 + 26] = bool((word >> 26) & 1),
+		    m_bits[nword * 32 + 27] = bool((word >> 27) & 1),
+		    m_bits[nword * 32 + 28] = bool((word >> 28) & 1),
+		    m_bits[nword * 32 + 29] = bool((word >> 29) & 1),
+		    m_bits[nword * 32 + 30] = bool((word >> 30) & 1),
+		    m_bits[nword * 32 + 31] = bool((word >> 31) & 1);
+	    } else if (32 * nword < nBits) {
+		if (nword * 32 +  0 < nBits) m_bits[nword * 32 +  0] = bool((word >>  0) & 1);
+		if (nword * 32 +  1 < nBits) m_bits[nword * 32 +  1] = bool((word >>  1) & 1);
+		if (nword * 32 +  2 < nBits) m_bits[nword * 32 +  2] = bool((word >>  2) & 1);
+		if (nword * 32 +  3 < nBits) m_bits[nword * 32 +  3] = bool((word >>  3) & 1);
+		if (nword * 32 +  4 < nBits) m_bits[nword * 32 +  4] = bool((word >>  4) & 1);
+		if (nword * 32 +  5 < nBits) m_bits[nword * 32 +  5] = bool((word >>  5) & 1);
+		if (nword * 32 +  6 < nBits) m_bits[nword * 32 +  6] = bool((word >>  6) & 1);
+		if (nword * 32 +  7 < nBits) m_bits[nword * 32 +  7] = bool((word >>  7) & 1);
+		if (nword * 32 +  8 < nBits) m_bits[nword * 32 +  8] = bool((word >>  8) & 1);
+		if (nword * 32 +  9 < nBits) m_bits[nword * 32 +  9] = bool((word >>  9) & 1);
+		if (nword * 32 + 10 < nBits) m_bits[nword * 32 + 10] = bool((word >> 10) & 1);
+		if (nword * 32 + 11 < nBits) m_bits[nword * 32 + 11] = bool((word >> 11) & 1);
+		if (nword * 32 + 12 < nBits) m_bits[nword * 32 + 12] = bool((word >> 12) & 1);
+		if (nword * 32 + 13 < nBits) m_bits[nword * 32 + 13] = bool((word >> 13) & 1);
+		if (nword * 32 + 14 < nBits) m_bits[nword * 32 + 14] = bool((word >> 14) & 1);
+		if (nword * 32 + 15 < nBits) m_bits[nword * 32 + 15] = bool((word >> 15) & 1);
+		if (nword * 32 + 16 < nBits) m_bits[nword * 32 + 16] = bool((word >> 16) & 1);
+		if (nword * 32 + 17 < nBits) m_bits[nword * 32 + 17] = bool((word >> 17) & 1);
+		if (nword * 32 + 18 < nBits) m_bits[nword * 32 + 18] = bool((word >> 18) & 1);
+		if (nword * 32 + 19 < nBits) m_bits[nword * 32 + 19] = bool((word >> 19) & 1);
+		if (nword * 32 + 20 < nBits) m_bits[nword * 32 + 20] = bool((word >> 20) & 1);
+		if (nword * 32 + 21 < nBits) m_bits[nword * 32 + 21] = bool((word >> 21) & 1);
+		if (nword * 32 + 22 < nBits) m_bits[nword * 32 + 22] = bool((word >> 22) & 1);
+		if (nword * 32 + 23 < nBits) m_bits[nword * 32 + 23] = bool((word >> 23) & 1);
+		if (nword * 32 + 24 < nBits) m_bits[nword * 32 + 24] = bool((word >> 24) & 1);
+		if (nword * 32 + 25 < nBits) m_bits[nword * 32 + 25] = bool((word >> 25) & 1);
+		if (nword * 32 + 26 < nBits) m_bits[nword * 32 + 26] = bool((word >> 26) & 1);
+		if (nword * 32 + 27 < nBits) m_bits[nword * 32 + 27] = bool((word >> 27) & 1);
+		if (nword * 32 + 28 < nBits) m_bits[nword * 32 + 28] = bool((word >> 28) & 1);
+		if (nword * 32 + 29 < nBits) m_bits[nword * 32 + 29] = bool((word >> 29) & 1);
+		if (nword * 32 + 30 < nBits) m_bits[nword * 32 + 30] = bool((word >> 30) & 1);
+		if (nword * 32 + 31 < nBits) m_bits[nword * 32 + 31] = bool((word >> 31) & 1);
+	    }
+	}
+
 	/** @brief return an estimate of set size
 	 *
 	 * @returns estimate of set size
@@ -790,6 +941,22 @@ class BloomFilter
 	    m_bits |= other.m_bits;
 	    return *this;
 	}
+
+	/** @brief compare Bloom filters for equality
+	 *
+	 * @param other Bloom filter to compare against
+	 * @returns true if other and this are the same, false otherwise
+	 */
+	bool operator==(const BloomFilter& other) const
+	{ return m_bits == other.m_bits; }
+
+	/** @brief compare Bloom filters for inequality
+	 *
+	 * @param other Bloom filter to compare against
+	 * @returns true if other and this are not the same, false otherwise
+	 */
+	bool operator!=(const BloomFilter& other) const
+	{ return m_bits != other.m_bits; }
 };
 
 /// perform set intersection
