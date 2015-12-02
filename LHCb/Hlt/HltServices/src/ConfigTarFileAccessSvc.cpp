@@ -7,7 +7,7 @@
 using ConfigTarFileAccessSvc_details::TarFile;
 
 // Factory implementation
-DECLARE_SERVICE_FACTORY( ConfigTarFileAccessSvc )
+DECLARE_COMPONENT( ConfigTarFileAccessSvc )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -37,7 +37,7 @@ IArchive* ConfigTarFileAccessSvc::file() const
         if ( m_mode != "ReadOnly" && m_mode != "ReadWrite" &&
              m_mode != "Truncate" ) {
             error() << "invalid mode: " << m_mode << endmsg;
-            return 0;
+            return nullptr;
         }
         std::ios::openmode mode = ( m_mode == "ReadWrite" )
                                  ? ( std::ios::in | std::ios::out | std::ios::ate )

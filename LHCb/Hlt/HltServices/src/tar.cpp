@@ -228,7 +228,7 @@ bool TarFile::_append( const std::string& name, std::stringstream& is )
     putOctal( getUid(), header.uid );
     putOctal( getGid(), header.gid );
     putOctal( size, header.size );
-    putOctal( time( 0 ), header.mtime );
+    putOctal( time( nullptr ), header.mtime );
     header.typeflag = TarFileType::REGTYPE;
     putString( getUname(), header.uname );
     putString( getGname(), header.gname );

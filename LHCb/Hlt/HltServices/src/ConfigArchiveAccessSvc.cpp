@@ -21,22 +21,8 @@ namespace fs = boost::filesystem;
 //=============================================================================
 ConfigArchiveAccessSvc::ConfigArchiveAccessSvc( const std::string& name,
                                                 ISvcLocator* pSvcLocator )
-    : Service( name, pSvcLocator )
+    : base_class( name, pSvcLocator )
 { }
-
-//=============================================================================
-// queryInterface
-//=============================================================================
-StatusCode ConfigArchiveAccessSvc::queryInterface( const InterfaceID& riid,
-                                                   void** ppvUnknown )
-{
-    if ( IConfigAccessSvc::interfaceID().versionMatch( riid ) ) {
-        *ppvUnknown = (IConfigAccessSvc*)this;
-        addRef();
-        return SUCCESS;
-    }
-    return Service::queryInterface( riid, ppvUnknown );
-}
 
 //=============================================================================
 // Initialization
@@ -77,7 +63,7 @@ template <typename T>
 boost::optional<T> ConfigArchiveAccessSvc::read( const string& path ) const
 {
     if ( msgLevel( MSG::DEBUG ) ) debug() << "trying to read " << path << endmsg;
-    if ( !file() ) return boost::optional<T>();
+    if ( !file() ) return boost::none;
     auto c = file()->get<T>(path);
     if ( !c &&  msgLevel( MSG::DEBUG ) ) {
         debug() << "file " << path << " not found in container " << endmsg;
@@ -121,12 +107,12 @@ boost::optional<ConfigTreeNode> ConfigArchiveAccessSvc::readConfigTreeNodeAlias(
 {
     string fnam = configTreeNodeAliasPath( alias );
     boost::optional<string> sref = this->read<string>( fnam );
-    if ( !sref ) return boost::optional<ConfigTreeNode>();
+    if ( !sref ) return boost::none;
     ConfigTreeNode::digest_type ref =
         ConfigTreeNode::digest_type::createFromStringRep( *sref );
     if ( !ref.valid() ) {
         error() << "content of " << fnam << " not a valid ref" << endmsg;
-        return boost::optional<ConfigTreeNode>();
+        return boost::none;
     }
     return readConfigTreeNode( ref );
 }

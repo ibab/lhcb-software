@@ -27,13 +27,11 @@
  *  @author Gerhard Raven
  *  @date   2008-01-04
  */
-class ConfigStackAccessSvc : public Service,
-                            virtual public IConfigAccessSvc {
+class ConfigStackAccessSvc : public extends1<Service, IConfigAccessSvc> {
 public:
   ConfigStackAccessSvc(const std::string& name, ISvcLocator* pSvcLocator);
   ~ConfigStackAccessSvc( ) override = default;     ///< Destructor
 
-  StatusCode queryInterface(const InterfaceID& , void** );
   StatusCode initialize();    ///< Service initialization
   StatusCode finalize();    ///< Service finalization
 

@@ -30,13 +30,10 @@ namespace coral {
  *  @author Gerhard Raven
  *  @date   2007-12-20
  */
-class ConfigDBAccessSvc : public Service,
-                          virtual public IConfigAccessSvc {
+class ConfigDBAccessSvc : public extends1<Service,IConfigAccessSvc> {
 public:
   ConfigDBAccessSvc(const std::string& name, ISvcLocator* pSvcLocator);
   ~ConfigDBAccessSvc( ) override = default;     ///< Destructor
-
-  StatusCode queryInterface(const InterfaceID& , void** );
 
   StatusCode initialize();    ///< Service initialization
   StatusCode finalize();      ///< Service initialization
@@ -78,8 +75,8 @@ private:
 
   mutable std::unique_ptr<MsgStream>   m_msg;
   std::string                          m_connection;
-  coral::ISessionProxy*                m_session;
-  ICOOLConfSvc*                        m_coolConfSvc;
+  coral::ISessionProxy*                m_session = nullptr;
+  ICOOLConfSvc*                        m_coolConfSvc = nullptr;
   bool                                 m_readOnly;
   bool                                 m_createSchema;
 

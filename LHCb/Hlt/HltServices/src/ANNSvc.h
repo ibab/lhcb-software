@@ -24,14 +24,12 @@ namespace ANNSvcUtilities {
  */
 
 
-class ANNSvc : public Service, 
-               virtual public IANNSvc {
+class ANNSvc : public extends1<Service, IANNSvc> {
 public:
   ANNSvc( const std::string& name, ISvcLocator* pSvcLocator,
           const std::vector<major_key_type>& majors );
   ~ANNSvc() = default;
   
-  StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown) override;
   StatusCode finalize() override;
 
   boost::optional<minor_value_type>  value(const major_key_type& major, const std::string& minor) const override;

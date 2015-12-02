@@ -87,7 +87,7 @@ cdb_init(struct cdb *cdbp, int fd)
   if (!mem)
     return -1;
 #else
-  mem = (unsigned char*)mmap(NULL, fsize, PROT_READ, MAP_SHARED, fd, 0);
+  mem = (unsigned char*)mmap(nullptr, fsize, PROT_READ, MAP_SHARED, fd, 0);
   if (mem == MAP_FAILED)
     return -1;
 #endif /* _WIN32 */
@@ -128,7 +128,7 @@ cdb_free(struct cdb *cdbp)
 #else
     munmap((void*)cdbp->cdb_mem, cdbp->cdb_fsize);
 #endif /* _WIN32 */
-    cdbp->cdb_mem = NULL;
+    cdbp->cdb_mem = nullptr;
   }
   cdbp->cdb_fsize = 0;
 }
@@ -138,7 +138,7 @@ cdb_get(const struct cdb *cdbp, unsigned len, unsigned pos)
 {
   if (pos > cdbp->cdb_fsize || cdbp->cdb_fsize - pos < len) {
     errno = EPROTO;
-    return NULL;
+    return nullptr;
   }
   return cdbp->cdb_mem + pos;
 }
@@ -794,7 +794,7 @@ cdb_make_finish_internal(struct cdb_make *cdbmp)
   /* count htab sizes and reorder reclists */
   hsize = 0;
   for (t = 0; t < 256; ++t) {
-    struct cdb_rl *rlt = NULL;
+    struct cdb_rl *rlt = nullptr;
     i = 0;
     rl = cdbmp->cdb_rec[t];
     while(rl) {

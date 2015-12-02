@@ -11,29 +11,16 @@ namespace fs = boost::filesystem;
 #include "GaudiKernel/System.h"
 
 // Factory implementation
-DECLARE_SERVICE_FACTORY(ConfigFileAccessSvc)
+DECLARE_COMPONENT(ConfigFileAccessSvc)
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 ConfigFileAccessSvc::ConfigFileAccessSvc( const std::string& name, ISvcLocator* pSvcLocator)
-  : Service ( name , pSvcLocator )
+  : base_class ( name , pSvcLocator )
 {
   declareProperty("Directory", m_dir = "");
-}
-
-//=============================================================================
-// queryInterface
-//=============================================================================
-StatusCode ConfigFileAccessSvc::queryInterface(const InterfaceID& riid,
-                                               void** ppvUnknown) {
-  if ( IConfigAccessSvc::interfaceID().versionMatch(riid) )   {
-    *ppvUnknown = (IConfigAccessSvc*)this;
-    addRef();
-    return SUCCESS;
-  }
-  return Service::queryInterface(riid,ppvUnknown);
 }
 
 //=============================================================================

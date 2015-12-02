@@ -5,8 +5,6 @@
 #include <string>
 #include <map>
 #include <vector>
-#include "boost/lambda/lambda.hpp"
-#include "boost/lambda/bind.hpp"
 #include "Kernel/TCK.h"
 
 // from Gaudi
@@ -26,7 +24,7 @@
  *  @author Gerhard Raven
  *  @date   2007-10-24
  */
-class HltConfigSvc : public PropertyConfigSvc, virtual public IIncidentListener {
+class HltConfigSvc : public extends1<PropertyConfigSvc, IIncidentListener> {
 public:
 
   HltConfigSvc(const std::string& name, ISvcLocator* pSvcLocator );
@@ -59,13 +57,13 @@ private:
   std::string                  m_initialTCK_;     ///< which TCK to start with...
 
   mutable TCKMap_t             m_tck2configCache; ///< from TCK to configuration ID
-  TCK                          m_configuredTCK;   ///< which TCK is currently in use?
-  IDataProviderSvc            *m_evtSvc;          ///< get Evt Svc to get ODIN (which contains TCK)
-  IIncidentSvc                *m_incidentSvc;     ///< 
+  TCK                          m_configuredTCK { 0 } ;   ///< which TCK is currently in use?
+  IDataProviderSvc            *m_evtSvc = nullptr;          ///< get Evt Svc to get ODIN (which contains TCK)
+  IIncidentSvc                *m_incidentSvc = nullptr;     ///< 
   ToolHandle<IGenericTool>     m_decodeOdin;
   bool                         m_checkOdin;
   bool                         m_maskL0TCK;
-  unsigned int                 m_id;
+  unsigned int                 m_id = ~0u;
   bool                         m_hlt2mode;
    
   // resolve TCK -> toplevel config ID, then call method with ID

@@ -2,31 +2,16 @@
 
 
 // Factory implementation
-DECLARE_SERVICE_FACTORY( ConfigStackAccessSvc )
+DECLARE_COMPONENT( ConfigStackAccessSvc )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 ConfigStackAccessSvc::ConfigStackAccessSvc( const std::string& name,
                                             ISvcLocator* pSvcLocator )
-    : Service( name, pSvcLocator )
+    : base_class( name, pSvcLocator )
 {
     declareProperty( "ConfigAccessSvcs", s_svcs = {{"ConfigDBAccessSvc"}} );
-}
-
-
-//=============================================================================
-// queryInterface
-//=============================================================================
-StatusCode ConfigStackAccessSvc::queryInterface( const InterfaceID& riid,
-                                                 void** ppvUnknown )
-{
-    if ( IConfigAccessSvc::interfaceID().versionMatch( riid ) ) {
-        *ppvUnknown = (IConfigAccessSvc*)this;
-        addRef();
-        return SUCCESS;
-    }
-    return Service::queryInterface( riid, ppvUnknown );
 }
 
 //=============================================================================

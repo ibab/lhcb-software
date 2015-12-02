@@ -36,18 +36,14 @@ static const std::string TOPLEVEL{ "TOPLEVEL/" };
 //-----------------------------------------------------------------------------
 
 // Declaration of the Service Factory
-DECLARE_SERVICE_FACTORY( HltConfigSvc )
+DECLARE_COMPONENT( HltConfigSvc )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 HltConfigSvc::HltConfigSvc( const std::string& name, ISvcLocator* pSvcLocator)
-  : PropertyConfigSvc( name , pSvcLocator )
-  , m_configuredTCK(0)
-  , m_evtSvc{nullptr}
-  , m_incidentSvc{nullptr}
+  : base_class( name , pSvcLocator )
   , m_decodeOdin("ODINDecodeTool",this)
-  , m_id(~0u)
 {
   //TODO: template this pattern of property + 'transformer' -> thing_I_really_want with callback support
   //TODO: Already done -- called propertyhandler...

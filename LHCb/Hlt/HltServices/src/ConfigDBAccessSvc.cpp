@@ -223,33 +223,18 @@ struct ConfigDBAccessSvc::table_traits<ConfigTreeNodeAlias> {
 };
 
 // Factory implementation
-DECLARE_SERVICE_FACTORY(ConfigDBAccessSvc)
+DECLARE_COMPONENT(ConfigDBAccessSvc)
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 ConfigDBAccessSvc::ConfigDBAccessSvc( const std::string& name, ISvcLocator* pSvcLocator)
-  : Service ( name , pSvcLocator )
-  , m_session(0)
-  , m_coolConfSvc(0)
+  : base_class ( name , pSvcLocator )
 {
   declareProperty("Connection", m_connection = "" );
   declareProperty("ReadOnly", m_readOnly = true );
   declareProperty("CreateSchema", m_createSchema = false);
-}
-
-//=============================================================================
-// queryInterface
-//=============================================================================
-StatusCode ConfigDBAccessSvc::queryInterface(const InterfaceID& IID,
-                                             void** iface) {
-  if ( IConfigAccessSvc::interfaceID().versionMatch(IID) )   {
-    *iface = (IConfigAccessSvc*)this;
-    addRef();
-    return StatusCode::SUCCESS;
-  }
-  return Service::queryInterface(IID,iface);
 }
 
 //=============================================================================
@@ -280,7 +265,7 @@ StatusCode ConfigDBAccessSvc::initialize() {
 //=============================================================================
 StatusCode ConfigDBAccessSvc::finalize() {
   info() << "Finalize" << endmsg;
-  if (m_coolConfSvc) { m_coolConfSvc->release(); m_coolConfSvc=0; }
+  if (m_coolConfSvc) { m_coolConfSvc->release(); m_coolConfSvc=nullptr; }
   return Service::finalize();
 }
 
@@ -437,7 +422,7 @@ void ConfigDBAccessSvc::generateCacheTableEntries(const ConfigTreeNode& target) 
                                              // does not invalidate iterators!!!!
     nodeRefs.push_back(target.digest()); //TODO: remove this one at the end...
     std::vector<PropertyConfig::digest_type> leafRefs;
-    std::list<ConfigTreeNode::digest_type>::iterator i = nodeRefs.begin();
+    auto i = nodeRefs.begin();
     while(i!=nodeRefs.end()) {
         boost::optional<ConfigTreeNode> node = read<ConfigTreeNode>(*i);
         if (!node) {
@@ -450,14 +435,14 @@ void ConfigDBAccessSvc::generateCacheTableEntries(const ConfigTreeNode& target) 
         }
 
         const ConfigTreeNode::NodeRefs& nodes = node->nodes();
-        for (ConfigTreeNode::NodeRefs::const_iterator j=nodes.begin();j!=nodes.end();++j) {
+        for (const auto & node : nodes) {
             //FIXME: this is not going to be very fast, as it going to 
             // make this operation quadratic...  should keep list sorted... but then
             // we have to rescan the entire range, as right now we keep going forward...
             // std::pair< > r = std::equal_range(nodeRefs.begin(),nodeRefs.end(),*j);
             // if (r.first!=r.second) nodeRefs.insert(r.first,*j);
-            if (std::find(nodeRefs.begin(),nodeRefs.end(),*j)==nodeRefs.end()) {
-                nodeRefs.push_back(*j);
+            if (std::find(nodeRefs.begin(),nodeRefs.end(),node)==nodeRefs.end()) {
+                nodeRefs.push_back(node);
             }
         }
         ++i;
@@ -473,9 +458,9 @@ void ConfigDBAccessSvc::generateCacheTableEntries(const ConfigTreeNode& target) 
 
 void ConfigDBAccessSvc::createCacheTables() {
     const char *names[] = { "ConfigTreeNode2ConfigTreeNode", "ConfigTreeNode2PropertyConfig" };
-    for (unsigned i=0;i<2;++i) {
-        coral::TableDescription descr( std::string("Table_")+names[i] );
-        descr.setName( std::string(names[i]) );
+    for (auto & name : names) {
+        coral::TableDescription descr( std::string("Table_")+name );
+        descr.setName( std::string(name) );
         descr.insertColumn( "parent",
                            coral::AttributeSpecification::typeNameForId( typeid(std::string) ),
                            32 );
@@ -512,7 +497,7 @@ void ConfigDBAccessSvc::createTable() {
 }
 
 StatusCode ConfigDBAccessSvc::openConnection() {
-    if (m_coolConfSvc==0) {
+    if (m_coolConfSvc==nullptr) {
         StatusCode sc = service("COOLConfSvc",m_coolConfSvc);
         if ( !sc.isSuccess() )   return sc;
     }

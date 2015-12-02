@@ -47,7 +47,7 @@ auto equals( const T& t)
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_SERVICE_FACTORY( PropertyConfigSvc )
+DECLARE_COMPONENT( PropertyConfigSvc )
 
 
 namespace {
@@ -64,8 +64,8 @@ namespace {
                 if (m_out) {
                    *m_out << m_name << '.' <<prop.first<< '=' << prop.second << ";\n";
                 }
-                const Property *p = (m_properties !=0 ? find(prop.first): nullptr);
-                if ( p==0 || p->toString() != prop.second ) {  // only update if non-existant or not up-to-date
+                const Property *p = (m_properties !=nullptr ? find(prop.first): nullptr);
+                if ( p==nullptr || p->toString() != prop.second ) {  // only update if non-existant or not up-to-date
                     // resolve references
                     // this is done in order to support the online use case, where we have options
                     // of the form foo.something = @OnlineEnv.somethingElse
@@ -83,7 +83,7 @@ namespace {
                        }
                        std::string value;
                        const Property * refProp = Gaudi::Utils::getProperty( m_jos->getProperties(string(what[1])),string(what[2]));
-                       if (refProp!=0) {
+                       if (refProp!=nullptr) {
                             value = refProp->toString();
                        } else if (what[3].first!=what[3].second) {
                            value = string(what[3]).substr(1);
@@ -118,13 +118,7 @@ namespace {
 // Standard constructor, initializes variables
 //=============================================================================
 PropertyConfigSvc::PropertyConfigSvc( const string& name, ISvcLocator* pSvcLocator)
-  : Service ( name , pSvcLocator )
-  , m_joboptionsSvc{nullptr}
-  , m_toolSvc{nullptr}
-  , m_algMgr{nullptr}
-  , m_appMgrUI{nullptr}
-  , m_accessSvc{nullptr}
-  , m_os{nullptr}
+  : base_class ( name , pSvcLocator )
 {
   declareProperty("ConfigAccessSvc", s_accessSvc = "ConfigCDBAccessSvc");
   declareProperty("prefetchConfig", m_prefetch);
@@ -143,34 +137,22 @@ MsgStream& PropertyConfigSvc::msg(MSG::Level level) const {
 }
 
 //=============================================================================
-// queryInterface
-//=============================================================================
-StatusCode PropertyConfigSvc::queryInterface(const InterfaceID& riid,
-                                               void** ppvUnknown) {
-  if ( IPropertyConfigSvc::interfaceID().versionMatch(riid) )   {
-    *ppvUnknown = (IPropertyConfigSvc*)this;
-    addRef();
-    return SUCCESS;
-  }
-  return Service::queryInterface(riid,ppvUnknown);
-}
-//=============================================================================
 // Initialization
 //=============================================================================
 StatusCode PropertyConfigSvc::initialize() {
    if(msgLevel(MSG::DEBUG)) debug() << "Initialize" << endmsg;
    StatusCode status = Service::initialize();
    if ( !status.isSuccess() )   return status;
-   status = service(s_accessSvc,m_accessSvc);
-   if ( !status.isSuccess() )   return status;
-   status = service("ApplicationMgr",m_algMgr);
-   if ( !status.isSuccess() )   return status;
-   status = service("ApplicationMgr",m_appMgrUI);
-   if ( !status.isSuccess() )   return status;
-   status = service("JobOptionsSvc",m_joboptionsSvc);
-   if ( !status.isSuccess() )   return status;
-   status = service("ToolSvc",m_toolSvc);
-   if ( !status.isSuccess() )   return status;
+   m_accessSvc = service(s_accessSvc);
+   if ( !m_accessSvc ) return StatusCode::FAILURE;
+   m_algMgr = service("ApplicationMgr");
+   if ( !m_algMgr )  return StatusCode::FAILURE;
+   m_appMgrUI = m_algMgr; 
+   if ( !m_appMgrUI ) return StatusCode::FAILURE;
+   m_joboptionsSvc = service("JobOptionsSvc");
+   if ( !m_joboptionsSvc )  return StatusCode::FAILURE;
+   m_toolSvc = service("ToolSvc");
+   if ( !m_toolSvc )  return StatusCode::FAILURE;
    m_toolSvc->registerObserver(this);
 
    if (!m_ofname.empty()) m_os.reset( new boost::filesystem::ofstream( m_ofname.c_str() ) );
@@ -178,7 +160,7 @@ StatusCode PropertyConfigSvc::initialize() {
   // read table of pre-assigned, possible configurations for this job...
   // i.e. avoid reading _everything_ when we really need to be quick
   for (const auto &i : m_prefetch ) {
-     ConfigTreeNode::digest_type digest = ConfigTreeNode::digest_type::createFromStringRep(i);
+     auto digest = ConfigTreeNode::digest_type::createFromStringRep(i);
      assert( digest.str() == i) ;
      if (loadConfig( digest ).isFailure()) {
         error() << " failed to load " << digest << endmsg;
@@ -201,9 +183,9 @@ void PropertyConfigSvc::onCreate(const IAlgTool* tool) {
 //=============================================================================
 StatusCode PropertyConfigSvc::finalize() {
   StatusCode status = Service::finalize();
-  m_joboptionsSvc->release(); m_joboptionsSvc = nullptr;
-  m_algMgr->release();        m_algMgr = nullptr;
-  m_accessSvc->release();     m_accessSvc = nullptr;
+  m_joboptionsSvc.reset();
+  m_algMgr.reset();
+  m_accessSvc.reset();
   m_os.reset();
   return status;
 }

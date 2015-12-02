@@ -24,13 +24,10 @@
 
 class IArchive;
 
-class ConfigArchiveAccessSvc : public Service,
-                            virtual public IConfigAccessSvc {
+class ConfigArchiveAccessSvc : public extends1<Service,IConfigAccessSvc> {
 public:
   ConfigArchiveAccessSvc(const std::string& name, ISvcLocator* pSvcLocator);
   ~ConfigArchiveAccessSvc( ) override = default;     ///< Destructor
-
-  StatusCode queryInterface(const InterfaceID& , void** );
 
   StatusCode initialize();    ///< Service initialization
 

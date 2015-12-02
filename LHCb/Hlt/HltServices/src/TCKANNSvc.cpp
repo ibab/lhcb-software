@@ -53,8 +53,7 @@ namespace std {
 #include "Kernel/TCK.h"
 
 
-class TCKANNSvc : public Service
-                , virtual public IIndexedANNSvc  {
+class TCKANNSvc : public extends<Service,IIndexedANNSvc>  {
 
 public:
   TCKANNSvc( const std::string& name, ISvcLocator* pSvcLocator);
@@ -71,20 +70,19 @@ private:
   // properties
   additionalIDs_t m_additionals;
 
-  mutable IPropertyConfigSvc * m_propertyConfigSvc;
+  mutable SmartIF<IPropertyConfigSvc>  m_propertyConfigSvc;
   std::string       m_propertyConfigSvcName;
   std::string       m_instanceName;
   mutable std::map<TCK,const PropertyConfig*> m_cache; // TODO: flush cache if m_instanceName changes
 };
 
-DECLARE_SERVICE_FACTORY( TCKANNSvc )
+DECLARE_COMPONENT( TCKANNSvc )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 TCKANNSvc::TCKANNSvc( const std::string& name, ISvcLocator* pSvcLocator)
-  : Service( name , pSvcLocator )
-  , m_propertyConfigSvc{nullptr}
+  : base_class( name , pSvcLocator )
 {
   declareProperty("IPropertyConfigSvcInstance", m_propertyConfigSvcName = "PropertyConfigSvc");
   declareProperty("InstanceName", m_instanceName = "HltANNSvc");
@@ -102,7 +100,8 @@ TCKANNSvc::initialize()
 
   if( msgLevel(MSG::VERBOSE) ) verbose() << "==> Initialize" << endmsg;
 
-  if (!service( m_propertyConfigSvcName, m_propertyConfigSvc).isSuccess()) {
+  m_propertyConfigSvc = service( m_propertyConfigSvcName);
+  if (!m_propertyConfigSvc) {
     fatal() << "TCKANNSvc failed to get the IConfigAccessSvc." << endmsg;
     return StatusCode::FAILURE;
   }
@@ -117,7 +116,7 @@ TCKANNSvc::initialize()
 StatusCode
 TCKANNSvc::finalize(  )
 {
-  if (m_propertyConfigSvc) { m_propertyConfigSvc->release(); m_propertyConfigSvc=nullptr; }
+  m_propertyConfigSvc.reset();
   return Service::finalize();
 }
 

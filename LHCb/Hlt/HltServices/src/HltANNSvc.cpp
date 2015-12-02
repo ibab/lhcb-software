@@ -11,12 +11,12 @@ public:
         declareProperty("allowUndefined",m_allowUndefined=true,"do we allow undefined, on-demand generated, key/value pairs?");
     }
     using ANNSvc::handleUndefined;
-    virtual boost::optional<minor_value_type> handleUndefined(const major_key_type& major, const std::string& minor) const;
+    boost::optional<minor_value_type> handleUndefined(const major_key_type& major, const std::string& minor) const override;
 private:
     bool              m_allowUndefined;
 };
 
-DECLARE_SERVICE_FACTORY( HltANNSvc )
+DECLARE_COMPONENT( HltANNSvc )
 
 boost::optional<IANNSvc::minor_value_type> 
 HltANNSvc::handleUndefined(const major_key_type& major, const std::string& minor) const

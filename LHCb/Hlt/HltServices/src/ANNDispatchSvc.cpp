@@ -19,39 +19,36 @@ using boost::optional;
 
 using namespace LHCb;
 
-class ANNDispatchSvc : public Service 
-                     , virtual public IANNSvc 
-                     , virtual public IIncidentListener {
+class ANNDispatchSvc : public extends<Service, IANNSvc, IIncidentListener> {
 
 public:
   ANNDispatchSvc( const std::string& name, ISvcLocator* pSvcLocator);
   ~ANNDispatchSvc() = default ; 
   
-  StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
-  StatusCode initialize(  );
-  StatusCode finalize();
+  StatusCode initialize(  ) override;
+  StatusCode finalize() override;
 
   // IncidentListener interface
-  void handle(const Incident& incident);
+  void handle(const Incident& incident) override;
 
   // IANNSvc interface: delegate to child...
 
-  boost::optional<minor_value_type>  value(const major_key_type& major, const std::string& minor) const
+  boost::optional<minor_value_type>  value(const major_key_type& major, const std::string& minor) const override
   { verify(); return m_child->value(major,minor); }
-  boost::optional<minor_value_type>  value(const major_key_type& major, int minor) const
+  boost::optional<minor_value_type>  value(const major_key_type& major, int minor) const override
   { verify(); return m_child->value(major,minor); }
 
-  bool                           hasMajor(const major_key_type& major) const
+  bool                           hasMajor(const major_key_type& major) const override
   { verify(); return m_child->hasMajor(major); }
 
-  std::vector<minor_key_type>    keys(const major_key_type& major) const
+  std::vector<minor_key_type>    keys(const major_key_type& major) const override
   { verify(); return m_child->keys(major); }
-  std::vector<minor_value_type>  items(const major_key_type& major) const
+  std::vector<minor_value_type>  items(const major_key_type& major) const override
   { verify(); return m_child->items(major); }
-  GaudiUtils::VectorMap< minor_value_type::first_type, minor_value_type::second_type > item_map(const major_key_type& major) const
+  GaudiUtils::VectorMap< minor_value_type::first_type, minor_value_type::second_type > item_map(const major_key_type& major) const override
   { verify(); return m_child->item_map(major); }
   
-  std::vector<major_key_type>    majors() const
+  std::vector<major_key_type>    majors() const override
   {  verify(); return m_child->majors(); }
 private:
   void verify() const { if (!m_uptodate) faultHandler(); }
@@ -71,13 +68,13 @@ private:
   mutable PropertyConfig::digest_type m_currentDigest;
 };
 
-DECLARE_SERVICE_FACTORY( ANNDispatchSvc )
+DECLARE_COMPONENT( ANNDispatchSvc )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 ANNDispatchSvc::ANNDispatchSvc( const string& name, ISvcLocator* pSvcLocator)
-  : Service( name , pSvcLocator )
+  : base_class( name , pSvcLocator )
   , m_evtSvc{nullptr}
   , m_child{nullptr}
   , m_incidentSvc{nullptr}
@@ -141,10 +138,10 @@ StatusCode
 ANNDispatchSvc::finalize(  )
 {
   StatusCode status = Service::finalize();
-  if (m_propertyConfigSvc) { m_propertyConfigSvc->release(); m_propertyConfigSvc=0; }
-  if (m_incidentSvc) { m_incidentSvc->release(); m_incidentSvc=0; }
-  if (m_evtSvc) { m_evtSvc->release(); m_evtSvc=0; }
-  if (m_child) { m_child->release(); m_child=0; }
+  if (m_propertyConfigSvc) { m_propertyConfigSvc->release(); m_propertyConfigSvc=nullptr; }
+  if (m_incidentSvc) { m_incidentSvc->release(); m_incidentSvc=nullptr; }
+  if (m_evtSvc) { m_evtSvc->release(); m_evtSvc=nullptr; }
+  if (m_child) { m_child->release(); m_child=nullptr; }
   return status;
 }
 //=============================================================================
@@ -169,8 +166,8 @@ void ANNDispatchSvc::faultHandler() const {
   unsigned int tck = 0;
 
   SmartDataPtr<LHCb::RawEvent> rawEvent(m_evtSvc, m_inputRawEventLocation); 
-  std::vector<std::string>::const_iterator iLoc = m_rawEventLocations.begin();
-  for (; iLoc != m_rawEventLocations.end() && rawEvent==0 ; ++iLoc ) {
+  auto iLoc = m_rawEventLocations.begin();
+  for (; iLoc != m_rawEventLocations.end() && !rawEvent ; ++iLoc ) {
     rawEvent = SmartDataPtr<LHCb::RawEvent>(m_evtSvc, *iLoc); 
   }
 
@@ -234,8 +231,8 @@ void ANNDispatchSvc::faultHandler() const {
         // if ( config==0 ) return StatusCode::FAILURE;
         // push properties to child
         SmartIF<IProperty> iProp(m_child);
-        for (PropertyConfig::Properties::const_iterator i =  config->properties().begin();i!= config->properties().end(); ++i ) {
-          iProp->setProperty( i->first, i->second  ).ignore();
+        for (const auto & elem : config->properties()) {
+          iProp->setProperty( elem.first, elem.second  ).ignore();
         }
         m_currentDigest = child;
         // do not reinit for ANNSvc derived instances, as they have a proper updateHandler...
@@ -245,25 +242,4 @@ void ANNDispatchSvc::faultHandler() const {
   }
   m_uptodate = true;
   m_currentTCK = tck;
-
-}
-
-
-
-//=============================================================================
-// queryInterface
-//=============================================================================
-StatusCode ANNDispatchSvc::queryInterface(const InterfaceID& riid,
-                                          void** ppvUnknown) {
-  if ( IANNSvc::interfaceID().versionMatch(riid) )   {
-    *ppvUnknown = (IANNSvc*)this;
-    addRef();
-    return SUCCESS;
-  }
-  if ( IANSvc::interfaceID().versionMatch(riid) )   {
-    *ppvUnknown = (IANSvc*)this;
-    addRef();
-    return SUCCESS;
-  }
-  return Service::queryInterface(riid,ppvUnknown);
 }

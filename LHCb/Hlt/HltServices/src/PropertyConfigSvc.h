@@ -41,9 +41,8 @@
  *  @author Gerhard Raven
  *  @date   2007-10-24
  */
-class PropertyConfigSvc : public Service
-                        , public IToolSvc::Observer 
-                        , virtual public IPropertyConfigSvc {
+class PropertyConfigSvc : public extends<Service,IPropertyConfigSvc>
+                        , public IToolSvc::Observer {
 private:
   typedef std::map<PropertyConfig::digest_type,  PropertyConfig> PropertyConfigMap_t;
   typedef std::map<ConfigTreeNode::digest_type,  ConfigTreeNode> ConfigTreeNodeMap_t;
@@ -60,9 +59,6 @@ public:
   ~PropertyConfigSvc( ) override  = default ; ///< Destructor
   StatusCode initialize() override;    ///< Service initialization
   StatusCode finalize() override;    ///< Service initialization
-
-  StatusCode queryInterface(const InterfaceID& riid,
-                            void** ppvUnknown) override;
 
   PropertyConfig currentConfiguration(const INamedInterface& obj) const override;
   PropertyConfig::digest_type findInTree(const ConfigTreeNode::digest_type& configTree, const std::string& name) const override;
@@ -131,11 +127,11 @@ private:
 
   mutable std::unique_ptr<MsgStream>   m_msg;
   std::string                          s_accessSvc;
-  IJobOptionsSvc*                      m_joboptionsSvc;
-  IToolSvc*                            m_toolSvc;
-  IAlgManager*                         m_algMgr;
-  IAppMgrUI*                           m_appMgrUI;
-  IConfigAccessSvc*                    m_accessSvc;
+  SmartIF<IJobOptionsSvc>              m_joboptionsSvc;
+  SmartIF<IToolSvc>                    m_toolSvc;
+  SmartIF<IAlgManager>                 m_algMgr;
+  SmartIF<IAppMgrUI>                   m_appMgrUI;
+  SmartIF<IConfigAccessSvc>            m_accessSvc;
   mutable PropertyConfigMap_t          m_configs;  // config ref -> config (leaf)
   mutable ConfigTreeNodeMap_t          m_nodes;    // node   ref -> node
   mutable ConfigTreeNodeAliasMap_t     m_aliases;    // node   ref -> node

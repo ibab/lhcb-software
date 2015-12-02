@@ -15,7 +15,7 @@ using namespace std;
 using ConfigZipFileAccessSvc_details::ZipFile;
 
 // Factory implementation
-DECLARE_SERVICE_FACTORY( ConfigZipFileAccessSvc )
+DECLARE_COMPONENT( ConfigZipFileAccessSvc )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -34,7 +34,7 @@ IArchive* ConfigZipFileAccessSvc::file() const
         if ( m_mode != "ReadOnly" && m_mode != "ReadWrite" &&
              m_mode != "Truncate" ) {
             error() << "invalid mode: " << m_mode << endmsg;
-            return 0;
+            return nullptr;
         }
         ios::openmode mode = ( m_mode == "ReadWrite" )
                                  ? ( ios::in | ios::out | ios::ate )

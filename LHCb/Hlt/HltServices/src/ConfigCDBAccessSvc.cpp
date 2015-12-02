@@ -3,6 +3,7 @@
 
 #include <map>
 #include <ctime>
+#include <cstdint>
 #include <iostream>
 #include <iomanip>
 #include <sstream>
@@ -22,11 +23,13 @@
 #include "boost/filesystem/path.hpp"
 #include "boost/filesystem/operations.hpp"
 
+#if 0
 #include "boost/integer_traits.hpp"
 using boost::uint8_t;
 using boost::uint16_t;
 using boost::uint32_t;
 using boost::uint64_t;
+#endif
 
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/StringKey.h"
@@ -47,7 +50,7 @@ struct DefaultFilenameSelector
 
 struct PrefixFilenameSelector
 {
-    PrefixFilenameSelector( const string& _prefix ) : prefix( _prefix )
+    PrefixFilenameSelector( string  _prefix ) : prefix(std::move( _prefix ))
     {
     }
     bool operator()( const string& fname ) const
@@ -66,7 +69,6 @@ uint8_t read8( std::istream& s )
     } u;
     u.i = s.get(); // stream will typically return an 'int', as it is a 'char' stream
     uint8_t r = u.ui;
-    ;
     return r;
 }
 uint16_t read16( std::istream& s )
@@ -399,33 +401,20 @@ class CDB
 using namespace ConfigCDBAccessSvc_details;
 
 // Factory implementation
-DECLARE_SERVICE_FACTORY( ConfigCDBAccessSvc )
+DECLARE_COMPONENT( ConfigCDBAccessSvc )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 ConfigCDBAccessSvc::ConfigCDBAccessSvc( const string& name,
                                         ISvcLocator* pSvcLocator )
-    : Service( name, pSvcLocator ), m_file{ nullptr }
+    : base_class( name, pSvcLocator )
 {
     declareProperty( "File", m_name = "" );
     declareProperty( "Mode", m_mode = "ReadOnly" );
 }
 
 
-//=============================================================================
-// queryInterface
-//=============================================================================
-StatusCode ConfigCDBAccessSvc::queryInterface( const InterfaceID& riid,
-                                               void** ppvUnknown )
-{
-    if ( IConfigAccessSvc::interfaceID().versionMatch( riid ) ) {
-        *ppvUnknown = (IConfigAccessSvc*)this;
-        addRef();
-        return SUCCESS;
-    }
-    return Service::queryInterface( riid, ppvUnknown );
-}
 
 //=============================================================================
 // Initialization
@@ -441,11 +430,11 @@ StatusCode ConfigCDBAccessSvc::initialize()
 
 ConfigCDBAccessSvc_details::CDB* ConfigCDBAccessSvc::file() const
 {
-    if ( !m_file ) {
+    if ( UNLIKELY(!m_file) ) {
         if ( m_mode != "ReadOnly" && m_mode != "ReadWrite" &&
              m_mode != "Truncate" ) {
             error() << "invalid mode: " << m_mode << endmsg;
-            return 0;
+            return nullptr;
         }
         ios::openmode mode = ( m_mode == "ReadWrite" )
                                  ? ( ios::in | ios::out | ios::ate )
@@ -454,14 +443,12 @@ ConfigCDBAccessSvc_details::CDB* ConfigCDBAccessSvc::file() const
                                        : ios::in;
         if ( m_name.empty() ) {
             std::string def( System::getEnv( "HLTTCKROOT" ) );
-            if ( !def.empty() ) {
-                def += "/config.cdb";
-            } else {
+            if ( def.empty() ) {
                throw GaudiException("Environment variable HLTTCKROOT not specified and no explicit "
                                     "filename given; cannot obtain location of config.cdb.",
                                     name(), StatusCode::FAILURE);
             }
-            m_name = def;
+            m_name = def + "/config.cdb";
         }
         info() << " opening " << m_name << " in mode " << m_mode << endmsg;
         m_file.reset( new CDB( m_name, mode ) );
@@ -469,7 +456,7 @@ ConfigCDBAccessSvc_details::CDB* ConfigCDBAccessSvc::file() const
             error() << " Failed to open " << m_name << " in mode " << m_mode
                     << endmsg;
             error() << string( strerror( errno ) ) << endmsg;
-            m_file.reset( nullptr );
+            m_file.reset( );
         }
     }
     return m_file.get();
@@ -480,7 +467,7 @@ ConfigCDBAccessSvc_details::CDB* ConfigCDBAccessSvc::file() const
 //=============================================================================
 StatusCode ConfigCDBAccessSvc::finalize()
 {
-    m_file.reset( nullptr ); // close file if still open
+    m_file.reset( ); // close file if still open
     return Service::finalize();
 }
 
@@ -506,16 +493,16 @@ template <typename T>
 boost::optional<T> ConfigCDBAccessSvc::read( const string& path ) const
 {
     if ( msgLevel( MSG::DEBUG ) ) debug() << "trying to read " << path << endmsg;
-    if ( file() == 0 ) {
+    if ( file() == nullptr ) {
         debug() << "file " << m_name << " not found" << endmsg;
-        return boost::optional<T>();
+        return boost::none;
     }
     T c;
     if ( !file()->readObject( c, path ) ) {
         if ( msgLevel( MSG::DEBUG ) )
             debug() << "file " << path << " not found in container " << m_name
                     << endmsg;
-        return boost::optional<T>();
+        return boost::none;
     }
     return c;
 }
@@ -556,12 +543,12 @@ boost::optional<ConfigTreeNode> ConfigCDBAccessSvc::readConfigTreeNodeAlias(
 {
     string fnam = configTreeNodeAliasPath( alias );
     boost::optional<string> sref = this->read<string>( fnam );
-    if ( !sref ) return boost::optional<ConfigTreeNode>();
+    if ( !sref ) return boost::none;
     ConfigTreeNode::digest_type ref =
         ConfigTreeNode::digest_type::createFromStringRep( *sref );
     if ( !ref.valid() ) {
         error() << "content of " << fnam << " not a valid ref" << endmsg;
-        return boost::optional<ConfigTreeNode>();
+        return boost::none;
     }
     return readConfigTreeNode( ref );
 }
