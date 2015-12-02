@@ -166,13 +166,13 @@ class RnSConf(LineBuilder) :
                                         RequiredRawEvents = ["Muon"],
                                         MDSTFlag = False
                                         )
-        self._K0s2PiPiLine = StrippingLine("_Ks2PiPiForRnSLine",
-                                        prescale = self.config['NoMuIDLinePrescale'],
-                                        postscale = self.config['NoMuIDLinePostscale'],
-                                        algos = [ self.K0s2PiPi ],
-                                        RequiredRawEvents = ["Muon"],
-                                        MDSTFlag = False
-                                        )
+   ##      self._K0s2PiPiLine = StrippingLine("_Ks2PiPiForRnSLine",
+##                                         prescale = self.config['NoMuIDLinePrescale'],
+##                                         postscale = self.config['NoMuIDLinePostscale'],
+##                                         algos = [ self.K0s2PiPi ],
+##                                         RequiredRawEvents = ["Muon"],
+##                                         MDSTFlag = False
+##                                         )
 
         self.K0s2MuMuSBLine = StrippingLine("K0s2MuMuSBLine",
                                         prescale = config['K0s2mmSBLinePrescale'],
@@ -263,13 +263,13 @@ class RnSConf(LineBuilder) :
                                       #RequiredRawEvents = ["Muon"],
                                       MDSTFlag = False
                                              )
-        self._TriggerTestLine = StrippingLine("_TriggerTestLine",
-                                      prescale = config['K0s2mmLinePrescale'],
-                                      postscale = config['K0s2mmLinePostscale'],
-                                      algos = [ self.SelTrigLikeDiMuons ],
-                                      #RequiredRawEvents = ["Muon"],
-                                      MDSTFlag = False
-                                                 )
+  ##       self._TriggerTestLine = StrippingLine("_TriggerTestLine",
+##                                       prescale = config['K0s2mmLinePrescale'],
+##                                       postscale = config['K0s2mmLinePostscale'],
+##                                       algos = [ self.SelTrigLikeDiMuons ],
+##                                       #RequiredRawEvents = ["Muon"],
+##                                       MDSTFlag = False
+##                                                  )
         
         
           # 5 : register Line
@@ -282,10 +282,9 @@ class RnSConf(LineBuilder) :
 
         #self.registerLine(self.Pi0MMsignalLine)
         #self.registerLine(self.Pi0MMsidebandLine)
-        #self.registerLine(self._K0s2PiPiLine)
         self.registerLine(self.K0s2PiPiLine)
-        #self.registerLine(self.K0s2MuMuLine)
-        #self.registerLine(self.K0s2MuMuSBLine)
+        self.registerLine(self.K0s2MuMuLine)
+        self.registerLine(self.K0s2MuMuSBLine)
         #self.registerLine(self.K0s24ProngLFVLine)
         #self.registerLine(self.K0s2e3MuLine)
         #self.registerLine(self.K0s2Mu3eLine)
@@ -296,7 +295,6 @@ class RnSConf(LineBuilder) :
         #self.registerLine(self.Lambda02PiMuMuELine)
         #self.registerLine(self.Lambda02pPiLine)
         #self.registerLine(self.Lambda02PiELine)
-        #self.registerLine(self._TriggerTestLine)
         self.registerLine(self.TriggerTestLine)
         
 #####################################################
