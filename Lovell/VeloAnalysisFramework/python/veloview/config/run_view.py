@@ -410,7 +410,7 @@ CLUSTERS = (
                         },
                         'normalise': True,
                         'tip': (
-                            'This distribution generally produces a staircase shape, with the highest number of strips corresponding to one or two cluster and the lowest number corresponding to four clusters.'
+                            'This distribution generally produces a staircase shape, with the highest number of strips corresponding to one or two clusters and the lowest number corresponding to four clusters.'
                         ),
                         'axis_titles': ['Cluster size', 'Entries']
                     },
