@@ -50,7 +50,29 @@ default_config = {
                           & (BPVVDRHO>0.1*mm) 
                           & (BPVVDZ>2.0*mm)
                           """,
-        'Prescale'      : 1.
+        'Prescale'      : 1.,
+        'RelatedInfoTools': [{
+                      'Type'              : 'RelInfoVertexIsolation',
+                      'Location'          : 'RelInfoVertexIsolation'
+                  }, {
+                      'Type'              : 'RelInfoVertexIsolationBDT',
+                      'Location'          : 'RelInfoVertexIsolationBDT'
+                  }, {
+                      'Type'              : 'RelInfoConeVariables',
+                      'ConeAngle'         : 1.0,
+                      "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                      'Location'          : 'RelInfoConeVariables_1.0'
+                  }, {
+                      'Type'              : 'RelInfoConeVariables',
+                      'ConeAngle'         : 1.5,
+                      "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                      'Location'          : 'RelInfoConeVariables_1.5'
+                  }, {
+                      'Type'              : 'RelInfoConeVariables',
+                      'ConeAngle'         : 2.0,
+                      "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                      'Location'          : 'RelInfoConeVariables_2.0'
+                  }]        
         },
     'STREAMS'           : ['Bhadron' ],
     'WGs'               : ['BandQ'],
@@ -80,7 +102,8 @@ class Lb2EtacKpConf(LineBuilder):
         'KsCuts',
         'LbComCuts',
         'LbMomCuts',
-        'Prescale'
+        'Prescale',
+        'RelatedInfoTools'
         )
 
     
@@ -216,7 +239,8 @@ class Lb2EtacKpConf(LineBuilder):
                                                  #  HLT       = config['HLTCuts'],
                                                    algos     = [ self.SelLb2EtacKp_KsKPi ],
                                                    EnableFlavourTagging = False,
-                                                   MDSTFlag = True
+                                                   MDSTFlag = True,
+                                                   RelatedInfoTools = self.config['RelatedInfoTools']                                                   
                                                    )
 
         self.registerLine( self.Lb2EtacKp_KsKPiLine )
@@ -235,7 +259,8 @@ class Lb2EtacKpConf(LineBuilder):
                                                   # HLT       = config['HLTCuts'],
                                                    algos     = [ self.SelLb2EtacKp_PPbar ],
                                                    EnableFlavourTagging = False,
-                                                   MDSTFlag = True
+                                                   MDSTFlag = True,
+                                                   RelatedInfoTools = self.config['RelatedInfoTools']                                                   
                                                    )
 
         self.registerLine( self.Lb2EtacKp_PPbarLine )
@@ -256,7 +281,8 @@ class Lb2EtacKpConf(LineBuilder):
                                                  #  HLT       = config['HLTCuts'],
                                                    algos     = [ self.SelLb2EtacKp ],
                                                    EnableFlavourTagging = False,
-                                                   MDSTFlag = True
+                                                   MDSTFlag = True,
+                                                   RelatedInfoTools = self.config['RelatedInfoTools']                                                   
                                                    )
 
         self.registerLine( self.Lb2EtacKp_4hLine )
