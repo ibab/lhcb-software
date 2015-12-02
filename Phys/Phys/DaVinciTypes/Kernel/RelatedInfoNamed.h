@@ -359,7 +359,10 @@ class RelatedInfoNamed : public LHCb::RelatedInfoMap {
       ISOMUM5 = CCNC_IT +4,
 
       // muon chi2 with correlation
-      MUONCORRCHI2PERDOF = ISOMUM5 +1
+      MUONCORRCHI2PERDOF = ISOMUM5 +1,
+
+      // END must be the highest enum+1
+      END = MUONCORRCHI2PERDOF+1
 
     };
 
@@ -694,7 +697,7 @@ class RelatedInfoNamed : public LHCb::RelatedInfoMap {
     
     static short int indexByName(std::string name) {
       short i;
-      for (i=0; i<=RelatedInfoNamed::BKSTTAUTAUMUONISOBDTTHIRDVALUETAUM; i++) {
+      for (i=0; i<RelatedInfoNamed::END; i++) {
 
         if ( name.compare(nameByIndex(i) ) == 0 ) return i; 
       }
