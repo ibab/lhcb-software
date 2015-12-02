@@ -1,13 +1,17 @@
-# $Id: StrippingCC2DD.py, v 0.1 2014-01-03  $
-'''
+# $Id: StrippingCC2DD.py, v 0.3 2015-12-01  $
+''' 
 Module for construction of CC->D D, where CC is a particle decaying to D D
                                     and D is a D0(Kpi) or a D+(K-pi+pi+)
-                                    or one of their antipartciles
+                                          or a Ds(KKpi)
+                                          or one of their antipartciles
+          v .03: added "D+charmed baryon" combinations, where
+                         "charmed baryon" = Lambda_c+(Xi_c+) -> p+ K- pi+
+                                      or    Xi_c0(Omega_c0)  -> p+ K- K- pi+
 '''
 
 __author__ = ['Lucio Anderlini','Andrea Bizzeti']
-__date__ = '2014-01-17'
-__version__ = '$Revision: 0.2f $'
+__date__ = '2015-12-01'
+__version__ = '$Revision: 0.3 $'
 
 __all__ = ('CC2DDConf',
            'makeD02HH',
@@ -52,7 +56,7 @@ default_config =  {
                    'DpmdaughterKaonProbNNk'  : 0.1,
                    'DpmdaughterPionProbNNpi' : 0.1,
 
-######## Lambda_c+, Xi_c+ -> p K pi cuts
+######## Lambda_c+, Xi_c+ -> p+ K- pi+ cuts
                    'LcMassWin'     : "60*MeV",
                    'LcPT'          : "1000*MeV",
                    'LcVtxChi2Ndof' : 10,
@@ -68,13 +72,13 @@ default_config =  {
                    'LcdaughterPionProbNNpi' : 0.1,
                    'LcdaughterProtonProbNNp': 0.1,
 
-######## Xi_c0, Omega_c -> p K K pi cuts
+######## Xi_c0, Omega_c0 -> p+ K- K- pi+ cuts
                    'XcMassWin'     : "60*MeV",
                    'XcPT'          : "1000*MeV",
                    'XcVtxChi2Ndof' : 10,
                    'XcBpvdira'     : -10.,
                    'XcBpvdls'      : -10.,
-                   'XcdaughterBpvIpChi2'    : 4.,
+                   'XcdaughterBpvIpChi2'    : -10.,      # no cut
                    'XcdaughterPT'           : "500*MeV",
                    'XcdaughterP'            : "5*GeV",
                    'XcdaughterTrkChi2'      : 3,
@@ -418,16 +422,16 @@ def makeLc2HHH(name, LcMassWin, LcPT, LcVtxChi2Ndof, LcBpvdira, LcBpvdls,
     Create and return a Lambda_c+/Xi_c+ -> p K- pi+
     """
 
-    _LcotherCuts  = "(ALL)"   # no cuts
-#    _LcotherCuts  = "( (ADMASS('Lambda_c+')<%(LcMassWin)s) | (ADMASS('Xi_c+')<%(LcMassWin)s) ) " % locals()
-#    _LcotherCuts += "& (PT> %(LcPT)s) & (VFASPF(VCHI2PDOF) < %(LcVtxChi2Ndof)s) " % locals()
-#    _LcotherCuts += "& (BPVDIRA>%(LcBpvdira)s) & (BPVDLS > %(LcBpvdls)s)" % locals()
-    _LcdaughtersCuts  = "(ALL)"   # no cuts
-#    _LcdaughtersCuts  = "(PT>%(LcdaughterPT)s) & (P>%(LcdaughterP)s) & (TRCHI2DOF<%(LcdaughterTrkChi2)s) " % locals()
-#    _LcdaughtersCuts += "& (TRGHP<%(LcdaughterTrkGhostProb)s) & (BPVIPCHI2()>%(LcdaughterBpvIpChi2)s)" % locals()
+###    _LcotherCuts  = "(ALL)"   # no cuts
+    _LcotherCuts  = "( (ADMASS('Lambda_c+')<%(LcMassWin)s) | (ADMASS('Xi_c+')<%(LcMassWin)s) ) " % locals()
+    _LcotherCuts += "& (PT> %(LcPT)s) & (VFASPF(VCHI2PDOF) < %(LcVtxChi2Ndof)s) " % locals()
+    _LcotherCuts += "& (BPVDIRA>%(LcBpvdira)s) & (BPVDLS > %(LcBpvdls)s)" % locals()
+###    _LcdaughtersCuts  = "(ALL)"   # no cuts
+    _LcdaughtersCuts  = "(PT>%(LcdaughterPT)s) & (P>%(LcdaughterP)s) & (TRCHI2DOF<%(LcdaughterTrkChi2)s) " % locals()
+    _LcdaughtersCuts += "& (TRGHP<%(LcdaughterTrkGhostProb)s) & (BPVIPCHI2()>%(LcdaughterBpvIpChi2)s)" % locals()
+
 ###    _KCutsPID     = "&( (PIDK>%(LcdaughterKaonPIDK)s) | (PROBNNk>%(LcdaughterKaonProbNNk)s) )" % locals()
 ###    _PiCutsPID    = "&( (PIDK<%(LcdaughterPionPIDK)s) | (PROBNNpi>%(LcdaughterPionProbNNpi)s) )" % locals()
-
     _PCutsPID     = "&(PROBNNp>%(LcdaughterProtonProbNNp)s)" % locals()
     _KCutsPID     = "&(PROBNNk>%(LcdaughterKaonProbNNk)s)" % locals()
     _PiCutsPID    = "&(PROBNNpi>%(LcdaughterPionProbNNpi)s)" % locals()
@@ -439,9 +443,12 @@ def makeLc2HHH(name, LcMassWin, LcPT, LcVtxChi2Ndof, LcBpvdira, LcBpvdls,
                                   MotherCut = _LcotherCuts,
                                   DaughtersCuts =  { "p+" : _LcPCuts, "pi+" : _LcPiCuts, "K+" : _LcKCuts }
                                   )
-    _stdTightProtons = DataOnDemand(Location = "Phys/StdAllLooseProtons/Particles")
-    _stdTightKaons   = DataOnDemand(Location = "Phys/StdAllLooseKaons/Particles")
-    _stdTightPions   = DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")
+#    _stdTightProtons = DataOnDemand(Location = "Phys/StdAllLooseProtons/Particles")
+#    _stdTightKaons   = DataOnDemand(Location = "Phys/StdAllLooseKaons/Particles")
+#    _stdTightPions   = DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")
+    _stdTightProtons = DataOnDemand(Location = "Phys/StdAllLooseANNProtons/Particles")
+    _stdTightKaons   = DataOnDemand(Location = "Phys/StdAllLooseANNKaons/Particles")
+    _stdTightPions   = DataOnDemand(Location = "Phys/StdAllLooseANNPions/Particles")
 
     return Selection (name,
                       Algorithm = _LcFilter,
@@ -469,10 +476,11 @@ def makeXc2HHHH(name, XcMassWin, XcPT, XcVtxChi2Ndof, XcBpvdira, XcBpvdls,
     Create and return a Xi_c0/Omega_c0 -> p K- K- pi+
     """
 
+###    _XcotherCuts  = "(ALL)"
     _XcotherCuts  = "( (ADMASS('Xi_c0')<%(XcMassWin)s) | (ADMASS('Omega_c0')<%(XcMassWin)s) ) " % locals()
     _XcotherCuts += "& (PT> %(XcPT)s) & (VFASPF(VCHI2PDOF) < %(XcVtxChi2Ndof)s) " % locals()
-    _XcotherCuts  = "(ADMASS('Lambda_c+')<%(XcMassWin)s) & (PT> %(XcPT)s) & (VFASPF(VCHI2PDOF) < %(XcVtxChi2Ndof)s) " % locals()
     _XcotherCuts += "& (BPVDIRA>%(XcBpvdira)s) & (BPVDLS > %(XcBpvdls)s)" % locals()
+###    _XcdaughtersCuts  = "(ALL)"
     _XcdaughtersCuts  = "(PT>%(XcdaughterPT)s) & (P>%(XcdaughterP)s) & (TRCHI2DOF<%(XcdaughterTrkChi2)s) " % locals()
     _XcdaughtersCuts += "& (TRGHP<%(XcdaughterTrkGhostProb)s) & (BPVIPCHI2()>%(XcdaughterBpvIpChi2)s)" % locals()
 ###    _KCutsPID     = "&( (PIDK>%(XcdaughterKaonPIDK)s) | (PROBNNk>%(XcdaughterKaonProbNNk)s) )" % locals()
@@ -485,7 +493,7 @@ def makeXc2HHHH(name, XcMassWin, XcPT, XcVtxChi2Ndof, XcBpvdira, XcBpvdls,
     _XcKCuts  = _XcdaughtersCuts + _KCutsPID
     _XcPiCuts = _XcdaughtersCuts + _PiCutsPID
 
-    _XcFilter = CombineParticles( DecayDescriptor = "[Lambda_c+ -> p+ K- pi+]cc",
+    _XcFilter = CombineParticles( DecayDescriptor = "[Xi_c0 -> p+ K- K- pi+]cc",
                                   MotherCut = _XcotherCuts,
                                   DaughtersCuts =  { "p+" : _XcPCuts, "pi+" : _XcPiCuts, "K+" : _XcKCuts }
                                   )

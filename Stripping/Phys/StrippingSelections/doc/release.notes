@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-02 - Lucio Anderlini (for Andrea Bizzeti)
+  - Further tuning StrippingBandQ/StrippingCC2DD.py for Lambda_c+ and Xi_c0 
+
 ! 2015-12-01 - Paula Alvarez Cartelle
   - Added Lb2dp and Lb2dppipi lines to StrippingQEE/StrippingLb2dp.py
 
