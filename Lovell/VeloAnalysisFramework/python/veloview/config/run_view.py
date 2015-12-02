@@ -390,12 +390,16 @@ CLUSTERS = (
         'title': 'Clusters',
         'subpages': [
             {
-                'title': 'Clusters 1',
+                'title': 'Cluster and Strips',
                 'plots': [
                     {
                         'title': 'Number of VELO clusters per event (Default)',
                         'short': 'Clusters per event',
-                        'name': 'Velo/VeloPrivateClusterMonitor/# VELO clusters'
+                        'name': 'Velo/VeloPrivateClusterMonitor/# VELO clusters',
+                        'tip': (
+                            'The distribution should peak extremely sharply at low cluster numbers, below 50. There is usually a very small tail extending toward higher numbers of clusters. This is quite different to earlier runs.'
+                        ),
+                        'axis_titles': ['Number of clusters', 'Entries']
                     },
                     {
                         'title': 'Number of strips per cluster',
@@ -404,37 +408,61 @@ CLUSTERS = (
                         'options': {
                             'uncertainties': True
                         },
-                        'normalise': True
+                        'normalise': True,
+                        'tip': (
+                            'This distribution generally produces a staircase shape, with the highest number of strips corresponding to one cluster and the lowest number corresponding to four clusters.'
+                        ),
+                        'axis_titles': ['Cluster size', 'Entries']
                     },
                     {
                         'title': 'Active chip links versus sensor',
                         'short': 'Active links per sensor',
-                        'name': 'Velo/VeloPrivateClusterMonitor/Active chip links vs sensor'
+                        'name': 'Velo/VeloPrivateClusterMonitor/Active chip links vs sensor',
+                        'tip': (
+                            'The R sensors have a distinctive pattern in this particular plot. This is completely normal and simply due to the geometry of the sensors. The Phi sensors should have a mostly uniform mid-range colour. Any links which stand out, have very high or very low activity, should be reported (Note that sensor 82 link 49, sensor 85 link 28-31, and sensor 97 sensor 48-51 have bad links).'
+                        ),
+                        'axis_titles': ['Sensor number', 'Active links']
                     },
                     {
                         'title': 'Number of strips per cluster versus sensor',
                         'short': 'Strips per cluster vs. sensor',
-                        'name': 'Velo/VeloPrivateClusterMonitor/Cluster size vs sensor'
+                        'name': 'Velo/VeloPrivateClusterMonitor/Cluster size vs sensor',
+                        'tip': (
+                            'This 2D plot also exhibits a distinctive shape. The number of strips decreases as cluster size increases, resulting in the colour shifting from yellow/ green to blue as you move up the y-axis. Near the interaction point there is generally a decrease in the number of strips with one cluster and an increase in the number with three clusters. There is also an increase in the number with one cluster after the interaction point. This is most visible for the R sensors.'
+                        ),
+                        'axis_titles': ['Sensor number', 'Cluster size']
                     },
                 ],
                 'layout': (2, 2)
             },
             {
-                'title': 'Clusters 2',
+                'title': 'ADC distributions',
                 'plots': [
                     {
                         'title': 'Cluster ADC value',
                         'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC value',
+                        'tip': (
+                            'The distribution should be a Landau distribution and a small peak in the low ADC region.'
+                        ),
+                        'axis_titles': ['ADC of cluster', 'Entries']
                     },
                     {
                         'title': 'Cluster ADC values vs sensor',
-                        'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC values vs sensor'
+                        'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC values vs sensor',
+                        'tip': (
+                            'For all of the sensors the majority of the clusters should have around 50 ADC counts. This results in a narrow band of colour near the bottom of the plot.'
+                        ),
+                        'axis_titles': ['Sensor number', 'ADC of cluster']
                     },
                     {
                         'title': 'Number of VELO clusters per event for each sensor',
                         'short': 'Clusters per event per sensor',
                         'name': 'Velo/VeloPrivateClusterMonitor/# clusters sensor {0}',
-                        'sensor_dependent': True
+                        'sensor_dependent': True,
+                        'tip': (
+                            'Per-sensor plot. The distribution should peak extremely sharply at low cluster numbers.'
+                        ),
+                        'axis_titles': ['Number of clusters', 'Entries']
                     },
                     {
                         'title': 'Cluster ADC values for each sensor',
@@ -458,13 +486,17 @@ CLUSTERS = (
                         'sensor_dependent': True,
                         'options': {
                             'legend': True
-                        }
+                        },
+                        'tip': (
+                            'Per-sensor plot. This should be a Landau distribution.'
+                        ),
+                        'axis_titles': ['ADC of Clusters', 'Entries']
                     }
                 ],
                 'layout': (2, 2)
             },
             {
-                'title': 'Clusters 3',
+                'title': 'Low ADC rates and ADC fit parameters',
                 'plots': [
                     {
                         'title': 'Rate vs DistToM2[um]',
@@ -472,7 +504,11 @@ CLUSTERS = (
                         'options': {
                             'yAxisMinimum': 0.0,
                             'yAxisMaximum': 1.0
-                        }
+                        },
+                        'tip': (
+                            'The relative Low ADC rate should increase when the track is closer to the M2 routing line due to the coupling effect.'
+                        ),
+                        'axis_titles': ['Distance to M2', 'Rate']
                     },
                     {
                         'title': 'Rate vs DistToOutStrip[um]',
@@ -480,15 +516,27 @@ CLUSTERS = (
                         'options': {
                             'yAxisMinimum': 0.0,
                             'yAxisMaximum': 1.0
-                        }
+                        },
+                        'tip': (
+                            'The relative Low ADC rate should decrease when the track is closer to the M1 strip due to the shielding.'
+                        ),
+                        'axis_titles': ['Distance to M1', 'Rate']
                     },
                     {
                         'title': 'Cluster ADC values fit parameter : MPV',
-                        'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC value MPV vs Sensor number'
+                        'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC value MPV vs Sensor number',
+                        'tip': (
+                            'The MPV in ADC counts versus the number of sensors, with R and Phi sensors separated into two distributions. All R or Phi sensors should have roughly same MPV value.'
+                        ),
+                        'axis_titles': ['Sensor number', 'MPV']
                     },
                     {
                         'title': 'Cluster ADC values fit parameter : FWHM',
-                        'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC value FWHM vs Sensor number'
+                        'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC value FWHM vs Sensor number',
+                        'tip': (
+                            'The FWHM in ADC counts versus the number of sensors, with R and Phi sensors separated into two distributions. There should be a peak around interaction piont. '
+                        ),
+                        'axis_titles': ['Sensor number', 'FWHM']
                     }
                 ],
                 'layout': (2, 2)
