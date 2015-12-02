@@ -30,6 +30,7 @@ class EvtConst {
   static const double radToDegrees;
 
   static const double c;
+  static const double Fermi;
 
 };
 

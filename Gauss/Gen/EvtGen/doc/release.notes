@@ -4,6 +4,11 @@
 ! Purpose     :
 !-----------------------------------------------------------------------------
 
+! 2015-12-02 - John Back
+ - Added EvtKStopizmumu model for KS -> pi0 mu mu decays based on 
+   JHEP08(1998)004, courtesy of Veronika Chobanova, Diego Martinez Santos
+   and Jeremy Dalseno. Added EvtConst::Fermi for Fermi coupling constant.
+
 ! 2015-11-18 - Marco Clemencic
  - Disabled warnings for FORTRAN code.
 
