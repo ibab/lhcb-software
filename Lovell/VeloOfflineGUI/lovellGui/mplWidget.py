@@ -69,9 +69,15 @@ class lPlottable():
             else:
                 if 'sensor_dependent' in self.plot.params and self.plot.params['sensor_dependent']:
                     self.plot.ext = ' - sensor ' + str(moduleID)
-                nominal, reference = lInterfaces.runview_plot(tabOpsState.runNum, self.params['name'], 
-                                                              moduleID, tabOpsState.run_data_dir, 
-                                                              refRun = tabOpsState.refRunNum, getRef = True, 
+                # Coerce non-Python objects, like QString, to Python objects
+                refRun = tabOpsState.refRunNum
+                try:
+                    refRun = int(refRun)
+                except ValueError:
+                    refRun = None
+                nominal, reference = lInterfaces.runview_plot(int(tabOpsState.runNum), self.params['name'],
+                                                              moduleID, str(tabOpsState.run_data_dir), 
+                                                              refRun = refRun, getRef = True, 
                                                               notifyBox = notifyBox,
                                                               normalise = norm)
                  
