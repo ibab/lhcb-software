@@ -12,8 +12,6 @@ from veloview.runview.response_formatters import dictionary_formatter
 
 def get_run_plot(name, run, reference=False, formatter=dictionary_formatter, 
                  refRun = None, normalise = False, notifyBox = None):
-    if normalise: print 'even still should norm'
-
     """Return the formatted object at the plot path in the run file.
 
     If reference is True, the corresponding plot from the reference file will
@@ -67,7 +65,6 @@ def get_run_plot(name, run, reference=False, formatter=dictionary_formatter,
 #     plot_dict = get_plot_dictionary(name)
 #     if plot_dict is not None and plot_dict.get('normalised', False): normalise = True
     if normalise:
-        print 'normalising'
         integral = clone.Integral()
         if integral > 0:
             clone.Scale(1.0/integral)
