@@ -682,7 +682,7 @@ class RelatedInfoNamed : public LHCb::RelatedInfoMap {
       case RelatedInfoNamed::NC_MAXPT_PY : return "NC_MAXPT_PY";  
       case RelatedInfoNamed::NC_MAXPT_PZ : return "NC_MAXPT_PZ";  
       case RelatedInfoNamed::NC_MAXPT_PE : return "NC_MAXPT_PE";  
-      case RelatedInfoNamed::CCNC_IT     : return "CCNC_ANGLE";  
+      case RelatedInfoNamed::CCNC_IT     : return "CCNC_IT";  
 
       case RelatedInfoNamed::ISOMUM2     : return "ISOMUM2";
       case RelatedInfoNamed::ISOMUM3     : return "ISOMUM3";

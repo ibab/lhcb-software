@@ -5,6 +5,9 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+! 2015-11-24 - Anton Poluektov 
+ - Fix typo in CCNC_IT variable
+
 !======================== DaVinciTypes v2r15 2015-12-03 ======================
 
 ! 2015-12-02 - Giacomo Graziani
