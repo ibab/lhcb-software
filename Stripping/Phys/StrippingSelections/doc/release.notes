@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-03 - Simone Stracka
+  - bug fix in StrippingCharm/StrippingD2PiPi0.py
+
 ! 2015-12-02 - Mika Vesterinen
   - Fixed overwrite of TISTOS requirement in StrippingB2DMuNuX.py
 
