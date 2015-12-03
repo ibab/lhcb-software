@@ -16,7 +16,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <cstring> // For memcpy with gcc 4.3
-#include <memory> // For memcpy with gcc 4.3
+#include <memory>  // For memcpy with gcc 4.3
 
 #ifdef _WIN32
 #define NOATOM
@@ -408,19 +408,18 @@ size_t LHCb::rawEventLength(const RawEvent* evt)    {
 /// Determine length of the sequential buffer from RawEvent object
 size_t LHCb::rawEventLength(const vector<RawBank*>& banks)    {
   return std::accumulate( banks.begin(), banks.end(), size_t{0},
-                          [](size_t l, const RawBank* bank) {
-                              return l+bank->totalSize();
-                          });
+                          [](size_t l, const RawBank* bank) { return l+bank->totalSize(); });
 }
 
 /// Determine length of the sequential buffer from RawEvent object
 size_t LHCb::rawEventLengthTAE(const vector<RawBank*>& banks)    {
   return std::accumulate( banks.begin(), banks.end(), size_t{0},
                           [](size_t l, const RawBank* bank) {
-    return ( !bank->type() == RawBank::DAQ && bank->version() == DAQ_STATUS_BANK) ?
-                    l + bank->totalSize() : l;
-                          });
+			    return !(bank->type() == RawBank::DAQ && bank->version() == DAQ_STATUS_BANK)
+			      ? l + bank->totalSize() : l;
+			  });
 }
+
 /// Determine length of the sequential buffer from RawEvent object
 size_t LHCb::rawEventLengthTAE(const RawEvent* evt)    {
   size_t i, len;
@@ -567,13 +566,13 @@ bool LHCb::checkMDFRecord(const MDFHeader* h, int opt_len, bool exc,bool prt)   
     char txt[255];
     const char *start, *end;
     if ( h->size0() != h->size1() || h->size0() != h->size2() )  {
-      ::sprintf(txt,"%s Inconsistent MDF header size: %u <-> %u <-> %u at %p",
-		s_checkLabel,h->size0(),h->size1(),h->size2(),reinterpret_cast<const void*>(h));
+      ::snprintf(txt,sizeof(txt),"%s Inconsistent MDF header size: %u <-> %u <-> %u at %p",
+		 s_checkLabel,h->size0(),h->size1(),h->size2(),reinterpret_cast<const void*>(h));
       goto Error;
     }
     if ( opt_len != ~0x0 && size_t(opt_len) != h->size0() )  {
-      ::sprintf(txt,"%s Wrong MDF header size: %u <-> %d at %p",
-		s_checkLabel,h->size0(),opt_len,reinterpret_cast<const void*>(h));
+      ::snprintf(txt,sizeof(txt),"%s Wrong MDF header size: %u <-> %d at %p",
+		 s_checkLabel,h->size0(),opt_len,reinterpret_cast<const void*>(h));
       goto Error;
     }
     compress  = h->compression()&0xF;
@@ -584,8 +583,8 @@ bool LHCb::checkMDFRecord(const MDFHeader* h, int opt_len, bool exc,bool prt)   
     start = ((char*)h) + sizeof(MDFHeader) + h->subheaderLength();
     end   = ((char*)h) + h->size0();
     if ( !checkRawBanks(start,end,exc,prt) )  {
-      ::sprintf(txt,"%s Error in multi raw bank buffer start:%p end:%p",
-		s_checkLabel,start,end);
+      ::snprintf(txt,sizeof(txt),"%s Error in multi raw bank buffer start:%p end:%p",
+		 s_checkLabel,(const void*)start, (const void*)end);
       goto Error;
     }
     return true;
