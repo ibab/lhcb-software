@@ -123,7 +123,9 @@ class NoPIDDstarWithD02RSKPiConf(LineBuilder) :
                                              prescale = config['Prescale'],
                                              postscale = config['Postscale'],
                                              selection = self.selDstar2D0Pi,
-                                             RequiredRawEvents = ["Muon"])  
+                                             RequiredRawEvents = ["Muon"],
+                                             RelatedInfoTools = [  addRelInfoMuonIsolation('[D*(2010)+ ->  ( D0 -> K- pi+ ) pi+]CC')  ]
+                                             )  
 
         self.registerLine(self.Dstar2D0Pi_line)
 
@@ -232,3 +234,30 @@ def Dstar ( name,
                                           D0Sel])
     
     return DSt
+
+
+
+def addRelInfoMuonIsolation( decdes ):    
+    import re
+    _DauLoc={}
+    _daughters = re.match(r'(.*)->([ |\[]*)([^\]]+)(.*)', decdes)
+    if _daughters:    
+        _particles = _daughters.group(3).split()
+        _ip=1
+        _gp=1
+        for _p in _particles:
+            if re.match(r'(pi|p|K|e|mu)[\+|-]',_p):
+                _key= _daughters.group(1)+"->"+_daughters.group(2)
+                _jp=1
+                for _p2 in _particles:
+                    _key+=" "
+                    if _jp==_ip: _key+="^"
+                    _key+=_p2
+                    _jp=_jp+1
+                _key+=_daughters.group(4).replace("cc","CC")
+                _DauLoc[_key] = "MudetIso"+str(_gp)
+                _gp=_gp+1
+            _ip=_ip+1
+    else:
+        return {}
+    return {  "Type" : "RelInfoMuonIsolation", "DaughterLocations" : _DauLoc}

@@ -93,7 +93,8 @@ class MuIDCalibConf( LineBuilder ):
         self.line_Prompt = StrippingLine( name + '_JpsiNoPID', 
                                           prescale = config[ 'PromptPrescale' ], 
                                           selection = self.sel_Prompt, 
-                                          RequiredRawEvents = ["Muon"] 
+                                          RequiredRawEvents = ["Muon"],
+                                          RelatedInfoTools = [addRelInfoMuonIsolation(self.sel_Prompt.algorithm().DecayDescriptor)  ] 
                                           ) 
 
         #Detached
@@ -101,21 +102,24 @@ class MuIDCalibConf( LineBuilder ):
         self.line_Detached = StrippingLine( name + '_JpsiFromBNoPID', 
                                             prescale = config[ 'DetachedPrescale' ], 
                                             selection = self.sel_Detached, 
-                                            RequiredRawEvents = ["Muon"] 
+                                            RequiredRawEvents = ["Muon"],
+                                            RelatedInfoTools = [addRelInfoMuonIsolation(self.sel_Detached.algorithm().DecayDescriptor)  ]
                                             ) 
 
         self.sel_DetachedNoMIP  = makeDetachedNoMIPSelection( name + "_FromBNoMipCombine", self.selStdNoPIDMuons )
         self.line_DetachedNoMIP = StrippingLine( name + '_JpsiFromBNoPIDNoMip', 
                                                  prescale = config[ 'DetachedNoMIPPrescale' ], 
                                                  selection = self.sel_DetachedNoMIP, 
-                                                 RequiredRawEvents = ["Muon"] 
+                                                 RequiredRawEvents = ["Muon"],
+                                                 RelatedInfoTools = [addRelInfoMuonIsolation(self.sel_DetachedNoMIP.algorithm().DecayDescriptor)  ]
                                                  ) 
                  
         self.sel_DetachedNoMIPHiP  = makeDetachedNoMIPHiPSelection( name + "_FromBNoMipHiPCombine", self.selStdNoPIDMuons )
         self.line_DetachedNoMIPHiP = StrippingLine( name + '_JpsiFromBNoPIDNoMipHiP', 
                                                     prescale = config[ 'DetachedNoMIPHiPPrescale' ], 
                                                     selection = self.sel_DetachedNoMIPHiP, 
-                                                    RequiredRawEvents = ["Muon"] 
+                                                    RequiredRawEvents = ["Muon"],
+                                                    RelatedInfoTools = [addRelInfoMuonIsolation(self.sel_DetachedNoMIPHiP.algorithm().DecayDescriptor)  ]
                                                     ) 
 
         self.sel_DetachedNoMIPNoPCut  = makeDetachedNoMIPNoPCutSelection( name + "_FromBNoMipCombineNoPCut", self.selStdNoPIDMuons )
@@ -124,7 +128,8 @@ class MuIDCalibConf( LineBuilder ):
                                                   prescale = config[ 'DetachedNoMIPKPrescale' ], 
                                                   selection = self.sel_DetachedNoMIPK, 
                                                   MDSTFlag = True,
-                                                  RequiredRawEvents = ["Muon"] 
+                                                  RequiredRawEvents = ["Muon"],
+                                                  RelatedInfoTools = [  addRelInfoMuonIsolation('[B+ ->  ( J/psi(1S) -> mu+ mu-) K+ ]CC')  ]
                                                   ) 
 
         #lambda_c
@@ -133,28 +138,32 @@ class MuIDCalibConf( LineBuilder ):
                                            prescale = config[ 'FromLambdacPrescale' ], 
                                            selection = self.sel_Lambdac, 
                                            MDSTFlag = True,
-                                           RequiredRawEvents = ["Muon"] 
+                                           RequiredRawEvents = ["Muon"],
+                                           RelatedInfoTools = [addRelInfoMuonIsolation(self.sel_Lambdac.algorithm().DecayDescriptor)  ]
                                            ) 
 
         self.sel_PiLambdac = makeLambdacSelection( name + '_PiFromLambdac', "pion", self.selStdNoPIDPions, self.selStdNoPIDKaons, self.selStdNoPIDProtons)
         self.line_PiLambdac = StrippingLine( name + '_PiFromLambdacDecay', 
                                              prescale = config[ 'PiFromLambdacPrescale' ], 
                                              selection = self.sel_PiLambdac, 
-                                             RequiredRawEvents = ["Muon"] 
+                                             RequiredRawEvents = ["Muon"],
+                                             RelatedInfoTools = [addRelInfoMuonIsolation(self.sel_PiLambdac.algorithm().DecayDescriptor)  ]
                                              ) 
 
         self.sel_KLambdac = makeLambdacSelection( name + '_KFromLambdac', "kaon", self.selStdNoPIDPions, self.selStdNoPIDKaons, self.selStdNoPIDProtons)
         self.line_KLambdac = StrippingLine( name + '_KFromLambdacDecay', 
                                             prescale = config[ 'KFromLambdacPrescale' ], 
                                             selection = self.sel_KLambdac, 
-                                            RequiredRawEvents = ["Muon"] 
+                                            RequiredRawEvents = ["Muon"],
+                                            RelatedInfoTools = [addRelInfoMuonIsolation(self.sel_KLambdac.algorithm().DecayDescriptor)  ]
                                             ) 
 
         self.sel_PLambdac = makeLambdacSelection( name + '_PFromLambdac', "proton", self.selStdNoPIDPions, self.selStdNoPIDKaons, self.selStdNoPIDProtons)
         self.line_PLambdac = StrippingLine( name + '_PFromLambdacDecay', 
                                             prescale = config[ 'PFromLambdacPrescale' ], 
                                             selection = self.sel_PLambdac, 
-                                            RequiredRawEvents = ["Muon"] 
+                                            RequiredRawEvents = ["Muon"],
+                                            RelatedInfoTools = [addRelInfoMuonIsolation(self.sel_PLambdac.algorithm().DecayDescriptor)  ]
                                             ) 
 
         self.sel_PiISMUONLambdac = makeLambdacSelection( name + '_PiISMUONFromLambdac', "pionISMUON", 
@@ -162,7 +171,8 @@ class MuIDCalibConf( LineBuilder ):
         self.line_PiISMUONLambdac = StrippingLine( name + '_PiISMUONFromLambdacDecay', 
                                                    prescale = config[ 'PiISMUONFromLambdacPrescale' ], 
                                                    selection = self.sel_PiISMUONLambdac, 
-                                                   RequiredRawEvents = ["Muon"] 
+                                                   RequiredRawEvents = ["Muon"],
+                                                   RelatedInfoTools = [addRelInfoMuonIsolation(self.sel_PiISMUONLambdac.algorithm().DecayDescriptor)  ]
                                                    ) 
 
         self.sel_KISMUONLambdac = makeLambdacSelection( name + '_KISMUONFromLambdac', "kaonISMUON", 
@@ -170,7 +180,8 @@ class MuIDCalibConf( LineBuilder ):
         self.line_KISMUONLambdac = StrippingLine( name + '_KISMUONFromLambdacDecay', 
                                                   prescale = config[ 'KISMUONFromLambdacPrescale' ], 
                                                   selection = self.sel_KISMUONLambdac, 
-                                                  RequiredRawEvents = ["Muon"] 
+                                                  RequiredRawEvents = ["Muon"],
+                                                  RelatedInfoTools = [addRelInfoMuonIsolation(self.sel_KISMUONLambdac.algorithm().DecayDescriptor)  ]
                                                   ) 
 
         self.sel_PISMUONLambdac = makeLambdacSelection( name + '_PISMUONFromLambdac', "protonISMUON"
@@ -178,7 +189,8 @@ class MuIDCalibConf( LineBuilder ):
         self.line_PISMUONLambdac = StrippingLine( name + '_PISMUONFromLambdacDecay', 
                                                   prescale = config[ 'PISMUONFromLambdacPrescale' ], 
                                                   selection = self.sel_PISMUONLambdac, 
-                                                  RequiredRawEvents = ["Muon"] 
+                                                  RequiredRawEvents = ["Muon"],
+                                                  RelatedInfoTools = [addRelInfoMuonIsolation(self.sel_PISMUONLambdac.algorithm().DecayDescriptor)  ]
                                                   ) 
 
         #self.registerLine( self.line_Prompt )
@@ -383,3 +395,28 @@ def makeTISTOS( name, sel, trigger ) :
                       )
 
 
+
+def addRelInfoMuonIsolation( decdes ):    
+    import re
+    _DauLoc={}
+    _daughters = re.match(r'(.*)->([ |\[]*)([^\]]+)(.*)', decdes)
+    if _daughters:    
+        _particles = _daughters.group(3).split()
+        _ip=1
+        _gp=1
+        for _p in _particles:
+            if re.match(r'(pi|p|K|e|mu)[\+|-]',_p):
+                _key= _daughters.group(1)+"->"+_daughters.group(2)
+                _jp=1
+                for _p2 in _particles:
+                    _key+=" "
+                    if _jp==_ip: _key+="^"
+                    _key+=_p2
+                    _jp=_jp+1
+                _key+=_daughters.group(4).replace("cc","CC")
+                _DauLoc[_key] = "MudetIso"+str(_gp)
+                _gp=_gp+1
+            _ip=_ip+1
+    else:
+        return {}
+    return {  "Type" : "RelInfoMuonIsolation", "DaughterLocations" : _DauLoc}

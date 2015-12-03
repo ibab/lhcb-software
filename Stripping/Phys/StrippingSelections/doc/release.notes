@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-03 - Giacomo Graziani
+  - added RelatedInfo from RelInfoMuonIsolation for PID calibration lines
+
 ! 2015-12-03 - Greg Ciezarek
 	-	Added StrippingLowPtMuID.py
 	

@@ -134,7 +134,7 @@ _default_configuration_ = {
 
 default_config ={
     'NAME'        :   'VznoPID'       ,
-    'WGs'         : [ 'ALL'] ,
+    'WGs'         : [ 'Calib'] ,
     'CONFIG'      : _default_configuration_  , 
     'BUILDERTYPE' :   'StrippingV0ForPIDConf'            ,
     'STREAMS'     :  [ 'PID']
@@ -216,7 +216,9 @@ class StrippingV0ForPIDConf(LineBuilder) :
             checkPV    = True , ## attention! PV is required!
             postscale  = 1 ,
             #HLT        = self._hlt , 
-            algos      = [ self.K0S_LL_Bin1() ]
+            algos      = [ self.K0S_LL_Bin1() ],
+            RequiredRawEvents = ["Muon"],    
+            RelatedInfoTools = [ addRelInfoMuonIsolation("KS0 -> pi+ pi-")  ]  
             ) ,
             ## 
             StrippingLine (
@@ -225,7 +227,9 @@ class StrippingV0ForPIDConf(LineBuilder) :
             checkPV    = True , ## attention! PV is required!
             postscale  = 1 ,
             #HLT        = self._hlt , 
-            algos      = [ self.K0S_DD_Bin1() ]
+            algos      = [ self.K0S_DD_Bin1() ],
+            RequiredRawEvents = ["Muon"],
+            RelatedInfoTools = [ addRelInfoMuonIsolation("KS0 -> pi+ pi-")  ] 
             ) ,
             ## 
             StrippingLine (
@@ -235,7 +239,9 @@ class StrippingV0ForPIDConf(LineBuilder) :
             postscale  = 1 ,
             #HLT        = self._hlt , 
             algos      = [ self.Lam0_LL_Bin1() ],
-            RequiredRawEvents = ["Muon"]) ,
+            RequiredRawEvents = ["Muon"],
+            RelatedInfoTools = [  addRelInfoMuonIsolation("[ Lambda0 -> p+ pi-]CC")  ]     
+                ) ,
             ## 
             StrippingLine (
             "Lam0LLLine2" + self._name ,
@@ -244,7 +250,8 @@ class StrippingV0ForPIDConf(LineBuilder) :
             postscale  = 1 ,
             #HLT        = self._hlt , 
             algos      = [ self.Lam0_LL_Bin2() ],
-            RequiredRawEvents = ["Muon"]
+            RequiredRawEvents = ["Muon"],
+            RelatedInfoTools = [  addRelInfoMuonIsolation("[ Lambda0 -> p+ pi-]CC")  ] 
             ) ,
             ## 
             StrippingLine (
@@ -254,7 +261,8 @@ class StrippingV0ForPIDConf(LineBuilder) :
             postscale  = 1 ,
             #HLT        = self._hlt , 
             algos      = [ self.Lam0_DD_Bin1() ],
-            RequiredRawEvents = ["Muon"]
+            RequiredRawEvents = ["Muon"],
+            RelatedInfoTools = [  addRelInfoMuonIsolation("[ Lambda0 -> p+ pi-]CC")  ] 
             ),
             ## 
             StrippingLine (
@@ -264,7 +272,8 @@ class StrippingV0ForPIDConf(LineBuilder) :
             postscale  = 1 ,
             #HLT        = self._hlt , 
             algos      = [ self.Lam0_LL_Bin1_IsMUON() ],
-            RequiredRawEvents = ["Muon"]
+            RequiredRawEvents = ["Muon"],
+            RelatedInfoTools = [  addRelInfoMuonIsolation("[ Lambda0 -> p+ pi-]CC")  ] 
             )
             ,
             ## 
@@ -275,7 +284,8 @@ class StrippingV0ForPIDConf(LineBuilder) :
             postscale  = 1 ,
             #HLT        = self._hlt , 
             algos      = [ self.Lam0_LL_Bin2_IsMUON() ],
-            RequiredRawEvents = ["Muon"]
+            RequiredRawEvents = ["Muon"],
+            RelatedInfoTools = [  addRelInfoMuonIsolation("[ Lambda0 -> p+ pi-]CC")  ] 
             )
             ,
             ## 
@@ -286,7 +296,8 @@ class StrippingV0ForPIDConf(LineBuilder) :
             postscale  = 1 ,
             #HLT        = self._hlt , 
             algos      = [ self.Lam0_DD_Bin1_IsMUON() ],
-            RequiredRawEvents = ["Muon"]
+            RequiredRawEvents = ["Muon"],
+            RelatedInfoTools = [  addRelInfoMuonIsolation("[ Lambda0 -> p+ pi-]CC")  ] 
             )
             ]
 
@@ -937,6 +948,33 @@ if '__main__' == __name__ :
     for l in conf.K0S     () : print __enroll__ ( l , lst = props ) 
     for l in conf.Lambda0 () : print __enroll__ ( l , lst = props )
     
+
+def addRelInfoMuonIsolation( decdes ):    
+    import re
+    _DauLoc={}
+    _daughters = re.match(r'(.*)->([ |\[]*)([^\]]+)(.*)', decdes)
+    if _daughters:    
+        _particles = _daughters.group(3).split()
+        _ip=1
+        _gp=1
+        for _p in _particles:
+            if re.match(r'(pi|p|K|e|mu)[\+|-]',_p):
+                _key= _daughters.group(1)+"->"+_daughters.group(2)
+                _jp=1
+                for _p2 in _particles:
+                    _key+=" "
+                    if _jp==_ip: _key+="^"
+                    _key+=_p2
+                    _jp=_jp+1
+                _key+=_daughters.group(4).replace("cc","CC")
+                _DauLoc[_key] = "MudetIso"+str(_gp)
+                _gp=_gp+1
+            _ip=_ip+1
+    else:
+        return {}
+    return {  "Type" : "RelInfoMuonIsolation", "DaughterLocations" : _DauLoc}
+
+
 # =============================================================================
 # The END 
 # =============================================================================
