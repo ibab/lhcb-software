@@ -4,6 +4,8 @@
 ! Purpose     : Jet finding MC accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!===================== JetAccessoriesMC v2r10 2015-12-03 ======================
+
 ! 2015-1-04 - Cedric Potterat
  - adding JetTagging as dependency.
 
