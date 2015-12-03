@@ -54,6 +54,7 @@ dstStreams  = [ "BhadronCompleteEvent", "CharmCompleteEvent", "CharmToBeSwum", "
 stripTESPrefix = 'Strip'
 
 from Configurables import ProcStatusCheck
+from PhysConf.Filters import LoKi_Filters
 flts = LoKi_Filters(VOID_Code = "( TrSource(TrSOURCE('/Event/Rec/Track/Best', TrLONG))"\
                                 " >> ( sum( TrPT,TrP < 1 * TeV ) > 1 * TeV ) )" ,
                     VOID_Preambulo = ["from LoKiTracks.decorators import *" ,

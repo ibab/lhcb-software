@@ -4,6 +4,8 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2015-12-03 - Tim Williams
+	-	Added missing import to TestMyWGfromSettings_Run1.py
 
 ! 2015-12-03 - Simone Stracka
   - bug fix in StrippingCharm/StrippingD2PiPi0.py
