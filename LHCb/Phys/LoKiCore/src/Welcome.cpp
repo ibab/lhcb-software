@@ -107,7 +107,7 @@ void LoKi::Welcome::welcome( std::ostream& stream ) const
   
   stream << boost::format ( m_fmt1 ) % m_str1 ;
   stream << boost::format ( m_fmt3 ) % 
-    "Author:  Vanya BELYAEV Ivan.Belyaev@nikhef.nl " ;
+    "Author:  Vanya BELYAEV Ivan.Belyaev@itep.ru " ;
   stream << boost::format ( m_fmt1 ) % m_str1 << std::endl ;
   
   stream << boost::format ( m_fmt1 ) % m_str1 ;
@@ -286,7 +286,7 @@ void Bender::Welcome::welcome( std::ostream& stream ) const
   //
   stream << boost::format ( m_fmt1 ) % m_str1 ;
   stream << boost::format ( m_fmt3 ) % 
-    "Author:  Vanya BELYAEV Ivan.Belyaev@nikhef.nl " ;
+    "Author:  Vanya BELYAEV Ivan.Belyaev@itep.ru " ;
   stream << boost::format ( m_fmt1 ) % m_str1 << std::endl ;
   //
   stream << boost::format ( m_fmt1 ) % m_str1 ;

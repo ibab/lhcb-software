@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2015-12-03 - Vanya Belyaev
+ - minor fix 
+
 ! 2015-11-30 - Vanya Belyaev
 
  - FilterAlg.cpp: 
