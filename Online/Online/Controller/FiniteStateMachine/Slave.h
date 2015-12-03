@@ -39,7 +39,7 @@ namespace FiniteStateMachine {
   public:
     typedef FSM::ErrCond ErrCond;
     enum SlaveState  {
-      SLAVE_NONE               = 0xFFFFFFFF,
+      SLAVE_NONE               = 0x0FFFFFFF,
       SLAVE_LIMBO              = 1<<20,
       SLAVE_STARTING           = 1<<21,
       SLAVE_ALIVE              = 1<<22,

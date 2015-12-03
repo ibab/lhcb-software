@@ -183,7 +183,7 @@ void Machine::handleIoc(const CPP::Event& event)   {
     }
     m_meta.execute(this);
     break;
-  case 0xFEEDBABE:
+  case 0x0FEEDBAB:
     display(WARNING,c_name(),"Machine ****TEST**** in meta state:%s - evaluate WHENs. Idle:%s",
             currentMetaName(), isIdle() ? "Yes" : "No");
     evaluateWhens();
