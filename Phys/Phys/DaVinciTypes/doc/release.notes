@@ -5,10 +5,10 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+!======================== DaVinciTypes v2r15 2015-12-03 ======================
+
 ! 2015-12-02 - Giacomo Graziani
 - fix loop in RelatedInfoNamed::indexByName (introducing RelatedInfoNamed::END to avoid the same mistake in the future)
-
-!======================== DaVinciTypes v2r15 2015-12-02 ======================
 
 ! 2015-12-01 - Giacomo Graziani
  - new variables in RelatedInfoNamed enum for Muon isolation
