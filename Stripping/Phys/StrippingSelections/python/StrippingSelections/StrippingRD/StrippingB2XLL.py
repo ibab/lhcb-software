@@ -32,6 +32,8 @@ default_config = {
         , 'UpperMass'      : 5500
         , 'BMassWindow'    : 1500
         , 'PIDe'           : 0
+        , 'TrGhostProb'    : 0.4
+        , 'TrChi2DOF'      : 4
         , 'mmXLinePrescale'  : 1
         , 'meXLinePrescale'  : 1
         , 'eeXLinePrescale'  : 1
@@ -72,6 +74,8 @@ class B2XLLConf(LineBuilder) :
         , 'UpperMass'
         , 'BMassWindow'
         , 'PIDe'
+        , 'TrGhostProb'
+        , 'TrChi2DOF'
         , 'mmXLinePrescale'
         , 'meXLinePrescale'
         , 'eeXLinePrescale'
@@ -127,6 +131,8 @@ class B2XLLConf(LineBuilder) :
         SelDsStars= self._dSStarPlus( name="DsStarFor"+self._name, DPlus=SelDsPlus, Gamma=Gammas )
 
         # 2 : Dileptons
+        # self._DaughtersCut = "(PT > %(LeptonPT)s) & (MIPCHI2DV(PRIMARY)>%(LeptonIPCHI2)s)" % config
+        self._DaughtersCut = "(PT > %(LeptonPT)s) & (MIPCHI2DV(PRIMARY)>%(LeptonIPCHI2)s) & (TRGHOSTPROB<%(TrGhostProb)s) & (TRCHI2DOF<%(TrChi2DOF)s)" % config
         MuMu = self._makeMuMu( "MuMuFor"+ self._name, params = config )
         MuE  = self._makeMuE ( "MuEFor" + self._name, params = config )
         EE   = self._makeEE  ( "EEFor"  + self._name, params = config )
@@ -183,9 +189,35 @@ class B2XLLConf(LineBuilder) :
         """
         Return related information for the given selection
         """
+        _decay = {"[Beauty -> ^( J/psi(1S) -> l+ l- ) X]CC" : "LPNHEISO"} # Surely this should work!
+        if ( selection.name().endswith("SS") ):
+            _decay = {"[Beauty -> ^( J/psi(1S) -> l+ l+ ) X]CC" : "LPNHEISO"} # Surely this should work!
         RelInfo = [{ "Type": "RelInfoConeVariables", "ConeAngle":1.0, "Location":"ConeIsoInfo" },
                    { "Type": "RelInfoVertexIsolation", "Location":"VtxIsoInfo" },
-                   { "Type": "RelInfoVertexIsolationBDT", "Location":"VtxIsoInfoBDT" }]
+                   { "Type": "RelInfoVertexIsolationBDT", "Location":"VtxIsoInfoBDT" },
+                   
+                   # {'Type' : 'RelInfoBs2MuMuTrackIsolations', # LPNHE isolation - 1
+                   #  'Location'  : 'BSMUMUVARIABLES',
+                   #  'DaughterLocations' : _decay,
+                   #  'tracktype' : 3,
+                   #  'makeTrackCuts' : False
+                   #  },
+
+                   # {'Type' : 'RelInfoBs2MuMuTrackIsolations',
+                   #  'Location'  : 'BSMUMUTrackVARIABLES',
+                   #  'tracktype' : 3,
+                   #  'angle'      : 0.27,
+                   #  'fc'         : 0.60,
+                   #  'doca_iso'   : 0.13,
+                   #  'ips'        : 3.0,
+                   #  'svdis'      : -0.15,
+                   #  'svdis_h'    : 30.,
+                   #  'pvdis'      : 0.5,
+                   #  'pvdis_h'    : 40.,
+                   #  'makeTrackCuts' : False,
+                   #  'IsoTwoBody' : True
+                   #  },
+                   ]
         return RelInfo
 
 #####################################################
@@ -195,14 +227,18 @@ class B2XLLConf(LineBuilder) :
         """
         # requires all basic particles to have IPCHI2 > KaonIPCHI2
         # and hadron PT > KaonPT
-        #need to add the ID here
-        _Code = "(PT > %(KaonPT)s *MeV) & " \
+        # Added a ghost probability cut to reduce the runI rate
+        _Code = "(PT > %(KaonPT)s *MeV) & (TRGHOSTPROB<%(TrGhostProb)s) & (TRCHI2DOF<%(TrChi2DOF)s) & " \
                 "((ISBASIC & (MIPCHI2DV(PRIMARY) > %(KaonIPCHI2)s)) | " \
                 "(NDAUGHTERS == NINTREE( ISBASIC &  (MIPCHI2DV(PRIMARY) > %(KaonIPCHI2)s))))" % params
+        # Mass window
         if (name.startswith("JPsisFor")):
             _Code += "& (M <  3200*MeV)" # Avoid psi(2S) resonance in the uppser sideband
         else :
             _Code += "& (M <  %(DiHadronMass)s*MeV) " % params
+        # Ghost Probability cut
+        if (name.startswith("KaonsFor") or name.startswith("PionsFor") or name.startswith("ProtonsFor")):
+            _Code += "& (TRGHOSTPROB<%(TrGhostProb)s) & (TRCHI2DOF<%(TrChi2DOF)s) " % params
         _Filter = FilterDesktop(Code = _Code)
         return Selection( name, Algorithm = _Filter, RequiredSelections = [ sel ] )
 
@@ -211,6 +247,7 @@ class B2XLLConf(LineBuilder) :
         """
         Handy interface for dilepton filter
         """
+        # No Ghost probability cut here, as it is already implemented in the _makell functions
         _Code = "(ID=='J/psi(1S)') & "\
                 "(PT > %(DiLeptonPT)s *MeV) & "\
                 "(MM < %(UpperMass)s *MeV) & "\
@@ -221,9 +258,7 @@ class B2XLLConf(LineBuilder) :
 
         # add additional cut on PID if requested
         if idcut: _Code += ( " & " + idcut ) 
-
         _Filter = FilterDesktop( Code = _Code )
-    
         return Selection(name, Algorithm = _Filter, RequiredSelections = [ dilepton ] )
 
 #####################################################
@@ -355,7 +390,7 @@ class B2XLLConf(LineBuilder) :
                     "[ B0 -> J/psi(1S) D0 ]cc",
                     "[ B0 -> J/psi(1S) rho(770)0 ]cc",
                     "[ B0 -> J/psi(1S) J/psi(1S) ]cc",
-                    "[ B0 -> J/psi(1S) psi(2S) ]cc", ## Checking
+                    "[ B0 -> J/psi(1S) psi(2S) ]cc",
                     "[ B0 -> J/psi(1S) omega(782) ]cc",
                     "[ B0 -> J/psi(1S) f_0(980) ]cc",
                     ]
@@ -380,28 +415,20 @@ class B2XLLConf(LineBuilder) :
         from StandardParticles import StdLooseElectrons as Electrons 
         from StandardParticles import StdLooseMuons as Muons
 
-        _DaughtersCut = "(PT > %(LeptonPT)s) & " \
-                        "(MIPCHI2DV(PRIMARY)>%(LeptonIPCHI2)s)" % params
-
         _MassCut = "(AM > 100*MeV)" 
         
         _DecayDescriptor = "[J/psi(1S) -> mu+ e-]cc"
         if samesign: _DecayDescriptor = "[J/psi(1S) -> mu+ e+]cc"
-
         
         _Combine = CombineParticles( DecayDescriptor = _DecayDescriptor,
                                      CombinationCut  = _MassCut,
                                      MotherCut       = "(VFASPF(VCHI2/VDOF) < 9)")
 
-
-        _ElectronCut = _DaughtersCut
-        _MuonCut     = _DaughtersCut
-        
         _Combine.DaughtersCuts   = {
-            "e+"  : _ElectronCut,
-            "mu+" : _MuonCut
+            "e+"  : self._DaughtersCut,
+            "mu+" : self._DaughtersCut
             }
-        
+
         return Selection(name,
                          Algorithm = _Combine,
                          RequiredSelections = [ Muons, Electrons ] )
@@ -411,18 +438,15 @@ class B2XLLConf(LineBuilder) :
         Makes MuMu combinations 
         """
         from StandardParticles import StdLooseMuons as Muons
-        _DaughtersCut = "(PT > %(LeptonPT)s) & " \
-                        "(MIPCHI2DV(PRIMARY)>%(LeptonIPCHI2)s)" % params
         _MassCut = "(AM > 100*MeV)"
         _DecayDescriptor = "J/psi(1S) -> mu+ mu-"
         if samesign: _DecayDescriptor = "[J/psi(1S) -> mu+ mu+]cc"
         _Combine = CombineParticles( DecayDescriptor = _DecayDescriptor,
                                      CombinationCut  = _MassCut,
                                      MotherCut       = "(VFASPF(VCHI2/VDOF) < 9)")
-        _MuonCut     = _DaughtersCut
         _Combine.DaughtersCuts   = {
-            "mu-" : _MuonCut,
-            "mu+" : _MuonCut
+            "mu-" : self._DaughtersCut,
+            "mu+" : self._DaughtersCut
             }
         return Selection(name,
                          Algorithm = _Combine,
@@ -434,18 +458,15 @@ class B2XLLConf(LineBuilder) :
         Makes EE combinations 
         """
         from StandardParticles import StdLooseElectrons as Electrons 
-        _DaughtersCut = "(PT > %(LeptonPT)s) & " \
-                        "(MIPCHI2DV(PRIMARY)>%(LeptonIPCHI2)s)" % params
         _MassCut = "(AM > 100*MeV)"
         _DecayDescriptor = "J/psi(1S) -> e+ e-"
         if samesign: _DecayDescriptor = "[J/psi(1S) -> e+ e+]cc"
         _Combine = CombineParticles( DecayDescriptor = _DecayDescriptor,
                                      CombinationCut  = _MassCut,
                                      MotherCut       = "(VFASPF(VCHI2/VDOF) < 9)")
-        _ElectronCut = _DaughtersCut
         _Combine.DaughtersCuts   = {
-            "e+" : _ElectronCut,
-            "e-" : _ElectronCut
+            "e+" : self._DaughtersCut,
+            "e-" : self._DaughtersCut
             }
         return Selection(name,
                          Algorithm = _Combine,
