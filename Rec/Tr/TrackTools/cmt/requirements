@@ -40,6 +40,7 @@ use   CaloUtils       v*     Calo
 use   OTDAQ           v*     OT
 
 use   MuonInterfaces  v*     Muon
+use   ROOT            v*     LCG_Interfaces 
 
 # For interpolator
 use   RichDet         v*     Det

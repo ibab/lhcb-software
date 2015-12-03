@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2015-12-03 - Vincenzo Battista
+ - First commit of "STSpilloverTool", which evaluates the likelihood ratio for each ST cluster on reco'ed tracks
+   between the "signal" and the "spillover" hypothesis.
+
 !========================= TrackTools v5r13 2015-11-23 =========================
 ! 2015-11-16 - Luigi Del Buono
  - replacing all tests about geometry being v2 version to allow for version v5
