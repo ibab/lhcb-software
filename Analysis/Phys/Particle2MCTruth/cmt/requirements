@@ -1,10 +1,10 @@
 #$Id: requirements,v 1.14 2010-05-28 12:14:40 jpalac Exp $
 #============================================================================
 # Created    : 2009-03-04
-# Maintainer : Juan PALACIOS
+# Maintainer : DaVinci coordinator
 #============================================================================
 package           Particle2MCTruth
-version           v2r5p1
+version           v2r6
 
 #============================================================================
 # Structure, i.e. directories to process. 

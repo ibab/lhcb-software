@@ -1,7 +1,7 @@
 ################################################################################
 # Package: Particle2MCTruth
 ################################################################################
-gaudi_subdir(Particle2MCTruth v2r5p1)
+gaudi_subdir(Particle2MCTruth v2r6)
 
 gaudi_depends_on_subdirs(Phys/DaVinciMCKernel
                          Phys/LoKiAlgoMC)
