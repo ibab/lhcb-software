@@ -7,6 +7,7 @@
 ! 2015-12-03 - Vincenzo Battista
  - First commit of "STSpilloverTool", which evaluates the likelihood ratio for each ST cluster on reco'ed tracks
    between the "signal" and the "spillover" hypothesis.
+	 Included a python directory with options to use it as well
 
 !========================= TrackTools v5r13 2015-11-23 =========================
 ! 2015-11-16 - Luigi Del Buono

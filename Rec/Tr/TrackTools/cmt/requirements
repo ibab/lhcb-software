@@ -7,7 +7,7 @@ version           v5r13
 
 # Structure, i.e. directories to process. 
 #=====================================================================
-branches          cmt doc src
+branches          cmt doc src python
 include_path      none
 
 # Used packages
