@@ -4,6 +4,8 @@
 ! Purpose     : Tools for Herschel
 !-----------------------------------------------------------------------------
 
+!================= DecayTreeTupleHerschel v1r2 2015-12-03 ====================
+
 ! 2015-12-03 - Dan Johnson
  - Small improvements (no rush to release)
   * Remove #include of ToolFactory.h
