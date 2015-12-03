@@ -1,7 +1,6 @@
 // Include files
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "Event/ODIN.h"
 #include "Event/HCDigit.h"
 // from LHCb
@@ -50,6 +49,8 @@ TupleToolHerschel::TupleToolHerschel( const std::string& type,
 StatusCode TupleToolHerschel::initialize() {
   StatusCode sc = TupleToolBase::initialize();
   if ( sc.isFailure() ) return sc;
+  // Temporary warning until default CorrectedDigits location is defined
+  warning() << "No default HCDigits location has yet been defined -- beware" << endmsg;
   // Set up the mapping
   m_channels.resize(5);
   m_masked.resize(5);
@@ -189,7 +190,6 @@ StatusCode TupleToolHerschel::fill( Tuples::Tuple& tup )
   // Get Herschel digits.
 //  LHCb::HCDigits* digits = getIfExists<LHCb::HCDigits>(LHCb::HCDigitLocation::Default);
   LHCb::HCDigits* digits = getIfExists<LHCb::HCDigits>(m_DigitsLocation);
-  warning() << "No default HCDigits location has yet been defined -- beware" << endmsg;
   if ( !digits ) {
     // should always be available ...
     return Error( "Cannot load the HCDigits data object", StatusCode::SUCCESS );
