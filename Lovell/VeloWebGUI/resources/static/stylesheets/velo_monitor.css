@@ -57,6 +57,17 @@ sidebar .sensor-detail {
   padding-top: 10px;
 }
 
+.label-plot-help {
+  background: #eee;
+  color: #fff;
+  /* These help labels open a modal dialog, so look like a link */
+  cursor: pointer;
+}
+
+.label-plot-help:hover {
+  background: #d5d5d5;
+}
+
 /* @endgroup Main content */
 
 /* Insert a thin space before units of measurement */
