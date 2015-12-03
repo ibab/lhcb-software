@@ -60,7 +60,7 @@ default_config = {
         # B -> K mu X
         'KMuVChi2Dof'      : 4.    ,# adimensional
         'KMuFdChi2'        : 100.  ,# adimensional
-        'KMuMassMin'       : 1000. ,# MeV
+        'KMuMassMin'       : 1800. ,# MeV
         'KMuMassMax'       : 5500. ,# MeV
 
         # B -> K Jpsi

@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-03 - Jianchun Wang
+  - Tighten selection criteria in Bs2st2KKMuX lines
+
 ! 2015-12-03 - Giacomo Graziani
   - added RelatedInfo from RelInfoMuonIsolation for PID calibration lines
 
