@@ -22,6 +22,9 @@ def tobject_formatter(tobject):
     data -- Data returned by the formatter appropriate for the class
     A TypeError is raised if a formatter cannot be found for the object.
     """
+    if tobject is None:
+        return dict(success=False, data={})
+
     obj_class = tobject.ClassName()
     if obj_class.startswith("TH1") or obj_class == "TProfile":
         data = th1_formatter(tobject)
