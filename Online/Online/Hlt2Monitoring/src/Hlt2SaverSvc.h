@@ -41,7 +41,7 @@ public:
    virtual ~Hlt2SaverSvc( ); ///< Destructor
 
    // Service pure virtual member functions
-   virtual StatusCode initialize();
+   virtual StatusCode initialize() override;
 
    virtual void function() override;
 

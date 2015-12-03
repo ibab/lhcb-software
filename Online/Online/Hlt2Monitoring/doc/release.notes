@@ -4,6 +4,9 @@
 ! Purpose     : Online monitoring of Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-12-03 - Roel Aaij
+ - Fix clang warnings
+
 ! 2015-11-05 - Roel Aaij
  - Make configuration script a bit more configurable and add test script.
 

@@ -48,7 +48,7 @@ namespace {
    using std::pair;
    using std::make_pair;
    using std::map;
-   
+
    using Monitoring::Chunk;
    using Monitoring::Histogram;
    using Monitoring::entry_t;
@@ -326,7 +326,7 @@ void Hlt2SaverSvc::saveHistograms() const
          it->second.insert(make_pair(string{histo->GetName()}, entry.type));
       }
    }
-   
+
    // Write ROOT histograms to file
    // Loop over runs
    for (const auto run : runs) {
@@ -393,9 +393,9 @@ void Hlt2SaverSvc::saveHistograms() const
          outDir->WriteTObject(histo, histo->GetName());
          debug() << "Saved " << entry.dir << "/" << histo->GetName() << endmsg;
 
-         // Write map of histogram 
-         
-         
+         // Write map of histogram
+
+
          // Reset all histograms that are not the normalization histogram
          if (histo != norm) {
             histo->Reset("ICESM");
@@ -459,7 +459,7 @@ array<string, 6> Hlt2SaverSvc::timeInfo(unsigned int run) const
 {
    auto info = runInfo(run);
    if (!info) {
-      return {"", "", "", "", "", ""};
+      return {{"", "", "", "", "", ""}};
    }
 
    using clock_t = std::chrono::high_resolution_clock;
@@ -469,9 +469,9 @@ array<string, 6> Hlt2SaverSvc::timeInfo(unsigned int run) const
    std::tm* start = gmtime(&t);
 
    auto fmt = [](int t)->string { return (boost::format("%02d") % t).str(); };
-   return {to_string(start->tm_year + 1900),
-           fmt(start->tm_mon + 1), fmt(start->tm_mday),
-           fmt(start->tm_hour), fmt(start->tm_min), fmt(start->tm_sec)};
+   return {{to_string(start->tm_year + 1900),
+            fmt(start->tm_mon + 1), fmt(start->tm_mday),
+            fmt(start->tm_hour), fmt(start->tm_min), fmt(start->tm_sec)}};
 }
 
 //===============================================================================

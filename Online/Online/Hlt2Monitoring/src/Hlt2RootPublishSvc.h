@@ -35,7 +35,7 @@ public:
    virtual ~Hlt2RootPublishSvc( ); ///< Destructor
 
    // Service pure virtual member functions
-   virtual StatusCode initialize();
+   virtual StatusCode initialize() override;
 
    virtual void function() override;
 
@@ -55,7 +55,7 @@ private:
    typedef std::pair<Monitoring::RunNumber, Monitoring::HistId> histoKey_t;
    typedef std::pair<std::string, Gaudi::Histo1DDef> histoValue_t;
    typedef boost::unordered_map<histoKey_t, histoValue_t> histoMap_t;
-   
+
    histoMap_t m_defs;
    histoMap_t m_rates;
    boost::unordered_map<Monitoring::RunNumber, int> m_startTimes;

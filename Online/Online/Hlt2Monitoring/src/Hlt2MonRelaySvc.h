@@ -27,7 +27,7 @@ public:
    virtual ~Hlt2MonRelaySvc();
 
    // Service pure virtual member functions
-   virtual StatusCode initialize();
+   virtual StatusCode initialize() override;
 
    // define the function to run in the thread
    virtual void function() override;
@@ -41,7 +41,7 @@ private:
    std::string m_hostRegex;
    std::string m_captureCon;
    bool m_capture;
-   
+
 };
 
 #endif // HLT2MONRELAYSVC_H

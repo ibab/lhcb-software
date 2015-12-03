@@ -43,7 +43,7 @@ public:
    virtual ~Hlt2HistPublishSvc( ); ///< Destructor
 
    // Service pure virtual member functions
-   virtual StatusCode initialize();
+   virtual StatusCode initialize() override;
 
    virtual void function() override;
 
@@ -61,6 +61,6 @@ private:
 
    SmartIF<IMonitorSvc> m_monitorSvc;
    SmartIF<IHistogramSvc> m_histoSvc;
-   
+
 };
 #endif // HLT2HISTPUBLISHSVC_H

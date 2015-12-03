@@ -281,7 +281,7 @@ bool Hlt2MonInfoSvc::histoInfoRequest(zmq::socket_t& inf) const
 
    debug() << "Sending info reply: " << run << " " << id << " |";
    // Send reply
-   array<string, 4> rep = {known, type, reply};
+   array<string, 4> rep = {{known, type, reply}};
    for (auto it = begin(rep), last = end(rep); it != last; ++it) {
       debug() << *it << "|";
       send(inf, *it, (it != (last -1) ? ZMQ_SNDMORE : 0));
@@ -314,7 +314,7 @@ bool Hlt2MonInfoSvc::runInfoRequest(zmq::socket_t& inf) const
    }
 
    debug() << "Sending info reply: |";
-   array<string, 2> rep = {known, reply};
+   array<string, 2> rep = {{known, reply}};
    for (auto it = begin(rep), last = end(rep); it != last; ++it) {
       debug() << *it << "|";
       send(inf, *it, (it != (last - 1) ? ZMQ_SNDMORE : 0));

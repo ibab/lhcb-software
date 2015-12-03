@@ -34,7 +34,7 @@ public:
    virtual ~Hlt2AdderSvc( ); ///< Destructor
 
    // Service pure virtual member functions
-   virtual StatusCode initialize();
+   virtual StatusCode initialize() override;
 
    // The function that does the work
    void function() override;

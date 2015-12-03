@@ -33,7 +33,7 @@ public:
    virtual ~Hlt2MonInfoSvc();
 
    // Service pure virtual member functions
-   virtual StatusCode initialize();
+   virtual StatusCode initialize() override;
 
    virtual void function() override;
 
@@ -44,7 +44,7 @@ private:
 
    bool histoInfoRequest(zmq::socket_t& inf) const;
    bool runInfoRequest(zmq::socket_t& inf) const;
-   
+
    // properties
    std::string m_hostRegex;
 
