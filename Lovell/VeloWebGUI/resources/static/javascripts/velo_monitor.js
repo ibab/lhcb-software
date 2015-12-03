@@ -84,7 +84,8 @@ var VeloMonitor = (function(window, undefined) {
     }
   };
 
-  // Load the plot(s) returned by the job 'runview.plots.get_run_plot' in to container.
+  // Load the plot(s) returned by the job
+  // 'runview.plots.get_run_plot_with_reference' in to container.
   // Accepts:
   //   args: Object of keyword arguments to pass to the job
   //   opts: Drawing options passed to appropriate d3.plotable
