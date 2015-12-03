@@ -934,9 +934,9 @@ void PresenterPage::rescaleHists()
     double ymin = 1.0e100;
     double ymax = -1.0e100;
     DisplayHistogram *dhist;
-    TH1 *rh;
-    TGraph *tg;
-    TAxis *ax;
+    TH1    *rh = 0;
+    TGraph *tg = 0;
+    TAxis  *ax = 0;
     for (auto hpit = histsonpad->begin();hpit!= histsonpad->end();hpit++)
     {
       OnlineHistogram *oh;
@@ -951,6 +951,11 @@ void PresenterPage::rescaleHists()
       else if (rh != 0)
       {
         ax = rh->GetYaxis();
+      }
+      else
+      {
+	std::cout << "Cannot determine Xmin/Xmax for histogram. [Ignored]" << std::endl;
+	continue;
       }
       double axymin = ax->GetXmin();
       double axymax = ax->GetXmax();
@@ -1012,6 +1017,12 @@ void PresenterPage::rescaleHists()
       {
         ax = rh->GetYaxis();
       }
+      else
+      {
+	std::cout << "Cannot determine user Range for histogram. [Ignored]" << std::endl;
+	continue;
+      }
+      std::cout << "Setting user Range ("<<pxmin<<","<<pxmax << ") for "<<dh->rootName()<<std::endl;
       xmin = ax->GetXmin();
       xmax = ax->GetXmax();
       if (pxmin > xmin)pxmin=xmin;
@@ -1022,7 +1033,7 @@ void PresenterPage::rescaleHists()
     {
       TH1 *rh;
       TGraph *tg;
-      TAxis *ax;
+      TAxis *ax = 0;
       dh = *jt;
       rh = dh->rootHist();
       tg=dh->graph();
@@ -1038,18 +1049,21 @@ void PresenterPage::rescaleHists()
         rh->SetMaximum(pxmax);
         ax = rh->GetYaxis();
       }
+      else
+      {
+	std::cout << "Cannot determine user Range for histogram. [Ignored]" << std::endl;
+	continue;
+      }
       std::cout << "Setting user Range ("<<pxmin<<","<<pxmax << ") for "<<dh->rootName()<<std::endl;
       ax->SetRangeUser(pxmin,pxmax);
       ax->SetLimits(pxmin,pxmax);
     }
     for (auto jt=v->begin();jt!=v->end();jt++)
     {
-      TH1 *rh;
-      TGraph *tg;
-      TAxis *ax;
       dh = *jt;
-      rh = dh->rootHist();
-      tg=dh->graph();
+      TH1 *rh = dh->rootHist();
+      TGraph *tg = dh->graph();
+      TAxis *ax = 0;
       if (tg != 0)
       {
         ax=tg->GetYaxis();
@@ -1057,6 +1071,11 @@ void PresenterPage::rescaleHists()
       else if (rh != 0)
       {
         ax = rh->GetYaxis();
+      }
+      else
+      {
+	std::cout << "Cannot determine Min/Max Y for histogram. [Ignored]" << std::endl;
+	continue;
       }
       xmin = ax->GetXmin();
       xmax = ax->GetXmax();

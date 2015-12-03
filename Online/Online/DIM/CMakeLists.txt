@@ -22,7 +22,7 @@ gaudi_add_library(dim
                   PUBLIC_HEADERS dim/.
                   INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/dim
                   LINK_LIBRARIES ${CMAKE_DL_LIBS} -lrt)
-set_property(TARGET dim APPEND PROPERTY COMPILE_FLAGS -Wno-unused-parameter)
+set_property(TARGET dim APPEND PROPERTY COMPILE_FLAGS -Wno-unused)
 
 macro(dim_exe name)
   gaudi_add_executable(${name} ${ARGN} LINK_LIBRARIES dim)
