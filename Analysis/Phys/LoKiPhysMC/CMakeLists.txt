@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LoKiPhysMC
 ################################################################################
-gaudi_subdir(LoKiPhysMC v9r10)
+gaudi_subdir(LoKiPhysMC v9r11)
 
 gaudi_depends_on_subdirs(Event/LinkerEvent
                          Kernel/Relations
