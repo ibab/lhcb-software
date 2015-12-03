@@ -19,7 +19,9 @@ _selections = [
     "StrippingTrackEffDownMuon",
     "StrippingD02KPiPi0",
     "StrippingSigmacForPID",
-    "StrippingDstarD02KShhForTrackingEff"
+    "StrippingDstarD02KShhForTrackingEff",
+    "StrippingJPsiForSL",
+    "StrippingLowPtMuID"
  ]
 
 for _sel in _selections :

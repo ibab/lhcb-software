@@ -4,6 +4,10 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2015-12-03 - Greg Ciezarek
+	-	Added StrippingLowPtMuID.py
+	
 ! 2015-12-03 - Tim Williams
 	-	Added missing import to TestMyWGfromSettings_Run1.py
 
