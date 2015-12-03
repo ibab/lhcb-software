@@ -55,7 +55,7 @@ private:
   bool m_dohisto;
   bool m_expandRate;
   bool m_isSaver;
-  bool m_isEOR;
+//  bool m_isEOR;
   bool m_started;
   bool m_doPause;
   bool m_PauseOnEOR;

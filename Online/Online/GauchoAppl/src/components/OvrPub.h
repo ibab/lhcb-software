@@ -1,5 +1,5 @@
 #ifndef ONLINE_GAUCHO_OVRPUB_H
-#define ONLINE_GAUCHO_OVRPUBB_H
+#define ONLINE_GAUCHO_OVRPUB_H
 
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IToolSvc.h"

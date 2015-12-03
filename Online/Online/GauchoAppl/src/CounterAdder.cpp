@@ -207,6 +207,11 @@ void CounterAdder::Update()
   ////printf(" %d %d\n", m_received,expected);
   if (m_outservice != 0)
   {
+    if (m_DebugOn)
+    {
+      ::lib_rtl_output(LIB_RTL_INFO,"++++++CounterAdder: Updating Output Service %s for Adder %s++++++\n",
+          m_outservice->getName(),m_name.c_str());
+    }
     m_outservice->Serialize();
     m_outservice->Update();
   }
