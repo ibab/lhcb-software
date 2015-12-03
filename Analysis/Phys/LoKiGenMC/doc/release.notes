@@ -14,6 +14,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+!========================= LoKiGenMC v9r3 2015-12-03 ==========================
+
 ! 2015-11-02 - Gerhard Raven
  - replace LoKi::select with std::copy_if
  - prefer not to compare (smart)pointers to 0
