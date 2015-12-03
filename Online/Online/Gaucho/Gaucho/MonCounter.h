@@ -13,7 +13,7 @@ public:
   CntrDescr(){ptr = 0;}
   ~CntrDescr(){deallocPtr(ptr);}
   std::string name;
-  int type;
+  unsigned int type;
   int i_data;
   long long l_data;
   float f_data;

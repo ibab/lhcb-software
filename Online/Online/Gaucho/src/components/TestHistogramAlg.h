@@ -12,7 +12,7 @@
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/Incident.h"
 
-class IHistogram1D;
+//class IHistogram1D;
 class TestHistogramAlg: public GaudiHistoAlg, virtual public IIncidentListener
 {
   public:
