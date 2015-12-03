@@ -1,12 +1,12 @@
 package PhysSys
-version v20r2
+version v20r3
 
 branches doc cmt
 
 #===================================================================
 
 use  DaVinciInterfaces          v2r25    Phys    # Current DV Maintainer
-use  DaVinciTypes               v2r14    Phys    # Current DV Maintainer
+use  DaVinciTypes               v2r15    Phys    # Current DV Maintainer
 use  DaVinciUtils               v1r1p1   Phys    # Current DV Maintainer
 use  DaVinciKernel              v12r3    Phys    # Current DV Maintainer
 use  SelectionLine              v1r6     Kernel  # Gerhard Raven
@@ -16,10 +16,10 @@ use  PhysSelPython              v9r8     PhysSel # Current DV Maintainer
 #===================================================================
 
 use  PhysConf                   v1r30    Phys    # Patrick Koppenburg
-use  ProtoParticleFilter        v1r8     Phys    # Current DV Maintainer
+use  ProtoParticleFilter        v1r9     Phys    # Current DV Maintainer
 use  DaVinciTransporter 	v3r13    Phys    # Current DV Maintainer
-use  ParticleMaker      	v6r16    Phys    # Current DV Maintainer
-use  VertexFit			v6r22    Phys    # Yuehong Xie
+use  ParticleMaker      	v6r17    Phys    # Current DV Maintainer
+use  VertexFit			v6r23    Phys    # Yuehong Xie
 use  LoKiFitters                v4r18    Phys    # Vanya Belyaev
 use  DecayTreeFitter            v1r22    Phys    # Wouter Hulsbergen
 use  PhysDict                   v4r2p4   Phys    # Current DV Maintainer
@@ -29,27 +29,27 @@ use  BBDecTreeTool              v1r8     Phys    # Mike Williams
 #===================================================================
 
 use  DaVinciTools       	v24r4    Phys    # DaVinci coordinator
-use  RelatedInfoTools           v1r3     Phys    # Anton Poluektov
-use  ExtraInfoTools             v1r1     Phys    # Anton Poluektov
-use  ParticleCombiners          v1r4     Phys    # Chris Jones
-use  DaVinciPVTools             v1r2     Phys    # Chris Jones
-use  DaVinciFilters             v1r3     Phys    # DaVinci coordinator
-use  DaVinciDecayFinder         v1r1     Phys    # DaVinci coordinator
-use  TopologicalTools           v1r1     Phys    # Mike Williams et. al.
+use  RelatedInfoTools           v1r4     Phys    # Anton Poluektov
+use  ExtraInfoTools             v1r2     Phys    # Anton Poluektov
+use  ParticleCombiners          v1r5     Phys    # Chris Jones
+use  DaVinciPVTools             v1r3     Phys    # Chris Jones
+use  DaVinciFilters             v1r4     Phys    # DaVinci coordinator
+use  DaVinciDecayFinder         v1r3     Phys    # DaVinci coordinator
+use  TopologicalTools           v1r2     Phys    # Mike Williams et. al.
 use  DaVinciOverlapsAndClones   v1r1     Phys    # DaVinci coordinator
 use  DaVinciNeutralTools        v1r1     Phys    # CALO Group
 
 #===================================================================
 
 use  LoKiUtils                  v1r3p1   Phys    # Vanya Belyaev
-use  LoKiJets                   v6r13    Phys    # Vanya Belyaev, Victor Coco
+use  LoKiJets                   v6r14    Phys    # Vanya Belyaev, Victor Coco
 use  LoKiAlgo                   v9r10    Phys    # Vanya Belyaev
-use  LoKiArrayFunctors          v11r4    Phys    # Vanya Belyaev
-use  LoKiPhys                   v11r4    Phys    # Vanya Belyaev
-use  LoKiProtoParticles         v3r1     Phys    # Vanya Belyaev
+use  LoKiArrayFunctors          v11r5    Phys    # Vanya Belyaev
+use  LoKiPhys                   v11r6    Phys    # Vanya Belyaev
+use  LoKiProtoParticles         v3r2     Phys    # Vanya Belyaev
 use  LoKi                       v9r0p1   Phys    # Vanya Belyaev
-use  LoKiTracks                 v3r3     Phys    # Vanya Belyaev
-use  KalmanFilter               v1r14    Phys    # Vanya Belyaev
+use  LoKiTracks                 v3r4     Phys    # Vanya Belyaev
+use  KalmanFilter               v1r15    Phys    # Vanya Belyaev
 
 #===================================================================
 
@@ -69,8 +69,8 @@ use FlavourTagging              v14r1    Phys   # Flavour tagging coordinators
 
 #===================================================================
 
-use JetAccessories              v3r14    Phys   # Victor Coco, Cedric Potterat
-use JetTagging                  v1r8     Phys   # Cedric Potterat
+use JetAccessories              v3r15    Phys   # Victor Coco, Cedric Potterat
+use JetTagging                  v1r10    Phys   # Cedric Potterat
 
 #===================================================================
 

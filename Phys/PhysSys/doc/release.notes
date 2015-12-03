@@ -3,6 +3,82 @@ Package             : PhysSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v20r3>2015-12-03 Phys v20r3</A></H1><PRE>
+Release of two kinds :
+- Development release for 2016 data taking.
+- Production release for the incremental restripping of Run-I data (S21r0p1 for 2012 and S21r1p1 for 2011).
+It is based on Gaudi v26r4, LHCb v39r2 and Rec v18r3 and uses LCG_79 with ROOT 6.04.02.
+
+- Packages updated :
+  Phys/DaVinciDecayFinder v1r3, Phys/DaVinciFilters v1r4, Phys/DaVinciPVTools v1r3,
+  Phys/DaVinciTypes v2r15, Phys/ExtraInfoTools v1r2, Phys/JetAccessories v3r15, Phys/JetTagging v1r10,
+  Phys/KalmanFilter v1r15, Phys/LoKiArrayFunctors v11r5, Phys/LoKiJets v6r14, Phys/LoKiPhys v11r6,
+  Phys/LoKiProtoParticles v3r2, Phys/LoKiTracks v3r4, Phys/ParticleCombiners v1r5, Phys/ParticleMaker v6r17,
+  Phys/ProtoParticleFilter v1r9, Phys/RelatedInfoTools v1r4, Phys/TopologicalTools v1r2, Phys/VertexFit v6r23.
+
+- In Phys/DaVinciFilters v1r4 :
+  . Replace LoKi::select with std::copy_if and replace endreq with endmsg.
+  . Pprefer range-based loops.
+  . Avoid comparing (smart)pointers to 0 or NULL.
+  . Prefer emplace over insert.
+
+- In Phys/DaVinciTypes v2r15 :
+ . New variables in RelatedInfoNamed enum for Muon isolation.
+ . Add new variables to RelatedInfoNamed enum.
+
+- In Phys/ExtraInfoTools v1r2 :
+  . ConeVariablesForEW: use LHCb::Particle::Range instead of LHCb::Particles to read from the TES
+    (and range-based for loop to iterate over the container).
+  . Replace endreq with endmsg.
+
+- In Phys/JetTagging v1r10 :
+  . Modification in BDTTag, remvoing the "erase" of Particle from the TES.
+  . Remove MC associations headers.
+  . Preapre the move from the ANALYSIS to the PHYS project.
+    . Move all Truth Tagger to JetAccessoresMC.
+    . Remove all MC related package.
+
+- In Phys/KalmanFilter v1r15 :
+  . Fix nDoF for "rho+"-like particles was set to zero.. formally should be -1.
+  . Fix clang error.
+
+- In Phys/LoKiArrayFunctors v11r5 :
+  . Replace endreq with endmsg.
+  . Replace LoKi::select with std::copy_if.
+
+- In Phys/LoKiPhys v11r6 :
+  .  Add class MissingDNeutrino in LoKi cuts.
+
+- In Phys/LoKiProtoParticles v3r2 :
+  . Replace LoKi::select with std::copy_if.
+  . Aavoid comparing (smart)pointers to 0.
+  . Pprefer std::accumulate over raw loop.
+
+- In Phys/LoKiTracks v3r4 :
+  . Replace LoKi::select with std::copy_if. 
+
+- In Phys/RelatedInfoTools v1r4 :
+  . Make RelInfoConeVariables usable in HLT:
+    * "Inputs" property should now be used, which takes the list of track locations,
+       instead of "TracksLocation" which takes a single location. By default, Inputs
+       equals to all tracks in the event.
+  . Use unique_ptr for selectors in AddRelatedInfo.
+  . Replace endreq with endmsg.
+  . Add flag "IgnoreUnmatchedDescriptors" to AddRelatedInfo. Setting it to "true" will make AddRelatedInfo
+    silently ignore the descriptors in DaughterLocations which do not match any daughter particles
+    (rather than stopping with FAILURE).
+  . Add RelInfoConeIsolation tool: converted from TupleToolConeIsolation. There is some overlap of functionality
+    with RelInfoConeVariables, but ConeIsolation offers additional variables and also neutral cones.
+    After making sure that ConeVariables and ConeIsolation produce the same results on charged cones,
+    we need to migrate to ConeIsolation.
+
+- In Phys/TopologicalTools v1r2 :
+  . Soft-code the Hlt requirement in DoubleTopoTool, HighPtTopoTool. Such that it's compatible with Run2 S24.
+  . Replace endreq with endmsg.
+
+- For all other packages :
+  . Simple replacement of endreq with endmsg.
+
 ! 2015-11-04 - Eduardo Rodrigues
  - Package Phys/JetTagging moved from the Analysis to this (Phys) project.
 
