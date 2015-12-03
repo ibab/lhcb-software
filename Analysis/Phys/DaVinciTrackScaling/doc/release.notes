@@ -4,6 +4,9 @@
 ! Purpose     : Track scaling and smearing
 !-----------------------------------------------------------------------------
 
+! 2015-12-03 - Vanya Belyaev
+ - update for scripts 
+
 !=================== DaVinciTrackScaling v1r5 2015-11-27 =====================
 
 ! 2015-11-01 - Gerhard Raven

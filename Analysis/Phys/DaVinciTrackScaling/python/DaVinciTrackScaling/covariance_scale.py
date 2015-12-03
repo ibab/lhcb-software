@@ -33,7 +33,7 @@ print __doc__
 print 100*'*'
 # ============================================================================
 import ROOT 
-from   AnalysisPython.PyRoUts import hID,h1_axis 
+from   Ostap.PyRoUts import hID,h1_axis 
 
 # =============================================================================
 ## get the data 

@@ -52,7 +52,7 @@ print __doc__
 print 100*'*'
 # ============================================================================
 import ROOT 
-from   AnalysisPython.PyRoUts import h1_axis,VE
+from   Ostap.PyRoUts import h1_axis,VE
 
 
 # =============================================================================

@@ -152,7 +152,7 @@
  *
  *  The dedicated script calib.py is provided for :
  *   - conversion of run off-set table into offset-histo
- *   - converison of histos into CONDB format
+ *   - conversion of histos into CONDB format
  *
  *  Other cross-checks: Track slope test:
  *  
