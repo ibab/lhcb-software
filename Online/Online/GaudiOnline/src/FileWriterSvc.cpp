@@ -56,15 +56,23 @@ extern "C"
       tis->LockList();
       i = tis->m_FileCloseList.begin();
       time_t now = time(0);
+//      ::lib_rtl_output(LIB_RTL_INFO,"Running through list of files to be deleted\n");
       while (i != tis->m_FileCloseList.end())
       {
+//        ::lib_rtl_output(LIB_RTL_INFO,"Found File %s now = %d closeAt = %d \n",
+//            (*i)->m_FileName.c_str(),now, (*i)->m_CloseAt);
         if (now > (*i)->m_CloseAt)
         {
+          ::lib_rtl_output(LIB_RTL_INFO,"Closing File %s\n",(*i)->m_FileName.c_str());
           close ((*i)->m_Handle);
+          tis->m_FileCloseList.erase(i);
+          i = tis->m_FileCloseList.begin();
+          delete (*i);
         }
-        delete (*i);
-        tis->m_FileCloseList.erase(i);
-        i = tis->m_FileCloseList.begin();
+        else
+        {
+          i++;
+        }
       }
       tis->UnlockList();
       sleep(10);
@@ -450,6 +458,7 @@ void FileWriterSvc::Markclose(FileWriter::FileDescr* d)
 {
   d->m_CloseAt = time(0)+m_FileCloseDelay;
   LockList();
+  ::lib_rtl_output(LIB_RTL_INFO,"Marking File for delete:%s\n",d->m_FileName.c_str());
   this->m_FileCloseList.push_back(d);
   UnlockList();
 }
