@@ -46,14 +46,14 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                  , 'DiMuonHighMass_GEC'       : 'Loose'
                  , 'DiMuonNoL0_VxDOCA'     :  0.2
                  , 'DiMuonNoL0_VxChi2'     :   25.
-                 , 'DiMuonNoL0_P'          : 3000.
-                 , 'DiMuonNoL0_PT'         :    5000.
-                 , 'DiMuonNoL0_IP'         :    100
-                 , 'DiMuonNoL0_TrChi2'     :    2.
+                 , 'DiMuonNoL0_P'          :  3000.
+                 , 'DiMuonNoL0_PT'         :    80.
+                 , 'DiMuonNoL0_IP'         :    0.3 
+                 , 'DiMuonNoL0_TrChi2'     :    4.
                  , 'DiMuonNoL0_M'          :    0.
                  , 'DiMuonNoL0_MSS'        : 220.   
                  , 'DiMuonNoL0_IPChi2'     :    9.
-                 , 'DiMuonNoL0_GEC'        : 'Loose'
+                 , 'DiMuonNoL0_GEC'        : 'Tight'
                  , 'MultiMuonNoL0_P'          : 6000.
                  , 'MultiMuonNoL0_PT'         :  5000.
                  , 'MultiMuonNoL0_IP'         :    100.
@@ -76,7 +76,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                  , 'L0Channels'               : { 'SingleMuonHighPT' : ( 'Muon', 'MuonEW' ),
                                                   'SingleMuonNoIP'   : ( 'Muon', ),
                                                   'DiMuonLowMass'    : ( 'Muon', 'DiMuon' ),
-                                                  'DiMuonNoL0'       : None,
+                                                  'DiMuonNoL0'       : ('Muon','DiMuon','Hadron','Photon', 'Electron'),
                                                   'DiMuonHighMass'   : ( 'Muon', 'DiMuon' ),
                                                   'MultiMuonNoL0'    : ( 'Muon', 'DiMuon' ),
                                                   'CalibMuonAlignJpsi'    : ( 'Muon', 'DiMuon' ),
@@ -86,7 +86,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                                                   'DiMuonLowMass'    : 5,
                                                   'DiMuonHighMass'   : 4,
                                                   'MultiMuonNoL0'    : 8,
-                                                  'DiMuonNoL0'       : 9,
+                                                  'DiMuonNoL0'       : 22,
                                                   'CalibMuonAlignJpsi'    : 9,
                                                   }
                  }
@@ -291,25 +291,23 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             Preambulo = self.diMuon_preambulo( properties ),
             Code = """
             VeloTTCandidates
-            >>  ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s * mm ) 
+            >>  ( (Tr_HLTMIP ( 'PV3D' ) > %(IP)s * mm) & ( TrPT > %(PT)s * MeV ) & ( TrP  > %(P)s  * MeV )  ) 
             >>  MatchVeloTTMuon
             >>  tee  ( monitor( TC_SIZE > 0, '# MatchMuon', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nMatched' , LoKi.Monitoring.ContextSvc ) )
             >>  ComplementForward
             >>  tee  ( monitor( TC_SIZE > 0, '# Complement', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nComp' , LoKi.Monitoring.ContextSvc ) )
-            >>  IsMuon
-            >>  tee  ( monitor( TC_SIZE > 0, '# pass IsMuon', LoKi.Monitoring.ContextSvc ) )
-            >>  tee  ( monitor( TC_SIZE , 'nIsMuon' , LoKi.Monitoring.ContextSvc ) )
             >>  FitTrack
             >>  tee  ( monitor( TC_SIZE > 0, '# pass fit', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nFitted' , LoKi.Monitoring.ContextSvc ) )
-            >>  ( ( TrPT > %(PT)s * MeV ) & ( TrP  > %(P)s  * MeV ) )
-            >>  tee  ( monitor( TC_SIZE , 'n after P/PT' , LoKi.Monitoring.ContextSvc ) )
-            >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )
             >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & ( Tr_HLTMIPCHI2( 'PV3D' ) > %(IPChi2)s ) )
-            >>  tee  ( monitor( TC_SIZE , 'n after Tr/IPChi2' , LoKi.Monitoring.ContextSvc ) )
-            >>  tee  ( monitor( TC_SIZE > 0, '# pass Tr/IPChi2', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'n after Tr/IPChi2' , LoKi.Monitoring.ContextSvc ) )                                                              
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass Tr/IPChi2', LoKi.Monitoring.ContextSvc ) ) 
+            >>  IsMuon 
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass IsMuon', LoKi.Monitoring.ContextSvc ) ) 
+            >>  tee  ( monitor( TC_SIZE , 'nIsMuon' , LoKi.Monitoring.ContextSvc ) )  
+            >>  tee  ( monitor( TC_SIZE > 1 , '# pass with TWO Muons' , LoKi.Monitoring.ContextSvc ) ) 
             >>  MakeDiMuons
             >>  tee  ( monitor( TC_SIZE > 0, '# pass vertex', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nVertices' , LoKi.Monitoring.ContextSvc ) )
