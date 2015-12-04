@@ -1,3 +1,8 @@
+2015-12-04  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* python/LbConfiguration/Package.py: LBCORE-991 Added new data package WG/PIDCalib
+
+
 2015-11-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* lb-dev: initialize git repository for created local projects and commit

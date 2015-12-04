@@ -61,7 +61,8 @@ package_names = ['XmlDDDB',
                  'HLTConfig',
                  'PGunsData',
                  'B2CCConfig',
-                 'TurboStreamProd']
+                 'TurboStreamProd',
+                 'PIDCalib']
 
 class PackageConfException(Exception):
     pass
@@ -374,3 +375,6 @@ B2CCConfig.setHat("WG")#IGNORE:E0602$
 B2CCConfig.setProject("DBASE")#IGNORE:E0602$
 
 TurboStreamProd.setProject("DBASE")#IGNORE:E0602
+
+PIDCalib.setHat("WG")#IGNORE:E0602$
+PIDCalib.setProject("DBASE")#IGNORE:E0602$
