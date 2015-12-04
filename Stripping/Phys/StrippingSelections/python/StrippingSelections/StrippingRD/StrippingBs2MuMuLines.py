@@ -26,6 +26,7 @@ __all__ = ('Bs2MuMuLinesConf',
            'makeBd',
            'makeSS',
            'makeBs2mmLTUB',
+           'makeBsst2mm',
            'makeBs2KKLTUB'
 #           'makeDetachedJPsi',
 #           'makeDetachedJPsiLoose',
@@ -49,6 +50,7 @@ default_config = {
     'JPsiPromptLinePrescale' : 0.005,
     'SSPrescale'             : 1 ,
     'Bs2mmLTUBLinePrescale'  : 1 ,
+    'Bsst2mmLinePrescale'  : 1 ,
     'Bs2KKLTUBLinePrescale' : 1 ,
     'MuIPChi2_loose'        :  9,
     'MuTrChi2_loose'        : 10,
@@ -59,6 +61,7 @@ default_config = {
     'daughter_IPChi2'            : 9,
 
     'TrackGhostProb'          : 0.40,
+    'TrackGhostProb_bsst'          : 0.30,
 
     'DOCA'                   : 0.3,
     'DOCA_loose'             :0.5,
@@ -70,6 +73,7 @@ default_config = {
 
     'daughter_TrChi2'                  :4,
     'daughter_TrChi2_LTUB'                    :4,
+    'daughter_TrChi2_bsst'                  :3,
 
     'B_Pt'                           :350,
     'B_Pt_LTUB'                      :500,
@@ -78,23 +82,29 @@ default_config = {
     'B_BPVIPChi2_LTUB'                :25,
 
     'B_minimum_decaytime_LTUB'           :0.6,
-    'muon_PT_LTUB'                          :40
+    'muon_PT_LTUB'                          :40,
+
+    'B_minimum_decaytime_bsst'           :0.0,
+    'B_maximum_decaytime_bsst'           :0.2,
+    'ProbNN'    :     0.4,
+    'SUMPT'     :     4500
     
     },
     'STREAMS' : {
-    'Dimuon' : ['StrippingBs2MuMuLinesNoMuIDLine',
-                'StrippingBs2MuMuLinesWideMassLine',
-                'StrippingBs2MuMuLinesBu2JPsiKLine'
-                ],
-    'Leptonic' : ['StrippingBs2MuMuLinesWideMassLine',
-                  'StrippingBs2MuMuLinesBs2JPsiPhiLine',
-                  'StrippingBs2MuMuLinesBs2KKLTUBLine',
-                  'StrippingBs2MuMuLinesNoMuIDLine',
-                  'StrippingBs2MuMuLinesSSLine',
-                  'StrippingBs2MuMuLinesBd2JPsiKstLine',
-                  'StrippingBs2MuMuLinesLTUBLine',
-                  'StrippingBs2MuMuLinesBu2JPsiKLine'
-                  ]
+      'Dimuon' : ['StrippingBs2MuMuLinesNoMuIDLine',
+                  'StrippingBs2MuMuLinesWideMassLine',
+                  'StrippingBs2MuMuLinesBu2JPsiKLine',
+                  'StrippingBs2MuMuLinesBsstLine'
+                  ],
+     'Leptonic' : ['StrippingBs2MuMuLinesWideMassLine',
+                   'StrippingBs2MuMuLinesBs2JPsiPhiLine',
+                   'StrippingBs2MuMuLinesBs2KKLTUBLine',
+                   'StrippingBs2MuMuLinesNoMuIDLine',
+                   'StrippingBs2MuMuLinesSSLine',
+                   'StrippingBs2MuMuLinesBd2JPsiKstLine',
+                   'StrippingBs2MuMuLinesLTUBLine',
+                   'StrippingBs2MuMuLinesBu2JPsiKLine'
+                   ]
     },
     
     }
@@ -200,10 +210,12 @@ class Bs2MuMuLinesConf(LineBuilder) :
                               'JPsiPromptLinePrescale',
                               'SSPrescale',
                               'Bs2mmLTUBLinePrescale',
+                              'Bsst2mmLinePrescale',
                               'Bs2KKLTUBLinePrescale',
                               'BPVVDChi2',
                               'daughter_IPChi2' ,
                               'TrackGhostProb',
+                              'TrackGhostProb_bsst',
                               'DOCA',
                               'DOCA_loose'  ,
                               'DOCA_LTUB',
@@ -212,12 +224,17 @@ class Bs2MuMuLinesConf(LineBuilder) :
                               'VCHI2_VDOF_loose',
                               'daughter_TrChi2',
                               'daughter_TrChi2_LTUB',
+                              'daughter_TrChi2_bsst',
                               'B_Pt',
                               'B_Pt_LTUB',
                               'B_BPVIPChi2',
                               'B_BPVIPChi2_LTUB',
                               'B_minimum_decaytime_LTUB',
-                              'muon_PT_LTUB'
+                              'muon_PT_LTUB',
+                              'B_minimum_decaytime_bsst',
+                              'B_maximum_decaytime_bsst',
+                              'ProbNN',
+                              'SUMPT'
                               )
 
 
@@ -237,6 +254,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
         bd_name=name+'Bd2JPsiKst'
         ss_name = name+'SS'
         ltub_name = name+'LTUB'
+        bsst_name = name+'Bsst'
         Bs2KKltub_name = name+'Bs2KKLTUB'
 
         self.selDefault = makeDefault(default_name,
@@ -319,7 +337,22 @@ class Bs2MuMuLinesConf(LineBuilder) :
                                      minimum_decaytime = config['B_minimum_decaytime_LTUB'],
                                      muon_PT = config['muon_PT_LTUB']
                                      )
-
+        
+        self.selbsst = makeBsst2mm(bsst_name,
+                                   TrackGhostProb = config['TrackGhostProb_bsst'],
+                                   DOCA = config['DOCA_LTUB'],
+                                   VCHI2_VDOF = config['VCHI2_VDOF_LTUB'],
+                                   TrChi2 = config['daughter_TrChi2_bsst'],
+                                   PID = config['ProbNN'],
+                                   SUMPT = config['SUMPT'],
+                                   B_Pt = config['B_Pt_LTUB'],
+                                   BPVIPChi2= config['B_BPVIPChi2_LTUB'],
+                                   minimum_decaytime = config['B_minimum_decaytime_bsst'],
+                                   maximum_decaytime = config['B_maximum_decaytime_bsst'],
+                                   muon_PT = config['muon_PT_LTUB']
+                                   )
+        
+        
         self.selBs2KKLTUB = makeBs2KKLTUB(Bs2KKltub_name,
                                           TrackGhostProb = config['TrackGhostProb'],
                                           DOCA = config['DOCA_LTUB'],
@@ -343,6 +376,9 @@ class Bs2MuMuLinesConf(LineBuilder) :
 
         stdjets_name_ban_LTUB = "StdJetsNoJetIDBanMuonsLTUB"
         stdjets_name_addb_LTUB = "StdJetsNoJetIDAddBLTUB"
+
+        stdjets_name_ban_bsst = "StdJetsNoJetIDBanMuonsbsst"
+        stdjets_name_addb_bsst = "StdJetsNoJetIDAddBbsst"
 
         stdjets_name_ban_KKLTUB = "StdJetsNoJetIDBanMuonsKKLTUB"
         stdjets_name_addb_KKLTUB = "StdJetsNoJetIDAddBKKLTUB"
@@ -875,6 +911,75 @@ class Bs2MuMuLinesConf(LineBuilder) :
             ]
                                     )
 
+        self.bsstLine = StrippingLine(bsst_name+"Line",
+                                    prescale = config['Bsst2mmLinePrescale'],
+                                    postscale = config['DefaultPostscale'],
+                                    MDSTFlag = True,
+                                    RequiredRawEvents = ["Muon", "Calo"],
+                                    algos = [ self.selbsst ],
+                                    RelatedInfoTools = [
+            { 'Type' : 'RelInfoJetsVariables',
+              'Location': 'RelatedInfoJets',
+              'Variables': ["JETNOMU1PX","JETNOMU1PY", "JETNOMU1PZ", "JETNOMU1PT", "JETNOMU1JETWIDTH", "JETNOMU1NNTAG", "JETNOMU1MNF", "JETNOMU2PX", "JETNOMU2PY", "JETNOMU2PZ", "JETNOMU2PT", "JETNOMU2JETWIDTH", "JETNOMU2NNTAG", "JETNOMU2MNF", "JETNOMU3PX", "JETNOMU3PY", "JETNOMU3PZ", "JETNOMU3PT", "JETNOMU3JETWIDTH", "JETNOMU3NNTAG", "JETNOMU3MNF", "JETMU1PX", "JETMU1PY", "JETMU1PZ", "JETMU1PT", "JETMU1JETWIDTH", "JETMU1NNTAG", "JETMU1MNF", "JETMU2PX", "JETMU2PY", "JETMU2PZ", "JETMU2PT", "JETMU2JETWIDTH", "JETMU2NNTAG", "JETMU2MNF", "JETBPX", "JETBPY", "JETBPZ", "JETBPT", "JETBJETWIDTH", "JETBNNTAG", "JETBMNF"],
+              'LocationJetsNoMu' : "Phys/"+stdjets_name_ban_bsst+"/Particles",
+              'LocationJetsNoRemove' : "Phys/"+stdjets_name_noban+"/Particles",
+              'LocationJetsForceB' : "Phys/"+stdjets_name_addb_bsst+"/Particles"},
+            { "Type" : "RelInfoBs2MuMuBIsolations"
+              , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUOTHERBTRACKS', 'BSMUMUPARTID','BSMUMUTOPID']
+              , "Location"  : "BSMUMUVARIABLES"},
+
+ 
+            { "Type" : "RelInfoBs2MuMuTrackIsolations"
+                      , "Variables" : [  'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKPLUSISOTWO' , 'ISOTWOBODYQPLUS', 'ISOTWOBODYMASSISOPLUS', 'ISOTWOBODYCHI2ISOPLUS', 'ISOTWOBODYISO5PLUS','BSMUMUTRACKID','BSMUMUTRACKTOPID' ]
+              ,"DaughterLocations" : {
+            "B*_s0 -> ^mu+ mu-" : "Muon1iso",
+            "B*_s0 -> mu+ ^mu-" : "Muon2iso" }
+             
+   
+              },
+            { "Type" : "RelInfoBs2MuMuZVisoBDT",
+              "Variables" : ['ZVISO'],
+              "Location"  : "RelInfoZVisoBDT"  
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "Variables" : 0,
+              "DaughterLocations" : {
+            "B*_s0 -> ^mu+ mu-" : "Muon1TrackIsoBDTInfo_0",
+            "B*_s0 -> mu+ ^mu-" : "Muon2TrackIsoBDTInfo_0" },
+              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT6varsA_v1r4.xml"
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "Variables" : 1,
+              "DaughterLocations" : {
+            "B*_s0 -> ^mu+ mu-" : "Muon1TrackIsoBDTInfo_1",
+            "B*_s0 -> mu+ ^mu-" : "Muon2TrackIsoBDTInfo_1" },
+              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT6varsB_v1r4.xml"
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "Variables" : 2,
+              "DaughterLocations" : {
+            "B*_s0 -> ^mu+ mu-" : "Muon1TrackIsoBDTInfo_2",
+            "B*_s0 -> mu+ ^mu-" : "Muon2TrackIsoBDTInfo_2" },
+              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT9vars_v1r4.xml"
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "Variables" : 3,
+              "DaughterLocations" : {
+            "B*_s0 -> ^mu+ mu-" : "Muon1TrackIsoBDTInfo_3",
+            "B*_s0 -> mu+ ^mu-" : "Muon2TrackIsoBDTInfo_3" },
+              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT13vars_v1r4.xml"
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "Variables" : 4,
+              "DaughterLocations" : {
+            "B*_s0 -> ^mu+ mu-" : "Muon1TrackIsoBDTInfo_4",
+            "B*_s0 -> mu+ ^mu-" : "Muon2TrackIsoBDTInfo_4" },
+              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT15vars_v1r4.xml"
+              }
+            ]
+                                    )
+
+
         self.Bs2KKltubLine = StrippingLine(Bs2KKltub_name+"Line",
                                     prescale = config['Bs2KKLTUBLinePrescale'],
                                     postscale = config['DefaultPostscale'],
@@ -948,6 +1053,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
         create_stdjets(self,self.ssLine.outputLocation(),stdjets_name_ban_SS, stdjets_name_addb_SS)
 
         create_stdjets(self,self.ltubLine.outputLocation(),stdjets_name_ban_LTUB, stdjets_name_addb_LTUB)
+        create_stdjets(self,self.bsstLine.outputLocation(),stdjets_name_ban_bsst, stdjets_name_addb_bsst)
         create_stdjets(self,self.Bs2KKltubLine.outputLocation(),stdjets_name_ban_KKLTUB, stdjets_name_addb_KKLTUB)
 
         
@@ -959,6 +1065,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
         self.registerLine(self.bdLine)
         self.registerLine(self.ssLine)
         self.registerLine(self.ltubLine)
+        self.registerLine(self.bsstLine)
         self.registerLine(self.Bs2KKltubLine)
 
 def makeDefault(name, BPVVDChi2, Muon_MIPChi2DV, TrackGhostProb, DOCA, VCHI2_VDOF, TrChi2 , B_Pt, BPVIPChi2) :
@@ -1313,6 +1420,48 @@ def makeBs2mmLTUB(name, TrackGhostProb, DOCA, VCHI2_VDOF, TrChi2, B_Pt, BPVIPChi
     return Selection (name,
                       Algorithm = Bs2MuMuLTUB,
                       RequiredSelections = [ _stdAllLooseMuons])
+
+def makeBsst2mm(name, TrackGhostProb, DOCA, VCHI2_VDOF, TrChi2, PID, SUMPT, B_Pt, BPVIPChi2, minimum_decaytime, maximum_decaytime, muon_PT) :
+    """
+    Lifetime unbiased Bs*2mumu selection object
+    starts from Phys/StdAllLooseMuons
+
+    Arguments:
+    name        : name of the Selection.
+    """
+    #from Configurables import OfflineVertexFitter
+    Bsst2mm = CombineParticles("Combine"+name)
+    Bsst2mm.DecayDescriptor = "B*_s0 -> mu+ mu-"
+    #Bsst2mm.addTool( OfflineVertexFitter )
+    #Bsst2mm.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
+    #Bsst2mm.OfflineVertexFitter.useResonanceVertex = False
+    Bsst2mm.ParticleCombiners.update( { "" : "LoKi::VertexFitter:PUBLIC"} )
+    Bsst2mm.ReFitPVs = True
+    Bsst2mm.DaughtersCuts = { "mu+" : "(PT > 500*MeV) & (TRCHI2DOF < %(TrChi2)s )"\
+                                    " & (0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1))"\
+                                    " & (PT < %(muon_PT)s*GeV)"\
+                                    " & (PROBNNmu > %(PID)s)" \
+                                    " & (P < 500*GeV)"\
+                                    " & ( TRGHOSTPROB <  %(TrackGhostProb)s )" % locals()}
+    
+    Bsst2mm.CombinationCut = "(ADAMASS('B_s0')<500*MeV)"\
+                             " & (ASUM(PT) > %(SUMPT)s)"\
+                             "& (AMAXDOCA('')<%(DOCA)s*mm)"% locals()
+
+    Bsst2mm.MotherCut = "(VFASPF(VCHI2/VDOF)<%(VCHI2_VDOF)s) "\
+                              "& (ADMASS('B_s0') < 500*MeV )"\
+                              "& (BPVIPCHI2()< %(BPVIPChi2)s) "\
+                              "& (BPVLTIME()>%(minimum_decaytime)s*ps)"\
+                              "& (BPVLTIME()<%(maximum_decaytime)s*ps)"\
+                              "& (PT >  %(B_Pt)s*MeV)"% locals()
+                             
+    _stdAllLooseMuons = DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")
+
+    return Selection (name,
+                      Algorithm = Bsst2mm,
+                      RequiredSelections = [ _stdAllLooseMuons])
+
+
 
 def makeBs2KKLTUB(name, TrackGhostProb, DOCA, VCHI2_VDOF, TrChi2, B_Pt, BPVIPChi2, minimum_decaytime, muon_PT) :
     """

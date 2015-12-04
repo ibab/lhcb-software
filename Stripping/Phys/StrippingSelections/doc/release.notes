@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-04 - Marco Santimaria
+  - Added Bs2MuMuLinesBsstLine to Bs2MuMuLines.py 
+
 ! 2015-12-03 - Jianchun Wang
   - Tighten selection criteria in Bs2st2KKMuX lines
 
