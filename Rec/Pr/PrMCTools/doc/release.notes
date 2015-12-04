@@ -3,6 +3,10 @@
 ! Responsible : Michel De Cian
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
+
+! 2015-12-04 Michel De Cian
+ - Add flag to PrChecker to switch between upgrade and non-upgrade location for LHCbID linker table.
+
 ! 2015-11-25  Renato Quagliani
  - Fix warning message for boole to double conversion in PrClustersResidual
 ! 2015-11-24  Renato Quagliani

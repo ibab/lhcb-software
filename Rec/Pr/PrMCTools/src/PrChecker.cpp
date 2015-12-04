@@ -30,6 +30,7 @@ DECLARE_ALGORITHM_FACTORY( PrChecker )
 //=============================================================================
 PrChecker::PrChecker( const std::string& name, ISvcLocator* pSvcLocator)
 : GaudiHistoAlg ( name , pSvcLocator ),
+  m_idLoc("Pr/LHCbID"),
   m_velo(NULL),
   m_forward(NULL),
   m_match(NULL),
@@ -77,7 +78,7 @@ PrChecker::PrChecker( const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty( "TriggerNumbers",     m_triggerNumbers       = false    );
   declareProperty( "UseElectrons",       m_useElectrons         = false    );
   declareProperty( "GhostProbCut",       m_ghostProbCut         = 1.0      );
-  
+  declareProperty( "Upgrade",            m_upgrade              = true     );
 
 }
 //=============================================================================
@@ -330,6 +331,10 @@ StatusCode PrChecker::initialize()
     (*itC)->setTriggerNumbers(m_triggerNumbers);
   }
 
+
+  if( !m_upgrade ) m_idLoc = "Pat/LHCbID";
+  
+
   return StatusCode::SUCCESS;
 }
 
@@ -376,7 +381,7 @@ StatusCode PrChecker::execute() {
   }
   
   //== Build a table (vector of vectors) of ids per MCParticle, indexed by MCParticle key.
-  AllLinks<LHCb::MCParticle> allIds( evtSvc(), msgSvc(), "Pr/LHCbID" );
+  AllLinks<LHCb::MCParticle> allIds( evtSvc(), msgSvc(), m_idLoc );
   std::vector< std::vector<int> > linkedIds;
   LHCb::MCParticle* part = allIds.first();
   while ( NULL != part ) {

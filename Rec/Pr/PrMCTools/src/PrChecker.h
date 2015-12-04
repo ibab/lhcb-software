@@ -25,6 +25,7 @@ class IHistoTool ;
  *  The output looks like:
  *
  *  prChecker.TrackType      INFO **** TrackType                        "nRecod tracks" tracks including                                                  "nGhosts" ghosts ["ghost rate" %], Event average   "ghost rate" % ****
+ *
  *  prChecker.TrackType      INFO                             type :    "nRecod & rectible tracks" from     "nRectible tracks" ["track efficiency" %]     "nClones" clones [ "cloneRate" %], purity: abc %, hitEff:  xzy %
  *
  *  with:
@@ -94,6 +95,8 @@ private:
   std::string m_upTracks;
   std::string m_bestTracks;
   
+  std::string m_idLoc;
+
   IPrCounter* m_velo;
   IPrCounter* m_forward;
   IPrCounter* m_match;
@@ -123,6 +126,7 @@ private:
   bool m_eta25cut;             
   bool m_triggerNumbers;
   bool m_useElectrons;
+  bool m_upgrade;
   
   double m_ghostProbCut;
 
