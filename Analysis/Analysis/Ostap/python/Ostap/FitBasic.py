@@ -1538,17 +1538,19 @@ class Convolution(object):
         #
         if useFFT :
             
-            nb = 20000
+            nb = 40000
             if hasattr ( self , 'cnv_sigma' ) :
                 dm  = mass.getMax() - mass.getMin()
                 dm /= self.cnv_sigma
-                nb  = max ( nb , 100 * int (  dm ) )
+                nb  = max ( nb , 100 * int (  dm ) ) 
                 logger.debug('Convolution: choose #bins %d' % nb )
                 
-            self.mass.setBins ( 20000 , 'cache' ) 
+            self.mass.setBins ( nb , 'cache' ) 
             self.pdf = ROOT.RooFFTConvPdf ( 'FFT'     + name ,
                                             'FFT(%s)' % name ,
                                             self.mass , self.orig_pdf , self.convolution )
+            self.pdf.setBufferFraction ( 0.25 )
+            
         else      :
             self.pdf = ROOT.RooNumConvPdf ( 'CNV'     + name ,
                                             'CNV(%s)' % name ,
