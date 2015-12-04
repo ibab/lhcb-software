@@ -31,8 +31,5 @@ find_package(ROOT)
 
 gaudi_add_module(TrackTools
                  src/*.cpp
-                 INCLUDE_DIRS GSL Event/DigiEvent OT/OTDAQ Tf/PatKernel Tr/TrackInterfaces
-                 LINK_LIBRARIES GSL CaloUtils MuonDetLib OTDetLib RichDetLib STDetLib VPDetLib VeloDetLib TrackEvent GaudiAlgLib GaudiGSLLib LHCbKernel PartPropLib RelationsLib MuonInterfacesLib STKernelLib TsaKernel TrackFitEvent TrackKernel)
-
-gaudi_add_library(INCLUDE_DIRS ROOT 
-	          LINK_LIBRARIES ROOT)
+                 INCLUDE_DIRS GSL ROOT Event/DigiEvent OT/OTDAQ Tf/PatKernel Tr/TrackInterfaces
+                 LINK_LIBRARIES GSL ROOT CaloUtils MuonDetLib OTDetLib RichDetLib STDetLib VPDetLib VeloDetLib TrackEvent GaudiAlgLib GaudiGSLLib LHCbKernel PartPropLib RelationsLib MuonInterfacesLib STKernelLib TsaKernel TrackFitEvent TrackKernel)
