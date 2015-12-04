@@ -4,7 +4,11 @@
 ! Purpose     : tuple tools for Muon PID calibration
 !-----------------------------------------------------------------------------
 
-!================== DecayTreeTupleMuonCalib v1r6 2015-11-30 ==================
+!================== DecayTreeTupleMuonCalib v1r6 2015-12-04 ==================
+
+! 2015-12-03 - Ricardo Vazquez Gomez
+ - Include extra options in TupleToolMuonVariables
+ - Add the TupleZVIso.cpp to the DecayTreeTupleMuonCalib package
 
 ! 2015-11-01 - Gerhard Raven
  - replace endreq with endmsg
