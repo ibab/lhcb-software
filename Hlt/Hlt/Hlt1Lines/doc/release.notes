@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+
+! 2015-12-04 - Jessica Prisciandaro
+ - Update of the Hlt1DiMuonNoL0 line
+
 ! 2015-11-04 - Roel Aaij
  - Swap IsMuon and TrackFit and the SharedMuonUnit to prevent tracks from being
    fitted again. They have already been fitted for other lines.
