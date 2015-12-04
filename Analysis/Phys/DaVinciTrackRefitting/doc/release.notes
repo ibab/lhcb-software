@@ -4,6 +4,9 @@
 ! Purpose     : Provide tools for refitting on DST
 !-----------------------------------------------------------------------------
 
+! 2015-12-04 - Paul Seyfert
+ - pack refitter into python function
+
 !=================== DaVinciTrackRefitting v2r2 2015-10-19 ===================
 
 ! 2015-09-06 - Paul Seyfert

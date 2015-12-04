@@ -87,7 +87,7 @@ RefitParticleTracks()
 from Gaudi.Configuration import *
 from GaudiConf import IOHelper
 IOHelper('ROOT').inputFiles([
-'root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/validation/Collision15/DIMUON.DST/00047284/0000/00047284_00000180_1.dimuon.dst'
+'root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision15/DIMUON.DST/00048460/0000/00048460_00000415_1.dimuon.dst'
 ], clear=True)
 
 
