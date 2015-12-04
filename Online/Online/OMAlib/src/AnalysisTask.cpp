@@ -44,6 +44,7 @@ AnalysisTask::AnalysisTask( const std::string& name,
   declareProperty ( "ForceOnlineEnv", m_forceOnlineEnv = false); // enable online tools (DIM, status checks) also in offline mode
   declareProperty ( "ChangeHistPadColors", m_padcolors = false);
   declareProperty ( "CheckDetectorStatus", m_checkStatus = true);
+  declareProperty ( "CleanupMessagesAtStartup", m_messageCleanup = false);
   //
   declareProperty ( "RICHclustersDir", m_RICHClDir= "/home/ryoung");
 }
@@ -82,9 +83,10 @@ StatusCode AnalysisTask::initialize() {
       return StatusCode::FAILURE;
     }
   }
-
   // use HistDB if requested
   openDBSession();
+
+  if(m_messageCleanup && m_doPublish) cleanupDIMMessages(); // to purge possible relic messages in Alarm Screen
 
   if( "default" != m_myRefRoot) {
     setRefRoot(m_myRefRoot);

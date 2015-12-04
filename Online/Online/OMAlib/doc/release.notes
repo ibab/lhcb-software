@@ -2,6 +2,10 @@
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
 
+! 2015-12-04 - GG
+- add possibility to cleanup relic messages on Alarm Screen at startup
+
+! ======== v5r0 ======================
 ! 2015-11-03 - Marco Clemencic
  - Fixed compilation with GaudiHive (see GAUDI-978).
 

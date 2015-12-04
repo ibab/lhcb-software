@@ -1,7 +1,7 @@
 ################################################################################
 # Package: OMAlib
 ################################################################################
-gaudi_subdir(OMAlib v5r0)
+gaudi_subdir(OMAlib v5r1)
 
 gaudi_depends_on_subdirs(GaudiAlg
                          Online/DIM

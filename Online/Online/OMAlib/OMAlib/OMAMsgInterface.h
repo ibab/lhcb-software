@@ -64,6 +64,7 @@ protected:
   void closeLog();
   void loadMessages();
   void updateMessages();
+  void cleanupDIMMessages();
   void setMsgStream(MsgStream* ms) { m_outs=ms;}  
   std::string m_savesetName;
   std::string m_taskname;

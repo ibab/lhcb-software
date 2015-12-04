@@ -12,8 +12,7 @@ class DBDrivenAnalysisTask : public AnalysisTask
 {
  public:
   DBDrivenAnalysisTask(const std::string& name, 
-                       ISvcLocator* pSvcLocator ) :
-    AnalysisTask( name, pSvcLocator ) {}
+                       ISvcLocator* pSvcLocator );
   virtual ~DBDrivenAnalysisTask ();
   virtual StatusCode initialize();
   virtual StatusCode analyze(std::string& SaveSet,

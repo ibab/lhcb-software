@@ -1,6 +1,7 @@
 // $Id: OMAMsgInterface.cpp,v 1.40 2010-10-22 10:54:28 ggiacomo Exp $
 #include <cstring>
 #include <sstream>
+#include <map>
 #include <algorithm>
 #include <time.h>
 #include "OnlineHistDB/OnlineHistDB.h"
@@ -166,6 +167,29 @@ void OMAMsgInterface::refreshMessageList(std::string& TaskName) {
       }
     }
     iM++;
+  }
+}
+
+void OMAMsgInterface::cleanupDIMMessages() {
+  if(!m_doPublish) return;
+  if(!m_dimSvc) return;
+  std::map< unsigned int, bool> activeMessage;
+  unsigned int maxId=0;
+  std::vector<OMAMessage*>::iterator iM = m_MessageStore.begin();
+  while( iM != m_MessageStore.end() ) {
+    unsigned int id=(*iM)->id();
+    if ((*iM)->isactive()) activeMessage[id] = true;
+    if (id>maxId) maxId=id;
+  }
+  for (unsigned int j=maxId+20; j>0; j++) {
+    if (NULL != m_outs) 
+      (*m_outs) << MSG::DEBUG << " cleaning alarm screen for message "<<j<< endmsg;
+    if(activeMessage[j]) continue;
+    std::stringstream svcContent;
+    svcContent << OMAMessage::WARNING <<  "/CLEAR/" << j;
+    updateDIMservice(svcContent.str());
+    svcContent << OMAMessage::ALARM <<  "/CLEAR/" << j;
+    updateDIMservice(svcContent.str());
   }
 }
 

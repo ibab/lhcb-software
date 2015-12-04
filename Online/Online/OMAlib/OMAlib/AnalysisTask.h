@@ -55,6 +55,8 @@ protected:
   std::string m_RICHClDir;
   bool m_stayHere;
   bool m_checkStatus;
+  bool m_messageCleanup;
+
   std::vector<DimInfo*> m_statusInfo;
   RunInfo* m_runInfo;
   long m_runStatus;

@@ -8,6 +8,10 @@
 
 DECLARE_ALGORITHM_FACTORY( DBDrivenAnalysisTask )
 
+DBDrivenAnalysisTask::DBDrivenAnalysisTask(const std::string& name, 
+                                           ISvcLocator* pSvcLocator ) :
+AnalysisTask( name, pSvcLocator ) {}
+
 DBDrivenAnalysisTask::~DBDrivenAnalysisTask()
 {
   std::map<std::string, TH1*>::iterator ih;
