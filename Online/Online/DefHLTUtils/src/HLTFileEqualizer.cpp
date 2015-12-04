@@ -763,15 +763,12 @@ void MBMInfoHandler::infoHandler()
   siz = this->itsService->getSize();
 //      gettimeofday()
   if (siz == sizeof(int)) return;
-  const char *psname, *pnname;
   m_sfstatus = (_MBMSF *)itsService->getData();
   const _MBMSF *ns = m_sfstatus;
-  psname = ns->name;
   Nodes::const_iterator n;
     for (n=ns->nodes.begin();n!=ns->nodes.end(); n=ns->nodes.next(n))
     {
       std::string nname = (*n).name;
-      pnname = nname.c_str();
       m_Equalizer->m_BufferrecvNodes.insert(nname);
       myNodeMap::iterator anit;
       anit = m_Equalizer->m_AllNodes.find(nname);
