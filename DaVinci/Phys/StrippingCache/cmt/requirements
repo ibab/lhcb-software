@@ -3,7 +3,7 @@
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru
 # =============================================================================
 package           StrippingCache
-version           v1r3
+version           v1r4
 
 # The build of this package is not enabled with CMT
 
