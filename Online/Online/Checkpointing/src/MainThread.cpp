@@ -62,7 +62,7 @@ MainThread::MainThread()  {
   chkpt_sys.restart_type  = SysInfo::RESTART_NORMAL;
   chkpt_sys.finishRestore = checkpointing_finish_restore;
   chkpt_sys.motherPID     = chkpt_sys.chkptPID = mtcp_sys_getpid();
-  __asm__ (".global clone ; .type clone,@function ; clone = __clone");
+  //__asm__ (".global clone ; .type clone,@function ; clone = __clone");
 }
 
 WEAK(MainThread&) MainThread::accessInstance() {
