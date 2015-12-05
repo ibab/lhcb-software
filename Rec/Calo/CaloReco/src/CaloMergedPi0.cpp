@@ -52,7 +52,7 @@ DECLARE_ALGORITHM_FACTORY( CaloMergedPi0 )
   declareProperty ( "PhotonTools"             , m_photonTools       ) ;
   declareProperty ( "Pi0Tools"                , m_pi0Tools       ) ;
   declareProperty ( "EtCut"                   , m_etCut  ) ;
-  declareProperty ( "MaxIterations"           , m_iter ) ;  
+  declareProperty ( "MaxIterations"           , m_iter ) ;
   declareProperty ( "CreateSplitClustersOnly" , m_createClusterOnly = false) ;
   declareProperty ( "Verbose"                 , m_verbose  = false );
   declareProperty ( "SplitPhotonMinET"        , m_minET=0.);
@@ -64,7 +64,7 @@ DECLARE_ALGORITHM_FACTORY( CaloMergedPi0 )
 
   // following properties are be inherited by the covariance tool
   declareProperty( "CovarianceParameters" , m_covParams    ) ; // KEEP IT UNSET ! INITIAL VALUE WOULD BYPASS DB ACCESS
-  
+
   // default context-dependent locations
   m_clusters  = LHCb::CaloAlgUtils::CaloClusterLocation ( "Ecal"     , context()    );  // input : neutral CaloCluster's
   m_mergedPi0s = LHCb::CaloAlgUtils::CaloHypoLocation   ("MergedPi0s" , context()   );  // output : mergedPi0 CaloHypo's
@@ -91,7 +91,7 @@ StatusCode CaloMergedPi0::initialize(){
 
   // Always skip negative-energy clusters :
   if(m_minET<0.)m_minET=0.;
-  
+
   if(m_createClusterOnly)info() << "Producing SplitClusters only" << endmsg;
 
   // get detectorElement
@@ -99,14 +99,14 @@ StatusCode CaloMergedPi0::initialize(){
   if( !m_detector ){ return Error("could not locate calorimeter '"+m_det+"'");}
 
   //==== get tools
-  
+
   // - main tool :
   m_oTool=tool<ICaloShowerOverlapTool>("CaloShowerOverlapTool","SplitPhotonShowerOverlap",this);
 
-  // - cluster  tools 
-  m_cov     = tool<ICaloClusterTool>      ( "ClusterCovarianceMatrixTool" , "EcalCovariance"     , this ) ;  
+  // - cluster  tools
+  m_cov     = tool<ICaloClusterTool>      ( "ClusterCovarianceMatrixTool" , "EcalCovariance"     , this ) ;
   m_spread  = tool<ICaloClusterTool>      ( "ClusterSpreadTool"           , "EcalSpread"         , this ) ;
-  m_tagger  = tool<SubClusterSelectorTool>( "SubClusterSelectorTool"      , "EcalClusterTag"     , this ); 
+  m_tagger  = tool<SubClusterSelectorTool>( "SubClusterSelectorTool"      , "EcalClusterTag"     , this );
 
   // - hypo tools
   for ( std::vector<std::string>::const_iterator it = m_photonTools.begin() ;m_photonTools.end() != it ; ++it ){
@@ -139,26 +139,20 @@ StatusCode CaloMergedPi0::execute(){
   //======== load input :
   Clusters* clusters = getIfExists<Clusters>( m_clusters );
   if( NULL == clusters )return Warning("No cluster input container : no merged Pi0 !", StatusCode::SUCCESS);
-  
+
 
   //======== create cluster output :
   //- split clusters (check it does not exist first)
-  LHCb::CaloClusters* splitclusters;
-
-  splitclusters = new LHCb::CaloClusters();
-  int level = outputLevel();     // store outputLevel
-  try{ 
-    setOutputLevel(MSG::ALWAYS);   // suppress FATAL message
-    put(splitclusters, m_splitClusters ); 
-  } catch(GaudiException &exc ) {
-    setOutputLevel(level);         // reset outputLevel
+  LHCb::CaloClusters* splitclusters = nullptr;
+  if (exist<LHCb::CaloClusters>(m_splitClusters)) {
     Warning("Existing SplitCluster container at "+ m_splitClusters + " found -> will replace",StatusCode::SUCCESS,1).ignore();
-    delete splitclusters;
     splitclusters=get<LHCb::CaloClusters>( m_splitClusters );
     splitclusters->clear();
+  } else {
+    splitclusters = new LHCb::CaloClusters();
+    put(splitclusters, m_splitClusters );
   }
-  setOutputLevel(level);         // reset outputLevel
-  
+
   //- pi0s & SPlitPhotons
   LHCb::CaloHypos* pi0s = new LHCb::CaloHypos();
   LHCb::CaloHypos* phots = new LHCb::CaloHypos();
@@ -178,11 +172,11 @@ StatusCode CaloMergedPi0::execute(){
 
     // define entry status'
 
-  LHCb::CaloDigitStatus::Status used   = 
-    LHCb::CaloDigitStatus::UseForEnergy  | 
-    LHCb::CaloDigitStatus::UseForPosition | 
+  LHCb::CaloDigitStatus::Status used   =
+    LHCb::CaloDigitStatus::UseForEnergy  |
+    LHCb::CaloDigitStatus::UseForPosition |
     LHCb::CaloDigitStatus::UseForCovariance  ;
-  LHCb::CaloDigitStatus::Status seed   = LHCb::CaloDigitStatus::SeedCell | 
+  LHCb::CaloDigitStatus::Status seed   = LHCb::CaloDigitStatus::SeedCell |
     LHCb::CaloDigitStatus::LocalMaximum | used ;
 
   // ============ loop over all clusters ==============
@@ -198,21 +192,21 @@ StatusCode CaloMergedPi0::execute(){
     const LHCb::CaloCluster::Digits::iterator iSeed =
       clusterLocateDigit( cluster->entries().begin() , cluster->entries().end  () , LHCb::CaloDigitStatus::SeedCell     );
     LHCb::CaloDigit* dig1 = iSeed->digit() ;
-    if( 0 == dig1) continue ; 
+    if( 0 == dig1) continue ;
     LHCb::CaloCellID  seed1 = dig1->cellID() ;
-    
+
     double seede  = dig1->e();
-    
+
     // -- get spd hit in front of seed1
     int spd1 = 0 ;
     const LHCb::CaloDigit* spddigit1 = (spds == NULL) ? NULL : spds->object( dig1->key() );
-    if( NULL != spddigit1 )spd1 = (spddigit1->e() > 0.) ? 1 : 0 ; 
-    
+    if( NULL != spddigit1 )spd1 = (spddigit1->e() > 0.) ? 1 : 0 ;
+
     // -- locate seed2
     double sube   = 0. ; // 2nd seed should must have a positive energy !
     LHCb::CaloDigit*  dig2  = NULL;
     for( LHCb::CaloCluster::Digits::iterator it =cluster->entries().begin() ; cluster->entries().end() != it ; ++it ){
-      LHCb::CaloDigit* dig = it->digit() ;    
+      LHCb::CaloDigit* dig = it->digit() ;
       if( 0 == dig) { continue ; }
       LHCb::CaloCellID seed  = dig->cellID() ;
       double ecel = dig->e()*it->fraction();
@@ -220,21 +214,21 @@ StatusCode CaloMergedPi0::execute(){
         //if (ecel > sube && ecel < seede && isNeighbor( seed1, seed) ){
         sube=ecel;
         dig2=dig;
-      } 
+      }
     }
 
     if ( NULL == dig2 ){
       counter("Cluster without 2nd seed found") += 1;
-      continue ; 
+      continue ;
     }
-    
+
     LHCb::CaloCellID  seed2 = dig2->cellID() ;
     // -- get spd hit in front of seed2
     int spd2 = 0 ;
     const LHCb::CaloDigit* spddigit2 = (spds == NULL) ? NULL : spds->object( dig2->key() );
     if( NULL != spddigit2 ) { spd2 = (spddigit2->e() > 0.) ? 1 : 0 ; }
-    
-    
+
+
     // -- create and fill sub-cluster
     LHCb::CaloCluster* cl1 = new LHCb::CaloCluster();
     cl1->setSeed( seed1 );
@@ -242,13 +236,13 @@ StatusCode CaloMergedPi0::execute(){
     LHCb::CaloCluster* cl2 = new LHCb::CaloCluster();
     cl2->setSeed( seed2 );
     cl2->setType( LHCb::CaloCluster::Area3x3);
-    
+
     for( LHCb::CaloCluster::Digits::const_iterator it2 =cluster->entries().begin() ; cluster->entries().end() != it2 ; ++it2 ){
       const LHCb::CaloDigit* dig = it2->digit() ;
       if( 0 == dig)continue ;
       const LHCb::CaloCellID  id = dig->cellID() ;
       double fraction = it2->fraction();
-      
+
       // -- tag 3x3 area for energy and position
       if ( isNeighbor( seed1, id ) ){
         LHCb::CaloDigitStatus::Status status = ( seed1 == id ) ? seed : used;
@@ -269,28 +263,28 @@ StatusCode CaloMergedPi0::execute(){
         cl2->entries().push_back(LHCb::CaloClusterEntry( dig , status,weight2 ));
       }
     }
-    
+
 
     // --  apply position tagger (possibly replacing the 3x3 already set)
-    // --  needed to apply hypo S/L-corrections with correct parameters internally 
+    // --  needed to apply hypo S/L-corrections with correct parameters internally
     // --  keep the 3x3 energy tag for the time being (to be applied after the overlap subtraction)
     StatusCode sc;
     sc = m_tagger->tagPosition(  cl1  ) ;
     sc = m_tagger->tagPosition(  cl2  ) ;
     if( sc.isFailure() )Warning("SplitCluster tagging failed - keep the initial 3x3 tagging").ignore();
-    
+
     // == apply the mergedPi0 tool : subtract shower overlap
     m_oTool->process(cl1,cl2, spd1*10+spd2, m_iter,true); // 'true' means the initial entries weight is propagated
     if( LHCb::CaloMomentum(cl1).pt() <= m_minET || LHCb::CaloMomentum(cl2).pt() <= m_minET ){ // skip negative energy "clusters"
       delete cl1;
       delete cl2;
       continue;
-    }    
+    }
 
     // == prepare outputs :
 
     // apply loose mass window : (TODO ??)
-    
+
     // == APPLY CLUSTER TOOLS : Energy tagger,  covariance & spread (position tagger already applied):
     if  (m_tagger  -> tagEnergy    ( cl1 ).isFailure() )counter("Fails to tag(E) cluster (1)")+=1;
     if  (m_tagger  -> tagEnergy    ( cl2 ).isFailure() )counter("Fails to tag(E) cluster (2)")+=1;
@@ -298,12 +292,12 @@ StatusCode CaloMergedPi0::execute(){
     if  (m_cov   -> process( cl2 ).isFailure() )counter("Fails to set covariance (2)")+=1;
     if  (m_spread-> process( cl1 ).isFailure() )counter("Fails to set spread (1)")    +=1;
     if  (m_spread-> process( cl2 ).isFailure() )counter("Fails to set spread (2)")    +=1;
-    
+
 
     // == insert splitClusters into their container
     splitclusters->insert( cl1 ) ;
     splitclusters->insert( cl2 ) ;
-    
+
     // == create CaloHypos if needed
     if(!m_createClusterOnly){
       // new CaloHypos for splitPhotons
@@ -332,7 +326,7 @@ StatusCode CaloMergedPi0::execute(){
         i++;
         if( UNLIKELY( msgLevel(MSG::DEBUG) ) )debug() << " apply SplitPhoton tool " << i << "/" << m_gTools.size() << endmsg;
         ICaloHypoTool* t = *it ;
-        if( 0 == t )  continue; 
+        if( 0 == t )  continue;
         StatusCode sc         = StatusCode::SUCCESS ;
         sc                    = (*t) ( g1 ) ;
         if( sc.isFailure() ) Error("Error from 'Tool' for g1 " , sc ).ignore() ;
@@ -360,12 +354,12 @@ StatusCode CaloMergedPi0::execute(){
       } else {
         if( m_verbose )info() << " >> MergedPi0 hypo Mass : "  << LHCb::CaloMomentum(pi0).mass() << endmsg;
         phots ->insert( g1  ) ;
-        phots ->insert( g2  ) ;        
+        phots ->insert( g2  ) ;
         pi0s -> insert( pi0 ) ;
       }
     }
   }
- 
+
   // ====================== //
   counter ( m_clusters + "=>" + m_mergedPi0s )   += pi0s   -> size() ;
   counter ( m_clusters + "=>" + m_splitPhotons)  += phots  -> size() ;

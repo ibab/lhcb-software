@@ -3,6 +3,9 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+! 2015-12-05 - Gerhard Raven
+ - avoid the use of exception handling to find out whether there already is an 
+   object on the TES...
 
 !========================= CaloReco v5r26 2015-10-23 ==========================
 
