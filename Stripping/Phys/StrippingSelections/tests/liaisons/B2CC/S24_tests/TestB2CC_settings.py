@@ -99,7 +99,7 @@ SelDSTWriterConf = {
 dstWriter = SelDSTWriter( "MyDSTWriter",
                           StreamConf = SelDSTWriterConf,
                           MicroDSTElements = SelDSTWriterElements,
-                          OutputFileSuffix ='20151106',
+                          OutputFileSuffix ='20151116',
                           SelectionSequences = sc.activeStreams() )
 
 
