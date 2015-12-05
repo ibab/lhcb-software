@@ -3,6 +3,8 @@
 ! Responsible : Marianna Fontana, Matteo Palutan, Ricardo Vazquez Gomez
 !-----------------------------------------------------------------------------
 
+!========================= MuonID v9r19 2015-12-05 ===========================
+
 ! 2015-11-27 - Marco Clemencic
  - Removed (invalid) link to component library MuonTrackRec.
 
@@ -18,8 +20,6 @@
  - new generic IMuonIDTool with implementation MuonIDPlusTool, to start developing new approaches to muonID
  - new MuonIDPlusAlg algorithm, using MuonIDPlusTool
  - add option to MakeMuonTool to compute chi2 properly (using MuonChi2MatchTool)
-
-
 
 !========================= MuonID v9r18 2015-10-13 =========================
 ! 2015-09-16 - Kevin Dungs
