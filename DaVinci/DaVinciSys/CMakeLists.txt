@@ -5,8 +5,10 @@ gaudi_subdir(DaVinciSys v38r0)
 
 gaudi_depends_on_subdirs(DaVinciTests
                          ##############################
-                         # Patched package just for this version
-                         Calo/CaloReco
+                         # Patched packages just for this version
+                         Hlt/HltDAQ
+                         Event/HltEvent
+                         Muon/MuonID
                          ##############################
                          # Temporarily moved in from Stripping, for S23 release
                          Phys/StrippingCache
