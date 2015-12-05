@@ -46,12 +46,12 @@ OTMeasurement::OTMeasurement( const LHCb::OTLiteTime& time,
   this->init() ;
 }
 
-void OTMeasurement::init() 
+void OTMeasurement::init()
 {
   m_trajectory   = module().trajectory( channel() );
   Gaudi::XYZPoint center = m_trajectory->position( 0.5*( m_trajectory->beginRange()+m_trajectory->endRange())) ;
   m_z = center.z() ;
-  
+
   // anything else can only be done if we have a reference.
   // I don't know what to do with these. They are part of the base class. We should just remove thenm somehow.
   // m_errMeasure = m_measure = 0;
@@ -63,12 +63,12 @@ double LHCb::OTMeasurement::stereoAngle() const
   return module().angle() ;
 }
 
-OTDet::RadiusWithError  LHCb::OTMeasurement::driftRadiusWithError( double arclen ) const 
+OTDet::RadiusWithError  LHCb::OTMeasurement::driftRadiusWithError( double arclen ) const
 {
   return module().driftRadiusWithError( driftTime(arclen) ) ;
 }
 
-OTDet::RadiusWithError  LHCb::OTMeasurement::driftRadiusWithErrorFromY( double globalY ) const 
+OTDet::RadiusWithError  LHCb::OTMeasurement::driftRadiusWithErrorFromY( double globalY ) const
 {
   return module().driftRadiusWithError( driftTimeFromY( globalY ) ) ;
 }

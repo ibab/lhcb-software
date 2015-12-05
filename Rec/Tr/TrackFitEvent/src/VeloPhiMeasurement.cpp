@@ -1,5 +1,5 @@
 // $Id: VeloPhiMeasurement.cpp,v 1.23 2008-11-14 10:33:37 mneedham Exp $
-// Include files 
+// Include files
 
 // From Event
 #include "Event/VeloCluster.h"
@@ -27,7 +27,7 @@ VeloPhiMeasurement::VeloPhiMeasurement( const VeloCluster& aCluster,
                                         const LHCb::StateVector& refVector )
   : VeloMeasurement(Measurement::VeloPhi,aCluster)
 {
-  IVeloClusterPosition::toolInfo clusInfo = 
+  IVeloClusterPosition::toolInfo clusInfo =
     clusPosTool.position(this->cluster(),refVector.position(),
                          std::pair<double,double>(refVector.tx(),refVector.ty())) ;
   this->init( det, clusInfo ) ;
@@ -36,7 +36,7 @@ VeloPhiMeasurement::VeloPhiMeasurement( const VeloCluster& aCluster,
 /// Standard constructor, initializes variables
 VeloPhiMeasurement::VeloPhiMeasurement( const VeloCluster& aCluster,					
                                         const DeVelo& det,
-                                        const IVeloClusterPosition& clusPosTool) 
+                                        const IVeloClusterPosition& clusPosTool)
   : VeloMeasurement(Measurement::VeloPhi,aCluster)
 {
   IVeloClusterPosition::toolInfo clusInfo = clusPosTool.position(cluster());
@@ -50,7 +50,7 @@ void VeloPhiMeasurement::init( const DeVelo& det, const IVeloClusterPosition::to
   m_detectorElement = phiDet ;
   m_z = phiDet->z();
   m_origin = phiDet -> globalOrigin();
-  
+
   // Store only the 'position', which is the signed distance from strip to
   // the origin.
   m_measure = phiDet -> distToOrigin(  channelID().strip() );
@@ -58,10 +58,10 @@ void VeloPhiMeasurement::init( const DeVelo& det, const IVeloClusterPosition::to
   if( ! phiDet -> isDownstream() ) {
     m_measure = -m_measure;
   }
-  
+
   m_errMeasure  = clusInfo.fractionalError *
-    phiDet -> phiPitch( clusInfo.strip.strip() );  
-  
+    phiDet -> phiPitch( clusInfo.strip.strip() );
+
   m_trajectory = phiDet -> trajectory( clusInfo.strip, clusInfo.fractionalPosition );
 }
 
@@ -81,7 +81,8 @@ double VeloPhiMeasurement::resolution2( const Gaudi::XYZPoint& point,
   return radius * m_errMeasure * radius * m_errMeasure;
 }
 
-const DeVeloPhiType& VeloPhiMeasurement::sensor() const{                                                return *static_cast<const DeVeloPhiType *>(detectorElement()); 
-}                                   
+const DeVeloPhiType& VeloPhiMeasurement::sensor() const{
+  return *static_cast<const DeVeloPhiType *>(detectorElement());
+}
 
 

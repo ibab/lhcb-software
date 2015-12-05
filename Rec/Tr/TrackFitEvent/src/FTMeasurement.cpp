@@ -1,4 +1,4 @@
-// Include files 
+// Include files
 
 // from FTDet
 #include "FTDet/DeFTDetector.h"
@@ -17,19 +17,18 @@ using namespace LHCb;
 //  2012-11-27 Olivier Callot, from STMeasurement
 //-----------------------------------------------------------------------------
 void FTMeasurement::init( const DeFTDetector& geom ) {
-  
+
   const DeFTFibreMat* ftMat = geom.findFibreMat( m_cluster.channelID() );
   m_detectorElement = ftMat;
   DetectorSegment mySeg = ftMat->createDetSegment( m_cluster.channelID(), m_cluster.fraction() );
   Gaudi::XYZPoint begPoint( mySeg.x( mySeg.yMin() ), mySeg.yMin(), mySeg.z( mySeg.yMin() ) );
   Gaudi::XYZPoint endPoint( mySeg.x( mySeg.yMax() ), mySeg.yMax(), mySeg.z( mySeg.yMax() ) );
-  
+
   m_size = m_cluster.size();
   m_errMeasure = 0.050 + .030 * m_size;
-  LHCb::LineTraj* traj = new LHCb::LineTraj( begPoint, endPoint );
-  m_trajectory = std::auto_ptr<LHCb::Trajectory>( traj );
+  m_trajectory.reset( new LHCb::LineTraj( begPoint, endPoint ) );
   m_z = ftMat->layerCenterZ();
   m_measure = mySeg.x( 0. );
-    
+
 }
 

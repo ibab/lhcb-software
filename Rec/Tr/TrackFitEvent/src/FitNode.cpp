@@ -205,7 +205,7 @@ namespace LHCb {
     const TrackVector&  biasedX = state().stateVector();
     TrackVector unbiasedX=biasedX - K.Col(0) * r;
     // Forwarddate the covariance matrix
-    static const TrackSymMatrix unit = TrackSymMatrix( ROOT::Math::SMatrixIdentity());
+    static const TrackSymMatrix unit = ROOT::Math::SMatrixIdentity();
     TrackSymMatrix unbiasedC ;
     ROOT::Math::AssignSym::Evaluate(unbiasedC, (unit + K*H)*biasedC) ;
     return State( unbiasedX, unbiasedC, z(), state().location()) ;
@@ -338,7 +338,7 @@ namespace LHCb {
           stateCov += this->noiseMatrix();
         } else {
           const TrackMatrix& invF = prevnode->invertTransportMatrix();
-          static TrackSymMatrix tempCov ;
+          TrackSymMatrix tempCov ;
           tempCov = previousState.covariance() + prevnode->noiseMatrix();
           stateVec = invF * ( previousState.stateVector() - prevnode->transportVector()) ;
           transportcovariance(invF,tempCov,stateCov) ;

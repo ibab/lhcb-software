@@ -28,7 +28,7 @@ VeloRMeasurement::VeloRMeasurement( const VeloCluster& aCluster,
   : VeloMeasurement(Measurement::VeloR,aCluster)
 
 {
-  IVeloClusterPosition::toolInfo clusInfo = 
+  IVeloClusterPosition::toolInfo clusInfo =
     clusPosTool.position(this->cluster(),refVector.position(),
                          std::pair<double,double>(refVector.tx(),refVector.ty())) ;
   this->init( det, clusInfo ) ;
@@ -36,8 +36,8 @@ VeloRMeasurement::VeloRMeasurement( const VeloCluster& aCluster,
 
 /// Standard constructor, initializes variables
 VeloRMeasurement::VeloRMeasurement( const VeloCluster& aCluster,
-                                    const DeVelo& det, 
-                                    const IVeloClusterPosition& clusPosTool) 
+                                    const DeVelo& det,
+                                    const IVeloClusterPosition& clusPosTool)
   : VeloMeasurement(Measurement::VeloR,aCluster)
 {
   IVeloClusterPosition::toolInfo clusInfo = clusPosTool.position(this->cluster());
@@ -50,7 +50,7 @@ void VeloRMeasurement::init( const DeVelo& det, const IVeloClusterPosition::tool
   const DeVeloRType* rDet=det.rSensor( channelID().sensor() );
   m_detectorElement = rDet ;
   m_z = rDet -> z();
-  
+
   m_measure = rDet -> rOfStrip( clusInfo.strip.strip() ) +
     rDet -> rPitch( clusInfo.strip.strip() ) * clusInfo.fractionalPosition;
   m_errMeasure = rDet -> rPitch( clusInfo.strip.strip() )

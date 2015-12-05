@@ -3,6 +3,8 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
+! 2015-12-05 - Gerhard Raven
+ - reduce mention of 'static' and 'std::auto_ptr' 
 
 !========================= TrackFitEvent v6r5 2015-01-14 =========================
 ! 2015-01-12 - Gerhard Raven

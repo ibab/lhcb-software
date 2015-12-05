@@ -1,5 +1,5 @@
 // $Id: STLiteMeasurement.cpp,v 1.2 2008-11-06 12:41:26 mneedham Exp $
-// Include files 
+// Include files
 
 // from STDet
 #include "STDet/DeSTDetector.h"
@@ -36,25 +36,25 @@ STLiteMeasurement::STLiteMeasurement( const STLiteCluster& stCluster,
 }
 
 void STLiteMeasurement::init( const DeSTDetector& geom,
-                          const ISTClusterPosition& stClusPosTool) 
+                          const ISTClusterPosition& stClusPosTool)
 {
   // Fill the data members
   m_mtype = ( m_cluster.isTT() ? Measurement::TTLite :
               m_cluster.isIT() ? Measurement::ITLite :
               Measurement::UTLite );
- 
+
   // Get the corresponding sensor
   const DeSTSector* stSector = geom.findSector( m_cluster.channelID() );
   m_detectorElement = stSector ;
- 
+
   m_errMeasure = stClusPosTool.error(m_cluster.pseudoSize())*stSector->pitch();
   m_trajectory = stSector->trajectory( m_cluster.channelID(), m_cluster.interStripFraction()) ;
   m_z = stSector->globalCentre().z();
 
   // get the best sensor to and go local
-  // this is the only way to ensure we get inside a 
+  // this is the only way to ensure we get inside a
   // sensor, and not into a bondgap
   m_measure = stSector->middleSensor()->localU( m_cluster.strip() )
               + ( m_cluster.interStripFraction() * stSector -> pitch() );
- 
+
 }

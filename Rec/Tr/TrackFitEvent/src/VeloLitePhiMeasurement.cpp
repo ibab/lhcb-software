@@ -1,5 +1,5 @@
 // $Id: VeloLitePhiMeasurement.cpp,v 1.1 2009-01-19 11:49:37 dhcroft Exp $
-// Include files 
+// Include files
 
 // From Event
 #include "Event/VeloCluster.h"
@@ -26,7 +26,7 @@ VeloLitePhiMeasurement::VeloLitePhiMeasurement( const VeloLiteCluster& aCluster,
                                         const LHCb::StateVector& refVector )
   : VeloLiteMeasurement(Measurement::VeloLitePhi,aCluster)
 {
-  IVeloClusterPosition::toolInfo clusInfo = 
+  IVeloClusterPosition::toolInfo clusInfo =
     clusPosTool.position(this->cluster(),refVector.position(),
                          std::pair<double,double>(refVector.tx(),refVector.ty())) ;
   this->init( det, clusInfo ) ;
@@ -35,7 +35,7 @@ VeloLitePhiMeasurement::VeloLitePhiMeasurement( const VeloLiteCluster& aCluster,
 /// Standard constructor, initializes variables
 VeloLitePhiMeasurement::VeloLitePhiMeasurement( const VeloLiteCluster& aCluster,					
                                         const DeVelo& det,
-                                        const IVeloClusterPosition& clusPosTool) 
+                                        const IVeloClusterPosition& clusPosTool)
   : VeloLiteMeasurement(Measurement::VeloLitePhi,aCluster)
 {
   IVeloClusterPosition::toolInfo clusInfo = clusPosTool.position(cluster());
@@ -49,7 +49,7 @@ void VeloLitePhiMeasurement::init( const DeVelo& det, const IVeloClusterPosition
   m_detectorElement = phiDet ;
   m_z = phiDet->z();
   m_origin = phiDet -> globalOrigin();
-  
+
   // Store only the 'position', which is the signed distance from strip to
   // the origin.
   m_measure = phiDet -> distToOrigin(  channelID().strip() );
@@ -57,10 +57,10 @@ void VeloLitePhiMeasurement::init( const DeVelo& det, const IVeloClusterPosition
   if( ! phiDet -> isDownstream() ) {
     m_measure = -m_measure;
   }
-  
+
   m_errMeasure  = clusInfo.fractionalError *
-    phiDet -> phiPitch( clusInfo.strip.strip() );  
-  
+    phiDet -> phiPitch( clusInfo.strip.strip() );
+
   m_trajectory = phiDet -> trajectory( clusInfo.strip, clusInfo.fractionalPosition );
 }
 
@@ -80,8 +80,8 @@ double VeloLitePhiMeasurement::resolution2( const Gaudi::XYZPoint& point,
   return radius * m_errMeasure * radius * m_errMeasure;
 }
 
-const DeVeloPhiType& VeloLitePhiMeasurement::sensor() const{                                                
-  return *static_cast<const DeVeloPhiType *>(detectorElement()); 
-}                                   
+const DeVeloPhiType& VeloLitePhiMeasurement::sensor() const{
+  return *static_cast<const DeVeloPhiType *>(detectorElement());
+}
 
 
