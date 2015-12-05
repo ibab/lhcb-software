@@ -1,5 +1,5 @@
 package AnalysisSys
-version v14r2
+version v14r3
 
 branches doc cmt
 
@@ -8,38 +8,38 @@ branches doc cmt
 use  AnalysisConf               v2r5     Phys   # Patrick Koppenburg
 use  DSTWriters                 v4r22    Phys   # Chris Jones
 use  DSTWriterTests             v2r6     Phys   # Chris Jones
-use  DaVinciMonitors            v1r23    Phys   # Patrick Koppenburg
+use  DaVinciMonitors            v1r24    Phys   # Patrick Koppenburg
 use  RichPIDQC                  v1r9     Rich   # Chris Jones
 
 ####################################################################
 
-use  DaVinciMCTools     	v10r13   Phys   # Chris Jones
-use  LoKiAlgoMC                 v9r6p1   Phys   # Vanya Belyaev
-use  LoKiGenMC                  v9r2     Phys   # Vanya Belyaev
-use  LoKiPhysMC                 v9r10    Phys   # Vanya Belyaev
-use  DaVinciAssociators         v9r8     Phys   # Vladimir Gligorov
-use  Particle2MCTruth           v2r5p1   Phys   # Chris Jones
-use  VertexFitCheck             v1r9     Phys   # Yuehong Xie
-use  FlavourTaggingChecker      v7r9     Phys   # Marc Grabalosa
-use  ParticleMakerChecker       v1r5p1   Phys   # Chris Jones
-use  DisplVerticesMC            v1r4p5   Phys   # Victor Coco
-use  JetAccessoriesMC		v2r9     Phys   # Victor Coco, Cedric Potterat
+use  DaVinciMCTools     	v10r14   Phys   # Chris Jones
+use  LoKiAlgoMC                 v9r7     Phys   # Vanya Belyaev
+use  LoKiGenMC                  v9r3     Phys   # Vanya Belyaev
+use  LoKiPhysMC                 v9r11    Phys   # Vanya Belyaev
+use  DaVinciAssociators         v9r9     Phys   # Vladimir Gligorov
+use  Particle2MCTruth           v2r6     Phys   # Chris Jones
+use  VertexFitCheck             v1r10    Phys   # Yuehong Xie
+use  FlavourTaggingChecker      v7r10    Phys   # Marc Grabalosa
+use  ParticleMakerChecker       v1r6     Phys   # Chris Jones
+use  DisplVerticesMC            v1r5     Phys   # Victor Coco
+use  JetAccessoriesMC		v2r10    Phys   # Victor Coco, Cedric Potterat
 use  CommonMCParticles          v1r1     Phys   # Conor Fitzpatrick
 use  DaVinciAngleCalculators    v1r0     Phys   # ?
 
 ####################################################################
 
-use  DecayTreeTupleBase         v1r4     Phys
+use  DecayTreeTupleBase         v1r5     Phys
 use  DecayTreeTupleReco         v1r5     Phys   
 use  DecayTreeTupleDalitz       v1r3     Phys
 use  DecayTreeTupleJets         v1r3     Phys
 use  DecayTreeTupleMC           v1r6     Phys
-use  DecayTreeTupleTrigger      v1r9     Phys
-use  DecayTreeTupleMuonCalib    v1r5     Phys
-use  DecayTreeTupleTracking     v1r3     Phys
+use  DecayTreeTupleTrigger      v1r10    Phys
+use  DecayTreeTupleMuonCalib    v1r6     Phys
+use  DecayTreeTupleTracking     v1r4     Phys
 use  DecayTreeTupleANNPID       v1r2     Phys
-use  DecayTreeTupleHerschel     v1r0     Phys
-use  DecayTreeTuple             v5r3     Phys 
+use  DecayTreeTupleHerschel     v1r2     Phys
+use  DecayTreeTuple             v5r4     Phys 
 
 ####################################################################
 
@@ -47,9 +47,9 @@ use  HltSelChecker              v12r4    Hlt    # Patrick Koppenburg
 
 ####################################################################
 
-use  AnalysisPython             v2r38    Phys     # Vanya Belyaev
+use  AnalysisPython             v2r39    Phys     # Vanya Belyaev
 use  PyAna                      v1r3p1   Analysis # Vanya Belyaev
-use  Ostap                      v1r10    Analysis # Vanya Belyaev
+use  Ostap                      v1r12    Analysis # Vanya Belyaev
 
 ####################################################################
 
@@ -62,18 +62,18 @@ use  MicroDSTConf               v2r12    MicroDST # Chris Jones
 ####################################################################
 
 use  Analysis                   v10r6   Tutorial   # P. Koppenburg
-use  LoKiExample                v8r9    Ex         # Vanya Belyaev
+use  LoKiExample                v8r10   Ex         # Vanya Belyaev
 use  MicroDSTExample            v2r15   Ex         # Chris Jones
 
 ####################################################################
 
 use  TrackSmearing              v1r6p1  Phys   # Alex Shires
-use  DaVinciTrackRefitting      v2r2    Phys   # Matt Needham
-use  DaVinciTrackScaling        v1r4    Phys   # Vanya Belyaev
+use  DaVinciTrackRefitting      v2r3    Phys   # Matt Needham
+use  DaVinciTrackScaling        v1r5    Phys   # Vanya Belyaev
 
 ####################################################################
 
-use  TeslaTools                 v1r16   Phys   # Sean Benson
+use  TeslaTools                 v1r17   Phys   # Sean Benson
 
 ####################################################################
 

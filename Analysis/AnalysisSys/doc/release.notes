@@ -3,6 +3,130 @@ Package             : AnalysisSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb analysis packages
 
+</PRE><H1><A NAME=v14r3>2015-12-04 Analysis v14r4</A></H1><PRE>
+
+Release of two kinds :
+- Development release for 2016 data taking.
+- Production release for the incremental restripping of Run-I data (S21r0p1 for 2012 and S21r1p1 for 2011).
+It is based on Gaudi v26r4, LHCb v39r2, Rec v18r3 and Phys v20r3, and uses LCG_79 with ROOT 6.04.02.
+
+- Packages updated :
+  Analysis/Ostap v1r12, Ex/LoKiExample v8r10, Phys/AnalysisPython v2r39, Phys/DaVinciAssociators v9r9,
+  Phys/DaVinciMCTools v10r14, Phys/DaVinciMonitors v1r24, Phys/DaVinciTrackRefitting v2r3, Phys/DaVinciTrackScaling v1r5,
+  Phys/DecayTreeTupleBase v1r5, Phys/DecayTreeTupleHerschel v1r2, Phys/DecayTreeTupleMuonCalib v1r6,
+  Phys/DecayTreeTupleTracking v1r4, Phys/DecayTreeTupleTrigger v1r10, Phys/DecayTreeTuple v5r4, Phys/DisplVerticesMC v1r5,
+  Phys/FlavourTaggingChecker v7r10, Phys/JetAccessoriesMC v2r10, Phys/LoKiAlgoMC v9r7, Phys/LoKiGenMC v9r3,
+  Phys/LoKiPhysMC v9r11, Phys/Particle2MCTruth v2r6, Phys/ParticleMakerChecker v1r6, Phys/TeslaTools v1r17,
+  Phys/VertexFitCheck v1r10.
+
+- In Analysis/Ostap v1r12 :
+  . Fix deleting the weight directory for the PyTMVA.Trainer
+  . Fix mix of varibales inn Voigt_pdf remove "sigma" from BreitWigner_pdf.
+  . Fix in HepDATA formatting.
+
+- In Ex/LoKiExample v8r10 :
+  . Replace endreq with endmsg.
+  . Avoid comparing pointers to 0.
+  . Pprefer range-based for loops.
+  . Use lambda where appropriate.
+
+- In Phys/AnalysisPython v2r39 :
+  . Add several default constructors re-enabling proper (de)serialisation.
+
+- In Phys/DaVinciAssociators v9r9 :
+  . Prefer not to compare (smart)pointers to 0.
+  . Prefer std::unique_ptr over raw ptr with explicit delete.
+
+- In Phys/DaVinciMCTools v10r14 :
+  . Replace endreq with endmsg.
+
+- In Phys/DaVinciMonitors v1r24 :
+  . Replace endreq with endmsg.
+
+- In Phys/DaVinciTrackRefitting v2r3 :
+  . Pack refitter into python function.
+
+- In Phys/DaVinciTrackScaling v1r5 :
+  . Update for scripts.
+  . Replace endreq with endmsg.
+
+- In Phys/DecayTreeTupleBase v1r5 :
+  . Replace endreq with endmsg.
+  . Replace LoKi::select with std::copy_if.
+
+- In Phys/DecayTreeTupleHerschel v1r2 :
+  . Small improvements:
+    * Remove #include of ToolFactory.h.
+    * Move warning about CorrectedDigits to initialize to avoid large logfiles.
+
+- In Phys/DecayTreeTupleMuonCalib v1r6 :
+  . Include extra options in TupleToolMuonVariables.
+  . Add the TupleZVIso.cpp to the DecayTreeTupleMuonCalib package.
+  . Replace endreq with endmsg.
+
+- In Phys/DecayTreeTupleTracking v1r4 :
+  . Replace endreq with endmsg.
+
+- In Phys/DecayTreeTupleTrigger v1r10 :
+  . Replace endreq with endmsg.
+
+- In Phys/DecayTreeTuple v5r4 :
+  . Fix forward declaration broken in Gaudi HEAD build.
+  . Remove obsolete Gaudi includes.
+  . Fixed CMakeLists.txt (hopefully).
+  . Moved the Matching magic in TeslaToolTwoParticleMatching to the general tool TeslaMatcher
+    (released under Phys/TeslaTools).
+    Warning: this may break existing scripts running on MicroDST since the RootInTes property is not propagated to tools.
+
+- In Phys/DisplVerticesMC v1r5 :
+  . Replace endreq with endmsg.
+
+- In Phys/FlavourTaggingChecker v7r10 :
+  . Replace endreq with endmsg.
+
+- In Phys/JetAccessoriesMC v2r10 :
+  . Adding JetTagging as dependency.
+  . Adding the JetTagging MC code (from previous Phys/JetTagging).
+  . Replace endreq with endmsg.
+
+- In Phys/LoKiAlgoMC v9r7 :
+  . Replace endreq with endmsg
+  . Replace LoKi::select with std::copy_if.
+  . Avoid comparing (smart)pointers to 0.
+
+- In Phys/LoKiGenMC v9r3 :
+  . Replace LoKi::select with std::copy_if.
+  . Prefer not to compare (smart)pointers to 0.
+  . Use auto where appropriate.
+  . Replace endreq with endmsg.
+
+- In Phys/LoKiPhysMC v9r11 :
+  . Avoid comparing (smart)pointers to 0.
+  . Replace LoKi::Select with std::copy_if.
+  . Replace endreq with endmsg.
+  . Avoid comparing (smart)pointers to 0.
+  . Replace BOOST_STATIC_ASSERT with static_assert.
+  . Prefer range-based for loops.
+
+- In Phys/Particle2MCTruth v2r6 :
+  . Replace LoKi::Select with std::copy_if.
+
+- In Phys/ParticleMakerChecker v1r6 :
+  . Replace endreq with endmsg.
+
+- In Phys/TeslaTools v1r17 :
+  . Restore related info.
+  . Update to agreed upon way of storing {location : id} in HltANNSvc.
+  . Made number of bins of the TeslaBrunelMonitor a configurable.
+  . Made the NumberOfBins accessible from TeslaMonitor python interface.
+  . Also look in extendedSubstructure.
+  . Small fixes in TeslaMatcher (better error handling and printing).
+  . Make sure IP chi^2 for PV association is calculated after resurrection of decay chain,
+    so that harmless ParticleTransporter warning is avoided.
+
+- In Phys/VertexFitCheck v1r10 :
+  . Replace endreq with endmsg.
+
 ! 2015-11-04 - Eduardo Rodrigues
  - Removed package Phys/JetTagging from this project and moved it to Phys.
 
