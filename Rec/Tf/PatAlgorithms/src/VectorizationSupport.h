@@ -2,6 +2,7 @@
 #define VECTORIZATION_SUPPORT_H
 
 #include <type_traits>
+#include <iterator>
 
 template <typename T,size_t N> struct vector_type;
 
@@ -67,5 +68,46 @@ inline std::array<Ret,N> scatter_array(Arg&& a)
 {
     return scatter_array_impl<Ret>( std::forward<Arg>(a), make_index_sequence<N>{} );
 }
+
+template <typename... Args>
+auto make_array( Args&&... a ) -> std::array<typename std::common_type<Args...>::type, sizeof...(a)>
+{
+    return { std::forward<Args>(a)... };
+}
+
+template< typename Ret, typename Arg, typename A,  size_t N, typename Vec, std::size_t... I>
+inline void scatter_invoke_impl( Ret(Arg::*fun)(A), std::array<Arg*,N> a, Vec&& v, index_sequence<I...> )
+{
+    std::initializer_list<int>{  ((a[I]->*fun)(v[I]) ,0)... };
+}
+
+template<typename Fun, typename Arg, std::size_t N, typename Vec>
+inline void scatter_invoke(Fun fun, std::array<Arg,N> args, Vec&& v)
+{
+    scatter_invoke_impl( fun, args, std::forward<Vec>(v), make_index_sequence<N>{} );
+}
+
+template<typename Fun, typename Arg, typename Vec>
+inline void scatter_invoke(Fun fun, std::array<Arg,1> args, Vec&& v)
+{
+    (args[0]->*fun)(std::forward<Vec>(v));
+}
+
+
+template <typename Iterator1, typename Iterator2, typename Fun, std::size_t... I>
+void for_each_n_impl( Iterator1 first, Iterator2 last, Fun f, index_sequence<I...>) {
+   using diff_t = typename std::iterator_traits<Iterator1>::difference_type;
+   while ( LIKELY( std::distance(first,last) >= static_cast<diff_t>(sizeof...(I)) ) ) {
+      f(first[I]...); first += sizeof...(I);
+   }
+   while ( first!=last ) { f(*first); ++first; }
+}
+
+template <size_t N, typename Iterator1, typename Iterator2, typename Fun>
+void for_each_n( Iterator1&& first, Iterator2&& last, Fun f) {
+    if (N==1) std::for_each(std::forward<Iterator1>(first), std::forward<Iterator2>(last), std::forward<Fun>(f));
+    else      for_each_n_impl(std::forward<Iterator1>(first), std::forward<Iterator2>(last), std::forward<Fun>(f), make_index_sequence<N>{} );
+}
+
 
 #endif

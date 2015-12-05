@@ -17,6 +17,7 @@
 #include "PatFwdRegionCounter.h"
 #include "PatFwdFitParabola.h"
 #include "PatFwdFitLine.h"
+#include "VectorizationSupport.h"
 //-----------------------------------------------------------------------------
 // Implementation file for class : PatFwdTool
 //
@@ -430,10 +431,9 @@ StatusCode PatFwdTool::initialize ( ) {
   return StatusCode::SUCCESS;
 }
 
-#include "VectorizationSupport.h"
 template <bool withoutBField, typename ... Hits>
-std::array<double, sizeof...(Hits)> 
-PatFwdTool::xAtReferencePlane( const PatFwdTrackCandidate& track, double z_magnet, Hits... hits ) const 
+void
+PatFwdTool::setXAtReferencePlane( const PatFwdTrackCandidate& track, double z_magnet, Hits... hits ) const 
 {
   using double_v = typename vector_type<double,sizeof...(Hits)>::type;
 
@@ -459,16 +459,16 @@ PatFwdTool::xAtReferencePlane( const PatFwdTrackCandidate& track, double z_magne
   }
   auto x = track.xStraight( zMagnet );
   x     += ( xHit - x ) * ( zReference() - zMagnet ) / ( zHit - zMagnet );
-  return scatter_array<double,sizeof...(Hits)>(x);
+  scatter_invoke(&PatFwdHit::setProjection,make_array(hits...),x);
 }
 
 // explicitly instantiate the relevant templates...
-#ifdef PATFWDTOOL_VEC
-template std::array<double, 2ul> PatFwdTool::xAtReferencePlane<false,PatForwardHit*, PatForwardHit*>(const PatFwdTrackCandidate&, double, PatForwardHit*, PatForwardHit*) const;
-template std::array<double, 2ul> PatFwdTool::xAtReferencePlane<true,PatForwardHit*, PatForwardHit*>(const PatFwdTrackCandidate&, double, PatForwardHit*, PatForwardHit*) const;
-#endif
-template std::array<double, 1ul> PatFwdTool::xAtReferencePlane<false,PatForwardHit*>(const PatFwdTrackCandidate&, double, PatForwardHit* ) const;
-template std::array<double, 1ul> PatFwdTool::xAtReferencePlane<true,PatForwardHit*>(const PatFwdTrackCandidate&, double, PatForwardHit* ) const;
+//template void PatFwdTool::setXAtReferencePlane<false,PatForwardHit*, PatForwardHit*, PatForwardHit*, PatForwardHit*>(const PatFwdTrackCandidate&, double, PatForwardHit*, PatForwardHit*, PatForwardHit*, PatForwardHit*) const;
+//template void PatFwdTool::setXAtReferencePlane<true,PatForwardHit*, PatForwardHit*, PatForwardHit*, PatForwardHit*>(const PatFwdTrackCandidate&, double, PatForwardHit*, PatForwardHit*, PatForwardHit*, PatForwardHit*) const;
+template void PatFwdTool::setXAtReferencePlane<false,PatForwardHit*, PatForwardHit*>(const PatFwdTrackCandidate&, double, PatForwardHit*, PatForwardHit*) const;
+template void PatFwdTool::setXAtReferencePlane<true,PatForwardHit*, PatForwardHit*>(const PatFwdTrackCandidate&, double, PatForwardHit*, PatForwardHit*) const;
+template void PatFwdTool::setXAtReferencePlane<false,PatForwardHit*>(const PatFwdTrackCandidate&, double, PatForwardHit* ) const;
+template void PatFwdTool::setXAtReferencePlane<true,PatForwardHit*>(const PatFwdTrackCandidate&, double, PatForwardHit* ) const;
 
 double PatFwdTool::updateTrackAndComputeZMagnet( PatFwdTrackCandidate& track, const PatFwdHit* hit ) const {
 

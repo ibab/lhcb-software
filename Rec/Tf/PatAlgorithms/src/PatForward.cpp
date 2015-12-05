@@ -13,14 +13,14 @@
 // 2005-04-01 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-class count_hits { 
+class count_hits {
 
     enum { ibTT0, ib0, ibTT1, ib1, icommon };
     std::array<short,5> m_count;// nbTT0, nb0, nbTT1, nb1, nbcommon
 
 public:
     count_hits(const LHCb::Track& lhs, const LHCb::Track& rhs)
-    : m_count{{0,0,0,0,0}} 
+    : m_count{{0,0,0,0,0}}
     {
       // adapted from Track::nCommonLhcbIDs
       auto i1 = std::begin(lhs.lhcbIDs());
@@ -36,8 +36,8 @@ public:
           f2(*i2); ++i2;
         } else {
           if (!i1->isVelo()) {
-                if (i1->isTT()) { ++m_count[ibTT0]; ++m_count[ibTT1]; 
-                } else { ++m_count[ib0]; ++m_count[ib1]; ++m_count[icommon]; 
+                if (i1->isTT()) { ++m_count[ibTT0]; ++m_count[ibTT1];
+                } else { ++m_count[ib0]; ++m_count[ib1]; ++m_count[icommon];
                 }
           }
           ++i1;
@@ -69,16 +69,16 @@ PatForward::PatForward( const std::string& name,
   , m_rawBankDecoder(nullptr)
   , m_forwardTool(nullptr)
   , m_timerTool(nullptr)
-{ 
+{
   declareProperty( "InputTracksName",    m_inputTracksName    = LHCb::TrackLocation::Velo );
   declareProperty( "OutputTracksName",   m_outputTracksName   = LHCb::TrackLocation::Forward);
   declareProperty( "ForwardToolName",    m_forwardToolName    = "PatForwardTool" );
-  declareProperty( "MaxNVelo",   m_maxNVelo = 1000 );  
-  declareProperty( "maxITHits" ,  m_maxNumberITHits = 3000);  
+  declareProperty( "MaxNVelo",   m_maxNVelo = 1000 );
+  declareProperty( "maxITHits" ,  m_maxNumberITHits = 3000);
   declareProperty( "maxOTHits" , m_maxNumberOTHits = 10000 );
   declareProperty( "DeltaNumberInT",   m_deltaNumberInT  = 3 );
   declareProperty( "DeltaNumberInTT",  m_deltaNumberInTT = 1 );
-  declareProperty( "DoCleanUp", m_doClean = true); 
+  declareProperty( "DoCleanUp", m_doClean = true);
   declareProperty( "TimingMeasurement", m_doTiming = false);
   // switch on or off NN var. writing
   declareProperty( "writeNNVariables", m_writeNNVariables = true);
@@ -123,7 +123,7 @@ PatForward::overlaps(const LHCb::Track* lhs, const LHCb::Track* rhs ) const
                          lhs->key(), rhs->key(), N.nb0(), N.nb1(), N.nbcommon(), N.nbTT0(), N.nbTT1(),
                          lhs->chi2PerDoF(), rhs->chi2PerDoF() ) << endmsg;
     }
-    auto dnbTT = N.nbTT0() - N.nbTT1(); 
+    auto dnbTT = N.nbTT0() - N.nbTT1();
     auto dnb   = N.nb0() - N.nb1();
     if (  dnb   > m_deltaNumberInT ||  dnbTT > m_deltaNumberInTT ) return +1;
     if ( -dnb   > m_deltaNumberInT || -dnbTT > m_deltaNumberInTT ) return -1;
@@ -136,11 +136,11 @@ PatForward::overlaps(const LHCb::Track* lhs, const LHCb::Track* rhs ) const
 StatusCode PatForward::execute() {
 
   //== Prepare tracks
- 
-  LHCb::Track::Range inputTracks   = get<LHCb::Track::Range>( m_inputTracksName ); 
 
-  LHCb::Tracks* outputTracks  = 
-    getOrCreate<LHCb::Tracks,LHCb::Tracks>( m_outputTracksName);
+  auto inputTracks   = get<LHCb::Track::Range>( m_inputTracksName );
+
+  LHCb::Tracks* outputTracks  =
+    getOrCreate<LHCb::Tracks,LHCb::Tracks>(m_outputTracksName);
 
   // S.Stahl: Why are GEC cuts in here?
   if (inputTracks.size() > m_maxNVelo) {
@@ -154,7 +154,7 @@ StatusCode PatForward::execute() {
     return Warning("Too many velo tracks", StatusCode::SUCCESS, 0);
   }
  // reject hot events
-  const LHCb::STLiteCluster::STLiteClusters* clusterCont 
+  const LHCb::STLiteCluster::STLiteClusters* clusterCont
     = get<LHCb::STLiteCluster::STLiteClusters>(LHCb::STLiteClusterLocation::ITClusters);
   if (clusterCont->size() > m_maxNumberITHits ){
      LHCb::ProcStatus* procStat =
@@ -165,7 +165,7 @@ StatusCode PatForward::execute() {
       // explicitly add a status code)
       procStat->addAlgorithmStatus(name(), "Tracking", "LimitOfITHitsExceeded", -3 , true );
     return Warning("Too many IT hits event rejected", StatusCode::SUCCESS, 0);
-  }  
+  }
 
   const unsigned int nHitsInOT = m_rawBankDecoder->totalNumberOfHits();
   if (nHitsInOT > m_maxNumberOTHits){
@@ -176,35 +176,33 @@ StatusCode PatForward::execute() {
       // (ProcStatus returns zero status for us in cases where we don't
       // explicitly add a status code)
      procStat->addAlgorithmStatus(name(), "Tracking", "LimitOfOTHitsExceeded", -3 , true );
-    return Warning("Too Many OT hits event rejected", StatusCode::SUCCESS,0); 
+    return Warning("Too Many OT hits event rejected", StatusCode::SUCCESS,0);
   }
 
   bool dbg = msgLevel(MSG::DEBUG);
   if ( dbg ) debug() << "==> Execute" << endmsg;
   if ( dbg  || m_doTiming ) m_timerTool->start( m_fwdTime );
-  
+
   int oriSize = outputTracks->size();
 
   counter("#Seeds") += inputTracks.size();
-  
+
   for ( const LHCb::Track *seed: inputTracks ) {
     auto prevSize = outputTracks->size();
     m_forwardTool->forwardTrack(seed, outputTracks );
     if ( dbg ) debug()  << " track " << seed->key()
                         << " position " << seed->position()
-                        << " slopes " << seed->slopes()  
+                        << " slopes " << seed->slopes()
                         << " cov \n" << seed->firstState().covariance() << "\n"
                         << " produced " << outputTracks->size() - prevSize
                         << " tracks " << endmsg;
-    
-    
   }
   // added for NNTools -- check how many tracks have common hits
   if( m_writeNNVariables){
     for( auto tr : *outputTracks ) {
       auto x0 = tr->stateAt( LHCb::State::AtT )->x();
       auto matches_tr = [=](const LHCb::Track* t) {
-            return fabs( x0 - t->stateAt( LHCb::State::AtT )->x() ) < 5.  && 
+            return fabs( x0 - t->stateAt( LHCb::State::AtT )->x() ) < 5.  &&
                    count_hits( *tr , *t ).overlaps() ;
       };
       tr->addInfo(LHCb::Track::NCandCommonHits,
@@ -242,9 +240,7 @@ StatusCode PatForward::execute() {
             << inputTracks.size() << " Velo tracks in " << t << " ms"
             << endmsg;
   }
-
   counter("#Tracks") += outputTracks->size() - oriSize;
-
   return StatusCode::SUCCESS;
 }
 

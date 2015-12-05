@@ -3,6 +3,9 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2015-12-05 - Gerhard Raven
+ - improve/simplify vectorization in PatFwdTool using new scatter_invoke 
+   and make_array functionality in VectorizationSupport.h
 
 !========================= PatAlgorithms v4r44 2015-11-23 =========================
 ! 2015-11-2 - Michel De Cian
