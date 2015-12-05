@@ -14,6 +14,8 @@
 #include "Event/MCCaloDigit.h"
 #include "Event/MCCaloHit.h"
 
+#include <boost/utility/string_ref.hpp>
+
 // local
 #include "CaloSignalAlg.h"
 
@@ -28,6 +30,22 @@
  *  @date:   21 February 2001
  */
 // ============================================================================
+
+namespace {
+       int getGlobalTimeOffset( boost::string_ref rootInTES ) {
+           if ( rootInTES.starts_with("Prev") && rootInTES.ends_with("/") ) {
+              rootInTES.remove_prefix(4);
+              rootInTES.remove_suffix(1);
+              return - std::stoi( rootInTES.data() );
+           }
+           if ( rootInTES.starts_with("Next") && rootInTES.ends_with("/") ) {
+              rootInTES.remove_prefix(4);
+              rootInTES.remove_suffix(1);
+              return std::stoi( rootInTES.data() );
+           }
+           return 0;
+       }
+}
 
 DECLARE_ALGORITHM_FACTORY( CaloSignalAlg )
 
@@ -164,6 +182,7 @@ StatusCode CaloSignalAlg::execute() {
   double storedE;
   int    storeType;
 
+  int globalTimeOffset = getGlobalTimeOffset( rootInTES() ) ; // in time bin number
   for( hitIt = hits->begin(); hits->end() != hitIt ; ++hitIt ) {
     hit = *hitIt;
     LHCb::CaloCellID id = hit->cellID() ;
@@ -175,7 +194,7 @@ StatusCode CaloSignalAlg::execute() {
     
     storeType = 0;
     storedE   = hit->activeE();
-    timeBin   = int( floor( hit->time() + .5 + globalTimeOffset()/25. ) );//== Now in time bin number...
+    timeBin   = int( floor( hit->time() + .5 + globalTimeOffset ) );//== Now in time bin number...
 
     if ( m_ignoreTimeInfo ) timeBin = 0;
       
@@ -235,7 +254,7 @@ StatusCode CaloSignalAlg::execute() {
         
         storeType = 0;
         storedE   = hit->activeE();
-        timeBin   = int( floor( hit->time() + .5 + globalTimeOffset()/25. ) );//== time bin number...
+        timeBin   = int( floor( hit->time() + .5 + globalTimeOffset ) );//== time bin number...
         if ( m_ignoreTimeInfo ) timeBin = 0;
 
         if ( 1 == timeBin ) {
