@@ -40,7 +40,7 @@ GaudiAlgorithm(name,pSvcLocator),
   //----- Newer Faster stereo method ( on by Default ), faster than normal one but need some retuning of the line Chi2 and tolerances
   declareProperty("stereo2",m_stereo2=false);
   {
-    std::vector<int> maxBest = boost::assign::list_of(2)(5)(5);
+    std::vector<int> maxBest = boost::assign::list_of(2)(2)(3);
     declareProperty("maxNbestCluster", m_maxNClusters = maxBest);
   }
   declareProperty( "SlopeCorr", m_SlopeCorr = false); //Changhe weight = 1./err -> 1./err*cos(tx)*cos(tx)
@@ -153,10 +153,10 @@ GaudiAlgorithm(name,pSvcLocator),
   //--------- SelectHoughCluster
   {
     // if stereo2 set to false
-    declareProperty("UseLineY", m_useLineY = true);    // Pre-fit a line?
+    declareProperty("UseLineY", m_useLineY = true);  // Pre-fit a line?
     std::vector<unsigned int> minUV6 = boost::assign::list_of(4)(4)(4); // minUVLayers when XZ candidate has 6 hits  (planes)
-    std::vector<unsigned int> minUV5 = boost::assign::list_of(4)(4)(4); // minUVLayers when XZ candidate has 5 hits  (planes)
-    std::vector<unsigned int> minUV4 = boost::assign::list_of(5)(5)(5); // minUVLayers when XZ candidate has 4 hits  (planes)
+    std::vector<unsigned int> minUV5 = boost::assign::list_of(5)(5)(4); // minUVLayers when XZ candidate has 5 hits  (planes)
+    std::vector<unsigned int> minUV4 = boost::assign::list_of(6)(6)(5); // minUVLayers when XZ candidate has 4 hits  (planes)
     declareProperty("minUV6"  ,   m_minUV6   =   minUV6);
     declareProperty("minUV5"  ,   m_minUV5   =   minUV5);
     declareProperty("minUV4"  ,   m_minUV4   =   minUV4);

@@ -4,6 +4,13 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2015-12-05 - Renato Quagliani
+ - Change default parameters for HybridSeeding to keep ghost rate under control for stereo2 = True, i.e.,
+ - minUV4          = [ 4,4,4] -> [ 5 , 5 , 5 ]
+ - minUV5          = [ 5,5,5] -> [ 5 , 5 , 4 ]
+ - maxNbestCluster = [ 2,5,5] -> [ 2 , 2 , 3 ] . Tr.Eff ~ 95% for V5 / Noise / SpillOver . Gh.Rate ~15%
+
+
 ! 2015-11-27 - Michel De Cian
  - Fix bug in PrPlaneCounter
 
