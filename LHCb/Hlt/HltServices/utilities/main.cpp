@@ -60,14 +60,14 @@ template <typename V>
 std::string to_json_t::operator()(const std::map<std::string,V>& m) const {
     std::vector<std::string> buf; buf.reserve( m.size() );
     std::transform( std::begin(m), std::end(m), std::back_inserter(buf), to_json );
-    return std::string{"{"} + boost::algorithm::join(buf,",") + "}";
+    return "{" + boost::algorithm::join(buf,",") + "}";
 }
 
 std::string to_json_t::operator()(const std::tuple<std::string,to_json_t::r2t_t,std::string>& e) const {
-    return std::string{"{"}+to_json(std::make_pair("TCK",std::get<0>(e)))
-                     + "," +to_json(std::make_pair("Release2Type",std::get<1>(e)))
-                     + "," +to_json(std::make_pair("label",std::get<2>(e)))
-                     + "}";
+    return "{" +to_json(std::make_pair("TCK",std::get<0>(e)))
+         + "," +to_json(std::make_pair("Release2Type",std::get<1>(e)))
+         + "," +to_json(std::make_pair("label",std::get<2>(e)))
+         + "}";
 }
 
 #include "../src/cdb.h"
