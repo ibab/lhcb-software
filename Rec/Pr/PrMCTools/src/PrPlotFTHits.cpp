@@ -107,6 +107,7 @@ void PrPlotFTHits::plotOccupancy(){
   std::map<int,int> m_Occupancy;
   const LHCb::MCHits *mcHitsNext = getIfExists<LHCb::MCHits>("Next/"+LHCb::MCHitLocation::FT);
   const LHCb::MCHits* mcHitsPrev = getIfExists<LHCb::MCHits>("Prev/"+LHCb::MCHitLocation::FT);
+    
   bool noSpill = false;
   if(! mcHitsNext && !mcHitsPrev){
     info()<<"The sample has been digitized without spillover, Occupancy Plots for them are suppressed"<<endmsg;
@@ -114,6 +115,7 @@ void PrPlotFTHits::plotOccupancy(){
   }
   //"/Event/Prev/MC/FT/Hits"
   LinkedFrom<LHCb::MCHit,LHCb::MCParticle> myMCHitLink( evtSvc(), msgSvc(), LHCb::MCParticleLocation::Default + "2MC" + "FT" + "Hits" );   
+    
   LinkedTo<LHCb::MCParticle, LHCb::FTCluster> myClusterLink ( evtSvc(), msgSvc(), LHCb::FTClusterLocation::Default );         
   LinkedTo<LHCb::MCHit, LHCb::FTCluster> myFTCluster2MCHitLink ( evtSvc(),msgSvc(), LHCb::FTClusterLocation::Default + "2MCHits");
   //"/Event/Prev/MC/FT/Hits"                                             
@@ -121,6 +123,7 @@ void PrPlotFTHits::plotOccupancy(){
   char Title[100];                                                       
   std::vector<int> nHits(12,0);                                          
   MCTrackInfo trackInfo( evtSvc(), msgSvc() );                           
+    
   LHCb::MCVertices* mcVert = getIfExists<LHCb::MCVertices>(LHCb::MCVertexLocation::Default );                                                        
   if(  mcVert == nullptr ){
     error() << "Could not find MCVertices at " << LHCb::MCParticleLocation::Default << endmsg;
@@ -181,19 +184,44 @@ void PrPlotFTHits::plotOccupancy(){
       bool fromMCParticleContrib = false;
       bool spillCluster = false;
       bool NoiseCluster = false;
-      LHCb::MCParticle* mcPart1 = myClusterLink.first( hit->id().ftID());
-       
-      if( mcPart1!=nullptr ){
-        fromMCParticleContrib=true;
+        
+      LHCb::MCParticle* mcPart0 = myClusterLink.first( hit->id().ftID());
+        
+      LHCb::MCParticle* mcPart1 = mcPart0;
+      double maxw = myClusterLink.weight();
+      double w = maxw;
+      
+      while( mcPart0!=nullptr){
+        w = myClusterLink.weight();
+        if( w>maxw){
+          maxw = w;
+          mcPart1 = mcPart;
+        }
+        mcPart0 = myClusterLink.next();
       }
-      if( mcPart1==nullptr){
-        NoiseCluster = true;
-      }                         
-      LHCb::MCHit* mcHit = myFTCluster2MCHitLink.first( hit->id().ftID());
+      LHCb::MCHit* mcHit = nullptr;
+      LHCb::MCHit* mcHitHigh = myFTCluster2MCHitLink.first( hit->id().ftID());
+      double maXweight = myFTCluster2MCHitLink.weight();
+      double weight = maXweight;
+      mcHit = mcHitHigh;
+      while( mcHitHigh!=nullptr){
+        weight = myFTCluster2MCHitLink.weight();
+        if( weight > maXweight){
+          maXweight = weight;
+          mcHit = mcHitHigh;
+        }
+        mcHitHigh = myFTCluster2MCHitLink.next();
+      }
       if(!noSpill){
         if(mcHit!=nullptr && (mcHit->parent() == mcHitsNext || mcHit->parent() == mcHitsPrev)){
           spillCluster = true;
         }
+      }
+      if( mcPart1 != nullptr){
+        fromMCParticleContrib = true;
+      }
+      if( mcHit==nullptr){
+        NoiseCluster = true;
       }
       
       bool RecobleMCParticle = false;
@@ -224,7 +252,7 @@ void PrPlotFTHits::plotOccupancy(){
       if(spillCluster && !noSpill){
         sprintf(layerName,"Layer%i/FromSpillover",layer); 
         sprintf(Title,"Sipm Index Layer %i;Sipm ID;Clusters/Sipm/Event",layer);
-        m_histoTool->plot1D(index,layerName,Title,0.5,96.5,96);
+        m_histoTool->plot1D(index,layerName,Title,0.5,512.5,512);
       }
     }//loop hits
   }//loop zones

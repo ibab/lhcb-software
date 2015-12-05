@@ -4,6 +4,10 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2015-12-05 Renato Quagliani
+  - Fix PlotResidual binning in PrPlotFTHits taking all the time the higher contribution to cluster.
+
+
 ! 2015-12-04 Michel De Cian
  - Add flag to PrChecker to switch between upgrade and non-upgrade location for LHCbID linker table.
 
