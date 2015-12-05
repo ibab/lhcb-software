@@ -3,6 +3,8 @@
 ! Responsible : Vanya Belyaev
 ! Purpose     : Track scaling and smearing
 !-----------------------------------------------------------------------------
+! 2015-12-05 - Gerhard Raven
+ - replace outputLevel with msgLevel
 
 !=================== DaVinciTrackScaling v1r5 2015-12-04 =====================
 
