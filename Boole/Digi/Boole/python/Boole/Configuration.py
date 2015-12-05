@@ -723,7 +723,6 @@ class Boole(LHCbConfigurableUser):
             digi = mainSeq.index("ProcessPhase/Digi")
             taePhase = ProcessPhase( "DigiPrev%s"%taePrev )
             taePhase.RootInTES = "Prev%s/"%taePrev
-            taePhase.GlobalTimeOffset = -taePrev * 25 * ns
             mainSeq.insert(digi,taePhase)
             taeSlots.append( "Prev%s"%taePrev )
             taePrev -= 1
@@ -733,7 +732,6 @@ class Boole(LHCbConfigurableUser):
             digi = mainSeq.index("ProcessPhase/Digi")
             taePhase = ProcessPhase( "DigiNext%s"%taeNext )
             taePhase.RootInTES = "Next%s/"%taeNext
-            taePhase.GlobalTimeOffset = taeNext * 25 * ns
             mainSeq.insert(digi+1,taePhase)
             taeSlots.append( "Next%s"%taeNext )
             taeNext -= 1
