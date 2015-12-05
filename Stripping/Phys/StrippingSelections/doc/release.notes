@@ -5,6 +5,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-05 - Simone Bifani, Harry Cliff, Rafael Silva Coutinho
+  - Updated RelInfo for StrippingBu2LLK.py
+  - Added K*+ll, K1ll and Ltaumu
+
 ! 2015-12-04 - Marco Santimaria
   - Added Bs2MuMuLinesBsstLine to Bs2MuMuLines.py 
 
