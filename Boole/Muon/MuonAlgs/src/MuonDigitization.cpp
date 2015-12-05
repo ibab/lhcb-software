@@ -14,7 +14,25 @@
 #include "SortPhChID.h" 
 #include "ComparePC.h"
 
+#include <boost/utility/string_ref.hpp>
+
 DECLARE_ALGORITHM_FACTORY( MuonDigitization )
+
+namespace {
+       double getGlobalTimeOffset( boost::string_ref rootInTES ) {
+           if ( rootInTES.starts_with("Prev") && rootInTES.ends_with("/") ) {
+              rootInTES.remove_prefix(4);
+              rootInTES.remove_suffix(1);
+              return - std::stoi( rootInTES.data() )*25*Gaudi::Units::ns;
+           }
+           if ( rootInTES.starts_with("Next") && rootInTES.ends_with("/") ) {
+              rootInTES.remove_prefix(4);
+              rootInTES.remove_suffix(1);
+              return std::stoi( rootInTES.data() )*25*Gaudi::Units::ns;
+           }
+           return 0.;
+       }
+}
 
 //reserve space for static variable
 std::string MuonDigitization::spill[6] = 
@@ -400,6 +418,8 @@ MuonDigitization::createInput(
   
   //loop over the containers
   std::vector<MuonPhPreInput> keepTemporary[20] ;	
+
+  double globalTimeOffset = getGlobalTimeOffset( rootInTES() );
   
   //  info()<<"quanti eventi "<<m_numberOfEvents<<endmsg;
   
@@ -492,7 +512,7 @@ MuonDigitization::createInput(
                                    zcenter*zcenter)/300.0;
             //info()<<" tof "<<tofOfLight<<" "<<hitStation<<" "<<hitRegion<<" "<<zcenter<<endmsg;
             inputPointer->getHitTraceBack()
-              ->setHitArrivalTime((*iter)->time()+globalTimeOffset()+
+              ->setHitArrivalTime((*iter)->time()+globalTimeOffset+
                                   +spillTime-tofOfLight+0.5);
 	    //
             inputPointer->getHitTraceBack()
