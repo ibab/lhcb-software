@@ -247,6 +247,13 @@ CHI2MM    = LoKi.Particles.DeltaMeasuredMassChi2
 CHI2MMASS = CHI2MM
 ## @see LoKi::Cuts::CL  
 CL       = LoKi.Particles.ConfidenceLevel   () 
+## @see LoKi::Cuts::CHI2VX
+CHI2VX     = LoKi.Particles.Chi2VX     () 
+## @see LoKi::Cuts::CHI2VXNDF
+CHI2VXNDF  = LoKi.Particles.Chi2VXnDOF () 
+## @see LoKi::Cuts::CHI2VXNDOF
+CHI2VXNDOF = LoKi.Particles.Chi2VXnDOF () 
+
 ## @see LoKi::Cuts::WEIGHT
 WEIGHT   = LoKi.Particles.Weight            () 
 ## @see LoKi::Cuts::ISBASIC 

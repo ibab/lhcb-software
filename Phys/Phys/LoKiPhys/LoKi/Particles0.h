@@ -1633,6 +1633,55 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class Chi2VX
+     *  trivial accessor to get estimate chi2 of the vertex 
+     *  @see LoKi::Cuts::CHI2VX 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2015-12-05
+     */
+    class GAUDI_API Chi2VX
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+    {
+    public:
+      // ======================================================================
+      /// Default Constructor
+      Chi2VX(){} ;
+      /// MANDATORY: virtual destructor 
+      virtual ~Chi2VX () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Chi2VX* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Chi2VXnDOF
+     *  trivial accessor to get estimate chi2 of the vertex per degree of freedom 
+     *  @see LoKi::Cuts::CHI2VXNDOF
+     *  @see LoKi::Cuts::CHI2VXNDF
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2015-12-05
+     */
+    class GAUDI_API Chi2VXnDOF
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+    {
+    public:
+      // ======================================================================
+      /// Default Constructor
+      Chi2VXnDOF(){} ;
+      /// MANDATORY: virtual destructor 
+      virtual ~Chi2VXnDOF () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Chi2VXnDOF* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    } ;
+    // ========================================================================
   } //                                         end of namespace LoKi::Particles
   // ==========================================================================
   namespace Cuts 
@@ -1645,6 +1694,54 @@ namespace LoKi
 #pragma warning(disable:854)
 #pragma warning(push)
 #endif
+    // ========================================================================
+    /** @var CHI2VX
+     *  get chi2 of vertex 
+     * 
+     *  @code 
+     * 
+     *   const LHCb::Particle* p = ... ;
+     *
+     *   const double chi2 = CHI2VX ( p ) ;
+     *
+     *  @endcode 
+     *  @see LoKi::Particles::Chi2VX
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2010-12-09     
+     */ 
+    const LoKi::Particles::Chi2VX                                      CHI2VX ;
+    // ========================================================================
+    /** @var CHI2VXNDF
+     *  get  reduced chi2 of vertex  (per degree of freedon)
+     * 
+     *  @code 
+     * 
+     *   const LHCb::Particle* p = ... ;
+     *
+     *   const double chi2ndf = CHI2VXNDF ( p ) ;
+     *
+     *  @endcode 
+     *  @see LoKi::Particles::Chi2VXnDOF
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2010-12-09     
+     */ 
+    const LoKi::Particles::Chi2VXnDOF                               CHI2VXNDF ;
+    // ========================================================================
+    /** @var CHI2VXNDOF
+     *  get  reduced chi2 of vertex  (per degree of freedon)
+     * 
+     *  @code 
+     * 
+     *   const LHCb::Particle* p = ... ;
+     *
+     *   const double chi2ndf = CHI2VXNDOF ( p ) ;
+     *
+     *  @endcode 
+     *  @see LoKi::Particles::Chi2VXnDOF
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2010-12-09     
+     */ 
+    const LoKi::Particles::Chi2VXnDOF                              CHI2VXNDOF ;
     // ========================================================================
     /** @typedef PCOV2 
      *  Trivial accessor toe elemenst of particel covarinacte matrix :

@@ -1493,6 +1493,100 @@ std::ostream&
 LoKi::Particles::M2err2::fillStream( std::ostream& s ) const 
 { return s << "M2ERR2" ; }
 
+
+
+
+
+
+
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Particles::Chi2VX::~Chi2VX(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::Chi2VX*
+LoKi::Particles::Chi2VX::clone() const 
+{ return new LoKi::Particles::Chi2VX ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Particles::Chi2VX::result_type 
+LoKi::Particles::Chi2VX::operator() 
+  ( LoKi::Particles::Chi2VX::argument p ) const 
+{
+  //
+  if ( 0 == p ) 
+  {
+    Error("LHCb::Particle* points to NULL, return 'InvalidChi2'") ;
+    return LoKi::Constants::InvalidChi2 ;
+  }
+  //
+  const LHCb::VertexBase* vx = p->endVertex() ;
+  //
+  if ( 0 == vx ) 
+  {
+    Error("EndVertex points to NULL, return 'InvalidChi2'") ;
+    return LoKi::Constants::InvalidChi2 ;
+  }
+  //
+  return vx->chi2() ;
+}
+// ============================================================================
+//  OPTIONAL: the specific printout 
+// ============================================================================
+std::ostream& 
+LoKi::Particles::Chi2VX::fillStream( std::ostream& s ) const 
+{ return s << "CHI2VX" ; }
+// ============================================================================
+
+
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Particles::Chi2VXnDOF::~Chi2VXnDOF(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::Chi2VXnDOF*
+LoKi::Particles::Chi2VXnDOF::clone() const 
+{ return new LoKi::Particles::Chi2VXnDOF ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Particles::Chi2VXnDOF::result_type 
+LoKi::Particles::Chi2VXnDOF::operator() 
+  ( LoKi::Particles::Chi2VXnDOF::argument p ) const 
+{
+  //
+  if ( 0 == p ) 
+  {
+    Error("LHCb::Particle* points to NULL, return 'InvalidChi2'") ;
+    return LoKi::Constants::InvalidChi2 ;
+  }
+  //
+  const LHCb::VertexBase* vx = p->endVertex() ;
+  //
+  if ( 0 == vx ) 
+  {
+    Error("EndVertex points to NULL, return 'InvalidChi2'") ;
+    return LoKi::Constants::InvalidChi2 ;
+  }
+  //
+  return vx->chi2() / std::max ( vx->nDoF() , 1 ) ;
+}
+// ============================================================================
+//  OPTIONAL: the specific printout 
+// ============================================================================
+std::ostream& 
+LoKi::Particles::Chi2VXnDOF::fillStream( std::ostream& s ) const 
+{ return s << "CHI2VXNDF" ; }
+// ============================================================================
+
+
+
+
 // ============================================================================
 // IsID 
 // ============================================================================

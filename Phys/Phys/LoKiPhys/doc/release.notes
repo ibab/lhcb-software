@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2015-12-05 - Vanya Belyaev
+ - add CHI2VX, CHI2NDF and CHI2NDOF symbols 
+
 !========================== LoKiPhys v11r6 2015-12-02 =========================
 
 ! 2015-11-30 - Wenbin Qian
