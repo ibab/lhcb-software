@@ -5,7 +5,8 @@ for B2CC WG.
 
 # last update: 05th Dec 2015
 _selections = ['StrippingBd2JpsieeKS',
-               'StrippingB2JpsiPi0']#,
+               'StrippingB2JpsiPi0_Run1']#,
+               #'StrippingB2JpsiPi0',
                #'StrippingB2JpsiXforBeta_s',
                #'StrippingBs2EtacPhiBDT',
                #'StrippingBs2JpsieePhi',

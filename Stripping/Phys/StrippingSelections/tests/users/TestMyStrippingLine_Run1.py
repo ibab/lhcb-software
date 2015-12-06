@@ -32,7 +32,7 @@ from Configurables import DecodeRawEvent
 DecodeRawEvent().setProp("OverrideInputs",4.2)
 
 # Specify the name of your configuration
-confname="DstarPromptWithD02HHMuMuControl" #FOR USERS
+confname="BetaSPi0" #FOR USERS
 
 # NOTE: this will work only if you inserted correctly the 
 # default_config dictionary in the code where your LineBuilder 

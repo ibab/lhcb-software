@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-06 - Carlos Vazquez Sierra
+ - Added B2JpsiPi0 line for S21p1
+
 ! 2015-12-05 - Francesco Dettori 
   - Lines added to StrippingRareStrange: 
     - Sigma-> p e e and Sigma-> p mu mu detached 
