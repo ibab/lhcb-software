@@ -6,6 +6,9 @@
 
 !========================= TMVAWeights v1r6 2015-08-19 =========================
 
+! 2015-12-06 - Carlos Vazquez Sierra
+ - Added data/B2JpsiPi0_Fisher_v1r2.xml for Stripping21p1
+
 ! 2015-07-30 - Stefano Perazzini
  - Added data/B2HH_BDT_v1r5.xml for Stripping23
 
