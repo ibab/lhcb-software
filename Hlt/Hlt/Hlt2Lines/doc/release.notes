@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-12-06 - Dan Johnson
+ - Introduce 0.05 prescale for Hlt2LowMultDiElectron_noTrFilt
+
 ! 2015-11-28 - Dan Johnson
  - Update default track chi2 cut for hadrons in LowMult lines
 

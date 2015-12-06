@@ -62,7 +62,7 @@ theseSlots =      { 'Prescale' : { 'Hlt2LowMultL2pPi'       : 1.0
                                  , 'Hlt2LowMultPi0'         : 1.0
                                  # Electron lines
                                  , 'Hlt2LowMultDiElectron'    : 1.0
-                                 , 'Hlt2LowMultDiElectron_noTrFilt': 1.0
+                                 , 'Hlt2LowMultDiElectron_noTrFilt': 0.05
                                  # Technical lines
                                  , 'Hlt2NoBiasNonBeamBeam'              : 0.33 # Aim for 100 Hz from 300 Hz non-bb crossings
                                  , 'Hlt2LowMultTechnical_MinBias'       : 1.0
