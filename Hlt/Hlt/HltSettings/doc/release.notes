@@ -3,6 +3,8 @@
 ! Responsible : Vladimir Gligorov, Mika Vesterinen, Roel Aaij
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+! 2015-12-06 - Dan Johnson
+ - Update prescale for low mult dielectron calibration line for 2016
 
 ! 2015-11-28 - Dan Johnson
  - Update track chi2 cut for low mult hadron lines
