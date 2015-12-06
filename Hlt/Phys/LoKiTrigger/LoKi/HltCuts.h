@@ -38,7 +38,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */
-    const LoKi::Tracks::DeltaE                                           TrDE ;
+    const LoKi::Tracks::DeltaE                                           TrDE{} ;
     // ========================================================================
     /** @var TrVIP 
      *  Evaluator of the impact parameter of the track with respect to the vertex 
@@ -51,7 +51,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */
-    const LoKi::Tracks::ImpactParameter                                 TrVIP ;
+    const LoKi::Tracks::ImpactParameter                                 TrVIP{} ;
     // ========================================================================
     /** @var TTrDA
      *  The evaluator of "delta angle" between two tracks 
@@ -63,7 +63,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */     
-    const LoKi::Tracks::DeltaAngle                                      TTrDA ;
+    const LoKi::Tracks::DeltaAngle                                      TTrDA{} ;
     // ========================================================================
     /** @var TTrDOCA
      *
@@ -83,7 +83,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */
-    const LoKi::Tracks::DistanceOfClosestApproach                     TTrDOCA ;
+    const LoKi::Tracks::DistanceOfClosestApproach                     TTrDOCA{} ;
     // ========================================================================
     /** @var TTrDP 
      *  The evaluator of "delta P" between two tracks 
@@ -95,7 +95,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */     
-    const LoKi::Tracks::DeltaP                                          TTrDP ;
+    const LoKi::Tracks::DeltaP                                          TTrDP{} ;
     // ========================================================================
     /** @typedef TTrMATCH
      *  Simple evaluator of "track-matching"

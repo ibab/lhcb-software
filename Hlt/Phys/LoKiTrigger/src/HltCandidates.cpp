@@ -8,7 +8,6 @@
 // ============================================================================
 // local
 // ============================================================================
-#include "LoKi/select.h"
 #include "LoKi/HltTool.h"
 #include "LoKi/HltCandidates.h"
 #include "LoKi/HltStages.h"
@@ -739,13 +738,9 @@ LoKi::Candidates::SlotFilter* LoKi::Candidates::SlotFilter::clone() const
 LoKi::Candidates::SlotFilter::result_type LoKi::Candidates::SlotFilter::
 operator()( LoKi::Candidates::SlotFilter::argument a ) const
 {
-    typedef LoKi::Candidates::SlotFilter::result_type RESULT;
-    //
-    RESULT result;
+    LoKi::Candidates::SlotFilter::result_type result;
     result.reserve( a.size() );
-    //
-    LoKi::select( a.begin(), a.end(), std::back_inserter( result ), m_cut );
-    //
+    std::copy_if( a.begin(), a.end(), std::back_inserter( result ), m_cut );
     return result;
 }
 // ============================================================================
@@ -827,9 +822,7 @@ LoKi::Candidates::SlotMap::SlotMap( const LoKi::Candidates::SlotFun& fun )
 // ============================================================================
 // MANDATORY: virtual destructor
 // ============================================================================
-LoKi::Candidates::SlotMap::~SlotMap()
-{
-}
+LoKi::Candidates::SlotMap::~SlotMap() = default;
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================
@@ -843,12 +836,9 @@ LoKi::Candidates::SlotMap* LoKi::Candidates::SlotMap::clone() const
 LoKi::Candidates::SlotMap::result_type LoKi::Candidates::SlotMap::
 operator()( LoKi::Candidates::SlotMap::argument a ) const
 {
-    typedef LoKi::Candidates::SlotMap::argument_type ARGUMENT;
-    typedef LoKi::Candidates::SlotMap::result_type RESULT;
-
-    RESULT result;
+    LoKi::Candidates::SlotMap::result_type result;
     // Loop over candidates
-    LoKi::transform( a.begin(), a.end(), std::back_inserter( result ), m_fun );
+    std::transform( a.begin(), a.end(), std::back_inserter( result ), m_fun );
     //
     return result;
 }

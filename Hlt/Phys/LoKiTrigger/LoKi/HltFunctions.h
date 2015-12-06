@@ -80,28 +80,30 @@ namespace LoKi
      *
      *  The class and implementation comes from  HltBase/HltFunctions.h
      *
-     *  The actual lines are copied from the package Hlt/HltBase 
+     *  The actual lines are copied from the package Hlt/HltBase
      *   written by Jose Angel Hernando Morata
      *
      *  @see LoKi::Cuts::TrDP
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-13
-     */     
-    class DeltaP 
+     */
+    class DeltaP
       : public LoKi::BasicFunctors<LoKi::TrackTypes::TrackPair>::Function
     {
     public:
       /// Default constructor
       DeltaP() { }
       /// MANDATORY: virtual destructor
-      virtual ~DeltaP() {} ;
-      /// MANDATORY: clone method ("virtual constructor")  
-      virtual  DeltaP* clone() const { return new DeltaP(*this); }
-      /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument a ) const ;
-      /// OPTIONAL: the nice printout 
-      virtual std::ostream& fillStream( std::ostream& s ) const 
-      { return s << "TTrDP" ; }      
+      ~DeltaP() override = default;
+      /// MANDATORY: clone method ("virtual constructor")
+      DeltaP* clone() const override
+      { return new DeltaP(*this); }
+      /// MANDATORY: the only one essential method
+      using LoKi::BasicFunctors<LoKi::TrackTypes::TrackPair>::Function::operator();
+      result_type operator() ( argument a ) const override;
+      /// OPTIONAL: the nice printout
+      std::ostream& fillStream( std::ostream& s ) const override
+      { return s << "TTrDP" ; }
     } ;
     // ========================================================================
     /** @class DeltaE
@@ -109,14 +111,14 @@ namespace LoKi
      *
      *  The class and implementation comes from  HltBase/HltFunctions.h
      *
-     *  The actual lines are copied from the package Hlt/HltBase 
+     *  The actual lines are copied from the package Hlt/HltBase
      *   written by Jose Angel Hernando Morata
      *
      *  @see LoKi::Cuts::TrDE
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-13
-     */     
-    class DeltaE 
+     */
+    class DeltaE
       : public LoKi::BasicFunctors<const LHCb::Track*>::Function
     {
     public:
@@ -124,146 +126,151 @@ namespace LoKi
       /// Default constructor
       DeltaE() { }
       /// MANDATORY: virtual destructor
-      virtual ~DeltaE() {} ;
-      /// MANDATORY: clone method ("virtual constructor")  
-      virtual  DeltaE* clone() const { return new DeltaE(*this); }
-      /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument a ) const ;
-      /// OPTIONAL: the nice printout 
-      virtual std::ostream& fillStream( std::ostream& s ) const 
-      { return s << "TrDE" ; }       
+      ~DeltaE() override = default;
+      /// MANDATORY: clone method ("virtual constructor")
+      DeltaE* clone() const override
+      { return new DeltaE(*this); }
+      /// MANDATORY: the only one essential method
+      using LoKi::BasicFunctors<const LHCb::Track*>::Function::operator();
+      result_type operator() ( argument a ) const override;
+      /// OPTIONAL: the nice printout
+      std::ostream& fillStream( std::ostream& s ) const override
+      { return s << "TrDE" ; }
       // ======================================================================
    } ;
     // ========================================================================
     /** @class TrackMatch
      *  "Match" twho tracks and return the "distance"
      *
-     *  The actual lines are copied from the package Hlt/HltBase 
+     *  The actual lines are copied from the package Hlt/HltBase
      *   written by Jose Angel Hernando Morata
      *  @see LoKi::Cuts::TTrMATCH
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-13
-     */     
-    class TrackMatch 
+     */
+    class TrackMatch
       : public LoKi::BasicFunctors<LoKi::TrackTypes::TrackPair>::Function
     {
     public:
-      /// constructor from the tool 
+      /// constructor from the tool
       TrackMatch ( ITrackBiFunctionTool* tool ) ;
-      /// constructor from the tool 
+      /// constructor from the tool
       TrackMatch ( const LoKi::Interface<ITrackBiFunctionTool>& tool ) ;
-      /// MANDATORY: virtual destructor 
-      virtual ~TrackMatch() {}
-      /// MANDATORY: clone method ("virtual constructor")  
-      virtual TrackMatch* clone() const { return new TrackMatch(*this) ; }
-      /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument a ) const ;
-      /// OPTIONAL: the nice printout 
-      virtual std::ostream& fillStream( std::ostream& s ) const 
-      { return s << "TTrMATCH" ; }      
+      /// MANDATORY: virtual destructor
+      ~TrackMatch() override = default;
+      /// MANDATORY: clone method ("virtual constructor")
+      TrackMatch* clone() const override
+      { return new TrackMatch(*this) ; }
+      /// MANDATORY: the only one essential method
+      using LoKi::BasicFunctors<LoKi::TrackTypes::TrackPair>::Function::operator();
+      result_type operator() ( argument a ) const override;
+      /// OPTIONAL: the nice printout
+      std::ostream& fillStream( std::ostream& s ) const override
+      { return s << "TTrMATCH" ; }
     public:
       /// cast to the tool
       operator const LoKi::Interface<ITrackBiFunctionTool>& () const { return m_tool ;}
     private:
-      // no default constructor 
+      // no default constructor
       TrackMatch() ; ///< no default constructor
     private:
-      // the tool itself 
-      LoKi::Interface<ITrackBiFunctionTool> m_tool ; ///< the tool itself 
-    } ;  
+      // the tool itself
+      LoKi::Interface<ITrackBiFunctionTool> m_tool ; ///< the tool itself
+    } ;
     // ========================================================================
-    /** @class ImpactParameter 
+    /** @class ImpactParameter
      *  Evaluator of impact parameter between track and vertex
      *
-     *  The actual lines are copied from the package Hlt/HltBase 
+     *  The actual lines are copied from the package Hlt/HltBase
      *   written by Jose Angel Hernando Morata
      *  @see HltUtils::impactParameter
      *  @see LoKi::Cuts::TrVIP
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-13
-     */     
-    class ImpactParameter 
+     */
+    class ImpactParameter
       : public LoKi::BasicFunctors<LoKi::TrackTypes::TrackVertexPair>::Function
     {
     public:
       /// Default constructor
-      ImpactParameter() { }
-      /// MANDATORY: virtual destructor 
-      virtual ~ImpactParameter() {}
-      /// MANDATORY: clone method ("virtual constructor")  
-      virtual  ImpactParameter* clone() const
+      ImpactParameter() = default;
+      /// MANDATORY: virtual destructor
+      ~ImpactParameter() override = default;
+      /// MANDATORY: clone method ("virtual constructor")
+      ImpactParameter* clone() const override
       { return new ImpactParameter (*this) ; }
-      /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument a ) const ;
-      /// OPTIONAL: the nice printout 
-      virtual std::ostream& fillStream( std::ostream& s ) const 
-      { return s << "TrVIP" ; }      
+      /// MANDATORY: the only one essential method
+      using LoKi::BasicFunctors<LoKi::TrackTypes::TrackVertexPair>::Function::operator();
+      result_type operator() ( argument a ) const override;
+      /// OPTIONAL: the nice printout
+      std::ostream& fillStream( std::ostream& s ) const override
+      { return s << "TrVIP" ; }
     } ;
     // ========================================================================
-    /** @class MatchIDsFraction 
+    /** @class MatchIDsFraction
      *
-     *  The actual lines are copied from the package Hlt/HltBase 
+     *  The actual lines are copied from the package Hlt/HltBase
      *   written by Jose Angel Hernando Morata
      *
      *  @see HltUtils::matchIDsFraction
      *  @see LoKi::Cuts::TTrMATCHIDS
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-13
-     */     
+     */
     class MatchIDsFraction
       : public LoKi::BasicFunctors<LoKi::TrackTypes::TrackPair>::Function
     {
     public:
       /// Default constructor
       MatchIDsFraction() { }
-      /// MANDATORY: virtual destructor 
-      virtual ~MatchIDsFraction() {}
-      /// MANDATORY: clone method ("virtual constructor")  
-      virtual  MatchIDsFraction* clone() const 
+      /// MANDATORY: virtual destructor
+      ~MatchIDsFraction() override = default;
+      /// MANDATORY: clone method ("virtual constructor")
+      MatchIDsFraction* clone() const override
       { return new MatchIDsFraction (*this) ; }
-      /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument a ) const ;
-      /// OPTIONAL: the nice printout 
-      virtual std::ostream& fillStream( std::ostream& s ) const 
+      /// MANDATORY: the only one essential method
+      using LoKi::BasicFunctors<LoKi::TrackTypes::TrackPair>::Function::operator();
+      result_type operator() ( argument a ) const override;
+      /// OPTIONAL: the nice printout
+      std::ostream& fillStream( std::ostream& s ) const override
       { return s << "TTrMATCHIDS" ; }
-    } ;  
+    } ;
     // ========================================================================
-    /** @class DeltaAngle 
+    /** @class DeltaAngle
      *
-     *  The actual lines are copied from the package Hlt/HltBase 
+     *  The actual lines are copied from the package Hlt/HltBase
      *   written by Jose Angel Hernando Morata
      *
      *  @see HltUtils::deltaAngle
      *  @see LoKi::Cuts::TTrDA
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-08-13
-     */     
-    class DeltaAngle 
+     */
+    class DeltaAngle
       : public LoKi::BasicFunctors<LoKi::TrackTypes::TrackPair>::Function
     {
     public:
       /// Default constructor
       DeltaAngle() { }
-      /// MANDATORY: virtual destructor 
-      virtual ~DeltaAngle ()  {}
-      /// MANDATORY: clone method ("virtual constructor")  
-      virtual  DeltaAngle* clone() const { return new DeltaAngle (*this) ; }
-      /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument a ) const ;
-      /// OPTIONAL: the nice printout 
-      virtual std::ostream& fillStream ( std::ostream& s ) const 
+      /// MANDATORY: virtual destructor
+      ~DeltaAngle () override = default;
+      /// MANDATORY: clone method ("virtual constructor")
+      DeltaAngle* clone() const override
+      { return new DeltaAngle (*this) ; }
+      /// MANDATORY: the only one essential method
+      using LoKi::BasicFunctors<LoKi::TrackTypes::TrackPair>::Function::operator();
+      result_type operator() ( argument a ) const override;
+      /// OPTIONAL: the nice printout
+      std::ostream& fillStream ( std::ostream& s ) const override
       { return s << "TTrDA" ; }
-    } ;    
+    } ;
     // ========================================================================
-#ifdef __INTEL_COMPILER
-#pragma warning(pop)
-#endif
     // ========================================================================
   } //                                            end of namespace LoKi::Tracks
   // ==========================================================================
-} //                                                      end of namespace LoKi 
+} //                                                      end of namespace LoKi
 // ============================================================================
-//                                                                      The END 
+//                                                                      The END
 // ============================================================================
 #endif // LOKI_HLTFUNCTIONS_H
 // ============================================================================
