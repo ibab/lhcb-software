@@ -8,28 +8,27 @@ Purpose     : LHCb stripping packages
 *StrippingSys
  - Patch MuonID just for this version
  
-
-Phys/CommonParticles
+*Phys/CommonParticles
 - Change the chi2 and ghostprob cut to Reco15 values for Taus and Dipion.
 
-Phys/CommonParticlesArchive
+*Phys/CommonParticlesArchive
 - Created archives for S24 and S21r0,1p1 with the correct versions of chi2 and ghostprob for Reco15 and Reco14, respectively
 
-Phys/IsolationTools
+*Phys/IsolationTools
  - null pointer check of bestVertex result in RelInfoBs2MuMuTrackIsolations
 
-Phys/StrippingConf
+*Phys/StrippingConf
  - Add "IgnoreUnmatchedDescriptors" key to RelatedInfoTools dictionary. Setting it to "true"
    will make AddRelatedInfo silently ignore the descriptors in DaughterLocations
    which do not match any daughter particles (rather than stopping with FAILURE).
 
-Phys/StrippingArchive
+*Phys/StrippingArchive
  - Updated test references
  - Remove strippings with olf relinfo convention from tests
  - Fix to S24 StrippingCalib init
  - Add Stripping24 to the archive
 
-Phys/StrippingSettings
+*Phys/StrippingSettings
  - Updated dbase for S24
  - Update dbase for S24
  - Removed PID Calib lines from S24 LineConfigDictionary_Calib
@@ -64,7 +63,7 @@ Phys/StrippingSettings
  - B2CC dictionaries updated
  - Added S24 folder
 
-Phys/StrippingSelections
+*Phys/StrippingSelections
  - Removed PID Calib lines from StrippingCalib init
  - added 2 stripping lines to the B2OC module:
    StrippingB02DsstarPiDsstar2DGammaD2HHHBeauty2CharmLine

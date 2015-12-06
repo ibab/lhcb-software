@@ -21,7 +21,7 @@ use  StrippingAlgs               v1r15    Phys   # Anton Poluektov
 use  StrippingArchive            v1r35    Phys   # Stripping Coordinators
 use  StrippingConf               v4r21    Phys   # Anton Poluektov
 use  StrippingNeuroBayes         v1r10     Phys   # Ulrich Kerzel
-use  StrippingSelections         v4r9     Phys   # Stripping Coordinators
+use  StrippingSelections      https://svnweb.cern.ch/trac/lhcb/browser/Stripping/tags/Phys/StrippingSettings   v4r9     Phys   # Stripping Coordinators
 use  StrippingSettings           v2r42    Phys   # Stripping Coordinators
 use  StrippingTCK                v1r4     Phys   # Anton Poluektov
 use  StrippingUtils              v1r11    Phys   # Stripping Coordinators
