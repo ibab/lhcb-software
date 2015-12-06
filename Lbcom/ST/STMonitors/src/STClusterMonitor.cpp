@@ -27,7 +27,6 @@
 
 // from Boost
 #include <boost/assign/list_of.hpp>
-#include "boost/lexical_cast.hpp"
 
 // AIDA histograms
 #include "AIDA/IHistogram1D.h"
@@ -385,7 +384,7 @@ void ST::STClusterMonitor::bookHistograms() {
     m_sectorBins1D.clear();
     int bin=1;
     for(; Sectors != tracker()->sectors().end(); ++Sectors, ++bin) {
-      std::string idh = "charge_$sector"+boost::lexical_cast<std::string>((*Sectors)->elementID().uniqueSector());
+      std::string idh = "charge_$sector"+std::to_string((*Sectors)->elementID().uniqueSector());
       std::string title = "Total charge in "+(*Sectors)->nickname();
       m_1ds_chargeBySector[(*Sectors)->elementID().uniqueSector()] 
         = Gaudi::Utils::Aida2ROOT::aida2root ( book1D("BySector/"+idh,title,0.,100.,50) );
@@ -513,7 +512,7 @@ void ST::STClusterMonitor::fillDetailedHistograms(const LHCb::STCluster*
   } else Warning("Some cluster have zero noise", StatusCode::SUCCESS,1).ignore();
   // Plot cluster ADCs for 1, 2, 3, 4 strip clusters
   std::string svcBox = (this->readoutTool())->serviceBox(cluster->channelID());
-  std::string idhStrip = " (" + boost::lexical_cast<std::string>(clusterSize) + " strip)";
+  std::string idhStrip = " (" + std::to_string(clusterSize) + " strip)";
   std::string idh;
   if(detType() == "TT" || detType() == "UT") {
     idh = "Cluster ADCs in " + svcBox.substr(0,2)+idhStrip;
@@ -523,8 +522,8 @@ void ST::STClusterMonitor::fillDetailedHistograms(const LHCb::STCluster*
   plot1D(totalCharge,idh, idh,0.,200.,200);
 
   // Charge in each sector for 1, 2, 3 and 4 strip clusters
-  idh = "BySector/s"+boost::lexical_cast<std::string>(cluster->size())
-    +"/charge_$sector"+boost::lexical_cast<std::string>(cluster->channelID().uniqueSector());
+  idh = "BySector/s"+std::to_string(cluster->size())
+    +"/charge_$sector"+std::to_string(cluster->channelID().uniqueSector());
   plot1D(totalCharge, idh, "Total charge in "+cluster->sectorName(),0.,200.,200);
 }
 //==============================================================================

@@ -21,7 +21,6 @@
 
 // standard
 #include "gsl/gsl_math.h"
-#include "boost/lexical_cast.hpp"
 
 // local
 #include "STNZSMonitor.h"
@@ -116,7 +115,7 @@ void STNZSMonitor::bookHistograms() {
     }
     unsigned int tellID = m_useSourceID ? sourceID : (*itT).second;
     // Create a title for the histogram
-    std::string strTellID  = boost::lexical_cast<std::string>(tellID);
+    std::string strTellID  = std::to_string(tellID);
     HistoID noiseHistoID        = "noise_$tell" + strTellID;
     std::string noiseHistoTitle = "Noise for " + detType() + "TELL" + strTellID;
     m_noiseHistos[sourceID] = 
@@ -152,13 +151,13 @@ StatusCode STNZSMonitor::execute() {
     if(m_useODINTime) {
       m_ODIN = get<ODIN>(LHCb::ODINLocation::Default); 
       const Gaudi::Time odinTime = m_ODIN->eventTime();
-      m_odinEvent  = "(#"+boost::lexical_cast<std::string>(m_ODIN->runNumber());
-      m_odinEvent += " on "+boost::lexical_cast<std::string>(odinTime.day(0));
-      m_odinEvent += "/"+boost::lexical_cast<std::string>(odinTime.month(0)+1);
-      m_odinEvent += "/"+boost::lexical_cast<std::string>(odinTime.year(0));
-      m_odinEvent += " @ "+boost::lexical_cast<std::string>(odinTime.hour(0)); 
-      m_odinEvent += ":"+boost::lexical_cast<std::string>(odinTime.minute(0)); 
-      m_odinEvent += ":"+boost::lexical_cast<std::string>(odinTime.second(0))+")"; 
+      m_odinEvent  = "(#"+std::to_string(m_ODIN->runNumber());
+      m_odinEvent += " on "+std::to_string(odinTime.day(0));
+      m_odinEvent += "/"+std::to_string(odinTime.month(0)+1);
+      m_odinEvent += "/"+std::to_string(odinTime.year(0));
+      m_odinEvent += " @ "+std::to_string(odinTime.hour(0));
+      m_odinEvent += ":"+std::to_string(odinTime.minute(0));
+      m_odinEvent += ":"+std::to_string(odinTime.second(0))+")";
     }
   }
 
@@ -265,7 +264,7 @@ void STNZSMonitor::updateNoiseHistogram(unsigned int sourceID, bool updateTitle)
     }
   } else {
     unsigned int tellID = m_useSourceID ? sourceID : (this->readoutTool())->SourceIDToTELLNumber(sourceID);
-    Warning("No histogram booked for "+boost::lexical_cast<std::string>(tellID),0,StatusCode::SUCCESS).ignore();
+    Warning("No histogram booked for "+std::to_string(tellID),0,StatusCode::SUCCESS).ignore();
   }
 }
 
@@ -297,10 +296,10 @@ void STNZSMonitor::updateSummaryPlots() {
       itPedBegin = m_noiseTool->cmsMeanBegin(sourceID);
       itNoiseBegin = m_noiseTool->cmsNoiseBegin(sourceID);
     }
-    std::vector<double>::const_iterator itNoise = itNoiseBegin;
-    std::vector<double>::const_iterator itPed = itPedBegin;
-    std::vector<bool>::const_iterator itStatus = m_noiseTool->stripStatusBegin(sourceID);
-    std::vector<bool>::const_iterator itStatusEnd = m_noiseTool->stripStatusEnd(sourceID);
+    auto itNoise = itNoiseBegin;
+    auto itPed = itPedBegin;
+    auto itStatus = m_noiseTool->stripStatusBegin(sourceID);
+    auto itStatusEnd = m_noiseTool->stripStatusEnd(sourceID);
     int strip=0;
     for(; itStatus != itStatusEnd; ++itNoise, ++itPed, ++itStatus, ++strip) {
       if(*itStatus) {
@@ -319,24 +318,24 @@ void STNZSMonitor::dumpNoiseCalculation(unsigned int sourceID) {
   const unsigned int TELL=(this->readoutTool())->SourceIDToTELLNumber(sourceID);
   unsigned int strip=0;
   std::vector<double> rawMean = m_noiseTool->rawMean(TELL);
-  std::vector<double>::iterator rawMeanIt = rawMean.begin();
+  auto rawMeanIt = rawMean.begin();
   std::vector<double> rawMeanSq = m_noiseTool->rawMeanSq(TELL);
-  std::vector<double>::iterator rawMeanSqIt = rawMeanSq.begin();
+  auto rawMeanSqIt = rawMeanSq.begin();
   std::vector<double> rawNoise = m_noiseTool->rawNoise(TELL);
-  std::vector<double>::iterator rawNoiseIt = rawNoise.begin();
+  auto rawNoiseIt = rawNoise.begin();
   std::vector<unsigned int> rawN = m_noiseTool->rawN(TELL);
-  std::vector<unsigned int>::iterator rawNIt = rawN.begin();
+  auto rawNIt = rawN.begin();
 
   std::vector<double> cmsMean = m_noiseTool->cmsMean(TELL);
-  std::vector<double>::iterator cmsMeanIt = cmsMean.begin();
+  auto cmsMeanIt = cmsMean.begin();
   std::vector<double> cmsMeanSq = m_noiseTool->cmsMeanSq(TELL);
-  std::vector<double>::iterator cmsMeanSqIt = cmsMeanSq.begin();
+  auto cmsMeanSqIt = cmsMeanSq.begin();
   std::vector<double> cmsNoise = m_noiseTool->cmsNoise(TELL);
-  std::vector<double>::iterator cmsNoiseIt = cmsNoise.begin();
+  auto cmsNoiseIt = cmsNoise.begin();
   std::vector<unsigned int> cmsN = m_noiseTool->cmsN(TELL);
-  std::vector<unsigned int>::iterator cmsNIt = cmsN.begin();
+  auto cmsNIt = cmsN.begin();
   
-  std::string idTELL = boost::lexical_cast<std::string>(TELL);
+  std::string idTELL = std::to_string(TELL);
   std::string idRawMean = "Raw mean, TELL "+idTELL;
   std::string idRawMeanSq = "Raw mean squared, TELL "+idTELL;
   std::string idRawNoiseS = "Raw noise stored, TELL "+idTELL;

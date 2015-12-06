@@ -11,7 +11,6 @@
 // fstream
 #include <fstream>
 
-#include "boost/lexical_cast.hpp"
 
 DECLARE_ALGORITHM_FACTORY( STDQSummaryAlg )
 
@@ -106,9 +105,9 @@ void STDQSummaryAlg::resetCounters(Gaudi::Time time){
   if (Counters != 0) delete Counters;
   Counters = new STDQCounters(m_minADC, m_maxADC);
 
-  Counters->m_RunDate  = boost::lexical_cast<std::string>(time.year(0));
-  Counters->m_RunDate += "-"+boost::lexical_cast<std::string>(time.month(0)+1);
-  Counters->m_RunDate += "-"+boost::lexical_cast<std::string>(time.day(0));
+  Counters->m_RunDate  = std::to_string(time.year(0));
+  Counters->m_RunDate += "-"+std::to_string(time.month(0)+1);
+  Counters->m_RunDate += "-"+std::to_string(time.day(0));
 
 
 }

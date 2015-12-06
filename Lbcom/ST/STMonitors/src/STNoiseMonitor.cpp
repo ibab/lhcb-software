@@ -25,7 +25,6 @@
 
 // standard
 #include "gsl/gsl_math.h"
-#include "boost/lexical_cast.hpp"
 
 // local
 #include "STNoiseMonitor.h"
@@ -101,20 +100,17 @@ StatusCode ST::STNoiseMonitor::initialize() {
   }
   // Store DeSTSector for each TELL1 sector: 
   // -----------------------------> BIT OF A NASTY HACK
-  std::map<unsigned int, unsigned int>::const_iterator itT = (this->readoutTool())->SourceIDToTELLNumberMap().begin();
-  for(; itT != (this->readoutTool())->SourceIDToTELLNumberMap().end(); ++itT) {
-    unsigned int TELL1SourceID = (*itT).first;
+  for(const auto& itT : (this->readoutTool())->SourceIDToTELLNumberMap() ) {
+    unsigned int TELL1SourceID = itT.first;
     STTell1Board* board = readoutTool()->findByBoardID(STTell1ID(TELL1SourceID));
     std::vector<DeSTSector*>* sectors = &m_sectorMap[TELL1SourceID];
     unsigned int strip = 0;
     while(strip < 3072) {
       LHCb::STChannelID channelID = (board->DAQToOffline(0, STDAQ::v4, STDAQ::StripRepresentation(strip)).first);
       DeSTSector* sector = tracker()->findSector(channelID);
-      if(sector != 0){
         sectors->push_back(sector);
+      if(sector){
         m_types[sector->type()] = sector->type();
-      }else {
-        sectors->push_back(NULL);
       }
       strip += m_nStripsInSector;      
     }
@@ -129,7 +125,7 @@ void ST::STNoiseMonitor::bookHistograms() {
   m_1d_nNZS = book1D("Number of NZS banks", "#  NZS banks / TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s);
 
   // Get the tell1 mapping from source ID to tell1 number
-  std::map<unsigned int, unsigned int>::const_iterator itT = (this->readoutTool())->SourceIDToTELLNumberMap().begin();
+  auto itT = (this->readoutTool())->SourceIDToTELLNumberMap().begin();
   for(; itT != (this->readoutTool())->SourceIDToTELLNumberMap().end(); ++itT) {
     unsigned int sourceID = (*itT).first;
     // Limit to selected tell1s
@@ -140,7 +136,7 @@ void ST::STNoiseMonitor::bookHistograms() {
     }
     unsigned int tellID = m_useSourceID ? sourceID : (*itT).second;
     // Create a title for the histogram
-    std::string strTellID  = boost::lexical_cast<std::string>(tellID);
+    std::string strTellID  = std::to_string(tellID);
 
     //================================================== noise / strip 
 
@@ -238,13 +234,13 @@ StatusCode ST::STNoiseMonitor::execute() {
     if(m_useODINTime) {
       m_ODIN = get<ODIN>(LHCb::ODINLocation::Default); 
       const Gaudi::Time odinTime = m_ODIN->eventTime();
-      m_odinEvent  = "(#"+boost::lexical_cast<std::string>(m_ODIN->runNumber());
-      m_odinEvent += " on "+boost::lexical_cast<std::string>(odinTime.day(0));
-      m_odinEvent += "/"+boost::lexical_cast<std::string>(odinTime.month(0)+1);
-      m_odinEvent += "/"+boost::lexical_cast<std::string>(odinTime.year(0));
-      m_odinEvent += " @ "+boost::lexical_cast<std::string>(odinTime.hour(0)); 
-      m_odinEvent += ":"+boost::lexical_cast<std::string>(odinTime.minute(0)); 
-      m_odinEvent += ":"+boost::lexical_cast<std::string>(odinTime.second(0))+")"; 
+      m_odinEvent  = "(#"+std::to_string(m_ODIN->runNumber());
+      m_odinEvent += " on "+std::to_string(odinTime.day(0));
+      m_odinEvent += "/"+std::to_string(odinTime.month(0)+1);
+      m_odinEvent += "/"+std::to_string(odinTime.year(0));
+      m_odinEvent += " @ "+std::to_string(odinTime.hour(0));
+      m_odinEvent += ":"+std::to_string(odinTime.minute(0));
+      m_odinEvent += ":"+std::to_string(odinTime.second(0))+")";
     }
   }
 
@@ -367,7 +363,7 @@ void ST::STNoiseMonitor::updateNoiseHistogram(unsigned int sourceID, bool update
     }
   } else {
     unsigned int tellID = m_useSourceID ? sourceID : (this->readoutTool())->SourceIDToTELLNumber(sourceID);
-    Warning("No histogram booked for "+boost::lexical_cast<std::string>(tellID),0,StatusCode::SUCCESS).ignore();
+    Warning("No histogram booked for "+std::to_string(tellID),0,StatusCode::SUCCESS).ignore();
   }
 }
 
@@ -478,7 +474,7 @@ void ST::STNoiseMonitor::dumpNoiseCalculation(unsigned int sourceID) {
   std::vector<unsigned int> cmsN = m_noiseTool->cmsN(TELL);
   std::vector<unsigned int>::iterator cmsNIt = cmsN.begin();
   
-  std::string idTELL = boost::lexical_cast<std::string>(TELL);
+  std::string idTELL = std::to_string(TELL);
   std::string idRawMean = "Raw mean, TELL "+idTELL;
   std::string idRawMeanSq = "Raw mean squared, TELL "+idTELL;
   std::string idRawNoiseS = "Raw noise stored, TELL "+idTELL;

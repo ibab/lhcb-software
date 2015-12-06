@@ -8,9 +8,6 @@
 #include "Kernel/STBoardMapping.h"
 #include "Kernel/ISTReadoutTool.h"
 
-// Boost
-#include "boost/lexical_cast.hpp"
-
 // AIDA
 #include "AIDA/IProfile1D.h"
 #include "AIDA/IHistogram1D.h"
@@ -79,7 +76,7 @@ StatusCode STErrorMonitor::initialize()
   for(; itT != (this->readoutTool())->SourceIDToTELLNumberMap().end(); ++itT) {
     unsigned int tellID = (*itT).second;
     // Create a title for the histogram
-    std::string strTellID  = boost::lexical_cast<std::string>(tellID);
+    std::string strTellID  = std::to_string(tellID);
     HistoID histoID        = "error-types_$tell" + strTellID;
     std::string histoTitle = "Error types " + detType() + "TELL" + strTellID;
     m_errorHistos[tellID] = book2D(histoID, histoTitle, 0., noptlinks, nports*noptlinks, 0., 10., 10);
@@ -159,7 +156,7 @@ StatusCode STErrorMonitor::execute()
     if ( !m_expertHisto ) continue;
 
     // Convert the tell1 number to a string
-    //std::string strTellNum  = boost::lexical_cast<std::string>(tellNum);
+    //std::string strTellNum  = std::to_string(tellNum);
 
     // Loop over the ErrorInfo objects (one for each FPGA-PP)
     const std::vector<STTELL1Error*> errorInfo = (*iterBank) -> errorInfo();

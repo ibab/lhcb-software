@@ -17,9 +17,6 @@
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
 
-// standard
-#include "gsl/gsl_math.h"
-
 // LHCbKernel
 #include "Kernel/LHCbConstants.h"
 #include "Kernel/BeetleRepresentation.h"
@@ -259,7 +256,7 @@ void ST::STBadChannelFinder::calcSlope(std::vector<double>::const_iterator noise
   unsigned int n=0;
   for(; itNoise != noiseEnd; ++itNoise, ++channel, ++n) {
     meanX += channel;
-    meanX2 += gsl_pow_2(channel);
+    meanX2 += channel*channel;
     meanY += (*itNoise);
     meanXY += channel*(*itNoise);
   }
@@ -269,7 +266,7 @@ void ST::STBadChannelFinder::calcSlope(std::vector<double>::const_iterator noise
     meanY /= n;
     meanXY /=n;
     
-    m_slope = (meanXY - meanX*meanY) / (meanX2 - gsl_pow_2(meanX));
+    m_slope = (meanXY - meanX*meanY) / (meanX2 - meanX*meanX);
     m_intercept = meanY - m_slope*meanX;
   }
   else {

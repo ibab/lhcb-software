@@ -3,6 +3,12 @@
 ! Responsible : Mark Tobin
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
+! 2015-12-06 - Gerhard Raven
+ - prefer simple * over gsl_pow_2
+ - prefer std::to_string over boost::lexical_cast<std::string>
+ - avoid comparing pointers to 0
+ - prefer auto
+ - prefer (implicit) std::initializer_list over boost::assign::list_of
 
 !========================= STMonitors v4r4 2015-10-12 =========================
 ! 2015-08-20 - Mark Tobin
@@ -16,7 +22,7 @@
 ! 2015-06-06
  - STClusterTuple moved to STCheckers
 
-!========================= STMonitors v4r2p1 2013-06-03 =========================
+!========================= STMonitors v4r2p1 2013-06-03 ========================
 ! 2013-05-27 - Marco Cattaneo
  - Fix clang32 warning
 

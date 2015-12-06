@@ -13,9 +13,6 @@
 // STTELL1Event
 #include "Event/STTELL1Data.h"
 
-// from Detector
-#include <boost/lexical_cast.hpp>
-
 // local
 #include "STDumpADCs.h"
 
@@ -76,7 +73,7 @@ StatusCode ST::STDumpADCs::execute() {
 
       // get the tell board and the data headers
       int sourceID = (*iterBoard)->TELL1ID();
-      std::string idh = "Mean ADC for sourceID" + boost::lexical_cast<std::string>(sourceID);
+      std::string idh = "Mean ADC for sourceID" + std::to_string(sourceID);
       const LHCb::STTELL1Data::Data& dataValues = (*iterBoard)->data();
 
       std::vector<double> ADCValues(3072,0.);
@@ -102,7 +99,7 @@ StatusCode ST::STDumpADCs::execute() {
           } // strip
         }  // beetle
       } // Loop on PPs
-      std::string tupleName = "TELL" + boost::lexical_cast<std::string>(readoutTool()->SourceIDToTELLNumber(sourceID));
+      std::string tupleName = "TELL" + std::to_string(readoutTool()->SourceIDToTELLNumber(sourceID));
       tuple->farray(tupleName, ADCValues, "channel", 3072 );
       
     } // Loop on boards

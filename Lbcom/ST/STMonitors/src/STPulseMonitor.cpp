@@ -17,12 +17,12 @@
 #include "STDet/DeSTSector.h"
 
 // Boost
-#include "boost/lexical_cast.hpp"
 #include <boost/assign/std/vector.hpp>
-#include <boost/assign/list_of.hpp>
 
 // local
 #include "STPulseMonitor.h"
+
+
 
 using namespace LHCb;
 using namespace LHCbConstants;
@@ -47,15 +47,11 @@ STPulseMonitor::STPulseMonitor( const std::string& name,
   declareSTConfigProperty("ClusterLocation", m_clusterLocation, 
                           LHCb::STClusterLocation::TTClusters);
   declareSTConfigProperty("InputData" , m_dataLocation, "Raw/TT/LCMSADCs");
-  
-  std::vector<std::string> tmp1 =
-    list_of("Prev2")("Prev1")("Central")("Next1")("Next2") ;
-  declareProperty("Spills",        m_spills         = tmp1 );
+  declareProperty("Spills",        m_spills         = { {"Prev2"},{"Prev1"},{"Central"},{"Next1"},{"Next2"} } );
   declareProperty("ChargeCut",     m_chargeCut      = -1.0 );// ADC counts
   declareProperty("BunchID",       m_bunchID               );// BunchID 
   declareProperty("SkipShortThick",m_skipShortThick = true );
-  std::vector<std::string> tmp2 = list_of("all") ;
-  declareProperty("DirNames",      m_dirNames       = tmp2 );
+  declareProperty("DirNames",      m_dirNames       = { { "all" } } );
   declareProperty("UseNZSdata",    m_useNZSdata     = true );
   
 }
@@ -78,7 +74,7 @@ StatusCode STPulseMonitor::execute()
 
   // Select the correct bunch id
   const ODIN* odin = getIfExists<ODIN> ( ODINLocation::Default );
-  if( NULL != odin ) {
+  if( odin ) {
     if( !m_bunchID.empty() && 
         std::find(m_bunchID.begin(), m_bunchID.end(), 
                   odin->bunchId()) == m_bunchID.end()) return StatusCode::SUCCESS;
@@ -91,8 +87,8 @@ StatusCode STPulseMonitor::execute()
   std::vector<STClusters*>   dataZS;
   for( unsigned int iSpill = 0; iSpill < m_spills.size(); ++iSpill ) {
     std::string spillName = m_spills[iSpill];
-    if( spillName == "Central" ) spillName = "";
-    else                         spillName = "/" + spillName;
+    if( spillName == "Central" ) spillName.clear();
+    else                         spillName.insert('/',0);
     std::string dataLocation = "/Event" + spillName + "/" + m_dataLocation;
     if( m_useNZSdata ) {
       if(!exist<STTELL1Datas>(dataLocation) ) dataNZS.push_back(0)  ;
@@ -160,7 +156,7 @@ StatusCode STPulseMonitor::execute()
         if( dataNZS[iSpill] == 0 ) continue;
         STTELL1Data* boardData = dataNZS[iSpill]->object(sourceID);
         if(boardData == 0) {
-          std::string sWarning = "No valid data from source "+boost::lexical_cast<std::string>(sourceID)+" in "+spillName;
+          std::string sWarning = "No valid data from source "+std::to_string(sourceID)+" in "+spillName;
           Warning(sWarning, StatusCode::SUCCESS,1).ignore();
           continue;
         }
@@ -195,7 +191,7 @@ StatusCode STPulseMonitor::execute()
       
 
       std::string sb = readoutTool()->serviceBox( chanID );
-      std::string clusSize = boost::lexical_cast<std::string>(cluster->size());
+      std::string clusSize = std::to_string(cluster->size());
 
       // Loop over the directories (can be used to subdivide the service box)
       std::vector<std::string>::const_iterator iDir = m_dirNames.begin();
