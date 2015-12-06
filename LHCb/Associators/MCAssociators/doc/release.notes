@@ -3,6 +3,12 @@
 ! Responsible : Vladimir Gligorov
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+! 2015-12-06 - Gerhard Raven
+ - modernize code:
+    o prefer nullptr to NULL
+    o avoid comparing pointers to NULL, 0
+    o prefer range-based for loops
+    o prefer STL algorithms over loops
 
 !========================= MCAssociators v1r5 2015-01-14 ===========
 ! 2015-01-08 - Gerhard Raven

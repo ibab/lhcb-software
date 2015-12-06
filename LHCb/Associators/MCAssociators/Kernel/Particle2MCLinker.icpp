@@ -33,10 +33,10 @@ Object2MCLinker<SOURCE>::setAlgorithm( const std::string& algType,
                              const std::vector<std::string>& containerList)
 {
   m_containerList = containerList;
-  if( NULL != m_linkerAlg ) {
+  if( m_linkerAlg ) {
     if( algType != m_linkerAlgType) {
       // We change the algorithm on the fly... risky!
-      m_linkerAlg = NULL;
+      m_linkerAlg = nullptr;
     } else {
       return setAlgInputData( m_linkerAlg, m_containerList);
     }
@@ -52,23 +52,23 @@ Object2MCLinker<SOURCE>::locateAlgorithm( const std::string& algType,
                                 IAlgorithm*& alg, 
                                 const std::vector<std::string>& inputData)
 {
-  if( NULL != m_myGaudiAlg)
+  if( m_myGaudiAlg)
     m_myGaudiAlg->debug() << "==> Calling locateAlgorithm with type "
                           << algType << ", name " << algName <<endmsg;
-  else if( NULL != m_myGaudiTool)
+  else if( m_myGaudiTool)
     m_myGaudiTool->debug() << "==> Calling locateAlgorithm with type "
                           << algType << ", name " << algName <<endmsg;
   
-  if( NULL != alg ) return StatusCode::SUCCESS;
+  if( alg ) return StatusCode::SUCCESS;
   if( algType.empty() ) return
-    NULL != m_myGaudiAlg? m_myGaudiAlg->Error("No alg type given") : 
-    NULL != m_myGaudiTool? m_myGaudiTool->Error("No alg type given"): 
+    m_myGaudiAlg? m_myGaudiAlg->Error("No alg type given") : 
+    m_myGaudiTool? m_myGaudiTool->Error("No alg type given"): 
     StatusCode::FAILURE;
 
   SmartIF<IAlgManager> algMgr( m_svcLoc );
   if( !algMgr.isValid() ) return
-    NULL != m_myGaudiAlg? m_myGaudiAlg->Error("Could not locate IAlgManager " ) :
-    NULL != m_myGaudiTool? m_myGaudiTool->Error("Could not locate IAlgManager " ) :
+    m_myGaudiAlg? m_myGaudiAlg->Error("Could not locate IAlgManager " ) :
+    m_myGaudiTool? m_myGaudiTool->Error("Could not locate IAlgManager " ) :
     StatusCode::FAILURE;
   // check the existence of the algorithm
   for( const auto& ia : algMgr->getAlgorithms() )
@@ -86,8 +86,8 @@ Object2MCLinker<SOURCE>::locateAlgorithm( const std::string& algType,
   //
 
   if( sc.isFailure()   ) { return
-    NULL != m_myGaudiAlg? m_myGaudiAlg->Error("Could not create algorithm", sc ) :
-    NULL != m_myGaudiTool? m_myGaudiTool->Error("Could not create algorithm", sc ) :
+    m_myGaudiAlg? m_myGaudiAlg->Error("Could not create algorithm", sc ) :
+    m_myGaudiTool? m_myGaudiTool->Error("Could not create algorithm", sc ) :
     sc;
   }else{
     IProperty* prop = dynamic_cast<IProperty*>( alg );
@@ -95,8 +95,8 @@ Object2MCLinker<SOURCE>::locateAlgorithm( const std::string& algType,
     if( !sc.isSuccess() ) {
       std::string err = "Unable to set Property Context in algo " + alg->name();
       return 
-        NULL != m_myGaudiAlg ? m_myGaudiAlg->Error( err, sc) :
-        NULL != m_myGaudiTool ? m_myGaudiTool->Error( err, sc) :
+        m_myGaudiAlg ? m_myGaudiAlg->Error( err, sc) :
+        m_myGaudiTool ? m_myGaudiTool->Error( err, sc) :
         sc;
     }
   }
@@ -109,23 +109,19 @@ Object2MCLinker<SOURCE>::locateAlgorithm( const std::string& algType,
   if( sc.isFailure() ) { 
     std::string err = "Error from algorithm " + algName + " initialization!";
     return 
-      NULL != m_myGaudiAlg ? m_myGaudiAlg->Error( err, sc) :
-      NULL != m_myGaudiTool ? m_myGaudiTool->Error( err, sc) :
+      m_myGaudiAlg ? m_myGaudiAlg->Error( err, sc) :
+      m_myGaudiTool ? m_myGaudiTool->Error( err, sc) :
       sc;
   }
   // Set jobOptions to the algorithm, supersede options file
   sc = setAlgInputData( alg, inputData);
   if( sc.isFailure() ) {
-    std::string err = "Error setting InputData property for algorithm " 
-      + algName + " to ";
-    for (std::vector<std::string>::const_iterator dataLoc = inputData.begin();
-         dataLoc!=inputData.end();
-         ++dataLoc) {
-      err+= ", " + *dataLoc;
-    }
+    auto err = std::accumulate( inputData.begin(), inputData.end(), 
+                                "Error setting InputData property for algorithm " + algName + " to ",
+                                [](std::string e, const std::string& l) { return e + ", " + l; } );
     return 
-      NULL != m_myGaudiAlg ? m_myGaudiAlg->Error( err, sc) :
-      NULL != m_myGaudiTool ? m_myGaudiTool->Error( err, sc) :
+      m_myGaudiAlg ? m_myGaudiAlg->Error( err, sc) :
+      m_myGaudiTool ? m_myGaudiTool->Error( err, sc) :
       sc;
   }
   //
@@ -147,8 +143,8 @@ Object2MCLinker<SOURCE>::setAlgInputData( IAlgorithm*& alg,
       if( !sc.isSuccess() ) {
         std::string err = "Unable to set Property Context in algo " + alg->name();
         return 
-          NULL != m_myGaudiAlg ? m_myGaudiAlg->Error( err, sc) :
-          NULL != m_myGaudiTool ? m_myGaudiTool->Error( err, sc) :
+          m_myGaudiAlg ? m_myGaudiAlg->Error( err, sc) :
+          m_myGaudiTool ? m_myGaudiTool->Error( err, sc) :
           sc;
       }
 
@@ -158,20 +154,19 @@ Object2MCLinker<SOURCE>::setAlgInputData( IAlgorithm*& alg,
       if( !sc.isSuccess() ) {
         std::string err = "Unable to set Property OutputTable in algo " + alg->name();
         return 
-          NULL != m_myGaudiAlg ? m_myGaudiAlg->Error( err, sc) :
-          NULL != m_myGaudiTool ? m_myGaudiTool->Error( err, sc) :
+          m_myGaudiAlg ? m_myGaudiAlg->Error( err, sc) :
+          m_myGaudiTool ? m_myGaudiTool->Error( err, sc) :
           sc;
       }
       std::string propString ;
       std::string sep = "\"";
       propString = "[";
-      for( std::vector<std::string>::const_iterator inp = inputData.begin();
-           inputData.end() != inp; inp++ ) {
-        std::string inpStr = *inp;
+      for( const auto& inpStr : inputData ) {
+        propString += sep ;
         if( std::string::npos == inpStr.find( "/Particles") &&
-             std::string::npos == inpStr.find( "/ProtoP") )
-           inpStr += "/Particles";
-        propString = propString + sep + inpStr ;
+            std::string::npos == inpStr.find( "/ProtoP") )
+           propString += "/Particles";
+        propString += inpStr ;
         sep = "\",\"";
       }
       propString = propString + "\"]";
@@ -179,20 +174,20 @@ Object2MCLinker<SOURCE>::setAlgInputData( IAlgorithm*& alg,
       if( sc.isSuccess() ) {
         std::string err = "Property InputData set to " + propString + " in algo " 
           + alg->name();
-        if( NULL != m_myGaudiAlg ) m_myGaudiAlg->debug() << err;
-        else if( NULL != m_myGaudiTool ) m_myGaudiTool->debug() << err;
+        if( m_myGaudiAlg ) m_myGaudiAlg->debug() << err;
+        else if( m_myGaudiTool ) m_myGaudiTool->debug() << err;
       } else {
         std::string err = "Unable to set Property InputData to " + propString + "in algo " + alg->name();
         return 
-          NULL != m_myGaudiAlg ? m_myGaudiAlg->Error( err, sc) :
-          NULL != m_myGaudiTool ? m_myGaudiTool->Error( err, sc) :
+          m_myGaudiAlg ? m_myGaudiAlg->Error( err, sc) :
+          m_myGaudiTool ? m_myGaudiTool->Error( err, sc) :
           sc;
       }
     } else {
       std::string err = "Unable to get IProperty pointer for algo " + alg->name();
       return 
-        NULL != m_myGaudiAlg ? m_myGaudiAlg->Warning( err, sc) :
-        NULL != m_myGaudiTool ? m_myGaudiTool->Warning ( err, sc) :
+        m_myGaudiAlg ? m_myGaudiAlg->Warning( err, sc) :
+        m_myGaudiTool ? m_myGaudiTool->Warning ( err, sc) :
         sc;
     }
   }  
@@ -202,19 +197,15 @@ template <class SOURCE>
 bool
 Object2MCLinker<SOURCE>::notFound( const std::string& contName)
 {
-  To test( m_evtSvc, NULL, contName + m_extension);
+  To test( m_evtSvc, nullptr, contName + m_extension);
   return test.notFound();
 }
 template <class SOURCE>
 bool
 Object2MCLinker<SOURCE>::notFound()
 {
-  for( std::vector<std::string>::const_iterator contIt = 
-         m_containerList.begin();
-       m_containerList.end() != contIt; contIt++) {
-    if( !notFound(*contIt) ) return false;
-  }
-  return true;
+  return std::all_of( m_containerList.begin(),m_containerList.end(),
+                      [&](const std::string& s) { return notFound(s); } );
 }
 template <class SOURCE> 
 void
@@ -226,30 +217,28 @@ Object2MCLinker<SOURCE>::createLinks( const std::string& contName )
                                           contName) ) {
     // Container was not in the list... add it!
     m_containerList.push_back( contName );
-    if( NULL != m_linkerAlg ) {
+    if( m_linkerAlg ) {
       std::string dbg = "    Add " + contName + " to InputData of "
         + m_linkerAlg->name();
-      if( NULL != m_myGaudiAlg ) m_myGaudiAlg->debug() << dbg << endmsg;
-      else if( NULL != m_myGaudiTool ) m_myGaudiTool->debug() << dbg << endmsg;
+      if( m_myGaudiAlg ) m_myGaudiAlg->debug() << dbg << endmsg;
+      else if( m_myGaudiTool ) m_myGaudiTool->debug() << dbg << endmsg;
       StatusCode sc = setAlgInputData( m_linkerAlg, m_containerList);
       if( sc.isFailure() ) {
         std::string err = "Error adding " + contName + " to InputData of " 
           + m_linkerAlg->name();
-        if( NULL != m_myGaudiAlg) m_myGaudiAlg->err() << err << endmsg;
-        else if( NULL != m_myGaudiTool) m_myGaudiTool->err() << err << endmsg;
+        if( m_myGaudiAlg) m_myGaudiAlg->err() << err << endmsg;
+        else if( m_myGaudiTool) m_myGaudiTool->err() << err << endmsg;
       }
     }
   }
-  for( std::vector<std::string>::const_iterator contIt = 
-         m_containerList.begin();
-       m_containerList.end() != contIt; contIt++) {
+  for( auto contIt = m_containerList.begin(); m_containerList.end() != contIt; contIt++) {
     const std::string name = *contIt + m_extension;
-    To test( m_evtSvc, NULL, name);
+    To test( m_evtSvc, nullptr, name);
     if( test.notFound() && "" != m_linkerAlgType) {
       std::string dbg = "Link table for " + name + " not found, creating it";
-      if( NULL != m_myGaudiAlg) m_myGaudiAlg->debug() << dbg << endmsg;
-      else if( NULL != m_myGaudiTool) m_myGaudiTool->debug() << dbg << endmsg;
-      if( NULL == m_linkerAlg ) {
+      if( m_myGaudiAlg) m_myGaudiAlg->debug() << dbg << endmsg;
+      else if( m_myGaudiTool) m_myGaudiTool->debug() << dbg << endmsg;
+      if( !m_linkerAlg ) {
         // Create the algorithm, as it has to be called
         StatusCode sc = locateAlgorithm( m_linkerAlgType, 
                                          m_name + "." + m_linkerAlgType, 
@@ -257,20 +246,20 @@ Object2MCLinker<SOURCE>::createLinks( const std::string& contName )
                                          m_containerList);
         if( !sc.isSuccess() ) {
           std::string err = "Cannot locate algorithm of type " + m_linkerAlgType;
-        if( NULL != m_myGaudiAlg) m_myGaudiAlg->err() << err << endmsg;
-        else if( NULL != m_myGaudiTool) m_myGaudiTool->err() << err << endmsg;
+        if( m_myGaudiAlg) m_myGaudiAlg->err() << err << endmsg;
+        else if( m_myGaudiTool) m_myGaudiTool->err() << err << endmsg;
         break;
         }
       }
       // Call the algorithm to get the table done
-      if( NULL != m_myGaudiAlg)
+      if( m_myGaudiAlg)
         m_myGaudiAlg->debug() << "==> Executing Linker builder algorithm "
                               << m_linkerAlg->name() << endmsg;
-      else if( NULL != m_myGaudiTool)
+      else if( m_myGaudiTool)
         m_myGaudiTool->debug() << "==> Executing Linker builder algorithm "
                               << m_linkerAlg->name() << endmsg;
       m_linkerAlg->sysExecute() ;
-      test = To( m_evtSvc, NULL, name);
+      test = To( m_evtSvc, nullptr, name);
     }
     if( *contIt == contName ) m_linkTo = test;
   }
@@ -281,7 +270,7 @@ Object2MCLinker<SOURCE>::getLink( const std::string& contName )
 {
   // If the lists are empty, create them
   std::string name = contName+ m_extension;
-  To test( m_evtSvc, NULL, name);
+  To test( m_evtSvc, nullptr, name);
   if( test.notFound() ) {
     createLinks( contName );
   } else {
@@ -295,7 +284,7 @@ Object2MCLinker<SOURCE>::associatedMCP( const SOURCE* obj)
 {
   int n = 0;
   for( const LHCb::MCParticle* mcPart = firstMCP(obj); 
-       NULL != mcPart; 
+       mcPart; 
        mcPart = nextMCP(), n++) { }
   
   return n;
@@ -308,7 +297,7 @@ Object2MCLinker<SOURCE>::rangeFrom(const SOURCE* part)
 
   const LHCb::MCParticle* tempMCP = firstMCP(part);
 
-  while(tempMCP != NULL){
+  while(tempMCP != nullptr){
 
     associatedRange.push_back( MCAssociation(tempMCP, weightMCP() ) );
     tempMCP = nextMCP();
@@ -322,7 +311,7 @@ const LHCb::MCParticle*
 Object2MCLinker<SOURCE>::firstMCP( const SOURCE* part, double& weight)
 {
   const LHCb::MCParticle* mcPart = firstMCP(part);
-  weight = NULL != mcPart ? weightMCP() : 0.;
+  weight = ( mcPart ? weightMCP() : 0. );
   return mcPart;
 }
 
@@ -330,20 +319,20 @@ template <class SOURCE>
 const LHCb::MCParticle* 
 Object2MCLinker<SOURCE>::firstMCP( const SOURCE* part)
 {
-  if( NULL == m_myGaudiAlg && NULL == m_myGaudiTool ) return NULL;
+  if( !m_myGaudiAlg && !m_myGaudiTool ) return nullptr;
 
   std::string contName = 
     containerName(dynamic_cast<const ContainedObject*>(part)) ;
-  if( "/Event/" == contName.substr(0,7) ) {
+  if( contName.compare(0,7,"/Event/") == 0 ) {
     contName = contName.substr(7);
   }
-  if("" == contName) {
-    m_linkTo = To( m_evtSvc, NULL, "");
-    return NULL;
+  if(contName.empty()) {
+    m_linkTo = To( m_evtSvc, nullptr, "");
+    return nullptr;
   }
   To* link =  getLink( contName );
   
-  return NULL != link ? link->first(part) : NULL;
+  return link ? link->first(part) : nullptr;
 }
 
 
@@ -352,9 +341,8 @@ template <class SOURCE>
 typename Object2MCLinker<SOURCE>::Linker* 
 Object2MCLinker<SOURCE>::linkerTable( const std::string& name)
 {
-  if( NULL == m_myGaudiAlg && NULL == m_myGaudiTool ) return NULL;
-
-  To test(m_evtSvc,NULL, name);
+  if( !m_myGaudiAlg && !m_myGaudiTool ) return nullptr;
+  To test(m_evtSvc,nullptr, name);
   return linkerTable( name, test);
 }
 
@@ -362,25 +350,25 @@ template <class SOURCE>
 typename Object2MCLinker<SOURCE>::Linker* 
 Object2MCLinker<SOURCE>::linkerTable( const std::string& name, To& test)
 {
-  if( NULL == m_myGaudiAlg && NULL == m_myGaudiTool ) return NULL;
+  if( !m_myGaudiAlg && !m_myGaudiTool ) return nullptr;
 
   if( test.notFound() ) {
     m_linkerTable = typename Object2MCLinker<SOURCE>::Linker( m_evtSvc, 0, name);
-    if( NULL != m_myGaudiAlg) {
+    if( m_myGaudiAlg) {
       m_myGaudiAlg->debug() << "Linker table " << name << " created" <<endmsg;
     }
-    else if( NULL != m_myGaudiTool) {
+    else if( m_myGaudiTool) {
       m_myGaudiTool->debug() << "Linker table " << name << " created" <<endmsg;
     }
-    test = To( m_evtSvc, NULL, name);
+    test = To( m_evtSvc, nullptr, name);
     return &m_linkerTable;
   } else {
-    if( NULL != m_myGaudiAlg)
+    if( m_myGaudiAlg)
       m_myGaudiAlg->debug() << "Linker table " << name << " found" <<endmsg;
-    if( NULL != m_myGaudiTool)
+    if( m_myGaudiTool)
       m_myGaudiTool->debug() << "Linker table " << name << " found" <<endmsg;
   }
-  return NULL;
+  return nullptr;
 }
 template <class SOURCE>
 bool
@@ -388,7 +376,7 @@ Object2MCLinker<SOURCE>::checkAssociation( const SOURCE* obj,
                                            const LHCb::MCParticle* mcPart)
 {
   const LHCb::MCParticle* mcp = firstMCP(obj);
-  while( NULL != mcp ) {
+  while( mcp ) {
     if( mcp == mcPart ) return true;
     mcp = nextMCP();
   }
