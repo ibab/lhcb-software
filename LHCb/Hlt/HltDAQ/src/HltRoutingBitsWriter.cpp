@@ -213,7 +213,7 @@ void HltRoutingBitsWriter::handle(const Incident&) {
 StatusCode
 HltRoutingBitsWriter::i_updateConditions()
 {
-   if (m_runpars==0) {
+   if (m_runpars==nullptr) {
       error() << "Could not obtain Condition for run parameters from conditions DB" << endmsg;
       return StatusCode::FAILURE;
    }

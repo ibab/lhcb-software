@@ -71,7 +71,7 @@ private:
   std::string m_l0_location;
   std::string m_hlt_location[2];
 
-  unsigned long long m_startOfRun;
+  unsigned long long m_startOfRun = 0;
   double m_binWidth; // in _minutes_!
   double m_timeSpan; // in _minutes_!
 

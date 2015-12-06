@@ -48,7 +48,7 @@ StatusCode HltVertexReportsDecoder::execute() {
 
 
   // create output container for vertex selections keyed with string and put it on TES
-  HltVertexReports* outputSummary = new HltVertexReports();
+  auto  outputSummary = new HltVertexReports();
   put( outputSummary, m_outputHltVertexReportsLocation );
 
   // ----------------------------------------------------------
@@ -98,13 +98,13 @@ StatusCode HltVertexReportsDecoder::execute() {
     }
 
     // create output container for vertices and put it on TES
-    VertexBase::Container* verticesOutput = new VertexBase::Container();
+    auto  verticesOutput = new VertexBase::Container();
     put( verticesOutput, m_outputHltVertexReportsLocation.value() + "/" + value->second.str()  );
 
     SmartRefVector<VertexBase> pVtxs;
 
     for( unsigned int j=0; j!=nVert; ++j ){
-      VertexBase* pVtx = new VertexBase();
+      auto  pVtx = new VertexBase();
       double x = doubleFromInt( *i++ );
       double y = doubleFromInt( *i++ );
       double z = doubleFromInt( *i++ );

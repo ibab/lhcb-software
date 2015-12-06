@@ -4,6 +4,13 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2015-12-06 - Gerhard Raven
+ - modernize code
+   o prefer auto
+   o replace endreq with endmsg
+   o prefer SmartIF + service<T> over raw pointer + svc<T> + explicit release
+   o prefer range-based for loops
+
 !========================== HltDAQ v4r22 2015-12-05 ===========================
 
 ! 2015-11-26 - Sean Benson

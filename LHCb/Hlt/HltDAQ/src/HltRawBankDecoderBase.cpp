@@ -17,9 +17,7 @@ unsigned int getTCK(const LHCb::RawBank* rb) {
 
 
 HltRawBankDecoderBase::HltRawBankDecoderBase( const std::string& name, ISvcLocator* pSvcLocator)
-    : Decoder::AlgBase ( name , pSvcLocator ),
-      m_hltANNSvc{nullptr},
-      m_TCKANNSvc{nullptr}
+    : Decoder::AlgBase ( name , pSvcLocator )
 {
   //new for decoders, initialize search path, and then call the base method
   m_rawEventLocations = {LHCb::RawEventLocation::Trigger, LHCb::RawEventLocation::Copied, LHCb::RawEventLocation::Default};
@@ -31,8 +29,8 @@ HltRawBankDecoderBase::HltRawBankDecoderBase( const std::string& name, ISvcLocat
 StatusCode HltRawBankDecoderBase::initialize()
 {
     StatusCode sc = Decoder::AlgBase::initialize(); // must be executed first
-    m_hltANNSvc = svc<IANNSvc>("HltANNSvc");
-    m_TCKANNSvc = svc<IIndexedANNSvc>("TCKANNSvc");
+    m_hltANNSvc = service<IANNSvc>("HltANNSvc");
+    m_TCKANNSvc = service<IIndexedANNSvc>("TCKANNSvc");
     if ( m_sourceID > kSourceID_Max ){
         return Error("Illegal SourceID specified; maximal allowed value is 7" , StatusCode::FAILURE, 50 );
     }

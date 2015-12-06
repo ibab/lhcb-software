@@ -90,7 +90,7 @@ StatusCode HltRawDataMonitor::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   // get inputs
- LHCb::RawEvent* rawEvent = 0;
+ LHCb::RawEvent* rawEvent = nullptr;
   std::vector<std::string>::const_iterator iLoc = m_rawEventLocations.begin();
   for (; iLoc != m_rawEventLocations.end() ; ++iLoc ) {
     //    try RootInTES independent path first
@@ -158,8 +158,8 @@ StatusCode HltRawDataMonitor::fillRawBank()
 
   unsigned int bankCounterMax = 0;
   unsigned int bankSize =0;
-  std::vector<const RawBank*> orderedBanks(hltselreportsRawBanks.size(),(const RawBank*)0);
-  for( std::vector<RawBank*>::const_iterator hltselreportsRawBankP=hltselreportsRawBanks.begin();
+  std::vector<const RawBank*> orderedBanks(hltselreportsRawBanks.size(),(const RawBank*)nullptr);
+  for( auto hltselreportsRawBankP=hltselreportsRawBanks.begin();
 	 hltselreportsRawBankP!=hltselreportsRawBanks.end(); ++hltselreportsRawBankP ){    
     const RawBank* hltselreportsRawBank = *hltselreportsRawBankP;
 
@@ -190,7 +190,7 @@ StatusCode HltRawDataMonitor::fillRawBank()
     if( ( m_sourceID == HltSelReportsWriter::kSourceID_Hlt1 ) ||
         ( m_sourceID == HltSelReportsWriter::kSourceID_Hlt2 ) ){
 
-      for( std::vector<RawBank*>::const_iterator hltselreportsRawBankP=hltselreportsRawBanks.begin();
+      for( auto hltselreportsRawBankP=hltselreportsRawBanks.begin();
 	   hltselreportsRawBankP!=hltselreportsRawBanks.end(); ++hltselreportsRawBankP ){    
 	const RawBank* hltselreportsRawBank = *hltselreportsRawBankP;
 
@@ -223,7 +223,7 @@ StatusCode HltRawDataMonitor::fillRawBank()
   }    
   bankSize = (bankSize+3)/4; // from bytes to words
   // need to copy it to local array to get rid of const restriction
-  unsigned int* pBank = new unsigned int[bankSize];
+  auto  pBank = new unsigned int[bankSize];
   HltSelRepRawBank hltSelReportsBank( pBank );
 
   ++bankCounterMax;
@@ -383,9 +383,9 @@ StatusCode HltRawDataMonitor::fillHltSelRep()
     const LHCb::HltSelReports* selReports = get<LHCb::HltSelReports>( LHCb::HltSelReportsLocation::Default );
 
     // individual L0/Hlt1/Hlt2 trigger line
-    for (  LHCb::HltSelReports::Container::const_iterator it = selReports->begin(); it != selReports->end(); ++it ) {
+    for (const auto & selReport : *selReports) {
       //      info() << "trigger:" << it->first << endmsg;
-      fillDiag( it->first.c_str(),double(nLength(it->second)));
+      fillDiag( selReport.first.c_str(),double(nLength(selReport.second)));
     }
   }
   return StatusCode::SUCCESS; 
@@ -398,17 +398,16 @@ int HltRawDataMonitor::nLength (const LHCb::HltObjectSummary& p)
 {
   unsigned int nlength    = (2+4*(p.lhcbIDs().size())) + (2+2*(p.substructure().size()));
   // loop over numericalInfo
-  for ( LHCb::HltObjectSummary::Info::const_iterator k = p.numericalInfo().begin(); k != p.numericalInfo().end(); ++k) {
-    if ( k->first.find("#") != std::string::npos ) { 
+  for (const auto & elem : p.numericalInfo()) {
+    if ( elem.first.find("#") != std::string::npos ) { 
       nlength += 2;
     } else { 
       nlength += 4;
     }
   }
   // loop over substructure
-  for ( SmartRefVector< LHCb::HltObjectSummary >::const_iterator j = p.substructure().begin(); 
-        j != p.substructure().end(); ++j){
-    nlength += nLength(**j);
+  for (const auto & elem : p.substructure()){
+    nlength += nLength(*elem);
   }
   return nlength;
 }

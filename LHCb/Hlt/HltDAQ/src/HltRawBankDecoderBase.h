@@ -6,6 +6,7 @@
 // from Gaudi
 #include "DAQKernel/DecoderAlgBase.h"
 
+#include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/VectorMap.h"
 #include "Kernel/IANNSvc.h"
 #include "Kernel/IIndexedANNSvc.h"
@@ -46,8 +47,8 @@ public:
     unsigned int tck() const;
 
 private:
-    IANNSvc* m_hltANNSvc;
-    IIndexedANNSvc* m_TCKANNSvc;
+    SmartIF<IANNSvc> m_hltANNSvc;
+    SmartIF<IIndexedANNSvc> m_TCKANNSvc;
 
     using IdTable_t =  GaudiUtils::VectorMap<unsigned int, GaudiUtils::VectorMap<int, element_t>>;
     using Table_t =  GaudiUtils::VectorMap<unsigned int, GaudiUtils::VectorMap<int, Gaudi::StringKey>>;

@@ -150,7 +150,7 @@ StatusCode HltTrackReportsDecoder::execute()
 	}
 
         // create output container and put it on TES
-        LHCb::Tracks* outputTracks = new Tracks();
+        auto  outputTracks = new Tracks();
         put( outputTracks, entry.first );
         // verify all present in expected order...
         bool ok = true;

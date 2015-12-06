@@ -108,7 +108,7 @@ StatusCode HltLumiWriter::finalize() {
   if ( m_nbEvents > 0 ) {
     m_totDataSize /= m_nbEvents;
     info() << format( "Average event size : %7.1f words", m_totDataSize )
-           << endreq;
+           << endmsg;
   }
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
@@ -131,7 +131,7 @@ void HltLumiWriter::fillDataBankShort ( ) {
     m_bank.push_back( ( summaryIter.first << 16 ) | ( i_value(summaryIter.second) & 0xFFFF ) );
     if ( MSG::VERBOSE >= msgLevel() ) {
       auto word = m_bank.back();
-      verbose() << format ( " %8x %11d %11d %11d ", word, word, word>>16, word&0xFFFF ) << endreq;
+      verbose() << format ( " %8x %11d %11d %11d ", word, word, word>>16, word&0xFFFF ) << endmsg;
     }
   }
 }

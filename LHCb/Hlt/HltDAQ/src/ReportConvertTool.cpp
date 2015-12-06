@@ -25,29 +25,29 @@ ReportConvertTool::ReportConvertTool( const std::string& type,
   declareInterface<IReportConvert>(this);
 
   m_LatestVersion=1;
-  for(it_unordered_map2 map_it = m_track_unordered_map2_Turbo.begin(); map_it!=m_track_unordered_map2_Turbo.end(); map_it++){
-    if(map_it->first > m_LatestVersion) m_LatestVersion = map_it->first;
+  for(const auto & elem : m_track_unordered_map2_Turbo){
+    if(elem.first > m_LatestVersion) m_LatestVersion = elem.first;
   }
-  for(it_unordered_map2 map_it = m_particle_unordered_map2_Turbo.begin(); map_it!=m_particle_unordered_map2_Turbo.end(); map_it++){
-    if(map_it->first > m_LatestVersion) m_LatestVersion = map_it->first;
+  for(const auto & elem : m_particle_unordered_map2_Turbo){
+    if(elem.first > m_LatestVersion) m_LatestVersion = elem.first;
   }
-  for(it_unordered_map2 map_it = m_proto_unordered_map2_Turbo.begin(); map_it!=m_proto_unordered_map2_Turbo.end(); map_it++){
-    if(map_it->first > m_LatestVersion) m_LatestVersion = map_it->first;
+  for(const auto & elem : m_proto_unordered_map2_Turbo){
+    if(elem.first > m_LatestVersion) m_LatestVersion = elem.first;
   }
-  for(it_unordered_map2 map_it = m_rpid_unordered_map2_Turbo.begin(); map_it!=m_rpid_unordered_map2_Turbo.end(); map_it++){
-    if(map_it->first > m_LatestVersion) m_LatestVersion = map_it->first;
+  for(const auto & elem : m_rpid_unordered_map2_Turbo){
+    if(elem.first > m_LatestVersion) m_LatestVersion = elem.first;
   }
-  for(it_unordered_map2 map_it = m_mpid_unordered_map2_Turbo.begin(); map_it!=m_mpid_unordered_map2_Turbo.end(); map_it++){
-    if(map_it->first > m_LatestVersion) m_LatestVersion = map_it->first;
+  for(const auto & elem : m_mpid_unordered_map2_Turbo){
+    if(elem.first > m_LatestVersion) m_LatestVersion = elem.first;
   }
-  for(it_unordered_map2 map_it = m_recvertex_unordered_map2_Turbo.begin(); map_it!=m_recvertex_unordered_map2_Turbo.end(); map_it++){
-    if(map_it->first > m_LatestVersion) m_LatestVersion = map_it->first;
+  for(const auto & elem : m_recvertex_unordered_map2_Turbo){
+    if(elem.first > m_LatestVersion) m_LatestVersion = elem.first;
   }
-  for(it_unordered_map2 map_it = m_vertex_unordered_map2_Turbo.begin(); map_it!=m_vertex_unordered_map2_Turbo.end(); map_it++){
-    if(map_it->first > m_LatestVersion) m_LatestVersion = map_it->first;
+  for(const auto & elem : m_vertex_unordered_map2_Turbo){
+    if(elem.first > m_LatestVersion) m_LatestVersion = elem.first;
   }
-  for(it_unordered_map2 map_it = m_recsummary_unordered_map2.begin(); map_it!=m_recsummary_unordered_map2.end(); map_it++){
-    if(map_it->first > m_LatestVersion) m_LatestVersion = map_it->first;
+  for(const auto & elem : m_recsummary_unordered_map2){
+    if(elem.first > m_LatestVersion) m_LatestVersion = elem.first;
   }
 }
 
@@ -681,8 +681,8 @@ void ReportConvertTool::ParticleObjectFromSummary( const HltObjectSummary::Info*
     int run1version=-999;
     // find size we care about (i.e. make sure extra info not counted)
     unsigned int Isize = 0;
-    for(HltObjectSummary::Info::iterator it_info = info->begin(); it_info!=info->end(); it_info++){
-      if( (it_info->first).find("#")!=std::string::npos ) Isize++;
+    for(const auto & elem : *info){
+      if( (elem.first).find("#")!=std::string::npos ) Isize++;
     }
     // Looking at Run 1 data, need to know which map to use
     if( Isize == (m_particle_unordered_map2.at(1)).size() ) run1version = 1;
@@ -859,8 +859,8 @@ void ReportConvertTool::TrackObjectFromSummary( const HltObjectSummary::Info* in
     int run1version=-999;
     // find size we care about (i.e. make sure extra info not counted)
     unsigned int Isize = 0;
-    for(HltObjectSummary::Info::iterator it_info = info->begin(); it_info!=info->end(); it_info++){
-      if( (it_info->first).find("#")!=std::string::npos ) Isize++;
+    for(const auto & elem : *info){
+      if( (elem.first).find("#")!=std::string::npos ) Isize++;
     }
     // Looking at Run 1 data, need to know which map to use
     if( Isize == (m_track_unordered_map2.at(1)).size() ) run1version = 1;
@@ -869,8 +869,8 @@ void ReportConvertTool::TrackObjectFromSummary( const HltObjectSummary::Info* in
     m_version=run1version;
   }
   
-  LHCb::State* first = new LHCb::State();
-  LHCb::State* last = new LHCb::State();
+  auto  first = new LHCb::State();
+  auto  last = new LHCb::State();
  
   Gaudi::TrackSymMatrix cov;
   for(it_unordered_map track_it = (used_map.at( findBestPrevious( used_map, m_version ) )).begin(); track_it!=(used_map.at( findBestPrevious( used_map, m_version ) )).end(); track_it++){
@@ -1035,8 +1035,8 @@ void ReportConvertTool::RecVertexObjectFromSummary( const HltObjectSummary::Info
     int run1version=-999;
     // find size we care about (i.e. make sure extra info not counted)
     unsigned int Isize = 0;
-    for(HltObjectSummary::Info::iterator it_info = info->begin(); it_info!=info->end(); it_info++){
-      if( (it_info->first).find("#")!=std::string::npos ) Isize++;
+    for(const auto & elem : *info){
+      if( (elem.first).find("#")!=std::string::npos ) Isize++;
     }
     // Looking at Run 1 data, need to know which map to use
     if( Isize == (m_recvertex_unordered_map2.at(1)).size() ) run1version = 1;

@@ -52,7 +52,7 @@ DECLARE_ALGORITHM_FACTORY( HltSelReportsDecoder )
 HltSelReportsDecoder::HltSelReportsDecoder( const std::string& name,
                                           ISvcLocator* pSvcLocator)
 : HltRawBankDecoderBase( name, pSvcLocator ) 
-,m_conv(NULL)
+,m_conv(nullptr)
 {
   declareProperty("OutputHltSelReportsLocation",
   m_outputHltSelReportsLocation= LHCb::HltSelReportsLocation::Default);  
@@ -118,7 +118,7 @@ StatusCode HltSelReportsDecoder::execute() {
   }    
 
   // need to copy it to local array to concatenate  --- TODO: we could run a decompression such as LZMA at this point as well...
-  unsigned int* pBank = new unsigned int[bankSize];
+  auto  pBank = new unsigned int[bankSize];
   HltSelRepRawBank hltSelReportsBank( pBank );
   std::accumulate( std::begin(hltselreportsRawBanks), std::end(hltselreportsRawBanks),
                    pBank, [](unsigned int *p, const LHCb::RawBank* bank) {
@@ -243,11 +243,11 @@ StatusCode HltSelReportsDecoder::execute() {
   // -----------------------------------------------------------------
   // create output container and put it on TES
   // TODO: check consistency of output location and source ID!!!!
-  HltSelReports* outputSummary = new HltSelReports();
+  auto  outputSummary = new HltSelReports();
   put( outputSummary, m_outputHltSelReportsLocation );
 
   // create output container for Object Summaries and put it on TES
-  LHCb::HltObjectSummary::Container* objectSummaries = new HltObjectSummary::Container();
+  auto  objectSummaries = new HltObjectSummary::Container();
   put( objectSummaries, m_outputHltSelReportsLocation.value() + "/Candidates" );
 
   auto mytck = tck();
@@ -259,7 +259,7 @@ StatusCode HltSelReportsDecoder::execute() {
 
   for(unsigned int iObj=0; iObj!= nObj; ++iObj){
   
-    HltObjectSummary* hos = new HltObjectSummary();
+    auto  hos = new HltObjectSummary();
 
     // =========== class ID
     hos->setSummarizedObjectCLID( objTypSubBank.next() );
@@ -455,22 +455,22 @@ StatusCode HltSelReportsDecoder::execute() {
         const SmartRefVector< LHCb::HltObjectSummary > & sub = hos->substructureExtended();
         // look for a track among substracture
         bool trackFound(false);
-        for( SmartRefVector< LHCb::HltObjectSummary >::const_iterator ihos=sub.begin();ihos!=sub.end();++ihos)
+        for(const auto & elem : sub)
         {
-          if( !(ihos->target()) )continue;
-          if( ihos->target()->summarizedObjectCLID() != LHCb::CLID_Track )continue;
+          if( !(elem.target()) )continue;
+          if( elem.target()->summarizedObjectCLID() != LHCb::CLID_Track )continue;
           trackFound = true;
           break;
         }
 
         if( trackFound )
         {
-          for( SmartRefVector< LHCb::HltObjectSummary >::const_iterator ihos=sub.begin();ihos!=sub.end();++ihos)
+          for(const auto & elem : sub)
           {
-            if( !(ihos->target()) )continue;
+            if( !(elem.target()) )continue;
             // add only if not calo cluster
-            if( ihos->target()->summarizedObjectCLID() == LHCb::CLID_CaloCluster )continue;
-            hos->addToSubstructure( ihos->target() );
+            if( elem.target()->summarizedObjectCLID() == LHCb::CLID_CaloCluster )continue;
+            hos->addToSubstructure( elem.target() );
           }
         }
         else

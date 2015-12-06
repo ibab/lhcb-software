@@ -116,7 +116,7 @@ class sortByCLID {
    bool operator() (const LHCb::HltObjectSummary*  elem1,
                     const LHCb::HltObjectSummary*  elem2 ) const
       {
-        if( (elem1==0) || (elem2==0) || elem1==elem2) return false;
+        if( (elem1==nullptr) || (elem2==nullptr) || elem1==elem2) return false;
         return  elem1->summarizedObjectCLID() > elem2->summarizedObjectCLID();
       }
 };

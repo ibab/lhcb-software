@@ -75,7 +75,7 @@ StatusCode HltDecReportsDecoder::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   // create output container and put it on TES
-  HltDecReports* outputSummary = new HltDecReports();
+  auto  outputSummary = new HltDecReports();
   put( outputSummary, m_outputHltDecReportsLocation );
   
   std::vector<const RawBank*> hltdecreportsRawBanks = selectRawBanks( RawBank::HltDecReports );
