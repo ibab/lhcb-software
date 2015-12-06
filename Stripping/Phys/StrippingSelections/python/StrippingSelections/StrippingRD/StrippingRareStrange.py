@@ -10,7 +10,13 @@ __version__ = '$Revision: 2.1 $'
 __all__ = ('RareStrangeLinesConf',
            'config_default',
            'makeSigmaPMuMu',
+           'makeSigmaPMuMuDet',
+           'myDiMuonDetached',
+           'myDiElectronDetached',
+           'makeDiElectronDetached',
+           'makeSigmaPEMu',
            'makeSigmaPEE',
+           'makeSigmaPEEDet',
            'makeSigmaPPi0',
            'makeSigmaPPi0Cal',
            'makeSigmaPMuMuLFV',
@@ -27,6 +33,9 @@ __all__ = ('RareStrangeLinesConf',
            'makeKPiMuMuLFVDown',
            'makeKPiPiPiDown',
            'makeKPiPiPiMassMeasDown',
+           'makePhiKMu'
+           'makeLambdaPPi',
+           'makeLambdaPPiEE',
            )
 
 from Gaudi.Configuration import *
@@ -42,7 +51,7 @@ from StandardParticles import ( StdAllNoPIDsPions, StdNoPIDsDownPions,
                                 
 #from CommonParticles.StdLooseDalitzPi0 import (StdLoosePi02gee, StdLoosePi024e)
                                 
-
+_monitor = False
 
 default_config = {
   'NAME': 'RareStrange',
@@ -53,11 +62,14 @@ default_config = {
         'Postscale'           :1,
         'SigmaPMuMuPrescale' : 1,
         'SigmaPMuMuDownPrescale' :1,
+        'SigmaPMuMuDetPrescale' : 1,
+        'SigmaPEMuPrescale' : 1,
         'SigmaPEEPrescale' : 1,
+        'SigmaPEEDetPrescale' : 1,
         'SigmaPPi0Prescale' : 1,
-        'SigmaPPi0CalPrescale' : 0.25,
+        'SigmaPPi0CalPrescale' : 1.,
         'SigmaPEEDownPrescale' : 0.1,
-        'SigmaPMuMuLFVPrescale' :0.1,
+        'SigmaPMuMuLFVPrescale' :1,
         'SigmaPMuMuLFVDownPrescale' :0.1,
         'SigmaMuMuMuPrescale' : 1,
         'SigmaMuMuMuDownPrescale' :1,   
@@ -69,6 +81,9 @@ default_config = {
         'KPiPiPiDownPrescale' : 0.1,
         'KPiPiPiMassMeasDownPrescale' :1,
         'KPiMuMuLFVDownPrescale' :1,
+        'PhiKMuPrescale' : 0.01,
+        'LambdaPPiPrescale' : 0.01 ,
+        'LambdaPPiEEPrescale' : 1. ,
         'SigmaMinTauPs' : 6.,
         'SigmaMinPt' : 500.,
         'SigmaMaxDOCA' : 2.,
@@ -87,31 +102,42 @@ default_config = {
         'SigmaDauTrChi2Down': 9.,
         'SigmaPPi0MassWin' : 150.,
         'muonMinIpChi2' : 9.,
-        'protonPIDp': 5.,
-        'protonPIDpTight': 15.,
+        'protonProbNNp': 0.05,
+        'protonProbNNpTight': 0.5,
         'pMinPt': 500.,
         'electronPIDe':2.,
         'electronMinIpChi2': 9.,
-        'pi0MinPt': 0.,
+        'pi0MinPt': 700.,
         'muonMinIpChi2Down' : 9.,
         'electronMinIpChi2Down': 4.,
-        'Sigma3MinTauPs' : 0.1,
+        'DiMuonMaxMass' : 700,
+        'DiMuonMaxDOCA' : 2,
+        'DiMuonMinPt'   : 0,
+        'DiMuonVtxChi2'  : 36,
+        'DiMuonMinIpChi2'   : 9,
+        'DiElectronMaxMass' : 1000,
+        'DiElectronVtxChi2'  : 36,
+        'DiElectronMinIpChi2'   : 9,
+        'DiElectronPIDe' : 2, 
+        'SigmaDetVtxChi2'   : 25,
+        'Sigma3MinTauPs' : 3,
         'Sigma3MinPt' : 0.,
-        'Sigma3MaxDOCA' : 25.,
+        'Sigma3MaxDOCA' : 2.,
         'Sigma3MassWin' : 500.,
         'Sigma3MinDIRA' : 0.9,
-        'Sigma3MaxIpChi2' : 50.,
-        'Sigma3VtxChi2' : 50.,
-        'Sigma3MinTauPsDown' : 0.1,
+        'Sigma3MaxIpChi2' : 36.,
+        'Sigma3VtxChi2' : 36.,
+        'Sigma3MinTauPsDown' : 2,
         'Sigma3MinPtDown' : 0.,
-        'Sigma3MaxDOCADown' : 50.,
+        'Sigma3MaxDOCADown' : 2.,
         'Sigma3MassWinDown' : 500.,
         'Sigma3MinDIRADown' : 0.1,
-        'Sigma3MaxIpChi2Down' : 500.,
-        'Sigma3VtxChi2Down' : 500.,
+        'Sigma3MaxIpChi2Down' : 100.,
+        'Sigma3VtxChi2Down' : 100.,
         'Sigma3DauTrChi2Down': 9.,
         'muon3MinIpChi2' : 5.,
         'muon3MinIpChi2Down' : 5.,
+        # Kaons 
         'KMaxDOCA' : 3.,
         'KMinPT' : 100. ,
         'KMassWin' : 100.,
@@ -131,7 +157,7 @@ default_config = {
         'KVDPVMinDown' : 500.,
         'KVDPVMaxDown' : 2500.,
         #Kaons stuff
-          'KMaxDOCAMassMeas' : 2.,
+        'KMaxDOCAMassMeas' : 2.,
         'KMinPTMassMeas' : 300. ,
         'KMassWinMassMeas' : 50.,
         'KMinDIRAMassMeas' : 0.9998,
@@ -148,7 +174,28 @@ default_config = {
         'KMinVDChi2MassMeasDown' : 64.,
         'KDauMinIpChi2MassMeasDown' : 4., 
         'KVDPVMinMassMeasDown' : 900.,
-        'KVDPVMaxMassMeasDown' : 2200.
+        'KVDPVMaxMassMeasDown' : 2200.,
+        # Phi lines
+        'PhiDauMinPT' :  400.,
+        'PhiMassMin' : 800,
+        'PhiMassMax' : 1200,
+        'PhiMaxDOCA' : 0.1,
+        'PhiMinDIRA' : 0.5,
+        'PhiMinPT'   : 700,
+        'PhiVtxChi2' : 9 ,
+        'PhiProbNNk' : 0.3,
+        #Lambda lines 
+        'LambdaMinTauPs' : 6.,
+        'LambdaMinPt' : 500.,
+        'LambdaMaxDOCA' : 2.,
+        'LambdaMassWin' : 500.,
+        'LambdaMassWinTight' : 50.,
+        'LambdaMinDIRA' : 0.9,
+        'LambdaMaxIpChi2' : 36.,
+        'LambdaVtxChi2' : 25.,
+        'pionMinIpChi2' : 9.,
+        'protonMinIpChi2' : 9.,
+        
         }
   }
   
@@ -167,7 +214,10 @@ class RareStrangeLinesConf(LineBuilder) :
         'Postscale'           ,
         'SigmaPMuMuPrescale',
         'SigmaPMuMuDownPrescale',
+        'SigmaPMuMuDetPrescale',
+        'SigmaPEMuPrescale',
         'SigmaPEEPrescale',
+        'SigmaPEEDetPrescale' ,
         'SigmaPPi0Prescale',
         'SigmaPPi0CalPrescale',
         'SigmaPEEDownPrescale',
@@ -175,6 +225,8 @@ class RareStrangeLinesConf(LineBuilder) :
         'SigmaPMuMuLFVDownPrescale',
         'SigmaMuMuMuPrescale',
         'SigmaMuMuMuDownPrescale',
+        'LambdaPPiPrescale',
+        'LambdaPPiEEPrescale' ,
         'KPiPiPiPrescale',
         'KPiPiPiMassMeasPrescale',
         'KPiMuMuPrescale',
@@ -183,6 +235,7 @@ class RareStrangeLinesConf(LineBuilder) :
         'KPiPiPiDownPrescale',
         'KPiPiPiMassMeasDownPrescale',
         'KPiMuMuLFVDownPrescale',
+        'PhiKMuPrescale', 
         'SigmaMinTauPs',
         'SigmaMinPt',
         'SigmaMaxDOCA',
@@ -201,14 +254,24 @@ class RareStrangeLinesConf(LineBuilder) :
         'SigmaDauTrChi2Down',
         'SigmaPPi0MassWin',
         'muonMinIpChi2',
-        'protonPIDp',
-        'protonPIDpTight',
+        'protonProbNNp',
+        'protonProbNNpTight',
         'pMinPt',
         'electronPIDe',
         'electronMinIpChi2',
         'muonMinIpChi2Down',
         'pi0MinPt',
-        'electronMinIpChi2Down',        
+        'electronMinIpChi2Down',
+        'DiMuonMaxMass' ,
+        'DiMuonMaxDOCA' ,
+        'DiMuonMinPt'   ,
+        'DiMuonVtxChi2' ,
+        'DiMuonMinIpChi2'   ,
+        'DiElectronMaxMass' ,
+        'DiElectronVtxChi2'  ,
+        'DiElectronMinIpChi2',
+        'DiElectronPIDe' , 
+        'SigmaDetVtxChi2' ,
         'Sigma3MinTauPs',
         'Sigma3MinPt',
         'Sigma3MaxDOCA',
@@ -260,8 +323,26 @@ class RareStrangeLinesConf(LineBuilder) :
         'KMinVDChi2MassMeasDown',
         'KDauMinIpChi2MassMeasDown',
         'KVDPVMinMassMeasDown',
-        'KVDPVMaxMassMeasDown'
-                                  )
+        'KVDPVMaxMassMeasDown',
+        'PhiDauMinPT' ,
+        'PhiMassMin' ,
+        'PhiMassMax' ,
+        'PhiMaxDOCA' ,
+        'PhiMinDIRA' ,
+        'PhiMinPT'   ,
+        'PhiVtxChi2'  ,
+        'PhiProbNNk',
+        'LambdaMinTauPs' ,
+        'LambdaMinPt' ,
+        'LambdaMaxDOCA' ,
+        'LambdaMassWin' ,
+        'LambdaMassWinTight' ,
+        'LambdaMinDIRA' ,
+        'LambdaMaxIpChi2',
+        'LambdaVtxChi2' ,
+        'pionMinIpChi2' ,
+        'protonMinIpChi2' ,
+        )
     
     #### This is the dictionary of all tunable cuts ########
     
@@ -276,7 +357,12 @@ class RareStrangeLinesConf(LineBuilder) :
 
         spmumu_name=name+'SigmaPMuMu'
         spmumudown_name=name+'SigmaPMuMuDown'
+        dimudet_name=name+'DiMuonDetached'
+        dielectrondet_name=name+'DiElectronDetached'
+        spmumudet_name=name+'SigmaPMuMuDet'
+        spemu_name=name+'SigmaPEMu'
         spee_name=name+'SigmaPEE'
+        speedet_name=name+'SigmaPEEDet'
         sppi0_name=name+'SigmaPPi0'
         sppi0cal_name=name+'SigmaPPi0Cal'
         speedown_name=name+'SigmaPEEDown'
@@ -292,11 +378,21 @@ class RareStrangeLinesConf(LineBuilder) :
         kpimumulfvdown_name=name+'KPiMuMuLFVDown'
         kpipipidown_name=name+'KPiPiPiDown'
         kpipipimassmeasdown_name=name+'KPiPiPiMassMeasDown'
+        phikmu_name = name +"PhiKMu"
+        lambdappi_name=name+'LambdaPPi'
+        lambdappiee_name=name+'LambdaPPiEE'
 
-
+        self._myDiMuons = makeDiMuonDetached(dimudet_name, config)
+        self._myDiElectrons = makeDiElectronDetached(dielectrondet_name, config)
+        self._stdLooseProtons = DataOnDemand(Location = "Phys/StdLooseProtons/Particles")
+        self._stdAllLoosePions = DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")
+        
         self.selSigmaPMuMu = makeSigmaPMuMu(spmumu_name, config)
         self.selSigmaPMuMuDown = makeSigmaPMuMuDown(spmumudown_name, config)
+        self.selSigmaPMuMuDet = makeSigmaPMuMuDet(spmumudet_name, config, [self._myDiMuons, self._stdLooseProtons])
+        self.selSigmaPEMu = makeSigmaPEMu(spemu_name, config)
         self.selSigmaPEE   = makeSigmaPEE(spee_name, config)
+        self.selSigmaPEEDet   = makeSigmaPEEDetached(speedet_name, config, [self._myDiElectrons, self._stdLooseProtons])
         self.selSigmaPPi0   = makeSigmaPPi0(sppi0_name, config)
         self.selSigmaPPi0Cal   = makeSigmaPPi0Cal(sppi0cal_name, config)
         self.selSigmaPEEDown   = makeSigmaPEEDown(speedown_name, config)
@@ -312,7 +408,11 @@ class RareStrangeLinesConf(LineBuilder) :
         self.selKPiMuMuLFVDown = makeKPiMuMuLFVDown(kpimumulfvdown_name, config)
         self.selKPiPiPiDown = makeKPiPiPiDown(kpipipidown_name, config)
         self.selKPiPiPiMassMeasDown = makeKPiPiPiMassMeasDown(kpipipimassmeasdown_name, config)
-        
+        self.selPhiKMu = makePhiKMu(phikmu_name, config)
+        self.selLambdaPPi = makeLambdaPPi(lambdappi_name, config)
+        self.selLambdaPPiEE = makeLambdaPPiEE(lambdappiee_name, config, [self._myDiElectrons, self._stdLooseProtons, self._stdAllLoosePions])
+
+               
         self.SigmaPMuMuLine = StrippingLine(spmumu_name+"Line",
                                             prescale = config['SigmaPMuMuPrescale'],
                                             postscale = config['Postscale'],
@@ -386,6 +486,81 @@ class RareStrangeLinesConf(LineBuilder) :
                                             ]
                                      )
 
+        self.SigmaPMuMuDetLine = StrippingLine(spmumudet_name+"Line",
+                                            prescale = config['SigmaPMuMuDetPrescale'],
+                                            postscale = config['Postscale'],
+                                            algos = [ self.selSigmaPMuMuDet ],
+                                            RequiredRawEvents = ["Velo"],
+                                            MDSTFlag=False,
+                                            RelatedInfoTools = [
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'Location' : 'P2CVSigma09',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p+ (KS0 -> ^mu+ mu-)]CC" : 'P2CVMu09_1', 
+                                                            "[Sigma+ -> p+ (KS0 -> mu+ ^mu-)]CC" : 'P2CVMu09_2',
+                                                            "[Sigma+ -> ^p+ (KS0 -> mu+ mu-)]CC" : 'P2CVProton09'
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'Location' : 'P2CVSigma10',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p+ (KS0 -> ^mu+ mu-)]CC" : 'P2CVMu10_1',  
+                                                            "[Sigma+ -> p+ (KS0 -> mu+ ^mu-)]CC" : 'P2CVMu10_2',
+                                                            "[Sigma+ -> ^p+ (KS0 -> mu+ mu-)]CC" : 'P2CVProton10'
+
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'Location' : 'P2CVSigma11',
+                                                'DaughterLocations' : {
+                                                          "[Sigma+ -> p+ (KS0 -> ^mu+ mu-)]CC" : 'P2CVMu11_1',  
+                                                            "[Sigma+ -> p+ (KS0 -> mu+ ^mu-)]CC" : 'P2CVMu11_2',
+                                                            "[Sigma+ -> ^p+ (KS0 -> mu+ mu-)]CC" : 'P2CVProton11'
+
+                                                }
+                                              }
+                                            ]
+                                     )
+        self.SigmaPEMuLine = StrippingLine(spemu_name+"Line",
+                                            prescale = config['SigmaPEMuPrescale'],
+                                            postscale = config['Postscale'],
+                                            algos = [ self.selSigmaPEMu ],
+                                            RequiredRawEvents = ["Velo"],
+                                            MDSTFlag=False,
+                                            RelatedInfoTools = [
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'Location' : 'P2CVSigma09',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p+ ^e+ mu-]CC" : 'P2CVMu09_1', 
+                                                            "[Sigma+ -> p+ e+ ^mu-]CC" : 'P2CVMu09_2',
+                                                            "[Sigma+ -> ^p+ e+ mu-]CC" : 'P2CVProton09'
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'Location' : 'P2CVSigma10',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p+ ^e+ mu-]CC" : 'P2CVMu10_1', 
+                                                            "[Sigma+ -> p+ e+ ^mu-]CC" : 'P2CVMu10_2',
+                                                            "[Sigma+ -> ^p+ e+ mu-]CC" : 'P2CVProton10'
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'Location' : 'P2CVSigma11',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p+ ^e+ mu-]CC" : 'P2CVMu11_1', 
+                                                            "[Sigma+ -> p+ e+ ^mu-]CC" : 'P2CVMu11_2',
+                                                            "[Sigma+ -> ^p+ e+ mu-]CC" : 'P2CVProton11'
+                                                }
+                                              }
+                                            ]
+                                     )
+
         self.SigmaPEELine = StrippingLine(spee_name+"Line",
                                             prescale = config['SigmaPEEPrescale'],
                                             postscale = config['Postscale'],
@@ -418,6 +593,43 @@ class RareStrangeLinesConf(LineBuilder) :
                                                             "[Sigma+ -> p+ ^e+ e-]CC" : 'P2CVE11_1', 
                                                             "[Sigma+ -> p+ e+ ^e-]CC" : 'P2CVE11_2',
                                                             "[Sigma+ -> ^p+ e+ e-]CC" : 'P2CVProton11'
+                                                }
+                                              }
+                                            ]
+                                          )
+
+        self.SigmaPEEDetLine = StrippingLine(speedet_name+"Line",
+                                            prescale = config['SigmaPEEDetPrescale'],
+                                            postscale = config['Postscale'],
+                                            algos = [ self.selSigmaPEEDet ],
+                                            RequiredRawEvents = ["Velo"],
+                                            MDSTFlag=True,
+                                            RelatedInfoTools = [
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'Location' : 'P2CVSigma09',
+                                                'DaughterLocations' : {
+                                                            "[Sigma+ -> p+ (KS0 -> ^e+ e-)]CC" : 'P2CVE09_1', 
+                                                            "[Sigma+ -> p+ (KS0 -> e+ ^e-)]CC" : 'P2CVE09_2',
+                                                            "[Sigma+ -> ^p+ (KS0 -> e+ e-)]CC" : 'P2CVProton09'
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'Location' : 'P2CVSigma10',
+                                                'DaughterLocations' : {
+                                                           "[Sigma+ -> p+ (KS0 -> ^e+ e-)]CC" : 'P2CVE10_1', 
+                                                           "[Sigma+ -> p+ (KS0 -> e+ ^e-)]CC" : 'P2CVE10_2',
+                                                           "[Sigma+ -> ^p+ (KS0 -> e+ e-)]CC" : 'P2CVProton10'
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'Location' : 'P2CVSigma11',
+                                                'DaughterLocations' : {
+                                                           "[Sigma+ -> p+ (KS0 -> ^e+ e-)]CC" : 'P2CVE11_1', 
+                                                           "[Sigma+ -> p+ (KS0 -> e+ ^e-)]CC" : 'P2CVE11_2',
+                                                           "[Sigma+ -> ^p+ (KS0 -> e+ e-)]CC" : 'P2CVProton11'
                                                 }
                                               }
                                             ]
@@ -938,8 +1150,117 @@ class RareStrangeLinesConf(LineBuilder) :
                                             ]
                                          )
 
+        self.PhiKMuLine = StrippingLine(phikmu_name+"Line",
+                                        prescale = config['PhiKMuPrescale'],
+                                        postscale = config['Postscale'],
+                                        algos = [ self.selPhiKMu ],
+                                        RequiredRawEvents = ["Velo"],
+                                        MDSTFlag=False,
+                                            RelatedInfoTools = [
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'Location' : 'P2CVK09',
+                                                'DaughterLocations' : {
+                                                            "[phi(1020) -> K+ ^mu-]CC" : 'P2CVMu09', 
+                                                            "[phi(1020) -> ^K+ mu-]CC" : 'P2CVK09'
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'Location' : 'P2CVK10',
+                                                'DaughterLocations' : {
+                                                            "[phi(1020) -> K+ ^mu-]CC" : 'P2CVMu10', 
+                                                            "[phi(1020) -> ^K+ mu-]CC" : 'P2CVK10'
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'Location' : 'P2CVK11',
+                                                'DaughterLocations' : {
+                                                            "[phi(1020) -> K+ ^mu-]CC" : 'P2CVMu11', 
+                                                            "[phi(1020) -> ^K+ mu-]CC" : 'P2CVK11'
+                                                }
+                                              }
+                                            ]
+                                         )
+
+        self.LambdaPPiLine = StrippingLine(lambdappi_name+"Line",
+                                            prescale = config['LambdaPPiPrescale'],
+                                            postscale = config['Postscale'],
+                                            algos = [ self.selLambdaPPi ],
+                                            RequiredRawEvents = ["Velo"],
+                                            MDSTFlag=False,
+                                            RelatedInfoTools = [
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'Location' : 'P2CVSigma09',
+                                                'DaughterLocations' : {
+                                                            "[Lambda0 -> p+ ^pi-]CC" : 'P2CVPi09', 
+                                                            "[Lambda0 -> ^p+ pi-]CC" : 'P2CVProton09'
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'Location' : 'P2CVSigma10',
+                                                'DaughterLocations' : {
+                                                            "[Lambda0 -> p+ ^pi-]CC" : 'P2CVPi10', 
+                                                            "[Lambda0 -> ^p+ pi-]CC" : 'P2CVProton10'
+                                                }
+                                                
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'Location' : 'P2CVSigma11',
+                                                'DaughterLocations' : {
+                                                            "[Lambda0 -> p+ ^pi-]CC" : 'P2CVPi11', 
+                                                            "[Lambda0 -> ^p+ pi-]CC" : 'P2CVProton11'
+                                                }
+                                              }
+                                            ]
+                                     )
+
+        self.LambdaPPiEELine = StrippingLine(lambdappiee_name+"Line",
+                                            prescale = config['LambdaPPiEEPrescale'],
+                                            postscale = config['Postscale'],
+                                            algos = [ self.selLambdaPPiEE ],
+                                            RequiredRawEvents = ["Velo"],
+                                            MDSTFlag=False,
+                                            RelatedInfoTools = [
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'Location' : 'P2CVSigma09',
+                                                'DaughterLocations' : {
+                                                            "[Lambda0 -> p+ ^pi- KS0]CC" : 'P2CVPi09', 
+                                                            "[Lambda0 -> ^p+ pi- KS0]CC" : 'P2CVProton09'
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'Location' : 'P2CVSigma10',
+                                                'DaughterLocations' : {
+                                                            "[Lambda0 -> p+ ^pi- KS0]CC" : 'P2CVPi10', 
+                                                            "[Lambda0 -> ^p+ pi- KS0]CC" : 'P2CVProton10'
+                                                }
+                                                
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'Location' : 'P2CVSigma11',
+                                                'DaughterLocations' : {
+                                                            "[Lambda0 -> p+ ^pi- KS0]CC" : 'P2CVPi11', 
+                                                            "[Lambda0 -> ^p+ pi- KS0]CC" : 'P2CVProton11'
+                                                }
+                                              }
+                                            ]
+                                     )
+
+
+
         self.registerLine(self.SigmaPMuMuLine)
         self.registerLine(self.SigmaPEELine)
+        self.registerLine(self.SigmaPEEDetLine)
+        self.registerLine(self.SigmaPEMuLine)
+        self.registerLine(self.SigmaPMuMuDetLine)
         self.registerLine(self.SigmaPPi0Line)
         self.registerLine(self.SigmaPPi0CalLine)
         self.registerLine(self.SigmaPEEDownLine)
@@ -956,7 +1277,9 @@ class RareStrangeLinesConf(LineBuilder) :
         self.registerLine(self.KPiMuMuDownLine)
         self.registerLine(self.KPiPiPiDownLine)
         self.registerLine(self.KPiPiPiMassMeasDownLine)
-        
+        self.registerLine(self.PhiKMuLine)
+        self.registerLine(self.LambdaPPiLine)
+        self.registerLine(self.LambdaPPiEELine)
 
 
 
@@ -975,7 +1298,7 @@ def makeSigmaPMuMu(name, config):
     #from Configurables import OfflineVertexFitter
     SigmaPMuMu = CombineParticles(  DecayDescriptor = "[Sigma+ -> p+ mu+ mu-]cc",
                                     DaughtersCuts = { "mu+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(muonMinIpChi2)s)"%config, 
-                                                     "p+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PIDp > %(protonPIDp)s)"%config},
+                                                     "p+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PROBNNp> %(protonProbNNp)s)"%config},
                                     CombinationCut = "(ADAMASS('Sigma+')<%(SigmaMassWin)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCA)s *mm)"%config,
                                     MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2)s)  & (PT> %(SigmaMinPt)s *MeV)"\
                               "& (ADMASS('Sigma+') < %(SigmaMassWin)s *MeV )"\
@@ -1005,7 +1328,7 @@ def makeSigmaPMuMuLFV(name, config):
     """
     SigmaPMuMu = CombineParticles(  DecayDescriptor = "[Sigma+ -> p~- mu+ mu+]cc",
                                     DaughtersCuts = { "mu+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(muonMinIpChi2)s)"%config,
-                                                        "p+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PIDp > %(protonPIDp)s)"%config},
+                                                        "p+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PROBNNp> %(protonProbNNp)s)"%config},
                                     CombinationCut = "(ADAMASS('Sigma+')<%(SigmaMassWin)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCA)s *mm)"%config,
                                     MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2)s)  & (PT> %(SigmaMinPt)s *MeV)"\
                                                 "& (ADMASS('Sigma+') < %(SigmaMassWin)s *MeV )"\
@@ -1023,12 +1346,110 @@ def makeSigmaPMuMuLFV(name, config):
                       Algorithm = SigmaPMuMu,
                       RequiredSelections = [ _stdAllLooseMuons,
                                              _stdLooseProtons ])
+#============================================================
+#  Sigma+ -> p mu mu  with detached dimuon
+def makeDiMuonDetached(name, config):
+    """
+    Arguments:
+    name        : name of the Selection.
+    config      : dictionary of tunable cuts 
+    """
+
+    myDiMuon = CombineParticles(  DecayDescriptor = "KS0 -> mu+ mu-",
+                                  DaughtersCuts = { "mu+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(muonMinIpChi2)s)"%config },
+                                  CombinationCut = "(AM <%(DiMuonMaxMass)s *MeV) & (AMAXDOCA('')< %(DiMuonMaxDOCA)s *mm)"%config,
+                                  MotherCut = "(VFASPF(VCHI2/VDOF)< %(DiMuonVtxChi2)s)  & (PT> %(DiMuonMinPt)s *MeV)" %config  
+                                )
+    # AllLooseMuons are needed in order to avoid the pt and ip cuts used in StdLooseMuons: do not change this!
+    _stdAllLooseMuons   = DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")
+    
+    return Selection (name,
+                      Algorithm = myDiMuon,
+                      RequiredSelections = [ _stdAllLooseMuons ])
+
+
+
+def makeSigmaPMuMuDet(name, config, inputs):
+    """
+    Line for the selection of Sigma+ -> p+ mu+ mu-,  
+    Before prescaling this line, please contact the authors listed above
+    
+    Arguments:
+    name        : name of the Selection.
+    config      : dictionary of tunable cuts 
+    """
+
+    #from Configurables import OfflineVertexFitter
+    SigmaPMuMuDet = CombineParticles(  DecayDescriptor = "[Sigma+ -> p+ KS0 ]cc",
+                                       DaughtersCuts = { "KS0" : "(MIPCHI2DV(PRIMARY)>%(DiMuonMinIpChi2)s)"%config, 
+                                                         "p+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PROBNNp> %(protonProbNNp)s)"%config},
+                                       CombinationCut = "(ADAMASS('Sigma+')<%(SigmaMassWin)s *MeV)"%config,
+                                       MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaDetVtxChi2)s)  & (PT> %(SigmaMinPt)s *MeV)"\
+                                       "& (ADMASS('Sigma+') < %(SigmaMassWin)s *MeV )"\
+                                       "& (BPVDIRA > %(SigmaMinDIRA)s) "\
+                                       "& (BPVIPCHI2()< %(SigmaMaxIpChi2)s)"\
+                                       "& (BPVLTIME()> %(SigmaMinTauPs)s * ps)" %config  
+                                       )
+    
+    return Selection (name,
+                      Algorithm = SigmaPMuMuDet,
+                      RequiredSelections = inputs )
 
 #============================================================
-#  Sigma+ -> p pi0 (->e+ e- gamma)
+#  Very soft Dielectron for Sigma-> p ee  and Lambda-> p pi e e 
+
+def makeDiElectronDetached(name, config):
+    from CommonParticles.Utils import trackSelector 
+    from Configurables import DiElectronMaker,ProtoParticleCALOFilter
+    from GaudiKernel.SystemOfUnits import MeV
+    dieLL = DiElectronMaker('MyDiElectron')
+    dieLL.Particle = "KS0"
+    selector = trackSelector ( dieLL , trackTypes = [ "Long"]) 
+    dieLL.addTool( ProtoParticleCALOFilter('Electron'))
+#    dieLL.Electron.Selection = ["RequiresDet='CALO' CombDLL(e-pi)>'%(DiElectronPIDe)s'"%config ]
+    dieLL.Electron.Selection = ["RequiresDet='CALO' PROBNNe>'0.2'" ]
+    
+    dieLL.DiElectronMassMax = 2000.*MeV
+    dieLL.DiElectronMassMin = 0.*MeV
+    dieLL.DiElectronPtMin =   0.*MeV
+
+    return Selection (name,
+                      Algorithm = dieLL
+                      )
+
+#============================================================
+#  Sigma+ -> p e e 
+def makeSigmaPEEDetached(name, config, inputs):
+    """
+    Line for the selection of Sigma+ -> p+ e+ e-, 
+    for normalisation purposes
+    Before prescaling this line, please contact the authors listed above
+    
+    Arguments:
+    name        : name of the Selection.
+    config      : dictionary of tunable cuts 
+    """
+    
+    SigmaPEE = CombineParticles(    DecayDescriptor = "[Sigma+ -> p+ KS0]cc",
+                                    DaughtersCuts = {  "KS0" : "(MIPCHI2DV(PRIMARY)>%(DiElectronMinIpChi2)s)"%config, 
+                                                       "p+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PROBNNp> %(protonProbNNp)s)"%config},
+                                    CombinationCut = "(ADAMASS('Sigma+')<%(SigmaMassWin)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCA)s *mm)"%config,
+                                    MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2)s)  & (PT> %(SigmaMinPt)s *MeV)"\
+                                                "& (ADMASS('Sigma+') < %(SigmaMassWin)s *MeV )"\
+                                                "& (BPVDIRA > %(SigmaMinDIRA)s) "\
+                                                "& (BPVIPCHI2()< %(SigmaMaxIpChi2)s)"\
+                                                "& (BPVLTIME()> %(SigmaMinTauPs)s * ps)" %config  
+                                )
+
+    return Selection (name,
+                      Algorithm = SigmaPEE,
+                      RequiredSelections = inputs )
+
+#============================================================
+#  Sigma+ -> p e e 
 def makeSigmaPEE(name, config):
     """
-    Line for the selection of Sigma+ -> p+ e+ e- gamma,  (with photon undetected)
+    Line for the selection of Sigma+ -> p+ e+ e- 
     for normalisation purposes
     Before prescaling this line, please contact the authors listed above
     
@@ -1039,7 +1460,7 @@ def makeSigmaPEE(name, config):
     
     SigmaPEE = CombineParticles(    DecayDescriptor = "[Sigma+ -> p+ e+ e-]cc",
                                     DaughtersCuts = { "e+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PIDe > %(electronPIDe)s ) &  (MIPCHI2DV(PRIMARY)>%(electronMinIpChi2)s)"%config,
-                                                    "p+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PIDp > %(protonPIDp)s)"%config},
+                                                    "p+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PROBNNp> %(protonProbNNp)s)"%config},
                                     CombinationCut = "(ADAMASS('Sigma+')<%(SigmaMassWin)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCA)s *mm)"%config,
                                     MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2)s)  & (PT> %(SigmaMinPt)s *MeV)"\
                                                 "& (ADMASS('Sigma+') < %(SigmaMassWin)s *MeV )"\
@@ -1059,7 +1480,43 @@ def makeSigmaPEE(name, config):
                                              _stdLooseProtons ])
 
 #============================================================
-#  Sigma+ -> p pi0 
+# Sigma+ -> p e mu 
+def makeSigmaPEMu(name, config):
+    """
+    Line for the selection of Sigma+ -> p+ e+ mu-,  
+    Before prescaling this line, please contact the authors listed above
+    
+    Arguments:
+    name        : name of the Selection.
+    config      : dictionary of tunable cuts 
+    """
+    
+    #from Configurables import OfflineVertexFitter
+    SigmaPEMu = CombineParticles(  DecayDescriptors = [ "[Sigma+ -> p+ e+ mu-]cc","[Sigma+ -> p+ mu+ e-]cc"],
+                                    DaughtersCuts = { "mu+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(muonMinIpChi2)s)"%config,
+                                                      "e+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(muonMinIpChi2)s)"%config, 
+                                                     "p+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PROBNNp> %(protonProbNNp)s)"%config},
+                                    CombinationCut = "(ADAMASS('Sigma+')<%(SigmaMassWin)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCA)s *mm)"%config,
+                                    MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2)s)  & (PT> %(SigmaMinPt)s *MeV)"\
+                              "& (ADMASS('Sigma+') < %(SigmaMassWin)s *MeV )"\
+                              "& (BPVDIRA > %(SigmaMinDIRA)s) "\
+                              "& (BPVIPCHI2()< %(SigmaMaxIpChi2)s)"\
+                              "& (BPVLTIME()> %(SigmaMinTauPs)s * ps)" %config  
+                                )
+    # AllLooseMuons are needed in order to avoid the pt and ip cuts used in StdLooseMuons: do not change this!
+    _stdAllLooseMuons   = DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")
+    _stdLooseProtons = DataOnDemand(Location = "Phys/StdLooseProtons/Particles")
+    _stdAllLooseElectrons   = DataOnDemand(Location = "Phys/StdAllLooseElectrons/Particles")
+    return Selection (name,
+                      Algorithm = SigmaPEMu,
+                      RequiredSelections = [ _stdAllLooseMuons,
+                                             _stdAllLooseElectrons,
+                                             _stdLooseProtons ])
+
+
+
+#============================================================
+#  Sigma+ -> p pi0 with Dalitz 
 def makeSigmaPPi0(name, config):
     """
     Line for the selection of Sigma+ -> p+ pi0
@@ -1077,7 +1534,7 @@ def makeSigmaPPi0(name, config):
     
     SigmaPPi0 = CombineParticles(   DecayDescriptor = "[Sigma+ -> p+ pi0]cc",
                                     DaughtersCuts = { "pi0" : "(PT > %(pi0MinPt)s)"%config,
-                                    "p+" : "(PT > %(pMinPt)s) & (TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PIDp > %(protonPIDpTight)s )"%config},
+                                    "p+" : "(PT > %(pMinPt)s) & (TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PROBNNp > %(protonProbNNpTight)s )"%config},
                                     CombinationCut = "(ADAMASS('Sigma+')<%(SigmaPPi0MassWin)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCA)s *mm)"%config,
                                     MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2)s)  & (PT> %(SigmaMinPt)s *MeV)"\
                                                 "& (ADMASS('Sigma+') < %(SigmaPPi0MassWin)s *MeV )"\
@@ -1094,6 +1551,8 @@ def makeSigmaPPi0(name, config):
                       RequiredSelections = [ pi0sel,
                                              _stdLooseProtons ])
 
+#============================================================
+#  Sigma+ -> p pi0 with Merged and Resolved pi0
 def makeSigmaPPi0Cal(name, config):
     """
     Line for the selection of Sigma+ -> p+ pi0
@@ -1109,7 +1568,7 @@ def makeSigmaPPi0Cal(name, config):
     
     SigmaPPi0 = CombineParticles(   DecayDescriptor = "[Sigma+ -> p+ pi0]cc",
                                     DaughtersCuts = { "pi0" : "(PT > %(pi0MinPt)s)"%config,
-                                    "p+" : "(PT > %(pMinPt)s) & (TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PIDp > %(protonPIDpTight)s )"%config},
+                                    "p+" : "(PT > %(pMinPt)s) & (TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PROBNNp > %(protonProbNNpTight)s )"%config},
                                     CombinationCut = "(ADAMASS('Sigma+')<%(SigmaPPi0MassWin)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCA)s *mm)"%config,
                                     MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2)s)  & (PT> %(SigmaMinPt)s *MeV)"\
                                     "& (ADMASS('Sigma+') < %(SigmaPPi0MassWin)s *MeV )"\
@@ -1129,8 +1588,9 @@ def makeSigmaPPi0Cal(name, config):
 
 
 
-
+#============================================================
 # Sigma+ -> mu mu mu
+# Contact: Xabier Cid Vidal
 def makeSigmaMuMuMu(name, config):
     """
     Line for the selection of Sigma+ -> mu+ mu+ mu-,
@@ -1161,8 +1621,9 @@ def makeSigmaMuMuMu(name, config):
                       RequiredSelections = [ _stdAllLooseMuons])
 
 
-
+# ============================================================
 # Sigma+ -> mu mu mu down
+# Contact: Xabier Cid Vidal
 def makeSigmaMuMuMuDown(name, config):
     """
     Line for the selection of Sigma+ -> mu+ mu+ mu-,
@@ -1193,6 +1654,7 @@ def makeSigmaMuMuMuDown(name, config):
                       RequiredSelections = [ _Muons])
         
 
+# ============================================================
 # K -> pi mu mu 
 def makeKPiMuMu(name, config):
     """
@@ -1218,6 +1680,8 @@ def makeKPiMuMu(name, config):
                       RequiredSelections = [ _stdAllLooseMuons,
                                              _stdAllLoosePions ])
 
+# ============================================================
+# K -> pi mu mu LFV
 def makeKPiMuMuLFV(name, config):
     """
     Line for the selection of K+ -> pi- mu+ mu+,  
@@ -1244,7 +1708,8 @@ def makeKPiMuMuLFV(name, config):
 
 
 
-
+# ============================================================
+# K-> pi pi pi loose selection
 def makeKPiPiPi(name, config):
     """
     Line for the selection of K+ -> pi+ pi+ pi-,  
@@ -1267,7 +1732,9 @@ def makeKPiPiPi(name, config):
     return Selection (name,
                       Algorithm = KPiPiPi,
                       RequiredSelections = [     _stdAllLoosePions ])
-                      
+
+# ============================================================
+# K-> pi pi pi tight selection for mass measurement
 def makeKPiPiPiMassMeas(name, config):
     """
     Line for the selection of K+ -> pi+ pi+ pi-,  
@@ -1490,5 +1957,108 @@ def makeKPiPiPiMassMeasDown(name, config):
     return Selection (name,
                       Algorithm = KPiPiPi,
                       RequiredSelections = [  _Pions ])
+
+
+#============================================================
+# Phi-> K K with K-> mu
+# Contact: Vava Gligorov
+def makePhiKMu(name, config):
+    """
+    Line for the selection of phi-> K K with K-> mu 
+    Before prescaling this line, please contact the authors listed above
+    
+    Arguments:
+    name        : name of the Selection.
+    config      : dictionary of tunable cuts 
+    """
+    
+    PhiKMu = CombineParticles( DecayDescriptor = "[phi(1020) -> K+ mu-]cc",
+                               DaughtersCuts = {  "K+":"(TRCHI2DOF<5) & (TRGHOSTPROB < 0.3) & (PT>%(PhiDauMinPT)s) & (PROBNNk > %(PhiProbNNk)s)"%config,
+                                                   "mu+":"(TRCHI2DOF<5) & (TRGHOSTPROB < 0.3) & (PT>%(PhiDauMinPT)s)"%config,
+                                                   },
+                               CombinationCut = "(AWM ('K+','mu+') > %(PhiMassMin)s *MeV) & (AWM ('K+','mu+') < %(PhiMassMax)s *MeV) & (AMAXDOCA('')< %(PhiMaxDOCA)s *mm)"%config,
+                               MotherCut ="(PT> %(PhiMinPT)s *  MeV) &  (BPVDIRA > %(PhiMinDIRA)s)"\
+                               "& (VFASPF(VCHI2/VDOF) < %(PhiVtxChi2)s)"%config
+                                )
+    
+    _stdAllLooseMuons   = DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")
+    _stdAllLooseKaons   = DataOnDemand(Location = "Phys/StdAllLooseKaons/Particles")
+    return Selection (name,
+                      Algorithm = PhiKMu,
+                      RequiredSelections = [  _stdAllLooseMuons, _stdAllLooseKaons ])
+
+
+#============================================================
+# Lambda-> p pi control channel for other searches
+def makeLambdaPPi(name, config):
+    """
+    Line for the selection of Lambda-> p pi as control channel
+    Before prescaling this line, please contact the authors listed above
+    
+    Arguments:
+    name        : name of the Selection.
+    config      : dictionary of tunable cuts 
+    """
+    
+    LambdaPPi = CombineParticles( DecayDescriptor = "[Lambda0 -> p+ pi-]cc",
+                                  DaughtersCuts = { "pi+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(pionMinIpChi2)s)"%config, 
+                                                     "p+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PROBNNp> %(protonProbNNp)s) & (MIPCHI2DV(PRIMARY)>%(protonMinIpChi2)s)"%config
+                                                    },
+                                  CombinationCut = "(ADAMASS('Lambda0')<%(LambdaMassWinTight)s *MeV) & (AMAXDOCA('')< %(LambdaMaxDOCA)s *mm)"%config,
+                                  MotherCut = "(VFASPF(VCHI2/VDOF)< %(LambdaVtxChi2)s)  & (PT> %(LambdaMinPt)s *MeV)"\
+                                  "& (ADMASS('Lambda0') < %(LambdaMassWinTight)s *MeV )"\
+                                  "& (BPVDIRA > %(LambdaMinDIRA)s) "\
+                                  "& (BPVIPCHI2()< %(LambdaMaxIpChi2)s)"\
+                                  "& (BPVLTIME()> %(LambdaMinTauPs)s * ps)" %config  
+                                  )
+    if _monitor : 
+        LambdaPPi.Preambulo       = [
+            ## define historam type (shortcut)
+            "Histo  = Gaudi.Histo1DDef"  ,
+            ## monitor LL-case
+            "massLam     = monitor ( M / GeV ,             Histo ( 'Lambda' , 1.015, 1.215, 100 ) , 'M_Lambda'    ) " ,
+            ]
+        LambdaPPi.Monitor         = True ,
+        LambdaPPi.HistoProduce    = True ,
+        LambdaPPi.MotherMonitor = """ process ( massLam )
+        >> EMPTY
+        """
+
+
+    _stdAllLoosePions   = DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")
+    _stdLooseProtons = DataOnDemand(Location = "Phys/StdLooseProtons/Particles")
+    return Selection (name,
+                      Algorithm = LambdaPPi,
+                      RequiredSelections = [  _stdAllLoosePions, _stdLooseProtons ])
+
+#============================================================
+# Lambda-> p pi e e FCNC 
+def makeLambdaPPiEE(name, config, inputs):
+    """
+    Line for the selection of Lambda-> p pi e e  FCNC
+    Before prescaling this line, please contact the authors listed above
+    
+    Arguments:
+    name        : name of the Selection.
+    config      : dictionary of tunable cuts 
+    """
+    
+    LambdaPPi = CombineParticles( DecayDescriptor = "[Lambda0 -> p+ pi- KS0]cc",
+                                  DaughtersCuts = { "pi+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(pionMinIpChi2)s)"%config, 
+                                                     "p+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PROBNNp> %(protonProbNNp)s) & (MIPCHI2DV(PRIMARY)>%(protonMinIpChi2)s)"%config,
+                                                    "KS0" : "(MIPCHI2DV(PRIMARY)>%(DiElectronMinIpChi2)s)"%config, 
+                                                    },
+                                  CombinationCut = "(ADAMASS('Lambda0')<%(LambdaMassWin)s *MeV) & (AMAXDOCA('')< %(LambdaMaxDOCA)s *mm)"%config,
+                                  MotherCut = "(VFASPF(VCHI2/VDOF)< %(LambdaVtxChi2)s)  & (PT> %(LambdaMinPt)s *MeV)"\
+                                  "& (ADMASS('Lambda0') < %(LambdaMassWin)s *MeV )"\
+                                  "& (BPVDIRA > %(LambdaMinDIRA)s) "\
+                                  "& (BPVIPCHI2()< %(LambdaMaxIpChi2)s)"\
+                                  "& (BPVLTIME()> %(LambdaMinTauPs)s * ps)" %config  
+                                  )
+
+    return Selection (name,
+                      Algorithm = LambdaPPi,
+                      RequiredSelections = inputs ) 
+
 
 

@@ -5,6 +5,14 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-05 - Francesco Dettori 
+  - Lines added to StrippingRareStrange: 
+    - Sigma-> p e e and Sigma-> p mu mu detached 
+    - Sigma-> p e mu 
+    - Lambda-> p pi 
+    - Lambda-> p pi e e 
+    - Phi-> K mu 
+
 ! 2015-12-05 - Carlos Vazquez Sierra
   - Modified B2CC lines for s21p1
 
