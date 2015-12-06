@@ -94,14 +94,13 @@ Trying to import module StrippingArchive.Stripping24
 # WARNING: lineMBNoBias uses plain Gaudi configurable MBNoBiasORL. Consider using Selection instead!
 # WARNING: lineHlt1L0AnyRateLimited uses plain Gaudi configurable Hlt1L0AnyRateLimitedORL. Consider using Selection instead!
 Creating Bhadron stream with 676 lines
-Creating Dimuon stream with 40 lines
+Creating Dimuon stream with 42 lines
 Creating BhadronCompleteEvent stream with 63 lines
 Creating Calibration stream with 53 lines
 Creating Radiative stream with 3 lines
 Creating Leptonic stream with 158 lines
 # WARNING: Line StrippingTau23MuDs23PiLine has prescale <= 0, it will be removed from stream Leptonic
 Creating PID stream with 2 lines
-Creating DiMuon stream with 2 lines
 Creating Charm stream with 276 lines
 # WARNING: Line StrippingDstarD02xxDst2PiD02Kpi_untagged_BoxMB has prescale <= 0, it will be removed from stream Charm
 # WARNING: Line StrippingDstarD02xxDst2PiD02Kpi_untagged_BoxMBTrEff has prescale <= 0, it will be removed from stream Charm

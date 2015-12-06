@@ -6,6 +6,9 @@
 
 !========================= StrippingArchive v1r35 2015-11-26 =========================
 
+! 2015-12-06 - Andrea Contu
+ - Fixed qmtest
+
 ! 2015-11-30 - Ricardo Vazquez Gomez
  - Change DiMuon to Dimuon in RareNStrange
 
