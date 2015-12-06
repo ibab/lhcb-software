@@ -13,9 +13,6 @@
 #include "HltBase/ParabolaHypothesis.h"
 #include "HltBase/FwdHypothesis.h"
 
-//boost
-#include <boost/assign/list_of.hpp>
-
 // local
 #include "L0ConfExtrapolator.h"
 
@@ -57,11 +54,8 @@ L0ConfExtrapolator::L0ConfExtrapolator( const std::string& type,
   declareProperty( "dxParam"    , m_dxParam = -3e-4 );
   declareProperty( "byParam"    , m_byParam = -.35  );
   
-  std::vector<double> tmpx2=boost::assign::list_of(121.)(144.)(625.)(225.)(1225.);
-  std::vector<double> tmpy2=boost::assign::list_of(196.)(289.)(784.)(400.)(2025.);
-  
-  declareProperty("fwdSigmaX2", m_fwdSigmaX2 = tmpx2 );
-  declareProperty("fwdSigmaY2", m_fwdSigmaY2 = tmpy2 );
+  declareProperty("fwdSigmaX2", m_fwdSigmaX2 = {{121.,144.,625.,225.,1225.}});
+  declareProperty("fwdSigmaY2", m_fwdSigmaY2 = {{196.,289.,784.,400.,2025.}});
   
   //kick constants for ECal seeding
   declareProperty("ecalKick" , m_ecalKick = 1536443. );

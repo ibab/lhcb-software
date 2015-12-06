@@ -17,9 +17,6 @@
 #include "CaloDet/DeCalorimeter.h"
 #include "CaloDAQ/ICaloDataProvider.h"
 
-//boost
-#include <boost/assign/list_of.hpp>
-
 // local
 #include "HadronSeedTool.h"
 

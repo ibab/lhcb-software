@@ -3,6 +3,8 @@
 ! Responsible : Johannes Albrecht
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
+! 2015-12-06- Gerhard Raven
+ - replace boost/assign/list_of with (implicit) std::initializer_list
 
 !========================= HltL0Conf v4r2 2014-11-05 =========================
 

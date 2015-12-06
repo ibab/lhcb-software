@@ -15,10 +15,6 @@
 // local
 #include "MuonSeedTool.h"
 
-//boost
-#include <boost/assign/list_of.hpp>
-
-
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
