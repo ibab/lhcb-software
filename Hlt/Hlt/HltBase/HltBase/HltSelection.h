@@ -26,13 +26,11 @@ class TSelection;
 class Selection : private boost::noncopyable
 {
   public:
-    Selection( const Gaudi::StringKey& id )
+    explicit Selection( const Gaudi::StringKey& id )
         : m_id( id ), m_decision( false ), m_processed( false ), m_error( false )
     {
     }
-    virtual ~Selection()
-    {
-    }
+    virtual ~Selection() = default;
 
     const Gaudi::StringKey& id() const
     {
@@ -44,16 +42,13 @@ class Selection : private boost::noncopyable
     }
 
     template <typename I> // I is assumed to be iterator over a range of Selection*
-    void addInputSelectionIDs( I i, I end )
-#ifdef __GCCXML__
-    ;
-#else
+    void addInputSelectionIDs( I begin, I end )
     {
-        m_inputSelectionsIDs.reserve( m_inputSelectionsIDs.size() + std::distance(i,end) );
-        using value_type = typename std::remove_pointer<typename I::value_type>::type;
-        std::transform(i,end,std::back_inserter(m_inputSelectionsIDs),std::mem_fn( &value_type::id ) );
+        using const_ref = typename std::add_const<typename std::iterator_traits<I>::reference>::type;
+        m_inputSelectionsIDs.reserve( m_inputSelectionsIDs.size() + std::distance(begin,end) );
+        std::transform(begin,end,std::back_inserter(m_inputSelectionsIDs),
+                       [](const_ref  i) { return i->id(); } );
     }
-#endif
     void setDecision( bool value )
     {
         m_decision = value;
@@ -92,13 +87,13 @@ class Selection : private boost::noncopyable
     TSelection<T>* down_cast()
     {
         return T::classID() == classID() ? dynamic_cast<TSelection<T>*>( this )
-                                         : (TSelection<T>*)0;
+                                         : nullptr;
     }
     template <typename T>
     const TSelection<T>* down_cast() const
     {
         return T::classID() == classID() ? dynamic_cast<const TSelection<T>*>( this )
-                                         : (const TSelection<T>*)0;
+                                         : nullptr;
     }
 
   public:
@@ -129,7 +124,7 @@ class TSelection : public Selection
     typedef const T candidate_type;
     typedef std::vector<candidate_type*> container_type;
 
-    TSelection( const Gaudi::StringKey& id ) : Selection( id )
+    explicit TSelection( const Gaudi::StringKey& id ) : Selection( id )
     {
     }
     virtual ~TSelection();
@@ -216,24 +211,16 @@ typedef TSelection<Hlt::Candidate> CandidateSelection;
 
 template <typename R, typename T>
 TSelection<T>&  operator>>( const R &range, TSelection<T> &sel ) 
-#ifdef __GCCXML__
-    ;
-#else
 {
     sel.insert( std::end(sel), std::begin(range), std::end(range) );
     return sel;
 }
-#endif
 
 template <typename T>
 TSelection<T>&  operator>>( typename TSelection<T>::candidate_type *c, TSelection<T> &sel ) 
-#ifdef __GCCXML__
-    ;
-#else
 {
     sel.push_back( c );
     return sel;
 }
-#endif
 }
 #endif

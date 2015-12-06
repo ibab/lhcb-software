@@ -3,6 +3,10 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+! 2015-12-06 - Gerhard Raven
+ - make single-argument Selection constructor explicit 
+ - remove __GCCXML__ guards
+ - prefer lambda over std::mem_fn (the latter makes inlining impossible)
 
 !========================= HltBase v15r7 2015-09-01 =========================
 
