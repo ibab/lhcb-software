@@ -35,8 +35,6 @@
 #include <math.h>
 
 // boost
-#include <boost/foreach.hpp>
-#include <boost/assign/list_of.hpp>
 #include <boost/algorithm/string/erase.hpp>
 #include <boost/regex.hpp>
 
@@ -47,7 +45,6 @@
 using LHCb::RawBank;
 using LHCb::RawEvent;
 
-using boost::assign::list_of;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltMassMonitor

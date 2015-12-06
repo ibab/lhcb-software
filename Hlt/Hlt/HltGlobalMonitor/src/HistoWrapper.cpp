@@ -4,9 +4,6 @@
 #include <math.h>
 #include <iostream>
 
-// boost
-#include <boost/foreach.hpp>
-
 // AIDA
 #include <AIDA/IHistogram1D.h>
 #include <AIDA/IHistogram2D.h>

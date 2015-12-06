@@ -5,7 +5,10 @@
 !Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
-! 2015-26-11 - Roel Aaij
+! 2015-12-06 - Gerhard Raven
+ - remove unused include statements
+
+! 2015-11-26 - Roel Aaij
  - Always book the standard histograms in the mass monitor.
 
 !========================= HltGlobalMonitor v5r3 2015-11-14 =========================
