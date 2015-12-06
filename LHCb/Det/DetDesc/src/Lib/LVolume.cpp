@@ -164,7 +164,7 @@ StatusCode LVolume::belongsTo
 const Material* LVolume::findMaterial() const 
 {
   SmartDataPtr<const Material> material( dataSvc() , materialName() );
-  if( 0 == material ) {
+  if( !material ) {
     throw LogVolumeException( "Could not locate material " + materialName(),
                               this, StatusCode::FAILURE );
   }

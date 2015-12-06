@@ -129,12 +129,12 @@ PVolume::~PVolume()
 // ============================================================================
 ILVolume* PVolume::findLogical() const 
 {
-  m_lvolume = 0 ;
-  ILVolume* lv = 0 ;
+  m_lvolume = nullptr ;
+  ILVolume* lv = nullptr ;
   try
     { 
       SmartDataPtr<ILVolume> ptr( dataSvc() , lvolumeName() );
-      if( 0 != ptr ) { lv = ptr.operator->(); }
+      if( ptr ) { lv = ptr.operator->(); }
     }
   catch( const GaudiException& Exception ) 
     { Assert( false , 
@@ -148,7 +148,7 @@ ILVolume* PVolume::findLogical() const
     { Assert( false , 
               " PVolume::findLogical(), unknown exception caught! ") ; } 
   ///
-  Assert( 0 != lv , 
+  Assert( lv , 
           " PVolume::findLogical, unable to locate LV=" + 
           lvolumeName() );
   ///
@@ -164,8 +164,9 @@ ILVolume* PVolume::findLogical() const
 // ============================================================================
 Gaudi::Transform3D* PVolume::findMatrix() const 
 {
-  if( 0 != m_imatrix ) { delete m_imatrix ; m_imatrix = 0 ; }
-  return m_imatrix = new Gaudi::Transform3D( matrix().Inverse() ) ;
+  delete m_imatrix;
+  m_imatrix = new Gaudi::Transform3D( matrix().Inverse() ) ;
+  return m_imatrix;
 }
 
 // ============================================================================
@@ -185,8 +186,8 @@ IDataProviderSvc* PVolume::dataSvc() const { return m_services->detSvc(); }
 StatusCode 
 PVolume::queryInterface( const InterfaceID& ID , void** ppI ) 
 {
-  if ( 0 == ppI ) { return StatusCode::FAILURE; }
-  *ppI = 0 ;
+  if ( !ppI ) { return StatusCode::FAILURE; }
+  *ppI = nullptr ;
   if      ( IPVolume::   interfaceID() == ID ) 
     { *ppI = static_cast<IPVolume*>     ( this ) ; } 
   else if ( IInterface:: interfaceID() == ID ) 
@@ -279,7 +280,10 @@ void PVolume::Assert( bool                  assertion ,
  */
 // ============================================================================
 const ILVolume* PVolume::lvolume () const
-{ return 0 != m_lvolume  ? m_lvolume : m_lvolume = findLogical() ; }
+{ 
+    if (!m_lvolume) m_lvolume = findLogical();
+    return m_lvolume;
+}
 // ============================================================================
 
 // ============================================================================
@@ -289,7 +293,7 @@ const ILVolume* PVolume::lvolume () const
 // ============================================================================
 const Gaudi::Transform3D&  PVolume::matrixInv  () const 
 {
-  if( 0 == m_imatrix ) { m_imatrix = findMatrix() ; }
+  if( !m_imatrix ) { m_imatrix = findMatrix() ; }
   return *m_imatrix ;
 }
 // ============================================================================
@@ -317,7 +321,7 @@ Gaudi::XYZPoint PVolume::toLocal
 // ============================================================================
 Gaudi::XYZPoint PVolume::toMother ( const Gaudi::XYZPoint& PointInLocal  ) const 
 {
-  if( 0 == m_imatrix ) { m_imatrix = findMatrix() ; }  
+  if( !m_imatrix ) { m_imatrix = findMatrix() ; }  
   return (*m_imatrix) * PointInLocal ;
 }
 // ============================================================================
@@ -331,7 +335,7 @@ Gaudi::XYZPoint PVolume::toMother ( const Gaudi::XYZPoint& PointInLocal  ) const
 bool PVolume::isInside   
 ( const Gaudi::XYZPoint& PointInMother ) const 
 {
-  if( 0 == m_lvolume ) { m_lvolume = findLogical() ; }
+  if( !m_lvolume ) { m_lvolume = findLogical() ; }
   return m_lvolume->isInside( toLocal( PointInMother ) ) ;
 }
 // ============================================================================
@@ -343,8 +347,8 @@ bool PVolume::isInside
 // ============================================================================
 IPVolume* PVolume::reset () 
 {
-  if( 0 != m_lvolume ) { m_lvolume->reset() ; m_lvolume = 0 ; }
-  if( 0 != m_imatrix ) { delete m_imatrix   ; m_imatrix = 0 ; }
+  if( m_lvolume ) { m_lvolume->reset() ; m_lvolume = nullptr ; }
+  delete m_imatrix   ; m_imatrix = nullptr ;
   return this;
 }
 // ============================================================================
@@ -379,12 +383,11 @@ unsigned int PVolume::intersectLine
   ILVolume::Intersections & intersections ,
   const double              threshold     ) const 
 {
-  const ILVolume* lv = 
-    0 != m_lvolume  ? m_lvolume : m_lvolume = findLogical() ;
-  return lv->intersectLine ( m_matrix * Point  , 
-                             m_matrix * Vector , 
-                             intersections     , 
-                             threshold         ); 
+  if (!m_lvolume) m_lvolume = findLogical();
+  return m_lvolume->intersectLine ( m_matrix * Point  , 
+                                    m_matrix * Vector , 
+                                    intersections     , 
+                                    threshold         ); 
 }
 // ============================================================================
 
@@ -419,14 +422,13 @@ unsigned int PVolume::intersectLine
   const ISolid::Tick        tickMax       ,
   const double              threshold     ) const
 { 
-  const ILVolume* lv = 
-    0 != m_lvolume  ? m_lvolume : m_lvolume = findLogical() ;
-  return lv->intersectLine( m_matrix * Point    , 
-                            m_matrix * Vector   , 
-                            intersections       , 
-                            tickMin             , 
-                            tickMax             ,
-                            threshold           );
+  if (!m_lvolume) m_lvolume = findLogical();
+  return m_lvolume->intersectLine( m_matrix * Point    , 
+                                   m_matrix * Vector   , 
+                                   intersections       , 
+                                   tickMin             , 
+                                   tickMax             ,
+                                   threshold           );
 }
 // ============================================================================
 
@@ -469,5 +471,3 @@ PVolume::resetMisAlignment (                          )
 // ============================================================================
 // The End 
 // ============================================================================
-
-

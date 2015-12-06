@@ -209,20 +209,6 @@ public:
   Ticks::size_type maxNumberOfTicks() const { return (number()+1)*2 ; }
 
 protected:
-  
-  /** @class CmpZ
-   *  simple utility class (functor) for comparizon of
-   *  z-posiiton of the triplet
-   */ 
-  class CmpZ: 
-    public std::binary_function<Triplet,double,bool>
-  { 
-  public:
-    inline bool operator() ( const Triplet& triplet , const double&  Z ) const
-    { return triplet.first >= Z ; }
-  };
-
-protected:
   /** static function to generate triplets for a cone */
   static Triplets makeTriplets(double ZHalfLength        , 
 			       double OuterRadiusMinusZ  ,

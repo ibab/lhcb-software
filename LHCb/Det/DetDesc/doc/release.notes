@@ -2,6 +2,19 @@
 ! package DetDesc
 ! package manager : Marco Clemencic
 ! =====================================================================
+! 2015-12-06 - Gerhard Raven
+ - Modernize code:
+   o prefer STL algorithms over raw loops
+   o prefer nullptr over 0
+   o avoid comparing pointers to 0
+   o prefer std::unique_ptr over raw pointers with explicit new/delete
+   o prefer =default constructors / destructors
+   o do not cast if not needed
+   o prefer SmartIF over explicit pointer with explicit release()
+   o prefer auto 
+   o prefer templates to macros
+   o prefer emplace_back over push_back
+
 
 ! 2015-11-26 - Marco Clemencic
  - Fixed compilation problem with gcc 5.2.

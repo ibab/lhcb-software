@@ -235,7 +235,9 @@ bool SolidPolycone::isInsideImpl (  const aPoint& point ) const
   if( !insidePhi( point.phi() ) ) { return false ; }
 
   /// check radius
-  Iterator it = std::find_if( begin() , end() , std::bind2nd( CmpZ() , point.z() ) ) ;
+  Iterator it = std::find_if( begin() , end() , 
+                              [&](const Triplet& i) 
+                              { return i.first >= point.z(); } );
 
   /// outside!
   if( begin() == it || end() == it ) { return false; }
@@ -521,8 +523,8 @@ SolidPolycone::Triplets SolidPolycone::makeTriplets(double ZHalfLength        ,
 						    double InnerRadiusPlusZ )
 {
   Triplets triplets ;
-  triplets.push_back( std::make_pair(-ZHalfLength, std::make_pair(InnerRadiusMinusZ,OuterRadiusMinusZ) ) ) ;
-  triplets.push_back( std::make_pair( ZHalfLength, std::make_pair(InnerRadiusPlusZ, OuterRadiusPlusZ)  ) ) ;
+  triplets.emplace_back( -ZHalfLength, std::make_pair(InnerRadiusMinusZ,OuterRadiusMinusZ) ) ;
+  triplets.emplace_back(  ZHalfLength, std::make_pair(InnerRadiusPlusZ, OuterRadiusPlusZ)  ) ;
   return triplets ;
 }
 

@@ -3,6 +3,7 @@
 #define DETDESC_SERVICES_H 1
 
 #include <iostream>
+#include "GaudiKernel/SmartIF.h"
 // Forward declarations
 class ISvcLocator;
 class IDataProviderSvc;
@@ -67,7 +68,7 @@ namespace DetDesc {
     Services();
     
     /** Default destructor */
-    virtual ~Services();
+    virtual ~Services() = default;
 
   private:
 
@@ -76,13 +77,13 @@ namespace DetDesc {
     
   private:
     /// The service locator
-    ISvcLocator* m_svcLocator;
+    SmartIF<ISvcLocator> m_svcLocator;
     /// The Detector data provider
-    IDataProviderSvc* m_detSvc;
+    SmartIF<IDataProviderSvc> m_detSvc;
     /// The Message service
-    IMessageSvc* m_msgSvc;
+    SmartIF<IMessageSvc> m_msgSvc;
     /// The Update Manager Service
-    IUpdateManagerSvc* m_updMgrSvc;
+    SmartIF<IUpdateManagerSvc> m_updMgrSvc;
     
     /// Reference count
     int m_refCount;

@@ -54,9 +54,9 @@ const std::string& ConditionInfo::conditionName() const {
 
 /// Get a pointer to the associated condition
 Condition* ConditionInfo::condition() {
-  if( m_condition == 0 ) {
+  if( !m_condition ) {
     SmartDataPtr<Condition> pCond( dataSvc(), conditionName() );
-    if( 0 != pCond ) m_condition = pCond;
+    if( pCond ) m_condition = pCond;
   }
   return m_condition;
 }
@@ -65,8 +65,8 @@ Condition* ConditionInfo::condition() {
 
 StatusCode ConditionInfo::queryInterface( const InterfaceID& ID , void** ppI ) 
 {
-  if ( 0 == ppI ) { return StatusCode::FAILURE; }
-  *ppI = 0 ;
+  if ( !ppI ) { return StatusCode::FAILURE; }
+  *ppI = nullptr ;
   if      ( IConditionInfo::interfaceID()  == ID ) 
     { *ppI = static_cast<IConditionInfo*> ( this ) ; } 
   else if ( IInterface:: interfaceID()    == ID ) 

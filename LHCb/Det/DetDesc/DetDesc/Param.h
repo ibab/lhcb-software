@@ -25,16 +25,16 @@ public:
   typedef T value_type;
   
   /// Standard constructor
-  Param( ): m_val() {}
+  Param( ) = default;
 
   /// Constructor by value
-  Param(const value_type &val): m_val(val) {}
+  Param(value_type val): m_val(std::move(val)) {}
 
-  virtual ~Param(){} ///< Destructor
+  virtual ~Param() = default; ///< Destructor
 
   /// Setter (with automatic conversion)
   template <class T1>
-  inline void set(const T1 &val) { m_val = val; }
+  inline void set(T1 val) { m_val = std::move(val); }
 
   /// Getter
   inline value_type &get() { return m_val; }
@@ -60,9 +60,9 @@ public:
 
 private:
   /// Void pointer to the datum (used by BasicParam)
-  virtual void *_get_ptr() { return (void*)&m_val;}
+  virtual void *_get_ptr() { return &m_val;}
   /// Void pointer to the datum (used by BasicParam), const version
-  virtual const void *_get_ptr() const { return (void*)&m_val;}
+  virtual const void *_get_ptr() const { return &m_val;}
   /// Where the datum is stored
   value_type m_val;
 
@@ -91,7 +91,7 @@ template<class T>
 std::string Param<T>::toXMLStr(const std::string&, const std::string&, int) const {
   throw GaudiException(std::string("Cannot convert parameter of type ") + typeid(m_val).name() + " to XML",
                        "Param<T>::toXMLStr()", StatusCode::FAILURE );
-  return "";
+  return {};
 }
 
 // === Forward declaration of version of toXMLStr for the supported types ===

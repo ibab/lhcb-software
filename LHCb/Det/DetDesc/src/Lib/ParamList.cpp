@@ -42,7 +42,7 @@ ParamList& ParamList::operator= (const ParamList &pl){
 ParamList& ParamList::operator+= (const ParamList &pl){
   const_iterator i;
   for ( i = pl.begin(); i != pl.end() ; ++i ){
-	iterator old = find(i->first);
+	auto old = find(i->first);
     if ( old != end() ) { // key already used
       delete old->second;
       old->second = i->second->new_copy();

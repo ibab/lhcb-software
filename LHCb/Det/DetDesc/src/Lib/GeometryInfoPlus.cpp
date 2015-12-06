@@ -37,7 +37,6 @@
 // create "ghost"
 GeometryInfoPlus::GeometryInfoPlus(IDetectorElement* de)
   :
-  m_log                 (       0     ),
   m_gi_has_logical      (     false   ),
   m_gi_lvolumeName      (      ""     ),
   m_gi_lvolume          (       0     ),
@@ -75,7 +74,6 @@ GeometryInfoPlus::GeometryInfoPlus(IDetectorElement* de)
 GeometryInfoPlus::GeometryInfoPlus(IDetectorElement*  de,
                                    const std::string& LogVol)
   :
-  m_log                 (       0     ),
   m_gi_has_logical      (    true     ),
   m_gi_lvolumeName      (   LogVol    ),
   m_gi_lvolume          (       0     ),
@@ -117,7 +115,6 @@ GeometryInfoPlus::GeometryInfoPlus(IDetectorElement*            de,
                                    const ILVolume::ReplicaPath& replicaPath,
                                    const std::string& alignmentPath          )
   :
-  m_log                 (       0     ),
   m_gi_has_logical      (    true     ),
   m_gi_lvolumeName      (   LogVol    ),
   m_gi_lvolume          (       0     ),
@@ -159,7 +156,6 @@ GeometryInfoPlus::GeometryInfoPlus( IDetectorElement*  de,
                                     const std::string& ReplicaNamePath,
                                     const std::string& alignmentPath   )
   :
-  m_log                 (       0     ),
   m_gi_has_logical      (    true         ),
   m_gi_lvolumeName      (   LogVol        ),
   m_gi_lvolume          (       0         ),
@@ -201,7 +197,7 @@ StatusCode GeometryInfoPlus::initialize()
 
   m_hasAlignmentPath=!m_alignmentPath.empty();
 
-  if( 0 == m_log ) m_log = new MsgStream(msgSvc(), "GeometryInfoPlus");
+  if( !m_log ) m_log.reset( new MsgStream(msgSvc(), "GeometryInfoPlus") );
   if( log().level() <= MSG::VERBOSE ) {
     log() << MSG::VERBOSE << "initialize" << endmsg;
     log() << MSG::VERBOSE << "alignment path " << m_alignmentPath << endmsg;
@@ -745,9 +741,9 @@ IGeometryInfo* GeometryInfoPlus::geoByName( const std::string& name ) const
   if( log().level() <= MSG::VERBOSE )
     log() << MSG::VERBOSE << "geoByName name is " << name << endmsg;
 
-  IGeometryInfo* gi = 0;
+  IGeometryInfo* gi = nullptr;
   SmartDataPtr<IDetectorElement> ptr( dataSvc() , name );
-  if ( 0 != ptr ) {
+  if ( ptr ) {
     gi = ptr->geometry();
     if( log().level() <= MSG::VERBOSE )
       log() << MSG::VERBOSE << "geoByName: Found detector element for "
@@ -770,7 +766,7 @@ StatusCode GeometryInfoPlus::fullGeoInfoForPoint
   if( !isInside( point )  )            { return StatusCode::FAILURE ; }
   //
   IGeometryInfo* gi = belongsTo( point , -1 );
-  if( 0 == gi || 0 == gi->lvolume() )  { return StatusCode::FAILURE ; }
+  if( !gi || !gi->lvolume() )  { return StatusCode::FAILURE ; }
   start = gi;
   //
   return
@@ -790,7 +786,7 @@ StatusCode GeometryInfoPlus::fullGeoInfoForPoint
   if( !isInside( point ) ) { return StatusCode::FAILURE; }
   //
   IGeometryInfo* gi = belongsTo    ( point , -1 );
-  if( 0 == gi || 0 == gi->lvolume() ) { return StatusCode::FAILURE ; }
+  if( !gi || !gi->lvolume() ) { return StatusCode::FAILURE ; }
   start             = belongsToPath( point , -1 );
   //
   return
@@ -811,7 +807,7 @@ StatusCode GeometryInfoPlus::fullGeoInfoForPoint
   if( !isInside( point )   )            { return StatusCode::FAILURE ; }
   //
   IGeometryInfo* gi = belongsTo( point , -1 );
-  if( 0 == gi || 0 == gi->lvolume() )   { return StatusCode::FAILURE ; }
+  if( !gi || !gi->lvolume() )   { return StatusCode::FAILURE ; }
   start = gi;
   //
   return
@@ -831,7 +827,7 @@ StatusCode GeometryInfoPlus::fullGeoInfoForPoint
   if( !isInside( point )   ) { return StatusCode::FAILURE; }
   //
   IGeometryInfo* gi = belongsTo    ( point , -1 );
-  if( 0 == gi || 0 == gi->lvolume() ) { return StatusCode::FAILURE ; }
+  if( !gi || !gi->lvolume() ) { return StatusCode::FAILURE ; }
   start             = belongsToPath( point , -1 );
   //
   return
@@ -860,8 +856,7 @@ std::string GeometryInfoPlus::belongsToPath( const Gaudi::XYZPoint& globalPoint,
 {
   if( 0 == level ){  return detElem()->name() ; }
   IGeometryInfo* gi =  belongsTo( globalPoint );
-  return
-    ( 0 == gi ) ? detElem()->name() :
+  return !gi  ? detElem()->name() :
     gi->belongsToPath( globalPoint , level - 1 ) ;
   //
 }
@@ -875,7 +870,7 @@ IGeometryInfo* GeometryInfoPlus::belongsTo( const Gaudi::XYZPoint& globalPoint )
     std::find_if( childBegin() , childEnd  () ,
                   IGeometryInfo_isInside(globalPoint) ) ;
   //
-  return ( childEnd() == it ? 0 : *it );
+  return childEnd() != it ? *it : nullptr ;
 }
 //=============================================================================
 IGeometryInfo* GeometryInfoPlus::belongsTo( const Gaudi::XYZPoint& globalPoint ,
@@ -883,7 +878,7 @@ IGeometryInfo* GeometryInfoPlus::belongsTo( const Gaudi::XYZPoint& globalPoint ,
 {
   if( level == 0 ) { return this;  } // do not look throug  daughters!
   IGeometryInfo* gi = belongsTo( globalPoint );
-  return  ( ( 0 == gi ) ? this : gi->belongsTo( globalPoint , level - 1 ) );
+  return  gi ? gi->belongsTo( globalPoint , level - 1 ) : this ;
 }
 //=============================================================================
 StatusCode GeometryInfoPlus::loadChildren() const
@@ -903,16 +898,16 @@ StatusCode GeometryInfoPlus::loadChildren() const
     {
       IDetectorElement* ide = *it++;
       try{
-        IGeometryInfo* igi   = 0 ;
-        DataObject*    pObj  = 0 ;
+        IGeometryInfo* igi   = nullptr ;
+        DataObject*    pObj  = nullptr ;
         std::string    path("")  ;
-        if( 0 != ide  ) { igi  = ide->geometry();                }
-        if( 0 != ide  ) { pObj = dynamic_cast<DataObject*>(ide); }
-        if( 0 != pObj ) {
+        if( ide  ) { igi  = ide->geometry();                }
+        if( ide  ) { pObj = dynamic_cast<DataObject*>(ide); }
+        if( pObj ) {
           IRegistry* pReg = pObj->registry();
-          if (0!=pReg) path=pReg->identifier();
+          if (pReg) path=pReg->identifier();
         }
-        if( 0 != igi &&  0 != path.size() )
+        if( igi &&  0 != path.size() )
           { m_gi_childrensNames.push_back( path );
           m_gi_childrens.push_back( igi  ); }
       }
@@ -934,21 +929,17 @@ StatusCode GeometryInfoPlus::loadChildren() const
 IGeometryInfo*  GeometryInfoPlus::reset()
 {
   /// reset logical volume
-  m_gi_lvolume = 0;
+  m_gi_lvolume = nullptr;
 
   /// reset matrices
-  if( 0 != m_matrix ) {
-    delete m_matrix;
-    m_matrix    = 0 ;
-  }
+  delete m_matrix;
+  m_matrix    = nullptr ;
 
-  if( 0 != m_matrixInv ) {
-    delete m_matrixInv ;
-    m_matrixInv = 0 ;
-  }
+  delete m_matrixInv ;
+  m_matrixInv = nullptr ;
 
   /// reset support
-  m_gi_support      = 0      ;
+  m_gi_support      = nullptr      ;
 
   /// reset parent
   m_gi_parentLoaded = false  ;
@@ -966,17 +957,13 @@ IGeometryInfo*  GeometryInfoPlus::reset()
 //=============================================================================
 IGeometryInfo* GeometryInfoPlus::parentIGeometryInfo()
 {
-  if( !hasSupport() )  { return 0; }
+  if( !hasSupport() )  { return nullptr; }
   if( log().level() <= MSG::VERBOSE )
     log() << MSG::VERBOSE << "parentIGeometryInfo with support "
           << m_gi_supportName << endmsg;
 
-  if( 0 == m_gi_support )
-  {
-    IGeometryInfo* gi = 0;
-    if( std::string("") != m_gi_supportName )
-    { gi = geoByName( m_gi_supportName ); }
-    if( 0 !=  gi ) { m_gi_support = gi ; }
+  if( !m_gi_support && !m_gi_supportName.empty() ) {
+    m_gi_support = geoByName( m_gi_supportName );
   }
   return m_gi_support;
 }
@@ -987,20 +974,19 @@ const IGeometryInfo* GeometryInfoPlus::parentIGeometryInfo() const
   Assert( 0 != m_gi_iDetectorElement ,
           "GeometryInfoPlus:: IDetectorElement is not available!" );
 
-  IDetectorElement* ide =
-    m_gi_iDetectorElement->parentIDetectorElement();
-  Assert( 0 != ide                   ,
+  auto ide = m_gi_iDetectorElement->parentIDetectorElement();
+  Assert( ide                   ,
           "GeometryInfoPlus:: parent           is not available!" );
-  const IGeometryInfo* igi = ide->geometry();
-  Assert( 0 != igi                   ,
+  auto igi = ide->geometry();
+  Assert( igi                   ,
           "GeometryInfoPlus:: parent geometry  is not available!" );
   return igi;
 }
 //=============================================================================
 const ILVolume* GeometryInfoPlus::lvolume() const
 {
-  if( !hasLVolume() )     { return  0              ; }
-  if( 0 != m_gi_lvolume ) { return  m_gi_lvolume          ; }
+  if( !hasLVolume() ) { return  nullptr              ; }
+  if(  m_gi_lvolume ) { return  m_gi_lvolume          ; }
   try
   { m_gi_lvolume  = findLogical() ; }
   catch ( const GaudiException Exception )
@@ -1010,7 +996,7 @@ const ILVolume* GeometryInfoPlus::lvolume() const
     { Assert( false ,
               "GeometryInfoPlus::lvolume() : unknown exception caught" ) ; }
   ///
-  Assert( 0 != m_gi_lvolume ,
+  Assert( m_gi_lvolume ,
           "GeometryInfoPlus::lvolume() : unable to load ILVolume!" );
   return m_gi_lvolume;
 }
@@ -1023,20 +1009,16 @@ StatusCode GeometryInfoPlus::location( IGeometryInfo*& start ,
   replicaPath.insert( replicaPath.end() ,
                       supportPath().begin() , supportPath().end() );
 
-  if( !hasSupport() )  { start = 0; return StatusCode::SUCCESS; }
+  if( !hasSupport() )  { start = nullptr; return StatusCode::SUCCESS; }
   //
-  if( 0 == m_gi_support )
-    {
-      IGeometryInfo* gi = 0;
-      if( std::string("") != m_gi_supportName )
-        { gi = geoByName( m_gi_supportName ); }
-      if( 0 !=  gi ) { m_gi_support = gi ; }
-    }
+  if( !m_gi_support && !m_gi_supportName.empty() ) {
+    m_gi_support = geoByName( m_gi_supportName );
+  }
 
   start = m_gi_support;
-  if( 0 == start ) { replicaPath.clear(); }
+  if( !start ) { replicaPath.clear(); }
 
-   return  ( ( 0 != start ) ? StatusCode::SUCCESS : StatusCode::FAILURE );
+   return  start ? StatusCode::SUCCESS : StatusCode::FAILURE;
 }
 //============================================================================
 StatusCode GeometryInfoPlus::location( std::string& start ,
@@ -1053,19 +1035,19 @@ StatusCode GeometryInfoPlus::location( std::string& start ,
 const ILVolume* GeometryInfoPlus::lvolume( IGeometryInfo* start,
                                        const ILVolume::ReplicaPath& replicaPath )
 {
-  if( 0 == start || 0 == start->lvolume() ){ return 0; }
+  if( !start || !start->lvolume() ){ return nullptr; }
   //
   const ILVolume* lv = start->lvolume();
   ILVolume::PVolumePath volumePath;
   if( lv->traverse( replicaPath.begin()  ,
                     replicaPath.end  ()  ,
-                    volumePath           ).isFailure() ) { return 0; }
+                    volumePath           ).isFailure() ) { return nullptr; }
   //
   if( volumePath.empty() ) { return lv; }
   //
   const IPVolume* pv = *(volumePath.rbegin()); // get "the last" element
   //
-  return ( 0 == pv ? 0 : pv->lvolume() );
+  return pv ? pv->lvolume() : nullptr; 
 }
 //=============================================================================
 std::string GeometryInfoPlus::lvolumePath( IGeometryInfo* start,
@@ -1073,41 +1055,34 @@ std::string GeometryInfoPlus::lvolumePath( IGeometryInfo* start,
                                            replicaPath )
 {
   // starting point for address is invalid!
-  if( 0 == start || 0 == start->lvolume() ){ return std::string("") ; }
+  if( !start || !start->lvolume() ){ return std::string{} ; }
   //
   const ILVolume* lv = start->lvolume();
   ILVolume::PVolumePath volumePath;
   if( lv->traverse( replicaPath.begin()  ,
                     replicaPath.end  ()  ,
                     volumePath           ).isFailure() ) { return 0; }
-  //
   if( volumePath.empty() ) { return start->lvolumeName(); }
-  //
   const IPVolume* pv = *(volumePath.rbegin()); // get "the last" element
-  //
-  return ( 0 == pv ? std::string("") : pv->lvolumeName() );
+  return pv ? pv->lvolumeName() : std::string{};
 }
 //=============================================================================
 const ILVolume* GeometryInfoPlus::lvolume( const std::string& start,
                                            const ILVolume::ReplicaPath&
                                            replicaPath )
 {
-  if( std::string("") == start ) { return 0; }
-  //
+  if( start.empty() ) { return nullptr; }
   IGeometryInfo* gi = geoByName( start );
-  //
-  return 0 == gi ? 0 : lvolume( gi , replicaPath );
+  return  gi ? lvolume( gi , replicaPath ) : nullptr;
 }
 //=============================================================================
 std::string GeometryInfoPlus::lvolumePath( const std::string& start,
                                            const ILVolume::ReplicaPath&
                                            replicaPath )
 {
-  if( std::string("") == start ) { return std::string(""); }
-  //
+  if( start.empty() ) { return std::string{}; };
   IGeometryInfo* gi = geoByName( start );
-  //
-  return 0 == gi ? std::string("") : lvolumePath( gi , replicaPath );
+  return  gi ? lvolumePath( gi , replicaPath ) : std::string{};
 }
 //=============================================================================
 // StatusCode  GeometryInfoPlus::reset( const int /*Level*/ )
@@ -1171,13 +1146,13 @@ MsgStream& GeometryInfoPlus::printOut( MsgStream& os ) const
 //=============================================================================
 ILVolume* GeometryInfoPlus::findLogical() const
 {
-  ILVolume* lv = 0;
+  ILVolume* lv = nullptr;
   if( !hasLVolume() ) { return lv; }
   //
   try
     {
       SmartDataPtr<ILVolume> ptr( dataSvc() , lvolumeName() );
-      if( 0 != ptr ) { lv = ptr ; }
+      if( ptr ) { lv = ptr ; }
     }
   catch ( const GaudiException& Exception )
     {  Assert( false ,
@@ -1198,8 +1173,8 @@ ILVolume* GeometryInfoPlus::findLogical() const
 StatusCode GeometryInfoPlus::queryInterface( const InterfaceID& ID,
                                              void** ppI )
 {
-  if ( 0 == ppI ) { return StatusCode::FAILURE; }
-  *ppI = 0 ;
+  if ( !ppI ) { return StatusCode::FAILURE; }
+  *ppI = nullptr ;
   if      ( IGeometryInfo::interfaceID()  == ID )
     { *ppI = static_cast<IGeometryInfo*> ( this ) ; }
   else if ( IInterface:: interfaceID()    == ID )
@@ -1217,21 +1192,9 @@ StatusCode GeometryInfoPlus::queryInterface( const InterfaceID& ID,
 GeometryInfoPlus::~GeometryInfoPlus()
 {
   //
-  m_gi_lvolume = 0 ;
-  //
   clearMatrices();
-  //
-  m_gi_support = 0;
-  //
-  m_gi_childLoaded = false;
   m_gi_childrensNames.clear();
   m_gi_childrens.clear();
-  //
-  if( 0 != m_log ) {
-    delete m_log;
-    m_log = 0;
-  }
-
   updMgrSvc()->unregister(this);
   m_services->release();
 }

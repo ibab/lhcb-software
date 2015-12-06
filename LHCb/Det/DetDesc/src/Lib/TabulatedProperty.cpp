@@ -29,7 +29,7 @@ std::ostream& TabulatedProperty::fillStream ( std::ostream& s ) const
     << " \txAxis="     << xAxis() 
     << " \tyAxis="     << yAxis() 
     << " \t#enties="   << table().size() << std::endl; 
-  for( Table::const_iterator it = table().begin() ; table().end() != it ; ++it )
+  for( auto it = table().begin() ; table().end() != it ; ++it )
     {
       s << " \t\t\t( entry#"    
         << std::setw(2) << it-table().begin()
@@ -48,7 +48,7 @@ MsgStream&    TabulatedProperty::fillStream ( MsgStream&    s ) const
     << " \txAxis="      << xAxis() 
     << " \tyAxis="      << yAxis() 
     << " \t#entries="   << table().size() << endmsg; 
-  for( Table::const_iterator it = table().begin() ; table().end() != it ; ++it )
+  for( auto it = table().begin() ; table().end() != it ; ++it )
     {
       s << " \t\t\t( entry#" 
         << std::setw(2) << it-table().begin()

@@ -27,8 +27,7 @@
  *  IPVolume_isInside(Point) );
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
  */
-class IPVolume_isInside: 
-  public std::unary_function<const IPVolume*,bool>
+class IPVolume_isInside
 {
 public:
   /** explict constructor
@@ -41,7 +40,7 @@ public:
    *  @return true if point is inside the physical volume 
    */
   inline bool operator() (  const IPVolume*  pv ) const 
-  { return ( ( 0 == pv ) ? false : pv->isInside( m_point ) ) ; }
+  { return ( pv && pv->isInside( m_point ) ) ; }
  private:
   /// point to be checked 
   const Gaudi::XYZPoint m_point;
@@ -57,8 +56,7 @@ public:
  *  IPVolume_byName(name) );
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  */
-class IPVolume_byName: 
-  std::unary_function<const IPVolume*,bool>
+class IPVolume_byName
 {
  public:
   /** explicit constructor 
@@ -71,7 +69,7 @@ class IPVolume_byName:
    *  @return true if name matches the given name 
    */
   inline bool operator() (  const IPVolume*  pv )  const 
-  { return ( ( 0 == pv ) ? false : ( pv->name() == m_name) ) ; }
+  { return pv && ( pv->name() == m_name); }
 private:
   /// name 
   std::string m_name;  
@@ -84,8 +82,7 @@ private:
  * std::accumulate(...)
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  */
-class IPVolume_accumulateMatrix: 
-  public std::unary_function<const IPVolume*,Gaudi::Transform3D&>
+class IPVolume_accumulateMatrix
 {
 public: 
   //
@@ -103,8 +100,7 @@ public:
  * used for "std::transform" algorithm
  * @author Vanya Belyaev Ivan.Belyaev@itep.ru 
  */
-class IPVolume_fromReplica:  
-  public std::unary_function<ILVolume::ReplicaType,const IPVolume*>
+class IPVolume_fromReplica
 {
 public: 
   /** constructor 
@@ -120,9 +116,9 @@ public:
   inline const IPVolume* operator() 
     ( const ILVolume::ReplicaType& replica ) const  
   {
-    if( 0 == m_lv ) {            return 0 ; }  
+    if( !m_lv ) {            return nullptr ; }  
     const IPVolume* pv = (*m_lv)[replica]; 
-    if( 0 == pv   ) { m_lv = 0 ; return 0 ; } 
+    if( !pv   ) { m_lv = nullptr ; return nullptr ; } 
     m_lv = pv->lvolume(); 
     return pv; 
   }

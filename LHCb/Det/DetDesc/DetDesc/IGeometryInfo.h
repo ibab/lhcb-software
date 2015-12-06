@@ -6,8 +6,6 @@
 #include "GaudiKernel/IInterface.h"
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Transform3DTypes.h"
-/** STD & STL includes */
-#include <functional>
 /// DetDesc include 
 #include "DetDesc/ILVolume.h"
 #include "DetDesc/AlignmentCondition.h"
@@ -36,7 +34,7 @@ class IGeometryInfo : virtual public IInterface
 public:
 
   /// type of vector of daughter elements
-  typedef  std::vector<IGeometryInfo*>  IGIChildrens;
+  typedef std::vector<IGeometryInfo*>  IGIChildrens;
   typedef IGeometryInfo::IGIChildrens::iterator IGIChildrenIterator;
   typedef IGeometryInfo::IGIChildrens::const_iterator IGIChildrenConstIterator;
   /** retrieve the uniqie interface identifier 
@@ -669,7 +667,7 @@ inline MsgStream&    operator<<( MsgStream&    os        ,
  *    with STL algorithms
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  */
-class IGeometryInfo_isInside : std::unary_function<const IGeometryInfo*,bool>
+class IGeometryInfo_isInside
 {
 public:
   /** explicit constructor
@@ -686,7 +684,7 @@ public:
    *  @return true if the point is inside the Geoemtry Info element
    */
   inline bool operator () ( const IGeometryInfo* gi )  const
-  { return ( ( 0 == gi ) ? false : gi->isInside( m_point ) ); };
+  { return gi && gi->isInside( m_point ); };
   
 private:
   

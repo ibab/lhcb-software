@@ -12,15 +12,15 @@
 /**
  * Default constructor
  */
-DetDesc::Services::Services() : m_svcLocator(0),
-                                m_detSvc(0),
-                                m_msgSvc(0),
-                                m_updMgrSvc(0),
+DetDesc::Services::Services() : m_svcLocator(nullptr),
+                                m_detSvc(nullptr),
+                                m_msgSvc(nullptr),
+                                m_updMgrSvc(nullptr),
                                 m_refCount(0) {
 }
 
 /// a static instance of the Services class
-DetDesc::Services* DetDesc::Services::s_services = 0 ;
+DetDesc::Services* DetDesc::Services::s_services = nullptr ;
 
 /// reset the static pointer 
 void DetDesc::Services::setServices ( DetDesc::Services* val )
@@ -29,14 +29,6 @@ void DetDesc::Services::setServices ( DetDesc::Services* val )
 }
 
 
-/** Default destructor */
-DetDesc::Services::~Services() {
-  if (0 != m_svcLocator) m_svcLocator->release();
-  if (0 != m_detSvc) m_detSvc->release();
-  if (0 != m_msgSvc) m_msgSvc->release();
-  if (0 != m_updMgrSvc) m_updMgrSvc->release();
-}
-
 /**
  * the accessor to Detector data provider 
  * @exception GaudiException the service could not be located 
@@ -44,9 +36,9 @@ DetDesc::Services::~Services() {
  */
 IDataProviderSvc* DetDesc::Services::detSvc() { 
   /// locate the service if necessary
-  if (0 == m_detSvc){
-    StatusCode sc = svcLocator()->service ("DetectorDataSvc", m_detSvc);
-    if (!sc.isSuccess()) {
+  if (!m_detSvc){
+    m_detSvc = svcLocator()->service ("DetectorDataSvc");
+    if (!m_detSvc) {
       throw GaudiException
         ("DetDesc::Could not locate IDataProviderSvc='DetectorDataSvc'",
          "*DetDescException*" , StatusCode::FAILURE);
@@ -64,17 +56,15 @@ IDataProviderSvc* DetDesc::Services::detSvc() {
  */
 ISvcLocator* DetDesc::Services::svcLocator() {
   /// Get the service if necessary
-  if (0 == m_svcLocator){
+  if (!m_svcLocator){
     m_svcLocator = Gaudi::svcLocator();
-    if (0 == m_svcLocator) {
+    if (!m_svcLocator) {
       throw GaudiException("DetDesc::ISvcLocator* points to NULL!",
                            "*DetDescException*" , 
                            StatusCode::FAILURE);
     }
-    return m_svcLocator;
   }
-  // If already there, return the cached service
-  return m_svcLocator ;
+  return m_svcLocator.get();
 }
 
 /**
@@ -84,16 +74,15 @@ ISvcLocator* DetDesc::Services::svcLocator() {
  */
 IMessageSvc* DetDesc::Services::msgSvc() {
   // locate the service if necessary
-  if (0 == m_msgSvc) {
-    StatusCode sc = svcLocator()->service("MessageSvc" , m_msgSvc);
-    if (!sc.isSuccess()) {
+  if (!m_msgSvc) {
+    m_msgSvc = svcLocator()->service("MessageSvc");
+    if (!m_msgSvc) { 
       throw GaudiException
         ("DetDesc::Could not locate IMessageSvc='MessageSvc'",
          "*DetDescException*" , StatusCode::FAILURE);
     }
-    return m_msgSvc;
   }
-  return m_msgSvc ;
+  return m_msgSvc.get();
 }
 
 /**
@@ -103,34 +92,31 @@ IMessageSvc* DetDesc::Services::msgSvc() {
  */
 IUpdateManagerSvc* DetDesc::Services::updMgrSvc(bool create) {
   // locate the service if necessary
-  if (0 == m_updMgrSvc) {
-    StatusCode sc = svcLocator()->service("UpdateManagerSvc", m_updMgrSvc, create);
-    if (!sc.isSuccess()) {
+  if (!m_updMgrSvc) {
+    m_updMgrSvc = svcLocator()->service("UpdateManagerSvc", create);
+    if (!m_updMgrSvc)
       throw GaudiException
         ("DetDesc::Could not locate IUpdateManagerSvc='UpdateManagerSvc'",
          "*DetDescException*" , StatusCode::FAILURE);
-    }
   }
-  return m_updMgrSvc ;
+  return m_updMgrSvc.get();
 }
 
 /**
  * Gets an instance of Services
  */
 DetDesc::Services* DetDesc::Services::services() {
-  if (0 == s_services){ 
-    s_services = new DetDesc::Services();
-  }
+  if (!s_services) s_services = new DetDesc::Services();
   s_services->addRef();
   return s_services;
 }
 
 /// Release this instance.
 unsigned long DetDesc::Services::release() {
-  m_refCount--;
+  --m_refCount;
   if (m_refCount <= 0) {
     delete this;
-    setServices ( 0 ) ;
+    setServices( nullptr ) ;
     return 0;
   }
   return m_refCount;

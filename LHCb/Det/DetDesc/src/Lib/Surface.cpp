@@ -32,7 +32,7 @@ std::ostream&     Surface::fillStream ( std::ostream& s ) const
     << "\tsecondVol='" << secondVol()    << "'" 
     << "\t#props="     << std::setw(2)   << m_props.size() 
     << std::endl;
-  for (Tables::const_iterator it = m_props.begin() ; m_props.end() != it ; ++it)
+  for (auto it = m_props.begin() ; m_props.end() != it ; ++it)
     { s << "\t" << (*it) ; } 
   return s;
 }
@@ -48,7 +48,7 @@ MsgStream&        Surface::fillStream ( MsgStream&    s ) const
     << "\tsecondVol='" << secondVol()   <<"'" 
     << "\t#props="     << std::setw(2)  << m_props.size() 
     << endmsg ;
-  for (Tables::const_iterator it = m_props.begin() ; m_props.end() != it ; ++it)
+  for (auto it = m_props.begin() ; m_props.end() != it ; ++it)
     { s << "\t" << (*it) ; } 
   return s;
 }    
