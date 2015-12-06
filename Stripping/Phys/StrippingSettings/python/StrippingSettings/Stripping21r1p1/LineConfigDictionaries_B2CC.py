@@ -6,20 +6,17 @@
 ################################################################################
 
 ######################################################################
-## StrippingBetaSBd2JpsiPi0PrescaledLine (MDST.DST)
 ## StrippingBetaSBd2JpsiPi0DetachedLine (MDST.DST)
 ## -------------------------------------------------------------------
-## Lines defined in StrippingB2JpsiPi0.py
+## Lines defined in StrippingB2JpsiPi0_Run1.py
 ## Authors: Maximilien Chefdeville
 ######################################################################
 
-BetaSPi0 = {
-    'BUILDERTYPE' : 'B2JpsiPi0Conf',
+BetaSPi0_RI = {
+    'BUILDERTYPE' : 'B2JpsiPi0Conf_RI',
     'CONFIG'      : { 'BPVLTIME'             :       0.2
                     , 'VCHI2PDOF'            :       10
                     , 'JpsiMassWindow'       :       80
-                    , 'HLTCuts'              :       "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')"
-                    , 'Bs2JpsiPi0Prescale'   :       1.0
                     },
     'STREAMS'     : [ 'Leptonic' ],
     'WGs'         : [ 'B2CC' ]
