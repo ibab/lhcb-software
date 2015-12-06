@@ -151,7 +151,7 @@ private:
    * @param fileName the name of the file that was just parsed
    * @param document the document that is the result of the parsing
    */
-  void cacheItem (std::string fileName, IOVDOMDocument* document);
+  IOVDOMDocument* cacheItem (std::string fileName, std::unique_ptr<IOVDOMDocument> document);
 
   /**
    * this only increases the age of the cache.
@@ -177,7 +177,7 @@ private:
 private:
 
   /// the actual DOM parser
-  xercesc::XercesDOMParser* m_parser;
+  std::unique_ptr<xercesc::XercesDOMParser> m_parser;
 
   /**
    * this is a parameter that defines the cache behavior.
@@ -196,8 +196,8 @@ private:
    * The rule is that an item is released if there is no more space,
    * if it has the smallest birthDate+cacheBehavior*utility score and is not locked.
    */
-  struct cachedItem {
-    IOVDOMDocument* document;
+  struct cachedItem final {
+    std::unique_ptr<IOVDOMDocument> document;
     unsigned int birthDate, utility;
     int lock;
   };
@@ -217,7 +217,7 @@ private:
    * or puting a new one (eventually removing another one but this is
    * not taken into account
    */
-  unsigned int m_cacheAge;
+  unsigned int m_cacheAge = 0;
   
   /// The maximum number of cached documents
   unsigned int m_maxDocNbInCache;
@@ -226,28 +226,28 @@ private:
   std::string m_resolverName;
 
   /// Pointer to the IXmlEntityResolver tool interface (for bookkeeping).
-  IAlgTool *m_resolverTool;
+  IAlgTool *m_resolverTool = nullptr;
   
   /// Pointer to the IXmlEntityResolver.
-  IXmlEntityResolver *m_resolver;
+  SmartIF<IXmlEntityResolver> m_resolver;
 
   /// Name of the service which will provide the event time (option "DetectorDataSvc", default = "DetectorDataSvc").
   std::string m_detDataSvcName;
   
   /// Pointer to the detector data service
-  IDetDataSvc *m_detDataSvc;
+  SmartIF<IDetDataSvc> m_detDataSvc;
   
   /// Pointer to the ToolSvc.
-  IToolSvc *m_toolSvc;
+  SmartIF<IToolSvc> m_toolSvc;
 
   /// Pointer to a message stream
-  MsgStream* m_msg;
+  std::unique_ptr<MsgStream> m_msg;
 
   /// Flag to decide if we measure time...
   bool m_measureTime;
   bool m_printTime;
-  double m_sumCpu;
-  double m_sumClock;
+  double m_sumCpu = 0;
+  double m_sumClock = 0;
 };
 
 #endif    // DETDESCCNV_XMLPARSERSVC_H

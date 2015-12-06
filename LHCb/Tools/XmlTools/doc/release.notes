@@ -4,6 +4,18 @@
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
 
+! 2015-12-06 - Gerhard Raven
+ - modernize code:
+   o replace std::auto_ptr with std::unique_ptr
+   o prefer std::unique_ptr over raw pointers with explicit delete
+   o prefer SmartIF over raw pointers with explicit release()
+   o remove gcc 3 specific code
+   o qualify internal structs as 'final'
+   o prefer auto
+   o prefer STL algorithms over raw loops
+   o avoid macros
+   o prefer nullptr over 0
+
 ! 2015-11-26 - Marco Clemencic
  - Removed (u)longlong typedef (see GAUDI-1125).
 

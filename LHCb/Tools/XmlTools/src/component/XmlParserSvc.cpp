@@ -1,6 +1,6 @@
 // Include Files
 #include <limits.h>
-#include <memory> // for auto_ptr with gcc 4.3
+#include <memory>
 
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
@@ -29,15 +29,7 @@ DECLARE_SERVICE_FACTORY(XmlParserSvc)
 // Standard Constructor
 // ------------------------------------------------------------------------
 XmlParserSvc::XmlParserSvc (const std::string& name, ISvcLocator* svc) :
-  Service (name, svc),
-  m_parser(NULL),
-  m_resolverTool(NULL),
-  m_resolver(NULL),
-  m_detDataSvc(NULL),
-  m_toolSvc(NULL),
-  m_msg(NULL),
-  m_sumCpu(0.), 
-  m_sumClock(0.)
+  Service (name, svc)
 {
 
   // gets the maximum number of caches documents from the joboption file
@@ -62,8 +54,6 @@ XmlParserSvc::XmlParserSvc (const std::string& name, ISvcLocator* svc) :
   // Property to print timing for each parse
   declareProperty( "PrintTime", m_printTime = false );
 
-  // initializes the cacheAge to 0
-  m_cacheAge = 0;
 }
 
 
@@ -74,7 +64,7 @@ StatusCode XmlParserSvc::initialize( ) {
   StatusCode sc = Service::initialize();
   if ( !sc.isSuccess() ) return sc;
 
-  if ( 0 == m_msg ) m_msg = new MsgStream (msgSvc(), name());
+  if ( !m_msg ) m_msg.reset(new MsgStream (msgSvc(), name()) );
 
   m_sumCpu = 0.;
   m_sumClock = 0.;
@@ -92,47 +82,43 @@ StatusCode XmlParserSvc::initialize( ) {
   }
 
   // creates a new XercesDOMParser
-  m_parser = new xercesc::XercesDOMParser;
+  m_parser.reset( new xercesc::XercesDOMParser );
   // if the creation was successful, sets some properties
-  if( 0 != m_parser ) {
-    // sets the error handler to this object
-    m_parser->setErrorHandler(this);
-    // asks the parser to validate the parsed xml
-    m_parser->setValidationScheme(xercesc::XercesDOMParser::Val_Auto);
-    // asks the parser to continue parsing after a fatal error
-    m_parser->setExitOnFirstFatalError(false);
-    // asks the parser to ignore whitespaces when possible
-    m_parser->setIncludeIgnorableWhitespace (false);
-    // asks the parser to avoid the creation of EntityReference nodes
-    m_parser->setCreateEntityReferenceNodes (false);
-
-    if( ! m_resolverName.empty() ) {
-      sc = service("ToolSvc",m_toolSvc,true);
-      if (  !sc.isSuccess() ) {
-        error() << "Could not locate the ToolSvc " << endmsg;
-        m_toolSvc = 0; // extra safety check
-        return sc;
-      }
-      sc = m_toolSvc->retrieveTool(m_resolverName,m_resolverTool,0,true);
-      if (  !sc.isSuccess() ) {
-        error() << "Could not locate the tool " << m_resolverName << endmsg;
-        m_resolverTool = 0; // extra safety check
-        return sc;
-      }
-      sc = m_resolverTool->queryInterface(IXmlEntityResolver::interfaceID(),pp_cast<void>(&m_resolver));
-      if (  !sc.isSuccess() ) {
-        error() << "Could not get the IXmlEntityResolver interface of" << m_resolverName << endmsg;
-        m_resolver = 0; // extra safety check
-        return sc;
-      }
-      m_parser->setEntityResolver(m_resolver->resolver());
-      if( msgLevel(MSG::DEBUG) ) debug() << "using the xercesc::EntityResolver provided by " << m_resolverName << endmsg;
-    }
-  } else {
+  if( !m_parser ) {
     error() << "Could not create xercesc::XercesDOMParser" << endmsg;
     return StatusCode::FAILURE;
   }
+  // sets the error handler to this object
+  m_parser->setErrorHandler(this);
+  // asks the parser to validate the parsed xml
+  m_parser->setValidationScheme(xercesc::XercesDOMParser::Val_Auto);
+  // asks the parser to continue parsing after a fatal error
+  m_parser->setExitOnFirstFatalError(false);
+  // asks the parser to ignore whitespaces when possible
+  m_parser->setIncludeIgnorableWhitespace (false);
+  // asks the parser to avoid the creation of EntityReference nodes
+  m_parser->setCreateEntityReferenceNodes (false);
 
+  if( ! m_resolverName.empty() ) {
+    m_toolSvc = service("ToolSvc",true);
+    if ( !m_toolSvc ) {
+      error() << "Could not locate the ToolSvc " << endmsg;
+      return sc;
+    }
+    sc = m_toolSvc->retrieveTool(m_resolverName,m_resolverTool,0,true);
+    if (  !sc.isSuccess() ) {
+      error() << "Could not locate the tool " << m_resolverName << endmsg;
+      m_resolverTool = nullptr; // extra safety check
+      return sc;
+    }
+    m_resolver.reset( m_resolverTool );
+    if (  !m_resolver) {
+      error() << "Could not get the IXmlEntityResolver interface of" << m_resolverName << endmsg;
+      return sc;
+    }
+    m_parser->setEntityResolver(m_resolver->resolver());
+    if( msgLevel(MSG::DEBUG) ) debug() << "using the xercesc::EntityResolver provided by " << m_resolverName << endmsg;
+  }
   return StatusCode::SUCCESS;
 }
 
@@ -142,36 +128,22 @@ StatusCode XmlParserSvc::initialize( ) {
 StatusCode XmlParserSvc::finalize() {
   clearCache();
 
-  if (m_parser) {
-    delete m_parser;
-    m_parser = 0;
-  }
+  m_parser.reset();
 
-  if (m_toolSvc) {
-    if (m_resolver) {
-      m_resolver->release();
-      m_resolver = 0;
-      m_toolSvc->releaseTool(m_resolverTool).ignore();
-      m_resolverTool = 0;
-    }
-    m_toolSvc->release();
-    m_toolSvc = 0;
+  if (m_toolSvc && m_resolver) {
+    m_resolver.reset();
+    m_toolSvc->releaseTool(m_resolverTool).ignore();
+    m_resolverTool = nullptr;
   }
-
-  if (m_detDataSvc) {
-    m_detDataSvc->release();
-    m_detDataSvc = 0;
-  }
+  m_toolSvc.reset();
+  m_detDataSvc.reset();
 
   if ( m_measureTime ) {
     info() << "***** Total parsing cpu time   " << m_sumCpu << " ms" << endmsg;
     info() << "***** Total parsing clock time " << m_sumClock << " ms" << endmsg;
   }
 
-  if ( m_msg ) {
-    delete m_msg;
-    m_msg = 0;
-  }
+  m_msg.reset();
 
   xercesc::XMLPlatformUtils::Terminate();
 
@@ -188,15 +160,15 @@ XmlParserSvc::~XmlParserSvc() { }
 IDetDataSvc *XmlParserSvc::detDataSvc() {
   if (!m_detDataSvc) {
     // find the detector data svc
-    StatusCode sc = service(m_detDataSvcName,m_detDataSvc,true);
-    if( !sc.isSuccess() ) {
+    m_detDataSvc = service(m_detDataSvcName,true);
+    if( !m_detDataSvc ) {
       throw GaudiException("Can't locate service " + m_detDataSvcName,
                            name(),StatusCode::FAILURE);
     } else {
       if( msgLevel(MSG::DEBUG) ) debug() << "Successfully located service " << m_detDataSvcName << endmsg;
     }
   }
-  return m_detDataSvc;
+  return m_detDataSvc.get();
 }
 
 // -----------------------------------------------------------------------
@@ -217,26 +189,22 @@ IOVDOMDocument* XmlParserSvc::parse (const char* fileName) {
         increaseCacheAge();
         ++it->second.utility;
         ++it->second.lock;
-        return it->second.document;
+        return it->second.document.get();
       }
-      else {
-        // the document is not valid: I try to remove it from the cache
-        if ( ! it->second.lock ) {
-          // we can remove the object from the cache
-          delete it->second.document;
-          m_cache.erase(it);
-        }
-        else {
-          // This should never happen: a document that is not valid cannot be locked!
-          throw GaudiException("BAD status of XmlParserSvc cache:"
-                               " a cache document is invalid and locked at the same time",
-                               "XmlParserSvc::parse",StatusCode::FAILURE);
-        }
+      // the document is not valid: Try to remove it from the cache
+      if ( !it->second.lock ) {
+        // we can remove the object from the cache
+        m_cache.erase(it);
+      } else {
+        // This should never happen: a document that is not valid cannot be locked!
+        throw GaudiException("BAD status of XmlParserSvc cache:"
+                             " a cache document is invalid and locked at the same time",
+                             "XmlParserSvc::parse",StatusCode::FAILURE);
       }
     }
   }
   // There was nothing in the cache, try to parse the file if a parser exists
-  if (0 != m_parser) {
+  if (m_parser) {
     // resets it
     m_parser->reset();
     // parses the file
@@ -249,45 +217,40 @@ IOVDOMDocument* XmlParserSvc::parse (const char* fileName) {
         start2 = System::currentTime( System::microSec );
       }
 
-      xercesc::DOMDocument *doc = NULL;
-      std::auto_ptr<xercesc::InputSource> is;
+      xercesc::DOMDocument *doc = nullptr;
+      std::unique_ptr<xercesc::InputSource> is;
       // If we have an entity resolver, we try to use it
       if (m_resolver){
         XMLCh *sysId = xercesc::XMLString::transcode(fileName);
-        is = std::auto_ptr<xercesc::InputSource>(m_resolver->resolver()->resolveEntity(NULL,sysId));
+        is = std::unique_ptr<xercesc::InputSource>(m_resolver->resolver()->resolveEntity(nullptr,sysId));
         xercesc::XMLString::release(&sysId);
       }
-      if ( is.get() != NULL ) { // If the entity resolver succeeded, we parse the InputSource
+      if ( is ) { // If the entity resolver succeeded, we parse the InputSource
         m_parser->parse(*is);
-      }
-      else { // otherwise try to pass the filename to XercesC
+      } else { // otherwise try to pass the filename to XercesC
         m_parser->parse(fileName);
       }
       // get a pointer to the DOM Document and also take the responsibility of
       // freeing the memory
       doc = m_parser->adoptDocument();
       // if the document is not null, cache it
-      if (doc != 0) {
-        IOVDOMDocument *cache_doc = new IOVDOMDocument(doc);
-        // Try to see if the InputSource knows about validity/
-        ValidInputSource *iov_is = dynamic_cast<ValidInputSource *>(is.get());
-        if (iov_is){ // it knows
-          cache_doc->setValidity(iov_is->validSince(),iov_is->validTill());
-        }
-        cacheItem (fileName, cache_doc);
-        // returns the parsed document
-        if ( m_measureTime ) {
-          double cpu1  =  .001 * double(System::cpuTime( System::microSec ) - start1 );
-          double cpu2  =  .001 * double(System::currentTime( System::microSec ) - start2 );
-          m_sumCpu   += cpu1;
-          m_sumClock += cpu2;
-          if ( m_printTime ) info() << format( "%7.1f ms user and %7.1f ms clock time for ", cpu1, cpu2 ) << fileName << endmsg;
-        }
-
-        return cache_doc;
+      if (!doc) return nullptr;
+      std::unique_ptr<IOVDOMDocument> cache_doc{ new IOVDOMDocument(doc) };
+      // Try to see if the InputSource knows about validity/
+      ValidInputSource *iov_is = dynamic_cast<ValidInputSource *>(is.get());
+      if (iov_is){ // it does
+        cache_doc->setValidity(iov_is->validSince(),iov_is->validTill());
       }
-      // return empty document
-      return NULL;
+      auto myDoc = cacheItem(fileName, std::move(cache_doc));
+      // returns the parsed document
+      if ( m_measureTime ) {
+        double cpu1  =  .001 * double(System::cpuTime( System::microSec ) - start1 );
+        double cpu2  =  .001 * double(System::currentTime( System::microSec ) - start2 );
+        m_sumCpu   += cpu1;
+        m_sumClock += cpu2;
+        if ( m_printTime ) info() << format( "%7.1f ms user and %7.1f ms clock time for ", cpu1, cpu2 ) << fileName << endmsg;
+      }
+      return myDoc;
     } catch (xercesc::XMLPlatformUtilsException e) {
       char *message = xercesc::XMLString::transcode(e.getMessage());
       error() << "Unable to find file " << fileName
@@ -296,7 +259,7 @@ IOVDOMDocument* XmlParserSvc::parse (const char* fileName) {
     }
   }
   // no way to parse the file, returns an empty document
-  return 0;
+  return nullptr;
 }
 
 
@@ -306,24 +269,19 @@ IOVDOMDocument* XmlParserSvc::parse (const char* fileName) {
 IOVDOMDocument* XmlParserSvc::parseString (std::string source) {
   // there is of course no cache for parsing XML strings directly
   // try to parse the string if a parser exists
-  if (0 != m_parser) {
-    // resets it
-    m_parser->reset();
-    // builds a new InputSource
-    xercesc::MemBufInputSource inputSource ((XMLByte*) source.data(),
-                                            source.length(),
-                                            "");
-    // parses the file
-    m_parser->parse(inputSource);
-    if( msgLevel(MSG::DEBUG) ) debug() << "parsing xml string..." << endmsg;
-    xercesc::DOMDocument *doc = m_parser->adoptDocument();
-    // returns the parsed document if successful
-    if (doc != 0) {
-      return new IOVDOMDocument(doc);
-    }
-  }
-  // no way to parse the string, returns an empty document
-  return 0;
+  if (!m_parser) return nullptr;
+  // resets it
+  m_parser->reset();
+  // builds a new InputSource
+  xercesc::MemBufInputSource inputSource ((XMLByte*) source.data(),
+                                          source.length(),
+                                          "");
+  // parses the file
+  m_parser->parse(inputSource);
+  if( msgLevel(MSG::DEBUG) ) debug() << "parsing xml string..." << endmsg;
+  xercesc::DOMDocument *doc = m_parser->adoptDocument();
+  // returns the parsed document if successful
+  return doc ? new IOVDOMDocument(doc) : nullptr;
 }
 
 
@@ -334,14 +292,12 @@ void XmlParserSvc::clearCache() {
   // remove everything from the cache
   //    first delete the DOM documents
   m_parser->resetDocumentPool();
-  //    release the memory used by the cached objects
-  for (cacheType::iterator i = m_cache.begin(); i != m_cache.end(); ++i){
-    if ( i->second.lock > 0 ) {
-      warning() << "Item in cache with lock count = " << i->second.lock
-                << " " << i->first << endmsg;
+  //    check the lock status of the cached objects
+  for ( auto& i : m_cache ) {
+    if ( i.second.lock > 0 ) {
+      warning() << "Item in cache with lock count = " << i.second.lock
+                << " " << i.first << endmsg;
     }
-    // i->second.document->release();
-    delete i->second.document;
   }
   //    then clear the cached pointers
   m_cache.clear();
@@ -353,10 +309,9 @@ void XmlParserSvc::clearCache() {
 //=========================================================================
 void XmlParserSvc::releaseDoc(IOVDOMDocument* doc) {
   // find the DOMDocument in the cache
-  cacheType::iterator it = m_cache.begin();
-  while (it != m_cache.end() && it->second.document != doc) {
-    ++it;
-  }
+  auto it = std::find_if( m_cache.begin(), m_cache.end(), [&](cacheType::const_reference i) {
+      return i.second.document.get() == doc;
+  } );
   if ( it == m_cache.end() ) {
     // the item was never cached (parsed from a string) ==> delete it
     delete doc;
@@ -447,8 +402,8 @@ StatusCode XmlParserSvc::queryInterface( const InterfaceID& riid,
 // -----------------------------------------------------------------------
 // CacheItem
 // -----------------------------------------------------------------------
-void XmlParserSvc::cacheItem (std::string fileName,
-                              IOVDOMDocument* document) {
+IOVDOMDocument* XmlParserSvc::cacheItem (std::string fileName,
+                                         std::unique_ptr<IOVDOMDocument> document) {
   // first increase the cache age
   increaseCacheAge();
 
@@ -457,8 +412,8 @@ void XmlParserSvc::cacheItem (std::string fileName,
     // the cache is full, scan the elements and find the minimum for
     // birthDate+cacheBehavior*utility
     unsigned long smallestScore = ULONG_MAX; // highest possible value
-    cacheType::iterator winner = m_cache.end();
-    for (cacheType::iterator it = m_cache.begin(); it != m_cache.end(); ++it) {
+    auto winner = m_cache.end();
+    for (auto it = m_cache.begin(); it != m_cache.end(); ++it) {
       unsigned long score =
         it->second.birthDate + m_cacheBehavior * it->second.utility;
       if (score < smallestScore && it->second.lock == 0) {
@@ -467,14 +422,11 @@ void XmlParserSvc::cacheItem (std::string fileName,
       }
     }
     if (m_cache.end() == winner) {
-      // This means that the cache is too small: I increase it
+      // This means that the cache is too small: increase it
       warning() << "The cache is full and I cannot delete anything: I increase the max size to "
                 << ++m_maxDocNbInCache << endmsg;
     } else {
-      // else release the memory used by the winner
-      //winner->second.document->release();
-      delete winner->second.document;
-      // and its entry in the map
+      // remove its entry in the map
       m_cache.erase(winner);
     }
   }
@@ -485,8 +437,9 @@ void XmlParserSvc::cacheItem (std::string fileName,
   if ( fileName.find( "/Conditions/" ) != std::string::npos ) newItem.birthDate += 1000;  // Prefer conditions!
   newItem.utility = 0;
   newItem.lock = 1;
-  newItem.document = document;
-  m_cache[fileName] = newItem;
+  newItem.document = std::move( document );
+  auto c = m_cache.emplace( fileName, std::move(newItem) );
+  return c.first->second.document.get();
 }
 
 
@@ -494,15 +447,13 @@ void XmlParserSvc::cacheItem (std::string fileName,
 // Increases cache age
 // -----------------------------------------------------------------------
 void XmlParserSvc::increaseCacheAge () {
-  m_cacheAge += 1;
+  ++m_cacheAge;
   if (0 == m_cacheAge) {
     // the cacheAge is an unsigned int. We are here because the age
     // has just exceeded the maximum possible value for unsigned ints.
     // As a consequence, we put every birthDate to 0.
-    for (cacheType::iterator it = m_cache.begin();
-         it != m_cache.end();
-         it++) {
-      it->second.birthDate = 0;
+    for (auto& i : m_cache ) {
+      i.second.birthDate = 0;
     }
   }
 }

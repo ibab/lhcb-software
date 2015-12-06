@@ -5,6 +5,7 @@
 #include "XmlTools/Evaluator.h"
 
 #include <iostream>
+#include <algorithm>
 #include <cmath>	// for pow()
 #include "stack.src"
 #include "string.src"
@@ -14,35 +15,28 @@
 #include <errno.h>
 #include <stdlib.h>	// for strtod()
 
-#if __GNUC__ < 4
-namespace System {
-  template <typename DESTPTR, typename SRCPTR>
-  inline DESTPTR FuncPtrCast(SRCPTR ptr) {
-    return (DESTPTR)ptr;
-  }
-}
-#else
-// System.h defines the function FuncPtrCast only for gcc >= 4.x
+// System.h defines the function FuncPtrCast
 #include "GaudiKernel/System.h"
-#endif
+
+#include "boost/utility/string_ref.hpp"
 
 //---------------------------------------------------------------------------
-struct Item {
+struct Item final {
   enum { UNKNOWN, VARIABLE, EXPRESSION, FUNCTION } what;
-  double variable;
+  double variable = 0;
   string expression;
-  void   *function;
+  void   *function = nullptr;
 
-  Item()         : what(UNKNOWN),   variable(0),expression(), function(0) {}
-  Item(double x) : what(VARIABLE),  variable(x),expression(), function(0) {}
-  Item(string x) : what(EXPRESSION),variable(0),expression(x),function(0) {}
-  Item(void  *x) : what(FUNCTION),  variable(0),expression(), function(x) {}
+  Item()         : what(UNKNOWN)      {}
+  Item(double x) : what(VARIABLE),   variable(x)  {}
+  Item(string x) : what(EXPRESSION), expression(x) {}
+  Item(void  *x) : what(FUNCTION),   function(x) {}
 };
 
 typedef char * pchar;
 typedef hash_map<string,Item> dic_type;
 
-struct Struct {
+struct Struct final {
   dic_type theDictionary;
   pchar    theExpression;
   pchar    thePosition;
@@ -53,12 +47,36 @@ struct Struct {
 //---------------------------------------------------------------------------
 #define EVAL XmlTools::Evaluator
 
-#define REMOVE_BLANKS \
-for(pointer=name;;pointer++) if (!isspace(*pointer)) break; \
-for(n=strlen(pointer);n>0;n--) if (!isspace(*(pointer+n-1))) break
+namespace { 
 
+    inline boost::string_ref remove_blanks(boost::string_ref str) {
+        int n=str.size();
+        int i=0;   while (i<n && isspace(str[i])) ++i;
+        int j=n-1; while (j>i && isspace(str[j])) --j;
+        return str.substr(i,j-i+1);
+    }
+
+    inline string to_string(boost::string_ref str) {
+        return string( str.data(), str.size() );
+    }
+    inline string operator+(const string& s1, boost::string_ref s2) {
+        return s1+to_string(s2);
+    }
+    inline string operator+(const char* s1, boost::string_ref s2) {
+        return s1+to_string(s2);
+    }
+    inline string operator+(char s1, boost::string_ref s2) {
+        return s1+to_string(s2);
+    }
+    inline string operator+(boost::string_ref s1, const string& s2) {
+        return to_string(s1)+s2;
+    }
+    inline string operator+(boost::string_ref s1, const char* s2) {
+        return to_string(s1)+s2;
+    }
+}
 #define SKIP_BLANKS                      \
-for(;;pointer++) {                       \
+for(;;++pointer) {                       \
   c = (pointer > end) ? '\0' : *pointer; \
   if (!isspace(c)) break;                \
 }
@@ -131,7 +149,7 @@ static int function(const string & name, stack<double> & par,
   int npar = par.size();
   if (npar > MAX_N_PAR) return EVAL::ERROR_UNKNOWN_FUNCTION;
 
-  dic_type::const_iterator iter = dictionary.find(sss[npar]+name);
+  auto iter = dictionary.find(sss[npar]+name);
   if (iter == dictionary.end()) return EVAL::ERROR_UNKNOWN_FUNCTION;
   Item item = iter->second;
 
@@ -542,25 +560,19 @@ static void setItem(const char * prefix, const char * name,
 
   //   R E M O V E   L E A D I N G   A N D   T R A I L I N G   S P A C E S
 
-  const char * pointer; int n; REMOVE_BLANKS;
+  auto nam = remove_blanks(name);
 
   //   C H E C K   N A M E
 
-  if (n == 0) {
+  if (nam.empty() || std::any_of( nam.begin(), nam.end(), 
+                                  [](const char& i) { return i != '_' && !isalnum(i) ; } ) ) {
     s->theStatus = EVAL::ERROR_NOT_A_NAME;
     return;
-  }
-  for(int i=0; i<n; i++) {
-    char c = *(pointer+i);
-    if (c != '_' && !isalnum(c)) {
-      s->theStatus = EVAL::ERROR_NOT_A_NAME;
-      return;
-    }
   }
 
   //   A D D   I T E M   T O   T H E   D I C T I O N A R Y
 
-  string item_name = prefix + string(pointer,n);
+  string item_name = prefix + to_string(nam);
   dic_type::iterator iter = (s->theDictionary).find(item_name);
   if (iter != (s->theDictionary).end()) {
     iter->second = item;
@@ -591,11 +603,11 @@ Evaluator::Evaluator() {
 //---------------------------------------------------------------------------
 Evaluator::~Evaluator() {
   Struct * s = (Struct *)(p);
-  if (s->theExpression != 0) {
+  if (s->theExpression) {
     delete[] s->theExpression;
-    s->theExpression = 0;
+    s->theExpression = nullptr;
   }
-  delete (Struct *)(p);
+  delete s;
 }
 
 //---------------------------------------------------------------------------
@@ -698,42 +710,39 @@ void Evaluator::setFunction(const char * name,
 //---------------------------------------------------------------------------
 bool Evaluator::findVariable(const char * name) const {
   if (name == 0 || *name == '\0') return false;
-  const char * pointer; int n; REMOVE_BLANKS;
-  if (n == 0) return false;
+  auto nam = remove_blanks(name);
+  if (nam.empty()) return false;
   Struct * s = (Struct *)(p);
-  return
-    ((s->theDictionary).find(string(pointer,n)) == (s->theDictionary).end()) ?
-    false : true;
+  return s->theDictionary.find(to_string(nam)) != s->theDictionary.end();
 }
 
 //---------------------------------------------------------------------------
 bool Evaluator::findFunction(const char * name, int npar) const {
-  if (name == 0 || *name == '\0')    return false;
   if (npar < 0  || npar > MAX_N_PAR) return false;
-  const char * pointer; int n; REMOVE_BLANKS;
-  if (n == 0) return false;
+  if (name == 0 || *name == '\0')    return false;
+  auto nam = remove_blanks(name);
+  if (nam.empty()) return false;
   Struct * s = (Struct *)(p);
-  return ((s->theDictionary).find(sss[npar]+string(pointer,n)) ==
-	  (s->theDictionary).end()) ? false : true;
+  return s->theDictionary.find(sss[npar]+nam) != s->theDictionary.end();
 }
 
 //---------------------------------------------------------------------------
 void Evaluator::removeVariable(const char * name) {
   if (name == 0 || *name == '\0') return;
-  const char * pointer; int n; REMOVE_BLANKS;
-  if (n == 0) return;
+  auto nam = remove_blanks(name);
+  if (nam.empty()) return;
   Struct * s = (Struct *)(p);
-  (s->theDictionary).erase(string(pointer,n));
+  s->theDictionary.erase(to_string(nam));
 }
 
 //---------------------------------------------------------------------------
 void Evaluator::removeFunction(const char * name, int npar) {
-  if (name == 0 || *name == '\0')    return;
   if (npar < 0  || npar > MAX_N_PAR) return;
-  const char * pointer; int n; REMOVE_BLANKS;
-  if (n == 0) return;
+  if (name == 0 || *name == '\0')    return;
+  auto nam = remove_blanks(name);
+  if (nam.empty()) return;
   Struct * s = (Struct *)(p);
-  (s->theDictionary).erase(sss[npar]+string(pointer,n));
+  s->theDictionary.erase(sss[npar]+nam);
 }
 
 //---------------------------------------------------------------------------
