@@ -17,7 +17,11 @@ gaudi_depends_on_subdirs(Phys/CommonParticles
                          Phys/StrippingTCK
                          Phys/StrippingUtils
                          Phys/TMVASelections
-                         Phys/IsolationTools)
-#                         Phys/StrippingCache
+                         Phys/IsolationTools
+                         ########################################
+                         # Patched packages just for this version
+                         Muon/MuonID
+                    
+)
 
 gaudi_add_test(QMTest QMTEST)

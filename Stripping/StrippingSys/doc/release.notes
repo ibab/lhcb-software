@@ -4,6 +4,11 @@ Package Coordinator : Andrea.Contu@cern.ch, Ricardo.Vazquez.Gomez@cern.ch
 Purpose     : LHCb stripping packages
 
 !========================= StrippingSys v9r12 2015-11-27 ===========================
+
+*StrippingSys
+ - Patch MuonID just for this version
+ 
+
 Phys/CommonParticles
 - Change the chi2 and ghostprob cut to Reco15 values for Taus and Dipion.
 

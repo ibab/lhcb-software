@@ -32,6 +32,9 @@ use  TMVASelections              v1r8     Phys   # Stripping Coordinators
 
 ####################################################################
 
+#Patched just for this version
+use   MuonID                     v9r19    Muon
+
 # Declare this as a container package
 apply_pattern container_package
 
