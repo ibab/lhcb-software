@@ -3,6 +3,12 @@
 ! Responsible : Olivier Deschamps
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
+! 2015-12-07 - Gerhard Raven
+ - CaloDataProviderFromTES:
+   o avoid comparing pointers to 0, NULL
+   o prefer std::string::empty() over == ""
+   o prefer range-based for loops
+   o prefer STL algorithms over raw loops
 
 !========================= CaloDAQ v4r38p1 2015-10-12 =========================
 ! 2015-08-03 - Gerhard Raven
