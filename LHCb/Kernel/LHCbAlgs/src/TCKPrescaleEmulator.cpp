@@ -30,8 +30,7 @@ TCKPrescaleEmulator::TCKPrescaleEmulator( const std::string& name,
 	m_condTrigger(0),
 	m_triggerTCK(0),
   firstevent(true),
-  lasttck(0),
-  decreports(NULL)
+  lasttck(0)
 {
 	//TCK we wish to emulate prescales for:
 	declareProperty("TCKtoEmulate",m_tck=0x9c0044);
@@ -73,7 +72,7 @@ StatusCode TCKPrescaleEmulator::initialize() {
 	}
 
 	//If "LinesToKill" hasn't been filled, fill it with sensible defaults, if it has been filled, make sure the user knows
-	if(m_linesToKill.size() == 0){
+	if(m_linesToKill.empty()){
 		m_linesToKill.push_back("Hlt1Global");
 		m_linesToKill.push_back("Hlt2Global");
 		m_linesToKill.push_back("Hlt1Phys");
@@ -83,8 +82,8 @@ StatusCode TCKPrescaleEmulator::initialize() {
 		//m_linesToKill.push_back("Hlt1CharmCalibrationNoBias");
 		m_linesToKill.push_back("Hlt2Transparent");
 		info() << "By default the following decisions are killed as they're meaningless in MC: ";
-		for( std::vector<std::string>::iterator i=m_linesToKill.begin(); i!=m_linesToKill.end(); ++i){
-			info() << (*i) << "," << endmsg;
+		for( const auto& i : m_linesToKill) {
+			info() << i << "," << endmsg;
 		}
 		info() << "To change this behavior fill property LinesToAlwaysKill with your own choice of lines" << endmsg;
 	}else{
@@ -109,8 +108,8 @@ StatusCode TCKPrescaleEmulator::execute() {
 	if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
 	// Get the dec reports, update prescalers if first event or TCK has changed
-	sc = getReports();
-	if(sc){
+	auto decreports = getReports();
+	if(!decreports){
 		if(UNLIKELY(msgLevel(MSG::VERBOSE))) verbose() << *decreports << endmsg;
 		HltDecReports* reports = new HltDecReports();
 		reports->setConfiguredTCK(decreports->configuredTCK());
@@ -119,12 +118,12 @@ StatusCode TCKPrescaleEmulator::execute() {
 		std::string lineName;
 		std::string strip= "Decision";
 		//loop over the Decreports
-		for(HltDecReports::Container::iterator itdec = decreports->begin(); itdec !=decreports->end(); ++itdec){
+		for(const auto& dec : *decreports) {
 			//Get the name of line, if it ends with "Decision" remove it: 
-			lineName =  (*itdec).first;
+			lineName =  dec.first;
 			if(endedWith(lineName,strip)){lineName.erase(lineName.end()-strip.length(),lineName.end());}
 			//Get the report
-			report = (*itdec).second;
+			report = dec.second;
 			//We only care about lines that fired: 
 			if(report.decision()){
 				//Pull the OfflineDeterministicPrescaler for this line from out map of ODPs: 
@@ -148,9 +147,9 @@ StatusCode TCKPrescaleEmulator::execute() {
 					report.setExecutionStage(6);
 				}
 			}
-			reports->insert((*itdec).first,report);
+			reports->insert(dec.first,report);
 		}
-		decreports->setDecReports(reports->decReports());
+		const_cast<HltDecReports*>(decreports)->setDecReports(reports->decReports());
 		if(UNLIKELY(msgLevel(MSG::VERBOSE)))  verbose() << *decreports << endmsg;
 	}else{
 		Warning("FAILED TO GET DECREPORTS! CANNOT PRESCALE THIS EVENT!").ignore();
@@ -162,15 +161,15 @@ StatusCode TCKPrescaleEmulator::execute() {
 //============================================================================
 // Get Dec reports, set prescaler acceptrates if first event or TCK changed
 //============================================================================
-StatusCode TCKPrescaleEmulator::getReports(){
+const HltDecReports* TCKPrescaleEmulator::getReports(){
 	StatusCode sc = StatusCode::FAILURE;
-	decreports = get<HltDecReports>(m_hltDecReportsLocation);
+	auto decreports = get<HltDecReports>(m_hltDecReportsLocation);
 	if(decreports){
 		if(!firstevent){
 			if(decreports->configuredTCK() == lasttck){
 				// TCK unchanged, no need to do anything
 				if (UNLIKELY(msgLevel(MSG::VERBOSE))) verbose() << "TCK unchanged, continue " << endmsg;
-				return StatusCode::SUCCESS;
+				return decreports;
 			}else{
 				// If we're already processing events and the TCK changes mid-run, warn the user, update the prescalers
 				// These shouldn't be Warning, as if/when they occur the user needs to know. 
@@ -193,9 +192,8 @@ StatusCode TCKPrescaleEmulator::getReports(){
 			updatePrescalers();
 			firstevent = false;
 		}
-
 	}
-	return sc;
+	return decreports;
 }
 
 //=============================================================================
@@ -300,7 +298,6 @@ StatusCode TCKPrescaleEmulator::getPrescalers(){
 	IJobOptionsSvc* jos = svc<IJobOptionsSvc>( "JobOptionsSvc" );
 	bool addedContext = false;  //= Have we added the context ?
 	bool addedRootInTES = false;  //= Have we added the rootInTES ?
-	bool addedGlobalTimeOffset = false;  //= Have we added the globalTimeOffset ?
 	bool addedPrescale = false; //= have we added the prescale? 
 
 	//= Get the Application manager, to see if algorithm exist
@@ -322,10 +319,9 @@ StatusCode TCKPrescaleEmulator::getPrescalers(){
 
 			if(UNLIKELY( msgLevel(MSG::VERBOSE))){verbose() << "AppManager doesn't already have an instance of " << theName << endmsg;}
 			//== Set the Context if not in the jobOptions list
-			if ( ""  != context() || ""  != rootInTES() ||0.0 != globalTimeOffset() ) {
+			if ( ""  != context() || ""  != rootInTES()  ) {
 				bool foundContext = false;
 				bool foundRootInTES = false;
-				bool foundGlobalTimeOffset = false;
 				const std::vector<const Property*>* properties = jos->getProperties( theName );
 				if ( 0 != properties ) {
 					if(UNLIKELY( msgLevel(MSG::VERBOSE))){verbose() << "Found properties for " << theName << endmsg;}
@@ -341,9 +337,6 @@ StatusCode TCKPrescaleEmulator::getPrescalers(){
 							if ( "RootInTES" == (*itProp)->name() ) {
 								foundRootInTES = true;
 							}
-							if ( "GlobalTimeOffset" == (*itProp)->name() ) {
-								foundGlobalTimeOffset = true;
-							}
 						}
 					}
 				}
@@ -356,11 +349,6 @@ StatusCode TCKPrescaleEmulator::getPrescalers(){
 					StringProperty rootInTESProperty( "RootInTES", rootInTES() );
 					jos->addPropertyToCatalogue( theName, rootInTESProperty ).ignore();
 					addedRootInTES = true;
-				}
-				if ( !foundGlobalTimeOffset && 0.0 != globalTimeOffset() ) {
-					DoubleProperty globalTimeOffsetProperty( "GlobalTimeOffset", globalTimeOffset() );
-					jos->addPropertyToCatalogue( theName, globalTimeOffsetProperty ).ignore();
-					addedGlobalTimeOffset = true;
 				}
 			}
 
@@ -398,10 +386,6 @@ StatusCode TCKPrescaleEmulator::getPrescalers(){
 		if ( addedRootInTES ) {
 			jos->removePropertyFromCatalogue( theName, "RootInTES" ).ignore();
 			addedRootInTES = false;
-		}
-		if ( addedGlobalTimeOffset ) {
-			jos->removePropertyFromCatalogue( theName, "GlobalTimeOffset" ).ignore();
-			addedGlobalTimeOffset = false;
 		}
 
 		if(addedPrescale){
@@ -470,7 +454,6 @@ StatusCode TCKPrescaleEmulator::getPrescalers(){
 	}
 	if ( "" != context() ) msg << ", with context '" << context() << "'";
 	if ( "" != rootInTES() ) msg << ", with rootInTES '" << rootInTES() << "'";
-	if ( 0.0 != globalTimeOffset() ) msg << ", with globalTimeOffset " << globalTimeOffset();
 	msg << endmsg;
 	return final;
 
@@ -492,9 +475,9 @@ StatusCode TCKPrescaleEmulator::updatePrescalers(){
 
 	//Loop over the TCK prescales: If the MC doesn't have this line, shout at the user 
 	//otherwse write to the master list the ratio of TCK prescale to MC. If >1.0, shout at the user:
-	for( std::map<std::string,double>::iterator i=scaleProductsToEmulate.begin(); i!=scaleProductsToEmulate.end(); ++i){
+	for( auto i=scaleProductsToEmulate.begin(); i!=scaleProductsToEmulate.end(); ++i){
 		OfflineDeterministicPrescaler* pre = dynamic_cast<OfflineDeterministicPrescaler*>(prescalers[(*i).first]);
-		std::map<std::string,double>::iterator j = scaleProductsInMC.find((*i).first);
+		auto j = scaleProductsInMC.find((*i).first);
 		if(j!=scaleProductsInMC.end()){
 			if((*j).second > 0.0){
 				double ratio = (*i).second/(*j).second;
@@ -549,8 +532,8 @@ StatusCode TCKPrescaleEmulator::updatePrescalers(){
 	}
 
 	//Kill lines that are in the MC but not in the TCK (we don't care if they're not, we just zero them)
-	for( std::map<std::string,double>::iterator i=scaleProductsInMC.begin(); i!=scaleProductsInMC.end(); ++i){
-		std::map<std::string,double>::iterator j = scaleProductsToApply.find((*i).first);
+	for( auto i=scaleProductsInMC.begin(); i!=scaleProductsInMC.end(); ++i){
+		auto j = scaleProductsToApply.find((*i).first);
 		if(j==scaleProductsToApply.end()){
 			if (msgLevel(MSG::DEBUG)) debug() << " MC contains a line not in the TCK: "<< (*i).first <<" prescaling it to zero" << endmsg;
 			scaleProductsToApply.insert(std::pair<std::string,double>((*i).first,0.0));
@@ -563,12 +546,8 @@ StatusCode TCKPrescaleEmulator::updatePrescalers(){
 // Find out if the lineName ends with a known string 
 //=========================================================================
 bool TCKPrescaleEmulator::endedWith(const std::string &lineName, const std::string &ending){
-	if(lineName.length()>ending.length()){
-		if(0 == lineName.compare (lineName.length() - ending.length(), ending.length(), ending)){
-			return true;
-		}
-	}
-	return false;
+	return lineName.length()>ending.length() && 
+     (0 == lineName.compare (lineName.length() - ending.length(), ending.length(), ending));
 }
 
 //=========================================================================
