@@ -5,6 +5,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+
+! 2015-12-07 - Greg Ciezarek
+	-	Added muon RawBank to StrippingLowPtMuID.py
+
 ! 2015-12-07 - Simone Bifani
   - Updated RelInfo for StrippingBu2LLK.py
 

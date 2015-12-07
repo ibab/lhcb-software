@@ -65,7 +65,7 @@ class LowPTMuConf( LineBuilder ):
         self.line_DetachedLowPT = StrippingLine( name + '_JpsiFromBLowPT', 
                                                  prescale = config[ 'Prescale' ], 
                                                  selection = self.sel_DetachedLowPT, 
-#                                                 RequiredRawEvents = ["Muon"] 
+                                                 RequiredRawEvents = ["Muon"]
                                                  ) 
         self.registerLine( self.line_DetachedLowPT )
 
