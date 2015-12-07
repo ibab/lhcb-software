@@ -4,6 +4,9 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2015-12-07 - Cedric Potterat
+ - add ClearDaughters (based on FilterDesktop) which clear the vect of daughter and save in a new location in the TES
+
 !====================== JetAccessories v3r15 2015-11-25 =======================
 
 ! 2015-11-02 - Gerhard Raven
