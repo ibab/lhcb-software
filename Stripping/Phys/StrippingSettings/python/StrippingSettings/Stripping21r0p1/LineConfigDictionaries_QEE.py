@@ -7,7 +7,6 @@
 
 from GaudiKernel.SystemOfUnits import *
 
-
 Ditau = {
     "BUILDERTYPE": "DitauConf", 
     "CONFIG": {
@@ -501,6 +500,17 @@ Ditau = {
     "WGs": [ "QEE" ]
 }
 
+FullDiJets = {
+    "BUILDERTYPE": "FullDiJetsConf", 
+    "CONFIG": {
+        "FullDiJetsLine_Postscale": 1.0, 
+        "FullDiJetsLine_Prescale": 0.05, 
+        "min_jet_pT": 20000.0
+    }, 
+    "STREAMS": [ "EW" ], 
+    "WGs": [ "QEE" ]
+}
+
 Lb2dp = {
     "BUILDERTYPE": "Lb2dpConf", 
     "CONFIG": {
@@ -527,6 +537,17 @@ Lb2dp = {
         "TrackIPChi2": 16.0
     }, 
     "STREAMS": [ "BhadronCompleteEvent" ], 
+    "WGs": [ "QEE" ]
+}
+
+MicroDiJets = {
+    "BUILDERTYPE": "MicroDiJetsConf", 
+    "CONFIG": {
+        "MicroDiJetsLine_Postscale": 1.0, 
+        "MicroDiJetsLine_Prescale": 0.5, 
+        "min_jet_pT": 20000.0
+    }, 
+    "STREAMS": [ "Leptonic" ], 
     "WGs": [ "QEE" ]
 }
 

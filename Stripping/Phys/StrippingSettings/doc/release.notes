@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-07 - Chitsanu Khurewathanakul
+  - Update QEE's S21rXp1 with new lines: FullDiJets, MicroDiJets
+
 !========================= StrippingSettings v2r42 2015-12-07 =========================
 
 ! 2015-12-07 Andrea Contu
