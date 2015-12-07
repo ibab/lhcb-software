@@ -7,7 +7,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to RecDev version HEAD
-                                          running on mcat.cern.ch on Thu Oct 22 10:56:51 2015
+                                          running on lxplus0100.cern.ch on Mon Dec  7 13:44:24 2015
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -17,36 +17,13 @@ LumiSeq              INFO Member list: GaudiSequencer/writeLumiSeq, GaudiSequenc
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.73 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   3.28 times the speed of a 2.8 GHz Xeon.
 writeLumiSeq         INFO Member list: createODIN, bankKiller/KillAll, FileIdBankWriter
 KillAll           SUCCESS bankKiller : all banks of type 'ODIN' will be kept.
 KillAll           SUCCESS bankKiller : all banks of type 'HltLumiSummary' will be kept.
 KillAll           SUCCESS bankKiller : all banks of type 'DAQ' will be kept.
 LumiFsrSeq           INFO OR Member list: GaudiSequencer/LumiNoBeamSeq, GaudiSequencer/LumiBeamCrossingSeq, GaudiSequencer/LumiBeam1Seq, GaudiSequencer/LumiBeam2Seq, GaudiSequencer/TimeSpanSeq, EventAccounting/EventAccount
 LumiNoBeamSeq        INFO Member list: LoKi::ODINFilter/FilterNoBeam, HltLumiSummaryDecoder/LumiDecodeNoBeam, FilterOnLumiSummary/LumiFilterNoBeam, LumiAccounting/LumiCountNoBeam
-LoKiSvc           SUCCESS
-
-
-Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome
-LoKi                                                                                               LoKi
-LoKi                                                                                               LoKi
-LoKi                                        Welcome to LoKi!                                       LoKi
-LoKi                                                                                               LoKi
-LoKi                                      (LOops & KInematics)                                     LoKi
-LoKi                                                                                               LoKi
-LoKi                         Smart & Friendly C++ Physics Analysis Tool Kit                        LoKi
-LoKi                                                                                               LoKi
-LoKi                                                                                               LoKi
-LoKi                         Author:  Vanya BELYAEV Ivan.Belyaev@nikhef.nl                         LoKi
-LoKi                     With the kind help of Galina Pakhlova & Sergey Barsuk                     LoKi
-LoKi                                                                                               LoKi
-LoKi                                       Have fun and enjoy!                                     LoKi
-LoKi                                                                                               LoKi
-Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome
-Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome
-
-
-
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/DDDB.db/DDDB"
@@ -109,40 +86,18 @@ DstWriter            INFO Events output: 1000
 FSROutputStream...   INFO Set up File Summary Record
 FSROutputStream...   INFO Events output: 1
 EventLoopMgr         INFO Histograms converted successfully according to request.
-LoKiSvc           SUCCESS
-
-
-Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good
-Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good
-LoKi                                                                                               LoKi
-LoKi                                                                                               LoKi
-LoKi                                       Good Bye from LoKi!                                     LoKi
-LoKi                                                                                               LoKi
-LoKi                                      (LOops & KInematics)                                     LoKi
-LoKi                                                                                               LoKi
-LoKi                         Smart & Friendly C++ Physics Analysis Tool Kit                        LoKi
-LoKi                                                                                               LoKi
-LoKi                                                                                               LoKi
-LoKi                      LoKi mailing list ('LoKi-club') : lhcb-loki@cern.ch                      LoKi
-LoKi      Comments, suggestions, criticism, ideas, questions and requests are *ALWAYS* welcome     LoKi
-LoKi                                                                                               LoKi
-Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good
-Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good
-
-
-
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.HltFactorySUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "# loaded from PYTHON"                          |         5 |          5 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.73 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   3.28 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO writeLumiSeq                  |     0.039 |     0.122 |    0.051       0.6 |    1000 |     0.122 |
-ToolSvc.Sequenc...   INFO   createODIN                  |     0.000 |     0.005 |    0.004       0.0 |    1000 |     0.005 |
-ToolSvc.Sequenc...   INFO   KillAll                     |     0.034 |     0.109 |    0.040       0.3 |    1000 |     0.109 |
-ToolSvc.Sequenc...   INFO   FileIdBankWriter            |     0.003 |     0.004 |    0.003       0.3 |    1000 |     0.004 |
+ToolSvc.Sequenc...   INFO writeLumiSeq                  |     0.033 |     0.121 |    0.044       0.9 |    1000 |     0.121 |
+ToolSvc.Sequenc...   INFO   createODIN                  |     0.001 |     0.006 |    0.004       0.1 |    1000 |     0.006 |
+ToolSvc.Sequenc...   INFO   KillAll                     |     0.028 |     0.108 |    0.035       0.7 |    1000 |     0.108 |
+ToolSvc.Sequenc...   INFO   FileIdBankWriter            |     0.003 |     0.004 |    0.002       0.4 |    1000 |     0.004 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 CounterSummarySvc    INFO filling counters...
 CounterSummarySvc    INFO counters filled OK

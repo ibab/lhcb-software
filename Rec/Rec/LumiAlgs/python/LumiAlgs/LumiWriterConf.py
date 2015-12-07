@@ -159,3 +159,7 @@ class LumiWriterConf(LHCbConfigurableUser):
     
     # output
     self._configureOutput()
+
+    # Switch off LoKi banner
+    from Configurables import LoKiSvc
+    LoKiSvc().Welcome = False

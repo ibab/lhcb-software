@@ -8,7 +8,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to RecDev version HEAD
-                                          running on mcat.cern.ch on Thu Oct 22 10:54:51 2015
+                                          running on lxplus0100.cern.ch on Mon Dec  7 13:42:36 2015
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -17,31 +17,8 @@ LumiSeq              INFO Member list: GaudiSequencer/writeLumiSeq
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.73 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   3.27 times the speed of a 2.8 GHz Xeon.
 writeLumiSeq         INFO Member list: createODIN, LoKi::ODINFilter/OdinTriggerTypes, HltLumiSummaryDecoder, GaudiSequencer/filterLumi, bankKiller/KillAll, FileIdBankWriter, LHCb::MDFWriter/MDFWriter
-LoKiSvc           SUCCESS
-
-
-Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome
-LoKi                                                                                               LoKi
-LoKi                                                                                               LoKi
-LoKi                                        Welcome to LoKi!                                       LoKi
-LoKi                                                                                               LoKi
-LoKi                                      (LOops & KInematics)                                     LoKi
-LoKi                                                                                               LoKi
-LoKi                         Smart & Friendly C++ Physics Analysis Tool Kit                        LoKi
-LoKi                                                                                               LoKi
-LoKi                                                                                               LoKi
-LoKi                         Author:  Vanya BELYAEV Ivan.Belyaev@nikhef.nl                         LoKi
-LoKi                     With the kind help of Galina Pakhlova & Sergey Barsuk                     LoKi
-LoKi                                                                                               LoKi
-LoKi                                       Have fun and enjoy!                                     LoKi
-LoKi                                                                                               LoKi
-Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome
-Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome
-
-
-
 filterLumi           INFO OR Member list: FilterOnLumiSummary/LumiRandomFilter
 KillAll           SUCCESS bankKiller : all banks of type 'ODIN' will be kept.
 KillAll           SUCCESS bankKiller : all banks of type 'HltLumiSummary' will be kept.
@@ -69,45 +46,23 @@ OdinTriggerTypes  SUCCESS Number of counters : 1
 HltLumiSummaryD...   INFO Average event size :    11.0 words
 FileIdBankWriter     INFO number of files seen: 1
 EventLoopMgr         INFO Histograms converted successfully according to request.
-LoKiSvc           SUCCESS
-
-
-Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good
-Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good
-LoKi                                                                                               LoKi
-LoKi                                                                                               LoKi
-LoKi                                       Good Bye from LoKi!                                     LoKi
-LoKi                                                                                               LoKi
-LoKi                                      (LOops & KInematics)                                     LoKi
-LoKi                                                                                               LoKi
-LoKi                         Smart & Friendly C++ Physics Analysis Tool Kit                        LoKi
-LoKi                                                                                               LoKi
-LoKi                                                                                               LoKi
-LoKi                      LoKi mailing list ('LoKi-club') : lhcb-loki@cern.ch                      LoKi
-LoKi      Comments, suggestions, criticism, ideas, questions and requests are *ALWAYS* welcome     LoKi
-LoKi                                                                                               LoKi
-Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good
-Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good
-
-
-
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.HltFactorySUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "# loaded from PYTHON"                          |         1 |          1 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.73 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   3.27 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO writeLumiSeq                  |     0.002 |     0.046 |    0.011       1.5 |    1000 |     0.046 |
-ToolSvc.Sequenc...   INFO   createODIN                  |     0.000 |     0.005 |    0.004       0.1 |    1000 |     0.005 |
-ToolSvc.Sequenc...   INFO   OdinTriggerTypes            |     0.000 |     0.006 |    0.004       0.1 |    1000 |     0.006 |
-ToolSvc.Sequenc...   INFO   HltLumiSummaryDecoder       |     0.000 |     0.016 |    0.012       0.3 |     204 |     0.003 |
-ToolSvc.Sequenc...   INFO   filterLumi                  |     0.000 |     0.009 |    0.007       0.1 |     204 |     0.002 |
-ToolSvc.Sequenc...   INFO     LumiRandomFilter          |     0.000 |     0.005 |    0.003       0.1 |     204 |     0.001 |
-ToolSvc.Sequenc...   INFO   KillAll                     |     0.005 |     0.054 |    0.044       0.2 |     204 |     0.011 |
-ToolSvc.Sequenc...   INFO   FileIdBankWriter            |     0.000 |     0.005 |    0.003       0.2 |     204 |     0.001 |
-ToolSvc.Sequenc...   INFO   MDFWriter                   |     0.000 |     0.075 |    0.063       0.5 |     204 |     0.015 |
+ToolSvc.Sequenc...   INFO writeLumiSeq                  |     0.014 |     0.043 |    0.009       2.3 |    1000 |     0.043 |
+ToolSvc.Sequenc...   INFO   createODIN                  |     0.001 |     0.005 |    0.003       0.0 |    1000 |     0.005 |
+ToolSvc.Sequenc...   INFO   OdinTriggerTypes            |     0.002 |     0.005 |    0.003       0.1 |    1000 |     0.005 |
+ToolSvc.Sequenc...   INFO   HltLumiSummaryDecoder       |     0.010 |     0.015 |    0.011       0.3 |     204 |     0.003 |
+ToolSvc.Sequenc...   INFO   filterLumi                  |     0.005 |     0.008 |    0.006       0.1 |     204 |     0.002 |
+ToolSvc.Sequenc...   INFO     LumiRandomFilter          |     0.005 |     0.005 |    0.003       0.1 |     204 |     0.001 |
+ToolSvc.Sequenc...   INFO   KillAll                     |     0.015 |     0.061 |    0.039       2.1 |     204 |     0.012 |
+ToolSvc.Sequenc...   INFO   FileIdBankWriter            |     0.005 |     0.005 |    0.002       0.2 |     204 |     0.001 |
+ToolSvc.Sequenc...   INFO   MDFWriter                   |     0.010 |     0.062 |    0.045       0.4 |     204 |     0.013 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

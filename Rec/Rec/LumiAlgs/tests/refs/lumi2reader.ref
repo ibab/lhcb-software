@@ -8,7 +8,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to RecDev version HEAD
-                                          running on mcat.cern.ch on Thu Oct 22 10:55:40 2015
+                                          running on lxplus0100.cern.ch on Mon Dec  7 13:43:20 2015
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -17,7 +17,7 @@ LumiSeq              INFO Member list: GaudiSequencer/readLumiSeq
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.73 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   3.26 times the speed of a 2.8 GHz Xeon.
 readLumiSeq         DEBUG Property update for OutputLevel : new value = 2
 readLumiSeq         DEBUG Property update for OutputLevel : new value = 2
 readLumiSeq         DEBUG Initialize base class GaudiCommon<Algorithm>
@@ -70,29 +70,6 @@ readLumiSeq         DEBUG Added algorithm LumiFileReader
 readLumiSeq         DEBUG Added algorithm InputDump
 readLumiSeq          INFO Member list: createODIN, LoKi::ODINFilter/OdinTriggerTypes, HltLumiSummaryDecoder, GaudiSequencer/filterLumi, LumiFileReader, RawEventDump/InputDump
 readLumiSeq         DEBUG The tool of type 'SequencerTimerTool' has been added with the name 'ToolSvc.SequencerTimerTool'
-LoKiSvc           SUCCESS
-
-
-Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome
-LoKi                                                                                               LoKi
-LoKi                                                                                               LoKi
-LoKi                                        Welcome to LoKi!                                       LoKi
-LoKi                                                                                               LoKi
-LoKi                                      (LOops & KInematics)                                     LoKi
-LoKi                                                                                               LoKi
-LoKi                         Smart & Friendly C++ Physics Analysis Tool Kit                        LoKi
-LoKi                                                                                               LoKi
-LoKi                                                                                               LoKi
-LoKi                         Author:  Vanya BELYAEV Ivan.Belyaev@nikhef.nl                         LoKi
-LoKi                     With the kind help of Galina Pakhlova & Sergey Barsuk                     LoKi
-LoKi                                                                                               LoKi
-LoKi                                       Have fun and enjoy!                                     LoKi
-LoKi                                                                                               LoKi
-Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome
-Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome
-
-
-
 filterLumi           INFO OR Member list: FilterOnLumiSummary/LumiRandomFilter, FilterOnLumiSummary/LumiLowFilter
 LumiFileReader      DEBUG Property update for OutputLevel : new value = 2
 LumiFileReader      DEBUG Property update for OutputLevel : new value = 2
@@ -997,45 +974,23 @@ readLumiSeq         DEBUG Releasing tool 'ToolSvc.SequencerTimerTool'
 readLumiSeq         DEBUG The tool 'ToolSvc.SequencerTimerTool' of type 'SequencerTimerTool' is released
 readLumiSeq         DEBUG Services to release :
 EventLoopMgr         INFO Histograms converted successfully according to request.
-LoKiSvc           SUCCESS
-
-
-Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good
-Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good
-LoKi                                                                                               LoKi
-LoKi                                                                                               LoKi
-LoKi                                       Good Bye from LoKi!                                     LoKi
-LoKi                                                                                               LoKi
-LoKi                                      (LOops & KInematics)                                     LoKi
-LoKi                                                                                               LoKi
-LoKi                         Smart & Friendly C++ Physics Analysis Tool Kit                        LoKi
-LoKi                                                                                               LoKi
-LoKi                                                                                               LoKi
-LoKi                      LoKi mailing list ('LoKi-club') : lhcb-loki@cern.ch                      LoKi
-LoKi      Comments, suggestions, criticism, ideas, questions and requests are *ALWAYS* welcome     LoKi
-LoKi                                                                                               LoKi
-Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good
-Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good
-
-
-
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.HltFactorySUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "# loaded from PYTHON"                          |         1 |          1 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.73 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   3.26 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO readLumiSeq                   |     0.300 |     0.357 |    0.281       1.2 |      20 |     0.007 |
+ToolSvc.Sequenc...   INFO readLumiSeq                   |     0.500 |     0.428 |    0.259       1.1 |      20 |     0.009 |
 ToolSvc.Sequenc...   INFO   createODIN                  |     0.000 |     0.007 |    0.004       0.0 |      20 |     0.000 |
-ToolSvc.Sequenc...   INFO   OdinTriggerTypes            |     0.000 |     0.009 |    0.004       0.1 |      20 |     0.000 |
-ToolSvc.Sequenc...   INFO   HltLumiSummaryDecoder       |     0.050 |     0.026 |    0.011       0.3 |      20 |     0.001 |
-ToolSvc.Sequenc...   INFO   filterLumi                  |     0.000 |     0.011 |    0.006       0.1 |      20 |     0.000 |
-ToolSvc.Sequenc...   INFO     LumiRandomFilter          |     0.000 |     0.008 |    0.003       0.1 |      20 |     0.000 |
+ToolSvc.Sequenc...   INFO   OdinTriggerTypes            |     0.000 |     0.009 |    0.003       0.1 |      20 |     0.000 |
+ToolSvc.Sequenc...   INFO   HltLumiSummaryDecoder       |     0.050 |     0.024 |    0.010       0.3 |      20 |     0.000 |
+ToolSvc.Sequenc...   INFO   filterLumi                  |     0.050 |     0.009 |    0.005       0.1 |      20 |     0.000 |
+ToolSvc.Sequenc...   INFO     LumiRandomFilter          |     0.000 |     0.007 |    0.002       0.1 |      20 |     0.000 |
 ToolSvc.Sequenc...   INFO     LumiLowFilter             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO   LumiFileReader              |     0.150 |     0.095 |    0.069       0.3 |      20 |     0.002 |
-ToolSvc.Sequenc...   INFO   InputDump                   |     0.100 |     0.194 |    0.171       0.4 |      20 |     0.004 |
+ToolSvc.Sequenc...   INFO   LumiFileReader              |     0.000 |     0.105 |    0.060       0.3 |      20 |     0.002 |
+ToolSvc.Sequenc...   INFO   InputDump                   |     0.300 |     0.217 |    0.163       0.4 |      20 |     0.004 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

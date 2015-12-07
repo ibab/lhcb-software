@@ -318,3 +318,6 @@ class LumiAlgsConf(LHCbConfigurableUser):
         sequence.ShortCircuit = False
         sequence.IgnoreFilterPassed = True
         
+        # Switch off LoKi banner
+        from Configurables import LoKiSvc
+        LoKiSvc().Welcome = False
