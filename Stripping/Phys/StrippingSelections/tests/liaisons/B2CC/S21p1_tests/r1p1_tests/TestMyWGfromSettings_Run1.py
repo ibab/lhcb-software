@@ -1,12 +1,12 @@
 # $Id: $
-# Test your line(s) of the stripping
+# Test your line(s) of the stripping by taking the dictionaries from StrippingSettings
 #  
 # NOTE: Please make a copy of this file for your testing, and do NOT change this one!
 #
 
 #use CommonParticlesArchive
 from CommonParticlesArchive import CommonParticlesArchiveConf
-CommonParticlesArchiveConf().redirect("stripping21r0p1")
+CommonParticlesArchiveConf().redirect("stripping21r1p1")
 
 from Gaudi.Configuration import *
 from Configurables import DaVinci
@@ -31,15 +31,17 @@ DecodeRawEvent().setProp("OverrideInputs",4.2)
 
 # Specify the name of your configuration
 my_wg='B2CC' #FOR LIAISONS
+stripping='stripping21r1p1'
 
 
 # NOTE: this will work only if you inserted correctly the 
 # default_config dictionary in the code where your LineBuilder 
 # is defined.
+from StrippingSettings.Utils import strippingConfiguration
 from StrippingSelections import buildersConf
-confs = buildersConf()
+conf=strippingConfiguration(stripping)
 from StrippingSelections.Utils import lineBuilder, buildStreams
-streams = buildStreams( confs, WGs=my_wg )
+streams = buildStreams( conf, WGs=my_wg )
 
 leptonicMicroDSTname   = 'Leptonic'
 charmMicroDSTname      = 'Charm'
@@ -52,7 +54,6 @@ dstStreams  = [ "BhadronCompleteEvent", "CharmCompleteEvent", "CharmToBeSwum", "
 stripTESPrefix = 'Strip'
 
 from Configurables import ProcStatusCheck
-
 from PhysConf.Filters import LoKi_Filters
 flts = LoKi_Filters(VOID_Code = "( TrSource(TrSOURCE('/Event/Rec/Track/Best', TrLONG))"\
                                 " >> ( sum( TrPT,TrP < 1 * TeV ) > 1 * TeV ) )" ,
@@ -117,7 +118,6 @@ SelDSTWriterConf = {
     pidMicroDSTname          : stripCalibMicroDSTStreamConf(pack=enablePacking, selectiveRawEvent=True)
     }
 
-
 # Items that might get lost when running the CALO+PROTO ReProcessing in DV
 caloProtoReprocessLocs = [ "/Event/pRec/ProtoP#99", "/Event/pRec/Calo#99" ]
 
@@ -156,29 +156,30 @@ from Configurables import AlgorithmCorrelationsAlg
 ac = AlgorithmCorrelationsAlg(Algorithms = list(set(sc.selections())))
 
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
-DaVinci().EvtMax = 1000
+DaVinci().EvtMax = 100000
 DaVinci().PrintFreq = 100
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
 #DaVinci().appendToMainSequence( [ ac ] )
 DaVinci().appendToMainSequence( [ dstWriter.sequence() ] )
 DaVinci().ProductionType = "Stripping"
-DaVinci().DataType  = "2012"
+DaVinci().DataType  = "2011"
 DaVinci().InputType = "DST"
+
+MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
 # change the column size of timing table
 from Configurables import TimingAuditor, SequencerTimerTool
 TimingAuditor().addTool(SequencerTimerTool,name="TIMER")
 TimingAuditor().TIMER.NameSize = 60
 
-MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
-
 # database
 DaVinci().DDDBtag  = "dddb-20120831"
-DaVinci().CondDBtag = "cond-20121008"
+DaVinci().CondDBtag = "cond-20121025"
 
 # RedoCalo
 importOptions("$STRIPPINGSELECTIONSROOT/tests/users/DV-RedoCaloPID-Stripping21.py")
 
 # input file
-importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_Run125113.py")
+#importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_Run125113.py")
+importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_2011Data_MagDn_New.py") # MagDown sample
