@@ -9,12 +9,6 @@
   - RichDetailedFrontEndResponsePMT, RichChannelPropertiesPMT
 
 ! 2015-11-30 - Marcin Kucharczyk
-  - Add options for RICH upgrade (PMTs)
-  - RichDetailedFrontEndResponsePMT
-
-!========================= RichDigiSys v1r3p1 2013-10-02 =========================
-
-! 2015-11-30 - Marcin Kucharczyk
   - Add algorithms for RICHupgrade (PMTs)
   - RichDetailedFrontEndResponsePMT, RichChannelPropertiesPMT
 
