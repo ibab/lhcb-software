@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-07 - Andrey Tayduganov
+   - StrippingB2KstTauTau.py code for s21, fixed bug of DecayDescriptor, added additional cuts on B_FD and MaxCandidates
+
 ! 2015-12-07 - Rafael Coutinho
   - Updated StrippingBu2Ksthh.py and StrippingB2Ksthh.py for Run1 data
 
