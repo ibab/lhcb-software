@@ -4,6 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSettings v2r42 2015-12-07 =========================
+
+! 2015-12-07 Andrea Contu
+ - Fix to StrippingD2PiPi0.py
+
 ! 2015-12-07 Pablo Ruiz Valls
  - Added XLLBDT lines to RD, modifications to LLK lines
 
@@ -22,9 +27,6 @@
 
 ! 2015-12-07 - Chitsanu Khurewathanakul
  - Dicts for QEE's S21rXp1 lines
-
-!========================= StrippingSettings v2r42 2015-11-26 =========================
-
 
 ! 2015-12-06 - Carlos Vazquez Sierra
  - Change in B2CC s21p1 dictionaries
