@@ -2,18 +2,12 @@
 #define COMPONENT_RICHCHANNELPROPERTIESPMT_H 1
 
 // Include files
-// from Gaudi
-#include "GaudiAlg/GaudiTool.h"
-
-// Interfaces                                                                              
-//#include "RichKernel/IRichSmartIDTool.h"
-
-// Kernel                                                                                  
+#include "RichKernel/RichToolBase.h"
 #include "Kernel/RichSmartID.h"
-//#include "Kernel/RichDetectorType.h"
-
 #include <map>
 #include "RichChannelParamsPMT.h"
+
+using namespace Rich;
 
 static const InterfaceID IID_RichChannelPropertiesPMT ( "RichChannelPropertiesPMT", 1, 0 );
 
@@ -23,8 +17,10 @@ static const InterfaceID IID_RichChannelPropertiesPMT ( "RichChannelPropertiesPM
        * 
        *  @author Mariusz Witek
        *  @date   2015-08-19
+       *  @modified by Marcin Kucharczyk
+       *  @date   2015-12-07
        */
-      class RichChannelPropertiesPMT : public GaudiTool {
+      class RichChannelPropertiesPMT : public ToolBase {
       public: 
       
         // Return the interface ID

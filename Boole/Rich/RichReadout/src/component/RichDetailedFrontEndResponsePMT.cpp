@@ -1,5 +1,3 @@
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 // Local
 #include "RichDetailedFrontEndResponsePMT.h"
 

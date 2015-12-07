@@ -1,17 +1,14 @@
-// Include files 
-
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
-
-// local
+// Include files
 #include "RichChannelPropertiesPMT.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichChannelPropertiesPMT
 //
 // 2015-08-19 : Mariusz Witek
+// 2015-12-07 : modified by Marcin Kucharczyk
 //-----------------------------------------------------------------------------
 
+using namespace Rich;
 using namespace Rich::MC::Digi;
 
 // Declaration of the Tool Factory
@@ -24,7 +21,7 @@ DECLARE_TOOL_FACTORY( RichChannelPropertiesPMT )
 RichChannelPropertiesPMT::RichChannelPropertiesPMT( const std::string& type,
                                                     const std::string& name,
                                                     const IInterface* parent )
-: GaudiTool ( type, name , parent ),
+: ToolBase ( type, name , parent ),
   m_meanGainGen(0.),
   m_sigmaGainGen(0.),
   m_sigmaNoiseGen(0.),
@@ -107,6 +104,8 @@ void RichChannelPropertiesPMT::generateParameters(const LHCb::RichSmartID::Vecto
 void RichChannelPropertiesPMT::setParametersFromDB(const LHCb::RichSmartID::Vector & pixels)
 {
    
+  info() << "Generating parameters for " << pixels.size() << " pixels" << endmsg;
+
   // not implemented 
   info() << "Reading Rich channel parameters from DB not implemented yet " << endmsg;
 
