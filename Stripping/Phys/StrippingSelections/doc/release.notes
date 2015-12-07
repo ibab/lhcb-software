@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-07 - Marco Pappagallo
+ - Added Omegab2XicKpi line for S21p1
+
 ! 2015-12-07 - Jibo He
   - First commit of StrippingB2LLXBDT lines
 
