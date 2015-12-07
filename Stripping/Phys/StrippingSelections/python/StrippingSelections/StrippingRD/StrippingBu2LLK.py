@@ -30,6 +30,7 @@ default_config = {
         , 'LeptonIPCHI2'         : 9   
         , 'LeptonPT'             : 300  
         , 'TauPT'                : 0
+        , 'TauVCHI2DOF'          : 150
         , 'KaonIPCHI2'           : 9
         , 'KaonPT'               : 400
         , 'KstarPVertexCHI2'     : 25
@@ -328,6 +329,7 @@ class Bu2LLKConf(LineBuilder) :
         , 'LeptonIPCHI2'       
         , 'LeptonPT'          
         , 'TauPT' 
+        , 'TauVCHI2DOF'
         , 'KaonIPCHI2'        
         , 'KaonPT'
         , 'KstarPVertexCHI2'
@@ -476,15 +478,15 @@ class Bu2LLKConf(LineBuilder) :
                                           params   = config,
                                           idcut    = None )
 
-        SelMuTau = self._filterDiLepton( "SelMuTauFor" + self._name,
-                                         dilepton = MuTau,
+        SelMuTau = self._filterMuTau( "SelMuTauFor" + self._name,
+                                      dilepton = MuTau,
+                                      params   = config,
+                                      idcut    = None )
+
+        SelMuTau_SS = self._filterMuTau( "SelMuTauSSFor" + self._name,
+                                         dilepton = MuTau_SS,
                                          params   = config,
                                          idcut    = None )
-
-        SelMuTau_SS = self._filterDiLepton( "SelMuTauSSFor" + self._name,
-                                            dilepton = MuTau_SS,
-                                            params   = config,
-                                            idcut    = None )
 
 
         # 3 : Make Photons
@@ -650,15 +652,15 @@ class Bu2LLKConf(LineBuilder) :
         # and hadron PT > KaonPT
         # need to add the ID here
         _Code = "(PT > %(KaonPT)s *MeV) & " \
-                "(M <  %(DiHadronMass)s*MeV) & " \
+                "(M < %(DiHadronMass)s*MeV) & " \
                 "((ISBASIC & (MIPCHI2DV(PRIMARY) > %(KaonIPCHI2)s)) | " \
-                "(NDAUGHTERS == NINTREE( ISBASIC &  (MIPCHI2DV(PRIMARY) > %(KaonIPCHI2)s))))" % params
+                "(NDAUGHTERS == NINTREE(ISBASIC & (MIPCHI2DV(PRIMARY) > %(KaonIPCHI2)s))))" % params
 
         _Filter = FilterDesktop( Code = _Code )
 
         return Selection( name, Algorithm = _Filter, RequiredSelections = [ sel ] )
 #####################################################
-    def _filterDiLepton(self, name, dilepton, params, idcut = None ) :
+    def _filterDiLepton( self, name, dilepton, params, idcut = None ) :
         """
         Handy interface for dilepton filter
         """
@@ -666,10 +668,30 @@ class Bu2LLKConf(LineBuilder) :
         _Code = "(ID=='J/psi(1S)') & "\
                 "(PT > %(DiLeptonPT)s *MeV) & "\
                 "(MM < %(UpperMass)s *MeV) & "\
-                "(MINTREE(ABSID<14,PT)>%(LeptonPT)s *MeV) & "\
-                "(MINTREE(ABSID<14,MIPCHI2DV(PRIMARY))>%(LeptonIPCHI2)s) & "\
-                "(VFASPF(VCHI2/VDOF)<9) & (BPVVDCHI2> %(DiLeptonFDCHI2)s) & "\
-                "(MIPCHI2DV(PRIMARY) > %(DiLeptonIPCHI2)s )" % params
+                "(MINTREE(ABSID<14,PT) > %(LeptonPT)s *MeV) & "\
+                "(MINTREE(ABSID<14,MIPCHI2DV(PRIMARY)) > %(LeptonIPCHI2)s) & "\
+                "(VFASPF(VCHI2/VDOF) < 9) & (BPVVDCHI2 > %(DiLeptonFDCHI2)s) & "\
+                "(MIPCHI2DV(PRIMARY) > %(DiLeptonIPCHI2)s)" % params
+
+        # add additional cut on PID if requested
+        if idcut : _Code += ( " & " + idcut ) 
+
+        _Filter = FilterDesktop( Code = _Code )
+    
+        return Selection(name, Algorithm = _Filter, RequiredSelections = [ dilepton ] )
+#####################################################
+    def _filterMuTau( self, name, dilepton, params, idcut = None ) :
+        """
+        Handy interface for mutau filter
+        """
+
+        _Code = "(ID=='J/psi(1S)') & "\
+                "(PT > %(DiLeptonPT)s *MeV) & "\
+                "(MM < %(UpperMass)s *MeV) & "\
+                "(MINTREE(ABSID<14,PT) > %(LeptonPT)s *MeV) & "\
+                "(MINTREE(ABSID<14,MIPCHI2DV(PRIMARY)) > %(LeptonIPCHI2)s) & "\
+                "(VFASPF(VCHI2/VDOF) < %(TauVCHI2DOF)s) & (BPVVDCHI2 > %(DiLeptonFDCHI2)s) & "\
+                "(MIPCHI2DV(PRIMARY) > %(DiLeptonIPCHI2)s)" % params
 
         # add additional cut on PID if requested
         if idcut : _Code += ( " & " + idcut ) 
@@ -683,13 +705,13 @@ class Bu2LLKConf(LineBuilder) :
         Filter photon conversions
         """
 
-        _Code = "(PT > 1000*MeV) & (HASVERTEX) & (VFASPF(VCHI2/VDOF)<9)"
+        _Code = "(PT > 1000*MeV) & (HASVERTEX) & (VFASPF(VCHI2/VDOF) < 9)"
 
         _Filter = FilterDesktop( Code = _Code )
 
         return Selection( name, Algorithm = _Filter, RequiredSelections = [ photons ] )
 #####################################################
-    def _makeKstarPlus(self, name, kshorts, pions, params):
+    def _makeKstarPlus( self, name, kshorts, pions, params):
         """
         Make a K*(892)+ -> KS0 pi+
         """
@@ -703,11 +725,11 @@ class Bu2LLKConf(LineBuilder) :
         _MotherCut = "(VFASPF(VCHI2) < %(KstarPVertexCHI2)s)" % params
 
         _KshortCut = "(PT > %(KaonPT)s *MeV) & " \
-                     "(M <  %(DiHadronMass)s*MeV) & " \
-                     "(NDAUGHTERS == NINTREE( ISBASIC &  (MIPCHI2DV(PRIMARY) > %(KaonIPCHI2)s)))" % params
+                     "(M < %(DiHadronMass)s*MeV) & " \
+                     "(NDAUGHTERS == NINTREE(ISBASIC & (MIPCHI2DV(PRIMARY) > %(KaonIPCHI2)s)))" % params
 
         _PionCut = "(PT > %(KaonPT)s *MeV) & " \
-                   "(M <  %(DiHadronMass)s*MeV) & " \
+                   "(M < %(DiHadronMass)s*MeV) & " \
                    "(ISBASIC & (MIPCHI2DV(PRIMARY) > %(KaonIPCHI2)s))" % params
 
         _Combine = CombineParticles( DecayDescriptor = _Decays,
@@ -729,11 +751,11 @@ class Bu2LLKConf(LineBuilder) :
         _Decays = "[K_1(1270)+ -> K+ pi+ pi-]cc"
 
          # define all the cuts
-        _K1CombCuts    = "(AM > %(K1_MassWindow_Lo)s*MeV) & (AM < %(K1_MassWindow_Hi)s*MeV) & ((APT1+APT2+APT3)>%(K1_SumPTHad)s*MeV)" % params
+        _K1CombCuts    = "(AM > %(K1_MassWindow_Lo)s*MeV) & (AM < %(K1_MassWindow_Hi)s*MeV) & ((APT1+APT2+APT3) > %(K1_SumPTHad)s*MeV)" % params
 
-        _K1MotherCuts  = "(VFASPF(VCHI2)<%(K1_VtxChi2)s) & (SUMTREE(MIPCHI2DV(PRIMARY),((ABSID=='K+') |(ABSID=='K-') |(ABSID=='pi+') | (ABSID=='pi-')),0.0) > %(K1_SumIPChi2Had)s)" % params
+        _K1MotherCuts  = "(VFASPF(VCHI2) < %(K1_VtxChi2)s) & (SUMTREE(MIPCHI2DV(PRIMARY),((ABSID=='K+') | (ABSID=='K-') | (ABSID=='pi+') | (ABSID=='pi-')),0.0) > %(K1_SumIPChi2Had)s)" % params
 
-        _daughtersCuts = "(TRCHI2DOF<%(Trk_Chi2)s) & (TRGHOSTPROB<%(Trk_GhostProb)s)" % params
+        _daughtersCuts = "(TRCHI2DOF < %(Trk_Chi2)s) & (TRGHOSTPROB < %(Trk_GhostProb)s)" % params
 
         _Combine = CombineParticles( DecayDescriptor = _Decays,
                                      CombinationCut  = _K1CombCuts,
@@ -763,7 +785,7 @@ class Bu2LLKConf(LineBuilder) :
         _MotherCut = "(VFASPF(VCHI2/VDOF) < 9)"
 
         _DaughtersCut = "(PT > %(LeptonPT)s) & " \
-                        "(MIPCHI2DV(PRIMARY)>%(LeptonIPCHI2)s)" % params
+                        "(MIPCHI2DV(PRIMARY) > %(LeptonIPCHI2)s)" % params
 
         _Combine = CombineParticles( DecayDescriptor = _DecayDescriptor,
                                      CombinationCut  = _MassCut,
@@ -798,10 +820,10 @@ class Bu2LLKConf(LineBuilder) :
 
         _MassCut = "(AM > 100*MeV)"
 
-        _MotherCut = "(VFASPF(VCHI2/VDOF) < 9)"
+        _MotherCut = "(VFASPF(VCHI2/VDOF) < %(TauVCHI2DOF)s)" % params
 
         _DaughtersCut = "(PT > %(LeptonPT)s) & " \
-                        "(MIPCHI2DV(PRIMARY)>%(LeptonIPCHI2)s)" % params
+                        "(MIPCHI2DV(PRIMARY) > %(LeptonIPCHI2)s)" % params
 
         _Combine = CombineParticles( DecayDescriptor = _DecayDescriptor,
                                      CombinationCut  = _MassCut,
@@ -834,10 +856,10 @@ class Bu2LLKConf(LineBuilder) :
                     "[ Lambda_b0 -> J/psi(1S) Lambda0 ]cc",                            
                     "[ Lambda_b0 -> J/psi(1S) Lambda(1520)0 ]cc" ]
         
-        _Cut = "((VFASPF(VCHI2/VDOF)< %(BVertexCHI2)s ) "\
-               "& (BPVIPCHI2()< %(BIPCHI2)s ) "\
-               "& (BPVDIRA> %(BDIRA)s ) "\
-               "& (BPVVDCHI2> %(BFlightCHI2)s ))" % params
+        _Cut = "((VFASPF(VCHI2/VDOF) < %(BVertexCHI2)s) "\
+               "& (BPVIPCHI2() < %(BIPCHI2)s) "\
+               "& (BPVDIRA > %(BDIRA)s) "\
+               "& (BPVVDCHI2 > %(BFlightCHI2)s))" % params
         
         _Combine = CombineParticles( DecayDescriptors = _Decays,
                                      CombinationCut   = masscut,
@@ -857,10 +879,10 @@ class Bu2LLKConf(LineBuilder) :
                      "[ Lambda_b0 -> gamma Lambda0 ]cc",                   
                      "[ Lambda_b0 -> gamma Lambda(1520)0 ]cc" ]
 
-        _Cut = "((VFASPF(VCHI2/VDOF)< %(BVertexCHI2)s ) "\
-               "& (BPVIPCHI2()< %(BIPCHI2)s ) "\
-               "& (BPVDIRA> %(BDIRA)s ) "\
-               "& (BPVVDCHI2> %(BFlightCHI2)s ))" % params
+        _Cut = "((VFASPF(VCHI2/VDOF) < %(BVertexCHI2)s) "\
+               "& (BPVIPCHI2() < %(BIPCHI2)s) "\
+               "& (BPVDIRA > %(BDIRA)s) "\
+               "& (BPVVDCHI2 > %(BFlightCHI2)s))" % params
         
         _Combine = CombineParticles( DecayDescriptors = _Decays,
                                      CombinationCut   = masscut,

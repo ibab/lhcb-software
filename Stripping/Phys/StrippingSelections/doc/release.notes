@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-07 - Simone Bifani
+  - Tuned mutau line in StrippingBu2LLK.py
+
 ! 2015-12-07 - Michel De Cian
  - Add new isolation tools to StrippingB2XMuMu. Comment out most of the decays, relax cuts on pi0 PT and B mass window.
 
