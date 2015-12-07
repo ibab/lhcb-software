@@ -46,7 +46,8 @@ Beauty2Charm = {
     "gamma" : { # Cuts made on all photons
     'PT_MIN'     : '800*MeV',
     'CL_MIN'     : 0.25,
-    'ISNOTE_MIN' : -999.0
+    'ISNOTE_MIN' : -999.0,
+    'PT_VLAPH'   : '90*MeV'
     },
     "D2X" : { # Cuts made on all D's and Lc's used in all lines 
     'ASUMPT_MIN'    : '1800*MeV',
@@ -102,7 +103,8 @@ Beauty2Charm = {
     'BPVVDCHI2_MIN' : 36,
     'BPVDIRA_MIN'   : 0, 
     'MASS_WINDOW'   : '600*MeV', # was 50MeV
-    'DELTAMASS_MAX' : '200*MeV'
+    'DELTAMASS_MAX' : '200*MeV',
+    'DELTAMASS_MIN' : '90*MeV'
     },
     "HH": { # Cuts for rho, K*, phi, XHH Dalitz analyese, etc.
     'MASS_WINDOW'   : {'KST':'150*MeV','RHO':'150*MeV','PHI':'150*MeV'},
@@ -169,7 +171,10 @@ Beauty2Charm = {
  
     ],
     'RawEvents' : [
-   
+    
+    'B02DsstarPiDsstar2DGammaD2HHHBeauty2CharmLine',
+    'B02DsstarKDsstar2DGammaD2HHHBeauty2CharmLine'
+    
     ],
     'MDSTChannels':[
    
@@ -215,6 +220,7 @@ Beauty2Charm = {
 
     'StrippingB02DsstarPiDsstar2DGammaD2HHHBeauty2CharmLine',
     'StrippingB02DsstarKDsstar2DGammaD2HHHBeauty2CharmLine'
+
 
     
     ],  
@@ -447,7 +453,7 @@ Beauty2Charm = {
 
 B2DXD2HMuNu = {
     'WGs'         : ['B2OC'],
-    'BUILDERTYPE' : 'B2DXD2HMuNuConf',
+    'BUILDERTYPE' : 'B2DXD2HMuNuBuilder',
     'CONFIG'      :{
     "PT_MIN"          :  200,  #MeV
     "P_MIN"           :  3000, #MeV

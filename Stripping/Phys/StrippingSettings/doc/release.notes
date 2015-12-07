@@ -4,6 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+
+
+! 2015-12-07 - Nicola Skidmore
+ - Correction to Dicts for B2OC's S21rXp1 lines
+
 ! 2015-12-07 - Nicola Skidmore
  - Dicts for B2OC's S21r0p1 lines
 
