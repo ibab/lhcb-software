@@ -43,7 +43,6 @@ list_S24 = (
 ## https://twiki.cern.ch/twiki/bin/view/LHCb/LHCbStripping21%28r0%2Cr1%29p1
 list_S21rXp1 = (
   'StrippingDitau',
-  'StrippingHighPtTau',
   'StrippingLb2dp',   
   'StrippingTaggedJets',          # Need Phys/JetTagging post-v1r9
 )
