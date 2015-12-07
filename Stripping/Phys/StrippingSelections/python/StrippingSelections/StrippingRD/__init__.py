@@ -6,6 +6,7 @@ for RD WG.
 _selections = [
     'StrippingB2Lambda0MuLines',
     'StrippingB2XMuMu',
+    'StrippingB2XTauMu',
     # 'StrippingB2XMuMuInclusive',
     'StrippingB2KstTauTau',
     'StrippingBu2LLK',

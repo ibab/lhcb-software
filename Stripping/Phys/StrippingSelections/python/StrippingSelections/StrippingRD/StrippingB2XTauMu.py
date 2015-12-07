@@ -1,14 +1,15 @@
 """
 Stripping selection for B->X tau mu:
     - B -> K tau(mu) mu
+    - B -> K tau(3pi) mu
     - B -> K*0 tau(mu) mu
     - B -> phi tau(mu) mu
     - B -> phi tau(3pi) mu
 """
 
 __author__ = "Paula Alvarez"
-__date__ = "27/04/2015"
-__version__ = "1.0"
+__date__ = "01/12/2015"
+__version__ = "2.0"
 
 __all__ = ('B2XTauMuConf',
            'default_conf')
@@ -26,7 +27,21 @@ from StandardParticles import StdLoosePions, StdAllLooseMuons, StdLooseKaons, St
 default_config = {
     'NAME'          : 'B2XTauMu',
     'BUILDERTYPE'   : 'B2XTauMuConf',
-    'STREAMS'       : ['Dimuon'],
+    'STREAMS' : {
+    'Dimuon' : ['StrippingB2XTauMu_KstLine',
+                'StrippingB2XTauMu_Kst_WSLine',
+                'StrippingB2XTauMu_K_3piLine',
+                'StrippingB2XTauMu_K_3pi_WSLine'],
+    'Leptonic' : ['StrippingB2XTauMu_PhiLine',
+                  'StrippingB2XTauMu_KLine',
+                  'StrippingB2XTauMu_Phi_3piLine',
+                  'StrippingB2XTauMu_Phi_WSLine',
+                  'StrippingB2XTauMu_K_WSLine',
+                  'StrippingB2XTauMu_Phi_3pi_WSLine',
+                  'StrippingB2XTauMu_K_3pi_looseLine',
+                  'StrippingB2XTauMu_K_3pi_loose_WSLine'],
+
+    },
     'WGs'           : ['RD'],
     'CONFIG'        : { 
         # Common cuts
@@ -41,9 +56,9 @@ default_config = {
 
         ####  Bd->K*0 tau(mu) mu
         # Daughters
-        ,"MuonPT_kst"        : 300.0   # MeV
+        ,"MuonPT_kst"        : 500.0   # MeV
         ,"MuonP_kst"         : 2.0     # GeV
-        ,"KPiPT_kst"         : 300.0   # MeV
+        ,"KPiPT_kst"         : 500.0   # MeV
         ,"KaonP_kst"         : 2.0     # GeV
         ,"PionP_kst"         : 2.0     # GeV
 
@@ -77,9 +92,9 @@ default_config = {
         
         ####  B+->K+ tau(mu) mu
         # Daughters
-        ,"MuonPT_K"        : 1000.0   # MeV
+        ,"MuonPT_K"        : 800.0   # MeV
         ,"MuonP_K"         : 5.0     # GeV
-        ,"KPiPT_K"         : 500.0   # MeV
+        ,"KPiPT_K"         : 800.0   # MeV
         ,"KaonP_K"         : 3.0     # GeV
         ,"MINIPCHI2_K"     : 36.0
         ,"KaonPIDK_K"      : 5    
@@ -92,18 +107,226 @@ default_config = {
         # B cuts for Ktaumu
         ,"BDIRA_K"         : 0.99    # adimensiional
         ,"BVCHI2DOF_K"     : 15.0    # adimensiional
-        ,"B_FDCHI2_K"      : 400.      # adimensiional
-        
+        ,"B_FDCHI2_K"      : 400.      # MeV
+        ,"B_PT_K"          : 3000.    # MeV
 
+        ####  B+->K+ tau(3pi) mu
+        ,"BDIRA_K_3pi"         : 0.999    # adimensiional
+        ,"BVCHI2DOF_K_3pi"     : 4.0    # adimensiional
+        ,"MuonP_K_3pi"         : 6.0     # GeV
+        ,"KaonP_K_3pi"         : 6.0     # GeV
+        ,"KaonPIDK_K_3pi"      : 6    
+        ,"B_MIN_MASS_K_3pi"    : 3000    # MeV
+        ,"B_MAX_MASS_K_3pi"    : 10000    # MeV
         
         # Wrong sign combinations
         ,'MuTauWS'       : True
 
 
         ,"Prescale"      : 1
-        ,"Prescale_WS"    : 1
+        ,"Prescale_WS"    : 0.5
 
-    }    
+
+        ,"RelatedInfoTools" : [
+                    {'Type'             : 'RelInfoVertexIsolation',
+                     'Location'         : 'VertexIsoInfo'},
+                    {'Type'             : 'RelInfoVertexIsolationBDT',
+                     'Location'         : 'VertexIsoBDTInfo'},
+                    {'Type'             : 'RelInfoConeVariables',
+                     'ConeAngle'        : 1.0,
+                     'Location'         : 'ConeVarsInfo'},
+                    {'Type'              : 'RelInfoConeIsolation',
+                     'ConeSize'          : 0.5,
+                     'IgnoreUnmatchedDescriptors': True,
+                     'DaughterLocations' : {
+                           # B2Kmutau
+                           "[Beauty -> (X0 -> X+ ^l-) l+]CC ":"ConeIsoInfoL1",
+                           "[Beauty -> (X+ -> X+ ^l+) l-]CC ":"ConeIsoInfoL1",
+                           "[Beauty -> (X0 -> X+ l-) ^l+]CC ":"ConeIsoInfoL2",
+                           "[Beauty -> (X+ -> X+ l+) ^l-]CC ":"ConeIsoInfoL2",
+                           "[Beauty -> (X0 -> ^X+ l-) l+]CC ":"ConeIsoInfoH",
+                           "[Beauty -> (X+ -> ^X+ l+) l-]CC ":"ConeIsoInfoH",
+
+                           # B2K*mutau
+                           "[Beauty -> (X+ -> X0 ^l+) l-]CC ":"ConeIsoInfoL1",
+                           "[Beauty -> (X+ -> X0 l+) ^l-]CC ":"ConeIsoInfoL2",
+                           "[Beauty -> (X+ -> (X0 -> ^X+ X-) l+) l-]CC ":"ConeIsoInfoH1",
+                           "[Beauty -> (X+ -> (X0 -> X+ ^X-) l+) l-]CC ":"ConeIsoInfoH2",
+
+                           # B2phimutau
+                           "[Beauty -> (X0-> X+ X-) ^l+ l-]CC ":"ConeIsoInfoL1",
+                           "[Beauty -> (X0-> X+ X-) l+ ^l-]CC ":"ConeIsoInfoL2",
+                           "[Beauty -> (X0-> ^X+ X-) l+ l-]CC ":"ConeIsoInfoH1",
+                           "[Beauty -> (X0-> X+ ^X-) l+ l-]CC ":"ConeIsoInfoH1",
+
+                           # B2Kmutau WS
+                           "[Beauty -> (X0 -> X+ ^l-) l-]CC ":"ConeIsoInfoL1",
+                           "[Beauty -> (X+ -> X+ ^l+) l+]CC ":"ConeIsoInfoL1",
+                           "[Beauty -> (X0 -> X+ l-) ^l-]CC ":"ConeIsoInfoL2",
+                           "[Beauty -> (X+ -> X+ l+) ^l+]CC ":"ConeIsoInfoL2",
+                           "[Beauty -> (X0 -> ^X+ l-) l-]CC ":"ConeIsoInfoH",
+                           "[Beauty -> (X+ -> ^X+ l+) l+]CC ":"ConeIsoInfoH",
+
+                           # B2K*mutau WS
+                           "[Beauty -> (X+ -> X0 ^l+) l+]CC ":"ConeIsoInfoL1",
+                           "[Beauty -> (X+ -> X0 l+) ^l+]CC ":"ConeIsoInfoL2",
+                           "[Beauty -> (X+ -> (X0 -> ^X+ X-) l+) l+]CC ":"ConeIsoInfoH1",
+                           "[Beauty -> (X+ -> (X0 -> X+ ^X-) l+) l+]CC ":"ConeIsoInfoH2",
+
+                           # B2phimutau WS
+                           "[Beauty -> (X0-> X+ X-) ^l+ l+]CC ":"ConeIsoInfoL1",
+                           "[Beauty -> (X0-> X+ X-) l+ ^l+]CC ":"ConeIsoInfoL2",
+                           "[Beauty -> (X0-> ^X+ X-) l+ l+]CC ":"ConeIsoInfoH1",
+                           "[Beauty -> (X0-> X+ ^X-) l+ l+]CC ":"ConeIsoInfoH1",
+
+                        }
+                     },
+                    {'Type'             : 'RelInfoConeVariables',
+                     'ConeAngle'        : 0.5,
+                     'IgnoreUnmatchedDescriptors': True,
+                     'DaughterLocations'   :{
+                           # B2Kmutau
+                           "[Beauty -> (X0 -> X+ ^l-) l+]CC ":"ConeVarsInfoL1",
+                           "[Beauty -> (X+ -> X+ ^l+) l-]CC ":"ConeVarsInfoL1",
+                           "[Beauty -> (X0 -> X+ l-) ^l+]CC ":"ConeVarsInfoL2",
+                           "[Beauty -> (X+ -> X+ l+) ^l-]CC ":"ConeVarsInfoL2",
+                           "[Beauty -> (X0 -> ^X+ l-) l+]CC ":"ConeVarsInfoH",
+                           "[Beauty -> (X+ -> ^X+ l+) l-]CC ":"ConeVarsInfoH",
+
+                           # B2K*mutau
+                           "[Beauty -> (X+ -> X0 ^l+) l-]CC ":"ConeVarsInfoL1",
+                           "[Beauty -> (X+ -> X0 l+) ^l-]CC ":"ConeVarsInfoL2",
+                           "[Beauty -> (X+ -> (X0 -> ^X+ X-) l+) l-]CC ":"ConeVarsInfoH1",
+                           "[Beauty -> (X+ -> (X0 -> X+ ^X-) l+) l-]CC ":"ConeVarsInfoH2",
+
+                           # B2phimutau
+                           "[Beauty -> (X0-> X+ X-) ^l+ l-]CC ":"ConeVarsInfoL1",
+                           "[Beauty -> (X0-> X+ X-) l+ ^l-]CC ":"ConeVarsInfoL2",
+                           "[Beauty -> (X0-> ^X+ X-) l+ l-]CC ":"ConeVarsInfoH1",
+                           "[Beauty -> (X0-> X+ ^X-) l+ l-]CC ":"ConeVarsInfoH1",
+
+                           # B2Kmutau WS
+                           "[Beauty -> (X0 -> X+ ^l-) l-]CC ":"ConeVarsInfoL1",
+                           "[Beauty -> (X+ -> X+ ^l+) l+]CC ":"ConeVarsInfoL1",
+                           "[Beauty -> (X0 -> X+ l-) ^l-]CC ":"ConeVarsInfoL2",
+                           "[Beauty -> (X+ -> X+ l+) ^l+]CC ":"ConeVarsInfoL2",
+                           "[Beauty -> (X0 -> ^X+ l-) l-]CC ":"ConeVarsInfoH",
+                           "[Beauty -> (X+ -> ^X+ l+) l+]CC ":"ConeVarsInfoH",
+
+                           # B2K*mutau WS
+                           "[Beauty -> (X+ -> X0 ^l+) l+]CC ":"ConeVarsInfoL1",
+                           "[Beauty -> (X+ -> X0 l+) ^l+]CC ":"ConeVarsInfoL2",
+                           "[Beauty -> (X+ -> (X0 -> ^X+ X-) l+) l+]CC ":"ConeVarsInfoH1",
+                           "[Beauty -> (X+ -> (X0 -> X+ ^X-) l+) l+]CC ":"ConeVarsInfoH2",
+
+                           # B2phimutau WS
+                           "[Beauty -> (X0-> X+ X-) ^l+ l+]CC ":"ConeVarsInfoL1",
+                           "[Beauty -> (X0-> X+ X-) l+ ^l+]CC ":"ConeVarsInfoL2",
+                           "[Beauty -> (X0-> ^X+ X-) l+ l+]CC ":"ConeVarsInfoH1",
+                           "[Beauty -> (X0-> X+ ^X-) l+ l+]CC ":"ConeVarsInfoH1",
+
+                        }
+                     },
+                   {'Type'             : 'RelInfoTrackIsolationBDT',
+                    'IgnoreUnmatchedDescriptors': True,
+                    'DaughterLocations'   :{
+                           # B2Kmutau
+                           "[Beauty -> (X0 -> X+ ^l-) l+]CC ":"TrackIsoBDTInfoL1",
+                           "[Beauty -> (X+ -> X+ ^l+) l-]CC ":"TrackIsoBDTInfoL1",
+                           "[Beauty -> (X0 -> X+ l-) ^l+]CC ":"TrackIsoBDTInfoL2",
+                           "[Beauty -> (X+ -> X+ l+) ^l-]CC ":"TrackIsoBDTInfoL2",
+                           "[Beauty -> (X0 -> ^X+ l-) l+]CC ":"TrackIsoBDTInfoH",
+                           "[Beauty -> (X+ -> ^X+ l+) l-]CC ":"TrackIsoBDTInfoH",
+
+                           # B2K*mutau
+                           "[Beauty -> (X+ -> X0 ^l+) l-]CC ":"TrackIsoBDTInfoL1",
+                           "[Beauty -> (X+ -> X0 l+) ^l-]CC ":"TrackIsoBDTInfoL2",
+                           "[Beauty -> (X+ -> (X0 -> ^X+ X-) l+) l-]CC ":"TrackIsoBDTInfoH1",
+                           "[Beauty -> (X+ -> (X0 -> X+ ^X-) l+) l-]CC ":"TrackIsoBDTInfoH2",
+
+                           # B2phimutau
+                           "[Beauty -> (X0-> X+ X-) ^l+ l-]CC ":"TrackIsoBDTInfoL1",
+                           "[Beauty -> (X0-> X+ X-) l+ ^l-]CC ":"TrackIsoBDTInfoL2",
+                           "[Beauty -> (X0-> ^X+ X-) l+ l-]CC ":"TrackIsoBDTInfoH1",
+                           "[Beauty -> (X0-> X+ ^X-) l+ l-]CC ":"TrackIsoBDTInfoH1",
+
+                           # B2Kmutau WS
+                           "[Beauty -> (X0 -> X+ ^l-) l-]CC ":"TrackIsoBDTInfoL1",
+                           "[Beauty -> (X+ -> X+ ^l+) l+]CC ":"TrackIsoBDTInfoL1",
+                           "[Beauty -> (X0 -> X+ l-) ^l-]CC ":"TrackIsoBDTInfoL2",
+                           "[Beauty -> (X+ -> X+ l+) ^l+]CC ":"TrackIsoBDTInfoL2",
+                           "[Beauty -> (X0 -> ^X+ l-) l-]CC ":"TrackIsoBDTInfoH",
+                           "[Beauty -> (X+ -> ^X+ l+) l+]CC ":"TrackIsoBDTInfoH",
+
+                           # B2K*mutau WS
+                           "[Beauty -> (X+ -> X0 ^l+) l+]CC ":"TrackIsoBDTInfoL1",
+                           "[Beauty -> (X+ -> X0 l+) ^l+]CC ":"TrackIsoBDTInfoL2",
+                           "[Beauty -> (X+ -> (X0 -> ^X+ X-) l+) l+]CC ":"TrackIsoBDTInfoH1",
+                           "[Beauty -> (X+ -> (X0 -> X+ ^X-) l+) l+]CC ":"TrackIsoBDTInfoH2",
+
+                           # B2phimutau WS
+                           "[Beauty -> (X0-> X+ X-) ^l+ l+]CC ":"TrackIsoBDTInfoL1",
+                           "[Beauty -> (X0-> X+ X-) l+ ^l+]CC ":"TrackIsoBDTInfoL2",
+                           "[Beauty -> (X0-> ^X+ X-) l+ l+]CC ":"TrackIsoBDTInfoH1",
+                           "[Beauty -> (X0-> X+ ^X-) l+ l+]CC ":"TrackIsoBDTInfoH1",
+                           }
+                    },
+                    {'Type'             : 'RelInfoBs2MuMuTrackIsolations',
+                     'IgnoreUnmatchedDescriptors': True,
+                     'DaughterLocations'   :{
+                           # B2Kmutau
+                           "[Beauty -> (X0 -> X+ ^l-) l+]CC ":"TrackIsoBsMMInfoL1",
+                           "[Beauty -> (X+ -> X+ ^l+) l-]CC ":"TrackIsoBsMMInfoL1",
+                           "[Beauty -> (X0 -> X+ l-) ^l+]CC ":"TrackIsoBsMMInfoL2",
+                           "[Beauty -> (X+ -> X+ l+) ^l-]CC ":"TrackIsoBsMMInfoL2",
+                           "[Beauty -> (X0 -> ^X+ l-) l+]CC ":"TrackIsoBsMMInfoH",
+                           "[Beauty -> (X+ -> ^X+ l+) l-]CC ":"TrackIsoBsMMInfoH",
+
+                           # B2K*mutau
+                           "[Beauty -> (X+ -> X0 ^l+) l-]CC ":"TrackIsoBsMMInfoL1",
+                           "[Beauty -> (X+ -> X0 l+) ^l-]CC ":"TrackIsoBsMMInfoL2",
+                           "[Beauty -> (X+ -> (X0 -> ^X+ X-) l+) l-]CC ":"TrackIsoBsMMInfoH1",
+                           "[Beauty -> (X+ -> (X0 -> X+ ^X-) l+) l-]CC ":"TrackIsoBsMMInfoH2",
+
+                           # B2phimutau
+                           "[Beauty -> (X0-> X+ X-) ^l+ l-]CC ":"TrackIsoBsMMInfoL1",
+                           "[Beauty -> (X0-> X+ X-) l+ ^l-]CC ":"TrackIsoBsMMInfoL2",
+                           "[Beauty -> (X0-> ^X+ X-) l+ l-]CC ":"TrackIsoBsMMInfoH1",
+                           "[Beauty -> (X0-> X+ ^X-) l+ l-]CC ":"TrackIsoBsMMInfoH1",
+
+                           # B2Kmutau WS
+                           "[Beauty -> (X0 -> X+ ^l-) l-]CC ":"TrackIsoBsMMInfoL1",
+                           "[Beauty -> (X+ -> X+ ^l+) l+]CC ":"TrackIsoBsMMInfoL1",
+                           "[Beauty -> (X0 -> X+ l-) ^l-]CC ":"TrackIsoBsMMInfoL2",
+                           "[Beauty -> (X+ -> X+ l+) ^l+]CC ":"TrackIsoBsMMInfoL2",
+                           "[Beauty -> (X0 -> ^X+ l-) l-]CC ":"TrackIsoBsMMInfoH",
+                           "[Beauty -> (X+ -> ^X+ l+) l+]CC ":"TrackIsoBsMMInfoH",
+
+                           # B2K*mutau WS
+                           "[Beauty -> (X+ -> X0 ^l+) l+]CC ":"TrackIsoBsMMInfoL1",
+                           "[Beauty -> (X+ -> X0 l+) ^l+]CC ":"TrackIsoBsMMInfoL2",
+                           "[Beauty -> (X+ -> (X0 -> ^X+ X-) l+) l+]CC ":"TrackIsoBsMMInfoH1",
+                           "[Beauty -> (X+ -> (X0 -> X+ ^X-) l+) l+]CC ":"TrackIsoBsMMInfoH2",
+
+                           # B2phimutau WS
+                           "[Beauty -> (X0-> X+ X-) ^l+ l+]CC ":"TrackIsoBsMMInfoL1",
+                           "[Beauty -> (X0-> X+ X-) l+ ^l+]CC ":"TrackIsoBsMMInfoL2",
+                           "[Beauty -> (X0-> ^X+ X-) l+ l+]CC ":"TrackIsoBsMMInfoH1",
+                           "[Beauty -> (X0-> X+ ^X-) l+ l+]CC ":"TrackIsoBsMMInfoH1",
+                           },
+                     'tracktype'        : 3,
+                     'angle'            : 0.27,
+                     'fc'               : 0.60,
+                     'doca_iso'         : 0.13,
+                     'ips'              : 3.0,
+                     'svdis'            : -0.15,
+                     'svdis_h'          : 30.,
+                     'pvdis'            : 0.5,
+                     'pvdis_h'          : 40.,
+                     'makeTrackCuts'    : False,
+                     'IsoTwoBody'       : False},
+                    ]
+       }    
 }
 
 
@@ -157,11 +380,22 @@ class B2XTauMuConf(LineBuilder) :
         ,"BDIRA_K"         
         ,"BVCHI2DOF_K"
         ,"B_FDCHI2_K"
+        ,"B_PT_K"
+        
+        ,"BDIRA_K_3pi"         
+        ,"BVCHI2DOF_K_3pi"
+        ,"MuonP_K_3pi"
+        ,"KaonP_K_3pi"
+        ,"KaonPIDK_K_3pi"
+        ,"B_MIN_MASS_K_3pi"
+        ,"B_MAX_MASS_K_3pi"
 
         ,"MuTauWS"
 
         ,"Prescale"
         ,"Prescale_WS"
+
+        ,"RelatedInfoTools"
         )
     
         
@@ -174,11 +408,15 @@ class B2XTauMuConf(LineBuilder) :
         name_kst = name+"_Kst"
         name_phi = name+"_Phi"
         name_k = name+"_K"
+        name_k_3pi = name+"_K_3pi"
         name_phi_3pi = name+"_Phi_3pi"
+        name_k_3pi_loose = name+"_K_3pi_loose"
 
         name_kst_WS = name+"_Kst_WS"
         name_phi_WS = name+"_Phi_WS"
         name_k_WS = name+"_K_WS"
+        name_k_3pi_WS = name+"_K_3pi_WS"
+        name_k_3pi_loose_WS = name+"_K_3pi_loose_WS"
         name_phi_3pi_WS = name+"_Phi_3pi_WS"
 
         ############### MUON SELECTIONS ###################
@@ -221,11 +459,22 @@ class B2XTauMuConf(LineBuilder) :
                                   RequiredSelections = [self.selKaon,self.selmuon])
 
 
+        self.selkmuOS_K = Selection(name = "KMuOSFor_K"+name,
+                                    Algorithm = self._KMuFilter_K(),
+                                    RequiredSelections = [self.selkmuOS])
+        
         ################ Delta++ -> K+ Mu+  (SS) SELECTION ##########################
         
         self.selkmuSS = Selection(name = "KMuSSFor"+name,
                                   Algorithm          = self._KMuSSFilter(),
                                   RequiredSelections = [self.selKaon,self.selmuon])
+
+
+        self.selkmuSS_K = Selection(name = "KMuSSFor_K"+name,
+                                    Algorithm = self._KMuFilter_K(),
+                                    RequiredSelections = [self.selkmuSS])
+
+
 
 
         ################ Kst(1430)+ -> phi Mu  SELECTION ##########################
@@ -284,6 +533,8 @@ class B2XTauMuConf(LineBuilder) :
                                           MuSel = self.selmuon,
                                           XMuSel = [self.selkmuOS,
                                                     self.selkmuSS],
+                                          # XMuSel = [self.selkmuOS_K,
+                                          #           self.selkmuSS_K],
                                           MuonP = config['MuonP_K'],
                                           MuonPT = config['MuonPT_K'],
                                           PIDmu = config['PIDmu'],
@@ -300,14 +551,59 @@ class B2XTauMuConf(LineBuilder) :
                                                     DecayDescriptors = ["[B0 ->  phi(1020)  tau+ mu-]cc",  
                                                                         "[B0 ->  phi(1020)  tau- mu+]cc"], 
                                                     
-                                                    TauSel = StdTightDetachedTau3pi,
-                                                    MuSel = self.selmuon,
+                                                    LeptonSel = [ StdTightDetachedTau3pi, self.selmuon ],
                                                     XSel = [self.selphi2kk],
+                                                    TauPT = 0.,
+                                                    TauP = 0.,
+                                                    TauIPCHI2 = 0.,
                                                     BVCHI2DOF = config['BVCHI2DOF_phi'],
+                                                    BPT = 0,
                                                     BDIRA = 0,
                                                     B_FDCHI2 = 0,
                                                     B_MIN_MASS = config['B_MIN_MASS'], B_MAX_MASS = config['B_MAX_MASS'])
-        
+
+
+        ### B -> K Tau(3pi) Mu
+        self.selb2KTauMu_3pi = self._B2XTauMu_3pi(name_k_3pi,
+                                                  DecayDescriptors = ["[B+ ->  K*(1410)0  tau+]cc",     # K*(1410)0 -> K+ mu-
+                                                                      "[B+ ->  Delta(1600)++  tau-]cc"], # Delta(1600)++ -> K+ mu+,
+                                                  LeptonSel = [ StdTightDetachedTau3pi ],
+                                                  # XSel = [self.selkmuOS,
+                                                  #         self.selkmuSS],
+                                                  XSel = [self.selkmuOS_K,
+                                                          self.selkmuSS_K],
+                                                     TauPT = config["MuonPT_K"],
+                                                     TauP = config["MuonP_K"],
+                                                     TauIPCHI2 = config["MINIPCHI2_K"],
+                                                  BVCHI2DOF = config['BVCHI2DOF_K_3pi'],
+                                                  BPT = config['B_PT_K'],
+                                                  BDIRA = config['BDIRA_K_3pi'],
+                                                  B_FDCHI2 = config["B_FDCHI2_K"],
+                                                  B_MIN_MASS = config['B_MIN_MASS_K_3pi'], 
+                                                  B_MAX_MASS = config['B_MAX_MASS_K_3pi'])
+
+
+
+
+        ### B -> K Tau(3pi) Mu Loose
+        self.selb2KTauMu_3pi_loose = self._B2XTauMu_3pi(name_k_3pi_loose,
+                                                  DecayDescriptors = ["[B+ ->  K*(1410)0  tau+]cc",     # K*(1410)0 -> K+ mu-
+                                                                      "[B+ ->  Delta(1600)++  tau-]cc"], # Delta(1600)++ -> K+ mu+,
+                                                  LeptonSel = [ StdTightDetachedTau3pi ],
+                                                  XSel = [self.selkmuOS,
+                                                          self.selkmuSS],
+                                                  # XSel = [self.selkmuOS_K,
+                                                  #         self.selkmuSS_K],
+                                                     TauPT = config["MuonPT_K"],
+                                                     TauP = config["MuonP_K"],
+                                                     TauIPCHI2 = config["MINIPCHI2_K"],
+                                                  BVCHI2DOF = config['BVCHI2DOF_K'],
+                                                  BPT = config['B_PT_K'],
+                                                  BDIRA = config['BDIRA_K'],
+                                                  B_FDCHI2 = config["B_FDCHI2_K"],
+                                                  B_MIN_MASS = config['B_MIN_MASS'], 
+                                                  B_MAX_MASS = config['B_MAX_MASS'])
+
 
 
         ################ B0 -> X Tau Mu WS  SELECTION ##########################
@@ -348,6 +644,8 @@ class B2XTauMuConf(LineBuilder) :
                                              MuSel = self.selmuon,
                                              XMuSel = [self.selkmuOS,
                                                        self.selkmuSS],
+                                             # XMuSel = [self.selkmuOS_K,
+                                             #           self.selkmuSS_K],
                                              MuonP = config['MuonP_K'],
                                              MuonPT = config['MuonPT_K'],
                                              PIDmu = config['PIDmu'],
@@ -361,56 +659,148 @@ class B2XTauMuConf(LineBuilder) :
         ### B -> Phi Tau(3pi) Mu
         self.selb2PhiTauMu_3pi_WS = self._B2XTauMu_3pi(name_phi_3pi_WS,
                                                        DecayDescriptors = ["[B0 ->  phi(1020)  tau+ mu+]cc"], 
-                                                       TauSel = StdTightDetachedTau3pi,
-                                                       MuSel = self.selmuon,
+                                                       LeptonSel = [StdTightDetachedTau3pi, self.selmuon],
                                                        XSel = [self.selphi2kk],
+                                                       TauPT = 0,
+                                                       TauP = 0,
+                                                       TauIPCHI2 = 0,
                                                        BVCHI2DOF = config['BVCHI2DOF_phi'],
+                                                       BPT = 0,
                                                        BDIRA = 0,
                                                        B_FDCHI2 = 0,
                                                        B_MIN_MASS = config['B_MIN_MASS'], B_MAX_MASS = config['B_MAX_MASS'])
 
 
+        ### B -> K Tau(3pi) Mu
+        self.selb2KTauMu_3pi_WS = self._B2XTauMu_3pi(name_k_3pi_WS,
+                                                     DecayDescriptors = ["[B+ ->  K*(1410)0  tau-]cc",     # K*(1410)0 -> K+ mu-
+                                                                         "[B+ ->  Delta(1600)++  tau+]cc"], # Delta(1600)++ -> K+ mu+
+                                                    
+                                                     LeptonSel = [StdTightDetachedTau3pi],
+                                                     # XSel = [self.selkmuOS,
+                                                     #           self.selkmuSS],
+                                                     XSel = [self.selkmuOS_K,
+                                                               self.selkmuSS_K],
+                                                     TauPT = config["MuonPT_K"],
+                                                     TauP = config["MuonP_K"],
+                                                     TauIPCHI2 = config["MINIPCHI2_K"],
+                                                     BVCHI2DOF = config['BVCHI2DOF_K_3pi'],
+                                                     BPT = config['B_PT_K'],
+                                                     BDIRA = config["BDIRA_K_3pi"],
+                                                     B_FDCHI2 = config["B_FDCHI2_K"],
+                                                     B_MIN_MASS = config['B_MIN_MASS_K_3pi'], B_MAX_MASS = config['B_MAX_MASS_K_3pi'])
 
+
+        ### B -> K Tau(3pi) Mu Loose
+        self.selb2KTauMu_3pi_loose_WS = self._B2XTauMu_3pi(name_k_3pi_loose_WS,
+                                                     DecayDescriptors = ["[B+ ->  K*(1410)0  tau-]cc",     # K*(1410)0 -> K+ mu-
+                                                                         "[B+ ->  Delta(1600)++  tau+]cc"], # Delta(1600)++ -> K+ mu+
+                                                    
+                                                     LeptonSel = [StdTightDetachedTau3pi],
+                                                     XSel = [self.selkmuOS,
+                                                               self.selkmuSS],
+                                                     # XSel = [self.selkmuOS_K,
+                                                     #           self.selkmuSS_K],
+                                                     TauPT = config["MuonPT_K"],
+                                                     TauP = config["MuonP_K"],
+                                                     TauIPCHI2 = config["MINIPCHI2_K"],
+                                                     BVCHI2DOF = config['BVCHI2DOF_K'],
+                                                     BPT = config['B_PT_K'],
+                                                     BDIRA = config["BDIRA_K"],
+                                                     B_FDCHI2 = config["B_FDCHI2_K"],
+                                                     B_MIN_MASS = config['B_MIN_MASS'], B_MAX_MASS = config['B_MAX_MASS'])
+
+        
         ################# DECLARE THE STRIPPING LINES #################################
         
         self.B2KstTauMu = StrippingLine(name_kst+ 'Line', 
                                         prescale = config["Prescale"], 
-                                        selection = self.selb2Kst0TauMu)
+                                        selection = self.selb2Kst0TauMu,
+                                        RequiredRawEvents = ["Rich","Velo","Tracker","Trigger","Muon","Calo"],
+                                        RelatedInfoTools = config["RelatedInfoTools"],
+                                        MDSTFlag = True)
 
         self.B2PhiTauMu = StrippingLine(name_phi+ 'Line', 
                                         prescale = config["Prescale"], 
-                                        selection = self.selb2PhiTauMu)
+                                        selection = self.selb2PhiTauMu,
+                                        RelatedInfoTools = config["RelatedInfoTools"],
+                                        MDSTFlag = True)
 
         self.B2KTauMu = StrippingLine(name_k+ 'Line', 
                                         prescale = config["Prescale"], 
-                                        selection = self.selb2KTauMu)
+                                        selection = self.selb2KTauMu,
+                                        RelatedInfoTools = config["RelatedInfoTools"],
+                                        MDSTFlag = True)
 
         self.B2PhiTauMu_3pi = StrippingLine(name_phi_3pi+ 'Line', 
                                             prescale = config["Prescale"], 
-                                            selection = self.selb2PhiTauMu_3pi)
+                                            selection = self.selb2PhiTauMu_3pi,
+                                        RelatedInfoTools = config["RelatedInfoTools"],
+                                        MDSTFlag = True)
+
+        self.B2KTauMu_3pi = StrippingLine(name_k_3pi+ 'Line', 
+                                            prescale = config["Prescale"], 
+                                            selection = self.selb2KTauMu_3pi,
+                                          RequiredRawEvents = ["Rich","Velo","Tracker","Trigger","Muon","Calo"],
+                                        RelatedInfoTools = config["RelatedInfoTools"],
+                                        MDSTFlag = True)
+
+
+        self.B2KTauMu_3pi_loose = StrippingLine(name_k_3pi_loose+ 'Line', 
+                                            prescale = config["Prescale"], 
+                                            selection = self.selb2KTauMu_3pi_loose,
+                                          RequiredRawEvents = ["Rich","Velo","Tracker","Trigger","Muon","Calo"],
+                                        RelatedInfoTools = config["RelatedInfoTools"],
+                                        MDSTFlag = True)
 
 
 
         self.B2KstTauMu_WS = StrippingLine(name_kst_WS+ 'Line', 
                                         prescale = config["Prescale_WS"], 
-                                        selection = self.selb2Kst0TauMu_WS)
+                                        selection = self.selb2Kst0TauMu_WS,
+                                           RequiredRawEvents = ["Rich","Velo","Tracker","Trigger","Muon","Calo"],
+                                        RelatedInfoTools = config["RelatedInfoTools"],
+                                        MDSTFlag = True)
 
         self.B2PhiTauMu_WS = StrippingLine(name_phi_WS+ 'Line', 
                                         prescale = config["Prescale_WS"], 
-                                        selection = self.selb2PhiTauMu_WS)
+                                        selection = self.selb2PhiTauMu_WS,
+                                        RelatedInfoTools = config["RelatedInfoTools"],
+                                        MDSTFlag = True)
 
         self.B2KTauMu_WS = StrippingLine(name_k_WS+ 'Line', 
                                         prescale = config["Prescale_WS"], 
-                                        selection = self.selb2KTauMu_WS)
+                                        selection = self.selb2KTauMu_WS,
+                                        RelatedInfoTools = config["RelatedInfoTools"],
+                                        MDSTFlag = True)
 
         self.B2PhiTauMu_3pi_WS = StrippingLine(name_phi_3pi_WS+ 'Line', 
                                                prescale = config["Prescale_WS"], 
-                                               selection = self.selb2PhiTauMu_3pi_WS)
+                                               selection = self.selb2PhiTauMu_3pi_WS,
+                                        RelatedInfoTools = config["RelatedInfoTools"],
+                                        MDSTFlag = True)
+
+        self.B2KTauMu_3pi_WS = StrippingLine(name_k_3pi_WS+ 'Line', 
+                                               prescale = config["Prescale_WS"], 
+                                               selection = self.selb2KTauMu_3pi_WS,
+                                             RequiredRawEvents = ["Rich","Velo","Tracker","Trigger","Muon","Calo"],
+                                             RelatedInfoTools = config["RelatedInfoTools"],
+                                        MDSTFlag = True) 
+
+
+        self.B2KTauMu_3pi_loose_WS = StrippingLine(name_k_3pi_loose_WS+ 'Line', 
+                                               prescale = config["Prescale_WS"], 
+                                               selection = self.selb2KTauMu_3pi_loose_WS,
+                                             RequiredRawEvents = ["Rich","Velo","Tracker","Trigger","Muon","Calo"],
+                                             RelatedInfoTools = config["RelatedInfoTools"],
+                                        MDSTFlag = True) 
 
 
         self.registerLine(self.B2KstTauMu)        
         self.registerLine(self.B2PhiTauMu)        
         self.registerLine(self.B2KTauMu)        
+        self.registerLine(self.B2KTauMu_3pi)        
+        self.registerLine(self.B2KTauMu_3pi_loose)        
         self.registerLine(self.B2PhiTauMu_3pi)        
 
         if config["MuTauWS"]: 
@@ -418,6 +808,8 @@ class B2XTauMuConf(LineBuilder) :
             self.registerLine(self.B2PhiTauMu_WS)        
             self.registerLine(self.B2KTauMu_WS)        
             self.registerLine(self.B2PhiTauMu_3pi_WS)        
+            self.registerLine(self.B2KTauMu_3pi_WS)        
+            self.registerLine(self.B2KTauMu_3pi_loose_WS)        
 
 
 
@@ -454,6 +846,18 @@ class B2XTauMuConf(LineBuilder) :
         _ka = FilterDesktop( Code = _code )
         return _ka     
 
+
+    def _KMuFilter_K( self ):
+        
+        _code = "(MINTREE(ABSID=='K+',P)> %(KaonP_K_3pi)s *GeV) & "\
+                "(MINTREE(ABSID=='K+',PT)> %(KPiPT_K)s *MeV) & "\
+                "(MINTREE(ABSID=='K+',PIDK)> %(KaonPIDK_K_3pi)s ) & "\
+                "(MINTREE(ABSID=='K+',MIPCHI2DV(PRIMARY)) > %(MINIPCHI2_K)s )" % self.__confdict__
+
+        _code += " & (MINTREE(ABSID=='mu+',MIPCHI2DV(PRIMARY)) > %(MINIPCHI2_K)s )" % self.__confdict__
+
+        _kmu = FilterDesktop( Code = _code )
+        return _kmu     
 
 
    
@@ -609,33 +1013,43 @@ class B2XTauMuConf(LineBuilder) :
     def _B2XTauMu_3pi(self,
                       name,
                       DecayDescriptors,
-                      TauSel,
-                      MuSel,
+                      LeptonSel,
                       XSel,
+                      TauPT,
+                      TauP,
+                      TauIPCHI2,
                       BVCHI2DOF,
+                      BPT,
                       BDIRA,
                       B_FDCHI2,
                       B_MIN_MASS,
                       B_MAX_MASS):
 
+        _daughtersCuts = {  "tau+"  : "(P > %(TauP)s *GeV) & (PT > %(TauPT)s *MeV) & (MIPCHI2DV(PRIMARY) > %(TauIPCHI2)s )" % locals() }
+                          
         _combinationCut = "(AM< ( %(B_MAX_MASS)s + 200) *MeV)" % locals()
         _motherCut = "  (MM < %(B_MAX_MASS)s *MeV)"\
                      " & (MM> %(B_MIN_MASS)s *MeV)"\
                      " & (VFASPF(VCHI2/VDOF) < %(BVCHI2DOF)s)"\
+                     " & (PT> %(BPT)s)"\
                      " & (BPVDIRA > %(BDIRA)s)"\
                      " & (BPVVDCHI2 > %(B_FDCHI2)s)" % locals()
 
 
         _B = CombineParticles(DecayDescriptors = DecayDescriptors,
+                              DaughtersCuts = _daughtersCuts,
                               CombinationCut = _combinationCut,
                               MotherCut = _motherCut)
                           
         _sel_Daughters = MergedSelection(name+"_daughters",
                                          RequiredSelections = XSel )
+
+        _req_selections = LeptonSel
+        _req_selections.append(_sel_Daughters)
         
         sel = Selection( name,
                          Algorithm = _B,
-                         RequiredSelections = [ TauSel, MuSel, _sel_Daughters ])
+                         RequiredSelections = _req_selections)
         return sel
 
 
