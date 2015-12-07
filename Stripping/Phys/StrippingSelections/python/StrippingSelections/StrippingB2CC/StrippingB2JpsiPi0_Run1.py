@@ -70,8 +70,7 @@ class B2JpsiPi0Conf_RI(LineBuilder) :
                                             )
 
         self.Bd2JpsiPi0DetachedLine  = StrippingLine( self.name + "Bd2JpsiPi0DetachedLine",
-                                                      #algos = [ self.MvaBd2JpsiPi0R ],
-                                                      algos = [ self.SelBd2JpsiPi0R ],
+                                                      algos = [ self.MvaBd2JpsiPi0R ],
                                                       MDSTFlag = True,
                                                       EnableFlavourTagging = True )
         

@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-07 - Carlos Vazquez Sierra
+ - Update in B2CC lines
+
 ! 2015-12-07 - William Barter
    - Added StrippingFullDiJets.py and StrippingMicroDiJets.py to StrippingQEE
 
