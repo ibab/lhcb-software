@@ -20,7 +20,7 @@ default_config =  {
   'PT_MU'                         : '1000', # MeV
   'TRACKCHI2_MU'                  : '4',    # dimensionless
   #
-  'FD_B_Max'                      : '70',
+  'FD_B_Max_KTM'                  : '70',
   'FD_B_Max_KTT'                  : '40',
   'PT_B_KTM'                      : '3000',#MeV
   'PT_B_KTT'                      : '3000',#MeV
@@ -170,9 +170,8 @@ class B2KstTauXConf(LineBuilder) :
                                 'MASS_HIGH_B'            ,
                                 'PT_B_KTM'                   ,
                                 'PT_B_KTT'                   ,
-                                'FD_B_Max_KTT'             ,
-                                #
-                                'FD_B_Max',
+                                'FD_B_Max_KTM'             ,
+                                'FD_B_Max_KTT',
                                 'MASS_LOW_Kst'          ,  
                                 'MASS_HIGH_Kst'         ,  
                                 'VCHI2_Kst'             ,  
@@ -317,7 +316,8 @@ class B2KstTauXConf(LineBuilder) :
                                                                    }
                                                   }
                                                   ],
-                                        selection = selB2KstTauTau
+                                        selection = selB2KstTauTau,
+                                        MaxCandidates = 50 
                                         )
 
     self.TauTau_SS_Line = StrippingLine(name+"_TauTau_SameSign_Line",
@@ -340,7 +340,8 @@ class B2KstTauXConf(LineBuilder) :
                                                   }
                                                 
                                                   ],
-                                        selection   = selB2KstTauTauSS
+                                        selection   = selB2KstTauTauSS,
+                                        MaxCandidates = 50 
                                         )
 
     self.TauMu_Line     = StrippingLine(name+"_TauMu_Line",
@@ -362,13 +363,16 @@ class B2KstTauXConf(LineBuilder) :
                                                                    }
                                                   }
                                                   ],
-                                        selection   = selB2KstTauMu                                      
+                                        selection   = selB2KstTauMu,
+                                        MaxCandidates = 30 
                                         )
    
     self.TauMu_SS_Line  = StrippingLine(name+"_TauMu_SameSign_Line",
                                         #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                         prescale    = config['B2KstTauMu_SameSign_LinePrescale'],
-                                        #postscale   = config['B2KstTauMu_SameSign_LinePostscale'],
+                                        postscale   = config['B2KstTauMu_SameSign_LinePostscale'],
+                                        MDSTFlag = True,
+                                        FILTER = self.FilterSPD,
                                         #RelatedInfoTools = config['RelatedInfoTools'],
                                         RelatedInfoTools      = [
                                                   { "Type" : "RelInfoBKsttautauMuonIsolationBDT" ,  "Location"  : "B2KstTauTau_MuonIsolationBDT"},
@@ -382,9 +386,8 @@ class B2KstTauXConf(LineBuilder) :
                                                                    }
                                                   }
                                                   ],
-                                        MDSTFlag = True,
-                                        FILTER = self.FilterSPD,
-                                        selection   = selB2KstTauMuSS
+                                        selection   = selB2KstTauMuSS,
+                                        MaxCandidates = 30 
                                         )
 
 
@@ -406,7 +409,8 @@ class B2KstTauXConf(LineBuilder) :
                                                                    }
                                                   }
                                                   ],
-                                        selection   = selB2KstMuMu                                      
+                                        selection   = selB2KstMuMu,
+                                        MaxCandidates = 30 
                                         )
    
     self.MuMu_SS_Line  = StrippingLine(name+"_MuMu_SameSign_Line",
@@ -427,7 +431,8 @@ class B2KstTauXConf(LineBuilder) :
                                                                    }
                                                   }
                                                   ],
-                                        selection   = selB2KstMuMuSS
+                                        selection   = selB2KstMuMuSS,
+                                        MaxCandidates = 30 
                                         )
     
     self.DDSL_Line    = StrippingLine(name+"_DDSL_Line",
@@ -435,6 +440,7 @@ class B2KstTauXConf(LineBuilder) :
                                       prescale    = config['B2DDSL_LinePrescale'],
                                       postscale   = config['B2DDSL_LinePostscale'],
                                       MDSTFlag = True,
+                                      FILTER = self.FilterSPD,
                                       #RelatedInfoTools = config['RelatedInfoTools'],
                                       RelatedInfoTools      = [
                                                   { "Type" : "RelInfoBKsttautauMuonIsolationBDT" ,  "Location"  : "B2KstTauTau_MuonIsolationBDT"},
@@ -447,8 +453,8 @@ class B2KstTauXConf(LineBuilder) :
                                                       "[B0 ->  K*(892)0 ^D+ mu-]CC" : "DVars_VertexIsoInfo"}
                                                   }
                                                   ],
-                                      FILTER = self.FilterSPD,
-                                      selection = selB2DDSL
+                                      selection = selB2DDSL,
+                                      MaxCandidates = 30
                                       )
 
      
@@ -471,7 +477,7 @@ class B2KstTauXConf(LineBuilder) :
                "(AM  < " + config['MASS_HIGH_B']   + "*MeV)"
     
     _bcut    = "(VFASPF(VCHI2)  <   "   + config['VCHI2_B']       + ")  &"\
-               "(BPVVDCHI2          >   "   + config['FDCHI2_B']      + ") & (BPVVD < " +config['FD_B_Max_KTT'] +") & (PT > "+config['PT_B_KTT']+" * MeV ) "
+               "(BPVVDCHI2          >   "   + config['FDCHI2_B']      + ") & (BPVVD < " +config['FD_B_Max_KTT'] +")" # & (PT > "+config['PT_B_KTT']+" * MeV ) "
    
     
     _CombineTau = CombineParticles( DecayDescriptors = ["[B0 -> K*(892)0 tau+ tau-]cc"],
@@ -491,7 +497,7 @@ class B2KstTauXConf(LineBuilder) :
                "(AM  < " + config['MASS_HIGH_B']   + "*MeV)"
     
     _bcut    = "(VFASPF(VCHI2)  <   "   + config['VCHI2_B']       + ") & "\
-               "(BPVVDCHI2          >   "   + config['FDCHI2_B']      + ") & (BPVVD < " +config['FD_B_Max_KTT'] +") & (PT > "+config['PT_B_KTT']+" * MeV ) "
+               "(BPVVDCHI2          >   "   + config['FDCHI2_B']      + ") & (BPVVD < " +config['FD_B_Max_KTT'] +")" # & (PT > "+config['PT_B_KTT']+" * MeV ) "
 
     
     _CombineTau = CombineParticles( DecayDescriptors = ["[B0 ->  K*(892)0 tau+ tau+]cc","[B0 ->  K*(892)0 tau- tau-]cc"],
@@ -503,6 +509,7 @@ class B2KstTauXConf(LineBuilder) :
                       Algorithm          = _CombineTau,
                       RequiredSelections = [ tauSel ,KstarSel] ))
   
+
   #####################################################
   def _makeB2XMu(self, name, tauSel,  muonSel, KstarSel, config):
     
@@ -510,7 +517,7 @@ class B2KstTauXConf(LineBuilder) :
                "(AM  < " + config['MASS_HIGH_B']   + "*MeV)"
 
     _bcut    ="(VFASPF(VCHI2)  <   "   + config['VCHI2_B_Mu']       + ") & "\
-               "(BPVVD          >   "   + config['FD_B_Mu']      + ") & (BPVVD < " +config['FD_B_Max'] +")"
+               "(BPVVD          >   "   + config['FD_B_Mu']      + ") & (BPVVD < " +config['FD_B_Max_KTM'] +")" # & (PT > "+config['PT_B_KTM']+" * MeV ) "
          
     
     _CombineTau = CombineParticles( DecayDescriptors = ["[B0 -> K*(892)0 tau+ mu-]cc","[B0 -> K*(892)0 tau- mu+]cc"],
@@ -520,25 +527,9 @@ class B2KstTauXConf(LineBuilder) :
     return (Selection(name+"_TauMu",
                       Algorithm          = _CombineTau,
                       RequiredSelections = [ tauSel, muonSel, KstarSel ] ))
-  #####################################################
-  def _makeB2DXMu(self, name, DSel,  muonSel, KstarSel, config):
-    
-    _combcut = "(AM  > " + config['MASS_LOW_B']    + "*MeV) & "\
-               "(AM  < " + config['MASS_HIGH_B']   + "*MeV)"
-
-    _bcut    ="(VFASPF(VCHI2)  <   "   + config['VCHI2_B_Mu']       + ") & "\
-               "(BPVVD          >   "   + config['FD_B_Mu']      + ")  & (BPVVD < " +config['FD_B_Max'] +")"
-         
-    
-    _CombineD = CombineParticles( DecayDescriptors = ["[B0 ->  K*(892)0 D+ mu-]cc"],
-                                   CombinationCut   = _combcut,
-                                   MotherCut        = _bcut)
-    
-    return (Selection(name+"_DDSL",
-                      Algorithm          = _CombineD,
-                      RequiredSelections = [ DSel, muonSel, KstarSel ] ))
   
-    #####################################################
+    
+  #####################################################
   def _makeB2XMuSS(self, name, tauSel, muonSel, KstarSel,config):
     
     
@@ -546,7 +537,7 @@ class B2KstTauXConf(LineBuilder) :
                "(AM  < " + config['MASS_HIGH_B']   + "*MeV)"
     
     _bcut    ="(VFASPF(VCHI2)  <   "   + config['VCHI2_B_Mu']       + ") & "\
-               "(BPVVD          >   "   + config['FD_B_Mu']      + ")   & (BPVVD < " +config['FD_B_Max'] +")"
+               "(BPVVD          >   "   + config['FD_B_Mu']      + ")   & (BPVVD < " +config['FD_B_Max_KTM'] +")" # & (PT > "+config['PT_B_KTM']+" * MeV ) "
     
  
     _CombineTau = CombineParticles( DecayDescriptors = ["[B0 ->  K*(892)0 tau+ mu+]cc","[B0 ->  K*(892)0 tau- mu-]cc"],
@@ -558,7 +549,26 @@ class B2KstTauXConf(LineBuilder) :
                       RequiredSelections = [ tauSel, muonSel, KstarSel ] ))
 
 
-#####################################################
+  #####################################################
+  def _makeB2DXMu(self, name, DSel,  muonSel, KstarSel, config):
+    
+    _combcut = "(AM  > " + config['MASS_LOW_B']    + "*MeV) & "\
+               "(AM  < " + config['MASS_HIGH_B']   + "*MeV)"
+
+    _bcut    ="(VFASPF(VCHI2)  <   "   + config['VCHI2_B_Mu']       + ") & "\
+               "(BPVVD          >   "   + config['FD_B_Mu']      + ")  & (BPVVD < " +config['FD_B_Max_KTM'] +")" # & (PT > "+config['PT_B_KTM']+" * MeV ) "
+         
+    
+    _CombineD = CombineParticles( DecayDescriptors = ["[B0 ->  K*(892)0 D+ mu-]cc"],
+                                   CombinationCut   = _combcut,
+                                   MotherCut        = _bcut)
+    
+    return (Selection(name+"_DDSL",
+                      Algorithm          = _CombineD,
+                      RequiredSelections = [ DSel, muonSel, KstarSel ] ))
+  
+
+  #####################################################
   def _makeB2XMuMu(self, name, muonSel_KMM, KstarSel_KMM, config):
     
     _combcut = "(AM  > " + config['MASS_LOW_B_KMM']    + "*MeV) & "\
@@ -578,7 +588,8 @@ class B2KstTauXConf(LineBuilder) :
                       Algorithm          = _CombineTau,
                       RequiredSelections = [ muonSel_KMM, KstarSel_KMM ] ))
   
-#####################################################
+
+  #####################################################
   def _makeB2XMuMuSS(self, name, muonSel_KMM, KstarSel_KMM, config):
     
     _combcut = "(AM  > " + config['MASS_LOW_B_KMM']    + "*MeV) & "\
@@ -598,8 +609,8 @@ class B2KstTauXConf(LineBuilder) :
                       Algorithm          = _CombineTau,
                       RequiredSelections = [ muonSel_KMM, KstarSel_KMM ] ))
   
-    #####################################################
 
+  #####################################################
   def _makeKstar(self, name, config) :
              
      _combcut = " (AM  > "           + config['MASS_LOW_Kst']    + "*MeV) & "\
@@ -629,7 +640,6 @@ class B2KstTauXConf(LineBuilder) :
 
   
   #####################################################
-
   def _makeKstar_KMM(self, name, config) :
              
      _combcut = " (AM  > "           + config['MASS_LOW_Kst']    + "*MeV) & "\
@@ -658,9 +668,8 @@ class B2KstTauXConf(LineBuilder) :
                       RequiredSelections = [StdLoosePions,StdNoPIDsKaons]
                       )
 
+
   #####################################################
-
-
   def _makeMuons(self, name, config) :
     """                     
       Muon selection          
@@ -674,11 +683,8 @@ class B2KstTauXConf(LineBuilder) :
                      Algorithm          = _Filter,
                      RequiredSelections = [ StdTightMuons ] )    
 
-  #####################################################
 
-
-
-   
+  #####################################################  
   def _makeMuons_KMM(self, name, config) :
     """                     
       Muon selection          
@@ -693,8 +699,8 @@ class B2KstTauXConf(LineBuilder) :
                      Algorithm          = _Filter_KMM,
                      RequiredSelections = [ StdTightMuons ] )    
 
+
   #####################################################
- 
   def _makePionsForD(self, name, config) :
     """
       Pion selection for B -> DD
@@ -706,6 +712,8 @@ class B2KstTauXConf(LineBuilder) :
     return Selection(name,
                      Algorithm          = _Filter,
                      RequiredSelections = [ StdLoosePions ] )
+
+
   #####################################################
   def _makeKaonsForD(self, name, config) :
     """
@@ -719,7 +727,8 @@ class B2KstTauXConf(LineBuilder) :
                      Algorithm          = _Filter,
                      RequiredSelections = [ StdLooseKaons ] )
   
-   #####################################################
+
+  #####################################################
   def _makeD(self, name, pionSel, kaonSel, config) :
 
      _preambulo = [ "c1c2c3 = ((('pi+') == ABSID) | (('K+') == ABSID))" ,
@@ -752,6 +761,7 @@ class B2KstTauXConf(LineBuilder) :
                       Algorithm          = _CombineD,
                       RequiredSelections = [pionSel, kaonSel]
                       )
+
 
   #####################################################   
   def _hadFinalStateKinematicCuts(self, config) :
