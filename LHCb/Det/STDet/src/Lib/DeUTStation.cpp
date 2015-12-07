@@ -6,12 +6,8 @@
 #include <algorithm>
 #include <numeric>
 
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/lambda.hpp>
-
 #include "Kernel/STChannelID.h"
 
-using namespace boost::lambda;
 using namespace LHCb;
 
 /** @file DeUTStation.cpp
@@ -23,14 +19,8 @@ using namespace LHCb;
  *
  */
 
-DeUTStation::DeUTStation( const std::string& name ) :
-  DeSTStation( name ),
-  m_parent(NULL)
-{
-}
-
-
-DeUTStation::~DeUTStation()
+DeUTStation::DeUTStation( std::string name ) :
+  DeSTStation( std::move(name) )
 {
 }
 
@@ -65,22 +55,22 @@ StatusCode DeUTStation::initialize()
 
 DeUTLayer* DeUTStation::findLayer(const STChannelID aChannel)
 {
-  Children::iterator iter = std::find_if(m_layers.begin() , m_layers.end(),
-                                         bind(&DeUTLayer::contains, _1, aChannel));
-  return (iter != m_layers.end() ? *iter: 0);
+  auto iter = std::find_if(m_layers.begin() , m_layers.end(),
+                           [&](const DeUTLayer *l) { return l->contains(aChannel); } );
+  return (iter != m_layers.end() ? *iter: nullptr);
 }
 
 
 DeUTLayer* DeUTStation::findLayer(const Gaudi::XYZPoint& point)
 {
-  Children::iterator iter = std::find_if(m_layers.begin(), m_layers.end(),
-                                         bind(&DeUTLayer::isInside, _1, point));
-  return (iter != m_layers.end() ? *iter: 0);
+  auto iter = std::find_if(m_layers.begin(), m_layers.end(),
+                           [&](const DeUTLayer *l) { return l->isInside(point); } );
+  return (iter != m_layers.end() ? *iter: nullptr);
 }
 
 
 double DeUTStation::fractionActive() const
 {
-  return std::accumulate(m_layers.begin(), m_layers.end(), 0.0,  _1 +
-                         bind(&DeUTLayer::fractionActive,_2))/double(m_layers.size());
+  return std::accumulate(m_layers.begin(), m_layers.end(), 0.0,  [&](double f,const DeUTLayer* l)
+                         { return f + l->fractionActive(); } )/double(m_layers.size());
 }

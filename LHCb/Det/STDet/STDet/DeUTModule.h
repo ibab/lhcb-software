@@ -134,17 +134,17 @@ protected:
 
 private:
 
-  unsigned int m_detRegion;
-  unsigned int m_firstSector;
-  unsigned int m_column;
+  unsigned int m_detRegion = 0;
+  unsigned int m_firstSector = 0;
+  unsigned int m_column = 0;
   std::string  m_type;
   std::string  m_moduleRotZ;
-  unsigned int m_numSectors;
-  parent_type* m_parent;
+  unsigned int m_numSectors = 0;
+  parent_type* m_parent = nullptr;
   Children     m_sectors;
-  unsigned int m_prodID;
-  std::string  m_versionString;
-  std::string  m_prodIDString;
+  unsigned int m_prodID = 0;
+  std::string  m_versionString = "DC11";
+  std::string  m_prodIDString = "ProdID";
 };
 
 #include "STDet/DeUTLayer.h"

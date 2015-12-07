@@ -40,42 +40,42 @@ public:
   DeITBox ( const std::string& name = "" ) ;
 
   /** Destructor */
-  virtual ~DeITBox(); 
+  virtual ~DeITBox() = default;
 
    /**
    * Retrieves reference to class identifier
    * @return the class identifier for this class
    */
    static const CLID& classID(){return CLID_DeITBox;}
-                        
+
    /**
    * another reference to class identifier
    * @return the class identifier for this class
    */
    const CLID& clID () const;
-                                                        
-   /** initialization method 
+
+   /** initialization method
    * @return Status of initialisation
    */
    virtual StatusCode initialize();
 
 
-   /** check whether contains 
+   /** check whether contains
    *  @param aChannel channel
    *  @return bool
-   */ 
-   virtual bool contains(const LHCb::STChannelID aChannel) const; 
+   */
+   virtual bool contains(const LHCb::STChannelID aChannel) const;
 
    /** identifier */
    unsigned int id() const;
 
    /**  locate half module based on a channel id
    @return  module */
-   DeITLayer* findLayer(const LHCb::STChannelID aChannel);     
+   DeITLayer* findLayer(const LHCb::STChannelID aChannel);
 
-   /** locate half module  based on a point  
+   /** locate half module  based on a point
    @return module */
-   DeITLayer* findLayer(const Gaudi::XYZPoint& point) ;  
+   DeITLayer* findLayer(const Gaudi::XYZPoint& point) ;
 
    /** vector of children **/
    const DeITBox::Children& layers() const;
@@ -88,14 +88,14 @@ public:
 
    /** print to stream */
    std::ostream& printOut( std::ostream& os ) const;
-     
+
    /** print to msgstream */
    MsgStream& printOut( MsgStream& os) const;
 
-   /** Nickname for the box **/   
+   /** Nickname for the box **/
    const std::string& nickname() const;
 
-   /** 
+   /**
    * fraction active channels
    * @return bool fraction active
    */
@@ -104,15 +104,14 @@ public:
 private:
 
    Children m_layers;
-   parent_type* m_parent;
-   unsigned int m_id;
+   parent_type* m_parent = nullptr;
+   unsigned int m_id = 0u;
    std::string m_nickname;
-   DeITLayer* m_firstLayer;
-   DeITLayer* m_lastLayer;
+   DeITLayer* m_firstLayer = nullptr;
+   DeITLayer* m_lastLayer = nullptr;
 
 
 };
-
 
 inline unsigned int DeITBox::id() const{
   return m_id;
@@ -131,7 +130,6 @@ inline const DeITBox::Children& DeITBox::layers() const{
 inline std::ostream& operator<<( std::ostream& os , const DeITBox* aBox )
 { return aBox->printOut( os ); }
 
-
 /** ouput operator for class DeITBox
  *  @see DeITBox
  *  @see MsgStream
@@ -143,8 +141,7 @@ inline MsgStream& operator<<( MsgStream& os , const DeITBox* aBox )
 
 inline const std::string& DeITBox::nickname() const{
   return m_nickname;
-} 
-
+}
 
 inline const DeITLayer* DeITBox::firstLayer() const {
   return m_firstLayer;

@@ -2,6 +2,18 @@
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
+! 2015-12-06 - Gerhard Raven
+ - modernize code:
+  o prefer direct member initialization
+  o declare trivial constructors/destructors as = default
+  o pass sink arguments by value, and std::move them in place
+  o prefer lambda ovoer boost::bind (the former allows for inlining, the latter 
+    does not)
+  o prefer std::unique_ptr over std::auto_ptr
+  o prefer STL algortihms over raw loops
+  o avoid comparing pointers to 0
+  o prefer nullptr over 0
+
 
 !========================= STDet v4r30 2013-04-29 =========================
 ! 2013-04-26 - Marco Cattaneo

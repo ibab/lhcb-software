@@ -18,11 +18,6 @@
 
 #include "Kernel/LHCbConstants.h"
 
-// Boost
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/lambda.hpp>
-#include <boost/foreach.hpp>
-
 /** @file DeSTSector.cpp
  *
  *  Implementation of class :  DeSTSector
@@ -30,7 +25,6 @@
  *    @author Matthew Needham
  */
 
-using namespace boost::lambda;
 using namespace LHCb;
 
 DeSTSector::DeSTSector( const std::string& name ) :
@@ -56,7 +50,7 @@ DeSTSector::DeSTSector( const std::string& name ) :
   m_versionString("DC06"),
   m_noiseString("Noise"),
   m_isStereo(false)
-{ 
+{
   // constructer (first strip means we number from 1)
 }
 
@@ -66,20 +60,20 @@ DeSTSector::~DeSTSector() {
 
 std::ostream& DeSTSector::printOut( std::ostream& os ) const{
 
-  // stream to cout  
+  // stream to cout
   os << " Sector :  "  << name() << std::endl;
-  os << " Nickname: " << m_nickname 
-     << "\n ID " << id() 
-     << "\n type  " << type() 
-     << "\n pitch " << m_pitch 
+  os << " Nickname: " << m_nickname
+     << "\n ID " << id()
+     << "\n type  " << type()
+     << "\n pitch " << m_pitch
      << "\n strip " << m_nStrip
      << "\n capacitance " << m_capacitance/Gaudi::Units::picofarad
      << "\n dead width " << m_deadWidth
      << "\n center " << globalCentre()
-     << "\n Sector status " << sectorStatus() 
-     << "\n fraction active " << fractionActive() 
-     << "\n version " << m_versionString 
-     << std::endl; 
+     << "\n Sector status " << sectorStatus()
+     << "\n fraction active " << fractionActive()
+     << "\n version " << m_versionString
+     << std::endl;
   return os;
 }
 
@@ -87,16 +81,16 @@ MsgStream& DeSTSector::printOut( MsgStream& os ) const{
 
   // stream to Msg service
   os << " Sector : \n "  << name() << std::endl;
-  os   << " Nickname: " << m_nickname 
-       << "\n ID " << id() 
-       << "type \n " << type() 
-       << " pitch \n " << m_pitch 
+  os   << " Nickname: " << m_nickname
+       << "\n ID " << id()
+       << "type \n " << type()
+       << " pitch \n " << m_pitch
        << "n strip \n " << m_nStrip
        << " capacitance \n " << m_capacitance/Gaudi::Units::picofarad
        << "dead width \n " << m_deadWidth
        << "\n center " << globalCentre()
-       << "\n fraction active " << fractionActive() 
-       << "\n version " << m_versionString 
+       << "\n fraction active " << fractionActive()
+       << "\n version " << m_versionString
        << std::endl;
 
   return os;
@@ -105,22 +99,22 @@ MsgStream& DeSTSector::printOut( MsgStream& os ) const{
 StatusCode DeSTSector::initialize() {
 
   // initialize method
- 
+
   StatusCode sc = DeSTBaseElement::initialize();
   if (sc.isFailure() ){
     MsgStream msg(msgSvc(), name() );
-    msg << MSG::ERROR << "Failed to initialize detector element" << endmsg; 
+    msg << MSG::ERROR << "Failed to initialize detector element" << endmsg;
     return sc;
   }
   else {
- 
+
     m_pitch = param<double>("pitch");
     m_nStrip =  param<int>("numStrips");
     m_capacitance = param<double>("capacitance");
     m_type = param<std::string>("type");
 
 
-    // version 
+    // version
     if (exists("version") == true) m_versionString = param<std::string>("version");
 
     // guard ring
@@ -146,7 +140,7 @@ StatusCode DeSTSector::initialize() {
       {
         sc = registerCondition(this, m_noiseString,
                                &DeSTSector::updateNoiseCondition, true);
-      
+
         if (sc.isFailure())
         {
           MsgStream msg(msgSvc(), name() );
@@ -154,7 +148,7 @@ StatusCode DeSTSector::initialize() {
           return StatusCode::FAILURE;
         }
       }
-      
+
     } // !DC06
   }
   return StatusCode::SUCCESS;
@@ -163,7 +157,7 @@ StatusCode DeSTSector::initialize() {
 double DeSTSector::noise(const LHCb::STChannelID& aChannel) const
 {
   // check strip is valid
-  if (!isStrip(aChannel.strip())) return 999; 
+  if (!isStrip(aChannel.strip())) return 999;
 
   const Status theStatus = stripStatus(aChannel);
 
@@ -171,7 +165,7 @@ double DeSTSector::noise(const LHCb::STChannelID& aChannel) const
   if (theStatus == DeSTSector::OK) return m_noiseValues[aChannel.strip()-1u];
 
   // and pinholes...
-  if (theStatus == DeSTSector::Pinhole) return m_noiseValues[aChannel.strip()-1u]; 
+  if (theStatus == DeSTSector::Pinhole) return m_noiseValues[aChannel.strip()-1u];
 
   return 999;
 }
@@ -205,9 +199,9 @@ double DeSTSector::sectorNoise() const
     {
       sum    += m_noiseValues[chan];
       number += 1.;
-    }    
+    }
   }
-  
+
   if (number < 1.)
     return 999.99;
   else
@@ -227,7 +221,7 @@ double DeSTSector::beetleNoise(const unsigned int& beetle) const
      MsgStream msg(msgSvc(), name() );
      msg << MSG::WARNING << "You asked for beetle " << beetle
          << " but there are " << nBeetle() << " of them" << endmsg;
-     return 999.99; 
+     return 999.99;
    }
   else if (beetle == 0)
   {
@@ -245,13 +239,13 @@ double DeSTSector::beetleNoise(const unsigned int& beetle) const
        chan < beetle * LHCbConstants::nStripsInBeetle; chan++)
   {
     if ( statusVector[chan] == DeSTSector::OK ||
-         statusVector[chan] == DeSTSector::Pinhole ) 
+         statusVector[chan] == DeSTSector::Pinhole )
     {
       sum    += m_noiseValues[chan];
       number += 1.;
-    }    
+    }
   }
-  
+
   if (number < 1.)
     return 999.99;
   else
@@ -299,7 +293,7 @@ double DeSTSector::portNoise(const unsigned int& beetle,
   }
 
   const std::vector<DeSTSector::Status> statusVector = stripStatus();
-  
+
   double sum(0.), number(0.);
 
   for (unsigned int chan((beetle - 1) * LHCbConstants::nStripsInBeetle +
@@ -312,9 +306,9 @@ double DeSTSector::portNoise(const unsigned int& beetle,
     {
       sum    += m_noiseValues[chan];
       number += 1.;
-    }    
+    }
   }
-  
+
   if (number < 1.)
     return 999.99;
   else
@@ -334,7 +328,7 @@ void DeSTSector::setNoise(const unsigned int& strip, const double& value)
   if (aCon == 0){
     MsgStream msg(msgSvc(), name());
     msg << MSG::ERROR << "Failed to find status condition" << endmsg;
-  } 
+  }
   else
   {
     std::vector<double>& reference =
@@ -342,7 +336,7 @@ void DeSTSector::setNoise(const unsigned int& strip, const double& value)
     reference[strip-1u] = value;
     m_noiseValues[strip-1u] = value;
   }
-} 
+}
 
 void DeSTSector::setNoise(const std::vector<double>& values)
 {
@@ -357,9 +351,9 @@ void DeSTSector::setNoise(const std::vector<double>& values)
     std::vector<double>& reference =
       aCon -> param< std::vector< double > >( "SectorNoise" );
     reference.assign( values.begin(), values.end() );
-    m_noiseValues = values; 
+    m_noiseValues = values;
   }
-} 
+}
 
 void DeSTSector::setCMNoise(const unsigned int& strip, const double& value)
 {
@@ -367,7 +361,7 @@ void DeSTSector::setCMNoise(const unsigned int& strip, const double& value)
   if (aCon == 0){
     MsgStream msg(msgSvc(), name());
     msg << MSG::ERROR << "Failed to find status condition" << endmsg;
-  } 
+  }
   else
   {
     std::vector<double>& reference =
@@ -375,7 +369,7 @@ void DeSTSector::setCMNoise(const unsigned int& strip, const double& value)
     reference[strip-1u] = value;
     m_cmModeValues[strip-1u] = value;
   }
-} 
+}
 
 void DeSTSector::setCMNoise(const std::vector<double>& values)
 {
@@ -392,7 +386,7 @@ void DeSTSector::setCMNoise(const std::vector<double>& values)
     reference.assign( values.begin(), values.end() );
     m_cmModeValues = values;
   }
-} 
+}
 
 void DeSTSector::setADCConversion(const std::vector<double>& values)
 {
@@ -409,12 +403,12 @@ void DeSTSector::setADCConversion(const std::vector<double>& values)
     reference.assign( values.begin(), values.end() );
     m_electronsPerADC = values;
   }
-} 
+}
 
 double DeSTSector::cmNoise(const LHCb::STChannelID& aChannel) const
 {
   // check strip is valid
-  if (!isStrip(aChannel.strip())) return 999; 
+  if (!isStrip(aChannel.strip())) return 999;
 
   const Status theStatus = stripStatus(aChannel);
 
@@ -422,7 +416,7 @@ double DeSTSector::cmNoise(const LHCb::STChannelID& aChannel) const
   if (theStatus == DeSTSector::OK) return m_cmModeValues[aChannel.strip()-1u];
 
   // and pinholes...
-  if (theStatus == DeSTSector::Pinhole) return m_cmModeValues[aChannel.strip()-1u]; 
+  if (theStatus == DeSTSector::Pinhole) return m_cmModeValues[aChannel.strip()-1u];
 
   return 999;
 }
@@ -441,9 +435,9 @@ double DeSTSector::cmSectorNoise() const
     {
       sum    += m_cmModeValues[chan];
       number += 1.;
-    }    
+    }
   }
-  
+
   if (number < 1.)
     return 999.99;
   else
@@ -463,7 +457,7 @@ double DeSTSector::cmBeetleNoise(const unsigned int& beetle) const
      MsgStream msg(msgSvc(), name() );
      msg << MSG::WARNING << "You asked for beetle " << beetle
          << " but there are " << nBeetle() << " of them" << endmsg;
-     return 999.99; 
+     return 999.99;
    }
   else if (beetle == 0)
   {
@@ -481,13 +475,13 @@ double DeSTSector::cmBeetleNoise(const unsigned int& beetle) const
        chan < beetle * LHCbConstants::nStripsInBeetle; chan++)
   {
     if ( statusVector[chan] == DeSTSector::OK ||
-         statusVector[chan] == DeSTSector::Pinhole ) 
+         statusVector[chan] == DeSTSector::Pinhole )
     {
       sum    += m_cmModeValues[chan];
       number += 1.;
-    }    
+    }
   }
-  
+
   if (number < 1.)
     return 999.99;
   else
@@ -548,9 +542,9 @@ double DeSTSector::cmPortNoise(const unsigned int& beetle,
     {
       sum    += m_cmModeValues[chan];
       number += 1.;
-    }    
+    }
   }
-  
+
   if (number < 1.)
     return 999.99;
   else
@@ -588,73 +582,71 @@ double DeSTSector::toElectron(const double& val,
   return val * m_electronsPerADC[aStrip-1];
 }
 
-std::auto_ptr<LHCb::Trajectory> 
-DeSTSector::trajectory(const STChannelID& aChan, const double offset) const 
+std::auto_ptr<LHCb::Trajectory>
+DeSTSector::trajectory(const STChannelID& aChan, const double offset) const
 {
-  
+
   if (contains(aChan) == false){
     MsgStream msg(msgSvc(), name() );
-    msg << MSG::ERROR << "Failed to link to sector " << nickname() 
-        << " test strip  number "  << aChan.strip() << " strip "  << endmsg; 
+    msg << MSG::ERROR << "Failed to link to sector " << nickname()
+        << " test strip  number "  << aChan.strip() << " strip "  << endmsg;
     throw GaudiException( "Failed to make trajectory",
                           "DeSTSector.cpp", StatusCode::FAILURE );
   }
-  
+
   return createTraj(aChan.strip(), offset);
 }
 
-std::auto_ptr<LHCb::Trajectory> DeSTSector::trajectoryFirstStrip() const 
+std::auto_ptr<LHCb::Trajectory> DeSTSector::trajectoryFirstStrip() const
 {
   return createTraj(m_firstStrip,0.);
 }
 
-std::auto_ptr<LHCb::Trajectory> DeSTSector::trajectoryLastStrip() const 
+std::auto_ptr<LHCb::Trajectory> DeSTSector::trajectoryLastStrip() const
 {
   return createTraj(nStrip(), 0.);
 }
 
-std::auto_ptr<LHCb::Trajectory> DeSTSector::createTraj(const unsigned int strip, 
+std::auto_ptr<LHCb::Trajectory> DeSTSector::createTraj(const unsigned int strip,
                                                        const double offset) const{
- 
+
   // collect the individual traj
   const Sensors& theSensors = sensors();
   Sensors::const_iterator iterS = theSensors.begin();
 
   if (theSensors.size() == 1){
     // can just return a line traj
-    return theSensors.front()->trajectory(strip,offset);  
+    return theSensors.front()->trajectory(strip,offset);
   }
-  else {
-    // return a piecewise traj
-    STTraj* traj = new STTraj(); 
-    for (; iterS != theSensors.end(); ++iterS) {                
-      std::auto_ptr<LHCb::Trajectory> sensTraj = (*iterS)->trajectory(strip,offset);
-      if (traj->numberOfPieces() == 0) {
-        traj->append(sensTraj.release());  
+  // return a piecewise traj
+  STTraj* traj = new STTraj();
+  for (; iterS != theSensors.end(); ++iterS) {
+    auto sensTraj = (*iterS)->trajectory(strip,offset);
+    if (traj->numberOfPieces() == 0) {
+      traj->append(sensTraj.release());
+    }
+    else {
+
+      const double d1 = (sensTraj->beginPoint()-traj->endPoint()).mag2();
+      const double d2 = (sensTraj->endPoint()-traj->beginPoint()).mag2();
+      if (d1 < d2) {
+        double mu = sensTraj->muEstimate(traj->endPoint());
+        sensTraj->setRange(mu,sensTraj->endRange());
+        traj->append(sensTraj.release());
       }
       else {
-
-        const double d1 = (sensTraj->beginPoint()-traj->endPoint()).mag2();      
-        const double d2 = (sensTraj->endPoint()-traj->beginPoint()).mag2();      
-        if (d1 < d2) {
-          double mu = sensTraj->muEstimate(traj->endPoint());        
-          sensTraj->setRange(mu,sensTraj->endRange());               
-          traj->append(sensTraj.release());          
-        } 
-        else {                                                           
-          const double mu = sensTraj->muEstimate(traj->beginPoint());      
-          sensTraj->setRange(sensTraj->beginRange(),mu);             
-          traj->prepend(sensTraj.release());                        
-        }
+        const double mu = sensTraj->muEstimate(traj->beginPoint());
+        sensTraj->setRange(sensTraj->beginRange(),mu);
+        traj->prepend(sensTraj.release());
       }
-    } // loop
-    return std::auto_ptr<LHCb::Trajectory>(traj);
-  } // if 
+    }
+  } // loop
+  return std::auto_ptr<LHCb::Trajectory>{traj};
 }
 
 StatusCode DeSTSector::cacheInfo()
 {
-  std::auto_ptr<LHCb::Trajectory> firstTraj = createTraj(m_firstStrip,0);
+  std::unique_ptr<LHCb::Trajectory> firstTraj = createTraj(m_firstStrip,0);
 
   // get the start and end point. for piecewise trajectories, we
   // effectively make an approximation by a straight line.
@@ -672,11 +664,11 @@ StatusCode DeSTSector::cacheInfo()
   Gaudi::XYZVector zVec(0,0,1);
   Gaudi::XYZVector norm = direction.Cross(zVec);
 
-  // trajectory of middle  
+  // trajectory of middle
   const Gaudi::XYZPoint g3 = g1 + 0.5*(g2 - g1);
   const Gaudi::XYZPoint g4 = g3 + activeWidth*norm ;
-  
-  // creating the 'fast' trajectories  
+
+  // creating the 'fast' trajectories
   const Gaudi::XYZVector vectorlayer = (g4-g3).unit() * m_pitch ;
   const Gaudi::XYZPoint p0 = g3-0.5*m_stripLength*direction ;
   m_dxdy = direction.x()/direction.y() ;
@@ -688,14 +680,14 @@ StatusCode DeSTSector::cacheInfo()
   m_p0.SetX( p0.x() - p0.y() * m_dxdy ) ;
   m_p0.SetY( p0.y() ) ;
   m_p0.SetZ( p0.z() - p0.y() * m_dzdy ) ;
-  
+
   // Update the stereo angle. We correct by 'pi' if necessary.
   Gaudi::XYZVector dir = direction ;
   if(dir.y()<0) dir *= -1 ;
   m_angle    = atan2(-dir.x(),dir.y()) ;
   m_cosAngle = cos( m_angle ) ;
   m_sinAngle = sin( m_angle ) ;
-  
+
   return StatusCode::SUCCESS;
 
 }
@@ -705,9 +697,9 @@ STChannelID DeSTSector::nextLeft(const STChannelID testChan) const
   if ((contains(testChan))&& (isStrip(testChan.strip()- 1u) == true)){
     return STChannelID(testChan.type(),
                        testChan.station(),
-                       testChan.layer(), 
+                       testChan.layer(),
                        testChan.detRegion(),
-                       testChan.sector(), 
+                       testChan.sector(),
                        testChan.strip() - 1u);
   }
   else {
@@ -720,9 +712,9 @@ STChannelID DeSTSector::nextRight(const LHCb::STChannelID testChan) const
   if ((contains(testChan) == true)&& (isStrip(testChan.strip()+ 1u) == true)){
     return STChannelID(testChan.type(),
                        testChan.station(),
-                       testChan.layer(), 
+                       testChan.layer(),
                        testChan.detRegion(),
-                       testChan.sector(), 
+                       testChan.sector(),
                        testChan.strip() + 1u);
   }
   else {
@@ -745,13 +737,13 @@ StatusCode DeSTSector::registerConditionsCallbacks(){
   StatusCode sc = registerCondition(this,sensors().front(),&DeSTSector::cacheInfo,true);
   if (sc.isFailure() ){
     msg << MSG::ERROR << "Failed to register geometry condition for first child" << endmsg;
-    return StatusCode::FAILURE; 
+    return StatusCode::FAILURE;
   }
 
   sc = registerCondition(this,sensors().back(),&DeSTSector::cacheInfo,true);
   if (sc.isFailure() ){
     msg << MSG::ERROR << "Failed to register geometry condition for first child" << endmsg;
-    return StatusCode::FAILURE; 
+    return StatusCode::FAILURE;
   }
 
   return StatusCode::SUCCESS;
@@ -763,7 +755,7 @@ StatusCode DeSTSector::updateStatusCondition(){
   if (aCon == 0){
     MsgStream msg(msgSvc(), name());
     msg << "failed to find status condition" << endmsg;
-    return StatusCode::FAILURE; 
+    return StatusCode::FAILURE;
   }
 
   const int tStatus = aCon->param<int>("SectorStatus");
@@ -774,13 +766,13 @@ StatusCode DeSTSector::updateStatusCondition(){
 
   std::map<int,int> stripMap = aCon->param<std::map<int,int> >("StripStatus");
   toEnumMap(stripMap,m_stripStatus);
- 
+
   if (aCon->exists("measuredEff") == true){
-    m_measEff = aCon-> param<double >("measuredEff");     
+    m_measEff = aCon-> param<double >("measuredEff");
   }
   else {
     m_measEff = 1.0;
-    aCon->addParam("measuredEff", m_measEff, "Measured sector Eff"); 
+    aCon->addParam("measuredEff", m_measEff, "Measured sector Eff");
   }
 
   return StatusCode::SUCCESS;
@@ -792,7 +784,7 @@ StatusCode DeSTSector::updateNoiseCondition()
   if (aCon == 0){
     MsgStream msg(msgSvc(), name());
     msg << MSG::ERROR << "failed to find noise condition" << endmsg;
-    return StatusCode::FAILURE; 
+    return StatusCode::FAILURE;
   }
 
   std::vector<double > tmpNoise = aCon -> param<std::vector< double > >("SectorNoise");
@@ -805,9 +797,9 @@ StatusCode DeSTSector::updateNoiseCondition()
     msg << MSG::ERROR << "Size mismatch for SectorNoise" << endmsg;
     return StatusCode::FAILURE;
   }
-  
+
   std::vector<double > tmpElectrons = aCon -> param<std::vector< double > >("electronsPerADC");
- 
+
   if (tmpElectrons.size() == m_nStrip)
     m_electronsPerADC.assign(tmpElectrons.begin(), tmpElectrons.end());
   else
@@ -825,7 +817,7 @@ StatusCode DeSTSector::updateNoiseCondition()
      MsgStream msg(msgSvc(), name());
      msg << MSG::ERROR << "Size mismatch for cmNoise" << endmsg;
      return StatusCode::FAILURE;
-    } 
+    }
   }
   else {
     // doesn't exists (MC early databases...)
@@ -848,30 +840,26 @@ void DeSTSector::toEnumMap(const std::map<int,int>& input, DeSTSector::StatusMap
 
 DeSTSensor* DeSTSector::findSensor(const Gaudi::XYZPoint& point) const{
   // return pointer to the layer from point
-  std::vector<DeSTSensor*>::const_iterator iter = 
-    std::find_if( m_sensors.begin(), m_sensors.end(), 
-                  bind(&DeSTSensor::isInside, _1, point));
-  return (iter != m_sensors.end() ? *iter: 0);
+  auto iter = std::find_if( m_sensors.begin(), m_sensors.end(),
+                            [&](const DeSTSensor* s) {
+                      return s->isInside(point);
+                  } );
+  return iter != m_sensors.end() ? *iter: nullptr;
 }
 
 bool DeSTSector::globalInActive(const Gaudi::XYZPoint& point,
                                 Gaudi::XYZPoint tol) const{
-
-  bool found = false; 
-  BOOST_FOREACH(DeSTSensor* aSensor, m_sensors ){
-    if (aSensor->globalInActive(point,tol) == true){ 
-      found = true;
-      break;
-    }
-  } 
-  return found ;
+  return std::any_of( m_sensors.begin(), m_sensors.end(),
+                      [&](const DeSTSensor* s) {
+                          return s->globalInActive(point,tol);
+                      });
 }
 
-bool DeSTSector::globalInBondGap(const Gaudi::XYZPoint& point, 
+bool DeSTSector::globalInBondGap(const Gaudi::XYZPoint& point,
                                  double tol) const
-{ 
+{
   const DeSTSensor* aSensor =  findSensor(point);
-  return (aSensor ?  aSensor->globalInBondGap(point, tol) : false ); 
+  return (aSensor ?  aSensor->globalInBondGap(point, tol) : false );
 }
 
 double DeSTSector::fractionActive() const {
@@ -902,7 +890,7 @@ void DeSTSector::setMeasEff(const double value){
 void DeSTSector::setSectorStatus(const DeSTSector::Status& newStatus)
 {
   m_status = newStatus;
-  
+
   // Set the condition
   Condition* aCon = condition(m_statusString);
   if (aCon == 0){
@@ -914,7 +902,7 @@ void DeSTSector::setSectorStatus(const DeSTSector::Status& newStatus)
   }
 }
 
-void DeSTSector::setBeetleStatus(const unsigned int beetle, 
+void DeSTSector::setBeetleStatus(const unsigned int beetle,
                                  const DeSTSector::Status& newStatus){
 
   // update the beetle status properly...
@@ -930,11 +918,11 @@ void DeSTSector::setBeetleStatus(const unsigned int beetle,
       // Lazarus walks...if we have an entry in the map delete it
       m_beetleStatus.erase(beetle);
       setStatusCondition("BeetleStatus", beetle, newStatus);
-    }  
+    }
     else {
       // death comes to this beetle, update the map
       if (std::find(::Status::validBeetleStates().begin(),
-                    ::Status::validBeetleStates().end(), 
+                    ::Status::validBeetleStates().end(),
                     newStatus) != ::Status::validBeetleStates().end() ){
         m_beetleStatus[beetle] = newStatus;
         setStatusCondition("BeetleStatus", beetle, newStatus);
@@ -946,8 +934,8 @@ void DeSTSector::setBeetleStatus(const unsigned int beetle,
   }
 }
 
-void DeSTSector::setStripStatus( const unsigned int strip, 
-                                 const DeSTSector::Status& newStatus ) 
+void DeSTSector::setStripStatus( const unsigned int strip,
+                                 const DeSTSector::Status& newStatus )
 {
   // update the strip status properly...
   MsgStream msg(msgSvc(), name());
@@ -955,7 +943,7 @@ void DeSTSector::setStripStatus( const unsigned int strip,
   if(sectorStatus() != DeSTSector::OK || beetleStatus(strip) != DeSTSector::OK){
     // if the sector is not ok nothing to be done
     if( UNLIKELY( msg.level() <= MSG::DEBUG ) )
-      msg << MSG::DEBUG << "Sector/Beetle is off anyway: set request ignored " 
+      msg << MSG::DEBUG << "Sector/Beetle is off anyway: set request ignored "
           << endmsg;
   }
   else {
@@ -963,16 +951,16 @@ void DeSTSector::setStripStatus( const unsigned int strip,
       // Lazarus walks...if we have an entry in the map delete it
       m_stripStatus.erase(strip);
       setStatusCondition("StripStatus", strip, newStatus);
-    }  
+    }
     else {
       // death comes to this strip, update the map
       Status oldStatus = m_stripStatus.find(strip)->second;
       if (std::find(::Status::protectedStates().begin(),
-                    ::Status::protectedStates().end(), 
+                    ::Status::protectedStates().end(),
                     oldStatus) == ::Status::protectedStates().end() ){
         m_stripStatus[strip] = newStatus;
         setStatusCondition("StripStatus", strip, newStatus);
-      } 
+      }
       else {
         msg << "Strip in protected state: set request ignored " << endmsg;
       }
@@ -980,8 +968,8 @@ void DeSTSector::setStripStatus( const unsigned int strip,
   }
 }
 
-void DeSTSector::setStatusCondition( const std::string& type, 
-                                     const unsigned int entry, 
+void DeSTSector::setStatusCondition( const std::string& type,
+                                     const unsigned int entry,
                                      const DeSTSector::Status& newStatus )
 {
   // Set the condition
@@ -990,7 +978,7 @@ void DeSTSector::setStatusCondition( const std::string& type,
     MsgStream msg(msgSvc(), name());
     msg << MSG::ERROR << "Failed to find status condition" << endmsg;
   } else {
-    std::map<int,int>& condMap = 
+    std::map<int,int>& condMap =
       aCon->param<std::map<int,int> >(type);
     condMap[entry] = int(newStatus);
   }

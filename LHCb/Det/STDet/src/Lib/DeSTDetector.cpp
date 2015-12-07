@@ -200,7 +200,7 @@ std::auto_ptr<LHCb::Trajectory> DeSTDetector::trajectory(const LHCb::LHCbID& id,
                           "DeSTDetector.cpp",
 			  StatusCode::FAILURE );
   }
-  return tTraj;  
+  return tTraj;
 }
 
 std::auto_ptr<LHCb::Trajectory> DeSTDetector::trajectoryFirstStrip(const LHCb::LHCbID& id) 

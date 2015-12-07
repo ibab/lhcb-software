@@ -15,7 +15,7 @@ class DeUTDetector;
  *
  *  @author Jianchun Wang, Matt Needham
  *  @date   2012-07-10
- * 
+ *
  */
 
 static const CLID CLID_DeUTStation = 9302;
@@ -30,14 +30,14 @@ public:
   /** child type */
   typedef STDetTraits<DeUTStation>::child child_type;
 
-  /** children */  
-  typedef std::vector<child_type*> Children; 
+  /** children */
+  typedef std::vector<child_type*> Children;
 
   /** Constructor */
-  DeUTStation ( const std::string& name = "" ) ;
+  DeUTStation ( std::string name = {} ) ;
 
   /** Destructor */
-  virtual ~DeUTStation(); 
+  virtual ~DeUTStation() = default;
 
    /**
    * Retrieves reference to class identifier
@@ -50,24 +50,24 @@ public:
   * @return the class identifier for this class
   */
   const CLID& clID () const;
-                                                                           
-  /** initialization method 
+
+  /** initialization method
   * @return Status of initialisation
   */
   virtual StatusCode initialize();
 
   /**  locate the layer based on a channel id
   @return  layer */
-  DeUTLayer* findLayer(const LHCb::STChannelID aChannel);     
+  DeUTLayer* findLayer(const LHCb::STChannelID aChannel);
 
-  /** locate layer based on a point  
+  /** locate layer based on a point
   @return layer */
-  DeUTLayer* findLayer(const Gaudi::XYZPoint& point) ;   
+  DeUTLayer* findLayer(const Gaudi::XYZPoint& point) ;
 
   /** vector of children */
-  const Children& layers() const; 
+  const Children& layers() const;
 
-  /** 
+  /**
   * fraction active channels
   * @return bool fraction active
   */
@@ -76,7 +76,7 @@ public:
 private:
 
 
-  parent_type* m_parent;
+  parent_type* m_parent = nullptr;
   Children m_layers;
 
 };

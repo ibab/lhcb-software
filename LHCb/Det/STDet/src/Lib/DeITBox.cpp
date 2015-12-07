@@ -15,25 +15,12 @@
 #include <algorithm>
 #include <numeric>
 
-// Boost
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/lambda.hpp>
-
-using namespace boost::lambda;
 using namespace LHCb;
 
 DeITBox::DeITBox( const std::string& name ) :
-  DeSTBaseElement( name ),
-  m_parent(NULL),
-  m_id(0u),
-  m_firstLayer(NULL),
-  m_lastLayer(NULL)
-{ 
+  DeSTBaseElement( name )
+{
   // constructer
-}
-
-DeITBox::~DeITBox() {
-
 }
 
 const CLID& DeITBox::clID () const
@@ -43,16 +30,16 @@ const CLID& DeITBox::clID () const
 
 StatusCode DeITBox::initialize() {
 
-  // initialize 
+  // initialize
   StatusCode sc = DeSTBaseElement::initialize();
   if (sc.isFailure() ){
     MsgStream msg(msgSvc(), name() );
-    msg << MSG::ERROR << "Failed to initialize detector element" << endmsg; 
+    msg << MSG::ERROR << "Failed to initialize detector element" << endmsg;
   }
   else {
     // get the children and parent
     m_id = param<int>("boxID");
-    m_parent = getParent<DeITBox>(); 
+    m_parent = getParent<DeITBox>();
 
     const STChannelID parentID = m_parent->elementID();
     STChannelID chan(STChannelID::typeIT, parentID.station(),parentID.layer(),
@@ -81,7 +68,7 @@ std::ostream& DeITBox::printOut( std::ostream& os ) const{
   // stream to cout
   os << " Box : "  << name() << std::endl
      << " id " << id()  << std::endl
-     << " nickname " << nickname() 
+     << " nickname " << nickname()
      << std::endl;
 
   return os;
@@ -90,9 +77,9 @@ std::ostream& DeITBox::printOut( std::ostream& os ) const{
 MsgStream& DeITBox::printOut( MsgStream& os ) const{
 
   // stream to Msg service
-  os << " Box : "  << name() 
-     << " id " << id() 
-     << " nickname " << nickname()  
+  os << " Box : "  << name()
+     << " id " << id()
+     << " nickname " << nickname()
      << std::endl;
 
   return os;
@@ -101,25 +88,30 @@ MsgStream& DeITBox::printOut( MsgStream& os ) const{
 DeITLayer* DeITBox::findLayer(const STChannelID aChannel){
 
   // return pointer to the station from channel
-  Children::iterator iter = std::find_if(m_layers.begin() , m_layers.end(), bind(&DeITLayer::contains, _1, aChannel));
-  return (iter != m_layers.end() ? *iter: 0);
+  auto i = std::find_if(m_layers.begin() , m_layers.end(),
+                        [&](const DeITLayer* l) { return l->contains(aChannel); } );
+  return i != m_layers.end() ? *i: nullptr;
 }
 
 DeITLayer* DeITBox::findLayer(const Gaudi::XYZPoint& point) {
 
   // return pointer to the station from point in global system
-  Children::iterator iter = std::find_if(m_layers.begin(), m_layers.end(), 
-                                                        bind(&DeITLayer::isInside, _1, point)); 
-  return (iter != m_layers.end() ? *iter: 0);
+  auto i = std::find_if(m_layers.begin(), m_layers.end(),
+                        [&](const DeITLayer* l)
+                        { return l->isInside(point); } );
+  return i != m_layers.end() ? *i: nullptr;
 }
 
 double DeITBox::fractionActive() const {
 
-  return std::accumulate(m_layers.begin(), m_layers.end(), 0.0,  _1 + bind(&DeITLayer::fractionActive,_2))/double(m_layers.size());   
+  return std::accumulate(m_layers.begin(), m_layers.end(),
+                         0.0,
+                         [&](double x, const DeITLayer* l)
+                         { return x + l->fractionActive()/double(m_layers.size()); } );
 }
 
 bool DeITBox::contains(const LHCb::STChannelID aChannel) const{
-  return ((aChannel.detRegion() == elementID().detRegion()) 
+  return ((aChannel.detRegion() == elementID().detRegion())
          && m_parent->contains(aChannel)) ;
 }
 
