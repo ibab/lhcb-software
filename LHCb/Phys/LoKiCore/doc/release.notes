@@ -12,6 +12,8 @@
 !   contributions and advices from G.Raven, J.van Tilburg,
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
+! 2015-12-06 - Gerhard Raven
+ - stop propagating globalTimeOffset (see GAUDI-1122)
 
 ! 2015-12-03 - Vanya Belyaev
  - minor fix 
@@ -33,6 +35,7 @@
 
 ! 2015-10-30 - Gerhard Raven
  - fix another clang error, avoid use of stringstream
+
 
 ! 2015-10-28 - Gerhard Raven
  - fix clang error
