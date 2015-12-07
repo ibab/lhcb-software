@@ -21,8 +21,7 @@ list_S24 = (
   'StrippingWmuAKTJets',
   'StrippingWeAKTJets',
   'StrippingZ02MuMu',
-  'StrippingFullDiJets',
-  'StrippingMicroDiJets',
+
   ## These lines are recovered from S21 `just-in-case`, 
   ## but there's no explicit request in S23+ yet.
   'StrippingDijets',
@@ -44,7 +43,9 @@ list_S24 = (
 ## https://twiki.cern.ch/twiki/bin/view/LHCb/LHCbStripping21%28r0%2Cr1%29p1
 list_S21rXp1 = (
   'StrippingDitau',
-  'StrippingLb2dp',   
+  'StrippingFullDiJets',
+  'StrippingLb2dp',
+  'StrippingMicroDiJets',
   'StrippingTaggedJets',          # Need Phys/JetTagging post-v1r9
 )
 

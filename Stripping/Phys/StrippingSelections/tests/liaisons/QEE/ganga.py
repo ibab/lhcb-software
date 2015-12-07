@@ -8,7 +8,7 @@ app.user_release_area = os.path.expandvars('$HOME/cmtuser/')
 app.optsfile  = 'TestS21rXp1_settings.py'
 app.extraopts = """
 from Configurables import DaVinci
-DaVinci().EvtMax = 2000
+DaVinci().EvtMax = 1000
 """
 
 ## S24
