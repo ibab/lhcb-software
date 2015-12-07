@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-07 - Patrick Owen
+   - StrippingLb2pMuNuVub.py added Lb->ppipimunu and B->ppmunu lines
+
 ! 2015-12-07 - Andrey Tayduganov
    - StrippingB2KstTauTau.py code for s21, fixed bug of DecayDescriptor, added additional cuts on B_FD and MaxCandidates
 

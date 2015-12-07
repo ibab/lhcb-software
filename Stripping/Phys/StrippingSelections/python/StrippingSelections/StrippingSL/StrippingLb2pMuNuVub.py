@@ -1,7 +1,7 @@
 
-__author__ = ['William Sutcliffe']
-__date__ = '19/01/2014'
-__version__ = '$Revision: 1.0 $'
+__author__ = ['William Sutcliffe','Patrick Owen']
+__date__ = '02/12/2015'
+__version__ = '$Revision: 2.0 $'
 
 '''
 Lb->p mu nu exclusive reconstruction
@@ -31,7 +31,7 @@ Lb->p mu nu exclusive reconstruction
 ## 
 
 """
-  Lb->p mu nu exclusive reconstruction. 
+  b->p mu nu X inclusive reconstruction. 
 
   Stripping lines for the charmless semileptonic decay Lambda_b -> p mu nu.
 
@@ -41,17 +41,6 @@ Lb->p mu nu exclusive reconstruction
   This together with form factor predictions from either light cone
   sum rules or lattice QCD will allow an exclusive determination of |Vub|.
  
-  Three lines are included:
-  Two of which strip the opposite sign (right sign) proton and muon and combinations.
-  One of which has no prescale and strips protons and muons with a corrected mass >
-  4 GeV.  The other line is prescaled by a factor of 0.5 and strips < 4 GeV in corrected
-  mass.  This exploits the fact that the corrected mass for Lb->pmunu peaks at the Lambda_b
-  mass.  The final line strips same sign proton and muon cominations over the whole corrected 
-  mass region.  This will be ussed to extract shapes for the combinatorial background.
-
-  Stripping XX, with requirements that the
-  rate <0.05% and timing <0.5ms/evt.
-
   Last modification $Date: 2014-January-19 $
                by $Author: William $
 """
@@ -77,11 +66,17 @@ default_config = {
 	  "ProtonPIDp"          : 10.     ,#adimensional
 	  "ProtonMINIPCHI2"     : 16.    ,#adminensional
 	  #B Mother Cuts
-	  "BVCHI2DOF"           : 4.     ,#adminensional
+	  "BVCHI2DOF"           : 20.     ,#adminensional
 	  "BDIRA"               : 0.9994  ,#adminensional
 	  "BFDCHI2HIGH"         : 150.   ,#adimensional
+	  "PPbarVCHI2DOF"           : 4.     ,#adminensional
+	  "PPbarDIRA"               : 0.994  ,#adminensional
+	  "PPbarFDCHI2HIGH"         : 150.   ,#adimensional
 	  "pMuMassLower"        : 1000.  ,#MeV
-	  "pMuPT"               : 1500.  #MeV
+	  "pMuPT"               : 1500.,  #MeV
+	  "PPbarPT"               : 1500.,  #MeV
+	  "DECAYS"               : ["[Lambda_b0 -> J/psi(1S) mu-]cc","[Lambda_b0 -> N(1440)+ mu-]cc"],
+	  "SSDECAYS"               : ["[Lambda_b0 -> N(1440)+ mu+]cc"]
 	},
        'STREAMS'     : ['Semileptonic']	  
       }
@@ -134,8 +129,14 @@ class Lb2pMuNuVubBuilder(LineBuilder):
         ,"BVCHI2DOF"
         ,"BDIRA"               
         ,"BFDCHI2HIGH"         
+        ,"PPbarVCHI2DOF"
+        ,"PPbarDIRA"               
+        ,"PPbarFDCHI2HIGH"         
         ,"pMuMassLower"     
-	,"pMuPT"     
+	      ,"pMuPT"     
+	      ,"PPbarPT"     
+	      ,"DECAYS"     
+	      ,"SSDECAYS"     
         ]
 
     def __init__(self,name,config):
@@ -152,8 +153,18 @@ class Lb2pMuNuVubBuilder(LineBuilder):
         self._protonSel=None
         self._protonFilter()
 
+        self._pionSel=None
+        self._pionFilter()
+
+        self._daughtersSel=None
+        self._daughters()
+
+
         self._fakeprotonSel=None
         self._fakeprotonFilter()
+
+        self._fakedaughtersSel=None
+        self._fakedaughters()
 
         self._fakemuonSel=None
         self._fakemuonFilter()
@@ -185,15 +196,37 @@ class Lb2pMuNuVubBuilder(LineBuilder):
                "& (MIPCHI2DV(PRIMARY)> %(ProtonMINIPCHI2)s )"\
                "& (switch(ISMUON,1,0) < 1)"
 
+    def _PiSelection( self ):
+        return "(MIPCHI2DV(PRIMARY)> %(ProtonMINIPCHI2)s )"\
+               "& (switch(ISMUON,1,0) < 1)"
+
     def _FakePSelection( self ):
         return "(TRCHI2DOF < %(ProtonTRCHI2)s )&  (P> %(ProtonP)s *MeV) &  (PT> %(ProtonPT)s *MeV)"\
                "& (TRGHOSTPROB < %(TRGHOSTPROB)s)"\
                "& (MIPCHI2DV(PRIMARY)> %(ProtonMINIPCHI2)s )"\
-               "& ( (PIDp-PIDpi< %(ProtonPIDp)s ) |  (PIDp-PIDK< %(ProtonPIDK)s ) ) "\
                "& (switch(ISMUON,1,0) < 1)"
+
+    def _PPbarSelection( self ):
+        return "(VFASPF(VCHI2/VDOF)< %(PPbarVCHI2DOF)s) & (BPVDIRA> %(PPbarDIRA)s)"\
+                     "& (PT > %(PPbarPT)s)"\
+                     "& (BPVVDCHI2 >%(PPbarFDCHI2HIGH)s)"
+
+    def _fakePPbarSelection( self ):
+        return "(VFASPF(VCHI2/VDOF)< %(PPbarVCHI2DOF)s) & (BPVDIRA> %(PPbarDIRA)s)"\
+                     "& (PT > %(PPbarPT)s)"\
+                     "& (INTREE((ABSID == 'p+')& (PIDp-PIDpi> %(ProtonPIDp)s )&(PIDp-PIDK> %(ProtonPIDK)s ))) "\
+                     "& (BPVVDCHI2 >%(PPbarFDCHI2HIGH)s)"
+
+    def _LbMotherSelection( self ):
+        return "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)"\
+                     "& (PT > %(pMuPT)s)"\
+                     "& (BPVVDCHI2 >%(BFDCHI2HIGH)s)"
+
+
 
 
     ###### High Corrected Mass Line  ######
+
     def _Lb_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         hlt = "HLT_PASS_RE('Hlt2.*SingleMuon.*Decision')"\
@@ -203,13 +236,12 @@ class Lb2pMuNuVubBuilder(LineBuilder):
                              FILTER=self.GECs,
                              algos = [ self._Lb2pMuNuVub_Lb()], HLT2 = hlt, L0DU = ldu)
 
-    ###### Low q^2 Line Same Sign ######
     def _SS_Lb_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         hlt = "HLT_PASS_RE('Hlt2.*SingleMuon.*Decision')"\
               "| HLT_PASS_RE('Hlt2TopoMu2Body.*Decision')"
         ldu = "L0_CHANNEL_RE('Muon')" 
-        return StrippingLine(self._name+'SSLine', prescale = 1.0,
+        return StrippingLine(self._name+'SSLine', prescale = 0.20,
                              FILTER=self.GECs, 
                              algos = [ self._Lb2pMuNuVubSS_Lb()], HLT2 = hlt, L0DU = ldu)
 
@@ -297,6 +329,24 @@ class Lb2pMuNuVubBuilder(LineBuilder):
         
         return _prSel
 
+    ##### Pion Filter ######
+    def _pionFilter( self ):
+        if self._pionSel is not None:
+            return self._pionSel
+        
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        from PhysSelPython.Wrappers import Selection
+        from StandardParticles import StdLoosePions
+        
+        _pr = FilterDesktop( Code = self._PiSelection() % self._config )
+        _prSel=Selection("pi_for"+self._name,
+                         Algorithm=_pr,
+                         RequiredSelections = [StdLoosePions])
+        
+        self._pionSel=_prSel
+        
+        return _prSel
+
     ##### Fake Proton Filter ######
     def _fakeprotonFilter( self ):
         if self._fakeprotonSel is not None:
@@ -315,30 +365,108 @@ class Lb2pMuNuVubBuilder(LineBuilder):
         
         return _prSel
 
+
     def _Definitions(self):
         return [ 
             "from LoKiPhys.decorators import *",
             "Lb_PT = PT"
                            ]
 
+    ###### Lb->pMuNu High M_corr Opposite Sign ######
+    def _PPbar( self ):
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection
+        
+        PPbar = CombineParticles(DecayDescriptors = ["J/psi(1S) -> p+ p~-"], ReFitPVs = True)
+        PPbar.Preambulo = self._Definitions()
+        PPbar.MotherCut = self._PPbarSelection() % self._config
+        PPbar.ReFitPVs = True
+            
+        PPbarSel=Selection("PPbar_Lb_for"+self._name,
+                         Algorithm=PPbar,
+                         RequiredSelections = [self._protonFilter()])
+         
+        return PPbarSel
+
+    ###### Lb->pMuNu High M_corr Opposite Sign ######
+    def _fakePPbar( self ):
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection
+        
+        PPbar = CombineParticles(DecayDescriptors = ["J/psi(1S) -> p+ p~-"], ReFitPVs = True)
+        PPbar.Preambulo = self._Definitions()
+        PPbar.MotherCut = self._fakePPbarSelection() % self._config
+        PPbar.ReFitPVs = True
+            
+        PPbarSel=Selection("fakePPbar_Lb_for"+self._name,
+                         Algorithm=PPbar,
+                         RequiredSelections = [self._fakeprotonFilter()])
+         
+        return PPbarSel
+
+    ###### Lb->pMuNu High M_corr Opposite Sign ######
+    def _Ppipi( self ):
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection
+        
+        Ppipi = CombineParticles(DecayDescriptors = ["[N(1440)+ -> p+ pi+ pi-]cc"], ReFitPVs = True)
+        Ppipi.Preambulo = self._Definitions()
+        Ppipi.MotherCut = self._PPbarSelection() % self._config
+        Ppipi.ReFitPVs = True
+            
+        PpipiSel=Selection("Ppipi_Lb_for"+self._name,
+                         Algorithm=Ppipi,
+                         RequiredSelections = [self._protonFilter(),self._pionFilter()])
+         
+        return PpipiSel
+
+    def _fakePpipi( self ):
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection
+        
+        Ppipi = CombineParticles(DecayDescriptors = ["[N(1440)+ -> p+ pi+ pi-]cc"], ReFitPVs = True)
+        Ppipi.Preambulo = self._Definitions()
+        Ppipi.MotherCut = self._PPbarSelection() % self._config
+        Ppipi.ReFitPVs = True
+            
+        PpipiSel=Selection("fakePpipi_Lb_for"+self._name,
+                         Algorithm=Ppipi,
+                         RequiredSelections = [self._fakeprotonFilter(),self._pionFilter()])
+         
+        return PpipiSel
+
+    def _daughters( self ):
+        if self._daughtersSel is not None:
+            return self._daughtersSel
+        from PhysSelPython.Wrappers import MergedSelection
+        _sel_Daughters = MergedSelection("Selection_mergeddaughters",
+                                         RequiredSelections = [self._protonFilter(),self._PPbar(),self._Ppipi()])
+        self._daughtersSel=_sel_Daughters
+        return _sel_Daughters
+
+    def _fakedaughters( self ):
+        if self._fakedaughtersSel is not None:
+            return self._fakedaughtersSel
+        from PhysSelPython.Wrappers import MergedSelection
+        _sel_Daughters = MergedSelection("Selection_fakemergeddaughters",
+                                         RequiredSelections = [self._fakeprotonFilter(),self._fakePPbar(),self._fakePpipi()])
+        self._fakedaughtersSel=_sel_Daughters
+        return _sel_Daughters
 
     ###### Lb->pMuNu High M_corr Opposite Sign ######
     def _Lb2pMuNuVub_Lb( self ):
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
-        from PhysSelPython.Wrappers import Selection
+        from PhysSelPython.Wrappers import Selection,MergedSelection
         
-        _pMu = CombineParticles(DecayDescriptors = ["[Lambda_b0 -> p+ mu-]cc"], ReFitPVs = True
-)
+        _pMu = CombineParticles(DecayDescriptors = self._config["DECAYS"], ReFitPVs = True)
         _pMu.Preambulo = self._Definitions()
         _pMu.CombinationCut = "(AM>%(pMuMassLower)s*MeV)" % self._config
-        _pMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)"\
-                    "& (Lb_PT > %(pMuPT)s)"\
-                    "& (BPVVDCHI2 >%(BFDCHI2HIGH)s)" % self._config
+        _pMu.MotherCut = self._LbMotherSelection() % self._config
         _pMu.ReFitPVs = True
             
         _pMuSel=Selection("pMu_Lb_for"+self._name,
                          Algorithm=_pMu,
-                         RequiredSelections = [self._muonFilter(), self._protonFilter()])
+                         RequiredSelections = [self._muonFilter(), self._daughters()])
          
         _LbSel = tosSelection(_pMuSel,{'Hlt2.*TopoMu2Body.*Decision%TOS':0,'Hlt2.*SingleMuon.*Decision%TOS':0})
         return _LbSel
@@ -350,18 +478,15 @@ class Lb2pMuNuVubBuilder(LineBuilder):
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection
         
-        _pMuSS = CombineParticles(DecayDescriptors = ["[Lambda_b0 -> p+ mu+]cc"], ReFitPVs = True
-)
+        _pMuSS = CombineParticles(DecayDescriptors = self._config["SSDECAYS"], ReFitPVs = True)
         _pMuSS.Preambulo = self._Definitions() 
         _pMuSS.CombinationCut = "(AM>%(pMuMassLower)s*MeV)"  % self._config
-        _pMuSS.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)"\
-                    "& (Lb_PT > %(pMuPT)s)"\
-		    "& (BPVVDCHI2 >%(BFDCHI2HIGH)s)" % self._config
+        _pMuSS.MotherCut = self._LbMotherSelection() % self._config
         _pMuSS.ReFitPVs = True
             
         _pMuSSSel=Selection("pMuSS_Lb_for"+self._name,
                          Algorithm=_pMuSS,
-                         RequiredSelections = [self._muonFilter(), self._protonFilter()])
+                         RequiredSelections = [self._muonFilter(), self._daughters()])
         _pMuSSSel = tosSelection(_pMuSSSel,{'Hlt2.*TopoMu2Body.*Decision%TOS':0,'Hlt2.*SingleMuon.*Decision%TOS':0})
         return _pMuSSSel
 	    
@@ -372,18 +497,15 @@ class Lb2pMuNuVubBuilder(LineBuilder):
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection
         
-        _pMu = CombineParticles(DecayDescriptors = ["[Lambda_b0 -> p+ mu-]cc"], ReFitPVs = True
-)
+        _pMu = CombineParticles(DecayDescriptors = self._config["DECAYS"], ReFitPVs = True)
         _pMu.Preambulo = self._Definitions()
         _pMu.CombinationCut = "(AM>%(pMuMassLower)s*MeV)" % self._config
-        _pMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)"\
-                    "& (Lb_PT > %(pMuPT)s)"\
-                    "& (BPVVDCHI2 >%(BFDCHI2HIGH)s)" % self._config
+        _pMu.MotherCut = self._LbMotherSelection() % self._config
         _pMu.ReFitPVs = True
             
         _pMuSel=Selection("pMu_fakep_Lb_for"+self._name,
                          Algorithm=_pMu,
-                         RequiredSelections = [self._muonFilter(), self._fakeprotonFilter()])
+                         RequiredSelections = [self._muonFilter(), self._fakedaughters()])
          
         _LbSel = tosSelection(_pMuSel,{'Hlt2.*TopoMu2Body.*Decision%TOS':0,'Hlt2.*SingleMuon.*Decision%TOS':0})
         return _LbSel
@@ -393,18 +515,15 @@ class Lb2pMuNuVubBuilder(LineBuilder):
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection
         
-        _pMuSS = CombineParticles(DecayDescriptors = ["[Lambda_b0 -> p+ mu+]cc"], ReFitPVs = True
-)
+        _pMuSS = CombineParticles(DecayDescriptors = self._config["SSDECAYS"], ReFitPVs = True)
         _pMuSS.Preambulo = self._Definitions()
         _pMuSS.CombinationCut = "(AM>%(pMuMassLower)s*MeV)" % self._config
-        _pMuSS.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)"\
-                    "& (Lb_PT > %(pMuPT)s)"\
-                    "& (BPVVDCHI2 >%(BFDCHI2HIGH)s)" % self._config
+        _pMuSS.MotherCut = self._LbMotherSelection() % self._config
         _pMuSS.ReFitPVs = True
             
         _pMuSSSel=Selection("pMuSS_fakep_Lb_for"+self._name,
                          Algorithm=_pMuSS,
-                         RequiredSelections = [self._muonFilter(), self._fakeprotonFilter()])
+                         RequiredSelections = [self._muonFilter(), self._fakedaughters()])
          
         _LbSSSel = tosSelection(_pMuSSSel,{'Hlt2.*TopoMu2Body.*Decision%TOS':0,'Hlt2.*SingleMuon.*Decision%TOS':0})
         return _LbSSSel
@@ -416,18 +535,15 @@ class Lb2pMuNuVubBuilder(LineBuilder):
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection
         
-        _pMu = CombineParticles(DecayDescriptors = ["[Lambda_b0 -> p+ mu-]cc"], ReFitPVs = True
-)
+        _pMu = CombineParticles(DecayDescriptors = self._config["DECAYS"], ReFitPVs = True)
         _pMu.Preambulo = self._Definitions()
         _pMu.CombinationCut = "(AM>%(pMuMassLower)s*MeV)" % self._config
-        _pMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)"\
-                    "& (Lb_PT > %(pMuPT)s)"\
-                    "& (BPVVDCHI2 >%(BFDCHI2HIGH)s)" % self._config
+        _pMu.MotherCut = self._LbMotherSelection() % self._config
         _pMu.ReFitPVs = True
             
         _pMuSel=Selection("pMu_fakemu_Lb_for"+self._name,
                          Algorithm=_pMu,
-                         RequiredSelections = [self._fakemuonFilter(), self._protonFilter()])
+                         RequiredSelections = [self._fakemuonFilter(), self._daughters()])
          
         _LbSel = tosSelection(_pMuSel,{'Hlt2.*Topo2Body.*Decision%TOS':0})
         return _LbSel
@@ -437,18 +553,15 @@ class Lb2pMuNuVubBuilder(LineBuilder):
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection
         
-        _pMuSS = CombineParticles(DecayDescriptors = ["[Lambda_b0 -> p+ mu+]cc"], ReFitPVs = True
-)
+        _pMuSS = CombineParticles(DecayDescriptors = self._config["SSDECAYS"], ReFitPVs = True)
         _pMuSS.Preambulo = self._Definitions()
         _pMuSS.CombinationCut = "(AM>%(pMuMassLower)s*MeV)" % self._config
-        _pMuSS.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)"\
-                    "& (Lb_PT > %(pMuPT)s)"\
-                    "& (BPVVDCHI2 >%(BFDCHI2HIGH)s)" % self._config
+        _pMuSS.MotherCut = self._LbMotherSelection() % self._config
         _pMuSS.ReFitPVs = True
             
         _pMuSSSel=Selection("pMuSS_fakemu_Lb_for"+self._name,
                          Algorithm=_pMuSS,
-                         RequiredSelections = [self._fakemuonFilter(), self._protonFilter()])
+                         RequiredSelections = [self._fakemuonFilter(), self._daughters()])
          
         _LbSSSel = tosSelection(_pMuSSSel,{'Hlt2.*Topo2Body.*Decision%TOS':0})
         return _LbSSSel
