@@ -612,15 +612,20 @@ else :
     
 models.append ( model_vgt )
 
-
 # =============================================================================
 ## Breit-Wigner
 # =============================================================================
 logger.info ('Test BreitWigner_pdf' )
-bw = cpp.Gaudi.Math.BreitWigner( m.value() ,
-                                 m.error() ,
-                                 0.150     ,
-                                 0.150     , 1 )
+ff = cpp.Gaudi.Math.FormFactors.BlattWeisskopf( 1 , 3.5 ) ## formfactor 
+bw = cpp.Gaudi.Math.BreitWigner (
+    m.value() ,
+    m.error() ,
+    0.150     ,
+    0.150     ,
+    1  , ## orbital momentum
+    ff   ## formfactor 
+    )
+
 mm  = ROOT.RooRealVar('m','m',0)
 ss  = ROOT.RooRealVar('s','s',0.010)
 cnv = ROOT.RooGaussian('XXX','XXX',mass,mm,ss)
@@ -634,6 +639,18 @@ cnv = ROOT.RooGaussian('XXX','XXX',mass,mm,ss)
 ##    mm     , sL , sR )
 ##cnv = signal_gauss.pdf 
 ##signal_gauss.mean.fix(0)
+
+cnv_cbds = Models.CB2_pdf ( name = 'CB2reso'           , 
+                            mass  = mass               ,
+                            sigma = 0.010              )
+
+cnv_cbds.mean.setMin(-1) ## NB!
+cnv_cbds.mean.fix(0)     ## NB!!
+cnv_cbds.nL.fix()
+cnv_cbds.nR.fix()
+cnv_cbds.aL.fix()
+cnv_cbds.aR.fix()
+cnv = cnv_cbds.pdf
 
 model_bw = Models.Fit1D (
     signal = Models.BreitWigner_pdf
@@ -675,7 +692,6 @@ with DBASE.tmpdb() as db :
     db['result'   ] = result
     db['frame'    ] = frame
     db.ls() 
-
 
 # =============================================================================
 # The END 
