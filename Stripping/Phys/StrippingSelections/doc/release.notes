@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-07 - William Barter
+   - Added StrippingFullDiJets.py and StrippingMicroDiJets.py to StrippingQEE
+
 ! 2015-12-07 - Pablio Ruiz
    - Added hhgammagamma and hhhgammagamma lines to StrippingBeauty2Xgamma
    - Adjustments to Lb2L0Gamma converted lines

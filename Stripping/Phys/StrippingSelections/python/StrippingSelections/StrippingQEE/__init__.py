@@ -21,7 +21,8 @@ list_S24 = (
   'StrippingWmuAKTJets',
   'StrippingWeAKTJets',
   'StrippingZ02MuMu',
-  
+  'StrippingFullDiJets',
+  'StrippingMicroDiJets',
   ## These lines are recovered from S21 `just-in-case`, 
   ## but there's no explicit request in S23+ yet.
   'StrippingDijets',
