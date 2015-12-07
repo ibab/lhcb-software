@@ -5,6 +5,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-07 - Oliver Gruenberg
+  - move StrippingB24pLines from StrippingRD to StrippingBnoC 
+    and updated module for linebuilders ( __init__.py )
+
 ! 2015-12-07 - Lucio Anderlini (for Andrea Bizzeti)
   - Further tuning StrippingBandQ/StrippingCC2DD.py for Lambda_c+ and Xi_c0 
 

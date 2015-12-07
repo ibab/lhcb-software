@@ -24,7 +24,6 @@ _selections = [
     'StrippingBu2MuNu',
     'StrippingD23MuLines',
     'StrippingB23MuLines',
-    'StrippingB24pLines',
     'StrippingBLVLines',
     'StrippingKshort2MuMuMuMu',
     'StrippingKshort2PiPiMuMu',
