@@ -1,40 +1,42 @@
 """
 Module for construction of B0 -> p+ p+ p- p- lines
 
-Performance:
+Performance: using DV38r0
 
-Full.dst
-########
+Full.dst (Reco14_Run125113.py)
+##########################
 StrippingReport                                                INFO Event 1000000, Good event 1000000
  |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
- |_StrippingGlobal_                                            |  0.0067|        67|       |   9.028|
- |!StrippingB24pB24pLine_TIMING                                |  0.0002|         2|  1.000|   0.115|
- |!StrippingB24pB2JpsiKpiLine_TIMING                           |  0.0050|        50|  2.600|   0.275|
- |!StrippingB24pB2PhiKhLine_TIMING                             |  0.0018|        18|  2.278|   0.183|
+ |_StrippingGlobal_                                            |  0.0475|        95|       |  18.580|
+ |_StrippingSequenceStreamBhadron_                             |  0.0475|        95|       |  18.502|  
+ |!StrippingB24pB24pLine_TIMING                                |  0.0235|        47|  1.128|   0.316|
+ |!StrippingB24pB2JpsiKpiLine_TIMING                           |  0.0210|        42|  1.524|   0.736|
+ |!StrippingB24pB2PhiKhLine_TIMING                             |  0.0030|         6|  1.833|   0.542|
+   
+
+MC: B2pppp (11104077)
+#######################
+StrippingReport                                                INFO Event 100000, Good event 100000
+ |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
+ |!StrippingB24pB24pLine_TIMING                                |  5.0250|      5025|  1.022|   0.260|
 
 MC: B2JpsiKpi (11134010)
 ########################
 StrippingReport                                                INFO Event 100000, Good event 100000
  |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
- |!StrippingB24pB2JpsiKpiLine_TIMING                           |  6.1830|      6183|  1.251|   0.667|
+ |!StrippingB24pB2JpsiKpiLine_TIMING                           |  6.3320|      6332|  1.311|   0.574|
 
 MC: B2PhiKst (11104020)
 #######################
 StrippingReport                                                INFO Event 100000, Good event 100000
  |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
- |!StrippingB24pB2PhiKhLine_TIMING                             |  7.7120|      7712|  1.323|   0.564|
+ |!StrippingB24pB2PhiKhLine_TIMING                             |  7.8100|      7810|  1.318|   0.476|
 
 MC: Bs2JpsiPhi (13134010)
 ########################
 StrippingReport                                                INFO Event 100000, Good event 100000
  |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
- |!StrippingB24pB2JpsiKpiLine_TIMING                           |  6.3410|      6341|  2.179|   0.627|
-
-MC: Bs2PhiPhi (MC2011 13104012)
-###############################
-StrippingReport                                                INFO Event 100000, Good event 100000
- |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
- |!StrippingB24pB2PhiKhLine_TIMING                             |  8.4740|      8474|  3.895|   0.384|
+ |!StrippingB24pB2JpsiKpiLine_TIMING                           |  6.3960|      6396|  2.397|   0.609|
 
 
     
@@ -43,7 +45,7 @@ Exported symbols (use python help!):
 """
 
 __author__  = ["Oliver Gruenberg"]
-__date__    = "19.05.2015"
+__date__    = "07.12.2015"
 __version__ = "$Revision: 2.0 $"
 
 #############################################################################
@@ -75,7 +77,7 @@ default_config = {
     "MaxTrGhp"           : 0.4,
     # CommonCombiCuts
     "MaxDoca"            : 0.3, # (mm)
-    "mDiffb"             : 500, # (MeV)
+    "mDiffb"             : 400, # (MeV)
     # MassCuts
     "mJpsiMin"           : 2990, # (MeV)
     "mJpsiMax"           : 3200, # (MeV)
@@ -360,7 +362,7 @@ class B24pLinesConf(LineBuilder) :
 
         B24p = DaVinci__N4BodyDecays("Combine"+name)
         B24p.DecayDescriptors = [ "B0 -> p+ p+ p~- p~-","[B0 -> p+ p+ p+ p~-]cc" ]
-        B24p.DaughtersCuts = { "p+" : self.TrackCuts + " & ((PIDp-PIDpi)>0)" + " & ((PIDp-PIDK)>0)" }
+        B24p.DaughtersCuts = { "p+" : self.TrackCuts + " & ((PIDp-PIDpi)>0)" + " & ((PIDp-PIDK)>-5)" }
             
         B24p.Combination12Cut  = self.CommonCombi12Cuts 
         B24p.Combination123Cut = self.CommonCombi123Cuts    
@@ -378,8 +380,8 @@ class B24pLinesConf(LineBuilder) :
         
         B2JpsiKpi = DaVinci__N4BodyDecays("Combine"+name)
         B2JpsiKpi.DecayDescriptors = [ "[B0 -> p+ p~- K+ pi-]cc" ]
-        B2JpsiKpi.DaughtersCuts = { "p+"  : self.TrackCuts + " & ((PIDp-PIDpi)>-10)" + " & ((PIDp-PIDK)>-10)",
-                                    "K+"  : self.TrackCuts + " & ((PIDK-PIDpi)>-10)" + " & ((PIDK-PIDp)>-10)",
+        B2JpsiKpi.DaughtersCuts = { "p+"  : self.TrackCuts,
+                                    "K+"  : self.TrackCuts,
                                     "pi-" : self.TrackCuts }
     
         B2JpsiKpi.Combination12Cut  = self.CommonCombi12Cuts + " & ( in_range(%(mJpsiMin)s*MeV,AM12,%(mJpsiMax)s*MeV) )" %config

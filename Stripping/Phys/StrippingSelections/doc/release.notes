@@ -5,6 +5,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-07 - Oliver Gruenberg
+	-  Tuned B24pLine in StrippingB24pLines: 
+	   softer PID selections, mass window from +/- 500MeV -> +/- 400MeV
+
 ! 2015-12-07 - Simone Bifani
   - Tuned mutau line in StrippingBu2LLK.py
 
