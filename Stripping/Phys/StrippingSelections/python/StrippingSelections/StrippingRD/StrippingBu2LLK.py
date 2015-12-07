@@ -147,13 +147,13 @@ default_config = {
                     "[Beauty -> (X0 ->  X+  X-) (X0 -> ^StableCharged  StableCharged)]CC" : "ConeIsoInfoL1",
                     "[Beauty -> (X0 ->  X+  X-) (X0 ->  StableCharged ^StableCharged)]CC" : "ConeIsoInfoL2",
                     # 7-body (quasi 4-body)
-                    "[Beauty -> (X0 -> ^X+  X-) (X0 ->  l+  (l- ->  X-  X-  X+))]CC" : "ConrIsoInfoH1",
-                    "[Beauty -> (X0 ->  X+ ^X-) (X0 ->  l+  (l- ->  X-  X-  X+))]CC" : "ConrIsoInfoH2",
-                    "[Beauty -> (X0 ->  X+  X-) (X0 -> ^l+  (l- ->  X-  X-  X+))]CC" : "ConrIsoInfoL1",
-                    "[Beauty -> (X0 ->  X+  X-) (X0 ->  l+ ^(l- ->  X-  X-  X+))]CC" : "ConrIsoInfoL2",
-                    "[Beauty -> (X0 ->  X+  X-) (X0 ->  l+  (l- -> ^X-  X-  X+))]CC" : "ConrIsoInfoL21",
-                    "[Beauty -> (X0 ->  X+  X-) (X0 ->  l+  (l- ->  X- ^X-  X+))]CC" : "ConrIsoInfoL22",
-                    "[Beauty -> (X0 ->  X+  X-) (X0 ->  l+  (l- ->  X-  X- ^X+))]CC" : "ConrIsoInfoL23",
+                    "[Beauty -> (X0 -> ^X+  X-) (X0 ->  l+  (l- ->  X-  X-  X+))]CC" : "ConeIsoInfoH1",
+                    "[Beauty -> (X0 ->  X+ ^X-) (X0 ->  l+  (l- ->  X-  X-  X+))]CC" : "ConeIsoInfoH2",
+                    "[Beauty -> (X0 ->  X+  X-) (X0 -> ^l+  (l- ->  X-  X-  X+))]CC" : "ConeIsoInfoL1",
+                    "[Beauty -> (X0 ->  X+  X-) (X0 ->  l+ ^(l- ->  X-  X-  X+))]CC" : "ConeIsoInfoL2",
+                    "[Beauty -> (X0 ->  X+  X-) (X0 ->  l+  (l- -> ^X-  X-  X+))]CC" : "ConeIsoInfoL21",
+                    "[Beauty -> (X0 ->  X+  X-) (X0 ->  l+  (l- ->  X- ^X-  X+))]CC" : "ConeIsoInfoL22",
+                    "[Beauty -> (X0 ->  X+  X-) (X0 ->  l+  (l- ->  X-  X- ^X+))]CC" : "ConeIsoInfoL23",
                     # SAME SIGN
                     # 3-body
                     "[Beauty -> ^StableCharged (X0 ->  l+  l+)]CC" : "ConeIsoInfoH",
@@ -171,13 +171,13 @@ default_config = {
                     "[Beauty -> (X0 ->  X+  X-) (X0 -> ^l+  l+)]CC" : "ConeIsoInfoL1",
                     "[Beauty -> (X0 ->  X+  X-) (X0 ->  l+ ^l+)]CC" : "ConeIsoInfoL2",
                     # 7-body (quasi 4-body)
-                    "[Beauty -> (X0 -> ^X+  X-) (X0 ->  l+  (l+ ->  X+  X-  X+))]CC" : "ConrIsoInfoH1",
-                    "[Beauty -> (X0 ->  X+ ^X-) (X0 ->  l+  (l+ ->  X+  X-  X+))]CC" : "ConrIsoInfoH2",
-                    "[Beauty -> (X0 ->  X+  X-) (X0 -> ^l+  (l+ ->  X+  X-  X+))]CC" : "ConrIsoInfoL1",
-                    "[Beauty -> (X0 ->  X+  X-) (X0 ->  l+ ^(l+ ->  X+  X-  X+))]CC" : "ConrIsoInfoL2",
-                    "[Beauty -> (X0 ->  X+  X-) (X0 ->  l+  (l+ -> ^X+  X-  X+))]CC" : "ConrIsoInfoL21",
-                    "[Beauty -> (X0 ->  X+  X-) (X0 ->  l+  (l+ ->  X+ ^X-  X+))]CC" : "ConrIsoInfoL22",
-                    "[Beauty -> (X0 ->  X+  X-) (X0 ->  l+  (l+ ->  X+  X- ^X+))]CC" : "ConrIsoInfoL23"
+                    "[Beauty -> (X0 -> ^X+  X-) (X0 ->  l+  (l+ ->  X+  X-  X+))]CC" : "ConeIsoInfoH1",
+                    "[Beauty -> (X0 ->  X+ ^X-) (X0 ->  l+  (l+ ->  X+  X-  X+))]CC" : "ConeIsoInfoH2",
+                    "[Beauty -> (X0 ->  X+  X-) (X0 -> ^l+  (l+ ->  X+  X-  X+))]CC" : "ConeIsoInfoL1",
+                    "[Beauty -> (X0 ->  X+  X-) (X0 ->  l+ ^(l+ ->  X+  X-  X+))]CC" : "ConeIsoInfoL2",
+                    "[Beauty -> (X0 ->  X+  X-) (X0 ->  l+  (l+ -> ^X+  X-  X+))]CC" : "ConeIsoInfoL21",
+                    "[Beauty -> (X0 ->  X+  X-) (X0 ->  l+  (l+ ->  X+ ^X-  X+))]CC" : "ConeIsoInfoL22",
+                    "[Beauty -> (X0 ->  X+  X-) (X0 ->  l+  (l+ ->  X+  X- ^X+))]CC" : "ConeIsoInfoL23"
                     }
              },
             {'Type'              : 'RelInfoTrackIsolationBDT',
