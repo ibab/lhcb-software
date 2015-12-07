@@ -34,23 +34,27 @@ default_config = {
     'CONFIG'     :
     {
     'RelatedInfoTools'      : [
-        {"Type" : "RelInfoConeVariables"
-      , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM','CONEPT','CONEP','CONEPASYM','CONEDELTAETA','CONEDELTAPHI']
-      , 'Location':'ConeIsoInfo'} 
-      , {'Type' : 'RelInfoVertexIsolation'
-      , "Variables" : ['VTXISONUMVTX', 'VTXISODCHI2ONETRACK', 'VTXISODCHI2MASSONETRACK','VTXISODCHI2TWOTRACK','VTXISODCHI2MASSTWOTRACK']
-      , 'Location':'VtxIsoInfo'} 
-      , {'Type': 'RelInfoVertexIsolationBDT'
-      , 'Location':'VtxIsoBDTInfo' }
-      #,  {"Type" : "RelInfoBs2MuMuIsolations"
-      #, "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
-      #, "Location"  : "BSMUMUVARIABLES"
-      #  }
+    {"Type" : "RelInfoConeVariables"
+     , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM','CONEPT','CONEP','CONEPASYM','CONEDELTAETA','CONEDELTAPHI']
+     , "Location"  : "ConeIsoInfo" }
+   ,{"Type" : "RelInfoConeIsolation"
+     ,'ConeSize'         : 1.0
+     ,'Variables' : [ 'CC_ANGLE', 'CC_MULT', 'CC_SPT', 'CC_VPT', 'CC_PX', 'CC_PY', 'CC_PZ', 'CC_PASYM', 'CC_PTASYM', 'CC_PXASYM', 'CC_PYASYM', 'CC_PZASYM', 'CC_DELTAETA', 'CC_DELTAPHI', 'CC_IT',  'CC_MAXPT_Q', 'CC_MAXPT_PT', 'CC_MAXPT_PX', 'CC_MAXPT_PY', 'CC_MAXPT_PZ', 'CC_MAXPT_PE',  'NC_ANGLE', 'NC_MULT', 'NC_SPT', 'NC_VPT', 'NC_PX', 'NC_PY', 'NC_PZ', 'NC_PASYM', 'NC_PTASYM', 'NC_PXASYM', 'NC_PYASYM', 'NC_PZASYM', 'NC_DELTAETA', 'NC_DELTAPHI', 'NC_IT',  'NC_MAXPT_PT', 'NC_MAXPT_PX', 'NC_MAXPT_PY', 'NC_MAXPT_PZ' ]
+     ,'Location':'ConeIsoInfoCCNC'}
+   ,{'Type' : 'RelInfoVertexIsolation'
+     ,"Variables" : ['VTXISONUMVTX', 'VTXISODCHI2ONETRACK', 'VTXISODCHI2MASSONETRACK','VTXISODCHI2TWOTRACK','VTXISODCHI2MASSTWOTRACK']
+     ,'Location':'VtxIsoInfo'} 
+   ,{'Type': 'RelInfoVertexIsolationBDT'
+     , 'Location':'VtxIsoBDTInfo' }
+    #,  {"Type" : "RelInfoBs2MuMuIsolations"
+    #, "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
+    #, "Location"  : "BSMUMUVARIABLES"
+    #  }
     ]
     , 'KpiVXCHI2NDOF'      : 9.0           # dimensionless
     , 'MuonPID'            : -3.0          # dimensionless
     , 'DimuonUPPERMASS'    : 7100.0        # MeV
-    , 'Pi0MINPT'           : 800.0         # MeV
+    , 'Pi0MINPT'           : 700.0         # MeV
     , 'Pi0ForOmegaMINPT'   : 500.0         # MeV
     , 'DplusLOWERMASS'     : 1600.0        # MeV
     , 'DplusUPPERMASS'     : 2300.0        # MeV      
@@ -73,9 +77,9 @@ default_config = {
     ,'UseNoPIDsHadrons'          : True,
     
     # B cuts
-    'B_Comb_MassLow'      : 4800.0,
+    'B_Comb_MassLow'      : 4600.0,
     'B_Comb_MassHigh'     : 7100.0,
-    'B_MassLow'           : 4900.0,
+    'B_MassLow'           : 4700.0,
     'B_MassHigh'          : 7000.0,
     'B_VertexCHI2'        :    8.0,
     'B_IPCHI2'            :   16.0,
@@ -134,27 +138,27 @@ default_config = {
     'HLT1_FILTER' : None ,
     'L0DU_FILTER' : None , 
 
-    'DECAYS'              :  ["B0 -> J/psi(1S) phi(1020)",                  
+    'DECAYS'              :  [#"B0 -> J/psi(1S) phi(1020)",   #only keep channels with pi0 in final state (and some control channels) for this stripping round               
                               "[B0 -> J/psi(1S) K*(892)0]cc",               
-                              "B0 -> J/psi(1S) rho(770)0",
+                              #"B0 -> J/psi(1S) rho(770)0",
                               "[B+ -> J/psi(1S) rho(770)+]cc",
-                              "B0 -> J/psi(1S) f_2(1950)",                  
-                              "B0 -> J/psi(1S) KS0",                        
-                              "[B0 -> J/psi(1S) D~0]cc",                    
+                              #"B0 -> J/psi(1S) f_2(1950)",                  
+                              #"B0 -> J/psi(1S) KS0",                        
+                              #"[B0 -> J/psi(1S) D~0]cc",                    
                               "[B+ -> J/psi(1S) K+]cc",                     
-                              "[B+ -> J/psi(1S) pi+]cc",                    
+                              #"[B+ -> J/psi(1S) pi+]cc",                    
                               "[B+ -> J/psi(1S) K*(892)+]cc",               
-                              "[B+ -> J/psi(1S) D+]cc",                     
-                              "[B+ -> J/psi(1S) D*(2010)+]cc",              
-                              "[Lambda_b0 -> J/psi(1S) Lambda0]cc",         
-                              "[Lambda_b0 -> J/psi(1S) Lambda(1520)0]cc",   
-                              "B0 -> J/psi(1S) pi0",                        
-                              "[B+ -> J/psi(1S) a_1(1260)+]cc",             
-                              "[B+ -> J/psi(1S) K_1(1270)+]cc",             
-                              "[B+ -> J/psi(1S) K_2(1770)+]cc",
-                              "B0 -> J/psi(1S) K_1(1270)0",
-                              "[B+ -> J/psi(1S) K_1(1400)+]cc", 
-                              "B0 -> J/psi(1S) K_1(1400)0"
+                              #"[B+ -> J/psi(1S) D+]cc",                     
+                              #"[B+ -> J/psi(1S) D*(2010)+]cc",              
+                              #"[Lambda_b0 -> J/psi(1S) Lambda0]cc",         
+                              #"[Lambda_b0 -> J/psi(1S) Lambda(1520)0]cc",   
+                              "B0 -> J/psi(1S) pi0"                        
+                              #"[B+ -> J/psi(1S) a_1(1260)+]cc",             
+                              #"[B+ -> J/psi(1S) K_1(1270)+]cc",             
+                              #"[B+ -> J/psi(1S) K_2(1770)+]cc",
+                              #"B0 -> J/psi(1S) K_1(1270)0",
+                              #"[B+ -> J/psi(1S) K_1(1400)+]cc", 
+                              #"B0 -> J/psi(1S) K_1(1400)0"
                              ]
 
     },
@@ -671,7 +675,7 @@ class B2XMuMuConf(LineBuilder) :
                                  
 
         _omegaConf = _omega2pipipizero.configurable("Combine_"+self.name+"_PiPiPi0")
-        _omegaConf.ParticleCombiners.update ( { '' : 'OfflineVertexFitter:PUBLIC' } )
+        #_omegaConf.ParticleCombiners.update ( { '' : 'OfflineVertexFitter:PUBLIC' } )
                                                  
         _selOMEGA2PIPIPIZERO = Selection( "Selection_"+self.name+"_omega2pipipizero",
                                        Algorithm = _omegaConf,
