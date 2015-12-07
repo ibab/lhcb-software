@@ -10,10 +10,6 @@
 #include "OTDet/DeOTLayer.h"
 #include "OTDet/DeOTQuarter.h"
 
-/// Boost
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/lambda.hpp>
-
 /** @file DeOTLayer.cpp
  *
  *  Implementation of class :  DeOTLayer
@@ -22,7 +18,6 @@
  */
 
 using namespace LHCb;
-using namespace boost::lambda;
 
 DeOTLayer::DeOTLayer(const std::string& name) :
   DetectorElement(name),
@@ -84,9 +79,10 @@ StatusCode DeOTLayer::initialize() {
 
 /// Find the quarter for a given XYZ point
 const DeOTQuarter* DeOTLayer::findQuarter(const Gaudi::XYZPoint& aPoint) const {  
-  Quarters::const_iterator iQ = std::find_if(m_quarters.begin(), m_quarters.end(),
-                                             bind(&DetectorElement::isInside, _1, aPoint));
-  return (iQ != m_quarters.end() ? (*iQ) : 0);
+  auto  iQ = std::find_if(m_quarters.begin(), m_quarters.end(),
+                         [&](const DetectorElement* e) 
+                         { return e->isInside(aPoint); } );
+  return iQ != m_quarters.end() ? *iQ : nullptr ;
 }
 
 StatusCode DeOTLayer::cachePlane() {

@@ -1,3 +1,4 @@
+#include <algorithm>
 // GaudiKernel
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
@@ -17,10 +18,6 @@
 // DetDesc
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/SolidBox.h"
-
-#if !(defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L)
-#include <boost/assign/list_of.hpp>
-#endif
 
 // local
 #include "OTDet/DeOTModule.h"
@@ -239,9 +236,9 @@ void DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
         if (notParallel) {
           const auto dist = driftDistance(lambda-mu);
           if (isEfficientA(mu.y()) && std::abs(dist) < m_cellRadius) {
-            chanAndDist.push_back(std::make_pair(
-			OTChannelID(m_stationID, m_layerID, m_quarterID, m_moduleID, straw),
-			dist));
+            chanAndDist.emplace_back(
+			OTChannelID{m_stationID, m_layerID, m_quarterID, m_moduleID, straw},
+			dist);
           }
         }
       }
@@ -257,9 +254,9 @@ void DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
         if (notParallel) {
           const auto dist = driftDistance(lambda-mu);
           if (isEfficientB(mu.y()) && std::abs(dist) < m_cellRadius) {
-            chanAndDist.push_back(std::make_pair(
-			OTChannelID(m_stationID, m_layerID, m_quarterID, m_moduleID, straw + m_nStraws),
-			dist));
+            chanAndDist.emplace_back(
+			OTChannelID{m_stationID, m_layerID, m_quarterID, m_moduleID, straw + m_nStraws},
+			dist);
           }
         }
       }
@@ -271,7 +268,7 @@ void DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
 
       double uLow = x1;
       double uHigh = x2;
-      std::tie(uLow, uHigh) = std::make_pair(std::min(uLow, uHigh), std::max(uLow, uHigh));
+      std::tie(uLow, uHigh) = std::minmax(uLow, uHigh);
 
       // zfrac is between 0 and 1. 2.7839542167 means nothing.
       // This seems to acts as a random number generator.
@@ -798,17 +795,10 @@ void DeOTModule::fallbackDefaults() {
   /// Only to ensure backwards compatibility with DC06
   /// Frist the rt-relation
   double resolution     = 0.200*Gaudi::Units::mm ;
-#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
   // Coefficients of polynomial t(r/rmax): for MC this is just t = 0 + 42/2.5 * r
   std::vector<double> tcoeff    = {0.0, 42*Gaudi::Units::ns};
   // Coefficients of polynomial sigma_t(r/rmax): for MC this is just sigma_t = 0.200 * 42/2.5
   std::vector<double> terrcoeff = {resolution * 42*Gaudi::Units::ns / m_cellRadius};
-#else
-  // Coefficients of polynomial t(r/rmax): for MC this is just t = 0 + 42/2.5 * r
-  std::vector<double> tcoeff    = boost::assign::list_of(0.0)(42*Gaudi::Units::ns ) ;
-  // Coefficients of polynomial sigma_t(r/rmax): for MC this is just sigma_t = 0.200 * 42/2.5
-  std::vector<double> terrcoeff = boost::assign::list_of(resolution * 42*Gaudi::Units::ns / m_cellRadius) ;
-#endif
   m_rtrelation = OTDet::RtRelation(m_cellRadius,tcoeff,terrcoeff) ;
   checkRtRelation(msg);
   m_walkrelation = OTDet::WalkRelation();

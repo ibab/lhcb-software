@@ -37,7 +37,7 @@ class DeOTStation : public DetectorElement {
   DeOTStation(const std::string& name = "") ;
   
   /** Destructor */
-  ~DeOTStation() ;
+  ~DeOTStation() = default;
   
   /** Retrieves reference to class identifier
    * @return the class identifier for this class
@@ -102,8 +102,8 @@ class DeOTStation : public DetectorElement {
   /// 4 layers; starting from 0
   typedef OT::IndexToDetElementMap<DeOTLayer, 4, 0> MapLayers;
 
-  unsigned int m_stationID;      ///< station ID number
-  LHCb::OTChannelID m_elementID; ///< Element ID
+  unsigned int m_stationID = 0u;      ///< station ID number
+  LHCb::OTChannelID m_elementID = 0u; ///< Element ID
   Layers m_layers;               ///< vector of layers
   MapLayers m_mapLayers;         ///< map of layers
 };

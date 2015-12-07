@@ -19,7 +19,7 @@
  *
  *  This is the detector element class for a Outer Tracker Quarter.
  *
- *  @author Jeroen van Tilburg jtilburg@nikhef.nl 
+ *  @author Jeroen van Tilburg jtilburg@nikhef.nl
  *  @date   04-04-2003
  */
 
@@ -33,10 +33,10 @@ class DeOTQuarter : public DetectorElement {
 
   /** Constructor */
   DeOTQuarter( const std::string& name = "");
-  
+
   /** Destructor */
-  ~DeOTQuarter();
-  
+  ~DeOTQuarter() = default;
+
   /** Retrieves reference to class identifier
    * @return the class identifier for this class
    */
@@ -46,10 +46,10 @@ class DeOTQuarter : public DetectorElement {
    * @return the class identifier for this class
    */
   static const CLID& classID() { return CLID_DeOTQuarter; };
-    
-  /** Initialization method 
+
+  /** Initialization method
    * @return Status of initialisation
-   */ 
+   */
   virtual StatusCode initialize();
 
   /** @return quarterID */
@@ -57,10 +57,10 @@ class DeOTQuarter : public DetectorElement {
 
   /** Element id */
   LHCb::OTChannelID elementID() const;
-  
+
   /** Set element id */
   void setElementID(const LHCb::OTChannelID& chanID);
-  
+
   /** Check contains channel
    *  @param  aChannel The channel to check
    *  @return bool
@@ -84,7 +84,7 @@ class DeOTQuarter : public DetectorElement {
    * @return const pointer to detector element
    */
   const DeOTModule* findModule(const Gaudi::XYZPoint& aPoint) const;
-  
+
   /** Non const method to return the module for a given XYZ point
    * @param  aPoint the given point
    * @return const pointer to detector element
@@ -98,16 +98,16 @@ class DeOTQuarter : public DetectorElement {
    * @return vector of modules
    */
   const Modules& modules() const;
-  
+
  private:
    /// 9 modules; starting from 1
   typedef OT::IndexToDetElementMap<DeOTModule, 9, 1> MapModules;
 
-  unsigned int m_stationID;      ///< station ID number
-  unsigned int m_layerID;        ///< layer ID number
-  unsigned int m_quarterID;      ///< quarter ID number
-  LHCb::OTChannelID m_elementID; ///< element id
-  double m_stereoAngle;          ///< layer stereo angle 
+  unsigned int m_stationID = 0u;      ///< station ID number
+  unsigned int m_layerID = 0u;        ///< layer ID number
+  unsigned int m_quarterID = 0u;      ///< quarter ID number
+  LHCb::OTChannelID m_elementID = 0u; ///< element id
+  double m_stereoAngle = 0.;          ///< layer stereo angle
   Modules m_modules;             ///< vector of modules
   MapModules m_mapModules;       ///< map module id to module
 };

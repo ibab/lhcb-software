@@ -487,7 +487,7 @@ private :
   Gaudi::Plane3D m_entryPlane;                  ///< entry plane
   Gaudi::Plane3D m_exitPlane;                   ///< exit plane
   Gaudi::XYZPoint m_centerModule;               ///< center of module
-  std::auto_ptr<LHCb::OTWireTraj> m_trajFirstWire[2] ; ///< trajectory of first wire in monolayer
+  std::unique_ptr<LHCb::OTWireTraj> m_trajFirstWire[2] ; ///< trajectory of first wire in monolayer
   double m_dxdy[2] ;                            ///< dx/dy along straw
   double m_dzdy[2] ;                            ///< dx/dz along straw
   double m_dy[2] ;                              ///< difference in y coordinates of straw end points

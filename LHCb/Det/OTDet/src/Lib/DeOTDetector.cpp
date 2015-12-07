@@ -16,10 +16,6 @@
 #include "OTDet/DeOTQuarter.h"
 #include "OTDet/DeOTModule.h"
 
-/// Boost
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/lambda.hpp>
-
 // Kernel/LHCbKernel
 
 
@@ -31,34 +27,15 @@
  */
 
 using namespace LHCb;
-using namespace boost::lambda;
 
 DeOTDetector::DeOTDetector(const std::string& name) :
-  DetectorElement( name ),
-  m_stations(),
-  m_layers(),
-  m_quarters(),
-  m_modules(),
-  m_firstStation(0u),
-  m_nChannels(0u),
-  m_nMaxChanInModule(0u),
-  m_cellRadius(0.0),
-  m_resolution(0.0),
-  m_propagationDelay(0.0),
-  m_maxDriftTime(0.0),
-  m_maxDriftTimeCor(0.0),
-  m_deadTime(0.0),
-  m_calibration(0)
+  DetectorElement( name )
 {
   /// Constructor
   m_stations.reserve(3);
   m_layers.reserve(12);
   m_quarters.reserve(48);
   m_modules.reserve(432);
-}
-
-DeOTDetector::~DeOTDetector() {
-  /// Destructor
 }
 
 const CLID& DeOTDetector::clID () const {
@@ -77,8 +54,8 @@ StatusCode DeOTDetector::initialize()
   }
 
   if( hasCondition("Calibration") ) {
-    m_calibration = new Calibration(this->condition("Calibration")) ;
-    updMgrSvc()->registerCondition( m_calibration,
+    m_calibration.reset( new Calibration(this->condition("Calibration")) );
+    updMgrSvc()->registerCondition( m_calibration.get(),
 				    m_calibration->m_condition.path(),
 				    &DeOTDetector::Calibration::callback ) ;
   } else {
@@ -146,33 +123,32 @@ void DeOTDetector::setFirstStation(const unsigned int iStation) {
 /// Find the station for a given XYZ point
 const DeOTStation* DeOTDetector::findStation(const Gaudi::XYZPoint& aPoint) const {
   /// Find the station and return a pointer to the station from XYZ point
-  Stations::const_iterator iS = std::find_if(m_stations.begin(), m_stations.end(),
-                                             bind(&DetectorElement::isInside, _1, aPoint));
-  return (iS != m_stations.end() ? (*iS) : 0);
+  auto iS = std::find_if(m_stations.begin(), m_stations.end(),
+                         [&](const DetectorElement* e) { return e->isInside(aPoint); } );
+  return iS != m_stations.end() ? *iS : nullptr;
 }
 
 /// Find the layer for a given XYZ point
 const DeOTLayer* DeOTDetector::findLayer(const Gaudi::XYZPoint& aPoint) const {
   const DeOTStation* s = findStation(aPoint);
-  return (s == 0 ? 0 : s->findLayer(aPoint));
+  return s ? s->findLayer(aPoint) : nullptr ;
 }
 
 /// Find the quarter for a given XYZ point
 const DeOTQuarter* DeOTDetector::findQuarter(const Gaudi::XYZPoint& aPoint) const {
   const DeOTLayer* l = findLayer(aPoint);
-  return (l == 0 ? 0 : l->findQuarter(aPoint));
+  return l ? l->findQuarter(aPoint) : nullptr;;
 }
 
 /// Find the module for a given XYZ point
 const DeOTModule* DeOTDetector::findModule(const Gaudi::XYZPoint& aPoint) const {
   const DeOTQuarter* q = findQuarter(aPoint);
-  return(q == 0 ? 0 : q->findModule(aPoint));
+  return q  ? q->findModule(aPoint) : nullptr;;
 }
 
 int DeOTDetector::sensitiveVolumeID( const Gaudi::XYZPoint& aPoint ) const {
   const DeOTModule* m = findModule(aPoint);
-  if (m==0) return -1;
-  return m->elementID();
+  return m ? static_cast<int>(m->elementID()) : -1;
 }
 
 double DeOTDetector::distanceAlongWire(const OTChannelID aChannel,

@@ -1,6 +1,18 @@
 ! Package     : OTDet
 ! Responsible : Alexandr Kozlinskiy, Lucia Grillo
 !--------------------------------------------------------------------------
+! 2015-12-06 - Gerhard Raven
+ - prefer std::unique_ptr over raw pointer + explicit delete
+ - prefer direct member initialization
+ - replace deprecated std::auto_ptr with std::unique_ptr
+ - prefer = default destructors and constructors
+ - prefer auto
+ - do not compare pointers to 0, avoid casting 0 to a pointer
+ - prefer lambda over boost::bind and boost::lambda
+ - prefer emplace_back
+ - prefer std::minmax over seperate std::min, std::max
+ - do not cast if not required
+
 
 !========================= OTDet v8r18 2015-11-23 =========================
 ! 2015-11-06 - Marco Cattaneo

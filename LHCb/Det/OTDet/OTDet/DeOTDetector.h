@@ -57,7 +57,7 @@ public:
   DeOTDetector(const std::string& name = "");
   
   /** Destructor */
-  ~DeOTDetector();
+  ~DeOTDetector() = default;
     
   /** Retrieves reference to class identifier
    * @return the class identifier for this class
@@ -320,7 +320,7 @@ public:
   
   /** get the calibrationholder */
   const Calibration* globalCalibration() const {
-    return m_calibration ;
+    return m_calibration.get() ;
   }
   
   /** get the global T0 offset */
@@ -341,18 +341,18 @@ private:
   Quarters m_quarters;             ///< flat vector of quarters
   Modules m_modules;               ///< flat vector of modules
   MapStations m_mapStations;       ///< map of stations
-  unsigned int m_firstStation;     ///< number of first station
+  unsigned int m_firstStation = 0u;     ///< number of first station
 
   /** General Outer Tracker pramaters */
-  unsigned int m_nChannels;        ///< total number of channels in OT
-  unsigned int m_nMaxChanInModule; ///< the maximum # channels in 1 module
-  double m_cellRadius;             ///< cell radius
-  double m_resolution;             ///< straw resolution
-  double m_propagationDelay;       ///< Propagation time delay
-  double m_maxDriftTime;           ///< maximum drift time
-  double m_maxDriftTimeCor;        ///< magn. correction on maximum drift time
-  double m_deadTime;               ///< deadtime
-  Calibration* m_calibration ;     ///< holder for global calibration parameters (e.g. t0)
+  unsigned int m_nChannels = 0u;        ///< total number of channels in OT
+  unsigned int m_nMaxChanInModule = 0u; ///< the maximum # channels in 1 module
+  double m_cellRadius = 0.;             ///< cell radius
+  double m_resolution = 0.;             ///< straw resolution
+  double m_propagationDelay = 0.;       ///< Propagation time delay
+  double m_maxDriftTime = 0.;           ///< maximum drift time
+  double m_maxDriftTimeCor = 0.;        ///< magn. correction on maximum drift time
+  double m_deadTime = 0.;               ///< deadtime
+  std::unique_ptr<Calibration> m_calibration;     ///< holder for global calibration parameters (e.g. t0)
 };
 
 // -----------------------------------------------------------------------------

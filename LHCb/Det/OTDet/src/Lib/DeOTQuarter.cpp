@@ -11,10 +11,6 @@
 #include "OTDet/DeOTQuarter.h"
 #include "OTDet/DeOTModule.h"
 
-/// Boost
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/lambda.hpp>
-
 /** @file DeOTQuarter.cpp
  *
  *  Implementation of class :  DeOTQuarter
@@ -23,22 +19,12 @@
  */
 
 using namespace LHCb;
-using namespace boost::lambda;
 
 DeOTQuarter::DeOTQuarter(const std::string& name) :
-  DetectorElement(name),
-  m_stationID(0u),
-  m_layerID(0u),
-  m_quarterID(0u),
-  m_elementID(0u),
-  m_stereoAngle(0.0),
-  m_modules() 
+  DetectorElement(name)
 { 
   /// Constructor
   m_modules.reserve(9);
-}
-
-DeOTQuarter::~DeOTQuarter() {
 }
 
 const CLID& DeOTQuarter::clID() const { 
@@ -59,9 +45,9 @@ StatusCode DeOTQuarter::initialize() {
 
   IDetectorElement* layer = this->parentIDetectorElement();
   IDetectorElement* station = layer->parentIDetectorElement();
-  m_stationID = (unsigned int) station->params()->param<int>("stationID");
-  m_layerID = (unsigned int) layer->params()->param<int>("layerID");
-  m_quarterID = (unsigned int) param<int>("quarterID");
+  m_stationID = station->params()->param<int>("stationID");
+  m_layerID = layer->params()->param<int>("layerID");
+  m_quarterID = param<int>("quarterID");
   OTChannelID aChan(m_stationID, m_layerID, m_quarterID, 0u, 0u, 0u);
   setElementID(aChan);
 
@@ -73,7 +59,8 @@ StatusCode DeOTQuarter::initialize() {
 /// Find the module for a given XYZ point
 const DeOTModule* DeOTQuarter::findModule(const Gaudi::XYZPoint& aPoint) const {
  /// Find the modules and return a pointer to the modules from channel
-  Modules::const_iterator iM = std::find_if(m_modules.begin(), m_modules.end(),
-                                            bind(&DetectorElement::isInside, _1, aPoint));
-  return (iM != m_modules.end() ? (*iM) : 0);
+  auto iM = std::find_if(m_modules.begin(), m_modules.end(),
+                         [&](const DetectorElement *e) 
+                         { return e->isInside(aPoint); } );
+  return iM != m_modules.end() ? *iM : nullptr;
 }

@@ -2,7 +2,6 @@
 #define OTDET_OTWIRETRAJ
 
 #include "Kernel/Trajectory.h"
-#include "DetDesc/StaticArray.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
 /*****************************/
