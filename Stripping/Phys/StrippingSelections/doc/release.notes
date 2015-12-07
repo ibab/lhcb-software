@@ -5,6 +5,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-07 - Pablio Ruiz
+   - Added hhgammagamma and hhhgammagamma lines to StrippingBeauty2Xgamma
+   - Adjustments to Lb2L0Gamma converted lines
+
 ! 2015-12-07 - Patrick Owen
    - StrippingLb2pMuNuVub.py added Lb->ppipimunu and B->ppmunu lines
 

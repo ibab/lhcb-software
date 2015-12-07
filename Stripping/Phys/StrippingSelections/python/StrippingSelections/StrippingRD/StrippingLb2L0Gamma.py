@@ -37,8 +37,9 @@ default_config = {'NAME'        : 'Lb2L0Gamma',
                                    'Lb2L0GammaConvertedPrescale' : 1.0,
                                    # Trigger cuts
                                    'L0'                          : ['Photon', 'Electron', 'Hadron'],
-                                   'HLT1'                         : [],
-                                   'HLT2'                         : [],
+                                   'L0_Conv'                     : [],
+                                   'HLT1'                        : [],
+                                   'HLT2'                        : [],
                                    # Track cuts
                                    'Track_Chi2ndf_Max'           : 3.0,
                                    'Track_MinChi2ndf_Max'        : 2.0,
@@ -64,7 +65,7 @@ default_config = {'NAME'        : 'Lb2L0Gamma',
                                    'Lambdab_VtxChi2_Max'         : 9.0,
                                    'Lambdab_Pt_Min'              : 1000.0,
                                    'Lambdab_SumPt_Min'           : 5000.0,
-                                   'Lambdab_IPChi2_Max'          : 9.0,
+                                   'Lambdab_IPChi2_Max'          : 25.0,
                                    'Lambdab_MTDOCAChi2_Max'      : 7.0,
                                    'Lambdab_MassWindow'          : 1100.0,
                                   },
@@ -75,6 +76,7 @@ class StrippingLb2L0GammaConf(LineBuilder):
     __configuration_keys__ = ('Lb2L0GammaPrescale'         ,
                               'Lb2L0GammaConvertedPrescale',
                               'L0'                         ,
+                              'L0_Conv'                    ,
                               'HLT1'                       ,
                               'HLT2'                       ,
                               'Track_Chi2ndf_Max'          ,
@@ -113,6 +115,9 @@ class StrippingLb2L0GammaConf(LineBuilder):
         l0 = None
         if config['L0']:
             l0 = "L0_CHANNEL_RE('%s')" % ('|'.join(config['L0']))
+        l0_conv = None
+        if config['L0_Conv']:
+            l0_conv = "L0_CHANNEL_RE('%s')" % ('|'.join(config['L0_Conv']))
         hlt1 = None
         if config['HLT1']:
             hlt1 = "HLT_PASS_RE('%s')" % ('|'.join(config['HLT1']))
@@ -217,7 +222,7 @@ class StrippingLb2L0GammaConf(LineBuilder):
         self.registerLine(self.line)
         self.line_cnv = StrippingLine("Lb2L0GammaConverted",
                                       prescale=config["Lb2L0GammaPrescale"],
-                                      L0DU=l0,
+                                      L0DU=l0_conv,
                                       HLT1=hlt1,
                                       HLT2=hlt2,
                                       checkPV=True,
