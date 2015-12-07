@@ -5,6 +5,8 @@
 ! Purpose     : Infrastructure for HLT and stripping 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2015-12-06 - Gerhard Raven
+ - stop propagating globalTimeOffset
 
 !======================= SelectionLine v1r6 2015-10-05 ========================
 

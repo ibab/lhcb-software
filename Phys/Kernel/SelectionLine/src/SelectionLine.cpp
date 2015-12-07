@@ -512,8 +512,7 @@ Algorithm* Selection::Line::getSubAlgorithm(const std::string& algname)
   // It doesn't. Create it, and while doing so, ensure some magic properties are propagated...
   populate_JobOptionsSvc_t populate{ name.name(), m_jos,
        std::forward_as_tuple( "Context",          context() ),
-       std::forward_as_tuple( "RootInTES",        rootInTES() ),
-       std::forward_as_tuple( "GlobalTimeOffset", globalTimeOffset() )
+       std::forward_as_tuple( "RootInTES",        rootInTES() )
   };
   return createSubAlgorithm( name.type(), name.name(), myAlg ).isSuccess() ? myAlg : nullptr;
 }
