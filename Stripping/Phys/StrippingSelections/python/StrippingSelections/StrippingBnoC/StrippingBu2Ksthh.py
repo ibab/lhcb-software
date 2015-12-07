@@ -58,8 +58,11 @@ default_config = {
                      'B_DD_FDChi2'             : 50.0,
                      'B_LL_FDChi2'             : 50.0,
                      'GEC_MaxTracks'           : 250,
-                     'HLT1Dec'                 : 'Hlt1(Two)?TrackMVADecision',
-                     'HLT2Dec'                 : 'Hlt2Topo[234]BodyDecision',
+                     'ConeAngle10'             : 1.0, 
+                     'ConeAngle15'             : 1.5, 
+                     'ConeAngle17'             : 1.7, 
+                     'HLT1Dec'                 : 'Hlt1TrackAllL0Decision', 
+                     'HLT2Dec'                 : 'Hlt2Topo[234]Body.*Decision',
                      'Prescale'                : 1.0,
                      'Postscale'               : 1.0
                      },
@@ -126,6 +129,9 @@ class Bu2KsthhConf(LineBuilder) :
                               'B_DD_FDChi2',
                               'B_LL_FDChi2',
                               'GEC_MaxTracks',
+                              'ConeAngle10',
+                              'ConeAngle15',
+                              'ConeAngle17',
                               'HLT1Dec',
                               'HLT2Dec',
                               'Prescale',
@@ -148,6 +154,34 @@ class Bu2KsthhConf(LineBuilder) :
         Hlt2Filter = {'Code' : "HLT_PASS_RE('%s')" % config['HLT2Dec'],
                      'Preambulo' : ["from LoKiCore.functions import *"]}
                           
+        relInfo    = [ { "Type" : "RelInfoConeVariables" 
+                      , "ConeAngle" : config['ConeAngle10']
+                      , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'] 
+                      , 'Location'  : 'P2ConeVar10_B'
+                      , "DaughterLocations" : { "[B+ -> ^pi+ pi- (K*(892)+ -> KS0 pi+)]CC" : 'P2ConeVar10_1',
+                                                "[B+ -> pi+ ^pi- (K*(892)+ -> KS0 pi+)]CC" : 'P2ConeVar10_2',
+                                                "[B+ -> pi+ pi- (K*(892)+ -> ^KS0 pi+)]CC" : 'P2ConeVar10_3',
+                                                "[B+ -> pi+ pi- (K*(892)+ -> KS0 ^pi+)]CC" : 'P2ConeVar10_4'} },
+                      { "Type" : "RelInfoConeVariables"
+                      , "ConeAngle" : config['ConeAngle15'] 
+                      , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
+                      , 'Location'  : 'P2ConeVar15_B'
+                      , "DaughterLocations" : { "[B+ -> ^pi+ pi- (K*(892)+ -> KS0 pi+)]CC" : 'P2ConeVar15_1',
+                                                "[B+ -> pi+ ^pi- (K*(892)+ -> KS0 pi+)]CC" : 'P2ConeVar15_2',
+                                                "[B+ -> pi+ pi- (K*(892)+ -> ^KS0 pi+)]CC" : 'P2ConeVar15_3',
+                                                "[B+ -> pi+ pi- (K*(892)+ -> KS0 ^pi+)]CC" : 'P2ConeVar15_4'} },
+                      { "Type" : "RelInfoConeVariables"
+                      , "ConeAngle" : config['ConeAngle17'] 
+                      , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
+                      , 'Location'  : 'P2ConeVar17_B'
+                      , "DaughterLocations" : { "[B+ -> ^pi+ pi- (K*(892)+ -> KS0 pi+)]CC" : 'P2ConeVar17_1',
+                                                "[B+ -> pi+ ^pi- (K*(892)+ -> KS0 pi+)]CC" : 'P2ConeVar17_2',
+                                                "[B+ -> pi+ pi- (K*(892)+ -> ^KS0 pi+)]CC" : 'P2ConeVar17_3',
+                                                "[B+ -> pi+ pi- (K*(892)+ -> KS0 ^pi+)]CC" : 'P2ConeVar17_4'} },
+                      { "Type"      : "RelInfoVertexIsolation"
+                      , "Location"  : 'VtxIsolationVar'}
+                     ]
+
         self.pions = Pions
 
         self.makeKS2DD( 'KSfor'+dd_name, config )
@@ -166,6 +200,7 @@ class Bu2KsthhConf(LineBuilder) :
                                      HLT1 = Hlt1Filter,
                                      HLT2 = Hlt2Filter,
                                      FILTER = GECCode, 
+                                     RelatedInfoTools = relInfo, 
                                      EnableFlavourTagging = True, 
                                      MDSTFlag = True
                                      )
@@ -176,6 +211,7 @@ class Bu2KsthhConf(LineBuilder) :
                                      HLT1 = Hlt1Filter,
                                      HLT2 = Hlt2Filter,
                                      FILTER = GECCode,
+                                     RelatedInfoTools = relInfo, 
                                      EnableFlavourTagging = True, 
                                      MDSTFlag = True
                                      )

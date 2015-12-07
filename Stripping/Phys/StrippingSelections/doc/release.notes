@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-07 - Rafael Coutinho
+  - Updated StrippingBu2Ksthh.py and StrippingB2Ksthh.py for Run1 data
+
 ! 2015-12-07 - Paula Alvarez
 	-	Added B2KTauMu lines in StrippingB2XTauMu.py
 
