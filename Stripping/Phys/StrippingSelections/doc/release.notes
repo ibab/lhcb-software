@@ -5,6 +5,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+
+! 2015-12-07 - Greg Ciezarek
+	-	Made prescale configurable for StrippingB2DMuForTauMu.py
+	-   Adding /\b -> p tau nu lines to StrippingB2XTauNu.py
+
 ! 2015-12-07 - Carlos Vazquez Sierra
  - Update in B2CC lines
 

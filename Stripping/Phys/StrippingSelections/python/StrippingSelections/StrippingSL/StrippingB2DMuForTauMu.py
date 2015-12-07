@@ -41,11 +41,9 @@ default_config = {
 	,"BDIRA"         : 0.999  #adimensiional
 	,"BVCHI2DOF"     : 6.0    # adimensiional
 	,"SPDmax"        : 600    # adimensiional
+	,"FakePrescale"  : 1.     # adimensional
 	,"Hlt2Line"        : "HLT_PASS_RE('Hlt2XcMuXForTauB2XcMuDecision')"    # adimensiional
 	,"Hlt2LineFake"        : "HLT_PASS_RE('Hlt2XcMuXForTauB2XcFakeMuDecision')"    # adimensiional
-#	,"Hlt2Line"        : "HLT_PASS_RE('Hlt2XcMuXForTau.*Decision')"    # adimensiional
-#	,"Hlt2LineFake"        : "HLT_PASS_RE('Hlt2XcMuXForTau.*Decision')"    # adimensiional
-
 	  },
       'STREAMS'     : ['Semileptonic']	  
       }
@@ -74,6 +72,7 @@ class B2DMuForTauMuconf(LineBuilder) :
         ,"BDIRA"         
         ,"BVCHI2DOF"
         ,"SPDmax"
+        ,"FakePrescale"
         ,"Hlt2Line"
         ,"Hlt2LineFake"
         )
@@ -241,19 +240,19 @@ class B2DMuForTauMuconf(LineBuilder) :
         self.registerLine(self.B2LcMuForTauMu)     
 
 
-        self.FakeB2DMuForTauMu = StrippingLine('b2D0MuXFake' + name+ 'Line', prescale = 1., selection = self.selFakeb2D0MuX, FILTER  = GECs,HLT2 = config["Hlt2LineFake"])
+        self.FakeB2DMuForTauMu = StrippingLine('b2D0MuXFake' + name+ 'Line', prescale = config["FakePrescale"], selection = self.selFakeb2D0MuX, FILTER  = GECs,HLT2 = config["Hlt2LineFake"])
         self.registerLine(self.FakeB2DMuForTauMu)   
 
-        self.FakeB2DK3piMuForTauMu = StrippingLine('b2D0K3piMuXFake' + name+ 'Line', prescale = 1., selection = self.selFakeb2D03MuX, FILTER  = GECs,HLT2 = config["Hlt2LineFake"])
+        self.FakeB2DK3piMuForTauMu = StrippingLine('b2D0K3piMuXFake' + name+ 'Line', prescale = config["FakePrescale"], selection = self.selFakeb2D03MuX, FILTER  = GECs,HLT2 = config["Hlt2LineFake"])
         self.registerLine(self.FakeB2DK3piMuForTauMu)
         
-        self.FakeB2DpMuForTauMu = StrippingLine('b2DpMuXFake' + name+ 'Line', prescale = 1., selection = self.selFakeb2DpMuX, FILTER  = GECs,HLT2 = config["Hlt2LineFake"])
+        self.FakeB2DpMuForTauMu = StrippingLine('b2DpMuXFake' + name+ 'Line', prescale = config["FakePrescale"], selection = self.selFakeb2DpMuX, FILTER  = GECs,HLT2 = config["Hlt2LineFake"])
         self.registerLine(self.FakeB2DpMuForTauMu)        
 
-        self.FakeB2DsMuForTauMu = StrippingLine('b2DsMuXFake' + name+ 'Line', prescale = 1., selection = self.selFakeb2DsMuX, FILTER  = GECs,HLT2 = config["Hlt2LineFake"])
+        self.FakeB2DsMuForTauMu = StrippingLine('b2DsMuXFake' + name+ 'Line', prescale = config["FakePrescale"], selection = self.selFakeb2DsMuX, FILTER  = GECs,HLT2 = config["Hlt2LineFake"])
         self.registerLine(self.FakeB2DsMuForTauMu) 
         
-        self.FakeB2LcMuForTauMu = StrippingLine('b2LcMuXFake' + name+ 'Line', prescale = 1., selection = self.selFakeb2LcMuX, FILTER  = GECs,HLT2 = config["Hlt2LineFake"])
+        self.FakeB2LcMuForTauMu = StrippingLine('b2LcMuXFake' + name+ 'Line', prescale = config["FakePrescale"], selection = self.selFakeb2LcMuX, FILTER  = GECs,HLT2 = config["Hlt2LineFake"])
         self.registerLine(self.FakeB2LcMuForTauMu)     
 
     def _muonFilter( self ):
