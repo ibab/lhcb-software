@@ -272,7 +272,8 @@ StatusCode RelInfoBs2MuMuBIsolations::OtherB(const LHCb::Particle *top,
 
     const LHCb::Particle *myDau = NULL;
     if (vdau1->charge()>0) myDau = vdau1;
-    else if (vdau2->charge()>0) myDau = vdau2;
+    // else if (vdau2->charge()>0) myDau = vdau2;
+    else myDau = vdau2;
     if(vdau1->charge() == vdau2->charge() ) myDau = vdau2;
     
     Gaudi::XYZVector ptproj2(0.,0.,0.);
