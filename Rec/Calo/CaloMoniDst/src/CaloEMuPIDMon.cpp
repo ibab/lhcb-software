@@ -16,11 +16,6 @@
 #include "Relations/IRelationWeighted.h"
 #include "CaloUtils/Calo2Track.h"
 // ============================================================================
-// Boost
-// ============================================================================
-#include "boost/lexical_cast.hpp"
-#include "boost/assign/list_of.hpp"
-// ============================================================================
 // Local
 // ============================================================================
 #include "CaloMoniAlg.h"
@@ -200,8 +195,7 @@ CaloEMuPIDMon::CaloEMuPIDMon( const std::string &name, ISvcLocator *isvc )
 
   // DG: on SLC5 I get 'warning: type qualifiers ignired on function return type'
   // if I combine the two follwing lines in one call (?)
-  std::vector<std::string> histoList = boost::assign::list_of<std::string>("All");
-  setProperty( "histoList",           histoList);
+  setProperty( "histoList",           { { "All" } });
   setProperty( "removeFromHistoList", std::vector<std::string>() );
   setProperty( "SaturationBin1D",     false);
   setProperty( "SaturationBin2D",     false);

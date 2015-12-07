@@ -17,10 +17,6 @@
 #include "Kernel/Particle2MCLinker.h"
 #include "CaloUtils/Calo2Track.h"
 // ============================================================================
-// Boost
-// ============================================================================
-#include "boost/lexical_cast.hpp"
-// ============================================================================
 // Local
 // ============================================================================
 #include "CaloMoniAlg.h"
@@ -74,10 +70,10 @@ public:
     if ( sc.isFailure() ) return sc; // error already printedby GaudiAlgorithm
   
     const std::string mom = "tanh(P/"
-      + boost::lexical_cast<std::string>( m_pNorm / Gaudi::Units::GeV )
+      + std::to_string( m_pNorm / Gaudi::Units::GeV )
       + " GeV/c) ";
     const std::string cut  = "with cut 'DLL>"
-      + boost::lexical_cast<std::string>( m_cut ) + "' ";
+      + std::to_string( m_cut ) + "' ";
   
     hBook1(  "1", "DLL for 'Signal'",     -5, 5 );
     hBook1(  "2", "DLL for 'Ghosts'",     -5, 5 );

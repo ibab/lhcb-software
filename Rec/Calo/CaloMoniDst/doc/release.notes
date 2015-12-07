@@ -4,6 +4,10 @@
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+! 2015-12-06 - Gerhard Raven
+ - replace boost::lexical_cast<std::string> with std::to_string
+ - replace explicit boost::assign::list_of with implicit std::initializer_list
+
 !========================= CaloMoniDst v5r20 2015-11-23 =========================
 ! 2015-11-06 - O. Deschamps
   -fix clang warnings
