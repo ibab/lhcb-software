@@ -2,6 +2,12 @@
 ! Package         : OTDAQ
 ! Package manager : A.Kozlinskiy
 !------------------------------------------------------------------------------
+! 2015-12-06 - Gerhard Raven
+ - qualify virtual function implementations as override
+ - prefer range-based for loops
+ - provide begin/end for container classes to allow use in STL algorithms
+ - replace boost::lambda::bind with first-class lambda (which allows for inlining)
+ - prefer emplace_back over push_back
 
 !========================= OTDAQ v7r20p1 2015-10-12 =========================
 ! 2015-08-03 - Gerhard Raven
