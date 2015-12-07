@@ -1177,11 +1177,16 @@ def makeResonance( name, config, inputSel, decDescriptors):
     
     combCuts = "in_range( {0[Res_Mass_MIN]},AM,{0[Res_Mass_MAX]} )".format(config)
     
+    etaggCuts = (
+        "(PT > {0[Neut_PT_MIN]})"
+        "& (ADMASS('eta') < {0[Neut_Mass_Win]})"
+        ).format(config)
+
     pizeroCuts = (
         "(PT > {0[Neut_PT_MIN]})"
-        "& (ADMASS('pi0') > {0[Neut_Mass_Win]})"
+        "& (ADMASS('pi0') < {0[Neut_Mass_Win]})"
         ).format(config)
-    
+
     gammaCuts = (
         "(PT > {0[Neut_PT_MIN]})"
         ).format(config)
@@ -1206,7 +1211,7 @@ def makeResonance( name, config, inputSel, decDescriptors):
         'pi+'  : '{0}'.format(piCuts),
         'gamma': '{0}'.format(gammaCuts),
         'pi0'  : '{0}'.format(pizeroCuts),
-        'eta'  : '{0}'.format(pizeroCuts),
+        'eta'  : '{0}'.format(etaggCuts),
         },
         CombinationCut=combCuts,
         MotherCut=resCuts

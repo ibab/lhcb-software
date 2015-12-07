@@ -6,6 +6,9 @@
 
 !========================= StrippingArchive v1r35 2015-11-26 =========================
 
+! 2015-12-07 - Andrea Contu
+ - Fix to StrippingD2PiPi0.py
+
 ! 2015-12-06 - Andrea Contu
  - Fixed qmtest
 
