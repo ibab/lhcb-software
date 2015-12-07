@@ -131,7 +131,6 @@ class B2XLLConf(LineBuilder) :
         SelDsStars= self._dSStarPlus( name="DsStarFor"+self._name, DPlus=SelDsPlus, Gamma=Gammas )
 
         # 2 : Dileptons
-        # self._DaughtersCut = "(PT > %(LeptonPT)s) & (MIPCHI2DV(PRIMARY)>%(LeptonIPCHI2)s)" % config
         self._DaughtersCut = "(PT > %(LeptonPT)s) & (MIPCHI2DV(PRIMARY)>%(LeptonIPCHI2)s) & (TRGHOSTPROB<%(TrGhostProb)s) & (TRCHI2DOF<%(TrChi2DOF)s)" % config
         MuMu = self._makeMuMu( "MuMuFor"+ self._name, params = config )
         MuE  = self._makeMuE ( "MuEFor" + self._name, params = config )
@@ -189,34 +188,16 @@ class B2XLLConf(LineBuilder) :
         """
         Return related information for the given selection
         """
-        _decay = {"[Beauty -> ^( J/psi(1S) -> l+ l- ) X]CC" : "LPNHEISO"} # Surely this should work!
-        if ( selection.name().endswith("SS") ):
-            _decay = {"[Beauty -> ^( J/psi(1S) -> l+ l+ ) X]CC" : "LPNHEISO"} # Surely this should work!
-        RelInfo = [{ "Type": "RelInfoConeVariables", "ConeAngle":1.0, "Location":"ConeIsoInfo" },
-                   { "Type": "RelInfoVertexIsolation", "Location":"VtxIsoInfo" },
-                   { "Type": "RelInfoVertexIsolationBDT", "Location":"VtxIsoInfoBDT" },
-                   
-                   # {'Type' : 'RelInfoBs2MuMuTrackIsolations', # LPNHE isolation - 1
-                   #  'Location'  : 'BSMUMUVARIABLES',
-                   #  'DaughterLocations' : _decay,
-                   #  'tracktype' : 3,
-                   #  'makeTrackCuts' : False
-                   #  },
-
-                   # {'Type' : 'RelInfoBs2MuMuTrackIsolations',
-                   #  'Location'  : 'BSMUMUTrackVARIABLES',
-                   #  'tracktype' : 3,
-                   #  'angle'      : 0.27,
-                   #  'fc'         : 0.60,
-                   #  'doca_iso'   : 0.13,
-                   #  'ips'        : 3.0,
-                   #  'svdis'      : -0.15,
-                   #  'svdis_h'    : 30.,
-                   #  'pvdis'      : 0.5,
-                   #  'pvdis_h'    : 40.,
-                   #  'makeTrackCuts' : False,
-                   #  'IsoTwoBody' : True
-                   #  },
+        # Use defaults where ever possible
+        _decay1 = "Bottom -> (J/psi(1S) -> ^[l+]CC [l-]CC) X"
+        _decay2 = "Bottom -> (J/psi(1S) -> [l+]CC ^[l-]CC) X"
+        RelInfo = [{ "Type":"RelInfoConeVariables", "Location":"ConeIsoInfo" },
+                   { "Type":"RelInfoVertexIsolation", "Location":"VtxIsoInfo" },
+                   { "Type":"RelInfoVertexIsolationBDT", "Location":"VtxIsoInfoBDT" },
+                   { "Type":"RelInfoBs2MuMuBIsolations", "Location":"BSMUMUVARIABLES"},
+                   # { "Type":"RelInfoBs2MuMuTrackIsolations", "Location":"BSMUMUTrackVARIABLES"},
+                   { "Type":"RelInfoBs2MuMuTrackIsolations", "DaughterLocations":{_decay1:"Muon1MuMuTrkIso", _decay2:"Muon2MuMuTrackIso"} },
+                   { "Type":"RelInfoMuonIsolation", "DaughterLocations":{_decay1:"Muon1Iso", _decay2:"Muon2Iso"} },
                    ]
         return RelInfo
 
@@ -228,7 +209,7 @@ class B2XLLConf(LineBuilder) :
         # requires all basic particles to have IPCHI2 > KaonIPCHI2
         # and hadron PT > KaonPT
         # Added a ghost probability cut to reduce the runI rate
-        _Code = "(PT > %(KaonPT)s *MeV) & (TRGHOSTPROB<%(TrGhostProb)s) & (TRCHI2DOF<%(TrChi2DOF)s) & " \
+        _Code = "(PT > %(KaonPT)s *MeV) & " \
                 "((ISBASIC & (MIPCHI2DV(PRIMARY) > %(KaonIPCHI2)s)) | " \
                 "(NDAUGHTERS == NINTREE( ISBASIC &  (MIPCHI2DV(PRIMARY) > %(KaonIPCHI2)s))))" % params
         # Mass window
@@ -394,15 +375,14 @@ class B2XLLConf(LineBuilder) :
                     "[ B0 -> J/psi(1S) omega(782) ]cc",
                     "[ B0 -> J/psi(1S) f_0(980) ]cc",
                     ]
-        
+
         _Combine = CombineParticles(DecayDescriptors = _Decays,
                                     CombinationCut = masscut,
                                     MotherCut = _Cut )
-        
+
         _Merge   = MergedSelection("Merge"+name, 
                                    RequiredSelections = XPart )
-        
-        
+
         return Selection(name,
                          Algorithm = _Combine,
                          RequiredSelections = [ dilepton, _Merge ]) 
