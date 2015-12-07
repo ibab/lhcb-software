@@ -1,17 +1,17 @@
-# $Id: StrippingCC2DD.py, v 0.3 2015-12-01  $
+# $Id: StrippingCC2DD.py, v 0.4 2015-12-01  $
 ''' 
 Module for construction of CC->D D, where CC is a particle decaying to D D
                                     and D is a D0(Kpi) or a D+(K-pi+pi+)
                                           or a Ds(KKpi)
                                           or one of their antipartciles
-          v .03: added "D+charmed baryon" combinations, where
-                         "charmed baryon" = Lambda_c+(Xi_c+) -> p+ K- pi+
-                                      or    Xi_c0(Omega_c0)  -> p+ K- K- pi+
+          v .03: added "D+charmed baryon" and "2-charmed baryons" combinations,
+                 where "charmed baryon" = Lambda_c+(Xi_c+) -> p+ K- pi+
+                                    or    Xi_c0(Omega_c0)  -> p+ K- K- pi+
 '''
 
 __author__ = ['Lucio Anderlini','Andrea Bizzeti']
 __date__ = '2015-12-01'
-__version__ = '$Revision: 0.3 $'
+__version__ = '$Revision: 0.4 $'
 
 __all__ = ('CC2DDConf',
            'makeD02HH',
@@ -61,7 +61,7 @@ default_config =  {
                    'LcPT'          : "1000*MeV",
                    'LcVtxChi2Ndof' : 10,
                    'LcBpvdira'     : -10.,
-                   'LcBpvdls'      : -10.,
+                   'LcBpvdls'      : 4.,               # standard cut
                    'LcdaughterBpvIpChi2'    : 4.,
                    'LcdaughterPT'           : "500*MeV",
                    'LcdaughterP'            : "5*GeV",
@@ -77,8 +77,8 @@ default_config =  {
                    'XcPT'          : "1000*MeV",
                    'XcVtxChi2Ndof' : 10,
                    'XcBpvdira'     : -10.,
-                   'XcBpvdls'      : -10.,
-                   'XcdaughterBpvIpChi2'    : -10.,      # no cut
+                   'XcBpvdls'      : -10.,             # no cut
+                   'XcdaughterBpvIpChi2'    : 2.,      # loose cut
                    'XcdaughterPT'           : "500*MeV",
                    'XcdaughterP'            : "5*GeV",
                    'XcdaughterTrkChi2'      : 3,
@@ -510,11 +510,6 @@ def makeXc2HHHH(name, XcMassWin, XcPT, XcVtxChi2Ndof, XcBpvdira, XcBpvdls,
 
 
 
-
-
-
-
-
 def makeCC2DD(name,
                    D0Sel,
                    DplusSel,
@@ -550,11 +545,11 @@ def makeCC2DD(name,
     #print 'makeBs2JpsiPhi', name, 'MotherCuts:', _motherCuts
     _X = CombineParticles( DecayDescriptors = [
                   ################################# pure particle-(anti)particle
-                  "psi(3770) -> D0 D~0",
+                 "psi(3770) -> D0 D~0",
                  "[psi(3770) -> D0 D0]cc",      ### C=2,       Q=0
-                  "psi(3770) -> D+ D-",
+                 "psi(3770) -> D+ D-",
                  "[psi(3770) -> D+ D+]cc",      ### C=2,       Q=+2
-                  "psi(3770) -> D_s+ D_s-",
+                 "psi(3770) -> D_s+ D_s-",
                  "[psi(3770) -> D_s+ D_s+]cc",  ### C=2, S=2,  Q=+2
                   #################################  mixed (without Ds)
                  "[psi(3770) -> D0 D-]cc",      ###            Q=-1
@@ -572,12 +567,19 @@ def makeCC2DD(name,
                  "[psi(3770) -> Lambda_c+ D_s+]cc",
                  "[psi(3770) -> Lambda_c+ D_s-]cc",
                   #################################  baryon mixed (with Xi_c0/Omega_c0)
-                 "[psi(3770) -> Xi_c+ D0]cc",
-                 "[psi(3770) -> Xi_c+ D~0]cc",
-                 "[psi(3770) -> Xi_c+ D+]cc",
-                 "[psi(3770) -> Xi_c+ D-]cc",
-                 "[psi(3770) -> Xi_c+ D_s+]cc",
-                 "[psi(3770) -> Xi_c+ D_s-]cc",
+                 "[psi(3770) -> Xi_c0 D0]cc",
+                 "[psi(3770) -> Xi_c0 D~0]cc",
+                 "[psi(3770) -> Xi_c0 D+]cc",
+                 "[psi(3770) -> Xi_c0 D-]cc",
+                 "[psi(3770) -> Xi_c0 D_s+]cc",
+                 "[psi(3770) -> Xi_c0 D_s-]cc",
+                  #################################  baryon + baryon
+                 "psi(3770) -> Lambda_c+ Lambda_c~-",
+                 "[psi(3770) -> Lambda_c+ Lambda_c+]cc",
+                 "psi(3770) -> Xi_c0 Xi_c~0",
+                 "[psi(3770) -> Xi_c0 Xi_c0]cc",
+                 "[psi(3770) -> Lambda_c+ Xi_c0]cc",
+                 "[psi(3770) -> Lambda_c+ Xi_c~0]cc",
                                                ],
                            MotherCut = _motherCuts,
                            CombinationCut = _combinationCuts

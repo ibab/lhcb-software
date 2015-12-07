@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-07 - Lucio Anderlini (for Andrea Bizzeti)
+  - Further tuning StrippingBandQ/StrippingCC2DD.py for Lambda_c+ and Xi_c0 
+
 ! 2015-12-06 - Carlos Vazquez Sierra
  - Added B2JpsiPi0 line for S21p1
 
