@@ -31,7 +31,8 @@ default_config = {
         , 'DiHadronMass'   : 2600
         , 'UpperMass'      : 5500
         , 'BMassWindow'    : 1500
-        , 'PIDe'           : 0
+        , 'ProbNNe'        : 0.05
+        , 'ProbNNpi'       : 0.95
         , 'TrGhostProb'    : 0.4
         , 'TrChi2DOF'      : 4
         , 'mmXLinePrescale'  : 1
@@ -73,7 +74,8 @@ class B2XLLConf(LineBuilder) :
         , 'DiHadronMass'
         , 'UpperMass'
         , 'BMassWindow'
-        , 'PIDe'
+        , 'ProbNNe'
+        , 'ProbNNpi'
         , 'TrGhostProb'
         , 'TrChi2DOF'
         , 'mmXLinePrescale'
@@ -131,7 +133,9 @@ class B2XLLConf(LineBuilder) :
         SelDsStars= self._dSStarPlus( name="DsStarFor"+self._name, DPlus=SelDsPlus, Gamma=Gammas )
 
         # 2 : Dileptons
-        self._DaughtersCut = "(PT > %(LeptonPT)s) & (MIPCHI2DV(PRIMARY)>%(LeptonIPCHI2)s) & (TRGHOSTPROB<%(TrGhostProb)s) & (TRCHI2DOF<%(TrChi2DOF)s)" % config
+        self._muonCut = "(HASMUON)&(ISMUON)"
+        self._electronCut = "(PROBNNe>%(ProbNNe)s)" %config
+        self._DaughtersCut = "(PT > %(LeptonPT)s) & (MIPCHI2DV(PRIMARY)>%(LeptonIPCHI2)s) & (TRGHOSTPROB<%(TrGhostProb)s) & (TRCHI2DOF<%(TrChi2DOF)s) & (PROBNNpi<%(ProbNNpi)s)" % config
         MuMu = self._makeMuMu( "MuMuFor"+ self._name, params = config )
         MuE  = self._makeMuE ( "MuEFor" + self._name, params = config )
         EE   = self._makeEE  ( "EEFor"  + self._name, params = config )
@@ -405,8 +409,8 @@ class B2XLLConf(LineBuilder) :
                                      MotherCut       = "(VFASPF(VCHI2/VDOF) < 9)")
 
         _Combine.DaughtersCuts   = {
-            "e+"  : self._DaughtersCut,
-            "mu+" : self._DaughtersCut
+            "e+"  : self._DaughtersCut + " & " + self._electronCut,
+            "mu+" : self._DaughtersCut + " & " + self._muonCut
             }
 
         return Selection(name,
@@ -425,8 +429,8 @@ class B2XLLConf(LineBuilder) :
                                      CombinationCut  = _MassCut,
                                      MotherCut       = "(VFASPF(VCHI2/VDOF) < 9)")
         _Combine.DaughtersCuts   = {
-            "mu-" : self._DaughtersCut,
-            "mu+" : self._DaughtersCut
+            "mu-" : self._DaughtersCut + " & " + self._muonCut,
+            "mu+" : self._DaughtersCut + " & " + self._muonCut
             }
         return Selection(name,
                          Algorithm = _Combine,
@@ -445,8 +449,8 @@ class B2XLLConf(LineBuilder) :
                                      CombinationCut  = _MassCut,
                                      MotherCut       = "(VFASPF(VCHI2/VDOF) < 9)")
         _Combine.DaughtersCuts   = {
-            "e+" : self._DaughtersCut,
-            "e-" : self._DaughtersCut
+            "e+" : self._DaughtersCut + " & " + self._electronCut,
+            "e-" : self._DaughtersCut + " & " + self._electronCut
             }
         return Selection(name,
                          Algorithm = _Combine,
