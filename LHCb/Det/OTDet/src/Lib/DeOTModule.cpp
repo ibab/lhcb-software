@@ -266,9 +266,7 @@ void DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
       const double x2 = exP.x();
       const double z2 = exP.z();
 
-      double uLow = x1;
-      double uHigh = x2;
-      std::tie(uLow, uHigh) = std::minmax(uLow, uHigh);
+      double uLow,uHigh; std::tie(uLow, uHigh) = std::minmax(x1,x2);
 
       // zfrac is between 0 and 1. 2.7839542167 means nothing.
       // This seems to acts as a random number generator.
