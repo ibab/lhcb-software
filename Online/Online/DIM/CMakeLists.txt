@@ -11,6 +11,8 @@ find_package(Motif)
 string(REPLACE "-pedantic" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
 string(REPLACE "-pedantic" "" CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
 string(REPLACE "-Wwrite-strings" "" CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
+# Ignore unused arguments
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused")
 
 add_definitions(-DPROTOCOL=1 -DMIPSEL -Df2cFortran)
 gaudi_add_library(dim
@@ -22,7 +24,6 @@ gaudi_add_library(dim
                   PUBLIC_HEADERS dim/.
                   INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/dim
                   LINK_LIBRARIES ${CMAKE_DL_LIBS} -lrt)
-set_property(TARGET dim APPEND PROPERTY COMPILE_FLAGS -Wno-unused)
 
 macro(dim_exe name)
   gaudi_add_executable(${name} ${ARGN} LINK_LIBRARIES dim)
