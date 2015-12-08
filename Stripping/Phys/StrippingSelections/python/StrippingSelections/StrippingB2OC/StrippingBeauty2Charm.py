@@ -480,7 +480,9 @@ default_config ={
     'B02DPiWSNoIPD2HHHCFPIDBeauty2CharmLine' : 1.0,
     'B02DPiWSNoIPDs2HHHPIDBeauty2CharmLine' : 1.0,
     'B02DPiPiPiWSD2HHHPIDBeauty2CharmLine': 1.0,
-    'B02DKPiPiWSD2HHHPIDBeauty2CharmLine' : 1.0
+    'B02DKPiPiWSD2HHHPIDBeauty2CharmLine' : 1.0,
+    'B02DsstarPiDsstar2DGammaD2HHHBeauty2CharmLine' : 0.5,
+    'B02DsstarKDsstar2DGammaD2HHHBeauty2CharmLine' : 0.
     },
     'GECNTrkMax'   : 500
   }, 
