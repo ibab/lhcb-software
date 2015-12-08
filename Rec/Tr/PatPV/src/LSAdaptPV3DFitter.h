@@ -1,19 +1,22 @@
-// $Id: LSAdaptPV3DFitter.h,v 1.6 2010-01-27 09:52:17 rlambert Exp $
 #ifndef LSADAPTPVFITTER_H
 #define LSADAPTPVFITTER_H 1
+
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
-#include "TrackInterfaces/ITrackExtrapolator.h"
+
 // Interfaces
 #include "IPVFitter.h"
 #include "PVUtils.h"
+
 // Track info
 #include "Event/Track.h"
-#include "Event/State.h"
 #include "Event/RecVertex.h"
-//#include <builtin>
+
+// Forward declarations
+class ITrackExtrapolator;
+
 class LSAdaptPV3DFitter : public GaudiTool, virtual public IPVFitter {
 
 public:
@@ -35,7 +38,7 @@ private:
   int    m_Iterations;    // Number of iterations for minimisation
   int    m_minIter;       // iterate at least m_minIter times
   double m_maxIP2PV;      // Maximum IP of a track to accept track
-  double m_maxRDPV;       // Maximum Radial Distance of PV 
+  //  double m_maxRDPV;       // Maximum Radial Distance of PV 
   double m_maxDeltaZ;     // Fit convergence condition
   double m_minTrackWeight;// Minimum Tukey's weight to accept a track
   double m_TrackErrorScaleFactor;

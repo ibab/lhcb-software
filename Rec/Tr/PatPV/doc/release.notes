@@ -4,6 +4,10 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2015-12-08 - Marco Cattaneo
+ - Fix unused member variable
+ - Remove unnecessary includes
+
 !========================= PatPV v3r29 2015-11-23 =========================
 ! 2015-11-03 - Wouter Hulsbergen
  - Added AdaptivePV3DFitter
