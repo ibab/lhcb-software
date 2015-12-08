@@ -193,12 +193,10 @@ CaloEMuPIDMon::CaloEMuPIDMon( const std::string &name, ISvcLocator *isvc )
   declareProperty( "nEventMin",       m_nEventMin = 200,   "minimal number of events to check");
   declareProperty( "useIsMuonLoose",  m_muonLoose = true,  "use IsMuonLoose instead of IsMuon for muon selection");
 
-  // DG: on SLC5 I get 'warning: type qualifiers ignired on function return type'
-  // if I combine the two follwing lines in one call (?)
-  setProperty( "histoList",           { { "All" } });
-  setProperty( "removeFromHistoList", std::vector<std::string>() );
-  setProperty( "SaturationBin1D",     false);
-  setProperty( "SaturationBin2D",     false);
+  setProperty( "histoList",           { { "All" } }).ignore();
+  setProperty( "removeFromHistoList", std::vector<std::string>() ).ignore();
+  setProperty( "SaturationBin1D",     false).ignore();
+  setProperty( "SaturationBin2D",     false).ignore();
 }
 /** Finalize - calculate mean, rms, relative overflow, etc. and
  *  compare with the reference parameters, generate warnins or
