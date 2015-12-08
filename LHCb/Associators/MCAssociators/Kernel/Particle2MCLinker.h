@@ -504,15 +504,14 @@ private:
   void        createFromLinks()
   {
     m_linkFromList.clear();
-    for( const auto& cont : this->m_containerList.begin() ) {
-      const std::string name =
-        cont + this->m_extension;
+    for( const auto& cont : this->m_containerList ) {
+      const std::string name = cont + this->m_extension;
       From test(  this->m_evtSvc, nullptr, name);
       if( test.notFound() ) {
         this->createLinks( cont );
         test = From(  this->m_evtSvc, nullptr, name);
       }
-      m_linkFromList.push_back( std::move(test) );
+      m_linkFromList.emplace_back( std::move(test) );
     }
     m_linkFrom = m_linkFromList.end();
   }
