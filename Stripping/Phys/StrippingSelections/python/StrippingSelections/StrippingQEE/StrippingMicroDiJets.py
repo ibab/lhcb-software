@@ -52,6 +52,7 @@ class MicroDiJetsConf( LineBuilder ) :
         self.line_MicroDiJetsLine = StrippingLine( self._myname + 'Line',
                                                   prescale  = config[ 'MicroDiJetsLine_Prescale' ],
                                                   postscale = config[ 'MicroDiJetsLine_Postscale' ],
+                                                  MDSTFlag = True,
                                                   RequiredRawEvents = ["Calo"],
                                                   checkPV   = False,
                                                   selection = self.sel_MicroDiJets
