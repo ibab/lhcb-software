@@ -21,7 +21,6 @@
 // ============================================================================
 #include "LoKi/Functor.h"
 #include "LoKi/Functions.h"
-#include "LoKi/select.h"
 #include "LoKi/Algs.h"
 #include "LoKi/Primitives.h"
 #include "LoKi/Dump.h"

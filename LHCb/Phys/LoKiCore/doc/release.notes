@@ -12,6 +12,9 @@
 !   contributions and advices from G.Raven, J.van Tilburg,
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
+! 2015-12-08 - Gerhard Raven
+ - remove unneeded include of select.h
+
 ! 2015-12-06 - Gerhard Raven
  - stop propagating globalTimeOffset (see GAUDI-1122)
 

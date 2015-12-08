@@ -111,7 +111,6 @@
 #include "LoKi/same.h"
 #include "LoKi/Scalers.h"
 #include "LoKi/Selected.h"
-#include "LoKi/select.h"
 #include "LoKi/Separators.h"
 #include "LoKi/Services.h"
 #include "LoKi/shifts.h"
