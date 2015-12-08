@@ -209,9 +209,8 @@ Beauty2Charm = {
     'RUN_RE'         : ['.*'],  
     # Defaults are defined in, eg, Beauty2Charm_B2DXBuilder.py.  Put the full
     # line name here to override. E.g. 'B2D0HD2HHBeauty2CharmTOSLine':0.5.
-
-
-    
+    'B02DsstarPiDsstar2DGammaD2HHHBeauty2CharmLine' : 0.5,
+    'B02DsstarKDsstar2DGammaD2HHHBeauty2CharmLine' : 0.
     },
     'GECNTrkMax'   : 500
   }, 
