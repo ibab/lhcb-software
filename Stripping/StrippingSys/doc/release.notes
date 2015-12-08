@@ -6,7 +6,7 @@ Purpose     : LHCb stripping packages
 !========================= StrippingSys v9r12 2015-11-27 ===========================
 
 *StrippingSys
- - Patch MuonID just for this version
+ - Patch MuonID just for this version, fix requirements
  
 *Phys/CommonParticles
 - Change the chi2 and ghostprob cut to Reco15 values for Taus and Dipion.
