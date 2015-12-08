@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-08 - Greg Ciezarek
+ - Corrected SL __init__ to include Strippingbhad2PMuX
+
 ! 2015-12-07 - Chitsanu Khurewathanakul
  - Corrected QEE's __init__
 
