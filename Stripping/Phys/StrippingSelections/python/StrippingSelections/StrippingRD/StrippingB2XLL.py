@@ -32,6 +32,9 @@ default_config = {
         , 'UpperMass'      : 5500
         , 'BMassWindow'    : 1500
         , 'ProbNNe'        : 0.05
+        , 'ProbNNmu'       : 0.05
+        , 'ProbNNp'        : 0.05
+        , 'ProbNNk'        : 0.05
         , 'ProbNNpi'       : 0.95
         , 'TrGhostProb'    : 0.4
         , 'TrChi2DOF'      : 4
@@ -75,6 +78,9 @@ class B2XLLConf(LineBuilder) :
         , 'UpperMass'
         , 'BMassWindow'
         , 'ProbNNe'
+        , 'ProbNNmu'
+        , 'ProbNNp'
+        , 'ProbNNk'
         , 'ProbNNpi'
         , 'TrGhostProb'
         , 'TrChi2DOF'
@@ -133,7 +139,7 @@ class B2XLLConf(LineBuilder) :
         SelDsStars= self._dSStarPlus( name="DsStarFor"+self._name, DPlus=SelDsPlus, Gamma=Gammas )
 
         # 2 : Dileptons
-        self._muonCut = "(HASMUON)&(ISMUON)"
+        self._muonCut = "(HASMUON) & (ISMUON) & (PROBNNmu>%(ProbNNmu)s)" %config
         self._electronCut = "(PROBNNe>%(ProbNNe)s)" %config
         self._DaughtersCut = "(PT > %(LeptonPT)s) & (MIPCHI2DV(PRIMARY)>%(LeptonIPCHI2)s) & (TRGHOSTPROB<%(TrGhostProb)s) & (TRCHI2DOF<%(TrChi2DOF)s) & (PROBNNpi<%(ProbNNpi)s)" % config
         MuMu = self._makeMuMu( "MuMuFor"+ self._name, params = config )
@@ -224,6 +230,12 @@ class B2XLLConf(LineBuilder) :
         # Ghost Probability cut
         if (name.startswith("KaonsFor") or name.startswith("PionsFor") or name.startswith("ProtonsFor")):
             _Code += "& (TRGHOSTPROB<%(TrGhostProb)s) & (TRCHI2DOF<%(TrChi2DOF)s) " % params
+        # PID cuts
+        if name.startswith("KaonsFor"):
+            _Code += "& (PROBNNk > %(ProbNNk)s) & (PROBNNpi < %(ProbNNpi)s)" % params
+        elif name.startswith("ProtonsFor"):
+            _Code += "& (PROBNNp > %(ProbNNp)s) & (PROBNNpi < %(ProbNNpi)s)" % params
+        # Actually implement the stuff
         _Filter = FilterDesktop(Code = _Code)
         return Selection( name, Algorithm = _Filter, RequiredSelections = [ sel ] )
 
