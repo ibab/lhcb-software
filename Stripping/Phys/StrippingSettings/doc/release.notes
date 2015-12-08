@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-08 Pablo Ruiz Valls
+ - Modifications to B2XLL dictionaries in RD
+
 ! 2015-12-08 - Michael Kolpin
  - Created LineConfigDictionary for Calibration
 

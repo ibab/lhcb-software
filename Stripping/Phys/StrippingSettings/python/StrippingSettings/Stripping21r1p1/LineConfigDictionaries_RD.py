@@ -211,37 +211,6 @@ B2Lambda0Mu = {
     "WGs": [ "RD" ]
 }
 
-B2XLL = {
-    "BUILDERTYPE": "B2XLLConf", 
-    "CONFIG": {
-        "BDIRA": 0.9995, 
-        "BFlightCHI2": 100, 
-        "BIPCHI2": 25, 
-        "BMassWindow": 1500, 
-        "BVertexCHI2": 9, 
-        "DiHadronMass": 2600, 
-        "DiLeptonFDCHI2": 16, 
-        "DiLeptonIPCHI2": 0, 
-        "DiLeptonPT": 0, 
-        "KaonIPCHI2": 9, 
-        "KaonPT": 400, 
-        "LeptonIPCHI2": 9, 
-        "LeptonPT": 300, 
-        "PIDe": 0, 
-        "TrChi2DOF": 4, 
-        "TrGhostProb": 0.4, 
-        "UpperMass": 5500, 
-        "eeXLinePrescale": 1, 
-        "eeXSSLinePrescale": 1, 
-        "meXLinePrescale": 1, 
-        "meXSSLinePrescale": 1, 
-        "mmXLinePrescale": 1, 
-        "mmXSSLinePrescale": 1
-    }, 
-    "STREAMS": [ "Leptonic" ], 
-    "WGs": [ "RD" ]
-}
-
 B2XMuMu = {
     "BUILDERTYPE": "B2XMuMuConf", 
     "CONFIG": {
@@ -1874,6 +1843,41 @@ Bu2LLK = {
         "Trk_Chi2": 3, 
         "Trk_GhostProb": 0.4, 
         "UpperMass": 5500
+    }, 
+    "STREAMS": [ "Leptonic" ], 
+    "WGs": [ "RD" ]
+}
+
+B2XLL = {
+    "BUILDERTYPE": "B2XLLConf", 
+    "CONFIG": {
+        "BDIRA": 0.9995, 
+        "BFlightCHI2": 100, 
+        "BIPCHI2": 25, 
+        "BMassWindow": 1500, 
+        "BVertexCHI2": 9, 
+        "DiHadronMass": 2600, 
+        "DiLeptonFDCHI2": 16, 
+        "DiLeptonIPCHI2": 0, 
+        "DiLeptonPT": 0, 
+        "KaonIPCHI2": 9, 
+        "KaonPT": 400, 
+        "LeptonIPCHI2": 9, 
+        "LeptonPT": 300, 
+        "ProbNNe": 0.05, 
+        "ProbNNk": 0.05, 
+        "ProbNNmu": 0.05, 
+        "ProbNNp": 0.05, 
+        "ProbNNpi": 0.95, 
+        "TrChi2DOF": 4, 
+        "TrGhostProb": 0.4, 
+        "UpperMass": 5500, 
+        "eeXLinePrescale": 1, 
+        "eeXSSLinePrescale": 1, 
+        "meXLinePrescale": 1, 
+        "meXSSLinePrescale": 1, 
+        "mmXLinePrescale": 1, 
+        "mmXSSLinePrescale": 1
     }, 
     "STREAMS": [ "Leptonic" ], 
     "WGs": [ "RD" ]
