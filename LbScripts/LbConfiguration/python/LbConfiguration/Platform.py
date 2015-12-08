@@ -239,7 +239,7 @@ linux_flavour_aliases = {
                          "rh"     : ["Redhat", "Red Hat"],
                          "fc"     : ["Fedora", "Fedora Core"],
                          "suse"   : ["SuSE"],
-                         "co"     : ["CentOS"],
+                         "centos"     : ["CentOS"],
                          "deb"    : ["Debian"],
                          "ubuntu" : ["Ubuntu"],
                          "ml"     : ["Mandriva Linux"],
@@ -250,7 +250,7 @@ lsb_flavour_aliases   = {
                          "sl"   : ["ScientificSL"],
                          "slc"  : ["ScientificCERNSLC"],
                          "fc"   : ["Fedora", "Fedora Core"],
-                         "co"   : ["CentOS"]
+                         "centos"   : ["CentOS"]
                         }
 
 flavor_runtime_compatibility = {

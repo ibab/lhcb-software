@@ -1,3 +1,7 @@
+2015-12-08  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* python/LbConfiguration/Platform.py: LBCORE-655 Changed CentOS alias to centos to follow LCG convention.
+
 2015-12-04  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* python/LbConfiguration/Package.py: LBCORE-991 Added new data package WG/PIDCalib
