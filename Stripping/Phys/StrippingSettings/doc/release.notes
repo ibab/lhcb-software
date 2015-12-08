@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-08 - Michael Kolpin
+ - Created LineConfigDictionary for Calibration
+
 ! 2015-12-07 - Chitsanu Khurewathanakul
   - Update QEE's S21rXp1 with new lines: FullDiJets, MicroDiJets
 
