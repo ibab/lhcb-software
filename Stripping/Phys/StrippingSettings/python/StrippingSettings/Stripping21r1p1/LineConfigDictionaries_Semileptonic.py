@@ -67,6 +67,7 @@ B2DMuForTauMu = {
     "WGs": [ "Semileptonic" ]
 }
 
+
 B2DMuNuX = {
     "BUILDERTYPE": "B2DMuNuXAllLinesConf", 
     "CONFIG": {
@@ -121,6 +122,14 @@ B2DMuNuX = {
     }, 
     "STREAMS": {
         "Semileptonic": [ 
+            "StrippingB2DMuNuX_D0",
+            "StrippingB2DMuNuX_D0_FakeMuon",
+            "StrippingB2DMuNuX_Dp",
+            "StrippingB2DMuNuX_Dp_FakeMuon",
+            "StrippingB2DMuNuX_Ds",
+            "StrippingB2DMuNuX_Ds_FakeMuon",
+            "StrippingB2DMuNuX_Lc",
+            "StrippingB2DMuNuX_Lc_FakeMuon",
             "StrippingB2DMuNuX_Omegac", 
             "StrippingB2DMuNuX_Xic", 
             "StrippingB2DMuNuX_Xic0",
@@ -131,7 +140,6 @@ B2DMuNuX = {
     }, 
     "WGs": [ "Semileptonic" ]
 }
-
 
 
 B2XTauNuAllLines = {
@@ -218,7 +226,7 @@ B2XTauNuAllLines = {
         "Prescale_Bc2JpsiTauNu": 0, 
         "Prescale_Bu2D0TauNu": 0, 
         "Prescale_Lb2LcTauNu": 0, 
-        "Prescale_Lb2pTauNu": 0.333, 
+        "Prescale_Lb2pTauNu": 0.1666, 
         "Prescale_NonPhys": 0.1, 
         "TRGHP": 0.4, 
         "TRGHP_slowPi": 0.6, 
@@ -348,3 +356,41 @@ B2XuMuNu = {
     "WGs": [ "Semileptonic" ]
 }
 
+bhad2PMuX = {
+    "BUILDERTYPE": "bhad2PMuXBuilder", 
+    "CONFIG": {
+        "BDIRA": 0.9994, 
+        "BFDCHI2HIGH": 150.0, 
+        "BVCHI2DOF": 20.0, 
+        "DECAYS": [
+            "[Lambda_b0 -> J/psi(1S) mu-]cc", 
+            "[Lambda_b0 -> N(1440)+ mu-]cc"
+        ], 
+        "GEC_nLongTrk": 250.0, 
+        "MuonGHOSTPROB": 0.35, 
+        "MuonMINIPCHI2": 16.0, 
+        "MuonP": 3000.0, 
+        "MuonPT": 1500.0, 
+        "MuonTRCHI2": 4.0, 
+        "NstarMass": 3000.0, 
+        "NstarVCHI2DOF": 2.0, 
+        "PPbarDIRA": 0.994, 
+        "PPbarFDCHI2HIGH": 150.0, 
+        "PPbarPT": 1500.0, 
+        "PPbarVCHI2DOF": 4.0, 
+        "ProtonMINIPCHI2": 16.0, 
+        "ProtonP": 15000.0, 
+        "ProtonPIDK": 5.0, 
+        "ProtonPIDp": 10.0, 
+        "ProtonPT": 1000.0, 
+        "ProtonTRCHI2": 6.0, 
+        "SSDECAYS": [
+            "[Lambda_b0 -> N(1440)+ mu+]cc"
+        ], 
+        "TRGHOSTPROB": 0.35, 
+        "pMuMassLower": 1000.0, 
+        "pMuPT": 1500.0
+    }, 
+    "STREAMS": [ "Semileptonic" ], 
+    "WGs": [ "Semileptonic" ]
+}
