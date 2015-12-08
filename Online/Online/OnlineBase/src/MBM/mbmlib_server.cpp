@@ -792,7 +792,7 @@ EVENT* _mbmsrv_ealloc (ServerBMID bm)  {
   return 0;
 }
 
-/// clear events with freqmode = notall
+/// Clear events with freqmode = notall
 int _mbmsrv_check_freqmode (ServerBMID bm)  {
   int ret = 0;
   MBMScanner<EVENT> que(bm->evDesc, -EVENT_next_off);
@@ -1700,12 +1700,35 @@ int mbmsrv_dispatch_call(ServerBMID bm, int which)  {
     }
     epoll = epoll_null;
     int nclients = ::epoll_wait(s.poll, &epoll, 1, 100);
-    if ( bm->stop )
+    if ( bm->stop )   {
       break;
-    if ( nclients < 0 && errno == EINTR )
+    }
+    else if ( nclients < 0 && errno == EINTR )   {
       continue;
-    else if ( nclients < 1 )
+    }
+    else if ( nclients < 1 && bm->ctrl->i_events > 0 )   {
+      bool has_free_slot = 0;
+      MBMScanner<EVENT> que(bm->evDesc, -EVENT_next_off);
+      for(EVENT* e=que.get(); e; e=que.get() )  {
+	/// Check if any consumer still waiting for an event....
+	_mbmsrv_check_wev(bm,e);  // check wev queue
+	/// Check if any producer still waiting for a slot....
+	if (e->busy == 0)  {
+	  has_free_slot = 1;
+	}
+      }
+      if ( has_free_slot )  {
+	// TODO: Notify consumer about free slot....
+
+      }
+      /// Check if any producer still waiting for space....
+      _mbmsrv_check_wsp(bm);
+
       continue;
+    }
+    else if ( nclients < 1 )   {
+      continue;
+    }
     else if( epoll.events&(EPOLLERR|EPOLLHUP) ) {
       ::lib_rtl_output(LIB_RTL_ERROR,"MBM input epoll error/hup signal for fd:%d",epoll.data.fd);
       mbmsrv_check_clients( bm );

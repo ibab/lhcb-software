@@ -251,11 +251,10 @@
   INTERNAL_SYSCALL_NCS (__NR_##name, err, nr, ##args)
 
 #undef INTERNAL_SYSCALL_ERROR_P
-#define INTERNAL_SYSCALL_ERROR_P(val, err) \
-  ((unsigned long) (val) >= -4095UL)
+#define INTERNAL_SYSCALL_ERROR_P(val, err) ((unsigned long) (val) >= -4095UL)
 
 #undef INTERNAL_SYSCALL_ERRNO
-#define INTERNAL_SYSCALL_ERRNO(val, err)	(-(val))
+#define INTERNAL_SYSCALL_ERRNO(val, err)   (-(val))
 
 #define LOAD_ARGS_0()
 #define LOAD_REGS_0

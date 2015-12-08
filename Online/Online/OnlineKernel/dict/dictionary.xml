@@ -28,9 +28,6 @@
     <!-- WT/wt.h       -->
     <function pattern="wtc_*"/>
 
-    <!-- WT/bmdef.h    -->
-    <function pattern="mbm_*"/>
-
     <!-- WT/amsdef.h   -->
     <function pattern="amsc_*"/>
 
@@ -49,12 +46,14 @@
 <!--
     <function pattern="DataTransfer::_*"/>
     <function pattern="SCR::*"/>
+-->
+
+    <!-- MBM/bmdef.h    -->
+    <function pattern="mbm_*"/>
+<!--
     <function pattern="MBM::*"/>
     <class pattern="bm_iterator*"/>
     <class pattern="MBM::*"/>
--->
-    <function pattern="mbm_*"/>
-<!--
     <class name="REQ"/>
     <class name="BUFFERS"/>
     <class name="BUFFERS::BUFF"/>
