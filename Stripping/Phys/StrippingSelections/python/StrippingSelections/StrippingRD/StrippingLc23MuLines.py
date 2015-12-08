@@ -45,7 +45,7 @@ Exported symbols (use python help!):
 """
 
 __author__ = ["Oliver Gruenberg"]
-__date__ = "19.05.2015"
+__date__ = "08.12.2015"
 __version__ = "$Revision: 1.0 $"
 
 ###################################################################################################
@@ -70,6 +70,7 @@ default_config = {
     "STREAMS"     : [ "Leptonic" ],
     "BUILDERTYPE" : "Lc23MuLinesConf",
     "CONFIG"      : {
+    "MDSTflag"            : False, # True or False
     # TrackCuts
     "MinTrPT"             : 300, # (MeV)
     "MinTrIPChi2"         : 9,
@@ -107,7 +108,8 @@ class Lc23MuLinesConf(LineBuilder) :
     
     """
 
-    __configuration_keys__ = ( # TrackCuts
+    __configuration_keys__ = ( "MDSTflag",
+                               # TrackCuts
                                "MinTrPT",
                                "MinTrIPChi2",
                                "MaxTrChi2Dof",
@@ -184,7 +186,7 @@ class Lc23MuLinesConf(LineBuilder) :
         self.Lc23mu_Line = StrippingLine(Lc23mu_name+"Line",
                                          prescale = config["Lc23muPrescale"],
                                          postscale = config["Postscale"],
-                                         MDSTFlag = True,
+                                         MDSTFlag = config["MDSTflag"],
                                          selection = self.selLc23mu,
                                          RelatedInfoTools = [ 
                                            { "Type" : "RelInfoConeVariables",
@@ -237,7 +239,7 @@ class Lc23MuLinesConf(LineBuilder) :
         self.Lc2muee_Line = StrippingLine(Lc2muee_name+"Line",
                                           prescale = config["Lc2mueePrescale"],
                                           postscale = config["Postscale"],
-                                          MDSTFlag = True,
+                                          MDSTFlag = config["MDSTflag"],
                                           selection = self.selLc2muee,
                                           RelatedInfoTools = [ 
                                            { "Type" : "RelInfoConeVariables",
@@ -289,7 +291,7 @@ class Lc23MuLinesConf(LineBuilder) :
         self.Lc2pmumu_Line = StrippingLine(Lc2pmumu_name+"Line",
                                            prescale = config["Lc2pmumuPrescale"],
                                            postscale = config["Postscale"],
-                                           MDSTFlag = True,
+                                           MDSTFlag = config["MDSTflag"],
                                            selection = self.selLc2pmumu,
                                            RelatedInfoTools = [ 
                                            { "Type" : "RelInfoConeVariables",
@@ -340,7 +342,7 @@ class Lc23MuLinesConf(LineBuilder) :
         self.Lc2pee_Line = StrippingLine(Lc2pee_name+"Line",
                                          prescale = config["Lc2peePrescale"],
                                          postscale = config["Postscale"],
-                                         MDSTFlag = True,
+                                         MDSTFlag = config["MDSTflag"],
                                          selection = self.selLc2pee,
                                          RelatedInfoTools = [
                                            { "Type" : "RelInfoConeVariables",
@@ -391,7 +393,7 @@ class Lc23MuLinesConf(LineBuilder) :
         self.Lc2pKpi_Line = StrippingLine(Lc2pKpi_name+"Line",
                                           prescale = config["Lc2pKpiPrescale"],
                                           postscale = config["Postscale"],
-                                          MDSTFlag = True,
+                                          MDSTFlag = config["MDSTflag"],
                                           selection = self.selLc2pKpi,
                                           RelatedInfoTools = [
                                            { "Type" : "RelInfoConeVariables",

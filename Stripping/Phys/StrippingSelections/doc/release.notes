@@ -5,6 +5,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-08 - Oliver Gruenberg
+ - The Lines B23Mu, B24p, BLV, D23Mu and Lc23Mu have MDSTFlag keyword in the dictionary
+   to be configurable from outside, default = False
+
 ! 2015-12-08 - Michael Kolpin
  - Changed WG in StrippingCalib.StrippingV0ForPID from Calib to PID
 

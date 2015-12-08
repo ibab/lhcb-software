@@ -75,7 +75,7 @@ Exported symbols (use python help!):
 """
 
 __author__ = ["Oliver Gruenberg"]
-__date__ = "17.05.2015"
+__date__ = "08.12.2015"
 __version__ = "$Revision: 1.0 $"
 
 ###################################################################################################
@@ -98,7 +98,8 @@ default_config = {
     "WGs"         : [ "RD" ],
     "STREAMS"     : [ "Bhadron" ],
     "BUILDERTYPE" : "BLVLinesConf",
-    "CONFIG"      : { # TrackCuts
+    "CONFIG"      : { "MDSTflag"            : False, # True or False
+                      # TrackCuts
                       "MinTrIPChi2"         : 25.0,
                       "MaxTrChi2Dof"        : 4.0,
                       "MaxTrGhp"            : 0.4,
@@ -160,7 +161,8 @@ class BLVLinesConf(LineBuilder) :
 
     #######################################################
     
-    __configuration_keys__ = ( # TrackCuts
+    __configuration_keys__ = ( "MDSTflag",
+                               # TrackCuts
                                "MinTrIPChi2",
                                "MaxTrChi2Dof",
                                "MaxTrGhp",
@@ -360,7 +362,7 @@ class BLVLinesConf(LineBuilder) :
         self.La2KmuLine = StrippingLine(La2Kmu_name+"Line",
                                         prescale = config["La2KmuPrescale"],
                                         postscale = config["Postscale"],
-                                        MDSTFlag = True,
+                                        MDSTFlag = config["MDSTflag"],
                                         selection = self.selLa2Kmu,
                                         RelatedInfoTools = [
                                            { "Type" : "RelInfoConeVariables",
@@ -406,7 +408,7 @@ class BLVLinesConf(LineBuilder) :
         self.Lb2KmuLine = StrippingLine(Lb2Kmu_name+"Line",
                                         prescale = config["Lb2KmuPrescale"],
                                         postscale = config["Postscale"],
-                                        MDSTFlag = True,
+                                        MDSTFlag = config["MDSTflag"],
                                         selection = self.selLb2Kmu,
                                         RelatedInfoTools = [
                                            { "Type" : "RelInfoConeVariables",
@@ -456,7 +458,7 @@ class BLVLinesConf(LineBuilder) :
         self.Xib2KhmuLine = StrippingLine(Xib2Khmu_name+"Line",
                                           prescale = config["Xib2KhmuPrescale"],
                                           postscale = config["Postscale"],
-                                          MDSTFlag = True,
+                                          MDSTFlag = config["MDSTflag"],
                                           selection = self.selXib2Khmu,
                                           RelatedInfoTools = [          
                                            { "Type" : "RelInfoConeVariables",
@@ -507,7 +509,7 @@ class BLVLinesConf(LineBuilder) :
         self.B2KhhLine = StrippingLine(B2Khh_name+"Line",
                                        prescale = config["B2KhhPrescale"],
                                        postscale = config["Postscale"],
-                                       MDSTFlag = True,
+                                       MDSTFlag = config["MDSTflag"],
                                        selection = self.selB2Khh,
                                        RelatedInfoTools = [ 
                                            { "Type" : "RelInfoConeVariables",
@@ -562,7 +564,7 @@ class BLVLinesConf(LineBuilder) :
         self.Lb2DmuLine = StrippingLine(Lb2Dmu_name+"Line",
                                         prescale = config["Lb2DmuPrescale"],
                                         postscale = config["Postscale"],
-                                        MDSTFlag = True,
+                                        MDSTFlag = config["MDSTflag"],
                                         selection = self.selLb2Dmu,
                                         RelatedInfoTools = [                                        
                                            { "Type" : "RelInfoConeVariables",
@@ -618,7 +620,7 @@ class BLVLinesConf(LineBuilder) :
         self.Lb2DsmuLine = StrippingLine(Lb2Dsmu_name+"Line",
                                          prescale = config["Lb2DsmuPrescale"],
                                          postscale = config["Postscale"],
-                                         MDSTFlag = True,
+                                         MDSTFlag = config["MDSTflag"],
                                          selection = self.selLb2Dsmu,
                                          RelatedInfoTools = [                                        
                                            { "Type" : "RelInfoConeVariables",
@@ -674,7 +676,7 @@ class BLVLinesConf(LineBuilder) :
         self.Lb2LcpiLine = StrippingLine(Lb2Lcpi_name+"Line",
                                          prescale = config["Lb2LcpiPrescale"],
                                          postscale = config["Postscale"],
-                                         MDSTFlag = True,
+                                         MDSTFlag = config["MDSTflag"],
                                          selection = self.selLb2Lcpi,
                                          RelatedInfoTools = [                                        
                                            { "Type" : "RelInfoConeVariables",
@@ -734,7 +736,7 @@ class BLVLinesConf(LineBuilder) :
         self.b2LcmuLine = StrippingLine(B2Lcmu_name+"Line",
                                         prescale = config["B2LcmuPrescale"],
                                         postscale = config["Postscale"],
-                                        MDSTFlag = True,
+                                        MDSTFlag = config["MDSTflag"],
                                         selection = self.selB2Lcmu,
                                         RelatedInfoTools = [
                                            { "Type" : "RelInfoConeVariables",
@@ -790,7 +792,7 @@ class BLVLinesConf(LineBuilder) :
         self.B2DpiLine = StrippingLine(B2Dpi_name+"Line",
                                        prescale = config["B2DpiPrescale"],
                                        postscale = config["Postscale"],
-                                       MDSTFlag = True,
+                                       MDSTFlag = config["MDSTflag"],
                                        selection = self.selB2Dpi,
                                        RelatedInfoTools = [                                        
                                            { "Type" : "RelInfoConeVariables",
@@ -846,7 +848,7 @@ class BLVLinesConf(LineBuilder) :
         self.Bs2DspiLine = StrippingLine(Bs2Dspi_name+"Line",
                                          prescale = config["Bs2DspiPrescale"],
                                          postscale = config["Postscale"],
-                                         MDSTFlag = True,
+                                         MDSTFlag = config["MDSTflag"],
                                          selection = self.selBs2Dspi,
                                          RelatedInfoTools = [                                        
                                            { "Type" : "RelInfoConeVariables",
@@ -902,7 +904,7 @@ class BLVLinesConf(LineBuilder) :
         self.b2LcpLine = StrippingLine(B2Lcp_name+"Line",                                           
                                        prescale = config["B2LcpPrescale"], 
                                        postscale = config["Postscale"],
-                                       MDSTFlag = True,
+                                       MDSTFlag = config["MDSTflag"],
                                        selection = self.selB2Lcp,
                                        RelatedInfoTools = [                                        
                                            { "Type" : "RelInfoConeVariables",

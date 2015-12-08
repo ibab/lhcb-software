@@ -71,6 +71,7 @@ default_config = {
     "STREAMS"     : [ "Bhadron" ],
     "BUILDERTYPE" : "B24pLinesConf",
     "CONFIG"      : {
+    "MDSTflag"           : False, # True or False
     # TrackCuts
     "MinTrIPChi2"        : 25.0,
     "MaxTrChi2Dof"       : 4.0,
@@ -110,7 +111,8 @@ class B24pLinesConf(LineBuilder) :
     
     """
 
-    __configuration_keys__ = ( # TrackCuts
+    __configuration_keys__ = ( "MDSTflag",
+                               # TrackCuts
                                "MinTrIPChi2",
                                "MaxTrChi2Dof",
                                "MaxTrGhp",
@@ -185,7 +187,7 @@ class B24pLinesConf(LineBuilder) :
         self.B24p_Line = StrippingLine(B24p_name+"Line",
                                        prescale = config["B24pPrescale"],
                                        postscale = config["Postscale"],
-                                       MDSTFlag = True,                                       
+                                       MDSTFlag = config["MDSTflag"],
                                        selection = self.selB24p,
                                        RelatedInfoTools = [                                       
                                            { "Type" : "RelInfoConeVariables",
@@ -241,7 +243,7 @@ class B24pLinesConf(LineBuilder) :
         self.B2JpsiKpi_Line = StrippingLine(B2JpsiKpi_name+"Line",
                                             prescale = config["B2JpsiKpiPrescale"],
                                             postscale = config["Postscale"],
-                                            MDSTFlag = True, 
+                                            MDSTFlag = config["MDSTflag"], 
                                             selection = self.selB2JpsiKpi, 
                                             RelatedInfoTools = [
                                                 { "Type" : "RelInfoConeVariables",
@@ -297,7 +299,7 @@ class B24pLinesConf(LineBuilder) :
         self.B2PhiKh_Line = StrippingLine(B2PhiKh_name+"Line",
                                           prescale = config["B2PhiKhPrescale"],
                                           postscale = config["Postscale"],
-                                          MDSTFlag = True, 
+                                          MDSTFlag = config["MDSTflag"], 
                                           selection = self.selB2PhiKh,
                                           RelatedInfoTools = [
                                                 { "Type" : "RelInfoConeVariables",

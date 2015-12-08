@@ -30,7 +30,7 @@ Exported symbols (use python help!):
 """
 
 __author__ = ["Oliver Gruenberg"]
-__date__ = "19.05.2015"
+__date__ = "08.12.2015"
 __version__ = "$Revision: 1.0 $"
 
 #############################################################################
@@ -56,6 +56,7 @@ default_config = {
     "STREAMS"     : [ "Leptonic" ],
     "BUILDERTYPE" : "D23MuLinesConf",
     "CONFIG"      : {
+    "MDSTflag"             : False, # True or False
     # TrackCuts
     "MinTrIPChi2"          : 25.0,
     "MaxTrChi2Dof"         : 4.0,
@@ -92,7 +93,8 @@ class D23MuLinesConf(LineBuilder) :
     
     """
 
-    __configuration_keys__ = ( # TrackCuts
+    __configuration_keys__ = ( "MDSTflag",
+                               # TrackCuts
                                "MinTrIPChi2",
                                "MaxTrChi2Dof",
                                "MaxTrGhp",
@@ -162,7 +164,7 @@ class D23MuLinesConf(LineBuilder) :
         self.D23Mu_Line = StrippingLine(D23Mu_name+"Line",
                                         prescale = config["D23MuPrescale"],
                                         postscale = config["Postscale"],
-                                        MDSTFlag = True,
+                                        MDSTFlag = config["MDSTflag"],
                                         selection = self.selD23Mu,
                                         RelatedInfoTools = [
                                            { "Type" : "RelInfoConeVariables",
@@ -213,7 +215,7 @@ class D23MuLinesConf(LineBuilder) :
         self.D2Muee_Line = StrippingLine(D2Muee_name+"Line",
                                          prescale = config["D2MueePrescale"],
                                          postscale = config["Postscale"],
-                                         MDSTFlag = True,
+                                         MDSTFlag = config["MDSTflag"],
                                          selection = self.selD2Muee,
                                          RelatedInfoTools = [ 
                                            { "Type" : "RelInfoConeVariables",
@@ -264,7 +266,7 @@ class D23MuLinesConf(LineBuilder) :
         self.D23Pi_Line = StrippingLine(D23Pi_name+"Line",
                                         prescale = config["D23PiPrescale"],
                                         postscale = config["Postscale"],
-                                        MDSTFlag = True,
+                                        MDSTFlag = config["MDSTflag"],
                                         selection = self.selD23Pi,
                                         RelatedInfoTools = [ 
                                            { "Type" : "RelInfoConeVariables",
