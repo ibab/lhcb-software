@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-08 - Michael Kolpin
+ - Changed WG in StrippingCalib.StrippingV0ForPID from Calib to PID
+
 ! 2015-12-08 - Greg Ciezarek
  - Corrected SL __init__ to include Strippingbhad2PMuX
 

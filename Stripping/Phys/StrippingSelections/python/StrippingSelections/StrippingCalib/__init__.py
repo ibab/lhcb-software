@@ -5,22 +5,22 @@ for Calib WG.
 
 _selections = [
     #"StrippingElectronID", #now part of StrippingPIDCalib
-    #"StrippingMuIDCalib",#now part of StrippingPIDCalib
-    #"StrippingNoPIDDstarWithD02RSKPi", #deactivated, might run in Run 1 restripping
+    "StrippingMuIDCalib",#now part of StrippingPIDCalib
+    "StrippingNoPIDDstarWithD02RSKPi", #deactivated, might run in Run 1 restripping
     #"StrippingPIDCalib", #deactivated, might run in Run 1 restripping
-    #"StrippingV0ForPID",#now part of StrippingPIDCalib
-    "StrippingCharmFromBSemiForHadronAsy",
-    "StrippingCharmFromBSemiForProtonPID",
-    "StrippingProtonAsym",
-    "StrippingTrackEffD0ToKPi",
-    "StrippingTrackEffD0ToK3Pi",
-    "StrippingTrackEffMuonTT",
-    "StrippingTrackEffVeloMuon",
-    "StrippingTrackEffDownMuon",
-    "StrippingD02KPiPi0",
-    "StrippingSigmacForPID",
-    "StrippingDstarD02KShhForTrackingEff",
-    "StrippingJPsiForSL",
+    "StrippingV0ForPID",#now part of StrippingPIDCalib
+    #"StrippingCharmFromBSemiForHadronAsy",
+    #"StrippingCharmFromBSemiForProtonPID",
+    #"StrippingProtonAsym",
+    #"StrippingTrackEffD0ToKPi",
+    #"StrippingTrackEffD0ToK3Pi",
+    #"StrippingTrackEffMuonTT",
+    #"StrippingTrackEffVeloMuon",
+    #"StrippingTrackEffDownMuon",
+    #"StrippingD02KPiPi0",
+    #"StrippingSigmacForPID",
+    #"StrippingDstarD02KShhForTrackingEff",
+    #"StrippingJPsiForSL",
     "StrippingLowPtMuID"
  ]
 

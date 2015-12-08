@@ -134,7 +134,7 @@ _default_configuration_ = {
 
 default_config ={
     'NAME'        :   'VznoPID'       ,
-    'WGs'         : [ 'Calib'] ,
+    'WGs'         : [ 'ALL'] ,
     'CONFIG'      : _default_configuration_  , 
     'BUILDERTYPE' :   'StrippingV0ForPIDConf'            ,
     'STREAMS'     :  [ 'PID']
