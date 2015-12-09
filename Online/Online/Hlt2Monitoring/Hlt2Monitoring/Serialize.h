@@ -1,6 +1,9 @@
 #ifndef HLT2MONITORING_SERIALIZE_H
 #define HLT2MONITORING_SERIALIZE_H 1
 
+// STD & STL
+#include <unordered_map>
+
 // Gaudi
 #include <GaudiKernel/HistoDef.h>
 
@@ -10,14 +13,21 @@
 #include "Histogram.h"
 
 // Boost
+#include "boost/version.hpp"
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/map.hpp>
 
+#if (BOOST_VERSION >= 105800)
+#include <boost/serialization/unordered_map.hpp>
+#endif
+
 namespace boost {
 namespace serialization {
 
-// unordered_map
+// Boost < 1.58 needs some special stuff for unordered_map.
+#if (BOOST_VERSION < 105800)
+
 template<class Archive, class Type, class Key, class Compare, class Allocator >
 inline void save(
     Archive & ar,
@@ -58,6 +68,7 @@ inline void serialize(
 ){
     boost::serialization::split_free(ar, t, file_version);
 }
+#endif
 
 // Gaudi::Histo1DDef
 template<class Archive>
