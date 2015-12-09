@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-09 - Michael Kolpin
+ - Updated Calib dictionary for S21r0p1
+
 ! 2015-12-09 Pablo Ruiz Valls
  - Removed B23Mu, BLV, D23Mu and Lc23Mu dictionaries from S21rXp1
 
