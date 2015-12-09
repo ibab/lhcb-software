@@ -666,7 +666,7 @@ inline PatSeedingTool::HitRange PatSeedingTool::hitsInRange(
   if (hitRange.end() == beg) return HitRange(beg, beg);
   HitRange::iterator end = beg;
   // for small windows, scan linearly
-  if (std::abs(xrange.max() - xrange.min()) < isRegionOT(reg) ? 20.0 : 2.0) {
+  if (std::abs(xrange.max() - xrange.min()) < (isRegionOT(reg) ? 20.0 : 2.0)) {
     while (hitRange.end() != end &&
 	(*end)->hit()->xAtYEq0() < xrange.max()) ++end;
   } else {

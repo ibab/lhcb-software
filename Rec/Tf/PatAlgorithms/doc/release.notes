@@ -3,6 +3,10 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+
+! 2015-12-09 - Manuel Tobias Schiller
+ - PatSeedingTool: fix clang warning (no changes in performance)
+
 ! 2015-12-05 - Gerhard Raven
  - improve/simplify vectorization in PatFwdTool using new scatter_invoke 
    and make_array functionality in VectorizationSupport.h
