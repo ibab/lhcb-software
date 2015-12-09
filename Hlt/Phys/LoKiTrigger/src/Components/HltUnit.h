@@ -129,7 +129,7 @@ namespace LoKi
      */
     const DataObject* tes
     ( const Client& client   ,
-      const Key&    location ) const ;
+      const Key&    location ) const override;
     // =========================================================================
     /** register the query  to TES-selection
      *  @param location TES location to be registered
@@ -165,7 +165,7 @@ namespace LoKi
     StatusCode queryInterface
     (const InterfaceID& iid, void** ppvi ) override;
     // ========================================================================
-  public:  // IDVAlgorithm stuff 
+  public:  // IDVAlgorithm stuff
     // ==========================================================================
     /// get the distance calculator tool
     virtual const IDistanceCalculator*
@@ -219,8 +219,8 @@ namespace LoKi
     /// Return the best primary vertex for a given LHCb::Particle.
     virtual const LHCb::VertexBase*
     bestVertex      ( const LHCb::Particle* ) const override;
-    /// unrelated the related PV 
-    virtual void unRelatePV ( const LHCb::Particle* p ) const 
+    /// unrelated the related PV
+    virtual void unRelatePV ( const LHCb::Particle* p ) const override
     { m_p2PVMap.erase ( p ) ; }
     /// Return gaudi algorithm
     virtual const GaudiAlgorithm* gaudiAlg ( ) const override { return this; }
@@ -305,13 +305,13 @@ namespace LoKi
     typedef GaudiUtils::HashMap<const LHCb::Particle*, const LHCb::VertexBase*> P2PVMap;
     // ========================================================================
     template <class ToolInterface>
-    const ToolInterface* getTool( const std::string& nickname ) const 
+    const ToolInterface* getTool( const std::string& nickname ) const
     {
-      if ( nickname == "" ) 
+      if ( nickname == "" )
       {
         // incase noname return DistanceCalculator
         auto it_nick = m_toolNames.find("DistanceCalculator");
-        if ( it_nick == m_toolNames.end() ) 
+        if ( it_nick == m_toolNames.end() )
         {
           this->Exception(std::string("Default Tool DistanceCalulator tried and not found"));
         }
@@ -324,18 +324,18 @@ namespace LoKi
         return tool;
       }
       auto it_tool = m_tools.find(nickname);
-      if ( it_tool != m_tools.end() ) 
+      if ( it_tool != m_tools.end() )
       {
         return dynamic_cast<const ToolInterface*>(it_tool->second);
       }
       auto it_nick = m_toolNames.find(nickname);
-      if ( it_nick == m_toolNames.end() ) 
+      if ( it_nick == m_toolNames.end() )
       {
         this->Exception(std::string("No entry in Tools property for nickname ")
                         + nickname + std::string("."));
       }
       auto tool = this->template tool<ToolInterface>(it_nick->second, this);
-      if ( !tool ) 
+      if ( !tool )
       {
         this->Exception(std::string("Could not retrieve tool of type ")
                         + it_nick->second + std::string("."));

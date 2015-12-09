@@ -65,12 +65,6 @@ namespace
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-  // ==========================================================================
-  /// move LHCbIDs
-  inline void moveIDs ( const LHCb::Track* tr1 , std::vector<LHCb::Track*>& tracks )
-  {
-    for ( auto &track : tracks) moveIDs ( tr1 , track ) ;
-  }
 }
 // ==========================================================================
 //                                                end of anonynmous namespace
@@ -235,7 +229,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::iupgrade
          return std::make_pair(true, results.size());
       }
    };
-   
+
    // Check for complement upgrade
    if (!complement().empty()) {
       auto cached = cache<LHCb::Track>(complement());
@@ -245,7 +239,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::iupgrade
          return  StatusCode::SUCCESS;
       }
    }
-   
+
    // Check for previous upgrade.
    auto cached = cache<LHCb::Track>(config().cache());
    if (!cached) {

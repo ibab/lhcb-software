@@ -4,8 +4,13 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2015-12-09 - Roel Aaij
+ - Fix for clang 3.7 build.
+ - Remove unused moveIds function.
+ - Remove unused ElementOps class selection from dictionary.
+
 ! 2015-12-06 - Gerhard Raven
- - replace LoKi::Select by std::copy_if, 
+ - replace LoKi::Select by std::copy_if,
  - replace LoKi::Transform with std::transform
  - fix compiler warnings
 
@@ -43,17 +48,17 @@
  - add more counters to Hlt1COmbiners
    (input paricles and rates for various filtering stages)
  - replace std::uniqu_ptr with single automatic instabce
-   (actually move from strategy  2 to strategy 3  - see DaVinciKernel/tests)   
+   (actually move from strategy  2 to strategy 3  - see DaVinciKernel/tests)
 
 
 ! 2015-04-01 - Vanya Belyaev
- - fix the issue with particle -> PV association 
+ - fix the issue with particle -> PV association
 
 !========================= LoKiTrigger v15r6 2015-03-31 =========================
 
 ! 2015-03-31 - Vanya Belyaev
 
- - reshuffle a bit Hlt1Combiner & Hlt1CombinerConf 
+ - reshuffle a bit Hlt1Combiner & Hlt1CombinerConf
 
 ! 2015-03-30 - Roel Aaij
    Significant changes in Hlt1 upgrade code.
@@ -89,7 +94,7 @@
  - Add entry to tool names for LoKi::DistanceCalculator.
 
 ! 2015-03-12 - Vanya Belyaev
- - add FakeSource: useful for debugging, in particular for fake streams 
+ - add FakeSource: useful for debugging, in particular for fake streams
 
 !========================= LoKiTrigger v15r5 2014-03-09 =========================
 
@@ -97,7 +102,7 @@
  - add particle and protoparticle cuts into selection source:
    it allows to save some code for combiners :
 
-           Selection ( name , predicates ) 
+           Selection ( name , predicates )
 
 
 ! 2015-02-19 - Matthew Kenzie
@@ -1213,4 +1218,3 @@
 ! -----------------------------------------------------------------------------
 ! The END
 ! -----------------------------------------------------------------------------
-

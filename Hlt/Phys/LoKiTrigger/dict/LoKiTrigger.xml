@@ -37,7 +37,6 @@
   <class pattern = "LoKi::Dicts::PipeOps<*Hlt::Candidate*>"     />
   <class pattern = "LoKi::Dicts::FunValOps<*Hlt::Candidate*>"   />
   <class pattern = "LoKi::Dicts::CutValOps<*Hlt::Candidate*>"   />
-  <class pattern = "LoKi::Dicts::ElementOps<*Hlt::Candidate*>"  />
   <class pattern = "LoKi::Dicts::SourceOps<*Hlt::Candidate*>"   />
   <class pattern = "LoKi::Dicts::InfoOps<*Hlt::Candidate*>"     />
 
