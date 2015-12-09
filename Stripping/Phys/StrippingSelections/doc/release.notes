@@ -4,6 +4,8 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+!	2015-12-09 - Tim Williams
+ - Changed name of Working group in B24p default_config to BnoC
 
 ! 2015-12-08 - Oliver Gruenberg
  - The Lines B23Mu, B24p, BLV, D23Mu and Lc23Mu have MDSTFlag keyword in the dictionary

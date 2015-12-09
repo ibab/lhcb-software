@@ -67,7 +67,7 @@ from GaudiKernel.PhysicalConstants import c_light
 
 default_config = {
     "NAME"        : "B24p",
-    "WGs"         : [ "RD" ],
+    "WGs"         : [ "BnoC" ],
     "STREAMS"     : [ "Bhadron" ],
     "BUILDERTYPE" : "B24pLinesConf",
     "CONFIG"      : {
