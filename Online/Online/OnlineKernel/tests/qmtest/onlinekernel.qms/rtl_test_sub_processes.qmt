@@ -5,4 +5,5 @@
   <argument name="args"><set><text>rtl_test_sub_processes</text></set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="reference"><text>../refs/rtl_test_sub_processes.ref</text></argument>
+  <argument name="error_reference"><text>../refs/rtl_test_sub_processes.stderr</text></argument>
 </extension>
