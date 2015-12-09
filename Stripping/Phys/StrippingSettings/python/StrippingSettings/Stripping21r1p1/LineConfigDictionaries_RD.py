@@ -6,46 +6,6 @@
 ##                   Guido Andreassi guido.andreassi@cern.ch                  ##
 ################################################################################
 
-B23Mu = {
-    "BUILDERTYPE": "B23MuLinesConf", 
-    "CONFIG": {
-        "B23MuPrescale": 1, 
-        "B23PiPrescale": 1, 
-        "B2MueePrescale": 1, 
-        "CommonRelInfoTools": [
-            {
-                "Location": "VtxIsoInfo", 
-                "Type": "RelInfoVertexIsolation"
-            }, 
-            {
-                "Location": "VtxIsoInfoBDT", 
-                "Type": "RelInfoVertexIsolationBDT"
-            }, 
-            {
-                "Location": "BsMuMuBIsolation", 
-                "Type": "RelInfoBs2MuMuBIsolations", 
-                "Variables": [], 
-                "makeTrackCuts": False, 
-                "tracktype": 3
-            }
-        ], 
-        "MaxDoca": 0.3, 
-        "MaxIPChi2": 25, 
-        "MaxTrChi2Dof": 4.0, 
-        "MaxTrGhp": 0.4, 
-        "MaxVtxChi2Dof": 9, 
-        "MinDira": 0.0, 
-        "MinTau": 0.0, 
-        "MinTrIPChi2": 25.0, 
-        "MinVDChi2": 225, 
-        "Postscale": 1, 
-        "mDiffBuLoose": 500, 
-        "mDiffBuTight": 100
-    }, 
-    "STREAMS": [ "Leptonic" ], 
-    "WGs": [ "RD" ]
-}
-
 B2KstTauTau = {
     "BUILDERTYPE": "B2KstTauXConf", 
     "CONFIG": {
@@ -601,62 +561,6 @@ B2XTauMu = {
     "WGs": [ "RD" ]
 }
 
-BLV = {
-    "BUILDERTYPE": "BLVLinesConf", 
-    "CONFIG": {
-        "B2DpiPrescale": 0.1, 
-        "B2KhhPrescale": 1, 
-        "B2LcmuPrescale": 1, 
-        "B2LcpPrescale": 0.2, 
-        "Bs2DspiPrescale": 0.1, 
-        "CommonRelInfoTools": [
-            {
-                "Location": "VtxIsoInfo", 
-                "Type": "RelInfoVertexIsolation"
-            }, 
-            {
-                "Location": "VtxIsoInfoBDT", 
-                "Type": "RelInfoVertexIsolationBDT"
-            }, 
-            {
-                "Location": "BsMuMuBIsolation", 
-                "Type": "RelInfoBs2MuMuBIsolations", 
-                "Variables": [], 
-                "makeTrackCuts": False, 
-                "tracktype": 3
-            }
-        ], 
-        "La2KmuPrescale": 1, 
-        "Lb2DmuPrescale": 1, 
-        "Lb2DsmuPrescale": 1, 
-        "Lb2KmuPrescale": 1, 
-        "Lb2LcpiPrescale": 0.1, 
-        "MaxDoca": 0.3, 
-        "MaxIPChi2": 25, 
-        "MaxTrChi2Dof": 4.0, 
-        "MaxTrGhp": 0.4, 
-        "MaxVtxChi2Dof": 9, 
-        "MinDira": 0.0, 
-        "MinTauLambda": 10.0, 
-        "MinTauLoose": 0.0, 
-        "MinTauTight": 1.0, 
-        "MinTrIPChi2": 25.0, 
-        "MinVDChi2Loose": 100, 
-        "MinVDChi2Tight": 225, 
-        "Postscale": 1, 
-        "Xib2KhmuPrescale": 1, 
-        "mDiffD": 100.0, 
-        "mDiffDs": 100.0, 
-        "mDiffLa": 400.0, 
-        "mDiffbLoose": 500.0, 
-        "mDiffbStand": 400.0, 
-        "mDiffbTight": 300.0, 
-        "mKst": 1200.0
-    }, 
-    "STREAMS": [ "Bhadron" ], 
-    "WGs": [ "RD" ]
-}
-
 Beauty2XGamma = {
     "BUILDERTYPE": "Beauty2XGammaConf", 
     "CONFIG": {
@@ -862,46 +766,6 @@ Bs2st2KKMuX = {
         ]
     }, 
     "STREAMS": [ "Semileptonic" ], 
-    "WGs": [ "RD" ]
-}
-
-D23Mu = {
-    "BUILDERTYPE": "D23MuLinesConf", 
-    "CONFIG": {
-        "CommonRelInfoTools": [
-            {
-                "Location": "VtxIsoInfo", 
-                "Type": "RelInfoVertexIsolation"
-            }, 
-            {
-                "Location": "VtxIsoInfoBDT", 
-                "Type": "RelInfoVertexIsolationBDT"
-            }, 
-            {
-                "Location": "BsMuMuBIsolation", 
-                "Type": "RelInfoBs2MuMuBIsolations", 
-                "Variables": [], 
-                "makeTrackCuts": False, 
-                "tracktype": 3
-            }
-        ], 
-        "D23MuPrescale": 1, 
-        "D23PiPrescale": 0.01, 
-        "D2MueePrescale": 1, 
-        "MaxDoca": 0.3, 
-        "MaxIPChi2": 25, 
-        "MaxTrChi2Dof": 4.0, 
-        "MaxTrGhp": 0.4, 
-        "MaxVtxChi2Dof": 9, 
-        "MinDira": 0.0, 
-        "MinTau": 0.1, 
-        "MinTrIPChi2": 25.0, 
-        "MinVDChi2": 225, 
-        "Postscale": 1, 
-        "mDiffDLoose": 150, 
-        "mDiffDTight": 150
-    }, 
-    "STREAMS": [ "Leptonic" ], 
     "WGs": [ "RD" ]
 }
 
@@ -1267,47 +1131,6 @@ Lb2L0Gamma = {
         "Track_Chi2ndf_Max": 3.0, 
         "Track_GhostProb_Max": 0.4, 
         "Track_MinChi2ndf_Max": 2.0
-    }, 
-    "STREAMS": [ "Leptonic" ], 
-    "WGs": [ "RD" ]
-}
-
-Lc23Mu = {
-    "BUILDERTYPE": "Lc23MuLinesConf", 
-    "CONFIG": {
-        "CommonRelInfoTools": [
-            {
-                "Location": "VtxIsoInfo", 
-                "Type": "RelInfoVertexIsolation"
-            }, 
-            {
-                "Location": "VtxIsoInfoBDT", 
-                "Type": "RelInfoVertexIsolationBDT"
-            }, 
-            {
-                "Location": "BsMuMuBIsolation", 
-                "Type": "RelInfoBs2MuMuBIsolations", 
-                "Variables": [], 
-                "makeTrackCuts": False, 
-                "tracktype": 3
-            }
-        ], 
-        "Lc23muPrescale": 1, 
-        "Lc2mueePrescale": 1, 
-        "Lc2pKpiPrescale": 0.01, 
-        "Lc2peePrescale": 1, 
-        "Lc2pmumuPrescale": 1, 
-        "MaxDoca": 0.3, 
-        "MaxIPChi2": 100, 
-        "MaxTrChi2Dof": 4.0, 
-        "MaxTrGhp": 0.4, 
-        "MaxVtxChi2": 15, 
-        "MinTrIPChi2": 9, 
-        "MinTrPT": 300, 
-        "MinVD": 70, 
-        "Postscale": 1, 
-        "mDiffLcLoose": 200, 
-        "mDiffLcTight": 150
     }, 
     "STREAMS": [ "Leptonic" ], 
     "WGs": [ "RD" ]
