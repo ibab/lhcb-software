@@ -23,7 +23,7 @@ DecodeRawEvent().setProp("OverrideInputs",4.2)
 #
 from StrippingConf.Configuration import StrippingConf, StrippingStream
 from StrippingSettings.Utils import strippingConfiguration
-from StrippingArchive.Utils import buildStream
+from StrippingArchive.Utils import buildStreams
 from StrippingArchive import strippingArchive
 
 #get the configuration dictionary from the database
