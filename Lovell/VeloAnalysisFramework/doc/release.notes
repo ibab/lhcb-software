@@ -4,6 +4,9 @@
 ! Purpose     : Analysis framework and configuration for offline and web GUIs
 !----------------------------------------------------------------------------
 
+! 2015-12-09 - Marco Gersabeck
+ - Removed redundant header cross-talk plots
+
 ! 2015-10-23 - Marco Gersabeck
  - Added intermediate merging step to filename logic in veloview/runview/utils.py
  - Used said filename logic directly in plot return method in veloview/runview/plots.py
