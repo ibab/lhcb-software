@@ -152,7 +152,7 @@ PEDESTALS = (
                         'sensor_dependent': True
                     },
                     {
-                        'title': 'Subtracted ADC profile',
+                        'title': 'Pedestal subtracted ADC profile',
                         'name': 'Vetra/VeloPedestalSubtractorMoni/TELL1_{0:03d}/Ped_Sub_ADCs_Profile',
                         'sensor_dependent': True
                     }
@@ -163,7 +163,7 @@ PEDESTALS = (
                 'title': '2D plots',
                 'plots': [
                     {
-                        'title': 'Subtracted ADC 2D',
+                        'title': 'Pedestal subtracted ADC 2D',
                         'name': 'Vetra/VeloPedestalSubtractorMoni/TELL1_{0:03d}/Ped_Sub_ADCs_2D',
                         'sensor_dependent': True
                     }
