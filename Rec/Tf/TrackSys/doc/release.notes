@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2015-12-09 - Michel De Cian
+ - Make 'PrHybridSeeding' default one in tracking sequence.
+
 ! 2015-11-30 - Elena Graverini
  - Added RecoExcludeSTLayers.py to ignore certains layers during the tracking. Added the "ExcludedLayers" prop to the TrackSys configurable. Modified RecoTrackingRun2.py in order to enable layers exclusion.
 
