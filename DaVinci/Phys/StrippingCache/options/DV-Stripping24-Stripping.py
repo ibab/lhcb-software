@@ -31,20 +31,37 @@ config  = strippingConfiguration(stripping)
 #get the line builders from the archive
 archive = strippingArchive(stripping)
 
-stream = buildStream(stripping = config, archive = archive)
+streams = buildStreams(stripping = config, archive = archive)
+	
+leptonicMicroDSTname   = 'Leptonic'
+charmMicroDSTname      = 'Charm'
+pidMicroDSTname        = 'PID'
+bhadronMicroDSTname    = 'Bhadron'
+mdstStreams = [ leptonicMicroDSTname,charmMicroDSTname,pidMicroDSTname,bhadronMicroDSTname ]
+dstStreams  = [ "BhadronCompleteEvent", "CharmCompleteEvent", "Dimuon",
+                "EW", "Semileptonic", "Calibration", "MiniBias", "Radiative" ]
 
-for l in stream.lines:
-        if l.RequiredRawEvents and l._prescale==0:
-                l.RequiredRawEvents=None
+stripTESPrefix = 'Strip'
 
 from Configurables import ProcStatusCheck
-filterBadEvents = ProcStatusCheck()
-
-sc = StrippingConf( Streams = [stream],
+	
+sc = StrippingConf( Streams = streams,
                     MaxCandidates = 2000,
                     AcceptBadEvents = False,
-                    BadEventSelection = filterBadEvents, 
-                    TESPrefix = 'Strip' )
+                    BadEventSelection = ProcStatusCheck(),
+                    TESPrefix = stripTESPrefix,
+                    ActiveMDSTStream = True,
+                    Verbose = True,
+                    DSTStreams = dstStreams,
+                    MicroDSTStreams = mdstStreams )
+
+from Configurables import ApplicationMgr, AuditorSvc, SequencerTimerTool
+	
+# Initial IOV time
+# http://www.onlineconversion.com/unix_time.htm
+# values in ns (so multiply values from above link by 1e9)
+#from Configurables import EventClockSvc
+#EventClockSvc().EventTimeDecoder = "OdinTimeDecoder"
 
 appMgr = ApplicationMgr()
 appMgr.OutputLevel = 6
