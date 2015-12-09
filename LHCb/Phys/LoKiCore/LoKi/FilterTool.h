@@ -118,7 +118,7 @@ namespace LoKi
       // use the factory 
       StatusCode sc = _factory-> get ( code() , functor , preambulo () ) ;
       // release the factory (not needed anymore) 
-      this->release ( _factory ).ignore() ;
+      this->releaseTool ( _factory ).ignore() ;
       if ( sc.isFailure() ) 
       { return Error("Unable to decode functor '" + code() + "'" , sc ) ; }
       //

@@ -169,8 +169,8 @@ namespace LoKi
       FACTORY* _factory = tool<FACTORY> ( factory() , this ) ;
       // use the factory 
       StatusCode sc = _factory-> get ( code() , functor , preambulo () ) ;
-      // release the factory (not needed anymore) 
-      this->release ( _factory ).ignore() ;
+      // release the factory (not needed anymore)
+      this->releaseTool ( _factory ).ignore() ;
       if ( sc.isFailure() ) 
       { return Error("Unable to decode functor '" + code() + "'" , sc ) ; }
       //

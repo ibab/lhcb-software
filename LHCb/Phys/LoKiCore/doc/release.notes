@@ -12,6 +12,11 @@
 !   contributions and advices from G.Raven, J.van Tilburg,
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
+
+! 2015-12-09 - Marco Cattaneo
+ - use releaseTool() instead of release() to explicitly release a tool acquired
+   with tool() templated method
+
 ! 2015-12-08 - Gerhard Raven
  - remove unneeded include of select.h
 
@@ -22,10 +27,8 @@
  - minor fix 
 
 ! 2015-11-30 - Vanya Belyaev
-
  - FilterAlg.cpp: 
    improve a little bit usage of double lock pattern 
-
 
 !========================= LoKiCore v11r28 2015-11-23 =========================
 ! 2015-11-03 - Gerhard Raven
