@@ -1,5 +1,3 @@
-// $Id: DeCalorimeter.h,v 1.41 2010-02-17 23:05:54 odescham Exp $ 
-// ============================================================================
 #ifndef       CALODET_DECALORIMETER_H
 #define       CALODET_DECALORIMETER_H 1
 // ============================================================================
@@ -7,6 +5,7 @@
 // ============================================================================
 #include <iostream>
 #include <vector>
+#include <algorithm>
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -45,22 +44,22 @@ class MsgStream        ;
 class DeSubCalorimeter ;
 class DeSubSubCalorimeter ;
 // ============================================================================
-/// definition of calorimeter planes 
+/// definition of calorimeter planes
 namespace CaloPlane
 {
   // ==========================================================================
-  /// definition of calorimeter planes  
+  /// definition of calorimeter planes
   enum Plane {
-    Front  = 0 , 
+    Front  = 0 ,
     Middle     ,
     ShowerMax  ,
-    Back       
+    Back
   } ;
   // ==========================================================================
-} //                                                 end of namespace CaloPlane 
+} //                                                 end of namespace CaloPlane
 // ============================================================================
 /// Locations of DeCalorimeter detector elements in the TDS
-namespace DeCalorimeterLocation 
+namespace DeCalorimeterLocation
 {
   static const std::string Spd  = "/dd/Structure/LHCb/DownstreamRegion/Spd"  ;
   static const std::string Prs  = "/dd/Structure/LHCb/DownstreamRegion/Prs"  ;
@@ -68,14 +67,14 @@ namespace DeCalorimeterLocation
   static const std::string Hcal = "/dd/Structure/LHCb/DownstreamRegion/Hcal" ;
 }
 // ============================================================================
-/** @class DeCalorimeter CaloDet/DeCalorimeter.h 
+/** @class DeCalorimeter CaloDet/DeCalorimeter.h
  *
  *  Calorimeter detector element class.
  *
  *  @author Olivier Callot Olivier.Callot@cern.ch
- *  @author Vanya Belyaev  Ivan.Belyaev@itep.ru  
+ *  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
  */
-class DeCalorimeter: public DetectorElement 
+class DeCalorimeter: public DetectorElement
 {
 public:
   typedef std::vector<const DeSubCalorimeter*>  SubCalos  ;
@@ -83,16 +82,16 @@ public:
   ///  Constructors
   DeCalorimeter( const std::string& name    = "" );
   ///  (dirtual) Destructor
-  virtual ~DeCalorimeter() ;
+  ~DeCalorimeter() override = default;
   ///  object identification
-  static  const CLID& classID ()       { return CLID_DeCalorimeter ; } 
+  static  const CLID& classID ()       { return CLID_DeCalorimeter ; }
   ///  object identification
   virtual const CLID& clID    () const ;
-  ///  printout to std::ostream 
+  ///  printout to std::ostream
   virtual std::ostream& printOut( std::ostream& s = std::cerr ) const;
-  ///  printout to MsgStream 
+  ///  printout to MsgStream
   virtual MsgStream&    printOut( MsgStream&                  ) const;
-  ///  initialization method 
+  ///  initialization method
   virtual StatusCode initialize();
 
   ///  if initialized in a proper way?
@@ -109,16 +108,16 @@ public:
   // general
   //--------
   const std::string& caloName () const { return m_caloDet   ; }
-  /// calorimeter index, @see namespace CaloCellCode  
+  /// calorimeter index, @see namespace CaloCellCode
   int                index    () const { return m_caloIndex ; }
   // accessing the geometry parameters
   //----------------------------------
-  // get constant access to subcalorimeters 
+  // get constant access to subcalorimeters
   const SubCalos&  subCalos() const { return m_subCalos ; }
   double zSize () const { return m_zSize         ; };
   double        zOffset       () const { return m_zOffset       ; };
   unsigned int numberOfAreas() const{return m_nArea;};
- // reference plane in the global frame 
+ // reference plane in the global frame
   Gaudi::Plane3D plane ( const double           zLocal ) const ;
   inline  Gaudi::Plane3D plane ( const Gaudi::XYZPoint& point  ) const ;
   inline  Gaudi::Plane3D plane ( const CaloPlane::Plane pos    ) const ;
@@ -126,10 +125,10 @@ public:
 
   // accessing the calibration parameters
   //-------------------------------------
-  double maxEtInCenter(unsigned int reg=0)const{return (reg<m_maxEtInCenter.size()) ? m_maxEtInCenter[reg]:m_maxEtInCenter[0];}; 
+  double maxEtInCenter(unsigned int reg=0)const{return (reg<m_maxEtInCenter.size()) ? m_maxEtInCenter[reg]:m_maxEtInCenter[0];};
   double maxEtSlope(unsigned int reg=0)   const{return (reg<m_maxEtSlope.size()) ? m_maxEtSlope[reg] : m_maxEtSlope[0];};
-  double        pedestalShift    ()     const { return m_pedShift      ; };  
-  double        pinPedestalShift ()     const { return m_pinPedShift   ; };  
+  double        pedestalShift    ()     const { return m_pedShift      ; };
+  double        pinPedestalShift ()     const { return m_pinPedShift   ; };
   double        L0EtGain         ()     const { return m_l0Et          ; };
   double        coherentNoise    ()     const { return m_cNoise        ; };
   double        incoherentNoise  ()     const { return m_iNoise        ; };
@@ -146,9 +145,9 @@ public:
   double        mipDeposit       ()     const { return m_mip           ; };
   double        dynamicsSaturation()    const { return m_dyn           ; };
   double        fractionFromPrevious()  const { return m_prev          ; };
-  double numberOfPhotoElectrons(unsigned int area=0) const { return (area < m_phe.size() ) ? m_phe[area] : 0.  ; };  
-  double l0EtCorrection(unsigned int area=0) const { return (area < m_l0Cor.size() ) ? m_l0Cor[area] : 1.  ; };  
-  double        activeToTotal    ()     const { return m_activeToTotal; };    
+  double numberOfPhotoElectrons(unsigned int area=0) const { return (area < m_phe.size() ) ? m_phe[area] : 0.  ; };
+  double l0EtCorrection(unsigned int area=0) const { return (area < m_l0Cor.size() ) ? m_l0Cor[area] : 1.  ; };
+  double        activeToTotal    ()     const { return m_activeToTotal; };
 
   // accessing the hardware parameter(s)
   // ---------------------------------
@@ -164,12 +163,10 @@ public:
   unsigned int   numberOfTell1s () { return  m_tell1Boards.size()  ; };
   unsigned int   numberOfPins   () { return  m_pins.size() ; };
   unsigned int   numberOfLeds   () { return  m_leds.size() ; };
-  unsigned int   numberOfInvalidCells  () { 
-    unsigned int count = 0;
-    for( CaloVector<CellParam>::iterator ic = m_cells.begin() ;m_cells.end() != ic ; ++ic ) {
-      if( !ic->cellID().isPin() && !ic->valid() )count++;
-    }
-    return  count;
+  unsigned int   numberOfInvalidCells  () {
+    return std::count_if( m_cells.begin(), m_cells.end(), [](const CellParam& c) {
+      return  !c.cellID().isPin() && !c.valid() ;
+    });
   };
   unsigned int   pinArea        () { return m_pinArea; };
   ///  Cell Parameters
@@ -188,7 +185,7 @@ public:
   inline double cellTime ( const LHCb::CaloCellID& ) const ;
   inline const Gaudi::XYZPoint cellCenter       ( const LHCb::CaloCellID& ) const ;
   inline const CaloNeighbors& neighborCells    ( const LHCb::CaloCellID& ) const ;
-  inline const CaloNeighbors& zsupNeighborCells( const LHCb::CaloCellID& ) const ;  
+  inline const CaloNeighbors& zsupNeighborCells( const LHCb::CaloCellID& ) const ;
   inline bool hasQuality( const LHCb::CaloCellID& , CaloCellQuality::Flag flag );
   inline bool isDead  ( const LHCb::CaloCellID& );
   inline bool isNoisy ( const LHCb::CaloCellID& );
@@ -205,7 +202,7 @@ public:
   inline int cardRow   ( const LHCb::CaloCellID& ) const ;
   inline int cardColumn( const LHCb::CaloCellID& ) const ;
   inline void cardAddress ( const LHCb::CaloCellID& ID   ,int & card ,int & row,int & col) const ;
-  //  FEB card 
+  //  FEB card
   int nCards ( ) const  { return m_feCards.size(); }
   inline int downCardNumber      ( const int card    )  const ;
   inline int leftCardNumber      ( const int card    )  const ;
@@ -229,11 +226,11 @@ public:
   inline int cardCrate( const int card ) const ;
   inline int cardSlot(  const int card ) const ;
   inline int cardCode(  const int card ) const ;
-  inline const std::vector<LHCb::CaloCellID>&  cardChannels( const int card );  
-  inline const std::vector<LHCb::CaloCellID>&  pinChannels( const LHCb::CaloCellID )  ;  
-  inline const std::vector<LHCb::CaloCellID>&  ledChannels( const int led ) ;  
-  inline const std::vector<int>&  pinLeds( const LHCb::CaloCellID )  ;  
-  inline const std::vector<int>&  cellLeds( const LHCb::CaloCellID )  ;  
+  inline const std::vector<LHCb::CaloCellID>&  cardChannels( const int card );
+  inline const std::vector<LHCb::CaloCellID>&  pinChannels( const LHCb::CaloCellID )  ;
+  inline const std::vector<LHCb::CaloCellID>&  ledChannels( const int led ) ;
+  inline const std::vector<int>&  pinLeds( const LHCb::CaloCellID )  ;
+  inline const std::vector<int>&  cellLeds( const LHCb::CaloCellID )  ;
   inline int cardIndexByCode( const int crate , const int slot );
   inline int cardToTell1( const int card ) const ;
   // from validation to Hcal FEB
@@ -268,7 +265,7 @@ public:
   int pileUpSubstractionMin(){return m_puMin;}
 
 
-protected:
+private:
   ///  Initialization method for building the cells/cards/tell1/PIN layout
   StatusCode     buildCells     ();
   StatusCode     buildCards     ();
@@ -282,14 +279,15 @@ protected:
   StatusCode     getNumericGains();
 
 private:
-  DeCalorimeter( const DeCalorimeter& ) ;
+  DeCalorimeter( const DeCalorimeter& ) = delete;
+  DeCalorimeter& operator=( const DeCalorimeter& ) = delete;
 
   // Calo id
   std::string m_caloDet;
-  int         m_caloIndex;   
+  int         m_caloIndex = -1;
 
   // init flag
-  bool     m_initialized;     
+  bool     m_initialized = false;
 
   // geometry
   double m_YToXSizeRatio;
@@ -299,16 +297,16 @@ private:
   unsigned int m_nArea;
 
   // hardware
-  int      m_adcMax;  
+  int      m_adcMax;
   int      m_coding;
   int      m_centralHoleX;
   int      m_centralHoleY;
-  int      m_maxRowCol;  
-  int      m_firstRowUp;       
-  double   m_centerRowCol;    
-  
+  int      m_maxRowCol;
+  int      m_firstRowUp;
+  double   m_centerRowCol;
+
   // calibration
-  std::vector<double>   m_maxEtInCenter;  
+  std::vector<double>   m_maxEtInCenter;
   std::vector<double>   m_maxEtSlope;
   double   m_pedShift;
   double   m_pinPedShift;
@@ -326,16 +324,16 @@ private:
   double   m_l0Thresh;
   std::vector<double> m_phe;
   std::vector<double> m_l0Cor;
-  int m_puMeth;
-  int m_puBin;
-  int m_puMin;
-    
+  int m_puMeth = -1;
+  int m_puBin = 0;
+  int m_puMin = 0;
+
 
   // reconstruction
   double   m_zShowerMax;
 
   // readout
-  int m_pinArea;
+  int m_pinArea = -1;
 
   ///  Collections
   std::vector<LHCb::CaloCellID> m_empty;
@@ -362,7 +360,12 @@ private:
   bool loadCondition(SmartRef<Condition>& cond, std::string name, bool mandatory = false);
 
   // cache
-  StatusCode resetCellParam(std::string m);
+  template <typename Fun>
+  void resetCellParam(MsgStream& msg, const char* member, Fun&& fun) {
+      if( UNLIKELY( msg.level() <= MSG::DEBUG ) )
+        msg << MSG::DEBUG << "Before updating condition - reset CellParam." <<member<< endmsg,
+      std::for_each( m_cells.begin(), m_cells.end(), std::forward<Fun>(fun) );
+  }
   StatusCode updHardware();
   StatusCode updGeometry();
   StatusCode updGain();
@@ -377,23 +380,23 @@ private:
   StatusCode updPileUp();
 };
 
-  
+
 // ===========================================================================
 /** ouput operator for class DeCalorimeter
- *  @see DeCalorimeter 
- *  @param os reference to standard STL/STD output stream 
- *  @param de reference to DeCalorimeter object 
+ *  @see DeCalorimeter
+ *  @param os reference to standard STL/STD output stream
+ *  @param de reference to DeCalorimeter object
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  */
 inline std::ostream&  operator<<( std::ostream& os , const DeCalorimeter& de )
-{ return de.printOut( os ); } 
+{ return de.printOut( os ); }
 // ===========================================================================
 
 // ===========================================================================
 /** ouput operator for class DeCalorimeter
- *  @see DeCalorimeter 
- *  @param os reference to standard STL/STD output stream 
- *  @param de pointer to DeCalorimeter object 
+ *  @see DeCalorimeter
+ *  @param os reference to standard STL/STD output stream
+ *  @param de pointer to DeCalorimeter object
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  */
 inline std::ostream&  operator<<( std::ostream& os , const DeCalorimeter* de )
@@ -402,22 +405,22 @@ inline std::ostream&  operator<<( std::ostream& os , const DeCalorimeter* de )
 
 // ===========================================================================
 /** ouput operator for class DeCalorimeter
- *  @see DeCalorimeter 
+ *  @see DeCalorimeter
  *  @see MsgStream
- *  @param os reference to Gaudi message output stream 
- *  @param de reference to DeCalorimeter object 
+ *  @param os reference to Gaudi message output stream
+ *  @param de reference to DeCalorimeter object
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  */
 inline MsgStream&     operator<<( MsgStream&    os , const DeCalorimeter& de )
-{ return de.printOut( os ); } 
+{ return de.printOut( os ); }
 // ===========================================================================
 
 // ===========================================================================
 /** ouput operator for class DeCalorimeter
- *  @see DeCalorimeter 
+ *  @see DeCalorimeter
  *  @see MsgStream
- *  @param os reference to Gaudi message output stream 
- *  @param de pointer to DeCalorimeter object 
+ *  @param os reference to Gaudi message output stream
+ *  @param de pointer to DeCalorimeter object
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  */
 inline MsgStream&     operator<<( MsgStream&    os , const DeCalorimeter* de )
@@ -427,15 +430,14 @@ inline MsgStream&     operator<<( MsgStream&    os , const DeCalorimeter* de )
 // ===========================================================================
 //  validity flag for the cell
 // ===========================================================================
-inline bool DeCalorimeter::valid    ( const LHCb::CaloCellID& ID ) const 
+inline bool DeCalorimeter::valid    ( const LHCb::CaloCellID& ID ) const
 { return m_cells[ID].valid();}
 // ===========================================================================
 //  Quality flag for the cell
 // ===========================================================================
 inline bool DeCalorimeter::hasQuality( const LHCb::CaloCellID& ID , CaloCellQuality::Flag flag){
   int quality = m_cells[ID].quality();
-  if( flag == CaloCellQuality::OK)return (quality == 0);
-  return ( (quality & flag) != 0) ;
+  return  flag == CaloCellQuality::OK ? quality == 0 : ( (quality & flag) != 0 ) ;
 }
 inline bool DeCalorimeter::isDead(const LHCb::CaloCellID& ID){
   return hasQuality(ID, CaloCellQuality::Dead);
@@ -458,24 +460,24 @@ inline bool DeCalorimeter::isVeryShifted(const LHCb::CaloCellID& ID){
 // ===========================================================================
 //  x-position of center of the cell
 // ===========================================================================
-inline double DeCalorimeter::cellX  ( const LHCb::CaloCellID& ID ) const 
+inline double DeCalorimeter::cellX  ( const LHCb::CaloCellID& ID ) const
 { return m_cells[ID].x (); }
 //  ===========================================================================
 //  y-position of center of the cell
 //  ===========================================================================
-inline double DeCalorimeter::cellY  ( const LHCb::CaloCellID& ID ) const 
+inline double DeCalorimeter::cellY  ( const LHCb::CaloCellID& ID ) const
 { return m_cells[ID].y (); }
 
 // ===========================================================================
 //  z-position of center of the cell
 // ===========================================================================
-inline double DeCalorimeter::cellZ  ( const LHCb::CaloCellID& ID ) const 
+inline double DeCalorimeter::cellZ  ( const LHCb::CaloCellID& ID ) const
 { return m_cells[ID].z (); }
 
 // ===========================================================================
 //  cell size
 // ===========================================================================
-inline double DeCalorimeter::cellSize ( const LHCb::CaloCellID& ID ) const 
+inline double DeCalorimeter::cellSize ( const LHCb::CaloCellID& ID ) const
 { return m_cells[ID].size (); }
 
 // ===========================================================================
@@ -486,82 +488,82 @@ inline double DeCalorimeter::cellSine ( const LHCb::CaloCellID& ID ) const{ retu
 // ===========================================================================
 //  PM gain for given cell
 // ===========================================================================
-inline double DeCalorimeter::cellGain ( const LHCb::CaloCellID& ID ) const 
+inline double DeCalorimeter::cellGain ( const LHCb::CaloCellID& ID ) const
 { return m_cells[ID].gain (); }
 
 // ===========================================================================
 //  Timing for for given cell
 // ===========================================================================
-inline double DeCalorimeter::cellTime ( const LHCb::CaloCellID& ID ) const 
+inline double DeCalorimeter::cellTime ( const LHCb::CaloCellID& ID ) const
 { return m_cells[ID].time (); }
 
 // ===========================================================================
 //  cell center
 // ===========================================================================
-inline const Gaudi::XYZPoint DeCalorimeter::cellCenter ( const LHCb::CaloCellID& ID ) const 
+inline const Gaudi::XYZPoint DeCalorimeter::cellCenter ( const LHCb::CaloCellID& ID ) const
 { return m_cells[ID].center(); }
 
 // ============================================================================
 //  list of neighbour cells
 // ============================================================================
-inline const CaloNeighbors& 
-DeCalorimeter::neighborCells    ( const LHCb::CaloCellID& ID ) const 
+inline const CaloNeighbors&
+DeCalorimeter::neighborCells    ( const LHCb::CaloCellID& ID ) const
 { return m_cells[ID].neighbors    (); }
 
 // ============================================================================
 //  list of neighbour cells
 // ============================================================================
-inline const CaloNeighbors& 
-DeCalorimeter::zsupNeighborCells( const LHCb::CaloCellID& ID ) const 
+inline const CaloNeighbors&
+DeCalorimeter::zsupNeighborCells( const LHCb::CaloCellID& ID ) const
 { return m_cells[ID].zsupNeighbors(); }
 
 // ============================================================================
 //  From ID to cell serial number and vice-versa
 // ============================================================================
-inline int    
-DeCalorimeter::cellIndex( const LHCb::CaloCellID& ID ) const 
+inline int
+DeCalorimeter::cellIndex( const LHCb::CaloCellID& ID ) const
 { return m_cells.index(ID); }
 
 // ============================================================================
 //  From ID to cell serial number and vice-versa
 // ============================================================================
-inline LHCb::CaloCellID 
-DeCalorimeter::cellIdByIndex( const unsigned int num )    const 
+inline LHCb::CaloCellID
+DeCalorimeter::cellIdByIndex( const unsigned int num )    const
 {
-  return 
+  return
     ( (num < m_cells.size() ) ? (m_cells.begin()+num)->cellID() : LHCb::CaloCellID() );
 }
 
-inline bool 
+inline bool
 DeCalorimeter::isReadout( const LHCb::CaloCellID& ID )const{
-  return ( m_cells[ID].cardNumber() >=0 )? true : false ; 
+  return ( m_cells[ID].cardNumber() >=0 )? true : false ;
 }
 // ============================================================================
-//  card number 
+//  card number
 // ============================================================================
-inline int 
+inline int
 DeCalorimeter::cardNumber( const LHCb::CaloCellID& ID ) const
 {return m_cells[ID].cardNumber(); }
 // ============================================================================
-//  card row  
+//  card row
 // ============================================================================
-inline int 
-DeCalorimeter::cardRow   ( const LHCb::CaloCellID& ID ) const 
+inline int
+DeCalorimeter::cardRow   ( const LHCb::CaloCellID& ID ) const
 {return m_cells[ID].cardRow();    }
 // ============================================================================
-//  card column  
+//  card column
 // ============================================================================
-inline int 
-DeCalorimeter::cardColumn( const LHCb::CaloCellID& ID ) const 
+inline int
+DeCalorimeter::cardColumn( const LHCb::CaloCellID& ID ) const
 {return m_cells[ID].cardColumn(); }
 // ============================================================================
-//  card address 
+//  card address
 // ============================================================================
-inline void 
+inline void
 DeCalorimeter::cardAddress ( const LHCb::CaloCellID& ID     ,
-                             int &             card   , 
-                             int &             row    , 
-                             int &             column ) const 
+                             int &             card   ,
+                             int &             row    ,
+                             int &             column ) const
 {
   card   = m_cells[ID].cardNumber ();
   row    = m_cells[ID].cardRow() ;
@@ -569,31 +571,31 @@ DeCalorimeter::cardAddress ( const LHCb::CaloCellID& ID     ,
 }
 
 // ============================================================================
-//  down card number 
+//  down card number
 // ============================================================================
-inline int DeCalorimeter::downCardNumber  ( const int card )  const 
+inline int DeCalorimeter::downCardNumber  ( const int card )  const
 { return (card < nCards() ) ? m_feCards[card].downNumber() : -1; }
 
 // ============================================================================
-//  left card number 
+//  left card number
 // ============================================================================
-inline int DeCalorimeter::leftCardNumber  ( const int card )  const 
+inline int DeCalorimeter::leftCardNumber  ( const int card )  const
 { return  (card < nCards() ) ? m_feCards[card].leftNumber() : -1; }
 
 // ============================================================================
-//  corder card number 
+//  corder card number
 // ============================================================================
-inline int DeCalorimeter::cornerCardNumber( const int card )  const 
+inline int DeCalorimeter::cornerCardNumber( const int card )  const
 { return  (card < nCards() ) ? m_feCards[card].cornerNumber() : -1;}
 
 // ============================================================================
-//  previous card number 
+//  previous card number
 // ============================================================================
 inline int DeCalorimeter::previousCardNumber(const int card ) const
 {  return  (card < nCards() ) ? m_feCards[card].previousNumber() : -1;}
 
 // ============================================================================
-//  validation card number 
+//  validation card number
 // ============================================================================
 inline int DeCalorimeter::validationNumber(const int card ) const
 {  return  (card < nCards() ) ? m_feCards[card].validationNumber() : -1;}
@@ -607,9 +609,9 @@ inline int DeCalorimeter::selectionType(const int card ) const
 // ============================================================================
 //  card neighbours
 // ============================================================================
-inline void DeCalorimeter::cardNeighbors ( const int card, 
-                                           int  & down, 
-                                           int  & left, 
+inline void DeCalorimeter::cardNeighbors ( const int card,
+                                           int  & down,
+                                           int  & left,
                                            int  & corner )const
 {
   down=-1;
@@ -624,39 +626,39 @@ inline void DeCalorimeter::cardNeighbors ( const int card,
 
 
 // ============================================================================
-//  card area 
+//  card area
 // ============================================================================
-inline int DeCalorimeter::cardArea       ( const int card ) const 
+inline int DeCalorimeter::cardArea       ( const int card ) const
 { return  (card < nCards() ) ? m_feCards[card].area() : -1; }
 
 // ============================================================================
-//  card first row 
+//  card first row
 // ============================================================================
-inline int DeCalorimeter::cardFirstRow   ( const int card ) const 
+inline int DeCalorimeter::cardFirstRow   ( const int card ) const
 { return  (card < nCards() ) ? m_feCards[card].firstRow() : -1 ;}
 
 // ============================================================================
-//  card first column 
+//  card first column
 // ============================================================================
-inline int DeCalorimeter::cardFirstColumn( const int card ) const 
+inline int DeCalorimeter::cardFirstColumn( const int card ) const
 { return  (card < nCards() ) ? m_feCards[card].firstColumn() : -1; }
 
 // ============================================================================
-//  card last row 
+//  card last row
 // ============================================================================
-inline int DeCalorimeter::cardLastRow   ( const int card ) const 
+inline int DeCalorimeter::cardLastRow   ( const int card ) const
 { return  (card < nCards() ) ? m_feCards[card].lastRow() : -1;}
 
 // ============================================================================
-//  card last column 
+//  card last column
 // ============================================================================
-inline int DeCalorimeter::cardLastColumn( const int card ) const 
+inline int DeCalorimeter::cardLastColumn( const int card ) const
 { return  (card < nCards() ) ? m_feCards[card].lastColumn() : -1; }
 
 // ============================================================================
 //  valid boundaries :  first/last col/row with a valid cell
 // ============================================================================
-inline int DeCalorimeter::cardFirstValidRow( const int card ) const{ 
+inline int DeCalorimeter::cardFirstValidRow( const int card ) const{
   LHCb::CaloCellID cell = firstCellID(card);
   if( valid( cell ) )return cell.row();
 
@@ -665,11 +667,11 @@ inline int DeCalorimeter::cardFirstValidRow( const int card ) const{
       LHCb::CaloCellID test(cell.calo(), cell.area(), irow, icol );
       if( valid( test ) )return irow;
     }
-  }    
+  }
   return -1;
 }
 
-inline int DeCalorimeter::cardFirstValidColumn( const int card ) const{ 
+inline int DeCalorimeter::cardFirstValidColumn( const int card ) const{
   LHCb::CaloCellID cell = firstCellID(card);
   if( valid( cell ) )return cell.col();
   for(int irow = cardFirstRow(card) ; irow <= cardLastRow(card) ; ++irow){
@@ -681,7 +683,7 @@ inline int DeCalorimeter::cardFirstValidColumn( const int card ) const{
   return -1;
 }
 
-inline int DeCalorimeter::cardLastValidRow( const int card ) const{ 
+inline int DeCalorimeter::cardLastValidRow( const int card ) const{
   LHCb::CaloCellID cell = lastCellID(card);
   if( valid( cell ) )return cell.row();
 
@@ -693,7 +695,7 @@ inline int DeCalorimeter::cardLastValidRow( const int card ) const{
   }
   return -1;
 }
-inline int DeCalorimeter::cardLastValidColumn( const int card ) const{ 
+inline int DeCalorimeter::cardLastValidColumn( const int card ) const{
   LHCb::CaloCellID cell = lastCellID(card);
   if( valid( cell ) )return cell.col();
 
@@ -710,58 +712,60 @@ inline int DeCalorimeter::cardLastValidColumn( const int card ) const{
 // ===========================================================================
 //  ID of the bottom left cell, of the top right cell, of the specified cell
 // ===========================================================================
-inline LHCb::CaloCellID DeCalorimeter::firstCellID ( const int card ) const 
-{  
-  
+inline LHCb::CaloCellID DeCalorimeter::firstCellID ( const int card ) const
+{
+
   return  (card < nCards() ) ? LHCb::CaloCellID( m_caloIndex                 ,
-                                                         m_feCards[card].area       () , 
+                                                         m_feCards[card].area       () ,
                                                          m_feCards[card].firstRow   () ,
-                                                         m_feCards[card].firstColumn() ) : LHCb::CaloCellID(); 
+                                                         m_feCards[card].firstColumn() ) : LHCb::CaloCellID();
 }
 
 // ===========================================================================
 //  ID of the bottom left cell, of the top right cell, of the specified cell
 // ===========================================================================
-inline LHCb::CaloCellID DeCalorimeter::lastCellID ( const int card ) const 
+inline LHCb::CaloCellID DeCalorimeter::lastCellID ( const int card ) const
 {
   return  (card < nCards() ) ? LHCb::CaloCellID( m_caloIndex                                     ,
-                                                 m_feCards[card].area       ()                   , 
+                                                 m_feCards[card].area       ()                   ,
                                                  m_feCards[card].firstRow   () + nRowCaloCard -1 ,
-                                                 m_feCards[card].firstColumn() + nColCaloCard -1 ) : LHCb::CaloCellID(); 
+                                                 m_feCards[card].firstColumn() + nColCaloCard -1 ) : LHCb::CaloCellID();
 }
 
 // ===========================================================================
 //  ID of the bottom left cell, of the top right cell, of the specified cell
 // ===========================================================================
-inline LHCb::CaloCellID DeCalorimeter::cardCellID ( const int card , 
-                                              const int row  , 
-                                              const int col ) const 
+inline LHCb::CaloCellID DeCalorimeter::cardCellID ( const int card ,
+                                              const int row  ,
+                                              const int col ) const
 {
   return  (card < nCards() ) ? LHCb::CaloCellID( m_caloIndex                       ,
-                                                         m_feCards[card].area       ()       , 
+                                                         m_feCards[card].area       ()       ,
                                                          m_feCards[card].firstRow   () + row ,
-                                                         m_feCards[card].firstColumn() + col ) : LHCb::CaloCellID(); 
+                                                         m_feCards[card].firstColumn() + col ) : LHCb::CaloCellID();
 }
 
 // ============================================================================
-//  FEcard -> Tell1 
+//  FEcard -> Tell1
 // ============================================================================
-inline int DeCalorimeter::cardToTell1( const int card ) const 
+inline int DeCalorimeter::cardToTell1( const int card ) const
 {
   return  (card < nCards() ) ? m_feCards[card].tell1() : -1;
 }
 // ============================================================================
-//  Validation -> Hcal FEB 
+//  Validation -> Hcal FEB
 // ============================================================================
 inline int DeCalorimeter::validationToHcalFEB( const int validation, const unsigned int slot ) const{
-  std::map<int,std::vector<int> >::const_iterator it = m_valCards.find( validation );
-  if(it == m_valCards.end())return -1;
-  std::vector<int> hcalFe = (*it).second;
-  if( slot >= hcalFe.size()) return -1;
-  return hcalFe[slot];
+  auto it = m_valCards.find( validation );
+  if(it == m_valCards.end()) return -1;
+  if ( it != m_valCards.end() ) {
+    const auto& hcalFe = it->second;
+    if ( slot < hcalFe.size() ) return hcalFe[slot];
+  }
+  return -1;
 }
 // ============================================================================
-//  Tell1 -> FECards 
+//  Tell1 -> FECards
 // ============================================================================
 inline std::vector<int> DeCalorimeter::tell1ToCards( const int tell1 ) const{
 return ( tell1 >=0 && tell1 < nTell1s()) ? m_tell1Boards[tell1].feCards() :std::vector<int>();
@@ -770,39 +774,41 @@ return ( tell1 >=0 && tell1 < nTell1s()) ? m_tell1Boards[tell1].feCards() :std::
 // ============================================================================
 //  card Id & content
 // ============================================================================
-inline int DeCalorimeter::cardCrate( const int card ) const 
+inline int DeCalorimeter::cardCrate( const int card ) const
 { return (card < nCards() ) ? m_feCards[card].crate() : -1; }
-inline int DeCalorimeter::cardSlot( const int card ) const 
+
+inline int DeCalorimeter::cardSlot( const int card ) const
 { return (card < nCards() ) ? m_feCards[card].slot() : -1; }
-inline int DeCalorimeter::cardCode( const int card ) const 
+
+inline int DeCalorimeter::cardCode( const int card ) const
 { return (card < nCards() ) ? m_feCards[card].code() : -1 ; }
-inline const std::vector<LHCb::CaloCellID>&  DeCalorimeter::cardChannels( const int card){ 
-  if (card < nCards() ) return m_feCards[card].ids();
-  return m_empty ;
-}
-inline const std::vector<LHCb::CaloCellID>&  DeCalorimeter::pinChannels( const LHCb::CaloCellID id){return m_pins[id].cells() ;}
-inline const std::vector<LHCb::CaloCellID>&  DeCalorimeter::ledChannels( const int led) { 
-  if (led < (int)m_leds.size() ) return  m_leds[led].cells() ;
-  return m_empty;
- }
-inline const std::vector<int>&  DeCalorimeter::pinLeds( const LHCb::CaloCellID id ){ 
-  return m_pins[id].leds() ;
-}
-inline const std::vector<int>&  DeCalorimeter::cellLeds( const LHCb::CaloCellID id ){ 
-  return m_cells[id].leds(); 
-}
-inline int DeCalorimeter::cardIndexByCode( const int crate, const int slot ){ 
-  for (unsigned int icard = 0 ; icard < m_feCards.size() ;  ++icard){
-    if(m_feCards[icard].crate() == crate && 
-       m_feCards[icard].slot() == slot )return icard;
-  }
-  return -1;
+
+inline const std::vector<LHCb::CaloCellID>&  DeCalorimeter::cardChannels( const int card)
+{ return card < nCards() ? m_feCards[card].ids() : m_empty ; }
+
+inline const std::vector<LHCb::CaloCellID>&  DeCalorimeter::pinChannels( const LHCb::CaloCellID id)
+{return m_pins[id].cells() ;}
+
+inline const std::vector<LHCb::CaloCellID>&  DeCalorimeter::ledChannels( const int led) 
+{ return  led < (int)m_leds.size() ? m_leds[led].cells() : m_empty; }
+
+inline const std::vector<int>&  DeCalorimeter::pinLeds( const LHCb::CaloCellID id )
+{ return m_pins[id].leds() ; }
+
+inline const std::vector<int>&  DeCalorimeter::cellLeds( const LHCb::CaloCellID id )
+{ return m_cells[id].leds(); }
+
+inline int DeCalorimeter::cardIndexByCode( const int crate, const int slot ){
+  auto i = std::find_if( m_feCards.begin(), m_feCards.end(), [&](const CardParam& c) {
+    return c.crate()==crate && c.slot() == slot;
+  } );
+  return i!=m_feCards.end() ? i-m_feCards.begin() : -1;
 }
 
 // ============================================================================
 #endif  //    CALODET_DECALORIMETER_H
 // ============================================================================
-// CaloDet 
+// CaloDet
 // ============================================================================
 #include "CaloDet/DeCalorimeter.icpp"
 // ============================================================================

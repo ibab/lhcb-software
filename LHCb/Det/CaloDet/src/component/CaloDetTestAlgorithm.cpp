@@ -77,17 +77,17 @@ StatusCode CaloDetTestAlgorithm::initialize()
 
   // channel
   const CaloVector<CellParam>& cells = calo->cellParams();
-  for(CaloVector<CellParam>::const_iterator icel = cells.begin();icel != cells.end();++icel){
+  for(const auto & cell : cells){
     
-    LHCb::CaloCellID id = (*icel).cellID();
-    int card = (*icel).cardNumber();
+    LHCb::CaloCellID id = (cell).cellID();
+    int card = (cell).cardNumber();
 
     info()    << " | " 
               << id << " | "
               << id.all() << " | "
               << format("0x%04X",id.all()) << " | "
-              << (*icel).cardColumn() <<"/"<< (*icel).cardRow() << " | "
-              << (*icel).cardNumber() << " ( " << calo->cardCode(card)      << ") | "
+              << (cell).cardColumn() <<"/"<< (cell).cardRow() << " | "
+              << (cell).cardNumber() << " ( " << calo->cardCode(card)      << ") | "
               << calo->cardCrate(card)     << " | "
               << calo->cardSlot(card)      << " | "
               << calo->cardToTell1(card)   << " | " 

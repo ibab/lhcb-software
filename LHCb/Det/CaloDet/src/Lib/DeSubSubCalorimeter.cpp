@@ -51,7 +51,7 @@ StatusCode DeSubSubCalorimeter::initialize(){
   typedef Parameters::iterator     Iterator;
   Parameters pars( paramNames() );
   /// cell size
-  Iterator it = std::find( pars.begin() , pars.end () , std::string("CellSize") );
+  auto it = std::find( pars.begin() , pars.end () , std::string("CellSize") );
   if( pars.end() != it ){
     const double value = param<double>( *it );
     setCellSize( value ) ;
@@ -60,7 +60,7 @@ StatusCode DeSubSubCalorimeter::initialize(){
       return StatusCode::FAILURE ; 
   }
   /// subSubCalo X size
-  Iterator itx = std::find( pars.begin() , pars.end () , std::string("XSize") );
+  auto itx = std::find( pars.begin() , pars.end () , std::string("XSize") );
   if( pars.end() != itx ){
     const double value = param<double>( *itx );
     setXSize( value ) ;
@@ -69,7 +69,7 @@ StatusCode DeSubSubCalorimeter::initialize(){
     return StatusCode::FAILURE ; 
   }
   /// subSubCalo Y size
-  Iterator ity = std::find( pars.begin() , pars.end () , std::string("YSize") );
+  auto ity = std::find( pars.begin() , pars.end () , std::string("YSize") );
   if( pars.end() != ity ){
     const double value = param<double>( *ity );
     setYSize( value ) ;
@@ -78,7 +78,7 @@ StatusCode DeSubSubCalorimeter::initialize(){
     return StatusCode::FAILURE ; 
   }
   /// area Id 
-  Iterator itt = std::find( pars.begin() , pars.end () , std::string("Area") );
+  auto itt = std::find( pars.begin() , pars.end () , std::string("Area") );
   if( pars.end() != itt ){
     const int value = param<int>( *itt );
     setArea( value ) ;
@@ -86,7 +86,7 @@ StatusCode DeSubSubCalorimeter::initialize(){
   }else{ 
       return StatusCode::FAILURE ; 
   }
-  Assert ( 0 != geometry() , "DeSubSubcalorimeter: Invalid GeometryInfo" ) ;
+  Assert ( nullptr != geometry() , "DeSubSubcalorimeter: Invalid GeometryInfo" ) ;
   return StatusCode::SUCCESS;
 }
 

@@ -18,15 +18,7 @@
 // ============================================================================
 DeSubCalorimeter::DeSubCalorimeter( const std::string& name )
   : DetectorElement     ( name )
-  , m_side(0)
-  , m_subSubCalos          () 
 {}
-
-// ============================================================================
-// Destructor
-// ============================================================================
-DeSubCalorimeter::~DeSubCalorimeter(){}
-
 
 // ============================================================================
 /// object identification
@@ -49,36 +41,31 @@ StatusCode DeSubCalorimeter::initialize()
   MsgStream msg( msgSvc(), myName );
 
 
-  typedef std::vector<std::string> Parameters;
-  typedef Parameters::iterator     Iterator;
-  Parameters pars( paramNames() );
+  auto pars = paramNames();
   /// calo half ID 
-  Iterator it = std::find( pars.begin() , pars.end () , std::string("CaloSide") );
-  if( pars.end() != it ){
-    const int value = param<int>( *it );
-    setSide( value ) ;
-    pars.erase( it );
-  }else{ 
-    return StatusCode::FAILURE ; 
-  } 
+  auto it = std::find( pars.begin() , pars.end () , "CaloSide" );
+  if( pars.end() == it ) return StatusCode::FAILURE ; 
+  const int value = param<int>( *it );
+  setSide( value ) ;
+  pars.erase( it );
   
   {
     // collect the sub-sub-calorimeters (calo areas)
     IDetectorElement::IDEContainer& subdets = childIDetectorElements();
     if( UNLIKELY( msg.level() <= MSG::DEBUG ) )
       msg << MSG::DEBUG << name() << " :  number of subSubCalorimeter " << subdets.size() << endmsg;
-    for(IDetectorElement::IDEContainer::iterator ichild = subdets.begin() ; ichild != subdets.end() ; ++ichild){
-      IDetectorElement* child = *ichild ;
-      if ( 0 == child ) { continue ; }
+    for(auto child : subdets){
+      
+      if ( !child ) { continue ; }
       DeSubSubCalorimeter* subSub = dynamic_cast<DeSubSubCalorimeter*> ( child ) ;
-      Assert ( 0 != subSub , "no DeSubSubCalorimeter!" ) ;
+      Assert ( subSub , "no DeSubSubCalorimeter!" ) ;
       m_subSubCalos.push_back ( subSub ) ;
     }
     Assert ( !m_subSubCalos.empty() , "Empty subcalorimeters!" ) ;
   }
 
 //
-  Assert ( 0 != geometry() , "DeSubcalorimeter: Invalid GeometryInfo" ) ;
+  Assert ( geometry() , "DeSubcalorimeter: Invalid GeometryInfo" ) ;
 ///
 return StatusCode::SUCCESS;
 ///

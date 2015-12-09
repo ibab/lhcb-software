@@ -27,8 +27,8 @@ DECLARE_ALGORITHM_FACTORY( DeCaloCalib )
 DeCaloCalib::DeCaloCalib( const std::string& name,
                             ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator )
-  , m_calo(NULL)
-  , m_rndmSvc(NULL)
+  , m_calo(nullptr)
+  , m_rndmSvc(nullptr)
 {
 
   declareProperty( "DetectorName"   , m_detectorName );
@@ -164,8 +164,8 @@ void DeCaloCalib::update() {
   CaloVector<CellParam>& cells = (CaloVector<CellParam>&) m_calo->cellParams(); // no-const conversion
   std::vector<int> cellids,cellind;
   std::vector<double> gains,dgains;
-  for(CaloVector<CellParam>::iterator icell = cells.begin() ; icell != cells.end() ; icell++){
-    LHCb::CaloCellID id = (*icell).cellID() ;
+  for(auto & cell : cells){
+    LHCb::CaloCellID id = (cell).cellID() ;
     if( !m_calo->valid  ( id )  )continue;
     if( m_calo->isPinId( id )   )continue; 
 
@@ -176,7 +176,7 @@ void DeCaloCalib::update() {
 
     if( isDead( index ) ){
       dt = 0.;
-      (*icell).addQualityFlag(CaloCellQuality::Dead);  
+      (cell).addQualityFlag(CaloCellQuality::Dead);  
     }
     else if( m_method == "User" )
       dt = delta( index );
@@ -185,11 +185,11 @@ void DeCaloCalib::update() {
     
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
       debug() << num << " Calibration constant for cellID " << id << " : " << dt << endmsg;
-    (*icell).setCalibration ( dt ) ; //
+    (cell).setCalibration ( dt ) ; //
     cellids.push_back( id.index()      );
     cellind.push_back( num             );
-    gains.push_back  ( (*icell).gain() );
-    dgains.push_back ( (*icell).calibration());
+    gains.push_back  ( (cell).gain() );
+    dgains.push_back ( (cell).calibration());
   }
 
   if(!m_ntup)return ;
@@ -209,7 +209,7 @@ void DeCaloCalib::update() {
 
 bool DeCaloCalib::isDead(int channel) {
   if(m_dead.empty())return false;
-  for(std::vector<int>::iterator i = m_dead.begin();m_dead.end()!=i;i++){
+  for(auto i = m_dead.begin();m_dead.end()!=i;i++){
     if( m_key == "Index"  && channel == *i)return true;
     if( m_key == "CellID" && channel == ( *i & 0x3FFF) ) return true;
   }  

@@ -23,7 +23,7 @@ public:
   /// Constructors
   DeSubCalorimeter( const std::string& name    = ""  );
   /// Destructor
-  virtual ~DeSubCalorimeter();
+  ~DeSubCalorimeter() override = default;
   /// object identification 
   static  const CLID& classID()       { return CLID_DeSubCalorimeter ; }
   /// printout to standard STL stream 
@@ -49,7 +49,7 @@ public:
   
 
 private:
-  int    m_side;      ///< Calo side (0=C-side=Right , 1=A-side=Left)
+  int    m_side = 0;      ///< Calo side (0=C-side=Right , 1=A-side=Left)
   SubSubCalos   m_subSubCalos  ;
 };
 // ============================================================================
