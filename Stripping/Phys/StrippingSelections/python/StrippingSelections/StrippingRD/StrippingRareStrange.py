@@ -535,27 +535,26 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
                                                 'Location' : 'P2CVSigma09',
                                                 'DaughterLocations' : {
-                                                            "[Sigma+ -> p+ ^e+ mu-]CC" : 'P2CVMu09_1', 
-                                                            "[Sigma+ -> p+ e+ ^mu-]CC" : 'P2CVMu09_2',
-                                                            "[Sigma+ -> ^p+ e+ mu-]CC" : 'P2CVProton09'
+                                                            "[[Sigma+ -> p+ ^e+ mu-]CC, [Sigma+ -> p+ ^e- mu+]CC] " : 'P2CVE09', 
+                                                            "[[Sigma+ -> p+ e+ ^mu-]CC, [Sigma+ -> p+ e- ^mu+]CC]" : 'P2CVMu09',
+                                                            "[[Sigma+ -> ^p+ e+ mu-]CC, [Sigma+ -> ^p+ e- mu+]CC]" : 'P2CVProton09'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
                                                 'Location' : 'P2CVSigma10',
-                                                'DaughterLocations' : {
-                                                            "[Sigma+ -> p+ ^e+ mu-]CC" : 'P2CVMu10_1', 
-                                                            "[Sigma+ -> p+ e+ ^mu-]CC" : 'P2CVMu10_2',
-                                                            "[Sigma+ -> ^p+ e+ mu-]CC" : 'P2CVProton10'
+                                                'DaughterLocations' : { "[[Sigma+ -> p+ ^e+ mu-]CC, [Sigma+ -> p+ ^e- mu+]CC] " : 'P2CVE10', 
+                                                                        "[[Sigma+ -> p+ e+ ^mu-]CC, [Sigma+ -> p+ e- ^mu+]CC]" : 'P2CVMu10',
+                                                                        "[[Sigma+ -> ^p+ e+ mu-]CC, [Sigma+ -> ^p+ e- mu+]CC]" : 'P2CVProton10'
                                                 }
                                               },
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
                                                 'Location' : 'P2CVSigma11',
-                                                'DaughterLocations' : {
-                                                            "[Sigma+ -> p+ ^e+ mu-]CC" : 'P2CVMu11_1', 
-                                                            "[Sigma+ -> p+ e+ ^mu-]CC" : 'P2CVMu11_2',
-                                                            "[Sigma+ -> ^p+ e+ mu-]CC" : 'P2CVProton11'
+                                                'DaughterLocations' : { "[[Sigma+ -> p+ ^e+ mu-]CC, [Sigma+ -> p+ ^e- mu+]CC] " : 'P2CVE10',
+                                                                        "[[Sigma+ -> p+ e+ ^mu-]CC, [Sigma+ -> p+ e- ^mu+]CC]" : 'P2CVMu10',
+                                                                        "[[Sigma+ -> ^p+ e+ mu-]CC, [Sigma+ -> ^p+ e- mu+]CC]" : 'P2CVProton10'
+
                                                 }
                                               }
                                             ]
