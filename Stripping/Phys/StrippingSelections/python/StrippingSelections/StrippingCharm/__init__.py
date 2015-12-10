@@ -34,7 +34,8 @@ _selections = (
     'StrippingCharmForVub',
     'StrippingD2hhh_conf',
     'StrippingDstarPromptWithD02HHHH',
-    'StrippingD2hhh_FTcalib'
+    'StrippingD2hhh_FTcalib',
+    'StrippingExcitedDsSpectroscopy'
     )
 
 for _sel in _selections :

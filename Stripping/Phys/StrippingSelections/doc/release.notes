@@ -4,6 +4,10 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2015-12-10 - Marco Pappagallo
+ - Added StrippingExcitedDsSpectroscopy line for S21p1  
+
 !	2015-12-09 - Tim Williams
  - Changed name of Working group in B24p default_config to BnoC
 
