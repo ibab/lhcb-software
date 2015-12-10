@@ -5,7 +5,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-12-09 - Roberta Cardinale
- - Updated Band LineConfig dictionaries for S21r0p1 and S21r1p1
+ - Updated BandQ LineConfig adding PromptCharm baryonic lines for S21r0p1 and S21r1p1	
+
+! 2015-12-09 - Roberta Cardinale
+ - Updated BandQ LineConfig dictionaries for S21r0p1 and S21r1p1
 
 ! 2015-12-09 - Tim Williams
  - Updated BnoC LineConfigDictionaries for S21r0p1 and S21r1p1
