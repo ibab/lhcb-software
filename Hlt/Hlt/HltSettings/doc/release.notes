@@ -3,6 +3,10 @@
 ! Responsible : Vladimir Gligorov, Mika Vesterinen, Roel Aaij
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+
+! 2015-12-10 - Mika Vesterinen
+ - Prepare Physics_pp_Draft2016
+
 ! 2015-12-06 - Dan Johnson
  - Update prescale for low mult dielectron calibration line for 2016
 
