@@ -4,15 +4,7 @@
 gaudi_subdir(MooreSys v24r3)
 
 gaudi_depends_on_subdirs(Hlt/Moore
-                         L0/L0App
-                         # Only for Moore v24r3
-                         Hlt/HltGlobalMonitors
-                         Hlt/HltLuminosity
-                         Hlt/HltConf
-                         Hlt/HltTracking
-                         Hlt/Hlt1Lines
-                         Hlt/Hlt2Lines
-                         Hlt/HltSettings)
+                         L0/L0App)
 
 gaudi_add_test(QMTest QMTEST)
 
