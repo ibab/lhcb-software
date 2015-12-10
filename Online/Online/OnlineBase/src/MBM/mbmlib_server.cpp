@@ -1708,13 +1708,16 @@ int mbmsrv_dispatch_call(ServerBMID bm, int which)  {
     }
     else if ( nclients < 1 && bm->ctrl->i_events > 0 )   {
       bool has_free_slot = 0;
-      MBMScanner<EVENT> que(bm->evDesc, -EVENT_next_off);
-      for(EVENT* e=que.get(); e; e=que.get() )  {
-	/// Check if any consumer still waiting for an event....
-	_mbmsrv_check_wev(bm,e);  // check wev queue
-	/// Check if any producer still waiting for a slot....
-	if (e->busy == 0)  {
-	  has_free_slot = 1;
+      {
+	LOCK lock(bm->lockid);
+	MBMScanner<EVENT> que(bm->evDesc, -EVENT_next_off);
+	for(EVENT* e=que.get(); e; e=que.get() )  {
+	  /// Check if any consumer still waiting for an event....
+	  _mbmsrv_check_wev(bm,e);  // check wev queue
+	  /// Check if any producer still waiting for a slot....
+	  if (e->busy == 0)  {
+	    has_free_slot = 1;
+	  }
 	}
       }
       if ( has_free_slot )  {
@@ -1722,8 +1725,10 @@ int mbmsrv_dispatch_call(ServerBMID bm, int which)  {
 
       }
       /// Check if any producer still waiting for space....
-      _mbmsrv_check_wsp(bm);
-
+      {
+	LOCK lock(bm->lockid);
+	_mbmsrv_check_wsp(bm);
+      }
       continue;
     }
     else if ( nclients < 1 )   {

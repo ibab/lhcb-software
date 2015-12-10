@@ -21,6 +21,11 @@ endif()
 find_package(Boost COMPONENTS filesystem date_time program_options serialization
                               thread system regex)
 
+if(Boost_VERSION STREQUAL "105900")
+  # See https://svn.boost.org/trac/boost/ticket/11743
+  add_definitions(-UNDEBUG)
+endif()
+
 set(dict_srcs ${CMAKE_CURRENT_SOURCE_DIR}/src/cintBootstrap.h
               ${CMAKE_CURRENT_SOURCE_DIR}/src/LinkDef.h)
 
