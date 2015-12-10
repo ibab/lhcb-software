@@ -17,7 +17,6 @@ _selections = ['StrippingB2DMuNuX',
 	       'StrippingLb2pMuNuVub',
 	       'Strippingbhad2PMuX',
 	       #'StrippingTrackEffD0ToK3Pi
-               'StrippingD2HMuNu'
 	       ]
 
 for _sel in _selections :

@@ -20,8 +20,8 @@ The two hadronic signal modes for D+ from D*+ -> D0 pi+ are:
 D0 -> K-  mu+(e+) nu, 
 D0 -> pi-  mu+(e+) nu, 
 
-Last modification $Date: 11/10/2015 $
-               by $Author: lsun$
+Last modification $Date: 12/9/2015 $
+               by $Author: adavis$
 """
 __all__ = ('D2HLepNuBuilder',
            'TOSFilter',
@@ -29,7 +29,7 @@ __all__ = ('D2HLepNuBuilder',
 
 default_config = {
     'D2HMuNu' : {
-        'WGs'         : ['Semileptonic','Charm'],
+        'WGs'         : ['Charm'],
         'BUILDERTYPE' : 'D2HLepNuBuilder',
         'CONFIG'      :  {
             "KLepMassLow" : 500 , #MeV
@@ -48,22 +48,24 @@ default_config = {
             "ElectronPT"    : 500,#MeV
             #Xu
             #K channel
-            #	"KaonP"               : 3000.  ,#MeV
-            "KaonPT"              : 500.   ,#MeV
+            "KaonP"               : 3000.  ,#MeV
+            "KaonPT"              : 800.   ,#MeV
             "KaonPIDK"            : 5.     ,#adimensional 
             "KaonPIDmu"           : 5.     ,#adimensional
             "KaonPIDp"            : 5.     ,#adimensional
+            "KaonMINIPCHI2"          : 9      ,#adimensional
             "BVCHI2DOF"       : 20    ,#adminensional
-            "BDIRA"       : 0.99    ,#adminensional
+            "BDIRA"       : 0.999    ,#adminensional
             "BFDCHI2HIGH"         : 100.  ,#adimensional
             #slow pion
-            "Slowpion_PT" : 200 #MeV 
+            "Slowpion_PT" : 300 #MeV
+            ,"Slowpion_P" : 1000 #MeV
             ,"Slowpion_TRGHOSTPROB" : 0.35 #adimensional
             ,"Slowpion_PIDe" : 5 #adimensional
             ,"useTOS" : True #adimensional
             ,"TOSFilter" : { 'Hlt2CharmHad.*HHX.*Decision%TOS' : 0}  #adimensional
             },
-        'STREAMS'     : ['Semileptonic']	  
+        'STREAMS'     : ['Charm']	  
         }
     }
 from Gaudi.Configuration import *
@@ -94,13 +96,15 @@ class D2HLepNuBuilder(LineBuilder):
         ,"ElectronPT"
         #        ,"MuonMINIPCHI2"       
         #        ,"KaonTRCHI2"          
-        #        ,"KaonP"               
+        ,"KaonP"               
         ,"KaonPT"              
         ,"KaonPIDK"             
         ,"KaonPIDmu"           
-        ,"KaonPIDp"            
-        #        ,"KaonMINIPCHI2"
+        ,"KaonPIDp"
+
+        ,"KaonMINIPCHI2"
         ,"Slowpion_PT"
+        ,"Slowpion_P"
         ,"Slowpion_TRGHOSTPROB"
         ,"Slowpion_PIDe"
         #        ,"useHLT2" 
@@ -110,6 +114,7 @@ class D2HLepNuBuilder(LineBuilder):
         , "BVCHI2DOF"
         , "BDIRA"
         , "BFDCHI2HIGH"
+#        , "VDCut"
         ]
     
     def __init__(self,name,config):
@@ -150,20 +155,23 @@ class D2HLepNuBuilder(LineBuilder):
     def _NominalKSelection( self ):
         #        return "(TRCHI2DOF < %(KaonTRCHI2)s )&  (P> %(KaonPTight)s *MeV) &  (PT> %(KaonPT)s *MeV)"\
         return " (PT> %(KaonPT)s *MeV)"\
+               "& (P> %(KaonP)s)"\
                "& (TRGHOSTPROB < %(TRGHOSTPROB)s)"\
-               "& (PIDK-PIDpi> %(KaonPIDK)s )& (PIDK-PIDp> %(KaonPIDp)s )& (PIDK-PIDmu> %(KaonPIDmu)s ) "
-#               "& (MIPCHI2DV(PRIMARY)> %(KaonMINIPCHI2)s )"
+               "& (PIDK-PIDpi> %(KaonPIDK)s )& (PIDK-PIDp> %(KaonPIDp)s )& (PIDK-PIDmu> %(KaonPIDmu)s ) "\
+               "& (MIPCHI2DV(PRIMARY)> %(KaonMINIPCHI2)s )"
 
     def _NominalPiSelection( self ):
         #        return "(TRCHI2DOF < %(KaonTRCHI2)s )&  (P> %(KaonP)s *MeV) &  (PT> %(KaonPT)s *MeV)"\
         return " (PT> %(KaonPT)s *MeV)"\
+               "& (P> %(KaonP)s)"\
                "& (TRGHOSTPROB < %(TRGHOSTPROB)s)"\
-               "& (PIDK-PIDpi< -%(KaonPIDK)s )& (PIDp < -%(KaonPIDp)s )& (PIDmu < -%(KaonPIDmu)s ) "
-    #               "& (MIPCHI2DV(PRIMARY)> %(KaonMINIPCHI2)s )"
+               "& (PIDK-PIDpi< -%(KaonPIDK)s )& (PIDp < -%(KaonPIDp)s )& (PIDmu < -%(KaonPIDmu)s ) "\
+               "& (MIPCHI2DV(PRIMARY)> %(KaonMINIPCHI2)s )"
 
     def _NominalSlowPiSelection( self ):
         #        return "(TRCHI2DOF < %(KaonTRCHI2)s )&  (P> %(KaonP)s *MeV) &  (PT> %(KaonPT)s *MeV)"\
         return " (PT> %(Slowpion_PT)s *MeV)"\
+               "& (P > %(Slowpion_P)s)"\
                "& (TRGHOSTPROB < %(Slowpion_TRGHOSTPROB)s)"\
                "& (PIDe < %(Slowpion_PIDe)s) & (MIPCHI2DV(PRIMARY)< 9.0) "
 
@@ -273,34 +281,36 @@ class D2HLepNuBuilder(LineBuilder):
             DecayDescriptors = _D0Decays,
             CombinationCut = "(AM>%(KLepMassLow)s*MeV) & (AM<%(KLepMassHigh)s*MeV)" % self._config,
             MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s )"\
-            "& (BPVVDCHI2 >%(BFDCHI2HIGH)s)"
+            "& (BPVVDCHI2 >%(BFDCHI2HIGH)s)"\
+            "& (BPVDIRA > %(BDIRA)s)"
+            #            "& (BPVVD > %(VDCut)s)"
             #" & (ratio > 0.0)"
             % self._config,
             ReFitPVs = True
             )
-        _KMu.Preambulo = [ "from LoKiPhys.decorators import *",
-                           "dx = (VFASPF(VX)-BPV(VX))",
-                           "dy = (VFASPF(VY)-BPV(VY))",
-                           "dz = (VFASPF(VZ)-BPV(VZ))",
-                           "norm = (max(sqrt(dx*dx+dy*dy+dz*dz),0))",
-                           "D_xdir  = ((dx)/norm)",
-                           "D_ydir  = ((dy)/norm)",
-                           "D_zdir  = ((dz)/norm)",
-                           "Pxkmu   = (CHILD(PX,1)+CHILD(PX,2))",
-                           "Pykmu   = (CHILD(PY,1)+CHILD(PY,2))",
-                           "Pzkmu   = (CHILD(PZ,1)+CHILD(PZ,2))",
-                           "Dflight = (D_xdir*Pxkmu + D_ydir*Pykmu+ D_zdir*Pzkmu)",
-                           "mD  = 1864.84",
-                           "M_2 = (mD*mD + M12*M12)",
-                           "kmu_E  = (CHILD(E,1)+CHILD(E,2))",
-                           "quada = (Dflight*Dflight - kmu_E*kmu_E)",
-                           "quadb = (M_2*Dflight)",
-                           "quadc = (((M_2*M_2)/4) - (kmu_E*kmu_E*mD*mD))",
-                           "Discriminant = ((quadb*quadb)-(4*quada*quadc))",
-                           "solution_a = ((-quadb + sqrt(max(Discriminant,0)))/(2*quada))",
-                           "solution_b = ((-quadb - sqrt(max(Discriminant,0)))/(2*quada))",
-                           "ratio = (solution_a/solution_b)"
-                           ]
+        # _KMu.Preambulo = [ "from LoKiPhys.decorators import *",
+        #                    "dx = (VFASPF(VX)-BPV(VX))",
+        #                    "dy = (VFASPF(VY)-BPV(VY))",
+        #                    "dz = (VFASPF(VZ)-BPV(VZ))",
+        #                    "norm = (max(sqrt(dx*dx+dy*dy+dz*dz),0))",
+        #                    "D_xdir  = ((dx)/norm)",
+        #                    "D_ydir  = ((dy)/norm)",
+        #                    "D_zdir  = ((dz)/norm)",
+        #                    "Pxkmu   = (CHILD(PX,1)+CHILD(PX,2))",
+        #                    "Pykmu   = (CHILD(PY,1)+CHILD(PY,2))",
+        #                    "Pzkmu   = (CHILD(PZ,1)+CHILD(PZ,2))",
+        #                    "Dflight = (D_xdir*Pxkmu + D_ydir*Pykmu+ D_zdir*Pzkmu)",
+        #                    "mD  = 1864.84",
+        #                    "M_2 = (mD*mD + M12*M12)",
+        #                    "kmu_E  = (CHILD(E,1)+CHILD(E,2))",
+        #                    "quada = (Dflight*Dflight - kmu_E*kmu_E)",
+        #                    "quadb = (M_2*Dflight)",
+        #                    "quadc = (((M_2*M_2)/4) - (kmu_E*kmu_E*mD*mD))",
+        #                    "Discriminant = ((quadb*quadb)-(4*quada*quadc))",
+        #                    "solution_a = ((-quadb + sqrt(max(Discriminant,0)))/(2*quada))",
+        #                    "solution_b = ((-quadb - sqrt(max(Discriminant,0)))/(2*quada))",
+        #                    "ratio = (solution_a/solution_b)"
+        #                    ]
         
         _D0Sel=Selection("SelD0_for"+_name,
                          Algorithm=_KMu,

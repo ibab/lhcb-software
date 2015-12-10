@@ -35,7 +35,8 @@ _selections = (
     'StrippingD2hhh_conf',
     'StrippingDstarPromptWithD02HHHH',
     'StrippingD2hhh_FTcalib',
-    'StrippingExcitedDsSpectroscopy'
+    'StrippingExcitedDsSpectroscopy',
+    'StrippingD2HMuNu'
     )
 
 for _sel in _selections :
