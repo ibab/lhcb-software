@@ -2,6 +2,10 @@
 ! Package         : CaloDet   
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! ====================================================================
+
+! 2015-12-11 - Marco Cattaneo
+ - DeSubCalorimeter: add a few more 'override' qualifications
+
 ! 2015-12-11 - Gerhard Raven
  - DeCalorimeter: 
    o add a few more 'override' qualifications,

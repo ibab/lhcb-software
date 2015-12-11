@@ -27,13 +27,13 @@ public:
   /// object identification 
   static  const CLID& classID()       { return CLID_DeSubCalorimeter ; }
   /// printout to standard STL stream 
-  virtual std::ostream& printOut( std::ostream& os = std::cerr ) const ; 
+  virtual std::ostream& printOut( std::ostream& os = std::cerr ) const override; 
   /// printout to standard Gaudi stream 
-  virtual MsgStream&    printOut( MsgStream&                   ) const ;
+  virtual MsgStream&    printOut( MsgStream&                   ) const override;
   /// object identification 
-  virtual const CLID& clID   () const ;
+  virtual const CLID& clID   () const override;
   /// standard initialization
-  virtual StatusCode    initialize() ;
+  virtual StatusCode    initialize() override;
   /// get side
   inline int side    ()            const    { return m_side; };
   inline std::string sideName()       const    { 
