@@ -4,6 +4,10 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2015-12-11 - Michael Alexander
+ - VeloIPResolutionMonitorNT : Allowing tools to be externally configured and 
+   fixing storing of momentum covariance matrix.
+
 !========================= VeloRecMonitors v2r33 2015-11-23 =========================
 ! 2015-11-08 - Gerhard Raven
  - replace endreq with endmsg
