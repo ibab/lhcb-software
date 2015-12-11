@@ -136,7 +136,7 @@ StatusCode RawDataSelector::next(Context& ctxt) const  {
   if ( pCtxt != 0 )   {
     ++m_evtCount;
     if ( m_printFreq>0 && (m_evtCount%m_printFreq)==0 ) {
-      MsgStream log(messageService(), name());
+      MsgStream log(msgSvc(), name());
       log << MSG::ALWAYS << "Reading Event record " << (m_evtCount-m_skipEvents)
           << ". Record number within stream " << m_evtCount << endmsg;
     }
@@ -207,7 +207,7 @@ RawDataSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr) cons
 
 StatusCode 
 RawDataSelector::resetCriteria(const std::string& criteria,Context& context) const    {
-  MsgStream log(messageService(), name());
+  MsgStream log(msgSvc(), name());
   LoopContext* ctxt = dynamic_cast<LoopContext*>(&context);
   if ( ctxt )  {
     std::string crit = criteria.substr(5);
@@ -217,7 +217,7 @@ RawDataSelector::resetCriteria(const std::string& criteria,Context& context) con
       log << MSG::ERROR << "Failed to connect to:" << crit << endmsg;
     }
     else if ( m_skipEvents > 0 ) {
-      sc = ctxt->skipEvents(messageService(),m_skipEvents);
+      sc = ctxt->skipEvents(msgSvc(),m_skipEvents);
     }
     return sc;
   }

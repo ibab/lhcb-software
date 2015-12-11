@@ -5,6 +5,8 @@
 !               Contains also the data structures to control MEPs and
 !               MEP fragments
 !-----------------------------------------------------------------------------
+! 2015-12-11 - Gerhard Raven
+ - replace deprecated messageService with msgSvc
 
 ! 2015-11-26 - Marco Clemencic
  - Removed (u)longlong typedef (see GAUDI-1125).
