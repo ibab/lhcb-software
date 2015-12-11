@@ -68,7 +68,9 @@ namespace Velo
     IMaterialLocator* m_materialLocator ;
     IHitExpectation* m_TTExpectTool;
     IVeloExpectation* m_VeloExpectTool;
-  
+
+    bool m_printToolProps ;
+
     Gaudi::XYZPoint extrapolateToZ(const LHCb::Track*, double );
     Gaudi::XYZPoint extrapolateToPOCA(const LHCb::Track*, Gaudi::XYZPoint );    
 

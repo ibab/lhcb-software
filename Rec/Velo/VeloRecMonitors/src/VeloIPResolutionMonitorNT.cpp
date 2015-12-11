@@ -72,7 +72,8 @@ Velo::VeloIPResolutionMonitorNT::VeloIPResolutionMonitorNT( const string& name,
     m_pvtool(NULL),
     m_materialLocator(NULL),
     m_TTExpectTool(NULL),
-    m_VeloExpectTool(NULL)
+    m_VeloExpectTool(NULL),
+    m_printToolProps(false)
 {
 
   // set input locations
@@ -89,6 +90,8 @@ Velo::VeloIPResolutionMonitorNT::VeloIPResolutionMonitorNT( const string& name,
 
   declareProperty("TrackExtrapolatorType", m_trackExtrapolatorType) ;
   declareProperty("MaterialLocatorType", m_materialLocatorType) ;
+
+  declareProperty("PrintToolProps", m_printToolProps) ;
 }
 //=============================================================================
 // Destructor
@@ -110,25 +113,20 @@ StatusCode Velo::VeloIPResolutionMonitorNT::initialize() {
 
   // Get vertexer if required
   if( m_refitPVs ){ 
-    m_pvtool = tool<IPVOfflineTool>( "PVOfflineTool" );
+    // The "this" is important so it can pick up a tool that's been 
+    // added during the configuration in python.
+    m_pvtool = tool<IPVOfflineTool>( "PVOfflineTool", this );
     info() << "Will refit PVs excluding each track in turn" << endmsg ;
-  }
+    info() << "PVOfflineTool name: " << m_pvtool->name() << endmsg ;
+    }
   
-  // Tried to get the material locator and track extrapolator from the 
-  // TrackMasterFitter, but it crashed when trying to retrieve the properties
-  // from the tool.
-  //AlgTool* masterFitter = dynamic_cast<AlgTool*>(tool<ITrackFitter>("TrackMasterFitter")) ;
   
   string materialLocatorType = 
     m_materialLocatorType.size() > 0 ? m_materialLocatorType
-    //: NULL != masterFitter ? 
-    //static_cast<const PropertyWithValue<ToolHandle<IMaterialLocator> >* >(&masterFitter->getProperty("MaterialLocator"))->value()->name()
     : "DetailedMaterialLocator" ;
 
   string trackExtrapolatorType = 
     m_trackExtrapolatorType.size() > 0 ? m_trackExtrapolatorType
-    //: NULL != masterFitter ? 
-    //static_cast<const PropertyWithValue<ToolHandle<IMaterialLocator> >* >(&masterFitter->getProperty("Extrapolator"))->value()->name()
     : "TrackMasterExtrapolator" ;
 
   m_materialLocator = 
@@ -141,8 +139,14 @@ StatusCode Velo::VeloIPResolutionMonitorNT::initialize() {
 			     "Extrapolator",this);
 
   // get hit expectation tools
-  m_TTExpectTool = tool<IHitExpectation>( "TTHitExpectation");
-  m_VeloExpectTool = tool<IVeloExpectation>( "VeloExpectation");
+  m_TTExpectTool = tool<IHitExpectation>("TTHitExpectation", this);
+  m_VeloExpectTool = tool<IVeloExpectation>("VeloExpectation", this);
+
+  if(m_printToolProps){
+    for(AlgTools::const_iterator iTool = tools().begin() ; iTool != tools().end() ; 
+	++iTool)
+      dynamic_cast<GaudiTool*>((*iTool))->printProps() ;
+  }
 
   return sc;
 }
@@ -343,8 +347,10 @@ StatusCode Velo::VeloIPResolutionMonitorNT::execute() {
     tuple->column( "PYerr", m_track->firstState().errMomentum()(1,1) );
     tuple->column( "PZerr", m_track->firstState().errMomentum()(2,2) );
 
-    tuple->fmatrix("Perr_CovMatrix", m_track->firstState().errMomentum(),3,3,"Length",3);
-    
+    //tuple->fmatrix("Perr_CovMatrix", m_track->firstState().errMomentum(),3,3,"Length",3);
+    const double* pCov = m_track->firstState().errMomentum().Array() ;
+    tuple->farray("Perr_CovMatrix", pCov, pCov+6, "nCovElm", 6) ;
+    tuple->column("Perr", sqrt(m_track->firstState().errP2())) ;
 
     //fill tuple arrays
     tuple->farray( "isInPV", isInPV, "nPVs", 50 );
