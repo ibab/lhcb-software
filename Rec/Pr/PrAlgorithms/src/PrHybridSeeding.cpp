@@ -38,11 +38,8 @@ GaudiAlgorithm(name,pSvcLocator),
   ,m_timerTool(nullptr)
 {
   //----- Newer Faster stereo method ( on by Default ), faster than normal one but need some retuning of the line Chi2 and tolerances
-  declareProperty("stereo2",m_stereo2=false);
-  {
-    std::vector<int> maxBest = boost::assign::list_of(2)(2)(3);
-    declareProperty("maxNbestCluster", m_maxNClusters = maxBest);
-  }
+  declareProperty("stereo2",m_stereo2=true);
+  declareProperty("maxNbestCluster", m_maxNClusters = {2,4,4});
   declareProperty( "SlopeCorr", m_SlopeCorr = false); //Changhe weight = 1./err -> 1./err*cos(tx)*cos(tx)
   //Used Params
   declareProperty( "InputName"          ,     m_inputName= LHCb::TrackLocation::Forward);
@@ -57,12 +54,13 @@ GaudiAlgorithm(name,pSvcLocator),
   declareProperty( "TimingMeasurement"  ,     m_doTiming= false);       //Measure timing of the algorithm splitting in cases up/down
   declareProperty( "PrintSettings"      ,     m_printSettings= false);  //Print the settings of the algorithm?
   declareProperty( "RemoveClones"       ,     m_removeClones = true);   //To be optimised : track.sorthits LHCbId
-  declareProperty( "minNCommonUV"       ,     m_nCommonUV=8);           //Global Clone removal Nb shared hits
+  // declareProperty( "FracCommon"         ,     m_fracCommon=0.71);           //Global Clone removal % shared hits ( to be implemented )
+  declareProperty( "NCommonTot" , m_nCommonTot = 8 );
   declareProperty( "RemoveClonesX"      ,     m_removeClonesX = true);   //To be optimised ( BloomFilter for instance & use of fraction )
+  // declareProperty( "FracCommonX"        ,     m_fracCommonX = {0.49, 0.49 , 0.29});
   declareProperty( "FlagHits"           ,     m_FlagHits = true);        //To be impoved
   declareProperty( "RemoveFlagged"      ,     m_removeFlagged = true);   //To be improved
   //Parameter Track Model
-  
   declareProperty( "UseCubicCorrection" ,     m_useCubic = true); // use "cubic" track model
   declareProperty( "dRatio"             , m_dRatio = -0.000262); // Const dRatio value ( By = B0+B1*z ; B1/B0 = dRatio
   //dRatio
@@ -70,73 +68,46 @@ GaudiAlgorithm(name,pSvcLocator),
   //Backward Projection
   declareProperty( "UseCorrPosition"    ,     m_useCorrPos = true);  // Compute the y(z) using the shift from the COS reference system of LHCb ( use the dzDy information of the hits )
   //Hit Flagging Step
-  {
-    //if SizeToFlag = 10 or 9 errors!
-    std::vector<unsigned int> size = boost::assign::list_of( 12)(11)(10);     // Number of hits to flag at each Case >= Value
-    declareProperty( "SizeToFlag"            ,m_SizeFlag = size);
-    std::vector<double> Chi2 = boost::assign::list_of(0.5)(1.0)(1.0);         // If NHits<12 Flag only tracks having Chi2DoF<Flag_MaxChi2DoF_11Hits[Case]
-    declareProperty( "Flag_MaxChi2DoF_11Hits",m_MaxChi2Flag = Chi2); 
-    std::vector<double> X0Flag = boost::assign::list_of( 100.)(8000.)(200.);  // If NHits<12 Flag only tracks having |X0| ( Back. Projection ) < Flag_MaxX0_11Hits[Case] 
-    declareProperty( "Flag_MaxX0_11Hits"     ,m_MaxX0Flag = X0Flag ); 
-  }
+  //if SizeToFlag = 10 or 9 errors!
+  // Number of hits to flag at each Case >= Value
+  declareProperty( "SizeToFlag"            ,m_SizeFlag = {12,11,10});
+  // IfNHits<12 Flag only tracks having Chi2DoF<Flag_MaxChi2DoF_11Hits[Case]
+  declareProperty( "Flag_MaxChi2DoF_11Hits",m_MaxChi2Flag = {0.5,1.0,1.0});
+  // If NHits<12 Flag only tracks having |X0| ( Back. Projection ) < Flag_MaxX0_11Hits[Case] 
+  declareProperty( "Flag_MaxX0_11Hits"     ,m_MaxX0Flag = {100.,8000.,200.});
   //--------------------X-Search Parametrisation
   //1st / Last Layer search windows
-  {
-    //find x-Projection 2 - hit Combo
-    //Case0 : 1st = T1-1X Last = T3-2X
-    //Case1 : 1st = T1-2X Last = T3-1X
-    //Case2 : 1st = T1-1X Last = T3-1X
-    //Hits in T3 are collected accrding to txInf = x1st/Z1st;
-    //[ L0_AlphaCorr*txInf + txInf(ZLast-Z1st) ] - L0_tolHp < (xT3) < [ L0_AlphaCorr*txInf + txInf(ZLast-Z1st) ] +L0_tolHp
-    std::vector<double> L0alpha=boost::assign::list_of(120.64)(510.64)(730.64);
-    declareProperty( "L0_AlphaCorr"     , m_alphaCorrection = L0alpha);
-    std::vector<double> tmp=boost::assign::list_of(280.0)(540.0)(1080.0);
-    declareProperty( "L0_tolHp"         , m_TolFirstLast = tmp);
-  }
-  {
-    //find x-Projection 3 - hit Combo
-    //2 Hit combination defines the value of the backward value at 0 ;
-    //txPicked = (XT3 -XT1)/(ZT3-ZT1)
-    //x0 = XT1-txPicked*ZT1
-    //Hits are collected in T2 based on the following parameters.
-    // See around Line 2165
-    declareProperty( "maxParabolaSeedHits", m_maxParabolaSeedHits = 8); // Max Nb Of hits to process in T2-1X and T2-2X given a 2hit combination
-    std::vector<double> X0Rotation = boost::assign::list_of(0.002152)(0.001534)(0.001834);
-    declareProperty( "x0Corr"             , m_x0Corr = X0Rotation);  // Rotation angle
+  //find x-Projection 2 - hit Combo
+  //Case0 : 1st = T1-1X Last = T3-2X
+  //Case1 : 1st = T1-2X Last = T3-1X
+  //Case2 : 1st = T1-1X Last = T3-1X
+  //Hits in T3 are collected accrding to txInf = x1st/Z1st;
+  declareProperty( "L0_AlphaCorr"     , m_alphaCorrection = {120.64,510.64,730.64});
+  declareProperty( "L0_tolHp"         , m_TolFirstLast = {280.0,540.0,1080.0});
+  //find x-Projection 3 - hit Combo
+  //2 Hit combination defines the value of the backward value at 0 ;
+  //txPicked = (XT3 -XT1)/(ZT3-ZT1)
+  //x0 = XT1-txPicked*ZT1
+  //Hits are collected in T2 based on the following parameters.
+  // See around Line 2165
+  declareProperty( "maxParabolaSeedHits", m_maxParabolaSeedHits = 8); // Max Nb Of hits to process in T2-1X and T2-2X given a 2hit combination
+  // std::vector<double> X0Rotation = boost::assign::list_of(0.002152)(0.001534)(0.001834);
+  declareProperty( "x0Corr"             , m_x0Corr = {0.002152 , 0.001534,0.001834});  // Rotation angle
+  declareProperty( "X0SlopeChange"      , m_x0SlopeChange = {400.,500.,500.});
+  declareProperty( "ToleranceX0Up"      , m_TolX0SameSign = {0.75,0.75,0.75});
+  //x0Cut needs to be different from X0SlopeChangeDown & X0SlopeChange 
+  declareProperty( "x0Cut"              , m_x0Cut = {1500.,4000.,6000.});
+  declareProperty( "TolAtX0Cut"         , m_tolAtX0Cut = {4.5,8.0,14.0});
+  declareProperty( "X0SlopeChangeDown"  , m_x0SlopeChange2 = {2000.,2000.,2000.});
+  //Tolerance inferior for |x0| > m_x0SlopeChange2 when x0 = m_x0Cut
+  declareProperty( "TolAtX0CutOpp"      , m_tolAtx0CutOppSig = {0.75,2.0,7.0});
+  declareProperty( "ToleranceX0Down"    , m_tolX0Oppsig = {0.75,0.75,0.75});
 
-    std::vector<double> X0SlopeChange = boost::assign::list_of(400.)(500.)(500.);
-    declareProperty( "X0SlopeChange"      , m_x0SlopeChange = X0SlopeChange);
-
-    std::vector<double> TolX0SignUp = boost::assign::list_of(0.75)(0.75)(0.75);
-    declareProperty( "ToleranceX0Up"      , m_TolX0SameSign = TolX0SignUp);
-
-    std::vector<double> x0Cut = boost::assign::list_of( 1500.)( 4000.)(6000.);
-    declareProperty( "x0Cut"              , m_x0Cut = x0Cut);
-
-    std::vector<double> TolAtX0Cut = boost::assign::list_of(4.5)(8.0)(14.0);
-    declareProperty( "TolAtX0Cut"         , m_tolAtX0Cut = TolAtX0Cut);
-
-    std::vector<double> x0SlopeChange2 = boost::assign::list_of(1500.)(2000.)(2000.);
-    declareProperty( "X0SlopeChangeDown"  , m_x0SlopeChange2 = x0SlopeChange2);
-
-    //Tolerance inferior for |x0| > m_x0SlopeChange2 when x0 = m_x0Cut
-    std::vector<double> tolAtx0CutOpp = boost::assign::list_of(1.5)(2.0)(7.0);
-    declareProperty( "TolAtX0CutOpp"      , m_tolAtx0CutOppSig = tolAtx0CutOpp);
-
-    std::vector<double> tolOpp = boost::assign::list_of(0.75)(0.75)(0.75);
-    declareProperty( "ToleranceX0Down"    , m_tolX0Oppsig = tolOpp);
-  }
-  
   //find x-Projection Remaining layers & fitting
-  {
-    std::vector<double> tolRem = boost::assign::list_of(1.0)(1.0)(1.0); // Tolerance for remaining layers ( after the 3 hit combination ) in mm
-    declareProperty( "TolXRemaining"      , m_tolRemaining = tolRem);   
-    std::vector<double> maxChi2X = boost::assign::list_of( 5.5)(5.5)(5.5);  // Outlier removal parameter MaxChi2 from single hit < 5.5 , if not track rejected, worst removed and refit
-    declareProperty( "maxChi2HitsX"       , m_maxChi2HitsX = maxChi2X );
-    std::vector<double> maxChi2DoFX = boost::assign::list_of(4.0)(5.0)(6.0);  // Max Chi2PerDOF xz projection
-    declareProperty( "maxChi2DoFX"        , m_maxChi2DoFX = maxChi2DoFX);
-  }
-
+  // Tolerance for remaining layers ( after the 3 hit combination ) in mm
+  declareProperty( "TolXRemaining"      , m_tolRemaining = {1.0,1.0,1.0});
+  declareProperty( "maxChi2HitsX"       , m_maxChi2HitsX = {5.5,5.5,5.5});
+  declareProperty( "maxChi2DoFX"        , m_maxChi2DoFX = {4.0,5.0,6.0});
   
   //--------------------UV search  Parametrisation (inherit from PrSeedingXLayers)
   // --------- COLLECT UV
@@ -149,46 +120,39 @@ GaudiAlgorithm(name,pSvcLocator),
   declareProperty("DoAsymm"               , m_doAsymmUV      = true); // Do asymmetric => take into account the alpha of the layers
   declareProperty( "TriangleFix"          , m_useFix         = true); // Use triangle fixing
   declareProperty( "TriangleFix2ndOrder"  , m_useFix2ndOrder = true); // Use triangle fixing accessing the PrHit::yMin and PrHit::yMax information
-
   //--------- SelectHoughCluster
-  {
-    // if stereo2 set to false
-    declareProperty("UseLineY", m_useLineY = true);  // Pre-fit a line?
-    std::vector<unsigned int> minUV6 = boost::assign::list_of(4)(4)(4); // minUVLayers when XZ candidate has 6 hits  (planes)
-    std::vector<unsigned int> minUV5 = boost::assign::list_of(5)(5)(4); // minUVLayers when XZ candidate has 5 hits  (planes)
-    std::vector<unsigned int> minUV4 = boost::assign::list_of(6)(6)(5); // minUVLayers when XZ candidate has 4 hits  (planes)
-    declareProperty("minUV6"  ,   m_minUV6   =   minUV6);
-    declareProperty("minUV5"  ,   m_minUV5   =   minUV5);
-    declareProperty("minUV4"  ,   m_minUV4   =   minUV4);
-    //10 or 9 hits on track
-    std::vector<double> Chi2LowLine =  boost::assign::list_of( 4.0 )( 6.0 )( 8.0 );
-    declareProperty("Chi2LowLine"     ,    m_Chi2LowLine = Chi2LowLine);  // if NXZ + NUV (Planes) <=10  XZChi2DoF + YLineChi2DoF < Chi2LowLine
-    //11 or 12 hits on track
-    std::vector<double> Chi2HighLine = boost::assign::list_of( 30.0 )( 50.0 )( 80.0 );
-    declareProperty("Chi2HighLine"    ,    m_Chi2HighLine = Chi2HighLine);  // if NXZ + NUV (Planes) >10 XZChi2DoF + YLineChi2DoF < Chi2HighLine
-    std::vector<unsigned int> mintot = boost::assign::list_of(9)(9)(9);
-    declareProperty("minTot"          ,    m_minTot = mintot);
-    std::vector<double> ty           = boost::assign::list_of( 0.0017 )( 0.0025 )( 0.007 );  // Hough Cluster window : maxCoord- minCoord < (TolTyOffset + TolTySlope*minCoord) : Hit Coord = |y/z|
-    declareProperty( "TolTyOffset"    ,    m_tolTyOffset = ty);
-    std::vector<double> tmp          = boost::assign::list_of(  0.0  )(  0.0  )(  0.0 );
-    declareProperty( "TolTySlope"     ,    m_tolTySlope = tmp);
-  }
+  // if stereo2 set to false
+  declareProperty("UseLineY", m_useLineY = true);  // Pre-fit a line?
+  declareProperty("minUV6"  ,   m_minUV6   =   {4,4,4});
+  declareProperty("minUV5"  ,   m_minUV5   =   {5,5,4});
+  declareProperty("minUV4"  ,   m_minUV4   =   {6,6,5});
+  //10 or 9 hits on track
+  //stereo2 OFF: declareProperty("Chi2LowLine"     ,    m_Chi2LowLine = {4.0,5.0,7.0}); 
+  declareProperty("Chi2LowLine"     ,    m_Chi2LowLine ={5.0,6.5,7.5} );
+  // if NXZ + NUV (Planes) <=10  XZChi2DoF + YLineChi2DoF < Chi2LowLine
+  //11 or 12 hits on track
+  declareProperty("Chi2HighLine"    ,    m_Chi2HighLine = {30.0, 50.0, 80.0});
+  declareProperty("minTot"          ,    m_minTot = {9,9,9});
+  declareProperty( "TolTyOffset"    ,    m_tolTyOffset = {0.0017, 0.0025, 0.0035});
+  declareProperty( "TolTySlope"     ,    m_tolTySlope =  {0.0, 0.025 , 0.035});
   //-------- Simultaneous Fit Y
-  {
-    //MaxChi2 Hit >10 Hits
-    std::vector<double> maxChi2FullFit_11and12Hit = boost::assign::list_of(5.5)(5.5)(5.5);  //N Layers > 10 ( 11 and 12 hits ) outliers removed if MaxChi2Hit > maxChi2Hits_11and12Hit
-    declareProperty( "maxChi2Hits_11and12Hit" , m_maxChi2HitFullFitHigh = maxChi2FullFit_11and12Hit);
-    //MaxChi2 Hit <11 Hits + Y(0) +  Y(zRef) cut
-    std::vector<double> maxChi2FullFit_less11Hit = boost::assign::list_of(2.5)(2.5)(2.5); // N Layers < 11 (9,10) outliers removed if MaxChi2Hit< maxChi2Hits_less11Hit
-    declareProperty( "maxChi2Hits_less11Hit" , m_maxChi2HitFullFitLow = maxChi2FullFit_less11Hit);
-    std::vector<double> maxY0 = boost::assign::list_of( 50.)(50.)(50.);                  // If N Layers < 11: kill tracks having y(z=0) >50. mm
-    declareProperty( "maxYatZeroLow"         , m_maxY0Low             = maxY0);
-    std::vector<double> maxyRef = boost::assign::list_of( 500.)(500.)(500.);             // If N Layers < 11 : kill tracks having y(zRef)>500. mm
-    declareProperty( "maxYatzRefLow"         , m_maxYZrefLow          = maxyRef);
-    //Global Chi2PerDoF
-    std::vector<double> chi = boost::assign::list_of(4.0)(6.0)(7.0);                     // Global Chi2PerDoF
-    declareProperty( "maxChi2PerDoF"         , m_maxChi2PerDoF        = chi );
-  }
+  //MaxChi2 Hit >10 Hits
+  //N Layers > 10 ( 11 and 12 hits ) outliers removed if MaxChi2Hit > maxChi2Hits_11and12Hit
+  declareProperty( "maxChi2Hits_11and12Hit" , m_maxChi2HitFullFitHigh = {5.5,5.5,5.5});
+  //MaxChi2 Hit <11 Hits + Y(0) +  Y(zRef) cut
+  
+  // N Layers < 11 (9,10) outliers removed if MaxChi2Hit< maxChi2Hits_less11Hit
+  declareProperty( "maxChi2Hits_less11Hit" , m_maxChi2HitFullFitLow = {2.5,2.5,2.5});
+  // If N Layers < 11: kill tracks having y(z=0) >50. mm
+  //stere2 Off: declareProperty( "maxYatZeroLow"         , m_maxY0Low             = {50.,50.,50.});
+  declareProperty( "maxYatZeroLow"         , m_maxY0Low             ={50.,60.,70.});
+
+  // If N Layers < 11 : kill tracks having y(zRef)>500. mm
+  //stereo2 Off : declareProperty( "maxYatzRefLow"         , m_maxYZrefLow          =  {500.,500.,500.});
+  declareProperty( "maxYatzRefLow"         , m_maxYZrefLow          ={400.,550.,700.});
+  
+  //Global Chi2PerDoF
+  declareProperty( "maxChi2PerDoF"         , m_maxChi2PerDoF        = {4.0,6.0,7.0});
   //Global Clone Removal
   // Parameters for debugging
 }
@@ -202,6 +166,7 @@ PrHybridSeeding::~PrHybridSeeding() {}
 //=============================================================================
 StatusCode PrHybridSeeding::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
+  
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
   m_hitManager= tool<PrHitManager>( m_hitManagerName );
@@ -338,7 +303,7 @@ StatusCode PrHybridSeeding::initialize() {
            << "==================Clone Removal and Flag Hits Settings=========="<<endmsg
            << "Remove Clones after X searh                    = " <<m_removeClonesX<<endmsg
            << "RemoveClones after add stereo UV               = " << m_removeClones<<endmsg
-           << "Min Hits Common Total                         = " << m_nCommonUV <<endmsg
+           << "N Common Total                         = " << m_nCommonTot <<endmsg
 
            << "Flag the hits                                  = " << m_FlagHits <<endmsg
            << "Remove All Flagged                             = " << m_removeFlagged<<endmsg;
@@ -374,6 +339,9 @@ StatusCode PrHybridSeeding::initialize() {
       info()<<"\t Case "<<kk<<"      MaxChi2Track X Fit  = "<<m_maxChi2DoFX[kk]<<endmsg;
     }
     info()<<" Remove Clones X " << m_removeClonesX<< endmsg;
+    // for( unsigned int kk = 0; m_fracCommonX.size()>kk; ++kk){
+    //   info()<<"\t Case" <<kk <<"     FracCommonX   = " << m_fracCommonX[kk]<<endmsg;
+    // }
     info()<<" ========================= Add The UV part =================================== "<<endmsg;
     info()<<" 1 - Hit Selection pre-Hough Clustering "<<endmsg;
     info()<<"\t Y Min                 "<< m_yMin      <<endmsg
@@ -420,6 +388,8 @@ StatusCode PrHybridSeeding::initialize() {
       info()<<"\t Case"<<kk<<" Size Flag"<< m_SizeFlag[kk]<<endmsg;
     }
   }
+  if( m_nCases >3) return StatusCode::FAILURE;
+  
   return StatusCode::SUCCESS;
 }
 
@@ -536,7 +506,7 @@ StatusCode PrHybridSeeding::execute() {
   //for( unsigned int part= 0; 2 > part; ++part ){
   //----- Loop For difference Cases
   //Swap them ? externally icase & inner loop part? m_xCandidates
-  for(unsigned int icase = 0; m_nCases>icase ; ++icase){
+  for(unsigned int icase = 0; m_nCases > icase ; ++icase){
     for(unsigned int part =0; 2>part;++part){
       if( m_doTiming){
         if( part ==0){m_timerTool->start( m_timeXProjeUp[icase]);}
@@ -600,7 +570,7 @@ StatusCode PrHybridSeeding::execute() {
     if(m_doTiming){
       m_timerTool->start( m_timeClone[(int)part]);
     }
-    removeClones(m_nCommonUV, part);
+    removeClones( part );
     if( m_doTiming){
       m_timerTool->stop( m_timeClone[ (int) part]);
     }
@@ -890,11 +860,17 @@ void PrHybridSeeding::addStereo2( unsigned int part, unsigned int iCase){
         if( itBeg == myStereo.end() &&  itEnd == myStereo.end()){
           break;
         }
+        // nCandidates++;
+        // if(nCandidates > m_maxNClusters[(*itT).Case()]) break;
+        ExtendCluster( itBeg, itEnd , iCase, myStereo , nLay );
+        //maxUVfound are the minimal UV layers to find !
+        if( (int)nLay < (int)maxUVfound || (int)nLay < (int)minUV) continue;
+        // if(nCandidates > m_maxNClusters[(*itT).Case()]) break;
+        // nCandidates++;
+        // // if(nCandidates > m_maxNClusters[(*itT).Case()]) break;
+        if( (int)nLay < (int)minUV) continue;
         nCandidates++;
         if(nCandidates > m_maxNClusters[(*itT).Case()]) break;
-        ExtendCluster( itBeg, itEnd , iCase, myStereo , nLay );
-        if( (int)nLay < (int)maxUVfound || (int)nLay < (int)minUV) continue;
-        if( (int)nLay < (int)minUV) continue;
         plCount.set( itBeg , itEnd );
         nLay = plCount.nbDifferentUV();
         if( nLay == 4 && !plCount.isOKUV()){
@@ -1223,7 +1199,7 @@ void PrHybridSeeding::addStereo(unsigned int part, unsigned int iCase)
     //first hit in U-V layer with small Ty
     PrHits::iterator itEnd = (itBeg + minUV<=myStereo.end()? itBeg+minUV: myStereo.end());
     // PrLineFitterY BestLine(m_zReference, (*itT));
-    BestLine.setXProj( (*itT)); // Here i set the ax,bx,cx, dRatio
+    BestLine.setXProj( (*itT) ); // Here i set the ax,bx,cx, dRatio
     if(msgLevel(MSG::DEBUG)) debug()<<"Size of MyStereo = " << myStereo.size()<<endmsg;
     for( ; itEnd-itBeg>=minUV; IncreaseIters( itBeg, itEnd, minUV, myStereo)){
       //while( itEnd-itBeg >= minUV){
@@ -1512,7 +1488,6 @@ void PrHybridSeeding::IncreaseIters( PrHits::iterator& itBeg, PrHits::iterator& 
 bool PrHybridSeeding::LineOK( double minChi2Low, double minChi2High, PrLineFitterY& line, PrHybridSeedTrack& xProje ){
   const int nHits = line.nHitsLine() + xProje.hits().size();
   const double Chi2DoFLineXProj = xProje.chi2PerDoF() + line.Chi2DoF();
-
   if( nHits > 10 && Chi2DoFLineXProj < minChi2High) return true;
   if( nHits < 11 && Chi2DoFLineXProj < minChi2Low ) return true;
   return false;
@@ -1520,72 +1495,148 @@ bool PrHybridSeeding::LineOK( double minChi2Low, double minChi2High, PrLineFitte
 
 void PrHybridSeeding::removeClonesX(unsigned int part,unsigned int icase, bool xOnly){
   std::sort(m_xCandidates[(int)part].begin(), m_xCandidates[(int)part].end(),PrHybridSeedTrack::GreaterBySize());
+  // double maxCommon = 0;
   unsigned int maxCommon = 0;
-
-  for( PrHybridSeedTracks::iterator itT1 = m_xCandidates[(int)part].begin(); m_xCandidates[(int)part].end() !=itT1; ++itT1){
-    // if((*itT1).zone() != part)             continue;
-    if((*itT1).Case() != icase && !xOnly)  continue; //useless if you clean the m_xCandidates
-    if(!(*itT1).valid())                   continue;
-    for( PrHybridSeedTracks::iterator itT2 = itT1 + 1; m_xCandidates[(int)part].end() !=itT2; ++itT2 ){
-      if(!m_removeClonesX && xOnly)        break;
-      if((*itT1).type()%2 != (*itT2).type()%2 )continue;
-      if(!(*itT2).valid())                continue;
-      if((*itT2).Case() != (*itT1).Case()) continue;
-      int Compare = (*itT1).hits().size()+(*itT2).hits().size();
-      switch(Compare){
-      case 12: //6 vs 6
-        maxCommon = 3;
-        break;
-      case 11: //6 vs 5
-        maxCommon = 3;
-        break;
-      case 10: //6 vs 4 & 5+5
-        maxCommon = 2;
-        break;
-      case 9: //5 vs 4
-        maxCommon = 1;
-        break;
-      case 8: /// 4 vs 4
-        maxCommon = 1;
-        break;
-      }
-      unsigned int nCommon = 0;
-      //if( (*itT1).Case() == 0) maxCommon =1;
-      PrHits::iterator itH1 = (*itT1).hits().begin();
-      PrHits::iterator itH2 = (*itT2).hits().begin();
-      PrHits::iterator itEnd1 = (*itT1).hits().end();
-      PrHits::iterator itEnd2 = (*itT2).hits().end();
-      //count number of common hits between track 1 and track 2
-      while( itH1 != itEnd1 && itH2 != itEnd2 ){
-        if((*itH1)->id() == (*itH2)->id()){
-          ++nCommon;
-          ++itH1;
-          ++itH2;
+  if( !xOnly ){
+    for( PrHybridSeedTracks::iterator itT1 = m_xCandidates[(int)part].begin(); m_xCandidates[(int)part].end() !=itT1; ++itT1){
+      if((*itT1).Case() != icase && !xOnly)  continue; //useless if you clean the m_xCandidates
+      if(!(*itT1).valid())                   continue;
+      for( PrHybridSeedTracks::iterator itT2 = itT1 + 1; m_xCandidates[(int)part].end() !=itT2; ++itT2 ){
+        if((*itT1).type()%2 != (*itT2).type()%2 )continue;
+        if(!(*itT2).valid())                continue;
+        if((*itT2).Case() != (*itT1).Case()) continue;
+        // maxCommon = (double)m_fracCommonX[icase]*(*itT1).hits().size();
+        // if( m_fracCommoX[icase]<0){
+        int Compare = (*itT1).hits().size()+(*itT2).hits().size(); // 36 , 30 ,30  ( 6 vs 6 6 vs 5 )
+        // if( Compare <=21){       // 4 vs 5 & 4 vs 4
+        //   maxCommon = 1;
+        // }else if( Compare<= 26){ // 5 vs 5 , 6 vs 4
+        //   maxCommon = 2;
+        // }else if( Compare <=30){ 
+        //   maxCommon = 3;
+        // }else if( Compare <=40){ // 6 vs 6 
+        //   maxCommon = 3;
+        // }
+        if( Compare <10 ){
+          maxCommon = 1;
+        }else if( Compare ==10 ){
+          maxCommon = 2;
+        }else if( Compare >10){
+          maxCommon = 3;
         }
-        else if( (*itH1)->id() < (*itH2)->id() ){
-          // while( itH1!=itEnd1 && (*itH1)->id() < (*itH2)->id() )
-          ++itH1;
+        // switch(Compare){
+        // case 12: //6 vs 6
+        //   maxCommon = 3;
+        //   break;
+        // case 11: //6 vs 5
+        //   maxCommon = 3;
+        //   break;
+        // case 10: //6 vs 4 & 5+5
+        //   maxCommon = 2;
+        //   break;
+        // case 9: //5 vs 4
+        //   maxCommon = 1;
+        //   break;
+        // case 8: /// 4 vs 4
+        //   maxCommon = 1;
+        //   break;
+        // }
+        unsigned int nCommon = 0;
+        //if( (*itT1).Case() == 0) maxCommon =1;
+        PrHits::iterator itH1 = (*itT1).hits().begin();
+        PrHits::iterator itH2 = (*itT2).hits().begin();
+        PrHits::iterator itEnd1 = (*itT1).hits().end();
+        PrHits::iterator itEnd2 = (*itT2).hits().end();
+        //count number of common hits between track 1 and track 2
+        while( itH1 != itEnd1 && itH2 != itEnd2 ){
+          if((*itH1)->id() == (*itH2)->id()){
+            ++nCommon;
+            ++itH1;
+            ++itH2;
+          }
+          else if( (*itH1)->id() < (*itH2)->id() ){
+            // while( itH1!=itEnd1 && (*itH1)->id() < (*itH2)->id() )
+            ++itH1;
+          }
+          else{
+            // while( itH2!=itEnd2 && (*itH2)->id() < (*itH1)->id() )
+            ++itH2;
+          }
+          if(nCommon>=maxCommon )  break;
         }
-        else{
-          // while( itH2!=itEnd2 && (*itH2)->id() < (*itH1)->id() )
-          ++itH2;
-        }
-        if( nCommon >=maxCommon )  break;
-      }
-      if(nCommon >= maxCommon){
+        if( nCommon>=maxCommon){
         //you need all the if statement if you change the way you sort the track container
-        (*itT1).setValid(false);
-        break;
+          (*itT1).setValid(false);
+          break;
+        }
+      }
+    }
+  }
+  if(xOnly){
+    // double maxCommon = 0.;
+    unsigned int maxCommon = 0;
+    for( PrHybridSeedTracks::iterator itT1 = m_xCandidates[(int)part].begin(); m_xCandidates[(int)part].end() !=itT1; ++itT1){
+      if( (*itT1).Case () != icase  ) continue;
+      if( !(*itT1).valid()) continue;                                                                            
+      // maxCommon = (double)m_fracCommonX[icase]*(*itT1).hits().size();                                                      
+      for( PrHybridSeedTracks::iterator itT2 = itT1 +1; m_xCandidates[(int)part].end()!=itT2; ++itT2){
+        if( (*itT2).Case() != icase )  continue;
+        if( (*itT1).type()%2 != (*itT2).type()%2 ) continue;
+        if(!(*itT2).valid() ) continue;                                                               
+        unsigned int nCommon = 0;                                                                                          
+        PrHits::iterator itH1 = (*itT1).hits().begin();
+        PrHits::iterator itH2 = (*itT2).hits().begin();
+        PrHits::iterator itEnd1 = (*itT1).hits().end();
+        PrHits::iterator itEnd2 = (*itT2).hits().end();
+        int Compare = (*itT1).hits().size()+(*itT2).hits().size();
+        
+        if( Compare <10 ){
+          maxCommon = 1;                                                                                                                                                                                                                                              
+        }
+        else if( Compare ==10 ){
+          maxCommon = 2;
+        }
+        else if( Compare >10){
+          maxCommon = 3;
+        }
+        
+        while( itH1 != itEnd1 && itH2 != itEnd2 ){
+          if((*itH1)->id() == (*itH2)->id()){
+            ++nCommon;                                                                                                   
+            ++itH1;
+            ++itH2;   
+          }
+          else if( (*itH1)->id() < (*itH2)->id() ){
+            ++itH1;
+          }
+          else{           
+            ++itH2;       
+          }         
+          if( nCommon >=maxCommon )  break;              
+        }
+        if(nCommon >= maxCommon){
+          (*itT1).setValid(false);
+          break;
+        }
+      }
+    }
+    if( icase == m_nCases-1){                  
+      for( PrHybridSeedTracks::iterator itT1 = m_xCandidates[(int)part].begin() ; m_xCandidates[(int)part].end()!= itT1; ++itT1){
+        if((*itT1).valid()) m_trackCandidates[(int)part].push_back( (*itT1));
       }
     }
   }
 }
 
-void PrHybridSeeding::removeClones(unsigned int maxCommon, unsigned int part){
+      
+      
+void PrHybridSeeding::removeClones( unsigned int part){
   //std::sort(m_trackCandidates.begin(),m_trackCandidates.end(),PrHybridSeedTrack::LowerBySize());
+  // double maxCommon = m_nCommonUV;
   std::sort(m_trackCandidates[(int)part].begin(), m_trackCandidates[(int)part].end(),PrHybridSeedTrack::GreaterBySize());
   for ( PrHybridSeedTracks::iterator itT1 = m_trackCandidates[(int)part].begin(); m_trackCandidates[(int)part].end()!=itT1; ++itT1){
     if( !(*itT1).valid()) continue;
+    // maxCommon = 8;//m_fracCommon*(*itT1).hits().size();
     for ( PrHybridSeedTracks::iterator itT2 = itT1 + 1; m_trackCandidates[(int)part].end() !=itT2; ++itT2 ) {
       if ( !(*itT2).valid()) continue;
       unsigned int nCommon = 0;
@@ -1606,34 +1657,14 @@ void PrHybridSeeding::removeClones(unsigned int maxCommon, unsigned int part){
           ++itH2;
         }
       }
-      unsigned int maxCommonUV = maxCommon;
-      if( nCommon>=maxCommonUV ){
+      if( nCommon>=m_nCommonTot ){
         //Due to sorting of tracks from lower quality to higher one
         (*itT1).setValid(false);
         break;
       }
-
-      //   if((*itT1).hits().size() > (*itT2).hits().size()){
-      //     (*itT2).setValid( false);
-      //   }
-      //   if( (*itT1).hits().size() < (*itT2).hits().size())
-      //   {
-      //     (*itT1).setValid( false);
-      //   }
-      //   else if((*itT1).chi2PerDoF() < (*itT2).chi2PerDoF()){
-      //     (*itT2).setValid(false);
-      //   }else
-      //   {
-      //     (*itT1).setValid(false);
-      //   }
-      // }
-      // if(! (*itT1).valid()) break;
-      //    }
     }
   }
 }
-
-
 void PrHybridSeeding::flagHits(unsigned int icase, unsigned int part){
   std::sort( m_trackCandidates[(int)part].begin() , m_trackCandidates[(int)part].end() , PrHybridSeedTrack::LowerBySize()); //bigger size is in front
   for(PrHybridSeedTracks::iterator track = m_trackCandidates[(int)part].begin(); m_trackCandidates[(int)part].end()!=track ; ++track){
@@ -1644,11 +1675,11 @@ void PrHybridSeeding::flagHits(unsigned int icase, unsigned int part){
     // PrHybridSeedTrack temp(*track);
     if((*track).hits().size() < m_SizeFlag[icase])break;
     // Important the sorting of before for this break
-    if(!(    ((*track).hits().size()==11
-              && (*track).chi2PerDoF()< m_MaxChi2Flag[icase]
-              && std::fabs((*track).X0())<m_MaxX0Flag[icase])
-             || ((*track).hits().size()==12 )
-             ) ) continue;
+    if(!(     ((*track).hits().size()==11
+               && (*track).chi2PerDoF()< m_MaxChi2Flag[icase]
+               && std::fabs((*track).X0())<m_MaxX0Flag[icase])
+              || ((*track).hits().size()==12 )
+              ) ) continue;
     for(PrHits::iterator it = (*track).hits().begin();(*track).hits().end()!=it; ++it){
       //if( (*it)->zone()%2 != part ) continue; Do you want to flag the hits if they belong to the opposite side of the detector?
       (*it)->setUsed(true);
@@ -1834,7 +1865,7 @@ bool PrHybridSeeding::fitXProjection(PrHybridSeedTrack& track, unsigned int iCas
   double mat[6];
   double rhs[3];
   const double zRef = m_zReference;
-  //track.setdRatio(m_dRatio);
+  // if(m_useCubic) track.setdRatio(m_dRatio);
   for(int loop = 0;3>loop;++loop)
   {
     std::fill(mat,mat+6,0.);
@@ -1897,7 +1928,6 @@ bool PrHybridSeeding::fitXProjection(PrHybridSeedTrack& track, unsigned int iCas
 
   track.setX0(X0);
   track.setMaxChi2(maxChi2);
-
   return (maxChi2 < m_maxChi2HitsX[iCase]) ;
   return false;
 }
@@ -2127,8 +2157,7 @@ void PrHybridSeeding::findXProjections(unsigned int part, unsigned int iCase)
             xMin = xProjectedCorrected + min;
             max = x0>m_x0SlopeChange2[iCase]? slopeopp*( x0 - m_x0SlopeChange2[iCase]) + m_tolX0Oppsig[iCase] : +m_tolX0Oppsig[iCase];
             xMax = xProjectedCorrected + max;
-          }
-          if(x0 < 0.){
+          }else{
             //max = x0<-400. ? -m_hp4_slope*: 1.0; // >0
             max = x0 <-m_x0SlopeChange[iCase]? -slope*( x0 + m_x0SlopeChange[iCase]) + m_TolX0SameSign[iCase]: m_TolX0SameSign[iCase];
             //min = -1.2;
@@ -2136,9 +2165,7 @@ void PrHybridSeeding::findXProjections(unsigned int part, unsigned int iCase)
             xMin = xProjectedCorrected + min;
             xMax = xProjectedCorrected + max;
           }
-
           if(xMin > xMax) always()<<"Error xMin xMax"<<endmsg;
-
           if( xMax<xMin && msgLevel(MSG::DEBUG)) debug()<<"\t\t\t\t\t Wrong xMax/xMin"<<endmsg;
           if( msgLevel(MSG::DEBUG)) debug()<<"Lower bound the zones"<<endmsg;
           PrHits::iterator itH = std::lower_bound(xZone->hits().begin(), xZone->hits().end(), xMin, lowerBoundX());
@@ -2316,12 +2343,10 @@ void PrHybridSeeding::findXProjections(unsigned int part, unsigned int iCase)
           //Create the track
           // PrHybridSeedTrack temp_track( part , m_geoTool->zReference() , xHits); //Create the track
           PrHybridSeedTrack temp_track( part , m_zReference , xHits);
-
           //Setters for it: usefull later to parametrise
-          //I load in the track these info which are then plotted
-          // if(m_useCubic){
-          //   temp_track.setdRatio(m_dRatio);
-          // }
+          if(m_useCubic){
+            temp_track.setdRatio(m_dRatio);
+          }
           //-----------------------------------------------------
           //----------------O-_The Fit_-O------------------
           //-----------------------------------------------------

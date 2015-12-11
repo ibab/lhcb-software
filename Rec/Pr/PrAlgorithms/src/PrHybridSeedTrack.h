@@ -174,16 +174,18 @@ public:
   }
   struct GreaterBySize{//Before elements with lower n hits later and lower Chi2
     bool operator() (const PrHybridSeedTrack& lhs, const PrHybridSeedTrack& rhs) const { 
-      if( lhs.hits().size() == rhs.hits().size() )
+      if( lhs.hits().size() == rhs.hits().size() ){
         return lhs.chi2PerDoF() > rhs.chi2PerDoF();
+      }
       return lhs.hits().size() < rhs.hits().size();
       //< by default
     }
   };
   struct LowerBySize{ //Before higher number of hits and better chi2
     bool operator() ( const PrHybridSeedTrack& lhs, const PrHybridSeedTrack& rhs) const{
-      if(lhs.hits().size() == rhs.hits().size())
+      if(lhs.hits().size() == rhs.hits().size()){
         return lhs.chi2PerDoF() < rhs.chi2PerDoF();
+      }
       return lhs.hits().size() > rhs.hits().size();
     }
   };

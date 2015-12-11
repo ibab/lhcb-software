@@ -3,6 +3,13 @@
 ! Responsible : Yasmine Amhis
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
+! 2015-12-11 - Renato Quagliani
+ - Correct default parametrisation which was applying division for 0
+ - Throw an exception if m_nCases >3 
+ - Fully retuned to be compatible to provide reproducible results with the Internal Note
+ - Stereo2 switched on by default , 1% more tracking eff for low P and 1% less ghost rate. NoSpillOver + NoNoise 
+ - ( => 14% ghost, 93.5 % tr.eff V2 )
+
 
 ! 2015-12-05 - Renato Quagliani
  - Change default parameters for HybridSeeding to keep ghost rate under control for stereo2 = True, i.e.,

@@ -168,7 +168,7 @@ protected:
   
   /** @brief Remove Clones of produced tracks once all cases are run
    */
-  void removeClones(unsigned int maxCommon , unsigned int part);
+  void removeClones( unsigned int part);
   
   
   /** @brief Set the Chi2 value and Chi2DoF for the track after the X+U-V search
@@ -372,8 +372,12 @@ private:
   
   //X+Y fit configure
   std::vector<double>          m_maxChi2PerDoF;
+
+  unsigned int m_nCommonTot;
+  
   //Clone removal setting
-  unsigned int              m_nCommonUV;
+  // double              m_fracCommon;
+  // std::vector<double>  m_fracCommonX; // to be implemented properly
   //Flag Hits Settings
     
   std::vector<double>         m_MaxChi2Flag;
