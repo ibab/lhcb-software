@@ -13,6 +13,7 @@
  */
 //-----------------------------------------------------------------------------
 
+#include "GaudiKernel/ToolFactory.h"
 #include "GaudiAlg/GaudiTool.h"
 
 // STL
@@ -45,6 +46,7 @@ public:
 private:
   size_t m_minHitsASide ;
   size_t m_minHitsCSide ;
+  size_t m_minHits;
 };
 
 DECLARE_TOOL_FACTORY( VPTrackSelector )
@@ -59,13 +61,15 @@ VPTrackSelector::VPTrackSelector( const std::string& type,
   declareInterface<ITrackSelector>(this);
   declareProperty( "MinHitsASide" , m_minHitsASide = 0 ) ;
   declareProperty( "MinHitsCSide" , m_minHitsCSide = 0 ) ;
+  declareProperty( "MinHits"      , m_minHits = 0 ) ;
+  
 }
 
 VPTrackSelector::~VPTrackSelector() { }
 
 bool VPTrackSelector::accept ( const LHCb::Track& aTrack ) const
 {
-  size_t numHits[2] = {0,0} ;
+  size_t numHits[3] = {0,0,0} ;
   for( std::vector<LHCb::LHCbID>::const_iterator 
 	 it = aTrack.lhcbIDs().begin() ;
        it != aTrack.lhcbIDs().end(); ++it ) 
@@ -73,10 +77,14 @@ bool VPTrackSelector::accept ( const LHCb::Track& aTrack ) const
       LHCb::VPChannelID vpid = it->vpID() ;
       unsigned int side    = (vpid.sensor()%2) ; 
       ++numHits[side] ;
+      ++numHits[2];
+      
     }
+
   return 
     numHits[0] >= m_minHitsASide &&
     numHits[1] >= m_minHitsCSide && 
+    numHits[2] >= m_minHits      &&
     TrackSelector::accept(aTrack) ;
 }
 
