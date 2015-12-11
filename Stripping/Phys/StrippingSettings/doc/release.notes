@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-09 Pablo Ruiz Valls (RD)
+ - Modifications to XLLBDT and Bs2MuMu lines dictionaries.
+
 ! 2015-12-09 Pablo Ruiz Valls
  - Modifications to XLLBDT and RareStrange lines dictionaries.
 
