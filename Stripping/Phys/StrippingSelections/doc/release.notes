@@ -1,9 +1,11 @@
-
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingSelections
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2015-12-11 - Jibo He
+ - Updated BDTs for B2LLXBDT lines, require the head of TMVAWeights
 
 ! 2015-12-10 - Marco Pappagallo
  - Added StrippingExcitedDsSpectroscopy line for S21p1  
