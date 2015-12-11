@@ -36,6 +36,15 @@
  *  @maintainer Olivier Deschamps odescham@in2p3.fr
  */
 // ============================================================================
+namespace {
+  template <typename Container, typename Fun>
+  void resetCellParam(MsgStream& msg, const char* member, Container& c, Fun&& fun) {
+      if( UNLIKELY( msg.level() <= MSG::DEBUG ) )
+        msg << MSG::DEBUG << "Before updating condition - reset CellParam." <<member<< endmsg,
+      std::for_each( std::begin(c), std::end(c), std::forward<Fun>(fun) );
+  }
+}
+// ============================================================================
 /*  constructor
  *  @name object name (useless)
  */
@@ -921,15 +930,8 @@ StatusCode DeCalorimeter::buildMonitoring( )  {
       }
     }
 
-
-
-
     // Link to cell (if not done yet)
-    std::vector<int>& leds = (std::vector<int>&) m_pins[pinId].leds(); // non-const conversion
-    for(auto iled=leds.begin() + nleds ;
-        iled != leds.end() ; ++iled ) {
-
-      int ledNum = (*iled);
+    for(int  ledNum : m_pins[pinId].leds()) {
       CaloLed& led = m_leds[ ledNum ];
       if( UNLIKELY( msg.level() <= MSG::VERBOSE ) )
         msg << MSG::VERBOSE << " LED " << ledNum << endmsg;
@@ -961,10 +963,10 @@ StatusCode DeCalorimeter::buildMonitoring( )  {
   // check all cells (including virtual) are connected to a Led
   for(auto & elem : m_cells){
     if( UNLIKELY( msg.level() <= MSG::VERBOSE ) )
-      msg << MSG::VERBOSE << " Cell " << (elem).cellID()
-          << " <- Led " << (elem).leds() << " -> Pin " << (elem).pins() << endmsg;
-    if(  0 == (elem).leds().size() ){
-      msg << MSG::ERROR << "Cell id = " << (elem).cellID() << " is not connect to the monitoring system."<< endmsg;
+      msg << MSG::VERBOSE << " Cell " << elem.cellID()
+          << " <- Led " << elem.leds() << " -> Pin " << elem.pins() << endmsg;
+    if(  elem.leds().empty() ){
+      msg << MSG::ERROR << "Cell id = " << elem.cellID() << " is not connect to the monitoring system."<< endmsg;
       return StatusCode::FAILURE;
     }
   }
@@ -1073,7 +1075,7 @@ StatusCode DeCalorimeter::getCalibration( )  {
       msg << MSG::DEBUG << "No 'data' in 'Calibration' condition : will assume deltaG = 1." << endmsg;
     return StatusCode::SUCCESS;
   }
-  int size = m_calib->param<int>( "size" );
+  auto size = m_calib->param<int>( "size" );
   const auto& data = m_calib->param<std::vector<double>>( "data" );
   if( !data.empty() && size > 2)msg << MSG::WARNING << "Reference data are not longer supported within 'Calibration' condition "<<
     "- use dedicated 'LEDReference' condition instead" << endmsg;
@@ -1523,9 +1525,9 @@ StatusCode DeCalorimeter::updGain(){
       msg << MSG::ERROR << nom << " gains are missing for " << (int)numberOfCells() - count << " channels !" << endmsg;
 
   // Pedestal shift
-  m_pedShift      = m_gain->exists( "PedShift"     ) ? m_gain->paramAsDouble( "PedShift"      ) : 0. ;
-  m_pinPedShift   = m_gain->exists( "PinPedShift"  ) ? m_gain->paramAsDouble( "PinPedShift"   ) : 0. ;
-  m_l0Et          = m_gain->exists( "L0EtBin"      ) ? m_gain->paramAsDouble( "L0EtBin"       ) : 0. ;
+  m_pedShift    = m_gain->exists( "PedShift"     ) ? m_gain->paramAsDouble( "PedShift"      ) : 0. ;
+  m_pinPedShift = m_gain->exists( "PinPedShift"  ) ? m_gain->paramAsDouble( "PinPedShift"   ) : 0. ;
+  m_l0Et        = m_gain->exists( "L0EtBin"      ) ? m_gain->paramAsDouble( "L0EtBin"       ) : 0. ;
 
   m_gainE    = m_gain->exists( "GainError")       ? m_gain->paramAsDouble("GainError")        : -1. ;
   m_stoch    = m_gain->exists( "StochasticTerm")  ? m_gain->paramAsDouble("StochasticTerm")   : -1. ;
@@ -1593,7 +1595,7 @@ StatusCode DeCalorimeter::updMonitor(){
     msg << MSG::DEBUG << "Updating condition 'Monitoring'" << endmsg;
   if( !hasCondition("Monitoring") )return StatusCode::SUCCESS;
       //  the monitoring condition is not mandatory (e.g Spd/Prs)
-  resetCellParam(msg,"Monitoring",[](CellParam& ic) {
+  resetCellParam(msg,"Monitoring",m_cells,[](CellParam& ic) {
     LHCb::CaloCellID id = ic.cellID() ;
     if( !id.isPin())return;
       ic.setValid(false);
@@ -1608,7 +1610,7 @@ StatusCode DeCalorimeter::updGeometry(){
   if( UNLIKELY( msg.level() <= MSG::DEBUG ) )
     msg << MSG::DEBUG << "Updating condition 'IGeometry'" << endmsg;
   if(!geometry() )return StatusCode::FAILURE;
-  resetCellParam(msg,"Geometry", [](CellParam& ic) {
+  resetCellParam(msg,"Geometry",m_cells, [](CellParam& ic) {
       if( !ic.cellID().isPin() ) {
         ic.setValid(false);
         ic.setCenterSize( Gaudi::XYZPoint() , 0.);
@@ -1625,7 +1627,7 @@ StatusCode DeCalorimeter::updCalib(){
   if( UNLIKELY( msg.level() <= MSG::DEBUG ) )
     msg << MSG::DEBUG << "Updating condition 'Calibration'" << endmsg;
   if( !hasCondition("Calibration") )return StatusCode::SUCCESS; // the calibration condition is NOT mandatory
-  resetCellParam(msg,"Calibration",[](CellParam& ic) {
+  resetCellParam(msg,"Calibration",m_cells,[](CellParam& ic) {
       ic.setCalibration( 1.0 ); // same default as in CellParam.cpp
   });
   return getCalibration();
@@ -1636,7 +1638,7 @@ StatusCode DeCalorimeter::updPileUp(){
   if( UNLIKELY( msg.level() <= MSG::DEBUG ) )
     msg << MSG::DEBUG << "Updating condition 'PileUpOffset'" << endmsg;
   if( !hasCondition("PileUpOffset") )return StatusCode::SUCCESS; // the pileUpOffset condition is NOT mandatory
-  resetCellParam(msg,"PileUpOffset",[](CellParam& ic) {
+  resetCellParam(msg,"PileUpOffset",m_cells,[](CellParam& ic) {
       ic.setPileUpOffset( 0.0 , 0.0); // same default as in CellParam.cpp
   });
   return getPileUpOffset();
@@ -1647,7 +1649,7 @@ StatusCode DeCalorimeter::updLEDReference(){
   if( UNLIKELY( msg.level() <= MSG::DEBUG ) )
     msg << MSG::DEBUG << "Updating condition 'LEDReference'" << endmsg;
   if( !hasCondition("LEDReference") )return StatusCode::SUCCESS; // the LEDReference condition is NOT mandatory
-  resetCellParam(msg,"LEDReference",[](CellParam& ic) {
+  resetCellParam(msg,"LEDReference",m_cells,[](CellParam& ic) {
       ic.setLedDataRef( -1.0, 0.0); // same default as in CellParam.cpp
   });
   return getLEDReference();
@@ -1658,7 +1660,7 @@ StatusCode DeCalorimeter::updQuality(){
   if( UNLIKELY( msg.level() <= MSG::DEBUG ) )
     msg << MSG::DEBUG << "Updating condition 'Quality'" << endmsg;
   if( !hasCondition("Quality") )return StatusCode::SUCCESS; // the quality condition is NOT mandatory
-  resetCellParam(msg,"Quality",[](CellParam& ic) {
+  resetCellParam(msg,"Quality",m_cells,[](CellParam& ic) {
       ic.setLedData( -1.0, -1.0);
       ic.setLedMoni( -1.0, 0.0);
       ic.setQualityFlag(CaloCellQuality::OK); // same default as in CellParam.cpp
@@ -1672,7 +1674,7 @@ StatusCode DeCalorimeter::updL0Calib(){
   if( UNLIKELY( msg.level() <= MSG::DEBUG ) )
     msg << MSG::DEBUG << "Updating condition 'L0Calibration'" << endmsg;
   if( !hasCondition("L0Calibration") )return StatusCode::SUCCESS; // the L0Calibration condition is NOT mandatory
-  resetCellParam(msg,"L0Calibration",[](CellParam& ic) {
+  resetCellParam(msg,"L0Calibration",m_cells,[](CellParam& ic) {
       ic.setL0Constant( 0.0 ); // same default as in CellParam.cpp
   });
   return getL0Calibration();
@@ -1683,7 +1685,7 @@ StatusCode DeCalorimeter::updNumGains(){
   if( UNLIKELY( msg.level() <= MSG::DEBUG ) )
     msg << MSG::DEBUG << "Updating condition 'NumericGain'" << endmsg;
   if( !hasCondition("NumericGains") )return StatusCode::SUCCESS; // the L0Calibration condition is NOT mandatory
-  resetCellParam(msg,"NumericGains",[](CellParam& ic) {
+  resetCellParam(msg,"NumericGains",m_cells,[](CellParam& ic) {
       ic.setNumericGain( 0.0 ); // same default as in CellParam.cpp
   });
   return getNumericGains();

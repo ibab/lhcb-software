@@ -86,13 +86,13 @@ public:
   ///  object identification
   static  const CLID& classID ()       { return CLID_DeCalorimeter ; }
   ///  object identification
-  virtual const CLID& clID    () const ;
+  const CLID& clID    () const override;
   ///  printout to std::ostream
-  virtual std::ostream& printOut( std::ostream& s = std::cerr ) const;
+  std::ostream& printOut( std::ostream& s = std::cerr ) const override;
   ///  printout to MsgStream
-  virtual MsgStream&    printOut( MsgStream&                  ) const;
+  MsgStream&    printOut( MsgStream&                  ) const override;
   ///  initialization method
-  virtual StatusCode initialize();
+  StatusCode initialize() override;
 
   ///  if initialized in a proper way?
   inline  bool  isInitialized() const  { return m_initialized ; }
@@ -359,13 +359,6 @@ private:
   SmartRef<Condition> m_numericGains;
   bool loadCondition(SmartRef<Condition>& cond, std::string name, bool mandatory = false);
 
-  // cache
-  template <typename Fun>
-  void resetCellParam(MsgStream& msg, const char* member, Fun&& fun) {
-      if( UNLIKELY( msg.level() <= MSG::DEBUG ) )
-        msg << MSG::DEBUG << "Before updating condition - reset CellParam." <<member<< endmsg,
-      std::for_each( m_cells.begin(), m_cells.end(), std::forward<Fun>(fun) );
-  }
   StatusCode updHardware();
   StatusCode updGeometry();
   StatusCode updGain();
@@ -757,7 +750,6 @@ inline int DeCalorimeter::cardToTell1( const int card ) const
 // ============================================================================
 inline int DeCalorimeter::validationToHcalFEB( const int validation, const unsigned int slot ) const{
   auto it = m_valCards.find( validation );
-  if(it == m_valCards.end()) return -1;
   if ( it != m_valCards.end() ) {
     const auto& hcalFe = it->second;
     if ( slot < hcalFe.size() ) return hcalFe[slot];
