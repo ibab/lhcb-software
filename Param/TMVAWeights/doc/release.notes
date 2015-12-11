@@ -4,6 +4,15 @@
 ! Purpose     : To accommodate weights file of all TMVA based selections
 !-----------------------------------------------------------------------------
 
+! 2015-12-11 - Jibo He
+ - Added weights files for B->eeX, including:
+   .Bu2eeK_BDT_v1r0.xml
+   .Bd2eeKs_BDT_v1r0.xml
+   .Bd2eeKstar_BDT_v1r0.xml
+   .Bs2eePhi_BDT_v1r0.xml
+   .Lb2eePK_BDT_v1r0.xml
+   .Lb2eeLambda_BDT_v1r0.xml
+   
 !========================= TMVAWeights v1r6 2015-08-19 =========================
 
 ! 2015-12-06 - Carlos Vazquez Sierra
