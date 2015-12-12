@@ -26,7 +26,8 @@ std::ostream& LHCb::RecSummary::fillStream(std::ostream& s) const
   s << " nVeloTracks = " << info( LHCb::RecSummary::nVeloTracks, 0 );
   s << " nBackTracks = " << info( LHCb::RecSummary::nBackTracks, 0 );
   s << " nTTracks = " << info( LHCb::RecSummary::nTTracks, 0 );
-
+  s << " nGhosts = " << info( LHCb::RecSummary::nGhosts, 0 );
+  
   s << " nRich1Hits = " << info( LHCb::RecSummary::nRich1Hits, 0 );
   s << " nRich2Hits = " << info( LHCb::RecSummary::nRich2Hits, 0 );
 

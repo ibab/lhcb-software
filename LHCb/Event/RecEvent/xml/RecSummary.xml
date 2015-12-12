@@ -28,31 +28,32 @@
          desc   = "List of summary data"
          name   = "DataTypes"
          access = "PUBLIC" >
-         <enumval name="nPVs"               value="0"    desc="Number of reconstructed Primary Vertices"/>
-         <enumval name="nLongTracks"        value="10"   desc="Number of reconstructed Long Tracks"/>
-         <enumval name="nDownstreamTracks"  value="11"   desc="Number of reconstructed Downstream Tracks"/>
-         <enumval name="nUpstreamTracks"    value="12"   desc="Number of reconstructed Upstream Tracks"/>
-         <enumval name="nVeloTracks"        value="13"   desc="Number of reconstructed VELO Tracks"/>
-         <enumval name="nTTracks"           value="14"   desc="Number of reconstructed T-station Tracks"/>
-         <enumval name="nBackTracks"        value="15"   desc="Number of reconstructed VELO backwards Tracks"/>
-         <enumval name="nTracks"            value="16"   desc="Number of reconstructed Tracks"/>
-         <enumval name="nRich1Hits"         value="20"   desc="Number of hits in RICH1"/>
-         <enumval name="nRich2Hits"         value="21"   desc="Number of hits in RICH2"/>
-         <enumval name="nVeloClusters"      value="30"   desc="Number of VELO clusters"/>
-         <enumval name="nITClusters"        value="40"   desc="Number of IT clusters"/>
-         <enumval name="nTTClusters"        value="50"   desc="Number of TT clusters"/>
-         <enumval name="nUTClusters"        value="51"   desc="Number of UT clusters"/>
-         <enumval name="nOTClusters"        value="60"   desc="Number of OT clusters"/>
-         <enumval name="nFTClusters"        value="41"   desc="Number of FT clusters"/>
-         <enumval name="nSPDhits"           value="70"   desc="Number of SPD hits"/>
-         <enumval name="nMuonCoordsS0"      value="80"   desc="Number of Coords in Muon Station 0"/>
-	 <enumval name="nMuonCoordsS1"      value="91"   desc="Number of Coords in Muon Station 1"/>
-	 <enumval name="nMuonCoordsS2"      value="92"   desc="Number of Coords in Muon Station 2"/>
-	 <enumval name="nMuonCoordsS3"      value="93"   desc="Number of Coords in Muon Station 3"/>
-	 <enumval name="nMuonCoordsS4"      value="94"   desc="Number of Coords in Muon Station 4"/>
-	 <enumval name="nMuonTracks"        value="95"   desc="Number of Muon Tracks"/>
+        <enumval name="nPVs"               value="0"    desc="Number of reconstructed Primary Vertices"/>
+        <enumval name="nLongTracks"        value="10"   desc="Number of reconstructed Long Tracks"/>
+        <enumval name="nDownstreamTracks"  value="11"   desc="Number of reconstructed Downstream Tracks"/>
+        <enumval name="nUpstreamTracks"    value="12"   desc="Number of reconstructed Upstream Tracks"/>
+        <enumval name="nVeloTracks"        value="13"   desc="Number of reconstructed VELO Tracks"/>
+        <enumval name="nTTracks"           value="14"   desc="Number of reconstructed T-station Tracks"/>
+        <enumval name="nBackTracks"        value="15"   desc="Number of reconstructed VELO backwards Tracks"/>
+        <enumval name="nTracks"            value="16"   desc="Number of reconstructed Tracks"/>
+        <enumval name="nGhosts"            value="17"   desc="Number of identified ghost Tracks"/>
+        <enumval name="nRich1Hits"         value="20"   desc="Number of hits in RICH1"/>
+        <enumval name="nRich2Hits"         value="21"   desc="Number of hits in RICH2"/>
+        <enumval name="nVeloClusters"      value="30"   desc="Number of VELO clusters"/>
+        <enumval name="nITClusters"        value="40"   desc="Number of IT clusters"/>
+        <enumval name="nTTClusters"        value="50"   desc="Number of TT clusters"/>
+        <enumval name="nUTClusters"        value="51"   desc="Number of UT clusters"/>
+        <enumval name="nOTClusters"        value="60"   desc="Number of OT clusters"/>
+        <enumval name="nFTClusters"        value="41"   desc="Number of FT clusters"/>
+        <enumval name="nSPDhits"           value="70"   desc="Number of SPD hits"/>
+        <enumval name="nMuonCoordsS0"      value="80"   desc="Number of Coords in Muon Station 0"/>
+        <enumval name="nMuonCoordsS1"      value="91"   desc="Number of Coords in Muon Station 1"/>
+        <enumval name="nMuonCoordsS2"      value="92"   desc="Number of Coords in Muon Station 2"/>
+        <enumval name="nMuonCoordsS3"      value="93"   desc="Number of Coords in Muon Station 3"/>
+        <enumval name="nMuonCoordsS4"      value="94"   desc="Number of Coords in Muon Station 4"/>
+        <enumval name="nMuonTracks"        value="95"   desc="Number of Muon Tracks"/>
        </enum>
-
+      
        <attribute
         name="summaryData"
         desc="Storage of the summary data"
