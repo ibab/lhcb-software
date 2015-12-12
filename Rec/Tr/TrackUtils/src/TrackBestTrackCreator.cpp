@@ -19,6 +19,7 @@
 #include "Event/TrackFunctor.h"
 #include "Event/KalmanFitResult.h"
 
+#include "Event/RecSummary.h"
 // LHCbKernel
 #include "Kernel/HitPattern.h"
 
@@ -47,22 +48,22 @@ namespace  {
   /// structure to save some data for each track
   class TrackData : public LHCb::TrackCloneData<>
   {
-    private:
-      double m_qOverP;
-      enum { Clone = 1 };
-    public:
-      /// constructor
-      TrackData(std::unique_ptr<LHCb::Track>&& tr) : 
-	LHCb::TrackCloneData<>(std::move(tr)), 
-	m_qOverP(track().firstState().qOverP())
-      { }
-      /// return q/p (or what it was at construction time)
-      double qOverP() const { return m_qOverP; }
-      bool cloneFlag() const { return userFlags() & Clone; }
-      void setCloneFlag() { setUserFlags(userFlags() | Clone); }
+  private:
+    double m_qOverP;
+    enum { Clone = 1 };
+  public:
+    /// constructor
+    TrackData(std::unique_ptr<LHCb::Track>&& tr) : 
+      LHCb::TrackCloneData<>(std::move(tr)), 
+      m_qOverP(track().firstState().qOverP())
+    { }
+    /// return q/p (or what it was at construction time)
+    double qOverP() const { return m_qOverP; }
+    bool cloneFlag() const { return userFlags() & Clone; }
+    void setCloneFlag() { setUserFlags(userFlags() | Clone); }
   };
 }
- 
+
 /** @brief kill clones among tracks in input container and Kalman-fit survivors
  *
  * @author Wouter Hulsbergen
@@ -81,127 +82,133 @@ class TrackBestTrackCreator :
   public GaudiAlgorithm
 #endif
 {
-  public: 
-    /// Standard constructor
-    TrackBestTrackCreator(const std::string& name, ISvcLocator* pSvcLocator);
+public: 
+  /// Standard constructor
+  TrackBestTrackCreator(const std::string& name, ISvcLocator* pSvcLocator);
+  
+  virtual ~TrackBestTrackCreator( ); ///< Destructor
+  
+  virtual StatusCode initialize();    ///< Algorithm initialization
+  virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode finalize  ();    ///< Algorithm finalization
+  
+private:
+  ToolHandle<ITrackStateInit> m_stateinittool;
+  ToolHandle<ITrackFitter> m_fitter;
+  ToolHandle<IGhostProbability> m_ghostTool;
+  
+  void fillRecTrackSummary();
+  
 
-    virtual ~TrackBestTrackCreator( ); ///< Destructor
-
-    virtual StatusCode initialize();    ///< Algorithm initialization
-    virtual StatusCode execute   ();    ///< Algorithm execution
-    virtual StatusCode finalize  ();    ///< Algorithm finalization
-
+  // job options
+  // -----------
+  // input Track container paths
+  std::vector<std::string> m_tracksInContainers;
+  // output Track container path
+  std::string m_tracksOutContainer;
+  std::string m_summaryLoc;
+  double m_maxOverlapFracVelo;
+  double m_maxOverlapFracT;
+  double m_maxOverlapFracTT;
+  double m_minLongLongDeltaQoP;
+  double m_minLongDownstreamDeltaQoP;
+  double m_maxChi2DoF;
+  double m_maxChi2DoFVelo;
+  double m_maxChi2DoFT;
+  double m_maxChi2DoFMatchAndTT;
+  double m_maxGhostProb;
+  /// fit the tracks using the Kalman filter?
+  bool m_fitTracks;
+  /// initialise track states using m_stateinittool?
+  bool m_initTrackStates;
+  /// Add the Ghost Probability to a track
+  bool m_addGhostProb;
+  /// use ancestor information to identify obvious clones
+  bool m_useAncestorInfo;
+  /// Do not refit already fitted tracks
+  bool m_doNotRefit;
+  /// Put final tracks into separate containers according to track type
+  bool m_splitByType;
+  /// Fill the RecSummary object for information about number of rejected 'ghost' tracks
+  bool m_fillRecTrackSummary;
+  std::map<std::string,std::string> m_tracksOutContainers;
+  std::vector<int> m_supportedTrackTypes;
+  
+  bool m_debugLevel;
+  mutable int m_nGhosts;
+  
+protected:
+  /// are tracks clones in VeloR and VeloPhi
+  bool veloClones(const TrackData&, const TrackData&) const;
+  /// are tracks clones in VeloR or VeloPhi
+  bool veloOrClones(const TrackData&, const TrackData&) const;
+  /// are tracks clones in T
+  bool TClones(const TrackData&, const TrackData&) const;
+  /// are tracks clones in TT
+  bool TTClones(const TrackData&, const TrackData&) const;
+  /// fit a track
+  StatusCode fit(LHCb::Track& track) const;
+  /// fit a track, then check if it passes selection requirements
+  bool fitAndSelect(LHCb::Track&) const;
+  
+  /// check if tracks pointed to by their TrackData objects are clones
+  bool areClones(const TrackData& it, const TrackData& jt);
+  
+  /// mapping between original track and the index of its copy
+  typedef std::pair<const LHCb::Track*, size_t> CopyMapEntry;
+  typedef std::vector<CopyMapEntry> CopyMap;
+  
+  /** @brief "generator" for TrackData objects
+   *
+   * @author Manuel Schiller
+   * @date 2014-11-18
+   *
+   * goes through track containers, clones the tracks, pre-initialises the
+   * Kalman filter fit with the TrackStateInitTool, creates a TrackData object
+   * from it, and returns a the newly created object
+   * 
+   * if m_useAncestorInfo is set in the parent, it uses the ancestor field in
+   * the track class to flag a large class of obvious clones (e.g. the Velo
+   * and T station tracks that got promoted to long); this relies on
+   * algorithms properly recording ancestor information, but is highly
+   * effective in speeding things up when available
+   */
+  class TrackDataGen {
   private:
-    ToolHandle<ITrackStateInit> m_stateinittool;
-    ToolHandle<ITrackFitter> m_fitter;
-    ToolHandle<IGhostProbability> m_ghostTool;
-  
-
-    // job options
-    // -----------
-    // input Track container paths
-    std::vector<std::string> m_tracksInContainers;
-    // output Track container path
-    std::string m_tracksOutContainer;
-    double m_maxOverlapFracVelo;
-    double m_maxOverlapFracT;
-    double m_maxOverlapFracTT;
-    double m_minLongLongDeltaQoP;
-    double m_minLongDownstreamDeltaQoP;
-    double m_maxChi2DoF;
-    double m_maxChi2DoFVelo;
-    double m_maxChi2DoFT;
-    double m_maxChi2DoFMatchAndTT;
-    double m_maxGhostProb;
-    /// fit the tracks using the Kalman filter?
-    bool m_fitTracks;
-    /// initialise track states using m_stateinittool?
-    bool m_initTrackStates;
-    /// Add the Ghost Probability to a track
-    bool m_addGhostProb;
-    /// use ancestor information to identify obvious clones
-    bool m_useAncestorInfo;
-    /// Do not refit already fitted tracks
-    bool m_doNotRefit;
-    /// Put final tracks into separate containers according to track type
-    bool m_splitByType;
-    std::map<std::string,std::string> m_tracksOutContainers;
-    std::vector<int> m_supportedTrackTypes;
-  
-    bool m_debugLevel;
-  
-  protected:
-    /// are tracks clones in VeloR and VeloPhi
-    bool veloClones(const TrackData&, const TrackData&) const;
-    /// are tracks clones in VeloR or VeloPhi
-    bool veloOrClones(const TrackData&, const TrackData&) const;
-    /// are tracks clones in T
-    bool TClones(const TrackData&, const TrackData&) const;
-    /// are tracks clones in TT
-    bool TTClones(const TrackData&, const TrackData&) const;
-    /// fit a track
-    StatusCode fit(LHCb::Track& track) const;
-    /// fit a track, then check if it passes selection requirements
-    bool fitAndSelect(LHCb::Track&) const;
-
-    /// check if tracks pointed to by their TrackData objects are clones
-    bool areClones(const TrackData& it, const TrackData& jt);
-
-    /// mapping between original track and the index of its copy
-    typedef std::pair<const LHCb::Track*, size_t> CopyMapEntry;
-    typedef std::vector<CopyMapEntry> CopyMap;
-
-    /** @brief "generator" for TrackData objects
-     *
-     * @author Manuel Schiller
-     * @date 2014-11-18
-     *
-     * goes through track containers, clones the tracks, pre-initialises the
-     * Kalman filter fit with the TrackStateInitTool, creates a TrackData object
-     * from it, and returns a the newly created object
-     * 
-     * if m_useAncestorInfo is set in the parent, it uses the ancestor field in
-     * the track class to flag a large class of obvious clones (e.g. the Velo
-     * and T station tracks that got promoted to long); this relies on
-     * algorithms properly recording ancestor information, but is highly
-     * effective in speeding things up when available
-     */
-    class TrackDataGen {
-      private:
-	TrackBestTrackCreator& m_parent; ///< parent TrackBestTrackCreator instance
-	decltype(m_tracksInContainers.begin()) m_curcont; ///< next track container
-	LHCb::Track::Range m_currange; ///< tracks in current track container
-	decltype(m_currange.begin()) m_currangeit; ///< next track
-
-	/// keep track of number of tracks returned
-	size_t m_nrtracks;
-	/// keep record between original track and copies
-	CopyMap& m_copymap;
-
-      public:
-	/// exception to throw when all tracks have been consumed
-	class DataExhaustedException : public std::exception
-        {
-	  private:
-	    const char* m_what;
-	  public:
-	    DataExhaustedException(const char* what) :
-	      m_what(what) { }
-	    virtual const char* what() const noexcept { return m_what; }
-	};
-
-	/// constructor
-	TrackDataGen(TrackBestTrackCreator& parent, CopyMap& copymap);
-
-	/** @brief destructo
-	 *
-	 * flags ancestors as clones if m_useAncestorInfo is set in parent
-	 */
-	~TrackDataGen();
-
-	/// call to get the next TrackData object
-	TrackData operator()();
+    TrackBestTrackCreator& m_parent; ///< parent TrackBestTrackCreator instance
+    decltype(m_tracksInContainers.begin()) m_curcont; ///< next track container
+    LHCb::Track::Range m_currange; ///< tracks in current track container
+    decltype(m_currange.begin()) m_currangeit; ///< next track
+    
+    /// keep track of number of tracks returned
+    size_t m_nrtracks;
+    /// keep record between original track and copies
+    CopyMap& m_copymap;
+    
+  public:
+    /// exception to throw when all tracks have been consumed
+    class DataExhaustedException : public std::exception
+    {
+    private:
+      const char* m_what;
+    public:
+      DataExhaustedException(const char* what) :
+        m_what(what) { }
+      virtual const char* what() const noexcept { return m_what; }
     };
+    
+    /// constructor
+    TrackDataGen(TrackBestTrackCreator& parent, CopyMap& copymap);
+    
+    /** @brief destructo
+     *
+     * flags ancestors as clones if m_useAncestorInfo is set in parent
+     */
+    ~TrackDataGen();
+    
+    /// call to get the next TrackData object
+    TrackData operator()();
+  };
 };
 
 //-----------------------------------------------------------------------------
@@ -212,9 +219,8 @@ class TrackBestTrackCreator :
 
 DECLARE_ALGORITHM_FACTORY( TrackBestTrackCreator )
 
-TrackBestTrackCreator::TrackDataGen::TrackDataGen(
-    TrackBestTrackCreator& parent, CopyMap& copymap) :
-  m_parent(parent), m_curcont(m_parent.m_tracksInContainers.begin()),
+TrackBestTrackCreator::TrackDataGen::TrackDataGen(TrackBestTrackCreator& parent, CopyMap& copymap) :
+m_parent(parent), m_curcont(m_parent.m_tracksInContainers.begin()),
   m_currange(), m_currangeit(m_currange.end()),
   m_nrtracks(0), m_copymap(copymap)
 { }
@@ -224,8 +230,8 @@ TrackBestTrackCreator::TrackDataGen::~TrackDataGen()
   if (!m_copymap.empty()) {
     // sort m_copymap for quick lookup
     std::sort(std::begin(m_copymap), std::end(m_copymap),
-	[] (const CopyMapEntry& a, const CopyMapEntry& b)
-	{ return a.first < b.first; });
+              [] (const CopyMapEntry& a, const CopyMapEntry& b)
+              { return a.first < b.first; });
   }
 }
 
@@ -239,29 +245,29 @@ TrackData TrackBestTrackCreator::TrackDataGen::operator()()
       std::unique_ptr<LHCb::Track> tr(oldtr->clone());
       // pre-initialise (if required)
       const bool fitted = m_parent.m_doNotRefit && ( tr->fitStatus() == LHCb::Track::Fitted ||
-                                               tr->fitStatus() == LHCb::Track::FitFailed );
+                                                     tr->fitStatus() == LHCb::Track::FitFailed );
       if (fitted && tr->fitStatus() == LHCb::Track::FitFailed )
         continue;
       StatusCode sc(m_parent.m_initTrackStates  && !fitted ?
                     m_parent.m_stateinittool->fit(*tr, true) : StatusCode::SUCCESS);
       // if successful, return new TrackData object
       if (sc.isSuccess()) {
-	if (m_parent.m_useAncestorInfo) {
-	  // save mapping between original track and its copy
-	  m_copymap.emplace_back(CopyMapEntry(oldtr, m_nrtracks));
-	}
-	++m_nrtracks;
-	// keep a record where this track came from
-	tr->addToAncestors(oldtr);
-	return TrackData(std::move(tr));
+        if (m_parent.m_useAncestorInfo) {
+          // save mapping between original track and its copy
+          m_copymap.emplace_back(CopyMapEntry(oldtr, m_nrtracks));
+        }
+        ++m_nrtracks;
+        // keep a record where this track came from
+        tr->addToAncestors(oldtr);
+        return TrackData(std::move(tr));
       }
       // report error in log file
       m_parent.Warning("TrackStateInitTool fit failed", sc, 0 ).ignore();
     } else {
       // need to start with new container
       if (m_parent.m_tracksInContainers.end() == m_curcont) {
-	// all tracks read from all containers, nothing to do any more
-	throw DataExhaustedException("No more tracks.");
+        // all tracks read from all containers, nothing to do any more
+        throw DataExhaustedException("No more tracks.");
       }
       m_currange = m_parent.get<LHCb::Track::Range>(*m_curcont++);
       m_currangeit = m_currange.begin();
@@ -282,7 +288,8 @@ TrackBestTrackCreator::TrackBestTrackCreator( const std::string& name,
 #endif
   m_stateinittool("TrackStateInitTool",this),
   m_fitter("TrackMasterFitter",this),
-  m_ghostTool("Run2GhostId",this)
+  m_ghostTool("Run2GhostId",this),
+  m_nGhosts(0)
 {
   // default list of input containers
   m_tracksInContainers.push_back( LHCb::TrackLocation::Forward    );
@@ -294,6 +301,7 @@ TrackBestTrackCreator::TrackBestTrackCreator( const std::string& name,
 
   declareProperty( "TracksInContainers",m_tracksInContainers );
   declareProperty( "TracksOutContainer", m_tracksOutContainer = LHCb::TrackLocation::Default );
+  declareProperty( "SummaryLocation", m_summaryLoc = "Rec/TrackSummary" );
   declareProperty( "MaxOverlapFracVelo", m_maxOverlapFracVelo = 0.5);
   declareProperty( "MaxOverlapFracT", m_maxOverlapFracT = 0.5);
   declareProperty( "MaxOverlapFracTT", m_maxOverlapFracTT = 0.35) ; // essentially: max 1 common hit
@@ -313,6 +321,7 @@ TrackBestTrackCreator::TrackBestTrackCreator( const std::string& name,
   declareProperty( "AddGhostProb", m_addGhostProb = false);
   declareProperty( "GhostIdTool", m_ghostTool );
   declareProperty( "SplitByType", m_splitByType = false);
+  declareProperty( "FillRecTrackSummary", m_fillRecTrackSummary = false);
   declareProperty( "TracksOutContainers", m_tracksOutContainers );
   m_supportedTrackTypes = { 1, 3, 4, 5, 6}; //Velo, Long, Upstream, Downstream, TTrack
   for ( auto type : m_supportedTrackTypes ){
@@ -391,12 +400,12 @@ StatusCode TrackBestTrackCreator::finalize()
   if( m_fitTracks ) {
     double perf = (1.0 - counter("FitFailed").mean())*100;
     info() << "  Fitting performance   : "
-	   << format( " %7.2f %%", perf ) << endmsg;
+           << format( " %7.2f %%", perf ) << endmsg;
   }
   
   m_stateinittool.release().ignore();
   m_fitter.release().ignore();
-
+  
 #if DEBUGHISTOGRAMS
   return GaudiHistoAlg::finalize();
 #else
@@ -413,15 +422,16 @@ StatusCode TrackBestTrackCreator::execute()
   if (m_addGhostProb){
     m_ghostTool->beginEvent().ignore();
   }
+  m_nGhosts = 0;
+  
   // create pool for TrackData objects for all input tracks 
   std::vector<TrackData> trackdatapool;
   // keep a record of which track goes where
   CopyMap copymap;
   // get total number of tracks
-  size_t nTracks = std::accumulate(
-      std::begin(m_tracksInContainers), std::end(m_tracksInContainers),
-      size_t(0), [this] (size_t sz, const std::string& loc)
-      { return sz + get<LHCb::Track::Range>(loc).size(); });
+  size_t nTracks = std::accumulate(std::begin(m_tracksInContainers), std::end(m_tracksInContainers),
+                                   size_t(0), [this] (size_t sz, const std::string& loc)
+                                   { return sz + get<LHCb::Track::Range>(loc).size(); });
   // reserve enough space so we don't have to reallocate
   trackdatapool.reserve(nTracks);
   copymap.reserve(nTracks);
@@ -434,48 +444,46 @@ StatusCode TrackBestTrackCreator::execute()
     // nothing to do - occasionally running out of tracks to convert is
     // expected
   }
-
+  
   // take a vector of "references" which is much easier to sort (because less
   // data is moved around)
-  std::vector<std::reference_wrapper<TrackData> > alltracks(
-      std::begin(trackdatapool), std::end(trackdatapool));
-
+  std::vector<std::reference_wrapper<TrackData> > alltracks(std::begin(trackdatapool), std::end(trackdatapool));
+  
   // sort them by quality
   std::stable_sort(alltracks.begin(), alltracks.end(),
-      [] (const TrackData& t1, const TrackData& t2) { return t1 < t2; });
-
+                   [] (const TrackData& t1, const TrackData& t2) { return t1 < t2; });
+  
   // remove and erase clones and unfittable tracks
-  auto selend = remove_if_partitioned(
-	  std::begin(alltracks), std::end(alltracks),
-	  // lambda function to find clones and unfittable tracks
-	  [this, &alltracks, &copymap, &trackdatapool] (TrackData& tr1,
-	      const decltype(std::begin(alltracks))& selend)
-	  { 
-	    // check ancestor based clone flagging
-	    if (tr1.cloneFlag()) return true;
-	    // selected tracks will be in range from std::begin(alltracks) to
-	    // selend find first track tr2 in that range that is a clone of the
-	    // track we're considering (tr1)
-	    const auto firstclone = std::find_if(std::begin(alltracks), selend,
-		[this, &tr1] (const TrackData& tr2)
+  auto selend = remove_if_partitioned(std::begin(alltracks), std::end(alltracks),
+                                      // lambda function to find clones and unfittable tracks
+                                      [this, &alltracks, &copymap, &trackdatapool] (TrackData& tr1,
+                                                                                    const decltype(std::begin(alltracks))& selend)
+                                      { 
+                                        // check ancestor based clone flagging
+                                        if (tr1.cloneFlag()) return true;
+                                        // selected tracks will be in range from std::begin(alltracks) to
+                                        // selend find first track tr2 in that range that is a clone of the
+                                        // track we're considering (tr1)
+                                        const auto firstclone = std::find_if(std::begin(alltracks), selend,
+                                                                             [this, &tr1] (const TrackData& tr2)
 		{ return areClones(tr1, tr2); });
-	    // if tr1 is a clone of something we already selected, say so
-	    if (selend != firstclone) return true;
-	    // else try to fit, and see what happens
-	    const bool okay = fitAndSelect(tr1.track());
-	    if (okay && m_useAncestorInfo) {
-	      // track survives, so no Clone, proceed to mark ancestors
-	      for (const auto& anc: tr1.track().ancestors()) {
-		const auto it = std::lower_bound(
-		    copymap.begin(), copymap.end(), anc,
-		    [] (const CopyMapEntry& cme, const LHCb::Track* tr)
-		    { return cme.first < tr; });
-		if (copymap.end() == it || it->first != anc) continue;
-		trackdatapool[it->second].setCloneFlag();
-	      }
-	    }
-	    return !okay;
-	  });
+                                        // if tr1 is a clone of something we already selected, say so
+                                        if (selend != firstclone) return true;
+                                        // else try to fit, and see what happens
+                                        const bool okay = fitAndSelect(tr1.track());
+                                        if (okay && m_useAncestorInfo) {
+                                          // track survives, so no Clone, proceed to mark ancestors
+                                          for (const auto& anc: tr1.track().ancestors()) {
+                                            const auto it = std::lower_bound(
+                                                                             copymap.begin(), copymap.end(), anc,
+                                                                             [] (const CopyMapEntry& cme, const LHCb::Track* tr)
+                                                                             { return cme.first < tr; });
+                                            if (copymap.end() == it || it->first != anc) continue;
+                                            trackdatapool[it->second].setCloneFlag();
+                                          }
+                                        }
+                                        return !okay;
+                                      });
   alltracks.erase(selend, std::end(alltracks));
   if (!m_splitByType){
     // create output container, and put selected tracks there
@@ -509,9 +517,13 @@ StatusCode TrackBestTrackCreator::execute()
       }
     }
   }
+  
+  if( m_fillRecTrackSummary) fillRecTrackSummary();
+  
+
   if (m_debugLevel) {
     debug() << "Selected " << alltracks.size() << " out of "
-	    << nTracks << " tracks. " << endmsg;
+            << nTracks << " tracks. Rejected " << m_nGhosts << endmsg;
   }
   return StatusCode::SUCCESS;
 }
@@ -530,21 +542,23 @@ bool TrackBestTrackCreator::fitAndSelect(LHCb::Track& track ) const
     if(sc.isSuccess() && kalfit ) {
       // only apply the cut to composite tracks
       if( track.type() == LHCb::Track::Long ||
-	  track.type() == LHCb::Track::Upstream ||
-	  track.type() == LHCb::Track::Downstream ) {
-	LHCb::ChiSquare chi2 = kalfit->chi2();
-	LHCb::ChiSquare chi2T = kalfit->chi2Downstream();
-	LHCb::ChiSquare chi2Velo = kalfit->chi2Velo();
-	// note: this includes TT hit contribution
-	LHCb::ChiSquare chi2MatchAndTT = chi2 - chi2T - chi2Velo;
-  //always()<< track.ghostProbability ()<<"  "<< m_maxGhostProb<<endmsg;
-  
-	accept = 
-	  chi2.chi2PerDoF() < m_maxChi2DoF &&
-	  chi2T.chi2PerDoF() < m_maxChi2DoFT &&
-	  chi2Velo.chi2PerDoF() < m_maxChi2DoFVelo &&
-	  chi2MatchAndTT.chi2PerDoF() < m_maxChi2DoFMatchAndTT &&
-    ( !m_addGhostProb || track.ghostProbability () < m_maxGhostProb);
+          track.type() == LHCb::Track::Upstream ||
+          track.type() == LHCb::Track::Downstream ) {
+        LHCb::ChiSquare chi2 = kalfit->chi2();
+        LHCb::ChiSquare chi2T = kalfit->chi2Downstream();
+        LHCb::ChiSquare chi2Velo = kalfit->chi2Velo();
+        // note: this includes TT hit contribution
+        LHCb::ChiSquare chi2MatchAndTT = chi2 - chi2T - chi2Velo;
+        //always()<< track.ghostProbability ()<<"  "<< m_maxGhostProb<<endmsg;
+        
+        accept = 
+          chi2.chi2PerDoF() < m_maxChi2DoF &&
+          chi2T.chi2PerDoF() < m_maxChi2DoFT &&
+          chi2Velo.chi2PerDoF() < m_maxChi2DoFVelo &&
+          chi2MatchAndTT.chi2PerDoF() < m_maxChi2DoFMatchAndTT &&
+          ( !m_addGhostProb || track.ghostProbability () < m_maxGhostProb);
+        if( !accept ) ++m_nGhosts;
+        
       }
       //   //if(!m_selector.accept( *track ) ) sc = StatusCode::FAILURE;
     } else {
@@ -567,7 +581,7 @@ StatusCode TrackBestTrackCreator::fit( LHCb::Track& track ) const
   std::string prefix = Gaudi::Utils::toString(track.type());
   if( track.checkFlag( LHCb::Track::Backward ) ) prefix += "Backward";
   prefix += '.';
-
+  
   if (m_doNotRefit && (track.fitStatus() == LHCb::Track::Fitted
                        || track.fitStatus() == LHCb::Track::FitFailed) ){
     if (track.fitStatus() == LHCb::Track::Fitted){
@@ -620,7 +634,7 @@ StatusCode TrackBestTrackCreator::fit( LHCb::Track& track ) const
 }
 
 bool TrackBestTrackCreator::veloClones(const TrackData& lhs,
-				       const TrackData& rhs) const
+                                       const TrackData& rhs) const
 {
   const double fR   = lhs.overlapFraction(rhs, TrackData::VeloR);
   const double fPhi = lhs.overlapFraction(rhs, TrackData::VeloPhi);
@@ -632,7 +646,7 @@ bool TrackBestTrackCreator::veloClones(const TrackData& lhs,
 }
 
 bool TrackBestTrackCreator::veloOrClones(const TrackData& lhs,
-					 const TrackData& rhs) const
+                                         const TrackData& rhs) const
 {
   const double fR   = lhs.overlapFraction(rhs, TrackData::VeloR);
 #ifndef DEBUGHISTOGRAMS
@@ -649,7 +663,7 @@ bool TrackBestTrackCreator::veloOrClones(const TrackData& lhs,
 }
 
 bool TrackBestTrackCreator::TClones(const TrackData& lhs,
-				    const TrackData& rhs) const
+                                    const TrackData& rhs) const
 {
   const double f = lhs.overlapFraction(rhs,TrackData::T);
 #ifdef DEBUGHISTOGRAMS
@@ -659,7 +673,7 @@ bool TrackBestTrackCreator::TClones(const TrackData& lhs,
 }
 
 bool TrackBestTrackCreator::TTClones(const TrackData& lhs,
-				     const TrackData& rhs) const
+                                     const TrackData& rhs) const
 {
   const double f = lhs.overlapFraction(rhs,TrackData::TT);
 #ifdef DEBUGHISTOGRAMS
@@ -675,66 +689,78 @@ bool TrackBestTrackCreator::areClones(const TrackData& it, const TrackData& jt)
   const double dqop = it.qOverP() - jt.qOverP();
   const int offset = 256;
   switch (itype + offset * jtype) {
-    case LHCb::Track::Long + offset * LHCb::Track::Long:
+  case LHCb::Track::Long + offset * LHCb::Track::Long:
 #ifdef DEBUGHISTOGRAMS
-      if (TClones(it, jt) && veloOrClones(it, jt)) {
-	plot(dqop, "LLDqopClones", -1e-5, 1e-5);
-      } else if (TClones(it, jt)) {
-	plot(dqop, "LLDqopTClones", -1e-5, 1e-5);
-      } else if (veloOrClones(it, jt)) {
-	plot(dqop, "LLDqopVeloOrClones", -1e-5, 1e-5);
-      }
+    if (TClones(it, jt) && veloOrClones(it, jt)) {
+      plot(dqop, "LLDqopClones", -1e-5, 1e-5);
+    } else if (TClones(it, jt)) {
+      plot(dqop, "LLDqopTClones", -1e-5, 1e-5);
+    } else if (veloOrClones(it, jt)) {
+      plot(dqop, "LLDqopVeloOrClones", -1e-5, 1e-5);
+    }
 #endif
-      return TClones(it, jt) && 
-	(std::abs(dqop) < m_minLongLongDeltaQoP || veloOrClones(it, jt));
-    case LHCb::Track::Long + offset*LHCb::Track::Downstream:
-    case LHCb::Track::Downstream + offset*LHCb::Track::Long:
+    return TClones(it, jt) && 
+      (std::abs(dqop) < m_minLongLongDeltaQoP || veloOrClones(it, jt));
+  case LHCb::Track::Long + offset*LHCb::Track::Downstream:
+  case LHCb::Track::Downstream + offset*LHCb::Track::Long:
 #ifdef DEBUGHISTOGRAMS
-      if (TClones(it, jt)) {
-	plot(dqop, "DLDqop", -2e-5, 2e-5);
-	if (TTClones(it, jt)) 
-	  plot(dqop, "DLDqopTTClones", -2e-5, 2e-5);
-      }
+    if (TClones(it, jt)) {
+      plot(dqop, "DLDqop", -2e-5, 2e-5);
+      if (TTClones(it, jt)) 
+        plot(dqop, "DLDqopTTClones", -2e-5, 2e-5);
+    }
 #endif
-      return TClones(it, jt) && 
-	(std::abs(dqop) < m_minLongDownstreamDeltaQoP || TTClones(it, jt));
-    case LHCb::Track::Downstream + offset*LHCb::Track::Downstream:
-      // it seems that there are no down stream tracks that share T hits ...
+    return TClones(it, jt) && 
+      (std::abs(dqop) < m_minLongDownstreamDeltaQoP || TTClones(it, jt));
+  case LHCb::Track::Downstream + offset*LHCb::Track::Downstream:
+    // it seems that there are no down stream tracks that share T hits ...
 #ifdef DEBUGHISTOGRAMS
-      if(TClones(it, jt)) {
-	plot(dqop, "DDDqop", -1e-4, 1e-4);
-      }
+    if(TClones(it, jt)) {
+      plot(dqop, "DDDqop", -1e-4, 1e-4);
+    }
 #endif
-      return TClones(it, jt) && TTClones(it, jt);
-    case LHCb::Track::Long + offset*LHCb::Track::Upstream:
-    case LHCb::Track::Upstream + offset*LHCb::Track::Long:
-    case LHCb::Track::Upstream + offset*LHCb::Track::Upstream:
-      return veloOrClones(it, jt) && TTClones(it, jt);
-    case LHCb::Track::Long + offset*LHCb::Track::Velo:
-    case LHCb::Track::Velo + offset*LHCb::Track::Long:
-    case LHCb::Track::Upstream + offset*LHCb::Track::Velo:
-    case LHCb::Track::Velo + offset*LHCb::Track::Upstream:
-    case LHCb::Track::Velo + offset*LHCb::Track::Velo:
-      return veloOrClones(it, jt);
-    case LHCb::Track::Long + offset*LHCb::Track::Ttrack:
-    case LHCb::Track::Ttrack + offset*LHCb::Track::Long:
-    case LHCb::Track::Downstream + offset*LHCb::Track::Ttrack:
-    case LHCb::Track::Ttrack + offset*LHCb::Track::Downstream:
-    case LHCb::Track::Ttrack + offset*LHCb::Track::Ttrack:
-      return TClones(it, jt);
-    case LHCb::Track::Ttrack + offset*LHCb::Track::Upstream:
-    case LHCb::Track::Upstream + offset*LHCb::Track::Ttrack:
-    case LHCb::Track::Ttrack + offset*LHCb::Track::Velo:
-    case LHCb::Track::Velo + offset*LHCb::Track::Ttrack:
-    case LHCb::Track::Downstream + offset*LHCb::Track::Velo:
-    case LHCb::Track::Velo + offset*LHCb::Track::Downstream:
-    case LHCb::Track::Downstream + offset*LHCb::Track::Upstream:
-    case LHCb::Track::Upstream + offset*LHCb::Track::Downstream:
-      break;
-    default:
-      error() << "Don't know how to handle combi: " << itype << " " 
-	<< jtype << endmsg;
+    return TClones(it, jt) && TTClones(it, jt);
+  case LHCb::Track::Long + offset*LHCb::Track::Upstream:
+  case LHCb::Track::Upstream + offset*LHCb::Track::Long:
+  case LHCb::Track::Upstream + offset*LHCb::Track::Upstream:
+    return veloOrClones(it, jt) && TTClones(it, jt);
+  case LHCb::Track::Long + offset*LHCb::Track::Velo:
+  case LHCb::Track::Velo + offset*LHCb::Track::Long:
+  case LHCb::Track::Upstream + offset*LHCb::Track::Velo:
+  case LHCb::Track::Velo + offset*LHCb::Track::Upstream:
+  case LHCb::Track::Velo + offset*LHCb::Track::Velo:
+    return veloOrClones(it, jt);
+  case LHCb::Track::Long + offset*LHCb::Track::Ttrack:
+  case LHCb::Track::Ttrack + offset*LHCb::Track::Long:
+  case LHCb::Track::Downstream + offset*LHCb::Track::Ttrack:
+  case LHCb::Track::Ttrack + offset*LHCb::Track::Downstream:
+  case LHCb::Track::Ttrack + offset*LHCb::Track::Ttrack:
+    return TClones(it, jt);
+  case LHCb::Track::Ttrack + offset*LHCb::Track::Upstream:
+  case LHCb::Track::Upstream + offset*LHCb::Track::Ttrack:
+  case LHCb::Track::Ttrack + offset*LHCb::Track::Velo:
+  case LHCb::Track::Velo + offset*LHCb::Track::Ttrack:
+  case LHCb::Track::Downstream + offset*LHCb::Track::Velo:
+  case LHCb::Track::Velo + offset*LHCb::Track::Downstream:
+  case LHCb::Track::Downstream + offset*LHCb::Track::Upstream:
+  case LHCb::Track::Upstream + offset*LHCb::Track::Downstream:
+    break;
+  default:
+    error() << "Don't know how to handle combi: " << itype << " " 
+            << jtype << endmsg;
   }
   return false;
 }
 
+//=============================================================================
+// Put number of ghosts (aka tracks rejected by chi2 and ghost prob cuts) on the TES
+//=============================================================================
+void TrackBestTrackCreator::fillRecTrackSummary(){
+  
+  // Create a new summary object and save to the TES
+  LHCb::RecSummary* summary = new LHCb::RecSummary();
+  put( summary, m_summaryLoc );
+
+  summary->addInfo( LHCb::RecSummary::nGhosts, m_nGhosts );
+  
+}

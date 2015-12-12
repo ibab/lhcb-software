@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-12-12 - Michel De Cian
+ - Add possibility to write out 'RecSummary' in TrackBestTrackCreator with number of identified ghosts (maybe used for event index). Default is off for the moment. Fix indentation.
+
 !========================= TrackUtils v1r62 2015-11-23 =========================
 ! 2015-11-11 - Marco Cattaneo
  - Fix forward broken declaration broken in Gaudi HEAD build 
