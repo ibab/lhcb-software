@@ -3,6 +3,9 @@
 ! Responsible : Yasmine Amhis
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
+! 2015-12-09 - Renato Quagliani
+ - Suppress info messages, showed only if m_printSettings is True
+
 ! 2015-12-11 - Renato Quagliani
  - Correct default parametrisation which was applying division for 0
  - Throw an exception if m_nCases >3 

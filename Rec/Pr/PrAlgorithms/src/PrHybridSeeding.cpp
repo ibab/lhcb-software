@@ -272,16 +272,17 @@ StatusCode PrHybridSeeding::initialize() {
     // m_timeFinal       = m_timerTool->addTimer( "Convert tracks" );
     m_timerTool->decreaseIndent();//0
   }
-  if( m_decodeData )         info() << "Will decode the FT clusters!" << endmsg;
-  if( m_FlagHits)                 info()<<"Will Flag the Hits" << endmsg;
-  if( m_removeFlagged)      info()<<"Will Not re-use Flagged"<<endmsg;
-  if( m_inputName == "")    info()<<"Standalone Seeding"<<endmsg;
-  if( !(m_inputName == "")) info()<<"Forward tracks as input"<<endmsg;
-  if( m_removeClones)      info()<<"Will Remove Clones"<<endmsg;
-  if( m_xOnly) info()<<"Will use Only X Layers" <<endmsg;
-  if( m_useFix && !m_xOnly) info()<<"WIll Use the triangle Fix"<<endmsg;
 
   if( m_printSettings){
+    if( m_decodeData )         info() << "Will decode the FT clusters!" << endmsg;                                                    
+    if( m_FlagHits)                 info()<<"Will Flag the Hits" << endmsg;                                                              
+    if( m_removeFlagged)      info()<<"Will Not re-use Flagged"<<endmsg;                                                                      
+    if( m_inputName == "")    info()<<"Standalone Seeding"<<endmsg;                                                                      
+    if( !(m_inputName == "")) info()<<"Forward tracks as input"<<endmsg;                                                                       
+    if( m_removeClones)      info()<<"Will Remove Clones"<<endmsg;                                                                                    
+    if( m_xOnly) info()<<"Will use Only X Layers" <<endmsg;                                                                                                                                               
+    if( m_useFix && !m_xOnly) info()<<"WIll Use the triangle Fix"<<endmsg;
+       
     info() <<"==================================================="<<endmsg
            << "===============GLOBAL SETTINGS===================="<<endmsg
            << " InputName                                       = "<<  m_inputName              << endmsg
@@ -862,13 +863,14 @@ void PrHybridSeeding::addStereo2( unsigned int part, unsigned int iCase){
         }
         // nCandidates++;
         // if(nCandidates > m_maxNClusters[(*itT).Case()]) break;
+        // if( i ==0){
         ExtendCluster( itBeg, itEnd , iCase, myStereo , nLay );
         //maxUVfound are the minimal UV layers to find !
         if( (int)nLay < (int)maxUVfound || (int)nLay < (int)minUV) continue;
         // if(nCandidates > m_maxNClusters[(*itT).Case()]) break;
         // nCandidates++;
         // // if(nCandidates > m_maxNClusters[(*itT).Case()]) break;
-        if( (int)nLay < (int)minUV) continue;
+        //if( (int)nLay < (int)minUV) continue;
         nCandidates++;
         if(nCandidates > m_maxNClusters[(*itT).Case()]) break;
         plCount.set( itBeg , itEnd );
@@ -1125,7 +1127,7 @@ void PrHybridSeeding::ExtendCluster( PrHits::iterator& itBeg, PrHits::iterator& 
     ++itEnd;
     nLay = __builtin_popcount( planes);
   }
-}
+}         
 
 //==================
 //Add Stereo void

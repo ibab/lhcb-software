@@ -142,9 +142,8 @@ protected:
   
   
 
-  //** @brief, Given two iterators in the Stereo compatible hits sorted by Y/Z the hough cluster is extended given the tolerance in Ty and the number of different layers in the cluster is returned
+  //** @brief, Given two iterators in the Stereo compatible hits sorted by Y/Z the hough cluster is forward extended (itEnd++) given the tolerance in Ty and the number of different layers in the cluster is returned
   void ExtendCluster( PrHits::iterator& itBeg, PrHits::iterator& itEnd, unsigned int iCase, PrHits& myStereo , int &nLay);
-
   
   /** @brief, It checks if the hough cluster satisfy the tolerance 
    */
@@ -375,9 +374,6 @@ private:
 
   unsigned int m_nCommonTot;
   
-  //Clone removal setting
-  // double              m_fracCommon;
-  // std::vector<double>  m_fracCommonX; // to be implemented properly
   //Flag Hits Settings
     
   std::vector<double>         m_MaxChi2Flag;
@@ -434,5 +430,6 @@ private:
   static const unsigned int s_T3X2 = 22;
   static const unsigned int s_down = 0;
   static const unsigned int s_up   = 1;
+
 };
 #endif // PRHYBRIDSEEDING_H
