@@ -8,6 +8,7 @@
            desc = "This class represents a Herschel PMT measurement">
     <location name = "Default" place = "Raw/HC/Digits"/>
     <location name = "L0" place = "Raw/HC/L0Digits"/>
+    <location name = "Corrected" place = "Raw/HC/CorrectedDigits"/>
     <import name = "Kernel/HCCellID"/>
     <template name = "KeyedObjectDict" t1 = "LHCb::HCCellID"/>
     <base name = "KeyedObject&lt;LHCb::HCCellID&gt;"/>
