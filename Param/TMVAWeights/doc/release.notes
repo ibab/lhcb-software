@@ -4,6 +4,8 @@
 ! Purpose     : To accommodate weights file of all TMVA based selections
 !-----------------------------------------------------------------------------
 
+!========================= TMVAWeights v1r7 2015-12-13 =========================
+
 ! 2015-12-11 - Jibo He
  - Added weights files for B->eeX, including:
    .Bu2eeK_BDT_v1r0.xml
