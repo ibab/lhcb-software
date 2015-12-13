@@ -397,3 +397,38 @@ Dst2PiD0EEG = {
     "STREAMS": [ "Charm" ], 
     "WGs": [ "Charm" ]
 }
+
+#StrippingExcitedDsSpectroscopy.py
+ExcitedDsSpectroscopy = {
+    "BUILDERTYPE": "ExcitedDsSpectroscopyConf", 
+    "CONFIG": {
+        "Daughter2IPChi2": 10.0, 
+        "DeltaMassDsg": 1300.0, 
+        "DeltaMassDsgg": 1300.0, 
+        "DeltaMassDsstar": 450.0, 
+        "DsDIRA": 0.0, 
+        "DsGammaLinePostscale": 1.0, 
+        "DsGammaLinePrescale": 1.0, 
+        "DsIPChi2": 9.0, 
+        "DsPt": 1000.0, 
+        "DsVXChi2NDOF": 10.0, 
+        "DsstGammaLinePostscale": 1.0, 
+        "DsstGammaLinePrescale": 1.0, 
+        "Gamma2CL": 0.1, 
+        "Gamma2PT": 0.0, 
+        "GammaCL": 0.1, 
+        "GammaPT": 400.0, 
+        "KPIDK": 7.0, 
+        "MaxMassDsst": 2300.0, 
+        "MaxMassKstar": 956.0, 
+        "MaxMassPhi": 1030.0, 
+        "MaxTracksInEvent": 500, 
+        "MinCosHelAngleKstar": 0.4, 
+        "MinMassKstar": 836.0, 
+        "MinMassPhi": 1010.0, 
+        "PTSum": 2800.0, 
+        "piPIDK": 3.0
+    }, 
+    "STREAMS": [ "Charm" ], 
+    "WGs": [ "Charm" ]
+}
