@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-13 Jinlin Fu
+ - Added LineConfigDictionaries_Charm for S21r0p1 and S21r1p1 
+
 ! 2015-12-09 Pablo Ruiz Valls (RD)
  - Modifications to XLLBDT and Bs2MuMu lines dictionaries.
 
