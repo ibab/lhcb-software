@@ -106,7 +106,6 @@ private:
   std::vector<std::string> m_tracksInContainers;
   // output Track container path
   std::string m_tracksOutContainer;
-  std::string m_summaryLoc;
   double m_maxOverlapFracVelo;
   double m_maxOverlapFracT;
   double m_maxOverlapFracTT;
@@ -301,7 +300,6 @@ TrackBestTrackCreator::TrackBestTrackCreator( const std::string& name,
 
   declareProperty( "TracksInContainers",m_tracksInContainers );
   declareProperty( "TracksOutContainer", m_tracksOutContainer = LHCb::TrackLocation::Default );
-  declareProperty( "SummaryLocation", m_summaryLoc = "Rec/TrackSummary" );
   declareProperty( "MaxOverlapFracVelo", m_maxOverlapFracVelo = 0.5);
   declareProperty( "MaxOverlapFracT", m_maxOverlapFracT = 0.5);
   declareProperty( "MaxOverlapFracTT", m_maxOverlapFracTT = 0.35) ; // essentially: max 1 common hit
@@ -759,7 +757,7 @@ void TrackBestTrackCreator::fillRecTrackSummary(){
   
   // Create a new summary object and save to the TES
   LHCb::RecSummary* summary = new LHCb::RecSummary();
-  put( summary, m_summaryLoc );
+  put( summary, LHCb::RecSummaryLocation::Track );
 
   summary->addInfo( LHCb::RecSummary::nGhosts, m_nGhosts );
   

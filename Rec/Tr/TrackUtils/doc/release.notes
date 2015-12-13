@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-12-13 - Michel De Cian
+ - Replace property to set summary location in TrackBestTrackCreator by predefined location 'LHCb::RecSummary:Track'
+
 ! 2015-12-12 - Michel De Cian
  - Add possibility to write out 'RecSummary' in TrackBestTrackCreator with number of identified ghosts (maybe used for event index). Default is off for the moment. Fix indentation.
 
