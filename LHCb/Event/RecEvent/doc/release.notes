@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output)
 !-----------------------------------------------------------------------------
 
+! 2015-12-13 - Michel De Cian
+ - Add location for TrackSummary to RecSummary.
+
 ! 2015-12-12 - Michel De Cian
  - Add 'nGhosts' to RecSummary, to store number of identified ghost tracks.
 

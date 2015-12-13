@@ -11,6 +11,7 @@
        id       = "106" >
 
        <location name="Default" place="Rec/Summary" />
+       <location name="Track" place="Rec/TrackSummary" />
 
        &DataObject;
        <base name="DataObject"/>
