@@ -1,5 +1,5 @@
 ###########################################################################################
-##                          S T R I P P I N G  2 1r0p1                                   ##
+##                          S T R I P P I N G  2 1r1p1                                   ##
 ##                                                                                       ##
 ##  Configuration for Charm WG                                                           ##
 ##  Contact person: Eva Gersabeck & Jinlin Fu (evelina.gersabeck@cern.ch & j.fu@cern.ch) ##
@@ -7,6 +7,7 @@
 
 from GaudiKernel.SystemOfUnits import *
 
+#Mika Vesterinen, Alex Pearce
 #StrippingCharmFromBSemi.py
 CharmFromBSemi = {
     "BUILDERTYPE": "CharmFromBSemiAllLinesConf", 
@@ -110,138 +111,8 @@ CharmFromBSemi = {
     "WGs": [ "Charm" ]
 }
 
-#StrippingD2PiPi0.py
-D2EtaEEGH = {
-    "BUILDERTYPE": "StrippingD2EtaEEGHConf", 
-    "CONFIG": {
-        "Bachelor_IPCHI2_MIN": 25.0, 
-        "Bachelor_PIDK_MIN": -999.0, 
-        "Bachelor_PT_MIN": 350.0, 
-        "Bachelor_P_MIN": 1000.0, 
-        "DTF_CHI2NDOF_MAX": 5, 
-        "D_BPVLTIME_MIN": 0.00015, 
-        "D_Mass_MAX": 2500.0, 
-        "D_Mass_MIN": 1600.0, 
-        "D_PT_Min": 2000.0, 
-        "D_VCHI2PDOF_MAX": 5, 
-        "Daug_ETA_MAX": 5.0, 
-        "Daug_ETA_MIN": 2.0, 
-        "Daug_IPCHI2_MIN": 25.0, 
-        "Daug_PT_MIN": 350.0, 
-        "Daug_P_MAX": 100000.0, 
-        "Daug_P_MIN": 1000.0, 
-        "Daug_TRCHI2DOF_MAX": 5, 
-        "Daug_TRGHOSTPROB_MAX": 0.5, 
-        "DiElectron_Mass_MAX": 650.0, 
-        "DiElectron_PT_MIN": 0.0, 
-        "Hlt1Filter": None, 
-        "Hlt2Filter": "HLT_PASS_RE('Hlt2CharmHadDp2Eta.*_Eta2EmEpG.*Decision')", 
-        "Neut_PT_MIN": 350.0, 
-        "PostscaleD2KEtaEEG": 1, 
-        "PostscaleD2PiEtaEEG": 1, 
-        "PrescaleD2KEtaEEG": 1, 
-        "PrescaleD2PiEtaEEG": 1, 
-        "Res_Mass_MAX": 700.0, 
-        "Res_Mass_MIN": 400.0
-    }, 
-    "STREAMS": [ "Charm" ], 
-    "WGs": [ "Charm" ]
-}
 
-#StrippingD2PiPi0.py
-D2EtaH = {
-    "BUILDERTYPE": "StrippingD2EtaHConf", 
-    "CONFIG": {
-        "Bachelor_IPCHI2_MIN": 16.0, 
-        "Bachelor_PIDK_MIN": -999.0, 
-        "Bachelor_PT_MIN": 600.0, 
-        "Bachelor_P_MIN": 1000.0, 
-        "DTF_CHI2NDOF_MAX": 5, 
-        "D_BPVLTIME_MIN": 0.00025, 
-        "D_Mass_MAX": 2200.0, 
-        "D_Mass_MIN": 1600.0, 
-        "D_PT_Min": 2000.0, 
-        "D_VCHI2PDOF_MAX": 4, 
-        "Daug_ETA_MAX": 5.0, 
-        "Daug_ETA_MIN": 2.0, 
-        "Daug_IPCHI2_MIN": 16.0, 
-        "Daug_PT_MIN": 500.0, 
-        "Daug_P_MAX": 100000.0, 
-        "Daug_P_MIN": 1000.0, 
-        "Daug_TRCHI2DOF_MAX": 5, 
-        "Daug_TRGHOSTPROB_MAX": 0.5, 
-        "Dipion_DOCACHI2_MAX": 15, 
-        "Dipion_Mass_MAX": 750.0, 
-        "Dipion_Mass_MIN": 200.0, 
-        "Hlt1Filter": None, 
-        "Hlt2Filter": "HLT_PASS_RE('Hlt2CharmHadDp2Eta.*Decision') | HLT_PASS_RE('Hlt2Topo.*Decision')", 
-        "Neut_Mass_Win": 50.0, 
-        "Neut_PT_MIN": 600.0, 
-        "Pi_PIDK_MAX": 0.0, 
-        "PostscaleD2KEta3HM": 1, 
-        "PostscaleD2KEta3HR": 1, 
-        "PostscaleD2KEtaPPG": 1, 
-        "PostscaleD2PiEta3HM": 1, 
-        "PostscaleD2PiEta3HR": 1, 
-        "PostscaleD2PiEtaPPG": 1, 
-        "PrescaleD2KEta3HM": 1, 
-        "PrescaleD2KEta3HR": 1, 
-        "PrescaleD2KEtaPPG": 1, 
-        "PrescaleD2PiEta3HM": 1, 
-        "PrescaleD2PiEta3HR": 1, 
-        "PrescaleD2PiEtaPPG": 1, 
-        "Res_Mass_MAX": 750.0, 
-        "Res_Mass_MIN": 350.0
-    }, 
-    "STREAMS": [ "Charm" ], 
-    "WGs": [ "Charm" ]
-}
-
-#StrippingD2PiPi0.py
-D2EtaPrimeH = {
-    "BUILDERTYPE": "StrippingD2EtaPrimeHConf", 
-    "CONFIG": {
-        "Bachelor_IPCHI2_MIN": 16.0, 
-        "Bachelor_PIDK_MIN": -999.0, 
-        "Bachelor_PT_MIN": 600.0, 
-        "Bachelor_P_MIN": 1000.0, 
-        "DTF_CHI2NDOF_MAX": 5, 
-        "D_BPVLTIME_MIN": 0.00025, 
-        "D_Mass_MAX": 2200.0, 
-        "D_Mass_MIN": 1600.0, 
-        "D_PT_Min": 2000.0, 
-        "D_VCHI2PDOF_MAX": 4, 
-        "Daug_ETA_MAX": 5.0, 
-        "Daug_ETA_MIN": 2.0, 
-        "Daug_IPCHI2_MIN": 16.0, 
-        "Daug_PT_MIN": 500.0, 
-        "Daug_P_MAX": 100000.0, 
-        "Daug_P_MIN": 1000.0, 
-        "Daug_TRCHI2DOF_MAX": 5, 
-        "Daug_TRGHOSTPROB_MAX": 0.5, 
-        "Dipion_DOCACHI2_MAX": 15, 
-        "Dipion_Mass_MAX": 1200.0, 
-        "Dipion_Mass_MIN": 200.0, 
-        "Hlt1Filter": None, 
-        "Hlt2Filter": "HLT_PASS_RE('Hlt2CharmHadDp2Etap.*Decision') | HLT_PASS_RE('Hlt2Topo.*Decision')", 
-        "Neut_Mass_Win": 50.0, 
-        "Neut_PT_MIN": 1000.0, 
-        "Pi_PIDK_MAX": 0, 
-        "PostscaleD2KEtaPrime3HR": 1, 
-        "PostscaleD2KEtaPrimePPG": 1, 
-        "PostscaleD2PiEtaPrime3HR": 1, 
-        "PostscaleD2PiEtaPrimePPG": 1, 
-        "PrescaleD2KEtaPrime3HR": 1, 
-        "PrescaleD2KEtaPrimePPG": 1, 
-        "PrescaleD2PiEtaPrime3HR": 1, 
-        "PrescaleD2PiEtaPrimePPG": 1, 
-        "Res_Mass_MAX": 1200.0, 
-        "Res_Mass_MIN": 650.0
-    }, 
-    "STREAMS": [ "Charm" ], 
-    "WGs": [ "Charm" ]
-}
-
+#Adam Davis,Liang Sun
 #StrippingD2HMuNu.py
 D2HMuNu = {
     "BUILDERTYPE": "D2HLepNuBuilder", 
@@ -276,128 +147,11 @@ D2HMuNu = {
         "TRGHOSTPROB": 0.35, 
         "useTOS": True
     }, 
-    "STREAMS": [ "Charm" ], 
+    "STREAMS": [ "CharmCompleteEvent" ], 
     "WGs": [ "Charm" ]
 }
 
-#StrippingD2PiPi0.py
-D2PhiH = {
-    "BUILDERTYPE": "StrippingD2PhiHConf", 
-    "CONFIG": {
-        "Bachelor_IPCHI2_MIN": 16.0, 
-        "Bachelor_PIDK_MIN": -999.0, 
-        "Bachelor_PT_MIN": 600.0, 
-        "Bachelor_P_MIN": 1000.0, 
-        "DTF_CHI2NDOF_MAX": 5, 
-        "D_BPVLTIME_MIN": 0.00025, 
-        "D_Mass_MAX": 2200.0, 
-        "D_Mass_MIN": 1600.0, 
-        "D_PT_Min": 2000.0, 
-        "D_VCHI2PDOF_MAX": 4, 
-        "Daug_ETA_MAX": 5.0, 
-        "Daug_ETA_MIN": 2.0, 
-        "Daug_IPCHI2_MIN": 16.0, 
-        "Daug_PT_MIN": 500.0, 
-        "Daug_P_MAX": 100000.0, 
-        "Daug_P_MIN": 1000.0, 
-        "Daug_TRCHI2DOF_MAX": 5, 
-        "Daug_TRGHOSTPROB_MAX": 0.5, 
-        "Dipion_DOCACHI2_MAX": 15, 
-        "Dipion_Mass_MAX": 1200.0, 
-        "Dipion_Mass_MIN": 200.0, 
-        "Hlt1Filter": None, 
-        "Hlt2Filter": None, 
-        "Neut_Mass_Win": 50.0, 
-        "Neut_PT_MIN": 600.0, 
-        "Pi_PIDK_MAX": 0, 
-        "PostscaleD2KPhi3HM": 1, 
-        "PostscaleD2KPhi3HR": 1, 
-        "PostscaleD2PiPhi3HM": 1, 
-        "PostscaleD2PiPhi3HR": 1, 
-        "PrescaleD2KPhi3HM": 1, 
-        "PrescaleD2KPhi3HR": 1, 
-        "PrescaleD2PiPhi3HM": 1, 
-        "PrescaleD2PiPhi3HR": 1, 
-        "Res_Mass_MAX": 1200.0, 
-        "Res_Mass_MIN": 650.0
-    }, 
-    "STREAMS": [ "Charm" ], 
-    "WGs": [ "Charm" ]
-}
-
-#StrippingD2PiPi0.py
-D2Pi0H = {
-    "BUILDERTYPE": "StrippingD2Pi0HConf", 
-    "CONFIG": {
-        "Bachelor_IPCHI2_MIN": 25.0, 
-        "Bachelor_PIDK_MIN": -999.0, 
-        "Bachelor_PT_MIN": 350.0, 
-        "Bachelor_P_MIN": 1000.0, 
-        "DTF_CHI2NDOF_MAX": 5, 
-        "D_BPVLTIME_MIN": 0.00015, 
-        "D_Mass_MAX": 2500.0, 
-        "D_Mass_MIN": 1600.0, 
-        "D_PT_Min": 2000.0, 
-        "D_VCHI2PDOF_MAX": 5, 
-        "Daug_ETA_MAX": 5.0, 
-        "Daug_ETA_MIN": 2.0, 
-        "Daug_IPCHI2_MIN": 25.0, 
-        "Daug_PT_MIN": 350.0, 
-        "Daug_P_MAX": 100000.0, 
-        "Daug_P_MIN": 1000.0, 
-        "Daug_TRCHI2DOF_MAX": 5, 
-        "Daug_TRGHOSTPROB_MAX": 0.5, 
-        "DiElectron_Mass_MAX": 210.0, 
-        "DiElectron_PT_MIN": 0.0, 
-        "Dstar_AMDiff_MAX": 165.0, 
-        "Dstar_MDiff_MAX": 160.0, 
-        "Dstar_VCHI2VDOF_MAX": 100.0, 
-        "Hlt1Filter": None, 
-        "Hlt2Filter": "(HLT_PASS_RE('Hlt2CharmHadD.*EmEp.*Decision') | HLT_PASS_RE('Hlt2Topo.*Decision'))", 
-        "Neut_PT_MIN": 350.0, 
-        "PostscaleD2KPi0EEG": 1, 
-        "PostscaleD2PiPi0EEG": 1, 
-        "PostscaleDst2D0PiEEG": 1, 
-        "PrescaleD2KPi0EEG": 1, 
-        "PrescaleD2PiPi0EEG": 1, 
-        "PrescaleDst2D0PiEEG": 1, 
-        "Res_Mass_MAX": 210.0, 
-        "Res_Mass_MIN": 70.0, 
-        "Soft_TRCHI2DOF_MAX": 5
-    }, 
-    "STREAMS": [ "Charm" ], 
-    "WGs": [ "Charm" ]
-}
-
-#StrippingD2PiPi0.py
-Dst2PiD0EEG = {
-    "BUILDERTYPE": "StrippingDst2PiD0EEGConf", 
-    "CONFIG": {
-        "DiElectron_Mass_MAX": 1914.0, 
-        "DiElectron_PT_MIN": 2600.0, 
-        "Dstar_AMDiff_MAX": 165.0, 
-        "Dstar_MDiff_MAX": 160.0, 
-        "Dstar_VCHI2VDOF_MAX": 9.0, 
-        "Electron_IPCHI2_MIN": 16.0, 
-        "Electron_PT_MIN": 350.0, 
-        "Electron_P_MIN": 1000.0, 
-        "Electron_TRCHI2DOF_MAX": 6, 
-        "Electron_TRGHOSTPROB_MAX": 0.5, 
-        "Hlt1Filter": None, 
-        "Hlt2Filter": "HLT_PASS_RE('Hlt2CharmHadDstp2.*EmEp.*Decision') | HLT_PASS_RE('Hlt2Topo.*Decision')", 
-        "Neut_PT_MIN": 600.0, 
-        "PostscaleDst2PiD0EE": 1, 
-        "PostscaleDst2PiD0EEG": 1, 
-        "PrescaleDst2PiD0EE": 1, 
-        "PrescaleDst2PiD0EEG": 1, 
-        "Res_Mass_MAX": 1914.0, 
-        "Res_Mass_MIN": 1814.0, 
-        "Soft_TRCHI2DOF_MAX": 3
-    }, 
-    "STREAMS": [ "Charm" ], 
-    "WGs": [ "Charm" ]
-}
-
+#Marco Pappagallo
 #StrippingExcitedDsSpectroscopy.py
 ExcitedDsSpectroscopy = {
     "BUILDERTYPE": "ExcitedDsSpectroscopyConf", 
@@ -431,4 +185,283 @@ ExcitedDsSpectroscopy = {
     }, 
     "STREAMS": [ "Charm" ], 
     "WGs": [ "Charm" ]
+}
+
+#Marianna Fontana, Andrea Contu
+#StrippingDstarD02xx.py
+DstarD02xx ={
+  'WGs' : ['Charm'],
+  'BUILDERTYPE' : 'StrippingDstarD02xxConf',
+  'STREAMS' : [ 'Charm' ],
+  'CONFIG' : {    'PrescalepipiBox'     : 1.
+                  , 'PrescalemumuBox'     : 1.
+                  , 'PrescaleKpiBox'    : 1.
+                  , 'PrescaleemuBox'    : 1.
+                  , 'PrescaleeKBox'    : 1.
+                  , 'PrescaleepiBox'    : 1.
+                  , 'PrescalepimuBox'    : 1.
+                  , 'PrescaleKmuBox'    : 1.
+                  , 'Prescalepipi_untagged_Box'     : 1.0
+                  , 'Prescalemumu_untagged_Box'     : 1.0
+                  , 'PrescaleKpi_untagged_Box'    : 1.0
+                  , 'Prescalepimu_untagged_Box'    : 1.0
+                  , 'PrescaleKmu_untagged_Box'    : 0.5
+                  , 'PrescaleKpi_untagged_BoxMB' : 0.
+                  , 'Prescalepipi_untagged_BoxMB':0.
+                  , 'PrescaleKpi_untagged_BoxMBTrEff' : 0.
+                  ,'DMassWin'           : 70.       # MeV
+                  ,'DMassWinMuMuLow'    : -150.       #MeV
+                  ,'DMassWinMuMuHigh'   : 300       #MeV
+                  ,'DMassWinEMu'        : 300
+                  ,'doca'               : 0.1        # mm
+                  ,'XminPT'             : 750.       # MeV
+                  ,'XmaxPT'             : 1100.      # MeV
+                  ,'XminP'              : 4000.      # MeV
+                  ,'XTrackChi2'         : 5.        # adimensional
+                  ,'XTrackChi2Pi'         : 7.        # adimensional
+                  ,'XminIPChi2'         : 3        # adimensional
+                  ,'XmaxIPChi2'         : 8        # adimensional
+                  ,'ghostProbCut'       : 0.5      #added for Stripping20 by A Contu
+                  ,'DMinFlightChi2'    :  20.
+                  ,'DDira'              : 0.9997     # adimensional
+                  ,'D0MinPT'            : 1800.      # MeV
+                  ,'DMaxIPChi2'        :15.
+                  ,'DVChi2'            :10. 
+                  ,'PiMinPT'            : 110.       # MeV
+                  ,'PiMaxIPCHI2'        : 10.         # adimensional
+                  ,'DstMassWin'         : 300.       # MeV
+                  ,'DstD0DMWin'         : 10.        # MeV
+                  ,'DstD0DMWinMuMu'      : 30.        # MeV  
+                  ,'RequireHlt'         : 1
+                  #,'HLT2String'          :  "Hlt2RareCharmD02LAB1LAB2*Decision" #run2
+                  ,'HLT2String'          :  "Hlt2Dst2PiD02LAB1LAB2*Decision" #run1
+                  ,'HLT1MB'             : "HLT_PASS_RE('Hlt1(MB|L0).*Decision')"
+                  ,'HLT2MB'             : "HLT_PASS_RE('Hlt2CharmHadMinBiasD02KPiDecision')"
+                  #hltname = "Hlt2Dst2PiD02"+Xplus+Xminus+"*Decision"
+                  #hltname = "Hlt2Dst2PiD02"+Xplus+Xminus+"*Decision"
+                 ,'ConeAngles'     : {"08":0.8,"10":1.0,"12":1.2,"14":1.4}
+                 ,'ConeVariables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
+                 ,'prefix'         : '' 
+                 }
+    
+}
+
+#Simone Stracka,
+#StrippingD2PiPi0.py linebuilder
+'D2EtaH' = {
+    'WGs': ['Charm'],
+    'BUILDERTYPE': 'StrippingD2EtaHConf',
+    'STREAMS': ['Charm'],
+    'CONFIG': {
+               # Minimum best primary vertex IP chi^2 for charged D daughters
+               'Bachelor_IPCHI2_MIN'      : 25.0,        # 25 --> 16
+               # Minimum PT for charged D daughters
+               'Bachelor_PT_MIN'          : 600  *MeV,   # 600
+               # Minimum momentum for charged D daughters
+               'Bachelor_P_MIN'           : 1000 *MeV,
+               # Bachelor particle PID requirement 
+               'Bachelor_PIDK_MIN'        : -999.0, # not used
+               # Minimum best primary vertex IP chi^2 for charged D daughters
+               'Daug_IPCHI2_MIN'      : 16.0,        # 25 --> 4
+               # Minimum PT for charged D daughters
+               'Daug_PT_MIN'          : 500  *MeV,   # 600 --> 300
+               # Minimum momentum for charged D daughters
+               'Daug_P_MIN'           : 1000 *MeV,
+               # Maximum momentum for charged D daughters
+               'Daug_P_MAX'           : 100000 *MeV,
+               # Minimum pseudorapidity for charged D daughters
+               'Daug_ETA_MIN'         : 2.0,
+               # Maximum pseudorapidity for charged D daughters
+               'Daug_ETA_MAX'         : 5.0,
+               # Track quality requirement for charged D daughters
+               'Daug_TRCHI2DOF_MAX'   : 5,
+               # Maximum ghost probability for charged D daughters
+               'Daug_TRGHOSTPROB_MAX' : 0.5,
+               # Maximum DLLK of intermediate resonance daughter (pion)
+               'Pi_PIDK_MAX'        : 0.0,
+               # Minimum PT for intermediate resonance neutral daughters
+               'Neut_PT_MIN'        : 600  *MeV,
+               # Mass window for intermediate resonance neutral daughters (pi0, eta)
+               'Neut_Mass_Win'      :  60  *MeV,
+               # Minimum dipion mass
+               'Dipion_Mass_MIN'    : 200 *MeV,
+               # Maximum dipion mass
+               'Dipion_Mass_MAX'    : 750 *MeV,
+               # Maximum DOCA chi2 for dipion combination
+               'Dipion_DOCACHI2_MAX': 15,
+               # Minimum mass for intermediate resonance
+               'Res_Mass_MIN'       : 350   *MeV,  # 500 --> 400
+               # Maximum mass for intermediate resonance
+               'Res_Mass_MAX'       : 750  *MeV,   # 600 --> 700
+               # Minimum D PT
+               'D_PT_Min'           : 2000 *MeV,   # 
+               # Minimum D mass
+               'D_Mass_MIN'          : 1600 *MeV,
+               # Maximum D mass
+               'D_Mass_MAX'          : 2200 *MeV,
+               # Maximum chi^2 on D end vertex
+               'D_VCHI2PDOF_MAX'         : 4,
+               # minimum flight time
+               'D_BPVLTIME_MIN'       : 0.25*picosecond,
+               # max chi^2 per DOF of DTF fit
+               'DTF_CHI2NDOF_MAX'   : 5,    # not used
+               # HLT filters, only process events firing triggers matching the RegEx
+               'Hlt1Filter'         : None,
+               'Hlt2Filter'      : "HLT_PASS_RE('Hlt2CharmHadD2.*Decision')",
+               # prescale and postscale
+               'PrescaleD2PiEtaPPG' : 1,
+               'PrescaleD2PiEta3HM' : 1,
+               'PrescaleD2PiEta3HR' : 1,
+               'PrescaleD2KEtaPPG'  : 1,
+               'PrescaleD2KEta3HM'  : 1,
+               'PrescaleD2KEta3HR'  : 1,
+               'PostscaleD2PiEtaPPG': 1,
+               'PostscaleD2PiEta3HM': 1,
+               'PostscaleD2PiEta3HR': 1,
+               'PostscaleD2KEtaPPG' : 1,
+               'PostscaleD2KEta3HM' : 1,
+               'PostscaleD2KEta3HR' : 1
+               }
+ }   
+'D2EtaPrimeH' = {
+    'WGs': ['Charm'],
+    'BUILDERTYPE': 'StrippingD2EtaPrimeHConf',
+    'STREAMS': ['Charm'],
+    'CONFIG': {
+                # Minimum best primary vertex IP chi^2 for charged D daughters
+                'Bachelor_IPCHI2_MIN'      : 25.0,        # 25 
+                # Minimum PT for charged D daughters
+                'Bachelor_PT_MIN'          : 600  *MeV,   # 600
+                # Minimum momentum for charged D daughters
+                'Bachelor_P_MIN'           : 1000 *MeV,
+                # Bachelor particle PID requirement 
+                'Bachelor_PIDK_MIN'        : -999.0, # not used 
+                # Minimum best primary vertex IP chi^2 for charged D daughters
+                'Daug_IPCHI2_MIN'      : 16.0,        # 25 --> 16
+                # Minimum PT for charged D daughters
+                'Daug_PT_MIN'          : 500  *MeV,   # 600 --> 500
+                # Minimum momentum for charged D daughters
+                'Daug_P_MIN'           : 1000 *MeV,
+                # Maximum momentum for charged D daughters
+                'Daug_P_MAX'           : 100000 *MeV,
+                # Minimum pseudorapidity for charged D daughters
+                'Daug_ETA_MIN'         : 2.0,
+                # Maximum pseudorapidity for charged D daughters
+                'Daug_ETA_MAX'         : 5.0,
+                # Track quality requirement for charged D daughters
+                'Daug_TRCHI2DOF_MAX'   : 5,
+                # Maximum ghost probability for charged D daughters
+                'Daug_TRGHOSTPROB_MAX' : 0.5,
+                # Maximum DLLK of intermediate resonance daughter (pion)
+                'Pi_PIDK_MAX'        : 0,
+                # Minimum PT for intermediate resonance neutral daughters
+                'Neut_PT_MIN'        : 1000  *MeV,
+                # Mass window for intermediate resonance neutral daughters (pi0, eta)
+                'Neut_Mass_Win'      :  60  *MeV,
+                # Minimum dipion mass
+                'Dipion_Mass_MIN'    : 200 *MeV,
+                # Maximum dipion mass
+                'Dipion_Mass_MAX'    : 1200 *MeV,
+                # Maximum DOCA chi2 for dipion combination
+                'Dipion_DOCACHI2_MAX': 15,
+                # Minimum mass for intermediate resonance
+                'Res_Mass_MIN'       : 650   *MeV,  # 900 --> 800
+                # Maximum mass for intermediate resonance
+                'Res_Mass_MAX'       : 1200  *MeV,   # 990 --> 1050
+                # Minimum D PT
+                'D_PT_Min'           : 2000 *MeV,   # 2000
+                # Minimum D mass
+                'D_Mass_MIN'          : 1600 *MeV,
+                # Maximum D mass
+                'D_Mass_MAX'          : 2200 *MeV,
+                # Maximum chi^2 on D end vertex
+                'D_VCHI2PDOF_MAX'         : 4,
+                # minimum flight time
+                'D_BPVLTIME_MIN'       : 0.25*picosecond,
+                # max chi^2 per DOF of DTF fit
+                'DTF_CHI2NDOF_MAX'   : 5,
+                # HLT filters, only process events firing triggers matching the RegEx
+                'Hlt1Filter'         :  None, 
+                'Hlt2Filter'      : "HLT_PASS_RE('Hlt2CharmHadD2.*Decision')",
+                # prescale and postscale
+                'PrescaleD2PiEtaPrimePPG' : 1,
+                'PrescaleD2PiEtaPrime3HR' : 1,
+                'PrescaleD2KEtaPrimePPG'  : 1,
+                'PrescaleD2KEtaPrime3HR'  : 1,
+                'PostscaleD2PiEtaPrimePPG': 1,
+                'PostscaleD2PiEtaPrime3HR': 1,
+                'PostscaleD2KEtaPrimePPG' : 1,
+                'PostscaleD2KEtaPrime3HR' : 1
+                }
+}
+'D2PhiH' = {
+    'WGs': ['Charm'],
+    'BUILDERTYPE': 'StrippingD2PhiHConf',
+    'STREAMS': ['Charm'],
+    'CONFIG': {
+                # Minimum best primary vertex IP chi^2 for charged D daughters
+                'Bachelor_IPCHI2_MIN'      : 25.0,        # 25 --> 16
+                # Minimum PT for charged D daughters
+                'Bachelor_PT_MIN'          : 600  *MeV,   # 600 
+                # Minimum momentum for charged D daughters
+                'Bachelor_P_MIN'           : 1000 *MeV,
+                # Bachelor particle PID requirement 
+                'Bachelor_PIDK_MIN'        : -999.0, # not used 
+                # Minimum best primary vertex IP chi^2 for charged D daughters
+                'Daug_IPCHI2_MIN'      : 25.0,        # 25 --> 16
+                # Minimum PT for charged D daughters
+                'Daug_PT_MIN'          : 500  *MeV,   # 600 --> 300
+                # Minimum momentum for charged D daughters
+                'Daug_P_MIN'           : 1000 *MeV,
+                # Maximum momentum for charged D daughters
+                'Daug_P_MAX'           : 100000 *MeV,
+                # Minimum pseudorapidity for charged D daughters
+                'Daug_ETA_MIN'         : 2.0,
+                # Maximum pseudorapidity for charged D daughters
+                'Daug_ETA_MAX'         : 5.0,
+                # Track quality requirement for charged D daughters
+                'Daug_TRCHI2DOF_MAX'   : 5,
+                # Maximum ghost probability for charged D daughters
+                'Daug_TRGHOSTPROB_MAX' : 0.5,
+                # Maximum DLLK of intermediate resonance daughter (pion)
+                'Pi_PIDK_MAX'        : 0,
+                # Minimum PT for intermediate resonance neutral daughters
+                'Neut_PT_MIN'        : 600  *MeV,
+                # Mass window for intermediate resonance neutral daughters (pi0, eta)
+                'Neut_Mass_Win'      :  60  *MeV,
+                # Minimum dipion mass
+                'Dipion_Mass_MIN'    : 200 *MeV,
+                # Maximum dipion mass
+                'Dipion_Mass_MAX'    : 1200 *MeV,
+                # Maximum DOCA chi2 for dipion combination
+                'Dipion_DOCACHI2_MAX': 15,
+                # Minimum mass for intermediate resonance
+                'Res_Mass_MIN'       : 650   *MeV,  #  includes omega
+                # Maximum mass for intermediate resonance
+                'Res_Mass_MAX'       : 950  *MeV,   #
+                # Minimum D PT
+                'D_PT_Min'           : 2000 *MeV,   #
+                # Minimum D mass
+                'D_Mass_MIN'          : 1600 *MeV,
+                # Maximum D mass
+                'D_Mass_MAX'          : 2200 *MeV,
+                # Maximum chi^2 on D end vertex
+                'D_VCHI2PDOF_MAX'         : 4,
+                # minimum flight time
+                'D_BPVLTIME_MIN'       : 0.25*picosecond,
+                # max chi^2 per DOF of DTF fit
+                'DTF_CHI2NDOF_MAX'   : 5,
+                # HLT filters, only process events firing triggers matching the RegEx
+                'Hlt1Filter'         : None,
+                'Hlt2Filter'      : "HLT_PASS_RE('Hlt2CharmHadD2.*Decision')",
+                # prescale and postscale
+                'PrescaleD2PiPhi3HM' : 1,
+                'PrescaleD2PiPhi3HR' : 1,
+                'PrescaleD2KPhi3HM'  : 1,
+                'PrescaleD2KPhi3HR'  : 1,
+                'PostscaleD2PiPhi3HM': 1,
+                'PostscaleD2PiPhi3HR': 1,
+                'PostscaleD2KPhi3HM' : 1,
+                'PostscaleD2KPhi3HR' : 1
+                }
 }
