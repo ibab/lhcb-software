@@ -175,12 +175,13 @@ namespace Rich
                                        const TYPE& d ) const 
       {
 
-        const TYPE r4 = 1.0 / 4.0;
-        const TYPE q2 = 1.0 / 2.0;
-        const TYPE q8 = 1.0 / 8.0;
-        const TYPE q1 = 3.0 / 8.0;
-        const TYPE q3 = 3.0 / 16.0;
-        const TYPE UU = -( std::sqrt(3.0) / 2.0 );
+        constexpr const TYPE r4 = 1.0 / 4.0;
+        constexpr const TYPE q2 = 1.0 / 2.0;
+        constexpr const TYPE q8 = 1.0 / 8.0;
+        constexpr const TYPE q1 = 3.0 / 8.0;
+        constexpr const TYPE q3 = 3.0 / 16.0;
+        //const TYPE UU { -( std::sqrt((TYPE)3.0) / (TYPE)2.0 ) };
+        constexpr const TYPE UU = -0.866025404; // - sqrt(3)/2
 
         const auto aa = a * a;
         const auto pp = b - q1 * aa;

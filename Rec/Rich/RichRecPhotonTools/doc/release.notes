@@ -7,6 +7,7 @@
 ! 2015-12-14 - Chris Jones
  - Convert QuarticSolver::solve<TYOE> calls RichPhotonRecoUsingQuarticSoln back
    to double precision, to fix FPE problems with clang.
+ - Use some constexpr calculations in QuarticSolver.
 
 !========================= RichRecPhotonTools v1r19 2015-11-23 =========================
 ! 2015-11-12 - Chris Jones
