@@ -15,6 +15,7 @@
 #include <numeric>
 #include <algorithm>
 #include <type_traits>
+#include <stdexcept>
 
 #undef _nBits
 #undef _nNashes
@@ -776,6 +777,181 @@ class BloomFilter
 		if (nword * 32 + 31 < nBits) m_bits[nword * 32 + 31] = bool((word >> 31) & 1);
 	    }
 	}
+
+	/** @brief return string representation of BloomFilter
+	 *
+	 * @returns string representing the BloomFilter
+	 */
+	operator std::string() const
+	{
+	    constexpr auto conv = [] (unsigned val) {
+		// we do something that's almost base64 encoding
+		if (val < 26) return char('A' + (val - 0));
+		else if (val < 52) return char('a' + (val - 26));
+		else if (val < 62) return char('0' + (val - 52));
+		else if (62 == val) return '+';
+		else return '/';
+	    };
+	    std::string retVal;
+	    const unsigned words = (nBits / 32) + bool(nBits % 32);
+	    const unsigned symbols = (nBits / 6) + bool(nBits % 6);
+	    retVal.reserve(symbols);
+	    unsigned inof = 0, iw = 0, ina;
+	    uint32_t acc, oflo = 0, tmp = 0;
+	    do {
+		acc = getword(iw),
+		    ina = std::min(32u, unsigned(nBits) - 32 * iw);
+		++iw;
+		switch (inof) {
+		    case 0: // no overflow bits from last iteration
+			oflo = acc >> 30;
+			if (ina) {
+			    retVal += conv(acc & 0x3f); acc >>= 6, ina -= std::min(6u, ina);
+			    if (ina) {
+				retVal += conv(acc & 0x3f); acc >>= 6, ina -= std::min(6u, ina);
+				if (ina) {
+				    retVal += conv(acc & 0x3f); acc >>= 6, ina -= std::min(6u, ina);
+				    if (ina) {
+					retVal += conv(acc & 0x3f); acc >>= 6, ina -= std::min(6u, ina);
+					if (ina) {
+					    retVal += conv(acc & 0x3f); inof += (ina > 6) ? (ina - 6) : -inof;
+					} else { inof = 0; }
+				    } else { inof = 0; }
+				} else { inof = 0; }
+			    } else { inof = 0; }
+			} else { inof = 0; }
+			break;
+		    case 2: // two overflow bits from last iteration
+			tmp = oflo; oflo = acc >> 28, acc <<= 2; acc |= tmp;
+			if (ina) {
+			    retVal += conv(acc & 0x3f); acc >>= 6, ina -= std::min(6u, ina);
+			    if (ina) {
+				retVal += conv(acc & 0x3f); acc >>= 6, ina -= std::min(6u, ina);
+				if (ina) {
+				    retVal += conv(acc & 0x3f); acc >>= 6, ina -= std::min(6u, ina);
+				    if (ina) {
+					retVal += conv(acc & 0x3f); acc >>= 6, ina -= std::min(6u, ina);
+					if (ina) {
+					    retVal += conv(acc & 0x3f); inof += (ina > 6) ? (ina - 6) : -inof;
+					} else { inof = 0; }
+				    } else { inof = 0; }
+				} else { inof = 0; }
+			    } else { inof = 0; }
+			} else { inof = 0; }
+			break;
+		    case 4: // four overflow bits from last iteration
+			tmp = oflo; oflo = acc >> 26, acc <<= 4; acc |= tmp;
+			if (ina) {
+			    retVal += conv(acc & 0x3f); acc >>= 6, ina -= std::min(6u, ina);
+			    if (ina) {
+				retVal += conv(acc & 0x3f); acc >>= 6, ina -= std::min(6u, ina);
+				if (ina) {
+				    retVal += conv(acc & 0x3f); acc >>= 6, ina -= std::min(6u, ina);
+				    if (ina) {
+					retVal += conv(acc & 0x3f); acc >>= 6, ina -= std::min(6u, ina);
+					if (ina) {
+					    retVal += conv(acc & 0x3f); inof += (ina > 6) ? (ina - 6) : -inof;
+					} else { inof = 0; }
+				    } else { inof = 0; }
+				} else { inof = 0; }
+			    } else { inof = 0; }
+			} else { inof = 0; }
+			if (inof) { retVal += conv(oflo & 0x3f); inof = 0; }
+			break;
+		}
+	    } while (iw < words);
+	    // output remaining overflow bits, if any
+	    if (inof) { retVal += conv(oflo & 0x3f); inof = 0; }
+	    if (retVal.size() != symbols) {
+		// verify that the string has the right length
+		throw std::invalid_argument(__func__);
+	    }
+	    return retVal;
+	}
+
+	/** @brief set BloomFilter from string representation
+	 *
+	 * @param str	string representation from which to set the BloomFilter
+	 */
+	void set(const std::string& str)
+	{
+	    constexpr auto conv = [] (char c) {
+		// we do something that's almost base64 decoding
+		if ('A' <= c && c <= 'Z') return uint32_t(0 + c - 'A');
+		else if ('a' <= c && c <= 'z') return uint32_t(26 + c - 'a');
+		else if ('0' <= c && c <= '9') return uint32_t(52 + c - '0');
+		else if ('+' == c) return uint32_t(62);
+		else if ('/' == c) return uint32_t(63);
+		throw std::invalid_argument(__func__);
+		return uint32_t(-1); // should never reach this point
+	    };
+	    const unsigned symbols = (nBits / 6) + bool(nBits % 6);
+	    if (str.size() != symbols) {
+		// verify the string has the right length
+		throw std::invalid_argument(__func__);
+	    }
+	    unsigned iw = 0, ipos = 0, inof = 0;
+	    uint32_t acc = 0, oflo = 0;
+	    while (ipos < str.size()) { // convert while there's input left
+		// three possibilities to read a 32 bit word from 6 bit input nibbles
+		switch (inof) {
+		    case 0: // oflo empty
+			acc = ((ipos + 0 < str.size()) ? conv(str[ipos + 0]) : 0) |
+			    ((ipos + 1 < str.size()) ? (conv(str[ipos + 1]) <<  6) : 0) |
+			    ((ipos + 2 < str.size()) ? (conv(str[ipos + 2]) << 12) : 0) |
+			    ((ipos + 3 < str.size()) ? (conv(str[ipos + 3]) << 18) : 0) |
+			    ((ipos + 4 < str.size()) ? (conv(str[ipos + 4]) << 24) : 0);
+			if (ipos + 5 < str.size()) {
+			    oflo = conv(str[ipos + 5]);
+			    acc |= (oflo << 30);
+			    oflo >>= 2, inof = 4, ipos += std::min(6u, unsigned(str.size() - ipos));
+			} else {
+			    oflo = 0, inof = 0, ipos = str.size();
+			}
+			break;
+		    case 2: // oflo contains 2 bits
+			acc = oflo |
+			    ((ipos + 0 < str.size()) ? (conv(str[ipos + 0]) <<  2) : 0) |
+			    ((ipos + 1 < str.size()) ? (conv(str[ipos + 1]) <<  8) : 0) |
+			    ((ipos + 2 < str.size()) ? (conv(str[ipos + 2]) << 14) : 0) |
+			    ((ipos + 3 < str.size()) ? (conv(str[ipos + 3]) << 20) : 0) |
+			    ((ipos + 4 < str.size()) ? (conv(str[ipos + 4]) << 26) : 0);
+			oflo = 0, inof = 0, ipos += std::min(5u, unsigned(str.size() - ipos));
+			break;
+		    case 4: // oflo contains 4 bits
+			acc = oflo |
+			    ((ipos + 0 < str.size()) ? (conv(str[ipos + 0]) <<  4) : 0) |
+			    ((ipos + 1 < str.size()) ? (conv(str[ipos + 1]) << 10) : 0) |
+			    ((ipos + 2 < str.size()) ? (conv(str[ipos + 2]) << 16) : 0) |
+			    ((ipos + 3 < str.size()) ? (conv(str[ipos + 3]) << 22) : 0);
+			if (ipos + 4 < str.size()) {
+			    oflo = conv(str[ipos + 4]);
+			    acc |= (oflo << 28);
+			    oflo >>= 4, inof = 2, ipos += std::min(5u, unsigned(str.size() - ipos));
+			} else {
+			    inof = 0, ipos = str.size();
+			}
+			break;
+		}
+		setword(iw++, acc); // set next word
+	    }
+	    if (inof) setword(iw, oflo); // set any bits remaining in oflo
+	    if (str.size() != ipos) {
+		// verify that we consumed the full input string
+		throw std::invalid_argument(__func__);
+	    }
+	    if (iw * 32 < nBits || iw * 32 >= nBits + 32) {
+		// verify that we converted the right number of bits
+		throw std::invalid_argument(__func__);
+	    }
+	}
+
+	/** @brief construct a BloomFilter from its string representation
+	 *
+	 * @param str	string from which to construct BloomFilter
+	 */
+	BloomFilter(const std::string& str)
+	{ set(str); }
 
 	/** @brief return an estimate of set size
 	 *

@@ -87,6 +87,11 @@ int main()
 	myassert(filter != copy); // incomplete copy
 	copy.setword(0, filter.getword(0));
 	myassert(filter == copy); // complete copy
+	// test conversion to/from string
+	copy.clear();
+	myassert(filter != copy); // empty
+	copy.set(std::string(filter));
+	myassert(filter == copy); // complete copy
     }
     rr *= 1e-2;
     rr2 *= 1e-2;
