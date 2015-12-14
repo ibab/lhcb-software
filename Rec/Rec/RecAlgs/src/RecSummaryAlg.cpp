@@ -126,6 +126,14 @@ StatusCode RecSummaryAlg::execute()
 
     // Save total number of tracks
     summary->addInfo( LHCb::RecSummary::nTracks, tracks->size() );
+
+    // -- Read in RecSummary filled in TrackBestTrackCreator and add it to the other track quantities
+    LHCb::RecSummary* rTS = getIfExists<LHCb::RecSummary>(evtSvc(),LHCb::RecSummaryLocation::Track);
+    if( rTS ){
+      summary->addInfo( LHCb::RecSummary::nGhosts, rTS->info(LHCb::RecSummary::nGhosts,-1) );
+    }
+    
+
   }
   else if( m_split )
   {
