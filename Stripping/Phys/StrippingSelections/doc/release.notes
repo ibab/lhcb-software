@@ -3,6 +3,9 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2015-12-14 - Marianna Fontana
+ - Added muon raw banks and RelInfoMuonIsolation to StrippingDstarD02xx
+
 ! 2015-12-13 - Adam Davis
  - Moved Stripping D2HMuNu to Charm WG and reduced rate.
 
