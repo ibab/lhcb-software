@@ -382,11 +382,11 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
       }
 
       // solve the quartic
-      m_quarticSolver.solve<float>( emissionPoint,
-                                    sphSegment->centreOfCurvature(),
-                                    virtDetPoint,
-                                    sphSegment->radius(),
-                                    sphReflPoint );
+      m_quarticSolver.solve<double>( emissionPoint,
+                                     sphSegment->centreOfCurvature(),
+                                     virtDetPoint,
+                                     sphSegment->radius(),
+                                     sphReflPoint );
 
     }
     else
@@ -423,11 +423,11 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
         virtDetPoint = detectionPoint - 2.0 * distance * plane.Normal();
 
         // solve the quartic using the new data
-        m_quarticSolver.solve<float>( emissionPoint,
-                                      sphSegment->centreOfCurvature(),
-                                      virtDetPoint,
-                                      sphSegment->radius(),
-                                      sphReflPoint );
+        m_quarticSolver.solve<double>( emissionPoint,
+                                       sphSegment->centreOfCurvature(),
+                                       virtDetPoint,
+                                       sphSegment->radius(),
+                                       sphReflPoint );
 
         // (re)find the spherical mirror segment
         sphSegment = m_mirrorSegFinder->findSphMirror( rich, side, sphReflPoint );
@@ -569,11 +569,11 @@ findMirrorData( const Rich::DetectorType rich,
                 Gaudi::XYZPoint& secReflPoint ) const
 {
   // solve quartic equation with nominal values and find spherical mirror reflection point
-  m_quarticSolver.solve<float>( emissionPoint,
-                                m_rich[rich]->nominalCentreOfCurvature(side),
-                                virtDetPoint,
-                                m_rich[rich]->sphMirrorRadius(),
-                                sphReflPoint );
+  m_quarticSolver.solve<double>( emissionPoint,
+                                 m_rich[rich]->nominalCentreOfCurvature(side),
+                                 virtDetPoint,
+                                 m_rich[rich]->sphMirrorRadius(),
+                                 sphReflPoint );
   // return status
   bool OK = true;
   // find the spherical mirror segment
@@ -586,8 +586,8 @@ findMirrorData( const Rich::DetectorType rich,
                                        virtDetPoint - sphReflPoint,
                                        m_rich[rich]->nominalPlane(side),
                                        secReflPoint );
-    if ( OK ) 
-    { 
+    if ( OK )
+    {
       // find the secondary mirror
       secSegment = m_mirrorSegFinder->findSecMirror( rich, side, secReflPoint );
     }

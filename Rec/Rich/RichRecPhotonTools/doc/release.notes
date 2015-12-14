@@ -4,6 +4,10 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-12-14 - Chris Jones
+ - Convert QuarticSolver::solve<TYOE> calls RichPhotonRecoUsingQuarticSoln back
+   to double precision, to fix FPE problems with clang.
+
 !========================= RichRecPhotonTools v1r19 2015-11-23 =========================
 ! 2015-11-12 - Chris Jones
  - Convert Gaudi XYZ types to Eigen types sooner, to avoid a few non-vectorised 

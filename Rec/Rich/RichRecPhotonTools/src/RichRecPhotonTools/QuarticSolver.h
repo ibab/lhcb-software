@@ -143,7 +143,7 @@ namespace Rich
                          Gaudi::XYZVector( angleaxis *
                                            Eigen3Vector(evec[0],evec[1],evec[2]) *
                                            ( radius / e ) ) );
-        
+
       }
 
     private:
