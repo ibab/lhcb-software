@@ -5,8 +5,8 @@ class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
     __slots__ = {
           'DiProton_SpdMult'    :   300.   # dimensionless, Spd Multiplicy cut 
         , 'DiProton_PT'         :  1900.   # MeV
-        , 'DiProton_P'          : 10000.   # MeV  
-        #, 'DiProton_TrChi2'     :     5. 
+        , 'DiProton_P'          : 10000.   # MeV
+        , 'DiProton_TrChi2'     :     3. 
         , 'DiProton_MassMin'    :  2800.   # MeV, after Vtx fit
         , 'DiProton_MassMax'    :  4000.   # MeV, after Vtx fit
         , 'DiProton_VtxDOCA'    :     0.1    
@@ -71,7 +71,7 @@ class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
             Preambulo = self.DiProton_preambulo(),
             Code = """
             TrackCandidates
-            >>  ( ( TrPT > %(DiProton_PT)s * MeV ) & ( TrP  > %(DiProton_P)s * MeV ) )
+            >>  ( ( TrPT > %(DiProton_PT)s * MeV ) & ( TrP  > %(DiProton_P)s * MeV ) & ( TrCHI2PDOF < %(DiProton_TrChi2)s ) )
             >>  tee  ( monitor( TC_SIZE > 0, '# pass PT', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nPT' , LoKi.Monitoring.ContextSvc ) )               
             >>  MakeDiProtons

@@ -5,6 +5,8 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-12-14 - Jibo He
+ - Added track chi2 cut for Hlt1 DiProton lines 
 
 ! 2015-12-04 - Jessica Prisciandaro
  - Update of the Hlt1DiMuonNoL0 line
