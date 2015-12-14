@@ -13,6 +13,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2015-12-14 - Marco Clemencic
+ - Add hash id for functor not in the cache in the error message
+   from Hybrid::CoreFactory.
+
 ! 2015-12-09 - Marco Cattaneo
  - use releaseTool() instead of release() to explicitly release a tool acquired
    with tool() templated method
@@ -24,18 +28,18 @@
  - stop propagating globalTimeOffset (see GAUDI-1122)
 
 ! 2015-12-03 - Vanya Belyaev
- - minor fix 
+ - minor fix
 
 ! 2015-11-30 - Vanya Belyaev
- - FilterAlg.cpp: 
-   improve a little bit usage of double lock pattern 
+ - FilterAlg.cpp:
+   improve a little bit usage of double lock pattern
 
 !========================= LoKiCore v11r28 2015-11-23 =========================
 ! 2015-11-03 - Gerhard Raven
  - add deprecation warning to LoKi::select and LoKi::transform
 
 ! 2015-11-01 - Gerhard Raven
- - augment LoKi::Interface so that it supports the same semantics as 
+ - augment LoKi::Interface so that it supports the same semantics as
    regular smartpointers, i.e. add explicit operator bool and get
  - replace LoKi::select with std::copy_if
 
@@ -47,9 +51,9 @@
  - fix clang error
 
 ! 2015-10-20 - Vanya Belyaev
- - LoKiCore.xml 
-   remove duplicated selection 
-   thank to Marco Cattaneo 
+ - LoKiCore.xml
+   remove duplicated selection
+   thank to Marco Cattaneo
 
 !========================= LoKiCore v11r27 2015-10-12 =========================
 ! 2015-09-25 - Gerhard Raven

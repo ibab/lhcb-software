@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Simple python functions for setting common options to all configurables.
 Uses elements from HLTConf and GaudiConf
@@ -12,19 +13,17 @@ or same with postConfForAll...
 
 """
 # Copied from GaudiConf, IOHelper. Manipulators of configurables.
-
+import Gaudi.Configuration as GaudiConfigurables
+import Configurables
 
 def fullNameConfigurables():
     """
     Simple function to find all defined configurables
     and make a dictionary of {fullName : conf}
     """
-    import Gaudi.Configuration as GaudiConfigurables
-    retdict={}
-    for key,con in GaudiConfigurables.allConfigurables.iteritems():
-        retdict[con.getFullName()]=con
-    return retdict
-    
+    return dict((c.getFullName(), c)
+                for c in GaudiConfigurables.allConfigurables.itervalues())
+
 def nameFromConfigurable(conf):
     """
     Safe function to get the full name of a configurable
@@ -37,19 +36,13 @@ def nameFromConfigurable(conf):
 
 def configurableClassFromString(config):
     '''Get a configurable class given only the string'''
-    import Gaudi.Configuration as GaudiConfigurables
-    #Since I didn't find it, I need to create it:
-    config=config.replace('::','__')
-    wclass=None
+    config = config.split('/')[0]
+    config = config.replace('::', '__')
 
-    if hasattr(GaudiConfigurables, config.split('/')[0]):
-        wclass = getattr(GaudiConfigurables,config.split('/')[0])
-    else:
-        import Configurables
-        wclass = getattr(Configurables,config.split('/')[0])
-        #otherwise it must be a configurable
-    
-    return wclass
+    try:
+        return getattr(Configurables, config)
+    except AttributeError:
+        return None
 
 def addPrivateToolFromString(amother,atool):
     '''
@@ -68,39 +61,24 @@ def addPrivateToolFromString(amother,atool):
     return getattr(amother,toolName)
 
 def configurableInstanceFromString(config):
-    '''Get a configurable instance given only the string
-    Uses  fullNameConfigurables() to get all defined configurables
-    If this configurable has not been instantiated, I instantiate it'''
-    
-    import Gaudi.Configuration as GaudiConfigurables
-    
-    #if it's in Gaudi.Configuration with this name, return it
-    
-    if config in fullNameConfigurables():
-        return fullNameConfigurables()[config]
+    '''Get a configurable instance given a type/name the string.
 
-    #might be using a short name instead:
-    if config in GaudiConfigurables.allConfigurables:
-        return GaudiConfigurables.allConfigurables[config]
-    
-    config=config.replace('::','__')
-    
-    #Try again with __ instead of :: to cope with namespaces!
-    
-    if config in fullNameConfigurables():
-        return fullNameConfigurables()[config]
-    
-    if config in GaudiConfigurables.allConfigurables:
-        return GaudiConfigurables.allConfigurables[config]
-    
-    #Since I didn't find it, I need to create it:
-    wclass=configurableClassFromString(config)
-    
-    #check if it has an instance name
-    if '/' not in config:
-        return wclass()
+    If the configurable was not instantiated yet, instantiate it.'''
+
+    if '/' in config:
+        typename, name = config.split('/', 1)
     else:
-        return wclass(name=config.split('/')[-1])
+        typename = name = config
+
+    try:
+        return (GaudiConfigurables.allConfigurables.get(config) or
+                getattr(Configurables, typename)(name))
+    except AttributeError:
+        # this is if the type is not in Configurables,
+        # so we try replacing the namespace separator
+        # FIXME: the logic is wrong because we replace '::' not only in the typename,
+        #        but it's the same logic that was there before the change
+        return configurableInstanceFromString(config.replace('::', '__'))
 
 def removeConfigurables(conf_list):
     '''Helper: get rid of all configurables from a list'''
@@ -114,14 +92,14 @@ def removeConfigurables(conf_list):
 
 def forAllConf( head=None, prop_value_dict={}, types=[], force=False, tool_value_dict={} , recurseToTools=False) :
     """ Find all configurable algorithms and set certain properties
-    
+
     head: can be a sequence or a list, or a configurable to start with.
     if None is given, allConfigurables plus ApplicationMgr().TopAlg will be used
     prop_value_dict: A dictionary of Property: Value, e.g. {'OutputLevel':3}
     types: A list of types to check against, e.g. ['FilterDesktop','CombineParticles','DVAlgorithm'...], default empty list, doesn't check for types
     force: Overwrite properties even if they are already set, default False
     tool_value_dict dictionary of dictionaries, first add tools then set their properties.
-    
+
     To obtain all configurables try something like:
     forAllConf(ApplicationMgr().TopAlg,{'OutputLevel':3})
     or:
@@ -135,11 +113,11 @@ def forAllConf( head=None, prop_value_dict={}, types=[], force=False, tool_value
         raise TypeError("Hey, you need to give me a dictionary, you passed me a, "+str(type(prop_value_dict)))
     if type(tool_value_dict) is not dict:
         raise TypeError("Hey, you need to give me a dictionary, you passed me a, "+str(type(prop_value_dict)))
-    
+
     if head is None:
         from Gaudi.Configuration import ApplicationMgr
         head=[ApplicationMgr()]+fullNameConfigurables().values()
-    
+
     #recurse over lists
     if type(head) is list:
         for i in head: forAllConf(i,prop_value_dict,types,force, tool_value_dict)
@@ -151,8 +129,8 @@ def forAllConf( head=None, prop_value_dict={}, types=[], force=False, tool_value
         except:
             #I cannot find the configurable, skip it
             return
- 
-    
+
+
     if head is None:
         return
     #print "attempting",  nameFromConfigurable(head)
@@ -169,29 +147,29 @@ def forAllConf( head=None, prop_value_dict={}, types=[], force=False, tool_value
                 if force or (not head.isPropertySet(prop)):
                     head.setProp(prop,prop_value_dict[prop])
                     #print "set", nameFromConfigurable(head)
-    
+
     #iterate/recurse over all subparts
     for p in [ 'Members','Filter0','Filter1','TopAlg' ] :
         if not hasattr(head,p) : continue
         seq = getattr(head,p)
-        forAllConf(seq,prop_value_dict,types,force) 
+        forAllConf(seq,prop_value_dict,types,force)
 
 def postConfigCallable(*args,**kwargs):
     """
     Setup a post comfig action for any function requiring arguments
-    
+
     usage:
-    
+
     postConfigCallable(<afunction>,<arg1>,...,<kw1>=<kwarg1>,...)
-    
+
     first unnamed argument MUST be a function to call in postConfig
-    
+
     all other named or unnamed arguments are passed into the function
-    
+
     """
     from Gaudi.Configuration import appendPostConfigAction
     import collections
-    
+
     class dummyPostConf(object):
         """dummy class to wrap function call"""
         def __init__(self,thefunction,theargs,thekwargs):
@@ -200,7 +178,7 @@ def postConfigCallable(*args,**kwargs):
             self.thekwargs=thekwargs
         def method(self):
             return self.thefunction(*self.theargs,**self.thekwargs)
-    
+
     if not len(args):
         raise ValueError("You must pass at least one nameless arg, the function to call!")
     if not isinstance(args[0], collections.Callable):

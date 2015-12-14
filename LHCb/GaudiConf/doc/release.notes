@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2015-12-14 - Marco Clemencic
+ - LHCBPS-1472: Optimized some functions in GaudiConf.Manipulations.
+
 !========================= GaudiConf v19r15 2015-11-23 =========================
 ! 2015-11-04 - Marco Cattaneo
  - LHCbExclusions.py: add temporary exclusions for printout of new Algorithm
