@@ -6,9 +6,9 @@ class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
           'DiProton_SpdMult'    :   300.   # dimensionless, Spd Multiplicy cut 
         , 'DiProton_PT'         :  1900.   # MeV
         , 'DiProton_P'          : 10000.   # MeV
-        , 'DiProton_TrChi2'     :     3. 
+        , 'DiProton_TrChi2'     :     2.5 
         , 'DiProton_MassMin'    :  2800.   # MeV, after Vtx fit
-        , 'DiProton_MassMax'    :  4000.   # MeV, after Vtx fit
+        , 'DiProton_MassMax'    :  3300.   # MeV, after Vtx fit
         , 'DiProton_VtxDOCA'    :     0.1    
         , 'DiProton_VtxChi2'    :     4.   # dimensionless
         , 'DiProton_JpsiPT'     :  6500.   # MeV 
@@ -23,11 +23,12 @@ class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
 
     
     def DiProton_preambulo( self ):
-        from HltTracking.Hlt1Tracking import ( TrackCandidates )
-                                                       
-
+        from HltTracking.Hlt1Tracking import ( TrackCandidates,
+                                               FitTrack )
+        
         ## define some "common" preambulo 
-        Preambulo = [ TrackCandidates( "DiProton" ),                      
+        Preambulo = [ TrackCandidates( "DiProton" ),
+                      FitTrack,
                       ## helpers
                       "VertexConf = LoKi.Hlt1.VxMakerConf( %(DiProton_VtxDOCA)s * mm, \
                                                            %(DiProton_VtxChi2)s )" % self.getProps(),
@@ -49,7 +50,7 @@ class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
 
     def DiProtonLowMult_preambulo( self ):
         from HltTracking.Hlt1Tracking import ( TrackCandidates,
-                                                       FitTrack )
+                                               FitTrack )
         
         ## define some "common" preambulo 
         Preambulo = [ TrackCandidates( "DiProtonLowMult" ),                      
@@ -71,6 +72,7 @@ class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
             Preambulo = self.DiProton_preambulo(),
             Code = """
             TrackCandidates
+            >>  FitTrack
             >>  ( ( TrPT > %(DiProton_PT)s * MeV ) & ( TrP  > %(DiProton_P)s * MeV ) & ( TrCHI2PDOF < %(DiProton_TrChi2)s ) )
             >>  tee  ( monitor( TC_SIZE > 0, '# pass PT', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nPT' , LoKi.Monitoring.ContextSvc ) )               
