@@ -42,7 +42,8 @@ GaudiAlgorithm(name,pSvcLocator),
   declareProperty("maxNbestCluster", m_maxNClusters = {2,4,4});
   declareProperty( "SlopeCorr", m_SlopeCorr = false); //Changhe weight = 1./err -> 1./err*cos(tx)*cos(tx)
   //Used Params
-  declareProperty( "InputName"          ,     m_inputName= LHCb::TrackLocation::Forward);
+  //declareProperty( "InputName"          ,     m_inputName= LHCb::TrackLocation::Forward);
+  declareProperty( "InputName"          ,     m_inputName = ""); // Standalone by Default !
   declareProperty( "OutputName"         ,     m_outputName=LHCb::TrackLocation::Seed);
   declareProperty( "HitManagerName"     ,     m_hitManagerName= "PrFTHitManager");
   declareProperty( "DecodeData"         ,     m_decodeData= false);
