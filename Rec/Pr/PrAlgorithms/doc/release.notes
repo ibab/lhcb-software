@@ -7,7 +7,7 @@
 ! 2015-12-14 - Renato Quagliani
  - By default the HybridSeeding algorithm will not pick as input the tracks from the Forward tracking ( too high ghosts )
 
-! 2015-12-09 - Renato Quagliani
+! 2015-12-12 - Renato Quagliani
  - Suppress info messages, showed only if m_printSettings is True
 
 ! 2015-12-11 - Renato Quagliani
