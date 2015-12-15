@@ -1,4 +1,4 @@
 from Configurables import Moore
 
-Moore().ThresholdSettings="Commissioning_Physics_2015"
+Moore().ThresholdSettings="Physics_25ns_October2015"
 Moore().UseTCK = False

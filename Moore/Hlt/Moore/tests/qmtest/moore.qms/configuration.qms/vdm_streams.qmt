@@ -1,0 +1,30 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: Roel Aaij
+# Purpose: Check that the alternative stream configuration works
+# Prerequisites: None
+# Common failure modes, severities and cures: 
+#               . MAJOR: Any failures in generating a TCK are major problems which need to be addressed
+#######################################################
+-->
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>python</text></argument>
+  <argument name="args"><set>
+    <text>../options/vdm_streams.py</text>
+  </set></argument>
+  <argument name="timeout">
+    <integer>1200</integer>
+  </argument>
+  <argument name="validator"><text>
+
+expected_string= &quot;PASSED&quot;
+if stdout.find(expected_string) ==-1:
+    causes.append('missing string')
+    result['moore.configuration.vdm_streams.expected_string']=result.Quote(expected_string)
+
+</text></argument>
+</extension>
+
