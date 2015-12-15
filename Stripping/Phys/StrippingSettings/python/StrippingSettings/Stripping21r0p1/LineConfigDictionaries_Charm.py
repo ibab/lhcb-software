@@ -248,7 +248,7 @@ DstarD02xx ={
 
 #Simone Stracka,
 #StrippingD2PiPi0.py linebuilder
-'D2EtaH' = {
+D2EtaH = {
     'WGs': ['Charm'],
     'BUILDERTYPE': 'StrippingD2EtaHConf',
     'STREAMS': ['Charm'],
@@ -323,7 +323,7 @@ DstarD02xx ={
                'PostscaleD2KEta3HR' : 1
                }
  }   
-'D2EtaPrimeH' = {
+D2EtaPrimeH = {
     'WGs': ['Charm'],
     'BUILDERTYPE': 'StrippingD2EtaPrimeHConf',
     'STREAMS': ['Charm'],
@@ -394,7 +394,7 @@ DstarD02xx ={
                 'PostscaleD2KEtaPrime3HR' : 1
                 }
 }
-'D2PhiH' = {
+D2PhiH = {
     'WGs': ['Charm'],
     'BUILDERTYPE': 'StrippingD2PhiHConf',
     'STREAMS': ['Charm'],
