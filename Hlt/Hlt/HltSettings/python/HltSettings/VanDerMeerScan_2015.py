@@ -71,8 +71,12 @@ class VanDerMeerScan_2015:
                 'Postscale'  : { 'Hlt1Lumi' :  1. },
             },
             Hlt1MBLinesConf : {
-                'Postscale'    : { 'Hlt1MBMicroBias.*RateLimited' : 'RATE(100)' },
-                'MicroBiasOdin': 'scale( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger, RATE(2000,LoKi.Scalers.RandomPhasePeriodicLimiter) )',
+                'Postscale'  : { 'Hlt1MBMicroBias.*RateLimited' : 'RATE(100)' },
+                'ODIN'       : { 'MicroBias'               : 'scale( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger, RATE(2000,LoKi.Scalers.RandomPhasePeriodicLimiter) )'
+                               , 'MicroBiasLowMultVelo'    : 'jbit( ODIN_EVTTYP,2 )'
+                               , 'NoBias'                  : 'jbit( ODIN_EVTTYP,2 )'
+                               , 'CharmCalibrationNoBias'  : 'jbit( ODIN_EVTTYP,2 )'
+                               , 'NoBiasLeadingCrossing'   : 'jbit( ODIN_EVTTYP,14 )'}
             },
             Hlt1BeamGasLinesConf : {
                 # Global behaviour settings
@@ -139,3 +143,10 @@ class VanDerMeerScan_2015:
             }
         })
         return thresholds
+
+    def Streams(self):
+        return {
+            'FULL' : "HLT_PASS('Hlt2SMOGPhysicsDecision') | HLT_PASS('Hlt2LumiDecision')",
+            'BEAMGAS' : "HLT_PASS_SUBSTR('Hlt1BeamGas') | HLT_PASS_RE('Hlt1L0.*Decision') | HLT_PASS_SUBSTR('Hlt1Lumi')",
+            'VELOCLOSING' : "HLT_PASS_RE('Hlt1Velo.*Decision')",
+        }

@@ -1,4 +1,4 @@
-class Calibration_TMicroBias :
+class Calibration_TMicroBias(object) :
     """
     Threshold settings for T-Station micro bias 
     

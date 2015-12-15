@@ -4,8 +4,14 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-12-15 - Roel Aaij
+ - Remove unused LHCbPR settings.
+
 ! 2015-12-15 - Rosen Matev
  - Fix Commissioning_Physics_2015 (adapt to changes in Hlt1 CEP lines)
+
+! 2015-12-14 - Roel Aaij
+ - Port stream configuration for VanDerMeerScan_2015.py from v7r5 (HI branch).
 
 ! 2015-12-10 - Mika Vesterinen
  - Prepare Physics_pp_Draft2016
