@@ -479,7 +479,7 @@ B2DXD2HMuNu = {
     "GEC_nLongTrk"        : 160.   #adimensional
     },
     'STREAMS'     : {
-    'B2OC': [
+    'Bhadron': [
     'StrippingB2D0PiD02PiMuNuLine',
     'StrippingB2D0PiD02KMuNuLine',
     'StrippingB2D0PiD02KPiPiMuNuLine',

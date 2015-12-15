@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-12-15 - Ricardo Vazquez Gomez
+ - Fix STREAM name in B2OC line config
+
+! 2015-12-15 - Ricardo Vazquez Gomez
  - Fix Charm config dictionaries for S21r0,1p1.
 
 ! 2015-12-14 Eva Gersabeck
