@@ -9,6 +9,8 @@ Purpose: LHCb reconstruction program
   . Make 'PrHybridSeeding' the default (instead of PrSeedingXLayers) in the 
     upgrade tracking sequence (TrackSys, PrAlgorithms)
   . Cleanup and fixes in CaloDet
+  . Convert QuarticSolver::solve calls RichPhotonRecoUsingQuarticSoln back to
+    double precision (RichRecPhotonTools)
 
 </PRE><H1><A NAME=v49r1>2015-11-25 Brunel v49r1</A></H1><PRE>
 This version uses projects LHCb v39r2, Lbcom v17r2, Rec v18r3, Gaudi v26r4
