@@ -317,9 +317,11 @@ class Commissioning_Physics_2015( object ):
                    , 'Hlt1CalibRICHMirrorRICH2'
                    , 'Hlt1DiProton'
                    , 'Hlt1DiProtonLowMult'
-                   , 'Hlt1CEP'
-                   , 'Hlt1CEPVeloCut'
-                   , 'Hlt1NoPVPassThrough'
+                   , 'Hlt1LowMult'
+                   , 'Hlt1LowMultVeloCut_Hadrons'
+                   , 'Hlt1LowMultVeloCut_Leptons'
+                   , 'Hlt1LowMultMaxVeloCut'
+                   , 'Hlt1LowMultPassThrough'
                    , 'Hlt1NoBiasNonBeamBeam']
 
 
