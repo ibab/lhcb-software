@@ -38,16 +38,15 @@ def _disableHistograms(c,filter = lambda x : True) :
 class HltMonitoringConf(LHCbConfigurableUser):
     __used_configurables__ = []
 
-    __slots__ = {"EnableMonitoring"         : False,
+    __slots__ = {"EnableAlgMonitoring"      : False,  # Enable monitoring for some algorithms
                  "EnableL0Monitor"          : True,
-                 "EnableHltMonitor"         : True,
-                 "EnableHlt1TrackMonitor"   : True,
+                 "EnableGlobalMonitor"      : True,
+                 "EnableTrackMonitor"       : True,
+                 "EnableMassMonitor"        : True,
                  'Hlt1TrackMonitorPrescale' : 0.001,
                  'Hlt1TrackMonitorGEC'      : "Loose",
-                 "HistogrammingLevel"       : "Line",
+                 "HistogrammingLevel"       : "Line",  # One of 'None', 'Line' or 'NotLine'
                  "OutputFile"               : "",
-                 "ActiveHlt1Lines"          : [],
-                 "ActiveHlt2Lines"          : [],
                  "MonitorSequence"          : None
                 }
 
@@ -97,14 +96,17 @@ class HltMonitoringConf(LHCbConfigurableUser):
             return []
 
     def __hlt1_monitoring(self, lines1):
-        ## and tell the monitoring what it should expect..
-        # the keys are the Labels for the Histograms in the GUI
-        # the values are the Pattern Rules to for the Decisions contributing
-        from Configurables import HltGlobalMonitor, HltL0GlobalMonitor
+        monSeq = Sequence("Hlt1MonitorSequence", IgnoreFilterPassed = True)
 
         l0Mon = self.__l0_monitoring("Hlt1")
+        monSeq.Members += l0Mon
+
+        # Tell the monitoring what it should expect..
+        # the keys are the Labels for the Histograms in the GUI
+        # the values are the Pattern Rules to for the Decisions contributing
 
         ## Global monitor
+        from Configurables import HltGlobalMonitor
         globalMon = self.__globalMonitor("Hlt1")
         globalMon.DecToGroup = self.__groupLines( [ i.decision() for i in lines1 ],
                                                   [ ("L0"         , "Hlt1L0.*Decision"),
@@ -122,6 +124,8 @@ class HltMonitoringConf(LHCbConfigurableUser):
                                                     ("Other"      , ".*") # add a 'catch all' term to pick up all remaining decisions...
                                                   ]
                                                   )
+        if self.getProp("EnableGlobalMonitor"):
+            monSeq.Members.append(globalMon)
 
         ## Mass monitor
         from Configurables import HltMassMonitor
@@ -144,6 +148,8 @@ class HltMonitoringConf(LHCbConfigurableUser):
                               "D0->KK"       : [ 1815, 1915, 50 ],
                               "D0->pipi"     : [ 1815, 1915, 50 ],
                               "phi->KK"      : [ 1000, 1040, 80 ]}
+        if self.getProp("EnableMassMonitor"):
+            monSeq.Members.append(massMon)
 
         # Setup the track monitoring
         from Configurables        import Hlt1TrackMonitor
@@ -166,16 +172,20 @@ class HltMonitoringConf(LHCbConfigurableUser):
         trackMonSeq = Sequence('Hlt1TrackMonitorSequence',
                                Members = [ gecUnit, prescaler ] + HltHPTTracking.members() + [ trackMon ])
 
-        # Sequence
-        monSeq = Sequence("Hlt1MonitorSequence", IgnoreFilterPassed = True)
-        if l0Mon:
-            monSeq.Members = l0Mon
-        monSeq.Members += [globalMon, massMon, trackMonSeq]
+        if self.getProp("EnableTrackMonitor"):
+            monSeq.Members.append(trackMonSeq)
+
         return monSeq
 
     def __hlt2_monitoring(self, lines2):
+        monSeq = Sequence("Hlt2MonitorSequence", IgnoreFilterPassed = True)
 
         l0Mon = self.__l0_monitoring("Hlt2")
+        monSeq.Members += l0Mon
+
+        # Tell the monitoring what it should expect..
+        # the keys are the Labels for the Histograms in the GUI
+        # the values are the Pattern Rules to for the Decisions contributing
 
         from Configurables import HltGlobalMonitor
         globalMon = self.__globalMonitor("Hlt2")
@@ -208,6 +218,8 @@ class HltMonitoringConf(LHCbConfigurableUser):
                                   ("Other",         ".*") # add a 'catch all' term to pick up all remaining decisions...
                                  ]
                                  )
+        if self.getProp("EnableGlobalMonitor"):
+            monSeq.Members.append(globalMon)
 
         from Configurables import HltMassMonitor
         massMon = HltMassMonitor("Hlt2MassMonitor")
@@ -231,7 +243,6 @@ class HltMonitoringConf(LHCbConfigurableUser):
                               "D0->Kpi"             : "Hlt2RareCharmD02KPiDecision",
                               "phi->KK"             : "Hlt2IncPhiDecision"
                               }
-
         massMon.Histograms = {"Jpsi"                : [3005, 3186, 50],
                               "Psi2S"               : [3600, 3770, 50],
                               "D+->Kpipi"           : [1820.,1920., 100],
@@ -249,10 +260,9 @@ class HltMonitoringConf(LHCbConfigurableUser):
                               "D0->Kpi"             : [1815.,1915., 100],
                               "phi->KK"             : [1000.,1040., 80]
                               }
+        if self.getProp("EnableMassMonitor"):
+            monSeq.Members.append(massMon)
 
-
-        monSeq = Sequence("Hlt2MonitorSequence", IgnoreFilterPassed = True,
-                          Members = l0Mon + [globalMon, massMon])
         return monSeq
 
     def __configureOutput(self):
@@ -272,7 +282,8 @@ class HltMonitoringConf(LHCbConfigurableUser):
         ## lines. This function is called from the postConfigAction of
         ## HltConf.Configuration.
 
-        monSeq = Sequence("HltMonitorSequence", IgnoreFilterPassed = True)
+        monSeq = self.getProp("MonitorSequence")
+        monSeq.IgnoreFilterPassed = True  # enforce execution of all sub-sequences
         if lines1:
             hlt1Mon = self.__hlt1_monitoring(lines1)
             monSeq.Members += [hlt1Mon]
@@ -280,9 +291,7 @@ class HltMonitoringConf(LHCbConfigurableUser):
             hlt2Mon = self.__hlt2_monitoring(lines2)
             monSeq.Members += [hlt2Mon]
 
-        ## Tell the monitoring what it should expect..
-        # the keys are the Labels for the Histograms in the GUI
-        # the values are the Pattern Rules to for the Decisions contributing
+        # Disable production of histograms for all (most) of the algorithms
         from HltLine.HltLine     import hlt1Lines, hlt2Lines
         if   self.getProp('HistogrammingLevel') == 'None' :
             for i in hlt1Lines()+hlt2Lines() : _disableHistograms( i.configurable() )
@@ -290,12 +299,16 @@ class HltMonitoringConf(LHCbConfigurableUser):
             for i in hlt1Lines()+hlt2Lines() : _disableHistograms( i.configurable(), lambda x: x.getType()!='Hlt::Line' )
         elif self.getProp('HistogrammingLevel') == 'NotLine' :
             for i in hlt1Lines()+hlt2Lines() : _disableHistograms( i.configurable(), lambda x: x.getType()=='Hlt::Line' )
-        if self.getProp('EnableMonitoring') :
+        else:
+            ValueError("HltMonitoringConf: HistogrammingLevel property must be set to 'None', 'Line' or 'NotLine'.")
+
+        # Enable production of histograms for some algorithms, see _enableMonitoring()
+        if self.getProp('EnableAlgMonitoring') :
             for i in hlt1Lines()+hlt2Lines() : _recurse( i.configurable(),_enableMonitoring )
 
     def __apply_configuration__(self):
         ## Only do things here that do not need to know the list of instantiated
         ## HLT lines.
         if not self.getProp("MonitorSequence"):
-            raise RuntimeException("HltMonitoringConf: MonitorSequence property must be set.")
+            raise ValueError("HltMonitoringConf: MonitorSequence property must be set.")
         self.__configureOutput()

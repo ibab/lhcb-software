@@ -4,6 +4,10 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-12-14 - Rosen Matev
+ - Remove properties related to monitoring from HltConf
+ - Improve configurability of HltMonitoringConf
+
 ! 2015-11-30 - Sascha Stahl
  - Protect TrackMonitor with a GEC cut.
 

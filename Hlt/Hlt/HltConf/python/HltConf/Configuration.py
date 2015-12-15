@@ -64,13 +64,9 @@ class HltConf(LHCbConfigurableUser):
                 , 'SkipDisabledL0Channels'         : False
                 , "DataType"                       : '2012'
                 , "Verbose"                        : False      # print the generated Hlt sequence
-                , "HistogrammingLevel"             : 'Line'     # or 'Line'
                 , "ThresholdSettings"              : ''         #  select a predefined set of settings, eg. 'Effective_Nominal'
                 , "Split"                          : ''         # Hlt1 or Hlt2 (will also be set by Moore)
-                , "EnableMonitoring"               : True
-                , "EnableHltGlobalMonitor"         : True
-                , "EnableHltL0GlobalMonitor"       : True
-                , "EnableBeetleSyncMonitor"        : False
+                , "EnableMonitoring"               : True       # Insert the monitoring sequence
                 , "EnableHltDecReports"            : True
                 , "EnableHltSelReports"            : True
                 , "EnableHltVtxReports"            : True
@@ -86,7 +82,6 @@ class HltConf(LHCbConfigurableUser):
                 , 'VetoRoutingBits'                : []
                 , 'SkipHltRawBankOnRejectedEvents' : True
                 , 'LumiBankKillerPredicate'        : "(HLT_PASS_SUBSTR('Hlt1Lumi') & ~HLT_PASS_RE('Hlt1(?!Lumi).*Decision'))"
-                , 'BeetleSyncMonitorRate'          : 5000
                 , "LumiBankKillerAcceptFraction"   : 0.9999     # fraction of lumi-only events where raw event is stripped down
                                                                 # (only matters if EnablelumiEventWriting = True)
                 , "AdditionalHlt1Lines"            : []         # must be configured
@@ -715,8 +710,12 @@ class HltConf(LHCbConfigurableUser):
         Hlt1PostAmble = instantiate( 'Hlt1Postamble',_hlt1postamble )
         Hlt2PostAmble = instantiate( 'Hlt2Postamble',_hlt2postamble )
 
+        # Configure monitoring
         from HltMonitoring import HltMonitoringConf
         HltMonitoringConf().MonitorSequence = Monitoring
+        # Disable L0 monitoring if no L0TCK has been set
+        if self.getProp('L0TCK') is None:
+            HltMonitoringConf().EnableL0Monitor = False
 
         if (self.getProp("EnableLumiEventWriting")) :
             if sets and hasattr(sets, 'NanoBanks') :
@@ -758,9 +757,6 @@ class HltConf(LHCbConfigurableUser):
         self.confType()
         self.endSequence()
         self.configureRoutingBits()
-
-        from HltConf.HltMonitoring import HltMonitoringConf
-        self.setOtherProps(HltMonitoringConf(), ["HistogrammingLevel"])
 
         #appendPostConfigAction( self.postConfigAction )
         GaudiKernel.Configurable.postConfigActions.insert( 0,  self.postConfigAction )
