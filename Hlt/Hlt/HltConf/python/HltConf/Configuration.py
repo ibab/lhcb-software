@@ -37,7 +37,7 @@ def __updateDict__( d, id, entries ) :
     for i in entries :
         while id in d.values() : id = id + 1
         d.update({ i : id } )
-        
+
 ### TODO: move this into HltPVs...
 def onlinePV():
     """Use the tracking cofigurables to define the onlinePV location
@@ -54,10 +54,21 @@ class HltConf(LHCbConfigurableUser):
     """
     Hlt configuration
     """
+    ## Streams we know about: {name, (rb, enabled-by-default)}
+    __streams__ = {"LUMI"        : (33, True),
+                   "BEAMGAS"     : (35, True),
+                   "VELOCLOSING" : (40, True),
+                   "FULL"        : (87, True),
+                   "TURBO"       : (88, True),
+                   "PARKED"      : (89, False),
+                   "TURCAL"      : (90, True),
+                   "NOBIAS"      : (91, False),
+                   "SMOGPHYS"    : (93, False)}
+
     __used_configurables__ = [ Hlt1Conf
                              , Hlt2Conf
                              , HltMonitoringConf
-                             , HltAfterburnerConf 
+                             , HltAfterburnerConf
                              , HltPersistRecoConf ]
     __slots__ = { "L0TCK"                          : None
                 , 'ForceSingleL0Configuration'     : True
@@ -90,8 +101,10 @@ class HltConf(LHCbConfigurableUser):
                                                       "PIDDetJPsiMuMuNegTaggedTurboCalib", "PIDLambda2PPiLLhighPTTurboCalib", "PIDLambda2PPiLLveryhighPTTurboCalib",
                                                       "DiMuonDetachedJPsi"]
                 , "NanoBanks"                      : ['ODIN','HltLumiSummary','HltRoutingBits','DAQ']
-                , "PruneHltANNSvc"                    : True
+                , "PruneHltANNSvc"                 : True
                 , "PersistReco"                    : False
+                , "PruneHltANNSvc"                 : True
+                , "EnabledStreams"                 : {"LUMI" : None, "BEAMGAS" : None, "FULL" : None, "TURBO" : None, "TURCAL" : None, "VELOCLOSING" : None}
                 }
 
     __settings__ = None
@@ -103,6 +116,9 @@ class HltConf(LHCbConfigurableUser):
     #_log.addHandler( handler )
     #_log.setLevel(logging.DEBUG)
 
+    def knownStreams(self):
+        return self.__streams__
+    
     def defineL0Channels(self, L0TCK = None) :
         """
         Define L0 channels
@@ -154,12 +170,12 @@ class HltConf(LHCbConfigurableUser):
 
         for factories, mods in {(HltFactory(),
                                  HltFactory("HltFactory"),
+                                 CoreFactory("Hlt1CoreFactory"),
+                                 CoreFactory("Hlt2CoreFactory"),
                                  HltFactory("Hlt1HltFactory"),
                                  HltFactory("Hlt2HltFactory")) :
                                 modules,
                                 (CoreFactory("Hlt1Factory"),
-                                 CoreFactory("Hlt1CoreFactory"),
-                                 CoreFactory("Hlt2CoreFactory"),
                                  HybridFactory("Hlt1HybridFactory"),
                                  HybridFactory("Hlt2HybridFactory")) :
                                 modules + extra_modules}.iteritems():
@@ -168,7 +184,7 @@ class HltConf(LHCbConfigurableUser):
                      factory.Modules.append(module)
                      factory.Lines += ["from GaudiKernel.SystemOfUnits import GeV, MeV, mm",
                                        "import HltTracking.Hlt1StreamerConf"]
-    
+
     def confType(self) :
         """
         Decoding of configuration. This is where Hlt1 and 2 configurations are called.
@@ -295,17 +311,26 @@ class HltConf(LHCbConfigurableUser):
         # 32-63: reserved for Hlt1
         # 64-91: reserved for Hlt2
 
-        ### NOTE: any change in the _meaning_ of any of the following needs to be
-        ###       communicated (at least!) with online, to insure the events are
-        ###       still properly routed!!! (this goes esp. for [32,36]!!!)
-        ### NOTE: current usage:
-        ###       bit 46 -> 'physics triggers'
-        ###       bit 37 -> subscribed to be Hlt monitoring
-        ###       bit 36 -> express stream
-        ###       bit 35 -> subscribed to by Velo closing monitoring
-        ###       bit 34 -> count number of 'non-lumi-exlusive events'
-        ###       bit 33 -> lumi stream
-        ###       bit 32 -> full stream (actually, not used for that, but it could be ;-)
+        ## NOTE: any change in the _meaning_ of any of the following needs to be
+        ##       communicated (at least!) with online, to insure the events are
+        ##       still properly routed!!! (this goes esp. for [32,36]!!!)
+        ## NOTE: Usage of bits set in HLT1:
+        ##       bit 46 -> 'physics triggers'
+        ##       bit 37 -> subscribed to be Hlt monitoring
+        ##       bit 36 -> express stream
+        ##       bit 35 -> subscribed to by Velo closing monitoring
+        ##       bit 34 -> count number of 'non-lumi-exlusive events'
+        ##       bit 33 -> lumi stream
+        ##       bit 32 -> full stream (actually, not used for that, but it could be ;-)
+        ## NOTE: Routing bits for streams set in HLT2
+        ##       bit 87 for the full (non-turbo(calib)) stream
+        ##       bit 88 for Turbo stream, includes lumi events.
+        ##       bit 89 for parked stream; reserved but not set for now
+        ##       bit 90 for TurboCalib stream, includes lumi events.
+        ##       bit 91 for NOBIAS stream; reserved
+        ##       bit 92 for online DQ on HLT2 output
+        ##       bit 93 for SMOG physics; reserved
+
         from Hlt1Lines.HltL0Candidates import L0Channels
 
         from Configurables import HltRoutingBitsWriter
@@ -378,21 +403,77 @@ class HltConf(LHCbConfigurableUser):
                       , 84 : "HLT_PASS_RE('Hlt2TopoMu[234]Body.*Decision')"
                       , 85 : "HLT_PASS_RE('Hlt2TopoE[234]Body.*Decision')"
                       , 86 : "HLT_PASS_RE('Hlt2Topo[234]Body.*Decision')"
-                      # routing bit for the full (non-turbo) stream
+                      # RB 87 for the full (non-turbo(calib)) stream
                       , 87 : "HLT_NONTURBOPASS_RE('Hlt2.*Decision') | HLT_PASS('Hlt2LumiDecision')"
-                      # routing bit for Turbo stream, includes lumi events.
+                      # RB 88 for Turbo stream, includes lumi events.
                       # this now excludes turbocalib events which have their own stream/routing bit
                       , 88 : "HLT_TURBOPASS_RE('^Hlt2.*(?!TurboCalib)Decision$') | HLT_PASS('Hlt2LumiDecision')"
-                      # RB 89 is reserved for the parked stream but is not set for now
-                      # routing bit 90 for TurboCalib stream, includes lumi events.
+                      # RB 89 for the parked stream; reserved but not set for now
+                      # RB 90 for TurboCalib stream, includes lumi events.
                       , 90 : "HLT_TURBOPASS_RE('^Hlt2.*TurboCalibDecision$') | HLT_PASS('Hlt2LumiDecision')"
-                      # VVG 01-05-2015
-                      , 91 : "HLT_PASS_RE('^Hlt2(%s)Decision$')" % '|'.join(self.getProp("Hlt2LinesForDQ"))
+                      # RB 91 for the NOBIAS stream; reserved
+                      # RB 92 for online DQ on HLT2 output
+                      , 92 : "HLT_PASS_RE('^Hlt2(%s)Decision$')" % '|'.join(self.getProp("Hlt2LinesForDQ"))
+                      # RB 93 for SMOG physics; reserved
         }
-        HltRoutingBitsWriter('Hlt1RoutingBitsWriter').RoutingBits = routingBits
-        HltRoutingBitsWriter('Hlt2RoutingBitsWriter').RoutingBits = routingBits
 
-        ## and record the settings in the ANN service
+        ## Stream configuration
+        knownStreams = self.knownStreams()
+        defaultEnabled = dict(filter(lambda e: e[1][1], knownStreams.iteritems()))
+
+        ## Update routing bits according to enabled streams
+        sets = self.settings()
+        ep = 'EnabledStreams'
+        if self.isPropertySet(ep) and self.getProp(ep) != self.getDefaultProperty(ep):
+            log.warning( '##########################################################')
+            log.warning( 'Non-default stream configuration specified from EnabledStreams property')
+        elif sets and hasattr(sets, 'Streams') and set(sets.Streams()) != set(self.getDefaultProperty(ep)):
+            log.warning( '##########################################################')
+            log.warning( 'Non-default stream configuration specified in Settings')
+            self._safeSet('EnabledStreams', sets.Streams())
+
+        streams = {s : (bit, None, False) for (s, (bit, on)) in knownStreams.iteritems()}
+        for stream, expr in self.getProp('EnabledStreams').iteritems():
+            if stream not in streams:
+                log.fatal("Attempt to enable a non-existent stream %s." % stream)
+                raise RuntimeError
+            if stream not in defaultEnabled:
+                log.warning("Enabling non-default enabled stream %s." % stream)
+            bit = streams[stream][0]
+            if expr == None:
+                if bit in routingBits:
+                    expr = routingBits[bit]
+                else:
+                    log.fatal("Attempt to enable %s stream with the default expression, which is not defined." % stream)
+                    raise RuntimeError
+            streams[stream] = (bit, expr, True)
+
+        ## Check if default enabled streams are on
+        disabled = [s[0] for s in streams.iteritems() if not s[1][2] and s[0] in defaultEnabled]
+        if disabled:
+            log.warning( '##########################################################')
+            log.warning( 'Normally enabled streams are disabled: %s.' % ', '.join(disabled) )
+            log.warning( '##########################################################')
+
+        if {k : (bit, on) for (k, (bit, expr, on)) in streams.iteritems()} != knownStreams:
+            log.warning( '##########################################################' )
+            log.warning( 'Non-standard stream configuration' )
+            log.warning( 'Enabled:  %s' % ', '.join(s[0] for s in streams.iteritems() if s[1][2]) )
+            log.warning( 'Disabled: %s' % ', '.join(s[0] for s in streams.iteritems() if not s[1][2]) )
+            log.warning( '##########################################################' )
+
+        ## Do the actual disabling of streams
+        for stream, (bit, expr, on) in streams.iteritems():
+            if not on and bit in routingBits:
+                routingBits.pop(bit)
+            if on and routingBits.get(bit, None) != expr:
+                log.warning( 'Setting non standard routing bit expression for %s stream' % stream)
+                log.warning( 'Now:     %s' % expr)
+                log.warning( 'Default: %s' % routingBits.get(bit, "Disabled"))
+                log.warning( '##########################################################' )
+                routingBits[bit] = expr
+
+        ## Record the settings in the ANN service
         from Configurables       import HltANNSvc
         HltANNSvc().RoutingBits = dict( [ (v,k) for k,v in routingBits.iteritems() ] )
         # LoKi::Hybrid::HltFactory is what RoutingBitsWriter uses as predicate factory..
@@ -401,8 +482,12 @@ class HltConf(LHCbConfigurableUser):
         from Configurables import LoKi__Hybrid__HltFactory as HltFactory
         HltFactory('ToolSvc.LoKi::Hybrid::HltFactory').Modules += [ 'LoKiCore.functions', 'LoKiNumbers.sources' ]
         #  forward compatibility: HltFactory will become private for HltRoutingBitsWriter...
-        HltFactory('HltRoutingBitsWriter.LoKi::Hybrid::HltFactory').Modules += [ 'LoKiCore.functions', 'LoKiNumbers.sources' ]
-        # and, last but not least, tell the writer what it should write..
+        for stage in ('Hlt1', 'Hlt2'):
+            HltFactory(stage + 'RoutingBitsWriter.LoKi::Hybrid::HltFactory').Modules += [ 'LoKiCore.functions', 'LoKiNumbers.sources' ]
+
+        # and, last but not least, tell the writers what they should write..
+        HltRoutingBitsWriter('Hlt1RoutingBitsWriter').RoutingBits = {k : routingBits[k] for k in routingBits.iterkeys() if k < 64}
+        HltRoutingBitsWriter('Hlt2RoutingBitsWriter').RoutingBits = routingBits
 
     def configurePersistence(self, hlt1Lines, lines, stage) :
         """

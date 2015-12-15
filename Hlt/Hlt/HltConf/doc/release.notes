@@ -4,12 +4,37 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-12-15 - Roel Aaij
+ - Add routing bits that are absent by default but enabled by the user.
+
+! 2015-12-15 - Roel Aaij
+ - Do not configure the Hlt1RoutingBitsWriter with routing bits larger than 64.
+
+! 2015-12-15 - Sascha Stahl
+ - Add VELOCLOSING to known streams.
+
+! 2015-12-15 - Sascha Stahl
+ - Fixed bug in logic to add unknown streams.
+
+! 2015-12-15 - Roel Aaij
+ - USE WITH EXTREME CARE!
+   Allow routing bits to be configured from the Settings by checking for the
+   presence of the "Streams" method that should return a dictionary of
+   {stream name : (None | expression)}.
+   The stream names must all be part of the known streams defined in
+   Configuration.py. If the value is None, the default expression to flag the
+   bit is used, as defined in Configuration.py. If an expression is given,
+   that will be used. Appropriate warnings have been implemented.
+
 ! 2015-12-14 - Rosen Matev
  - Remove properties related to monitoring from HltConf
  - Improve configurability of HltMonitoringConf
 
 ! 2015-11-30 - Sascha Stahl
  - Protect TrackMonitor with a GEC cut.
+
+! 2015-11-23 - Roel Aaij
+ - Remove additional modules from CoreFactories that don't need them.
 
 ! 2015-11-23 - Sean Benson
  - Updates and fixes to PersistReco.
