@@ -73,7 +73,7 @@ def configurableInstanceFromString(config):
     try:
         return (GaudiConfigurables.allConfigurables.get(config) or
                 getattr(Configurables, typename)(name))
-    except AttributeError:
+    except (AttributeError, TypeError):
         # this is if the type is not in Configurables,
         # so we try replacing the namespace separator
         # FIXME: the logic is wrong because we replace '::' not only in the typename,
