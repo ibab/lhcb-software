@@ -21,6 +21,13 @@
     <text>from Configurables import Moore; from PRConfig import TestFileDB; TestFileDB.test_file_db["2010_raw_default"].run(configurable=Moore(), withDB=True); Moore().EvtMax=100;</text>
   </set></argument>
   <argument name="validator"><text>
-countErrorLines({"FATAL":0, "WARNING":0, "ERROR":0})
-</text></argument>
+  
+countErrorLines({"FATAL":0, "WARNING":1, "ERROR":0})
+warning = """
+DetectorDataSvc                         SUCCESS Detector description database: conddb:/lhcb.xml
+DeVeloRType                             WARNING VELO R sensor M2 routing lines not in conditions DB cond: Routing-R-X-Strip0000 and Routing-R-Y-Strip0000
+"""
+findReferenceBlock(warning)
+
+  </text></argument>
 </extension>

@@ -4,8 +4,8 @@
 # SUMMARY OF THIS TEST
 # ...................
 # Author: rlambert
-# Purpose: Compatibiltiy test, check that moore can successfully process 2011 data with the tags which produced that data in the first place
-# Prerequisites: 
+# Purpose: Compatibility test, check that Moore can successfully process 2011 data with the tags which produced that data in the first place
+# Prerequisites: None
 # Common failure modes, severities and cures: 
 #               . SEVERE: Segfault or raised exception, stderr, nonzero return code
 #               . MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
@@ -18,12 +18,16 @@
   <argument name="args"><set>
     <text>$MOOREROOT/tests/options/Moore-Offline.py</text>
     <text>--option</text>
-    <text>from Configurables import Moore; from PRConfig import TestFileDB; TestFileDB.test_file_db["2011_raw_default"].run(configurable=Moore(),withDB=True); Moore().EvtMax=100;</text>
+    <text>from Configurables import Moore; from PRConfig import TestFileDB; TestFileDB.test_file_db["2011_raw_default"].run(configurable=Moore(), withDB=True); Moore().EvtMax=100;</text>
   </set></argument>
   <argument name="validator"><text>
-#print stdout
-#from Brunel.QMTest.BrunelExclusions import preprocessor
-#validateWithReference(preproc = preprocessor)
-countErrorLines({"FATAL":0, "WARNING":0, "ERROR":0})
-</text></argument>
+  
+countErrorLines({"FATAL":0, "WARNING":1, "ERROR":0})
+warning = """
+DetectorDataSvc                         SUCCESS Detector description database: conddb:/lhcb.xml
+DeVeloRType                             WARNING VELO R sensor M2 routing lines not in conditions DB cond: Routing-R-X-Strip0000 and Routing-R-Y-Strip0000
+"""
+findReferenceBlock(warning)
+
+  </text></argument>
 </extension>

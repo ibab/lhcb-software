@@ -4,6 +4,10 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2015-12-15 - Rosen Matev
+ - Ignore VELO warning for tests using old dddb.
+   (VELO R sensor M2 routing lines not in conditions DB cond)
+
 ! 2015-12-15 - Roel Aaij
  - Add tests for stream configuration from settings:
    - If a settings configures streams, all streams must be known
