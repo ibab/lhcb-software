@@ -309,7 +309,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         algs.extend(algTracking)
 
         if self.getProp("FitTracks"):
-            algs.append(self._create_velo_fitter())
+            algs += self._create_velo_fitter()
 
         algs.append(self._create_pvalg())
 

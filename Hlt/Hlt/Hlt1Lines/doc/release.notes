@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-12-15 - Roel Aaij
+ - Port fix to BeamGas lines from HI branch to head.
+
 ! 2015-12-14 - Jibo He
  - Added track chi2 cut for Hlt1 DiProton lines, and reduced the mass range 
    to etac(1S) and J/psi region.  
