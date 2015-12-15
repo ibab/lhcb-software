@@ -32,12 +32,12 @@ if len(stdout.split('\n'))&lt;128:
     causes.append('stdout is too short, aiming for at least 128 lines')
     result['moore.physics.2015_25ns.lt_lines']=result.Quote('Expected at least 128 lines, got '+ str(len(stdout.split('\n'))))
 
-if len(stdout.split('\n'))&gt;500:
+if len(stdout.split('\n'))&gt;2000:
     causes.append('stdout is too long, aiming for at most 2000 lines')
     result['moore.physics.2015_25ns.gt_lines']=result.Quote('Expected at most 2000 lines, got '+ str(len(stdout.split('\n'))))
 
 #count error lines, shouldn't be any warnings or errors, ideally
-countErrorLines({"FATAL":0,"ERROR":0,"WARNING":5})
+countErrorLines({"FATAL":0,"ERROR":0,"WARNING":3})
 
 </text></argument>
 </extension>

@@ -9,6 +9,7 @@
    - If a settings configures streams, all streams must be known
    - Check that the custom stream configurations in the vdM settings end up
      in the routing bits writers as intended.
+ - Fix some tests.
 
 ! 2015-12-15 - Rosen Matev
  - Adapt to changes related to monitoring in HltConf
