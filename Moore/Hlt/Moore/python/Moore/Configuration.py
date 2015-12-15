@@ -695,9 +695,7 @@ class Moore(LHCbConfigurableUser):
             Funcs._mergeTransform(trans)
         else:
             hltConf = HltConf()
-            hltConf.setProp("EnableHltGlobalMonitor",False)
-            hltConf.setProp("EnableBeetleSyncMonitor",False)
-            hltConf.setProp("EnableHltL0GlobalMonitor",False)
+            hltConf.setProp("EnableMonitoring", False)
 
     def _config_with_tck(self):
         from Configurables import HltConfigSvc
