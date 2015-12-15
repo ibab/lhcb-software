@@ -784,7 +784,7 @@ class BloomFilter
 	 */
 	operator std::string() const
 	{
-	    constexpr auto conv = [] (unsigned val) {
+	    static const auto conv = [] (unsigned val) {
 		// we do something that's almost base64 encoding
 		if (val < 26) return char('A' + (val - 0));
 		else if (val < 52) return char('a' + (val - 26));
@@ -875,7 +875,7 @@ class BloomFilter
 	 */
 	void set(const std::string& str)
 	{
-	    constexpr auto conv = [] (char c) {
+	    static const auto conv = [] (char c) {
 		// we do something that's almost base64 decoding
 		if ('A' <= c && c <= 'Z') return uint32_t(0 + c - 'A');
 		else if ('a' <= c && c <= 'z') return uint32_t(26 + c - 'a');

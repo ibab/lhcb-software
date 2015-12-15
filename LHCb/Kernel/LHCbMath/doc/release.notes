@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-12-15 - Manuel Tobias Schiller
+ - BloomFilter: fix clang warning
+
 ! 2015-12-14 - Manuel Tobias Schiller
  - BloomFilter: add conversions from/to a string representation
 
