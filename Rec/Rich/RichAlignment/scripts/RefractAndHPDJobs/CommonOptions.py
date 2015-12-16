@@ -113,7 +113,7 @@ longT.EnablePerPDPlots    = True
 longT.EnablePerPDColPlots = True
 
 # Flip the panels for background shape studies
-rConf.richTools().PixelCreatorType = "RawBufferWithPanelFlip"
+#rConf.richTools().PixelCreatorType = "RawBufferWithPanelFlip"
 
 # Don't reject HLT error events
 Brunel().VetoHltErrorEvents = False 

@@ -198,7 +198,7 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
         #pass
         #dbFiles["2015-refscale-V1"] = "CALIBOFF"
         dbFiles["2015-refscale-V2"] = "CALIBOFF"
-        
+
     # Configure additional DBs
     for dbFile,dbType in dbFiles.iteritems() :
         print "Using DB", dbFile, dbType
@@ -452,7 +452,7 @@ def refractiveIndexCalib(jobs,rads=['Rich1Gas','Rich2Gas'],polarity='',pdCol='',
                     gStyle.SetOptFit(1011)
 
                     # Fits
-                    fitResultRes = fitCKThetaHistogram(rootfile,run,rad,resPlot,4,bckOnly)
+                    fitResultRes = fitCKThetaHistogram(rootfile,run,rad,resPlot,5,bckOnly)
                     fitResultRaw = fitCKThetaHistogram(rootfile,run,rad,'thetaRec',-1,bckOnly)
                     fitResultExp = fitCKExpectedHistogram(rootfile,run,rad)
 
@@ -460,7 +460,8 @@ def refractiveIndexCalib(jobs,rads=['Rich1Gas','Rich2Gas'],polarity='',pdCol='',
                         scale = nScaleFromShift(fitResultRes,rad)
                         if scale[0] < minMaxScale[0] : minMaxScale[0] = scale[0]
                         if scale[0] > minMaxScale[1] : minMaxScale[1] = scale[0]
-                        calibrations[run] = { "ScaleFactor" : scale, "ThetaShift" : fitResultRes['Mean'] }
+                        calibrations[run] = { "ScaleFactor" : scale,
+                                              "ThetaShift"  : fitResultRes['Mean'] }
                         ckmeans[run]  = fitResultRes['Mean']
                         cksigmas[run] = fitResultRes['Sigma']
                         ckraws[run]   = fitResultRaw['Mean']
@@ -1198,7 +1199,7 @@ def fitCKForFile(filename,plot='ckResAll',outfile="CKFit.pdf"):
 
         file.Close()
 
-def checkCKThetaStats(hist,minEntries=5000):
+def checkCKThetaStats(hist,minEntries=100000):
     return hist.GetEntries() >= minEntries
         
 def fitCKThetaHistogram(rootfile,run,rad='Rich1Gas',plot='ckResAll',nPolFull=4,bckOnly=False):
@@ -1300,6 +1301,7 @@ def fitCKThetaHistogram(rootfile,run,rad='Rich1Gas',plot='ckResAll',nPolFull=4,b
                                 fFitF.SetParameter(p,lastFitF.GetParameter(p))
                                 
                         hist.Fit(fFitF,"MQRSE0")
+                        #hist.Fit(fFitF,"MRSE0")
                         lastFitF = fFitF
                         
                         # Fit OK ?
@@ -1343,8 +1345,11 @@ def fitCKThetaHistogram(rootfile,run,rad='Rich1Gas',plot='ckResAll',nPolFull=4,b
                        
                 # Add Run number to plot
                 if bestNPol > 0 :
-                    addRunToPlot(run,[ ("Signal+Bkg Fit",fullFitColor),
-                                       ("Bkg pol"+str(bestNPol),bkgColor) ] )
+                    if not bckOnly :
+                        addRunToPlot(run,[ ("Signal+Bkg Fit",fullFitColor),
+                                           ("Bkg pol"+str(bestNPol),bkgColor) ] )
+                    else:
+                        addRunToPlot(run,[ ("Bkg Fit",fullFitColor) ] )
                 else:
                     addRunToPlot(run)
             
