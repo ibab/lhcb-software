@@ -4,6 +4,10 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2015-12-17 - Rosen Matev
+ - Change default input of tests to 2015HLTValidationData_L0filtered_0x0050
+   to reflect the change of the default settings to Physics_25ns_October2015
+
 ! 2015-12-16 - Rosen Matev
  - Fix validation in diff.qmt test
  - Specify prerequisite of the zfromxtck.qmt test (test still fails)
