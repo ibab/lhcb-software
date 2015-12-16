@@ -39,7 +39,7 @@ namespace LHCb
 
   private:
 
-    unsigned int m_key; ///< The bit-packed internal data word
+    unsigned int m_key = 0; ///< The bit-packed internal data word
 
   public:
 
@@ -283,7 +283,7 @@ namespace LHCb
   public:
 
     /// Default Constructor
-    RichSmartID() : m_key(0) { setIDType( HPDID ); }
+    RichSmartID() { setIDType( HPDID ); }
 
     /// Constructor from internal type (unsigned int)
     explicit RichSmartID( const LHCb::RichSmartID::KeyType key ) 
@@ -309,7 +309,7 @@ namespace LHCb
                  const int pixelRow,
                  const int pixelCol,
                  const int pixelSubRow,
-                 const IDType type = HPDID ) : m_key( 0 )
+                 const IDType type = HPDID )
     {
       setIDType        ( type              );
       setRich          ( rich              );
@@ -327,7 +327,7 @@ namespace LHCb
                  const int pdCol,
                  const int pixelRow,
                  const int pixelCol,
-                 const IDType type = HPDID ) : m_key( 0 )
+                 const IDType type = HPDID ) 
     {
       setIDType        ( type              );
       setRich          ( rich              );
@@ -342,7 +342,7 @@ namespace LHCb
                  const Rich::Side panel,
                  const int pdNumInCol,
                  const int pdCol,
-                 const IDType type = HPDID ) : m_key( 0 )
+                 const IDType type = HPDID )
     {
       setIDType        ( type              );
       setRich          ( rich              );
@@ -353,18 +353,12 @@ namespace LHCb
     /// PD panel level constructor
     RichSmartID( const Rich::DetectorType rich,
                  const Rich::Side panel,
-                 const IDType type = HPDID ) : m_key( 0 )
+                 const IDType type = HPDID )
     {
       setIDType        ( type  );
       setRich          ( rich  );
       setPanel         ( panel );
     }
-
-    /// Copy Constructor
-    RichSmartID( const RichSmartID & rh ) : m_key( rh.key() ) { }
-
-    /// Default Destructor
-    ~RichSmartID() { }
 
   public:
 

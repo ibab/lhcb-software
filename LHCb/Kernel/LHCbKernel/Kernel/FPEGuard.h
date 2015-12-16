@@ -259,7 +259,7 @@ namespace FPE {
       mask_type mask(0);
       if ( FPE::detail::has_working_implementation )
       {
-	std::map<std::string,mask_type>::const_iterator j = FPE::detail::map().find(excpt);
+	auto j = FPE::detail::map().find(excpt);
 	if ( FPE::detail::map().end() == j )
 	{
 	  throw GaudiException("FPE::Guard::mask : Unknown mask "+excpt,excpt,StatusCode::FAILURE);

@@ -42,6 +42,11 @@ namespace LHCb
   class FastAllocVector : public std::vector< TYPE, ALLOC >
   {
 
+  private:
+
+    /// Shortcut to the base class type
+    typedef std::vector< TYPE, ALLOC > BaseClass;
+
   public:
 
     /// Default constructor
@@ -50,20 +55,20 @@ namespace LHCb
     /** Constructor with initial size
      *  @param size Initialisation size for vector 
      */
-    FastAllocVector( const typename std::vector<TYPE,ALLOC>::size_type size )
-      : std::vector<TYPE,ALLOC>(size) { }
+    FastAllocVector( const typename BaseClass::size_type size )
+      : BaseClass(size) { }
 
     /** Constructor with initial size and initialisation value
      *  @param size Initialisation size for vector
      *  @param init Initialisation value
      */
-    FastAllocVector( const typename std::vector<TYPE,ALLOC>::size_type size,
-                     const TYPE & init ) : std::vector<TYPE,ALLOC>(size,init) { }
+    FastAllocVector( const typename BaseClass::size_type size,
+                     const TYPE & init ) : BaseClass(size,init) { }
 
     /** Copy Constructor
      *  @param init Initialisation vector
      */
-    FastAllocVector( const FastAllocVector & init ) : std::vector<TYPE,ALLOC>(init) { }
+    FastAllocVector( const BaseClass & init ) : BaseClass(init) { }
 
     /// Operator overloading for ostream
     friend inline std::ostream& operator << ( std::ostream& str ,
