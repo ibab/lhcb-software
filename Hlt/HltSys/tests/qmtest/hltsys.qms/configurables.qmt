@@ -21,6 +21,6 @@
   </set></argument>
   <argument name="validator"><text>
 from GaudiConf.QMTest.ConfigurablesTest import compareConfigurables
-compareConfigurables("../refs/configurables.ref",stdout,causes,result,"lhcbsys.configurables",threshold=0)
+compareConfigurables("../refs/configurables.ref",stdout,causes,result,"hltsys.configurables",threshold=0)
 </text></argument>
 </extension>
