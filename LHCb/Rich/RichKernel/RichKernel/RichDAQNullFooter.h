@@ -39,12 +39,6 @@ namespace Rich
 
     public:
 
-      /// Standard constructor
-      NullFooter( ) { }
-
-      /// Destructor
-      ~NullFooter( ) { }
-
       /// Does this foot have a parity word ?
       inline bool hasParityWord() const { return false; }
 

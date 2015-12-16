@@ -157,7 +157,7 @@ HPDPixelClusters::getCluster( const LHCb::RichSmartID & id ) const
   // should look to implement this better sometime...
 
   // cluster pointer to return
-  const Cluster * clus = NULL;
+  const Cluster * clus = nullptr;
 
   // loop over clusters
   for ( const auto * c : clusters() )

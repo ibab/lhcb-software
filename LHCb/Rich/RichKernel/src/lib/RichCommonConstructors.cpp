@@ -37,7 +37,7 @@ namespace Rich
   CommonBase<GaudiAlgorithm>::CommonBase( const std::string& /* type */,
                                           const std::string& /* name */,
                                           const IInterface* /* parent */ )
-    : GaudiAlgorithm ( "ERROR", NULL )
+    : GaudiAlgorithm ( "ERROR", nullptr )
   {
     throw GaudiException( "Invalid Rich::CommonBase<GaudiAlgorithm> constructor",
                           "Rich::CommonBase", StatusCode::FAILURE );
@@ -46,7 +46,7 @@ namespace Rich
   CommonBase<GaudiAlgorithm>::CommonBase( long /* storage_type */,
                                           const CLID& /* class_type */,
                                           ISvcLocator * /* svc */ )
-    : GaudiAlgorithm ( "ERROR", NULL )
+    : GaudiAlgorithm ( "ERROR", nullptr )
   {
     throw GaudiException( "Invalid Rich::CommonBase<GaudiAlgorithm> constructor",
                           "Rich::CommonBase", StatusCode::FAILURE );
@@ -67,7 +67,7 @@ namespace Rich
   CommonBase<GaudiHistoAlg>::CommonBase( const std::string& /* type */,
                                          const std::string& /* name */,
                                          const IInterface* /* parent */ )
-    : GaudiHistoAlg ( "ERROR", NULL )
+    : GaudiHistoAlg ( "ERROR", nullptr )
   {
     throw GaudiException( "Invalid Rich::CommonBase<GaudiHistoAlg> constructor",
                           "Rich::CommonBase", StatusCode::FAILURE );
@@ -76,7 +76,7 @@ namespace Rich
   CommonBase<GaudiHistoAlg>::CommonBase( long /* storage_type */,
                                          const CLID& /* class_type */,
                                          ISvcLocator * /* svc */ )
-    : GaudiHistoAlg ( "ERROR", NULL )
+    : GaudiHistoAlg ( "ERROR", nullptr )
   {
     throw GaudiException( "Invalid Rich::CommonBase<GaudiHistoAlg> constructor",
                           "Rich::CommonBase", StatusCode::FAILURE );
@@ -115,7 +115,7 @@ namespace Rich
   CommonBase<GaudiTupleAlg>::CommonBase( const std::string& /* type */,
                                          const std::string& /* name */,
                                          const IInterface* /* parent */ )
-    : GaudiTupleAlg ( "ERROR", NULL )
+    : GaudiTupleAlg ( "ERROR", nullptr )
   {
     throw GaudiException( "Invalid Rich::CommonBase<GaudiTupleAlg> constructor",
                           "Rich::CommonBase", StatusCode::FAILURE );
@@ -124,7 +124,7 @@ namespace Rich
   CommonBase<GaudiTupleAlg>::CommonBase( long /* storage_type */,
                                          const CLID& /* class_type */,
                                          ISvcLocator * /* svc */ )
-    : GaudiTupleAlg ( "ERROR", NULL )
+    : GaudiTupleAlg ( "ERROR", nullptr )
   {
     throw GaudiException( "Invalid Rich::CommonBase<GaudiTupleAlg> constructor",
                           "Rich::CommonBase", StatusCode::FAILURE );
@@ -164,7 +164,7 @@ namespace Rich
   template <>
   CommonBase<GaudiTool>::CommonBase( const std::string& /* name */,
                                      ISvcLocator* /* pSvcLocator */ )
-    : GaudiTool ( "ERROR", "ERROR", NULL )
+    : GaudiTool ( "ERROR", "ERROR", nullptr )
   {
     throw GaudiException( "Invalid Rich::CommonBase<GaudiTool> constructor",
                           "Rich::CommonBase", StatusCode::FAILURE );
@@ -173,7 +173,7 @@ namespace Rich
   CommonBase<GaudiTool>::CommonBase( long /* storage_type */,
                                      const CLID& /* class_type */,
                                      ISvcLocator * /* svc */ )
-    : GaudiTool ( "ERROR", "ERROR", NULL )
+    : GaudiTool ( "ERROR", "ERROR", nullptr )
   {
     throw GaudiException( "Invalid Rich::CommonBase<GaudiTool> constructor",
                           "Rich::CommonBase", StatusCode::FAILURE );
@@ -194,7 +194,7 @@ namespace Rich
   template <>
   CommonBase<GaudiHistoTool>::CommonBase( const std::string& /* name */,
                                           ISvcLocator* /* pSvcLocator */ )
-    : GaudiHistoTool ( "ERROR", "ERROR", NULL )
+    : GaudiHistoTool ( "ERROR", "ERROR", nullptr )
   {
     throw GaudiException( "Invalid Rich::CommonBase<GaudiHistoTool> constructor",
                           "Rich::CommonBase", StatusCode::FAILURE );
@@ -203,7 +203,7 @@ namespace Rich
   CommonBase<GaudiHistoTool>::CommonBase( long /* storage_type */,
                                           const CLID& /* class_type */,
                                           ISvcLocator * /* svc */ )
-    : GaudiHistoTool ( "ERROR", "ERROR", NULL )
+    : GaudiHistoTool ( "ERROR", "ERROR", nullptr )
   {
     throw GaudiException( "Invalid Rich::CommonBase<GaudiHistoTool> constructor",
                           "Rich::CommonBase", StatusCode::FAILURE );
@@ -242,7 +242,7 @@ namespace Rich
   template <>
   CommonBase<GaudiTupleTool>::CommonBase( const std::string& /* name */,
                                           ISvcLocator* /* pSvcLocator */ )
-    : GaudiTupleTool ( "ERROR", "ERROR", NULL )
+    : GaudiTupleTool ( "ERROR", "ERROR", nullptr )
   {
     throw GaudiException( "Invalid Rich::CommonBase<GaudiTupleTool> constructor",
                           "Rich::CommonBase", StatusCode::FAILURE );
@@ -251,7 +251,7 @@ namespace Rich
   CommonBase<GaudiTupleTool>::CommonBase( long /* storage_type */,
                                           const CLID& /* class_type */,
                                           ISvcLocator * /* svc */ )
-    : GaudiTupleTool ( "ERROR", "ERROR", NULL )
+    : GaudiTupleTool ( "ERROR", "ERROR", nullptr )
   {
     throw GaudiException( "Invalid Rich::CommonBase<GaudiTupleTool> constructor",
                           "Rich::CommonBase", StatusCode::FAILURE );
@@ -284,7 +284,7 @@ namespace Rich
   CommonBase< Rich::Converter_Imp >::CommonBase( const std::string& /* type */,
                                                  const std::string& /* name */,
                                                  const IInterface* /* parent */ )
-    : Rich::Converter_Imp ( 0, CLID_NULL, NULL )
+    : Rich::Converter_Imp ( 0, CLID_NULL, nullptr )
   {
     throw GaudiException( "Invalid Rich::CommonBase<Rich::Converter_Imp> constructor",
                           "Rich::CommonBase", StatusCode::FAILURE );
@@ -292,7 +292,7 @@ namespace Rich
   template <>
   CommonBase< Rich::Converter_Imp >::CommonBase( const std::string& /* name */,
                                                  ISvcLocator* /* pSvcLocator */ )
-    : Rich::Converter_Imp ( 0, CLID_NULL, NULL )
+    : Rich::Converter_Imp ( 0, CLID_NULL, nullptr )
   {
     throw GaudiException( "Invalid Rich::CommonBase<Rich::Converter_Imp> constructor",
                           "Rich::CommonBase", StatusCode::FAILURE );

@@ -1,4 +1,4 @@
-// $Id: RichConverter.h,v 1.3 2009-09-30 08:25:59 jonrob Exp $
+
 #ifndef RICHKERNEL_RICHCONVERTER_H
 #define RICHKERNEL_RICHCONVERTER_H 1
 

@@ -40,9 +40,6 @@ namespace Rich
       /// Standard constructor
       ParityFooterTB2006( ) : FooterPDBase(1) {}
 
-      /// Destructor
-      ~ParityFooterTB2006( ) { }
-
       /// Does this foot have a parity word ?
       inline bool hasParityWord() const { return true; }
 

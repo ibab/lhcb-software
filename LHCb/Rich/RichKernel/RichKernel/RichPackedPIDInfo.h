@@ -133,9 +133,6 @@ namespace Rich
       setPid  ( pid  );
     }
 
-    /// Destructor
-    ~PackedPIDInfo( ) { }
-
   public:
 
     /// Return as a raw unsigned int

@@ -33,7 +33,7 @@ namespace Rich
   public:
 
     /// Default Constructor
-    ObjPtn() : m_obj(NULL) { }
+    ObjPtn() { }
 
     /** Constructor from pointer to the underlying object
      *
@@ -70,7 +70,7 @@ namespace Rich
   public:
 
     /// Check if an object is defined
-    inline bool objectExists()      const { return NULL != m_obj; }
+    inline bool objectExists()      const { return nullptr != m_obj; }
 
     /// Dereference operator to const object
     inline const TYPE* operator->() const { return checkObj(); }
@@ -90,7 +90,7 @@ namespace Rich
     /// Clone method
     inline TYPE* clone() const
     {
-      return ( m_obj ? new TYPE(*m_obj) : NULL );
+      return ( m_obj ? new TYPE(*m_obj) : nullptr );
     }
 
     /// Overload output to ostream
@@ -103,7 +103,7 @@ namespace Rich
   private:
 
     /// Pointer to the data object
-    mutable TYPE * m_obj;
+    mutable TYPE * m_obj = nullptr;
 
   };
 

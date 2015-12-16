@@ -4,9 +4,6 @@
  *
  *  Header file for tool base class : RichTupleToolBase
  *
- *  CVS Log :-
- *  $Id: RichTupleToolBase.h,v 1.7 2009-07-27 20:29:01 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */

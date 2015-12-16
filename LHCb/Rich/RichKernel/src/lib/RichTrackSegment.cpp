@@ -57,15 +57,15 @@ void LHCb::RichTrackSegment::updateState( const Gaudi::XYZPoint & rotPnt,
                                           const Gaudi::Transform3D & trans )
 {
   // Entry point
-  Gaudi::XYZVector toEntry = entryPoint() - rotPnt;
+  auto toEntry = entryPoint() - rotPnt;
   setEntryState( rotPnt + trans(toEntry), trans(entryMomentum()) );
 
   // Middle point
-  Gaudi::XYZVector toMid   = middlePoint() - rotPnt;
+  auto toMid   = middlePoint() - rotPnt;
   setMiddleState( rotPnt + trans(toMid), trans(middleMomentum()) );
 
   // exit point
-  Gaudi::XYZVector toExit  = exitPoint() - rotPnt;
+  auto toExit  = exitPoint() - rotPnt;
   setExitState( rotPnt + trans(toExit), trans(exitMomentum()) );
 
   // reset
@@ -74,10 +74,10 @@ void LHCb::RichTrackSegment::updateState( const Gaudi::XYZPoint & rotPnt,
 
 void LHCb::RichTrackSegment::computeRotationMatrix2() const
 {
-  const Gaudi::XYZVector z = bestMomentum().Unit();
-  Gaudi::XYZVector y = z.Cross( Gaudi::XYZVector(1,0,0) );
+  const auto z = bestMomentum().Unit();
+  auto y = z.Cross( Gaudi::XYZVector(1,0,0) );
   y *= vdt::fast_isqrtf( y.Mag2() ); // maybe not needed ?
-  const Gaudi::XYZVector x = y.Cross(z);
+  const auto x = y.Cross(z);
   m_rotation2 = new Gaudi::Rotation3D( x.X(), y.X(), z.X(),
                                        x.Y(), y.Y(), z.Y(),
                                        x.Z(), y.Z(), z.Z() );
@@ -85,17 +85,17 @@ void LHCb::RichTrackSegment::computeRotationMatrix2() const
 
 Gaudi::XYZPoint LHCb::RichTrackSegment::bestPoint( const double fractDist ) const
 {
-  const Gaudi::XYZVector entryExitV ( entryPoint() - exitPoint() );
+  const auto entryExitV ( entryPoint() - exitPoint() );
   if ( zCoordAt(fractDist) < middlePoint().z() )
   {
-    const Gaudi::XYZVector midEntryV ( middlePoint() - entryPoint());
-    const double invMidFrac1 = std::sqrt( entryExitV.mag2() / midEntryV.mag2() );
+    const auto midEntryV ( middlePoint() - entryPoint());
+    const auto invMidFrac1 = std::sqrt( entryExitV.mag2() / midEntryV.mag2() );
     return entryPoint() + (fractDist*invMidFrac1*midEntryV);
   }
   else
   {
-    const Gaudi::XYZVector exitMidV ( exitPoint() - middlePoint() );
-    const double midFrac2 = std::sqrt( exitMidV.mag2() / entryExitV.mag2() );
+    const auto exitMidV ( exitPoint() - middlePoint() );
+    const auto midFrac2 = std::sqrt( exitMidV.mag2() / entryExitV.mag2() );
     return middlePoint() + (exitMidV*((fractDist-midFrac2)/midFrac2));
   }
 }
@@ -104,14 +104,14 @@ Gaudi::XYZVector LHCb::RichTrackSegment::bestMomentum( const double fractDist ) 
 {
   if ( zCoordAt(fractDist) < middlePoint().z() )
   {
-    const double midFrac =
+    const auto midFrac =
       fractDist * std::sqrt( (entryPoint()-exitPoint()).mag2() / 
                              (entryPoint()-middlePoint()).mag2() );
     return entryMomentum()*(1-midFrac) + middleMomentum()*midFrac;
   }
   else
   {
-    const double midFrac =
+    const auto midFrac =
       (fractDist * std::sqrt( (entryPoint()-exitPoint()).mag2() / 
                               (middlePoint()-exitPoint()).mag2() )) - 1;
     return middleMomentum()*(1-midFrac) + exitMomentum()*midFrac;
@@ -121,7 +121,7 @@ Gaudi::XYZVector LHCb::RichTrackSegment::bestMomentum( const double fractDist ) 
 void LHCb::RichTrackSegment::chordConstructorInit2()
 {
   // the direction to use
-  Gaudi::XYZVector v = exitPoint()-entryPoint();
+  auto v = exitPoint()-entryPoint();
   if ( v.Mag2() > 0 )
   {
     // Update direction of entry state to chord direction
@@ -139,7 +139,7 @@ void LHCb::RichTrackSegment::chordConstructorInit2()
 void LHCb::RichTrackSegment::chordConstructorInit3()
 {
   // the direction to use
-  Gaudi::XYZVector v = exitPoint()-entryPoint();
+  auto v = exitPoint()-entryPoint();
   if ( v.Mag2() > 0 )
   {
     // Update direction of entry state to chord direction

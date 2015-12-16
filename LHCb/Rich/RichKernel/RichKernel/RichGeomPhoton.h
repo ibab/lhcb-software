@@ -56,8 +56,8 @@ namespace LHCb
                     const float activeFrac = 0 )
       : m_CherenkovTheta        ( theta      ),
         m_CherenkovPhi          ( phi        ),
-        m_primaryMirror         ( NULL       ),
-        m_secondaryMirror       ( NULL       ),
+        m_primaryMirror         ( nullptr    ),
+        m_secondaryMirror       ( nullptr    ),
         m_unambiguousPhoton     ( false      ),
         m_activeSegmentFraction ( activeFrac ) { }
 
@@ -90,8 +90,8 @@ namespace LHCb
         m_sphMirReflectionPoint  ( sphMirrReflPoint  ),
         m_flatMirReflectionPoint ( flatMirrReflPoint ),
         m_smartID                ( smartID           ),
-        m_primaryMirror          ( NULL              ),
-        m_secondaryMirror        ( NULL              ),
+        m_primaryMirror          ( nullptr           ),
+        m_secondaryMirror        ( nullptr           ),
         m_unambiguousPhoton      ( false             ),
         m_activeSegmentFraction  ( activeFrac        ) { }
 
@@ -121,12 +121,10 @@ namespace LHCb
         m_sphMirReflectionPoint  ( sphMirrReflPoint  ),
         m_flatMirReflectionPoint ( flatMirrReflPoint ),
         m_smartID                ( smartID           ),
-        m_primaryMirror          ( NULL              ),
-        m_secondaryMirror        ( NULL              ),
+        m_primaryMirror          ( nullptr           ),
+        m_secondaryMirror        ( nullptr           ),
         m_unambiguousPhoton      ( false             ),
         m_activeSegmentFraction  ( activeFrac        ) { }
-
-    ~RichGeomPhoton( ) {} ///< Destructor
 
     /**
      * Set accessor for the Cherenkov theta angle
@@ -393,8 +391,8 @@ namespace LHCb
 
   private: // data
 
-    float m_CherenkovTheta;                    ///< Cherenkov angle theta
-    float m_CherenkovPhi;                      ///< Cherenkov angle phi
+    float m_CherenkovTheta = 0;                ///< Cherenkov angle theta
+    float m_CherenkovPhi   = 0;                ///< Cherenkov angle phi
     Gaudi::XYZPoint m_emissionPoint;           ///< The photon emission point
     Gaudi::XYZVector m_emissionDir;            ///< The photon direction at the emission point
     Gaudi::XYZPoint m_detectionPoint;          ///< The photon detection point on the HPD entrance window
@@ -403,18 +401,18 @@ namespace LHCb
     LHCb::RichSmartID m_smartID;               ///< The channel ID for the photon detection point
 
     /// Pointer to the associated primary mirror detector element
-    const DeRichSphMirror * m_primaryMirror;
+    const DeRichSphMirror * m_primaryMirror = nullptr;
 
     /// Pointer to the associated secondary mirror detector element
-    const DeRichSphMirror * m_secondaryMirror;
+    const DeRichSphMirror * m_secondaryMirror = nullptr;
 
     /// Flag to indicate if an unambiguous photon or not
-    bool m_unambiguousPhoton;
+    bool m_unambiguousPhoton = false;
 
     /** The fraction of the RichTrackSegment trajectory this photon is associated
      *  with for which it is geometrically possible this photon was produced
      */
-    float m_activeSegmentFraction;
+    float m_activeSegmentFraction = 0;
 
   };
 

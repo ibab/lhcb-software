@@ -100,9 +100,9 @@ StatusCode Rich::Converter_Imp::initialize()
 StatusCode Rich::Converter_Imp::finalize()
 {
   // release used services
-  if ( 0 != m_detSvc    ) { m_detSvc    ->release() ; m_detSvc    = 0 ; }
-  if ( 0 != m_toolSvc   ) { m_toolSvc   ->release() ; m_toolSvc   = 0 ; }
-  if ( 0 != m_chronoSvc ) { m_chronoSvc ->release() ; m_chronoSvc = 0 ; }
+  if ( m_detSvc    ) { m_detSvc    ->release() ; m_detSvc    = nullptr ; }
+  if ( m_toolSvc   ) { m_toolSvc   ->release() ; m_toolSvc   = nullptr ; }
+  if ( m_chronoSvc ) { m_chronoSvc ->release() ; m_chronoSvc = nullptr ; }
   // try to finalize the base class
   return ::Converter::finalize();
 }
@@ -112,12 +112,12 @@ StatusCode Rich::Converter_Imp::finalize()
 // ============================================================================
 StatusCode Rich::Converter_Imp::release ( const IInterface* interface ) const
 {
-  if ( 0 == interface )
+  if ( nullptr == interface )
   { return Error ( "release(IInterface):: IInterface* points to NULL!" ) ; }
   // dispatch between tools and services
   const IAlgTool* algTool = dynamic_cast<const IAlgTool*>( interface )  ;
   // perform the actual release
-  return 0 != algTool ? releaseTool( algTool ) : releaseSvc( interface ) ;
+  return nullptr != algTool ? releaseTool( algTool ) : releaseSvc( interface ) ;
 }
 // ============================================================================
 
@@ -126,9 +126,9 @@ StatusCode Rich::Converter_Imp::release ( const IInterface* interface ) const
 // ============================================================================
 StatusCode Rich::Converter_Imp::releaseTool ( const IAlgTool* algTool ) const
 {
-  if( 0 == algTool   )
+  if( nullptr == algTool   )
   { return Error ( "releaseTool(IAlgTool):: IAlgTool* points to NULL!" ) ; }
-  if( this->toolSvc() == 0 )
+  if( this->toolSvc() == nullptr )
   { return Error ( "releaseTool(IAlgTool):: IToolSvc* points to NULL!" ) ; }
   // find a tool in the list of active tools
   AlgTools::reverse_iterator it =

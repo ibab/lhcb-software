@@ -4,8 +4,6 @@
  *
  *  Header file to include all the various HPD header classes
  *
- *  $Id: RichDAQHeaderPD.h,v 1.1 2007-04-23 12:44:04 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
  */

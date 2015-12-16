@@ -262,9 +262,9 @@ namespace Rich
 
     /// Default Constructor
     HPDPixelClustersBuilder( )
-      : m_hpdClus   ( NULL  ),
-        m_lastID    ( 0     ),
-        m_aliceMode ( false ) 
+      : m_hpdClus   ( nullptr ),
+        m_lastID    ( 0       ),
+        m_aliceMode ( false   ) 
     { 
       memset ( m_data,     0, sizeof(m_data)     );
       memset ( m_clusters, 0, sizeof(m_clusters) );
@@ -395,7 +395,7 @@ namespace Rich
   HPDPixelClusters::Cluster *
   HPDPixelClustersBuilder::getCluster( const int row, const int col ) const
   {
-    return ( isOn(row,col) ? (m_clusters[row])[col] : NULL );
+    return ( isOn(row,col) ? (m_clusters[row])[col] : nullptr );
   }
 
   inline 

@@ -62,7 +62,7 @@ namespace Rich
     /// Standard Converter-like Constructor
     HistoBase( long storage_type,
                const CLID &class_type,
-               ISvcLocator *svc = NULL );
+               ISvcLocator *svc = nullptr );
 
     /// Destructor
     virtual ~HistoBase( );
@@ -300,8 +300,8 @@ namespace Rich
      */
     inline AIDA::IHistogram1D * richHisto1D( const Rich::HistogramID & id ) const
     {
-      typename Map1DH::StringToHist & map = m_1dhmap.getmap(id.packedData());
-      typename Map1DH::StringToHist::iterator iH = map.find(id.id());
+      const auto & map = m_1dhmap.getmap(id.packedData());
+      const auto    iH = map.find(id.id());
       if ( iH == map.end() )
       {
         this->Exception( "Cannot find pre-booked histogram '"+id.fullid()+"'" );
@@ -317,8 +317,8 @@ namespace Rich
      */
     inline AIDA::IHistogram2D * richHisto2D( const Rich::HistogramID & id ) const
     {
-      typename Map2DH::StringToHist & map = m_2dhmap.getmap(id.packedData());
-      typename Map2DH::StringToHist::iterator iH = map.find(id.id());
+      const auto & map = m_2dhmap.getmap(id.packedData());
+      const auto    iH = map.find(id.id());
       if ( iH == map.end() )
       {
         this->Exception( "Cannot find pre-booked histogram '"+id.fullid()+"'" );
@@ -334,8 +334,8 @@ namespace Rich
      */
     inline AIDA::IProfile1D * richProfile1D( const Rich::HistogramID & id ) const
     {
-      typename Map1DP::StringToHist & map = m_1dpmap.getmap(id.packedData());
-      typename Map1DP::StringToHist::iterator iH = map.find(id.id());
+      const auto & map = m_1dpmap.getmap(id.packedData());
+      const auto    iH = map.find(id.id());
       if ( iH == map.end() )
       {
         this->Exception( "Cannot find pre-booked histogram '"+id.fullid()+"'" );
@@ -351,8 +351,8 @@ namespace Rich
      */
     inline AIDA::IProfile2D * richProfile2D( const Rich::HistogramID & id ) const
     {
-      typename Map2DP::StringToHist & map = m_2dpmap.getmap(id.packedData());
-      typename Map2DP::StringToHist::iterator iH = map.find(id.id());
+      const auto & map = m_2dpmap.getmap(id.packedData());
+      const auto    iH = map.find(id.id());
       if ( iH == map.end() )
       {
         this->Exception( "Cannot find pre-booked histogram '"+id.fullid()+"'" );

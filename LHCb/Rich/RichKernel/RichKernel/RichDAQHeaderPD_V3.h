@@ -148,7 +148,7 @@ namespace Rich
         }
 
         /// Destructor
-        ~RichDAQHeaderPD( ) {}
+        virtual ~RichDAQHeaderPD( ) {}
 
       public:
         

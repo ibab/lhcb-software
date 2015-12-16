@@ -15,6 +15,7 @@
 
 // std include
 #include <iostream>
+#include <memory>
 
 // LHCbKernel
 #include "Kernel/RichRadiatorType.h"
@@ -153,11 +154,11 @@ namespace LHCb
 
     private:
 
-      float m_errX2;  ///< The x error squared
-      float m_errY2;  ///< The y error squared
-      float m_errTX2; ///< The tx error squared
-      float m_errTY2; ///< The ty error squared
-      float m_errP2;  ///< The P error squared
+      float m_errX2  = 0;  ///< The x error squared
+      float m_errY2  = 0;  ///< The y error squared
+      float m_errTX2 = 0;  ///< The tx error squared
+      float m_errTY2 = 0;  ///< The ty error squared
+      float m_errP2  = 0;  ///< The P error squared
 
     };
 
@@ -174,8 +175,8 @@ namespace LHCb
     /// Delete and reset the current rotations
     inline void cleanUpRotations() const
     {
-      if ( m_rotation  ) { delete m_rotation;  m_rotation  = 0; }
-      if ( m_rotation2 ) { delete m_rotation2; m_rotation2 = 0; }
+      if ( m_rotation  ) { delete m_rotation;  m_rotation  = nullptr; }
+      if ( m_rotation2 ) { delete m_rotation2; m_rotation2 = nullptr; }
     }
 
     /// The segment type
@@ -218,8 +219,8 @@ namespace LHCb
         m_errorsMiddle     ( Rich::Rich1Gas == rad ? exitErrors : entryErrors ), // CRJ : Is this best ?
         m_errorsExit       ( exitErrors    ),
         m_avPhotonEnergy   ( avPhotEn(rad) ),
-        m_rotation         ( NULL          ),
-        m_rotation2        ( NULL          )
+        m_rotation         ( nullptr       ),
+        m_rotation2        ( nullptr       )
     {
       if      ( RichTrackSegment::UseAllStateVectors    == type() )
       {
@@ -259,8 +260,8 @@ namespace LHCb
         m_errorsMiddle     ( middleErrors  ),
         m_errorsExit       ( exitErrors    ),
         m_avPhotonEnergy   ( avPhotEn(rad) ),
-        m_rotation         ( NULL          ),
-        m_rotation2        ( NULL          )
+        m_rotation         ( nullptr       ),
+        m_rotation2        ( nullptr       )
     {
       if      ( RichTrackSegment::UseAllStateVectors == type() )
       {
@@ -287,8 +288,8 @@ namespace LHCb
         m_radiator         ( Rich::InvalidRadiator ),
         m_rich             ( Rich::InvalidDetector ),
         m_avPhotonEnergy   ( 0                     ),
-        m_rotation         ( NULL                  ),
-        m_rotation2        ( NULL                  ) { }
+        m_rotation         ( nullptr               ),
+        m_rotation2        ( nullptr               ) { }
 
     /// Destructor
     ~RichTrackSegment( ) { cleanUpRotations(); }
@@ -543,7 +544,7 @@ namespace LHCb
   private:  // private data
 
     /// The segment type
-    SegmentType m_type;
+    SegmentType m_type = RichTrackSegment::UnDefined;
 
     /// The raw intersections with the radiator volumes
     Rich::RadIntersection::Vector m_radIntersections;
@@ -554,8 +555,8 @@ namespace LHCb
     /// The momentum vector at the segment middle point in the radiator volume
     Gaudi::XYZVector m_middleMomentum;
 
-    Rich::RadiatorType m_radiator; ///< Rich radiator
-    Rich::DetectorType m_rich;     ///< Rich detector
+    Rich::RadiatorType m_radiator = Rich::InvalidRadiator; ///< Rich radiator
+    Rich::DetectorType m_rich     = Rich::InvalidDetector; ///< Rich detector
 
     StateErrors m_errorsEntry;     ///< Errors for the entry state
     StateErrors m_errorsMiddle;    ///< Errors for the middle state
@@ -565,7 +566,7 @@ namespace LHCb
      *  @todo Quick fix. Need to review to if this can be done in a better way
      *        without the need for this variable.
      */
-    double m_avPhotonEnergy;
+    double m_avPhotonEnergy = 0;
 
     // Some variables for internal caching of information for speed
 
@@ -573,13 +574,13 @@ namespace LHCb
      *  this track segment and a given direction.
      *  Created on demand as required.
      */
-    mutable Gaudi::Rotation3D * m_rotation;
+    mutable Gaudi::Rotation3D * m_rotation = nullptr;
 
     /** Rotation matrix used to create vectors at a given theta and phi angle
      *  to this track segment.
      *  Created on demand as required
      */
-    mutable Gaudi::Rotation3D * m_rotation2;
+    mutable Gaudi::Rotation3D * m_rotation2 = nullptr;
 
   };
 

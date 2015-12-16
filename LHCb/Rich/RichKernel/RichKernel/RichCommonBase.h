@@ -130,14 +130,14 @@ namespace Rich
     inline const TOOL* acquireTool( const std::string & nickName,
                                     const std::string & iName,
                                     const TOOL*& pTool,
-                                    const IInterface * parent = 0,
+                                    const IInterface * parent = nullptr,
                                     const bool commonTool = false ) const
     {
       // Check consistency
       if ( parent && commonTool )
       {
         this -> Error( "Tool " + nickName + " cannot be common and private !" ).ignore();
-        return NULL;
+        return nullptr;
       }
 
       // Construct name
@@ -147,7 +147,7 @@ namespace Rich
       // If not private tool - Check Context and OutputLevel option
       if ( !parent )
       {
-        if ( ! this -> setProperties(this->toolRegistry()->toolName(iName)) ) { return NULL; }
+        if ( ! this -> setProperties(this->toolRegistry()->toolName(iName)) ) { return nullptr; }
       }
 
       // get tool
@@ -186,7 +186,7 @@ namespace Rich
     template <typename TOOL>
     inline const TOOL* acquireTool( const std::string & nickName,
                                     const TOOL*& pTool,
-                                    const IInterface * parent = 0,
+                                    const IInterface * parent = nullptr,
                                     const bool commonTool = false ) const
     {
       return this -> acquireTool( nickName, nickName, pTool, parent, commonTool );
@@ -209,7 +209,7 @@ namespace Rich
           this -> debug() << " Forced release for tool '" << pTool->name() << "'" << endmsg;
         }
         this -> release( pTool );
-        pTool = NULL;
+        pTool = nullptr;
       }
       else
       {
@@ -327,16 +327,16 @@ namespace Rich
   private: // data
 
     /// Pointer to tool registry
-    mutable const IToolRegistry * m_toolReg;
+    mutable const IToolRegistry * m_toolReg = nullptr;
 
     /// Pointer to job options service
-    mutable IJobOptionsSvc * m_jos;
+    mutable IJobOptionsSvc * m_jos = nullptr;
 
     /// Runtime name for RichToolRegistry
     std::string m_regName;
 
     /// Pointer to detector too for DeRich objects
-    mutable const IDetectorTool * m_deRichTool;
+    mutable const IDetectorTool * m_deRichTool = nullptr;
     
   };
 

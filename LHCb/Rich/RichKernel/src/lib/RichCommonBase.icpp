@@ -34,11 +34,11 @@
 template <class PBASE>
 void Rich::CommonBase<PBASE>::initRichCommonConstructor()
 {
-  m_toolReg = NULL;
-  m_jos     = NULL;
+  m_toolReg = nullptr;
+  m_jos     = nullptr;
   m_regName = ( this->context().empty() ?
                 "RichToolRegistry" : this->context()+"_RichToolRegistry" );
-  m_deRichTool = NULL;
+  m_deRichTool = nullptr;
   this->declareProperty( "ToolRegistryName", m_regName, "Tool Registry Name" );
 }
 
@@ -88,7 +88,7 @@ StatusCode Rich::CommonBase<PBASE>::finalize()
 template <class PBASE>
 IJobOptionsSvc* Rich::CommonBase<PBASE>::joSvc() const
 {
-  if (!m_jos)
+  if ( !m_jos )
   { m_jos = this -> template svc<IJobOptionsSvc>( "JobOptionsSvc" ); }
   return m_jos;
 }
@@ -164,26 +164,26 @@ const PROPERTYTYPE *
 Rich::CommonBase<PBASE>::my_getProperty( const std::string & name,
                                          const std::string & property ) const
 {
-  const PROPERTYTYPE * sp = NULL;
+  const PROPERTYTYPE * sp = nullptr;
 
   // get properties for this name
   const std::vector<const Property*> * properties = this->joSvc()->getProperties( name );
 
-  if ( NULL != properties )
+  if ( nullptr != properties )
   {
     if ( this -> msgLevel(MSG::VERBOSE) )
     { this -> verbose() << "Found " << properties->size() << " Properties for " << name << endmsg; }
     for ( std::vector<const Property*>::const_reverse_iterator itProp = properties->rbegin();
           itProp != properties->rend(); ++itProp )
     {
-      if ( NULL != *itProp )
+      if ( nullptr != *itProp )
       {
         if ( this -> msgLevel(MSG::VERBOSE) )
         { this->verbose() << " -> " << **itProp << endmsg; }
         if ( property == (*itProp)->name() )
         {
           sp = dynamic_cast<const PROPERTYTYPE*>(*itProp);
-          if ( NULL != sp )
+          if ( nullptr != sp )
           {
             if ( this -> msgLevel(MSG::VERBOSE) )
             { this->verbose() << "  -> Found requested property" << *sp << " for "
@@ -265,22 +265,21 @@ Rich::CommonBase<PBASE>::propagateJobOptions( const std::string & from_name,
   StatusCode sc = StatusCode::SUCCESS;
 
   // Find the list of set options from the from object
-  const std::vector<const Property*> * from_props = joSvc()->getProperties(from_name);
+  const auto * from_props = joSvc()->getProperties(from_name);
   if ( from_props )
   {
 
     // Loop over the options
-    for ( std::vector<const Property*>::const_iterator it_prop_from = from_props->begin();
-          it_prop_from != from_props->end(); ++it_prop_from )
+    for ( const auto& prop_from : *from_props )
     {
 
       // Is this option in the list of those to copy ?
       if ( options.empty() ||
-           std::find(options.begin(),options.end(),(*it_prop_from)->name()) != options.end() )
+           std::find(options.begin(),options.end(),prop_from->name()) != options.end() )
       {
 
         if (this->msgLevel(MSG::VERBOSE))
-          this->verbose() << "Found job option '" << (*it_prop_from)->name()
+          this->verbose() << "Found job option '" << prop_from->name()
                           << "' to copy from " << from_name
                           << " to " << to_name << endmsg;
 
@@ -288,14 +287,13 @@ Rich::CommonBase<PBASE>::propagateJobOptions( const std::string & from_name,
         if ( !overwrite )
         {
           // get list of already set options for to_name
-          const std::vector<const Property*> * to_props = joSvc()->getProperties(to_name);
+          const auto * to_props = joSvc()->getProperties(to_name);
           if ( to_props )
           {
             // Search them to see if option is already set
-            for ( std::vector<const Property*>::const_iterator it_prop_to = to_props->begin();
-                  it_prop_to != to_props->end(); ++it_prop_to )
+            for ( const auto& prop_to : *to_props )
             {
-              if ( (*it_prop_from)->name() == (*it_prop_to)->name() ) 
+              if ( prop_from->name() == prop_to->name() ) 
               { 
                 if (this->msgLevel(MSG::VERBOSE))
                   this->verbose() << " " << to_name 
@@ -311,13 +309,13 @@ Rich::CommonBase<PBASE>::propagateJobOptions( const std::string & from_name,
         if ( okToCopy )
         {
           if (this->msgLevel(MSG::VERBOSE))
-            this->verbose() << "  -> Adding option " << (*it_prop_from)->name()
+            this->verbose() << "  -> Adding option " << prop_from->name()
                             << " to " << to_name << endmsg;
           const StatusCode add_sc = joSvc()->addPropertyToCatalogue( to_name,
-                                                                     *(*it_prop_from) );
+                                                                     *prop_from );
           if ( add_sc.isFailure() )
           {
-            this->Error( "Cannot set option '" + (*it_prop_from)->name() +
+            this->Error( "Cannot set option '" + prop_from->name() +
                          "' for '" + to_name + "'" ).ignore();
           }
           sc = sc && add_sc;

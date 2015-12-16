@@ -1,3 +1,4 @@
+
 //---------------------------------------------------------------------------------
 /** @file RichDAQDefinitions.h
  *
@@ -159,7 +160,7 @@ namespace Rich
         return ( 0 != (m_id & (1<<pos)) );
       }
     private:
-      TYPE m_id; ///< The data value
+      TYPE m_id = 0; ///< The data value
     };
 
     //---------------------------------------------------------------------------------
@@ -258,18 +259,18 @@ namespace Rich
       /// Copy Constructor
       EventID( const EventID& id )
         : NumericType<unsigned long long> ( id.data()       ),
-          m_nActiveBits          ( id.activeBits() ) { }
+          m_nActiveBits                   ( id.activeBits() ) { }
       /// Constructor from value and number of bits
       template<class NUMTYPE>
       EventID ( const NUMTYPE   id,
                 const ShortType aBits )
         : NumericType<unsigned long long> ( (unsigned long long)id ),
-          m_nActiveBits          ( aBits         ) { }
+          m_nActiveBits                   ( aBits         ) { }
       /// Constructor from value
       template<class NUMTYPE>
       explicit EventID ( const NUMTYPE id )
         : NumericType<unsigned long long> ( (unsigned long long)id     ),
-          m_nActiveBits          ( 8*sizeof(NUMTYPE) ) { }
+          m_nActiveBits                   ( 8*sizeof(NUMTYPE) ) { }
       /// Return the number of active bits
       inline ShortType activeBits() const { return m_nActiveBits; }
       /// Set the number of active bits

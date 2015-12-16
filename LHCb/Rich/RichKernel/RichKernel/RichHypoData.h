@@ -60,9 +60,6 @@ namespace Rich
      */
     explicit HypoData( const TYPE & value ) { resetData(value); }
 
-    /// Destructor
-    ~HypoData() { }
-
   public: // methods
 
     /** Read access operator
