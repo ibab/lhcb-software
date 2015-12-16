@@ -257,6 +257,11 @@ double CaloCorrectionBase::getCorrection(CaloCorrection::Type type,  const LHCb:
         v = (var == 0) ? 0. : v/var ;
       else
         v *= var;
+#if defined(__clang__)
+#warning "Activating workaround for FPE with clang"
+      // Without this, clang optimiser does something with this loop that causes FPE...
+      if ( UNLIKELY(msgLevel(MSG::VERBOSE)) ) verbose() << "cor = " << cor << endmsg;
+#endif
     }
     if( pars.first == CaloCorrection::InversPolynomial) cor = ( cor == 0 ) ? def : 1./cor;
     if( pars.first == CaloCorrection::ExpPolynomial) cor = ( cor == 0 ) ? def : exp(cor);
@@ -309,7 +314,7 @@ double CaloCorrectionBase::getCorrection(CaloCorrection::Type type,  const LHCb:
       Warning("The ShowerProfile function must have 10 parameters").ignore();
     }  
   }
-  
+
   // Sinusoidal function
   if( pars.first == CaloCorrection::Sinusoidal ){
     if( temp.size() == 1){
@@ -321,7 +326,7 @@ double CaloCorrectionBase::getCorrection(CaloCorrection::Type type,  const LHCb:
       Warning("The Sinusoidal function must have 1 parameter").ignore();
     }
   }
-  
+
   kounter(type, id.areaName()) += cor;
   return cor;
 }

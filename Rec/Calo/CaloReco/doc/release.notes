@@ -3,6 +3,10 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+! 2015-12-16 - Marco Cattaneo
+ - CaloCorrectionBase.cpp: add workaround to prevent wierd FPE with clang
+
 ! 2015-12-05 - Gerhard Raven
  - avoid the use of exception handling to find out whether there already is an 
    object on the TES...
