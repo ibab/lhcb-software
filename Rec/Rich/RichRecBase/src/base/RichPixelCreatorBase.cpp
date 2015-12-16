@@ -29,13 +29,13 @@ namespace Rich
                                         const IInterface* parent )
       : Rich::Rec::ToolBase ( type, name, parent ),
         m_allDone       ( false ),
-        m_richSys       ( NULL  ),
+        m_richSys       ( nullptr  ),
         m_hpdOcc        ( Rich::NRiches ),
         m_hpdClus       ( Rich::NRiches ),
-        m_idTool        ( NULL  ),
-        m_decoder       ( NULL  ),
-        m_geomTool      ( NULL  ),
-        m_pixels        ( NULL  ),
+        m_idTool        ( nullptr  ),
+        m_decoder       ( nullptr  ),
+        m_geomTool      ( nullptr  ),
+        m_pixels        ( nullptr  ),
         m_bookKeep      ( true  ),
         m_hpdCheck      ( true  ),
         m_clusterHits   ( Rich::NRiches, false ),
@@ -64,10 +64,10 @@ namespace Rich
       declareProperty( "MaxPixels",              m_maxPixels = 999999 );
 
       // Initialise
-      m_hpdOcc[Rich::Rich1]  = NULL;
-      m_hpdOcc[Rich::Rich2]  = NULL;
-      m_hpdClus[Rich::Rich1] = NULL;
-      m_hpdClus[Rich::Rich2] = NULL;
+      m_hpdOcc[Rich::Rich1]  = nullptr;
+      m_hpdOcc[Rich::Rich2]  = nullptr;
+      m_hpdClus[Rich::Rich1] = nullptr;
+      m_hpdClus[Rich::Rich2] = nullptr;
 
     }
 
@@ -149,7 +149,7 @@ namespace Rich
       _ri_debug << " -> Creating RichRecPixel from RichSmartID " << id << endmsg;
 
       // See if this RichRecPixel already exists
-      LHCb::RichRecPixel * pixel = ( bookKeep() && m_pixelDone[id] ? m_pixelExists[id] : NULL );
+      LHCb::RichRecPixel * pixel = ( bookKeep() && m_pixelDone[id] ? m_pixelExists[id] : nullptr );
       if ( pixel ) return pixel;
 
       // Check this hit is OK
@@ -165,7 +165,7 @@ namespace Rich
                                           gPos,                            // position in global coords
                                           smartIDTool()->globalToPDPanel(gPos), // position in local coords
                                           Rich::Rec::PixelParent::RawBuffer,    // parent type
-                                          NULL                             // pointer to parent (not available)
+                                          nullptr                             // pointer to parent (not available)
                                           );
 
           // set the corrected local positions
@@ -218,7 +218,7 @@ namespace Rich
       if ( 1 == cluster.size() ) return buildPixel(id);
 
       // See if this RichRecPixel already exists
-      LHCb::RichRecPixel * pixel = ( bookKeep() && m_pixelDone[id] ? m_pixelExists[id] : NULL );
+      LHCb::RichRecPixel * pixel = ( bookKeep() && m_pixelDone[id] ? m_pixelExists[id] : nullptr );
       if ( pixel ) return pixel;
 
       // Check this hit is OK
@@ -234,7 +234,7 @@ namespace Rich
                                           gPos,                            // position in global coords
                                           smartIDTool()->globalToPDPanel(gPos), // position in local coords
                                           Rich::Rec::PixelParent::RawBuffer,    // parent type
-                                          NULL                             // pointer to parent (not available)
+                                          nullptr                             // pointer to parent (not available)
                                           );
 
           // set the corrected local positions

@@ -4,9 +4,6 @@
  *
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IPhotonEmissionPoint
  *
- *  CVS Log :-
- *  $Id: IRichPhotonEmissionPoint.h,v 1.2 2008-06-03 15:02:55 cattanem Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   31/10/2007
  */

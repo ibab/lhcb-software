@@ -21,11 +21,11 @@
 template <class PBASE>
 Rich::Rec::CommonBase<PBASE>::CommonBase( PBASE * base )
   : m_base          ( base ),
-    m_pixTool       ( NULL ),
-    m_tkTool        ( NULL ),
-    m_segTool       ( NULL ),
-    m_photTool      ( NULL ),
-    m_statTool      ( NULL ),
+    m_pixTool       ( nullptr ),
+    m_tkTool        ( nullptr ),
+    m_segTool       ( nullptr ),
+    m_photTool      ( nullptr ),
+    m_statTool      ( nullptr ),
     m_trackCrName   ( "RichTrackCreator"   ),
     m_pixelCrName   ( "RichPixelCreator"   ),
     m_segmentCrName ( "RichSegmentCreator" ),

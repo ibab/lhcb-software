@@ -4,6 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2015-12-16 - Chris Jones
+ - Various small cleanups. Remove some obsolete CVS comments (yes, still some
+   hanging around) and a few C++11 optimisations.
+
 !========================= RichRecBase v4r22 2015-11-23 =========================
 ! 2015-11-09 - Chris Jones
  - Add 'MuonID' to the list of known track types.

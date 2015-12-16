@@ -4,9 +4,6 @@
  *
  *  Header file for RICH reconstruction tool interface : Rich::Rec::ISellmeirFunc
  *
- *  CVS Log :-
- *  $Id: IRichSellmeirFunc.h,v 1.11 2008-08-18 19:09:07 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */

@@ -4,8 +4,6 @@
  *
  * Header file for enumeration Rich::Rec::ProcStat
  *
- * $Id: RichRecProcCode.h,v 1.7 2007-03-09 18:04:34 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2003-05-10
  */

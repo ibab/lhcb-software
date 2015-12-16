@@ -4,9 +4,6 @@
  *
  * Header file for reconstruction tool base class : RichRecTupleToolBase
  *
- * CVS Log :-
- * $Id: RichRecTupleToolBase.h,v 1.3 2007-03-09 18:04:34 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2005/01/13
  */

@@ -56,7 +56,7 @@ namespace Rich
     public:
 
       /// Standard constructor
-      CommonBase( PBASE * base = 0 );
+      CommonBase( PBASE * base = nullptr );
 
       /// Destructor
       ~CommonBase( ) { }
@@ -302,15 +302,15 @@ namespace Rich
 
     private:
 
-      PBASE * m_base; ///< Pointer to derived class
+      PBASE * m_base = nullptr; ///< Pointer to derived class
 
     private:
 
-      mutable const IPixelCreator * m_pixTool;   ///< RichRecPixel Creator tool
-      mutable const ITrackCreator * m_tkTool;    ///< RichRecTrack Creator tool
-      mutable const ISegmentCreator * m_segTool; ///< RichRecSegment Creator tool
-      mutable const IPhotonCreator * m_photTool; ///< RichRecPhoton Creator tool
-      mutable const IStatusCreator * m_statTool; ///< RichRecStatus Creator tool
+      mutable const IPixelCreator * m_pixTool   = nullptr; ///< RichRecPixel Creator tool
+      mutable const ITrackCreator * m_tkTool    = nullptr; ///< RichRecTrack Creator tool
+      mutable const ISegmentCreator * m_segTool = nullptr; ///< RichRecSegment Creator tool
+      mutable const IPhotonCreator * m_photTool = nullptr; ///< RichRecPhoton Creator tool
+      mutable const IStatusCreator * m_statTool = nullptr; ///< RichRecStatus Creator tool
 
       std::string m_trackCrName;      ///< Track creator nickname
       std::string m_pixelCrName;      ///< Pixel creator nickname

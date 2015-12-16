@@ -4,8 +4,6 @@
  *
  *  Header file for tool interface : Rich::Rec::ITrSegMaker
  *
- *  $Id: IRichTrSegMaker.h,v 1.4 2007-03-09 18:04:33 jonrob Exp $
- *
  *  @author Chris Jones         Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @date   2003-10-28

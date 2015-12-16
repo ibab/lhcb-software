@@ -4,9 +4,6 @@
  *
  *  Header file for RICH reconstruction tool interface : Rich::Rec::ICherenkovResolution
  *
- *  CVS Log :-
- *  $Id: IRichCherenkovResolution.h,v 1.10 2007-04-23 16:50:23 cattanem Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -54,7 +51,7 @@ namespace Rich
       /** static interface identification
        *  @return unique interface identifier
        */
-      static const InterfaceID& interfaceID() {return IID_IRichCherenkovResolution;}
+      static const InterfaceID& interfaceID() { return IID_IRichCherenkovResolution; }
 
       /** Calculates the Cherenkov theta resolution for given RichRecSegment
        *  and particle mass hypothesis

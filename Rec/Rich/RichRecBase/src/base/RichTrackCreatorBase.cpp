@@ -30,8 +30,8 @@ namespace Rich
                                         const IInterface* parent )
       : Rich::Rec::ToolBase    ( type, name, parent ),
         m_hasBeenCalled        ( false              ),
-        m_smartIDTool          ( NULL               ),
-        m_rayTrace             ( NULL               ),
+        m_smartIDTool          ( nullptr            ),
+        m_rayTrace             ( nullptr            ),
         m_tracks               ( 0                  ),
         m_Nevts                ( 0                  ),
         m_bookKeep             ( true               ),
@@ -67,7 +67,7 @@ namespace Rich
       }
 
       // tools
-      acquireTool( "RichSmartIDTool", m_smartIDTool, NULL, true );
+      acquireTool( "RichSmartIDTool", m_smartIDTool, nullptr, true );
       acquireTool( "TrackSelector", m_trSelector, this       );
 
       // Setup incident services
@@ -154,7 +154,7 @@ namespace Rich
     {
       m_hasBeenCalled = false;
       if ( bookKeep() ) m_trackDone.clear();
-      m_tracks   = NULL;
+      m_tracks   = nullptr;
       if ( msgLevel(MSG::DEBUG) )
       {
         m_nTracksLast = m_nTracksAll;

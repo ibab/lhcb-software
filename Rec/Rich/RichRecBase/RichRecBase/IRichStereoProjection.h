@@ -4,9 +4,6 @@
  *
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IStereoProjection
  *
- *  CVS Log :-
- *  $Id: IRichStereoProjection.h,v 1.2 2008-06-03 15:02:55 cattanem Exp $
- *
  *  @author Luigi Delbuono   delbuono@in2p3.fr
  *  @date   20/06/2007
  */

@@ -33,10 +33,11 @@ void FastRingFitter::clear()
 const FastRingFitter::Result& FastRingFitter::fit()
 {
 
-  double xx, yy, xx2, yy2;
-  double f, g, h, p, q, t, g0, g02, a, b, c, d;
-  double xroot, ff, fp, xd, yd, g1;
-  double dx, dy, dradius2, xnom;
+  double xx(0), yy(0), xx2(0), yy2(0);
+  double f(0), g(0), h(0), p(0), q(0), t(0), g0(0), g02(0);
+  double  a(0), b(0), c(0), d(0);
+  double xroot(0), ff(0), fp(0), xd(0), yd(0), g1(0);
+  double dx(0), dy(0), dradius2(0), xnom(0);
 
   // initialise fit
   double xgravity = 0.0;

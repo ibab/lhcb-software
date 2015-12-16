@@ -4,9 +4,6 @@
  *
  *  Header file for RICH reconstruction tool interface : Rich::Rec::ICherenkovAngle
  *
- *  CVS Log :-
- *  $Id: IRichCherenkovAngle.h,v 1.11 2008-02-15 10:08:47 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */

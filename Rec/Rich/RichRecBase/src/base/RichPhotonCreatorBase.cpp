@@ -25,13 +25,13 @@ PhotonCreatorBase::PhotonCreatorBase( const std::string& type,
                                       const IInterface* parent )
   : ToolBase            ( type, name, parent ),
     m_hasBeenCalled     ( false ),
-    m_photonPredictor   ( NULL ),
-    m_photonSignal      ( NULL ),
-    m_ckAngle           ( NULL ),
-    m_ckRes             ( NULL ),
-    m_richPartProp      ( NULL ),
+    m_photonPredictor   ( nullptr ),
+    m_photonSignal      ( nullptr ),
+    m_ckAngle           ( nullptr ),
+    m_ckRes             ( nullptr ),
+    m_richPartProp      ( nullptr ),
     m_Nevts             ( 0    ),
-    m_photons           ( NULL ),
+    m_photons           ( nullptr ),
     m_photCount         ( Rich::NRadiatorTypes, 0 ),
     m_photCountLast     ( Rich::NRadiatorTypes, 0 )
 {
@@ -42,14 +42,7 @@ PhotonCreatorBase::PhotonCreatorBase( const std::string& type,
   m_minCKtheta     = {0.075, 0.005, 0.005} ;
   m_maxCKtheta     = {0.320, 0.075, 0.035} ;
   m_minPhotonProb  = {1e-15, 1e-15, 1e-15} ;
-  //if ( contextContains("HLT") )
-  //{
-  //  m_nSigma = { 3.5, 2.8, 3.0 } ;
-  //}
-  //else // Offline settings
-  //{
   m_nSigma         = { 3.8,  3.3,   3.3  } ;
-  //}
 
   // set properties
   declareProperty( "RichRecPhotonLocation",
@@ -321,7 +314,7 @@ PhotonCreatorBase::reconstructPhoton( LHCb::RichRecSegment * segment,
     {
       verbose() << "   -> FAILED HPD occupancy check -> reject" << endmsg;
     }
-    return NULL;
+    return nullptr;
   }
 
   // check photon is possible before proceeding
@@ -331,7 +324,7 @@ PhotonCreatorBase::reconstructPhoton( LHCb::RichRecSegment * segment,
     {
       verbose() << "   -> FAILED predictor check -> reject" << endmsg;
     }
-    return NULL;
+    return nullptr;
   }
   else if (  msgLevel(MSG::VERBOSE) )
   {
@@ -359,7 +352,7 @@ PhotonCreatorBase::reconstructPhoton( LHCb::RichRecSegment * segment,
       {
         verbose() << "   -> FAILED Aerogel/Gas check -> reject" << endmsg;
       }
-      return NULL;
+      return nullptr;
     }
   }
 
@@ -372,7 +365,7 @@ PhotonCreatorBase::reconstructPhoton( LHCb::RichRecSegment * segment,
 //   info() << "PhotonKey " << photonKey << endmsg;
 
   // See if this photon already exists
-  LHCb::RichRecPhoton * phot = NULL;
+  LHCb::RichRecPhoton * phot = nullptr;
   if ( UNLIKELY( bookKeep() && m_photonDone[ photonKey ] ) )
   {
     // return pre-made photon
@@ -424,12 +417,7 @@ LHCb::RichRecPhotons * PhotonCreatorBase::richPhotons() const
       // Remake local photon reference map
       if ( bookKeep() )
       {
-        for ( LHCb::RichRecPhotons::const_iterator iPhoton = m_photons->begin();
-              iPhoton != m_photons->end();
-              ++iPhoton )
-        {
-          m_photonDone[ (*iPhoton)->key() ] = true;
-        }
+        for ( const auto * phot : *m_photons ) { m_photonDone[phot->key()] = true; }
       }
 
     }
@@ -447,11 +435,9 @@ PhotonCreatorBase::reconstructPhotons( LHCb::RichRecTrack * track ) const
       debug() << "Reconstructing all photons for track " << track->key() << endmsg;
 
     // Iterate over segments
-    for ( LHCb::RichRecTrack::Segments::iterator segment =
-            track->richRecSegments().begin();
-          segment != track->richRecSegments().end(); ++segment )
+    for ( auto * segment : track->richRecSegments() )
     {
-      reconstructPhotons( *segment );
+      reconstructPhotons( segment );
     }
 
     track->setAllPhotonsDone(true);
@@ -632,7 +618,7 @@ void PhotonCreatorBase::InitNewEvent()
 {
   m_hasBeenCalled = false;
   if ( bookKeep() ) m_photonDone.clear();
-  m_photons = NULL;
+  m_photons = nullptr;
   m_photCountLast = m_photCount;
 }
 

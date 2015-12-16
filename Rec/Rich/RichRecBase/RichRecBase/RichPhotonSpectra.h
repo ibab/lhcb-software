@@ -63,9 +63,6 @@ namespace Rich
         m_binSize  ( 0 != enBins ? (maxEn-minEn)/enBins : 0   ),
         m_photdata ( Rich::NParticleTypes, PhotonData(enBins) ) { }
 
-    /// Destructor
-    ~PhotonSpectra( ) { }
-
     /** Access the number of energy bins
      *  @return The number of energy bins
      */
@@ -196,10 +193,10 @@ namespace Rich
 
   private: // data
 
-    int m_enBins;              ///< number of energy bins
-    TYPE m_minEn;              ///< minimum energy for which the distribution is defined
-    TYPE m_maxEn;              ///< maximum energy for which the distribution is defined
-    TYPE m_binSize;            ///< energy bin size
+    int m_enBins   = 5;        ///< number of energy bins
+    TYPE m_minEn   = 0;        ///< minimum energy for which the distribution is defined
+    TYPE m_maxEn   = 5;        ///< maximum energy for which the distribution is defined
+    TYPE m_binSize = 1;        ///< energy bin size
     HypoPhotonData m_photdata; ///< The data container
 
   };
@@ -309,8 +306,7 @@ namespace Rich
   inline TYPE PhotonSpectra<TYPE>::integral( const Rich::ParticleIDType id ) const
   {
     TYPE sum = 0;
-    for ( typename PhotonSpectra<TYPE>::PhotonData::const_iterator i = energyDist(id).begin();
-          i != energyDist(id).end(); ++i ) { sum += *i; }
+    for ( const auto& i : energyDist(id) ) { sum += i; }
     return sum;
   }
 
@@ -319,8 +315,8 @@ namespace Rich
                                              const typename PhotonSpectra<TYPE>::PhotonData & data )
   {
     if ( this->energyBins() != data.size() ) return false;
-    typename PhotonSpectra<TYPE>::PhotonData::const_iterator j = data.begin();
-    for ( typename PhotonSpectra<TYPE>::PhotonData::iterator i = energyDist(id).begin();
+    auto j = data.begin();
+    for ( auto i = energyDist(id).begin();
           i != energyDist(id).end(); ++i ) { *i *= *j; ++j; }
     return true;
   }

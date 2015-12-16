@@ -5,9 +5,6 @@
  *  Header file for RICH reconstruction monitor algorithm base class :
  *  RichRecTupleAlgBase
  *
- *  CVS Log :-
- *  $Id: RichRecTupleAlgBase.h,v 1.3 2007-03-09 18:04:34 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005/01/13
  */
@@ -48,7 +45,7 @@ namespace Rich
                     ISvcLocator* pSvcLocator );
 
       /// Destructor
-      virtual ~TupleAlgBase() {};
+      virtual ~TupleAlgBase() {}
 
       /** Initialization of the algorithm after creation
        *

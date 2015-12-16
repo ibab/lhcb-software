@@ -33,10 +33,10 @@
 #include "boost/limits.hpp"
 #include "boost/format.hpp"
 
-namespace LHCb {
+namespace LHCb
+{
   class Track;
 }
-
 
 namespace Rich
 {
@@ -179,14 +179,14 @@ namespace Rich
 
       /// returns minimum of two values
       template<class T>
-      inline T min( const T t1, const T t2) const
+      inline T min( const T& t1, const T& t2) const
       {
         return ( t1 < t2 ? t1 : t2 );
       }
 
       /// returns maximum of two values
       template<class T>
-      inline T max( const T t1, const T t2) const
+      inline T max( const T& t1, const T& t2) const
       {
         return ( t1 < t2 ? t2 : t1 );
       }

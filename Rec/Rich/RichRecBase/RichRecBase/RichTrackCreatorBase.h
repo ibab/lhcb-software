@@ -63,7 +63,7 @@ namespace Rich
                         const IInterface* parent );
 
       /// Destructor
-      virtual ~TrackCreatorBase( ) {};
+      virtual ~TrackCreatorBase( ) {}
 
       // Initialize method
       virtual StatusCode initialize();
@@ -91,12 +91,12 @@ namespace Rich
       {
       public:
         /// Default constructor
-        TrackCount() : triedTracks(0), selectedTracks(0), aeroSegs(0), rich1GasSegs(0), rich2GasSegs(0) {}
-        unsigned int triedTracks;    ///< Number of tracks passing track selection
-        unsigned int selectedTracks; ///< Number of tracks selected for RICH analysis
-        unsigned int aeroSegs;       ///< Number of aerogel segments created
-        unsigned int rich1GasSegs;   ///< Number of Rich1Gas segments created
-        unsigned int rich2GasSegs;   ///< Number of Rich2Gas segments created
+        TrackCount() {}
+        unsigned int triedTracks    = 0; ///< Number of tracks passing track selection
+        unsigned int selectedTracks = 0; ///< Number of tracks selected for RICH analysis
+        unsigned int aeroSegs       = 0; ///< Number of aerogel segments created
+        unsigned int rich1GasSegs   = 0; ///< Number of Rich1Gas segments created
+        unsigned int rich2GasSegs   = 0; ///< Number of Rich2Gas segments created
         /** Increment segment count for given radiator
          *  @param rad Radiator type to increment count for */
         inline void countRadiator( const Rich::RadiatorType rad )
@@ -171,7 +171,7 @@ namespace Rich
       /// Returns a pointer to the ray tracing tool
       const Rich::IRayTracing * rayTraceTool() const
       {
-        if ( !m_rayTrace ) { acquireTool( "RichRayTracing", m_rayTrace, NULL, true ); }
+        if ( !m_rayTrace ) { acquireTool( "RichRayTracing", m_rayTrace, nullptr, true ); }
         return m_rayTrace;
       }
 
@@ -190,25 +190,25 @@ namespace Rich
     private: // data
 
       /// Pointer to RichSmartID tool
-      const Rich::ISmartIDTool * m_smartIDTool;
+      const Rich::ISmartIDTool * m_smartIDTool = nullptr;
 
       /// Pointer to the detector ray tracing tool
-      mutable const Rich::IRayTracing * m_rayTrace;
+      mutable const Rich::IRayTracing * m_rayTrace = nullptr;
 
       /// Pointer to RichRecTracks
-      mutable LHCb::RichRecTracks * m_tracks;
+      mutable LHCb::RichRecTracks * m_tracks = nullptr;
 
       /// Output location for RichRecTracks in TES
       std::string m_richRecTrackLocation;
 
       /// Number of events processed tally
-      unsigned int m_Nevts;
+      unsigned int m_Nevts = 0;
 
       /// Flag to turn on or off the book keeping features to save cpu time.
-      bool m_bookKeep;
+      bool m_bookKeep = false;
 
       /// Track Selector
-      const Rich::Rec::ITrackSelector * m_trSelector;
+      const Rich::Rec::ITrackSelector * m_trSelector = nullptr;
 
       /// Track statistics, summed for all events
       mutable TrackTypeCount m_nTracksAll;
@@ -222,10 +222,10 @@ namespace Rich
     protected: // data
 
       /// Maximum number of raw input tracks per event to consider for processing
-      unsigned int m_maxInputTracks;
+      unsigned int m_maxInputTracks = 0;
 
       /// Maximum number of selected tracks per event to consider for processing
-      unsigned int m_maxSelTracks;
+      unsigned int m_maxSelTracks = 0;
 
     };
 

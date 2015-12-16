@@ -4,9 +4,6 @@
  *
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IGeomTool
  *
- *  CVS Log :-
- *  $Id: IRichRecGeomTool.h,v 1.10 2007-08-09 15:51:12 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */

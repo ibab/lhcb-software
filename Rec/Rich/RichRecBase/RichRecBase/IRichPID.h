@@ -4,9 +4,6 @@
  *
  *  Header file for RICH Global PID algorithm class : Rich::Rec::IRichPID
  *
- *  CVS Log :-
- *  $Id: IRichPID.h,v 1.1 2008-03-25 16:01:13 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
  */

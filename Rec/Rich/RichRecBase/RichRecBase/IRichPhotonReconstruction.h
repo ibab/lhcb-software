@@ -1,8 +1,7 @@
+
 /** @file IRichPhotonReconstruction.h
  *
  *  Header file for tool interface : Rich::Rec::IPhotonReconstruction
- *
- *  $Id: IRichPhotonReconstruction.h,v 1.7 2007-11-26 16:45:34 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28

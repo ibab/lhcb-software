@@ -66,7 +66,7 @@ namespace Rich
                          const IInterface* parent );
 
       /// Destructor
-      virtual ~PhotonCreatorBase( ) {};
+      virtual ~PhotonCreatorBase( ) {}
 
       // Initialize method
       virtual StatusCode initialize();
@@ -274,7 +274,7 @@ namespace Rich
     protected: // data
 
       /// Flag to indicate if the tool has been used in a given event
-      mutable bool m_hasBeenCalled;
+      mutable bool m_hasBeenCalled = false;
 
       /// photon done map
       mutable Rich::HashMap<Rich::Rec::PhotonKey::KeyType,bool> m_photonDone;
@@ -282,22 +282,22 @@ namespace Rich
     private: // data
 
       /// Pointer to the RichPhotonPredictor tool
-      const IPhotonPredictor * m_photonPredictor;
+      const IPhotonPredictor * m_photonPredictor = nullptr;
 
       /// Pointer to the RichPhotonSignal tool
-      const IPhotonSignal * m_photonSignal;
+      const IPhotonSignal * m_photonSignal = nullptr;
 
       /// Pointer to Cherenkov angle tool
-      const ICherenkovAngle * m_ckAngle;
+      const ICherenkovAngle * m_ckAngle = nullptr;
 
       /// Pointer to Cherenkov angle resolution tool
-      const ICherenkovResolution * m_ckRes;
+      const ICherenkovResolution * m_ckRes = nullptr;
 
       /// Pointer to RichParticleProperties interface
-      const IParticleProperties * m_richPartProp;
+      const IParticleProperties * m_richPartProp = nullptr;
 
       /// Number of events processed tally
-      unsigned int m_Nevts;
+      unsigned int m_Nevts = 0;
 
       /// N sigma for acceptance bands
       std::vector<double> m_nSigma;   
@@ -315,13 +315,13 @@ namespace Rich
       std::vector<double> m_maxHPDOccForReco;
 
       /// Flag to turn on or off the book keeping features to save cpu time.
-      bool m_bookKeep;
+      bool m_bookKeep = false;
 
       /// Flag to turn on or off the rejection of aerogel photons based on gas photons
-      bool m_rejAeroPhotsIfGas;
+      bool m_rejAeroPhotsIfGas = false;
 
       /// Pointer to RichRecPhotons
-      mutable LHCb::RichRecPhotons * m_photons;
+      mutable LHCb::RichRecPhotons * m_photons = nullptr;
 
       /// Location of RichRecPhotons in TES
       std::string m_richRecPhotonLocation;
@@ -339,7 +339,7 @@ namespace Rich
     protected: // data
 
       /// Maximum number of photon candidates
-      unsigned int m_maxPhotons;
+      unsigned int m_maxPhotons = 0;
 
     };
 

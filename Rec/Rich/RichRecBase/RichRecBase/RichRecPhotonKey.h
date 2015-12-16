@@ -76,10 +76,7 @@ namespace Rich
       }
 
       /// Copy Constructor
-      PhotonKey( const PhotonKey & k ) { m_data.raw = k.key(); }
-
-      /// Destructor
-      ~PhotonKey() { }
+      //PhotonKey( const PhotonKey & k ) { m_data.raw = k.key(); }
 
     public:
 

@@ -52,11 +52,6 @@ namespace Rich
 
       public:
 
-        /// Default Constructor
-        Result() : Radius(0), XCenter(0), YCenter(0), Variance(0), Status(0) { }
-
-      public:
-
         /// overload printout to ostream operator <<
         friend inline std::ostream& operator << ( std::ostream& s,
                                                   const Result & result )
@@ -71,11 +66,11 @@ namespace Rich
 
       public:
 
-        double  Radius;        ///< Fitted radius
-        double  XCenter;       ///< Fitted x point of centre
-        double  YCenter;       ///< Fitted y point of centre
-        double  Variance;      ///< the variance estimate
-        int     Status;        ///< Fit status code
+        double  Radius{0};        ///< Fitted radius
+        double  XCenter{0};       ///< Fitted x point of centre
+        double  YCenter{0};       ///< Fitted y point of centre
+        double  Variance{0};      ///< the variance estimate
+        int     Status{0};        ///< Fit status code
 
       };
 
@@ -87,9 +82,6 @@ namespace Rich
       ///< Constructor from a RichRecRing
       explicit FastRingFitter( const LHCb::RichRecRing & ring ) 
       { addPoints(ring); }
-
-      ///< Default Destructor
-      ~FastRingFitter() { }
 
       /// Perform the ring fit with the current set of points
       const Result& fit();
