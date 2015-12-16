@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-12-16 - Rosen Matev
+ - Adapt Calibration_VeloMicroBias settings to changes in Hlt1MBLines
+
 ! 2015-12-15 - Roel Aaij
  - Remove unused LHCbPR settings.
 

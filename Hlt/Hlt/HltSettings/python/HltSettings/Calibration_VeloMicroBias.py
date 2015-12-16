@@ -35,12 +35,18 @@ class Calibration_VeloMicroBias :
         Returns a dictionary of cuts
         """
         from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
-        d= { Hlt1MBLinesConf : { 'MicroBiasOdin' : '( (ODIN_TRGTYP == LHCb.ODIN.PhysicsTrigger) | (ODIN_TRGTYP == LHCb.ODIN.TimingTrigger) )'
-                                 ,'Prescale' : { 'Hlt1MBMicroBias.*' : 0.01 } 
-#                                   , 'Postscale': { 'Hlt1MBMicroBias.*' : 'RATE(5000)' }
-                                   }
-             }
-        
-
+        d = {
+            Hlt1MBLinesConf : {
+                'ODIN' : {
+                    'MicroBias'               : '( (ODIN_TRGTYP == LHCb.ODIN.PhysicsTrigger) | (ODIN_TRGTYP == LHCb.ODIN.TimingTrigger) )',
+                    'MicroBiasLowMultVelo'    : 'jbit( ODIN_EVTTYP,2 )',
+                    'NoBias'                  : 'jbit( ODIN_EVTTYP,2 )',
+                    'CharmCalibrationNoBias'  : 'jbit( ODIN_EVTTYP,2 )',
+                    'NoBiasLeadingCrossing'   : 'jbit( ODIN_EVTTYP,14 )',
+                },
+                'Prescale' : { 'Hlt1MBMicroBias.*' : 0.01 },
+                # 'Postscale': { 'Hlt1MBMicroBias.*' : 'RATE(5000)' },
+            }
+        }
 
         return d
