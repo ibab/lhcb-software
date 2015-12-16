@@ -23,7 +23,9 @@
   </set></argument>
   <argument name="validator"><text>
 
-if len(stdout.split())>8:
+import re
+pattern = r"============= diffs zero->1 event ===============\n============= diffs 1->100 events ===============$"
+if not re.search(pattern, stdout):
     causes.append('differences found')
     result['moore.physics.tck.diffs']=result.Quote('check stdout for differences')
 

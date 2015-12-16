@@ -5,7 +5,7 @@
 # ...................
 # Author: rlambert
 # Purpose: Test if running Moore from a TCK gives the same result as running from that threshold setting.
-# Prerequisites: 
+# Prerequisites: The TCK is generated earlier in this suite.
 # Common failure modes, severities and cures: 
 #               . SEVERE: Segfault or raised exception, stderr, nonzero return code
 #               . MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
@@ -27,6 +27,10 @@
     <text>--option</text>
     <text>from Configurables import Moore; Moore().RemoveInputHltRawBanks = True; Moore().UseTCK=True; Moore().InitialTCK='0x00ef0046';  Moore().CheckOdin=False; Moore().EnableTimer="tck.hlt1and2.csv"; from Configurables import EventSelector; EventSelector().PrintFreq=100;</text>
   </set></argument>
+  <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
+  <argument name="prerequisites"><set>
+    <tuple><text>moore.physics.tck.hundredevents</text><enumeral>PASS</enumeral></tuple>
+  </set></argument>  
   <argument name="validator"><text>
 myname='moore.physics.tck.zfromxtck'
 

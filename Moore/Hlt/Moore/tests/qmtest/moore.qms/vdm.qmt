@@ -18,7 +18,7 @@
   <argument name="args"><set>
     <text>-n</text>
     <text>1200</text>
-    <text>VanDerMeerScan_Jul12</text>
+    <text>VanDerMeerScan_2015</text>
     <text>-d</text>
     <text>2012_raw_L041</text>
   </set></argument>
@@ -33,7 +33,7 @@ if stdout.find(expected_string) == -1:
 countErrorLines({"FATAL":0,"ERROR":0,"WARNING":0})
 
 from LHCbAlgs import TTParser
-timingdict=TTParser.event_av_dict("VanDerMeerScan_Jul12.csv")
+timingdict=TTParser.event_av_dict("VanDerMeerScan_2015.csv")
 
 if len([t for t in timingdict if t.startswith("Hlt2")])!=0:
     causes.append('Does not look like pass-through')

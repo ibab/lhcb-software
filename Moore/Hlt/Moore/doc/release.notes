@@ -4,6 +4,14 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2015-12-16 - Rosen Matev
+ - Fix validation in diff.qmt test
+ - Specify prerequisite of the zfromxtck.qmt test (test still fails)
+ - Update vdm.qmt test to use 2015 settings (test still fails)
+ - Remove fixedfile-r08s12b-2010-defaultdb.qmt test
+   (duplicate of fixedfile-r08s12b-2010.qmt)
+ - Ignore VELO warning for fixedfile-r08s12b-2010.qmt test
+
 ! 2015-12-15 - Rosen Matev
  - Ignore VELO warning for tests using old dddb.
    (VELO R sensor M2 routing lines not in conditions DB cond)
