@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2015-12-16 - Marco Clemencic
+ - LHCBPS-1472: Fixed another flaw in the new logic of configurableInstanceFromString.
+
 ! 2015-12-15 - Marco Clemencic
  - LHCBPS-1472: Fixed a problem with a special case.
 

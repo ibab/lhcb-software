@@ -69,16 +69,17 @@ def configurableInstanceFromString(config):
         typename, name = config.split('/', 1)
     else:
         typename = name = config
+    # Configurables typenames use '__' as namespace separator
+    typename = typename.replace('::', '__')
 
     try:
-        return (GaudiConfigurables.allConfigurables.get(config) or
+        return (GaudiConfigurables.allConfigurables.get(name) or
                 getattr(Configurables, typename)(name))
-    except (AttributeError, TypeError):
-        # this is if the type is not in Configurables,
-        # so we try replacing the namespace separator
-        # FIXME: the logic is wrong because we replace '::' not only in the typename,
-        #        but it's the same logic that was there before the change
-        return configurableInstanceFromString(config.replace('::', '__'))
+    except TypeError:
+        # this can happen during build
+        if Configurables.ignoreMissingConfigurables:
+            return None
+        raise
 
 def removeConfigurables(conf_list):
     '''Helper: get rid of all configurables from a list'''
