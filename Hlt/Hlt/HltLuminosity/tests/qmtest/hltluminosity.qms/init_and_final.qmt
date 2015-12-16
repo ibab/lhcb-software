@@ -20,7 +20,7 @@
     <text>../options/init_and_final.py</text>
   </set></argument>
   <argument name="validator"><text>
-countErrorLines({"FATAL":0, "ERROR":4, "WARNING" :4})
+countErrorLines({"FATAL":0, "ERROR":4, "WARNING" :8})
 </text></argument>
 </extension>
 
