@@ -658,7 +658,7 @@ Bs2MuMuLines = {
         "DOCA": 0.3,
         "DOCA_LTUB": 0.3,
         "DOCA_loose": 0.5,
-        "DefaultLinePrescale": 1,
+        "DefaultLinePrescale": 0,
         "DefaultPostscale": 1,
         "JPsiLinePrescale": 0,
         "JPsiLooseLinePrescale": 0.,

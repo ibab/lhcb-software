@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-12-17 Pablo Ruiz Valls
+ - Prescale StrippingBs2MuMuLinesNoMuIDLine to 0 in RD dictionaries.
+
 ! 2015-12-15 - Ricardo Vazquez Gomez
  - Fix STREAM name in B2OC line config
 
