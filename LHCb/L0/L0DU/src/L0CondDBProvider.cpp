@@ -98,7 +98,7 @@ double L0CondDBProvider::caloEtScale(){
 
 double L0CondDBProvider::muonPtScale(){
   double muonPtScale = 40.*Gaudi::Units::MeV ;// ADC to MeV (hardcoded -- to be extracted from CondDB)
-  if( abs(caloEtScale() - 24.*Gaudi::Units::MeV)<1.e-3  ) muonPtScale = 50.*Gaudi::Units::MeV;  // patch for hardware change on 2015/06/02
+  if( std::abs(caloEtScale() - 24.*Gaudi::Units::MeV)<1.e-3  ) muonPtScale = 50.*Gaudi::Units::MeV;  // patch for hardware change on 2015/06/02
   return muonPtScale;
 }
 

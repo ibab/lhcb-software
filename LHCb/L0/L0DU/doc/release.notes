@@ -3,6 +3,10 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2015-12-17 - Marco Cattaneo
+ - Fix a clang warning ("using integer absolute value function 'abs' when
+   argument is of floating point type")
+
 !========================= L0DU v10r34 2015-10-12 =========================
 ! 2015-10-08 - Olivier Deschamps
 	- L0DURawBankMonitor : fix data scaling 
