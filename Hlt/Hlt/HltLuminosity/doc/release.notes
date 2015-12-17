@@ -1,6 +1,6 @@
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltLuminosity
-! Responsible : Jaap Panman
+! Responsible : Rosen Matev
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
