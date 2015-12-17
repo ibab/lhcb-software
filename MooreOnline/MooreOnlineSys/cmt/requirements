@@ -1,5 +1,5 @@
 package MooreOnlineSys
-version           v24r3
+version           v24r4
 branches doc cmt tests
 
 #=======================================================
@@ -9,7 +9,7 @@ branches doc cmt tests
 use  MooreScripts      v1r13
 use  MooreOnlineConf   v1r11
 use  IndependenceTests v1r14    Hlt
-use  HltMonitoring     v1r2     Hlt
+use  HltMonitoring     v1r3     Hlt
 
 # Declare this as a container package
 apply_pattern container_package
