@@ -5,6 +5,12 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
+!========================= TCKUtils v1r18 2015-12-17 =========================
+
+! 2015-11-23 - Roel Aaij
+ - Fix routing bits listing for split configuration in case HLT1 does not contain the definition of
+   the HLT2 bits.
+
 ! 2015-11-19 - Roel Aaij
  - Fix the copy function.
 
