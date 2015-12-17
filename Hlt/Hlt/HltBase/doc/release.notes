@@ -3,6 +3,9 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+
+!========================= HltBase v15r8 2015-12-17 =========================
+
 ! 2015-12-06 - Gerhard Raven
  - make single-argument Selection constructor explicit 
  - remove __GCCXML__ guards
