@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HltLuminosity
 ################################################################################
-gaudi_subdir(HltLuminosity v4r4)
+gaudi_subdir(HltLuminosity v4r5)
 
 gaudi_depends_on_subdirs(Calo/CaloUtils
                          Event/DAQEvent

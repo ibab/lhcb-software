@@ -3,7 +3,7 @@
 # Maintainer : Rosen Matev
 #============================================================================
 package           HltLuminosity
-version           v4r4
+version           v4r5
 
 #============================================================================
 # Structure, i.e. directories to process. 
