@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HltL0Conf
 ################################################################################
-gaudi_subdir(HltL0Conf v4r2)
+gaudi_subdir(HltL0Conf v4r3)
 
 gaudi_depends_on_subdirs(Calo/CaloUtils
                          Det/CaloDet
