@@ -57,6 +57,7 @@ default_config = {
             "BVCHI2DOF"       : 20    ,#adminensional
             "BDIRA"       : 0.999    ,#adminensional
             "BFDCHI2HIGH"         : 100.  ,#adimensional
+            "BPVVDZcut"   : 0.0, #mm
             #slow pion
             "Slowpion_PT" : 300 #MeV
             ,"Slowpion_P" : 1000 #MeV
@@ -114,6 +115,7 @@ class D2HLepNuBuilder(LineBuilder):
         , "BVCHI2DOF"
         , "BDIRA"
         , "BFDCHI2HIGH"
+        , "BPVVDZcut" 
 #        , "VDCut"
         ]
     
@@ -282,7 +284,8 @@ class D2HLepNuBuilder(LineBuilder):
             CombinationCut = "(AM>%(KLepMassLow)s*MeV) & (AM<%(KLepMassHigh)s*MeV)" % self._config,
             MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s )"\
             "& (BPVVDCHI2 >%(BFDCHI2HIGH)s)"\
-            "& (BPVDIRA > %(BDIRA)s)"
+            "& (BPVDIRA > %(BDIRA)s)"\
+            "& (BPVVDZ > %(BPVVDZcut)s)"
             #            "& (BPVVD > %(VDCut)s)"
             #" & (ratio > 0.0)"
             % self._config,
@@ -333,14 +336,17 @@ class D2HLepNuBuilder(LineBuilder):
     
         hlt2 = ""        
         if self._config["useTOS"] == True: # and _name.find('E') < 0:
+            the_prescale = 1.0
+            if "K" in _name:
+                the_prescale = 0.1
             Line = StrippingLine(_name+'Line',
-                    prescale = 1.0,
+                    prescale = the_prescale,
                     FILTER=self.GECs,
                     HLT2 = hlt2,
                     selection = DstSelTOS) 
         else:
             Line = StrippingLine(_name+'Line',
-                    prescale = 1.0,
+                    prescale = the_prescale,
                     FILTER=self.GECs,
                     HLT2 = hlt2,
                     selection = DstSel) 

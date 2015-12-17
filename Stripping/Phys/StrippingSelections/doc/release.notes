@@ -3,6 +3,9 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2015-12-16 - Adam Davis
+ - Prescaled Kaon lines in StrippingD2HMuNu
+
 ! 2015-12-14 - Marianna Fontana
  - Added muon raw banks and RelInfoMuonIsolation to StrippingDstarD02xx
 
