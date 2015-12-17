@@ -5,6 +5,8 @@
 !Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
+!========================= HltGlobalMonitor v5r4 2015-12-17 =========================
+
 ! 2015-12-06 - Gerhard Raven
  - remove unused include statements
 
