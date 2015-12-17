@@ -24,14 +24,9 @@ gaudi_depends_on_subdirs(Hlt/Hlt1Lines
                          Hlt/TCKUtils
                          Phys/LoKiTrigger
                          ## Packages from other projects
-                         Pr/PrPixel          
-                         Tf/TrackSys         
-                         Tr/PatChecker       
-                         Muon/MuonID          
-                         Muon/MuonTrackRec    
-                         Phys/DecayTreeFitter
-                         Phys/KalmanFilter   
-                         Phys/LoKiFitters    
-                         Phys/TisTosTobbing)
+                         Event/HltEvent
+                         Hlt/HltDAQ
+                         Hlt/HltServices
+                         Phys/RelatedInfoTools)
 
 gaudi_add_test(QMTest QMTEST)
