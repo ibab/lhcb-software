@@ -407,8 +407,8 @@ StatusCode AnalyticFieldSvc::GetParam() {
 
 }
 
- delete sZmin;
- delete sZmax;
+ delete[] sZmin;
+ delete[] sZmax;
  infile.close(); 
   }
   
