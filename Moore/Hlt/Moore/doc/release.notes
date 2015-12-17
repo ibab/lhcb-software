@@ -4,7 +4,7 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
-!========================= Moore v25r0 2015-12-17 =========================
+!========================= Moore v24r4 2015-12-17 =========================
 
 ! 2015-12-17 - Rosen Matev
  - Change default input of tests to 2015HLTValidationData_L0filtered_0x0050
