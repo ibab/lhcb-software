@@ -1,6 +1,5 @@
 // ============================================================================
 /// Include files
-#include<cmath>
 #include "GaudiKernel/ToStream.h"
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/MsgStream.h"
@@ -41,9 +40,9 @@ CovarianceEstimator::~CovarianceEstimator(){}
 // ============================================================================
 StatusCode CovarianceEstimator::operator()( LHCb::CaloCluster* cluster ) const{
   // ignore trivial cases 
-  if( 0 == cluster               ) { return StatusCode::SUCCESS ; }
+  if( nullptr == cluster         ) { return StatusCode::SUCCESS ; }
   if( cluster->entries().empty() ) { return StatusCode::SUCCESS ; }
-  if( 0 == detector()            ) { return StatusCode(221)     ; }
+  if( nullptr == detector()      ) { return StatusCode(221)     ; }
   
   
   LHCb::CaloCluster::Entries entries = cluster->entries();
@@ -86,7 +85,7 @@ StatusCode CovarianceEstimator::operator()( LHCb::CaloCluster* cluster ) const{
     const LHCb::CaloDigit* digit  = it->digit() ;    
     /// check the status 
 
-    if( 0 == digit )continue;
+    if( nullptr == digit )continue;
     if((it->status() & LHCb::CaloDigitStatus::UseForEnergy ) || ( it->status() & LHCb::CaloDigitStatus::UseForPosition))
       it->addStatus    ( LHCb::CaloDigitStatus::UseForCovariance   );
     else    
@@ -152,7 +151,7 @@ StatusCode CovarianceEstimator::operator()( LHCb::CaloCluster* cluster ) const{
     gain [i] = g ;
     int j=0;      
     for( LHCb::CaloCluster::Entries::iterator jt = entries.begin() ; jt < it ; ++jt ){    
-      if( jt->digit() == NULL)continue;
+      if( jt->digit() == 0 )continue;
       if( (jt->status() & UseForCovariance) == 0 ) continue; 
       
       // position of cell "j"
@@ -259,13 +258,13 @@ StatusCode CovarianceEstimator::operator()( LHCb::CaloCluster* cluster ) const{
 MsgStream& CovarianceEstimator::printOut ( MsgStream& log ) const{
   log << " Cluster Covariance Estimator: " 
       << " Detector is " <<  ( 0 == m_detector ? "INVALID" : "VALID" )
-      << endmsg 
+      << std::endl 
       << "   Resolution       is [" << ( m_A  ) << "]" 
-      << endmsg 
+      << std::endl 
       << "   Sigma Gain       is [" << ( m_GainError              )  << "]" 
-      << endmsg 
+      << std::endl 
       << "   Incoherent Noise   is " << ( m_IncoherentNoise      )  << "]"
-      << endmsg 
+      << std::endl 
       << "   Coherent Noise is " << ( m_CoherentNoise     )  << "]"
       << endmsg ;
   ///

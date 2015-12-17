@@ -3,6 +3,13 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+! 2015-12-17 - Marco Cattaneo
+ - CovarianceEstimator.cpp: 
+   o fix clang warning ("implicit conversion of NULL constant to 'int'")
+   o prefer nullptr to 0 or NULL
+   o use std::endl instead of endmsg for new line inside a MsgStream
+   o remove unnecessary include
+
 !========================= CaloUtils v10r5p1 2015-10-12 =========================
 ! 2015-08-03 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
