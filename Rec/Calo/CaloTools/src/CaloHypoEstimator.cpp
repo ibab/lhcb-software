@@ -290,8 +290,17 @@ bool CaloHypoEstimator::estimator(const LHCb::CaloHypo* hypo){
         if( *ih >= Prse4max ) Prse4max=*ih;
       }
       m_data[PrsE4Max]  = Prse4max;
-      m_data[PrsE49] = (sum9>0) ? Prse4max /sum9 : 0.;
-      m_data[PrsE19]= (sum9>0) ? sum1/sum9 : 0. ;
+      double sum9Inv = 0.;
+      if( sum9 > 0. ) {
+        sum9Inv = 1./sum9;
+        m_data[PrsE49] = Prse4max * sum9Inv;
+        m_data[PrsE19] = sum1 * sum9Inv;
+      }
+      else 
+      {
+        m_data[PrsE49] = 0.;
+        m_data[PrsE19] = 0.;
+      }
       m_data[PrsE1]= Prse9[0]; 
       m_data[PrsE2]= Prse9[1]; 
       m_data[PrsE3]= Prse9[2]; 

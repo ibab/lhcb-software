@@ -3,6 +3,9 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !-------------------------------------------------------------------------------
 
+! 2015-12-17 - Marco Cattaneo
+ - CaloHypoEstimator.cpp: reorganise an if clause to avoid and FPE with clang
+
 !========================= CaloTools v6r11 2015-11-23 =========================
 ! 2015-11-06 - O. Deschamps
  - fix clang compilation warnings
