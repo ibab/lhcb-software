@@ -205,7 +205,8 @@ bool CondDBCache::get(const std::string &path, const cool::ValidityKey &when,
       until = cool::ValidityKeyMax;
       descr = folder->second.description;
       payload.reset();
-      m_log << " FOUND (FolderSet)" << endmsg;
+      if( UNLIKELY( m_log.level() <= MSG::DEBUG ) )
+        m_log << " FOUND (FolderSet)" << endmsg;
       return true;
     }
     ItemListType::iterator i = folder->second.find(when,channel);
@@ -215,11 +216,13 @@ bool CondDBCache::get(const std::string &path, const cool::ValidityKey &when,
       descr   = folder->second.description;
       payload = i->data;
       //i->score += 1.0;
-      m_log << " FOUND" << endmsg;
+      if( UNLIKELY( m_log.level() <= MSG::DEBUG ) )
+        m_log << " FOUND" << endmsg;
       return true;
     }
   }
-  m_log << " MISSING" << endmsg;
+  if( UNLIKELY( m_log.level() <= MSG::DEBUG ) )
+    m_log << " MISSING" << endmsg;
   return false;
 }
 //=========================================================================
