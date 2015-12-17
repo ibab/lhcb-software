@@ -1,12 +1,12 @@
 package MooreSys
-version           v24r3
+version           v24r4
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  Moore               v24r2    Hlt
+use  Moore               v24r4    Hlt
 use  L0App               v2r4     L0
 
 # Declare this as a container package
