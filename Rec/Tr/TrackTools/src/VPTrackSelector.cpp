@@ -1,90 +1,71 @@
-//-----------------------------------------------------------------------------
 /** @file VPTrackSelector.cpp
  *
- *  Implementation file for reconstruction tool : VPTrackSelector
+ *  Implementation file for reconstruction tool VPTrackSelector,
+ *  based on VeloTrackSelector.
  *
- *  CVS Log :-
- *  $Id: VeloTrackSelector.cpp,v 1.1 2015-01-22 09:25:40 chombach Exp $
- *
- *  @author M.Needham Matt.Needham@cern.ch
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Christoph Hombach Christoph.Hombach@hep.manchester.ac.uk 
- *  @date   30/12/2005
  */
-//-----------------------------------------------------------------------------
-
-#include "GaudiKernel/ToolFactory.h"
-#include "GaudiAlg/GaudiTool.h"
-
-// STL
-#include <string>
 
 #include "TrackSelector.h"
 
-class VPTrackSelector : public TrackSelector
-{
+class VPTrackSelector : public TrackSelector {
 
 public:
 
-  /// constructer
-  VPTrackSelector( const std::string& type,
-                   const std::string& name,
-                   const IInterface* parent );
-  
+  /// Constructor
+  VPTrackSelector(const std::string& type,
+                  const std::string& name,
+                  const IInterface* parent);
+  /// Destructor 
   virtual ~VPTrackSelector();
 
   /** Returns if the given track is selected or not
    *
-   *  @param aTrack Reference to the Track to test
+   *  @param track Reference to the track to test
    *
    *  @return boolean indicating if the track is selected or not
    *  @retval true  Track is selected
    *  @retval false Track is rejected
    */
-  virtual bool accept ( const LHCb::Track & aTrack ) const;
+  virtual bool accept(const LHCb::Track & track) const;
 
 private:
-  size_t m_minHitsASide ;
-  size_t m_minHitsCSide ;
+  size_t m_minHitsASide;
+  size_t m_minHitsCSide;
   size_t m_minHits;
 };
 
-DECLARE_TOOL_FACTORY( VPTrackSelector )
+DECLARE_TOOL_FACTORY(VPTrackSelector)
 
 //-----------------------------------------------------------------------------
 
-VPTrackSelector::VPTrackSelector( const std::string& type,
-                              const std::string& name,
-                              const IInterface* parent )
-  : TrackSelector ( type, name, parent )
-{
+VPTrackSelector::VPTrackSelector(const std::string& type,
+                                 const std::string& name,
+                                 const IInterface* parent)
+    : TrackSelector(type, name, parent) {
   declareInterface<ITrackSelector>(this);
-  declareProperty( "MinHitsASide" , m_minHitsASide = 0 ) ;
-  declareProperty( "MinHitsCSide" , m_minHitsCSide = 0 ) ;
-  declareProperty( "MinHits"      , m_minHits = 0 ) ;
+  declareProperty("MinHitsASide", m_minHitsASide = 0);
+  declareProperty("MinHitsCSide", m_minHitsCSide = 0);
+  declareProperty("MinHits",      m_minHits = 0);
   
 }
 
 VPTrackSelector::~VPTrackSelector() { }
 
-bool VPTrackSelector::accept ( const LHCb::Track& aTrack ) const
-{
-  size_t numHits[3] = {0,0,0} ;
-  for( std::vector<LHCb::LHCbID>::const_iterator 
-	 it = aTrack.lhcbIDs().begin() ;
-       it != aTrack.lhcbIDs().end(); ++it ) 
-    if( it->isVP() ) {
-      LHCb::VPChannelID vpid = it->vpID() ;
-      unsigned int side    = (vpid.sensor()%2) ; 
-      ++numHits[side] ;
-      ++numHits[2];
-      
-    }
+bool VPTrackSelector::accept(const LHCb::Track& track) const {
 
-  return 
+  size_t numHits[3] = {0, 0, 0};
+  for (const LHCb::LHCbID lhcbid : track.lhcbIDs()) {
+    if (!lhcbid.isVP()) continue;
+    const LHCb::VPChannelID vpid = lhcbid.vpID();
+    const unsigned int side = (vpid.sensor() % 2);
+    ++numHits[side];
+    ++numHits[2];
+  }
+  return
     numHits[0] >= m_minHitsASide &&
-    numHits[1] >= m_minHitsCSide && 
+    numHits[1] >= m_minHitsCSide &&
     numHits[2] >= m_minHits      &&
-    TrackSelector::accept(aTrack) ;
+    TrackSelector::accept(track);
 }
 
