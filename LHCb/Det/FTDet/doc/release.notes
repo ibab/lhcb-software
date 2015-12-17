@@ -3,7 +3,9 @@
 ! Purpose     : Interface to the xml description
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
-
+! 2015-12-17 - Luigi Del Buono
+ - Another small CLang warning killed in DeFTDetector.cpp
+ 
 !========================= FTDet v2r11 2015-11-23 =========================
 ! 2015-11-12 - Luigi Del Buono
  - Clang warnings elimination (DeFTFibreMat.cpp)

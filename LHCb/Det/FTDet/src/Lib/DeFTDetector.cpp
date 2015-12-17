@@ -375,7 +375,7 @@ const DeFTFibreMat* DeFTDetector::findFibreMat ( const LHCb::FTChannelID id ) co
     unsigned int module;    //numbering v5 style: 1,2,3,4,5,6 (left, L->R) and 6,5,4,3,2,1 (right, L->R)
     if(modulev2==10||modulev2==11) module=6;
     else if(modulev2<=4) module=modulev2+1;
-    else if(modulev2>=5) module=(9-modulev2)+1;
+    else module=(9-modulev2)+1;    //modulev2>=5 and != 10 or 11
     std::bitset<2> bT(station);
     std::bitset<2> bL(layer);
     std::bitset<2> bQ(quarter);
