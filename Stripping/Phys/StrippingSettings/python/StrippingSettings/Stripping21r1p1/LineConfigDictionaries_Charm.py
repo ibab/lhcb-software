@@ -115,41 +115,46 @@ CharmFromBSemi = {
 #Adam Davis,Liang Sun
 #StrippingD2HMuNu.py
 D2HMuNu = {
-    "BUILDERTYPE": "D2HLepNuBuilder", 
-    "CONFIG": {
-        "BDIRA": 0.999, 
-        "BFDCHI2HIGH": 100.0, 
-        "BVCHI2DOF": 20, 
-        "DELTA_MASS_MAX": 400, 
-        "ElectronPIDe": 0.0, 
-        "ElectronPT": 500, 
-        "GEC_nLongTrk": 160.0, 
-        "KLepMassHigh": 2000, 
-        "KLepMassLow": 500, 
-        "KaonMINIPCHI2": 9, 
-        "KaonP": 3000.0, 
-        "KaonPIDK": 5.0, 
-        "KaonPIDmu": 5.0, 
-        "KaonPIDp": 5.0, 
-        "KaonPT": 800.0, 
-        "MuonGHOSTPROB": 0.35, 
-        "MuonPIDK": 0.0, 
-        "MuonPIDmu": 3.0, 
-        "MuonPIDp": 0.0, 
-        "MuonPT": 500.0, 
-        "Slowpion_P": 1000, 
-        "Slowpion_PIDe": 5, 
-        "Slowpion_PT": 300, 
-        "Slowpion_TRGHOSTPROB": 0.35, 
-        "TOSFilter": {
-            "Hlt2CharmHad.*HHX.*Decision%TOS": 0
-        }, 
-        "TRGHOSTPROB": 0.35, 
-        "useTOS": True
-    }, 
-    "STREAMS": [ "CharmCompleteEvent" ], 
-    "WGs": [ "Charm" ]
+    'WGs'         : ['Charm'],
+    'BUILDERTYPE' : 'D2HLepNuBuilder',
+    'CONFIG'      :  {
+       "KLepMassLow" : 500 , #MeV
+       "KLepMassHigh" : 2000 , #MeV
+       "DELTA_MASS_MAX" : 400  , #MeV
+       "GEC_nLongTrk"        : 160.  , #adimensional
+       "TRGHOSTPROB"         : 0.35    ,#adimensional
+       #Muons
+       "MuonGHOSTPROB"       : 0.35  ,#adimensional
+       #	"MuonP"               : 3000. ,#MeV
+       "MuonPT"              : 500. ,#MeV
+       "MuonPIDK"            : 0.    ,#adimensional
+       "MuonPIDmu"           : 3.    ,#adimensional
+       "MuonPIDp"            : 0.    ,#adimensional
+       "ElectronPIDe"  : 0.0 ,
+       "ElectronPT"    : 500,#MeV
+       #Xu
+       #K channel
+       "KaonP"               : 3000.  ,#MeV
+       "KaonPT"              : 800.   ,#MeV
+       "KaonPIDK"            : 5.     ,#adimensional 
+       "KaonPIDmu"           : 5.     ,#adimensional
+       "KaonPIDp"            : 5.     ,#adimensional
+       "KaonMINIPCHI2"          : 9      ,#adimensional
+       "BVCHI2DOF"       : 20    ,#adminensional
+       "BDIRA"       : 0.999    ,#adminensional
+       "BFDCHI2HIGH"         : 100.  ,#adimensional
+       "BPVVDZcut"   : 0.0, #mm
+       #slow pion
+       "Slowpion_PT" : 300 #MeV
+       ,"Slowpion_P" : 1000 #MeV
+       ,"Slowpion_TRGHOSTPROB" : 0.35 #adimensional
+       ,"Slowpion_PIDe" : 5 #adimensional
+       ,"useTOS" : True #adimensional
+       ,"TOSFilter" : { 'Hlt2CharmHad.*HHX.*Decision%TOS' : 0}  #adimensional
+       },
+    'STREAMS'     : ['CharmCompleteEvent']	  
 }
+
 
 #Marco Pappagallo
 #StrippingExcitedDsSpectroscopy.py
