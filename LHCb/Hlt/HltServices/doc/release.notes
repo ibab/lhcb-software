@@ -3,6 +3,9 @@
 ! Responsible : Rob Lambert, Gerhard Raven
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
+
+!========================= HltServices v2r12 2015-12-17 =========================
+
 ! 2015-12-05 - Gerhard Raven
  - remove deprecated ANNDispatchSvc
 
