@@ -4,6 +4,8 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiTrigger v15r8 2015-12-17 =========================
+
 ! 2015-12-09 - Roel Aaij
  - Fix for clang 3.7 build.
  - Remove unused moveIds function.
