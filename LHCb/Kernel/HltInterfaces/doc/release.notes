@@ -2,7 +2,9 @@
 ! Package     : HltInterfaces
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
- 
+
+!========================= HltInterfaces v6r4 2015-12-18 =========================
+
 ! 2015-12-01 - Gerhard Raven
  - update interfaces to use extend_interfaces and DeclareInterfaceID
 

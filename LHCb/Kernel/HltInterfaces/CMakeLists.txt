@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HltInterfaces
 ################################################################################
-gaudi_subdir(HltInterfaces v6r3)
+gaudi_subdir(HltInterfaces v6r4)
 
 gaudi_depends_on_subdirs(Event/DAQEvent
                          GaudiKernel
