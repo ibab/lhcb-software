@@ -259,6 +259,7 @@ class Bu2hhhBuilder(LineBuilder) :
                                            prescale   = config['KKK_inclLinePrescale'],
                                            postscale  = config['KKK_inclLinePostscale'],
                                            algos      = self.algosKKK,
+                                           EnableFlavourTagging = True,
                                            FILTER = filter,
                                            RelatedInfoTools = [
                                           { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPASYM', 'CONEPTASYM'],
@@ -332,6 +333,7 @@ class Bu2hhhBuilder(LineBuilder) :
                                               prescale   = config['KpKpKp_inclLinePrescale'],
                                               postscale  = config['KpKpKp_inclLinePostscale'],
                                               algos      = self.algosKpKpKp,
+                                              EnableFlavourTagging = True,
                                               FILTER = filter,
                                               RelatedInfoTools = [
                                           { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPASYM', 'CONEPTASYM'],
@@ -405,6 +407,7 @@ class Bu2hhhBuilder(LineBuilder) :
                                            prescale   = config['pph_inclLinePrescale'],
                                            postscale  = config['pph_inclLinePostscale'],
                                            algos      = self.algospph,
+                                           EnableFlavourTagging = True,
                                            FILTER = filter,
                                            RelatedInfoTools = [
                                           { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPASYM', 'CONEPTASYM'],
