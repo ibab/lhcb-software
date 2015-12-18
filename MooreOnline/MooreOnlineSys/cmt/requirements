@@ -13,6 +13,7 @@ use  HltMonitoring     v1r3     Hlt
 
 # TEMPORARY PACKAGES
 use  ZeroMQ            v4r1p4   Online
+use  Hlt2Monitoring    v1r5     Online
 
 # Declare this as a container package
 apply_pattern container_package

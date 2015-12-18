@@ -3,9 +3,11 @@ Package             : MooreOnlineSys
 Package Coordinator : R. Aaij
 Purpose             : Running and testing Moore in the online environment
 
-</PRE><H1><A NAME=v24r4>2015-12-17 MooreOnlineSys v24r4</A></H1><PRE>
+</PRE><H1><A NAME=v24r4>2015-12-18 MooreOnlineSys v24r4</A></H1><PRE>
 
 Depends on Moore v24r4 and Online v5r27.
+Included unreleased packages from Online:
+Online/ZeroMQ v4r1p4, Online/Hlt2Monitoring v1r5
 
 MooreOnline version for 2016 preparation.
 
