@@ -11,6 +11,9 @@ use  MooreOnlineConf   v1r11
 use  IndependenceTests v1r14    Hlt
 use  HltMonitoring     v1r3     Hlt
 
+# TEMPORARY PACKAGES
+use  ZeroMQ            v4r1p4   Online
+
 # Declare this as a container package
 apply_pattern container_package
 
