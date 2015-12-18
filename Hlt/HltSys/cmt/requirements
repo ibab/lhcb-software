@@ -31,6 +31,7 @@ use  HltServices         v2r12     Hlt
 
 # TEMPORARY PHYS PACKAGES
 use  RelatedInfoTools    v1r4      Phys
+use  DaVinciTypes        v2r15     Phys
 
 
 # Declare this as a container package

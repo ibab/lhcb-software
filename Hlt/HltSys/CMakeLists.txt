@@ -27,6 +27,7 @@ gaudi_depends_on_subdirs(Hlt/Hlt1Lines
                          Event/HltEvent
                          Hlt/HltDAQ
                          Hlt/HltServices
-                         Phys/RelatedInfoTools)
+                         Phys/RelatedInfoTools
+                         Phys/DaVinciTypes)
 
 gaudi_add_test(QMTest QMTEST)
