@@ -28,6 +28,7 @@ use LoKiTrigger         v15r8    Phys  # Vanya Belyaev
 use  HltEvent            v9r6      Event
 use  HltDAQ              v4r23     Hlt
 use  HltServices         v2r12     Hlt
+use  HltInterfaces       v6r4      Kernel
 
 # TEMPORARY PHYS PACKAGES
 use  RelatedInfoTools    v1r4      Phys

@@ -27,6 +27,7 @@ gaudi_depends_on_subdirs(Hlt/Hlt1Lines
                          Event/HltEvent
                          Hlt/HltDAQ
                          Hlt/HltServices
+                         Kernel/HltInterfaces
                          Phys/RelatedInfoTools
                          Phys/DaVinciTypes)
 
