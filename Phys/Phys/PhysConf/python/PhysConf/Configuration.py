@@ -38,6 +38,7 @@ class PhysConf(LHCbConfigurableUser) :
         ,  "AllowPIDRerunning" : True    # Allow, under the correct circumstances, PID reconstruction to be rerun (e.g. MuonID)
         ,  "EnableUnpack"      : None    # Enable unpacking of DST.
         ,  "CaloReProcessing"  : False   # Force CaloReco reprocessing
+        ,  "UpdateCaloMCLinks" : True    # Update (True) or delete (False) the obsolete CaloHypo->MC Linker in case of calo reprocessing
         ,  "AllowPIDRecalib"   : True    # Allow recalibration of the PID information as required
         ,  "Detectors"         : ['Velo','PuVeto','Rich1','Rich2','TT','IT','OT','Spd','Prs','Ecal','Hcal','Muon','Magnet','Tr']
         ,  "OutputLevel"       : INFO    # The global output level
@@ -96,15 +97,34 @@ class PhysConf(LHCbConfigurableUser) :
 
         # Reprocess explicitely the full calo sequence in the init sequence ?
         inputtype = self.getProp('InputType').upper()
-        if ( self.getProp("CaloReProcessing") and inputtype != 'MDST' and inputtype != 'RDST' ) :
+        if ( self.getProp("CaloReProcessing") and inputtype != 'MDST' ) :
             caloProc.RecList =  clusters + hypos
             caloSeq = caloProc.sequence() # apply the CaloProcessor configuration
             cSeq = GaudiSequencer( 'CaloReProcessing' )
             cSeq.Members += [ caloSeq ]
             init.Members += [cSeq]
             unpack.setProp('Enable',False)
+            # update CaloHypo->MC Linker 
+            if self.getProp('Simulation') :
+                log.info("CaloReprocessing : obsolete CaloHypo2MC Links is updated")
+                from Configurables import (TESCheck,EventNodeKiller,CaloHypoMCTruth)
+                caloMCLinks = ["Link/Rec/Calo"]
+                caloMCSeq=GaudiSequencer("cleanCaloMCLinks")
+                checkCaloMCLinks=TESCheck("checkCaloMCLinks")
+                checkCaloMCLinks.Inputs=caloMCLinks
+                checkCaloMCLinks.Stop=False
+                killCaloMCLinks = EventNodeKiller ( "killCaloMCLinks" )
+                killCaloMCLinks.Nodes = caloMCLinks
+                caloMCSeq.Members=[checkCaloMCLinks,killCaloMCLinks]
+                init.Members += [ caloMCSeq ]
+                update = self.getProp("UpdateCaloMCLinks") 
+                if  update :
+                    redoCaloMCLinks = CaloHypoMCTruth("recreteCaloMCLinks")
+                    init.Members += [ redoCaloMCLinks ]
         else :
             caloProc.applyConf()
+            if inputtype != 'MDST' :
+                log.info("CaloReProcessing cannot be processed on reduced (m)DST data")
 
         # For backwards compatibility with MC09, we need the following to rerun
         # the Muon Reco on old data. To be removed AS SOON as this backwards compatibility

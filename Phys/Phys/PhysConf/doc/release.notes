@@ -5,6 +5,14 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+! 2015-12-19 - O. Deschamps
+ - Configuration.py : - delete the obsolete CaloHypo->MC Linker on TES in case ofCaloReprocessing is active on MC.
+     								  - new slot 'UpdateCaloMCLinks' (default = True) : recreate the CaloHypo->MC Linker after deletion 
+											  (relies on CaloHypo->CaloCluster->CaloDigit->MC back-propagation available onDemand via CaloAssociator).
+												In case the Linker is not recreated the Calo2MCTool is able to perform the MC-association using the
+												same back-propagation chain.
+
+
 !========================= PhysConf v1r30 2015-10-20 =========================
 
 ! 2015-08-24 - Chris Jones
