@@ -4,6 +4,10 @@
 ! Purpose     : Jet related Tuple Tools
 !-----------------------------------------------------------------------------
 
+- 2015-12-19 - Cedric Potterat
+ - fix TupleToolJetTag, hacked for BDTTag
+ - add all var in Base
+
 !==================== DecayTreeTupleJets v1r3 2015-07-24 ====================
 
 ! 2015-06-12 - Eduardo Rodrigues
