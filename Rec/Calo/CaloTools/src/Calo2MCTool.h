@@ -104,9 +104,10 @@ protected:
 
 private:
   StatusCode process();
-  void addCluster(const LHCb::CaloCluster* cluster);
-  void addHypo(const LHCb::CaloHypo* hypo);
-  void addProto(const LHCb::ProtoParticle* proto, const LHCb::Particle* parent = NULL);
+  void addDigit   (const LHCb::CaloDigit* digit);
+  void addCluster (const LHCb::CaloCluster* cluster);
+  void addHypo    (const LHCb::CaloHypo* hypo);
+  void addProto   (const LHCb::ProtoParticle* proto, const LHCb::Particle* parent = NULL);
   void clear();
   void mcDigest();
   void mcTree(const LHCb::MCParticle* part, std::vector<const LHCb::MCParticle*>& tree , std::string& sTree);
@@ -129,7 +130,6 @@ private:
   //
   std::string m_cluster2MCLoc;
   std::string m_digit2MCLoc;
-  std::string m_hypo2MCLoc;
   LHCb::Calo2MC::IClusterTable* m_cluster2MC ;
   //LHCb::Calo2MC::IHypoTable*    m_hypo2MC ;
   LHCb::Calo2MC::IDigitTable*   m_digit2MC ;

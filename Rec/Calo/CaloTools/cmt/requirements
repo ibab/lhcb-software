@@ -19,6 +19,7 @@ use TrackEvent       v*      Event
 use LHCbMath         v*      Kernel
 use LHCbKernel       v*      Kernel
 use Relations	     v*      Kernel
+use LinkerEvent      v*      Event 
 
 # ================= constituents: linker library ==============================
 library             CaloTools *.cpp
