@@ -5,6 +5,7 @@
 ! 2015-12-21 - Gerhard Raven
  - remove OTFillEventFromOTTime (contains various memory leaks, and seems to 
    have been deprecated for O(10 years) )
+ - remove unneccessary dependency on GSL
 
 ! 2015-12-06 - Gerhard Raven
  - qualify virtual function implementations as override

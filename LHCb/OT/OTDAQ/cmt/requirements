@@ -8,7 +8,6 @@ use DAQEvent	v*      Event
 use DAQKernel   v*    DAQ
 use DigiEvent   v*      Event
 use OTDet	v*	Det
-use GSL         v*      LCG_Interfaces
 
 #---- Copy header  files to the InstallArea
 apply_pattern install_more_includes more=OTDAQ offset=Event
