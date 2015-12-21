@@ -3,8 +3,6 @@
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "LHCbMath/LHCbMath.h"
 
-// Boost
-#include <boost/assign/std/vector.hpp>
 
 // Mathematical tools
 #include <math.h> 
@@ -16,7 +14,6 @@
 #include "Kernel/STFun.h"
 #include "STSmearedPosition.h"
 
-using namespace boost::assign;
 using namespace LHCb;
 
 DECLARE_TOOL_FACTORY( STSmearedPosition )
@@ -26,8 +23,7 @@ STSmearedPosition::STSmearedPosition( const std::string& type,
                                     const IInterface* parent ) :
   ST::ToolBase(type, name, parent)
 {
-  m_corrections += 0.0 , 0.0 , 0.0 , 0.0;
-  declareProperty("CorrectionsVec",m_corrections);
+  declareProperty("CorrectionsVec",m_corrections = { 0.0 , 0.0 , 0.0 , 0.0 });
   declareSTConfigProperty("BaseToolName", m_baseToolName , "TTClusterPosition");
   declareProperty("BaseToolType", m_baseToolType = "STOfflinePosition");
 
@@ -43,19 +39,17 @@ StatusCode STSmearedPosition::initialize()
   m_baseTool = tool<ISTClusterPosition>(m_baseToolType, m_baseToolName);
 
   // get the gaussian generator
-  IRndmGenSvc* tRandNumSvc = svc<IRndmGenSvc>("RndmGenSvc", true);
-  sc = tRandNumSvc->generator( Rndm::Gauss(0.,1.0), m_gaussDist.pRef() );
-  if (sc.isFailure()) return Error( "Failed to init generator ", sc);
-  sc = release(tRandNumSvc);
-  if (sc.isFailure()) return Error( "Failed to release RndmGenSvc ", sc);
+  auto tRandNumSvc = service<IRndmGenSvc>("RndmGenSvc", true);
+  m_gaussDist = tRandNumSvc->generator( Rndm::Gauss(0.,1.0) );
+  if (!m_gaussDist) return Error( "Failed to init generator ", sc);
 
   return StatusCode::SUCCESS; 
 }
 
-double STSmearedPosition::applySmear(const double value, const unsigned int nStrips) const {
+double STSmearedPosition::applySmear(double value, unsigned int nStrips) const {
   double corrValue = 0.0;
-  nStrips < m_corrections.size() ?  corrValue = m_corrections[nStrips-1] : corrValue = m_corrections.back();
-  corrValue = corrValue* m_gaussDist->shoot();
+  corrValue = ( nStrips < m_corrections.size() ?  m_corrections[nStrips-1] : m_corrections.back() );
+  corrValue *=  m_gaussDist->shoot();
   return sqrt(corrValue * corrValue + value*value);
 }
 

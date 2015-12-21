@@ -10,8 +10,8 @@
 #include "Kernel/LHCbConstants.h"
 
 // standard
-#include "gsl/gsl_math.h"
-#include<bitset>
+#include <bitset>
+#include <cmath>
 
 // STTELL1Event
 #include "Event/STTELL1Data.h"
@@ -338,14 +338,14 @@ StatusCode ST::STCMSNoiseCalculationTool::calculateNoise() {
           // Calculate the pedestal and the pedestal squared
           *rawPedStrip = ( *rawPedStrip * (nEvt-1) + valuePed ) / nEvt;
           *rawMeanStrip   = (*rawMeanStrip   *(nEvt-1) + valueRaw )           / nEvt;
-          *rawMeanSqStrip = (*rawMeanSqStrip *(nEvt-1) + gsl_pow_2(valueRaw)) / nEvt;
-          *rawNoiseStrip = sqrt( *rawMeanSqStrip - gsl_pow_2( *rawMeanStrip ) );
+          *rawMeanSqStrip = (*rawMeanSqStrip *(nEvt-1) + std::pow(valueRaw,2)) / nEvt;
+          *rawNoiseStrip = sqrt( *rawMeanSqStrip - std::pow( *rawMeanStrip,2 ) );
 
           // Calculate the mean(adc) and mean(adc^2) on cms values
           if (!m_skipCMS) {
             *cmsMeanStrip   = (*cmsMeanStrip   *(nCMS-1) + valueCMS )            / nCMS;
-            *cmsMeanSqStrip = (*cmsMeanSqStrip *(nCMS-1) + gsl_pow_2(valueCMS) ) / nCMS;
-            *cmsNoiseStrip = sqrt( *cmsMeanSqStrip - gsl_pow_2( *cmsMeanStrip ) );
+            *cmsMeanSqStrip = (*cmsMeanSqStrip *(nCMS-1) + std::pow(valueCMS,2) ) / nCMS;
+            *cmsNoiseStrip = sqrt( *cmsMeanSqStrip - std::pow( *cmsMeanStrip,2) );
           }	    
           // move to next strip
           dataStrip++; tmpStrip++; 
@@ -1023,8 +1023,8 @@ void ST::STCMSNoiseCalculationTool::veloHitDetection2( std::vector<std::pair <do
 double ST::STCMSNoiseCalculationTool::calcThreshold( std::vector<std::pair <double, bool> >::iterator& itBeetleTmpADCs, 
                                                      double nSigma) {
   double threshold = 0;
-  for (unsigned int i = 0 ; i < LHCbConstants::nStripsInPort ; i++ ) { 
-    threshold   += gsl_pow_2(itBeetleTmpADCs->first);
+  for (unsigned int i = 0 ; i < LHCbConstants::nStripsInPort ; ++i ) { 
+    threshold   += std::pow(itBeetleTmpADCs->first,2);
     itBeetleTmpADCs++; 
   }
    

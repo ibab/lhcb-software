@@ -63,7 +63,7 @@ private:
     
   SmartIF<IRndmGen> m_gaussDist;
 
-  double applySmear(const double value, const unsigned int nStrips) const ;
+  double applySmear(double value, unsigned int nStrips) const ;
 
 };
 

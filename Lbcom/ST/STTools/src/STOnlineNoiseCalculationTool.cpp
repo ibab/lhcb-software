@@ -9,9 +9,6 @@
 #include "Kernel/ISTReadoutTool.h"
 #include "Kernel/LHCbConstants.h"
 
-// standard
-#include "gsl/gsl_math.h"
-
 // local
 #include "STOnlineNoiseCalculationTool.h"
 
@@ -187,16 +184,16 @@ StatusCode ST::STOnlineNoiseCalculationTool::calculateNoise() {
               // raw noise
               (*rawMean)[strip] = ((*rawMean)[strip]*(nEvt-1) + rawValue ) / nEvt;
               (*rawPedestal)[strip] = (*rawMean)[strip];
-              (*rawMeanSq)[strip] = ((*rawMeanSq)[strip]*(nEvt-1) + gsl_pow_2(rawValue) ) / nEvt;
-              (*rawNoise)[strip] = sqrt( (*rawMeanSq)[strip] - gsl_pow_2((*rawMean)[strip]) );
+              (*rawMeanSq)[strip] = ((*rawMeanSq)[strip]*(nEvt-1) + std::pow(rawValue,2) ) / nEvt;
+              (*rawNoise)[strip] = sqrt( (*rawMeanSq)[strip] - std::pow((*rawMean)[strip],2) );
               // pedestal subtracted noise
               (*pedSubMean)[strip] = ((*pedSubMean)[strip]*(nEvt-1) + pedSubValue ) / nEvt;
-              (*pedSubMeanSq)[strip] = ((*pedSubMeanSq)[strip]*(nEvt-1) + gsl_pow_2(pedSubValue) ) / nEvt;
-              (*pedSubNoise)[strip] = sqrt( (*pedSubMeanSq)[strip] - gsl_pow_2((*pedSubMean)[strip]) );
+              (*pedSubMeanSq)[strip] = ((*pedSubMeanSq)[strip]*(nEvt-1) + std::pow(pedSubValue,2) ) / nEvt;
+              (*pedSubNoise)[strip] = sqrt( (*pedSubMeanSq)[strip] - std::pow((*pedSubMean)[strip],2) );
               // cms noise
               (*cmsMean)[strip] = ((*cmsMean)[strip]*(nEvt-1) + lcmsValue ) / nEvt;
-              (*cmsMeanSq)[strip] = ((*cmsMeanSq)[strip]*(nEvt-1) + gsl_pow_2(lcmsValue) ) / nEvt;
-              (*cmsNoise)[strip] = sqrt( (*cmsMeanSq)[strip] - gsl_pow_2((*cmsMean)[strip]) );
+              (*cmsMeanSq)[strip] = ((*cmsMeanSq)[strip]*(nEvt-1) + std::pow(lcmsValue,2) ) / nEvt;
+              (*cmsNoise)[strip] = sqrt( (*cmsMeanSq)[strip] - std::pow((*cmsMean)[strip],2) );
             }
           }// stripStatus
         } // strip

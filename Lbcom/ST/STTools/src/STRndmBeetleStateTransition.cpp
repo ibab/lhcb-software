@@ -26,7 +26,6 @@ STRndmBeetleStateTransition::STRndmBeetleStateTransition( const std::string& typ
 
 STRndmBeetleStateTransition::~STRndmBeetleStateTransition()
 {
-  //destructer
 }
 
 StatusCode STRndmBeetleStateTransition::initialize() {
@@ -35,11 +34,9 @@ StatusCode STRndmBeetleStateTransition::initialize() {
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
   // get the random number generator
-  IRndmGenSvc* tRandNumSvc = svc<IRndmGenSvc>("RndmGenSvc", true);
-  sc = tRandNumSvc->generator( Rndm::Flat(0.,1.0), m_uniformDist.pRef() );
-  if (sc.isFailure()) return Error( "Failed to init generator ", sc);
-  sc = release(tRandNumSvc);
-  if (sc.isFailure()) return Error( "Failed to release RndmGenSvc ", sc);
+  auto tRandNumSvc = service<IRndmGenSvc>("RndmGenSvc", true);
+  m_uniformDist = tRandNumSvc->generator( Rndm::Flat(0.,1.0) );
+  if (!m_uniformDist) return Error( "Failed to init generator ", sc);
 
   DeSTSector::Status newState = ::Status::toStatus(m_newState);
  
@@ -47,9 +44,7 @@ StatusCode STRndmBeetleStateTransition::initialize() {
 
   info() << "Active fraction at input " << tracker()->fractionActive() << endmsg; 
   unsigned int tcounter = 0;
-  const DeSTDetector::Sectors& sec = tracker()->sectors();
-  BOOST_FOREACH(DeSTSector* sector, sec){
-
+  for(DeSTSector* sector: tracker()->sectors()){
     for (unsigned int i = 1; i <= sector->nBeetle(); ++i ){
       if (m_uniformDist->shoot() < m_fracToChange  ){
         sector->setBeetleStatus(i,newState);  

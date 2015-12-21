@@ -2,6 +2,12 @@
 ! Package         : ST/STTools
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
+! 2015-12-21 - Gerhard Raven
+ - replace gsl_ with std::
+ - prefer service<T> and SmartIF over svc<T> and raw pointer
+ - replace BOOST_FOREACH with range-based for loop
+ - qualify implementations of virtual functions with override
+ - replace boost::assign with (implicit) std::initializer_list
 
 !========================= STTools v4r18 2015-10-12 =========================
 ! 2015-08-26 - Gerhard Raven

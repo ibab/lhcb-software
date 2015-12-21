@@ -23,9 +23,6 @@
 
 #include "boost/algorithm/string.hpp"
 
-// standard
-#include "gsl/gsl_math.h"
-
 // local
 #include "STNoiseToolBase.h"
 
@@ -243,7 +240,7 @@ void ST::STNoiseToolBase::readTELL1Parameters(const unsigned int TELL1SourceID) 
       }
       if(m_verbose) verbose() << "caching pedestal masks: "+detType()+"TELL" 
                               << (this->readoutTool())->SourceIDToTELLNumber(TELL1SourceID)
-                              << "\t statusMap" << (*status) << endreq;
+                              << "\t statusMap" << (*status) << endmsg;
     }
   } else {
     error() << "No condition: " << condPath << endmsg;

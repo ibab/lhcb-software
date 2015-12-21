@@ -18,49 +18,49 @@
  *  @date   3/2/2009
  */
 
-class STRndmChannelIDSelector: public ST::ToolBase, 
+class STRndmChannelIDSelector: public ST::ToolBase,
                          virtual public ISTChannelIDSelector {
 
- public: 
-   
+ public:
+
   /// constructer
   STRndmChannelIDSelector( const std::string& type,
                          const std::string& name,
                          const IInterface* parent );
 
   /// destructer
-  virtual ~STRndmChannelIDSelector();
+  ~STRndmChannelIDSelector() override = default;
 
   /** intialize */
-  StatusCode initialize();
+  StatusCode initialize() override;
 
-  /**  @param  cluster pointer to calo cluster object to be selected 
+  /**  @param  cluster pointer to calo cluster object to be selected
   *  @return true if cluster is selected
   */
-  virtual bool select     ( const LHCb::STChannelID& id ) const ;
-  
+  bool select     ( const LHCb::STChannelID& id ) const override ;
+
   /** "select"/"preselect" method (functor interface)
-   *  @param  cluster pointer to calo cluster object to be selected 
+   *  @param  cluster pointer to calo cluster object to be selected
    *  @return true if cluster is selected
    */
-  virtual bool operator() ( const LHCb::STChannelID& id ) const  ;
+  bool operator() ( const LHCb::STChannelID& id ) const override;
 
  private:
 
-  ///   default  constructor  is  private 
-  STRndmChannelIDSelector();
+  ///   default  constructor  is  private
+  STRndmChannelIDSelector() = delete;
 
-  ///   copy     constructor  is  private 
-  STRndmChannelIDSelector (const STRndmChannelIDSelector& );
+  ///   copy     constructor  is  private
+  STRndmChannelIDSelector (const STRndmChannelIDSelector& ) = delete;
 
-  ///   assignement operator  is  private 
-  STRndmChannelIDSelector& operator=(const STRndmChannelIDSelector& );  
+  ///   assignement operator  is  private
+  STRndmChannelIDSelector& operator=(const STRndmChannelIDSelector& ) = delete;
 
   // smart interface to generator
-  SmartIF<IRndmGen> m_uniformDist; 
+  SmartIF<IRndmGen> m_uniformDist;
 
-  double m_fractionToReject; 
- 
+  double m_fractionToReject;
+
 };
 
 #endif // STRndmChannelIDSelector_H

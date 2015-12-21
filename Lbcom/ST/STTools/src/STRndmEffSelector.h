@@ -20,7 +20,6 @@
 
 class STRndmEffSelector: public ST::ToolBase, 
                          virtual public ISTChannelIDSelector {
-
  public: 
    
   /// constructer
@@ -29,33 +28,31 @@ class STRndmEffSelector: public ST::ToolBase,
                          const IInterface* parent );
 
   /// destructer
-  virtual ~STRndmEffSelector();
+  ~STRndmEffSelector() override = default;
 
   /** intialize */
-  StatusCode initialize();
+  StatusCode initialize() override;
 
   /**  @param  cluster pointer to calo cluster object to be selected 
   *  @return true if cluster is selected
   */
-  virtual bool select     ( const LHCb::STChannelID& id ) const ;
+  bool select     ( const LHCb::STChannelID& id ) const override;
   
   /** "select"/"preselect" method (functor interface)
    *  @param  cluster pointer to calo cluster object to be selected 
    *  @return true if cluster is selected
    */
-  virtual bool operator() ( const LHCb::STChannelID& id ) const  ;
+  bool operator() ( const LHCb::STChannelID& id ) const  override;
 
- private:
 
   ///   default  constructor  is  private 
-  STRndmEffSelector();
-
+  STRndmEffSelector() = delete;
   ///   copy     constructor  is  private 
-  STRndmEffSelector (const STRndmEffSelector& );
-
+  STRndmEffSelector (const STRndmEffSelector& ) = delete;
   ///   assignement operator  is  private 
-  STRndmEffSelector& operator=(const STRndmEffSelector& );  
+  STRndmEffSelector& operator=(const STRndmEffSelector& ) = delete;
 
+ private:
   // smart interface to generator
   SmartIF<IRndmGen> m_uniformDist; 
 

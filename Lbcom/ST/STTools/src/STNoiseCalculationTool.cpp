@@ -9,9 +9,6 @@
 #include "Kernel/ISTReadoutTool.h"
 #include "Kernel/LHCbConstants.h"
 
-// standard
-#include "gsl/gsl_math.h"
-
 // local
 #include "STNoiseCalculationTool.h"
 
@@ -120,8 +117,8 @@ StatusCode ST::STNoiseCalculationTool::calculateNoise() {
           int strip = iStrip + beetle * LHCbConstants::nStripsInBeetle;
           (*meanTELL)[strip] = ((*meanTELL)[strip]*(nEvt-1) + value ) / nEvt;
           (*pedestalTELL)[strip] = (*meanTELL)[strip];
-          (*meanSqTELL)[strip] = ((*meanSqTELL)[strip]*(nEvt-1) + gsl_pow_2(value) ) / nEvt;
-          (*noiseTELL)[strip] = sqrt( (*meanSqTELL)[strip] - gsl_pow_2((*meanTELL)[strip]) );
+          (*meanSqTELL)[strip] = ((*meanSqTELL)[strip]*(nEvt-1) + std::pow(value,2) ) / nEvt;
+          (*noiseTELL)[strip] = sqrt( (*meanSqTELL)[strip] - std::pow((*meanTELL)[strip],2) );
         } // strip
       }  // beetle
       
