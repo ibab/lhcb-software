@@ -2,6 +2,9 @@
 ! Package         : OTMonitor
 ! Package manager : Wouter Hulsbergen
 !---------------------------------------------------------------------------
+! 2015-12-21 - Gerhard Raven
+ - remove unused header files
+ - replace GSL with std::
 
 !========================= OTMonitor v3r9 2015-11-23 =========================
 ! 2015-10-24 - Gerhard Raven

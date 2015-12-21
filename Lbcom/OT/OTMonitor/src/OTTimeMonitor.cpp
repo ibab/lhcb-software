@@ -9,10 +9,6 @@
 #include "OTDet/DeOTDetector.h"
 #include "OTDet/DeOTModule.h"
 
-/// BOOST
-#include "boost/lambda/bind.hpp"
-#include "boost/lambda/lambda.hpp"
-
 // local
 #include "OTTimeMonitor.h"
 
@@ -24,8 +20,6 @@
  */
 
 using namespace LHCb;
-using namespace boost;
-using namespace boost::lambda;
 
 /// Declaration of algorithm factory
 DECLARE_ALGORITHM_FACTORY( OTTimeMonitor )

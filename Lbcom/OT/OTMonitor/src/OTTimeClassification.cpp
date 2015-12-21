@@ -17,8 +17,6 @@
 // Linker
 #include "Linker/LinkedTo.h"
 
-// GSL
-#include "gsl/gsl_math.h"
 
 using namespace LHCb;
 
@@ -154,7 +152,7 @@ void OTTimeClassification::fillInfo(const std::vector<MCHit*>& hits)
         if(origin != 0)
         {
           Gaudi::XYZPoint point = origin->position();
-          double r = gsl_hypot(point.x(), point.y());
+          double r = std::hypot(point.x(), point.y());
           plot(point.z() / Gaudi::Units::cm, "z", 0.0, 1200.0, 600);
           plot2D(point.z() / Gaudi::Units::cm, r / Gaudi::Units::cm, "r vs z", 0.0, 1000.0, 0.0, 500.0, 500, 500);
           if(origin->type() == 0)
