@@ -6,6 +6,7 @@ gaudi_subdir(CaloTools v6r11)
 gaudi_depends_on_subdirs(Calo/CaloInterfaces
                          Calo/CaloUtils
                          Det/CaloDet
+                         Event/LinkerEvent
                          Event/RecEvent
                          Event/TrackEvent
                          GaudiAlg
