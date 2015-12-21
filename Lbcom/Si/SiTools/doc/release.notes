@@ -1,6 +1,10 @@
 Package         : Si/SiTools
 Package manager : Matt Needham
 !------------------------------------------------------------------------------
+! 2015-12-21 - Gerhard Raven
+ - replace GSL with std:: 
+ - prefer service<> and SmartIF over svc<> and raw pointer
+ - qualify implementations of virtual functions with override
 
 !========================= SiTools v1r9p1 2015-10-12 =========================
 ! 2015-08-04 - Gerhard Raven

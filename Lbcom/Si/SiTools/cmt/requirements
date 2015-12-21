@@ -13,7 +13,6 @@ use MCEvent      v* Event
 use LHCbKernel   v* Kernel
 use GaudiAlg     v*
 use GaudiKernel  v*
-use GaudiGSL     v*
 
 #============================================================================
 # Component library building rule

@@ -1,9 +1,5 @@
-// $Id: SiDepositedChargeBase.h,v 1.1 2007-12-11 10:14:25 mneedham Exp $
 #ifndef SiDepositedChargeBase_H
 #define SiDepositedChargeBase_H 1
-
-// GSL
-#include "gsl/gsl_math.h"
 
 // Gaudi
 #include "GaudiAlg/GaudiTool.h"
@@ -24,20 +20,20 @@
 
 class SiDepositedChargeBase : public GaudiTool, virtual public ISiDepositedCharge {
 
-public: 
+public:
 
   /** Constructor */
   SiDepositedChargeBase( const std::string& type, const std::string& name,
                      const IInterface* parent );
 
 
-  /** destructor */ 
-  virtual ~SiDepositedChargeBase();
+  /** destructor */
+  ~SiDepositedChargeBase() override = default;
 
   /** initialize */
-  virtual StatusCode initialize();
+  StatusCode initialize() override;
 
- 
+
 protected:
 
   /// Calculate the atomic binding effect
@@ -49,8 +45,8 @@ protected:
 
   // job options
   double m_delta2;        ///< parameter for the atomic binding effect
-  double m_scalingFactor; ///< Scaling factor for path length through sensor 
- 
+  double m_scalingFactor; ///< Scaling factor for path length through sensor
+
 };
 
 inline double SiDepositedChargeBase::atomicBinding(const double pathLength) const

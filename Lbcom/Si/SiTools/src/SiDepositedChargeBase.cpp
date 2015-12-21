@@ -19,36 +19,28 @@ using namespace Gaudi::Units;
 
 
 
-SiDepositedChargeBase::SiDepositedChargeBase(const std::string& type, 
-                                     const std::string& name, 
-                                     const IInterface* parent) : 
+SiDepositedChargeBase::SiDepositedChargeBase(const std::string& type,
+                                     const std::string& name,
+                                     const IInterface* parent) :
   GaudiTool( type, name, parent )
 {
   // constructer
   declareProperty("delta2", m_delta2 = 1800*keV*keV/cm);
-  
-  // need a line here to get the interface correct 
+
+  // need a line here to get the interface correct
   declareInterface<ISiDepositedCharge>(this);
 }
 
-SiDepositedChargeBase::~SiDepositedChargeBase()
-{
-  // destructer
-}
-
 StatusCode SiDepositedChargeBase::initialize()
-{ 
+{
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
   /// initialize generators .
-  IRndmGenSvc* tRandNumSvc = svc<IRndmGenSvc>("RndmGenSvc", true);
-  sc = tRandNumSvc->generator(Rndm::Gauss(0.,1.0),m_GaussDist.pRef());
-  if (sc.isFailure()) return Error( "Failed to init generator ", sc);
+  auto tRandNumSvc = service<IRndmGenSvc>("RndmGenSvc", true);
+  m_GaussDist = tRandNumSvc->generator(Rndm::Gauss(0.,1.0));
+  if (!m_GaussDist) return Error( "Failed to init generator ", sc);
 
-  sc = release(tRandNumSvc);
-  if (sc.isFailure()) return Error( "Failed to release RndmSvc ", sc);
- 
   return sc;
 }
 
