@@ -3,6 +3,8 @@
 ! Responsible : Heinrich Schindler
 ! Purpose     : Detector element for upgraded VELO
 !-----------------------------------------------------------------------------
+! 2015-12-21 - Gerhard Raven
+ - remove unneeded dependency on GSL
 
 !========================= VPDet v3r3 2015-11-23 =========================
 ! 2015-11-07 - Heinrich Schindler
