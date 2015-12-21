@@ -63,10 +63,9 @@ StatusCode STClusterChecker::initialize()
   m_selector = tool<IMCParticleSelector>(m_selectorName,m_selectorName,this);
 
   LHCb::ParticleID pid = LHCb::ParticleID(211); 
-  IParticlePropertySvc* pp = svc<LHCb::IParticlePropertySvc>( "LHCb::ParticlePropertySvc", true );
+  auto pp = service<LHCb::IParticlePropertySvc>( "LHCb::ParticlePropertySvc", true );
   const LHCb::ParticleProperty* partProp = pp->find(pid);
   const double mPion = partProp->mass();
-  pp->release();  
 
   const double betaGammaMin = 4.8;
   const double P = betaGammaMin * mPion;

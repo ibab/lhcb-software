@@ -11,7 +11,6 @@ use DigiEvent    v*   Event
 use STDet        v*   Det
 use LinkerEvent  v*   Event
 use GaudiAlg     v*
-use GSL          v*   LCG_Interfaces
 use RecEvent     v* Event
 use AIDA         v* LCG_Interfaces -no_auto_imports
 

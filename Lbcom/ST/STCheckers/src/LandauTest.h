@@ -22,12 +22,11 @@ public:
   LandauTest(const std::string& name, ISvcLocator* pSvcLocator);
 
   /// Destructer
-  ~LandauTest();
+  ~LandauTest() = default;
 
   /// intialize
   virtual StatusCode initialize();
 
-  /// execute
   virtual StatusCode execute();
 
 private:

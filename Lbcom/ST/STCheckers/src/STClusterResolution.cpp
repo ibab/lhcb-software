@@ -1,4 +1,4 @@
-// BOOST
+#include <cmath>
 #include "Kernel/STLexicalCaster.h"
 
 // Event
@@ -18,7 +18,6 @@
 
 // from TrackInterfaces
 #include "Kernel/ITrajPoca.h"
-#include "gsl/gsl_math.h"
 
 // local
 #include "STClusterResolution.h"
@@ -200,7 +199,7 @@ void STClusterResolution::fillHistograms( const STCluster* aCluster,
     double s1 = 0.0;
     double s2 = clusTraj.arclength( mcTraj.position(s1) );
     m_poca -> minimize( mcTraj, s1, clusTraj, s2, distance,  0.005);
-    double residual = distance.R() * GSL_SIGN( distance.x() );
+    double residual = std::copysign( distance.R(), distance.x() );
 
     // Resolution and pull plots
     plot( residual, 110,"Resolution "+detType()+" (using Trajectories)",

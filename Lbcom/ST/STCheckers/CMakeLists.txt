@@ -13,10 +13,9 @@ gaudi_depends_on_subdirs(Det/STDet
                          ST/STKernel)
 
 find_package(AIDA)
-find_package(GSL)
 
 gaudi_add_module(STCheckers
                  src/*.cpp
-                 INCLUDE_DIRS GSL AIDA Event/DigiEvent Kernel/MCInterfaces
-                 LINK_LIBRARIES GSL STDetLib LinkerEvent MCEvent RecEvent GaudiAlgLib STKernelLib)
+                 INCLUDE_DIRS AIDA Event/DigiEvent Kernel/MCInterfaces
+                 LINK_LIBRARIES STDetLib LinkerEvent MCEvent RecEvent GaudiAlgLib STKernelLib)
 

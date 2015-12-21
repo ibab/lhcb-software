@@ -7,10 +7,6 @@
 // from Associators
 #include "Linker/LinkerTool.h"
 
-// GSL
-#include "gsl/gsl_math.h"
-
-
 // LHCbKernel
 #include "Kernel/LHCbConstants.h"
 #include "GaudiKernel/SystemOfUnits.h"

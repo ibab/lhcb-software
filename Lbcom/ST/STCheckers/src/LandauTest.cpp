@@ -14,12 +14,6 @@ LandauTest::LandauTest(const std::string& name,
                        ISvcLocator* pSvcLocator):
   GaudiHistoAlg(name, pSvcLocator)
 {
-  /// constructor
-}
-
-LandauTest::~LandauTest()
-{
-  /// destructor
 }
 
 StatusCode LandauTest::initialize()
@@ -29,7 +23,7 @@ StatusCode LandauTest::initialize()
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
   // Initialize the Landau function
-  sc = randSvc()->generator(Rndm::Landau(0.226,1.), m_landauDist.pRef());  
+  m_landauDist = randSvc()->generator(Rndm::Landau(0.226,1.));
 
   // Sample the Landau funtion 10M times and plot it
   for (int i=0; i<1e7 ; ++i ){
