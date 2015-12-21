@@ -96,6 +96,7 @@ double EvtSemiLeptonicAmp::CalcMaxProb( EvtId parent, EvtId meson,
   double m = root_part->mass();
   
   EvtVector4R p4meson, p4lepton, p4nu, p4w;
+  double q2min;
   double q2max;
 
   double q2, elepton, plepton;
@@ -119,12 +120,13 @@ double EvtSemiLeptonicAmp::CalcMaxProb( EvtId parent, EvtId meson,
       if ( (mass[0]+mass[1]+mass[2])>m) mass[0]=m-mass[1]-mass[2]-0.00001; 
     }
 
+    q2min = mass[1]*mass[1];
     q2max = (m-mass[0])*(m-mass[0]);
     
     //loop over q2
 
     for (i=0;i<25;i++) {
-      q2 = ((i+0.5)*q2max)/25.0;
+      q2 = q2min + ((i+0.5)*(q2max-q2min))/25.0;
       
       erho = ( m*m + mass[0]*mass[0] - q2 )/(2.0*m);
       
