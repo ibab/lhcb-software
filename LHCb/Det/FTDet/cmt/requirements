@@ -14,7 +14,6 @@ use   DetDescCnv   v*   Det
 use   LHCbKernel   v*   Kernel
 use   LHCbMath     v*   Kernel
 use   Boost        v*   LCG_Interfaces
-use   GSL          v*   LCG_Interfaces
 
 # packages needed for the test algs
 use   GaudiAlg     v*

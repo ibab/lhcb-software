@@ -3,6 +3,9 @@
 ! Purpose     : Interface to the xml description
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
+! 2015-12-21 - Gerhard Raven
+ - remove unneeded dependency on GSL
+
 ! 2015-12-17 - Luigi Del Buono
  - Another small CLang warning killed in DeFTDetector.cpp
  
