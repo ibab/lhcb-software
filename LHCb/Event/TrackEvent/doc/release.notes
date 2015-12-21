@@ -3,6 +3,8 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Package for the tracking event model classes
 !-------------------------------------------------------------------------------
+! 2015-12-21 - Gerhard Raven
+ - remove unneeded include of gsl_math.h
 
 !========================= TrackEvent v6r4 2015-11-23 =========================
 ! 2015-11-01 - Gerhard Raven

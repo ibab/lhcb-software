@@ -12,7 +12,6 @@
       serializers = 'FALSE'
       allocator   = 'NO' >
 
-      <import name='gsl/gsl_math' />
       <import name='Event/State' />
       <import name='Event/Measurement' />
       <import name='Event/TrackParameters' />
