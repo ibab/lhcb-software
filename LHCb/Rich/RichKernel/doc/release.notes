@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
+! 2015-12-21 - Gerhard Raven
+ - replace gsl_pow_2 with std::pow( ,2)
 
 ! 2015-12-16 - Chris Jones
  - Various C++11 cleanups.

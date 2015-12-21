@@ -21,8 +21,7 @@
 #include "vdt/sqrt.h"
 #include "vdt/atan2.h"
 
-// GSL
-#include "gsl/gsl_math.h"
+#include <cmath>
 
 void
 LHCb::RichTrackSegment::angleToDirection( const Gaudi::XYZVector & direction,
@@ -30,7 +29,7 @@ LHCb::RichTrackSegment::angleToDirection( const Gaudi::XYZVector & direction,
                                           double & phi ) const
 {
   // create vector in track reference frame
-  const Gaudi::XYZVector rotDir ( rotationMatrix() * direction );
+  const Gaudi::XYZVector rotDir{ rotationMatrix() * direction };
 
   // get the angles
   // phi   = rotDir.phi();
@@ -45,10 +44,10 @@ LHCb::RichTrackSegment::angleToDirection( const Gaudi::XYZVector & direction,
   // do it by hand, the same only faster ;)
   // Skip checks against 0 as we know that never happens here.
   phi   = vdt::fast_atan2( rotDir.y(), rotDir.x() );
-  theta = vdt::fast_atan2( std::sqrt( gsl_pow_2(rotDir.x()) + 
-                                      gsl_pow_2(rotDir.y()) ), 
+  theta = vdt::fast_atan2( std::sqrt( std::pow(rotDir.x(),2) +
+                                      std::pow(rotDir.y(),2) ),
                            rotDir.z() );
-  
+
   // correct phi
   if ( phi < 0 ) phi += 2.0*M_PI;
 }
@@ -105,14 +104,14 @@ Gaudi::XYZVector LHCb::RichTrackSegment::bestMomentum( const double fractDist ) 
   if ( zCoordAt(fractDist) < middlePoint().z() )
   {
     const auto midFrac =
-      fractDist * std::sqrt( (entryPoint()-exitPoint()).mag2() / 
+      fractDist * std::sqrt( (entryPoint()-exitPoint()).mag2() /
                              (entryPoint()-middlePoint()).mag2() );
     return entryMomentum()*(1-midFrac) + middleMomentum()*midFrac;
   }
   else
   {
     const auto midFrac =
-      (fractDist * std::sqrt( (entryPoint()-exitPoint()).mag2() / 
+      (fractDist * std::sqrt( (entryPoint()-exitPoint()).mag2() /
                               (middlePoint()-exitPoint()).mag2() )) - 1;
     return middleMomentum()*(1-midFrac) + exitMomentum()*midFrac;
   }
