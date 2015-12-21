@@ -18,5 +18,5 @@ gaudi_depends_on_subdirs(Calo/CaloInterfaces
 gaudi_add_module(CaloTools
                  src/*.cpp
                  INCLUDE_DIRS Tr/TrackInterfaces
-                 LINK_LIBRARIES CaloInterfaces CaloUtils CaloDetLib RecEvent TrackEvent GaudiAlgLib LHCbKernel LHCbMathLib RelationsLib)
+                 LINK_LIBRARIES CaloInterfaces CaloUtils CaloDetLib LinkerEvent RecEvent TrackEvent GaudiAlgLib LHCbKernel LHCbMathLib RelationsLib)
 
