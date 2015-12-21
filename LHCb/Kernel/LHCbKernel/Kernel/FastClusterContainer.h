@@ -15,10 +15,6 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/ObjectContainerBase.h"
 // ============================================================================
-// Boost
-// ============================================================================
-#include "boost/static_assert.hpp"
-// ============================================================================
 /** @class FastClusterContainer FastClusterContainer.h <dir>/FastClusterContainer.h
  *
  * Fast containers can only be used for containees not having a virtual table.
@@ -33,12 +29,12 @@
  *
  */
 template <typename VISIBLE, typename INTERNAL>
-class FastClusterContainer : public ObjectContainerBase
+class FastClusterContainer final : public ObjectContainerBase
 {
 private:
   // ==========================================================================
   /// static compile-time assertion
-  BOOST_STATIC_ASSERT( sizeof(VISIBLE) == sizeof(INTERNAL) ) ;
+  static_assert( sizeof(VISIBLE) == sizeof(INTERNAL), "Cannot remap data of difference size!" ) ;
   // ==========================================================================
 private:
   typedef typename std::vector<VISIBLE>       VD;
@@ -57,66 +53,64 @@ public:
   typedef typename VISIBLE::chan_type         chan_type;
 
 private:
-
-  typedef std::vector<INTERNAL> InternalData;
   /// Data holder
-  InternalData m_data;
-  union DataRep {
-    std::vector<INTERNAL>* internal;
-    std::vector<VISIBLE>*  ext;
-  };
-  DataRep         m_r;   //! Transient
+  std::vector<INTERNAL> m_data;
+
+  inline std::vector<VISIBLE>& ext() {
+      // type punning
+      union { std::vector<INTERNAL>* i;
+              std::vector<VISIBLE>*  v; };
+      i = &m_data; return *v;
+  }
+  inline const std::vector<VISIBLE>& ext() const {
+      // type punning
+      union { const std::vector<INTERNAL>* i;
+              const std::vector<VISIBLE>*  v; };
+      i = &m_data; return *v;
+  }
 
 public:
   /// Standard constructor
-  FastClusterContainer() : ObjectContainerBase()
-  {
-    m_r.internal = &m_data;
-    if ( sizeof(VISIBLE) != sizeof(INTERNAL) )   {
-      throw std::runtime_error("Cannot remap data of different size!");
-    }
-  }
+  FastClusterContainer() = default;
 
-  /// Standard destructor
-  virtual ~FastClusterContainer() {}
   /// return iterator for beginning of mutable sequence
-  iterator begin()                           { return m_r.ext->begin();       }
+  iterator begin()                           { return ext().begin();       }
   /// return iterator for end of mutable sequence
-  iterator end()                             { return m_r.ext->end();         }
+  iterator end()                             { return ext().end();         }
   /// return iterator for beginning of nonmutable sequence
-  const_iterator begin() const               { return m_r.ext->begin();       }
+  const_iterator begin() const               { return ext().begin();       }
   /// return iterator for end of nonmutable sequence
-  const_iterator end() const                 { return m_r.ext->end();         }
+  const_iterator end() const                 { return ext().end();         }
   /// return iterator for beginning of reversed mutable sequence
-  reverse_iterator rbegin()                  { return m_r.ext->rbegin();      }
+  reverse_iterator rbegin()                  { return ext().rbegin();      }
   /// return iterator for beginning of reversed nonmutable sequence
-  const_reverse_iterator rbegin() const      { return m_r.ext->rbegin();      }
+  const_reverse_iterator rbegin() const      { return ext().rbegin();      }
   /// return iterator for end of reversed mutable sequence
-  reverse_iterator rend()                    { return m_r.ext->rend();        }
+  reverse_iterator rend()                    { return ext().rend();        }
   /// return iterator for end of reversed nonmutable sequence
-  const_reverse_iterator rend() const        { return m_r.ext->rend();        }
+  const_reverse_iterator rend() const        { return ext().rend();        }
   /// subscript mutable sequence
-  reference operator[](size_type i)          { return m_r.ext->operator[](i); }
+  reference operator[](size_type i)          { return ext().operator[](i); }
   /// subscript nonmutable sequence
-  const_reference operator[](size_type i)const{return m_r.ext->operator[](i); }
+  const_reference operator[](size_type i)const{return ext().operator[](i); }
   /// subscript mutable sequence with checking
-  reference at(size_type i)                  { return m_r.ext->at(i);         }
+  reference at(size_type i)                  { return ext().at(i);         }
   /// subscript nonmutable sequence with checking
-  const_reference at(size_type i) const      { return m_r.ext->at(i);         }
+  const_reference at(size_type i) const      { return ext().at(i);         }
   /// test if sequence is empty
   bool empty() const                         { return m_data.empty();         }
   /// return first element of mutable sequence
-  reference front()                          { return m_r.ext->front();       }
+  reference front()                          { return ext().front();       }
   /// return first element of nonmutable sequence
-  const_reference front() const              { return m_r.ext->front();       }
+  const_reference front() const              { return ext().front();       }
   /// return last element of mutable sequence
-  reference back()                           { return m_r.ext->back();        }
+  reference back()                           { return ext().back();        }
   /// return last element of nonmutable sequence
-  const_reference back() const               { return m_r.ext->back();        }
+  const_reference back() const               { return ext().back();        }
   /// insert element at end
-  void push_back(const VISIBLE& val)         { return m_r.ext->push_back(val);}
+  void push_back(const VISIBLE& val)         { ext().push_back(val);}
   /// erase element at end
-  void pop_back()                            { return m_data.pop_back();      }
+  void pop_back()                            { m_data.pop_back();      }
 
   /// Return current length of allocated storage
   size_type size() const                     { return m_data.size();          }
@@ -134,18 +128,15 @@ public:
 
   /// find method
   template <class findPolicy>
-    const_iterator find(const typename findPolicy::comp_type& value) const{
-    std::pair< const_iterator, const_iterator> iterP = std::equal_range(begin(),end(),value,findPolicy());
-    return (iterP.first!=iterP.second) ? iterP.first : end();
+  const_iterator find(const typename findPolicy::comp_type& value) const{
+    auto i = std::equal_range(begin(),end(),value,findPolicy());
+    return (i.first!=i.second) ? i.first : end();
   }
 
   /// object method, adding a direct access by key using a customised lower_bound (assumes list sorted)
   const value_type * object( const chan_type & id ) const{
     const_iterator it = find<typename VISIBLE::findPolicy>( id );
-    if( it == end() ){
-      return 0; // not found
-    }
-    return &(*it);
+    return it!=end() ? &(*it) : nullptr;
   }
 
   // ==========================================================================
@@ -154,7 +145,7 @@ public: // fake methods form ObjectContainerBase
   /// Distance of a given object from the beginning of its container
   virtual long index( const ContainedObject* /* obj */ ) const { return -1 ; }
   /// Pointer to an object of a given distance
-  virtual ContainedObject* containedObject( long /* dist */ ) const { return 0 ; }
+  virtual ContainedObject* containedObject( long /* dist */ ) const { return nullptr ; }
   /// Number of objects in the container
   virtual size_type numberOfObjects() const { return this->size() ; }
   /// Add an object to the container

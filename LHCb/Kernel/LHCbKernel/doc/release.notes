@@ -3,6 +3,8 @@
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
+! 2015-12-21 - Gerhard Raven
+ - reduce size of FastClusterContainer by 8 bytes
 
 ! 2015-12-16 - Chris Jones
  - Various C++11 cleanups.
