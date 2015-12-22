@@ -1,6 +1,8 @@
 ! Package         : ST/STAlgorithms
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
+! 2015-12-21 - Gerhard Raven
+ - remove dependency on GaudiGSL
 
 !========================= STAlgorithms v4r7p2 2015-11-23 =========================
 ! 2015-10-24 - Gerhard Raven

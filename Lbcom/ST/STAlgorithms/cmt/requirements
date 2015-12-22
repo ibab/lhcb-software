@@ -7,7 +7,6 @@ include_path none
 
 use GaudiKernel         v*
 use GaudiAlg            v*
-use GaudiGSL            v*
 use LHCbKernel          v*    Kernel
 use DigiEvent           v*    Event
 use STDet               v*    Det
