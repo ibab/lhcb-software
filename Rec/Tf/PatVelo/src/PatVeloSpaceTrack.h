@@ -3,7 +3,7 @@
 #define TF_PATVELOSPACETRACK_H 1
 
 // Include files
-#include "gsl/gsl_math.h"
+#include <cmath>
 
 // Gaudi
 // Include files
@@ -243,7 +243,7 @@ namespace Tf {
       dz1 = dzCurrent;
       it2 = it1;
       it1 = itCurr;
-      if( GSL_SIGN(dz1) != GSL_SIGN(dz2) ) break; // points bracket z
+      if( std::signbit(dz1) != std::signbit(dz2) ) break; // points bracket z
     }
     // in case z is the same (cheated PR only) skip to next sensor
     while( (*it1)->z() == (*it2)->z() && it1 != (cont.end()-1) ) {
@@ -303,7 +303,7 @@ namespace Tf {
       }
       /// get the errors on on the predicted value of x squared
       inline double predErr2(double z){
-        return errorX2(z) + gsl_pow_2(z*errorsDxDz2());
+        return errorX2(z) + std::pow(z*errorsDxDz2(),2);
       }
     };
   }

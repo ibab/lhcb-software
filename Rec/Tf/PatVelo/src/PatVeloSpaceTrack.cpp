@@ -238,20 +238,20 @@ namespace Tf {
       }else{
 	if( !m_backward ){
 	  // want the first measured point
-	  zUse = GSL_MIN_DBL((*m_rCoord.rbegin())->z(),
+	  zUse = std::min((*m_rCoord.rbegin())->z(),
 			     (*m_phiCoord.rbegin())->z());
 	}else{
-	  zUse = GSL_MAX_DBL((*m_rCoord.rbegin())->z(),
+	  zUse = std::max((*m_rCoord.rbegin())->z(),
 			     (*m_phiCoord.rbegin())->z());
 	}
       }
     }else{
       if( !m_backward ){
         // want last measurement point
-        zUse = GSL_MAX_DBL((*m_rCoord.rbegin())->z(),
+        zUse = std::max((*m_rCoord.rbegin())->z(),
             (*m_phiCoord.rbegin())->z());
       }else{
-        zUse = GSL_MIN_DBL((*m_rCoord.rbegin())->z(),
+        zUse = std::min((*m_rCoord.rbegin())->z(),
             (*m_phiCoord.rbegin())->z());
       }
     }

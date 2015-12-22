@@ -1,12 +1,12 @@
 // $Id: PatRZTrack.h,v 1.6 2009-07-20 11:35:32 dhcroft Exp $
-#ifndef TF_PATRZTRACK_H 
+#ifndef TF_PATRZTRACK_H
 #define TF_PATRZTRACK_H 1
 
 // Include files
 // Include files
 #include "GaudiKernel/MsgStream.h"
 
-#include "gsl/gsl_pow_int.h"
+#include <cmath>
 
 #include "PatVeloHit.h"
 
@@ -31,8 +31,8 @@ namespace Tf {
       inline double errR2()       const { return 1. / m_s0; }
       inline double errSl2()      const { return m_slopeErr; }
       inline double rPred( double z )  const { return m_pos0 + z * m_slope; }
-      inline double rErr2( double z )  const { 
-        return errR2() + gsl_pow_2(z-meanZ()) * m_slopeErr;  
+      inline double rErr2( double z )  const {
+        return errR2() + std::pow(z-meanZ(),2) * m_slopeErr;
       }
       inline bool valid()          const { return m_valid; }
       inline PatVeloRHits* coords()       { return &m_coord; };
@@ -47,8 +47,8 @@ namespace Tf {
       // set track parmaters
       void setValid( bool flag )  { m_valid = flag; }
       void setZone( unsigned int zone )    { m_zone = zone;   } ///< Set track R zone
-      void setMissedStations( int missed ) { m_missedStations = missed ; } 
-      void setBackward( bool flag )      { m_backward = flag; }  
+      void setMissedStations( int missed ) { m_missedStations = missed ; }
+      void setBackward( bool flag )      { m_backward = flag; }
 
       void addRCoord( PatVeloRHit* coord ); ///< new R coord + fit
 

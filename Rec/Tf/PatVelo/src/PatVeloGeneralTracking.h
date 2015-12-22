@@ -2,6 +2,7 @@
 #define TF_PATVELOGENERALTRACKING_H 1
 
 // Include files
+#include <cmath>
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiAlg/ISequencerTimerTool.h"
@@ -52,12 +53,12 @@ namespace Tf {
 	m_pos(rHit->hit()->coordHalfBox()*cos(phi)+offsetX,
 	      rHit->hit()->coordHalfBox()*sin(phi)+offsetY,rHit->z())
       {      
-	m_dx = sqrt(rHit->hit()->variance()*gsl_pow_2(cos(phi)) + 
+	m_dx = sqrt(rHit->hit()->variance()*std::pow(cos(phi),2) + 
 		    phiHit->hit()->variance()*
-		    gsl_pow_2(rHit->hit()->coordHalfBox()*sin(phi)));
-	m_dy = sqrt(rHit->hit()->variance()*gsl_pow_2(sin(phi)) + 
+		    std::pow(rHit->hit()->coordHalfBox()*sin(phi),2));
+	m_dy = sqrt(rHit->hit()->variance()*std::pow(sin(phi),2) + 
 		    phiHit->hit()->variance() * 
-		    gsl_pow_2(rHit->hit()->coordHalfBox()*cos(phi)));
+		    std::pow(rHit->hit()->coordHalfBox()*cos(phi),2));
       };
       /// check if either cluster is already used elsewhere
       inline bool used() const { 

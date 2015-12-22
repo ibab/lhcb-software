@@ -22,7 +22,7 @@ namespace Tf {
     {
       declareInterface<PatVeloRHitManager>(this);
       // currently disarmed: only 512 strips in a zone...
-      declareProperty("MaxClustersRZone", m_maxRClustersZone = 999) ; 
+      declareProperty("MaxClustersRZone", m_maxRClustersZone = 999) ;
     }
 
   //=============================================================================
@@ -55,20 +55,14 @@ namespace Tf {
   //=============================================================================
   // Reset all used flags to unused
   //=============================================================================
-  void PatVeloRHitManager::resetUsedFlagOfHits() 
+  void PatVeloRHitManager::resetUsedFlagOfHits()
   {
     for (unsigned int half=0; half<m_nHalfs; ++half) { // loop over velo halfs
       DefaultStationIterator si   = m_defaultHitManager->stationsHalfBegin(half);
       DefaultStationIterator send = m_defaultHitManager->stationsHalfEnd(half);
-
       for ( ; si != send; ++si) {
         for (unsigned int zone=0; zone<m_nZones; ++zone) { // loop over inner/outer zones
-          Tf::VeloRHitRange hits = (*si)->hits(zone);
-          Tf::VeloRHits::const_iterator hi   = hits.begin();
-          Tf::VeloRHits::const_iterator hend = hits.end();
-          for ( ; hi != hend; ++hi ) { // import all hits
-            (*hi)->resetUsedFlag();
-          }
+          for ( auto& hit : (*si)->hits(zone) ) {  hit->resetUsedFlag(); }// import all hits
         }
       }
     }
@@ -77,7 +71,7 @@ namespace Tf {
   //=============================================================================
   // Preparation of measurements
   //=============================================================================
-  void PatVeloRHitManager::prepareHits() 
+  void PatVeloRHitManager::prepareHits()
   {
     for (unsigned int half=0; half<m_nHalfs; ++half) { // loop over velo halfs
       DefaultStationIterator si   = m_defaultHitManager->stationsHalfBegin(half);
@@ -91,22 +85,19 @@ namespace Tf {
         station->clear();
 
         for (unsigned int zone=0; zone<m_nZones; ++zone) { // loop over r sectors
-          Tf::VeloRHitRange hits = defaultStation->hits(zone);
-          bool markUsed = false;
-          if ( hits.size() > m_maxRClustersZone ){
+          auto hits = defaultStation->hits(zone);
+          bool markUsed = (hits.size() > m_maxRClustersZone);
+          if ( markUsed ){
             Warning("Very hot VELO R zone: ignoring clusters",
                 StatusCode::SUCCESS, 0 ).ignore();
-            markUsed = true;
           }
-          Tf::VeloRHits::const_iterator hi   = hits.begin();
-          Tf::VeloRHits::const_iterator hend = hits.end();
-
-          m_data[half][defaultStationNumber][zone].reserve(std::distance(hi,hend));
-          for ( ; hi != hend; ++hi ) { // import all hits
-            if ( (*hi)->ignore() ) { continue; } // don't use hit if ignore flag is set
-            if ( markUsed ) (*hi)->setUsed(true); // hot region hit
-            m_data[half][defaultStationNumber][zone].push_back(PatVeloRHit(*hi)); 
-            station->zone(zone).push_back(&(m_data[half][defaultStationNumber][zone].back()));
+          auto &d = m_data[half][defaultStationNumber][zone];
+          d.reserve( hits.size() );
+          for ( const auto& hit : hits )  { // import all hits
+            if ( hit->ignore() ) { continue; } // don't use hit if ignore flag is set
+            if ( markUsed ) hit->setUsed(true); // hot region hit
+            d.emplace_back(hit);
+            station->zone(zone).push_back(&d.back());
           }
         }
         station->setHitsPrepared(true);
@@ -118,7 +109,7 @@ namespace Tf {
   //=============================================================================
   // Preparation of measurements for one station, actual implementation
   //=============================================================================
-  void PatVeloRHitManager::prepareHits(Station* station) 
+  void PatVeloRHitManager::prepareHits(Station* station)
   {
     DefaultStation*    defaultStation = m_defaultHitManager->stationNoPrep(station->sensorNumber());
     if (!defaultStation->hitsPrepared()) {
@@ -142,15 +133,10 @@ namespace Tf {
       for ( ; hi != hend; ++hi ) { // import all hits
         if ( (*hi)->ignore() ) { continue; } // don't use hit if ignore flag is set
         if ( markUsed ) (*hi)->setUsed(true); // hot region hit
-        m_data[half][defaultStationNumber][zone].push_back(PatVeloRHit(*hi)); 
+        m_data[half][defaultStationNumber][zone].push_back(PatVeloRHit(*hi));
         station->zone(zone).push_back(&(m_data[half][defaultStationNumber][zone].back()));
       }
     }
     station->setHitsPrepared(true);
   }
-
 }
-
-
-
-

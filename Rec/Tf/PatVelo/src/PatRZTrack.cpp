@@ -60,7 +60,7 @@ namespace Tf {
   double PatRZTrack::chi2() const {
     double chi2=0;
     for(PatVeloRHits::const_iterator i= m_coord.begin() ; i < m_coord.end(); ++i){
-      chi2 += gsl_pow_2((*i)->coordHalfBox() - (*i)->z()*m_slope - m_pos0)*
+      chi2 += std::pow((*i)->coordHalfBox() - (*i)->z()*m_slope - m_pos0,2)*
 	(*i)->weight();
     }
     return chi2;

@@ -515,12 +515,12 @@ namespace Tf {
         bool added = false;
 
         // check found enough hits in common to start merge
-        if ( nCommon > m_fractionPhiMerge * GSL_MIN(n1,n2) ) {
+        if ( nCommon > m_fractionPhiMerge * std::min(n1,n2) ) {
           if ( msgLevel(MSG::DEBUG) ) {
             debug() << "For list " << iLong-m_phiPt.begin() << " size "
-              << GSL_MAX(n1,n2)
+              << std::max(n1,n2)
               << " and list " << iShort-m_phiPt.begin() << " size "
-              << GSL_MIN(n1,n2)
+              << std::min(n1,n2)
               << " " << nCommon << " shared hits." << endmsg;
           }
           for ( itHShort = (*iShort).coords().begin();
