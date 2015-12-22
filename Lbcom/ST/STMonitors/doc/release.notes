@@ -3,6 +3,9 @@
 ! Responsible : Mark Tobin
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
+! 2015-12-22 - Gerhard Raven
+ - replace GSL with std::
+
 ! 2015-12-06 - Gerhard Raven
  - prefer simple * over gsl_pow_2
  - prefer std::to_string over boost::lexical_cast<std::string>

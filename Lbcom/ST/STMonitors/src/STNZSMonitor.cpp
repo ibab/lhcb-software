@@ -19,9 +19,6 @@
 #include "TProfile.h"
 #include "TH2D.h"
 
-// standard
-#include "gsl/gsl_math.h"
-
 // local
 #include "STNZSMonitor.h"
 #include "Kernel/ISTNoiseCalculationTool.h"
@@ -39,19 +36,19 @@ DECLARE_ALGORITHM_FACTORY( STNZSMonitor)
 //
 //--------------------------------------------------------------------
 
-STNZSMonitor::STNZSMonitor( const std::string& name, 
+STNZSMonitor::STNZSMonitor( const std::string& name,
                             ISvcLocator* pSvcLocator ) :
   ST::HistoAlgBase(name, pSvcLocator)
 {
   // constructer
   declareProperty("UseSourceID", m_useSourceID = true );
-  declareProperty("UpdateRate", m_updateRate = -1);  
-  declareProperty("UpdateSummaryRate", m_summaryUpdateRate = -1);  
+  declareProperty("UpdateRate", m_updateRate = -1);
+  declareProperty("UpdateSummaryRate", m_summaryUpdateRate = -1);
 
   // Debugging
   declareProperty("CheckNoiseCalculation", m_checkCalculation=false);
-  // Limit calculation to vector of tell1s given in terms of TELLID (eg TTTELL1 = 1) 
-  declareProperty("LimitToTell",      m_limitToTell     ); 
+  // Limit calculation to vector of tell1s given in terms of TELLID (eg TTTELL1 = 1)
+  declareProperty("LimitToTell",      m_limitToTell     );
 
   // Use ODIN time in histograms
   declareProperty("UseODINTime", m_useODINTime = false);
@@ -118,20 +115,20 @@ void STNZSMonitor::bookHistograms() {
     std::string strTellID  = std::to_string(tellID);
     HistoID noiseHistoID        = "noise_$tell" + strTellID;
     std::string noiseHistoTitle = "Noise for " + detType() + "TELL" + strTellID;
-    m_noiseHistos[sourceID] = 
-      Gaudi::Utils::Aida2ROOT::aida2root( bookProfile1D(noiseHistoID, noiseHistoTitle, 
+    m_noiseHistos[sourceID] =
+      Gaudi::Utils::Aida2ROOT::aida2root( bookProfile1D(noiseHistoID, noiseHistoTitle,
                                                         -0.5, nStripsPerBoard-0.5, nStripsPerBoard) );
 
     HistoID pedHistoID        = "pedestal_$tell" + strTellID;
     std::string pedHistoTitle = "Pedestal for " + detType() + "TELL" + strTellID;
-    m_pedestalHistos[sourceID] = 
+    m_pedestalHistos[sourceID] =
       Gaudi::Utils::Aida2ROOT::aida2root( bookProfile1D(pedHistoID, pedHistoTitle, -0.5, nStripsPerBoard-0.5, nStripsPerBoard) );
   }
-  m_2d_noisePerLinkVsTell1 = 
+  m_2d_noisePerLinkVsTell1 =
     Gaudi::Utils::Aida2ROOT::aida2root( book2D("Noise per link vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s, 0., 96., 96) );
-  m_2d_pedestalPerLinkVsTell1 = 
+  m_2d_pedestalPerLinkVsTell1 =
     Gaudi::Utils::Aida2ROOT::aida2root( book2D("Pedestal per link vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s, 0., 96., 96) );
-  m_2d_normalisationPerLinkVsTell1 = 
+  m_2d_normalisationPerLinkVsTell1 =
     Gaudi::Utils::Aida2ROOT::aida2root( book2D("Normalisation", 0.5, m_nTELL1s+0.5, m_nTELL1s, 0., 96., 96) );
 
   m_1d_noise = book1D("Noise (all strips)", 0., 10., 500);
@@ -143,13 +140,13 @@ void STNZSMonitor::bookHistograms() {
 
 }
 
-StatusCode STNZSMonitor::execute() { 
+StatusCode STNZSMonitor::execute() {
   m_evtNumber++;
 
   // Get the time of the first event and convert to a string for the histogram title.
   if(m_evtNumber == 1) {
     if(m_useODINTime) {
-      m_ODIN = get<ODIN>(LHCb::ODINLocation::Default); 
+      m_ODIN = get<ODIN>(LHCb::ODINLocation::Default);
       const Gaudi::Time odinTime = m_ODIN->eventTime();
       m_odinEvent  = "(#"+std::to_string(m_ODIN->runNumber());
       m_odinEvent += " on "+std::to_string(odinTime.day(0));
@@ -171,13 +168,13 @@ StatusCode STNZSMonitor::execute() {
   for(; itT != m_noiseTool->tell1WithNZSEnd(); ++itT) {
     // Flag to check if histogram needs to be updated
     bool needToUpdate = false;
-    
+
     unsigned int sourceID = (*itT);
 
     // Loop over number of events for FPGA-PP and see if the histograms need to be reset
     std::vector<unsigned int>::const_iterator itEvts = m_noiseTool->cmsNEventsPPBegin(sourceID);
     for(; itEvts != m_noiseTool->cmsNEventsPPEnd(sourceID); ++itEvts) {
-      
+ 
       int nEvt = (*itEvts);
 
       // Check if at least one of the PPs requires to update the histogram
@@ -187,7 +184,7 @@ StatusCode STNZSMonitor::execute() {
     } // FPGA-PP
     // Update the noise histogram
     if( needToUpdate ) updateNoiseHistogram( sourceID );
-    
+
   } // boards
   if(m_summaryUpdateRate > 0 && m_evtNumber%m_summaryUpdateRate == 0) {
     updateSummaryPlots();
@@ -201,16 +198,16 @@ StatusCode STNZSMonitor::finalize() {
   // Update all histograms at the end
   std::map<int, TProfile*>::const_iterator itH = m_noiseHistos.begin();
 
-  for( ; itH != m_noiseHistos.end(); ++itH ) { 
+  for( ; itH != m_noiseHistos.end(); ++itH ) {
     // Limit to selected tell1s
-    if ( m_selectedTells && 
+    if ( m_selectedTells &&
          !binary_search(m_limitToTell.begin(), m_limitToTell.end(), (this->readoutTool())->SourceIDToTELLNumber((*itH).first))) {
       continue;
     }
     updateNoiseHistogram( (*itH).first, m_useODINTime );
     updateSummaryPlots();
     if(m_checkCalculation) dumpNoiseCalculation( (*itH).first );
-  } 
+  }
 
   return ST::HistoAlgBase::finalize();// must be called after all other actions
 }
@@ -218,15 +215,15 @@ StatusCode STNZSMonitor::finalize() {
 void STNZSMonitor::updateNoiseHistogram(unsigned int sourceID, bool updateTitle) {
   if(m_debug) debug() << "updateNoiseHistogram: " << m_evtNumber << endmsg;
 
-  // Get the histogram and reset it in case it is already booked. 
-  if( m_noiseHistos.find(sourceID) != m_noiseHistos.end() && m_pedestalHistos.find(sourceID) != m_pedestalHistos.end()) { 
+  // Get the histogram and reset it in case it is already booked.
+  if( m_noiseHistos.find(sourceID) != m_noiseHistos.end() && m_pedestalHistos.find(sourceID) != m_pedestalHistos.end()) {
 
     TProfile* noiseHist = m_noiseHistos.find(sourceID)->second;//->second.end();
     noiseHist->Reset();
-  
+
     TProfile* pedestalHist = m_pedestalHistos.find(sourceID)->second;//->second.end();
     pedestalHist->Reset();
-  
+ 
     // Loop over strips in tell1
     unsigned int strip=0;
 
@@ -358,12 +355,12 @@ void STNZSMonitor::dumpNoiseCalculation(unsigned int sourceID) {
     profile1D(strip, (*rawMeanIt), idRawMean, idRawMean, -0.5, 3071.5, 3072); 
     profile1D(strip, (*rawMeanSqIt), idRawMeanSq, idRawMeanSq, -0.5, 3071.5, 3072); 
     profile1D(strip, (*rawNoiseIt), idRawNoiseS, idRawNoiseS, -0.5, 3071.5, 3072); 
-    profile1D(strip, sqrt(*rawMeanSqIt - gsl_pow_2(*rawMeanIt)), idRawNoiseC, idRawNoiseC, -0.5, 3071, 3072);
+    profile1D(strip, sqrt(*rawMeanSqIt - std::pow(*rawMeanIt,2)), idRawNoiseC, idRawNoiseC, -0.5, 3071, 3072);
 
     profile1D(strip, (*cmsMeanIt), idCMSMean, idCMSMean, -0.5, 3071.5, 3072); 
     profile1D(strip, (*cmsMeanSqIt), idCMSMeanSq, idCMSMeanSq, -0.5, 3071.5, 3072); 
     profile1D(strip, (*cmsNoiseIt), idCMSNoiseS, idCMSNoiseS, -0.5, 3071.5, 3072); 
-    profile1D(strip, sqrt(*cmsMeanSqIt - gsl_pow_2(*cmsMeanIt)), idCMSNoiseC, idCMSNoiseC, -0.5, 3071.5, 3072);
+    profile1D(strip, sqrt(*cmsMeanSqIt - std::pow(*cmsMeanIt,2)), idCMSNoiseC, idCMSNoiseC, -0.5, 3071.5, 3072);
 
   }
 }

@@ -23,9 +23,6 @@
 #include "TProfile.h"
 #include "TH2D.h"
 
-// standard
-#include "gsl/gsl_math.h"
-
 // local
 #include "STNoiseMonitor.h"
 #include "Kernel/ISTNoiseCalculationTool.h"
@@ -45,18 +42,18 @@ namespace ST{
 //
 //--------------------------------------------------------------------
 
-ST::STNoiseMonitor::STNoiseMonitor( const std::string& name, 
+ST::STNoiseMonitor::STNoiseMonitor( const std::string& name,
                                     ISvcLocator* pSvcLocator ) :
   ST::HistoAlgBase(name, pSvcLocator)
 {
   // constructer
   declareProperty("UseSourceID", m_useSourceID = false );
-  declareProperty("UpdateRate", m_updateRate = 1);  
+  declareProperty("UpdateRate", m_updateRate = 1);
 
   // Debugging
   declareProperty("CheckNoiseCalculation", m_checkCalculation=false);
-  // Limit calculation to vector of tell1s given in terms of TELLID (eg TTTELL1 = 1) 
-  declareProperty("LimitToTell",      m_limitToTell     ); 
+  // Limit calculation to vector of tell1s given in terms of TELLID (eg TTTELL1 = 1)
+  declareProperty("LimitToTell",      m_limitToTell     );
 
   // Use ODIN time in histograms
   declareProperty("UseODINTime", m_useODINTime = false);
@@ -83,7 +80,7 @@ StatusCode ST::STNoiseMonitor::initialize() {
   m_evtNumber = 0;
 
   m_debug = msgLevel( MSG::DEBUG );
- 
+
   m_noiseTool = tool<ST::ISTNoiseCalculationTool>(m_noiseToolType, m_noiseToolName);
 
   // Read following period, reset rate and skip events from configuration of tool
@@ -98,7 +95,7 @@ StatusCode ST::STNoiseMonitor::initialize() {
     m_selectedTells = true;
     sort(m_limitToTell.begin(), m_limitToTell.end());
   }
-  // Store DeSTSector for each TELL1 sector: 
+  // Store DeSTSector for each TELL1 sector:
   // -----------------------------> BIT OF A NASTY HACK
   for(const auto& itT : (this->readoutTool())->SourceIDToTELLNumberMap() ) {
     unsigned int TELL1SourceID = itT.first;
@@ -112,7 +109,7 @@ StatusCode ST::STNoiseMonitor::initialize() {
       if(sector){
         m_types[sector->type()] = sector->type();
       }
-      strip += m_nStripsInSector;      
+      strip += m_nStripsInSector;
     }
   }
   bookHistograms();
@@ -138,69 +135,69 @@ void ST::STNoiseMonitor::bookHistograms() {
     // Create a title for the histogram
     std::string strTellID  = std::to_string(tellID);
 
-    //================================================== noise / strip 
+    //================================================== noise / strip
 
     // Raw Noise
     HistoID raw_noiseHistoID        = "raw_noise_$tell" + strTellID;
     std::string raw_noiseHistoTitle = " Raw Noise for " + detType() + "TELL" + strTellID;
-    m_raw_noiseHistos[sourceID] = Aida2ROOT::aida2root( bookProfile1D(raw_noiseHistoID, raw_noiseHistoTitle, -0.5, 
+    m_raw_noiseHistos[sourceID] = Aida2ROOT::aida2root( bookProfile1D(raw_noiseHistoID, raw_noiseHistoTitle, -0.5,
                                                                       nStripsPerBoard-0.5, nStripsPerBoard) );
-                                                              
+
     HistoID raw_pedHistoID        = "raw_pedestal_$tell" + strTellID;
     std::string raw_pedHistoTitle = "Raw Pedestal for " + detType() + "TELL" + strTellID;
-    m_raw_pedestalHistos[sourceID] = Aida2ROOT::aida2root( bookProfile1D(raw_pedHistoID, raw_pedHistoTitle, 
+    m_raw_pedestalHistos[sourceID] = Aida2ROOT::aida2root( bookProfile1D(raw_pedHistoID, raw_pedHistoTitle,
                                                                          -0.5, nStripsPerBoard-0.5, nStripsPerBoard) );
-                                                                         
+
 
     // Pedestal subtracted noise
     HistoID pedsub_noiseHistoID        = "pedsub_noise_$tell" + strTellID;
     std::string pedsub_noiseHistoTitle = "Pedestal Subtracted Noise for " + detType() + "TELL" + strTellID;
-    m_pedsub_noiseHistos[sourceID] = 
-      Aida2ROOT::aida2root( bookProfile1D(pedsub_noiseHistoID, pedsub_noiseHistoTitle, 
+    m_pedsub_noiseHistos[sourceID] =
+      Aida2ROOT::aida2root( bookProfile1D(pedsub_noiseHistoID, pedsub_noiseHistoTitle,
                                           -0.5, nStripsPerBoard-0.5, nStripsPerBoard) );
     HistoID pedsub_pedHistoID        = "pedsub_pedestal_$tell" + strTellID;
     std::string pedsub_pedHistoTitle = "Pedestal after Pedestal Subtraction for " + detType() + "TELL" + strTellID;
-    m_pedsub_pedestalHistos[sourceID] = 
-      Aida2ROOT::aida2root( bookProfile1D(pedsub_pedHistoID, pedsub_pedHistoTitle, 
+    m_pedsub_pedestalHistos[sourceID] =
+      Aida2ROOT::aida2root( bookProfile1D(pedsub_pedHistoID, pedsub_pedHistoTitle,
                                           -0.5, nStripsPerBoard-0.5, nStripsPerBoard) );
 
     // Common Mode Subtracted Noise
     HistoID cms_noiseHistoID        = "cms_noise_$tell" + strTellID;
     std::string cms_noiseHistoTitle = "Common Mode Subtracted Noise for " + detType() + "TELL" + strTellID;
-    m_cms_noiseHistos[sourceID] = 
-      Aida2ROOT::aida2root( bookProfile1D(cms_noiseHistoID, cms_noiseHistoTitle, 
+    m_cms_noiseHistos[sourceID] =
+      Aida2ROOT::aida2root( bookProfile1D(cms_noiseHistoID, cms_noiseHistoTitle,
                                           -0.5, nStripsPerBoard-0.5, nStripsPerBoard) );
     HistoID cms_pedHistoID        = "cms_pedestal_$tell" + strTellID;
     std::string cms_pedHistoTitle = "Pedestal after CMS for " + detType() + "TELL" + strTellID;
-    m_cms_pedestalHistos[sourceID] = 
-      Aida2ROOT::aida2root( bookProfile1D(cms_pedHistoID, cms_pedHistoTitle, 
+    m_cms_pedestalHistos[sourceID] =
+      Aida2ROOT::aida2root( bookProfile1D(cms_pedHistoID, cms_pedHistoTitle,
                                           -0.5, nStripsPerBoard-0.5, nStripsPerBoard) );
 
     // Common Mode Noise
     HistoID cm_noiseHistoID        = "cm_noise_$tell" + strTellID;
     std::string cm_noiseHistoTitle = "Common Mode Noise for " + detType() + "TELL" + strTellID;
-    m_cm_noiseHistos[sourceID] = Aida2ROOT::aida2root( bookProfile1D(cm_noiseHistoID, cm_noiseHistoTitle, 
+    m_cm_noiseHistos[sourceID] = Aida2ROOT::aida2root( bookProfile1D(cm_noiseHistoID, cm_noiseHistoTitle,
                                                                      -0.5, nStripsPerBoard-0.5, nStripsPerBoard) );
 
   }
   if( m_summaryPlots ) {
 
-    m_2d_RawPedestalPerLinkVsTell1 = 
+    m_2d_RawPedestalPerLinkVsTell1 =
       Aida2ROOT::aida2root( book2D("Mean Raw ADCs per link vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s, 0., 96., 96) );
-    m_2d_RawNoisePerLinkVsTell1 = 
+    m_2d_RawNoisePerLinkVsTell1 =
       Aida2ROOT::aida2root( book2D("Raw Noise per link vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s, 0., 96., 96) );
 
-    m_2d_PedSubPedestalPerLinkVsTell1 = 
+    m_2d_PedSubPedestalPerLinkVsTell1 =
       Aida2ROOT::aida2root( book2D("Mean Ped Subtracted ADCs per link vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s, 0., 96., 96) );
-    m_2d_PedSubNoisePerLinkVsTell1 = 
+    m_2d_PedSubNoisePerLinkVsTell1 =
       Aida2ROOT::aida2root( book2D("Pedestal Subtracted Noise per link vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s, 0., 96., 96) );
-                                       
-    m_2d_CMSPedestalPerLinkVsTell1 = 
+
+    m_2d_CMSPedestalPerLinkVsTell1 =
       Aida2ROOT::aida2root( book2D("Mean CMS ADCs per link vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s, 0., 96., 96) );
-    m_2d_CMSNoisePerLinkVsTell1 = 
+    m_2d_CMSNoisePerLinkVsTell1 =
       Aida2ROOT::aida2root( book2D("CMS Noise per link vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s, 0., 96., 96) );
 
-    m_2d_NormalisationPerLinkVsTell1 = 
+    m_2d_NormalisationPerLinkVsTell1 =
       Aida2ROOT::aida2root( book2D("Normalisation", 0.5, m_nTELL1s+0.5, m_nTELL1s, 0., 96., 96) );
 
     m_1d_raw_noise = book1D("Raw noise", 0., 10., 500);
@@ -225,14 +222,14 @@ void ST::STNoiseMonitor::bookHistograms() {
   }
 }
 
-StatusCode ST::STNoiseMonitor::execute() { 
+StatusCode ST::STNoiseMonitor::execute() {
   m_evtNumber++;
 
   if(m_debug) debug() << "execute:\t" << m_evtNumber << endmsg;
   // Get the time of the first event and convert to a string for the histogram title.
   if(m_evtNumber == 1) {
     if(m_useODINTime) {
-      m_ODIN = get<ODIN>(LHCb::ODINLocation::Default); 
+      m_ODIN = get<ODIN>(LHCb::ODINLocation::Default);
       const Gaudi::Time odinTime = m_ODIN->eventTime();
       m_odinEvent  = "(#"+std::to_string(m_ODIN->runNumber());
       m_odinEvent += " on "+std::to_string(odinTime.day(0));
@@ -254,7 +251,7 @@ StatusCode ST::STNoiseMonitor::execute() {
   for(; itT != m_noiseTool->tell1WithNZSEnd(); ++itT) {
     // Flag to check if histogram needs to be updated
     bool needToUpdate = false;
-    
+
     unsigned int sourceID = (*itT);
     unsigned int tell1 = (this->readoutTool())->SourceIDToTELLNumber(sourceID);
     m_1d_nNZS->fill(tell1);
@@ -262,7 +259,7 @@ StatusCode ST::STNoiseMonitor::execute() {
     // Loop over number of events for FPGA-PP and see if the histograms need to be reset
     std::vector<unsigned int>::const_iterator itEvts = m_noiseTool->cmsNEventsPPBegin(sourceID);
     for(; itEvts != m_noiseTool->cmsNEventsPPEnd(sourceID); ++itEvts) {
-      
+
       int nEvt = (*itEvts);
 
       // Check if at least one of the PPs requires to update the histogram
@@ -272,7 +269,7 @@ StatusCode ST::STNoiseMonitor::execute() {
     } // FPGA-PP
     // Update the noise histogram
     if( needToUpdate ) updateNoiseHistogram( sourceID );
-    
+
   } // boards
   if( m_summaryPlots && m_updateRate > 0 && m_evtNumber%m_updateRate == 0) updateSummaryHistograms();
 
@@ -284,15 +281,15 @@ StatusCode ST::STNoiseMonitor::finalize() {
   // Update all histograms at the end
   std::map<int, TProfile*>::const_iterator itH = m_raw_noiseHistos.begin();
 
-  for( ; itH != m_raw_noiseHistos.end(); ++itH ) { 
+  for( ; itH != m_raw_noiseHistos.end(); ++itH ) {
     // Limit to selected tell1s
-    if ( m_selectedTells && 
+    if ( m_selectedTells &&
          !binary_search(m_limitToTell.begin(), m_limitToTell.end(), (this->readoutTool())->SourceIDToTELLNumber((*itH).first))) {
       continue;
     }
     updateNoiseHistogram( (*itH).first, m_useODINTime );
     if(m_checkCalculation) dumpNoiseCalculation( (*itH).first );
-  } 
+  }
   if(m_summaryPlots) updateSummaryHistograms();
 
   return ST::HistoAlgBase::finalize();// must be called after all other actions
@@ -300,12 +297,12 @@ StatusCode ST::STNoiseMonitor::finalize() {
 
 void ST::STNoiseMonitor::updateNoiseHistogram(unsigned int sourceID, bool updateTitle) {
   if(m_debug) debug() << "updateNoiseHistograms:\t" << m_evtNumber << endmsg;
-  // Get the histogram and reset it in case it is already booked. 
-  if( m_raw_noiseHistos.find(sourceID) != m_raw_noiseHistos.end() 
+  // Get the histogram and reset it in case it is already booked.
+  if( m_raw_noiseHistos.find(sourceID) != m_raw_noiseHistos.end()
       && m_raw_pedestalHistos.find(sourceID) != m_raw_pedestalHistos.end()
-      && m_pedsub_noiseHistos.find(sourceID) != m_pedsub_noiseHistos.end() 
+      && m_pedsub_noiseHistos.find(sourceID) != m_pedsub_noiseHistos.end()
       && m_pedsub_pedestalHistos.find(sourceID) != m_pedsub_pedestalHistos.end()
-      && m_cms_noiseHistos.find(sourceID) != m_cms_noiseHistos.end() 
+      && m_cms_noiseHistos.find(sourceID) != m_cms_noiseHistos.end()
       && m_cms_pedestalHistos.find(sourceID) != m_cms_pedestalHistos.end()
       && m_cm_noiseHistos.find(sourceID) != m_cm_noiseHistos.end() ){
 
@@ -314,17 +311,17 @@ void ST::STNoiseMonitor::updateNoiseHistogram(unsigned int sourceID, bool update
     raw_noiseHist->Reset();
     TProfile* raw_pedestalHist = m_raw_pedestalHistos.find(sourceID)->second;
     raw_pedestalHist->Reset();
-  
+
     TProfile* pedsub_noiseHist = m_pedsub_noiseHistos.find(sourceID)->second;
     pedsub_noiseHist->Reset();
     TProfile* pedsub_pedestalHist = m_pedsub_pedestalHistos.find(sourceID)->second;
     pedsub_pedestalHist->Reset();
-  
+
     TProfile* cms_noiseHist = m_cms_noiseHistos.find(sourceID)->second;
     cms_noiseHist->Reset();
     TProfile* cms_pedestalHist = m_cms_pedestalHistos.find(sourceID)->second;
     cms_pedestalHist->Reset();
-  
+
     TProfile* cm_noiseHist = m_cm_noiseHistos.find(sourceID)->second;
     cm_noiseHist->Reset();
 
@@ -341,7 +338,7 @@ void ST::STNoiseMonitor::updateNoiseHistogram(unsigned int sourceID, bool update
     std::vector<double>::const_iterator itCMSNoise = m_noiseTool->cmsNoiseBegin(sourceID);
 
     std::vector<bool>::const_iterator itStatus = m_noiseTool->stripStatusBegin(sourceID);
-    for(; itRawNoise != itRawNoiseEnd; ++itRawNoise, ++itRawPed, ++itPedSubNoise, ++itPedSubPed, 
+    for(; itRawNoise != itRawNoiseEnd; ++itRawNoise, ++itRawPed, ++itPedSubNoise, ++itPedSubPed,
           ++itCMSNoise, ++itCMSPed, ++itStatus, ++strip) {
       if(*itStatus) {
         raw_noiseHist->Fill( strip, (*itRawNoise) );
@@ -350,7 +347,7 @@ void ST::STNoiseMonitor::updateNoiseHistogram(unsigned int sourceID, bool update
         pedsub_pedestalHist->Fill( strip, (*itPedSubPed) );
         cms_noiseHist->Fill( strip, (*itCMSNoise) );
         cms_pedestalHist->Fill( strip, (*itCMSPed) );
-        double commonMode = gsl_pow_2(*itRawNoise)-gsl_pow_2(*itCMSNoise);
+        double commonMode = std::pow(*itRawNoise,2)-std::pow(*itCMSNoise,2);
         if(commonMode > 0) commonMode = sqrt(commonMode);
         else commonMode = 0;
         cm_noiseHist->Fill( strip, commonMode );
@@ -404,10 +401,10 @@ void ST::STNoiseMonitor::updateSummaryHistograms(){
     std::vector<double>::const_iterator itRawPed = m_noiseTool->pedestalBegin(sourceID);
     std::vector<double>::const_iterator itRawNoise = m_noiseTool->rawNoiseBegin(sourceID);
     std::vector<double>::const_iterator itRawNoiseEnd = m_noiseTool->rawNoiseEnd(sourceID);
-    
+
     std::vector<double>::const_iterator itPedSubPed = m_noiseTool->pedSubMeanBegin(sourceID);
     std::vector<double>::const_iterator itPedSubNoise = m_noiseTool->pedSubNoiseBegin(sourceID);
-    
+
     std::vector<double>::const_iterator itCMSPed = m_noiseTool->cmsMeanBegin(sourceID);
     std::vector<double>::const_iterator itCMSNoise = m_noiseTool->cmsNoiseBegin(sourceID);
 
@@ -424,7 +421,7 @@ void ST::STNoiseMonitor::updateSummaryHistograms(){
         m_1d_pedsub_pedestal->fill( (*itPedSubPed) );
         m_1d_cms_noise->fill( (*itCMSNoise) );
         m_1d_cms_pedestal->fill( (*itCMSPed) );
-        double commonMode = gsl_pow_2(*itRawNoise)-gsl_pow_2(*itCMSNoise);
+        double commonMode = std::pow(*itRawNoise,2)-std::pow(*itCMSNoise,2);
         if(commonMode > 0) commonMode = sqrt(commonMode);
         else commonMode = 0;
         m_1d_cm_noise->fill(commonMode);
@@ -445,7 +442,7 @@ void ST::STNoiseMonitor::updateSummaryHistograms(){
             m_1d_cms_noiseByType[type]->fill( (*itCMSNoise) );
             m_1d_cms_pedestalByType[type]->fill( (*itCMSPed) );
             m_1d_cm_noiseByType[type]->fill( commonMode );
-          }          
+          }
         }
       } // strip status
     }
@@ -494,15 +491,15 @@ void ST::STNoiseMonitor::dumpNoiseCalculation(unsigned int sourceID) {
 
   }
   for(; rawMeanIt != rawMean.end(); ++rawMeanIt, ++rawMeanSqIt, ++rawNoiseIt, ++cmsMeanIt, ++cmsMeanSqIt, ++cmsNoiseIt, ++strip) {
-    profile1D(strip, (*rawMeanIt), idRawMean, idRawMean, -0.5, 3071.5, 3072); 
-    profile1D(strip, (*rawMeanSqIt), idRawMeanSq, idRawMeanSq, -0.5, 3071.5, 3072); 
-    profile1D(strip, (*rawNoiseIt), idRawNoiseS, idRawNoiseS, -0.5, 3071.5, 3072); 
-    profile1D(strip, sqrt(*rawMeanSqIt - gsl_pow_2(*rawMeanIt)), idRawNoiseC, idRawNoiseC, -0.5, 3071, 3072);
+    profile1D(strip, (*rawMeanIt), idRawMean, idRawMean, -0.5, 3071.5, 3072);
+    profile1D(strip, (*rawMeanSqIt), idRawMeanSq, idRawMeanSq, -0.5, 3071.5, 3072);
+    profile1D(strip, (*rawNoiseIt), idRawNoiseS, idRawNoiseS, -0.5, 3071.5, 3072);
+    profile1D(strip, sqrt(*rawMeanSqIt - std::pow(*rawMeanIt,2)), idRawNoiseC, idRawNoiseC, -0.5, 3071, 3072);
 
-    profile1D(strip, (*cmsMeanIt), idCMSMean, idCMSMean, -0.5, 3071.5, 3072); 
-    profile1D(strip, (*cmsMeanSqIt), idCMSMeanSq, idCMSMeanSq, -0.5, 3071.5, 3072); 
-    profile1D(strip, (*cmsNoiseIt), idCMSNoiseS, idCMSNoiseS, -0.5, 3071.5, 3072); 
-    profile1D(strip, sqrt(*cmsMeanSqIt - gsl_pow_2(*cmsMeanIt)), idCMSNoiseC, idCMSNoiseC, -0.5, 3071.5, 3072);
+    profile1D(strip, (*cmsMeanIt), idCMSMean, idCMSMean, -0.5, 3071.5, 3072);
+    profile1D(strip, (*cmsMeanSqIt), idCMSMeanSq, idCMSMeanSq, -0.5, 3071.5, 3072);
+    profile1D(strip, (*cmsNoiseIt), idCMSNoiseS, idCMSNoiseS, -0.5, 3071.5, 3072);
+    profile1D(strip, sqrt(*cmsMeanSqIt - std::pow(*cmsMeanIt,2)), idCMSNoiseC, idCMSNoiseC, -0.5, 3071.5, 3072);
 
   }
 }
