@@ -3,6 +3,17 @@
 ! Responsible : Tomasz Szumlak
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+! 2015-12-22 - Gerhard Raven
+ - replace GSL with std::
+ - replace VeloChargeThrehold with lambda function
+ - prefer direct member initialization
+ - avoid looking up FP mask by string on every invokation of erf_Q
+ - keep working containers 'by value' instead of 'by pointer'
+ - prefer range-based for loops
+ - prefer STL algorithms
+ - qualify implementation of virtual functions with 'override'
+ - prefer passing by & over by *
+
 
 !========================= VeloSimulation v3r15p1 2015-10-12 =========================
 ! 2015-08-04 - Gerhard Raven

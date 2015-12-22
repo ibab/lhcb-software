@@ -17,7 +17,6 @@ include_path      none
 use  MCEvent       v* Event
 use  VeloDet       v* Det
 use  GaudiAlg      v*
-use  GaudiGSL 	   v* 
 use  AIDA          v* LCG_Interfaces -no_auto_imports
 #=====================================================================
 # Component library building rule
