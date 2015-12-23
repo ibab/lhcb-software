@@ -5,7 +5,6 @@
 
 // Gaudi
 #include "GaudiKernel/SystemOfUnits.h"
-#include "gsl/gsl_math.h"
 
 // track interfaces
 #include "Event/State.h"
@@ -96,7 +95,7 @@ void TrackPrepareVelo::prepare(Track* aTrack, const int charge) const{
   std::vector< LHCb::State * >::const_iterator iState;
   for ( iState = states.begin() ; iState != states.end() ; ++iState ){
     TrackVector& vec = (*iState)->stateVector();
-    double slope2 = GSL_MAX(vec(2)*vec(2) + vec(3)*vec(3), 1e-20);
+    double slope2 = std::max(vec(2)*vec(2) + vec(3)*vec(3), 1e-20);
     double curv = charge * sqrt( slope2 ) / (m_ptVelo * sqrt( 1. + slope2 ));
     (*iState)->setQOverP(curv);
     (*iState)->setErrQOverP2(1e-6);

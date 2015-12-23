@@ -5,7 +5,6 @@
 
 // Gaudi
 #include "GaudiKernel/SystemOfUnits.h"
-#include "gsl/gsl_math.h"
 
 // track interfaces
 #include "Event/State.h"
@@ -55,7 +54,7 @@ void TrackPrepareForFit::prepare(Track* aTrack, const int charge) const{
  // do what we have to do...
  State& vState = aTrack->firstState();
  TrackVector& vec = vState.stateVector();
- double slope2 = GSL_MAX(vec(2)*vec(2) + vec(3)*vec(3), 1e-20);
+ double slope2 = std::max(vec(2)*vec(2) + vec(3)*vec(3), 1e-20);
  double curv  = m_curvValue;
  if ( !m_fixP) curv = charge * sqrt( slope2 ) / (m_ptVelo * sqrt( 1. + slope2 ));
 

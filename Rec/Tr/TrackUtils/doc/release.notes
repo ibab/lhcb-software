@@ -3,12 +3,21 @@
 ! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
+! 2015-12-23 - Gerhard Raven
+ - remove dependency on boost::lambda and boost::bind
+ - replace GSL_ with std::
+ - prefer nullptr to 0,NULL, avoid comparing pointers to 0
+ - prefer range-based for loops
+ - remove static
 
 ! 2015-12-13 - Michel De Cian
- - Replace property to set summary location in TrackBestTrackCreator by predefined location 'LHCb::RecSummary:Track'
+ - Replace property to set summary location in TrackBestTrackCreator by 
+   predefined location 'LHCb::RecSummary:Track'
 
 ! 2015-12-12 - Michel De Cian
- - Add possibility to write out 'RecSummary' in TrackBestTrackCreator with number of identified ghosts (maybe used for event index). Default is off for the moment. Fix indentation.
+ - Add possibility to write out 'RecSummary' in TrackBestTrackCreator with 
+   number of identified ghosts (maybe used for event index). Default is off 
+   for the moment. Fix indentation.
 
 !========================= TrackUtils v1r62 2015-11-23 =========================
 ! 2015-11-11 - Marco Cattaneo
@@ -23,7 +32,8 @@
  - Suppress warning about non-existing container in TrackEraseExtraInfo.
 
 ! 2015-06-27 - Michel De Cian
- - Make list of locations to erase configurable in 'TrackEraseExtraInfo', add print option, remove unnecessary includes, add doxygen comments.
+ - Make list of locations to erase configurable in 'TrackEraseExtraInfo',
+   add print option, remove unnecessary includes, add doxygen comments.
 
 !========================= TrackUtils v1r60 2015-04-21 =========================
 ! 2015-04-16 - Sascha Stahl

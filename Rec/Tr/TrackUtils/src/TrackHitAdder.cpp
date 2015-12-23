@@ -3,7 +3,6 @@
 // from std
 #include <string>
 #include <vector>
-#include "boost/lexical_cast.hpp"
 
 // from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"

@@ -226,12 +226,10 @@ m_parent(parent), m_curcont(m_parent.m_tracksInContainers.begin()),
 
 TrackBestTrackCreator::TrackDataGen::~TrackDataGen()
 {
-  if (!m_copymap.empty()) {
-    // sort m_copymap for quick lookup
-    std::sort(std::begin(m_copymap), std::end(m_copymap),
-              [] (const CopyMapEntry& a, const CopyMapEntry& b)
-              { return a.first < b.first; });
-  }
+  // sort m_copymap for quick lookup
+  std::sort(std::begin(m_copymap), std::end(m_copymap),
+            [] (const CopyMapEntry& a, const CopyMapEntry& b)
+            { return a.first < b.first; });
 }
 
 TrackData TrackBestTrackCreator::TrackDataGen::operator()()
@@ -253,7 +251,7 @@ TrackData TrackBestTrackCreator::TrackDataGen::operator()()
       if (sc.isSuccess()) {
         if (m_parent.m_useAncestorInfo) {
           // save mapping between original track and its copy
-          m_copymap.emplace_back(CopyMapEntry(oldtr, m_nrtracks));
+          m_copymap.emplace_back(oldtr, m_nrtracks);
         }
         ++m_nrtracks;
         // keep a record where this track came from
@@ -585,15 +583,13 @@ StatusCode TrackBestTrackCreator::fit( LHCb::Track& track ) const
     if (track.fitStatus() == LHCb::Track::Fitted){
       counter("FittedBefore") += 1;
       sc = StatusCode::SUCCESS;
-      if (m_addGhostProb){
-        m_ghostTool->execute(track).ignore();
-      }
+      if (m_addGhostProb) m_ghostTool->execute(track).ignore();
     }
     else {
       /// fit failed before
       /// This should always be 0 as this type is filtered out when initializing the tracks
-      track.setFlag( LHCb::Track::Invalid, true );
       counter("FitFailedBefore") += 1;
+      track.setFlag( LHCb::Track::Invalid, true );
       sc = StatusCode::FAILURE;
     }
   }else{
@@ -605,10 +601,9 @@ StatusCode TrackBestTrackCreator::fit( LHCb::Track& track ) const
   	  double qopBefore = track.firstState().qOverP();
   	  /// Fit the track 
   	  sc =  m_fitter -> fit( track );
+
   	  if ( sc.isSuccess()){
-        if (m_addGhostProb){
-          m_ghostTool->execute(track).ignore();
-        }
+        if (m_addGhostProb) m_ghostTool->execute(track).ignore();
         // Update counters
         if( track.nDoF()>0) {
   	      double chisqprob = track.probChi2();
@@ -617,8 +612,7 @@ StatusCode TrackBestTrackCreator::fit( LHCb::Track& track ) const
   	    }
   	    counter(prefix + "flipCharge") += bool( qopBefore * track.firstState().qOverP() <0);
   	    counter(prefix + "numOutliers") += track.nMeasurementsRemoved();
-      }
-  	  else {
+      } else {
   	    track.setFlag( LHCb::Track::Invalid, true );
   	    fitfailed = true;
         counter(prefix + "FitFailed") += int(fitfailed);

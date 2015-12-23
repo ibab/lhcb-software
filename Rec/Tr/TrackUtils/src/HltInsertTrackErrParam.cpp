@@ -1,8 +1,6 @@
-// Include files 
+// Include files
 #include <math.h>
 #include "gsl/gsl_sys.h"
-#include "boost/lambda/lambda.hpp"
-#include "boost/lambda/construct.hpp"
 
 // event
 #include "Event/Track.h"
@@ -31,7 +29,7 @@ HltInsertTrackErrParam::HltInsertTrackErrParam( const std::string& name,
   m_xParams.push_back(  0.0108*Gaudi::Units::mm);
   m_xParams.push_back( -0.00122*Gaudi::Units::mm );
   m_xParams.push_back(  0.0000547*Gaudi::Units::mm);
-    
+
   m_yParams = m_xParams ; // y is equal to x by default
 
   declareProperty( "XParams",  m_xParams );
@@ -44,7 +42,7 @@ HltInsertTrackErrParam::HltInsertTrackErrParam( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-HltInsertTrackErrParam::~HltInsertTrackErrParam() {} 
+HltInsertTrackErrParam::~HltInsertTrackErrParam() {}
 
 //=============================================================================
 // Initialization
@@ -69,11 +67,11 @@ StatusCode HltInsertTrackErrParam::initialize() {
 }
 
 //=========================================================================
-//  
+//
 //=========================================================================
-void HltInsertTrackErrParam::printParams( std::vector<double>& params, 
+void HltInsertTrackErrParam::printParams( std::vector<double>& params,
                                           std::string coord ) {
-  info() << "Your Pt-dependent " << coord << " error parameterisation will be " 
+  info() << "Your Pt-dependent " << coord << " error parameterisation will be "
          << endmsg ;
   int p = 0 ;
   info() << "Error on " << coord << " = " ;
@@ -98,39 +96,38 @@ StatusCode HltInsertTrackErrParam::execute() {
   /// @todo Should use some HltAlgorithm method to get access to tracks anywhere
 
   LHCb::Tracks* tracks = getIfExists<LHCb::Tracks>(m_inputLocation);
-  if ( NULL == tracks ){
+  if ( !tracks ){
     setFilterPassed(false);
     Warning("No tracks at "+m_inputLocation).ignore();
     return StatusCode::SUCCESS;
   }
-  LHCb::Tracks* newTracks =  (  m_newLocation ?  new LHCb::Tracks() 
-                                              : (LHCb::Tracks*)0    );
+  LHCb::Tracks* newTracks =  (  m_newLocation ? new LHCb::Tracks()
+                                              : nullptr    );
 
-  if (msgLevel(MSG::DEBUG)) 
+  if (msgLevel(MSG::DEBUG))
     debug() << "Loaded " << tracks->size() << " tracks"  << endmsg ;
 
-  for (  LHCb::Tracks::iterator it = tracks->begin(); it != tracks->end(); ++it) {
-    if (msgLevel(MSG::VERBOSE)) 
-      verbose() << "Looping on track " << (*it)->key() << endmsg ;
-    
-    LHCb::Track* tk =  ( newTracks ? (*it)->clone() : *it );
-    
+  for ( auto& track : *tracks ) {
+    if (msgLevel(MSG::VERBOSE))
+      verbose() << "Looping on track " << track->key() << endmsg ;
+
+    LHCb::Track* tk =  ( newTracks ? track->clone() : track );
+
     StatusCode sc = insertParamInTrack( tk );
     if (!sc) {
       Warning(" call to insertParamInTrack failed -- abandoning all new tracks").ignore();
-      if (newTracks!=0) { 
+      if (newTracks) {
         std::for_each(newTracks->begin(),
                       newTracks->end(),
-                      boost::lambda::delete_ptr());
+                      std::default_delete<LHCb::Track>());
         newTracks->clear();
-        
       }
-      return sc;    
-    } 
-    if ( newTracks !=0 ) newTracks->insert(tk) ;
-    
+      return sc;
+    }
+    if ( newTracks ) newTracks->insert(tk) ;
+
   }
-  if ( newTracks!=0 ) put(newTracks,  m_outputLocation);
+  if ( newTracks ) put(newTracks,  m_outputLocation);
 
   return StatusCode::SUCCESS;
 }
@@ -139,57 +136,56 @@ StatusCode HltInsertTrackErrParam::execute() {
 //=========================================================================
 StatusCode HltInsertTrackErrParam::insertParamInTrack( LHCb::Track* tr )
 {
-  for ( std::vector< LHCb::State* >::const_iterator s = tr->states().begin() ;
-        s != tr->states().end() ; ++s ){ // const
-    LHCb::State::Location loc = (*s)->location() ;
-    if (( loc == LHCb::State::ClosestToBeam ) || 
+  for ( const auto& s : tr->states() ) {
+    LHCb::State::Location loc = s->location() ;
+    if (( loc == LHCb::State::ClosestToBeam ) ||
         ( loc == LHCb::State::FirstMeasurement ) ||
         ( loc == LHCb::State::EndVelo )){
-      if ( msgLevel(MSG::DEBUG)) debug() << "State at " << loc << " " << (*s)->position().z() << endmsg ;
+      if ( msgLevel(MSG::DEBUG)) debug() << "State at " << loc << " " << s->position().z() << endmsg ;
       /// @todo add counter later
       StatusCode sc = insertParamInState( tr->stateAt(loc) );
       if (!sc) return sc;
     }
   }
   return StatusCode::SUCCESS ;
-}  
+}
 //=========================================================================
 //  The actual thing
 //=========================================================================
 StatusCode HltInsertTrackErrParam::insertParamInState( LHCb::State* state ){
-  
+
   if ( 0 == gsl_fcmp( state->qOverP() , 0 , 1.e-9 ) ){ // that needs a 1000 TeV track
-    err() << "Track state at " << state->position() << " (" << state->location() 
+    err() << "Track state at " << state->position() << " (" << state->location()
           << ") has q/P = " << state->qOverP() << endmsg ;
     return StatusCode::FAILURE;
   }
 
   if ( msgLevel( MSG::DEBUG ) ) {
-    debug() << state->position().x() << " " 
+    debug() << state->position().x() << " "
             << state->position().y() << " "
             << state->position().z() << " "
-            << 1./ state->qOverP() 
+            << 1./ state->qOverP()
             << endmsg;
-    debug() << "Pt: " << state->pt() << endmsg;  
+    debug() << "Pt: " << state->pt() << endmsg;
     debug() << "Existent matrix: \n" << state->covariance() << endmsg;
   }
-  
+
   double invPt=1./(fabs(state->pt()/Gaudi::Units::GeV));
-  
+
   if ( msgLevel( MSG::DEBUG ) ) debug() << "Inverse of Pt: " << invPt << endmsg;
-  
-  double sigmaX = 0 ;  
+
+  double sigmaX = 0 ;
   for ( unsigned int p = 0 ; p<m_xParams.size() ; ++p ){
     sigmaX += m_xParams[p]*std::pow(invPt, static_cast<int>(p));}
-  double sigmaY = 0 ;  
+  double sigmaY = 0 ;
   for ( unsigned int p = 0 ; p<m_yParams.size() ; ++p ){
     sigmaY += m_yParams[p]*std::pow(invPt, static_cast<int>(p));}
-    
+
   if ( msgLevel( MSG::DEBUG ) ) debug() << "sigmaX, sigmaY: " << sigmaX << " " << sigmaY << endmsg;
-  
-  Gaudi::TrackSymMatrix newMatrix = Gaudi::TrackSymMatrix() ;
+
+  Gaudi::TrackSymMatrix newMatrix;
   if ( m_keepMomentum ) newMatrix = state->covariance() ;
-  
+
   newMatrix(0,0) = sigmaX*sigmaX;
   newMatrix(1,1) = sigmaY*sigmaY;
   newMatrix(1,0) = 0;   // xy term
@@ -208,7 +204,7 @@ StatusCode HltInsertTrackErrParam::insertParamInState( LHCb::State* state ){
   }
 
   if ( msgLevel( MSG::DEBUG ) ) debug() << "New matrix: \n" << newMatrix << endmsg;
-  
+
   state->setCovariance(newMatrix);
 
   return StatusCode::SUCCESS ;

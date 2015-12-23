@@ -496,7 +496,7 @@ TrackV0Finder::constrainToVertex(const Gaudi::XYZPoint& pos,
     // trick is to remove the contribution of B-flight along the V0
     // direction.
 
-    static Gaudi::SymMatrix3x3 covBFlight ;
+    Gaudi::SymMatrix3x3 covBFlight ;
     covBFlight(0,0) = m_sigmaBFlightX*m_sigmaBFlightX  ;
     covBFlight(1,1) = m_sigmaBFlightY*m_sigmaBFlightY  ;
     covBFlight(2,2) = m_sigmaBFlightZ*m_sigmaBFlightZ  ;
