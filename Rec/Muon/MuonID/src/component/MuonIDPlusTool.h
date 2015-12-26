@@ -98,7 +98,7 @@ private:
 
   StatusCode getMuonHits();
   StatusCode matchHitsToTracks();
-  bool isTrackInsideStation(LHCb::State& state, unsigned int& istation);
+  bool isTrackInsideStation(const LHCb::State& state, unsigned int istation) const;
 
   double medianClusize();
 

@@ -31,8 +31,8 @@ public:
 
   bool stInStations(const int myst,const std::vector<int>& stations);
   bool IsMuonSimple(const std::vector<int>& stations);
-  bool IsMuon(const std::vector<int>& stations,const double& p);
-  bool IsMuonLoose(const std::vector<int>& stations,const double& p);
+  bool IsMuon(const std::vector<int>& stations,double p);
+  bool IsMuonLoose(const std::vector<int>& stations,double p);
 
 protected:
 

@@ -19,16 +19,16 @@ public:
   /// Standard constructor
   MakeMuonMeasurements( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~MakeMuonMeasurements( ); ///< Destructor
+  ~MakeMuonMeasurements( ) override = default; ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
+  StatusCode initialize() override;    ///< Algorithm initialization
+  StatusCode execute   () override;    ///< Algorithm execution
 
 protected:
 
-  IMeasurementProvider*  m_measProvider;
-  DeMuonDetector*  m_mudet;
-  bool m_use_uncrossed;
+  IMeasurementProvider*  m_measProvider = nullptr;
+  DeMuonDetector*  m_mudet = nullptr;
+  bool m_use_uncrossed = true;
 
 private:
 

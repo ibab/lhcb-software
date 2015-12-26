@@ -44,7 +44,7 @@ StatusCode MuonIDAlgLite::initialize() {
     Warning( "'TrackLocation' Property is obsolete. Please change to use 'TrackLocations' instead").ignore();
     tesPathsInputTracks_ = { tesPathInputTracks_ };
   }
-  
+
   muonTool_ = tool<ICommonMuonTool>("CommonMuonTool");
   DLLTool_ = tool<DLLMuonTool>("DLLMuonTool");
   makeMuonTool_ = tool<MakeMuonTool>("MakeMuonTool");
@@ -55,9 +55,9 @@ StatusCode MuonIDAlgLite::initialize() {
  * Resulting PID objects as well as muon tracks are stored on the TES.
  */
 StatusCode MuonIDAlgLite::execute() {
-  
+
   std::vector<LHCb::Track*> tracks;
-  for( const std::string inputLoc : tesPathsInputTracks_){ 
+  for( const std::string inputLoc : tesPathsInputTracks_){
     const auto tracksPtr = get<LHCb::Tracks>(inputLoc);
     if (tracksPtr == nullptr){
       // TODO: What is the right thing to do here? Error or Warning and return
@@ -68,10 +68,10 @@ StatusCode MuonIDAlgLite::execute() {
     for (const auto trackPtr : tracksFromTES) {
       tracks.push_back(trackPtr);
     }
-  }  
+  }
 
   // Acquire TES containers for storing muon PIDs and tracks
-  //const auto muPidsPtr = 
+  //const auto muPidsPtr =
   //    getOrCreate<LHCb::MuonPIDs, LHCb::MuonPIDs>(tesPathOutputMuonPid_);
   LHCb::MuonPIDs *muPids =
       getOrCreate<LHCb::MuonPIDs, LHCb::MuonPIDs>(tesPathOutputMuonPid_);
@@ -82,7 +82,7 @@ StatusCode MuonIDAlgLite::execute() {
                  "replaced.";
   }
   //const auto &muPids = *muPidsPtr;
-  
+
   LHCb::Tracks *muTracks =
       getOrCreate<LHCb::Tracks, LHCb::Tracks>(tesPathOutputMuonTracks_);
   if (!muTracks->empty()) {
@@ -128,7 +128,7 @@ StatusCode MuonIDAlgLite::execute() {
 
     bool preSel = muonTool_->preSelection(track);
     const auto extrapolation = muonTool_->extrapolateTrack(track);
-    bool inAcc = muonTool_->inAcceptance(extrapolation); 
+    bool inAcc = muonTool_->inAcceptance(extrapolation);
     if (preSel) {
       muPid->setPreSelMomentum(1);
       counter("nMomentumCut")++;
@@ -137,7 +137,7 @@ StatusCode MuonIDAlgLite::execute() {
       muPid->setInAcceptance(1);
       counter("nInAcceptance")++;
     }
-    
+
     // Store the muonPIDs for tracks passing InAcceptance
     if (!inAcc) {
       delete muPid;
@@ -177,7 +177,7 @@ StatusCode MuonIDAlgLite::execute() {
           Error("Invalid DLL flag");  // TODO: seriously this is just a quick fix,
           // this whole flag thing has to go
         }
-        
+
         muPid->setMuonLLMu(log(probMu));
         muPid->setMuonLLBg(log(probNonMu));
 
@@ -185,12 +185,12 @@ StatusCode MuonIDAlgLite::execute() {
       }
     }
     muPids->insert(muPid);
-    counter("nMuonPIDs")++; 
-    
+    counter("nMuonPIDs")++;
+
     // make the muon track only for tracks passing IsMuonLoose
     if(muPid->IsMuonLoose()){
       auto muTrack = makeMuonTool_->makeMuonTrack(muPid, hits, extrapolation);
-      
+
       // Insert in muonTrack
       muTrack->setType(LHCb::Track::Muon);
       muTrack->setHistory(LHCb::Track::MuonID);
@@ -198,7 +198,7 @@ StatusCode MuonIDAlgLite::execute() {
       muTrack->addInfo(LHCb::Track::MuonInAcceptance, muPid->InAcceptance());
       muTrack->addInfo(LHCb::Track::IsMuonLoose, muPid->IsMuonLoose());
       muTrack->addInfo(LHCb::Track::IsMuon, muPid->IsMuon());
-      muTrack->addInfo(LHCb::Track::IsMuonTight, muPid->IsMuonTight()); 
+      muTrack->addInfo(LHCb::Track::IsMuonTight, muPid->IsMuonTight());
       muTrack->addInfo(LHCb::Track::MuonDist2, Dsquare);
       muTrack->addInfo(LHCb::Track::MuonDLL, muPid->MuonLLMu() - muPid->MuonLLBg());
       muTrack->addInfo(LHCb::Track::MuonNShared, muPid->nShared());
@@ -207,18 +207,13 @@ StatusCode MuonIDAlgLite::execute() {
       muTracks->insert(muTrack);
     }
   }
-  
+
   // Clear the tool maps
   DLLTool_->clearMap();
 
   return StatusCode::SUCCESS;
 }
 
-/** Tear down.
- */
-StatusCode MuonIDAlgLite::finalize() { 
-  return GaudiAlgorithm::finalize(); 
-}
 
 /** Offline requirement for a good track. The track mustn't be a clone. Also it
  * should either be a long track or a downstream track or in case TT tracks are

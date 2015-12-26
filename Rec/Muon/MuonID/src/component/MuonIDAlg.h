@@ -87,13 +87,16 @@ private:
   StatusCode trackExtrapolate(const LHCb::Track *pTrack);
 
   // Find out if st myst is in input array of stations
-  bool stInStations(const int myst,const std::vector<int>& stations);
+  template <typename Container>
+  bool stInStations(const int myst,const Container& stations) {
+     return std::find(stations.begin(),stations.end(),myst)!=stations.end();
+  }
 
   //Common IsMuon requirements from set of stations with hits in FOI
-  bool IsMuon(const std::vector<int>& stations,const double& p);
+  bool IsMuon(const std::vector<int>& stations,double p);
 
   // Common IsMuonLoose requirements from set of stations with hits in FOI
-  bool IsMuonLoose(const std::vector<int>& stations,const double& p);
+  bool IsMuonLoose(const std::vector<int>& stations,double p);
 
   // Calculates MuProb based on DeltaSx (slope difference)
   double calcMuProb(LHCb::MuonPID * pMuid);

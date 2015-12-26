@@ -1,7 +1,7 @@
-// $Id: SmartMuonMeasProvider.h,v 1.1 2009-07-01 18:27:12 polye Exp $
 #ifndef SMARTMUONMEASUREMENTPROVIDER_H 
 #define SMARTMUONMEASUREMENTPROVIDER_H 1
 
+#include <array>
 #include "GaudiKernel/DataObject.h"
 #include "Event/Measurement.h"
 #include "Event/State.h"
@@ -16,78 +16,68 @@
  *  @author Xabier Cid Vidal
  *  @date   2008-07-16
  */
-typedef std::pair<LHCb::Measurement*,LHCb::Measurement*> MeasPair;
-typedef std::vector<std::pair<LHCb::Measurement*,LHCb::Measurement*> > MeasPairList;
+typedef std::pair<std::unique_ptr<LHCb::Measurement>,std::unique_ptr<LHCb::Measurement>> MeasPair;
+typedef std::vector<MeasPair> MeasPairList;
 typedef std::pair<LHCb::LHCbID,double> LHCbIDWeight;
 
-class SmartMuonMeasProvider : public DataObject{
+class SmartMuonMeasProvider : public DataObject {
 public: 
   /// Standard constructor
-  SmartMuonMeasProvider( );
+  SmartMuonMeasProvider( ) = default;
   
-  virtual ~SmartMuonMeasProvider();
+  ~SmartMuonMeasProvider() override = default;
+
+  const MeasPairList& atStation(int istation) const { return m_meas[istation]; }
+  MeasPairList& atStation(int istation) { return m_meas[istation]; }
+
+  std::vector<LHCb::LHCbID> idsInRange(const LHCb::State& state, double nsigmas = 5.,int discriminationValue=1);
   
-
-  std::vector<double> m_stationsz;
-
-
-  MeasPairList& atStation(int istation) {return m_meas[istation];}
-
-  MeasPair getMeasPair() 
-  {
-    MeasPair out;
-    return out;
-  }
-  
-
-  std::vector<LHCb::LHCbID> idsInRange(LHCb::State& state, double nsigmas = 5.,int discriminationValue=1);
-  
-  std::vector<double> linearExtrapolator(const LHCb::State& state,const double z);
+  std::pair<double,double> linearExtrapolator(const LHCb::State& state,double z) const;
 
   int findClosestStation(double z);
 
-  double distance(const MeasPair& meas, const LHCb::State& state){return sqrt(pow(distx(meas,state),2)+pow(disty(meas,state),2));}
-
-
-  double distx(const MeasPair& meas, const LHCb::State& state)
+  double distance(const MeasPair& meas, const LHCb::State& state) const
   {
-    return fabs(meas.first->measure() - linearExtrapolator(state,meas.first->z())[0]);
+      return std::sqrt(std::pow(distx(meas,state),2)+std::pow(disty(meas,state),2));
+  }
+
+  double distx(const MeasPair& meas, const LHCb::State& state) const
+  {
+    return std::abs(meas.first->measure() - linearExtrapolator(state,meas.first->z()).first);
   }
   
-  double disty(const MeasPair& meas, const LHCb::State& state)
+  double disty(const MeasPair& meas, const LHCb::State& state) const
   {
-    return fabs(meas.second->measure() - linearExtrapolator(state,meas.first->z())[1]);
+    return std::abs(meas.second->measure() - linearExtrapolator(state,meas.first->z()).second);
   }
   
+  //get uncx from errors on pair and state
+  double uncx(const MeasPair& meas, const LHCb::State& state) const{
+    return sqrt(state.errX2()+std::pow(meas.first->errMeasure(),2));
+  }
 
-  double uncx(const MeasPair& meas, const LHCb::State& state);
+  //get uncy from errors on pair and state
+  double uncy(const MeasPair& meas, const LHCb::State& state) const {
+    return sqrt(state.errY2()+std::pow(meas.second->errMeasure(),2));
+  }
+  
+  double chi2x(const MeasPair& meas, const LHCb::State& state) const
+  {return std::pow(distx(meas,state)/uncx(meas,state),2);}
 
-  double uncy(const MeasPair& meas, const LHCb::State& state);
-  
-  double chi2x(const MeasPair& meas, const LHCb::State& state){return pow(distx(meas,state),2)/pow(uncx(meas,state),2);}
+  double chi2y(const MeasPair& meas, const LHCb::State& state) const
+  {return std::pow(disty(meas,state)/uncy(meas,state),2);}
 
-  double chi2y(const MeasPair& meas, const LHCb::State& state){return pow(disty(meas,state),2)/pow(uncy(meas,state),2);}
+  double chi2(const MeasPair& meas, const LHCb::State& state) const
+  {return chi2x(meas,state)+chi2y(meas,state);}
+  
+private:
+  
+  std::array<MeasPairList,5> m_meas;
 
-  double chi2(const MeasPair& meas, const LHCb::State& state){return (chi2x(meas,state)+chi2y(meas,state));}
-  
-
-
-protected:
-  
-  std::vector<MeasPairList> m_meas;
-  
-  
-  // OrderByValue _orderByValue;
-  
-  class OrderByValue {
-  public:
-    bool operator() (const LHCbIDWeight& id1, const LHCbIDWeight& id2) 
+  struct OrderByValue {
+    bool operator()(const LHCbIDWeight& id1, const LHCbIDWeight& id2) const
     {return id1.second < id2.second;}
   };
   
-  
-
-private:
-
 };
 #endif // MUONMEASUREMENTPROVIDER_H

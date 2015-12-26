@@ -1,4 +1,4 @@
-// Include files 
+// Include files
 
 // local
 #include "GetArrival.h"
@@ -40,9 +40,9 @@ GetArrival::GetArrival( const std::string& type,
 
   declareProperty("probs", m_probs,
                   "probs corresponding to moms in each station");
-  
+
   declareProperty("alpha", m_alpha = tmp, "parameter alpha in fitted curves");
-  
+
   declareProperty("beta", m_beta = tmp, "parameter beta in fitted curves");
 
   declareProperty("eff", m_eff=.99, "eff of muon chambers");
@@ -59,12 +59,12 @@ StatusCode GetArrival::initialize() {
   m_init = StatusCode::SUCCESS;
 
   if (m_useFunct) {
-    
+
     for (std::vector<double>::const_iterator it=m_beta.begin();
          it!=m_beta.end();++it) {
       if ((*it)==-1) {
         m_init.setCode(401);
-        return sc;        
+        return sc;
         // return Error( "BETAS NOT INITIALIZED", m_init);
       }
     }
@@ -77,13 +77,13 @@ StatusCode GetArrival::initialize() {
       }
     }
   }
-  
-  else{  
+
+  else{
     //check if tool has been initialized
     for (std::vector<double>::const_iterator it=m_moms.begin();
          it!=m_moms.end();++it)
     {
-      if ((*it)==-1) 
+      if ((*it)==-1)
       {
         //TODO: sure?
         m_init.setCode(401);
@@ -91,10 +91,10 @@ StatusCode GetArrival::initialize() {
         // m_init.setChecked();
         return sc;
       }
-      
+
     }
-    
-    
+
+
     //number of points per each station
     unsigned int npoints = m_moms.size();
     if (msgLevel(MSG::DEBUG) ) debug() << " npoints: " << npoints << endmsg;
@@ -103,33 +103,33 @@ StatusCode GetArrival::initialize() {
       return sc;
       // return Error( "INPUT VALUES WRONG SIZE PER STATION", m_init);
     }
-    
+
     //build vector for each station. For station 0, initialization to 0
     for(int i=0;i<5;i++) {
-      
+
       m_vprobs.push_back(std::vector<double>());
-      
+
       if (i==0) {
         std::vector<double> partial_st0(npoints);
         m_functprobs.push_back(Uniformer(m_moms,partial_st0));
         continue;
       }
-      
+
       if (msgLevel(MSG::DEBUG) ) debug()<<"ST="<<i<<endmsg;
-      
+
       for (unsigned int j=0;j<npoints;j++){
         //int g_ind=i*npoints+j;
         int g_ind=(i-1)*npoints+j;
         m_vprobs[i].push_back(m_probs[g_ind]);
       }
-      
+
       //from vector build uniformer to interpolate between different moms.
       if (msgLevel(MSG::DEBUG) ) debug() << " m_vprobs "<< i << m_vprobs[i]<<endmsg;
       m_functprobs.push_back(Uniformer(m_moms,m_vprobs[i]));
-      
+
     }
   }
-  
+
   std::vector<std::vector<int> > types_st;
 
   types_st.push_back(boost::assign::list_of (1)(1)(1)(1));
@@ -149,34 +149,34 @@ StatusCode GetArrival::initialize() {
   types_st.push_back(boost::assign::list_of (0)(0)(0)(1));
   types_st.push_back(boost::assign::list_of (0)(0)(0)(0));
 
-  
+
   for (std::vector<std::vector<int> >::const_iterator it=types_st.begin();
-       it!=types_st.end();++it) {                        
-    std::vector<int> type_st=*it;         
-    if (countArray(type_st,4,1)>=m_minhits) m_types_st.push_back(type_st);  
+       it!=types_st.end();++it) {
+    std::vector<int> type_st=*it;
+    if (countArray(type_st,4,1)>=m_minhits) m_types_st.push_back(type_st);
   }
 
   if (msgLevel(MSG::DEBUG) ) debug()<<"m_types_st="<<m_types_st<<endmsg;
 
   m_init.ignore();
   return sc;
-  
+
 }
- 
+
 //find prob for one single station according to mom
-double GetArrival::findProbStation(const int st, const double mom) {       
+double GetArrival::findProbStation(const int st, const double mom) {
   double val,val1;
   val1=pow(m_alpha[st]*(mom-m_beta[st]), st);
   //calculate function value for station st
-  if (m_useFunct) 
-  { 
+  if (m_useFunct)
+  {
     if (mom>m_beta[st]) val=val1/(1+val1);
       else val=.01;
   }
-  
+
   //calculate value from histogram
   else val=m_functprobs[st].getYvalue(mom);
-  return 0.99*val; 
+  return 0.99*val;
   }
 
 
@@ -190,7 +190,7 @@ double GetArrival::findProbAllStations(std::vector<int> sts, const double mom)
   //find prob per each station
   for (int st=1;st<5;st++) {
     double prob_st=findProbStation(st,mom);
-    if (!(binary_search(sts.begin(),sts.end(),st))) prob_st=1-prob_st;    
+    if (!(binary_search(sts.begin(),sts.end(),st))) prob_st=1-prob_st;
 
     if (msgLevel(MSG::DEBUG) ) debug()<<"ST="<<st<<",prob="<<prob_st<<endmsg;
     all_probs.push_back(prob_st);
@@ -202,19 +202,19 @@ double GetArrival::findProbAllStations(std::vector<int> sts, const double mom)
 
   //if removeSmallest, remove smallest
   if (m_removeSmallest) all_probs.erase(all_probs.begin());
-  
+
   if (msgLevel(MSG::DEBUG) ) debug()<<"after removal (if removeSmallest)"<<all_probs<<endmsg;
 
   //calculate prod for all stored values
   for (std::vector<double>::const_iterator it=all_probs.begin();
       it!=all_probs.end();++it)
-      {                        
-         double p=*it;         
-         prob*=p; 
+      {
+         double p=*it;
+         prob*=p;
       }
-  
+
   if (msgLevel(MSG::DEBUG) ) debug()<<"all_prob="<<prob<<endmsg;
-  if (prob==0) return 1e-6; 
+  if (prob==0) return 1e-6;
 
   return prob;
 }
@@ -222,9 +222,9 @@ double GetArrival::findProbAllStations(std::vector<int> sts, const double mom)
 
 bool GetArrival::stInStations(const int myst,const std::vector<int>& stations)
 {
-  
+
   for (std::vector<int>::const_iterator it = stations.begin();
-         it != stations.end(); ++it) 
+         it != stations.end(); ++it)
     {
       int ist = *it;
       if (ist==myst) return true;
@@ -241,13 +241,13 @@ StatusCode GetArrival::getStationsFromTrack(const LHCb::Track& mutrack, std::vec
   std::vector< LHCb::LHCbID > lhcbids = mutrack.lhcbIDs();
   for (std::vector<LHCb::LHCbID>::const_iterator it=lhcbids.begin();
        it!=lhcbids.end();++it)
-  {                        
+  {
     if (!it->isMuon()) continue;
     int st=(*it).muonID().station();
     if (msgLevel(MSG::DEBUG) ) debug()<<"added station "<<st<<endmsg;
     if (!stInStations(st,sts_init)) sts_init.push_back(st);
   }
-  
+
   if (opt){
     for (int ist=1;ist<5;ist++){
       if (stInStations(ist,sts_init)) sts.push_back(1);
@@ -255,7 +255,7 @@ StatusCode GetArrival::getStationsFromTrack(const LHCb::Track& mutrack, std::vec
     }
   }
   else sts=sts_init;
-  
+
   if (sts.size()<1) sc = StatusCode::FAILURE;
   return sc;
 }
@@ -267,15 +267,15 @@ StatusCode GetArrival::getArrivalFromTrack(const LHCb::Track& mutrack,double& pa
   parr = 0.;
   StatusCode sc = StatusCode::SUCCESS;
   if (m_init.isFailure()){
-    return m_init;  
+    return m_init;
   }
 
-  if (mutrack.lhcbIDs().size()<1) 
+  if (mutrack.lhcbIDs().size()<1)
   {
     sc.setCode(410);
     return Error("NO LHCbIDs ON TRACK. IMPOSSIBLE TO CALCULATE QUALITY",sc);
   }
-  
+
   std::vector<int> type_st;
   sc = getStationsFromTrack(mutrack,type_st);
   if (sc.isFailure())
@@ -289,7 +289,7 @@ StatusCode GetArrival::getArrivalFromTrack(const LHCb::Track& mutrack,double& pa
     debug()<<"sts= "<<type_st<<endmsg;
     debug()<<"prob= "<<parr<<endmsg;
   }
-  
+
   return sc;
 }
 
@@ -297,7 +297,7 @@ StatusCode GetArrival::getArrivalFromTrack(const LHCb::Track& mutrack,double& pa
 
 
 double GetArrival::probTypeSt(const double p, const std::vector<int>& type_st) {
-  
+
   // returns the probability of getting a given type_st [1,1,1,1] (all stations for example)
 
   double p4 = probTypeStStation(p,type_st,4);
@@ -305,7 +305,7 @@ double GetArrival::probTypeSt(const double p, const std::vector<int>& type_st) {
   double p2 = 0.;
   double p1 = 0.;
   double p0 = 0.;
-  
+
   if (!type_st[3]){
     p3 = probTypeStStation(p,type_st,3);
     if (!type_st[2]){
@@ -314,11 +314,11 @@ double GetArrival::probTypeSt(const double p, const std::vector<int>& type_st) {
         p1 = probTypeStStation(p,type_st,1);
         if (!type_st[0]) p0 = probTypeStStation(p,type_st,0);
       }
-    }  
+    }
   }
-  
+
   double pp = p4 + p3 + p2 + p1 + p0;
-  
+
   if (msgLevel(MSG::DEBUG) ) debug()<< "@probTypeSt: "<<type_st<<","<<p4<<","<<p3<<","<<p2<<","<<p1<<","<<p0<<","<<pp<<endmsg;
   return pp;
 }
@@ -336,7 +336,7 @@ int GetArrival::countArray(const std::vector<int>& type_st, const int up_to, con
 
 
 double GetArrival::probTypeStStation(const double p, const std::vector<int>& type_st,const int station){
-      
+
   //returns the probability of a given type_st, assuming that a track reach that station (3 or 4)
   double P4 = findProbStation(4, p);
   double P3 = findProbStation(3, p);
@@ -354,7 +354,7 @@ double GetArrival::probTypeStStation(const double p, const std::vector<int>& typ
   else if (station == 3) m = 3;
   else if (station == 2) m = 2;
   else if (station == 1) m = 1;
-  
+
 
   int nholes = 0;
   if (station == 4) nholes = countArray(type_st,4,0);
@@ -363,34 +363,34 @@ double GetArrival::probTypeStStation(const double p, const std::vector<int>& typ
   else if (station == 1) nholes = countArray(type_st,1,0);
 
   double val = PP*pow(m_eff,m-nholes)*pow((1-m_eff),nholes);
-  
+
   if (msgLevel(MSG::DEBUG) ) debug()
     <<"@probTypeStStation: "<<p<<","<<type_st<<","<<station
     <<" \np4, p3, p2, p1, pp ="<<P4<<","<<P3<<","<<P2<<","<<P1<<","<<PP
     <<" \neff, (1-eff) "<<","<<pow(m_eff,m-nholes)<<","<<pow((1-m_eff),nholes)
     <<" \nval "<<val<<endmsg;
   return val;
-  
+
 }
 
 
 
 StatusCode GetArrival::clArrival(const LHCb::Track& muTrack, double& clarr){
   StatusCode sc = StatusCode::SUCCESS;
-  
-  if (m_init.isFailure()) 
+
+  if (m_init.isFailure())
   {
     clarr=0.;
     return m_init;
   }
 
-  if (muTrack.lhcbIDs().size()<1) 
+  if (muTrack.lhcbIDs().size()<1)
   {
     sc.setCode(410);
     return Error("NO LHCbIDs ON TRACK. IMPOSSIBLE TO CALCULATE CL",sc);
   }
-  
-  
+
+
   std::vector<int> type_st;
   sc = getStationsFromTrack(muTrack,type_st);
   if (sc.isFailure())
@@ -399,7 +399,7 @@ StatusCode GetArrival::clArrival(const LHCb::Track& muTrack, double& clarr){
     sc.setCode(411);
     return Error("COULD NOT RETRIEVE STS FROM LHCbIDs",sc);
   }
-  
+
   double p = muTrack.p();
   return clArrival(p, type_st, clarr);
 }
@@ -409,26 +409,26 @@ StatusCode GetArrival::clArrival(const LHCb::Track& muTrack, double& clarr){
 
 StatusCode GetArrival::clArrival(const double p,const std::vector<int>& type_st, double& clarr)
 {
-  
+
   StatusCode sc = StatusCode::SUCCESS;
-  
+
   if (countArray(type_st,4,1)<m_minhits) {
     sc.setCode(412);
     if (msgLevel(MSG::DEBUG) ) debug()<<"number of hits less than min"<<endmsg;
     return sc;
   }
-  
+
   //return CL of a muon having as this type_st or a worse type_st of this
   std::vector<double> vals;
   for (std::vector<std::vector<int> >::const_iterator it=m_types_st.begin();
        it!=m_types_st.end();++it){
     vals.push_back(probTypeSt(p,*it));
   }
-  
+
   double  tot= 0.;
   for (std::vector<double>::const_iterator it=vals.begin();
        it!=vals.end();++it) tot += *it;
-  
+
   double  sval = probTypeSt(p,type_st);
   double  stot = 0.;
   for (std::vector<double>::const_iterator it=vals.begin();
@@ -440,17 +440,16 @@ StatusCode GetArrival::clArrival(const double p,const std::vector<int>& type_st,
     if (msgLevel(MSG::DEBUG) ) debug()<<"tot=0, division by 0"<<endmsg;
     return sc;
   }
-  
+
   for (unsigned int i=0; i<m_types_st.size();i++){
     if (msgLevel(MSG::DEBUG) ) debug() << " probTypeSt " << m_types_st[i]<<","<<vals[i]<<endmsg;
   }
-  
+
   if (msgLevel(MSG::DEBUG) ) debug()
     << " currenttype_st "<<type_st<<","<<sval
     << " tot,stot,cls "<<tot<<","<<stot<<","<<clarr<<endmsg;
-  
+
   return sc;
 }
 
-GetArrival::~GetArrival() 
-{}
+GetArrival::~GetArrival() = default;

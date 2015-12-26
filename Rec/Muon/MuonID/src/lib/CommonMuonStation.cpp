@@ -71,14 +71,14 @@ void CommonMuonStation::setHits(CommonMuonHits&& hts) {
   auto id = std::begin(m_index);
   *id = std::begin(m_hits);
   // partition in x
-  for (auto x = std::begin(m_xboundaries) + 1; x != std::end(m_xboundaries);
+  for (auto x = std::next(std::begin(m_xboundaries)); x != std::end(m_xboundaries);
        ++x) {
     auto imax = std::partition(*id, std::end(m_hits), x_lt_(*x));
     // within each x partition, partition in y
     for (unsigned j = 0; j < nRegionsY; ++j) {
-      *(id + 1) = std::partition(*id, imax, y_lt_(ymin() + (j + 1) * dy()));
+      *std::next(id) = std::partition(*id, imax, y_lt_(ymin() + (j + 1) * dy()));
       // within each region, sort by x
-      std::sort(*id, *(id + 1), by_x);
+      std::sort(*id, *std::next(id), by_x);
       ++id;  // next region...
     }
     assert(*id == imax);  // no invalid hits in y...

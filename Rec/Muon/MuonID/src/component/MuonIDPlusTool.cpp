@@ -1,11 +1,11 @@
-#include <stdlib.h> 
+#include <stdlib.h>
 
 // local
 #include "MuonIDPlusTool.h"
 #include "MuonID/CommonMuonHit.h"
 #include "MuonID/IMuonMatchTool.h"
 
-#include "Event/ODIN.h" 
+#include "Event/ODIN.h"
 #include "Event/MuonPID.h"
 
 #include "MuonDet/DeMuonDetector.h"
@@ -47,7 +47,7 @@ MuonIDPlusTool::MuonIDPlusTool( const std::string& type,
                    "minimum momentum  for considered tracks");
 
   declareProperty("MaxCluSize", m_maxCluSize=8,
-                  "do not consider cluster above this size for track fitting (just attach after fit)");  
+                  "do not consider cluster above this size for track fitting (just attach after fit)");
 
   declareProperty("InputTracksLocation", m_BestTrackLocation =LHCb::TrackLocation::Default,
                   "address of best tracks container");
@@ -65,9 +65,9 @@ StatusCode MuonIDPlusTool::initialize() {
 
   m_mudet=getDet<DeMuonDetector>(DeMuonLocation::Default);
   nStations = m_mudet->stations();
-  nRegions = m_mudet->regions();  
+  nRegions = m_mudet->regions();
 
-  
+
   m_muhits.resize(nStations);
   for (std::vector<CommonMuonHits>::iterator is=m_muhits.begin(); is!=m_muhits.end(); is++)
     is->reserve(MAXHITS); // ensure that pointers to stored hits won't change
@@ -108,7 +108,7 @@ void MuonIDPlusTool::clearPIDs() {
 }
 
 StatusCode MuonIDPlusTool::eventInitialize()
-{ 
+{
   const LHCb::ODIN* odin = getIfExists<LHCb::ODIN>(evtSvc(),LHCb::ODINLocation::Default);
   if ( !odin ) { odin = getIfExists<LHCb::ODIN>(evtSvc(),LHCb::ODINLocation::Default,false); }
   if ( !odin )
@@ -116,7 +116,7 @@ StatusCode MuonIDPlusTool::eventInitialize()
     // should always be available ...
     return Error( "Cannot load the ODIN data object", StatusCode::SUCCESS );
   }
-  
+
   if (odin->runNumber()   != m_lastRun ||
       odin->eventNumber() != m_lastEvent) {
     // initialize the event doing preliminary matching between all tracks and all muon hits
@@ -149,26 +149,22 @@ void MuonIDPlusTool::initVariables() {
 void MuonIDPlusTool::checkMuIsolation(const LHCb::Track *pTrack, std::vector<CommonConstMuonHits>* mucoord) {
   std::map<const LHCb::Track*, int> nStcloseTr;
   std::map<const LHCb::Track*, bool> closeTr;
-  std::map<const LHCb::Track*, int>::iterator isct;
-  std::map<const LHCb::Track*, bool>::iterator ict;
   debug() << "--- starting mu isolation check---"<<endmsg;
-  CommonConstMuonHits::iterator hit;
-  std::vector< std::pair<const LHCb::Track*,float> >::iterator imatch;
 
   for (unsigned int s=0; s<nStations; s++) {
     closeTr.clear();
     m_isoM[s]=999.;
     CommonConstMuonHits* sthits = &((*mucoord)[s]);
     debug() << "size hits in M"<<s+1<<"  ="<<sthits->size()<<endmsg;
-    for (hit = sthits->begin(); hit != sthits->end(); hit++) {
-      const CommonMuonHit* link=*hit; 
+    for (auto hit = sthits->begin(); hit != sthits->end(); hit++) {
+      const CommonMuonHit* link=*hit;
       if(link->clusterSize() > m_maxCluSize) {
         m_isoM[s] = 0.; // large clusters are not isolated by definition
         continue;
       }
       debug() << "ckMuIso M"<<s+1<<" There are "<<m_mutrkmatchTable[link].size()<<" matches for this hit"<<endmsg;
       if(m_mutrkmatchTable[link].size() > 1) {
-        for (imatch=m_mutrkmatchTable[link].begin() ; imatch < m_mutrkmatchTable[link].end(); imatch++) {
+        for (auto imatch=m_mutrkmatchTable[link].begin() ; imatch < m_mutrkmatchTable[link].end(); imatch++) {
           if (imatch->first == pTrack) continue;
           // require that competing track has enough momentum for this station
           debug() << "concurrent track with momentum "<<imatch->first->p()/Gaudi::Units::GeV<<" GeV"<<endmsg;
@@ -179,14 +175,14 @@ void MuonIDPlusTool::checkMuIsolation(const LHCb::Track *pTrack, std::vector<Com
         }
       }
     }
-    for (ict=closeTr.begin() ; ict != closeTr.end(); ict++) {
+    for (auto ict=closeTr.begin() ; ict != closeTr.end(); ict++) {
       nStcloseTr[ict->first]++;
     }
     debug() << "isoM station "<<s+1<<" = "<<m_isoM[s]<<endmsg;
   }
   int maxctr=-1;
-  const LHCb::Track* tfriend=0;
-  for (isct=nStcloseTr.begin() ; isct != nStcloseTr.end(); isct++) {
+  const LHCb::Track* tfriend=nullptr;
+  for (auto isct=nStcloseTr.begin() ; isct != nStcloseTr.end(); isct++) {
     if (isct->second > maxctr) {
       maxctr=isct->second;
       tfriend=isct->first;
@@ -211,8 +207,8 @@ void MuonIDPlusTool::checkMuIsolation(const LHCb::Track *pTrack, std::vector<Com
 double MuonIDPlusTool::medianClusize() {
   double mcl=0.;
   std::vector<double> thiscls;
-  for (unsigned int s=0; s<nStations ; s++) 
-    if(m_matchM[s] == 2) thiscls.push_back((double) m_clusize[s]);  
+  for (unsigned int s=0; s<nStations ; s++)
+    if(m_matchM[s] == 2) thiscls.push_back(m_clusize[s]);
   if(thiscls.size()>1) {
     std::sort (thiscls.begin(), thiscls.end());
     if (thiscls.size()%2 == 1)
@@ -228,48 +224,47 @@ double MuonIDPlusTool::medianClusize() {
 
 
 LHCb::MuonPID* MuonIDPlusTool::getMuonID(const LHCb::Track* track) {
-  MuonPID* muPid=NULL;
+  std::unique_ptr<MuonPID> muPid;
   initVariables();
-  if (!track) return muPid;
+  if (!track) return muPid.release();
 
 
-  // check that the current event has been intialized 
+  // check that the current event has been intialized
   eventInitialize();
 
-  muPid=new MuonPID();
-  
-  m_muonPIDs.push_back(muPid);
+  muPid.reset(new MuonPID());
+
+  m_muonPIDs.push_back(muPid.get());
   muPid->setIDTrack(track);
   muPid->setPreSelMomentum(track->p() > m_minTrackMomentum);
   bool inAcc = m_trkInAcceptance.count(track) ? (m_trkInAcceptance[track])[nStations] : false;
   muPid->setInAcceptance(inAcc);
-  m_lasttrack = track; m_lastPID = muPid;
+  m_lasttrack = track; m_lastPID = muPid.get();
 
   // run the matching tool for this track
   StatusCode matchStatus = m_matchTool->run(track, &(m_trkmumatchTable[track]), &(m_trkmumatchTableSpares[track]));
   if(matchStatus.isFailure()) {
-    warning() << " Failed to match track to Muon Detector! " << endreq; 
-    return muPid;
+    warning() << " Failed to match track to Muon Detector! " << endreq;
+    return muPid.release();
   }
 
-  // now make the muonTrack  
-  LHCb::Track* mtrack = new LHCb::Track(muPid->key());
+  // now make the muonTrack
+  std::unique_ptr<LHCb::Track> mtrack{ new LHCb::Track(muPid->key()) };
   mtrack->addToAncestors(*track);
   mtrack->addToStates(track->closestState(m_mudet->getStationZ(0)));
 
 
   // get informations from the best matched hit in each station
   CommonConstMuonHits matchedMuonHits;
-  m_matchTool->getListofCommonMuonHits(matchedMuonHits, -1, true); 
+  m_matchTool->getListofCommonMuonHits(matchedMuonHits, -1, true);
   m_nSmatched =0;
   m_nVmatched =0;
 
 
-  for (CommonConstMuonHits::iterator ich=matchedMuonHits.begin(); ich!=matchedMuonHits.end(); ich++) {
-    m_nSmatched ++;
-    const CommonMuonHit* hit=*ich;
+  for (const auto& hit : matchedMuonHits ) {
+    ++m_nSmatched;
     mtrack->addToLhcbIDs(hit->tile());
-    
+
     int station = hit->station();
     m_matchM[station] = hit->uncrossed() ? 1 : 2;
     m_nVmatched += m_matchM[station];
@@ -278,11 +273,11 @@ LHCb::MuonPID* MuonIDPlusTool::getMuonID(const LHCb::Track* track) {
     m_matchT[station] = hit->time();
     m_matchdT[station] = hit->deltaTime();
     m_clusize[station] = hit->clusterSize();
-    m_matchSigma[station] = m_matchTool->getMatchSigma(station);    
+    m_matchSigma[station] = m_matchTool->getMatchSigma(station);
     debug()<<"station M"<<station+1<<" matched with type "<<m_matchM[station]<<" sigma="<<m_matchSigma[station]<<endmsg;
   }
 
-  debug() <<"There are "<<m_nSmatched<<" matched stations for this track" << endmsg; 
+  debug() <<"There are "<<m_nSmatched<<" matched stations for this track" << endmsg;
 
 
   if(m_nSmatched>0) {
@@ -292,12 +287,12 @@ LHCb::MuonPID* MuonIDPlusTool::getMuonID(const LHCb::Track* track) {
     mtrack->setType(LHCb::Track::Muon);
     mtrack->setHistory(LHCb::Track::MuonID);
     mtrack->addInfo(LHCb::Track::MuonMomentumPreSel, m_minTrackMomentum);
-    mtrack->addInfo(LHCb::Track::MuonInAcceptance, muPid->InAcceptance()); 
+    mtrack->addInfo(LHCb::Track::MuonInAcceptance, muPid->InAcceptance());
     mtrack->addInfo(LHCb::Track::IsMuonLoose, muPid->IsMuonLoose());
     mtrack->addInfo(LHCb::Track::IsMuon, muPid->IsMuon());
-    mtrack->addInfo(LHCb::Track::IsMuonTight, muPid->IsMuonTight()); 
+    mtrack->addInfo(LHCb::Track::IsMuonTight, muPid->IsMuonTight());
     mtrack->addInfo(LHCb::Track::MuonChi2perDoF, mtrack->chi2PerDoF());
-    muPid->setMuonTrack(mtrack);
+    muPid->setMuonTrack(mtrack.release());
 
     m_medianClusize = medianClusize();
 
@@ -305,16 +300,13 @@ LHCb::MuonPID* MuonIDPlusTool::getMuonID(const LHCb::Track* track) {
     std::vector<CommonConstMuonHits> matchedHitsByStation;
     for (unsigned int s=0; s<nStations; s++) {
       CommonConstMuonHits matchInstation;
-      m_matchTool->getListofCommonMuonHits(matchInstation, s, true); 
+      m_matchTool->getListofCommonMuonHits(matchInstation, s, true);
       matchedHitsByStation.push_back(matchInstation);
     }
-    checkMuIsolation(track, &matchedHitsByStation);   
+    checkMuIsolation(track, &matchedHitsByStation);
 
     // set binary flags
-    setIsMuon(track->p(), mtrack->chi2PerDoF());
-  }
-  else {
-    delete mtrack;
+    setIsMuon(track->p(), muPid->muonTrack()->chi2PerDoF());
   }
 
   muPid->setIsMuon(m_isMuon);
@@ -326,14 +318,13 @@ LHCb::MuonPID* MuonIDPlusTool::getMuonID(const LHCb::Track* track) {
   // note that LLmuon, LLbg and Nshared are not (yet) defined by this tool
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-
-  return muPid;
+  return muPid.release();
 }
-  
+
 
 void MuonIDPlusTool::setIsMuon(double momentum, double chi2perdof ) {
 
-  // this is very preliminary and untuned and not (yet) really used 
+  // this is very preliminary and untuned and not (yet) really used
 
   int requiredViews =  std::min( 7,  std::max ( 3, (int) (3 + 4*( momentum - 3*Gaudi::Units::GeV )/6*Gaudi::Units::GeV  )) );
 
@@ -345,13 +336,12 @@ void MuonIDPlusTool::setIsMuon(double momentum, double chi2perdof ) {
 
 }
 
-  
+
 StatusCode MuonIDPlusTool::getMuonHits(){
 //==========================================================================
-  // get the Muon hits, compute the spatial coordinates and store them by station 
-  
-  for (std::vector<CommonMuonHits>::iterator is=m_muhits.begin(); is!=m_muhits.end(); is++)
-    is->clear();
+  // get the Muon hits, compute the spatial coordinates and store them by station
+
+  for (auto& i : m_muhits) i.clear();
 
   m_largeClusters=false;
   for(unsigned int s = 0; s<nStations ; s++) {
@@ -359,72 +349,63 @@ StatusCode MuonIDPlusTool::getMuonHits(){
       m_hitCounter[s]=0;
   }
 
-  double x,dx,y,dy,z,dz,t=0,deltat=0;
-  StatusCode sc;
+  double x,dx,y,dy,z,dz;
 
   const std::vector<MuonLogPad*> *muRawHits=m_padrectool->pads();
   // clusterize muon signals to assign cluster size to each hit
-  const std::vector<MuonHit*> *muclu = m_clustertool->clusters(muRawHits);
   // loop over the clusters and store hits by station
-  std::vector<MuonHit*>::const_iterator iclu;
-  for (iclu= muclu->begin(); iclu != muclu->end(); iclu++) {    
-    int cls=  (*iclu)->npads();
-    int st= (*iclu)->station();
+  for (const auto& clu : *m_clustertool->clusters(muRawHits)) {
+    int cls=  clu->npads();
+    int st= clu->station();
     if (st == 0 &&  nStations == 5 && m_useM1 == false) continue;
     if (cls>m_maxCluSize) {
       m_largeClusters=true; // remember that this event have hits that won't be used for track fitting but could be attached to tracks
       m_stationHasLargeCluster[st]=true;
     }
-    const std::vector< MuonLogPad * >* thepads =  (*iclu)->logPads();
-    std::vector< MuonLogPad * >::const_iterator itp;
-    for(itp=thepads->begin(); itp != thepads->end(); itp++) {
-      LHCb::MuonTileID tile= *((*itp)->tile());      
-      sc = m_posTool->calcTilePos(tile,x,dx,y,dy,z,dz);
+    for(const auto& pad : *clu->logPads() ) {
+      LHCb::MuonTileID tile= *(pad->tile());
+      auto sc = m_posTool->calcTilePos(tile,x,dx,y,dy,z,dz);
       if (sc.isFailure()){
-        warning() << " Failed to get x,y,z of tile " << tile << endreq; 
-        continue; 
+        warning() << " Failed to get x,y,z of tile " << tile << endreq;
+        continue;
       }
-      t=(*itp)->time();
-      deltat=(*itp)->dtime();
-      if(++(m_hitCounter[st]) < MAXHITS)
-        m_muhits[st].push_back(CommonMuonHit(tile,x,dx,y,dy,z,dz,false,t,deltat,cls));
-      else 
+      if(++m_hitCounter[st] < MAXHITS) {
+        m_muhits[st].emplace_back(tile,x,dx,y,dy,z,dz,false,pad->time(),pad->dtime(),cls);
+      } else
         warning() << "maximum number of stored hits reached for station M"<<st+1<<endmsg;
     }
   }
-  
+
   // also store uncrossed log. hits
-  std::vector<MuonLogPad*>::const_iterator iOnev;
   int cl1v=1;
-  for (iOnev=muRawHits->begin(); iOnev != muRawHits->end() ; iOnev++) {
-    MuonLogPad* pad = const_cast<MuonLogPad*>(*iOnev);
-    if (false == pad->truepad()) {
-      LHCb::MuonTileID tile= *(pad->tile());
+  for (const auto& onev : *muRawHits ) {
+    MuonLogPad* pad = const_cast<MuonLogPad*>(onev);
+    if (pad->truepad()) continue;
+    LHCb::MuonTileID tile= *(pad->tile());
+    if(++(m_hitCounter[tile.station()]) < MAXHITS) {
       m_mudet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
-      t=pad->time();
-      deltat=pad->dtime();
-      if(++(m_hitCounter[tile.station()]) < MAXHITS)
-        m_muhits[tile.station()].push_back(CommonMuonHit(tile,x,dx,y,dy,z,dz,true,t,deltat,cl1v));
-      else 
-        warning() << "maximum number of stored hits reached for station M"<<tile.station()+1<<endmsg;
-    }
+      m_muhits[tile.station()].emplace_back(tile,x,dx,y,dy,z,dz,true,pad->time(),pad->dtime(),cl1v);
+    } else
+      warning() << "maximum number of stored hits reached for station M"<<tile.station()+1<<endmsg;
   }
   debug() <<"Muon hits per station:";
-  for(unsigned int s = 0; s<nStations ; s++) 
+  for(unsigned int s = 0; s<nStations ; s++)
     debug() <<" M"<<s+1<<" "<<m_hitCounter[s];
   debug() <<endmsg;
 
-  return StatusCode::SUCCESS; 
+  return StatusCode::SUCCESS;
 }
 
 
-bool MuonIDPlusTool::isTrackInsideStation(LHCb::State& state, unsigned int& istation) {
-  const bool xcond=((fabs(state.x())+sqrt(state.errX2()) > m_mudet->getInnerX(istation)) && (fabs(state.x())-sqrt(state.errX2())<m_mudet->getOuterX(istation)));
-  const bool ycond=((fabs(state.y())+sqrt(state.errY2()) > m_mudet->getInnerY(istation)) && (fabs(state.y())-sqrt(state.errY2())<m_mudet->getOuterY(istation)));
+bool MuonIDPlusTool::isTrackInsideStation(const LHCb::State& state, unsigned int istation) const {
+  auto xcond=((fabs(state.x())+sqrt(state.errX2()) > m_mudet->getInnerX(istation))
+           && (fabs(state.x())-sqrt(state.errX2()) < m_mudet->getOuterX(istation)));
+  auto ycond=((fabs(state.y())+sqrt(state.errY2()) > m_mudet->getInnerY(istation))
+           && (fabs(state.y())-sqrt(state.errY2()) < m_mudet->getOuterY(istation)));
   return (xcond && ycond);
 }
 
-StatusCode MuonIDPlusTool::matchHitsToTracks() 
+StatusCode MuonIDPlusTool::matchHitsToTracks()
 // check compatibility of each muon hit with all good long tracks
 {
   m_mutrkmatchTable.clear();
@@ -433,7 +414,7 @@ StatusCode MuonIDPlusTool::matchHitsToTracks()
   m_nStationsWithMatch=0;
 
   std::vector<bool> matchInStation(nStations);
-  for(unsigned int s = 0; s<nStations ; s++) 
+  for(unsigned int s = 0; s<nStations ; s++)
     matchInStation[s]=false;
 
   const LHCb::Tracks* bestTracks = get<LHCb::Tracks>( m_BestTrackLocation );
@@ -441,28 +422,25 @@ StatusCode MuonIDPlusTool::matchHitsToTracks()
   std::pair<const LHCb::Track*, float> trackMatch;
   TrackMuMatch muhitMatch;
   double xdist,ydist,Err2x,Err2y,mtcSigmax,mtcSigmay;
-  CommonMuonHits::iterator ihit;
   int nm=0;
   debug() << "Start matching tracks with muon hits"<<endmsg;
-  for (t = bestTracks->begin() ; t != bestTracks->end(); ++t ) {    
-    const LHCb::Track * trk = *t;
+  for (const auto& trk : *bestTracks) {
     if( trk->type() != LHCb::Track::Long &&  trk->type() != LHCb::Track::Downstream)  continue;
     if( trk->chi2PerDoF() > m_maxTrackChi2)  continue;
     if( trk->ghostProbability() > m_maxGhostProb)  continue;
     if( trk->p() < m_minTrackMomentum)  continue;
     LHCb::State ExtraState = trk->closestState(m_mudet->getStationZ(0));
-    std::vector<bool> inAcc(nStations+1); // inacceptance bit for each station + global
-    for (unsigned int i=0;i<nStations+1;i++) inAcc[nStations] = true;
+    std::vector<bool> inAcc(nStations+1,true); // inacceptance bit for each station + global
 
-    for(unsigned int station = (m_useM1 ? 0 : 1); station<nStations ; station++) {      
+    for(unsigned int station = (m_useM1 ? 0 : 1); station<nStations ; station++) {
       if (fabs(m_mudet->getStationZ(station)-ExtraState.z())>1*Gaudi::Units::cm) {
-        m_extrapolator->propagate(ExtraState, m_mudet->getStationZ(station), theMuon);      
+        m_extrapolator->propagate(ExtraState, m_mudet->getStationZ(station), theMuon);
         verbose()<< "Track extrapolation to station M"<<station+1<<" has errors (in cm) "<<sqrt(ExtraState.errX2())/Gaudi::Units::cm<<"/"<<sqrt(ExtraState.errY2())/Gaudi::Units::cm<<endmsg;
       }
       inAcc[station]=isTrackInsideStation(ExtraState, station);  // is in acceptance of this station
       inAcc[nStations+1] = (inAcc[station] && inAcc[nStations+1]); // is in acceptance of all stations
 
-      for ( ihit=m_muhits[station].begin(); ihit<m_muhits[station].end(); ihit++) {
+      for ( auto ihit=m_muhits[station].begin(); ihit<m_muhits[station].end(); ihit++) {
         CommonMuonHit* hit= &(*ihit);
         bool spare =  (hit->uncrossed()) ||  // hit in single view, treat as spare
           (hit->clusterSize() > m_maxCluSize);     // treat also large clusters as spare hits
@@ -475,9 +453,9 @@ StatusCode MuonIDPlusTool::matchHitsToTracks()
         if (mtcSigmax < m_searchSigmaCut &&
             mtcSigmay < m_searchSigmaCut) { // found compatible muon hit with this track
           verbose() << "    found match in station "<<station+1 <<" sigma= "<<sqrt(mtcSigmax*mtcSigmax + mtcSigmay*mtcSigmay)<<" clusize="<<hit->clusterSize()<<endmsg;
-          trackMatch.first = trk; 
+          trackMatch.first = trk;
           std::get<0>(muhitMatch) =hit;
-          std::get<1>(muhitMatch)= trackMatch.second= (float) sqrt(mtcSigmax*mtcSigmax + mtcSigmay*mtcSigmay);
+          std::get<1>(muhitMatch)= trackMatch.second= sqrt(mtcSigmax*mtcSigmax + mtcSigmay*mtcSigmay);
           std::get<2>(muhitMatch)= ExtraState.x() + ExtraState.tx()*(hit->z()-ExtraState.z());
           std::get<3>(muhitMatch)= ExtraState.y() + ExtraState.ty()*(hit->z()-ExtraState.z());
           m_mutrkmatchTable[hit].push_back(trackMatch);
@@ -496,7 +474,7 @@ StatusCode MuonIDPlusTool::matchHitsToTracks()
     }
   }
   debug() << "end of matchHitsToTracks found nmatch="<<nm<<endmsg;
-  return StatusCode::SUCCESS; 
+  return StatusCode::SUCCESS;
 }
 
 
@@ -523,7 +501,6 @@ double MuonIDPlusTool::muonIDPropertyD(const LHCb::Track* track, const char* pro
   else if(prop == "dtime") {
     if(reqStation) out=m_matchdT[station];
   }
-
   return out;
 }
 

@@ -1,4 +1,4 @@
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
 #include "MuonIDPlusAlg.h"
 #include "MuonID/IMuonIDTool.h"
@@ -37,11 +37,6 @@ MuonIDPlusAlg::MuonIDPlusAlg( const std::string& name,
 
 }
 //=============================================================================
-// Destructor
-//=============================================================================
-MuonIDPlusAlg::~MuonIDPlusAlg() {} 
-
-//=============================================================================
 // Initialization
 //=============================================================================
 StatusCode MuonIDPlusAlg::initialize() {
@@ -63,7 +58,7 @@ StatusCode MuonIDPlusAlg::execute() {
   debug() << "==> Execute" << endmsg;
 
   // initialize MuonPID container
-  LHCb::MuonPIDs * muPids = getOrCreate<LHCb::MuonPIDs,LHCb::MuonPIDs>(m_MuonPIDsPath);
+  auto muPids = getOrCreate<LHCb::MuonPIDs,LHCb::MuonPIDs>(m_MuonPIDsPath);
   if ( !muPids->empty() )
   {
     muPids->clear();
@@ -71,7 +66,7 @@ StatusCode MuonIDPlusAlg::execute() {
              StatusCode::SUCCESS,1 ).ignore();
   }
   // initialize muon tracks container
-  LHCb::Tracks * muTracks = getOrCreate<LHCb::Tracks,LHCb::Tracks>(m_MuonTracksPath);
+  auto muTracks = getOrCreate<LHCb::Tracks,LHCb::Tracks>(m_MuonTracksPath);
   if ( !muTracks->empty() )
   {
     muTracks->clear();
@@ -79,35 +74,20 @@ StatusCode MuonIDPlusAlg::execute() {
              StatusCode::SUCCESS,1 ).ignore();
   }
 
-
   const LHCb::Tracks* bestTracks = get<LHCb::Tracks>( m_BestTrackLocation );
-  LHCb::Tracks::const_iterator t;
-  for (t = bestTracks->begin() ; t != bestTracks->end(); ++t ) { 
-    LHCb::MuonPID* pid=m_muonIDtool->getMuonID(*t);
-    if(pid) {
-      if(pid->InAcceptance()) { // store it 
-         muPids->insert(pid);
-         if(pid->muonTrack()) 
-           muTracks->insert( const_cast<LHCb::Track*> (pid->muonTrack()));
-      }
-      else { // remove objects
-        if(pid->muonTrack()) delete pid->muonTrack();
-        delete pid;
-      }
+  for (const auto& t : *bestTracks) {
+    // IMuonIDTool interface is not very informative about ownership...
+    // (esp. about the muTrack below!)
+    std::unique_ptr<LHCb::MuonPID> pid{ m_muonIDtool->getMuonID(t) };
+    if(!pid) continue;
+    std::unique_ptr<LHCb::Track> muTrack{const_cast<LHCb::Track*>(pid->muonTrack()) };
+
+    if(pid->InAcceptance()) { // store it
+       muPids->insert(pid.release());
+       if(muTrack) muTracks->insert( muTrack.release() );
     }
   }
-
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode MuonIDPlusAlg::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

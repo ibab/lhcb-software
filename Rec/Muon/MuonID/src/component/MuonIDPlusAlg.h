@@ -17,15 +17,13 @@ public:
   /// Standard constructor
   MuonIDPlusAlg( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~MuonIDPlusAlg( ); ///< Destructor
+  ~MuonIDPlusAlg( ) override = default; ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
+  StatusCode initialize() override;    ///< Algorithm initialization
+  StatusCode execute   () override;    ///< Algorithm execution
 
 private:
-  IMuonIDTool* m_muonIDtool;
+  IMuonIDTool* m_muonIDtool = nullptr;
   std::string m_BestTrackLocation;
   std::string m_MuonPIDsPath;
   std::string m_MuonTracksPath;

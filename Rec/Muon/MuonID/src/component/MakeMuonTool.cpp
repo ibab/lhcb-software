@@ -37,7 +37,7 @@ StatusCode MakeMuonTool::initialize() {
   m_extrapolator =
     tool<ITrackExtrapolator>("TrackLinearExtrapolator", "extrapol", this);
     //      tool<ITrackExtrapolator>("TrackMasterExtrapolator", "extrapol", this);
-    
+
   m_measProvider = tool<IMeasurementProvider>("MuonMeasurementProvider", this);
   m_mySeedState = 0;
 
@@ -66,7 +66,7 @@ StatusCode MakeMuonTool::muonCandidate(
     debug() << "ids_init.size()=" << ids_init.size() << endmsg;
 
   // get closest hit to the seed extrapolation
-  StatusCode sc2 = makeStates(seed); 
+  StatusCode sc2 = makeStates(seed);
   if (sc2.isFailure()) {
     sc.setCode(202);
     return Error("search: make states", sc);
@@ -82,14 +82,14 @@ StatusCode MakeMuonTool::muonCandidate(
             << ", z=" << lstate.z() << endmsg;
   // TODO: the following does also the chi2 now.
   // it could be divided, but at present is faster like this.
-  addLHCbIDsToMuTrack(muTrack, ids_init, extrapolation); 
-  
+  addLHCbIDsToMuTrack(muTrack, ids_init, extrapolation);
+
   // Check that the size of the muTrack lhcbID is at least 2.
   if (muTrack.lhcbIDs().size() < 2){
     sc.setCode(204);
     return sc;
   }
-  
+
   // check to how many different stations the hits belong
   const std::vector<LHCb::LHCbID>& idsFromTrack=muTrack.lhcbIDs();
   std::vector<LHCb::LHCbID>::const_iterator id;
@@ -110,9 +110,9 @@ StatusCode MakeMuonTool::muonCandidate(
     sc.setCode(203);
     return sc;
   }
- 
+
   // add seed track to muon track ancestors
-  muTrack.addToAncestors(seed); 
+  muTrack.addToAncestors(seed);
 
   if (msgLevel(MSG::DEBUG)) debug() << "muTrack with seeds on it" << endmsg;
   if (sc.isFailure()) {
@@ -143,7 +143,7 @@ StatusCode MakeMuonTool::muonTrackFit(LHCb::Track& muTrack) {
 
   if (msgLevel(MSG::DEBUG))
     debug() << "This is the track before the fit =" << muTrack << endmsg;
-  
+
   StatusCode sc2 = m_fitter->fit(muTrack);
 
   if (sc2.isFailure()) {
@@ -180,7 +180,7 @@ StatusCode MakeMuonTool::makeStates(const LHCb::Track& seed) {
     debug() << "x=" << muState->x() << ",y=" << muState->y()
             << ",z=" << muState->z() << endmsg;
   }
-  
+
   // to be refined: even if the pointer is the same, it may happen that is is
   // pointing really to different states (from the previous event),
   // so the extrapolation would not be the correct. To avoid that, extrapolate
@@ -238,7 +238,7 @@ StatusCode MakeMuonTool::makeStates(const LHCb::Track& seed) {
 // find closest hit to the seed and add them to track
 void MakeMuonTool::addLHCbIDsToMuTrack(LHCb::Track& muTrack, const std::vector<LHCb::LHCbID>& ids_init,
                                        const ICommonMuonTool::MuonTrackExtrapolation& extrapolation) {
-  
+
   double minDist[5] = {1e10, 1e10, 1e10, 1e10, 1e10};
   double distSeedHit[5] = {1e6, 1e6, 1e6, 1e6, 1e6};
   double chi2_contrib[5] = {0};
@@ -255,23 +255,23 @@ void MakeMuonTool::addLHCbIDsToMuTrack(LHCb::Track& muTrack, const std::vector<L
     distSeedHit[s] = pow((xmeas->measure() - extrapolation[s].first), 2) +
       pow((ymeas->measure() - extrapolation[s].second), 2);
     if(distSeedHit[s] < minDist[s]) {
-      minDist[s] = distSeedHit[s]; 
+      minDist[s] = distSeedHit[s];
       idToAdd[s] = id;
       chi2_contrib[s] = pow( (xmeas->measure() - extrapolation[s].first) / xmeas->errMeasure() , 2) +
-        pow( (ymeas->measure() - extrapolation[s].second ) / ymeas->errMeasure() , 2); 
+        pow( (ymeas->measure() - extrapolation[s].second ) / ymeas->errMeasure() , 2);
     }
-  }); 
+  });
 
   unsigned idCounter = 0;
   for(unsigned i = 0; i != 5; ++i){
     if(idToAdd[i].isMuon()!=0){
       muTrack.addToLhcbIDs(idToAdd[i]);
-      // Calculate chi2 assuming the error on the extrapolation is negligible 
+      // Calculate chi2 assuming the error on the extrapolation is negligible
       chi2 += chi2_contrib[i];
       idCounter+=1;
     }
-  } 
-  // TODO: this is a barbatrick to pass the chi2 value to the other track, it should be moved 
+  }
+  // TODO: this is a barbatrick to pass the chi2 value to the other track, it should be moved
   muTrack.setChi2AndDoF(chi2,1);
 
   if (msgLevel(MSG::DEBUG))
@@ -316,19 +316,19 @@ LHCb::Track* MakeMuonTool::makeLegacyMuonTrack(
   if (msgLevel(MSG::DEBUG)) debug() << "ids ready to get chi2" << endmsg;
 
   if (m_FindQuality) {
-    //TODO: why we do not calculate the chi2 of the whole muon track 
-    // instead of only of the closest hits? 
+    //TODO: why we do not calculate the chi2 of the whole muon track
+    // instead of only of the closest hits?
 
     // get chi2 value
     LHCb::Track mtrack_partial;
     if (!ids_init.empty()) {
-      // add only the closest hit from ids_init 
+      // add only the closest hit from ids_init
       // to mtrack_partial
       StatusCode sc =
         muonCandidate(*mother, mtrack_partial, extrapolation, ids_init);
       if (!sc.isFailure()) {
         if (msgLevel(MSG::DEBUG)) {
-          for_each(std::begin(mtrack_partial.lhcbIDs()), 
+          for_each(std::begin(mtrack_partial.lhcbIDs()),
                 std::end(mtrack_partial.lhcbIDs()), [&](const LHCb::LHCbID id){
             debug() << "id is muon? " << id.isMuon() << endmsg;
             if (id.isMuon()) {
@@ -348,7 +348,7 @@ LHCb::Track* MakeMuonTool::makeLegacyMuonTrack(
   }
 
   return mtrack;
-} 
+}
 
 
 
@@ -364,7 +364,7 @@ LHCb::Track* MakeMuonTool::makeMuonTrackWithProperChi2(LHCb::MuonPID* mupid,
   mtrack->addToStates(mother->closestState(m_mudet->getStationZ(0)));
 
   CommonConstMuonHits::iterator ih;
-  for (ih= hits.begin(); ih != hits.end(); ih++) 
+  for (ih= hits.begin(); ih != hits.end(); ih++)
     mtrack->addToLhcbIDs((*ih)->tile());
 
   if(hits.size()>0) {
@@ -378,7 +378,7 @@ LHCb::Track* MakeMuonTool::makeMuonTrackWithProperChi2(LHCb::MuonPID* mupid,
     // run Cagliari algorithm
     StatusCode matchStatus = matchTool->run(mother, &matches);
     if(matchStatus.isFailure()) {
-      warning() << " Failed to run the matchTool for proper chi2 computation! " << endreq; 
+      warning() << " Failed to run the matchTool for proper chi2 computation! " << endreq;
     }
     else {
       int ndof;

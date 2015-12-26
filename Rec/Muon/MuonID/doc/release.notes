@@ -2,6 +2,25 @@
 ! Package     : MuonID
 ! Responsible : Marianna Fontana, Matteo Palutan, Ricardo Vazquez Gomez
 !-----------------------------------------------------------------------------
+! 2015-12-26 - Gerhard Raven
+ - replace trivial constructors/destructor implementations with = default
+ - prefer std::unique_ptr over explicit pointer + delete (fixing a memory leak)
+ - prefer .empty() over .size()==0
+ - prefer STL algorithms over raw loops
+ - prefer range-based loops
+ - prefer emplace_back over push_back with an temporary
+ - improve const-correctnes
+ - prefer inheritance from extends (fixes the omission of 'virtual')
+ - qualify implementation of virtual functions with 'override'
+ - avoid protected member data when possible
+ - replace boost::assign::list_of with (implicit) use of std::initializer_list
+ - properly nest momentum ranges in IsMuon, IsMuonLoose
+ - prefer pass-by-value over pass-by-const-reference for doubles
+ - prefer direct member initialization
+ - use auto where appropriate
+ - prefer switch/case over if-then-else-if cascade
+ - prefer std::array over std::vector if size is a compile-time constant
+ - prefer std::array over C-style array
 
 !========================= MuonID v9r19 2015-12-05 ===========================
 

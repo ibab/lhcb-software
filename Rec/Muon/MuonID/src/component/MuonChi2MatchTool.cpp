@@ -5,11 +5,11 @@
 
 #include "GaudiKernel/SystemOfUnits.h"
 #include <TMatrixF.h>
-#include <vector>   
-#include <algorithm>  
+#include <vector>
+#include <algorithm>
 
 /** @class MuonChi2MatchTool MuonChi2MatchTool.h component/MuonChi2MatchTool.h
- *  
+ *
  *
  *  @author Violetta Cogoni, Marianna Fontana, Rolf Oldeman, ported here by Giacomo Graziani
  *  @date   2015-11-11
@@ -18,7 +18,7 @@
 // convention for station counters to avoid confusions:
 //   S from  0 to nStations (real station number obtained from condDB)
 //   s from  0 to nSt       (hardcoded to 4) for vectors defined for M2-M5
-//   iO from 0 to m_ord     (number of matched stations on which the algorithm is run) 
+//   iO from 0 to m_ord     (number of matched stations on which the algorithm is run)
 
 
 MuonChi2MatchTool::MuonChi2MatchTool( const std::string& type,
@@ -38,11 +38,11 @@ MuonChi2MatchTool::MuonChi2MatchTool( const std::string& type,
 StatusCode MuonChi2MatchTool::initialize() {
   const StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
-  
+
   // initialize geometry
   m_mudet=getDet<DeMuonDetector>(DeMuonLocation::Default);
   nStations = m_mudet->stations();
-  nRegions = m_mudet->regions();  
+  nRegions = m_mudet->regions();
 
   m_myFirstStation = (nStations == 5) ? 1 : 0;  // upgrade-wise
 
@@ -50,7 +50,7 @@ StatusCode MuonChi2MatchTool::initialize() {
   for (unsigned int s=0; s<nSt; s++) {
     m_zm[s] =  m_mudet->getStationZ( s+m_myFirstStation ); // upgrade-wise
   }
-  
+
 
   m_xpadsize.resize(nStations);
   m_ypadsize.resize(nStations);
@@ -62,19 +62,19 @@ StatusCode MuonChi2MatchTool::initialize() {
        m_ypadsize[S][R] = m_mudet->getPadSizeY(S,R);
      }
   }
-  
+
   // Define radiation lenghts z/X0 wrt z position
-  // TODO: remove hardcoding of these numbers 
+  // TODO: remove hardcoding of these numbers
   //                           z pos   z/X0
   m_mcs.push_back(std::make_pair(12800.*Gaudi::Units::mm,28.));  // ECAL + SPD + PS
   m_mcs.push_back(std::make_pair(14300.*Gaudi::Units::mm,53.));  // HCAL
   m_mcs.push_back(std::make_pair(15800.*Gaudi::Units::mm,47.5)); // M23 filter
   m_mcs.push_back(std::make_pair(17100.*Gaudi::Units::mm,47.5)); // M34 filter
   m_mcs.push_back(std::make_pair(18300.*Gaudi::Units::mm,47.5)); // M45 filter
-  
 
-  // vectors used for the algorithm 
-  m_maxcomb =pow(m_maxnhitinFOI, nSt); 
+
+  // vectors used for the algorithm
+  m_maxcomb =pow(m_maxnhitinFOI, nSt);
   m_nhit.resize(nSt);
   m_trkExtrap.resize(nSt);
 
@@ -94,9 +94,9 @@ void  MuonChi2MatchTool::initCombs() {
 
 // Calculate Chi2
 double MuonChi2MatchTool::calcChi2(std::vector<std::pair<double,double> > combination,double vextraM[],double p){
-  
+
   //construct covariance matrix
-  double chisq = 0.; 
+  double chisq = 0.;
   TMatrixF var(m_ord,m_ord);
   TMatrixF ivar(m_ord,m_ord);
 
@@ -118,12 +118,12 @@ double MuonChi2MatchTool::calcChi2(std::vector<std::pair<double,double> > combin
         }
       }//end i
     }// end k
-    
+
   }// end j
-  
+
   //take the inverse of Var
   ivar = var.Invert();
-  
+
   //calculate the chisquare
   for (int j = 0; j < m_ord; j++){
     deltaj = combination[j].first - vextraM[j];
@@ -150,7 +150,7 @@ void MuonChi2MatchTool::getResidual(TrackMuMatch& match) {
   m_nhit[s]++;
 
   double extraX = std::get<2>(match);
-  double extraY = std::get<3>(match);  
+  double extraY = std::get<3>(match);
   m_trkExtrap[s] = std::make_pair(extraX, extraY);
   m_dhit[s].push_back(std::make_pair(muhit,
                                      pow(extraX - muhit->x(),2) +  pow(extraY - muhit->y(),2) ) );
@@ -165,17 +165,17 @@ void MuonChi2MatchTool::makeComb(std::vector<int>* c , int& comb) {
   for (iO=0; iO<m_ord; iO++)
     verbose() <<" M"<<m_matchedStationIndex[iO]+2<<" "<<(*c)[iO];
   verbose()<<endmsg;
-  
+
   for (iO=0; iO<m_ord; iO++) {
     i=c->at(iO);
     s=m_matchedStationIndex[iO];
     const CommonMuonHit* muhit = m_dhit[s][i].first;
-    m_xhit_comb[comb].push_back(std::make_pair(muhit->x(), m_xpadsize[muhit->station()][muhit->region()]/sqrt(12)));    
-    m_yhit_comb[comb].push_back(std::make_pair(muhit->y(), m_ypadsize[muhit->station()][muhit->region()]/sqrt(12)));    
+    m_xhit_comb[comb].push_back(std::make_pair(muhit->x(), m_xpadsize[muhit->station()][muhit->region()]/sqrt(12)));
+    m_yhit_comb[comb].push_back(std::make_pair(muhit->y(), m_ypadsize[muhit->station()][muhit->region()]/sqrt(12)));
     m_muhit_comb[comb].push_back(muhit);
   }
   comb++;
-  
+
   // now call next combination
   bool notLastComb = false;
   iO=m_ord-1;
@@ -195,8 +195,8 @@ void MuonChi2MatchTool::makeComb(std::vector<int>* c , int& comb) {
 }
 
 
-// =============== MAIN FUNCTION =============== 
-StatusCode MuonChi2MatchTool::run(const LHCb::Track* track, 
+// =============== MAIN FUNCTION ===============
+StatusCode MuonChi2MatchTool::run(const LHCb::Track* track,
                                   std::vector<TrackMuMatch>* bestMatches,
                                   std::vector<TrackMuMatch>* spareMatches)
 {
@@ -211,24 +211,24 @@ StatusCode MuonChi2MatchTool::run(const LHCb::Track* track,
     m_hitOnStation[S]=false;
     m_bestmatchedHits[S]=NULL;
   }
-  
+
   if(!bestMatches)  return  StatusCode::SUCCESS;
-	if(bestMatches->size() <2) return  StatusCode::SUCCESS; // require at least 2 reasonable matches 
+	if(bestMatches->size() <2) return  StatusCode::SUCCESS; // require at least 2 reasonable matches
 
   m_dhit.clear();
   m_dhit.resize(nSt);
-  
+
   for (unsigned int s=0; s<nSt; s++) m_nhit[s]=0;
   m_missedStations=nSt;
 
   std::vector<TrackMuMatch>::iterator ih;
   if(bestMatches) {
-    for (ih=bestMatches->begin(); ih != bestMatches->end(); ih++) { 
+    for (ih=bestMatches->begin(); ih != bestMatches->end(); ih++) {
       getResidual(*ih);
     }
   }
 
-  if(m_missedStations>0 && spareMatches) { // also look among low quality muon hits if nothing better was found    
+  if(m_missedStations>0 && spareMatches) { // also look among low quality muon hits if nothing better was found
     for (ih=spareMatches->begin(); ih != spareMatches->end(); ih++) {
       if(false == m_hitOnStation[(std::get<0>(*ih))->station()])
         getResidual(*ih);
@@ -240,7 +240,7 @@ StatusCode MuonChi2MatchTool::run(const LHCb::Track* track,
 	// Sort distsq from closest to farthest hits
 	for(int s=0;s<nSt;s++ ){
     if(m_nhit[s]>0)
-      std::sort(m_dhit[s].begin(), m_dhit[s].end(), [](const std::pair<const CommonMuonHit*,double> &left, const std::pair<const CommonMuonHit*,double> &right) {	      
+      std::sort(m_dhit[s].begin(), m_dhit[s].end(), [](const std::pair<const CommonMuonHit*,double> &left, const std::pair<const CommonMuonHit*,double> &right) {	
                   return left.second < right.second;
                 });
 	}
@@ -266,7 +266,7 @@ StatusCode MuonChi2MatchTool::run(const LHCb::Track* track,
   int ncomb=comb;
   verbose() << "Found "<<ncomb<<" combinations"<<endmsg;
 
-	// Calculate chisquare starting from hit combinations 
+	// Calculate chisquare starting from hit combinations
 	double chisq_x = 0;
 	double chisq_y = 0;
 	double chisq_sum = 0;
@@ -286,9 +286,9 @@ StatusCode MuonChi2MatchTool::run(const LHCb::Track* track,
 
 	    chisq_x = calcChi2(m_xhit_comb[combs],vextraXsM,track->p());	
 	    chisq_y = calcChi2(m_yhit_comb[combs],vextraYsM,track->p());
-	    chisq_sum = chisq_x + chisq_y; 
+	    chisq_sum = chisq_x + chisq_y;
 
-	    if (chisq_sum < m_chisq_min){ // choose the best chi square and store that combination 
+	    if (chisq_sum < m_chisq_min){ // choose the best chi square and store that combination
         m_bestcomb=combs;
 	      m_chisq_min = chisq_sum;
 
@@ -302,7 +302,7 @@ StatusCode MuonChi2MatchTool::run(const LHCb::Track* track,
   for (iO=0; iO<m_ord; iO++) {
     const CommonMuonHit* bestHit= (m_muhit_comb[m_bestcomb])[iO];
     m_matchedHits.push_back(bestHit);
-    m_bestmatchedHits[bestHit->station()] = bestHit;    
+    m_bestmatchedHits[bestHit->station()] = bestHit;
   }
   debug() << "MuonChi2MatchTool output: chi2="<<m_chisq_min<<" with ndof="<<m_ord*2<<endmsg;
 
@@ -312,8 +312,7 @@ StatusCode MuonChi2MatchTool::run(const LHCb::Track* track,
 void MuonChi2MatchTool::getListofCommonMuonHits(CommonConstMuonHits& matchedMuonHits, int station, bool) {
   if (station<0) {
     matchedMuonHits=m_matchedHits;
-  }
-  else {
+  } else {
     matchedMuonHits.clear();
     if(station<(int)nStations && m_bestmatchedHits[station])
       matchedMuonHits.push_back(m_bestmatchedHits[station]);
@@ -324,11 +323,10 @@ void MuonChi2MatchTool::getListofMuonTiles(std::vector<LHCb::MuonTileID>& matche
   matchedTiles.clear();
   if(station>-1 && station<(int)nStations && m_bestmatchedHits[station]) {
     matchedTiles.push_back(m_bestmatchedHits[station]->tile());
-  }
-  else {
-    CommonConstMuonHits::iterator ih;
-    for (ih=m_matchedHits.begin(); ih!=m_matchedHits.end(); ih++) 
-      matchedTiles.push_back((*ih)->tile());
+  } else {
+    std::transform(m_matchedHits.begin(),m_matchedHits.end(),
+                   std::back_inserter(matchedTiles),
+                   [](const CommonMuonHit* hit) { return hit->tile(); } );
   }
 }
 
@@ -352,12 +350,11 @@ double MuonChi2MatchTool::getMatchSigma(int station) {
   if(m_lasttrack) {
     std::vector< TrackMuMatch > * mvector=NULL;
     if(m_lastMatchesBest) mvector = m_lastMatchesBest;
-    if(NULL == mvector) {
+    if(!mvector) {
       if(m_lastMatchesSpare) mvector = m_lastMatchesSpare;
     }
     if(mvector) {
-      std::vector< TrackMuMatch >::iterator im;
-      for (im=mvector->begin(); im!=mvector->end(); im++) {
+      for (auto im=mvector->begin(); im!=mvector->end(); im++) {
         if( std::get<0>(*im) == m_bestmatchedHits[station]) {
           out=std::get<1>(*im);
           break;
@@ -368,22 +365,12 @@ double MuonChi2MatchTool::getMatchSigma(int station) {
   return out;
 }
 
-double MuonChi2MatchTool::muonMatchPropertyD(const char* propertyName, int ) {
-  double out=-9999.;
-  std::string pName(propertyName);
-  //  bool reqStation = (station>-1 && station < (int)nStations);
-  return out;
+double MuonChi2MatchTool::muonMatchPropertyD(const char*, int ) {
+  return -9999.;
 }
 
 int MuonChi2MatchTool::muonMatchPropertyI(const char* propertyName, int) {
-  int out=-9999;
-  std::string pName(propertyName);
-  //bool reqStation = (station>-1 && station < (int)nStations);
-
-  if(pName == "matchedStations") {
-    out = m_ord;
-  }
-  return out;
+  return std::string{propertyName} == "matchedStations" ? m_ord : -9999;
 }
 
 DECLARE_TOOL_FACTORY( MuonChi2MatchTool )

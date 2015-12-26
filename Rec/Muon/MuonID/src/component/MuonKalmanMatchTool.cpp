@@ -12,12 +12,12 @@
 
 #include "GaudiKernel/SystemOfUnits.h"
 #include <TMatrixF.h>
-#include <vector>   
-#include <algorithm>  
+#include <vector>
+#include <algorithm>
 
 
 /** @class MuonKalmanMatchTool MuonKalmanMatchTool.h component/MuonKalmanMatchTool.h
- *  
+ *
  *  muon match tool based on Kalman filter through Muon stations
  *
  *  @author Giacomo Graziani
@@ -46,15 +46,15 @@ MuonKalmanMatchTool::MuonKalmanMatchTool( const std::string& type,
 StatusCode MuonKalmanMatchTool::initialize() {
   const StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
-  
-  
+
+
   m_extrapolator = tool<ITrackExtrapolator>( "TrackMasterExtrapolator",this );
   m_trackFitter = tool<ITrackFitter>( "TrackMasterFitter", this );
 
   // initialize geometry
   m_mudet=getDet<DeMuonDetector>(DeMuonLocation::Default);
   nStations = m_mudet->stations();
-  nRegions = m_mudet->regions();  
+  nRegions = m_mudet->regions();
 
   m_bestMatchedTile.resize(nStations);
   m_bestPM.resize(nStations);
@@ -94,8 +94,8 @@ double  MuonKalmanMatchTool::matchStateToMuonHit(const CommonMuonHit* hit, LHCb:
 
 
 
-// =============== MAIN FUNCTION =============== 
-StatusCode MuonKalmanMatchTool::run(const LHCb::Track* pTrack, 
+// =============== MAIN FUNCTION ===============
+StatusCode MuonKalmanMatchTool::run(const LHCb::Track* pTrack,
                                     std::vector<TrackMuMatch>* bestMatches,
                                     std::vector<TrackMuMatch>* spareMatches)
 {
@@ -108,13 +108,13 @@ StatusCode MuonKalmanMatchTool::run(const LHCb::Track* pTrack,
     m_hitOnStation[S]=false;
     m_bestmatchedHits[S]=NULL;
   }
-  
+
   m_muchi2 = m_mymuchi2  =-1.;
   m_mudof = m_mymudof =1;
 
   if (!pTrack) return StatusCode::SUCCESS;
   if(!bestMatches)  return  StatusCode::SUCCESS;
-	if(bestMatches->size() <2) return  StatusCode::SUCCESS; // require at least 2 reasonable matches 
+	if(bestMatches->size() <2) return  StatusCode::SUCCESS; // require at least 2 reasonable matches
 
 
   const LHCb::State muState = pTrack->closestState(m_mudet->getStationZ(0));
@@ -131,7 +131,7 @@ StatusCode MuonKalmanMatchTool::run(const LHCb::Track* pTrack,
 
   int ok25=0;
   std::vector<TrackMuMatch>::iterator ih;
-  for (ih=bestMatches->begin(); ih != bestMatches->end(); ih++) { 
+  for (ih=bestMatches->begin(); ih != bestMatches->end(); ih++) {
     float nSigmaMatch= std::get<1>(*ih);
     if (nSigmaMatch<m_maxDeltaCutStation) {
       const CommonMuonHit* link=std::get<0>(*ih);
@@ -144,7 +144,7 @@ StatusCode MuonKalmanMatchTool::run(const LHCb::Track* pTrack,
       }
       if (nSigmaMatch<m_maxDeltaCut) {
         if (!m_hitOnStation[station]) {
-          m_hitOnStation[station]=true; 
+          m_hitOnStation[station]=true;
           nSmatched++;
         }
         if(nStations==5 && station>0) ok25++;
@@ -158,11 +158,11 @@ StatusCode MuonKalmanMatchTool::run(const LHCb::Track* pTrack,
   // attach best hit if nothing found within  m_maxDeltaCut sigma
   for(unsigned int station = 0; station < nStations ; station++) {
     if (!m_hitOnStation[station] && m_bestPM[station]<m_maxDeltaCutStation) {
-      m_hitOnStation[station]=true; 
+      m_hitOnStation[station]=true;
       nSmatched++;
       if(nStations==5 && station>0) ok25++;
       muGoodHits.push_back(m_bestMatchedTile[station]);
-      matchedCoords[station].push_back(m_bestmatchedHits[station]);      
+      matchedCoords[station].push_back(m_bestmatchedHits[station]);
     }
   }
 
@@ -171,32 +171,32 @@ StatusCode MuonKalmanMatchTool::run(const LHCb::Track* pTrack,
     return StatusCode::SUCCESS;
   }
 
-  //repeat fast check 
+  //repeat fast check
   if (nSmatched < 2 || (pTrack->p() > 10*Gaudi::Units::GeV && nSmatched<3)) {
     debug()<<" Too few muon stations matched with this track, ending now"<<endmsg;
     return StatusCode::SUCCESS;
   }
 
-  
-  LHCb::Track mutrack; 
+
+  LHCb::Track mutrack;
   mutrack.addToStates(muState);
   // attach muon hits to track
-  for ( std::vector<LHCb::LHCbID>::reverse_iterator rit=muGoodHits.rbegin() ; 
+  for ( std::vector<LHCb::LHCbID>::reverse_iterator rit=muGoodHits.rbegin() ;
         rit < muGoodHits.rend(); ++rit ) {
     mutrack.addToLhcbIDs( *rit );
     debug() << "added muon logical pad " <<  *rit<< endmsg;
   }
-  
-  
+
+
   // refit  track (Kalman filter) with muon hits
   debug() << "starting mutrack with muon hits before fit" << endmsg;
   debug() << mutrack  << endmsg;
   m_trackFitter -> fit(mutrack, theMuon);
   debug() << "track with muon hits" << endmsg;
   debug() <<mutrack  << endmsg;
-  
-  
-  
+
+
+
 
   bool refit=true;
   // choose best hits and remove outliers iteratively
@@ -213,7 +213,7 @@ StatusCode MuonKalmanMatchTool::run(const LHCb::Track* pTrack,
       m_bestPM[station]=9.e9;
       StState = mutrack.closestState(m_mudet->getStationZ(station));
       if (fabs(m_mudet->getStationZ(station)-StState.z())>1*Gaudi::Units::cm)
-        m_extrapolator->propagate(StState, m_mudet->getStationZ(station), theMuon);        
+        m_extrapolator->propagate(StState, m_mudet->getStationZ(station), theMuon);
       CommonConstMuonHits::iterator hit=(matchedCoords[station]).begin();
       while( hit< (matchedCoords[station]).end()) {
         double mchi = matchStateToMuonHit(*hit, StState, sigmax, sigmay);
@@ -249,18 +249,18 @@ StatusCode MuonKalmanMatchTool::run(const LHCb::Track* pTrack,
   } // end outlier check
 
   m_mudof -= 4; // 4 fitted parameters (x,y,tx,ty)
-  
-   
+
+
   // check also low quality muon hits for stations with no good match
   if(spareMatches) {
     if(spareMatches->size() > 0) {
-      for(unsigned int station = 0; station<nStations ; station++) {     
-        if (m_bestmatchedHits[station]) continue;    
+      for(unsigned int station = 0; station<nStations ; station++) {
+        if (m_bestmatchedHits[station]) continue;
         m_bestPM[station]=9.e9;
         StState = mutrack.closestState(m_mudet->getStationZ(station));
         if (fabs(m_mudet->getStationZ(station)-StState.z())>1*Gaudi::Units::cm)
-          m_extrapolator->propagate(StState, m_mudet->getStationZ(station), theMuon);     
-        for (ih=spareMatches->begin(); ih != spareMatches->end(); ih++) { 
+          m_extrapolator->propagate(StState, m_mudet->getStationZ(station), theMuon);
+        for (ih=spareMatches->begin(); ih != spareMatches->end(); ih++) {
           const CommonMuonHit* hit=std::get<0>(*ih);
           unsigned int s = hit->station();
           if (s != station) continue;
@@ -273,13 +273,13 @@ StatusCode MuonKalmanMatchTool::run(const LHCb::Track* pTrack,
             m_bestPM[station]=mchi;
             m_bestmatchedHits[station]=hit;
           }
-        }    
+        }
       }
     }
   }
 
   // save output hits
-  for(unsigned int station = 0; station<nStations ; station++) 
+  for(unsigned int station = 0; station<nStations ; station++)
     m_matchedHits.insert(m_matchedHits.end(),matchedCoords[station].begin(),matchedCoords[station].end());
 
   // evaluate chi2 from best hits of mu stations only
@@ -298,7 +298,7 @@ StatusCode MuonKalmanMatchTool::run(const LHCb::Track* pTrack,
     m_mymuchi2 += m_bestPM[station];
   }
   m_mymudof -= 4; // 4 fitted parameters (x,y,tx,ty)
-  
+
   debug() << "MuonKalmanMatchTool output: chi2="<<m_muchi2<<" with ndof="<<m_mudof<<endmsg;
   debug() << "using best hits only: chi2="<<m_mymuchi2<<" with ndof="<<m_mymudof<<endmsg;
 
@@ -307,36 +307,35 @@ StatusCode MuonKalmanMatchTool::run(const LHCb::Track* pTrack,
 
 void MuonKalmanMatchTool::getListofCommonMuonHits(CommonConstMuonHits& matchedMuonHits, int station, bool onlybest) {
   matchedMuonHits.clear();
-  CommonConstMuonHits::iterator ih;
   if(onlybest) {
     if(station>-1 && station<(int)nStations && m_bestmatchedHits[station]) {
       matchedMuonHits.push_back(m_bestmatchedHits[station]);
+    } else {
+      std::copy_if( m_bestmatchedHits.begin(), m_bestmatchedHits.end(),
+                    std::back_inserter(matchedMuonHits),
+                    [](const CommonMuonHit* hit) -> bool { return hit; } );
     }
-    else {
-      for (ih=m_bestmatchedHits.begin(); ih!=m_bestmatchedHits.end(); ih++) 
-        if(*ih) matchedMuonHits.push_back(*ih);
-    }
-  }
-  else {
-    for (ih=m_matchedHits.begin(); ih!=m_matchedHits.end(); ih++) 
-      if(station<0 || station == (int) ((*ih)->station()) ) matchedMuonHits.push_back(*ih);
+  } else {
+    std::copy_if( m_matchedHits.begin(), m_matchedHits.end(),
+                  std::back_inserter(matchedMuonHits),
+                  [&](const CommonMuonHit* hit) {
+      return station<0 || station == (int) hit->station();
+                  } );
   }
 }
 
 void MuonKalmanMatchTool::getListofMuonTiles(std::vector<LHCb::MuonTileID>& matchedTiles, int station, bool onlybest) {
   matchedTiles.clear();
-  CommonConstMuonHits::iterator ih;
   if(onlybest) {
     if(station>-1 && station<(int)nStations && m_bestmatchedHits[station]) {
       matchedTiles.push_back(m_bestmatchedHits[station]->tile());
+    } else {
+      std::transform( m_bestmatchedHits.begin(), m_bestmatchedHits.end(),
+                     std::back_inserter(matchedTiles),
+                     [](const CommonMuonHit* hit) { return hit->tile(); } );
     }
-    else {
-      for (ih=m_bestmatchedHits.begin(); ih!=m_bestmatchedHits.end(); ih++) 
-        matchedTiles.push_back((*ih)->tile());
-    }
-  }
-  else {
-    for (ih=m_matchedHits.begin(); ih!=m_matchedHits.end(); ih++) 
+  } else {
+    for (auto ih=m_matchedHits.begin(); ih!=m_matchedHits.end(); ih++)
       if(station<0 || station == (int) ((*ih)->station()) ) matchedTiles.push_back((*ih)->tile());
   }
 }
@@ -359,40 +358,25 @@ double MuonKalmanMatchTool::getMatchSigma(int station) {
   double out=999.;
   if(!m_hitOnStation[station]) return out;
   if(m_lasttrack) {
-    std::vector< TrackMuMatch > * mvector=NULL;
-    if(m_lastMatchesBest) mvector = m_lastMatchesBest;
-    if(NULL == mvector) {
-      if(m_lastMatchesSpare) mvector = m_lastMatchesSpare;
-    }
+    auto mvector = ( m_lastMatchesBest ?  m_lastMatchesBest : nullptr );
+    if(!mvector && m_lastMatchesSpare) mvector = m_lastMatchesSpare;
     if(mvector) {
-      std::vector< TrackMuMatch >::iterator im;
-      for (im=mvector->begin(); im!=mvector->end(); im++) {
-        if( std::get<0>(*im) == m_bestmatchedHits[station]) {
-          out=std::get<1>(*im);
-          break;
-        }
-      }
+      auto im = std::find_if( mvector->begin(), mvector->end(),
+                              [&](const TrackMuMatch& tmm) {
+                                return std::get<0>(tmm) == m_bestmatchedHits[station];
+                              } );
+      if (im!=mvector->end()) out = std::get<1>(*im);
     }
   }
   return out;
 }
 
 double MuonKalmanMatchTool::muonMatchPropertyD(const char* propertyName, int ) {
-  double out=-9999.;
-  std::string pName(propertyName);
-  //  bool reqStation = (station>-1 && station < (int)nStations);
-  return out;
+  return -9999.;
 }
 
 int MuonKalmanMatchTool::muonMatchPropertyI(const char* propertyName, int) {
-  int out=-9999;
-  std::string pName(propertyName);
-  //bool reqStation = (station>-1 && station < (int)nStations);
-
-  if(pName == "matchedStations") {
-    out =nStations- m_missedStations;
-  }
-  return out;
+  return std::string{propertyName} == "matchedStations" ? nStations- m_missedStations : -9999;
 }
 
 DECLARE_TOOL_FACTORY( MuonKalmanMatchTool )

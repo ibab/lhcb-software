@@ -26,7 +26,6 @@ class MuonIDAlgLite final : public GaudiAlgorithm {
   ~MuonIDAlgLite() override = default;
   StatusCode initialize() override;
   StatusCode execute() override;
-  StatusCode finalize() override;
 
  private:
   // Helper functions

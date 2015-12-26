@@ -1,8 +1,8 @@
-// Include files 
+// Include files
+#include <algorithm>
 
 // local
 #include "NShared.h"
-
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : NShared
@@ -23,15 +23,15 @@ NShared::NShared( const std::string& type,
   : GaudiTool ( type, name , parent )
 {
   declareInterface<INShared>(this);
-  
+
   declareProperty("TrackLocation",
                   m_TracksPath = LHCb::TrackLocation::Default);
-  
+
   declareProperty("useTtrack", m_useTtrack = false);
-  
+
   // Destination of MuonPID
   declareProperty("MuonIDLocation",
-                  m_MuonPIDsPath = LHCb::MuonPIDLocation::Default);  
+                  m_MuonPIDsPath = LHCb::MuonPIDLocation::Default);
 }
 
 
@@ -73,7 +73,7 @@ StatusCode NShared::mapMuonPIDs()
 LHCb::MuonPID* NShared::mupidFromTrack(const LHCb::Track& mother)
 {
   LHCb::MuonPID * mymupid = NULL;
-  
+
   // Does this track have a MUON PID result ?
   TrackToMuonPID::const_iterator iM = m_muonMap.find( &mother );
   if ( m_muonMap.end() == iM ) return mymupid;
@@ -87,13 +87,13 @@ LHCb::MuonPID* NShared::mupidFromTrack(const LHCb::Track& mother)
 
 StatusCode NShared::getNShared(const LHCb::Track& mother, int& nshared)
 {
- 
+
   //if m_muonmap not loaded, do so
   if (!m_muonMap.size()){
     StatusCode sc=mapMuonPIDs();
     if (sc.isFailure()) return sc;
   }
-  
+
 
   LHCb::MuonPID* mymupid = mupidFromTrack(mother);
   if (!mymupid) {
@@ -123,7 +123,7 @@ StatusCode NShared::getNShared(const LHCb::Track& mother, int& nshared)
     if (msgLevel(MSG::DEBUG) ) debug()<< "getNShared: Track with wrong distance stored" << endmsg;
     return StatusCode::SUCCESS;
   }
-  
+
   LHCb::Tracks* trTracks = get<LHCb::Tracks>(m_TracksPath);
   LHCb::Tracks::const_iterator iTrack;
   int comp_tracks=0;
@@ -133,9 +133,9 @@ StatusCode NShared::getNShared(const LHCb::Track& mother, int& nshared)
     if (mother.checkType(LHCb::Track::Long) && (!(*iTrack)->checkType(LHCb::Track::Long))) continue;
     if (mother.checkType(LHCb::Track::Ttrack) && (!(*iTrack)->checkType(LHCb::Track::Ttrack))) continue;
     if (mother.checkType(LHCb::Track::Downstream) && (!(*iTrack)->checkType(LHCb::Track::Downstream))) continue;
-    
+
     comp_tracks++;
-    
+
     if (msgLevel(MSG::DEBUG) ) {
       debug()<< "getNShared: comp_tracks="<<comp_tracks<<endmsg;
       debug()<< "iTrack="<<(*(*iTrack))<<endmsg;
@@ -147,17 +147,17 @@ StatusCode NShared::getNShared(const LHCb::Track& mother, int& nshared)
       if (msgLevel(MSG::DEBUG) ) debug()<< "No MuonPID found when computing NShared" << endmsg;
       continue;
     }
-    
+
     if (msgLevel(MSG::DEBUG) ) debug()<< "getNShared: mupid="<<(*mupid)<<endmsg;
     if (!mupid->IsMuonLoose() ) continue;
     if (mupid==mymupid) continue;
-    
+
     if (msgLevel(MSG::DEBUG) ) debug()<< "getNShared: comparable track"<<endmsg;
-    const LHCb::Track* mutrack  = mupid->muonTrack();    
-    
+    const LHCb::Track* mutrack  = mupid->muonTrack();
+
     // see if there are shared hits between the muonIDs
     if (! compareHits( *mymutrack, *mutrack) ) continue;
-    
+
     if (msgLevel(MSG::DEBUG) ) debug()<< "getNShared: tracks share a hit!"<<endmsg;
     double dist2 = mutrack->info(305,-1.);
     // if distance badly calculated: nothing to compare!
@@ -168,65 +168,51 @@ StatusCode NShared::getNShared(const LHCb::Track& mother, int& nshared)
     if( dist2 < dist1 ) nshared+=1;
   }
   if (msgLevel(MSG::DEBUG) ) debug()  << "nShared=  " <<  nshared << endmsg;
-  
+
   return StatusCode::SUCCESS;
 }
 
 
 void NShared::fillNShared()
 {
- 
   StatusCode sc=mapMuonPIDs();
   if (sc.isFailure()) return;
 
-  LHCb::Tracks* trTracks = get<LHCb::Tracks>(m_TracksPath);
-  LHCb::Tracks::const_iterator iTrack;
-
-  for( iTrack = trTracks->begin() ; iTrack != trTracks->end() ; iTrack++){
+  for(const auto & trk : *get<LHCb::Tracks>(m_TracksPath)) {
     // in the clone killed output we want only
     // unique && (matched || forward || downstream)
-    if(!(*iTrack)->checkFlag(LHCb::Track::Clone)  &&
-       ((*iTrack)->checkType(LHCb::Track::Long) ||
-        ((*iTrack)->checkType(LHCb::Track::Ttrack) && m_useTtrack) ||
-        (*iTrack)->checkType(LHCb::Track::Downstream))){
-      
+    if(!trk->checkFlag(LHCb::Track::Clone)  &&
+       (trk->checkType(LHCb::Track::Long) ||
+        (trk->checkType(LHCb::Track::Ttrack) && m_useTtrack) ||
+        trk->checkType(LHCb::Track::Downstream))){
+
       int nshared=-1;
-      sc = getNShared((**iTrack),nshared);
-      if (sc.isFailure()){
-        if (msgLevel(MSG::DEBUG) ) 
-          debug()<<"Error getting Nshared for track "<<(**iTrack)<<endmsg;
-      }
-      else{
-        LHCb::MuonPID* pMuid = mupidFromTrack(*(*iTrack));
+      sc = getNShared(*trk,nshared);
+      if (UNLIKELY(sc.isFailure())){
+        if (msgLevel(MSG::DEBUG) )
+          debug()<<"Error getting Nshared for track "<<(*trk)<<endmsg;
+      } else{
+        LHCb::MuonPID* pMuid = mupidFromTrack(*trk);
         pMuid->setNShared(nshared);
       }
-      
     }
-  }  
+  }
 }
 
 
 bool NShared::compareHits(const LHCb::Track& muTrack1,const LHCb::Track& muTrack2)
 {
-  bool theSame = false;
-  std::vector<LHCb::LHCbID>::const_iterator iids1;
-  std::vector<LHCb::LHCbID>::const_iterator iids2;
   if (msgLevel(MSG::DEBUG) ) debug()<< "comparing_hits="<<endmsg;
-  
-  for( iids1 = muTrack1.lhcbIDs().begin() ; iids1 != muTrack1.lhcbIDs().end() ; iids1++ ){
-    if (!(*iids1).isMuon()) continue;
-    if ((*iids1).muonID().station()==0) continue;
-    for( iids2 = muTrack2.lhcbIDs().begin() ; iids2 != muTrack2.lhcbIDs().end() ; iids2++ ){
-      if (!(*iids2).isMuon()) continue;
-      if ((*iids2).muonID().station()==0) continue;
-      if ((*iids1).channelID() ==  (*iids2).channelID()) {  
-        theSame = true;
-        return theSame;
-      }
-      
-    }  
-  }
- return theSame;
+  const auto& ids1 = muTrack1.lhcbIDs();
+  const auto& ids2 = muTrack2.lhcbIDs();
+  return std::any_of( ids1.begin(), ids1.end(),
+                    [&](const LHCb::LHCbID& id1) {
+    return id1.isMuon() && id1.muonID().station()!=0 &&
+           std::any_of( ids2.begin(), ids2.end(),
+                        [&](const LHCb::LHCbID& id2) {
+      return id2.isMuon() && id2.muonID().station()!=0 && id1.channelID() ==  id2.channelID();
+    } );
+  } );
 }
 
 
@@ -234,6 +220,6 @@ bool NShared::compareHits(const LHCb::Track& muTrack1,const LHCb::Track& muTrack
 //=============================================================================
 // Destructor
 //=============================================================================
-NShared::~NShared() {} 
+NShared::~NShared() = default;
 
 //=============================================================================

@@ -1,4 +1,4 @@
-#ifndef CHI2MUIDTOOL_H 
+#ifndef CHI2MUIDTOOL_H
 #define CHI2MUIDTOOL_H 1
 
 // Include files
@@ -22,65 +22,73 @@
 
 
 /** @class Chi2MuIDTool Chi2MuIDTool.h
- *  
+ *
  *
  *  @author Jose Angel Hernando Morata
  *  @author Xabier Cid Vidal
  *  @date   2008-07-02
  */
-class Chi2MuIDTool : public GaudiTool, public ImuIDTool {
+class Chi2MuIDTool : public extends1<GaudiTool, ImuIDTool> {
 public:
-  
+
   /// Standard constructor
-  Chi2MuIDTool( const std::string& type, 
-            const std::string& name,
-            const IInterface* parent);
+  Chi2MuIDTool( const std::string& type,
+                const std::string& name,
+                const IInterface* parent);
 
-  virtual ~Chi2MuIDTool( ); ///< Destructor
+  ~Chi2MuIDTool( ) override; ///< Destructor
 
-  virtual StatusCode initialize();
+  StatusCode initialize() override;
 
-  
-  StatusCode isGoodSeed(const LHCb::Track& seed);
-  
+
+  StatusCode isGoodSeed(const LHCb::Track& seed) override;
+
   StatusCode muonCandidate(const LHCb::Track& seed, LHCb::Track& muTrack,
-                           const std::vector<LHCb::LHCbID> ids_init = std::vector<LHCb::LHCbID>());
+                           const std::vector<LHCb::LHCbID> ids_init = std::vector<LHCb::LHCbID>()) override;
 
-  virtual StatusCode muonQuality(LHCb::Track& muTrack, double& Quality);
+  StatusCode muonQuality(LHCb::Track& muTrack, double& Quality) override;
 
-  StatusCode muonArrival(LHCb::Track& muTrack, double& Arrival);
-  
-  StatusCode muonDLL(LHCb::Track& muTrack, const double& Quality, double& CLQuality, 
-                     const double& Arrival, double& CLArrival, double& DLL);
- 
- 
-  
-  
-  StatusCode muonID(const LHCb::Track& seed,LHCb::Track& muTrack, 
-                    double& Quality, double& CLQuality, 
+  StatusCode muonArrival(const LHCb::Track& muTrack, double& Arrival) const override;
+
+  StatusCode muonDLL(const LHCb::Track& muTrack, const double& Quality, double& CLQuality,
+                     const double& Arrival, double& CLArrival, double& DLL) const override;
+
+
+
+
+  StatusCode muonID(const LHCb::Track& seed,LHCb::Track& muTrack,
+                    double& Quality, double& CLQuality,
                     double& Arrival, double& CLArrival, double& DLL,
-                    const std::vector<LHCb::LHCbID> ids_init = std::vector<LHCb::LHCbID>());
+                    const std::vector<LHCb::LHCbID> ids_init = std::vector<LHCb::LHCbID>()) override;
 
 
-  bool isTrackInsideStation(const int& istation);
 
-  bool isTrackInAcceptance(const LHCb::Track& seed);
+  bool isTrackInAcceptance(const LHCb::Track& seed) override;
 
+
+
+
+  StatusCode findTrackRegions(const LHCb::Track& muTrack,  std::vector<int>& trackRegion) override;
+
+
+protected:
+  std::vector < double > m_zstations;
+  std::vector < LHCb::State > m_states;
+  IMeasurementProvider*  m_measProvider;
+  SmartMuonMeasProvider* m_muonProvider;
   StatusCode makeStates(const LHCb::Track& seed);
-  
-  void addLHCbIDsToMuTrack(LHCb::Track& muTrack,double mom);
-  
+  /// Momentum ranges: different treatement of M4/M5 in each
+  std::vector<double> m_MomentumCuts; // vector of momentum ranges
+  /// Preselection momentum (no attempt to ID below this)
+  double m_PreSelMomentum;
+
+private:
+  bool isTrackInsideStation(int istation) const ;
+  void addLHCbIDsToMuTrack(LHCb::Track& muTrack,double mom) const;
   StatusCode search(const LHCb::Track& seed, LHCb::Track& muTrack);
 
-  StatusCode findTrackRegions(const LHCb::Track& muTrack,  std::vector<int>& trackRegion);
-
-
-  
-protected:
-  
   ITrackFitter* m_fitter;
   ITrackExtrapolator* m_extrapolator;
-  IMeasurementProvider*  m_measProvider;
 
   IIsMuonCandidateC* m_IsMuonTool;
   ICLTool* m_CLQuality;
@@ -101,27 +109,20 @@ protected:
   double m_2hits;
   double m_3hits;
   double m_chi2cut;
-  
+
   bool m_arrivalCuts;
 
-  /// Preselection momentum (no attempt to ID below this)
-  double m_PreSelMomentum;
 
-  /// Momentum ranges: different treatement of M4/M5 in each
-  std::vector<double> m_MomentumCuts; // vector of momentum ranges
 
   bool m_applyIsMuon;
 
 
   std::vector<double> m_MomRangeIsMuon;
 
-  std::vector < double > m_zstations;
 
   std::vector < int > m_stations_acceptance;
 
-  std::vector < LHCb::State > m_states;
 
-  SmartMuonMeasProvider* m_muonProvider;
 
   //GP check if M1 exists
   int m_isM1defined;

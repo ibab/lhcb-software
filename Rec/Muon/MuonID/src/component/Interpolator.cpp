@@ -1,5 +1,5 @@
 // $Id: Interpolator.cpp,v 1.1 2009-07-01 18:27:11 polye Exp $
-// Include files 
+// Include files
 
 
 // local
@@ -25,11 +25,10 @@ Uniformer::Uniformer(const std::vector<double>& xpoints_in,const std::vector<dou
   //number of points
   m_npoints=m_xpoints.size();
   m_nbins=m_npoints-1;
-  
+
   for (int i=1;i<m_npoints;i++){
     //build interpolator between each pair of consecutive points
-    interpolator i1=interpolator(m_xpoints[i-1],m_xpoints[i],m_ypoints[i-1],m_ypoints[i]);
-    m_uniformer.push_back(i1);
+    m_uniformer.emplace_back(m_xpoints[i-1],m_xpoints[i],m_ypoints[i-1],m_ypoints[i]);
   }
   //std::cout <<"Uniformer correctly created"<<std::endl;
 }
@@ -37,13 +36,13 @@ Uniformer::Uniformer(const std::vector<double>& xpoints_in,const std::vector<dou
 //find which bin corresponds to val
 int Uniformer::findBin(const double& xval)
 {
-  
+
   int out_bin=-5;
   //loop over all bins to look up
   for (int i=1;i<m_npoints;i++){
     if (m_xpoints[i-1]<=xval && m_xpoints[i]>xval) out_bin=i-1;
   }
-  //if last bin 
+  //if last bin
   if (out_bin==-5)
   {
     if (xval>=m_xpoints[m_npoints-1]) out_bin= m_nbins;
@@ -51,7 +50,7 @@ int Uniformer::findBin(const double& xval)
   }
   //std::cout<< " bin in uniformer is "<<out_bin<<std::endl;
   return out_bin;
-  
+
 }
 
 //get bin and calculate result from corresponding interpolator

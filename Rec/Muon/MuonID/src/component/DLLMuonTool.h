@@ -17,7 +17,6 @@
 
 #include "TMath.h"
 #include "Math/ProbFuncMathCore.h"
-#include <gsl/gsl_math.h>
 
 static const InterfaceID IID_DLLMuonTool("DLLMuonTool", 1, 0);
 

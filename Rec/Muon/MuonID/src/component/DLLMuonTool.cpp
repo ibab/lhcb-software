@@ -203,7 +203,7 @@ StatusCode DLLMuonTool::initialize() {
     //registerCondition<DLLMuonTool>(
     //    "Conditions/ParticleID/Muon/tanhScaleFactorsMuon",
     //    condtanhScaleFactorsMuon);
-    
+
     // registerCondition<DLLMuonTool>("Conditions/ParticleID/Muon/tanhScaleFactorsNonMuon",
     // condtanhScaleFactorsNonMuon);
     registerCondition<DLLMuonTool>(
@@ -444,7 +444,7 @@ StatusCode DLLMuonTool::initialize() {
   if (scNorm.isFailure()) {
     return Error(" Normalizations of Landaus not properly set ", scNorm);
   }
-  
+
   return sc;
 }
 
@@ -462,7 +462,7 @@ double DLLMuonTool::calcDist(
   for_each( begin(hits), end(hits), [&](const CommonMuonHit* hit) {
         for (unsigned s = 1; s != 5; ++s) { // No M1 ever
           if (s == hit->station()) {  // same station for hit and extrapolation
-            if (mCoordX[s] == 0) {  // first coord found. 
+            if (mCoordX[s] == 0) {  // first coord found.
               mCoordX[s] = hit->x();
               mCoordY[s] = hit->y();
               // difference between x,y and the extrapolated x,y
@@ -553,7 +553,7 @@ double DLLMuonTool::calcDist(
 bool DLLMuonTool::calcNShared(
     LHCb::MuonPID* muonid, LHCb::MuonPIDs* pMuids, CommonConstMuonHits& hits,
     const ICommonMuonTool::MuonTrackExtrapolation& extr){
-  
+
   unsigned nNSH;
   double dsquare1;
   // Calculate dist only if it is not store already in the distance map
@@ -570,13 +570,13 @@ bool DLLMuonTool::calcNShared(
       muonid->setNShared(100);
       return Warning("calcDist 1 failure", false);
     }
-    // Store distance in the muon map 
+    // Store distance in the muon map
     m_muonDistMap[muonid] = dsquare1;
   } else {
-    // Get distance from the muon map 
+    // Get distance from the muon map
     dsquare1 = m_muonDistMap[muonid];
   }
-  
+
   CommonConstMuonHits hits2;
 
   // loop over the muonPIDs
@@ -593,11 +593,11 @@ bool DLLMuonTool::calcNShared(
       debug() << "Comparing primary with p = " << (muonid->idTrack())->p()
               << " with secondary of p = " << (*iMuon)->idTrack()->p()
               << endmsg;
-    // Get hits from muon hits map 
+    // Get hits from muon hits map
     hits2 = m_muonMap[*iMuon];
     if (compareHits(hits, hits2)) {
       // get dist for this muonID
-      
+
       double dsquare2;
       // Calculate dist only if it is not store already in the distance map
       if ( m_muonDistMap.find(*iMuon) == m_muonDistMap.end() ) {
@@ -620,13 +620,13 @@ bool DLLMuonTool::calcNShared(
         if (msgLevel(MSG::DEBUG))
           debug() << "            For SECONDARY track with momentum = "
                   << track2->p() << ". Dist 2 = " << dsquare2 << endmsg;
-        // Store distance in the muon map 
+        // Store distance in the muon map
         m_muonDistMap[*iMuon] = dsquare2;
       } else {
-        // Get distance from the muon map 
+        // Get distance from the muon map
         dsquare2 = m_muonDistMap[*iMuon];
       }
-  
+
       // the muonID which gets the number of shared hits is the one
       // which has the biggest dist
       if (dsquare2 < dsquare1) {
@@ -648,8 +648,8 @@ bool DLLMuonTool::calcNShared(
     debug() << "nShared = " << muonid->nShared() << endmsg;
 
   // Store hits in the muon map for this track
-  m_muonMap[muonid] = hits; 
-  
+  m_muonMap[muonid] = hits;
+
   return true;
 }
 
@@ -682,8 +682,8 @@ unsigned DLLMuonTool::GetPbin(double p, unsigned region) {
     error() << "GetPbin: No match to a pBins vector. Null pBins pointer. Return default value 0." << endmsg;
     return 0;
   }
-  
-    
+
+
   unsigned end(pBins->size());
   for (unsigned iBin = 0; iBin != end; ++iBin) {
     if (msgLevel(MSG::VERBOSE))
@@ -697,10 +697,10 @@ unsigned DLLMuonTool::GetPbin(double p, unsigned region) {
 std::vector<double> DLLMuonTool::loadNonMuLandauParam(
     const ICommonMuonTool::MuonTrackExtrapolation& extrapolation) {
   std::vector<double> parNonMu;
-  
+
   // Get region to use to calculate the LL
   int region = findTrackRegion(extrapolation);
-  
+
   if (region == 0) {                                            // Region 1
     for (unsigned i = 0; i != 3; ++i) {
       parNonMu[i] = m_NonMuLanParR1[i];
@@ -717,21 +717,21 @@ std::vector<double> DLLMuonTool::loadNonMuLandauParam(
     for (unsigned i = 0; i != 3; ++i) {
       parNonMu[i] = m_NonMuLanParR4[i];
     }
-  } else 
+  } else
   {
     error() << "loadNonMuLandauParam: Not valid region! This shoud not happen. Using R1.  " << endmsg;
     for (unsigned i = 0; i != 3; ++i) {
       parNonMu[i] = m_NonMuLanParR1[i];
     }
   }
-  
+
   return parNonMu;
 }
 
 int DLLMuonTool::getRegionFromPosition(
     const ICommonMuonTool::MuonTrackExtrapolation& extrapolation) {
   // Returns a Region from the extrapolation in M2 in case all else does not work
-  // Yes, this function is hardcoded: 
+  // Yes, this function is hardcoded:
   // it is used only for very strange tracks whose extrapolation is in the gaps in various stations
 
   //  Following numbers from TDR, page 3.
@@ -751,40 +751,40 @@ int DLLMuonTool::getRegionFromPosition(
   if(x > 1200 || y > 1000) return 2; // R3
   if(x > 600  || y > 500)  return 1; // R2
   else                     return 0; // R1
-  // Return R1 also in beam-pipe case 
+  // Return R1 also in beam-pipe case
 }
 
 int DLLMuonTool::findTrackRegion(
     const ICommonMuonTool::MuonTrackExtrapolation& extrapolation) {
-  // Returns a region for a given track extrapolation 
+  // Returns a region for a given track extrapolation
   // It always returns a valid region (0,... ,3) = (R1,...R4)
-  
+
   std::vector<int> regions = findTrackRegions(extrapolation);
-  int region = regions[iM2];  // M2  
+  int region = regions[iM2];  // M2
   // Find a non zero region
   if (region < 0){
     for(unsigned int i=2; i<nStations; i++){ //M3, M4, M5
       if(msgLevel(MSG::DEBUG))
         debug() << format("No valid region in M2 looking in i=%i",i)   << endmsg;
 
-      region = regions[i];  
+      region = regions[i];
       if(region >= 0)break;
     }
-    
+
     // If all else fails get region from x,y position in M2
     if(region<0){
       if(msgLevel(MSG::DEBUG))
         debug() << "No valid region found, going to call getRegionFromPosition"  << endmsg;
-      
-      region = getRegionFromPosition(extrapolation); 
+
+      region = getRegionFromPosition(extrapolation);
     }
-    
+
   }
-  
+
   return region;
 }
- 
-    
+
+
 
 std::vector<int> DLLMuonTool::findTrackRegions(
     const ICommonMuonTool::MuonTrackExtrapolation& extrapolation) {
@@ -836,7 +836,7 @@ double DLLMuonTool::calc_closestDist(
     closest_y[ista] = -1;
     small_dist[ista] = 10000000.;
     Fdist[ista] = 0;
-    closest_region[ista] = -1; 
+    closest_region[ista] = -1;
 
   }
   double p = track.p();
@@ -1036,7 +1036,7 @@ StatusCode DLLMuonTool::calcLandauNorm() {
   //=====================================================================
   // comment: Normalizations for Landaus for Muons and Non-Muons
   //=====================================================================
-  
+
   double parnmu[3];
   for (unsigned i = 1; i != 3; ++i) parnmu[i] = 0;
   double Norm = -1;
@@ -1044,7 +1044,7 @@ StatusCode DLLMuonTool::calcLandauNorm() {
   //=============
   //  Non-Muons
   //=============
-  
+
   if (m_NonMuLanParR1.size() < 3) {
     return Error("NonMuLandauParameterR1 not filled properly");
   }
@@ -1115,7 +1115,7 @@ std::tuple<double, double, double> DLLMuonTool::calcMuonLL_tanhdist(
   double myDist = -1.;
   double ProbMu = -1.;
   double ProbNonMu = -1.;
-  
+
   // Determine the region to use for the calculation
   int region = findTrackRegion(extrapolation);
 
@@ -1123,7 +1123,7 @@ std::tuple<double, double, double> DLLMuonTool::calcMuonLL_tanhdist(
   myDist = calc_closestDist(track, extrapolation, hits, occupancies);
   if (msgLevel(MSG::DEBUG))
     debug() << "The value of myDist is = " << myDist << endmsg;
-  
+
   // Determine the momentum bin for this region
   unsigned pBin = GetPbin(p, region);
   double tanhdistMu, tanhdistNonMu;
@@ -1199,7 +1199,7 @@ std::tuple<double, double, double> DLLMuonTool::calcMuonLL_tanhdist_landau(
 
   // Find the region to use to calculate the MuonLL
   int region = findTrackRegion(extrapolation);
-  
+
   // Calculate Distance using the closest hit:
   myDist = calc_closestDist(track, extrapolation, hits, occupancies);
   if (msgLevel(MSG::DEBUG))

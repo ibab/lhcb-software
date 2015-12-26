@@ -97,8 +97,8 @@
 // from options.  DLL_Flag = 3 should not be used for 2011 and 2010 data anymore
 //=====================
 //05/05/2011: X. Cid Vidal
-// Implement the use of KalmanFoI in MuonIDAlg. This implies the use of MuIDTool 
-// and some other independent tools, also for distance calculation. New tool introduced 
+// Implement the use of KalmanFoI in MuonIDAlg. This implies the use of MuIDTool
+// and some other independent tools, also for distance calculation. New tool introduced
 // for NShared calculation. Default behaviour left as before, with possibility to switch
 // with a flag.
 // Introduction of UseUncrossed hits option. Default true. If false, in regions where
@@ -112,7 +112,7 @@
 //=====================
 // 25/08/2011: J. Helder Lopes
 // Implemented IsMuonTight, which is IsMuon but using only hits with x,y crossing
-// Option UseUncrossed now affects only probabilities, dlls, NShared... 
+// Option UseUncrossed now affects only probabilities, dlls, NShared...
 // Does not affect IsMuonLoose or IsMuon or IsMuonTight.
 // MuonPID in Event/RecEvent was modified to save the new IsMuonTight info. Also mutrack saves this info.
 //=====================
@@ -188,7 +188,7 @@ MuonIDAlg::MuonIDAlg( const std::string& name,
 
   //want to find quality?
   declareProperty("FindQuality", m_FindQuality = true);
-  
+
   //use default FoI or Kalman?
   declareProperty("KalmanFoI", m_kalman_foi = false);
 
@@ -209,14 +209,14 @@ MuonIDAlg::MuonIDAlg( const std::string& name,
   // 4 -- binned tanh(distance) with closest hit(Muon) + integral of Landau fit(NonMuon).
   //-----------------------------
   declareProperty("DLL_flag",m_dllFlag = 1);
-  
+
   if (m_kalman_foi && m_dllFlag == 0){
-    warning() << 
-      "DLL flag 0 (use of all hits in FoI for DLL computation) incompatible with Kalman FoI. Setting DLL flag to 1 (use of closest hit)" 
+    warning() <<
+      "DLL flag 0 (use of all hits in FoI for DLL computation) incompatible with Kalman FoI. Setting DLL flag to 1 (use of closest hit)"
               << endmsg;
     m_dllFlag = 1;
   }
-  
+
 
   // Muons - Region1:
   declareProperty( "MuLandauParameterR1_1", m_MuLanParR1_1 );
@@ -360,7 +360,7 @@ StatusCode MuonIDAlg::initialize() {
     }
     else {  // Use database values instead of options file ones.
       // THE CONDITIONS AND THEIR REGISTERING SHOULD BE DONE AFTER GaudiAlgorithm::initialize() !!
-      
+
       //Global Muon ParticleID Conditions from database
       Condition * PreSelMomentum;
       Condition * MomentumCuts;
@@ -414,18 +414,18 @@ StatusCode MuonIDAlg::initialize() {
 
       int dllFlag  = DLL_flag->param<int>("DLL_flag");
       if(dllFlag != m_dllFlag) info() << "Initialise: OverrideDB=false but dllFlag in options file (="
-                                      << m_dllFlag << ") not equal dllFlag in database (="  << dllFlag 
+                                      << m_dllFlag << ") not equal dllFlag in database (="  << dllFlag
    				      << "). Using dllFlag from options file" << endmsg;
       //m_dllFlag = dllFlag;
       if (msgLevel(MSG::DEBUG) ) debug()  << "==> DLL_flag:" << m_dllFlag << endmsg;
 
       if(1 == m_dllFlag){
-      
+
       // Check the presence of a MuonID parameters for dllFlag==1 in the loaded conditions database
       if(existDet<DataObject>(detSvc(),"Conditions/ParticleID/Muon/MuLandauParameterR1" )){
-        if (msgLevel(MSG::DEBUG) ) debug()  << "Initialise: Conditions database with muon ID info for  DLL_flag == 1 found"  
+        if (msgLevel(MSG::DEBUG) ) debug()  << "Initialise: Conditions database with muon ID info for  DLL_flag == 1 found"
                                             << endmsg;
-    
+
       // Muon ParticleID Conditions for DLL_flag = 1 from database
         Condition * nMupBins;
         Condition * MupBins;
@@ -463,7 +463,7 @@ StatusCode MuonIDAlg::initialize() {
         if ( scupdMgr.isFailure() )
           return Error(" Unable to update DLL_flag = 1 conditions from database ",scupdMgr);
 
-        if (msgLevel(MSG::DEBUG) ) debug()  << "Initialise: Reading parameters for DLL_flag=1 mode from conditions database:"  
+        if (msgLevel(MSG::DEBUG) ) debug()  << "Initialise: Reading parameters for DLL_flag=1 mode from conditions database:"
                                             << endmsg;
         m_nMupBinsR1 = nMupBins->param<int>("nMupBinsR1");
         if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> nMupBinsR1:" << m_nMupBinsR1 << endmsg;
@@ -557,7 +557,7 @@ StatusCode MuonIDAlg::initialize() {
           debug()  << endmsg;
 	}
       }
-      else {  
+      else {
         warning()  << "Initialise: Parameters for dllFlag==1 not found in Conditions database."
                    << " Using values from options file"  << endmsg;
       }	
@@ -567,10 +567,10 @@ StatusCode MuonIDAlg::initialize() {
 
       // Check the presence of a MuonID parameters for dllFlag==4 in the loaded conditions database
       if(existDet<DataObject>(detSvc(),"Conditions/ParticleID/Muon/tanhScaleFactors" )){
-        if (msgLevel(MSG::DEBUG) ) debug()  << 
+        if (msgLevel(MSG::DEBUG) ) debug()  <<
           "Initialise: Conditions database with muon ID info for dllFlag==4 (ProbMu from tanh(dist) ) found"  << endmsg;
         Condition *  nMupBins;
-        Condition *  MupBins;     
+        Condition *  MupBins;
 
         registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/nMupBins", nMupBins);
         registerCondition<MuonIDAlg>("Conditions/ParticleID/Muon/MupBins", MupBins);
@@ -596,7 +596,7 @@ StatusCode MuonIDAlg::initialize() {
         if ( scupdMgr.isFailure() )
           return Error(" Unable to update DLL_flag = 4 tanh conditions from database ",scupdMgr);
 
-        if (msgLevel(MSG::DEBUG) ) debug()  << "Initialise: Reading parameters for DLL_flag=4 mode from conditions database:"  
+        if (msgLevel(MSG::DEBUG) ) debug()  << "Initialise: Reading parameters for DLL_flag=4 mode from conditions database:"
                                             << endmsg;
         m_nMupBinsR1 = nMupBins->param<int>("nMupBinsR1");
         if (msgLevel(MSG::DEBUG) ) debug()  << "==> nMupBinsR1:" << m_nMupBinsR1 << endmsg;
@@ -673,7 +673,7 @@ StatusCode MuonIDAlg::initialize() {
 	m_tanhCumulHistoMuonR4_5 = tanhCumulHistoMuonR4->paramVect<double>("tanhCumulHistoMuonR4_5");
         if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> tanhCumulHistoMuonR4_5:" << m_tanhCumulHistoMuonR4_5 << endmsg;
         }
-        else {  
+        else {
           warning()  << "Initialise: Parameters for dllFlag==4 MuonProb not found in Conditions database."
                      << " Using values from options file"  << endmsg;
         }	
@@ -681,7 +681,7 @@ StatusCode MuonIDAlg::initialize() {
 	// For the non-muon hypothesis, use the previous Landau fitings, as in dllFlag==1
         // Check the presence of a MuonID parameters for dllFlag==1 in the loaded conditions database
         if(existDet<DataObject>(detSvc(),"Conditions/ParticleID/Muon/NonMuLandauParameterR1" )){
-        if (msgLevel(MSG::DEBUG) ) debug()  
+        if (msgLevel(MSG::DEBUG) ) debug()
           << "Initialise: Conditions database with muon ID info (ProbNonMu from previous Landau fits ) found"  << endmsg;
 	
         Condition * NonMuLandauParameterR1;
@@ -704,7 +704,7 @@ StatusCode MuonIDAlg::initialize() {
         scupdMgr = runUpdate();
         if ( scupdMgr.isFailure() )
           return Error(" Unable to update DLL_flag = 4  conditions from database ",scupdMgr);
-	  
+	
         // Non-Muons - Region 1-2-3-4:
         m_NonMuLanParR1 = NonMuLandauParameterR1->paramVect<double>("NonMuLandauParameterR1");
         if (msgLevel(MSG::DEBUG) ) debug()  << "==> NonMuLandauParameterR1:" << m_NonMuLanParR1 << endmsg;
@@ -725,16 +725,16 @@ StatusCode MuonIDAlg::initialize() {
           debug()  << "==> nMax_bin:" << m_nMax << endmsg;
           debug()  << endmsg;
         }
-        
+
         }
-        else {  
+        else {
           warning()  << "Initialise: Parameters for dllFlag==4 NonMuonProb not found in Conditions database."
                      << " Using values from options file"  << endmsg;
         }	
 	
       }
       else {
-        error() << "Initialise: OverrideDB=False but no parameters in database for dllFlag = " 
+        error() << "Initialise: OverrideDB=False but no parameters in database for dllFlag = "
                 << m_dllFlag << endmsg;
         return Error("Initialise: Failed to configure MuonID dll parameters");
       }
@@ -874,12 +874,12 @@ StatusCode MuonIDAlg::initialize() {
     debug()  << "-Geometry information ----------------"<< endmsg;
     for(station = 0 ; station < m_NStation ; station++ ){
       debug()  << "Station " << m_stationNames[station] << " Outer X = "  << m_regionOuterX[station]
-               << " Outer Y = " << m_regionOuterY[station] 
+               << " Outer Y = " << m_regionOuterY[station]
                << "\tInner X = "  << m_regionInnerX[station] << " Inner Y = " << m_regionInnerY[station]
                << "\tstationZ = " <<  m_stationZ[station] <<  endmsg;
     }
   }
-  
+
 
   if( m_MomentumCuts.empty() ||
       m_xfoiParam1.size() != 20 ||   // 20 = 5 stationx x 4 regions// JHLJHL 30/08/2013
@@ -892,9 +892,9 @@ StatusCode MuonIDAlg::initialize() {
 
   }
 
-  // Parameters in database or option files assumes five muon stations. In case of no M1, shift the values properly:  JHL 11/10/2013 
+  // Parameters in database or option files assumes five muon stations. In case of no M1, shift the values properly:  JHL 11/10/2013
   if(0 == m_iM2){
-     for(station = 0 ; station < m_NStation ; station++ ){   // m_NStation==4 
+     for(station = 0 ; station < m_NStation ; station++ ){   // m_NStation==4
         for(region=0; region<m_NRegion; ++region){
            int i  = station * m_NRegion + region;
            int ii = (station + 1) * m_NRegion + region;
@@ -975,17 +975,17 @@ StatusCode MuonIDAlg::initialize() {
   }
 
   // GL&SF: Check that dll flag is properly set:
-  if (m_dllFlag==0) info() << " dllFlag=0 -----> DLL standard (old method) " << endmsg;
-  if (m_dllFlag==1) info() << " dllFlag=1 -----> DLL  new (binned-integrated method) " << endmsg;
-  if (m_dllFlag==3) info() << " dllFlag=3 -----> DLL  new (hyperbolic tangent mapping) " << endmsg;
-  if (m_dllFlag==4) info() << " dllFlag=4 -----> DLL with muLL tuned on 2010 data (hyperbolic tangent mapping) and previous nonMuLL (Landau fittings 2009)" 
-                           << endmsg;
-
-  if (m_dllFlag<0 || m_dllFlag>4 || m_dllFlag==2)
+  switch (m_dllFlag) {
+  case 0: info() << " dllFlag=0 -----> DLL standard (old method) " << endmsg; break;
+  case 1: info() << " dllFlag=1 -----> DLL  new (binned-integrated method) " << endmsg; break;
+  case 3: info() << " dllFlag=3 -----> DLL  new (hyperbolic tangent mapping) " << endmsg; break;
+          warning() << "dllFlag = 3 cannot be used with datatype 2010 or 2011. Check that this is not the case."
+                    << endmsg; break;
+  case 4: info() << " dllFlag=4 -----> DLL with muLL tuned on 2010 data (hyperbolic tangent mapping) and previous nonMuLL (Landau fittings 2009)"
+                 << endmsg; break;
+  default :
     return Error("DLL flag set to a not existing value: allowed values are: 0=DLL old, 1=DLL integrated, 3=hyperbolic tangent mapping, 4=new mu prob tuned on 2010 data");
-    
-  if(3 == m_dllFlag) warning() << "dllFlag = 3 cannot be used with datatype 2010 or 2011. Check that this is not the case." 
-                               << endmsg;
+  }
 
   // GL&SF: Check that parameters of the integral are fine
   if ((int)(m_x*m_nMax) !=800) return Error(format("DLL integral cannot be calculated, parameters are wrong: x, N %8.3f, %8.3f",
@@ -1045,7 +1045,7 @@ StatusCode MuonIDAlg::execute() {
   m_nmu = 0;
 
   //XCV: if kalman foi, this will be done by SmartMuonMeasProvider
-  if (!m_kalman_foi){  
+  if (!m_kalman_foi){
     StatusCode sc = fillCoordVectors();
     if(sc.isFailure()){
       return sc;
@@ -1076,79 +1076,78 @@ StatusCode MuonIDAlg::execute() {
   pMuids->setVersion(1);
 
   //LHCb::Tracks * mutracks_all = m_DoAllMuonTracks ? new LHCb::Tracks() : 0;
-  LHCb::Tracks * mutracks_all = new LHCb::Tracks();
+  std::unique_ptr<LHCb::Tracks> mutracks_all{ new LHCb::Tracks() };
 
-  LHCb::Tracks::const_iterator iTrack;
-  for( iTrack = trTracks->begin() ; iTrack != trTracks->end() ; iTrack++){
+  for( const auto& track: *trTracks) {
     // in the clone killed output we want only
     // unique && (matched || forward || downstream)
-    if(!(*iTrack)->checkFlag(LHCb::Track::Clone)  &&
-       ((*iTrack)->checkType(LHCb::Track::Long) ||
-        ((*iTrack)->checkType(LHCb::Track::Ttrack) && m_useTtrack) ||
-        (*iTrack)->checkType(LHCb::Track::Downstream))){
- 
+    if(!track->checkFlag(LHCb::Track::Clone)  &&
+       (track->checkType(LHCb::Track::Long) ||
+        (track->checkType(LHCb::Track::Ttrack) && m_useTtrack) ||
+        track->checkType(LHCb::Track::Downstream))){
+
      counter("nGoodTracksForMuonID")++;
 
       m_mutrack=LHCb::Track();
-      
+
       if(m_kalman_foi){
         //get first state
-         const LHCb::State * state1 = &((*iTrack)->firstState());
+         const LHCb::State * state1 = &(track->firstState());
          if(state1) m_MomentumPre = state1->p();
          else{
            Warning(" Failed to get 1st state from track ").ignore();
            m_MomentumPre = 0;
          }
-         
+
          // get state closest to M1 for extrapolation
-         const LHCb::State * state = &((*iTrack)->closestState(9450.));
+         const LHCb::State * state = &(track->closestState(9450.));
          if(state) m_Momentum = state->p();
          else {
            Warning(" Failed to get state from track ").ignore();
            m_Momentum = 0;
          }
       }
-      
+
 
       //XCV: if kalman foi, this will be done by DistMuonIDTool
       else{
         // do the track extrapolations
-        StatusCode sc0 = trackExtrapolate(*iTrack);
+        StatusCode sc0 = trackExtrapolate(track);
         if ( sc0.isFailure() ){
           Warning(" trackExtrapolate failed for track ",StatusCode::SUCCESS,0).ignore();
-          if (msgLevel(MSG::DEBUG) ) debug()<< " trackExtrapolate failed for track " << *iTrack << endmsg;
+          if (msgLevel(MSG::DEBUG) ) debug()<< " trackExtrapolate failed for track " << track << endmsg;
           continue;
         }
       }
 
       // Do the complete ID, calculating IsMuon and likelihoods
       LHCb::MuonPID * pMuid = new LHCb::MuonPID;
-      pMuid->setIDTrack(*iTrack);
+      pMuid->setIDTrack(track);
       StatusCode sc = doID(pMuid);
       if(sc.isFailure()){
         Warning(" doID failed for track ",StatusCode::SUCCESS,0).ignore();
-        if (msgLevel(MSG::DEBUG) ) debug()<< " doID failed for track " << *iTrack << endmsg;
+        if (msgLevel(MSG::DEBUG) ) debug()<< " doID failed for track " << track << endmsg;
       }
 
       // Save MuonPIDs only if track is in acceptance, unless DoAllMuonTracks is true
       if(!m_DoAllMuonTracks && (!pMuid->InAcceptance())){
-        if (msgLevel(MSG::DEBUG) ) debug()<< " Track with key " << (*iTrack)->key() << " not in acceptance. Not saving MuonPID"  << endmsg;
+        if (msgLevel(MSG::DEBUG) ) debug()<< " Track with key " << track->key() << " not in acceptance. Not saving MuonPID"  << endmsg;
         delete pMuid;
         continue;
       }
- 
+
       counter("nMuonPIDs")++;
 
-      pMuids->insert( pMuid, (*iTrack)->key() );
+      pMuids->insert( pMuid, track->key() );
       if (msgLevel(MSG::DEBUG) ) debug()<< " added MuonPID object with key " << pMuid->key()  << endmsg;
 
-      LHCb::Track* mutrack = 0;
+      LHCb::Track* mutrack = nullptr;
 
       // Build mutrack if IsMuonLoose is 1
       if (pMuid->IsMuonLoose()) {
         mutrack = makeMuonTrack(*pMuid);
         pMuid->setMuonTrack( mutrack );
-        mutracks->insert( mutrack, (*iTrack)->key() );
+        mutracks->insert( mutrack, track->key() );
       }
 
       // If required, save all tracks. If tracks already created, simply clone them
@@ -1156,21 +1155,21 @@ StatusCode MuonIDAlg::execute() {
         LHCb::Track* mutrack_all;
         if (pMuid->IsMuonLoose())  mutrack_all=mutrack->clone();
         else mutrack_all = makeMuonTrack(*pMuid);
-        mutracks_all->insert( mutrack_all, (*iTrack)->key() );
+        mutracks_all->insert( mutrack_all, track->key() );
       }
-      
+
       // XCV: If kalman foi, nshared will be calculated afterwards, once all the distances have been calculated
       if (!m_kalman_foi){
         sc = calcSharedHits(pMuid, pMuids);
         if (sc.isFailure()){
           Warning(" calcSharedHits failed for track ",StatusCode::SUCCESS,0).ignore();
-          if (msgLevel(MSG::DEBUG) ) debug()<<" calcSharedHits failed for track " << *iTrack << endmsg;
+          if (msgLevel(MSG::DEBUG) ) debug()<<" calcSharedHits failed for track " << track << endmsg;
         }
       }
-      
+
     } // long tracks
   }  // loop over tracks
-  
+
   // Debug : muon identification event summary
   if (msgLevel(MSG::DEBUG) ) {
     debug()  << "MuonIDAlg:: Number of MuonPID objects created: " << pMuids->size()
@@ -1182,11 +1181,8 @@ StatusCode MuonIDAlg::execute() {
   if (msgLevel(MSG::DEBUG) ) debug()  << "execute:: Muon Tracks registered  " << endmsg;
 
   // Register the PIDTracksIsMuonLoose container to the TES
-  if (m_DoAllMuonTracks){ 
-      put(mutracks_all,m_MuonTracksPathAll);
-  }
-  else delete mutracks_all;
-  if (msgLevel(MSG::DEBUG) ) debug()  << "execute:: All Muon Tracks registered or deleted " << endmsg;
+  if (m_DoAllMuonTracks) put(mutracks_all.release(),m_MuonTracksPathAll);
+  if (msgLevel(MSG::DEBUG) ) debug()  << "execute:: All Muon Tracks registered or (about to be) deleted" << endmsg;
 
   //XCV: once the muon tracks have been put in TES, store in the muonPIDs and tracks the NShared info
   if (m_kalman_foi) NSharedTool()->fillNShared();
@@ -1221,24 +1217,23 @@ StatusCode MuonIDAlg::fillCoordVectors(){
 
   // get the MuonCoords for each station in turn
   LHCb::MuonCoords* coords = get<LHCb::MuonCoords>(LHCb::MuonCoordLocation::MuonCoords);
-  if ( coords==0 ) return Error(" Cannot retrieve MuonCoords ");
+  if ( !coords ) return Error(" Cannot retrieve MuonCoords ");
 
   // loop over the coords
   LHCb::MuonCoords::const_iterator iCoord;
-  for ( iCoord = coords->begin() ; iCoord != coords->end() ; iCoord++ ){
-    int region = (*iCoord)->key().region();
-    int station = (*iCoord)->key().station();
+  for (const auto& coord : *coords) {
+    int region = coord->key().region();
+    int station = coord->key().station();
     double x,dx,y,dy,z,dz;
-    LHCb::MuonTileID tile=(*iCoord)->key();
-    
+    LHCb::MuonTileID tile=coord->key();
+
     StatusCode sc = m_mudet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
     if (sc.isFailure()){
       Warning(" Failed to get x,y,z of tile ",StatusCode::SUCCESS).ignore();
       if (msgLevel(MSG::DEBUG) ) debug()<< "Failed to get x,y,z of tile " << tile << endmsg;
       continue;
     }
-    m_coordPos[station*m_NRegion+region].
-      push_back(coordExtent_(x,dx,y,dy,*iCoord));
+    m_coordPos[station*m_NRegion+region].emplace_back(x,dx,y,dy,coord);
     if (msgLevel(MSG::VERBOSE) ) verbose() << "fillCoordVectors: station: " << station << " region: " << region << " tile: " << tile << " z: " << z << endmsg;
   }
 
@@ -1327,14 +1322,14 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
   if (msgLevel(MSG::DEBUG) )debug()  << " p = " << m_MomentumPre << " bin = "   << momentumBin << endmsg;
 
   StatusCode sc;
-    
+
   bool myIsMuon=false;
   bool myIsMuonLoose=false;
   bool myIsMuonTight=false;
 
     if (m_kalman_foi){
     // Kalman filter FoI method
-    // Is good seed? 
+    // Is good seed?
     // Check PreSelMom and Acceptance
     const LHCb::Track* mother = pMuid->idTrack();
     sc = DistMuIDTool()->isGoodSeed(*mother);
@@ -1345,7 +1340,7 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
       pMuid->setPreSelMomentum(1);
       if (sc.getCode()!=102) pMuid->setInAcceptance(1);
     }
-    
+
     if (msgLevel(MSG::DEBUG) ) {
       debug() << " pMuid->PreSelMomentum()=" << pMuid->PreSelMomentum() << endmsg;
       debug() << " pMuid->InAcceptance()=" << pMuid->InAcceptance() << endmsg;
@@ -1356,14 +1351,14 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
 
     if(sc.isFailure()){
       if (msgLevel(MSG::DEBUG) ) debug() << " Track failed preselection " << endmsg;
-      return StatusCode::SUCCESS;    
+      return StatusCode::SUCCESS;
     }
-    
+
     m_mutrack = LHCb::Track(mother->key());
     //add mother track to ancestors
     m_mutrack.addToAncestors(mother);
 
-    
+
     // Is it a muon candidate?
     sc = DistMuIDTool()->muonCandidate(*mother,m_mutrack);
     if (!(sc.isSuccess()||sc.getCode()==203))
@@ -1375,10 +1370,10 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
     myIsMuon = IsMuonTool()->IsMuonCandidate(m_mutrack);
     myIsMuonLoose = IsMuonLooseTool()->IsMuonCandidate(m_mutrack);
   }
-  
+
 
   else{
-    
+
     // First do a preselection:
     // track is in acceptance? Track has minimum momentum?
     bool passed = true;
@@ -1392,7 +1387,7 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
     if(pMuid->InAcceptance())  counter("nInAcceptance")++;
     if(pMuid->PreSelMomentum())  counter("nMomentumPresel")++;
 
-    if (msgLevel(MSG::DEBUG) ) debug() << "doID: Track key: " << pMuid->idTrack()->key() << " InAcceptance: " << pMuid->InAcceptance() 
+    if (msgLevel(MSG::DEBUG) ) debug() << "doID: Track key: " << pMuid->idTrack()->key() << " InAcceptance: " << pMuid->InAcceptance()
         << " PreSelMomentum: " << pMuid->PreSelMomentum() << endmsg;
 
     // OK: track failed preselection say so and return
@@ -1425,7 +1420,7 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
 
     //GL & SF: IsMuon/IsMuonLoose definition (with/without weights):
     //JHL: Remove use of weights 15/08/2011
-    myIsMuonLoose = IsMuonLoose(stations,m_MomentumPre);  
+    myIsMuonLoose = IsMuonLoose(stations,m_MomentumPre);
     myIsMuon = IsMuon(stations,m_MomentumPre);
 
     std::vector<int> stationsWithCrossing;
@@ -1442,45 +1437,50 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
   if (msgLevel(MSG::DEBUG) ) {
     debug()<< " myIsMuon="<<myIsMuon<<" myIsMuonLoose="<<myIsMuonLoose<<" myIsMuonTight="<<myIsMuonTight<<endmsg;
   }
-  
-  
+
+
   pMuid->setIsMuon(myIsMuon);
   pMuid->setIsMuonLoose(myIsMuonLoose);
   pMuid->setIsMuonTight(myIsMuonTight);
 
-  if(!m_kalman_foi){  
+  if(!m_kalman_foi){
     // calculate MuProb
     double MuProb = calcMuProb( pMuid );
     if (msgLevel(MSG::DEBUG) ) debug()  << " MuProb= " << MuProb <<endmsg;
   }
-  
+
   // calculate Muon DLL
-  if(m_dllFlag == 0){   //  (old Erica&Miriam code):
+  switch (m_dllFlag) {
+  case  0:  //  (old Erica&Miriam code):
     sc = calcMuonLL( pMuid );
-    if (msgLevel(MSG::DEBUG) ) debug() << " calcMuonLL failed (P<0) to MuonPID object " << pMuid << endmsg;
     if(sc.isFailure()){
+      if (msgLevel(MSG::DEBUG) ) debug() << " calcMuonLL failed (P<0) to MuonPID object " << pMuid << endmsg;
       if (myIsMuonLoose) m_mullfail++;
     }
-  }  else if(m_dllFlag == 1){             // DLL with distance+integral:
+    break;
+  case 1:             // DLL with distance+integral:
     sc = calcMuonLL_dist(pMuid,m_MomentumPre);
     if(sc.isFailure()){
       if (msgLevel(MSG::DEBUG) ) debug() << " calcMuonLL(binned) failed (P<0) to MuonPID object " << pMuid << endmsg;
       if (myIsMuonLoose) m_mullfail++;
     }
-  } else  if(m_dllFlag == 3){ // DLL with tanh(dist2) histograms
+    break;
+  case 3: // DLL with tanh(dist2) histograms
     sc = calcMuonLL_tanhdist(pMuid,m_MomentumPre);
     if(sc.isFailure()){
-      if (msgLevel(MSG::DEBUG) ) debug() 
-        << " calcMuonLL(tanh mapping) failed (P<0) to MuonPID object " << pMuid << endmsg;
+      if (msgLevel(MSG::DEBUG) ) debug()
+            << " calcMuonLL(tanh mapping) failed (P<0) to MuonPID object " << pMuid << endmsg;
       if (myIsMuonLoose) m_mullfail++;
     }
-  } else  if(m_dllFlag == 4){ // DLL with tanh(dist2) 2010 data histograms for muons and 2009 landau fittings for non-muons
+    break;
+  case 4:  // DLL with tanh(dist2) 2010 data histograms for muons and 2009 landau fittings for non-muons
     sc = calcMuonLL_tanhdist_landau(pMuid,m_MomentumPre);
     if(sc.isFailure()){
-      if (msgLevel(MSG::DEBUG) ) debug() 
-        << " calcMuonLL (dllFlag == 4) failed (P<0) to MuonPID object " << pMuid << endmsg;
-      if (myIsMuonLoose) m_mullfail++;    
+      if (msgLevel(MSG::DEBUG) ) debug()
+            << " calcMuonLL (dllFlag == 4) failed (P<0) to MuonPID object " << pMuid << endmsg;
+      if (myIsMuonLoose) m_mullfail++;
     }
+    break;
   }
 
 
@@ -1493,24 +1493,6 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
   return StatusCode::SUCCESS;
 }
 
-
-
-//=============================================================================
-// Find out if st myst is in input array of stations
-//=============================================================================
-bool MuonIDAlg::stInStations(const int myst,const std::vector<int>& stations)
-{
-
-  for (std::vector<int>::const_iterator it = stations.begin();
-       it != stations.end(); ++it)
-  {
-    int ist = *it;
-    if (ist==myst) return true;
-  }
-  return false;
-}
-
-
 //=============================================================================
 // Common IsMuon (with weights) requirements from set
 // of stations with hits in FOI
@@ -1518,41 +1500,23 @@ bool MuonIDAlg::stInStations(const int myst,const std::vector<int>& stations)
 // Modified by J. Helder to remove use of weights
 //=============================================================================
 
-bool MuonIDAlg::IsMuon(const std::vector<int>& stations,const double& p)
+bool MuonIDAlg::IsMuon(const std::vector<int>& stations,double mom)
 {
-
-  const double pr1=m_PreSelMomentum;
-  const double pr2=m_MomentumCuts[0];
-  const double pr3=m_MomentumCuts[1];
-
-  double mom=p;
-  //double mom=p/Gaudi::Units::GeV;
-
   if (msgLevel(MSG::DEBUG) ) {
     debug()<<"IsMuon"<<endmsg;
-    debug()<<"pr1="<<pr1<<endmsg;
-    debug()<<"pr2="<<pr2<<endmsg;
-    debug()<<"pr3="<<pr3<<endmsg;
+    debug()<<"pr1="<<m_PreSelMomentum<<endmsg;
+    debug()<<"pr2="<<m_MomentumCuts[0]<<endmsg;
+    debug()<<"pr3="<<m_MomentumCuts[1]<<endmsg;
     debug()<<"IsMuon p="<<mom<<endmsg;
   }
 
-  if (mom>pr1 && mom<pr2)  // JHLJHL: Check indices for M2 and M3 30/08/2013
-  {
-    if (stInStations(m_iM2,stations) && stInStations(m_iM2+1,stations)) return true;
-  }
+  // JHLJHL: Check indices for M2 and M3 30/08/2013
+  if (mom<m_PreSelMomentum)  return false;
+  auto i12 = stInStations(m_iM2,stations) && stInStations(m_iM2+1,stations);
+  if (mom<m_MomentumCuts[0]) return i12;
+  if (mom<m_MomentumCuts[1]) return i12 && ( stInStations(m_iM2+2,stations) || stInStations(m_iM2+3,stations) );
+  return i12 && stInStations(m_iM2+2,stations) && stInStations(m_iM2+3, stations) ;
 
-  else if (mom>pr2 && mom<pr3)
-  {
-    if (stInStations(m_iM2,stations) && stInStations(m_iM2+1,stations) &&
-        (stInStations(m_iM2+2,stations) || stInStations(m_iM2+3,stations))) return true;
-  }
-  else if (mom>pr3)
-  {
-    if (stInStations(m_iM2,stations) && stInStations(m_iM2+1,stations)
-        && stInStations(m_iM2+2,stations) && stInStations(m_iM2+3, stations) ) return true;
-  }
-
-  return false;
 }
 
 
@@ -1562,23 +1526,21 @@ bool MuonIDAlg::IsMuon(const std::vector<int>& stations,const double& p)
 // modified  Sara & Gaia
 // Modified by J. Helder to remove use of weights
 //=============================================================================
-bool MuonIDAlg::IsMuonLoose(const std::vector<int>& stations,const double& p)
+bool MuonIDAlg::IsMuonLoose(const std::vector<int>& stations,double mom)
 {
-  //double mom=p/Gaudi::Units::GeV;
-  double mom=p;
-  std::vector<int> vstations_rel1 = boost::assign::list_of(m_iM2)(m_iM2+1)(m_iM2+2);   // JHLJHL: Check indices... 30/08/2013
-  std::vector<int> vstations_rel2 = boost::assign::list_of(m_iM2)(m_iM2+1)(m_iM2+2)(m_iM2+3);
+  std::array<int,3> vstations_rel1 = { m_iM2,m_iM2+1,m_iM2+2 };   // JHLJHL: Check indices... 30/08/2013
+  std::array<int,4> vstations_rel2 = { m_iM2,m_iM2+1,m_iM2+2,m_iM2+3 };
 
   if (msgLevel(MSG::DEBUG) ) {
-    debug()<<"vstations_rel1"<<vstations_rel1<<endmsg;
-    debug()<<"vstations_rel2"<<vstations_rel2<<endmsg;
+    debug()<<"vstations_rel1"<<std::vector<int>{std::begin(vstations_rel1),std::end(vstations_rel1)}<<endmsg;
+    debug()<<"vstations_rel2"<<std::vector<int>{std::begin(vstations_rel2),std::end(vstations_rel2)}<<endmsg;
   }
 
   const double pr1=m_PreSelMomentum;
   const double pr2=m_MomentumCuts[0];
 
   // JHL: Aug. 2011: Don't use random weights but assume hits in M4 and M5 for p < 3.5 GeV and hits in M5 for p<4.2 GeV are not signal
-  bool w[5] = {true,true,true,false,false};
+  std::array<bool,5> w = {true,true,true,false,false};
   if(mom>3500) w[3]=true;
   if(mom>4200) w[4]=true;
 
@@ -1590,32 +1552,19 @@ bool MuonIDAlg::IsMuonLoose(const std::vector<int>& stations,const double& p)
     debug() << "weights: " << w[0] << " " << w[1] << " " << w[2] << " " << w[3] << " " << w[4] <<endmsg;
   }
 
-  if (mom>pr1 && mom<pr2)
-  {
-    int j=0;
-    for (std::vector<int>::const_iterator it = stations.begin();
-         it != stations.end(); ++it)
-    {
-      int ist = *it;
-      if (stInStations(ist,vstations_rel1)&&w[ist]) j+=1;
-    }
+  if (mom<pr1) return false;
+  if (mom<pr2) {
+    int j=std::count_if( stations.begin(), stations.end(), [&](int ist) {
+                            return stInStations(ist,vstations_rel1)&&w[ist];
+    });
     if (msgLevel(MSG::DEBUG) ) debug()<<"first bin, j="<<j<<endmsg;
-    if (j>1) return true;
+    return j>1;
   }
-
-  else if (mom>pr2)
-  {
-    int j=0;
-    for (std::vector<int>::const_iterator it = stations.begin();
-         it != stations.end(); ++it)
-    {
-      int ist = *it;
-      if (stInStations(ist,vstations_rel2)&&w[ist]) j+=1;
-    }
-    if (msgLevel(MSG::DEBUG) ) debug()<<"second bin, j="<<j<<endmsg;
-    if (j>2) return true;
-  }
-  return false;
+  int j=std::count_if( stations.begin(), stations.end(), [&](int ist) {
+      return stInStations(ist,vstations_rel2)&&w[ist];
+  });
+  if (msgLevel(MSG::DEBUG) ) debug()<<"second bin, j="<<j<<endmsg;
+  return j>2;
 }
 
 //=============================================================================
@@ -1624,33 +1573,23 @@ bool MuonIDAlg::IsMuonLoose(const std::vector<int>& stations,const double& p)
 // if found a muon make a probability from the DxDz matching
 double MuonIDAlg::calcMuProb(LHCb::MuonPID * pMuid){
 
-  if(pMuid->IsMuonLoose()){
-    // slope calculated in M2 and M3
-    m_xMatchStation = m_iM2;  // JHLJHL: Check M2 and M3 indices, ... for the case with no M1! 30/08/2013
-    // find slope difference between track and Coords in M2-M3
-    double coordSlopeX = ((m_CoordX[m_xMatchStation] -
-                           m_CoordX[m_xMatchStation+1])/
-                          (m_stationZ[m_xMatchStation] -
-                           m_stationZ[m_xMatchStation+1]));
-    double dSlopeX = fabs( m_trackSlopeX - coordSlopeX );
-    if (msgLevel(MSG::DEBUG) ) debug()<<"calcMuProb: m_xMatchStation: " << m_xMatchStation << " m_CoordX: " 
-        << m_CoordX[m_xMatchStation] << " - " << m_CoordX[m_xMatchStation+1] << " m_stationZ: " <<  m_stationZ[m_xMatchStation] << " - " <<  m_stationZ[m_xMatchStation+1] << " dSlopeX: " << dSlopeX <<endmsg; 
-
-    // formula to make this a probability is
-    // dSlopeX < 0.005 = 1.0
-    // 0.005 < dSlopeX < 0.085 = 1. - ( (dSlopeX-0.005) / 0.08 )
-    // 0.085 < dSlopeX = 0.
-    if( dSlopeX < 0.005 ) {
-      return 1.0;
-    }else if( dSlopeX > 0.085 ){
-      return 0.0;
-    } else {
-      return (1.0 - ( (dSlopeX-0.005) / 0.08 ) );
-    }
-  }else{
+  if(!pMuid->IsMuonLoose()) {
     // not passed selection as a muon so probability is zero
     return 0.0;
   }
+  // slope calculated in M2 and M3
+  m_xMatchStation = m_iM2;  // JHLJHL: Check M2 and M3 indices, ... for the case with no M1! 30/08/2013
+  // find slope difference between track and Coords in M2-M3
+  double coordSlopeX = ((m_CoordX[m_xMatchStation] - m_CoordX[m_xMatchStation+1])/
+                        (m_stationZ[m_xMatchStation] - m_stationZ[m_xMatchStation+1]));
+  double dSlopeX = fabs( m_trackSlopeX - coordSlopeX );
+  if (msgLevel(MSG::DEBUG) ) debug()<<"calcMuProb: m_xMatchStation: " << m_xMatchStation << " m_CoordX: "
+      << m_CoordX[m_xMatchStation] << " - " << m_CoordX[m_xMatchStation+1] << " m_stationZ: " <<  m_stationZ[m_xMatchStation] << " - " <<  m_stationZ[m_xMatchStation+1] << " dSlopeX: " << dSlopeX <<endmsg;
+
+  // formula to make this a probability is
+  if( dSlopeX < 0.005 ) return 1.0;
+  if( dSlopeX > 0.085 ) return 0.0;
+  return (1.0 - ( (dSlopeX-0.005) / 0.08 ) );
 }
 
 
@@ -1681,7 +1620,7 @@ StatusCode MuonIDAlg::calcMuonLL_dist(LHCb::MuonPID * pMuid, const double& p){
   myDist = calc_closestDist(pMuid,p,closest_region);
   if (myDist<=0){
     Warning("Closest Distance <= 0 ",StatusCode::SUCCESS).ignore();
-    return StatusCode::FAILURE; 
+    return StatusCode::FAILURE;
   }
 
   //EP: Store dist to fill Muon Track extra info
@@ -1728,7 +1667,7 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist(LHCb::MuonPID * pMuid, const double& p
   //=============================================================================
 
   static const double atanh05 = std::atanh(0.5);
-  
+
   pMuid->setMuonLLMu(-10000.);
   pMuid->setMuonLLBg(-10000.);
 
@@ -1745,7 +1684,7 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist(LHCb::MuonPID * pMuid, const double& p
   myDist = calc_closestDist(pMuid,p,closest_region);
   if (myDist<=0){
     Warning("Closest Distance < 0 ",StatusCode::SUCCESS).ignore();
-    return StatusCode::FAILURE; 
+    return StatusCode::FAILURE;
   }
 
   //EP: Store dist to fill Muon Track extra info
@@ -1757,7 +1696,7 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist(LHCb::MuonPID * pMuid, const double& p
 
   int region=trackRegion[m_iM2]; // M2 // JHLJHL: Check M2 and M3 indices in case of no M1. 30/08/2013
   if (region<0) region=trackRegion[m_iM2+1]; // M3
-  
+
   if (region<0) {
     Warning("calcMuonLL_tanhdist: no valid region",StatusCode::SUCCESS).ignore();
     return StatusCode::FAILURE;
@@ -1795,8 +1734,8 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist(LHCb::MuonPID * pMuid, const double& p
 StatusCode MuonIDAlg::calcMuonLL_tanhdist_landau(LHCb::MuonPID * pMuid, const double& p){
   //=============================================================================
   // comment: Calculate the muon DLL using cumulative histos of the hyperbolic
-  //          tangent of the closest distance tuned on 2010 data for muon hypothesis 
-  //          and previous landau fittings to 2009 MC for non-muon hypothesis, 
+  //          tangent of the closest distance tuned on 2010 data for muon hypothesis
+  //          and previous landau fittings to 2009 MC for non-muon hypothesis,
   //          per region and momentum bins:
   // authors: J. Helder Lopes
   // date:    16/02/2011
@@ -1824,9 +1763,9 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist_landau(LHCb::MuonPID * pMuid, const do
   myDist = calc_closestDist(pMuid,p,closest_region);
   if (myDist<=0){
     Warning("Closest Distance < 0 ",StatusCode::SUCCESS).ignore();
-    return StatusCode::FAILURE; 
+    return StatusCode::FAILURE;
   }
-  
+
   //EP: Store dist to fill Muon Track extra info
   m_dist_out=myDist;
 
@@ -1854,7 +1793,7 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist_landau(LHCb::MuonPID * pMuid, const do
   ProbMu = calc_ProbMu_tanh(tanhdist, pBin, region );
   if (ProbMu<0) return Error("ProbMu <0", StatusCode::FAILURE);
 
-  // Calculate ProbNonMu using Landau fits 
+  // Calculate ProbNonMu using Landau fits
   ProbNonMu = calc_ProbNonMu(myDist, parNonMu);
   if (ProbNonMu<0) return Error("ProbNonMu <0", StatusCode::FAILURE);
 
@@ -1918,9 +1857,9 @@ StatusCode MuonIDAlg::calcMuonLL(LHCb::MuonPID * muonid){
     }
 
     int station = (*iCoord)->key().station();
-    if (station >= m_iM2 ) {  // JHL: station == 0 is OK in the case of no M1  12/Oct./2013 
-      dist = dist + pow(((x - m_trackX[station])/dx),2) +
-        pow(((y - m_trackY[station])/dy),2) ;
+    if (station >= m_iM2 ) {  // JHL: station == 0 is OK in the case of no M1  12/Oct./2013
+      dist = dist + std::pow(((x - m_trackX[station])/dx),2) +
+        std::pow(((y - m_trackY[station])/dy),2) ;
       nhits++;
     }
   }
@@ -2040,21 +1979,20 @@ StatusCode MuonIDAlg::calcDist( LHCb::MuonPID* muonid ){
   }
 
   std::vector<LHCb::MuonCoord*> & mcoord = m_muonMap[muonid];
-  std::vector<LHCb::MuonCoord*>::const_iterator iCoord;
   double mCoordX[5] = {0.,0.,0.,0.,0.};
   double mCoordY[5] = {0.,0.,0.,0.,0.};
   double mCoordDX[5] = {0.,0.,0.,0.,0.};
   double mCoordDY[5] = {0.,0.,0.,0.,0.};
-  for( iCoord = mcoord.begin() ; iCoord != mcoord.end() ; iCoord++ ){
+  for( const auto& coord : mcoord) {
     double x,dx,y,dy,z,dz;
-    LHCb::MuonTileID tile=(*iCoord)->key();
+    LHCb::MuonTileID tile=coord->key();
     sc = m_mudet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
     if(sc.isFailure()){
       Warning(" Failed to get x,y,z of tile ",sc).ignore();
       if (msgLevel(MSG::DEBUG) ) debug()<< "Failed to get x,y,z of tile " << tile << endmsg;
       continue;
     }
-    int station = (*iCoord)->key().station();
+    auto  station = tile.station();
     if(mCoordX[station] == 0) {
       // this is the first coord found
       mCoordX[station] = x;
@@ -2065,10 +2003,10 @@ StatusCode MuonIDAlg::calcDist( LHCb::MuonPID* muonid ){
 
     }else{
       // get best match in X and Y
-      if( (x - m_trackX[station])*(x - m_trackX[station]) +
-          (y - m_trackY[station])*(y - m_trackY[station])  <
-          pow((mCoordX[station] - m_trackX[station]),2) +
-          pow((mCoordY[station] - m_trackY[station]),2) ){
+      if( std::pow(               x - m_trackX[station],2) +
+          std::pow(               y - m_trackY[station],2)  <
+          std::pow(mCoordX[station] - m_trackX[station],2) +
+          std::pow(mCoordY[station] - m_trackY[station],2) ){
         // this Coord is a better match
         mCoordX[station] = x;
         mCoordY[station] = y;
@@ -2082,7 +2020,7 @@ StatusCode MuonIDAlg::calcDist( LHCb::MuonPID* muonid ){
   int nstn = 0;
   for( int stn = 0 ; stn < 5; stn++ ){  // No M1 case: 5 here refers to dimension of mCoordDX arrays JHL 12/Oct./2013
     if (msgLevel(MSG::DEBUG) ) {
-      debug() << "calcDist: station: "<< stn << " mCoordDX = " << mCoordDX[stn] 
+      debug() << "calcDist: station: "<< stn << " mCoordDX = " << mCoordDX[stn]
               << " mCoordDY = " << mCoordDY[stn] <<  endmsg;
     }
     if ( mCoordDX[stn] != 0. ) {
@@ -2111,7 +2049,7 @@ StatusCode MuonIDAlg::preSelection(LHCb::MuonPID * pMuid, bool &passed){
     pMuid->setPreSelMomentum(1);
   }
   pMuid->setInAcceptance(1);
-  // in first and last station acceptance  
+  // in first and last station acceptance
   // JHLJHL: Change 4 -> m_NStation-1, in case of no M1. In this case 0 -> M2. Check how this affects InAcceptance... 30/08/2013
   if (msgLevel(MSG::DEBUG) ) {
     debug()  << "trackX0 = " << m_trackX[0] << endmsg;
@@ -2237,7 +2175,7 @@ StatusCode MuonIDAlg::setCoords(LHCb::MuonPID *pMuid){
 }
 
 
-StatusCode MuonIDAlg::get_closest(LHCb::MuonPID *pMuid, double *closest_x, 
+StatusCode MuonIDAlg::get_closest(LHCb::MuonPID *pMuid, double *closest_x,
                                   double *closest_y, double *closest_region){
   //=============================================================================
   // comment: get the closest hit
@@ -2280,7 +2218,7 @@ StatusCode MuonIDAlg::get_closest(LHCb::MuonPID *pMuid, double *closest_x,
     if (station >= m_iM2 ) {  // JHL: station == 0 is OK in the case of no M1  12/Oct./2013
       if(  ( fabs( x - m_trackX[station] ) < foiXDim ) &&
            ( fabs( y - m_trackY[station] ) < foiYDim )  ) {
-        
+
         Fdist[station] =(((x - m_trackX[station])/dx) * ((x - m_trackX[station])/dx))
           +(((y - m_trackY[station])/dy) * ((y - m_trackY[station])/dy));
 
@@ -2310,29 +2248,29 @@ std::vector<int> MuonIDAlg::findTrackRegions(){
   // authors: G. Lanfranchi & S. Furcas & X. Cid Vidal,
   // date:    10/3/11
   //=====================================================================
-    
+
   std::vector<int> trackRegion(m_NStation,-1);
   // Region of the track extrapolated:
-  
+
   if (m_kalman_foi)
   {
     StatusCode sc = DistMuIDTool()->findTrackRegions(m_mutrack,trackRegion);
     if (sc.isFailure() && msgLevel(MSG::DEBUG) ) debug() << " Error finding track regions "<< endmsg;
     return trackRegion;
   }
-  
+
   for (int sta=0;sta<m_NStation; sta++){
-  
+
     int chnum = -1;
     int regnum = -1;
-    
+
     m_mudet->Pos2StChamberNumber(m_trackX[sta],m_trackY[sta],sta,chnum,regnum).ignore();
     trackRegion[sta] = regnum;
     if (trackRegion[sta]<0 && msgLevel(MSG::DEBUG) )
       debug() << format(" Track extrapolation in station %d gives not-existent region ",sta)
               << endmsg;
   }
-  
+
   if (msgLevel(MSG::DEBUG)) debug() << "TrackRegions" << trackRegion << endmsg;
   return trackRegion;
 }
@@ -2353,9 +2291,9 @@ double MuonIDAlg::calc_closestDist(LHCb::MuonPID *pMuid, const double& p, double
   else occupancy = &m_occupancyWithCrossing;
 
   if (msgLevel(MSG::DEBUG) )debug()  << "calc_closestDist: occupancy: " << (*occupancy) << endmsg;
-  
+
   if (m_kalman_foi){
-      
+
     StatusCode sc = DistMuIDTool()->muonQuality(m_mutrack, closest_dist);
     if (sc.isFailure())
     {
@@ -2461,7 +2399,7 @@ int MuonIDAlg::GetPbin(double p, int region){
   case 3:{ pBins = &m_MupBinsR3; break;}
   case 4:{ pBins = &m_MupBinsR4; break;}
   }
-  if (msgLevel(MSG::VERBOSE) ) verbose() << "GetPbin: region+1 " << region+1 << " p " <<  p << " pBins vector address: " 
+  if (msgLevel(MSG::VERBOSE) ) verbose() << "GetPbin: region+1 " << region+1 << " p " <<  p << " pBins vector address: "
                                      << pBins << endmsg;
   if(0 == pBins) throw GaudiException("GetPbin: No match to a pBins vector. Null pBins pointer", "",StatusCode::FAILURE);
   for(unsigned int iBin=0; iBin<pBins->size();++iBin){
@@ -2490,8 +2428,8 @@ double MuonIDAlg::calc_ProbNonMu_tanh(const double& tanhdist0, int pBin, int reg
   int itanhdist=int(tanhdist0*nDistBins);
   //if(itanhdist>nDistBins)itanhdist--;
   if(itanhdist>=nDistBins) itanhdist=nDistBins-1;
-  if (msgLevel(MSG::DEBUG) ) debug() << "calc_ProbNonMu_tanh: region " << region << " pBin " << pBin << " tanh(dist) " 
-                                     << tanhdist0 << " itanhdist " << itanhdist << " ProbNonMu " 
+  if (msgLevel(MSG::DEBUG) ) debug() << "calc_ProbNonMu_tanh: region " << region << " pBin " << pBin << " tanh(dist) "
+                                     << tanhdist0 << " itanhdist " << itanhdist << " ProbNonMu "
                                      << (*((*(m_tanhCumulHistoNonMuon[region]))[pBin]))[itanhdist] << endmsg;
   return (*((*(m_tanhCumulHistoNonMuon[region]))[pBin]))[itanhdist];
 }
@@ -2767,7 +2705,7 @@ StatusCode MuonIDAlg::trackExtrapolate(const LHCb::Track *pTrack){
                                       (m_stationZ[station] - state->z()) ));
     m_trackY.push_back(state->y() + ( state->ty() *
                                       (m_stationZ[station] - state->z()) ));
-    if (msgLevel(MSG::DEBUG) ) debug() << "trackExtrapolate: station: " << station << " m_trackX: " 
+    if (msgLevel(MSG::DEBUG) ) debug() << "trackExtrapolate: station: " << station << " m_trackX: "
         << m_trackX[station] << " m_trackY: " << m_trackY[station] << endmsg;
   }
 
@@ -2784,9 +2722,9 @@ std::pair<double,double> MuonIDAlg::foiXY(int station, int region, double p) con
   int i  = station * m_NRegion + region;
   if (p < 1000000. ){
     auto pGeV = p/Gaudi::Units::GeV;
-    std::array<double,2> pp = { -m_xfoiParam3[ i ]*pGeV , 
+    std::array<double,2> pp = { -m_xfoiParam3[ i ]*pGeV ,
                                 -m_yfoiParam3[ i ]*pGeV };
-    return { ( m_xfoiParam1[ i ] + m_xfoiParam2[ i ]* vdt::fast_exp(pp[0]) ), 
+    return { ( m_xfoiParam1[ i ] + m_xfoiParam2[ i ]* vdt::fast_exp(pp[0]) ),
              ( m_yfoiParam1[ i ] + m_yfoiParam2[ i ]* vdt::fast_exp(pp[1]) ) };
 
   }else{
@@ -2823,10 +2761,10 @@ LHCb::Track* MuonIDAlg::makeMuonTrack(const LHCb::MuonPID& mupid){
 
   const LHCb::Track* mother = mupid.idTrack();
   double Quality=-1;
-  LHCb::Track* mtrack;
+  std::unique_ptr<LHCb::Track> mtrack;
 
   //XCV: if Kalman Foi, can use directly the existing muon track!
-  if (m_kalman_foi){    
+  if (m_kalman_foi){
     if (m_FindQuality) {
       StatusCode sc;
       if (m_use_dist){
@@ -2841,7 +2779,7 @@ LHCb::Track* MuonIDAlg::makeMuonTrack(const LHCb::MuonPID& mupid){
         if (m_mutrack.states().size()) sc = myMuIDTool()->muonQuality(m_mutrack,Quality);
         else sc=StatusCode::FAILURE;
       }
-      
+
       if (sc.isSuccess()) {
         if (msgLevel(MSG::DEBUG) ) debug()<<"\t Quality="<< Quality<<endmsg;
       }
@@ -2849,36 +2787,36 @@ LHCb::Track* MuonIDAlg::makeMuonTrack(const LHCb::MuonPID& mupid){
         if (msgLevel(MSG::DEBUG) ) debug()<<"Error when fitting track"<<endmsg;
       }
     }
-  
-    if (m_mutrack.states().size()) mtrack = m_mutrack.cloneWithKey();
-    else 
+
+    if (m_mutrack.states().size()) mtrack.reset( m_mutrack.cloneWithKey() );
+    else
     {
-      mtrack = new LHCb::Track( mupid.key() );
+      mtrack.reset( new LHCb::Track( mupid.key() ) );
       mtrack->addToStates( mother->closestState(9450.) );
     }
   }
-  
+
   else{
-    
-    mtrack = new LHCb::Track( mupid.key() );
+
+    mtrack.reset( new LHCb::Track( mupid.key() ) );
     std::vector<LHCb::MuonCoord*> & mcoord = m_muonMap[(LHCb::MuonPID*) &mupid];
     //add mother track to ancestors
     mtrack->addToAncestors(*mother);
     mtrack->addToStates( mother->closestState(9450.) );
-    std::vector<LHCb::MuonCoord*>::const_iterator iCoord;      
+    std::vector<LHCb::MuonCoord*>::const_iterator iCoord;
     std::vector<LHCb::LHCbID> ids_init;
-      
-    //charge lhcbids to track and fit  
+
+    //charge lhcbids to track and fit
     for(iCoord = mcoord.begin(); iCoord != mcoord.end(); ++iCoord ) {
       LHCb::MuonTileID tile= (*iCoord)->key();
       LHCb::LHCbID id(tile);
       mtrack->addToLhcbIDs(id);
       ids_init.push_back(id);
     }
-  
+
     if (msgLevel(MSG::DEBUG) ) debug()<<"ids ready to get chi2"<<endmsg;
 
-  
+
     if (m_FindQuality) {
       // get chi2 value
       LHCb::Track mtrack_partial;
@@ -2896,7 +2834,7 @@ LHCb::Track* MuonIDAlg::makeMuonTrack(const LHCb::MuonPID& mupid){
               debug()<< "id channelID="<< id->channelID()<<endmsg;
             }
           }
-          
+
           StatusCode sc2 = myMuIDTool()->muonQuality(mtrack_partial,Quality);
           if (!sc2.isFailure()) {
             if (msgLevel(MSG::DEBUG) ) debug()<<"\t Quality="<< Quality<<endmsg;
@@ -2904,7 +2842,7 @@ LHCb::Track* MuonIDAlg::makeMuonTrack(const LHCb::MuonPID& mupid){
           }
           else {
             if (msgLevel(MSG::DEBUG) ) debug()<<"Error when preparing track to fit"<<endmsg;
-          }  
+          }
         }
       }
     }
@@ -2943,16 +2881,11 @@ LHCb::Track* MuonIDAlg::makeMuonTrack(const LHCb::MuonPID& mupid){
   //mtrack->addInfo(LHCb::Track::MuonCLArrival,CLArrival);
 
 
-  return mtrack;
+  return mtrack.release();
 }
 
 double land2(Double_t *x, Double_t *par) {
-
-  double result = 0;
-  Double_t landau1 = TMath::Landau(x[0],par[0],par[1]);
-  Double_t landau2 = TMath::Landau(x[0],par[2],par[3]);
-  result = (landau1 + par[4]*landau2);
-
-  return result;
-
+  auto  landau1 = TMath::Landau(x[0],par[0],par[1]);
+  auto  landau2 = TMath::Landau(x[0],par[2],par[3]);
+  return  landau1 + par[4]*landau2;
 }
