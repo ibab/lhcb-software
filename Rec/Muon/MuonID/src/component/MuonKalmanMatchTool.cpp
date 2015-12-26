@@ -340,19 +340,19 @@ void MuonKalmanMatchTool::getListofMuonTiles(std::vector<LHCb::MuonTileID>& matc
   }
 }
 
-double MuonKalmanMatchTool::getChisquare(int& ndof) {
+double MuonKalmanMatchTool::getChisquare(int& ndof) const {
   ndof= m_mymudof;
   return m_mymuchi2;
 }
 
-IMuonMatchTool::MuonMatchType MuonKalmanMatchTool::getMatch(int station) {
+IMuonMatchTool::MuonMatchType MuonKalmanMatchTool::getMatch(int station) const {
   if(!m_hitOnStation[station]) return IMuonMatchTool::NoMatch;
   if(m_bestmatchedHits[station]->uncrossed()) return IMuonMatchTool::Uncrossed;
   return IMuonMatchTool::Good;
 }
 
 
-double MuonKalmanMatchTool::getMatchSigma(int station) {
+double MuonKalmanMatchTool::getMatchSigma(int station) const {
   // retrieve the original match distance in sigma for this station
   verbose() << "requested MatchSigma for M"<<station+1<<" lastTrack is "<<m_lasttrack<<" match is "<<m_hitOnStation[station]<<endmsg;
   double out=999.;
@@ -369,14 +369,6 @@ double MuonKalmanMatchTool::getMatchSigma(int station) {
     }
   }
   return out;
-}
-
-double MuonKalmanMatchTool::muonMatchPropertyD(const char* propertyName, int ) {
-  return -9999.;
-}
-
-int MuonKalmanMatchTool::muonMatchPropertyI(const char* propertyName, int) {
-  return std::string{propertyName} == "matchedStations" ? nStations- m_missedStations : -9999;
 }
 
 DECLARE_TOOL_FACTORY( MuonKalmanMatchTool )

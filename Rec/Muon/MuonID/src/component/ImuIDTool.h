@@ -17,7 +17,7 @@
  *  @date   2008-07-15
  */
 
-class ImuIDTool : virtual public extend_interfaces<IAlgTool> {
+class ImuIDTool : public extend_interfaces<IAlgTool> {
 public:
 
   DeclareInterfaceID(ImuIDTool,2,0);
@@ -42,8 +42,6 @@ public:
                             double& Quality, double& CLQuality,
                             double& Arrival, double& CLArrival, double& DLL,
                             const std::vector<LHCb::LHCbID> ids_init = std::vector<LHCb::LHCbID>()) =0;
-
-
 };
 
 #endif // MUONID_IMUIDTOOL_H

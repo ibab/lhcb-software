@@ -2,8 +2,6 @@
 
 // local
 #include "DistMuIDTool.h"
-//boost
-#include <boost/assign/list_of.hpp>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : DistMuIDTool
@@ -77,8 +75,7 @@ StatusCode DistMuIDTool::computeDistance(const LHCb::Track& muTrack, double& dis
   if (msgLevel(MSG::DEBUG) ) debug()<<"z_stations="<<m_zstations<<endmsg;
 
   sc=makeStates(muTrack);
-  if (sc.isFailure())
-  {
+  if (sc.isFailure()) {
     sc.setCode(303);
     return sc;
   }

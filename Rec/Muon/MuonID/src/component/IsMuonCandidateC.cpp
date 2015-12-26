@@ -3,11 +3,6 @@
 // local
 #include "IsMuonCandidateC.h"
 
-
-//boost
-#include <boost/assign/list_of.hpp>
-
-
 //-----------------------------------------------------------------------------
 // Implementation file for class : IsMuonCandidateC
 //
@@ -31,8 +26,7 @@ IsMuonCandidateC::IsMuonCandidateC( const std::string& type,
 
 
   //Mom Range for IsMuon
-  std::vector<double> tmp = boost::assign::list_of(3000.)(6000.)(10000.);
-  declareProperty("MomRangeIsMuon", m_MomRangeIsMuon = tmp);
+  declareProperty("MomRangeIsMuon", m_MomRangeIsMuon = { {3000.,6000.,10000.} } );
 
   //IsMuon used:
   //- 1 IsMuonCandidate

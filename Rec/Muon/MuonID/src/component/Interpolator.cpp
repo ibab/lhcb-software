@@ -1,10 +1,8 @@
-// $Id: Interpolator.cpp,v 1.1 2009-07-01 18:27:11 polye Exp $
 // Include files
-
+#include <algorithm>
 
 // local
 #include "Interpolator.h"
-#include <iostream>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Uniformer
@@ -19,45 +17,28 @@
 Uniformer::Uniformer(const std::vector<double>& xpoints_in,const std::vector<double>& ypoints_in) {
   //xpoint to interpolate in 2D
   m_xpoints=xpoints_in;
-  //y points to interpolate in 2D
-  m_ypoints=ypoints_in;
 
-  //number of points
-  m_npoints=m_xpoints.size();
-  m_nbins=m_npoints-1;
+  // if (xpoints_in.size()!=ypoints_in.size()) throw std::runtime_error();
 
-  for (int i=1;i<m_npoints;i++){
+  m_uniformer.reserve(m_xpoints.size()-1);
+  for (unsigned i=1;i<m_xpoints.size();++i){
     //build interpolator between each pair of consecutive points
-    m_uniformer.emplace_back(m_xpoints[i-1],m_xpoints[i],m_ypoints[i-1],m_ypoints[i]);
+    m_uniformer.emplace_back(m_xpoints[i-1],m_xpoints[i],ypoints_in[i-1],ypoints_in[i]);
   }
-  //std::cout <<"Uniformer correctly created"<<std::endl;
 }
 
 //find which bin corresponds to val
-int Uniformer::findBin(const double& xval)
+int Uniformer::findBin(double xval) const
 {
-
-  int out_bin=-5;
   //loop over all bins to look up
-  for (int i=1;i<m_npoints;i++){
-    if (m_xpoints[i-1]<=xval && m_xpoints[i]>xval) out_bin=i-1;
-  }
-  //if last bin
-  if (out_bin==-5)
-  {
-    if (xval>=m_xpoints[m_npoints-1]) out_bin= m_nbins;
-    else out_bin=-1;
-  }
-  //std::cout<< " bin in uniformer is "<<out_bin<<std::endl;
-  return out_bin;
-
+  auto i = std::upper_bound(m_xpoints.begin(),m_xpoints.end(),xval)-m_xpoints.begin();
+  return i-1;
 }
 
 //get bin and calculate result from corresponding interpolator
-double Uniformer::getYvalue(const double& xval)
+double Uniformer::getYvalue(double xval) const
 {
-  int dind=findBin(xval);
-  if (dind>=0 && dind<m_nbins) return m_uniformer[dind].value(xval);
-  if (dind==-1) return 0.;
-  return 1.;
+  auto dind=findBin(xval);
+  if (dind>=0 && dind<static_cast<int>(m_xpoints.size())-1) return m_uniformer[dind].value(xval);
+  return dind==-1 ? 0. : 1. ;
 }

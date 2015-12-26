@@ -51,11 +51,9 @@ public:
                          std::vector<TrackMuMatch>* spareMatches=NULL);
   virtual void getListofCommonMuonHits(CommonConstMuonHits& matchedMuonHits, int station=-1, bool onlybest=true);
   virtual void getListofMuonTiles(std::vector<LHCb::MuonTileID>& matchedTiles, int station=-1, bool onlybest=true);
-  virtual double getChisquare(int& ndof);
-  virtual MuonMatchType getMatch(int station);
-  virtual double getMatchSigma(int station);
-  virtual double muonMatchPropertyD(const char* propertyName, int station=-1);
-  virtual int muonMatchPropertyI(const char* propertyName, int  station=-1);
+  virtual double getChisquare(int& ndof) const;
+  virtual MuonMatchType getMatch(int station) const;
+  virtual double getMatchSigma(int station) const;
 
 private:
   DeMuonDetector*  m_mudet;

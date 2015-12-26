@@ -30,20 +30,20 @@ public:
                         double& clr, double mom = 0.,int region = 0);
   
   
-  double minRange(){return m_minMomentum;}
-  double maxRange(){return 1000000.;}
-  
-
-  StatusCode findMomRange(const double& mom,int& p_r,std::string sig_bkg);
-  
-  double valFromUnif(double value, double mom, int p_r, std::string sig_bkg);
 
   StatusCode finalize() {m_init.ignore(); return GaudiTool::finalize();} //tool finalization
 
-protected:
+private:
+  double minRange(){return m_minMomentum;}
+  double maxRange(){return 1000000.;}
+  
+  enum class sb { sig, bkg };
+
+  StatusCode findMomRange(const double& mom,int& p_r,sb sig_bkg);
+  double valFromUnif(double value, double mom, int p_r, sb sig_bkg);
 
   
-  StatusCode getClValues(std::string sig_bkg);
+  StatusCode getClValues(sb sig_bkg);
 
   
   std::string m_leftRight;

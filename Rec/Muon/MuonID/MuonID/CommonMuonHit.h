@@ -2,7 +2,6 @@
 #define COMMONMUONHIT_H_
 
 #include "GaudiKernel/Range.h"
-#include "GaudiKernel/boost_allocator.h"
 #include "Kernel/MuonTileID.h"
 
 /** @class CommonMuonHit CommonMuonHit.h

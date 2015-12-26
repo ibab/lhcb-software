@@ -15,10 +15,6 @@
 #include "Math/ProbFuncMathCore.h"
 #include "vdt/exp.h"
 
-//boost
-#include <boost/assign/list_of.hpp>
-
-
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonIDAlg
 //

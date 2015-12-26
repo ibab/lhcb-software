@@ -330,47 +330,37 @@ void MuonChi2MatchTool::getListofMuonTiles(std::vector<LHCb::MuonTileID>& matche
   }
 }
 
-double MuonChi2MatchTool::getChisquare(int& ndof) {
+double MuonChi2MatchTool::getChisquare(int& ndof) const {
   ndof= 2*m_ord;
   return m_chisq_min;
 }
 
-IMuonMatchTool::MuonMatchType MuonChi2MatchTool::getMatch(int station) {
+IMuonMatchTool::MuonMatchType MuonChi2MatchTool::getMatch(int station) const {
   if(!m_hitOnStation[station]) return IMuonMatchTool::NoMatch;
   if(m_bestmatchedHits[station]->uncrossed()) return IMuonMatchTool::Uncrossed;
   return IMuonMatchTool::Good;
 }
 
-
-double MuonChi2MatchTool::getMatchSigma(int station) {
+double MuonChi2MatchTool::getMatchSigma(int station) const {
   // retrieve the original match distance in sigma for this station
   verbose() << "requested MatchSigma for M"<<station+1<<" lastTrack is "<<m_lasttrack<<" match is "<<m_hitOnStation[station]<<endmsg;
   double out=999.;
   if(!m_hitOnStation[station]) return out;
   if(m_lasttrack) {
-    std::vector< TrackMuMatch > * mvector=NULL;
+    std::vector< TrackMuMatch > * mvector= nullptr;
     if(m_lastMatchesBest) mvector = m_lastMatchesBest;
     if(!mvector) {
       if(m_lastMatchesSpare) mvector = m_lastMatchesSpare;
     }
     if(mvector) {
-      for (auto im=mvector->begin(); im!=mvector->end(); im++) {
-        if( std::get<0>(*im) == m_bestmatchedHits[station]) {
-          out=std::get<1>(*im);
-          break;
-        }
-      }
+      auto im = std::find_if( mvector->begin(), mvector->end(),
+                              [&](const TrackMuMatch& tmm) {
+            return std::get<0>(tmm) == m_bestmatchedHits[station];
+                              } );
+      if (im!=mvector->end()) out = std::get<1>(*im);
     }
   }
   return out;
-}
-
-double MuonChi2MatchTool::muonMatchPropertyD(const char*, int ) {
-  return -9999.;
-}
-
-int MuonChi2MatchTool::muonMatchPropertyI(const char* propertyName, int) {
-  return std::string{propertyName} == "matchedStations" ? m_ord : -9999;
 }
 
 DECLARE_TOOL_FACTORY( MuonChi2MatchTool )
