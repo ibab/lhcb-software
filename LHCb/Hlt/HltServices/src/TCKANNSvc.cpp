@@ -59,7 +59,6 @@ public:
   TCKANNSvc( const std::string& name, ISvcLocator* pSvcLocator);
   ~TCKANNSvc() = default ;
 
-  StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown) override;
   StatusCode initialize() override;
   StatusCode finalize() override;
 
@@ -196,19 +195,4 @@ TCKANNSvc::i2s(unsigned int tck, const Gaudi::StringKey& major) const
       return {};
     }
     return result;
-}
-
-
-
-//=============================================================================
-// queryInterface
-//=============================================================================
-StatusCode TCKANNSvc::queryInterface(const InterfaceID& riid,
-                                     void** ppvUnknown) {
-  if ( IIndexedANNSvc::interfaceID().versionMatch(riid) )   {
-    *ppvUnknown = dynamic_cast<IIndexedANNSvc*>(this);
-    addRef();
-    return SUCCESS;
-  }
-  return Service::queryInterface(riid,ppvUnknown);
 }

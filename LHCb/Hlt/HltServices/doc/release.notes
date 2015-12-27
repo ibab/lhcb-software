@@ -3,6 +3,8 @@
 ! Responsible : Rob Lambert, Gerhard Raven
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
+! 2015-12-27 - Gerhard Raven
+ - remove TCKANNSvc::queryInterface, use base_class implementation instead
 
 !========================= HltServices v2r12 2015-12-17 =========================
 
