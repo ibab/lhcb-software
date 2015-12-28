@@ -59,7 +59,7 @@ private:
 
   // -- Methods
   StatusCode fillPVs(std::vector<double>& PVPos);
-  void fillMuonStubInfo(LHCb::Track* track, MuonTrack* muTrack);
+  void fillMuonStubInfo(LHCb::Track& track, const MuonTrack& muTrack) const;
   StatusCode iterateToPV(LHCb::Track* track, LHCb::State& finalState, std::vector<double> PVPos, double qOverP);
   LHCb::MCParticle* assocMCParticle(const std::vector<MuonHit*> muonHits);
   bool isIDOnTrack(LHCb::LHCbID id, LHCb::MCParticle* mcp);

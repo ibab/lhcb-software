@@ -192,7 +192,7 @@ StatusCode MuonTTTrack::execute() {
     // -- Get parameters of Muon Stub, add it to the extra info field
     // -- (this is NOT a nice way, hence its off per default)
     if(m_fillMuonStubInfo){
-      fillMuonStubInfo(track, (*it));
+      fillMuonStubInfo(*track, **it);
 
       // -- Add some mroe general information
       track->addInfo(1400, 1 ); // -- Flag it as a muon-stub-track
@@ -265,70 +265,63 @@ StatusCode MuonTTTrack::fillPVs(std::vector<double>& PVPos){
 //=============================================================================
 //  Fill Muon Stub Information
 //=============================================================================
-void MuonTTTrack::fillMuonStubInfo(LHCb::Track* track, MuonTrack* muTrack){
+void MuonTTTrack::fillMuonStubInfo(LHCb::Track& track, const MuonTrack& muTrack) const{
 
   // -- Retrieve fit errors
   Gaudi::XYZVector slope;
   Gaudi::SymMatrix3x3 errmat;
-  track->slopes( slope , errmat );
+  track.slopes( slope , errmat );
 
 
   // -- Get parameters of the MuonStub
-  double bx_fit = track->position().X() - slope.X()*track->position().Z();
-  double by_fit = track->position().Y() - slope.Y()*track->position().Z();
+  double bx_fit = track.position().X() - slope.X()*track.position().Z();
+  double by_fit = track.position().Y() - slope.Y()*track.position().Z();
 
   double sx_fit = slope.X();
   double sy_fit = slope.Y();
 
-  double chi2_fit = track->chi2PerDoF();
+  double chi2_fit = track.chi2PerDoF();
 
-  double npad_fit = double( muTrack->getHits().size() );
+  double npad_fit = double( muTrack.getHits().size() );
   // ---------------------------------------------------------------
 
-  double sx  = muTrack->sx() ;   // -- track slope in XZ
-  double bx  = muTrack->bx() ;   // -- track intercept in XZ
-  double sy  = muTrack->sy() ;   // -- track slope in YZ
-  double by  = muTrack->by() ;   // -- track intercept in YZ
-  double esx = muTrack->errsx(); // -- error on sx
-  double ebx = muTrack->errbx(); // -- error on bx
-  double esy = muTrack->errsy(); // -- error on sy
-  double eby = muTrack->errby(); // -- error on by
-  double covbsy = muTrack->covbsy();
+  double sx  = muTrack.sx() ;   // -- track slope in XZ
+  double bx  = muTrack.bx() ;   // -- track intercept in XZ
+  double sy  = muTrack.sy() ;   // -- track slope in YZ
+  double by  = muTrack.by() ;   // -- track intercept in YZ
+  double esx = muTrack.errsx(); // -- error on sx
+  double ebx = muTrack.errbx(); // -- error on bx
+  double esy = muTrack.errsy(); // -- error on sy
+  double eby = muTrack.errby(); // -- error on by
 
-  double px = muTrack->momentum().X();
-  double py = muTrack->momentum().Y();
-  double pz = muTrack->momentum().Z();
-  double pp = muTrack->p();
-  double pt = muTrack->pt();
-  double qp = muTrack->qOverP();
   // ---------------------------------------------------------------
-  track->addInfo(1000, muTrack->chi2x() );
-  track->addInfo(1001, muTrack->chi2y() );
-  track->addInfo(1002, sx);
-  track->addInfo(1003, bx);
-  track->addInfo(1004, sy);
-  track->addInfo(1005, by);
-  track->addInfo(1006, esx);
-  track->addInfo(1007, ebx);
-  track->addInfo(1008, esy);
-  track->addInfo(1009, eby);
-  track->addInfo(1010, bx_fit);
-  track->addInfo(1011, by_fit);
-  track->addInfo(1012, sx_fit);
-  track->addInfo(1013, sy_fit);
-  track->addInfo(1014, chi2_fit);
-  track->addInfo(1015, npad_fit);
-  track->addInfo(1016, pp);
-  track->addInfo(1017, pt);
-  track->addInfo(1018, qp);
-  track->addInfo(1019, covbsy);
+  track.addInfo(1000, muTrack.chi2x() );
+  track.addInfo(1001, muTrack.chi2y() );
+  track.addInfo(1002, sx);
+  track.addInfo(1003, bx);
+  track.addInfo(1004, sy);
+  track.addInfo(1005, by);
+  track.addInfo(1006, esx);
+  track.addInfo(1007, ebx);
+  track.addInfo(1008, esy);
+  track.addInfo(1009, eby);
+  track.addInfo(1010, bx_fit);
+  track.addInfo(1011, by_fit);
+  track.addInfo(1012, sx_fit);
+  track.addInfo(1013, sy_fit);
+  track.addInfo(1014, chi2_fit);
+  track.addInfo(1015, npad_fit);
+  track.addInfo(1016, muTrack.p());
+  track.addInfo(1017, muTrack.pt());
+  track.addInfo(1018, muTrack.qOverP());
+  track.addInfo(1019, muTrack.covbsy());
 
-  track->addInfo(1020, muTrack->getSpan() );
-  track->addInfo(1021, muTrack->qOverP() );
+  track.addInfo(1020, muTrack.getSpan() );
+  track.addInfo(1021, muTrack.qOverP() );
 
-  track->addInfo(1200, px);
-  track->addInfo(1201, py);
-  track->addInfo(1202, pz);
+  track.addInfo(1200, muTrack.momentum().X());
+  track.addInfo(1201, muTrack.momentum().Y());
+  track.addInfo(1202, muTrack.momentum().Z());
   // ---------------------------------------------------------------
 
 }
@@ -372,39 +365,33 @@ StatusCode MuonTTTrack::iterateToPV(LHCb::Track* track, LHCb::State& finalState,
 LHCb::MCParticle* MuonTTTrack::assocMCParticle(const std::vector<MuonHit*> muonHits){
 
   std::map<LHCb::MCParticle*, int> mcparts;
-  bool isTrue = false;
 
   // -- Get the MCParticles which are associated to the hits of the Particle in the Muon System
   // -- Put the mcparticles into a map, count how many times they appear
-  for( std::vector<MuonHit*>::const_iterator it2 = muonHits.begin() ; it2 != muonHits.end() ; ++it2){
-
-    const LHCb::MuonTileID* centerTile = (*it2)->centerTile();
-
-    if( m_muonPad2MC->Pad2MC( *centerTile ) != NULL && mcparts.find(m_muonPad2MC->Pad2MC( *centerTile )) != mcparts.end()){
-      ++(mcparts.find(m_muonPad2MC->Pad2MC( *centerTile ))->second);
-    }
-
-    if( m_muonPad2MC->Pad2MC( *centerTile ) != NULL && mcparts.find(m_muonPad2MC->Pad2MC( *centerTile )) == mcparts.end()){
-      std::pair<LHCb::MCParticle*, int> dummy;
-      dummy.second = 1;
-      dummy.first =  m_muonPad2MC->Pad2MC( *centerTile );
-      mcparts.insert( dummy );
+  for( const auto& muonHit : muonHits ) {
+    LHCb::MCParticle *p = m_muonPad2MC->Pad2MC( muonHit->centerTile() );
+    if (!p) continue;
+    auto iter = mcparts.find(p);
+    if( iter != mcparts.end()){
+      ++(iter->second);
+    } else {
+      mcparts.insert( std::make_pair(p, 1 ) );
     }
   }
   // ---------------------------------------------------------------
 
   // -- Get particle which contributes the most (i.e. appears the most)
-  std::pair<LHCb::MCParticle*, int> best;
-  for(std::map<LHCb::MCParticle*, int>::iterator iContrib = mcparts.begin() ; iContrib != mcparts.end() ; iContrib++){
-
-    if( (*iContrib).second > best.second ){
-      best.first = (*iContrib).first;
-      best.second = (*iContrib).second;
+  std::pair<LHCb::MCParticle*, int> best{nullptr, 0};
+  for(const auto& contrib : mcparts) {
+    if( contrib.second > best.second ){
+      best.first = contrib.first;
+      best.second = contrib.second;
     }
   }
   // ---------------------------------------------------------------
 
   // -- Call a Particle associated if more than 70% of all MCParticles for all the hits on a track are the same
+  bool isTrue = false;
   if( double(best.second) / muonHits.size() > 0.7){
 
     // -- Particle has to be a Muon
@@ -416,11 +403,7 @@ LHCb::MCParticle* MuonTTTrack::assocMCParticle(const std::vector<MuonHit*> muonH
   }
   // ---------------------------------------------------------------
 
-  if(isTrue){
-    return best.first;
-  }else{
-    return NULL;
-  }
+  return isTrue ? best.first : nullptr;
 
 }
 //=========================================================================
@@ -429,7 +412,6 @@ LHCb::MCParticle* MuonTTTrack::assocMCParticle(const std::vector<MuonHit*> muonH
 //=========================================================================
 bool MuonTTTrack::isIDOnTrack(LHCb::LHCbID id, LHCb::MCParticle* mcp){
 
-  bool isTrue = false;
 
   std::map<LHCb::MCParticle*, unsigned int> linkMap;
   // -- This class should link my id to the MCParticle!
@@ -438,13 +420,8 @@ bool MuonTTTrack::isIDOnTrack(LHCb::LHCbID id, LHCb::MCParticle* mcp){
   // -- For simplicity, we only look at unambigously assigned mcparticles!
   if(linkMap.size() > 1 ) return false;
 
-  for(std::map<LHCb::MCParticle*, unsigned int>::iterator it = linkMap.begin() ; it != linkMap.end() ; ++it){
-
-    if(mcp == (*it).first){
-      isTrue = true;
-    }
-  }
-  // ---------------------------------------------------------------
-
-  return isTrue;
+  return std::any_of( linkMap.begin(), linkMap.end(),
+                      [&](const std::pair<const LHCb::MCParticle*,unsigned int>& i) {
+                              return mcp==i.first;
+  });
 }

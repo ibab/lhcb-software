@@ -16,7 +16,6 @@ use   GSL             v*     LCG_Interfaces
 use   vdt             v*     LCG_Interfaces
 
 use   GaudiAlg        v*
-use   GaudiGSL        v*
 use   LHCbKernel      v*     Kernel
 use   PartProp        v*     Kernel
 use   TrackEvent      v*     Event

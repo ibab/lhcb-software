@@ -6,6 +6,12 @@
 ! 2015-12-28 - Gerhard Raven
  - replace GSL_ with std::
  - replace BOOST_FOREACH with range-based for loop
+ - remove depenendcy on GaudiGSL
+ - prefer pass-by-const-& instead of pass-by-const-* if callee does not check
+   for nullptr
+ - prefer STL algorithms over raw loops
+ - prefer range-based for loops
+ - follow change in MuonInterfaces to pass MuonTileID by value
 
 ! 2015-12-17 - Heinrich Schindler
  - VPTrackSelector: remove obsolete and unnecessary includes. 
