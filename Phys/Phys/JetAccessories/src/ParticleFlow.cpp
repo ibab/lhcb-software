@@ -517,7 +517,7 @@ StatusCode ParticleFlow::execute() {
         verbose()<<"selectTrack: Check inf mom..."<<endmsg;
         // Tag long and downstream tracks with large curvature errors.
         if(track->type()== LHCb::Track::Long || track->type()== LHCb::Track::Downstream){
-            LHCb::State& firstS = track -> firstState () ;
+            const LHCb::State& firstS = track -> firstState () ;
             if ( ( track->type()== LHCb::Track::Long && std::fabs( firstS.qOverP()/sqrt(firstS.errQOverP2()) ) < m_cutInfMomTRVal ) ||
                     ( track->type()== LHCb::Track::Downstream && std::fabs( firstS.qOverP()/sqrt(firstS.errQOverP2()) ) < m_cutInfMomTRVal_Down )  ){
                 return LHCb::PFParticle::KeepInfMom;
@@ -525,7 +525,7 @@ StatusCode ParticleFlow::execute() {
         }
         // Tag upstream tracks with large curvature errors.
         else if(track->type()== LHCb::Track::Upstream){
-            LHCb::State& firstS = track -> firstState () ;
+            const LHCb::State& firstS = track -> firstState () ;
             if ( std::fabs( firstS.qOverP()/sqrt(firstS.errQOverP2()) ) < m_cutInfMomTRVal_Up ){
                 return LHCb::PFParticle::TurnTo0Momentum;
             }

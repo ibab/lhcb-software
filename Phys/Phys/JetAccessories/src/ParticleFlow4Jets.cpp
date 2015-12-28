@@ -972,13 +972,13 @@ int ParticleFlow4Jets::tagTrack( const LHCb::Track* track )
   }
   if ( msgLevel(MSG::VERBOSE) ) verbose()<<"selectTrack: Check inf mom..."<<endmsg;
   if(track->type()== LHCb::Track::Long || track->type()== LHCb::Track::Downstream){
-    LHCb::State& firstS = track -> firstState () ;
+    const LHCb::State& firstS = track -> firstState () ;
     if ( std::fabs( firstS.qOverP()/sqrt(firstS.errQOverP2()) ) < m_cutInfMomTRVal ){
       return KeepInPFBanned;
     }
   }
   if(track->type()== LHCb::Track::Upstream){
-    LHCb::State& firstS = track -> firstState () ;
+    const LHCb::State& firstS = track -> firstState () ;
     if ( std::fabs( firstS.qOverP()/sqrt(firstS.errQOverP2()) ) < m_cutInfMomTRVal ){
       return TurnTo0Momentum;
     }
