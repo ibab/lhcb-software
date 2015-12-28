@@ -157,17 +157,16 @@ IVPExpectation::Info VPExpectation::scan(const LHCb::Track &track,
   nHits.n = 0;
   nHits.firstR = 99999.;
 
-  auto sensors = m_det->sensors();
-  for (auto it = sensors.cbegin(), end = sensors.cend(); it != end; ++it) {
+  for (const auto& sensor : m_det->sensors() ) {
     // Skip sensors outside the range.
-    const double z = (*it)->z();
+    const double z = sensor->z();
     if (z < zStart || z > zStop) continue;
     auto state = track.closestState(z);
     Tf::Tsa::Line xLine(state.tx(), state.x(), state.z());
     Tf::Tsa::Line yLine(state.ty(), state.y(), state.z());
     const double x = xLine.value(z);
     const double y = yLine.value(z);
-    if (!isInside(*it, x, y)) continue;
+    if (!isInside(sensor, x, y)) continue;
     ++nHits.n;
     const double r = sqrt(x * x + y * y);
     if (nHits.firstR > r) {
@@ -178,7 +177,6 @@ IVPExpectation::Info VPExpectation::scan(const LHCb::Track &track,
     }
     nHits.expectedZ.push_back(z);
   } 
-
   return nHits;
 }
 

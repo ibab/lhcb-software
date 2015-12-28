@@ -4,8 +4,7 @@
 // from Gaudi
 #include "GaudiKernel/PhysicalConstants.h" 
 
-// from GSL
-#include "gsl/gsl_math.h"
+#include <cmath>
 
 // Boost
 #include <boost/assign/list_of.hpp>
@@ -138,8 +137,8 @@ StatusCode TrackPtKick::calculate( const LHCb::State* tState,
 
     // momentum
     p = Gaudi::Units::eplus * Gaudi::Units::c_light *fabs(bdl.x()) 
-        * sqrt((1.0 +tX*tX+gsl_pow_2(tState->ty()))
-                                           /(1.0 +gsl_pow_2(tX)))/fabs(curv);
+        * sqrt((1.0 +tX*tX+std::pow(tState->ty(),2))
+                                           /(1.0 +std::pow(tX,2)))/fabs(curv);
 
     //   Addition Correction factor for the angle of the track!
     if ( m_ParabolicCorrection.size() == 2u ) {

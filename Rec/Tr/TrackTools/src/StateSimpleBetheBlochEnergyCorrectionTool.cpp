@@ -1,7 +1,6 @@
 // Include files
 // -------------
-// from GSL
-#include "gsl/gsl_math.h"
+#include <cmath>
 
 // from DetDesc
 #include "DetDesc/Material.h"
@@ -50,9 +49,9 @@ void StateSimpleBetheBlochEnergyCorrectionTool::correctState( LHCb::State& state
                                                               LHCb::ParticleID ) const
 {
   double bbLoss = wallThickness
-    * sqrt( 1. + gsl_pow_2(state.tx()) + gsl_pow_2(state.ty()) )
+    * sqrt( 1. + std::pow(state.tx(),2) + std::pow(state.ty(),2) )
     * m_energyLossCorr * material->Z() * material->density() / material->A();
-  bbLoss = GSL_MIN( m_maxEnergyLoss, bbLoss );
+  bbLoss = std::min( m_maxEnergyLoss, bbLoss );
   if ( !upstream ) bbLoss *= -1.;
   
   // apply correction - note for now only correct the state vector
@@ -61,12 +60,12 @@ void StateSimpleBetheBlochEnergyCorrectionTool::correctState( LHCb::State& state
   //  double minMomentumForEnergyCorrection = 10*Gaudi::Units::MeV;
 
   double qOverP = 0.0;
-  tX[4] < 0.0 ? qOverP = GSL_MIN(tX[4], -LHCb::Math::lowTolerance) :
-                qOverP = GSL_MAX(tX[4], LHCb::Math::lowTolerance);  
+  tX[4] < 0.0 ? qOverP = std::min(tX[4], -LHCb::Math::lowTolerance) :
+                qOverP = std::max(tX[4], LHCb::Math::lowTolerance);  
   
   double newP = 0.0;
-  qOverP < 0.0 ? newP = GSL_MIN(1.0/qOverP - bbLoss, -m_minMomentumAfterEnergyCorr) :
-                 newP = GSL_MAX(1.0/qOverP + bbLoss, m_minMomentumAfterEnergyCorr);
+  qOverP < 0.0 ? newP = std::min(1.0/qOverP - bbLoss, -m_minMomentumAfterEnergyCorr) :
+                 newP = std::max(1.0/qOverP + bbLoss, m_minMomentumAfterEnergyCorr);
   
   tX[4] = 1.0/newP;
   

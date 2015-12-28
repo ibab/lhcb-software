@@ -3,6 +3,9 @@
 ! Responsible : 
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+! 2015-12-28 - Gerhard Raven
+ - replace GSL_ with std::
+ - replace BOOST_FOREACH with range-based for loop
 
 ! 2015-12-17 - Heinrich Schindler
  - VPTrackSelector: remove obsolete and unnecessary includes. 

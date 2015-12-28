@@ -1,7 +1,6 @@
 // Include files
 // -------------
-// from GSL
-#include "gsl/gsl_math.h"
+#include <cmath>
 
 // from DetDesc
 #include "DetDesc/Material.h"
@@ -43,17 +42,17 @@ void StateElectronEnergyCorrectionTool::correctState( LHCb::State& state,
 {
   //hard energy loss for electrons
   double t = wallThickness / material -> radiationLength()
-    * sqrt( 1. + gsl_pow_2(state.tx()) + gsl_pow_2(state.ty()) );
+    * sqrt( 1. + std::pow(state.tx(),2) + std::pow(state.ty(),2) );
   if ( ! upstream ) t *= -1.;
   
   // protect against t too big
-  if ( fabs(t) > m_maxRadLength )  t = GSL_SIGN(t) * m_maxRadLength;
+  if ( fabs(t) > m_maxRadLength )  t = std::copysign( 1.0, t ) * m_maxRadLength;
   
   // apply correction
   Gaudi::TrackVector&    tX = state.stateVector();
   Gaudi::TrackSymMatrix& tC = state.covariance();
   
-  tC(4,4) += gsl_pow_2(tX[4]) * ( exp(-t*log(3.0)/log(2.0))-exp(-2.0*t) );
+  tC(4,4) += std::pow(tX[4],2) * ( exp(-t*log(3.0)/log(2.0))-exp(-2.0*t) );
   tX[4]   *= exp(-t);
 }
 

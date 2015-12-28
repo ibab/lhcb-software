@@ -128,10 +128,8 @@ StatusCode TrackHitCollector::execute(
 	// reserve ample space for collected hits
 	ids.reserve(3 * tr.lhcbIDs().size());
 	if (collectVelo) {
-	    this->collectVeloHits<HitManVeloR>(
-		    m_hitManagerVeloR, ttraj, ids);
-	    this->collectVeloHits<HitManVeloPhi>(
-		    m_hitManagerVeloPhi, ttraj, ids);
+	    this->collectVeloHits( m_hitManagerVeloR, ttraj, ids);
+	    this->collectVeloHits( m_hitManagerVeloPhi, ttraj, ids);
 	}
 	if (collectTT)
 	    collectLineHits<HitManTT,

@@ -119,9 +119,9 @@ StatusCode TrackStateInitTool::createVeloStates( LHCb::Track& track ) const
     int charge = 2*(track.key()%2)-1 ;
     double tx = track.firstState().tx() ;
     double ty = track.firstState().ty() ;
-    double slope2 = GSL_MAX( tx*tx + ty*ty, 1e-20);
+    double slope2 = std::max( tx*tx + ty*ty, 1e-20);
     double qop = charge * sqrt( slope2 ) / (m_ptVelo * sqrt( 1. + slope2 ));
-    BOOST_FOREACH( LHCb::State* state, track.states() ) {
+    for( LHCb::State* state: track.states() ) {
       state->setQOverP( qop ) ;
     }
   }
@@ -207,7 +207,7 @@ StatusCode TrackStateInitTool::createTStationStates( LHCb::Track& track ) const
     }
 
     // now update q/p of all other states
-    BOOST_FOREACH( LHCb::State* state, track.states() ) {
+    for( LHCb::State* state: track.states() ) {
       state->setQOverP( qOverP ) ;
       state->setErrQOverP2(errQOverP) ;
     }
@@ -300,7 +300,7 @@ StatusCode TrackStateInitTool::createTTState(LHCb::Track& track ) const
     // collect the TT hits
     std::vector< LHCb::LHCbID > ttids ;
     std::set<int> ttlayers ;
-    BOOST_FOREACH( const LHCb::LHCbID& id, track.lhcbIDs() )
+    for( const LHCb::LHCbID& id: track.lhcbIDs() )
       if( id.isTT() ) {
         ttids.push_back( id ) ;
         LHCb::STChannelID stid = id.stID() ;
@@ -314,7 +314,7 @@ StatusCode TrackStateInitTool::createTTState(LHCb::Track& track ) const
       //      double xtt(0) ;
       typedef Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector> LineHit ;
       std::vector<LineHit> tthits ;
-      BOOST_FOREACH( const LHCb::LHCbID& id, ttids ) {
+      for( const LHCb::LHCbID& id: ttids ) {
         LHCb::STChannelID ttid = id.stID() ;
         const DeSTSector* sector = m_ttdetector->findSector(ttid) ;
         double dxdy, dzdy, xAtYEq0, zAtYEq0, ybegin,  yend ;
@@ -346,7 +346,7 @@ StatusCode TrackStateInitTool::createTTState(LHCb::Track& track ) const
       if( track.type() != LHCb::Track::Long ) {
         double qop = statevec.qOverP() + dqop ;
         statevec.setQOverP( qop ) ;
-        BOOST_FOREACH( LHCb::State* state, track.states() )
+        for( LHCb::State* state: track.states() )
           state->setQOverP( qop ) ;
       }
     }

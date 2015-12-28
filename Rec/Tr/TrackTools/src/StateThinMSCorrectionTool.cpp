@@ -1,7 +1,5 @@
 // Include files 
 // -------------
-// from GSL
-#include "gsl/gsl_math.h"
 #include "vdt/log.h"
 
 // from DetDesc
@@ -63,7 +61,7 @@ void StateThinMSCorrectionTool::correctState( LHCb::State& state,
   }
 
   // protect 0 momentum
-  const double p = GSL_MAX( state.p(), 1.0*MeV );
+  const double p = std::max( state.p(), 1.0*MeV );
 
   const double norm2cnoise = norm2 * m_msff2 * scatLength / pow_2(p);
 

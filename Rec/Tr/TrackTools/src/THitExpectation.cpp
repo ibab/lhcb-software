@@ -75,11 +75,11 @@ double THitExpectation::curvature(const LHCb::State& aState) const{
   m_pIMF->fieldVector( P, B ).ignore();
   const double tx = aState.tx();
   const double ty = aState.ty();
-  const double nTx = sqrt(1.0+gsl_pow_2(tx));
-  const double norm = sqrt(1.0+gsl_pow_2(tx)+gsl_pow_2(ty));
+  auto tmp = 1.0+std::pow(tx,2);
+  const double nTx = sqrt(tmp);
+  const double norm = sqrt(tmp+std::pow(ty,2));
 
-  double a = -0.5*norm * nTx *Gaudi::Units::c_light* B.y() * aState.qOverP();
-  return a;
+  return -0.5*norm * nTx *Gaudi::Units::c_light* B.y() * aState.qOverP();
 }
 
 Tf::Tsa::Line THitExpectation::yLine(const LHCb::Track& aTrack, const double z)const{

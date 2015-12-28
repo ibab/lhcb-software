@@ -1,5 +1,4 @@
 #include <map>
-#include <boost/foreach.hpp>
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/SystemOfUnits.h"
 // from TrackInterfaces
@@ -22,10 +21,6 @@
 #include "Event/FitNode.h"
 #include "Event/State.h"
 #include "TrackKernel/TrackTraj.h"
-
-// gsl
-#include "gsl/gsl_math.h"
-
 
 /** @class TrackStateInitTool TrackStateInitTool.h 
  *

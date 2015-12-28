@@ -183,7 +183,7 @@ double TrackLikelihood::addVelo(LHCb::Track& aTrack) const{
   // add term to lik
   double prob1 = log(gsl_ran_binomial_pdf(nHigh, m_veloHighEff1, veloRHits.size() + veloPhiHits.size()));
   double prob2 = log(gsl_ran_binomial_pdf(nHigh, m_veloHighEff2, veloRHits.size() + veloPhiHits.size()));
-  lik += gsl_max(prob1,prob2);
+  lik += std::max(prob1,prob2);
 
   return lik;
 }
