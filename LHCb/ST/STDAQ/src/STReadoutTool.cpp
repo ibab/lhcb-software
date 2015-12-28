@@ -12,10 +12,7 @@
 #include "Kernel/STChannelID.h"
 #include "STDet/DeSTDetector.h"
 
-
-// Boost
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/lambda.hpp>
+#include <algorithm>
 
 // STKernel
 #include "Kernel/STXMLUtils.h"
@@ -27,7 +24,6 @@
 *    @author Matthew Needham
 */
 
-using namespace boost::lambda;
 using namespace LHCb;
 
 
@@ -153,11 +149,10 @@ std::string STReadoutTool::serviceBox(const LHCb::STChannelID& aChan) const{
 } 
 
 std::vector<STTell1ID> STReadoutTool::boardIDs() const{
-  std::vector<STTell1Board*>::const_iterator iterBoard = m_boards.begin();
   std::vector<STTell1ID> ids; ids.reserve(m_boards.size());
-  for (;iterBoard != m_boards.end(); ++iterBoard){
-    ids.push_back((*iterBoard)->boardID());
-  } //iterBoard
+  std::transform( m_boards.begin(), m_boards.end(),
+                  std::back_inserter(ids),
+                  [](const STTell1Board* b) { return b->boardID(); } );
   return ids;
 }
 
@@ -166,25 +161,23 @@ STDAQ::chanPair STReadoutTool::offlineChanToDAQ(const STChannelID aOfflineChan,
 {
   // look up region start.....
   unsigned int iBoard = m_firstBoardInRegion[region(aOfflineChan)];
-  bool isFound = false;
   unsigned int waferIndex = 999u; 
 
-  while ((iBoard != m_nBoard)&&(isFound == false)){
+  bool isFound = false;
+  while ((iBoard != m_nBoard)&&!isFound){
      if (m_boards[iBoard]->isInside(aOfflineChan,waferIndex)) {
       isFound = true;
-    }
-    else {
+    } else {
       ++iBoard;
     }
   } // iBoard
 
-  if (isFound == false){
-    return(std::make_pair(STTell1ID(STTell1ID::nullBoard, false),0));
-  }
-  else {
-    return (std::make_pair(m_boards[iBoard]->boardID(),
+  if (!isFound){
+    return std::make_pair(STTell1ID(STTell1ID::nullBoard, false),0);
+  } else {
+    return std::make_pair(m_boards[iBoard]->boardID(),
                            m_boards[iBoard]->offlineToDAQ(aOfflineChan,
-                                                          waferIndex,isf))); 
+                                                         waferIndex,isf));
   }
 }
 
@@ -220,36 +213,25 @@ bool STReadoutTool::ADCOfflineToDAQ(const STChannelID aOfflineChan,
   unsigned int waferIndex = 999u;
   STTell1Board* aBoard = this->findByBoardID(aBoardID);
     
-  if( aBoard->isInside(aOfflineChan,waferIndex) ) {
-    unsigned int orientation = aBoard->orientation()[waferIndex];
-    if( orientation == 0 ){
-      STCluster::ADCVector adcsflip = adcs;
-      for (unsigned int i = 0; i < adcs.size(); ++i) {
-        adcsflip[adcs.size()-1-i] = adcs[i];
-      }
-      adcs = adcsflip;
-    }
-  }
-  else{ // can not find board!
-    return false;
-  }  
+  if( !aBoard->isInside(aOfflineChan,waferIndex) ) return false; // can not find board!
   
+  if( aBoard->orientation()[waferIndex] == 0 ){
+    std::reverse( std::begin(adcs), std::end(adcs) );
+  }
   return true;
 }
 
 
 STTell1Board* STReadoutTool::findByBoardID(const STTell1ID aBoardID) const{
   // find by board id
-  std::vector<STTell1Board*>::const_iterator iter = 
-    std::find_if( m_boards.begin(), m_boards.end(), 
-    bind(&STTell1Board::sameID, _1, aBoardID));
-  return (iter != m_boards.end() ? *iter: 0);
-  //  return findByOrder( m_firstBoardInRegion[aBoardID.region()] + aBoardID.subID());
+  auto iter = std::find_if( m_boards.begin(), m_boards.end(),
+                            [&](const STTell1Board* b) { return b->sameID(aBoardID); } );
+  return iter != m_boards.end() ? *iter: nullptr;
 }
 
 STTell1Board* STReadoutTool::findByOrder(const unsigned int aValue) const{
   // find by order
-  return ( aValue< m_nBoard ? m_boards[aValue] : 0);
+  return aValue< m_nBoard ? m_boards[aValue] : nullptr;
 }
 
 void STReadoutTool::printMapping() const{
@@ -257,10 +239,7 @@ void STReadoutTool::printMapping() const{
   // dump out the readout mapping
   std::cout << "print mapping for: " << name() << " tool" << std::endl;  
   std::cout << " Number of boards " << m_nBoard << std::endl;
-  std::vector<STTell1Board*>::const_iterator iterBoard = m_boards.begin();  
-  for (; iterBoard != m_boards.end() ;++iterBoard){
-    std::cout << **iterBoard << std::endl;
-  } // print loop
+  for (const auto& b : m_boards ) std::cout << *b << std::endl;
 }
 
 /// Add the mapping of source ID to TELL1 board number
@@ -276,16 +255,13 @@ unsigned int STReadoutTool::TELLNumberToSourceID(unsigned int TELL) const {
 StatusCode STReadoutTool::validate() const{
 
   // validate the map - every sector must go somewhere !
-  bool valid = true;
   const DeSTDetector::Sectors& dSectors = m_tracker->sectors(); 
-  DeSTDetector::Sectors::const_iterator iter = dSectors.begin();
-  for (; iter != dSectors.end() && valid; ++iter) {
-    STChannelID chan = (*iter)->elementID();
-    STDAQ::chanPair chanPair = offlineChanToDAQ(chan,0.0);
-    if (chanPair.first == STTell1ID(STTell1ID::nullBoard, false)) valid = false; 
-  } // iter 
-  
-  return valid;
+  return std::none_of(std::begin(dSectors), std::end(dSectors),
+                      [this](const DeSTSector *s) {
+                             STChannelID chan = s->elementID();
+                             auto chanPair = offlineChanToDAQ(chan,0.0);
+                             return chanPair.first == STTell1ID(STTell1ID::nullBoard, false);
+                       } );
 }
 
 std::vector<LHCb::STChannelID> STReadoutTool::sectorIDs(const STTell1ID board) const{
@@ -303,22 +279,18 @@ std::vector<LHCb::STChannelID> STReadoutTool::sectorIDs(const STTell1ID board) c
   
 std::vector<DeSTSector*> STReadoutTool::sectors(const STTell1ID board) const{ 
 
-  std::vector<LHCb::STChannelID> sectors = sectorIDs(board);
-  return m_tracker->findSectors(sectors);
+  return m_tracker->findSectors(sectorIDs(board));
 }
 
 std::vector<DeSTSector*> STReadoutTool::sectorsOnServiceBox(const std::string& serviceBox) const{ 
 
-  std::vector<LHCb::STChannelID> sectors = sectorIDsOnServiceBox(serviceBox);
-  return m_tracker->findSectors(sectors);
+  return m_tracker->findSectors(sectorIDsOnServiceBox(serviceBox));
 }
 
 std::vector<LHCb::STChannelID> STReadoutTool::sectorIDsOnServiceBox(const std::string& serviceBox) const{
   // loop over all boards
   std::vector<LHCb::STChannelID> sectors; sectors.reserve(16);
-  std::vector<STTell1Board*>::const_iterator iterB = m_boards.begin();
-  for (; iterB != m_boards.end(); ++iterB){
-    const STTell1Board* board = *iterB;
+  for (const auto& board : m_boards ) {
     const std::vector<LHCb::STChannelID>& sectorVec = board->sectorIDs();
     const std::vector<std::string>& sBoxes = board->serviceBoxes();
     for (unsigned int iS = 0u ; iS < board->nSectors(); ++iS){
@@ -365,8 +337,3 @@ std::string STReadoutTool::strip(const std::string& conString) const
   std::string::size_type endpos = conString.find(m_footer);
   return conString.substr(startpos, endpos - startpos);
 } 
-
-
-
-
-

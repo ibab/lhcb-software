@@ -3,6 +3,11 @@
 ! Responsible : Greig Cowan
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
+! 2015-12-28 - Gerhard Raven
+ - replace GSL_ with std::
+ - prefer range-based for loops
+ - prefer regular lambdas over boost/bind and boost/lambda
+ - prefer STL algorithms over raw loops
 
 ! 2015-12-01 - Elena Graverini
  - Fix compiler warnings and remove unnecessary includes

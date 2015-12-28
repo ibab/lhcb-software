@@ -22,7 +22,6 @@
 // Kernel
 #include "Kernel/STChannelID.h"
 
-#include "gsl/gsl_math.h"
 
 #include <algorithm>
 
@@ -232,56 +231,50 @@ void STClustersToRawBankAlg::writeBank(STClustersOnBoard::ClusterVector&
                                        LHCb::BankWriter& bWriter,
                                        const STTell1ID aBoardID)
 {
-  unsigned int nClus = clusCont.size();
 
+  auto nClus = clusCont.size();
   // make a bank header
   SiHeaderWord aHeader = SiHeaderWord(nClus,getPCN());
   bWriter << aHeader.value();
 
   // pick up the data and write first half of the bank into temp container...
-  for (unsigned int iCluster = 0; iCluster < nClus; ++iCluster){
-    STCluster* aClus = clusCont[iCluster].first;
+  for (const auto& clus : clusCont ) {
+    STCluster* aClus = clus.first;
     STChannelID aChan = aClus->channelID();
 
     double isf = readoutTool()->interStripToDAQ(aChan,
                                                 aBoardID,
                                                 aClus->interStripFraction());
-    STClusterWord aWord = STClusterWord(clusCont[iCluster].second,
+    bWriter << STClusterWord(clus.second,
                                         isf,
                                         aClus->size(),
                                         aClus->highThreshold());
-    bWriter << aWord;
-  } // iCluster
+  } // clusCont
 
-  // padding
-  if (nClus % 2 == 1 ){
+  if ( nClus & 1 ) { // add padding if odd number of clusters
     short padding = 0;
     bWriter << padding;
   }
 
   // now the second half neighbour sum and ADC
-  for (unsigned int iCluster = 0; iCluster < nClus; ++iCluster){
-    STCluster* aCluster = clusCont[iCluster].first;
-    double tADC = GSL_MIN(GSL_MAX(aCluster->neighbourSum(),-16),15);
-    char neighbourSum = (char)tADC;
+  for (const auto& clus : clusCont ) {
+    STCluster* aCluster = clus.first;
+    // implicit double->char conversion!
+    char neighbourSum = std::min(std::max(aCluster->neighbourSum(),-16.),15.);
     bWriter << neighbourSum;
     STCluster::ADCVector adcs = aCluster->stripValues();
-    unsigned int nToWrite = GSL_MIN(aCluster->size(), m_maxClusterSize);
 
     //flip ADC values for rotated modules
     STChannelID channelID = aCluster->channelID();
     readoutTool()->ADCOfflineToDAQ(channelID,aBoardID,adcs);
     
+    unsigned int nToWrite = std::min(aCluster->size(), m_maxClusterSize);
     for (unsigned int i = 0; i < nToWrite; ++i){
-      bool last;
-      i == nToWrite-1 ? last = true: last = false;
-      SiADCWord adcWord = SiADCWord(adcs[i].second, last);
-      bWriter << adcWord;  
+      bool last = ( i == nToWrite-1 );
+      bWriter << SiADCWord(adcs[i].second, last);
     } //iter   
     
-  } // iCluster
-
-  return;
+  } // clusCont
 }
 
 unsigned int STClustersToRawBankAlg::getPCN() const{

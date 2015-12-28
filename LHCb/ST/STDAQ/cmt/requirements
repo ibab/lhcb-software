@@ -17,7 +17,6 @@ use SiDAQ        v*  Si
 use DetDesc      v*  Det
 use GaudiKernel  v*
 use GaudiAlg     v*
-use GSL          v*  LCG_Interfaces
 
 #component
 library STDAQ *.cpp
