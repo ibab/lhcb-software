@@ -588,6 +588,20 @@
         type    = 'LHCb::State &amp;'
         name    = 'firstState'
         desc    = 'Retrieve the first state on the track'
+        const   = 'FALSE'>
+        <code>
+  // check at least the &quot;first state&quot; exists
+  if ( m_states.empty() )
+    throw GaudiException( &quot;first state not defined!&quot;,
+                          &quot;Track.h&quot;,
+                          StatusCode::FAILURE );
+  return *m_states[0];
+        </code>
+      </method>
+      <method
+        type    = 'const LHCb::State &amp;'
+        name    = 'firstState'
+        desc    = 'Retrieve the first state on the track'
         const   = 'TRUE'>
         <code>
   // check at least the &quot;first state&quot; exists

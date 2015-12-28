@@ -3,6 +3,9 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Package for the tracking event model classes
 !-------------------------------------------------------------------------------
+! 2015-12-28 - Gerhard Raven
+ - enforce const correctness of firstState getter
+
 ! 2015-12-21 - Gerhard Raven
  - remove unneeded include of gsl_math.h
 
