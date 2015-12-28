@@ -1,4 +1,3 @@
-// $Id: IMuonTrackMomRec.h,v 1.1 2010-02-10 19:07:50 ggiacomo Exp $
 #ifndef MUONINTERFACES_IMUONTRACKMOMREC_H 
 #define MUONINTERFACES_IMUONTRACKMOMREC_H 1
 
@@ -13,7 +12,6 @@
 #include "Event/Track.h"
 
 class MuonTrack;
-static const InterfaceID IID_IMuonTrackMomRec ( "IMuonTrackMomRec", 1, 0 );
 
 /** @class IMuonTrackMomRec IMuonTrackMomRec.h MuonInterfaces/IMuonTrackMomRec.h
  *  
@@ -21,15 +19,15 @@ static const InterfaceID IID_IMuonTrackMomRec ( "IMuonTrackMomRec", 1, 0 );
  *  @author Giacomo Graziani
  *  @date   2010-02-10
  */
-class IMuonTrackMomRec : virtual public IAlgTool {
+class IMuonTrackMomRec : public extend_interfaces<IAlgTool> {
 public: 
 
   // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_IMuonTrackMomRec; }
+  DeclareInterfaceID( IMuonTrackMomRec, 2, 0 );
 
   virtual StatusCode recMomentum(MuonTrack* track, 
-                                 LHCb::Track* lbTrack) = 0;
-  virtual double getBdl() = 0;
-  virtual double getZcenter() = 0;
+                                 LHCb::Track* lbTrack) const = 0;
+  virtual double getBdl() const = 0;
+  virtual double getZcenter() const = 0;
 };
 #endif // MUONINTERFACES_IMUONTRACKMOMREC_H

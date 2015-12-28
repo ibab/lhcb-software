@@ -41,12 +41,11 @@ void MuonTrack::insert( const int id, const MuonHit* xyz ){
   m_muonTrack.insert( MuonTrack::MuonTkVtype(id, const_cast<MuonHit*>(xyz)) );
 }
 ///
-std::vector< MuonHit* > MuonTrack::getHits(){
-  std::vector< MuonHit* > hits;
-  MuonTrack::MuonTkIt tk = m_muonTrack.begin();
-  for(; tk != m_muonTrack.end(); tk++){
-    hits.push_back( tk->second );
-  }
+std::vector< MuonHit* > MuonTrack::getHits() const {
+  std::vector< MuonHit* > hits; hits.reserve(m_muonTrack.size());
+  std::transform( m_muonTrack.begin(), m_muonTrack.end(),
+                  std::back_inserter(hits),
+                  [](const std::pair<const int, MuonHit*>& p) { return p.second; } );
   return hits;
 }
 ///
@@ -70,24 +69,22 @@ bool MuonTrack::isClone()
   return m_isClone;
 }
 ///
-int MuonTrack::getSpan(){
-  MuonTrack::MuonTkIt iv = m_muonTrack.begin();
+int MuonTrack::getSpan() const{
   int smax = -9999;
   int smin =  9999;
-  for(;iv != m_muonTrack.end(); iv++){
-    int s = iv->second->station();
+  for(const auto& mt : m_muonTrack) {
+    int s = mt.second->station();
      if(s >= smax) smax = s;
      if(s <= smin) smin = s;
   }
-  return (smax-smin);
+  return smax-smin;
 }
 ///
-int MuonTrack::getFiringStations(){
-  MuonTrack::MuonTkIt iv;
+int MuonTrack::getFiringStations() const{
   int firstat = 0;
   for(int s=0; s<5; s++){
-    for(iv = m_muonTrack.begin() ;iv != m_muonTrack.end(); iv++){
-      int hs = iv->second->station();
+    for(const auto& v : m_muonTrack) {
+      int hs = v.second->station();
       if(hs == s){
         firstat++;
         break;
@@ -143,7 +140,7 @@ StatusCode MuonTrack::speedFit() {
 double MuonTrack::correctTOF(double rawT,
                              double X,
                              double Y,
-                             double Z) {
+                             double Z) const {
  return ( rawT +
            (sqrt(X*X+Y*Y+Z*Z)-MuonTrackRec::Zref)/MuonTrackRec::muspeed);
 }
@@ -152,7 +149,7 @@ double MuonTrack::correctTOF(double rawT,
 double MuonTrack::correctTime(double rawT,
                               double X,
                               double Y,
-                              double Z) {
+                              double Z) const {
   double t = rawT;
   if (MuonTrackRec::PhysTiming) { // correct for TOF applied in delays (from primary vertex)
     t = correctTOF(t, X, Y, Z);
@@ -160,7 +157,7 @@ double MuonTrack::correctTime(double rawT,
   return t;
 }
 
-double MuonTrack::correctedTime(MuonHit& hit) {
+double MuonTrack::correctedTime(MuonHit& hit) const {
   double tc = hit.hitTime();
   return correctTime( tc, hit.X(), hit.Y(), hit.Z());
 }

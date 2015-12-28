@@ -10,7 +10,6 @@
 #include "GaudiKernel/IAlgTool.h"
 #include "Kernel/MuonTileID.h"
 
-static const InterfaceID IID_IMuonClusterTool ( "IMuonClusterTool", 1, 0 );
 
 /** @class IMuonClusterTool IMuonClusterTool.h MuonTools/IMuonClusterTool.h
  *  
@@ -18,18 +17,11 @@ static const InterfaceID IID_IMuonClusterTool ( "IMuonClusterTool", 1, 0 );
  *  @author Alessia Satta
  *  @date   2010-01-15
  */
-class IMuonClusterTool : virtual public IAlgTool {
+class IMuonClusterTool : public extend_interfaces<IAlgTool> {
 public: 
-
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_IMuonClusterTool; }
-  virtual StatusCode doCluster(const std::string Input,const std::string 
-Output)=0;
-
-
-protected:
-
-private:
+  DeclareInterfaceID( IMuonClusterTool, 2, 0 );
+  virtual StatusCode doCluster(const std::string& Input,
+                               const std::string& Output) =0;
 
 };
 #endif // MUONTOOLS_IMUONCLUSTERTOOL_H

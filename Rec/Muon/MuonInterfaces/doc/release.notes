@@ -2,6 +2,19 @@
 ! Package     : MuonInterfaces
 ! Responsible : Giovanni Passaleva
 ! ====================================================================
+! 2015-12-28 - Gerhard Raven
+ - major change: pass MuonTileID by value instead of by pointer
+    x requires matching versions of MuonID, MuonTools, MuonTrackRec and TrackTools
+    o MuonTileID is 32 bits, pointers are 64 bit, saving memory
+    o avoids additional dereferencing, improves data locality
+    o easier to optimize for the compiler
+ - prefer extend_interfaces
+ - prefer to not put data members in interface classes
+ - add const where possible
+ - qualify single argument constructors with explicit
+ - prefer STL algorithms over raw loops
+ - prefer range-based for loops
+ 
 
 !========================= MuonInterfaces v1r6 2014-02-19 ======================
 ! 2014-02-14 - Chris Jones

@@ -1,10 +1,10 @@
 // $Id: MuonLogPad.h,v 1.2 2010-02-11 09:29:51 ggiacomo Exp $
-#ifndef MUONLOGPAD_H 
+#ifndef MUONLOGPAD_H
 #define MUONLOGPAD_H 1
 
 /** @class MuonLogPad MuonLogPad.h
- *  
- *  Muon logical pad class for standalone cosmics reconstruction 
+ *
+ *  Muon logical pad class for standalone cosmics reconstruction
  *  @author Giacomo
  *  @date   2007-10-26
  */
@@ -17,12 +17,12 @@
 #include <ostream>
 
 class MuonLogPad {
- public: 
+ public:
   /// standard constructor
-  MuonLogPad() : m_crossed(false), m_tile( NULL ) , m_padhits(0),
+  MuonLogPad() : m_crossed(false), m_tile( 0 ) , m_padhits(0),
                  m_time( 0 ), m_dtime(0), m_truepad(false),
                  m_intime(false)  {}
-  /// constructor for uncrossed pad 
+  /// constructor for uncrossed pad
   MuonLogPad( MuonLogHit* hit ) :
     m_crossed(false), m_tile( hit->tile() ) , m_padhits(1),
     m_time( hit->time() ), m_dtime(0), m_truepad(false)
@@ -30,25 +30,22 @@ class MuonLogPad {
     m_padhits[0] = hit;
     m_intime = hit->intime();
   }
-  
-  /// constructor fot crossed pad, note that hit1 must be the strip (giving X coordinate) 
-  ///  and hit2 must be the pad  (giving Y coordinate) 
+
+  /// constructor fot crossed pad, note that hit1 must be the strip (giving X coordinate)
+  ///  and hit2 must be the pad  (giving Y coordinate)
   MuonLogPad( MuonLogHit* hit1,
               MuonLogHit* hit2 ) :
     m_crossed(true), m_padhits(2), m_truepad(true)
   {
-    m_tile = new LHCb::MuonTileID(hit1->tile()->intercept(*(hit2->tile()) ) );
+    m_tile = hit1->tile().intercept(hit2->tile());
     m_padhits[0] = hit1;
     m_padhits[1] = hit2;
     assignTimes(hit1->time(), hit2->time() );
     m_intime = (hit1->intime() && hit2->intime());
   }
-  
-  virtual ~MuonLogPad( ) 
-  {
-    if(m_crossed) delete m_tile;
-  }
-  
+
+  virtual ~MuonLogPad( ) = default;
+
 
   // public member functions
   typedef enum { NOX=0, XONEFE=1, XTWOFE=2, UNPAIRED=3} LogPadType;
@@ -56,22 +53,22 @@ class MuonLogPad {
   inline LogPadType type() {
     if (!m_truepad) return UNPAIRED;
     LogPadType t=XONEFE;
-    if (m_tile->station() == 0 || 
-        (m_tile->station()>2 && m_tile->region()==0) ) {
+    if (m_tile.station() == 0 ||
+        (m_tile.station()>2 && m_tile.region()==0) ) {
       t=NOX; // single log. channel
     }
     else {
-      if (m_tile->station()>0 && m_tile->station()<3 && m_tile->region()<2)
+      if (m_tile.station()>0 && m_tile.station()<3 && m_tile.region()<2)
         t=XTWOFE; // double readout for M23R12
     }
     return t;
   }
-  
-  inline const LHCb::MuonTileID* tile()
+
+  inline LHCb::MuonTileID tile() const
   {
     return m_tile;
   }
-  
+
   inline void assignTimes(float t1, float t2) {
     m_time = (float) (( t1 + t2 ) / 2.);
     m_dtime = (float) (( t1 - t2 ) / 2.);
@@ -94,7 +91,7 @@ class MuonLogPad {
   inline float time()
   {
     return m_time;
-  }  
+  }
   inline float timeX() {
     LogPadType t=type();
     return (float) ( (t == XONEFE || t == XTWOFE) ? m_time+m_dtime : -9999. );
@@ -109,12 +106,12 @@ class MuonLogPad {
     return m_dtime;
   }
   /// true if this is the crossing of two logical channels
-  inline bool crossed() 
+  inline bool crossed()
   {
     return m_crossed;
   }
   /// true if it's a real logical pad (if false, it's an unpaired logical channel)
-  inline bool truepad() 
+  inline bool truepad()
   {
     return m_truepad;
   }
@@ -140,8 +137,8 @@ class MuonLogPad {
 
  private:
   bool m_crossed;
-  const LHCb::MuonTileID* m_tile;
-  std::vector<MuonLogHit*> m_padhits;  
+  LHCb::MuonTileID m_tile;
+  std::vector<MuonLogHit*> m_padhits;
   float m_time;
   float m_dtime;
   bool m_truepad;

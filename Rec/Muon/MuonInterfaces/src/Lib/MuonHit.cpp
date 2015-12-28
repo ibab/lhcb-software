@@ -11,8 +11,8 @@ MuonHit::MuonHit():
   m_mamy_pid(0),
   m_hit_ID(-1),
   m_dx(0.), m_dy(0.), m_dz(0.),
-  m_hit_minx(0.), m_hit_maxx(0.), 
-  m_hit_miny(0.), m_hit_maxy(0.), 
+  m_hit_minx(0.), m_hit_maxx(0.),
+  m_hit_miny(0.), m_hit_maxy(0.),
   m_hit_minz(0.), m_hit_maxz(0.),
   m_xsize(0), m_ysize(0), m_zsize(0),
   m_time(0),  m_dtime(0),
@@ -28,8 +28,8 @@ MuonHit::MuonHit(DeMuonDetector*,  IMuonFastPosTool* posTool):
   m_mamy_pid(0),
   m_hit_ID(-1),
   m_dx(0.), m_dy(0.), m_dz(0.),
-  m_hit_minx(0.), m_hit_maxx(0.), 
-  m_hit_miny(0.), m_hit_maxy(0.), 
+  m_hit_minx(0.), m_hit_maxx(0.),
+  m_hit_miny(0.), m_hit_maxy(0.),
   m_hit_minz(0.), m_hit_maxz(0.),
   m_xsize(0), m_ysize(0), m_zsize(0),
   m_time(0),  m_dtime(0),
@@ -43,7 +43,7 @@ MuonHit::MuonHit(DeMuonDetector*,  IMuonFastPosTool* posTool):
 // Constructor from a MuonLogPad
 //=============================================================================
 // obsolete constructor from a MuonPad (kept for backw. compat.)
-MuonHit::MuonHit( DeMuonDetector*, 
+MuonHit::MuonHit( DeMuonDetector*,
                   MuonLogPad* mp,
                   const double x,
                   const double y,
@@ -59,7 +59,7 @@ MuonHit::MuonHit( DeMuonDetector*,
   createFromPad(mp);
 }
 
-MuonHit::MuonHit( DeMuonDetector*, 
+MuonHit::MuonHit( DeMuonDetector*,
                   MuonLogPad* mp,
                   IMuonFastPosTool* posTool):
   ROOT::Math::XYZPoint(0.,0.,0.),
@@ -76,7 +76,7 @@ void MuonHit::createFromPad(MuonLogPad* mp) {
   m_pads.clear();
   if (mp->type() == MuonLogPad::UNPAIRED) return;
   double x,dx,y,dy,z,dz;
-  StatusCode sc = m_posTool->calcTilePos(*(mp->tile()),x,dx,y,dy,z,dz);
+  StatusCode sc = m_posTool->calcTilePos(mp->tile(),x,dx,y,dy,z,dz);
   if(sc) {
     m_pads.push_back(mp);
     m_padx.push_back(x);
@@ -101,7 +101,7 @@ void MuonHit::createFromPad(MuonLogPad* mp) {
 // Destructor
 //=============================================================================
 MuonHit::~MuonHit() {
-} 
+}
 
 //=============================================================================
 // public member functions
@@ -111,10 +111,9 @@ void MuonHit::addPad(MuonLogPad* mp){
   if (mp->type() == MuonLogPad::UNPAIRED) return;
   if ( m_pads.empty() ) {
     createFromPad(mp);
-  }
-  else {
+  } else {
     double x,dx,y,dy,z,dz;
-    StatusCode sc = m_posTool->calcTilePos(*(mp->tile()),x,dx,y,dy,z,dz);
+    StatusCode sc = m_posTool->calcTilePos(mp->tile(),x,dx,y,dy,z,dz);
     if(sc) {
       m_pads.push_back(mp);
       m_padx.push_back(x);
@@ -131,12 +130,12 @@ void MuonHit::addPad(MuonLogPad* mp){
       recomputePos(&m_padz,&z,&m_dz,&m_zsize,10*dz);
       SetXYZ(x,y,z);
 
-      recomputeTime();     
+      recomputeTime();
     }
   }
 }
 
-void MuonHit::recomputePos(std::vector<double> *data, 
+void MuonHit::recomputePos(std::vector<double> *data,
                            double* pos, double* dpos,
                            int* clsize, double step) {
   int np=0;
@@ -146,7 +145,7 @@ void MuonHit::recomputePos(std::vector<double> *data,
     bool prendila=true;
     // check that this position is not already the same of a previous pad
     for (previp=data->begin() ; previp < ip; previp++) {
-      if ( fabs((*ip)-(*previp))< 0.5*step) { 
+      if ( fabs((*ip)-(*previp))< 0.5*step) {
         prendila=false;
         break;
       }
@@ -171,22 +170,20 @@ void MuonHit::recomputeTime() {
   std::vector<float> times;
   m_mintime=999.;
   m_maxtime=-999.;
-  for (std::vector<MuonLogPad*>::iterator m_ip=m_pads.begin() ; 
-       m_ip != m_pads.end(); m_ip++) {
-    if( (*m_ip)->type() == MuonLogPad::XTWOFE) { //consider the two measurements as independent
-      times.push_back( (*m_ip)->timeX() );
-      times.push_back( (*m_ip)->timeY() );
-    }
-    else {
-      times.push_back( (*m_ip)->time() );
+  for (const auto& pad : m_pads )  {
+    if( pad->type() == MuonLogPad::XTWOFE) { //consider the two measurements as independent
+      times.push_back( pad->timeX() );
+      times.push_back( pad->timeY() );
+    } else {
+      times.push_back( pad->time() );
     }
   }
-  for (std::vector<float>::iterator itime=times.begin() ; itime != times.end(); itime++) {
-    sum += (*itime);
-    sum2 += (*itime)*(*itime);
+  for (const auto& time : times) {
+    sum += time;
+    sum2 += time*time;
     np++;
-    if ((*itime) < m_mintime) m_mintime=(*itime);
-    if ((*itime) > m_maxtime) m_maxtime=(*itime);
+    if (time < m_mintime) m_mintime=time;
+    if (time > m_maxtime) m_maxtime=time;
   }
 
   m_time = ( np>0 ? sum/np : 0.0f );
@@ -199,37 +196,34 @@ void MuonHit::recomputeTime() {
   }
 }
 
-
 /// return tile sizes
-std::vector<double> MuonHit::hitTile_Size()
+std::vector<double> MuonHit::hitTile_Size() const
 {
-  std::vector<double> hit_size;
-  hit_size.push_back((m_hit_maxx-m_hit_minx)/2.);
-  hit_size.push_back((m_hit_maxy-m_hit_miny)/2.);
-  hit_size.push_back((m_hit_maxz-m_hit_minz)/2.);
-  return hit_size;
+  return { (m_hit_maxx-m_hit_minx)/2.,
+           (m_hit_maxy-m_hit_miny)/2.,
+           (m_hit_maxz-m_hit_minz)/2. };
 }
 
 
 /// return Hit PID
-int MuonHit::hitPID()
+int MuonHit::hitPID() const
 {
   return m_pid;
 }
 /// return Hit mother PID
-int MuonHit::hitMother()
+int MuonHit::hitMother() const
 {
   return m_mamy_pid;
 }
-double MuonHit::hitTile_dX()
+double MuonHit::hitTile_dX() const
 {
   return (m_hit_maxx-m_hit_minx)/2.;
 }
-double MuonHit::hitTile_dY()
+double MuonHit::hitTile_dY() const
 {
   return (m_hit_maxy-m_hit_miny)/2.;
 }
-double MuonHit::hitTile_dZ()
+double MuonHit::hitTile_dZ() const
 {
   return (m_hit_maxz-m_hit_minz)/2.;
 }
@@ -241,81 +235,81 @@ StatusCode MuonHit::setHitID(const int id)
   return StatusCode::SUCCESS;
 }
  /// retireve the hit ID
-int MuonHit::hitID()
+int MuonHit::hitID() const
 {
   return m_hit_ID;
 }
 
 /// return the hit station
-int MuonHit::station()
+int MuonHit::station() const
 {
-  return ((m_pads.empty()) ? -1 : (int)m_pads[0]->tile()->station());
+  return m_pads.empty() ? -1 : (int)m_pads[0]->tile().station();
 }
 
  /// return the hit region
-int MuonHit::region()
+int MuonHit::region() const
 {
-  return ((m_pads.empty()) ? -1 : (int)m_pads[0]->tile()->region());
+  return m_pads.empty() ? -1 : (int)m_pads[0]->tile().region();
 }
 
 
 
-std::vector<MuonLogHit*> MuonHit::getHits()
+std::vector<const MuonLogHit*> MuonHit::getHits() const
 {
-  std::vector<MuonLogHit*> out;
-  for (std::vector<MuonLogPad*>::iterator m_ip=m_pads.begin() ;
-       m_ip != m_pads.end(); m_ip++) {
-    std::vector<MuonLogHit*> padhits = (*m_ip)->getHits();
+  std::vector<const MuonLogHit*> out;
+  for (const auto& pad : m_pads) {
+    auto padhits = pad->getHits();
     out.insert(out.end(), padhits.begin(), padhits.end());
   }
   return out;
 }
 
 
-std::vector<LHCb::MuonTileID*> MuonHit::getTiles()
+std::vector<LHCb::MuonTileID> MuonHit::getTiles() const
 {
-  std::vector<LHCb::MuonTileID*> tiles;
-  std::vector<MuonLogHit*> hits = getHits();
-  std::vector<MuonLogHit*>::iterator ih;
-  for(ih = hits.begin(); ih != hits.end(); ih++){
-    tiles.push_back((*ih)->tile());
+  std::vector<LHCb::MuonTileID> tiles;
+  for (const auto& pad : m_pads) {
+    auto padhits = pad->getHits();
+    std::transform( padhits.begin(), padhits.end(),
+                    std::back_inserter(tiles),
+                    [](const MuonLogHit* mlh) {
+        return mlh->tile();
+    });
   }
   return tiles;
 }
 
-std::vector<LHCb::MuonTileID*> MuonHit::getLogPadTiles() {
-  std::vector<LHCb::MuonTileID*> tiles;
-  for (std::vector<MuonLogPad*>::iterator m_ip=m_pads.begin() ;
-       m_ip != m_pads.end(); m_ip++) {
-    tiles.push_back(const_cast<LHCb::MuonTileID*>((*m_ip)->tile()));
-  }
+std::vector<LHCb::MuonTileID> MuonHit::getLogPadTiles() const
+{
+  std::vector<LHCb::MuonTileID> tiles; tiles.reserve(m_pads.size());
+  std::transform( m_pads.begin(), m_pads.end(),
+                  std::back_inserter(tiles),
+                  [](const MuonLogPad* mlp) { return mlp->tile(); } );
   return tiles;
 }
 
-std::vector<float> MuonHit::getTimes()
+std::vector<float> MuonHit::getTimes() const
 {
-  std::vector<float> times;
-  std::vector<MuonLogHit*> hits = getHits();
-  std::vector<MuonLogHit*>::iterator ih;
-  for(ih = hits.begin(); ih != hits.end(); ih++){
-    times.push_back((*ih)->time());
-  }
-  
+  auto hits = getHits();
+  std::vector<float> times; times.reserve(hits.size());
+  std::transform( hits.begin(), hits.end(),
+                  std::back_inserter(times),
+                  [](const MuonLogHit* mlh) { return mlh->time(); } );
   return times;
 }
 
-const LHCb::MuonTileID* MuonHit::tile()
+LHCb::MuonTileID MuonHit::tile() const
 {
-  return ((m_pads.empty()) ? NULL : m_pads[0]->tile());
+  return !m_pads.empty() ? m_pads[0]->tile() : LHCb::MuonTileID{};
 }
 
-const LHCb::MuonTileID* MuonHit::centerTile()
+LHCb::MuonTileID MuonHit::centerTile() const
 {
   if (m_pads.size() == 1) {
     return m_pads[0]->tile();
   }
   double d2min=9999999.,d2;
-  const LHCb::MuonTileID* out=NULL;
+  LHCb::MuonTileID out;
   for (unsigned int ip=0; ip<m_pads.size(); ip++) {
     d2 = (m_padx[ip]-X())*(m_padx[ip]-X()) +
       (m_pady[ip]-Y())*(m_pady[ip]-Y()) +
@@ -325,7 +319,7 @@ const LHCb::MuonTileID* MuonHit::centerTile()
       out = m_pads[ip]->tile();
     }
   }
-  if (out == NULL) {
+  if (!out.isDefined()) {
     for (unsigned int ip=0; ip<m_pads.size(); ip++) {
       std::cout << m_padx[ip] << " " <<m_pady[ip]<< " " <<m_padz[ip]<<std::endl;
     }
@@ -334,7 +328,7 @@ const LHCb::MuonTileID* MuonHit::centerTile()
   return out;
 }
 
-bool MuonHit::isTruePad()
+bool MuonHit::isTruePad() const
 {
-  return ((m_pads.empty()) ? false : m_pads[0]->truepad());
+  return !m_pads.empty() && m_pads.front()->truepad();
 }

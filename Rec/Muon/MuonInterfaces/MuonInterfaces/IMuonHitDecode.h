@@ -1,5 +1,4 @@
-// $Id: IMuonHitDecode.h,v 1.3 2010-03-25 16:58:33 ggiacomo Exp $
-#ifndef MUONMONITOR_IMUONHITDECODE_H 
+#ifndef MUONMONITOR_IMUONHITDECODE_H
 #define MUONMONITOR_IMUONHITDECODE_H 1
 
 #include <vector>
@@ -13,22 +12,19 @@
 // forward decl.
 class MuonLogHit;
 
-static const InterfaceID IID_IMuonHitDecode ( "IMuonHitDecode", 1, 0 );
-
 /** @class IMuonHitDecode IMuonHitDecode.h MuonTrackRec/IMuonHitDecode.h
- *  
  *
- *  @author 
+ *
+ *  @author
  *  @date   2008-01-25
  */
-class IMuonHitDecode : virtual public IAlgTool {
-public: 
+class IMuonHitDecode : public extend_interfaces<IAlgTool> {
+public:
 
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_IMuonHitDecode; }
+  DeclareInterfaceID( IMuonHitDecode, 2, 0);
 
   // main methods
-  virtual StatusCode decodeRawData() = 0;      
+  virtual StatusCode decodeRawData() = 0;
   /// list of decoded hits
   virtual const std::vector<MuonLogHit*>* hits() = 0;
   /// list of fake hits (unconnected channels)
@@ -44,7 +40,7 @@ public:
   virtual int banksSize(LHCb::RawBank::BankType bankType,  std::vector<int> &sizes) = 0;
   virtual unsigned int odeErrorWord(int T1, int BX) =0;
   virtual int bankVersion() = 0;
-  virtual void dumpRawBanks() = 0;  
+  virtual void dumpRawBanks() = 0;
   virtual void dumpFrame(int Tell1, int ODE) = 0;
   virtual bool mappingIsOld()  = 0;
   virtual int l0id() = 0;
@@ -57,43 +53,38 @@ public:
   virtual bool centralBX() = 0;
   virtual bool firstBX() = 0;
   virtual bool lastBX() = 0;
-  virtual LHCb::MuonTileID* tileFromODE(int ODEnumber,
-                                        int ODEchannel)  = 0;
+  virtual LHCb::MuonTileID tileFromODE(int ODEnumber,
+                                       int ODEchannel)  = 0;
   virtual int odeIndex(int ODEnumber) =0;
   virtual int channelsPerQuadrant(int station,
-				  int region) =0;
+                                  int region) =0;
   virtual int nPadX(int s) =0;
   virtual int nPadY(int s) =0;
   virtual int nPadXvy(int s, int r) =0;
   virtual int nPadYvx(int s, int r) =0;
-  virtual float padSizeX(int station,			    
+  virtual float padSizeX(int station,
                          int region)  =0;
-  virtual float padSizeY(int station,			    
+  virtual float padSizeY(int station,
                          int region)  =0;
-  virtual float padSizeXvy(int station,			    
-			   int region)  =0;
-  virtual float padSizeYvx(int station,			    
-			   int region)  =0;
-  virtual LHCb::MuonTileID* tileFromLogCh(unsigned int q, 
-                                          unsigned int s, 
-                                          unsigned int r, 
-                                          short int io, 
-                                          unsigned int ch)  =0;
-  virtual std::string& ecsChamberName(int region,
-                                      int chamberNumber)=0;
+  virtual float padSizeXvy(int station,
+                           int region)  =0;
+  virtual float padSizeYvx(int station,
+                           int region)  =0;
+  virtual LHCb::MuonTileID tileFromLogCh(unsigned int q,
+                                         unsigned int s,
+                                         unsigned int r,
+                                         short int io,
+                                         unsigned int ch)  =0;
   virtual bool completeEvent() =0;
   virtual void setCompleteEventMask(int mask) {m_ceMask=mask;}
 protected:
-  inline std::string locBX(int iX) {
-    std::stringstream sloc;
-    if(iX < 0) 
-      sloc << "Prev"<< -iX << "/";
-    if(iX > 0) 
-      sloc << "Next"<<  iX << "/";
-    return sloc.str();
+  inline std::string locBX(int iX) const {
+    return iX<0 ? "Prev" + std::to_string(-iX) + "/"
+         : iX>0 ? "Next" + std::to_string(iX)  + "/"
+         : "";
   }
-  int m_ceMask;
 private:
+  int m_ceMask;
 
 };
 #endif // MUONMONITOR_IMUONHITDECODE_H

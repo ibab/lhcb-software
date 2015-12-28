@@ -53,11 +53,11 @@ public:
   /// get the Clone flag
   bool isClone();
   /// return a vector with hits
-  std::vector< MuonHit* > getHits();
+  std::vector< MuonHit* > getHits() const;
   /// get the track span i.e. the max length in station units
-  int getSpan();
+  int getSpan() const;
   /// get the number of stations giving a hit to this track
-  int getFiringStations();
+  int getFiringStations() const;
   // linear chi2 fit. Track is fitted separately in XZ, YZ, TZ (assuming speed of light)
   StatusCode linFit();
   // add XTalk tracks
@@ -111,7 +111,7 @@ public:
   // residuals
   Gaudi::XYZTPoint& residuals(MuonHit& hit);
   // corrected time of i-th hit (i from 0)
-  double correctedTime(MuonHit& hit);
+  double correctedTime(MuonHit& hit) const;
   /// cluster size (total, and in the x/y views) associated to a given hit 
   /// (only if first hit of a given station, to avoid double counting)
   int clsize(MuonHit* hit, int& xsize, int& ysize);
@@ -124,7 +124,7 @@ public:
   inline double p() const { return m_trackP; }
   inline double pt() const { return m_trackPt; }
   inline double qOverP() const { return m_trackqOverP; }
-  inline Gaudi::XYZVector momentum(){ return m_trackMomentum; }
+  inline Gaudi::XYZVector momentum() const{ return m_trackMomentum; }
 
 
 private:
@@ -132,11 +132,11 @@ private:
   double correctTOF(double rawT,
                     double X,
                     double Y,
-                    double Z);
+                    double Z) const;
   double correctTime(double rawT,
                      double X,
                      double Y,
-                     double Z);
+                     double Z) const;
   typedef std::map< int, MuonHit* >::value_type MuonTkVtype;
   typedef std::map< int, MuonHit* >::iterator MuonTkIt;
   std::map< int, MuonHit* > m_muonTrack;
