@@ -1,6 +1,13 @@
 ! Package     : MuonPIDChecker
 ! Responsible : E. Polycarpo, H. Lopes
 !----------------------------------------------------------------------------
+! 2015-12-28 - Gerhard Raven
+ - prefer (implicit) std::initializer_list over boost::assign::list_of
+ - prefer std::to_string over boost::lexical_cast
+ - prefer getIfExists over the exists combined with get
+ - prefer range-based for loops
+ - add const when possible
+ - prefer pass-by-const& over pass-by-const* if a nullptr is not allowed/checked for
 
 !========================= MuonPIDChecker v5r5p1 2015-10-13 ========================
 ! 2015-08-12 - Gerhard Raven

@@ -91,12 +91,12 @@ private:
   unsigned int m_TrType;
 
   // methods
-  StatusCode trackExtrapolate(const LHCb::Track *pTrack);
+  StatusCode trackExtrapolate(const LHCb::Track& track);
   int findTrackRegion(const int sta);
   void resetTrInfo();
-  void getMuonPIDInfo(const LHCb::Track *pTrack, LHCb::MuonPIDs* pMuid);
-  void getMuonTrackInfo(const LHCb::Track *pTrack, LHCb::Tracks* muTracks);
-  StatusCode getTrackInfo(const LHCb::Track *pTrack);
+  void getMuonPIDInfo(const LHCb::Track& track, const LHCb::MuonPIDs* pMuid);
+  void getMuonTrackInfo(const LHCb::Track& track, const LHCb::Tracks* muTracks);
+  StatusCode getTrackInfo(const LHCb::Track& track);
   void fillPreSelPlots(int level);
   void fillIMLPlots(int level);
   void fillIMPlots(int level);

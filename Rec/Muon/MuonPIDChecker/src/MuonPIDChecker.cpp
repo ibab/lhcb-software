@@ -3,8 +3,6 @@
 #include <cmath>
 #include <iomanip>
 #include <vector>
-#include "boost/assign/list_of.hpp"
-#include <boost/lexical_cast.hpp>
 
 #include "Linker/LinkedTo.h"
 
@@ -30,14 +28,11 @@ MuonPIDChecker::MuonPIDChecker( const std::string& name,
   : GaudiHistoAlg ( name , pSvcLocator )
 {
   // Source of track to ID
-  declareProperty("TrackLocation",
-                  m_TracksPath = LHCb::TrackLocation::Default);
+  declareProperty("TrackLocation", m_TracksPath = LHCb::TrackLocation::Default);
   // Source of MuonPID
-  declareProperty("MuonIDLocation",
-                  m_MuonPIDsPath = LHCb::MuonPIDLocation::Default);
+  declareProperty("MuonIDLocation", m_MuonPIDsPath = LHCb::MuonPIDLocation::Default);
   // Source of MuonTracks 
-  declareProperty("MuonTrackLocation",
-                  m_MuonTracksPath = LHCb::TrackLocation::Muon);
+  declareProperty("MuonTrackLocation", m_MuonTracksPath = LHCb::TrackLocation::Muon);
   // Look at Long,Downstream or Both types of tracks
   declareProperty("TrackType", m_TrackType = 0 ); // Long
   // OutputLevel for Histograms  
@@ -143,18 +138,18 @@ StatusCode MuonPIDChecker::initialize() {
 	//fillIMLPlots
         GaudiAlg::HistoID  hname;
         std::string htitle;
-	hname = "hDist2_IML_R"+boost::lexical_cast<std::string>(i);
-        htitle= "Muon Dist for IML candidates at R"+boost::lexical_cast<std::string>(i);
+	hname = "hDist2_IML_R"+std::to_string(i);
+        htitle= "Muon Dist for IML candidates at R"+std::to_string(i);
 	book1D( hname, htitle, 0., 600., 100); 
-	hname = "hProbMu_IML_R"+boost::lexical_cast<std::string>(i);
-	htitle= "Muon Probability for IML candidates at R"+boost::lexical_cast<std::string>(i);
+	hname = "hProbMu_IML_R"+std::to_string(i);
+	htitle= "Muon Probability for IML candidates at R"+std::to_string(i);
 	book1D( hname , htitle , -0.1, 1.1, 60);
 	//fillIMPlots
-	hname = "hDist2_IM_R"+boost::lexical_cast<std::string>(i);
-        htitle= "Muon Dist for IM candidates at R"+boost::lexical_cast<std::string>(i);
+	hname = "hDist2_IM_R"+std::to_string(i);
+        htitle= "Muon Dist for IM candidates at R"+std::to_string(i);
 	book1D( hname, htitle, 0., 600., 100); 
-	hname = "hProbMu_IM_R"+boost::lexical_cast<std::string>(i);
-	htitle= "Muon Probability for IM candidates at R"+boost::lexical_cast<std::string>(i);
+	hname = "hProbMu_IM_R"+std::to_string(i);
+	htitle= "Muon Probability for IM candidates at R"+std::to_string(i);
 	book1D( hname , htitle , -0.1, 1.1, 60);
       }
     }
@@ -170,12 +165,12 @@ StatusCode MuonPIDChecker::initialize() {
 	//fillIMLPlots
 	GaudiAlg::HistoID hname;
 	std::string htitle;
-	hname = "hDLL_IML_R"+boost::lexical_cast<std::string>(i);
-	htitle= "Muon DLL for IML candidates at R"+boost::lexical_cast<std::string>(i);
+	hname = "hDLL_IML_R"+std::to_string(i);
+	htitle= "Muon DLL for IML candidates at R"+std::to_string(i);
 	book1D( hname , htitle , m_DLLlower, m_DLLupper, m_DLLnbins);
 	//fillIMPlots
-	hname = "hDLL_IM_R"+boost::lexical_cast<std::string>(i);
-	htitle= "Muon DLL for IM candidates at R"+boost::lexical_cast<std::string>(i);
+	hname = "hDLL_IM_R"+std::to_string(i);
+	htitle= "Muon DLL for IM candidates at R"+std::to_string(i);
 	book1D( hname , htitle , m_DLLlower, m_DLLupper, m_DLLnbins);
       }
       //fillHitMultPlots
@@ -191,8 +186,8 @@ StatusCode MuonPIDChecker::initialize() {
       htitle= "Mean Number of hits in FOI vs Y (M2)";
       bookProfile1D( hname, htitle, -5000, 5000, 200); 
       for (unsigned int i=1;i<m_NStation+1;i++){
-	hname = "hAvNHhitsFOIvsR_M"+boost::lexical_cast<std::string>(i);
-	htitle= "Mean Number of hits in FOI for M"+boost::lexical_cast<std::string>(i)+" vs MS Region";
+	hname = "hAvNHhitsFOIvsR_M"+std::to_string(i);
+	htitle= "Mean Number of hits in FOI for M"+std::to_string(i)+" vs MS Region";
 	bookProfile1D( hname ,htitle , 0.5, 4.5, 4);
       }
     } 
@@ -215,24 +210,24 @@ StatusCode MuonPIDChecker::initialize() {
       for (unsigned int i=1;i<m_NStation+1;i++){
 	GaudiAlg::HistoID hname;
 	std::string htitle;
-	hname = "hNHhitsFOIvsR_M"+boost::lexical_cast<std::string>(i);
-	htitle= "Number of hits in FOI for M"+boost::lexical_cast<std::string>(i)+" vs MS Region";
+	hname = "hNHhitsFOIvsR_M"+std::to_string(i);
+	htitle= "Number of hits in FOI for M"+std::to_string(i)+" vs MS Region";
 	book2D(hname, htitle, 0.5,4.5,4, -0.5,10.5,11); 
 
-	hname = "hNhitsFOIvsX_M"+boost::lexical_cast<std::string>(i);
-	htitle= "Number of hits in FOI for M"+boost::lexical_cast<std::string>(i)+" vs MS X Pos.";
+	hname = "hNhitsFOIvsX_M"+std::to_string(i);
+	htitle= "Number of hits in FOI for M"+std::to_string(i)+" vs MS X Pos.";
 	book2D(hname, htitle, -0.5,10.5, 11, -5000, 5000, 200); 
 
-	hname = "hNhitsFOIvsY_M"+boost::lexical_cast<std::string>(i);
-	htitle= "Number of hits in FOI for M"+boost::lexical_cast<std::string>(i)+" vs MS Y Pos.";
+	hname = "hNhitsFOIvsY_M"+std::to_string(i);
+	htitle= "Number of hits in FOI for M"+std::to_string(i)+" vs MS Y Pos.";
 	book2D(hname, htitle, -0.5,10.5, 11,-5000, 5000, 200); 
 
-	hname = "hAvNhitsFOIvsX_M"+boost::lexical_cast<std::string>(i);
-	htitle= "Mean Number of hits in FOI for M"+boost::lexical_cast<std::string>(i)+" vs MS X Pos.";
+	hname = "hAvNhitsFOIvsX_M"+std::to_string(i);
+	htitle= "Mean Number of hits in FOI for M"+std::to_string(i)+" vs MS X Pos.";
 	bookProfile1D( hname, htitle, -5000, 5000, 200); 
 
-	hname = "hAvNhitsFOIvsY_M"+boost::lexical_cast<std::string>(i);
-	htitle= "Mean Number of hits in FOI for M"+boost::lexical_cast<std::string>(i)+" vs MS Y Pos.";
+	hname = "hAvNhitsFOIvsY_M"+std::to_string(i);
+	htitle= "Mean Number of hits in FOI for M"+std::to_string(i)+" vs MS Y Pos.";
 	bookProfile1D( hname, htitle, -5000, 5000, 200); 
 
       }
@@ -255,30 +250,20 @@ StatusCode MuonPIDChecker::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() <<"execute:: HistosOutput "<<m_HistosOutput <<endmsg;
 
   // Get tracks to loop over
-  LHCb::Tracks* trTracks = get<LHCb::Tracks>(m_TracksPath);
-  if (!trTracks){
+  const LHCb::Tracks* trTracks = get<LHCb::Tracks>(m_TracksPath);
+  if (!trTracks){ // this will never happen -- get will throw instead...
     Warning("execute:: Failed to get Track container", StatusCode::SUCCESS).ignore();
   }
 
   // get  MuonPID objects 
-  LHCb::MuonPIDs* pMuids=0;
-  if ( exist<LHCb::MuonPIDs>(m_MuonPIDsPath)){
-    pMuids=get<LHCb::MuonPIDs>(m_MuonPIDsPath);
-    if (!pMuids){
-      Warning("execute:: Failed to get MuonPID from container", StatusCode::SUCCESS).ignore();
-    }
-  } else {
+  const LHCb::MuonPIDs* pMuids= getIfExists<LHCb::MuonPIDs>(m_MuonPIDsPath);
+  if (!pMuids){
     Warning("execute:: Failed. MuonPID container doesn't exist", StatusCode::SUCCESS).ignore();
   }
 
   // Get muon tracks to loop over
-  LHCb::Tracks* muTracks = 0;
-  if ( exist<LHCb::Tracks>(m_MuonTracksPath)){
-    muTracks = get<LHCb::Tracks>(m_MuonTracksPath);
-    if (!muTracks){
-      Warning("execute:: Failed to get MuonTrack from container", StatusCode::SUCCESS).ignore();
-    }
-  } else {
+  const LHCb::Tracks* muTracks = getIfExists<LHCb::Tracks>(m_MuonTracksPath);
+  if (!muTracks){
     Warning("execute:: Failed. MuonTrack container doesn't exist", StatusCode::SUCCESS).ignore();
   }
 
@@ -289,21 +274,19 @@ StatusCode MuonPIDChecker::execute() {
   m_nTrPreSel=0; 
   m_nTrIsMuonLoose=0; 
   m_nTrIsMuon=0; 
-  LHCb::Tracks::const_iterator iTrack;
-  for (iTrack = trTracks->begin() ; iTrack != trTracks->end() ; iTrack++){
+  for (const auto& track : *trTracks ) {
 
-    if(!((*iTrack)->checkFlag(LHCb::Track::Clone))  &&
-       ( ((*iTrack)->checkType(LHCb::Track::Long) && (m_TrackType==0 || m_TrackType==2)) ||
-         ((*iTrack)->checkType(LHCb::Track::Downstream) && (m_TrackType==1 || m_TrackType==2))) ){
+    if(!(track->checkFlag(LHCb::Track::Clone))  &&
+       ( (track->checkType(LHCb::Track::Long) && (m_TrackType==0 || m_TrackType==2)) ||
+         (track->checkType(LHCb::Track::Downstream) && (m_TrackType==1 || m_TrackType==2))) ){
 
       m_nTr++;
       resetTrInfo();
-      if ( msgLevel(MSG::DEBUG) ) debug() << "execute::isDown " << (*iTrack)->checkType(LHCb::Track::Downstream)<<endmsg;
-      if ( msgLevel(MSG::DEBUG) ) debug() << "execute::isLong " << (*iTrack)->checkType(LHCb::Track::Long)<<endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug() << "execute::isDown " << track->checkType(LHCb::Track::Downstream)<<endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug() << "execute::isLong " << track->checkType(LHCb::Track::Long)<<endmsg;
       if ( msgLevel(MSG::DEBUG) ) debug() << "execute::TrackType " << m_TrackType <<endmsg;
        
-      const LHCb::Track *pTrack = *iTrack;
-      StatusCode scget=getTrackInfo(pTrack);
+      StatusCode scget=getTrackInfo(*track);
       if ( msgLevel(MSG::DEBUG) ) debug() << "execute:: track info retrieved" << endmsg;
 
       if (scget.isFailure()) {
@@ -311,10 +294,10 @@ StatusCode MuonPIDChecker::execute() {
         continue;
       }
 
-      if(pMuids) getMuonPIDInfo(pTrack, pMuids);
+      if(pMuids) getMuonPIDInfo(*track, pMuids);
       if ( msgLevel(MSG::DEBUG) ) debug() << "execute:: MuonPID info retrieved for track "<< m_nTr  << endmsg;
 
-      if(muTracks) getMuonTrackInfo(pTrack, muTracks);
+      if(muTracks) getMuonTrackInfo(*track, muTracks);
       if ( msgLevel(MSG::DEBUG) ) debug() << "execute:: MuonTrack info retrieved for track "<< m_nTr << endmsg;
 
       if (m_TrIsPreSel>0) {
@@ -419,10 +402,10 @@ StatusCode MuonPIDChecker::finalize() {
 //======================================================================
 // Extrapolate Tracks to get X,Y of extrapolation point in each station 
 //======================================================================
-StatusCode MuonPIDChecker::trackExtrapolate(const LHCb::Track *pTrack){
+StatusCode MuonPIDChecker::trackExtrapolate(const LHCb::Track &track){
 
   // get state closest to M1 for extrapolation
-  const LHCb::State * state = &(pTrack->closestState(9450));
+  const LHCb::State * state = &(track.closestState(9450));
 
 
   if(!state){
@@ -495,19 +478,18 @@ void MuonPIDChecker::resetTrInfo() {
 //=====================================================================
 //  Fill MuonPID Info      
 //====================================================================
-void MuonPIDChecker::getMuonPIDInfo(const LHCb::Track *pTrack, LHCb::MuonPIDs* pMuids) {
+void MuonPIDChecker::getMuonPIDInfo(const LHCb::Track &track, const LHCb::MuonPIDs* pMuids) {
 
   int nMuonPIDs=0; //number of MuonPIDs associated to track
   // link between track and MuonPID 
-  LHCb::MuonPIDs::const_iterator imuid;
-  for (imuid = pMuids->begin() ; imuid != pMuids->end() ; imuid++){
-    if ((*imuid)->idTrack() == pTrack){  // found Associated MuonPID
+  for (const auto& muid : *pMuids) {
+    if (muid->idTrack() == &track){  // found Associated MuonPID
       nMuonPIDs++;
       // Preselection
-      if ((*imuid)->PreSelMomentum() && (*imuid)->InAcceptance() ){
+      if (muid->PreSelMomentum() && muid->InAcceptance() ){
         m_TrIsPreSel=1;
-        m_TrIsMuon = (*imuid)->IsMuon();
-        m_TrIsMuonLoose = (*imuid)->IsMuonLoose();
+        m_TrIsMuon = muid->IsMuon();
+        m_TrIsMuonLoose = muid->IsMuonLoose();
         if (m_TrIsMuonLoose< m_TrIsMuon){ // Sanity Check  
           Warning("getMuonPIDInfo:: Muon Track IsMuon < IsMuonLoose").ignore(); 
           if ( msgLevel(MSG::DEBUG) ) debug() << "getMuonPIDInfo::Muon Track" << m_nTr
@@ -515,9 +497,9 @@ void MuonPIDChecker::getMuonPIDInfo(const LHCb::Track *pTrack, LHCb::MuonPIDs* p
                                         "< IsMuonLoose= "<< m_TrIsMuonLoose << endmsg;
             
         }
-        m_TrMuonLhd= (*imuid)->MuonLLMu();
-        m_TrNMuonLhd = (*imuid)->MuonLLBg();
-        m_TrNShared = (*imuid)->nShared();
+        m_TrMuonLhd= muid->MuonLLMu();
+        m_TrNMuonLhd = muid->MuonLLBg();
+        m_TrNShared = muid->nShared();
         if ( msgLevel(MSG::DEBUG) ) debug() << "getMuonPIDInfo::Muon Track" << m_nTr
                                             <<"  TrMuonLhd ="<< m_TrMuonLhd << " TrNMuonLhd= "<< m_TrNMuonLhd<< endmsg;
 	    
@@ -530,7 +512,7 @@ void MuonPIDChecker::getMuonPIDInfo(const LHCb::Track *pTrack, LHCb::MuonPIDs* p
 //=====================================================================
 //  Fill Muon Track Info      
 //====================================================================
-void MuonPIDChecker::getMuonTrackInfo(const LHCb::Track *pTrack, LHCb::Tracks* muTracks) {
+void MuonPIDChecker::getMuonTrackInfo(const LHCb::Track& track, const LHCb::Tracks* muTracks) {
 
   LHCb::Tracks::const_iterator imuTrack;
   std::vector<int> assocHits(m_NRegion*m_NStation);
@@ -550,7 +532,7 @@ void MuonPIDChecker::getMuonTrackInfo(const LHCb::Track *pTrack, LHCb::Tracks* m
       continue;
     }
     // if muon track ancestor is the current track get info 
-    if (trParent == pTrack){
+    if (trParent == &track){
     
       // Sanity Checks   
       unsigned int muTrPS=0;
@@ -579,12 +561,9 @@ void MuonPIDChecker::getMuonTrackInfo(const LHCb::Track *pTrack, LHCb::Tracks* m
                 <<"  TrCLArrival   ="<< m_TrCLarrival << endmsg;
       }
       // Look at coords
-      std::vector<LHCb::LHCbID> mucoords = (*imuTrack) -> lhcbIDs();
-      std::vector<LHCb::LHCbID>::iterator iID;
-      for (iID = mucoords.begin(); iID != mucoords.end(); iID++) {
-        if (!(iID->isMuon())) continue;
-
-        LHCb::MuonTileID mutile = iID->muonID();
+      for (const auto& id : (*imuTrack) -> lhcbIDs() ) {
+        if (!id.isMuon()) continue;
+        LHCb::MuonTileID mutile = id.muonID();
         int region = mutile.region();
         int station = mutile.station();
         int nStatReg = station*m_NRegion+region;
@@ -592,10 +571,8 @@ void MuonPIDChecker::getMuonTrackInfo(const LHCb::Track *pTrack, LHCb::Tracks* m
         if ( msgLevel(MSG::DEBUG) ) debug() << "getMuonTrackInfo:: " << 
                                       "nHits in FOI in MR"<<nStatReg << " = "<<m_Trnhitsfoi[nStatReg]<<endmsg;
       } //end of loop over lhcbIDs 
-
     }
   }
-  return;
 }
 //=====================================================================
 //  Fill Multiplicity Plots         
@@ -667,20 +644,20 @@ void MuonPIDChecker::fillIMLPlots(int level) {
     plot1D( m_trackX[1], "hNIMLvsXM2", "MS X position at M2 for IML  tracks",-5500, 5500, 550);
     plot1D( m_trackY[1], "hNIMLvsYM2", "MS Y position at M2 for IML  tracks",-5500, 5500, 550);
 
-    GaudiAlg::HistoID hname1 = "hDist2_IML_R"+boost::lexical_cast<std::string>(m_TrRegionM2);
-    std::string htitle1= "Muon Dist for IML candidates at R"+boost::lexical_cast<std::string>(m_TrRegionM2);
+    GaudiAlg::HistoID hname1 = "hDist2_IML_R"+std::to_string(m_TrRegionM2);
+    std::string htitle1= "Muon Dist for IML candidates at R"+std::to_string(m_TrRegionM2);
     plot1D( m_TrDist2, hname1 , htitle1 , 0., 600., 100); 
 
-    hname1 = "hProbMu_IML_R"+boost::lexical_cast<std::string>(m_TrRegionM2);
-    htitle1= "Muon Probability for IML candidates at R"+boost::lexical_cast<std::string>(m_TrRegionM2);
+    hname1 = "hProbMu_IML_R"+std::to_string(m_TrRegionM2);
+    htitle1= "Muon Probability for IML candidates at R"+std::to_string(m_TrRegionM2);
     plot1D( exp(m_TrMuonLhd), hname1 , htitle1 , -0.1, 1.1, 60);
 
   }
   if (level>2){
 
     plot1D( m_TrIsMuon, "hIM_IML"  , " IsMuon for IML Tracks ", -0.5 , 1.5, 2 );
-    GaudiAlg::HistoID hname = "hDLL_IML_R"+boost::lexical_cast<std::string>(m_TrRegionM2);
-    std::string htitle = "Muon DLL for IML candidates at R"+boost::lexical_cast<std::string>(m_TrRegionM2);
+    GaudiAlg::HistoID hname = "hDLL_IML_R"+std::to_string(m_TrRegionM2);
+    std::string htitle = "Muon DLL for IML candidates at R"+std::to_string(m_TrRegionM2);
     plot1D( m_TrMuonLhd-m_TrNMuonLhd, hname , htitle , m_DLLlower, m_DLLupper, m_DLLnbins);
   }
   if (level>3){     
@@ -708,12 +685,12 @@ void MuonPIDChecker::fillIMPlots(int level) {
     plot1D( m_TrRegionM2, "hIMRegion", "MS Region for IM tracks",0.5,4.5,4); 
     plot1D( m_TrNShared, "hNShared_IM"  , " NShared for PS Tracks ", -0.5 , 5.5, 6 );
     plot1D( m_TrDist2, "hDist2_IM", "Muon Dist for IM candidates", 0., 600., 100); 
-    GaudiAlg::HistoID hname = "hDist2_IM_R"+boost::lexical_cast<std::string>(m_TrRegionM2);
-    std::string htitle= "Muon Dist for IML candidates at R"+boost::lexical_cast<std::string>(m_TrRegionM2);
+    GaudiAlg::HistoID hname = "hDist2_IM_R"+std::to_string(m_TrRegionM2);
+    std::string htitle= "Muon Dist for IML candidates at R"+std::to_string(m_TrRegionM2);
     plot1D( m_TrDist2, hname , htitle , 0., 600., 100); 
     plot1D( exp(m_TrMuonLhd), "hProbMu_IM", "Muon Probability for IM candidates", -0.1, 1.1, 60);
-    hname = "hProbMu_IM_R"+boost::lexical_cast<std::string>(m_TrRegionM2);
-    htitle= "Muon Probability for IM candidates at R"+boost::lexical_cast<std::string>(m_TrRegionM2);
+    hname = "hProbMu_IM_R"+std::to_string(m_TrRegionM2);
+    htitle= "Muon Probability for IM candidates at R"+std::to_string(m_TrRegionM2);
     plot1D( exp(m_TrMuonLhd), hname , htitle , -0.1, 1.1, 60);
     plot1D( exp(m_TrNMuonLhd), "hProbNMu_IM", "Non-Muon Probability for IM candidates", -0.1, 1.1, 60);
     plot1D( m_TrMuonLhd-m_TrNMuonLhd, "hMuDLL_IM", "Muon DLL for IM candidates",m_DLLlower, m_DLLupper, m_DLLnbins); 
@@ -721,8 +698,8 @@ void MuonPIDChecker::fillIMPlots(int level) {
     plot1D( m_trackY[1], "hNIMvsYM2", "MS Y position at M2 for IM  tracks",-5500, 5500, 550);
   }
   if (level>2){
-    GaudiAlg::HistoID hname = "hDLL_IM_R"+boost::lexical_cast<std::string>(m_TrRegionM2);
-    std::string htitle = "Muon DLL for IM candidates at R"+boost::lexical_cast<std::string>(m_TrRegionM2);
+    GaudiAlg::HistoID hname = "hDLL_IM_R"+std::to_string(m_TrRegionM2);
+    std::string htitle = "Muon DLL for IM candidates at R"+std::to_string(m_TrRegionM2);
     plot1D( m_TrMuonLhd-m_TrNMuonLhd, hname , htitle , m_DLLlower, m_DLLupper, m_DLLnbins);
   }
   if (level>3){
@@ -751,29 +728,29 @@ void MuonPIDChecker::fillHitMultPlots(int level) {
       }
       NhitsFOI += nhitsfoiS[i];
 
-      hname = "hAvNHhitsFOIvsR_M"+boost::lexical_cast<std::string>(i+1);
-      htitle= "Mean Number of hits in FOI for M"+boost::lexical_cast<std::string>(i+1)+" vs MS Region";
+      hname = "hAvNHhitsFOIvsR_M"+std::to_string(i+1);
+      htitle= "Mean Number of hits in FOI for M"+std::to_string(i+1)+" vs MS Region";
       profile1D( m_TrRegionM2, nhitsfoiS[i],hname ,htitle , 0.5, 4.5, 4);
 
       if (level > 3){
-	hname = "hNHhitsFOIvsR_M"+boost::lexical_cast<std::string>(i+1);
-	htitle= "Number of hits in FOI for M"+boost::lexical_cast<std::string>(i+1)+" vs MS Region";
+	hname = "hNHhitsFOIvsR_M"+std::to_string(i+1);
+	htitle= "Number of hits in FOI for M"+std::to_string(i+1)+" vs MS Region";
         plot2D(m_TrRegionM2, nhitsfoiS[i], hname, htitle, 0.5,4.5,-0.5,10.5,4,11); 
         
-	hname = "hNhitsFOIvsX_M"+boost::lexical_cast<std::string>(i+1);
-	htitle= "Number of hits in FOI for M"+boost::lexical_cast<std::string>(i+1)+" vs MS X Pos.";
+	hname = "hNhitsFOIvsX_M"+std::to_string(i+1);
+	htitle= "Number of hits in FOI for M"+std::to_string(i+1)+" vs MS X Pos.";
         plot2D(nhitsfoiS[i], m_trackX[i], hname, htitle, -0.5,10.5, -5000, 5000, 11, 200); 
 
-	hname = "hNhitsFOIvsY_M"+boost::lexical_cast<std::string>(i+1);
-	htitle= "Number of hits in FOI for M"+boost::lexical_cast<std::string>(i+1)+" vs MS Y Pos.";
+	hname = "hNhitsFOIvsY_M"+std::to_string(i+1);
+	htitle= "Number of hits in FOI for M"+std::to_string(i+1)+" vs MS Y Pos.";
         plot2D(nhitsfoiS[i], m_trackY[i], hname, htitle, -0.5,10.5, -5000, 5000, 11, 200); 
 
-	hname = "hAvNhitsFOIvsX_M"+boost::lexical_cast<std::string>(i+1);
-	htitle= "Mean Number of hits in FOI for M"+boost::lexical_cast<std::string>(i+1)+" vs MS X Pos.";
+	hname = "hAvNhitsFOIvsX_M"+std::to_string(i+1);
+	htitle= "Mean Number of hits in FOI for M"+std::to_string(i+1)+" vs MS X Pos.";
         profile1D(m_trackX[i], nhitsfoiS[i], hname, htitle, -5000, 5000, 200); 
 
-	hname = "hAvNhitsFOIvsY_M"+boost::lexical_cast<std::string>(i+1);
-	htitle= "Mean Number of hits in FOI for M"+boost::lexical_cast<std::string>(i+1)+" vs MS Y Pos.";
+	hname = "hAvNhitsFOIvsY_M"+std::to_string(i+1);
+	htitle= "Mean Number of hits in FOI for M"+std::to_string(i+1)+" vs MS Y Pos.";
         profile1D(m_trackY[i], nhitsfoiS[i], hname, htitle, -5000, 5000, 200); 
       }
     }
@@ -794,18 +771,14 @@ void MuonPIDChecker::fillHitMultPlots(int level) {
 //=====================================================================
 //  Fill MuonPID Info      
 //====================================================================
-StatusCode MuonPIDChecker::getTrackInfo(const LHCb::Track* pTrack) {
+StatusCode MuonPIDChecker::getTrackInfo(const LHCb::Track& track) {
   // get momentum
   // get state in zero position 
-  const LHCb::State * stateP0 = &(pTrack->firstState());
-  if (!stateP0){
-    if ( msgLevel(MSG::DEBUG) ) debug() << "getTrackInfo:: Failed to get stateP0 for track "<< m_nTr<< endmsg;
-    return Warning("getTrackInfo:: Failed to get stateP0 for track ",StatusCode::FAILURE); 
-  }
-  if( std::abs( stateP0->qOverP() ) > 0.001 / Gaudi::Units::GeV ) {
-    m_Trp0 = (1./stateP0->qOverP())/Gaudi::Units::GeV;
-    m_TrpT = (stateP0->pt()/Gaudi::Units::GeV)*(int)(m_Trp0/fabs(m_Trp0));
-  }else if( stateP0->qOverP() > 0. ) {
+  const LHCb::State& stateP0 = track.firstState();
+  if( std::abs( stateP0.qOverP() ) > 0.001 / Gaudi::Units::GeV ) {
+    m_Trp0 = (1./stateP0.qOverP())/Gaudi::Units::GeV;
+    m_TrpT = (stateP0.pt()/Gaudi::Units::GeV)*(int)(m_Trp0/fabs(m_Trp0));
+  }else if( stateP0.qOverP() > 0. ) {
     m_Trp0 = 1000. / Gaudi::Units::GeV;
     m_TrpT = 1000. / Gaudi::Units::GeV;
   }else {
@@ -814,7 +787,7 @@ StatusCode MuonPIDChecker::getTrackInfo(const LHCb::Track* pTrack) {
   }
   if ( msgLevel(MSG::DEBUG) ) debug() << "getTrackInfo:: TrP0=" << m_Trp0 << " TrPT= "<< m_TrpT << endmsg;
 
-  StatusCode sc = trackExtrapolate(pTrack);
+  StatusCode sc = trackExtrapolate(track);
   if (sc.isFailure()) Warning("getTrackInfo:: Failed to extrapolate track ", StatusCode::FAILURE,0).ignore();
 
   if ( msgLevel(MSG::DEBUG) ){
@@ -828,7 +801,5 @@ StatusCode MuonPIDChecker::getTrackInfo(const LHCb::Track* pTrack) {
 //  Rate Error             
 //====================================================================
 double MuonPIDChecker::getRateError( double rate , int den){
-
-  double RateError = 100.*sqrt(rate*(1.-rate)/(double)den);
-  return RateError;
+  return 100.*sqrt(rate*(1.-rate)/(double)den);
 }
