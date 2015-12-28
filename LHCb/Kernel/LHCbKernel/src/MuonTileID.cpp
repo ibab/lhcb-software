@@ -38,9 +38,6 @@ LHCb::MuonTileID LHCb::MuonTileID::neighbourID(int dirX, int dirY) const {
   return result;
 }
 
-bool LHCb::MuonTileID::isDefined() const {
-  return m_muonid != 0;
-}
 
 bool LHCb::MuonTileID::isValid() const {
 

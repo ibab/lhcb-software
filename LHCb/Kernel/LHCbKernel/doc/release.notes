@@ -3,6 +3,9 @@
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
+! 2015-12-28 - Gerhard Raven
+ - inline MuonTileID::isDefined
+
 ! 2015-12-21 - Gerhard Raven
  - reduce size of FastClusterContainer by 8 bytes
 
