@@ -522,7 +522,7 @@ double PVOfflineTool::zCloseBeam(const LHCb::Track* track){
 
   Gaudi::XYZVector unitVect;
   unitVect = track->firstState().slopes().Unit();
-  LHCb::State& stateG = track->firstState(); 
+  const LHCb::State& stateG = track->firstState(); 
 
   double zclose = stateG.z() - unitVect.z() * 
     (unitVect.x() * stateG.x() + unitVect.y() * stateG.y()) /

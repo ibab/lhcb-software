@@ -4,6 +4,9 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2015-12-28 - Gerhard Raven
+ - fix const correctness
+
 ! 2015-12-08 - Marco Cattaneo
  - Fix unused member variable
  - Remove unnecessary includes
