@@ -363,7 +363,7 @@ StatusCode MuonIDPlusTool::getMuonHits(){
       m_stationHasLargeCluster[st]=true;
     }
     for(const auto& pad : *clu->logPads() ) {
-      LHCb::MuonTileID tile= *(pad->tile());
+      LHCb::MuonTileID tile= pad->tile();
       auto sc = m_posTool->calcTilePos(tile,x,dx,y,dy,z,dz);
       if (sc.isFailure()){
         warning() << " Failed to get x,y,z of tile " << tile << endreq;
@@ -381,7 +381,7 @@ StatusCode MuonIDPlusTool::getMuonHits(){
   for (const auto& onev : *muRawHits ) {
     MuonLogPad* pad = const_cast<MuonLogPad*>(onev);
     if (pad->truepad()) continue;
-    LHCb::MuonTileID tile= *(pad->tile());
+    LHCb::MuonTileID tile= pad->tile();
     if(++(m_hitCounter[tile.station()]) < MAXHITS) {
       m_mudet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
       m_muhits[tile.station()].emplace_back(tile,x,dx,y,dy,z,dz,true,pad->time(),pad->dtime(),cl1v);

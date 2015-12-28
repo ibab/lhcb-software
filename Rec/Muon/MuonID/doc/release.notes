@@ -3,6 +3,8 @@
 ! Responsible : Marianna Fontana, Matteo Palutan, Ricardo Vazquez Gomez
 !-----------------------------------------------------------------------------
 ! 2015-12-26 - Gerhard Raven
+ - follow changes in MuonInterfaces to pass MuonTileID by value instead of
+   by pointer
  - replace trivial constructors/destructor implementations with = default
  - prefer std::unique_ptr over explicit pointer + delete (fixing a memory leak)
  - prefer .empty() over .size()==0
