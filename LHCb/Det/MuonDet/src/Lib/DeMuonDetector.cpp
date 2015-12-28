@@ -21,28 +21,17 @@
  *
  */
 
-/// Standard Constructor
-DeMuonDetector::DeMuonDetector() : m_msgStream(NULL),
-                                   m_isM1defined(true)     
-{
-  m_detSvc = 0;
-  m_stations = 0;
-  m_regions = 0;
-  m_chamberLayout = 0;
-  m_hitNotInGap = 0;
-}
-
-/// Standard Destructor
-DeMuonDetector::~DeMuonDetector()
-{
-  delete m_chamberLayout; m_chamberLayout = NULL;
-  delete m_msgStream; m_msgStream = NULL;
-}
+  //Maximum number of chambers allowed per region
+  //Initialize the maximum number of allowed chambers per region
+static constexpr const std::array<int,4> MaxRegions = {12,24,48,192}; // this can go to DDDB
 
 const CLID& DeMuonDetector::clID () const
 {
   return DeMuonDetector::classID() ;
 }
+
+DeMuonDetector::DeMuonDetector() = default;
+DeMuonDetector::~DeMuonDetector() = default;
 
 StatusCode DeMuonDetector::initialize()
 {
@@ -106,20 +95,10 @@ StatusCode DeMuonDetector::initialize()
 				   &MuonDAQHelper::updateLUT);
       */
   }
-
-
-
-
-  //Initialize the maximum number of allowed chambers per region
-  int myDum[4] = {12,24,48,192}; // this can go to DDDB
-  for(int dum = 0; dum<4; dum++) {MaxRegions[dum] = myDum[dum];}
-  
   
   //Initializing the Layout in chamber coordinates
   MuonLayout R1(1,1), R2(1,2), R3(1,4), R4(2,8); // also this can go to DDDB
-  MuonChamberLayout* tLay = new MuonChamberLayout(R1,R2,R3,R4,m_detSvc,msgSvc());
-  m_chamberLayout = tLay;
-  
+  m_chamberLayout.reset( new MuonChamberLayout(R1,R2,R3,R4,m_detSvc,msgSvc()) );
   
   m_ChmbPtr =  m_chamberLayout->fillChambersVector(m_detSvc);
   
@@ -135,13 +114,10 @@ StatusCode DeMuonDetector::initialize()
       m_stationBox[0][1]<<" "<<
       m_stationBox[0][2]<<" "<<
       m_stationBox[0][3]<<" "<<endmsg;
-  //  delete tLay;
 
   
   m_daqHelper.initSvc(dataSvc(),msgSvc());
-  sc=m_daqHelper.initDAQMaps();
-
-  return sc;
+  return m_daqHelper.initDAQMaps();
 }
 
 
@@ -234,10 +210,9 @@ if(debug)std::cout<<chamberNumber<<" "<<regNum<<std::endl;
       m_chamberLayout->returnChambers(station, (float)x_ref,(float)y_ref,
                                       x_sgn,y_sgn,regs, myChams);
 
-      std::vector<int>::iterator aChamber;
       //Loops on found chambers
       int idx = 0;
-      for(aChamber = myChams.begin(); aChamber<myChams.end(); aChamber++){
+      for(auto aChamber = myChams.begin(); aChamber<myChams.end(); aChamber++){
 
         int tmpChn = *aChamber;
         int tmpRen = regs.at(idx);
@@ -271,8 +246,8 @@ if(debug)std::cout<<chamberNumber<<" "<<regNum<<std::endl;
       if(debug) {
         std::cout<<"Chmb test n.  :"<<chamberNumber+1<<"  ";
         std::cout<<"Chmb ret.  : ";
-        for(aChamber = myChams.begin(); aChamber<myChams.end(); aChamber++){
-          std::cout<<*aChamber<<" ";
+        for(const auto&  aChamber:myChams) {
+          std::cout<<aChamber<<" ";
         }
         std::cout<<" "<<std::endl;
       }
@@ -286,22 +261,17 @@ if(debug)std::cout<<chamberNumber<<" "<<regNum<<std::endl;
                   <<endmsg;
     int msta(0),mreg(0),mchm(0);
     //Getting stations
-    IDetectorElement::IDEContainer::const_iterator itSt;
-    for(itSt=this->childBegin(); itSt<this->childEnd(); itSt++){
-      if (testForFilter(*itSt) == true)
-        continue;
+    for(auto itSt=this->childBegin(); itSt<this->childEnd(); itSt++){
+      if (testForFilter(*itSt)) continue;
 
       if(msta == station) {
         //Getting regions
-        IDetectorElement::IDEContainer::iterator itSide=(*itSt)->childBegin();
-        for(itSide=(*itSt)->childBegin(); itSide<(*itSt)->childEnd(); itSide++){
+        for(auto itSide=(*itSt)->childBegin(); itSide<(*itSt)->childEnd(); itSide++){
           mreg = 0;
-          IDetectorElement::IDEContainer::iterator itRg=(*itSide)->childBegin();
-          for(itRg=(*itSide)->childBegin(); itRg<(*itSide)->childEnd(); itRg++){
+          for(auto itRg=(*itSide)->childBegin(); itRg<(*itSide)->childEnd(); itRg++){
             //Getting chambers
             mchm = 0;
-            IDetectorElement::IDEContainer::iterator itCh=(*itRg)->childBegin();
-            for(itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); itCh++){
+            for(auto itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); itCh++){
               IGeometryInfo* geoAllChm = (*itCh)->geometry();
 
               //For calls not providing hit z take the z of chamber center
@@ -361,20 +331,17 @@ StatusCode DeMuonDetector::Pos2StGapNumber(const double x,
 StatusCode DeMuonDetector::Pos2StChamberPointer(const double x,
                                                 const double y,
                                                 int station,
-                                                DeMuonChamber* &
-                                                chamberPointer)const{
+                                                DeMuonChamber* & chamberPointer)const{
   //Hit Z is not know (giving only the station).
   //Take the chamber Z to update the hit later on.
   Gaudi::XYZPoint hitPoint(x,y,0);
   int chamberNumber(-1),regNum(-1);
   StatusCode sc = Hit2ChamberNumber(hitPoint,station,chamberNumber,regNum);
-  if(sc.isFailure())return sc;
+  if(sc.isFailure()) return sc;
 
   if((regNum > -1) && (chamberNumber>-1)) {
-    DeMuonChamber*  myPtr =  getChmbPtr(station,regNum,chamberNumber) ;
-    chamberPointer = myPtr;
+    chamberPointer = getChmbPtr(station,regNum,chamberNumber) ;
   }
-
   return sc;
 }
 
@@ -396,7 +363,6 @@ StatusCode DeMuonDetector::Pos2ChamberNumber(const double x,
   //Z is know/provided.
   Gaudi::XYZPoint hitPoint(x,y,z);
   int sta = getStation(z);
-
   return Hit2ChamberNumber(hitPoint,sta,chamberNumber,regNum);
 }
 
@@ -410,7 +376,6 @@ StatusCode DeMuonDetector::Pos2GapNumber(const double x,
   //Z is know/provided.
   Gaudi::XYZPoint hitPoint(x,y,z);
   int sta = getStation(z);
-
   return Hit2GapNumber(hitPoint,sta,gapNumber,chamberNumber,regNum);
 }
 
@@ -430,83 +395,28 @@ StatusCode DeMuonDetector::Pos2ChamberTile(const double x,
   return sc;
 }
 
-/*IDetectorElement* DeMuonDetector::ReturnADetElement(int lsta, int lreg,
-  int lchm) {
-
-  IDetectorElement* myDet = (IDetectorElement*)0;
-  int msta(0),mreg(0),mchm(0);
-
-  //Getting stations
-  IDetectorElement::IDEContainer::iterator itSt=this->childBegin();
-  for(itSt=this->childBegin(); itSt<this->childEnd(); itSt++){
-  if((msta == lsta) && (lreg == -1) && (lchm == -1)) {
-  myDet = *itSt;
-  return myDet;
-  }
-  //Getting regions
-  mreg = 0;
-  IDetectorElement::IDEContainer::iterator itRg=(*itSt)->childBegin();
-  for(itRg=(*itSt)->childBegin(); itRg<(*itSt)->childEnd(); itRg++){
-  if((msta == lsta) && (mreg == lreg) && (lchm == -1)) {
-  myDet = *itRg;
-  return myDet;
-  }
-  //Getting chambers
-  mchm = 0;
-  IDetectorElement::IDEContainer::iterator itCh=(*itRg)->childBegin();
-  for(itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); itCh++){
-
-  if((msta == lsta) && (mreg == lreg) && (mchm == lchm)) {
-  myDet = *itCh;
-  return myDet;
-  }
-  mchm++;
-  }//Chamber Loop
-  mreg++;
-  }//Region Loop
-  msta++;
-  }//Stations Loop
-
-  return myDet;
-
-  }
-*/
 void DeMuonDetector::CountDetEls() {
 
-  IDetectorElement* myDet = (IDetectorElement*)0;
-  int msta(0),mreg(0),mallreg(0);
+  int msta(0),mallreg(0);
 
   //Getting stations
-  IDetectorElement::IDEContainer::iterator itSt=this->childBegin();
-  for(itSt=this->childBegin(); itSt<this->childEnd(); itSt++){
+  for(auto itSt=this->childBegin(); itSt<this->childEnd(); itSt++){
     if (testForFilter(*itSt)) continue;
-    IDetectorElement::IDEContainer::iterator itSide=(*itSt)->childBegin();
-    myDet = *itSt;
-    if(myDet) msta++;
+    if(*itSt) msta++;
 
     //Getting regions
-    mreg = 0;
-    IDetectorElement::IDEContainer::iterator itRg=(*itSide)->childBegin();
-    for(itRg=(*itSide)->childBegin(); itRg<(*itSide)->childEnd(); itRg++){
-
-      myDet = *itRg;
-      if(myDet) {
-        mreg++;
-        mallreg++;
-      }
-
-    }//Region Loop
-
+    auto itSide=(*itSt)->childBegin();
+    auto mreg = std::count_if((*itSide)->childBegin(), (*itSide)->childEnd(),
+                              [](const IDetectorElement* rg) -> bool 
+                              { return rg; } );
     m_regsperSta[msta-1] = mreg;
+    mallreg += mreg;
 
   }//Stations Loop
 
   m_stations = msta;
   // these are the so-called partitions i.e. regions summed over stations
   m_regions = mallreg;
-
-  return;
-
 }
 
 DeMuonChamber* DeMuonDetector::getChmbPtr(const int station, const int region,
@@ -520,58 +430,12 @@ DeMuonChamber* DeMuonDetector::getChmbPtr(const int station, const int region,
   }
   myPtr = m_ChmbPtr.at(encode);
 
-  if (myPtr == NULL)
+  if (!myPtr)
     msgStream() << MSG::WARNING << "DeMuonDetector::getChmbPtr"
       "is returning NULL pointer" << endmsg;
 
   return myPtr;
 }
-
-/*const DeMuonChamber* DeMuonDetector::getChmbPtr(const int station,
-  const int region,
-  const int chmb) const {
-  DeMuonChamber* myPtr;
-  int encode, re(0);
-  encode = 276*station+chmb;
-  if(region) {
-  re = region;
-  while(re >= 1) {encode += MaxRegions[re-1]; re--;}
-  }
-  myPtr = m_ChmbPtr.at(encode);
-  return myPtr;
-  }
-*/
-
-/*void DeMuonDetector::fillChmbPtr() {
-
-int encode(0);
-bool debug = false;
-//Stations
-for(int iS = 0; iS<5; iS++){
-//Regions
-for(int iR = 0; iR<4; iR++){
-//Chambers
-for(int iC = 0; iC<MaxRegions[iR]; iC++){
-
-IDetectorElement* det  = ReturnADetElement(iS,iR,iC);
-DeMuonChamber*  myPtr =  dynamic_cast<DeMuonChamber*>( det ) ;
-
-if(debug) std::cout<<"Filling chamber Pointer: "<<encode<<" "
-<<iS<<" "<<MaxRegions[iR]<<" "<<iR<<" "<<iC<<
-std::endl;
-if(myPtr) {
-m_ChmbPtr.at(encode) = myPtr;
-} else {
-m_ChmbPtr.at(encode) = (DeMuonChamber*)0;
-}
-encode++;
-}
-}
-}
-if(debug)  std::cout<<" Filled the chamber pointer "<<std::endl;
-return;
-}
-*/
 
 std::vector< std::pair<MuonFrontEndID, std::vector<float> > >
 DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_exit,
@@ -602,22 +466,10 @@ DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_
     //If given.. assign region and chamber number
     regNum = region; chamberNumber = chamber;
   }
-  /*
-  msgStream() << MSG::INFO <<"Create list of physical channels: (entry/exit/s/s1/r/c) "
-	      <<my_entry<<" "
-	      <<my_exit<<" "<<station<<" "
-	      <<station1<<" "
-	      <<region<<" "<<chamber<<endmsg;
-  */
 
   //Getting the chamber pointer.
   DeMuonChamber*  myChPtr =  getChmbPtr(station,regNum,chamberNumber); 
   //check if the retrieved chamber is OK
-  /*
-  msgStream() << MSG::INFO <<"Chamber name/gridname: "<< myChPtr->name()
-	      <<" "<<myChPtr->getGridName()<<" "
-	      <<myChPtr ->geometry()<<endmsg;
-  */
   Gaudi::XYZPoint midInCh= (myChPtr ->geometry())->toLocal(Gaudi::XYZPoint(
                               ((my_entry.x()+my_exit.x())/2),
                               ((my_entry.y()+my_exit.y())/2),
@@ -714,15 +566,12 @@ DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_
 
   //Convert relative distances into absolute ones
   std::vector< std::pair<MuonFrontEndID, std::vector<float> > > myPair;
-  std::vector< std::pair< MuonFrontEndID,std::vector<float> > >::iterator 
-    tmpPair_it;
   std::vector<float> myVec; MuonFrontEndID myFE;
   if(theGrid) {
     //Gets list of channels
 
     tmpPair = theGrid->listOfPhysChannels(mod_xen,mod_yen,mod_xex,mod_yex);
-    tmpPair_it = tmpPair.begin();
-    for(tmpPair_it = tmpPair.begin();tmpPair_it<tmpPair.end(); tmpPair_it++){
+    for(auto tmpPair_it = tmpPair.begin();tmpPair_it<tmpPair.end(); tmpPair_it++){
       myFE  = tmpPair_it->first;
       myVec = tmpPair_it->second;
       myFE.setLayer(gapCnt/2);
@@ -783,15 +632,9 @@ StatusCode DeMuonDetector::getPCCenter(MuonFrontEndID fe,int chamber,
   double xcenter_gap=xcenter_norma*2*dx-dx;
   double ycenter_gap=ycenter_norma*2*dy-dy;
 
-  //  Gaudi::XYZPoint globChCenter= myChPtr->geometry()->toGlobal( Gaudi::XYZPoint(0,0,0));
-
-
   Gaudi::XYZPoint loc(xcenter_gap,ycenter_gap,0);   
-
   Gaudi::XYZPoint refInCh= myGap->toMother(loc);
-
   Gaudi::XYZPoint glob= myChPtr->geometry()->toGlobal(refInCh);
-
  
   xcenter=glob.x();
   ycenter=glob.y();
@@ -803,10 +646,9 @@ StatusCode DeMuonDetector::getPCCenter(MuonFrontEndID fe,int chamber,
 StatusCode  DeMuonDetector::Chamber2Tile(int  chaNum, int station, int region,
                                          LHCb::MuonTileID& tile) const
 {
-  StatusCode sc = StatusCode::SUCCESS;
   //Convert chamber number into a tile
   tile = m_chamberLayout->tileChamberNumber(station,region,chaNum);
-  return sc;
+  return StatusCode::SUCCESS;
 }
 
 
@@ -819,14 +661,10 @@ void DeMuonDetector::fillGeoInfo()
   int Side=0;
   int region=0;
 
-  IDetectorElement::IDEContainer::iterator itSt=this->childBegin();
-  for(; itSt<this->childEnd(); itSt++){ // loop over detector elements
+  for(auto itSt = this->childBegin(); itSt<this->childEnd(); itSt++){ // loop over detector elements
 
     //Check if the "station" isn't actually a filter
-    //    msgStream()<<MSG::INFO<<"DET ELEM stations: "<<(*itSt)->name()<<endmsg;
-    if (testForFilter(*itSt) == true)
-      continue;
-    //
+    if (testForFilter(*itSt)) continue;
 
     // get station z-coordinates
     IGeometryInfo*  geoSt=(*itSt)->geometry();
@@ -842,23 +680,16 @@ void DeMuonDetector::fillGeoInfo()
 
     Side=0;
 
-    IDetectorElement::IDEContainer::iterator itSide=(*itSt)->childBegin();
-    for(; itSide<(*itSt)->childEnd(); itSide++){ // loop over sides
+    
+    for(auto itSide=(*itSt)->childBegin(); itSide<(*itSt)->childEnd(); itSide++){ // loop over sides
 
-      IDetectorElement::IDEContainer::iterator itRg=(*itSide)->childBegin();
       region=0;
       //      if(debug)
       // msgStream()<<MSG::INFO<<" station "<<station<<endmsg;
 
-      //      for(itRg=(*itSide)->childBegin(); itRg<(*itSide)->childEnd(); itRg++){ // loop over regions
-      for(; itRg<(*itSide)->childEnd(); itRg++){ // loop over regions
-	//        if(debug)
-	//msgStream()<<MSG::INFO<<" region "<<region<<endmsg;
-	//    msgStream()<<MSG::INFO<<"DET ELEM region: "<<(*itRg)->name()<<endmsg;
+      for(auto itRg=(*itSide)->childBegin(); itRg<(*itSide)->childEnd(); itRg++){ // loop over regions
 
-        IDetectorElement::IDEContainer::iterator itCh=(*itRg)->childBegin();
-        //        DeMuonRegion* reg=dynamic_cast<DeMuonRegion*> (*itRg);
-	//        for(itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); itCh++){
+        auto itCh=(*itRg)->childBegin();
 
 	// apparently it loops only over the first chamber to get general information
 	// can it be made equivalently using begin() iterator ?
@@ -868,8 +699,7 @@ void DeMuonDetector::fillGeoInfo()
           int gaps=0;
           double area=0;
 
-          ILVolume::PVolumes::const_iterator pvIterator;
-          for (pvIterator=((((*itCh)->geometry())->lvolume())->pvBegin());
+          for (auto pvIterator=((((*itCh)->geometry())->lvolume())->pvBegin());
                pvIterator!=((((*itCh)->geometry())->lvolume())->pvEnd());
                pvIterator++){
             
@@ -883,8 +713,7 @@ void DeMuonDetector::fillGeoInfo()
 	    
     if(mystring=="lvGasGap"){ // these are the gas gaps
 	    
-              ILVolume::PVolumes::const_iterator pvGapIterator;
-              for (pvGapIterator=(geoCh->pvBegin());
+              for (auto pvGapIterator=(geoCh->pvBegin());
                    pvGapIterator!=(geoCh->pvEnd());pvGapIterator++){
 
 		//		msgStream()<<MSG::INFO<<"Gap Volume Name: "
@@ -897,23 +726,15 @@ void DeMuonDetector::fillGeoInfo()
                   //Retrieve the chamber box dimensions  
                   const SolidBox *box = dynamic_cast<const SolidBox *>
                     (geoGap->solid());
-                  float dx = static_cast<float>(box->xHalfLength());
-                  float dy = static_cast<float>(box->yHalfLength());
-                  float dz = static_cast<float>(box->zHalfLength());
+                  float dx = box->xHalfLength();
+                  float dy = box->yHalfLength();
+                  float dz = box->zHalfLength();
                   m_sensitiveAreaX[station*4+region]=2*dx;
                   m_sensitiveAreaY[station*4+region]=2*dy;
                   m_sensitiveAreaZ[station*4+region]=2*dz;
                   area=4*dx*dy;
                   m_areaChamber[station*4+region]=area;
                   gaps++;
-		  /*
-                   msgStream()<<MSG::INFO<<" in quale gap siamo "
-			   <<(*pvGapIterator)->lvolume()->name()
-			   <<" dimensions x, y, z: "
-			   <<2*dx<<" "
-			   <<2*dy<<" "
-			   <<2*dz<<" "<<endmsg;
-		  */
                 }
               }
             }
@@ -922,11 +743,7 @@ void DeMuonDetector::fillGeoInfo()
           
           m_gapPerRegion[station*4+region]=gaps;
           m_gapPerFE[station*4+region]=gaps/2;
-	  /*
-	  msgStream()<<MSG::INFO<<"Grid for chamber (s/r/c):  "
-		     <<station<<"/"<<region<<" "<<chPt->name()<<" "
-		     <<chPt->getGridName()<<endmsg;
-	  */
+
           Condition* bGrid = (chPt)->condition(chPt->getGridName());
           MuonChamberGrid* theGrid = static_cast<MuonChamberGrid*>(bGrid);
           
@@ -1357,15 +1174,8 @@ void DeMuonDetector::fillGeoInfo()
         m_padSizeX[part]=(m_sensitiveAreaX[part]/m_phChannelNX[0][part])* mgx;
         m_padSizeY[part]=(m_sensitiveAreaY[part]/m_phChannelNY[1][part])* mgy;
       }
-
-      //  msgStream()<<MSG::INFO<<"S/R/P "<<stat<<"/"<<reg<<"/"<<part
-      //	     <<" pX/pY "<<m_padSizeX[part]<<"/"<<m_padSizeY[part]<<endmsg;
-
-
     }
   }
-
-  return;
 }
 
 void DeMuonDetector::fillGeoArray()
@@ -1535,8 +1345,6 @@ if(debug)msgStream()<<MSG::ERROR<<geoCh->toGlobal(myGapVol->toMother(Gaudi::XYZP
 
     station++;
   }
-
-  return;
 }
 
 
@@ -1613,13 +1421,10 @@ std::vector<DeMuonChamber*> DeMuonDetector::Tile2Chamber(LHCb::MuonTileID aTile)
 
 DetectorElement* DeMuonDetector::Hit2Station(Gaudi::XYZPoint myPoint)
 {
-  char stationName[10];
-
   unsigned int istat = getStation(myPoint.z());
-  sprintf(stationName,"/M%u",istat+(m_isM1defined?1:2));
-  std::string stationPath = DeMuonLocation::Default+stationName;
+  auto stationName = DeMuonLocation::Default+ "/M" + std::to_string( istat+(m_isM1defined?1:2));
 
-  SmartDataPtr<DetectorElement> station(m_detSvc, stationPath);
+  SmartDataPtr<DetectorElement> station(m_detSvc, stationName );
   if( !station ) {
     msgStream() << MSG::ERROR << "Error in retrieving DetectorElement!" << endmsg;
   }

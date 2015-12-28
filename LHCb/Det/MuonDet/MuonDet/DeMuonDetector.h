@@ -43,20 +43,20 @@ static const CLID CLID_DEMuonDetector = 11009;
 class DeMuonDetector: public DetectorElement {
 
 public:
-  /// Constructor, empty
+  /// Constructor
   DeMuonDetector();
 
   /// Destructor
-  virtual  ~DeMuonDetector();
+  ~DeMuonDetector() override;
 
   /// object identification
-  const CLID& clID () const ;
+  const CLID& clID () const override;
 
   /// object identification
   static const CLID& classID () { return CLID_DEMuonDetector; }
 
   //Initialize of Detector Element
-  virtual StatusCode initialize();
+  StatusCode initialize() override;
 
 
   StatusCode Hit2ChamberNumber(Gaudi::XYZPoint myPoint, 
@@ -281,7 +281,7 @@ private:
   /// Access to Msgstream object
   inline MsgStream & msgStream() const
   {
-    if ( !m_msgStream ) m_msgStream = new MsgStream(msgSvc(),name());
+    if ( UNLIKELY(!m_msgStream) ) m_msgStream.reset( new MsgStream(msgSvc(),name()) );
     return *m_msgStream;
   }
 
@@ -290,23 +290,21 @@ private:
 
 private:
 
-  mutable MsgStream * m_msgStream;
+  mutable std::unique_ptr<MsgStream> m_msgStream;
 
   //My data provider
-  IDataProviderSvc* m_detSvc;
+  IDataProviderSvc* m_detSvc = nullptr;
 
   //My vector of Chamber pointers
   std::vector<DeMuonChamber*> m_ChmbPtr;
 
   //Chamber Layout
-  MuonChamberLayout *m_chamberLayout;
+  std::unique_ptr<MuonChamberLayout> m_chamberLayout;
 
-  //Maximum number of chambers allowed per region
-  int MaxRegions[4];
 
   //How many stations and regions
-  int m_stations;
-  int m_regions;
+  int m_stations = 0;
+  int m_regions = 0;
   int m_regsperSta[5];
 
   //geometry info
@@ -336,9 +334,9 @@ private:
   //  double m_stationZ[5];
   std::vector<double> m_stationZ;
   MuonDAQHelper m_daqHelper;
-  int   m_hitNotInGap;
+  int   m_hitNotInGap = 0;
 
-  bool m_isM1defined;
+  bool m_isM1defined = true;
 };
 
 // -----------------------------------------------------------------------------

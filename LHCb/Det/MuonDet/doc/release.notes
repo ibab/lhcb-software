@@ -2,6 +2,13 @@
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
+! 2015-12-28 - Gerhard Raven
+ - qualify implementations of virtual functions with 'override'
+ - prefer std::unique_ptr over raw pointer + explicit delete
+ - prefer direct member initialization
+ - prefer range-based for loops and auto
+ - do not explicitly cast if not needed
+ - prefer std::to_string over ::sprintf
 
 !========================= MuonDet v9r17 2015-01-14 =========================
 ! 2014-12-15 - Gerhard Raven
