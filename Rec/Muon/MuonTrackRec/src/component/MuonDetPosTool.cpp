@@ -15,15 +15,12 @@ DECLARE_TOOL_FACTORY( MuonDetPosTool )
 MuonDetPosTool::MuonDetPosTool( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-  : GaudiTool ( type, name , parent ),
-    m_muonDetector(NULL)
+  : base_class ( type, name , parent )
 {
   declareInterface<IMuonFastPosTool>(this);
-
 }
 
-MuonDetPosTool::~MuonDetPosTool() {} 
-
+MuonDetPosTool::~MuonDetPosTool() = default;
 
 StatusCode MuonDetPosTool::initialize ()
 {
@@ -39,12 +36,6 @@ StatusCode MuonDetPosTool::initialize ()
 }
 
  
-StatusCode MuonDetPosTool::finalize ()
-{
-  return   GaudiTool::finalize() ;
-}
-
-
 StatusCode MuonDetPosTool::calcTilePos(const LHCb::MuonTileID& tile, 
                                        double& x, double& deltax,
                                        double& y, double& deltay,

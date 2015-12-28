@@ -23,7 +23,7 @@ class DeMuonDetector;
  *
  *
  */
-class MuonTrackMomRec : public GaudiTool, virtual public IMuonTrackMomRec , virtual public IIncidentListener {
+class MuonTrackMomRec : public extends<GaudiTool, IMuonTrackMomRec, IIncidentListener> {
 public: 
   /// Standard constructor
   MuonTrackMomRec( const std::string& type, 
@@ -34,13 +34,12 @@ public:
 
   // from GaudiTool
   virtual StatusCode initialize();    
-  virtual StatusCode finalize  ();    
   
   // from IMuonTrackMomRec
   virtual StatusCode recMomentum(MuonTrack* track, 
-                                 LHCb::Track* lbTrack);
-  virtual double getBdl() {return m_bdlX;}
-  virtual double getZcenter() {return m_zCenter;}
+                                 LHCb::Track* lbTrack) const;
+  virtual double getBdl() const {return m_bdlX;}
+  virtual double getZcenter() const {return m_zCenter;}
 
   // from IIncidentListener
   virtual void handle ( const Incident& incident );   
@@ -49,15 +48,15 @@ private:
   
   std::vector<double> m_ParabolicCorrection;
   std::vector<double> m_resParams;
-  double m_Constant;
+  double m_Constant = 0;
 
   StatusCode  initBdl();
 
-  IBIntegrator* m_bIntegrator; // magnetic field tool
-  DeMuonDetector* m_muonDetector;
-  double m_zCenter; // Bx field center position in z
-  double m_bdlX;    // integrated Bx field
-  int m_FieldPolarity;
+  IBIntegrator* m_bIntegrator = nullptr; // magnetic field tool
+  DeMuonDetector* m_muonDetector = nullptr;
+  double m_zCenter = 0; // Bx field center position in z
+  double m_bdlX = 0;    // integrated Bx field
+  int m_FieldPolarity = 0;
 
 };
 #endif // COMPONENT_MUONTRACKMOMREC_H

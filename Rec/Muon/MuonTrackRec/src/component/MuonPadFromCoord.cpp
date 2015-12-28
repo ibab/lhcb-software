@@ -25,7 +25,7 @@ DECLARE_TOOL_FACTORY( MuonPadFromCoord )
 MuonPadFromCoord::MuonPadFromCoord( const std::string& type,
                                     const std::string& name,
                                     const IInterface* parent )
-  : GaudiTool ( type, name , parent ),   m_padsReconstructed(false)
+  : base_class ( type, name , parent )
 {
   declareInterface<IMuonPadRec>(this);
   m_tiles.clear(); m_tiles.reserve(50000);
@@ -33,26 +33,12 @@ MuonPadFromCoord::MuonPadFromCoord( const std::string& type,
   m_pads.clear(); m_pads.reserve(50000);
 }
 
-MuonPadFromCoord::~MuonPadFromCoord() {
-  clearPads();
-} 
+MuonPadFromCoord::~MuonPadFromCoord() = default;
 
 void MuonPadFromCoord::clearPads() 
 {
-  std::vector<MuonTileID*>::iterator it;
-  for (it=m_tiles.begin() ; it != m_tiles.end(); it++) {
-    delete (*it);
-  }
   m_tiles.clear();
-  std::vector<MuonLogHit*>::iterator il;
-  for (il=m_hits.begin() ; il != m_hits.end(); il++) {
-    delete (*il);
-  }
   m_hits.clear();
-  std::vector<MuonLogPad*>::iterator ih;
-  for (ih=m_pads.begin() ; ih != m_pads.end(); ih++) {
-    delete (*ih);
-  }
   m_pads.clear();
 }
 
@@ -95,53 +81,43 @@ const std::vector<MuonLogPad*>* MuonPadFromCoord::pads() {
 StatusCode MuonPadFromCoord::buildLogicalPads(const std::vector<MuonLogHit*>* ) {
   MuonCoords* coords = get<MuonCoords>(MuonCoordLocation::MuonCoords);
   if ( !coords ) {
-    err() << " ==> Cannot retrieve MuonCoords " << endreq;
+    err() << " ==> Cannot retrieve MuonCoords " << endmsg;
     return StatusCode::FAILURE;
   }
-  MuonLogHit* log1;
-  MuonLogHit* log2;
   // loop over the coords
 
-
-
-  MuonCoords::const_iterator iCoord;
-  for ( iCoord = coords->begin() ; iCoord != coords->end() ; iCoord++ ){
-    MuonTileID* tile = new MuonTileID((*iCoord)->key());
-    unsigned int station = tile->station();
-    unsigned int region = tile->region();
-    double uncross = (station == 0 || ((station>2)&&(region==0))) ? false : (*iCoord)->uncrossed();
-    int time1= (int) (*iCoord)->digitTDC1();
-    int time2= (int) (*iCoord)->digitTDC2();
+  for (const auto&  coord : *coords) {
+    MuonTileID tile = MuonTileID(coord->key());
+    unsigned int station = tile.station();
+    unsigned int region = tile.region();
+    double uncross = (station == 0 || ((station>2)&&(region==0))) ? false : coord->uncrossed();
+    int time1= (int) coord->digitTDC1();
+    int time2= (int) coord->digitTDC2();
 
     if(uncross) {
       m_tiles.push_back(tile);
-      log1 = new MuonLogHit(tile);
-      log1->setTime(time1);
-      m_hits.push_back(log1);
-      m_pads.push_back(new MuonLogPad(log1));
-    }
-    else {
-      const std::vector<MuonTileID > thetiles= (*iCoord)->digitTile();
-      tile = new MuonTileID(thetiles[0]);
+      m_hits.emplace_back( new MuonLogHit(tile) );
+      m_hits.back()->setTime(time1);
+      m_pads.emplace_back(new MuonLogPad(m_hits.back().get()));
+    } else {
+      const std::vector<MuonTileID > thetiles= coord->digitTile();
+      tile = MuonTileID(thetiles[0]);
       m_tiles.push_back(tile);
-      log1 = new MuonLogHit(tile);
-      log1->setTime(time1);
-      m_hits.push_back(log1);
+      m_hits.emplace_back(new MuonLogHit(tile));
+      auto hit1 = m_hits.back().get();
+      m_hits.back()->setTime(time1);
       if (thetiles.size() == 1) {        
-        MuonLogPad* lpad=new MuonLogPad(log1);
-        lpad->settruepad();
-        m_pads.push_back(lpad);
-      }
-      else {
-        tile = new MuonTileID(thetiles[1]);
+        m_pads.emplace_back(new MuonLogPad(hit1));
+        m_pads.back()->settruepad();
+      } else {
+        tile = MuonTileID(thetiles[1]);
         m_tiles.push_back(tile);
-        log2 = new MuonLogHit(tile);
-        log2->setTime(time2);
-        m_hits.push_back(log2);
-        m_pads.push_back(new MuonLogPad(log1,log2));
+        m_hits.emplace_back( new MuonLogHit(tile) );
+        m_hits.back()->setTime(time2);
+        m_pads.emplace_back(new MuonLogPad(hit1,m_hits.back().get()));
       }
-    } 
-  }  
+    }
+  }
   debug() << "Got from MuonCoords " << m_hits.size()<<" MuonLogHits and " <<
     m_pads.size() << " MuonLogPads" << endmsg;
   m_padsReconstructed=true;

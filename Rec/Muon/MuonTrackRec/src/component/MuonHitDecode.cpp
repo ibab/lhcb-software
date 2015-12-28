@@ -28,7 +28,7 @@ DECLARE_TOOL_FACTORY( MuonHitDecode )
   MuonHitDecode::MuonHitDecode( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-    : GaudiTool ( type, name , parent ), m_hitsDecoded(false)
+    : base_class ( type, name , parent )
 {
   declareInterface<IMuonHitDecode>(this);
   declareProperty( "NumberRawLocations", m_TAENum = 1 );
@@ -51,10 +51,7 @@ void MuonHitDecode::handle ( const Incident& incident )
 void MuonHitDecode::clearHits()
 {
   m_tilesAndTDC.clear();
-  std::vector<MuonLogHit*>::iterator ih;
-  for (ih=m_hits.begin() ; ih != m_hits.end(); ih++) {
-    delete (*ih);
-  }
+  for (auto& h : m_hits) delete h;
   m_hits.clear();
 }
 
@@ -84,12 +81,9 @@ StatusCode MuonHitDecode::decodeRawData()
 {
   StatusCode sc;
 
-  typedef std::vector<std::pair<LHCb::MuonTileID,unsigned int> > TileAndTDCMap;
-  TileAndTDCMap tileAndTDC;
+  std::vector<std::pair<LHCb::MuonTileID,unsigned int> > tileAndTDC;
 
-  MuonLogHit * newhit = NULL;
   // run MuonRawBuffer on all avilable BXs
-
   bool validLocation = false;
 
   // -- Loop over locations. m_TAEN is the number of locations, so the counter has to be smaller by one.
@@ -101,12 +95,9 @@ StatusCode MuonHitDecode::decodeRawData()
 
     // -- Check raw locations and load raw event. Second option is for backward compatibility
     LHCb::RawEvent* raw = getIfExists<LHCb::RawEvent>(evtSvc(),locBX(i)+LHCb::RawEventLocation::Muon);
-    if ( raw )
-    {
+    if ( raw ) {
       validLocation = true;
-    }
-    else
-    {
+    } else {
       raw = getIfExists<LHCb::RawEvent>(evtSvc(),locBX(i)+LHCb::RawEventLocation::Default);
       if ( raw ) { validLocation = true; }
     }
@@ -116,13 +107,12 @@ StatusCode MuonHitDecode::decodeRawData()
     sc = m_recTool->getTileAndTDC(raw,tileAndTDC,locBX(i));
     if (!sc) return sc;
 
-    for( TileAndTDCMap::iterator it = tileAndTDC.begin(); it != tileAndTDC.end(); ++it ) 
-    {
+    for( auto& ttdc : tileAndTDC) {
       // set the time taking into account the BX. must be positive so I need to add an offset...
-      unsigned int tprim = (*it).second;
-      (*it).second += (7+i)*16;
+      auto tprim = ttdc.second;
+      ttdc.second += (7+i)*16;
       if ( msgLevel(MSG::VERBOSE) ) verbose()<<"time conversion: before "<<tprim
-                                             <<" after"<<(*it).second<<endmsg;
+                                             <<" after"<<ttdc.second<<endmsg;
     }
 
     m_tilesAndTDC.insert(m_tilesAndTDC.end(), tileAndTDC.begin(), tileAndTDC.end());
@@ -143,21 +133,20 @@ StatusCode MuonHitDecode::decodeRawData()
     debug()<<"Size of tilesAndTDC container is: "<<m_tilesAndTDC.size()<<endmsg;
 
   // create list of MuonLogHit objects
-  for ( TileAndTDCMap::iterator it = m_tilesAndTDC.begin(); it != m_tilesAndTDC.end(); ++it )
-  {
-    newhit = new MuonLogHit( &((*it).first) );
+  for ( const auto& ttdc :  m_tilesAndTDC ) {
+    std::unique_ptr<MuonLogHit> newhit{ new MuonLogHit( ttdc.first ) };
     long L1Number=0,link_number=0,ODE_number=0,ode_ch=0;
-    if(!m_skipHWNumber)  m_muonDetector->getDAQInfo()->findHWNumber ( (*it).first,
+    if(!m_skipHWNumber)  m_muonDetector->getDAQInfo()->findHWNumber ( ttdc.first,
                                                                       L1Number,link_number,ODE_number,ode_ch);
     unsigned int on=ODE_number, oc=ode_ch;
     newhit->setOdeNumber( on );
     newhit->setOdeChannel( oc );
     short int OdeIndex=1;
     newhit->setOdeIndex(OdeIndex ); // to be implemented
-    int time=(*it).second - 7*16; // remove the positive-forcing offset
+    int time=ttdc.second - 7*16; // remove the positive-forcing offset
     newhit->setTime( time );
 
-    m_hits.push_back(newhit);
+    m_hits.push_back(newhit.release());
   }
 
   if ( msgLevel(MSG::DEBUG) )

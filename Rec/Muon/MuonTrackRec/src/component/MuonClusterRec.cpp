@@ -1,7 +1,7 @@
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/IIncidentSvc.h" 
+#include "GaudiKernel/IIncidentSvc.h"
 // local
 #include "MuonClusterRec.h"
 #include "MuonInterfaces/MuonLogPad.h"
@@ -10,7 +10,16 @@
 #include "MuonDet/DeMuonDetector.h"
 using namespace LHCb;
 using namespace std;
+ 
 
+namespace {
+int regX(LHCb::MuonTileID tile) {
+  return ( (tile.quarter() > 1 ? -1 : 1) * tile.nX() );
+}
+int regY(LHCb::MuonTileID tile) {
+  return ( ((tile.quarter() > 0 && tile.quarter()< 3) ? -1 : 1) * tile.nY() );
+}
+}
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonClusterRec
 //
@@ -21,28 +30,25 @@ using namespace std;
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( MuonClusterRec )
 
-
-
 MuonClusterRec::MuonClusterRec( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
-  : GaudiTool ( type, name , parent ) 
+  : base_class( type, name , parent )
 {
   declareInterface<IMuonClusterRec>(this);
   declareProperty( "PosTool"          , m_posToolName = "MuonDetPosTool");
   declareProperty( "MaxPadsPerStation" , m_maxPadsPerStation = 1500);
-  m_clustersDone = false;
 }
 
 MuonClusterRec::~MuonClusterRec() {
   clear();
-} 
+}
 
 
 
 StatusCode MuonClusterRec::initialize () {
   StatusCode sc = GaudiTool::initialize() ;
-  
+
   if (!sc) return sc;
   m_muonDetector = getDet<DeMuonDetector>(DeMuonLocation::Default);
   if(!m_muonDetector){
@@ -54,13 +60,13 @@ StatusCode MuonClusterRec::initialize () {
     error()<<"error retrieving the muon position tool "<<endmsg;
     return StatusCode::FAILURE;
   }
-  
+
   incSvc()->addListener( this, IncidentType::EndEvent );
   return sc;
 }
 
 void MuonClusterRec::handle ( const Incident& incident )
-{ 
+{
   if ( IncidentType::EndEvent == incident.type() ) {
     verbose() << "End Event: clear everything"<<endmsg;
     clear() ;
@@ -68,90 +74,86 @@ void MuonClusterRec::handle ( const Incident& incident )
 }
 
 void MuonClusterRec::clear() {
-  std::vector<MuonHit*>::iterator ih;
-  for(ih=m_clusters.begin() ; ih !=m_clusters.end() ; ih++)
-    delete (*ih); // delete all the allocated MuonHit's
+  for(auto& h : m_clusters)
+    delete h; // delete all the allocated MuonHit's
   m_clusters.clear();
   m_clustersDone=false;
 }
 
 
 StatusCode MuonClusterRec::finalize ()
-
 {
   debug()<<" MuonClusterRec::finalize"<<endmsg;
   return   GaudiTool::finalize() ;
 }
 
 
-const std::vector<MuonHit*>* MuonClusterRec::clusters(const std::vector<MuonLogPad*>* pads, 
-                                                          bool force) {
+const std::vector<MuonHit*>* MuonClusterRec::clusters(const std::vector<MuonLogPad*>* pads,
+                                                      bool force) {
 
   const int factor[5] = {3,1,1,1,1};	
   if( (m_clustersDone == false || force==true) && pads) {
     int nhits=0;
-    std::vector<MuonLogPad*>::const_iterator ipad,jpad,clpad;
     std::map<MuonLogPad*,bool> usedPad;
     bool searchNeighbours=true;
 
     clear();
-    
+
 
     //group pads by station
     debug() << "Log. pads before clustering:"<<endmsg;
     //make it a vector of vectors, to allow dynamic sizing
     std::vector< std::vector<MuonLogPad*> > stationPads=
       std::vector< std::vector<MuonLogPad*> >(m_muonDetector->stations(),std::vector<MuonLogPad*>(0));
-    for (std::vector< std::vector<MuonLogPad*>  >::iterator isP = stationPads.begin(); 
-         isP != stationPads.end(); isP++ )
-    {
-      isP->reserve(pads->size());
-    }
-    
-    for (ipad = pads->begin(); ipad != pads->end(); ipad++ )
-    {
-      if(! (*ipad)->truepad() ) continue;
-      debug() << "LOGPAD Q"<<((*ipad)->tile()->quarter()+1)<<
-        "M"<< ((*ipad)->tile()->station()+1) << "R"<<((*ipad)->tile()->region()+1) <<
-        " nX="<< (*ipad)->tile()->nX() << " nY="<< (*ipad)->tile()->nY() <<
-        " time="<<(*ipad)->time() << " +/-" <<(*ipad)->dtime() << endmsg;
-      stationPads[ (*ipad)->tile()->station() ].push_back(*ipad);
-    }      
+    for (auto& isP : stationPads) isP.reserve(pads->size());
 
-  
+    if (msgLevel(MSG::DEBUG)) {
+        for (const auto& pad : *pads) {
+          if(! pad->truepad() ) continue;
+          debug() << "LOGPAD Q"<<(pad->tile().quarter()+1)<<
+            "M"<< (pad->tile().station()+1) << "R"<<(pad->tile().region()+1) <<
+            " nX="<< pad->tile().nX() << " nY="<< pad->tile().nY() <<
+            " time="<<pad->time() << " +/-" <<pad->dtime() << endmsg;
+        }
+    }
+    for (const auto& pad : *pads) {
+      if(pad->truepad() ) stationPads[ pad->tile().station() ].push_back(pad);
+    }
+
+
     for (int station =0 ; station<m_muonDetector->stations() ; station++) {
       if (stationPads[station].size() > factor[station]*m_maxPadsPerStation) {
-        info() << "skipping station M"<<station+1<<" with too many pads:" 
+        info() << "skipping station M"<<station+1<<" with too many pads:"
                << stationPads[station].size() <<endmsg;
         continue;
       }
-      for (ipad = stationPads[station].begin(); ipad != stationPads[station].end(); ipad++ )
+      for (auto ipad = stationPads[station].begin(); ipad != stationPads[station].end(); ipad++ )
       {
-        if (! usedPad.count(*ipad)) 
+        if (! usedPad.count(*ipad))
         {
           // cluster seed
           usedPad[*ipad]=true;
-          MuonHit* muon_Hit = new MuonHit(m_muonDetector, *ipad, 
-                                          m_posTool );
+          m_clusters.push_back(new MuonHit(m_muonDetector, *ipad,
+                                           m_posTool ));
+          MuonHit *muon_Hit = m_clusters.back();
           // store a progressive hit number for debugging purposes
-          StatusCode sc = muon_Hit->setHitID(++nhits);        
-          m_clusters.push_back(muon_Hit);
+          StatusCode sc = muon_Hit->setHitID(++nhits);
           // now search for adjacent pads
           searchNeighbours=true;
-          while (searchNeighbours) 
+          while (searchNeighbours)
           {
             searchNeighbours=false;
-            for (jpad = ipad+1; jpad != stationPads[station].end(); jpad++ )
+            for (auto jpad = ipad+1; jpad != stationPads[station].end(); jpad++ )
             {
               if( usedPad.count(*jpad)) continue;
               bool takeit=false;
-              int deltaRegion = abs((int)((*ipad)->tile()->region()-(*jpad)->tile()->region()));
-              if (deltaRegion > 1) continue; 
+              int deltaRegion = abs((int)((*ipad)->tile().region()-(*jpad)->tile().region()));
+              if (deltaRegion > 1) continue;
               if (deltaRegion == 0) { //same region: use logical position
                 const std::vector<MuonLogPad*>* clPads = muon_Hit->logPads();
-                for (clpad = clPads->begin() ; clpad != clPads->end() ; clpad++) 
+                for (auto clpad = clPads->begin() ; clpad != clPads->end() ; clpad++)
                 {
-                  if ((*clpad)->tile()->region() != (*jpad)->tile()->region() ) continue;
+                  if ((*clpad)->tile().region() != (*jpad)->tile().region() ) continue;
                   int deltaX = abs(regX((*clpad)->tile())-regX((*jpad)->tile()));
                   int deltaY = abs(regY((*clpad)->tile())-regY((*jpad)->tile()));
                   if ( (deltaX == 0 && deltaY == 1) ||
@@ -160,16 +162,15 @@ const std::vector<MuonHit*>* MuonClusterRec::clusters(const std::vector<MuonLogP
                     break;
                   }
                 }
-              }
-              else { // adjacent regions: use absolute position
+              } else { // adjacent regions: use absolute position
                 double x,dx,y,dy,z,dz;
-                m_posTool->calcTilePos(*((*jpad)->tile()),x,dx,y,dy,z,dz);
-              
+                m_posTool->calcTilePos((*jpad)->tile(),x,dx,y,dy,z,dz);
+
                 bool Xinside = ( x > muon_Hit->minX() && x < muon_Hit->maxX());
-                bool Xadj = ( (x > muon_Hit->maxX() && x-dx-muon_Hit->maxX() < dx/2) || 
+                bool Xadj = ( (x > muon_Hit->maxX() && x-dx-muon_Hit->maxX() < dx/2) ||
                               (x < muon_Hit->minX() && muon_Hit->minX()-x-dx  < dx/2) );
                 bool Yinside = ( y > muon_Hit->minY() && y < muon_Hit->maxY());
-                bool Yadj = ( (y > muon_Hit->maxY() && y-dy-muon_Hit->maxY() < dy/2) || 
+                bool Yadj = ( (y > muon_Hit->maxY() && y-dy-muon_Hit->maxY() < dy/2) ||
                               (y < muon_Hit->minY() && muon_Hit->minY()-y-dy  < dy/2) );
                 if ( (Xinside || Xadj) && (Yinside || Yadj) ) takeit=true;
               }
@@ -177,7 +178,7 @@ const std::vector<MuonHit*>* MuonClusterRec::clusters(const std::vector<MuonLogP
                 usedPad[*jpad]=true;
                 muon_Hit->addPad(*jpad);
                 searchNeighbours=true; // we exit the loop and restart from ipad+1 ith the larger cluster
-                break; 
+                break;
               }
             }
           } // end of neighbour search
@@ -185,13 +186,14 @@ const std::vector<MuonHit*>* MuonClusterRec::clusters(const std::vector<MuonLogP
       }// end of loop on log. pads of a given station
     }// end of loop on stations
     m_clustersDone = true;
-    debug() << "\n OBTAINED CLUSTERS:"<<endmsg;
-    std::vector<MuonHit*>::iterator ic;
-    for (ic=m_clusters.begin() ; ic!= m_clusters.end() ; ic++) {
-      debug() << "Cluster #"<<(*ic)->hitID()<<" in M"<<((*ic)->station()+1)<<
-        " with "<<(*ic)->npads()<<" pads   X="<<(*ic)->minX() << " - "<<(*ic)->maxX()
-              << "  Y="<<(*ic)->minY() << " - "<<(*ic)->maxY() <<
-        " first tile has Nx/Ny="<< (*ic)->tile()->nX() << "/" << (*ic)->tile()->nY() <<endmsg;
+    if (msgLevel(MSG::DEBUG)) {
+      debug() << "\n OBTAINED CLUSTERS:"<<endmsg;
+      for (const auto& c : m_clusters) {
+        debug() << "Cluster #"<<c->hitID()<<" in M"<<(c->station()+1)<<
+          " with "<<c->npads()<<" pads   X="<<c->minX() << " - "<<c->maxX()
+                << "  Y="<<c->minY() << " - "<<c->maxY() <<
+          " first tile has Nx/Ny="<< c->tile().nX() << "/" << c->tile().nY() <<endmsg;
+      }
     }
   }// end of clustering algorithm
 

@@ -7,6 +7,20 @@
 !               implementation of MuonCombRac, combinatorial track 
 !               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
+! 2015-12-28 - Gerhard Raven
+ - follow change in MuonInterfaces to pass MuonTileID by value
+ - prefer extends, extendinterfaces
+ - qualify implementations of virtual functions with override
+ - prefer = default over trivial explicit d'tor implementation
+ - prefer std::unique_ptr over raw pointer + explicit delete
+ - prefer .empty() over .size()==0
+ - prefer STL algorithms over raw loops
+ - prefer range-based for loops
+ - prefer emplace_back over push_back
+ - improve const-correctness
+ - prefer to pass int,double by value instead of const&
+ - prefer std:: over GSL_
+ - prefer (implicit) std::initializer_list over boost::assign::list_of
 
 !========================= MuonTrackRec v3r15 2015-11-23 =========================
 ! 2015-11-10 - G.Graziani

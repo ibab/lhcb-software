@@ -40,18 +40,18 @@ public:
 private:
   std::vector<long int>  m_TileVeto;  
   bool m_getfirsthit;
-  std::vector<MuonLogPad*> m_pads;
+  std::vector<std::unique_ptr<MuonLogPad>> m_pads;
   bool m_padsReconstructed;
   DeMuonDetector* m_muonDetector;
   std::map<long int, bool> m_TileIsVetoed;
   void clearPads();
 
   StatusCode addCoordsNoMap(std::vector<MuonLogHit*> &hits,
-                            const int & station,
-                            const int & region);
+                            int station,
+                            int region);
   StatusCode addCoordsCrossingMap(std::vector<MuonLogHit*> &hits,
-                                  const int & station,
-                                  const int & region);
+                                  int station,
+                                  int region);
   StatusCode makeStripLayouts(int station, int region, 
                               MuonLayout &layout1,
                               MuonLayout &layout2);

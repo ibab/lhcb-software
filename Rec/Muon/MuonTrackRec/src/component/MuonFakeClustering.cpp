@@ -26,7 +26,7 @@ DECLARE_TOOL_FACTORY( MuonFakeClustering )
 MuonFakeClustering::MuonFakeClustering( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
-  : GaudiTool ( type, name , parent ) 
+  : base_class ( type, name , parent ) 
 {
   declareInterface<IMuonClusterRec>(this);
   declareProperty( "PosTool"          , m_posToolName = "MuonDetPosTool");
@@ -67,8 +67,7 @@ void MuonFakeClustering::handle ( const Incident& incident )
 }
 
 void MuonFakeClustering::clear() {
-  std::vector<MuonHit*>::iterator ih;
-  for(ih=m_clusters.begin() ; ih !=m_clusters.end() ; ih++)
+  for(auto ih=m_clusters.begin() ; ih !=m_clusters.end() ; ih++)
     delete (*ih); // delete all the allocated MuonHit's
   m_clusters.clear();
   m_clustersDone=false;
@@ -86,25 +85,20 @@ StatusCode MuonFakeClustering::finalize ()
 const std::vector<MuonHit*>* MuonFakeClustering::clusters(const std::vector<MuonLogPad*>* pads, 
                                                           bool force) {
 
-  std::vector<MuonLogPad*>::const_iterator ipad;
-
   if( (m_clustersDone == false || force==true) && pads) {
     int nhits=0;
     clear();
     
     if (pads) {
-      for (ipad = pads->begin(); ipad != pads->end(); ipad++ ){
-        if(! (*ipad)->truepad() ) continue;
+      for (const auto& pad : *pads) {
+        if(! pad->truepad() ) continue;
 
         // fill the hit array
         // create a MuonHit object
-        MuonHit* muon_Hit = new MuonHit(m_muonDetector, *ipad, 
-                                        m_posTool );
-        nhits++;
+        m_clusters.emplace_back( new MuonHit(m_muonDetector, pad, 
+                                             m_posTool ) );
         // store a progressive hit number for debugging purposes
-        StatusCode sc = muon_Hit->setHitID(nhits);
-        
-        m_clusters.push_back(muon_Hit);
+        m_clusters.back()->setHitID(++nhits).ignore();
       }
     }
   }

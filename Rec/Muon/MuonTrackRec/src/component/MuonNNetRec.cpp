@@ -700,39 +700,29 @@ StatusCode MuonNNetRec::copyToLHCbTracks()
     return StatusCode::SUCCESS;
   }
 
-  typedef std::vector< MuonTrack* > MTracks;
-  
-  const MTracks* mTracks = tracks();
-
-  Tracks* tracks = new Tracks();
-
-  for ( MTracks::const_iterator t = mTracks->begin(), tEnd = mTracks->end(); t != tEnd; ++t ) {
+  std::unique_ptr<Tracks> otracks{ new Tracks() };
+  for (const auto& t : *tracks()) {
     /// New track
-    Track* track = new Track();
+    std::unique_ptr<Track> track{ new Track() };
     if (m_assumeCosmics) {
-      Gaudi::XYZPoint trackPos((*t)->bx() + (*t)->sx() * m_muonDetector->getStationZ(0),
-                               (*t)->by() + (*t)->sy() * m_muonDetector->getStationZ(0),
-                               m_muonDetector->getStationZ(0));
+      auto z = m_muonDetector->getStationZ(0);
+      Gaudi::XYZPoint trackPos(t->bx() + t->sx()*z, t->by() + t->sy()*z, z);
       LHCb::State state( LHCb::StateVector( trackPos,
-                                            Gaudi::XYZVector( (*t)->sx(), (*t)->sy(), 1.0 ), 1./10000.));
+                                            Gaudi::XYZVector( t->sx(), t->sy(), 1.0 ), 1./10000.));
       state.setLocation( LHCb::State::Muon );
       track->addToStates( state );
-      std::vector<MuonHit*> hits  = (*t)->getHits();
-      for ( std::vector<MuonHit*>::const_iterator h = hits.begin(); h != hits.end(); ++h ){
-        const std::vector<LHCb::MuonTileID*> Tiles = (*h)->getLogPadTiles();
-        for (std::vector<LHCb::MuonTileID*>::const_iterator it = Tiles.begin(); it!= Tiles.end(); ++it){
-          track->addToLhcbIDs( (LHCb::LHCbID) ( **it ) );
+      for ( const auto& hits : t->getHits() ) {
+        for (const auto& tileID : hits->getLogPadTiles()) {
+          track->addToLhcbIDs( (LHCb::LHCbID) ( tileID ) );
         }
       }
+    } else {
+      m_momentumTool->recMomentum( t, track.get());
     }
-    else {
-      m_momentumTool->recMomentum( (*t), track);
-    }
-    tracks->insert( track );
+    otracks->insert( track.release() );
   }
   if(msgLevel(MSG::DEBUG)) debug()<< " copying container to TES"<<endmsg;
-  put( tracks, m_trackOutputLoc );
-
+  put( otracks.release(), m_trackOutputLoc );
 
   return StatusCode::SUCCESS;
 }

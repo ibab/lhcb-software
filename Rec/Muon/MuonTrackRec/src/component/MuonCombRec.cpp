@@ -1,9 +1,4 @@
 // Include files 
-#include <fstream>
-
-#ifdef _WIN32
-#pragma warning ( disable : 4244 ) // conversion double to float in boost
-#endif
 
 // from Gaudi
 #include "GaudiKernel/IIncidentSvc.h" 
@@ -26,13 +21,11 @@
 #include "MuonInterfaces/IMuonTrackMomRec.h"
 #include "MuonDet/DeMuonDetector.h"
 #include "Kernel/MuonTileID.h"
-#include "boost/assign/list_of.hpp"
 //tools
 // local
 #include "MuonCombRec.h"
 using namespace LHCb; 
 using namespace Gaudi::Units;
-using namespace boost::assign;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonCombRec
@@ -50,8 +43,7 @@ DECLARE_TOOL_FACTORY( MuonCombRec )
 MuonCombRec::MuonCombRec( const std::string& type,
                           const std::string& name,
                           const IInterface* parent )
-  : GaudiTool ( type, name , parent ),
-    m_muonDetector(nullptr), m_hitsDone(0), m_sortDone(0)
+  : base_class ( type, name , parent )
 {
   declareInterface<IMuonTrackRec>(this);
   declareProperty( "MeasureTime"      , m_measureTime = false );
@@ -60,21 +52,19 @@ MuonCombRec::MuonCombRec( const std::string& type,
   declareProperty( "SkipStation"      , m_optSkipStation = -1 );
   declareProperty( "SeedStation"      , m_optSeedStation = 4); // default seed: M5
 
-  std::vector<float> tmp1 = list_of
-  //                 R1     R2    R3    R4
-                   (100.0F)(200.0F)(300.0F)(400.0F)   // M1
-                   (100.0F)(200.0F)(300.0F)(400.0F)   // M2
-                   (100.0F)(200.0F)(300.0F)(400.0F)   // M3
-                   (400.0F)(400.0F)(400.0F)(400.0F);  // M4
-  declareProperty( "xFOIs"          , m_xFOIs = tmp1); // M4
+  declareProperty( "xFOIs"          , m_xFOIs = {{
+  //                 R1     R2     R3     R4
+                     100.0F,200.0F,300.0F,400.0F,      // M1
+                     100.0F,200.0F,300.0F,400.0F,      // M2
+                     100.0F,200.0F,300.0F,400.0F,      // M3
+                     400.0F,400.0F,400.0F,400.0F }});  // M4
 
-  std::vector<float> tmp2 = list_of
-  //                 R1     R2    R3    R4
-                   ( 30.0F)( 60.0F)(100.0F)(150.0F)   // M1
-                   ( 60.0F)(120.0F)(180.0F)(240.0F)   // M2
-                   ( 60.0F)(120.0F)(240.0F)(480.0F)   // M3
-                   ( 60.0F)(120.0F)(240.0F)(480.0F);  // M4
-  declareProperty( "yFOIs"          , m_yFOIs = tmp2);
+  declareProperty( "yFOIs"          , m_yFOIs = {{
+  //                 R1     R2    R3     R4
+                     30.0F, 60.0F,100.0F,150.0F,       // M1
+                     60.0F,120.0F,180.0F,240.0F,       // M2
+                     60.0F,120.0F,240.0F,480.0F,       // M3
+                     60.0F,120.0F,240.0F,480.0F, }});  // M4
   
   declareProperty( "PhysicsTiming"    , m_physicsTiming = true );
   declareProperty( "AssumeCosmics"    , m_assumeCosmics = false );
@@ -89,18 +79,14 @@ MuonCombRec::MuonCombRec( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-MuonCombRec::~MuonCombRec() {
-  clear();
-} 
+MuonCombRec::~MuonCombRec() = default;
 //=============================================================================
 // clear memory
 //=============================================================================
 void MuonCombRec::clear() {
   
   if( !m_hitsDone ) m_trackhits.clear() ; // clear the array of pointers to MuonHit's
-  if( !m_sortDone ) for( auto hitVector : m_sortedHits ) hitVector->clear();
-
-  for( MuonTrack* track: m_tracks) delete track;
+  if( !m_sortDone ) for( auto hitVector : m_sortedHits ) hitVector.clear();
   m_tracks.clear() ;      // clear the array of pointers to MuonTrack's
 
   m_recDone = m_recOK = false;
@@ -286,12 +272,6 @@ StatusCode MuonCombRec::initialize() {
 
   if ( msgLevel(MSG::DEBUG)) debug() << "Create the sorted hits container" << endmsg;
   
-  for (int station=0; station < m_nStation;++station){
-    for ( int region = 0 ; region < m_nRegion ; ++region ){      
-      m_sortedHits.push_back(new std::vector<MuonHit*>);
-    }
-  }
-  
   // -- Set tolerances for hit search in region
   m_tolForRegion = {{ 2.0, 4.0, 8.0, 10.0 }};
 
@@ -450,7 +430,7 @@ StatusCode MuonCombRec::muonTrackFind() {
 StatusCode MuonCombRec::muonSearch() {
 
   // -- Local array of matched hits
-  std::vector< std::vector<MuonHit*> > candidates(5);
+  std::array< std::vector<MuonHit*>,5 > candidates;
 
   // -- Local array of Seed Station seeds
   std::vector<MuonHit*> SSseeds;
@@ -465,7 +445,7 @@ StatusCode MuonCombRec::muonSearch() {
   // -- Loop over SS hits and copy them in a local array with SS seeds
   for ( int region = 0; region < m_nRegion; ++region){
     int keySS = SS*4+region;
-    for( MuonHit* hit : *m_sortedHits[keySS] ) SSseeds.push_back( hit );
+    for( MuonHit* hit : m_sortedHits[keySS] ) SSseeds.push_back( hit );
   }
   
   // -- Main loop over all SS seeds. Merge xtalk hits in single seeds
@@ -631,7 +611,6 @@ StatusCode MuonCombRec::muonSearch() {
       if ( msgLevel(MSG::DEBUG) ) debug() << "Search a matching in station: M" << is+1 << " prev station: M"
                                           << prevStat+1 << " next station: M" << nextStat+1 << " skip station: M"
                                           << m_skipStation+1 << endmsg;
-      
       candidates[is].clear();
       
       // -- Call the method that finds matching hits in the other stations
@@ -692,19 +671,15 @@ StatusCode MuonCombRec::muonSearch() {
     
     if( !matchingFound ) continue; // no matching in at least 1 station, go to the next seed
     
-    
-    //std::vector< std::vector<MuonHit*> >::iterator im;
-    MuonTrack* muonTrack= new MuonTrack();
-    
+    std::unique_ptr<MuonTrack> muonTrack{ new MuonTrack() };
     for( std::vector<MuonHit*> candidate : candidates){
       for( MuonHit* hit : candidate){
         muonTrack->insert( hit->hitID(), hit );
       }
     }
-    
     // -- Store the best candidate array
     muonTrack->setBestCandidate(bestCandidate);
-    m_tracks.push_back(muonTrack);
+    m_tracks.push_back(std::move(muonTrack));
     
     if ( msgLevel(MSG::DEBUG) ) debug() << "++ This seed has been processed, go to the next one ++" << endmsg;
     
@@ -738,12 +713,11 @@ StatusCode MuonCombRec::findMatching( const double x, const double y,
   // -- Loop over the regions of the station considered
   int keyBefore = station*4+regionBefore;
   
-  std::vector<MuonHit*>::iterator itP;
   for(int region = 0; region<4 ; ++region){ //loop over regions
     int key = station*4+region;
     
     // -- Loop over the hits in this region
-    for( MuonHit* hit : *m_sortedHits[key]){
+    for( MuonHit* hit : m_sortedHits[key]){
       // -- Get the distance of the hit from the extrapolation point
       double deltaX = fabs( x - hit->x() );
       double deltaY = fabs( y - hit->y() );
@@ -786,7 +760,7 @@ StatusCode MuonCombRec::findMatching( const double x, const double y,
     for(int region=0;region<4;region++){ //loop over regions
       int key = station*4+region;
       // -- Loop over the hits in this region
-      for( MuonHit* hit : *m_sortedHits[key]){
+      for( MuonHit* hit : m_sortedHits[key]){
         
         double deltaX = fabs(candidate->x()-hit->x());
         double deltaY = fabs(candidate->y()-hit->y());
@@ -817,28 +791,20 @@ StatusCode MuonCombRec::findMatching( const double x, const double y,
 //========================================================================
 StatusCode MuonCombRec::cloneKiller()
 {
-
-  std::vector<MuonTrack*>::iterator it1;
-  std::vector<MuonTrack*>::iterator it2;
-  std::vector<MuonHit*>::iterator iht1;
-  std::vector<MuonHit*>::iterator iht2;
-
-  for(it1 = m_tracks.begin(); it1 != m_tracks.end(); it1++){ // 1stloop over tracks
-    bool sameM[5]={0,0,0,0,0};
-    std::vector<MuonHit*> hitsT1 = (*it1)->getHits(); // get hits of 1st track
-
-    for(it2 = it1+1; it2 != m_tracks.end(); it2++){ // 2nd loop over tracks
-      std::vector<MuonHit*> hitsT2 = (*it2)->getHits(); // get hits of 2nd track
+  for(auto it1 = m_tracks.begin(); it1 != m_tracks.end(); ++it1){ // 1st loop over tracks
+    std::array<bool,5> sameM={false,false,false,false,false};
+    auto hitsT1 = (*it1)->getHits(); // get hits of 1st track
+    for(auto it2 = it1+1; it2 != m_tracks.end(); ++it2){ // 2nd loop over tracks
+      auto hitsT2 = (*it2)->getHits(); // get hits of 2nd track
       
-      for(iht1 = hitsT1.begin(); iht1 != hitsT1.end(); iht1++){ // loop over hits of 1st trk
+      for(const auto& hitT1 : hitsT1) { // loop over hits of 1st trk
         
-        int st1 = (*iht1)->station();
+        int st1 = hitT1->station();
         if(st1 != M2 && st1 != M3 && st1 != M4) continue;//look only in M2,M3,M4
-        
 
-        for(iht2 = hitsT2.begin(); iht2 != hitsT2.end(); iht2++){ // loop over hits of 2nd trk
+        for(const auto& hitT2 : hitsT2){ // loop over hits of 2nd trk
         
-          if((*iht1)->tile()->key() == (*iht2)->tile()->key() ) { // compare the hits
+          if(hitT1->tile().key() == hitT2->tile().key() ) { // compare the hits
             sameM[st1] = true; // count common hits in station st1
           }
         }
@@ -860,8 +826,8 @@ StatusCode MuonCombRec::cloneKiller()
         double deltaX2 = (*it2)->bestCandidate()[M5]->x() - x_extra5;
         double deltaY2 = (*it2)->bestCandidate()[M5]->y() - y_extra5;
 
-        double dist1=sqrt(deltaX1*deltaX1+deltaY1*deltaY1);
-        double dist2=sqrt(deltaX2*deltaX2+deltaY2*deltaY2);
+        double dist1=std::hypot(deltaX1,deltaY1);
+        double dist2=std::hypot(deltaX2,deltaY2);
         
         if(dist1>dist2){
           (*it1)->setClone();
@@ -873,9 +839,7 @@ StatusCode MuonCombRec::cloneKiller()
       }
     }
   }
-  
   return StatusCode::SUCCESS;
-  
 }
 
 //========================================================================
@@ -884,27 +848,21 @@ StatusCode MuonCombRec::cloneKiller()
 
 StatusCode MuonCombRec::strongCloneKiller()
 {
+  for(auto it1 = m_tracks.begin(); it1 != m_tracks.end(); it1++){ // 1stloop over tracks
+    std::array<bool,5> sameM={false,false,false,false,false};
+    auto hitsT1 = (*it1)->getHits(); // get hits of 1st track
 
-  std::vector<MuonTrack*>::iterator it1;
-  std::vector<MuonTrack*>::iterator it2;
-  std::vector<MuonHit*>::iterator iht1;
-  std::vector<MuonHit*>::iterator iht2;
-
-  for(it1 = m_tracks.begin(); it1 != m_tracks.end(); it1++){ // 1stloop over tracks
-    bool sameM[5]={0,0,0,0,0};
-    std::vector<MuonHit*> hitsT1 = (*it1)->getHits(); // get hits of 1st track
-
-    for(it2 = it1+1; it2 != m_tracks.end(); it2++){ // 2nd loop over tracks
-      std::vector<MuonHit*> hitsT2 = (*it2)->getHits(); // get hits of 2nd track
+    for(auto it2 = it1+1; it2 != m_tracks.end(); it2++){ // 2nd loop over tracks
+      auto hitsT2 = (*it2)->getHits(); // get hits of 2nd track
       
-      for(iht1 = hitsT1.begin(); iht1 != hitsT1.end(); iht1++){ // loop over hits of 1st trk
+      for(const auto& hitT1 : hitsT1){ // loop over hits of 1st trk
         
-        int st1 = (*iht1)->station();
+        int st1 = hitT1->station();
         if(st1 != M2 && st1 != M3) continue; // look only in M2,M3
 
-        for(iht2 = hitsT2.begin(); iht2 != hitsT2.end(); iht2++){ // loop over hits of 2nd trk
+        for(const auto& hitT2 : hitsT2){ // loop over hits of 2nd trk
         
-          if((*iht1)->tile()->key() == (*iht2)->tile()->key() ) { // compare the hits
+          if(hitT1->tile().key() == hitT2->tile().key() ) { // compare the hits
             sameM[st1] = true; // count common hits in station st1
           }
         }
@@ -925,8 +883,8 @@ StatusCode MuonCombRec::strongCloneKiller()
         double deltaX2 = (*it2)->bestCandidate()[M5]->x() - x_extra5;
         double deltaY2 = (*it2)->bestCandidate()[M5]->y() - y_extra5;
 
-        double dist1=sqrt(deltaX1*deltaX1+deltaY1*deltaY1);
-        double dist2=sqrt(deltaX2*deltaX2+deltaY2*deltaY2);
+        double dist1=std::hypot(deltaX1,deltaY1);
+        double dist2=std::hypot(deltaX2,deltaY2);
         
         if(dist1>dist2){
           (*it1)->setClone();
@@ -951,12 +909,12 @@ StatusCode MuonCombRec::sortMuonHits(){
     int station = hit->station();
     int region  = hit->region();
     int key = station*4+region;
-    m_sortedHits[key]->push_back(hit);
+    m_sortedHits[key].push_back(hit);
   }
   
   if ( msgLevel(MSG::DEBUG) ){
-    for( std::vector<MuonHit*>* hitVec : m_sortedHits){
-      for( MuonHit* hit : *hitVec ){
+    for( const auto& hitVec : m_sortedHits){
+      for( const MuonHit* hit : hitVec ){
         debug() << "sorted hit stored station: " << hit->station()
                 <<" sorted hit stored  region: "<< hit->region()
                 <<" x,y,z: "
@@ -966,7 +924,6 @@ StatusCode MuonCombRec::sortMuonHits(){
       }
     }
   }
-  
   return StatusCode::SUCCESS;
 }
 //========================================================================
@@ -978,23 +935,16 @@ StatusCode MuonCombRec::copyToLHCbTracks(){
     //already called with this output location, exit
     return StatusCode::SUCCESS;
   }
-
-  typedef std::vector< MuonTrack* > MTracks;
   
-  const MTracks* mTracks = tracks();
-
-  Tracks* tracks = new Tracks();
-
-  for ( MTracks::const_iterator t = mTracks->begin(), tEnd = mTracks->end(); t != tEnd; ++t ) {
+  std::unique_ptr<Tracks> otracks{ new Tracks() };
+  for ( const auto& t : *tracks() ) {
     /// New track
-    Track* track = new Track();
-    
-    m_momentumTool->recMomentum( (*t), track);
-    tracks->insert( track );
+    std::unique_ptr<Track> track{ new Track() };
+    m_momentumTool->recMomentum( t, track.get() );
+    otracks->insert( track.release() );
   }
   debug()<< " copying container to TES"<<endmsg;
-  put( tracks, m_trackOutputLoc );
-  
+  put( otracks.release(), m_trackOutputLoc );
   
   return StatusCode::SUCCESS;
 }
@@ -1005,13 +955,12 @@ StatusCode MuonCombRec::copyToLHCbTracks(){
 //=============================================================================
 StatusCode MuonCombRec::trackFit(){
   
-  for( MuonTrack* track : m_tracks ){
+  for( auto& track : m_tracks ){
     StatusCode tsc = track->linFit();
-    if(! tsc){
+    if(!tsc){
       err() << "Error fitting track" << endmsg;
       return StatusCode::FAILURE ;
     }
-
     if ( msgLevel(MSG::DEBUG) ){
       debug() << "track fitted" << endmsg;
       debug() << "sx : "<<track->sx() << " bx : "<< track->bx() << endmsg;
@@ -1019,8 +968,6 @@ StatusCode MuonCombRec::trackFit(){
       debug() << "esx : "<<track->errsx() << " ebx : " << track->errbx() << endmsg;
       debug() << "esy : "<< track->errsy() << " eby : " << track->errby() << endmsg;
     }
-
   }// end loop on tracks
-
   return StatusCode::SUCCESS;
 }

@@ -18,7 +18,7 @@ namespace LHCB {
 }
 
 
-class MuonPadFromCoord : public GaudiTool, virtual public IMuonPadRec , virtual public IIncidentListener 
+class MuonPadFromCoord : public extends<GaudiTool, IMuonPadRec , IIncidentListener>
 {
 public: 
   /// Standard constructor
@@ -26,24 +26,24 @@ public:
               const std::string& name,
               const IInterface* parent);
 
-  virtual ~MuonPadFromCoord( ); ///< Destructor
+  ~MuonPadFromCoord( ) override; ///< Destructor
 
-  virtual StatusCode buildLogicalPads(const std::vector<MuonLogHit*>* myhits );
-  virtual const std::vector<MuonLogPad*>* pads();
+  StatusCode buildLogicalPads(const std::vector<MuonLogHit*>* myhits ) override;
+  const std::vector<MuonLogPad*>* pads() override;
 
 
   // from GaudiTool
-  virtual StatusCode 	initialize ();
-  virtual StatusCode 	finalize ();
+  StatusCode 	initialize () override;
+  StatusCode 	finalize () override;
 
   // from IIncidentListener
-  virtual void handle ( const Incident& incident );    
+  void handle ( const Incident& incident ) override;
 private:
   
-  std::vector<LHCb::MuonTileID*> m_tiles;
-  std::vector<MuonLogHit*> m_hits;
-  std::vector<MuonLogPad*> m_pads;
+  std::vector<LHCb::MuonTileID> m_tiles;
+  std::vector<std::unique_ptr<MuonLogHit>> m_hits;
+  std::vector<std::unique_ptr<MuonLogPad>> m_pads;
   void clearPads();
-  bool m_padsReconstructed;
+  bool m_padsReconstructed = false;
 };
 #endif // MUONPADFROMCOORD_H

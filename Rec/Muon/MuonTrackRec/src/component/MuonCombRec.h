@@ -1,4 +1,3 @@
-
 #ifndef COMPONENT_MUONCOMBREC_H 
 #define COMPONENT_MUONCOMBREC_H 1
 
@@ -23,8 +22,7 @@ class IMuonTrackMomRec;
  *  @author Giovanni Passaleva
  *  @date   2009-10-07
  */
-class MuonCombRec : public GaudiTool, virtual public IMuonTrackRec, 
-                    virtual public IIncidentListener {
+class MuonCombRec : public extends<GaudiTool,IMuonTrackRec, IIncidentListener> {
 public: 
   /// Standard constructor
   MuonCombRec( const std::string& type, 
@@ -118,11 +116,11 @@ private:
   IMuonTrackMomRec* m_momentumTool;
 
 
-  DeMuonDetector* m_muonDetector;
+  DeMuonDetector* m_muonDetector = nullptr;
   bool m_recDone;
   bool m_recOK;
-  bool m_hitsDone; // MuonHit container filled
-  bool m_sortDone; // MuonHit-s sorted
+  bool m_hitsDone = false; // MuonHit container filled
+  bool m_sortDone = false; // MuonHit-s sorted
   
   std::vector<float> m_xFOIs;
   std::vector<float> m_yFOIs;
@@ -130,8 +128,8 @@ private:
   double m_zStations[5];
   
   std::vector< MuonHit* > m_trackhits;
-  std::vector< MuonTrack* > m_tracks;
-  std::vector< std::vector<MuonHit*>* > m_sortedHits;
+  std::vector< std::unique_ptr<MuonTrack> > m_tracks;
+  std::array< std::vector<MuonHit*>, 4*5 > m_sortedHits;
 
   void clear();
 

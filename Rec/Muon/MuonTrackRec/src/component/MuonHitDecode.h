@@ -1,4 +1,3 @@
-// $Id: MuonHitDecode.h,v 1.12 2010-03-25 17:00:56 ggiacomo Exp $
 #ifndef LIB_MUONHITDECODE_H 
 #define LIB_MUONHITDECODE_H 1
 
@@ -21,9 +20,7 @@ class DeMuonDetector;
  *
  */
 
-class MuonHitDecode : public GaudiTool, 
-                      virtual public IMuonHitDecode , 
-                      virtual public IIncidentListener
+class MuonHitDecode : public extends<GaudiTool, IMuonHitDecode , IIncidentListener >
 {
 
 public: 
@@ -39,10 +36,10 @@ public:
   virtual const std::vector<MuonLogHit*>* hits()
   { 
     if (! m_hitsDecoded) decodeRawData();
-    return (const std::vector<MuonLogHit*>*) (&m_hits);
+    return &m_hits;
   }
   virtual const std::vector<MuonLogHit*>* fakehits() {
-    return (const std::vector<MuonLogHit*>*) (&m_fakehits);
+    return &m_fakehits;
   }
   // specific for Online Monitoring, not implemented here (just avoid compil. warnings)
   virtual int banksSize(LHCb::RawBank::BankType , std::vector<int>& )
@@ -62,7 +59,7 @@ public:
   virtual bool centralBX() {return true;}
   virtual bool firstBX() {return true;}
   virtual bool lastBX() {return true;}
-  virtual LHCb::MuonTileID* tileFromODE(int, int) { return NULL; }
+  virtual LHCb::MuonTileID tileFromODE(int, int) { return 0; }
   virtual int odeIndex(int ) {return 0;}
   virtual int channelsPerQuadrant(int, int ) {return 0;}
   virtual int nPadX(int ) {return 0;}
@@ -73,15 +70,12 @@ public:
   virtual float padSizeY(int , int)	{return 0.;}
   virtual float padSizeXvy(int , int)	{return 0.;}
   virtual float padSizeYvx(int , int)	{return 0.;}
-  virtual LHCb::MuonTileID* tileFromLogCh(unsigned int,
-                                          unsigned int,
-                                          unsigned int,
-                                          short int,
-                                          unsigned int) 
-  { return NULL;}
-  virtual std::string& ecsChamberName(int, int) 
-  { nullstring="";
-    return nullstring;}
+  virtual LHCb::MuonTileID tileFromLogCh(unsigned int,
+                                         unsigned int,
+                                         unsigned int,
+                                         short int,
+                                         unsigned int) 
+  { return 0;}
   virtual bool completeEvent() {return true;}
 
   // from GaudiTool
@@ -98,10 +92,9 @@ private:
   std::vector<std::pair<LHCb::MuonTileID,unsigned int> >  m_tilesAndTDC;
   std::vector<MuonLogHit*> m_hits;
   std::vector<MuonLogHit*> m_fakehits;
-  bool m_hitsDecoded;
-  std::string nullstring;
-  int m_TAENum;
-  bool m_skipHWNumber;
+  bool m_hitsDecoded = false;
+  int m_TAENum = 1;
+  bool m_skipHWNumber = false;
   
 };
 #endif // LIB_MUONHITDECODE_H
