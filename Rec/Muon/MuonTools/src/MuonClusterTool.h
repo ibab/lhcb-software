@@ -16,30 +16,27 @@
  *  @author Alessia Satta
  *  @date   2010-01-15
  */
-class MuonClusterTool : public GaudiTool, virtual public IMuonClusterTool {
+class MuonClusterTool : public extends<GaudiTool, IMuonClusterTool> {
 public: 
   /// Standard constructor
   MuonClusterTool( const std::string& type, 
                    const std::string& name,
                    const IInterface* parent);
 
-  virtual ~MuonClusterTool( ); ///< Destructor
-  StatusCode initialize();	
-  virtual StatusCode doCluster(const std::string Input,const std::string Output);
+  ~MuonClusterTool( ) override; ///< Destructor
+  StatusCode initialize() override;	
+  StatusCode doCluster(const std::string& Input,const std::string& Output) override;
 
-protected:
-  
 private:
   StatusCode initClusterVector(LHCb::MuonCoords* coords);
   StatusCode mergeCluster();
   StatusCode mergeStation(int i);
   void ClearMemory();
-  StatusCode SaveOutput(std::string output);
+  StatusCode SaveOutput(const std::string& output);
   
   bool detectCluster(LHCb::MuonCluster* one,LHCb::MuonCluster* two);
   bool isIncluded(int station,LHCb::MuonCluster* cluster)	;  
   std::vector<std::pair<LHCb::MuonCluster *,int> > m_inputclust[5];
-  //  std::vector<std::pair<LHCb::MuonCluster *,int> > m_outputclust[5];
   std::vector<LHCb::MuonCluster * > m_finalclust[5];
   DeMuonDetector* m_muonDetector;  
 };

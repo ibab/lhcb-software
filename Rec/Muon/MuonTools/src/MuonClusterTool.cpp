@@ -22,7 +22,7 @@ DECLARE_TOOL_FACTORY( MuonClusterTool )
 MuonClusterTool::MuonClusterTool( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : base_class ( type, name , parent )
 {
   declareInterface<IMuonClusterTool>(this);
 
@@ -44,7 +44,7 @@ StatusCode MuonClusterTool::initialize() {
 }
 
 
-StatusCode MuonClusterTool::doCluster(const std::string Input,const std::string Output){
+StatusCode MuonClusterTool::doCluster(const std::string& Input,const std::string& Output) {
   if(!exist<LHCb::MuonCoords>(Input)){
 	error()<<" no coords at the locaion "<<Input<<endmsg;
      return StatusCode::FAILURE;
@@ -211,18 +211,8 @@ StatusCode MuonClusterTool::mergeStation(int station)
 
 void MuonClusterTool::ClearMemory()
 {
-
-
-
-  
-
-  std::vector<std::pair<MuonCluster *,int> >::iterator itcluOne;
-
-  
   for(int station=0;station<5;station++){
-    
-    
-    for(itcluOne=m_inputclust[station].begin();itcluOne!=m_inputclust[station].end();
+    for(auto itcluOne=m_inputclust[station].begin();itcluOne!=m_inputclust[station].end();
         itcluOne++){
       //      if(itcluOne->second!=-2)continue;
       delete itcluOne->first;                                
@@ -231,25 +221,21 @@ void MuonClusterTool::ClearMemory()
     m_finalclust[station].clear();
     
   }  
-
-
 }
 
-StatusCode MuonClusterTool::SaveOutput(std::string output)
+StatusCode MuonClusterTool::SaveOutput(const std::string& output)
 {
-  std::vector<MuonCluster *>::iterator itcluOne;
-  MuonClusters *clusters = new MuonClusters;
+  std::unique_ptr<MuonClusters> clusters{ new MuonClusters };
   
   int totcoord=0;
   
   for(int station=0;station<5;station++){
     
     
-    for(itcluOne=m_finalclust[station].begin();itcluOne!=m_finalclust[station].end();
+    for(auto itcluOne=m_finalclust[station].begin();itcluOne!=m_finalclust[station].end();
         itcluOne++){
 
       const SmartRefVector<LHCb::MuonCoord> mycoord =(*itcluOne)->coords();
-      SmartRefVector<LHCb::MuonCoord>::const_iterator myit;
       float xmin=0;
       float ymin=0;
       float zmin=0;
@@ -257,7 +243,7 @@ StatusCode MuonClusterTool::SaveOutput(std::string output)
       float ymax=0;
       float zmax=0;
       totcoord=0;
-      for(myit=mycoord.begin();myit!=mycoord.end();myit++){
+      for(auto myit=mycoord.begin();myit!=mycoord.end();myit++){
         MuonTileID mytile((*myit)->key());
         totcoord++;
         
@@ -266,20 +252,20 @@ StatusCode MuonClusterTool::SaveOutput(std::string output)
            double x,y,z;                   
            m_muonDetector->Tile2XYZ(mytile,x,dx,y,dy,z,dz);
         if(totcoord==1){
-          xmin=float(x-dx);
-          ymin=float(y-dy);
-          zmin=float(z-dz);
-          xmax=float(x+dx);
-          ymax=float(y+dy);
-          zmax=float(z+dz);
+          xmin=x-dx;
+          ymin=y-dy;
+          zmin=z-dz;
+          xmax=x+dx;
+          ymax=y+dy;
+          zmax=z+dz;
           
         }else{
-          if(xmin>x-dx)xmin=float(x-dx);
-          if(ymin>y-dy)ymin=float(y-dy);
-          if(zmin>z-dz)zmin=float(z-dz);
-          if(xmax<x+dx)xmax=float(x+dx);
-          if(ymax<y+dy)ymax=float(y+dy);
-          if(zmax<z+dz)zmax=float(z+dz);
+          if(xmin>x-dx)xmin=x-dx;
+          if(ymin>y-dy)ymin=y-dy;
+          if(zmin>z-dz)zmin=z-dz;
+          if(xmax<x+dx)xmax=x+dx;
+          if(ymax<y+dy)ymax=y+dy;
+          if(zmax<z+dz)zmax=z+dz;
           
         }
         
@@ -304,7 +290,7 @@ StatusCode MuonClusterTool::SaveOutput(std::string output)
     
   }
   debug()<<"cluster size "<<clusters->size()<<" "<<totcoord<<endmsg;
-  put(clusters,output);
+  put(clusters.release(),output);
   
   LHCb::MuonClusters* muoncl=get<LHCb::MuonClusters>
      ("Raw/Muon/TAECluster");
@@ -317,7 +303,7 @@ StatusCode MuonClusterTool::SaveOutput(std::string output)
 }
 
 bool MuonClusterTool::detectCluster(LHCb::MuonCluster* one,
-                                   LHCb::MuonCluster* two)
+                                    LHCb::MuonCluster* two)
 {
   bool near1=false;
   const SmartRefVector<LHCb::MuonCoord> coordsOne=one->coords();
@@ -463,14 +449,12 @@ bool MuonClusterTool::isIncluded(int station,LHCb::MuonCluster* cluster)
     if(it->first==cluster)continue;
     MuonCluster* other=it->first;
     const SmartRefVector<LHCb::MuonCoord> othercoord =(other)->coords();
-    SmartRefVector<LHCb::MuonCoord>::const_iterator myit;
-    SmartRefVector<LHCb::MuonCoord>::const_iterator otherit;
-    for(myit=mycoord.begin();myit!=mycoord.end();myit++){
+    for(auto myit=mycoord.begin();myit!=mycoord.end();myit++){
       MuonTileID mytile((*myit)->key());
       bool same=false;
       verbose()<<" looking for "<<mytile<<endmsg;
       
-      for(otherit=othercoord.begin();otherit!=othercoord.end();otherit++){
+      for(auto otherit=othercoord.begin();otherit!=othercoord.end();otherit++){
         MuonTileID othertile((*otherit)->key());
         verbose()<<" check "<<othertile<<endmsg;
         

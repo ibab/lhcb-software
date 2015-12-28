@@ -22,15 +22,14 @@
  *  @author David Hutchcroft
  *  @date   07/03/2002
  */
-class MuonFastPosTool : public GaudiTool, 
-                    virtual public IMuonFastPosTool {
+class MuonFastPosTool : public extends<GaudiTool, IMuonFastPosTool>  {
 public:
   /// Standard constructor
   MuonFastPosTool( const std::string& type, 
                  const std::string& name,
                  const IInterface* parent);
   
-  virtual ~MuonFastPosTool( ){} ; ///< Destructor
+  ~MuonFastPosTool( ) override = default ; ///< Destructor
 
   /** Calculate the x,y,z and dx,dy,dz of a MuonTileID in mm
    * this ignores gaps: these can never be read out independently
@@ -45,9 +44,9 @@ public:
 private:
 
   // Number of stations
-  int m_stationNumber;
+  int m_stationNumber = 0;
   // Number of regions
-  int m_regionNumber;
+  int m_regionNumber = 0;
   //Names of the station
   std::vector<std::string> m_stationNames;
 

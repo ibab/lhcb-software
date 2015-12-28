@@ -2,6 +2,19 @@
 ! Package     : MuonTools
 ! Responsible : Alessia Satta Alessia.Sattaft@cern.ch
 ! ========================================================================
+! 2015-12-28 - Gerhard Raven
+ - follow changes in MuonInterfaces:
+    o pass MuonTileID by value
+    o add const where possible
+ - prefer extends
+ - prefer range-based for loops
+ - prefer not to cast if not needed
+ - prefer std::unique_ptr over raw pointer and explicit delete
+ - qualify implementations of virtual functions with override
+ - prefer (implicit) std::initializer_list over boost::assign::list_of
+ - prefer direct member initialization
+ - prefer stand-alone functions in anonymous namespace over private member functions
+   that do not use member data (or only use public accesible member data)
 
 !========================= MuonTools v5r5p1 2015-10-13 =========================
 ! 2015-08-12 - Gerhard Raven

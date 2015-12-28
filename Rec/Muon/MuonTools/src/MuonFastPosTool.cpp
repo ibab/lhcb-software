@@ -1,6 +1,3 @@
-// Include files 
-#include "boost/assign/list_of.hpp"
-
 // local
 #include "MuonFastPosTool.h"
 
@@ -18,9 +15,7 @@ DECLARE_TOOL_FACTORY( MuonFastPosTool )
   MuonFastPosTool::MuonFastPosTool( const std::string& type,
                                     const std::string& name,
                                     const IInterface* parent )
-    : GaudiTool ( type, name, parent )
-    , m_stationNumber(0)
-    , m_regionNumber(0)
+    : base_class ( type, name, parent )
 {
   declareInterface<IMuonFastPosTool>(this);
 }
@@ -42,10 +37,8 @@ StatusCode MuonFastPosTool::initialize() {
   m_stationNumber=basegeometry.getStations();
   m_regionNumber=basegeometry.getRegions();
 
-  std::vector<unsigned int> tmp1 = boost::assign::list_of(24)(48)(48)(12)(12);
-  std::vector<unsigned int> tmp2 = boost::assign::list_of( 8)( 8)( 8)( 8)( 8);
-  m_padGridX = tmp1;
-  m_padGridY = tmp2;
+  m_padGridX = { 24,48,48,12,12 };
+  m_padGridY = {  8, 8, 8, 8, 8 };
 
   m_padSizeX.resize(20);
   m_padSizeY.resize(20);
