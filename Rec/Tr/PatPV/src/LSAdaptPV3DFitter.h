@@ -17,28 +17,28 @@
 // Forward declarations
 class ITrackExtrapolator;
 
-class LSAdaptPV3DFitter : public GaudiTool, virtual public IPVFitter {
+class LSAdaptPV3DFitter : public extends<GaudiTool, IPVFitter> {
 
 public:
   // Standard constructor
   LSAdaptPV3DFitter(const std::string& type,
-                  const std::string& name,
-                  const IInterface* parent);
+                    const std::string& name,
+                    const IInterface* parent);
   // Destructor
-  ~LSAdaptPV3DFitter();
+  ~LSAdaptPV3DFitter() override = default;
   // Initialization
-  virtual StatusCode initialize();
+  StatusCode initialize() override;
   // Fitting
-  StatusCode fitVertex(const Gaudi::XYZPoint seedPoint,
-                       std::vector<const LHCb::Track*>& tracks,
-                       LHCb::RecVertex& vtx, 
-                       std::vector<const LHCb::Track*>& tracks2remove);
+  StatusCode fitVertex(const Gaudi::XYZPoint& seedPoint,
+                       const std::vector<const LHCb::Track*>& tracks,
+                       LHCb::RecVertex& vtx,
+                       std::vector<const LHCb::Track*>& tracks2remove) const override;
 private:
   int    m_minTr;         // Minimum number of tracks to make a vertex
   int    m_Iterations;    // Number of iterations for minimisation
   int    m_minIter;       // iterate at least m_minIter times
   double m_maxIP2PV;      // Maximum IP of a track to accept track
-  //  double m_maxRDPV;       // Maximum Radial Distance of PV 
+  //  double m_maxRDPV;       // Maximum Radial Distance of PV
   double m_maxDeltaZ;     // Fit convergence condition
   double m_minTrackWeight;// Minimum Tukey's weight to accept a track
   double m_TrackErrorScaleFactor;
@@ -50,27 +50,28 @@ private:
   double m_maxChi2;       // maximal chi2 to accept track
   bool   m_AddMultipleScattering; // add multiple scattering calculation to not fitted tracks
   bool   m_CalculateMultipleScattering; // calculate multiple scattering
-  bool   m_UseFittedTracks; // use tracks fitted by kalman fit 
+  bool   m_UseFittedTracks; // use tracks fitted by kalman fit
   double m_scatCons;      // calculated from m_x0MS and 3 GeV
   double m_scatConsNoMom; // calculated from m_x0MS to be divided by momemntum [MeV]
   double m_myZero;        //myzero=1E-12 small number
   double m_zVtxShift;
-  // double m_factor; 
+  // double m_factor;
 
-  PVTracks m_pvTracks;
-  ITrackExtrapolator* m_linExtrapolator;   // Linear extrapolator                                                                                                                
-  ITrackExtrapolator* m_fullExtrapolator;  // Full extrapolator 
-  
+  ITrackExtrapolator* m_linExtrapolator;   // Linear extrapolator
+  ITrackExtrapolator* m_fullExtrapolator;  // Full extrapolator
+
   // Add track for PV
   void addTrackForPV(const LHCb::Track* str, PVTracks& pvTracks,
-                           const Gaudi::XYZPoint& seed);
+                           const Gaudi::XYZPoint& seed) const;
 
-  double err2d0(const LHCb::Track* track, const Gaudi::XYZPoint& seed);
-  Gaudi::XYZVector impactParameterVector(const Gaudi::XYZPoint& vertex,
-                                         const Gaudi::XYZPoint& point,
-					 const Gaudi::XYZVector& direction);
+  double err2d0(const LHCb::Track* track, const Gaudi::XYZPoint& seed) const;
   // Get Tukey's weight
-  double getTukeyWeight(double trchi2, int iter);
+  double getTukeyWeight(double trchi2, int iter) const {
+    if (iter<1 ) return 1.;
+    auto ctrv = m_trackChi * std::max(m_minIter -  iter, 1);
+    auto cT2  = trchi2 / std::pow(ctrv*m_TrackErrorScaleFactor,2);
+    return cT2 < 1 ? std::pow( 1-cT2, 2 ) : 0.;
+  }
 };
 
 #endif // LSADAPTPVFITTER_H

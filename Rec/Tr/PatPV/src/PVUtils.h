@@ -1,5 +1,5 @@
 // $Id: PVUtils.h,v 1.3 2010-01-20 13:46:49 rlambert Exp $
-#ifndef PVUTILS_H 
+#ifndef PVUTILS_H
 #define PVUTILS_H 1
 
 // Include files
@@ -12,45 +12,43 @@ namespace LHCb {
   class Track;
 }
 
-class PVTrack 
+class PVTrack final
 {
 public:
- PVTrack():refTrack(0),stateG(),unitVect(),isUsed(false),vd0(),d0(0),err2d0(0),chi2(0),weight(0),type(LHCb::Track::Velo){};
-  
-  const LHCb::Track* refTrack;
+  PVTrack() = default;
+
+  const LHCb::Track* refTrack = nullptr;
   // Current state of the track at the current point
   LHCb::State stateG;
   // Normalized vector of slope
   Gaudi::XYZVector unitVect;
   // Flag if the track has been used in a previous vertex
-  bool isUsed;
+  bool isUsed = false;
 
   // Result for impact parameter
   Gaudi::XYZVector vd0;          // Impact parameter vector
-  double d0;                     // Impact parameter
-  double err2d0;                 // IP error squared
-  double chi2;                   // chi2 = d02 / d0err**2
-  double weight;                 // Weight assigned to track
-  LHCb::Track::Types  type;
+  double d0 = 0;                     // Impact parameter
+  double err2d0 = 0;                 // IP error squared
+  double chi2 = 0;                   // chi2 = d02 / d0err**2
+  double weight = 0;                 // Weight assigned to track
+  LHCb::Track::Types  type = LHCb::Track::Velo;
 
-  inline double zClose() { 
-    return stateG.z() - unitVect.z() * 
+  inline double zClose() {
+    return stateG.z() - unitVect.z() *
            (unitVect.x() * stateG.x() + unitVect.y() * stateG.y()) /
-           (1.0 - pow(unitVect.z(),2)); 
+           (1.0 - std::pow(unitVect.z(),2));
   }
 };
 
 typedef std::vector<PVTrack> PVTracks;
 typedef std::vector<PVTrack*> PVTrackPtrs;
 
-class PVVertex {
+class PVVertex final {
 public:
   PVTrackPtrs pvTracks;
   LHCb::RecVertex primVtx;
-  
-  PVVertex():pvTracks(0),primVtx(0){};
 
-  
+  PVVertex():pvTracks(0),primVtx(0){};
 };
 typedef std::vector<PVVertex> PVVertices;
 

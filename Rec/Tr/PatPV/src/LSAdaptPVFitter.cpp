@@ -1,4 +1,4 @@
-// Include files 
+// Include files
 // from Event
 #include "Event/Track.h"
 #include "Event/State.h"
@@ -15,7 +15,7 @@ DECLARE_TOOL_FACTORY(LSAdaptPVFitter)
 LSAdaptPVFitter::LSAdaptPVFitter(const std::string& type,
                                  const std::string& name,
                                  const IInterface* parent)
-  : GaudiTool(type,name,parent),
+  : base_class(type,name,parent),
     m_minTr(0),
     m_maxIterations(0),
     m_maxChi2(0.),
@@ -23,26 +23,33 @@ LSAdaptPVFitter::LSAdaptPVFitter(const std::string& type,
     m_maxDeltaChi2NDoF(0.),
     m_minTrackWeight(0.),
     m_trackChi(3.),
-    m_pvTracks(0),
     m_linExtrapolator(0),
     m_fullExtrapolator(0),
     m_myZero(1E-12)
 {
   declareInterface<IPVFitter>(this);
-  // Minimum number of tracks in vertex  
-  declareProperty("MinTracks", m_minTr = 5);
+  // Minimum number of tracks in vertex
+  declareProperty("MinTracks", m_minTr = 5)
+  ->declareUpdateHandler( [=](Property&) {
+      // do not allow less than 3 tracks in a vertex
+      if  ( this->m_minTr < 3 ) {
+        this->m_minTr = 3;
+        this->warning() << "MinTracks parameter set to 3" << endmsg;
+      }
+  });
   // Number of iterations
   declareProperty("Iterations", m_maxIterations = 50);
   // Chi2 of completely wrong tracks
   declareProperty("maxChi2", m_maxChi2 = 400.0);
-  // Fit convergence condition delta z 
+  // Fit convergence condition delta z
   declareProperty("maxDeltaZ", m_maxDeltaZ = 0.0005 * Gaudi::Units::mm);
   // Fit convergence condition delta chi2/ndof if not converged by dz
   declareProperty("maxDeltaChi2NDoF", m_maxDeltaChi2NDoF = 0.002);
   // Value of the Tukey's weight to accept a track
   declareProperty("acceptTrack", m_minTrackWeight = 0.00000001);
   // Max chi2 track to accept track in PV fit
-  declareProperty("trackMaxChi2", m_trackMaxChi2 = 9.);
+  declareProperty("trackMaxChi2", m_trackMaxChi2 = 9.)
+    ->declareUpdateHandler( [=](Property&) { this->m_trackChi = std::sqrt(m_trackMaxChi2); });
   // Max chi2 tracks to be removed from next PV search
   declareProperty("trackMaxChi2Remove", m_trackMaxChi2Remove = 25.);
   // Min number of iterations
@@ -68,50 +75,41 @@ StatusCode LSAdaptPVFitter::initialize()
     err() << "Unable to get TrackMasterExtrapolator" << endmsg;
     return  StatusCode::FAILURE;
   }
-  // do not allow less than 3 tracks in a vertex
-  if  ( m_minTr < 3 ) {
-    m_minTr = 3;  
-    warning() << "MinTracks parameter set to 3" << endmsg;
-  }
-
-  m_trackChi = std::sqrt(m_trackMaxChi2);
-
   return StatusCode::SUCCESS;
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-LSAdaptPVFitter::~LSAdaptPVFitter() {}
+LSAdaptPVFitter::~LSAdaptPVFitter() = default;
 
 //=============================================================================
 // Least square adaptive fitting method
 //=============================================================================
-StatusCode LSAdaptPVFitter::fitVertex(const Gaudi::XYZPoint seedPoint, 
-                                      std::vector<const LHCb::Track*>& rTracks, 
-                                      LHCb::RecVertex& vtx, 
-                                      std::vector<const LHCb::Track*>& tracks2remove)
+StatusCode LSAdaptPVFitter::fitVertex(const Gaudi::XYZPoint& seedPoint,
+                                      const std::vector<const LHCb::Track*>& rTracks,
+                                      LHCb::RecVertex& vtx,
+                                      std::vector<const LHCb::Track*>& tracks2remove) const
 {
   if(msgLevel(MSG::VERBOSE)) {
     verbose() << "fitVertex method" << endmsg;
   }
 
-  m_pvTracks.clear();
+  PVTracks pvTracks;
   PVVertex pvVertex;
 
-  std::vector<const LHCb::Track*>::const_iterator itr;
-  for(itr = rTracks.begin(); itr != rTracks.end(); itr++) {    
+  for(auto itr = rTracks.begin(); itr != rTracks.end(); itr++) {
     const LHCb::Track* track = *itr;
-    addTrackForPV(track, m_pvTracks, seedPoint.z()).ignore();
+    addTrackForPV(track, pvTracks, seedPoint.z()).ignore();
   }
-  
-  initVertex(m_pvTracks,pvVertex,seedPoint);
-  
+
+  initVertex(pvTracks,pvVertex,seedPoint);
+
   // Initial track cleaning
   if(msgLevel(MSG::VERBOSE)) {
     verbose() << "clean tracks" << endmsg;
   }
-  for(PVTrackPtrs::iterator itrack = pvVertex.pvTracks.begin(); 
+  for(auto itrack = pvVertex.pvTracks.begin();
       itrack != pvVertex.pvTracks.end();) {
     PVTrack* pvTrack = *itrack;
     StatusCode sc = trackExtrapolate(pvTrack,pvVertex.primVtx);
@@ -135,9 +133,9 @@ StatusCode LSAdaptPVFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
 
   StatusCode scvfit = fit(pvVertex.primVtx, pvVertex.pvTracks, tracks2remove);
   if (!scvfit.isSuccess() ) {
-    if(msgLevel(MSG::DEBUG)) debug() << "PV fit failed" << endmsg;  
+    if(msgLevel(MSG::DEBUG)) debug() << "PV fit failed" << endmsg;
   }
-  
+
   vtx = pvVertex.primVtx;
   vtx.setTechnique(LHCb::RecVertex::Primary);
   return scvfit;
@@ -146,11 +144,11 @@ StatusCode LSAdaptPVFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
 //=============================================================================
 // Least square adaptive PV fit
 //=============================================================================
-StatusCode LSAdaptPVFitter::fit(LHCb::RecVertex& vtx, 
-                                std::vector<PVTrack*>& pvTracks, std::vector<const LHCb::Track*>& tracks2remove) 
+StatusCode LSAdaptPVFitter::fit(LHCb::RecVertex& vtx,
+                                std::vector<PVTrack*>& pvTracks, std::vector<const LHCb::Track*>& tracks2remove) const
 {
   tracks2remove.clear();
-  
+
   if(msgLevel(MSG::VERBOSE)) {
     verbose() << "Least square adaptive PV fit" << endmsg;
   }
@@ -182,12 +180,12 @@ StatusCode LSAdaptPVFitter::fit(LHCb::RecVertex& vtx,
     prepareVertex(vtx,pvTracks,hess,d0vec,nbIter);
 
     int ntr=0;
-    for(PVTrackPtrs::iterator itrack = pvTracks.begin(); 
+    for(PVTrackPtrs::iterator itrack = pvTracks.begin();
          itrack != pvTracks.end(); itrack++) {
        PVTrack* pvTrack = *itrack;
        if (pvTrack->weight > 0.) ntr++;
     }
-    if (ntr < 3 ) { 
+    if (ntr < 3 ) {
       if(msgLevel(MSG::DEBUG)) debug() << "# tracks too low. ntr = " << ntr << endmsg;
       break;
     }
@@ -206,64 +204,64 @@ StatusCode LSAdaptPVFitter::fit(LHCb::RecVertex& vtx,
 
     delta_zVtx = fabs(zVtx - zPrevious);
     delta_chi2Vtx = fabs(chi2Vtx-chi2previous);
-  
+
     if( delta_zVtx < maxdz) {
       if ( nbIter >= m_minIter ) converged = true;
     }
-    
-    if( msgLevel(MSG::DEBUG) ) 
-    {      
-      if ( converged ) 
+
+    if( msgLevel(MSG::DEBUG) )
+    {
+      if ( converged )
       {
-        debug() << format(" converged with delta chi2 and dz %8.5f %8.5f %4d %4d ", 
+        debug() << format(" converged with delta chi2 and dz %8.5f %8.5f %4d %4d ",
                           delta_chi2Vtx, delta_zVtx, vtx.nDoF(), nbIter) << endmsg;
-      }      
-    }      
+      }
+    }
     zPrevious = zVtx;
     chi2previous = chi2Vtx;
-    
+
     ++nbIter;
   }
 
   if (nbIter >= m_maxIterations) {
-    if( msgLevel(MSG::DEBUG) ) {  
+    if( msgLevel(MSG::DEBUG) ) {
       debug() << " Reached max # iterations without convergence " << nbIter << endmsg;
     }
 
     // check if delta chi2/ndof acceptable to confirm convergence anyway
-    if ( delta_chi2Vtx < m_maxDeltaChi2NDoF ) converged = true;    
+    if ( delta_chi2Vtx < m_maxDeltaChi2NDoF ) converged = true;
   }
 
   if ( ! converged ) {
-    return StatusCode::FAILURE; 
+    return StatusCode::FAILURE;
   }
-  
+
 
   setChi2(vtx,pvTracks);
 
   // fill tracks arounf PV to remove from next PV search
-  for(PVTrackPtrs::iterator itrack = pvTracks.begin(); 
+  for(PVTrackPtrs::iterator itrack = pvTracks.begin();
       itrack != pvTracks.end(); itrack++) {
-    
+
     if( (*itrack)->chi2 < m_trackMaxChi2Remove) {
        tracks2remove.push_back( (*itrack)->refTrack);
     }
-    
-    if( msgLevel(MSG::DEBUG) ) 
+
+    if( msgLevel(MSG::DEBUG) )
     {
-      
+
     if (  (*itrack)->chi2 < 100.) {
         const LHCb::Track * lbtrack = (*itrack)->refTrack;
         int back = lbtrack->checkFlag(LHCb::Track::Backward);
         int velo = ( lbtrack->checkType(LHCb::Track::Velo) ||  lbtrack->checkType(LHCb::Track::Upstream) );
         int longtr = lbtrack->checkType(LHCb::Track::Long);
         int hasmom = fabs( lbtrack->firstState().qOverP() )>0. ;
-      
-        debug() <<  format("track significance dump: %3d %3d %3d %3d %7.2f", 
+
+        debug() <<  format("track significance dump: %3d %3d %3d %3d %7.2f",
                    back, velo, longtr, hasmom, std::sqrt((*itrack)->chi2) ) << endmsg;
-      } 
+      }
     }
-    
+
   }
 
   // Check the weight of tracks to be accepted for PV candidate
@@ -282,7 +280,7 @@ StatusCode LSAdaptPVFitter::fit(LHCb::RecVertex& vtx,
     }
     return StatusCode::FAILURE;
   }
-  
+
 
   return StatusCode::SUCCESS;
 }
@@ -291,7 +289,7 @@ StatusCode LSAdaptPVFitter::fit(LHCb::RecVertex& vtx,
 // Add track for PV
 //=============================================================================
 StatusCode LSAdaptPVFitter::addTrackForPV(const LHCb::Track* pvtr,
-                                          PVTracks& pvTracks, double zseed) 
+                                          PVTracks& pvTracks, double zseed) const
 {
   // Create a new PVTrack to be put on the vecctor
   PVTrack pvtrack;
@@ -313,7 +311,7 @@ StatusCode LSAdaptPVFitter::addTrackForPV(const LHCb::Track* pvtr,
        if(sc.isFailure()) return sc;
     }
   }
-  pvtrack.stateG = mstate; 
+  pvtrack.stateG = mstate;
   pvtrack.unitVect = pvtrack.stateG.slopes().Unit();
   pvTracks.push_back(pvtrack);
   return StatusCode::SUCCESS;
@@ -323,17 +321,16 @@ StatusCode LSAdaptPVFitter::addTrackForPV(const LHCb::Track* pvtr,
 // initialize vertex
 //=============================================================================
 void LSAdaptPVFitter::initVertex(PVTracks& pvTracks, PVVertex& pvVtx,
-                                 const Gaudi::XYZPoint seedPoint) 
+                                 const Gaudi::XYZPoint seedPoint)  const
 {
   if(msgLevel(MSG::VERBOSE)) {
     verbose() << "initVertex method" << endmsg;
   }
-  PVTracks::iterator pvTrack;
-  for(pvTrack = pvTracks.begin(); pvTracks.end() != pvTrack; pvTrack++) {
+  for(auto pvTrack = pvTracks.begin(); pvTracks.end() != pvTrack; pvTrack++) {
          pvVtx.pvTracks.push_back(&(*pvTrack));
          pvVtx.primVtx.addToTracks(pvTrack->refTrack);
   }
-  
+
   int nTracks = pvTracks.size();
   if(msgLevel(MSG::DEBUG)) {
     debug() << " Collected " << nTracks << " for this vtx search" << endmsg;
@@ -353,11 +350,11 @@ void LSAdaptPVFitter::initVertex(PVTracks& pvTracks, PVVertex& pvVtx,
 //=============================================================================
 // Prepare vertices
 //=============================================================================
-void LSAdaptPVFitter::prepareVertex(LHCb::RecVertex& vtx, 
-                                   PVTrackPtrs& pvTracks, 
+void LSAdaptPVFitter::prepareVertex(LHCb::RecVertex& vtx,
+                                   PVTrackPtrs& pvTracks,
                                    Gaudi::SymMatrix3x3& hess,
-                                   ROOT::Math::SVector<double,3>& d0vec, 
-                                   int iter)
+                                   ROOT::Math::SVector<double,3>& d0vec,
+                                   int iter) const
 {
   int nbIter = iter;
   // Reset hessian and d0 vector
@@ -368,13 +365,12 @@ void LSAdaptPVFitter::prepareVertex(LHCb::RecVertex& vtx,
     }
   }
   if(msgLevel(MSG::VERBOSE)) {
-    verbose() << "Extrapolate tracks to the vertex at z = " 
+    verbose() << "Extrapolate tracks to the vertex at z = "
               << vtx.position().z()
               << endmsg;
   }
-  // Add whole track vector to hessian and d0 vector     
-  for(PVTrackPtrs::iterator itrack = pvTracks.begin(); 
-      itrack != pvTracks.end();) {
+  // Add whole track vector to hessian and d0 vector
+  for(auto itrack = pvTracks.begin(); itrack != pvTracks.end();) {
     PVTrack* pvTrack = *itrack;
     // Extrapolate tracks
     StatusCode sc = trackExtrapolate(pvTrack,vtx);
@@ -382,7 +378,7 @@ void LSAdaptPVFitter::prepareVertex(LHCb::RecVertex& vtx,
       if(msgLevel(MSG::VERBOSE)) {
         verbose() << "Track " << pvTrack->refTrack->key()
                   << " could not be extrapolated to the vertex" << endmsg;
-      }      
+      }
       itrack = pvTracks.erase(itrack);
     } else {
       pvTrack->weight = getTukeyWeight(pvTrack->chi2,nbIter);
@@ -396,7 +392,8 @@ void LSAdaptPVFitter::prepareVertex(LHCb::RecVertex& vtx,
 // Track extrapolation
 //=============================================================================
 StatusCode LSAdaptPVFitter::trackExtrapolate(PVTrack* pvTrack,
-                                             const LHCb::RecVertex& vtx) {
+                                             const LHCb::RecVertex& vtx) const
+{
   Gaudi::XYZPoint trkPoint(pvTrack->stateG.x(),
                            pvTrack->stateG.y(),
                            pvTrack->stateG.z());
@@ -408,7 +405,7 @@ StatusCode LSAdaptPVFitter::trackExtrapolate(PVTrack* pvTrack,
   pvTrack->d0 = sqrt(pvTrack->vd0.Mag2());
   // Use linear extrapolator to move the track to the desired position
   LHCb::State stateToMove = pvTrack->stateG;
-  StatusCode sc = m_linExtrapolator->propagate(stateToMove,vtx.position().z() 
+  StatusCode sc = m_linExtrapolator->propagate(stateToMove,vtx.position().z()
                                            + pvTrack->vd0.z());
   if(!sc.isSuccess()) {
     if(msgLevel(MSG::VERBOSE)) {
@@ -425,7 +422,7 @@ StatusCode LSAdaptPVFitter::trackExtrapolate(PVTrack* pvTrack,
                       stateToMove.covariance().Sub<Gaudi::SymMatrix2x2>(0,0);
   ROOT::Math::SVector<double,2> covMatrix_xyVec_product;
   covMatrix_xyVec_product = covMatrix * xyVec;
-  pvTrack->err2d0 = xyVec[0] * covMatrix_xyVec_product[0] 
+  pvTrack->err2d0 = xyVec[0] * covMatrix_xyVec_product[0]
                   + xyVec[1] * covMatrix_xyVec_product[1];
   if(pvTrack->err2d0>m_myZero) pvTrack->chi2 = (pvTrack->d0 * pvTrack->d0)/ pvTrack->err2d0;
   else
@@ -433,16 +430,16 @@ StatusCode LSAdaptPVFitter::trackExtrapolate(PVTrack* pvTrack,
     if(msgLevel(MSG::DEBUG)) debug() << "trackExtrapolate: pvTrack error is too small for computation" << endmsg;
     pvTrack->chi2 = (pvTrack->d0 * pvTrack->d0)/ m_myZero;
   }
-  
+
   return StatusCode::SUCCESS;
 }
 
 //=============================================================================
 // Add track
 //=============================================================================
-void LSAdaptPVFitter::addTrack(PVTrack* pTrack, 
+void LSAdaptPVFitter::addTrack(PVTrack* pTrack,
                                Gaudi::SymMatrix3x3& hess,
-                               ROOT::Math::SVector<double,3>& d0vec)
+                               ROOT::Math::SVector<double,3>& d0vec) const
 {
   addsubTrack(pTrack,hess,d0vec,+1.0);
 }
@@ -450,9 +447,9 @@ void LSAdaptPVFitter::addTrack(PVTrack* pTrack,
 //=============================================================================
 // Remove track
 //=============================================================================
-void LSAdaptPVFitter::removeTrack(PVTrack* pTrack, 
+void LSAdaptPVFitter::removeTrack(PVTrack* pTrack,
                                   Gaudi::SymMatrix3x3& hess,
-                                  ROOT::Math::SVector<double,3>& d0vec)
+                                  ROOT::Math::SVector<double,3>& d0vec) const
 {
   addsubTrack(pTrack,hess,d0vec,-1.0);
 }
@@ -460,22 +457,21 @@ void LSAdaptPVFitter::removeTrack(PVTrack* pTrack,
 //=============================================================================
 // Add subtrack
 //=============================================================================
-void LSAdaptPVFitter::addsubTrack(PVTrack* pvTrack, 
+void LSAdaptPVFitter::addsubTrack(PVTrack* pvTrack,
                                   Gaudi::SymMatrix3x3& hess,
                                   ROOT::Math::SVector<double,3>& d0vec,
-                                  double invs)
+                                  double invs) const
 {
   if(pvTrack->err2d0>m_myZero) invs *= (2.0 / pvTrack->err2d0) * pvTrack->weight;
-  else
-  {
+  else {
     if(msgLevel(MSG::DEBUG)) debug() << "trackExtrapolate: pvTrack error is too small for computation" << endmsg;
     invs *= (2.0 / m_myZero) * pvTrack->weight;
   }
-  
+
   double unitVectStd[3];
   unitVectStd[0] = pvTrack->unitVect.x();
   unitVectStd[1] = pvTrack->unitVect.y();
-  unitVectStd[2] = pvTrack->unitVect.z(); 
+  unitVectStd[2] = pvTrack->unitVect.z();
   double vd0Std[3];
   vd0Std[0] = pvTrack->vd0.x();
   vd0Std[1] = pvTrack->vd0.y();
@@ -500,7 +496,7 @@ void LSAdaptPVFitter::addsubTrack(PVTrack* pvTrack,
 StatusCode LSAdaptPVFitter::outVertex(LHCb::RecVertex& vtx,
                                       PVTrackPtrs& pvTracks,
                                       Gaudi::SymMatrix3x3& hess,
-                                      ROOT::Math::SVector<double,3>& d0vec)
+                                      ROOT::Math::SVector<double,3>& d0vec) const
 {
   if(msgLevel(MSG::VERBOSE)) {
     verbose() << "Computing new vertex position" << endmsg;
@@ -520,19 +516,19 @@ StatusCode LSAdaptPVFitter::outVertex(LHCb::RecVertex& vtx,
   }
   delta = hess * d0vec;
   if(msgLevel(MSG::DEBUG)) {
-    debug() << "Displacement found: " 
-            << delta[0] << " , " 
-            << delta[1] << " , " 
+    debug() << "Displacement found: "
+            << delta[0] << " , "
+            << delta[1] << " , "
             << delta[2] << " , " << endmsg;
   }
-  Gaudi::XYZPoint newVtx(vtx.position().x() + delta[0], 
-                         vtx.position().y() + delta[1], 
+  Gaudi::XYZPoint newVtx(vtx.position().x() + delta[0],
+                         vtx.position().y() + delta[1],
                          vtx.position().z() + delta[2]);
   vtx.setPosition(newVtx);
   if(msgLevel(MSG::DEBUG)) {
     debug() << " New vertex position: "
             << vtx.position().x() << " , "
-            << vtx.position().y() << " , " 
+            << vtx.position().y() << " , "
             << vtx.position().z() << endmsg;
   }
 
@@ -545,35 +541,35 @@ StatusCode LSAdaptPVFitter::outVertex(LHCb::RecVertex& vtx,
   vtx.setCovMatrix(hess);
   // Set tracks
   vtx.clearTracks();
-  for (PVTrackPtrs::iterator itrack = pvTracks.begin(); 
+  for (PVTrackPtrs::iterator itrack = pvTracks.begin();
                              itrack != pvTracks.end(); itrack++) {
     if((*itrack)->weight > m_minTrackWeight) {
       vtx.addToTracks( (*itrack)->refTrack, (float) (*itrack)->weight );
     }
   }
   setChi2(vtx,pvTracks);
-  
+
   return StatusCode::SUCCESS;
 }
 
 //=============================================================================
 // Compute PV chi2
 //=============================================================================
-void LSAdaptPVFitter::setChi2(LHCb::RecVertex& vtx, 
-                                PVTrackPtrs& pvTracks)
+void LSAdaptPVFitter::setChi2(LHCb::RecVertex& vtx,
+                                PVTrackPtrs& pvTracks) const
 {
   int nDoF = -3;
   double chi2 = 0.0;
-  for(PVTrackPtrs::iterator itrack = pvTracks.begin(); 
-      itrack != pvTracks.end(); itrack++) {  
+  for(PVTrackPtrs::iterator itrack = pvTracks.begin();
+      itrack != pvTracks.end(); itrack++) {
     if((*itrack)->weight > m_minTrackWeight) {
       chi2 += (*itrack)->chi2 * (*itrack)->weight;
       nDoF += 2;
     }
   }
   if(msgLevel(MSG::VERBOSE)) {
-    verbose() << "Compute chi2 of this vertex: " << chi2 
-              << " for " << nDoF << " DoF ( " 
+    verbose() << "Compute chi2 of this vertex: " << chi2
+              << " for " << nDoF << " DoF ( "
               << chi2 / nDoF << " / DoF)"
              << endmsg;
   }
@@ -584,11 +580,11 @@ void LSAdaptPVFitter::setChi2(LHCb::RecVertex& vtx,
 //=============================================================================
 // Compute PV chi2
 //=============================================================================
-void LSAdaptPVFitter::printTracks(PVTrackPtrs& pvTracks)
+void LSAdaptPVFitter::printTracks(PVTrackPtrs& pvTracks) const
 {
   if(msgLevel(MSG::VERBOSE)) {
     verbose() << " dump tracks for this vertex" << endmsg;
-  
+
     for(PVTrackPtrs::iterator iFitTrPtr = pvTracks.begin(); iFitTrPtr != pvTracks.end(); iFitTrPtr++) {
       int invx = 0;
       PVTrack* iFitTr = *iFitTrPtr;
@@ -602,7 +598,7 @@ void LSAdaptPVFitter::printTracks(PVTrackPtrs& pvTracks)
 //=============================================================================
 // Get Tukey's weight
 //=============================================================================
-double LSAdaptPVFitter::getTukeyWeight(double trchi2, int iter)
+double LSAdaptPVFitter::getTukeyWeight(double trchi2, int iter) const
 {
   if (iter<1 ) return 1.;
   double ctrv = m_trackChi * (m_minIter -  iter);

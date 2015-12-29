@@ -1,4 +1,4 @@
-// Include files 
+// Include files
 
 // STL
 #include <cmath>
@@ -85,11 +85,11 @@ PVSeedTool::~PVSeedTool() {}
 //=============================================================================
 // getSeeds
 //=============================================================================
-void PVSeedTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks, 
+void PVSeedTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks,
 			  const Gaudi::XYZPoint& beamspot,
 			  std::vector<Gaudi::XYZPoint>& seeds) {
 
-  if(inputTracks.size() < 3 ) return; 
+  if(inputTracks.size() < 3 ) return;
 
   std::vector<vtxCluster> vclusters;
   std::vector<double> zseeds;
@@ -98,7 +98,7 @@ void PVSeedTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks,
   for ( it = inputTracks.begin(); it != inputTracks.end(); it++ ) {
     const LHCb::Track* ptr = (*it);
 
-    double sigsq; 
+    double sigsq;
     double zclu;
 
     if ( ptr->type() == LHCb::Track::VeloR) {
@@ -106,7 +106,7 @@ void PVSeedTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks,
       errorForPVSeedFinding(ptr->firstState().tx(), 0.0, sigsq);
     }
     else {
-      zclu = zCloseBeam(ptr,beamspot); 
+      zclu = zCloseBeam(ptr,beamspot);
       errorForPVSeedFinding(ptr->firstState().tx(), ptr->firstState().ty(),sigsq);
     }
     if ( fabs(zclu)>2000.) continue;
@@ -116,7 +116,7 @@ void PVSeedTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks,
     clu.sigsqmin = clu.sigsq;
     clu.ntracks = 1;
     vclusters.push_back(clu);
-  } 
+  }
 
   findClusters(vclusters,zseeds);
 
@@ -128,7 +128,7 @@ void PVSeedTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks,
 }
 
 
-void PVSeedTool::findClusters(std::vector<vtxCluster>& vclus, 
+void PVSeedTool::findClusters(std::vector<vtxCluster>& vclus,
                               std::vector<double>& zclusters) {
 
 
@@ -145,7 +145,7 @@ void PVSeedTool::findClusters(std::vector<vtxCluster>& vclus,
   std::vector<vtxCluster>::iterator itvtx;
 
   for(itvtx = vclus.begin(); itvtx != vclus.end(); itvtx++) {
-    itvtx->sigsq *= m_factorToIncreaseErrors*m_factorToIncreaseErrors; // blow up errors 
+    itvtx->sigsq *= m_factorToIncreaseErrors*m_factorToIncreaseErrors; // blow up errors
     itvtx->sigsqmin = itvtx->sigsq;
     vtxCluster* pivc = &(*itvtx);
     pvclus.push_back(pivc);
@@ -158,7 +158,7 @@ void PVSeedTool::findClusters(std::vector<vtxCluster>& vclus,
 
   bool more_merging = true;
   while (more_merging) {
-  // find pair of clusters for merging 
+  // find pair of clusters for merging
 
     // refresh flag for this iteration
     for(ivc = pvclus.begin(); ivc != pvclus.end(); ivc++) {
@@ -168,11 +168,11 @@ void PVSeedTool::findClusters(std::vector<vtxCluster>& vclus,
     // for a given cluster look only up to a few consequtive ones to merge
     // "a few" might become a property?
     ivc2up = pvclus.begin();
-    for (int i=0; i<5; i++) { 
+    for (int i=0; i<5; i++) {
       if(ivc2up != pvclus.end()) ivc2up++;
-    } 
+    }
 
-    // use vecp2m in a static manner 
+    // use vecp2m in a static manner
     int im = 0;
     m_pvecp2m.clear();
     for(ivc1 = pvclus.begin(); ivc1 != pvclus.end()-1; ivc1++) {
@@ -181,7 +181,7 @@ void PVSeedTool::findClusters(std::vector<vtxCluster>& vclus,
         double zdist = fabs((*ivc1)->z-(*ivc2)->z);
         double chi2dist = zdist*zdist/((*ivc1)->sigsq+(*ivc2)->sigsq);
         if(chi2dist<m_maxChi2Merge && im<m_p2mstatic) {
-                    
+
           pair_to_merge* ppm = &(m_vecp2m[im]);
           ppm->chi2dist = chi2dist;
           ppm->first  = *ivc1;
@@ -193,19 +193,19 @@ void PVSeedTool::findClusters(std::vector<vtxCluster>& vclus,
     }
 
     // done if no more pairs to merge
-    if(m_pvecp2m.size() < 1) { 
+    if(m_pvecp2m.size() < 1) {
       more_merging = false;
     }
     else {
       // sort if number of pairs reasonable. Sorting increases efficency.
       if(m_pvecp2m.size()<100) std::stable_sort(m_pvecp2m.begin(), m_pvecp2m.end(), paircomp);
       std::vector<pair_to_merge*>::iterator itp2m;
-      
-      // merge pairs 
+
+      // merge pairs
       for(itp2m = m_pvecp2m.begin(); itp2m != m_pvecp2m.end(); itp2m++) {
         vtxCluster* pvtx1 = (*itp2m)->first;
         vtxCluster* pvtx2 = (*itp2m)->second;
-        if(pvtx1->not_merged == 1 && pvtx2->not_merged == 1) {  
+        if(pvtx1->not_merged == 1 && pvtx2->not_merged == 1) {
 
           double z1 = pvtx1->z;
           double z2 = pvtx2->z;
@@ -252,7 +252,7 @@ void PVSeedTool::findClusters(std::vector<vtxCluster>& vclus,
   if(pvclus.size()>1) {
     std::stable_sort(pvclus.begin(),pvclus.end(),multcomp);
   }
-  
+
   // Select good clusters.
 
   for(ivc=pvclus.begin(); ivc != pvclus.end(); ivc++) {
@@ -267,14 +267,14 @@ void PVSeedTool::findClusters(std::vector<vtxCluster>& vclus,
 	if( ivc!=ivc1 && ( fabs((*ivc1)->z-(*ivc)->z) < dist_to_closest) ) {
 	  dist_to_closest = fabs((*ivc1)->z-(*ivc)->z);
 	}
-      } 
+      }
     }
 
-    // ratio to remove clusters made of one low error track and many large error ones 
+    // ratio to remove clusters made of one low error track and many large error ones
     double rat = (*ivc)->sigsq/(*ivc)->sigsqmin;
     int igood = 0;
     int ntracks = (*ivc)->ntracks;
-    if( ntracks >= m_minClusterMult ) { 
+    if( ntracks >= m_minClusterMult ) {
       if( dist_to_closest>10. && rat<0.95) igood=1;
       if( ntracks >= m_highMult && rat < m_ratioSig2HighMult)  igood=1;
       if( ntracks <  m_highMult && rat < m_ratioSig2LowMult )  igood=1;
@@ -305,7 +305,7 @@ void PVSeedTool::errorForPVSeedFinding(double tx, double ty, double &sigz2) {
     double fslope2      = 0.0005*0.0005;
     double sigma_slope2 = fslope2*dist2;
 
-    sigz2 = (sigma_ms2 + sigma_slope2) / sinTheta2; 
+    sigz2 = (sigma_ms2 + sigma_slope2) / sinTheta2;
 
 }
 
@@ -317,22 +317,22 @@ void PVSeedTool::print_clusters(std::vector<vtxCluster*>& pvclus) {
 
   std::cout << pvclus.size() << " clusters at this iteration" << std::endl;
   for(ivc=pvclus.begin(); ivc != pvclus.end(); ivc++) {
-     std::cout << (*ivc)->ntracks << " " << (*ivc)->z << " " 
+     std::cout << (*ivc)->ntracks << " " << (*ivc)->z << " "
             <<  (*ivc)->sigsq << " " <<  (*ivc)->sigsqmin << std::endl;
   }
 
 }
 
 double PVSeedTool::zCloseBeam(const LHCb::Track* track, const Gaudi::XYZPoint& beamspot){
-   
+
 
 //  Gaudi::XYZVector unitVect;
 //  unitVect = track->firstState().slopes().Unit();
-//  LHCb::State& stateG = track->firstState(); 
+//  LHCb::State& stateG = track->firstState();
 //
-//  double zclose = stateG.z() - unitVect.z() * 
+//  double zclose = stateG.z() - unitVect.z() *
 //         (unitVect.x() * stateG.x() + unitVect.y() * stateG.y()) /
-//         (1.0 - pow(unitVect.z(),2)); 
+//         (1.0 - pow(unitVect.z(),2));
 //
 //  return zclose;
 

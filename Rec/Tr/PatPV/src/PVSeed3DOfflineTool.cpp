@@ -51,7 +51,7 @@ StatusCode PVSeed3DOfflineTool::initialize() {
 //=============================================================================
 // getSeeds
 //=============================================================================
-void PVSeed3DOfflineTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks, 
+void PVSeed3DOfflineTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks,
 				   const Gaudi::XYZPoint& beamspot,
 				   std::vector<Gaudi::XYZPoint>& seeds) {
 

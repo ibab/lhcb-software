@@ -12,22 +12,22 @@
 #include "Event/RecVertex.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
 
-class LSAdaptPVFitter : public GaudiTool, virtual public IPVFitter {
+class LSAdaptPVFitter : public extends<GaudiTool, IPVFitter> {
 
 public:
   // Standard constructor
-  LSAdaptPVFitter(const std::string& type, 
+  LSAdaptPVFitter(const std::string& type,
                   const std::string& name,
                   const IInterface* parent);
   // Destructor
-  ~LSAdaptPVFitter();
+  ~LSAdaptPVFitter() override;
   // Initialization
-  virtual StatusCode initialize();
-  // Fitting 
-  StatusCode fitVertex(const Gaudi::XYZPoint seedPoint, 
-                       std::vector<const LHCb::Track*>& tracks,
-                       LHCb::RecVertex& vtx, 
-                       std::vector<const LHCb::Track*>& tracks2remove);
+  StatusCode initialize() override;
+  // Fitting
+  StatusCode fitVertex(const Gaudi::XYZPoint& seedPoint,
+                       const std::vector<const LHCb::Track*>& tracks,
+                       LHCb::RecVertex& vtx,
+                       std::vector<const LHCb::Track*>& tracks2remove) const override;
 private:
   int    m_minTr;         // Minimum number of tracks to make a vertex
   int    m_maxIterations;    // Number of iterations for minimisation
@@ -40,56 +40,55 @@ private:
   double m_trackMaxChi2Remove; // Max chi2 tracks to be removed from next PV search
   double m_trackChi;      // sqrt of m_trackMaxChi2
 
-  PVTracks m_pvTracks;
   // Extrapolators
   ITrackExtrapolator* m_linExtrapolator;   // Linear extrapolator
   ITrackExtrapolator* m_fullExtrapolator;  // Full extrapolator
   // Least square iterative PV fit
-  StatusCode fit(LHCb::RecVertex& vtx, std ::vector<PVTrack*>& pvTracks, 
-  std::vector<const LHCb::Track*>& tracks2remove);
+  StatusCode fit(LHCb::RecVertex& vtx, std ::vector<PVTrack*>& pvTracks,
+                 std::vector<const LHCb::Track*>& tracks2remove) const;
   // Add track for PV
   StatusCode addTrackForPV(const LHCb::Track* str,std::vector<PVTrack>& pvTracks,
-                           double zseed);
-  
-  void initVertex(PVTracks& pvTracks, 
-                  PVVertex& pvVertex, 
-                  const Gaudi::XYZPoint seedPoint);
-  
+                           double zseed) const;
+
+  void initVertex(PVTracks& pvTracks,
+                  PVVertex& pvVertex,
+                  const Gaudi::XYZPoint seedPoint) const;
+
   // Prepare hessian matrix and vectorD0
-  void prepareVertex(LHCb::RecVertex& vtx, 
-                    PVTrackPtrs& pvTracks, 
+  void prepareVertex(LHCb::RecVertex& vtx,
+                    PVTrackPtrs& pvTracks,
                     Gaudi::SymMatrix3x3& hess,
                     ROOT::Math::SVector<double,3>& d0vec,
-                    int iter);
+                    int iter) const;
   // Extrapolation
-  StatusCode trackExtrapolate(PVTrack* pvTrack, 
-                              const LHCb::RecVertex& vtx);
+  StatusCode trackExtrapolate(PVTrack* pvTrack,
+                              const LHCb::RecVertex& vtx) const;
   // Add track to fit
-  void addTrack(PVTrack* pTrack, 
+  void addTrack(PVTrack* pTrack,
                 Gaudi::SymMatrix3x3& hessian,
-                ROOT::Math::SVector<double,3>& vectorD0);
+                ROOT::Math::SVector<double,3>& vectorD0) const;
   // Remove track from fit
-  void removeTrack(PVTrack* pTrack, 
+  void removeTrack(PVTrack* pTrack,
                 Gaudi::SymMatrix3x3& hessian,
-                ROOT::Math::SVector<double,3>& vectorD0);
+                ROOT::Math::SVector<double,3>& vectorD0) const;
   // Add subtrack
-  void addsubTrack(PVTrack* pTrack, 
+  void addsubTrack(PVTrack* pTrack,
                    Gaudi::SymMatrix3x3& hessian,
                    ROOT::Math::SVector<double,3>& vectorD0,
-                   double invs);
+                   double invs) const;
   // Update matrices and vectors
   StatusCode outVertex(LHCb::RecVertex& vtx,
                        PVTrackPtrs& pvTracks,
                        Gaudi::SymMatrix3x3& hess,
-                       ROOT::Math::SVector<double,3>& d0vec);
+                       ROOT::Math::SVector<double,3>& d0vec) const;
   // Set current chi2
-  void setChi2(LHCb::RecVertex& vtx, 
-               PVTrackPtrs& pvTracks);
+  void setChi2(LHCb::RecVertex& vtx,
+               PVTrackPtrs& pvTracks) const;
 
   // Get Tukey's weight
-  double getTukeyWeight(double trchi2, int iter);
-  
-  void printTracks(PVTrackPtrs& pvTracks);
+  double getTukeyWeight(double trchi2, int iter) const;
+
+  void printTracks(PVTrackPtrs& pvTracks) const;
 
   //problem on windows for some reason
   //static const double myzero=1E-12;

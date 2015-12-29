@@ -80,7 +80,7 @@ public:
   virtual StatusCode initialize();
   virtual StatusCode finalize();
 
-  void getSeeds(std::vector<const LHCb::Track*>& inputTracks, 
+  void getSeeds(std::vector<const LHCb::Track*>& inputTracks,
 		const Gaudi::XYZPoint& beamspot,
 		std::vector<Gaudi::XYZPoint>& seeds);
 

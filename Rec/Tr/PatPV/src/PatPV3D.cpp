@@ -31,10 +31,6 @@ PatPV3D::PatPV3D( const std::string& name,
   declareProperty( "RefitPV", m_refitpv = false ) ;
 }
 
-//=============================================================================
-// Destructor
-//=============================================================================
-PatPV3D::~PatPV3D() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -53,7 +49,7 @@ StatusCode PatPV3D::initialize() {
     return  StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS;
-  
+
 }
 
 //=============================================================================
@@ -68,13 +64,13 @@ StatusCode PatPV3D::execute() {
     debug() << "==> Execute" << endmsg;
   }
 
-  LHCb::RecVertices* outputRecVertices(0) ;
+  LHCb::RecVertices* outputRecVertices = nullptr;
   if( !m_recVertexLocation.empty() ) {
     outputRecVertices = new LHCb::RecVertices();
     put(outputRecVertices, m_recVertexLocation);
   }
-  
-  LHCb::PrimaryVertices* outputPrimaryVertices(0) ;
+
+  LHCb::PrimaryVertices* outputPrimaryVertices = nullptr;
   if( !m_primaryVertexLocation.empty() ) {
     outputPrimaryVertices = new LHCb::PrimaryVertices() ;
     put( outputPrimaryVertices, m_primaryVertexLocation ) ;
@@ -85,8 +81,8 @@ StatusCode PatPV3D::execute() {
   if (scfit == StatusCode::SUCCESS) {
     setFilterPassed( !rvts.empty() ) ;
     if( outputRecVertices ) {
-      for( std::vector<LHCb::RecVertex>::iterator iv = rvts.begin(); iv != rvts.end(); iv++) {
-        LHCb::RecVertex* vertex = new LHCb::RecVertex(*iv);
+      for( const auto& iv : rvts ) {
+        LHCb::RecVertex* vertex = new LHCb::RecVertex(iv);
         vertex->setTechnique(LHCb::RecVertex::Primary);
         outputRecVertices->insert(vertex);
       }
@@ -101,17 +97,6 @@ StatusCode PatPV3D::execute() {
     setFilterPassed( false ) ;
     Warning("reconstructMultiPV failed!",scfit).ignore();
   }
-  
+
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode PatPV3D::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();
-
 }

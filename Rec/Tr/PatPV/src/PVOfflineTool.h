@@ -1,5 +1,5 @@
 // $Id: PVOfflineTool.h,v 1.7 2010-02-09 10:44:20 witekma Exp $
-#ifndef PVOFFLINETOOL_H 
+#ifndef PVOFFLINETOOL_H
 #define PVOFFLINETOOL_H 1
 // Include files:
 // from STL
@@ -20,31 +20,31 @@
 class PVOfflineTool : public GaudiTool, virtual public IPVOfflineTool {
 public:
   // Standard constructor
-  PVOfflineTool(const std::string& type, 
+  PVOfflineTool(const std::string& type,
                 const std::string& name,
                 const IInterface* parent);
   // Destructor
   ~PVOfflineTool();
   virtual StatusCode initialize();
-  // PV fitting 
+  // PV fitting
 
   StatusCode reDoSinglePV(const Gaudi::XYZPoint xyzseed,
 			  std::vector<const LHCb::Track*>& tracks2exclude,
 			  LHCb::RecVertex& outvtx);
 
-  StatusCode reDoMultiPV(const LHCb::RecVertex& invtx, 
-			 std::vector<const LHCb::Track*>& tracks2exclude, 
+  StatusCode reDoMultiPV(const LHCb::RecVertex& invtx,
+			 std::vector<const LHCb::Track*>& tracks2exclude,
 			 LHCb::RecVertex& outvtx);
 
 
   StatusCode reconstructSinglePVFromTracks(const Gaudi::XYZPoint xyzseed,
 					   std::vector<const LHCb::Track*>& tracks2use,
-					   LHCb::RecVertex& outvtx);
+					   LHCb::RecVertex& outvtx) ;
 
   StatusCode reconstructMultiPVFromTracks(std::vector<const LHCb::Track*>& tracks2use,
 					  std::vector<LHCb::RecVertex>& outvtxVec);
 
-  StatusCode reconstructMultiPV(std::vector<LHCb::RecVertex>& outvtxVec); 
+  StatusCode reconstructMultiPV(std::vector<LHCb::RecVertex>& outvtxVec);
 
   StatusCode reconstructSinglePV(const Gaudi::XYZPoint xyzseed,
 			         LHCb::RecVertex& outvtx);
@@ -52,7 +52,7 @@ public:
   StatusCode removeTracksAndRecalculatePV(const LHCb::RecVertex* pvin,
 					  const std::vector<const LHCb::Track*>& tracks2remove,
 					  LHCb::RecVertex& vtx);
-  
+
 
 private:
 
@@ -60,13 +60,12 @@ private:
   bool m_saveSeedsAsPV; // Save seeds as PVs (for monitoring)
   bool m_lookForDisplaced;
   std::string        m_outputVertices;
-  LHCb::RecVertices* m_inputVertices;   ///< Pointer to the 3D vertices
   std::string        m_inputVerticesName;
   // Tools
   IPVFitter* m_pvfit;                // PV fitting tool
   IPVSeeding* m_pvSeedTool;              // Seeding tool
   PVOfflineRecalculate* m_pvRecalc;
-  
+
   // Member functions
   std::vector<std::string> m_inputTracks;
   std::string m_pvFitterName;
@@ -81,34 +80,29 @@ private:
   std::string m_beamSpotCond;
   double m_resolverBound;
   bool m_veloClosed;
-   
-  StatusCode matchVtxByTracks(const LHCb::RecVertex& invtx,  
-			      std::vector<LHCb::RecVertex>& outvtxvec, 
+
+  StatusCode matchVtxByTracks(const LHCb::RecVertex& invtx,
+			      std::vector<LHCb::RecVertex>& outvtxvec,
 			      LHCb::RecVertex& outvtx);
 
-  void readTracks( std::vector<const LHCb::Track*>& rtracks);
+  std::vector<const LHCb::Track*> readTracks( ) const;
 
-  void getSeeds(std::vector<const LHCb::Track*>& rtracks, 
+  void getSeeds(std::vector<const LHCb::Track*>& rtracks,
                 std::vector<Gaudi::XYZPoint>& seeds);
 
-  void removeTracksByLHCbIDs(std::vector<const LHCb::Track*>& tracks, 
-		             std::vector<const LHCb::Track*>& tracks2remove);
+  void removeTracksByLHCbIDs(std::vector<const LHCb::Track*>& tracks,
+		             const std::vector<const LHCb::Track*>& tracks2remove) const;
 
-  void removeTracks(std::vector<const LHCb::Track*>& tracks, 
-		    std::vector<const LHCb::Track*>& tracks2remove);
+  void removeTracks(std::vector<const LHCb::Track*>& tracks,
+		    const std::vector<const LHCb::Track*>& tracks2remove) const;
 
   void removeTracksUsedByVertex(std::vector<const LHCb::Track*>& tracks,
-				LHCb::RecVertex& rvtx);
+				LHCb::RecVertex& rvtx) const;
 
-  void storeDummyVertices(std::vector<Gaudi::XYZPoint>& zseeds,
-			  std::vector<const LHCb::Track*> rtracks, 
-			  std::vector<LHCb::RecVertex>& outvtx);
-
-  double zCloseBeam(const LHCb::Track* track);
-  bool separatedVertex( LHCb::RecVertex& rvtx, std::vector<LHCb::RecVertex>& outvtxvec);
+  bool separatedVertex( const LHCb::RecVertex& rvtx, const std::vector<LHCb::RecVertex>& outvtxvec) const;
   StatusCode UpdateBeamSpot();
 
-  // timing 
+  // timing
   bool  m_doTiming;
   ISequencerTimerTool* m_timerTool;
   int   m_timeTotal;

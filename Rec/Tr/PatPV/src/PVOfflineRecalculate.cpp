@@ -1,4 +1,4 @@
-// Include files 
+// Include files
 
 // local
 #include "PVOfflineRecalculate.h"
@@ -11,8 +11,19 @@
 
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( PVOfflineRecalculate )
- 
 
+namespace {
+static constexpr const std::initializer_list<const char*>  s_counter_name = {
+      "Total calls to PV recalculate             ", // 0
+      "Sizes of PV and Weight containers differ  ", // 1
+      "Specified input vtx not in PV container   ", // 2
+      "Number of PV tracks and Weights differ    ", // 3
+      "None of tracks to remove comes from PV    ", // 4
+      "Error inverting hessian matrix            ", // 5
+      "Number of PV tracks after removal too low ", // 6
+      "No tracks to be removed from PV           ", // 7
+      "No of PV recalculations performed         "};// 8
+}
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -24,20 +35,20 @@ PVOfflineRecalculate::PVOfflineRecalculate( const std::string& type,
   , m_fullExtrapolator(0)
 {
   declareInterface<PVOfflineRecalculate>(this);
-  declareProperty("UpdatePVTracks"      , m_updatePVTracks   = false); 
+  declareProperty("UpdatePVTracks"      , m_updatePVTracks   = false);
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-PVOfflineRecalculate::~PVOfflineRecalculate() {} 
+PVOfflineRecalculate::~PVOfflineRecalculate() = default;
 
 StatusCode PVOfflineRecalculate::finalize()
 {
-  if ( m_counter_count[0] > 0 ) {  
+  if ( m_counter_count[0] > 0 ) {
     print_stats();
   }
-  
-  return GaudiTool::finalize();  
+
+  return GaudiTool::finalize();
 }
 
 
@@ -58,20 +69,8 @@ StatusCode PVOfflineRecalculate::initialize()
     return  StatusCode::FAILURE;
   }
   // set counters
-  m_counter_name.push_back("Total calls to PV recalculate             "); // 0
-  m_counter_name.push_back("Sizes of PV and Weight containers differ  "); // 1
-  m_counter_name.push_back("Specified input vtx not in PV container   "); // 2
-  m_counter_name.push_back("Number of PV tracks and Weights differ    "); // 3
-  m_counter_name.push_back("None of tracks to remove comes from PV    "); // 4
-  m_counter_name.push_back("Error inverting hessian matrix            "); // 5
-  m_counter_name.push_back("Number of PV tracks after removal too low "); // 6
-  m_counter_name.push_back("No tracks to be removed from PV           "); // 7
-  m_counter_name.push_back("No of PV recalculations performed         "); // 8
 
-  for ( unsigned int i=0; i< m_counter_name.size(); i++ ) {
-    m_counter_count.push_back(0);    
-  }
-
+  std::fill( std::begin(m_counter_count), std::end(m_counter_count), 0);
   return StatusCode::SUCCESS;
 }
 
@@ -79,9 +78,9 @@ StatusCode PVOfflineRecalculate::initialize()
 //=============================================================================
 StatusCode PVOfflineRecalculate::RecalculateVertex(const LHCb::RecVertex* pvin,
                                              const std::vector<const LHCb::Track*>& tracks2remove,
-                                             LHCb::RecVertex& vtx) 
-{ 
-   m_counter_count[0] += 1;    
+                                             LHCb::RecVertex& vtx)
+{
+   m_counter_count[0] += 1;
 
   // Copy input vtx to output vtx. In case of failure original PV is returned
   vtx = *pvin;
@@ -89,7 +88,7 @@ StatusCode PVOfflineRecalculate::RecalculateVertex(const LHCb::RecVertex* pvin,
   // Collect tracks to remove together with their weights. If no weight found track is skipped.
   std::vector<const LHCb::Track*> trin;
   std::vector<double> wgin;
-  for (std::vector<const LHCb::Track*>::const_iterator itr = tracks2remove.begin(); 
+  for (std::vector<const LHCb::Track*>::const_iterator itr = tracks2remove.begin();
        itr != tracks2remove.end(); ++itr)
   {
     const std::pair<bool,float> W = pvin->trackWeight(*itr);
@@ -101,18 +100,18 @@ StatusCode PVOfflineRecalculate::RecalculateVertex(const LHCb::RecVertex* pvin,
   }
   if ( trin.size() < 1 ) {
     // nothing to do if no tracks to removed
-    m_counter_count[4] += 1; 
+    m_counter_count[4] += 1;
     return StatusCode::SUCCESS; // success
   }
 
   // remove track
   Gaudi::SymMatrix3x3 hess = pvin->covMatrix();
   hess = hess * 0.5;
-  int fail;  
+  int fail;
   hess.Inverse(fail);
   if (0 != fail) {
     debug() << "Error inverting hessian matrix" << endmsg;
-    m_counter_count[5] += 1; 
+    m_counter_count[5] += 1;
     return StatusCode::FAILURE;
   } else {
     hess.Invert();
@@ -121,22 +120,22 @@ StatusCode PVOfflineRecalculate::RecalculateVertex(const LHCb::RecVertex* pvin,
   ROOT::Math::SVector<double,3> d0vec;
   for ( int i = 0; i<3; i++ ) d0vec[i]=0;
   double dchi2 = 0.;
-  int ntr_removed = 0;  
+  int ntr_removed = 0;
   std::vector<const LHCb::Track*> removed_tracks;
   for ( unsigned int it = 0; it <  trin.size(); it++) {
 
     bool removed = remove_track(pvin, hess, d0vec, dchi2, trin[it],  wgin[it] );
-    if ( removed ) { 
-      removed_tracks.push_back(trin[it]);    
+    if ( removed ) {
+      removed_tracks.push_back(trin[it]);
       ntr_removed++;
     }
-    
+
     // check if enough tracks left in PV i.e. at least 5 tracks (ndof=2*ntrack-3).
     if ( (pvin->nDoF() - 2 *ntr_removed ) < 7 ) {
       // Number of PV tracks after removal too low
       m_counter_count[6] += 1;
       return StatusCode::FAILURE;
-    }    
+    }
 
   }
 
@@ -146,7 +145,7 @@ StatusCode PVOfflineRecalculate::RecalculateVertex(const LHCb::RecVertex* pvin,
     m_counter_count[7] += 1;
     return StatusCode::SUCCESS; // success
   }
-  
+
   // calculate new vertex
   hess.Inverse(fail);
   if (0 != fail) {
@@ -162,19 +161,19 @@ StatusCode PVOfflineRecalculate::RecalculateVertex(const LHCb::RecVertex* pvin,
   }
   delta = hess * d0vec;
   if(msgLevel(MSG::DEBUG)) {
-    debug() << "PV recalculate - displacement found: " 
-            << delta[0] << " , " 
-            << delta[1] << " , " 
+    debug() << "PV recalculate - displacement found: "
+            << delta[0] << " , "
+            << delta[1] << " , "
             << delta[2] << " , " << endmsg;
   }
-  Gaudi::XYZPoint newVtx(pvin->position().x() + delta[0], 
-                         pvin->position().y() + delta[1], 
+  Gaudi::XYZPoint newVtx(pvin->position().x() + delta[0],
+                         pvin->position().y() + delta[1],
                          pvin->position().z() + delta[2]);
   vtx.setPosition(newVtx);
   if(msgLevel(MSG::DEBUG)) {
     debug() << " PV recalculate - new vertex position: "
             << vtx.position().x() << " , "
-            << vtx.position().y() << " , " 
+            << vtx.position().y() << " , "
             << vtx.position().z() << endmsg;
   }
 
@@ -185,7 +184,7 @@ StatusCode PVOfflineRecalculate::RecalculateVertex(const LHCb::RecVertex* pvin,
   vtx.setNDoF(pvin->nDoF()-2*ntr_removed);
 
   if (m_updatePVTracks) {
-    
+
     // Update tracks. Default is not to update since tracks may not be available (uDST)
     vtx.clearTracks();
     const SmartRefVector<LHCb::Track>& vtx_tracks = pvin->tracks();
@@ -198,17 +197,17 @@ StatusCode PVOfflineRecalculate::RecalculateVertex(const LHCb::RecVertex* pvin,
   }
 
   m_counter_count[8] += 1;
-  
+
   return StatusCode::SUCCESS; // success
 
 }
 
-bool PVOfflineRecalculate::remove_track(const LHCb::RecVertex* pvin, 
-                                        Gaudi::SymMatrix3x3& hess, 
+bool PVOfflineRecalculate::remove_track(const LHCb::RecVertex* pvin,
+                                        Gaudi::SymMatrix3x3& hess,
                                         ROOT::Math::SVector<double,3>& d0vec,
                                         double& dchi2wg,
                                         const LHCb::Track* vtrack,
-                                        double wg) 
+                                        double wg)
 {
 
   // Check if tracks has Velo
@@ -225,16 +224,16 @@ bool PVOfflineRecalculate::remove_track(const LHCb::RecVertex* pvin,
     } else {
        StatusCode sc = m_linExtrapolator->propagate(mstate,pvin->position().z());
        if(sc.isFailure()) return false;
-    }  
+    }
   } else {
     StatusCode sc = m_linExtrapolator->propagate(mstate,pvin->position().z());
-    if(sc.isFailure()) return false;  
+    if(sc.isFailure()) return false;
   }
 
   // calculate IP and its error
-  Gaudi::XYZVector unitVect = mstate.slopes().Unit();  
+  Gaudi::XYZVector unitVect = mstate.slopes().Unit();
   Gaudi::XYZPoint trkPoint(mstate.x(),mstate.y(),mstate.z());
-  
+
   Gaudi::XYZVector diffVect = trkPoint - pvin->position();
   // Compute IP
   Gaudi::XYZVector vd0 = unitVect.Cross(diffVect.Cross(unitVect));
@@ -249,10 +248,10 @@ bool PVOfflineRecalculate::remove_track(const LHCb::RecVertex* pvin,
   ROOT::Math::SVector<double,2> covMatrix_xyVec_product;
   covMatrix_xyVec_product = covMatrix * xyVec;
   double err2d0 = xyVec[0] * covMatrix_xyVec_product[0] + xyVec[1] * covMatrix_xyVec_product[1];
-  double chi2 = 0.;  
+  double chi2 = 0.;
   if(err2d0 > 0.0) chi2 = d02/err2d0;
   // Return if track outside 3 sigma
-  if ( chi2 > 9. ) return false;  
+  if ( chi2 > 9. ) return false;
 
   // remove track from hessian
   double invs = -1.0;
@@ -261,8 +260,8 @@ bool PVOfflineRecalculate::remove_track(const LHCb::RecVertex* pvin,
   double unitVectStd[3];
   unitVectStd[0] = unitVect.x();
   unitVectStd[1] = unitVect.y();
-  unitVectStd[2] = unitVect.z(); 
-  
+  unitVectStd[2] = unitVect.z();
+
   double vd0Std[3];
   vd0Std[0] = vd0.x();
   vd0Std[1] = vd0.y();
@@ -281,25 +280,26 @@ bool PVOfflineRecalculate::remove_track(const LHCb::RecVertex* pvin,
   }
   dchi2wg += wg*d02/err2d0;
   return true;
-  
+
 }
 
 
-void PVOfflineRecalculate::print_stats() 
+void PVOfflineRecalculate::print_stats()
 {
   info() << "Statistics for PV recalculation (in case of any failure original PV is returned)" << endmsg;
   info() << "=================================================================================" << endmsg;
 
-  if (  m_counter_count.size() < m_counter_name.size() ) return;
+  assert(  m_counter_count.size() == s_counter_name.size() );
 
-  for ( unsigned int i = 0; i < m_counter_count.size(); i++ ) {
-    printRat(m_counter_name[i], m_counter_count[i], m_counter_count[0]);
+  int i=0;
+  for (const auto& name : s_counter_name ) {
+    printRat(name, m_counter_count[i++], m_counter_count[0]);
   }
   info() << "--------------------------------------------------------------------------------" << endmsg;
-  info() << endmsg;  
+  info() << endmsg;
 }
 
-void PVOfflineRecalculate::printRat(std::string& mes, int a, int b) {
+void PVOfflineRecalculate::printRat(const std::string& mes, int a, int b) {
 
   double rat = 0.;
   if(b>0) rat = 1.0*a/b;
@@ -312,6 +312,6 @@ void PVOfflineRecalculate::printRat(std::string& mes, int a, int b) {
   }
   pmes+= " : ";
 
-  info() << pmes << format(" %8.5f ( %7d / %8d )", rat,a,b) << endmsg; 
+  info() << pmes << format(" %8.5f ( %7d / %8d )", rat,a,b) << endmsg;
 
 }

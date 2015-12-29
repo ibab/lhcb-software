@@ -1,4 +1,4 @@
-// Include files 
+// Include files
 
 // STL
 #include <cmath>
@@ -35,11 +35,11 @@ SimplePVSeedTool::~SimplePVSeedTool() {}
 //=============================================================================
 // getSeeds
 //=============================================================================
-void SimplePVSeedTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks, 
+void SimplePVSeedTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks,
 				const Gaudi::XYZPoint& beamspot,
 				std::vector<Gaudi::XYZPoint>& seeds) {
 
-  if(inputTracks.size() < 3 ) return; 
+  if(inputTracks.size() < 3 ) return;
 
   if(msgLevel(MSG::DEBUG))  {
      debug() << " Beam spot is ignored. BS: " << beamspot << endmsg;

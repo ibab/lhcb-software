@@ -1,4 +1,4 @@
-#ifndef PATPV_PATPV3D_H 
+#ifndef PATPV_PATPV3D_H
 #define PATPV_PATPV3D_H 1
 
 // Include files
@@ -22,13 +22,12 @@ public:
   /// Standard constructor
   PatPV3D( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~PatPV3D( );    ///< Destructor
+  ~PatPV3D( ) override = default;    ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
+  StatusCode initialize() override;    ///< Algorithm initialization
+  StatusCode execute   () override;    ///< Algorithm execution
 
-private: 
+private:
   std::string m_recVertexLocation ;     /// Output location of PVs of type RecVertex
   std::string m_primaryVertexLocation ; /// Output location of PVs of type PrimaryVertex
   bool m_refitpv ;                      /// Flag to refit PVs when converting to type PrimaryVertex

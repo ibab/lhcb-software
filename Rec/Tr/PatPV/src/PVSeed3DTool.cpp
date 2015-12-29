@@ -1,4 +1,4 @@
-// Include files 
+// Include files
 
 // local
 #include "PVSeed3DTool.h"
@@ -34,9 +34,9 @@ PVSeed3DTool::PVSeed3DTool( const std::string& type,
 
 }
 //=============================================================================
-// Destructor 
+// Destructor
 //=============================================================================
-PVSeed3DTool::~PVSeed3DTool() {} 
+PVSeed3DTool::~PVSeed3DTool() {}
 
 //=============================================================================
 // Initialize
@@ -61,11 +61,11 @@ bool PVSeed3DTool::seedcomp( const seedPoint& first, const seedPoint& second )
 //=============================================================================
 // getSeeds
 //=============================================================================
-void PVSeed3DTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks, 
+void PVSeed3DTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks,
 			    const Gaudi::XYZPoint& beamspot,
 			    std::vector<Gaudi::XYZPoint>& seeds) {
 
-  if(inputTracks.size() < 3 ) return; 
+  if(inputTracks.size() < 3 ) return;
 
   if(msgLevel(MSG::DEBUG))  {
      debug() << " This is 3D PV seeding. Beam spot is ignored. BS: " << beamspot << endmsg;
@@ -85,8 +85,8 @@ void PVSeed3DTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks,
   }
 
   if(msgLevel(MSG::DEBUG))  {
-     debug() << " seed_tracks.size  " << seed_tracks.size() << endmsg; 
-     debug() << " inputTracks.size  " << inputTracks.size() << endmsg;; 
+     debug() << " seed_tracks.size  " << seed_tracks.size() << endmsg;
+     debug() << " inputTracks.size  " << inputTracks.size() << endmsg;;
   }
 
   std::vector<closeNode> close_nodes;
@@ -100,7 +100,7 @@ void PVSeed3DTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks,
 
       for(its2 = seed_tracks.begin(); its2 != seed_tracks.end(); its2++) {
         if ( ! its2->used  && its1 != its2 ) {
-          
+
           EPoint closest_point;
           double distance2;
           double cos2th;
@@ -109,16 +109,16 @@ void PVSeed3DTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks,
           if (xPointParameters(lbtr1, lbtr2, distance2, cos2th, closest_point)
               && distance2 <  m_TrackPairMaxDistanceSq
 	      && cos2th < m_TrackPairMaxCos2Theta) {
-	    
+	
       	    closeTracksNumber++;
-            closeNode closetr; 
+            closeNode closetr;
             closetr.take           = true;
-            closetr.seed_track    =  &(*its2); 
+            closetr.seed_track    =  &(*its2);
             closetr.closest_point = closest_point;
             close_nodes.push_back( closetr );
           }
         }
-        
+
       }  // its2
 
       if ( closeTracksNumber < m_MinCloseTracks ) continue;
@@ -127,10 +127,10 @@ void PVSeed3DTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks,
       if(msgLevel(MSG::DEBUG))  {
         debug() << " close nodes (pairs of tracks wrt one track): " << endmsg;
         std::vector<closeNode>::iterator itd;
-        for ( itd = close_nodes.begin(); itd != close_nodes.end(); itd++ ) { 
+        for ( itd = close_nodes.begin(); itd != close_nodes.end(); itd++ ) {
           debug() << format(" xyz %7.3f %7.3f %7.3f ",
 			    itd->closest_point.X(),  itd->closest_point.Y(), itd->closest_point.Z() )
-                  << endmsg;           
+                  << endmsg;
         }
       }
 
@@ -140,42 +140,42 @@ void PVSeed3DTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks,
       if ( OK ) {
         its1->used=true; // base track
         std::vector<closeNode>::iterator it;
-        for ( it = close_nodes.begin(); it != close_nodes.end(); it++ ) { 
+        for ( it = close_nodes.begin(); it != close_nodes.end(); it++ ) {
           if ( it->take ) {
             it->seed_track->used = true;
-          }          
-        }   
-        seedTrack* base_track = &(*its1); 
+          }
+        }
+        seedTrack* base_track = &(*its1);
         wMean(close_nodes, base_track, mean_point_w);
-        seed_points.push_back(mean_point_w);      
-        
-      }      
-      
+        seed_points.push_back(mean_point_w);
+
+      }
+
     }
-    
+
   }
 
   std::stable_sort(seed_points.begin(), seed_points.end(), seedcomp);
   for ( unsigned int i=0; i<seed_points.size(); i++) {
     seeds.push_back(seed_points[i].position);
 
-    if(msgLevel(MSG::DEBUG)) 
+    if(msgLevel(MSG::DEBUG))
     {
-      debug() << " xyz seed multi  " 
-              << seed_points[i].position.X()  << " " 
-              << seed_points[i].position.Y()  << " " 
-              << seed_points[i].position.Z()  << " | " 
-              << seed_points[i].error.X()  << " " 
-              << seed_points[i].error.Y()  << " " 
-              << seed_points[i].error.Z()  << " | " 
-              << seed_points[i].multiplicity  << " " 
+      debug() << " xyz seed multi  "
+              << seed_points[i].position.X()  << " "
+              << seed_points[i].position.Y()  << " "
+              << seed_points[i].position.Z()  << " | "
+              << seed_points[i].error.X()  << " "
+              << seed_points[i].error.Y()  << " "
+              << seed_points[i].error.Z()  << " | "
+              << seed_points[i].multiplicity  << " "
               << endmsg;
     }
   }
 
 }
 
-  
+
 
 
 //=============================================================================
@@ -225,12 +225,12 @@ bool PVSeed3DTool::xPointParameters
 //=============================================================================
 // weighedMean
 //=============================================================================
-void PVSeed3DTool::wMean(std::vector<closeNode> & close_nodes, seedTrack* base_track, 
+void PVSeed3DTool::wMean(std::vector<closeNode> & close_nodes, seedTrack* base_track,
                                seedPoint & pseed) {
 
-   pseed.position.SetXYZ(0., 0., 0.); 
-   pseed.error.SetXYZ(0., 0., 0.); 
-   pseed.multiplicity = close_nodes.size(); 
+   pseed.position.SetXYZ(0., 0., 0.);
+   pseed.error.SetXYZ(0., 0., 0.);
+   pseed.multiplicity = close_nodes.size();
    if ( close_nodes.size() < 2 ) return;
 
    double sum_wx = 0.;
@@ -241,7 +241,7 @@ void PVSeed3DTool::wMean(std::vector<closeNode> & close_nodes, seedTrack* base_t
    double sum_wzz =0.;
 
    std::vector<closeNode>::iterator it;
-   for ( it = close_nodes.begin(); it != close_nodes.end(); it++ ) { 
+   for ( it = close_nodes.begin(); it != close_nodes.end(); it++ ) {
      if ( it->take == 0 ) continue;
 
      double errxy2 = 0.1*0.1;
@@ -251,15 +251,15 @@ void PVSeed3DTool::wMean(std::vector<closeNode> & close_nodes, seedTrack* base_t
      double ctanth2 = c2/(1.-c2);
      double errz2 = 2.*ctanth2*errxy2;
 
-     double wx = 1./ errxy2;      
-     double wy = 1./ errxy2;      
-     double wz = 1./ errz2;      
+     double wx = 1./ errxy2;
+     double wy = 1./ errxy2;
+     double wz = 1./ errz2;
      sum_wx += wx;
      sum_wy += wy;
      sum_wz += wz;
      sum_wxx += wx*it->closest_point.X();
      sum_wyy += wy*it->closest_point.Y();
-     sum_wzz += wz*it->closest_point.Z();       
+     sum_wzz += wz*it->closest_point.Z();
    }
 
    double x = sum_wxx/sum_wx;
@@ -275,13 +275,13 @@ void PVSeed3DTool::wMean(std::vector<closeNode> & close_nodes, seedTrack* base_t
    pseed.multiplicity = close_nodes.size();
    /*
 
-      cout << " www mean  " 
-          << x  << " " 
-          << y  << " " 
-          << z  << "  err " 
-          << ex  << " " 
-          << ey  << " " 
-          << ez  << " " 
+      cout << " www mean  "
+          << x  << " "
+          << y  << " "
+          << z  << "  err "
+          << ex  << " "
+          << ey  << " "
+          << ez  << " "
           << endl;
    */
    return;
@@ -291,10 +291,10 @@ void PVSeed3DTool::wMean(std::vector<closeNode> & close_nodes, seedTrack* base_t
 // simpleMean
 //=============================================================================
 bool PVSeed3DTool::simpleMean(std::vector<closeNode> & close_nodes, seedPoint & pseed) {
-  
-   pseed.position.SetXYZ(0., 0., 0.); 
-   pseed.error.SetXYZ(0., 0., 0.); 
-   pseed.multiplicity = close_nodes.size(); 
+
+   pseed.position.SetXYZ(0., 0., 0.);
+   pseed.error.SetXYZ(0., 0., 0.);
+   pseed.multiplicity = close_nodes.size();
 
    if ( close_nodes.size() < 2 ) return false;
 
@@ -315,7 +315,7 @@ bool PVSeed3DTool::simpleMean(std::vector<closeNode> & close_nodes, seedPoint & 
      x = 0.;
      y = 0.;
      z = 0.;
-     for ( it = close_nodes.begin(); it != close_nodes.end(); it++ ) {         
+     for ( it = close_nodes.begin(); it != close_nodes.end(); it++ ) {
         if ( it->take == 0 ) continue;
         ng++;
         x += it->closest_point.X();
@@ -329,20 +329,20 @@ bool PVSeed3DTool::simpleMean(std::vector<closeNode> & close_nodes, seedPoint & 
      pmean.SetXYZ(x,y,z);
 
      double d2max=0.;
-     for ( it = close_nodes.begin(); it != close_nodes.end(); it++ ) { 
+     for ( it = close_nodes.begin(); it != close_nodes.end(); it++ ) {
        if ( it->take == 0 ) continue;
-       double dist2 = (pmean - it->closest_point).Mag2(); 
+       double dist2 = (pmean - it->closest_point).Mag2();
        if ( dist2>d2max ) {
          d2max = dist2;
          itmax = it;
        }
      }
-   
+
      ngood = ng;
      if ( d2max > spread2_max ) {
        itmax->take = 0;
        ngood--;
-     }   
+     }
      dist2_max = d2max;
 
    } // end while

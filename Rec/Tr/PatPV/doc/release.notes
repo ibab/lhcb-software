@@ -3,6 +3,21 @@
 ! Responsible : Mariusz Witek
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
+! 2015-12-29 - Gerhard Raven
+ - prefer extends, extend_interfaces
+ - qualify implementations of virtual functions as 'override'
+ - add const where possible
+ - add final to internal data classes
+ - prefer returning double by value instead of const&
+ - add callbacks for items which depend on properties
+ - prefer emplace_back over push_back
+ - move member functions which do not acces member data
+   into standalone functions in anonymous namespace
+ - remove deprecated property
+ - prefer STL algorithms over raw loops
+ - prefer range-based for loops
+ - improver overlap check by using that LHCbID are ordered
+ - prefer return-by-value over OUT argument
 
 ! 2015-12-28 - Gerhard Raven
  - fix const correctness

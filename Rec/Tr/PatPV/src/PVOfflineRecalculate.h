@@ -9,8 +9,8 @@
 #include "Event/RecVertex.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
 
-static const InterfaceID IID_PVOfflineRecalculate ( "PVOfflineRecalculate", 1, 0 );
 
+static const InterfaceID IID_PVOfflineRecalculate ( "PVOfflineRecalculate", 1, 0 );
 /** @class PVOfflineRecalculate PVOfflineRecalculate.h
  *
  *
@@ -49,8 +49,7 @@ private:
   ITrackExtrapolator* m_linExtrapolator;   // Linear extrapolator
   ITrackExtrapolator* m_fullExtrapolator;  // Full extrapolator
 
-  std::vector<std::string> m_counter_name;
-  std::vector<int> m_counter_count;
+  std::array<int,9> m_counter_count;
 
 private:
 
@@ -61,7 +60,7 @@ private:
                     const LHCb::Track* vtrack,
                     double wg);
 
-  void printRat(std::string& mes, int a, int b);
+  void printRat(const std::string& mes, int a, int b);
 
 };
 #endif // PVOFFLINERECALCULATE_H

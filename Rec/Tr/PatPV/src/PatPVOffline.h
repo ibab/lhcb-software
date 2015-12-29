@@ -1,5 +1,5 @@
 // $Id: PatPVOffline.h,v 1.2 2007-12-04 08:46:52 witekma Exp $
-#ifndef PATPVOFFLINE_H 
+#ifndef PATPVOFFLINE_H
 #define PATPVOFFLINE_H 1
 // Include files:
 // from Gaudi
@@ -8,7 +8,7 @@
 #include "TrackInterfaces/IPVOfflineTool.h"
 
 /** @class PatPVOffline PatPVOffline.h
- *   
+ *
  *
  *  @author Mariusz Witek
  *  @date   2010-10-05

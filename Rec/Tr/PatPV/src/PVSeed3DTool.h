@@ -1,5 +1,5 @@
 // $Id: PVSeed3DTool.h,v 1.2 2008-08-28 17:38:45 witekma Exp $
-#ifndef NEWTOOL_PVSEED3DTOOL_H 
+#ifndef NEWTOOL_PVSEED3DTOOL_H
 #define NEWTOOL_PVSEED3DTOOL_H 1
 
 // Include files
@@ -13,16 +13,16 @@
 
 
 /** @class PVSeed3DTool PVSeed3DTool.h newtool/PVSeed3DTool.h
- *  
+ *
  *
  *  @author Mariusz Witek
  *  @date   2008-04-20
  */
 class PVSeed3DTool : public GaudiTool, virtual public IPVSeeding  {
-public: 
+public:
 
   /// Standard constructor
-  PVSeed3DTool( const std::string& type, 
+  PVSeed3DTool( const std::string& type,
                 const std::string& name,
                 const IInterface* parent);
 
@@ -30,7 +30,7 @@ public:
 
   StatusCode initialize();
 
-  void getSeeds(std::vector<const LHCb::Track*>& inputTracks, 
+  void getSeeds(std::vector<const LHCb::Track*>& inputTracks,
 		const Gaudi::XYZPoint& beamspot,
 		std::vector<Gaudi::XYZPoint>& seeds);
 

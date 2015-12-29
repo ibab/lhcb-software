@@ -1,12 +1,11 @@
-// $Id: IPVFitter.h,v 1.2 2008-02-22 10:09:49 cattanem Exp $
-#ifndef IPVFITTER_H 
+#ifndef IPVFITTER_H
 #define IPVFITTER_H 1
 
 // from STL
 #include <vector>
 
 // from Gaudi
-#include "GaudiKernel/AlgTool.h"
+#include "GaudiKernel/IAlgTool.h"
 #include "GaudiKernel/Point3DTypes.h"
 
 namespace LHCb {
@@ -14,19 +13,17 @@ namespace LHCb {
   class RecVertex;
 }
 
-// Interface ID 
-static const InterfaceID IID_IPVFitter("IPVFitter",1,0);
+// Interface ID
 
-class IPVFitter : virtual public IAlgTool {
+class IPVFitter : public extend_interfaces<IAlgTool> {
  public:
-  // Retrieve interface ID
-  static const InterfaceID& interfaceID() {return IID_IPVFitter;}
+  DeclareInterfaceID(IPVFitter,2,0);
 
   // Fit
-  virtual StatusCode fitVertex(const Gaudi::XYZPoint seedPoint, 
-			       std::vector<const LHCb::Track*>& tracks,
-                               LHCb::RecVertex& vtx, 
-                               std::vector<const LHCb::Track*>& tracks2remove) = 0;
+  virtual StatusCode fitVertex(const Gaudi::XYZPoint& seedPoint,
+			                   const std::vector<const LHCb::Track*>& tracks,
+                               LHCb::RecVertex& vtx,
+                               std::vector<const LHCb::Track*>& tracks2remove) const = 0;
 
 };
 #endif // IPVFITTER_H
