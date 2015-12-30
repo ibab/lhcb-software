@@ -635,7 +635,7 @@ LoKi::Particles::MTDOCA::operator()
   if ( !tool() ) { loadTool() ; }
 
   // clone the mother and move it to the PV
-  std::auto_ptr<LHCb::Particle> tempMother = moveMother( p , daughter ) ;
+  auto tempMother = moveMother( p , daughter ) ;
 
   // evaluate the result
   return doca ( tempMother.get() , daughter ) ;
@@ -644,11 +644,11 @@ LoKi::Particles::MTDOCA::operator()
 // ============================================================================
 // Move the mother particle to the best PV of the daughter
 // ============================================================================
-std::auto_ptr<LHCb::Particle> LoKi::Particles::MTDOCA::moveMother
+std::unique_ptr<LHCb::Particle> LoKi::Particles::MTDOCA::moveMother
   ( const LHCb::Particle *mother , const LHCb::Particle *daughter ) const
 {
   // clone the mother and move it to the PV
-  std::auto_ptr<LHCb::Particle> tempMother ( mother->clone() ) ;
+  std::unique_ptr<LHCb::Particle> tempMother ( mother->clone() ) ;
 
   const LHCb::VertexBase *aPV = bestVertex( daughter );
   // Update the position errors
@@ -751,7 +751,7 @@ LoKi::Particles::MTDOCAChi2::operator()
   if ( !tool() ) { loadTool() ; }
 
   // clone the mother and move it to the PV
-  std::auto_ptr<LHCb::Particle> tempMother = moveMother( p , daughter ) ;
+  auto tempMother = moveMother( p , daughter ) ;
 
   // evaluate the result
   return chi2 ( tempMother.get() , daughter ) ;

@@ -4,6 +4,8 @@
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+! 2015-12-30 - Gerhard Raven
+ - replace deprecated std::auto_ptr with std::unique_ptr
 
 ! 2015-12-05 - Vanya Belyaev
  - add CHI2VX, CHI2NDF and CHI2NDOF symbols 

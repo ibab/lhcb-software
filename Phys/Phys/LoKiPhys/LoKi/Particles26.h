@@ -479,7 +479,7 @@ namespace LoKi
       std::string toolName() const ;
       // ======================================================================
       // Move the mother particle to the best PV of the daughter
-      std::auto_ptr<LHCb::Particle> moveMother
+      std::unique_ptr<LHCb::Particle> moveMother
           ( const LHCb::Particle*, const LHCb::Particle*) const ;
     private:
       // ======================================================================
