@@ -87,8 +87,7 @@ private:
 
   std::vector<const LHCb::Track*> readTracks( ) const;
 
-  void getSeeds(std::vector<const LHCb::Track*>& rtracks,
-                std::vector<Gaudi::XYZPoint>& seeds);
+  std::vector<Gaudi::XYZPoint> getSeeds(std::vector<const LHCb::Track*>& rtracks) const;
 
   void removeTracksByLHCbIDs(std::vector<const LHCb::Track*>& tracks,
 		             const std::vector<const LHCb::Track*>& tracks2remove) const;

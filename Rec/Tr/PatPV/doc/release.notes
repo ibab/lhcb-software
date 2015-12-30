@@ -3,6 +3,16 @@
 ! Responsible : Mariusz Witek
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
+! 2015-12-30 - Gerhard Raven
+ - major: update IPVSeeding interface to return by value, take const
+   arguments and be const
+ - explicitly invoke callbacks so that even if property is never
+   updated the dependency gets synchronized
+ - prefer STL algorithms over raw loops
+ - replace member functions that do not interact with their
+   class by standalone functions in an anonymous namespace
+ - add more const
+ - replace cache vecpm data member with in-situ cache
 ! 2015-12-29 - Gerhard Raven
  - prefer extends, extend_interfaces
  - qualify implementations of virtual functions as 'override'

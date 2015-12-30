@@ -48,8 +48,9 @@ LSAdaptPVFitter::LSAdaptPVFitter(const std::string& type,
   // Value of the Tukey's weight to accept a track
   declareProperty("acceptTrack", m_minTrackWeight = 0.00000001);
   // Max chi2 track to accept track in PV fit
-  declareProperty("trackMaxChi2", m_trackMaxChi2 = 9.)
-    ->declareUpdateHandler( [=](Property&) { this->m_trackChi = std::sqrt(m_trackMaxChi2); });
+  auto p = declareProperty("trackMaxChi2", m_trackMaxChi2 = 9.);
+  p->declareUpdateHandler( [=](Property&) { this->m_trackChi = std::sqrt(m_trackMaxChi2); });
+  p->useUpdateHandler();
   // Max chi2 tracks to be removed from next PV search
   declareProperty("trackMaxChi2Remove", m_trackMaxChi2Remove = 25.);
   // Min number of iterations

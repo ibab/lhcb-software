@@ -1,11 +1,5 @@
 // Include files
 
-// STL
-#include <cmath>
-
-// from Gaudi
-#include "GaudiKernel/SystemOfUnits.h"
-
 // local
 #include "SimplePVSeedTool.h"
 
@@ -21,34 +15,33 @@ DECLARE_TOOL_FACTORY( SimplePVSeedTool )
 // Standard constructor, initializes variables
 //=============================================================================
 SimplePVSeedTool::SimplePVSeedTool( const std::string& type,
-                    const std::string& name,
-                    const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+                                    const std::string& name,
+                                    const IInterface* parent )
+  : base_class( type, name , parent )
 {
   declareInterface<IPVSeeding>(this);
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-SimplePVSeedTool::~SimplePVSeedTool() {}
+SimplePVSeedTool::~SimplePVSeedTool() = default;
 
 //=============================================================================
 // getSeeds
 //=============================================================================
-void SimplePVSeedTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks,
-				const Gaudi::XYZPoint& beamspot,
-				std::vector<Gaudi::XYZPoint>& seeds) {
+std::vector<Gaudi::XYZPoint> 
+SimplePVSeedTool::getSeeds(const std::vector<const LHCb::Track*>& inputTracks,
+                           const Gaudi::XYZPoint& beamspot) const {
 
-  if(inputTracks.size() < 3 ) return;
+  std::vector<Gaudi::XYZPoint> seeds;
+  if(inputTracks.size() < 3 ) return seeds;
 
   if(msgLevel(MSG::DEBUG))  {
      debug() << " Beam spot is ignored. BS: " << beamspot << endmsg;
   }
 
-  std::vector<double> zseeds;
-  Gaudi::XYZPoint ep(0., 0., 0.);
-  seeds.push_back(ep);
-
+  seeds.emplace_back( 0., 0., 0.);
+  return seeds;
 }
 
 //=============================================================================

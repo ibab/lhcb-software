@@ -132,8 +132,9 @@ AdaptivePV3DFitter::AdaptivePV3DFitter(const std::string& type,
   // Minimum Tukey's weight to accept a track
   declareProperty("minTrackWeight", m_minTrackWeight = 0.00000001); //0.00001);
   declareProperty("TrackErrorScaleFactor", m_TrackErrorScaleFactor = 1.0 );
-  declareProperty("trackMaxChi2", m_trackMaxChi2 = 12.)
-      ->declareUpdateHandler( [this](Property&){ this->m_trackChi = std::sqrt(this->m_trackMaxChi2); } );
+  auto p = declareProperty("trackMaxChi2", m_trackMaxChi2 = 12.);
+  p->declareUpdateHandler( [this](Property&){ this->m_trackChi = std::sqrt(this->m_trackMaxChi2); } ); // TODO: update declareUpdateHandler to return *this
+  p->useUpdateHandler(); // insure m_trackChi is in sync with m_trackMaxChi2
   // Max chi2 tracks to be removed from next PV search
   declareProperty("trackMaxChi2Remove", m_trackMaxChi2Remove = 25.);
   // Min number of iterations

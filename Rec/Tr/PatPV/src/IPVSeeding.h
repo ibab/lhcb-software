@@ -12,7 +12,6 @@
 // From Event
 #include "Event/Track.h"
 
-static const InterfaceID IID_IPVSeeding ( "IPVSeeding", 1, 0 );
 
 /** @class IPVSeeding IPVSeeding.h newtool/IPVSeeding.h
  *
@@ -20,19 +19,16 @@ static const InterfaceID IID_IPVSeeding ( "IPVSeeding", 1, 0 );
  *  @author Mariusz Witek
  *  @date   2008-05-19
  */
-class IPVSeeding : virtual public IAlgTool {
+class IPVSeeding : public extend_interfaces<IAlgTool> {
 public:
+  DeclareInterfaceID( IPVSeeding, 2, 0 );
 
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_IPVSeeding; }
-  virtual void getSeeds(std::vector<const LHCb::Track*>& inputTracks,
-                        const Gaudi::XYZPoint& beamspot,
-                        std::vector<Gaudi::XYZPoint>& seeds) =0;
+  virtual 
+  std::vector<Gaudi::XYZPoint> 
+  getSeeds(const std::vector<const LHCb::Track*>& inputTracks,
+           const Gaudi::XYZPoint& beamspot) const =0;
 
 
-protected:
-
-private:
 
 };
 #endif // NEWTOOL_IPVSEEDING_H

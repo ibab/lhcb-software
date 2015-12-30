@@ -29,21 +29,6 @@ public:
 
 };
 
-// auxiliary class for merging procedure of tracks/clusters
-class pair_to_merge {
-
-public:
-  vtxCluster* first;  // pointer to first cluster to be merged
-  vtxCluster* second; // pointer to second cluster to be merged
-  double chi2dist;    // a chi2dist = zdistance**2/(sigma1**2+sigma2**2)
-
-  pair_to_merge() {
-    first    = 0;
-    second   = 0;
-    chi2dist = 10.e+10;
-  }
-
-};
 
 /** @class PVSeedTool PVSeedTool.h tmp/PVSeedTool.h
  *
@@ -51,7 +36,7 @@ public:
  *  @author Mariusz Witek
  *  @date   2005-11-19
  */
-class PVSeedTool : public GaudiTool, virtual public IPVSeeding {
+class PVSeedTool : public extends<GaudiTool, IPVSeeding> {
 public:
 
   /// Standard constructor
@@ -59,25 +44,21 @@ public:
               const std::string& name,
               const IInterface* parent);
 
-  virtual ~PVSeedTool( ); ///< Destructor
+  ~PVSeedTool( ) override; ///< Destructor
 
-  void getSeeds(std::vector<const LHCb::Track*>& inputTracks,
-		const Gaudi::XYZPoint& beamspot,
-		std::vector<Gaudi::XYZPoint>& seeds);
+  std::vector<Gaudi::XYZPoint>
+  getSeeds(const std::vector<const LHCb::Track*>& inputTracks,
+		   const Gaudi::XYZPoint& beamspot) const override;
 
-protected:
 
 private:
 
-  void findClusters(std::vector<vtxCluster>& vclus, std::vector<double>& zclusters);
-  void errorForPVSeedFinding(double tx, double ty, double &sigzaq);
+  std::vector<double> findClusters(std::vector<vtxCluster>& vclus) const;
+  void errorForPVSeedFinding(double tx, double ty, double &sigzaq) const;
 
-  double zCloseBeam(const LHCb::Track* track, const Gaudi::XYZPoint& beamspot);
+  double zCloseBeam(const LHCb::Track* track, const Gaudi::XYZPoint& beamspot) const;
   void print_clusters(std::vector<vtxCluster*>& pvclus);
 
-  std::vector<pair_to_merge*> m_pvecp2m;
-  std::vector<pair_to_merge>  m_vecp2m;
-  int m_p2mstatic;
 
   double m_maxChi2Merge;
   double m_factorToIncreaseErrors;
@@ -89,9 +70,9 @@ private:
   double m_ratioSig2HighMult;
   double m_ratioSig2LowMult;
 
-  double  m_x0MS;         // X0 (tunable) of MS to add for extrapolation of
+  double  m_x0MS = 0;         // X0 (tunable) of MS to add for extrapolation of
                           // track parameters to PV
-  double  m_scatCons;     // calculated from m_x0MS
+  double  m_scatCons = 0;     // calculated from m_x0MS
 
 };
 #endif // PATPV_PVSEEDTOOL_H

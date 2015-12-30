@@ -8,56 +8,40 @@
 #include "Event/Track.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
 
-typedef Gaudi::XYZVector EVector;
-typedef Gaudi::XYZPoint EPoint;
 
 namespace SimplePVSpace {
 
-class seedPoint
+struct seedPoint final
 {
-public:
-  EPoint position;
-  EPoint error;
-  int multiplicity;
+  Gaudi::XYZPoint position;
+  Gaudi::XYZPoint error;
+  int multiplicity = 0;
 
-  seedPoint():position(),error(),multiplicity(0) {};
+  seedPoint() = default;
 
 };
 
-class seedState
+struct seedState final
 {
-public:
   LHCb::State lbstate;
-  int    nclose;
-  double dclose;
-  int used;
+  int    nclose = 0;
+  double dclose = 0;
+  int used = 0;
 
-  seedState():lbstate(),nclose(0),dclose(0.),used(0) {};
+  seedState() = default;
 };
 
-class closeNode
+struct closeNode final
 {
-public:
-  seedState* seed_state;
-  double distance;
-  EPoint closest_point;
-  int take;
+  seedState* seed_state = nullptr;
+  double distance = 0;
+  Gaudi::XYZPoint closest_point;
+  int take = 0;
 
-  closeNode():seed_state(0),distance(0.),closest_point(),take(0){};
+  closeNode() = default;
 };
 
-bool  statecomp( const seedState &first, const seedState &second ) {
-    return first.dclose > second.dclose;
-    //    return first->distance < second->distance;
 }
-
-}
-
-using namespace SimplePVSpace;
-using namespace ROOT::Math;
-using namespace Gaudi;
-using namespace LHCb;
-using namespace std;
 
 
 /** @class PVSeed3DOfflineTool PVSeed3DOfflineTool.h tmp/PVSeed3DOfflineTool.h
@@ -66,43 +50,31 @@ using namespace std;
  *  @author Mariusz Witek
  *  @date   2005-11-19
  */
-class PVSeed3DOfflineTool : public GaudiTool, virtual public IPVSeeding {
+class PVSeed3DOfflineTool : public extends<GaudiTool, IPVSeeding> {
 public:
 
   /// Standard constructor
   PVSeed3DOfflineTool( const std::string& type,
-              const std::string& name,
-              const IInterface* parent);
+                       const std::string& name,
+                       const IInterface* parent);
 
-  virtual ~PVSeed3DOfflineTool( ); ///< Destructor
+  ~PVSeed3DOfflineTool( ) override; ///< Destructor
 
   // Initialization
-  virtual StatusCode initialize();
-  virtual StatusCode finalize();
+  StatusCode initialize() override;
 
-  void getSeeds(std::vector<const LHCb::Track*>& inputTracks,
-		const Gaudi::XYZPoint& beamspot,
-		std::vector<Gaudi::XYZPoint>& seeds);
-
-protected:
+  std::vector<Gaudi::XYZPoint> 
+  getSeeds(const std::vector<const LHCb::Track*>& inputTracks,
+           const Gaudi::XYZPoint& beamspot) const override;
 
 private:
 
-  ITrackExtrapolator* m_fullExtrapolator;  // Full extrapolator
+  ITrackExtrapolator* m_fullExtrapolator = nullptr;  // Full extrapolator
 
-  bool closestPoints(const EPoint& ori1, const EVector& dir1,
-		     const EPoint& ori2, const EVector& dir2,
-		     EPoint& close1, EPoint& close2);
 
-  double thetaTracks(const State& state1,
-                     const State& state2);
+  bool simpleMean(std::vector<SimplePVSpace::closeNode> & close_nodes, SimplePVSpace::seedPoint & pseed) const;
 
-  bool xPointParameters(const State& state1, const State& state2,
-                        double & distance, double & distanceChi2, EPoint & closestPoint);
-
-  bool simpleMean(std::vector<closeNode> & close_nodes, seedPoint & pseed);
-
-  void wMean(std::vector<closeNode> & close_nodes, seedState* base_state, seedPoint & pseed);
+  SimplePVSpace::seedPoint wMean(const std::vector<SimplePVSpace::closeNode> & close_nodes, const SimplePVSpace::seedState& base_state) const;
 
   double m_TrackPairMaxDistance; // maximum distance between tracks
   double m_TrackPairMaxDistanceChi2; // maximum distance pseudo Chi2 between tracks

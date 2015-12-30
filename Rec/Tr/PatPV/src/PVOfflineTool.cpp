@@ -293,9 +293,7 @@ StatusCode PVOfflineTool::reconstructMultiPVFromTracks(std::vector<const LHCb::T
   outvtxvec.clear();
 
   if (m_saveSeedsAsPV) {
-    std::vector<Gaudi::XYZPoint> seeds;
-    Gaudi::XYZPoint beamspot(m_beamSpotX, m_beamSpotY, 0.0);
-    m_pvSeedTool->getSeeds(rtracks, beamspot, seeds);
+    auto seeds = m_pvSeedTool->getSeeds(rtracks, {m_beamSpotX, m_beamSpotY, 0.0 });
     outvtxvec = storeDummyVertices(seeds, rtracks);
     return StatusCode::SUCCESS;
   }
@@ -306,23 +304,19 @@ StatusCode PVOfflineTool::reconstructMultiPVFromTracks(std::vector<const LHCb::T
     nvtx_before = outvtxvec.size();
     // reconstruct vertices
 
-    std::vector<Gaudi::XYZPoint> seeds;
-    Gaudi::XYZPoint beamspot(m_beamSpotX, m_beamSpotY, 0.0);
-
     if ( m_doTiming ){
       m_timerTool->start( m_timeSeeding );
     }
 
     // seeding
-    m_pvSeedTool->getSeeds(rtracks, beamspot, seeds);
-
+    auto seeds = m_pvSeedTool->getSeeds(rtracks, {m_beamSpotX, m_beamSpotY, 0.0} );
 
     if ( m_doTiming ){
       m_timerTool->stop( m_timeSeeding );
     }
 
     //TIMEBOMB fixed
-    if (m_pvfit==NULL)
+    if (!m_pvfit)
       return Warning("m_pvfit is null ", StatusCode::FAILURE);
 
     if(msgLevel(MSG::DEBUG)) {
@@ -502,24 +496,20 @@ StatusCode PVOfflineTool::matchVtxByTracks(const LHCb::RecVertex& invtx,
                                            std::vector<LHCb::RecVertex>& outvtxvec,
                                            LHCb::RecVertex& outvtx)
 {
-  typedef const SmartRefVector<LHCb::Track>      PVTRACKS ;
-  PVTRACKS& tracksIn =  invtx.tracks();
-  PVTRACKS::const_iterator itin,itout;
+  auto& tracksIn =  invtx.tracks();
   int ntrin = tracksIn.size();
 
   if( ntrin == 0 ) return StatusCode::FAILURE;
 
   double lastrate = 0.;
-  std::vector<LHCb::RecVertex>::iterator itv, itbest;
-  itbest = outvtxvec.end();
-
-  for (itv = outvtxvec.begin(); itv != outvtxvec.end(); itv++) {
-    int imatch = 0;
-    PVTRACKS& tracksOut =  (*itv).tracks();
-    for ( itin = tracksIn.begin(); itin !=tracksIn.end(); itin++) {
-      itout = std::find(tracksOut.begin(),tracksOut.end(), *itin );
-      if(itout != tracksOut.end() ) imatch++;
-    }
+  auto itbest = outvtxvec.end();
+  for (auto itv = outvtxvec.begin(); itv != outvtxvec.end(); itv++) {
+    const auto& tracksOut = itv->tracks();
+    auto imatch = std::count_if( tracksIn.begin(), tracksIn.end(),
+                                 [&](const LHCb::Track* t) {
+      return std::find_if(tracksOut.begin(),tracksOut.end(), //force SmartRef-> * conversion...
+                          [&](const LHCb::Track* to) { return to==t;})!=tracksOut.end();
+    });
     double rate = 1.0*imatch/ntrin;
     if (rate > lastrate ) {
       lastrate = rate;

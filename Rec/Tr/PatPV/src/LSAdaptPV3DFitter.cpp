@@ -46,18 +46,21 @@ LSAdaptPV3DFitter::LSAdaptPV3DFitter(const std::string& type,
   declareProperty("maxDeltaZ", m_maxDeltaZ = 0.0005 * Gaudi::Units::mm); //m_maxDeltaZ = 0.001 * Gaudi::Units::mm);
   // Minimum Tukey's weight to accept a track
   declareProperty("minTrackWeight", m_minTrackWeight = 0.00000001); //0.00001);
-  declareProperty( "x0MS"            , m_x0MS          =  0.02          )
-  ->declareUpdateHandler( [=](Property&) {
+  auto p = declareProperty( "x0MS"            , m_x0MS          =  0.02          );
+  p->declareUpdateHandler( [=](Property&) {
     double X0 = this->m_x0MS;
     this->m_scatCons = (13.6*std::sqrt(X0)*(1.+0.038*log(X0))) / ( 3.0 * Gaudi::Units::GeV );
     this->m_scatConsNoMom = (13.6*std::sqrt(X0)*(1.+0.038*log(X0)));
-  });
+  }); 
+  p->useUpdateHandler();
+
   declareProperty("TrackErrorScaleFactor", m_TrackErrorScaleFactor = 1.0 );
   declareProperty("CalculateMultipleScattering", m_CalculateMultipleScattering = true );
   declareProperty("UseFittedTracks", m_UseFittedTracks = false );
   declareProperty("AddMultipleScattering", m_AddMultipleScattering = true );
-  declareProperty("trackMaxChi2", m_trackMaxChi2 = 9.)
-  ->declareUpdateHandler( [=](Property&) { this->m_trackChi = std::sqrt(m_trackMaxChi2); });
+  p = declareProperty("trackMaxChi2", m_trackMaxChi2 = 9.);
+  p->declareUpdateHandler( [=](Property&) { this->m_trackChi = std::sqrt(m_trackMaxChi2); });
+  p->useUpdateHandler();
   // Max chi2 tracks to be removed from next PV search
   declareProperty("trackMaxChi2Remove", m_trackMaxChi2Remove = 25.);
   // Min number of iterations

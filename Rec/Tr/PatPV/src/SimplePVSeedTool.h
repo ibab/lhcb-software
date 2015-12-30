@@ -15,7 +15,7 @@
  *  @author Mariusz Witek
  *  @date   2005-11-19
  */
-class SimplePVSeedTool : public GaudiTool, virtual public IPVSeeding {
+class SimplePVSeedTool : public extends<GaudiTool, IPVSeeding> {
 public:
 
   /// Standard constructor
@@ -23,15 +23,10 @@ public:
               const std::string& name,
               const IInterface* parent);
 
-  virtual ~SimplePVSeedTool( ); ///< Destructor
+  ~SimplePVSeedTool( ) override; ///< Destructor
 
-  void getSeeds(std::vector<const LHCb::Track*>& inputTracks,
-		const Gaudi::XYZPoint& beamspot,
-		std::vector<Gaudi::XYZPoint>& seeds);
-
-protected:
-
-private:
+  std::vector<Gaudi::XYZPoint> getSeeds(const std::vector<const LHCb::Track*>& inputTracks,
+		                                const Gaudi::XYZPoint& beamspot) const override;
 
 };
 #endif // PATPV_SIMPLEPVSEEDTOOL_H

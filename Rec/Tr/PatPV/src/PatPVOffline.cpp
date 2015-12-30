@@ -54,28 +54,21 @@ StatusCode PatPVOffline::execute() {
 
   std::vector<LHCb::RecVertex> rvts;
   StatusCode scfit = m_pvsfit->reconstructMultiPV(rvts);
-  if (scfit != StatusCode::SUCCESS) {
-    return StatusCode::SUCCESS;
-  }
+  if (scfit.isFailure()) return StatusCode::SUCCESS;
 
-  for(unsigned int iv = 0; iv < rvts.size(); ++iv)
-  {
-    LHCb::RecVertex* vertex = new LHCb::RecVertex();
-    *vertex = rvts[iv];
+  for(const auto& rvt : rvts ) {
+    LHCb::RecVertex* vertex = new LHCb::RecVertex( rvt );
     vertex->setTechnique(LHCb::RecVertex::Primary);
     v2tes->insert(vertex);
   }
 
   // ---> Debug
-  if(msgLevel(MSG::DEBUG))
-  {
+  if(msgLevel(MSG::DEBUG)) {
     debug() << endmsg;
     debug() << "TES location filled with "
             << v2tes->size() << " PrimVertices" << endmsg;
     int nVtx = 0;
-    for(LHCb::RecVertices::iterator itVtx = v2tes->begin();
-        v2tes->end() != itVtx; itVtx++, nVtx++) {
-      LHCb::RecVertex* vertex = (*itVtx);
+    for(const auto& vertex : *v2tes ) {
       debug() << " Vertex " << nVtx << endmsg;
       debug() << " x, y, z: "
               << vertex->position().x() << " "

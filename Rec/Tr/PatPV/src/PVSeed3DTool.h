@@ -18,7 +18,7 @@
  *  @author Mariusz Witek
  *  @date   2008-04-20
  */
-class PVSeed3DTool : public GaudiTool, virtual public IPVSeeding  {
+class PVSeed3DTool : public extends<GaudiTool, IPVSeeding>  {
 public:
 
   /// Standard constructor
@@ -26,60 +26,23 @@ public:
                 const std::string& name,
                 const IInterface* parent);
 
-  virtual ~PVSeed3DTool( ); ///< Destructor
 
-  StatusCode initialize();
+  std::vector<Gaudi::XYZPoint>
+  getSeeds(const std::vector<const LHCb::Track*>& inputTracks,
+           const Gaudi::XYZPoint& beamspot) const override;
 
-  void getSeeds(std::vector<const LHCb::Track*>& inputTracks,
-		const Gaudi::XYZPoint& beamspot,
-		std::vector<Gaudi::XYZPoint>& seeds);
-
-protected:
 
 private:
 
-typedef Gaudi::XYZVector EVector;
-typedef Gaudi::XYZPoint EPoint;
+  double m_TrackPairMaxDistance = 0.; // maximus distance between tracks to come from same seed
+  int    m_MinCloseTracks = 0;
 
-  // helper types
-  struct seedPoint {
-    EPoint position;
-    EPoint error;
-    int multiplicity;
-  };
-
-  static bool seedcomp( const seedPoint& first, const seedPoint& second );
-
-  struct seedTrack {
-    const LHCb::Track* lbtrack;
-    bool used;
-  };
-
-  struct closeNode {
-    seedTrack* seed_track;
-    EPoint closest_point;
-    bool take;
-  };
-
-
-  double cos2Theta( const EVector& v1, const EVector& v2 );
-
-  bool xPointParameters(const LHCb::Track* track1, const LHCb::Track* track2,
-                        double & distance2, double & cos2th, EPoint & closestPoint);
-
-  bool simpleMean(std::vector<closeNode> & close_nodes, seedPoint & pseed);
-
-  void wMean(std::vector<closeNode> & close_nodes, seedTrack* base_track, seedPoint & pseed);
-
-  double m_TrackPairMaxDistance; // maximus distance between tracks to come from same seed
-  int    m_MinCloseTracks;
-
-  double m_zMaxSpread;  // for truncated mean
+  double m_zMaxSpread = 0;  // for truncated mean
 
   // suqared variables to gain in speed
-  double m_TrackPairMaxDistanceSq;
-  double m_zMaxSpreadSq;
-  double m_TrackPairMaxCos2Theta;
+  double m_TrackPairMaxDistanceSq = 0;
+  double m_zMaxSpreadSq = 0;
+  double m_TrackPairMaxCos2Theta = 0.999*0.999;
 };
 
 #endif // NEWTOOL_PVSEED3DTOOL_H
