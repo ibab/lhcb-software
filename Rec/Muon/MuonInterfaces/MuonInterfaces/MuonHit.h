@@ -1,5 +1,5 @@
-#ifndef COSMICSMUONHIT_H
-#define COSMICSMUONHIT_H 1
+#ifndef MUONHIT_H
+#define MUONHIT_H 1
 
 #include <vector>
 
@@ -21,9 +21,7 @@ class IMuonFastPosTool;
  *  @date   2007-10-26
  */
 
-class MuonHit:
-public ROOT::Math::PositionVector3D< ROOT::Math::Cartesian3D<double> > {
-  //public ROOT::Math::XYZPoint {
+class MuonHit: public ROOT::Math::PositionVector3D< ROOT::Math::Cartesian3D<double> > {
 public:
   /// standard constructor
   MuonHit();
@@ -61,10 +59,10 @@ public:
   double hitTile_dX() const; /// dx half-size of the tile underlying this hit
   double hitTile_dY() const; /// dy half-size of the tile underlying this hit
   double hitTile_dZ() const; /// dz half-size of the tile underlying this hit
-  inline float hitTime() const {    return m_time;  }  /// in TDC counts !
-  inline float hitDeltaTime() const { return m_dtime; } /// in TDC counts !
-  inline float hitMinTime() const { return m_mintime; } /// in TDC counts !
-  inline float hitMaxTime() const { return m_maxtime; } /// in TDC counts !
+  float hitTime() const {    return m_time;  }  /// in TDC counts !
+  float hitDeltaTime() const { return m_dtime; } /// in TDC counts !
+  float hitMinTime() const { return m_mintime; } /// in TDC counts !
+  float hitMaxTime() const { return m_maxtime; } /// in TDC counts !
 
   /// retireve the hit ID
   int hitID() const;
@@ -80,36 +78,24 @@ public:
   bool isTruePad() const;
 
   /// return the (first) associated MuonLogPad object
-  inline MuonLogPad* logPad() {
-    return !m_pads.empty() ? m_pads[0] : nullptr;
-  }
+  MuonLogPad* logPad() { return !m_pads.empty() ? m_pads[0] : nullptr; }
   /// return the associated MuonLogPad objects
-  inline const std::vector<MuonLogPad*>* logPads() {
-    return &m_pads;
-  }
+  const std::vector<MuonLogPad*>* logPads() { return &m_pads; }
   /// return the MuonTileIDs of the logical pads used for this cluster
   std::vector<LHCb::MuonTileID> getLogPadTiles() const;
   /// number of logical pads in this hit
-  inline int npads() {
-    return m_pads.size();
-  }
-  /// cluster size in X
-  inline int clsizeX() {
-    return m_xsize;
-  }
-  /// cluster size in Y
-  inline int clsizeY() {
-    return m_ysize;
-  }
-  inline double dX() { return m_dx;}  /// error on X position
-  inline double dY() { return m_dy;}  /// error on Y position
-  inline double dZ() { return m_dz;}  /// error on Z position
-  inline double minX() { return m_hit_minx;}
-  inline double maxX() { return m_hit_maxx;}
-  inline double minY() { return m_hit_miny;}
-  inline double maxY() { return m_hit_maxy;}
-  inline double minZ() { return m_hit_minz;}
-  inline double maxZ() { return m_hit_maxz;}
+  int npads() const { return m_pads.size(); }
+  int clsizeX() const { return m_xsize; } /// cluster size in X
+  int clsizeY() const { return m_ysize; } /// cluster size in Y
+  double dX() const { return m_dx;}  /// error on X position
+  double dY() const { return m_dy;}  /// error on Y position
+  double dZ() const { return m_dz;}  /// error on Z position
+  double minX() const { return m_hit_minx;}
+  double maxX() const { return m_hit_maxx;}
+  double minY() const { return m_hit_miny;}
+  double maxY() const { return m_hit_maxy;}
+  double minZ() const { return m_hit_minz;}
+  double maxZ() const { return m_hit_maxz;}
 
 private:
 
@@ -121,30 +107,30 @@ private:
 
 private:
 
+  IMuonFastPosTool* m_posTool = nullptr;
   std::vector<MuonLogPad*> m_pads;
   std::vector<double> m_padx;
   std::vector<double> m_pady;
   std::vector<double> m_padz;
-  int m_pid;
-  int m_mamy_pid;
-  int m_hit_ID;
-  double m_dx;
-  double m_dy;
-  double m_dz;
-  double m_hit_minx;
-  double m_hit_maxx;
-  double m_hit_miny;
-  double m_hit_maxy;
-  double m_hit_minz;
-  double m_hit_maxz;
-  int m_xsize;
-  int m_ysize;
-  int m_zsize;
-  float m_time;
-  float m_dtime;
-  float m_mintime;
-  float m_maxtime;
-  IMuonFastPosTool* m_posTool;
+  double m_dx = 0;
+  double m_dy = 0;
+  double m_dz = 0;
+  double m_hit_minx = 0;
+  double m_hit_maxx = 0;
+  double m_hit_miny = 0;
+  double m_hit_maxy = 0;
+  double m_hit_minz = 0;
+  double m_hit_maxz = 0;
+  float m_time = 0;
+  float m_dtime = 0;
+  float m_mintime = 0;
+  float m_maxtime = 0;
+  int m_pid = 0;
+  int m_mamy_pid = 0;
+  int m_hit_ID = -1;
+  int m_xsize = 0;
+  int m_ysize = 0;
+  int m_zsize = 0;
 };
 
-#endif // COSMICSMUONHIT_H
+#endif // MUONHIT_H

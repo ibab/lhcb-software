@@ -2,6 +2,11 @@
 ! Package     : MuonInterfaces
 ! Responsible : Giovanni Passaleva
 ! ====================================================================
+! 2015-12-30 - Gerhard Raven
+ - add more const to MuonHit methods
+ - prefer direct member initialization
+ - prefer STL algorithms over raw loops
+
 ! 2015-12-28 - Gerhard Raven
  - major change: pass MuonTileID by value instead of by pointer
     x requires matching versions of MuonID, MuonTools, MuonTrackRec and TrackTools

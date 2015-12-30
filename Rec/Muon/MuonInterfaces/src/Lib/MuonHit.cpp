@@ -5,39 +5,11 @@
 #include "MuonInterfaces/MuonLogPad.h"
 #include "MuonDet/IMuonFastPosTool.h"
 
-MuonHit::MuonHit():
-  ROOT::Math::XYZPoint(),
-  m_pid(0),
-  m_mamy_pid(0),
-  m_hit_ID(-1),
-  m_dx(0.), m_dy(0.), m_dz(0.),
-  m_hit_minx(0.), m_hit_maxx(0.),
-  m_hit_miny(0.), m_hit_maxy(0.),
-  m_hit_minz(0.), m_hit_maxz(0.),
-  m_xsize(0), m_ysize(0), m_zsize(0),
-  m_time(0),  m_dtime(0),
-  m_mintime(0.),m_maxtime(0.),
-  m_posTool(NULL)
-{
-  m_pads.clear(); m_padx.clear(); m_pady.clear(); m_padz.clear();
-}
+MuonHit::MuonHit() = default;
 
 MuonHit::MuonHit(DeMuonDetector*,  IMuonFastPosTool* posTool):
-  ROOT::Math::XYZPoint(),
-  m_pid(0),
-  m_mamy_pid(0),
-  m_hit_ID(-1),
-  m_dx(0.), m_dy(0.), m_dz(0.),
-  m_hit_minx(0.), m_hit_maxx(0.),
-  m_hit_miny(0.), m_hit_maxy(0.),
-  m_hit_minz(0.), m_hit_maxz(0.),
-  m_xsize(0), m_ysize(0), m_zsize(0),
-  m_time(0),  m_dtime(0),
-  m_mintime(0.),m_maxtime(0.),
   m_posTool(posTool)
-{
-  m_pads.clear(); m_padx.clear(); m_pady.clear(); m_padz.clear();
-}
+{ }
 
 //=============================================================================
 // Constructor from a MuonLogPad
@@ -50,10 +22,6 @@ MuonHit::MuonHit( DeMuonDetector*,
                   const double z,
                   IMuonFastPosTool* posTool):
   ROOT::Math::XYZPoint(x,y,z),
-  m_pid(0),
-  m_mamy_pid(0),
-  m_hit_ID(-1),
-  m_xsize(0), m_ysize(0), m_zsize(0),
   m_posTool(posTool)
 {
   createFromPad(mp);
@@ -63,10 +31,6 @@ MuonHit::MuonHit( DeMuonDetector*,
                   MuonLogPad* mp,
                   IMuonFastPosTool* posTool):
   ROOT::Math::XYZPoint(0.,0.,0.),
-  m_pid(0),
-  m_mamy_pid(0),
-  m_hit_ID(-1),
-  m_xsize(0), m_ysize(0), m_zsize(0),
   m_posTool(posTool)
 {
   createFromPad(mp);
@@ -82,9 +46,9 @@ void MuonHit::createFromPad(MuonLogPad* mp) {
     m_padx.push_back(x);
     m_pady.push_back(y);
     m_padz.push_back(z);
-    m_dx = dx/sqrt(12.);
-    m_dy = dy/sqrt(12.);
-    m_dz = dz/sqrt(12.);
+    m_dx = dx/std::sqrt(12.);
+    m_dy = dy/std::sqrt(12.);
+    m_dz = dz/std::sqrt(12.);
     m_hit_minx=x-dx;
     m_hit_maxx=x+dx;
     m_hit_miny=y-dy;
@@ -100,8 +64,7 @@ void MuonHit::createFromPad(MuonLogPad* mp) {
 ///=============================================================================
 // Destructor
 //=============================================================================
-MuonHit::~MuonHit() {
-}
+MuonHit::~MuonHit() = default;
 
 //=============================================================================
 // public member functions
@@ -140,19 +103,15 @@ void MuonHit::recomputePos(std::vector<double> *data,
                            int* clsize, double step) {
   int np=0;
   double sum=0.,sum2=0.;
-  std::vector<double>::iterator ip,previp;
-  for (ip=data->begin() ; ip != data->end(); ip++) {
-    bool prendila=true;
+  for (auto ip=data->begin() ; ip != data->end(); ip++) {
     // check that this position is not already the same of a previous pad
-    for (previp=data->begin() ; previp < ip; previp++) {
-      if ( fabs((*ip)-(*previp))< 0.5*step) {
-        prendila=false;
-        break;
-      }
-    }
+    bool prendila= std::none_of( data->begin(), ip,
+                                 [&](double p) {
+                        return std::abs(*ip-p)<0.5*step;
+    } );
     if (prendila) {
-      np++;
-      sum += (*ip);
+      ++np;
+      sum  += (*ip);
       sum2 += (*ip)*(*ip);
     }
   }
@@ -190,8 +149,7 @@ void MuonHit::recomputeTime() {
   if (np>1) {
     const float tmp = (sum2-sum*sum/np)/(np*np-np);
     m_dtime = ( tmp>0 ? std::sqrt(tmp) : 0.0f );
-  }
-  else {
+  } else {
     m_dtime = m_pads[0]->dtime();
   }
 }
@@ -251,8 +209,6 @@ int MuonHit::region() const
 {
   return m_pads.empty() ? -1 : (int)m_pads[0]->tile().region();
 }
-
-
 
 std::vector<const MuonLogHit*> MuonHit::getHits() const
 {
@@ -323,7 +279,6 @@ LHCb::MuonTileID MuonHit::centerTile() const
     for (unsigned int ip=0; ip<m_pads.size(); ip++) {
       std::cout << m_padx[ip] << " " <<m_pady[ip]<< " " <<m_padz[ip]<<std::endl;
     }
-
   }
   return out;
 }
