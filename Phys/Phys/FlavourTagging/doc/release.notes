@@ -6,6 +6,8 @@
 !                                               ---> Julian Wishahi (2015--now)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+! 2015-12-30 - Gerhard Raven
+ - replace deprecated std::auto_ptr with std::unique_ptr
 
 !====================== FlavourTagging v14r1 2015-10-16 ======================
 

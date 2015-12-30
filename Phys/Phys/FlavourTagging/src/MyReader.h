@@ -33,7 +33,9 @@ public:
 
   
   inline void set(const ParListType& par) {
-    std::transform(par.begin(), par.end(), m_vars, i_getSecond);
+    std::transform(par.begin(), par.end(), m_vars,
+                   [](const std::pair<std::string,Float_t>& p)
+                   { return p.second; } );
   }
 
   inline Double_t eval() {
@@ -48,12 +50,8 @@ public:
 private:
 
   TString m_method;
-  std::auto_ptr<TMVA::Reader> m_reader;
+  std::unique_ptr<TMVA::Reader> m_reader;
   Float_t *m_vars;
-
-  static inline Float_t i_getSecond(const std::pair<std::string, Float_t> &p) {
-    return p.second;
-  }
 
 };
 
