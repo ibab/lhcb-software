@@ -3,6 +3,8 @@
 ! Responsible : DV Maintainer
 ! Purpose     : DV Filtering tools
 !-----------------------------------------------------------------------------
+! 2015-12-30 - Gerhard Raven
+ - replace deprecated std::auto_ptr with std::unique_ptr
 
 !======================= DaVinciFilters v1r4 2015-11-25 ======================
 

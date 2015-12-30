@@ -159,24 +159,21 @@ void FitDecayTrees::updateCloneProp ( Property& /* p */ )
 LHCb::DecayTree FitDecayTrees::reFitted ( const LHCb::Particle* p ) const
 {
   //
-  if ( 0 == p ) { return LHCb::DecayTree () ; }
+  if ( !p ) { return LHCb::DecayTree () ; }
   //
   typedef DecayTreeFitter::Fitter Fitter ;
   //
-  const LHCb::VertexBase* pv = 0 ;
+  const LHCb::VertexBase* pv = nullptr ;
   if ( use_PV_Constraint ()  )
   {
     pv = bestVertex ( p ) ;
-    if ( 0 == pv )
+    if ( !pv )
     { Warning ("No bestVertex is found!", StatusCode::FAILURE , 1 ).ignore() ; }
   }
   //
-  // initialize fitter
-  std::auto_ptr<Fitter>  fitter ;
-  //
   // instantiate the fitter
-  fitter.reset ( pv ? new Fitter( *p , *pv, extrapolator() ) :
-                      new Fitter( *p, extrapolator() ) ) ;
+  std::unique_ptr<Fitter> fitter{ pv ? new Fitter( *p , *pv, extrapolator() ) :
+                                       new Fitter( *p, extrapolator() )     } ;
   //
   // apply mass-constraints (if needed)
   for ( const auto& ipid : m_mc_2 )
