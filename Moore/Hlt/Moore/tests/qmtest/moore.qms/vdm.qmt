@@ -4,13 +4,13 @@
 # SUMMARY OF THIS TEST
 # ...................
 # Author: rlambert
-# Purpose: Test Moore running some very simple threshold setting, in this case, a vandemeer like setting.
-# Prerequisites: Needs specific L0 on the input file, whihc was previously emulated and uploaded ot the TestFileDB
+# Purpose: Test Moore running some very simple threshold setting, in this case, a VDM-like setting.
+# Prerequisites: Needs specific L0 on the input file, which was previously emulated and uploaded to the TestFileDB
 # Common failure modes, severities and cures: 
 #               . SEVERE: Segfault or raised exception, stderr, nonzero return code
 #               . MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
 #               . MINOR: additional WARNING messages, it is unclear how severe these may be, you will need to hunt down the cause and either fix the problem or suppress the warning.
-#               . MINOR: this test compares the timing table events to see if it looks like pass-through and has the minimum bias/beam gas lines. If we change how we do vdm, this needs updating.
+#               . MINOR: this test compares the timing table events to see if it looks like pass-through and has the minimum bias/beam gas lines. If we change how we do VDM, this needs updating.
 #######################################################
 -->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
@@ -24,29 +24,36 @@
   </set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
-expected_string = &quot;SUCCESS Reading Event record 1101. Record number within stream 1: 1101&quot;
+
+countErrorLines({"FATAL":0,"ERROR":0,"WARNING":0})
+
+expected_string = "SUCCESS Reading Event record 1101. Record number within stream 1: 1101"
 if stdout.find(expected_string) == -1:
     causes.append('missing string')
     result['moore.vdm.expected_string'] = result.Quote(expected_string)
 
-#ideally no errors, but there is always two when opening every Raw file
-countErrorLines({"FATAL":0,"ERROR":0,"WARNING":0})
+# Parse timing table, and check that there is no entry for HLT 2 and
+# that all events are seen (1200)
 
 from LHCbAlgs import TTParser
-timingdict=TTParser.event_av_dict("VanDerMeerScan_2015.csv")
+timing_table_fn = "VanDerMeerScan_2015.csv"
+try:
+    timingdict = TTParser.event_av_dict(timing_table_fn)
 
-if len([t for t in timingdict if t.startswith("Hlt2")])!=0:
-    causes.append('Does not look like pass-through')
-    result['moore.vdm.passthrough'] = result.Quote('Expected no Hlt2 entries in timing table, saw '+','.join([t for t in timingdict if t.startswith("Hlt2")]))
+    hlt2_entries = [t for t in timingdict if t.startswith("Hlt2")]
+    if hlt2_entries:
+        causes.append('Does not look like pass-through')
+        result['moore.vdm.passthrough'] = result.Quote('Expected no Hlt2 entry in timing table, saw {}'.format(hlt2_entries))
 
-if 'Hlt1BeamGasBeam1' not in timingdict:
-    causes.append('Doesnt contain beamgas lines')
-    result['moore.vdm.bg'] = result.Quote('No line called Hlt1BeamGasBeam1 in timing table')
-elif timingdict['Hlt1BeamGasBeam1'][0]!=1200:
-    causes.append('BeamGas does not see all events')
-    result['moore.vdm.passnumber'] = result.Quote('Expected 1200 events, saw '+str(timingdict['Hlt1BeamGasBeam1'][0]))
-
+    if 'Hlt1BeamGasBeam1' not in timingdict:
+        causes.append('Doesn\'t contain beamgas lines')
+        result['moore.vdm.bg'] = result.Quote('No line called Hlt1BeamGasBeam1 in timing table')
+    elif timingdict['Hlt1BeamGasBeam1'][0] != 1200:
+        causes.append('BeamGas does not see all events')
+        result['moore.vdm.passnumber'] = result.Quote('Expected 1200 events, saw '+str(timingdict['Hlt1BeamGasBeam1'][0]))
+except IOError:
+    causes.append('Timing table not found')
+    result['moore.cosmics.timing_table'] = result.Quote('Timing table "{}" not found'.format(timing_table_fn))
 
 </text></argument>
 </extension>
-

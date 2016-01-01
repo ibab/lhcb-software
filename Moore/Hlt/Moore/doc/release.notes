@@ -4,6 +4,13 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2016-01-01 - Rosen Matev
+ - Improve passthrough tests {passthrough, calibration, cosmics, vdm}.qmt
+   - catch exception in validator due to missing timing table
+   - cosmetic cleanup
+ - Improve validator of hltratesmoore.qmt test
+   (now fails on errors/warnings and zero rates)
+
 !========================= Moore v24r4 2015-12-17 =========================
 
 ! 2015-12-17 - Rosen Matev

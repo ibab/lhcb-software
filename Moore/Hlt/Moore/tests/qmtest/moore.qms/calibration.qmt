@@ -20,30 +20,37 @@
     <text>1200</text>
     <text>Calibration_VeloMicroBias</text>
   </set></argument>
+  <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
-expected_string = &quot;SUCCESS Reading Event record 1101. Record number within stream 3: 800&quot; 
+
+countErrorLines({"FATAL":0,"ERROR":0,"WARNING":0})
+
+expected_string = "SUCCESS Reading Event record 1101. Record number within stream 3: 800"
 if stdout.find(expected_string) == -1:
     causes.append('missing string')
     result['moore.calibration.expected_string'] = result.Quote(expected_string)
-#check that all events are actually passed through?
-#Parse timing table, and check that there is no entry for HLT 2 and it sees all events (1200)
 
+# Parse timing table, and check that there is no entry for HLT 2 and
+# that all events are seen (1200)
 
 from LHCbAlgs import TTParser
-timingdict=TTParser.event_av_dict("Calibration_VeloMicroBias.csv")
+timing_table_fn = "Calibration_VeloMicroBias.csv"
+try:
+    timingdict = TTParser.event_av_dict(timing_table_fn)
 
-if len([t for t in timingdict if t.startswith("Hlt2")])!=0:
-    causes.append('Does not look like pass-through')
-    result['moore.calibration.passthrough'] = result.Quote('Expected no Hlt2 entry in timing table, saw '+','.join([t for t in timingdict if t.startswith("Hlt2")]))
+    hlt2_entries = [t for t in timingdict if t.startswith("Hlt2")]
+    if hlt2_entries:
+        causes.append('Does not look like pass-through')
+        result['moore.calibration.passthrough'] = result.Quote('Expected no Hlt2 entry in timing table, saw {}'.format(hlt2_entries))
 
-if 'Hlt1MBMicroBiasVelo' not in timingdict:
-    causes.append('No MB selection seen')
-elif timingdict['Hlt1MBMicroBiasVelo'][0]!=1200:
-    causes.append('MB test does not select everything')
-    result['moore.calibration.passnumber'] = result.Quote('Expected 1200 events, saw '+str(timingdict['Hlt1MBMicroBiasVelo'][0]))
+    if 'Hlt1MBMicroBiasVelo' not in timingdict:
+        causes.append('No MB selection seen')
+    elif timingdict['Hlt1MBMicroBiasVelo'][0] != 1200:
+        causes.append('MB test does not select everything')
+        result['moore.calibration.passnumber'] = result.Quote('Expected 1200 events, saw {}'.format(timingdict['Hlt1MBMicroBiasVelo'][0]))
+except IOError:
+    causes.append('Timing table not found')
+    result['moore.calibration.timing_table'] = result.Quote('Timing table "{}" not found'.format(timing_table_fn))
 
-
-countErrorLines({"FATAL":0,"ERROR":0,"WARNING":0})
 </text></argument>
 </extension>
-

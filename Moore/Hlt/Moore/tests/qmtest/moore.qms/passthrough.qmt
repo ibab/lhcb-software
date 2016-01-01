@@ -22,27 +22,34 @@
   </set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
-expected_string = &quot;SUCCESS Reading Event record 1101. Record number within stream 3: 800&quot; 
+  
+countErrorLines({"FATAL":0,"ERROR":0,"WARNING":0})
+
+expected_string = "SUCCESS Reading Event record 1101. Record number within stream 3: 800"
 if stdout.find(expected_string) == -1:
     causes.append('missing string')
     result['moore.passthrough.expected_string'] = result.Quote(expected_string)
 
-countErrorLines({"FATAL":0,"ERROR":0,"WARNING":0})
-
-#check that all events are actually passed through?
-#Parse timing table, and check that there are no entries for HLT 2 and it sees all events (1200)
+# Parse timing table, and check that there is no entry for HLT 2 and
+# that all events are seen (1200)
 
 from LHCbAlgs import TTParser
-timingdict=TTParser.event_av_dict("Commissioning_PassThrough.csv")
+timing_table_fn = "Commissioning_PassThrough.csv"
+try:
+    timingdict = TTParser.event_av_dict(timing_table_fn)
 
-if len([t for t in timingdict if t.startswith("Hlt2")])!=0:
-    causes.append('Does not look like pass-through')
-    result['moore.passthrough.passthrough'] = result.Quote('Expected no Hlt2 entries in timing table, saw '+','.join([t for t in timingdict if t.startswith("Hlt2")]))
+    hlt2_entries = [t for t in timingdict if t.startswith("Hlt2")]
+    if hlt2_entries:
+        causes.append('Does not look like pass-through')
+        result['moore.passthrough.passthrough'] = result.Quote('Expected no Hlt2 entry in timing table, saw {}'.format(hlt2_entries))
 
-if timingdict['HltEndSequence'][0]!=1200:
-    causes.append('Does not pass everything')
-    result['moore.passthrough.passnumber'] = result.Quote('Expected 1200 events, saw '+str(timingdict['HltEndSequence']))
+    if timingdict['HltEndSequence'][0] != 1200:
+        causes.append('Does not pass everything')
+        result['moore.passthrough.passnumber'] = result.Quote('Expected 1200 events, saw {}'.format(timingdict['HltEndSequence']))
+
+except IOError:
+    causes.append('Timing table not found')
+    result['moore.passthrough.timing_table'] = result.Quote('Timing table "{}" not found'.format(timing_table_fn))
 
 </text></argument>
 </extension>
-

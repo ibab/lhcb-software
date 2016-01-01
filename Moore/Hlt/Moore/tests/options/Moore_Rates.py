@@ -336,7 +336,9 @@ def main():
                 "Hlt2":40.}
     for level in ['Hlt1','Hlt2']:
         if GlobalRates[level][0] > MaxRates[level]:
-            'print %s rate = %s > max = %s' %(level,GlobalRates[level][0],MaxRates[level])
+            print '%s rate = %s > max = %s' %(level,GlobalRates[level][0],MaxRates[level])
+        elif GlobalRates[level][0] == 0:
+            print '%s rate is zero' %level
         else:
             print '%s rates OK' %level
     print '-'*100
