@@ -1,4 +1,3 @@
-// $Id: PVSeed3DTool.h,v 1.2 2008-08-28 17:38:45 witekma Exp $
 #ifndef NEWTOOL_PVSEED3DTOOL_H
 #define NEWTOOL_PVSEED3DTOOL_H 1
 
@@ -10,7 +9,6 @@
 #include "GaudiKernel/Vector3DTypes.h"
 // From Event
 #include "Event/Track.h"
-
 
 /** @class PVSeed3DTool PVSeed3DTool.h newtool/PVSeed3DTool.h
  *

@@ -110,25 +110,7 @@ public:
 PVOfflineTool::PVOfflineTool(const std::string& type,
                              const std::string& name,
                              const IInterface* parent)
-  : GaudiTool(type,name,parent),
-    m_requireVelo(false),
-    m_saveSeedsAsPV(false),
-    m_outputVertices(""),
-    m_pvfit(0),
-    m_pvSeedTool(0),
-    m_pvRecalc(0),
-    m_inputTracks(0),
-    m_pvFitterName(""),
-    m_pvSeedingName(""),
-    m_pvsChi2Separation(0.0),
-    m_pvsChi2SeparationLowMult(0.0),
-    m_useBeamSpotRCut(false),
-    m_beamSpotRCut(0.3),
-    m_beamSpotX(0.),
-    m_beamSpotY(0.),
-    m_beamSpotCond(""),
-    m_veloClosed(false),
-    m_timerTool(0)
+  : base_class(type,name,parent)
 {
   declareInterface<IPVOfflineTool>(this);
   declareProperty("RequireVelo"      , m_requireVelo   = true);
@@ -175,6 +157,7 @@ StatusCode PVOfflineTool::initialize()
     err() << "Unable to retrieve the PV seeding tool " << m_pvSeedingName << endmsg;
     return  StatusCode::FAILURE;
   }
+
   // Access PVOFflineRecalculate tool
   m_pvRecalc = tool<PVOfflineRecalculate>("PVOfflineRecalculate", this);
   //  m_pvRecalc = tool<PVOfflineRecalculateWG1>("PVOfflineRecalculateWG1", this);
@@ -201,10 +184,6 @@ StatusCode PVOfflineTool::initialize()
   return StatusCode::SUCCESS;
 }
 
-//=============================================================================
-// Destructor
-//=============================================================================
-PVOfflineTool::~PVOfflineTool() = default;
 
 //=============================================================================
 // reconstruct PV for a given seed

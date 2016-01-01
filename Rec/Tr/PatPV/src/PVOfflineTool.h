@@ -17,15 +17,14 @@
 #include "Event/RecVertex.h"
 #include "GaudiAlg/ISequencerTimerTool.h"
 
-class PVOfflineTool : public GaudiTool, virtual public IPVOfflineTool {
+class PVOfflineTool : public extends<GaudiTool, IPVOfflineTool> {
 public:
   // Standard constructor
   PVOfflineTool(const std::string& type,
                 const std::string& name,
                 const IInterface* parent);
   // Destructor
-  ~PVOfflineTool();
-  virtual StatusCode initialize();
+  StatusCode initialize() override;
   // PV fitting
 
   StatusCode reDoSinglePV(const Gaudi::XYZPoint xyzseed,
@@ -56,31 +55,32 @@ public:
 
 private:
 
-  bool m_requireVelo;   // Option to use tracks with VELO segment only
-  bool m_saveSeedsAsPV; // Save seeds as PVs (for monitoring)
-  bool m_lookForDisplaced;
+  bool m_requireVelo = false;   // Option to use tracks with VELO segment only
+  bool m_saveSeedsAsPV = false; // Save seeds as PVs (for monitoring)
+  bool m_lookForDisplaced = false;
   std::string        m_outputVertices;
   std::string        m_inputVerticesName;
-  // Tools
-  IPVFitter* m_pvfit;                // PV fitting tool
-  IPVSeeding* m_pvSeedTool;              // Seeding tool
-  PVOfflineRecalculate* m_pvRecalc;
 
-  // Member functions
+  // Tools
+  IPVFitter* m_pvfit = nullptr;                // PV fitting tool
+  IPVSeeding* m_pvSeedTool = nullptr;              // Seeding tool
+  PVOfflineRecalculate* m_pvRecalc = nullptr;
+
   std::vector<std::string> m_inputTracks;
   std::string m_pvFitterName;
   std::string m_pvSeedingName;
-  double m_pvsChi2Separation;
-  double m_pvsChi2SeparationLowMult;
+  double m_pvsChi2Separation = 0;
+  double m_pvsChi2SeparationLowMult = 0;
 
-  bool m_useBeamSpotRCut;
-  double m_beamSpotRCut;
-  double m_beamSpotX;
-  double m_beamSpotY;
+  bool m_useBeamSpotRCut = false;
+  double m_beamSpotRCut = 0.3;
+  double m_beamSpotX = 0;
+  double m_beamSpotY = 0;
   std::string m_beamSpotCond;
-  double m_resolverBound;
-  bool m_veloClosed;
+  double m_resolverBound = 5 * Gaudi::Units::mm;
+  bool m_veloClosed = false;
 
+  // Member functions
   StatusCode matchVtxByTracks(const LHCb::RecVertex& invtx,
 			      std::vector<LHCb::RecVertex>& outvtxvec,
 			      LHCb::RecVertex& outvtx);
@@ -103,7 +103,7 @@ private:
 
   // timing
   bool  m_doTiming;
-  ISequencerTimerTool* m_timerTool;
+  ISequencerTimerTool* m_timerTool = nullptr;
   int   m_timeTotal;
   int   m_timeSeeding;
   int   m_timeFitting;

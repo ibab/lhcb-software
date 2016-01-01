@@ -128,13 +128,14 @@ PVSeed3DOfflineTool::PVSeed3DOfflineTool( const std::string& type,
 PVSeed3DOfflineTool::~PVSeed3DOfflineTool() = default;
 
 StatusCode PVSeed3DOfflineTool::initialize() {
+  auto sc = base_class::initialize();
   // Full track extrapolator
   m_fullExtrapolator = tool<ITrackExtrapolator>("TrackMasterExtrapolator",this);
   if(!m_fullExtrapolator) {
     err() << "Unable to get TrackMasterExtrapolator" << endmsg;
     return  StatusCode::FAILURE;
   }
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================

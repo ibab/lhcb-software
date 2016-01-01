@@ -3,6 +3,10 @@
 ! Responsible : Mariusz Witek
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
+! 2016-01-01 - Gerhard Raven
+ - fix  PVOfflineTool::initialize: invoke base class initialize 
+   (exposed after fixing 'the same' problem in finalize by removing finalize...)
+
 ! 2015-12-30 - Gerhard Raven
  - major: update IPVSeeding interface to return by value, take const
    arguments and be const
