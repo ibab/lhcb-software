@@ -423,7 +423,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
   // correct.
   if(m_newEvent) prepareHits();
   //m_tHitManager->prepareHits();
-  boost::iterator_range<typename PatFwdHits::const_iterator> rng = fillXList( track ) ;
+  auto rng = fillXList( track ) ;
 
   bool processingSecondLoop = false;
   bool processedSecondLoop = false;
@@ -440,9 +440,8 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
           hit->setIgnored( false );
           hit->setRlAmb( 0 );
           hit->setSelected( this->driftInRange(*hit) );
-          if(not_selected(hit))m_xHitsAtReference.erase(it);
-        }
-        else{
+          if(not_selected(hit)) it = std::prev(m_xHitsAtReference.erase(it));
+        } else{
           updateNonOTHitForTrack( hit, y0, ty);
           hit->setIgnored( false );
           hit->setRlAmb( 0 );
