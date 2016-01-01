@@ -187,8 +187,8 @@ PVSeed3DOfflineTool::getSeeds(const std::vector<const LHCb::Track*>& inputTracks
         bool ok = xPointParameters(its1->lbstate, its2->lbstate, distance, distanceChi2, closestPoint);
 	if (ok && distance < m_TrackPairMaxDistance && distanceChi2 < m_TrackPairMaxDistanceChi2 ) {
           double err2xy = its1->lbstate.errX2() + its1->lbstate.errY2() + its2->lbstate.errX2() + its2->lbstate.errY2();
-	  its1->nclose++;
-	  its2->nclose++;
+	  ++its1->nclose;
+	  ++its2->nclose;
 	  its1->dclose += 1./err2xy;
 	  its2->dclose += 1./err2xy;
         }
@@ -208,12 +208,12 @@ PVSeed3DOfflineTool::getSeeds(const std::vector<const LHCb::Track*>& inputTracks
     if(its1->nclose < m_MinCloseTracks) break;
     if ( its1->used > 0 ) continue;
 
-    std::vector<closeNode> close_nodes;
 
     if(msgLevel(MSG::DEBUG)) {
       debug() << " close nodes - next track, nclose: " << its1->nclose << endmsg;
     }
 
+    std::vector<closeNode> close_nodes; close_nodes.reserve(seed_states.size());
     for(auto its2 = seed_states.begin(); its2 != seed_states.end(); its2++) {
       if ( its2->used > 0 || its1 == its2 ) continue;
        Gaudi::XYZPoint closest_point;
@@ -223,10 +223,11 @@ PVSeed3DOfflineTool::getSeeds(const std::vector<const LHCb::Track*>& inputTracks
        //       const State lbst2 = its2->lbstate;
        bool ok = xPointParameters(its1->lbstate, its2->lbstate, distance, distanceChi2, closest_point);
        double costh = thetaTracks(its1->lbstate, its2->lbstate);
-       //if (ok && distance < m_TrackPairMaxDistance && costh<0.999) 
-       if (ok && distance < m_TrackPairMaxDistance && distanceChi2 < m_TrackPairMaxDistanceChi2 && costh<0.999) {
+       if (ok && distance < m_TrackPairMaxDistance 
+              && distanceChi2 < m_TrackPairMaxDistanceChi2 
+              && costh<0.999) {
          closeNode closetr;
-         closetr.take           = 1;
+         closetr.take          = true;
          closetr.seed_state    =  &(*its2);
          closetr.distance      = distance;
          closetr.closest_point = closest_point;
@@ -242,23 +243,21 @@ PVSeed3DOfflineTool::getSeeds(const std::vector<const LHCb::Track*>& inputTracks
        }
     }  // its2
 
-    seedPoint mean_point;
-    seedPoint mean_point_w;
-    bool OK = simpleMean(close_nodes, mean_point);
-    if ( OK ) {
+    auto mean_point = simpleMean(close_nodes);
+    if ( mean_point ) {
       if(msgLevel(MSG::DEBUG)) {
         debug() << "simple mean OK " << endmsg;
       }
       its1->used=1; // base track
       int multi = 1;
-      for (auto it = close_nodes.begin(); it != close_nodes.end(); it++ ) {
-        if ( it->take > 0 ) {
-          it->seed_state->used = 1;
-          multi++;
+      for (auto& cn : close_nodes) {
+        if ( cn.take ) {
+          cn.seed_state->used = 1;
+          ++multi;
         }
       }
       if ( multi < m_MinCloseTracks ) continue;
-      mean_point_w = wMean(close_nodes, *its1);
+      auto mean_point_w = wMean(close_nodes, *its1);
       seeds.push_back(mean_point_w.position);
 
       if(msgLevel(MSG::DEBUG)) {
@@ -300,7 +299,7 @@ seedPoint PVSeed3DOfflineTool::wMean(const std::vector<closeNode> & close_nodes,
    double sum_wzz =0.;
 
    for (auto it = close_nodes.begin(); it != close_nodes.end(); it++ ) {
-     if ( it->take == 0 ) continue;
+     if ( !it->take ) continue;
 
      const State& state1 = base_state.lbstate;
      const State& state2 = it->seed_state->lbstate;
@@ -343,50 +342,38 @@ seedPoint PVSeed3DOfflineTool::wMean(const std::vector<closeNode> & close_nodes,
 //=============================================================================
 // simpleMean
 //=============================================================================
-bool PVSeed3DOfflineTool::simpleMean(std::vector<closeNode> & close_nodes, seedPoint & pseed) const {
-
-   pseed.position.SetXYZ(0., 0., 0.);
-   pseed.error.SetXYZ(0., 0., 0.);
-   pseed.multiplicity = close_nodes.size();
+boost::optional<seedPoint> PVSeed3DOfflineTool::simpleMean(std::vector<closeNode> & close_nodes) const {
 
    if(msgLevel(MSG::DEBUG)) {
      debug() << "close node size: " << close_nodes.size() << endmsg;
    }
-   if ( close_nodes.size() < 2 ) return false;
-
-   double x = 0.;
-   double y = 0.;
-   double z = 0.;
+   if ( close_nodes.size() < 2 ) return boost::none;
 
    double  spread2_max = m_zMaxSpread*m_zMaxSpread;
 
    Gaudi::XYZPoint pmean;
-   std::vector<closeNode>::iterator it;
    std::vector<closeNode>::iterator itmax;
 
    double dist2_max = 1000.*1000.;
    int ngood = 1000;
    while (dist2_max>spread2_max && ngood>1) {
      int ng = 0;
-     x = 0.;
-     y = 0.;
-     z = 0.;
-     for ( it = close_nodes.begin(); it != close_nodes.end(); it++ ) {
-        if ( it->take == 0 ) continue;
-        ng++;
-        x += it->closest_point.X();
-        y += it->closest_point.Y();
-        z += it->closest_point.Z();
+     double x = 0.;
+     double y = 0.;
+     double z = 0.;
+     for (const auto&  cn : close_nodes) {
+        if ( !cn.take ) continue;
+        ++ng;
+        x += cn.closest_point.X();
+        y += cn.closest_point.Y();
+        z += cn.closest_point.Z();
      }
-     if ( ng < m_MinCloseTracks ) return false;
-     x /= ng;
-     y /= ng;
-     z /= ng;
-     pmean.SetXYZ(x,y,z);
+     if ( ng < m_MinCloseTracks ) return boost::none;
+     pmean.SetXYZ(x/ng,y/ng,z/ng);
 
      double d2max=0.;
-     for ( it = close_nodes.begin(); it != close_nodes.end(); it++ ) {
-       if ( it->take == 0 ) continue;
+     for (auto it = close_nodes.begin(); it != close_nodes.end(); it++ ) {
+       if ( !it->take ) continue;
        double dist2 = (pmean - it->closest_point).Mag2();
        if ( dist2>d2max ) {
          d2max = dist2;
@@ -396,8 +383,8 @@ bool PVSeed3DOfflineTool::simpleMean(std::vector<closeNode> & close_nodes, seedP
 
      ngood = ng;
      if ( d2max > spread2_max ) {
-       itmax->take = 0;
-       ngood--;
+       itmax->take = false;
+       --ngood;
        if(msgLevel(MSG::DEBUG)) {
          debug() << "spread too large => throwing out node" << endmsg;
        }
@@ -406,10 +393,13 @@ bool PVSeed3DOfflineTool::simpleMean(std::vector<closeNode> & close_nodes, seedP
 
    } // end while
 
-   if ( ngood < m_MinCloseTracks ) return false;
+   if ( ngood < m_MinCloseTracks ) return boost::none;
+
+   seedPoint pseed;
+   pseed.error.SetXYZ(0., 0., 0.);
    pseed.position = pmean;
    pseed.multiplicity = ngood;
-   return true;
+   return pseed;
 }
 
 //=============================================================================

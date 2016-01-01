@@ -2,6 +2,7 @@
 #define PATPV_PVSEED3DOFFLINETOOL_H 1
 
 // Include files
+#include "boost/optional.hpp"
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "IPVSeeding.h"            // Interface
@@ -36,7 +37,7 @@ struct closeNode final
   seedState* seed_state = nullptr;
   double distance = 0;
   Gaudi::XYZPoint closest_point;
-  int take = 0;
+  bool take = false;
 
   closeNode() = default;
 };
@@ -72,7 +73,7 @@ private:
   ITrackExtrapolator* m_fullExtrapolator = nullptr;  // Full extrapolator
 
 
-  bool simpleMean(std::vector<SimplePVSpace::closeNode> & close_nodes, SimplePVSpace::seedPoint & pseed) const;
+  boost::optional<SimplePVSpace::seedPoint> simpleMean(std::vector<SimplePVSpace::closeNode> & close_nodes) const;
 
   SimplePVSpace::seedPoint wMean(const std::vector<SimplePVSpace::closeNode> & close_nodes, const SimplePVSpace::seedState& base_state) const;
 

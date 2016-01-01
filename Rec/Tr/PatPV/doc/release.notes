@@ -6,6 +6,7 @@
 ! 2016-01-01 - Gerhard Raven
  - fix  PVOfflineTool::initialize: invoke base class initialize 
    (exposed after fixing 'the same' problem in finalize by removing finalize...)
+ - use boost::optional instead of a bool return value and out parameter
 
 ! 2015-12-30 - Gerhard Raven
  - major: update IPVSeeding interface to return by value, take const

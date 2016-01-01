@@ -8,6 +8,8 @@ gaudi_depends_on_subdirs(Det/VeloDet
                          Event/TrackEvent
                          Tr/TrackInterfaces)
 
+find_package(Boost)
+
 gaudi_add_module(PatPV
                  src/*.cpp
                  INCLUDE_DIRS Tr/TrackInterfaces

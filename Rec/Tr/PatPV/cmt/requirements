@@ -16,6 +16,7 @@ use VeloDet             v*  Det
 use TrackInterfaces     v*  Tr
 use RecEvent            v*  Event
 use TrackEvent          v*  Event
+use Boost               v*  LCG_Interfaces -no_auto_imports
 
 # Component library building rule
 #=========================================================================
