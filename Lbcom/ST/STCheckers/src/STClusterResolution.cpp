@@ -32,12 +32,12 @@ DECLARE_ALGORITHM_FACTORY( STClusterResolution )
 //
 //--------------------------------------------------------------------
 
-STClusterResolution::STClusterResolution(const std::string& name, 
+STClusterResolution::STClusterResolution(const std::string& name,
                                          ISvcLocator* pSvcLocator) :
  ST::HistoAlgBase(name, pSvcLocator)
 {
   // constructer
-  this->declareProperty("PositionToolName", m_positionToolName = 
+  this->declareProperty("PositionToolName", m_positionToolName =
                         "STOfflinePosition");
   this->declareProperty("SelectorName", m_selectorName = "MCParticleSelector" );
   this->declareProperty("MergeSplitClusters", m_mergeSplitClusters = false );
@@ -133,7 +133,7 @@ void STClusterResolution::fillHistograms( const STCluster* aCluster,
     // get true u - need stereoangle/z info from channel
     const STChannelID aChan = aCluster->channelID();
     const DeSTSector* aSector = findSector(aChan);
-  
+
     const DeSTSensor* aSensor = aSector->findSensor(aHit->midPoint());
     if (aSensor == 0){
       Warning("Failed to find sensor", StatusCode::SUCCESS).ignore();
@@ -141,10 +141,10 @@ void STClusterResolution::fillHistograms( const STCluster* aCluster,
     }
 
     const double uTrue = this->calculateUTrue(aHit,aSensor);
-    
+
     // rec u - offline
     ISTClusterPosition::Info measVal = m_positionTool->estimate(aCluster);
-    const double uRec = aSensor->localU( measVal.strip.strip(), 
+    const double uRec = aSensor->localU( measVal.strip.strip(),
                                          measVal.fractionalPosition);
 
     // determine which histos to fill based on cluster size
@@ -154,7 +154,7 @@ void STClusterResolution::fillHistograms( const STCluster* aCluster,
     const double error = measVal.fractionalError * aSensor->pitch();
 
     // Fill offline resolution and pull
-    std::string histTitle = detType() + " " + 
+    std::string histTitle = detType() + " " +
       ST::toString(id) + "-strip clusters";
     plot( uRec-uTrue, 10+id,"Resolution "+histTitle, -0.25, 0.25, 100 );
     plot( (uRec-uTrue)/error, 20+id, "Pull "+histTitle, -10., 10., 100 );
@@ -164,21 +164,21 @@ void STClusterResolution::fillHistograms( const STCluster* aCluster,
     int sign = (aSensor->localU(2) - aSensor->localU(1) > 0 ) ? 1 : -1;
     trueFracPos = double(sign)*trueFracPos/aSensor->pitch();
     profile1D( measVal.fractionalPosition, trueFracPos, 50+id,
-               "True frac position "+histTitle+" vs rec frac pos", 
+               "True frac position "+histTitle+" vs rec frac pos",
                -0.005, 1.005, 101);
- 
+
     // Plot the cluster size versus angle in each station (Lorentz deflection)
-    profile1D( aHit->dxdz(), aCluster->size(), 60+aChan.station(), 
+    profile1D( aHit->dxdz(), aCluster->size(), 60+aChan.station(),
                "Cluster size vs dx/dz in station "
                +ST::toString(aChan.station()), -0.2, 0.2, 50);
 
     // Plot total number and number of symmetric two-strip clusters versus
     // angle in each station (the ratio shows the Lorentz deflection)
-    if( id == 2 && fabs(measVal.fractionalPosition-0.5) < 0.2) 
+    if( id == 2 && fabs(measVal.fractionalPosition-0.5) < 0.2)
       plot( aHit->dxdz(),70+aChan.station(),
-            "Num sym 2-strip clus vs dxdz in station " 
+            "Num sym 2-strip clus vs dxdz in station "
             + ST::toString(aChan.station()), -0.2, 0.2, 50);
-    plot( aHit->dxdz(),80+aChan.station(), "Num of clus vs dxdz in station " 
+    plot( aHit->dxdz(),80+aChan.station(), "Num of clus vs dxdz in station "
           + ST::toString(aChan.station()), -0.2, 0.2, 50);
 
     // now the online version
@@ -187,9 +187,8 @@ void STClusterResolution::fillHistograms( const STCluster* aCluster,
     plot( uOnline-uTrue, 30+id,"Online resolution "+histTitle, -0.25, 0.25,100);
 
     // Do the same with trajectories
-    std::auto_ptr<Trajectory> tmpTraj = 
+    auto clusTraj =
       aSensor->trajectory( measVal.strip.strip(), measVal.fractionalPosition );
-    const Trajectory& clusTraj = *(tmpTraj.get());
 
     // Get the true trajectory
     const LineTraj mcTraj(aHit->entry(), aHit->exit());
@@ -197,8 +196,8 @@ void STClusterResolution::fillHistograms( const STCluster* aCluster,
     // poca !
     Gaudi::XYZVector distance;
     double s1 = 0.0;
-    double s2 = clusTraj.arclength( mcTraj.position(s1) );
-    m_poca -> minimize( mcTraj, s1, clusTraj, s2, distance,  0.005);
+    double s2 = clusTraj->arclength( mcTraj.position(s1) );
+    m_poca -> minimize( mcTraj, s1, *clusTraj, s2, distance,  0.005);
     double residual = std::copysign( distance.R(), distance.x() );
 
     // Resolution and pull plots
@@ -211,9 +210,7 @@ void STClusterResolution::fillHistograms( const STCluster* aCluster,
     plot( residual/error, 120+id, "Pull "+histTitle, -10., 10., 100 );
 
   } // aHit
-  
   // end
-  return;
 }
 
 int STClusterResolution::histoId( const int clusterSize ) const
