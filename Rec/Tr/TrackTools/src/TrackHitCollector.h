@@ -127,7 +127,7 @@ class TrackHitCollector : public GaudiTool, virtual public ITrackHitCollector
 	/// compute residual between track and hit, return true if small enough
 	bool computeResidAndError(
 		const Tf::VeloRHit* hit,
-		std::auto_ptr<LHCb::Trajectory> htraj,
+		const LHCb::Trajectory& htraj,
 		const LHCb::TrackTraj& ttraj, const Gaudi::XYZPoint& ptrack,
 		const DeVeloRType* sensor,
 		const double trerr2, const double trerrphi2,
@@ -135,7 +135,7 @@ class TrackHitCollector : public GaudiTool, virtual public ITrackHitCollector
 	/// compute residual between track and hit, return true if small enough
 	bool computeResidAndError(
 		const Tf::VeloPhiHit* hit,
-		std::auto_ptr<LHCb::Trajectory> htraj,
+		const LHCb::Trajectory& htraj,
 		const LHCb::TrackTraj& ttraj, const Gaudi::XYZPoint& ptrack,
 		const DeVeloPhiType* sensor,
 		const double trerr2, const double trerrphi2,

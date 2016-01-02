@@ -3,6 +3,14 @@
 ! Responsible : 
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+! 2016-01-02 - Gerhard Raven
+ - TrackHitCollector: use const LHCb::Trajectory& instead of std::auto_ptr<LHCb::Trajector>,
+   which is OK as the the dereferenced std::auto_ptr has a lifetime until the
+   end of the statement, which (in this case) is sufficiently long.
+ - TrajectoryProvider: major change: follow update of ITrajectorProvider
+   (needs corresponding version of Tr/TrackInterfaces)
+
+
 ! 2015-12-28 - Gerhard Raven
  - replace GSL_ with std::
  - replace BOOST_FOREACH with range-based for loop

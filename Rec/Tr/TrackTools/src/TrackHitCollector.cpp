@@ -349,7 +349,7 @@ namespace TrackHitCollectorHelpers {
 
 bool TrackHitCollector::computeResidAndError(
 	const Tf::VeloRHit* hit,
-	std::auto_ptr<LHCb::Trajectory> htraj,
+	const LHCb::Trajectory& htraj,
 	const LHCb::TrackTraj& ttraj,
 	const Gaudi::XYZPoint& ptrack,
 	const DeVeloRType* sensor,
@@ -357,10 +357,10 @@ bool TrackHitCollector::computeResidAndError(
 	double& resid, double& err) const
 {
     // minimize doca
-    double mu1 = ptrack.z(), mu2 = htraj->muEstimate(ptrack);
+    double mu1 = ptrack.z(), mu2 = htraj.muEstimate(ptrack);
     Gaudi::XYZVector doca;
     StatusCode sc(m_trajPoca->minimize(
-		ttraj, mu1, true, *htraj, mu2, true, doca, 0.0001));
+		ttraj, mu1, true, htraj, mu2, true, doca, 0.0001));
     if (sc.isFailure())
 	throw CollectionFailure("Failed to minimize DOCA in VeloR collection!");
     // get signed distance
@@ -374,7 +374,7 @@ bool TrackHitCollector::computeResidAndError(
 
 bool TrackHitCollector::computeResidAndError(
 	const Tf::VeloPhiHit* hit,
-	std::auto_ptr<LHCb::Trajectory> htraj,
+	const LHCb::Trajectory& htraj,
 	const LHCb::TrackTraj& ttraj,
 	const Gaudi::XYZPoint& ptrack,
 	const DeVeloPhiType* sensor,
@@ -382,10 +382,10 @@ bool TrackHitCollector::computeResidAndError(
 	double& resid, double& err) const
 {
     // minimize doca
-    double mu1 = ptrack.z(), mu2 = htraj->muEstimate(ptrack);
+    double mu1 = ptrack.z(), mu2 = htraj.muEstimate(ptrack);
     Gaudi::XYZVector doca;
     StatusCode sc(m_trajPoca->minimize(
-		ttraj, mu1, true, *htraj, mu2, true, doca, 0.0001));
+		ttraj, mu1, true, htraj, mu2, true, doca, 0.0001));
     if (sc.isFailure())
 	throw CollectionFailure("Failed to minimize DOCA in VeloPhi collection!");
     // get signed distance
@@ -459,17 +459,16 @@ void TrackHitCollector::collectVeloHits(HITMANAGER* hitman,
 		continue;
 	    std::pair<double, double> coordrange(
 		    selectVeloCoordinates(sensor, iZone, r, rmin, rmax, hbphimin, hbphimax));
-	    BOOST_FOREACH(const typename VeloTraits<HITMANAGER>::Hit* hit,
-		    station->hitsHalfBox(iZone, coordrange.first, coordrange.second)) {
-		double resid, err;
-		// get trajectory
-		if (!computeResidAndError(
-			    hit, sensor->trajectory(hit->channelID(), 0.),
-			    ttraj, p, sensor, trerr2, trerrphi2 * r2, resid, err))
-		    continue;
-		ids.push_back(
-			IDWithResidual(LHCb::LHCbID(hit->channelID()), resid, err));
-	    }
+	    for(const typename VeloTraits<HITMANAGER>::Hit* hit:
+		  station->hitsHalfBox(iZone, coordrange.first, coordrange.second)) {
+          double resid, err;
+          // get trajectory
+          if (!computeResidAndError(
+                  hit, *sensor->trajectory(hit->channelID(), 0.),
+                  ttraj, p, sensor, trerr2, trerrphi2 * r2, resid, err))
+              continue;
+          ids.emplace_back( LHCb::LHCbID(hit->channelID()), resid, err);
+        }
 	}
     }
 }

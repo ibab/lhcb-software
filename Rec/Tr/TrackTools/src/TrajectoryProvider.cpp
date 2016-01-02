@@ -28,7 +28,7 @@ DECLARE_TOOL_FACTORY( TrajectoryProvider )
 TrajectoryProvider::TrajectoryProvider( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : base_class ( type, name , parent )
 {
   declareInterface<ITrajectoryProvider>(this);
 
@@ -45,14 +45,12 @@ TrajectoryProvider::TrajectoryProvider( const std::string& type,
   
   declareProperty( "MagneticFieldService",
                    m_magsvcname = "MagneticFieldSvc" );
-
-  //m_dets.clear();
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-TrajectoryProvider::~TrajectoryProvider() {}
+TrajectoryProvider::~TrajectoryProvider() = default;
 
 //=============================================================================
 // Initialization
@@ -61,12 +59,6 @@ StatusCode TrajectoryProvider::initialize() {
   
   StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
-
-  // Retrieve the Velo, ST and OT detector elements
-  //m_dets[LHCbID::Velo] = getDet<DeVelo>( m_veloDetPath );
-  //m_dets[LHCbID::TT]   = getDet<DeSTDetector>( m_ttDetPath );
-  //m_dets[LHCbID::IT]   = getDet<DeSTDetector>( m_itDetPath );
-  //m_dets[LHCbID::OT]   = getDet<DeOTDetector>( m_otDetPath );
 
   m_veloDet = getDet<DeVelo>( m_veloDetPath );
   
@@ -84,7 +76,7 @@ StatusCode TrajectoryProvider::initialize() {
 //=============================================================================
 // Return a "Measurement Trajectory" from a Measurement
 //=============================================================================
-const Trajectory* TrajectoryProvider::trajectory( const Measurement& meas )
+const Trajectory* TrajectoryProvider::trajectory( const Measurement& meas ) const
 {
   return &meas.trajectory();
 }
@@ -92,8 +84,8 @@ const Trajectory* TrajectoryProvider::trajectory( const Measurement& meas )
 //=============================================================================
 // Return a "Measurement trajectory" from an LHCbID and an offset
 //=============================================================================
-std::auto_ptr<Trajectory> TrajectoryProvider::trajectory( const LHCbID& id,
-                                                          const double offset )
+std::unique_ptr<Trajectory> TrajectoryProvider::trajectory( const LHCbID& id,
+                                                            double offset ) const
 {
   //TODO: the following switch block could be replaced by this very simple
   //      and single line if the DetectorElement class had
@@ -114,32 +106,32 @@ std::auto_ptr<Trajectory> TrajectoryProvider::trajectory( const LHCbID& id,
 		error() << "LHCbID is of unknown type!"
             << " (type is " << id.detectorType() << ")" << endmsg
             << " -> do not know how to create a Trajectory!" << endmsg;
-		return std::auto_ptr<Trajectory>( NULL );
+		return {};
   }
 }
 
 //=============================================================================
 // Return a "State trajectory" from a State
 //=============================================================================
-std::auto_ptr<Trajectory> TrajectoryProvider::trajectory( const State& state )
+std::unique_ptr<Trajectory> TrajectoryProvider::trajectory( const State& state ) const
 {
   XYZVector bField;
   m_magsvc -> fieldVector( state.position(), bField );
   
-  return std::auto_ptr<Trajectory>(new StateTraj( state, bField ));
+  return std::unique_ptr<Trajectory>(new StateTraj( state, bField ));
 }
 
 //=============================================================================
 // Return a "State trajectory" from a State vector and a z-position
 //=============================================================================
-std::auto_ptr<Trajectory> TrajectoryProvider::trajectory( const Gaudi::TrackVector& stateVector,
-                                                          const double z )
+std::unique_ptr<Trajectory> TrajectoryProvider::trajectory( const Gaudi::TrackVector& stateVector,
+                                                            double z ) const
 {
   XYZVector bField;
-  m_magsvc -> fieldVector( XYZPoint( stateVector(0),stateVector(1), z ),
+  m_magsvc -> fieldVector( { stateVector(0),stateVector(1), z },
                            bField );
   
-  return std::auto_ptr<Trajectory>(new StateTraj( stateVector, z, bField ));
+  return std::unique_ptr<Trajectory>{new StateTraj( stateVector, z, bField )};
 }
 
 //=============================================================================
