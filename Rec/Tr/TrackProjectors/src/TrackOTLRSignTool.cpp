@@ -11,7 +11,7 @@
 #include "OTDet/DeOTModule.h"
 
 namespace {
-  struct OTHit
+  struct OTHit final
   {
     OTHit() : node(0),meas(0),projectedX(0),active(true) {}
     LHCb::OTChannelID otid ;
@@ -20,12 +20,26 @@ namespace {
     double projectedX ;
     bool active ;
   } ;
-  
-  struct OTCluster : public StaticArray<OTHit,16>
+
+  struct OTCluster final
   {
-    unsigned int numRemoved ;
-    unsigned int numLRSignsSet ;
-    OTCluster() : numRemoved(0), numLRSignsSet(0) {}
+    using HitContainer = StaticArray<OTHit,16>;
+    using size_type = typename HitContainer::size_type;
+    using reference = typename HitContainer::reference;
+    using const_reference = typename HitContainer::const_reference;
+
+    HitContainer  hits;
+    unsigned int numRemoved = 0;
+    unsigned int numLRSignsSet = 0;
+    OTCluster() = default;
+
+    size_type size() const { return hits.size(); }
+    bool empty() const { return hits.empty(); }
+    reference operator[](size_type i) noexcept { return hits[i]; }
+    const_reference operator[](size_type i) const noexcept { return hits[i]; }
+    void push_back(const_reference x) { return hits.push_back(x); }
+    reference front() noexcept { return hits.front(); }
+    const_reference front() const noexcept { return hits.front(); }
   } ;
 }
 
@@ -47,7 +61,7 @@ private:
   size_t removeHitsInLayer( OTCluster& ) const ;
   size_t processHitsInLayer( OTCluster& ) const ;
 private:
-  const DeOTDetector* m_otdet ;
+  const DeOTDetector* m_otdet = nullptr;
   bool m_removeOutliers ;
   bool m_printCounters ;
 };
@@ -57,8 +71,7 @@ DECLARE_TOOL_FACTORY(TrackOTLRSignTool)
 TrackOTLRSignTool::TrackOTLRSignTool(const std::string& type,
 				     const std::string& name,
 				     const IInterface* parent):
-  GaudiTool(type, name, parent),
-  m_otdet(0)
+  GaudiTool(type, name, parent)
 {
   // constructor
   declareInterface<ITrackManipulator>(this);
@@ -67,7 +80,7 @@ TrackOTLRSignTool::TrackOTLRSignTool(const std::string& type,
 }
 
 StatusCode TrackOTLRSignTool::initialize()
-{  
+{
   StatusCode sc = GaudiTool::initialize();
   m_otdet = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
   return sc ;
@@ -100,7 +113,7 @@ size_t TrackOTLRSignTool::removeHitsInLayer(OTCluster& othits) const
 	othits.numRemoved +=2 ;
       } else {
 	double avX = sumX/nActive ;
-	int hitToRemove = 
+	int hitToRemove =
 	  std::abs(othits[minX].projectedX - avX ) > std::abs(othits[maxX].projectedX - avX ) ? minX : maxX ;
 	othits[hitToRemove].active = false ;
 	othits.numRemoved += 1 ;
@@ -116,20 +129,22 @@ size_t TrackOTLRSignTool::removeHitsInLayer(OTCluster& othits) const
 	// Leave this for debugging: whener we change something in
 	// signs, we want to make sure we use consistent signs all
 	// over.
-	// info() << "LRSign before/after max: " 
-	//        << maxXSign << " " << othits[maxX].meas->ambiguity() 
-	//        << " min : " 
-	//        << minXSign << " " << othits[minX].meas->ambiguity() << endmsg ;
-	// if( maxXSign * othits[maxX].meas->ambiguity() < 0 ||
-	//     minXSign * othits[minX].meas->ambiguity() <0 ) {
-	//   const LHCb::FitNode* minNode = dynamic_cast<const LHCb::FitNode*>(othits[minX].node) ;
-	//   const LHCb::FitNode* maxNode = dynamic_cast<const LHCb::FitNode*>(othits[maxX].node) ;
-	//   std::cout << "fit doesn't quite agree: "
-	// 	    << othits[minX].projectedX << " " << othits[maxX].projectedX << std::endl
-	// 	    << minNode->doca() << " " << maxNode->doca() << std::endl
-	// 	    << othits[minX].meas->trajectory().direction(0).y() << " "
-	// 	    << othits[maxX].meas->trajectory().direction(0).y() << std::endl ;
-	// }
+    if (false) {
+	  info() << "LRSign before/after max: "
+	         << maxXSign << " " << othits[maxX].meas->ambiguity()
+	         << " min : "
+	         << minXSign << " " << othits[minX].meas->ambiguity() << endmsg ;
+	  if( maxXSign * othits[maxX].meas->ambiguity() < 0 ||
+	      minXSign * othits[minX].meas->ambiguity() <0 ) {
+	    const LHCb::FitNode* minNode = dynamic_cast<const LHCb::FitNode*>(othits[minX].node) ;
+	    const LHCb::FitNode* maxNode = dynamic_cast<const LHCb::FitNode*>(othits[maxX].node) ;
+	    std::cout << "fit doesn't quite agree: "
+                  << othits[minX].projectedX << " " << othits[maxX].projectedX << std::endl
+                  << minNode->doca() << " " << maxNode->doca() << std::endl
+                  << othits[minX].meas->trajectory().direction(0).y() << " "
+                  << othits[maxX].meas->trajectory().direction(0).y() << std::endl ;
+	  }
+    }
 
 	// set the ambiguities. the '2' signals to the projector that the ambiguity is fixed.
 	const_cast<LHCb::OTMeasurement*>(othits[maxX].meas)->setAmbiguity( 2*maxXSign ) ;
@@ -145,12 +160,12 @@ size_t TrackOTLRSignTool::processHitsInLayer( OTCluster& cluster ) const
 {
   size_t rc = 0  ;
   size_t N = cluster.size() ;
-  if(N>=2) {  
+  if(N>=2) {
     // get a reference
     const LHCb::StateVector& refstate = cluster.front().node->refVector() ;
     Gaudi::XYZVector dref(refstate.tx(),refstate.ty(),1) ;
     Gaudi::XYZPoint pref(refstate.x(),refstate.y(),refstate.z()) ;    // fill the residuals
-  
+
     // project the x-coordinates in a single plane perpendicular to
     // the slope. if the track is fitted, all we need is 'doca', I think
     for(size_t i=0; i<N; ++i) {
@@ -169,13 +184,13 @@ size_t TrackOTLRSignTool::processHitsInLayer( OTCluster& cluster ) const
       Gaudi::XYZVector proj = dref.Cross( dhit ) ;
       hit.projectedX = (phit - pref).Dot( proj ) / proj.R() ;
     }
-    
+
     // remove outlying hits and set LR signs
     rc = removeHitsInLayer(cluster) ;
     // deactivate the nodes, but only for clusters of size larger than 2 (otherwise we cannto choose)
     if(rc>0 && m_removeOutliers && cluster.size()>2) {
-      for(size_t i=0; i<N; ++i) 
-	if( !cluster[i].active) 
+      for(size_t i=0; i<N; ++i)
+	if( !cluster[i].active)
 	  (const_cast<LHCb::Node*>(cluster[i].node))->setType(LHCb::Node::Outlier) ;
     }
   }
@@ -192,7 +207,7 @@ StatusCode TrackOTLRSignTool::execute(LHCb::Track& track) const
   } else {
     // now there are two options. if the track was fitted, we'll run
     // over nodes and disable any node in a cluster. if the track was
-    // not yet fitted, we'll remove lhcbids 
+    // not yet fitted, we'll remove lhcbids
     const int numUniqueLayers=12 ;
     // sort the nodes by unique layer
     int nremoved(0), nset(0), nall(0) ;
@@ -202,7 +217,7 @@ StatusCode TrackOTLRSignTool::execute(LHCb::Track& track) const
     const LHCb::TrackFitResult::NodeContainer& nodes = fr->nodes() ;
     for( LHCb::TrackFitResult::NodeContainer::const_iterator it = nodes.begin() ;
 	 it != nodes.end() ; ++it ) {
-      const LHCb::Node* node = *it ;  
+      const LHCb::Node* node = *it ;
       if( node->type()==LHCb::Node::HitOnTrack &&
 	  node->measurement().type()==LHCb::Measurement::OT ) {
 	const LHCb::OTMeasurement* meas = static_cast<LHCb::OTMeasurement*>(&(node->measurement())) ;
@@ -217,7 +232,7 @@ StatusCode TrackOTLRSignTool::execute(LHCb::Track& track) const
 	  const_cast<LHCb::OTMeasurement*>(meas)->setAmbiguity( meas->ambiguity() >0 ? 1 : -1 ) ;
       }
     }
-    
+
     // now loop over the layers, assign LR signs and identify problematic clusters
     for( OTClusterContainer::iterator iclus = nodesByLayer.begin() ;
 	 iclus != nodesByLayer.end(); ++iclus ) {
@@ -239,7 +254,7 @@ StatusCode TrackOTLRSignTool::execute(LHCb::Track& track) const
 }
 
 StatusCode TrackOTLRSignTool::finalize()
-{  
+{
   if( m_printCounters ) {
     info() << counter("Average number of removed OT hits") << endmsg ;
     info() << counter("Fraction of set LR signs") << endmsg ;
