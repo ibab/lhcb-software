@@ -3,6 +3,11 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
+! 2016-01-01 - Gerhard Raven
+ - major change: update ITrajectoryProvider interface:
+    o use std::unique_ptr instead of std::auto_ptr
+    o add const
+   (needs corresponding version of Tr/TrackTools)
 
 ! 2015-02-03 - Vincenzo Battista
  - First commit of ISTSpilloverTool

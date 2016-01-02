@@ -1,4 +1,3 @@
-// $Id: ITrajectoryProvider.h,v 1.7 2007-01-12 14:51:48 cattanem Exp $
 #ifndef TRACKINTERFACES_ITRAJECTORYPROVIDER_H 
 #define TRACKINTERFACES_ITRAJECTORYPROVIDER_H 1
 
@@ -20,7 +19,6 @@ namespace LHCb {
   class State;
 }
 
-static const InterfaceID IID_ITrajectoryProvider ( "ITrajectoryProvider", 1, 0 );
 
 /** @class ITrajectoryProvider ITrajectoryProvider.h TrackInterfaces/ITrajectoryProvider.h
  *  
@@ -29,16 +27,13 @@ static const InterfaceID IID_ITrajectoryProvider ( "ITrajectoryProvider", 1, 0 )
  *  @author Eduardo Rodrigues
  *  @date   2006-02-17
  */
-class ITrajectoryProvider : virtual public IAlgTool {
+class ITrajectoryProvider : public extend_interfaces<IAlgTool> {
 public: 
 
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_ITrajectoryProvider; }
-
-  virtual StatusCode initialize() = 0;
+  DeclareInterfaceID( ITrajectoryProvider, 2, 0 );
 
   /// Return a "Measurement Trajectory" from a Measurement
-  virtual const LHCb::Trajectory* trajectory( const LHCb::Measurement& meas ) = 0;
+  virtual const LHCb::Trajectory* trajectory( const LHCb::Measurement& meas ) const = 0;
 
   /** Return a "Measurement Trajectory" from an LHCbID
    *  Note: the meaning of the offset input depends on the sub-detector type
@@ -46,19 +41,15 @@ public:
    *  @param  id:     input LHCbID
    *  @param  offset: input offset
    */
-  virtual std::auto_ptr<LHCb::Trajectory> trajectory( const LHCb::LHCbID& id,
-                                                      const double offset = 0 ) = 0;
+  virtual std::unique_ptr<LHCb::Trajectory> trajectory( const LHCb::LHCbID& id,
+                                                        double offset = 0 ) const = 0;
   
   /// Return a "State Trajectory" from a State
-  virtual std::auto_ptr<LHCb::Trajectory> trajectory( const LHCb::State& state ) = 0;
+  virtual std::unique_ptr<LHCb::Trajectory> trajectory( const LHCb::State& state ) const = 0;
   
   /// Return a "State Trajectory" from a State vector and a z-position
-  virtual std::auto_ptr<LHCb::Trajectory> trajectory( const Gaudi::TrackVector& stateVector,
-                                                      const double z ) = 0;
+  virtual std::unique_ptr<LHCb::Trajectory> trajectory( const Gaudi::TrackVector& stateVector,
+                                                        double z ) const = 0;
   
-protected:
-  
-private:
-
 };
 #endif // TRACKINTERFACES_ITRAJECTORYPROVIDER_H
