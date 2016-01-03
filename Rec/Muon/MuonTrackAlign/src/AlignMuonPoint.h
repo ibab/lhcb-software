@@ -1,9 +1,7 @@
-// $Id: AlignMuonPoint.h,v 1.1.1.1 2007-07-23 07:14:36 asatta Exp $
 #ifndef ALIGNMUONPOINT_H 
 #define ALIGNMUONPOINT_H 1
 
 // Include files
-#include "MuonKernel/MuonTile.h"
 #include "Kernel/MuonTileID.h"
 /** @class AlignMuonPoint AlignMuonPoint.h
  *  
