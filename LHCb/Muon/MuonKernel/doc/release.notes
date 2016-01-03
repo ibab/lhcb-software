@@ -1,6 +1,9 @@
 Package MuonKernel
 Package manager: A.Tsaregorodtsev
 
+! 2016-01-03 - Gerhard Raven
+ - remove obsolete and unused MuonTile class
+
 !========================= MuonKernel v4r1 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
