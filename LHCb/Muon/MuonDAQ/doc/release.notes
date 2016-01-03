@@ -3,6 +3,8 @@
 ! Responsible : Alessia Satta
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
+! 2016-01-03 - Gerhard Raven
+ - remove unused #include of MuonTile.h
 
 !========================= MuonDAQ v4r20p1 2015-10-12 =========================
 ! 2015-08-03 - Gerhard Raven

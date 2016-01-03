@@ -5,7 +5,6 @@
 // from STL
 #include <string>
 
-#include "MuonKernel/MuonTile.h"
 #include "Kernel/MuonTileID.h"
 #include "MuonDet/DeMuonDetector.h"
 // from Gaudi
