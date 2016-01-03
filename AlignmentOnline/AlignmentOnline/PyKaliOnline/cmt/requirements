@@ -1,0 +1,39 @@
+#============================================================================
+# Created    : 2015-12-15
+# Maintainer : Daria Savrina
+#============================================================================
+package PyKaliOnline
+version v1r0
+
+#============================================================================
+# Structure, i.e. directories to process.
+#============================================================================
+branches src cmt doc python
+include_path none
+
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library      library=AlignOnline
+
+# Declare this as a container package
+apply_pattern container_package
+
+# Allow the generation of QMTest summary
+apply_pattern QMTestSummarize
+
+# run QMTests
+apply_pattern QMTest
+
+#============================================================================
+# Install the configurable
+apply_pattern install_python_modules
+
+#private
+#macro_append Boost_linkopts " $(Boost_linkopts_system) $(Boost_linkopts_filesystem) "
+#end_private

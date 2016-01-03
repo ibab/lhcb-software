@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : AlignmentOnline/PyKaliOnline
+! Responsible : Daria Savrina
+! Purpose     : Online calibration of the ECAL with neutral pions
+!-----------------------------------------------------------------------------
+
+! 2015-12-11 - Daria Savrina
+ - first commit of the package
