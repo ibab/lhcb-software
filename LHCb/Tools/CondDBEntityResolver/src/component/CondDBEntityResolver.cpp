@@ -205,13 +205,13 @@ StatusCode CondDBEntityResolver::i_getData(const std::string &url,
 
   StatusCode sc = condDBReader()->getObject(path,now,data,descr,since,until,channel);
   if (sc.isSuccess()) {
-    if ( data.get() == NULL ) {
+    if ( !data ) {
       log << MSG::ERROR << "Cannot find any data at " << url << endmsg;
       return StatusCode::FAILURE;
     }
     try {
       // try to copy the data into the istringstream
-      std::string str2 = (*data)[data_field_name].data<std::string>();
+      const std::string& str2 = (*data)[data_field_name].data<std::string>();
       str = CondDBCompression::decompress(str2);
     } catch (cool::RecordSpecificationUnknownField &e) {
       log << MSG::ERROR << "I cannot find the data inside COOL object: "
