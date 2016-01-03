@@ -2,6 +2,11 @@
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
+! 2016-01-03 - Gerhard Raven
+ - add missing override
+ - add const
+ - remove executable property from source files
+
 ! 2015-12-28 - Gerhard Raven
  - qualify implementations of virtual functions with 'override'
  - prefer std::unique_ptr over raw pointer + explicit delete

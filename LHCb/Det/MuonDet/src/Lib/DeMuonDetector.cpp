@@ -595,7 +595,7 @@ DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_
 StatusCode DeMuonDetector::Tile2XYZ(LHCb::MuonTileID tile,
                                     double & x, double & dx,
                                     double & y, double & dy,
-                                    double & z, double & dz){
+                                    double & z, double & dz) const{
 
   StatusCode sc = StatusCode::FAILURE;
 

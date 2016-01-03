@@ -13,7 +13,7 @@
 #include "MuonDet/DeMuonChamber.h"
 #include "MuonDet/MuonFrontEndID.h"
 
-#include "MuonDet/PackMCMuonHit.h"  
+#include "MuonDet/PackMCMuonHit.h"
 #include "MuonDet/MuonL1Board.h"
 #include "MuonDet/MuonStationCabling.h"
 #include "MuonDet/MuonODEBoard.h"
@@ -28,7 +28,7 @@ class IDataProviderSvc;
 
 
 /** @class DeMuonDetector DeMuonDetector.h MuonDet/DeMuonDetector.h
- *  
+ *
  *  Detector element class for the muon system
  *
  *  @author Alessia Satta
@@ -36,7 +36,7 @@ class IDataProviderSvc;
  *  @date   18/10/2005
  */
 
-static const CLID CLID_DEMuonDetector = 11009;  
+static const CLID CLID_DEMuonDetector = 11009;
 
 
 
@@ -59,14 +59,14 @@ public:
   StatusCode initialize() override;
 
 
-  StatusCode Hit2ChamberNumber(Gaudi::XYZPoint myPoint, 
-			       int station, 
+  StatusCode Hit2ChamberNumber(Gaudi::XYZPoint myPoint,
+			       int station,
 			       int & chamberNumber, int& regNum) const;
-  
-  StatusCode Hit2GapNumber(Gaudi::XYZPoint myPoint, 
+
+  StatusCode Hit2GapNumber(Gaudi::XYZPoint myPoint,
 			   int station, int & gapNumber,
 			   int & chamberNumber, int& regNum) const ;
-  
+
   StatusCode Pos2ChamberNumber(const double x,
                                const double y,
                                const double z,
@@ -86,7 +86,7 @@ public:
 			     const double y,
 			     int station , int & gapNumber,
 			     int & chamberNumber, int& regNum) const;
-  
+
   StatusCode Pos2ChamberTile(const double x,
                              const double y,
                              const double z,
@@ -96,44 +96,43 @@ public:
                                 const double y,
                                 int station ,
                                 DeMuonChamber* & chamberPointer) const;
-  
+
   StatusCode Pos2ChamberPointer(const double x,
                                 const double y,
                                 const double z,
                                 DeMuonChamber* & chamberPointer) const;
 
-  StatusCode Chamber2Tile(int  chaNum, int station, int region, 
+  StatusCode Chamber2Tile(int  chaNum, int station, int region,
                           LHCb::MuonTileID& tile) const ;
 
 
-  int sensitiveVolumeID(const Gaudi::XYZPoint &  myPoint) const;
-  
+  int sensitiveVolumeID(const Gaudi::XYZPoint &  myPoint) const override;
 
-  unsigned int gapID( int sensDetID);
-  
-  unsigned int chamberID( int sensDetID);
-  
-  unsigned int regionID( int sensDetID );
-  
-  unsigned int stationID( int sensDetID );
-  
-  unsigned int quadrantID( int sensDetID );
-  
-  bool isM1defined();
+  unsigned int gapID( int sensDetID) const;
 
-  //Returns the list of physical channels for a given chamber  
-  std::vector< std::pair<MuonFrontEndID, std::vector<float> > > 
-  listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_exit, 
+  unsigned int chamberID( int sensDetID) const;
+
+  unsigned int regionID( int sensDetID ) const;
+
+  unsigned int stationID( int sensDetID ) const;
+
+  unsigned int quadrantID( int sensDetID ) const;
+
+  bool isM1defined() const;
+
+  //Returns the list of physical channels for a given chamber
+  std::vector< std::pair<MuonFrontEndID, std::vector<float> > >
+  listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_exit,
                      int region, int chamber);
-  StatusCode getPCCenter(MuonFrontEndID fe,int chamber,int station, 
-                         int region,double& xcenter, 
+  StatusCode getPCCenter(MuonFrontEndID fe,int chamber,int station,
+                         int region,double& xcenter,
                          double& ycenter, double & zcenter);
   //Returns the station index starting from the z position
   int getStation(const double z) const;
-  
+
   //Returns a detector element identified by chmb, reg, num
   //IDetectorElement* ReturnADetElement(int lsta, int lreg, int lchm);
-  
+
   // Return the chamber pointer from m_ChmbPtr
   DeMuonChamber* getChmbPtr(const int station, const int region,
 			    const int chmb) const;
@@ -143,129 +142,129 @@ public:
 
 
 
-  //Fills the vector of chamber pointers  
+  //Fills the vector of chamber pointers
   //void fillChmbPtr();
 
   //Fills various geometry related info
   void fillGeoInfo();
   void fillGeoArray();
-  StatusCode Tile2XYZ(LHCb::MuonTileID tile, 
+  StatusCode Tile2XYZ(LHCb::MuonTileID tile,
 		      double & x, double & dx,
-		      double & y, double & dy, 
-		      double & z, double & dz);  
+		      double & y, double & dy,
+		      double & z, double & dz) const;
   void CountDetEls();
- 
-  int stations();
-  int regions();
-  int regions(int stations);
-  double getStationZ(const int station);
 
-  
-  int gapsInRegion(const int station, const int region){
-    return m_gapPerRegion[station*4+region];    
+  int stations() const;
+  int regions() const;
+  int regions(int stations) const;
+  double getStationZ(const int station) const;
+
+
+  int gapsInRegion(const int station, const int region) const {
+    return m_gapPerRegion[station*4+region];
   };
-  int gapsPerFE(const int station, const int region){
+  int gapsPerFE(const int station, const int region) const {
     return m_gapPerFE[station*4+region];
   };
-  int readoutInRegion(const int station, const int region){
+  int readoutInRegion(const int station, const int region) const {
     return m_readoutNumber[station*4+region];
   };
-  int mapInRegion(const int station, const int region){
+  int mapInRegion(const int station, const int region) const {
     return m_LogMapPerRegion[station*4+region];
   };
-  double areaChamber(const int station, const int region){
+  double areaChamber(const int station, const int region) const {
     return m_areaChamber[station*4+region];
   };
-  unsigned int getPhChannelNX(const int readout, const int station, 
-                              const int region){
+  unsigned int getPhChannelNX(const int readout, const int station,
+                              const int region) const {
     return  m_phChannelNX[readout][station*4+region];
   };
-  unsigned int getPhChannelNY(const int readout,const int station, 
-                              const int region){
+  unsigned int getPhChannelNY(const int readout,const int station,
+                              const int region) const {
     return  m_phChannelNY[readout][station*4+region];
   };
-  float getPadSizeX(const int station, 
-                              const int region){
+  float getPadSizeX(const int station,
+                              const int region) const {
     return m_padSizeX[station*4+region];
   };
 
-  float getPadSizeY(const int station, 
-                              const int region){
+  float getPadSizeY(const int station,
+                              const int region) const {
     return m_padSizeY[station*4+region];
   };
-  unsigned int getReadoutType(const int ireadout,const int station, 
-                              const int region){    
+  unsigned int getReadoutType(const int ireadout,const int station,
+                              const int region) const {
     return  m_readoutType[ireadout][station*4+region];
   };
-  unsigned int chamberInRegion(const int station, const int region){
+  unsigned int chamberInRegion(const int station, const int region) const {
     return  m_chamberPerRegion[station*4+region];
   };
-  unsigned int getLogMapInRegion(const int station, const int region){
+  unsigned int getLogMapInRegion(const int station, const int region) const {
     return  m_LogMapPerRegion[station*4+region];
   };
-  unsigned int getLogMapRType(const int ireadout, const int station, 
-                              const int region){
+  unsigned int getLogMapRType(const int ireadout, const int station,
+                              const int region) const {
     return m_LogMapRType[ireadout][station*4+region];
   };
-  unsigned int getLogMapMergex( const int ireadout,const int station, 
-                                const int region){
+  unsigned int getLogMapMergex( const int ireadout,const int station,
+                                const int region) const {
     return m_LogMapMergex[ireadout][station*4+region];
   };
-  unsigned int getLogMapMergey( const int ireadout,const int station, 
-                                const int region){ 
+  unsigned int getLogMapMergey( const int ireadout,const int station,
+                                const int region) const {
     return m_LogMapMergey[ireadout][station*4+region];
   };
-  unsigned int getLayoutX( const int ireadout,const int station, 
-                           const int region){
+  unsigned int getLayoutX( const int ireadout,const int station,
+                           const int region) const {
     return m_layoutX[ireadout][station*4+region];
   };
-  unsigned int getLayoutY( const int ireadout,const int station, 
-                           const int region){  
+  unsigned int getLayoutY( const int ireadout,const int station,
+                           const int region) const {
     return m_layoutY[ireadout][station*4+region];
   };
-  float getSensAreaX( const int station, 
-                           const int region){  
+  float getSensAreaX( const int station,
+                           const int region) const {
     return m_sensitiveAreaX[station*4+region];
   };
-  float getSensAreaY( const int station, 
-                           const int region){  
+  float getSensAreaY( const int station,
+                           const int region) const {
     return m_sensitiveAreaY[station*4+region];
   };
-  float getSensAreaZ( const int station, 
-                           const int region){  
+  float getSensAreaZ( const int station,
+                           const int region) const {
     return m_sensitiveAreaZ[station*4+region];
   };
 
-  double getInnerX(const int station){
+  double getInnerX(const int station) const {
     return m_stationBox[station][0];
   };
-  double getInnerY(const int station){
+  double getInnerY(const int station) const {
     return m_stationBox[station][1];
   };
-  double getOuterX(const int station){
+  double getOuterX(const int station) const {
     return m_stationBox[station][2];
   };
-  double getOuterY(const int station){
+  double getOuterY(const int station) const {
     return m_stationBox[station][3];
   };
 
-  unsigned int getCardiacORX(const int par, const unsigned int readoutType){
+  unsigned int getCardiacORX(const int par, const unsigned int readoutType) const {
     return m_phCardiacORNX[readoutType][par];
   };
-  unsigned int getCardiacORY(const int par, const unsigned int readoutType){
+  unsigned int getCardiacORY(const int par, const unsigned int readoutType) const {
     return m_phCardiacORNY[readoutType][par];
   };
 
   //Returns the station (as DetectorElement pointer) identified by MuonTileID
   DetectorElement* Tile2Station(const LHCb::MuonTileID aTile);
-  
+
   // Return the chambers (as vector of DeMuonChamber pointer) from the MuonTileID
   std::vector<DeMuonChamber*> Tile2Chamber(const LHCb::MuonTileID aTile);
 
-  //Returns the station (as DetectorElement pointer) from a Hit 
+  //Returns the station (as DetectorElement pointer) from a Hit
   DetectorElement* Hit2Station(const Gaudi::XYZPoint myPoint);
-  
-  //Returns the chamber (as DetectorElement pointer) from a Hit 
+
+  //Returns the chamber (as DetectorElement pointer) from a Hit
   DeMuonChamber* Hit2Chamber(const Gaudi::XYZPoint myPoint);
 
   inline MuonDAQHelper* getDAQInfo(){
@@ -311,7 +310,7 @@ private:
   int m_readoutNumber[partition];
   unsigned int m_chamberPerRegion[partition];
   unsigned int m_gapPerRegion[partition];
-  unsigned int m_LogMapPerRegion[partition]; 
+  unsigned int m_LogMapPerRegion[partition];
   unsigned int m_readoutType[maxReadoutType][partition];
   unsigned int m_LogMapRType[maxReadoutType][partition];
   unsigned int m_LogMapMergex[maxReadoutType][partition];
@@ -326,10 +325,10 @@ private:
   int m_gapPerFE[partition];
   int m_layoutX[maxReadoutType][partition];
   int m_layoutY[maxReadoutType][partition];
-  double  m_areaChamber[partition]; 
+  double  m_areaChamber[partition];
   float m_sensitiveAreaX[partition];
   float m_sensitiveAreaY[partition];
-  float m_sensitiveAreaZ[partition];  
+  float m_sensitiveAreaZ[partition];
   double m_stationBox[5][4];
   //  double m_stationZ[5];
   std::vector<double> m_stationZ;
@@ -358,85 +357,85 @@ inline int DeMuonDetector::getStation(const double z) const
 
 
   //If M1 is not defined (post upgrade) shift the index back
-//  if (m_isM1defined == false) 
+//  if (m_isM1defined == false)
 //    idX--;
 
   return idX;
 }
 
-inline int DeMuonDetector::stations()
+inline int DeMuonDetector::stations() const
 {
-  //Number of stations 
+  //Number of stations
   return m_stations;
 }
 
-inline int DeMuonDetector::regions() 
+inline int DeMuonDetector::regions() const
 {
   //Number of all regions
   return m_regions;
 }
 
-inline double DeMuonDetector::getStationZ(const int station){
+inline double DeMuonDetector::getStationZ(const int station) const {
   //    return m_stationZ[station];
   return m_stationZ.at(station);
 }
 
 
-inline int DeMuonDetector::regions(int stations)
+inline int DeMuonDetector::regions(int stations) const
 {
   //Number of regions in each station
   return m_regsperSta[stations];
 }
 
-inline unsigned int DeMuonDetector::gapID(int sensDetID)
+inline unsigned int DeMuonDetector::gapID(int sensDetID) const
 {
-  
+
   return LHCb::Packer::getBit(sensDetID,
                         PackMCMuonHit::maskGapID,PackMCMuonHit::shiftGapID);
-  
+
 }
 
 
-inline unsigned int DeMuonDetector::chamberID(int sensDetID)
+inline unsigned int DeMuonDetector::chamberID(int sensDetID) const
 {
-  
+
   return LHCb::Packer::getBit(sensDetID,
                         PackMCMuonHit::maskChamberID,
                         PackMCMuonHit::shiftChamberID);
-  
+
 }
 
 
-inline unsigned int DeMuonDetector::regionID(int sensDetID)
+inline unsigned int DeMuonDetector::regionID(int sensDetID) const
 {
-  
+
   return LHCb::Packer::getBit(sensDetID,
                                     PackMCMuonHit::maskRegionID,
                                     PackMCMuonHit::shiftRegionID);
-  
+
 }
 
 
-inline unsigned int DeMuonDetector::stationID(int sensDetID)
+inline unsigned int DeMuonDetector::stationID(int sensDetID) const
 {
-  
+
   return LHCb::Packer::getBit(sensDetID,
                                     PackMCMuonHit::maskStationID,
                                     PackMCMuonHit::shiftStationID);
-  
+
 }
 
 
-inline unsigned int DeMuonDetector::quadrantID(int sensDetID)
+inline unsigned int DeMuonDetector::quadrantID(int sensDetID) const
 {
-  
+
   return LHCb::Packer::getBit(sensDetID,
                                     PackMCMuonHit::maskQuadrantID,
                                     PackMCMuonHit::shiftQuadrantID);
-  
+
 }
 
-inline bool DeMuonDetector::isM1defined()
+inline bool DeMuonDetector::isM1defined() const
 {
     return m_isM1defined;
 }
