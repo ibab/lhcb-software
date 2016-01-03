@@ -1,7 +1,5 @@
-// $Id: MuonODEBoard.cpp,v 1.3 2006-01-16 15:11:33 asarti Exp $
 // Include files 
 
-#include "MuonKernel/MuonTile.h"
 #include <iostream>
 
 // local

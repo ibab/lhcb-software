@@ -1,4 +1,3 @@
-// $Id: MuonODEBoard.h,v 1.3 2008-04-02 11:47:48 asatta Exp $
 #ifndef MUONDET_MUONODEBOARD_H
 #define MUONDET_MUONODEBOARD_H 1
 
@@ -8,8 +7,8 @@
 
 
 // Include files
+#include "Kernel/MuonTileID.h"
 #include "MuonDet/CLID_MuonODEBoard.h"
-#include "MuonKernel/MuonTile.h"
 
 /** @class MuonODEBoard MuonODEBoard.h MuonDet/MuonODEBoard.h
  *

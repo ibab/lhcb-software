@@ -6,6 +6,7 @@
  - add missing override
  - add const
  - remove executable property from source files
+ - remove unused include of MuonTile.h
 
 ! 2015-12-28 - Gerhard Raven
  - qualify implementations of virtual functions with 'override'
