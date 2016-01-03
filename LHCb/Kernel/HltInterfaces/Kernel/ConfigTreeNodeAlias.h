@@ -6,17 +6,17 @@
 #include <iostream>
 #include "boost/format.hpp"
 
-class ConfigTreeNodeAlias {
+class ConfigTreeNodeAlias final {
 public:
     typedef ConfigTreeNode::digest_type  digest_type;
 
-    class alias_type {
+    class alias_type final {
     public:
         //@TODO: add/enforce rules: TCK/xxx, TOPLEVEL/xxx, TAG/xxx
-       alias_type() {}
-       alias_type(const std::string& s) : m_alias(s) { }
+       alias_type() = default;
+       alias_type(std::string s) : m_alias(std::move(s)) { }
        const std::string& str() const { return m_alias; }
-       alias_type  operator/ (const std::string& x) { return alias_type( *this ) /= x ; }
+       alias_type  operator/ (const std::string& x) const { return alias_type( *this ) /= x ; }
        alias_type& operator/=(const std::string& x) { m_alias += "/" ; m_alias+=x; return *this; }
        alias_type& operator=(const std::string& x)  { m_alias = x ; return *this; }
        std::string major() const; // the part upto (not including) the first '/'
@@ -31,7 +31,7 @@ public:
        std::string m_alias;
     };
      
-    ConfigTreeNodeAlias() : m_ref(digest_type::createInvalid()) {}
+    ConfigTreeNodeAlias() = default;
 
     // protect top of alias namespace...
     static ConfigTreeNodeAlias createTopLevel(const std::string& release, const std::string& runType, const ConfigTreeNode& top) 
@@ -58,7 +58,7 @@ private:
     ConfigTreeNodeAlias(const digest_type& ref, const alias_type& alias);
     void invalidate(const std::string& reason);
 
-    digest_type     m_ref;
+    digest_type     m_ref = digest_type::createInvalid();
     alias_type      m_alias;
 };
 

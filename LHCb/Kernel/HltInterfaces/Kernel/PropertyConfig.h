@@ -9,43 +9,39 @@
 #include "GaudiKernel/IProperty.h"
 #include "LHCbMath/MD5.h"
 
-class PropertyConfig : public boost::equality_comparable<PropertyConfig> {
+class PropertyConfig final : public boost::equality_comparable<PropertyConfig> {
 public:
     typedef Gaudi::Math::MD5 digest_type;
 
     typedef std::pair<std::string,std::string> Prop;
     typedef std::vector<Prop> Properties;
 
-    PropertyConfig() {} ;
+    PropertyConfig() = default;
 
-    PropertyConfig(const std::string& name, const IProperty& obj, const std::string& kind)
+    PropertyConfig(std::string name, const IProperty& obj, std::string kind)
       : m_type(System::typeinfoName(typeid(obj)))
-      , m_name(name)
-      , m_kind(kind)
-      , m_digest(digest_type::createInvalid())
+      , m_name(std::move(name))
+      , m_kind(std::move(kind))
     { initProperties( obj ) ; }
 
-    PropertyConfig(const std::string& name, const std::string& type, const std::string& kind)
-      : m_type(type)
-      , m_name(name)
-      , m_kind(kind)
-      , m_digest(digest_type::createInvalid())
+    PropertyConfig(std::string name, std::string type, std::string kind)
+      : m_type(std::move(type))
+      , m_name(std::move(name))
+      , m_kind(std::move(kind))
     {  }
 
-    PropertyConfig(const std::string& name, const std::string& type, const std::string& kind, const Properties& props)
-      : m_properties(props)
-      , m_type(type)
-      , m_name(name)
-      , m_kind(kind)
-      , m_digest(digest_type::createInvalid())
+    PropertyConfig(std::string name, std::string type, std::string kind, Properties props)
+      : m_properties(std::move(props))
+      , m_type(std::move(type))
+      , m_name(std::move(name))
+      , m_kind(std::move(kind))
     { }
 
-    PropertyConfig(const PropertyConfig& orig, const Properties& properties)
-        : m_properties( properties )
+    PropertyConfig(const PropertyConfig& orig, Properties properties)
+        : m_properties( std::move(properties) )
         , m_type( orig.m_type )
         , m_name( orig.m_name )
         , m_kind( orig.m_kind )
-        , m_digest( digest_type::createInvalid())
     { }
 
     bool operator==(const PropertyConfig& rhs) const { 
@@ -82,7 +78,7 @@ private:
 
     Properties   m_properties;
     std::string  m_type,m_name,m_kind;
-    mutable digest_type  m_digest;
+    mutable digest_type  m_digest = digest_type::createInvalid();
     void updateCache() const;
     void initProperties( const IProperty& obj );
 };

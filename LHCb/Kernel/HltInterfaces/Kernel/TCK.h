@@ -3,11 +3,11 @@
 #include "boost/operators.hpp"
 #include "boost/format.hpp"
 
-class TCK : public boost::equality_comparable<TCK> {
+class TCK final : public boost::equality_comparable<TCK> {
 public:
-    TCK() : m_unsigned(0) {}
+    TCK() = default;
     explicit TCK(unsigned int i) : m_unsigned(i) { set(i); }
-    explicit TCK(std::string s) : m_unsigned(0) { set(s); }
+    explicit TCK(std::string s) { set(s); }
     bool operator<(const TCK& rhs) const { return m_unsigned  < rhs.m_unsigned; } 
     bool operator==(const TCK& rhs) const { return m_unsigned == rhs.m_unsigned; } 
     bool operator==(unsigned int rhs) const { return m_unsigned == rhs; } 
@@ -31,7 +31,7 @@ public:
     bool valid() const { return m_unsigned != 0 ; }
 private:
     std::string m_stringRep;
-    unsigned int m_unsigned;
+    unsigned int m_unsigned = 0;
 };
 inline std::ostream& operator<<(std::ostream& os, const TCK& tck) 
 { return os << tck.str(); }

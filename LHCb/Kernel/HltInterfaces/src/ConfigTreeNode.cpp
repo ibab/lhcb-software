@@ -5,10 +5,10 @@
 
 using Gaudi::Math::MD5;
 
-ConfigTreeNode::ConfigTreeNode(const LeafRef& leaf, const NodeRefs& nodes, const std::string& label)
+ConfigTreeNode::ConfigTreeNode(const LeafRef& leaf, const NodeRefs& nodes, std::string label)
       : m_nodes(nodes)
       , m_leaf(leaf)
-      , m_label(label)
+      , m_label( std::move(label))
       , m_digest( digest_type::createInvalid() )
 { 
  if (this->label().find(':')!=std::string::npos)

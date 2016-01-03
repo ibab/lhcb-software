@@ -1,4 +1,3 @@
-// $Id: ReadRoutingBits.h,v 1.1 2009-11-06 13:22:03 pkoppenb Exp $
 #ifndef KERNEL_READROUTINGBITS_H 
 #define KERNEL_READROUTINGBITS_H 1
 

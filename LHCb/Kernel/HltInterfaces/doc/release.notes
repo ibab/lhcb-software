@@ -2,6 +2,11 @@
 ! Package     : HltInterfaces
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
+! 2016-01-03 - Gerhard Raven
+ - pass sink arguments by value and move them in place
+ - add 'final' to  PropertyConfig, ConfigTreeNode, ConfigTreeAlias, TCK
+ - add a const
+ - prefer direct member initialization
 
 !========================= HltInterfaces v6r4 2015-12-18 =========================
 

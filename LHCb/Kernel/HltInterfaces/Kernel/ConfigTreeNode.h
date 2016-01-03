@@ -7,7 +7,7 @@
 #include "boost/optional.hpp"
 #include "boost/operators.hpp"
 
-class ConfigTreeNode : public boost::equality_comparable<ConfigTreeNode> {
+class ConfigTreeNode final : public boost::equality_comparable<ConfigTreeNode> {
 public:
     // this class represent an adjacency view layout of the configuration tree...
     // There is one 'leaf' per node: basically, the 'data' at this node,
@@ -30,23 +30,18 @@ public:
     typedef digest_type              NodeRef;
     typedef std::vector<NodeRef>     NodeRefs;
 
-    ConfigTreeNode() 
-      : m_leaf( digest_type::createInvalid() ) 
-      , m_digest( digest_type::createInvalid() )
-    { }
+    ConfigTreeNode() = default;
 
     ConfigTreeNode(const LeafRef& leaf)
       : m_leaf(leaf)
-      , m_digest( digest_type::createInvalid() )
     { }
 
     ConfigTreeNode(const LeafRef& leaf, const NodeRefs& nodes)
       : m_nodes(nodes)
       , m_leaf(leaf)
-      , m_digest( digest_type::createInvalid() )
     { }
 
-    ConfigTreeNode(const LeafRef& leaf, const NodeRefs& nodes, const std::string& label);
+    ConfigTreeNode(const LeafRef& leaf, const NodeRefs& nodes, std::string label);
 
     ConfigTreeNode *clone(boost::optional<const LeafRef&> newLeaf = boost::optional<const LeafRef&>(), 
                           boost::optional<const NodeRefs&> newNodes = boost::optional<const NodeRefs&>(), 
@@ -78,12 +73,12 @@ public:
 private:
     friend class ConfigArchiveAccessSvc; // provide access to 'str' to allow backwards compatible writes...
     std::string str() const;
+    void updateCache() const;
 
     NodeRefs    m_nodes;
-    LeafRef     m_leaf;
+    LeafRef     m_leaf = digest_type::createInvalid();
     std::string m_label;
-    void updateCache() const;
-    mutable digest_type m_digest;
+    mutable digest_type m_digest = digest_type::createInvalid();
 };
 
 inline std::ostream& operator<<(std::ostream& os, const ConfigTreeNode& x) { return x.print(os); }
