@@ -79,7 +79,6 @@ namespace {
     std::vector<std::pair<double,LHCb::CaloCellID> >    m_std_vector_std_pair_double_CaloCellID;
     std::vector<std::pair<LHCb::MuonTileID,int> >       m_std_vector_std_pair_MuonTileID_int;
     std::vector<std::pair<LHCb::HCCellID,int> >         m_std_vector_std_pair_HCCellID_int;
-    std::auto_ptr<LHCb::Trajectory>                     m_auto_ptr_Trajectory;
     LHCb::SiPositionInfo<LHCb::STChannelID>             m_SiPositionInfo_STChannelID;
     LHCb::SiPositionInfo<LHCb::VeloChannelID>           m_SiPositionInfo_VeloChannelID;
     LHCb::PixelPositionInfo<LHCb::VPChannelID>          m_PixelPositionInfo_VPChannelID;

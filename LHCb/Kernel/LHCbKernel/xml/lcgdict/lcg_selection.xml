@@ -23,7 +23,6 @@
   <class name="LHCb::LineTraj"/>
   <class name="LHCb::ParabolaTraj"/>
   <class name="MuonLayout"/>
-  <class name="std::auto_ptr<LHCb::Trajectory>"/>
   <class pattern ="LHCb::SiPositionInfo<*>"/>
   <class pattern ="LHCb::PixelPositionInfo<*>"/>
   <class pattern ="GaudiUtils::VectorMap<*>"/>

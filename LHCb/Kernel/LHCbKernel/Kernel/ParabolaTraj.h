@@ -30,7 +30,7 @@ namespace LHCb
     virtual ~ParabolaTraj() {};
 
     // clone thyself...
-    virtual std::auto_ptr<Trajectory> clone() const;
+    virtual std::unique_ptr<Trajectory> clone() const;
 
     /// Constructor from a (middle) point, a (unit) direction vector,
     /// a curvature vector and the pair of begin- and endpoints.

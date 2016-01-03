@@ -17,9 +17,9 @@ using namespace LHCb;
 using namespace ROOT::Math;
 using namespace Gaudi;
 
-std::auto_ptr<Trajectory> CircleTraj::clone() const
+std::unique_ptr<Trajectory> CircleTraj::clone() const
 {
-  return std::auto_ptr<Trajectory>(new CircleTraj(*this));
+  return std::unique_ptr<Trajectory>(new CircleTraj(*this));
 }
 
 CircleTraj::CircleTraj( const Point& origin,

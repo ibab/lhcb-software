@@ -34,7 +34,7 @@ namespace LHCb
     PiecewiseTrajectory(const PiecewiseTrajectory& rhs);
 
     // clone thyself...
-    virtual std::auto_ptr<Trajectory> clone() const;
+    virtual std::unique_ptr<Trajectory> clone() const;
 
     /// Point on the trajectory at mu
     Point position( double mu ) const;

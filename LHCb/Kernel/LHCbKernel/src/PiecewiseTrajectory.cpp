@@ -31,9 +31,9 @@ namespace {
   };
 }
 
-std::auto_ptr<LHCb::Trajectory> LHCb::PiecewiseTrajectory::clone() const
+std::unique_ptr<LHCb::Trajectory> LHCb::PiecewiseTrajectory::clone() const
 {
-  return std::auto_ptr<LHCb::Trajectory>(new LHCb::PiecewiseTrajectory(*this));
+  return std::unique_ptr<LHCb::Trajectory>(new LHCb::PiecewiseTrajectory(*this));
 }
 
 LHCb::PiecewiseTrajectory::PiecewiseTrajectory(const PiecewiseTrajectory& rhs)

@@ -74,7 +74,7 @@ namespace LHCb
     virtual ~AlignTraj(){}
 
     // clone thyself...
-    virtual std::auto_ptr<Trajectory> clone() const;
+    virtual std::unique_ptr<Trajectory> clone() const;
 
     /// Retrieve the derivative of the point at fixed arclength 'arclength'
     /// with respect to the alignment parameters

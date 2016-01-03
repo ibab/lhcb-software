@@ -3,6 +3,9 @@
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
+! 2016-01-03 - Gerhard Raven
+ - major change: replace deprecated std::auto_ptr with std::unique_ptr
+
 ! 2015-12-28 - Gerhard Raven
  - inline MuonTileID::isDefined
 

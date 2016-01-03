@@ -37,9 +37,9 @@ namespace {
     { return Diag<T>(t,begin,end);}
 }
 
-std::auto_ptr<LHCb::Trajectory> AlignTraj::clone() const
+std::unique_ptr<LHCb::Trajectory> AlignTraj::clone() const
 {
-  return std::auto_ptr<LHCb::Trajectory>(new AlignTraj(*this));
+  return std::unique_ptr<LHCb::Trajectory>(new AlignTraj(*this));
 }
 
 

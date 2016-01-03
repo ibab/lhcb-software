@@ -32,7 +32,7 @@ namespace LHCb
     typedef Gaudi::XYZVector         Vector;
 
     /// Clone a trajectory...
-    virtual std::auto_ptr<Trajectory> clone() const = 0;
+    virtual std::unique_ptr<Trajectory> clone() const = 0;
 
     /// Constructor taking the values of mu that defined the valid range of the trajectory
     Trajectory( double begin, double end ): m_range(Range(begin,end)) {}

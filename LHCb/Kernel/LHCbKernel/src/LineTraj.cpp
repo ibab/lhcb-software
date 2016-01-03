@@ -6,9 +6,9 @@
 using namespace LHCb;
 using namespace ROOT::Math;
 
-std::auto_ptr<Trajectory> LineTraj::clone() const
+std::unique_ptr<Trajectory> LineTraj::clone() const
 {
-  return std::auto_ptr<Trajectory>(new LineTraj(*this));
+  return std::unique_ptr<Trajectory>(new LineTraj(*this));
 }
 
 

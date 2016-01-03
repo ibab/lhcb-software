@@ -31,7 +31,7 @@ namespace LHCb
     virtual ~CircleTraj() {};
 
     // clone thyself...
-    virtual std::auto_ptr<Trajectory> clone() const;
+    virtual std::unique_ptr<Trajectory> clone() const;
 
     /// Constructor from a center, the normal which defines the plane
     /// of the circle, a vector from the center to a point on the circle,

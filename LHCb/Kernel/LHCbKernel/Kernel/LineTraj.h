@@ -31,7 +31,7 @@ namespace LHCb
     virtual ~LineTraj() {};
 
     // clone thyself...
-    virtual std::auto_ptr<Trajectory> clone() const;
+    virtual std::unique_ptr<Trajectory> clone() const;
 
     /// Constructor from the middle point and a direction vector
     LineTraj( const Point& middle,

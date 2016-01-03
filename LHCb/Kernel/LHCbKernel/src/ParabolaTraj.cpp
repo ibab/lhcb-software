@@ -6,9 +6,9 @@
 using namespace LHCb;
 using namespace ROOT::Math;
 
-std::auto_ptr<Trajectory> ParabolaTraj::clone() const
+std::unique_ptr<Trajectory> ParabolaTraj::clone() const
 {
-        return std::auto_ptr<Trajectory>(new ParabolaTraj(*this));
+        return std::unique_ptr<Trajectory>(new ParabolaTraj(*this));
 }
 
 #ifdef __INTEL_COMPILER         // Disable ICC remark from ROOT
