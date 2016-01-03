@@ -473,7 +473,7 @@ public:
   }
   
   /// Return a trajectory (for track fit) from strip + offset
-  std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::LHCbID& id, const double offset) const {
+  std::unique_ptr<LHCb::Trajectory> trajectory(const LHCb::LHCbID& id, const double offset) const {
     if ( !id.isVelo()){
       throw GaudiException( "The LHCbID is not a VeloChannelID", "DeVelo",StatusCode::FAILURE );
     }

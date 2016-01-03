@@ -574,44 +574,28 @@ void DeVeloPhiType::BuildRoutingLineMap(){
 }
 //==============================================================================
 // Return a trajectory (for track fit) from strip + offset
-std::auto_ptr<LHCb::Trajectory> DeVeloPhiType::trajectory(const LHCb::VeloChannelID& id,
-                                                          const double offset) const {
+std::unique_ptr<LHCb::Trajectory> DeVeloPhiType::trajectory(const LHCb::VeloChannelID& id,
+                                                            double offset) const {
   // Trajectory is a line
-  Gaudi::XYZPoint lEnd1, lEnd2;
   unsigned int strip=id.strip();
-  //StatusCode sc = stripLimits(strip,lEnd1,lEnd2);
-  std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint> localCoords;
-  localCoords=localStripLimits(strip);
-  lEnd1 = localCoords.first;
-  lEnd2 = localCoords.second;
+  auto lEnd = localStripLimits(strip);
   // need to also grab next strip in local frame to get offset effect
-  Gaudi::XYZPoint lNextEnd1, lNextEnd2;
   // check direction of offset
   // do nothing if offset == 0.
   if(offset > 0. ){
-    localCoords = localStripLimits(strip+1);
-    lNextEnd1 = localCoords.first;
-    lNextEnd2 = localCoords.second;
-    lEnd1 += (lNextEnd1-lEnd1)*offset;
-    lEnd2 += (lNextEnd2-lEnd2)*offset;
+    auto lNextEnd = localStripLimits(strip+1);
+    lEnd.first  += (lNextEnd.first-lEnd.first)*offset;
+    lEnd.second += (lNextEnd.second-lEnd.second)*offset;
   }else if(offset < 0.) {
-    localCoords = localStripLimits(strip-1);
-    lNextEnd1 = localCoords.first;
-    lNextEnd2 = localCoords.second;
-    lEnd1 += (lEnd1-lNextEnd1)*offset;
-    lEnd2 += (lEnd2-lNextEnd2)*offset;
+    auto lNextEnd = localStripLimits(strip-1);
+    lEnd.first += (lEnd.first-lNextEnd.first)*offset;
+    lEnd.second += (lEnd.second-lNextEnd.second)*offset;
   }
-
-  Gaudi::XYZPoint gEnd1 = localToGlobal(lEnd1);
-  Gaudi::XYZPoint gEnd2 = localToGlobal(lEnd2);
-
-  // put into trajectory
-  LHCb::Trajectory* tTraj = new LHCb::LineTraj(gEnd1,gEnd2);
-
-  std::auto_ptr<LHCb::Trajectory> autoTraj(tTraj);
-
-  return autoTraj;
-
+  // transform to global coordinates, and create trajectory
+  return std::unique_ptr<LHCb::Trajectory>{
+    new LHCb::LineTraj(localToGlobal(lEnd.first),
+                       localToGlobal(lEnd.second))
+  };
 }
 
 StatusCode DeVeloPhiType::updatePhiCache()
@@ -619,7 +603,7 @@ StatusCode DeVeloPhiType::updatePhiCache()
   for (unsigned int zone=0; zone<m_numberOfZones; ++zone) {
 
     unsigned int firstStrip = m_nbInner*zone;
-    std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>  limits = localStripLimits(firstStrip);
+    auto limits = localStripLimits(firstStrip);
     double r0 = (limits.first.rho()+limits.second.rho())/2.0;
 
     double d0 = zone ? m_outerDistToOrigin : m_innerDistToOrigin;
@@ -676,27 +660,25 @@ StatusCode DeVeloPhiType::updateZoneLimits()
     unsigned int midStrip = (minStrip+maxStrip)/2;
 
     // determine the r ranges of the zones in global frame
-    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> globalLimitsMin = globalStripLimits(minStrip);
-    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> globalLimitsMax = globalStripLimits(maxStrip);
-    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> globalLimitsMid = globalStripLimits(midStrip);
-    std::vector<double> rLimits;
-    rLimits.push_back(globalLimitsMin.first.rho()); rLimits.push_back(globalLimitsMin.second.rho());
-    rLimits.push_back(globalLimitsMax.first.rho()); rLimits.push_back(globalLimitsMax.second.rho());
-    rLimits.push_back(globalLimitsMid.first.rho()); rLimits.push_back(globalLimitsMid.second.rho());
-    m_globalRLimitsZone[zone].first  = *std::min_element(rLimits.begin(),rLimits.end());
-    m_globalRLimitsZone[zone].second = *std::max_element(rLimits.begin(),rLimits.end());
+    auto globalLimitsMin = globalStripLimits(minStrip);
+    auto globalLimitsMax = globalStripLimits(maxStrip);
+    auto globalLimitsMid = globalStripLimits(midStrip);
+    std::array<double,6> rLimits = { globalLimitsMin.first.rho(),globalLimitsMin.second.rho(),
+                                     globalLimitsMax.first.rho(),globalLimitsMax.second.rho(),
+                                     globalLimitsMid.first.rho(),globalLimitsMid.second.rho() };
+    auto minmax = std::minmax_element( rLimits.begin(),rLimits.end() );
+    m_globalRLimitsZone[zone].first  = *minmax.first;
+    m_globalRLimitsZone[zone].second = *minmax.second;
 
-    std::vector<double> phiLimits;
-    phiLimits.push_back(globalLimitsMin.first.phi()); phiLimits.push_back(globalLimitsMin.second.phi());
-    phiLimits.push_back(globalLimitsMax.first.phi()); phiLimits.push_back(globalLimitsMax.second.phi());
+    std::array<double,4> phiLimits = { globalLimitsMin.first.phi(), globalLimitsMin.second.phi(),
+                                       globalLimitsMax.first.phi(), globalLimitsMax.second.phi() };
     // map to [0,2pi] for righ hand side sensors
     if (isRight()) {
-      for (unsigned int i=0; i<phiLimits.size(); ++i) {
-        if (phiLimits[i]<0) phiLimits[i] += 2.0*Gaudi::Units::pi;
-      }
+      for (auto& i : phiLimits ) if (i<0) i += 2.0*Gaudi::Units::pi;
     }
-    m_globalPhiLimitsZone[zone].first  = *std::min_element(phiLimits.begin(),phiLimits.end());
-    m_globalPhiLimitsZone[zone].second = *std::max_element(phiLimits.begin(),phiLimits.end());
+    minmax = std::minmax_element( phiLimits.begin(), phiLimits.end() );
+    m_globalPhiLimitsZone[zone].first  = *minmax.first;
+    m_globalPhiLimitsZone[zone].second = *minmax.second;
     // map back to [-pi,pi]
     if (isRight()) {
       if (m_globalPhiLimitsZone[zone].first  > Gaudi::Units::pi) m_globalPhiLimitsZone[zone].first  -= 2.0*Gaudi::Units::pi;
@@ -704,30 +686,28 @@ StatusCode DeVeloPhiType::updateZoneLimits()
     }
 
     // determine the r ranges of the zones in VELO half box frame
-    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> halfBoxLimitsMin
-      (globalToVeloHalfBox(globalLimitsMin.first),globalToVeloHalfBox(globalLimitsMin.second));
-    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> halfBoxLimitsMax
-      (globalToVeloHalfBox(globalLimitsMax.first),globalToVeloHalfBox(globalLimitsMax.second));
-    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> halfBoxLimitsMid
-      (globalToVeloHalfBox(globalLimitsMid.first),globalToVeloHalfBox(globalLimitsMid.second));
-    rLimits.clear();
-    rLimits.push_back(halfBoxLimitsMin.first.rho()); rLimits.push_back(halfBoxLimitsMin.second.rho());
-    rLimits.push_back(halfBoxLimitsMax.first.rho()); rLimits.push_back(halfBoxLimitsMax.second.rho());
-    rLimits.push_back(halfBoxLimitsMid.first.rho()); rLimits.push_back(halfBoxLimitsMid.second.rho());
-    m_halfboxRLimitsZone[zone].first  = *std::min_element(rLimits.begin(),rLimits.end());
-    m_halfboxRLimitsZone[zone].second = *std::max_element(rLimits.begin(),rLimits.end());
+    auto halfBoxLimitsMin = std::make_pair(globalToVeloHalfBox(globalLimitsMin.first),
+                                           globalToVeloHalfBox(globalLimitsMin.second));
+    auto halfBoxLimitsMax = std::make_pair(globalToVeloHalfBox(globalLimitsMax.first),
+                                           globalToVeloHalfBox(globalLimitsMax.second));
+    auto halfBoxLimitsMid = std::make_pair(globalToVeloHalfBox(globalLimitsMid.first),
+                                           globalToVeloHalfBox(globalLimitsMid.second));
+    rLimits = { halfBoxLimitsMin.first.rho(), halfBoxLimitsMin.second.rho(),
+                halfBoxLimitsMax.first.rho(), halfBoxLimitsMax.second.rho(),
+                halfBoxLimitsMid.first.rho(), halfBoxLimitsMid.second.rho() };
+    minmax = std::minmax_element(rLimits.begin(),rLimits.end());
+    m_halfboxRLimitsZone[zone].first  = *minmax.first;
+    m_halfboxRLimitsZone[zone].second = *minmax.second;
 
-    phiLimits.clear();
-    phiLimits.push_back(halfBoxLimitsMin.first.phi()); phiLimits.push_back(halfBoxLimitsMin.second.phi());
-    phiLimits.push_back(halfBoxLimitsMax.first.phi()); phiLimits.push_back(halfBoxLimitsMax.second.phi());
+    phiLimits = { halfBoxLimitsMin.first.phi(), halfBoxLimitsMin.second.phi(),
+                  halfBoxLimitsMax.first.phi(), halfBoxLimitsMax.second.phi() };
     // map to [0,2pi] for righ hand side sensors
     if (isRight()) {
-      for (unsigned int i=0; i<phiLimits.size(); ++i) {
-        if (phiLimits[i]<0) phiLimits[i] += 2.0*Gaudi::Units::pi;
-      }
+      for (auto& i : phiLimits ) if (i<0) i += 2.0*Gaudi::Units::pi;
     }
-    m_halfboxPhiLimitsZone[zone].first  = *std::min_element(phiLimits.begin(),phiLimits.end());
-    m_halfboxPhiLimitsZone[zone].second = *std::max_element(phiLimits.begin(),phiLimits.end());
+    minmax = std::minmax_element( phiLimits.begin(), phiLimits.end() );
+    m_halfboxPhiLimitsZone[zone].first  = *minmax.first;
+    m_halfboxPhiLimitsZone[zone].second = *minmax.second;
     // map back to [-pi,pi]
     if (isRight()) {
       if (m_halfboxPhiLimitsZone[zone].first  > Gaudi::Units::pi) m_halfboxPhiLimitsZone[zone].first  -= 2.0*Gaudi::Units::pi;

@@ -367,7 +367,7 @@ void VeloDetChecker::TestTrajectories() {
 //==============================================================================
 void VeloDetChecker::PrintTrajectory(std::vector<DeVeloSensor*>::const_iterator iSens, 
                                      LHCb::VeloChannelID channel) {
-  std::auto_ptr<LHCb::Trajectory> traj=(*iSens)->trajectory(channel,0.);
+  auto traj=(*iSens)->trajectory(channel,0.);
   Gaudi::XYZPoint begin=traj->beginPoint(); 
   Gaudi::XYZPoint end=traj->endPoint(); 
   debug() << format("Strip=%d, Begin: x=%f,y=%f,z=%f",channel.strip(),begin.x(),begin.y(),begin.z()) << endmsg;

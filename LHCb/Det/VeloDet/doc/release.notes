@@ -1,6 +1,11 @@
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
+! 2016-01-03 - Gerhard Raven
+ - major change: migrate from std::auto_ptr to std::unique_ptr
+ - DeVeloPhiType: 
+    o simplify trajectory construction
+    o use std::minmax_element instead of std::min_element and std::max_element
 
 ! 2015-11-26 - Wouter Hulsbergen
  - make sure arguments of fast_sincos are initialized to see if this solves problem with reproducibility

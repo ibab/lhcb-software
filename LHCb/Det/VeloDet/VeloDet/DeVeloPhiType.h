@@ -61,7 +61,7 @@ public:
                        LHCb::VeloChannelID& channel) const;
 
   /// Return a trajectory (for track fit) from strip + offset
-  virtual std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::VeloChannelID& id, const double offset) const;
+  virtual std::unique_ptr<LHCb::Trajectory> trajectory(const LHCb::VeloChannelID& id, const double offset) const;
 
   /// Residual of 3-d point to a VeloChannelID
   virtual StatusCode residual(const Gaudi::XYZPoint& point, 
