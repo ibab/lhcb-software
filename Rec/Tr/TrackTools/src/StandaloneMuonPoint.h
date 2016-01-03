@@ -1,9 +1,7 @@
-// $Id: StandaloneMuonPoint.h,v 1.2 2009-11-18 13:19:45 dgolubko Exp $
 #ifndef STANDALONEMUONPOINT_H 
 #define STANDALONEMUONPOINT_H 1
 
 // Include files
-#include "MuonKernel/MuonTile.h"
 #include "Kernel/MuonTileID.h"
 /** @class StandaloneMuonPoint StandaloneMuonPoint.h
  *  

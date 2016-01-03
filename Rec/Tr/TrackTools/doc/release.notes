@@ -3,6 +3,9 @@
 ! Responsible : 
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+! 2016-01-03 - Gerhard Raven
+ - StandaloneMuonPoint: remove unused include of MuonTile.h
+
 ! 2016-01-02 - Gerhard Raven
  - TrackHitCollector: use const LHCb::Trajectory& instead of std::auto_ptr<LHCb::Trajector>,
    which is OK as the the dereferenced std::auto_ptr has a lifetime until the
