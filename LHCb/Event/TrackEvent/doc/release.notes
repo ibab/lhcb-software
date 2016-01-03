@@ -3,6 +3,9 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Package for the tracking event model classes
 !-------------------------------------------------------------------------------
+! 2016-01-03 - Gerhard Raven
+ - migrate from std::auto_ptr to std::unique_ptr
+
 ! 2015-12-28 - Gerhard Raven
  - enforce const correctness of firstState getter
 

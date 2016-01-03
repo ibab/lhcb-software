@@ -48,8 +48,8 @@
 	argList  = "LHCb::Measurement other" 
         initList = "m_mtype(other.m_mtype),m_z(other.m_z),m_measure(other.m_measure),m_errMeasure(other.m_errMeasure),m_lhcbID(other.m_lhcbID),m_detectorElement(other.m_detectorElement)" >
         <code>
-	  if( other.m_trajectory.get() )
-            m_trajectory.reset( (other.m_trajectory)->clone().release());
+	  if( other.m_trajectory )
+            m_trajectory.reset( other.m_trajectory->clone().release() );
 	</code>
       </constructor>
 
@@ -95,7 +95,7 @@
         access  = 'PROTECTED' />
 
       <attribute
-        type    = 'std::auto_ptr &lt; LHCb::Trajectory &gt;'
+        type    = 'std::unique_ptr &lt; LHCb::Trajectory &gt;'
         name    = 'trajectory'
         desc    = 'the trajectory representing the measurement (owner)'
         access  = 'PROTECTED'
@@ -193,8 +193,8 @@
       <method
         name    = 'setTrajectory'
         desc    = 'Set the trajectory'>
-        <arg type = 'std::auto_ptr &lt; LHCb::Trajectory &gt;' name='traj' const='FALSE'/>
-        <code>  m_trajectory = traj ; </code>
+        <arg type = 'std::unique_ptr &lt; LHCb::Trajectory &gt;' name='traj' const='FALSE'/>
+        <code>  m_trajectory = std::move(traj) ; </code>
       </method>
       
     </class>
