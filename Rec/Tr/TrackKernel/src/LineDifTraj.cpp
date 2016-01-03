@@ -1,4 +1,3 @@
-// $Id: LineDifTraj.cpp,v 1.1 2009-07-08 13:33:45 wouter Exp $
 // Include files
 
 // local
@@ -13,9 +12,9 @@ using namespace ROOT::Math;
   #pragma warning(disable:1572) // Floating-point equality and inequality comparisons are unreliable
 #endif
 
-std::auto_ptr<Trajectory> LineDifTraj::clone() const
+std::unique_ptr<Trajectory> LineDifTraj::clone() const
 {
-  return std::auto_ptr<Trajectory>(new LineDifTraj(*this));
+  return std::unique_ptr<Trajectory>(new LineDifTraj(*this));
 }
 
 
@@ -92,10 +91,8 @@ double LineDifTraj::distTo2ndError( double , double , int ) const
 
 LineDifTraj::Parameters LineDifTraj::parameters() const 
 {
-    return Parameters( m_pos.x(), 
-                       m_pos.y(), 
-                       m_dir.x()/m_dir.z(), 
-                       m_dir.y()/m_dir.z() );
+    return { m_pos.x(), m_pos.y(), 
+             m_dir.x()/m_dir.z(), m_dir.y()/m_dir.z() };
 }
 
 LineDifTraj&
@@ -136,7 +133,7 @@ LineDifTraj::derivative(double s) const
 
     double n  = 1.0/m_dir.z();
     double dz = s*n; double dz2 = dz*n*n;
-    Parameters p = parameters();
+    auto p = parameters();
     Derivative d;
     // first z
     d(2,0) = 0; d(2,1) = 0; d(2,2) = -dz2*p(2)       ;  d(2,3) = -dz2*p(3);

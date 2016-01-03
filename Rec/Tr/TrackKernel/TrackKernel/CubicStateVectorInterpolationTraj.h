@@ -57,7 +57,7 @@ namespace LHCb
   public: // trajectory interface
 
     /// Clone this trajectory
-    std::auto_ptr<Trajectory> clone() const { return std::auto_ptr<Trajectory>(new CubicStateVectorInterpolationTraj(*this)) ; }
+    std::unique_ptr<Trajectory> clone() const { return std::unique_ptr<Trajectory>(new CubicStateVectorInterpolationTraj(*this)) ; }
     /// Position at location z
     Point position( double z ) const { return Point(x(z),y(z),z) ; }
     /// First derivative of position to z

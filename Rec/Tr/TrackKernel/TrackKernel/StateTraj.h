@@ -42,7 +42,7 @@ namespace LHCb
     enum { kSize = 5 };
 
     /// get me another one of these!
-    std::auto_ptr<Trajectory> clone() const;
+    std::unique_ptr<Trajectory> clone() const;
 
     /// Default Destructor
     virtual ~StateTraj() {};

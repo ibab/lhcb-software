@@ -8,8 +8,8 @@ namespace LHCb
 
   LHCb::State CubicStateInterpolationTraj::state( double z ) const
   {
-    const Gaudi::TrackVector vec(x(z),y(z),tx(z),ty(z),qop(z)) ;
-    return LHCb::State(vec, covariance(z), z,  LHCb::State::LocationUnknown) ;
+    return LHCb::State({x(z),y(z),tx(z),ty(z),qop(z)}, 
+                       covariance(z), z,  LHCb::State::LocationUnknown) ;
   }
   
   Gaudi::TrackSymMatrix CubicStateInterpolationTraj::covariance( double z ) const

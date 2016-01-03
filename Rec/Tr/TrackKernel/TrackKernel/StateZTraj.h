@@ -40,7 +40,7 @@ namespace LHCb
     typedef ROOT::Math::SVector<double,kSize>   Parameters;
 
     /// get me another one of these!
-    std::auto_ptr<Trajectory> clone() const { return std::auto_ptr<Trajectory>(new StateZTraj(*this)) ; }
+    std::unique_ptr<Trajectory> clone() const { return std::unique_ptr<Trajectory>(new StateZTraj(*this)) ; }
     
     /// Default Destructor
     virtual ~StateZTraj() {};

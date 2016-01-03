@@ -28,8 +28,7 @@ namespace LHCb
     CubicStateInterpolationTraj(const LHCb::State& state, const Gaudi::XYZVector& bfield) ; 
 
     /// Default constructor (does nothing)
-    CubicStateInterpolationTraj() : 
-      CubicStateVectorInterpolationTraj(), m_covbegin(0), m_covend(0) {}
+    CubicStateInterpolationTraj() = default;
     
     /// Initialize with two states
     void init( const LHCb::State& begin, const LHCb::State& end ) ;
@@ -44,11 +43,11 @@ namespace LHCb
     State state(double z) const ;
 
     /// Clone this trajectory
-    std::auto_ptr<Trajectory> clone() const { return std::auto_ptr<Trajectory>(new CubicStateInterpolationTraj(*this)) ; }
+    std::unique_ptr<Trajectory> clone() const { return std::unique_ptr<Trajectory>(new CubicStateInterpolationTraj(*this)) ; }
 
   private:
-    const Gaudi::TrackSymMatrix* m_covbegin ; ///< Covariance at first state
-    const Gaudi::TrackSymMatrix* m_covend ;   ///< Covariance at second state
+    const Gaudi::TrackSymMatrix* m_covbegin = nullptr ; ///< Covariance at first state
+    const Gaudi::TrackSymMatrix* m_covend  = nullptr;   ///< Covariance at second state
   };
   
   /*************************************************************************************************/

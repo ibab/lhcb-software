@@ -6,10 +6,9 @@ namespace LHCb {
 			  double zseed, double ztolerance, double maxdchisq, size_t maxiterations)
     : m_trajectories(trajectories)
   {
-    const unsigned int N ( m_trajectories.size() ) ;
-    for(unsigned int i = 0; i<N; ++i) 
-      addTrack( m_trajectories[i]->state(zseed) ) ;
-    
+    for (const auto& traj : m_trajectories )
+      addTrack( traj->state(zseed) ) ;
+
     for(size_t iter = 0; iter<maxiterations; ++iter) {
       if(iter != 0 ) updateStates( zseed ) ;
       TrackStateVertex::fit(maxdchisq,maxiterations) ;
@@ -17,20 +16,18 @@ namespace LHCb {
       zseed = position().z() ;
     }
   }
-  
-  TrajVertex::~TrajVertex() 
-  {
-  }
+
+  TrajVertex::~TrajVertex() = default;
 
   void TrajVertex::updateStates( double zseed )
   {
-    const unsigned int N ( m_trajectories.size() ) ;
-    for(unsigned int i = 0; i<N; ++i) 
-      setInputState( i,  m_trajectories[i]->state(zseed) ) ;
+    int i=0;
+    for (const auto& traj : m_trajectories )
+      setInputState( i++,  traj->state(zseed) ) ;
   }
 
-  TrajVertex::FitStatus TrajVertex::fit(double ztolerance, double maxdchisq, size_t maxiterations) 
-  { 
+  TrajVertex::FitStatus TrajVertex::fit(double ztolerance, double maxdchisq, size_t maxiterations)
+  {
     double zseed = position().z() ;
     for(size_t iter = 0; iter<maxiterations; ++iter) {
       updateStates(zseed) ;
@@ -40,9 +37,9 @@ namespace LHCb {
     }
     return fitStatus() ;
   }
-  
-  TrajVertex::FitStatus TrajVertex::fitAdaptive( double maxtrkchi2, double ztolerance, 
-						 double maxdchisq, size_t maxiterations) 
+
+  TrajVertex::FitStatus TrajVertex::fitAdaptive( double maxtrkchi2, double ztolerance,
+						 double maxdchisq, size_t maxiterations)
   {
     double zseed = position().z() ;
     for(size_t iter = 0; iter<2; ++iter) {
@@ -50,7 +47,7 @@ namespace LHCb {
       TrackStateVertex::fitAdaptive(maxtrkchi2,maxdchisq,maxiterations) ;
       if( std::abs( zseed - position().z() ) < ztolerance ) break ;
       zseed = position().z() ;
-    } 
+    }
     return fitStatus() ;
   }
 }

@@ -5,8 +5,7 @@ namespace LHCb
   
   LHCb::StateVector CubicStateVectorInterpolationTraj::stateVector( double z ) const
   {
-    Gaudi::TrackVector parameters(x(z),y(z),tx(z),ty(z),qop(z)) ;
-    return LHCb::StateVector(parameters, z) ;
+    return { { x(z),y(z),tx(z),ty(z),qop(z)}, z } ;
   }
 
   double CubicStateVectorInterpolationTraj::arclength(double /*z1*/, double /*z2*/) const 

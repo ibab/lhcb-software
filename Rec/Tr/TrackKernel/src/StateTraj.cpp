@@ -1,4 +1,3 @@
-// $Id: StateTraj.cpp,v 1.1 2009-07-08 13:33:45 wouter Exp $
 // Include files
 
 // Units
@@ -45,16 +44,15 @@ StateTraj::StateTraj( const Gaudi::TrackVector& stateVector,
     m_qOverP( stateVector(4) ),
     m_bField(bField)
 {
-  XYZVector slopes = XYZVector( stateVector(2), stateVector(3), 1. );
   // True when approximating the trajectory as a straight line
-  m_dir  = slopes.unit();
+  m_dir  = XYZVector{ stateVector(2), stateVector(3), 1. }.unit();
   m_curv = (Units::c_light*m_qOverP)*( m_dir.Cross(m_bField) );   
 }
 
 // StateTraj clone method
-std::auto_ptr<Trajectory> StateTraj::clone() const
+std::unique_ptr<Trajectory> StateTraj::clone() const
 {
-  return std::auto_ptr<Trajectory>( new StateTraj(*this) );
+  return std::unique_ptr<Trajectory>( new StateTraj(*this) );
 }
 
 XYZPoint StateTraj::position( double arclength ) const

@@ -3,6 +3,9 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+! 2016-01-03 - Gerhard Raven
+ - major change: follow substitution of std::unique_ptr in favor of  std::auto_ptr 
+   in Kernel/LHCbKernel
 
 !========================= TrackKernel v2r4 2015-11-23 =========================
 ! 2015-11-08 - Gerhard Raven

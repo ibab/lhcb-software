@@ -1,4 +1,3 @@
-// $Id: ZTrajectory.h,v 1.1 2009-07-08 13:33:45 wouter Exp $
 #ifndef TRACKKERNEL_ZTRAJECTORY_H 
 #define TRACKKERNEL_ZTRAJECTORY_H 1
 
@@ -28,13 +27,13 @@ namespace LHCb
     /// Constructor taking a range
     ZTrajectory( const Range& range ):  Trajectory(range) {}
     /// Destructor
-    virtual ~ZTrajectory( ) {} 
+    virtual ~ZTrajectory( ) = default;
     /// return stateVector at position mu
     virtual StateVector stateVector( double mu ) const = 0 ;
     /// return a state at position mu
     virtual State state( double mu ) const { return State(stateVector(mu)) ; }
     /// return the set of reference statevectors for this parameterization (if any)
-    virtual std::vector<StateVector> refStateVectors() const { return std::vector<StateVector>() ; }
+    virtual std::vector<StateVector> refStateVectors() const { return { }; }
   };
   
 }

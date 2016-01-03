@@ -18,7 +18,7 @@ namespace LHCb
       virtual ~LineDifTraj() {};
 
       // clone thyself...
-      virtual std::auto_ptr<Trajectory> clone() const;
+      virtual std::unique_ptr<Trajectory> clone() const;
       
       /// Constructor from the middle point and a direction vector
       LineDifTraj( const Point& middle,
