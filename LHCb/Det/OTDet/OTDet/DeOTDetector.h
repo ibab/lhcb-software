@@ -288,21 +288,21 @@ public:
   /** Get trajectory representing the most left wire in (first=0) monolayer  
    * @return trajectory
    */
-  std::auto_ptr<LHCb::Trajectory> trajectoryFirstWire(const LHCb::LHCbID& id, 
-                                                      int monolayer=0) const;
+  std::unique_ptr<LHCb::Trajectory> trajectoryFirstWire(const LHCb::LHCbID& id, 
+                                                        int monolayer=0) const;
   
   /** Get trajectory representing the most right wire in (second=0) monolayer
    * @return trajectory
    */
-  std::auto_ptr<LHCb::Trajectory> trajectoryLastWire(const LHCb::LHCbID& id, 
-                                                     int monolayer=1) const;
+  std::unique_ptr<LHCb::Trajectory> trajectoryLastWire(const LHCb::LHCbID& id, 
+                                                       int monolayer=1) const;
 
   /** Get trajectory representing the wire identified by the LHCbID
    * The offset is zero for all OT Trajectories
    * @return trajecory
    */ 
-  std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::LHCbID& id, 
-                                             const double =0 /** offset */) const;
+  std::unique_ptr<LHCb::Trajectory> trajectory(const LHCb::LHCbID& id, 
+                                               double =0 /** offset */) const;
 
 
  public:

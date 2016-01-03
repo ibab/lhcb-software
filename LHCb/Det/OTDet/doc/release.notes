@@ -1,6 +1,8 @@
 ! Package     : OTDet
 ! Responsible : Alexandr Kozlinskiy, Lucia Grillo
 !--------------------------------------------------------------------------
+! 2016-01-03 - Gerhard Raven
+ - major change: migrate from std::auto_ptr to std::unique_ptr
 ! 2015-12-06 - Gerhard Raven
  - prefer std::unique_ptr over raw pointer + explicit delete
  - prefer direct member initialization

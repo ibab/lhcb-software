@@ -659,21 +659,21 @@ StatusCode DeOTModule::monoalignCallback() {
   return cacheInfo() ;
 }
 
-std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectoryFirstWire(int monolayer) const {
+std::unique_ptr<LHCb::Trajectory> DeOTModule::trajectoryFirstWire(int monolayer) const {
   /// Default is 0 -> straw 1
-  return std::auto_ptr<LHCb::Trajectory>( m_trajFirstWire[monolayer]->cloneOTWireTraj() ) ;
+  return m_trajFirstWire[monolayer]->cloneOTWireTraj();
 }
 
-std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectoryLastWire(int monolayer) const {
+std::unique_ptr<LHCb::Trajectory> DeOTModule::trajectoryLastWire(int monolayer) const {
   /// Default is 1 -> straw 64(s3)/128
-  LHCb::OTWireTraj* traj = m_trajFirstWire[monolayer]->cloneOTWireTraj() ;
+  auto traj = m_trajFirstWire[monolayer]->cloneOTWireTraj() ;
   traj->applyTranslation( (m_nStraws/2-1)*m_dp0di ) ;
-  return std::auto_ptr<LHCb::Trajectory>(traj) ;
+  return std::move(traj);
 }
 
 /// Returns a Trajectory representing the wire identified by the LHCbID
 /// The offset is zero for all OT Trajectories
-std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectory(const OTChannelID& aChan,
+std::unique_ptr<LHCb::Trajectory> DeOTModule::trajectory(const OTChannelID& aChan,
                                                        const double /*offset*/) const {
   if (!contains(aChan)) {
     throw GaudiException("Failed to make trajectory!", "DeOTModule.cpp",
@@ -682,10 +682,9 @@ std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectory(const OTChannelID& aChan,
 
   unsigned int aStraw = aChan.straw();
   unsigned int mono = this->mono(aStraw) ;
-  LHCb::OTWireTraj* traj = m_trajFirstWire[mono]->cloneOTWireTraj() ;
+  auto traj = m_trajFirstWire[mono]->cloneOTWireTraj() ;
   traj->applyTranslation( ((aStraw-1)%m_nStraws)*m_dp0di ) ;
-  
-  return std::auto_ptr<LHCb::Trajectory>(traj) ;
+  return std::move(traj);
 }
 
 StatusCode DeOTModule::setStrawStatus( const std::vector< int >& flags )

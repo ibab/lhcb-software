@@ -64,30 +64,29 @@ StatusCode DeOTDetector::initialize()
   }
 
   // loop over stations
-  typedef IDetectorElement::IDEContainer::const_iterator Iter;
-  for (Iter iS = this->childBegin(); iS != this->childEnd(); ++iS) {
-    DeOTStation* station = dynamic_cast<DeOTStation*>(*iS);
+  for (auto  iS = this->childBegin(); iS != this->childEnd(); ++iS) {
+    auto* station = dynamic_cast<DeOTStation*>(*iS);
     if (station) {
       /// fill sation vector
       m_stations.push_back(station);
       m_mapStations.insert((station->elementID()).station(), station);
     }
     //loop over layers
-    for (Iter iL = (*iS)->childBegin(); iL!= (*iS)->childEnd(); ++iL) {
+    for (auto iL = (*iS)->childBegin(); iL!= (*iS)->childEnd(); ++iL) {
       DeOTLayer* layer = dynamic_cast<DeOTLayer*>(*iL);
       if (layer) {
         /// fill layer vector
         m_layers.push_back(layer);
       }
       // loop over quarters
-      for (Iter iQ = (*iL)->childBegin(); iQ != (*iL)->childEnd(); ++iQ) {
+      for (auto iQ = (*iL)->childBegin(); iQ != (*iL)->childEnd(); ++iQ) {
         DeOTQuarter* quarter = dynamic_cast<DeOTQuarter*>(*iQ);
         if (quarter) {
           /// fill quarter vector
           m_quarters.push_back(quarter);
         }
         // loop over modules
-        for (Iter iM = (*iQ)->childBegin(); iM != (*iQ)->childEnd(); ++iM) {
+        for (auto iM = (*iQ)->childBegin(); iM != (*iQ)->childEnd(); ++iM) {
           DeOTModule* module = dynamic_cast<DeOTModule*>(*iM);
           if (module) {
             // get # of channels
@@ -189,7 +188,7 @@ OTChannelID DeOTDetector::nextChannelRight(const OTChannelID aChannel) const {
                                                               nextRight );
 }
 
-std::auto_ptr<LHCb::Trajectory> DeOTDetector::trajectoryFirstWire(const LHCb::LHCbID& id, 
+std::unique_ptr<LHCb::Trajectory> DeOTDetector::trajectoryFirstWire(const LHCb::LHCbID& id, 
                                                                   int monolayer) const {
   if (!id.isOT()) {
     throw GaudiException("The LHCbID is not of OT type!", "DeOTDetector.cpp",
@@ -202,10 +201,10 @@ std::auto_ptr<LHCb::Trajectory> DeOTDetector::trajectoryFirstWire(const LHCb::LH
                          StatusCode::FAILURE);
   } 
   
-  return std::auto_ptr<LHCb::Trajectory>(aModule->trajectoryFirstWire(monolayer));
+  return std::unique_ptr<LHCb::Trajectory>(aModule->trajectoryFirstWire(monolayer));
 }
 
-std::auto_ptr<LHCb::Trajectory> DeOTDetector::trajectoryLastWire(const LHCb::LHCbID& id, 
+std::unique_ptr<LHCb::Trajectory> DeOTDetector::trajectoryLastWire(const LHCb::LHCbID& id, 
                                                                  int monolayer) const {
   if (!id.isOT()) {
     throw GaudiException("The LHCbID is not of OT type!", "DeOTDetector.cpp",
@@ -218,12 +217,12 @@ std::auto_ptr<LHCb::Trajectory> DeOTDetector::trajectoryLastWire(const LHCb::LHC
 			 StatusCode::FAILURE);
   }
   
-  return std::auto_ptr<LHCb::Trajectory>(aModule->trajectoryLastWire(monolayer));
+  return std::unique_ptr<LHCb::Trajectory>(aModule->trajectoryLastWire(monolayer));
 }
 
 /// Returns a Trajectory representing the wire identified by the LHCbID
 /// The offset is zero for all OT Trajectories
-std::auto_ptr<LHCb::Trajectory> DeOTDetector::trajectory(const LHCb::LHCbID& id,
+std::unique_ptr<LHCb::Trajectory> DeOTDetector::trajectory(const LHCb::LHCbID& id,
                                                          const double /*offset*/) const {
   if (!id.isOT()) {
     throw GaudiException("The LHCbID is not of OT type!", "DeOTDetector.cpp",
@@ -237,7 +236,7 @@ std::auto_ptr<LHCb::Trajectory> DeOTDetector::trajectory(const LHCb::LHCbID& id,
   }
   
   // Offset hardcoded to 0. to eliminate warning about unused parameter
-  return std::auto_ptr<LHCb::Trajectory>(aModule->trajectory(id.otID(),0));
+  return std::unique_ptr<LHCb::Trajectory>(aModule->trajectory(id.otID(),0));
 }
 
 StatusCode DeOTDetector::Calibration::callback()

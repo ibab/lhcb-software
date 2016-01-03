@@ -18,7 +18,7 @@ namespace LHCb
     typedef unsigned int Index ;
     OTWireTraj(const double beginyrange, const double endyrange) : Trajectory(beginyrange,endyrange) {}
     virtual void applyTranslation( const Vector& vec ) = 0 ;
-    virtual OTWireTraj* cloneOTWireTraj() const = 0 ;
+    virtual std::unique_ptr<OTWireTraj> cloneOTWireTraj() const = 0 ;
     virtual void indexAndMu(double y, unsigned int& index, double& localmu) const = 0 ;
     virtual Index numSegments() const = 0 ;
   } ;
@@ -115,16 +115,16 @@ namespace LHCb
 	localmu = frac - index ;
       }
         
-      OTWireTraj* cloneOTWireTraj() const {
-	return new OTWireTrajImp<N>(*this) ;
+      std::unique_ptr<OTWireTraj> cloneOTWireTraj() const {
+	return std::unique_ptr<OTWireTraj>(new OTWireTrajImp<N>(*this));
       }
       
       Index numSegments() const { return N ; }
 
     public: // implementation for member functions of the interface
       
-      std::auto_ptr<Trajectory> clone() const {
-	return std::auto_ptr<Trajectory>(new OTWireTrajImp<N>(*this)) ;
+      std::unique_ptr<Trajectory> clone() const {
+	return std::unique_ptr<Trajectory>(new OTWireTrajImp<N>(*this)) ;
       }
       
       /// trajectory is parameterized along y
