@@ -2,7 +2,7 @@
 #ifndef _DeSTStation_H_
 #define _DeSTStation_H_
 
-// STL 
+// STL
 #include <string>
 #include <vector>
 
@@ -35,9 +35,9 @@ public:
   DeSTStation ( const std::string& name = "" ) ;
 
   /** Destructor */
-  virtual ~DeSTStation(); 
- 
-  /** initialization method 
+  virtual ~DeSTStation();
+
+  /** initialization method
   * @return Status of initialisation
   */
   virtual StatusCode initialize();
@@ -49,7 +49,7 @@ public:
 
   /** print to stream */
   std::ostream& printOut( std::ostream& os ) const;
-    
+
   /** print to stream */
   MsgStream& printOut( MsgStream& os) const;
 
@@ -59,19 +59,19 @@ public:
   */
   virtual bool contains(const LHCb::STChannelID aChannel) const;
 
-  /** 
+  /**
   * Nickname for the station
   **/
   const std::string& nickname() const ;
 
  protected:
 
- std::string m_nickname; 
+ std::string m_nickname;
 
  private:
 
   unsigned int m_id;
- 
+
 };
 
 inline unsigned int DeSTStation::id() const{

@@ -35,31 +35,31 @@ public:
    DeITLadder ( const std::string& name = "" ) ;
 
    /** Destructor */
-   virtual ~DeITLadder(); 
+   virtual ~DeITLadder();
 
    /**
    * Retrieves reference to class identifier
    * @return the class identifier for this class
    */
    static const CLID& classID(){return CLID_DeITLadder;}
-                        
+
    /**
    * another reference to class identifier
    * @return the class identifier for this class
    */
    const CLID& clID () const;
-                                                        
-   /** initialization method 
+
+   /** initialization method
    * @return Status of initialisation
    */
    virtual StatusCode initialize();
 
 
-   /** check whether contains 
+   /** check whether contains
    *  @param  aChannel channel
    *  @return bool
-   */ 
-   virtual bool contains(const LHCb::STChannelID aChannel) const; 
+   */
+   virtual bool contains(const LHCb::STChannelID aChannel) const;
 
    /** identifier */
    unsigned int id() const;
@@ -69,11 +69,11 @@ public:
 
    /** print to stream */
    std::ostream& printOut( std::ostream& os ) const;
-     
+
    /** print to msgstream */
    MsgStream& printOut( MsgStream& os) const;
 
-   /** 
+   /**
    * fraction active channels
    * @return bool fraction active
    */

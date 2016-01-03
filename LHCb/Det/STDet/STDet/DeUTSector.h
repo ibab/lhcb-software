@@ -30,8 +30,8 @@ public:
   DeUTSector ( const std::string& name = "" ) ;
 
   /** Destructor */
-  virtual ~DeUTSector(); 
- 
+  virtual ~DeUTSector();
+
   /**
   * Retrieves reference to class identifier
   * @return the class identifier for this class
@@ -50,7 +50,7 @@ public:
    */
   std::string hybridType() const;
 
-  /** initialization method 
+  /** initialization method
   * @return Status of initialisation
   */
   virtual StatusCode initialize();

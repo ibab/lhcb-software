@@ -2,6 +2,14 @@
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
+! 2016-01-03 - Gerhard Raven
+ - major change: migrate from std::auto_ptr to std::unique_ptr
+ - add const where possible
+ - qualify implementations of virtual functions as override
+ - prefer lambda over boost::lambda, boost::bind
+ - prefer auto
+ - prefer STL algorithms over raw loops
+
 ! 2015-12-06 - Gerhard Raven
  - modernize code:
   o prefer direct member initialization

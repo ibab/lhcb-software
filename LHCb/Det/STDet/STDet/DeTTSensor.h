@@ -32,8 +32,8 @@ public:
   DeTTSensor ( const std::string& name = "" ) ;
 
   /** Destructor */
-  virtual ~DeTTSensor(); 
- 
+  virtual ~DeTTSensor();
+
   /**
   * Retrieves reference to class identifier
   * @return the class identifier for this class
@@ -46,7 +46,7 @@ public:
   */
   const CLID& clID () const;
 
-  /** initialization method 
+  /** initialization method
   * @return Status of initialisation
   */
   virtual StatusCode initialize();

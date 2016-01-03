@@ -24,9 +24,7 @@ DeTTDetector::DeTTDetector( const std::string& name ) :
   m_sectors.clear();
 }
 
-DeTTDetector::~DeTTDetector() {
-  // initialize
-}
+DeTTDetector::~DeTTDetector() = default;
 
 const CLID& DeTTDetector::clID () const
 {
@@ -57,16 +55,16 @@ StatusCode DeTTDetector::initialize() {
 
 }
 
-DeSTSector* DeTTDetector::findSector(const Gaudi::XYZPoint& aPoint){
+DeSTSector* DeTTDetector::findSector(const Gaudi::XYZPoint& aPoint) const {
 
-  DeSTSector* aSector = 0;
+  DeSTSector* aSector = nullptr;
   DeSTStation* tStation = findStation(aPoint);
-  if (0 != tStation){
+  if (tStation){
     DeTTStation* aStation = static_cast<DeTTStation*>(tStation);
     DeTTLayer* aLayer = aStation->findLayer(aPoint);    
-    if (0 != aLayer){
+    if (aLayer){
       DeTTHalfModule* aModule = aLayer->findHalfModule(aPoint);
-      if (0 != aModule){
+      if (aModule){
         aSector = aModule->findSector(aPoint);
       } // module   
     } // layer
@@ -74,40 +72,34 @@ DeSTSector* DeTTDetector::findSector(const Gaudi::XYZPoint& aPoint){
   return aSector;
 }
 
-DeSTBaseElement* DeTTDetector::findTopLevelElement(const std::string& nickname){
-  if (nickname.find("TT") == std::string::npos) return 0;
+DeSTBaseElement* DeTTDetector::findTopLevelElement(const std::string& nickname) const {
+  if (nickname.find("TT") == std::string::npos) return nullptr;
 
   const STChannelID chan = TTNames().stringToChannel(nickname);
-  if (chan.sector() != 0){
+  if (chan.sector()){
     // its a sector
     return this->DeSTDetector::findSector(chan);
   }
-  else if (chan.layer() != 0){
+  if (chan.layer()){
     return findLayer(chan);
-  } 
-  else if (chan.station() != 0u) {
+  }
+  if (chan.station() != 0u) {
     // its a station
     return findStation(chan);
-  } 
-  else {
-    // too bad 
   }
-  return 0;
+  // too bad 
+  return nullptr;
 }
 
 void DeTTDetector::flatten(){
 
   m_sectors.reserve(400);
-  std::vector<DeSTStation*>::iterator iterStation = m_stations.begin();
-  for (; iterStation != m_stations.end() ; ++iterStation){
-    DeTTStation* tStation =  dynamic_cast<DeTTStation*>(*iterStation);
-    DeTTStation::Children::const_iterator iterLayer = tStation->layers().begin();
-    for (;iterLayer != tStation->layers().end(); ++iterLayer){
-      DeTTLayer* tLayer = *iterLayer;
+  for (auto& station : m_stations) {
+    DeTTStation* tStation =  dynamic_cast<DeTTStation*>(station);
+    for (auto& tLayer : tStation->layers()) {
       m_layers.push_back(tLayer);
       const DeSTLayer::Sectors& tSectors = tLayer->sectors();
       m_sectors.insert(m_sectors.begin(),tSectors.begin(),tSectors.end());
-    }  // iterLayer
-  } // iterStation
-
+    }
+  }
 }

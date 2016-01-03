@@ -29,9 +29,7 @@ DeUTDetector::DeUTDetector( const std::string& name ) :
 }
 
 
-DeUTDetector::~DeUTDetector()
-{
-}
+DeUTDetector::~DeUTDetector() = default;
 
 
 const CLID& DeUTDetector::clID () const
@@ -64,16 +62,16 @@ StatusCode DeUTDetector::initialize()
 }
 
 
-DeSTSector* DeUTDetector::findSector(const Gaudi::XYZPoint& aPoint)
+DeSTSector* DeUTDetector::findSector(const Gaudi::XYZPoint& aPoint) const
 {
-  DeSTSector* aSector = 0;
+  DeSTSector* aSector = nullptr;
   DeSTStation* tStation = findStation(aPoint);
-  if ( 0 != tStation ){
+  if ( tStation ){
     DeUTStation* aStation = dynamic_cast<DeUTStation*>(tStation);
     DeUTLayer* aLayer = aStation->findLayer(aPoint);
-    if ( 0 != aLayer ){
+    if ( aLayer ){
       DeUTModule* aModule = aLayer->findModule(aPoint);
-      if ( 0 != aModule ){
+      if ( aModule ){
         aSector = aModule->findSector(aPoint);
       }
     }
@@ -82,16 +80,16 @@ DeSTSector* DeUTDetector::findSector(const Gaudi::XYZPoint& aPoint)
 }
 
 
-DeSTBaseElement* DeUTDetector::findTopLevelElement(const std::string& nickname)
+DeSTBaseElement* DeUTDetector::findTopLevelElement(const std::string& nickname) const
 {
-  if ( nickname.find("UT") == std::string::npos ) return 0;
+  if ( nickname.find("UT") == std::string::npos ) return nullptr;
 
   const STChannelID chan = UTNames().stringToChannel(nickname);
   if ( chan.sector() != 0 )  return this->DeSTDetector::findSector(chan);
   if ( chan.layer() != 0 )   return findLayer(chan);
   if ( chan.station() != 0u) return findStation(chan);
 
-  return 0;
+  return nullptr;
 }
 
 

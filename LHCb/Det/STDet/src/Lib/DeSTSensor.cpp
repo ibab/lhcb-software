@@ -151,7 +151,7 @@ bool DeSTSensor::localInActive( const Gaudi::XYZPoint& point,
 }
 
 
-std::auto_ptr<LHCb::Trajectory> DeSTSensor::trajectory(const unsigned int strip, 
+std::unique_ptr<LHCb::Trajectory> DeSTSensor::trajectory(const unsigned int strip, 
                                                        const double offset) const {
   
   const double arclen = (offset + strip - m_firstStrip)*m_pitch ;
@@ -159,7 +159,7 @@ std::auto_ptr<LHCb::Trajectory> DeSTSensor::trajectory(const unsigned int strip,
   Gaudi::XYZPoint midPoint = m_midTraj->position( arclen + 
                                                     m_midTraj->beginRange());
   
-  return std::auto_ptr<LHCb::Trajectory>(new LineTraj(midPoint,m_direction,m_range, true));
+  return std::unique_ptr<LHCb::Trajectory>(new LineTraj(midPoint,m_direction,m_range, true));
 }
 
 

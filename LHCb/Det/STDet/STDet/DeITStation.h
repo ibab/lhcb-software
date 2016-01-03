@@ -41,21 +41,21 @@ public:
    DeITStation ( const std::string& name = "" ) ;
 
    /** Destructor */
-   virtual ~DeITStation(); 
+   virtual ~DeITStation();
 
    /**
    * Retrieves reference to class identifier
    * @return the class identifier for this class
    */
    static const CLID& classID(){return CLID_DeITStation;}
-                        
+
    /**
    * another reference to class identifier
    * @return the class identifier for this class
    */
    const CLID& clID () const;
-                                                        
-   /** initialization method 
+
+   /** initialization method
    * @return Status of initialisation
    */
    virtual StatusCode initialize();
@@ -63,23 +63,23 @@ public:
 
   /**  locate the box based on a channel id
   @return  layer */
-  DeITBox* findBox(const LHCb::STChannelID aChannel);     
+  DeITBox* findBox(const LHCb::STChannelID aChannel);
 
-  /** locate box  based on a point  
+  /** locate box  based on a point
   @return layer */
-  DeITBox* findBox(const Gaudi::XYZPoint& point) ;   
+  DeITBox* findBox(const Gaudi::XYZPoint& point) ;
 
   /** vector of children */
-  const DeITStation::Children& boxes() const; 
+  const DeITStation::Children& boxes() const;
 
-  /** 
+  /**
   * fraction active channels
   * @return bool fraction active
   */
   double fractionActive() const;
 
 private:
-   
+
 
    Children m_boxes;
    parent_type* m_parent;

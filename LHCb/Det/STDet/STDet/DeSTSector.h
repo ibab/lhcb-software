@@ -5,7 +5,7 @@
 #include <vector>
 #include <map>
 #include <utility>
-#include <memory> // for auto_ptr with gcc 4.3
+#include <memory>
 
 #include "Kernel/STChannelID.h"
 #include "Kernel/LHCbConstants.h"
@@ -41,18 +41,18 @@ class DeSTSector : public DeSTBaseElement  {
 
 public:
 
-  /** status enum 
+  /** status enum
   * <b> For details on definitions see:</b>
   * \li <a href="http://ckm.physik.unizh.ch/software/det/deadStrips.php"><b>documentation</b></a><p>
   */
   enum Status{
     OK = 0,
     Open = 1,
-    Short = 2, 
+    Short = 2,
     Pinhole = 3,
     ReadoutProblems = 4,
     NotBonded = 5,
-    LowGain = 6, 
+    LowGain = 6,
     Noisy = 7,
     OtherFault = 9,
     Dead = 10,
@@ -102,23 +102,23 @@ public:
    */
   double portNoise(const unsigned int& beetle, const unsigned int& port) const;
 
-  /** set the Noise of the corresponding strip 
+  /** set the Noise of the corresponding strip
    * @param strip strip number
    * @param value Noise value
    */
   void setNoise(const unsigned int& strip, const double& value);
-  
-  /** set the Noise of the corresponding channel 
+
+  /** set the Noise of the corresponding channel
    * @param chan channel
    * @param value Noise value
    */
   void setNoise(const LHCb::STChannelID &chan, const double& value);
-  
-  /** set the Noise vector 
+
+  /** set the Noise vector
    * @param values Noise vector
    */
   void setNoise(const std::vector<double>& values);
-  
+
   /** get the Noise of the corresponding strip
    * @param aChannel channel
    * @return double noise of the strip
@@ -167,28 +167,28 @@ public:
    */
   double cmPortNoise(const unsigned int& beetle, const unsigned int& port) const;
 
-  /** set the cmNoise of the corresponding strip 
+  /** set the cmNoise of the corresponding strip
    * @param strip strip number
    * @param value cmNoise value
    */
   void setCMNoise(const unsigned int& strip, const double& value);
-  
-  /** set the cmNoise of the corresponding channel 
+
+  /** set the cmNoise of the corresponding channel
    * @param chan channel
    * @param value cmNoise value
    */
   void setCMNoise(const LHCb::STChannelID &chan, const double& value);
-  
+
   /** set the cmNoise vector
    * @param values cmNoise vector
    */
   void setCMNoise(const std::vector<double>& values);
-  
-  /** set the ACD count from the electron number vector 
-   * @param values 
+
+  /** set the ACD count from the electron number vector
+   * @param values
    */
   void setADCConversion(const std::vector<double>& values);
-  
+
   /** get the ADC count from the electron number
    * @param e electron number
    * @param aChannel channel
@@ -248,22 +248,22 @@ public:
    */
   bool isStrip(const unsigned int strip) const;
 
-  
+
   /** trajectory
    * @return trajectory for the fit
    */
-  std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::STChannelID& aChan,
+  std::unique_ptr<LHCb::Trajectory> trajectory(const LHCb::STChannelID& aChan,
                                              const double offset) const;
 
   /** trajectory
    * @return trajectory of the first strip
    */
-  std::auto_ptr<LHCb::Trajectory> trajectoryFirstStrip() const;
+  std::unique_ptr<LHCb::Trajectory> trajectoryFirstStrip() const;
 
   /** trajectory
    * @return trajectory of the last strip
    */
-  std::auto_ptr<LHCb::Trajectory> trajectoryLastStrip() const;
+  std::unique_ptr<LHCb::Trajectory> trajectoryLastStrip() const;
 
   /** Trajectory parameterized along y-axis */
   void trajectory(unsigned int strip, double offset, double& dxdy, double& dzdy,
@@ -275,10 +275,10 @@ public:
    */
   double capacitance() const;
 
-  /** 
+  /**
    * @return sensor Capacitance
    */
-  double sensorCapacitance() const; 
+  double sensorCapacitance() const;
 
   /** strip length
    * @return strip length
@@ -291,12 +291,12 @@ public:
   double thickness() const;
 
   /** get the next channel left
-  * @return next chan left  
+  * @return next chan left
   */
   LHCb::STChannelID nextLeft(const LHCb::STChannelID testChan) const;
 
-  /** get the next channel right 
-  * @return next chan left  
+  /** get the next channel right
+  * @return next chan left
   */
   LHCb::STChannelID nextRight(const LHCb::STChannelID testChan) const;
 
@@ -327,7 +327,7 @@ public:
   /** beetle corresponding to channel  1-3 (IT) 1-4 (TT)*/
   unsigned int beetle(const unsigned int strip) const;
 
-  /** n beetle 
+  /** n beetle
    * @return double nBeetles
   */
   unsigned int nBeetle() const;
@@ -338,7 +338,7 @@ public:
   double measEff() const;
 
   /** set measured Eff of sector  */
-  void setMeasEff(const double measEff) ; 
+  void setMeasEff(const double measEff) ;
 
   /** Status of sector
    @return Status of readout sector
@@ -347,7 +347,7 @@ public:
 
   /** Status of the Beetle corresponding to strip */
   Status beetleStatus(const LHCb::STChannelID& chan) const;
-  
+
   /** Status of the Beetle with given id  1-3 (IT), 1-4 (TT) */
   Status beetleStatus(const unsigned int id) const;
 
@@ -361,53 +361,53 @@ public:
   std::vector<Status> stripStatus() const;
 
   /** set the sector status */
-  void setSectorStatus(const Status& newStatus); 
+  void setSectorStatus(const Status& newStatus);
 
-  /** set vector of beetleStatus 
+  /** set vector of beetleStatus
   * @param unsigned int beetle [numbering from 1]
-  * @param Status newStatus 
+  * @param Status newStatus
   **/
   void setBeetleStatus(const unsigned int beetle, const Status& newStatus);
 
-  /** set vector of beetleStatus 
+  /** set vector of beetleStatus
   * @param LHCb::STChannelID chan id of beetle
-  * @param Status newStatus 
+  * @param Status newStatus
   **/
   void setBeetleStatus(const LHCb::STChannelID& chan, const Status& newStatus);
 
-  /** set vector of beetleStatus 
+  /** set vector of beetleStatus
   * @param unsigned int strip [numbering from 1]
-  * @param Status newStatus 
+  * @param Status newStatus
   **/
   void setStripStatus(const unsigned int strip, const Status& newStatus);
 
-  /** set vector of beetleStatus 
+  /** set vector of beetleStatus
   * @param LHCb::STChannelID chan id of strip
-  * @param Status newStatus 
+  * @param Status newStatus
   **/
   void setStripStatus(const LHCb::STChannelID& chan, const Status& newStatus);
 
-  /** short cut for strip status ok 
+  /** short cut for strip status ok
   * @return isOKStrip
   */
   bool isOKStrip(const LHCb::STChannelID& chan) const;
 
   /** strip to channel
   * @param strip
-  * @return corresponding channel */ 
+  * @return corresponding channel */
   LHCb::STChannelID stripToChan(const unsigned int strip) const;
 
-  /** production ID 
+  /** production ID
   *  @return unsigned int prodID
   */
-  virtual unsigned int prodID() const = 0; 
+  virtual unsigned int prodID() const = 0;
 
   /** version */
   std::string versionString() const;
 
   /** dead width */
   double deadWidth() const;
- 
+
   /** print to stream */
   std::ostream& printOut( std::ostream& os ) const;
 
@@ -421,18 +421,18 @@ public:
 
   /** locate sensor based on a point
   * @return module */
-  DeSTSensor* findSensor(const Gaudi::XYZPoint& point) const;  
+  DeSTSensor* findSensor(const Gaudi::XYZPoint& point) const;
 
 
   /** find the middle sensor. rounding down if odd **/
   DeSTSensor* middleSensor() const;
 
-  /** check if inside the active area  
+  /** check if inside the active area
   * @param  point point in global frame
   * @param  tol   tolerance
-  * @return bool isInside  
+  * @return bool isInside
   **/
-  bool globalInActive(const Gaudi::XYZPoint& point, 
+  bool globalInActive(const Gaudi::XYZPoint& point,
                       Gaudi::XYZPoint tol = Gaudi::XYZPoint(0.,0.,0.)) const;
 
   /** globalInActive
@@ -444,11 +444,11 @@ public:
                        double tol = 0) const;
 
   /**
-  * Nickname for the sensor 
+  * Nickname for the sensor
   **/
-  const std::string& nickname() const ; 
+  const std::string& nickname() const ;
 
-  /** 
+  /**
   * fraction active channels
   * @return bool fraction active
   */
@@ -456,7 +456,7 @@ public:
 
   /** direct access to the status condition, for experts only */
   const Condition* statusCondition() const;
-  
+
   /** direct access to the noise condition, for experts only */
   const Condition* noiseCondition() const;
 
@@ -465,7 +465,7 @@ public:
 
   /** y sense of local frame relative to global */
   bool yInverted() const;
-  
+
 protected:
 
   StatusCode registerConditionsCallbacks();
@@ -480,12 +480,12 @@ private:
   typedef std::map<unsigned int,Status> StatusMap;
 
   //  void clear();
-  
+
   StatusCode updateStatusCondition();
   StatusCode updateNoiseCondition();
   void toEnumMap(const std::map<int,int>& input, DeSTSector::StatusMap& output);
-  std::auto_ptr<LHCb::Trajectory> createTraj(const unsigned int strip, const double offset ) const; 
-  void setStatusCondition( const std::string& type, const unsigned int entry, 
+  std::unique_ptr<LHCb::Trajectory> createTraj(const unsigned int strip, const double offset ) const;
+  void setStatusCondition( const std::string& type, const unsigned int entry,
                            const DeSTSector::Status& newStatus );
 
 
@@ -518,7 +518,7 @@ private:
   std::string m_statusString;
   std::string m_versionString;
 
- 
+
   // Noise info
   std::string m_noiseString;
   std::vector< double > m_noiseValues;
@@ -649,15 +649,15 @@ inline DeSTSector::Status DeSTSector::beetleStatus(const LHCb::STChannelID& chan
   return beetleStatus(beetle(chan));
 }
 
-inline void DeSTSector::setBeetleStatus(const LHCb::STChannelID& chan, 
+inline void DeSTSector::setBeetleStatus(const LHCb::STChannelID& chan,
                                         const DeSTSector::Status& newStatus){
-  // just delegate 
+  // just delegate
   setBeetleStatus(beetle(chan), newStatus);
 }
 
-inline void DeSTSector::setStripStatus(const LHCb::STChannelID& chan, 
+inline void DeSTSector::setStripStatus(const LHCb::STChannelID& chan,
                                       const DeSTSector::Status& newStatus){
-  // just delegate 
+  // just delegate
   setStripStatus(chan.strip(), newStatus);
 }
 
@@ -665,8 +665,8 @@ inline DeSTSector::Status DeSTSector::beetleStatus(const unsigned int id) const{
   DeSTSector::Status theStatus = sectorStatus();
   if (theStatus == DeSTSector::OK){
     DeSTSector::StatusMap::const_iterator iter = m_beetleStatus.find(id);
-    if (iter != m_beetleStatus.end()) theStatus = iter->second; 
-  } 
+    if (iter != m_beetleStatus.end()) theStatus = iter->second;
+  }
   return theStatus;
 }
 
@@ -674,15 +674,15 @@ inline DeSTSector::Status DeSTSector::stripStatus(const LHCb::STChannelID& chan)
   DeSTSector::Status theStatus = beetleStatus(chan);
   if (theStatus == DeSTSector::OK){
     DeSTSector::StatusMap::const_iterator iter = m_stripStatus.find(chan.strip());
-    if (iter != m_stripStatus.end()) theStatus = iter->second; 
-  } 
+    if (iter != m_stripStatus.end()) theStatus = iter->second;
+  }
   return theStatus;
 }
 
 
 inline bool DeSTSector::isOKStrip(const LHCb::STChannelID& chan) const{
   return (stripStatus(chan) == DeSTSector::OK ? true : false);
-} 
+}
 
 inline std::vector<DeSTSector::Status> DeSTSector::beetleStatus() const{
   std::vector<Status> vec; vec.resize(nBeetle());
@@ -694,10 +694,10 @@ inline std::vector<DeSTSector::Status> DeSTSector::beetleStatus() const{
     DeSTSector::StatusMap::const_iterator iter = m_beetleStatus.find(iBeetle);
     if (iter != m_beetleStatus.end()){
       vec[iBeetle - 1] = iter->second;
-    } 
+    }
     else{
       vec[iBeetle - 1] = DeSTSector::OK;
-    } 
+    }
   } // nStrip
   return vec;
 }
@@ -712,15 +712,15 @@ inline std::vector<DeSTSector::Status> DeSTSector::stripStatus() const{
     LHCb::STChannelID chan = stripToChan(iStrip);
     if (beetleStatus(chan) != DeSTSector::OK){
       vec[iStrip - 1] = beetleStatus(chan);
-      continue; 
+      continue;
     }
     DeSTSector::StatusMap::const_iterator iter = m_stripStatus.find(iStrip);
     if (iter != m_stripStatus.end()){
       vec[iStrip - 1] = iter->second;
-    } 
+    }
     else{
       vec[iStrip - 1] = DeSTSector::OK;
-    } 
+    }
   } // nStrip
   return vec;
 }
@@ -729,7 +729,7 @@ inline LHCb::STChannelID DeSTSector::stripToChan(const unsigned int strip) const
   return isStrip(strip) ? LHCb::STChannelID(elementID().type(),elementID().station(),
                                       elementID().layer(),elementID().detRegion(),
                                       elementID().sector(), strip)
-                        : LHCb::STChannelID(0); 
+                        : LHCb::STChannelID(0);
 }
 
 inline const DeSTSector::Sensors& DeSTSector::sensors() const{

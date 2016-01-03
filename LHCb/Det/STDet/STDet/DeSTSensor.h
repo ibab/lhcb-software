@@ -1,9 +1,8 @@
-// $Id: DeSTSensor.h,v 1.8 2010-04-05 09:43:18 mneedham Exp $
 #ifndef _DeSTSensor_H_
 #define _DeSTSensor_H_
 
 #include <string>
-#include <memory> // for auto_ptr with gcc 4.3
+#include <memory>
 
 #include "Kernel/STChannelID.h"
 #include "GaudiKernel/SystemOfUnits.h"
@@ -77,22 +76,22 @@ public:
    * @param  u local u
    * @return bool strip
    **/
-  unsigned int localUToStrip(const double u) const;
+  unsigned int localUToStrip(double u) const;
 
   /** convert strip to local U
    * @param strip
    * @param offset
    * @return local u
    */
-  double localU(const unsigned int strip, double offset = 0.) const;
+  double localU(unsigned int strip, double offset = 0.) const;
 
   /** trajectory
    * @return trajectory for the fit
    */
-  std::auto_ptr<LHCb::Trajectory> trajectory(const unsigned int strip,
-                                             const double offset) const;
+  std::unique_ptr<LHCb::Trajectory> trajectory(unsigned int strip,
+                                               double offset) const;
 
- 
+
   /** plane corresponding to the sector
    * @return the plane
    */
@@ -145,12 +144,12 @@ public:
    */
   double thickness() const;
 
-  /** active height 
+  /** active height
   * @return double activeHeight
   **/
   double activeHeight() const;
 
-  /** active height 
+  /** active height
   * @return double activeWidth
   **/
   double activeWidth() const;
@@ -163,7 +162,7 @@ public:
 
   /** y sense of local frame relative to global */
   bool yInverted() const;
-  
+
   /** print to stream */
   std::ostream& printOut( std::ostream& os ) const;
 
@@ -173,7 +172,7 @@ public:
 protected:
 
   void cacheParentProperties(const DeSTSector* parent);
-  StatusCode initGeometryInfo();   
+  StatusCode initGeometryInfo();
 
 private:
 
@@ -273,9 +272,9 @@ inline bool DeSTSensor::globalInActive( const Gaudi::XYZPoint& gpoint,
   return localInActive(lPoint,tol);
 }
 
-inline bool DeSTSensor::globalInBondGap(const Gaudi::XYZPoint& gpoint, 
+inline bool DeSTSensor::globalInBondGap(const Gaudi::XYZPoint& gpoint,
                                         double tol) const
-{ 
+{
   Gaudi::XYZPoint lPoint = toLocal(gpoint);
   return localInBondGap(lPoint.Y(),tol);
 }
@@ -312,7 +311,7 @@ inline std::ostream& operator<<( std::ostream& os , const DeSTSensor* aSensor )
  */
 inline MsgStream& operator<<( MsgStream& os , const DeSTSensor* aSensor )
 { return aSensor->printOut( os ); }
- 
+
 #endif // _DeSTSector_H
 
 

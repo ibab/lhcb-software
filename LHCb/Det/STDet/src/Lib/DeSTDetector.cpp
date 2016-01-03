@@ -9,16 +9,10 @@
 //STL
 #include <algorithm>
 
-// Boost
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/lambda.hpp>
-
-
 #include "GaudiKernel/GaudiException.h"
 
 #include "Kernel/Trajectory.h"
 
-using namespace boost::lambda;
 using namespace LHCb;
 
 /** @file DeSTDetector.cpp
@@ -28,20 +22,15 @@ using namespace LHCb;
 *    @author Matthew Needham
 */
 
-
 DeSTDetector::DeSTDetector( const std::string& name ) :
-  DetectorElement( name ),
-  m_firstStation(0u),
-  m_nStrip(0u)
+  DetectorElement( name )
 { 
   // constructer
   m_sectors.reserve(512);
 }
 
 
-DeSTDetector::~DeSTDetector() {
-
-}
+DeSTDetector::~DeSTDetector() = default;
 
 StatusCode DeSTDetector::initialize() {
 
@@ -53,10 +42,10 @@ StatusCode DeSTDetector::initialize() {
   }
   else {
     // get the children
-    IDetectorElement::IDEContainer::const_iterator iStation =this->childBegin();
-    for ( ; this->childEnd() != iStation; ++iStation ) {
+    
+    for (auto iStation =this->childBegin(); this->childEnd() != iStation; ++iStation ) {
       DeSTStation* tStation = dynamic_cast<DeSTStation*>(*iStation);
-      if (tStation != 0) { 
+      if (tStation) { 
         m_stations.push_back(tStation); 
       }
     } // iStation
@@ -70,7 +59,6 @@ StatusCode DeSTDetector::initialize() {
       sc = StatusCode::FAILURE; 
     } // empty
   }
-
   return sc;
 }
 
@@ -82,7 +70,7 @@ int DeSTDetector::sensitiveVolumeID(const Gaudi::XYZPoint& point) const
 {
   DeSTDetector* nonConstThis = const_cast<DeSTDetector*>(this);
   DeSTSector* sector = nonConstThis->findSector( point );
-  if ( sector == 0 ) {
+  if ( !sector ) {
     MsgStream msg(msgSvc(), name() );
     msg << MSG::ERROR << "sensitiveVolumeID: no sensitive volume at " 
         << point << endmsg;
@@ -91,73 +79,72 @@ int DeSTDetector::sensitiveVolumeID(const Gaudi::XYZPoint& point) const
   return sector->elementID();
 }
 
-DeSTStation* DeSTDetector::findStation(const STChannelID aChannel){
+DeSTStation* DeSTDetector::findStation(const STChannelID aChannel) const {
 
   // return pointer to the station from channel
-  std::vector<DeSTStation*>::iterator iter = std::find_if(m_stations.begin(),
-                                                          m_stations.end(),
-                                    bind(&DeSTStation::contains, _1, aChannel));
-  return (iter != m_stations.end() ? *iter: 0);
+  auto iter = std::find_if(m_stations.begin(), m_stations.end(),
+                           [&](const DeSTStation* s) { 
+                               return s->contains(aChannel); 
+  });
+  return iter != m_stations.end() ? *iter: nullptr;
 }
 
-DeSTStation* DeSTDetector::findStation(const Gaudi::XYZPoint& point) {
+DeSTStation* DeSTDetector::findStation(const Gaudi::XYZPoint& point) const {
 
   // return pointer to the station from point in global system
-  std::vector<DeSTStation*>::iterator iter = std::find_if(m_stations.begin(),
-                                                          m_stations.end(), 
-                                                          bind(&DeSTStation::isInside, _1, point));
-
-  return (iter != m_stations.end() ? *iter: 0);
+  auto iter = std::find_if(m_stations.begin(), m_stations.end(), 
+                           [&](const DeSTStation *s) {
+                           return s->isInside(point);
+  });
+  return iter != m_stations.end() ? *iter: nullptr;
 }
 
-DeSTLayer* DeSTDetector::findLayer(const STChannelID aChannel)
+DeSTLayer* DeSTDetector::findLayer(const STChannelID aChannel) const
 {
   // return pointer to the layer from channel
-  std::vector<DeSTLayer*>::iterator iter = m_layers.begin();
-  while (iter != m_layers.end() && (*iter)->contains(aChannel) == false){
-    ++iter;
-  } // iter
-  return (iter != m_layers.end() ? *iter: 0);
+  auto iter = std::find_if( m_layers.begin(), m_layers.end(),
+                            [&](const DeSTLayer* l) { return l->contains(aChannel); } );
+  return iter != m_layers.end() ? *iter: nullptr;
 }
 
-DeSTLayer* DeSTDetector::findLayer(const Gaudi::XYZPoint& point){
+DeSTLayer* DeSTDetector::findLayer(const Gaudi::XYZPoint& point) const {
   // return pointer to the layer from point
-  std::vector<DeSTLayer*>::iterator iter = 
-    std::find_if( m_layers.begin(), m_layers.end(), 
-                 bind(&DeSTLayer::isInside, _1, point));
-  return (iter != m_layers.end() ? *iter: 0);
+  auto iter = std::find_if( m_layers.begin(), m_layers.end(), 
+                            [&](const DeSTLayer* l) { 
+                                return l->isInside(point);
+  });
+  return iter != m_layers.end() ? *iter: nullptr;
 }
 
 
-DeSTSector* DeSTDetector::findSector(const std::string& nickname){
+DeSTSector* DeSTDetector::findSector(const std::string& nickname) const {
   // return pointer to the sector from the nickname
-  std::vector<DeSTSector*>::iterator iter = 
-    std::find_if( m_sectors.begin(), m_sectors.end(), STDetFun::equal_by_name<DeSTSector*>(nickname));
-  return (iter != m_sectors.end() ? *iter: 0);
+  auto iter = std::find_if( m_sectors.begin(), m_sectors.end(), 
+                            STDetFun::equal_by_name<DeSTSector*>(nickname));
+  return iter != m_sectors.end() ? *iter: nullptr;
 }
 
-DeSTLayer* DeSTDetector::findLayer(const std::string& nickname){
+DeSTLayer* DeSTDetector::findLayer(const std::string& nickname) const {
   // return pointer to the sector from the nickname
-  std::vector<DeSTLayer*>::iterator iter = 
-    std::find_if( m_layers.begin(), m_layers.end(), STDetFun::equal_by_name<DeSTLayer*>(nickname));
-  return (iter != m_layers.end() ? *iter: 0);
+  auto iter = std::find_if( m_layers.begin(), m_layers.end(), 
+                            STDetFun::equal_by_name<DeSTLayer*>(nickname));
+  return iter != m_layers.end() ? *iter: nullptr;
 }
 
-DeSTStation* DeSTDetector::findStation(const std::string& nickname){
+DeSTStation* DeSTDetector::findStation(const std::string& nickname) const {
   // return pointer to the sector from the nickname
-  std::vector<DeSTStation*>::iterator iter = 
-    std::find_if( m_stations.begin(), m_stations.end(), STDetFun::equal_by_name<DeSTStation*>(nickname));
-  return (iter != m_stations.end() ? *iter: 0);
+  auto iter = std::find_if( m_stations.begin(), m_stations.end(), 
+                            STDetFun::equal_by_name<DeSTStation*>(nickname));
+  return iter != m_stations.end() ? *iter: nullptr;
 }
 
-DeSTDetector::Sectors DeSTDetector::disabledSectors() const{
-
+DeSTDetector::Sectors DeSTDetector::disabledSectors() const {
   Sectors disabled;
-  const Sectors& vec = sectors();
-  Sectors::const_iterator iterS = vec.begin();
-  for (; iterS != vec.end(); ++iterS){
-    if ((*iterS)->sectorStatus() == DeSTSector::ReadoutProblems) disabled.push_back(*iterS);
-  } // iterS
+  const auto& vec = sectors();
+  std::copy_if(vec.begin(), vec.end(), std::back_inserter(disabled),
+               [](const DeSTSector* s) {
+    return s->sectorStatus() == DeSTSector::ReadoutProblems;
+  });
   return disabled; 
 } 
 
@@ -165,12 +152,11 @@ std::vector<LHCb::STChannelID> DeSTDetector::disabledBeetles() const{
 
   std::vector<LHCb::STChannelID> disabledBeetles;
   const Sectors& vec = sectors();
-  Sectors::const_iterator iterS = vec.begin();
-  for (; iterS != vec.end(); ++iterS){
+  for (auto iterS = vec.begin(); iterS != vec.end(); ++iterS){
     std::vector<DeSTSector::Status> bStatus = (*iterS)->beetleStatus();
     for (unsigned int i = 0; i < bStatus.size(); ++i) {
       if (bStatus[i] == DeSTSector::ReadoutProblems){
-	const unsigned int firstStripOnBeetle = (i*LHCbConstants::nStripsInBeetle) + 1;
+        const unsigned int firstStripOnBeetle = (i*LHCbConstants::nStripsInBeetle) + 1;
         disabledBeetles.push_back((*iterS)->stripToChan(firstStripOnBeetle)); 
       }
     } //i 
@@ -178,35 +164,26 @@ std::vector<LHCb::STChannelID> DeSTDetector::disabledBeetles() const{
   return disabledBeetles; 
 } 
 
-std::auto_ptr<LHCb::Trajectory> DeSTDetector::trajectory(const LHCb::LHCbID& id, 
-                                                         const double offset) 
+std::unique_ptr<LHCb::Trajectory> DeSTDetector::trajectory(const LHCb::LHCbID& id, 
+                                                         const double offset) const 
 {
   // look up the trajectory
- 
- std::auto_ptr<LHCb::Trajectory> tTraj;
-
   if ( !id.isST()){
      throw GaudiException( "The LHCbID is not of ST type!",
                            "DeSTDetector.cpp",
                            StatusCode::FAILURE );
   }
-  
   DeSTSector* aSector = findSector(id.stID());
-  if (aSector != 0){
-    tTraj = aSector->trajectory(id.stID(), offset);
-  }
-  else {
+  if (!aSector){
     throw GaudiException( "Failed to find sector",
                           "DeSTDetector.cpp",
 			  StatusCode::FAILURE );
   }
-  return tTraj;
+  return aSector->trajectory(id.stID(), offset);
 }
 
-std::auto_ptr<LHCb::Trajectory> DeSTDetector::trajectoryFirstStrip(const LHCb::LHCbID& id) 
+std::unique_ptr<LHCb::Trajectory> DeSTDetector::trajectoryFirstStrip(const LHCb::LHCbID& id) const
 {
-  std::auto_ptr<LHCb::Trajectory> tTraj;
-
   if ( !id.isST()){
      throw GaudiException( "The LHCbID is not of ST type!",
                            "DeSTDetector.cpp",
@@ -214,42 +191,33 @@ std::auto_ptr<LHCb::Trajectory> DeSTDetector::trajectoryFirstStrip(const LHCb::L
   }
   
   DeSTSector* aSector = findSector(id.stID());
-  if (aSector != 0){
-    tTraj = aSector->trajectoryFirstStrip();
-  }
-  else {
+  if (!aSector){
     throw GaudiException( "Failed to find sector",
                           "DeSTDetector.cpp",
 			  StatusCode::FAILURE );
   }
-  return tTraj;  
+  return aSector->trajectoryFirstStrip();
 }
 
-std::auto_ptr<LHCb::Trajectory> DeSTDetector::trajectoryLastStrip(const LHCb::LHCbID& id) 
+std::unique_ptr<LHCb::Trajectory> DeSTDetector::trajectoryLastStrip(const LHCb::LHCbID& id) const
 {
-  std::auto_ptr<LHCb::Trajectory> tTraj;
-
   if ( !id.isST()){
-     throw GaudiException( "The LHCbID is not of ST type!",
-                           "DeSTDetector.cpp",
-                           StatusCode::FAILURE );
+    throw GaudiException( "The LHCbID is not of ST type!",
+                          "DeSTDetector.cpp",
+                          StatusCode::FAILURE );
   }
-  
   DeSTSector* aSector = findSector(id.stID());
-  if (aSector != 0){
-    tTraj = aSector->trajectoryLastStrip();
-  }
-  else {
+  if (!aSector){
     throw GaudiException( "Failed to find sector",
                           "DeSTDetector.cpp",
-			  StatusCode::FAILURE );
+                          StatusCode::FAILURE );
   }
-  return tTraj;  
+  return aSector->trajectoryLastStrip();
 }
 
 double DeSTDetector::fractionActive() const {
-
-  return std::accumulate(m_sectors.begin(), m_sectors.end(), 0.0,  _1 + bind(&DeSTSector::fractionActive,_2))/double(m_sectors.size());   
+  return std::accumulate(m_sectors.begin(), m_sectors.end(), 0.0,
+                         [&](double fA, const DeSTSector* s) {
+                             return fA + s->fractionActive();
+                         }) / double(m_sectors.size());   
 }
-
-

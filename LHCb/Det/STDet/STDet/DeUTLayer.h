@@ -23,7 +23,7 @@ static const CLID CLID_DeUTLayer = 9303;
 class DeUTLayer : public DeSTLayer  {
 
 public:
-  
+
   /** parent type */
   typedef STDetTraits<DeUTLayer>::parent parent_type;
 
@@ -37,7 +37,7 @@ public:
   DeUTLayer ( const std::string& name = "" ) ;
 
   /** Destructor */
-  virtual ~DeUTLayer(); 
+  virtual ~DeUTLayer();
 
   /**
   * Retrieves reference to class identifier
@@ -50,30 +50,30 @@ public:
   * @return the class identifier for this class
   */
   const CLID& clID () const;
-                                                                           
-  /** initialization method 
+
+  /** initialization method
   * @return Status of initialisation
   */
   virtual StatusCode initialize();
 
   /**  locate module based on a channel id
   @return  module */
-  DeUTModule* findModule(const LHCb::STChannelID aChannel);     
+  DeUTModule* findModule(const LHCb::STChannelID aChannel);
 
-  /** locate module  based on a point  
+  /** locate module  based on a point
   @return module */
-  DeUTModule* findModule(const Gaudi::XYZPoint& point) ;  
+  DeUTModule* findModule(const Gaudi::XYZPoint& point) ;
 
-  /** check whether contains 
+  /** check whether contains
   *  @param  aChannel channel
   *  @return bool
-  */ 
-  virtual bool contains(const LHCb::STChannelID aChannel) const; 
+  */
+  virtual bool contains(const LHCb::STChannelID aChannel) const;
 
   /** vector of children */
   const Children& modules() const;
 
-  /** 
+  /**
   * fraction active channels
   * @return bool fraction active
   */
@@ -83,7 +83,7 @@ public:
 
   /** make flat list of lowest descendents  and also layers*/
   void flatten();
-    
+
   Children m_modules;
   parent_type* m_parent;
 
@@ -92,7 +92,7 @@ public:
 #include "STDet/DeUTModule.h"
 
 inline bool DeUTLayer::contains(const LHCb::STChannelID aChannel) const{
-  return (elementID().station() == aChannel.station() && 
+  return (elementID().station() == aChannel.station() &&
          (elementID().layer() == aChannel.layer())) ;
 }
 

@@ -13,11 +13,6 @@
 *    @author Matthew Needham
 */
 
-// Boost
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/lambda.hpp>
-using namespace boost::lambda;
-
 using namespace LHCb;
 
 DeITDetector::DeITDetector( const std::string& name ) :
@@ -56,20 +51,20 @@ StatusCode DeITDetector::initialize() {
   
 }
 
-DeSTSector* DeITDetector::findSector(const Gaudi::XYZPoint& aPoint){
+DeSTSector* DeITDetector::findSector(const Gaudi::XYZPoint& aPoint) const {
 
-  DeSTSector* aSector = 0;
+  DeSTSector* aSector = nullptr;
   DeSTStation* tStation = findStation(aPoint);
-  if (0 != tStation){
+  if (tStation){
     DeITStation* aStation = static_cast<DeITStation*>(tStation);
     DeITBox* aBox = aStation->findBox(aPoint);    
-    if (0 != aBox){
+    if (aBox){
       DeITLayer* aLayer = aBox->findLayer(aPoint);
-      if (0 != aLayer){
+      if (aLayer){
         DeITLadder* aLadder = aLayer->findLadder(aPoint);
-        if (0 != aLadder){
-          if (aLadder->isInside(aPoint) == true) aSector=aLadder->sector();
-	}
+        if (aLadder){
+          if (aLadder->isInside(aPoint)) aSector=aLadder->sector();
+        }
       } // module   
     } // layer
   }   // station
@@ -98,46 +93,47 @@ void DeITDetector::flatten(){
 }
 
 
-DeITBox* DeITDetector::findBox(const STChannelID aChannel)
+DeITBox* DeITDetector::findBox(const STChannelID aChannel) const
 {
   // return pointer to the layer from channel
-  std::vector<DeITBox*>::iterator iter = std::find_if(m_boxes.begin() , 
-                                                      m_boxes.end(), bind(&DeITBox::contains, _1, aChannel));
-  return (iter != m_boxes.end() ? *iter: 0);
+  auto iter = std::find_if(m_boxes.begin() , m_boxes.end(), 
+                           [&](const DeITBox* b) { 
+                              return b->contains(aChannel);
+  });
+  return iter != m_boxes.end() ? *iter: nullptr;
 }
 
-DeITBox* DeITDetector::findBox(const Gaudi::XYZPoint& point){
+DeITBox* DeITDetector::findBox(const Gaudi::XYZPoint& point) const {
   // return pointer to a box from point
-  std::vector<DeITBox*>::iterator iter = 
-    std::find_if( m_boxes.begin(), m_boxes.end(), 
-                 bind(&DeITBox::isInside, _1, point));
-  return (iter != m_boxes.end() ? *iter: 0);
+  auto iter = std::find_if( m_boxes.begin(), m_boxes.end(), 
+                            [&](const DeITBox* b) { 
+                                return b->isInside(point);
+  });
+  return iter != m_boxes.end() ? *iter: nullptr;
 }
 
-DeSTBaseElement* DeITDetector::findTopLevelElement(const std::string& nickname){
+DeSTBaseElement* DeITDetector::findTopLevelElement(const std::string& nickname) const {
 
   // sanity check...
-  if (nickname.find("IT") == std::string::npos) return 0;
+  if (nickname.find("IT") == std::string::npos) return nullptr;
 
   const STChannelID chan = ITNames().stringToChannel(nickname);
-  if (chan.sector() != 0){
+  if (chan.sector()){
     // its a sector
     return this->DeSTDetector::findSector(chan);
   }
-  else if (chan.layer() != 0u){
+  if (chan.layer() != 0u){
     // its a layer
     return findLayer(chan);
   }
-  else if (chan.detRegion() != 0u){
+  if (chan.detRegion() != 0u){
     // its a box
     return findBox(chan);
   } 
-  else if (chan.station() != 0u) {
+  if (chan.station() != 0u) {
     // its a station
     return findStation(chan);
   } 
-  else {
-    // too bad 
-  }
-  return 0;
+  // too bad 
+  return nullptr;
 }

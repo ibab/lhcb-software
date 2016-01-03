@@ -1,10 +1,9 @@
-// $Id: DeSTDetector.h,v 1.29 2009-07-30 08:01:09 mneedham Exp $
 #ifndef _DeSTDetector_H_
 #define _DeSTDetector_H_
 
 #include <string>
 #include <vector>
-#include <memory> // for auto_ptr with gcc 4.3
+#include <memory>
 
 #include "Kernel/STChannelID.h"
 #include "Kernel/LHCbID.h"
@@ -66,57 +65,57 @@ public:
   DeSTDetector ( const std::string& name = "" ) ;
 
   /** Destructor */
-  virtual ~DeSTDetector(); 
- 
-  /** initialization method 
+  virtual ~DeSTDetector();
+
+  /** initialization method
   * @return Status of initialisation
   */
   virtual StatusCode initialize();
 
   /** @return number of first station */
-  unsigned int firstStation() const; 
+  unsigned int firstStation() const;
 
   /** @return number of last station */
-  unsigned int lastStation() const; 
+  unsigned int lastStation() const;
 
   /** @return number of stations */
-  unsigned int nStation() const; 
+  unsigned int nStation() const;
 
-  /** Implementation of sensitive volume identifier for a given point in the 
+  /** Implementation of sensitive volume identifier for a given point in the
       global reference frame. This is the sensor number defined in the xml.
   */
   int sensitiveVolumeID(const Gaudi::XYZPoint& globalPos) const;
 
   /**  locate the station based on a channel id
   @return  station */
-  DeSTStation* findStation(const LHCb::STChannelID aChannel);     
+  DeSTStation* findStation(const LHCb::STChannelID aChannel) const;
 
-  /** locate station based on a point  
+  /** locate station based on a point
   @return station */
-  DeSTStation* findStation(const Gaudi::XYZPoint & point) ;     
+  DeSTStation* findStation(const Gaudi::XYZPoint & point)  const;
 
-  /** 
+  /**
   *  short cut to pick up the station corresponding to a given nickname
   * @param nickname
-  * @return station 
+  * @return station
   */
-  DeSTStation* findStation(const std::string& nickname); 
+  DeSTStation* findStation(const std::string& nickname) const;
 
-  /** 
+  /**
   *  short cut to pick up the station corresponding to a given nickname
   * @param nickname
   * @return layer
   */
-  DeSTLayer* findLayer(const std::string& nickname); 
+  DeSTLayer* findLayer(const std::string& nickname) const;
 
   /**  locate the layer based on a channel id
   @return  layer */
-  DeSTLayer* findLayer(const LHCb::STChannelID aChannel);     
+  DeSTLayer* findLayer(const LHCb::STChannelID aChannel) const;
 
-  /** locate layer based on a point 
+  /** locate layer based on a point
    *return layer */
-  DeSTLayer* findLayer(const Gaudi::XYZPoint& point);
-    
+  DeSTLayer* findLayer(const Gaudi::XYZPoint& point) const;
+
   /** check contains channel
   *  @param  aChannel channel
   *  @return bool
@@ -129,7 +128,7 @@ public:
   inline bool isValid(const Gaudi::Time& t) const
                               { return ValidDataObject::isValid(t); }
   /** check channel number is valid */
-  bool isValid(const LHCb::STChannelID aChannel);
+  bool isValid(const LHCb::STChannelID aChannel) const;
 
   /** vector of stattions
   * @return vector of stations
@@ -146,57 +145,57 @@ public:
   */
   const Layers& layers() const;
 
-  /** 
+  /**
   *  short cut to pick up the wafer corresponding to x,y,z
-  * @param  aPoint point in global frame  
-  * @return sector 
+  * @param  aPoint point in global frame
+  * @return sector
   */
-  virtual DeSTSector* findSector(const Gaudi::XYZPoint& aPoint) = 0; 
+  virtual DeSTSector* findSector(const Gaudi::XYZPoint& aPoint) const = 0;
 
-  /** 
+  /**
   *  short cut to pick up the wafer corresponding to a channel
-  * @param  aChannel channel 
-  * @return sector 
+  * @param  aChannel channel
+  * @return sector
   */
-  DeSTSector* findSector(const LHCb::STChannelID aChannel) const; 
+  DeSTSector* findSector(const LHCb::STChannelID aChannel) const;
 
-  /** 
+  /**
   *  short cut to pick up the wafer corresponding to a given nickname
   * @param nickname
-  * @return sector 
+  * @return sector
   */
-  DeSTSector* findSector(const std::string& nickname); 
+  DeSTSector* findSector(const std::string& nickname) const;
 
-  /** 
+  /**
   *  find top level DeSTBaseElement by nickname
   * @param nickname
   * @return base element
   */
-  virtual DeSTBaseElement* findTopLevelElement(const std::string& nickname) = 0;
+  virtual DeSTBaseElement* findTopLevelElement(const std::string& nickname) const = 0;
 
   /** get the next channel left */
-  LHCb::STChannelID nextLeft(const LHCb::STChannelID testChan);
+  LHCb::STChannelID nextLeft(const LHCb::STChannelID testChan) const;
 
   /** get the next channel right */
-  LHCb::STChannelID nextRight(const LHCb::STChannelID testChan);
+  LHCb::STChannelID nextRight(const LHCb::STChannelID testChan) const;
 
-  /** get the trajectory 
+  /** get the trajectory
    @return trajectory
   */
-  std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::LHCbID& id, const double offset);
+  std::unique_ptr<LHCb::Trajectory> trajectory(const LHCb::LHCbID& id, const double offset) const;
 
   /** get the trajectory representing the first strip
    @return trajectory
   */
-  std::auto_ptr<LHCb::Trajectory> trajectoryFirstStrip(const LHCb::LHCbID& id);
+  std::unique_ptr<LHCb::Trajectory> trajectoryFirstStrip(const LHCb::LHCbID& id) const;
 
   /** get the trajectory representing the last strip
    @return trajectory
   */
-  std::auto_ptr<LHCb::Trajectory> trajectoryLastStrip(const LHCb::LHCbID& id);
+  std::unique_ptr<LHCb::Trajectory> trajectoryLastStrip(const LHCb::LHCbID& id) const;
 
   /** get the number of strips in detector*/
-  unsigned int nStrip() const; 
+  unsigned int nStrip() const;
 
 
   /** get the number of layers **/
@@ -208,20 +207,20 @@ public:
   /** number of layers per station **/
   unsigned int nLayersPerStation() const;
 
-  /** 
+  /**
   * fraction active channels
   * @return bool fraction active
   */
   double fractionActive() const;
 
   /** find a list of sectors from channelIDs **/
-  Sectors findSectors(const std::vector<LHCb::STChannelID>& vec);
+  Sectors findSectors(const std::vector<LHCb::STChannelID>& vec) const;
 
   /** find a list of sectors from list of nicknames  **/
-  Sectors findSectors(const std::vector<std::string>& vec);
+  Sectors findSectors(const std::vector<std::string>& vec) const;
 
   /** get list of all disabled sectors */
-  Sectors disabledSectors() const; 
+  Sectors disabledSectors() const;
 
   /** get list of disabled beetles */
   std::vector<LHCb::STChannelID> disabledBeetles() const;
@@ -233,7 +232,7 @@ protected:
 
   /** set the strip number  */
   void setNstrip(const unsigned int nStrip);
- 
+
   Stations m_stations;
 
   Sectors m_sectors;
@@ -246,9 +245,9 @@ protected:
 private:
 
 
-  unsigned int m_firstStation;
-  unsigned int m_nStrip;
-  
+  unsigned int m_firstStation = 0u;
+  unsigned int m_nStrip = 0u;
+
 };
 
 inline const std::string& DeSTDetLocation::location(const std::string& type){
@@ -305,23 +304,23 @@ inline const DeSTDetector::Layers& DeSTDetector::layers() const{
   return m_layers;
 }
 
-inline LHCb::STChannelID DeSTDetector::nextLeft(const LHCb::STChannelID 
-                                                aChannel) {
+inline LHCb::STChannelID DeSTDetector::nextLeft(const LHCb::STChannelID
+                                                aChannel) const {
   const DeSTSector* aSector = findSector(aChannel);
-  return (0 != aSector ? aSector->nextLeft(aChannel) : 
-          LHCb::STChannelID(0u) ); 
+  return (0 != aSector ? aSector->nextLeft(aChannel) :
+          LHCb::STChannelID(0u) );
 }
 
 inline LHCb::STChannelID DeSTDetector::nextRight(const LHCb::STChannelID
-                                                 aChannel) {
+                                                 aChannel) const {
   const DeSTSector* aSector = findSector(aChannel);
-  return (0 != aSector ? aSector->nextRight(aChannel) : 
-          LHCb::STChannelID(0u) ); 
+  return (0 != aSector ? aSector->nextRight(aChannel) :
+          LHCb::STChannelID(0u) );
 }
 
-inline bool DeSTDetector::isValid(const LHCb::STChannelID aChannel){
+inline bool DeSTDetector::isValid(const LHCb::STChannelID aChannel) const {
   const DeSTSector* aSector = findSector(aChannel);
-  return (aSector != 0 ? aSector->isStrip(aChannel.strip()) : false); 
+  return (aSector != 0 ? aSector->isStrip(aChannel.strip()) : false);
 }
 
 inline DeSTSector* DeSTDetector::findSector(const LHCb::STChannelID aChannel) const{
@@ -341,41 +340,28 @@ inline unsigned int DeSTDetector::nLayersPerStation() const{
   return nLayer()/nStation();
 }
 
-inline DeSTDetector::Sectors DeSTDetector::findSectors(const std::vector<LHCb::STChannelID>& vec){
+inline DeSTDetector::Sectors DeSTDetector::findSectors(const std::vector<LHCb::STChannelID>& vec) const {
   std::vector<DeSTSector*> sectors; sectors.reserve(vec.size());
-  std::vector<LHCb::STChannelID>::const_iterator iter = vec.begin();
-  for (; iter != vec.end(); ++iter){
+  for (auto iter = vec.begin(); iter != vec.end(); ++iter) {
     DeSTSector* aSector = findSector(*iter);
     if (aSector != 0) sectors.push_back(aSector);
-  }  // for 
-
-  // ensure unique list 
-  sectors.erase(std::unique(sectors.begin(), sectors.end()), sectors.end());
-  return sectors;
-}
-
-inline DeSTDetector::Sectors DeSTDetector::findSectors(const std::vector<std::string>& vec){
-  std::vector<DeSTSector*> sectors; sectors.reserve(vec.size());
-  std::vector<std::string>::const_iterator iter = vec.begin();
-  for (; iter != vec.end(); ++iter){
-    DeSTSector* aSector = findSector(*iter);
-    if (aSector != 0) sectors.push_back(aSector);
-  }  // for 
+  }  // for
 
   // ensure unique list
   sectors.erase(std::unique(sectors.begin(), sectors.end()), sectors.end());
   return sectors;
 }
 
+inline DeSTDetector::Sectors DeSTDetector::findSectors(const std::vector<std::string>& vec) const {
+  std::vector<DeSTSector*> sectors; sectors.reserve(vec.size());
+  for (auto iter = vec.begin(); iter != vec.end(); ++iter){
+    DeSTSector* aSector = findSector(*iter);
+    if (aSector) sectors.push_back(aSector);
+  }  // for
 
-
+  // ensure unique list
+  sectors.erase(std::unique(sectors.begin(), sectors.end()), sectors.end());
+  return sectors;
+}
 
 #endif // _DeSTDetector_H
-
-
-
-
-
-
-
-

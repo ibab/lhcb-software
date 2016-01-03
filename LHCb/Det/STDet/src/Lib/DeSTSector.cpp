@@ -582,11 +582,11 @@ double DeSTSector::toElectron(const double& val,
   return val * m_electronsPerADC[aStrip-1];
 }
 
-std::auto_ptr<LHCb::Trajectory>
+std::unique_ptr<LHCb::Trajectory>
 DeSTSector::trajectory(const STChannelID& aChan, const double offset) const
 {
 
-  if (contains(aChan) == false){
+  if (!contains(aChan)){
     MsgStream msg(msgSvc(), name() );
     msg << MSG::ERROR << "Failed to link to sector " << nickname()
         << " test strip  number "  << aChan.strip() << " strip "  << endmsg;
@@ -597,17 +597,17 @@ DeSTSector::trajectory(const STChannelID& aChan, const double offset) const
   return createTraj(aChan.strip(), offset);
 }
 
-std::auto_ptr<LHCb::Trajectory> DeSTSector::trajectoryFirstStrip() const
+std::unique_ptr<LHCb::Trajectory> DeSTSector::trajectoryFirstStrip() const
 {
   return createTraj(m_firstStrip,0.);
 }
 
-std::auto_ptr<LHCb::Trajectory> DeSTSector::trajectoryLastStrip() const
+std::unique_ptr<LHCb::Trajectory> DeSTSector::trajectoryLastStrip() const
 {
   return createTraj(nStrip(), 0.);
 }
 
-std::auto_ptr<LHCb::Trajectory> DeSTSector::createTraj(const unsigned int strip,
+std::unique_ptr<LHCb::Trajectory> DeSTSector::createTraj(const unsigned int strip,
                                                        const double offset) const{
 
   // collect the individual traj
@@ -619,7 +619,7 @@ std::auto_ptr<LHCb::Trajectory> DeSTSector::createTraj(const unsigned int strip,
     return theSensors.front()->trajectory(strip,offset);
   }
   // return a piecewise traj
-  STTraj* traj = new STTraj();
+  std::unique_ptr<STTraj> traj{ new STTraj() };
   for (; iterS != theSensors.end(); ++iterS) {
     auto sensTraj = (*iterS)->trajectory(strip,offset);
     if (traj->numberOfPieces() == 0) {
@@ -641,12 +641,12 @@ std::auto_ptr<LHCb::Trajectory> DeSTSector::createTraj(const unsigned int strip,
       }
     }
   } // loop
-  return std::auto_ptr<LHCb::Trajectory>{traj};
+  return std::move(traj);
 }
 
 StatusCode DeSTSector::cacheInfo()
 {
-  std::unique_ptr<LHCb::Trajectory> firstTraj = createTraj(m_firstStrip,0);
+  auto firstTraj = createTraj(m_firstStrip,0);
 
   // get the start and end point. for piecewise trajectories, we
   // effectively make an approximation by a straight line.

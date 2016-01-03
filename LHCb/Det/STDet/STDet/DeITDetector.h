@@ -31,10 +31,10 @@ public:
   /** Constructor */
   DeITDetector ( const std::string& name = "" ) ;
 
- 
+
   /** Destructor */
-  virtual ~DeITDetector(); 
- 
+  ~DeITDetector() override;
+
   /**
   * Retrieves reference to class identifier
   * @return the class identifier for this class
@@ -47,21 +47,21 @@ public:
   */
   const CLID& clID () const ;
 
-  virtual StatusCode initialize();
-  
-  /** 
-  *  short cut to pick up the wafer corresponding to x,y,z
-  * @param  aPoint point in global frame  
-  * @return sector 
-  */
-  virtual DeSTSector* findSector(const Gaudi::XYZPoint& aPoint); 
+  StatusCode initialize() override;
 
-  /** 
+  /**
+  *  short cut to pick up the wafer corresponding to x,y,z
+  * @param  aPoint point in global frame
+  * @return sector
+  */
+  DeSTSector* findSector(const Gaudi::XYZPoint& aPoint) const override;
+
+  /**
   *  find top level DeSTBaseElement by nickname
   * @param nickname
   * @return base element
   */
-  DeSTBaseElement* findTopLevelElement(const std::string& nickname) ;
+  DeSTBaseElement* findTopLevelElement(const std::string& nickname) const override;
 
 
   /** flat vector of boxes
@@ -71,11 +71,11 @@ public:
 
   /**  locate the layer based on a channel id
   @return  box */
-  DeITBox* findBox(const LHCb::STChannelID aChannel);     
+  DeITBox* findBox(const LHCb::STChannelID aChannel) const;
 
-  /** locate layer based on a point 
+  /** locate layer based on a point
    *return layer */
-  DeITBox* findBox(const Gaudi::XYZPoint& point);
+  DeITBox* findBox(const Gaudi::XYZPoint& point) const;
 
   /** get the number of boxes **/
   unsigned int nBox() const;
@@ -112,11 +112,3 @@ inline unsigned DeITDetector::nLayerPerBox() const{
 }
 
 #endif // _DeITDetector_H
-
-
-
-
-
-
-
-

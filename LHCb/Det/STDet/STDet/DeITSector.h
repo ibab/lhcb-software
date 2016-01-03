@@ -33,8 +33,8 @@ public:
   DeITSector ( const std::string& name = "" ) ;
 
   /** Destructor */
-  virtual ~DeITSector(); 
- 
+  virtual ~DeITSector();
+
   virtual unsigned int prodID() const;
 
   /**
@@ -49,7 +49,7 @@ public:
   */
   const CLID& clID () const;
 
-  /** initialization method 
+  /** initialization method
   * @return Status of initialisation
   */
   virtual StatusCode initialize();

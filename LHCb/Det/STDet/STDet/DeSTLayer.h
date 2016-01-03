@@ -30,9 +30,9 @@ public:
   DeSTLayer ( const std::string& name = "" );
 
   /** Destructor */
-  virtual ~DeSTLayer(); 
- 
-  /** initialization method 
+  virtual ~DeSTLayer();
+
+  /** initialization method
   * @return Status of initialisation
   */
   virtual StatusCode initialize();
@@ -42,17 +42,17 @@ public:
   */
   unsigned int id() const;
 
-  /** stereo angle 
+  /** stereo angle
   *  @return identifier
   */
   double angle() const;
 
-  /** cosine stereo angle 
+  /** cosine stereo angle
   *  @return identifier
   */
   double cosAngle() const;
 
-  /** sine stereo angle 
+  /** sine stereo angle
   *  @return identifier
   */
   double sinAngle() const;
@@ -60,7 +60,7 @@ public:
 
   /** print to stream */
   std::ostream& printOut( std::ostream& os ) const;
-    
+
   /** print to stream */
   MsgStream& printOut( MsgStream& os) const;
 
@@ -75,12 +75,12 @@ public:
   */
   const Sectors& sectors() const;
 
-  /** plane corresponding to the sector 
-  * @return the plane 
+  /** plane corresponding to the sector
+  * @return the plane
   */
-  Gaudi::Plane3D plane() const; 
+  Gaudi::Plane3D plane() const;
 
-  /** 
+  /**
   * Nickname for the layer
   **/
   const std::string& nickname() const;

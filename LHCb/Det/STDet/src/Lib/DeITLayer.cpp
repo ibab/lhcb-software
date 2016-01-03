@@ -10,11 +10,6 @@
 */
 
 
-// Boost
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/lambda.hpp>
-
-
 //STL
 #include <numeric>
 #include <algorithm>
@@ -22,7 +17,6 @@
 #include "Kernel/ITNames.h"
 
 using namespace LHCb;
-using namespace boost::lambda;
 
 DeITLayer::DeITLayer( const std::string& name ) :
   DeSTLayer( name ),
@@ -58,8 +52,8 @@ StatusCode DeITLayer::initialize() {
     m_nickname = ITNames().UniqueLayerToString(chan);
     m_ladders = getChildren<DeITLayer>();
    // set the first and last layers
-    DeITLayer::Children::const_iterator start = m_ladders.begin();
-    DeITLayer::Children::const_iterator childEnd = m_ladders.end();
+    auto start = m_ladders.begin();
+    auto childEnd = m_ladders.end();
     m_firstSector = (*start)->sector(); m_lastSector = (*start)->sector();
     for (; start != childEnd; ++start){
       unsigned int testID = (*start)->id();
@@ -72,34 +66,38 @@ StatusCode DeITLayer::initialize() {
   return sc;
 }
 
-DeITLadder* DeITLayer::findLadder(const STChannelID aChannel){
+DeITLadder* DeITLayer::findLadder(const STChannelID aChannel) const{
 
   // return pointer to the station from channel
-  Children::iterator iter = std::find_if(m_ladders.begin() , m_ladders.end(), bind(&DeITLadder::contains, _1, aChannel));
-  return (iter != m_ladders.end() ? *iter: 0);
+  auto iter = std::find_if(m_ladders.begin() , m_ladders.end(), 
+                           [&](const DeITLadder* l) { return l->contains(aChannel); });
+  return iter != m_ladders.end() ? *iter: nullptr;
 }
 
-DeITLadder* DeITLayer::findLadder(const Gaudi::XYZPoint& point) {
+DeITLadder* DeITLayer::findLadder(const Gaudi::XYZPoint& point)  const{
 
   // find the half module 
-  Children::iterator iter = std::find_if(m_ladders.begin(), m_ladders.end(), bind(&DeITLadder::isInside, _1, point)); 
-  return (iter != m_ladders.end() ? *iter: 0);
+  auto iter = std::find_if(m_ladders.begin(), m_ladders.end(), 
+                           [&](const DeITLadder* l) { return l->isInside(point); });
+  return iter != m_ladders.end() ? *iter: nullptr;
 }
 
 
 void DeITLayer::flatten() {
 
- Children::const_iterator iterLadder = ladders().begin();
- for ( ; iterLadder !=  ladders().end() ; ++iterLadder ){
-   DeSTSector* tSector = (*iterLadder)->sector();
-   m_sectors.push_back(tSector);  
- } //sectors     
-
+ std::transform( m_ladders.begin(), m_ladders.end(),
+                 std::back_inserter(m_sectors),
+                 [](const child_type* i) {
+                     return i->sector();
+ });
 }
 
 double DeITLayer::fractionActive() const {
 
-  return std::accumulate(m_ladders.begin(), m_ladders.end(), 0.0,  _1 + bind(&DeITLadder::fractionActive,_2))/double(m_ladders.size());   
+  return std::accumulate(m_ladders.begin(), m_ladders.end(), 0.0,  
+                         [](double fa, const DeITLadder* l) {
+                             return fa + l->fractionActive();
+                         }) / double(m_ladders.size());   
 }
 
 bool DeITLayer::contains(const LHCb::STChannelID aChannel) const{

@@ -18,7 +18,7 @@ class DeTTDetector;
   * <b> Additional information: </b>
  * \li <a href="http://doc.cern.ch//archive/electronic/cern/others/LHB/internal/lhcb-2006-034.pdf"><b>LHCb note on STDet</b></a>
    \li  <a href="http://ckm.physik.unizh.ch/software"><b>ST Software page</b></a><p>
- * 
+ *
  */
 
 static const CLID CLID_DeTTStation = 9102;
@@ -33,14 +33,14 @@ public:
   /** child type */
   typedef STDetTraits<DeTTStation>::child child_type;
 
-  /** children */  
-  typedef std::vector<child_type*> Children; 
+  /** children */
+  typedef std::vector<child_type*> Children;
 
   /** Constructor */
   DeTTStation ( const std::string& name = "" ) ;
 
   /** Destructor */
-  virtual ~DeTTStation(); 
+  virtual ~DeTTStation();
 
    /**
    * Retrieves reference to class identifier
@@ -53,24 +53,24 @@ public:
   * @return the class identifier for this class
   */
   const CLID& clID () const;
-                                                                           
-  /** initialization method 
+
+  /** initialization method
   * @return Status of initialisation
   */
   virtual StatusCode initialize();
 
   /**  locate the layer based on a channel id
   @return  layer */
-  DeTTLayer* findLayer(const LHCb::STChannelID aChannel);     
+  DeTTLayer* findLayer(const LHCb::STChannelID aChannel);
 
-  /** locate layer based on a point  
+  /** locate layer based on a point
   @return layer */
-  DeTTLayer* findLayer(const Gaudi::XYZPoint& point) ;   
+  DeTTLayer* findLayer(const Gaudi::XYZPoint& point) ;
 
   /** vector of children */
-  const Children& layers() const; 
+  const Children& layers() const;
 
-  /** 
+  /**
   * fraction active channels
   * @return bool fraction active
   */

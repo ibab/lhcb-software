@@ -24,7 +24,7 @@ static const CLID CLID_DeUTModule = 9310;
 class DeUTModule : public DeSTBaseElement  {
 
 public:
-   
+
   /** parent type */
   typedef STDetTraits<DeUTModule>::parent parent_type;
 
@@ -38,8 +38,8 @@ public:
   DeUTModule ( const std::string& name = "" ) ;
 
   /** Destructor */
-  virtual ~DeUTModule(); 
- 
+  virtual ~DeUTModule();
+
   /**
   * Retrieves reference to class identifier
   * @return the class identifier for this class
@@ -52,13 +52,13 @@ public:
   */
   const CLID& clID () const;
 
-  /** initialization method 
+  /** initialization method
   * @return Status of initialisation
   */
   virtual StatusCode initialize();
 
-  /** region where module is located 
-  * @return m_region 
+  /** region where module is located
+  * @return m_region
   */
   unsigned int detRegion() const;
 
@@ -92,23 +92,23 @@ public:
 
   /** test whether contains channel
   * @param  aChannel test channel
-  * @return bool 
+  * @return bool
   */
-  virtual bool contains(const LHCb::STChannelID aChannel) const; 
- 
+  virtual bool contains(const LHCb::STChannelID aChannel) const;
+
   /** print to stream */
   std::ostream& printOut( std::ostream& os ) const;
-    
+
   /** print to stream */
   MsgStream& printOut( MsgStream& os) const;
 
   /**  locate sector based on a channel id
   @return  sector */
-  DeUTSector* findSector(const LHCb::STChannelID aChannel);     
+  DeUTSector* findSector(const LHCb::STChannelID aChannel);
 
-  /** locate sector based on a point  
+  /** locate sector based on a point
   @return sector */
-  DeUTSector* findSector(const Gaudi::XYZPoint& point) ;  
+  DeUTSector* findSector(const Gaudi::XYZPoint& point) ;
 
   /** children */
   const DeUTModule::Children& sectors() const;
@@ -116,10 +116,10 @@ public:
   /** column number */
   unsigned int column() const;
 
-  /** production id */ 
+  /** production id */
   unsigned int prodID() const;
 
-  /** 
+  /**
   * fraction active channels
   * @return bool fraction active
   */

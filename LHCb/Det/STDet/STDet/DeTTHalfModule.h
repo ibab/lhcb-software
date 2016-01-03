@@ -14,7 +14,7 @@ class DeTTSector;
  *  Class representing a TT Half module (7 sensors ganged together)
  *
  *  @author Matthew Needham Matthew.Needham@cern.ch
- * 
+ *
  * <b> Additional information: </b>
  * \li <a href="http://doc.cern.ch//archive/electronic/cern/others/LHB/internal/lhcb-2006-034.pdf"><b>LHCb note on STDet</b></a>
    \li  <a href="http://ckm.physik.unizh.ch/software"><b>ST Software page</b></a><p>
@@ -26,7 +26,7 @@ static const CLID CLID_DeTTHalfModule = 9110;
 class DeTTHalfModule : public DeSTBaseElement  {
 
 public:
-   
+
   /** parent type */
   typedef STDetTraits<DeTTHalfModule>::parent parent_type;
 
@@ -40,8 +40,8 @@ public:
   DeTTHalfModule ( const std::string& name = "" ) ;
 
   /** Destructor */
-  virtual ~DeTTHalfModule(); 
- 
+  virtual ~DeTTHalfModule();
+
   /**
   * Retrieves reference to class identifier
   * @return the class identifier for this class
@@ -54,13 +54,13 @@ public:
   */
   const CLID& clID () const;
 
-  /** initialization method 
+  /** initialization method
   * @return Status of initialisation
   */
   virtual StatusCode initialize();
 
-  /** region where module is located 
-  * @return m_region 
+  /** region where module is located
+  * @return m_region
   */
   unsigned int detRegion() const;
 
@@ -72,7 +72,7 @@ public:
   */
   std::string type() const;
 
-  /** indicate the module position (T, B) 
+  /** indicate the module position (T, B)
   * @return m_position
   */
   std::string position() const;
@@ -89,23 +89,23 @@ public:
 
   /** test whether contains channel
   * @param  aChannel test channel
-  * @return bool 
+  * @return bool
   */
-  virtual bool contains(const LHCb::STChannelID aChannel) const; 
- 
+  virtual bool contains(const LHCb::STChannelID aChannel) const;
+
   /** print to stream */
   std::ostream& printOut( std::ostream& os ) const;
-    
+
   /** print to stream */
   MsgStream& printOut( MsgStream& os) const;
 
   /**  locate sector based on a channel id
   @return  sector */
-  DeTTSector* findSector(const LHCb::STChannelID aChannel);     
+  DeTTSector* findSector(const LHCb::STChannelID aChannel);
 
-  /** locate sector based on a point  
+  /** locate sector based on a point
   @return sector */
-  DeTTSector* findSector(const Gaudi::XYZPoint& point) ;  
+  DeTTSector* findSector(const Gaudi::XYZPoint& point) ;
 
   /** children */
   const DeTTHalfModule::Children& sectors() const;
@@ -113,10 +113,10 @@ public:
   /** column number */
   unsigned int column() const;
 
-  /** production id */ 
+  /** production id */
   unsigned int prodID() const;
 
-  /** 
+  /**
   * fraction active channels
   * @return bool fraction active
   */
