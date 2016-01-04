@@ -8,6 +8,11 @@
  - reduce the amount of copying when reading compressed items, and a-priori
    determine the required output buffer size so that there is no need to allocate
    more than strictly neccessary.
+ - implement a custom string-based istream which can use move semantics to
+   avoid copying
+ - prefer SmartIF over raw pointer + release
+ - prefer boost::optional over StatusCode + OUT parameter
+ - use new ValidInputSource constructor to move buffer instead of copying it
 
 !========================= CondDBEntityResolver v5r9 2015-10-12 ======================
 ! 2015-08-03 - Gerhard Raven

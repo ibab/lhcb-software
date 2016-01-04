@@ -30,7 +30,7 @@ std::array<char,256> build_decoding_table() {
     for (int i = 0; i < 0x40; i++) tbl[(size_t)encoding_table[i]] = i;
     return tbl;
 }
-static const std::array<char,256> decoding_table = build_decoding_table();
+static const auto decoding_table = build_decoding_table();
 
 static int mod_table[] = {0, 2, 1};
 
@@ -68,12 +68,11 @@ std::string base64_decode(const char* data, size_t input_length) {
 
     if (input_length % 4 != 0) return {};
 
-    size_t output_length = input_length / 4 * 3;
+    std::string::size_type output_length = input_length / 4 * 3;
     if (data[input_length - 1] == '=') --output_length;
     if (data[input_length - 2] == '=') --output_length;
 
-    std::string decoded_data;
-    decoded_data.resize(output_length);
+    std::string decoded_data(output_length,char{});
 
     for (size_t i = 0, j = 0; i < input_length;) {
         uint32_t sextet_a = data[i] == '=' ? 0: decoding_table[(size_t)data[i]]; i++;

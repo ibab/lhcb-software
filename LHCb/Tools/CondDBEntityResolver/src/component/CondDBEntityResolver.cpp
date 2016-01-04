@@ -21,6 +21,37 @@
 // local
 #include "CondDBEntityResolver.h"
 
+namespace {
+
+// custom istream, which, when given an rvalue std::string,
+// will 'steal' its buffer. This avoids a copy compared to
+// std::istringstream... (which only accepts a string by const&)
+template <typename char_type>
+class basic_isstream : public std::basic_istream<char_type> {
+  class isstreambuf : public std::basic_streambuf<char_type, std::char_traits<char_type> >
+  {
+    std::basic_string<char_type> m_buffer;
+  public:
+    template <typename... Args>
+    isstreambuf(Args&&... args) : m_buffer( std::forward<Args>(args)... ) {
+      // there could be a write to this buffer through sputbackc, (i.e. istream::putback)
+      // if one puts back a different character then originally there -- which would be
+      // undefined behaviour, as writes to data() are undefined behaviour...
+      // (think: cow string implementation where it doesn't realize there is a write,
+      // but cow isn't C++11 conforming anyway)
+      char_type* b = const_cast<char_type*>(m_buffer.data());
+      this->setg( b, b, b+m_buffer.size() );
+    }
+  } m_sbuf;
+public:
+  template <typename ... Args>
+  basic_isstream(Args&&... args) : std::istream(&m_sbuf), m_sbuf(std::forward<Args>(args)...) { }
+};
+
+using isstream = basic_isstream<char>;
+
+}
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : CondDBEntityResolverSvc
 //
@@ -36,23 +67,19 @@ DECLARE_TOOL_FACTORY(CondDBEntityResolver)
 CondDBEntityResolver::CondDBEntityResolver( const std::string& type,
                                             const std::string& name,
                                             const IInterface* parent ):
-  AlgTool(type,name,parent),
-  m_condDBReader(0),
-  m_detDataSvc(0)
+  base_class(type,name,parent)
 {
-
   declareInterface<IXmlEntityResolver>(this);
   declareInterface<IFileAccess>(this);
 
   declareProperty("DetDataSvc", m_detDataSvcName = "DetDataSvc/DetectorDataSvc");
   declareProperty("CondDBReader", m_condDBReaderName = "CondDBCnvSvc");
 
-  m_protocols.push_back("conddb");
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-CondDBEntityResolver::~CondDBEntityResolver() {}
+CondDBEntityResolver::~CondDBEntityResolver() = default;
 
 
 //=========================================================================
@@ -87,14 +114,8 @@ StatusCode CondDBEntityResolver::initialize ( ) {
 //=========================================================================
 StatusCode CondDBEntityResolver::finalize ( ) {
 
-  if ( m_condDBReader ) {
-    m_condDBReader->release();
-    m_condDBReader = 0;
-  }
-  if ( m_detDataSvc ) {
-    m_detDataSvc->release();
-    m_detDataSvc = 0;
-  }
+  m_condDBReader.reset();
+  m_detDataSvc.reset();
 
   // Finalize the Xerces-C++ XML subsystem
   xercesc::XMLPlatformUtils::Terminate();
@@ -114,8 +135,8 @@ xercesc::EntityResolver *CondDBEntityResolver::resolver() {
 //=========================================================================
 ICondDBReader *CondDBEntityResolver::condDBReader() {
   if (!m_condDBReader) {
-    StatusCode sc = service(m_condDBReaderName,m_condDBReader,true);
-    if( !sc.isSuccess() ) {
+    m_condDBReader = service(m_condDBReaderName,true);
+    if( !m_condDBReader) {
       throw GaudiException("Can't locate service " + m_condDBReaderName,
                            name(),StatusCode::FAILURE);
     } else {
@@ -131,8 +152,8 @@ ICondDBReader *CondDBEntityResolver::condDBReader() {
 //=========================================================================
 IDetDataSvc *CondDBEntityResolver::detDataSvc() {
   if (!m_detDataSvc) {
-    StatusCode sc = service(m_detDataSvcName,m_detDataSvc,true);
-    if( !sc.isSuccess() ) {
+    m_detDataSvc = service(m_detDataSvcName,true);
+    if( !m_detDataSvc ) {
       throw GaudiException("Can't locate service " + m_detDataSvcName,
                            name(),StatusCode::FAILURE);
     } else {
@@ -146,9 +167,8 @@ IDetDataSvc *CondDBEntityResolver::detDataSvc() {
 //=========================================================================
 // fill validity limits and data (str) with the content retrieved from the url
 //=========================================================================
-StatusCode CondDBEntityResolver::i_getData(const std::string &url,
-                                           Gaudi::Time &since, Gaudi::Time &until,
-                                           std::string &str){
+boost::optional<std::string> CondDBEntityResolver::i_getData(const std::string &url,
+                                           Gaudi::Time &since, Gaudi::Time &until ) {
   MsgStream log(msgSvc(), name());
 
   std::string path;
@@ -196,7 +216,7 @@ StatusCode CondDBEntityResolver::i_getData(const std::string &url,
     now =  detDataSvc()->eventTime();
   } else {
     log << MSG::ERROR << "event time undefined" << endmsg;
-    return StatusCode::FAILURE;
+    return boost::none;
   }
 
   // outputs
@@ -204,42 +224,40 @@ StatusCode CondDBEntityResolver::i_getData(const std::string &url,
   ICondDBReader::DataPtr data;
 
   StatusCode sc = condDBReader()->getObject(path,now,data,descr,since,until,channel);
-  if (sc.isSuccess()) {
-    if ( !data ) {
-      log << MSG::ERROR << "Cannot find any data at " << url << endmsg;
-      return StatusCode::FAILURE;
-    }
-    try {
-      // try to copy the data into the istringstream
-      const std::string& str2 = (*data)[data_field_name].data<std::string>();
-      str = CondDBCompression::decompress(str2);
-    } catch (cool::RecordSpecificationUnknownField &e) {
-      log << MSG::ERROR << "I cannot find the data inside COOL object: "
-          << e.what() << endmsg;
-      return StatusCode::FAILURE;
-    }
+  if (!sc.isSuccess()) return boost::none;
+
+  if ( !data ) {
+    log << MSG::ERROR << "Cannot find any data at " << url << endmsg;
+    return boost::none;
   }
-  return sc;
+  try {
+    return CondDBCompression::decompress((*data)[data_field_name].data<std::string>());
+
+  } catch (cool::RecordSpecificationUnknownField &e) {
+    log << MSG::ERROR << "I cannot find the data inside COOL object: "
+        << e.what() << endmsg;
+  }
+  return boost::none;
 }
 //=========================================================================
 //  Returns an input stream to read from the opened file.
 //=========================================================================
 CondDBEntityResolver::open_result_t CondDBEntityResolver::open(const std::string &url) {
-  MsgStream log(msgSvc(), name());
 
   Gaudi::Time since, until;
-  std::string str;
-  StatusCode sc = i_getData(url,since,until,str);
-  if (sc.isFailure()){
+  auto str = i_getData(url,since,until);
+  if (!str){
     throw GaudiException("Cannot open URL " + url, name(), StatusCode::FAILURE);
   }
-  return open_result_t(new std::istringstream(str));
+  return open_result_t(new isstream(std::move(*str)));
 }
 //=========================================================================
 //  Returns the list of supported protocols.
 //=========================================================================
 const std::vector<std::string> &CondDBEntityResolver::protocols() const {
-  return m_protocols;
+  /// Vector of supported protocols. (for IFileAccess)
+  static const std::vector<std::string> s_protocols = { { "conddb" } };
+  return s_protocols;
 }
 //=========================================================================
 //  Create a Xerces-C input source based on the given systemId (publicId is ignored).
@@ -264,34 +282,25 @@ xercesc::InputSource *CondDBEntityResolver::resolveEntity(const XMLCh *const, co
     if( UNLIKELY( log.level() <= MSG::VERBOSE ) )
       log << MSG::VERBOSE << "Not a conddb URL" << endmsg;
     // tell XercesC to use the default action
-    return NULL;
+    return nullptr;
   }
 
   Gaudi::Time since, until;
-  std::string str;
-  StatusCode sc = i_getData(systemIdString,since,until,str);
+  auto str = i_getData(systemIdString,since,until);
 
-  if (sc.isSuccess()) {
-    // Create a copy of the string for the InputSource
-
-    // fill the buffer
-    unsigned int buff_size = static_cast<unsigned int>(str.size());
-    XMLByte* buff = new XMLByte[buff_size];
-    std::copy(str.begin(),str.end(),buff);
-
-    // Create the input source using the string
-    ValidInputSource *inputSource = new ValidInputSource((XMLByte*) buff,
-                                                         buff_size,
-                                                         systemId,
-                                                         true);
-    inputSource->setSystemId(systemId);
-    inputSource->setValidity(since, until);
-
-    // Done!
-    return inputSource;
+  if (!str) {
+    // tell XercesC to use the default action
+    return nullptr;
   }
 
-  // tell XercesC to use the default action
-  return NULL;
+  // _move_ the string into the inputSource
+  ValidInputSource *inputSource = new ValidInputSource(std::move(*str),
+                                                       systemId);
+  inputSource->setSystemId(systemId);
+  inputSource->setValidity(since, until);
+
+  // Done!
+  return inputSource;
+
 }
 //=============================================================================
