@@ -11,7 +11,17 @@ ValidInputSource::ValidInputSource ( const XMLByte *const           srcDocBytes,
   m_until(Gaudi::Time::max())
 {}
 
-ValidInputSource::~ValidInputSource() {}
+/// Constructor
+ValidInputSource::ValidInputSource ( std::string                    buffer,
+                                     const XMLCh *const             bufId,
+                                     xercesc::MemoryManager *const  manager ):
+  xercesc::MemBufInputSource(reinterpret_cast<const XMLByte*>(buffer.data()),static_cast<unsigned int>(buffer.size()),bufId,false,manager),
+  m_since(Gaudi::Time::epoch()),
+  m_until(Gaudi::Time::max()),
+  m_buffer( std::move(buffer) ) // keep the buffer alive for the lifetime of 'this'
+{}
+
+ValidInputSource::~ValidInputSource() = default;
 
 bool ValidInputSource::isValid() const
 {

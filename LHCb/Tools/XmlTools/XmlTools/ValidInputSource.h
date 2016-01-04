@@ -31,6 +31,12 @@ public:
                      const bool                     adoptBuffer = false,
                      xercesc::MemoryManager *const  manager = xercesc::XMLPlatformUtils::fgMemoryManager );
 
+  /// Constructor
+  ValidInputSource ( std::string                    buffer,
+                     const XMLCh *const             bufId,
+                     xercesc::MemoryManager *const  manager = xercesc::XMLPlatformUtils::fgMemoryManager );
+
+
   /// Destructor
   virtual ~ValidInputSource();
 
@@ -64,6 +70,9 @@ private:
   
   /// Time of end of validity
   Gaudi::Time m_until;
+
+  /// optional buffer, external to xercesc
+  std::string m_buffer;
   
 };
 

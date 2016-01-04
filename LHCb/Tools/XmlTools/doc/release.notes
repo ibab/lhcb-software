@@ -3,6 +3,10 @@
 ! Responsible : Marco Clemencic / Sebastien Ponce
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
+! 2016-01-03 - Gerhard Raven
+ - ValidInputSource: add the possibility to use an (internal) string
+   as memory buffer. When combined with move semantics this alllows 
+   for zero-copy initialization from an std::string.
 
 ! 2015-12-06 - Gerhard Raven
  - modernize code:
