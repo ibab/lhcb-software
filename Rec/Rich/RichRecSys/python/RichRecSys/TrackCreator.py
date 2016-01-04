@@ -75,20 +75,10 @@ class RichTrackCreatorConfig(RichConfigurableUser):
                     self.setProp( "MaxUsedTracks", 500 )
                 else:
                     self.setProp( "MaxUsedTracks", 400 )
-
-        ## elif dataType == "Upgrade" :
-
-        ##     # Temporarily add ghost prob cuts
-        ##     if not self.isPropertySet("TrackCuts") :
-        ##         self.setProp( "TrackCuts", { "Forward" : { "GhostProbCut": [0.0,0.3], "Chi2Cut" : [0,5], "PCut" : [0,9999999] } ,
-        ##                                      "Match"   : { "GhostProbCut": [0.0,0.3], "Chi2Cut" : [0,5], "PCut" : [0,9999999] } ,
-        ##                                      "Seed"    : { "GhostProbCut": [0.0,0.3], "Chi2Cut" : [0,5], "PCut" : [0,9999999] } ,
-        ##                                      "VeloTT"  : { "GhostProbCut": [0.0,0.3], "Chi2Cut" : [0,5], "PCut" : [0,9999999] } ,
-        ##                                      "KsTrack" : { "GhostProbCut": [0.0,0.3], "Chi2Cut" : [0,5], "PCut" : [0,9999999] } } )
             
         # Relaxed GECs for pA data, tuning for 2013 Reco14r1 
         if "pA" in self.getProp("SpecialData"):
-            if not self.isPropertySet("MaxUsedTracks") : self.setProp("MaxUsedTracks", 10000)
+            if not self.isPropertySet("MaxUsedTracks")  : self.setProp("MaxUsedTracks",  10000)
             if not self.isPropertySet("MaxInputTracks") : self.setProp("MaxInputTracks", 99999)
 
     ## @brief Apply the configuration

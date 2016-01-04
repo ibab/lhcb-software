@@ -544,6 +544,9 @@ class RichRecSysConf(RichRecSysBaseConf) :
         self.copyOptions( self.gpidConfig(),   groupConfig.gpidConfig()   )
         self.copyOptions( self.ckResConfig(),  groupConfig.ckResConfig()  )
 
+        # Misc. tools
+        self.copyOptions( self.richTools().photonReco(), groupConfig.richTools().photonReco() )
+
     ## Get the configurable for a given track type
     def getTrackGroupConf(self,tktype):
         conf = None
@@ -688,7 +691,7 @@ class RichRecSysConf(RichRecSysBaseConf) :
                     # Construct the track selection cuts for this group
                     tkCuts = { }
                     for tkType in tkTypeGroup : tkCuts[tkType] = globalTkCuts[tkType]
-                
+
                     # Set the track selection for this group
                     groupConfig.trackConfig().setProp("TrackCuts",tkCuts)
 
