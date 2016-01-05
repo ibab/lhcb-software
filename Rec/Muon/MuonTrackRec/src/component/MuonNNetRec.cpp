@@ -597,8 +597,8 @@ StatusCode MuonNNetRec::muonNNetMon(){
       }
       
       
-      std::vector< MuonHit* > t_hits = muonTrack->getHits();
-      std::vector< MuonHit* >::iterator tk = t_hits.begin();
+      auto t_hits = muonTrack->getHits();
+      auto tk = t_hits.begin();
       
       debug()<<"track hits "<<t_hits.size()<<endmsg;
       

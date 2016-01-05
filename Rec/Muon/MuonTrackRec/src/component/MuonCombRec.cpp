@@ -670,8 +670,8 @@ StatusCode MuonCombRec::muonSearch() {
     if( !matchingFound ) continue; // no matching in at least 1 station, go to the next seed
 
     std::unique_ptr<MuonTrack> muonTrack{ new MuonTrack() };
-    for( std::vector<MuonHit*> candidate : candidates){
-      for( MuonHit* hit : candidate){
+    for( const auto& candidate : candidates){
+      for( const MuonHit* hit : candidate){
         muonTrack->insert( hit->hitID(), hit );
       }
     }
