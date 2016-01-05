@@ -575,7 +575,7 @@ StatusCode MuonCombRec::muonSearch() {
     if ( msgLevel(MSG::DEBUG) ) debug() << "seed " << SSSeedX << " " << SSSeedY << " REGION " << regionSS << endmsg;
 
 
-    std::vector<MuonHit*> bestCandidate(5); // best candidates in M1,..,M4
+    std::vector<const MuonHit*> bestCandidate(5); // best candidates in M1,..,M4
     std::array<int,5> seedRegion; // seed region
     std::array<double,5> bcX; // best candidates x
     std::array<double,5> bcY; // best candidates y

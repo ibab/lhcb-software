@@ -10,6 +10,7 @@
 ! 2016-01-05 - Gerhard Raven
  - fix bug introduced in MuonCombRec::clear 
  - prefer auto
+ - follow change in MuonInterfaces: make Muontrack const correct
 
 ! 2015-12-28 - Gerhard Raven
  - follow change in MuonInterfaces to pass MuonTileID by value
