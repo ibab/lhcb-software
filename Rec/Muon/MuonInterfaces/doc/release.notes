@@ -2,6 +2,10 @@
 ! Package     : MuonInterfaces
 ! Responsible : Giovanni Passaleva
 ! ====================================================================
+! 2016-01-05 - Gerhard Raven
+ - major change: make MuonTrack const correct
+     x requires matching version of MuonTrackRec, TrackTools
+
 ! 2015-12-30 - Gerhard Raven
  - add more const to MuonHit methods
  - prefer direct member initialization

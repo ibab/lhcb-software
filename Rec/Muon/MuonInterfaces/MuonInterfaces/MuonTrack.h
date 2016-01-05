@@ -44,16 +44,16 @@ public:
   /// insert a hit in the track
   void insert( const int id, const MuonHit* xyz );
   /// store the best hit candidates in each station
-  void setBestCandidate( std::vector<MuonHit*> bcand );
+  void setBestCandidate( std::vector<const MuonHit*> bcand );
   /// retrieve the array of best candidates. Best candidates 
   /// are sorted by station by construction
-  std::vector<MuonHit*> bestCandidate();
+  std::vector<const MuonHit*> bestCandidate() const { return m_bestcand; };
   /// set the clone flag
-  void setClone();
+  void setClone() { m_isClone = true; }
   /// get the Clone flag
-  bool isClone();
+  bool isClone() const { return m_isClone; }
   /// return a vector with hits
-  std::vector< MuonHit* > getHits() const;
+  std::vector< const MuonHit* > getHits() const;
   /// get the track span i.e. the max length in station units
   int getSpan() const;
   /// get the number of stations giving a hit to this track
@@ -111,7 +111,7 @@ public:
   // residuals
   Gaudi::XYZTPoint& residuals(MuonHit& hit);
   // corrected time of i-th hit (i from 0)
-  double correctedTime(MuonHit& hit) const;
+  double correctedTime(const MuonHit& hit) const;
   /// cluster size (total, and in the x/y views) associated to a given hit 
   /// (only if first hit of a given station, to avoid double counting)
   int clsize(MuonHit* hit, int& xsize, int& ysize);
@@ -138,9 +138,8 @@ private:
                      double Y,
                      double Z) const;
   typedef std::map< int, MuonHit* >::value_type MuonTkVtype;
-  typedef std::map< int, MuonHit* >::iterator MuonTkIt;
   std::map< int, MuonHit* > m_muonTrack;
-  std::vector<MuonHit*> m_bestcand;
+  std::vector<const MuonHit*> m_bestcand;
   bool m_isClone;
   double m_chi2x;
   double m_chi2y;

@@ -38,35 +38,20 @@ MuonTrack::~MuonTrack() {}
 
 //=============================================================================
 void MuonTrack::insert( const int id, const MuonHit* xyz ){
-  m_muonTrack.insert( MuonTrack::MuonTkVtype(id, const_cast<MuonHit*>(xyz)) );
+  m_muonTrack.emplace( id, const_cast<MuonHit*>(xyz) );
 }
 ///
-std::vector< MuonHit* > MuonTrack::getHits() const {
-  std::vector< MuonHit* > hits; hits.reserve(m_muonTrack.size());
+std::vector< const MuonHit* > MuonTrack::getHits() const {
+  std::vector< const  MuonHit* > hits; hits.reserve(m_muonTrack.size());
   std::transform( m_muonTrack.begin(), m_muonTrack.end(),
                   std::back_inserter(hits),
                   [](const std::pair<const int, MuonHit*>& p) { return p.second; } );
   return hits;
 }
 ///
-void MuonTrack::setBestCandidate( std::vector<MuonHit*> bcand ) 
+void MuonTrack::setBestCandidate( std::vector<const MuonHit*> bcand ) 
 {
-  m_bestcand = bcand;
-}
-///
-std::vector<MuonHit*> MuonTrack::bestCandidate() 
-{
-  return m_bestcand;
-}
-/// set the clone flag
-void MuonTrack::setClone()
-{
-  m_isClone = true;
-}
-/// get the Clone flag
-bool MuonTrack::isClone()
-{
-  return m_isClone;
+  m_bestcand = std::move(bcand);
 }
 ///
 int MuonTrack::getSpan() const{
@@ -96,7 +81,6 @@ int MuonTrack::getFiringStations() const{
 
 StatusCode MuonTrack::speedFit() {
   // first extract the hits 
-  MuonTrack::MuonTkIt tk;
   double dof = m_muonTrack.size() - 2.;
   if(dof<0) return StatusCode::FAILURE;
 
@@ -104,8 +88,8 @@ StatusCode MuonTrack::speedFit() {
   tc11 = tc12 = tc22 = tv1 = tv2 = ttt = 0;
   double tdet,t,xp,yp,z,d;
 
-  for(tk = m_muonTrack.begin(); tk != m_muonTrack.end(); tk++){
-    MuonHit* hit= tk->second;
+  for(auto tk = m_muonTrack.begin(); tk != m_muonTrack.end(); tk++){
+    const MuonHit* hit= tk->second;
     xp = hit->X() - m_bx; 
     yp = hit->Y() - m_by; 
     z  = hit->Z();
@@ -157,7 +141,7 @@ double MuonTrack::correctTime(double rawT,
   return t;
 }
 
-double MuonTrack::correctedTime(MuonHit& hit) const {
+double MuonTrack::correctedTime(const MuonHit& hit) const {
   double tc = hit.hitTime();
   return correctTime( tc, hit.X(), hit.Y(), hit.Z());
 }
@@ -166,7 +150,6 @@ double MuonTrack::correctedTime(MuonHit& hit) const {
 StatusCode MuonTrack::linFit()
 {
   // first extract the hits 
-  MuonTkIt tk;
   double dof = m_muonTrack.size() - 2.;
   if(dof<0) return StatusCode::FAILURE;
 
@@ -177,8 +160,8 @@ StatusCode MuonTrack::linFit()
   double xdet,ydet;
   double  xerr,yerr,x,y,z;
 
-  for(tk = m_muonTrack.begin(); tk != m_muonTrack.end(); tk++){
-    MuonHit* hit= tk->second;
+  for(auto tk = m_muonTrack.begin(); tk != m_muonTrack.end(); tk++){
+    const MuonHit* hit= tk->second;
     xerr = 2.* hit->dX();
     yerr = 2.* hit->dY();
 
@@ -236,8 +219,8 @@ StatusCode MuonTrack::linFit()
   double sumt,sumd,sumt2,sumd2,sumtd;
   sumt = sumd = sumt2 = sumd2 = sumtd = 0.;
 
-  for(tk = m_muonTrack.begin(); tk != m_muonTrack.end(); tk++){
-    MuonHit* hit= tk->second;
+  for(auto tk = m_muonTrack.begin(); tk != m_muonTrack.end(); tk++){
+    const MuonHit* hit= tk->second;
     xp = hit->X() - m_bx; 
     yp = hit->Y() - m_by; 
     z  = hit->Z();
@@ -295,11 +278,9 @@ StatusCode MuonTrack::AddXTalk(const std::vector< MuonHit* >* trackhits, float c
     return StatusCode::FAILURE;
   
   // first extract the hits 
-  MuonTkIt tk;
   std::vector< MuonHit* > tt_hits ; // vector containing the added MuonHits
 
-  std::vector<MuonHit*>::const_iterator ihT,ihH,ihK; 
-  for (ihT = trackhits->begin(); ihT != trackhits->end() ; ihT++){ // loop on all the hits
+  for (auto ihT = trackhits->begin(); ihT != trackhits->end() ; ihT++){ // loop on all the hits
 
     double z =(*ihT)->Z();    
     double dx2_fit = pow(m_errsx*z,2) + pow(m_errbx,2) + 2*m_covbsx*z ;
@@ -321,7 +302,7 @@ StatusCode MuonTrack::AddXTalk(const std::vector< MuonHit* >* trackhits, float c
           "   delta: "<<deltaX<<" "<<deltaY<<"    dist "<<dist<<std::endl;
         */
         bool trovato = true;      
-        for (ihK=tt_hits.begin(); ihK!=tt_hits.end(); ihK++) 
+        for (auto ihK=tt_hits.begin(); ihK!=tt_hits.end(); ihK++) 
           if ((*ihT)==(*ihK) ) trovato = false; // avoid to fill double
         if (trovato){
           tt_hits.push_back(*ihT);  
@@ -330,11 +311,11 @@ StatusCode MuonTrack::AddXTalk(const std::vector< MuonHit* >* trackhits, float c
       }      
     }else{      
       if (deltaX<cut && deltaY<cut ) {
-        for (tk = m_muonTrack.begin(); tk != m_muonTrack.end(); tk++){ // loop on the track hits
-          MuonHit* hit= tk->second;
+        for (auto tk = m_muonTrack.begin(); tk != m_muonTrack.end(); tk++){ // loop on the track hits
+          const MuonHit* hit= tk->second;
           if (  hit->station() == (*ihT)->station() && hit->hitID() != (*ihT)->hitID() ) {
             bool trovato = true;
-            for (ihK=tt_hits.begin(); ihK!=tt_hits.end(); ihK++) 
+            for (auto ihK=tt_hits.begin(); ihK!=tt_hits.end(); ihK++) 
               if ((*ihT)==(*ihK) ) trovato = false; //avoid to fill double
             if (trovato){
               tt_hits.push_back(*ihT);  
@@ -347,25 +328,21 @@ StatusCode MuonTrack::AddXTalk(const std::vector< MuonHit* >* trackhits, float c
   } // loop on trackhits
   
   int idhit=100;
-  std::vector<MuonHit* >::iterator tj;
-  for (tj=tt_hits.begin(); tj!=tt_hits.end(); tj++ ){
-    idhit++;
-    this->insert(idhit,( *tj) );
+  for (auto tj=tt_hits.begin(); tj!=tt_hits.end(); tj++ ){
+    this->insert(++idhit,*tj);
   }
-
   return StatusCode::SUCCESS;
 }
 
 int MuonTrack::clsize(MuonHit* hit, int& xsize, int& ysize) {
   // cluster size is computed only for the first hit of a given station, return -1 otherwise
-  std::vector< MuonHit* > hits=getHits();
+  std::vector<const  MuonHit* > hits=getHits();
   bool start=false;
   xsize=ysize=0;
   int np=0;
-  MuonHit *tkh, *prevh;
   
-  for (std::vector< MuonHit* >::iterator itkh=hits.begin() ; itkh != hits.end(); itkh++) {
-    tkh=*itkh;
+  for (auto itkh=hits.begin() ; itkh != hits.end(); itkh++) {
+    auto tkh=*itkh;
     if (!start && tkh != hit && tkh->station() == hit->station()) {
       xsize=ysize=-1;
       return -1;
@@ -374,8 +351,8 @@ int MuonTrack::clsize(MuonHit* hit, int& xsize, int& ysize) {
     if (start && tkh->station() == hit->station()) {
       bool prendilax=true,prendilay=true;
       // check that this position is not already the same of a previous pad      
-      for (std::vector< MuonHit* >::iterator iprevh=hits.begin() ; iprevh<itkh ; iprevh++) {
-        prevh=*iprevh;
+      for (auto iprevh=hits.begin() ; iprevh<itkh ; iprevh++) {
+        auto prevh=*iprevh;
         if(prevh->station() == tkh->station()) {
           if ( fabs(tkh->X() - prevh->X())< tkh->hitTile_dX()) { 
             prendilax=false;
