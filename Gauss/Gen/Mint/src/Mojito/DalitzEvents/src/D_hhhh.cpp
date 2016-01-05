@@ -45,10 +45,20 @@ std::vector<double> MintGen::getDaughterMom(IDalitzEvent* dE, int daughter)
 {
 	std::vector<double> DaughterMom;
 	DaughterMom.push_back(dE->p(daughter).T()/1000);
-	DaughterMom.push_back(dE->p(daughter).X()/1000);
-	DaughterMom.push_back(dE->p(daughter).Y()/1000);
-	DaughterMom.push_back(dE->p(daughter).Z()/1000);
-
+	
+	if(!m_swap)
+	{
+		DaughterMom.push_back(dE->p(daughter).X()/1000);
+		DaughterMom.push_back(dE->p(daughter).Y()/1000);
+		DaughterMom.push_back(dE->p(daughter).Z()/1000);
+	}
+	else
+	{
+		DaughterMom.push_back(-dE->p(daughter).X()/1000);
+		DaughterMom.push_back(-dE->p(daughter).Y()/1000);
+		DaughterMom.push_back(-dE->p(daughter).Z()/1000);
+	}
+	
 	return DaughterMom;
 }
 
