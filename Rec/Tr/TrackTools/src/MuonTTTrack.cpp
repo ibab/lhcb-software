@@ -85,13 +85,13 @@ StatusCode MuonTTTrack::execute() {
   if (!sc) Warning( "==> Could not find PVs!" ).ignore();
 
   const std::vector<MuonTrack*>* muonTracks = m_trackTool->tracks();
-  LHCb::Tracks* tracks = new LHCb::Tracks();
+  std::unique_ptr<LHCb::Tracks> tracks{new LHCb::Tracks()};
 
   // -- Loop over all Muon Tracks
   for (std::vector<MuonTrack*>::const_iterator it = muonTracks->begin() ;
        it != muonTracks->end() ; it++){
 
-    LHCb::MCParticle* bestMCPart = NULL;
+    const LHCb::MCParticle* bestMCPart = nullptr;
 
     // -- Associate Muon Hits to an MCParticle, get momentum components
     double truePx = 0;
@@ -100,9 +100,8 @@ StatusCode MuonTTTrack::execute() {
     double trueP = 0;
 
     if(m_MC){
-      const std::vector<MuonHit*> & muonHits = (*it)->getHits();
-      bestMCPart = assocMCParticle(muonHits);
-      if(bestMCPart != NULL){
+      bestMCPart = assocMCParticle((*it)->getHits());
+      if(bestMCPart){
         truePx = bestMCPart->momentum().X();
         truePy = bestMCPart->momentum().Y();
         truePz = bestMCPart->momentum().Z();
@@ -114,20 +113,16 @@ StatusCode MuonTTTrack::execute() {
 
     // -- Get the momentum of the muon track, make a new track
     //m_momentumTool->recMomentum( (*it), track, PVPos);
-    LHCb::Track* track = new LHCb::Track();
-    sc = m_momentumTool->recMomentum( (*it), track);
-    if(!sc){
-      delete track;
-      continue;
-    }
+    std::unique_ptr<LHCb::Track> track{ new LHCb::Track() };
+    sc = m_momentumTool->recMomentum( (*it), track.get());
+    if(!sc) continue;
     // ---------------------------------------------------------------
 
     // -- Change Q/p until it points to the PV (stolen from Wouter)
     LHCb::State muonState;
-    sc = iterateToPV(track, muonState, PVPos, (*it)->qOverP() ); // -- This is the function that iterates
+    sc = iterateToPV(track.get(), muonState, PVPos, (*it)->qOverP() ); // -- This is the function that iterates
     if(!sc){
       Warning( "==> Could not iterate to PV!", StatusCode::SUCCESS, 0 ).ignore();
-      delete track;
       continue;
     }
 
@@ -135,7 +130,6 @@ StatusCode MuonTTTrack::execute() {
     sc = m_extrapolator->propagate( veloState, PVPos[2]);
     if(!sc){
       Warning( "==> Could not propagate state to VELO!", StatusCode::SUCCESS, 0 ).ignore();
-      delete track;
       continue;
     }
     veloState.setLocation( LHCb::State::Vertex );
@@ -152,17 +146,11 @@ StatusCode MuonTTTrack::execute() {
       // -- Skip if not enough TT hits were found
       if( ttHits.size() < m_minNumberTTHits ){
         if(msgLevel(MSG::DEBUG)) debug() << "==> Not enough hits in TT found" << endmsg;
-        delete track;
         continue;
       }
 
-
       // -- Add the TT hits
-      for(PatTTHits::iterator itHit = ttHits.begin(); itHit != ttHits.end(); ++itHit){
-
-        track->addToLhcbIDs( (*itHit)->hit()->lhcbID() );
-
-      }
+      for(const auto& h : ttHits) track->addToLhcbIDs( h->hit()->lhcbID() );
     }
     // ---------------------------------------------------------------
 
@@ -180,13 +168,6 @@ StatusCode MuonTTTrack::execute() {
       track->addToStates(veloState);
       track->addToStates(muonState);
     }
-    // ---------------------------------------------------------------
-
-    // -- Finally, insert the track into the container!
-    if (m_addTTHits){ //when performing track fit, only insert fitted tracks
-	   if (sc) tracks->insert( track );
-    }
-    else tracks->insert( track );
     // ---------------------------------------------------------------
 
     // -- Get parameters of Muon Stub, add it to the extra info field
@@ -208,6 +189,12 @@ StatusCode MuonTTTrack::execute() {
       track->addInfo(1303, trueP);
     }
 
+    // -- Finally, insert the track into the container!
+    if (m_addTTHits){ //when performing track fit, only insert fitted tracks
+	   if (sc) tracks->insert( track.release() );
+    }
+    else tracks->insert( track.release() );
+    // ---------------------------------------------------------------
 
   }
   // ---------------------------------------------------------------
@@ -218,15 +205,10 @@ StatusCode MuonTTTrack::execute() {
 
   bool filterPassed = false;
 
-  if(tracks->size() !=0){
-    put( tracks, m_outputLoc );
+  if(!tracks->empty()){
+    put( tracks.release(), m_outputLoc );
     filterPassed = true;
   }
-  else
-  {
-    delete tracks;
-  }
-
 
   // -- Only go on if MuonTT tracks have been reconstructed
   setFilterPassed( filterPassed );
@@ -242,25 +224,24 @@ StatusCode MuonTTTrack::fillPVs(std::vector<double>& PVPos){
   double zPVmax = 500;
 
   LHCb::RecVertices* PVs = getIfExists<LHCb::RecVertices>(m_pvLoc);
-  if( NULL == PVs ) return StatusCode::FAILURE;
+  if( !PVs ) return StatusCode::FAILURE;
 
   // -- Set the PV position (if existing)
-  for(LHCb::RecVertices::iterator it = PVs->begin(); it != PVs->end() ; ++it){
+  for(const auto& pv : *PVs) {
 
-    if(*it == NULL) continue;
+    if(!pv) continue;
 
     //-- If more than one PV, take the one closer to 0
-    if( (*it)->position().Z() < zPVmax ){
-      zPVmax = (*it)->position().Z();
+    if( pv->position().Z() < zPVmax ){
+      zPVmax = pv->position().Z();
     }
     
-    PVPos[0] = (*it)->position().X();
-    PVPos[1] = (*it)->position().Y();
-    PVPos[2] = (*it)->position().Z();
+    PVPos[0] = pv->position().X();
+    PVPos[1] = pv->position().Y();
+    PVPos[2] = pv->position().Z();
     
   }
   return StatusCode::SUCCESS;
-
 }
 //=============================================================================
 //  Fill Muon Stub Information
@@ -362,26 +343,26 @@ StatusCode MuonTTTrack::iterateToPV(LHCb::Track* track, LHCb::State& finalState,
 //=============================================================================
 //  Associate MCParticle to Pad Hits
 //=============================================================================
-LHCb::MCParticle* MuonTTTrack::assocMCParticle(const std::vector<MuonHit*> muonHits){
+const LHCb::MCParticle* MuonTTTrack::assocMCParticle(std::vector<const MuonHit*> muonHits){
 
-  std::map<LHCb::MCParticle*, int> mcparts;
+  std::map<const LHCb::MCParticle*, int> mcparts;
 
   // -- Get the MCParticles which are associated to the hits of the Particle in the Muon System
   // -- Put the mcparticles into a map, count how many times they appear
   for( const auto& muonHit : muonHits ) {
-    LHCb::MCParticle *p = m_muonPad2MC->Pad2MC( muonHit->centerTile() );
+    const LHCb::MCParticle *p = m_muonPad2MC->Pad2MC( muonHit->centerTile() );
     if (!p) continue;
     auto iter = mcparts.find(p);
     if( iter != mcparts.end()){
       ++(iter->second);
     } else {
-      mcparts.insert( std::make_pair(p, 1 ) );
+      mcparts.emplace( p, 1 );
     }
   }
   // ---------------------------------------------------------------
 
   // -- Get particle which contributes the most (i.e. appears the most)
-  std::pair<LHCb::MCParticle*, int> best{nullptr, 0};
+  std::pair<const LHCb::MCParticle*, int> best{nullptr, 0};
   for(const auto& contrib : mcparts) {
     if( contrib.second > best.second ){
       best.first = contrib.first;

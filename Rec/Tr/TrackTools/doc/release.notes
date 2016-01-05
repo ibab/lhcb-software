@@ -3,6 +3,11 @@
 ! Responsible : 
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+! 2016-01-05 - Gerhard Raven
+ - follow change in MuonInterfaces: make MuonTrack const correct
+ - prefer std::unique_ptr over raw poiner + explicit delete
+ - add a few const qualifications
+
 ! 2016-01-03 - Gerhard Raven
  - StandaloneMuonPoint: remove unused include of MuonTile.h
 
