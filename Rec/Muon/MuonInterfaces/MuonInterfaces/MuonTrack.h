@@ -114,7 +114,7 @@ public:
   double correctedTime(const MuonHit& hit) const;
   /// cluster size (total, and in the x/y views) associated to a given hit 
   /// (only if first hit of a given station, to avoid double counting)
-  int clsize(MuonHit* hit, int& xsize, int& ysize);
+  int clsize(const MuonHit* hit, int& xsize, int& ysize) const;
   /// track momentum variables; setters
   inline void setP( double p ){ m_trackP = p; }
   inline void setPt( double pt ){ m_trackPt = pt; }

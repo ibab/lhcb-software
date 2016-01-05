@@ -334,7 +334,7 @@ StatusCode MuonTrack::AddXTalk(const std::vector< MuonHit* >* trackhits, float c
   return StatusCode::SUCCESS;
 }
 
-int MuonTrack::clsize(MuonHit* hit, int& xsize, int& ysize) {
+int MuonTrack::clsize(const MuonHit* hit, int& xsize, int& ysize) const {
   // cluster size is computed only for the first hit of a given station, return -1 otherwise
   std::vector<const  MuonHit* > hits=getHits();
   bool start=false;
