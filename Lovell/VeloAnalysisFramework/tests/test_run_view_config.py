@@ -1,8 +1,13 @@
+import copy
 import unittest
 from numbers import Real
 
 from veloview.config import Config
-run_view_pages = Config().run_view_pages
+# Copy the dict so we can safely mutate it
+run_view_pages = copy.deepcopy(Config().run_view_pages)
+# The IV scans dictionary is a special case, currently handled only by the
+# offline GUI, so we'll ignore it in these tests
+run_view_pages.pop('IV', None)
 
 # Required keys for the page dictionary
 REQ_PAGE_KEYS = ['title']
@@ -33,11 +38,17 @@ PLOT_VALUE_TYPES = {
 
 # Value types for a given option with plot options dictionary
 PLOT_OPTIONS_TYPES = {
-    'showUncertainties': bool,
+    'uncertainties': bool,
     'yAxisMinimum': Real,
     'yAxisMaximum': Real,
     'yAxisZeroSuppressed': bool,
-    'asPoints': bool
+    'zAxisMinimum': Real,
+    'zAxisMaximum': Real,
+    'asPoints': bool,
+    'legend': bool,
+    'asText': bool,
+    'color': str,
+    'marker': str
 }
 
 
@@ -73,40 +84,30 @@ class TestRunViewConfig(unittest.TestCase):
     def test_every_plot_dictionary_defines_required_keys(self):
         """Each page dictionary must define REQ_PLOT_KEYS."""
         for page in run_view_pages.itervalues():
-            if PLOTS_KEY not in page:
-                continue
-            for plot in page['plots']:
+            for plot in page.get(PLOTS_KEY, []):
                 for key in REQ_PLOT_KEYS:
                     self.assertIn(key, plot)
 
     def test_every_plot_dictionary_defines_correct_value_types(self):
         """Each plot dictionary values must be of types PLOT_VALUE_TYPES."""
         for page in run_view_pages.itervalues():
-            if PLOTS_KEY not in page:
-                continue
-            for plot in page['plots']:
+            for plot in page.get(PLOTS_KEY, []):
                 for key, key_type in PLOT_VALUE_TYPES.iteritems():
                     if key not in plot:
                         continue
                     self.assertIsInstance(plot[key], key_type)
 
-    def test_every_plot_options_dictionary_key_is_valud(self):
+    def test_every_plot_options_dictionary_key_is_valid(self):
         """Each plot option must be a key in PLOT_OPTIONS_TYPES."""
         for page in run_view_pages.itervalues():
-            if PLOTS_KEY not in page:
-                continue
-            for plot in page['plots']:
-                if OPTIONS_KEY not in plot:
-                    continue
-                for key in plot[OPTIONS_KEY]:
+            for plot in page.get(PLOTS_KEY, []):
+                for key in plot.get(OPTIONS_KEY, []):
                     self.assertIn(key, PLOT_OPTIONS_TYPES)
 
     def test_every_plot_options_dictionary_defines_correct_value_types(self):
         """Each plot option must be of type PLOT_OPTIONS_TYPES."""
         for page in run_view_pages.itervalues():
-            if PLOTS_KEY not in page:
-                continue
-            for plot in page['plots']:
+            for plot in page.get(PLOTS_KEY, []):
                 if OPTIONS_KEY not in plot:
                     continue
                 for key, key_type in PLOT_OPTIONS_TYPES.iteritems():
