@@ -1,5 +1,3 @@
-print 'Starting the Lovell GUI (~10secs)' 
-print 'Loading modules'
 import sys
 from PyQt4.QtGui import (
     QApplication,
@@ -113,18 +111,12 @@ class run_view(QWidget):
         return plots
 
 
-def main():
-    run_data_dir = "/afs/cern.ch/work/a/apearce/public/VetraOutput"
-    if len(sys.argv) > 1:
-        if sys.argv[1][0:15] == '--run-data-dir=': run_data_dir = sys.argv[1][15:]
-    app = QApplication(sys.argv) 
+def main(run_data_dir):
+    print 'Starting Lovell'
+    app = QApplication([]) 
 #     form = run_view(run_data_dir)
     form = lovellGui(run_data_dir)
     form.resize(1200, 700)
     form.show() 
     app.setStyle("plastique")
     app.exec_()
-
-
-if __name__ == "__main__":
-    main()

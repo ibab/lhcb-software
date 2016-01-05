@@ -4,6 +4,9 @@
 ! Purpose     : Offline GUI for analysis of VELO data
 !----------------------------------------------------------------------------
 
+! 2016-01-05 - Alex Pearce
+ - Remove obsolete C++ components, add `lovell` script for running Python GUI
+
 !====================== VeloOfflineGUI v1r3 2015-06-12 ======================
 ! 2015-06-10 - Alex Pearce
  - Quick fix to support retrieve_run_view_plot.py now returning two plots by
