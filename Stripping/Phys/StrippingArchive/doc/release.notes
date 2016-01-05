@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 2016-01-04 - Ricardo Vazquez Gomez
+ - Fix typo in __init__.py
+
+2016-01-04 - Ricardo Vazquez Gomez
  - Add Stripping S21r0p1 to the archive
 
 !========================= StrippingArchive v1r35 2015-11-26 =========================

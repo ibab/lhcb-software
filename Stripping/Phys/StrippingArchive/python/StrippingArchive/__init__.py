@@ -105,9 +105,9 @@ _stripping_help={"Stripping13"  : "2011 data taking, processing during the first
                  "Stripping22" : "Stripping of 13TeV data from 2015 for the Early Measurements campaign.",
                  "Stripping23" : "Stripping of 13TeV data from August 2015 for 25ns run.", 
                  "Stripping23r1" : "Stripping of 13TeV data from Sept 2015 onwards",
-                 "Stripping24" :  "Stripping of 13TeV after September technical stop"
+                 "Stripping24" :  "Stripping of 13TeV after September technical stop",
                  "Stripping21r0p1" : "Incremental stripping of Legacy 2012 dataset, Reco14 + new Calo calibration",
-                 "Stripping21r1p1" : "Incremental stripping of Legacy 2011 dataset, Reco14 + new Calo calibration",
+                 "Stripping21r1p1" : "Incremental stripping of Legacy 2011 dataset, Reco14 + new Calo calibration"
                  }
 
 _strippingKeys = {}
