@@ -3,6 +3,9 @@
 ! Responsible : Rob Lambert, Gerhard Raven
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
+! 2016-01-06 - Gerhard Raven
+ - prefer SmartIF over bare pointer to interface
+
 ! 2015-12-27 - Gerhard Raven
  - remove TCKANNSvc::queryInterface, use base_class implementation instead
 

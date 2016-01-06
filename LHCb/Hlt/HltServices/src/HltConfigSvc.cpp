@@ -74,8 +74,8 @@ void HltConfigSvc::updateInitial(Property&) {
 // Finalization
 //=============================================================================
 StatusCode HltConfigSvc::finalize() {
-  m_evtSvc->release();      m_evtSvc=nullptr;
-  if (m_incidentSvc) { m_incidentSvc->release(); m_incidentSvc=nullptr; }
+  m_evtSvc.reset();
+  m_incidentSvc.reset();
   return PropertyConfigSvc::finalize();
 }
 
@@ -86,11 +86,13 @@ StatusCode HltConfigSvc::initialize() {
 
   StatusCode status = PropertyConfigSvc::initialize();
   if (!status.isSuccess() ) return status;
-  if (!service( "EventDataSvc", m_evtSvc).isSuccess()) return StatusCode::FAILURE;
+  m_evtSvc = service( "EventDataSvc");
+  if (!m_evtSvc) return StatusCode::FAILURE;
   if (!m_decodeOdin.retrieve().isSuccess()) return StatusCode::FAILURE;
 
 
-  if (!service( "IncidentSvc", m_incidentSvc).isSuccess()) return StatusCode::FAILURE;
+  m_incidentSvc = service( "IncidentSvc");
+  if (!m_incidentSvc) return StatusCode::FAILURE;
   // add listener to be triggered by first BeginEvent with low priority
   // so it gets called first
   bool rethrow = false;

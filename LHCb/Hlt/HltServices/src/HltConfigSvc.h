@@ -1,4 +1,4 @@
-#ifndef HLTCONFIGSVC_H 
+#ifndef HLTCONFIGSVC_H
 #define HLTCONFIGSVC_H 1
 
 // Include files
@@ -17,7 +17,7 @@
 
 
 /** @class HltConfig HltConfig.h
- *  
+ *
  *  functionality:
  *         configure the HLT algorithms...
  *
@@ -46,7 +46,7 @@ private:
   typedef std::map<TCK,std::string> TCKMap_t;
 
   std::vector<std::string>     m_outputContainerName;  ///< location of HltDecReports in which to record configured TCK
-  std::string                  m_prefetchDir;     ///< which set of configurations 
+  std::string                  m_prefetchDir;     ///< which set of configurations
                                                   ///< to search for same types as initial TCK
                                                   ///< and to prefetch...
 
@@ -58,14 +58,14 @@ private:
 
   mutable TCKMap_t             m_tck2configCache; ///< from TCK to configuration ID
   TCK                          m_configuredTCK { 0 } ;   ///< which TCK is currently in use?
-  IDataProviderSvc            *m_evtSvc = nullptr;          ///< get Evt Svc to get ODIN (which contains TCK)
-  IIncidentSvc                *m_incidentSvc = nullptr;     ///< 
+  SmartIF<IDataProviderSvc>    m_evtSvc ;          ///< get Evt Svc to get ODIN (which contains TCK)
+  SmartIF<IIncidentSvc>        m_incidentSvc;     ///<
   ToolHandle<IGenericTool>     m_decodeOdin;
   bool                         m_checkOdin;
   bool                         m_maskL0TCK;
   unsigned int                 m_id = ~0u;
   bool                         m_hlt2mode;
-   
+
   // resolve TCK -> toplevel config ID, then call method with ID
   ConfigTreeNode::digest_type tck2id(TCK    tck) const;
 
