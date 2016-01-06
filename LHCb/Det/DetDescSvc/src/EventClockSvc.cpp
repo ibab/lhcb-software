@@ -21,7 +21,7 @@ DECLARE_SERVICE_FACTORY( EventClockSvc )
 // Standard constructor, initializes variables
 //=============================================================================
 EventClockSvc::EventClockSvc(const std::string& name, ISvcLocator* svcloc):
-  Service(name,svcloc),m_incidentSvc(NULL),m_detDataSvc(NULL),m_toolSvc(NULL),
+  base_class(name,svcloc),m_detDataSvc(NULL),m_toolSvc(NULL),
   m_eventTimeDecoder(NULL)
 {
   // service name
@@ -36,19 +36,8 @@ EventClockSvc::EventClockSvc(const std::string& name, ISvcLocator* svcloc):
 //=============================================================================
 // Destructor
 //=============================================================================
-EventClockSvc::~EventClockSvc() {}
+EventClockSvc::~EventClockSvc() = default;
 
-//=============================================================================
-// IInterface implementation
-//=============================================================================
-StatusCode EventClockSvc::queryInterface(const InterfaceID& riid, void** ppvUnknown){
-  if ( IIncidentListener::interfaceID().versionMatch(riid) ) {
-    *ppvUnknown = (IIncidentListener*)this;
-    addRef();
-    return StatusCode::SUCCESS;
-  }
-  return Service::queryInterface(riid,ppvUnknown);
-}
 //=========================================================================
 //
 //=========================================================================
@@ -105,14 +94,13 @@ StatusCode EventClockSvc::initialize() {
   m_detDataSvc->setEventTime(initTime);
 
   // register to the incident service for BeginEvent incidents
-  sc = service("IncidentSvc", m_incidentSvc, false);
-  if ( sc.isSuccess() ) {
+  m_incidentSvc = service("IncidentSvc", false);
+  if ( m_incidentSvc ) {
     m_incidentSvc->addListener(this,IncidentType::BeginEvent);
     if( log.level() <= MSG::DEBUG )
       log << MSG::DEBUG << "Got pointer to IncidentSvc" << endmsg;
   } else {
     log << MSG::WARNING << "Unable to register to the incident service." << endmsg;
-    m_incidentSvc = NULL;
   }
   return StatusCode::SUCCESS;
 }
@@ -133,11 +121,11 @@ StatusCode EventClockSvc::finalize ( ) {
     m_toolSvc->release();
   }
   if (m_detDataSvc      != NULL) m_detDataSvc->release();
-  if (m_incidentSvc     != NULL) {
+  if (m_incidentSvc ) {
     // unregister from the incident svc
     m_incidentSvc->removeListener(this,IncidentType::BeginEvent);
-    m_incidentSvc->release();
   }
+  m_incidentSvc.reset();
 
   return Service::finalize();
 }

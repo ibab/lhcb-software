@@ -46,7 +46,7 @@ unsigned long TransportSvc::intersections
   ILVolume::Intersections& intersept           , 
   double                   threshold           , 
   IGeometryInfo*           alternativeGeometry , 
-  IGeometryInfo*           guessGeometry       ) 
+  IGeometryInfo*           guessGeometry       ) const
 {
 
   try { 

@@ -16,18 +16,12 @@ class IToolSvc;
  *  @author Marco Clemencic
  *  @date   2005-07-08
  */
-class EventClockSvc: public virtual Service, public virtual IIncidentListener {
+class EventClockSvc: public extends<Service, IIncidentListener> {
 public: 
   /// Standard constructor
   EventClockSvc(const std::string& name, ISvcLocator* svcloc); 
 
   virtual ~EventClockSvc( ); ///< Destructor
-
-  /** Query interfaces (\see{IInterface})
-      @param riid       ID of Interface to be retrieved
-      @param ppvUnknown Pointer to Location for interface pointer
-  */
-  virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
 
   /// Initialize Service
   virtual StatusCode initialize();
@@ -55,7 +49,7 @@ private:
   
   // --- services ---
   /// Pointer to the incident service;
-  IIncidentSvc     *m_incidentSvc;
+  SmartIF<IIncidentSvc> m_incidentSvc;
   /// Handle to the IDetDataSvc interface (to propagate the event time).
   IDetDataSvc      *m_detDataSvc;
   /// Handle to the Tool Service.

@@ -15,7 +15,7 @@
 #include <set>
 #include <sstream>
 #include <fstream>
-#include <memory> // for auto_ptr with gcc 4.3
+#include <memory>
 
 // local
 #include "UpdateManagerSvc.h"
@@ -393,7 +393,6 @@ StatusCode UpdateManagerSvc::newEvent(const Gaudi::Time &evtTime){
 #ifndef WIN32
   try {
 #endif
-  Item::ItemList::iterator it;
 
   // We are in the initialization phase if we are not yet "STARTED"
   SmartIF<IStateful> globalState(serviceLocator());
@@ -413,7 +412,7 @@ StatusCode UpdateManagerSvc::newEvent(const Gaudi::Time &evtTime){
     Gaudi::Time head_copy_since(Gaudi::Time::epoch());
     Gaudi::Time head_copy_until(Gaudi::Time::max());
     MsgStream item_log(msgSvc(), name()+"::Item");
-    for (it = head_copy.begin(); it != head_copy.end() && sc.isSuccess(); ++it){
+    for (auto it = head_copy.begin(); it != head_copy.end() && sc.isSuccess(); ++it){
       sc = (*it)->update(dataProvider(), evtTime, item_log, inInit);
       if (sc.isSuccess()) {
         if ( head_copy_since < (*it)->since )  head_copy_since = (*it)->since;
@@ -631,13 +630,13 @@ void UpdateManagerSvc::dump(){
 
   MsgStream log(msgSvc(),name());
 
-  std::auto_ptr<std::ofstream> dot_file;
+  std::unique_ptr<std::ofstream> dot_file;
 
-  if ( ! m_dotDumpFile.empty() ){
+  if ( !m_dotDumpFile.empty() ){
     dot_file.reset(new std::ofstream(m_dotDumpFile.c_str()));
   }
 
-  if (dot_file.get() != NULL) {
+  if (dot_file) {
     // dot header
     (*dot_file) << "digraph " << name() << " {\n";
   }
@@ -650,7 +649,7 @@ void UpdateManagerSvc::dump(){
   }
 
   size_t cnt = 0, head_cnt = 0;
-  for (Item::ItemList::iterator i = m_all_items.begin(); i != m_all_items.end(); ++i){
+  for (auto i = m_all_items.begin(); i != m_all_items.end(); ++i){
     if ( m_outputLevel <= MSG::VERBOSE ) {
       log << MSG::VERBOSE << "--item " << cnt++ << " " << std::hex << *i << std::dec;
       if ((*i)->isHead()){
@@ -660,7 +659,7 @@ void UpdateManagerSvc::dump(){
       log << endmsg;
     }
 
-    if (dot_file.get() != NULL) {
+    if (dot_file) {
       // graph node for registered item (first part, label)
       (*dot_file) << "item_" << std::hex << *i
     		  << "[label=\""
@@ -674,7 +673,7 @@ void UpdateManagerSvc::dump(){
     if ( !(*i)->path.empty() ) {
       if ( m_outputLevel <= MSG::VERBOSE )
         log << MSG::VERBOSE << "       path = " << (*i)->path << endmsg;
-      if (dot_file.get() != NULL) {
+      if (dot_file) {
         // If we have the path, we can put it in the graph label
         (*dot_file) << "\\n" << (*i)->path;
       }
@@ -686,7 +685,7 @@ void UpdateManagerSvc::dump(){
       }
     } */
 
-    if (dot_file.get() != NULL) {
+    if (dot_file) {
       // graph node for registered item (end)
       (*dot_file) << "\"];\n";
     }
@@ -696,13 +695,13 @@ void UpdateManagerSvc::dump(){
     if ((*i)->memFuncs.size()){
       if ( m_outputLevel <= MSG::VERBOSE )
         log << MSG::VERBOSE << "       depend on :" << endmsg;
-      for (Item::MembFuncList::iterator mfIt = (*i)->memFuncs.begin(); mfIt != (*i)->memFuncs.end(); ++mfIt){
+      for (auto mfIt = (*i)->memFuncs.begin(); mfIt != (*i)->memFuncs.end(); ++mfIt){
         if ( m_outputLevel <= MSG::VERBOSE )
           log << MSG::VERBOSE << std::hex << "                  ";
-        for (Item::ItemList::iterator itemIt = mfIt->items->begin(); itemIt != mfIt->items->end(); ++itemIt){
+        for (auto itemIt = mfIt->items->begin(); itemIt != mfIt->items->end(); ++itemIt){
           if ( m_outputLevel <= MSG::VERBOSE )
             log << " " << *itemIt;
-          if (dot_file.get() != NULL) {
+          if (dot_file) {
             // Add an arrow to the graph connecting the user Item to the
             // used Item
             (*dot_file) << "item_" << std::hex << *i << " -> " << "item_" << std::hex << *itemIt << ";\n";
@@ -714,7 +713,7 @@ void UpdateManagerSvc::dump(){
     }
   }
 
-  if (dot_file.get() != NULL) {
+  if (dot_file) {
     // DIA header
     (*dot_file) << "}\n";
     log << MSG::ALWAYS << "DOT file '" << m_dotDumpFile << "' written" << endmsg;
@@ -748,16 +747,16 @@ void UpdateManagerSvc::purge() {
   //Gaudi::Time head_copy_since(Gaudi::Time::epoch());
   //Gaudi::Time head_copy_until(Gaudi::Time::max());
 
-  Item::ItemList::iterator it = m_all_items.begin();
-  for (it = m_all_items.begin(); it != m_all_items.end() ; ++it){
-    (*it)->purge(&log);
+  
+  for (auto& item : m_all_items ) {
+    item->purge(&log);
 
-    if ( ! (*it)->path.empty() ) {
-      Item::ItemList &children = (*it)->children;
+    if ( ! item->path.empty() ) {
+      auto& children = item->children;
       // remove connections to children if the object is going to be reloaded
-      Item::ItemList::iterator c = children.begin();
-      while ( children.end() != c ) {
-        unlink(*it,*c);
+      auto c = children.begin();
+      while ( c != children.end() ) {
+        unlink(item,*c);
         c = children.begin();
       }
     }
@@ -805,7 +804,7 @@ void UpdateManagerSvc::setValidity(const std::string path, const Gaudi::Time& si
       if (item->vdo) item->vdo->setValidity(since,until);
     }
   } else { // a CondDB path can contain many objects
-    Item::ItemList::iterator i = m_all_items.begin();
+    auto i = m_all_items.begin();
     while ( i !=  m_all_items.end() ) {
       if ( (*i)->match(path,path_to_db) ) {
         // set the validity and propagate up

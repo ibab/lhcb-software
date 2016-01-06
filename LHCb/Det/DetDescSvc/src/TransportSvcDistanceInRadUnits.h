@@ -1,5 +1,3 @@
-// $Id: TransportSvcDistanceInRadUnits.h,v 1.4 2009-04-17 12:47:39 cattanem Exp $
-// ============================================================================
 #ifndef    __DETDESC_TRANSPORTSVC_TRASNPORTSVCDISTANCEINRADUNITS_H__
 #define    __DETDESC_TRANSPORTSVC_TRASNPORTSVCDISTANCEINRADUNITS_H__ 1
 
@@ -37,7 +35,7 @@ inline double TransportSvc::distanceInRadUnits
   const Gaudi::XYZPoint& point2         ,  
   double            threshold           ,  
   IGeometryInfo*    alternativeGeometry ,  
-  IGeometryInfo*    geometryGuess       )  
+  IGeometryInfo*    geometryGuess       )  const
 {
   // check for the  distance 
   if( point1 == point2 ) { return 0 ;} 
