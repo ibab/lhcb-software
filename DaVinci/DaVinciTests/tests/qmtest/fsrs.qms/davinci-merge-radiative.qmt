@@ -15,7 +15,7 @@
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args">
     <set>
-     <text>../options/fsrs/davinci-merge-radiative.py</text>
+      <text>../options/fsrs/davinci-merge-radiative.py</text>
     </set>
   </argument>
   <argument name="timeout"><integer>3000</integer></argument>

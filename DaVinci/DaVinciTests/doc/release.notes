@@ -4,6 +4,10 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2016-01-06 - Rosen Matev
+ - Use Stripping24 in FSR tests.
+   Fixes issue with removal of property in LSAdaptPV3DFitter.
+
 !======================= DaVinciTests v3r1 2015-11-27 ========================
 
 ! 2015-11-12 - Eduardo Rodrigues

@@ -4,7 +4,7 @@
 # SUMMARY OF THIS TEST
 # ...................
 # Author: rlambert
-# Purpose: Merge some fioes to check the FSRs on the merged output
+# Purpose: Merge some files to check the FSRs on the merged output
 # Prerequisites: This is a full test suite creating its own input
 # Common failure modes, severities and cures: 
 #               . SEVERE: Segfault or raised exception, stderr, nonzero return code
