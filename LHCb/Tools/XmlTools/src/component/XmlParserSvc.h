@@ -30,12 +30,8 @@ template <class TYPE> class SvcFactory;
  * @author Sebastien Ponce
  * @author Marco Clemencic
  */
-class XmlParserSvc : public Service,
-                     virtual public IXmlParserSvc,
+class XmlParserSvc : public extends<Service, IXmlParserSvc>,
                      virtual public xercesc::ErrorHandler {
-  
-  /// Friend needed
-  friend class SvcFactory<XmlParserSvc>;
   
 public:
 
@@ -49,22 +45,13 @@ public:
   /**
    * default destructor
    */
-  virtual ~XmlParserSvc();
-
-  /**
-   * Queries interfaces of Interface.
-   * @param riid ID of Interface to be retrieved
-   * @param ppvInterface Pointer to Location for interface pointer
-   * @return status depending on the completion of the call
-   */
-  virtual StatusCode queryInterface ( const InterfaceID& riid,
-                                      void** ppvInterface );
+  ~XmlParserSvc() override;
 
   /// Initialize the service
-  virtual StatusCode initialize();
+  StatusCode initialize() override;
 
   /// Finalize the service
-  virtual StatusCode finalize();
+  StatusCode finalize() override;
 
   ///////////////////////////////////////////////////
   // implementation of the IXmlParserSvc interface //
@@ -77,7 +64,7 @@ public:
    * @param fileName the name of the file to parse
    * @return the document issued from the parsing
    */
-  virtual IOVDOMDocument* parse (const char* fileName);
+  IOVDOMDocument* parse (const char* fileName) override;
 
   /**
    * This method parses XML from a string and produces the corresponding DOM
@@ -86,16 +73,16 @@ public:
    * @param source the string to parse
    * @return the document issued from the parsing
    */
-  virtual IOVDOMDocument* parseString (std::string source);
+  IOVDOMDocument* parseString (std::string source) override;
 
   /**
    * This clears the cache of previously parsed xml files.
    */
-  virtual void clearCache();
+  void clearCache() override;
 
   /// Method to remove the lock from a document in the cache or to delete the document
   /// generated from a string.
-  virtual void releaseDoc(IOVDOMDocument* doc);
+  void releaseDoc(IOVDOMDocument* doc) override;
 
   //////////////////////////////////////////////////////
   // implementation of the SAX ErrorHandler interface //
@@ -109,7 +96,7 @@ public:
    * @param exception the warning information encapsulated in a SAX parse
    * exception.
    */
-  virtual void warning( const xercesc::SAXParseException& exception );
+  void warning( const xercesc::SAXParseException& exception ) override;
 
   /**
    * Receives notification of a recoverable error. 
@@ -120,7 +107,7 @@ public:
    * @param exception the error information encapsulated in a SAX parse
    * exception.
    */
-  virtual void error( const xercesc::SAXParseException& exception );
+  void error( const xercesc::SAXParseException& exception ) override;
 
   /**
    * Receives notification of a non-recoverable error. 
@@ -131,7 +118,7 @@ public:
    * @param exception the error information encapsulated in a SAX parse
    * exception. 
    */
-  virtual void fatalError( const xercesc::SAXParseException& exception );
+  void fatalError( const xercesc::SAXParseException& exception ) override;
 
   /**
    * Resets the Error handler object on its reuse. 
@@ -139,7 +126,7 @@ public:
    * defaults each time the Error handler is begun.
    * The default implementation does nothing
    */
-  virtual void resetErrors ();
+  void resetErrors () override;
 
 
 private:

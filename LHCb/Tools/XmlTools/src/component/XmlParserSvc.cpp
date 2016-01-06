@@ -29,7 +29,7 @@ DECLARE_SERVICE_FACTORY(XmlParserSvc)
 // Standard Constructor
 // ------------------------------------------------------------------------
 XmlParserSvc::XmlParserSvc (const std::string& name, ISvcLocator* svc) :
-  Service (name, svc)
+  base_class (name, svc)
 {
 
   // gets the maximum number of caches documents from the joboption file
@@ -382,21 +382,6 @@ void XmlParserSvc::fatalError (const xercesc::SAXParseException& exception){
 // -----------------------------------------------------------------------
 void XmlParserSvc::resetErrors () {}
 
-
-// -----------------------------------------------------------------------
-// Query interface
-// -----------------------------------------------------------------------
-StatusCode XmlParserSvc::queryInterface( const InterfaceID& riid,
-                                         void** ppvInterface     ) {
-  if (IID_IXmlParserSvc.versionMatch(riid))  {
-    *ppvInterface = (IXmlParserSvc*)this;
-  } else {
-    // Interface is not directly available: try out a base class
-    return Service::queryInterface(riid, ppvInterface);
-  }
-  addRef();
-  return StatusCode::SUCCESS;
-}
 
 
 // -----------------------------------------------------------------------

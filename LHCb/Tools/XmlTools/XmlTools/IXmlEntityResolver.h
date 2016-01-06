@@ -12,7 +12,6 @@
 
 #include "xercesc/sax/EntityResolver.hpp"
 
-static const InterfaceID IID_IXmlEntityResolver ( "IXmlEntityResolver", 1, 0 );
 
 /** @class IXmlEntityResolver IXmlEntityResolver.h XmlTools/IXmlEntityResolver.h
  *  
@@ -24,11 +23,9 @@ static const InterfaceID IID_IXmlEntityResolver ( "IXmlEntityResolver", 1, 0 );
  *  @author Marco Clemencic
  *  @date   2005-10-12
  */
-class IXmlEntityResolver : virtual public IInterface {
+class IXmlEntityResolver : public extend_interfaces<IInterface> {
 public: 
-
-  /// Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_IXmlEntityResolver; }
+  DeclareInterfaceID(IXmlEntityResolver, 2, 0 );
 
   /// Return a pointer to the actual implementation of a xercesc::EntityResolver.
   virtual xercesc::EntityResolver *resolver() = 0;

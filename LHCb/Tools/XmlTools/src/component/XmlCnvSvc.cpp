@@ -20,7 +20,8 @@ DECLARE_SERVICE_FACTORY(XmlCnvSvc)
 // Standard Constructor
 // -----------------------------------------------------------------------
 XmlCnvSvc::XmlCnvSvc (const std::string& name, ISvcLocator* svc) :
-  ConversionSvc(name, svc, XML_StorageType), m_parserSvc(0), m_msg(0) {
+  base_class(name, svc, XML_StorageType)
+{
   
   // gets the AllowGenericConversion property value
   declareProperty ("AllowGenericConversion", m_genericConversion = false);
@@ -39,9 +40,7 @@ XmlCnvSvc::XmlCnvSvc (const std::string& name, ISvcLocator* svc) :
 // -----------------------------------------------------------------------
 // Standard Destructor
 // -----------------------------------------------------------------------
-XmlCnvSvc::~XmlCnvSvc() {
-}
-
+XmlCnvSvc::~XmlCnvSvc() = default;
 
 // -----------------------------------------------------------------------
 // Initialize the service.
@@ -51,17 +50,13 @@ StatusCode XmlCnvSvc::initialize() {
   StatusCode status = ConversionSvc::initialize();
 
   // Service MUST be initialized BEFORE!
-  m_msg = new MsgStream(msgSvc(), name() );
+  m_msg.reset( new MsgStream(msgSvc(), name() ) );
 
-  if (!status.isSuccess()) {
-    return status;  
-  }
+  if (!status.isSuccess()) return status;  
   
   // creation of a parser service
-  status = serviceLocator()->service(m_parserSvcName, m_parserSvc, true);
-  if (status.isFailure()) {
-    return status;
-  }
+  m_parserSvc = serviceLocator()->service(m_parserSvcName,  true);
+  if (!m_parserSvc) return StatusCode::FAILURE;
   
   //setProperties();
 
@@ -92,27 +87,9 @@ StatusCode XmlCnvSvc::reinitialize() {
 // Stop the service.
 // -----------------------------------------------------------------------
 StatusCode XmlCnvSvc::finalize() {
-  m_parserSvc->release();
-  m_parserSvc = 0;
+  m_parserSvc.reset();
   return ConversionSvc::finalize();
 }
-
-
-// -----------------------------------------------------------------------
-// Query interface
-// -----------------------------------------------------------------------
-StatusCode XmlCnvSvc::queryInterface( const InterfaceID& riid, 
-                                      void** ppvInterface     ) {
-  if (IID_IXmlSvc.versionMatch(riid))  {
-    *ppvInterface = (IXmlSvc*)this;
-  } else {
-    // Interface is not directly availible: try out a base class
-    return ConversionSvc::queryInterface(riid, ppvInterface);
-  }
-  addRef();
-  return StatusCode::SUCCESS;
-}
-
 
 // -----------------------------------------------------------------------
 // Create an XML address.
@@ -191,9 +168,7 @@ StatusCode XmlCnvSvc::createAddress(long  svc_type,
 // Parses an Xml file and provides the DOM tree representing it
 // -----------------------------------------------------------------------
 IOVDOMDocument* XmlCnvSvc::parse (const char* fileName) {
-  if (0 != m_parserSvc) {
-    return m_parserSvc->parse(fileName);
-  }
+  if (m_parserSvc) return m_parserSvc->parse(fileName);
   if( msgLevel(MSG::DEBUG) ) debug() << "null result returned in parse" << endmsg;
   return 0;
 }
@@ -233,9 +208,7 @@ IOVDOMDocument* XmlCnvSvc::parseString (std::string source) {
   }
 
   // Then feed the string to the XML parser
-  if (0 != m_parserSvc) {
-    return m_parserSvc->parseString (source);
-  }
+  if (m_parserSvc) return m_parserSvc->parseString (source);
   if( msgLevel(MSG::DEBUG) )  debug() << "null result returned in parseString" << endmsg;
   return 0;
 
@@ -246,20 +219,14 @@ IOVDOMDocument* XmlCnvSvc::parseString (std::string source) {
 // clears the cache of previously parsed xml files
 // -----------------------------------------------------------------------
 void XmlCnvSvc::clearCache() {
-  if (0 != m_parserSvc) {
-    m_parserSvc->clearCache();
-    return;
-  }
+  if (m_parserSvc) m_parserSvc->clearCache();
 }
 
 // -----------------------------------------------------------------------
 // release a DOMDocument pointer
 // -----------------------------------------------------------------------
 void XmlCnvSvc::releaseDoc(IOVDOMDocument* doc) {
-  if (0 != m_parserSvc) {
-    m_parserSvc->releaseDoc(doc);
-    return;
-  }
+  if (m_parserSvc) m_parserSvc->releaseDoc(doc);
 }
 
 

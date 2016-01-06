@@ -11,9 +11,6 @@
 #include "GaudiKernel/System.h"
 
 
-// Forward and external declarations
-template <class TYPE> class SvcFactory;
-
 /** @class XmlCnvSvc XmlCnvSvc.h DetDescCnv/XmlCnvSvc.h
  *
  *  A conversion service for XML based data. It is based on the generic
@@ -24,13 +21,22 @@ template <class TYPE> class SvcFactory;
  *  @author Pere Mato
  *  @author Marco Clemencic
  */
-class XmlCnvSvc : public ConversionSvc,
-                  virtual public IXmlSvc {
+class XmlCnvSvc : public extends<ConversionSvc,IXmlSvc> {
 
-  /// Friend needed
-  friend class SvcFactory<XmlCnvSvc>;
-  
 public:
+  /**
+   * Standard Constructor
+   * @param name String with service name
+   * @param svc Pointer to service locator interface
+   * @return Reference to CdfPersCnvSvc
+   */
+  XmlCnvSvc (const std::string& name, ISvcLocator* svc);
+  
+  /**
+   * Default destructor
+   */
+  virtual ~XmlCnvSvc();
+
   
   /**
    * Initializes the service
@@ -50,14 +56,6 @@ public:
    */
   virtual StatusCode finalize();
   
-  /**
-   * Queries interfaces of Interface.
-   * @param riid ID of Interface to be retrieved
-   * @param ppvInterface Pointer to Location for interface pointer
-   * @return status depending on the completion of the call
-   */
-  virtual StatusCode queryInterface ( const InterfaceID& riid, 
-                                      void** ppvInterface );
 
   /**
    * Create an XML address using explicit arguments to identify a single object
@@ -179,21 +177,6 @@ public:
   bool allowGenericCnv() { return m_genericConversion; }
 
   
-protected:
-  
-  /**
-   * Standard Constructor
-   * @param name String with service name
-   * @param svc Pointer to service locator interface
-   * @return Reference to CdfPersCnvSvc
-   */
-  XmlCnvSvc (const std::string& name, ISvcLocator* svc);
-  
-  /**
-   * Default destructor
-   */
-  virtual ~XmlCnvSvc();
-
 
 private:
 
@@ -264,7 +247,7 @@ private:
   std::string m_parserSvcName;
 
   /// XmlParserSvc used to parse xmlfiles
-  IXmlParserSvc* m_parserSvc;
+  SmartIF<IXmlParserSvc> m_parserSvc;
 
   /// Numerical expressions parser
   XmlTools::Evaluator m_xp;
@@ -287,7 +270,7 @@ private:
    */
   bool m_checkUnits;
   /// The message stream
-  MsgStream* m_msg;
+  std::unique_ptr<MsgStream> m_msg;
   
   /// Methods to print as in GaudiAlgorithms
   MsgStream& verbose() const { return *m_msg << MSG::VERBOSE; }

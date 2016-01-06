@@ -3,6 +3,13 @@
 ! Responsible : Marco Clemencic / Sebastien Ponce
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
+! 2016-01-06 - Gerhard Raven
+ - prefer extend_interfaces over virtual public inheritance
+   and explicit InterfaceID + queryInterface 
+ - prefer std::unique_ptr over raw pointer + explicit delete
+ - prefer SmartIF over raw pointer + release
+ - qualify virtual function implementations with override
+
 ! 2016-01-03 - Gerhard Raven
  - ValidInputSource: add the possibility to use an (internal) string
    as memory buffer. When combined with move semantics this alllows 

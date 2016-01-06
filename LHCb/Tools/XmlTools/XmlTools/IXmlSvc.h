@@ -8,8 +8,6 @@
 #include "xercesc/dom/DOMDocument.hpp"
 #include "XmlTools/IXmlParserSvc.h"
 
-/// Declaration of the interface ID (interface id, major version, minor version)
-static const InterfaceID IID_IXmlSvc(130, 3 , 0);
 
 
 /** @class IXmlSvc IXmlSvc.h DetDescCnv/IXmlSvc.h
@@ -23,13 +21,12 @@ static const InterfaceID IID_IXmlSvc(130, 3 , 0);
     @author Sebastien Ponce
 
 */
-class IXmlSvc : virtual public IInterface,
-                virtual public IXmlParserSvc {
+class IXmlSvc : public extend_interfaces<IInterface, IXmlParserSvc> {
 
 public:
 
-  /// Retrieve interface ID
-  static const InterfaceID& interfaceID() { return IID_IXmlSvc; }
+  /// Declaration of the interface ID (interface id, major version, minor version)
+  DeclareInterfaceID( IXmlSvc, 4 , 0);
 
   /**
    * Tells whether generic conversion of user defined detector elements should

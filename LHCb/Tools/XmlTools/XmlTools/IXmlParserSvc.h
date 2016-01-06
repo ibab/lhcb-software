@@ -8,8 +8,6 @@
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include "XmlTools/IOVDOMDocument.h"
 
-/// Declaration of the interface ID (interface id, major version, minor version)
-static const InterfaceID IID_IXmlParserSvc(131, 1 , 0);
 
 
 /** @class IXmlParserSvc IXmlParserSvc.h DetDescCnv/IXmlParserSvc.h
@@ -20,12 +18,10 @@ static const InterfaceID IID_IXmlParserSvc(131, 1 , 0);
  *  @author Marco Clemencic
  */
 
-class IXmlParserSvc : virtual public IInterface {
+class IXmlParserSvc : public extend_interfaces<IInterface> {
 
  public:
-
-  /// Retrieve interface ID
-  static const InterfaceID& interfaceID() { return IID_IXmlParserSvc; }
+   DeclareInterfaceID( IXmlParserSvc, 2 , 0);
 
   /**
    * This method parses an xml file and produces the corresponding DOM
