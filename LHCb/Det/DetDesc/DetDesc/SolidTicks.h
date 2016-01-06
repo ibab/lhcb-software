@@ -71,7 +71,7 @@ namespace SolidTicks
         else                        { ticks.clear() ; return 0 ; } // RETURN
       }
     // perform removing of adjancent  ticks
-    StaticArray<size_t, ISolid::Ticks::MaxSize> tmp;
+    boost::container::static_vector<size_t, ISolid::MaxTicks> tmp;
     bool    boolPrev = true  ;
     bool    boolNext = true  ;
     for ( auto it = ticks.begin() ; it != ticks.end() ; ++it ) {

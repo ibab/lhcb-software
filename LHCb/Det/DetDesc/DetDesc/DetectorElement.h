@@ -56,7 +56,7 @@ public:
   DetectorElement (const std::string& name = "NotYetDefined");
 
   ///  Destructor
-  virtual ~DetectorElement();
+  ~DetectorElement() override;
 
 public:
 
@@ -65,12 +65,12 @@ public:
    * and used for computation purposes. This is a kind of hook for adding
    * user code easily in the initialization of a detector element.
    */
-  virtual StatusCode initialize();
+  StatusCode initialize() override;
 
 public:
 
   /// Obtain class ID
-  virtual const  CLID& clID()   const  { return classID(); }
+  const  CLID& clID()   const override { return classID(); }
   static const   CLID& classID()       { return CLID_DetectorElement; }
 
   const std::string& name () const override;
@@ -90,10 +90,10 @@ public:
   { return m_de_conditions.end(); }
 
   /// delegation for geometry
-  inline        IGeometryInfo* geometry();
+  inline        IGeometryInfo* geometry() override;
 
   /// delegation for geometry  (const version)
-  inline  const IGeometryInfo* geometry() const;
+  inline  const IGeometryInfo* geometry() const override;
 
   /// helper member using IGeometryInfo::isInside
   bool isInside(const Gaudi::XYZPoint& globalPoint) const;
@@ -101,119 +101,119 @@ public:
   const IDetectorElement* childDEWithPoint(const Gaudi::XYZPoint& globalPoint) const;
 
   /// delegation for alignnment
-  inline        IAlignment*    alignment();
+  inline        IAlignment*    alignment() override;
 
   /// delegation for alignment (const version)
-  inline  const IAlignment*    alignment() const;
+  inline  const IAlignment*    alignment() const override;
 
   // delegation for calibration
-  inline        ICalibration*  calibration();
+  inline        ICalibration*  calibration() override;
 
   // delegation for calibration (const version)
-  inline  const ICalibration*  calibration() const;
+  inline  const ICalibration*  calibration() const override;
 
   // delegation for readout
-  inline        IReadOut*      readOut();
+  inline        IReadOut*      readOut() override;
 
   // delegation for readout (const version)
-  inline  const IReadOut*      readOut() const ;
+  inline  const IReadOut*      readOut() const  override;
 
   // delegation for slow control
-  inline        ISlowControl*  slowControl();
+  inline        ISlowControl*  slowControl() override;
 
   // delegation for slow control (const version)
-  inline  const ISlowControl*  slowControl() const;
+  inline  const ISlowControl*  slowControl() const override;
 
   // delegation for fast control
-  inline        IFastControl*  fastControl();
+  inline        IFastControl*  fastControl() override;
 
   // delegation for fast control (const version)
-  inline  const IFastControl*  fastControl() const;
+  inline  const IFastControl*  fastControl() const override;
 
   // another way to access: "pseudo-conversion"
   // cast to         IGeometryInfo*
-  inline operator       IGeometryInfo*();
+  inline operator       IGeometryInfo*() override;
 
   // cast to   const IGeometryInfo*
-  inline operator const IGeometryInfo*() const;
+  inline operator const IGeometryInfo*() const override;
 
   // cast to         IAligment*
-  inline operator       IAlignment*   ();
+  inline operator       IAlignment*   () override;
 
   // cast to   const IAlignment*
-  inline operator const IAlignment*   () const;
+  inline operator const IAlignment*   () const override;
 
   // cast to         ICalibration*
-  inline operator       ICalibration* ();
+  inline operator       ICalibration* () override;
 
   // cast to   const ICalibration*
-  inline operator const ICalibration* () const;
+  inline operator const ICalibration* () const override;
 
   // cast to         IReadOut*
-  inline operator       IReadOut*     ();
+  inline operator       IReadOut*     () override;
 
   // cast to   const IReadOut*
-  inline operator const IReadOut*     () const;
+  inline operator const IReadOut*     () const override;
 
   // cast to         ISlowControl*
-  inline operator       ISlowControl* ();
+  inline operator       ISlowControl* () override;
 
   // cast to   const ISlowControl*
-  inline operator const ISlowControl* () const;
+  inline operator const ISlowControl* () const override;
 
   // cast to         IFastControl*
-  inline operator       IFastControl* ();
+  inline operator       IFastControl* () override;
 
   // cast to   const IFastControl*
-  inline operator const IFastControl* () const;
+  inline operator const IFastControl* () const override;
 
   // cast to         IGeometryInfo&
   // (potentially could throw DetectorElementException)
-  inline operator       IGeometryInfo&();
+  inline operator       IGeometryInfo&() override;
 
   // cast to   const IGeometryInfo&
   // (potentially could throw DetectorElementException)
-  inline operator const IGeometryInfo&() const;
+  inline operator const IGeometryInfo&() const override;
 
   // cast to         IAlignment&
   // (potentially could throw DetectorElementException)
-  inline operator       IAlignment&   ();
+  inline operator       IAlignment&   () override;
 
   // cast to   const IAlignment&
   // (potentially could throw DetectorElementException)
-  inline operator const IAlignment&   () const;
+  inline operator const IAlignment&   () const override;
 
   // cast to         ICalibration&
   // (potentially could throw DetectorElementException)
-  inline operator       ICalibration& ()                ;
+  inline operator       ICalibration& () override;
 
   // cast to   const ICalibration&
   // (potentially could throw DetectorElementException)
-  inline operator const ICalibration& ()          const ;
+  inline operator const ICalibration& () const  override;
 
   // cast to         IReadOut&
   // (potentially could throw DetectorElementException)
-  inline operator       IReadOut&     ()                ;
+  inline operator       IReadOut&     () override;
 
   // cast to   const IReadOut&
   // (potentially could throw DetectorElementException)
-  inline operator const IReadOut&     ()          const ;
+  inline operator const IReadOut&     () const override;
 
   // cast to         ISlowControl&
   // (potentially could throw DetectorElementException)
-  inline operator       ISlowControl& ()                ;
+  inline operator       ISlowControl& () override;
 
   // cast to   const ISlowControl&
   // (potentially could throw DetectorElementException)
-  inline operator const ISlowControl& ()          const ;
+  inline operator const ISlowControl& () const override;
 
   // cast to         IFastControl&
   // (potentially could throw DetectorElementException)
-  inline operator       IFastControl& ()                ;
+  inline operator       IFastControl& () override;
 
   // cast to   const IFastControl&
   // (potentially could throw DetectorElementException)
-  inline operator const IFastControl& ()          const ;
+  inline operator const IFastControl& () const override;
 
   //  printout (overloaded)
   // (potentially could throw DetectorElementException)
@@ -225,21 +225,21 @@ public:
   virtual MsgStream&    printOut( MsgStream&    ) const;
 
   // pointer to parent IDetectorElement (const version)
-  virtual IDetectorElement*  parentIDetectorElement() const;
+  IDetectorElement*  parentIDetectorElement() const override;
 
   // (reference to) container of pointers to child detector elements
-  virtual IDetectorElement::IDEContainer& childIDetectorElements() const;
+  IDetectorElement::IDEContainer& childIDetectorElements() const override;
 
   // iterators for manipulation of daughter elements
-  inline virtual IDetectorElement::IDEContainer::iterator childBegin() {
+  inline IDetectorElement::IDEContainer::iterator childBegin() override{
     return childIDetectorElements().begin();
   }
-  inline virtual IDetectorElement::IDEContainer::const_iterator
-    childBegin() const { return childIDetectorElements().begin() ; }
-  inline virtual IDetectorElement::IDEContainer::iterator
-    childEnd  () { return childIDetectorElements().end  () ; }
-  inline virtual IDetectorElement::IDEContainer::const_iterator
-    childEnd  () const { return childIDetectorElements().end  () ; }
+  inline IDetectorElement::IDEContainer::const_iterator
+    childBegin() const override { return childIDetectorElements().begin() ; }
+  inline IDetectorElement::IDEContainer::iterator
+    childEnd  () override { return childIDetectorElements().end  () ; }
+  inline IDetectorElement::IDEContainer::const_iterator
+    childEnd  () const override { return childIDetectorElements().end  () ; }
 
   /**
    * Method used to access the ParamValidDataObject methods from IDetectorElement
@@ -306,10 +306,10 @@ public:
 public:
 
   // Implementation of IInterface
-  virtual unsigned long addRef();
-  virtual unsigned long release();
-  virtual StatusCode queryInterface( const InterfaceID& riid,
-                                     void** ppvInterface );
+  unsigned long addRef() override;
+  unsigned long release() override;
+  StatusCode queryInterface( const InterfaceID& riid,
+                                     void** ppvInterface ) override;
 
 protected:
 

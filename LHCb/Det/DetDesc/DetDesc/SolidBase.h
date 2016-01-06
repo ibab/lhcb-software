@@ -434,7 +434,7 @@ protected:
    *  @exception SolidException if maxNumberOfTicks too large
    */
   inline void checkTickContainerCapacity() const {
-    if( maxNumberOfTicks() > ISolid::Ticks::MaxSize ) {
+    if( maxNumberOfTicks() > ISolid::MaxTicks ) {
       std::stringstream msg ;
       msg << "Volume \'" << name() << "\' has too large maxNumberOfTicks: "
 	  << maxNumberOfTicks() << ". Please increase max capacity in ISolid::Ticks" ;

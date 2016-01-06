@@ -11,6 +11,7 @@ use           GaudiUtils        v*
 use           ROOT              v* LCG_Interfaces
 use           LHCbMath          v* Kernel
 use           VectorClass       v* Kernel
+use           Boost             v* LCG_Interfaces
 
 # =========== own includes ================================================
 apply_pattern install_more_includes more=DetDesc

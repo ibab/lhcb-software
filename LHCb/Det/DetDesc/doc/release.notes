@@ -9,6 +9,8 @@
         allows move semantics
  - remove unneeded include of gsl_sys.h
  - fix bug in StaticArray::insert
+ - major change: replace StaticArray by boost::container::static_vector
+ - qualify virtual function implementations with override
 
 ! 2015-12-06 - Gerhard Raven
  - Modernize code:

@@ -10,11 +10,9 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/Vector3DTypes.h"
 #include "GaudiKernel/Point3DTypes.h"
-/// local
-#include "DetDesc/StaticArray.h"
+/// boost
+#include "boost/container/static_vector.hpp"
 
-/// Declaration of the interface ID ( interface id, major & minor versions)
-static const InterfaceID IID_ISolid( "ISolid" , 4 , 1 );
 
 /** @interface ISolid ISolid.h "DetDesc/ISolid.h"
  *
@@ -25,7 +23,7 @@ static const InterfaceID IID_ISolid( "ISolid" , 4 , 1 );
  *  @date   xx/xx/xxxx 
  */
 
-class ISolid : public virtual IInterface
+class ISolid : public extend_interfaces<IInterface>
 {
 public:
   
@@ -33,15 +31,13 @@ public:
    *  with intersections of the solid and the line 
    */
   typedef double               Tick  ;
-  typedef StaticArray<Tick,96> Ticks ;
+  static constexpr std::size_t MaxTicks = 96;
+  typedef boost::container::static_vector<Tick,MaxTicks> Ticks ;
 
 public:
+    /// Declaration of the interface ID ( interface id, major & minor versions)
+    DeclareInterfaceID( ISolid , 5 , 0 );
   
-  /** retrieve the uninque interface identifier 
-   *  @see Interface::interfaceID()
-   *  @return uniqie interface identifier 
-   */
-  static const InterfaceID& interfaceID() { return IID_ISolid; }
   
 public:
   

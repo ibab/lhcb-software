@@ -8,12 +8,13 @@ gaudi_depends_on_subdirs(GaudiKernel
                          Kernel/LHCbMath
                          Kernel/VectorClass)
 
+find_package(Boost)
 find_package(ROOT COMPONENTS MathCore GenVector)
 
 gaudi_add_library(DetDescLib
                   src/Lib/*.cpp
                   PUBLIC_HEADERS DetDesc
-                  INCLUDE_DIRS ROOT
+                  INCLUDE_DIRS ROOT Boost
                   LINK_LIBRARIES ROOT GaudiKernel GaudiUtilsLib LHCbMathLib)
 
 gaudi_add_dictionary(DetDesc
