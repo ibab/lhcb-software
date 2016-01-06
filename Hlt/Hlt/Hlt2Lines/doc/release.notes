@@ -10,6 +10,9 @@
 
 !========================= Hlt2Lines v10r6 2015-12-17 =========================
 
+! 2016-01-06 - Sandra Amato
+ - Added the charged isolation variables to the D2HHHLines: DpToKpPimPip, DpToPimPipPip, DpToKmKpKp, pToKpKpPim, DspToKpKpPim, DspToKpPimPip, DspToPimPipPip, DspToKmKpKp, DspToKmPipPip
+
 ! 2015-12-06 - Dan Johnson
  - Introduce 0.05 prescale for Hlt2LowMultDiElectron_noTrFilt
 

@@ -226,9 +226,51 @@ class CharmHadD2HHHLines() :
                  'DConeVar05' : { "ConeAngle" : 0.5,
                                   "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
                                   "Location"  : 'DConeVar05' },
-                 'DConeVar10' : { "ConeAngle" : 1.0,
+                 #'DConeVar10' : { "ConeAngle" : 1.0,
+                 #                 "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                 #                 "Location" :  'DConeVar10'},
+                 'DConeVar15' : { "ConeAngle" : 1.5,
                                   "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-                                  "DaughterLocations" : {"[D_s+ -> ^K- K+ pi+]CC" : "KmConeVar10"} },
+                                  "Location" :  'DConeVar15'},
+                 'DConeVar10DKPP' : { "ConeAngle" : 1.0,
+                                  "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                  "DaughterLocations" : {"[D+ ->^K- pi+ pi+ ]CC" : "KmConeVar10"} },
+                 'DConeVar10DPPK' : { "ConeAngle" : 1.0,
+                                  "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                  "DaughterLocations" : {"[D+ ->K+ ^pi- pi+ ]CC" : "PimConeVar10"} },
+                 'DConeVar10DKKP' : { "ConeAngle" : 1.0,
+                                  "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                  "DaughterLocations" : {"[D+ -> ^K- K+ pi+]CC" : "KmConeVar10"} },
+                 'DConeVar10DPPP' : { "ConeAngle" : 1.0,
+                                  "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                  "DaughterLocations" : {"[D+ ->^pi- pi+ pi+ ]CC" : "PimConeVar10"} },
+                 'DConeVar10DKKK' : { "ConeAngle" : 1.0,
+                                  "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                  "DaughterLocations" : {"[D+ ->^K- K+ K+ ]CC" : "KmConeVar10"} },
+                 'DConeVar10DPKK' : { "ConeAngle" : 1.0,
+                                  "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                  "DaughterLocations" : {"[D+ -> pi- K+ K+]CC" : "PimConeVar10"} },
+
+                 'DConeVar10DsPKK' : { "ConeAngle" : 1.0,
+                                  "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                  "DaughterLocations" : {"[D_s+ ->K+ K+ ^pi- ]CC" : "PimConeVar10"} },
+                 'DConeVar10DsPPK' : { "ConeAngle" : 1.0,
+                                  "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                  "DaughterLocations" : {"[D_s+ ->K+ ^pi- pi+ ]CC" : "PimConeVar10"} },
+                 'DConeVar10DsKKP' : { "ConeAngle" : 1.0,
+                                  "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                  "DaughterLocations" : {"[D_s+ ->^K- K+ pi+ ]CC" : "KmConeVar10"} },
+                 'DConeVar10DsKKK' : { "ConeAngle" : 1.0,
+                                  "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                  "DaughterLocations" : {"[D_s+ ->^K- K+ K+ ]CC" : "KmConeVar10"} },
+                 'DConeVar10DsKPP' : { "ConeAngle" : 1.0,
+                                  "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                  "DaughterLocations" : {"[D_s+ ->K- pi+ pi+ ]CC" : "KmConeVar10"} },
+
+                 'DConeVar10DsPPP' : { "ConeAngle" : 1.0,
+                                  "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                 "DaughterLocations" : {"[D_s+ -> ^pi- pi+ pi+]CC" : "PimConeVar10"} },
+
                  'VertexIsolation' : { "Location"  : "VertexIsoInfo" }
                 }
 
@@ -389,7 +431,30 @@ class CharmHadD2HHHLines() :
     def relatedInfo(self):
         from Hlt2Lines.Utilities.Hlt2RelatedInfo import Hlt2RelInfoConeVariables, Hlt2RelInfoVertexIsolation
         DConeVar05 = Hlt2RelInfoConeVariables('DConeVar05')
-        DConeVar10 = Hlt2RelInfoConeVariables('DConeVar10')
+        DConeVar15 = Hlt2RelInfoConeVariables('DConeVar15')
+        DConeVar10DsPPP = Hlt2RelInfoConeVariables('DConeVar10DsPPP')
+        DConeVar10DKPP  = Hlt2RelInfoConeVariables('DConeVar10DKPP')
+        DConeVar10DPPK  = Hlt2RelInfoConeVariables('DConeVar10DPPK')
+        DConeVar10DKKP  = Hlt2RelInfoConeVariables('DConeVar10DKKP')
+        DConeVar10DPPP  = Hlt2RelInfoConeVariables('DConeVar10DPPP')
+        DConeVar10DKKK  = Hlt2RelInfoConeVariables('DConeVar10DKKK')
+        DConeVar10DPKK  = Hlt2RelInfoConeVariables('DConeVar10DPKK')
+        DConeVar10DsPKK  = Hlt2RelInfoConeVariables('DConeVar10DsPKK')
+        DConeVar10DsPPK  = Hlt2RelInfoConeVariables('DConeVar10DsPPK')
+        DConeVar10DsKKP  = Hlt2RelInfoConeVariables('DConeVar10DsKKP')
+        DConeVar10DsKKK  = Hlt2RelInfoConeVariables('DConeVar10DsKKK')
+        DConeVar10DsKPP  = Hlt2RelInfoConeVariables('DConeVar10DsKPP')
+
         VertexIso = Hlt2RelInfoVertexIsolation("VertexIsolation")
-        relInfo = {'DspToKmKpPipTurbo' : [DConeVar05, DConeVar10, VertexIso]}
+        relInfo = {  
+                   'DpToKpPimPipTurbo' : [DConeVar10DPPK, DConeVar05,  DConeVar15,VertexIso],  
+                   'DpToPimPipPipTurbo' : [DConeVar10DPPP, DConeVar05,  DConeVar15,VertexIso],  
+                   'DpToKmKpKpTurbo' : [DConeVar10DKKK, DConeVar05,  DConeVar15,VertexIso], 
+                   'DpToKpKpPimTurbo' : [DConeVar10DPKK, DConeVar05,  DConeVar15,VertexIso],   
+                   'DspToKpKpPimTurbo' : [DConeVar10DsPKK, DConeVar05,  DConeVar15,VertexIso],  
+                   'DspToKpPimPipTurbo' : [DConeVar10DsPPK, DConeVar05,  DConeVar15,VertexIso],  
+                   'DspToPimPipPipTurbo' : [DConeVar10DsPPP, DConeVar05, DConeVar15, VertexIso],  
+                   'DspToKmKpKpTurbo' : [DConeVar10DsKKK, DConeVar05,  DConeVar15,VertexIso],  
+                   'DspToKmPipPipTurbo' : [DConeVar10DsKPP, DConeVar05,  DConeVar15,VertexIso]                  
+} 
         return relInfo
