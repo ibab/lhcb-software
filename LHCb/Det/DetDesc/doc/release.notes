@@ -8,6 +8,7 @@
       o this allows the elimination of the destructor, which 
         allows move semantics
  - remove unneeded include of gsl_sys.h
+ - fix bug in StaticArray::insert
 
 ! 2015-12-06 - Gerhard Raven
  - Modernize code:

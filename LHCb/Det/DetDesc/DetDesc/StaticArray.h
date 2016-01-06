@@ -94,10 +94,7 @@ public:
   /** erase a range */
   iterator erase(iterator first, iterator last) noexcept {
     if (last > first) {
-      if (last < end()) {
-	size_type n = static_cast<size_type>(end() - last);
-	for(size_type i=0; i<n; ++i) *(first + i) = *(last+i);
-      }
+      if (last < end()) std::copy(last,end(),first);
       m_size -= last - first;
     }
     return first;
@@ -109,7 +106,7 @@ public:
   /** insert a single element */
   void insert(iterator pos, const_reference x) {
     testcapacity(m_size+1) ;
-    for(iterator next = pos; next<end(); ++next) *(next+1) = *(next) ;
+    std::copy_backward(pos,end(),end()+1);
     ++m_size ;
     *pos = x ;
   }
