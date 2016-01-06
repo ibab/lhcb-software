@@ -8,7 +8,6 @@
 #include "GaudiKernel/IAlgTool.h"
 #include "Kernel/SiPositionInfo.h"
 
-static const InterfaceID IID_IVeloClusterPosition ("IVeloClusterPosition", 1, 0);
 
 /** @class IVeloClusterPosition IVeloClusterPosition.h Kernel/IVeloClusterPosition.h
  *  
@@ -25,16 +24,15 @@ namespace LHCb
   class StateVector;
 }
 
-class IVeloClusterPosition : virtual public IAlgTool{
+class IVeloClusterPosition : public extend_interfaces<IAlgTool>{
 public:
+   DeclareInterfaceID(IVeloClusterPosition, 2, 0);
 
   // a new tool interface, common for Velo and ST 
   // (defined in Kernel/SiPositonInfo.h)
   typedef LHCb::SiPositionInfo<LHCb::VeloChannelID> toolInfo;
   typedef std::pair<double, double> Direction;
   
-  // Return the interface ID
-  static const InterfaceID& interfaceID() {return IID_IVeloClusterPosition;}
   
  /** calculate position of the VeloCluster
   * @param aCluster pointer to a VeloCLuster cluster

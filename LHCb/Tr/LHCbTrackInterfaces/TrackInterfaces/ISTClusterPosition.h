@@ -23,24 +23,21 @@ class STDigit;
  *  @date   14/3/2002
  */
 
-// Declaration of the interface ID ( interface id, major version, minor version)
-static const InterfaceID IID_ISTClusterPosition("ISTClusterPosition", 0 , 0); 
 
-class  ISTClusterPosition: virtual public IAlgTool {
+class  ISTClusterPosition: public extend_interfaces<IAlgTool> {
 
-public: 
+public:
+  // Declaration of the interface ID ( interface id, major version, minor version)
+  DeclareInterfaceID( ISTClusterPosition, 1 , 0);
 
   typedef LHCb::SiPositionInfo<LHCb::STChannelID> Info;
 
-   /// Static access to interface id
-  static const InterfaceID& interfaceID() { return IID_ISTClusterPosition; }
-   
   /** calc position
   * @param aCluster cluster
-  * @return Info (simple struct) 
+  * @return Info (simple struct)
   * <br> strip = floored nearest channel
   * <br> fractionStrip = interstrip position (in fraction of strip)
-  * <br> error = estimate of the error 
+  * <br> error = estimate of the error
   */
   virtual Info estimate(const LHCb::STCluster* aCluster) const=0;
 
@@ -48,12 +45,12 @@ public:
   /** calc position
   * @param aCluster cluster
   * @param refVector Reference vector from the track
-  * @return Info (simple struct) 
+  * @return Info (simple struct)
   * <br> strip = floored nearest channel
   * <br> fractionStrip = interstrip position (in fraction of strip)
-  * <br> error = estimate of the error 
+  * <br> error = estimate of the error
   */
-  virtual Info estimate(const LHCb::STCluster* aCluster, 
+  virtual Info estimate(const LHCb::STCluster* aCluster,
                         const LHCb::StateVector& refVector) const=0;
 
   /** calc position
@@ -61,7 +58,7 @@ public:
   * @return Measurement (pair of pairs)
   * <br> first.first = floored nearest channel
   * <br> first.second = interstrip position (in fraction of strip)
-  * <br> second = estimate of the error 
+  * <br> second = estimate of the error
   */
   virtual Info estimate(const SmartRefVector<LHCb::STDigit>& digits) const=0;
 
@@ -76,12 +73,9 @@ public:
   * @param refVector Reference vector from the track
   * @return error estimate
   */
-  virtual double error(const unsigned int nStrips, 
+  virtual double error(const unsigned int nStrips,
                        const LHCb::StateVector& refVector) const =0;
 
 };
 
 #endif // TrackInterfaces_ISTClusterPosition_H
-
-
-

@@ -6,7 +6,6 @@
 // Kernel/LHCbKernel
 #include "Kernel/PixelPositionInfo.h"
 
-static const InterfaceID IID_IVPClusterPosition("IVPClusterPosition", 1, 0);
 
 /** @class IVPClusterPosition IVPClusterPosition.h
  *TrackInterfaces/IVPClusterPosition.h
@@ -20,10 +19,9 @@ namespace LHCb {
 class VPCluster;
 }
 
-class IVPClusterPosition : virtual public IAlgTool {
+class IVPClusterPosition : public extend_interfaces<IAlgTool> {
  public:
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_IVPClusterPosition; }
+    DeclareInterfaceID(IVPClusterPosition, 2, 0);
 
   /** Calculate position of a given VPCluster
    * @param cluster pointer to a VPCluster
