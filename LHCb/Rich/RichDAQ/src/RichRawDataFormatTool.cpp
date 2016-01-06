@@ -1165,7 +1165,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
 
           // Create data bank and decode into RichSmartIDs
           // Use original method that creates a new object each time
-          //std::auto_ptr<const HPDDataBank>
+          //std::unique_ptr<const HPDDataBank>
           //  hpdBank ( createDataBank( &bank.data()[lineC], // pointer to start of data
           //                            0, // Not needed here (to be removed). Must be 0 though
           //                            version ) );
@@ -1474,9 +1474,9 @@ void RawDataFormatTool::decodeToSmartIDs_2006TB( const LHCb::RawBank & bank,
     {
 
       // Create data bank and decode into RichSmartIDs
-      std::auto_ptr<const HPDDataBank> hpdBank ( createDataBank( &bank.data()[lineC], // pointer to start of data
-                                                                 0, // Not needed here (to be removed). Must be 0 though
-                                                                 version ) );
+      std::unique_ptr<const HPDDataBank> hpdBank ( createDataBank( &bank.data()[lineC], // pointer to start of data
+                                                                   0, // Not needed here (to be removed). Must be 0 though
+                                                                   version ) );
 
       // get HPD RichSmartID
       const LHCb::RichSmartID hpdID = ( m_useFakeHPDID ? s_fakeHPDID :
