@@ -1,9 +1,8 @@
-// $Id: DeOTModule.h,v 1.44 2010-02-03 08:35:24 wouter Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
+#include "boost/container/static_vector.hpp"
 /// DetDesc
-#include "DetDesc/StaticArray.h"
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
 
@@ -85,14 +84,14 @@ public:
   /// some handy typedefs
   typedef std::vector<DeOTModule*> Container;
   enum { MAXNUMCHAN = 128 } ;
-  typedef StaticArray<unsigned, MAXNUMCHAN> Straws;
+  typedef boost::container::static_vector<unsigned, MAXNUMCHAN> Straws;
   enum ChannelStatus { Good = 0, Dead = 1, Noisy = 2, Unknown = 99 } ;
 
   /** Constructor */
   DeOTModule(const std::string& name = "");
 
   /** Destructor */
-  ~DeOTModule();
+  ~DeOTModule() override;
 
   /** Retrieves reference to class identifier
    * @return the class identifier for this class

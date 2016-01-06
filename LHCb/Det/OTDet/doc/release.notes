@@ -3,6 +3,7 @@
 !--------------------------------------------------------------------------
 ! 2016-01-03 - Gerhard Raven
  - major change: migrate from std::auto_ptr to std::unique_ptr
+ - migrate from StaticArray to boost::container::static_vector
 ! 2015-12-06 - Gerhard Raven
  - prefer std::unique_ptr over raw pointer + explicit delete
  - prefer direct member initialization
