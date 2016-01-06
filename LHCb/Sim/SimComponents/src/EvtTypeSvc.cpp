@@ -13,6 +13,19 @@
 #include <fstream>
 #include <algorithm>
 
+namespace { 
+  // Function to compare evtcode of an evttype
+  class EvtCodeEqual {
+    int m_code;
+  public: 
+    EvtCodeEqual( int code = 10000000 ) : m_code( code ) { }
+    
+    inline bool operator() ( const EvtTypeInfo& type ) const {
+      return ( type.evtCode() == m_code );
+    }
+  };
+} 
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : EvtTypeSvc
 //
@@ -27,17 +40,14 @@ DECLARE_SERVICE_FACTORY(EvtTypeSvc)
 // Standard constructor, initializes variables
 //=============================================================================
 EvtTypeSvc::EvtTypeSvc( const std::string& name, ISvcLocator* svc ) 
-  : Service( name, svc )
+  : base_class( name, svc )
 {
   //m_mcFinder=NULL; //don't make it unless needed
   
   // Default file to parse
-  if( getenv("DECFILESROOT") != NULL ) {
+  if( getenv("DECFILESROOT") ) {
     m_inputFile = std::string(getenv( "DECFILESROOT" )) +
-      std::string( "/doc/table_event.txt");
-  }
-  else {
-    m_inputFile = "";
+                  "/doc/table_event.txt";
   }
  
   declareProperty( "EvtTypesFile", m_inputFile );
@@ -46,28 +56,7 @@ EvtTypeSvc::EvtTypeSvc( const std::string& name, ISvcLocator* svc )
 //=============================================================================
 // Destructor
 //=============================================================================
-EvtTypeSvc::~EvtTypeSvc() {}
-
-//=============================================================================
-// QueryInterface
-//=============================================================================
-StatusCode EvtTypeSvc::queryInterface( const InterfaceID& riid, 
-                                       void** ppvInterface ) 
-{
-  StatusCode sc = StatusCode::FAILURE;
-  if ( ppvInterface ) {
-    *ppvInterface = 0;
-    
-    if ( riid == IID_IEvtTypeSvc ) {
-      *ppvInterface = static_cast<IEvtTypeSvc*>(this);
-      sc = StatusCode::SUCCESS;
-      addRef();
-    }
-    else
-      sc = Service::queryInterface( riid, ppvInterface );    
-  }
-  return sc;
-}
+EvtTypeSvc::~EvtTypeSvc() = default;
 
 //=============================================================================
 // Initialize
@@ -111,11 +100,7 @@ StatusCode EvtTypeSvc::finalize()
   }
   
   // Clean up list of evttypes
-  while( !m_evtTypeInfos.empty() ) {
-    EvtTypeInfo* anEvtType = m_evtTypeInfos.back();
-    m_evtTypeInfos.pop_back();
-    delete anEvtType;
-  }
+  m_evtTypeInfos.clear();
   
   if( msg.level() <= MSG::DEBUG )
     msg << MSG::DEBUG << "Table size after clean up" << m_evtTypeInfos.size()
@@ -178,8 +163,7 @@ StatusCode EvtTypeSvc::parseFile( const std::string input )
     evtNick = line.substr(index0,index1-index0);
     index1 = index1+token.size();
     evtDesc = line.substr(index1);
-    EvtTypeInfo* entry = new EvtTypeInfo( evtCode, evtNick, evtDesc );
-    m_evtTypeInfos.push_back(entry);
+    m_evtTypeInfos.emplace_back( evtCode, evtNick, evtDesc );
   }
 
   if( msg.level() <= MSG::DEBUG ) {
@@ -190,11 +174,10 @@ StatusCode EvtTypeSvc::parseFile( const std::string input )
       msg << MSG::VERBOSE 
           << "List of entries: EvtType, NickName, DecayDescriptor"
           << std::endl;
-      for( EvtTypeInfos::const_iterator iEntry = m_evtTypeInfos.begin();
-           m_evtTypeInfos.end() != iEntry; ++iEntry ) {
-        msg << MSG::VERBOSE << (*iEntry)->evtCode() << token
-            << (*iEntry)->nickName() << token
-            << (*iEntry)->decayDescriptor() << std::endl;
+      for( const auto& iEntry : m_evtTypeInfos) {
+        msg << MSG::VERBOSE << iEntry.evtCode() << token
+            << iEntry.nickName() << token
+            << iEntry.decayDescriptor() << std::endl;
       }
       msg << MSG::VERBOSE << endmsg;
     }
@@ -207,53 +190,46 @@ StatusCode EvtTypeSvc::parseFile( const std::string input )
 // Given the integer code of an Event type checks that it exists in the
 // list of used values 
 //=============================================================================
-bool EvtTypeSvc::typeExists( const int evtCode ) {
+bool EvtTypeSvc::typeExists( const int evtCode ) const {
 
-  EvtTypeInfos::const_iterator iEvtTypeInfo;
-  iEvtTypeInfo = std::find_if( m_evtTypeInfos.begin(), 
-                               m_evtTypeInfos.end(), 
-                               EvtCodeEqual(evtCode) );
-  if( m_evtTypeInfos.end() == iEvtTypeInfo ) {
-    return false;
-  }
-  return true;
+  return std::any_of( m_evtTypeInfos.begin(), 
+                      m_evtTypeInfos.end(), 
+                      EvtCodeEqual(evtCode) );
 
 }
 
 //=============================================================================
 // Given the integer code of an Event type provides its Nick Name  
 //=============================================================================
-std::string EvtTypeSvc::nickName( const int evtCode ) {
+std::string EvtTypeSvc::nickName( const int evtCode ) const {
   
-  EvtTypeInfos::const_iterator iEvtTypeInfo;
-  iEvtTypeInfo = std::find_if( m_evtTypeInfos.begin(), 
-                               m_evtTypeInfos.end(), 
-                               EvtCodeEqual(evtCode) );
+  auto iEvtTypeInfo = std::find_if( m_evtTypeInfos.begin(), 
+                                    m_evtTypeInfos.end(), 
+                                    EvtCodeEqual(evtCode) );
   if( m_evtTypeInfos.end() == iEvtTypeInfo ) 
     {
       MsgStream msg( msgSvc(), name() );
       msg << MSG::WARNING << evtCode << "not known" << endmsg;
-      return "";
+      return {};
     }
-  return (*iEvtTypeInfo)->nickName();
+  return iEvtTypeInfo->nickName();
   
 }  
  
 //=============================================================================
 // Given an EventType provide its ASCII decay descriptor
 //=============================================================================
-std::string EvtTypeSvc::decayDescriptor( const int evtCode ) {
+std::string EvtTypeSvc::decayDescriptor( const int evtCode ) const {
 
-  EvtTypeInfos::iterator iEvtTypeInfo;
-  iEvtTypeInfo = std::find_if( m_evtTypeInfos.begin(), 
-                               m_evtTypeInfos.end(), 
-                               EvtCodeEqual(evtCode) );
+  auto iEvtTypeInfo = std::find_if( m_evtTypeInfos.begin(), 
+                                    m_evtTypeInfos.end(), 
+                                    EvtCodeEqual(evtCode) );
   if( m_evtTypeInfos.end() == iEvtTypeInfo ) {
     MsgStream msg( msgSvc(), name() );
     msg << MSG::WARNING << evtCode << "not known" << endmsg;
-    return "";
+    return {};
   }
-  return (*iEvtTypeInfo)->decayDescriptor();
+  return iEvtTypeInfo->decayDescriptor();
 
 }
 
@@ -263,14 +239,13 @@ std::string EvtTypeSvc::decayDescriptor( const int evtCode ) {
 // this is a typedef of std::set<long unsigned int, std::greater<long unsigned int> >
 // an ordered, unique, list
 //=============================================================================
-LHCb::EventTypeSet EvtTypeSvc::allTypes( void )
+LHCb::EventTypeSet EvtTypeSvc::allTypes( ) const
 {
-
   LHCb::EventTypeSet types;
-
-  for(EvtTypeInfos::const_iterator iEvtTypeInfo=m_evtTypeInfos.begin(); iEvtTypeInfo!=m_evtTypeInfos.end(); iEvtTypeInfo++)
-    types.insert((*iEvtTypeInfo)->evtCode());
-  
+  std::transform( m_evtTypeInfos.begin(),m_evtTypeInfos.end(),
+                  std::inserter(types,types.end()),
+                  [](const EvtTypeInfo& eti) {
+                      return eti.evtCode();
+  });
   return types;
-
 }

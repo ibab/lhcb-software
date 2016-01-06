@@ -1,4 +1,3 @@
-// $Id: EvtTypeInfo.h,v 1.1.1.1 2005-12-15 14:29:30 gcorti Exp $
 #ifndef EVTTYPEINFO_H 
 #define EVTTYPEINFO_H 1
 
@@ -11,16 +10,11 @@
  *  @author Gloria CORTI
  *  @date   2005-07-30
  */
-class EvtTypeInfo {
+class EvtTypeInfo final {
 public: 
 
   /// Standard constructor
-  EvtTypeInfo( ) 
-    : m_evtCode(0)
-    , m_nickName("")
-    , m_decayDescriptor("") 
-  { 
-  }; 
+  EvtTypeInfo( ) = default;
 
   /* Constructor with arguments
    * @param evtCode   integer describing eventtype
@@ -30,16 +24,11 @@ public:
    */
   EvtTypeInfo( int evtCode, std::string nickName, std::string decayDesc)
     : m_evtCode(evtCode)
-    , m_nickName(nickName)
-    , m_decayDescriptor(decayDesc)
+    , m_nickName(std::move(nickName))
+    , m_decayDescriptor(std::move(decayDesc))
   {
   };
 
-  /// Destructor
-  virtual ~EvtTypeInfo( )
-  {
-  };
-  
   /// Accessor to event type integer code
   int evtCode() const 
   { 
@@ -76,11 +65,9 @@ public:
     m_decayDescriptor = value;
   }
 
-protected:
-
 private:
 
-  int         m_evtCode;           ///< integer code describing event type
+  int         m_evtCode = 0;           ///< integer code describing event type
   std::string m_nickName;          ///< nick name 
   std::string m_decayDescriptor;   ///< decay descriptor
 
