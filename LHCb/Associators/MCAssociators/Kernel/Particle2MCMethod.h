@@ -1,7 +1,8 @@
-// $Id: Particle2MCMethod.h,v 1.4 2008/07/11 13:29:58 gligorov Exp $
 #ifndef KERNEL_PARTICLE2MCMETHOD_H
 #define KERNEL_PARTICLE2MCMETHOD_H 1
 
+#include <string>
+#include <array>
 // Include files
 
 /** @namespace Particle2MCMethod Particle2MCMethod.h Kernel/Particle2MCMethod.h
@@ -22,7 +23,7 @@ namespace Particle2MCMethod {
     No = 0, WithChi2, Chi2, Links, Composite, ChargedPP, NeutralPP, Max
   } ;
 
-  static const std::string extension[Max] = {
+  static const std::array<std::string,Max> extension= {
     "",
     "/WithChi2",
     "/Chi2",
@@ -31,7 +32,7 @@ namespace Particle2MCMethod {
     "/PP2MC",
     "/PP2MC"
   };
-  static const std::string algType[Max] = {
+  static const std::array<std::string,Max> algType = {
     "",
     "Particle2MCWithChi2",
     "Particle2MCChi2",

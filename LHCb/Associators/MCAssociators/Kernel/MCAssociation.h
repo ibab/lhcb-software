@@ -1,4 +1,3 @@
-// $Id: MCAssociation.h,v 1.4 2009/03/26 17:50:48 jpalac Exp $
 #ifndef KERNEL_MCASSOCIATION_H 
 #define KERNEL_MCASSOCIATION_H 1
 
@@ -16,24 +15,15 @@ namespace LHCb
  *  @author V. Gligorov
  *  @date   2007-11-07
  */
-class MCAssociation {
+class MCAssociation final {
 public: 
-  /// Standard constructor
-  MCAssociation( )
-    :
-    m_associatedMCP(0),
-    m_weight(0.)
-  {}
+  MCAssociation( ) = default;
 
   MCAssociation(const LHCb::MCParticle* mcp, 
                 const double weight)
-    :
-    m_associatedMCP(mcp),
-    m_weight(weight)
+    : m_associatedMCP(mcp), m_weight(weight)
   {
   }
-
-  virtual ~MCAssociation() {}
   
   const LHCb::MCParticle* to() const { return m_associatedMCP; }
 
@@ -42,8 +32,8 @@ public:
   double& weight() { return m_weight; }
 
 private:
-  const LHCb::MCParticle* m_associatedMCP;
-  double m_weight;
+  const LHCb::MCParticle* m_associatedMCP = nullptr;
+  double m_weight = 0;
 
 };
 #endif // KERNEL_MCASSOCIATION_H

@@ -3,6 +3,11 @@
 ! Responsible : Vladimir Gligorov
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+! 2016-01-06 - Gerhard Raven
+ - make MCAssociation 'final' and remove virtual destructor
+ - prefer direct member initialization
+ - prefer std::array over raw array
+
 ! 2015-12-06 - Gerhard Raven
  - modernize code:
     o prefer nullptr to NULL
