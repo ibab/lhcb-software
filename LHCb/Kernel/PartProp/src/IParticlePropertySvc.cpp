@@ -23,18 +23,9 @@
  *  @date 2008-08-03 
  */
 // ============================================================================
-// retrieve the unique interface identrifier
+// virtual destructor
 // ============================================================================
-const InterfaceID& LHCb::IParticlePropertySvc::interfaceID()
-{
-  // the unique identifier
-  static const InterfaceID s_ID ( "LHCb::IParticlePropertySvc" , 1 , 0 );
-  return s_ID ;
-}
-// ============================================================================
-// virtual and protected destructor
-// ============================================================================
-LHCb::IParticlePropertySvc::~IParticlePropertySvc() {} // protected destructor
+LHCb::IParticlePropertySvc::~IParticlePropertySvc() = default; // destructor
 // ============================================================================
 /* helper utility for mapping of LHCb::ParticleProperty object into 
  *  non-negative integral sequential identifier 
@@ -57,14 +48,13 @@ size_t LHCb::ParticleProperties::index
 ( const LHCb::ParticleProperty*     property ,
   const LHCb::IParticlePropertySvc* service  )
 {
-  if ( 0 == property || 0 == service ) { return 0 ; }               // RETURN
+  if ( !property || !service ) { return 0 ; }               // RETURN
   // ==========================================================================
-  LHCb::IParticlePropertySvc::iterator first = service -> begin () ;
-  LHCb::IParticlePropertySvc::iterator last  = service -> end   () ;
+  auto first = service -> begin () ;
+  auto last  = service -> end   () ;
   // start the binary_search
   static const LHCb::ParticleProperty::Compare cmp = LHCb::ParticleProperty::Compare() ;
-  LHCb::IParticlePropertySvc::iterator ifind =
-    std::lower_bound ( first , last , property , cmp ) ;
+  auto ifind = std::lower_bound ( first , last , property , cmp ) ;
   return
     last != ifind && !cmp ( *ifind, property ) ?  (ifind-first+1) : 0 ;
 }

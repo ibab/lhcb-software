@@ -1,5 +1,3 @@
-// $Id$
-// ============================================================================
 #ifndef LHCBKERNEL_IPARTICLEPROPERTYSVC_H
 #define LHCBKERNEL_IPARTICLEPROPERTYSVC_H
 // ============================================================================
@@ -28,11 +26,12 @@ namespace LHCb
    *  @author G.Corti
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    */
-  class GAUDI_API IParticlePropertySvc : virtual public IInterface
+  class GAUDI_API IParticlePropertySvc : public extend_interfaces<IInterface>
   {
     // ========================================================================
   public: // the  public types 
     // ========================================================================
+    DeclareInterfaceID( LHCb::IParticlePropertySvc , 2 , 0 );
   public:
     // ========================================================================
     /// the actual type of (ordered) container of particle properties 
@@ -115,7 +114,7 @@ namespace LHCb
      *
      *  @endcode 
      *  
-     *  Essentially it is just a missing <c>std::copy_if</c> STL-algorithm 
+     *  Essentially it is just <c>std::copy_if</c> STL-algorithm 
      *
      *  @param cut the predicate
      *  @param output the output iterator
@@ -145,14 +144,7 @@ namespace LHCb
      */  
     virtual std::string cc ( const std::string& decay ) const = 0 ;
     // ========================================================================
-  public:
-    // ========================================================================
-    /// retrieve the unique interface identifier
-    static const InterfaceID& interfaceID() ;          // the unique identifier 
-    // ========================================================================
-  protected:
-    // ========================================================================
-    /// virtual and protected destructor 
+    /// virtual destructor 
     virtual ~IParticlePropertySvc() ;       // virtual and protected destructor 
     // ========================================================================
   };
@@ -552,5 +544,3 @@ namespace LHCb
 // ============================================================================
 #endif
 // ============================================================================
-
-

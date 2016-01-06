@@ -3,6 +3,9 @@
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     :
 ! -----------------------------------------------------------------------------
+! 2016-01-06 - Gerhard Raven
+ - prefer extend_interfaces inheritance over virtual inheritance from IInterface
+ - prefer lambda over boost::lambda,boost::bind
 
 !========================= PartProp v1r20 2015-10-12 =========================
 ! 2015-09-73 - Gerhard Raven
