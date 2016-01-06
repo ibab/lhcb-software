@@ -4447,6 +4447,14 @@ Gaudi::Math::FormFactors::BlattWeisskopf::BlattWeisskopf
   }
 }
 // ============================================================================
+// default constructor (needed for  serialization)
+// ============================================================================
+Gaudi::Math::FormFactors::BlattWeisskopf::BlattWeisskopf()
+  : Gaudi::Math::FormFactor() 
+  , m_L ( Gaudi::Math::FormFactors::BlattWeisskopf::Zero ) 
+  , m_b ( 0.0 )
+{}
+// ============================================================================
 // destructor 
 // ============================================================================
 Gaudi::Math::FormFactors::BlattWeisskopf::~BlattWeisskopf(){}
@@ -4497,7 +4505,8 @@ double Gaudi::Math::FormFactors::BlattWeisskopf::operator()
     const double m1 , const double m2 ) const 
 {
   //
-  if  ( s_equal ( m , m0 ) ) { return 1 ; }
+  if ( s_equal ( m , m0 ) ) { return    1   ; }
+  if ( s_zero  ( m_b )    ) { return m0 / m ; }
   //
   /// get the momenta 
   const double q  = Gaudi::Math::PhaseSpace2::q ( m  , m1 , m2 ) ;
@@ -4508,15 +4517,6 @@ double Gaudi::Math::FormFactors::BlattWeisskopf::operator()
   //
   return ( m0 / m ) * b ( _z * _z , _z0 * _z0 ) ;
 }
-// ============================================================================
-
-
-
-
-
-
-
-
 // ============================================================================
 // constructor from all parameters
 // ============================================================================

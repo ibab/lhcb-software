@@ -2351,6 +2351,8 @@ namespace Gaudi
         // ====================================================================
         /// constructor from enum and barrier factor 
         BlattWeisskopf ( const Case   L , const double b ) ;
+        /// default constructor (needed for  serialization)
+        BlattWeisskopf () ;
         /// virtual destructor 
         virtual ~BlattWeisskopf () ; 
         /// clone method ("virtual constructor")
@@ -2363,11 +2365,6 @@ namespace Gaudi
         // ====================================================================
         /// get the barrier factor 
         double   b ( const double z , const double z0 ) const ;
-        // ====================================================================
-      private:
-        // ====================================================================
-        /// default constructor is disabled 
-        BlattWeisskopf () ; // default constructor is disabled        
         // ====================================================================
       private:
         // ====================================================================

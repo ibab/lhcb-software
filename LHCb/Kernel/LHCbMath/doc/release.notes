@@ -6,6 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2016-01-06 - VanyaBelyaev
+  add some defautl constructors make serialization machnery happy 
+
+
 ! 2015-12-15 - Manuel Tobias Schiller
  - BloomFilter: fix clang warning
 
