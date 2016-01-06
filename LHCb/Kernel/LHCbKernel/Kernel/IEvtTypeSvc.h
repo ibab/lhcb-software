@@ -5,9 +5,6 @@
 #include "GaudiKernel/IService.h"
 #include <set>
 
-// Declaration of the interface ID (interface id, major version, minor version)
-static const InterfaceID IID_IEvtTypeSvc("IEvtTypeSvc", 2 , 0);
-
 //definition of how to store sets of events
 namespace LHCb
 {
@@ -28,28 +25,27 @@ namespace LHCb
  *  to handle groups of Event type codes in an ordered, unique std::set
  *
  */
-class IEvtTypeSvc : virtual public IService {
+class IEvtTypeSvc : public extend_interfaces<IService> {
 public:
-  /// Retrieve interface ID
-  static const InterfaceID& interfaceID() { return IID_IEvtTypeSvc; }
+    DeclareInterfaceID(IEvtTypeSvc, 3 , 0);
 
   /// Given an event code number provide its Nick Name as in input table.
   /// If an event type does not exist in the table this method
   /// will return "Unknown"
-  virtual std::string nickName( const int evtCode ) = 0;
+  virtual std::string nickName( const int evtCode ) const = 0;
 
   /// Given an event code number provide the ASCII decay descriptor
   /// as in input table. Some event types have "No signal" as
   /// decay descriptor, if an event type does not exist in the
   /// table this method will return "Unknown"
-  virtual std::string decayDescriptor( const int evtCode ) = 0;
+  virtual std::string decayDescriptor( const int evtCode ) const = 0;
 
   /// Given an event code number check if it 'exist', i.e. is known by the
   /// service
-  virtual bool typeExists( const int evtCode ) = 0;
+  virtual bool typeExists( const int evtCode ) const = 0;
 
   /// Return all known event types in a unique and ordered std::set
-  virtual LHCb::EventTypeSet allTypes( void ) = 0;
+  virtual LHCb::EventTypeSet allTypes( void ) const = 0;
 
 };
 #endif // KERNEL_IEVTTYPESVC_H

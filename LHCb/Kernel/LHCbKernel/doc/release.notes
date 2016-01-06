@@ -5,6 +5,7 @@
 !--------------------------------------------------------------------------------
 ! 2016-01-06 - Gerhard Raven
  - DetectorSegment: classify as 'final' and remove virtual destructor
+ - major change: IEvtTypeSvc add const, prefer extend_interfaces
 
 ! 2016-01-03 - Gerhard Raven
  - major change: replace deprecated std::auto_ptr with std::unique_ptr
