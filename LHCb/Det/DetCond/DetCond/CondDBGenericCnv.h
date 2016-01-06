@@ -84,9 +84,9 @@ protected:
   void setObjValidity(Gaudi::Time &since, Gaudi::Time &till, DataObject *pObject);
 
   /// Pointer to the DetectorDataService.
-  IDetDataSvc         *m_detDataSvc;
+  SmartIF<IDetDataSvc> m_detDataSvc;
   /// Pointer to the ICondDBReader interface;
-  ICondDBReader       *m_condDBReader;
+  SmartIF<ICondDBReader> m_condDBReader;
 
   /**
    * Get an object from the Conditions DB. It tries all the CondDBReaders

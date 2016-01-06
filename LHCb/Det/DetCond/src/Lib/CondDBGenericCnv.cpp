@@ -27,14 +27,12 @@
 // Standard constructor, initializes variables
 //=============================================================================
 CondDBGenericCnv::CondDBGenericCnv(ISvcLocator* svc,const CLID& clid):
-  Converter(CONDDB_StorageType,clid,svc),
-  m_detDataSvc(0),
-  m_condDBReader(0)
+  Converter(CONDDB_StorageType,clid,svc)
 {}
 //=============================================================================
 // Destructor
 //=============================================================================
-CondDBGenericCnv::~CondDBGenericCnv() {}
+CondDBGenericCnv::~CondDBGenericCnv() = default;
 
 //=========================================================================
 // Initialization
@@ -44,7 +42,7 @@ StatusCode CondDBGenericCnv::initialize() {
   StatusCode sc = Converter::initialize();
 
   // Query the IDetDataSvc interface of the detector data service
-  sc = serviceLocator()->service("DetectorDataSvc",m_detDataSvc);
+  m_detDataSvc = serviceLocator()->service("DetectorDataSvc");
   if( !sc.isSuccess() ) {
     MsgStream log(msgSvc(),"CondDBGenericCnv");
     log << MSG::ERROR << "Can't locate DetectorDataSvc" << endmsg;
@@ -55,8 +53,8 @@ StatusCode CondDBGenericCnv::initialize() {
       log << MSG::DEBUG << "Succesfully located DetectorDataSvc" << endmsg;
   }
   // Get a pointer to the CondDBReader (implemented by the conversion service)
-  sc = conversionSvc()->queryInterface(ICondDBReader::interfaceID(),(void**)&m_condDBReader);
-  if ( !sc.isSuccess() ) {
+  m_condDBReader.reset( conversionSvc().get() );
+  if ( !m_condDBReader ) {
     MsgStream log(msgSvc(),"CondDBGenericCnv");
     log << MSG::ERROR << "The conversion service does not implement ICondDBReader!" << endmsg;
     return StatusCode::FAILURE;
@@ -69,8 +67,8 @@ StatusCode CondDBGenericCnv::initialize() {
 // Finalization
 //=========================================================================
 StatusCode CondDBGenericCnv::finalize() {
-  m_detDataSvc->release();
-  m_condDBReader->release();
+  m_detDataSvc.reset();
+  m_condDBReader.reset();
   return Converter::finalize();
 }
 

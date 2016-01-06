@@ -3,6 +3,8 @@
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+! 2016-01-06 - Gerhard Raven
+ - prefer SmartIF over raw pointer to interface
 
 ! 2015-12-17 - Christopher Burr
  - Prevent CondDBCache from logging " FOUND" as a warning
