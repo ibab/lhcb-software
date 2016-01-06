@@ -29,9 +29,7 @@ DECLARE_ALGORITHM_FACTORY( OTTimeCreator )
 // Standard constructor, initializes variables
 //=============================================================================
 OTTimeCreator::OTTimeCreator(const std::string& name, ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ),
-    m_tracker(NULL),
-    m_decoder("OTRawBankDecoder")
+  : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "OutputLocation", m_timeLocation = OTTimeLocation::Default );
   declareProperty( "RawBankDecoder", m_decoder ) ;
@@ -40,7 +38,7 @@ OTTimeCreator::OTTimeCreator(const std::string& name, ISvcLocator* pSvcLocator)
 //=============================================================================
 // Destructor
 //=============================================================================
-OTTimeCreator::~OTTimeCreator() {}
+OTTimeCreator::~OTTimeCreator() = default;
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -52,7 +50,6 @@ StatusCode OTTimeCreator::initialize() {
   
   // Loading OT Geometry from XML
   m_tracker = getDet<DeOTDetector>( DeOTDetectorLocation::Default );
-
   m_decoder.retrieve().ignore();
 
   return sc;
@@ -75,23 +72,19 @@ StatusCode OTTimeCreator::execute()
   put(outputTimes, m_timeLocation);
 
   // Load all modules.
-  for(DeOTDetector::Modules::const_iterator imod = m_tracker->modules().begin() ;
-      imod != m_tracker->modules().end(); ++imod) {
-    LHCb::OTLiteTimeRange ottimes = m_decoder->decodeModule( (*imod)->elementID() ) ;
-    for( LHCb::OTLiteTimeRange::const_iterator it = ottimes.begin() ; it != ottimes.end(); ++it) {
-      bool found(false) ;
-      for( LHCb::OTLiteTimeRange::const_iterator jt = ottimes.begin() ; it != jt && !found; ++jt)
-	found = it->channel()==jt->channel() ;
-      if ( found ) {
+  for(const auto& mod : m_tracker->modules() ) {
+    auto ottimes = m_decoder->decodeModule( mod->elementID() ) ;
+    for( auto it = ottimes.begin() ; it != ottimes.end(); ++it) {
+      auto found = std::find_if( ottimes.begin(), it, 
+                                 [&](const LHCb::OTLiteTime& t) { return t.channel()==it->channel(); } );
+      if ( found!=it ) {
         std::ostringstream mess;
         mess << "Found duplicate hit!" << it->channel();
         Warning( mess.str(), StatusCode::FAILURE, 0 ).ignore();
       } else outputTimes->insert(new OTTime(it->channel(),it->calibratedTime())) ;
     }
   }
-  
   if ( msgLevel( MSG::DEBUG ) ) debug() << " OTTimeCreator created " << outputTimes->size() 
                                         << " OTTime(s) at " << m_timeLocation << endmsg;
-
   return StatusCode::SUCCESS;
 }

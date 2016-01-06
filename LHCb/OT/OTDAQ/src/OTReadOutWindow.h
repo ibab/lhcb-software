@@ -1,4 +1,3 @@
-// $Id: OTReadOutWindow.h,v 1.2 2004-11-10 13:02:08 jnardull Exp $
 #ifndef OTDAQ_OTREADOUTWINDOW_H
 #define OTDAQ_OTREADOUTWINDOW_H 1
 
@@ -18,7 +17,7 @@
  *  @date   11/11/2002
  */
 
-class OTReadOutWindow : public GaudiTool, virtual public IOTReadOutWindow {
+class OTReadOutWindow : public extends<GaudiTool, IOTReadOutWindow> {
 
 public:
 
@@ -28,32 +27,32 @@ public:
                   const IInterface* parent);
 
   /// destructor
-  virtual ~OTReadOutWindow();
+  ~OTReadOutWindow() override;
 
-  StatusCode initialize();
+  StatusCode initialize() override;
 
   /// Start of read out window for each station
-  std::vector<double> startReadOutGate();
+  std::vector<double> startReadOutGate() const override;
 
   /// Size of the read out window
-  double sizeOfReadOutGate();
+  double sizeOfReadOutGate() const override;
 
 private:
 
   std::vector<double> m_startReadOutGate;  ///< start of readout gate
   double m_sizeOfReadOutGate;              ///< end of readout gate
 
-  Condition* condReadOutGate;
+  Condition* condReadOutGate = nullptr;
 
   StatusCode condReadOutGateUpdate();
 };
 
-inline std::vector<double> OTReadOutWindow::startReadOutGate()
+inline std::vector<double> OTReadOutWindow::startReadOutGate() const
 {
   return m_startReadOutGate;
 }
 
-inline double OTReadOutWindow::sizeOfReadOutGate() 
+inline double OTReadOutWindow::sizeOfReadOutGate() const
 {
   return m_sizeOfReadOutGate;
 }

@@ -1,4 +1,3 @@
-// $Id: OTTimeCreator.h,v 1.13 2008-12-17 08:35:18 cattanem Exp $
 #ifndef OTDAQ_OTTIMECREATOR_H 
 #define OTDAQ_OTTIMECREATOR_H 1
 
@@ -6,8 +5,6 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 // Kernel
-#include "Kernel/OTChannelID.h"
-
 #include "GaudiKernel/ToolHandle.h"
 #include "OTDAQ/IOTRawBankDecoder.h"
 
@@ -28,19 +25,17 @@ public:
   /// Standard constructor
   OTTimeCreator( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~OTTimeCreator( ); ///< Destructor
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode finalize();
-  virtual StatusCode execute   ();    ///< Algorithm execution
+  ~OTTimeCreator( ) override; ///< Destructor
+  StatusCode initialize() override;    ///< Algorithm initialization
+  StatusCode finalize() override;
+  StatusCode execute() override;    ///< Algorithm execution
  
-protected:
-
 private:
   
   // job options
   std::string m_timeLocation;
-  DeOTDetector* m_tracker;                  ///< Pointer to XML geometry 
-  ToolHandle<IOTRawBankDecoder> m_decoder;
+  DeOTDetector* m_tracker = nullptr;                  ///< Pointer to XML geometry 
+  ToolHandle<IOTRawBankDecoder> m_decoder = { "OTRawBankDecoder" };
 };
 
 #endif // OTDAQ_OTTIMECREATOR_H
