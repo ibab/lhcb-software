@@ -2,6 +2,13 @@
 ! package DetDesc
 ! package manager : Marco Clemencic
 ! =====================================================================
+! 2016-01-06 - Gerhard Raven
+ - major change: add const qualifier to ITransportSvc methods
+ - major change: make StaticArray final 
+      o this allows the elimination of the destructor, which 
+        allows move semantics
+ - remove unneeded include of gsl_sys.h
+
 ! 2015-12-06 - Gerhard Raven
  - Modernize code:
    o prefer STL algorithms over raw loops

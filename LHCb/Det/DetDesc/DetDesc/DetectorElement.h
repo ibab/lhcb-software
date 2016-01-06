@@ -73,13 +73,13 @@ public:
   virtual const  CLID& clID()   const  { return classID(); }
   static const   CLID& classID()       { return CLID_DetectorElement; }
 
-  virtual const std::string& name () const;
+  const std::string& name () const override;
 
   /// Check if the condition called 'name' is in the list of conditionrefs.
-  virtual bool hasCondition(const std::string &name) const;
+  bool hasCondition(const std::string &name) const override;
 
   /// Return the SmartRef for the condition called 'name'.
-  virtual SmartRef<Condition> condition(const std::string &name) const;
+  SmartRef<Condition> condition(const std::string &name) const override;
 
   /// Iterator to the first element of the list of conditions.
   inline  ConditionMap::const_iterator conditionBegin() const
@@ -245,14 +245,14 @@ public:
    * Method used to access the ParamValidDataObject methods from IDetectorElement
    * interface.
    */
-  virtual const ParamValidDataObject *params() const;
+  const ParamValidDataObject *params() const override;
 
   /**
    * Return a sensitive volume identifier for a given point in the
    * global reference frame.
    */
 
-  virtual int sensitiveVolumeID(const Gaudi::XYZPoint& globalPos) const;
+  int sensitiveVolumeID(const Gaudi::XYZPoint& globalPos) const override;
 
   /// Used to create a link with a given name to the condition at 'path' in the detector data store.
   void createCondition(std::string &name, std::string &path);
@@ -360,7 +360,7 @@ inline MsgStream& operator<< (MsgStream& os, const DetectorElement& de) {
 }
 
 inline MsgStream& operator<< (MsgStream& os, const DetectorElement* de) {
-  if (0 == de) {
+  if (!de) {
     return os << "DetectorElement* points to NULL"<< endmsg;
   } else {
     return os << *de;

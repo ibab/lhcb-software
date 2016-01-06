@@ -9,7 +9,6 @@ branches      DetDesc doc cmt src
 use           GaudiKernel       v*
 use           GaudiUtils        v*
 use           ROOT              v* LCG_Interfaces
-##use           GSL               v* LCG_Interfaces -no_auto_imports
 use           LHCbMath          v* Kernel
 use           VectorClass       v* Kernel
 

@@ -14,7 +14,7 @@
  *  only works for basic types. The interface is also not entirely
  *  complete (e.g. no assignment, insert, or resize), but that can
  *  easily be changed when needed.
- *  
+ *
  *  Note that there is also a more official implementation of this
  *  idea, namely the "alps/fixed_capacity_vector.h". I hope that that
  *  will make it to boost one day.
@@ -23,32 +23,30 @@
  *  @date 20/09/2007
  */
 
-template<typename T, std::size_t N> 
-class StaticArray
+template<typename T, std::size_t N>
+class StaticArray final
 {
 public:
   ///@{
   /** types */
-  typedef typename std::array<T, N>::value_type          value_type;            
-  typedef typename std::array<T, N>::iterator            iterator;              
-  typedef typename std::array<T, N>::const_iterator      const_iterator;        
-  typedef std::reverse_iterator<iterator>                reverse_iterator;      
+  typedef typename std::array<T, N>::value_type          value_type;
+  typedef typename std::array<T, N>::iterator            iterator;
+  typedef typename std::array<T, N>::const_iterator      const_iterator;
+  typedef std::reverse_iterator<iterator>                reverse_iterator;
   typedef std::reverse_iterator<const_iterator>          const_reverse_iterator;
-  typedef typename std::array<T, N>::reference           reference;             
-  typedef typename std::array<T, N>::const_reference     const_reference;       
-  typedef typename std::array<T, N>::size_type           size_type;             
-  typedef typename std::array<T, N>::difference_type     difference_type;       
+  typedef typename std::array<T, N>::reference           reference;
+  typedef typename std::array<T, N>::const_reference     const_reference;
+  typedef typename std::array<T, N>::size_type           size_type;
+  typedef typename std::array<T, N>::difference_type     difference_type;
   ///@}
 
   ///@{
   /** enums */
   enum { MaxSize=N } ;
   ///@}
-  
-  /** constructor */
-  StaticArray() : m_size(0) {}
 
-  //template<typename U> StaticArray& operator=(const StaticArray<U, N>&) ;
+  /** constructor */
+  StaticArray() = default;
 
   ///@{
   /** iterator support */
@@ -117,21 +115,21 @@ public:
   }
 
   /** swap the contents of this array with that of another one */
-  void swap( StaticArray<T, N>& rhs) noexcept(noexcept(std::swap(rhs.m_size, rhs.m_size)) && noexcept(std::swap(rhs.front(), rhs.front()))) { 
-    std::swap_ranges(begin(),begin()+std::max(m_size,rhs.m_size),rhs.begin()); 
+  void swap( StaticArray<T, N>& rhs) noexcept(noexcept(std::swap(rhs.m_size, rhs.m_size)) && noexcept(std::swap(rhs.front(), rhs.front()))) {
+    std::swap_ranges(begin(),begin()+std::max(m_size,rhs.m_size),rhs.begin());
     std::swap( m_size, rhs.m_size ) ;
   }
-  
+
 private:
   /** throw an exception if the capacity is not large enough to hold 'newsize' elements */
   void testcapacity( size_type newsize ) const {
-    if( newsize > N ) 
+    if( newsize > N )
       throw GaudiException("DetDesc/StaticArray: trying to add data beyond maximum capacity of this container.\n Please increase the max_size template parameter.","DetDesc/StaticArray overflow", StatusCode::FAILURE) ;
   }
-  
+
 private:
   std::array<T, N> m_data;       /// elements
-  size_type m_size ; /// size
+  size_type m_size = 0 ; /// size
 };
 
 #endif
