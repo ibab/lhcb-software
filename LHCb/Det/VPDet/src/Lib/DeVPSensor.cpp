@@ -41,25 +41,21 @@ bool DeVPSensor::m_common_cache_valid = false;
 // Standard constructor
 //==============================================================================
 DeVPSensor::DeVPSensor(const std::string& name)
-    : DetectorElement(name), m_geometry(nullptr), m_msg(nullptr) {
-  
+    : DetectorElement(name), m_geometry(nullptr) {
+
 }
 
 //==============================================================================
 // Destructor
 //==============================================================================
-DeVPSensor::~DeVPSensor() {
-
-  delete m_msg;
-
-}
+DeVPSensor::~DeVPSensor() = default;
 
 //==============================================================================
 // Object identification
 //==============================================================================
-const CLID& DeVPSensor::clID() const { 
+const CLID& DeVPSensor::clID() const {
 
-  return DeVPSensor::classID(); 
+  return DeVPSensor::classID();
 
 }
 
@@ -69,25 +65,22 @@ const CLID& DeVPSensor::clID() const {
 StatusCode DeVPSensor::initialize() {
 
   // Set the output level.
-  PropertyMgr* pmgr = new PropertyMgr();
+  std::unique_ptr<PropertyMgr> pmgr{ new PropertyMgr() };
   int outputLevel = 0;
   pmgr->declareProperty("OutputLevel", outputLevel);
-  IJobOptionsSvc* jobSvc;
   ISvcLocator* svcLoc = Gaudi::svcLocator();
-  StatusCode sc = svcLoc->service("JobOptionsSvc", jobSvc);
-  if (sc.isSuccess()) sc = jobSvc->setMyProperties("DeVPSensor", pmgr);
+  auto jobSvc = svcLoc->service<IJobOptionsSvc>("JobOptionsSvc");
+  if (jobSvc) {
+      auto sc = jobSvc->setMyProperties("DeVPSensor", pmgr.get());
+      if (!sc) return sc;
+  }
   if (outputLevel > 0) {
     msgSvc()->setOutputLevel("DeVPSensor", outputLevel);
   }
-  delete pmgr;
-  if (!sc) return sc;
-  m_debug = false;
-  if ((msgSvc()->outputLevel("DeVPSensor") == MSG::DEBUG) ||
-      (msgSvc()->outputLevel("DeVPSensor") == MSG::VERBOSE)) {
-    m_debug = true;
-  }
+  m_debug = (msgSvc()->outputLevel("DeVPSensor") == MSG::DEBUG ||
+             msgSvc()->outputLevel("DeVPSensor") == MSG::VERBOSE);
 
-  sc = DetectorElement::initialize();
+  auto sc = DetectorElement::initialize();
   if (!sc.isSuccess()) {
     msg() << MSG::ERROR << "Cannot initialise DetectorElement" << endmsg;
     return sc;
@@ -183,7 +176,7 @@ bool DeVPSensor::pointToChannel(const Gaudi::XYZPoint& point,
 //==============================================================================
 // Calculate the pixel and fraction corresponding to a global point.
 //==============================================================================
-bool DeVPSensor::pointToChannel(const Gaudi::XYZPoint& point, 
+bool DeVPSensor::pointToChannel(const Gaudi::XYZPoint& point,
                                 const bool local, LHCb::VPChannelID& channel,
                                 std::pair<double, double>& fraction) const {
 
@@ -273,14 +266,12 @@ bool DeVPSensor::isInActiveArea(const Gaudi::XYZPoint& point) const {
 //==============================================================================
 // Return the size of a pixel with given channel ID.
 //==============================================================================
-std::pair<double, double> DeVPSensor::pixelSize(
-    LHCb::VPChannelID channel) const {
+std::pair<double, double>
+DeVPSensor::pixelSize( LHCb::VPChannelID channel) const {
 
-  if (isLong(channel)) {
-    return std::make_pair(DeVPSensor::m_interChipPixelSize,
-                          DeVPSensor::m_pixelSize);
-  }
-  return std::make_pair(DeVPSensor::m_pixelSize, DeVPSensor::m_pixelSize);
+  return { isLong(channel) ? DeVPSensor::m_interChipPixelSize
+                           : DeVPSensor::m_pixelSize,
+           DeVPSensor::m_pixelSize };
 
 }
 
@@ -302,7 +293,7 @@ bool DeVPSensor::isLong(LHCb::VPChannelID channel) const {
 //==============================================================================
 // Calculate and cache the local x positions and pitches
 //==============================================================================
-void DeVPSensor::cacheLocalXAndPitch(void) {
+void DeVPSensor::cacheLocalXAndPitch() {
 
   for (unsigned int col = 0; col < VP::NSensorColumns; ++col) {
     // Calculate the x-coordinate of the pixel centre and the pitch.
@@ -312,20 +303,20 @@ void DeVPSensor::cacheLocalXAndPitch(void) {
     double pitch = DeVPSensor::m_pixelSize;
     switch (col) {
       case 256:
-      case 512:  
+      case 512:
         // right of chip border
         x -= 0.5 * (DeVPSensor::m_interChipPixelSize - DeVPSensor::m_pixelSize);
         pitch =
             0.5 * (DeVPSensor::m_interChipPixelSize + DeVPSensor::m_pixelSize);
         break;
       case 255:
-      case 511:  
+      case 511:
         // left of chip border
         x += 0.5 * (DeVPSensor::m_interChipPixelSize - DeVPSensor::m_pixelSize);
         pitch = DeVPSensor::m_interChipPixelSize;
         break;
       case 254:
-      case 510:  
+      case 510:
         // two left of chip border
         pitch =
             0.5 * (DeVPSensor::m_interChipPixelSize + DeVPSensor::m_pixelSize);

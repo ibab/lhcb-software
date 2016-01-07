@@ -19,18 +19,13 @@
 // Constructor
 //============================================================================
 DeVP::DeVP(const std::string& name)
-    : DetectorElement(name), m_nSensors(0), m_msg(nullptr) {
-
+    : DetectorElement(name) {
 }
 
 //============================================================================
 // Destructor
 //============================================================================
-DeVP::~DeVP() {
-
-  delete m_msg;
-
-}
+DeVP::~DeVP() = default;
 
 //============================================================================
 // Object identification
@@ -47,24 +42,21 @@ const CLID& DeVP::clID() const {
 StatusCode DeVP::initialize() {
 
   // Set the output level.
-  PropertyMgr* pmgr = new PropertyMgr();
+  std::unique_ptr<PropertyMgr> pmgr{ new PropertyMgr() };
   int outputLevel = 0;
   pmgr->declareProperty("OutputLevel", outputLevel);
-  IJobOptionsSvc* jobSvc;
   ISvcLocator* svcLoc = Gaudi::svcLocator();
-  StatusCode sc = svcLoc->service("JobOptionsSvc", jobSvc);
-  if (sc.isSuccess()) sc = jobSvc->setMyProperties("DeVP", pmgr);
-  if (outputLevel > 0) msgSvc()->setOutputLevel("DeVP", outputLevel);
-  delete pmgr;
-  if (!sc) return sc;
-  m_debug = false;
-  if (msgSvc()->outputLevel("DeVP") == MSG::DEBUG ||
-      msgSvc()->outputLevel("DeVP") == MSG::VERBOSE) {
-    m_debug = true;
+  auto jobSvc = svcLoc->service<IJobOptionsSvc>("JobOptionsSvc");
+  if (jobSvc) {
+      auto sc = jobSvc->setMyProperties("DeVP", pmgr.get());
+      if (!sc) return sc;
   }
+  if (outputLevel > 0) msgSvc()->setOutputLevel("DeVP", outputLevel);
+  m_debug = (msgSvc()->outputLevel("DeVP") == MSG::DEBUG ||
+             msgSvc()->outputLevel("DeVP") == MSG::VERBOSE);
 
   // Initialise the base class.
-  sc = DetectorElement::initialize();
+  auto sc = DetectorElement::initialize();
   if (sc.isFailure()) {
     msg() << MSG::ERROR << "Cannot initialize DetectorElement" << endmsg;
     return sc;
@@ -104,13 +96,13 @@ int DeVP::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
 
   const double z = point.z();
   const double tol = 10 * Gaudi::Units::mm; 
-  // Loop over all VP sensors.
-  for (auto it = m_sensors.cbegin(), end = m_sensors.cend(); it != end; ++it) {
-    // Skip sensors which are far away in z.
-    if (fabs(z - (*it)->z()) > tol) continue; 
-    // Check if the point is inside this sensor.
-    if ((*it)->isInside(point)) return (*it)->sensorNumber();
-  }
+  auto i = std::find_if( m_sensors.begin(), m_sensors.end(),
+                         [&]( const DeVPSensor* s) {
+    // Quickly skip sensors which are far away in z, only
+    // then check whether point is inside this sensor
+    return (fabs(z - s->z()) < tol) && s->isInside(point);
+  });
+  if (i!=m_sensors.end()) return (*i)->sensorNumber();
   msg() << MSG::ERROR << "No sensitive volume at (" << point.x() << ", "
         << point.y() << ", " << point.z() << ")" << endmsg;
   return -999;
@@ -143,5 +135,4 @@ void DeVP::findSensors(IDetectorElement* det,
       findSensors(*it, sensors);
     }
   }
-
 }

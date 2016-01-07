@@ -78,7 +78,7 @@ class DeVP : public DetectorElement {
   std::vector<DeVPSensor*> m_sensors;
 
   /// Number of sensors
-  unsigned int m_nSensors;
+  unsigned int m_nSensors = 0;
 
   /// Custom operator for sorting sensors by z position.
   struct less_Z {
@@ -97,10 +97,10 @@ class DeVP : public DetectorElement {
   bool m_debug;
 
   /// Message stream
-  mutable MsgStream* m_msg;
+  mutable std::unique_ptr<MsgStream> m_msg;
   /// On-demand access to message stream.
   MsgStream& msg() const {
-    if (!m_msg) m_msg = new MsgStream(msgSvc(), "DeVP");
+    if (!m_msg) m_msg.reset( new MsgStream(msgSvc(), "DeVP") );
     return *m_msg;
   }
 

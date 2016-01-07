@@ -3,6 +3,11 @@
 ! Responsible : Heinrich Schindler
 ! Purpose     : Detector element for upgraded VELO
 !-----------------------------------------------------------------------------
+! 2016-01-07 - Gerhard Raven
+ - prefer std::unique_ptr over raw pointer + explicit delete
+ - prefer SmartIF over raw pointer and explicit ref counting
+ - prefer STL algorithms
+
 ! 2015-12-21 - Gerhard Raven
  - remove unneeded dependency on GSL
 

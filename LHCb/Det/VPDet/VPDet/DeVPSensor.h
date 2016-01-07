@@ -143,10 +143,10 @@ class DeVPSensor : public DetectorElement {
   bool m_debug;
 
   /// Message stream
-  mutable MsgStream* m_msg;
+  mutable std::unique_ptr<MsgStream> m_msg;
   /// On-demand access to message stream
   MsgStream& msg() const {
-    if (!m_msg) m_msg = new MsgStream(msgSvc(), "DeVPSensor");
+    if (!m_msg) m_msg.reset( new MsgStream(msgSvc(), "DeVPSensor") );
     return *m_msg;
   }
 
