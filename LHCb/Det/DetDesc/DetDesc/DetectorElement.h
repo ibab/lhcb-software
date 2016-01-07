@@ -217,10 +217,10 @@ public:
 
   //  printout (overloaded)
   // (potentially could throw DetectorElementException)
-  virtual std::ostream& printOut( std::ostream& ) const;
+  std::ostream& printOut( std::ostream& ) const override;
 
   /// reset to the initial state
-  IDetectorElement* reset() ;
+  IDetectorElement* reset() override;
 
   virtual MsgStream&    printOut( MsgStream&    ) const;
 
