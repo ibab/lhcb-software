@@ -38,6 +38,7 @@ Hlt2SelReportsMaker::Hlt2SelReportsMaker(const std::string& name,
 {
    declareProperty("RecSummaryLocation", m_RecSummaryLoc = "Hlt2/RecSummary" );
    declareProperty("SummaryName", m_summaryName = "Hlt2RecSummary");
+   declareProperty("NumCandidateWarning", m_numCand = 100);
 }
 
 //=============================================================================
@@ -54,6 +55,15 @@ Hlt2SelReportsMaker::~Hlt2SelReportsMaker()
 StatusCode Hlt2SelReportsMaker::postExecute(LHCb::HltSelReports* outputSummary,
 											const LHCb::HltDecReports* decReports)
 {
+
+   for(auto name : decReports->decisionNames()){
+     const LHCb::HltDecReport* report = decReports->decReport(name);
+     if(report){
+       if(report->numberOfCandidates()>m_numCand) Warning( name+" selects "+std::to_string(report->numberOfCandidates())+" candidates, this is not allowed" ,
+           StatusCode::SUCCESS, 10 );
+     }
+   }
+   
    const LHCb::RecSummary* recsummary = getIfExists<LHCb::RecSummary>(m_RecSummaryLoc);
 
    if( !recsummary && !m_RecSummaryLoc.empty() ) {

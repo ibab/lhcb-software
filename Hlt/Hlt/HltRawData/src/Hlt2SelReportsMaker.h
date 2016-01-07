@@ -40,6 +40,7 @@ private:
 
    std::string m_RecSummaryLoc;
    std::string m_summaryName;
+   unsigned int m_numCand;
 
 };
 #endif // HLT2SELREPORTSMAKER_H

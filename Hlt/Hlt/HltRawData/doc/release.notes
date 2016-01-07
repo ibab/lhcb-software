@@ -5,6 +5,9 @@
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+! 2015-1-7 - Sean Benson
+ - Print warning if a line in Hlt2 selects many candidates in an event.
+
 !========================= HltRawData v5r11 2015-12-17 =========================
 
 ! 2015-11-8 - Sean Benson
