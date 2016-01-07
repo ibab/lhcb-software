@@ -4,6 +4,9 @@
 ! Purpose     : Online monitoring of Hlt2
 !-----------------------------------------------------------------------------
 
+! 2016-01-07 - Roel Aaij
+ - Update Hlt2Adder.py to allow easier testing.
+
 ! 2015-12-09 - Roel Aaij
  - Fix Serialize.h: when using boost 1.59, unordered_map is supported by
    the library.

@@ -91,7 +91,7 @@ def configureNode(appMgr, node_info):
 
     return (infoRelay, histoRelay)
 
-def configure(host_type = None, directory = None, ports = None):
+def configure(host_type = None, directory = None, ports = None, test = False):
 
     from Configurables import ApplicationMgr
     appMgr = ApplicationMgr()
@@ -142,5 +142,9 @@ def configure(host_type = None, directory = None, ports = None):
     OnlineEnv = importOnline()
     for svcConf in svcConfs:
         svcConf.PartitionName = OnlineEnv.PartitionName
-
+        if test:
+            # Make sure the check for running in the right partition passes by
+            # pluggin it in here
+            svcConf.RunInPartitions = [OnlineEnv.PartitionName]
+            
     configOnline(appMgr, ht)
