@@ -16,7 +16,7 @@
 // ============================================================================
 // Boost 
 // ============================================================================
-#include "boost/math/special_functions/beta.hpp"
+// #include "boost/math/special_functions/beta.hpp"
 // ============================================================================
 /** @file
  *  implementationof funcntion from file LHCbMath/Binomial.h
@@ -41,7 +41,8 @@ namespace
   inline double ibeta_inv  ( const double a ,
                              const double b ,
                              const double p )
-  { return boost::math::ibeta_inv ( a , b , p ) ; }
+  // { return boost::math::ibeta_inv ( a , b , p ) ; }
+  { return gsl_cdf_beta_Pinv      ( p , a , b ) ; } 
   // ==========================================================================
 }
 // ============================================================================

@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2016-01-07 - VanyaBelyaev
+  Replace Boost.Math for inverse imcomplete beta function with GSL 
+
 ! 2016-01-06 - VanyaBelyaev
   add some defautl constructors make serialization machnery happy 
 
