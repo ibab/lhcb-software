@@ -14,6 +14,8 @@ gaudi_depends_on_subdirs(Det/OTDet
                          Tr/TrackInterfaces
                          Tr/TrackTools)
 
+find_package(Boost)
+
 gaudi_add_module(PatAlgorithms
                  src/*.cpp
                  INCLUDE_DIRS OT/OTDAQ Tf/PatKernel Tf/TfKernel Tr/TrackInterfaces

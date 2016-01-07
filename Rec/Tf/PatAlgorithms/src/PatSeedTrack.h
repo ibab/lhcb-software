@@ -1,4 +1,3 @@
-// $Id: PatSeedTrack.h,v 1.5 2009-04-22 13:09:00 smenzeme Exp $
 #ifndef PATSEEDTRACK_H
 #define PATSEEDTRACK_H 1
 
@@ -15,7 +14,7 @@
 #include "TfKernel/RecoFuncs.h"
 #include "TfKernel/RegionID.h"
 #include "TfKernel/STHit.h"
-#include "DetDesc/StaticArray.h"
+#include "boost/container/static_vector.hpp"
 
 #include "LHCbMath/BloomFilter.h"
 
@@ -37,7 +36,8 @@ class PatSeedTrack {
     enum {
       kNPlanes = Tf::RegionID::OTIndex::kNLayers * Tf::RegionID::OTIndex::kNStations,
       kNLayers = Tf::RegionID::OTIndex::kNLayers,
-      kNStations = Tf::RegionID::OTIndex::kNStations
+      kNStations = Tf::RegionID::OTIndex::kNStations,
+      MaxHits = 72
     };
     typedef std::array<unsigned char, kNPlanes> PlaneArray;
 
@@ -45,7 +45,7 @@ class PatSeedTrack {
     friend class PatSeedTool;
 
     // 12 layers - should not have more than 6 hits per layer on track
-    typedef StaticArray<PatFwdHit*, 72> Hits;
+    typedef boost::container::static_vector<PatFwdHit*, MaxHits> Hits;
 
     class TooManyHits : public std::length_error
     {
@@ -161,7 +161,7 @@ class PatSeedTrack {
       try {
       m_coords.push_back( hit );
       if ( 0 == m_planeList[hit->planeCode()]++ ) ++m_nbPlanes;
-      } catch (const GaudiException& ge) {
+      } catch (const std::bad_alloc& ge) {
 	throw TooManyHits();
       }
     }
@@ -176,7 +176,7 @@ class PatSeedTrack {
 	  if (0 == m_planeList[hit->planeCode()]++) ++m_nbPlanes;
 	  ++begin;
 	}
-      } catch (const GaudiException& ge) {
+      } catch (const std::bad_alloc& ge) {
 	throw TooManyHits();
       } 
     }
@@ -192,7 +192,7 @@ class PatSeedTrack {
 	  }
 	  ++begin;
 	}
-      } catch (const GaudiException& ge) {
+      } catch (const std::bad_alloc& ge) {
 	throw TooManyHits();
       }
     }
@@ -476,7 +476,7 @@ template <PatSeedTrack::TrackRegion region>
 inline void PatSeedTrack::updateHits() noexcept
 {
   if (ITOT == region) {
-    std::array<PatFwdHit*, Hits::MaxSize> ithits, othits;
+    std::array<PatFwdHit*, MaxHits> ithits, othits;
     auto itend = ithits.begin(), otend = othits.begin();
     for( PatFwdHit* hit: m_coords ) {
       if (hit->isOT()) *otend++ = hit;

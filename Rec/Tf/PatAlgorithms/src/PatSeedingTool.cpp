@@ -1302,7 +1302,7 @@ void PatSeedingTool::collectLowQualTracks(
 	  stereo.push_back(hit);
 	}
       }
-    } catch (const GaudiException& e) {
+    } catch (const std::bad_alloc& e) {
       throw std::length_error("static storage of FwdHits exhausted.");
     }
     // refit in yz
@@ -2026,35 +2026,35 @@ void PatSeedingTool::collectStereoHits ( PatSeedTrack& track,
                             sta, sLay, testRegion, range.min(), range.max() ) << endmsg;
 
         std::array<unsigned char, 20> nDense;
-        nDense.fill( 0);
+        nDense.fill(0);
 
-	try {
-	  HitRange rangeW = hitsInRange( range, sta, sLay, testRegion);
-	  HitRange::const_iterator it = rangeW.begin(), end = rangeW.end();
-	  for ( ; end != it; ++it ) {
-	    PatFwdHit* hit = *it;
-	    if ( hit->isUsed() ) continue;
-	    const double x = hit->hit()->xAtYEq0();
-	    const double z = hit->hit()->zAtYEq0();
-	    const double y = (track.xAtZ(z) - x) / hit->hit()->dxDy();
-	    if (!hit->hit()->isYCompatible(y, m_yTolSensArea)) continue;
+        HitRange rangeW = hitsInRange( range, sta, sLay, testRegion);
+        auto it = rangeW.begin(), end = rangeW.end();
+        for ( ; end != it; ++it ) {
+          PatFwdHit* hit = *it;
+          if ( hit->isUsed() ) continue;
+          const double x = hit->hit()->xAtYEq0();
+          const double z = hit->hit()->zAtYEq0();
+          const double y = (track.xAtZ(z) - x) / hit->hit()->dxDy();
+          if (!hit->hit()->isYCompatible(y, m_yTolSensArea)) continue;
 
-	    // check if the hit is isolated
-	    if ( m_enforceIsolation && !isIsolated(it, rangeW) ) {
-	      int idx = int(std::abs(y) * 20. / 3e3);
-	      if (idx < 0) idx = 0;
-	      if (idx >= 20) idx = 19;
-	      if (nDense[idx]++ > 0)
-		continue;
-	    }
-	    // save y position in projection plane
-	    hit->setProjection(y * m_zForYMatch / z);
-	    hit->setIgnored( false );
-	    stereo.push_back( hit );
-	  }
-	} catch (const GaudiException& e) {
-	  throw std::length_error("static storage of FwdHits exhausted.");
-	}
+          // check if the hit is isolated
+          if ( m_enforceIsolation && !isIsolated(it, rangeW) ) {
+            int idx = int(std::abs(y) * 20. / 3e3);
+            if (idx < 0) idx = 0;
+            if (idx >= 20) idx = 19;
+            if (nDense[idx]++ > 0)
+          continue;
+          }
+          // save y position in projection plane
+          hit->setProjection(y * m_zForYMatch / z);
+          hit->setIgnored( false );
+          try {
+              stereo.push_back( hit );
+          } catch (const std::bad_alloc& e) {
+            throw std::length_error("static storage of FwdHits exhausted.");
+          }
+        }
       }
     }
   }

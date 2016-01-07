@@ -3,6 +3,9 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2016-01-07 - Gerhard Raven
+ - replace StaticArray in PatSeedTrack and PatSeedTool with boost::container::static_vector
+
 ! 2016-01-01 - Gerhard Raven
  - fix bug in PatForward 2nd loop: hits following a not selected OT hit are skipped,
    and if the not selected hit is the last one, the loop termination fails, and
