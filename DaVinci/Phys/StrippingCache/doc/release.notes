@@ -5,6 +5,9 @@
 ! Created     : 2015-02-04
 ! -----------------------------------------------------------------------------
 
+! 2016-01-07 - Ricardo Vazquez Gomez
+ - Correct syntax warning in CMakeLists.txt 
+
 ! 2016-01-02 - Andrea Contu
  - Remove cache for S20 series
 

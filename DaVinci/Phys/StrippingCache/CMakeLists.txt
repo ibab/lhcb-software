@@ -57,7 +57,7 @@ if ( NOT "$ENV{CMTCONFIG}" STREQUAL "x86_64-slc6-gcc48-do0" )
   if ( EXISTS ${optsfile} )
 
     # Print this cache
-    MESSAGE( STATUS "S"${strip} " : " ${optsfile} )
+    MESSAGE( STATUS "S" ${strip} " : " ${optsfile} )
 
     # Build !
     loki_functors_cache(${sname}
