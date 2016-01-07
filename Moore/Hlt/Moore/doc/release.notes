@@ -4,6 +4,10 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2016-01-07 - Rosen Matev
+ - Add options and test for the 2016 draft settings: 2016_draft.qmt. Options
+   can be used for development: $MOOREROOT/tests/options/Moore_2016draft.py
+
 ! 2016-01-01 - Rosen Matev
  - Improve passthrough tests {passthrough, calibration, cosmics, vdm}.qmt
    - catch exception in validator due to missing timing table
