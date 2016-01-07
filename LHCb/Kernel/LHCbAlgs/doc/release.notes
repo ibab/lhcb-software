@@ -3,6 +3,9 @@
 ! Responsible : Marco Cattaneo
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
+! 2016-01-07 - Gerhard Raven
+ - prefer extends over direct virtual public inheritance
+
 ! 2015-10-29 - Gerhard Raven
  - stop propagating globalTimeOffset (see GAUDI-1122)
  - drive-by code modernization...

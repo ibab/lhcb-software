@@ -19,7 +19,7 @@ DECLARE_TOOL_FACTORY( TrajPoca )
 TrajPoca::TrajPoca( const std::string& type,
                     const std::string& name,
                     const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : base_class ( type, name , parent )
 {
   declareInterface<ITrajPoca>(this);
 
@@ -30,12 +30,6 @@ TrajPoca::TrajPoca( const std::string& type,
   declareProperty( "MaxDist",           m_maxDist = 100000000   );
   declareProperty( "MaxExtrapTolerance", m_maxExtrapTolerance = 1*Gaudi::Units::cm) ;
 }
-
-//=============================================================================
-// Default destructor
-//=============================================================================
-TrajPoca::~TrajPoca() {}
-
 
 //=============================================================================
 // Find mus along trajectories having a distance smaller than tolerance

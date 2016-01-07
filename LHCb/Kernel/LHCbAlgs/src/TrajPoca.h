@@ -1,4 +1,3 @@
-// $Id: TrajPoca.h,v 1.4 2007-10-16 11:53:20 wouter Exp $
 #ifndef TRACKTOOLS_TRAJPOCA_H 
 #define TRACKTOOLS_TRAJPOCA_H 1
 
@@ -24,8 +23,7 @@
  *  @date   2005-11-23
  */
 
-class TrajPoca : public GaudiTool,
-                 virtual public ITrajPoca {
+class TrajPoca : public extends<GaudiTool,ITrajPoca> {
 
 public:
 
@@ -35,7 +33,7 @@ public:
             const IInterface* parent );
 
   /// Default destructor
-  virtual ~TrajPoca();
+  ~TrajPoca() override = default;
 
   /// Find points along trajectories at which the distance between the
   /// trajectories is at its minimum. The precision parameter is the desired
