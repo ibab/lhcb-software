@@ -10,6 +10,8 @@
 #include "OTDet/DeOTDetector.h"
 #include "OTDet/DeOTModule.h"
 
+#include "boost/container/static_vector.hpp"
+
 namespace {
   struct OTHit final
   {
@@ -23,7 +25,7 @@ namespace {
 
   struct OTCluster final
   {
-    using HitContainer = StaticArray<OTHit,16>;
+    using HitContainer = boost::container::static_vector<OTHit,16>;
     using size_type = typename HitContainer::size_type;
     using reference = typename HitContainer::reference;
     using const_reference = typename HitContainer::const_reference;
