@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-1-7 - Sean Benson
+ - Removed Roel's example code in the settings as real use cases exist.
+
 !========================= HltSettings v7r6 2015-12-17 =========================
 
 ! 2015-12-16 - Rosen Matev

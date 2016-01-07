@@ -1617,14 +1617,7 @@ class CharmHad_25ns_September2015 :
                    , 'Xicc_BPVVDCHI2_MIN'   :   -1.0
                    , 'Xicc_acosBPVDIRA_MIN' : math.pi / 2.0
                    , 'TisTosSpec'           : "Hlt1.*Track.*Decision%TOS"
-                 },
- 'DConeVar05' : { "ConeAngle" : 0.5,
-                  "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-                                 "Location"  : 'DConeVar05' },
- 'DConeVar10' : { "ConeAngle" : 1.0,
-                  "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-                  "DaughterLocations" : {"[D_s+ -> ^K- K+ pi+]CC" : "KmConeVar10"} },
- 'VertexIsolation' : { "Location"  : "VertexIsoInfo" }
+                 }
             }
         }   )
 
