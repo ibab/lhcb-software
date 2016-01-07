@@ -7,10 +7,6 @@ branches cmt doc
 # Gauss packages
 #==================================================================
 
-# Temporarily to pick up new tool with its interface
-use MCInterfaces        v1r19   Kernel
-use SimComponents       v3r0    Sim
-
 # Gauss application: the application is not built on Win32
 use Gauss               v48r3   Sim
 
