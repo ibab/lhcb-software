@@ -5,6 +5,9 @@
 !============================================
 
 ! 2016-01-07 - Rosen Matev
+ - A little friendlier Moore_2016draft.py
+
+! 2016-01-07 - Rosen Matev
  - Add options and test for the 2016 draft settings: 2016_draft.qmt. Options
    can be used for development: $MOOREROOT/tests/options/Moore_2016draft.py
 
