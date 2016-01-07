@@ -38,7 +38,6 @@ Hlt2SelReportsMaker::Hlt2SelReportsMaker(const std::string& name,
 {
    declareProperty("RecSummaryLocation", m_RecSummaryLoc = "Hlt2/RecSummary" );
    declareProperty("SummaryName", m_summaryName = "Hlt2RecSummary");
-   declareProperty("NumCandidateWarning", m_numCand = 100);
 }
 
 //=============================================================================
@@ -59,7 +58,7 @@ StatusCode Hlt2SelReportsMaker::postExecute(LHCb::HltSelReports* outputSummary,
    for(auto name : decReports->decisionNames()){
      const LHCb::HltDecReport* report = decReports->decReport(name);
      if(report){
-       if(report->numberOfCandidates()>m_numCand) Warning( name+" selects "+std::to_string(report->numberOfCandidates())+" candidates, this is not allowed" ,
+       if(report->numberOfCandidates()>14) Warning( name+" selects 15 or more candidates. If you see this a lot there is a problem." ,
            StatusCode::SUCCESS, 10 );
      }
    }
