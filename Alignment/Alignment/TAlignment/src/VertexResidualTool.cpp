@@ -63,14 +63,12 @@ namespace Al
     ToolHandle<ITrackExtrapolator> m_extrapolator ;
     LHCb::IParticlePropertySvc* m_propertysvc ;
     double m_chiSquarePerDofCut ;
+    double m_maxMassConstraintChi2 ;
     bool   m_computeCorrelations ;
     size_t m_maxHitsPerTrackForCorrelations ;
-    std::string m_parentName;
-    std::vector<std::string> m_daughterNames;
-    std::vector<double> m_daughterMass;
-    double m_parentMass ;
     typedef std::vector<const Al::MultiTrackResiduals*> ResidualContainer ;
     mutable ResidualContainer m_residuals ;
+    bool m_debugLevel ;
   } ;
   
 }
@@ -105,7 +103,6 @@ namespace Al
       m_trackresidualtool("Al::TrackResidualTool"), // important: use the toolsvc, because of caching!
       m_extrapolator("TrackMasterExtrapolator"),
       m_propertysvc(0),
-      m_chiSquarePerDofCut(10),
       m_maxHitsPerTrackForCorrelations(9999)
   {
     // interfaces
@@ -113,9 +110,8 @@ namespace Al
     declareProperty("TrackResidualTool",m_trackresidualtool) ;
     declareProperty("Extrapolator",m_extrapolator) ;
     declareProperty("MaxHitsPerTrackForCorrelations", m_maxHitsPerTrackForCorrelations) ;
-    declareProperty("parentName", m_parentName = "J/psi(1S)");
-    std::vector<std::string> tmp = boost::assign::list_of("mu+")("mu+") ;
-    declareProperty("daughterNames",  m_daughterNames = tmp) ;
+    declareProperty("MaxVertexChi2PerDoF",m_chiSquarePerDofCut = 10 ) ;
+    declareProperty("MaxMassConstraintChi2", m_maxMassConstraintChi2 = 16 ) ;
   }
   
   StatusCode VertexResidualTool::initialize()
@@ -126,16 +122,9 @@ namespace Al
     }
     m_trackresidualtool.retrieve().ignore() ;
     m_extrapolator.retrieve().ignore() ;
-    incSvc()->addListener(this, IncidentType::EndEvent);
-    
+    incSvc()->addListener(this, IncidentType::EndEvent);    
     m_propertysvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc",true) ;
-    for (std::vector<std::string>::const_iterator iterS = m_daughterNames.begin(); iterS != m_daughterNames.end() ; ++iterS){
-      const double tmass = m_propertysvc->find(*iterS)->mass() ;
-      m_daughterMass.push_back(tmass);
-      info() << "Adding daughter " << *iterS <<  " with mass " <<  tmass << endreq;
-    }
-    m_parentMass = m_propertysvc->find(m_parentName)->mass() ;
-    info() << "parent mass " << m_parentMass << endreq ;
+    m_debugLevel = msgLevel( MSG::DEBUG ) ;
     return sc ;
   }
 
@@ -171,14 +160,7 @@ namespace Al
       }
     }
 
-    MassConstraint* mconstraint(0) ;
-    // we'll keep this for backward compatibility
-    if( dynamic_cast<const LHCb::TwoProngVertex*>(&vertex) != 0 ) {
-      mconstraint = new MassConstraint() ;
-      mconstraint->daughtermasses =  m_daughterMass ;
-      mconstraint->mothermass = m_parentMass ;
-      mconstraint->motherwidth = 0. ;
-    }
+    const MassConstraint* mconstraint(0) ;
     rc = compute( trackresiduals, vertex.position(), mconstraint ) ;
     if(rc) m_residuals.push_back(rc) ;
     
@@ -289,21 +271,26 @@ namespace Al
 
       LHCb::TrackStateVertex::FitStatus fitstatus = vertex.fit() ;
       double vchi2orig = vertex.chi2() ; // cache it, because I know it is slow
-      
+      int ndof = vertex.nDoF() ;
+            
       if(fitstatus == LHCb::TrackStateVertex::FitSuccess && mconstraint ) {
 	//	static std::vector<double> masshypos = boost::assign::list_of(m_muonmass)(m_muonmass) ;
-	debug() << "mass before constraint: "
-		<< vertex.mass(mconstraint->daughtermasses) 
-		<< " +/- " << vertex.massErr(mconstraint->daughtermasses) << endreq ;
+	if( m_debugLevel ) 
+	  debug() << "mass before constraint: "
+		  << vertex.mass(mconstraint->daughtermasses) 
+		  << " +/- " << vertex.massErr(mconstraint->daughtermasses) << endreq ;
 	double qopbefore = std::sqrt(vertex.stateCovariance(0)(4,4)) ;
 	fitstatus = vertex.constrainMass( mconstraint->daughtermasses, mconstraint->mothermass, mconstraint->motherwidth) ;
-	debug() << "mass afterconstraint: "
-		<< vertex.mass(mconstraint->daughtermasses)
-		<< " +/- " << vertex.massErr(mconstraint->daughtermasses) << endreq ;
-	debug() << "error on qop of first track, original, after vertex fit, after mass fit: "
-		<< std::sqrt(vertex.inputState(0).covariance()(4,4)) << " "
-		<< qopbefore << " "
-		<< std::sqrt(vertex.stateCovariance(0)(4,4)) << endreq ;
+	// vertex fit updates chi2, but not ndof
+	ndof += 1 ;
+	if( m_debugLevel ) 
+	  debug() << "mass afterconstraint: "
+		  << vertex.mass(mconstraint->daughtermasses)
+		  << " +/- " << vertex.massErr(mconstraint->daughtermasses) << std::endl
+		  << "error on qop of first track, original, after vertex fit, after mass fit: "
+		  << std::sqrt(vertex.inputState(0).covariance()(4,4)) << " "
+		  << qopbefore << " "
+		  << std::sqrt(vertex.stateCovariance(0)(4,4)) << endreq ;
       }
       // this is the chisquare including an eventual mass constraint
       double vchi2 = vertex.chi2() ; // cache it, because I know it is slow
@@ -312,22 +299,26 @@ namespace Al
       counter("vchi2orig") += vchi2orig ;
       //counter("niter") += vertex.nIter() ;
        
-      debug() << "Fitted vertex, chi2/dof=" << vchi2 << "/" << vertex.nDoF() << endreq ;
-      debug() << "Vertex position orig/new="
-	      << vertexestimate << "/" << vertex.position() << endreq ;
-      
+      if( m_debugLevel ) {
+	debug() << "Fitted vertex, chi2/dof=" << vchi2 << "/" << ndof << endreq ;
+	debug() << "Vertex position orig/new="
+		<< vertexestimate << "/" << vertex.position() << endreq ;
+      }
+
       // note that when we cut on the vertex chisqur2 we exclude the mass constraint
-      if(fitstatus == LHCb::TrackStateVertex::FitSuccess && vchi2orig / vertex.nDoF() < m_chiSquarePerDofCut) {
+      if(fitstatus == LHCb::TrackStateVertex::FitSuccess && vchi2orig / vertex.nDoF() < m_chiSquarePerDofCut &&
+	 (!mconstraint || (vchi2-vchi2orig) < m_maxMassConstraintChi2 ) ) {
 	// create a vertexresiduals object
 	totalchisq += vchi2 ;
-	totalndof  += vertex.nDoF() ;
+	totalndof  += ndof ;
 	std::vector<const Al::TrackResiduals*> tracks ;
 	BOOST_FOREACH( const TrackContribution& atrack, states) 
 	  tracks.push_back( atrack.trackresiduals ) ;
-	rc = new Al::MultiTrackResiduals( totalchisq, totalndof, numexternalhits, tracks, vchi2, vertex.nDoF()  ) ;
+	rc = new Al::MultiTrackResiduals( totalchisq, totalndof, numexternalhits, tracks, vchi2, ndof ) ;
 	rc->m_residuals.reserve(numresiduals) ;
-	debug() << "created the vertex: " << numresiduals << endreq ;
-
+	if( m_debugLevel )
+	  debug() << "created the vertex: " << numresiduals << endreq ;
+	
 	// calculate all new residuals and all correlations
 	bool computationerror(false) ;
 	for(size_t i = 0; i<states.size() && !computationerror; ++i) {
