@@ -16,7 +16,8 @@ class HltPersistRecoConf(LHCbConfigurableUser):
 
     __slots__ = {"WriterName"              : "Writer",
                  "PreFilter"               : "HLT_TURBOPASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Lumi)(?!Transparent)(?!PassThrough).*Decision')",
-                 "Sequence"                : None
+                 "Sequence"                : None,
+                 "CaloHypoPrefix"          : "Hlt2/PID/CALO/Calo"
                 }
 
     def __apply_configuration__(self):
@@ -42,8 +43,6 @@ class HltPersistRecoConf(LHCbConfigurableUser):
         writer = InputCopyStream(self.getProp("WriterName"))
         for alg in algs:
             writer.OptItemList+=[alg.OutputName+'#99']
-        # also save calo digits
-        writer.OptItemList+=["Hlt/Calo/Digits#99"]
 
         # Add packer algorithms to the afterburner
         persistReco.Members+= algs
@@ -132,19 +131,38 @@ class HltPersistRecoConf(LHCbConfigurableUser):
                              AlwaysCreateOutput = True,
                              DeleteInput        = False,
                              OutputLevel        = debugLevel,
-                             InputName          = "Hlt/Calo/Clusters", 
+                             InputName          = "Hlt/Calo/EcalClusters", 
                              OutputName         = "Hlt2/pRec/neutral/CaloClusters" )
                   ]
         
         # Neutral Calo Hypos
         #from Configurables import DataPacking__Pack_LHCb__CaloHypoPacker_ as PackCaloHypos
         from Configurables import PackCaloHypo as PackCaloHypos
-        algs += [ PackCaloHypos( name = "PackCaloHypos",
+        algs += [ 
+                PackCaloHypos( name = "PackCaloElectronHypos",
                              AlwaysCreateOutput = True,
                              DeleteInput        = False,
                              OutputLevel        = debugLevel,
-                             InputName          = "Hlt/Calo/Hypos",
-                             OutputName         = "Hlt2/pRec/neutral/CaloHypos" )
+                             InputName          = self.getProp("CaloHypoPrefix")+"/Electrons",
+                             OutputName         = "Hlt2/pRec/neutral/Electrons" ),
+                PackCaloHypos( name = "PackCaloPhotonsHypos",
+                             AlwaysCreateOutput = True,
+                             DeleteInput        = False,
+                             OutputLevel        = debugLevel,
+                             InputName          = self.getProp("CaloHypoPrefix")+"/Photons",
+                             OutputName         = "Hlt2/pRec/neutral/Photons" ),
+                PackCaloHypos( name = "PackCaloMergedPi0Hypos",
+                             AlwaysCreateOutput = True,
+                             DeleteInput        = False,
+                             OutputLevel        = debugLevel,
+                             InputName          = self.getProp("CaloHypoPrefix")+"/MergedPi0s",
+                             OutputName         = "Hlt2/pRec/neutral/MergedPi0s" ),
+                PackCaloHypos( name = "PackCaloSplitPhotonHypos",
+                             AlwaysCreateOutput = True,
+                             DeleteInput        = False,
+                             OutputLevel        = debugLevel,
+                             InputName          = self.getProp("CaloHypoPrefix")+"/SplitPhotons",
+                             OutputName         = "Hlt2/pRec/neutral/SplitPhotons" )
                   ]
         
         # Finally return all the packers

@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2016-1-7 - Sean Benson
+ - Updates to PersistReco for neutrals following info from Olivier on CaloProcessor locations.
+
 !========================= HltConf v13r5 2015-12-17 =========================
 
 ! 2015-12-15 - Roel Aaij
