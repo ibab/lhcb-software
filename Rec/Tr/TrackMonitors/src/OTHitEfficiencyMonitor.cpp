@@ -8,15 +8,13 @@
 #include "TrackInterfaces/ITrackInterpolator.h"
 #include "OTDet/DeOTDetector.h"
 #include "OTDet/DeOTModule.h"
-#include "DetDesc/StaticArray.h"
 #include "OTDAQ/IOTRawBankDecoder.h"
 #include "AIDA/IProfile1D.h"
 #include "AIDA/IProfile2D.h"
 #include "AIDA/IHistogram2D.h"
 #include "AIDA/IHistogram1D.h"
 
-#include <boost/lexical_cast.hpp>
-#include <boost/foreach.hpp>
+#include "boost/container/static_vector.hpp"
 
 /*
   Author: Wouter Hulsbergen (wouterh@nikhef.nl)
@@ -37,7 +35,7 @@ namespace {
 
     LayerEfficiencyHistograms(GaudiHistoAlg& alg,  size_t LayerID , bool isOnline) {
       // construct a directory name
-      std::string Layername = std::string("Layer") + boost::lexical_cast<std::string>( LayerID ) + "/" ;
+      std::string Layername = "Layer" + std::to_string( LayerID ) + "/" ;
       if(!isOnline){
         m_2DHitEfficiency = alg.bookProfile2D( Layername + "2DHitEfficiency", "2DHitEfficiency", 
                                                -3157.0, 3157.0, 74, -2800,2800,100);
@@ -73,7 +71,7 @@ namespace {
     
     ModuleEfficiencyHistograms(GaudiHistoAlg& alg,  size_t moduleID, bool isOnline ) {
       // construct a directory name
-      std::string modulename = std::string("Module") + boost::lexical_cast<std::string>( moduleID ) + "/" ;
+      std::string modulename = "Module" + std::to_string( moduleID ) + "/" ;
       if(!isOnline){
         m_effvsdist     = alg.bookProfile1D( modulename + "effvsdist", 
                                              "hit efficiency versus distance", -7.5, 7.5, 200) ;
@@ -139,29 +137,29 @@ private:
   // this should be moved to OTChannelID  
   enum {NumUniqueStation=3, NumUniqueLayer=12, NumUniqueModule=432, NumUniqueOtis=432*4  } ;
 
-  inline int uniqueLayer( const LHCb::OTChannelID& channelID) {
+  inline int uniqueLayer( const LHCb::OTChannelID& channelID) const {
     return  (channelID.station()-1) * 4 + channelID.layer() ;
   }
-  inline int uniqueQuarter( const LHCb::OTChannelID& channelID) {
+  inline int uniqueQuarter( const LHCb::OTChannelID& channelID) const {
     return uniqueLayer( channelID) * 4 + channelID.quarter() ;
   }
-  inline int uniqueModule( const LHCb::OTChannelID& channelID) {
+  inline int uniqueModule( const LHCb::OTChannelID& channelID) const {
     return uniqueQuarter(channelID)*9 + channelID.module() - 1 ;
   }
-  inline int uniqueOtis( const LHCb::OTChannelID& channelID) {
+  inline int uniqueOtis( const LHCb::OTChannelID& channelID) const {
     return uniqueModule(channelID)*4 + (channelID.straw()-1)/32 ;
   }
 
   void fillEfficiency(const LHCb::Track& track, const DeOTModule& module,
-                      double strawpos[2], double yFrac[2], const LHCb::State& refstate ) ;
-  void fillEfficiency(const LHCb::Track& track, const DeOTModule& module, const LHCb::State& state) ;
+                      double strawpos[2], double yFrac[2], const LHCb::State& refstate ) const;
+  void fillEfficiency(const LHCb::Track& track, const DeOTModule& module, const LHCb::State& state) const;
   void fillEfficiency(const LHCb::Track& track, const DeOTModule& module,
-                      const LHCb::FitNode* nodeA,const LHCb::FitNode* nodeB) ;
-  void fillEfficiency(const LHCb::Track& track) ;
-  void plotHist1D(AIDA::IHistogram1D* hist, double value, double weight);
-  void plotHist2D(AIDA::IHistogram2D* hist, double x, double y, double weight);
-  void plotProf1D(AIDA::IProfile1D* hist, double x, double y, double weight);
-  void plotProf2D(AIDA::IProfile2D* hist, double x, double y, double z, double weight);
+                      const LHCb::FitNode* nodeA,const LHCb::FitNode* nodeB) const;
+  void fillEfficiency(const LHCb::Track& track) const;
+  void plotHist1D(AIDA::IHistogram1D* hist, double value, double weight) const;
+  void plotHist2D(AIDA::IHistogram2D* hist, double x, double y, double weight) const;
+  void plotProf1D(AIDA::IProfile1D* hist, double x, double y, double weight) const;
+  void plotProf2D(AIDA::IProfile2D* hist, double x, double y, double z, double weight) const;
 private:
   ToolHandle<IOTRawBankDecoder> m_decoder ;
   ToolHandle<ITrackInterpolator> m_interpolator ;
@@ -181,8 +179,8 @@ private:
   // booked histograms
   AIDA::IProfile1D* m_efficiencyPerModulePr ;
   AIDA::IProfile1D* m_efficiencyPerOtisPr ;
-  std::vector<ModuleEfficiencyHistograms*> m_moduleHistograms ;
-  std::vector<LayerEfficiencyHistograms*> m_layerHistograms ;
+  std::vector<std::unique_ptr<ModuleEfficiencyHistograms>> m_moduleHistograms ;
+  std::vector<std::unique_ptr<LayerEfficiencyHistograms>> m_layerHistograms ;
 
 
 } ;
@@ -246,10 +244,10 @@ StatusCode OTHitEfficiencyMonitor::initialize()
   m_layerHistograms.reserve(12) ;
 
   for(int i=0; i<9; ++i)
-    m_moduleHistograms.push_back( new ModuleEfficiencyHistograms(*this,i+1, m_isOnline) ) ;
+    m_moduleHistograms.emplace_back( new ModuleEfficiencyHistograms(*this,i+1, m_isOnline) ) ;
   
   for(int i=0; i<12; ++i)
-    m_layerHistograms.push_back( new LayerEfficiencyHistograms(*this, i, m_isOnline) );
+    m_layerHistograms.emplace_back( new LayerEfficiencyHistograms(*this, i, m_isOnline) );
   
   m_nTrackOTHits = 0;
   
@@ -266,8 +264,8 @@ StatusCode OTHitEfficiencyMonitor::finalize()
   // here we should create some 'summary' histograms
   
   // the delete the structure that holds the histograms
-  BOOST_FOREACH ( ModuleEfficiencyHistograms* hist, m_moduleHistograms ) delete hist ;
-  BOOST_FOREACH ( LayerEfficiencyHistograms* hist, m_layerHistograms ) delete hist ;
+  m_moduleHistograms.clear();
+  m_layerHistograms.clear();
 
   
   // rescale the occupancy histogram
@@ -278,28 +276,25 @@ StatusCode OTHitEfficiencyMonitor::finalize()
 }
 
 
-void OTHitEfficiencyMonitor::plotHist1D(AIDA::IHistogram1D* hist, double value, double weight)
+void OTHitEfficiencyMonitor::plotHist1D(AIDA::IHistogram1D* hist, double value, double weight) const
 {
-  if(hist)
-    fill(hist, value, weight);
+  if(hist) fill(hist, value, weight);
 } 
-void OTHitEfficiencyMonitor::plotHist2D(AIDA::IHistogram2D* hist, double x, double y, double weight)
+
+void OTHitEfficiencyMonitor::plotHist2D(AIDA::IHistogram2D* hist, double x, double y, double weight) const
 {
-  if(hist)
-    fill(hist, x, y, weight);
+  if(hist) fill(hist, x, y, weight);
 }
 
-
-void OTHitEfficiencyMonitor::plotProf1D(AIDA::IProfile1D* hist, double x, double y, double weight)
+void OTHitEfficiencyMonitor::plotProf1D(AIDA::IProfile1D* hist, double x, double y, double weight) const
 { 
-  if(hist)
-    fill(hist, x, y, weight);
+  if(hist) fill(hist, x, y, weight);
 } 
+
 void OTHitEfficiencyMonitor::plotProf2D(AIDA::IProfile2D* hist, double x, 
-                                        double y, double z, double weight)
+                                        double y, double z, double weight) const
 { 
-  if(hist)
-    fill(hist, x, y, z, weight);
+  if(hist) fill(hist, x, y, z, weight);
 }
 
 //=========================================================================
@@ -326,7 +321,7 @@ StatusCode OTHitEfficiencyMonitor::execute()
     // now loop over the tracks
     LHCb::Track::Range tracks = get<LHCb::Track::Range>(m_trackLocation) ;
     if(tracks.size()<m_maxTracksPerEvent){
-      BOOST_FOREACH(const LHCb::Track* track, tracks) {
+      for(const LHCb::Track* track: tracks) {
         if( track->fitStatus() == LHCb::Track::Fitted && track->nDoF()>1 &&
             track->chi2PerDoF() < m_maxChi2PerDoF ) {
           // count the number
@@ -350,7 +345,7 @@ StatusCode OTHitEfficiencyMonitor::execute()
 void OTHitEfficiencyMonitor::fillEfficiency( const LHCb::Track& track,
                                              const DeOTModule& module,
                                              double strawpos[2], double yfrac[2],
-                                             const LHCb::State& refstate)
+                                             const LHCb::State& refstate) const
 {
   // make a temporary structure that tells which hits are in this
   // module. if this takes time, then we should do it once per event
@@ -361,8 +356,8 @@ void OTHitEfficiencyMonitor::fillEfficiency( const LHCb::Track& track,
     
   size_t nstraws = module.nChannels() ;
   
-  ModuleEfficiencyHistograms* modulehist = m_moduleHistograms[module.elementID().module()-1] ;
-  LayerEfficiencyHistograms* layerhist = m_layerHistograms[module.elementID().uniqueLayer()-4] ;
+  auto modulehist = m_moduleHistograms[module.elementID().module()-1].get();
+  auto layerhist = m_layerHistograms[module.elementID().uniqueLayer()-4].get();
 
    
   // compute the direction in the local frame. this can be done a lot more efficient, but okay:
@@ -425,7 +420,7 @@ void OTHitEfficiencyMonitor::fillEfficiency( const LHCb::Track& track,
     // monitor 'cluster size'. cluster size is zero if there is no hit in 'closest straw'.
     int closeststraw = int( strawpos[imono] + 0.5 ) ;
     if( 1<=closeststraw && closeststraw <=int(nstraws/2) ) {
-      StaticArray<LHCb::OTChannelID,128> clusterhits ;
+      boost::container::static_vector<LHCb::OTChannelID,128> clusterhits ;
       LHCb::OTChannelID tmp ;
       for( int istraw = closeststraw; 
            istraw<=int(nstraws/2) && (tmp = m_moduleHitMap[ uniquemodule ].hashit[ istraw + monooffset ]) ;
@@ -442,7 +437,7 @@ void OTHitEfficiencyMonitor::fillEfficiency( const LHCb::Track& track,
 
 void OTHitEfficiencyMonitor::fillEfficiency(const LHCb::Track& track,
                                             const DeOTModule& module,
-                                            const LHCb::State& state )
+                                            const LHCb::State& state ) const
 {
   double strawpos[2], yfrac[2] ;
   for(size_t imono = 0 ; imono<2; ++imono) 
@@ -457,7 +452,7 @@ void OTHitEfficiencyMonitor::fillEfficiency(const LHCb::Track& track,
 void OTHitEfficiencyMonitor::fillEfficiency(const LHCb::Track& track,
                                             const DeOTModule& module,
                                             const LHCb::FitNode* nodeMonoA,
-                                            const LHCb::FitNode* nodeMonoB)
+                                            const LHCb::FitNode* nodeMonoB) const
 {
   double strawpos[2], yfrac[2] ;
   const LHCb::State* refstate(0) ;
@@ -506,7 +501,7 @@ void OTHitEfficiencyMonitor::fillEfficiency(const LHCb::Track& track,
 }
 
 
-void OTHitEfficiencyMonitor::fillEfficiency(const LHCb::Track& track)
+void OTHitEfficiencyMonitor::fillEfficiency(const LHCb::Track& track) const
 {
   // first collect all modules that are already on the track. for these we need to unbias.
   typedef std::pair<const LHCb::Node*, const LHCb::Node*> MonoLayerNodes ;
@@ -549,18 +544,21 @@ void OTHitEfficiencyMonitor::fillEfficiency(const LHCb::Track& track)
   
   /*This should be moved to initialize and be common to all events... */
   // cache the z-positions of the layers
-  static std::vector<double> layerzpos ;
-  if( layerzpos.empty() ) {
-    for( DeOTDetector::Layers::const_iterator ilay = m_otdet->layers().begin() ;
-         ilay !=  m_otdet->layers().end(); ++ilay ) 
-      layerzpos.push_back((*ilay)->geometry()->toGlobal(Gaudi::XYZPoint(0.0, 0.0, 0.0)).z()) ;
-  }
+  static const std::vector<double> layerzpos = [&](){
+    const auto& layers = m_otdet->layers();
+    std::vector<double> lz; lz.reserve(layers.size());
+    std::transform( layers.begin(), layers.end(),
+                    std::back_inserter(lz), [](const DeOTLayer* l) {
+            return l->geometry()->toGlobal( Gaudi::XYZPoint{ 0, 0, 0 } ).z();
+    });
+    return lz;
+  }();
   
   // now find the modules in the missing planes
   LHCb::State state ;
   int layindex(0) ;
   std::vector< std::pair< const DeOTModule*, LHCb::State > > modulesNotOnTrack ;
-  for( DeOTDetector::Layers::const_iterator ilay = m_otdet->layers().begin() ;
+  for( auto ilay = m_otdet->layers().begin() ;
        ilay !=  m_otdet->layers().end(); ++ilay, ++layindex ) 
     if( layersOnTrack.find( *ilay ) == layersOnTrack.end() ) {
       // propagate to the z-coordinate of this layer
@@ -589,9 +587,7 @@ void OTHitEfficiencyMonitor::fillEfficiency(const LHCb::Track& track)
           }
         }else{
           Warning(" Track interpolation or propagation failed ").ignore();
-          
         }
       }
     }
-
 }

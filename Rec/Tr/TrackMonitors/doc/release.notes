@@ -3,6 +3,15 @@
 ! Responsible : Wouter Hulsbergen, Stephanie Hansmann-Menzemer
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
+! 2016-01-07 - Gerhard Raven
+ - migrate from StaticArray to boost::container::static_vector
+ - prefer std::to_string to boost::lexical_cast
+ - add const when possible
+ - prefer std::unique_ptr over raw pointer + explicit delete
+ - prefer range-based for loop over BOOST_FOREACH
+ - prefer STL algorithms over raw loops
+ - make static variable const
+ - don't cast if it isn't needed or has no effect
 
 ! 2015-11-25 - Elena Graverini
  - Add STADCTrackMonitor (analysis of ST CCE scans)

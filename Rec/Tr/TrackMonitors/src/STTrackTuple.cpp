@@ -153,14 +153,13 @@ StatusCode STTrackTuple::initialize()
       std::vector<float> corner4_x;    corner4_x.reserve( sensorsInSector.size() );
       std::vector<float> corner4_y;    corner4_y.reserve( sensorsInSector.size() );
       std::vector<float> corner4_z;    corner4_z.reserve( sensorsInSector.size() );
-      std::vector<DeSTSensor*>::const_iterator sensor = sensorsInSector.begin();
-      for(; sensor != sensorsInSector.end(); ++sensor)
+      for(auto sensor = sensorsInSector.begin(); sensor != sensorsInSector.end(); ++sensor)
       {
         // Sensor centre
         Gaudi::XYZPoint pos = (*sensor)->globalCentre();//toGlobal( Gaudi::XYZPoint(0.,0.,0.) );
-        sensor_x.push_back( float(pos.x()) );
-        sensor_y.push_back( float(pos.y()) );
-        sensor_z.push_back( float(pos.z()) );
+        sensor_x.push_back( pos.x() );
+        sensor_y.push_back( pos.y() );
+        sensor_z.push_back( pos.z() );
         // Sensor corners
         auto firsttraj = (*sensor)->trajectory(1, 0.);
         Gaudi::XYZPoint corner1 = firsttraj->beginPoint();
@@ -168,18 +167,18 @@ StatusCode STTrackTuple::initialize()
         auto lasttraj = (*sensor)->trajectory(512, 0.);
         Gaudi::XYZPoint corner3 = lasttraj->beginPoint();
         Gaudi::XYZPoint corner4 = lasttraj->endPoint();
-        corner1_x.push_back( float(corner1.x()) );
-        corner1_y.push_back( float(corner1.y()) );
-        corner1_z.push_back( float(corner1.z()) );
-        corner2_x.push_back( float(corner2.x()) );
-        corner2_y.push_back( float(corner2.y()) );
-        corner2_z.push_back( float(corner2.z()) );
-        corner3_x.push_back( float(corner3.x()) );
-        corner3_y.push_back( float(corner3.y()) );
-        corner3_z.push_back( float(corner3.z()) );
-        corner4_x.push_back( float(corner4.x()) );
-        corner4_y.push_back( float(corner4.y()) );
-        corner4_z.push_back( float(corner4.z()) );
+        corner1_x.push_back( corner1.x() );
+        corner1_y.push_back( corner1.y() );
+        corner1_z.push_back( corner1.z() );
+        corner2_x.push_back( corner2.x() );
+        corner2_y.push_back( corner2.y() );
+        corner2_z.push_back( corner2.z() );
+        corner3_x.push_back( corner3.x() );
+        corner3_y.push_back( corner3.y() );
+        corner3_z.push_back( corner3.z() );
+        corner4_x.push_back( corner4.x() );
+        corner4_y.push_back( corner4.y() );
+        corner4_z.push_back( corner4.z() );
       }
       positions -> farray( "sensor_x",  sensor_x, "len",  sensorsInSector.size() );
       positions -> farray( "sensor_y",  sensor_y, "len",  sensorsInSector.size() );
@@ -211,8 +210,7 @@ StatusCode STTrackTuple::initialize()
     }
   } // end loop (iterS)
 
-  unsigned int iCut;
-  for (iCut = 0; iCut < m_NbrOfCuts; ++iCut)
+  for (unsigned iCut = 0; iCut < m_NbrOfCuts; ++iCut)
   {
     if ( std::abs( m_xCut - m_spacialCuts[iCut] ) < .005 )
       m_whichCut[0] = iCut;
@@ -220,7 +218,7 @@ StatusCode STTrackTuple::initialize()
       m_whichCut[1] = iCut;
   } // end loop (iCut)
 
-  for(iCut = 1; iCut < m_NbrOfCuts; iCut++)
+  for(unsigned iCut = 1; iCut < m_NbrOfCuts; iCut++)
   {
     m_binSize = std::min( m_binSize,
                           m_spacialCuts[ iCut ] - m_spacialCuts[ iCut - 1 ] );
