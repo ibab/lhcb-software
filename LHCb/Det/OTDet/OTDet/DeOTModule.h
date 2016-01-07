@@ -96,7 +96,7 @@ public:
   /** Retrieves reference to class identifier
    * @return the class identifier for this class
    */
-  const CLID& clID() const;
+  const CLID& clID() const override;
 
   /** Another reference to class identifier
    * @return the class identifier for this class
@@ -106,7 +106,7 @@ public:
   /** Initialization method
    * @return Status of initialisation
    */
-  virtual StatusCode initialize();
+  StatusCode initialize() override;
 
   /** @return moduleID */
   unsigned int moduleID() const;
