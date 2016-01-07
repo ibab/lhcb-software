@@ -369,7 +369,10 @@ StatusCode HltSelReportsWriter::execute() {
       substrSubBank.deleteBank();
       stdInfoSubBank.deleteBank();
       extraInfoSubBank.deleteBank();
-      return Error("Exceeded maximal size of substructure-subbank. HltSelReports RawBank cannot be created"
+      
+      std::vector<unsigned int> vect;
+      rawEvent->addBank(  m_sourceID, RawBank::HltSelReports, 99,  vect);
+      return Error("Exceeded maximal size of substructure-subbank. HltSelReports RawBank cannot be created, instead returning dummy bank"
                    , StatusCode::SUCCESS, 50 );
     }
   }

@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2016-1-7 - Sean Benson
+ - In the case that too many objects are requested to be saved, write a dummy bank with version 99.
+
 !========================= HltDAQ v4r23 2015-12-17 =========================
 
 ! 2015-12-06 - Gerhard Raven

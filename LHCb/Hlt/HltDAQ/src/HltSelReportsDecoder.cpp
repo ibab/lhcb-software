@@ -82,7 +82,14 @@ StatusCode HltSelReportsDecoder::execute() {
   // Tell the converter the version from the raw bank
   m_conv->setReportVersion( hltselreportsRawBank0->version() );
  
-  if( hltselreportsRawBank0->version() > kVersionNumber ){
+  // Check we know how to decode this version
+  // If version is 99, this is the special case of the empty dummy bank
+  if( hltselreportsRawBank0->version() == 99 ){
+    auto  outputDummy = new HltSelReports();
+    put( outputDummy, m_outputHltSelReportsLocation );
+    return Warning( "Version (99) indicates too many objects were requested to be saved. Returning empty reports" ,StatusCode::SUCCESS, 20 );
+  }
+  else if( hltselreportsRawBank0->version() > kVersionNumber ){
     Warning( " HltSelReports RawBank version is higher than expected. Will try to decode it anyway." ,StatusCode::SUCCESS, 20 );
   }
   // put the banks into the right order (in case the data was split across multiple banks...
