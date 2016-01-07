@@ -19,6 +19,10 @@ set               ALPGENPDFPATH $(alpgen_author_dir)/alplib/pdfdat
 #set               ALPGENPDFPATH $(LHAPDFSETSROOT)/alpgen
 
 # =============== dependencies ================================================
+
+# Work-around for a problem with builds of LHAPDF without -std=c++11
+use lhapdf     v* LCG_GeneratorsInterfaces
+
 use               alpgen       v* LCG_GeneratorsInterfaces
 use               LbPythia     v* Gen
 use               Boost        v* LCG_Interfaces -no_auto_import

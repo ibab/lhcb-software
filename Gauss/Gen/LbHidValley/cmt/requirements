@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.9 2009-12-02 09:04:40 gcorti Exp $ 
+# $Id: requirements,v 1.9 2009-12-02 09:04:40 gcorti Exp $
 # =============================================================================
 # Created    : 2006-10-22
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -7,37 +7,41 @@ package           LbHidValley
 version           v4r0p1
 
 # =============== structure ===================================================
-branches          cmt doc src options LbHidValley 
+branches          cmt doc src options LbHidValley
 
 # =============== exported includes ===========================================
-include_dirs      $(LBHIDVALLEYROOT) 
+include_dirs      $(LBHIDVALLEYROOT)
 
 # =============== environment =================================================
-set               LBHIDVALLEYOPTS $(LBHIDVALLEYROOT)/options 
+set               LBHIDVALLEYOPTS $(LBHIDVALLEYROOT)/options
 
 # =============== dependencies ================================================
-use               LbPythia     v* Gen 
-use               Boost        v* LCG_Interfaces 
-use               GENSER       v* Gen 
+
+# Work-around for a problem with builds of LHAPDF without -std=c++11
+use lhapdf     v* LCG_GeneratorsInterfaces
+
+use               LbPythia     v* Gen
+use               Boost        v* LCG_Interfaces
+use               GENSER       v* Gen
 use               LoKiGen      v* Phys
 
 # =============== constituents ================================================
-library           LbHidValleyLib Lib/*.cpp  Lib/*.F  
+library           LbHidValleyLib Lib/*.cpp  Lib/*.F
 library           LbHidValley    Components/*.cpp
-application       HidValley      Main/*.cpp Main/*.F 
+application       HidValley      Main/*.cpp Main/*.F
 
 # =============== standard patterns ===========================================
 apply_pattern     component_library library=LbHidValley
 apply_pattern     linker_library    library=LbHidValleyLib
-apply_pattern     application_path 
+apply_pattern     application_path
 
-macro_append      HidValley_dependencies " LbHidValleyLib " 
+macro_append      HidValley_dependencies " LbHidValleyLib "
 
 # =============================================================================
-macro_append      HidValleylinkopts  " $(use_linkopts) " 
-macro_append      HidValleylinkopts  " $(Boost_linkopts_program_options) " 
+macro_append      HidValleylinkopts  " $(use_linkopts) "
+macro_append      HidValleylinkopts  " $(Boost_linkopts_program_options) "
 
-# private 
+# private
 # macro_prepend fincludes $(ppcmd)"$(GENSER_path)/include/pythia/$(pythia_native_version)/include"
 
 # do not build on windows
@@ -45,5 +49,5 @@ macro_append      HidValleylinkopts  " $(Boost_linkopts_program_options) "
 apply_pattern disable_package_on platform=target-winxp
 
 # =============================================================================
-# The END 
+# The END
 # =============================================================================

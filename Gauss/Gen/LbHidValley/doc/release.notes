@@ -19,6 +19,10 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2016-01-07 - Marco Clemencic
+ - Work-around for a problem with builds of LHAPDF without -std=c++11
+   Changed link order such that lhapdf is picked up before LHCbMath.
+
 ! 2015-11-18 - Marco Clemencic
  - Disabled warnings for FORTRAN code.
 
