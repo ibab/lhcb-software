@@ -115,6 +115,16 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         unit.Code = code
         return unit
 
+    def optionalHPT_tracking(self, name):
+        # The high pT tracking algorithms sometimes have to be wrapped in a
+        # sequence that ignores FilterPassed to avoid stopping if no tracks are
+        # created.
+        from Configurables import GaudiSequencer
+        from HltTracking.Hlt1Tracking import TrackCandidatesAlgos
+        return GaudiSequencer('Hlt1%sHPTTrackingSequence' % name,
+                              Members = TrackCandidatesAlgos(name).members(),
+                              IgnoreFilterPassed = True)
+    
     def singleMuon_preambulo( self, properties ):
         from HltTracking.Hlt1Tracking import ( TrackCandidates, IsMuon,
                                                FitTrack, MatchVeloTTMuon,
@@ -133,7 +143,6 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         """
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
         from Configurables import LoKi__HltUnit as HltUnit
-        from HltTracking.Hlt1Tracking import TrackCandidatesAlgos
         unit = HltUnit(
             'Hlt1%(name)sStreamer' % properties,
             ##OutputLevel = 1 ,
@@ -162,7 +171,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             )
         gec = properties[ 'GEC' ]
         return [ Hlt1GECUnit( gec ),
-                 TrackCandidatesAlgos(properties['name']),
+                 self.optionalHPT_tracking(properties['name']),
                  unit ]
 
     def diMuon_preambulo( self, properties ):
@@ -184,7 +193,6 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         IsMuon is used for Long tracks, MatchVeloTTMuon for VeloTT and Velo ones.
         """
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
-        from HltTracking.Hlt1Tracking import TrackCandidatesAlgos
         from Configurables import LoKi__HltUnit as HltUnit
         unit = HltUnit(
             'Hlt1%(name)sStreamer' % properties,
@@ -220,7 +228,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             )
         gec = properties[ 'GEC' ]
         return [ Hlt1GECUnit( gec ),
-                 TrackCandidatesAlgos(properties['name']),
+                 self.optionalHPT_tracking(properties['name']),
                  unit ]
 
     def diMuonDetached_streamer( self, properties ):
@@ -230,7 +238,6 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         IsMuon is used for Long tracks, MatchVeloTTMuon for VeloTT and Velo ones.
         """
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
-        from HltTracking.Hlt1Tracking import TrackCandidatesAlgos
         from Configurables import LoKi__HltUnit as HltUnit
         from HltTracking.HltPVs import PV3D
         unit = HltUnit(
@@ -272,7 +279,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
 
         return [ Hlt1GECUnit( gec ),
                  PV3D('Hlt1'),
-                 TrackCandidatesAlgos(properties['name']),
+                 self.optionalHPT_tracking(properties['name']),
                  unit ]
 
     def diMuonNoL0_streamer( self, properties ):
@@ -282,7 +289,6 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         IsMuon is used for Long tracks, MatchVeloTTMuon for VeloTT and Velo ones.
         """
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
-        from HltTracking.Hlt1Tracking import TrackCandidatesAlgos
         from Configurables import LoKi__HltUnit as HltUnit
         from HltTracking.HltPVs import PV3D
         unit = HltUnit(
@@ -323,7 +329,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
 
         return [ Hlt1GECUnit( gec ),
                  PV3D('Hlt1'),
-                 TrackCandidatesAlgos(properties['name']),
+                 self.optionalHPT_tracking(properties['name']),
                  unit ]
 
 
@@ -336,7 +342,6 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         """
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
         from Configurables import LoKi__HltUnit as HltUnit
-        from HltTracking.Hlt1Tracking import TrackCandidatesAlgos
         from HltTracking.HltPVs import PV3D
         unit = HltUnit(
             'Hlt1%(name)sStreamer' % properties,
@@ -368,13 +373,12 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             """ % properties
             )
         gec = properties[ 'GEC' ]
+
+        # The final sequence of algorithms
         return [ Hlt1GECUnit( gec ),
                  PV3D('Hlt1'),
-                 TrackCandidatesAlgos(properties['name']),
+                 self.optionalHPT_tracking(properties['name']),
                  unit ]
-
-
-
     
     def MuMu_Unit( self, properties ) :
         # Let's start with pions and ask ismuon first... this should be changed putting it in shared particles
@@ -506,7 +510,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                      ( 'SingleMuonNoIP',   self.singleMuon_streamer ),
                      ( 'DiMuonLowMass',    self.diMuonDetached_streamer ),
                      ( 'DiMuonHighMass',   self.diMuon_streamer ),
-                     ( 'DiMuonNoL0',    self.diMuonNoL0_streamer ),
+                     ( 'DiMuonNoL0',       self.diMuonNoL0_streamer ),
                      ( 'MultiMuonNoL0',    self.multiMuon_streamer ) ]
         for line, streamer in to_build:
             self.build_line( line, streamer )

@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2016-01-08 - Roel Aaij
+ - Wrap the HPT tracking algorithms in a sequence that ignores filterPassed to
+   avoid stopping if there are no high pT tracks.
+
 !========================= Hlt1Lines v7r20 2015-12-17 =========================
 
 ! 2015-12-15 - Roel Aaij
