@@ -45,12 +45,15 @@ void MakeRichPlots()
   cuts.push_back(2.5);
   cuts.push_back(5);
 
+  // Open a PDF file
+  const std::string pdfFile = nametag + "-RichPID."+imageType;
+  c->SaveAs( (pdfFile+"[").c_str() );
+
   // Kaon ID plots
-  for ( std::vector<double>::const_iterator iC = cuts.begin();
-        iC != cuts.end(); ++iC )
+  for ( const auto& cut : cuts )
   {
     std::ostringstream cC; 
-    cC << *iC;
+    cC << cut;
 
     tree->Draw( ("(RichDLLk>"+cC.str()+"?100:0):TrackP>>kIDEff").c_str(),     
                 detOK && realK  && trackSel && kAboveThres, "prof" );
@@ -72,7 +75,7 @@ void MakeRichPlots()
       piMisIDEff->SetMarkerColor(kBlue);
       piMisIDEff->SetLineColor(kBlue);
       
-      c->SaveAs( (nametag+"-KaonID-DLL"+cC.str()+"."+imageType).c_str() );
+      c->SaveAs( pdfFile.c_str() );
     }
     else
     {
@@ -82,11 +85,10 @@ void MakeRichPlots()
   }
 
   // Proton ID plots
-  for ( std::vector<double>::const_iterator iC = cuts.begin();
-        iC != cuts.end(); ++iC )
+  for ( const auto& cut : cuts )
   {
     std::ostringstream cC; 
-    cC << *iC;
+    cC << cut;
 
     tree->Draw( ("(RichDLLp>"+cC.str()+"?100:0):TrackP>>prIDEff").c_str(),     
                 detOK && realPr && trackSel && prAboveThres, "prof" );
@@ -108,7 +110,7 @@ void MakeRichPlots()
       piMisIDEff->SetMarkerColor(kBlue);
       piMisIDEff->SetLineColor(kBlue);
       
-      c->SaveAs( (nametag+"-ProtonID-DLL"+cC.str()+"."+imageType).c_str() );   
+      c->SaveAs( pdfFile.c_str() );
     }
     else
     {
@@ -116,5 +118,8 @@ void MakeRichPlots()
     }
 
   }
+
+  // close the PDF file
+  c->SaveAs( (pdfFile+"]").c_str() );
 
 }

@@ -1,11 +1,12 @@
 
 #include "TROOT.h"
 
-#include "GlobalPID.h"
+//#include "GlobalPID.h"
+#include "GlobalPID.C"
 
 void RichKaonIDCompareFiles()
 {
-  
+
   //gROOT->ProcessLine(".L GlobalPID.C");
 
   // make a new pid object
@@ -53,7 +54,7 @@ void RichKaonIDCompareFiles()
   pid->config = defaultConfig;
   pid->config.subtitle = "Quartic";
   pid->config.superImpose = false;
-  pid->config.color = kRed+1;;
+  pid->config.color = kBlack;
   // create the plot
   pid->makeCurve(nTracks);
 
@@ -61,7 +62,7 @@ void RichKaonIDCompareFiles()
   pid->config = defaultConfig;
   pid->config.subtitle = "Quartic - No Ambiguous Photon Test";
   pid->config.superImpose = true;
-  pid->config.color = kBlack;
+  pid->config.color = kRed+1;
   // create the plot
   pid->makeCurve(nTracks);
 
