@@ -260,12 +260,8 @@ class Alignables( list ):
             
     def TTShortModules( self, dofs = "" ) :
         elements = []
-        for layer in ['TTaXLayer','TTaULayer']:
-            elements.append( layer + "R2Module2T" + " : " + self.m_tt + "/TTa/"+layer+"/R2Module2T")
-            elements.append( layer + "R2Module2B" + " : " + self.m_tt + "/TTa/"+layer+"/R2Module2B")
-        for layer in ['TTbVLayer','TTbXLayer']:
-            elements.append( layer + "R2Module3T" + " : " + self.m_tt + "/TTb/"+layer+"/R2Module3T")
-            elements.append( layer + "R2Module3B" + " : " + self.m_tt + "/TTb/"+layer+"/R2Module3B")
+        self.__append( self.m_tt + "/TTa/.{4}Layer/R2Module2.", dofs )
+        self.__append( self.m_tt + "/TTb/.{4}Layer/R2Module3.", dofs )
         self.__append( sorted(elements), dofs )
             
     def TTModules( self, dofs = "" ) :
@@ -365,6 +361,9 @@ class Alignables( list ):
 
     def OTShortHalfModules( self, dofs = "" ) :
         self.OTHalfModules( dofs = dofs, modules = [ '/M8', '/M9' ] )
+                
+    def OTLongModules( self, dofs = "" ) :
+        self.OTModules( dofs = dofs, modules = [ '/M1','/M2','/M3','/M4','/M5','/M6','/M7' ] )
                 
     def XOTModules( self, dofs = '' ) :
         elements = []
