@@ -3,6 +3,13 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+! 2016-01-07 - Wouter Hulsbergen
+ - VertexResidualTool: bux fix in computation of ndof, new cut on mass constraint chi2, cleanup
+ - AlignUpdateTool: added extra info from solv tool
+ - TrackSelections.py: fixed bug in NoPIDTracksFromHlt
+ - Alignables.py: bug fix in specification of TT short modules
+ - Configuration.py: bug fix to make sure that constants are written in right folder when running run2 alignment offline
+
 ! 2015-11-11 - Maurizio Martinelli
  - added the option to choose hlt lines in Jpsi particle selection
 
