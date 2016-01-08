@@ -2,6 +2,9 @@
 ! Responsible : Adlene Hicheur (Adlene.Hicheur@cern.ch)
 !-----------------------------------------------------------------------------
 
+! 2016-01-08 - Wouter Hulsbergen
+ - Adaped DiagSolvTool to fill fields added to IAlignSolvTool::SolutionInfo
+
 !========================= AlignSolvTools v3r5 2014-11-10 =========================
 
 ! 2014-10-05 - Wouter Hulsbergen

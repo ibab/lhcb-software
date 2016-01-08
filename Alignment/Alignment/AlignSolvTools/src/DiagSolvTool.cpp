@@ -71,13 +71,16 @@ bool DiagSolvTool::compute(AlSymMat& m,AlVec& b) const
   return sc.isSuccess() ;
 }
 
-template<class T>
-struct SortByAbs
-{
-  bool operator()(const T& lhs, const T& rhs) const {
-    return std::abs( lhs ) < std::abs(rhs ) ;
-  }
-} ;
+namespace {
+  struct SortByAbsSecond
+  {
+    template<class T>
+    bool operator()(const T& lhs, 
+		    const T& rhs) const {
+      return std::abs( lhs.second ) < std::abs(rhs.second ) ;
+    }
+  } ;
+}
 
 StatusCode DiagSolvTool::compute(AlSymMat& m_bigmatrix, AlVec& m_bigvector,
 				 IAlignSolvTool::SolutionInfo& solinfo) const
@@ -108,26 +111,43 @@ StatusCode DiagSolvTool::compute(AlSymMat& m_bigmatrix, AlVec& m_bigvector,
   // Dump the 10 smallest eigenvalues. We'll sort these really in abs,
   // ignoring the sign.
   {
+    // count the number of negative eigenvalues and number smaller than one
+    solinfo.numNegativeEigenvalues = solinfo.numSmallEigenvalues = 0 ;
+    std::vector<std::pair<size_t,double> > sortedev(N) ;
+    for(size_t ipar = 0; ipar<N; ++ipar) {
+      sortedev[ipar] = std::make_pair(ipar,w[ipar]) ;
+      if( std::abs( w[ipar] ) < 1.0 ) ++solinfo.numSmallEigenvalues ;
+      if( w[ipar] < 0.0 ) ++solinfo.numNegativeEigenvalues ;
+    }
+
+    std::sort(sortedev.begin(),sortedev.end(),SortByAbsSecond()) ;
     std::ostringstream logmessage ;
     logmessage << "Smallest eigen values: [ " << std::setprecision(4) ;
-    std::vector<double> sortedev(N) ;
-    for(size_t ipar = 0; ipar<N; ++ipar) sortedev[ipar] = w[ipar] ;
-    std::sort(sortedev.begin(),sortedev.end(),SortByAbs<double>()) ;
     size_t maxpar = std::min(N,m_numberOfPrintedEigenvalues) ;
     for(size_t ipar = 0; ipar<maxpar; ++ipar) 
-      logmessage << sortedev[ipar] << (( ipar<maxpar-1) ? ", " : " ]") ;
-
-    // find the smallest eigenvalue and dump the corresponding eigenvector
-    if( N<=m_numberOfPrintedEigenvalues ) {
-      logmessage << std::endl ;
-      size_t imin(0) ;
-      for(size_t ipar = 1; ipar<N; ++ipar) 
-	if( std::abs(w[ipar]) < std::abs(w[imin]) ) imin = ipar ;
-      logmessage << "Eigenvector for smallest eigenvalue: [ " ;
-      for(size_t ipar = 0; ipar<N; ++ipar) logmessage << z[imin][ipar] << (( ipar<N-1) ? ", " : " ]") ;
+      logmessage << sortedev[ipar].second << (( ipar<maxpar-1) ? ", " : " ]") ;
+    
+    // consider the smallest eigenvalue
+    if(N>0) {
+      // dump the corresponding eigenvector
+      if( N<=m_numberOfPrintedEigenvalues ) {
+	logmessage << std::endl ;
+	logmessage << "Eigenvector for smallest eigenvalue: [ " ;
+	for(size_t ipar = 0; ipar<N; ++ipar) {
+	  logmessage << z[sortedev[0].first][ipar] << (( ipar<N-1) ? ", " : " ]") ;
+	}
+      }
+      // figure out which parameter contributes most to this eigenvector
+      size_t thepar(0) ;
+      for(size_t ipar = 0; ipar<N; ++ipar) {
+	if( std::abs( z[sortedev[0].first][thepar] ) < std::abs( z[sortedev[0].first][ipar] ) )
+	  thepar = ipar ;
+      }
+      solinfo.minEigenValue = sortedev[0].second ;
+      solinfo.weakestModeMaxPar = thepar ;
+      solinfo.weakestModeMaxParCoef = z[sortedev[0].first][thepar] ;
     }
     info() << logmessage.str() << endmsg ;
-    if(N>0) solinfo.minEigenValue = sortedev[0] ;
   }
   
   if (infjob==0) {
