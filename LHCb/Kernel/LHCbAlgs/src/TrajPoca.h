@@ -46,7 +46,7 @@ public:
                        double& mu2, 
                        bool restrictRange2, 
                        Gaudi::XYZVector& distance,
-                       double precision ) const ;
+                       double precision ) const override;
 
   /// Find point along trajectory at which the distance to point 'p'
   /// is minimum. The precision parameter is the desired numerical accuracy of
@@ -57,7 +57,7 @@ public:
                        bool restrictRange,
                        const Gaudi::XYZPoint& pt,
                        Gaudi::XYZVector& distance,
-                       double precision ) const ;
+                       double precision ) const override;
 private:
   bool stepTowardPoca( const LHCb::Trajectory& traj1,
                        double& mu1,
