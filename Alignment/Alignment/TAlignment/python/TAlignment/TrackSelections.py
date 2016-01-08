@@ -31,10 +31,13 @@ class TrackRefiner(  TrackSelection ):
     def algorithm( self ):
         from Configurables import TrackListRefiner
         refiner = TrackListRefiner( self.name() + "SelectorAlg",
-                                    inputLocation = self._inputLocation,
+                                    inputLocation = self.inputLocation(),
                                     outputLocation = self.location())
         self.configureSelector( refiner )
         return refiner
+
+    def inputLocation(self) : 
+        return self._inputLocation
 
     def configureSelector( self, selector):
         print 'Base classes must overload configureSelector'
@@ -50,6 +53,7 @@ class GoodLongTracks( TrackRefiner ):
         a.Selector.MinPCut  =   5000
         a.Selector.MaxPCut  = 200000
         a.Selector.MinPtCut =    200
+        a.Selector.MaxNTHoles = 1
         a.Selector.TrackTypes = ["Long"]
         if self._fitted:
             a.Selector.MaxChi2Cut = 5
@@ -236,8 +240,9 @@ class NoPIDTracksFromHlt(TrackSelection):
         # hits on the tracks. adding Hlt1Global does rather
         # little. (if you do, make sure to put it after Hlt2Global,
         # since the clone rejection takes the first track.)
-        hltTrackConvAll = HltTrackConverter("HltTrackConvAll",TrackDestination = 'Rec/Track/NoPIDBest',
-                                            HltLinesToUse = ['Hlt2Global'])
+        hltTrackConvAll = HltTrackConverter("HltTrackConvAll",TrackDestination = 'Rec/Track/NoPIDBest')
+        hltTrackConvAll.HltLinesToUse += ['Hlt2Global','Hlt1Global']
+        
         if Escher().DataType in ['2015']: hltTrackConvAll.SelReportsLocation = 'Hlt1/SelReports'
         seq.Members += [ hltTrackConvAll ]
         # configure algorithm to run Velo standalone reconstruction
