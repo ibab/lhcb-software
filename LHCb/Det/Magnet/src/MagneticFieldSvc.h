@@ -1,4 +1,3 @@
-// $Id: MagneticFieldSvc.h,v 1.34 2010-04-23 17:12:22 smenzeme Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
@@ -17,10 +16,7 @@
 #include <string>
 
 // Forward declarations
-template <class TYPE> class SvcFactory;
-class IToolSvc;
 class IUpdateManagerSvc;
-class IMagFieldTool;
 
 /** @class MagneticFieldSvc MagneticFieldSvc.h
  *  A service for finding the magnetic field vector at a given
@@ -32,79 +28,54 @@ class IMagFieldTool;
  *  Updated and further developped - Adlene Hicheur
  */
 
-class MagneticFieldSvc : public Service,
-                         virtual public ILHCbMagnetSvc 
+class MagneticFieldSvc : public extends<Service, ILHCbMagnetSvc>
 {
 
-protected:
-
+public:
   /// Standard Constructor.
   /// @param  name   String with service name
   /// @param  svc    Pointer to service locator interface
   MagneticFieldSvc( const std::string& name, ISvcLocator* svc );
 
   /// Virtual destructor.
-  virtual ~MagneticFieldSvc();
-
-public:
+  ~MagneticFieldSvc() override;
 
   /// Initialise the service (Inherited Service overrides)
-  virtual StatusCode initialize();
+  StatusCode initialize() override;
 
   /// Finalise the service (Inherited Service overrides)
-  virtual StatusCode finalize();
+  StatusCode finalize() override;
 
-  /** Query the available interfaces.
-   * @param riid Requested interface ID
-   * @param ppvInterface Pointer to requested interface
-   * @return StatusCode indicating SUCCESS or FAILURE.
-   */
-  virtual StatusCode queryInterface( const InterfaceID& riid,
-                                     void** ppvInterface      );
 
+  using ILHCbMagnetSvc::fieldVector;
   /** Implementation of IMagneticFieldSvc interface.
    * @param[in]  xyz Point at which magnetic field vector will be given
-   * @param[out] fvec Magnectic field vector.
-   * @return StatusCode SUCCESS if calculation was performed.
+   * @return Magnetic field vector.
    */
-  virtual StatusCode fieldVector( const Gaudi::XYZPoint&  xyz,
-                                  Gaudi::XYZVector& fvec ) const
-  {
-    fvec = m_magFieldGrid.fieldVector(xyz) ;
-    return StatusCode::SUCCESS ;
-  }
-
-  /** Implementation of IMagneticFieldSvc interface.
-   * @param[in]  xyz Point at which magnetic field vector will be given
-   * @return fvec Magnectic field vector.
-   */
-  Gaudi::XYZVector fieldVector( const Gaudi::XYZPoint&  xyz ) const;
+  Gaudi::XYZVector fieldVector( const Gaudi::XYZPoint&  xyz ) const override;
 
   /// Returns the field grid
-  virtual const LHCb::MagneticFieldGrid* fieldGrid() const
+  const LHCb::MagneticFieldGrid* fieldGrid() const override
   {
     return &m_magFieldGrid ;
   }
 
-  bool useRealMap() const; ///< True is using real map
+  bool useRealMap() const override; ///< True is using real map
 
-  double signedRelativeCurrent() const
+  double signedRelativeCurrent() const override
   {
     const int sign = ( isDown() ? -1 : +1 );
     return std::abs(m_magFieldGrid.scaleFactor())*sign;
   }
 
   // True if the down polarity map is loaded
-  virtual bool isDown() const;
+  bool isDown() const override;
 
 private:
 
-  /// Allow SvcFactory to instantiate the service.
-  friend class SvcFactory<MagneticFieldSvc>;
   StatusCode initializeWithCondDB();    ///< default get magnet data from CondDB
   StatusCode initializeWithoutCondDB(); ///< alternative get magnet data from job options
   StatusCode i_updateConditions();       ///< Reads from conditions
-  void cacheFieldPolarity();
 
 private:
 
@@ -116,29 +87,34 @@ private:
 
   // Special properties to use constant field (and no condDB!)
   bool                m_useConstField;    ///< Job option to use constant field
-  std::vector<double> m_constFieldVector; ///< Option for constant field value
+  std::vector<double> m_constFieldVector = {{ 0., 0., 0. }}; ///< Option for constant field value
 
   // Properties to over-ride values in CondDB
   std::vector<std::string> m_mapFileNames;
-  bool                     m_forcedToUseDownMap;
-  bool                     m_forcedToUseUpMap;
-  double                   m_forcedScaleFactor;
-  bool                     m_mapFromOptions;
+  bool                     m_forcedToUseDownMap = false;
+  bool                     m_forcedToUseUpMap = false;
+  double                   m_forcedScaleFactor = 9999.;
+  bool                     m_mapFromOptions = false;
 
   // Private data
 
-  Condition* m_mapFilesUpPtr;   ///< Pointer to FieldMapFilesUp condition
-  Condition* m_mapFilesDownPtr; ///< Pointer to FieldMapFilesDown condition
-  Condition* m_scaleUpPtr;      ///< Pointer to ScaleUp condition
-  Condition* m_scaleDownPtr;    ///< Pointer to ScaleDown condition
-  Condition* m_currentPtr;      ///< Pointer to Measured or Set condition
+  Condition* m_mapFilesUpPtr = nullptr;   ///< Pointer to FieldMapFilesUp condition
+  Condition* m_mapFilesDownPtr = nullptr; ///< Pointer to FieldMapFilesDown condition
+  Condition* m_scaleUpPtr = nullptr;      ///< Pointer to ScaleUp condition
+  Condition* m_scaleDownPtr = nullptr;    ///< Pointer to ScaleDown condition
+  Condition* m_currentPtr = nullptr;      ///< Pointer to Measured or Set condition
 
-  IUpdateManagerSvc* m_updMgrSvc; ///< Pointer to UpdateManagerSvc
+  SmartIF<IUpdateManagerSvc> m_updMgrSvc; ///< Pointer to UpdateManagerSvc
 
   MagneticFieldGridReader m_magFieldGridReader ;
   LHCb::MagneticFieldGrid m_magFieldGrid ;
 
-  bool m_isDown; ///< Cache the field polarity
+  bool m_isDown = false; ///< Cache the field polarity
+
+  // update the cached field polarity
+  void cacheFieldPolarity() {
+    m_isDown = m_magFieldGrid.fieldVectorClosestPoint({ 0,0,5200}).y() < 0 ;
+  }
 
 };
 

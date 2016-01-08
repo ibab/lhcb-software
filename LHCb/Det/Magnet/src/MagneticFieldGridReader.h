@@ -20,10 +20,10 @@ public:
 
   StatusCode readFiles( const std::vector<std::string>& filenames,
 			LHCb::MagneticFieldGrid& grid ) const ;
-  
+
   StatusCode readDC06File( const std::string& filename,
 			   LHCb::MagneticFieldGrid& grid ) const ;
-  
+
   void fillConstantField( const Gaudi::XYZVector& field ,
 			  LHCb::MagneticFieldGrid& grid ) const ;
 private:

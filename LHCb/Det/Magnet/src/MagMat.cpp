@@ -5,7 +5,7 @@
 
 MagMat::MagMat() {
 
-  Ncol = 0; Nrow = 0; Nele = 0; 
+  Ncol = 0; Nrow = 0; Nele = 0;
   ptr_data = 0;  // set pointer to null
 
 }
@@ -13,7 +13,7 @@ MagMat::MagMat() {
 
 MagMat::MagMat(int N, int M) {
 
-  Nrow = N; Ncol = M; Nele = N*M; 
+  Nrow = N; Ncol = M; Nele = N*M;
   ptr_data = new double[Nele];
 
   for( int i=0; i<Nrow; i++ ) {
@@ -21,13 +21,13 @@ MagMat::MagMat(int N, int M) {
 
       *(ptr_data+i*Ncol+j) = 0.;
 
-    } 
+    }
   }
 
 }
 
 MagMat::MagMat(const MagMat& m) {
-  Nrow = m.Nrow; Ncol = m.Ncol; Nele = Nrow*Ncol; 
+  Nrow = m.Nrow; Ncol = m.Ncol; Nele = Nrow*Ncol;
   ptr_data = new double[Nele];
   copy(m);
 }
@@ -47,7 +47,7 @@ void MagMat::copy(const MagMat&  m) {
 
       *(ptr_data+i*Ncol+j) = *(m.ptr_data+i*m.Ncol+j);
 
-    } 
+    }
   }
 
 }
@@ -86,7 +86,7 @@ MagMat MagMat::operator+(const MagMat& m) {
   }
 
   return b;
-} 
+}
 
 MagMat MagMat::operator+(const MagMat& m) const {
 
@@ -104,7 +104,7 @@ MagMat MagMat::operator+(const MagMat& m) const {
   }
 
   return b;
-} 
+}
 
 MagMat&  MagMat::operator+=(const MagMat& m) {
 
@@ -244,7 +244,7 @@ MagMat MagMat::T() const {
 
 void MagMat::reSize(int Nnew, int Mnew) {
 
- 
+
   if ( Nnew != Nrow || Mnew != Ncol ) {
 
     double*  p = ptr_data;

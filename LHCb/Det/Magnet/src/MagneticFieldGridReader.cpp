@@ -178,7 +178,7 @@ void MagneticFieldGridReader::fillGridFromQuadrants( GridQuadrant* quadrants,
 
         // 4th quadrant (negative x, negative y)
         const auto& Q4 = quadrants[3].Q[Nxquad * ( Nyquad * iz + iy ) + ix ];
-        grid.m_Q_V[ grid.m_Nxyz_V[0] * ( grid.m_Nxyz_V[1]*iz + (Nyquad-iy-1) ) + (Nxquad-ix-1)] = 
+        grid.m_Q_V[ grid.m_Nxyz_V[0] * ( grid.m_Nxyz_V[1]*iz + (Nyquad-iy-1) ) + (Nxquad-ix-1)] =
           Vec4f( Q4.x(), Q4.y(), Q4.z(), 0.0 );
         // 2nd quadrant (negative x, positive y)
         const auto& Q2 = quadrants[1].Q[Nxquad * ( Nyquad * iz + iy ) + ix ] ;

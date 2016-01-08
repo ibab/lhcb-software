@@ -19,7 +19,7 @@ public:
   double& operator[](int i);
   const double& operator[](int i) const;
 
- 
+
   MagVec& operator=(const MagVec& v);
   //  MagVec& operator=(const double& v);
   MagVec  operator+(const MagVec& v);
@@ -39,7 +39,7 @@ public:
 
 private:
 
-   
+
 
   int Nele;
 

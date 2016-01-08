@@ -1,8 +1,8 @@
-#ifndef LUTFORBDLFUNCTION_H 
+#ifndef LUTFORBDLFUNCTION_H
 #define LUTFORBDLFUNCTION_H 1
 
 /*
-  LutForBdlFunction class 
+  LutForBdlFunction class
   Lookup table implementation to tabulate
   function of n double arguments
 
@@ -11,7 +11,7 @@
 
   Initialize
     constructor          -  specify ranges and nr of bins for x1,x2,x3... (n-dim net)
-    resetIndexVector     -  set start point (the lowest values x1,x2,x3,...)   
+    resetIndexVector     -  set start point (the lowest values x1,x2,x3,...)
 
   Loop to fill table
     incrementIndexVector -  increment over all (x1,x2,x3,...) n-dim points
@@ -25,7 +25,7 @@
     getInterpolatedValueFromTable is slower than getValueFromTable by a factor of 2 approximately
     but uses less memory
 
-Example: 
+Example:
 
   int nvar =3;
   int  nbin[3] = {30, 30, 30};
@@ -41,7 +41,7 @@ Example:
     tabfun.fillTable( fun (var[0],var[1],var[2]) );
     iover= tabfun.incrementIndexVector();
   }
-  
+
 ...
 
 Retrieve information
@@ -49,9 +49,9 @@ Retrieve information
   var[0]=1.5;
   var[1]=4.1;
   var[2]=2.9;
-  tabfun.getValueFromTable(var);  
+  tabfun.getValueFromTable(var);
 or
-  tabfun.getInterpolatedValueFromTable(var);  
+  tabfun.getInterpolatedValueFromTable(var);
 
 
 */

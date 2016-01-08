@@ -1,5 +1,5 @@
 // $Id: MagnetCondLocations.h,v 1.2 2008-09-02 09:11:50 cattanem Exp $
-#ifndef MAGNETCONDLOCATIONS_H 
+#ifndef MAGNETCONDLOCATIONS_H
 #define MAGNETCONDLOCATIONS_H 1
 
 /** @namespace MagnetCondLocations
@@ -18,7 +18,7 @@ namespace MagnetCondLocations
   /// Location of Field Map file names for "Up" polarity
   static const std::string& FieldMapFilesUp =
          "/dd/Conditions/HardwareProperties/LHCb/Magnet/FieldMapFilesUp";
-  
+
   /// Location of Field Map file names for "Down" polarity
   static const std::string& FieldMapFilesDown =
          "/dd/Conditions/HardwareProperties/LHCb/Magnet/FieldMapFilesDown";

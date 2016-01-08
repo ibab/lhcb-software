@@ -1,4 +1,4 @@
-// Include files 
+// Include files
 // from Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/SystemOfUnits.h"
@@ -36,16 +36,16 @@ MagFieldReader::MagFieldReader( const std::string& name,
 //, m_pIAF(0)
 {
   declareProperty("Zmin", m_zMin =  -500.0*Gaudi::Units::mm);
-  declareProperty("Zmax", m_zMax = 14000.0*Gaudi::Units::mm);  
-  declareProperty("Step", m_step =   100.0*Gaudi::Units::mm);  
-  declareProperty("Xmin", m_xMin =     0.0*Gaudi::Units::mm);  
+  declareProperty("Zmax", m_zMax = 14000.0*Gaudi::Units::mm);
+  declareProperty("Step", m_step =   100.0*Gaudi::Units::mm);
+  declareProperty("Xmin", m_xMin =     0.0*Gaudi::Units::mm);
   declareProperty("Xmax", m_xMax =  4000.0*Gaudi::Units::mm);
-  declareProperty("Ymin", m_yMin =     0.0*Gaudi::Units::mm);  
+  declareProperty("Ymin", m_yMin =     0.0*Gaudi::Units::mm);
   declareProperty("Ymax", m_yMax =  4000.0*Gaudi::Units::mm);
   declareProperty("FieldSvcName",m_FieldServiceName="MagneticFieldSvc");
   declareProperty("TestFieldInt",m_testbdl=false);
   declareProperty("NInt",m_nInt=1000);
-  
+
 }
 
 //=============================================================================
@@ -55,10 +55,10 @@ StatusCode MagFieldReader::initialize() {
 
   StatusCode sc = GaudiTupleAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
     debug() << "FieldReader intialize() has been called" << endmsg;
-  
+
   m_pIMF = svc<IMagneticFieldSvc>( m_FieldServiceName, true );
   // m_pIAF = svc<IMagneticFieldSvc>( "AnalyticFieldSvc", true );
 
@@ -72,10 +72,10 @@ StatusCode MagFieldReader::initialize() {
 StatusCode MagFieldReader::execute() {
 
   if (m_testbdl) TestBdl();
-  
+
   // Print out info messages with the field value at different locations.
 
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
     debug() << "m_pIMF = " << m_pIMF << endmsg;
 
   Tuple nt1 = nTuple( 10, "Field", CLID_ColumnWiseTuple );
@@ -88,13 +88,13 @@ StatusCode MagFieldReader::execute() {
     for( double y = m_yMin; y <= m_yMax; y += m_step ) {
       for( double x = m_xMin; x <= m_xMax; x += m_step ) {
         Gaudi::XYZPoint P( x, y, z );
-        
+
 
           m_pIMF->fieldVector( P, B );
 
-        
-        
-        
+
+
+
         // fill ntuple
         nt1->column( "x", P.x()/Gaudi::Units::cm );
         nt1->column( "y", P.y()/Gaudi::Units::cm );
@@ -102,7 +102,7 @@ StatusCode MagFieldReader::execute() {
         nt1->column( "Bx", B.x()/Gaudi::Units::tesla );
         nt1->column( "By", B.y()/Gaudi::Units::tesla );
         nt1->column( "Bz", B.z()/Gaudi::Units::tesla );
- 
+
         nt1->write();
       }
     }
@@ -110,13 +110,13 @@ StatusCode MagFieldReader::execute() {
      Gaudi::XYZPoint P0( 0.0, 0.0, z);
      Gaudi::XYZPoint P02( 0.0, 0.0, z);
       m_pIMF->fieldVector( P0, B );
-  
-      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
         debug() << "Magnetic Field at ("
                 << P0.x() << ", " << P0.y() << ", " << P0.z() << " ) = "
                 << (B.x())/Gaudi::Units::tesla << ", "
                 << (B.y())/Gaudi::Units::tesla << ", "
-                << (B.z())/Gaudi::Units::tesla << " Tesla " 
+                << (B.z())/Gaudi::Units::tesla << " Tesla "
                 << endmsg;
   }
 
@@ -135,9 +135,9 @@ StatusCode MagFieldReader::finalize() {
 }
 
 
-void MagFieldReader::TestBdl() 
+void MagFieldReader::TestBdl()
 {
-  
+
 Tuple nt2 = nTuple( 20, "Field Integral", CLID_ColumnWiseTuple );
 
   IBIntegrator* bIntegrator = tool<IBIntegrator>("BIntegrator");
@@ -152,14 +152,14 @@ Tuple nt2 = nTuple( 20, "Field Integral", CLID_ColumnWiseTuple );
   // random number generation
   Rndm::Numbers gausstx(randSvc(),Rndm::Gauss(0.,sigtx/2));
   Rndm::Numbers gaussty(randSvc(),Rndm::Gauss(0.,sigty/2));
-  
+
   for (int i=0;i<m_nInt;i++) {
     double tx = gausstx();
     double ty = gaussty();
     if (fabs(tx) < sigtx && fabs(ty) < sigty) {
-      
+
       bIntegrator->calculateBdlAndCenter(start, stop, tx, ty, zC, bdl);
-  
+
       nt2->column( "tx", tx);
       nt2->column( "ty", ty);
       nt2->column( "Bdlx", bdl.x());
@@ -169,7 +169,7 @@ Tuple nt2 = nTuple( 20, "Field Integral", CLID_ColumnWiseTuple );
       nt2->write();
     }
   }
-  
-  releaseTool(bIntegrator).ignore(); 
-  
+
+  releaseTool(bIntegrator).ignore();
+
 }

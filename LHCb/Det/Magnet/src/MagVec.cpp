@@ -21,7 +21,7 @@ MagVec::MagVec(int N) {
 MagVec::MagVec(const MagVec& v) {
 
   Nele = v.Nele;
-  ptr_data = new double[Nele]; 
+  ptr_data = new double[Nele];
   for(int i=0;i<Nele;i++) *(ptr_data+i)=v[i];
 
 }
@@ -32,8 +32,8 @@ MagVec::~MagVec()
 
 double& MagVec::operator[](int i) {
 
-  if( i < 0 ) { std::cerr << "MagVec: Index < zero! " << std::endl; return ptr_data[0]; }; 
-  if( i >= Nele ) { std::cerr << "MagVec: Index too large! " << std::endl; return ptr_data[0]; }; 
+  if( i < 0 ) { std::cerr << "MagVec: Index < zero! " << std::endl; return ptr_data[0]; };
+  if( i >= Nele ) { std::cerr << "MagVec: Index too large! " << std::endl; return ptr_data[0]; };
 
   return  *(ptr_data+i);
 
@@ -41,8 +41,8 @@ double& MagVec::operator[](int i) {
 
 const double& MagVec::operator[](int i) const {
 
-  if( i < 0 ) { std::cerr << "MagVec: Index < zero! " << std::endl; return ptr_data[0]; }; 
-  if( i >= Nele ) { std::cerr << "MagVec: Index too large! " << std::endl; return ptr_data[0]; }; 
+  if( i < 0 ) { std::cerr << "MagVec: Index < zero! " << std::endl; return ptr_data[0]; };
+  if( i >= Nele ) { std::cerr << "MagVec: Index too large! " << std::endl; return ptr_data[0]; };
 
   return  *(ptr_data+i);
 
@@ -53,7 +53,7 @@ MagVec& MagVec::operator=(const MagVec& v) {
   if(Nele!=0 && Nele!=v.Nele) {
 std::cerr << "MagVec Assignment: size does not match!" << std::endl; return *this;
   }
- 
+
   if ( ptr_data != v.ptr_data ) {
     reSize(v.Nele);
     for(int i=0;i<Nele;i++) *(ptr_data+i) = v[i];
@@ -65,7 +65,7 @@ std::cerr << "MagVec Assignment: size does not match!" << std::endl; return *thi
 
 MagVec MagVec::operator+(const MagVec& v) {
 
-  if( Nele != v.Nele ) { std::cerr << "operator+: vectors size does not match!" << std::endl; return *this; }; 
+  if( Nele != v.Nele ) { std::cerr << "operator+: vectors size does not match!" << std::endl; return *this; };
   MagVec b(Nele);
 
   for (int i=0;i<Nele;i++) b[i] = *(ptr_data+i) + v[i];
@@ -75,9 +75,9 @@ MagVec MagVec::operator+(const MagVec& v) {
 
 MagVec MagVec::operator+(const MagVec& v) const {
 
-  if( Nele != v.Nele ) { std::cerr << "operator+: vectors size does not match!" << std::endl; return *this; }; 
+  if( Nele != v.Nele ) { std::cerr << "operator+: vectors size does not match!" << std::endl; return *this; };
   MagVec b(Nele);
- 
+
   for (int i=0;i<Nele;i++) b[i] = *(ptr_data+i) + v[i];
   return b;
 
@@ -85,7 +85,7 @@ MagVec MagVec::operator+(const MagVec& v) const {
 
 MagVec& MagVec::operator+=(const MagVec& v) {
 
- if( Nele != v.Nele ) { std::cerr << "operator+=: vectors size does not match!" << std::endl; return *this; }; 
+ if( Nele != v.Nele ) { std::cerr << "operator+=: vectors size does not match!" << std::endl; return *this; };
 
  for (int i=0;i<Nele;i++) *(ptr_data+i)+=v[i];
   return *this;
@@ -106,7 +106,7 @@ MagVec  MagVec::operator-(const MagVec& v) const{
 
   if( Nele != v.Nele ) { std::cerr << "operator+: vectors size does not match!" << std::endl; return *this; }
   MagVec b(Nele);
- 
+
   for (int i=0;i<Nele;i++) b[i] = *(ptr_data+i) - v[i];
   return b;
 
@@ -152,7 +152,7 @@ MagVec& MagVec::operator*=(const double& d) {
 
 void MagVec::reSize(int Nnew) {
 
- 
+
   if ( Nnew>=0 && Nnew != Nele ) {
     double*  p = ptr_data;
     int Nele_old = Nele;

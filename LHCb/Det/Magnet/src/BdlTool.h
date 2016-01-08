@@ -12,9 +12,9 @@
 class IMagneticFieldSvc;
 class LutForBdlFunction;
 
-static const InterfaceID IID_PatVTTBdlTool("PatVTTBdlTool", 1 , 0); 
+static const InterfaceID IID_PatVTTBdlTool("PatVTTBdlTool", 1 , 0);
 
-/** @class BdlTool BdlTool.h 
+/** @class BdlTool BdlTool.h
  * Field integral using lookup tables.
  * @author Mariusz Witek
  *
@@ -25,8 +25,8 @@ class BdlTool : public GaudiTool,
 public:
 
   /// Standard Constructor
-  BdlTool(const std::string& type, 
-          const std::string& name, 
+  BdlTool(const std::string& type,
+          const std::string& name,
           const IInterface* parent);
 
   /// Standard Destructor

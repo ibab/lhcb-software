@@ -3,6 +3,15 @@
 ! Responsible : Adlene Hicheur, Marco Cattaneo
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
+! 2016-01-08 - Gerhard Raven
+ - major change: follow interface change in ILHCbMagneticFieldSvc 
+     x requires matching version of Kernel/LHCbKernel
+ - prefer extends over direct (virtual) inheritance, and use extends' implementation
+   of queryInterface
+ - prefer direct member initialization
+ - prefer SmartIF over raw interface pointer + explicit release
+ - prefer STL algorithms over raw loops
+
 
 ! 2015-12-17 - Marco Cattaneo
  - Fix a clang warning

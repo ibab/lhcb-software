@@ -17,7 +17,7 @@ LutForBdlFunction::LutForBdlFunction(int nVar, int* nBinVar, double* minVar, dou
   int i;
   int good_input = 1;
 
-  // check arguments 
+  // check arguments
   if(nVar<1 || nVar>100) {
     good_input=0;
   }
@@ -36,7 +36,7 @@ LutForBdlFunction::LutForBdlFunction(int nVar, int* nBinVar, double* minVar, dou
       m_nPointVar[i]  = nBinVar[i]+1;
       m_minVar[i]     = minVar[i];
       m_maxVar[i]     = maxVar[i];
-      m_deltaVar[i]   = ( maxVar[i] - minVar[i] ) /  (m_nPointVar[i]-1);  
+      m_deltaVar[i]   = ( maxVar[i] - minVar[i] ) /  (m_nPointVar[i]-1);
     }
     createTable();
     // reset internal vectors
@@ -77,7 +77,7 @@ void LutForBdlFunction::deleteVectors() {
 
 void LutForBdlFunction::createTable() {
   int i;
-  int iSize = 1; 
+  int iSize = 1;
   for (i=0; i<m_nVar; i++) {
     iSize *= (m_nPointVar[i]);
   }
@@ -93,14 +93,14 @@ void LutForBdlFunction::resetIndexVector() {
   int i;
   for (i=0; i<m_nVar; i++) {
     m_indexVector[i] = 0;
-  }  
+  }
 }
 
 void LutForBdlFunction::resetVariableVector() {
   int i;
   for (i=0; i<m_nVar; i++) {
     m_variableVector[i] = 0;
-  }  
+  }
 }
 
 int LutForBdlFunction::incrementIndexVector() {
@@ -114,8 +114,8 @@ int LutForBdlFunction::incrementIndexVector() {
     else {
         break;
     }
-  }  
-  if(m_indexVector[m_nVar-1] > m_nPointVar[m_nVar-1]-1) { 
+  }
+  if(m_indexVector[m_nVar-1] > m_nPointVar[m_nVar-1]-1) {
     resetIndexVector();
     return 1;
   }
@@ -158,11 +158,11 @@ double LutForBdlFunction::getInterpolatedValueFromTable(double* var) {
     if(m_indexVector[i] > m_nPointVar[i]-2) continue;
     if(var[i]<m_minVar[i] || var[i]>m_maxVar[i]) continue;
     m_indexVector[i]++;
-    double dTab_dVar =  (m_table[tableLocation()] - tabVal) / m_deltaVar[i];  
+    double dTab_dVar =  (m_table[tableLocation()] - tabVal) / m_deltaVar[i];
     m_indexVector[i]--;
     double dVar = (var[i]-m_variableVector[i]);
     addTabVal += dTab_dVar*dVar;
-  }  
+  }
   tabVal+=addTabVal;
   return tabVal;
 }
@@ -192,7 +192,7 @@ void LutForBdlFunction::calculateIndexVector(double* var) {
     if(idx<0) idx=0;
     if(idx>(m_nPointVar[i]-1)) idx=m_nPointVar[i]-1;
     m_indexVector[i]=idx;
-  }  
+  }
 }
 
 void LutForBdlFunction::calculateClosestIndexVector(double* var) {
@@ -202,5 +202,5 @@ void LutForBdlFunction::calculateClosestIndexVector(double* var) {
     if(idx<0) idx=0;
     if(idx>(m_nPointVar[i]-1)) idx=m_nPointVar[i]-1;
     m_indexVector[i]=idx;
-  }  
+  }
 }

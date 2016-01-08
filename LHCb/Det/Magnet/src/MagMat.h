@@ -19,7 +19,7 @@ class MagMat
   MagMat(const MagMat& m);
  ~MagMat();
 
- 
+
 
  class MagMat_row {
  public:
@@ -43,8 +43,8 @@ class MagMat
  inline MagMat_row_const operator[] (int) const;
 
  MagMat&  operator=(const MagMat& m);
-  MagMat   operator+(const MagMat& m);  
- MagMat   operator+(const MagMat& m) const;  
+  MagMat   operator+(const MagMat& m);
+ MagMat   operator+(const MagMat& m) const;
  MagMat&  operator+=(const MagMat& m);
  MagMat   operator-(const MagMat& m);
  MagMat   operator-(const MagMat& m) const;
@@ -58,20 +58,20 @@ class MagMat
  //
 //invert sym matrix declared as non-symetric for convenience
 
- 
+
 
  int nrow() const;
  int ncol() const;
  // reSize method
  void reSize (int Nnew, int Mnew);
 
- 
+
 
   //  void invert(int ierr); // only if Ncol=Nrow !!
 
  private:
 
- 
+
   friend class MagMat_row;
   friend class MagMat_row_const;
 
@@ -113,22 +113,22 @@ inline double &MagMat::MagMat_row::operator[](int c)
 
 }
 
-inline const double & MagMat::MagMat_row_const::operator[](int c) const 
+inline const double & MagMat::MagMat_row_const::operator[](int c) const
 {
 
    if(_r<0||_r>=_a.Nrow || c<0||c>=_a.Ncol)
      std::cerr << "Range error in MagMat::operator[][]" << std::endl;
-   
+
    return *(_a.ptr_data+_r*_a.Ncol+c);
- 
+
 }
 
-inline MagMat::MagMat_row::MagMat_row(MagMat &a,int r) 
+inline MagMat::MagMat_row::MagMat_row(MagMat &a,int r)
    : _a(a), _r(r)
 {}
 
 inline MagMat::MagMat_row_const::MagMat_row_const
-(const MagMat&a,int r) 
+(const MagMat&a,int r)
    : _a(a), _r(r)
 {}
 
