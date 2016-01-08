@@ -115,9 +115,9 @@ public:
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2007-12-14
    */
-  virtual void setCode
+  void setCode
   ( const StatusCode& sc     ,
-    const ILVolume*   volume ) ;
+    const ILVolume*   volume ) override ;
   // ==========================================================================
   /** inspect the potential error in intersections
    *  @param  volume   the problematic volume
@@ -127,11 +127,11 @@ public:
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2007-12-14
    */
-  virtual void inspect
+  void inspect
   ( const ILVolume*                volume ,
     const Gaudi::XYZPoint&         pnt    ,
     const Gaudi::XYZVector&        vect   ,
-    const ILVolume::Intersections& cnt    ) ;
+    const ILVolume::Intersections& cnt    ) override;
   // ========================================================================
   /** report the recovered action in intersections
    *  @param  volume    the problematic volume
@@ -141,11 +141,11 @@ public:
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2007-12-14
    */
-  virtual void recovered
+  void recovered
   ( const ILVolume* volume    ,
     const Material* material1 ,
     const Material* material2 ,
-    const double    delta     ) ;
+    const double    delta     ) override ;
   // ========================================================================
   /** report the skipped intersection
    *  @param  volume   the problematic volume
@@ -154,10 +154,10 @@ public:
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2007-12-14
    */
-  virtual void skip
+  void skip
   ( const ILVolume* volume   ,
     const Material* material ,
-    const double    delta    ) ;
+    const double    delta    ) override;
   // ========================================================================
 private:
   // ==========================================================================
