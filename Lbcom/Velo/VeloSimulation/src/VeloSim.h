@@ -55,7 +55,7 @@ private:
     // remove underflows by ignoring results different from 0 or 1 by < 1e-24
     if(fabs(arg)>10.) return (arg>0. ? 0. : 1.);
     // turn off the inexact FPE (always goes off for this function)
-    static constexpr const auto c_sqrt1_2 = 1.0/sqrt(2.);
+    static const auto c_sqrt1_2 = 1.0/std::sqrt(2);
     auto reducedFPE = FPE::Guard{Inexact, true};
     return 0.5*std::erfc( c_sqrt1_2*arg );
   }
