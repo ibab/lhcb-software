@@ -3,6 +3,13 @@
 ! package manager : Marco Clemencic
 ! purpose:          Component library for Detector Description Services
 ! ====================================================================
+! 2016-01-07 Gerhard Raven
+ - prefer extends over pure virtual inheritance, and use extends' version
+   of queryInterface
+ - add override to virtual function implementations
+ - prefer STL algorithms over raw loops
+ - prefer SmartIF over raw pointers to interface + explicit release
+
 ! 2016-01-06 Gerhard Raven
  - follow major change in ITransportSvc: make methods const
  - prefer to inherit from extends over direct virtual inheritance, and

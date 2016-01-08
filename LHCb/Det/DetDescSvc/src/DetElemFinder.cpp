@@ -22,7 +22,7 @@ DECLARE_SERVICE_FACTORY( DetElemFinder )
 // Standard constructor, initializes variables
 //=============================================================================
 DetElemFinder::DetElemFinder( const std::string& name, ISvcLocator* svcloc ):
-  Service(name,svcloc)
+  base_class(name,svcloc)
 {
   declareProperty( "DetectorDataSvc", m_detDataSvcName = "DetectorDataSvc" );
   declareProperty( "RootElement",     m_rootElement    = "/dd/Structure/LHCb" );
@@ -31,19 +31,7 @@ DetElemFinder::DetElemFinder( const std::string& name, ISvcLocator* svcloc ):
 //=============================================================================
 // Destructor
 //=============================================================================
-DetElemFinder::~DetElemFinder() {} 
-
-//=============================================================================
-// IInterface implementation
-//=============================================================================
-StatusCode DetElemFinder::queryInterface(const InterfaceID& riid, void** ppvUnknown){
-  if ( IID_IDetElemFinder.versionMatch(riid) ) {
-    *ppvUnknown = (IDetElemFinder*)this;
-    addRef();
-    return StatusCode::SUCCESS;
-  }
-  return Service::queryInterface(riid,ppvUnknown);
-}
+DetElemFinder::~DetElemFinder() = default;
 
 //=============================================================================
 // Find the detector element
@@ -59,39 +47,33 @@ const IDetectorElement * DetElemFinder::detectorElementForPath(const std::string
 //=============================================================================
 StatusCode DetElemFinder::initialize ( )
 {
-	// base class initialization
-	StatusCode sc = Service::initialize();
-	if (!sc.isSuccess()) return sc;
+  // base class initialization
+  StatusCode sc = Service::initialize();
+  if (!sc.isSuccess()) return sc;
 
-	// local initialization
-	MsgStream log(msgSvc(),name());
+  // local initialization
+  MsgStream log(msgSvc(),name());
   if( log.level() <= MSG::DEBUG )
     log << MSG::DEBUG << "--- initialize ---" << endmsg;
 
-  IDataProviderSvc *detSvc = 0;
-  sc = service(m_detDataSvcName,detSvc,true);
-  if (!sc.isSuccess()) {
+  auto detSvc = service<IDataProviderSvc>(m_detDataSvcName,true);
+  if (!detSvc) {
 		log << MSG::ERROR << "Unable to get a handle to the detector data service ("
         << m_detDataSvcName << ")" << endmsg; 
-    return sc;
-	}
+    return StatusCode::FAILURE;
+  }
   
   DataObject *obj;
   sc = detSvc->retrieveObject(m_rootElement,obj);
   if (!sc.isSuccess()) {
 		log << MSG::ERROR << "Unable to retrieve object '" << m_rootElement << "'" << endmsg; 
-    detSvc->release();
     return sc;
-	}
+  }
   IDetectorElement *de = dynamic_cast<IDetectorElement *>(obj);
   if (!de) {
 		log << MSG::ERROR << "Object '" << m_rootElement << "' is not a DetectorElement" << endmsg; 
-    detSvc->release();
     return sc;
-	}
-
-  // I do not need anymore the data proivider
-  detSvc->release();
+  }
 
   // add all the detector elements to the map
   return insert(de);
@@ -107,8 +89,8 @@ StatusCode DetElemFinder::finalize ( )
     log << MSG::DEBUG << "--- finalize ---" << endmsg;
 
   if ( m_dumpMap ) {
-    for ( map_type::iterator i = m_map.begin(); i != m_map.end(); ++i ){
-      log << MSG::ALWAYS << i->first << " -> " << i->second->name() << endmsg;
+    for ( const auto& i : m_map ) {
+      log << MSG::ALWAYS << i.first << " -> " << i.second->name() << endmsg;
     } 
   }
 
@@ -119,7 +101,7 @@ StatusCode DetElemFinder::finalize ( )
 //=========================================================================
 //  get the PV path of the given DE
 //=========================================================================
-StatusCode DetElemFinder::detector_element_path(const IDetectorElement *de, std::string &path, const std::string &parent_path) 
+StatusCode DetElemFinder::detector_element_path(const IDetectorElement *de, std::string &path, const std::string &parent_path)  const
 {
   StatusCode sc = StatusCode::SUCCESS;
 
@@ -129,17 +111,13 @@ StatusCode DetElemFinder::detector_element_path(const IDetectorElement *de, std:
   // get the parent geometryInfo (supportIGeometryInfo() is public)
   IGeometryInfo* sgi = de->geometry()->supportIGeometryInfo();
 
-  if (NULL == sgi) {
-    return sc;
-  }
+  if (!sgi) return sc;
   
   // If the parent path was not specified, I have to find it recursively
   if (parent_path.empty()){
     if (de->parentIDetectorElement()) {
       sc = detector_element_path(de->parentIDetectorElement(),path);
-      if (!sc.isSuccess()) {
-        return sc;
-      }
+      if (!sc.isSuccess()) return sc;
     } else { // this should never happen
       return sc;
     }
@@ -163,9 +141,10 @@ StatusCode DetElemFinder::detector_element_path(const IDetectorElement *de, std:
   }
   
   // build the string
-  for ( ILVolume::PVolumePath::iterator pv = volumePath.begin(); pv != volumePath.end(); ++pv ) {
-    path += "/" + (*pv)->name();
-  }
+  path = std::accumulate( volumePath.begin(),volumePath.end(), path,
+                          [](std::string p, const IPVolume* vp) { 
+                              return p + "/" + vp->name();
+  });
   return sc;
 }
 
@@ -189,7 +168,7 @@ StatusCode DetElemFinder::insert ( const IDetectorElement *de, const std::string
     return sc;
   }
   
-  map_type::iterator x = m_map.find(path);
+  auto x = m_map.find(path);
   if ( x != m_map.end() ) {
     log << MSG::ERROR << "Cannot insert duplicated path \"" << path << "\" for \"" << de->name() << "\"" << endmsg;
     log << MSG::ERROR << "Already used for \"" << x->second->name() << "\"" << endmsg;
@@ -202,12 +181,9 @@ StatusCode DetElemFinder::insert ( const IDetectorElement *de, const std::string
   }
 
   // insert all children
-  IDetectorElement::IDEContainer::const_iterator child;
-  for ( child = de->childBegin(); sc.isSuccess() && child != de->childEnd(); ++child ){
+  for ( auto child = de->childBegin(); sc.isSuccess() && child != de->childEnd(); ++child ){
     sc = insert(*child,path);
-    if ( ! sc.isSuccess() ) {
-      return sc;
-    }
+    if ( ! sc.isSuccess() ) return sc;
   }
   return sc;
 }
