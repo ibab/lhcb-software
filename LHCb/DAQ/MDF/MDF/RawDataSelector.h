@@ -25,7 +25,7 @@ namespace LHCb  {
     * @author M.Frank
     * @date   12/12/2005
     */
-  class RawDataSelector : public Service, virtual public IEvtSelector  {
+  class RawDataSelector : public extends<Service, IEvtSelector>  {
   public:
 
     /** @class LoopContext
@@ -81,8 +81,6 @@ namespace LHCb  {
     /// IService implementation: finalize the service
     virtual StatusCode finalize();
 
-    // IInterface implementation: query interfaces
-    virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
 
     /** Create a new event loop context
       * @param[in,out] refpCtxt  Reference to pointer to store the context
@@ -183,7 +181,7 @@ namespace LHCb  {
 
     // Data Members
     /// ROOT class ID in TES
-    CLID                   m_rootCLID;
+    CLID                   m_rootCLID = CLID_NULL;
     /// Name of ROOT element in TES
     std::string            m_rootName;
     /// Property: name of the file manager service
@@ -191,7 +189,7 @@ namespace LHCb  {
     /// Property: input dataset name
     std::string            m_input;
     /// Pointer to file manager service
-    Gaudi::IIODataManager* m_ioMgr;
+    Gaudi::IIODataManager* m_ioMgr = nullptr;
     /// Property: First event to process
     int                    m_skipEvents;
     /// Property: printout frequency
@@ -203,7 +201,7 @@ namespace LHCb  {
     /// Property: veto mask from MDF header (only 128 bits significant)
     Mask                   m_vetoMask;
     /// Event record count
-    mutable int            m_evtCount;
+    mutable int            m_evtCount = 0;
   };
 }
 #endif  // MDF_RAWDATASELECTOR_H

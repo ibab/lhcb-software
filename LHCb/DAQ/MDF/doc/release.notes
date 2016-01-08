@@ -5,6 +5,12 @@
 !               Contains also the data structures to control MEPs and
 !               MEP fragments
 !-----------------------------------------------------------------------------
+! 2016-01-08 - Gerhard Raven
+ - prefer SmartIF over raw interface pointer with explicit queryInterface / ref 
+   count handling
+ - prefer extends over direct virtual public inheritance from interface,
+    and use extends' implementation of queryInterface
+
 ! 2015-12-11 - Gerhard Raven
  - replace deprecated messageService with msgSvc
 

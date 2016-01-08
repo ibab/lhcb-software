@@ -12,15 +12,15 @@
 // Framework include files
 #include "GaudiKernel/ConversionSvc.h"
 #include "GaudiKernel/StreamBuffer.h"
+#include "GaudiKernel/IDataManagerSvc.h"
+#include "GaudiUtils/IIODataManager.h"
 #include "MDF/MDFIO.h"
 
 // C++ include files
 #include <map>
 
 // Forward declarations
-class IDataManagerSvc;
 class IRegistry;
-namespace Gaudi {  class IIODataManager;     }
 
 /*
  *    LHCb namespace declaration
@@ -54,9 +54,9 @@ namespace LHCb  {
     /// Streambuffer to hold uncompressed data
     StreamBuffer           m_data;
     /// Reference to data manager interface
-    IDataManagerSvc*       m_dataMgr;
+    SmartIF<IDataManagerSvc> m_dataMgr;
     /// Reference to file manager service
-    Gaudi::IIODataManager* m_ioMgr;
+    SmartIF<Gaudi::IIODataManager> m_ioMgr;
     /// Property: Compression algorithm identifier
     int                    m_compress;
     /// Property: Flag to create checksum

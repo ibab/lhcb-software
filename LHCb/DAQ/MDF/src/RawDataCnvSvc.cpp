@@ -31,13 +31,13 @@ using namespace LHCb;
 using namespace Gaudi;
 
 namespace {
-  struct MDFMapEntry  {
+  struct MDFMapEntry  final {
     string           name;
     IDataConnection* connection;
     StreamDescriptor desc;
   };
   static bool s_recursiveFlag = true;
-  struct RecursiveDetection {
+  struct RecursiveDetection final {
     RecursiveDetection()   { s_recursiveFlag = !s_recursiveFlag; }
     ~RecursiveDetection()  { s_recursiveFlag = !s_recursiveFlag; }
     bool isRecursive() const    { return s_recursiveFlag; }
@@ -49,7 +49,7 @@ static string RAWDATA_INPUT = "RAW";
 // Initializing constructor
 RawDataCnvSvc::RawDataCnvSvc(CSTR nam, ISvcLocator* loc, long typ) 
   : ConversionSvc(nam, loc, typ), MDFIO(MDFIO::MDF_RECORDS, nam), 
-    m_wrFlag(false), m_dataMgr(0), m_ioMgr(0)
+    m_wrFlag(false)
 {
   m_data.reserve(48*1024);
   declareProperty("Compress",       m_compress=2);     // File compression
@@ -67,7 +67,7 @@ RawDataCnvSvc::RawDataCnvSvc(CSTR nam, ISvcLocator* loc, long typ)
 RawDataCnvSvc::RawDataCnvSvc(CSTR nam, ISvcLocator* loc) 
   : ConversionSvc(nam, loc, RAWDATA_StorageType), 
     MDFIO(MDFIO::MDF_RECORDS, nam), 
-    m_wrFlag(false), m_dataMgr(0), m_ioMgr(0)
+    m_wrFlag(false)
 {
   m_data.reserve(48*1024);
   declareProperty("Compress",       m_compress=2);     // File compression
@@ -85,13 +85,16 @@ RawDataCnvSvc::RawDataCnvSvc(CSTR nam, ISvcLocator* loc)
 StatusCode RawDataCnvSvc::initialize()     {
   StatusCode sc = ConversionSvc::initialize();
   MsgStream log(msgSvc(),name());
-  m_dataMgr = 0;
   if ( !sc.isSuccess() )  {
     log << MSG::ERROR << "Unable to initialize base class ConversionSvc." << endmsg;
     return sc;
   }
 
   // Add this conversion service to the EventPersistencySvc 
+  // Note: I assume that the lack of a release is on purpose, to keep 
+  //       this EventPersistencySvc instance alive, and avoid it going
+  //       out of scope, and then being resurrected without 'us' being
+  //       added... (as createIf is set to true here!)
   IPersistencySvc *pSvc = 0;
   sc = service("EventPersistencySvc",pSvc,true);
   if ( !sc.isSuccess() )  {
@@ -106,21 +109,20 @@ StatusCode RawDataCnvSvc::initialize()     {
   }
   
   // get the IDataManagerSvc interface from the EventPersistencySvc
-  sc = dataProvider()->queryInterface(IDataManagerSvc::interfaceID(),
-                                      (void**)&m_dataMgr);
-  if ( !sc.isSuccess() )  {
+  m_dataMgr = dataProvider();
+  if ( !m_dataMgr )  {
     log << MSG::ERROR << "Conversion service " << name() 
         << "not registered to EventPersistencySvc." << endmsg;
-    return sc;
+    return StatusCode::FAILURE;
   }
 
   // Retrieve conversion service handling event iteration
-  sc = Service::service(m_ioMgrName, m_ioMgr);
-  if( !sc.isSuccess() ) {
+  m_ioMgr = Service::service(m_ioMgrName);
+  if( !m_ioMgr ) {
     log << MSG::ERROR 
         << "Unable to localize interface IID_IIODataManager from service:" 
         << m_ioMgrName << endmsg;
-    return sc;
+    return StatusCode::FAILURE;
   }
   /// All OK
   return sc;
@@ -129,16 +131,14 @@ StatusCode RawDataCnvSvc::initialize()     {
 /// Service finalization
 StatusCode RawDataCnvSvc::finalize()    {
   long typ = repSvcType();
-  for(FileMap::iterator i=m_fileMap.begin(); i != m_fileMap.end(); ++i)  {
-    if ( typ == RAWDATA_StorageType && (*i).second )  {
-      closeIO((*i).second).ignore();
+  for(auto&  i : m_fileMap ) {
+    if ( typ == RAWDATA_StorageType && i.second )  {
+      closeIO(i.second).ignore();
     }
   }
   m_fileMap.clear();
-  if ( m_dataMgr ) m_dataMgr->release();
-  m_dataMgr = 0;
-  if ( m_ioMgr ) m_ioMgr->release();
-  m_ioMgr = 0;
+  m_dataMgr.reset();
+  m_ioMgr.reset();
   return ConversionSvc::finalize();
 }
 

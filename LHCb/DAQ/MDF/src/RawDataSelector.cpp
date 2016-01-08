@@ -56,7 +56,7 @@ void RawDataSelector::LoopContext::close()    {
 }
 
 RawDataSelector::RawDataSelector(const std::string& nam, ISvcLocator* svcloc)
-  : Service( nam, svcloc), m_rootCLID(CLID_NULL), m_ioMgr(0), m_evtCount(0)
+  : base_class( nam, svcloc)
 {
   declareProperty("DataManager", m_ioMgrName="Gaudi::IODataManager/IODataManager");
   declareProperty("TriggerMask", m_trgMask);
@@ -67,15 +67,6 @@ RawDataSelector::RawDataSelector(const std::string& nam, ISvcLocator* svcloc)
   declareProperty("Input",       m_input="");
 }
 
-// IInterface::queryInterface
-StatusCode RawDataSelector::queryInterface(const InterfaceID& riid, void** ppvIf) {
-  if (riid == IEvtSelector::interfaceID() )  {
-    *ppvIf = (IEvtSelector*)this;
-    addRef();
-    return S_OK;
-  }
-  return Service::queryInterface(riid, ppvIf);
-}
 
 /// IService implementation: Db event selector override
 StatusCode RawDataSelector::initialize()  {
@@ -95,14 +86,12 @@ StatusCode RawDataSelector::initialize()  {
     return status;
   }
   // Get DataSvc
-  IDataManagerSvc* eds = 0;
-  status = serviceLocator()->service("EventDataSvc", eds);
-  if( !status.isSuccess() ) {
+  auto eds = serviceLocator()->service<IDataManagerSvc>("EventDataSvc");
+  if( !eds ) {
     log << MSG::ERROR << "Cannot get IID_IDataManagerSvc from EventDataSvc" << endmsg;
-    return status;
+    return StatusCode::FAILURE;
   }
   m_rootCLID = eds->rootCLID();
-  eds->release();
   if( UNLIKELY(log.level() <= MSG::DEBUG) )
     log << MSG::DEBUG << "Selection CLID:" << m_rootCLID << endmsg;
   if ( !m_trgMask.empty() ) {
