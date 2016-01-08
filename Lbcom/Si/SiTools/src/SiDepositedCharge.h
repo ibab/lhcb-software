@@ -35,7 +35,7 @@ public:
   * @param  aHit hit
   * @return deposited charge
   */
-  double charge(const LHCb::MCHit* aHit) const;
+  double charge(const LHCb::MCHit* aHit) const override;
 
 private:
 
