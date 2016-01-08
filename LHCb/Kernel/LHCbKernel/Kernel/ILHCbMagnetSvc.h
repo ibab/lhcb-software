@@ -9,11 +9,13 @@
 #include "GaudiKernel/IAlgTool.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
 
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+
 namespace LHCb {
   class MagneticFieldGrid ;
 }
 
-static const InterfaceID IID_ILHCbMagnetSvc ( "ILHCbMagnetSvc", 1, 0 );
 
 /** @class ILHCbMagnetSvc ILHCbMagnetSvc.h Kernel/ILHCbMagnetSvc.h
  *  LHCb extensions to the Gaudi IMagneticFieldSvc interface
@@ -21,29 +23,29 @@ static const InterfaceID IID_ILHCbMagnetSvc ( "ILHCbMagnetSvc", 1, 0 );
  *  @author Marco Cattaneo
  *  @date   2008-07-18
  */
-class ILHCbMagnetSvc : virtual public IMagneticFieldSvc 
+class ILHCbMagnetSvc : public extend_interfaces<IMagneticFieldSvc>
 {
 
 public:
-  /// Virtual destructor
-  virtual ~ILHCbMagnetSvc() {}
 
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_ILHCbMagnetSvc; }
+  DeclareInterfaceID( ILHCbMagnetSvc, 2, 0 );
 
   virtual bool   useRealMap()            const = 0; ///< True if using measured map
   virtual bool   isDown()                const = 0; ///< True if the down polarity map is loaded
   virtual double signedRelativeCurrent() const = 0; ///< scale factor including polarity and current
 
-  /** Implementation of IMagneticFieldSvc interface.
+  /** implementation of the IMagneticFieldSvc interface.
    * @param[in]  xyz Point at which magnetic field vector will be given
    * @param[out] fvec Magnectic field vector.
    * @return StatusCode SUCCESS if calculation was performed.
    */
-  virtual StatusCode fieldVector( const ROOT::Math::XYZPoint& xyz,
-                                  ROOT::Math::XYZVector& fvec ) const = 0;
+  StatusCode fieldVector( const ROOT::Math::XYZPoint& xyz,
+                          ROOT::Math::XYZVector& fvec ) const override final {
+      fvec = fieldVector(xyz) ;
+      return StatusCode::SUCCESS ;
+  }
 
-  /** Implementation of IMagneticFieldSvc interface.
+  /** 
    * @param[in]  xyz Point at which magnetic field vector will be given
    * @return fvec Magnectic field vector.
    */

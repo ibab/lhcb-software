@@ -3,6 +3,12 @@
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
+! 2016-01-08 - Gerhard Raven
+ - major changes: 
+   o implement StatusCode fieldVector as final, shunt calls to XYZPoint fieldVector 
+   o use extend_interfaces instead of direct virtual inheritance from IMagneticFieldSvc
+   x requires matching version of Det/Magnet
+
 ! 2016-01-06 - Gerhard Raven
  - DetectorSegment: classify as 'final' and remove virtual destructor
  - major change: IEvtTypeSvc add const, prefer extend_interfaces
