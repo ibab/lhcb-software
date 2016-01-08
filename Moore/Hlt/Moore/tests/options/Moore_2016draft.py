@@ -6,7 +6,7 @@ Moore().UseTCK = False
 Moore().ForceSingleL0Configuration = False
 Moore().Split = ''
 Moore().EnableTimer = True
-# Moore().OutputLevel = INFO
+Moore().OutputLevel = INFO
 
 from Configurables import LHCbTimingAuditor, LHCbSequencerTimerTool
 LHCbTimingAuditor("TIMING").addTool(LHCbSequencerTimerTool, "TIMING")

@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2016-01-08 - Rosen Matev
+ - Use OutputLevel = INFO in Moore_2016draft.py and override in 2016_draft.qmt
+
 ! 2016-01-07 - Rosen Matev
  - A little friendlier Moore_2016draft.py
 

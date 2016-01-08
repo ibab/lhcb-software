@@ -21,7 +21,7 @@
   <argument name="args"><set>
     <text>../options/Moore_2016draft.py</text>
     <text>--option</text>
-    <text>from Configurables import Moore; Moore().RemoveInputHltRawBanks = True; Moore().EnableTimer='physics.2016_draft.csv'; from Configurables import EventSelector; EventSelector().PrintFreq=100;</text>
+    <text>from Configurables import Moore; Moore().RemoveInputHltRawBanks = True; Moore().EnableTimer='physics.2016_draft.csv'; from Configurables import EventSelector; EventSelector().PrintFreq=100; Moore().OutputLevel = 4;</text>
   </set></argument>
   <argument name="validator"><text>
   
