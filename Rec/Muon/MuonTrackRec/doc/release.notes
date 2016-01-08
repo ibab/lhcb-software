@@ -8,6 +8,9 @@
 !               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
 ! 2016-01-05 - Gerhard Raven
+ - major change: follow constification of IMuonFastPosTool interface
+
+! 2016-01-05 - Gerhard Raven
  - fix bug introduced in MuonCombRec::clear 
  - prefer auto
  - follow change in MuonInterfaces: make Muontrack const correct

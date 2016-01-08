@@ -39,7 +39,7 @@ StatusCode MuonDetPosTool::initialize ()
 StatusCode MuonDetPosTool::calcTilePos(const LHCb::MuonTileID& tile, 
                                        double& x, double& deltax,
                                        double& y, double& deltay,
-                                       double& z, double& deltaz) {
+                                       double& z, double& deltaz) const {
   return m_muonDetector->Tile2XYZ(tile, 
                                   x,deltax,
                                   y,deltay,

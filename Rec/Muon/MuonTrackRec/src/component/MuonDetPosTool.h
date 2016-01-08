@@ -25,7 +25,7 @@ public:
   StatusCode calcTilePos(const LHCb::MuonTileID& tile, 
                          double& x, double& deltax,
                          double& y, double& deltay,
-                         double& z, double& deltaz) override;
+                         double& z, double& deltaz) const override;
 private:
   DeMuonDetector* m_muonDetector = nullptr;
 };
