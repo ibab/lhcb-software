@@ -92,7 +92,7 @@ class TAlignment( LHCbConfigurableUser ):
             inputSequencer.MeasureTime = True
             trackselections = self.getProp("TrackSelections")
             if len(trackselections)>0:
-                trackInputSeq = GaudiSequencer( "AlignTrackSelSeq" )
+                trackInputSeq = GaudiSequencer( "AlignTrackSelSeq", IgnoreFilterPassed = True )
                 inputSequencer.Members.append(trackInputSeq)
                 # add the algorithms for the track selections to the sequence.
                 # also merge the tracks lists into one list
@@ -108,7 +108,7 @@ class TAlignment( LHCbConfigurableUser ):
 
             # add all particle selections
             if len(self.getProp("ParticleSelections"))>0:
-                particleInputSeq = GaudiSequencer( "AlignParticleSelSeq" )
+                particleInputSeq = GaudiSequencer( "AlignParticleSelSeq",IgnoreFilterPassed = True )
                 inputSequencer.Members.append(particleInputSeq)
                 from Configurables import FilterDesktop
                 particlemerger = FilterDesktop( "AlignParticles", Code="ALL" )
@@ -116,7 +116,9 @@ class TAlignment( LHCbConfigurableUser ):
                 particlemerger.CloneFilteredParticles = False
                 for i in self.getProp("ParticleSelections"):
                     alg = i.algorithm()
-                    if alg: particleInputSeq.Members.append( alg )
+                    if alg: 
+                        particleInputSeq.Members.append( alg )
+                        print "adding particleinputsel to sequence: ", i.name(), i.algorithm(), i.location()
                     particlemerger.Inputs.append( i.location() )
                 particleInputSeq.Members.append(particlemerger)
                 self.setProp("ParticleLocation",'/Event/Phys/AlignParticles/Particles')
@@ -133,23 +135,24 @@ class TAlignment( LHCbConfigurableUser ):
 
     # set up the monitoring sequence
     def createTrackMonitors(self, name, location ):
-        from Configurables import (TrackMonitor,TrackVeloOverlapMonitor,TrackITOverlapMonitor)
+        from Configurables import (TrackMonitor,TrackVeloOverlapMonitor,TrackITOverlapMonitor,
+                                   TrackFitMatchMonitor,TTTrackMonitor,OTTrackMonitor)
+        seq = [TrackMonitor(name + "TrackMonitor",
+                            TracksInContainer = location) ]
         if not self.getProp( "Upgrade" ):
-            seq = [TrackMonitor(name + "TrackMonitor",
-                                TracksInContainer = location),
-
-                   TrackVeloOverlapMonitor(name + "VeloOverlapMonitor",
-                                           TrackLocation =location),
-                   TrackITOverlapMonitor(name + "ITOverlapMonitor",
-                                         TrackLocation =location)]
-        else:
-            seq = [TrackMonitor(name + "TrackMonitor",
-                                TracksInContainer = location)]
+            seq += [TrackVeloOverlapMonitor(name + "VeloOverlapMonitor",
+                                            TrackLocation =location),
+                    TrackITOverlapMonitor(name + "ITOverlapMonitor",
+                                          TrackLocation =location),
+                    TTTrackMonitor(name+"TTTrackMonitor",
+                                   TracksInContainer =location),
+                    OTTrackMonitor(name+"OTTrackMonitor", TrackLocation = location),
+                    TrackFitMatchMonitor(name + "FitMatchMonitor",TrackContainer =location)]
         return seq
 
     def monitorSeq( self ) :
         from Configurables import (TrackVertexMonitor,ParticleToTrackContainer)
-        monitorSeq = GaudiSequencer("AlignMonitorSeq")
+        monitorSeq = GaudiSequencer("AlignMonitorSeq", IgnoreFilterPassed = True)
         for i in self.getProp("TrackSelections"):
             if isinstance(i,str): i = TrackSelection(i)
             name = i.name()
@@ -158,11 +161,13 @@ class TAlignment( LHCbConfigurableUser ):
         for i in self.getProp("ParticleSelections"):
             location = i.location()
             name = i.name()
-            monitorSeq.Members += [ ParticleToTrackContainer(name + "ParticleToTrackForMonitoring",
+            pmonseq = GaudiSequencer("AlignMonitorSeq" + name)
+            pmonseq.Members += [ ParticleToTrackContainer(name + "ParticleToTrackForMonitoring",
                                                              ParticleLocation = location,
                                                              TrackLocation = location + "Tracks")]
-            monitorSeq.Members += self.createTrackMonitors(name,location + "Tracks")
-
+            pmonseq.Members += self.createTrackMonitors(name,location + "Tracks")
+            monitorSeq.Members.append(pmonseq)
+            
         if self.getProp("VertexLocation") != "":
              monitorSeq.Members.append(TrackVertexMonitor("AlignVertexMonitor",
                                                           PVContainer = self.getProp("VertexLocation")))
@@ -186,7 +191,10 @@ class TAlignment( LHCbConfigurableUser ):
         handle.topElement = self.getProp( subdet + 'TopLevelElement' )
         handle.precision = self.getProp( "Precision" )
         handle.depths = depths
-        handle.outputFile = self.getProp('CondFilePrefix') + 'Conditions/' + subdet + '/Alignment/' +condname + '.xml'
+        subdetprefix = subdet
+        if self.getProp('DataCondType') is "Run2":
+            if subdet in ['IT','TT','OT','Velo']: subdetprefix = 'Online/' + subdet
+        handle.outputFile = self.getProp('CondFilePrefix') + 'Conditions/' + subdetprefix + '/Alignment/' +condname + '.xml'
         handle.author = getpass.getuser()
         handle.desc = self.getProp('DatasetName')
         alg.XmlWriters.append("WriteAlignmentConditionsTool/" + name)
