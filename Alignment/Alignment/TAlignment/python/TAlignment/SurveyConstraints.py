@@ -119,7 +119,7 @@ class SurveyConstraints( LHCbConfigurableUser ):
         for f in XmlFilesDict['IT'][ver]: self.XmlFiles += [ self.defaultSurveyDir() + "IT/"+f+".xml" ]
         self.XmlUncertainties += [ "ITSystem                   : 1 1 1 0.01 0.01 0.01",
                                    "ITT.                       : 0.5 0.5 0.5 0.001 0.001 0.001",
-                                   "ITT.*?Box                  : 0.5 0.5 0.5 0.001 0.001 0.001",
+                                   "ITT.*?Box                  : 2.0 2.0 2.0 0.001 0.001 0.001",
                                    "ITT.*?Layer.{1,2}          : 0.2 0.05 0.05 0.0001 0.0001 0.001",
                                    "ITT.*?Layer(X1U|VX2)       : 0.2 0.05 0.05 0.0001 0.0001 0.001",
                                    "ITT.*?Layer.{1,2}Ladder.*? : 0.1 0.02 0.02 0.0001 0.0001 0.001" ] 
