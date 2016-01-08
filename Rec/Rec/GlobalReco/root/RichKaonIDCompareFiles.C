@@ -46,7 +46,10 @@ void RichKaonIDCompareFiles()
   defaultConfig.var1      = GlobalPID::richDLLk;
   defaultConfig.var2      = GlobalPID::richDLLpi;
 
-  pid->loadTTree("/usera/jonesc/LHCbCMake/lhcb-head/BrunelDevNightly/output/Run2/Quartic/1000events/protoparticles.tuples.root");
+  const std::string dir = "/Users/chris/LHCb/RootFiles/Run2";
+  //const std::string dir = "/usera/jonesc/LHCbCMake/lhcb-head/BrunelDevNightly/output/Run2";
+
+  pid->loadTTree((dir+"/Quartic/50000events/protoparticles.tuples.root").c_str());
   pid->config = defaultConfig;
   pid->config.subtitle = "Quartic";
   pid->config.superImpose = false;
@@ -54,7 +57,7 @@ void RichKaonIDCompareFiles()
   // create the plot
   pid->makeCurve(nTracks);
 
-  pid->loadTTree("/usera/jonesc/LHCbCMake/lhcb-head/BrunelDevNightly/output/Run2/Quartic-NoAmbig/1000events/protoparticles.tuples.root");
+  pid->loadTTree((dir+"/Quartic-NoAmbig/50000events/protoparticles.tuples.root").c_str());
   pid->config = defaultConfig;
   pid->config.subtitle = "Quartic - No Ambiguous Photon Test";
   pid->config.superImpose = true;
@@ -62,7 +65,7 @@ void RichKaonIDCompareFiles()
   // create the plot
   pid->makeCurve(nTracks);
 
-  pid->loadTTree("/usera/jonesc/LHCbCMake/lhcb-head/BrunelDevNightly/output/Run2/Esti-LightestOnly/1000events/protoparticles.tuples.root");
+  pid->loadTTree((dir+"/Esti-LightestOnly/50000events/protoparticles.tuples.root").c_str());
   pid->config = defaultConfig;
   pid->config.subtitle = "Estimation - Lightest Hypo Only";
   pid->config.superImpose = true;
@@ -70,7 +73,7 @@ void RichKaonIDCompareFiles()
   // create the plot
   pid->makeCurve(nTracks);
 
-  pid->loadTTree("/usera/jonesc/LHCbCMake/lhcb-head/BrunelDevNightly/output/Run2/Esti-All/1000events/protoparticles.tuples.root");
+  pid->loadTTree((dir+"/Esti-All/50000events/protoparticles.tuples.root").c_str());
   pid->config = defaultConfig;
   pid->config.subtitle = "Estimation - All Hypos";
   pid->config.superImpose = true;

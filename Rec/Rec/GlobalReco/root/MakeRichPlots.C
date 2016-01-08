@@ -9,9 +9,14 @@ void MakeRichPlots()
 
   const std::string imageType = "pdf";
 
+  const std::string dir = "/Users/chris/LHCb/RootFiles/Run2";
+  //const std::string dir = "/usera/jonesc/LHCbCMake/lhcb-head/BrunelDevNightly/output/Run2";
+
   // load the file
-  TFile * f = TFile::Open("/usera/jonesc/LHCbCMake/lhcb-head/BrunelDevNightly/output/Run2/Quartic/1000events/protoparticles.tuples.root");
-  const std::string nametag = "Quartic";
+  //const std::string nametag = "Quartic";
+  const std::string nametag = "Quartic-NoAmbig";
+  //const std::string nametag = "Esti-All";
+  TFile * f = TFile::Open((dir+"/"+nametag+"/50000events/protoparticles.tuples.root").c_str());
 
   TTree * tree = (TTree*)gDirectory->Get("ChargedProtoTuple/protoPtuple");
 
