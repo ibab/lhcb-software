@@ -10,8 +10,8 @@ void MakeRichPlots()
   const std::string imageType = "pdf";
 
   // load the file
-  //TFile * f = new TFile("/usera/jonesc/LHCbCMake/BrunelDevNightly/Run2/AllTracks/protoparticles.tuples.root");
-  TFile * f = new TFile("/usera/jonesc/LHCbCMake/BrunelDevNightly/Run2/LongTracks/protoparticles.tuples.root");
+  TFile * f = TFile::Open("/usera/jonesc/LHCbCMake/lhcb-head/BrunelDevNightly/output/Run2/Quartic/1000events/protoparticles.tuples.root");
+  const std::string nametag = "Quartic";
 
   TTree * tree = (TTree*)gDirectory->Get("ChargedProtoTuple/protoPtuple");
 
@@ -67,7 +67,7 @@ void MakeRichPlots()
       piMisIDEff->SetMarkerColor(kBlue);
       piMisIDEff->SetLineColor(kBlue);
       
-      c->SaveAs( ("KaonID-DLL"+cC.str()+"."+imageType).c_str() );
+      c->SaveAs( (nametag+"-KaonID-DLL"+cC.str()+"."+imageType).c_str() );
     }
     else
     {
@@ -103,7 +103,7 @@ void MakeRichPlots()
       piMisIDEff->SetMarkerColor(kBlue);
       piMisIDEff->SetLineColor(kBlue);
       
-      c->SaveAs( ("ProtonID-DLL"+cC.str()+"."+imageType).c_str() );   
+      c->SaveAs( (nametag+"-ProtonID-DLL"+cC.str()+"."+imageType).c_str() );   
     }
     else
     {
