@@ -3,6 +3,9 @@ Package : AlignmentInterfaces
 Package Coordinator : Johan Blouw
 Purpose :  Collection of interfaces needed for the T-station alignment
 
+! 2016-01-08 - Wouter Hulsbergen
+ - add more fields to 'IAlignSolvTool::SolutionInfo'
+
 ! 2015-08-13 - Maurizio Martinelli
  - added the method that gets the alignment constants to the AlignUpdateTool interface
 

@@ -32,8 +32,12 @@ public:
   // simple struct that stores some info on solution
   struct SolutionInfo {
     double totalChisq ;
-    double maxChisqEigenMode ;
-    double minEigenValue ;
+    double maxChisqEigenMode ;          // max chi2 contribution of a single mode
+    double minEigenValue ;              // smallest eigenvalue
+    size_t weakestModeMaxPar ;          // parameter that contributes strongest to weakest mode
+    double weakestModeMaxParCoef ;      // coefficient of this parameter in eigenvector 
+    size_t numNegativeEigenvalues ;     // number of negative eigenvalues (lagrange constraints)
+    size_t numSmallEigenvalues ;        // number of eigenvalues smaller than one
   } ;
 
   // Solves the system Ax=b for x. Returns A=A^{-1} and b=x.
