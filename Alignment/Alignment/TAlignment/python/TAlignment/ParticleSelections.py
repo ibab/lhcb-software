@@ -165,10 +165,6 @@ def ReviveHltTracks(TriggerLines=[]):
                                                 InputLocation = hltTrackConv.TrackDestination,
                                                 OutputLocation = 'Rec/Track/Best' )
     trackseq.Members.append( fitseq )
-    # now make sure that there are at least 2 tracks left
-    from Configurables import LoKi__VoidFilter as LokiFilter
-    trackseq.Members.append( LokiFilter ( 'BestTrackFilter' ,
-                                          Code = "1 < CONTAINS ( 'Rec/Track/Best' )" ) )
     return HltLines
 
 
@@ -228,7 +224,7 @@ def defaultHLTD0Selection():
 
     # create the sequence that we pass to the alignment
     from Configurables import TrackParticleMonitor, GaudiSequencer
-    recoD0Seq= GaudiSequencer("RecoD0Seq")
+    recoD0Seq= GaudiSequencer("RecoD0Seq",IgnoreFilterPassed=True)
     recoD0Seq.Members = [
         ChargedProtoParticleMaker('ChargedProtoPMaker'),
         ChargedProtoParticleAddRichInfo('ChargedProtoPAddRich'),
@@ -427,7 +423,7 @@ def defaultMinBiasD0Selection():
 
     # create the sequence that we pass to the alignment
     from Configurables import TrackParticleMonitor, GaudiSequencer
-    recoD0Seq= GaudiSequencer("RecoD0Seq")
+    recoD0Seq= GaudiSequencer("RecoD0Seq",IgnoreFilterPassed = True)
     recoD0Seq.Members = [
         ChargedProtoParticleMaker('ChargedProtoPMaker'),
         ChargedProtoParticleAddRichInfo('ChargedProtoPAddRich'),
