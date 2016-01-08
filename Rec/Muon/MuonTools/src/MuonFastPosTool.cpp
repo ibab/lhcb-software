@@ -91,7 +91,7 @@ StatusCode MuonFastPosTool::initialize() {
 StatusCode MuonFastPosTool::calcTilePos(const LHCb::MuonTileID& tile,
                                         double& x, double& deltax,
                                         double& y, double& deltay,
-                                        double& z, double& /*deltaz*/)
+                                        double& z, double& /*deltaz*/) const
 {
 
   int station=tile.station();

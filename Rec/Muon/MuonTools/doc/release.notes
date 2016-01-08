@@ -2,6 +2,9 @@
 ! Package     : MuonTools
 ! Responsible : Alessia Satta Alessia.Sattaft@cern.ch
 ! ========================================================================
+! 2016-01-08 - Gerhard Raven
+ - major change: follow constification of IMuonFastPosTool interface
+
 ! 2015-12-28 - Gerhard Raven
  - follow changes in MuonInterfaces:
     o pass MuonTileID by value

@@ -31,15 +31,16 @@ public:
   
   ~MuonFastPosTool( ) override = default ; ///< Destructor
 
+  StatusCode initialize() override;
+
   /** Calculate the x,y,z and dx,dy,dz of a MuonTileID in mm
    * this ignores gaps: these can never be read out independently
    */
-  virtual StatusCode calcTilePos(const LHCb::MuonTileID& tile, 
-                                 double& x, double& deltax,
-                                 double& y, double& deltay,
-                                 double& z, double& deltaz);
+  StatusCode calcTilePos(const LHCb::MuonTileID& tile, 
+                         double& x, double& deltax,
+                         double& y, double& deltay,
+                         double& z, double& deltaz) const override;
   
-  StatusCode initialize();
   
 private:
 
@@ -55,7 +56,6 @@ private:
   std::vector<unsigned int> m_padGridY;
   std::vector<float> m_padSizeX;
   std::vector<float> m_padSizeY;
-//  IDataProviderSvc* m_DDS;
   std::vector<Gaudi::XYZPoint> m_pos[5];
   DeMuonDetector* m_muonDetector;  
 };
