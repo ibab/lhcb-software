@@ -26,19 +26,19 @@ public:
   ConfigFileAccessSvc(const std::string& name, ISvcLocator* pSvcLocator);
   ~ConfigFileAccessSvc( ) override = default;     ///< Destructor
 
-  StatusCode initialize();    ///< Service initialization
-  StatusCode finalize();      ///< Service initialization
+  StatusCode initialize() override;    ///< Service initialization
+  StatusCode finalize() override;      ///< Service initialization
 
-  boost::optional<PropertyConfig>  readPropertyConfig(const PropertyConfig::digest_type& ref);
-  PropertyConfig::digest_type      writePropertyConfig(const PropertyConfig& config);
+  boost::optional<PropertyConfig>  readPropertyConfig(const PropertyConfig::digest_type& ref) override;
+  PropertyConfig::digest_type      writePropertyConfig(const PropertyConfig& config) override;
 
-  boost::optional<ConfigTreeNode>  readConfigTreeNode(const ConfigTreeNode::digest_type& ref);
-  ConfigTreeNode::digest_type      writeConfigTreeNode(const ConfigTreeNode& config);
+  boost::optional<ConfigTreeNode>  readConfigTreeNode(const ConfigTreeNode::digest_type& ref) override;
+  ConfigTreeNode::digest_type      writeConfigTreeNode(const ConfigTreeNode& config) override;
 
-  boost::optional<ConfigTreeNode>  readConfigTreeNodeAlias(const ConfigTreeNodeAlias::alias_type&);
-  ConfigTreeNodeAlias::alias_type writeConfigTreeNodeAlias(const ConfigTreeNodeAlias&);
+  boost::optional<ConfigTreeNode>  readConfigTreeNodeAlias(const ConfigTreeNodeAlias::alias_type&) override;
+  ConfigTreeNodeAlias::alias_type writeConfigTreeNodeAlias(const ConfigTreeNodeAlias&) override;
 
-  std::vector<ConfigTreeNodeAlias> configTreeNodeAliases(const ConfigTreeNodeAlias::alias_type&);
+  std::vector<ConfigTreeNodeAlias> configTreeNodeAliases(const ConfigTreeNodeAlias::alias_type&) override;
 private:
   MsgStream& verbose() const { return msg(MSG::VERBOSE); }
   MsgStream&   debug() const { return msg(MSG::DEBUG);   }

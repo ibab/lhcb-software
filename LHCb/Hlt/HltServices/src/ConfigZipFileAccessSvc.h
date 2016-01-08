@@ -22,9 +22,9 @@ class ConfigZipFileAccessSvc : public ConfigArchiveAccessSvc {
 public:
   ConfigZipFileAccessSvc(const std::string& name, ISvcLocator* pSvcLocator);
   ~ConfigZipFileAccessSvc( ) override = default;     ///< Destructor
-  StatusCode finalize();      ///< Service initialization
+  StatusCode finalize() override;      ///< Service initialization
 private:  
-  IArchive*  file() const;
+  IArchive*  file() const override;
   mutable std::unique_ptr<IArchive>    m_file;
   mutable std::string                  m_name;   ///< filename of zip file from which to read configurations
   std::string                          m_mode;   ///< which flags to specify when opening the zip file

@@ -21,7 +21,7 @@ class ConfigTarFileAccessSvc : public ConfigArchiveAccessSvc {
 public:
   ConfigTarFileAccessSvc(const std::string& name, ISvcLocator* pSvcLocator);
   ~ConfigTarFileAccessSvc( ) override = default;     ///< Destructor
-  StatusCode finalize();      ///< Service initialization
+  StatusCode finalize() override;      ///< Service initialization
 private:
   IArchive*  file() const override;
 

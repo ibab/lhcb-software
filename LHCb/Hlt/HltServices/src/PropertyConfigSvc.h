@@ -149,7 +149,7 @@ private:
 
   MsgStream& msg(MSG::Level level) const;
 
-  void onCreate(const IAlgTool* tool);
+  void onCreate(const IAlgTool* tool) override;
 
   template <typename T> T* resolve(const std::string& name) const;
   StatusCode invokeSetProperties(const PropertyConfig& config) const;
