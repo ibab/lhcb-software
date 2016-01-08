@@ -243,6 +243,9 @@ namespace Al
 	ElementData& elementdata = const_cast<ElementData&>(equations.element((*ielem)->index())) ;
 	if( elementdata.numHits() != 0 ) {
 	  error() << "AlignUpdateTool::addDaughterDerivatives does not yet work if only subset of hits taken by daughters."
+		  << (*ielem)->name() << " "
+		  << (*ielem)->daughters() << " "
+		  << elementdata.numHits()
 		  << endreq ;
 	  return StatusCode::FAILURE ;
 	}
@@ -359,6 +362,24 @@ namespace Al
   {
     return process( constequations, convergencestatus, m_iteration++, 20 ) ;
   }
+
+  namespace {
+    std::pair<const AlignmentElement*, int> findElementByParameter( const IGetElementsToBeAligned::Elements& elements,
+								    const size_t globalparameterindex)
+    {
+      std::pair<const AlignmentElement*, int> rc(0,-1) ;
+      for( const auto& ielem: elements ) {
+	const int di = globalparameterindex - ielem->activeParOffset() ;
+	if( 0 <= di && di < int(ielem->dofMask().nActive()) ) {
+	  int parindex = ielem->dofMask().parIndex( di ) ;
+	  rc.first  = ielem ;
+	  rc.second = parindex ;
+	  break ;
+	} 
+      }
+      return rc ;
+    }
+  }    
 
   bool AlignUpdateTool::checkGeometry( const Al::Equations& equations ) const 
   {
@@ -556,6 +577,7 @@ namespace Al
       sc = m_matrixSolverTool->compute(covmatrix, solution,solinfo);
       if (sc.isSuccess()) {
 
+	// undo the scaling
 	if (m_usePreconditioning) {
 	  info() << "Applying post-conditioning" << endreq ;
 	  postCondition(solution,covmatrix, scale) ;
@@ -582,9 +604,36 @@ namespace Al
 		   << "Alignment delta chisquare/track dof: "
 		   << deltaChi2 / equations.totalTrackNumDofs() << std::endl;
 	logmessage << "Alternative total chisq: " << solinfo.totalChisq  << std::endl
-		   << "Smallest eigenvalue: " << solinfo.minEigenValue << std::endl
-		   << "Maximum chisq contribution of eigenmode: " << solinfo.maxChisqEigenMode << std::endl ;
+		   << "Maximum chisq contribution of eigenmode: " << solinfo.maxChisqEigenMode << std::endl 
+		   << "Number of negative eigenvalues: " << solinfo.numNegativeEigenvalues << std::endl
+		   << "Number of eigenvalues < 1: " << solinfo.numSmallEigenvalues << std::endl
+		   << "Smallest eigenvalue: " << solinfo.minEigenValue << std::endl ;
+	// print which parameter contributes most to this mode
+	{
+	  std::pair<const AlignmentElement*, int> elem = findElementByParameter(elements,solinfo.weakestModeMaxPar) ;
+	  if(elem.first) {
+	    logmessage << "Parameter contributing most to weakest mode: " 
+		       << elem.first->name() << " " << elem.second << " " 
+		       <<  solinfo.weakestModeMaxParCoef << std::endl ;
+	  }
+	}
+	// compute which parameter contributes most to total delta chi2
+	{
+	  size_t imaxchi2(0) ;
+	  double maxchi2(0) ;
+	  for(size_t i=0; i<halfD2Chi2dX2.size(); ++i) {
+	    double thisdeltachi2 = solution(i) * halfDChi2dX(i) ;
+	    if( maxchi2 < thisdeltachi2 ) {
+	      maxchi2 = thisdeltachi2 ;
+	      imaxchi2 = i ;
+	    }
+	  }
+	  std::pair<const AlignmentElement*, int> elem = findElementByParameter(elements,imaxchi2) ;
+	  logmessage << "Alignment parameter with largest contribution to chi2: "
+		     << elem.first->name() << " " << elem.second << " " << maxchi2 << std::endl ;
+	}
 
+	// print the constraints
 	m_lagrangeconstrainttool->printConstraints(solution, covmatrix, logmessage) ;
 	
 	if (printDebug()) debug() << "==> Putting alignment constants" << endmsg;
