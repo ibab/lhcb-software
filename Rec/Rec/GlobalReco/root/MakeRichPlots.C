@@ -1,5 +1,6 @@
-#include "TROOT.h"
-#include "TSystem.h"
+
+//#include "TROOT.h"
+//#include "TSystem.h"
 #include "TPad.h"
 #include "TCanvas.h"
 #include "TH1F.h"
@@ -14,8 +15,8 @@ void MakeRichPlots()
 
   // load the file
   //const std::string nametag = "Quartic";
-  const std::string nametag = "Quartic-NoAmbig";
-  //const std::string nametag = "Esti-All";
+  //const std::string nametag = "Quartic-NoAmbig";
+  const std::string nametag = "Esti-All";
   TFile * f = TFile::Open((dir+"/"+nametag+"/50000events/protoparticles.tuples.root").c_str());
 
   TTree * tree = (TTree*)gDirectory->Get("ChargedProtoTuple/protoPtuple");

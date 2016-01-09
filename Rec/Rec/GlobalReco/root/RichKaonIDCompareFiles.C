@@ -1,5 +1,5 @@
 
-#include "TROOT.h"
+//#include "TROOT.h"
 
 //#include "GlobalPID.h"
 #include "GlobalPID.C"
@@ -21,7 +21,7 @@ void RichKaonIDCompareFiles()
 
   // Histo range
   defaultConfig.useFixedGraphRange = true;
-  defaultConfig.minGraphX = 60;
+  defaultConfig.minGraphX = 80;
   defaultConfig.maxGraphX = 100;
   defaultConfig.minGraphY = 1;
   defaultConfig.maxGraphY = 20;
@@ -32,7 +32,7 @@ void RichKaonIDCompareFiles()
   // Momentum range
   defaultConfig.minP      = 3   * GeV;
   defaultConfig.maxP      = 100 * GeV;
-  defaultConfig.minPt     = 0.0 * GeV;
+  defaultConfig.minPt     = 0.5 * GeV;
   defaultConfig.maxPt     = 100 * GeV;
   // track selection
   defaultConfig.trackType = GlobalPID::Long;
