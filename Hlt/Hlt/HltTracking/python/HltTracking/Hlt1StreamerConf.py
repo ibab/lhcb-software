@@ -88,7 +88,18 @@ FitTrack = LoKi.Hlt1.UpgradeConf (
     True                         ,                     ##              "Owner"
     True                         ,                     ##        "TransferIDs"
     True                         ,                     ##   "TransferAncestor"
-    True                         ,                     ##  "TransferExtraInfo"
+    False                        ,                     ##  "TransferExtraInfo"
+    True                         )                     ##          "OrderByPt"
+# =============================================================================
+FilterGhostProb = LoKi.Hlt1.UpgradeConf(
+    Hlt1Tools["FilterGhostProb"]   ,                     ##               "Tool" 
+    Hlt1TrackLoc["FilterGhostProb"],                     ##          "TESOutput"
+    Hlt1CacheLoc["FilterGhostProb"],                     ##              "Cache"
+    LHCb.Track.Long              ,                     ##          "TrackType"
+    False                        ,                     ##              "Owner"
+    False                        ,                     ##        "TransferIDs"
+    False                        ,                     ##   "TransferAncestor"
+    False                        ,                     ##  "TransferExtraInfo"
     True                         )                     ##          "OrderByPt"
 # =============================================================================
 VeloOnlyFitTrack = LoKi.Hlt1.UpgradeConf (
@@ -138,6 +149,7 @@ IsMuon = LoKi.Hlt1.UpgradeConf(
 _trUpgrader = {}
 _trUpgrader['ComplementForward'] = ComplementForward
 _trUpgrader['FitTrack'         ] = FitTrack
+_trUpgrader['FilterGhostProb'     ] = FilterGhostProb
 _trUpgrader['MatchVeloMuon'    ] = MatchVeloMuon
 _trUpgrader['IsMuon'           ] = IsMuon
 

@@ -9,6 +9,7 @@ from Configurables import ( PatSeedingTool,
                             PatForwardTool,
                             PatVeloTTHybridTool,
                             MatchVeloMuon,
+                            HltTrackFilterGhostProb,
                             MatchVeloTTMuon,
                             HltTrackFit )
                             
@@ -21,6 +22,7 @@ __all__ = ( 'MatchVeloL0Muon',
             'LooseForward',
             'FitTrack',
             'MatchVeloMuon',
+            'FilterGhostProb',
             'MatchVeloTTMuon',
             'VeloCandidates',
             'VeloTTCandidates',
@@ -109,6 +111,18 @@ def ConfiguredFastVeloOnlyFit( parent = None, name = None ) :
     parent.FitterName = fitter.getFullName()
     fitter.AddDefaultReferenceNodes = True
 
+def ConfiguredFilterGhostProb( parent, name ) :
+    options = {  "GhostIdTool" : "Run2GhostId" }
+    if HltRecoConf().getProp("ApplyGHOSTPROBCutInTBTC") or HltRecoConf().getProp("ApplyGHOSTPROBCut"):
+        options.update( 
+            {"MaxChi2PerDoFCut" : HltRecoConf().getProp("MaxTrCHI2PDOF"),
+             "MaxGhostProbCut"   : HltRecoConf().getProp("MaxTrGHOSTPROB") }
+            )
+    tool =  Hlt1Tool( HltTrackFilterGhostProb
+                      , name
+                      , **options
+                      ).createConfigurable( parent )
+    return tool
 
 def ConfiguredMatchVeloMuon( toolType, parent, name, options ) :
     minP = HltRecoConf().getProp("MatchVeloMuon_MinP")
@@ -158,8 +172,12 @@ ComplementForward = ("ComplementForward  = ( execute(decodeIT) * "
 ## Hlt trackfit upgrade configuration
 # =============================================================================
 ConfiguredFastKalman( parent = None, name = to_name( "FitTrack" ) )
+ConfiguredFilterGhostProb( parent = ToolSvc(), name = to_name( "FilterGhostProb" ) )
 ## String for users
-FitTrack      = "FitTrack = TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.FitTrack )"
+if HltRecoConf().getProp("ApplyGHOSTPROBCutInHLT1"):
+    FitTrack      = "FitTrack = TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.FitTrack ) >>  TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.FilterGhostProb ) "
+else:
+    FitTrack      = "FitTrack = TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.FitTrack ) "
 # =============================================================================
 ## Hlt Velo-only trackfit upgrade configuration
 # =============================================================================

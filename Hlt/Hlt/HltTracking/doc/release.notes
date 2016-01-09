@@ -4,6 +4,12 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2016-01-09 - Sascha Stahl
+ - Added code to calculate ghost probability and cut on it. 
+ - The new Hlt1TrackFilterGhostProb can cut on the chi2 and the ghost probability.
+ - When HltRecoConf().ApplyGHOSTPROBCutInHLT1 is set to true, the streamer FitTrack
+   includes the calculation of the Ghost Prob and the same cut as is applied in Hlt2.
+
 !========================= HltTracking v13r14 2015-12-17 =========================
 
 ! 2015-10-26 - Sean Benson
