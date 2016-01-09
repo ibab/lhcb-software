@@ -15,8 +15,8 @@ void MakeRichPlots()
 
   // load the file
   //const std::string nametag = "Quartic";
-  //const std::string nametag = "Quartic-NoAmbig";
-  const std::string nametag = "Esti-All";
+  const std::string nametag = "Quartic-NoAmbig";
+  //const std::string nametag = "Esti-All";
   TFile * f = TFile::Open((dir+"/"+nametag+"/50000events/protoparticles.tuples.root").c_str());
 
   TTree * tree = (TTree*)gDirectory->Get("ChargedProtoTuple/protoPtuple");
@@ -47,7 +47,7 @@ void MakeRichPlots()
   cuts.push_back(5);
 
   // Open a PDF file
-  const std::string pdfFile = nametag + "-RichPID."+imageType;
+  const std::string pdfFile = nametag + "-RichPID." + imageType;
   c->SaveAs( (pdfFile+"[").c_str() );
 
   // Kaon ID plots
