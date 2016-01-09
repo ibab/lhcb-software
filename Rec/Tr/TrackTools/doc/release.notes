@@ -3,6 +3,10 @@
 ! Responsible : 
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+
+! 2016-01-09 - Wouter Hulsbergen
+ - add 'MaxNTHoles' cut to TrackSelector (for use in alignment)
+
 ! 2016-01-05 - Gerhard Raven
  - follow change in MuonInterfaces: make MuonTrack const correct
  - prefer std::unique_ptr over raw poiner + explicit delete

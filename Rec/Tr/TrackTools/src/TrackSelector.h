@@ -110,6 +110,7 @@ private:
   int m_maxNVeloHoles ;    ///< Maximum number of missing velo hits 
   int m_minNOTHits ;       ///< Minimum number of OT hits
   int m_minNTTHits ;       ///< Minimum number of TT hits
+  int m_maxNTHoles ;    ///< Maximum number of missing T layers
 
   double m_maxChi2Velo ;
   double m_maxChi2Upstream ;

@@ -78,6 +78,7 @@ TrackSelector::TrackSelector( const std::string& type,
   declareProperty( "MaxNVeloHoles",   m_maxNVeloHoles     = 999 ) ;
   declareProperty( "MinNOTHits",      m_minNOTHits        = 0 ) ;
   declareProperty( "MinNTTHits",      m_minNTTHits        = 0 ) ;
+  declareProperty( "MaxNTHoles",      m_maxNTHoles = 999 ) ;
 
 }
 
@@ -251,8 +252,7 @@ bool TrackSelector::checkNHits( const LHCb::Track & aTrack ) const
   if ( m_minNVeloPhiHits > 0 ||
        m_minNVeloRHits   > 0 ||
        m_minNOTHits      > 0 ||
-       m_minNTTHits      > 0 ||
-       m_maxNVeloHoles < 99 )
+       m_minNTTHits      > 0 )
   {
     int numVeloPhi(0), numVeloR(0), numTT(0), numOT(0) ;
     for( std::vector<LHCbID>::const_iterator it = aTrack.lhcbIDs().begin() ;
@@ -288,17 +288,22 @@ bool TrackSelector::checkNHits( const LHCb::Track & aTrack ) const
         verbose() << " -> #TT " << numTT << " failed cut" << endmsg;
       return false;
     }
-
-    if (m_maxNVeloHoles < numVeloPhi + numVeloR ) {
-      LHCb::HitPattern hitpattern(aTrack.lhcbIDs()) ;
-      int numVeloHoles = hitpattern.numVeloHoles() ;
-      if( numVeloHoles > m_maxNVeloHoles ) {
-        if ( msgLevel(MSG::VERBOSE) )
-          verbose() << " -> #VeloHoles " << numVeloHoles << " failed cut" << endmsg;
-        return false;
-      }
+  }
+  
+  if( m_maxNVeloHoles < 99 || m_maxNTHoles < 99 ) {
+    LHCb::HitPattern hitpattern(aTrack.lhcbIDs()) ;
+    int numVeloHoles = hitpattern.numVeloHoles() ;
+    if( numVeloHoles > m_maxNVeloHoles ) {
+      if ( msgLevel(MSG::VERBOSE) )
+	verbose() << " -> #VeloHoles " << numVeloHoles << " failed cut" << endmsg;
+      return false;
     }
-
+    int numTHoles = hitpattern.numTHoles() ;
+    if( numTHoles > m_maxNTHoles ) {
+      if ( msgLevel(MSG::VERBOSE) )
+	verbose() << " -> #THoles " << numTHoles << " failed cut" << endmsg;
+      return false;
+    }
   }
 
   return true;
