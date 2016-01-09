@@ -15,7 +15,7 @@ void RichKaonIDCompareFiles()
   // Default Config Object
   GlobalPID::Configuration defaultConfig;
 
-  const Long64_t nTracks = 1e7;
+  const Long64_t nTracks = 1e8;
 
   const double GeV(1000);
 
