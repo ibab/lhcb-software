@@ -23,7 +23,7 @@ import sys
 import string
 import random
 
-def str_generator(size=6, chars=string.ascii_uppercase + string.digits):
+def str_generator(size=6, chars=string.printable):
     return ''.join(random.choice(chars) for x in range(size))
 
 class DetCondCompressionTest(unittest.TestCase):
@@ -34,7 +34,8 @@ class DetCondCompressionTest(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
         self.testin = 'data'
-        self.testout = ['0WFoAOAAABAAA/Td6WFoAAAFpIt42AgAhARwAAAAQz1jMAQADZGF0YQBj8/OtAAEYBGvp8KWQQpkNAQAAAAABWVo=', '1QlpoOTFBWSZTWa/mnnIAAAEBgCQABAAgADDMDHqCcXckU4UJCv5p5yA=']
+        self.testout = ['0WFoAOAAABAAA/Td6WFoAAAFpIt42AgAhARwAAAAQz1jMAQADZGF0YQBj8/OtAAEYBGvp8KWQQpkNAQAAAAABWVo=',
+                        '1QlpoOTFBWSZTWa/mnnIAAAEBgCQABAAgADDMDHqCcXckU4UJCv5p5yA=']
         self.Nmethods = 1 # number of methods
 
 #    def tearDown(self):
@@ -65,14 +66,15 @@ class DetCondCompressionTest(unittest.TestCase):
         self.assertEquals(rdnstr, ret)
 
     def test_both(self):
-        """Check both compression and decompression methods with random string in sequence
-           should return exactly the same string"""
-        rdnstr = str_generator(random.randint(1,10000))
-        for method in range(self.Nmethods):
-            ret = CondDBCompression.compress(rdnstr, method)
-            self.assertTrue(ret)
-            ret = CondDBCompression.decompress(ret)
-            self.assertEquals(rdnstr, ret)
+        """Check both compression and decompression methods with 100 random
+           strings -- output should be identical to input"""
+        for x in range(100):
+            rdnstr = str_generator(random.randint(1,10000))
+            for method in range(self.Nmethods):
+                ret = CondDBCompression.compress(rdnstr, method)
+                self.assertTrue(ret)
+                ret = CondDBCompression.decompress(ret)
+                self.assertEquals(rdnstr, ret)
 
 if __name__ == '__main__':
     unittest.main(testRunner = unittest.TextTestRunner(stream=sys.stdout,verbosity=0))

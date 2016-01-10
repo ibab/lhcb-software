@@ -32,22 +32,19 @@ std::array<char,256> build_decoding_table() {
 }
 static const auto decoding_table = build_decoding_table();
 
-static int mod_table[] = {0, 2, 1};
+std::string base64_encode(const std::string& data, const std::string& preamble) {
 
+	auto data2 = reinterpret_cast<const unsigned char*>(data.data());
+	auto input_length = data.length();
+	auto output_length = (input_length!=0 ? ((input_length - 1) / 3) * 4 + 4 : 0);
+    std::string encoded_data(output_length+preamble.size(),char{});
+    std::copy(preamble.begin(),preamble.end(),encoded_data.begin());
 
-bool base64_encode(const std::string& data,
-                    std::string& encoded_data) {
+    for (size_t i = 0, j = preamble.size(); i < input_length;) {
 
-	const unsigned char* data2 = (const unsigned char*)data.c_str();
-	size_t input_length = data.length();
-	size_t output_length = ((input_length - 1) / 3) * 4 + 4;
-	encoded_data.resize(output_length);
-
-    for (size_t i = 0, j = 0; i < input_length;) {
-
-        uint32_t octet_a = i < input_length ? data2[i++] : 0;
-        uint32_t octet_b = i < input_length ? data2[i++] : 0;
-        uint32_t octet_c = i < input_length ? data2[i++] : 0;
+        uint32_t octet_a = (i < input_length ? data2[i++] : 0);
+        uint32_t octet_b = (i < input_length ? data2[i++] : 0);
+        uint32_t octet_c = (i < input_length ? data2[i++] : 0);
 
         uint32_t triple = (octet_a << 0x10) + (octet_b << 0x08) + octet_c;
 
@@ -56,11 +53,9 @@ bool base64_encode(const std::string& data,
         encoded_data[j++] = encoding_table[(triple >> 1 * 6) & 0x3F];
         encoded_data[j++] = encoding_table[(triple >> 0 * 6) & 0x3F];
     }
-
-    for (int i = 0; i < mod_table[input_length % 3]; i++)
-        encoded_data[output_length - 1 - i] = '=';
-
-    return true;
+    std::fill( std::prev(encoded_data.end(), (3-input_length%3)%3),
+               encoded_data.end(), '=' );
+    return encoded_data;
 }
 
 

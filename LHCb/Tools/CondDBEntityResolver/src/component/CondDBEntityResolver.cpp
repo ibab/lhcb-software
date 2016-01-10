@@ -44,6 +44,9 @@ class basic_isstream : public std::basic_istream<char_type> {
     }
   } m_sbuf;
 public:
+  // note: the buffer passed to the istream constructor hasn't had its constructor
+  // called yet, but because the C++ standard requires istream to not use rdbuf in
+  // it's constructor (or destructor) this is not a problem.
   template <typename ... Args>
   basic_isstream(Args&&... args) : std::istream(&m_sbuf), m_sbuf(std::forward<Args>(args)...) { }
 };

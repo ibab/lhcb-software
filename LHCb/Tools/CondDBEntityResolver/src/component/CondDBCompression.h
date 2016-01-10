@@ -9,7 +9,7 @@
 #define CONDDBCOMPRESSION_H_
 
 #include <string>
-#include <stdint.h>
+#include <cstdint>
 
 /** @class CondDBCompression CondDBCompression.h DetCond/CondDBCompression.h
  *
@@ -20,9 +20,8 @@
  *  @date   Feb 2013
  */
 
-class CondDBCompression{
-public:
-	static std::string compress(const std::string& strin, const int8_t method = 0);
+struct CondDBCompression{
+	static std::string compress(const std::string& strin, int8_t method = 0);
 	static std::string decompress(const std::string&);
 };
 
