@@ -13,13 +13,13 @@
 #include <vector>
 #include <cmath>
 
-#include <TROOT.h>
+//#include <TROOT.h>
 #include <TChain.h>
 #include <TFile.h>
 #include <TCanvas.h>
 #include <TH2F.h>
-#include "TSystem.h"
-#include "TPad.h"
+//#include "TSystem.h"
+//#include "TPad.h"
 
 /// ROOT class for producing PID plots from a TTree
 class GlobalPID

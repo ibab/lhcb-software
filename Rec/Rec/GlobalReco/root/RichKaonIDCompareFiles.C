@@ -1,7 +1,4 @@
 
-//#include "TROOT.h"
-
-//#include "GlobalPID.h"
 #include "GlobalPID.C"
 
 void RichKaonIDCompareFiles()

@@ -1,6 +1,4 @@
 
-//#include "TROOT.h"
-//#include "TSystem.h"
 #include "TPad.h"
 #include "TCanvas.h"
 #include "TH1F.h"
