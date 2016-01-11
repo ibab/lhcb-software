@@ -4,6 +4,11 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2016-01-11 - Rosen Matev
+ - Modify LumiEventTuple to output all kinds of lumi events, not only random.
+   Old behavior is achieved with setting OnlyRandom to True. Logic with
+   ArrayColumns=True is improved (always add lc_20 and lc_21 columns).
+
 ! 2015-12-07 - Marco Cattaneo
  - Switch off LoKi welcome banner and update tests accordingly
  
