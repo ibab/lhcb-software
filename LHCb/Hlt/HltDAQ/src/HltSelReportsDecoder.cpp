@@ -87,7 +87,35 @@ StatusCode HltSelReportsDecoder::execute() {
   if( hltselreportsRawBank0->version() == 99 ){
     auto  outputDummy = new HltSelReports();
     put( outputDummy, m_outputHltSelReportsLocation );
-    return Warning( "Version (99) indicates too many objects were requested to be saved. Returning empty reports" ,StatusCode::SUCCESS, 20 );
+ 
+    // Get the list of ids and associated candidates
+    auto  pBank99 = new unsigned int[hltselreportsRawBank0->size()];
+    HltSelRepRawBank hltSelReportsBank99( pBank99 );
+    std::copy( hltselreportsRawBank0->begin<unsigned int>(), hltselreportsRawBank0->end<unsigned int>(), pBank99);
+    HltSelRepRBHits hitsSubBank99( hltSelReportsBank99.subBankFromID( HltSelRepRBEnums::kHitsID ) );
+    
+    // Populate map with line name and number of candidates
+    auto summary = new LHCb::HltObjectSummary();
+    
+    auto tck_dummy = tck();
+    bool settings=true;
+    if(tck_dummy!=0) settings=false;
+    GaudiUtils::VectorMap<int, HltRawBankDecoderBase::element_t> idmap_dummy;
+    if(!settings) idmap_dummy = id2string(tck_dummy);
+    
+    unsigned int i = hitsSubBank99.seqBegin(0);
+    while(i<hitsSubBank99.seqEnd(0)){
+      int temp1 = hitsSubBank99.location()[i];
+      i++;
+      int temp2 = hitsSubBank99.location()[i];
+      if(!settings) summary->addToInfo(idmap_dummy.find(temp1)->second.str(),temp2);
+      else summary->addToInfo(std::to_string(temp1),temp2);
+      i++;
+    }
+
+    outputDummy->insert("0#Candidates",*summary);
+
+    return Warning( "Version (99) indicates too many objects were requested to be saved. Returning debugging reports" ,StatusCode::SUCCESS, 20 );
   }
   else if( hltselreportsRawBank0->version() > kVersionNumber ){
     Warning( " HltSelReports RawBank version is higher than expected. Will try to decode it anyway." ,StatusCode::SUCCESS, 20 );

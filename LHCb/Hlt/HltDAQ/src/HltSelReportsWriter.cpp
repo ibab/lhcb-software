@@ -370,9 +370,35 @@ StatusCode HltSelReportsWriter::execute() {
       stdInfoSubBank.deleteBank();
       extraInfoSubBank.deleteBank();
       
+      
+      Gaudi::StringKey HltID;
+      if(m_sourceID==1) HltID = "Hlt1SelectionID";
+      else HltID = "Hlt2SelectionID";
+      
+      const auto* reports = getIfExists<LHCb::HltSelReports>( m_inputHltSelReportsLocation.value() );
+      
+      auto SelNames = reports->selectionNames();
+      
       std::vector<unsigned int> vect;
-      rawEvent->addBank(  m_sourceID, RawBank::HltSelReports, 99,  vect);
-      return Error("Exceeded maximal size of substructure-subbank. HltSelReports RawBank cannot be created, instead returning dummy bank"
+      for(auto n : SelNames){
+        auto j = m_hltANNSvc->value(HltID, n ) ;
+        vect.push_back(j->second);
+        vect.push_back(reports->selReport(n)->substructure().size());
+      }
+      HltSelRepRBHits hitsSubBank_99;
+      hitsSubBank_99.initialize(1,vect.size());
+      hitsSubBank_99.push_back( vect );
+      
+      HltSelRepRawBank hltSelReportsBank_99;
+      hltSelReportsBank_99.push_back( HltSelRepRBEnums::kHitsID, hitsSubBank_99.location(), hitsSubBank_99.size() );
+      hitsSubBank_99.deleteBank();
+      
+      std::vector< unsigned int > bankBody_99( &(hltSelReportsBank_99.location()[0]),
+        &(hltSelReportsBank_99.location()[hltSelReportsBank_99.size()]) );
+      rawEvent->addBank(  m_sourceID, RawBank::HltSelReports, 99,  bankBody_99);
+      hltSelReportsBank_99.deleteBank();
+      
+      return Error("Exceeded maximal size of substructure-subbank. HltSelReports RawBank cannot be created, instead returning debugging bank"
                    , StatusCode::SUCCESS, 50 );
     }
   }

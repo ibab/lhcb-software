@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2016-1-11 - Sean Benson
+ - Make a helpful debugging selection report for version 99.
+
 ! 2016-1-7 - Sean Benson
  - In the case that too many objects are requested to be saved, write a dummy bank with version 99.
 
