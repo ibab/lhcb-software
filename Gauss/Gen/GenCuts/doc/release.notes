@@ -4,6 +4,12 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+! 2016-01-11 - Victor Renaudin
+ - Add new tool: DaughtersInLHCbAndCutsForLc3pi to select Lc3pi
+ 	 inclusive events from B decays
+
+
+
 !========================== GenCuts v3r12 2015-08-05 =========================
 ! 2015-08-02 - Philip Ilten
  - Updated BcDaughtersInLHCb to handle excited states with configurable 
