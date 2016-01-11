@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2016-01-11 - Wouter Hulsbergen
+ - added flag to TrackStateProvider to turn off on-demand cache
+
 !========================= TrackExtrapolators v2r39 2015-10-13 ========================
 ! 2015-08-28 - Gerhard Raven
  - simplify unit matrix assignment
