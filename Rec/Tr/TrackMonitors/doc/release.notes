@@ -3,6 +3,10 @@
 ! Responsible : Wouter Hulsbergen, Stephanie Hansmann-Menzemer
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
+
+! 2016-01-11 - Elena Graverini
+ - Add option files for the analysis of ST CCE scans
+
 ! 2016-01-07 - Gerhard Raven
  - migrate from StaticArray to boost::container::static_vector
  - prefer std::to_string to boost::lexical_cast
