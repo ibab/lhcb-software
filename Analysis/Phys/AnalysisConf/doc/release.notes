@@ -5,6 +5,9 @@
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
 
+! 2016-01-11 - Olivier Deschamps
+ - Configuration.py : RedoMCLinks change NodeKiller setting from "Link/Rec" to "Link/Rec/Track" to avoid removing the Calo Linkers ...
+
 !======================= AnalysisConf v2r5 2015-10-19 ========================
 
 ! 2015-08-14 - Chris Jones

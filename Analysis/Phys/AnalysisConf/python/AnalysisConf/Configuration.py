@@ -70,13 +70,13 @@ class AnalysisConf(LHCbConfigurableUser) :
                 tescheck.Stop = False                     # But don't stop
                 tescheck.OutputLevel = 5                  # don't print warnings
                 evtnodekiller = EventNodeKiller("DaVinciEvtNodeKiller") # kill nodes
-                evtnodekiller.Nodes = ["Link/Rec"]        # Kill that
-                mcKillSeq.Members = [ tescheck, evtnodekiller, TrackAssociator() ]  
-                
+                evtnodekiller.Nodes = ["Link/Rec/Track"]        # Kill that
+                mcKillSeq.Members = [ tescheck, evtnodekiller, TrackAssociator() ]                  
                 mcLinkSeq = GaudiSequencer("RedoMCLinks") # The sequence redoing the links
                 mcLinkSeq.IgnoreFilterPassed = True       # Run it always
                 mcLinkSeq.Members = [ mcKillSeq, TrackAssociator() ]  
                 init.Members += [ mcLinkSeq ]
+
 #
 # Set MC
 #
