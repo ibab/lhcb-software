@@ -8,6 +8,8 @@
 #                                                                            #
 ##############################################################################
 
+import os
+
 # Insert your email address.
 # Leave empty if no notifications are desired
 notify_address = ''
