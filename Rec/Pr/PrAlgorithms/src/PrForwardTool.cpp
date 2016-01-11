@@ -313,19 +313,52 @@ void PrForwardTool::collectAllXHits ( PrForwardTrack& track, unsigned int side )
                                               xMin, 
                                               lowerBoundX() );
     
-
     PrHits::iterator itEnd =  m_hitManager->hits( zoneNumber ).end();
-    for ( ; itEnd != itH; ++itH ) {
+
+    //MatchStereoHits
+    PrHitZone* zoneUv = m_hitManager->zone(uvZoneNumber); 
+    float xCentral = xInZone + yInZone * zoneUv->dxDy();
+    float xInUv = track.xFromVelo( zoneUv->z() );
+    float zRatio = ( zoneUv->z() - zMag ) / ( zZone - zMag );
+    PrHits::iterator itUV1 = m_hitManager->hits( uvZoneNumber ).begin();
+    PrHits::iterator itUV1end = m_hitManager->hits( uvZoneNumber ).end();
+    PrHits::iterator itUV2 = m_hitManager->hits( triangleZone ).begin();
+    PrHits::iterator itUV2end = m_hitManager->hits( triangleZone ).end();
+    
+    for ( ; itEnd != itH; ++itH ) { //loop over all xHits in a layer between xMin and xMax
       if ( (*itH)->x() > xMax ) break;
       (*itH)->setUsed( false );
       
       bool hasUVHit = false;
+ 
+      float dx      = yInZone * zoneUv->dxDy();//x correction from rotation by stereo angle
+      float xPredUv = xInUv + ( (*itH)->x() - xInZone) * zRatio - dx;//predicted hit in UV-layer
+      float maxDx   = m_tolY + ( fabs( (*itH)->x() -xCentral ) + fabs( yInZone ) ) * m_tolYSlope; 
+      float xMinUV = xPredUv - maxDx;
+      float xMaxUV = xPredUv + maxDx;
+
       //search for same side UV hit
-      hasUVHit = matchStereoHit(track,itH,uvZoneNumber);
-      //if no matching UV hit was found, search in other side, to cover triangles
-      if(m_useTFix)
-        hasUVHit ? hasUVHit : hasUVHit = matchStereoHit(track,itH,triangleZone);
-      
+      for ( ; itUV1end != itUV1; ++itUV1 ) {
+        if( (*itUV1)->x() < xMinUV)continue;
+        if( (*itUV1)->x() > xMaxUV)break; //uvhits sorted in x-Pos
+        if( ((*itUV1)->yMin() < yInZone + m_yTol_UVsearch) && (  (*itUV1)->yMax() > yInZone - m_yTol_UVsearch  )){
+          hasUVHit = true;
+          break;
+        }
+      }
+
+      //search for opposite side UV hit
+      if(m_useTFix && !hasUVHit){
+        for ( ; itUV2end != itUV2; ++itUV2 ) {
+          if( (*itUV2)->x() < xMinUV)continue;
+          if( (*itUV2)->x() > xMaxUV)break; //uvhits sorted in x-Pos
+          if( ((*itUV2)->yMin() < yInZone + m_yTol_UVsearch) && (  (*itUV2)->yMax() > yInZone - m_yTol_UVsearch  )){
+            hasUVHit = true;
+            break;
+          }
+        } 
+      }
+
       if(hasUVHit){
         
         m_geoTool->xAtReferencePlane( track, *itH );
@@ -1177,36 +1210,4 @@ void PrForwardTool::makeLHCbTracks ( LHCb::Tracks* result ) {
   }
   
 }
-//=============================================================================
 
-//  Check if a stereo Hit matches the X hit from collectAllXHits
-//=========================================================================
-bool PrForwardTool::matchStereoHit( PrForwardTrack& track, PrHits::iterator Xhit, unsigned int uvZoneNumber ) {
-  
-  if ( 0 == m_hitManager->hits( uvZoneNumber ).size() ) return false;
-  PrHitZone* zoneUv = m_hitManager->zone(uvZoneNumber);
-  float zMag = m_geoTool->zMagnet( track );
-  float zZone = (*Xhit)->z();//zZone is the same as in collectAllXHits
-  float zRatio = ( zoneUv->z() - zMag ) / ( zZone - zMag );
-  float xInZone = track.xFromVelo( zZone );
-  float yInZone = track.yFromVelo( zZone );
-  float xCentral = xInZone + yInZone * zoneUv->dxDy();
-  float xInUv = track.xFromVelo( zoneUv->z() );
-  
-  float dx    = yInZone * zoneUv->dxDy();//x correction from rotation by stereo angle
-  float xPredUv = xInUv + ( (*Xhit)->x() - xInZone) * zRatio - dx;//predicted hit in UV-layer
-  float maxDx   = m_tolY + ( fabs( (*Xhit)->x() -xCentral ) + fabs( yInZone ) ) * m_tolYSlope;
-  
-  bool hasUV = false;
-  for(const PrHit* UVHit : zoneUv->hits()){
-    if(UVHit->x() < xPredUv - maxDx)continue;
-    if(UVHit->x() > xPredUv + maxDx)continue;
-    if(yInZone < (UVHit->yMin() - m_yTol_UVsearch))continue;
-    if(yInZone > (UVHit->yMax() + m_yTol_UVsearch))continue;
-    hasUV = true;
-    break;
-  }
-  return hasUV;
-}
-
-//=========================================================================

@@ -47,8 +47,6 @@ public:
 
   bool fitStereoHits( PrForwardTrack& track );
 
-  bool matchStereoHit( PrForwardTrack& track, PrHits::iterator Xhit, unsigned int uvZoneNumber );
-  
   void makeLHCbTracks ( LHCb::Tracks* result );
 
 protected:

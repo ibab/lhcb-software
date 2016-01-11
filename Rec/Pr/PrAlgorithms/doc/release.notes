@@ -4,6 +4,9 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2016-01-11 - Thomas Nikodem
+ - Fixed timing bug in PrForwardTool (removed matchStereoHit method)
+
 ! 2015-12-14 - Renato Quagliani
  - By default the HybridSeeding algorithm will not pick as input the tracks from the Forward tracking ( too high ghosts )
 
