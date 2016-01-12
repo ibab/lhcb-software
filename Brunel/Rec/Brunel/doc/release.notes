@@ -11,6 +11,11 @@ Purpose: LHCb reconstruction program
   . Cleanup and fixes in CaloDet
   . Convert QuarticSolver::solve calls RichPhotonRecoUsingQuarticSoln back to
     double precision (RichRecPhotonTools)
+  . Added flag to TrackStateProvider to turn off on-demand cache
+    (TrackExtrapolators)
+
+- Changes to tests
+  . References now taken from x86_64-slc6-gcc49-opt tests
 
 </PRE><H1><A NAME=v49r1>2015-11-25 Brunel v49r1</A></H1><PRE>
 This version uses projects LHCb v39r2, Lbcom v17r2, Rec v18r3, Gaudi v26r4
