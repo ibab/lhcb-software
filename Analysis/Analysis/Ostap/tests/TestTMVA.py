@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id: TestTMVA.py 193612 2015-08-12 16:10:51Z ibelyaev $ 
+# $Id$ 
 # =============================================================================
 ## @file TestTMVA.py
 #
@@ -10,9 +10,9 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2015-10-25
 # 
-#                    $Revision: 193612 $
-#  Last modification $Date: 2015-08-12 18:10:51 +0200 (Wed, 12 Aug 2015) $
-#                 by $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """
 Test for TVMA machinery

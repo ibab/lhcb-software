@@ -14,9 +14,9 @@
 #
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #
-#                    $Revision: 183660 $
-#  Last modification $Date: 2015-02-09 11:19:33 +0100 (Mon, 09 Feb 2015) $
-#  by                $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#  by                $Author$
 # =============================================================================
 """Collection of simple utilites to deal with LHCb RunDB 
 via http://lbrundb.cern.ch/api
@@ -27,7 +27,7 @@ extracted using these utilities
 Thanks to Alex PEARCE
 """
 # =============================================================================
-__version__ = "$Revision: 183660 $"
+__version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2015-01-12"
 __all__     = (
