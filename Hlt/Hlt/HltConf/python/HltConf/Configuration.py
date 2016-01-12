@@ -103,6 +103,7 @@ class HltConf(LHCbConfigurableUser):
                 , "NanoBanks"                      : ['ODIN','HltLumiSummary','HltRoutingBits','DAQ']
                 , "PruneHltANNSvc"                 : True
                 , "PersistReco"                    : False
+                , "CustomPersistRecoFilter"        : ""
                 , "PruneHltANNSvc"                 : True
                 , "EnabledStreams"                 : {"LUMI" : None, "BEAMGAS" : None, "FULL" : None, "TURBO" : None, "TURCAL" : None, "VELOCLOSING" : None}
                 }
@@ -262,6 +263,8 @@ class HltConf(LHCbConfigurableUser):
                 if self.getProp("PersistReco"):
                     PRseq = Sequence("HltPersistReco", IgnoreFilterPassed = True)
                     HltPersistRecoConf().Sequence = PRseq
+                    if self.getProp("CustomPersistRecoFilter"):
+                        HltPersistRecoConf().PreFilter=self.getProp("CustomPersistRecoFilter")
             Dec.Members.append(Sequence("Hlt2Postamble"))
             Hlt2Conf()
             self.setOtherProps(Hlt2Conf(),[ "DataType" ])
