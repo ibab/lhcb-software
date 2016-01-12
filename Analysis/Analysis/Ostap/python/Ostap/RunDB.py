@@ -7,7 +7,7 @@
 #  Collection of simple utilites to deal with LHCb RunDB 
 #  via http://lbrundb.cern.ch/api
 #
-#  @thanks Alex Pearce
+#  @thanks Alex PEARCE 
 # 
 #  Run this script to get example of run/fill information that could be
 #  extracted using these utilities
@@ -23,6 +23,8 @@ via http://lbrundb.cern.ch/api
 
 Run this script to get example of run/fill information that could be
 extracted using these utilities
+
+Thanks to Alex PEARCE
 """
 # =============================================================================
 __version__ = "$Revision: 183660 $"
@@ -177,6 +179,7 @@ def fill_number ( run_number ) :
 if '__main__' == __name__  :
 
     from Ostap.Line import line 
+    logger.info ( 80*'*' )        
     logger.info ( __file__ + '\n' + line  )
     logger.info ( 80*'*' )
     logger.info ( __doc__  )
@@ -187,12 +190,7 @@ if '__main__' == __name__  :
     logger.info ( ' Symbols : %s' %  list ( __all__     ) )
     logger.info ( 80*'*' )    
 
-    runs =  [ 0,  1 , 169064 , 5 , 6 , 98241980 , 169064  , 2334 , 524387 ]
 
-    for run in runs :
-        
-        fill = fill_number ( run )
-        logger.info ( 'Run/Fill#:%12d/%-10d ' % ( run , fill ) ) 
 
     logger.info ( 80*'*' )        
     logger.info ( 'Run  info for #run=%d ' %  169064 )
@@ -208,7 +206,18 @@ if '__main__' == __name__  :
     for k in finfo : logger.info ( "  %30s : %-35s " % ( k , finfo [ k ] ) )
     
     logger.info ( 80*'*' )    
-        
+
+    from Ostap.Utils import timing    
+    runs =  [ 0,  1 , 169064 , 5 , 6 , 98241980 , 169064  , 2334 , 2334 , 524387 ]
+    for run in runs :
+
+        with timing() :
+            
+            fill = fill_number ( run )
+            logger.info ( 'Run/Fill#:%12d/%-10d ' % ( run , fill ) )
+            
+    logger.info ( 80*'*' )    
+
 # =============================================================================
 # The END 
 # =============================================================================
