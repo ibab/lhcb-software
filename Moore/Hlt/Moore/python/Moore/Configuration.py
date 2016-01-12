@@ -85,6 +85,7 @@ class Moore(LHCbConfigurableUser):
         , "EnableTimer" :       None
         , "TimingTableWidth" :   90
         , "PersistReco" :   False
+        , "PersistRecoFilter" :   ""
         , "EnableDataOnDemand": False
         , "OutputLevel" : WARNING #if this is set to WARNING (or higher) Moore will become almost silent.
                              #if this is set to DEBUG or VERBOSE, this mimics the previous verbose setting
@@ -193,6 +194,7 @@ class Moore(LHCbConfigurableUser):
         # Options for offline running
         #######################################
         , "PersistReco" : "Do we want toe persist Moore reconstruction containers (if writing DST)"
+        , "PersistRecoFilter" : "Filter code to control which events get the full reco added to the writer"
         #########################################
         # Deprecated former options
         #########################################
@@ -354,6 +356,8 @@ class Moore(LHCbConfigurableUser):
             IOHelper(persistency,persistency).outStream(fname,writer,writeFSR=MooreExpert().getProp('WriteFSR'))
             if self.getProp("PersistReco"):
                 HltConf().PersistReco=True
+                if self.getProp("PersistRecoFilter"):
+                    HltConf().CustomPersistRecoFilter=self.getProp("PersistRecoFilter")
 
 
     def getRelease(self):

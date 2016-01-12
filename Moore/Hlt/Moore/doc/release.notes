@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2016-01-12 - Sean Benson
+ - Add slot to configure pre-filter for PersistReco.
+
 ! 2016-01-08 - Rosen Matev
  - Use OutputLevel = INFO in Moore_2016draft.py and override in 2016_draft.qmt
 
