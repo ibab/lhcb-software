@@ -196,8 +196,12 @@ namespace {
     //       }
     //     }
     
-    // insert the state
-    refstates.insert(pos, state) ;
+    // insert the state. gcc 4.8 has trouble with the
+    // const_iterator. let's hope that the optimization does the
+    // obvious with the following strange cast.
+    const StateContainer::const_iterator constbegin = refstates.begin() ;
+    const StateContainer::iterator nonconstpos = refstates.begin() + std::distance( constbegin, pos ) ;
+    refstates.insert(nonconstpos, state) ;
 
     // update the range of the trajectory
     Trajectory::setRange( refstates.front()->z(), refstates.back()->z() ) ;
