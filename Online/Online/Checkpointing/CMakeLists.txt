@@ -27,6 +27,7 @@ if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
   #set(CMAKE_FIND_LIBRARY_SUFFIXES .a)
   #  set(CMAKE_EXE_LINK_DYNAMIC_C_FLAGS)       # remove -Wl,-Bdynamic
   set(CMAKE_EXE_LINKER_FLAGS)
+  set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS)
   string(REPLACE "-pthread" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
   #gaudi_add_executable(restore aux/main.cpp)
   add_executable(restore aux/main.cpp)
