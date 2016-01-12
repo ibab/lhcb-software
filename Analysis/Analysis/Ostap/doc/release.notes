@@ -8,6 +8,15 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2016-01-12 - Vanya Belyaev
+ - add RunDB module with utilities to deal with LHCb RunDB, 
+   namely: 
+   run_info      : get run-info  from #run 
+   fill_info     : get fill-info from #fill 
+   fill_number   : get #fill from #run
+   Thanks to Alex Pearce!  
+
+
 ! 2015-12-04 - Vanya Belyaev
  - tiny improvement in convolution 
 
