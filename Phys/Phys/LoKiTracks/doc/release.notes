@@ -5,6 +5,9 @@
 ! Purpose     : track-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
+! 2016-01-12 - Sascha Stahl
+ - Add functor TrGHOSTPROB to cut on the ghost probability.
+
 !========================= LoKiTracks v3r4 2015-11-25 =========================
 
 ! 2015-11-01 - Gerhard Raven

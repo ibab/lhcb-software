@@ -612,6 +612,30 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class GhostProb
+     *  simple evaluator of the LHCb::Track::ghostProbability
+     *  @see LoKi::Cuts::TrGHOSTPROB
+     *  @author Sascha Stahl sascha.stahl@cern.ch
+     *  @date   2016-01-12
+     */  
+    class GAUDI_API GhostProb : public LoKi::BasicFunctors<const LHCb::Track*>::Function
+    {
+    public:
+      // ======================================================================
+      /// Default Constructor
+      GhostProb() { }
+      /// MANDATORY: virtual destrcutor  
+      virtual ~GhostProb () {}
+      /// MANDATORY: clone method ("virtual constructor")  
+      virtual  GhostProb* clone() const { return new GhostProb(*this) ; }
+      /// mandatory: the only one essential method 
+      virtual result_type operator() ( argument t ) const ;
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const 
+      { return s << "TrGHOSTPROB" ; }
+      // ======================================================================
+    } ;
+    // ========================================================================
     /** @class HasStateAt 
      *  Simple predicate which evaluates LHCb::Track::HasStateAt
      *  @see LoKi::Cuts::TrHASSTATE

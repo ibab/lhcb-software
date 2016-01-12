@@ -681,6 +681,23 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-08
      */
+    const LoKi::Tracks::GhostProb                                   TrGHOSTPROB ; 
+    // ========================================================================
+    /** @var TrGHOSTPROB
+     *  trivial estimator of the ghost probability of the track
+     *
+     *  @code
+     *
+     *   const LHCb::Track& track = ... ;
+     *
+     *   const double pt = TrGHOSTPROB ( track ) ;
+     *
+     *  @endcode
+     *
+     *  @see LoKi::Tracks::GhostProb
+     *  @author Sascha Stahl sascha.stahl@cern.ch
+     *  @date   2016-01-12
+     */
     const LoKi::Tracks::TransverseMomentum                               TrPT ;
     // =========================================================================
     /** @var TrHAST

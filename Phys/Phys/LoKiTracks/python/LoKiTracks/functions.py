@@ -78,6 +78,8 @@ TrBACKWARD    = LoKi.Tracks.CheckFlag ( LHCb.Track.Backward )
 TrCHI2        = LoKi.Tracks.Chi2       () 
 ## @see LoKi::Cuts::TrCHI2PDOF 
 TrCHI2PDOF    = LoKi.Tracks.Chi2PerDoF () 
+## @see LoKi::Cuts::TrGHOSTPROB 
+TrGHOSTPROB    = LoKi.Tracks.GhostProb () 
 ## @see LoKi::Cuts::TrCLONE
 TrCLONE       = LoKi.Tracks.CheckFlag ( LHCb.Track.Clone ) 
 ## ## @see LoKi::Cuts::TrDE

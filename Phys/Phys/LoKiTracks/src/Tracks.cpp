@@ -513,6 +513,20 @@ LoKi::Tracks::ProbChi2::operator()
   return t->probChi2() ; 
 }
 // ============================================================================
+// mandatory: the only one essential method 
+// ============================================================================
+LoKi::Tracks::GhostProb::result_type 
+LoKi::Tracks::GhostProb::operator() 
+  ( LoKi::Tracks::GhostProb::argument t ) const 
+{ 
+  if ( 0 == t ) 
+  {
+    Error ("LHCb::Track* points to NULL, return 'InvalidChi2'") ;
+    return LoKi::Constants::InvalidChi2 ;
+  }
+  return t->ghostProbability() ; 
+}
+// ============================================================================
 // constructor 
 // ============================================================================
 LoKi::Tracks::HasStateAt::HasStateAt
