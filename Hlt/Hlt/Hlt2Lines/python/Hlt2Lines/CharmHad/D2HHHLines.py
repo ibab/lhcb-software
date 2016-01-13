@@ -249,7 +249,7 @@ class CharmHadD2HHHLines() :
                                   "DaughterLocations" : {"[D+ ->^K- K+ K+ ]CC" : "KmConeVar10"} },
                  'DConeVar10DPKK' : { "ConeAngle" : 1.0,
                                   "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-                                  "DaughterLocations" : {"[D+ -> pi- K+ K+]CC" : "PimConeVar10"} },
+                                  "DaughterLocations" : {"[D+ -> ^pi- K+ K+]CC" : "PimConeVar10"} },
 
                  'DConeVar10DsPKK' : { "ConeAngle" : 1.0,
                                   "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
@@ -265,7 +265,7 @@ class CharmHadD2HHHLines() :
                                   "DaughterLocations" : {"[D_s+ ->^K- K+ K+ ]CC" : "KmConeVar10"} },
                  'DConeVar10DsKPP' : { "ConeAngle" : 1.0,
                                   "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-                                  "DaughterLocations" : {"[D_s+ ->K- pi+ pi+ ]CC" : "KmConeVar10"} },
+                                  "DaughterLocations" : {"[D_s+ ->^K- pi+ pi+ ]CC" : "KmConeVar10"} },
 
                  'DConeVar10DsPPP' : { "ConeAngle" : 1.0,
                                   "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
