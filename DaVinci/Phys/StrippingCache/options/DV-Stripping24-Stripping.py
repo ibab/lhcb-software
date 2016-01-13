@@ -13,7 +13,13 @@ from Gaudi.Configuration import *
 MessageSvc().Format = "% F%30W%S%7W%R%T %0W%M"
 
 #
-#Fix for TrackEff lines
+# Disable the cache in Tr/TrackExtrapolators 
+#
+from Configurables import TrackStateProvider
+TrackStateProvider().CacheStatesOnDemand = False
+
+#
+# Fix for TrackEff lines
 #
 from Configurables import DecodeRawEvent
 DecodeRawEvent().setProp("OverrideInputs",4.2)

@@ -5,6 +5,9 @@
 ! Created     : 2015-02-04
 ! -----------------------------------------------------------------------------
 
+! 2016-01-13 - Ricardo Vazquez Gomez
+ - Add options to disable the cache in TrackExtrapolators
+
 ! 2016-01-07 - Ricardo Vazquez Gomez
  - Correct syntax warning in CMakeLists.txt 
 
