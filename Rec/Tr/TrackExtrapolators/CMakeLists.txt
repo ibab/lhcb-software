@@ -1,7 +1,7 @@
 ################################################################################
 # Package: TrackExtrapolators
 ################################################################################
-gaudi_subdir(TrackExtrapolators v2r39)
+gaudi_subdir(TrackExtrapolators v3r0)
 
 gaudi_depends_on_subdirs(Det/DetDesc
                          Event/TrackEvent

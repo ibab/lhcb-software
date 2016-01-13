@@ -3,7 +3,7 @@
 # Maintainer : Wouter Hulsbergen
 #=====================================================================
 package           TrackExtrapolators
-version           v2r39
+version           v3r0
 
 #=====================================================================
 # Structure, i.e. directories to process. 
