@@ -5,9 +5,10 @@ branches doc cmt
 
 ##############################
 # Patches just for this version
-use  HltDAQ      v4r22    Hlt
-use  HltEvent    v9r6     Event
-use  MuonID      v9r19    Muon
+use  HltDAQ               v4r22    Hlt
+use  HltEvent             v9r6     Event
+use  MuonID               v9r19    Muon
+use  TrackExtrapolators   v3r0     Tr
 # Temporarily moved in from Stripping, for S23 release
 # To be decided if longer term this stays in the DaVinci 
 # project, or moves elsewhere.

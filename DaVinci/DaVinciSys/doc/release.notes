@@ -11,41 +11,46 @@ Release of two kinds :
 It is based on Gaudi v26r4, LHCb v39r2, Rec v18r3, Phys v20r3 and Analysis v14r3, and uses LCG_79 with ROOT 6.04.02.
 
 - Packages patched :
-  Event/HltEvent v9r6, Hlt/HltDAQ v4r22, Muon/MuonID v9r19.
+  Event/HltEvent v9r6, Hlt/HltDAQ v4r22, Muon/MuonID v9r19, Tr/TrackExtrapolators v3r0.
 
 - Packages updated :
   DaVinciTests v3r1, Phys/DaVinci v38r1, Phys/StrippingCache v1r4.
 
 - In Event/HltEvent v9r6 :
- . HltObjectSummary: add substructureExtended() to be used in Turbo stream.
-                     substructure() will only return objects used in TisTos.
-                                    this restores its Run I functionality.
+  . HltObjectSummary: add substructureExtended() to be used in Turbo stream.
+                      substructure() will only return objects used in TisTos.
+                                     this restores its Run I functionality.
 
 - In Hlt/HltDAQ v4r22 :
- . Fix for Tesla related info. resurrection.
+  . Fix for Tesla related info. resurrection.
 
 - In Muon/MuonID v9r19 :
- . New IMuonMatchTool interface for track/muon matching with 2 implementations:
-   MuonChi2MatchTool  (computes chi2 properly, taking correlations into account,
-                       and chooses best muon hits combination based on this chi2).
-   MuonKalmanMatchTool (extends Kalman fit through muon stations).
- . New generic IMuonIDTool with implementation MuonIDPlusTool, to start developing new approaches to muonID.
- . New MuonIDPlusAlg algorithm, using MuonIDPlusTool.
- . Add option to MakeMuonTool to compute chi2 properly (using MuonChi2MatchTool).
- . Fix CMakeLists.txt.
- . Some cleanup and documentation.
- . Removed (invalid) link to component library MuonTrackRec.
+  . New IMuonMatchTool interface for track/muon matching with 2 implementations:
+    MuonChi2MatchTool  (computes chi2 properly, taking correlations into account,
+                        and chooses best muon hits combination based on this chi2).
+    MuonKalmanMatchTool (extends Kalman fit through muon stations).
+  . New generic IMuonIDTool with implementation MuonIDPlusTool, to start developing new approaches to muonID.
+  . New MuonIDPlusAlg algorithm, using MuonIDPlusTool.
+  . Add option to MakeMuonTool to compute chi2 properly (using MuonChi2MatchTool).
+  . Fix CMakeLists.txt.
+  . Some cleanup and documentation.
+  . Removed (invalid) link to component library MuonTrackRec.
+
+- In Tr/TrackExtrapolators v3r0 :
+  . Added flag to TrackStateProvider to turn off on-demand cache.
 
 - In DaVinciTests v3r1 :
- . Updated the reference file test_standardintermediate_reco14_run.qmt.
+  . Updated the reference file test_standardintermediate_reco14_run.qmt.
 
 - In Phys/DaVinci v38r1 :
- . Development release in preparation for 2016 data-taking and simulation.
+  . Development release in preparation for 2016 data-taking and simulation.
 
 - In Phys/StrippingCache v1r4 :
- . Added StrippingCache for S24.
- . Remove upfront tracking cuts.
-
+  . Added StrippingCache for S24.
+  . Removed upfront tracking cuts.
+  . Fixed S24 options.
+  . Correct syntax warning in CMakeLists.txt.
+  . Removed cache for S20 series.
 
 ! 2015-11-12 - Eduardo Rodrigues
  - Test reference file updated.

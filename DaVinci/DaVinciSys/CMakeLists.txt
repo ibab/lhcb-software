@@ -9,6 +9,7 @@ gaudi_depends_on_subdirs(DaVinciTests
                          Hlt/HltDAQ
                          Event/HltEvent
                          Muon/MuonID
+                         Tr/TrackExtrapolators
                          ##############################
                          # Temporarily moved in from Stripping, for S23 release
                          Phys/StrippingCache
