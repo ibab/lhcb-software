@@ -550,7 +550,7 @@ class DetachedHHHCombiner(Hlt2Combiner) : # {
     """
     def __init__(self, name, decay, inputs, nickname = None) : # {
         dc =    {}
-        for child in ['pi+','K+','p+'] :
+        for child in ['pi+','K+','p+','mu+'] :
             dc[child] = "(PT > %(Trk_ALL_PT_MIN)s) & (MIPCHI2DV(PRIMARY) > %(Trk_ALL_MIPCHI2DV_MIN)s)"
         cc =    ("(in_range( %(AM_MIN)s, AM, %(AM_MAX)s ))" +
                  " & ((APT1+APT2+APT3) > %(ASUMPT_MIN)s )" +

@@ -106,7 +106,7 @@ class BCombiner(Hlt2Combiner):
               + mc_mass)
 
         dc = { }
-        for daug in ['p+', 'pi+', 'K+']:
+        for daug in ['p+', 'pi+', 'K+', 'mu+', 'e+']:
             dc[daug] = ("(PT > %(BachPt)s)" +
                         " & (P > %(BachP)s)" +
                         " & (MIPCHI2DV(PRIMARY) > %(BachIPChi2)s)")
@@ -149,6 +149,7 @@ class KSFilter(Hlt2ParticleFilter):
         cut = ("(ADMASS ( 'KS0') < %(KsMassWindow)s ) & " + 
                "in_range ( 0 , VFASPF ( VCHI2 ) , %(KsVChi2)s ) & " +
                "( VFASPF ( VZ ) < %(KsDecayMaxZ)s ) & " +
+               "( MIPCHI2DV(PRIMARY) < %(KsIPChi2Max)s ) & " +
                "(BPVVDCHI2 > %(KsVDChi2)s ) & " +
                "( ADWM( 'Lambda0' , WM( 'p+' , 'pi-') ) > %(KsLambdaVeto)s ) & " +
                "( ADWM( 'Lambda0' , WM( 'pi+' , 'p~-') ) > %(KsLambdaVeto)s )")
@@ -173,8 +174,10 @@ class LambdaFilter(Hlt2ParticleFilter):
                                     UseP2PVRelations = False)
 
 class MassVetoFilter(Hlt2ParticleFilter):
-    def __init__(self, name, inputs, vetoes = { }, windows = { }):
+    # TODO allow for helicity angle cuts.
+    def __init__(self, name, inputs, vetoes = { }, windows = { }, misid_windows = { }):
         cuts = ["( ( WM(" + ids + ") > %(MVETO_" + hypo + "_GT)s ) | ( WM(" + ids + ") < %(MVETO_" + hypo + "_LT)s ) )" for hypo, ids in vetoes.iteritems()]
+        cuts += ["( WM(" + ids + ") > %(MVETO_" + hypo + "_LOW)s )" for hypo, ids in misid_windows.iteritems()]
         cuts += ["(in_range(%(M_" + comb + "_LOW)s, MASS(" + var + "), %(M_" + comb + "_HIGH)s))" for comb, var in windows.iteritems()]
         cut = (" & ".join(cuts))
         Hlt2ParticleFilter.__init__(self, 'PID' + name + 'Veto', cut, inputs,
@@ -195,15 +198,17 @@ class PIDGhostInFilter(Hlt2ParticleFilter):
 
 
 class PromptIPChi2Filter(Hlt2ParticleFilter):
-    def __init__(self, name, inputs):
-        cut = ("(MIPCHI2DV(PRIMARY) < %(D0_BPVIPCHI2_Max)s)")
+    def __init__(self, name, inputs, nickname = None):
+        cut = ("(MIPCHI2DV(PRIMARY) < %(BPVIPCHI2_MAX)s)")
+        if nickname is None:
+          nickname = name
         Hlt2ParticleFilter.__init__(self, 'PID' + name + 'PromptIPChi2Filter', cut,
-                                    inputs, shared = True, nickname = name,
+                                    inputs, shared = True, nickname = nickname,
                                     UseP2PVRelations = False)
 
 class PromptFilter(Hlt2ParticleFilter):
     def __init__(self, name, inputs):
-        cut = ("(BPVDIRA > %(BPVDIRA_MIN)s) & (BPVLTIME() > %(BPVLTIME_MIN)s )")
+        cut = ("(BPVDIRA > %(BPVDIRA_MIN)s) & (BPVLTIME() > %(BPVLTIME_MIN)s) & (MIPCHI2DV(PRIMARY) < %(BPVIPCHI2_MAX)s)")
         Hlt2ParticleFilter.__init__(self, 'PID' + name + 'PromptFilter', cut, inputs,
                                     shared = True, nickname = name, UseP2PVRelations = False,
                                     tistos = 'PromptTisTosSpec')
@@ -294,11 +299,94 @@ Lc2KPPi_Loose = MassFilter('PIDLc2KPPi', inputs = [
 Lc2KPPi = MassVetoFilter('Lc2KPPi', [Lc2KPPi_Loose], vetoes = {
               "Kpipi" : "'K-', 'pi+', 'pi+'",
               "KKpi"  : "'K-', 'K+',  'pi+'"
-            }, windows = {
-              "Kpi" : "1, 3"
+            },
+            #windows = {
+            #  "Kpi" : "1, 3",
+            #  "pK"  : "1, 2"
+            #  },
+            misid_windows = {
+              "Kpipi" : "'K-', 'pi+', 'pi+'"
               })
 
 Lc2KPPi_Prompt = PromptFilter('Lc2KPPiPrompt', [Lc2KPPi])
+
+# This is a PID-free Ds+ -> K+ K- pi+ line
+
+Ds2KKPi = MassVetoFilter('Ds2KKPi', [
+  MassFilter('PIDDs2KKPi', inputs = [
+    DetachedHHHCombiner('PIDDs2KKPi',
+      decay = "[D_s+ -> K+ K- pi+]cc",
+      inputs = [
+        SharedNoPIDPions,
+        SharedNoPIDKaons
+        ],
+      nickname = 'Ds2KKPi')
+    ], shared = True, nickname = 'Ds2KKPi')
+  ], vetoes = {
+  "Kpipi" : "'K+', 'pi-', 'pi+'",
+  "Kppi"  : "'p+', 'K-', 'pi+'"
+  })
+
+# Prepare +ve and -ve tag and probe kaons
+tag_extra_cut = " & (PIDK > %(TagPIDK)s)"
+PosTagKaons = TagFilter("PIDPosTagKaons", SharedNoPIDKaons, 0, "Ds2KKPiKTag", tag_extra_cut)
+NegTagKaons = TagFilter("PIDNegTagKaons", SharedNoPIDKaons, 1, "Ds2KKPiKTag", tag_extra_cut)
+PosProbeKaons = ProbeFilter("PIDPosProbeKaons", SharedNoPIDKaons, 1, "Ds2KKPiKTag")
+NegProbeKaons = ProbeFilter("PIDNegProbeKaons", SharedNoPIDKaons, 0, "Ds2KKPiKTag")
+
+Ds2KKPi_PKTag = PromptIPChi2Filter('Ds2KKPiPKTag', inputs = [
+    MassFilter('PIDDs2KKPiPKTag', inputs = [
+      DetachedHHHCombiner('PIDDs2KKPiPKPosTag',
+        decay = "D_s+ -> K+ K- pi+",
+        inputs = [
+          PosTagKaons,
+          NegProbeKaons,
+          SharedNoPIDPions
+          ],
+        nickname = 'Ds2KKPiPKTag'),
+      DetachedHHHCombiner("PIDDs2KKPiPKNegTag",
+        decay = "D_s- -> K- K+ pi-",
+        inputs = [
+          NegTagKaons,
+          PosProbeKaons,
+          SharedNoPIDPions
+          ],
+        nickname = 'Ds2KKPiPKTag')
+      ], shared = True, nickname = 'Ds2KKPiPKTag')
+    ])
+
+# Prepare +ve and -ve tag and probe kaons
+tag_extra_cut = " & (ISMUON)"
+PosTagMuons = TagFilter("PIDPosTagMuons", Muons, 0, "Ds2MuMuPi", tag_extra_cut)
+NegTagMuons = TagFilter("PIDNegTagMuons", Muons, 1, "Ds2MuMuPi", tag_extra_cut)
+PosProbeMuons = ProbeFilter("PIDPosProbeMuons", NoPIDsMuons, 1, "Ds2MuMuPi")
+NegProbeMuons = ProbeFilter("PIDNegProbeMuons", NoPIDsMuons, 0, 'Ds2MuMuPi')
+
+Ds2MuMuPi_MuPTag = PromptIPChi2Filter('Ds2MuMuPiMuPTag', inputs = [
+  MassFilter('PIDDs2MuMuPiMuPTag', inputs = [
+    DetachedHHHCombiner('PIDDs2MuMuPiMuPTag',
+      decay = "[D_s+ -> mu+ mu- pi+]cc",
+      inputs = [
+        PosTagMuons,
+        NegProbeMuons,
+        SharedNoPIDPions
+        ],
+      nickname = 'Ds2MuMuPi')
+    ], shared = True, nickname = 'Ds2MuMuPi')
+  ], nickname = 'Ds2MuMuPi')
+
+Ds2MuMuPi_MuMTag = PromptIPChi2Filter('Ds2MuMuPiMuMTag', inputs = [
+  MassFilter('PIDDs2MuMuPiMuMTag', inputs = [
+    DetachedHHHCombiner('PIDDs2MuMuPiMuMTag',
+      decay = "[D_s+ -> mu+ mu- pi+]cc",
+      inputs = [
+        NegTagMuons,
+        PosProbeMuons,
+        SharedNoPIDPions
+        ],
+      nickname = 'Ds2MuMuPi')
+    ], shared = True, nickname = 'Ds2MuMuPi')
+  ], nickname = 'Ds2MuMuPi')
 
 D02KPi = PromptIPChi2Filter('D02KPi', [MassFilter('PIDD02KPi', inputs = [ 
   DetachedD02HHCombiner('PIDD02KPi',
