@@ -5,6 +5,13 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2016-01-14 - Vanya Belyaev
+ - DistanceCalculator, "track" interface: 
+     for long-tracks in vicinity of origin point use 
+      ITrackStateProvider::stateFromTrajectory  instead of 
+      ITrackStateProvider::state
+   It is expected to be more CPU  efficient 
+
 !====================== Phys/LoKiFitters v4r18 2015-10-16 =====================
 
 ! 2015-10-13 - Chris Jones

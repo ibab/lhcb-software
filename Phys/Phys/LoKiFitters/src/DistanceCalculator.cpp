@@ -664,6 +664,14 @@ namespace LoKi
       //
       const double tolerance = 0.35 * m_deltaZ ;
       //
+      // For long tracks in vicinity of origin point, use trajectory approximation.
+      // According to Wouter it should be much more CPU efficient.
+      if ( t.checkType ( LHCb::Track::Long ) && std::abs ( z ) <  30 * Gaudi::Units::cm )   
+      {
+        StatusCode sc = stateProvider()->stateFromTrajectory ( s , t , z ) ;
+        if ( sc.isSuccess() ) { return sc ; }
+      }
+      //
       StatusCode sc = stateProvider() -> state ( s , t , z , 0.9 * tolerance ) ;
       if ( sc.isSuccess() && std::fabs ( s.z() - z ) < tolerance ) { return sc ; }
       //

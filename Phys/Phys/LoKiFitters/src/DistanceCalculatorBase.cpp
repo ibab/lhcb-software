@@ -54,9 +54,9 @@ LoKi::DistanceCalculatorBase::DistanceCalculatorBase
     // The state provider  tool itself
   , m_stateProvider     ( 0 ) /// The state provider
     // The name of track extrapolator
-  , m_extrapolatorName ( "TrackMasterExtrapolator:PUBLIC" )
+  , m_extrapolatorName  ( "TrackMasterExtrapolator:PUBLIC" )
     // The state provider  tool itself
-  , m_extrapolator     ( 0 ) /// The extrapolator
+  , m_extrapolator      ( 0 ) /// The extrapolator
 {
   // ==========================================================================
   declareProperty
