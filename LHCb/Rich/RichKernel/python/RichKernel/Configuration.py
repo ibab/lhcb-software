@@ -142,8 +142,8 @@ class RichTools(RichConfigurableUser):
         # default values
         self.setRichDefaults( "PixelCreatorType",    { "Offline" : "RawBuffer",      "HLT" : "RawBuffer"   } )
         self.setRichDefaults( "PhotonCreatorType",   { "Offline" : "RecoPhotons",    "HLT" : "RecoPhotons" } )
-        #self.setRichDefaults( "PhotonRecoType",      { "Offline" : "Quartic",        "HLT" : "EstiFromRadius" } )
         self.setRichDefaults( "PhotonRecoType",      { "Offline" : "Quartic",        "HLT" : "Quartic" } )
+        #self.setRichDefaults( "PhotonRecoType",      { "Offline" : "Adaptive",        "HLT" : "Adaptive" } )
         self.setRichDefaults( "PhotonPredictorType", { "Offline" : "CKthetaBands",   "HLT" : "CKthetaBands" } )
         self.setRichDefaults( "TrackCreatorType",    { "Offline" : "RecoTracks",     "HLT" : "RecoTracks" } )
         self.setRichDefaults( "TrackSelectorType",   { "Offline" : "Reco",           "HLT" : "Reco" } )
@@ -377,6 +377,11 @@ class RichTools(RichConfigurableUser):
         elif recoType == "EstiFromRadius" :
             from Configurables import Rich__Rec__PhotonRecoUsingCKEstiFromRadius
             tool = self.__makeRichTool( Rich__Rec__PhotonRecoUsingCKEstiFromRadius, nickname, private )
+        elif recoType == "Adaptive" :
+            from Configurables import Rich__Rec__AdaptivePhotonReco
+            tool = self.__makeRichTool( Rich__Rec__AdaptivePhotonReco, nickname, private )
+            self.toolRegistry().Tools += [ "Rich::Rec::PhotonRecoUsingQuarticSoln/AdaptiveSlowPhotonReco",
+                                           "Rich::Rec::PhotonRecoUsingCKEstiFromRadius/AdaptiveFastPhotonReco" ]
         else:
             raise RuntimeError("Unknown Photon Reco '%s'"%recoType)
         return tool
@@ -399,6 +404,11 @@ class RichTools(RichConfigurableUser):
         from Configurables import Rich__Rec__ExpectedTrackSignal
         return self.__makeRichTool( Rich__Rec__ExpectedTrackSignal, nickname, private )
 
+    ## @brief CK Mass Hypothesis Ring creator
+    def massHypoRingCreator(self,nickname="RichMassHypoRings",private=False):
+        from Configurables import Rich__Rec__MassHypothesisRingCreator
+        return self.__makeRichTool( Rich__Rec__MassHypothesisRingCreator, nickname, private )
+    
 # ----------------------------------------------------------------------------------
 
 ## @class RichTools

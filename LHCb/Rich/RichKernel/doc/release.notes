@@ -3,8 +3,14 @@
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
+
+! 2016-01-14 - Chris Jones
+ - Add support for a new 'Adaptive' photon reconstruction type.
+   Default remains Quartic for now.
+ - Add configuration method for the CK Mass Hypothesis Ring creator
+
 ! 2015-12-21 - Gerhard Raven
- - replace gsl_pow_2 with std::pow( ,2)
+ - replace gsl_pow_2(x) with std::pow(x,2)
 
 ! 2015-12-16 - Chris Jones
  - Various C++11 cleanups.
