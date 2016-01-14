@@ -33,6 +33,8 @@ class RichTrackCreatorConfig(RichConfigurableUser):
        ,"TrackCuts"      : None
        ,"MaxInputTracks" : None
        ,"MaxUsedTracks"  : None
+       ,"MaxRingPoints"  : [ 100, 100, 100 ]
+       ,"MinRingPoints"  : [ 100, 100, 100 ]
         }
 
     ## Initialize 
@@ -121,6 +123,11 @@ class RichTrackCreatorConfig(RichConfigurableUser):
             trSeg.UseRadiators = self.getProp("Radiators")
             self.setOutputLevel(trSeg)
             trackCr.addTool( trSeg, trSegNickName )
+
+        # Mass Hypo Rings
+        massRings = self.richTools().massHypoRingCreator()
+        massRings.MaxRingPoints = self.getProp("MaxRingPoints")
+        massRings.MinRingPoints = self.getProp("MinRingPoints")
 
         # OutputLevels
         self.setOutputLevel(trackCr)

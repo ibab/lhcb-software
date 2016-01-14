@@ -588,6 +588,15 @@ class RichRecSysConf(RichRecSysBaseConf) :
                 sequence.Members += [ raw ]
 
             #-----------------------------------------------------------------------------
+            # Preload the raw input tracks
+            #-----------------------------------------------------------------------------
+            if self.getProp("PreloadTracks"):
+                from Configurables import Rich__Rec__Initialise
+                trackInit = self.makeRichAlg( Rich__Rec__Initialise, "LoadRawTracks"+cont )
+                trackInit.LoadRawTracks = True
+                sequence.Members += [ trackInit ]
+
+            #-----------------------------------------------------------------------------
             # Enable this to run a full track refit prior to processing
             # Useful for running on DSTs.
             #-----------------------------------------------------------------------------

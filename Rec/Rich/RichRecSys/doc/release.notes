@@ -4,6 +4,12 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2016-01-06 - Chris Jones
+ - Fix option to run an algorithm to preload the TES with the raw input tracks
+   (useful for timing studies when running on DSTs).
+ - Add new configuration parameters to allow the number of ray trace photons
+   per CK mass hypothesis ring to be set.
+
 ! 2016-01-04 - Chris Jones
  - Propagate custom options for groupConfig.richTools().photonReco()
    ( really need a better solution for this sometime... )
