@@ -3,6 +3,9 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2016-01-14 - Michel De Cian
+- Small speed improvement in PatAddTTCoord.
+
 ! 2016-01-07 - Gerhard Raven
  - replace StaticArray in PatSeedTrack and PatSeedTool with boost::container::static_vector
 

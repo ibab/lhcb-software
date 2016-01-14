@@ -72,7 +72,7 @@ public:
  private:
 
   void selectHits(const LHCb::State& state, const double p);
-  void calculateChi2(double& chi2, const double& bestChi2, double& finalDist, const double& p );
+  void calculateChi2(double& chi2, const double& bestChi2, double& finalDist, const double& p, const unsigned int bestSize );
   void printInfo(double dist, double chi2, const LHCb::State& state);
   void initEvent();
   
