@@ -7,24 +7,24 @@
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2003-06-20
  *
- * @todo Remove this file anad replace with IRichDetParameters tool
+ * @todo Remove this file and replace with IRichDetParameters tool
  */
 //-----------------------------------------------------------------------------
 
 #ifndef RICHKERNEL_RICHDETPARAMS_H
 #define RICHKERNEL_RICHDETPARAMS_H 1
 
-#define RADIATOR_NAMES      const std::string radiator[] = { "aerogel", "Rich1Gas", "Rich2Gas" }
-#define RICH_NAMES          const std::string rich[] =     { "Rich1", "Rich2" }
-#define HYPOTHESIS_NAMES    const std::string hypothesis[] = { "el", "mu", "pi", "Ka", "Pr", "X" }
-#define RICH_HISTO_OFFSET   const int richOffset = 100000
-#define RAD_HISTO_OFFSET    const int radOffset  = 10000
-#define HYPO_HISTO_OFFSET   const int hypoOffset = 1000
-#define MAX_CKTHETA_RAD     const double maxCkTheta[] = { 0.31, 0.065, 0.035  }
-#define MIN_CKTHETA_RAD     const double minCkTheta[] = { 0.0,  0.001, 0.005  }
-
-#define RADIATOR_MAX_CKTHETA \
-const double ckThetaMax[] = { 0.3, 0.06, 0.06 }
+#define RADIATOR_NAMES       const std::string radiator[] = { "aerogel", "Rich1Gas", "Rich2Gas" }
+#define RICH_NAMES           const std::string rich[] =     { "Rich1", "Rich2" }
+#define HYPOTHESIS_NAMES     const std::string hypothesis[] = { "el", "mu", "pi", "Ka", "Pr", "X" }
+#define RICH_HISTO_OFFSET    const int richOffset = 100000
+#define RAD_HISTO_OFFSET     const int radOffset  = 10000
+#define HYPO_HISTO_OFFSET    const int hypoOffset = 1000
+//            Radiator                                  Aerogel  Rich1Gas  Rich2Gas
+#define MAX_CKTHETA_RAD      const double maxCkTheta[] = { 0.31,   0.065,    0.035  }
+#define MIN_CKTHETA_RAD      const double minCkTheta[] = { 0.0,    0.001,    0.005  }
+#define CKTHETADIFF_RANGE    const double ckRange[]    = { 0.015,  0.01,     0.005  }
+#define RADIATOR_MAX_CKTHETA const double ckThetaMax[] = { 0.3,    0.06,     0.06   }
 
 //                               Aerogel  Rich1Gas    Rich2Gas
 #define RADIATOR_GLOBAL_POSITIONS_X \

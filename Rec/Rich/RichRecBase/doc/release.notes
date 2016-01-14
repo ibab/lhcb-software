@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2016-01-14 - Chris Jones
+ - Add a new definition to RichDetParams.h
+
 ! 2015-12-16 - Chris Jones
  - Various small cleanups. Remove some obsolete CVS comments (yes, still some
    hanging around) and a few C++11 optimisations.
