@@ -9,18 +9,23 @@ inline void UpdateManagerSvc::link(Item* parent, BaseObjectMemberFunction *mf, I
 }
 inline UpdateManagerSvc::Item *UpdateManagerSvc::findItem(const std::string &path, bool is_path_to_db ) const {
   if ( is_path_to_db ) { // "path to db" is not indexed, we need a full scan
-    for (Item::ItemList::const_iterator i = m_all_items.begin(); i != m_all_items.end(); ++i){
-      if ((*i)->match(path,is_path_to_db)) return *i;
-    }
+    auto i = std::find_if(m_all_items.begin(), m_all_items.end(),
+                          [&](typename UpdateManagerSvc::Item* j) {
+            return j->match(path,is_path_to_db);
+    });
+    if (i!=m_all_items.end()) return *i;
   }
   return const_cast<Item*>( m_pathMap(path) );
 }
+
 inline UpdateManagerSvc::Item *UpdateManagerSvc::findItem(void *p) const {
-  for (Item::ItemList::const_reverse_iterator i = m_all_items.rbegin(); i != m_all_items.rend(); ++i){
-    if ((*i)->match(p)) return *i;
-  }
-  return NULL;
+  auto i = std::find_if(m_all_items.rbegin(),m_all_items.rend(),
+                        [&](UpdateManagerSvc::Item* j) {
+              return j->match(p);
+  });
+  return i!=m_all_items.rend() ? *i : nullptr;
 }
+
 inline UpdateManagerSvc::Item *UpdateManagerSvc::findItem(BaseObjectMemberFunction *mf) const {
   Item *item = NULL;
   ValidDataObject *vdo = mf->castToValidDataObject();
