@@ -3,7 +3,10 @@
 ! Responsible : Gloria CORTI, Patrick ROBBE
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
-! 2016-01-12 - Guy Wormser                                                                               
+! 2016-01-14 - Guy Wormser                                                                               
+ - DaughtersInLHCbAndCutsDstarD.h added 
+   
+ ! 2016-01-12 - Guy Wormser                                                                               
  - Add new tool: DaughtersInLHCbAndCutsDstarD                                                 
    to select B particles going to D* + another D meson in inclusive events from B decays
  
