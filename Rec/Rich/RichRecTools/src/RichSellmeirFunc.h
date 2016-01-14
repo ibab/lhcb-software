@@ -108,10 +108,10 @@ namespace Rich
       boost::array<double,Rich::NParticleTypes> m_particleMassSq;
 
       // Rich1 Detector element
-      DeRich1 * m_Rich1DE;
+      DeRich1 * m_Rich1DE = nullptr;
 
       // particle properties
-      const IParticleProperties * m_partProp;
+      const IParticleProperties * m_partProp = nullptr;
 
     };
 

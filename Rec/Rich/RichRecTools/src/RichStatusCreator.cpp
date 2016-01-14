@@ -17,19 +17,16 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( StatusCreator )
-
 // Standard constructor
 StatusCreator::StatusCreator( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
-  : ToolBase  ( type, name, parent ),
-    m_status  ( NULL )
+  : ToolBase( type, name, parent )
 {
   // interface
   declareInterface<IStatusCreator>(this);
   // JOs
-  declareProperty( "RichRecStatusLocation", 
+  declareProperty( "RichRecStatusLocation",
                    m_richStatusLocation = contextSpecificTES(LHCb::RichRecStatusLocation::Default) );
 }
 
@@ -42,33 +39,35 @@ StatusCode StatusCreator::initialize()
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
 
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    debug() << "RichRecStatus location : " << m_richStatusLocation << endmsg;
-  }
+  _ri_debug << "RichRecStatus location : " << m_richStatusLocation << endmsg;
 
   return sc;
 }
 
 // Method that handles various Gaudi "software events"
-void StatusCreator::handle ( const Incident& incident )
+void StatusCreator::handle ( const Incident& /* incident */ )
 {
-  if ( IncidentType::BeginEvent == incident.type() ) InitNewEvent();
+  //if ( IncidentType::BeginEvent == incident.type() ) 
+  // No need to check incident type if only one callback is registered.
+  InitNewEvent();
 }
 
 LHCb::RichRecStatus * StatusCreator::richStatus() const
 {
   if ( !m_status )
   {
-    if ( !exist<LHCb::RichRecStatus>(m_richStatusLocation) )
+    m_status = getIfExists<LHCb::RichRecStatus>(m_richStatusLocation);
+    if ( !m_status )
     {
       m_status = new LHCb::RichRecStatus();
       put( m_status, m_richStatusLocation );
     }
-    else
-    {
-      m_status = get<LHCb::RichRecStatus>(m_richStatusLocation);
-    }
   }
   return m_status;
 }
+
+//-----------------------------------------------------------------------------
+
+DECLARE_TOOL_FACTORY( StatusCreator )
+
+//-----------------------------------------------------------------------------

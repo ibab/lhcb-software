@@ -17,15 +17,11 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( SellmeirFunc )
-
 // Standard constructor
 SellmeirFunc::SellmeirFunc ( const std::string& type,
                              const std::string& name,
                              const IInterface* parent )
-  : ToolBase   ( type, name, parent ),
-    m_Rich1DE  ( NULL ),
-    m_partProp ( NULL )
+  : ToolBase ( type, name, parent )
 {
   // interface
   declareInterface<ISellmeirFunc>(this);
@@ -178,3 +174,9 @@ double SellmeirFunc::photonsInEnergyRange( const LHCb::RichRecSegment * segment,
   // return
   return length * ( nPhot < 0 ? 0 : nPhot );
 }
+
+//-----------------------------------------------------------------------------
+
+DECLARE_TOOL_FACTORY( SellmeirFunc )
+
+//-----------------------------------------------------------------------------

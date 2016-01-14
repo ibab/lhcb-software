@@ -75,7 +75,7 @@ namespace Rich
     private: // data
 
       /// Pointer to RichRecStatus
-      mutable LHCb::RichRecStatus * m_status;
+      mutable LHCb::RichRecStatus * m_status = nullptr;
 
       /// Location of RichRecStatus in TES
       std::string m_richStatusLocation;
@@ -84,7 +84,7 @@ namespace Rich
 
     inline void StatusCreator::InitNewEvent()
     {
-      m_status = NULL;
+      m_status = nullptr;
     }
 
   }

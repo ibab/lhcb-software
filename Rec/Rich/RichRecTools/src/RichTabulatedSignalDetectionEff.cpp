@@ -1,3 +1,4 @@
+
 //-----------------------------------------------------------------------------
 /** @file RichTabulatedSignalDetectionEff.cpp
  *
@@ -27,15 +28,10 @@ TabulatedSignalDetectionEff ( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
 : ToolBase         ( type, name, parent ),
-  m_coneTrace      ( NULL ),
-  m_ckAngle        ( NULL ),
   m_riches         ( Rich::NRiches ),
   m_qEffPedLoss    ( 0 ),
   m_traceModeRad   ( Rich::NRadiatorTypes ),
-  m_nPoints        ( Rich::NRadiatorTypes, 50 ),
-  m_last_segment   ( NULL ),
-  m_last_ring      ( NULL ),
-  m_last_hypo      ( Rich::Unknown )
+  m_nPoints        ( Rich::NRadiatorTypes, 50 )
 {
   // interface
   declareInterface<ISignalDetectionEff>(this);
@@ -110,7 +106,7 @@ TabulatedSignalDetectionEff::ckRing( LHCb::RichRecSegment * segment,
   // Make a CK ring for this segment and hypo. Used to work out which mirrors
   // and PDs we need to sample the reflectivities and Q.E. values from
 
-  LHCb::RichRecRing * newRing = NULL;
+  LHCb::RichRecRing * newRing = nullptr;
 
   // protect against below threshold case
   if ( Rich::BelowThreshold == hypo ) return newRing;
@@ -137,7 +133,7 @@ TabulatedSignalDetectionEff::ckRing( LHCb::RichRecSegment * segment,
     {
       Warning( "Some problem occured during CK cone ray-tracing" ).ignore();
       delete newRing;
-      newRing = NULL;
+      newRing = nullptr;
     }
 
   }
@@ -154,8 +150,7 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
   // protect against below threshold case
   if ( Rich::BelowThreshold == hypo ) return 0;
 
-  if ( msgLevel(MSG::DEBUG) )
-    debug() << "Computing detection efficiency for " << segment << " " << hypo
+  _ri_debug << "Computing detection efficiency for " << segment << " " << hypo
             << " photon energy=" << energy << endmsg;
 
   // Get a (local) ring for this segment/hypo
@@ -193,8 +188,7 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
     }
   }
 
-  if ( msgLevel(MSG::DEBUG) )
-    debug() << " -> Found " << totalInPD << " usable ring points out of "
+  _ri_debug << " -> Found " << totalInPD << " usable ring points out of "
             << m_last_ring->ringPoints().size() << endmsg;
   if ( 0 == totalInPD ) { return 0; }
 
@@ -265,8 +259,7 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
     Warning( "No secondary mirrors found -> Assuming Av. reflectivity of 1", StatusCode::SUCCESS );
   }
 
-  if ( msgLevel(MSG::DEBUG) )
-    debug() << " -> Av. PD Q.E. = " << pdQEEff << " Prim. Mirr Refl. = " << primMirrRefl
+  _ri_debug << " -> Av. PD Q.E. = " << pdQEEff << " Prim. Mirr Refl. = " << primMirrRefl
             << " Sec. Mirr. Refl. " << secMirrRefl << endmsg;
 
   // return overall efficiency

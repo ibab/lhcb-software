@@ -26,8 +26,6 @@ BackgroundEstiAvHPD::BackgroundEstiAvHPD( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
 : Rich::Rec::ToolBase ( type, name, parent ),
-  m_tkSignal       ( NULL          ),
-  m_geomEff        ( NULL          ),
   m_obsPDsignals   ( Rich::NRiches ),
   m_expPDsignals   ( Rich::NRiches ),
   m_expPDbkg       ( Rich::NRiches )

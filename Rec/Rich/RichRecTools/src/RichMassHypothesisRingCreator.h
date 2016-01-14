@@ -98,19 +98,30 @@ namespace Rich
       LHCb::RichRecRing * buildRing( LHCb::RichRecSegment * segment,
                                      const Rich::ParticleIDType id ) const;
 
+      /// Access the # point scale factor for the given radiator
+      inline double nPointScale( const Rich::RadiatorType rad ) const
+      {
+        if ( m_nPointScale[rad] < 0 )
+        {
+          const auto satCKang = m_ckAngle->nominalSaturatedCherenkovTheta(rad);
+          m_nPointScale[rad] = fabs( m_maxPoint[rad] - m_minPoint[rad] ) / satCKang;
+        }
+        return m_nPointScale[rad];
+      }
+
     private: // data
 
-      // Pointers to tool instances
-      const ICherenkovAngle * m_ckAngle;
+      /// Cherenkov angle tool
+      const ICherenkovAngle * m_ckAngle = nullptr;
 
       /// Pointer to Rings
-      mutable LHCb::RichRecRings * m_rings;
+      mutable LHCb::RichRecRings * m_rings = nullptr;
 
       /// Cherenkov cone ray tracing tool
-      const IRayTraceCherenkovCone * m_coneTrace;
+      const IRayTraceCherenkovCone * m_coneTrace = nullptr;
 
       /// Pointer to RichParticleProperties interface
-      const IParticleProperties * m_richPartProp;
+      const IParticleProperties * m_richPartProp = nullptr;
 
       /// Location of Rings in TES
       std::string m_ringLocation;
@@ -125,7 +136,7 @@ namespace Rich
       bool m_checkBeamPipe;
 
       /// Scale number for number of points on ring
-      std::vector<double> m_nPointScale;
+      mutable std::vector<double> m_nPointScale;
 
       /// Max number of points on a ring
       std::vector<unsigned int> m_maxPoint;

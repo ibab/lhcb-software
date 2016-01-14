@@ -159,10 +159,10 @@ namespace Rich
     private:
 
       // Pointers to tool instances
-      const IRayTracing * m_rayTrace;     ///< Optical ray tracing tool
-      const ICherenkovAngle * m_ckAngle;  ///< Cherenkov angle calculator tool
-      const ISmartIDTool * m_smartIDTool; ///< RichSmartID manipulation tool
-      const IGeomTool * m_geomTool;       ///< Geometry tool
+      const IRayTracing * m_rayTrace     = nullptr; ///< Optical ray tracing tool
+      const ICherenkovAngle * m_ckAngle  = nullptr; ///< Cherenkov angle calculator tool
+      const ISmartIDTool * m_smartIDTool = nullptr; ///< RichSmartID manipulation tool
+      const IGeomTool * m_geomTool       = nullptr; ///< Geometry tool
 
       /// Bailout number. If no ray tracing have worked after this number then give up
       std::vector<unsigned int> m_nBailout;

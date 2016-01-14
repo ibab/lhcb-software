@@ -17,34 +17,28 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( MassHypothesisRingCreator )
-
 // Standard constructor
 MassHypothesisRingCreator::
 MassHypothesisRingCreator( const std::string& type,
                            const std::string& name,
                            const IInterface* parent )
   : ToolBase        ( type, name, parent ),
-    m_ckAngle       ( NULL ),
-    m_rings         ( NULL ),
-    m_coneTrace     ( NULL ),
-    m_richPartProp  ( NULL ),
     m_traceModeRad  ( Rich::NRadiatorTypes ),
-    m_nPointScale   ( Rich::NRadiatorTypes ),
-    m_maxPoint      ( Rich::NRadiatorTypes, 100 ),
-    m_minPoint      ( Rich::NRadiatorTypes, 100 )
+    m_nPointScale   ( Rich::NRadiatorTypes, -1 )
 {
   // tool interface
   declareInterface<IMassHypothesisRingCreator>(this);
 
-  // Job Options
-  declareProperty( "MaxRingPoints", m_maxPoint  );
-  declareProperty( "MinRingPoints", m_minPoint  );
+  // Job Options                                   Aero R1Gas R2Gas
+  declareProperty( "MaxRingPoints", m_maxPoint = { 100,  100,  100 } );
+  declareProperty( "MinRingPoints", m_minPoint = { 100,  100,  100 } );
   declareProperty( "CheckBeamPipe", m_checkBeamPipe = true );
   declareProperty( "UseDetailedHPDsInRayTracing", m_useDetailedHPDsForRayT = false );
-  declareProperty( "RingsLocation", m_ringLocation = 
+  declareProperty( "RingsLocation", m_ringLocation =
                    contextSpecificTES(LHCb::RichRecRingLocation::SegmentHypoRings) );
-  
+
+  //setProperty( "OutputLevel", 1 );
+
 }
 
 StatusCode MassHypothesisRingCreator::initialize()
@@ -78,14 +72,9 @@ StatusCode MassHypothesisRingCreator::initialize()
   _ri_debug << "Rich1Gas Track " << m_traceModeRad[Rich::Rich1Gas] << endmsg;
   _ri_debug << "Rich2Gas Track " << m_traceModeRad[Rich::Rich2Gas] << endmsg;
 
-  // only need to be rough
-  m_nPointScale[Rich::Aerogel]  = m_maxPoint[Rich::Aerogel]  / 0.240;
-  m_nPointScale[Rich::Rich1Gas] = m_maxPoint[Rich::Rich1Gas] / 0.050;
-  m_nPointScale[Rich::Rich2Gas] = m_maxPoint[Rich::Rich2Gas] / 0.028;
-
   // ring info
-  _ri_debug << "Maximum # ray trace points = " << m_maxPoint << endmsg;
-  _ri_debug << "Minimum # ray trace points = " << m_minPoint << endmsg;
+  _ri_debug << "Maximum # points [Aero,R1Gas,R2Gas] = " << m_maxPoint << endmsg;
+  _ri_debug << "Minimum # points [Aero,R1Gas,R2Gas] = " << m_minPoint << endmsg;
 
   // Make sure we are ready for a new event
   InitNewEvent();
@@ -97,7 +86,7 @@ StatusCode MassHypothesisRingCreator::initialize()
 void MassHypothesisRingCreator::handle ( const Incident& /* incident */ )
 {
   // We only subscribe to one sort of incident, so no need to check type
-  //if ( IncidentType::BeginEvent == incident.type() ) 
+  //if ( IncidentType::BeginEvent == incident.type() )
   InitNewEvent();
 }
 
@@ -113,40 +102,36 @@ MassHypothesisRingCreator::massHypoRing( LHCb::RichRecSegment * segment,
 {
   // does the ring already exist ?
   return ( segment ? ( segment->hypothesisRings().dataIsValid(id) ?
-                       segment->hypothesisRings()[id] : buildRing(segment,id) ) : NULL );
+                       segment->hypothesisRings()[id] : buildRing(segment,id) ) : nullptr );
 }
 
 LHCb::RichRecRing *
 MassHypothesisRingCreator::buildRing( LHCb::RichRecSegment * segment,
                                       const Rich::ParticleIDType id ) const
 {
-
-  LHCb::RichRecRing * newRing = NULL;
+  LHCb::RichRecRing * newRing = nullptr;
 
   // Cherenkov theta for this segment/hypothesis combination
   const double ckTheta = m_ckAngle->avgCherenkovTheta( segment, id );
   if ( ckTheta > 0 )
   {
-    if ( msgLevel(MSG::VERBOSE) )
-    {
-      verbose() << "Creating " << id
-                << " hypothesis ring for RichRecSegment " << segment->key()
-                << endmsg;
-    }
+    _ri_verbo << "Creating " << id
+              << " hypothesis ring for RichRecSegment " << segment->key()
+              << endmsg;
 
     // Get a new ring and save it
-    newRing = new LHCb::RichRecRing( segment, 
-                                     (LHCb::RichRecRing::FloatType)(ckTheta), 
+    newRing = new LHCb::RichRecRing( segment,
+                                     (LHCb::RichRecRing::FloatType)(ckTheta),
                                      id );
 
     // set ring type info
     newRing->setType ( LHCb::RichRecRing::RayTracedCK );
 
     // ray tracing
-    const Rich::RadiatorType rad = segment->trackSegment().radiator();
-    unsigned int nPoints = (unsigned int) ( m_nPointScale[rad] * ckTheta );
-    if      ( nPoints < m_minPoint[rad] ) { nPoints = m_minPoint[rad]; }
-    else if ( nPoints > m_maxPoint[rad] ) { nPoints = m_maxPoint[rad]; }
+    const auto rad = segment->trackSegment().radiator();
+    const auto nPoints = m_minPoint[rad] + (unsigned int)( nPointScale(rad) * ckTheta );
+    //if      ( nPoints < m_minPoint[rad] ) { nPoints = m_minPoint[rad]; }
+    //else if ( nPoints > m_maxPoint[rad] ) { nPoints = m_maxPoint[rad]; }
     const StatusCode sc = m_coneTrace->rayTrace( newRing, nPoints, m_traceModeRad[rad] );
     if ( sc.isSuccess() )
     {
@@ -157,12 +142,12 @@ MassHypothesisRingCreator::buildRing( LHCb::RichRecSegment * segment,
     {
       Warning( "Some problem occured during CK cone ray-tracing" ).ignore();
       delete newRing;
-      newRing = NULL;
+      newRing = nullptr;
     }
 
   }
 
-  // set data in segment
+  // set data in segment ( even if null )
   segment->hypothesisRings().setData( id, newRing );
 
   // return final pointer
@@ -173,26 +158,19 @@ LHCb::RichRecRings * MassHypothesisRingCreator::massHypoRings() const
 {
   if ( !m_rings )
   {
-
-    if ( !exist<LHCb::RichRecRings>(m_ringLocation) )
+    // Try and load the rings
+    m_rings = getIfExists<LHCb::RichRecRings>(m_ringLocation);
+    if ( !m_rings )
     {
-
       // Reinitialise the Ring Container
       m_rings = new LHCb::RichRecRings();
-
       // Register new RichRecRing container to Gaudi data store
       put( m_rings, m_ringLocation );
-
     }
     else
     {
-
-      // Set smartref to TES Ring container
-      m_rings = get<LHCb::RichRecRings>(m_ringLocation);
-
       _ri_debug << "Found " << m_rings->size() << " pre-existing RichRecRings in TES at "
                 << m_ringLocation << endmsg;
-
     }
   }
 
@@ -210,3 +188,9 @@ void MassHypothesisRingCreator::saveMassHypoRing( LHCb::RichRecRing * ring ) con
 {
   massHypoRings()->insert( ring );
 }
+
+//-----------------------------------------------------------------------------
+
+DECLARE_TOOL_FACTORY( MassHypothesisRingCreator )
+
+//-----------------------------------------------------------------------------

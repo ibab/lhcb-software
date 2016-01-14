@@ -4,6 +4,13 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2016-01-14 - Chris Jones
+ - A few more C++11 clean ups (nullptr versus NULL, etc.).
+ - Slightly change how the number of ray trace photons to use in 
+   MassHypothesisRingCreator is determined.
+ - Calculate the saturated CK theta values from the refractive index 
+   information rather than hardcode the values.
+
 !========================= RichRecTools v4r28p1 2015-10-13 =========================
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers

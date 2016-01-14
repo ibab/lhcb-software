@@ -110,10 +110,10 @@ namespace Rich
     private: // Private data
 
       /// Cherenkov cone ray tracing tool
-      const IRayTraceCherenkovCone * m_coneTrace;
+      const IRayTraceCherenkovCone * m_coneTrace = nullptr;
 
       // Pointers to tool instances
-      const ICherenkovAngle * m_ckAngle;
+      const ICherenkovAngle * m_ckAngle = nullptr;
 
       /// Pointers to RICHes
       std::vector<const DeRich*> m_riches;
@@ -134,9 +134,13 @@ namespace Rich
       std::vector<unsigned int> m_nPoints;
 
       // cached variables for speed
-      mutable const LHCb::RichRecSegment * m_last_segment; ///< Last segment looked at
-      mutable const LHCb::RichRecRing    * m_last_ring;    ///< Last ring looked at
-      mutable Rich::ParticleIDType         m_last_hypo;    ///< last mass hypothesis looked at
+
+      /// Last segment looked at
+      mutable const LHCb::RichRecSegment * m_last_segment = nullptr; 
+      /// Last ring looked at
+      mutable const LHCb::RichRecRing    * m_last_ring    = nullptr; 
+      /// last mass hypothesis looked at
+      mutable Rich::ParticleIDType         m_last_hypo    = Rich::Unknown; 
 
     };
 

@@ -20,17 +20,11 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RayTraceCherenkovCone )
-
 // Standard constructor
 RayTraceCherenkovCone::RayTraceCherenkovCone( const std::string& type,
                                               const std::string& name,
                                               const IInterface* parent )
-  : Rich::Rec::ToolBase ( type, name, parent ),
-    m_rayTrace      ( NULL ),
-    m_ckAngle       ( NULL ),
-    m_smartIDTool   ( NULL ),
-    m_geomTool      ( NULL )
+  : Rich::Rec::ToolBase ( type, name, parent )
 {
   using namespace boost::assign;
   // Define interface for this tool
@@ -126,6 +120,7 @@ RayTraceCherenkovCone::rayTrace ( LHCb::RichRecRing * ring,
                                   const LHCb::RichTraceMode mode,
                                   const bool forceTracing ) const
 {
+
   if ( !ring ) return Error( "Null RichRecRing pointer!" );
   //debug() << "RichRecRing has " << ring->ringPoints().size() << " ring points" << endmsg;
   if ( !forceTracing && !(ring->ringPoints().empty()) ) return StatusCode::SUCCESS;
@@ -365,3 +360,9 @@ void RayTraceCherenkovCone::fillCosSinValues( CosSinPhi::Vector & vect,
     vect.push_back( CosSinPhi( cosCKPhi, sinCKPhi ) );
   }
 }
+
+//-----------------------------------------------------------------------------
+
+DECLARE_TOOL_FACTORY( RayTraceCherenkovCone )
+
+//-----------------------------------------------------------------------------

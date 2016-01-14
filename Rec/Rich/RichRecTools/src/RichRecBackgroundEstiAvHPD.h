@@ -103,10 +103,10 @@ namespace Rich
     private: // data members
 
       /// Pointers to expected track signal tool
-      const IExpectedTrackSignal * m_tkSignal;
+      const IExpectedTrackSignal * m_tkSignal = nullptr;
 
       /// Geometrical efficiency tool
-      const IGeomEff * m_geomEff;
+      const IGeomEff * m_geomEff = nullptr;
 
       /// Maximum number of iterations in background normalisation
       int m_maxBkgIterations;
