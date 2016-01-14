@@ -22,11 +22,7 @@ DECLARE_ALGORITHM_FACTORY( PhotonGeomMonitor )
 // Standard constructor, initializes variables
 PhotonGeomMonitor::PhotonGeomMonitor( const std::string& name,
                                       ISvcLocator* pSvcLocator )
-  : HistoAlgBase        ( name, pSvcLocator ),
-    m_richRecMCTruth    ( NULL ),
-    m_ckAngle           ( NULL ),
-    m_geomTool          ( NULL ),
-    m_trSelector        ( NULL )
+  : HistoAlgBase( name, pSvcLocator )
 {
   // job opts
 }
@@ -101,13 +97,10 @@ StatusCode PhotonGeomMonitor::execute()
 
 
     // Get photons for this segment
-    const LHCb::RichRecSegment::Photons & photons = photonCreator()->reconstructPhotons( segment );
-    for ( LHCb::RichRecSegment::Photons::const_iterator iPhot = photons.begin();
-          iPhot != photons.end();
-          ++iPhot )
+    const auto & photons = photonCreator()->reconstructPhotons( segment );
+    for ( const auto * photon : photons )
     {
-      LHCb::RichRecPhoton * photon = *iPhot;
-      LHCb::RichRecPixel  * pixel  = photon->richRecPixel();
+      const LHCb::RichRecPixel * pixel = photon->richRecPixel();
 
       // Cherenkov angles
       const double thetaRec = photon->geomPhoton().CherenkovTheta();

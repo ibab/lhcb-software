@@ -7,6 +7,9 @@
 ! 2016-01-14 - Chris Jones
  - Add a few more plots to RichCherenkovAngleMonitor to help understand Rec-MC
    differences with the various different photon reconstruction tools.
+ - Add a new monitor, PhotonRecoCompare, that explicitly compares, photon by 
+   photon, candidates created by different reconstruction tools.
+ - A little more C++11 clean ups.
 
 !========================= RichRecMonitors v2r36p1 2015-10-13 ========================
 ! 2015-08-12 - Gerhard Raven

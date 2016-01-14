@@ -20,14 +20,10 @@ using namespace Rich::Rec::MC;
 
 //---------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( PhotonTrajectoryMonitor )
-
 // Standard constructor, initializes variables
 PhotonTrajectoryMonitor::PhotonTrajectoryMonitor( const std::string& name,
                                                   ISvcLocator* pSvcLocator )
-  : Rich::Rec::TupleAlgBase ( name, pSvcLocator ),
-    m_richRecMCTruth    ( NULL ),
-    m_trSelector        ( NULL ) { }
+  : Rich::Rec::TupleAlgBase ( name, pSvcLocator ) { }
 
 // Destructor
 PhotonTrajectoryMonitor::~PhotonTrajectoryMonitor() {}
@@ -40,8 +36,8 @@ StatusCode PhotonTrajectoryMonitor::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichRecMCTruthTool",   m_richRecMCTruth );
-  acquireTool( "TrackSelector",      m_trSelector, this );
+  acquireTool( "RichRecMCTruthTool", m_richRecMCTruth );
+  acquireTool( "TrackSelector",    m_trSelector, this );
 
   return sc;
 }
@@ -57,32 +53,34 @@ StatusCode PhotonTrajectoryMonitor::execute()
   const Rich::HistoID hid;
 
   // Iterate over segments
-  for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
-        iSeg != richSegments()->end(); ++iSeg )
+  for ( auto * segment : *richSegments() )
   {
-    LHCb::RichRecSegment * segment = *iSeg;
 
     // apply track selection
     if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
 
     // Radiator info
-    const Rich::RadiatorType rad = segment->trackSegment().radiator();
-    
-    // loop over photons
-    const LHCb::RichRecSegment::Photons & photons = photonCreator()->reconstructPhotons( segment );
-    for ( LHCb::RichRecSegment::Photons::const_iterator iPhot = photons.begin();
-          iPhot != photons.end(); ++iPhot )
-    {
+    const auto rad = segment->trackSegment().radiator();
 
+    // loop over photons
+    const auto & photons = photonCreator()->reconstructPhotons( segment );
+    for ( const auto * photon : photons )
+    {
+      
       // Associated MCRichOpticalPhoton
-      const LHCb::MCRichOpticalPhoton * mcPhoton = m_richRecMCTruth->trueOpticalPhoton(*iPhot);
+      const LHCb::MCRichOpticalPhoton * mcPhoton = m_richRecMCTruth->trueOpticalPhoton(photon);
       if ( mcPhoton )
       {
-        
-        const Gaudi::XYZPoint & primMirrPnt   = (*iPhot)->geomPhoton().sphMirReflectionPoint();
-        const Gaudi::XYZPoint & secMirrPnt    = (*iPhot)->geomPhoton().flatMirReflectionPoint();
-        const Gaudi::XYZPoint & primMirrPntMC = mcPhoton->sphericalMirrorReflectPoint();
-        const Gaudi::XYZPoint & secMirrPntMC  = mcPhoton->flatMirrorReflectPoint();
+
+        // Mirror data
+        const auto & primMirrPnt   = photon->geomPhoton().sphMirReflectionPoint();
+        const auto & secMirrPnt    = photon->geomPhoton().flatMirReflectionPoint();
+        const auto & primMirrPntMC = mcPhoton->sphericalMirrorReflectPoint();
+        const auto & secMirrPntMC  = mcPhoton->flatMirrorReflectPoint();
+
+        // emission point data
+        const auto & emissPth   = photon->geomPhoton().emissionPoint();
+        const auto & mcEmissPtn = mcPhoton->emissionPoint();
 
         plot1D( primMirrPnt.x() - primMirrPntMC.x(), hid(rad,"primMirrX"), "Primary Mirror X", -30, 30 );
         plot1D( primMirrPnt.y() - primMirrPntMC.y(), hid(rad,"primMirrY"), "Primary Mirror Y", -30, 30 );
@@ -91,6 +89,10 @@ StatusCode PhotonTrajectoryMonitor::execute()
         plot1D( secMirrPnt.x() - secMirrPntMC.x(), hid(rad,"secMirrX"), "Secondary Mirror X", -30, 30 );
         plot1D( secMirrPnt.y() - secMirrPntMC.y(), hid(rad,"secMirrY"), "Secondary Mirror Y", -30, 30 );
         plot1D( secMirrPnt.z() - secMirrPntMC.z(), hid(rad,"secMirrZ"), "Secondary Mirror Z", -10, 10 );
+
+        plot1D( emissPth.x() - mcEmissPtn.x(), hid(rad,"emissPtnX"), "Rec-MC Emission Point X", -100,  100  );
+        plot1D( emissPth.y() - mcEmissPtn.y(), hid(rad,"emissPtnY"), "Rec-MC Emission Point Y", -100,  100  );
+        plot1D( emissPth.z() - mcEmissPtn.z(), hid(rad,"emissPtnZ"), "Rec-MC Emission Point Z", -1000, 1000 );
 
       } // mc photon
 
@@ -101,3 +103,8 @@ StatusCode PhotonTrajectoryMonitor::execute()
   return StatusCode::SUCCESS;
 }
 
+//---------------------------------------------------------------------------
+
+DECLARE_ALGORITHM_FACTORY( PhotonTrajectoryMonitor )
+
+//---------------------------------------------------------------------------

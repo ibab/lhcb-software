@@ -64,7 +64,7 @@ StatusCode CherenkovAngleMonitor::execute()
   // Histogramming
   const Rich::HistoID hid;
   //            Radiator          Aerogel  Rich1Gas  Rich2Gas
-  const double ckRange[]      = { 0.015,   0.01,     0.005   };
+  CKTHETADIFF_RANGE;
   MAX_CKTHETA_RAD;
   MIN_CKTHETA_RAD;
   const double xLimit[]       = { 400,     200,      1400    };
@@ -84,23 +84,23 @@ StatusCode CherenkovAngleMonitor::execute()
     if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
 
     // segment momentum
-    const double pTot = std::sqrt(segment->trackSegment().bestMomentum().Mag2());
+    const auto pTot = std::sqrt(segment->trackSegment().bestMomentum().Mag2());
 
     // beta for pion
-    const double pionbeta = m_richPartProp->beta( pTot, Rich::Pion );
+    const auto pionbeta = m_richPartProp->beta( pTot, Rich::Pion );
     if ( pionbeta < m_minBeta ) continue; // skip non-saturated tracks
 
     // MC type
-    const Rich::ParticleIDType mcType = m_richRecMCTruth->mcParticleType( segment );
+    const auto mcType = m_richRecMCTruth->mcParticleType( segment );
 
     // Radiator info
-    const Rich::RadiatorType rad = segment->trackSegment().radiator();
+    const auto rad = segment->trackSegment().radiator();
 
     // Expected Cherenkov theta angle for true particle type
     // if MC type is unknown, assume pion (maybe type should be job option ???)
-    const double thetaExpTrue = ( mcType == Rich::Unknown ?
-                                  m_ckAngle->avgCherenkovTheta( segment, Rich::Pion ) :
-                                  m_ckAngle->avgCherenkovTheta( segment, mcType ) );
+    const auto thetaExpTrue = ( mcType == Rich::Unknown ?
+                                m_ckAngle->avgCherenkovTheta( segment, Rich::Pion ) :
+                                m_ckAngle->avgCherenkovTheta( segment, mcType ) );
 
     // Nominal saturated CK theta for this radiator
     const auto nomSatCKTheta = m_ckAngle->nominalSaturatedCherenkovTheta(rad);
@@ -133,8 +133,8 @@ StatusCode CherenkovAngleMonitor::execute()
     }
 
     // Get photons for this segment
-    const LHCb::RichRecSegment::Photons & photons = photonCreator()->reconstructPhotons( segment );
-    verbose() << " Found " << photons.size() << " photon candidates" << endmsg;
+    const auto & photons = photonCreator()->reconstructPhotons( segment );
+    _ri_verbo << " Found " << photons.size() << " photon candidates" << endmsg;
 
     // loop over photons
     for ( auto * photon : photons )

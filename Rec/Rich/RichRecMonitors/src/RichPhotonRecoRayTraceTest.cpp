@@ -23,12 +23,7 @@ DECLARE_ALGORITHM_FACTORY( PhotonRecoRayTraceTest )
 // Standard constructor, initializes variables
 PhotonRecoRayTraceTest::PhotonRecoRayTraceTest( const std::string& name,
                                                 ISvcLocator* pSvcLocator )
-  : HistoAlgBase        ( name, pSvcLocator ),
-    m_richRecMCTruth    ( NULL ),
-    m_ckAngle           ( NULL ),
-    m_trSelector        ( NULL ),
-    m_rayTracing        ( NULL ),
-    m_idTool            ( NULL )
+  : HistoAlgBase( name, pSvcLocator )
 {
   // JOs
   declareProperty( "RefractionCorrection", m_refractCorr = true  );
@@ -53,8 +48,8 @@ StatusCode PhotonRecoRayTraceTest::initialize()
   acquireTool( "RichRecMCTruthTool",   m_richRecMCTruth   );
   acquireTool( "RichCherenkovAngle",   m_ckAngle          );
   acquireTool( "TrackSelector",        m_trSelector, this );
-  acquireTool( "RichRayTracing",       m_rayTracing, NULL, true );
-  acquireTool( "RichSmartIDTool",      m_idTool,  NULL, true );
+  acquireTool( "RichRayTracing",       m_rayTracing, nullptr, true );
+  acquireTool( "RichSmartIDTool",      m_idTool,     nullptr, true );
 
   // ray tracing options
   m_mode = LHCb::RichTraceMode( LHCb::RichTraceMode::RespectHPDTubes,
@@ -74,10 +69,8 @@ StatusCode PhotonRecoRayTraceTest::execute()
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
   // Iterate over segments
-  for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
-        iSeg != richSegments()->end(); ++iSeg )
+  for ( auto * segment : *richSegments() )
   {
-    LHCb::RichRecSegment * segment = *iSeg;
 
     // apply track selection
     if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
@@ -87,27 +80,26 @@ StatusCode PhotonRecoRayTraceTest::execute()
     if ( mcType == Rich::Unknown ) continue;
 
     // Loop over photons for this segment
-    const LHCb::RichRecSegment::Photons & photons = photonCreator()->reconstructPhotons( segment );
-    for ( LHCb::RichRecSegment::Photons::const_iterator iPhot = photons.begin();
-          iPhot != photons.end(); ++iPhot )
+    const auto & photons = photonCreator()->reconstructPhotons( segment );
+    for ( auto * photon : photons )
     {
       // photon selection
-      if ( m_rejectAmbigPhots && !(*iPhot)->geomPhoton().unambiguousPhoton() ) continue;
+      if ( m_rejectAmbigPhots && !photon->geomPhoton().unambiguousPhoton() ) continue;
 
       // Make plots against reco photon
       makePlots( "Reco/",
-                 (*iPhot)->geomPhoton().emissionPoint(),
-                 (*iPhot)->geomPhoton().emissionDir(),
-                 (*iPhot)->geomPhoton().detectionPoint(),
-                 (*iPhot)->geomPhoton().sphMirReflectionPoint(),
-                 (*iPhot)->geomPhoton().flatMirReflectionPoint(),
+                 photon->geomPhoton().emissionPoint(),
+                 photon->geomPhoton().emissionDir(),
+                 photon->geomPhoton().detectionPoint(),
+                 photon->geomPhoton().sphMirReflectionPoint(),
+                 photon->geomPhoton().flatMirReflectionPoint(),
                  segment->trackSegment().rich(),
                  segment->trackSegment().radiator(),
-                 (*iPhot)->geomPhoton().CherenkovPhi(),
+                 photon->geomPhoton().CherenkovPhi(),
                  segment->trackSegment().avPhotonEnergy() );
 
       // Locate MC photon
-      const LHCb::MCRichOpticalPhoton * mcPhot = m_richRecMCTruth->trueOpticalPhoton(*iPhot);
+      const LHCb::MCRichOpticalPhoton * mcPhot = m_richRecMCTruth->trueOpticalPhoton(photon);
       if ( mcPhot )
       {
         // Make plots against MC photon

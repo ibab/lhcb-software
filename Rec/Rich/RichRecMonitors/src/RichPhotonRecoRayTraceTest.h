@@ -77,11 +77,11 @@ namespace Rich
 
       private: // data
 
-        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth; ///< Pointer to RichRecMCTruthTool interface
-        const ICherenkovAngle * m_ckAngle;         ///< Rich Cherenkov angle calculator tool
-        const ITrackSelector * m_trSelector;       ///< Track selector
-        const IRayTracing * m_rayTracing;          ///< Ray tracing tool
-        const ISmartIDTool * m_idTool;             ///< Pointer to RichSmartID tool
+        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth = nullptr; ///< Pointer to RichRecMCTruthTool interface
+        const ICherenkovAngle * m_ckAngle = nullptr;         ///< Rich Cherenkov angle calculator tool
+        const ITrackSelector * m_trSelector = nullptr;       ///< Track selector
+        const IRayTracing * m_rayTracing = nullptr;          ///< Ray tracing tool
+        const ISmartIDTool * m_idTool = nullptr;             ///< Pointer to RichSmartID tool
 
         /// Use full HPD treatment in ray tracing
         bool m_fullHPDs;
