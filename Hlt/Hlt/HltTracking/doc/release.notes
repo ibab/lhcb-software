@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2016-01-14 - Sascha Stahl
+ - Switch on filtering on ghost probability and track chi2 in Hlt1.
+ 
 ! 2016-01-09 - Sascha Stahl
  - Added code to calculate ghost probability and cut on it. 
  - The new Hlt1TrackFilterGhostProb can cut on the chi2 and the ghost probability.
