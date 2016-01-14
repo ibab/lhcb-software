@@ -287,10 +287,10 @@ namespace Rich
   private: // data
 
     /// Snell's Law refraction tool
-    mutable const ISnellsLawRefraction * m_snellsLaw;
+    mutable const ISnellsLawRefraction * m_snellsLaw = nullptr;
 
     /// Mirror segment finder tool
-    const IMirrorSegFinder* m_mirrorSegFinder;
+    const IMirrorSegFinder* m_mirrorSegFinder = nullptr;
 
     /// Rich1 and Rich2 pointers
     std::vector< const DeRich* > m_rich;

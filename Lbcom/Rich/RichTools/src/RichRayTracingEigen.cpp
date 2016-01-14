@@ -28,16 +28,14 @@ Rich::RayTracingEigen::RayTracingEigen( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent)
   : Rich::HistoToolBase       ( type, name, parent  ),
-    m_snellsLaw               ( NULL                ),
-    m_mirrorSegFinder         ( NULL                ),
-    m_rich                    ( Rich::NRiches, NULL ),
+    m_rich                    ( Rich::NRiches, nullptr ),
     m_photoDetPanels          ( Rich::NRiches,
-                                PDPanelsPerRich(Rich::NPDPanelsPerRICH,NULL) ),
+                                PDPanelsPerRich(Rich::NPDPanelsPerRICH,nullptr) ),
     m_sphMirrorSegRows        ( Rich::NRiches, 0    ),
     m_sphMirrorSegCols        ( Rich::NRiches, 0    ),
     m_secMirrorSegRows        ( Rich::NRiches, 0    ),
     m_secMirrorSegCols        ( Rich::NRiches, 0    ),
-    m_deBeam                  ( Rich::NRiches, NULL )
+    m_deBeam                  ( Rich::NRiches, nullptr )
 {
   // interface
   declareInterface<IRayTracing>(this);
@@ -67,7 +65,7 @@ StatusCode Rich::RayTracingEigen::initialize()
   if ( sc.isFailure() ) return sc;
 
   // get tools
-  acquireTool( "RichMirrorSegFinder", m_mirrorSegFinder, NULL, true );
+  acquireTool( "RichMirrorSegFinder", m_mirrorSegFinder, nullptr, true );
 
   // RICH detector elements
   m_rich[Rich::Rich1] = getDet<DeRich>( DeRichLocations::Rich1 );
