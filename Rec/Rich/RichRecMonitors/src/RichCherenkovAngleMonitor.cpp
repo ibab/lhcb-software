@@ -20,16 +20,10 @@ using namespace Rich::Rec::MC;
 
 //---------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( CherenkovAngleMonitor )
-
 // Standard constructor, initializes variables
 CherenkovAngleMonitor::CherenkovAngleMonitor( const std::string& name,
                                               ISvcLocator* pSvcLocator )
-  : Rich::Rec::TupleAlgBase ( name, pSvcLocator ),
-    m_richPartProp      ( NULL ),
-    m_richRecMCTruth    ( NULL ),
-    m_ckAngle           ( NULL ),
-    m_trSelector        ( NULL )
+  : Rich::Rec::TupleAlgBase ( name, pSvcLocator )
 {
   // min beta
   declareProperty( "MinBeta",     m_minBeta   = 0.999 );
@@ -54,6 +48,7 @@ StatusCode CherenkovAngleMonitor::initialize()
   acquireTool( "RichParticleProperties", m_richPartProp );
   acquireTool( "RichRecMCTruthTool",   m_richRecMCTruth );
   acquireTool( "RichCherenkovAngle",      m_ckAngle     );
+  acquireTool( "RichMassHypoRings",   m_massHypoRings   );
   acquireTool( "TrackSelector",      m_trSelector, this );
 
   return sc;
@@ -82,16 +77,14 @@ StatusCode CherenkovAngleMonitor::execute()
   const double minP = 0   * Gaudi::Units::GeV;
 
   // Iterate over segments
-  for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
-        iSeg != richSegments()->end(); ++iSeg )
+  for ( auto * segment : *richSegments() )
   {
-    LHCb::RichRecSegment * segment = *iSeg;
 
     // apply track selection
     if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
 
     // segment momentum
-    const double pTot = sqrt(segment->trackSegment().bestMomentum().Mag2());
+    const double pTot = std::sqrt(segment->trackSegment().bestMomentum().Mag2());
 
     // beta for pion
     const double pionbeta = m_richPartProp->beta( pTot, Rich::Pion );
@@ -109,16 +102,43 @@ StatusCode CherenkovAngleMonitor::execute()
                                   m_ckAngle->avgCherenkovTheta( segment, Rich::Pion ) :
                                   m_ckAngle->avgCherenkovTheta( segment, mcType ) );
 
+    // Nominal saturated CK theta for this radiator
+    const auto nomSatCKTheta = m_ckAngle->nominalSaturatedCherenkovTheta(rad);
+
+    // How far from CK theta saturation (for kaon) is this segment ?
+    const auto fracCKThetaSat =
+      ( m_ckAngle->avgCherenkovTheta(segment,Rich::Kaon) / nomSatCKTheta );
+
+    // Loop over hypos for this segment
+    unsigned int nRingPointTrue = 0;
+    for ( const auto pid : m_richPartProp->particleTypes() )
+    {
+      // get the mass hypo ring for this pid
+      const auto * ring = m_massHypoRings->massHypoRing( segment, pid );
+      if ( ring )
+      {
+        // Number of run points
+        const auto nPts = ring->ringPoints().size();
+        // Fill info for this hypo ring
+        richHisto1D( hid(rad,pid,"nMassHypoRingPnts"), "# Mass hypo ring points",
+                     0.5, 200.5, 200 )->fill( nPts );
+        richProfile1D( hid(rad,pid,"nMassHypoRingPntsVP"), "# Mass hypo ring points V Ptot",
+                       minP, maxP, nBins1D() )->fill( pTot, nPts );
+        richProfile1D( hid(rad,pid,"nMassHypoRingPntsVCKTheta"),
+                       "# Mass hypo ring points V CK theta Exp",
+                       minCkTheta[rad], maxCkTheta[rad], nBins1D() )
+          -> fill( m_ckAngle->avgCherenkovTheta(segment,pid), nPts );
+        if ( pid == mcType ) { nRingPointTrue = nPts; }
+      }
+    }
+
     // Get photons for this segment
     const LHCb::RichRecSegment::Photons & photons = photonCreator()->reconstructPhotons( segment );
     verbose() << " Found " << photons.size() << " photon candidates" << endmsg;
 
     // loop over photons
-    for ( LHCb::RichRecSegment::Photons::const_iterator iPhot = photons.begin();
-          iPhot != photons.end();
-          ++iPhot )
+    for ( auto * photon : photons )
     {
-      LHCb::RichRecPhoton * photon = *iPhot;
 
       // Hit point associated to photon
       const Gaudi::XYZPoint & hitPnt = photon->richRecPixel()->globalPosition();
@@ -143,10 +163,19 @@ StatusCode CherenkovAngleMonitor::execute()
       richHisto2D( hid(rad,"ckDiffAllVPhi"), "Rec-Exp CK theta all V CK Phi",
                    0, 2*M_PI, nBins2D(), -ckRange[rad], ckRange[rad], nBins2D() )->fill(phiRec,delTheta);
 
+      // only fill these if above Kaon threshold
+      if ( fracCKThetaSat > 0 )
+      {
+        richHisto1D( hid(rad,"fracCKThetaSat"), "Fraction of nominal saturated Kaon CK Theta",
+                     0.0, 1.0, nBins1D() )->fill(fracCKThetaSat);
+        richProfile1D( hid(rad,"fracCKThetaSatVP"), "Fraction of nominal saturated Kaon CK Theta V Momentum",
+                       minP, maxP, nBins1D() )->fill(pTot,fracCKThetaSat);
+      }
+
       // theta versus phi plots
       richHisto2D( hid(rad,"thetaVphi"), "CK theta V phi",
-                   0, 2*M_PI, nBins2D(), minCkTheta[rad], maxCkTheta[rad],
-                   nBins2D() )->fill(phiRec,thetaRec);
+                   0, 2*M_PI, nBins2D(),
+                   minCkTheta[rad], maxCkTheta[rad], nBins2D() )->fill(phiRec,thetaRec);
       if ( hitPnt.y() < 0 && hitPnt.x() < 0 )
       {
         richHisto2D( hid(rad,"thetaVphiR1"), "CK theta V phi : y<0 x<0",
@@ -174,12 +203,12 @@ StatusCode CherenkovAngleMonitor::execute()
 
       richProfile1D( HID("avgCKThetaVGloX",rad),
                      "Average CK theta V Global X in radiator : Isolated Tracks",
-                     -xLimit[rad], xLimit[rad], 100 )
+                     -xLimit[rad], xLimit[rad], nBins1D() )
         ->fill( segment->trackSegment().middlePoint().x(), thetaRec );
 
       richProfile1D( HID("avgCKThetaVGloY",rad),
                      "Average CK theta V Global Y in radiator : Isolated Tracks",
-                     -yLimit[rad], yLimit[rad], 100 )
+                     -yLimit[rad], yLimit[rad], nBins1D() )
         ->fill( segment->trackSegment().middlePoint().y(), thetaRec );
 
       if ( mcType != Rich::Unknown )
@@ -199,15 +228,22 @@ StatusCode CherenkovAngleMonitor::execute()
           richHisto1D( hid(rad,mcType,"ckPhiTrue"), "Cherenkov phi : true", 0, 2*M_PI, nBins1D() )->fill(phiRec);
           richHisto1D( hid(rad,"ckDiffTrue"), "Rec-Exp CK theta all : true",
                        -ckRange[rad],ckRange[rad], nBins1D() )->fill(delTheta);
+          richHisto1D( hid(rad,mcType,"ckDiffTrue"), "Rec-Exp CK theta all : true",
+                       -ckRange[rad],ckRange[rad], nBins1D() )->fill(delTheta);
           richHisto1D( hid(rad,"ckDiffTrue"+phiR.first), "Rec-Exp CK theta all : true : "+phiR.second,
                        -ckRange[rad],ckRange[rad], nBins1D() )->fill(delTheta);
           richHisto2D( hid(rad,"ckDiffTrueVPhi"), "Rec-Exp CK theta all V CK Phi : true",
                        0, 2*M_PI, nBins2D(), -ckRange[rad], ckRange[rad], nBins2D() )->fill(phiRec, delTheta);
 
           richProfile1D( hid(rad,"ckDiffTrueVP"), "Rec-Exp CK theta Versus Ptot all : true",
-                         minP, maxP, 50 )->fill(pTot,delTheta);
+                         minP, maxP, nBins1D() )->fill(pTot,delTheta);
+          richProfile1D( hid(rad,"absckDiffTrueVP"), "| Rec - Exp CK theta | Versus Ptot all : true",
+                         minP, maxP, nBins1D() )->fill(pTot,fabs(delTheta));
+
           richProfile1D( hid(rad,"ckDiffTrueVCKtheta"), "Rec-Exp CK theta Versus CK theta all : true",
-                         minCkTheta[rad], maxCkTheta[rad], 50 )->fill(thetaRec,delTheta);
+                         minCkTheta[rad], maxCkTheta[rad], nBins1D() )->fill(thetaRec,delTheta);
+          richProfile1D( hid(rad,"absckDiffTrueVCKtheta"), "| Rec-Exp CK theta | Versus CK theta all : true",
+                         minCkTheta[rad], maxCkTheta[rad], nBins1D() )->fill(thetaRec,fabs(delTheta));
 
           // theta versus phi plots
           richHisto2D( hid(rad,"thetaVphiTrue"), "CK theta V phi : true CK photons",
@@ -248,24 +284,42 @@ StatusCode CherenkovAngleMonitor::execute()
           {
             thetaMC       = mcPhot->cherenkovTheta();
             phiMC         = mcPhot->cherenkovPhi();
-            delThetaMC    = thetaRec-mcPhot->cherenkovTheta();
-            delThetaExpMC = thetaExpTrue-mcPhot->cherenkovTheta();
+            delThetaMC    = thetaRec     - thetaMC;
+            delThetaExpMC = thetaExpTrue - thetaMC;
 
-            richHisto1D( hid(rad,"ckThetaMC"), "MC Cherenkov theta",
+            richHisto1D( hid(rad,"ckThetaMCTrue"), "MC Cherenkov theta",
                          minCkTheta[rad], maxCkTheta[rad], nBins1D() )->fill(thetaMC);
             richHisto1D( hid(rad,"mcckDiffTrue"), "Rec-MC CK theta true",
                          -ckRange[rad],ckRange[rad], nBins1D() )->fill(delThetaMC);
+            richHisto1D( hid(rad,mcType,"mcckDiffTrue"), "Rec-MC CK theta true",
+                         -ckRange[rad],ckRange[rad], nBins1D() )->fill(delThetaMC);
             richHisto1D( hid(rad,"mcckDiffTrue"+phiR.first), "Rec-MC CK theta true : "+phiR.second,
                          -ckRange[rad],ckRange[rad], nBins1D() )->fill(delThetaMC);
-            richHisto1D( hid(rad,"mcExpDiff"), "MC-Exp CK theta true",
+            richHisto1D( hid(rad,mcType,"mcckDiffTrue"+phiR.first), "Rec-MC CK theta true : "+phiR.second,
+                         -ckRange[rad],ckRange[rad], nBins1D() )->fill(delThetaMC);
+            richHisto1D( hid(rad,"mcExpDiffTrue"), "Exp-MC CK theta true",
                          -ckRange[rad],ckRange[rad], nBins1D() )->fill(delThetaExpMC);
-            richHisto1D( hid(rad,"mcExpDiff"+phiR.first), "MC-Exp CK theta true : "+phiR.second,
+            richHisto1D( hid(rad,"mcExpDiffTrue"+phiR.first), "Exp-MC CK theta : true : "+phiR.second,
                          -ckRange[rad],ckRange[rad], nBins1D() )->fill(delThetaExpMC);
-            richHisto2D( hid(rad,"mcckDiffTrueVPhi"), "Rec-MC CK theta true V true CK Phi",
-                         0, 2*M_PI, nBins2D(), -ckRange[rad], ckRange[rad], nBins2D() )->fill(phiMC, delThetaMC);
-            richProfile1D( hid(rad,"absMCExpDiffVP"), "abs(MC-Exp CK theta) Versus Ptot true",
-                           minP, maxP, 50 )->fill(pTot, fabs(delThetaMC) );
-                           
+
+            richHisto2D( hid(rad,"mcckDiffTrueVPhi"), "Rec-MC CK theta true V true CK Phi : true",
+                         0, 2*M_PI, nBins2D(), 
+                         -ckRange[rad], ckRange[rad], nBins2D() )->fill(phiMC, delThetaMC);
+
+            richProfile1D( hid(rad,"absMcCkDiffTrueVP"), "| Rec-MC CK theta | Versus Ptot : true",
+                           minP, maxP, nBins1D() )->fill(pTot,fabs(delThetaMC));
+            richProfile1D( hid(rad,mcType,"absMcCkDiffTrueVP"), "| Rec-MC CK theta | Versus Ptot : true",
+                           minP, maxP, nBins1D() )->fill(pTot,fabs(delThetaMC));
+
+            richProfile1D( hid(rad,"absMcCkDiffTrueVCKtheta"), "| Rec-MC CK theta | Versus CK theta all : true",
+                           minCkTheta[rad], maxCkTheta[rad], nBins1D() )->fill(thetaRec,fabs(delThetaMC));
+            richProfile1D( hid(rad,mcType,"absMcCkDiffTrueVCKtheta"), "| Rec-MC CK theta | Versus CK theta all : true",
+                           minCkTheta[rad], maxCkTheta[rad], nBins1D() )->fill(thetaRec,fabs(delThetaMC));
+
+            // resolution versus # ring points plots
+            richProfile1D( hid(rad,"absMcCkDiffTrueVnRingPoints"),
+                           "| Exp-MC CK theta | Versus # Mass Hypo Ring Points",
+                           0.5, 200.5, 100 ) -> fill( nRingPointTrue, fabs(delThetaMC) );
 
           } // mc photon
 
@@ -279,6 +333,7 @@ StatusCode CherenkovAngleMonitor::execute()
           sc = sc && tuple->column( "McCKtheta" , thetaMC );
           sc = sc && tuple->column( "McCKphi" ,  phiMC );
           sc = sc && tuple->column( "ExpCKtheta", thetaExpTrue );
+          sc = sc && tuple->column( "NumRingPoints", nRingPointTrue );
           sc = sc && tuple->write();
           if ( sc.isFailure() ) return sc;
 
@@ -297,7 +352,7 @@ StatusCode CherenkovAngleMonitor::execute()
           richHisto1D( hid(rad,"ckDiffFake"+phiR.first), "Rec-Exp CK theta all : fake : "+phiR.second,
                        -ckRange[rad],ckRange[rad], nBins1D() )->fill(delTheta);
           richProfile1D( hid(rad,"ckDiffFakeVP"), "Rec-Exp CK theta Versus Ptot all : fake",
-                         minP, maxP, 50 )->fill(pTot,delTheta);
+                         minP, maxP, nBins1D() )->fill(pTot,delTheta);
 
         }
 
@@ -327,3 +382,9 @@ CherenkovAngleMonitor::phiRegionDesc( const double phi ) const
   }
   return iDesc->second;
 }
+
+//---------------------------------------------------------------------------
+
+DECLARE_ALGORITHM_FACTORY( CherenkovAngleMonitor )
+
+//---------------------------------------------------------------------------

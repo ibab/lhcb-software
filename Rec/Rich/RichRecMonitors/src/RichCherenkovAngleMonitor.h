@@ -26,6 +26,7 @@
 #include "RichKernel/IRichParticleProperties.h"
 #include "MCInterfaces/IRichRecMCTruthTool.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
+#include "RichRecBase/IRichMassHypothesisRingCreator.h"
 
 // temporary histogramming numbers
 #include "RichRecBase/RichDetParams.h"
@@ -84,14 +85,22 @@ namespace Rich
 
       private: // data
 
-        const IParticleProperties * m_richPartProp;   ///< Rich Particle properties
-        const Rich::Rec::MC::IMCTruthTool * m_richRecMCTruth; ///< Pointer to RichRecMCTruthTool interface
-        const ICherenkovAngle     * m_ckAngle;        ///< Rich Cherenkov angle calculator tool
+        /// Rich Particle properties
+        const IParticleProperties         * m_richPartProp = nullptr;   
 
-        double m_minBeta;        ///< minimum beta value for 'saturated' tracks
+        /// Pointer to RichRecMCTruthTool interface
+        const Rich::Rec::MC::IMCTruthTool * m_richRecMCTruth = nullptr;
+
+        /// Rich Cherenkov angle calculator tool
+        const ICherenkovAngle             * m_ckAngle = nullptr;
+
+        /// Pointer to ring creator
+        const IMassHypothesisRingCreator * m_massHypoRings = nullptr;
+
+        double m_minBeta; ///< minimum beta value for 'saturated' tracks
 
         /// Track selector
-        const ITrackSelector * m_trSelector;
+        const ITrackSelector * m_trSelector = nullptr;
 
         /// Number of phi regions to use
         unsigned int m_nPhiRegions;
