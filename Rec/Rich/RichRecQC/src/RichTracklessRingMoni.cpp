@@ -23,37 +23,16 @@ DECLARE_ALGORITHM_FACTORY( TracklessRingMoni )
 // Standard constructor, initializes variables
 TracklessRingMoni::TracklessRingMoni( const std::string& name,
                                       ISvcLocator* pSvcLocator )
-  : HistoAlgBase      ( name, pSvcLocator ),
-    m_richRecMCTruth  ( NULL ),  
-    m_ckAngle         ( NULL )
+  : HistoAlgBase( name, pSvcLocator )
 {
-  using namespace boost::assign;
   declareProperty( "RingLocation", m_ringLoc = LHCb::RichRecRingLocation::ENNRings+"All" );
-  {
-    std::vector<double> tmp = list_of(0.1)(0.025)(0.02);
-    declareProperty( "ChThetaRecHistoLimitMin", m_ckThetaMin = tmp);
-  }
-  {
-    std::vector<double> tmp = list_of(0.3)(0.06)(0.035);
-    declareProperty( "ChThetaRecHistoLimitMax", m_ckThetaMax = tmp);
-  }
-  {
-    std::vector<double> tmp = list_of(200.0)(20.0)(60.0);
-    declareProperty( "RingRadiiHistoLimitMin",  m_radiiMin = tmp);
-  }
-  {
-    std::vector<double> tmp = list_of(400.0)(100.0)(175.0);
-    declareProperty( "RingRadiiHistoLimitMax",  m_radiiMax = tmp);
-  }
-  {
-    std::vector<double> tmp = list_of(100)(100)(100);
-    declareProperty( "MaxFitVariance", m_maxFitVariance = tmp);
-  }
-  {
-    std::vector<double> tmp = list_of(0.2)(0.0075)(0.0075);
-    declareProperty( "CKThetaRes", m_ckThetaRes = tmp);
-  }
-  declareProperty( "MCAssocFrac", m_mcAssocFrac = 0.75 );
+  declareProperty( "ChThetaRecHistoLimitMin", m_ckThetaMin = { 0.1,   0.025, 0.02  } );
+  declareProperty( "ChThetaRecHistoLimitMax", m_ckThetaMax = { 0.3,   0.06,  0.035 } );
+  declareProperty( "RingRadiiHistoLimitMin",  m_radiiMin   = { 200.0, 20.0,  60.0  } );
+  declareProperty( "RingRadiiHistoLimitMax",  m_radiiMax   = { 400.0, 100.0, 175.0 } );
+  declareProperty( "MaxFitVariance",      m_maxFitVariance = { 100,   100,   100   } );
+  declareProperty( "CKThetaRes",              m_ckThetaRes = { 0.2, 0.0075, 0.0075 } );
+  declareProperty( "MCAssocFrac",            m_mcAssocFrac = 0.75 );
 }
 
 // Destructor
@@ -69,8 +48,7 @@ StatusCode TracklessRingMoni::initialize()
   // tools
   acquireTool( "RichCherenkovAngle", m_ckAngle );
 
-  if ( msgLevel(MSG::DEBUG) )
-    debug() << "Monitoring Trackless rings at '" << m_ringLoc << "'" << endmsg;
+  _ri_debug << "Monitoring Trackless rings at '" << m_ringLoc << "'" << endmsg;
 
   return sc;
 }
@@ -81,16 +59,15 @@ StatusCode TracklessRingMoni::prebookHistograms()
   // for online monitoring
  
   // Loop over radiators
-  for ( Rich::Radiators::const_iterator rad = Rich::radiators().begin();
-        rad != Rich::radiators().end(); ++rad )
+  for ( const auto& rad : Rich::radiators() )
   {
-    richHisto1D( HID("ringRadii",*rad), "Trackless Ring Radii",
-                 m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D() );
-    richHisto1D( HID("totalPhotons",*rad), "Photon Yield : Trackless Rings",
+    richHisto1D( HID("ringRadii",rad), "Trackless Ring Radii",
+                 m_ckThetaMin[rad], m_ckThetaMax[rad], nBins1D() );
+    richHisto1D( HID("totalPhotons",rad), "Photon Yield : Trackless Rings",
                  -0.5, 50.5, 51 );
-    richHisto1D( HID("ringRadiiRefitted",*rad), "Refitted Trackless Ring Radii (mm on HPD plane)",
-                 m_radiiMin[*rad], m_radiiMax[*rad], nBins1D() );
-    richHisto1D( HID("nRings",*rad), "Number of Rings",
+    richHisto1D( HID("ringRadiiRefitted",rad), "Refitted Trackless Ring Radii (mm on HPD plane)",
+                 m_radiiMin[rad], m_radiiMax[rad], nBins1D() );
+    richHisto1D( HID("nRings",rad), "Number of Rings",
                  0.5, 50.5, 50 );
   }
 
@@ -104,24 +81,20 @@ StatusCode TracklessRingMoni::execute()
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
   // Retrieve rings
-  if ( !exist<LHCb::RichRecRings>(m_ringLoc) ) 
+  const LHCb::RichRecRings * rings = getIfExists<LHCb::RichRecRings>( m_ringLoc );
+  if ( !rings ) 
   {
     return Warning( "No rings found at "+m_ringLoc, StatusCode::SUCCESS );
   }
-  const LHCb::RichRecRings * rings = get<LHCb::RichRecRings>( m_ringLoc );
-  if ( msgLevel(MSG::DEBUG) )
-    debug() << "Found " << rings->size() << " rings at " << m_ringLoc << endmsg;
+  _ri_debug << "Found " << rings->size() << " rings at " << m_ringLoc << endmsg;
 
   // Rich Histo ID
   const Rich::HistoID hid;
 
   // loop
   Rich::Map<Rich::RadiatorType,unsigned int> ringsPerRad;
-  for ( LHCb::RichRecRings::const_iterator iR = rings->begin();
-        iR != rings->end(); ++iR )
+  for ( LHCb::RichRecRing * ring : *rings )
   {
-    LHCb::RichRecRing * ring = *iR;
-
     // Radiator info
     const Rich::RadiatorType rad = ring->radiator();
 
@@ -166,19 +139,18 @@ StatusCode TracklessRingMoni::execute()
     }
 
     // photon yield
-    richHisto1D( HID("totalPhotons",rad) )->fill( (double) (*iR)->richRecPixels().size() );
+    richHisto1D( HID("totalPhotons",rad) )->fill( (double) ring->richRecPixels().size() );
 
     // refit the ring ...
-    FastRingFitter fitter(**iR);
+    FastRingFitter fitter(*ring);
     // run the fit
     fitter.fit();
     // plot the fitted radius
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << "Fit "<< fitter.result().Status
-                << " " << fitter.result().Radius
-                << " " << fitter.result().Variance
-                << " " << fitter.numberOfPoints()
-                << endmsg;
+    _ri_verbo << "Fit "<< fitter.result().Status
+              << " " << fitter.result().Radius
+              << " " << fitter.result().Variance
+              << " " << fitter.numberOfPoints()
+              << endmsg;
     const bool refitOK = ( fitter.result().Status == 0 &&
                            fitter.result().Variance < m_maxFitVariance[rad] );
     if ( refitOK )
@@ -222,11 +194,10 @@ StatusCode TracklessRingMoni::execute()
 
   } // outer ring loop
 
-  for ( Rich::Radiators::const_iterator iRad = Rich::radiators().begin();
-        iRad != Rich::radiators().end(); ++iRad )
+  for ( const auto& rad : Rich::radiators() )
   {
-    if ( ringsPerRad[*iRad]>0 )
-      richHisto1D( HID("nRings",*iRad) ) -> fill( ringsPerRad[*iRad] );
+    if ( ringsPerRad[rad]>0 )
+      richHisto1D( HID("nRings",rad) ) -> fill( ringsPerRad[rad] );
   }
 
   return StatusCode::SUCCESS;

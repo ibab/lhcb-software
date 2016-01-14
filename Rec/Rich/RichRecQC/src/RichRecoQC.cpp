@@ -304,11 +304,10 @@ StatusCode RecoQC::execute()
 
   // Count (selected) segments per radiator
   Rich::Map<Rich::RadiatorType,unsigned int> segsPerRad;
-  for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
-        iSeg != richSegments()->end(); ++iSeg )
+  for ( const auto * seg : *richSegments() )
   {
-    if ( !m_trSelector->trackSelected((*iSeg)->richRecTrack()) ) continue;
-    ++segsPerRad[(*iSeg)->trackSegment().radiator()];
+    if ( !m_trSelector->trackSelected(seg->richRecTrack()) ) continue;
+    ++segsPerRad[seg->trackSegment().radiator()];
   }
 
   // Count events
@@ -527,7 +526,7 @@ StatusCode RecoQC::execute()
   } // end loop over segments
 
   // fill total number of photons plots
-  for ( const Rich::RadiatorType rad : Rich::radiators() )
+  for ( const auto rad : Rich::radiators() )
   {
     if ( m_rads[rad] )
     {
@@ -569,7 +568,7 @@ StatusCode RecoQC::finalize()
     info() << "                 : " << m_maxBeta << " > beta > " << m_minBeta << endmsg;
 
     // loop over radiators
-    for ( const Rich::RadiatorType rad : Rich::radiators() )
+    for ( const auto rad : Rich::radiators() )
     {
       // rad name
       std::string radName = Rich::text(rad);
@@ -610,7 +609,7 @@ void RecoQC::fitResolutionHistos()
   const LHCb::RichSmartID::Vector& hpds = m_RichSys->allPDRichSmartIDs();
 
   // Loop over radiators
-  for ( const Rich::RadiatorType rad : Rich::radiators() )
+  for ( const auto rad : Rich::radiators() )
   {
     if ( !m_rads[rad] ) continue;
 

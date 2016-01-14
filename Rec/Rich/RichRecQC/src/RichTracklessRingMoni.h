@@ -37,9 +37,6 @@
 // Kernel
 #include "RichRecBase/FastRingFitter.h"
 
-// boost
-#include "boost/assign/list_of.hpp"
-
 namespace Rich
 {
   namespace Rec
@@ -90,8 +87,11 @@ namespace Rich
 
       private: // data
 
-        mutable const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;  ///< Pointer to RichRecMCTruthTool interface
-        const ICherenkovAngle * m_ckAngle;  ///< Pointer to RichCherenkovAngle tool
+        /// Pointer to RichRecMCTruthTool interface
+        mutable const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth = nullptr; 
+
+        /// Pointer to RichCherenkovAngle tool
+        const ICherenkovAngle * m_ckAngle = nullptr;  
 
         /// Location of Rings in TES
         std::string m_ringLoc;
