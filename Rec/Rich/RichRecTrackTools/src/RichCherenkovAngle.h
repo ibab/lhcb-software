@@ -113,22 +113,22 @@ namespace Rich
     private: // Private data
 
       /// Pointer to RichExpectedTrackSignal interface
-      const IExpectedTrackSignal * m_signal;
+      const IExpectedTrackSignal * m_signal = nullptr;
 
       /// Pointer to RichParticleProperties interface
-      const IParticleProperties * m_richPartProp;
+      const IParticleProperties * m_richPartProp = nullptr;
 
       /// Pointer to refractive index tool
-      const IRefractiveIndex * m_refIndex;
+      const IRefractiveIndex * m_refIndex = nullptr;
 
       /// Pointer to the RichSmartID tool
-      const ISmartIDTool * m_smartIDTool;
+      const ISmartIDTool * m_smartIDTool = nullptr;
 
       /// Pointer to the ray tracking tool
-      const IRayTracing * m_rayTrace;
+      const IRayTracing * m_rayTrace = nullptr;
 
       /// Track effective refractive index tool
-      const ITrackEffectiveRefractiveIndex * m_tkIndex;
+      const ITrackEffectiveRefractiveIndex * m_tkIndex = nullptr;
 
       /// Particle ID types to consider in the photon creation checks
       Rich::Particles m_pidTypes;

@@ -76,10 +76,10 @@ namespace Rich
     private: // Private data
 
       /// Pointer to RichCherenkovAngle interface
-      const ICherenkovAngle * m_ckAngle;
+      const ICherenkovAngle * m_ckAngle = nullptr;
 
       /// Pointer to RichParticleProperties interface
-      const IParticleProperties * m_richPartProp;
+      const IParticleProperties * m_richPartProp = nullptr;
 
       typedef std::vector<double> BinData;
       typedef std::map< Rich::Rec::Track::Type, BinData > BinDataMap;

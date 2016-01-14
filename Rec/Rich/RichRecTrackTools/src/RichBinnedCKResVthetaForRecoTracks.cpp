@@ -25,8 +25,6 @@ BinnedCKResVthetaForRecoTracks ( const std::string& type,
                                  const std::string& name,
                                  const IInterface* parent )
   : ToolBase        ( type, name, parent ),
-    m_ckAngle       ( NULL ),
-    m_richPartProp  ( NULL ),
     m_scale         ( Rich::NRadiatorTypes, 1.0 )
 {
 
@@ -140,14 +138,11 @@ BinnedCKResVthetaForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segmen
       ckThetaResolution_Imp(segment,id,res);
       segment->setCKThetaResolution( id, (LHCb::RichRecSegment::FloatType)(res) );
 
-      if ( msgLevel(MSG::VERBOSE) )
-      {
-        verbose() << "Segment " << segment->key() << " : " << id
-                  << " ckRes=" << segment->ckThetaResolution( id ) << endmsg;
-      }
-
+      _ri_verbo << "Segment " << segment->key() << " : " << id
+                << " ckRes=" << segment->ckThetaResolution( id ) << endmsg;
+      
     }
-
+    
   }
 
   // return the final value

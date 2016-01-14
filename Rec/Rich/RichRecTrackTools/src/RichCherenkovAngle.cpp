@@ -23,13 +23,7 @@ DECLARE_TOOL_FACTORY( CherenkovAngle )
 CherenkovAngle::CherenkovAngle ( const std::string& type,
                                  const std::string& name,
                                  const IInterface* parent )
-  : ToolBase        ( type, name, parent ),
-    m_signal        ( NULL ),
-    m_richPartProp  ( NULL ),
-    m_refIndex      ( NULL ),
-    m_smartIDTool   ( NULL ),
-    m_rayTrace      ( NULL ),
-    m_tkIndex       ( NULL )
+  : ToolBase( type, name, parent )
 {
   // interface
   declareInterface<ICherenkovAngle>(this);

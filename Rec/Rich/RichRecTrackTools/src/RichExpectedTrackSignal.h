@@ -177,12 +177,12 @@ namespace Rich
     private:  // Private data
 
       // Pointers to tool instances
-      const IGeomEff * m_geomEff;                  ///< Geometrical efficiency tool
-      const ISellmeirFunc * m_sellmeir;            ///< Sellmeir function
-      const ISignalDetectionEff * m_sigDetEff;     ///< signal detection efficiency
-      const IParticleProperties * m_richPartProp;  ///< General particle properties
-      const IRayleighScatter * m_rayScat;          ///< Rayleigh scattering function
-      const IGasQuartzWindowAbs * m_gasQuartzWin;  ///< Absorption at the quartz window
+      const IGeomEff            * m_geomEff      = nullptr; ///< Geometrical efficiency tool
+      const ISellmeirFunc       * m_sellmeir     = nullptr; ///< Sellmeir function
+      const ISignalDetectionEff * m_sigDetEff    = nullptr; ///< signal detection efficiency
+      const IParticleProperties * m_richPartProp = nullptr; ///< General particle properties
+      const IRayleighScatter    * m_rayScat      = nullptr; ///< Rayleigh scattering function
+      const IGasQuartzWindowAbs * m_gasQuartzWin = nullptr; ///< Absorption at the quartz window
 
       /// Particle ID types to consider in the photon creation checks
       Rich::Particles m_pidTypes;

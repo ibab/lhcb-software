@@ -15,19 +15,13 @@
 // All code is in general Rich reconstruction namespace
 using namespace Rich::Rec;
 
-//-----------------------------------------------------------------------------
-
-// Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( BaseTrackSelector )
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 BaseTrackSelector::BaseTrackSelector( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
-  : ToolBase   ( type, name , parent ),
-    m_isoTrack ( NULL )
+  : ToolBase( type, name , parent )
 {
   // interface
   declareInterface<IBaseTrackSelector>(this);
@@ -174,21 +168,17 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
 {
   if (!track) { Warning("Null Track pointer").ignore(); return false; }
 
-  if ( msgLevel(MSG::VERBOSE) )
-  {
-    verbose() << "Trying Track " << track->key()
-              << " P=" << track->p()
-              << " Pt=" << track->pt()
-              << " charge=" << track->charge()
-              << endmsg;
-  }
+  _ri_verbo << "Trying Track " << track->key()
+            << " P=" << track->p()
+            << " Pt=" << track->pt()
+            << " charge=" << track->charge()
+            << endmsg;
 
   // Fit status
   if ( !m_acceptFitFailures && 
        track->fitStatus() == LHCb::Track::FitFailed )
   {
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> Fit Status FAILED -> Reject" << endmsg;
+    _ri_verbo << " -> Fit Status FAILED -> Reject" << endmsg;
     return false;
   }
 
@@ -198,10 +188,9 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
     const double p = track->p() / Gaudi::Units::GeV;
     if ( p < m_minPCut || p > m_maxPCut )
     {
-      if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> P " << p << " failed cut "
-                  << m_minPCut << " -> " << m_maxPCut
-                  << endmsg;
+      _ri_verbo << " -> P " << p << " failed cut "
+                << m_minPCut << " -> " << m_maxPCut
+                << endmsg;
       return false;
     }
   }
@@ -212,10 +201,9 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
     const double pt = track->pt() / Gaudi::Units::GeV;
     if ( pt < m_minPtCut || pt > m_maxPtCut )
     {
-      if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> Pt " << pt << " failed cut "
-                  << m_minPtCut << " -> " << m_maxPtCut
-                  << endmsg;
+      _ri_verbo << " -> Pt " << pt << " failed cut "
+                << m_minPtCut << " -> " << m_maxPtCut
+                << endmsg;
       return false;
     }
   }
@@ -226,10 +214,9 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
     const double chi2 = track->chi2PerDoF();
     if ( chi2 < m_minChi2Cut || chi2 > m_maxChi2Cut )
     {
-      if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> Chi^2 " << chi2 << " failed cut "
-                  << m_minChi2Cut << " -> " << m_maxChi2Cut
-                  << endmsg;
+      _ri_verbo << " -> Chi^2 " << chi2 << " failed cut "
+                << m_minChi2Cut << " -> " << m_maxChi2Cut
+                << endmsg;
       return false;
     }
   }
@@ -237,16 +224,14 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
   // track charge
   if ( m_chargeSel != 0 && m_chargeSel*track->charge() < 0 )
   {
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> Track charge " << track->charge() << " failed cut" << endmsg;
+    _ri_verbo << " -> Track charge " << track->charge() << " failed cut" << endmsg;
     return false;
   }
 
   // clones
   if ( !m_acceptClones && track->checkFlag(LHCb::Track::Clone) )
   {
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> Track rejected due to clone flag" << endmsg;
+    _ri_verbo << " -> Track rejected due to clone flag" << endmsg;
     return false;
   }
   if ( m_cloneDistCutEnabled )
@@ -256,10 +241,9 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
     if ( ( m_minCloneCut > bounds<double>::lowest()  && cloneDist < m_minCloneCut ) || 
          ( m_maxCloneCut < bounds<double>::highest() && cloneDist > m_maxCloneCut ) )
     {
-      if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> Track clone distance " << cloneDist << " failed cut "
-                  << m_minCloneCut << " -> " << m_maxCloneCut
-                  << endmsg;
+      _ri_verbo << " -> Track clone distance " << cloneDist << " failed cut "
+                << m_minCloneCut << " -> " << m_maxCloneCut
+                << endmsg;
       return false;
     }
   }
@@ -270,10 +254,9 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
     if ( track->likelihood() < 99 && // check against default value in Track class. Accept in this case.
          ( track->likelihood() < m_minLL || track->likelihood() > m_maxLL ) )
     {
-      if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> Track Likelihood " << track->likelihood() << " failed cut "
-                  << m_minLL << " -> " << m_maxLL
-                  << endmsg;
+      _ri_verbo << " -> Track Likelihood " << track->likelihood() << " failed cut "
+                << m_minLL << " -> " << m_maxLL
+                << endmsg;
       return false;
     }
   }
@@ -284,10 +267,9 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
     if ( track->ghostProbability() < 99 && // check against default value in Track class. Accept in this case.
          ( track->ghostProbability() < m_minGhostProb || track->ghostProbability() > m_maxGhostProb ) )
     {
-      if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> Track GhostProbability " << track->ghostProbability() << " failed cut "
-                  << m_minGhostProb << " -> " << m_maxGhostProb
-                  << endmsg;
+      _ri_verbo << " -> Track GhostProbability " << track->ghostProbability() << " failed cut "
+                << m_minGhostProb << " -> " << m_maxGhostProb
+                << endmsg;
       return false;
     }
   }
@@ -297,13 +279,12 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
   {
     if ( !isoTrackTool()->isIsolated(track) )
     {
-      if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> Isolation Criteria failed" << endmsg;
+      _ri_verbo << " -> Isolation Criteria failed" << endmsg;
       return false;
     }
   }
 
-  if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> Track selected" << endmsg;
+  _ri_verbo << " -> Track selected" << endmsg;
   return true;
 }
 
@@ -313,11 +294,9 @@ BaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
 
   if (!track) { Warning("Null RichRecTrack pointer").ignore(); return false; }
 
-  if ( msgLevel(MSG::VERBOSE) )
-  {
-    verbose() << "Trying RichRecTrack " << track->key() << " " << track->trackID().trackType()
-              << endmsg;
-  }
+  _ri_verbo << "Trying RichRecTrack " << track->key() 
+            << " " << track->trackID().trackType()
+            << endmsg;
 
   /** @todo Add fit status cut for RichRecTracks */
 
@@ -325,10 +304,9 @@ BaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
   const double p = track->vertexMomentum() / Gaudi::Units::GeV;
   if ( p < m_minPCut || p > m_maxPCut )
   {
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> P " << p << " failed cut "
-                << m_minPCut << " -> " << m_maxPCut
-                << endmsg;
+    _ri_verbo << " -> P " << p << " failed cut "
+              << m_minPCut << " -> " << m_maxPCut
+              << endmsg;
     return false;
   }
 
@@ -336,10 +314,9 @@ BaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
   const double pt = track->vertexPt() / Gaudi::Units::GeV;
   if ( pt < m_minPtCut || pt > m_maxPtCut )
   {
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> Pt " << pt << " failed cut "
-                << m_minPtCut << " -> " << m_maxPtCut
-                << endmsg;
+    _ri_verbo << " -> Pt " << pt << " failed cut "
+              << m_minPtCut << " -> " << m_maxPtCut
+              << endmsg;
     return false;
   }
 
@@ -347,26 +324,24 @@ BaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
   const double chi2 = track->chi2PerDoF();
   if ( chi2 < m_minChi2Cut || chi2 > m_maxChi2Cut )
   {
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> Chi^2 " << chi2 << " failed cut "
-                << m_minChi2Cut << " -> " << m_maxChi2Cut
-                << endmsg;
+    _ri_verbo << " -> Chi^2 " << chi2 << " failed cut "
+              << m_minChi2Cut << " -> " << m_maxChi2Cut
+              << endmsg;
     return false;
   }
 
   // track charge
   if ( m_chargeSel != 0 && m_chargeSel*track->charge() < 0 )
   {
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> Track charge " << track->charge() << " failed cut" << endmsg;
+    _ri_verbo << " -> Track charge " << track->charge() << " failed cut"
+              << endmsg;
     return false;
   }
 
   // clones
   if ( !m_acceptClones && !track->trackID().unique() )
   {
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> Track rejected due to clone flag" << endmsg;
+    _ri_verbo << " -> Track rejected due to clone flag" << endmsg;
     return false;
   }
   if ( m_cloneDistCutEnabled )
@@ -376,10 +351,9 @@ BaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
     if ( ( m_minCloneCut > bounds<double>::lowest()  && cloneDist < m_minCloneCut ) || 
          ( m_maxCloneCut < bounds<double>::highest() && cloneDist > m_maxCloneCut ) )
     {
-      if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> Track clone distance " << cloneDist << " failed cut "
-                  << m_minCloneCut << " -> " << m_maxCloneCut
-                  << endmsg;
+      _ri_verbo << " -> Track clone distance " << cloneDist << " failed cut "
+                << m_minCloneCut << " -> " << m_maxCloneCut
+                << endmsg;
       return false;
     }
   }
@@ -390,10 +364,9 @@ BaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
     if ( track->likelihood() < 99 && // check against default value in Track class. Accept in this case.
          ( track->likelihood() < m_minLL || track->likelihood() > m_maxLL ) )
     {
-      if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> Track Likelihood " << track->likelihood() << " failed cut "
-                  << m_minLL << " -> " << m_maxLL
-                  << endmsg;
+      _ri_verbo << " -> Track Likelihood " << track->likelihood() << " failed cut "
+                << m_minLL << " -> " << m_maxLL
+                << endmsg;
       return false;
     }
   }
@@ -405,10 +378,9 @@ BaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
          ( track->ghostProbability() < m_minGhostProb ||
            track->ghostProbability() > m_maxGhostProb ) )
     {
-      if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> Track GhostProbability " << track->ghostProbability() << " failed cut "
-                  << m_minGhostProb << " -> " << m_maxGhostProb
-                  << endmsg;
+      _ri_verbo << " -> Track GhostProbability " << track->ghostProbability() << " failed cut "
+                << m_minGhostProb << " -> " << m_maxGhostProb
+                << endmsg;
       return false;
     }
   }
@@ -418,13 +390,12 @@ BaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
   {
     if ( !isoTrackTool()->isIsolated(track) )
     {
-      if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> Isolation Criteria failed" << endmsg;
+      _ri_verbo << " -> Isolation Criteria failed" << endmsg;
       return false;
     }
   }
 
-  if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> Track selected" << endmsg;
+  _ri_verbo << " -> Track selected" << endmsg;
   return true;
 }
 
@@ -443,3 +414,10 @@ double BaseTrackSelector::minCloneDistCut()  const { return m_minCloneCut; }
 double BaseTrackSelector::maxCloneDistCut()  const { return m_maxCloneCut; }
 double BaseTrackSelector::minGhostProbCut()  const { return m_minGhostProb; }
 double BaseTrackSelector::maxGhostProbCut()  const { return m_maxGhostProb; }
+
+//-----------------------------------------------------------------------------
+
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( BaseTrackSelector )
+
+//-----------------------------------------------------------------------------

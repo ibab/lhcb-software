@@ -83,14 +83,14 @@ namespace Rich
 
     private: // Private data
 
-      // Pointers to tool instances
-      const ICherenkovAngle * m_ckAngle; ///< Cherenkov angle tool
+      /// Cherenkov angle tool
+      const ICherenkovAngle * m_ckAngle = nullptr; 
 
       /// Pointer to ring creator
-      const IMassHypothesisRingCreator * m_massHypoRings;
+      const IMassHypothesisRingCreator * m_massHypoRings = nullptr;
 
       /// Pointer to RichParticleProperties interface
-      const IParticleProperties * m_richPartProp;
+      const IParticleProperties * m_richPartProp = nullptr;
 
       /// Particle ID types to consider in the photon creation checks
       Rich::Particles m_pidTypes;

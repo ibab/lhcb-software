@@ -17,23 +17,16 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( GeomEffCKMassRing )
-
 // Standard constructor
 GeomEffCKMassRing::GeomEffCKMassRing ( const std::string& type,
                                        const std::string& name,
                                        const IInterface* parent )
-  : ToolBase          ( type, name, parent ),
-    m_ckAngle         ( NULL ),
-    m_massHypoRings   ( NULL ),
-    m_richPartProp    ( NULL )
+  : ToolBase( type, name, parent )
 {
-
   // define interface
   declareInterface<IGeomEff>(this);
   // JOs
   declareProperty( "UseFirstRingForAll", m_useFirstRingForAll = false );
-
 }
 
 StatusCode GeomEffCKMassRing::initialize()
@@ -43,9 +36,9 @@ StatusCode GeomEffCKMassRing::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichCherenkovAngle", m_ckAngle  );
-  acquireTool( "RichMassHypoRings", m_massHypoRings );
-  acquireTool( "RichParticleProperties",  m_richPartProp );
+  acquireTool( "RichCherenkovAngle",     m_ckAngle       );
+  acquireTool( "RichMassHypoRings",      m_massHypoRings );
+  acquireTool( "RichParticleProperties", m_richPartProp  );
 
   m_pidTypes = m_richPartProp->particleTypes();
   _ri_debug << "Particle types considered = " << m_pidTypes << endmsg;
@@ -69,13 +62,10 @@ GeomEffCKMassRing::geomEfficiency ( LHCb::RichRecSegment * segment,
     if ( ckTheta > 0 )
     {
 
-      if ( msgLevel(MSG::VERBOSE) )
-      {
-        verbose() << "geomEfficiency : Trying segment " << segment->key() << " CK theta = " << ckTheta
-                  << " track Dir "
-                  << segment->trackSegment().bestMomentum().Unit()
-                  << endmsg;
-      }
+      _ri_verbo << "geomEfficiency : Trying segment " << segment->key() << " CK theta = " << ckTheta
+                << " track Dir "
+                << segment->trackSegment().bestMomentum().Unit()
+                << endmsg;
 
       // Load the CK mass ring
       LHCb::RichRecRing * ring = m_massHypoRings->massHypoRing( segment, id );
@@ -96,31 +86,27 @@ GeomEffCKMassRing::geomEfficiency ( LHCb::RichRecSegment * segment,
             // The HPD ID
             const LHCb::RichSmartID hpdID = P.smartID().pdID();
 
-            if ( msgLevel(MSG::VERBOSE) )
-            {
-              verbose() << " -> photon was traced to detector at "
-                        << hpdID << " "
-                        << P.globalPosition()
-                        << endmsg;
-            }
-
+            _ri_verbo << " -> photon was traced to detector at "
+                      << hpdID << " "
+                      << P.globalPosition()
+                      << endmsg;
+            
             // count detected photons
             ++nDetect;
 
             // update efficiency per HPD tally
-            
+
             if ( m_useFirstRingForAll )
             {
-              for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
-                    hypo != m_pidTypes.end(); ++hypo )
-              { 
-                segment->addToGeomEfficiencyPerPD( *hypo, hpdID, 
+              for ( const auto& hypo : m_pidTypes )
+              {
+                segment->addToGeomEfficiencyPerPD( hypo, hpdID,
                                                    (LHCb::RichRecSegment::FloatType)(pdInc) );
               }
             }
             else
             {
-              segment->addToGeomEfficiencyPerPD( id, hpdID, 
+              segment->addToGeomEfficiencyPerPD( id, hpdID,
                                                  (LHCb::RichRecSegment::FloatType)(pdInc) );
             }
 
@@ -161,19 +147,14 @@ GeomEffCKMassRing::geomEfficiency ( LHCb::RichRecSegment * segment,
     if ( m_useFirstRingForAll )
     {
       for ( const auto& hypo : m_pidTypes )
-      { 
+      {
         segment->setGeomEfficiency( hypo, (LHCb::RichRecSegment::FloatType)(eff) );
       }
     }
     else
     {
       segment->setGeomEfficiency( id, (LHCb::RichRecSegment::FloatType)(eff) );
-      if ( msgLevel(MSG::DEBUG) )
-      {
-        debug() << "Segment "
-          //<< segment->key()
-                << " has " << id << " geom. eff. " << eff << endmsg;
-      }
+      _ri_debug << "Segment has " << id << " geom. eff. " << eff << endmsg;
     }
 
   }
@@ -195,10 +176,16 @@ GeomEffCKMassRing::geomEfficiencyScat ( LHCb::RichRecSegment * segment,
      *  @todo Look to improving this by taking into account the cos^2 scattering
      *        probability. Need to do this though without using random numbers ...
      */
-    segment->setGeomEfficiencyScat( id, 
+    segment->setGeomEfficiencyScat( id,
                                     (LHCb::RichRecSegment::FloatType)(geomEfficiency(segment,id)) );
   }
 
   // return result fo this id type
   return segment->geomEfficiencyScat( id );
 }
+
+//-----------------------------------------------------------------------------
+
+DECLARE_TOOL_FACTORY( GeomEffCKMassRing )
+
+//-----------------------------------------------------------------------------

@@ -33,8 +33,8 @@ BaseTrSegMakerFromRecoTracks( const std::string& type,
   declareInterface<ITrSegMaker>(this);
 
   // initialise
-  m_deBeam[Rich::Rich1] = NULL;
-  m_deBeam[Rich::Rich2] = NULL;
+  m_deBeam[Rich::Rich1] = nullptr;
+  m_deBeam[Rich::Rich2] = nullptr;
 
   // JOs
   m_checkBeamP[Rich::Aerogel]  = false;

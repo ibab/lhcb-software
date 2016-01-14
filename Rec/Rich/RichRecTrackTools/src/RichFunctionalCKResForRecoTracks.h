@@ -1,3 +1,4 @@
+
 //----------------------------------------------------------------------------------------
 /** @file RichFunctionalCKResForRecoTracks.h
  *
@@ -124,24 +125,27 @@ namespace Rich
     private: // data
 
       /// Pointer to RichCherenkovAngle interface
-      const ICherenkovAngle * m_ckAngle;
+      const ICherenkovAngle * m_ckAngle = nullptr;
 
       /// Pointer to refractive index tool
-      const ITrackEffectiveRefractiveIndex * m_refIndex;
+      const ITrackEffectiveRefractiveIndex * m_refIndex = nullptr;
 
       /// Pointer to RichParticleProperties interface
-      const IParticleProperties * m_richPartProp;
+      const IParticleProperties * m_richPartProp = nullptr;
 
       /// Detector parameters
-      const IDetParameters * m_detParams;
+      const IDetParameters * m_detParams = nullptr;
 
-      mutable ITrackExtrapolator * m_trExt; ///< Track extrapolation tool
-      std::string m_Ext; ///< Track extrapolation tool name
+      /// Track extrapolation tool
+      mutable ITrackExtrapolator * m_trExt = nullptr; 
+      /// Track extrapolation tool name
+      std::string m_Ext; 
 
       /// Transport Service
-      mutable ITransportSvc * m_transSvc;
+      mutable ITransportSvc * m_transSvc = nullptr;
 
-      double m_scatt; ///< Scattering coefficent
+      /// Scattering coefficent. should be used with p in GeV
+      const double m_scatt = 13.6e-03; 
 
       /// Asymtopic Errors
       std::vector<double> m_asmpt[Rich::NRadiatorTypes];
@@ -165,10 +169,10 @@ namespace Rich
       std::vector<double> m_scaleR2Pmt;
 
       /// Pointer to Rich1 detector element
-      DeRich1 * m_rich1DE;
+      DeRich1 * m_rich1DE = nullptr;
 
       /// Pointer to a PD Panel
-      DeRichPDPanel * m_aRichPDPanel;
+      DeRichPDPanel * m_aRichPDPanel = nullptr;
 
       /// Flag to turn on the use of an alternative geometry for the radiation length calculation
       bool m_useAltGeom;
@@ -177,13 +181,13 @@ namespace Rich
       std::string m_altGeomLoc;
 
       /// Pointer to the DetElm for the alternate geometry
-      mutable IDetectorElement * m_altGeom;
+      mutable IDetectorElement * m_altGeom = nullptr;
 
       /// Possible uses of Grand Pixel for pmts
-      bool m_useOfGrandPixPmt;
-      bool m_rich2UseMixedPmt;
-      bool m_usePDWithPMT;
-      bool m_useUpgradeOptics;
+      bool m_useOfGrandPixPmt = false;
+      bool m_rich2UseMixedPmt = false;
+      bool m_usePDWithPMT     = false;
+      bool m_useUpgradeOptics = false;
       double m_grandPmtPixelSizeFactor;
 
     };

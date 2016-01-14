@@ -1,3 +1,4 @@
+
 //----------------------------------------------------------------------------------------
 /** @file RichFunctionalCKResForRecoTracks.cpp
  *
@@ -31,25 +32,14 @@ FunctionalCKResForRecoTracks ( const std::string& type,
                                const std::string& name,
                                const IInterface* parent )
 : HistoToolBase   ( type, name, parent  ),
-  m_ckAngle       ( NULL                          ),
-  m_refIndex      ( NULL                          ),
-  m_richPartProp  ( NULL                          ),
-  m_detParams     ( NULL                          ),
-  m_trExt         ( NULL                          ),
-  m_Ext           ( "TrackRungeKuttaExtrapolator" ),
-  m_transSvc      ( NULL                          ),
-  m_scatt         ( 13.6e-03                      ), // should be used with p in GeV
-  m_scaleR2Pmt    ( 2                             ),
-  m_rich1DE       ( NULL                          ),
-  m_aRichPDPanel  ( NULL                          ),
-  m_altGeom       ( NULL                          )
+  m_scaleR2Pmt    ( 2                   )
 {
   // define interface
   declareInterface<ICherenkovResolution>(this);
 
   // job options
 
-  declareProperty( "TrackExtrapolator", m_Ext );
+  declareProperty( "TrackExtrapolator", m_Ext = "TrackRungeKuttaExtrapolator" );
 
   // Allows for additional adhoc contributions as needed
   m_asmpt[Rich::Aerogel]  = std::vector<double>( Rich::Rec::Track::NTrTypes, 0.0 );
@@ -86,7 +76,7 @@ StatusCode FunctionalCKResForRecoTracks::initialize()
   acquireTool( "RichCherenkovAngle",         m_ckAngle      );
   acquireTool( "RichTrackEffectiveRefIndex", m_refIndex     );
   acquireTool( "RichParticleProperties",     m_richPartProp );
-  acquireTool( "RichDetParameters", m_detParams, NULL, true );
+  acquireTool( "RichDetParameters", m_detParams, nullptr, true );
 
   m_pidTypes = m_richPartProp->particleTypes();
   _ri_debug << "Particle types considered = " << m_pidTypes << endmsg;
@@ -385,7 +375,7 @@ StatusCode FunctionalCKResForRecoTracks::setUseOfPmtFlags()
 {
   StatusCode sc = StatusCode::SUCCESS;
 
-  /// CRJ : This needs to be cleaned up once the Upgrade geometery is decided ...
+  /// CRJ : This needs to be cleaned up once the Upgrade geometry is decided ...
 
   m_useOfGrandPixPmt = false;
   m_rich2UseMixedPmt = false;

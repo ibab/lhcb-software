@@ -17,19 +17,11 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( GeomEffPhotonTracing )
-
 // Standard constructor
 GeomEffPhotonTracing::GeomEffPhotonTracing ( const std::string& type,
                                              const std::string& name,
                                              const IInterface* parent )
-  : ToolBase          ( type, name, parent ),
-    m_rayTrace        ( NULL ),
-    m_ckAngle         ( NULL ),
-    m_richSys         ( NULL ),
-    m_nGeomEff        ( 0    ),
-    m_nGeomEffBailout ( 0    ),
-    m_pdInc           ( 0    )
+  : ToolBase( type, name, parent )
 {
 
   // define interface
@@ -99,13 +91,10 @@ GeomEffPhotonTracing::geomEfficiency ( LHCb::RichRecSegment * segment,
     if ( ckTheta > 0 )
     {
 
-      if ( msgLevel(MSG::VERBOSE) )
-      {
-        verbose() << "geomEfficiency : Trying segment " << segment->key() << " CK theta = " << ckTheta
-                  << " track Dir "
-                  << segment->trackSegment().bestMomentum().Unit()
-                  << endmsg;
-      }
+      _ri_verbo << "geomEfficiency : Trying segment " << segment->key() << " CK theta = " << ckTheta
+                << " track Dir "
+                << segment->trackSegment().bestMomentum().Unit()
+                << endmsg;
 
       int nDetect(0), iPhot(0);
       for ( PhiList::const_iterator ckPhi = m_phiValues.begin();
@@ -142,13 +131,10 @@ GeomEffPhotonTracing::geomEfficiency ( LHCb::RichRecSegment * segment,
           // Check HPD status
           if ( m_hpdCheck && !m_richSys->pdIsActive(photon.smartID().pdID()) ) continue;
 
-          if ( msgLevel(MSG::VERBOSE) )
-          {
-            verbose() << " -> photon was traced to detector at " 
-                      << photon.smartID().pdID() << " "
-                      << photon.detectionPoint()
-                      << endmsg;
-          }
+          _ri_verbo << " -> photon was traced to detector at " 
+                    << photon.smartID().pdID() << " "
+                    << photon.detectionPoint()
+                    << endmsg;
 
           // count detected photons
           ++nDetect;
@@ -190,12 +176,7 @@ GeomEffPhotonTracing::geomEfficiency ( LHCb::RichRecSegment * segment,
 
     // store result
     segment->setGeomEfficiency( id, (LHCb::RichRecSegment::FloatType)(eff) );
-    if ( msgLevel(MSG::DEBUG) )
-    {
-      debug() << "Segment " 
-        //<< segment->key() 
-              << " has " << id << " geom. eff. " << eff << endmsg;
-    }
+    _ri_debug << "Segment has " << id << " geom. eff. " << eff << endmsg;
 
   }
 
@@ -223,3 +204,9 @@ GeomEffPhotonTracing::geomEfficiencyScat ( LHCb::RichRecSegment * segment,
   // return result fo this id type
   return segment->geomEfficiencyScat( id );
 }
+
+//-----------------------------------------------------------------------------
+
+DECLARE_TOOL_FACTORY( GeomEffPhotonTracing )
+
+//-----------------------------------------------------------------------------

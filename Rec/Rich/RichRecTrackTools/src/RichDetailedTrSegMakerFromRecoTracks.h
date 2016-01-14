@@ -212,16 +212,16 @@ namespace Rich
     private: // data
 
       /// Ray tracing tool
-      const IRayTracing* m_rayTracing;
+      const IRayTracing* m_rayTracing = nullptr;
 
       /// Pointer to RichParticleProperties interface
-      const IParticleProperties * m_richPartProp;
+      const IParticleProperties * m_richPartProp = nullptr;
 
       /// Pointer to the radiator intersections tool
-      const IRadiatorTool * m_radTool;
+      const IRadiatorTool * m_radTool = nullptr;
 
       /// Track state provider
-      mutable ITrackStateProvider * m_trStateP;
+      mutable ITrackStateProvider * m_trStateP = nullptr;
 
       /// Rich1 and Rich2 detector elements
       DeRich* m_rich[Rich::NRiches];
@@ -244,8 +244,8 @@ namespace Rich
       std::vector<double> m_minStateDiff;
 
       // Track extrapolators
-      mutable ITrackExtrapolator * m_trExt1; ///< Primary track extrapolation tool
-      mutable ITrackExtrapolator * m_trExt2; ///< Secondary (backup if primary fails) track extrapolation tool
+      mutable ITrackExtrapolator * m_trExt1 = nullptr; ///< Primary track extrapolation tool
+      mutable ITrackExtrapolator * m_trExt2 = nullptr; ///< Secondary (backup) track extrapolation tool
       std::string m_trExt1Name; ///< Primary track extrapolation tool name
       std::string m_trExt2Name; ///< Secondary track extrapolation tool name
 
@@ -281,10 +281,10 @@ namespace Rich
       TrackTypesRads m_radsToSkip;
 
       /// Pointer to the Magnetic Field Service
-      mutable IMagneticFieldSvc * m_magFieldSvc;
+      mutable IMagneticFieldSvc * m_magFieldSvc = nullptr;
 
       /// Cached pointer to a TrackTraj object
-      mutable LHCb::TrackTraj * m_trackTraj;
+      mutable LHCb::TrackTraj * m_trackTraj = nullptr;
 
     };
 

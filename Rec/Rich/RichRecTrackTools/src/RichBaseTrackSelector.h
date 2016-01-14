@@ -133,7 +133,7 @@ namespace Rich
     private: // data
 
       /// Isolated Track tool
-      mutable const IIsolatedTrack * m_isoTrack;
+      mutable const IIsolatedTrack * m_isoTrack = nullptr;
 
       double m_minChi2Cut; ///< Min chi^2 cut
       double m_maxChi2Cut; ///< Max chi^2 cut
@@ -161,12 +161,12 @@ namespace Rich
 
       bool m_acceptFitFailures; ///< Accept tracks with a FAILED fit status
 
-      mutable bool m_chiSqCutEnabled;
-      mutable bool m_ghostProbCutEnabled;
-      mutable bool m_cloneDistCutEnabled;
-      mutable bool m_likelihoodCutEnabled;
-      mutable bool m_pCutEnabled;
-      mutable bool m_ptCutEnabled;
+      mutable bool m_chiSqCutEnabled      = false;
+      mutable bool m_ghostProbCutEnabled  = false;
+      mutable bool m_cloneDistCutEnabled  = false;
+      mutable bool m_likelihoodCutEnabled = false;
+      mutable bool m_pCutEnabled          = false;
+      mutable bool m_ptCutEnabled         = false;
 
     };
 

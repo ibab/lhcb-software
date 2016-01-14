@@ -82,21 +82,19 @@ namespace Rich
 
     private: // Private data
 
-      // Pointers to tool instances
-      const IRayTracing * m_rayTrace;    ///< Ray tracking tool
-      const ICherenkovAngle * m_ckAngle; ///< Cherenkov angle tool
-
-      const DeRichSystem * m_richSys;    ///< RICH detector system object
+      const IRayTracing     * m_rayTrace = nullptr; ///< Ray tracking tool
+      const ICherenkovAngle * m_ckAngle  = nullptr; ///< Cherenkov angle tool
+      const DeRichSystem    * m_richSys  = nullptr; ///< RICH detector system object
 
       /// Number of photons to use in geometrical efficiency calculation
-      int m_nGeomEff;
+      int m_nGeomEff = 0;
 
       /** Number of photons to quit after in geometrical efficiency calculation
        *  if all so far have failed */
-      int m_nGeomEffBailout;
+      int m_nGeomEffBailout = 0;
 
       /// Increment parameter for PD efficiencies
-      double m_pdInc;
+      double m_pdInc = 0;
 
       /// JO flag to switch between simple or detail HPD description in ray tracing
       bool m_useDetailedHPDsForRayT;

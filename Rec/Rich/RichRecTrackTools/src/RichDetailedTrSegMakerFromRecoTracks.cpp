@@ -23,14 +23,7 @@ DetailedTrSegMakerFromRecoTracks( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
   : BaseTrSegMakerFromRecoTracks ( type, name, parent ),
-    m_rayTracing         ( NULL                       ),
-    m_richPartProp       ( NULL                       ),
-    m_radTool            ( NULL                       ),
-    m_trStateP           ( NULL                       ),
-    m_nomZstates         ( 2*Rich::NRiches,    0      ),
-    m_trExt1             ( NULL                       ),
-    m_trExt2             ( NULL                       ),
-    m_magFieldSvc        ( NULL                       )
+    m_nomZstates         ( 2*Rich::NRiches,    0      )
 {
   using namespace Gaudi::Units;
 
@@ -111,9 +104,9 @@ StatusCode DetailedTrSegMakerFromRecoTracks::initialize()
   if ( m_createMissingStates || m_useStateProvider ) { stateProvider(); }
 
   // Get the RICH tools
-  acquireTool( "RichRayTracing",          m_rayTracing, NULL, true );
+  acquireTool( "RichRayTracing",          m_rayTracing, nullptr, true );
   acquireTool( "RichParticleProperties",  m_richPartProp );
-  acquireTool( "RichRadiatorTool",        m_radTool, NULL, true );
+  acquireTool( "RichRadiatorTool",        m_radTool, nullptr, true );
 
   // get Detector elements for RICH1 and RICH2
   m_rich[Rich::Rich1] = getDet<DeRich>( DeRichLocations::Rich1 );
@@ -121,11 +114,11 @@ StatusCode DetailedTrSegMakerFromRecoTracks::initialize()
 
   // Radiators
   m_radiators.push_back( usedRads(Rich::Aerogel)  ?
-                         getDet<DeRichRadiator>(DeRichLocations::Aerogel)  : NULL );
+                         getDet<DeRichRadiator>(DeRichLocations::Aerogel)  : nullptr );
   m_radiators.push_back( usedRads(Rich::Rich1Gas) ?
-                         getDet<DeRichRadiator>(DeRichLocations::Rich1Gas) : NULL );
+                         getDet<DeRichRadiator>(DeRichLocations::Rich1Gas) : nullptr );
   m_radiators.push_back( usedRads(Rich::Rich2Gas) ?
-                         getDet<DeRichRadiator>(DeRichLocations::Rich2Gas) : NULL );
+                         getDet<DeRichRadiator>(DeRichLocations::Rich2Gas) : nullptr );
 
   if ( m_useStateProvider )
   {
@@ -246,7 +239,7 @@ constructSegments( const ContainedObject * obj,
 //                    -xRadEntGlo[rad], xRadEntGlo[rad], 200,
 //                    -yRadEntGlo[rad], yRadEntGlo[rad], 200 )->fill( entryPStateRaw->x(),
 //                                                                    entryPStateRaw->y() );
-      entryPStateRaw = NULL;
+      entryPStateRaw = nullptr;
     }
 
     // Failed to find the state, so try with the state provider....
@@ -304,7 +297,7 @@ constructSegments( const ContainedObject * obj,
 //                    -xRadExitGlo[rad], xRadExitGlo[rad], 200,
 //                    -yRadExitGlo[rad], yRadExitGlo[rad], 200 )->fill( exitPStateRaw->x(),
 //                                                                      exitPStateRaw->y() );
-      exitPStateRaw = NULL;
+      exitPStateRaw = nullptr;
     }
 
     // Failed to find the state, so try with the state provider....
@@ -331,7 +324,7 @@ constructSegments( const ContainedObject * obj,
     checkState( exitPStateRaw,  rad );
 
     // Construct TrackTraj if it is to be used
-    std::unique_ptr<LHCb::TrackTraj> trackTraj( !m_useTrackTraj ? NULL :
+    std::unique_ptr<LHCb::TrackTraj> trackTraj( !m_useTrackTraj ? nullptr :
                                                 new LHCb::TrackTraj(*track,magFieldSvc()) );
     m_trackTraj = trackTraj.get();
 
