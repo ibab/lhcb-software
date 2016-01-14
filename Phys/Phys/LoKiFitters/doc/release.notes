@@ -5,6 +5,8 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+!================= Phys/LoKiFitters v4r19 2016-01-14 =================
+
 ! 2016-01-14 - Vanya Belyaev
  - DistanceCalculator, "track" interface: 
      for long-tracks in vicinity of origin point use 
