@@ -56,12 +56,13 @@ class Physics_pp_Draft2016( object ):
         return          'Physics_pp_Draft2016'
 
     def SubDirs(self):
-        return {'August' : ['CcDiHadron', 'DPS', 'EW', 'PID', 'Topo',
+        return {'August2015' : ['CcDiHadron', 'DPS', 'EW', 'Topo',
                             'Bc2JpsiX', 'DiMuon', 'DisplVertices',
                             'TrackEff', 'TrackEffDiMuon', "Commissioning", 'RareStrange',
                             'TriMuon', 'B2HH', 'B2Kpi0','Phi','RareCharm'],
-                'September' : ['CharmHad', 'XcMuXForTau', 'Radiative'],
-                'October' : ['LowMult', 'SingleMuon']}
+                'September2015' : ['CharmHad', 'XcMuXForTau', 'Radiative'],
+                'October2015' : ['LowMult', 'SingleMuon'],
+                'Draft2016' : [ 'PID' ]}
 
 
     def Thresholds(self) :
@@ -323,9 +324,9 @@ class Physics_pp_Draft2016( object ):
 
         # HLT2 thresholds from individual files
         sds = self.SubDirs()
-        for month, subdirs in self.SubDirs().iteritems():
+        for monthyear, subdirs in self.SubDirs().iteritems():
             for subdir in subdirs:
-                conf = __get_conf__(subdir, "_25ns_%s2015" % month)
+                conf = __get_conf__(subdir, "_25ns_%s" %(monthyear))
                 __update_conf__(thresholds, conf.Thresholds())
 
         return thresholds
@@ -337,9 +338,9 @@ class Physics_pp_Draft2016( object ):
 
         hlt2 = []
         sds = self.SubDirs()
-        for month, subdirs in self.SubDirs().iteritems():
+        for monthyear, subdirs in self.SubDirs().iteritems():
             for subdir in subdirs:
-                conf = __get_conf__(subdir, "_25ns_%s2015" % month)
+                conf = __get_conf__(subdir, "_25ns_%s" %(monthyear))
                 hlt2.extend(conf.ActiveHlt2Lines())
 
         return hlt2

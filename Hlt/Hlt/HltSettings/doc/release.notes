@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-01-14 - Olli Lupton
+ - Add draft settings for PID lines in 2016.
+ - Update Physics_pp_Draft2016 to point at these new PID settings.
+
 ! 2015-1-7 - Sean Benson
  - Removed Roel's example code in the settings as real use cases exist.
 
