@@ -20,7 +20,7 @@ use  ProtoParticleFilter        v1r9     Phys    # Current DV Maintainer
 use  DaVinciTransporter 	v3r13    Phys    # Current DV Maintainer
 use  ParticleMaker      	v6r17    Phys    # Current DV Maintainer
 use  VertexFit			v6r23    Phys    # Yuehong Xie
-use  LoKiFitters                v4r18    Phys    # Vanya Belyaev
+use  LoKiFitters                v4r19    Phys    # Vanya Belyaev
 use  DecayTreeFitter            v1r22    Phys    # Wouter Hulsbergen
 use  PhysDict                   v4r2p4   Phys    # Current DV Maintainer
 use  HighPtJets                 v1r9     Phys    # Marcin Kucharczyk
