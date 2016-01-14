@@ -12,15 +12,12 @@
 // local
 #include "RichPhotonRecoBase.h"
 
-// All code is in general Rich reconstruction namespace
-using namespace Rich::Rec;
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-PhotonRecoBase::PhotonRecoBase( const std::string& type,
-                                const std::string& name,
-                                const IInterface* parent )
+Rich::Rec::PhotonRecoBase::PhotonRecoBase( const std::string& type,
+                                           const std::string& name,
+                                           const IInterface* parent )
   : Rich::Rec::ToolBase ( type, name, parent ),
     m_ckBiasCorrs( Rich::NRadiatorTypes, 0.0 )
 {
@@ -36,16 +33,19 @@ PhotonRecoBase::PhotonRecoBase( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-PhotonRecoBase::~PhotonRecoBase() { }
+Rich::Rec::PhotonRecoBase::~PhotonRecoBase() { }
 
 //=============================================================================
 // Initialisation.
 //=============================================================================
-StatusCode PhotonRecoBase::initialize()
+StatusCode Rich::Rec::PhotonRecoBase::initialize()
 {
   // initialise base class
   const StatusCode sc = Rich::Rec::ToolBase::initialize();
   if ( sc.isFailure() ) return sc;
+
+  // get tools
+  acquireTool( "RichPhotonEmissionPoint", m_emissPoint );
 
   // loop over radiators
   for ( const auto& rad : Rich::radiators() )
@@ -63,3 +63,5 @@ StatusCode PhotonRecoBase::initialize()
 
   return sc;
 }
+
+//=============================================================================

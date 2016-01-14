@@ -16,13 +16,14 @@
 // STL
 #include <sstream>
 
-// Base class and interfaces
+// Base class
 #include "RichPhotonRecoBase.h"
+
+// interfaces
 #include "RichRecBase/IRichPhotonReconstruction.h"
 #include "RichKernel/IRichMirrorSegFinder.h"
 #include "RichKernel/IRichRayTracing.h"
 #include "RichKernel/IRichSmartIDTool.h"
-#include "RichRecBase/IRichPhotonEmissionPoint.h"
 #include "RichKernel/IRichSnellsLawRefraction.h"
 
 // RichKernel
@@ -163,19 +164,16 @@ namespace Rich
       const DeRich * m_rich[Rich::NRiches];
 
       /// Tool to locate the appropriate mirror segments for a given reflection point
-      const IMirrorSegFinder* m_mirrorSegFinder;
+      const IMirrorSegFinder * m_mirrorSegFinder = nullptr;
 
       /// Raytracing tool
-      const IRayTracing* m_rayTracing;
+      const IRayTracing * m_rayTracing = nullptr;
 
       /// RichSmartID tool
-      const ISmartIDTool* m_idTool;
-
-      /// Estimated emission point tool
-      const IPhotonEmissionPoint * m_emissPoint;
+      const ISmartIDTool * m_idTool = nullptr;
 
       /// Snell's Law refraction tool
-      mutable const ISnellsLawRefraction * m_snellsLaw;
+      mutable const ISnellsLawRefraction * m_snellsLaw = nullptr;
 
       /// Quartic Solver
       QuarticSolver m_quarticSolver;

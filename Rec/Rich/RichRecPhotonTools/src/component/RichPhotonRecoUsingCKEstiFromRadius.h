@@ -1,3 +1,4 @@
+
 //-----------------------------------------------------------------------------
 /** @file RichPhotonRecoUsingCKEstiFromRadius.h
  *
@@ -9,11 +10,12 @@
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHRECTOOLS_RichPhotonRecoUsingCKEstiFromRadius_H
-#define RICHRECTOOLS_RichPhotonRecoUsingCKEstiFromRadius_H 1
+#ifndef RICHRECPHOTONTOOLS_RichPhotonRecoUsingCKEstiFromRadius_H
+#define RICHRECPHOTONTOOLS_RichPhotonRecoUsingCKEstiFromRadius_H 1
 
 // STL
 #include <sstream>
+#include <limits>
 
 // Base class and interfaces
 #include "RichPhotonRecoBase.h"
@@ -30,9 +32,6 @@
 // RichKernel
 #include "RichKernel/RichTrackSegment.h"
 #include "RichKernel/RichGeomPhoton.h"
-
-// GSL
-#include "gsl/gsl_math.h"
 
 // VDT
 #include "vdt/atan2.h"
@@ -52,6 +51,7 @@ namespace Rich
      *  using the track and photon hit positions on the detector plane.
      *
      *  @author Chris Jones         Christopher.Rob.Jones@cern.ch
+     *  @date   2003-11-14
      */
     //-----------------------------------------------------------------------------
 
@@ -64,11 +64,12 @@ namespace Rich
       /// Standard constructor
       PhotonRecoUsingCKEstiFromRadius( const std::string& type,
                                        const std::string& name,
-                                       const IInterface* parent);
+                                       const IInterface* parent );
 
-      virtual ~PhotonRecoUsingCKEstiFromRadius( ); ///< Destructor
+      /// Destructor
+      virtual ~PhotonRecoUsingCKEstiFromRadius( ); 
 
-      // Initialization of the tool after creation
+      /// Initialization of the tool after creation
       virtual StatusCode initialize();
 
     public: // methods (and doxygen comments) inherited from interface
@@ -79,25 +80,52 @@ namespace Rich
                                      const LHCb::RichRecPixel * pixel,
                                      LHCb::RichGeomPhoton& gPhoton ) const;
 
+    private: // methods
+      
+            /// Access the nominal saturated CK theta for the given radiator
+      inline double nomSatCKTheta( const Rich::RadiatorType rad ) const
+      {
+        if ( m_nomSatCKTheta[rad] < 0 )
+        {
+          m_nomSatCKTheta[rad] = m_ckAngle->nominalSaturatedCherenkovTheta(rad);
+        }
+        return m_nomSatCKTheta[rad]; 
+      }
+
+      inline double minCalibRingRadius( const Rich::RadiatorType rad ) const
+      {
+        return nomSatCKTheta(rad) * m_minFracCKtheta[rad];
+      }
+
     private: // data
 
       /// RichSmartID tool
-      const ISmartIDTool* m_idTool;
+      const ISmartIDTool * m_idTool = nullptr;
 
       /// Pointer to ring creator
-      const IMassHypothesisRingCreator * m_massHypoRings;
+      const IMassHypothesisRingCreator * m_massHypoRings = nullptr;
 
-      const ICherenkovAngle * m_ckAngle; ///< Cherenkov angle tool
+      /// Cherenkov angle tool
+      const ICherenkovAngle * m_ckAngle = nullptr; 
 
       /// Pointer to RichParticleProperties interface
-      const IParticleProperties * m_richPartProp;
+      const IParticleProperties * m_richPartProp = nullptr;
 
       /// Particle ID types to consider in the photon creation checks
       Rich::Particles m_pidTypes;
+
+      /// Option to only use lightest hypothesis for calibration points (default false)
+      bool m_useLightestHypoOnly = false;
+
+      /// Cache (for speed) the nominal saturated CK theta values for each radiator
+      mutable std::vector<double> m_nomSatCKTheta;
+
+      /// Min fraction of saturated CK theta angle for a ring to be used as a calibration source
+      std::vector<double> m_minFracCKtheta;
 
     };
 
   }
 }
 
-#endif // RICHRECTOOLS_RichPhotonRecoUsingCKEstiFromRadius_H
+#endif // RICHRECPHOTONTOOLS_RichPhotonRecoUsingCKEstiFromRadius_H

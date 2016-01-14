@@ -25,11 +25,7 @@ CKthetaBandsPhotonPredictor( const std::string& type,
                              const std::string& name,
                              const IInterface* parent )
   : Rich::Rec::ToolBase( type, name, parent ),
-    m_geomTool      ( NULL ),
-    m_ckAngle       ( NULL ),
-    m_ckRes         ( NULL ),
-    m_richPartProp  ( NULL ),
-    m_scale         ( Rich::NRadiatorTypes, 0 )
+    m_scale( Rich::NRadiatorTypes, 0 )
 {
   using namespace Gaudi::Units;
 

@@ -17,18 +17,17 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PhotonCreator )
-
 // Standard constructor
 PhotonCreator::PhotonCreator( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
-  : PhotonCreatorBase ( type, name, parent ),
-    m_photonReco      ( NULL )
+  : PhotonCreatorBase ( type, name, parent )
 {
   // job options
   declareProperty( "PhotonRecoTool", m_photonRecoName = "PhotonParams" );
 }
+
+PhotonCreator::~PhotonCreator() { }
 
 StatusCode PhotonCreator::initialize()
 {
@@ -48,7 +47,7 @@ PhotonCreator::buildPhoton( LHCb::RichRecSegment * segment,
                             const Rich::Rec::PhotonKey key ) const
 {
 
-  LHCb::RichRecPhoton * newPhoton = NULL;
+  LHCb::RichRecPhoton * newPhoton = nullptr;
 
   // Reconstruct the geometrical photon
   LHCb::RichGeomPhoton * geomPhoton = new LHCb::RichGeomPhoton();
@@ -85,7 +84,7 @@ PhotonCreator::buildPhoton( LHCb::RichRecSegment * segment,
         verbose() << "  -> RichRecPhoton FAILED probability checks" << endmsg;
       }
       delete newPhoton; // also deletes geomPhoton
-      newPhoton = NULL;
+      newPhoton = nullptr;
     }
 
   }
@@ -105,3 +104,9 @@ PhotonCreator::buildPhoton( LHCb::RichRecSegment * segment,
   return newPhoton;
 
 }
+
+//-----------------------------------------------------------------------------
+
+DECLARE_TOOL_FACTORY( PhotonCreator )
+
+//-----------------------------------------------------------------------------

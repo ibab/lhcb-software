@@ -13,9 +13,12 @@
 #ifndef RICHRECTOOLS_RichPhotonRecoBase_H
 #define RICHRECTOOLS_RichPhotonRecoBase_H 1
 
-// Base class and interfaces
+// Base class
 #include "RichRecBase/RichRecToolBase.h"
+
+// interfaces
 #include "RichRecBase/IRichPhotonReconstruction.h"
+#include "RichRecBase/IRichPhotonEmissionPoint.h"
 
 // RichKernel
 #include "Kernel/RichSide.h"
@@ -78,6 +81,9 @@ namespace Rich
         return m_ckJOCorrs[rad] + m_ckBiasCorrs[rad];
       }
 
+      /// Access the emission point tool
+      inline const IPhotonEmissionPoint * emissPoint() const { return m_emissPoint; }
+
     protected: // data
 
       /// Check for photons that cross between the different RICH 'sides'
@@ -90,6 +96,11 @@ namespace Rich
       /** Cherenkov theta bias corrections, specific for each photon
        *  reconstruction method. */
       std::vector<double> m_ckBiasCorrs;
+
+    private: // data
+
+      /// Estimated emission point tool
+      const IPhotonEmissionPoint * m_emissPoint = nullptr;
 
     };
 

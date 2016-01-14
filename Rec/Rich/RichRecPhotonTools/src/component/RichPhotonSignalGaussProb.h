@@ -142,21 +142,24 @@ namespace Rich
 
       /// The exponential function to use
       template< class TYPE >
-      inline TYPE _exp( const TYPE& x ) const { return (TYPE)vdt::fast_exp(x); }
+      inline TYPE _exp( const TYPE& x ) const 
+      { 
+        return (TYPE)vdt::fast_exp(x); 
+      }
 
     private: // private data
 
       /// Pointer to RichExpectedTrackSignal interface
-      const IExpectedTrackSignal * m_signal;
+      const IExpectedTrackSignal * m_signal = nullptr;
 
       /// Pointer to RichCherenkovAngle interface
-      const ICherenkovAngle * m_ckAngle;
+      const ICherenkovAngle * m_ckAngle = nullptr;
 
       /// Pointer to RichCherenkovResolution interface
-      const ICherenkovResolution * m_ckRes;
+      const ICherenkovResolution * m_ckRes = nullptr;
 
       /// Pointer to RichParticleProperties interface
-      const IParticleProperties * m_richPartProp;
+      const IParticleProperties * m_richPartProp = nullptr;
 
       /// Cached Radii of curvature
       double m_radiusCurv[Rich::NRiches];
@@ -176,18 +179,18 @@ namespace Rich
       // cached parameters
 
       /// Flag to indicate if the pre-filling of information has been performed.
-      mutable bool m_prefillDone; 
+      mutable bool m_prefillDone = false; 
 
-      double m_minArg;
-      double m_expMinArg;
+      double m_minArg    = 0.0;
+      double m_expMinArg = 0.0;
 
-      double m_stdPixelArea;
-      double m_grandPixelArea;
+      double m_stdPixelArea   = 0.0;
+      double m_grandPixelArea = 0.0;
 
-      DeRichPDPanel * m_aRichPDPanel;
-      bool m_pmtActivate;
-      bool m_useGrandPmtInRich2;
-      bool m_useMixedPmtInRich2;
+      DeRichPDPanel * m_aRichPDPanel = nullptr;
+      bool m_pmtActivate        = false;
+      bool m_useGrandPmtInRich2 = false;
+      bool m_useMixedPmtInRich2 = false;
 
     };
 

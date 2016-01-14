@@ -4,6 +4,19 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2016-01-14 - Chris Jones
+ - Add new Adaptive photon reconstruction tool that delegates to either the
+   fast (Estimation from ray traced CK rings) or full (Quartic) photon
+   reconstruction depending on the track momentum. Switches to the full
+   tool only for tracks close to saturation, where resolution is most critical.
+ - Improve the photon reconstruction tools using ray traced CK rings by
+   instead of just always using the lightest (largest) ring as the source of
+   calibration points, pick the best (closest) to the pixel in question.
+ - Various C++11 cleanups.
+ - Reinstate the CK theta bias corrections in the Quartic and CK mass ring
+   photon reconstruction tools, to make sure both are consistent such that the
+   'Rec-MC' resolution distribution peaks at 0.
+
 ! 2015-12-14 - Chris Jones
  - Convert QuarticSolver::solve<TYOE> calls RichPhotonRecoUsingQuarticSoln back
    to double precision, to fix FPE problems with clang.

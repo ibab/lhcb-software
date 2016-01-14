@@ -1,5 +1,4 @@
 
-
 // Quartic Solver
 #include "RichRecPhotonTools/QuarticSolver.h"
 
@@ -55,18 +54,15 @@ void solve( const Data& data )
 template< class TYPE >
 void solve( const Data::Vector & dataV )
 {
-
-  std::cout << "Solving Quartic Equation for " << typeid(TYPE).name() 
+  std::cout << "Solving Quartic Equation for " 
+            << typeid(TYPE).name() 
             << " Photons ..." << std::endl;
-
   // iterate over the data and solve it...
   for ( const auto& data : dataV ) { solve<TYPE>(data); }
-
 }
 
 int main ( int /*argc*/, char** /*argv*/ )
 {
-
   const unsigned int nPhotons = 1e6;
   
   Data::Vector dataV;

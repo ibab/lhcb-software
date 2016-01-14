@@ -25,20 +25,11 @@ namespace
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PhotonSignalGaussProb )
-
 // Standard constructor
 PhotonSignalGaussProb::PhotonSignalGaussProb( const std::string& type,
                                               const std::string& name,
                                               const IInterface* parent )
-: ToolBase       ( type, name, parent ),
-  m_signal       ( NULL ),
-  m_ckAngle      ( NULL ),
-  m_ckRes        ( NULL ),
-  m_richPartProp ( NULL ),
-  m_prefillDone  ( false ),
-  m_expMinArg    ( 0.0  ),
-  m_aRichPDPanel ( NULL )
+  : ToolBase( type, name, parent )
 {
   // interface
   declareInterface<IPhotonSignal>(this);
@@ -161,7 +152,7 @@ void PhotonSignalGaussProb::prefillPredictedPixelSignal() const
       // Compute the ID independent term
       const double A = _predictedPixelSignal(photon);
       // Loop over the mass hypos and compute and fill each value
-      for ( const auto id : m_pidTypes )
+      for ( const auto& id : m_pidTypes )
       {
         // If not alrady done, fill this hypo
         if ( !photon->expPixelSignalPhots().dataIsValid(id) )
@@ -186,7 +177,7 @@ PhotonSignalGaussProb::predictedPixelSignal( LHCb::RichRecPhoton * photon,
     // Compute the expected pixel contribution
     // See note LHCB/98-040 page 10 equation 16 for the details of where this comes from
 
-    const LHCb::RichRecPhoton::FloatType pixelSignal = 
+    const LHCb::RichRecPhoton::FloatType pixelSignal =
       _predictedPixelSignal(photon) * _predictedPixelSignal(photon,id);
 
     // // check for (over/under)flows
@@ -214,7 +205,7 @@ PhotonSignalGaussProb::signalProb( LHCb::RichRecPhoton * photon,
                                    const Rich::ParticleIDType id ) const
 {
   // Protect against below threshold hypothesis
-  if ( id == Rich::BelowThreshold ) return 0;
+  if ( id == Rich::BelowThreshold ) return 0.0;
 
   // Expected Cherenkov theta angle
   const double thetaExp = m_ckAngle->avgCherenkovTheta(photon->richRecSegment(),id);
@@ -236,7 +227,7 @@ PhotonSignalGaussProb::scatterProb( LHCb::RichRecPhoton * photon,
                                     const Rich::ParticleIDType id ) const
 {
   // Protect against below threshold hypothesis
-  if ( id == Rich::BelowThreshold ) return 0;
+  if ( id == Rich::BelowThreshold ) return 0.0;
 
   if ( Rich::Aerogel == photon->richRecSegment()->trackSegment().radiator() )
   {
@@ -267,5 +258,11 @@ PhotonSignalGaussProb::scatterProb( LHCb::RichRecPhoton * photon,
     return two_over_pi2 * fbkg;
   }
 
-  return 0.;
+  return 0.0;
 }
+
+//-----------------------------------------------------------------------------
+
+DECLARE_TOOL_FACTORY( PhotonSignalGaussProb )
+
+//-----------------------------------------------------------------------------

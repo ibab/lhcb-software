@@ -16,9 +16,6 @@
 // All code is in general Rich reconstruction namespace
 using namespace Rich::Rec;
 
-// Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY ( PhotonRecoUsingQuarticSoln )
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -27,11 +24,6 @@ PhotonRecoUsingQuarticSoln( const std::string& type,
                             const std::string& name,
                             const IInterface* parent )
 : PhotonRecoBase        ( type, name, parent ),
-  m_mirrorSegFinder     ( NULL ),
-  m_rayTracing          ( NULL ),
-  m_idTool              ( NULL ),
-  m_emissPoint          ( NULL ),
-  m_snellsLaw           ( NULL ),
   m_testForUnambigPhots ( Rich::NRadiatorTypes, true  ),
   m_rejectAmbigPhots    ( Rich::NRadiatorTypes, false ),
   m_useAlignedMirrSegs  ( Rich::NRadiatorTypes, true  ),
@@ -43,27 +35,29 @@ PhotonRecoUsingQuarticSoln( const std::string& type,
   m_minSphMirrTolIt     ( Rich::NRadiatorTypes        )
 {
   // Initialise
-  m_deBeam[Rich::Rich1] = NULL;
-  m_deBeam[Rich::Rich2] = NULL;
+  m_deBeam[Rich::Rich1] = nullptr;
+  m_deBeam[Rich::Rich2] = nullptr;
 
   // job options
   declareProperty( "FindUnambiguousPhotons",    m_testForUnambigPhots         );
   declareProperty( "UseMirrorSegmentAllignment", m_useAlignedMirrSegs         );
   declareProperty( "AssumeFlatSecondaries",     m_forceFlatAssumption = false );
-  declareProperty( "NQuarticIterationsForSecMirrors", m_nQits                 );
+  declareProperty( "NQuarticIterationsForSecMirrors",         m_nQits         );
   declareProperty( "UseSecondaryMirrors",                m_useSecMirs = true  );
   declareProperty( "RejectAmbiguousPhotons",       m_rejectAmbigPhots         );
-  declareProperty( "CheckBeamPipe",                m_checkBeamPipe            );
-  declareProperty( "CheckPrimaryMirrorSegments", m_checkPrimMirrSegs          );
+  declareProperty( "CheckBeamPipe",                   m_checkBeamPipe         );
+  declareProperty( "CheckPrimaryMirrorSegments",  m_checkPrimMirrSegs         );
   declareProperty( "CorrectAeroRefract",       m_applyAeroRefractCorr = true  );
-  declareProperty( "MinActiveFraction", m_minActiveFrac );
+  declareProperty( "MinActiveFraction",               m_minActiveFrac         );
   m_minSphMirrTolIt[Rich::Aerogel]  = std::pow( 0.10 * Gaudi::Units::mm, 2 );
   m_minSphMirrTolIt[Rich::Rich1Gas] = std::pow( 0.08 * Gaudi::Units::mm, 2 );
   m_minSphMirrTolIt[Rich::Rich2Gas] = std::pow( 0.05 * Gaudi::Units::mm, 2 );
   declareProperty( "MinSphMirrTolIt", m_minSphMirrTolIt );
 
-  // default MC fudge factors for this implementation
-  //m_ckBiasCorrs = { -0.000358914, -0.000192933, -3.49182e-05 };
+  // Corrections for the intrinsic biases
+  m_ckBiasCorrs = { -0.000358914, -7.505e-5, -4.287e-5 };
+
+  //setProperty( "OutputLevel", 2 );
 }
 
 //=============================================================================
@@ -85,21 +79,29 @@ StatusCode PhotonRecoUsingQuarticSoln::initialize()
   m_rich[Rich::Rich2] = getDet<DeRich>( DeRichLocations::Rich2 );
 
   // Get tools
-  acquireTool( "RichMirrorSegFinder",     m_mirrorSegFinder, NULL, true );
-  acquireTool( "RichRayTracing",          m_rayTracing,      NULL, true );
-  acquireTool( "RichSmartIDTool",         m_idTool, NULL, true );
-  acquireTool( "RichPhotonEmissionPoint", m_emissPoint         );
+  acquireTool( "RichMirrorSegFinder", m_mirrorSegFinder, nullptr, true );
+  acquireTool( "RichRayTracing",      m_rayTracing,      nullptr, true );
+  acquireTool( "RichSmartIDTool",     m_idTool, nullptr, true );
 
   // loop over radiators
   for ( const auto& rad : Rich::radiators() )
   {
 
-    // If rejection of ambiguous photons is turned on
-    // make sure test is turned on
-    if ( m_rejectAmbigPhots[rad] ) m_testForUnambigPhots[rad]  = true;
+    // If rejection of ambiguous photons is turned on make sure test is turned on
+    if ( m_rejectAmbigPhots[rad] && !m_testForUnambigPhots[rad] )
+    {
+      Warning( "Unambigous photon check will be enabled in order to reject ambiguous photons",
+               StatusCode::SUCCESS );
+      m_testForUnambigPhots[rad] = true;
+    }
 
     // If we are testing for photons that hit the beam pipe, turn on ambig photon test
-    if ( m_checkBeamPipe[rad] )    m_testForUnambigPhots[rad]  = true;
+    if ( m_checkBeamPipe[rad] && !m_testForUnambigPhots[rad] )
+    {
+      Warning( "Unambigous photon check will be enabled for beampipe check",
+               StatusCode::SUCCESS );
+      m_testForUnambigPhots[rad] = true;
+    }
 
     // information printout about configuration
     if ( m_testForUnambigPhots[rad] )
@@ -177,7 +179,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   // Emission point to use for photon reconstruction
   // operate directly on photon data member for efficiency
   Gaudi::XYZPoint & emissionPoint = gPhoton.emissionPoint();
-  m_emissPoint->emissionPoint( segment, pixel, emissionPoint );
+  emissPoint()->emissionPoint( segment, pixel, emissionPoint );
 
   // Photon direction at emission point
   // Again, operator directly on data member
@@ -192,8 +194,8 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   float fraction(1);
 
   // Pointers to best sec and spherical mirror segments
-  const DeRichSphMirror * sphSegment = NULL;
-  const DeRichSphMirror * secSegment = NULL;
+  const DeRichSphMirror * sphSegment = nullptr;
+  const DeRichSphMirror * secSegment = nullptr;
 
   // flag to say if this photon candidate is un-ambiguous - default to false
   bool unambigPhoton( false );
@@ -216,7 +218,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   // --------------------------------------------------------------------------------------
   if ( m_testForUnambigPhots[radiator] )
   {
-    if ( radiator == Rich::Aerogel )
+    if ( UNLIKELY( radiator == Rich::Aerogel ) )
     {
       // use default emission point and assume unambiguous since path length is so short..
       unambigPhoton = true;
@@ -230,10 +232,10 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
       // -------------------------------------------------------------------------------
       // First emission point, at start of track segment
       Gaudi::XYZPoint emissionPoint1;
-      m_emissPoint->emissionPoint( segment, pixel, 0.01, emissionPoint1 );
+      emissPoint()->emissionPoint( segment, pixel, 0.01, emissionPoint1 );
       // Find mirror segments for this emission point
-      const DeRichSphMirror* sphSegment1 = NULL;
-      const DeRichSphMirror* secSegment1 = NULL;
+      const DeRichSphMirror* sphSegment1 = nullptr;
+      const DeRichSphMirror* secSegment1 = nullptr;
       Gaudi::XYZPoint sphReflPoint1, secReflPoint1;
       if ( !findMirrorData( rich, side, virtDetPoint, emissionPoint1,
                             sphSegment1, secSegment1, sphReflPoint1, secReflPoint1 ) )
@@ -251,10 +253,10 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
       // -------------------------------------------------------------------------------
       // now do it again for emission point #2, at end of segment
       Gaudi::XYZPoint emissionPoint2;
-      m_emissPoint->emissionPoint( segment, pixel, 0.99, emissionPoint2 );
+      emissPoint()->emissionPoint( segment, pixel, 0.99, emissionPoint2 );
       // Find mirror segments for this emission point
-      const DeRichSphMirror* sphSegment2 = NULL;
-      const DeRichSphMirror* secSegment2 = NULL;
+      const DeRichSphMirror* sphSegment2 = nullptr;
+      const DeRichSphMirror* secSegment2 = nullptr;
       Gaudi::XYZPoint sphReflPoint2, secReflPoint2;
       if ( !findMirrorData( rich, side, virtDetPoint, emissionPoint2,
                             sphSegment2, secSegment2, sphReflPoint2, secReflPoint2 ) )
@@ -319,8 +321,8 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
         sphSegment = sphSegment1;
         secSegment = secSegment1;
         // rough guesses at reflection points (improved later on)
-        sphReflPoint = sphReflPoint1 + (sphReflPoint2-sphReflPoint1)/2.0;
-        secReflPoint = secReflPoint1 + (secReflPoint2-secReflPoint1)/2.0;
+        sphReflPoint = sphReflPoint1 + 0.5*(sphReflPoint2-sphReflPoint1);
+        secReflPoint = secReflPoint1 + 0.5*(secReflPoint2-secReflPoint1);
         // photon is not unambiguous
         unambigPhoton = true;
       }
@@ -335,7 +337,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
       return StatusCode::FAILURE;
     }
 
-  } // end do test if
+  } // end unambiguous photon check
   // --------------------------------------------------------------------------------------
 
   // --------------------------------------------------------------------------------------
@@ -354,7 +356,9 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   // using best emission point and nominal mirror geometries to get the spherical and sec
   // mirrors. Also, force this reconstruction if the above unambiguous test was skipped
   // --------------------------------------------------------------------------------------
-  if ( !m_testForUnambigPhots[radiator] || Rich::Aerogel == radiator || !unambigPhoton )
+  if ( UNLIKELY( !m_testForUnambigPhots[radiator] || 
+                 Rich::Aerogel == radiator        || 
+                 !unambigPhoton ) )
   {
     if ( !findMirrorData(rich,side,
                          virtDetPoint,emissionPoint,
@@ -371,7 +375,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   // --------------------------------------------------------------------------------------
   if ( m_useAlignedMirrSegs[radiator] )
   {
-    if ( m_forceFlatAssumption )
+    if ( UNLIKELY(m_forceFlatAssumption) )
     {
       // assume secondary mirrors are perfectly flat
 
@@ -454,7 +458,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   // check that spherical mirror reflection point is on the same side as detection point
   // and (if configured to do so) photon does not cross between detector sides
   // --------------------------------------------------------------------------------------
-  if ( !sameSide(radiator,sphReflPoint,virtDetPoint) )
+  if ( UNLIKELY( !sameSide(radiator,sphReflPoint,virtDetPoint) ) )
   {
     _ri_debug << radiator << " : Reflection point on wrong side" << endmsg;
     return StatusCode::FAILURE;
@@ -472,11 +476,11 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   // already done for these photons during those checks), check if the photon would have
   // intersected with the beampipe
   // --------------------------------------------------------------------------------------
-  if ( m_checkBeamPipe[radiator] &&
-       ( radiator == Rich::Aerogel || !m_testForUnambigPhots[radiator] ) )
+  if ( UNLIKELY( m_checkBeamPipe[radiator] &&
+                 ( radiator == Rich::Aerogel || !m_testForUnambigPhots[radiator] ) ) )
   {
-    if ( deBeam(rich)->testForIntersection( emissionPoint,
-                                            sphReflPoint-emissionPoint ) )
+    if ( UNLIKELY( deBeam(rich)->testForIntersection( emissionPoint,
+                                                      sphReflPoint-emissionPoint ) ) )
     {
       _ri_debug << radiator << " : Failed final beampipe intersection checks" << endmsg;
       return StatusCode::FAILURE;
@@ -513,7 +517,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   // --------------------------------------------------------------------------------------
   // Correct Cherenkov theta for refraction at exit of aerogel
   // --------------------------------------------------------------------------------------
-  if ( Rich::Aerogel == radiator && m_applyAeroRefractCorr )
+  if ( UNLIKELY( Rich::Aerogel == radiator && m_applyAeroRefractCorr ) )
   {
     correctAeroRefraction( trSeg, photonDirection, thetaCerenkov );
   }
@@ -532,7 +536,6 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
 
   //---------------------------------------------------------------------------------------
   // Apply fudge factor correction for small biases in CK theta
-  // To be understood
   //---------------------------------------------------------------------------------------
   thetaCerenkov += ckThetaCorrection(radiator);
   //---------------------------------------------------------------------------------------
@@ -542,12 +545,12 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   // --------------------------------------------------------------------------------------
   gPhoton.setCherenkovTheta         ( (float)(thetaCerenkov) );
   gPhoton.setCherenkovPhi           ( (float)(phiCerenkov)   );
-  gPhoton.setActiveSegmentFraction  ( fraction       );
-  gPhoton.setDetectionPoint         ( detectionPoint );
-  gPhoton.setSmartID                ( smartIDs.primaryID() );
-  gPhoton.setUnambiguousPhoton      ( unambigPhoton  );
-  gPhoton.setPrimaryMirror          ( sphSegment );
-  gPhoton.setSecondaryMirror        ( secSegment );
+  gPhoton.setActiveSegmentFraction  ( fraction               );
+  gPhoton.setDetectionPoint         ( detectionPoint         );
+  gPhoton.setSmartID                ( smartIDs.primaryID()   );
+  gPhoton.setUnambiguousPhoton      ( unambigPhoton          );
+  gPhoton.setPrimaryMirror          ( sphSegment             );
+  gPhoton.setSecondaryMirror        ( secSegment             );
   _ri_verbo << "Created photon " << gPhoton << endmsg;
   // --------------------------------------------------------------------------------------
 
@@ -597,6 +600,22 @@ findMirrorData( const Rich::DetectorType rich,
 }
 
 //=========================================================================
+// Correct Aerogel Cherenkov angle theta for refraction at exit of aerogel
+//=========================================================================
+void
+PhotonRecoUsingQuarticSoln::
+correctAeroRefraction( const LHCb::RichTrackSegment& trSeg,
+                       Gaudi::XYZVector& photonDirection,
+                       double & thetaCerenkov ) const
+{
+  // apply Snell's Law
+  snellsLaw()->gasToAerogel( photonDirection, trSeg );
+  // update CK theta
+  const double ctc = photonDirection.Dot( trSeg.bestMomentum().Unit() );
+  thetaCerenkov = ( ctc>1 ? 0 : vdt::fast_acos(ctc) );
+}
+
+//=========================================================================
 // Compute the best emission point for the gas radiators using
 // the given spherical mirror reflection points
 //=========================================================================
@@ -622,19 +641,19 @@ getBestGasEmissionPoint( const Rich::RadiatorType radiator,
     const bool sameSide2 = ( sphReflPoint2.y() * detectionPoint.y() > 0 );
     if ( sameSide1 && sameSide2 )
     {
-      m_emissPoint->emissionPoint( segment, pixel, emissionPoint );
+      emissPoint()->emissionPoint( segment, pixel, emissionPoint );
     }
     else if ( sameSide1 )
     {
       fraction = (float)(std::fabs(sphReflPoint1.y()/(sphReflPoint1.y()-sphReflPoint2.y())));
       alongTkFrac = fraction/2.0;
-      m_emissPoint->emissionPoint( segment, pixel, alongTkFrac, emissionPoint );
+      emissPoint()->emissionPoint( segment, pixel, alongTkFrac, emissionPoint );
     }
     else if ( sameSide2 )
     {
       fraction = (float)(std::fabs(sphReflPoint2.y()/(sphReflPoint1.y()-sphReflPoint2.y())));
       alongTkFrac = 1.0-fraction/2.0;
-      m_emissPoint->emissionPoint( segment, pixel, alongTkFrac, emissionPoint );
+      emissPoint()->emissionPoint( segment, pixel, alongTkFrac, emissionPoint );
     }
     else
     {
@@ -656,13 +675,13 @@ getBestGasEmissionPoint( const Rich::RadiatorType radiator,
     {
       fraction = (float)(std::fabs(sphReflPoint1.x()/(sphReflPoint1.x()-sphReflPoint2.x())));
       alongTkFrac = fraction/2.0;
-      m_emissPoint->emissionPoint( segment, pixel, alongTkFrac, emissionPoint );
+      emissPoint()->emissionPoint( segment, pixel, alongTkFrac, emissionPoint );
     }
     else if ( sameSide2 )
     {
       fraction = (float)(std::fabs(sphReflPoint2.x()/(sphReflPoint1.x()-sphReflPoint2.x())));
       alongTkFrac = 1.0-fraction/2.0;
-      m_emissPoint->emissionPoint( segment, pixel, alongTkFrac, emissionPoint );
+      emissPoint()->emissionPoint( segment, pixel, alongTkFrac, emissionPoint );
     }
     else
     {
@@ -686,19 +705,9 @@ getBestGasEmissionPoint( const Rich::RadiatorType radiator,
   return true;
 }
 
-//=========================================================================
-// Correct Aerogel Cherenkov angle theta for refraction at exit of aerogel
-//=========================================================================
-void
-PhotonRecoUsingQuarticSoln::
-correctAeroRefraction( const LHCb::RichTrackSegment& trSeg,
-                       Gaudi::XYZVector& photonDirection,
-                       double & thetaCerenkov ) const
-{
-  // apply Snell's Law
-  snellsLaw()->gasToAerogel( photonDirection, trSeg );
-  // update CK theta
-  const double ctc = photonDirection.Dot( trSeg.bestMomentum().Unit() );
-  thetaCerenkov = ( ctc>1 ? 0 : vdt::fast_acos(ctc) );
-}
+//=============================================================================
 
+// Declaration of the Algorithm Factory
+DECLARE_TOOL_FACTORY ( PhotonRecoUsingQuarticSoln )
+
+//=============================================================================

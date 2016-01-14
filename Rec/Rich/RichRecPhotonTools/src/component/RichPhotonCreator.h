@@ -45,7 +45,7 @@ namespace Rich
                      const IInterface* parent );
 
       /// Destructor
-      virtual ~PhotonCreator(){}
+      virtual ~PhotonCreator();
 
       // Initialize method
       StatusCode initialize();
@@ -60,7 +60,7 @@ namespace Rich
     private: // private data
 
       /// Pointer to photon reconstruction tool
-      const IPhotonReconstruction * m_photonReco;
+      const IPhotonReconstruction * m_photonReco = nullptr;
 
       /// Photon reconstruction tool runtime name
       std::string m_photonRecoName;

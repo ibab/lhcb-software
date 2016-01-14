@@ -88,16 +88,16 @@ namespace Rich
     private: // private data
 
       /// Geometry tool
-      const IGeomTool * m_geomTool;
+      const IGeomTool * m_geomTool = nullptr;
 
       /// Pointer to Cherenkov angle tool
-      const ICherenkovAngle * m_ckAngle;
+      const ICherenkovAngle * m_ckAngle = nullptr;
 
       /// Pointer to Cherenkov angle resolution tool
-      const ICherenkovResolution * m_ckRes;
+      const ICherenkovResolution * m_ckRes = nullptr;
 
       /// Pointer to RichParticleProperties interface
-      const IParticleProperties * m_richPartProp;
+      const IParticleProperties * m_richPartProp = nullptr;
 
       std::vector<double> m_minROI;     ///< Min hit radius of interest around track centres
       std::vector<double> m_maxROI;     ///< Max hit radius of interest around track centres
