@@ -133,16 +133,16 @@ namespace Rich
       private: // data
 
         // Pointers to tool instances
-        const IParticleProperties * m_richPartProp; ///< Rich Particle properties
-        const ICherenkovAngle * m_ckAngle;          ///< Pointer to RichCherenkovAngle tool
-        const ICherenkovResolution * m_ckRes;       ///< Cherenkov angle resolution tool
-        mutable const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;  ///< Pointer to RichRecMCTruthTool interface
-        const ITrackSelector * m_trSelector;        ///< Track selector
-        const IIsolatedTrack * m_isoTrack;          ///< Isolated track tool
-        const IStereoFitter * m_fitter;             ///< Stereographic refitting tool
+        const IParticleProperties * m_richPartProp = nullptr; ///< Rich Particle properties
+        const ICherenkovAngle * m_ckAngle = nullptr;          ///< Pointer to RichCherenkovAngle tool
+        const ICherenkovResolution * m_ckRes = nullptr;       ///< Cherenkov angle resolution tool
+        mutable const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth = nullptr;  ///< Pointer to RichRecMCTruthTool interface
+        const ITrackSelector * m_trSelector = nullptr;        ///< Track selector
+        const IIsolatedTrack * m_isoTrack = nullptr;          ///< Isolated track tool
+        const IStereoFitter * m_fitter = nullptr;             ///< Stereographic refitting tool
 
         /// Pointer to RICH system detector element
-        const DeRichSystem * m_RichSys;
+        const DeRichSystem * m_RichSys = nullptr;
 
         // job options selection cuts
         std::vector<double> m_minBeta; ///< minimum beta value for tracks

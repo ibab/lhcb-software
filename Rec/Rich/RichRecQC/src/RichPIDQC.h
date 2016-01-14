@@ -150,11 +150,11 @@ namespace Rich
         bool m_ignoreMCThres;          ///< Flag to turn on/off the setting of MC-PIDs as "below threshold"
         bool m_mcPsel;                 ///< Flag to turn on/off the selection of 'nice' MCParticles
 
-        const ITrackSelector * m_trSelector;  ///< Track selector
+        const ITrackSelector * m_trSelector = nullptr;  ///< Track selector
 
-        const Rich::Rec::MC::IMCTruthTool * m_mcTruth;    ///< MC Truth tool
+        const Rich::Rec::MC::IMCTruthTool * m_mcTruth = nullptr;    ///< MC Truth tool
 
-        const IMCParticleSelector * m_mcPselector; ///< MCParticle selector
+        const IMCParticleSelector * m_mcPselector = nullptr; ///< MCParticle selector
 
         // Summary information
         double m_sumTab[6][6];

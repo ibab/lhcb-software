@@ -49,6 +49,7 @@ class RichRecQCConf(RichConfigurableUser):
                            "RichCKThetaResolution", "RichTrackResolution",
                            "RichPhotonSignal", "RichTrackCKResolutions",
                            "RichPhotonGeometry", "PhotonRecoEfficiency",
+                           "RichPhotonRecoCompare",
                            "RichPhotonTrajectory", "RichStereoFitterTests",
                            "RichRayTracingTests", "RichDataObjectChecks",
                            "RichRecoTiming", "RichFuncCKResPlots",
@@ -73,7 +74,7 @@ class RichRecQCConf(RichConfigurableUser):
                                             "HotPixelFinder", "PidMonitoring",
                                             "PixelMonitoring", "TrackMonitoring",
                                             "PhotonMonitoring", "TracklessRingAngles",
-                                            "TracklessRingPeakSearch",
+                                            "TracklessRingPeakSearch", 
                                             "AlignmentMonitoring", "HPDIFBMonitoring",
                                             "HPDImageShifts", "RichFuncCKResPlots",
                                             "RichPixelPositions", "HPDHitPlots",
@@ -81,6 +82,7 @@ class RichRecQCConf(RichConfigurableUser):
                                             "RichCKThetaResolution", "RichTrackResolution",
                                             "RichPhotonSignal", "RichTrackCKResolutions",
                                             "RichPhotonGeometry", "PhotonRecoEfficiency",
+                                            "RichPhotonRecoCompare",
                                             "RichPhotonTrajectory", "RichStereoFitterTests"
                                             #,"RichRayTracingTests","RichDataObjectChecks",
                                             #"RichRecoTiming"
@@ -827,6 +829,16 @@ class RichRecQCConf(RichConfigurableUser):
             for trackType in tkTypes :
                 name = "RiRecPhotTraj" + self.trackSelName(trackType) + "TkMoni"
                 seq.Members += [ self.createMonitor(Rich__Rec__MC__PhotonTrajectoryMonitor,name,trackType) ]
+
+
+        check = "RichPhotonRecoCompare"
+        if check in checks :
+            from Configurables import Rich__Rec__MC__PhotonRecoCompare
+            seq = self.newSeq(sequence,check)
+            self.toolRegistry().Tools += [ "Rich::Rec::PhotonRecoUsingQuarticSoln/BaselinePhotonReco" ]
+            for trackType in tkTypes :
+                name = "RiRecPhotCompare" + self.trackSelName(trackType) + "TkMoni"
+                seq.Members += [ self.createMonitor(Rich__Rec__MC__PhotonRecoCompare,name,trackType) ]
 
         check = "PhotonRecoEfficiency"
         if check in checks :
