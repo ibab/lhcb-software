@@ -98,7 +98,7 @@ bool GlobalPID::passTrackSelection() const
 
 void GlobalPID::makeCurve(const Long64_t nTracks)
 {
-  if (fChain == 0) return;
+  if ( fChain == 0 ) return;
 
   // reset track count
   tksInAcc.clear();
@@ -195,6 +195,7 @@ void GlobalPID::makeCurve(const Long64_t nTracks)
 
   std::vector<double> ideff, idefferr, misideff, misidefferr;
   Labels labels;
+  static unsigned int labelOffset = 0;
   unsigned int iLabel(999);
   for ( PIDStepData::iterator iStep = pidData.begin();
         iStep != pidData.end(); ++iStep, ++iLabel )
@@ -225,13 +226,14 @@ void GlobalPID::makeCurve(const Long64_t nTracks)
     // label ?
     if ( config.writeCutValues && iLabel >= labelRate )
     {
-      iLabel = 0;
+      iLabel = labelOffset;
       std::ostringstream label;
       //label << "cut=";
       label << iStep->first;
       labels.push_back( Label(partEff, partMisIDEff, label.str()) );
     }
   }
+  labelOffset += 1;
 
   if ( config.useFixedGraphRange && !config.superImpose )
   {
@@ -293,7 +295,7 @@ void GlobalPID::makeCurve(const Long64_t nTracks)
     {
       const double xScale(1.00), yScale(0.96);
       TText * text = new TText();
-      text->SetTextSize(0.03);
+      text->SetTextSize(0.012);
       text->SetTextColor(config.color);
       text->DrawText( xScale*(iL->x), yScale*(iL->y), iL->label.c_str() );
       //TArrow * arrow = new TArrow( xScale*(iL->x), yScale*(iL->y), iL->x, iL->y, 0.02, "|>" );

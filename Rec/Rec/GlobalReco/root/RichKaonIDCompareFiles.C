@@ -4,8 +4,6 @@
 void RichKaonIDCompareFiles()
 {
 
-  //gROOT->ProcessLine(".L GlobalPID.C");
-
   // make a new pid object
   GlobalPID * pid = new GlobalPID();
 
@@ -44,8 +42,8 @@ void RichKaonIDCompareFiles()
   defaultConfig.var1      = GlobalPID::richDLLk;
   defaultConfig.var2      = GlobalPID::richDLLpi;
 
-  const std::string dir = "/Users/chris/LHCb/RootFiles/Run2";
-  //const std::string dir = "/usera/jonesc/LHCbCMake/lhcb-head/BrunelDevNightly/output/Run2";
+  //const std::string dir = "/Users/chris/LHCb/RootFiles/Run2";
+  const std::string dir = "/usera/jonesc/LHCbCMake/lhcb-head/BrunelDevNightly/output/Run2";
 
   pid->loadTTree((dir+"/Quartic/50000events/protoparticles.tuples.root").c_str());
   pid->config = defaultConfig;
@@ -63,17 +61,49 @@ void RichKaonIDCompareFiles()
   // create the plot
   pid->makeCurve(nTracks);
 
-  pid->loadTTree((dir+"/Esti-LightestOnly/50000events/protoparticles.tuples.root").c_str());
+  // pid->loadTTree((dir+"/Esti-LightestOnly/50000events/protoparticles.tuples.root").c_str());
+  // pid->config = defaultConfig;
+  // pid->config.subtitle = "Estimation - Lightest Hypo Only - 100 points";
+  // pid->config.superImpose = true;
+  // pid->config.color = kYellow+3;
+  // // create the plot
+  // pid->makeCurve(nTracks);
+
+  // pid->loadTTree((dir+"/Esti-200points/50000events/protoparticles.tuples.root").c_str());
+  // pid->config = defaultConfig;
+  // pid->config.subtitle = "Estimation - 200 points";
+  // pid->config.superImpose = true;
+  // pid->config.color = kMagenta+1;
+  // // create the plot
+  // pid->makeCurve(nTracks);
+
+  // pid->loadTTree((dir+"/Esti-150points/50000events/protoparticles.tuples.root").c_str());
+  // pid->config = defaultConfig;
+  // pid->config.subtitle = "Estimation - 150 points";
+  // pid->config.superImpose = true;
+  // pid->config.color = kCyan+1;
+  // // create the plot
+  // pid->makeCurve(nTracks);
+
+  pid->loadTTree((dir+"/Esti-100points/50000events/protoparticles.tuples.root").c_str());
   pid->config = defaultConfig;
-  pid->config.subtitle = "Estimation - Lightest Hypo Only";
+  pid->config.subtitle = "Estimation - All Hypos - 100 points";
   pid->config.superImpose = true;
   pid->config.color = kBlue+1;
   // create the plot
   pid->makeCurve(nTracks);
 
-  pid->loadTTree((dir+"/Esti-All/50000events/protoparticles.tuples.root").c_str());
+  // pid->loadTTree((dir+"/Esti-50points/50000events/protoparticles.tuples.root").c_str());
+  // pid->config = defaultConfig;
+  // pid->config.subtitle = "Estimation - 50 points";
+  // pid->config.superImpose = true;
+  // pid->config.color = kBlue+1;
+  // // create the plot
+  // pid->makeCurve(nTracks);
+
+  pid->loadTTree((dir+"/Adaptive-100points/50000events/protoparticles.tuples.root").c_str());
   pid->config = defaultConfig;
-  pid->config.subtitle = "Estimation - All Hypos";
+  pid->config.subtitle = "Adaptive - 100 points";
   pid->config.superImpose = true;
   pid->config.color = kGreen+2;
   // create the plot
