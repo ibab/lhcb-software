@@ -4,13 +4,16 @@ Package Coordinator : Wouter Hulsbergen
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+!2016-01-15 - Maurizio Martinelli
+- Fixed compilation errors (pow->std::pow; auto_ptr->unique_ptr; some typedef changed)
+
 !2015-08-17 - Lucia Grillo
 - Changed the path L217 in /Alignment/AlignTrTools/src/WriteOTCalibrationsTool.cpp
 to transfer the global t0 to the offline database
 
 !========================= AlignTrTools v4r17 2015-07-29 =========================
 ! 2015-07-21 - Lucia Grillo or Roel Aaij
- - Change in OT calibration precision 
+ - Change in OT calibration precision
 
 ! 2015-06-16 - Stefania Vecchi
  - Added selection criteria on the Long+Muon track for alignment purposes
@@ -69,7 +72,7 @@ to transfer the global t0 to the offline database
  - make python depend on C++ compilation
 
 ! 2011-08-24 - Wouter Hulsbergen
- - moved algorithms that are not directly related to the core of the 
+ - moved algorithms that are not directly related to the core of the
    TAlignment algorithm from TAlignment to AlignTrTools
  - added algorithms dealing with particles-track relation/refitting
 
@@ -114,7 +117,7 @@ to transfer the global t0 to the offline database
  - Added a few variables to the __slots__ to accomodate the configuration of TAConfig.
 
 ! 2010-03-17 - Johan Blouw
- - modifed Configuration.py so that it does not rely anymore on 
+ - modifed Configuration.py so that it does not rely anymore on
    python files in the option directory.
  - modified ATrackSelector code so that it generates a more homogenous track distribution
  - modifed  python/AlignTrTools/Configuration.py to reflect changes in source code
@@ -139,13 +142,13 @@ to transfer the global t0 to the offline database
   - modified the ATrackSelector, it now attempts to create a uniform distribution
     of tracks across the OT. Therefore, a method 'uniformTD' was added,
     and used inside 'accept' to do just that. Two new parameters were introduced:
-    m_weights, to switch on/off this feature, and 
+    m_weights, to switch on/off this feature, and
     m_uniCut (UniformCutOff). The algorithm accepts a track through module i,
     in case there are equal or more tracks going through module i-1.
-    Note that module 8 is nearest the beampipe, and module 0 furthest. 
+    Note that module 8 is nearest the beampipe, and module 0 furthest.
   - modified ATrackSelector.py to reflect the aforementioned changes.
   - modified the AlignTrTools Configurable for the same reasone.
-  - modifed the Derivatives class so that it automagically sets the signs in the 
+  - modifed the Derivatives class so that it automagically sets the signs in the
     derivatives according to the data (e.g. -1 for MC, +1 for data etc.)
   - removed a useless call in TAConfig (namely: TAConfig::Resolution)
 
@@ -165,7 +168,7 @@ to transfer the global t0 to the offline database
     ATrackSelector
     TAConfig
     Derivatives
-    
+
 
 </PRE><H1><A NAME=v4r4>2009-11-02 AlignTrTools v4r4 </A></H1><PRE>
 ! 2009-11-02 Johan Blouw
@@ -184,7 +187,7 @@ to transfer the global t0 to the offline database
 - tagged this package for Alignment v4r2 release
 
 ! 2009-08-31 M Needham
- - Add comment tag to WriteAlignmentConditions 
+ - Add comment tag to WriteAlignmentConditions
 
 ! 2009-07-09 - Wouter Hulsbergen
  - adapted to migration to TrackKernel
@@ -256,12 +259,12 @@ to transfer the global t0 to the offline database
 ! 2008-03-04 - Johan Blouw
   - added functionality to TAConfigTool class, such that the Millepede alignment parameters
     are now stored in a Transformation3D object which is subsequently stored in the transient
-    cond db per detector element. 
+    cond db per detector element.
   - Added code to TAConfigTool so that muon stations can also be aligned.
   - changes to the way the doca is calculated in TAConfigTool class. It now works for both
     OT/IT and Muon stations.
   - added Matt's "WriteAlignmentConditions" class to AlignTrTools package.
-  
+
 
 ! 2008-02-06 - Louis Nicolas
  - Bug fix for the cut on the number of shared hits and close hits in AlignSelTool.cpp
@@ -347,7 +350,7 @@ to transfer the global t0 to the offline database
 </PRE><H1><A NAME=v3r0>2007-04-25 AlignTrTools v3r2 </A></H1><PRE>
 - J. Blouw
   -> updated TAConfig to become compatible with LHCB_v22r9
-- J. Blouw 
+- J. Blouw
   -> updated Derivatives class
   -> updated TAConfig class
 - L. Nicolas
@@ -359,7 +362,7 @@ to transfer the global t0 to the offline database
   and ready the package for the software project release
 
 - J. Blouw, 15/05/2007
-  - attempt to resolve a complaint by windows compiler about defining and 
+  - attempt to resolve a complaint by windows compiler about defining and
     declaring variale lenght arrays in TAConfig.h.
 
 </PRE><H1><A NAME=v3r0>2007-04-25 AlignTrTools v3r0 </A></H1><PRE>

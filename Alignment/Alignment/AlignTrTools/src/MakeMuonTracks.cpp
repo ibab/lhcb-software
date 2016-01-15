@@ -1,11 +1,11 @@
 // $Id: MakeMuonTracks.cpp,v 1.1 2010-06-04 13:02:57 svecchi Exp $
-// Include files 
+// Include files
 
 // from STD
 #include <vector>
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 
 // from LHCbKernel
 #include "Kernel/LHCbID.h"
@@ -27,7 +27,7 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : MakeMuonTracks based on CopyNNetTracks by Jan  Amoraal
 //
-// 2009-12-3: Stefania Vecchi: 
+// 2009-12-3: Stefania Vecchi:
 //-----------------------------------------------------------------------------
 
 using namespace LHCb;
@@ -46,7 +46,7 @@ MakeMuonTracks::MakeMuonTracks( const std::string& name,
   declareProperty( "BField"              , m_Bfield = false );
 }
 
-MakeMuonTracks::~MakeMuonTracks() {} 
+MakeMuonTracks::~MakeMuonTracks() {}
 
 StatusCode MakeMuonTracks::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
@@ -57,12 +57,12 @@ StatusCode MakeMuonTracks::initialize() {
   m_muonRecTool = tool<IMuonTrackRec>( m_muonRecToolName, "MuonRecTool", this );
 
   debug()<<" MakeMuonTracks will make the tracks with "<<m_muonRecToolName<<" Tool "<<endmsg;
-  
-  //calculate the transverse momentum  
+
+  //calculate the transverse momentum
   m_fCalcMomentum = tool<ITrackMomentumEstimate>("TrackPtKick");
   if ( msgLevel(MSG::DEBUG) ) debug() << "In init, PTKick from geometry " << endreq;
 
-  m_muonDetector =getDet<DeMuonDetector>(DeMuonLocation::Default); 
+  m_muonDetector =getDet<DeMuonDetector>(DeMuonLocation::Default);
 
   return StatusCode::SUCCESS;
 }
@@ -78,10 +78,10 @@ StatusCode MakeMuonTracks::execute() {
   put( tracks, m_trackOutputLoc );
 
   typedef std::vector< MuonTrack* > MTracks;
-  typedef std::vector< MuonHit*   > MHits  ;
-  typedef std::vector<LHCb::MuonTileID*> MTileIDs;  
+  typedef std::vector< const MuonHit*   > MHits  ;
+  typedef std::vector<LHCb::MuonTileID> MTileIDs;
   const MTracks* mTracks = m_muonRecTool->tracks();
-  
+
   if(mTracks->size() == 0 && m_muonRecToolName == "MuonCombRec" ){
     m_muonRecTool->setSeedStation(3); // Try starting with M4
     mTracks = m_muonRecTool->tracks();
@@ -95,7 +95,7 @@ StatusCode MakeMuonTracks::execute() {
       continue;
     }
     */
-    
+
     /// New track
     Track* track = new Track();
     /// Get the hits
@@ -103,7 +103,7 @@ StatusCode MakeMuonTracks::execute() {
 
     Gaudi::XYZPoint trackPos((*t)->bx() + (*t)->sx() * m_muonDetector->getStationZ(0),
                              (*t)->by() + (*t)->sy() * m_muonDetector->getStationZ(0),
-                             m_muonDetector->getStationZ(0));  
+                             m_muonDetector->getStationZ(0));
     LHCb::State state( LHCb::StateVector( trackPos,
                                           Gaudi::XYZVector( (*t)->sx(), (*t)->sy(), 1.0 ), 1./10000.));
 
@@ -112,44 +112,44 @@ StatusCode MakeMuonTracks::execute() {
       m_fCalcMomentum->calculate(&state, qOverP, sigmaQOverP);
       state.setQOverP(qOverP);
     }
-    
+
     state.setLocation( State::Muon );
     /// add state to new track
     debug() << "Muon state = " << state << endmsg;
     track->addToStates( state );
-    
+
     debug()<< " MakeMuonTracks "<<(*t)->getHits().size() <<" MuonHits to the track "<<endmsg;
-    int ntile=0;    
+    int ntile=0;
     bool flagBIGcluster = false;                                //flag to identify tracks with too big clusters
     for ( MHits::const_iterator h = hits.begin(); h != hits.end(); ++h ){
       const MTileIDs Tiles = (*h)->getLogPadTiles();
       debug()<< " // "<< (*h)->getLogPadTiles().size()<<" tiles in station "<< (*h)->station() ;
-      
+
       if(Tiles.size()>m_MaxNTiles) flagBIGcluster = true;
-      
+
       for (MTileIDs::const_iterator it = Tiles.begin(); it!= Tiles.end(); ++it){
-        track->addToLhcbIDs( LHCbID( **it ) );
-        ntile++;        
+        track->addToLhcbIDs( LHCbID( *it ) );
+        ntile++;
       }
     }
-    debug()<<endmsg;    
+    debug()<<endmsg;
     debug()<< " in total "<<ntile<<" tiles"<<endmsg;
 
     if(m_skipBigClusters && flagBIGcluster) {
-      
-      debug()<< " track not saved due to BIG cluster rejection"<< endmsg;      
+
+      debug()<< " track not saved due to BIG cluster rejection"<< endmsg;
       delete track;
-      
+
     } else {
 
       track->setPatRecStatus( Track::PatRecIDs );
-      track->setType( Track::Muon );      
+      track->setType( Track::Muon );
       tracks->insert( track );
-      debug()<< " track  saved in the container"<<m_trackOutputLoc << endmsg;      
+      debug()<< " track  saved in the container"<<m_trackOutputLoc << endmsg;
 
-    }    
+    }
   }
   debug()<<" end MakeMuonTrack"<<endmsg;
-  
+
   return StatusCode::SUCCESS;
 }

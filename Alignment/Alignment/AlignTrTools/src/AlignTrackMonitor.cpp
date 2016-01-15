@@ -56,7 +56,7 @@ AlignTrackMonitor::AlignTrackMonitor ( const std::string& name,
   // Reserving space for some vectors
   m_closeHits.reserve  ( 1000 );
   m_sharedHits.reserve ( 1000 );
-  
+
   // constructor
   // Location of the IT/OT geometries
   this -> declareProperty ( "OTGeometryPath",
@@ -120,8 +120,8 @@ StatusCode AlignTrackMonitor::initialize ( ) {
               << endmsg;
   m_nLayers = m_itTracker->nLayerPerBox();
   m_nStrips = m_itTracker->nStrip()/m_itTracker->nReadoutSector()/3;
-  
-  debug() << "AlignTrackMonitor initialized successfully" << endmsg;    
+
+  debug() << "AlignTrackMonitor initialized successfully" << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -133,9 +133,9 @@ StatusCode AlignTrackMonitor::initialize ( ) {
 //===========================================================================
 StatusCode AlignTrackMonitor::execute ( ) {
 
-  if ( msgLevel( MSG::DEBUG ) )     
+  if ( msgLevel( MSG::DEBUG ) )
     debug() << "AlignTrackMonitor starting execution" << endmsg;
-  
+
   // Get the tracks
   m_tracks = get<LHCb::Tracks>( m_tracksPath );
 
@@ -173,7 +173,7 @@ StatusCode AlignTrackMonitor::execute ( ) {
   for ( ; iTracks != m_tracks->end(); ++iTracks ) {
     LHCb::Track& aTrack = **iTracks;
 
-    if ( msgLevel( MSG::DEBUG ) )     
+    if ( msgLevel( MSG::DEBUG ) )
       debug() << "******************************************************" << endmsg
               << "Entering new good track" << endmsg;
 
@@ -181,7 +181,7 @@ StatusCode AlignTrackMonitor::execute ( ) {
     const std::vector<LHCb::LHCbID>& ids = aTrack.lhcbIDs();
     m_nITHits = std::count_if(ids.begin(), ids.end(), bind(&LHCb::LHCbID::isIT,_1));
     m_nOTHits = std::count_if(ids.begin(), ids.end(), bind(&LHCb::LHCbID::isOT,_1));
-    
+
     // Only fill the histos when there are some IT or OT Hits
     if ( !m_nITHits && !m_nOTHits ) {
       Warning("There is no hit in IT nor in OT!!!", StatusCode::SUCCESS, 1);
@@ -191,21 +191,21 @@ StatusCode AlignTrackMonitor::execute ( ) {
     if ( (sc=fillVariables( &aTrack ) )
          == StatusCode::FAILURE ) return sc;
   }
-  
-  return StatusCode::SUCCESS;  
+
+  return StatusCode::SUCCESS;
 }
 //===========================================================================
 
-  
+
 //===========================================================================
 // Finalize
 //===========================================================================
 StatusCode AlignTrackMonitor::finalize ( ) {
-  
+
   if ( msgLevel( MSG::DEBUG ) )
     debug() << "==> Finalize" << endmsg;
 
-  return GaudiHistoAlg::finalize ( );   // Must be called after all other actions  
+  return GaudiHistoAlg::finalize ( );   // Must be called after all other actions
 }
 //===========================================================================
 
@@ -252,7 +252,7 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
   LHCb::Track::ConstNodeRange nodes = aTrack->nodes() ;
   LHCb::Track::ConstNodeRange::const_iterator iNodes = nodes.begin();
   for ( ; iNodes != nodes.end(); ++iNodes ) {
-    
+
     // Only loop on hits with measurement
     if ( !(**iNodes).hasMeasurement() ) continue;
 
@@ -262,21 +262,21 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
 
     LHCb::STChannelID theSTID;
     LHCb::OTChannelID theOTID;
-    
+
     if ( aNode.measurement().type() == LHCb::Measurement::IT ) {
       theSTID = nodeID.stID();
       if ( msgLevel( MSG::VERBOSE ) )
-        verbose() << "IT Hit (Station,Box,Layer,Ladder,Strip) = (" 
-                  << theSTID.station() << "," << theSTID.detRegion() << "," 
-                  << theSTID.layer() << "," << theSTID.sector() << "," 
+        verbose() << "IT Hit (Station,Box,Layer,Ladder,Strip) = ("
+                  << theSTID.station() << "," << theSTID.detRegion() << ","
+                  << theSTID.layer() << "," << theSTID.sector() << ","
                   << theSTID.strip() << ")" << endmsg;
     }
     else if ( aNode.measurement().type() == LHCb::Measurement::OT ) {
       theOTID = nodeID.otID();
       if ( msgLevel( MSG::VERBOSE ) )
-        verbose() << "OT Hit (Station,Layer,Quarter,Module,Straw) = (" 
-                  << theOTID.station() << "," << theOTID.layer() << "," 
-                  << theOTID.quarter() << "," << theOTID.module() << "," 
+        verbose() << "OT Hit (Station,Layer,Quarter,Module,Straw) = ("
+                  << theOTID.station() << "," << theOTID.layer() << ","
+                  << theOTID.quarter() << "," << theOTID.module() << ","
                   << theOTID.straw() << ")" << endmsg;
     }
     else {
@@ -338,7 +338,7 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
         theSTID2 = aNode2.measurement().lhcbID().stID();
       else if ( aNode2.measurement().type() == LHCb::Measurement::OT )
         theOTID2 = aNode2.measurement().lhcbID().otID();
-      
+
       if ( (aNode.measurement().type() == LHCb::Measurement::IT) &&
            (aNode2.measurement().type() == LHCb::Measurement::IT) ) {
         //**********************************************************************
@@ -356,27 +356,27 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
           else
             lOResidual = fNode2->unbiasedResidual() - fNode->unbiasedResidual();
 //             lOResidual = aNode2.residual() - aNode.residual();
-          int id = 1000*theSTID.layer() + 100*theSTID.detRegion() + 
+          int id = 1000*theSTID.layer() + 100*theSTID.detRegion() +
             10*theSTID.sector() + theSTID2.sector();
           std::string lOResPlotID = "LadOverlaps/";
           lOResPlotID.append( Gaudi::Utils::toString( theSTID.station() ) );
           lOResPlotID.append( "/" ).append( Gaudi::Utils::toString( id ) );
           plot (lOResidual, lOResPlotID, lOResPlotID, -0.5, 0.5, 50);
           if ( msgLevel( MSG::DEBUG ) )
-            debug() << "Found IT ladder overlap: ladOverlap = " 
+            debug() << "Found IT ladder overlap: ladOverlap = "
                     << lOResidual << " in layer " << theSTID.uniqueDetRegion()
                     << endmsg;
           ++m_nLadOverlaps;
         }
         //**********************************************************************
-        
+
         //**********************************************************************
         // Box overlap residuals
         //**********************************************************************
         // Different hits in different box of same station
         if ( (theSTID.station() == theSTID2.station())
              && (theSTID.detRegion() != theSTID2.detRegion()) ) {
-          
+
           // Save only one overlap per station (up to three box overlaps per track)
           if ( theSTID.station() != overlapStation ) {
             overlapStation = theSTID.station();
@@ -388,7 +388,7 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
             bOResPlotID.append( "/" ).append( Gaudi::Utils::toString( id ) );
             plot (bOResidual, bOResPlotID, bOResPlotID, -150., 150., 50);
             if ( msgLevel(MSG::DEBUG) ) {
-              debug() << "Station " << overlapStation 
+              debug() << "Station " << overlapStation
                       << ": Found IT box overlap: boxOverlap = "
                       << bOResidual << endmsg;
             }
@@ -404,8 +404,8 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
   //**********************************************************************
   // Number of Holes
   //**********************************************************************
-  unsigned int itExpHits = m_itHitExpectation->nExpected(*aTrack); 
-  unsigned int otExpHits = m_otHitExpectation->nExpected(*aTrack); 
+  unsigned int itExpHits = m_itHitExpectation->nExpected(*aTrack);
+  unsigned int otExpHits = m_otHitExpectation->nExpected(*aTrack);
   unsigned int expHits = itExpHits + otExpHits;
   if ( expHits < m_nITHits + m_nOTHits ) expHits = m_nITHits + m_nOTHits;
   m_nHoles = expHits - (m_nITHits + m_nOTHits);
@@ -455,7 +455,7 @@ void AlignTrackMonitor::getCloseHits ( ) {
         m_closeHits.push_back( (*iClus).channelID() );
         m_closeHits.push_back( (*(iClus+1)).channelID() );
       }
-  
+
   // Loop over all the OT times
   if ( otTimes->size() != 0 )
     for ( ; iTimes+1 != otTimes->end(); ++iTimes )
@@ -477,14 +477,14 @@ void AlignTrackMonitor::getCloseHits ( ) {
 //===========================================================================
 bool AlignTrackMonitor::isNeighbouringHit ( LHCb::STChannelID clusID,
                                             LHCb::STChannelID hitID ) {
-  
+
   // Not a TELL1 artefact at beetles boundaries
   if ( (hitID.strip()+clusID.strip())%(2*m_nStrips) <= 3 ) return false;
 
   // Same ladder within 2 strips aside
   if ( (hitID.uniqueSector() == clusID.uniqueSector()) &&
        (abs(int(hitID.strip()-clusID.strip())) <= m_nStripsTol) ) return true;
-  
+
   return false;
 }
 //===========================================================================
@@ -495,10 +495,10 @@ bool AlignTrackMonitor::isNeighbouringHit ( LHCb::STChannelID clusID,
 //===========================================================================
 bool AlignTrackMonitor::isNeighbouringHit ( LHCb::OTChannelID timeID,
                                             LHCb::OTChannelID hitID ) {
-       
+
   // Same module?
   if ( hitID.uniqueModule() != timeID.uniqueModule() ) return false;
-  
+
   // In module 9 of quarters 0 and 2, only 2*32 straws
   if ( !(timeID.quarter()%2) && (int(timeID.module()) == m_nOTModules) ) {
     if ( (abs(int((hitID.straw()%int(m_nStraws/4))
@@ -541,7 +541,7 @@ void AlignTrackMonitor::getSharedHits ( ) {
 //===========================================================================
 bool AlignTrackMonitor::isSharedHit ( const LHCb::Track* theTrack,
                                       const LHCb::LHCbID aID ) {
-  
+
   LHCb::Tracks::const_iterator iTracks = m_tracks->begin();
   for ( ; iTracks != m_tracks->end(); ++iTracks ) {
     const LHCb::Track* aTrack = *iTracks;
@@ -552,7 +552,7 @@ bool AlignTrackMonitor::isSharedHit ( const LHCb::Track* theTrack,
         return true;
       }
   }
-  
+
   return false;
 }
 //===========================================================================
@@ -587,7 +587,7 @@ double AlignTrackMonitor::boxOverlap ( const LHCb::Track* aTrack,
     if ( (aSTID.station() == STChanID2.station()) &&
          (aSTID.detRegion() == STChanID2.detRegion()) )
       hitsOverlapBox2.push_back( &aNode );
-  }  
+  }
 
   if ( (int(hitsOverlapBox1.size()) >= m_nLayers) ||
        (int(hitsOverlapBox2.size()) >= m_nLayers) )
@@ -619,29 +619,29 @@ double AlignTrackMonitor::boxOverlap ( const LHCb::Track* aTrack,
 
     double xTrack = fitPar[0]*aNode2.z()*aNode2.z() + fitPar[1]*aNode2.z() + fitPar[2];
     double yTrack = fitPar[3]*aNode2.z() + fitPar[4];
-    
+
     double b = -(aNode2.measurement().trajectory().beginPoint().X()-
                  aNode2.measurement().trajectory().endPoint().X())/
       (aNode2.measurement().trajectory().beginPoint().Y()-
        aNode2.measurement().trajectory().endPoint().Y());
-    
+
     bOVect.push_back( (xTrack +
                        b*(yTrack-aNode2.measurement().trajectory().endPoint().Y()) -
                        aNode2.measurement().trajectory().endPoint().X())/
                       sqrt(1+b*b) );
-  }  
+  }
 
   // Averaging the overlap residual values of hits in second box
   double bOResidual = 0;
   std::vector<double>::const_iterator iBOVect = bOVect.begin();
   for ( ; iBOVect != bOVect.end(); ++iBOVect )
     bOResidual += *iBOVect;
-  
+
   return bOResidual/bOVect.size();
 }
 //===========================================================================
 
- 
+
 //===========================================================================
 // Fit piece of track with straight line and return fit parameters
 //===========================================================================
@@ -667,13 +667,13 @@ AlignTrackMonitor::fitTrackPiece ( const LHCb::Track* aTrack,
     LHCb::State hitState;
     sc = m_extrapolator->propagate( *aTrack, aNode.z(), hitState );
     if ( sc.isFailure() ) continue;
-    
+
     if ( !aNode.hasMeasurement() ) {
       --nHitsToFit;
       if ( nHitsToFit < m_nLayers ) {
         fitPar.clear();
         return fitPar;
-      } 
+      }
       continue;
     }
 
@@ -687,19 +687,19 @@ AlignTrackMonitor::fitTrackPiece ( const LHCb::Track* aTrack,
 
     bFieldPoint = hitState.position();
 
-    double sig2_res = gsl_pow_2(fNode->errUnbiasedResidual());
+    double sig2_res = std::pow(fNode->errUnbiasedResidual(),2);
 //     double sig2_res = gsl_pow_2(aNode.errResidual());
 
 //     xPar[0] += gsl_pow_4(aNode.z())/sig2_res;
-    xPar[1] += gsl_pow_3(aNode.z())/sig2_res;
-    xPar[2] += gsl_pow_2(aNode.z())/sig2_res;
+    xPar[1] += std::pow(aNode.z(),3)/sig2_res;
+    xPar[2] += std::pow(aNode.z(),2)/sig2_res;
 //     xPar[3] += gsl_pow_2(aNode.z())*xHit/sig2_res;
     xPar[4] += aNode.z()/sig2_res;
     xPar[5] += aNode.z()*xHit/sig2_res;
     xPar[6] += xHit/sig2_res;
     xPar[7] += 1/sig2_res;
 
-    yPar[0] += gsl_pow_2(aNode.z())/hitState.errY2();
+    yPar[0] += std::pow(aNode.z(),2)/hitState.errY2();
     yPar[1] += aNode.z()/hitState.errY2();
     yPar[2] += aNode.z()*hitState.y()/hitState.errY2();
     yPar[3] += hitState.y()/hitState.errY2();
@@ -711,29 +711,29 @@ AlignTrackMonitor::fitTrackPiece ( const LHCb::Track* aTrack,
   double pT = 0;
   m_extrapolator -> pt ( *aTrack, bFieldPoint.z(), pT );
 
-  // x = fitPar[0]*zÅ≤ + fitPar[1]*z + fitPar[2]
+  // x = fitPar[0]*zÔøΩÔøΩ + fitPar[1]*z + fitPar[2]
   // y = fitPar[3]*z + fitPar[4]
   if ( !sc.isFailure() ) {
 
     // Using pT constrained fit
-    double D = gsl_pow_2(xPar[4])-xPar[2]*xPar[7];
-    
+    double D = std::pow(xPar[4],2)-xPar[2]*xPar[7];
+
     fitPar[0] = 2 * bfield.y() / pT;
-    
+
     fitPar[1] = (xPar[5]*xPar[7]-xPar[4]*xPar[6]+
                  (xPar[2]*xPar[4]-xPar[1]*xPar[7])*fitPar[0])/(-D);
 
     fitPar[2] = ((xPar[4]*xPar[5]-xPar[2]*xPar[6]) +
-                 (gsl_pow_2(xPar[2])-xPar[1]*xPar[4])*fitPar[0])/D;
+                 (std::pow(xPar[2],2)-xPar[1]*xPar[4])*fitPar[0])/D;
 
-    fitPar[4] = (yPar[1]*yPar[2]-yPar[0]*yPar[3])/(gsl_pow_2(yPar[1])-yPar[0]*yPar[4]);
+    fitPar[4] = (yPar[1]*yPar[2]-yPar[0]*yPar[3])/(std::pow(yPar[1],2)-yPar[0]*yPar[4]);
 
     fitPar[3] = (yPar[2]-yPar[1]*fitPar[4])/yPar[0];
 
   }
-  else 
+  else
     fitPar.clear();
-  
+
   return fitPar;
 }
 //===========================================================================
@@ -744,7 +744,7 @@ AlignTrackMonitor::fitTrackPiece ( const LHCb::Track* aTrack,
 //===========================================================================
 StatusCode AlignTrackMonitor::fillHistos ( ) {
 
-  // Event Variables  
+  // Event Variables
   plot ( m_eventMultiplicity, "Multiplicity", "Multiplicity", 0., 500., 50 );
   plot ( m_nITClusters, "NITClusters", "NITClusters", 0., 2000., 50 );
   plot ( m_nVeloClusters, "NVeloClusters", "NVeloClusters", 0., 5000., 50 );
@@ -758,11 +758,11 @@ StatusCode AlignTrackMonitor::fillHistos ( ) {
   plot ( m_nHoles, "NHoles", "NHoles", -0.5, 20.5, 21 );
   plot ( m_nLadOverlaps, "NLadOverlaps", "NLadOverlaps", -0.5, 15.5, 16 );
   plot ( m_nBoxOverlaps, "NBoxOverlaps", "NBoxOverlaps", -0.5, 3.5, 4 );
-  
+
   // Track fit "quality"
   plot ( m_trackChi2PerDoF, "TrackChi2PerDoF", "TrackChi2PerDoF", -2., 100., 50 );
   plot ( m_trackChi2Prob, "TrackChi2Prob", "TrackChi2Prob", -0.01, 1.01, 50 );
-  
+
   // Track momentum and more
   plot ( m_trackP, "TrackP", "TrackP", -5., 205., 50 );
   plot ( m_trackPt, "TrackPt", "TrackPt", -0.1, 10.1, 50 );
@@ -777,7 +777,7 @@ StatusCode AlignTrackMonitor::fillHistos ( ) {
   plot ( m_entryX, "XAt7500", "XAt7500", -3000., 3000., 50 );
   plot ( m_entryY, "YAt7500", "YAt7500", -3000., 3000., 50 );
   //**********************************************************************
-  
+
   return StatusCode::SUCCESS;
 }
 //===========================================================================

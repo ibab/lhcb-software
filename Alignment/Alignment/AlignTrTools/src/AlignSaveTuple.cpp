@@ -49,7 +49,7 @@ AlignSaveTuple::AlignSaveTuple ( const std::string& name,
   m_itHitExpectation("ITHitExpectation"),
   m_otHitExpectation("OTHitExpectation")
  {
-  
+
   // Reserving space for some vectors
   m_closeHits.reserve  ( 1000 );
   m_sharedHits.reserve ( 1000 );
@@ -112,7 +112,7 @@ StatusCode AlignSaveTuple::initialize ( ) {
   // Retrieve the ghost classification tool
   m_ghostClassification = tool<ITrackGhostClassification>( m_ghostToolName,
                                                            "GhostTool", this );
-  
+
   // Get The Magnetic Field
   m_pIMF = svc<IMagneticFieldSvc>( "MagneticFieldSvc",true );
 
@@ -129,7 +129,7 @@ StatusCode AlignSaveTuple::initialize ( ) {
               << endmsg;
   m_nLayers = m_itTracker->nLayerPerBox();
   m_nStrips = m_itTracker->nStrip()/m_itTracker->nReadoutSector()/3;
-  
+
   // Max possible number of hits:
   // In OT: = nLayers * 2 (two layers of straws per layer)
   // In IT: counted wrong: nLayers = 3 stations * 4 boxes/station * 4 layers/box
@@ -139,7 +139,7 @@ StatusCode AlignSaveTuple::initialize ( ) {
 
   m_iEvent = 0;
 
-  debug() << "AlignSaveTuple initialized successfully" << endmsg;    
+  debug() << "AlignSaveTuple initialized successfully" << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -151,9 +151,9 @@ StatusCode AlignSaveTuple::initialize ( ) {
 //===========================================================================
 StatusCode AlignSaveTuple::execute ( ) {
 
-  if ( msgLevel( MSG::DEBUG ) )     
+  if ( msgLevel( MSG::DEBUG ) )
     debug() << "AlignSaveTuple starting execution" << endmsg;
-  
+
   // Get the odin information
   odin = get<LHCb::ODIN>( LHCb::ODINLocation::Default );
 
@@ -173,11 +173,11 @@ StatusCode AlignSaveTuple::execute ( ) {
   // Get the hits shared by more than one track
   m_sharedHits.clear();
   getSharedHits();
-  
+
   // Creating the tuple in memory
   Tuples::Tuple trackSelTuple = nTuple( "AllVariables" );
-  
-  // Get the association table 
+
+  // Get the association table
   AsctTool associator( evtSvc(), m_tracksPath );
   m_directTable = associator.direct();
 
@@ -185,7 +185,7 @@ StatusCode AlignSaveTuple::execute ( ) {
   // Global Variables
   //**********************************************************************
   m_runNr = odin->runNumber();
-  m_evtNr = odin->eventNumber(); 
+  m_evtNr = odin->eventNumber();
   ++m_iEvent;
   m_eventMultiplicity = m_tracks->size();
   m_nITClusters = m_itClusters->size();
@@ -212,7 +212,7 @@ StatusCode AlignSaveTuple::execute ( ) {
         else
           m_ghostRate = 0;
       }
-      
+
 
       LHCb::Tracks::const_iterator iTracks2 = iTracks+1;
       for ( ; iTracks2 != m_tracks->end(); ++iTracks2 ) {
@@ -224,7 +224,7 @@ StatusCode AlignSaveTuple::execute ( ) {
       }
     }
 
-    if ( msgLevel( MSG::DEBUG ) )     
+    if ( msgLevel( MSG::DEBUG ) )
       debug() << "******************************************************" << endmsg
               << "Entering new good track" << endmsg;
 
@@ -234,7 +234,7 @@ StatusCode AlignSaveTuple::execute ( ) {
     for( std::vector<LHCb::LHCbID>::const_iterator id = ids.begin() ; id != ids.end(); ++id)
       if(      id->isIT() ) ++m_nITHits ;
       else if( id->isOT() ) ++m_nOTHits ;
-    
+
     // Only fill NTuple when there are some IT or OT Hits
     if ( !m_nITHits && !m_nOTHits ) {
       if ( msgLevel( MSG::DEBUG ) )
@@ -246,21 +246,21 @@ StatusCode AlignSaveTuple::execute ( ) {
          == StatusCode::FAILURE ) return sc;
     ++m_iGoodTrack;
   }
-  
-  return StatusCode::SUCCESS;  
+
+  return StatusCode::SUCCESS;
 }
 //===========================================================================
 
-  
+
 //===========================================================================
 // Finalize
 //===========================================================================
 StatusCode AlignSaveTuple::finalize ( ) {
-  
+
   if ( msgLevel( MSG::DEBUG ) )
     debug() << "==> Finalize" << endmsg;
 
-  return GaudiTupleAlg::finalize ( );   // Must be called after all other actions  
+  return GaudiTupleAlg::finalize ( );   // Must be called after all other actions
 }
 //===========================================================================
 
@@ -284,7 +284,7 @@ AlignSaveTuple::fillVariables ( const LHCb::Track* aTrack,
       m_ghostClassification->info( *aTrack , ghostClassInfo );
       m_ghostTrackClassification = ghostClassInfo.classification();
       if ( msgLevel( MSG::DEBUG ) )
-        debug() << "Ghost classification = " 
+        debug() << "Ghost classification = "
                 << ghostClassInfo.classification() << endmsg;
     }
   }
@@ -335,8 +335,8 @@ AlignSaveTuple::fillVariables ( const LHCb::Track* aTrack,
   m_res.clear();
   m_errRes.clear();
 
-  m_hitX.clear();  	 
-  m_hitY.clear(); 	 
+  m_hitX.clear();
+  m_hitY.clear();
   m_hitZ.clear();
 
   m_nLadOverlaps = 0;
@@ -368,7 +368,7 @@ AlignSaveTuple::fillVariables ( const LHCb::Track* aTrack,
     delete mcPart;
     //**********************************************************************
   }
-  
+
   std::vector<LHCb::LHCbID>::const_iterator iIDs = aTrack->lhcbIDs().begin();
   for ( ; iIDs != aTrack->lhcbIDs().end(); ++iIDs ) {
     const LHCb::LHCbID& aID = *iIDs;
@@ -379,7 +379,7 @@ AlignSaveTuple::fillVariables ( const LHCb::Track* aTrack,
 			     m_sharedHits.end(), aID, lessByID() ) )
       ++m_nSharedHits;
     //**********************************************************************
-    
+
     //**********************************************************************
     // Number of hits close to the track
     //**********************************************************************
@@ -406,21 +406,21 @@ AlignSaveTuple::fillVariables ( const LHCb::Track* aTrack,
     LHCb::LHCbID nodeID = aNode.measurement().lhcbID();
     LHCb::STChannelID theSTID;
     LHCb::OTChannelID theOTID;
-    
+
     if ( aNode.measurement().type() == LHCb::Measurement::IT ) {
       theSTID = nodeID.stID();
       if ( msgLevel( MSG::VERBOSE ) )
-        verbose() << "IT Hit (Station,Box,Layer,Ladder,Strip) = (" 
-                  << theSTID.station() << "," << theSTID.detRegion() << "," 
-                  << theSTID.layer() << "," << theSTID.sector() << "," 
+        verbose() << "IT Hit (Station,Box,Layer,Ladder,Strip) = ("
+                  << theSTID.station() << "," << theSTID.detRegion() << ","
+                  << theSTID.layer() << "," << theSTID.sector() << ","
                   << theSTID.strip() << ")" << endmsg;
     }
     else if ( aNode.measurement().type() == LHCb::Measurement::OT ) {
       theOTID = nodeID.otID();
       if ( msgLevel( MSG::VERBOSE ) )
-        verbose() << "OT Hit (Station,Layer,Quarter,Module,Straw) = (" 
-                  << theOTID.station() << "," << theOTID.layer() << "," 
-                  << theOTID.quarter() << "," << theOTID.module() << "," 
+        verbose() << "OT Hit (Station,Layer,Quarter,Module,Straw) = ("
+                  << theOTID.station() << "," << theOTID.layer() << ","
+                  << theOTID.quarter() << "," << theOTID.module() << ","
                   << theOTID.straw() << ")" << endmsg;
     }
     else {
@@ -464,7 +464,7 @@ AlignSaveTuple::fillVariables ( const LHCb::Track* aTrack,
         theSTID2 = aNode2.measurement().lhcbID().stID();
       else if ( aNode2.measurement().type() == LHCb::Measurement::OT )
         theOTID2 = aNode2.measurement().lhcbID().otID();
-      
+
       if ( (aNode.measurement().type() == LHCb::Measurement::IT) &&
            (aNode2.measurement().type() == LHCb::Measurement::IT) ) {
         //**********************************************************************
@@ -483,20 +483,20 @@ AlignSaveTuple::fillVariables ( const LHCb::Track* aTrack,
 //             m_ladOvlapRes.push_back( aNode2.residual()-aNode.residual() );
           m_ladOvlapLay.push_back( theSTID.uniqueDetRegion() );
           if ( msgLevel( MSG::DEBUG ) )
-            debug() << "Found IT ladder overlap: ladOverlap = " 
+            debug() << "Found IT ladder overlap: ladOverlap = "
                     << m_ladOvlapRes.back() << " in layer "
                     << m_ladOvlapLay.back() << endmsg;
           ++m_nLadOverlaps;
         }
         //**********************************************************************
-        
+
         //**********************************************************************
         // Box overlap residuals
         //**********************************************************************
         // Different hits in different box of same station
         if ( (theSTID.station() == theSTID2.station())
              && (theSTID.detRegion() != theSTID2.detRegion()) ) {
-          
+
           // Save only one overlap per station (up to three box overlaps per track)
           if ( theSTID.station() != overlapStation ) {
             overlapStation = theSTID.station();
@@ -508,7 +508,7 @@ AlignSaveTuple::fillVariables ( const LHCb::Track* aTrack,
             else
               m_boxOvlapSta.push_back( overlapStation );
             if ( msgLevel(MSG::DEBUG) ) {
-              debug() << "Station " << overlapStation 
+              debug() << "Station " << overlapStation
                       << ": Found IT box overlap: boxOverlap = "
                       << m_boxOvlapRes.back() << endmsg;
             }
@@ -520,12 +520,12 @@ AlignSaveTuple::fillVariables ( const LHCb::Track* aTrack,
     }
     //**********************************************************************
   }
-  
+
   //**********************************************************************
   // Number of Holes
   //**********************************************************************
-  int itExpHits = m_itHitExpectation->nExpected(*aTrack); 
-  int otExpHits = m_otHitExpectation->nExpected(*aTrack); 
+  int itExpHits = m_itHitExpectation->nExpected(*aTrack);
+  int otExpHits = m_otHitExpectation->nExpected(*aTrack);
   int expHits = itExpHits + otExpHits;
   if ( expHits < m_nITHits + m_nOTHits ) expHits = m_nITHits + m_nOTHits;
   m_nHoles = expHits - (m_nITHits + m_nOTHits);
@@ -548,7 +548,7 @@ AlignSaveTuple::fillVariables ( const LHCb::Track* aTrack,
             << "               " << m_nOTHits << " OT hits" << endmsg
             << "               " << otExpHits << " OT expected hits" << endmsg
             << "               " << m_nHoles << " holes" << endmsg
-            << "               " << m_nSharedHits << " shared hits" << " (= " 
+            << "               " << m_nSharedHits << " shared hits" << " (= "
             << 100*m_fSharedHits << " %)" << endmsg
             << "               " << m_nCloseHits << " neighbouring hits" << endmsg;
   //**********************************************************************
@@ -579,7 +579,7 @@ bool AlignSaveTuple::isGhostTrack ( const LHCb::Track* aTrack ) {
 // Get the IT clusters and OT times that are close to anything else
 //===========================================================================
 void AlignSaveTuple::getCloseHits ( ) {
-  
+
   const STLiteClusters* itClusters = get<STLiteClusters>( m_itClustersPath );
   const LHCb::OTTimes* otTimes = get<LHCb::OTTimes>( m_otTimesPath );
   STLiteClusters::const_iterator iClus = itClusters->begin();
@@ -613,14 +613,14 @@ void AlignSaveTuple::getCloseHits ( ) {
 //===========================================================================
 bool AlignSaveTuple::isNeighbouringHit ( LHCb::STChannelID clusID,
                                          LHCb::STChannelID hitID ) {
-  
+
   // Not a TELL1 artefact at beetles boundaries
   if ( (hitID.strip()+clusID.strip())%(2*m_nStrips) <= 3 ) return false;
 
   // Same ladder within N strips aside
   if ( (hitID.uniqueSector() == clusID.uniqueSector()) &&
        (abs(int(hitID.strip()-clusID.strip())) <= m_nStripsTol) ) return true;
-  
+
   return false;
 }
 //===========================================================================
@@ -631,10 +631,10 @@ bool AlignSaveTuple::isNeighbouringHit ( LHCb::STChannelID clusID,
 //===========================================================================
 bool AlignSaveTuple::isNeighbouringHit ( LHCb::OTChannelID timeID,
                                          LHCb::OTChannelID hitID ) {
-       
+
   // Same module?
   if ( hitID.uniqueModule() != timeID.uniqueModule() ) return false;
-  
+
   // In module 9 of quarters 0 and 2, only 2*32 straws
   if ( !(timeID.quarter()%2) && (int(timeID.module()) == m_nOTModules) ) {
     if ( (abs(int((hitID.straw()%int(m_nStraws/4))
@@ -676,7 +676,7 @@ void AlignSaveTuple::getSharedHits ( ) {
 //===========================================================================
 bool AlignSaveTuple::isSharedHit ( const LHCb::Track* theTrack,
                                    const LHCb::LHCbID aID ) {
-  
+
   LHCb::Tracks::const_iterator iTracks = m_tracks->begin();
   for ( ; iTracks != m_tracks->end(); ++iTracks ) {
     const LHCb::Track* aTrack = *iTracks;
@@ -687,7 +687,7 @@ bool AlignSaveTuple::isSharedHit ( const LHCb::Track* theTrack,
         return true;
       }
   }
-  
+
   return false;
 }
 //===========================================================================
@@ -722,7 +722,7 @@ double AlignSaveTuple::boxOverlap ( const LHCb::Track* aTrack,
     if ( (aSTID.station() == STChanID2.station()) &&
          (aSTID.detRegion() == STChanID2.detRegion()) )
       hitsOverlapBox2.push_back( &aNode );
-  }  
+  }
 
   if ( (int(hitsOverlapBox1.size()) >= m_nLayers) ||
        (int(hitsOverlapBox2.size()) >= m_nLayers) )
@@ -754,12 +754,12 @@ double AlignSaveTuple::boxOverlap ( const LHCb::Track* aTrack,
 
     double xTrack = fitPar[0]*aNode2.z()*aNode2.z() + fitPar[1]*aNode2.z() + fitPar[2];
     double yTrack = fitPar[3]*aNode2.z() + fitPar[4];
-    
+
     double b = -(aNode2.measurement().trajectory().beginPoint().X()-
                  aNode2.measurement().trajectory().endPoint().X())/
       (aNode2.measurement().trajectory().beginPoint().Y()-
        aNode2.measurement().trajectory().endPoint().Y());
-    
+
     bOVect.push_back( (xTrack +
                        b*(yTrack-aNode2.measurement().trajectory().endPoint().Y()) -
                        aNode2.measurement().trajectory().endPoint().X())/
@@ -776,7 +776,7 @@ double AlignSaveTuple::boxOverlap ( const LHCb::Track* aTrack,
 }
 //===========================================================================
 
- 
+
 //===========================================================================
 // Fit piece of track with straight line and return fit parameters
 //===========================================================================
@@ -802,13 +802,13 @@ AlignSaveTuple::fitTrackPiece ( const LHCb::Track* aTrack,
     LHCb::State hitState;
     sc = m_extrapolator->propagate( *aTrack, aNode.z(), hitState );
     if ( sc.isFailure() ) continue;
-    
+
     if ( !aNode.hasMeasurement() ) {
       --nHitsToFit;
       if ( nHitsToFit < m_nLayers ) {
         fitPar.clear();
         return fitPar;
-      } 
+      }
       continue;
     }
 
@@ -822,19 +822,19 @@ AlignSaveTuple::fitTrackPiece ( const LHCb::Track* aTrack,
 
     bFieldPoint = hitState.position();
 
-    double sig2_res = gsl_pow_2(fNode->errUnbiasedResidual());
+    double sig2_res = std::pow(fNode->errUnbiasedResidual(),2);
 //     double sig2_res = gsl_pow_2(aNode.errResidual());
 
 //     xPar[0] += gsl_pow_4(aNode.z())/sig2_res;
-    xPar[1] += gsl_pow_3(aNode.z())/sig2_res;
-    xPar[2] += gsl_pow_2(aNode.z())/sig2_res;
+    xPar[1] += std::pow(aNode.z(),3)/sig2_res;
+    xPar[2] += std::pow(aNode.z(),2)/sig2_res;
 //     xPar[3] += gsl_pow_2(aNode.z())*xHit/sig2_res;
     xPar[4] += aNode.z()/sig2_res;
     xPar[5] += aNode.z()*xHit/sig2_res;
     xPar[6] += xHit/sig2_res;
     xPar[7] += 1/sig2_res;
 
-    yPar[0] += gsl_pow_2(aNode.z())/hitState.errY2();
+    yPar[0] += std::pow(aNode.z(),2)/hitState.errY2();
     yPar[1] += aNode.z()/hitState.errY2();
     yPar[2] += aNode.z()*hitState.y()/hitState.errY2();
     yPar[3] += hitState.y()/hitState.errY2();
@@ -846,29 +846,29 @@ AlignSaveTuple::fitTrackPiece ( const LHCb::Track* aTrack,
   double pT = 0;
   m_extrapolator -> pt ( *aTrack, bFieldPoint.z(), pT );
 
-  // x = fitPar[0]*z² + fitPar[1]*z + fitPar[2]
+  // x = fitPar[0]*zï¿½ï¿½ + fitPar[1]*z + fitPar[2]
   // y = fitPar[3]*z + fitPar[4]
   if ( !sc.isFailure() ) {
 
     // Using pT constrained fit
-    double D = gsl_pow_2(xPar[4])-xPar[2]*xPar[7];
-    
+    double D = std::pow(xPar[4],2)-xPar[2]*xPar[7];
+
     fitPar[0] = 2 * bfield.y() / pT;
-    
+
     fitPar[1] = (xPar[5]*xPar[7]-xPar[4]*xPar[6]+
                  (xPar[2]*xPar[4]-xPar[1]*xPar[7])*fitPar[0])/(-D);
 
     fitPar[2] = ((xPar[4]*xPar[5]-xPar[2]*xPar[6]) +
-                 (gsl_pow_2(xPar[2])-xPar[1]*xPar[4])*fitPar[0])/D;
+                 (std::pow(xPar[2],2)-xPar[1]*xPar[4])*fitPar[0])/D;
 
-    fitPar[4] = (yPar[1]*yPar[2]-yPar[0]*yPar[3])/(gsl_pow_2(yPar[1])-yPar[0]*yPar[4]);
+    fitPar[4] = (yPar[1]*yPar[2]-yPar[0]*yPar[3])/(std::pow(yPar[1],2)-yPar[0]*yPar[4]);
 
     fitPar[3] = (yPar[2]-yPar[1]*fitPar[4])/yPar[0];
 
   }
-  else 
+  else
     fitPar.clear();
-  
+
   return fitPar;
 }
 //===========================================================================
@@ -894,26 +894,26 @@ StatusCode AlignSaveTuple::writeNTuple ( Tuples::Tuple trackSelTuple ) {
   trackSelTuple -> column ( "NVeLoClusters", m_nVeLoClusters );
   trackSelTuple -> column ( "NITClusters", m_nITClusters );
 
-  // Track Variables                     
+  // Track Variables
   trackSelTuple -> column ( "ITrack", m_iGoodTrack );
-  
+
   if ( m_mcData ) {
     trackSelTuple -> column ( "IsAGhost", m_isGhostTrack );
     trackSelTuple -> column ( "GhostTrackClassification", m_ghostTrackClassification );
   }
-  
+
   trackSelTuple -> column ( "NITHits", m_nITHits );
   trackSelTuple -> column ( "NOTHits", m_nOTHits );
   trackSelTuple -> column ( "NSharedHits", m_nSharedHits );
   trackSelTuple -> column ( "FSharedHits", m_fSharedHits );
   trackSelTuple -> column ( "NNeighbouringHits", m_nCloseHits );
   trackSelTuple -> column ( "NHoles", m_nHoles );
-  
+
   trackSelTuple -> column ( "TrackChi2PerDoF", m_trackChi2PerDoF );
   trackSelTuple -> column ( "TrackChi2Prob", m_trackChi2Prob );
   trackSelTuple -> column ( "TrackFitMatchChi2", m_trackFitMatchChi2 );
 
-  trackSelTuple -> column ( "TrackEta", m_trackEta );  
+  trackSelTuple -> column ( "TrackEta", m_trackEta );
 
   trackSelTuple -> column ( "TrackP", m_trackP );
   trackSelTuple -> column ( "TrackPt", m_trackPt );
@@ -938,21 +938,21 @@ StatusCode AlignSaveTuple::writeNTuple ( Tuples::Tuple trackSelTuple ) {
                             m_boxOvlapRes.end(), "NBoxOverlaps", m_nStations );
   trackSelTuple -> farray ( "BoxOvlapStation", m_boxOvlapSta.begin(),
                             m_boxOvlapSta.end(), "NBoxOverlaps", m_nStations );
-  
+
   // Hits Variables
   trackSelTuple -> farray ( "Residuals", m_res.begin(),
                             m_res.end(), "NResiduals", m_maxNHits );
   trackSelTuple -> farray ( "ErrResiduals", m_errRes.begin(),
                             m_errRes.end(), "NResiduals", m_maxNHits );
 
-  trackSelTuple -> farray ( "HitX", m_hitX.begin(),  	 
-			    m_hitX.end(), "NResiduals", m_maxNHits ); 	 
-  trackSelTuple -> farray ( "HitY", m_hitY.begin(), 	 
-			    m_hitY.end(), "NResiduals", m_maxNHits ); 	 
-  trackSelTuple -> farray ( "HitZ", m_hitZ.begin(), 	 
+  trackSelTuple -> farray ( "HitX", m_hitX.begin(),
+			    m_hitX.end(), "NResiduals", m_maxNHits );
+  trackSelTuple -> farray ( "HitY", m_hitY.begin(),
+			    m_hitY.end(), "NResiduals", m_maxNHits );
+  trackSelTuple -> farray ( "HitZ", m_hitZ.begin(),
 			    m_hitZ.end(), "NResiduals", m_maxNHits );
   //**********************************************************************
-  
-  return trackSelTuple->write();  
+
+  return trackSelTuple->write();
 }
 //===========================================================================
