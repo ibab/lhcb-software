@@ -28,11 +28,8 @@ namespace
 RawDataFormatTool::RawDataFormatTool( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
-  : Rich::ToolBase  ( type, name , parent  ),
-    m_evtCount      ( 0                    ),
-    m_hasBeenCalled ( false                ),
-    m_richIsActive  ( Rich::NRiches, true  ),
-    m_pixelsToSuppress ( false )
+  : Rich::ToolBase ( type, name , parent  ),
+    m_richIsActive ( Rich::NRiches, true  )
 {
   // interface
   declareInterface<IRawDataFormatTool>(this);
@@ -413,7 +410,7 @@ RawDataFormatTool::createDataBank( const LongType * dataStart,
     // Decide to zero suppress or not depending on number of hits
     if ( header.zeroSuppressed() )
     {
-      if ( header.aliceMode() )
+      if ( UNLIKELY(header.aliceMode()) )
       {
         static RichDAQ_LHCb5::ZeroSuppAlice b;
         b.reset( dataStart );
@@ -428,7 +425,7 @@ RawDataFormatTool::createDataBank( const LongType * dataStart,
     }
     else
     {
-      if ( header.aliceMode() )
+      if ( UNLIKELY(header.aliceMode()) )
       {
         static RichDAQ_LHCb5::NonZeroSuppAlice b;
         b.reset( dataStart );
@@ -453,7 +450,7 @@ RawDataFormatTool::createDataBank( const LongType * dataStart,
     // Decide to zero suppress or not depending on number of hits
     if ( header.zeroSuppressed() )
     {
-      if ( header.aliceMode() )
+      if ( UNLIKELY(header.aliceMode()) )
       {
         Warning ( "LHCb4 data format does not support ZS Alice mode data" ).ignore();
       }
@@ -466,7 +463,7 @@ RawDataFormatTool::createDataBank( const LongType * dataStart,
     }
     else
     {
-      if ( header.aliceMode() )
+      if ( UNLIKELY(header.aliceMode()) )
       {
         static RichDAQ_LHCb4::NonZeroSuppAlice b;
         b.reset( dataStart );
@@ -491,7 +488,7 @@ RawDataFormatTool::createDataBank( const LongType * dataStart,
     // Decide to zero suppress or not depending on number of hits
     if ( header.zeroSuppressed() )
     {
-      if ( header.aliceMode() )
+      if ( UNLIKELY(header.aliceMode()) )
       {
         Warning ( "LHCb3 data format does not support ZS Alice mode data" ).ignore();
       }
@@ -504,7 +501,7 @@ RawDataFormatTool::createDataBank( const LongType * dataStart,
     }
     else
     {
-      if ( header.aliceMode() )
+      if ( UNLIKELY(header.aliceMode()) )
       {
         static RichDAQ_LHCb3::NonZeroSuppAlice b;
         b.reset( dataStart );

@@ -301,10 +301,10 @@ namespace Rich
       mutable L1TypeCount m_l1encodeSummary; ///< Summary object for encoding
 
       /// Number of events processed
-      mutable unsigned long long m_evtCount;
+      mutable unsigned long long m_evtCount = 0;
 
       /// Flag to indicate if the tool has been used in a given event
-      mutable bool m_hasBeenCalled;
+      mutable bool m_hasBeenCalled = false;
 
       /// Max HPD Occupancy Cut
       unsigned int m_maxHPDOc;
@@ -365,12 +365,11 @@ namespace Rich
       typedef std::vector<LHCb::RichSmartID::KeyType> HotPixelListType;
 
       /** Software suppression of hot channels. List of RichSmartIDs (as unsigned ints) 
-       * to suppress in the data.
-       */
+       *  to suppress in the data. */
       HotPixelListType m_hotChannels;
 
       /// Boolean to indicate if there are any pixels that need suppressing
-      bool m_pixelsToSuppress;
+      bool m_pixelsToSuppress = false;
 
       /// Type for Storage of pixels to mask for each HPD
       typedef Rich::HashMap< LHCb::RichSmartID, std::set<LHCb::RichSmartID> > HPDHotPixels;
