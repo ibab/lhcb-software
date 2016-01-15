@@ -61,6 +61,19 @@ namespace Rich
       virtual LHCb::RichRecRing * massHypoRing( LHCb::RichRecSegment * segment,
                                                 const Rich::ParticleIDType id ) const = 0;
 
+      /** Creates the Cherenkov ring for a given segment and mass hypothesis
+       *
+       *  @param segment Pointer to a RichRecSegment
+       *  @param id      Mass hypothesis
+       *
+       *  @return Pointer to the mass hypothesis ring
+       */
+      inline LHCb::RichRecRing * massHypoRing( const LHCb::RichRecSegment * segment,
+                                               const Rich::ParticleIDType id ) const
+      {
+        return massHypoRing( const_cast<LHCb::RichRecSegment*>(segment), id );
+      }
+
       /** Creates and returns a new default RichRecRing object.
        *
        *  @attention It is the reponsibility of the user to save or delete the ring,

@@ -4,6 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2016-01-15 - Chris Jones
+ - Add some wrapper methods to interfaces that hide const_cast'ing in one place, 
+   until I figure out a better longer term fix.
+
 ! 2016-01-14 - Chris Jones
  - Add a new definition to RichDetParams.h
 

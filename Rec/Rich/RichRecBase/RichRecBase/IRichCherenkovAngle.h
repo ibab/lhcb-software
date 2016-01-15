@@ -66,6 +66,23 @@ namespace Rich
                                         const Rich::ParticleIDType id,
                                         const bool useEmittedSpectrum = false ) const = 0;
 
+      /** Computes the average Cherenkov angle for given particle hypothesis
+       *
+       *  @param segment The RichRecSegment for which to coumpute the expected CK angle
+       *  @param id      The mass hypothesis for which the angle should be calculated
+       *  @param useEmittedSpectrum Flag to turn on (true) the use of the emitted photon
+       *                            spectrum instead of the detected (false).
+       *
+       *  @return The expected average cherenkov angle
+       */
+      inline double avgCherenkovTheta( const LHCb::RichRecSegment * segment,
+                                       const Rich::ParticleIDType id,
+                                       const bool useEmittedSpectrum = false ) const
+      {
+        return avgCherenkovTheta( const_cast<LHCb::RichRecSegment*>(segment), 
+                                  id, useEmittedSpectrum );
+      }
+      
       /** Computes the average Cherenkov angle for the current mass hypothesis
        *  assigned to the given segment
        *
@@ -74,6 +91,18 @@ namespace Rich
        *  @return The expected average cherenkov angle
        */
       virtual double avgCherenkovTheta( LHCb::RichRecSegment * segment ) const = 0;
+
+      /** Computes the average Cherenkov angle for the current mass hypothesis
+       *  assigned to the given segment.
+       *
+       *  @param segment The RichRecSegment for which to coumpute the expected CK angle
+       *
+       *  @return The expected average cherenkov angle
+       */
+      inline double avgCherenkovTheta( const LHCb::RichRecSegment * segment ) const
+      {
+        return avgCherenkovTheta( const_cast<LHCb::RichRecSegment*>(segment) );
+      }
 
       /** Computes the nominal saturated Cherenkov angle for a given radiator medium
        *
