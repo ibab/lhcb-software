@@ -22,7 +22,6 @@ DECLARE_ALGORITHM_FACTORY( RawBufferToRichDigitsAlg )
 RawBufferToRichDigitsAlg::RawBufferToRichDigitsAlg( const std::string& name,
                                                     ISvcLocator* pSvcLocator )
   : AlgBase ( name , pSvcLocator )
-  , m_decoder(NULL)
 {
   declareProperty( "RichDigitsLocation",
                    m_richDigitsLoc = LHCb::RichDigitLocation::Default );
@@ -40,7 +39,7 @@ StatusCode RawBufferToRichDigitsAlg::initialize()// RICH software
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire tools
-  acquireTool( "RichSmartIDDecoder", m_decoder, NULL, true );
+  acquireTool( "RichSmartIDDecoder", m_decoder, nullptr, true );
 
   if ( m_decodeOnly )
   { info() << "Will only decode Raw Buffer -> No RichDigits produced" << endmsg; }
@@ -53,7 +52,7 @@ StatusCode RawBufferToRichDigitsAlg::execute()
 {
 
   // Get RichSmartIDs decoded from RawEvent
-  const Rich::DAQ::L1Map & data = m_decoder->allRichSmartIDs();
+  const auto & data = m_decoder->allRichSmartIDs();
 
   if ( !m_decodeOnly )
   {
@@ -62,27 +61,23 @@ StatusCode RawBufferToRichDigitsAlg::execute()
     put( digits, m_richDigitsLoc );
 
     // Loop over L1 boards
-    for ( Rich::DAQ::L1Map::const_iterator iL1 = data.begin();
-          iL1 != data.end(); ++iL1 )
+    for ( const auto& L1 : data )
     {
-      debug() << "L1 board " << (*iL1).first << endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug() << "L1 board " << L1.first << endmsg;
       // loop over ingresses for this L1 board
-      for ( Rich::DAQ::IngressMap::const_iterator iIn = (*iL1).second.begin();
-            iIn != (*iL1).second.end(); ++iIn )
+      for ( const auto& In : L1.second )
       {
         // Loop over HPDs in this ingress
-        for ( Rich::DAQ::HPDMap::const_iterator iHPD = (*iIn).second.hpdData().begin();
-              iHPD != (*iIn).second.hpdData().end(); ++iHPD )
+        for ( const auto& HPD : In.second.hpdData() )
         {
           // Valid HPD ID
-          if ( !(*iHPD).second.hpdID().isValid() ) { continue; }
+          if ( !HPD.second.hpdID().isValid() ) { continue; }
           // inhibited HPD ?
-          if ( (*iHPD).second.header().inhibit() ) { continue; }
+          if ( HPD.second.header().inhibit() ) { continue; }
           // Loop over RichSmartIDs in this HPD
-          for ( LHCb::RichSmartID::Vector::const_iterator iID = (*iHPD).second.smartIDs().begin();
-                iID != (*iHPD).second.smartIDs().end(); ++iID )
+          for ( const auto& ID : HPD.second.smartIDs() )
           {
-            digits->insert( new LHCb::RichDigit(), *iID );
+            digits->insert( new LHCb::RichDigit(), ID );
           }
         }
       }

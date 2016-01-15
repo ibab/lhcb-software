@@ -38,17 +38,14 @@ namespace Rich
         const RichZSPacked zsData;
 
         // Loop over digits
-        for ( LHCb::RichSmartID::Vector::const_iterator iID = pdHits.begin();
-              iID != pdHits.end(); ++iID )
+        for ( const auto& ID : pdHits )
         {
-
           // Get bit and address
-          const ShortType bit     = zsData.bitFromCol( (*iID).pixelCol() );
-          const ShortType address = zsData.addressFromRowCol( (*iID).pixelRow(), (*iID).pixelCol() );
+          const ShortType bit     = zsData.bitFromCol( ID.pixelCol() );
+          const ShortType address = zsData.addressFromRowCol( ID.pixelRow(), ID.pixelCol() );
 
           // Set the correct bit on for this address
           this->setBit( dataM[address], bit );
-
         }
 
         // How many words ?

@@ -51,9 +51,7 @@ namespace Rich
 
         /// Default constructor
         RichZeroSuppData()
-          : HPDDataBankImp<Version,Header,Footer>( MaxDataSize ),
-            m_tooBig        ( false   ),
-            m_nHits         ( -1      )
+          : HPDDataBankImp<Version,Header,Footer>( MaxDataSize )
         { }
 
         /** Constructor from a RichSmartID HPD identifier and a vector of RichSmartIDs
@@ -69,9 +67,7 @@ namespace Rich
                                                              0      // Filled by buildData call below in main body
                                                              ),
                                                     Footer ( ),
-                                                    0, MaxDataSize ),
-            m_tooBig        ( false   ),
-            m_nHits         ( -1      )
+                                                    0, MaxDataSize )
         {
           buildData( digits );
         }
@@ -83,9 +79,7 @@ namespace Rich
         explicit RichZeroSuppData( const LongType * data )
           : HPDDataBankImp<Version,Header,Footer> ( data,          // start of data
                                                     MaxDataSize  // max data block size
-                                                    ),
-            m_tooBig ( false   ),
-            m_nHits  ( -1      )
+                                                    )
         { }
 
         /** Reset for a new block of raw data
@@ -109,10 +103,7 @@ namespace Rich
                                             const LHCb::RichSmartID hpdID ) const;
 
         // Test if this bank would be too big ( i.e. greater than 32 words )
-        inline bool tooBig() const
-        {
-          return m_tooBig;
-        }
+        inline bool tooBig() const { return m_tooBig; }
 
       private: // methods
 
@@ -122,10 +113,10 @@ namespace Rich
       private: // data
 
         /// Too big flag
-        bool m_tooBig;
+        bool m_tooBig = false;
 
         /// Decoded number of hits
-        mutable int m_nHits;
+        mutable int m_nHits = -1;
 
       };
 

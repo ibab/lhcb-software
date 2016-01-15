@@ -192,13 +192,16 @@ namespace Rich
       inline void dataInRange( const Rich::DAQ::ShortType value,
                                const Rich::DAQ::ShortType max ) const
       {
-        if ( value > max ) throw GaudiException( "Data out of range", "*RichZSHitTriplet*", StatusCode::FAILURE );
+        if ( value > max ) 
+        { 
+          throw GaudiException( "Data out of range", "*RichZSHitTriplet*", StatusCode::FAILURE );
+        }
       }
 
     private: // data
 
       /// The data word
-      Rich::DAQ::LongType m_data;
+      Rich::DAQ::LongType m_data = 0;
 
     };
 

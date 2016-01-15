@@ -213,7 +213,7 @@ namespace Rich
       private: // data
 
         /// The data word
-        Rich::DAQ::LongType m_data;
+        Rich::DAQ::LongType m_data = 0;
 
       };
 

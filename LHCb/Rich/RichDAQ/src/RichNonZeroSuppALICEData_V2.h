@@ -52,8 +52,7 @@ namespace Rich
 
         /// Default constructor
         RichNonZeroSuppALICEData() :
-          HPDDataBankImp<Version,Header,Footer> ( MaxDataSizeALICE ),
-          m_nHits(-1)
+          HPDDataBankImp<Version,Header,Footer> ( MaxDataSizeALICE )
         { }
 
         /** Constructor from a RichSmartID HPD identifier and a vector of RichSmartIDs
@@ -74,8 +73,7 @@ namespace Rich
                                                              0 // filled by buildData call
                                                              ),
                                                     Footer(),
-                                                    0, MaxDataSizeALICE ),
-            m_nHits ( -1 )
+                                                    0, MaxDataSizeALICE )
         {
           buildData( digits );
         }
@@ -87,8 +85,7 @@ namespace Rich
         explicit RichNonZeroSuppALICEData( const LongType * data )
           : HPDDataBankImp<Version,Header,Footer> ( data, // start of data
                                                     MaxDataSizeALICE,
-                                                    MaxDataSizeALICE ),
-            m_nHits( -1 )
+                                                    MaxDataSizeALICE )
         { }
 
         /** Reset for a new block of raw data
@@ -135,7 +132,7 @@ namespace Rich
       private: // data
 
         /// Decoded number of hits
-        mutable int m_nHits;
+        mutable int m_nHits = -1;
 
       };
 

@@ -299,7 +299,7 @@ namespace Rich
         if ( m_internalData && m_data )
         {
           delete[] m_data;
-          m_data = NULL;
+          m_data = nullptr;
         }
       }
 
@@ -391,19 +391,19 @@ namespace Rich
       Header m_header;
 
       /// Pointer to the data block (excluding header)
-      LongType * m_data;
+      LongType * m_data = nullptr;
 
       /// HPD Footer word(s)
       Footer m_footer;
 
       /// Size of data block (excluding header and footer)
-      ShortType m_dataSize;
+      ShortType m_dataSize = 0;
 
       /// Maximum data block size (excluding header, 32 LHCb mode, 256 ALICE mode)
-      ShortType m_maxDataSize;
+      ShortType m_maxDataSize = 0;
 
       /// Flag to indicate if data is external or internal
-      bool m_internalData;
+      bool m_internalData = false;
 
     };
 

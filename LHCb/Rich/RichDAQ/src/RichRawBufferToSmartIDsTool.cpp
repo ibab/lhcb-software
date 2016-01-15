@@ -21,9 +21,7 @@ DECLARE_TOOL_FACTORY( RawBufferToSmartIDsTool )
   RawBufferToSmartIDsTool::RawBufferToSmartIDsTool( const std::string& type,
                                                     const std::string& name,
                                                     const IInterface* parent )
-    : ToolBase       ( type, name, parent ),
-      m_richSys      ( NULL ),
-      m_rawFormatT   ( NULL )
+    : ToolBase( type, name, parent )
 {
   // Defined interface
   declareInterface<IRawBufferToSmartIDsTool>(this);

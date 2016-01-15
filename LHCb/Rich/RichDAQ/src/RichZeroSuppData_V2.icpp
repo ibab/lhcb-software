@@ -34,19 +34,16 @@ namespace Rich
         DataMap dataM;
 
         // Loop over digits
-        for ( LHCb::RichSmartID::Vector::const_iterator iID = pdHits.begin();
-              iID != pdHits.end(); ++iID )
+        for ( const auto& ID : pdHits )
         {
-
           // Get bit and address
           const ShortType bit     =
-            RichZSPacked_V1::RichZSPacked::bitFromCol( (*iID).pixelCol() );
+            RichZSPacked_V1::RichZSPacked::bitFromCol( ID.pixelCol() );
           const ShortType address =
-            RichZSPacked_V1::RichZSPacked::addressFromRowCol( (*iID).pixelRow(), (*iID).pixelCol() );
+            RichZSPacked_V1::RichZSPacked::addressFromRowCol( ID.pixelRow(), ID.pixelCol() );
 
           // Set the correct bit on for this address
           this->setBit( dataM[address], bit );
-
         }
 
         // How many words ?

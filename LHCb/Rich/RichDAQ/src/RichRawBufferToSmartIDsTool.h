@@ -105,8 +105,7 @@ namespace Rich
       inline std::string taeKey( const IRawBufferToSmartIDsTool::RawEventLocations& taeLocs ) const
       {
         std::string loc;
-        for ( IRawBufferToSmartIDsTool::RawEventLocations::const_iterator iL = taeLocs.begin();
-              iL != taeLocs.end(); ++iL ) { loc += *iL; }
+        for ( const auto& L : taeLocs ) { loc += L; }
         return loc;
       }
 
@@ -125,10 +124,10 @@ namespace Rich
     private: // private data
 
       /// Rich System detector element
-      const DeRichSystem * m_richSys;
+      const DeRichSystem * m_richSys = nullptr;
 
       /// Pointer to RICH raw data format tool
-      const IRawDataFormatTool * m_rawFormatT;
+      const IRawDataFormatTool * m_rawFormatT = nullptr;
 
       /// The decoded data for particular TAE event(s)
       mutable Rich::HashMap< const std::string, Rich::DAQ::L1Map > m_richDataTAE;

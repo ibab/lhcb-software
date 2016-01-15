@@ -33,10 +33,9 @@ namespace Rich
       RichNonZeroSuppData<Version,Header,Footer>::buildData( const LHCb::RichSmartID::Vector & digits )
       {
         // Set data words
-        for ( LHCb::RichSmartID::Vector::const_iterator iDig = digits.begin();
-              iDig != digits.end(); ++ iDig )
+        for ( const auto& digit : digits )
         {
-          setPixelActive( (*iDig).pixelRow(), (*iDig).pixelCol() );
+          setPixelActive( digit.pixelRow(), digit.pixelCol() );
         }
         // set footer parity
         if ( this->footer().hasParityWord() )
@@ -65,13 +64,12 @@ namespace Rich
         const RichZSPacked zsData;
 
         // Loop over digits
-        for ( LHCb::RichSmartID::Vector::const_iterator iID = digits.begin();
-              iID != digits.end(); ++iID )
+        for ( const auto& ID : digits )
         {
 
           // Get bit and address
-          const ShortType bit     = zsData.bitFromCol( (*iID).pixelCol() );
-          const ShortType address = zsData.addressFromRowCol( (*iID).pixelRow(), (*iID).pixelCol() );
+          const ShortType bit     = zsData.bitFromCol( ID.pixelCol() );
+          const ShortType address = zsData.addressFromRowCol( ID.pixelRow(), ID.pixelCol() );
 
           // Set the correct bit on for this address
           this->setBit( dataM[address], bit );

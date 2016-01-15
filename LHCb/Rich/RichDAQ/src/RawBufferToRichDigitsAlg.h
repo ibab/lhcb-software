@@ -54,7 +54,7 @@ namespace Rich
       std::string m_richDigitsLoc;
 
       /// Raw Buffer Decoding tool
-      const IRawBufferToSmartIDsTool * m_decoder;
+      const IRawBufferToSmartIDsTool * m_decoder = nullptr;
 
       /// Flag to turn off RichDigit creation
       bool m_decodeOnly;

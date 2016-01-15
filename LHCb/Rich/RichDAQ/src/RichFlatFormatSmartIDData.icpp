@@ -29,11 +29,7 @@ namespace Rich
     {
 
       // Set data words
-      for ( LHCb::RichSmartID::Vector::const_iterator iDig = digits.begin();
-            iDig != digits.end(); ++ iDig )
-      {
-        this->addData( (*iDig).key() );
-      }
+      for ( const auto& d : digits ) { this->addData( d.key() ); }
 
       // In extended format mode set footer parity
       // basically, we don't simulate bit errors, so parity word here is just zero

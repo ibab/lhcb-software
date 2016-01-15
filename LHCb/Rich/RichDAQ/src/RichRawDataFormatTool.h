@@ -124,9 +124,6 @@ namespace Rich
       class L1IDandV
       {
       public:
-        /// Default Constructor
-        L1IDandV( )
-          : bankVersion  ( Rich::DAQ::UndefinedBankVersion ) { }
         /// Constructor from arguments
         L1IDandV( const Rich::DAQ::BankVersion _version,
                   const Rich::DAQ::Level1HardwareID& _id )
@@ -137,8 +134,10 @@ namespace Rich
         inline bool operator < ( const L1IDandV& id ) const
         { return this->l1HardwareID < id.l1HardwareID ; }
       public:
-        Rich::DAQ::BankVersion      bankVersion;  ///< Bank version
-        Rich::DAQ::Level1HardwareID l1HardwareID; ///< L1 hardwareID
+        /// Bank version
+        Rich::DAQ::BankVersion bankVersion = Rich::DAQ::UndefinedBankVersion; 
+        /// L1 hardwareID
+        Rich::DAQ::Level1HardwareID l1HardwareID; 
       };
 
       /** @class L1CountAndSize RichRawDataFormatTool.h
@@ -151,7 +150,7 @@ namespace Rich
       class L1CountAndSize
       {
       public:
-        /// Default Constructor
+        /// Constructor from values
         L1CountAndSize( const unsigned long long _nHPDs  = 0,
                         const unsigned long long _nHits  = 0,
                         const unsigned long long _nWords = 0,
@@ -161,10 +160,10 @@ namespace Rich
             nWords ( _nWords ),
             nFills ( _nFills ) { }
       public:
-        unsigned long long nHPDs;  ///< Number of HPDs
-        unsigned long long nHits;  ///< Number of Hits
-        unsigned long long nWords; ///< Number of 32 bit words
-        unsigned long long nFills; ///< Number of data entries
+        unsigned long long nHPDs  = 0;  ///< Number of HPDs
+        unsigned long long nHits  = 0;  ///< Number of Hits
+        unsigned long long nWords = 0; ///< Number of 32 bit words
+        unsigned long long nFills = 0; ///< Number of data entries
       };
 
       /// Summary data per L1 board
@@ -194,8 +193,7 @@ namespace Rich
 
       /** Creates a bank data from the given raw block of data
        *
-       *  NOTE : Ownership of the data object passes to the caller.
-       *         It is their responsibility to delete when no longer needed.
+       *  Uses static objects to avoid recreating.
        *
        *  @param dataStart Pointer to the start of the raw data
        *  @param dataSize  The length of the data block (excluding header HPD word)
@@ -204,18 +202,6 @@ namespace Rich
       const HPDDataBank * createDataBank( const Rich::DAQ::LongType * dataStart,
                                           const unsigned int dataSize,
                                           const Rich::DAQ::BankVersion version ) const;
-
-      /** Creates a bank data from the given raw block of data
-       *
-       *  Uses static objects to avoid recreating.
-       *
-       *  @param dataStart Pointer to the start of the raw data
-       *  @param dataSize  The length of the data block (excluding header HPD word)
-       *  @param version   The RICH DAQ data bank version
-       */
-      const HPDDataBank * createDataBank_static( const Rich::DAQ::LongType * dataStart,
-                                                 const unsigned int dataSize,
-                                                 const Rich::DAQ::BankVersion version ) const;
 
       /// Initialise for each event
       void InitEvent();
@@ -290,7 +276,7 @@ namespace Rich
     private: // data
 
       /// Rich System detector element
-      const DeRichSystem * m_richSys;
+      const DeRichSystem * m_richSys = nullptr;
 
       /// Pointer to Raw Event
       mutable Rich::HashMap< const std::string, LHCb::RawEvent * > m_rawEvent;
@@ -302,7 +288,7 @@ namespace Rich
       mutable std::string m_currentTAE;
 
       /// Pointer to ODIN (Event time) tool
-      mutable const IEventTimeDecoder * m_timeTool;
+      mutable const IEventTimeDecoder * m_timeTool = nullptr;
 
       /// The number of hits marking the transistion between zero and non-zero suppressed data
       /// Used by version 0 of the data banks

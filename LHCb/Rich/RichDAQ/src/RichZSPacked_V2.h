@@ -79,9 +79,10 @@ namespace Rich
           : m_data( word.data() ), m_aliceMode( word.aliceMode() ) {}
 
         /// Constructor from LongType
-        RichZSPacked( const LongType data = 0,
-                      const bool aliceMode = false ) : m_data( data ), m_aliceMode( aliceMode ) { }
-
+        RichZSPacked( const LongType data  = 0,
+                      const bool aliceMode = false ) 
+          : m_data( data ), m_aliceMode( aliceMode ) { }
+        
         /// Constructor from address and field values
         RichZSPacked( const ShortType address0 ,  ///< First address to store
                       const ShortType field0   ,  ///< First bitfield to store
@@ -253,10 +254,10 @@ namespace Rich
       private: // data
 
         /// The data word
-        LongType m_data;
+        LongType m_data  = 0;
 
         /// Alice mode flag
-        bool m_aliceMode;
+        bool m_aliceMode = false;
 
       };
 
