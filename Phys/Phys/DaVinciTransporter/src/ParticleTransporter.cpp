@@ -1,9 +1,16 @@
-
+//  $Id:$
+// ============================================================================
 // STL
+// ============================================================================
 #include <cmath>
 #include <sstream>
-
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/Chrono.h"
+// ============================================================================
 // local
+// ============================================================================
 #include "ParticleTransporter.h"
 
 //-----------------------------------------------------------------------------
@@ -25,6 +32,13 @@ ParticleTransporter::ParticleTransporter
   , m_ppSvc          ( NULL )
   , m_particle2State ( NULL )
   , m_eID            ( 0    )
+    //
+#ifndef NDEBUG 
+  , m_timing         ( true  )
+#else 
+  , m_timing         ( false )
+#endif
+    //
 {
   //
   if      ( std::string::npos != name.find ( "Master"     ) ) 
@@ -37,6 +51,10 @@ ParticleTransporter::ParticleTransporter
     ( "TrackExtrapolator"                  , 
       m_trackExtrapolatorName              ,
       "Extrapolator to be use for tracks"  ) ;
+  declareProperty 
+    ( "MeasureCPUPerformance"   , 
+      m_timing                  , 
+      "Measure CPU perormance"  ) ;
 }
 //=============================================================================
 // Destructor
@@ -67,6 +85,9 @@ StatusCode ParticleTransporter::initialize()
   const LHCb::ParticleProperty * pe = m_ppSvc->find("e-");
   m_eID = abs( pe->particleID().pid() );
 
+  // is message level is low enough, active timing 
+  if ( msgLevel ( MSG::DEBUG ) ) { m_timing = true ; }
+  
   return sc;
 }
 
@@ -78,7 +99,10 @@ StatusCode ParticleTransporter::transport(const LHCb::Particle* P,
                                           LHCb::Particle& transParticle)
 {
   StatusCode sc = StatusCode::SUCCESS;
-
+  //
+  // measure CPU if required 
+  Chrono chrono ( m_timing ? chronoSvc() : nullptr , name() );
+  
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Transport PID " << P->particleID().pid()
             << " p " << P->momentum() << " from "
@@ -116,8 +140,12 @@ StatusCode ParticleTransporter::transportAndProject(const LHCb::Particle* P,
                                                     const double zNew,
                                                     LHCb::Particle& transParticle)
 {
+  
+  // measure CPU if required 
+  Chrono chrono ( m_timing ? chronoSvc() : nullptr , name () ) ;
+  
   StatusCode sc = StatusCode::SUCCESS;
-
+  
   // avoid some "extra" self-assignements:
   if ( &transParticle != P ) { transParticle = LHCb::Particle(*P) ; }
 

@@ -3,6 +3,16 @@
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
 
+! 2016-01-15 - Vanya Belyaev
+
+ 1) DaVinci::ParticleTransporter:
+    - make use of Trajectory approximation for long tracks for certain Z-region 
+    - define new property 'TrajectoryRegion' to define this region 
+      [ Default value:  (-30cm, 100cm) ]
+ 2) ParticleTransporter & DaVinci::ParticleTransporter
+   - add new proeprty 'MeasureCPUPerformance' to 
+     report CPU perfromance for extrapolation
+ 
 !========================= DaVinciTransporter v3r13 2015-08-24 =========================
 
 ! 2015-08-24 - Chris Jones

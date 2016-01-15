@@ -149,5 +149,8 @@ private:
   /// Electron ID
   unsigned int m_eID ;
 
+  /// measure CPU performance ?
+  bool  m_timing ;
+  
 };
 #endif // PARTICLETRANSPORTER_H

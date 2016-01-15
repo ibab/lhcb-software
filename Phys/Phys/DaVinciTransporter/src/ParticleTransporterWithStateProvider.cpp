@@ -2,9 +2,18 @@
 // ============================================================================
 // Include files 
 // ============================================================================
+// STD & STL  
+// ============================================================================
+#include <tuple>
+// ============================================================================
+//GaudiKernel
+// ============================================================================
+#include "GaudiKernel/ParsersFactory.h"
+// ============================================================================
 // GaudiAlgs 
 // ============================================================================
 #include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/Chrono.h"
 // ============================================================================
 // TrackInterfaces
 // ============================================================================
@@ -100,16 +109,22 @@ namespace DaVinci
     /// assignement operator is disabled 
     ParticleTransporter& operator=( const ParticleTransporter& ) ; // no assignment
     // ========================================================================
-  private:
+  private: // properties: 
     // ========================================================================
     /// the name of state provider 
     std::string m_stateprovidername  ; // the name of state provider 
     /// the name of particle <-->state tool 
     std::string m_particle2statename ; // the name of particle <-->state tool 
     /// the name of extrapolator name (1) 
-    std::string m_extrapolator1name  ;
+    std::string m_extrapolator1name  ; // the name of extrapolator name (1) 
     /// the name of extrapolator name (2) 
-    std::string m_extrapolator2name  ;
+    std::string m_extrapolator2name  ; // the name of extrapolator name (2) 
+    /// area in Z, where "Trajectory" approximation to be used for long track
+    std::pair<double,double> m_region ;
+    /// measure CPU performance? 
+    bool                     m_timing ; // measure CPU performance? 
+    // ========================================================================    
+  private:
     // ========================================================================
     ITrackStateProvider* m_stateprovider  ;
     IParticle2State*     m_particle2state ;
@@ -126,11 +141,14 @@ StatusCode DaVinci::ParticleTransporter::initialize ()
   StatusCode sc = GaudiTool::initialize () ;
   if ( sc.isFailure() ) { return sc ; }
   //
-  m_stateprovider  = tool<ITrackStateProvider>( m_stateprovidername  , this ) ;
-  m_particle2state = tool<IParticle2State>    ( m_particle2statename , this ) ;
-  m_extrapolator1  = tool<ITrackExtrapolator> ( m_extrapolator1name  , this ) ;
+  m_stateprovider  = tool<ITrackStateProvider>  ( m_stateprovidername  , this ) ;
+  m_particle2state = tool<IParticle2State>      ( m_particle2statename , this ) ;
+  m_extrapolator1  = tool<ITrackExtrapolator>   ( m_extrapolator1name  , this ) ;
   if ( !m_extrapolator2name.empty() ) 
   { m_extrapolator2  = tool<ITrackExtrapolator> ( m_extrapolator2name  , this ) ; }
+  //
+  // is message level is low enough, active timing 
+  if ( msgLevel ( MSG::DEBUG ) ) { m_timing = true ; }
   //
   return sc ;
 }
@@ -147,11 +165,18 @@ DaVinci::ParticleTransporter::ParticleTransporter
   , m_particle2statename ( "Particle2State:PUBLIC"              )
   , m_extrapolator1name  ( "TrackParabolicExtrapolator:PUBLIC"  )
   , m_extrapolator2name  ( "TrackRungeKuttaExtrapolator:PUBLIC" )
-//
+  , m_region         ( -30 * Gaudi::Units::cm , 100 * Gaudi::Units::cm )
+    //
+#ifndef NDEBUG 
+  , m_timing         ( true  )
+#else 
+  , m_timing         ( false )
+#endif 
+    //
   , m_stateprovider  ( 0 ) 
   , m_particle2state ( 0 ) 
   , m_extrapolator1  ( 0 ) 
-  , m_extrapolator2  ( 0 ) 
+  , m_extrapolator2  ( 0 )
 //
 {
   //
@@ -187,6 +212,14 @@ DaVinci::ParticleTransporter::ParticleTransporter
     ( "Extrapolator2"          , 
       m_extrapolator2name      , 
       "Track extrapolator to be used for tracks/electrons" ) ;
+  declareProperty 
+    ( "TrajectoryRegion"        , 
+      m_region                  , 
+      "Region in Z where Trajectory approximation should be used for long tracks" ) ;
+  declareProperty 
+    ( "MeasureCPUPerformance"   , 
+      m_timing                  , 
+      "Measure CPU perormance"  ) ;  
 }
 // ============================================================================
 // destructor 
@@ -205,6 +238,9 @@ StatusCode DaVinci::ParticleTransporter::transport
   const double          znew        ,
   LHCb::Particle&       transported ) 
 {
+  //
+  // measure CPU if required 
+  Chrono chrono ( m_timing ? chronoSvc() : nullptr , name() );
   //
   if ( 0 == particle ) 
   { return Error("Invalid particle, impossible to transport") ; }
@@ -233,6 +269,9 @@ StatusCode DaVinci::ParticleTransporter::transportAndProject
   const double          znew        ,
   LHCb::Particle&       transported ) 
 {
+  //
+  // measure CPU if required 
+  Chrono chrono ( m_timing ? chronoSvc() : nullptr , name() );
   //
   if ( 0 == particle ) 
   { return Error("Invalid particle, impossible to transport") ; }
@@ -271,11 +310,24 @@ StatusCode DaVinci::ParticleTransporter::transportChargedBasic
   // finally use two tools to get an answer 
   //
   LHCb::State state ;
-  StatusCode sc = m_stateprovider -> state ( state , *track , znew );
-  if ( sc.isFailure() ) 
-  { return Warning ("Error from StateProvider::state", sc, 3 ) ; }
+  if ( track->checkType ( LHCb::Track::Long ) && 
+       m_region.first <= znew && znew <= m_region.second )
+  {
+    StatusCode sc = m_stateprovider -> stateFromTrajectory ( state , *track , znew );
+    if ( sc.isFailure() ) 
+    { Warning ("Error from StateProvider::stateFromTrajectory", sc , 3 ) ; }
+    sc = m_stateprovider -> state ( state , *track , znew );
+    if ( sc.isFailure() ) 
+    { return Warning ("Error from StateProvider::state", sc, 3 ) ; } 
+  }
+  else 
+  {
+    StatusCode sc = m_stateprovider -> state ( state , *track , znew );
+    if ( sc.isFailure() ) 
+    { return Warning ("Error from StateProvider::state", sc, 3 ) ; }
+  }
   //
-  sc = m_particle2state -> state2Particle ( state , transported ) ;
+  StatusCode sc = m_particle2state -> state2Particle ( state , transported ) ;
   if ( sc.isFailure() ) 
   { return Warning ( "Error from Particle2State", sc, 3 ) ; }
   //
@@ -303,10 +355,9 @@ StatusCode DaVinci::ParticleTransporter::transportElectron
   if ( sc.isFailure() ) 
   { return Warning ("Error from Particle2State", sc, 3 ) ; }
   //
-  if ( LHCb::Track::Long  == track -> type () || 
-       LHCb::Track::Velo  == track -> type () || 
-       LHCb::Track::VeloR == track -> type () || 0 == m_extrapolator2 ) 
-    
+  if ( track->checkType ( LHCb::Track::Long  ) ||  
+       track->checkType ( LHCb::Track::Velo  ) || 
+       track->checkType ( LHCb::Track::VeloR ) || 0 == m_extrapolator2 ) 
   {
     // first try "simple" extrapolator 
     sc = m_extrapolator1 -> propagate ( state , znew , particle->particleID() ) ;
