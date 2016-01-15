@@ -5,6 +5,12 @@
 // local
 #include "PrCounter2.h"
 
+//std
+#include <stdio.h>
+
+//boost
+#include <boost/algorithm/string/replace.hpp>
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : PrCounter2
 //
@@ -21,8 +27,8 @@ DECLARE_TOOL_FACTORY( PrCounter2 )
 PrCounter2::PrCounter2( const std::string& type,
                         const std::string& name,
                         const IInterface* parent )
-: GaudiTool ( type, name , parent ),
-  m_selector("",this)
+  : GaudiTool ( type, name , parent ),
+    m_selector("",this)
 {
   declareInterface<IPrCounter>(this);
   m_link        = NULL;
@@ -44,7 +50,7 @@ PrCounter2::PrCounter2( const std::string& type,
 
   std::string title(name);
   while(title.find(".") < title.size()){
-   title = title.substr( title.find(".")+1);
+    title = title.substr( title.find(".")+1);
   }
   m_title = title;
 
@@ -94,6 +100,7 @@ void PrCounter2::addSelection ( std::string name, bool writeHisto ) {
   m_clone.push_back( 0 );
   m_purity.push_back( 0. );
   m_hitEff.push_back( 0. );
+
 }
 //=========================================================================
 //  Event initialisation, get the linker table.
@@ -110,14 +117,14 @@ void PrCounter2::initEvent(const IHistoTool* htool = NULL, const int nPV = 0){
 
   m_nbTrack = tracks->size();
   const Table* table = m_link->direct();
-  if ( NULL == table ) { 
+  if ( NULL == table ) {
     Warning( "Problem with MC associations for " + m_container ).ignore();
-    return; 
+    return;
   }
 
   m_extrapolator = tool<ITrackExtrapolator>("TrackMasterExtrapolator",this);
   // m_idealStateCreator = tool<IIdealStateCreator>("IdealStateCreator", "IdealStateCreator", this);
- 
+
   double nbTracks = 0;
   if(htool && m_writeHistos>0 )htool->plot1D(nPV,m_title+"/nPV_Events","nPV_Events",-0.5,20.5,21);
 
@@ -147,13 +154,13 @@ void PrCounter2::initEvent(const IHistoTool* htool = NULL, const int nPV = 0){
           htool->plot1D(track->momentum().Phi(),m_title+"/Phi_Ghosts","Phi_Ghosts",-3.142,3.142,25);
           htool->plot1D(track->pt(),m_title+"/Pt_Ghosts","Pt_Ghosts",0.,10000.,50);
           htool->plot1D(track->p(),m_title+"/P_Ghosts","P_Ghosts",0.,100000.,50);
-	  htool->plot2D(track->pseudoRapidity(),track->p(),m_title+"/EtaP_Ghosts","EtaP_Ghosts",0.,7.,0.,100000.,20, 20);
-	  htool->plot2D(track->pseudoRapidity(),track->momentum().Phi(),m_title+"/EtaPhi_Ghosts","EtaPhi_Ghosts",0.,7.,-3.142,3.142,20,20);
-       }
-	if(sc){
-	  htool->plot2D( state.x(),state.y() ,m_title+"/XYZ9000_Ghosts", "XYZ9000_Ghosts",-3000,3000.,-3000.,3000.0,100,100);
-	  htool->plot2D( state2.x(),state2.y() ,m_title+"/XYZ2485_Ghosts", "XYZ2485_Ghosts",-1000,1000.,-1000.,1000.0,100,100);
-	}
+          htool->plot2D(track->pseudoRapidity(),track->p(),m_title+"/EtaP_Ghosts","EtaP_Ghosts",0.,7.,0.,100000.,20, 20);
+          htool->plot2D(track->pseudoRapidity(),track->momentum().Phi(),m_title+"/EtaPhi_Ghosts","EtaPhi_Ghosts",0.,7.,-3.142,3.142,20,20);
+        }
+        if(sc){
+          htool->plot2D( state.x(),state.y() ,m_title+"/XYZ9000_Ghosts", "XYZ9000_Ghosts",-3000,3000.,-3000.,3000.0,100,100);
+          htool->plot2D( state2.x(),state2.y() ,m_title+"/XYZ2485_Ghosts", "XYZ2485_Ghosts",-1000,1000.,-1000.,1000.0,100,100);
+        }
       }
     }
     if(htool && m_writeHistos>0 ){
@@ -163,12 +170,12 @@ void PrCounter2::initEvent(const IHistoTool* htool = NULL, const int nPV = 0){
         htool->plot1D(track->momentum().Phi(),m_title+"/Phi_Total","Phi_Total",-3.142,3.142,25);
         htool->plot1D(track->pt(),m_title+"/Pt_Total","Pt_Total",0.,10000.,50);
         htool->plot1D(track->p(),m_title+"/P_Total","P_Total",0.,100000.,50);
-	htool->plot2D(track->pseudoRapidity(),track->p(),m_title+"/EtaP_Total","EtaP_Total",0.,7.,0.,100000.,20, 20);
-	htool->plot2D(track->pseudoRapidity(),track->momentum().Phi(),m_title+"/EtaPhi_Total","EtaPhi_Total",0.,7.,-3.142,3.142,20,20);
+        htool->plot2D(track->pseudoRapidity(),track->p(),m_title+"/EtaP_Total","EtaP_Total",0.,7.,0.,100000.,20, 20);
+        htool->plot2D(track->pseudoRapidity(),track->momentum().Phi(),m_title+"/EtaPhi_Total","EtaPhi_Total",0.,7.,-3.142,3.142,20,20);
       }
       if(sc ){
-	htool->plot2D( state.x(),state.y() ,m_title+"/XYZ9000_Total", "XYZ9000_Total",-3000,3000.,-3000.,3000.0,100,100);
-	htool->plot2D( state2.x(),state2.y() ,m_title+"/XYZ2485_Total", "XYZ2485_Total",-1000,1000.,-1000.,1000.0,100,100);
+        htool->plot2D( state.x(),state.y() ,m_title+"/XYZ9000_Total", "XYZ9000_Total",-3000,3000.,-3000.,3000.0,100,100);
+        htool->plot2D( state2.x(),state2.y() ,m_title+"/XYZ2485_Total", "XYZ2485_Total",-1000,1000.,-1000.,1000.0,100,100);
       }
     }
     m_totTrack++;
@@ -182,13 +189,13 @@ void PrCounter2::initEvent(const IHistoTool* htool = NULL, const int nPV = 0){
           htool->plot1D(track->momentum().Phi(),m_title+"/Phi_Ghosts_P>3GeV_Pt>0.5GeV","Phi_Ghosts_P>3GeV_Pt>0.5GeV",-3.142,3.142,25);
           htool->plot1D(track->pt(),m_title+"/Pt_Ghosts_P>3GeV_Pt>0.5GeV","Pt_Ghosts_P>3GeV_Pt>0.5GeV",0.,10000.,50);
           htool->plot1D(track->p(),m_title+"/P_Ghosts_P>3GeV_Pt>0.5GeV","P_Ghosts_P>3GeV_Pt>0.5GeV",0.,100000.,50);
-	  htool->plot2D(track->pseudoRapidity(),track->p(),m_title+"/EtaP_Ghosts_P>3GeV_Pt>0.5GeV","EtaP_Ghosts_P>3GeV_Pt>0.5GeV",0.,7.,0.,100000.,20, 20);
-	  htool->plot2D(track->pseudoRapidity(),track->momentum().Phi(),m_title+"/EtaPhi_Ghosts_P>3GeV_Pt>0.5GeV","EtaPhi_Ghosts_P>3GeV_Pt>0.5GeV",0.,7.,-3.142,3.142,20,20);
-	  if(sc ){
-	    htool->plot2D( state.x(),state.y() ,m_title+"/XYZ9000_Ghosts_P>3GeV_Pt>0.5GeV", "XYZ9000_Ghosts_P>3GeV_Pt>0.5GeV",-3000,3000.,-3000.,3000.0,100,100);
-	    htool->plot2D( state2.x(),state2.y() ,m_title+"/XYZ2485_Ghosts_P>3GeV_Pt>0.5GeV", "XYZ2485_Ghosts_P>3GeV_Pt>0.5GeV",-1000,1000.,-1000.,1000.0,100,100);
-	  }
-	}
+          htool->plot2D(track->pseudoRapidity(),track->p(),m_title+"/EtaP_Ghosts_P>3GeV_Pt>0.5GeV","EtaP_Ghosts_P>3GeV_Pt>0.5GeV",0.,7.,0.,100000.,20, 20);
+          htool->plot2D(track->pseudoRapidity(),track->momentum().Phi(),m_title+"/EtaPhi_Ghosts_P>3GeV_Pt>0.5GeV","EtaPhi_Ghosts_P>3GeV_Pt>0.5GeV",0.,7.,-3.142,3.142,20,20);
+          if(sc ){
+            htool->plot2D( state.x(),state.y() ,m_title+"/XYZ9000_Ghosts_P>3GeV_Pt>0.5GeV", "XYZ9000_Ghosts_P>3GeV_Pt>0.5GeV",-3000,3000.,-3000.,3000.0,100,100);
+            htool->plot2D( state2.x(),state2.y() ,m_title+"/XYZ2485_Ghosts_P>3GeV_Pt>0.5GeV", "XYZ2485_Ghosts_P>3GeV_Pt>0.5GeV",-1000,1000.,-1000.,1000.0,100,100);
+          }
+        }
       }
       if(htool && m_writeHistos>0 ){
         htool->plot1D(nPV,m_title+"/nPV_Total_P>3GeV_Pt>0.5GeV","nPV_Total_P>3GeV_Pt>0.5GeV",-0.5,20.5,21);
@@ -196,12 +203,12 @@ void PrCounter2::initEvent(const IHistoTool* htool = NULL, const int nPV = 0){
         htool->plot1D(track->momentum().Phi(),m_title+"/Phi_Total_P>3GeV_Pt>0.5GeV","Phi_Total_P>3GeV_Pt>0.5GeV",-3.142,3.142,25);
         htool->plot1D(track->pt(),m_title+"/Pt_Total_P>3GeV_Pt>0.5GeV","Pt_Total_P>3GeV_Pt>0.5GeV",0.,10000.,50);
         htool->plot1D(track->p(),m_title+"/P_Total_P>3GeV_Pt>0.5GeV","P_Total_P>3GeV_Pt>0.5GeV",0.,100000.,50);
-	htool->plot2D(track->pseudoRapidity(),track->p(),m_title+"/EtaP_Total_P>3GeV_Pt>0.5GeV","EtaP_Ghosts_P>3GeV_Pt>0.5GeV",0.,7.,0.,100000.,20, 20);
-	htool->plot2D(track->pseudoRapidity(),track->momentum().Phi(),m_title+"/EtaPhi_Total_P>3GeV_Pt>0.5GeV","EtaPhi_Total_P>3GeV_Pt>0.5GeV",0.,7.,-3.142,3.142,20,20);
-	if(sc ){
-	    htool->plot2D( state.x(),state.y() ,m_title+"/XYZ9000_Total_P>3GeV_Pt>0.5GeV", "XYZ9000_Total_P>3GeV_Pt>0.5GeV",-3000,3000.,-3000.,3000.0,100,100);
-	    htool->plot2D( state2.x(),state2.y() ,m_title+"/XYZ2485_Total_P>3GeV_Pt>0.5GeV", "XYZ2485_Total_P>3GeV_Pt>0.5GeV",-1000,1000.,-1000.,1000.0,100,100);
-	  }
+        htool->plot2D(track->pseudoRapidity(),track->p(),m_title+"/EtaP_Total_P>3GeV_Pt>0.5GeV","EtaP_Ghosts_P>3GeV_Pt>0.5GeV",0.,7.,0.,100000.,20, 20);
+        htool->plot2D(track->pseudoRapidity(),track->momentum().Phi(),m_title+"/EtaPhi_Total_P>3GeV_Pt>0.5GeV","EtaPhi_Total_P>3GeV_Pt>0.5GeV",0.,7.,-3.142,3.142,20,20);
+        if(sc ){
+          htool->plot2D( state.x(),state.y() ,m_title+"/XYZ9000_Total_P>3GeV_Pt>0.5GeV", "XYZ9000_Total_P>3GeV_Pt>0.5GeV",-3000,3000.,-3000.,3000.0,100,100);
+          htool->plot2D( state2.x(),state2.y() ,m_title+"/XYZ2485_Total_P>3GeV_Pt>0.5GeV", "XYZ2485_Total_P>3GeV_Pt>0.5GeV",-1000,1000.,-1000.,1000.0,100,100);
+        }
       }
       m_totTrackTrigger++;
     }
@@ -220,7 +227,7 @@ void PrCounter2::initEvent(const IHistoTool* htool = NULL, const int nPV = 0){
 //  PLot into HistoTool
 //=========================================================================
 int PrCounter2::countAndPlot(const IHistoTool* htool,const LHCb::MCParticle* part, std::vector<bool> flags,
-                       std::vector<LHCb::LHCbID>& ids, const int nPV) {
+                             std::vector<LHCb::LHCbID>& ids, const int nPV) {
 
   if ( !m_validData ) return -1;
 
@@ -252,11 +259,11 @@ int PrCounter2::countAndPlot(const IHistoTool* htool,const LHCb::MCParticle* par
     if (LHCb::Track::TypeUnknown == m_trackType || tr->type()==m_trackType) {
       found = true;
       clone = trackList.size() - 1;
-      key = it->to()->key();  
+      key = it->to()->key();
       //pmeas   = trackList.begin()->to()->p();//
-     // ptmeas  = trackList.begin()->to()->pt();//
-     // etameas = trackList.begin()->to()->pseudoRapidity();//
-     // phimeas = trackList.begin()->to()->phi();//
+      // ptmeas  = trackList.begin()->to()->pt();//
+      // etameas = trackList.begin()->to()->pseudoRapidity();//
+      // phimeas = trackList.begin()->to()->phi();//
       break;
     }
   }
@@ -283,14 +290,14 @@ int PrCounter2::countAndPlot(const IHistoTool* htool,const LHCb::MCParticle* par
     if ( flags[kk] ) {
       m_wanted[kk] ++;
       if ( found ) {
-	m_counted[kk]++;
+        m_counted[kk]++;
         m_clone[kk] += clone;
         for ( InvIterator it = trackList.begin(); trackList.end() != it; ++it ) {
           const LHCb::Track* tr = it->to();
           if ( (m_trackType!=LHCb::Track::TypeUnknown) && (tr->type()!=m_trackType) ) continue;
-	  if ( !m_selector.empty() && !m_selector->accept( *tr ) ) continue;
+          if ( !m_selector.empty() && !m_selector->accept( *tr ) ) continue;
           m_purity[kk] += it->weight();
-	  unsigned int nbMeas = 0;
+          unsigned int nbMeas = 0;
           for ( std::vector<LHCb::LHCbID>::const_iterator itId = tr->lhcbIDs().begin();
                 tr->lhcbIDs().end() != itId; ++itId ) {
             if ( std::find( ids.begin(), ids.end(), *itId ) == ids.end() ) continue;
@@ -312,7 +319,7 @@ int PrCounter2::countAndPlot(const IHistoTool* htool,const LHCb::MCParticle* par
     }
   }
 
- 
+
   double prodx = part->originVertex()->position().X();
   double prody = part->originVertex()->position().Y();
   double docaz = -100.0;
@@ -344,7 +351,7 @@ int PrCounter2::countAndPlot(const IHistoTool* htool,const LHCb::MCParticle* par
   }
 
   for( unsigned int k = 0; flags.size() > k; ++k ) {
-     // -- Protect against nonphysical states
+    // -- Protect against nonphysical states
     if( isnan( state.x() ) || isnan( state.y() ) ) continue;
     if(!htool)break;
     if(m_writeHistos<(m_writeHisto[k]?1:2))continue;
@@ -361,41 +368,41 @@ int PrCounter2::countAndPlot(const IHistoTool* htool,const LHCb::MCParticle* par
       htool->plot2D(part->momentum().Eta(),part->momentum().P(),m_title+"/"+m_name[k]+"_EtaP_reconstructible",m_name[k]+"_EtaP_reconstructible",0.,7.,0.,100000.,20, 20);
       htool->plot2D(part->momentum().Eta(),part->momentum().Phi(),m_title+"/"+m_name[k]+"_EtaPhi_reconstructible",m_name[k]+"_EtaPhi_reconstructible",0.,7.,-3.142,3.142,20,20);
       if(sc){
-	htool->plot2D( state.x(),state.y() ,m_title+"/"+m_name[k]+"XYZ9000_reconstructible", "XYZ9000_reconstructible",-3000,3000.,-3000.,3000.0,100,100);
-	htool->plot2D( state2.x(),state2.y() ,m_title+"/"+m_name[k]+"XYZ2485_reconstructible", "XYZ2485_reconstructible",-1000,1000.,-1000.,1000.0,100,100);
+        htool->plot2D( state.x(),state.y() ,m_title+"/"+m_name[k]+"XYZ9000_reconstructible", "XYZ9000_reconstructible",-3000,3000.,-3000.,3000.0,100,100);
+        htool->plot2D( state2.x(),state2.y() ,m_title+"/"+m_name[k]+"XYZ2485_reconstructible", "XYZ2485_reconstructible",-1000,1000.,-1000.,1000.0,100,100);
       }
       if(mcq>0){
         htool->plot1D(part->momentum().Eta(),m_title+"/"+m_name[k]+"_Eta_pos_reconstructible",m_name[k]+"_Eta_pos_reconstructible",0.,7.,50);
         htool->plot1D(part->momentum().Phi(),m_title+"/"+m_name[k]+"_Phi_pos_reconstructible",m_name[k]+"_Phi_pos_reconstructible",-3.142,3.142,25);
-	htool->plot2D(part->momentum().Eta(),part->momentum().P(),m_title+"/"+m_name[k]+"_EtaP_pos_reconstructible",m_name[k]+"_EtaP_pos_reconstructible",0.,7.,0.,100000.,20, 20);
+        htool->plot2D(part->momentum().Eta(),part->momentum().P(),m_title+"/"+m_name[k]+"_EtaP_pos_reconstructible",m_name[k]+"_EtaP_pos_reconstructible",0.,7.,0.,100000.,20, 20);
         htool->plot2D(part->momentum().Eta(),part->momentum().Phi(),m_title+"/"+m_name[k]+"_EtaPhi_pos_reconstructible",m_name[k]+"_EtaPhi_pos_reconstructible",0.,7.,-3.142,3.142,20,20);
-	if(sc){
-	  htool->plot2D( state.x(),state.y() ,m_title+"/"+m_name[k]+"XYZ9000_pos_reconstructible", "XYZ9000_pos_reconstructible",-3000,3000.,-3000.,3000.0,100,100);
-	  htool->plot2D( state2.x(),state2.y() ,m_title+"/"+m_name[k]+"XYZ2485_pos_reconstructible", "XYZ2485_pos_reconstructible",-1000,1000.,-1000.,1000.0,100,100);
-	}
+        if(sc){
+          htool->plot2D( state.x(),state.y() ,m_title+"/"+m_name[k]+"XYZ9000_pos_reconstructible", "XYZ9000_pos_reconstructible",-3000,3000.,-3000.,3000.0,100,100);
+          htool->plot2D( state2.x(),state2.y() ,m_title+"/"+m_name[k]+"XYZ2485_pos_reconstructible", "XYZ2485_pos_reconstructible",-1000,1000.,-1000.,1000.0,100,100);
+        }
       }else{
         htool->plot1D(part->momentum().Eta(),m_title+"/"+m_name[k]+"_Eta_neg_reconstructible",m_name[k]+"_Eta_neg_reconstructible",0.,7.,50);
         htool->plot1D(part->momentum().Phi(),m_title+"/"+m_name[k]+"_Phi_neg_reconstructible",m_name[k]+"_Phi_neg_reconstructible",-3.142,3.142,25);
-	htool->plot2D(part->momentum().Eta(),part->momentum().P(),m_title+"/"+m_name[k]+"_EtaP_neg_reconstructible",m_name[k]+"_EtaP_neg_reconstructible",0.,7.,0.,100000.,20, 20);
+        htool->plot2D(part->momentum().Eta(),part->momentum().P(),m_title+"/"+m_name[k]+"_EtaP_neg_reconstructible",m_name[k]+"_EtaP_neg_reconstructible",0.,7.,0.,100000.,20, 20);
         htool->plot2D(part->momentum().Eta(),part->momentum().Phi(),m_title+"/"+m_name[k]+"_EtaPhi_neg_reconstructible",m_name[k]+"_EtaPhi_neg_reconstructible",0.,7.,-3.142,3.142,20,20);
-	if(sc){
-	  htool->plot2D( state.x(),state.y() ,m_title+"/"+m_name[k]+"XYZ9000_neg_reconstructible", "XYZ900_neg_reconstructible",-3000,3000.,-3000.,3000.0,100,100);
-	  htool->plot2D( state2.x(),state2.y() ,m_title+"/"+m_name[k]+"XYZ2485_neg_reconstructible", "XYZ2485_neg_reconstructible",-1000,1000.,-1000.,1000.0,100,100);
-	}
+        if(sc){
+          htool->plot2D( state.x(),state.y() ,m_title+"/"+m_name[k]+"XYZ9000_neg_reconstructible", "XYZ900_neg_reconstructible",-3000,3000.,-3000.,3000.0,100,100);
+          htool->plot2D( state2.x(),state2.y() ,m_title+"/"+m_name[k]+"XYZ2485_neg_reconstructible", "XYZ2485_neg_reconstructible",-1000,1000.,-1000.,1000.0,100,100);
+        }
       }
     }
-    if ( !found ) continue; 
+    if ( !found ) continue;
     htool->plot1D(nPV,m_title+"/"+m_name[k]+"_nPV_reconstructed",m_name[k]+"_nPV_reconstructed",-0.5,20.5,21);
     htool->plot1D(part->momentum().Eta(),m_title+"/"+m_name[k]+"_Eta_reconstructed",m_name[k]+"_Eta_reconstructed",0.,7.,50);
     htool->plot1D(part->momentum().Phi(),m_title+"/"+m_name[k]+"_Phi_reconstructed",m_name[k]+"_Phi_reconstructed",-3.142,3.142,25);
     htool->plot1D(part->momentum().Pt(),m_title+"/"+m_name[k]+"_Pt_reconstructed",m_name[k]+"_Pt_reconstructed",0.,10000.,50);
     htool->plot1D(part->momentum().P(),m_title+"/"+m_name[k]+"_P_reconstructed",m_name[k]+"_P_reconstructed",0.,100000.,50);
-     //
+    //
     //htool->plot1D(pmeas,m_title+"/"+m_name[k]+"_P_reconstructedmeasured",m_name[k]+"_P_reconstructedmeasured",0.,100000.,50);
     //htool->plot1D(ptmeas,m_title+"/"+m_name[k]+"_Pt_reconstructedmeasured",m_name[k]+"_Pt_reconstructedmeasured",0.,10000.,50);
     //htool->plot1D(etameas,m_title+"/"+m_name[k]+"_Eta_reconstructedmeasured",m_name[k]+"_Eta_reconstructedmeasured",0.,7.,50);
     //htool->plot1D(phimeas,m_title+"/"+m_name[k]+"_Phi_reconstructedmeasured",m_name[k]+"_Phi_reconstructedmeasured",-3.142,3.142,25);
- 
+
 
     if(m_writeHistos>1){
       htool->plot1D(nTrue,m_title+"/"+m_name[k]+"_expectedHits_reconstructed",m_name[k]+"_expectedHits_reconstructed",-0.5,20.5,21);
@@ -406,27 +413,27 @@ int PrCounter2::countAndPlot(const IHistoTool* htool,const LHCb::MCParticle* par
       htool->plot2D(part->momentum().Eta(),part->momentum().P(),m_title+"/"+m_name[k]+"_EtaP_reconstructed",m_name[k]+"_EtaP_reconstructed",0.,7.,0.,100000.,20, 20);
       htool->plot2D(part->momentum().Eta(),part->momentum().Phi(),m_title+"/"+m_name[k]+"_EtaPhi_reconstructed",m_name[k]+"_EtaPhi_reconstructed",0.,7.,-3.142,3.142,20,20);
       if(sc){
-	htool->plot2D( state.x(),state.y() ,m_title+"/"+m_name[k]+"XYZ9000_reconstructed", "XYZ9000_reconstructed",-3000,3000.,-3000.,3000.0,100,100);
-	htool->plot2D( state2.x(),state2.y() ,m_title+"/"+m_name[k]+"XYZ2485_reconstructed", "XYZ2485_reconstructed",-1000,1000.,-1000.,1000.0,100,100);
+        htool->plot2D( state.x(),state.y() ,m_title+"/"+m_name[k]+"XYZ9000_reconstructed", "XYZ9000_reconstructed",-3000,3000.,-3000.,3000.0,100,100);
+        htool->plot2D( state2.x(),state2.y() ,m_title+"/"+m_name[k]+"XYZ2485_reconstructed", "XYZ2485_reconstructed",-1000,1000.,-1000.,1000.0,100,100);
       }
       if(mcq>0){
         htool->plot1D(part->momentum().Eta(),m_title+"/"+m_name[k]+"_Eta_pos_reconstructed",m_name[k]+"_Eta_pos_reconstructed",0.,7.,50);
         htool->plot1D(part->momentum().Phi(),m_title+"/"+m_name[k]+"_Phi_pos_reconstructed",m_name[k]+"_Phi_pos_reconstructed",-3.142,3.142,25);
-	htool->plot2D(part->momentum().Eta(),part->momentum().P(),m_title+"/"+m_name[k]+"_EtaP_pos_reconstructed",m_name[k]+"_EtaP_pos_reconstructed",0.,7.,0.,100000.,20, 20);
+        htool->plot2D(part->momentum().Eta(),part->momentum().P(),m_title+"/"+m_name[k]+"_EtaP_pos_reconstructed",m_name[k]+"_EtaP_pos_reconstructed",0.,7.,0.,100000.,20, 20);
         htool->plot2D(part->momentum().Eta(),part->momentum().Phi(),m_title+"/"+m_name[k]+"_EtaPhi_pos_reconstructed",m_name[k]+"_EtaPhi_pos_reconstructed",0.,7.,-3.142,3.142,20,20);
-	if(sc){
-	  htool->plot2D( state.x(),state.y() ,m_title+"/"+m_name[k]+"XYZ9000_pos_reconstructed", "XYZ9000_pos_reconstructed",-3000,3000.,-3000.,3000.0,100,100);
-	  htool->plot2D( state2.x(),state2.y() ,m_title+"/"+m_name[k]+"XYZ2485_pos_reconstructed", "XYZ2485_pos_reconstructed",-1000,1000.,-1000.,1000.0,100,100);
-	}
+        if(sc){
+          htool->plot2D( state.x(),state.y() ,m_title+"/"+m_name[k]+"XYZ9000_pos_reconstructed", "XYZ9000_pos_reconstructed",-3000,3000.,-3000.,3000.0,100,100);
+          htool->plot2D( state2.x(),state2.y() ,m_title+"/"+m_name[k]+"XYZ2485_pos_reconstructed", "XYZ2485_pos_reconstructed",-1000,1000.,-1000.,1000.0,100,100);
+        }
       }else{
         htool->plot1D(part->momentum().Eta(),m_title+"/"+m_name[k]+"_Eta_neg_reconstructed",m_name[k]+"_Eta_neg_reconstructed",0.,7.,50);
         htool->plot1D(part->momentum().Phi(),m_title+"/"+m_name[k]+"_Phi_neg_reconstructed",m_name[k]+"_Phi_neg_reconstructed",-3.142,3.142,25);
-	htool->plot2D(part->momentum().Eta(),part->momentum().P(),m_title+"/"+m_name[k]+"_EtaP_neg_reconstructed",m_name[k]+"_EtaP_neg_reconstructed",0.,7.,0.,100000.,20, 20);
+        htool->plot2D(part->momentum().Eta(),part->momentum().P(),m_title+"/"+m_name[k]+"_EtaP_neg_reconstructed",m_name[k]+"_EtaP_neg_reconstructed",0.,7.,0.,100000.,20, 20);
         htool->plot2D(part->momentum().Eta(),part->momentum().Phi(),m_title+"/"+m_name[k]+"_EtaPhi_neg_reconstructed",m_name[k]+"_EtaPhi_neg_reconstructed",0.,7.,-3.142,3.142,20,20);
-	if(sc){
-	  htool->plot2D( state.x(),state.y() ,m_title+"/"+m_name[k]+"XYZ9000_neg_reconstructed", "XYZ9000_neg_reconstructed",-3000,3000.,-3000.,3000.0,100,100);
-	  htool->plot2D( state2.x(),state2.y() ,m_title+"/"+m_name[k]+"XYZ2485_neg_reconstructed", "XYZ2485_neg_reconstructed",-1000,1000.,-1000.,1000.0,100,100);
-	}
+        if(sc){
+          htool->plot2D( state.x(),state.y() ,m_title+"/"+m_name[k]+"XYZ9000_neg_reconstructed", "XYZ9000_neg_reconstructed",-3000,3000.,-3000.,3000.0,100,100);
+          htool->plot2D( state2.x(),state2.y() ,m_title+"/"+m_name[k]+"XYZ2485_neg_reconstructed", "XYZ2485_neg_reconstructed",-1000,1000.,-1000.,1000.0,100,100);
+        }
       }
     }
   }
@@ -440,20 +447,37 @@ int PrCounter2::countAndPlot(const IHistoTool* htool,const LHCb::MCParticle* par
 //=========================================================================
 void PrCounter2::printStatistics ( ) {
   if ( 0 == m_nEvent ) return;
+  std::string short_title = m_title;
 
   double totT = m_totTrack + 0.00000000001;
   double frac = 100. * double( m_totGhost ) / totT;
   m_title.resize( m_titleSize, ' ' );
   std::string strigger = "for P>3GeV,Pt>0.5GeV";
+  std::string short_trigger = strigger;
   strigger.resize( m_titleSize, ' ' );
 
-
   info() << "**** " << m_title
-         << format( "%7d tracks including       %7d ghosts [%4.1f %%], Event average %5.1f %% ****",
+         << format( "%7d tracks including       %7d ghosts [%4.2f %%], Event average %5.2f %% ****",
                     m_totTrack, m_totGhost, frac, 100. * m_fracGhost / m_nEvent ) << endmsg;
-  if(m_triggerNumbers) info() << "**** " << strigger 
-         << format( "%7d tracks including       %7d ghosts [%4.1f %%]  ****",
-                    m_totTrackTrigger, m_totGhostTrigger, 100.*m_totGhostTrigger/m_totTrackTrigger ) << endmsg;
+  if(m_triggerNumbers) info() << "**** " << strigger
+                              << format( "%7d tracks including       %7d ghosts [%4.2f %%]  ****",
+                                         m_totTrackTrigger, m_totGhostTrigger, 100.*m_totGhostTrigger/m_totTrackTrigger ) << endmsg;
+
+  std::FILE * table = nullptr;
+  if(m_writetex){
+    std::string outfile = m_texoutdir + m_texoutname + "_" + short_title + ".tex";
+    info() << "writing LaTeX table to " << outfile << endmsg;
+    table = std::fopen(outfile.c_str(),"w");
+    std::fprintf(table, "\\begin{table}[]\n");
+    std::fprintf(table, "\t\\begin{center}\n");
+    std::fprintf(table, "\t\\resizebox*{\\textwidth}{!}{\n");
+    std::fprintf(table, "\t\t\\begin{tabular}{rr@{ }lr@{ $[$}r@{ $\\%%]$}r@{ }l@{ $[$}r@{ $\\%%]$}l@{ }r@{ $\\%%$, hitEff: }r}\n");
+    std::fprintf(table, "\t\t\t\\multicolumn{1}{@{}l}{\\textbf{%s}} & %7d & \\multicolumn{3}{@{}l}{tracks including} & %7d & ghosts & %4.2f & \\multicolumn{3}{@{}l}{, Event average %5.2f \\%%}\\\\ \n",
+                 short_title.c_str(),m_totTrack, m_totGhost, frac, 100. * m_fracGhost / m_nEvent );
+    if(m_triggerNumbers)
+      std::fprintf(table, "\t\t\t\\multicolumn{1}{@{}l}{ %s } & %7d & \\multicolumn{3}{@{}l}{tracks including} & %7d & ghosts & %4.2f & \\multicolumn{3}{l}{ }\\\\ \n",
+                 short_trigger.c_str(),m_totTrackTrigger, m_totGhostTrigger, 100.*m_totGhostTrigger/m_totTrackTrigger);
+  }
 
   for ( unsigned int kk = 0; m_name.size() > kk; ++kk ) {
     if ( 0 == m_wanted[kk] ) continue;
@@ -466,11 +490,26 @@ void PrCounter2::printStatistics ( ) {
     std::string blank ( m_titleSize-(nameformat.size()), ' ');
     nameformat = blank + nameformat;
     info() << "  " << nameformat
-           << format( " :%8d from %8d [%5.1f %%] %6d clones [%4.1f %%]",
+           << format( " :%8d from %8d [%5.2f %%] %6d clones [%4.2f %%]",
                       m_counted[kk], m_wanted[kk], frac, m_clone[kk], clo);
     info() << format( ", purity:%6.2f %%, hitEff:%6.2f %%", purity, hitEff ) << endmsg;
+
+    if(m_writetex){
+      boost::replace_all(nameformat, "_", "\\_");
+      std::fprintf(table, "%s : & %8d & from & %8d & %5.2f & %6d & clones & %4.2f &, purity: & %6.2f & %6.2f \\%% \\\\ \n",
+                   nameformat.c_str(),m_counted[kk], m_wanted[kk], frac, m_clone[kk], clo, purity, hitEff);
+    }
   }
   info() << endmsg;
+
+  if(m_writetex){
+    std::fprintf(table, "\t\t\\end{tabular}\n");
+    std::fprintf(table, "\t }\n");
+    std::fprintf(table, "\t\\end{center}\n");
+    std::fprintf(table, "\\end{table}\n");
+    std::fclose(table);
+  }
+
 }
 
 //=============================================================================

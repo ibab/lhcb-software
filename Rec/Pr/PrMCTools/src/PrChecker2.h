@@ -34,6 +34,8 @@ class IHistoTool ;
  *   - VetoElectrons: Take electrons into account in numbers? (default: true)
  *   - TrackExtrapolation: Do track extrapolation into middle of T and TTstations for efficiency maps (default: false)
  *   - Upgrade: Gets hitLocation from link to MCParticle from "Pr/LHCbID" instead of "Pat/LHCbID" (default: true)
+ *   - WriteTexOutput: Writes the statistics table to a TeX file (default: false)
+ *     which is dumped to the location specified in TexOutputFolder
  * 
  * 
  * additional track location container can be added for PrCounter2 and PrTTCounter via:
@@ -198,6 +200,10 @@ private:
   bool m_trackextrapolation;
   
   bool m_upgrade;
+
+  bool m_writetexfile;
+  std::string m_texfilename;
+  std::string m_texfolder;
   
   enum recAs {
     isLong = 1,
