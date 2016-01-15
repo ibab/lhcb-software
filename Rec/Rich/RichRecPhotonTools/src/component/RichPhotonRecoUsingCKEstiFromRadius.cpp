@@ -23,8 +23,8 @@ PhotonRecoUsingCKEstiFromRadius::
 PhotonRecoUsingCKEstiFromRadius( const std::string& type,
                                  const std::string& name,
                                  const IInterface* parent )
-  : PhotonRecoBase  ( type, name, parent       ),
-    m_nomSatCKTheta ( Rich::NRadiatorTypes, -1 )
+  : PhotonRecoBase       ( type, name, parent       ),
+    m_minCalibRingRadius ( Rich::NRadiatorTypes, -1 )
 {
   // Job options
   declareProperty( "UseLightestHypoOnly", m_useLightestHypoOnly = false );
@@ -48,10 +48,10 @@ StatusCode PhotonRecoUsingCKEstiFromRadius::initialize()
   const StatusCode sc = PhotonRecoBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  acquireTool( "RichSmartIDTool",     m_idTool, nullptr, true  );
-  acquireTool( "RichMassHypoRings",   m_massHypoRings    );
-  acquireTool( "RichCherenkovAngle",  m_ckAngle          );
-  acquireTool( "RichParticleProperties",  m_richPartProp );
+  acquireTool( "RichSmartIDTool", m_idTool, nullptr, true  );
+  acquireTool( "RichMassHypoRings",        m_massHypoRings );
+  acquireTool( "RichCherenkovAngle",       m_ckAngle       );
+  acquireTool( "RichParticleProperties",   m_richPartProp  );
 
   m_pidTypes = m_richPartProp->particleTypes();
   if ( m_useLightestHypoOnly )
@@ -75,9 +75,6 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
                     const LHCb::RichRecPixel * pixel,
                     LHCb::RichGeomPhoton& gPhoton ) const
 {
-  // need to remove this nastiness ...
-  auto * nonconst_seg = const_cast<LHCb::RichRecSegment*>(segment);
-
   // return status. Default is OK until proved otherwise
   StatusCode sc = StatusCode::SUCCESS;
 
@@ -132,7 +129,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   {
 
     // Load the ring and select the point for this PID type
-    const auto * ring_tmp = m_massHypoRings->massHypoRing( nonconst_seg, pid );
+    const auto * ring_tmp = m_massHypoRings->massHypoRing( segment, pid );
 
     // check how close to threshold the ring is. Do not use if too close.
     if ( ring_tmp && ring_tmp->radius() > minCalibRingRadius(radiator) )

@@ -23,10 +23,6 @@
 #include "RichRecBase/IRichPhotonReconstruction.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 
-// RichKernel
-#include "RichKernel/RichTrackSegment.h"
-#include "RichKernel/RichGeomPhoton.h"
-
 namespace Rich
 {
   namespace Rec
@@ -69,23 +65,21 @@ namespace Rich
 
     private: // methods
 
-      /// Access the nominal saturated CK theta for the given radiator
-      inline double nomSatCKTheta( const Rich::RadiatorType rad ) const
+      /// Access maximum CK theta value
+      inline double maxCKThetaForFast( const Rich::RadiatorType rad ) const
       {
-        if ( m_nomSatCKTheta[rad] < 0 )
+        if ( m_maxCKThetaForFast[rad] < 0 )
         {
-          m_nomSatCKTheta[rad] = m_ckAngle->nominalSaturatedCherenkovTheta(rad);
+          m_maxCKThetaForFast[rad] = ( m_ckAngle->nominalSaturatedCherenkovTheta(rad) *
+                                       m_maxFracCKtheta[rad] );
         }
-        return m_nomSatCKTheta[rad]; 
+        return m_maxCKThetaForFast[rad]; 
       }
 
     private: // data
 
       /// Max fraction of saturated kaon CK theta angle to use fast reco tool
       std::vector<double> m_maxFracCKtheta;
-
-      /// Min fraction of saturated kaon CK theta angle to use fast reco tool
-      std::vector<double> m_minFracCKtheta;
 
       /// Cherenkov angle tool
       const ICherenkovAngle * m_ckAngle = nullptr;
@@ -96,8 +90,8 @@ namespace Rich
       /// Fast Photon reco tool
       const IPhotonReconstruction * m_recoFast = nullptr;
 
-      /// Cache (for speed) the nominal saturated CK theta values for each radiator
-      mutable std::vector<double> m_nomSatCKTheta;
+      /// Cache (for speed) the maximum CK theta value for the fast tool.
+      mutable std::vector<double> m_maxCKThetaForFast;
 
     };
 

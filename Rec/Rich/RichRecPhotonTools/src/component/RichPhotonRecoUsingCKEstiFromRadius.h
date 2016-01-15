@@ -16,6 +16,7 @@
 // STL
 #include <sstream>
 #include <limits>
+#include <vector>
 
 // Base class and interfaces
 #include "RichPhotonRecoBase.h"
@@ -28,10 +29,6 @@
 // Kernel
 #include "Kernel/RichSide.h"
 #include "Kernel/RichSmartID.h"
-
-// RichKernel
-#include "RichKernel/RichTrackSegment.h"
-#include "RichKernel/RichGeomPhoton.h"
 
 // VDT
 #include "vdt/atan2.h"
@@ -82,19 +79,14 @@ namespace Rich
 
     private: // methods
       
-            /// Access the nominal saturated CK theta for the given radiator
-      inline double nomSatCKTheta( const Rich::RadiatorType rad ) const
-      {
-        if ( m_nomSatCKTheta[rad] < 0 )
-        {
-          m_nomSatCKTheta[rad] = m_ckAngle->nominalSaturatedCherenkovTheta(rad);
-        }
-        return m_nomSatCKTheta[rad]; 
-      }
-
       inline double minCalibRingRadius( const Rich::RadiatorType rad ) const
       {
-        return nomSatCKTheta(rad) * m_minFracCKtheta[rad];
+        if ( m_minCalibRingRadius[rad] < 0 )
+        {
+          m_minCalibRingRadius[rad] = ( m_ckAngle->nominalSaturatedCherenkovTheta(rad) *
+                                        m_minFracCKtheta[rad] );
+        }
+        return m_minCalibRingRadius[rad];
       }
 
     private: // data
@@ -117,11 +109,11 @@ namespace Rich
       /// Option to only use lightest hypothesis for calibration points (default false)
       bool m_useLightestHypoOnly = false;
 
-      /// Cache (for speed) the nominal saturated CK theta values for each radiator
-      mutable std::vector<double> m_nomSatCKTheta;
-
       /// Min fraction of saturated CK theta angle for a ring to be used as a calibration source
       std::vector<double> m_minFracCKtheta;
+
+      /// Cache (for speed) the minimum CK ring radius for use as a calibration source
+      mutable std::vector<double> m_minCalibRingRadius;
 
     };
 

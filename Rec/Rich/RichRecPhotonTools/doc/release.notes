@@ -4,6 +4,10 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2016-01-15 - Chris Jones
+ - Improved caching in RichPhotonRecoUsingCKEstiFromRadius and
+   RichAdaptivePhotonReco to avoid a few runtime calculations.
+
 ! 2016-01-14 - Chris Jones
  - Add new Adaptive photon reconstruction tool that delegates to either the
    fast (Estimation from ray traced CK rings) or full (Quartic) photon

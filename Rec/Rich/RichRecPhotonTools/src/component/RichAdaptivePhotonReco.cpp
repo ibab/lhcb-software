@@ -23,12 +23,11 @@ AdaptivePhotonReco::
 AdaptivePhotonReco( const std::string& type,
                                  const std::string& name,
                                  const IInterface* parent )
-  : PhotonRecoBase  ( type, name, parent ),
-    m_nomSatCKTheta ( Rich::NRadiatorTypes, -1 )
+  : PhotonRecoBase      ( type, name, parent       ),
+    m_maxCKThetaForFast ( Rich::NRadiatorTypes, -1 )
 {
   // Job options                                          Aero R1gas R2gas
   declareProperty( "MaxFracCKTheta", m_maxFracCKtheta = { 0.0, 0.95, 0.95 } );
-  declareProperty( "MinFracCKTheta", m_minFracCKtheta = { 1.0, 0.00, 0.00 } );
 
   //setProperty( "Outputlevel", 1 );
 }
@@ -64,19 +63,14 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
                     const LHCb::RichRecPixel * pixel,
                     LHCb::RichGeomPhoton& gPhoton ) const
 {
-  // need to remove this ...
-  LHCb::RichRecSegment * seg = const_cast<LHCb::RichRecSegment*>(segment);
-
   // radiator for this segment
   const auto rad = segment->trackSegment().radiator();
-
-  // How far from CK theta saturation (for kaon) is this segment ?
-  const auto kaonFracCKThetaSat = 
-    ( m_ckAngle->avgCherenkovTheta(seg,Rich::Kaon) / nomSatCKTheta(rad) );
-      
+  
+  // Expected Kaon CK theta
+  const auto kaonCKTheta = m_ckAngle->avgCherenkovTheta(segment,Rich::Kaon);
+  
   // Delegate the photon reconstruction
-  return ( kaonFracCKThetaSat > m_minFracCKtheta[rad] &&
-           kaonFracCKThetaSat < m_maxFracCKtheta[rad] ? 
+  return ( kaonCKTheta < maxCKThetaForFast(rad) ? 
            m_recoFast : m_recoSlow ) -> reconstructPhoton(segment,pixel,gPhoton);  
 }
 
@@ -87,4 +81,3 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
 DECLARE_TOOL_FACTORY ( AdaptivePhotonReco )
 
 //=============================================================================
-
