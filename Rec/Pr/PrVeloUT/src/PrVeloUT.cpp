@@ -88,8 +88,8 @@ StatusCode PrVeloUT::execute() {
   outputTracks->reserve(200);
   put(outputTracks, m_outputTracksName);
 
-  LHCb::Tracks* inputTracks   = get<LHCb::Tracks>( m_inputTracksName ); 
-  if( !inputTracks ){
+  LHCb::Tracks* inputTracks   = getIfExists<LHCb::Tracks>( m_inputTracksName ); 
+  if(inputTracks  == nullptr){
     warning() << " Input Tracks container: " <<  m_inputTracksName << " is invalid! Skipping" << endmsg;
     return StatusCode::SUCCESS;
   }
