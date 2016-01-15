@@ -1,4 +1,4 @@
-// $Id: ParticleTransporter.h,v 1.8 2008-04-15 15:45:33 jpalac Exp $
+// $Id$
 #ifndef PARTICLETRANSPORTER_H
 #define PARTICLETRANSPORTER_H 1
 
