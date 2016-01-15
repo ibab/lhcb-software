@@ -5,6 +5,15 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2016-01-15 - Vanya Belyaev
+
+ - Unification of code between
+   LoKi::DistanceCalculator and LoKi::TrgDistanceCalcualtor
+   Essentially now the same  code is running, modulo
+   property setting  ( 'UseFastAlgorithms' ))
+   In short -  LoKi::TrgDistanceCalculator is LoKi::DistanceCalculator 
+   with no transportation and no iterations  
+
 !================= Phys/LoKiFitters v4r19 2016-01-14 =================
 
 ! 2016-01-14 - Vanya Belyaev

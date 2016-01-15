@@ -8,10 +8,6 @@
 #include <memory>
 #include <sstream>
 // ============================================================================
-// GaudiKernel
-// ============================================================================
-#include "GaudiKernel/Chrono.h"
-// ============================================================================
 // Event 
 // ============================================================================
 #include "Event/Particle.h"
@@ -241,9 +237,8 @@ bool LoKi::VertexFitter::stop_iter
 StatusCode LoKi::VertexFitter::_iterate_opt ( const size_t nMax ) const 
 {
   // timing measurements 
-  std::unique_ptr<Chrono> timer ;
-  if ( m_timing || msgLevel ( MSG::INFO ) )  
-  { timer.reset( new Chrono( chronoSvc() , name() + ":optimized" ) ) ; }
+  Chrono chrono ( timing() ? chronoSvc()           : nullptr       , 
+                  timing() ? name() + ":optimized" : std::string() ) ;
   //
   Gaudi::Vector3  x0    ;
   for ( size_t iIter = 0 ; iIter <= nMax + 1 ; ++iIter ) 
@@ -279,9 +274,8 @@ StatusCode LoKi::VertexFitter::_iterate
   const Gaudi::Vector3&      _x       ) const 
 {  
   // timing measurements 
-  std::unique_ptr<Chrono> timer ;
-  if ( m_timing || msgLevel ( MSG::INFO ) )  
-  { timer.reset( new Chrono( chronoSvc() , name() + ":iterate" ) ) ; }
+  Chrono chrono ( timing() ? chronoSvc()         : nullptr       , 
+                  timing() ? name() + ":iterate" : std::string() ) ;
   //
   // initial position
   const Gaudi::Vector3* x = &_x ;
@@ -361,9 +355,8 @@ StatusCode LoKi::VertexFitter::_iterate_rho
 ( const size_t               nIterMax ) const 
 {  
   // timing measurements 
-  std::unique_ptr<Chrono> timer ;
-  if ( m_timing || msgLevel ( MSG::INFO ) )  
-  { timer.reset( new Chrono( chronoSvc() , name() + ":rho" ) ) ; }
+  Chrono chrono ( timing() ? chronoSvc()       : nullptr       , 
+                  timing() ? name() + ":rho"   : std::string() ) ;
   //
   // initial position
   const Gaudi::Vector3*      x    = 0 ; 
@@ -415,9 +408,8 @@ StatusCode LoKi::VertexFitter::_iterate_rho
 StatusCode LoKi::VertexFitter::_seed ( const LHCb::Vertex* vertex ) const
 {
   // timing measurements 
-  std::unique_ptr<Chrono> timer ;
-  if ( m_timing || msgLevel ( MSG::INFO ) )  
-  { timer.reset( new Chrono( chronoSvc() , name() + ":seed" ) ) ; }
+  Chrono chrono ( timing() ? chronoSvc()       : nullptr       , 
+                  timing() ? name() + ":seed"  : std::string() ) ;
   //
   // check if vertex could be used as a seed 
   const Gaudi::XYZPoint&     p = vertex->position  () ;
@@ -613,9 +605,8 @@ StatusCode LoKi::VertexFitter::fit
   const LHCb::Particle::ConstVector& daughters ) const 
 {
   // timing measurements 
-  std::unique_ptr<Chrono> timer ;
-  if ( m_timing || msgLevel ( MSG::INFO ) )  
-  { timer.reset( new Chrono( chronoSvc() , name() + ":fit" ) ) ; }
+  Chrono chrono ( timing() ? chronoSvc()     : nullptr       , 
+                  timing() ? name() + ":fit" : std::string() ) ;
   //
   // load the data 
   StatusCode sc = _load ( daughters ) ;
@@ -960,8 +951,6 @@ LoKi::VertexFitter::VertexFitter
   , m_use_shortlived_as_seed  ( true   ) 
     /// The transport tolerance  
   , m_transport_tolerance     ( 10 * Gaudi::Units::micrometer )
-    /// perform CPU performance statistics 
-  , m_timing                  ( true   ) 
     /// Use optimized algorithm ?
   , m_use_optimized           ( true   )  // ATTENTION !!! 
     ///
@@ -1033,10 +1022,6 @@ LoKi::VertexFitter::VertexFitter
     ( "TransportTolerance"  , 
       m_transport_tolerance , 
       "The tolerance for particle transport" ) ;
-  declareProperty 
-    ( "MeasureCPUPerformace"    , 
-      m_timing                  , 
-      "Measure CPU perormance"  ) ;
   declareProperty 
     ( "UseOptimizedAlgorithm"   , 
       m_use_optimized           , 

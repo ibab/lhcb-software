@@ -31,6 +31,13 @@
 #include "Kernel/IParticleTransporter.h"
 #include "Kernel/IDistanceCalculator.h"
 // ============================================================================
+// KalmanFilter 
+// ============================================================================
+#include "KalmanFilter/VertexFit.h"
+#include "KalmanFilter/VertexFitWithTracks.h"
+// ============================================================================
+// Local 
+// ============================================================================
 #include "ParticleClassificator.h"
 // ============================================================================
 /** @file 
@@ -521,7 +528,7 @@ inline StatusCode LoKi::DistanceCalculatorBase::check
   const LHCb::VertexBase* v ) const 
 {
   if ( 0 == t ) 
-  { return _Error ( "LHCb::Track*      points to NULL", InvalidTrack     ) ; }
+  { return _Error ( "LHCb::Track*      points to NULL" , InvalidTrack     ) ; }
   if ( 0 == v ) 
   { return _Error ( "LHCb::VertexBase* points to NULL" , InvalidVertex   ) ; }
   //

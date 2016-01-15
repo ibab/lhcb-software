@@ -10,6 +10,10 @@
 #include <algorithm>
 #include <set>
 // ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/Chrono.h"
+// ============================================================================
 // Event 
 // ============================================================================
 #include "Event/Particle.h"
@@ -435,6 +439,10 @@ namespace LoKi
      */
     virtual StatusCode reFit ( LHCb::Particle& particle ) const  
     {
+      //
+      Chrono chrono ( timing() ? chronoSvc()       : nullptr       , 
+                      timing() ? name() + ":reFit" : std::string() ) ;
+      //
       // play a bit with extra-info
       if ( particle.hasInfo ( LHCb::Particle::Chi2OfParticleReFitter ) ) 
       { particle.eraseInfo ( LHCb::Particle::Chi2OfParticleReFitter )  ; }
@@ -610,8 +618,6 @@ namespace LoKi
     bool   m_use_shortlived_as_seed ;
     /// transport tolerance 
     double m_transport_tolerance    ; // the transport tolerance 
-    /// measure CPU performance 
-    bool   m_timing                 ; // perform timing measurements  
     /// use optimized algorithm ?
     bool m_use_optimized            ;
     // ========================================================================

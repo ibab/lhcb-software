@@ -30,16 +30,31 @@ LoKi::MessagingBase::MessagingBase
   const std::string& name,
   const IInterface* parent )
   : GaudiTool ( type , name , parent )
+  , m_myAlg      (       )  
+  , m_printMyAlg ( false ) 
+  , m_prints     ( 2     )  
+    //
+#ifndef NDEBUG 
+  , m_timing         ( true  )
+#else 
+  , m_timing         ( false )
+#endif   
+    //
 { 
   //
   declareProperty 
     ( "PrintMyAlg"        ,
-      m_printMyAlg = false ,
+      m_printMyAlg        ,
       "Print the name of ``associated'' algorithm" ) ;
   declareProperty 
     ( "MaxPrints"         ,
-      m_prints = 2        ,
+      m_prints            ,
       "Maximum number of prints" ) ;
+  declareProperty 
+    ( "MeasureCPUPerformance"   , 
+      m_timing                  , 
+      "Measure CPU perormance"  ) ;  
+  //
   if ( parent )
   {
     SmartIF<IAlgorithm> alg ( const_cast<IInterface*>(parent) ) ;
@@ -70,6 +85,9 @@ StatusCode LoKi::MessagingBase::initialize()
     SmartIF<IAlgorithm> alg ( const_cast<IInterface*> ( parent() ) ) ;
     if ( alg.isValid() ) { m_myAlg = alg->name() ; }
   }
+  //
+  // is message level is low enough, enforce CPU performance measurements
+  if ( msgLevel ( MSG::DEBUG ) ) { m_timing = true ; }
   //
   return sc;
 }

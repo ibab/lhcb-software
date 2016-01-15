@@ -46,7 +46,7 @@ LoKi::DistanceCalculatorBase::DistanceCalculatorBase
   const IInterface*  parent ) // the parent
   : LoKi::ParticleClassificator ( type , name , parent )
     // The name of particle transporter tool
-  , m_transporterName   ( "ParticleTransporter:PUBLIC" ) /// The name of particle transpoter tool
+  , m_transporterName   ( "DaVinci::ParticleTransporter:PUBLIC" ) // NB!!!
     // The transporter tool itself
   , m_transporter       ( 0 ) /// The transporter tool itself
     // The name of track state provider

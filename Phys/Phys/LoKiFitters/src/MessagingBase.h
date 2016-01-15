@@ -51,6 +51,13 @@ namespace LoKi
       const StatusCode&  code   = StatusCode( StatusCode::FAILURE, true ),
       const unsigned int prints = 2                                     ) const ;
     // ========================================================================
+  public:
+    // ========================================================================
+    /// measure CPU performance ?    
+    bool timing() const { return m_timing ; }  // measure CPU performance ?    
+    /// measure CPU performance ?    
+    void setTiming ( const bool  value ) { m_timing = value ; }
+    // ========================================================================
   private:
     // ========================================================================
     /// Access the current algorithm context name
@@ -69,6 +76,9 @@ namespace LoKi
     // ========================================================================    
     /// # of prints 
     unsigned int        m_prints  ;
+    // ========================================================================    
+    /// measure CPU performance ? 
+    bool                m_timing  ;  /// measure CPU performance ? 
     // ========================================================================    
   };
   // ==========================================================================  
