@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2016-01-15 Marian Stahl
+  - made tex table compatible with lhcb template, added caption and label
+
+! 2016-01-15 Marian Stahl
   - Added option to write the statistics table to a tex-file in PrChecker2
   - Implemented writing of statistics table to tex file in PrCounter2
   - rewrote some for-loops as C++11 range based loops in PrChecker2

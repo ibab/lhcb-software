@@ -454,6 +454,7 @@ void PrCounter2::printStatistics ( ) {
   m_title.resize( m_titleSize, ' ' );
   std::string strigger = "for P>3GeV,Pt>0.5GeV";
   std::string short_trigger = strigger;
+  boost::replace_all(short_trigger, ">", "$>$");
   strigger.resize( m_titleSize, ' ' );
 
   info() << "**** " << m_title
@@ -496,6 +497,7 @@ void PrCounter2::printStatistics ( ) {
 
     if(m_writetex){
       boost::replace_all(nameformat, "_", "\\_");
+      boost::replace_all(nameformat, ">", "$>$");
       std::fprintf(table, "%s : & %8d & from & %8d & %5.2f & %6d & clones & %4.2f &, purity: & %6.2f & %6.2f \\%% \\\\ \n",
                    nameformat.c_str(),m_counted[kk], m_wanted[kk], frac, m_clone[kk], clo, purity, hitEff);
     }
@@ -505,6 +507,8 @@ void PrCounter2::printStatistics ( ) {
   if(m_writetex){
     std::fprintf(table, "\t\t\\end{tabular}\n");
     std::fprintf(table, "\t }\n");
+    std::fprintf(table, "\t \\caption[%s %s]{%s %s}\\label{tab:%s_%s}\n"
+                 ,m_texoutname.c_str(),short_title.c_str(),m_texoutname.c_str(),short_title.c_str(),m_texoutname.c_str(),short_title.c_str());
     std::fprintf(table, "\t\\end{center}\n");
     std::fprintf(table, "\\end{table}\n");
     std::fclose(table);
