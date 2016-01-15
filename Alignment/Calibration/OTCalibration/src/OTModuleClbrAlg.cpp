@@ -85,7 +85,7 @@ OTModuleClbrAlg::OTModuleClbrAlg(const std::string& name, ISvcLocator* pSvcLocat
   std::vector<double> dtOpts= list_of(-30.0)(70.0)(200);
   std::vector<double> dtrOpts= list_of(-50.0)(50.0)(200);
   std::vector<double> dtvdOpts= list_of(-5.0)(5.0)(200)(-30.0)(70.0)(200);
-  std::vector<double> dt0Opts= list_of(-10.0)(20.0)(120);  
+  std::vector<double> dt0Opts= list_of(-10.0)(20.0)(120);
   std::vector<double> t0Opts= list_of(-10.0)(20.0)(120);
   if(histDriftTimeOpts.size() != 3) histDriftTimeOpts= dtOpts;
   if(histDriftTimeResidualOpts.size() != 3) histDriftTimeResidualOpts = dtrOpts;
@@ -505,12 +505,12 @@ void fMinuit(int&, double*, double& result, double* par, int)
         double pr0 = 1.0 - exp( - 2.0 * rho * std::sqrt(rmax2 - r_ * r_) );
 
         double sigmaR = sigmaRA * (1.0 - r0_) + sigmaRB * r0_;
-        double pr = exp( -0.5 * pow((r - r_) / sigmaR, 2) ) / sigmaR;
-        double prbg = exp( -0.5 * pow((r - r_) / sigmaRBG, 2) ) / sigmaRBG;
+        double pr = exp( -0.5 * std::pow((r - r_) / sigmaR, 2) ) / sigmaR;
+        double prbg = exp( -0.5 * std::pow((r - r_) / sigmaRBG, 2) ) / sigmaRBG;
 
         double t_ = t0 + tm * r0_ - 4.0 * tc * r0_ * (1 - r0_);
         sigmaT = ( (tm - 4.0 * tc) + 8.0 * tc * r0_ ) * sigmaR / rmax;
-        double pt = exp( -0.5 * pow((t - t_) / sigmaT, 2) ) / sigmaT;
+        double pt = exp( -0.5 * std::pow((t - t_) / sigmaT, 2) ) / sigmaT;
 
         ptr += weights[m] * pr0 * ((1.0 - bg) * pr + bg * prbg) * pt;
       }

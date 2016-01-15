@@ -3,6 +3,9 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Algorithm for OT rt and t0 calibration
 
+!2016-01-15 - Maurizio Martinelli
+- Fixed compilation errors (pow->std::pow)
+
 !========================= OTCalibration v1r11 2015-07-29 =========================
 !2015-06-09 - Lucia Grillo
 - OTIS calibration implemented in clbr_new.cpp
@@ -39,9 +42,9 @@ Todo: - implement the condition to update the database t0> 0.3ns?
       - check the timing, optimizing, can the full implementation go in Brunel online or we have to change completely?
 
 ! 2014-12-18 - Lucia Grillo
-- First draft of on-line t0 calibration - algorithm in the finalize. functions to read and write xml files, function to read t0 from 
+- First draft of on-line t0 calibration - algorithm in the finalize. functions to read and write xml files, function to read t0 from
 the LHCBCOND or SIMCOND. to be added: function to write the new values in the database, at the moment only the new xml files in the
- scripts directory are written 
+ scripts directory are written
 to try the calibration from scripts: gaudirun.py MC_BuJpsiK_JunSept2012.py 12143001_Bu_JpsiK_pfn.py
 
 !========================= OTCalibration v1r7 2014-08-23 =========================
@@ -105,9 +108,9 @@ to try the calibration from scripts: gaudirun.py MC_BuJpsiK_JunSept2012.py 12143
 ! 2009-09-06 Wouter Hulsbergen
   - cosmics analysis: Calo time is no longer stored in calo track segment, so
     I disabled using calo timing. This can be restored with a bit of work.
- 
+
 ! 2009-04-21 Johan Blouw
-  - imported this package into alignment software project as 
+  - imported this package into alignment software project as
     Calibration/OTCAlibration v1r0
 
 ! 2008-09-19
@@ -120,4 +123,3 @@ to try the calibration from scripts: gaudirun.py MC_BuJpsiK_JunSept2012.py 12143
   first import
 
 ! ====================================================================
- 
