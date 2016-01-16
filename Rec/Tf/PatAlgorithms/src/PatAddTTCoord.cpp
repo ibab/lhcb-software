@@ -399,7 +399,7 @@ void PatAddTTCoord::calculateChi2(double& chi2, const double& bestChi2,
     }
     
     // -- Remove last point (outlier) if bad fit...
-    if ( worstDiff > 0. && bestChi2 < chi2 ) {
+    if ( worstDiff > 0. && bestChi2 < chi2 && nHits > 3) {
       
       const PatTTHit* tt = *worst;
       const double w     = tt->hit()->weight();
