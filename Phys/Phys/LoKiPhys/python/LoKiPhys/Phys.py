@@ -43,8 +43,7 @@ from   LoKiPhys.functions   import LoKi,LHCb,cpp
 # =============================================================================
 ## Get number of child particles :
 def nChildren ( p ) :
-    """
-    Get the number of child particles :
+    """Get the number of child particles :
 
     >>> n = nChildren ( p )
     
@@ -84,10 +83,16 @@ LHCb.Particle .   daughters   =  children
 LHCb.Particle . __daughters__ =  children
 
 # =============================================================================
-## get the child 
+## get the child
+#  @code
+#  p = ...
+#  d1  = child ( p , 1 ) 
+#  d12 = child ( p , 1 , 2 )
+#  @code
+#  @attention indices start from 1.
+#  Index 0 corresponds to the particle itself. 
 def child ( p , *a ) :
-    """
-    Get the child for 'particle'
+    """Get the child for 'particle'
     
     >>> p = ...
     >>> d1  = child ( p , 1 ) 
@@ -105,16 +110,37 @@ LHCb.Particle  . __child__    = child
 LHCb.Particle  .   daughter   = child 
 LHCb.Particle  . __daughter__ = child 
 
-LHCb . Particle . __call__    = child  
-LHCb . Particle . __getitem__ = child  
+LHCb . Particle . __call__    = child
 
+
+# =============================================================================
+## get proper getitem method 
+#  @code
+#  p   = ...
+#  d1  = p[1] 
+#  d2  = p[2] 
+#  @code
+#  @attention indices start from 1.
+#  Index 0 corresponds to the particle itself. 
+def _p_getitem_ ( p , index ) :
+    """ Get children particle by index
+    >>> p   = ...
+    >>> d1  = p[1] 
+    >>> d2  = p[2]
+    ATTTENTION: indices start from 1.
+    Index 0 corresponds to the particle itself.    
+    """
+    nc = nChildren( p ) 
+    if not 0 <= index <= nc :
+        raise IndexError ('Index %s is outside the range [0,%d]' % ( index , nc ) )
+    return child ( p , index ) 
+
+LHCb . Particle . __getitem__ = _p_getitem_
 
 # =============================================================================
 ## Get all descendants from the given LHCb::Particle 
 def descendants ( o ) :
-    """
-    Get all descendants from the given LHCb::Particle
-
+    """Get all descendants from the given LHCb::Particle
     >>> o = ...
     >>> for p in descendants ( o ) :
     ...    print p
@@ -130,8 +156,7 @@ LHCb.Particle . __descendants__  =  descendants
 # =============================================================================
 ## Get the particles from the decay tree, which satisfy certain criteria
 def particles ( p , c ) :
-    """
-    Get the particles from the decay tree, which satisfy certrain criteria
+    """Get the particles from the decay tree, which satisfy certrain criteria
 
     >>> p = ...
     >>> pions = p.particles ( 'pi+' == ABSID )
@@ -146,8 +171,7 @@ particles . __doc__ += "\n\n" + LoKi.Dicts.Extract.particles . __doc__
 # =============================================================================
 ## Get the particles from the decay tree, which satisfy certain criteria
 def protoparticles ( p , c ) :
-    """
-    Get the protoparticles from the decay tree, which satisfy certrain criteria
+    """Get the protoparticles from the decay tree, which satisfy certrain criteria
 
     >>> p = ...
     >>> pion_pps = p.protoparticles ( 'pi+' == ABSID )
@@ -160,8 +184,7 @@ def protoparticles ( p , c ) :
 # =============================================================================
 ## Get the tarcks from the decay tree, which satisfy certain criteria
 def tracks ( p , *c ) :
-    """
-    Get the tracks from the decay tree, which satisfy certrain criteria
+    """Get the tracks from the decay tree, which satisfy certrain criteria
 
     >>> p = ...
     >>> pion_trks = p.tracks ( 'pi+' == ABSID )
@@ -202,8 +225,7 @@ LHCb.Particle .getTracks         = tracks
 # =============================================================================
 ## Count number of 'interesting' elements in the decay tree or container,
 def count_if ( s , *a ) :
-    """
-    Count number of 'interesting' elements in the decay tree or container,
+    """Count number of 'interesting' elements in the decay tree or container,
     which satisfy certain criteria
 
     >>> o = ...
@@ -217,8 +239,7 @@ count_if . __doc__ += "\n\n" + LoKi.Dicts.Algs.count_if . __doc__
 # =============================================================================
 ## Check the presence of 'interesting' elements in the decay tree or container,
 def found ( s , *a ) :
-    """
-    check the presence of 'interesting' elements in the decay tree or container,
+    """Check the presence of 'interesting' elements in the decay tree or container,
     which satisfy certain criteria
 
     >>> o = ...
@@ -232,8 +253,7 @@ found . __doc__ += "\n\n" + LoKi.Dicts.Algs.found . __doc__
 # =============================================================================
 ## Accumulate through the decay tree or container,
 def accumulate  ( s , *a ) :
-    """
-    Accumulate through the decay tree or container,
+    """Accumulate through the decay tree or container,
 
     >>> o = ...
     >>> ptOfAllPions= accumulate ( o , PT , 'pi+' == ABSID )
@@ -246,8 +266,7 @@ accumulate. __doc__ += "\n\n" + LoKi.Dicts.Algs.accumulate . __doc__
 # =============================================================================
 ## Find the minimal value through decay tree or  container  
 def min_value ( s , *a ) :
-    """
-    Find the minimal value through decay tree or  container  
+    """Find the minimal value through decay tree or  container  
 
     >>> o = ...
     >>> minPT = min_value ( o , PT , 'pi+' == ABSID )
@@ -260,8 +279,7 @@ min_value. __doc__ += "\n\n" + LoKi.Dicts.Algs.min_value . __doc__
 # =============================================================================
 ## Find the maximal value through decay tree or  container  
 def max_value ( s , *a ) :
-    """
-    Find the maximal value through decay tree or  container  
+    """Find the maximal value through decay tree or  container  
 
     >>> o = ...
     >>> maxPT = max_value ( o , PT , 'pi+' == ABSID )
@@ -274,8 +292,7 @@ max_value. __doc__ += "\n\n" + LoKi.Dicts.Algs.max_value . __doc__
 # =============================================================================
 ## Find the minimal element through decay tree or  container  
 def min_element ( s , *a ) :
-    """
-    Find the minimal element through decay tree or  container  
+    """Find the minimal element through decay tree or  container  
 
     >>> o = ...
     >>> pion = min_element ( o , PT , 'pi+' == ABSID )
@@ -288,8 +305,7 @@ min_element. __doc__ += "\n\n" + LoKi.Dicts.Algs.min_element . __doc__
 # =============================================================================
 ## Find the maximal element through decay tree or  container  
 def max_element ( s , *a ) :
-    """
-    Find the maximal element through decay tree or  container  
+    """Find the maximal element through decay tree or  container  
 
     >>> o = ...
     >>> pion = max_element ( o , PT , 'pi+' == ABSID )
@@ -319,8 +335,7 @@ LHCb.Particle . __accumulate__  = accumulate
 # =============================================================================
 ## print the decay  
 def printDecay ( s , *a ) :
-    """
-    Print the decay of LHCb::Particle
+    """Print the decay of LHCb::Particle
 
     >>> p = ...
     >>> printDecay ( p )
@@ -430,7 +445,7 @@ def _print_ ( self                                     ,
               bg       = cpp.MSG.RED                   ) :
     
     """
-    Define the print functions for some MC-objects
+    Define the print functions for some objects
     for details see LoKi::DecayChain 
     """
     _printer = LoKi.DecayChain ( maxDepth ,
