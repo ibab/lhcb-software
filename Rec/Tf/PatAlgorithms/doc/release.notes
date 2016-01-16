@@ -3,6 +3,10 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+
+! 2016-01-16 - Michel De Cian
+- Revert previous commit of PatAddTTCoord, as it might cause not understood effects.
+
 ! 2016-01-14 - Michel De Cian
 - Small speed improvement in PatAddTTCoord.
 

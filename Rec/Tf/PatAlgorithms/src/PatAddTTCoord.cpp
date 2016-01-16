@@ -190,7 +190,7 @@ StatusCode PatAddTTCoord::returnTTClusters( LHCb::State& state, PatTTHits& ttHit
     double dist = 0;
     chi2 = 1.e20;
     
-    calculateChi2(chi2, bestChi2, dist, p, ttHits.size() );
+    calculateChi2(chi2, bestChi2, dist, p );
 
     // -- If this group has a better chi2 than all the others
     // -- and is at least as large as all the others, then make this group the new candidate
@@ -289,7 +289,7 @@ void PatAddTTCoord::selectHits(const LHCb::State& state, const double p){
 // Calculate Chi2
 //=========================================================================
 void PatAddTTCoord::calculateChi2(double& chi2, const double& bestChi2,
-                                  double& finalDist, const double& p, const unsigned int bestSize ){
+                                  double& finalDist, const double& p){
 
   // -- Fit a straight line to the points and calculate the chi2 of the hits with respect to the fitted track
 
@@ -399,7 +399,7 @@ void PatAddTTCoord::calculateChi2(double& chi2, const double& bestChi2,
     }
     
     // -- Remove last point (outlier) if bad fit...
-    if ( worstDiff > 0. && bestChi2 < chi2 && nHits > bestSize ) {
+    if ( worstDiff > 0. && bestChi2 < chi2 ) {
       
       const PatTTHit* tt = *worst;
       const double w     = tt->hit()->weight();
