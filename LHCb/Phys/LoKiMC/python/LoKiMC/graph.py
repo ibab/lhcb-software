@@ -107,10 +107,13 @@ class MCDecayGraph ( object ) :
 
         nid = self.node_id ( p )
         if nid in self._nodes : return nid 
-
-        nid = nid.replace ( ':' , '/' )
-        nid = nid.replace ( '_' , '/' )
-        nid = nid.replace ( '#' , '/' )
+        
+        nid = nid.replace ( ':'       , '/' )
+        nid = nid.replace ( '_'       , '/' )
+        nid = nid.replace ( '#'       , '/' )
+        nid = nid.replace ( '<'       , ''  )
+        nid = nid.replace ( '>'       , ''  )
+        nid = nid.replace ( 'Unknown' , ''  )
 
         # create new node
         node = pydot.Node ( name      = nid       ,
