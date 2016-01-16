@@ -41,23 +41,41 @@ GaudiHistoAlg ( name , pSvcLocator ),
   declareProperty( "MaxChi2InTrack",      m_maxChi2InTrack       = 5.5                          ); 
   declareProperty( "TolXInf",             m_tolXInf              = 0.5 * Gaudi::Units::mm       );
   declareProperty( "TolXSup",             m_tolXSup              = 8.0 * Gaudi::Units::mm       );
-  declareProperty( "MinXPlanes",          m_minXPlanes           = 5                            );
+  //  declareProperty( "TolXInfIN",           m_tolXInfIN            = 0.5 * Gaudi::Units::mm       );
+  //declareProperty( "TolXSupIN",           m_tolXSupIN            = 8.0 * Gaudi::Units::mm       );
+  declareProperty( "MinXPlanes",          m_minXPlanes           = 4                            );
+  declareProperty( "MinSPlanes",          m_minSPlanes           = 4                            );
+  declareProperty( "MinTPlanes",          m_minTPlanes           = 9                            );
   declareProperty( "MaxChi2PerDoF",       m_maxChi2PerDoF        = 4.0                          ); 
   declareProperty( "MaxParabolaSeedHits", m_maxParabolaSeedHits  = 4                            );
   declareProperty( "TolTyOffset",         m_tolTyOffset          = 0.002                        ); 
   declareProperty( "TolTySlope",          m_tolTySlope           = 0.015                        );
-  declareProperty( "MaxIpAtZero",         m_maxIpAtZero          = 5000.                        );
+  declareProperty( "MaxIpAtZero",         m_maxIpAtZero          = 6000.                        );
+  declareProperty( "MaxIpAtZeroIN",       m_maxIpAtZeroIN        = 2500.                        );
   declareProperty( "BestDist",            m_bestDist             = 10.0                         );//added
   declareProperty( "UseFix",              m_useFix               = true                         );//added 
   declareProperty( "TolTriangle",         m_tolTriangle          = 10.* Gaudi::Units::mm        );//added 
   declareProperty( "TolYOffset",          m_tolYOffset           = 100000.* Gaudi::Units::mm    );//added 
   declareProperty( "TolXStereo",          m_tolXStereo           = 2700.* Gaudi::Units::mm      );//added
+  declareProperty( "TolXStereoIN",        m_tolXStereoIN         = 500.* Gaudi::Units::mm       );//added
   declareProperty( "TolCoord" ,           m_coord                = 0.005                        );//added
   // Parameters for debugging
   declareProperty( "DebugToolName",       m_debugToolName         = ""                          );
   declareProperty( "WantedKey",           m_wantedKey             = -100                        );
   declareProperty( "TimingMeasurement",   m_doTiming              = false                       );
   declareProperty( "PrintSettings",       m_printSettings         = false                       );
+  //Parameter Track Model                                                                                                                              
+  declareProperty( "UseCubicCorrection",  m_useCubic              = true                        );
+  declareProperty( "dRatio",              m_dRatio                = -0.000262                   ); 
+  declareProperty( "CConst",              m_ConstC                =  2.458e8                    );  
+  declareProperty( "UseCorrPosition",     m_useCorrPos            = true                        ); 
+  declareProperty( "maxChi2Hits_high",    m_maxChi2HitFullFitHigh = 5.5                         );
+  declareProperty( "maxChi2Hits_low",     m_maxChi2HitFullFitLow  = 2.5                         );
+  declareProperty( "maxYatZeroLow",       m_maxY0Low              = 70.                         );
+  declareProperty( "maxYatzRefLow",       m_maxYZrefLow           = 700.                        );
+  declareProperty( "maxChi2HitsX",        m_maxChi2HitsX          = 5.5                         );
+
+
 }
 //=============================================================================
 // Destructor
@@ -76,6 +94,8 @@ StatusCode PrSeedingXLayers::initialize() {
   m_hitManager = tool<PrHitManager>( m_hitManagerName );
   m_hitManager->buildGeometry();
   m_geoTool = tool<PrGeometryTool>("PrGeometryTool");
+  m_zReference = m_geoTool->zReference();
+  
 
   m_debugTool   = 0;
   if ( "" != m_debugToolName ) {
@@ -379,12 +399,166 @@ bool PrSeedingXLayers::fitTrack( PrSeedTrack& track ) {
   return false;
 }
 
+//=========================================================================
+//  Fit the X track, return OK if fit sucecssfull
+//=========================================================================
+bool PrSeedingXLayers::fitXProjection(PrSeedTrack& track ){
+  if (msgLevel(MSG::DEBUG)) debug()<<"Fitting"<<endmsg;
+
+  double mat[6];
+  double rhs[3];
+  const double zRef = m_zReference;
+  // if(m_useCubic) track.setdRatio(m_dRatio);                                                                                                             
+  for(int loop = 0;3>loop;++loop)
+    {
+      std::fill(mat,mat+6,0.);
+      std::fill(rhs,rhs+3,0.);
+      for( PrHits::iterator itH = track.hits().begin(); track.hits().end() != itH; ++itH ){
+	const double dRatio = track.dRatio();
+	double w = (*itH)->w();//squared                                                                                                                     
+	if(m_SlopeCorr){
+	  track.setSlopeCorr( true);
+	  double Corr = std::cos( track.xSlope( (*itH)->z()));
+	  if(loop ==0) Corr = 1.;
+	  w = w*(Corr*Corr);
+	}
+	const double dz= 0.001*((*itH)->z() - zRef);
+	const double deta = dz*dz*(1. + dRatio*dz);
+	const double dist = track.distance( *itH );
+	if (msgLevel(MSG::DEBUG)) debug()<<"Loop \t"<<loop<<"\n Distance From Hit \t"<<dist<<endmsg;
+	mat[0]+= w;
+	mat[1]+= w * dz;   mat[2]+= w * dz * dz;
+	mat[3]+= w * deta; mat[4]+= w * dz * deta;  mat[5]+= w * deta * deta;
+	rhs[0]+= w * dist;
+	rhs[1]+= w * dist * dz;
+	rhs[2]+= w * dist * deta;
+      }
+      ROOT::Math::CholeskyDecomp<double,3> decomp(mat);
+      if(!decomp){
+	return false;
+      }
+      //Solve linear system                                                                                                                                  
+      decomp.Solve(rhs);
+      rhs[1]*=1.e-3;
+      rhs[2]*=1.e-6;
+      if (msgLevel(MSG::DEBUG)) debug()<<"Loop \t"<<loop<<"\n a = \t"<<rhs[0]<<"\n b = \t"<<rhs[1]<<"\n c = \t"<<rhs[2]<<endmsg;
+      // protect against unreasonable track parameter corrections                                                                                            
+      // (check that out)                                                                                                                                    
+      if(std::fabs(rhs[0]) > 1.e4 || std::fabs(rhs[1]) > 5. ||
+	 std::fabs(rhs[2]) > 1.e-3 ) return false;
+      //Small corrections                                                                                                                                    
+      track.updateParameters(rhs[0],rhs[1],rhs[2],0.,0.);
+      if(loop==0 && m_useCubic){
+	track.setdRatio(m_dRatio);
+      }
+      //Put back later faster maybe                                                                                                                          
+      if(loop >0 && std::abs(rhs[0]) < 5e-5 && std::abs(rhs[1]) < 5e-8 &&
+	 std::abs(rhs[2]) < 5e-11){
+	break;
+      }
+    }
+  //Compute some values on the track                                                                                                                       
+  double maxChi2 = 0.;
+  for ( PrHits::iterator itH = track.hits().begin(); track.hits().end() != itH; ++itH ) 
+    {
+      double chi2_onHit = track.chi2( *itH );
+      if ( chi2_onHit > maxChi2 ){
+	maxChi2 = chi2_onHit;
+      }
+    }
+  // double X0 = track.ax() - track.bx()*m_geoTool->zReference()+track.cx()*m_ConstC;                                                                      
+  double X0 = track.ax() - track.bx()*m_zReference+track.cx()*m_ConstC;
+
+  track.setX0(X0);
+  track.setMaxChi2(maxChi2);
+  return ( m_maxChi2HitsX > maxChi2 );
+}
+
+//=========================================================================                                                                                
+//  Fit the track, return OK if fit sucecssfull                                                                                                            
+//=========================================================================                                                                                
+bool PrSeedingXLayers::fitSimultaneouslyXY( PrSeedTrack& track, int refit){
+
+  if( track.nx() <m_minXPlanes || track.ny() <m_minSPlanes ) return false;
+  double mat[15];
+  double rhs[5];
+
+  const double zRef = m_zReference;// m_geoTool->zReference();                                                                                             
+  for ( int loop = refit; 3 > loop ; ++loop ){
+    if(loop ==1 && m_useCubic && m_useCorrPos){
+      double RadiusPosition = std::sqrt((0.0005*0.0005*track.ax()*track.ax() + 0.001*0.001*track.y(zRef)*track.y(zRef)));
+      double dRatioPos = -1.*(2.633e-4 - 3.59957e-6*RadiusPosition + 4.7312e-5*RadiusPosition*RadiusPosition);
+      track.setdRatio(dRatioPos);
+    }
+
+    std::fill(mat,mat+15,0.);
+    std::fill(rhs,rhs+5,0.);
+    for( PrHits::iterator itH = track.hits().begin(); track.hits().end() != itH; ++itH ){
+      double w = (*itH)->w();
+      if( m_SlopeCorr && loop >0){
+        const double Corr = std::cos(track.xSlope( (*itH)->z()) );
+        track.setSlopeCorr( true);
+        w = w*(Corr*Corr);
+      }
+      const double dxdy = (*itH)->dxDy();
+      const double yOnTrack = track.yOnTrack( (*itH) ) ;
+      const double   dz = 0.001*((*itH)->z( yOnTrack ) - zRef);
+      const double dRatio = track.dRatio();
+      const double deta = dz*dz*(1. + dz*dRatio);
+      const double wdz = w * dz;
+      const double weta = w * deta;
+      const double wdxdy = w * dxdy;
+      const double wdxdydz = wdxdy * dz;
+      const double dist = track.distance(*itH);
+      mat[0] += w;
+      mat[1] += wdz;  mat[2] += wdz * dz;
+      mat[3] += weta; mat[4] += weta * dz; mat[5] += weta * deta;
+      mat[6] -= wdxdy;mat[7] -= wdxdydz;   mat[8] -= wdxdy * deta;  mat[9] += wdxdy * dxdy;
+      mat[10] -= wdxdydz; mat[11] -= wdxdydz * dz;mat[12] -= wdxdydz * deta;mat[13] += wdxdydz * dxdy; mat[14] += wdxdydz * dz * dxdy;
+
+      // fill right hand side                                                                                                                             
+      rhs[0] += w * dist;
+      rhs[1] += wdz * dist;
+      rhs[2] += weta * dist;
+      rhs[3] -= wdxdy * dist;
+      rhs[4] -= wdxdydz * dist;
+    }//Loop over Hits to fill the matrix                                                                                                                   
+    ROOT::Math::CholeskyDecomp<double, 5> decomp(mat);
+    if (!decomp) return false;
+    decomp.Solve(rhs);
+    rhs[1]*=1.e-3;
+    rhs[2]*=1.e-6;
+    rhs[4]*=1.e-3;
+    rhs[3]-=rhs[4]*zRef;
+    if( loop >0 &&(std::fabs(rhs[0]) > 1e4 || std::fabs(rhs[1]) > 5. ||
+                   std::fabs(rhs[2]) > 1e-3 || std::fabs(rhs[3]) > 1e4 || std::fabs(rhs[4]) > 1.)) return false;
+    track.updateParameters(rhs[0],rhs[1],rhs[2],rhs[3],rhs[4]);
+  }
+  double maxChi2 =0.;
+  for( PrHits::iterator itH = track.hits().begin(); track.hits().end() != itH; ++itH ){
+    double chi2_onHit = track.chi2( *itH);
+    if ( chi2_onHit > maxChi2 ){
+      maxChi2 = chi2_onHit;
+    }
+  }//Set Max Chi2DoF                                                                                                                                       
+  double X0 = track.ax() - track.bx()*m_zReference+track.cx()*m_ConstC;
+  track.setX0(X0);
+  track.setMaxChi2(maxChi2);
+  if( (track.hits().size()>10) && maxChi2<m_maxChi2HitFullFitHigh) return true;
+  if( std::fabs(track.y(0.))< m_maxY0Low &&
+      maxChi2<m_maxChi2HitFullFitLow &&
+      std::fabs(track.y(zRef)) < m_maxYZrefLow ) return true;
+  return false;
+}
+
 
 //=========================================================================
 //  Remove the worst hit and refit.
 //=========================================================================
-bool PrSeedingXLayers::removeWorstAndRefit ( PrSeedTrack& track ) {
-  float maxChi2 = 0.;
+bool PrSeedingXLayers::removeWorstAndRefit ( PrSeedTrack& track, bool xonlyFit ) {
+
+  float maxChi2 = -1.;
+  
   PrHits::iterator worst = track.hits().begin();
   for ( PrHits::iterator itH = track.hits().begin(); track.hits().end() != itH; ++itH ) {
     float chi2 = track.chi2( *itH );
@@ -394,7 +568,18 @@ bool PrSeedingXLayers::removeWorstAndRefit ( PrSeedTrack& track ) {
     }
   }
   track.hits().erase( worst );
-  return fitTrack( track );
+
+  if (xonlyFit)  return fitXProjection(track); 
+  else{
+    if( (*worst)->isX()){
+      track.setnXnY( track.nx()-1, track.ny());
+    }else{
+      track.setnXnY( track.nx(), track.ny()-1);
+    }
+    if( track.nx() <m_minXPlanes || track.ny() <m_minSPlanes ) return false;
+    return fitSimultaneouslyXY(track, 1);
+  }
+  return false;
 }
 //=========================================================================
 //  Set the chi2 of the track
@@ -493,17 +678,18 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
     //Case 3
     if ( 2 == iCase ) lastZone  = 16 + part; //lastZone = 1st X-layer in T3
 
-    if (m_debugTool){
-      info()<<"Currently in case "<<iCase<<" . First zone "<<firstZone<<" . Last zone "<<lastZone<<endmsg;
-     }
+    debug()<<"Currently in case "<<iCase<<" . First zone "<<firstZone<<" . Last zone "<<lastZone<<endmsg;
       
      //Load of Hits on zones
     PrHitZone* fZone = m_hitManager->zone( firstZone );
     PrHitZone* lZone = m_hitManager->zone( lastZone  );
+    double invDeltaz= 1./ (lZone->z() - fZone->z() );
+    double zRatio =  lZone->z(0.) / fZone->z(0.);
+
     PrHits& fHits = fZone->hits();
     PrHits& lHits = lZone->hits();
 
-    float zRatio =  lZone->z(0.) / fZone->z(0.);
+
     
 #ifdef DEBUG_HISTO
     plot(zRatio,"zRatio","zRatio",0.,2,100);
@@ -514,10 +700,12 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
     
     
     std::vector<PrHitZone*> xZones; 
-    xZones.reserve(12);
+    xZones.reserve(10);
     for ( int kk = firstZone+2; lastZone > kk ; kk += 2 ) {
       if ( m_hitManager->zone( kk )->isX() ) xZones.push_back( m_hitManager->zone(kk) );
     }
+
+
     //Last zone Hits iterator begin
     PrHits::iterator itLBeg = lHits.begin();
     // -- Define the iterators for the "in-between" layers
@@ -526,36 +714,30 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
 
     //Loop over first Zone hits to define last Zone hit search window
     for ( PrHits::iterator itF = fHits.begin(); fHits.end() != itF; ++itF ) {
-      if ( 0 != iCase && (*itF)->isUsed() ) continue;
+      //if ( 0 != iCase && (*itF)->isUsed() ) continue;
       float minXl = (*itF)->x() * zRatio - m_maxIpAtZero * ( zRatio - 1 );
       float maxXl = (*itF)->x() * zRatio + m_maxIpAtZero * ( zRatio - 1 );
+      
+      if( (*itF)->id().ftID().module()>9 ){
+        minXl = (*itF)->x() * zRatio - m_maxIpAtZeroIN * ( zRatio - 1 );
+        maxXl = (*itF)->x() * zRatio + m_maxIpAtZeroIN * ( zRatio - 1 );
+      }
+      
       
 #ifdef DEBUG_HISTO
       plot(minXl, "minXl", "minXl", -6000, 6000, 100); 
       plot(maxXl, "maxXl", "maxXl", -6000, 6000, 100);
 #endif     
-       itLBeg = std::lower_bound( lHits.begin(), lHits.end(), minXl, lowerBoundX() );
-       
-       
-      //Was in Old Version
-      //while ( itLBeg != lHits.end() && (*itLBeg)->x() < minXl ) 
-      //{
-      //  ++itLBeg;
-      //  if ( lHits.end() == itLBeg ) break;
-      //}
+      itLBeg = std::lower_bound( lHits.begin(), lHits.end(), minXl, lowerBoundX() );
       
       PrHits::iterator itL = itLBeg;
       //Loop in last zone hits up to the maxXl or end of Hit list
       while ( itL != lHits.end() && (*itL)->x() < maxXl ) {
-        //find hits in the last zone search window [minXl,maxXl]
-        if ( 0 != iCase && (*itL)->isUsed()) {
-          ++itL;
-          continue; 
-        }
+
         // tx = coefficient of the line connecting the hits found in first and last zones
         // x0 = offset of the line connecting the hits found in fist and last zones
-        float tx = ((*itL)->x() - (*itF)->x()) / (lZone->z() - fZone->z() );
-        float x0 = (*itF)->x() - (*itF)->z() * tx;
+        float tx = ((*itL)->x() - (*itF)->x()) * invDeltaz ; /// (lZone->z() - fZone->z()); 
+	float x0 = (*itF)->x() - (*itF)->z() * tx;
 #ifdef DEBUG_HISTO
 	plot(tx, "tx", "tx", -1.,1., 100 );
 	plot(x0, "x0", "x0", 0., 6000., 100.);
@@ -566,28 +748,14 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
         
         // -- loop over first two x zones
         // --------------------------------------------------------------------------------
-        unsigned int counter = 0;
-        bool skip = true;
-        if( iCase != 0 ) skip = false;
-
-        
         for ( std::vector<PrHitZone*>::iterator itZ = xZones.begin(); xZones.end() != itZ; ++itZ ) {
-          
-          ++counter;
-          // -- to make sure, in case = 0, only x layers of the 2nd T station are used
-          // I think this can be written shorter, basically it selects only zones in T2 
-          if(skip){
-            skip = false;
-            continue;
-          }
-          if( iCase == 0){
-            if(counter > 3) break;
-          }else{
-            if(counter > 2) break;
-          }
-          float xP   = x0 + (*itZ)->z() * tx;
-          float xMax = xP + 2*fabs(tx)*m_tolXSup + 1.5;
-          float xMin = xP - m_tolXInf;
+
+	  if( (*itZ)->planeCode() == 3 ) continue;
+          if( (*itZ)->planeCode() == 8 ) break;
+
+          float xP   = x0 + (*itZ)->z() * tx ;
+          float xMax = xP + 2*fabs(tx)*m_tolXSup + 1.5 ;
+          float xMin = xP - m_tolXInf ;
           
 #ifdef DEBUG_HISTO
 	  plot(xP, "xP_x0pos", "xP_x0pos", -10000., 10000., 100); 
@@ -616,7 +784,12 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
           for ( ; (*itZ)->hits().end() != itH; ++itH ) {
             if ( (*itH)->x() < xMin ) continue;
             if ( (*itH)->x() > xMax ) break;
-            //Sascha ???? if ( ((*itH)->x() > xMax) || ((*itH)->x()< xMin) ) break;
+	    
+	    if ( 0 != iCase){
+              if ( (*itF)->isUsed() and  (*itH)->isUsed() ) continue;
+              if ( (*itL)->isUsed() and  (*itH)->isUsed() ) continue;
+            }
+
             parabolaSeedHits.push_back( *itH );
           }
         }
@@ -663,9 +836,13 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
 
           for ( std::vector<PrHitZone*>::iterator itZ = xZones.begin(); xZones.end() != itZ; ++itZ ) {
 	    
-            float dz = (*itZ)->z() - m_geoTool->zReference();
-            float xAtZ = a*dz*dz + b*dz + c; //parabola extracted value of x at the z of the inter-layer
 	    
+            float dz = (*itZ)->z() - m_zReference;
+            float xAtZ = a*dz*dz + b*dz + c; //parabola extracted value of x at the z of the inter-layer
+	    if(m_useCubic){
+              xAtZ= a * dz * dz * (1. + m_dRatio* dz) + b * dz + c; 
+	    }
+
             float xP   = x0 + (*itZ)->z() * tx;  //Linear Prediction
             float xMax = xAtZ + fabs(tx)*2.0 + 0.5; //max ...put outside the params?
             float xMin = xAtZ - fabs(tx)*2.0 - 0.5; //min ...put outside the params?
@@ -698,11 +875,12 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
           xHits.push_back( *itF ); //add also to xHits the First and last layer one
           xHits.push_back( *itL );
           
-          if (xHits.size()<5) continue;
-          
+          if( xHits.size() <  m_minXPlanes)  continue;          
+          if( xHits.size()==4 &&  innerMod(xHits) > 1 ) continue;
+
           // shifted before continue due to debug reasons
           std::stable_sort(xHits.begin(), xHits.end(), compX());
-          if( xHits.size() <  m_minXPlanes)  continue;
+
 
           bool isEqual = false;
 	  //xHitsLists = vector of<PrHits> 
@@ -719,7 +897,7 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
 
         // -- remove duplicates
 	
-        if( xHitsLists.size() > 2){
+        if( xHitsLists.size() > 1){
           std::stable_sort( xHitsLists.begin(), xHitsLists.end() );
           xHitsLists.erase( std::unique(xHitsLists.begin(), xHitsLists.end()), xHitsLists.end());
         }
@@ -727,15 +905,16 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
 
         for( PrHits xHits : xHitsLists ){
 	  
-          PrSeedTrack temp( part, m_geoTool->zReference(), xHits );
-
-          bool OK = fitTrack( temp ); //1 fit
+          PrSeedTrack temp( part, m_zReference, xHits );
+	  
+          bool OK = fitXProjection( temp ); //1 fit
           //bool OK = fitTrack(temp )
-          while ( !OK ) {
-            OK = removeWorstAndRefit( temp );
+          while ( !OK && temp.hits().size()>m_minXPlanes) {
+            OK = removeWorstAndRefit( temp , true);
             debug()<<"Remove worse and refit"<<endmsg;
             debug()<<"***"<<endmsg;
             }
+          if( temp.hits().size()==4 &&  innerMod(temp) > 1 ) continue;
           setChi2( temp );
           // ---------------------------------------
           
@@ -758,8 +937,9 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
                 (*itH)->setUsed( true );
               }
             }
+	    std::sort( temp.hits().begin(),  temp.hits().end(), compLHCbID());
             m_xCandidates.push_back( temp );
-          }
+	  }
           // -------------------------------------
         } 
         ++itL;
@@ -767,6 +947,57 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
     } //end loop first zone 
   } //end loop case
 
+ 
+ std::sort( m_xCandidates.begin(), m_xCandidates.end(), PrSeedTrack::GreaterBySize() );                   
+ 
+ for ( PrSeedTracks::iterator itT1 = m_xCandidates.begin(); m_xCandidates.end() !=itT1; ++itT1 ) {  
+   if ( !(*itT1).valid() ) continue;
+   for ( PrSeedTracks::iterator itT2 = itT1 + 1; m_xCandidates.end() !=itT2; ++itT2 ) {
+     if ( !(*itT2).valid() ) continue;             
+     
+     PrHits::iterator itH1 = (*itT1).hits().begin();
+     PrHits::iterator itH2 = (*itT2).hits().begin();
+     PrHits::iterator itEnd1 = (*itT1).hits().end();
+     PrHits::iterator itEnd2 = (*itT2).hits().end();
+     int Compare = (*itT1).hits().size()+(*itT2).hits().size();
+     unsigned int maxCommon = 3;
+     if( Compare <10 )	maxCommon = 1;	//5 vs 4
+     else if( Compare ==10 )maxCommon = 2; //5 vs 5 or 6 vs 4 
+     
+     unsigned int nCommon = 0;
+     while( itH1 != itEnd1 && itH2 != itEnd2 ){
+       if((*itH1)->id() == (*itH2)->id()){
+	 ++nCommon;
+	 
+	 ++itH1;
+	 ++itH2;
+       }
+       else if( (*itH1)->id() < (*itH2)->id() ){
+	 ++itH1;
+       }
+       else{
+	 ++itH2;
+       }
+       if( nCommon >=maxCommon )  break;
+     }
+     
+     if(nCommon >= maxCommon){
+       (*itT1).setValid(false);
+       break;
+     }
+   }
+ }
+ 
+ if(m_xOnly){
+   for( PrSeedTracks::iterator itT1 = m_xCandidates.begin() ; m_xCandidates.end()!= itT1; ++itT1){
+      if((*itT1).valid()) m_trackCandidates.push_back( (*itT1));
+   }
+ }
+    
+  
+
+ 
+  /*
   //order Track candidates in increasing size
   std::stable_sort( m_xCandidates.begin(), m_xCandidates.end(), PrSeedTrack::GreaterBySize() );
   
@@ -791,6 +1022,21 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
 
     for ( PrSeedTracks::iterator itT2 = itT1 + 1; m_xCandidates.end() !=itT2; ++itT2 ) {
       if ( !(*itT2).valid() ) continue;
+
+      if ( (*itT2).hits().size() != 6 ) {
+	int nUsed2 = 0;
+      
+	//count number of used hits in same 
+	for ( PrHits::iterator itH2 = (*itT2).hits().begin(); (*itT2).hits().end() != itH2; ++ itH2) {
+	  if ( (*itH2)->isUsed()) ++nUsed2;
+	}
+	if ( 1 < nUsed2 ) 
+	  {
+	    (*itT2).setValid( false );
+	    continue;
+	  }
+      }
+
       int nCommon = 0;
       PrHits::iterator itH1 = (*itT1).hits().begin();
       PrHits::iterator itH2 = (*itT2).hits().begin();
@@ -823,9 +1069,12 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
     }
     if ( m_xOnly && (*itT1).valid() ) m_trackCandidates.push_back( *itT1 );
   }
+*/
 }
 
+//=========================================================================
 
+//=========================================================================
 int PrSeedingXLayers::matchXCandidate( PrSeedTrack& track ){
   setKey(-1);
   std::map<int,std::vector <int> >keys;
@@ -852,6 +1101,7 @@ int PrSeedingXLayers::matchXCandidate( PrSeedTrack& track ){
 }
 
 
+
 //=========================================================================
 // Modified version of adding the stereo layers
 //=========================================================================
@@ -863,7 +1113,7 @@ void PrSeedingXLayers::addStereo2( unsigned int part ) {
   }
   unsigned int firstZone = part + 2;
   unsigned int lastZone  = part + 22;
-  //when the fixing is active firstZone is always T1 1st uv layer and lastZone is last uv layer
+  //when the fixing is active firstZone is always T1 1st uv layer and lastZone is last uv layer                                                          
   if (m_useFix){
     firstZone = 2;
     lastZone  = 22;
@@ -871,134 +1121,133 @@ void PrSeedingXLayers::addStereo2( unsigned int part ) {
   for ( PrSeedTracks::iterator itT = xProjections.begin(); xProjections.end() !=itT; ++itT ){
     PrHits myStereo;
     myStereo.reserve(30);
-    // loop over all zones to improve efficiency of stereo hits & triangle fixing
+    // loop over all zones to improve efficiency of stereo hits & triangle fixing                                                                        
     const unsigned int stepSize = m_useFix ? 1 : 2;
     for ( unsigned int kk = firstZone; lastZone > kk ; kk+= stepSize ) {
-      if ( m_hitManager->zone(kk)->isX() ) 
-      {
-        continue;
-      }
-      
+      if ( m_hitManager->zone(kk)->isX() )
+	{
+	  continue;
+	}
+
       float dxDy = m_hitManager->zone(kk)->dxDy();
-      float zPlane = m_hitManager->zone(kk)->z(); //to be sure of it
-      float xPred = (*itT).x(m_hitManager->zone(kk)->z() ); //Predicted X
-     
+      float zPlane = m_hitManager->zone(kk)->z(); //to be sure of it  
+      float invdxDy = 1./dxDy;
+      float invzPlane = 1./zPlane;
+      float xPred = (*itT).x(m_hitManager->zone(kk)->z() ); //Predicted X                                            
+
 #ifdef DEBUG_HISTO
       plot2D(xPred,zPlane,"xPred_ZPlane","xPred_ZPlane",-3000.,3000.,6000.,12000.,1000,1000);
 #endif
-      
-      
-      
-      // increase a bit??
-      // as x is at 0, can't you just take either xMin or xMax???
+
       float xMin = xPred + m_tolXStereo* dxDy;
-      float xMax = xPred - m_tolXStereo* dxDy;
-      //simmetric search windows in the X axis
+      float xMax = xPred - m_tolXStereoIN * dxDy;
+      //simmetric search windows in the X axis                                                                                                                                                                  
+      if(part==0) {
+        xMax = xPred - m_tolXStereo* dxDy;
+        xMin = xPred + m_tolXStereoIN * dxDy;
+      }
       
+
       if ( xMin > xMax ) {
         float tmp = xMax;
         xMax = xMin;
         xMin = tmp;
       }
 
+
 #ifdef DEBUG_HISTO
       plot2D(xMax-xMin,xPred,"xMax-xMin Vs xPred","xMax-xMin Vs xPred",-3000.,3000.,-3000.,3000.,1000,1000);
-#endif 
-      
+#endif
       
       PrHits::iterator itH = m_hitManager->zone(kk)->hits().begin();
-      
+
       for ( ;
             m_hitManager->zone(kk)->hits().end() != itH; ++itH ) {
         if ( (*itH)->x() < xMin ) continue;
-        if ( (*itH)->x() > xMax ) continue;
-        
-         if (m_useFix){
-	    
-	   const double yOnTrack = ( xPred - (*itH)->x() ) / dxDy;
-	    
-	   if ( yOnTrack  < (*itH)->yMin() - m_tolTriangle  ) {
-	     continue;
-	   }
-	   if ( yOnTrack  > (*itH)->yMax() + m_tolTriangle  ) {
-	     continue; 
-            }
-	   if ( (0 == part) && (yOnTrack < -m_tolYOffset) ) {
-	     continue;
-	   }
-            if ( (1 == part) && (yOnTrack > m_tolYOffset) ) { 
-	      continue; // bottom
-            }  
-	 }
-	 
-	 
-	 (*itH)->setCoord( ((*itH)->x() - xPred) / dxDy  / zPlane );
-	 
-	
-	 if ( 1 == part && (*itH)->coord() < -m_coord ) {
+        if ( (*itH)->x() > xMax ) break;
+
+	const double yOnTrack = ( xPred - (*itH)->x() )  * invdxDy;
+	if (m_useFix && ((part==0&&kk%2==1) || (part==1&&kk%2==0) )){
+
+	  if ( yOnTrack  < (*itH)->yMin() - m_tolTriangle  ) {
+	    continue;
+	  }
+	  if ( yOnTrack  > (*itH)->yMax() + m_tolTriangle  ) {
+	    continue;
+	  }
+	  if ( (0 == part) && (yOnTrack < -m_tolYOffset) ) {
+	    continue;
+	  }
+	  if ( (1 == part) && (yOnTrack > m_tolYOffset) ) {
+	    continue; // bottom                                                                                                                                                                               
+	  }
+	}
+
+	(*itH)->setCoord( ((*itH)->x() - xPred) * invdxDy  * invzPlane );
+
+
+	if ( 1 == part && (*itH)->coord() < -m_coord ) {
           continue;
-	 }
-	 if ( 0 == part && (*itH)->coord() >  m_coord ) {
-	   continue;
-	 }
-	 myStereo.push_back( *itH );
+	}
+	if ( 0 == part && (*itH)->coord() >  m_coord ) {
+	  continue;
+	}
+	myStereo.push_back( *itH );
       }
     }
+
     std::stable_sort( myStereo.begin(), myStereo.end(), PrHit::LowerByCoord() );
     PrPlaneCounter plCount;
-    //Save position of this x candidate, for later use
+    //Save position of this x candidate, for later use                                                                                                                                                          
     unsigned int firstSpace = m_trackCandidates.size();
     PrHits::iterator itBeg = myStereo.begin();
-    PrHits::iterator itEnd = itBeg + 5; //Why 5?
-    //PrHits::iterator itEnd = itBeg + 4;
+    PrHits::iterator itEnd = itBeg + m_minSPlanes  ; //Why 5?
 
     while ( itEnd < myStereo.end() ) {
-      // why should this increase, somehow momentum is missing or?
       float tolTy = m_tolTyOffset + m_tolTySlope * fabs( (*itBeg)->coord() );
-      // Take the next 4 hits and check if inside a given tolerance      
+      // Take the next 4 hits and check if inside a given tolerance                                                                                                                                             
       if ( (*(itEnd-1))->coord() - (*itBeg)->coord() < tolTy ) {
         while( itEnd+1 < myStereo.end() &&
                (*itEnd)->coord() - (*itBeg)->coord() < tolTy ) {
           ++itEnd;
         }
 
-        // count planes
-        plCount.set( itBeg, itEnd );    
-        
-        if ( 4 < plCount.nbDifferent() ) {
+	// count planes                                                                                                                                                                                         
+        plCount.set( itBeg, itEnd );
+
+	if ( m_minSPlanes-1 < plCount.nbDifferent() ) {
           PrSeedTrack temp( *itT );
           for ( PrHits::iterator itH = itBeg; itEnd != itH; ++itH ) {
             temp.addHit( *itH );
           }
-          bool ok = fitTrack( temp );
-	  
-          ok = fitTrack( temp );
-          ok = fitTrack( temp );
+	  temp.setnXnY( (*itT).hits().size(), temp.hits().size()-(*itT).hits().size());
+          bool ok = fitSimultaneouslyXY( temp , 0);
 
-          while ( !ok && temp.hits().size() > 10 ) {
-            ok = removeWorstAndRefit( temp );
-          }
+          //ok = fitTrack( temp );
+          //ok = fitTrack( temp );
 	  
-          if ( ok ) {
-            setChi2( temp );
-           float maxChi2 = m_maxChi2PerDoF + 6*temp.xSlope(9000)*temp.xSlope(9000);
-           
-	   //number of hits hard coded??? More than in PatSeeding? 
-	   if ( temp.hits().size() > 9 ||
-                 temp.chi2PerDoF() < maxChi2 ) {
-	     m_trackCandidates.push_back( temp );
-	   }
-	   itBeg += 4;
+          while ( !ok && temp.hits().size() > m_minTPlanes ) {
+            ok = removeWorstAndRefit( temp, false );
           }
+
+	  if(temp.hits().size()<12) ok=addEmptyLayers(part, temp);
+          if ( ok  &&  (temp.hits().size() > m_minTPlanes ||  (temp.hits().size()<10 &&  innerMod(temp) < 4 ))){
+	    setChi2( temp );
+	    float maxChi2 = m_maxChi2PerDoF + 6*temp.xSlope(9000)*temp.xSlope(9000);
+	    if(temp.chi2PerDoF() < maxChi2 ){                                                                         
+	      m_trackCandidates.push_back( temp );
+	      std::sort( temp.hits().begin(),  temp.hits().end(), compLHCbID());
+	      if(temp.hits().size()==12) break;
+	      else   itBeg = itEnd-1;
+	    }
+	  }
         }
       }
       ++itBeg;
-      itEnd = itBeg + 5;
+      itEnd = itBeg + m_minSPlanes;
     }
-
     
-    
-    //=== Remove bad candidates: Keep the best for this input track
+    //=== Remove bad candidates: Keep the best for this input track      
     if ( m_trackCandidates.size() > firstSpace+1 ) {
       for ( unsigned int kk = firstSpace; m_trackCandidates.size()-1 > kk ; ++kk ) {
         if ( !m_trackCandidates[kk].valid() ) continue;
@@ -1008,18 +1257,19 @@ void PrSeedingXLayers::addStereo2( unsigned int part ) {
             m_trackCandidates[ll].setValid( false );
           } else if ( m_trackCandidates[ll].hits().size() > m_trackCandidates[kk].hits().size() ) {
             m_trackCandidates[kk].setValid( false );
-            //equal size, take the one with the better chi2
-          } else if ( m_trackCandidates[kk].chi2() < m_trackCandidates[ll].chi2() ) {
+	  } else if ( m_trackCandidates[kk].chi2() < m_trackCandidates[ll].chi2() ) {
             m_trackCandidates[ll].setValid( false );
           } else {
             m_trackCandidates[kk].setValid( false );
           }
         }
       }
-    }//loop candidates removal
+    }//loop candidates removal                                                                                           
     
+
   }
 }
+
 
 
 //=========================================================================
@@ -1027,6 +1277,34 @@ void PrSeedingXLayers::addStereo2( unsigned int part ) {
 //========================================================================
 void PrSeedingXLayers::solveParabola(const PrHit* hit1, const PrHit* hit2, const PrHit* hit3, float& a, float& b, float& c){
  
+  const double z1 = hit1->z() - m_zReference;//->zReference();       
+  const double z2 = hit2->z() - m_zReference;//m_geoTool->zReference();        
+  const double z3 = hit3->z() - m_zReference;//m_geoTool->zReference();                                                                                     
+  const double x1 = hit1->x();
+  const double x2 = hit2->x();
+  const double x3 = hit3->x();
+
+  const double corrZ1 = 1.+m_dRatio*z1;
+  const double corrZ2 = 1.+m_dRatio*z2;
+  const double corrZ3 = 1.+m_dRatio*z3;
+  const double det = (z1*z1)*corrZ1*z2 + z1*(z3*z3)*corrZ3 + (z2*z2)*corrZ2*z3 - z2*(z3*z3)*corrZ3 - z1*(z2*z2)*corrZ2 - z3*(z1*z1)*corrZ1;
+  if( std::fabs(det) < 1e-8 )
+    {
+      a = 0.0;
+      b = 0.0;
+      c = 0.0;
+      return;
+    }
+  const double recdet = 1./det;
+  const double det1 = (x1)*z2 + z1*(x3) + (x2)*z3 - z2*(x3) - z1*(x2) - z3*(x1);
+  const double det2 = (z1*z1)*corrZ1*x2 + x1*(z3*z3)*corrZ3 + (z2*z2)*corrZ2*x3 - x2*(z3*z3)*corrZ3 - x1*(z2*z2)*corrZ2 - x3*(z1*z1)*corrZ1;
+  const double det3 = (z1*z1)*corrZ1*z2*x3 + z1*(z3*z3)*corrZ3*x2 + (z2*z2)*corrZ2*z3*x1  
+    - z2*(z3*z3)*corrZ3*x1 - z1*(z2*z2)*corrZ2*x3 - z3*(z1*z1)*corrZ1* x2;
+
+  a = recdet*det1;
+  b = recdet*det2;
+  c = recdet*det3;
+  /*
   const float x3 = hit3->x();
   
   //New Parabola Method
@@ -1053,6 +1331,102 @@ void PrSeedingXLayers::solveParabola(const PrHit* hit1, const PrHit* hit2, const
 
   c = x3 + a * z3_PB * z3_PB - b *z3_PB;
   b -= 2 * a * z3_PB;
+  */
+}
 
+//===============================================================                                                                                        
+//--- number of  inner modules a track passes                                                                                                           
+//===============================================================                                                                                       
+int PrSeedingXLayers::innerMod( const PrSeedTrack& track  ) {
+  unsigned int ninner=0;
+  for ( PrHits::const_iterator itF = track.hits().begin(); track.hits().end() != itF; ++itF ) {
+    if( (*itF)->id().ftID().module()>9 ) ninner++;
+  }
+  return ninner;
+}
+
+int PrSeedingXLayers::innerMod( PrHits thesehits ) {
+  unsigned int ninner=0;
+  for ( PrHits::iterator itF = thesehits.begin(); thesehits.end() != itF; ++itF ) {
+    if( (*itF)->id().ftID().module()>9 ) ninner++;
+  }
+  return ninner;
+}
+
+
+
+//========================================================================= 
+// adding hits in empty layers 
+//========================================================================= 
+bool PrSeedingXLayers::addEmptyLayers(  unsigned int part,  PrSeedTrack& track  ) {
+
+  PrHits myEmptyLayer;;
+  myEmptyLayer.reserve(12);
+
+  
+  int emptyPlanes[12]={1};
+  for ( PrHits::iterator itH2 = track.hits().begin(); track.hits().end() != itH2; ++itH2 ) {
+    emptyPlanes[(*itH2)->planeCode()]=0;
+  }
+  
+  debug()<<"let's add some hits"<<endmsg;
+  for ( unsigned int kk = part; m_hitManager->nbZones()  > kk ; kk += 2 ) {
+
+    if( 0 == emptyPlanes[kk/2] ) continue;
+    float yPred = track.y(m_hitManager->zone(kk)->z() ); //Predicted y                                                                                                                                                  
+    float dxDy = m_hitManager->zone(kk)->dxDy();
+    float zPlane = m_hitManager->zone(kk)->z(); 
+    zPlane= m_hitManager->zone(kk)->z(yPred);  //correct for dzDy  
+    yPred = track.y(zPlane );//to be sure of it
+    float xPred = track.x(zPlane ); //Predicted X
+
+    float xMax = xPred + dxDy*yPred  ;
+    float xMin = xPred + dxDy*yPred  ;
+
+    if ( xMin > xMax ) {
+      float tmp = xMax;
+      xMax = xMin;
+      xMin = tmp;
+    }
+
+    PrHits::iterator itH = m_hitManager->zone(kk)->hits().begin();
+    for ( ;
+          m_hitManager->zone(kk)->hits().end() != itH; ++itH ) {
+      if ( (*itH)->x() < xMin-2.1  ) continue;
+      if ( (*itH)->x() > xMax+2.1  ) break;
+      if( yPred < (*itH)->yMin() -2.1)continue;
+      if( yPred > (*itH)->yMax() +2.1  )continue;;
+      
+      float chi2 = track.chi2( *itH );
+      if(chi2<m_maxChi2InTrack) {
+        myEmptyLayer.push_back( *itH );
+      }
+    }
+  }
+  
+  bool ok=true;
+  if( myEmptyLayer.size()>0 ) {
+
+    debug()<<"-------------------------------"<<endmsg;
+    for ( PrHits::iterator itH = myEmptyLayer.begin(); myEmptyLayer.end() != itH; ++ itH) {
+
+      track.addHit( *itH );
+      
+      if( (*itH)->isX()){
+	track.setnXnY( track.nx()-1, track.ny());
+      }else{
+	track.setnXnY( track.nx(), track.ny()-1);
+      }
+
+      ok = fitSimultaneouslyXY( track, 1);
+
+      while ( !ok && track.hits().size() >  m_minTPlanes  ) {
+        ok = removeWorstAndRefit( track, false );
+      }
+    }
+    
+    setChi2( track );
+  }
+  return ok;
 }
 

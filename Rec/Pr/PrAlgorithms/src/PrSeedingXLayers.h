@@ -85,11 +85,26 @@ public:
    */
   bool fitTrack( PrSeedTrack& track );
 
+  /** @brief Fit the track combining the XZ and YZ projections                                                                                             
+   *  @param track The track to fit                                                                                                                        
+   *  @param Refit Iteration in the Refitting after removal worst hit                                                                                      
+   *  @return bool Success of the XY+XZ Fit                                                                                                                
+   **/
+  bool fitSimultaneouslyXY( PrSeedTrack& track, int refit=0 );
+
+  /** @brief Fit the track combining the only in the XZ plane                                                                                              
+   *  @param track The track to fit                                                                                                                        
+   *  @param Refit Iteration in the Refitting after removal worst hit                                                                                      
+   *  @return bool Success of the XZ Fit                                                                                                                   
+   **/
+  bool fitXProjection( PrSeedTrack & track );
+
   /** @brief Remove the hit which gives the largest contribution to the chi2 and refit
    *  @param track The track to fit
    *  @return bool Success of the fit
    */
-  bool removeWorstAndRefit( PrSeedTrack& track );
+
+  bool removeWorstAndRefit( PrSeedTrack& track, bool xonlyFit=false );
   
   /** @brief Set the chi2 of the track
    *  @param track The track to set the chi2 of 
@@ -153,13 +168,18 @@ public:
    */
   void solveParabola(const PrHit* hit1, const PrHit* hit2, const PrHit* hit3, float& a, float& b, float& c);
   
+  //classes to find number of inner modules a track passes 
+  int innerMod(const PrSeedTrack& track);
+  int innerMod(PrHits thesehits);
+  bool addEmptyLayers(  unsigned int part,  PrSeedTrack& track);
+
   
   /// Class to find lower bound of x of PrHit
   class lowerBoundX {
   public:
     bool operator() (const PrHit* lhs, const double testval ) const { return lhs->x() < testval; }
   };
-
+  
   /// Class to compare x positions of PrHits
   class compX {
   public:
@@ -184,24 +204,47 @@ private:
   std::string     m_inputName;
   std::string     m_outputName;
   std::string     m_hitManagerName;
+  unsigned int    m_minXPlanes;
+  unsigned int    m_minSPlanes;
+  unsigned int    m_minTPlanes;
+  unsigned int    m_maxParabolaSeedHits;
+
   float           m_maxChi2InTrack;
   float           m_maxIpAtZero;
+  float           m_maxIpAtZeroIN;
   float           m_tolXInf;
   float           m_tolXSup;
-  unsigned int    m_minXPlanes;
   float           m_maxChi2PerDoF;
-  bool            m_xOnly;
-  unsigned int    m_maxParabolaSeedHits;
   float           m_bestDist;
   float           m_tolXStereo; //added
+  float           m_tolXStereoIN; //added
   float           m_coord; //added
   float           m_tolTyOffset;
   float           m_tolTySlope;
   float           m_tolYOffset;//added(debug)
   float           m_tolTriangle; //added(debug)
+
   bool            m_useFix; //added  
   bool            m_decodeData;
   bool            m_printSettings;
+  bool            m_xOnly;
+  
+  bool            m_useCubic;
+  bool            m_useCorrPos;
+  bool            m_SlopeCorr;           
+
+  double          m_x0Corr;
+  double          m_zReference;
+  double          m_dRatio;
+  double          m_ConstC;
+  //--------_Fit X parametrisation                                                                                                                         
+  double          m_maxChi2HitsX;
+  //--------_Full Fit parametrisation                                                                                                                      
+  double          m_maxChi2HitFullFitHigh;
+  double          m_maxChi2HitFullFitLow;
+  double          m_maxY0Low;
+  double          m_maxYZrefLow;
+
 
   PrHitManager*   m_hitManager;
   PrGeometryTool* m_geoTool;
