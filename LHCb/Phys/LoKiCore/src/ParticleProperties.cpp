@@ -10,6 +10,7 @@
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/VectorMap.h"
+#include "GaudiKernel/ToStream.h"
 // ============================================================================
 // Kernel
 // ============================================================================
@@ -50,7 +51,7 @@ namespace
   /** @var s_InvalidPIDName 
    *  representation of "invalid" particle ID 
    */
-  const std::string s_InvalidPIDName = "<Unknown>" ;
+  const std::string s_InvalidPIDName = "Unknown" ;
   // ==========================================================================
 }
 // ============================================================================
@@ -382,7 +383,7 @@ std::string  LoKi::Particles::nameFromPID ( const LHCb::ParticleID& pid )
   if ( s_map.end() != ifind ) { return ifind->second ; }               // RETURN 
   //
   const LHCb::ParticleProperty* pp = LoKi::Particles::_ppFromPID( pid ) ;
-  if ( 0 == pp ) 
+  if ( 0 == pp && 0 == pid.abspid() ) 
   {
     LoKi::Report::Error
       ( " LoKi::Particles::nameFromPID("               + 
@@ -390,6 +391,16 @@ std::string  LoKi::Particles::nameFromPID ( const LHCb::ParticleID& pid )
         "): LHCb::ParticleProperty* points to NULL "         + 
         " return '" + s_InvalidPIDName + "'"           ) ;
     return s_InvalidPIDName ;
+  }
+  else if ( 0 == pp ) 
+  {
+    std::string invalid_name = Gaudi::Utils::toString ( pid.pid() ) ;
+    LoKi::Report::Error
+      ( " LoKi::Particles::nameFromPID("             + 
+        boost::lexical_cast<std::string>( pid )      + 
+        "): LHCb::ParticleProperty* points to NULL " + 
+        " return 'Unknown(" + invalid_name + ")'"  ) ;
+    return "Unknown(" + invalid_name + ")";
   }
   // update the map
   s_map.insert ( pid , pp->particle() ) ;                        // RETURN 

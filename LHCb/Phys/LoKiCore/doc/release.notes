@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2016-01-16 - Vanya Belyaev
+ - ParticleProperties: make more explicit prinout for invalid pids 
+
 ! 2015-12-14 - Marco Clemencic
  - Add hash id for functor not in the cache in the error message
    from Hybrid::CoreFactory.

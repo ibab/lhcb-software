@@ -75,11 +75,13 @@ namespace LoKi
     /// make printout of DataObject
     std::string toString ( const DataObject*      obj ) ;
     /// make printout of DataObject
-    std::string toString ( const ContainedObject* obj ) ;    
-  } // end of namespace LoKi::Print
-} // end of namespace LoKi
+    std::string toString ( const ContainedObject* obj ) ;
+    // ========================================================================
+  } //                                             end of namespace LoKi::Print
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PRINT_H
 // ============================================================================
