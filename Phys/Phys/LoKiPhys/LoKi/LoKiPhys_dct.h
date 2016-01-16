@@ -1,4 +1,4 @@
-// $Id:$
+// $Id$
 // ============================================================================
 #ifndef LOKI_LOKIPHYS_DCT_H 
 #define LOKI_LOKIPHYS_DCT_H 1

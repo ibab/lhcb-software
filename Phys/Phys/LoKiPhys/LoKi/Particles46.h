@@ -1,4 +1,4 @@
-// $Id:$
+// $Id$
 // ============================================================================ 
 #ifndef LOKI_PARTICLES46_H 
 #define LOKI_PARTICLES46_H 1
@@ -31,9 +31,9 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  @date 2015-02-04
  * 
- *                    $Revision: $
- *  Last modification $Date:$
- *                 by $Author:$
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ============================================================================
 namespace LoKi

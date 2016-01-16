@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id:$ 
+# $Id$ 
 # =============================================================================
 ## @file LoKiPhys/graph.py
 #  Simple utilities to vizualize the decay tree 
@@ -20,9 +20,9 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2016-01-16
 #  
-#                    $Revision: 198748 $
-#  Last modification $Date:$
-#                 by $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """Simple utilities to vizualize the decay tree 
 
@@ -38,15 +38,15 @@ By usage of this code one clearly states the disagreement
 with the campain of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-                  $Revision: 198748 $
-Last modification $Date: 2015-12-05 16:12:22 +0100 (Sat, 05 Dec 2015) $
-               by $Author: ibelyaev $
+                  $Revision$
+Last modification $Date$
+               by $Author$
 
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2015-01-16"
-__version__ = "$Revision: 198748 $"
+__version__ = "$Revision$"
 __all__     = (
     'graph'      ,  ## function to produce graph 
     'DecayGraph'    ## helpe class to produce graph 

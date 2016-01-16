@@ -1,4 +1,4 @@
-// $Id:$ 
+// $Id$ 
 // =======================================================================================
 #ifndef LOKI_LEGACY_H 
 #define LOKI_LEGACY_H 1
@@ -33,9 +33,9 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design. 
  *   
- *                    $Revision:$
- *  Last modification $Date:$
- *                 by $Author:$
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  *                    
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date   2009-04-30

@@ -1,4 +1,4 @@
-// $Id: Particles44.h 95471 2010-11-01 22:39:01Z ibelyaev $
+// $Id$
 // ============================================================================
 #ifndef LOKI_PARTICLES44_H 
 #define LOKI_PARTICLES44_H 1
