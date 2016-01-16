@@ -1,4 +1,4 @@
-// $Id:$ 
+// $Id$ 
 // ============================================================================
 #ifndef LOKI_PARAMFUNCTORS_H 
 #define LOKI_PARAMFUNCTORS_H 1
@@ -34,9 +34,9 @@ class Property ;
  * @date 2014-02-02 
  * @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  
- *                    $Revision:$
- *  Last modification $Date:$
- *                 by $Author:$ 
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$ 
  */
 namespace LoKi 
 {

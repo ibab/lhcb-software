@@ -1,4 +1,4 @@
-// $Id:$ 
+// $Id$ 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -44,9 +44,9 @@
  * with the smear campaign of Dr.O.Callot et al.: 
  * ``No Vanya's lines are allowed in LHCb/Gaudi software''
  *
- *                    $Revision:$
- *  Last modification $Date:$
- *                 by $Author:$
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ============================================================================
 namespace 

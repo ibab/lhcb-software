@@ -1,4 +1,4 @@
-// $Id:$
+// $Id$
 // ============================================================================
 #ifndef LOKI_MISSINGPARTICLE_H 
 #define LOKI_MISSINGPARTICLE_H 1

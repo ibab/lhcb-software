@@ -1,4 +1,4 @@
-// $Id:$ 
+// $Id$ 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -25,9 +25,9 @@
  *  @date 2015-01-14 
  *  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
  * 
- *                    $Revision:$
- *  Last modification $Date:$
- *                 by $Author:$
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ============================================================================
 // constructors for Histogram service 

@@ -1,4 +1,4 @@
-// $Id:$ 
+// $Id$ 
 // ============================================================================
 #ifndef LOKI_PARAM_H 
 #define LOKI_PARAM_H 1
@@ -32,9 +32,9 @@
  * @date 2014-02-02 
  * @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  
- *                    $Revision:$
- *  Last modification $Date:$
- *                 by $Author:$ 
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$ 
  */
 namespace LoKi 
 {

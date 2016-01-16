@@ -1,4 +1,4 @@
-// $Id:$ 
+// $Id$ 
 // ============================================================================
 #ifndef LOKI_LOKINUMBERS_H 
 #define LOKI_LOKINUMBERS_H 1
