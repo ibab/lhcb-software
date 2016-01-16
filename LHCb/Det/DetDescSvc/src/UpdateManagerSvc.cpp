@@ -34,9 +34,7 @@ DECLARE_SERVICE_FACTORY( UpdateManagerSvc )
 // Standard constructor, initializes variables
 //=============================================================================
 UpdateManagerSvc::UpdateManagerSvc(const std::string& name, ISvcLocator* svcloc):
-  base_class(name,svcloc),
-  m_dataProvider(NULL), m_detDataSvc(NULL), m_incidentSvc(NULL), m_evtProc(NULL),
-  m_head_since(1),m_head_until(0)
+  base_class(name,svcloc), m_head_since(1),m_head_until(0)
 {
 #ifndef WIN32
   pthread_mutex_t tmp_lock = PTHREAD_MUTEX_INITIALIZER;
@@ -50,12 +48,7 @@ UpdateManagerSvc::UpdateManagerSvc(const std::string& name, ISvcLocator* svcloc)
 //=============================================================================
 // Destructor
 //=============================================================================
-UpdateManagerSvc::~UpdateManagerSvc() {
-  // delete objects in the container
-  for (Item::ItemList::const_iterator i = m_all_items.begin(); i != m_all_items.end(); ++i){
-    delete *i;
-  }
-}
+UpdateManagerSvc::~UpdateManagerSvc() = default;
 
 //=============================================================================
 // IService implementation
@@ -70,76 +63,65 @@ StatusCode UpdateManagerSvc::initialize(){
     log << MSG::DEBUG << "--- initialize ---" << endmsg;
 
   // find the data provider
-  sc = serviceLocator()->service<IDataProviderSvc>(m_dataProviderName,m_dataProvider,true);
+  m_dataProvider = serviceLocator()->service(m_dataProviderName,true);
   if (!sc.isSuccess()) {
     log << MSG::ERROR << "Unable to get a handle to the data provider" << endmsg;
     return sc;
   } else {
     if( log.level() <= MSG::DEBUG )
       log << MSG::DEBUG << "Got pointer to IDataProviderSvc \"" << m_dataProviderName << '"' << endmsg;
-    IDataManagerSvc * dMgr;
-    sc = m_dataProvider->queryInterface(IDataManagerSvc::interfaceID(),(void **) &dMgr);
-    if ( sc.isSuccess() ) {
+    auto dMgr = m_dataProvider.as<IDataManagerSvc>();
+    if ( dMgr ) {
       m_dataProviderRootName = dMgr->rootName() + "/";
-      dMgr->release();
-      if (!sc.isSuccess()) {
-        return sc;
-      }
-    }
-    else {
+    } else {
       log << MSG::WARNING << "Cannot access IDataManagerSvc interface of \"" << m_dataProviderName
           << "\": using empty RootName" << endmsg;
-      m_dataProviderRootName = "";
+      m_dataProviderRootName.clear();
     }
   }
 
   // find the detector data service
-  if (m_detDataSvcName == "") m_detDataSvcName = m_dataProviderName;
-  sc = serviceLocator()->service(m_detDataSvcName,m_detDataSvc,true);
-  if (!sc.isSuccess()) {
+  if (m_detDataSvcName.empty()) m_detDataSvcName = m_dataProviderName;
+  m_detDataSvc = serviceLocator()->service(m_detDataSvcName,true);
+  if (!m_detDataSvc) {
     log << MSG::WARNING << "Unable to get a handle to the detector data service interface:"
       " all the calls to newEvent(void) will fail!" << endmsg;
-    m_detDataSvc = NULL;
   } else {
     if( log.level() <= MSG::DEBUG )
       log << MSG::DEBUG << "Got pointer to IDetDataSvc \"" << m_detDataSvcName << '"' << endmsg;
   }
 
   // before registering to the incident service I have to be sure that the EventClockSvc is ready
-  IService *evtClockSvc;
-  sc = service("EventClockSvc", evtClockSvc, true);
-  if ( sc.isSuccess() ) {
+  auto evtClockSvc = service<IService>("EventClockSvc", true);
+  if ( evtClockSvc ) {
     if( log.level() <= MSG::DEBUG )
       log << MSG::DEBUG << "Good: EventClockSvc found" << endmsg;
-    evtClockSvc->release();
   } else {
     log << MSG::WARNING << "Unable find EventClockSvc, probably I'll not work." << endmsg;
   }
 
   // register to the incident service for BeginEvent incidents
-  sc = service("IncidentSvc", m_incidentSvc, false);
-  if ( sc.isSuccess() ) {
+  m_incidentSvc = service("IncidentSvc", false);
+  if ( m_incidentSvc ) {
     m_incidentSvc->addListener(this,IncidentType::BeginEvent);
     if( log.level() <= MSG::DEBUG )
       log << MSG::DEBUG << "Got pointer to IncidentSvc" << endmsg;
   } else {
     log << MSG::ERROR << "Unable to register to the incident service." << endmsg;
-    m_incidentSvc = NULL;
-    return sc;
+    return StatusCode::FAILURE;
   }
 
-  sc = serviceLocator()->service("ApplicationMgr",m_evtProc);
-  if ( !sc.isSuccess() ) {
+  m_evtProc = serviceLocator()->service("ApplicationMgr");
+  if ( !m_evtProc ) {
     log << MSG::ERROR << "Cannot find an event processor." << endmsg;
-    return sc;
+    return StatusCode::FAILURE;
   }
 
   // Loop over overridden conditions
-  for ( std::vector<std::string>::iterator co = m_conditionsOveridesDesc.begin();
-        co != m_conditionsOveridesDesc.end(); ++co ) {
+  for ( const auto& co : m_conditionsOveridesDesc) {
     std::string name;
-    Condition *cond = new Condition();
-    if (ConditionParser(*co,name,*cond)) {
+    std::unique_ptr<Condition> cond {new Condition()};
+    if (ConditionParser(co,name,*cond)) {
       // Special update mode
       cond->setUpdateMode(ValidDataObject::OVERRIDE);
 
@@ -149,28 +131,25 @@ StatusCode UpdateManagerSvc::initialize(){
         name.erase(0,m_dataProviderRootName.size());
       }
 
-      // If a condition override with that name already exists, delete it
-      Condition * dest = m_conditionsOverides[name];
+      // If a condition override with that name already exists, delete it (implicitly)
+      auto& dest = m_conditionsOverides[name];
       if ( dest ) {
         log << MSG::WARNING << "Override condition for path '" << name
             << "' is defined more than once (I use the last one)." << endmsg;
-        delete dest;
       }
 
       // Add the condition to internal list
-      m_conditionsOverides[name] = cond;
+      dest = std::move(cond);
       if( log.level() <= MSG::DEBUG )
-        log << MSG::DEBUG << "Added condition: " << name << "\n" << cond->printParams() << endmsg;
+        log << MSG::DEBUG << "Added condition: " << name << "\n" << dest->printParams() << endmsg;
 
     } else {
-      // something went wrong while parsing: delete the temporary
-      delete cond;
+      // something went wrong while parsing
       log << MSG::ERROR << "Cannot understand condition:" << endmsg;
-      log << MSG::ERROR << *co << endmsg;
+      log << MSG::ERROR << co << endmsg;
       return StatusCode::FAILURE;
     }
   }
-
   return StatusCode::SUCCESS;
 }
 
@@ -192,23 +171,22 @@ StatusCode UpdateManagerSvc::finalize(){
     log << MSG::DEBUG << "--- finalize ---" << endmsg;
 
   // release the interfaces used
-  if (m_dataProvider != NULL) m_dataProvider->release();
-  if (m_detDataSvc != NULL) m_detDataSvc->release();
-  if (m_incidentSvc != NULL) {
+  m_dataProvider.reset();
+  m_detDataSvc.reset();
+  if (m_incidentSvc) {
     // unregister from the incident svc
     m_incidentSvc->removeListener(this,IncidentType::BeginEvent);
-    m_incidentSvc->release();
+    m_incidentSvc.reset();
   }
-  if (m_evtProc != NULL) m_evtProc->release();
+  m_evtProc.reset();
 
   // delete unused overridden conditions (the others are deleted together with the T.S.)
   if ( ! m_conditionsOverides.empty() ) {
     log << MSG::WARNING << "Overridden conditions not used:" << endmsg;
-    for (GaudiUtils::Map<std::string,Condition*>::iterator c = m_conditionsOverides.begin();
-         c != m_conditionsOverides.end(); ++c ) {
-      log << MSG::WARNING << c->first << endmsg;
-      delete c->second;
+    for (auto& c : m_conditionsOverides) {
+      log << MSG::WARNING << c.first << endmsg;
     }
+    m_conditionsOverides.clear();
   }
 
   // base class finalization
@@ -253,8 +231,8 @@ void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObj
   // find the object
   Item *mf_item = findItem(mf);
   if (!mf_item){ // a new OMF
-    mf_item = new Item(mf, m_dataProviderRootName);
-    m_all_items.push_back(mf_item);
+    m_all_items.emplace_back(new Item(mf, m_dataProviderRootName));
+    mf_item = m_all_items.back().get();
     m_head_items.push_back(mf_item); // since it is new, it has no parents
     insertInMap( mf_item );
  } else {
@@ -270,11 +248,11 @@ void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObj
     if (!cond_item){ // a new condition
 
       // Check if the requested condition is in the override list.
-      GaudiUtils::Map<std::string,Condition*>::iterator cond_ov = m_conditionsOverides.find(cond_copy);
+      auto cond_ov = m_conditionsOverides.find(cond_copy);
       if ( cond_ov != m_conditionsOverides.end() ) {
         // yes, it is!
         cond_item = new Item(cond_copy,Item::UserPtrType(ptr_dest,mf_item->ptr),
-                             cond_ov->second);
+                             cond_ov->second.get());
         // I do not need it anymore in the list
         m_conditionsOverides.erase(cond_ov);
       } else {
@@ -282,8 +260,8 @@ void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObj
         cond_item = new Item(cond_copy,Item::UserPtrType(ptr_dest,mf_item->ptr));
       }
 
-      m_all_items.push_back(cond_item);
-      insertInMap( cond_item );
+      m_all_items.emplace_back(cond_item);
+      insertInMap( m_all_items.back().get() );
     } else {
       if (ptr_dest){
         // I already have this condition registered, but a new user wants to set the pointer to it.
@@ -302,7 +280,7 @@ void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObj
     link(mf_item,mf,cond_item);
   } else {
     // this is usually done inside Item::addChild (called by "link")
-    Item::MembFuncList::iterator mfIt = mf_item->find(mf);
+    auto mfIt = mf_item->find(mf);
     if (mfIt == mf_item->memFuncs.end()) {
       // I do not have the MF registered inside the item
       // so I add it
@@ -315,12 +293,13 @@ void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObj
     }
     // Since we are not using a condition, the user pointer setter is not needed
     // nor used, so we must delete it.
-    if (ptr_dest) delete ptr_dest;
+    delete ptr_dest;
   }
   // a new item means that we need an update
   m_head_since = 1;
   m_head_until = 0;
 }
+
 void UpdateManagerSvc::i_registerCondition(void *obj, BaseObjectMemberFunction *mf){
   if ( FSMState() < Gaudi::StateMachine::INITIALIZED ){
     throw GaudiException("Service offline","UpdateManagerSvc::registerCondition",StatusCode::FAILURE);
@@ -341,8 +320,8 @@ void UpdateManagerSvc::i_registerCondition(void *obj, BaseObjectMemberFunction *
   // find the OMF (Object Member Function)
   Item *mf_item = findItem(mf);
   if (!mf_item){ // a new OMF
-    mf_item = new Item(mf, m_dataProviderRootName);
-    m_all_items.push_back(mf_item);
+    m_all_items.emplace_back(new Item(mf, m_dataProviderRootName));
+    mf_item = m_all_items.back().get();
     m_head_items.push_back(mf_item); // since it is new, it has no parents
     insertInMap( mf_item );
   }
@@ -356,7 +335,7 @@ void UpdateManagerSvc::i_registerCondition(void *obj, BaseObjectMemberFunction *
   m_head_until = 0;
 }
 StatusCode UpdateManagerSvc::newEvent(){
-  if (detDataSvc() != NULL){
+  if (detDataSvc()){
     if (detDataSvc()->validEventTime()) {
       return newEvent(detDataSvc()->eventTime());
     } else {
@@ -409,15 +388,14 @@ StatusCode UpdateManagerSvc::newEvent(const Gaudi::Time &evtTime){
     // first I make a copy of the current head
     Item::ItemList head_copy(m_head_items);
     // Start from a clean IOV (I cannot use m_head_X because the head is not stable and they may change)
-    Gaudi::Time head_copy_since(Gaudi::Time::epoch());
-    Gaudi::Time head_copy_until(Gaudi::Time::max());
+    auto head_copy_since = Gaudi::Time::epoch();
+    auto head_copy_until = Gaudi::Time::max();
     MsgStream item_log(msgSvc(), name()+"::Item");
-    for (auto it = head_copy.begin(); it != head_copy.end() && sc.isSuccess(); ++it){
-      sc = (*it)->update(dataProvider(), evtTime, item_log, inInit);
-      if (sc.isSuccess()) {
-        if ( head_copy_since < (*it)->since )  head_copy_since = (*it)->since;
-        if ( head_copy_until > (*it)->until )  head_copy_until = (*it)->until;
-      }
+    for (const auto& hc : head_copy) {
+      sc = hc->update(dataProvider(), evtTime, item_log, inInit);
+      if (!sc.isSuccess()) break;
+      if ( head_copy_since < hc->since )  head_copy_since = hc->since;
+      if ( head_copy_until > hc->until )  head_copy_until = hc->until;
     }
     // now it is safe to set m_head_X
     m_head_since = head_copy_since;
@@ -451,13 +429,13 @@ StatusCode UpdateManagerSvc::i_update(void *instance){
     MsgStream log(msgSvc(),name());
     log << MSG::VERBOSE << "Update specific object at " << instance << endmsg;
   }
-  if (detDataSvc() != NULL){
+  if (detDataSvc()){
     if (detDataSvc()->validEventTime()) {
       Item *item = findItem(instance);
       if (item) {
         StatusCode sc;
         // We are in the initialization phase if we are not yet "STARTED"
-        SmartIF<IStateful> globalState(serviceLocator());
+        auto globalState = serviceLocator().as<IStateful>();
         const bool inInit = globalState &&
                             (globalState->FSMState() < Gaudi::StateMachine::INITIALIZED) &&
                             (globalState->targetFSMState() >= Gaudi::StateMachine::INITIALIZED);
@@ -501,13 +479,13 @@ void UpdateManagerSvc::i_invalidate(void *instance){
 void UpdateManagerSvc::unlink(Item *parent, Item *child){
 
   // check if the parent knows about the child
-  Item::ItemList::iterator childIt = std::find(parent->children.begin(),
+  auto childIt = std::find(parent->children.begin(),
                                                parent->children.end(),child);
   if ( parent->children.end() == childIt )
     return; // parent does not know about child
 
   // remove from child all the user pointers belonging to the parent
-  Item::UserPtrList::iterator pi = child->user_dest_ptrs.begin();
+  auto pi = child->user_dest_ptrs.begin();
   while ( pi != child->user_dest_ptrs.end() ) {
     if (pi->second != parent) {
       pi = child->user_dest_ptrs.erase(pi);
@@ -521,8 +499,7 @@ void UpdateManagerSvc::unlink(Item *parent, Item *child){
   std::set<Item*> siblings; // list of Items used together with "child"
 
   // loop over child parent's pairs (mf,parent) to disconnect from them
-  Item::MembFuncList::iterator p_mf;
-  Item::ParentList::iterator p = child->parents.begin();
+  auto p = child->parents.begin();
   while ( p != child->parents.end() ) {
     if (p->first != parent) {
       ++p;
@@ -530,11 +507,11 @@ void UpdateManagerSvc::unlink(Item *parent, Item *child){
     }
 
     // find the MF inside the parent
-    p_mf = parent->find(p->second);
+    auto p_mf = parent->find(p->second);
 
     // find iterator to child in MF list ...
     Item::ItemList *mfInternalList = p_mf->items;
-    Item::ItemList::iterator entry = std::find(mfInternalList->begin(),
+    auto entry = std::find(mfInternalList->begin(),
                                                mfInternalList->end(),child);
     // ... and remove it (if found)
     if ( mfInternalList->end() != entry )
@@ -548,14 +525,11 @@ void UpdateManagerSvc::unlink(Item *parent, Item *child){
   }
 
   // unlink the siblings
-  std::set<Item*>::iterator s;
-  for ( s = siblings.begin(); s != siblings.end(); ++s ) {
-    unlink(parent,*s);
-  }
+  for (auto& s : siblings ) unlink(parent,s);
 
   // Check in the parent if there are MF without children: they have to be
   // removed.
-  p_mf = parent->memFuncs.begin();
+  auto p_mf = parent->memFuncs.begin();
   while ( p_mf != parent->memFuncs.end() ) {
     if ( p_mf->items->empty() ) p_mf = parent->memFuncs.erase(p_mf);
     else ++p_mf;
@@ -598,14 +572,14 @@ void UpdateManagerSvc::i_unregister(void *instance){
   if (item){
 
     // unlink from parents
-    Item::ParentList::iterator p = item->parents.begin();
+    auto p = item->parents.begin();
     while ( p != item->parents.end() ) {
       unlink(p->first,item);
       p = item->parents.begin();
     }
 
     // unlink from children
-    Item::ItemList::iterator c = item->children.begin();
+    auto c = item->children.begin();
     while ( c != item->children.end() ) {
       unlink(item,(*c));
       c = item->children.begin();
@@ -613,13 +587,14 @@ void UpdateManagerSvc::i_unregister(void *instance){
 
     // update the lists of Items
     if ( item->isHead() ) removeFromHead(item);
-    m_all_items.erase(std::find(m_all_items.begin(),m_all_items.end(),item));
 
     // The erased item shoud also disappear from the maps, if this is the last for this key, i.e. isHead
     m_pathMap.erase( item->path );
 
     // finally we can delete the Item
-    delete item;
+    m_all_items.erase(std::find_if(m_all_items.begin(),m_all_items.end(),
+                                   [&](const std::unique_ptr<Item>& i) 
+                                   { return i.get()==item; }));
   }
 }
 
@@ -651,7 +626,7 @@ void UpdateManagerSvc::dump(){
   size_t cnt = 0, head_cnt = 0;
   for (auto i = m_all_items.begin(); i != m_all_items.end(); ++i){
     if ( m_outputLevel <= MSG::VERBOSE ) {
-      log << MSG::VERBOSE << "--item " << cnt++ << " " << std::hex << *i << std::dec;
+      log << MSG::VERBOSE << "--item " << cnt++ << " " << std::hex << i->get() << std::dec;
       if ((*i)->isHead()){
         log << " (head)";
         ++head_cnt;
@@ -661,10 +636,10 @@ void UpdateManagerSvc::dump(){
 
     if (dot_file) {
       // graph node for registered item (first part, label)
-      (*dot_file) << "item_" << std::hex << *i
+      (*dot_file) << "item_" << std::hex << i->get()
     		  << "[label=\""
     		  << "(" << std::dec << cnt-1 << ") "
-    		  << std::hex << *i << "\\n"
+    		  << std::hex << i->get() << "\\n"
     		  << "(" << (*i)->ptr << ")";
     }
 
@@ -704,7 +679,7 @@ void UpdateManagerSvc::dump(){
           if (dot_file) {
             // Add an arrow to the graph connecting the user Item to the
             // used Item
-            (*dot_file) << "item_" << std::hex << *i << " -> " << "item_" << std::hex << *itemIt << ";\n";
+            (*dot_file) << "item_" << std::hex << i->get() << " -> " << "item_" << std::hex << *itemIt << ";\n";
           }
         }
         if ( m_outputLevel <= MSG::VERBOSE )
@@ -756,7 +731,7 @@ void UpdateManagerSvc::purge() {
       // remove connections to children if the object is going to be reloaded
       auto c = children.begin();
       while ( c != children.end() ) {
-        unlink(item,*c);
+        unlink(item.get(),*c);
         c = children.begin();
       }
     }

@@ -7,22 +7,28 @@ inline void UpdateManagerSvc::link(Item* parent, BaseObjectMemberFunction *mf, I
   mf = parent->addChild(mf,child);
   child->addParent(parent,mf);
 }
+
 inline UpdateManagerSvc::Item *UpdateManagerSvc::findItem(const std::string &path, bool is_path_to_db ) const {
   if ( is_path_to_db ) { // "path to db" is not indexed, we need a full scan
-    for (Item::ItemList::const_iterator i = m_all_items.begin(); i != m_all_items.end(); ++i){
-      if ((*i)->match(path,is_path_to_db)) return *i;
-    }
+    auto i = std::find_if(m_all_items.begin(), m_all_items.end(),
+                          [&](const std::unique_ptr<Item>& j) {
+            return j->match(path,is_path_to_db);
+    });
+    if (i!=m_all_items.end()) return i->get();
   }
   return const_cast<Item*>( m_pathMap(path) );
 }
+
 inline UpdateManagerSvc::Item *UpdateManagerSvc::findItem(void *p) const {
-  for (Item::ItemList::const_reverse_iterator i = m_all_items.rbegin(); i != m_all_items.rend(); ++i){
-    if ((*i)->match(p)) return *i;
-  }
-  return NULL;
+  auto i = std::find_if(m_all_items.rbegin(),m_all_items.rend(),
+                        [&](const std::unique_ptr<Item>& j) {
+              return j->match(p);
+  });
+  return i!=m_all_items.rend() ? i->get() : nullptr;
 }
+
 inline UpdateManagerSvc::Item *UpdateManagerSvc::findItem(BaseObjectMemberFunction *mf) const {
-  Item *item = NULL;
+  Item *item = nullptr;
   ValidDataObject *vdo = mf->castToValidDataObject();
   if (vdo && vdo->registry()){
     std::string name = vdo->registry()->identifier();
@@ -33,11 +39,10 @@ inline UpdateManagerSvc::Item *UpdateManagerSvc::findItem(BaseObjectMemberFuncti
     }
     item = findItem(name);
   }
-  if (!item) {
-    item = findItem(mf->castToVoid());
-  }
+  if (!item) item = findItem(mf->castToVoid());
   return item;
 }
+
 inline void UpdateManagerSvc::removeFromHead(Item *item) {
   m_head_items.erase(std::find(m_head_items.begin(),m_head_items.end(),item));
 }

@@ -3,6 +3,15 @@
 ! package manager : Marco Clemencic
 ! purpose:          Component library for Detector Description Services
 ! ====================================================================
+! 2016-01-16 Gerhard Raven
+  Modernization of UpdateManagerSvc:
+  - prefer range-based loops
+  - prefer STL algortihms
+  - prefer auto
+  - prefer SmartIF
+  - prefer std::unique_ptr
+  - prefer direct member initialization
+
 ! 2016-01-07 Gerhard Raven
  - prefer extends over pure virtual inheritance, and use extends' version
    of queryInterface
