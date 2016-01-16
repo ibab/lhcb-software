@@ -1,4 +1,4 @@
-// $Id:$
+// $Id$
 // ============================================================================
 // Include files
 // ============================================================================
@@ -25,9 +25,9 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  @date 2013-04-14 
  *
- *                    $Revision: 134315 $
- *  Last modification $Date: 2012-01-29 14:43:08 +0100 (Sun, 29 Jan 2012) $
- *                 by $Author: ibelyaev $
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ============================================================================
 /** constructor from one 
