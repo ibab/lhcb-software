@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: tests.py 124207 2011-06-02 16:05:29Z ibelyaev $
+# $Id$
 # =============================================================================
 ## @file   LoKiMC/tests2.py
 #   Test the problem reported in JIRA:
@@ -31,7 +31,7 @@ A.Golutvin, P.Koppenburg have been used in the design.
 # =============================================================================
 __author__  = "Pieter David pieter.david@nikhef.nl"
 __date__    = "2007-05-29"
-__version__ = "$Revision: 124207 $ "
+__version__ = "$Revision$ "
 # =============================================================================
 
 from LoKiCore.basic import LoKi, std,cpp 
