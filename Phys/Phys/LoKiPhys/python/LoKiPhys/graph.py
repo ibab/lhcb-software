@@ -54,13 +54,15 @@ __all__     = (
 # =============================================================================
 import pydot 
 from   LoKiPhys.Phys import LHCb
+#
+node_attributes = { 'shape'     : 'ellipse' ,
+                    'fillcolor' : 'yellow'  , 
+                    'color'     : 'red'     ,
+                    'style'     : 'filled'  }
+edge_attributes = { 'color'     : 'red'     }
+#
+PARTICLE = LHCb.Particle 
 # 
-node_attributes = { shape     : 'ellipse' ,
-                    fillcolor : 'yellow'  , 
-                    color     : 'red'     ,
-                    style     : 'filled'  }
-edge_attributes = { color     : 'red'     }
-
 # =============================================================================
 ## @class DecayGraph
 #  Make graphical (dot) representation of the decay tree
@@ -84,7 +86,7 @@ class DecayGraph ( object ) :
         self._edges = set()
         self._graph = pydot.Dot ( 'DecayTree' , graph_type = 'digraph' )
         
-        if isinstance ( trees , LHCb.Particle ) : trees = [ trees ] 
+        if isinstance ( trees , PARTICLE ) : trees = [ trees ] 
         for t in trees :
             self.add_tree ( t )
 
@@ -162,11 +164,11 @@ def _p_graph_ ( particle , format = 'dot' , filename = 'decaytree' ) :
     return graph ( p , format = format , filename = filename )
 
 
-for t in ( LHCb.Particle             ,
-           LHCb.Particle.Container   ,
-           LHCb.Particle.Selection   ,
-           LHCb.Particle.ConstVector ,
-           LHCb.Particle.Range       ) : t.graph = _p_graph_ 
+for t in ( PARTICLE             ,
+           PARTICLE.Container   ,
+           PARTICLE.Selection   ,
+           PARTICLE.ConstVector ,
+           PARTICLE.Range       ) : t.graph = _p_graph_ 
 
 # =============================================================================
 if '__main__' == __name__ :
