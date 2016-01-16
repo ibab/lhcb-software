@@ -60,12 +60,9 @@ if not hasattr ( HepMC.GenParticle , '_orig_momentum_' ) :
     _orig_momentum_                   = HepMC.GenParticle.momentum
     HepMC.GenParticle._orig_momentum_ = _orig_momentum_ 
     def _momentum_ ( p ) :
-        """
-        4-momenemtum of HepMC::GenParticle
-        
+        """4-momentumtum of HepMC::GenParticle
         >>> p = ...
         >>> v = p.momentum()
-        
         """
         m = p._orig_momentum_ ()
         return Gaudi.LorentzVector ( m.px () ,
@@ -344,8 +341,7 @@ extract      = genParticles
 # =============================================================================
 ## Count number of 'interesting' elements in the decay tree or container,
 def count_if ( s , *a ) :
-    """
-    Count number of 'interesting' elements in the decay tree or container,
+    """Count number of 'interesting' elements in the decay tree or container,
     which satisfy certain criteria
 
     >>> o = ...
@@ -359,8 +355,7 @@ count_if . __doc__ += "\n\n" + LoKi.Dicts.GenAlgs.count_if . __doc__
 # =============================================================================
 ## Check the presence of 'interesting' elements in the decay tree or container,
 def found ( s , *a ) :
-    """
-    check the presence of 'interesting' elements in the decay tree or container,
+    """Check the presence of 'interesting' elements in the decay tree or container,
     which satisfy certain criteria
 
     >>> o = ...
@@ -375,8 +370,7 @@ found . __doc__ += "\n\n" + LoKi.Dicts.GenAlgs.found . __doc__
 # =============================================================================
 ## Accumulate through the decay tree or container,
 def accumulate  ( s , *a ) :
-    """
-    Accumulate through the decay tree or container,
+    """Accumulate through the decay tree or container,
 
     >>> o = ...
     >>> ptOfAllPions= accumulate ( o , GPT , 'pi+' == GABSID )
@@ -390,8 +384,7 @@ accumulate. __doc__ += "\n\n" + LoKi.Dicts.GenAlgs.accumulate . __doc__
 # =============================================================================
 ## Find the minimal value through decay tree or  container  
 def min_value ( s , *a ) :
-    """
-    Find the minimal value through decay tree or  container  
+    """Find the minimal value through decay tree or  container  
 
     >>> o = ...
     >>> minPT = min_value ( o , GPT , 'pi+' == GABSID )
@@ -404,8 +397,7 @@ min_value. __doc__ += "\n\n" + LoKi.Dicts.GenAlgs.min_value . __doc__
 # =============================================================================
 ## Find the maximal value through decay tree or  container  
 def max_value ( s , *a ) :
-    """
-    Find the maximal value through decay tree or  container  
+    """Find the maximal value through decay tree or  container  
 
     >>> o = ...
     >>> maxPT = max_value ( o , GPT , 'pi+' == GABSID )
@@ -432,8 +424,7 @@ min_element. __doc__ += "\n\n" + LoKi.Dicts.GenAlgs.min_element . __doc__
 # =============================================================================
 ## Find the maximal element through decay tree or  container  
 def max_element ( s , *a ) :
-    """
-    Find the maximal element through decay tree or  container  
+    """Find the maximal element through decay tree or  container  
 
     >>> o = ...
     >>> pion = max_element ( o , GPT , 'pi+' == GABSID )
@@ -480,8 +471,7 @@ for t in ( HepMC.GenParticle ,
 # =============================================================================
 ## print the decay  
 def printDecay ( s , *a ) :
-    """
-    Print the decay of HepMC::GenParticle
+    """Print the decay of HepMC::GenParticle
 
     >>> p = ...
     >>> printDecay ( p )
@@ -564,7 +554,6 @@ for r in ( HepMC.GenParticle.Range ,
     r.__getslice__ = _LCD . _slice_
     r.__getitem__  =    r . __call__ 
     r.__setitem__  =          None
-
    
 if not hasattr ( LHCb.HepMCEvent , 'Container' ) :
     LHCb.HepMCEvent.Container = cpp.KeyedContainer(LHCb.HepMCEvent,'Containers::KeyedObjectManager<Containers::hashmap>')
@@ -612,8 +601,6 @@ for t in ( HepMC.GenParticle             ,
     t._print_   = _print_
     t.__str__   = _print_
     t.__repr__  = _print_
-    
-
     
     
 # =============================================================================
