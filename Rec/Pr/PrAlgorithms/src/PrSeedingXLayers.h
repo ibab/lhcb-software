@@ -177,7 +177,7 @@ public:
   /// Class to find lower bound of x of PrHit
   class lowerBoundX {
   public:
-    bool operator() (const PrHit* lhs, const double testval ) const { return lhs->x() < testval; }
+    bool operator() (const PrHit* lhs, const float testval ) const { return lhs->x() < testval; }
   };
   
   /// Class to compare x positions of PrHits
@@ -209,6 +209,15 @@ private:
   unsigned int    m_minTPlanes;
   unsigned int    m_maxParabolaSeedHits;
 
+  bool            m_useFix; //added  
+  bool            m_decodeData;
+  bool            m_printSettings;
+  bool            m_xOnly;
+  
+  bool            m_useCubic;
+  bool            m_useCorrPos;
+  bool            m_SlopeCorr;           
+
   float           m_maxChi2InTrack;
   float           m_maxIpAtZero;
   float           m_maxIpAtZeroIN;
@@ -224,26 +233,16 @@ private:
   float           m_tolYOffset;//added(debug)
   float           m_tolTriangle; //added(debug)
 
-  bool            m_useFix; //added  
-  bool            m_decodeData;
-  bool            m_printSettings;
-  bool            m_xOnly;
-  
-  bool            m_useCubic;
-  bool            m_useCorrPos;
-  bool            m_SlopeCorr;           
 
-  double          m_x0Corr;
-  double          m_zReference;
-  double          m_dRatio;
-  double          m_ConstC;
+  float          m_zReference;
+  float          m_dRatio;
   //--------_Fit X parametrisation                                                                                                                         
-  double          m_maxChi2HitsX;
+  float          m_maxChi2HitsX;
   //--------_Full Fit parametrisation                                                                                                                      
-  double          m_maxChi2HitFullFitHigh;
-  double          m_maxChi2HitFullFitLow;
-  double          m_maxY0Low;
-  double          m_maxYZrefLow;
+  float          m_maxChi2HitFullFitHigh;
+  float          m_maxChi2HitFullFitLow;
+  float          m_maxY0Low;
+  float          m_maxYZrefLow;
 
 
   PrHitManager*   m_hitManager;

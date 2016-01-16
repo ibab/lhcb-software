@@ -12,6 +12,7 @@
 // 2013-02-14 : Olivier Callot
 // 2013-03-21 : Yasmine Amhis Modification
 // 2014-11-24 : Renato Quagliani Modification
+// 2016-01-16 : Sevda Esen Modification 
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -41,8 +42,6 @@ GaudiHistoAlg ( name , pSvcLocator ),
   declareProperty( "MaxChi2InTrack",      m_maxChi2InTrack       = 5.5                          ); 
   declareProperty( "TolXInf",             m_tolXInf              = 0.5 * Gaudi::Units::mm       );
   declareProperty( "TolXSup",             m_tolXSup              = 8.0 * Gaudi::Units::mm       );
-  //  declareProperty( "TolXInfIN",           m_tolXInfIN            = 0.5 * Gaudi::Units::mm       );
-  //declareProperty( "TolXSupIN",           m_tolXSupIN            = 8.0 * Gaudi::Units::mm       );
   declareProperty( "MinXPlanes",          m_minXPlanes           = 4                            );
   declareProperty( "MinSPlanes",          m_minSPlanes           = 4                            );
   declareProperty( "MinTPlanes",          m_minTPlanes           = 9                            );
@@ -67,7 +66,6 @@ GaudiHistoAlg ( name , pSvcLocator ),
   //Parameter Track Model                                                                                                                              
   declareProperty( "UseCubicCorrection",  m_useCubic              = true                        );
   declareProperty( "dRatio",              m_dRatio                = -0.000262                   ); 
-  declareProperty( "CConst",              m_ConstC                =  2.458e8                    );  
   declareProperty( "UseCorrPosition",     m_useCorrPos            = true                        ); 
   declareProperty( "maxChi2Hits_high",    m_maxChi2HitFullFitHigh = 5.5                         );
   declareProperty( "maxChi2Hits_low",     m_maxChi2HitFullFitLow  = 2.5                         );
@@ -405,26 +403,26 @@ bool PrSeedingXLayers::fitTrack( PrSeedTrack& track ) {
 bool PrSeedingXLayers::fitXProjection(PrSeedTrack& track ){
   if (msgLevel(MSG::DEBUG)) debug()<<"Fitting"<<endmsg;
 
-  double mat[6];
-  double rhs[3];
-  const double zRef = m_zReference;
+  float mat[6];
+  float rhs[3];
+  const float zRef = m_zReference;
   // if(m_useCubic) track.setdRatio(m_dRatio);                                                                                                             
   for(int loop = 0;3>loop;++loop)
     {
       std::fill(mat,mat+6,0.);
       std::fill(rhs,rhs+3,0.);
       for( PrHits::iterator itH = track.hits().begin(); track.hits().end() != itH; ++itH ){
-	const double dRatio = track.dRatio();
-	double w = (*itH)->w();//squared                                                                                                                     
+	const float dRatio = track.dRatio();
+	float w = (*itH)->w();//squared                                                                                                                     
 	if(m_SlopeCorr){
 	  track.setSlopeCorr( true);
-	  double Corr = std::cos( track.xSlope( (*itH)->z()));
+	  float Corr = std::cos( track.xSlope( (*itH)->z()));
 	  if(loop ==0) Corr = 1.;
 	  w = w*(Corr*Corr);
 	}
-	const double dz= 0.001*((*itH)->z() - zRef);
-	const double deta = dz*dz*(1. + dRatio*dz);
-	const double dist = track.distance( *itH );
+	const float dz= 0.001*((*itH)->z() - zRef);
+	const float deta = dz*dz*(1. + dRatio*dz);
+	const float dist = track.distance( *itH );
 	if (msgLevel(MSG::DEBUG)) debug()<<"Loop \t"<<loop<<"\n Distance From Hit \t"<<dist<<endmsg;
 	mat[0]+= w;
 	mat[1]+= w * dz;   mat[2]+= w * dz * dz;
@@ -433,7 +431,7 @@ bool PrSeedingXLayers::fitXProjection(PrSeedTrack& track ){
 	rhs[1]+= w * dist * dz;
 	rhs[2]+= w * dist * deta;
       }
-      ROOT::Math::CholeskyDecomp<double,3> decomp(mat);
+      ROOT::Math::CholeskyDecomp<float,3> decomp(mat);
       if(!decomp){
 	return false;
       }
@@ -458,19 +456,14 @@ bool PrSeedingXLayers::fitXProjection(PrSeedTrack& track ){
       }
     }
   //Compute some values on the track                                                                                                                       
-  double maxChi2 = 0.;
+  float maxChi2 = 0.;
   for ( PrHits::iterator itH = track.hits().begin(); track.hits().end() != itH; ++itH ) 
     {
-      double chi2_onHit = track.chi2( *itH );
+      float chi2_onHit = track.chi2( *itH );
       if ( chi2_onHit > maxChi2 ){
 	maxChi2 = chi2_onHit;
       }
     }
-  // double X0 = track.ax() - track.bx()*m_geoTool->zReference()+track.cx()*m_ConstC;                                                                      
-  double X0 = track.ax() - track.bx()*m_zReference+track.cx()*m_ConstC;
-
-  track.setX0(X0);
-  track.setMaxChi2(maxChi2);
   return ( m_maxChi2HitsX > maxChi2 );
 }
 
@@ -480,36 +473,36 @@ bool PrSeedingXLayers::fitXProjection(PrSeedTrack& track ){
 bool PrSeedingXLayers::fitSimultaneouslyXY( PrSeedTrack& track, int refit){
 
   if( track.nx() <m_minXPlanes || track.ny() <m_minSPlanes ) return false;
-  double mat[15];
-  double rhs[5];
+  float mat[15];
+  float rhs[5];
 
-  const double zRef = m_zReference;// m_geoTool->zReference();                                                                                             
+  const float zRef = m_zReference;// m_geoTool->zReference();                                                                                             
   for ( int loop = refit; 3 > loop ; ++loop ){
     if(loop ==1 && m_useCubic && m_useCorrPos){
-      double RadiusPosition = std::sqrt((0.0005*0.0005*track.ax()*track.ax() + 0.001*0.001*track.y(zRef)*track.y(zRef)));
-      double dRatioPos = -1.*(2.633e-4 - 3.59957e-6*RadiusPosition + 4.7312e-5*RadiusPosition*RadiusPosition);
+      float RadiusPosition = std::sqrt((0.0005*0.0005*track.ax()*track.ax() + 0.001*0.001*track.y(zRef)*track.y(zRef)));
+      float dRatioPos = -1.*(2.633e-4 - 3.59957e-6*RadiusPosition + 4.7312e-5*RadiusPosition*RadiusPosition);
       track.setdRatio(dRatioPos);
     }
 
     std::fill(mat,mat+15,0.);
     std::fill(rhs,rhs+5,0.);
     for( PrHits::iterator itH = track.hits().begin(); track.hits().end() != itH; ++itH ){
-      double w = (*itH)->w();
+      float w = (*itH)->w();
       if( m_SlopeCorr && loop >0){
-        const double Corr = std::cos(track.xSlope( (*itH)->z()) );
+        const float Corr = std::cos(track.xSlope( (*itH)->z()) );
         track.setSlopeCorr( true);
         w = w*(Corr*Corr);
       }
-      const double dxdy = (*itH)->dxDy();
-      const double yOnTrack = track.yOnTrack( (*itH) ) ;
-      const double   dz = 0.001*((*itH)->z( yOnTrack ) - zRef);
-      const double dRatio = track.dRatio();
-      const double deta = dz*dz*(1. + dz*dRatio);
-      const double wdz = w * dz;
-      const double weta = w * deta;
-      const double wdxdy = w * dxdy;
-      const double wdxdydz = wdxdy * dz;
-      const double dist = track.distance(*itH);
+      const float dxdy = (*itH)->dxDy();
+      const float yOnTrack = track.yOnTrack( (*itH) ) ;
+      const float   dz = 0.001*((*itH)->z( yOnTrack ) - zRef);
+      const float dRatio = track.dRatio();
+      const float deta = dz*dz*(1. + dz*dRatio);
+      const float wdz = w * dz;
+      const float weta = w * deta;
+      const float wdxdy = w * dxdy;
+      const float wdxdydz = wdxdy * dz;
+      const float dist = track.distance(*itH);
       mat[0] += w;
       mat[1] += wdz;  mat[2] += wdz * dz;
       mat[3] += weta; mat[4] += weta * dz; mat[5] += weta * deta;
@@ -523,7 +516,7 @@ bool PrSeedingXLayers::fitSimultaneouslyXY( PrSeedTrack& track, int refit){
       rhs[3] -= wdxdy * dist;
       rhs[4] -= wdxdydz * dist;
     }//Loop over Hits to fill the matrix                                                                                                                   
-    ROOT::Math::CholeskyDecomp<double, 5> decomp(mat);
+    ROOT::Math::CholeskyDecomp<float, 5> decomp(mat);
     if (!decomp) return false;
     decomp.Solve(rhs);
     rhs[1]*=1.e-3;
@@ -534,15 +527,14 @@ bool PrSeedingXLayers::fitSimultaneouslyXY( PrSeedTrack& track, int refit){
                    std::fabs(rhs[2]) > 1e-3 || std::fabs(rhs[3]) > 1e4 || std::fabs(rhs[4]) > 1.)) return false;
     track.updateParameters(rhs[0],rhs[1],rhs[2],rhs[3],rhs[4]);
   }
-  double maxChi2 =0.;
+  float maxChi2 =0.;
   for( PrHits::iterator itH = track.hits().begin(); track.hits().end() != itH; ++itH ){
-    double chi2_onHit = track.chi2( *itH);
+    float chi2_onHit = track.chi2( *itH);
     if ( chi2_onHit > maxChi2 ){
       maxChi2 = chi2_onHit;
     }
   }//Set Max Chi2DoF                                                                                                                                       
-  double X0 = track.ax() - track.bx()*m_zReference+track.cx()*m_ConstC;
-  track.setX0(X0);
+
   track.setMaxChi2(maxChi2);
   if( (track.hits().size()>10) && maxChi2<m_maxChi2HitFullFitHigh) return true;
   if( std::fabs(track.y(0.))< m_maxY0Low &&
@@ -616,9 +608,9 @@ void PrSeedingXLayers::makeLHCbTracks ( LHCb::Tracks* result ) {
     LHCb::Track* tmp = new LHCb::Track;
     tmp->setType( LHCb::Track::Ttrack );
     tmp->setHistory( LHCb::Track::PrSeeding );
-    double qOverP = m_geoTool->qOverP( *itT );
+    float qOverP = m_geoTool->qOverP( *itT );
     LHCb::State tState;
-    double z = StateParameters::ZEndT;
+    float z = StateParameters::ZEndT;
     tState.setLocation( LHCb::State::AtT );
     tState.setState( (*itT).x( z ), (*itT).y( z ), z, (*itT).xSlope( z ), (*itT).ySlope( ), qOverP );
     
@@ -683,8 +675,8 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
      //Load of Hits on zones
     PrHitZone* fZone = m_hitManager->zone( firstZone );
     PrHitZone* lZone = m_hitManager->zone( lastZone  );
-    double invDeltaz= 1./ (lZone->z() - fZone->z() );
-    double zRatio =  lZone->z(0.) / fZone->z(0.);
+    float invDeltaz= 1./ (lZone->z() - fZone->z() );
+    float zRatio =  lZone->z(0.) / fZone->z(0.);
 
     PrHits& fHits = fZone->hits();
     PrHits& lHits = lZone->hits();
@@ -1095,7 +1087,7 @@ int PrSeedingXLayers::matchXCandidate( PrSeedTrack& track ){
     }
     
   }
-  double fraction =  nMost/nHits;
+  float fraction =  nMost/nHits;
   if (fraction>0.65) return key;
   else return -201;
 }
@@ -1166,7 +1158,7 @@ void PrSeedingXLayers::addStereo2( unsigned int part ) {
         if ( (*itH)->x() < xMin ) continue;
         if ( (*itH)->x() > xMax ) break;
 
-	const double yOnTrack = ( xPred - (*itH)->x() )  * invdxDy;
+	const float yOnTrack = ( xPred - (*itH)->x() )  * invdxDy;
 	if (m_useFix && ((part==0&&kk%2==1) || (part==1&&kk%2==0) )){
 
 	  if ( yOnTrack  < (*itH)->yMin() - m_tolTriangle  ) {
@@ -1277,17 +1269,17 @@ void PrSeedingXLayers::addStereo2( unsigned int part ) {
 //========================================================================
 void PrSeedingXLayers::solveParabola(const PrHit* hit1, const PrHit* hit2, const PrHit* hit3, float& a, float& b, float& c){
  
-  const double z1 = hit1->z() - m_zReference;//->zReference();       
-  const double z2 = hit2->z() - m_zReference;//m_geoTool->zReference();        
-  const double z3 = hit3->z() - m_zReference;//m_geoTool->zReference();                                                                                     
-  const double x1 = hit1->x();
-  const double x2 = hit2->x();
-  const double x3 = hit3->x();
+  const float z1 = hit1->z() - m_zReference;//->zReference();       
+  const float z2 = hit2->z() - m_zReference;//m_geoTool->zReference();        
+  const float z3 = hit3->z() - m_zReference;//m_geoTool->zReference();                                                                                     
+  const float x1 = hit1->x();
+  const float x2 = hit2->x();
+  const float x3 = hit3->x();
 
-  const double corrZ1 = 1.+m_dRatio*z1;
-  const double corrZ2 = 1.+m_dRatio*z2;
-  const double corrZ3 = 1.+m_dRatio*z3;
-  const double det = (z1*z1)*corrZ1*z2 + z1*(z3*z3)*corrZ3 + (z2*z2)*corrZ2*z3 - z2*(z3*z3)*corrZ3 - z1*(z2*z2)*corrZ2 - z3*(z1*z1)*corrZ1;
+  const float corrZ1 = 1.+m_dRatio*z1;
+  const float corrZ2 = 1.+m_dRatio*z2;
+  const float corrZ3 = 1.+m_dRatio*z3;
+  const float det = (z1*z1)*corrZ1*z2 + z1*(z3*z3)*corrZ3 + (z2*z2)*corrZ2*z3 - z2*(z3*z3)*corrZ3 - z1*(z2*z2)*corrZ2 - z3*(z1*z1)*corrZ1;
   if( std::fabs(det) < 1e-8 )
     {
       a = 0.0;
@@ -1295,10 +1287,10 @@ void PrSeedingXLayers::solveParabola(const PrHit* hit1, const PrHit* hit2, const
       c = 0.0;
       return;
     }
-  const double recdet = 1./det;
-  const double det1 = (x1)*z2 + z1*(x3) + (x2)*z3 - z2*(x3) - z1*(x2) - z3*(x1);
-  const double det2 = (z1*z1)*corrZ1*x2 + x1*(z3*z3)*corrZ3 + (z2*z2)*corrZ2*x3 - x2*(z3*z3)*corrZ3 - x1*(z2*z2)*corrZ2 - x3*(z1*z1)*corrZ1;
-  const double det3 = (z1*z1)*corrZ1*z2*x3 + z1*(z3*z3)*corrZ3*x2 + (z2*z2)*corrZ2*z3*x1  
+  const float recdet = 1./det;
+  const float det1 = (x1)*z2 + z1*(x3) + (x2)*z3 - z2*(x3) - z1*(x2) - z3*(x1);
+  const float det2 = (z1*z1)*corrZ1*x2 + x1*(z3*z3)*corrZ3 + (z2*z2)*corrZ2*x3 - x2*(z3*z3)*corrZ3 - x1*(z2*z2)*corrZ2 - x3*(z1*z1)*corrZ1;
+  const float det3 = (z1*z1)*corrZ1*z2*x3 + z1*(z3*z3)*corrZ3*x2 + (z2*z2)*corrZ2*z3*x1  
     - z2*(z3*z3)*corrZ3*x1 - z1*(z2*z2)*corrZ2*x3 - z3*(z1*z1)*corrZ1* x2;
 
   a = recdet*det1;
