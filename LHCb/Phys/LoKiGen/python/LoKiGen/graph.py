@@ -49,6 +49,7 @@ __date__    = "2015-01-16"
 __version__ = "$Revision$"
 __all__     = (
     'graph'           ,  ## function to produce graph 
+    'view'            ,  ## function to produce graph and immediately display it 
     'HepMCDecayGraph'    ## helper class to produce graph 
     ) 
 # =============================================================================
@@ -65,6 +66,8 @@ PARTICLE   = HepMC.GenParticle
 HEPMCEVENT = HepMC.GenEvent
 LHCBEVENT  = LHCb.HepMCEvent
 LHCBEVENTS = LHCb.HepMCEvent.Container 
+CONTAINER  = HepMC.GenParticle.ConstVector
+RANGE      = HepMC.GenParticle.Range
 # 
 # =============================================================================
 ## @class HepMCDecayGraph
@@ -90,28 +93,8 @@ class HepMCDecayGraph ( object ) :
         self._graph      = pydot.Dot ( 'DecayTree' , graph_type = 'digraph' )
         
         if   isinstance ( trees , PARTICLE   ) : trees = [ trees ]
-        elif isinstance ( trees , HEPMCEVENT ) :
-            parts = set()
-            for p in trees.particles_all() : parts.add ( p ) 
-            trees = list( parts )
-        elif isinstance ( trees , LHCBEVENT  ) :
-            evt   = trees.pGenEvt()
-            trees = []
-            if evt :
-                parts  = set() 
-                for p in evt.particles_all() : parts.add ( p )
-                trees += list( parts )
-        elif isinstance ( trees , LHCBEVENTS ) :
-            evts  = trees
-            trees = []
-            for levt in evts :
-                if not levt : continue
-                evt = levt.pGenEvt()
-                if evt :
-                    parts  = set() 
-                    for p in evt.particles_all() : parts.add ( p )
-                    trees += list( parts )
-
+        elif isinstance ( trees , ( HEPMCEVENT , LHCBEVENT , LHCBEVENTS ) ) : 
+            trees =  trees.trees() 
         
         for t in trees :
             self.add_tree ( t )
@@ -119,22 +102,15 @@ class HepMCDecayGraph ( object ) :
     ## construct node-id for the given particle
     def node_id ( self , p ) :                
         if not p  : return ''
-        # get the container
-        return '%s:%s:#%d' % ( p.name () , hex ( id ( p ) ) , p.barcode() )
+        nid = '%s:%s:#%d/%d' % ( p.name () , p.hex_id() , p.barcode() , p.status() ) 
+        return pydot.quote_if_necessary( nid ) 
 
     ## add particle to graph 
     def add_tree ( self , p ) :
 
         nid = self.node_id ( p )
-        if nid in self._nodes : return nid 
-
-        nid = nid.replace ( ':'       , '/' )
-        nid = nid.replace ( '_'       , '/' )
-        nid = nid.replace ( '#'       , '/' )
-        nid = nid.replace ( '<'       , ''  )
-        nid = nid.replace ( '>'       , ''  )
-        nid = nid.replace ( 'Unknown' , ''  )
-
+        if nid in self._nodes : return nid
+        
         # create new node
         node = pydot.Node ( name      = nid       ,
                             label     = p.name()  , **node_attributes) 
@@ -162,7 +138,7 @@ class HepMCDecayGraph ( object ) :
 #  @endcode
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2016-01-16
-def graph ( particle , format = 'dot' , filename = 'hepmcdecaytree' ) :
+def graph ( particle , format = 'png' , filename = 'hepmcdecaytree' ) :
     """ Make a graph for given particle
     >>> p               = ...
     >>> graph_file_name = graph( p , format  = 'png' )
@@ -170,29 +146,73 @@ def graph ( particle , format = 'dot' , filename = 'hepmcdecaytree' ) :
     dg = HepMCDecayGraph ( particle )
     dt = dg.graph() 
     #
+    f , d , e = filename.rpartition('.')
+    if not d : filename += '.' + format
+    #
     return filename if dt.write ( filename , format = format ) else None 
 
 # =============================================================================
-## make a graph for given particle or container of particles 
+## prepare the graph and vizualize it
 #  @code
-#  p               = ...
-#  graph_file_name = p.graph( format  = 'png' )
+#  p = ...
+#  p.view ( format  = 'png' )
 #  @endcode
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2016-01-16
-def _p_graph_ ( p , format = 'dot' , filename = 'hepmcdecaytree'  ) :
-    """ Make a graph for given particle
-    >>> p               = ...
-    >>> graph_file_name = p.graph ( format  = 'png' )
+def view ( particle , command = None , format = 'png' ) :
+    """Prepare the graph and vizualize it
+    p = ...
+    p.view ( format  = 'png' )
+    p.view ( format  = 'png' , commmand = 'eog' )
     """
-    return graph ( p , format = format , filename = filename )
+
+    
+    class _TmpName_(object):
+        def __init__ ( self , suffix = 'png' ) : self.suffix = '.' + suffix 
+        def __enter__ ( self ) :
+            import tempfile
+            self.name = tempfile.mktemp ( suffix = self.suffix )
+            return self.name 
+        def __exit__  ( self , *_ ) :
+            import os
+            try :
+                if os.path.exists ( self.name ) :
+                    os.remove ( self.name )
+            except:
+                pass
+            
+    with _TmpName_( format ) as ofile :
+
+        if not graph ( particle , format , filename = ofile ) :  
+            print 'Error producing the graph for %s '% particle.decay()
+            return
+        
+        if not command: 
+            import distutils.spawn  as ds
+            for i in ( 'eog'     , 'display', 'gnome-photos'  , 'gwenview' ,  
+                       'gimp'    , 'gthumb' , 'google-chrome' ) :
+                command = ds.find_executable ( i )
+                if command : break
+                
+        if not command :
+            print 'No valid command is found!'
+            return
+        
+        import subprocess
+        try:
+            subprocess.check_call ( "%s %s " % ( command , ofile ) , shell = True )
+        except subprocess.CalledProcessError :
+            pass 
+            
 
 for t in ( PARTICLE             ,
            PARTICLE.Range       ,
            PARTICLE.ConstVector ,           
            HEPMCEVENT           ,
            LHCBEVENT            ,
-           LHCBEVENTS           ) : t.graph = _p_graph_ 
+           LHCBEVENTS           ) :
+    t.graph = graph
+    t.view  = view 
 
 # =============================================================================
 if '__main__' == __name__ :

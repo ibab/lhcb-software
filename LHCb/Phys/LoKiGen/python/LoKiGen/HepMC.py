@@ -319,6 +319,24 @@ relatives . __doc__ += "\n\n" + LoKi.GenChild.relatives . __doc__
 HepMC.GenVertex .   relatives   =  relatives
 HepMC.GenVertex . __relatives__ =  relatives
 
+# =============================================================================
+## get all trees from GenEvent/HepMCEvent/HepMCEvents
+#  @code
+#  v = ...
+#  for t in trees ( v ) : print p 
+#  @endcode
+#  @author Vanya BELYAEV van.Belyaev@itep.ru
+#  @date 2016-01-16
+def trees ( v ) :
+    """Get all trees from GenEvent/HepMCEvent/HepMCEvents
+    >>> v = ...
+    >>> for t in trees ( v ) : print p 
+    """
+    return LoKi.GenChild.trees ( v ) 
+
+HepMC.GenEvent           . trees = trees
+LHCb.HepMCEvent          . trees = trees
+
 
 # =============================================================================
 ## Extract the certain elements from decay trees and/or containers
@@ -559,6 +577,10 @@ if not hasattr ( LHCb.HepMCEvent , 'Container' ) :
     LHCb.HepMCEvent.Container = cpp.KeyedContainer(LHCb.HepMCEvent,'Containers::KeyedObjectManager<Containers::hashmap>')
 
 
+LHCb.HepMCEvent.Container     . trees = trees
+HepMC.GenParticle.ConstVector . trees = trees
+HepMC.GenParticle.Range       . trees = trees
+
 # =============================================================================
 ## define various printers 
 def _print_ ( self                                     ,
@@ -590,6 +612,7 @@ def _print_ ( self                                     ,
 
 _print_ . __doc__ += "\n" + LoKi.GenDecayChain.print_ . __doc__ 
 
+HepMC.GenParticle.hex_id = lambda s : LoKi.GenParticles.hex_id ( s )
 
 for t in ( HepMC.GenParticle             ,
            HepMC.GenParticle.Range       , 

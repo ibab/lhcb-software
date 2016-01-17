@@ -18,7 +18,6 @@
 #include "LoKi/PrintHepMCDecay.h"
 #include "LoKi/BuildGenTrees.h"
 #include "LoKi/GenChild.h"
-#include "LoKi/GetHepMC.h"
 #include "LoKi/IGenHybridFactory.h"
 #include "LoKi/GenSources.h"
 // ============================================================================

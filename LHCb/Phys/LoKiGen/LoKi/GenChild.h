@@ -252,7 +252,7 @@ namespace LoKi
     { return particles ( vertex , HepMC::children , output ) ; }
     // ========================================================================
     /** get all "daughter" particles form the given vertex
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-05-26
      */    
     inline size_t daughters 
@@ -391,6 +391,61 @@ namespace LoKi
     children 
     ( const HepMC::GenParticle*        particle , 
       const LoKi::GenChild::Selector& selector ) ;
+    // ========================================================================
+    /** get all independent decay trees from HepMC::GenEvent
+     *  @see LoKi::GenTrees::buildTrees 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2016-01-17
+     *  @attention  it could be a bit slow 
+     */
+    GAUDI_API
+    LoKi::GenTypes::ConstVector
+    trees 
+    ( const HepMC::GenEvent* event    ) ;
+    // ========================================================================
+    /** get all independent decay trees from LHCb::HepMCEvent
+     *  @see LoKi::GenTrees::buildTrees 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2016-01-17
+     *  @attention  it could be a bit slow 
+     */
+    GAUDI_API
+    LoKi::GenTypes::ConstVector
+    trees 
+    ( const LHCb::HepMCEvent* event    ) ;
+    // ========================================================================
+    /** get all independent decay trees from LHCb::HepMCEvent::Container
+     *  @see LoKi::GenTrees::buildTrees 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2016-01-17
+     *  @attention  it could be a bit slow 
+     */
+    GAUDI_API
+    LoKi::GenTypes::ConstVector
+    trees 
+    ( const LHCb::HepMCEvent::Container* events ) ;
+    // ========================================================================
+    /** get all independent decay trees from container of particles 
+     *  @see LoKi::GenTrees::buildTrees 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2016-01-17
+     *  @attention  it could be a bit slow 
+     */
+    GAUDI_API
+    LoKi::GenTypes::ConstVector
+    trees 
+    ( const  LoKi::GenTypes::ConstVector& particles ) ;
+    // ========================================================================
+    /** get all independent decay trees from container of particles 
+     *  @see LoKi::GenTrees::buildTrees 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2016-01-17
+     *  @attention  it could be a bit slow 
+     */
+    GAUDI_API
+    LoKi::GenTypes::ConstVector
+    trees 
+    ( const  LoKi::GenTypes::GRange& particles ) ;
     // ========================================================================
   } //                                          end of namespace LoKi::GenChild 
   // ==========================================================================

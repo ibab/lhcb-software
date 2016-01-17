@@ -11,6 +11,7 @@
 // ============================================================================
 #include "LoKi/GenTypes.h"
 #include "LoKi/GenChild.h"
+#include "LoKi/BuildGenTrees.h"
 // ============================================================================
 /** @file
  *
@@ -239,6 +240,99 @@ LoKi::GenChild::descendants ( const HepMC::GenParticle* particle )
   return LoKi::GenChild::descendants ( particle->end_vertex() ) ;
 }
 // ============================================================================
+/* get all independent decay trees from HepMC::GenEvent
+ *  @see LoKi::GenTrees::buildTrees 
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date   2016-01-17
+ */
+// ============================================================================
+LoKi::GenTypes::ConstVector
+LoKi::GenChild::trees 
+( const HepMC::GenEvent* event )
+{
+  if ( 0 == event ) { return LoKi::GenTypes::ConstVector() ; }
+  LoKi::GenTypes::ConstVector result ;
+  result.reserve ( 128 ) ; 
+  LoKi::GenTrees::buildTrees 
+    ( event -> particles_begin ()   , 
+      event -> particles_end   ()   , 
+      std::back_inserter ( result ) ) ;
+  return result ;  
+}
+// ========================================================================
+/*  get all independent decay trees from LHCb::HepMCEvent
+ *  @see LoKi::GenTrees::buildTrees 
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date   2016-01-17
+ */
+// ============================================================================
+LoKi::GenTypes::ConstVector
+LoKi::GenChild::trees 
+( const LHCb::HepMCEvent* event )
+{
+  if ( 0 == event ) { return LoKi::GenTypes::ConstVector() ; }
+  return trees ( event -> pGenEvt() ) ;
+}
+// ========================================================================
+/*  get all independent decay trees from LHCb::HepMCEvent::Container
+ *  @see LoKi::GenTrees::buildTrees 
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date   2016-01-17
+ */
+// ============================================================================
+LoKi::GenTypes::ConstVector
+LoKi::GenChild::trees 
+( const LHCb::HepMCEvent::Container* events)
+{
+  if ( 0 == events ) { return LoKi::GenTypes::ConstVector() ; }
+  LoKi::GenTypes::ConstVector result ;
+  for ( LHCb::HepMCEvent::Container::const_iterator it = events->begin() ; 
+        events->end() != it ; ++it ) 
+  {
+    LoKi::GenTypes::ConstVector r = trees ( *it ) ;
+    result.insert( result.end() , r.begin() , r.end() ) ;
+  }
+  return result ;
+}
+// ========================================================================
+/*  get all independent decay trees from container of particles
+ *  @see LoKi::GenTrees::buildTrees 
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date   2016-01-17
+ */
+// ============================================================================
+LoKi::GenTypes::ConstVector
+LoKi::GenChild::trees 
+( const LoKi::GenTypes::ConstVector& particles ) 
+{
+  LoKi::GenTypes::ConstVector result ;
+  result.reserve ( particles.size() ) ;
+  LoKi::GenTrees::buildTrees 
+    ( particles.begin () , 
+      particles.end   () , 
+      std::back_inserter ( result ) ) ;
+  return result ;  
+}
+// ========================================================================
+/*  get all independent decay trees from container of particles
+ *  @see LoKi::GenTrees::buildTrees 
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date   2016-01-17
+ */
+// ============================================================================
+LoKi::GenTypes::ConstVector
+LoKi::GenChild::trees 
+( const LoKi::GenTypes::GRange& particles ) 
+{
+  LoKi::GenTypes::ConstVector result ;
+  result.reserve ( particles.size() ) ;
+  LoKi::GenTrees::buildTrees 
+    ( particles.begin () , 
+      particles.end   () , 
+      std::back_inserter ( result ) ) ;
+  return result ;  
+}
+// ========================================================================
 namespace 
 {
   // ==========================================================================
@@ -268,6 +362,7 @@ LoKi::GenChild::child
 ( const HepMC::GenParticle*        particle , 
   const std::vector<unsigned int>& indices  )
 { return _child_ ( particle , indices.begin () , indices.end () ) ; }
+// ============================================================================
 
 
 

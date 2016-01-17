@@ -13,6 +13,11 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2016-01-17 - Vanya Belyaev
+ - LoKiGen.graph: several improvements 
+ - remove old GetHepMC stuff 
+ - add methods to get HepMC-treed  from event, events, containers, ...
+
 ! 2016-01-16 - Vanya Belyaev
  - add new module LoKiGen.graph to produce decay tree graphs 
 

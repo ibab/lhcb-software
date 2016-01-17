@@ -19,8 +19,6 @@
 
 <lcgdict>
   
-  <class name      = "LoKi::GetHepMC"                />
-  
   <class pattern   = "Gaudi::Range_<*HepMC::*>"      />
   <class pattern   = "Gaudi::NamedRange_<*HepMC::*>" />
   <class pattern   = "LoKi::RangeList_<*HepMC::*>"   />
@@ -49,6 +47,7 @@
   <function pattern = "LoKi::GenChild::*"                />
   <function pattern = "LoKi::GenExtract::*"              />
   <function pattern = "LoKi::Dicts::GenAlgs::*"          />
+  <function name    = "LoKi::GenParticles::hex_id"       />
   
   <class name = "LoKi::GenChild::Selector"         />
   

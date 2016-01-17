@@ -55,6 +55,7 @@ namespace LoKi
      *  @param last   end    of flat sequence  of HepMC::GenParticles 
      *  @param output output iterator 
      *  @return iterator for  sequence of trees 
+     *  @attention  it could be a bit slow 
      */
     template <class PARTICLE, class OUTPUT>
     inline OUTPUT buildTrees 
@@ -79,8 +80,9 @@ namespace LoKi
       return output ;
     } 
     // ========================================================================
-  } // end of namespace GenTrees
-} // end of namespace LoKi
+  } //                                          end of namespace LoKi::GenTrees
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================
