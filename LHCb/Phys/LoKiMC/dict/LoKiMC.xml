@@ -52,6 +52,7 @@
   <function pattern = "LoKi::Dicts::MCAlgs::*"              />
   <function pattern = "LoKi::Dicts::MCFinderDicts::*"       />
   <function name    = "LoKi::MCExtract::mcParticles"        />
+  <function name    = "LoKi::MCParticles::hex_id"           />
 
   <class name       = "LoKi::MCChild::Selector" />
 

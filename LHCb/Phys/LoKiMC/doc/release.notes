@@ -14,6 +14,9 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2016-01-17 - Vanya Belyaev
+ - LoKiMC.graph : seevral improvemens for making  graphs from decay trees 
+
 !========================= LoKiMC v10r20 2015-11-23 =========================
 ! 2015-11-20 - Thomas Blake
  - Fix of LoKi::MCAlg::accumulate for LHCb::MCParticle* 

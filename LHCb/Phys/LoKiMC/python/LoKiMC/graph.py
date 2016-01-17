@@ -49,6 +49,7 @@ __date__    = "2015-01-16"
 __version__ = "$Revision$"
 __all__     = (
     'graph'        ,  ## function to produce graph 
+    'view'         ,  ## function to produce graph and immediately display it 
     'MCDecayGraph'    ## helper class to produce graph 
     ) 
 # =============================================================================
@@ -92,28 +93,28 @@ class MCDecayGraph ( object ) :
             self.add_tree ( t )
 
     ## construct node-id for the given particle
-    def node_id ( self , p ) :                
+    def node_id ( self , p ) :
+        """
+        Construct unique node-id for the given particle
+        """
+        
         if not p  : return ''
-        # get the container 
-        c = p.parent() 
-        if not c : return '%s:%s:#%d' % ( p.name () , hex ( id ( p ) ) , p.key() ) 
-        r = c.registry()
-        if not r : return '%s:%s:#%d' % ( p.name () , hex ( id ( p ) ) , p.key() )
-        #
-        return '%s:%s:#%d' % ( p.name() , r.identifier() , p.key() )
-
+        
+        ## construct some unique name 
+        nid = '%s:%s:#%d' % ( p.name () , p.hex_id() , p.key() )
+        ## container 
+        cnt = p.parent() 
+        if cnt :
+            r = cnt.registry()
+            if r : nid = '%s:%s:#%d' % ( p.name() , r.identifier() , p.key() )
+        ## massage the name:
+        return pydot.quote_if_necessary( nid ) 
+                
     ## add particle to graph 
     def add_tree ( self , p ) :
 
         nid = self.node_id ( p )
-        if nid in self._nodes : return nid 
-        
-        nid = nid.replace ( ':'       , '/' )
-        nid = nid.replace ( '_'       , '/' )
-        nid = nid.replace ( '#'       , '/' )
-        nid = nid.replace ( '<'       , ''  )
-        nid = nid.replace ( '>'       , ''  )
-        nid = nid.replace ( 'Unknown' , ''  )
+        if nid in self._nodes : return nid         
 
         # create new node
         node = pydot.Node ( name      = nid       ,
@@ -153,24 +154,67 @@ def graph ( particle , format = 'dot' , filename = 'mcdecaytree' , decay_only = 
     return filename if dt.write ( filename , format = format ) else None 
 
 # =============================================================================
-## make a graph for given particle or container of particles 
+## prepare the graph and vizualize it
 #  @code
-#  p               = ...
-#  graph_file_name = p.graph( format  = 'png' )
+#  p = ...
+#  p.view ( format  = 'png' )
 #  @endcode
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2016-01-16
-def _p_graph_ ( p , format = 'dot' , filename = 'mcdecaytree' , decay_only = True ) :
-    """ Make a graph for given particle
-    >>> p               = ...
-    >>> graph_file_name = p.graph ( format  = 'png' )
+def view ( particle , command = None , format = 'png' , decay_only = True ) :
+    """Prepare the graph and vizualize it
+    p = ...
+    p.view ( format  = 'png' )
+    p.view ( format  = 'png' , commmand = 'eog' )
     """
-    return graph ( p , format = format , filename = filename , decay_only = decay_only )
+
+    
+    class _TmpName_(object):
+        def __init__ ( self , suffix = 'png' ) : self.suffix = '.' + suffix 
+        def __enter__ ( self ) :
+            import tempfile
+            self.name = tempfile.mktemp ( suffix = self.suffix )
+            return self.name 
+        def __exit__  ( self , *_ ) :
+            import os
+            try :
+                if os.path.exists ( self.name ) :
+                    os.remove ( self.name )
+            except:
+                pass
+            
+    with _TmpName_( format ) as ofile :
+
+        if not graph ( particle , format , filename = ofile , decay_only = decay_only ) :  
+            print 'Error producing the graph for %s '% particle.decay()
+            return
+        
+        if not command: 
+            import distutils.spawn  as ds
+            for i in ( 'eog'     , 'display', 'gnome-photos'  , 'gwenview' ,  
+                       'gimp'    , 'gthumb' , 'google-chrome' ) :
+                command = ds.find_executable ( i )
+                if command : break
+                
+        if not command :
+            print 'No valid command is found!'
+            return
+        
+        import subprocess
+        try:
+            subprocess.check_call ( "%s %s " % ( command , ofile ) , shell = True )
+        except subprocess.CalledProcessError :
+            pass 
+
+
 
 for t in ( PARTICLE             ,
            PARTICLE.Container   ,
            PARTICLE.ConstVector ,
-           PARTICLE.Range       ) : t.graph = _p_graph_ 
+           PARTICLE.Range       ) :
+    
+    t.graph = graph 
+    t.view  = view 
 
 # =============================================================================
 if '__main__' == __name__ :

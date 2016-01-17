@@ -80,6 +80,8 @@ LHCb.MCParticle  . nDaughters     = nChildren
 LHCb.MCParticle  . __nChildren__  = nChildren
 LHCb.MCParticle  . __nDaughters__ = nChildren
 
+LHCb.MCParticle.hex_id  = lambda s : LoKi.MCParticles.hex_id ( s ) 
+
 # =============================================================================
 ## get the child 
 def child ( p , *a ) :

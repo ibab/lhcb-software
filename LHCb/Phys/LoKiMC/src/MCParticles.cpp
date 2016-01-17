@@ -28,6 +28,10 @@
 #include "MCInterfaces/IMCDecayFinder.h"
 #include "MCInterfaces/IMCParticleSelector.h"
 // ============================================================================
+// Boost
+// ============================================================================
+#include "boost/format.hpp"
+// ============================================================================
 /*  @file
  *
  *  Implementation file for functions from namespace LoKi::MCParticles 
@@ -2803,9 +2807,17 @@ LoKi::MCParticles::FromInteractions::fillStream ( std::ostream& s ) const
 { return s << " MCFROMXS" ; }
 // ============================================================================
 
-
-
-
+// ============================================================================
+// get unique string for HepMC::Particle 
+// ============================================================================
+std::string LoKi::MCParticles::hex_id ( const LHCb::MCParticle* particle ) 
+{
+  if ( 0 == particle ) { return "NULL" ; }
+  boost::format fmt ( "%p" ) ;
+  const void * p = particle ;
+  fmt % p ;
+  return fmt.str() ;
+}
 
 
 
