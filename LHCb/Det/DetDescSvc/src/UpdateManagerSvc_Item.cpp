@@ -58,7 +58,7 @@ StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time
   resetIOV();
   StatusCode sc(StatusCode::SUCCESS, true);
   // start real update
-  if ( !ptr && !vdo && !path.empty()) { // I do not have a VDO ptr (or a void*) but a path: load it
+  if (ptr == NULL && vdo == NULL && !path.empty()) { // I do not have a VDO ptr (or a void*) but a path: load it
 
     if( log.level() <= MSG::DEBUG )
       log << MSG::DEBUG << "Retrieve object " << path << " from data provider" << endmsg;
@@ -91,7 +91,7 @@ StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time
         // to avoid memory leaks, I have to delete the overriding object
         delete override;
         //override->release();
-        override = nullptr;
+        override = NULL;
       } else { // I cannot update the object, so I replace it.
         //   let's unregister the original object
         sc = dp->unregisterObject(pObj);
@@ -121,14 +121,14 @@ StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time
 
     // try to get the path to CondDB folder
     IOpaqueAddress *pAddr = pObj->registry()->address();
-    if (pAddr) {
+    if (pAddr != NULL) {
       if (pAddr->svcType() == CONDDB_StorageType) {
         // it comes from the cond db, so I can find its path
         db_path = pAddr->par()[0];
       }
     }
   }
-  if (vdo && !vdo->isValid(when)){ // I have a VDO ptr and the object is not valid
+  if (vdo != NULL && !vdo->isValid(when)){ // I have a VDO ptr and the object is not valid
     // Note: this may happen even if we just retrieved the object
     // (see bug #80076, https://savannah.cern.ch/bugs/?80076)
     if (!inInit) { // during initialization we may have a loaded object that doesn't have a valid
@@ -148,7 +148,7 @@ StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time
       return sc;
     }
   }
-  if (vdo) { // it is a valid data object and should be up-to-date: align validity
+  if (vdo != NULL) { // it is a valid data object and should be up-to-date: align validity
     // no check because it shouldn't be necessary
     since = vdo->validSince();
     until = vdo->validTill();
@@ -197,7 +197,7 @@ StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time
 // Adds a child item to the given member function
 //=============================================================================
 BaseObjectMemberFunction * UpdateManagerSvc::Item::addChild(BaseObjectMemberFunction *thisMF, Item *child) {
-  auto mfIt = find(thisMF);
+  MembFuncList::iterator mfIt = find(thisMF);
   if (mfIt == memFuncs.end()) {
     mfIt = memFuncs.insert(mfIt,MembFunc(thisMF));
   } else {
@@ -235,7 +235,7 @@ void UpdateManagerSvc::Item::purge(MsgStream *log) {
       (*log) << MSG::DEBUG << "Purging " << path << endmsg;
     // Clean up pointers
     const bool force = true;
-    setPointers(nullptr,force).ignore();
+    setPointers(NULL,force).ignore();
   } else {
     if( log && (*log).level() <= MSG::DEBUG )
       (*log) << MSG::DEBUG << "Purging object at " << ptr << endmsg;
