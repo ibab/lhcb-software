@@ -82,6 +82,7 @@ if not hasattr ( LHCb.Particle , 'orig_daughters' ) :
 LHCb.Particle .   daughters   =  children
 LHCb.Particle . __daughters__ =  children
 
+LHCb.Particle.hex_id  = lambda s : LoKi.Particles.hex_id ( s ) 
 # =============================================================================
 ## get the child
 #  @code

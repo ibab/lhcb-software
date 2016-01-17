@@ -72,6 +72,9 @@ namespace LoKi
   namespace Particles 
   {
     // ========================================================================
+    GAUDI_API 
+    std::string hex_id ( const LHCb::Particle* particle ) ;
+    // ========================================================================
   } //                                         end of namespace LoKi::Particles
   // ==========================================================================
 } //                                                      end of namespace LoKi

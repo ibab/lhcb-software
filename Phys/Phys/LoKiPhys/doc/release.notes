@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2016-01-17 - Vanya Belyaev
+ - LoKiPhys.graph: several improvements 
+
 ! 2016-01-16 - Vanya Belyaev
  - add new module LoKiPhys.graph to produce decay tree graphs 
 

@@ -48,6 +48,8 @@
   <function name = "LoKi::Child::children"    />
   <function name = "LoKi::Child::descendants" />
 
+  <function name = "LoKi::Particles::hex_id"  />
+
   <function pattern = "LoKi::PhysKinematics::*"          />
   <function pattern = "LoKi::PrintPhys::*"               />
   

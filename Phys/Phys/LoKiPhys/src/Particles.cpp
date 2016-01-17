@@ -16,6 +16,10 @@
 #include "LoKi/Particles.h"
 #include "LoKi/ParticleContextCuts.h"
 // ============================================================================
+// Boost
+// ============================================================================
+#include "boost/format.hpp"
+// ============================================================================
 /** @file
  *
  *  Implementation file for functions from namespace  LoKi::Particles
@@ -31,6 +35,17 @@
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-02-10 
  */
+// ============================================================================
+// get unique string for LHCb::Particle 
+// ============================================================================
+std::string LoKi::Particles::hex_id ( const LHCb::Particle* particle ) 
+{
+  if ( 0 == particle ) { return "NULL" ; }
+  boost::format fmt ( "%p" ) ;
+  const void * p = particle ;
+  fmt % p ;
+  return fmt.str() ;
+}
 // ============================================================================
 // The END 
 // ============================================================================
