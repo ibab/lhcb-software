@@ -196,7 +196,7 @@ void STClusterResolution::fillHistograms( const STCluster* aCluster,
     // poca !
     Gaudi::XYZVector distance;
     double s1 = 0.0;
-    double s2 = clusTraj->arclength( mcTraj.position(s1) );
+    double s2 = clusTraj->muEstimate( mcTraj.position(s1) );
     m_poca -> minimize( mcTraj, s1, *clusTraj, s2, distance,  0.005);
     double residual = std::copysign( distance.R(), distance.x() );
 
