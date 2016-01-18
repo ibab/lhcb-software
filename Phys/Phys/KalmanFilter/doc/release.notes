@@ -5,6 +5,12 @@
 ! Purpose     : Kalman filter Utilities for Vertex fit
 ! -----------------------------------------------------------------------------
 
+! 2016-01-18 - Vanya Belyaev
+ - Introduce new type of particles "rho+-like"
+   1) add correspondiong enum
+   2) update IParticleClassifier interface 
+
+
 !========================= KalmanFilter v1r15 2015-12-02 ======================
 
 ! 2015-11-28 - Vanya Belyaev

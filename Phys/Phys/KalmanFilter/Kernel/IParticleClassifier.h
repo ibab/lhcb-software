@@ -33,7 +33,7 @@ class GAUDI_API IParticleClassifier : virtual public IAlgTool
  public:
   // ==========================================================================
   /// interface machinery 
-  DeclareInterfaceID(IParticleClassifier, 1, 0) ;  
+  DeclareInterfaceID(IParticleClassifier, 2, 0) ;  
   // ==========================================================================  
  public:
   // ==========================================================================
@@ -41,10 +41,20 @@ class GAUDI_API IParticleClassifier : virtual public IAlgTool
    *  @see LoKi::KalmanFilter::ParticleType
    */
   virtual LoKi::KalmanFilter::ParticleType 
-    particleType ( const LHCb::Particle* p     ) const = 0 ;
-  /// is the combination of particles good for vertex ? 
+    particleType   ( const LHCb::Particle*   p )  const = 0 ;
+  /** check the particle type 
+   *  @see LoKi::KalmanFilter::ParticleType
+   */
+  virtual bool 
+    isParticleType 
+    ( const LHCb::Particle*                  p , 
+      const LoKi::KalmanFilter::ParticleType t ) const = 0 ;
+  // ==========================================================================
+ public:
+  // ==========================================================================
+  /// is the combination of particles good enouth for vertex ? 
   virtual bool goodForVertex 
-    ( const LHCb::Particle::Range&       parts ) const = 0 ;
+    ( const LHCb::Particle::Range&         parts ) const = 0 ;
   // ==========================================================================
  protected:
   // ==========================================================================

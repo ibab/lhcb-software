@@ -57,7 +57,9 @@ namespace LoKi
         /// Merged-pi0-like 
         MergedPi0LikeParticle   ,               //     Merged-pi0-like particle 
         /// Jet-like 
-        JetLikeParticle                         //            Jet-like particle 
+        JetLikeParticle         ,               //            Jet-like particle 
+        /// Jet-like 
+        RhoPlusLikeParticle                     //          rho+-like particles 
         // ====================================================================
       } ;
     // ========================================================================

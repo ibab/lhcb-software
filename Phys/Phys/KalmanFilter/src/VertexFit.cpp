@@ -182,7 +182,9 @@ namespace
       entry.m_vxi ( 1 , 1 ) = s_ERROR2_i [ 1 ]  ;
       entry.m_vxi ( 2 , 2 ) = s_ERROR2_i [ 2 ] ;
     }
+    //
     // treat long-lived particles and unspecified  with the appropriate matrix 
+    //
     else if ( LoKi::KalmanFilter::LongLivedParticle == type  
               || 
               _pmcov ( 2 , 2 ) < 0.25 * ( _pmcov ( 0 , 0 ) + _pmcov ( 1 , 1 ) ) )
@@ -213,6 +215,7 @@ namespace
       entry.m_type = LoKi::KalmanFilter::LongLivedParticle ;
       //
     }
+    //
     else // else assume it is ShortLived Particle 
     {
       // the regular particle:
@@ -327,6 +330,10 @@ StatusCode LoKi::KalmanFilter::transport
   if ( 0 == tool ) 
   { return StatusCode ( ErrorFromParticleTransporter , true )  ; }
   // 
+  // avoid transporting of rho+-like particles 
+  if ( KalmanFilter::RhoPlusLikeParticle == entry.m_type ) 
+  { return StatusCode::SUCCESS ; }  // RETURN
+  //
   StatusCode sc = tool -> transport ( entry.m_p0 , newZ , entry.m_p ) ;
   if ( sc.isFailure() ) { entry.m_p = *entry.m_p0 ; }   
   //
@@ -380,19 +387,24 @@ StatusCode LoKi::KalmanFilter::stepRho
         entries.end() != it ; ++it ) 
   {
     //
-    // if ( !it->regular() ) { continue ; } // CONTINUE 
+    if ( !it->regular() ) { continue ; } // CONTINUE 
     //
     ci   += it->m_vxi                ;
     seed += it->m_vxi * it -> m_parx ;
   }
   //
+  ci ( 0 , 1 ) += 1 / ( (  50 * Gaudi::Units::cm ) * (  50 * Gaudi::Units::cm ) ) ;
+  ci ( 1 , 1 ) += 1 / ( (  50 * Gaudi::Units::cm ) * (  50 * Gaudi::Units::cm ) ) ;
+  ci ( 2 , 2 ) += 1 / ( ( 150 * Gaudi::Units::cm ) * ( 150 * Gaudi::Units::cm ) ) ;
+  //
   Gaudi::SymMatrix3x3   c ;
   if ( 0 != Gaudi::Math::inverse ( ci , c ) ) 
   { 
     // try to recover using "soft" constraints 
-    _smooth ( ci ) ;
+    _smooth ( ci , 2 * Gaudi::Units::meter ) ;
     //
-    if ( 0 !=  Gaudi::Math::inverse ( ci , c ) ) { return StatusCode ( ErrorInMatrixInversion4 , true ) ; } 
+    if ( 0 !=  Gaudi::Math::inverse ( ci , c ) )
+    { return StatusCode ( ErrorInMatrixInversion4 , true ) ; } 
   }
   //
   Gaudi::Vector3 x = c * seed ; 
@@ -408,10 +420,15 @@ StatusCode LoKi::KalmanFilter::stepRho
     //
     ientry -> m_q     =  ientry -> m_parq ;
     //
-    // do we need these lines ?
-    const Gaudi::Vector3 dx = ientry -> m_parx - x ;  
-    ientry -> m_q -= ientry -> m_p.posMomCovMatrix() * ( ientry->m_vxi * dx ) ;
-  }      
+    if ( ientry->regular() ) 
+    {
+      // do we need these lines ?
+      const Gaudi::Vector3 dx = ientry -> m_parx - x ;  
+      ientry -> m_q  = 
+        ientry -> m_parq - 
+        ientry -> m_p.posMomCovMatrix() * ( ientry->m_vxi * dx ) ;
+    }
+  }
   //
   return StatusCode::SUCCESS ;
 }
@@ -776,12 +793,10 @@ StatusCode LoKi::KalmanFilter::smooth
     {
       // the simplest way to calculate entry->m_q
       StatusCode sc = transportGamma ( *entry , entry->m_x , &last.m_c ) ;    
-      if ( sc.isFailure() ) 
-      { entry -> m_q = entry->m_parq ; continue ; }               // CONTINUE 
+      if ( sc.isFailure() ) { entry -> m_q = entry->m_parq ; continue ; } // CONTINUE 
       //
       Gaudi::Math::geo2LA ( entry->m_p.momentum () , entry->m_q ) ;
-      //
-      continue ;                                                  // CONTINUE 
+      continue ;                                                          // CONTINUE 
     }
     //
     // regular case: 
@@ -792,6 +807,7 @@ StatusCode LoKi::KalmanFilter::smooth
       entry -> m_parq - 
       entry -> m_p.posMomCovMatrix() * ( entry -> m_vxi * dx ) ; 
   }
+  //
   return StatusCode::SUCCESS ;
 } 
 // ============================================================================
@@ -929,7 +945,6 @@ StatusCode LoKi::KalmanFilter::transport
   if ( !entry.special() ) 
   { return transport ( entry , point.Z () , tool ) ; }
   //
-  //
   const  Gaudi::SymMatrix3x3* cov = 0 ;
   return transportGamma ( entry , point , cov ) ;
 }
@@ -1051,9 +1066,9 @@ StatusCode LoKi::KalmanFilter::transportGamma
   if ( !ok ) { return StatusCode ( ErrorFromCaloMomentum , true ) ; }
   //
   // extract the values:
-  entry.m_p.setReferencePoint  ( point                     ) ;
-  entry.m_p.setMomentum        ( calo.momentum          () ) ;
-  entry.m_p.setMomCovMatrix    ( calo.momCovMatrix      () ) ;
+  entry.m_p.setReferencePoint    ( point                     ) ;
+  entry.m_p.setMomentum          ( calo.momentum          () ) ;
+  entry.m_p.setMomCovMatrix      ( calo.momCovMatrix      () ) ;
   //
   if ( 0 != pointCov2 ) 
   {
@@ -1100,7 +1115,7 @@ unsigned short LoKi::KalmanFilter::nGood
 /*  check if the collection of entries is OK for vertex:
  *   - either at least one short-lived particle 
  *   - or at least two long-lived particles 
- *  @return true of colelction of entries is OK 
+ *  @return true of collection of entries is OK 
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2010-08-24
  */   
@@ -1182,6 +1197,7 @@ bool  LoKi::KalmanFilter::rhoPlusLike
     case GammaLikeParticle     : ++nGamma ; break ;  
     case DiGammaLikeParticle   : ++nGamma ; break ;  
     case MergedPi0LikeParticle : ++nGamma ; break ;  
+    case RhoPlusLikeParticle   : ++nLong  ; break ;
     case LongLivedParticle     : ++nLong  ; break ;
     default                    :            break ;
     } 
@@ -1196,7 +1212,7 @@ bool  LoKi::KalmanFilter::rhoPlusLike
  *  @thanks Wouter Hulsbergen
  *  @thanks Fred Blanc 
  *  @param entries (input) vector of entries 
- *  @return true of colelction of entries is OK 
+ *  @return true of collection of entries is OK 
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2010-09-26
  */
