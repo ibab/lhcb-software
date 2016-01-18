@@ -380,9 +380,13 @@ StatusCode LoKi::KalmanFilter::stepRho
   { return StatusCode ( ErrorInInputData , true ) ; }         // RETURN 
   //
   Gaudi::SymMatrix3x3   ci ;
-  Gaudi::Vector3      seed ;
-  // construct the seed from the data 
   Gaudi::Math::setToScalar ( ci , 0.0 ) ;
+  ci ( 0 , 1 ) += 1 / ( (  20 * Gaudi::Units::cm ) * (  20 * Gaudi::Units::cm ) ) ;
+  ci ( 1 , 1 ) += 1 / ( (  30 * Gaudi::Units::cm ) * (  20 * Gaudi::Units::cm ) ) ;
+  ci ( 2 , 2 ) += 1 / ( ( 150 * Gaudi::Units::cm ) * ( 150 * Gaudi::Units::cm ) ) ;
+  //
+  // construct the seed from the data 
+  Gaudi::Vector3      seed ;
   for ( Entries::const_iterator it = entries.begin() ; 
         entries.end() != it ; ++it ) 
   {
@@ -393,9 +397,6 @@ StatusCode LoKi::KalmanFilter::stepRho
     seed += it->m_vxi * it -> m_parx ;
   }
   //
-  ci ( 0 , 1 ) += 1 / ( (  50 * Gaudi::Units::cm ) * (  50 * Gaudi::Units::cm ) ) ;
-  ci ( 1 , 1 ) += 1 / ( (  50 * Gaudi::Units::cm ) * (  50 * Gaudi::Units::cm ) ) ;
-  ci ( 2 , 2 ) += 1 / ( ( 150 * Gaudi::Units::cm ) * ( 150 * Gaudi::Units::cm ) ) ;
   //
   Gaudi::SymMatrix3x3   c ;
   if ( 0 != Gaudi::Math::inverse ( ci , c ) ) 
