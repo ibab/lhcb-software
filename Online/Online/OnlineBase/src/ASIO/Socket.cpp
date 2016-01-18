@@ -17,6 +17,7 @@
 #include "ASIO/Socket.h"
 #include "ASIO/TanInterface.h"
 #include "TAN/TanMessage.h"
+#include "RTL/rtl.h"
 
 // C/C++ include files
 #include <iostream>
