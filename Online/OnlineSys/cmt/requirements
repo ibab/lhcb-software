@@ -64,6 +64,7 @@ use UPIR                v1r7     Online
 use Writer              v1r51    Online
 use XML                 v0r6     Online
 use ZeroMQ              v4r1p3   Online
+use ZMQTransfer         v0r1     Online
 
 #Obsolete: use confDB              v1r6     Online
 #Obsolete: use confDBpython        v1r7     Online
