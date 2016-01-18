@@ -1,7 +1,7 @@
 ################################################################################
 # Package: OnlineTools
 ################################################################################
-gaudi_subdir(OnlineTools v1r5)
+gaudi_subdir(OnlineTools v1r6)
 
 gaudi_depends_on_subdirs(Online/ROLogger)
 
