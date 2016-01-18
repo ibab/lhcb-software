@@ -4,6 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2016-01-18 - Chris Jones
+ - Update the Cherenkov cone tool to determine the best guess photon emission
+   point using the tool interface rather than directly from the track segment.
+
 ! 2016-01-14 - Chris Jones
  - A few more C++11 clean ups (nullptr versus NULL, etc.).
  - Slightly change how the number of ray trace photons to use in 

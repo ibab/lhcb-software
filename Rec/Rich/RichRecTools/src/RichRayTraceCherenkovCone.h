@@ -21,6 +21,7 @@
 #include "RichKernel/IRichRayTracing.h"
 #include "RichKernel/IRichSmartIDTool.h"
 #include "RichRecBase/IRichRecGeomTool.h"
+#include "RichRecBase/IRichPhotonEmissionPoint.h"
 
 // Event
 #include "Event/RichRecRing.h"
@@ -140,8 +141,8 @@ namespace Rich
                    const double _sinPhi = 0 )
           : cosPhi(_cosPhi), sinPhi(_sinPhi) { }
       public:
-        double cosPhi; ///< Cos(CK phi)
-        double sinPhi; ///< Sin(CK phi)
+        double cosPhi = 0; ///< Cos(CK phi)
+        double sinPhi = 0; ///< Sin(CK phi)
       };
 
       /// Returns the cos and sin phi values for the given number of points
@@ -163,6 +164,7 @@ namespace Rich
       const ICherenkovAngle * m_ckAngle  = nullptr; ///< Cherenkov angle calculator tool
       const ISmartIDTool * m_smartIDTool = nullptr; ///< RichSmartID manipulation tool
       const IGeomTool * m_geomTool       = nullptr; ///< Geometry tool
+      const IPhotonEmissionPoint * m_emissPoint = nullptr; ///< Estimated emission point tool
 
       /// Bailout number. If no ray tracing have worked after this number then give up
       std::vector<unsigned int> m_nBailout;

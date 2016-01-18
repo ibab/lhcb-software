@@ -45,10 +45,11 @@ StatusCode RayTraceCherenkovCone::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichRayTracing",     m_rayTrace, NULL, true );
-  acquireTool( "RichCherenkovAngle", m_ckAngle  );
-  acquireTool( "RichSmartIDTool",    m_smartIDTool, NULL, true );
-  acquireTool( "RichRecGeometry",    m_geomTool );
+  acquireTool( "RichRayTracing",          m_rayTrace, nullptr, true );
+  acquireTool( "RichSmartIDTool",         m_smartIDTool, nullptr, true );
+  acquireTool( "RichCherenkovAngle",      m_ckAngle  );
+  acquireTool( "RichRecGeometry",         m_geomTool );
+  acquireTool( "RichPhotonEmissionPoint", m_emissPoint );
 
   _ri_debug << "# ray tracing attempts before bailout = " << m_nBailout << endmsg;
 
@@ -107,9 +108,13 @@ RayTraceCherenkovCone::rayTrace ( LHCb::RichRecSegment * segment,
   // make sure segment is valid
   if ( !segment ) Exception( "Null RichRecSegment pointer!" );
 
+  // Get the emission point
+  Gaudi::XYZPoint emissionPoint;
+  m_emissPoint->emissionPoint( segment, emissionPoint );
+
   // Do the ray-tracing
   return rayTrace ( segment->trackSegment().rich(),
-                    segment->trackSegment().bestPoint(),
+                    emissionPoint,
                     segment->trackSegment().bestMomentum(),
                     ckTheta, points, nPoints, mode );
 }
@@ -135,11 +140,12 @@ RayTraceCherenkovCone::rayTrace ( LHCb::RichRecRing * ring,
     ring->ringPoints().reserve(nPoints);
 
     // emission point
-    const Gaudi::XYZPoint & emissionPoint = ring->richRecSegment()->trackSegment().bestPoint();
+    Gaudi::XYZPoint emissionPoint;
+    m_emissPoint->emissionPoint( ring->richRecSegment(), emissionPoint );
 
     // which rich and radiator
-    const Rich::DetectorType rich = ring->richRecSegment()->trackSegment().rich();
-    const Rich::RadiatorType rad  = ring->richRecSegment()->trackSegment().radiator();
+    const auto rich = ring->richRecSegment()->trackSegment().rich();
+    const auto rad  = ring->richRecSegment()->trackSegment().radiator();
 
     if ( msgLevel(MSG::DEBUG) )
     {
