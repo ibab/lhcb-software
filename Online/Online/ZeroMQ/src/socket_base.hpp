@@ -67,6 +67,7 @@ namespace zmq
         friend class reaper_t;
 
     public:
+        typedef void (*monitor_call_t)(void* p_, void* s_, int e_, int v_, const char* a_);
 
         //  Returns false if object is not a socket.
         bool check_tag ();
@@ -116,6 +117,7 @@ namespace zmq
         void unlock();
 
         int monitor (const char *endpoint_, int events_);
+        int monitor (int events, monitor_call_t mon_, void* param_);
 
         void set_fd(fd_t fd_);
         fd_t fd();
@@ -178,6 +180,8 @@ namespace zmq
         // Next assigned name on a zmq_connect() call used by ROUTER and STREAM socket types
         std::string connect_rid;
 
+        monitor_call_t monitor_call;
+        void*          monitor_param;
     private:
         //  Creates new endpoint ID and adds the endpoint to the map.
         void add_endpoint (const char *addr_, own_t *endpoint_, pipe_t *pipe);

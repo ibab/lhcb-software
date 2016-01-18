@@ -453,6 +453,9 @@ ZMQ_EXPORT void *zmq_threadstart (zmq_thread_fn* func, void* arg);
 ZMQ_EXPORT void zmq_threadclose (void* thread);
 
 
+ZMQ_EXPORT int zmq_socket_callback(void* s_, int events_, void(*monitor_call)(void* p_, void* s_,int e_,int v_,const char* a_), void* param);
+
+
 #undef ZMQ_EXPORT
 
 #ifdef __cplusplus

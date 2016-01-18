@@ -561,6 +561,16 @@ int zmq_recviov (void *s_, iovec *a_, size_t *count_, int flags_)
     return nread;
 }
 
+int zmq_socket_callback(void* s_, int e_, void(*call_)(void* p_, void* s_,int e_,int v_,const char* a_), void* param_)   {
+    if (!s_ || !((zmq::socket_base_t*) s_)->check_tag ()) {
+        errno = ENOTSOCK;
+        return -1;
+    }
+    zmq::socket_base_t *s = (zmq::socket_base_t *) s_;
+    return s->monitor(e_, call_,param_);
+}
+
+
 // Message manipulators.
 
 int zmq_msg_init (zmq_msg_t *msg_)

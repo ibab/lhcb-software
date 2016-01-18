@@ -141,6 +141,7 @@ zmq::socket_base_t *zmq::socket_base_t::create (int type_, class ctx_t *parent_,
 
 zmq::socket_base_t::socket_base_t (ctx_t *parent_, uint32_t tid_, int sid_) :
     own_t (parent_, tid_),
+    monitor_call(0),
     tag (0xbaddecaf),
     ctx_terminated (false),
     destroyed (false),
@@ -1200,6 +1201,17 @@ void zmq::socket_base_t::extract_flags (msg_t *msg_)
     rcvmore = msg_->flags () & msg_t::more ? true : false;
 }
 
+int zmq::socket_base_t::monitor (int events_, monitor_call_t mon_, void* param_)  {
+    if (unlikely (ctx_terminated)) {
+        errno = ETERM;
+        return -1;
+    }
+    monitor_events = events_;
+    monitor_param = param_;
+    monitor_call = mon_;
+    return 0;
+}
+
 int zmq::socket_base_t::monitor (const char *addr_, int events_)
 {
     if (unlikely (ctx_terminated)) {
@@ -1314,6 +1326,9 @@ void zmq::socket_base_t::event_disconnected (const std::string &addr_, int fd_)
 //  Send a monitor event
 void zmq::socket_base_t::monitor_event (int event_, int value_, const std::string &addr_)
 {
+  if (monitor_call)  {
+    (*monitor_call)(monitor_param,this,event_,value_,addr_.c_str());
+  }
     if (monitor_socket) {
         //  Send event in first frame
         zmq_msg_t msg;
@@ -1338,5 +1353,8 @@ void zmq::socket_base_t::stop_monitor (void)
         zmq_close (monitor_socket);
         monitor_socket = NULL;
         monitor_events = 0;
+    }
+    if ( monitor_call)  {
+      monitor_call = 0;
     }
 }
