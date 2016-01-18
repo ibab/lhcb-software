@@ -1,20 +1,25 @@
-/*
- *    T A N   database structure
- *
- */
+// $Id: $
+//==========================================================================
+//  LHCb Online software suite
+//--------------------------------------------------------------------------
+// Copyright (C) Organisation europeenne pour la Recherche nucleaire (CERN)
+// All rights reserved.
+//
+// For the licensing terms see OnlineSys/LICENSE.
+//
+// Author     : M.Frank
+//
+//==========================================================================
+//
+//    T A N   database structure
+//==========================================================================
+
 #define _TanDB_C_
 
 #include    <cstdio>
 #include    <cstdlib>
 #include    <cstring>
-#ifdef _OSK
-#include <sg_codes.h>
-#include <INET/sg_pcodes.h>
-#include <INET/tcp.h>
-#elif defined(_VMS)
-#include    <vms.h>
-#include <unistd.h>
-#endif
+#include    <vector>
 
 #include    "NET/defs.h"
 #include    "CPP/PubArea.h"
@@ -27,45 +32,23 @@
 #define NAMESRV_PUBAREA_NAME     "TAN_PUBAREA"
 #define NAMESRV_PUBAREA_SIZE     ((int)(sizeof(TanPaSlot)+sizeof(TanPaSlot)/2))
 
-#ifdef _OSK
-extern "C" int _sockstt(int,int,void*,int,int,int);
-typedef void IOSB;
-#define _PreviousEntry(x) (qentry_t*)(x)->prev
-#define _NextEntry(x)     (qentry_t*)(x)->next
-#define _INSQHI(x,y)      insqhi ( (qentry_t*)x, (head_t*)y    )
-#define _INSQTI(x,y)      insqti ( (qentry_t*)x, (head_t*)y    )
-#define _REMQHI(x,y)      remqhi ( (head_t*)  x, (qentry_t**)y )
-#define _REMQTI(x,y)      remqti ( (head_t*)  x, (qentry_t**)y )
-#elif defined(_VMS)
-#define _PreviousEntry(x) (qentry_t*)((char*)(x) + (int)(x)->prev)
-#define _NextEntry(x)     (qentry_t*)((char*)(x) + (int)(x)->next)
-#define _INSQHI(x,y)      lib$insqhi((void*)x,(void*)y)
-#define _INSQTI(x,y)      lib$insqti((void*)x,(void*)y)
-#define _REMQHI(x,y)      lib$remqhi((void*)x,(void**)y)
-#define _REMQTI(x,y)      lib$remqti((void*)x,(void**)y)
-#else
 #define _PreviousEntry(x) (qentry_t*)((char*)(x) + (long)(x)->prev)
 #define _NextEntry(x)     (qentry_t*)((char*)(x) + (long)(x)->next)
 #define _INSQHI(x,y)      insqhi(x,y)
 #define _INSQTI(x,y)      insqti(x,y)
 #define _REMQHI(x,y)      remqhi(x,y)
 #define _REMQTI(x,y)      remqti(x,y)
-#endif
 #define _TheEntry(x) ((qentry_t*)&e.al)
 
 class TanPaSlot  {
 public:
-  enum {
-#ifndef _OSK
-    NumEntries = 512
-#else // _OSK
-#define OS9_PORT_FLIP 512
-    NumEntries = 32
-#endif
-  };
+  enum {  NumEntries = 1024  };
   qentry_t     _name_head;       /* hash linked list */
   int          _allocated;
   int          _ports;
+#ifndef WIN32
+  sem_t        _semaphore;
+#endif
   TanDataBase::Entry* _pEntry[NumEntries];
   TanDataBase::Entry  _Entry[NumEntries];
 };
@@ -99,10 +82,9 @@ extern "C" int tandb_insert_alias (TanDataBase::Entry *ce)   {
 // C INTERFACE: convert Dbase entry into its information
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-extern "C" void tandb_get_info (TanDataBase::Entry *ce, NetworkChannel::Channel *chan, TanMessage **msg, TanDataBase::Entry::IOSB **iosb)   {
+extern "C" void tandb_get_info (TanDataBase::Entry *ce, NetworkChannel::Channel *chan, TanMessage **msg)  {
   *chan = ce->m_chan;
   *msg  = &ce->m_msg;
-  *iosb = &ce->m_iosb;
 }
 // ----------------------------------------------------------------------------
 // C INTERFACE: find port by entry
@@ -137,15 +119,15 @@ extern "C" int tandb_free_port (TanDataBase::Entry* ce)   {
 // Database Constructor
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-TanDataBase::TanDataBase() : m_lock(0) {
+TanDataBase::TanDataBase() : m_data(0), m_lock(0), m_error(0)  {
   PubArea Pa(NAMESRV_PUBAREA_NAME);
   int status = PA_FAILURE;
   void* slot = 0;
   while ( status != PA_SUCCESS )  {
     status = Pa.LinkPubArea(NAMESRV_PUBAREA_SIZE);  
     if ( status != PA_SUCCESS )       {
-      lib_rtl_output(LIB_RTL_INFO,"--1-- Waiting for Publishing area beeing valid!\n");
-      lib_rtl_sleep(1000);
+      ::lib_rtl_output(LIB_RTL_INFO,"--1-- Waiting for Publishing area beeing valid!\n");
+      ::lib_rtl_sleep(1000);
     }
   }
   status = PA_FAILURE;
@@ -153,14 +135,18 @@ TanDataBase::TanDataBase() : m_lock(0) {
     int context = (-1);
     status = Pa.GetSlotofType(123,&context,slot);
     if ( status != PA_SUCCESS )       {
-      lib_rtl_output(LIB_RTL_INFO,"--2-- Waiting for Publishing area beeing valid!\n");
-      lib_rtl_sleep(1000);
+      ::lib_rtl_output(LIB_RTL_INFO,"--2-- Waiting for Publishing area beeing valid!\n");
+      ::lib_rtl_sleep(1000);
     }
   }
-  _iError = TAN_SS_SUCCESS;
-  _pData = (TanPaSlot*)slot;
-  status = lib_rtl_create_lock ("TANDB", &m_lock);
-  if ( !lib_rtl_is_success(status) )  {
+  m_error = TAN_SS_SUCCESS;
+  m_data = (TanPaSlot*)slot;
+#ifdef WIN32
+  status = ::lib_rtl_create_lock ("TANDB", &m_lock);
+#else
+  status = ::lib_rtl_create_lock2(&m_data->_semaphore, &m_lock, true);
+#endif
+  if ( !::lib_rtl_is_success(status) )  {
     ::lib_rtl_output(LIB_RTL_ERROR,"Error creating TANDB lock!\n");
   }
 }
@@ -184,10 +170,10 @@ int TanDataBase::initialize()  {
   if ( status != PA_SUCCESS )  {
     status = Pa.LinkPubArea(NAMESRV_PUBAREA_SIZE);  
     if ( status != PA_SUCCESS )  {
-      lib_rtl_output(LIB_RTL_ERROR,"Nameserver failed to link publishing area:%s.\n",NAMESRV_PUBAREA_NAME);
+      ::lib_rtl_output(LIB_RTL_ERROR,"Nameserver failed to link publishing area:%s.\n",NAMESRV_PUBAREA_NAME);
       return TAN_SS_NOMEM;
     }
-    lib_rtl_output(LIB_RTL_ALWAYS,"Nameserver linked to existing publishing area:%s.\n",NAMESRV_PUBAREA_NAME);
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"Nameserver linked to existing publishing area:%s.\n",NAMESRV_PUBAREA_NAME);
   }
   status = Pa.GetSlotofType(123,&context,slot);
   if ( status != PA_SUCCESS )  {
@@ -200,14 +186,10 @@ int TanDataBase::initialize()  {
   if ( data != 0 )  {
     data->_allocated = data->_ports = 0;
     qentry_t* e = (qentry_t*)&data->_name_head;
-#ifdef _OSK
-    e->next = e->prev = e;
-#else
     e->next = e->prev = 0;
-#endif
     for ( int i = 0; i < TanPaSlot::NumEntries; i++ )
       data->_pEntry[i] = 0;
-    lib_rtl_output(LIB_RTL_ALWAYS,"Nameserver Publishing area successfully initialized!\n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"Nameserver Publishing area successfully initialized!\n");
     return TAN_SS_SUCCESS;
   }
   return TAN_SS_NOMEM;
@@ -226,7 +208,7 @@ TanDataBase& TanDataBase::Instance() {
 //  If not existant, retrun 0.
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-NetworkChannel::Port TanDataBase::findPort ( TanMessage& msg )  {
+NetworkChannel::Port TanDataBase::findPort ( const TanMessage& msg )  {
   RTL::Lock lock(m_lock);
   Entry *e = _findEntry ( msg._Name() );  
   return (e && e->m_dead == 0) ? e->m_port : 0;
@@ -241,81 +223,22 @@ NetworkChannel::Port TanDataBase::allocatePort ( Entry* ce)   {
 }
 NetworkChannel::Port TanDataBase::_allocatePort ( Entry* ce)   {
   int index;
-#ifdef _OSK
-  static int current_port    = 0;
-  static int ports_availible = OS9_PORT_FLIP-1;
-#endif
-  if(_pData->_ports >= (TanPaSlot::NumEntries-1)) {  // JUST TO AVOID FILLING THE TABLE ...
-    _iError = TAN_SS_DATABASEFULL;
+  if(m_data->_ports >= (TanPaSlot::NumEntries-1)) {  // JUST TO AVOID FILLING THE TABLE ...
+    m_error = TAN_SS_DATABASEFULL;
     return 0;
   }
-  _pData->_ports++;
+  m_data->_ports++;
   strup(ce->m_name, ce->m_msg.m_name);              // FIND INDEX
   Entry* entry = _findEntry(ce->m_name);
   if ( entry != 0 )  {                              // CHECK IF ENTRY ALREADY EXISTS
-    _iError = TAN_SS_DUPLNAM;
+    m_error = TAN_SS_DUPLNAM;
     return 0;
   }
-  _INSQTI(&ce->hl, &_pData->_name_head);
-#ifndef _OSK
+  _INSQTI(&ce->hl, &m_data->_name_head);
   for ( index = 0; index < TanPaSlot::NumEntries; index++ ) {
-    if ( ce == _pData->_pEntry[index] ) break;
+    if ( ce == m_data->_pEntry[index] ) break;
   }
-#else
-  if ( ++current_port > ports_availible )    {
-    //
-    // Strategy:
-    // =========
-    // Starting from each slot: find the biggest range of free
-    // port numbers.
-    // 
-    Entry* e, *ee;
-    int count, next, used, numUsed = 0, first_free = 0;
-    ports_availible = 0;
-    for ( int j = 0; j < TanPaSlot::NumEntries; j++ )    {
-      e = _pData->_pEntry[j];
-      count = 0;
-      if ( 0 != e && e->m_dead == 0 && e->port != 0 )   {
-        used = next = (e->port+1 > (NAMESERVICE_BASE_PORT+OS9_PORT_FLIP))
-          ? NAMESERVICE_BASE_PORT : e->port+1;
-        for ( int i = next-NAMESERVICE_BASE_PORT; i < OS9_PORT_FLIP; i++ )    {
-          for ( int k = 0; k < TanPaSlot::NumEntries; k++ )    {
-            ee = _pData->_pEntry[k];
-            if ( 0 != ee && e != ee && ee->m_dead == 0 && ee->m_port == used )    {
-              goto Done;
-            }
-          }
-          count++;
-          used++;
-        }
-      Done:
-        if ( count > ports_availible )     {
-          ports_availible = count;
-          first_free     = next-NAMESERVICE_BASE_PORT;
-        }
-        numUsed++;
-      }
-    }
-    if ( numUsed == 0 )  {
-      first_free = 1;  // no port used: start at index 0
-      ports_availible = OS9_PORT_FLIP;
-    }
-    if ( numUsed == TanPaSlot::NumEntries )    {
-      lib_rtl_output(LIB_RTL_ERROR,"ALL Slots are used up....PROBLEM!!!!!\n");
-      first_free = 8;  // a guess
-    }
-    if ( ports_availible == 0 )     {
-      ::lib_rtl_output(LIB_RTL_ERROR,"NO free range availible.....PROBLEM!!!!!\n");
-      first_free = 8;  // a guess
-    }
-    ::lib_rtl_output(LIB_RTL_ALWAYS,"New start port %d -> %X slots availible:%d\n",
-                     first_free, NAMESERVICE_BASE_PORT+first_free, 
-                     ports_availible);
-    current_port     = first_free-1;
-    ports_availible += first_free-2;
-  }
-  index = current_port;
-#endif
+  ce->mark_dead = 0;
   ce->m_dead   = 0;
   ce->m_port   = NAMESERVICE_BASE_PORT+index+1;   // THAT'S MY PORT NUMBER
   //fprintf(stdout, "%s [%s] Got port:%d %X -> current: %d remaining: %d \n", 
@@ -356,21 +279,22 @@ int TanDataBase::insertAlias ( Entry *ce )  {
   RTL::Lock lock(m_lock);
   Entry *e = _findEntry ( ce->m_msg.m_name );
   if ( e != 0 )  {                           // CHECK IF ENTRY ALREADY EXISTS 
-    _iError = TAN_SS_DUPLNAM;
+    m_error = TAN_SS_DUPLNAM;
     return TAN_SS_ERROR;
   }
   e = _allocateEntry(ce->m_chan);            // NO, ONE EXTRA ENTRY IS NEEDED 
   if ( e == 0 )    {                         // CHECK ALLOCATION STATUS 
-    _iError = TAN_SS_NOMEM;
+    m_error = TAN_SS_NOMEM;
     return TAN_SS_ERROR;
   }
   e->m_msg = ce->m_msg;                      // COPY REQUEST MESSAGE 
   strup(e->m_name,      ce->m_msg.m_name);   // COPY REMOTE ALIAS NAME 
   strup(e->m_msg.m_name,ce->m_msg.m_name);   // COPY REMOTE ALIAS NAME 
-  _INSQTI (&e->hl, &_pData->_name_head);     // INSERT ENTRY IN NAME TABLE 
+  _INSQTI (&e->hl, &m_data->_name_head);     // INSERT ENTRY IN NAME TABLE 
   _INSQTI (&e->al, &ce->al);                 // INSERT ENTRY IN ALIAS TABLE 
   e->m_port       = ce->m_port;              // PORT IS MAIN ENTRIES PORT 
   e->m_alias_flag = true;
+  e->mark_dead = 0;
   return TAN_SS_SUCCESS;
 }
 // ----------------------------------------------------------------------------
@@ -381,11 +305,11 @@ int TanDataBase::removeAlias ( Entry *e )  {
   RTL::Lock lock(m_lock);
   Entry *db = _findEntry ( e->m_msg.m_name );
   if ( db == 0 )  {                        // CHECK IF ENTRY ALREADY EXISTS
-    _iError = TAN_SS_ENTNOTALLOC;
+    m_error = TAN_SS_ENTNOTALLOC;
     return TAN_SS_ERROR;
   }
   if ( db->m_port_flag )  {             // CHECK IF THIS IS REALLY A PORT ENTRY
-    _iError = TAN_SS_ODDREQUEST;
+    m_error = TAN_SS_ODDREQUEST;
     return TAN_SS_ERROR;
   }
   return _freeEntry(db);
@@ -402,41 +326,20 @@ TanDataBase::Entry* TanDataBase::AllocateEntry ( NetworkChannel::Channel chan ) 
 TanDataBase::Entry* TanDataBase::_allocateEntry ( NetworkChannel::Channel chan )   {
   Entry *e = 0;
   for ( int i = 0; i < TanPaSlot::NumEntries; i++ )   {
-    if ( _pData->_pEntry[i] == 0 )  {
-      e = &_pData->_Entry[i];
+    if ( m_data->_pEntry[i] == 0 )  {
+      e = &m_data->_Entry[i];
       e->m_port_flag = e->m_alias_flag = false;
       e->m_port = 0;
       e->m_dead = 0;
       e->m_chan = chan;
-#ifdef _OSK
-      sockaddr_in peer;
-      int peerlen = sizeof(peer);
-      e->m_iosb._pHandler = 0;
-      e->m_iosb._pPort = e->iosb._lPort = 0;
-      e->hl.next = e->hl.prev = (int)&e->hl;
-      e->al.next = e->al.prev = (int)&e->al;
-      if ( getpeername( e->chan, (sockaddr *)&peer, &peerlen ) == 0 )
-        e->m_iosb._pPort = peer.sin_port;
-      else
-        ::lib_rtl_output(LIB_RTL_ERROR,"Cannot determine peer of socket %d\n", e->chan);
-      if ( getsockname( e->m_chan, (sockaddr *)&peer, &peerlen ) == 0 )
-        e->im_osb._lPort = peer.sin_port;
-      else
-        ::lib_rtl_output(LIB_RTL_ERROR,"Cannot determine sock of socket %d\n", e->chan);
-#elif _VMS
-      e->m_iosb.dev_info = e->m_iosb.status = e->m_iosb.count = 0;
+      e->mark_dead = 0;
       e->hl.next = e->hl.prev = e->al.next = e->al.prev = 0;
-#else
-      e->m_iosb._pHandler = 0;
-      e->m_iosb._pPort = e->m_iosb._lPort = 0;
-      e->hl.next = e->hl.prev = e->al.next = e->al.prev = 0;
-#endif
-      _pData->_pEntry[i] =  e;
-      _pData->_allocated++;
+      m_data->_pEntry[i] =  e;
+      m_data->_allocated++;
       return e;
     }
   }
-  _iError = TAN_SS_NOMEM;
+  m_error = TAN_SS_NOMEM;
   return 0;
 }
 // ----------------------------------------------------------------------------
@@ -446,20 +349,16 @@ TanDataBase::Entry* TanDataBase::_allocateEntry ( NetworkChannel::Channel chan )
 int TanDataBase::_freeEntry (TanDataBase::Entry* e)  {
   bool found = false;
   for ( int i = 0; i < TanPaSlot::NumEntries; i++ )   {
-    Entry* db = _pData->_pEntry[i];
+    Entry* db = m_data->_pEntry[i];
     if ( db == e )  {
-      _pData->_pEntry[i] = 0;
-#ifdef _OSK
-      e->hl.next = e->hl.prev = (int)&e->hl;
-      e->al.next = e->al.prev = (int)&e->al;
-#else
+      m_data->_pEntry[i] = 0;
       e->hl.next = e->hl.prev = e->al.next = e->al.prev = 0;
-#endif
       e->m_dead = 1;
       e->m_name[0] = 0;
       e->m_chan = 0;
-      if ( e->m_port_flag ) _pData->_ports--;
-      _pData->_allocated--;
+      e->mark_dead = 0;
+      if ( e->m_port_flag ) m_data->_ports--;
+      m_data->_allocated--;
       found = true;
     }
   }
@@ -476,23 +375,71 @@ TanDataBase::Entry* TanDataBase::FindEntry( const char* proc_name)  {
 TanDataBase::Entry* TanDataBase::_findEntry( const char* proc_name)  {
   char s[64];
   strup(s, proc_name);
-  qentry_t *e = (qentry_t*)&_pData->_name_head;
+  qentry_t *e = (qentry_t*)&m_data->_name_head;
   for ( Entry* a  = (Entry*)_NextEntry(e), *last = 0; 
         a != (Entry*) e && a != 0 && a != last;
-#ifdef _OSK
-        last = a, a = (Entry*) a->hl.next )
-#else
-    last = a, a  = (Entry*)((char*)a + (long)a->hl.next) )
-#endif
-  {
-    if (::strlen(a->m_name) > 0 && ::strncmp(s,a->m_name,sizeof(a->m_name)) == 0)  {
-      if ( a->m_port_flag || a->m_alias_flag )  {
-        return a;
+        last = a, a  = (Entry*)((char*)a + (long)a->hl.next) )
+    {
+      if ( (a->m_port_flag || a->m_alias_flag) && a->mark_dead == 0 )  {
+	if (::strlen(a->m_name) > 0 && ::strncmp(s,a->m_name,sizeof(a->m_name)) == 0)  {
+	  return a;
+	}
       }
     }
-  }
-_iError = TAN_SS_TASKNOTFOUND;
-return 0;
+  m_error = TAN_SS_TASKNOTFOUND;
+  return 0;
+}
+
+void TanDataBase::entriesMarkedDead(std::vector<Entry*>& ents)   {
+  RTL::Lock lock(m_lock);
+  qentry_t *e = (qentry_t*)&m_data->_name_head;
+  for ( Entry* a  = (Entry*)_NextEntry(e), *last = 0; 
+        a != (Entry*) e && a != 0 && a != last;
+        last = a, a  = (Entry*)((char*)a + (long)a->hl.next) )
+    {
+      if ( a->mark_dead )  { //&& (a->m_port_flag || a->m_alias_flag) )  {
+	ents.push_back(a);
+      }
+    }
+}
+
+void TanDataBase::entriesByFD(int chan, std::vector<Entry*>& ents)   {
+  RTL::Lock lock(m_lock);
+  qentry_t *e = (qentry_t*)&m_data->_name_head;
+  for ( Entry* a  = (Entry*)_NextEntry(e), *last = 0; 
+        a != (Entry*) e && a != 0 && a != last;
+        last = a, a  = (Entry*)((char*)a + (long)a->hl.next) )
+    {
+      if ( chan > 0 && chan == a->m_chan )  {
+	if ( a->m_port_flag || a->m_alias_flag )  {
+	  ents.push_back(a);
+	}
+      }
+    }
+}
+
+// ----------------------------------------------------------------------------
+// Find entry identified by its channel
+//                                      M.Frank
+// ----------------------------------------------------------------------------
+TanDataBase::Entry* TanDataBase::FindEntry( NetworkChannel::Channel chan )  {
+  RTL::Lock lock(m_lock);
+  return _findEntry(chan);
+}
+TanDataBase::Entry* TanDataBase::_findEntry( NetworkChannel::Channel chan )  {
+  qentry_t *e = (qentry_t*)&m_data->_name_head;
+  for ( Entry* a  = (Entry*)_NextEntry(e), *last = 0; 
+        a != (Entry*) e && a != 0 && a != last;
+        last = a, a  = (Entry*)((char*)a + (long)a->hl.next) )
+    {
+      if ( chan > 0 && chan == a->m_chan )  {
+	if ( a->m_port_flag || a->m_alias_flag )  {
+	  return a;
+	}
+      }
+    }
+  m_error = TAN_SS_TASKNOTFOUND;
+  return 0;
 }
 // ----------------------------------------------------------------------------
 // Find port associated to e valid entry
@@ -505,7 +452,7 @@ NetworkChannel::Port TanDataBase::findPort(Entry *e)  {
 NetworkChannel::Port TanDataBase::_findPort(Entry *e)  {
   Entry *db = _findEntry (e->m_msg.m_name);
   if ( db != 0 )  return db->m_port;
-  _iError = TAN_SS_TASKNOTFOUND;
+  m_error = TAN_SS_TASKNOTFOUND;
   return 0;
 }
 // ----------------------------------------------------------------------------
@@ -525,16 +472,16 @@ int TanDataBase::Dump( std::ostream& os )  {
   char text[1024];
   const char *func;
   ::snprintf(text,sizeof(text),"NameServer Database entry dump: #Allocated %d With port:%d",
-             _pData->_allocated,_pData->_ports);
+             m_data->_allocated,m_data->_ports);
   os << text << std::endl;
   ::snprintf(text,sizeof(text),"%-32s %-4s(%-3s) %-4s Msg:%-6s %-3s %-32s %s",
              "Name","Port","Flg","Chan","Reqst","Len","Name","Address");
   os << text << std::endl;
   for ( int i = 0; i < TanPaSlot::NumEntries; i++ )     {
-    if ( _pData->_pEntry[i] != 0 )  {
-      Entry& e = _pData->_Entry[i];
+    if ( m_data->_pEntry[i] != 0 )  {
+      Entry& e = m_data->_Entry[i];
       if ( e.m_port_flag )  {
-        switch ( htonl(e.m_msg.m_function) ) {
+        switch ( e.m_msg.m_function ) {
         case TanMessage::ALLOCATE:
           func = "ALLOC";  
           break;
@@ -559,7 +506,7 @@ int TanDataBase::Dump( std::ostream& os )  {
         }
         ::snprintf(text,sizeof(text),"%-32s %04X Prt  %-4d %-3s %-7s%-4d%-32s %s",
                    e._Name(), e.port(), e.channel(), e.m_dead==1 ? "***" : "",
-                   func, htonl(e.m_msg._Length()), e.m_msg._Name(),
+                   func, e.m_msg._Length(), e.m_msg._Name(),
                    inet_ntoa(e.m_msg.address()));
         os << text << std::endl;
         for ( qentry_t* a  = _NextEntry(&e.al), *last = 0; 
@@ -568,7 +515,7 @@ int TanDataBase::Dump( std::ostream& os )  {
 	  {
 	    Entry* ee  = (Entry*) ((char*)a - sizeof(qentry_t));
 	    a = (qentry_t*)&ee->al;
-	    switch ( htonl(ee->m_msg.m_function) ) {
+	    switch ( ee->m_msg.m_function ) {
 	    case TanMessage::ALLOCATE:       func = "ALLOC";       break;
 	    case TanMessage::DEALLOCATE:     func = "DEALLOC";     break;
 	    case TanMessage::INQUIRE:        func = "INQUIRE";     break;
@@ -597,13 +544,13 @@ int TanDataBase::DumpXML(std::ostream& s)  {
   XML::Guard top(os,"TAN_SUMMARY");
   os << XML::item("Time",      XML::text(::lib_rtl_timestr("%a %d %b %Y  %H:%M:%S",0)))
      << XML::item("Node",      XML::text(RTL::nodeName()))
-     << XML::item("Allocated", _pData->_allocated)
-     << XML::item("Ports",     _pData->_ports);
+     << XML::item("Allocated", m_data->_allocated)
+     << XML::item("Ports",     m_data->_ports);
   for ( int j, i = 0; i < TanPaSlot::NumEntries; i++ )     {
-    if ( _pData->_pEntry[i] != 0 )  {
-      Entry& e = _pData->_Entry[i];
+    if ( m_data->_pEntry[i] != 0 )  {
+      Entry& e = m_data->_Entry[i];
       if ( e.m_port_flag )  {
-        switch ( htonl(e.m_msg.m_function) ) {
+        switch ( e.m_msg.m_function ) {
         case TanMessage::ALLOCATE:
           func = "ALLOC";  
           break;
@@ -641,7 +588,7 @@ int TanDataBase::DumpXML(std::ostream& s)  {
 	  {
 	    Entry* ee  = (Entry*) ((char*)a - sizeof(qentry_t));
 	    a = (qentry_t*)&ee->al;
-	    switch ( htonl(ee->m_msg.m_function) ) {
+	    switch ( ee->m_msg.m_function ) {
 	    case TanMessage::ALLOCATE:       func = "ALLOC";       break;
 	    case TanMessage::DEALLOCATE:     func = "DEALLOC";     break;
 	    case TanMessage::INQUIRE:        func = "INQUIRE";     break;

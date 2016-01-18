@@ -23,7 +23,7 @@ namespace MBM {
     int   p_size;         // buffer size
     int   p_force;        // force deinstall
     int   p_bits;         // Block size 
-    char  buff_id[16];    // Buffer identifier
+    char  buff_id[128];   // Buffer identifier
   public:
     /// Standard constructor
     Installer(int argc, char **argv);

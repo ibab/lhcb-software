@@ -1,9 +1,12 @@
 #include "RTL/rtl.h"
-#include "RTL/Lock.h"
 #include "NET/IOPortManager.h"
 #include <map>
 #include <vector>
 #include <stdexcept>
+#include <mutex>
+#define LOCK std::lock_guard<std::recursive_mutex>
+// #include "RTL/Lock.h"
+// #define LOCK RTL::Lock
 
 #ifdef __linux
 #include <sys/poll.h>
@@ -102,7 +105,8 @@ namespace {
     __NetworkPort__  m_port;
     bool             m_dirty;
     bool             m_stop;
-    void*            m_mutex_id;
+    std::recursive_mutex m_mutex_id;
+    //void*            m_mutex_id;
   public:
     static int threadCall(void* param);
     static int consoleCall(void* param);
@@ -189,7 +193,7 @@ namespace {
       FD_ZERO(&read_fds);
       m_dirty = false;
       {
-        RTL::Lock lock(m_mutex_id);
+	LOCK lock(m_mutex_id);
         size_t len = size();
         if(channels.size()<len) channels.resize(len+32);
         for(iterator i=begin(); i != end(); ++i)  {
@@ -219,7 +223,7 @@ namespace {
         ::select(nsock, 0, 0, 0, &tv);
         continue;
       }
-      RTL::Lock lock(m_mutex_id);
+      LOCK lock(m_mutex_id);
       for ( int j=0; !m_stop && j<nsock; ++j )  {
         __NetworkChannel__ fd = channels[j];      
         if ( FD_ISSET(fd, &read_fds) )  {
@@ -241,7 +245,7 @@ namespace {
 #ifdef _WIN32
                   _asm int 3
 #endif
-                    }
+		}
               }
               if ( t == 1 && nb < 0 )  {
                 k = find(fd);
@@ -262,11 +266,11 @@ namespace {
   }
 
   EntryMap::EntryMap(__NetworkPort__ p) 
-    : m_thread(0), m_port(p), m_dirty(false), m_stop(false), m_mutex_id(0) {
-    lib_rtl_create_lock(0, &m_mutex_id);
+    : m_thread(0), m_port(p), m_dirty(false), m_stop(false), m_mutex_id() {
+    //::lib_rtl_create_lock(0, &m_mutex_id);
   }
   EntryMap::~EntryMap() {
-    lib_rtl_delete_lock(m_mutex_id);
+    //::lib_rtl_delete_lock(m_mutex_id);
   }
   void EntryMap::stop() {
     m_stop = true;
@@ -345,8 +349,9 @@ int IOPortManager::add(int typ, NetworkChannel::Channel c, int (*callback)(void*
     portMap()[m_port] = em = new EntryMap(m_port);
   }
   em->setDirty();
-  bool locked = 0 != em->m_thread && !::lib_rtl_is_current_thread(em->m_thread);
-  if ( locked ) ::lib_rtl_lock(em->m_mutex_id);
+  //bool locked = 0 != em->m_thread && !::lib_rtl_is_current_thread(em->m_thread);
+  //if ( locked ) ::lib_rtl_lock(em->m_mutex_id);
+  LOCK lock(em->m_mutex_id);
   if ( 0 != c )  {
     PortEntry* e = (*em)[c];
     if ( !e ) {
@@ -359,7 +364,7 @@ int IOPortManager::add(int typ, NetworkChannel::Channel c, int (*callback)(void*
     e->type = typ;
   }
   int sc = em->run();
-  if ( locked ) ::lib_rtl_unlock(em->m_mutex_id);
+  //if ( locked ) ::lib_rtl_unlock(em->m_mutex_id);
   return sc;
 }
 
@@ -369,9 +374,10 @@ int IOPortManager::addEx(int typ, NetworkChannel::Channel c, int (*callback)(voi
     //lib_rtl_output(LIB_RTL_ERROR,"Install port watcher for %d\n",m_port);
     portMap()[m_port] = em = new EntryMap(m_port);
   }
+  LOCK lock(em->m_mutex_id);
   em->setDirty();
-  bool locked = 0 != em->m_thread && !::lib_rtl_is_current_thread(em->m_thread);
-  if ( locked ) ::lib_rtl_lock(em->m_mutex_id);
+  //bool locked = 0 != em->m_thread && !::lib_rtl_is_current_thread(em->m_thread);
+  //if ( locked ) ::lib_rtl_lock(em->m_mutex_id);
   PortEntry* e = (*em)[c];
   if ( !e ) {
     //lib_rtl_output(LIB_RTL_ERROR,"Install channel watcher for %d\n",c);
@@ -382,7 +388,7 @@ int IOPortManager::addEx(int typ, NetworkChannel::Channel c, int (*callback)(voi
   e->armed = 1;
   e->type = typ;
   int sc = em->run();
-  if ( locked ) ::lib_rtl_unlock(em->m_mutex_id);
+  //if ( locked ) ::lib_rtl_unlock(em->m_mutex_id);
   return sc;
 }
 
@@ -391,15 +397,17 @@ int IOPortManager::remove(NetworkChannel::Channel c, bool need_lock)  {
   if ( em ) {
     EntryMap::iterator i = em->find(c);
     if ( i != em->end() )  {
-      bool locked = need_lock && 0 != em->m_thread && !::lib_rtl_is_current_thread(em->m_thread);
-      if ( locked ) ::lib_rtl_lock(em->m_mutex_id);
+      LOCK lock(em->m_mutex_id);
+      if ( need_lock ) {}
+      //bool locked = need_lock && 0 != em->m_thread && !::lib_rtl_is_current_thread(em->m_thread);
+      //if ( locked ) ::lib_rtl_lock(em->m_mutex_id);
       i = em->find(c);
       if ( i != em->end() )  {
         if ( (*i).second ) delete (*i).second;
         em->erase(i);
         em->setDirty();
       }
-      if ( locked ) ::lib_rtl_unlock(em->m_mutex_id);
+      //if ( locked ) ::lib_rtl_unlock(em->m_mutex_id);
     }
   }
   return 1;
@@ -408,11 +416,15 @@ int IOPortManager::remove(NetworkChannel::Channel c, bool need_lock)  {
 void* IOPortManager::lock() {
   EntryMap* em = portMap()[m_port];
   if ( em ) {
+    em->m_mutex_id.lock();
+    return em;
+#if 0
     bool locked = 0 != em->m_thread && !::lib_rtl_is_current_thread(em->m_thread);
     if ( locked ) {
       ::lib_rtl_lock(em->m_mutex_id);
       return em;
     }
+#endif
   }
   return 0;
 }
@@ -420,7 +432,8 @@ void* IOPortManager::lock() {
 void IOPortManager::unlock(void* entry) {
   if ( entry ) {
     EntryMap* em = (EntryMap*)entry;
-    if ( em ) ::lib_rtl_unlock(em->m_mutex_id);
+    if ( em ) em->m_mutex_id.unlock();
+    //if ( em ) ::lib_rtl_unlock(em->m_mutex_id);
   }
 }
 

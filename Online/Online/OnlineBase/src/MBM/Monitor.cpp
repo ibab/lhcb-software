@@ -17,6 +17,7 @@
 #define MBM_IMPLEMENTATION
 #include "MBM/Monitor.h"
 #include "MBM/bmstruct.h"
+#include "MBM/bmserver.h"
 #include "MBM/Manager.h"
 #include "CPP/Event.h"
 #include "CPP/TimeSensor.h"
@@ -209,15 +210,15 @@ int Monitor::show_information()
   static const char* fmt_cons;
   static const char* head;
   if (rateMode)  {
-    fmt_def =  " %1d/%-38s%5x%7d%5s          %30s%5s %7s";
-    fmt_prod = " %1d/%-38s%5x%7d%5s%6s    %7.3f   %3.0f%22s %7s";
-    fmt_cons = " %1d/%-38s%5x%7d%5s%6s                    %7.3f    %3.0f%5s %7s";
+    fmt_def =  " %2d/%-37s%5x%7d%5s          %30s%5s %7s";
+    fmt_prod = " %2d/%-37s%5x%7d%5s%6s    %7.3f   %3.0f%22s %7s";
+    fmt_cons = " %2d/%-37s%5x%7d%5s%6s                    %7.3f    %3.0f%5s %7s";
     head =    " Srv/Name                            Partition    Pid Type State   Produced %%prod     #seen  %%seen Reqs Buffer";
   }
   else  {
-    fmt_def =  " %1d/%-38s%5x%7d%5s          %30s%5s %7s";
-    fmt_prod = " %1d/%-38s%5x%7d%5s%6s%11d   %3.0f%22s %7s";
-    fmt_cons = " %1d/%-38s%5x%7d%5s%6s               %12d    %3.0f%5s %7s";
+    fmt_def =  " %2d/%-37s%5x%7d%5s          %30s%5s %7s";
+    fmt_prod = " %2d/%-37s%5x%7d%5s%6s%11d   %3.0f%22s %7s";
+    fmt_cons = " %2d/%-37s%5x%7d%5s%6s               %12d    %3.0f%5s %7s";
     head =     " Srv/Name                            Partition    Pid Type State   Produced %%prod     #seen  %%seen Reqs Buffer";
   }
   char line[256];

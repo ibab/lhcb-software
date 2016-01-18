@@ -63,14 +63,6 @@ extern "C" {
   typedef int (*lib_rtl_rundown_handler_t)(void*);
   inline bool lib_rtl_is_success(int status) { return status&1; }
 
-  /// Enumerations
-  enum {
-    LIB_RTL_DEFAULT = 0,
-    LIB_RTL_ERRNO = 1,
-    LIB_RTL_OS,
-    LIB_RTL_INFINITE = 0
-  };
-
   /// Enumeration of printout levels
   enum {
     LIB_RTL_VERBOSE = 1,
@@ -79,7 +71,11 @@ extern "C" {
     LIB_RTL_WARNING,
     LIB_RTL_ERROR,
     LIB_RTL_FATAL,
-    LIB_RTL_ALWAYS
+    LIB_RTL_ALWAYS,
+    LIB_RTL_ERRNO = 100,
+    LIB_RTL_OS = 200,
+    LIB_RTL_DEFAULT = 0,
+    LIB_RTL_INFINITE = 0
   };
 
   /**RTL: Online runtime library wrapper for OS specific functions.

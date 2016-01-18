@@ -496,6 +496,23 @@ extern "C" size_t lib_rtl_output(int level, const char* format, ...)   {
   size_t result;
   va_list args;
   va_start( args, format );
+  switch(level) {
+  case LIB_RTL_ERRNO:
+  case LIB_RTL_OS:
+    if ( errno != 0 )  {
+      int err = errno;
+      ::lib_rtl_output(LIB_RTL_ERROR,"RTL: %8d : %s\n",err, RTL::errorString(err));
+      errno = 0;
+    }
+    level = LIB_RTL_ERROR;
+    break;
+  case LIB_RTL_DEFAULT:
+    level = LIB_RTL_ERROR;
+    break;
+  default:
+    break;
+  }
+
   if ( RTL::s_rtl_printer != 0 && !RTL::rtl_exit_handler_active )  {
     result = (*RTL::s_rtl_printer)(RTL::s_rtl_printer_arg, level, format, args);
   }

@@ -7,6 +7,7 @@
 #define MBM_IMPLEMENTATION
 #include "MBM/bmstruct.h"
 #include "MBM/Manager.h"
+#include "MBM/bmserver.h"
 #include "bm_internals.h"
 
 using namespace MBM;

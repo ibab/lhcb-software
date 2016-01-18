@@ -4,14 +4,20 @@
 #include <cerrno>
 #include <memory>
 #include <vector>
+#include <map>
 #include <stdexcept>
+#include "RTL/rtl.h"
 #include "RTL/que.h"
-#include "RTL/Lock.h"
 #include "RTL/time.h"
 #include "NET/defs.h"
 #include "NET/IOPortManager.h"
 #include "NET/DataTransfer.h"
 #include "TAN/TanInterface.h"
+//#include "ASIO/TanInterface.h"
+#include <mutex>
+#define LOCK std::lock_guard<std::recursive_mutex>
+// #include "RTL/Lock.h"
+// #define LOCK RTL::Lock
 
 /// one-at-time hash function
 static unsigned int hash32(const char* key) {
@@ -77,7 +83,8 @@ namespace DataTransfer  {
     NetConnectionType        m_type;
     netentry_t               m_me;
     std::map<unsigned int,netentry_t*> m_db;
-    lib_rtl_lock_t           m_lockid;
+    std::recursive_mutex     m_lockid;
+    //lib_rtl_lock_t           m_lockid;
     Clients                  m_clients;
     int                      m_cancelled;
     NetConnectionType type() const { return m_type; }
@@ -89,7 +96,7 @@ namespace DataTransfer  {
     NetErrorCode accept();
     NetErrorCode init(NetConnectionType type);
     NetErrorCode handleMessage(netentry_t* e);
-    NetErrorCode getData(netentry_t* e, void* data);
+    NetErrorCode receive(netentry_t* e, void* data);
     NetErrorCode setSockopts(int chan);
     NetErrorCode send(const void* buff, size_t size, netentry_t* dest, int fac);
     NetErrorCode send(const void* buff, size_t size, const std::string& dest, int fac);
@@ -109,28 +116,32 @@ static NET*& inst()  {
 }
 
 //#define _net_printf printf
-static inline void _net_printf(const char*, ...) {}
+namespace  {
 
-//----------------------------------------------------------------------------------
-void netheader_t::fill(const char* nam,unsigned int hash_val, size_t siz, int fac, int mtype, const void *buf)    {
-  magic    = NET_MAGIC;
-  size     = htonl(siz);
-  facility = htonl(fac);
-  msg_type = htonl(mtype);
-  hash     = htonl(hash_val);
-  strncpy(name,nam,sizeof(name));
-  name[sizeof(name)-1] = 0;
-  if (buf != 0 && siz>0)  {
-    ::memcpy(this+1,buf,siz);
+  inline void _net_printf(const char*, ...) {}
+
+  //----------------------------------------------------------------------------------
+  void header_fill(netheader_t& header, const char* nam,unsigned int hash_val, size_t siz, int fac, int mtype, const void *buf)    {
+    header.magic    = NET_MAGIC;
+    header.size     = htonl(siz);
+    header.facility = htonl(fac);
+    header.msg_type = htonl(mtype);
+    header.hash     = htonl(hash_val);
+    strncpy(header.name,nam,sizeof(header.name));
+    header.name[sizeof(header.name)-1] = 0;
+    if (buf != 0 && siz>0)  {
+      ::memcpy(&header+1,buf,siz);
+    }
+  }
+  //----------------------------------------------------------------------------------
+  void header_net_to_host (netheader_t& header)  {
+    header.hash     = ntohl(header.hash);
+    header.size     = ntohl(header.size);
+    header.msg_type = ntohl(header.msg_type);
+    header.facility = ntohl(header.facility);
   }
 }
-//----------------------------------------------------------------------------------
-void netheader_t::net_to_host ()  {
-  hash     = ntohl(hash);
-  size     = ntohl(size);
-  msg_type = ntohl(msg_type);
-  facility = ntohl(facility);
-}
+
 //----------------------------------------------------------------------------------
 int NET::recvAction (void* param)    {
   netentry_t* e = (netentry_t*)param;
@@ -249,9 +260,8 @@ NetErrorCode netentry_t::recv(void *buffer, size_t siz, unsigned int flag)  {
 }
 //----------------------------------------------------------------------------------
 NET::NET(const std::string& proc) 
-  : m_refCount(0), m_mgr(0), m_type(NET_SERVER), m_lockid(0), m_cancelled(0)
+  : m_refCount(0), m_mgr(0), m_type(NET_SERVER), m_lockid(), m_cancelled(0)
 {
-  m_lockid = 0;
   m_me.sys = this;
   m_me.name = proc;
   m_me.hash = hash32(m_me.name.c_str());
@@ -269,7 +279,7 @@ NET::~NET() {
     netentry_t* e = (*i).second;
     if ( e )    {
       netheader_t h;
-      h.fill(m_me.name.c_str(),m_me.hash,0,0,NET_CONNCLOSED,0);
+      header_fill(h,m_me.name.c_str(),m_me.hash,0,0,NET_CONNCLOSED,0);
       m_mgr.remove(e->chan, false);
       e->setSendBuff(sizeof(h));
       e->send(&h, sizeof(h), 0);
@@ -278,11 +288,6 @@ NET::~NET() {
     }
   }
   m_db.clear();
-  if (m_lockid)  {
-    lib_rtl_unlock(m_lockid);
-    lib_rtl_delete_lock(m_lockid);
-  }
-  m_lockid = 0;
 }
 //----------------------------------------------------------------------------------
 void NET::cancel()   {
@@ -362,11 +367,9 @@ NetErrorCode NET::accept()   {
       e->close();
       return NET_ERROR;
     }
-    RTL::Lock lock(m_lockid);
     e->setSockopts();
+    LOCK lock(m_lockid);
     m_db[e->hash] = e.get();
-    //::printf("New connection: %s chan=%d addr=%s\n",
-    //  e->name.c_str(),e->chan,inet_ntoa(e->addr.sin_addr));
     m_mgr.add(0,m_me.chan,acceptAction, this);
     m_mgr.add(1,e->chan,recvAction,e.get());
     e.release();
@@ -387,10 +390,10 @@ NetErrorCode NET::disconnect(netentry_t *e)   {
 //----------------------------------------------------------------------------------
 void NET::sendShutdown(netentry_t *e)  {
   try {
-    e->header.fill(e->name.c_str(),e->hash,0,0,NET_TASKDIED,0);
-    e->header.net_to_host();
+    header_fill(e->header,e->name.c_str(),e->hash,0,0,NET_TASKDIED,0);
+    header_net_to_host(e->header);
     for(Clients::iterator i=m_clients.begin(); i != m_clients.end(); ++i)  {
-      if ( (*i).death ) (*((*i).death))(e,e->header,(*i).param);
+      if ( (*i).death ) (*((*i).death))(e->header, (*i).param, 0);
     }
   }
   catch(...)  {
@@ -400,9 +403,9 @@ void NET::sendShutdown(netentry_t *e)  {
 }
 //----------------------------------------------------------------------------------
 NetErrorCode NET::handleMessage(netentry_t* e) {
-  RTL::Lock lock(m_lockid);
+  LOCK lock(m_lockid);
   e->status = e->recv(&e->header,sizeof(netheader_t),0);
-  e->header.net_to_host();
+  header_net_to_host(e->header);
   switch (e->status)  {
   case NET_SUCCESS:        // allocate memory for message
     switch(e->header.msg_type)  {
@@ -413,12 +416,12 @@ NetErrorCode NET::handleMessage(netentry_t* e) {
       e->data = 0;
       for(Clients::iterator i=m_clients.begin(); i != m_clients.end(); ++i)  {
         if ( (*i).data && (*i).fac == e->header.facility ) {
-          (*((*i).data))(e,e->header,(*i).param);
+          (*((*i).data))(e->header,(*i).param, e);
         }
       }
       if ( !e->data )  {
         char* buff = new char[e->header.size];
-        e->status = getData(e,buff);
+        e->status = receive(e,buff);
         delete [] buff;
       }
       switch(e->status)  {
@@ -455,11 +458,11 @@ NetErrorCode NET::send(const void* buff, size_t size, netentry_t* e, int facilit
   e->setSendBuff(len);
   std::auto_ptr<netheader_t> h(new(::operator new(len)) netheader_t);
   if (size <= COPY_LIMIT)    {
-    h->fill(m_me.name.c_str(),m_me.hash,size,facility,NET_MSG_DATA,buff);
+    header_fill(*h,m_me.name.c_str(),m_me.hash,size,facility,NET_MSG_DATA,buff);
     status = e->send(h.get(),len,0);
   }
   else    {
-    h->fill(m_me.name.c_str(),m_me.hash,size,facility,NET_MSG_DATA,0);
+    header_fill(*h,m_me.name.c_str(),m_me.hash,size,facility,NET_MSG_DATA,0);
     status = e->send(h.get(),sizeof(netheader_t),0);
     if (status == NET_SUCCESS)  {
       status = e->send(buff,size,0);
@@ -481,14 +484,11 @@ NetErrorCode NET::send(const void* buff, size_t size, const std::string& dest, i
   //
   NetErrorCode status = NET_CONNCLOSED;
   unsigned int hash = hash32(dest.c_str());
-  void* io_lock = m_mgr.lock();
-  if ( io_lock ) {
-    RTL::Lock lock(m_lockid);
+  netentry_t *e = 0;    {
+    LOCK lock(m_lockid);
     std::map<unsigned int,netentry_t*>::iterator i=m_db.find(hash);
-    netentry_t *e = i != m_db.end() ? (*i).second : 0;
+    e = i != m_db.end() ? (*i).second : 0;
     if ( !e ) {
-      m_mgr.unlock(io_lock);
-      io_lock = 0;
       if ( !(e=connect(dest)) ) {
         return NET_TASKNOTFOUND;
       }
@@ -499,7 +499,6 @@ NetErrorCode NET::send(const void* buff, size_t size, const std::string& dest, i
       disconnect(e);
     }
   }
-  if ( io_lock ) m_mgr.unlock(io_lock);
   return status;
 }
 //----------------------------------------------------------------------------------
@@ -507,13 +506,6 @@ NetErrorCode NET::init(NetConnectionType type)  {
   // Only initialize if needed!
   if ( m_me.addr.sin_port == 0 )  {
     int status = 1;
-    if ( 0 == m_lockid ) {
-      status = ::lib_rtl_create_lock(0, &m_lockid);
-      if ( !lib_rtl_is_success(status) )  {
-        ::lib_rtl_signal_message(LIB_RTL_OS,"Error creating NET lock. Status %d",status);
-        return NET_ERROR;
-      }
-    }
     m_type = type;
     if ( type == NET_SERVER )  {
       status = ::tan_allocate_port_number(m_me.name.c_str(),&m_me.addr.sin_port);
@@ -553,9 +545,16 @@ NetErrorCode NET::init(NetConnectionType type)  {
   return NET_SUCCESS;
 }
 //----------------------------------------------------------------------------------
-NetErrorCode NET::getData(netentry_t* e, void* data)  {
-  e->status = e->recv(data,e->header.size,0);
-  e->data =  data;
+NetErrorCode NET::receive(netentry_t* e, void* data)  {
+  if ( data )  {
+    e->status = e->recv(data,e->header.size,0);
+    e->data =  data;
+    return e->status;
+  }
+  data = ::operator new(e->header.size);
+  e->status = e->recv(data, e->header.size,0);
+  e->data = 0;
+  ::operator delete(data);
   return e->status;
 }
 //----------------------------------------------------------------------------------
@@ -575,7 +574,7 @@ NET* NET::instance(const std::string& proc, NetConnectionType type)  {
       throw std::runtime_error("Cannot initialize network server.");
     }
   }
-  RTL::Lock lock(n->m_lockid);
+  LOCK lock(n->m_lockid);
   n->m_refCount++;
   return n;
 }
@@ -583,12 +582,13 @@ NET* NET::instance(const std::string& proc, NetConnectionType type)  {
 unsigned int NET::release()  {
   NET*& n = inst();
   if ( n )  {
+    n->m_lockid.lock();
     void* lock = n->m_mgr.lock();
-    ::lib_rtl_lock(n->m_lockid);
     unsigned int cnt = --n->m_refCount;
     if ( cnt == 0 )  {
       __NetworkPort__  port = n->m_mgr.port();
       IOPortManager mgr(port);
+      n->m_lockid.unlock();
       delete n;
       mgr.stop(lock);
       mgr.unlock(lock);
@@ -596,7 +596,7 @@ unsigned int NET::release()  {
       n = 0;
       return cnt;
     }
-    ::lib_rtl_unlock(n->m_lockid);
+    n->m_lockid.unlock();
     n->m_mgr.unlock(lock);
     return cnt;
   }
@@ -604,7 +604,7 @@ unsigned int NET::release()  {
 }
 //----------------------------------------------------------------------------------
 NetErrorCode NET::subscribe(void* param, unsigned int fac, net_handler_t data, net_handler_t death) {
-  RTL::Lock lock(m_lockid);
+  LOCK lock(m_lockid);
   for(Clients::iterator i=m_clients.begin(); i != m_clients.end(); ++i)  {
     if ( (*i).fac == fac && (*i).param == param ) {
       (*i).data = data;
@@ -621,7 +621,7 @@ NetErrorCode NET::subscribe(void* param, unsigned int fac, net_handler_t data, n
 }
 //----------------------------------------------------------------------------------
 NetErrorCode NET::unsubscribe(void* param, unsigned int fac) {
-  RTL::Lock lock(m_lockid);
+  LOCK lock(m_lockid);
   for(Clients::iterator i=m_clients.begin(); i != m_clients.end(); ++i)  {
     if ( (*i).fac == fac && (*i).param == param ) {
       m_clients.erase(i);
@@ -631,154 +631,25 @@ NetErrorCode NET::unsubscribe(void* param, unsigned int fac) {
   return NET_SUCCESS;
 }
 //----------------------------------------------------------------------------------
-NET* DataTransfer::net_init(const std::string& proc, NetConnectionType type)
-{ return NET::instance(proc, type);                 }
+NET* DataTransfer::net_init(const std::string& proc, int /* nthreads */, NetConnectionType type)
+{ return NET::instance(proc, type);                               }
 void DataTransfer::net_close(NET* net)
-{ if ( net ) net->release();                        }
+{ if ( net ) net->release();                                      }
 int DataTransfer::net_receive(NET* net, netentry_t* e, void* buff) 
-{ return net ? net->getData(e,buff) : NET_ERROR;    }
+{ return net ? net->receive(e,buff) : NET_ERROR;                  }
 int DataTransfer::net_send(NET* net, const void* buff, size_t size, const std::string& dest, unsigned int fac)
-{ return net ? net->send(buff,size,dest,fac) : NET_ERROR;      }
-int DataTransfer::net_send(NET* net, const void* buff, size_t size, netentry_t* dest, unsigned int fac)
-{ return net ? net->send(buff,size,dest,fac) : NET_ERROR;      }
+{ return net ? net->send(buff,size,dest,fac) : NET_ERROR;         }
 int DataTransfer::net_subscribe(NET* net, void* param, unsigned int fac, net_handler_t data, net_handler_t death)
 { return net ? net->subscribe(param,fac,data,death) : NET_ERROR;  }
 int DataTransfer::net_unsubscribe(NET* net, void* param, unsigned int fac)
-{ return net ? net->unsubscribe(param,fac) : NET_SUCCESS;  }
+{ return net ? net->unsubscribe(param,fac) : NET_SUCCESS;         }
 void* DataTransfer::net_lock(NET* net)
-{ return net ? net->m_mgr.lock() : 0;               }
+{ return net ? net->m_mgr.lock() : 0;                             }
 void DataTransfer::net_unlock(NET* net, void* lock)
-{ if ( net && lock ) net->m_mgr.unlock(lock);       }
+{ if ( net && lock ) net->m_mgr.unlock(lock);                     }
 void DataTransfer::net_cancel(NET* net)
-{ if ( net ) net->cancel();   }
+{ if ( net ) net->cancel();                                       }
 
-#ifndef ONLINEKERNEL_NO_TESTS
-
-#include "RTL/rtl.h"
-namespace {
-  void help() {
-    ::printf("net_send -opt [-opt]\n");
-    ::printf("    -n<ame>=<process-name>     Sender/own process name     \n");
-    ::printf("    -ta<rget>=<process-name>   Receiver's process name     \n");
-    ::printf("    -tu<rns>=<number>          Number of receive/send turns\n");
-    ::printf("    -l<ength>=<number>         Message length in bytes     \n");
-    ::printf("    -b<ounce>                  Run in message bounce mode) \n");
-  }
-  void help_recv() {
-    ::printf("net_recv -opt [-opt]\n");
-    ::printf("    -b<ounce>                  Run in message bounce mode) \n");
-    ::printf("    -n<ame>=<process-name>     Receiver's process name     \n");
-  }
-  struct NetSensor  {
-    char* m_buffer;
-    bool  m_bounce;
-    NET*  m_net;
-    char* buffer()   { return m_buffer; }
-    static void handle_data(netentry_t* e, const netheader_t& hdr, void* param)   {
-      NetSensor* s = (NetSensor*)param;
-      static time_t start = time(0);
-      static int cnt = 0;
-      net_receive(s->m_net,e, s->m_buffer);
-      if ( (++cnt)%1000 == 0 )  {
-        ::printf("%3ld %s %d messages [%s]. chan:%d port:%d addr:%s\n",
-                 time(0)-start, s->m_bounce ? "Bounced" : "Received",cnt,
-                 hdr.name,e->chan,e->addr.sin_port,inet_ntoa(e->addr.sin_addr));
-      }
-      if ( s->m_bounce )  {
-        int sc = net_send(s->m_net,s->m_buffer,e->header.size,e,e->header.facility);
-        if ( sc != NET_SUCCESS )  {
-          ::printf("Failed to send message. ret=%d\n",sc);
-        }
-      }
-    }
-    static void handle_death(netentry_t* e, const netheader_t& hdr, void* /* param */ )
-    { ::printf("Task died: %s chan=%d addr=%s\n",hdr.name,e->chan,inet_ntoa(e->addr.sin_addr));  }
-    explicit NetSensor(const std::string& proc,bool bounce=false) : m_bounce(bounce) 
-    {
-      m_buffer = new char[1024*1024];
-      net_subscribe(m_net=net_init(proc),this,1,handle_data,handle_death);  
-    }
-    virtual ~NetSensor() 
-    {
-      net_unsubscribe(m_net,this,1);
-      delete [] m_buffer;
-      m_buffer = 0;
-    }
-  };
-}
-
-static std::string host_name()  {
-  char host[64];
-  ::gethostname(host,sizeof(host));
-  hostent* h = gethostbyname(host);
-  const char* add = inet_ntoa(*(in_addr*)h->h_addr_list[0]);
-  return add;
-}
-
-extern "C" int net_send(int argc, char **argv)  {
-  char *wmessage = 0;
-  int count=1, length=256, loop=100000;
-  std::string target, name;
-
-  RTL::CLI cli(argc, argv, help);
-  bool bounce = cli.getopt("bounce",1) != 0;
-  cli.getopt("count",1,count);
-  cli.getopt("length",1,length);
-  cli.getopt("turns",2,loop);
-  cli.getopt("target",2,target);
-  cli.getopt("name",1,name);
-
-  count = bounce ? 1 : count;
-  std::string proc = name.empty() ? host_name()+"::SND_0" : name;
-  std::string to   = target.empty() ? host_name()+"::RCV_0" : target;
-  ::printf (" Starting net sender:%d turns:%d name:%s target:%s\n",
-            length,loop,name.c_str(),target.c_str());
-  while(count-- > 0)  {
-    NetSensor cl(proc,bounce);
-    if ( length<=0 ) length=10;
-    wmessage = cl.buffer();
-    for (int k = 0; k < length; k++) wmessage[k] = char((length + k) & 0xFF);
-
-    // receive some messages and bounce them
-    struct timeval start;
-    ::gettimeofday(&start,0);
-    for (int i=0, mx=loop; mx > 0; --mx, ++i)  {
-      int sc = net_send(cl.m_net,wmessage, length, to, 1);
-      if (sc != NET_SUCCESS)
-        printf("Client::send Failed: Error=%d\n",sc);
-      if ((i+1) % 1000 == 0) {
-        struct timeval now;
-        ::gettimeofday(&now,0);
-        double diff = double(now.tv_sec-start.tv_sec)+double(now.tv_usec-start.tv_usec)/1e6;
-        if ( diff == 0 ) diff = 1;
-        double diff2 = double(i+1)/diff;
-        printf ("%-4ld Sent %6d messages rate:%9.3f kHz %9.3f MB/sec  total:%7.3f [sec]\n",
-                time(0)-start.tv_sec,i+1,diff2/1000.0,diff2*length/1024.0/1024.0,diff);
-      }
-    }
-    if ( bounce )  {
-      while(1)  {
-        ::lib_rtl_sleep(100);
-      }
-    }
-  }
-  printf("Hit key+Enter to exit ...");
-  getchar();
-  return 0x1;
-}
-
-extern "C" int net_recv(int argc, char **argv)  {
-  RTL::CLI cli(argc, argv, help_recv);
-  std::string proc;
-  bool run = true, bounce = cli.getopt("bounce",1) != 0;
-
-  cli.getopt("name",1,proc);
-  if (proc.empty() ) proc = host_name()+"::RCV_0";
-  printf (" Starting receiver:%s. Bounce:%s\n",proc.c_str(),bounce ? "true" : "false");
-  NetSensor cl(proc, bounce);
-  while(run)  {
-    ::lib_rtl_sleep(100);
-  }
-  return 0x1;
-}
-#endif
+#define TRANSFERTEST_SEND test_socket_net_send
+#define TRANSFERTEST_RECV test_socket_net_recv
+#include "NET/TransferTest.h"

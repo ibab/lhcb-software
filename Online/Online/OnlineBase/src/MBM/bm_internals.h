@@ -1,3 +1,15 @@
+// $Id: $
+//==========================================================================
+//  LHCb Online software suite
+//--------------------------------------------------------------------------
+// Copyright (C) Organisation europeenne pour la Recherche nucleaire (CERN)
+// All rights reserved.
+//
+// For the licensing terms see OnlineSys/LICENSE.
+//
+// Author     : M.Frank
+//
+//==========================================================================
 #ifndef _MBM_INTERNALS_H
 #define _MBM_INTERNALS_H
 #include "RTL/rtl.h"

@@ -190,7 +190,6 @@ int TanInterface::hostName(char* name, size_t size)  const  {
 int TanInterface::setInquireAddr(const char* node, NetworkChannel::Address& sin, 
                                  NetworkChannel::Address& rin )  
 {
-  static const char* mode = ::getenv("TAN_PORT");
   short port = NAME_SERVICE_PORT;
   struct hostent *rp = hostByName (node);
   if ( rp == 0 ) return TAN_SS_ERROR;
@@ -210,10 +209,13 @@ int TanInterface::setInquireAddr(const char* node, NetworkChannel::Address& sin,
   static struct servent* se = ::getservbyname(NAME_SERVICE_NAME,"udp");
   rin          = m_sinudp;
 #endif
-  rin.sin_port = se==0 ? mode ? htons(port) : htons(port+1) : se->s_port;
   // To use only ONE nameserver and no predefined service 
   // for both allocation and inquire enable this:
   // export TAN_PORT=YES;
+  //static const char* mode = ::getenv("TAN_PORT");
+  //rin.sin_port = se==0 ? mode ? htons(port) : htons(port+1) : se->s_port;
+  // Ignore above. We only use ONE nameserver!
+  rin.sin_port = se==0 ? htons(port) : se->s_port;
   return TAN_SS_SUCCESS;
 }
 // ----------------------------------------------------------------------------

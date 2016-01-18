@@ -55,6 +55,7 @@ public:
     INQUIRE,
     ALIAS,
     DEALIAS,
+    DISCONNECTED,
     DUMP,
     SHUTDOWN
   };
@@ -73,12 +74,20 @@ public:
   char* _Name() {
     return m_name;
   }
+  /// Retrieve pointer to name
+  const char* _Name()  const {
+    return m_name;
+  }
   /// Retrieve reference to network address
   Address& Addr()  {
     return m_sin;
   }
   /// Retrieve reference to network sub address
   SubAddress& address() {
+    return m_sin.sin_addr;
+  }
+  /// Retrieve reference to network sub address
+  const SubAddress& address()  const  {
     return m_sin.sin_addr;
   }
   /// Retrieve port number
@@ -109,15 +118,15 @@ inline TanMessage::TanMessage () {
   m_length = sizeof (TanMessage);
   m_error  = TAN_SS_SUCCESS;
   m_function = 0;
-  ::memset  (m_name,0,sizeof(m_name));
-  ::memset  (&m_sin, 0, sizeof (m_sin));
+  ::memset(m_name,0,sizeof(m_name));
+  ::memset(&m_sin, 0, sizeof (m_sin));
 }
 
 inline TanMessage::TanMessage (u_int func, const char* proc)  {
   size_t i, n;
-  m_length    = htonl (sizeof (TanMessage));
-  m_error     = htonl (TAN_SS_SUCCESS);
-  m_function  = htonl (func);
+  m_length    = sizeof (TanMessage);
+  m_error     = TAN_SS_SUCCESS;
+  m_function  = func;
   for (i=0, n=::strlen(proc); i<n; i++)
     m_name[i] = char(::tolower(proc[i]));
   m_name[i] = 0;
@@ -136,9 +145,9 @@ inline TanMessage& TanMessage::operator = (const TanMessage& cp)  {
 }
 
 inline void TanMessage::Convert()  {
-  m_length   = htonl(m_length);
-  m_error    = htonl(m_error);
-  m_function = htonl(m_function);
+  //m_length   = htonl(m_length);
+  //m_error    = htonl(m_error);
+  //m_function = htonl(m_function);
   //m_sin.sin_family = ntohs (m_sin.sin_family);
 }
 

@@ -1,8 +1,26 @@
+// $Id: $
+//==========================================================================
+//  LHCb Online software suite
+//--------------------------------------------------------------------------
+// Copyright (C) Organisation europeenne pour la Recherche nucleaire (CERN)
+// All rights reserved.
+//
+// For the licensing terms see OnlineSys/LICENSE.
+//
+// Author     : M.Frank
+//
+//==========================================================================
 #ifndef _MBM_MBMDEF_H 
 #define _MBM_MBMDEF_H
 
 #include "MBM/bmssdef.h"
 #include "RTL/rtl.h"
+
+enum MBM_communications  {
+  BM_COM_NONE = 0,
+  BM_COM_FIFO = 1,
+  BM_COM_ASIO = 2
+};
 
 enum MBM_dimensions  {
   BM_MASK_SIZE     =  4,
@@ -14,7 +32,7 @@ enum MBM_Internals  {
   BM_MAX_REQS   = 8,
   BM_MAX_EVTYPE = 10,
   BM_MAX_REQONE = 12,   // This must be a multiple of 4!!!
-  BM_MAX_THREAD = 16
+  BM_MAX_THREAD = 32
 };
 
 enum MBM_MaskTypes  {
@@ -82,11 +100,10 @@ extern "C"  {
   int  mbm_mon(int argc , char** argv);
 
   /// Include as client in buffer manager
-  BMID mbm_include (const char* bm_name, const char* name, int partid);
+  BMID mbm_include (const char* bm_name, const char* name, int partid, int com_type);
   int  mbm_exclude (BMID bm);
   __MBM_CONST char* mbm_buffer_address(BMID);
-  /// Clean possibly pending messages from the receive fifo (e.g. after a cancel)
-  int mbm_clear(BMID bm);
+  int  mbm_clear(BMID bm);
 
   int  mbm_add_req (BMID bm, int evtype, __MBM_CONST unsigned int* trmask, __MBM_CONST unsigned int* veto, int masktype, 
                     int usertype, int freqmode, float freq);

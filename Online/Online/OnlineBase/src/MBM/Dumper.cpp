@@ -1,5 +1,18 @@
+// $Id: $
+//==========================================================================
+//  LHCb Online software suite
+//--------------------------------------------------------------------------
+// Copyright (C) Organisation europeenne pour la Recherche nucleaire (CERN)
+// All rights reserved.
+//
+// For the licensing terms see OnlineSys/LICENSE.
+//
+// Author     : M.Frank
+//
+//==========================================================================
 #define MBM_IMPLEMENTATION
 #include "MBM/bmstruct.h"
+#include "MBM/bmserver.h"
 #include "MBM/Manager.h"
 
 namespace MBM {

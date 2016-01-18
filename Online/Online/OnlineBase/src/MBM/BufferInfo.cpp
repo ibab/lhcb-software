@@ -1,14 +1,20 @@
-// $Id: ISuspendable.h,v 1.2 2007-12-06 14:39:34 frankb Exp $
-//====================================================================
+// $Id: $
+//==========================================================================
+//  LHCb Online software suite
+//--------------------------------------------------------------------------
+// Copyright (C) Organisation europeenne pour la Recherche nucleaire (CERN)
+// All rights reserved.
 //
-//  Package    : OnlineBase
-//  Author     : M.Frank
-//====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/ISuspendable.h,v 1.2 2007-12-06 14:39:34 frankb Exp $
+// For the licensing terms see OnlineSys/LICENSE.
+//
+// Author     : M.Frank
+//
+//==========================================================================
 
 #define MBM_IMPLEMENTATION
 #include "MBM/BufferInfo.h"
 #include "MBM/bmstruct.h"
+#include "MBM/bmserver.h"
 #include "MBM/mepdef.h"
 #include "RTL/rtl.h"
 

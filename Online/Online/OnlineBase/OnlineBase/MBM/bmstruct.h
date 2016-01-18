@@ -1,3 +1,15 @@
+// $Id: $
+//==========================================================================
+//  LHCb Online software suite
+//--------------------------------------------------------------------------
+// Copyright (C) Organisation europeenne pour la Recherche nucleaire (CERN)
+// All rights reserved.
+//
+// For the licensing terms see OnlineSys/LICENSE.
+//
+// Author     : M.Frank
+//
+//==========================================================================
 #ifndef _MBM_MBM_STRUCTS_H
 #define _MBM_MBM_STRUCTS_H
 
@@ -10,6 +22,7 @@
 #ifndef _WIN32
 #include "semaphore.h"
 #endif
+
 #include "RTL/Pack.h"
 
 typedef Bits::BitMask<BM_MASK_SIZE> TriggerMask;
@@ -41,6 +54,7 @@ namespace MBM  {
     BID_USER  = 0xfeed0001,
     BID_EVENT = 0xfeed0002
   };
+
 }
 
 //#define Shift_p_Bit  12  // = (20-Bits_p_MegaByte+1)
@@ -92,6 +106,35 @@ template <class T> struct bm_iterator  {
   }
 };
 
+union MBMConnection  {
+  char           name[128];       // Name of answer connection
+  struct ServerConnection {
+    char         name[128];       // Name of answer connection
+    int          request;
+    int          poll;
+  } master;
+  struct FifoServerConnection {
+    char         name[128];       // Name of answer connection
+    int          request;
+    int          response;
+  } client;
+  struct FifoClientConnection {
+    char         name[128];       // Name of answer connection
+    int          request;
+    int          response;
+  } server;
+  struct AnyConnection {
+    char         name[128];       // Name of answer connection
+    void*        channel;
+  } any;
+  void init()  {
+    name[0] = 0;
+    client.request  = -1;
+    client.response = -1;
+  }
+  bool hasResponse()  {  return client.response > 0; }
+};
+
 struct USER : public qentry_t  {
   qentry_t wsnext;
   qentry_t wenext;
@@ -104,9 +147,8 @@ struct USER : public qentry_t  {
   int   state;                     // consumer/producer state (Active,Pause) - (Active,Wspace)
   int   partid;                    // user partition ID
   int   pid;                       // process id
-  int   fifo;                      // File descriptor of the answer fifo
+  MBMConnection connection;        // File descriptor of the answer connection
   char  name[BM_USER_NAME_LEN];    // user name
-  char  fifoName[128];             // Name of answer fifo
   TriggerMask ev_trmask;           // trmask of waiting exent
   char  ev_dest[BM_USER_NAME_LEN]; // If event was sent with destination, this is the target user
   int   ev_ptr;                    // pointer of waiting space/event
@@ -185,7 +227,6 @@ struct CONTROL    {
 
 } PACKED_DATA;
 
-
 struct BUFFERS  {
   struct BUFF {
     char name[BM_BUFF_NAME_LEN];
@@ -217,56 +258,44 @@ struct BufferMemory : public qentry_t   {
 };
 
 struct MBMMessage;
-struct BMDESCRIPT : public qentry_t  {
-  int              pid;
-  int              partID;
-  int**            evt_ptr;
-  int*             evt_size;
-  int*             evt_type;
-  unsigned int*    trmask;
-  RTL_ast_t        ast_addr;
-  void*            ast_param;
-  lib_rtl_gbl_t    buff_add;
-  lib_rtl_lock_t   lock;
-  char*            buffer_add;
-  int              fifo;
-  int              reqFifo;
-  int              cancelled;
-  char             fifoName[BM_USER_NAME_LEN+BM_BUFF_NAME_LEN+16];
-  char             name[BM_USER_NAME_LEN];     // user name
-  char             bm_name[BM_BUFF_NAME_LEN];  // buffer name
-  USER*            user;
-  BMDESCRIPT();
-  ~BMDESCRIPT() {}
+struct MBMCommunication  {
+  // MBM Server communication functions
+  int (*accept)(MBMConnection& connection, const char* bm_name, const char* name);
+  int (*close)(MBMConnection& connection);
+  int (*bind)(MBMConnection& connection, const char* bm_name, int id);
+  int (*open)(MBMConnection& connection, const char* bm_name, const char* name);
+  int (*send_response)(MBMConnection& connection, const void* buffer, size_t length);
+
+  /// Create new poll pool
+  int (*poll_create)(MBMConnection& connection, int max_count);
+  /// Add connection to poll pool
+  int (*poll_add)(MBMConnection& connection, MBMConnection& client);
+  /// Remove connection from poll pool
+  int (*poll_del)(MBMConnection& connection, MBMConnection& client);
+  /// Poll on connections delivering data
+  int (*poll)(MBMConnection& connection, int& events, int tmo);
+
+  int (*dispatch)(ServerBMID bm, int which);
+
+  /** MBM Client communication functions   */
+  /// Open connection to server process
+  int (*open_server)(MBMConnection& connection, const char* bm_name, const char* name);
+  /// Move server connection to worker thread
+  int (*move_server)(MBMConnection& connection, const char* bm_name, USER* u, int serverid);
+  /// Exchange MBM message with server
+  int (*communicate)(MBMConnection& connection, MBMMessage& msg, int* cancelation_flag);
+  /// Clear possibly pending data from communication channel
+  int (*clear)(MBMConnection& connection);
+  /// Send request to server
+  int (*send_request)(MBMConnection& connection, MBMMessage& msg, bool clear_before);
+  /// Read server response
+  int (*read_response)(MBMConnection& connection, MBMMessage& msg, int* cancelled);
+
+  int type;
+  MBMCommunication();
 };
 
-struct ServerBMID_t : public BufferMemory {
-  int              clientfd;
-  int              num_threads;
-  int              stop;
-  int              allow_declare;
-  RTL_ast_t        free_event;
-  void*            free_event_param;
-  RTL_ast_t        alloc_event;
-  void*            alloc_event_param;
-  lib_rtl_thread_t client_thread;
-  lib_rtl_lock_t   lockid;
-  struct Server {
-    int              fifo;
-    char             fifoName[BM_BUFF_NAME_LEN+32];
-    int              poll;
-    lib_rtl_thread_t dispatcher;
-  } server[BM_MAX_THREAD];
-
-  struct ConsumerREQ {
-    REQ      requirement;
-    char     name[BM_USER_NAME_LEN];     // user name match
-    int      count;
-  } cons_req[BM_MAX_REQS];
-
-  ServerBMID_t();
-  ~ServerBMID_t();
-};
+struct ServerBMID_t;
 typedef ServerBMID_t* ServerBMID;
 
 #include "RTL/Unpack.h"
@@ -285,6 +314,10 @@ extern "C" {
   int mbmsrv_dispatch_nonblocking(ServerBMID bmid);
   int mbmsrv_stop_dispatch(ServerBMID bmid);
   int mbmsrv_wait_dispatch(ServerBMID bmid);
+
+  int  mbmsrv_handle_request(ServerBMID bm, void* connection, MBMMessage& msg);
+  int  mbmsrv_check_pending_tasks(ServerBMID bm);
+  void mbmsrv_check_clients(ServerBMID bm);
 }
 
 #ifndef MBM_PRINT

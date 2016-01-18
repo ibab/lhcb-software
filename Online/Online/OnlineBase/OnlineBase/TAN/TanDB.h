@@ -1,37 +1,36 @@
+// $Id: $
+//==========================================================================
+//  LHCb Online software suite
+//--------------------------------------------------------------------------
+// Copyright (C) Organisation europeenne pour la Recherche nucleaire (CERN)
+// All rights reserved.
+//
+// For the licensing terms see OnlineSys/LICENSE.
+//
+// Author     : M.Frank
+//
+//==========================================================================
 #ifndef ONLINEKERNEL_TAN_TANDB_H
 #define ONLINEKERNEL_TAN_TANDB_H 1
 
+// C/C++ include files
 #include <cstdio>
 #include <ctype.h>
 #include <cstring>
 
-#define NAMESERVICE_BASE_PORT    0x5300
-
+// Framework include files
 #include "NET/NetworkChannel.h"
 #include "TAN/TanMessage.h"
 #include "TAN/TanErrno.h"
 #include "RTL/que.h"
 #include "RTL/rtl.h"
 
+#define NAMESERVICE_BASE_PORT    0x5300
+
 #ifdef __cplusplus
 class ReceiveHandler;
+#include <vector>
 #endif
-
-typedef struct {                       /* IOSB structure definition */
-#ifdef _VMS
-  unsigned short status;             /* I/O status code           */
-  unsigned short count;              /* Number of Bytes I/O'ed    */
-  unsigned int   dev_info;           /* Device specific info      */
-#else
-  unsigned short _pPort;
-  unsigned short _lPort;
-#ifdef __cplusplus
-  ReceiveHandler* _pHandler;
-#else
-  void* _pHandler;
-#endif
-#endif
-} __TAN_IOSB__;                        /*                           */
 
 #ifndef __cplusplus                    /*  NO C++ !                 */
 typedef void TANDB_ENTRY;              /*  cast TANDB_ENTRY         */
@@ -53,8 +52,7 @@ extern "C"  {
   int          tandb_init            (void);
   void         tandb_get_info        (TANDB_ENTRY *ce, 
                                       __NetworkChannel__ *chan, 
-                                      TanMessage **msg, 
-                                      __TAN_IOSB__ **iosb);
+                                      TanMessage **msg);
   int          tandb_free_port       (TANDB_ENTRY *ce);
 #ifdef __cplusplus                     /*  C++ ONLY!                */
 }                                      /*  External declarations    */
@@ -71,15 +69,12 @@ extern "C"  {
  * @author  M.Frank
  */
 class TANDB_ENTRY  {
-public:
+ public:
   //@Man: public member variables
-  typedef __TAN_IOSB__  IOSB;
   /// Linked list of entries
   qentry_t   hl;       /* hash linked list */
   /// Linked list of alias entries
   qentry_t   al;       /* alias linked list */
-  /// IOSB structure
-  IOSB    m_iosb;
   /// Conected channel number
   NetworkChannel::Channel m_chan;
   /// Port number of the connection
@@ -101,6 +96,7 @@ public:
 #endif
   /// Dead entry flag (used mainly for OS9)
   char    m_dead;
+  char    mark_dead;
   //@Man: Public access method
   /// Return channel number
   NetworkChannel::Channel channel() const {
@@ -126,22 +122,18 @@ public:
     M.Frank
 */
 class TanDataBase : public SmartObject<TanDataBase>  {
-public:
+ public:
   //@Man: public data declarations
   /// Database entry definition
   typedef TANDB_ENTRY   Entry;
-protected:
+ protected:
   //@Man: Protected member variables
   /// Pointer to data in Pubarea
-  TanPaSlot* _pData;
-  /// Number of currently allocated Ports
-  int _iPort;
-  /// Number of currently allocated slots
-  int _iAlloc;
-  /// Internal errno
-  int _iError;
+  TanPaSlot* m_data;
   /// Mutex to protect the database
   lib_rtl_lock_t m_lock;
+  /// Internal errno
+  int m_error;
 
   //@Man Protected member functions
   /// Standard constructor
@@ -151,6 +143,8 @@ protected:
   int _freeEntry (Entry* entry);
   /// Lookupo entry by name
   Entry* _findEntry( const char* proc_name);
+  /// Lookupo entry by name
+  Entry* _findEntry( NetworkChannel::Channel chan );
   /// Find port entry
   NetworkChannel::Port _findPort( Entry *ce );
   /// Allocate entry
@@ -161,7 +155,7 @@ protected:
   /// Free port
   int _freePort( Entry *ce );
 
-public:
+ public:
   //@Man Public member functions
   /// Initialise/Create the database (Should ONLY be done by the allocator server)
   static int initialize();
@@ -174,7 +168,7 @@ public:
 
   /// Retrieve error
   int Error() const {
-    return _iError;
+    return m_error;
   }
 
   /// Find port entry
@@ -201,6 +195,9 @@ public:
   /// Find entry by name
   Entry* FindEntry                  ( const char* s);
 
+  /// Find entry by connection
+  Entry* FindEntry                  ( NetworkChannel::Channel chan );
+
   /// Dump dbase content to FILE
   int Dump                          ( std::ostream& os );
 
@@ -208,7 +205,11 @@ public:
   int DumpXML                       ( std::ostream& os );
 
   /// Given a message, find the approprate port number in the database. If not existant, retrun 0.
-  NetworkChannel::Port findPort     ( TanMessage& msg );
+  NetworkChannel::Port findPort     ( const TanMessage& msg );
+
+  void entriesByFD(int chan, std::vector<Entry*>& ents);
+  void entriesMarkedDead(std::vector<Entry*>& ents);
+
 };
 
 #endif /*  C++ ONLY!                */

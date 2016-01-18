@@ -1,14 +1,26 @@
-/*-----------------------------------------------------------------------*/
-/*                                                                       */
-/*                  BUFFER MANAGER XML SERVER                            */
-/*                                                                       */
-/*  #   Date    Comments                                       By        */
-/* -- -------- ----------------------------------------------- ---       */
-/*  0  14/05/07  Initial version                               MF        */
-/*-----------------------------------------------------------------------*/
+// $Id: $
+//==========================================================================
+//  LHCb Online software suite
+//--------------------------------------------------------------------------
+// Copyright (C) Organisation europeenne pour la Recherche nucleaire (CERN)
+// All rights reserved.
+//
+// For the licensing terms see OnlineSys/LICENSE.
+//
+// Author     : M.Frank
+//
+//==========================================================================
+//                                                                       
+//                  BUFFER MANAGER XML SERVER                            
+//                                                                       
+//  #   Date    Comments                                       By        
+//==========================================================================
+//  0  14/05/07  Initial version                               MF        
+//==========================================================================
 #define MBM_IMPLEMENTATION
 #include "CPP/XMLStream.h"
 #include "MBM/bmstruct.h"
+#include "MBM/bmserver.h"
 #include "MBM/Manager.h"
 #include "bm_internals.h"
 #include "NET/TcpConnection.h"

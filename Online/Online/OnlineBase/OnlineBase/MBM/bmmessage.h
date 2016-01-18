@@ -21,6 +21,7 @@ struct MBMMessage {
   enum msg_type {
     INCLUDE        = 1,
     EXCLUDE        = 2,
+    RECONNECT      = 3,
     // Consummer commands
     ADD_REQUEST    = 103,
     DEL_REQUEST    = 104,
@@ -127,15 +128,25 @@ struct MBMMessage {
 
   explicit MBMMessage(int typ, USER* u=0, int stat=MBM_ERROR) 
     : user(u), type(typ), status(stat), magic(MAGIC) {}
-  int read(int fd);
-  int read(int fd, int* cancelation_flag);
-  int write(int fd) const;
-  int write(int fd, void* ptr, size_t len) const;
-  int wait(int fd, int* cancelled);
-  int communicate(int fdout, int fdin);
-  int communicate(int fdout, int fdin, int* cancelation_flag);
+#ifndef MBM_SERVER_IMPLEMENTATION
+  //int communicate(MBMConnection& connection);
+  //int communicate(MBMConnection& connection, int* cancelation_flag);
+
+  /// Client communication
+  //int send_request(MBMConnection& connection, bool clear_before);
+  //int read_response(MBMConnection& connection, int* cancelation_flag);
+  /// Server communication
+  //int read_request(MBMConnection& connection);
+  //int send_response(MBMConnection& connection);
+  //static int clear_response(MBMConnection& connection);
+#endif
   /// Clean possibly pending messages from the receive fifo (e.g. after a cancel)
-  static int clearFifo(int fd);
   static const char* typeStr(int typ);
+  const char* c_type() const;
+  const char* c_user() const;
 };
+
+int _mbm_connections_use_fifos(MBMCommunication& com);
+int _mbm_connections_use_asio(MBMCommunication& com);
+
 #endif // ONLINEBASE_MBM_BMMESSAGE_H

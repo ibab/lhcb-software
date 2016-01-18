@@ -1,4 +1,30 @@
+// $Id: $
+//==========================================================================
+//  LHCb Online software suite
+//--------------------------------------------------------------------------
+// Copyright (C) Organisation europeenne pour la Recherche nucleaire (CERN)
+// All rights reserved.
+//
+// For the licensing terms see OnlineSys/LICENSE.
+//
+// Author     : M.Frank
+//
+//==========================================================================
+
 #define MBM_IMPLEMENTATION
+#define MBM_SERVER_IMPLEMENTATION
+
+// Framework include files
+#include "RTL/Lock.h"
+#include "RTL/strdef.h"
+#include "RTL/DoubleLinkedQueue.h"
+#include "RTL/DoubleLinkedQueueScan.h"
+#include "MBM/bmstruct.h"
+#include "MBM/bmserver.h"
+#include "MBM/bmmessage.h"
+#include "bm_internals.h"
+
+// C/C++ include files
 #include <cerrno>
 #include <vector>
 #include <sys/stat.h>
@@ -7,13 +33,6 @@
 #include <signal.h>
 #include <fcntl.h>
 #include <stdexcept>
-#include "RTL/Lock.h"
-#include "RTL/strdef.h"
-#include "RTL/DoubleLinkedQueue.h"
-#include "RTL/DoubleLinkedQueueScan.h"
-#include "MBM/bmstruct.h"
-#include "MBM/bmmessage.h"
-#include "bm_internals.h"
 
 //#include <google/profiler.h>
 
@@ -32,8 +51,10 @@ static inline int mbm_error_code()  {
 }
 
 static inline int mbm_error(const char* fn, int line)  {  
-  ::lib_rtl_output(LIB_RTL_ERROR,"MBM inconsistency in '%s' Line:%d\n",fn,line);
-  return MBM_ERROR;  
+  int e = errno;
+  ::lib_rtl_output(LIB_RTL_ERROR,"MBM inconsistency in '%s' Line:%d errno:%d\n",
+		   fn, line, e, RTL::errorString(e));
+  return MBM_ERROR;
 }
 
 #define MBM_MAX_BUFF  32
@@ -43,11 +64,18 @@ static inline int mbm_error(const char* fn, int line)  {
 #define  MBM_ERROR  mbm_error(__FILE__,__LINE__);
 #define CHECKED_CONSUMER(u)  (u); if ( !(u) || (u)->magic != MBM_USER_MAGIC || (u)->busy == 0 || (u)->uid == -1   ) { mbm_error(__FILE__,__LINE__); return MBM_ILL_CONS; }
 #define CHECKED_CLIENT(u)    (u); if ( !(u) || (u)->magic != MBM_USER_MAGIC || (u)->busy == 0 || (u)->uid == -1   ) return MBM_ERROR;
+
+#ifndef MBM_HAVE_STD_MUTEX
 #define CHECK_BMID(b)        (b); if ( !(b) || (b)->magic != MBM_USER_MAGIC || 0 == (b)->lockid ) return MBM_ERROR;
+typedef  RTL::Lock  LOCK;
+#else
+#define CHECK_BMID(b)        (b); if ( !(b) || (b)->magic != MBM_USER_MAGIC ) return MBM_ERROR;
+typedef  std::lock_guard<std::mutex> LOCK;
+#endif
+
 #define  MBMQueue   RTL::DoubleLinkedQueue
 #define  MBMScanner RTL::DoubleLinkedQueueScan
 typedef  MBMMessage MSG;
-typedef  RTL::Lock  LOCK;
 
 /// Interface routine: Map all memory sections of the server process
 int mbmsrv_map_memory(const char* bm_name, BufferMemory* bm);
@@ -58,7 +86,9 @@ int mbmsrv_remap_mon_memory(BufferMemory* bm);
 /// Interface routine: unmape memory
 int mbmsrv_unmap_memory(BufferMemory* bmid);
 /// Include into buffer manager
-int mbmsrv_include (ServerBMID bm, MSG& msg);
+int mbmsrv_include (ServerBMID bm, void* connection, MSG& msg);
+/// Reconnect after moving to different worker
+int mbmsrv_reconnect (ServerBMID bm, void* connection, MSG& msg);
 /// Exclude client from buffer manager
 int mbmsrv_exclude (ServerBMID bm, MSG& msg);
 /// Consumer interface: Free event after processing
@@ -154,8 +184,19 @@ int _mbmsrv_check_freqmode (ServerBMID bm);
 int _mbmsrv_rel_event (ServerBMID bm, USER* u);
 /// Get event pending / subscribe to event eventually pending
 int _mbmsrv_get_ev(ServerBMID bm, USER* u);
-/// Send reply message to client
-int _mbmsrv_reply(ServerBMID bm, const MSG& msg, int fd);
+
+MBMCommunication::MBMCommunication()
+  :
+  /* Server functions */
+  accept(0), close(0), bind(0), open(0), send_response(0),
+  poll_create(0), poll_add(0), poll_del(0), poll(0), dispatch(0), 
+  /* Client functions  */
+  open_server(0), move_server(0), communicate(0), clear(0), 
+  send_request(0), read_response(0),
+  /* Misc. */
+  type(BM_COM_NONE)
+{
+}
 
 BufferMemory::BufferMemory() : qentry_t(0,0), gbl_add(0), buff_add(0) {
   magic             = MBM_USER_MAGIC;
@@ -180,10 +221,12 @@ ServerBMID_t::ServerBMID_t() : BufferMemory(), client_thread(0) {
   alloc_event       = 0;
   alloc_event_param = 0;
   stop              = 0;
+#ifndef MBM_HAVE_STD_MUTEX
   lockid            = 0;
-  clientfd          = 0;
+#endif
   num_threads       = 0;
   allow_declare     = 1;
+  clients.init();
 }
 
 ServerBMID_t::~ServerBMID_t()  {
@@ -232,8 +275,7 @@ int _mbmsrv_map_buff_section(BufferMemory* bm)  {
   ::snprintf(text,sizeof(text),"bm_buff_%s",bm_name);
   int status = ::lib_rtl_map_section(text,0,&bm->buff_add);
   if (!lib_rtl_is_success(status))    {
-    ::lib_rtl_signal_message(LIB_RTL_OS,"Error mapping buffer section for MBM buffer %s\n",
-                             bm_name);
+    ::lib_rtl_output(LIB_RTL_OS,"++bm_serevr++ Error mapping buffer section for MBM buffer %s\n",bm_name);
     return MBM_ERROR;
   }
   bm->buffer_add  = (char*)bm->buff_add->address;
@@ -248,8 +290,7 @@ int _mbmsrv_map_ctrl_section(BufferMemory* bm)  {
   ::snprintf(text,sizeof(text),"bm_ctrl_%s",bm_name);
   int status = ::lib_rtl_map_section(text,0,&bm->gbl_add);
   if (!lib_rtl_is_success(status))    {
-    ::lib_rtl_signal_message(LIB_RTL_OS,"Error mapping control section for MBM buffer %s",
-                             bm_name);
+    ::lib_rtl_output(LIB_RTL_OS,"++bm_server++ Error mapping control section for MBM buffer %s\n",bm_name);
     return MBM_ERROR;
   }
   bm->gbl         = (char*)bm->gbl_add->address;
@@ -286,22 +327,12 @@ int _mbmsrv_unmap_sections(BufferMemory* bm)  {
   return MBM_NORMAL;
 }
 
-int _mbmsrv_close_fifos(ServerBMID bm) {
-  for(size_t i=0; i<sizeof(bm->server)/sizeof(bm->server[0]); ++i) {
+int _mbmsrv_close_connections(ServerBMID bm) {
+  for(size_t i=0; i < BM_MAX_THREAD; ++i) {
     ServerBMID_t::Server& s = bm->server[i];
-    if ( s.fifo > 0 )
-      ::close(s.fifo);
-    s.fifo = 0;
-    if ( s.fifoName[0] )
-      ::unlink(s.fifoName);
-    s.fifoName[0] = 0;
-    if ( s.poll ) 
-      ::close(s.poll);
-    s.poll = 0;
+    bm->communication.close(s.connection);
   }
-  if ( bm->clientfd > 0 ) 
-    ::close(bm->clientfd);
-  bm->clientfd = 0;
+  bm->communication.close(bm->clients);
   // Return for convenience here error, since this is called in initialize
   return MBM_NORMAL;
 }
@@ -326,11 +357,10 @@ int _mbmsrv_shutdown (void* /* param */) {
     for(int i=0; i<cnt; ++i)  {
       ServerBMID bm = ids[i];
       if ( bm != 0 )   {
-        _mbmsrv_close_fifos(bm);
+        _mbmsrv_close_connections(bm);
         for (USER* u=bm->user, *last=u+bm->ctrl->p_umax; u != last; ++u)    {
           if ( u->busy )   {
-            if ( u->fifo > 0 ) ::close(u->fifo);
-            if ( u->fifoName[0] ) ::unlink(u->fifoName);
+	    bm->communication.close(u->connection);
           }
         }
         if ( bm->gbl        ) ::lib_rtl_delete_section(bm->gbl_add);
@@ -350,11 +380,6 @@ int _mbmsrv_findnam (ServerBMID bm, const char* name) {
     }
   }
   return -1;
-}
-
-/// Send reply message to client
-int _mbmsrv_reply(ServerBMID /* bm */, const MSG& msg, int fd) {
-  return msg.write(fd);
 }
 
 /// Check if a given event is held by any user. Returns true if at least one consumer needs to see this event.
@@ -413,7 +438,6 @@ USER* _mbmsrv_ualloc(ServerBMID bm)  {
       u->busy     =  1;
       u->uid      =  i;
       u->pid      = -1;
-      u->fifo     = -1;
       u->partid   = -1;
       u->name[0]  =  0;
       u->magic    =  MBM_USER_MAGIC;
@@ -423,6 +447,7 @@ USER* _mbmsrv_ualloc(ServerBMID bm)  {
       u->ev_size  =  0;
       // Producer variables
       u->space_size = 0;
+      u->connection.init();
       ::insqti(u,bm->usDesc);
       return u;
     }
@@ -525,9 +550,7 @@ int _mbmsrv_ufree(USER* u)  {
     u->space_add    =  0;
     u->busy         =  0;
     u->uid          = -1;
-    u->fifo         = -1;
     u->name[0]      =  0;
-    u->fifoName[0]  =  0;
     u->state        =  S_nil;
     u->wsnext.next  =  0;
     u->wsnext.prev  =  0;
@@ -535,6 +558,7 @@ int _mbmsrv_ufree(USER* u)  {
     u->wesnext.prev =  0;
     u->wenext.next  =  0;
     u->wenext.prev  =  0;
+    u->connection.init();
     ::remqent(u);
     return MBM_NORMAL;
   }
@@ -554,7 +578,7 @@ int _mbmsrv_check_wsp(ServerBMID bm)  {
       if( BF_count(bitmap,ctrl->bm_size,&bit,&nbit) == 1) {    // find largest block 
         ctrl->last_alloc = 0;
         int status = BF_alloc(bitmap,ctrl->bm_size,ubit,&bit);
-        if (lib_rtl_is_success(status))   {
+        if ( lib_rtl_is_success(status) )   {
           MSG msg(MSG::GET_SPACE, u, MBM_NORMAL);
           MSG::get_space_t& sp = msg.data.get_space;
           bit             += ctrl->last_alloc<<3;
@@ -568,7 +592,7 @@ int _mbmsrv_check_wsp(ServerBMID bm)  {
           u->state         = S_active;
           sp.size          = u->space_size;
           sp.offset        = u->space_add;
-          return _mbmsrv_reply(bm,msg,u->fifo);
+	  return msg.status=bm->communication.send_response(u->connection,&msg,sizeof(msg));
         }
       }
     }
@@ -636,32 +660,6 @@ int _mbmsrv_sfree(ServerBMID bm, int add, int size)  {
   return MBM_NORMAL;
 }
 
-/// Remove event from active event queue
-int _mbmsrv_del_event(ServerBMID bm, EVENT* e)  {
-  int add = e->ev_add;
-  int len = e->ev_size;
-  _mbmsrv_efree(bm, e);        // de-allocate event 
-  ::memset(bm->buffer_add+add,0xAB,len);
-  _mbmsrv_sfree(bm, add, len);    // de-allocate event slot/space
-  return MBM_NORMAL;
-}
-
-/// Release event held by this user
-int _mbmsrv_rel_event (ServerBMID bm, USER* u)  {
-  // Release event if held by user
-  if ( u->held_eid != EVTID_NONE )  {
-    EVENT *e = bm->event + u->held_eid;
-    u->held_eid = EVTID_NONE;
-    _mbmsrv_evt_clear(e,u);
-    if ( _mbmsrv_evt_held(e) )  {
-      return MBM_NORMAL;
-    }
-    ++u->free_calls;
-    return _mbmsrv_del_event(bm, e);
-  }
-  return MBM_NORMAL;
-}
-
 /// Free event slot
 int _mbmsrv_efree (ServerBMID bm, EVENT* e)  {
   if (e == 0)  {
@@ -725,8 +723,34 @@ int _mbmsrv_efree (ServerBMID bm, EVENT* e)  {
       MSG::declare_event_t& d = msg.data.declare_event;
       d.freeAddr = u->space_add;
       d.freeSize = u->space_size;
-      return _mbmsrv_reply(bm,msg,u->fifo);
+      return msg.status=bm->communication.send_response(u->connection,&msg,sizeof(msg));
     }
+  }
+  return MBM_NORMAL;
+}
+
+/// Remove event from active event queue
+int _mbmsrv_del_event(ServerBMID bm, EVENT* e)  {
+  int add = e->ev_add;
+  int len = e->ev_size;
+  _mbmsrv_efree(bm, e);        // de-allocate event 
+  memset(bm->buffer_add+add,0xAB,len);
+  _mbmsrv_sfree(bm, add, len);    // de-allocate event slot/space
+  return MBM_NORMAL;
+}
+
+/// Release event held by this user
+int _mbmsrv_rel_event (ServerBMID bm, USER* u)  {
+  // Release event if held by user
+  if ( u->held_eid != EVTID_NONE )  {
+    EVENT *e = bm->event + u->held_eid;
+    u->held_eid = EVTID_NONE;
+    _mbmsrv_evt_clear(e,u);
+    if ( _mbmsrv_evt_held(e) )  {
+      return MBM_NORMAL;
+    }
+    ++u->free_calls;
+    return _mbmsrv_del_event(bm, e);
   }
   return MBM_NORMAL;
 }
@@ -969,18 +993,11 @@ int mbmsrv_unrequire_consumer(ServerBMID bmid, const char* name, int partid, int
 
 int mbmsrv_send_include_error(ServerBMID bm, MSG& msg, int status)   {
   MSG::include_t& inc = msg.data.include;
-  const char* bm_name = bm->bm_name;           // buffer manager name 
-  const char* name    = inc.name;              // client name
-  char fifo_name[256];
+  MBMConnection connection;
   msg.status = status;
-  ::snprintf(fifo_name,sizeof(fifo_name),"/tmp/bm_%s_%s",bm_name,name);
-  int fifo = ::open(fifo_name, O_NONBLOCK | O_WRONLY );
-  if ( fifo != -1 )   {
-    _mbmsrv_reply(bm,msg,fifo);
-    ::close(fifo);
-    return MBM_NO_REPLY;
-  }
-  ::lib_rtl_signal_message(LIB_RTL_OS,"[%s] Unable to open the answer fifo %s.\n",name,fifo_name);
+  bm->communication.open(connection,bm->bm_name,inc.name);
+  bm->communication.send_response(connection,&msg,sizeof(msg));
+  bm->communication.close(connection);
   return MBM_NO_REPLY;
 }
 
@@ -993,9 +1010,9 @@ int mbmsrv_send_include_error(ServerBMID bm, MSG& msg, int status)   {
  *   used by the server to add a new client
  * \return pointer to the new BMDESCRIPT structure
  */
-int mbmsrv_include (ServerBMID bmid, MSG& msg) {
-  static int  tot_clients = 0;
-  ServerBMID bm = CHECK_BMID(bmid);
+int mbmsrv_include (ServerBMID bmid, void* connection, MSG& msg) {
+  static int      tot_clients = 0;
+  ServerBMID      bm  = CHECK_BMID(bmid);
   MSG::include_t& inc = msg.data.include;
   const char* bm_name = bm->bm_name;           // buffer manager name 
   const char* name    = inc.name;              // client name
@@ -1003,12 +1020,12 @@ int mbmsrv_include (ServerBMID bmid, MSG& msg) {
 
   USER* u = _mbmsrv_ualloc(bm);                // find free user slot
   if (u == 0)  {
-    ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to allocate user slot of %s for %s.\n",bm_name,name);
+    ::lib_rtl_output(LIB_RTL_OS,"++bm_server++ Failed to allocate user slot of %s for %s.\n",
+		     bm_name,name);
     return mbmsrv_send_include_error(bm,msg,MBM_NO_FREE_US); // Typical use case: Too many users
   }
   u->pid           = inc.pid;
   u->partid        = inc.partid;
-  u->fifo          = -1;
   u->state         = S_active;
   u->space_add     = 0;
   u->space_size    = 0;
@@ -1023,32 +1040,32 @@ int mbmsrv_include (ServerBMID bmid, MSG& msg) {
   u->free_calls    = 0;
   u->alloc_calls   = 0;
   u->serverid      = (++tot_clients)%bm->ctrl->p_tmax;
+  u->connection.init();
+  u->connection.any.channel = connection;
   ::strncpy(u->name,name,sizeof(u->name));
   u->name[sizeof(u->name)-1] = 0;
   bm->ctrl->i_users++;
-  msg.user = u;
+  msg.user     = u;
   inc.serverid = u->serverid;
-  ::snprintf(u->fifoName,sizeof(u->fifoName),"/tmp/bm_%s_%s",bm->bm_name,name);
-  if( -1 == (u->fifo = ::open(u->fifoName, O_NONBLOCK | O_RDWR ))) {
-    ::lib_rtl_signal_message(LIB_RTL_OS,"[%s] Unable to open the answer fifo %s.\n",name,u->fifoName);
+  if (bm->communication.accept(u->connection,bm->bm_name,name) != MBM_NORMAL )  {
     return mbmsrv_send_include_error(bm,msg,MBM_INTERNAL); // We can try again, but no big hope....
   }
-  // Keep the fifo blocking.
-  //
-  //else if ( -1 == (::fcntl(u->fifo,F_SETFL,::fcntl(u->fifo,F_GETFL)|O_NONBLOCK)) ) {
-    //::lib_rtl_signal_message(LIB_RTL_OS,"[%s] Unable to set fifo descriptor %s NON-Blocking.\n",name,u->fifoName);
-    //}
-  //MBMMessage::clearFifo(u->fifo);
-
-  // Add new client to the epoll structure
-  struct epoll_event epoll;
-  epoll.events  = EPOLLERR | EPOLLHUP;
-  epoll.data.fd = u->fifo;
-  if ( 0 > ::epoll_ctl(bm->clientfd, EPOLL_CTL_ADD, u->fifo, &epoll) ) {
-    ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to client fifo %s to epoll descriptor.\n",u->fifoName);
+  // Add new client to the poll procedure
+  if (bm->communication.poll_add(bm->clients,u->connection) != MBM_NORMAL )  {
     return mbmsrv_send_include_error(bm,msg,MBM_INTERNAL);
   }
   return _mbmsrv_evaluate_rules(bm);
+}
+
+/// Reconnect after moving to different worker
+int mbmsrv_reconnect (ServerBMID bmid, void* connection, MSG& msg)   {
+  ServerBMID bm  = CHECK_BMID(bmid);
+  LOCK lock(bm->lockid);
+  USER* u = msg.user;
+  if ( u )   {
+    u->connection.any.channel = connection;
+  }
+  return MBM_NORMAL;
 }
 
 /// Exclude client from buffer manager
@@ -1056,16 +1073,11 @@ int mbmsrv_exclude (ServerBMID bmid, MSG& msg)  {
   ServerBMID bm = CHECK_BMID(bmid);
   LOCK lock(bm->lockid);
   USER* u = msg.user;
-  if ( u && u->fifo > 0 )  {
-    if ( 0 > ::epoll_ctl(bm->clientfd,EPOLL_CTL_DEL,u->fifo,0) ) {
-      ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to remove client fifo %s to epoll descriptor.\n",u->fifoName);
-    }
-    _mbmsrv_reply(bm,msg,u->fifo);
-    ::close(u->fifo);
+  if ( u )   {
+    bm->communication.poll_del(bm->clients,u->connection);
+    msg.status = bm->communication.send_response(u->connection,&msg,sizeof(msg));
+    bm->communication.close(u->connection);
   }
-  if ( u->fifoName[0] ) ::unlink(u->fifoName);
-  u->fifoName[0] = 0;
-  u->fifo = -1;
   if ( u->busy == 1 ) _mbmsrv_uclean(bm, u);
   return MBM_NO_REPLY;
 }
@@ -1141,7 +1153,7 @@ int mbmsrv_get_event(ServerBMID bm, MSG& msg) {
   LOCK lock(bm->lockid);
   USER* u = CHECKED_CONSUMER(msg.user);
   if ( u->state == S_wevent )    {
-    ::lib_rtl_output(LIB_RTL_ERROR,"Too many calls to mbm_get_event\n");
+    ::lib_rtl_output(LIB_RTL_ERROR,"++bm_server++ Too many calls to mbm_get_event\n");
     return MBM_NO_REPLY;
   }
   _mbmsrv_rel_event(bm, u);
@@ -1422,13 +1434,15 @@ int _mbmsrv_check_wev (ServerBMID bm, EVENT* e)  {
         evt.offset = u->ev_ptr;
         ::memcpy(evt.trmask,&u->ev_trmask,sizeof(evt.trmask));
         u->state = S_active;
-        return _mbmsrv_reply(bm,msg,u->fifo);
+	return msg.status=bm->communication.send_response(u->connection,&msg,sizeof(msg));
       }
     }
     if ( count == (bm->ctrl->p_umax+1) )    {
       // Something is really odd here.
       // The BM internal structure looks corrupted....
-      ::lib_rtl_output(LIB_RTL_ERROR,"MBM server structures '%s' look corrupted. Something ugly happened!",bm->bm_name);
+      ::lib_rtl_output(LIB_RTL_ERROR,
+		       "++bm_server++ structures of '%s' look corrupted. Something ugly happened!\n",
+		       bm->bm_name);
       return MBM_NORMAL;
     }
   }
@@ -1510,55 +1524,31 @@ int _mbmsrv_connect(ServerBMID bm)    {
   byte_offset(EVENT,next,  EVENT_next_off);
 
   bm->num_threads = bm->ctrl->p_tmax;
-  bm->clientfd = 0;
+  bm->clients.init();
   ::memset(bm->server,0,sizeof(bm->server));
 
+  /// Bind all server
   for(int i=0; i<bm->num_threads; ++i) {
     ServerBMID_t::Server& s = bm->server[i];
-    ::snprintf(s.fifoName,sizeof(s.fifoName),"/tmp/bm_%s_server_%d",bm->bm_name,i);
-    s.fifoName[sizeof(s.fifoName)-1] = 0;
-    if( ::mkfifo(s.fifoName,0666)  ) {
-      if ( errno != EEXIST ) { // It is not an error if the file already exists....
-        ::lib_rtl_signal_message(LIB_RTL_OS,"Unable to create the fifo: %s.\n",s.fifoName);
-        return MBM_ERROR;
-      }
-    }
-    ::chmod(s.fifoName,0666);
-    if( -1 == (s.fifo=::open(s.fifoName,O_RDWR|O_NONBLOCK)) ) {
-      ::lib_rtl_signal_message(LIB_RTL_OS,"Unable to open the fifo: %s\n",s.fifoName);
-      _mbmsrv_close_fifos(bm);
-      return MBM_ERROR;
-    }
-    if ( -1 == (::fcntl(s.fifo,F_SETFL,::fcntl(s.fifo,F_GETFL)|O_NONBLOCK)) ) {
-      ::lib_rtl_signal_message(LIB_RTL_OS,"Unable to set fifo: %s non-blocking\n",s.fifoName);
-    }
-    s.poll = ::epoll_create(1);
-    if ( s.poll < 0 ) {
-      ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to create pollset for server fifo %s.\n",s.fifoName);
-      _mbmsrv_close_fifos(bm);
-      return MBM_ERROR;
-    }
-    struct epoll_event epoll;
-    epoll.events = EPOLLIN | EPOLLPRI | EPOLLERR | EPOLLHUP;
-    epoll.data.fd = s.fifo;
-    if ( 0 > ::epoll_ctl(s.poll,EPOLL_CTL_ADD,epoll.data.fd,&epoll) ) {
-      ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to add server fifo %s to epoll descriptor.\n",s.fifoName);
-      _mbmsrv_close_fifos(bm);
+    if ( MBM_NORMAL != bm->communication.bind(s.connection,bm->bm_name,i) )  {
+      _mbmsrv_close_connections(bm);
       return MBM_ERROR;
     }
   }
-
-  bm->clientfd = ::epoll_create(bm->ctrl->p_umax);
-  if ( bm->clientfd < 0 ) {
-    ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to create client epollset for server %s.\n",bm->bm_name);
-    _mbmsrv_close_fifos(bm);
+  /// Create client poll. Add, when clients get accepted
+  if ( bm->communication.poll_create(bm->clients,bm->ctrl->p_umax) != MBM_NORMAL )   {
+    _mbmsrv_close_connections(bm);
     return MBM_ERROR;
   }
+#ifndef MBM_HAVE_STD_MUTEX
+  /// Create table lock
   if ( !lib_rtl_is_success(::lib_rtl_create_lock(0, &bm->lockid)) ) {
-    ::lib_rtl_signal_message(LIB_RTL_OS,"Failed create server lock for buffer %s.\n",bm->bm_name);
-    _mbmsrv_close_fifos(bm);
+    ::lib_rtl_output(LIB_RTL_OS,"++bm_server++ Failed create server lock for buffer %s.\n",
+		     bm->bm_name);
+    _mbmsrv_close_connections(bm);
     return MBM_ERROR;
   }
+#endif
 
   // Now setup exit and rundown handler
   if ( reference_count == 0 )  {
@@ -1574,17 +1564,18 @@ int _mbmsrv_connect(ServerBMID bm)    {
 
 /// Server interface: Disconnect server process from clients and shut it down
 int mbmsrv_disconnect(ServerBMID bm)    {
+#ifndef MBM_HAVE_STD_MUTEX
+  // Delete table lock
   if ( bm->lockid ) {
     ::lib_rtl_delete_lock(bm->lockid);
     bm->lockid = 0;
   }
-  _mbmsrv_close_fifos(bm);
+#endif
+  // Close server connections
+  _mbmsrv_close_connections(bm);
   for (USER* u=bm->user, *last=u+bm->ctrl->p_umax; u != last; ++u)    {
     if ( u->busy )   {
-      if ( u->fifo > 0 ) ::close(u->fifo);
-      if ( u->fifoName[0] ) ::unlink(u->fifoName);
-      u->fifoName[0] = 0;
-      u->fifo = -1;
+      bm->communication.close(u->connection);
       _mbmsrv_uclean(bm,u);
     }
   }
@@ -1607,31 +1598,44 @@ int mbmsrv_disconnect(ServerBMID bm)    {
   return MBM_NORMAL;
 }
 
-static void mbmsrv_check_clients(ServerBMID bm)   {
-  struct epoll_event epoll;
-  bool client_removed = false;
+/// Check consumer if (some) clients are waiting for events
+int mbmsrv_check_pending_tasks(ServerBMID bm)  {
+  int free_slots = 0;
   LOCK lock(bm->lockid);
+  MBMScanner<EVENT> que(bm->evDesc, -EVENT_next_off);
+  for(EVENT* e=que.get(); e; e=que.get() )  {
+    /// Check if any consumer still waiting for an event....
+    _mbmsrv_check_wev(bm,e);  // check wev queue
+    /// Check if any producer still waiting for a slot....
+    if (e->busy == 0)  {
+      ++free_slots;
+    }
+  }
+  _mbmsrv_check_wsp(bm);
+  return free_slots;
+}
+
+/// Generic fix to find dead clients
+void mbmsrv_check_clients(ServerBMID bm)   {
+  bool client_removed = false;
+  //LOCK lock(bm->lockid);
   for (USER* u=bm->user, *last=u+bm->ctrl->p_umax; u != last; ++u)    {
-    if ( u->magic == MBM_USER_MAGIC && u->busy && u->uid > 0 && u->fifo > 0 ) {
+    if ( u->magic == MBM_USER_MAGIC && u->busy && u->uid > 0 && u->connection.hasResponse() ) {
       int ret = ::kill(u->pid,0);
       if ( -1 == ret ) {
-	if ( u->fifo >= 0 )  {
-	  epoll.data.fd = u->fifo;
-	  if ( 0 > ::epoll_ctl(bm->clientfd, EPOLL_CTL_DEL, u->fifo, &epoll) ) {
-	    ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to remove client fifo %d.\n",u->fifo);
-	  }
-	  ::close(u->fifo);
+	LOCK lock(bm->lockid);
+	ret = bm->communication.poll_del(bm->clients,u->connection);
+	bm->communication.close(u->connection);
+	if ( ret == MBM_NORMAL )  {
 	  ::fprintf(stdout,"[ERROR] MBM server removing dead client '%s'.pid:%d\n",u->name,u->pid);
 	}
-	if ( 0 != u->fifoName[0] ) ::unlink(u->fifoName);
-	u->fifoName[0] = 0;
-	u->fifo = -1;
 	_mbmsrv_uclean(bm,u);
 	client_removed = true;
       }
     }
   }
   if ( client_removed ) {
+    LOCK lock(bm->lockid);
     MBMScanner<EVENT> que(bm->evDesc, -EVENT_next_off);
     for(EVENT* e=que.get(); e; e=que.get() )  {
       _mbmsrv_check_wev(bm,e);  // check wev queue
@@ -1639,28 +1643,81 @@ static void mbmsrv_check_clients(ServerBMID bm)   {
   }
 }
 
+/// Generic MBM server action handler routine
+int mbmsrv_handle_request(ServerBMID bm, void* connection, MBMMessage& msg)   {
+  switch(msg.type) {
+  case MSG::INCLUDE:
+    mbmsrv_check_clients(bm);
+    return msg.status = mbmsrv_include(bm,connection,msg);
+  case MSG::EXCLUDE:
+    return msg.status = mbmsrv_exclude(bm,msg);
+  case MSG::RECONNECT:
+    return msg.status = mbmsrv_reconnect(bm,connection,msg);
+
+    // Server command handlers
+  case MSG::REQUIRE_CONS:
+    return msg.status = mbmsrv_req_consumer(bm,msg);
+  case MSG::UNREQUIRE_CONS:
+    return msg.status = mbmsrv_unreq_consumer(bm,msg);
+
+    // Consumer routines
+  case MSG::ADD_REQUEST:
+    return msg.status = mbmsrv_add_req(bm,msg);
+  case MSG::DEL_REQUEST:
+    return msg.status = mbmsrv_del_req(bm,msg);
+  case MSG::GET_EVENT: 
+    return msg.status = mbmsrv_get_event(bm,msg);
+  case MSG::STOP_CONSUMER:
+    return msg.status = mbmsrv_stop_consumer(bm,msg);
+  case MSG::PAUSE:
+    return msg.status = mbmsrv_pause(bm,msg);
+  case MSG::FREE_EVENT:
+    return msg.status = mbmsrv_free_event(bm,msg);
+
+    // Producer routines
+  case MSG::GET_SPACE_TRY:
+    return msg.status = mbmsrv_get_space_try(bm,msg);
+  case MSG::GET_SPACE:
+    return msg.status = mbmsrv_get_space(bm,msg);
+  case MSG::FREE_SPACE:
+    return msg.status = mbmsrv_free_space(bm,msg);
+  case MSG::SEND_SPACE:
+    return msg.status = mbmsrv_send_space(bm,msg);
+  case MSG::DECLARE_EVENT:
+    return msg.status = mbmsrv_declare_event(bm,msg);
+  case MSG::CANCEL_REQUEST:
+    return msg.status = mbmsrv_cancel_request(bm,msg);
+  default:
+    return msg.status = MBM_ERROR;
+  }
+  return msg.status;
+}
+ 
 static int _mbmsrv_client_watch(void* param) {  
   ServerBMID bm = (ServerBMID)param;
-  struct epoll_event epoll;
   try {
+    int events = 0;
     while ( !bm->stop )   {
-      int nclients = ::epoll_wait(bm->clientfd, &epoll, 1, 200);
+      int fd = bm->communication.poll(bm->clients, events, 250);
       if ( bm->stop )
 	return 0x1;
-      else if ( nclients > 0 && epoll.events&(EPOLLERR|EPOLLHUP) )  {
-	::lib_rtl_output(LIB_RTL_ERROR,"MBM epoll error/hup signal for fd:%d",epoll.data.fd);
+      else if ( fd > 0 && (events&(EPOLLERR | EPOLLHUP)) != 0 )  {
+	::lib_rtl_output(LIB_RTL_ERROR,"++bm_server++ MBM epoll error/hup signal for fd:%d\n",fd);
 	mbmsrv_check_clients( bm );
       }
-      else
+      else  {
 	mbmsrv_check_clients( bm );
+      }
+      //if ( bm->communication.type != BM_COM_FIFO )
+      mbmsrv_check_pending_tasks( bm );
     }
     return 0x1;
   }
   catch(const std::exception& e) {
-    ::lib_rtl_output(LIB_RTL_ERROR,"MBM server thread exited with exception: %s\n",e.what());
+    ::lib_rtl_output(LIB_RTL_ERROR,"++bm_server++ MBM server thread exited with exception: %s\n",e.what());
   }
   catch(...) {
-    ::lib_rtl_output(LIB_RTL_ERROR,"MBM server thread exited with UNKNOWN exception.\n");
+    ::lib_rtl_output(LIB_RTL_ERROR,"++bm_server++ MBM server thread exited with UNKNOWN exception.\n");
   }
   return 0x0;
 }
@@ -1674,149 +1731,6 @@ int _mbmsrv_watch_clients(ServerBMID bm)   {
   return MBM_NORMAL;
 }
 
-/** int mbmsrv_dispatch
- * @author Nicolas Rouvière, Markus Frank
- *
- * Function waiting for clients, and sending answer
- *
- *   The mbmsrv_dispatch function first setup a Server structure. Then
- *    it wait for incomming client connection. When it occurs, the mbmsrv_call
- *    routine is called. Then the answer message is sent, and the function goes back
- *    to the incomming transmission point.
- *
- * @param bmid Structure ServerBMID for this server.
- *
- * @return MBM_ERROR if error 
- */ 
-int mbmsrv_dispatch_call(ServerBMID bm, int which)  {
-  ServerBMID_t::Server& s = bm->server[which];
-  struct epoll_event epoll, epoll_null;
-  MSG msg(0);
-
-  ::memset(&epoll_null,0,sizeof(epoll_null));
-  while ( !bm->stop )   {
-    if ( bm->stop )  {
-      break;
-    }
-    epoll = epoll_null;
-    int nclients = ::epoll_wait(s.poll, &epoll, 1, 100);
-    if ( bm->stop )   {
-      break;
-    }
-    else if ( nclients < 0 && errno == EINTR )   {
-      continue;
-    }
-    else if ( nclients < 1 && bm->ctrl->i_events > 0 )   {
-      bool has_free_slot = 0;
-      {
-	LOCK lock(bm->lockid);
-	MBMScanner<EVENT> que(bm->evDesc, -EVENT_next_off);
-	for(EVENT* e=que.get(); e; e=que.get() )  {
-	  /// Check if any consumer still waiting for an event....
-	  _mbmsrv_check_wev(bm,e);  // check wev queue
-	  /// Check if any producer still waiting for a slot....
-	  if (e->busy == 0)  {
-	    has_free_slot = 1;
-	  }
-	}
-      }
-      if ( has_free_slot )  {
-	// TODO: Notify consumer about free slot....
-
-      }
-      /// Check if any producer still waiting for space....
-      {
-	LOCK lock(bm->lockid);
-	_mbmsrv_check_wsp(bm);
-      }
-      continue;
-    }
-    else if ( nclients < 1 )   {
-      continue;
-    }
-    else if( epoll.events&(EPOLLERR|EPOLLHUP) ) {
-      ::lib_rtl_output(LIB_RTL_ERROR,"MBM input epoll error/hup signal for fd:%d",epoll.data.fd);
-      mbmsrv_check_clients( bm );
-    }
-    else if ( epoll.events&EPOLLIN ) {
-      if ( MBM_NORMAL != msg.read(epoll.data.fd) ) {
-        ::perror("error while reading : message is lost");
-      }
-      // Keep temporary of file descriptor
-      switch(msg.type) {
-      case MSG::INCLUDE:
-	mbmsrv_check_clients(bm);
-        msg.status = mbmsrv_include(bm,msg);
-        break;
-      case MSG::EXCLUDE:
-        msg.status = mbmsrv_exclude(bm,msg);
-        break;
-
-        // Server command handlers
-      case MSG::REQUIRE_CONS:
-        msg.status = mbmsrv_req_consumer(bm,msg);
-        break;
-      case MSG::UNREQUIRE_CONS:
-        msg.status = mbmsrv_unreq_consumer(bm,msg);
-        break;
-
-        // Consumer routines
-      case MSG::ADD_REQUEST:
-        msg.status = mbmsrv_add_req(bm,msg);
-        break;
-      case MSG::DEL_REQUEST:
-        msg.status = mbmsrv_del_req(bm,msg);
-        break;
-      case MSG::GET_EVENT: 
-        msg.status = mbmsrv_get_event(bm,msg);
-        break;
-      case MSG::STOP_CONSUMER:
-        msg.status = mbmsrv_stop_consumer(bm,msg);
-        break;
-      case MSG::PAUSE:
-        msg.status = mbmsrv_pause(bm,msg);
-        break;
-      case MSG::FREE_EVENT:
-        msg.status = mbmsrv_free_event(bm,msg);
-        break;
-
-        // Producer routines
-      case MSG::GET_SPACE_TRY:
-        msg.status = mbmsrv_get_space_try(bm,msg);
-        break;
-      case MSG::GET_SPACE:
-        msg.status = mbmsrv_get_space(bm,msg);
-        break;
-      case MSG::FREE_SPACE:
-        msg.status = mbmsrv_free_space(bm,msg);
-        break;
-      case MSG::SEND_SPACE:
-        msg.status = mbmsrv_send_space(bm,msg);
-        break;
-      case MSG::DECLARE_EVENT:
-        msg.status = mbmsrv_declare_event(bm,msg);
-        break;
-      case MSG::CANCEL_REQUEST:
-        msg.status = mbmsrv_cancel_request(bm,msg);
-        break;
-
-      default:
-        msg.status = MBM_ERROR;
-        break;
-      }
-
-      if ( msg.status != MBM_NO_REPLY ) {
-        _mbmsrv_reply(bm,msg,msg.user->fifo);
-        continue;
-      }
-      //if ( nreq == 200 ) ProfilerStart("mbm_server.prof");
-      //if ( nreq == 5000000 ) break;
-    }
-  }
-  //ProfilerStop();
-  return 1;
-}
-
 static int mbmsrv_thread_routine(void* param) {  
   std::pair<int,ServerBMID> *p = (std::pair<int,ServerBMID>*)param;
   int        id = p->first;
@@ -1824,13 +1738,13 @@ static int mbmsrv_thread_routine(void* param) {
   delete p;
   try {
     bm->stop = false;
-    return mbmsrv_dispatch_call(bm,id);
+    return bm->communication.dispatch(bm,id);
   }
   catch(const std::exception& e) {
-    ::lib_rtl_output(LIB_RTL_ERROR,"MBM server thread exited with exception: %s\n",e.what());
+    ::lib_rtl_output(LIB_RTL_ERROR,"++bm_server++ Thread exited with exception: %s\n",e.what());
   }
   catch(...) {
-    ::lib_rtl_output(LIB_RTL_ERROR,"MBM server thread exited with UNKNOWN exception.\n");
+    ::lib_rtl_output(LIB_RTL_ERROR,"++bm_server++ Thread exited with UNKNOWN exception.\n");
   }
   return 0;
 }
@@ -1840,7 +1754,7 @@ extern "C" int mbmsrv_dispatch_blocking(ServerBMID bm)  {
     bm->stop = false;
     int sc = _mbmsrv_connect(bm);
     if ( sc == MBM_NORMAL )  {
-      sc = mbmsrv_dispatch_call(bm,1);
+      sc = bm->communication.dispatch(bm,1);
       if ( sc == MBM_NORMAL )  {
         _mbmsrv_watch_clients(bm);
         return MBM_NORMAL;
@@ -1856,7 +1770,8 @@ extern "C" int mbmsrv_dispatch_nonblocking(ServerBMID bm)  {
     int sc = _mbmsrv_connect(bm);
     if ( sc == MBM_NORMAL )  {
       for(int i=0; i<bm->num_threads; ++i) {
-        sc = ::lib_rtl_start_thread(mbmsrv_thread_routine,new std::pair<int,ServerBMID>(i,bm),&bm->server[i].dispatcher);
+	void* param = new std::pair<int,ServerBMID>(i,bm);
+        sc = ::lib_rtl_start_thread(mbmsrv_thread_routine,param,&bm->server[i].dispatcher);
         if ( !lib_rtl_is_success(sc) ) {
           return MBM_ERROR;
         }

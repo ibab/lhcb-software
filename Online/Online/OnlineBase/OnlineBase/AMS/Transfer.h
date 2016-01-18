@@ -10,4 +10,12 @@
 // Author     : M.Frank
 //
 //==========================================================================
-#include "MBM/bmstruct.h"
+
+#ifndef ONLINE_ZMQTRANSFER_TRANSFER_H
+#define ONLINE_ZMQTRANSFER_TRANSFER_H
+
+#define TRANSFER_NS AMS
+#include "NET/Transfer.h"
+#undef  TRANSFER_NS
+
+#endif  /* ONLINE_ZMQTRANSFER_TRANSFER_H */

@@ -1,5 +1,18 @@
+// $Id: $
+//==========================================================================
+//  LHCb Online software suite
+//--------------------------------------------------------------------------
+// Copyright (C) Organisation europeenne pour la Recherche nucleaire (CERN)
+// All rights reserved.
+//
+// For the licensing terms see OnlineSys/LICENSE.
+//
+// Author     : M.Frank
+//
+//==========================================================================
 #define MBM_IMPLEMENTATION
 #include "MBM/bmstruct.h"
+#include "MBM/bmserver.h"
 #include "MBM/bmmessage.h"
 #include "bm_internals.h"
 #include "Installer.h"
@@ -40,6 +53,7 @@ MBM::Installer::Installer(int argc, char **argv)  {
   p_size     = 10;
   p_force    = 0;
   p_bits     = 10;
+  _mbm_connections_use_fifos(m_bm->communication);
   getOptions(argc, argv);
 }
 
@@ -123,6 +137,13 @@ int MBM::Installer::optparse (const char* c)  {
     break;
   case 'a':
     p_continue = 2;
+    break;
+  case 'x':
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"Using boost::asio connections....\n");
+    _mbm_connections_use_asio(m_bm->communication);
+    break;
+  case 'y':
+    _mbm_connections_use_fifos(m_bm->communication);
     break;
   case '?':
   case 'h':
