@@ -1,7 +1,7 @@
 ################################################################################
 # Package: GaudiRootCnvTests
 ################################################################################
-gaudi_subdir(GaudiRootCnvTests v1r14)
+gaudi_subdir(GaudiRootCnvTests v1r15)
 
 # gaudi_depends_on_subdirs(Online/GaudiCheckpointing GaudiExamples)
 

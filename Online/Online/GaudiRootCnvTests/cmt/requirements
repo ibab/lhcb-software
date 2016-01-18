@@ -1,6 +1,6 @@
 package GaudiRootCnvTests
 author  Markus Frank
-version v1r14
+version v1r15
 
 branches  cmt tests
 
