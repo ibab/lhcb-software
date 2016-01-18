@@ -100,7 +100,11 @@ extern "C"  {
   int  mbm_mon(int argc , char** argv);
 
   /// Include as client in buffer manager
+#ifdef __cplusplus
+  BMID mbm_include (const char* bm_name, const char* name, int partid, int com_type=BM_COM_FIFO);
+#else
   BMID mbm_include (const char* bm_name, const char* name, int partid, int com_type);
+#endif
   int  mbm_exclude (BMID bm);
   __MBM_CONST char* mbm_buffer_address(BMID);
   int  mbm_clear(BMID bm);
