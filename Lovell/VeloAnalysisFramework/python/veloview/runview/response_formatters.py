@@ -9,7 +9,25 @@ def json_formatter(plot):
 
 def dictionary_formatter(plot):
     """Return a the data as a Python dictionary."""
+    if isinstance(plot, dict):
+        return dict_formatter(plot)
     return tobject_formatter(plot)
+
+def dict_formatter(d):
+    """Format a dictionary as a valid response."""
+    if not d:
+        return dict(success=False, data={})
+
+    result=dict()
+    result["name"]=d["name"]
+    result["title"]=d["title"]
+    result["object_class"]="dict"
+    data=dict()
+    data["values"]=d["data"]
+    data["entries"]=len(d["data"])
+    data["axis_titles"]=(d["xLabel"], d["yLabel"])
+    result["data"]=data
+    return dict(success=True, data=result)
 
 
 def tobject_formatter(tobject):
