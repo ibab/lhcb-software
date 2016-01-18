@@ -78,6 +78,7 @@ LoKi::ParticleClassificator::ParticleClassificator
   , m_digamma_like   ()
   , m_mergedPi0_like ()
   , m_jets_like      ()
+  , m_rhoplus_like   ()
     //
 {
   // ==========================================================================
@@ -257,6 +258,14 @@ StatusCode LoKi::ParticleClassificator::finalize()
       log << endmsg ;
     }
     //
+    // rho+-like 
+    if ( !m_rhoplus_like.empty() )
+    {
+      log << "Rho+-like  particles : " << std::endl ;
+      LHCb::ParticleProperties::printAsTable ( m_rhoplus_like , log , m_ppSvc ) ;
+      log << endmsg ;
+    }
+    //
   }
   //
   if ( !m_unclassified.empty() )
@@ -283,35 +292,43 @@ LoKi::KalmanFilter::ParticleType
 LoKi::ParticleClassificator::particleType_ ( const LHCb::Particle& p ) const
 {
   //
-  if ( m_jetsLike( p.particleID()  ) )
+  const bool basic   = p.isBasicParticle() ;
+  const bool neutral = 0 == p.charge()     ;
+  //
+  if      ( !basic && m_jetsLike( p.particleID()  ) )
   {
     m_jets_like.insert   ( p.particleID () ) ;
     return LoKi::KalmanFilter::JetLikeParticle     ;    // RETURN
   }
-  else if ( m_gammaCLike  ( &p ) )
+  else if ( !basic && m_gammaCLike  ( &p ) )
   {
     m_gammaC_like.insert ( p.particleID () ) ;
     // ATTENTION! GammaC is *LONG_LIVED_PARTICLE*
     return LoKi::KalmanFilter::LongLivedParticle   ;    // RETURN
   }
-  else if ( m_mergedPi0Like( &p ) )
+  else if ( neutral && m_mergedPi0Like( &p ) )
   {    
     m_mergedPi0_like.insert   ( p.particleID () ) ;
     return LoKi::KalmanFilter::MergedPi0LikeParticle   ;    // RETURN
   }
-  else if ( m_digammaLike ( &p ) )
+  else if ( neutral && m_digammaLike ( &p ) )
   {
     m_digamma_like.insert ( p.particleID () ) ;
     return LoKi::KalmanFilter::DiGammaLikeParticle ;    // RETURN
   }
-  else if ( m_gammaLike   ( &p ) )
+  else if ( basic && neutral && m_gammaLike   ( &p ) )
   {
     m_gamma_like.insert   ( p.particleID () ) ;
     return LoKi::KalmanFilter::GammaLikeParticle   ;    // RETURN
   }
   else if ( m_longLived  ( p.particleID () ) )
   { return LoKi::KalmanFilter::LongLivedParticle   ; }  // RETURN
-  else if ( m_shortLived ( p.particleID () ) )
+  else if ( !basic && rhoPlusLike_ ( &p ) )
+  { 
+    m_rhoplus_like.insert ( p.particleID () ) ;
+    return LoKi::KalmanFilter::RhoPlusLikeParticle ;    // RETURN  
+  }
+  else if ( !basic && m_shortLived ( p.particleID () ) )
   { return LoKi::KalmanFilter::ShortLivedParticle  ; }  // RETURN
   //
   m_unclassified.insert  ( p.particleID() ) ;

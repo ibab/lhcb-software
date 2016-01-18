@@ -134,7 +134,7 @@ StatusCode LoKi::DistanceCalculator::_distance
     {
       impact =  Gaudi::XYZVector() ;
       if ( 0 != chi2 ) { *chi2 = 0 ; }
-      if ( printStat() || msgLevel( MSG::INFO ) ) { ++counter ( "IP->(DI)GAMMA" ) ; }
+      if ( printStat() &&  msgLevel( MSG::INFO ) ) { ++counter ( "IP->(DI)GAMMA" ) ; }
       return StatusCode::SUCCESS ;                                    // RETURN 
     }
   case LoKi::KalmanFilter::ShortLivedParticle : 
@@ -143,7 +143,7 @@ StatusCode LoKi::DistanceCalculator::_distance
       { 
         const LHCb::VertexBase* v1 = particle.endVertex() ;
         if ( 0 == v1 ) { break ; }  
-        if ( printStat() || msgLevel( MSG::INFO ) ) { ++counter ( "IP->VD" ) ; }
+        if ( printStat() && msgLevel( MSG::INFO ) ) { ++counter ( "IP->VD" ) ; }
         // make the real calculations 
         double dist = 0 ;
         StatusCode sc = i_distance ( *v1 , vertex , dist , chi2 ) ; // RETURN 

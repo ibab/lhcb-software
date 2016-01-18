@@ -5,6 +5,11 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2016-01-18 - Vanya Belyaev
+
+ - Implement more correct treatment of rho+-like particles 
+   (Thanks to Jascha Grabovski)
+
 ! 2016-01-15 - Vanya Belyaev
 
  - Unification of code between

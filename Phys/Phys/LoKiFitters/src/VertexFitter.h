@@ -505,6 +505,10 @@ namespace LoKi
     StatusCode _transport
     ( Entry&                 entry  , 
       const Gaudi::XYZPoint& point  ) const ;
+    /// transport the data to a certain position 
+    StatusCode _transportRhoPlusLike
+    ( Entry&                 entry  , 
+      const Gaudi::XYZPoint& point  ) const ;
     /// transport all data to a certain position 
     StatusCode _transport 
     ( const Gaudi::XYZPoint& point ) const 
@@ -517,6 +521,16 @@ namespace LoKi
       }
       return StatusCode::SUCCESS ;
     }
+    /** transport calorimeteric particles:
+     *  - gamma 
+     *  - digmma 
+     *  - merged pi0 
+     */
+    StatusCode _transportCalo
+    ( const LHCb::Particle*      gamma         , 
+      LHCb::Particle&            transported   ,
+      const Gaudi::XYZPoint&     point         , 
+      const Gaudi::SymMatrix3x3* pointCov2 = 0 ) const ;  
     /// transport all data to a certain position 
     StatusCode _transport ( const Gaudi::Vector3& p ) const 
     { return _transport ( Gaudi::XYZPoint( p[0] , p[1] , p[2] ) ) ; }

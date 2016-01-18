@@ -91,6 +91,14 @@ namespace LoKi
     LoKi::KalmanFilter::ParticleType 
     particleType ( const LHCb::Particle* p ) const 
     { return particleType_ ( p ) ; }
+    // ==========================================================================
+    /** check the particle type 
+     *  @see LoKi::KalmanFilter::ParticleType
+     */
+    bool isParticleType 
+    ( const LHCb::Particle*                  p , 
+      const LoKi::KalmanFilter::ParticleType t ) const 
+    { return 0 != p && isParticleType_ ( *p , t ) ; }      
     // ========================================================================
     /** good for vertex ? 
      *  @attention This definiton is <b>different</b> from the 
@@ -114,9 +122,16 @@ namespace LoKi
     LoKi::KalmanFilter::ParticleType 
     particleType_ ( const LHCb::Particle* p ) const 
     {
-      if ( 0 == p ) { return LoKi::KalmanFilter::UnspecifiedParticle ; }  // RETURN
-      return particleType_ ( *p ) ;
+      return 
+        0 == p ? LoKi::KalmanFilter::UnspecifiedParticle : particleType_ ( *p ) ;
     }    
+    // ========================================================================
+    /** check the particle type 
+     *  @see LoKi::KalmanFilter::ParticleType
+     */
+    inline bool isParticleType_  
+    ( const LHCb::Particle& p , const LoKi::KalmanFilter::ParticleType t ) const
+    { return particleType_( p ) == t ; }
     // ========================================================================
     /** good for vertex ? 
      *  @attention This definiton is <b>different</b> from the 
@@ -128,6 +143,15 @@ namespace LoKi
       /// two or more long-lived particles are required for vertex
       return 2 <= nForVertex ( parts.begin() , parts.end() ) ;
     }
+    // ========================================================================
+    /** check if particle is rho+like one:
+     *  Exactly 1 long lived particle in the decay tree
+     */
+    inline bool rhoPlusLike_ ( const LHCb::Particle* particle ) const ;    
+    /** get long-lived particle from rho+-like particle 
+     */
+    inline const LHCb::Particle* 
+    longFromRhoPlusLike_     ( const LHCb::Particle* particle ) const ;
     // ========================================================================
   protected:
     // ========================================================================
@@ -198,6 +222,7 @@ namespace LoKi
     mutable std::set<LHCb::ParticleID>        m_digamma_like   ;
     mutable std::set<LHCb::ParticleID>        m_mergedPi0_like ;
     mutable std::set<LHCb::ParticleID>        m_jets_like      ;
+    mutable std::set<LHCb::ParticleID>        m_rhoplus_like   ;
     // ========================================================================
   };
   // ==========================================================================
@@ -221,11 +246,12 @@ LoKi::ParticleClassificator::nForVertex
     //
     LoKi::KalmanFilter::ParticleType pType = particleType_ ( p ) ;
     //
-    // 1 for long-lived particles
-    if      ( LoKi::KalmanFilter::LongLivedParticle  == pType )
-    { ++nTr ; }
+    // 1. for long-lived particles
+    if      ( LoKi::KalmanFilter::LongLivedParticle   == pType ) { ++nTr ; }
+    // 2. "rho+-ilke" particles also have exactly one long lived particle
+    else if ( LoKi::KalmanFilter::RhoPlusLikeParticle == pType ) { ++nTr ; }
     // number for long-lived particles for short lived resonance
-    else if ( LoKi::KalmanFilter::ShortLivedParticle == pType )
+    else if ( LoKi::KalmanFilter::ShortLivedParticle  == pType )
     {
       const SmartRefVector<LHCb::Particle>& daughters = p->daughters() ;
       nTr += nForVertex ( daughters.begin() , daughters.end() ) ;
@@ -234,6 +260,74 @@ LoKi::ParticleClassificator::nForVertex
   }
   return nTr ;
 }
+// ============================================================================
+// get long-type particle from rho+-like paricle
+// ============================================================================
+inline 
+const LHCb::Particle* 
+LoKi::ParticleClassificator::longFromRhoPlusLike_
+( const LHCb::Particle* particle ) const 
+{
+  if ( nullptr == particle  ) { return nullptr ; } // RETURN 
+  // get daughters 
+  typedef SmartRefVector<LHCb::Particle> DAUGHTERS ;
+  const DAUGHTERS& daughters = particle->daughters() ;
+  if ( 2 > daughters.size() ) { return nullptr ; } // REUTRN 
+  //
+  // require exactly one long-lived daughter particle
+  for ( DAUGHTERS::const_iterator idau = daughters.begin() ; 
+        daughters.end() != idau ; ++idau ) 
+  {
+    // the type of daughter particle 
+    LoKi::KalmanFilter::ParticleType dType = particleType_ ( *idau ) ;
+    switch ( dType ) 
+    {
+    case LoKi::KalmanFilter::LongLivedParticle   : return *idau    ;  // RETURN
+      // case LoKi::KalmanFilter::RhoPlusLikeParticle :               // NB!
+      // return longFromRhoPlus_ ( *idau ) ;                          // RETURN
+    case LoKi::KalmanFilter::ShortLivedParticle  : return nullptr  ;  // RETURN
+    case LoKi::KalmanFilter::JetLikeParticle     : return nullptr  ;  // RETURN
+    default: ;
+    }
+  }
+  // 
+  return nullptr ;  // RETURN
+}
+// ===========================================================================
+// rho+-like category ? 
+// ============================================================================
+inline bool 
+LoKi::ParticleClassificator::rhoPlusLike_ 
+( const LHCb::Particle* particle ) const 
+{
+  if ( 0 == particle ||  particle->isBasicParticle() ) { return false ; } // RETURN 
+  // get daughters 
+  typedef SmartRefVector<LHCb::Particle> DAUGHTERS ;
+  const DAUGHTERS& daughters = particle->daughters() ;
+  if ( 2 > daughters.size() )                          { return false ; } // REUTRN 
+  //
+  // require exactly one long-lived daughter particle
+  unsigned short nLong = 0 ;
+  for ( DAUGHTERS::const_iterator idau = daughters.begin() ; 
+        daughters.end() != idau ; ++idau ) 
+  {
+    // the type of daughter particle 
+    LoKi::KalmanFilter::ParticleType dType = particleType_ ( *idau ) ;
+    switch ( dType ) 
+    {
+    case LoKi::KalmanFilter::LongLivedParticle   : ++nLong ; break ;
+      // case LoKi::KalmanFilter::RhoPlusLikeParticle : ++nLong ; break ;  // NB!!
+    case LoKi::KalmanFilter::ShortLivedParticle  :    return false ;  // RETURN
+    case LoKi::KalmanFilter::JetLikeParticle     :    return false ;  // RETURN
+    default: ;
+    }
+    if ( 1 < nLong ) { return false ; } 
+  }
+  // 
+  return 1 == nLong ;
+}
+// ===========================================================================
+
 // ============================================================================
 // The END 
 // ============================================================================

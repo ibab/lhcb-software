@@ -30,6 +30,7 @@
 // LoKi
 // ============================================================================
 #include "LoKi/Trees.h"
+#include "LoKi/Child.h"
 // ============================================================================
 // ROOT/Mathlib
 // ============================================================================
@@ -38,6 +39,11 @@
 // KalmanFilter 
 // ============================================================================
 #include "KalmanFilter/VertexFit.h"
+// ============================================================================
+// Photon transportation
+// ============================================================================
+#include "CaloUtils/CaloMomentum.h"
+#include "CaloUtils/CaloParticle.h"
 // ============================================================================
 // Local 
 // ============================================================================
@@ -314,7 +320,7 @@ StatusCode LoKi::VertexFitter::_iterate
         ci   = &last.m_ci   ;
         x    = &last.m_x    ;
         chi2 = &last.m_chi2 ;
-      } 
+      }
     }
     //
     // D) general case (or failure specialization ) 
@@ -664,8 +670,7 @@ StatusCode LoKi::VertexFitter::fit
   for ( Entries::const_iterator ientry = m_entries.begin() ; 
         m_entries.end() != ientry ; ++ientry ) 
   {
-    if ( ientry->regular() )  
-    { vertex.addToOutgoingParticles( ientry -> m_p0 ) ; }  
+    if ( ientry->regular() ) { vertex.addToOutgoingParticles( ientry -> m_p0 ) ; }  
   }
   // keep for future tracing
   m_vertex = &vertex ;
@@ -1151,6 +1156,9 @@ StatusCode LoKi::VertexFitter::_transport
         ( entry , vertex->position() , transporter () ) ;             // RETURN
     }
   }
+  /// special "transport" for rho+-like particles 
+  else if ( LoKi::KalmanFilter::RhoPlusLikeParticle == entry.m_type )
+  { return _transportRhoPlusLike ( entry , point ) ; }
   //
   // no need for transport?
   //
@@ -1161,7 +1169,181 @@ StatusCode LoKi::VertexFitter::_transport
   // finally: transport it! 
   //
   return LoKi::KalmanFilter::transport ( entry , point , transporter () ) ; 
-}  
+} 
+// ============================================================================
+// transport the data to a certain position 
+// ============================================================================
+StatusCode LoKi::VertexFitter::_transportRhoPlusLike 
+( LoKi::VertexFitter::Entry& entry , 
+  const Gaudi::XYZPoint&     point ) const 
+{
+  const double refPointZ = entry.m_p.referencePoint().Z() ;
+  const double parZ      = entry.m_parx [2]               ;
+  //
+  // no need for transport?
+  //
+  if ( std::fabs ( refPointZ - point.Z () ) < m_transport_tolerance && 
+       std::fabs ( parZ      - point.Z () ) < m_transport_tolerance  ) 
+  { return StatusCode::SUCCESS ; }                                    // RETURN 
+  //
+  const LHCb::Particle* lparticle = longFromRhoPlusLike_ ( entry.m_p0 ) ;
+  if ( 0 == lparticle ) { return _Error ("Rho+-transport: wrong structure[1]!" ) ; }
+  // temporary particle 
+  LHCb::Particle temp (*lparticle) ;
+  StatusCode sc = transporter() -> transportAndProject
+    ( lparticle , point.Z() , temp ) ;
+  if ( sc.isFailure() ) { return _Warning ("Error in rho+-transport", sc , 0 ) ; }
+  //
+  const Gaudi::SymMatrix3x3& _pmcov = temp.posCovMatrix() ;
+  Gaudi::SymMatrix2x2 cixy ;
+  // basic particle? : use some tricks to 
+  cixy ( 0 , 0 ) = _pmcov ( 0, 0 ) ;
+  cixy ( 0 , 1 ) = _pmcov ( 0, 1 ) ;
+  cixy ( 1 , 1 ) = _pmcov ( 1, 1 ) ;
+  // Invert matrix: use Cholesky's decomposition; if it fails, use regular inversion 
+  if ( !cixy.InvertChol() && !cixy.Invert () )
+  { return Warning ("Rho+-transport: can't inverse matrix!")  ; }  // RETURN
+  //
+  // The most tricky part I
+  entry.m_vxi ( 0 , 0 ) = cixy ( 0 , 0 ) ;
+  entry.m_vxi ( 0 , 1 ) = cixy ( 0 , 1 ) ;
+  entry.m_vxi ( 1 , 1 ) = cixy ( 1 , 1 ) ;
+  //
+  // The most tricky part II 
+  const Gaudi::LorentzVector& mom = temp.momentum() ;
+  const Gaudi::Vector2 slopes ( mom.Px() / mom.Pz() , mom.Py() / mom.Pz() ) ;
+  const Gaudi::Vector2 cslope ( cixy * slopes )  ;
+  entry.m_vxi ( 0 , 2 ) = - cslope ( 0 ) ;
+  entry.m_vxi ( 1 , 2 ) = - cslope ( 1 ) ;
+  entry.m_vxi ( 2 , 2 ) = ROOT::Math::Similarity ( slopes , cixy ) ;
+  //
+  // transported particle:
+  //
+  LHCb::Particle& tp = entry.m_p ;
+  //
+  tp.setMomentum        ( temp.momentum         () ) ;
+  tp.setReferencePoint  ( temp.referencePoint   () ) ;
+  //
+  tp.setMomCovMatrix    ( temp.momCovMatrix     () ) ;
+  tp.setPosCovMatrix    ( temp.posCovMatrix     () ) ;
+  tp.setPosMomCovMatrix ( temp.posMomCovMatrix  () ) ;
+  //
+  bool found = false ;
+  typedef SmartRefVector<LHCb::Particle> DAUGHTERS ;
+  const DAUGHTERS& daughters = entry.m_p0->daughters() ;
+  //
+  for ( DAUGHTERS::const_iterator idau = daughters.begin() ; 
+        daughters.end() != idau ; ++idau ) 
+  {
+    const LHCb::Particle* dau = *idau ;
+    if ( dau == lparticle ) { found = true ; continue  ; } // CONTINUE
+    //
+    StatusCode sc = _transportCalo ( dau , temp , entry.m_p.referencePoint()  ) ;
+    if ( sc.isFailure() ) { _Warning("Rho+-transport: can't transport `Calo'!") ; }
+    //
+    const_cast<Gaudi::LorentzVector&> ( tp.momentum()        ) += temp.momentum        () ;
+    const_cast<Gaudi::SymMatrix4x4&>  ( tp.momCovMatrix()    ) += temp.momCovMatrix    () ;
+    const_cast<Gaudi::SymMatrix3x3&>  ( tp.posCovMatrix()    ) += temp.posCovMatrix    () ;
+    const_cast<Gaudi::Matrix4x3&>     ( tp.posMomCovMatrix() ) += temp.posMomCovMatrix () ;
+  } 
+  if  (!found) { return Error("Rho+-transport: wrong structure[1]!"); }
+  //
+  return StatusCode::SUCCESS ;
+} 
+// ============================================================================
+// transport gamma & digmma & merged pi0 particles 
+// ============================================================================
+StatusCode LoKi::VertexFitter::_transportCalo
+( const LHCb::Particle*      gamma       , 
+  LHCb::Particle&            transported ,
+  const Gaudi::XYZPoint&     point       , 
+  const Gaudi::SymMatrix3x3* pointCov2   ) const 
+{
+  if ( 0 == gamma ) { return StatusCode::FAILURE ; }
+  // assign 
+  if ( gamma != &transported ) { transported = *gamma ; }  
+  // the actual type: 
+  const LoKi::KalmanFilter::ParticleType t = particleType_( gamma ) ;
+  if ( LoKi::KalmanFilter::MergedPi0LikeParticle == t ) 
+  {
+    int status = 0 ;
+    if ( 0 == pointCov2 ) 
+    {
+      LHCb::CaloParticle calo ( &transported , point ) ;
+      calo.updateParticle  () ;
+      status = calo.status () ;
+    }
+    else 
+    {
+      LHCb::CaloParticle calo ( &transported , point , *pointCov2 ) ;
+      calo.updateParticle  () ;
+      status = calo.status () ;
+    }
+    //
+    if( 0 != status ) { _Warning("Calo-transport: can't update merged pi0!" , status ) ; }
+    //
+    // mass and mass uncertainties
+    transported. setMeasuredMass    ( gamma-> measuredMass    () ) ; // corrected mass
+    transported. setMeasuredMassErr ( gamma-> measuredMassErr () ) ; 
+    //
+    return StatusCode::SUCCESS ;  
+  }
+  //
+  // Gamma-like & Digamma-like entry 
+  LHCb::CaloMomentum calo ;
+  //
+  calo.setReferencePoint ( point ) ;
+  if ( 0 != pointCov2 ) { calo.setPosCovMatrix ( *pointCov2 ) ; }
+  //
+  if      ( LoKi::KalmanFilter::GammaLikeParticle == t) 
+  {
+    const LHCb::ProtoParticle* proto = gamma->proto() ;
+    if ( 0 == proto ) { return Error("Calo-transport: wrong protoparticle[1]!") ; }
+    //
+    calo.addCaloPosition ( proto ) ;
+  }
+  else if ( LoKi::KalmanFilter::DiGammaLikeParticle == t ) 
+  {
+    // the first gamma  : 
+    const LHCb::Particle*      gamma1 = LoKi::Child::child ( gamma , 1 ) ;
+    if ( 0 == gamma1 ) { return _Error("Calo-transport: invalid first gamma"    ) ; }
+    const LHCb::ProtoParticle* proto1 = gamma1 -> proto() ;
+    if ( 0 == proto1 ) { return _Error("Calo-transport: invalid protoparticle-1"); }
+    // the second gamma :
+    const LHCb::Particle*      gamma2 = LoKi::Child::child ( gamma , 2 ) ;
+    if ( 0 == gamma2 ) { return _Error("Calo-transport: invalid second gamma"   ); }
+    const LHCb::ProtoParticle* proto2 = gamma2 -> proto() ;
+    if ( 0 == proto1 ) { return _Error("Calo-transport: invalid protoparticle-2"); }
+    //
+    calo.addCaloPosition ( proto1 ) ;
+    calo.addCaloPosition ( proto2 ) ;
+    //
+  }
+  else { return _Error("Calo-transport: illegal case"); }  // RETURN
+  //
+  const bool ok = calo.evaluate() ;
+  if ( !ok ) { return Error("Calo-transport: invalid calo momentum") ; }
+  //
+  // extract the values:
+  transported.setReferencePoint    ( point                     ) ;
+  transported.setMomentum          ( calo.momentum          () ) ;
+  transported.setMomCovMatrix      ( calo.momCovMatrix      () ) ;
+  //
+  if ( 0 != pointCov2 ) 
+  {
+    transported.setPosCovMatrix    ( calo.pointCovMatrix    () ) ;
+    transported.setPosMomCovMatrix ( calo.momPointCovMatrix () ) ;
+  }
+  else 
+  {
+    Gaudi::Math::setToScalar
+      ( const_cast<Gaudi::SymMatrix3x3&>( transported.posCovMatrix    () ) , 0.0 ) ;
+    Gaudi::Math::setToScalar
+      ( const_cast<Gaudi::Matrix4x3&>   ( transported.posMomCovMatrix () ) , 0.0 ) ;
+  }
+  //
+  return StatusCode::SUCCESS ;
+}
 // ============================================================================
 /// the factory needed for instantiation
 DECLARE_NAMESPACE_TOOL_FACTORY ( LoKi , VertexFitter )
