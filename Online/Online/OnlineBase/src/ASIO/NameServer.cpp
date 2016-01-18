@@ -17,6 +17,7 @@
 
 // C/C++ include files
 #include <set>
+#include <iostream>
 
 namespace BoostAsio  {
 
@@ -349,7 +350,7 @@ extern "C" int boost_asio_tan_server(int argc, char** argv)  {
     server.run();
   }
   catch (const exception& e)  {
-    cerr << "exception: " << e.what() << "\n";
+    ::lib_rtl_output(LIB_RTL_OS,"Boost::asio: exception: %s\n",e.what());
   }
   return 0;
 }

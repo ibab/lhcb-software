@@ -19,6 +19,7 @@
 #include "ASIO/TanInterface.h"
 
 // C/C++ include files
+#include <iostream>
 #include <sstream>
 #include <memory>
 
@@ -257,7 +258,7 @@ namespace {
     }
     catch (const exception& e)  {
       ::tan_deallocate_port_number(srv_name.c_str());
-      cerr << "mbmsrv_asio: exception: " << e.what() << "\n";
+      ::lib_rtl_output(LIB_RTL_ERROR,"mbmsrv_asio: exception: %s\n",e.what());
     }
     return 1;
   }

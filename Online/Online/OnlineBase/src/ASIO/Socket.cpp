@@ -18,6 +18,9 @@
 #include "ASIO/TanInterface.h"
 #include "TAN/TanMessage.h"
 
+// C/C++ include files
+#include <iostream>
+
 using namespace BoostAsio;
 using boost::asio::ip::tcp;
 using namespace boost;
@@ -93,7 +96,7 @@ int Socket::recv(void* buffer, size_t len, int tmo)   {
     }
   }
   catch (std::exception& e)   {
-    std::cerr << "Exception: " << e.what() << "\n";
+    ::lib_rtl_output(LIB_RTL_ERROR,"Boost::asio: exception: %s\n",e.what());
   }
   m_error = errno;
   return -1;
