@@ -4,6 +4,11 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2016-01-18 - Chris Jones
+ - Update the photon reconstruction tools to always use the tool interface
+   to determine the best emission point estimate, rather than to determine
+   this directly from the track segment.
+
 ! 2016-01-15 - Chris Jones
  - Improved caching in RichPhotonRecoUsingCKEstiFromRadius and
    RichAdaptivePhotonReco to avoid a few runtime calculations.

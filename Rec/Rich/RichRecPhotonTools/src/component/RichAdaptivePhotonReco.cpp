@@ -21,8 +21,8 @@ using namespace Rich::Rec;
 //=============================================================================
 AdaptivePhotonReco::
 AdaptivePhotonReco( const std::string& type,
-                                 const std::string& name,
-                                 const IInterface* parent )
+                    const std::string& name,
+                    const IInterface* parent )
   : PhotonRecoBase      ( type, name, parent       ),
     m_maxCKThetaForFast ( Rich::NRadiatorTypes, -1 )
 {

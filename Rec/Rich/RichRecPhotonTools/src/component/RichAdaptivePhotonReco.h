@@ -82,7 +82,7 @@ namespace Rich
       std::vector<double> m_maxFracCKtheta;
 
       /// Cherenkov angle tool
-      const ICherenkovAngle * m_ckAngle = nullptr;
+      const ICherenkovAngle       * m_ckAngle  = nullptr;
 
       /// Slow Photon reco tool (highest precision)
       const IPhotonReconstruction * m_recoSlow = nullptr;

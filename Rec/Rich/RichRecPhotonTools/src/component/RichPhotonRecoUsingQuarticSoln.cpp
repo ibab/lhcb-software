@@ -630,8 +630,6 @@ getBestGasEmissionPoint( const Rich::RadiatorType radiator,
                          Gaudi::XYZPoint & emissionPoint,
                          float & fraction ) const
 {
-  const LHCb::RichTrackSegment& trSeg = segment->trackSegment();
-
   double alongTkFrac = 0.5;
 
   if ( radiator == Rich::Rich1Gas )
@@ -669,7 +667,7 @@ getBestGasEmissionPoint( const Rich::RadiatorType radiator,
     const bool sameSide2 = ( sphReflPoint2.x() * detectionPoint.x() > 0 );
     if ( sameSide1 && sameSide2 )
     {
-      emissionPoint = trSeg.bestPoint();
+      emissPoint()->emissionPoint( segment, pixel, emissionPoint );
     }
     else if ( sameSide1 )
     {

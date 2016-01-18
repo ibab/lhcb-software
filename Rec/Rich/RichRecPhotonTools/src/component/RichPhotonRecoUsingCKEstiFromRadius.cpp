@@ -88,7 +88,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
 
   // Emission point to use for photon reconstruction
   Gaudi::XYZPoint & emissionPoint = gPhoton.emissionPoint();
-  emissionPoint = trSeg.bestPoint();
+  emissPoint()->emissionPoint( segment, pixel, emissionPoint );
 
   // Cannot set these yet - Could be done if needed, but at what CPU cost ?
   //Gaudi::XYZPoint & sphReflPoint = gPhoton.sphMirReflectionPoint();
