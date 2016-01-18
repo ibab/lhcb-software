@@ -164,3 +164,32 @@ def Draw(tree, coords, cuts = None, weight = None, histo = None,
         map(histo.Fill, *c)
     return histo
 
+## get data points
+def Data(tree, coords, cuts = None, weight = None):
+    if None == cuts: cuts = ( lambda t: True, )
+    if None == weight: weight = lambda t: 1.
+    ndim = None
+    result = []
+    # loop over tree entries
+    for dummy in tree:
+        # figure out if entry passes cuts
+        passed = True
+        for c in cuts:
+            if not c(tree):
+                passed = False
+                break
+        if not passed: continue
+        # yes, cuts passed, get what to draw
+        c = list([c(tree)] for c in coords)
+        if None == ndim:
+            ndim = len(c)
+        else:
+            if ndim != len(c):
+                raise Exception("Shape change during plotting.")
+        c = map(__flattenCoordinate, c)
+        # verify shape of what the functors returned, extend individual
+        # coordinates as needed to match
+        c = __verifyAndExtendShape(c, __flattenCoordinate(weight(tree)))
+        # fill the stuff into the result
+        result.append(c)
+    return result

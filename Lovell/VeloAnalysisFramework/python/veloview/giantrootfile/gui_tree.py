@@ -257,4 +257,7 @@ class Tree:
     ## plot Tree contents (see draw_helper.Draw for details)
     Plot = draw_helper.Draw
 
+    ## get list of Tree contents (see draw_helper.Data for details)
+    Data = draw_helper.Data
+
 # vim: sw=4:tw=78:ft=python
