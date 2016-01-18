@@ -4,6 +4,12 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2016-01-18 - Chris Jones
+ - Add a configuration flag to make sure the MC association information for
+   tracks is prepared before the RICH reconstruction sequence. Default is off.
+   Useful for expert studies where MC information is used during the 
+   reconstruction to cheat various aspects.
+
 ! 2016-01-06 - Chris Jones
  - Fix option to run an algorithm to preload the TES with the raw input tracks
    (useful for timing studies when running on DSTs).

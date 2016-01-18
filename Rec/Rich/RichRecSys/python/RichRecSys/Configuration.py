@@ -45,6 +45,7 @@ class RichRecSysBaseConf(RichConfigurableUser):
        ,"ConfigureAlgs":   True   # Configure the reconstruction algorithms
        ,"PreloadRawEvent": False  # Preload the RawEvent prior to the RICH algorithms
        ,"PreloadTracks":   False  # Preload the input tracks prior to the RICH algorithms
+       ,"PreloadMCLinks":  False  # Make sure MC associations (for tracks) are available before RICH runs
        ,"RefitTracks":     False  # Refit the tracks first. Useful for running on DSTs.
        ,"InitDecoding":    True   # Run an initialisation algorithm to decode the Rich RawBuffer
        ,"InitPixels":      True   # Run an initialisation algorithm to create the pixels
@@ -614,6 +615,12 @@ class RichRecSysConf(RichRecSysBaseConf) :
                 #init.OutputLevel = 1
                 #fit.OutputLevel  = 1
                 sequence.Members += [ init, fit ]
+
+            #-----------------------------------------------------------------------------
+            # Preload MC association information
+            #-----------------------------------------------------------------------------
+            if self.getProp("PreloadMCLinks") :
+                sequence.Members += ["UnpackMCParticle","UnpackMCVertex","TrackAssociator"]
 
             #-----------------------------------------------------------------------------
             # RICH RawEvent decoding
