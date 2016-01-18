@@ -13,11 +13,17 @@
 #define DEBUG
 */
 
-/* Modifies the number of open connections to 8192 for Windows and Linux */
-/* Can not be moved from here ! */
-#include <dim_tcpip.h>
+#ifdef WIN32
+#define FD_SETSIZE      16384
+#endif
+
+#include <stdio.h>
+#include <time.h>
+#define DIMLIB
+#include <dim.h>
 
 #ifdef WIN32
+#define poll(pfd,nfds,timeout)	WSAPoll(pfd,nfds,timeout)
 #define ioctl ioctlsocket
 
 #define closesock myclosesocket
@@ -69,10 +75,18 @@ typedef int pid_t;
 
 #endif
 
-#include <stdio.h>
-#include <time.h>
-#define DIMLIB
-#include <dim.h>
+#ifdef __linux__
+#include <poll.h>
+#define MY_FD_ZERO(set)	
+#define MY_FD_SET(fd, set)		poll_add(fd)
+#define MY_FD_CLR(fd, set)
+#define MY_FD_ISSET(fd, set)	poll_test(fd)
+#else
+#define MY_FD_ZERO(set)			FD_ZERO(set)
+#define MY_FD_SET(fd, set)		FD_SET(fd, set)
+#define MY_FD_CLR(fd, set)		FD_CLR(fd, set)
+#define MY_FD_ISSET(fd, set)	FD_ISSET(fd, set)
+#endif
 
 #define ushort unsigned short
 
@@ -122,6 +136,7 @@ int dim_get_keepalive_timeout()
 	if(!(ret = Keepalive_timeout_set))
 	{
 		ret = get_keepalive_tmout();
+		Keepalive_timeout_set = ret;
 	}
 	return(ret);
 }
@@ -436,6 +451,26 @@ static int enable_sig(int conn_id)
 	return(1);
 }
 
+#ifdef __linux__
+int tcpip_get_send_space(int conn_id)
+{
+	int ret, n_bytes;
+		
+	ret = ioctl(Net_conns[conn_id].channel, TIOCOUTQ, &n_bytes );
+	if(ret == -1) 
+	{
+#ifdef DEBUG
+		printf("Couln't get send buffer free size, ret =  %d\n", ret);
+#endif
+		return(0);
+	}
+/*
+	printf("tcpip_get_send_space %d\n", Write_buffer_size - n_bytes);
+*/
+	return(Write_buffer_size - n_bytes);
+}
+#endif
+
 /*
 static void dump_list()
 {
@@ -449,24 +484,89 @@ static void dump_list()
 }
 */
 
+#ifdef __linux__
+static struct pollfd *Pollfds = 0;
+static int Pollfd_size = 0;
+
+static int poll_create()
+{
+	int i;
+	if(Pollfd_size == 0)
+	{
+		Pollfd_size = Curr_N_Conns;
+		Pollfds = malloc(Pollfd_size * sizeof(struct pollfd));
+		Pollfds[0].fd = -1;
+		for(i = 0; i < Pollfd_size; i++)
+		{
+			Pollfds[i].events = POLLIN;
+		}
+	}
+	else if(Pollfd_size < Curr_N_Conns)
+	{
+		free(Pollfds);
+		Pollfd_size = Curr_N_Conns;
+		Pollfds = malloc(Pollfd_size * sizeof(struct pollfd));
+		Pollfds[0].fd = -1;
+		for(i = 0; i < Pollfd_size; i++)
+		{
+			Pollfds[i].events = POLLIN;
+		}
+	}
+	return 1;
+}
+
+static int poll_add(int fd)
+{
+	Pollfds[0].fd = fd;
+	return 1;
+}
+
+static int poll_test(int fd)
+{
+	if(Pollfds[0].fd == fd)
+	{
+		if( (Pollfds[0].revents & POLLIN) || (Pollfds[0].revents & POLLHUP) ) 
+		{
+		    Pollfds[0].revents = 0;
+			return 1;
+		}
+	}
+	return 0;
+}
+#endif
+
 static int list_to_fds( fd_set *fds )
 {
 	int	i;
 	int found = 0;
 
+	DISABLE_AST
+#ifdef __linux__
+	if(fds) {}
+	poll_create();
+#else
 	FD_ZERO( fds ) ;
+#endif
 	for( i = 1; i < Curr_N_Conns; i++ )
     {
+#ifdef __linux__
+		Pollfds[i].fd = -1;
+#endif
 		if( Dna_conns[i].busy )
 		{
 			if(Net_conns[i].channel)
 			{
 				found = 1;
+#ifdef __linux__
+				Pollfds[i].fd = Net_conns[i].channel;
+#else
 				FD_SET( Net_conns[i].channel, fds );
+#endif
 
 			}
 		}
 	}
+	ENABLE_AST
 	return(found);
 }
 
@@ -474,6 +574,25 @@ static int fds_get_entry( fd_set *fds, int *conn_id )
 {
 	int	i;
 
+#ifdef __linux__
+	int index = *conn_id;
+	if(fds) {}
+	index++;
+	for( i = index; i < Pollfd_size; i++ )
+	{
+		if( Dna_conns[i].busy && (
+		    (Pollfds[i].revents & POLLIN) || (Pollfds[i].revents & POLLHUP) ) ) 
+		{
+		    Pollfds[i].revents = 0;
+		    if(Net_conns[i].channel)
+		    {
+				*conn_id = i;
+				return 1;
+			}
+		}
+	}
+	return 0;
+#else
 	for( i = 1; i < Curr_N_Conns; i++ )
 	{
 		if( Dna_conns[i].busy &&
@@ -487,6 +606,7 @@ static int fds_get_entry( fd_set *fds, int *conn_id )
 		}
 	}
 	return 0;
+#endif
 }
 
 #if defined(__linux__) && !defined (darwin)
@@ -703,9 +823,14 @@ void io_sig_handler(int num)
 		timeout.tv_sec = 0;		/* Don't wait, just poll */
 		timeout.tv_usec = 0;
 		list_to_fds( &rfds );
+#ifdef __linux__
+		selret = poll(Pollfds, Pollfd_size, 0);
+#else
 		selret = select(FD_SETSIZE, &rfds, NULL, NULL, &timeout);
+#endif
 		if(selret > 0)
 		{
+			conn_id = 0;
 			while( (ret = fds_get_entry( &rfds, &conn_id )) > 0 ) 
 			{
 				if( Net_conns[conn_id].reading )
@@ -728,7 +853,7 @@ void io_sig_handler(int num)
 				{
 					do_accept( conn_id );
 				}
-				FD_CLR( (unsigned)Net_conns[conn_id].channel, &rfds );
+				MY_FD_CLR( (unsigned)Net_conns[conn_id].channel, &rfds );
 	    	}
 		}
 	}while(selret > 0);
@@ -739,7 +864,10 @@ void tcpip_task( void *dummy)
 	/* wait for an IO signal, find out what is happening and
 	 * call the right routine to handle the situation.
 	 */
-	fd_set	rfds, efds, *pfds;
+	fd_set	rfds, *pfds;
+#ifndef __linux__
+	fd_set efds;
+#endif
 	int	conn_id, ret, count;
 #ifndef WIN32
 	int data;
@@ -751,28 +879,37 @@ void tcpip_task( void *dummy)
 			dim_usleep(1000);
 
 		list_to_fds( &rfds );
-		FD_ZERO(&efds);
+		MY_FD_ZERO(&efds);
 #ifdef WIN32
 		pfds = &efds;
 #else
 		pfds = &rfds;
 #endif
-		FD_SET( DIM_IO_path[0], pfds );
+		MY_FD_SET( DIM_IO_path[0], pfds );
+#ifdef __linux__
+		ret = poll(Pollfds, Pollfd_size, -1);
+#else
 		ret = select(FD_SETSIZE, &rfds, NULL, &efds, NULL);
+#endif
+		if(ret <= 0)
+		{
+		    printf("poll returned %d, errno %d\n", ret, errno);
+		}
 		if(ret > 0)
 		{
-			if(FD_ISSET(DIM_IO_path[0], pfds) )
+			if(MY_FD_ISSET(DIM_IO_path[0], pfds) )
 			{
 #ifndef WIN32
 				read(DIM_IO_path[0], &data, 4);
 				DIM_IO_Done = 0;
 #endif
-				FD_CLR( (unsigned)DIM_IO_path[0], pfds );
+				MY_FD_CLR( (unsigned)DIM_IO_path[0], pfds );
 			}
 /*
 			{
 			DISABLE_AST
 */
+			conn_id = 0;
 			while( (ret = fds_get_entry( &rfds, &conn_id )) > 0 ) 
 			{
 				if( Net_conns[conn_id].reading )
@@ -799,7 +936,7 @@ void tcpip_task( void *dummy)
 					do_accept( conn_id );
 					ENABLE_AST
 				}
-				FD_CLR( (unsigned)Net_conns[conn_id].channel, &rfds );
+				MY_FD_CLR( (unsigned)Net_conns[conn_id].channel, &rfds );
 			}
 /*
 			ENABLE_AST
@@ -904,6 +1041,7 @@ int tcpip_open_client( int conn_id, char *node, char *task, int port )
 	    ipaddr[2] = (unsigned char)c;
 	    ipaddr[3] = (unsigned char)d;
 	    host_number = 1;
+/*
 #ifndef VxWorks
 		if( gethostbyaddr(ipaddr, sizeof(ipaddr), AF_INET) == (struct hostent *)0 )
 		{
@@ -912,13 +1050,14 @@ int tcpip_open_client( int conn_id, char *node, char *task, int port )
 #else
 			ret = WSAGetLastError();
 #endif
-			if((ret == HOST_NOT_FOUND) || (ret == NO_DATA))
-			{
-				if(!check_node_addr(node, ipaddr))
-					return(0);
-			}
+//			if((ret == HOST_NOT_FOUND) || (ret == NO_DATA))
+//			{
+//				if(!check_node_addr(node, ipaddr))
+//					return(0);
+//			}
 		}
 #endif
+*/
 	}
 #ifndef VxWorks
 	else if( (host = gethostbyname(node)) == (struct hostent *)0 ) 
@@ -1261,6 +1400,8 @@ int tcpip_write( int conn_id, char *buffer, int size )
 /*
 		Net_conns[conn_id].read_rout( conn_id, -1, 0 );
 */
+		dna_report_error(conn_id, 0,
+			"Writing (blocking) to", DIM_ERROR, DIMTCPWRRTY);
 		return(0);
 	}
 	return(wrote);
@@ -1299,12 +1440,20 @@ int tcpip_write_nowait( int conn_id, char *buffer, int size )
 	/* Do a (asynchronous) write to conn_id.
 	 */
 	int	wrote, ret, selret;
-
+	int tcpip_would_block();
+#ifdef __linux__
+	struct pollfd pollitem;
+#else
 	struct timeval	timeout;
 	fd_set wfds;
-	int tcpip_would_block();
+#endif
 	
 	set_non_blocking(Net_conns[conn_id].channel);
+/*
+#ifdef __linux__
+	tcpip_get_send_space(conn_id);
+#endif
+*/
 	wrote = (int)writesock( Net_conns[conn_id].channel, buffer, (size_t)size, 0 );
 #ifndef WIN32
 	ret = errno;
@@ -1324,30 +1473,33 @@ printf("Writing %d, ret = %d\n", size, ret);
 	{
 		if(tcpip_would_block(ret))
 		{
+#ifdef __linux__
+		  pollitem.fd = Net_conns[conn_id].channel;
+		  pollitem.events = POLLOUT;
+		  pollitem.revents = 0;
+		  selret = poll(&pollitem, 1, Write_timeout*1000);
+#else
 			timeout.tv_sec = Write_timeout;
 			timeout.tv_usec = 0;
 			FD_ZERO(&wfds);
 			FD_SET( Net_conns[conn_id].channel, &wfds);
 			selret = select(FD_SETSIZE, NULL, &wfds, NULL, &timeout);
+#endif
 			if(selret > 0)
 			{
 				wrote = (int)writesock( Net_conns[conn_id].channel, buffer, (size_t)size, 0 );
 				if( wrote == -1 ) 
 				{
-/*
-		dna_report_error(conn_id, 0,
-			"Writing to", DIM_ERROR, DIMTCPWRRTY);
-*/
+					dna_report_error(conn_id, 0,
+						"Writing to", DIM_ERROR, DIMTCPWRRTY);
 					return(0);
 				}
 			}
 		}
 		else
 		{
-/*
-dna_report_error(conn_id, 0,
-			"Writing (non-blocking) to", DIM_ERROR, DIMTCPWRRTY);
-*/
+			dna_report_error(conn_id, 0,
+				"Writing (non-blocking) to", DIM_ERROR, DIMTCPWRRTY);
 			return(0);
 		}
 	}
@@ -1695,7 +1847,7 @@ void tcpip_get_error( char *str, int code )
 	DISABLE_AST
 #ifndef WIN32
 	if(code){}
-	if((errno == ENOENT) && (h_errno == HOST_NOT_FOUND))
+	if((errno == 0) && (h_errno == HOST_NOT_FOUND))
 		strcpy(str,"Host not found");
 	else
 		strcpy(str, strerror(errno));

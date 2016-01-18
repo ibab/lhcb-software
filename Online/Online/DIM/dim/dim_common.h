@@ -1,24 +1,9 @@
-#ifndef __DIM_COMMONDEFS
-#define __DIM_COMMONDEFS
+#ifndef __COMMONDEFS
+#define __COMMONDEFS
 
 /* Service type definition */
 
-#ifndef DIM_DEFINITIONS_DECLARED
-#define DIM_DEFINITIONS_DECLARED
-
-#ifdef __cplusplus
-static const int ONCE_ONLY=	0x01;
-static const int TIMED=		0x02;
-static const int MONITORED=	0x04;
-static const int COMMAND=	0x08;
-static const int DIM_DELETE=	0x10;
-static const int MONIT_ONLY=	0x20;
-static const int UPDATE=	0x40;
-static const int TIMED_ONLY=	0x80;
-static const int MONIT_FIRST=   0x100;
-static const int MAX_TYPE_DEF=  0x100;
-static const int STAMPED=       0x1000;
-#else
+#ifndef ONCE_ONLY
 #define ONCE_ONLY	0x01
 #define TIMED		0x02
 #define MONITORED	0x04
@@ -30,7 +15,6 @@ static const int STAMPED=       0x1000;
 #define MONIT_FIRST 0x100
 #define MAX_TYPE_DEF    0x100
 #define STAMPED       0x1000
-#endif
 
 typedef enum { SRC_NONE, SRC_DIS, SRC_DIC, SRC_DNS, SRC_DNA, SRC_USR }SRC_TYPES;
 
@@ -170,9 +154,6 @@ extern int DIM_Threads_OFF;
 
 #ifdef __cplusplus
 extern "C" {
-#define __CXX_CONST const
-#else
-#define __CXX_CONST
 #endif
 
 _DIM_PROTOE( void dim_lock,		() );
@@ -202,6 +183,9 @@ _DIM_PROTOE( void dim_signal_cond,	() );
 
 #ifdef __cplusplus
 extern "C" {
+#define __CXX_CONST const
+#else
+#define __CXX_CONST
 #endif
 
 _DIM_PROTOE( int id_get,           (void *ptr, int type) );

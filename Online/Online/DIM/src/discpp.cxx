@@ -82,7 +82,12 @@ void DimService::declareIt(char *name, char *format, DimServiceHandler *handler,
 
 void DimService::storeIt(void *data, int size)
 {
-
+	DISABLE_AST
+	if(!itsId)
+	{
+		ENABLE_AST
+		return;
+	}
 	if(!itsDataSize)
 	{
 		itsData = new char[size];
@@ -96,6 +101,7 @@ void DimService::storeIt(void *data, int size)
 	}
 	memcpy(itsData, data, (size_t)size);
 	itsSize = size;
+	ENABLE_AST
 }
 
 extern "C" {
@@ -130,6 +136,7 @@ static void command_routine( void *tagp, void *buf, int *size)
 void DimCommand::declareIt(char *name, char *format, DimCommandHandler *handler, DimServerDns *dns)
 {
 //	itsTagId = 0;
+	itsId = 0;
 	itsDns = dns;
 	itsName = new char[(int)strlen(name)+1];
 	strcpy( itsName, name);
@@ -240,6 +247,8 @@ static void rpcout_routine( void *tagp, void **buf, int *size, int *first_time)
 void DimRpc::declareIt(char *name, char *formatin, char *formatout, DimServerDns *dns)
 {
 //	itsTagId = 0;
+	itsIdIn = 0;
+	itsIdOut = 0;
 	itsDns = dns;
 	itsName = new char[(int)strlen(name)+1];
 	strcpy( itsName, name);
@@ -286,7 +295,12 @@ void DimRpc::declareIt(char *name, char *formatin, char *formatout, DimServerDns
 
 void DimRpc::storeIt(void *data, int size)
 {
-
+	DISABLE_AST
+	if(!itsIdIn)
+	{
+		ENABLE_AST
+		return;
+	}
 	if(!itsDataOutSize)
 	{
 		itsDataOut = new char[size];
@@ -300,6 +314,7 @@ void DimRpc::storeIt(void *data, int size)
 	}
 	memcpy(itsDataOut, data, (size_t)size);
 	itsSizeOut = size;
+	ENABLE_AST
 }
 
 extern "C" {
@@ -775,10 +790,14 @@ static void srv_error_user_routine(int severity, int code, char *msg)
 DimService::DimService()
 {
 //	itsTagId = 0;
+	itsId = 0;
+	itsName = 0;
 }
 
 DimService::DimService(const char *name, int &value) 
 {
+	itsId = 0;
+	itsName = 0;
 	itsData = &value;
 	itsSize = sizeof(int);
 	itsType = DisINT;
@@ -787,6 +806,8 @@ DimService::DimService(const char *name, int &value)
 
 DimService::DimService(const char *name, float &value)
 {
+	itsId = 0;
+	itsName = 0;
 	itsData = &value;
 	itsSize = sizeof(float);
 	itsType = DisFLOAT;
@@ -795,6 +816,8 @@ DimService::DimService(const char *name, float &value)
 
 DimService::DimService(const char *name, double &value)
 {
+	itsId = 0;
+	itsName = 0;
 	itsData = &value;
 	itsSize = sizeof(double);
 	itsType = DisDOUBLE;
@@ -803,6 +826,8 @@ DimService::DimService(const char *name, double &value)
 
 DimService::DimService(const char *name, longlong &value)
 {
+	itsId = 0;
+	itsName = 0;
 	itsData = &value;
 	itsSize = sizeof(longlong);
 	itsType = DisXLONG;
@@ -811,6 +836,8 @@ DimService::DimService(const char *name, longlong &value)
 
 DimService::DimService(const char *name, short &value)
 {
+	itsId = 0;
+	itsName = 0;
 	itsData = &value;
 	itsSize = sizeof(short);
 	itsType = DisSHORT;
@@ -819,6 +846,8 @@ DimService::DimService(const char *name, short &value)
 
 DimService::DimService(const char *name, char *string)
 {
+	itsId = 0;
+	itsName = 0;
 	itsData = string;
 	itsSize = (int)strlen(string)+1;
 	itsType = DisSTRING;
@@ -827,6 +856,8 @@ DimService::DimService(const char *name, char *string)
 
 DimService::DimService(const char *name, char *format, void *structure, int size)
 {
+	itsId = 0;
+	itsName = 0;
 	itsData = structure;
 	itsSize = size;
 	itsType = DisPOINTER;
@@ -835,6 +866,8 @@ DimService::DimService(const char *name, char *format, void *structure, int size
 
 DimService::DimService(const char *name, char *format, DimServiceHandler *handler)
 {
+	itsId = 0;
+	itsName = 0;
 	itsData = 0;
 	itsSize = 0;
 	itsType = DisPOINTER;
@@ -843,6 +876,8 @@ DimService::DimService(const char *name, char *format, DimServiceHandler *handle
 
 DimService::DimService(const char *name, const char *format, void *structure, int size)
 {
+	itsId = 0;
+	itsName = 0;
 	itsData = structure;
 	itsSize = size;
 	itsType = DisPOINTER;
@@ -851,6 +886,8 @@ DimService::DimService(const char *name, const char *format, void *structure, in
 
 DimService::DimService(const char *name, const char *format, DimServiceHandler *handler)
 {
+	itsId = 0;
+	itsName = 0;
 	itsData = 0;
 	itsSize = 0;
 	itsType = DisPOINTER;
@@ -861,6 +898,8 @@ DimService::DimService(const char *name, const char *format, DimServiceHandler *
 
 DimService::DimService(DimServerDns *dns, const char *name, int &value) 
 {
+	itsId = 0;
+	itsName = 0;
 	itsData = &value;
 	itsSize = sizeof(int);
 	itsType = DisINT;
@@ -869,6 +908,8 @@ DimService::DimService(DimServerDns *dns, const char *name, int &value)
 
 DimService::DimService(DimServerDns *dns, const char *name, float &value)
 {
+	itsId = 0;
+	itsName = 0;
 	itsData = &value;
 	itsSize = sizeof(float);
 	itsType = DisFLOAT;
@@ -877,6 +918,8 @@ DimService::DimService(DimServerDns *dns, const char *name, float &value)
 
 DimService::DimService(DimServerDns *dns, const char *name, double &value)
 {
+	itsId = 0;
+	itsName = 0;
 	itsData = &value;
 	itsSize = sizeof(double);
 	itsType = DisDOUBLE;
@@ -885,6 +928,8 @@ DimService::DimService(DimServerDns *dns, const char *name, double &value)
 
 DimService::DimService(DimServerDns *dns, const char *name, longlong &value)
 {
+	itsId = 0;
+	itsName = 0;
 	itsData = &value;
 	itsSize = sizeof(longlong);
 	itsType = DisXLONG;
@@ -893,6 +938,8 @@ DimService::DimService(DimServerDns *dns, const char *name, longlong &value)
 
 DimService::DimService(DimServerDns *dns, const char *name, short &value)
 {
+	itsId = 0;
+	itsName = 0;
 	itsData = &value;
 	itsSize = sizeof(short);
 	itsType = DisSHORT;
@@ -901,6 +948,8 @@ DimService::DimService(DimServerDns *dns, const char *name, short &value)
 
 DimService::DimService(DimServerDns *dns, const char *name, char *string)
 {
+	itsId = 0;
+	itsName = 0;
 	itsData = string;
 	itsSize = (int)strlen(string)+1;
 	itsType = DisSTRING;
@@ -909,6 +958,8 @@ DimService::DimService(DimServerDns *dns, const char *name, char *string)
 
 DimService::DimService(DimServerDns *dns, const char *name, char *format, void *structure, int size)
 {
+	itsId = 0;
+	itsName = 0;
 	itsData = structure;
 	itsSize = size;
 	itsType = DisPOINTER;
@@ -917,6 +968,8 @@ DimService::DimService(DimServerDns *dns, const char *name, char *format, void *
 
 DimService::DimService(DimServerDns *dns, const char *name, char *format, DimServiceHandler *handler)
 {
+	itsId = 0;
+	itsName = 0;
 	itsData = 0;
 	itsSize = 0;
 	itsType = DisPOINTER;
@@ -926,6 +979,8 @@ DimService::DimService(DimServerDns *dns, const char *name, char *format, DimSer
 
 DimService::DimService(DimServerDns *dns, const char *name, const char *format, void *structure, int size)
 {
+	itsId = 0;
+	itsName = 0;
 	itsData = structure;
 	itsSize = size;
 	itsType = DisPOINTER;
@@ -934,6 +989,8 @@ DimService::DimService(DimServerDns *dns, const char *name, const char *format, 
 
 DimService::DimService(DimServerDns *dns, const char *name, const char *format, DimServiceHandler *handler)
 {
+	itsId = 0;
+	itsName = 0;
 	itsData = 0;
 	itsSize = 0;
 	itsType = DisPOINTER;
@@ -943,21 +1000,30 @@ DimService::DimService(DimServerDns *dns, const char *name, const char *format, 
 
 DimService::~DimService()
 {
-	delete[] itsName;
+	DISABLE_AST
+	if(itsName)
+		delete[] itsName;
 	if(itsDataSize)
 		delete[] (char *)itsData;
 //	if(itsTagId)
 //		id_free(itsTagId, SRC_DIS);
-	dis_remove_service( itsId );
+	if(itsId)
+		dis_remove_service( itsId );
+	itsId = 0;
+	ENABLE_AST
 }
 
 int DimService::updateService()
 {
+	if(!itsId)
+		return 0;
 	return dis_update_service( itsId );
 }
 
 int DimService::updateService( int &value )
 {
+	if(!itsId)
+		return 0;
 	if( itsType == DisINT)
 	{
 		itsData = &value;
@@ -968,6 +1034,8 @@ int DimService::updateService( int &value )
 
 int DimService::updateService( float &value )
 {
+	if(!itsId)
+		return 0;
 	if( itsType == DisFLOAT) {
 		itsData = &value;
 		return dis_update_service( itsId );
@@ -977,6 +1045,8 @@ int DimService::updateService( float &value )
 
 int DimService::updateService( double &value )
 {
+	if(!itsId)
+		return 0;
 	if( itsType == DisDOUBLE) {
 		itsData = &value;
 		return dis_update_service( itsId );
@@ -986,6 +1056,8 @@ int DimService::updateService( double &value )
 
 int DimService::updateService( longlong &value )
 {
+	if(!itsId)
+		return 0;
 	if( itsType == DisXLONG)
 	{
 		itsData = &value;
@@ -996,6 +1068,8 @@ int DimService::updateService( longlong &value )
 
 int DimService::updateService( short &value )
 {
+	if(!itsId)
+		return 0;
 	if( itsType == DisSHORT)
 	{
 		itsData = &value;
@@ -1006,6 +1080,8 @@ int DimService::updateService( short &value )
 
 int DimService::updateService( char *string )
 {
+	if(!itsId)
+		return 0;
 	if( itsType == DisSTRING)
 	{
 		itsData = string;
@@ -1017,6 +1093,8 @@ int DimService::updateService( char *string )
 	
 int DimService::updateService( void *structure, int size )
 {
+	if(!itsId)
+		return 0;
 	if( itsType == DisPOINTER)
 	{
 		itsData = structure;
@@ -1028,6 +1106,8 @@ int DimService::updateService( void *structure, int size )
 	
 int DimService::selectiveUpdateService(int *cids)
 {
+	if(!itsId)
+		return 0;
 	if( cids == 0)
 	{
 		int ids[2];
@@ -1040,6 +1120,8 @@ int DimService::selectiveUpdateService(int *cids)
 
 int DimService::selectiveUpdateService( int &value, int *cids)
 {
+	if(!itsId)
+		return 0;
 	if( itsType == DisINT)
 	{
 		itsData = &value;
@@ -1057,6 +1139,8 @@ int DimService::selectiveUpdateService( int &value, int *cids)
 
 int DimService::selectiveUpdateService( float &value, int *cids )
 {
+	if(!itsId)
+		return 0;
 	if( itsType == DisFLOAT)
 	{
 		itsData = &value;
@@ -1074,6 +1158,8 @@ int DimService::selectiveUpdateService( float &value, int *cids )
 
 int DimService::selectiveUpdateService( double &value, int *cids )
 {
+	if(!itsId)
+		return 0;
 	if( itsType == DisDOUBLE)
 	{
 		itsData = &value;
@@ -1091,6 +1177,8 @@ int DimService::selectiveUpdateService( double &value, int *cids )
 
 int DimService::selectiveUpdateService( longlong &value, int *cids )
 {
+	if(!itsId)
+		return 0;
 	if( itsType == DisXLONG) 
 	{
 		itsData = &value;
@@ -1108,6 +1196,8 @@ int DimService::selectiveUpdateService( longlong &value, int *cids )
 
 int DimService::selectiveUpdateService( short &value, int *cids )
 {
+	if(!itsId)
+		return 0;
 	if( itsType == DisSHORT) 
 	{
 		itsData = &value;
@@ -1125,6 +1215,8 @@ int DimService::selectiveUpdateService( short &value, int *cids )
 
 int DimService::selectiveUpdateService( char *string, int *cids )
 {
+	if(!itsId)
+		return 0;
 	if( itsType == DisSTRING)
 	{
 		itsData = string;
@@ -1143,6 +1235,8 @@ int DimService::selectiveUpdateService( char *string, int *cids )
 	
 int DimService::selectiveUpdateService( void *structure, int size, int *cids )
 {
+	if(!itsId)
+		return 0;
 	if( itsType == DisPOINTER)
 	{
 		itsData = structure;
@@ -1161,11 +1255,15 @@ int DimService::selectiveUpdateService( void *structure, int size, int *cids )
 	
 void DimService::setQuality(int quality)
 {
+	if(!itsId)
+		return;
 	dis_set_quality( itsId, quality );
 }
 
 void DimService::setTimestamp(int secs, int millisecs)
 { 
+	if(!itsId)
+		return;
 	dis_set_timestamp( itsId, secs, millisecs );
 }
 
@@ -1356,7 +1454,12 @@ int DimCommand::getTimestamp()
 {
 
 	if(secs == 0)
-		dis_get_timestamp(itsId, &secs, &millisecs);
+	{
+		DISABLE_AST
+		if(itsId)
+			dis_get_timestamp(itsId, &secs, &millisecs);
+		ENABLE_AST
+	}
 	return(secs);
 }
 
@@ -1383,11 +1486,15 @@ char *DimCommand::getName()
 
 DimCommand::~DimCommand()
 {
+	DISABLE_AST
 	delete[] itsName;
 	delete[] itsFormat;
 //	if(itsTagId)
 //		id_free(itsTagId, SRC_DIS);
-	dis_remove_service( itsId );
+	if(itsId)
+		dis_remove_service( itsId );
+	itsId = 0;
+	ENABLE_AST
 }
 
 DimRpc::DimRpc()
@@ -1406,13 +1513,19 @@ DimRpc::DimRpc(DimServerDns *dns, const char *name, const char *formatin, const 
 
 DimRpc::~DimRpc()
 {
+	DISABLE_AST
 	delete[] itsName;
 	delete[] itsNameIn;
 	delete[] itsNameOut;
 //	if(itsTagId)
 //		id_free(itsTagId, SRC_DIS);
-	dis_remove_service( itsIdIn );
-	dis_remove_service( itsIdOut );
+	if(itsIdIn)
+		dis_remove_service( itsIdIn );
+	if(itsIdOut)
+		dis_remove_service( itsIdOut );
+	itsIdIn = 0;
+	itsIdOut = 0;
+	ENABLE_AST
 }
 
 void *DimRpc::getData()

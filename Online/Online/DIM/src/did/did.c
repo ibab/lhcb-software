@@ -1083,8 +1083,8 @@ int get_nodes();
 		XmListAddItem(id,create_str(node),i+1);
 	}
 	*/
-	set_something(id,XmNlistItemCount,(void*)(long)i);
-	set_something(id,XmNlistVisibleItemCount,(void*)(long)((i < 8) ? i : 8));
+	set_something(id,XmNlistItemCount,i);
+	set_something(id,XmNlistVisibleItemCount,(i < 8) ? i : 8);
 }	
 
 void get_server_service()
@@ -2340,10 +2340,15 @@ char str[MAX_NAME], sname[MAX_NAME], *ptr;
 	buffer->server.n_services = vtohl(buffer->server.n_services);
 	buffer->server.pid = vtohl(buffer->server.pid);
 	n_services = buffer->server.n_services;
-
+	/*
+printf("received pid %d, nservices %d\n",buffer->server.pid, n_services);
+	*/
 	if(n_services == 1)
 	  return;
 	strcpy(sname, buffer->server.task);
+	/*
+printf("name = %s\n", sname);
+	*/
 	if(n_services > 1)
 	{
 		for(j = 0; j < n_services; j++)
@@ -2409,6 +2414,12 @@ char str[MAX_NAME], sname[MAX_NAME], *ptr;
 			N_services += n_services;
 		}
 		servp->busy = 1;
+		if(strcmp(servp->name, sname))
+		{
+		  strcpy(servp->name,sname);
+		  Force_update = 1;
+		  servp->busy = 3;
+		}
 	}
 	else
 	{
@@ -2525,6 +2536,11 @@ void put_label();
 		    return;
 		}
 		server_ptr = &servp->server;
+		if(servp->busy == 3)
+		{
+		  remove_button(servp);
+		  servp->busy = 1;
+		}
 		if(servp->busy == 1)
 		{
 			if(!servp->button_id)
@@ -2679,7 +2695,7 @@ char w_name[MAX_NAME];
 				(String)XmStringCreateLtoR ( w_name,XmSTRING_DEFAULT_CHARSET),
 				arglist,(Cardinal)n);
 	set_something(w,XmNlabelString,name);
-	set_something(w,XmNalignment,(void*)XmALIGNMENT_CENTER);
+	set_something(w,XmNalignment,XmALIGNMENT_CENTER);
 /*
 	if(n_services == -1)
 		set_color(w, XmNbackground, RED);
@@ -2792,8 +2808,8 @@ void kick_it();
 	XmListAddItem(id,create_str(
           "Ordering services alphabeticaly, please be patient..."),1);
 
-	set_something(id,XmNlistItemCount,(void*)1);
-	set_something(id,XmNlistVisibleItemCount,(void*)1);
+	set_something(id,XmNlistItemCount,1);
+	set_something(id,XmNlistVisibleItemCount,1);
 	
 	sprintf(str,"%s/SERVICE_LIST",/*ptr->task*/servp->name);
 	dic_info_service(str,ONCE_ONLY,20,0,0,
@@ -2902,8 +2918,8 @@ void delete_str();
 	}
 	free(service_list);
 	
-	set_something(id,XmNlistItemCount,(void*)(long)i);
-	set_something(id,XmNlistVisibleItemCount,(void*)(long)((i < 20) ? i : 20));
+	set_something(id,XmNlistItemCount,i);
+	set_something(id,XmNlistVisibleItemCount,(i < 20) ? i : 20);
 }
 
 void show_clients(SERVER **servp_ptr, char *buffer, int *size)

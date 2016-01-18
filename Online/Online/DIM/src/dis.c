@@ -222,6 +222,7 @@ void dis_init()
 	int dis_hash_service_init();
 	void dis_dns_init();
 
+	dim_init();
 	dis_dns_init();
 	{
 	DISABLE_AST

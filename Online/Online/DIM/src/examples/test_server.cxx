@@ -141,12 +141,11 @@ int main()
 	if(extraDns)
 		newDns = new DimServerDns(extraDns, 0, (char *)"new_TEST");
 
-/*
-	int i, arr[15000];
-	DimService *servp;
-	DimCommand *cmndp;
-	char str[132];
-*/
+//	int i, arr[15000];
+//	DimService *servp;
+//	DimCommand *cmndp;
+//	char str[132];
+
 //	float farr[4];
 //	DimService *farrp;
 
@@ -172,33 +171,32 @@ int main()
 //	farrp = new DimService("/PCITCO147/sensors/fan/input","F", farr, sizeof(farr));
 
 
-/*
 //	DimServer::autoStartOff();
-	DimServer::start("TEST");
+//	DimServer::start("TEST");
 
-	for(i = 0; i < 15000; i++)
-	{
-		arr[i] = i;
-		sprintf(str,"ServiceManyTest/%05d",i);
-		servp = new DimService(str,arr[i]);
-		servp->setQuality(1);
-		servp->updateService(arr[i]);
-//	DimServer::start("TEST");
-		sprintf(str,"CommandManyTest/%05d",i);
-		cmndp = new CmndServMany(str);
-//	DimServer::start("TEST");
-	}
-*/
+//	for(i = 0; i < 15000; i++)
+//	{
+//		arr[i] = i;
+//		sprintf(str,"ServiceManyTest/%05d",i);
+//		servp = new DimService(str,arr[i]);
+//		servp->setQuality(1);
+//		servp->updateService(arr[i]);
+////	DimServer::start("TEST");
+//		sprintf(str,"CommandManyTest/%05d",i);
+//		cmndp = new CmndServMany(str);
+////	DimServer::start("TEST");
+//	}
+
 	while(1)
 	{
 		sleep(5);
-/*
-		while(cmdsvr.hasNext())
-		{
-			cmdsvr.getNext();
-			cmdsvr.handleIt();
-		}
-*/
+
+//		while(cmdsvr.hasNext())
+//		{
+//			cmdsvr.getNext();
+//			cmdsvr.handleIt();
+//		}
+
 		s1 = "hello1";
 		if(!boolval)
 			boolval = 1;
@@ -216,3 +214,20 @@ int main()
 	return 0;
 }
 
+/*
+int main()
+{
+DimService *servint, *newServint;
+int ival = 0;
+
+DimServer::start("TEST");
+servint = new DimService("TEST/INTVAL",ival);
+sleep(20);
+DimServer::stop();
+sleep(1);
+DimServer::start("TESTOTHER");
+newServint = new DimService("TESTOTHER/INTVAL",ival);
+sleep(20);
+DimServer::stop();
+}
+*/

@@ -30,7 +30,6 @@
 
 #define BAD_CONN_TIMEOUT 2
 
-
 typedef struct bad_conn {
 	struct bad_conn *next;
 	struct bad_conn *prev;
@@ -497,6 +496,7 @@ static void recv_dns_dic_rout( int conn_id, DNS_DIC_PACKET *packet, int size, in
 		request_dns_info(0);
 		break;
 	case STA_CONN:        /* connection received */
+		dna_set_test_write(conn_id, 2*(dim_get_keepalive_timeout()));
 		if(Dns_dic_conn_id < 0)
 		{
 			Dns_dic_conn_id = conn_id;
@@ -548,6 +548,20 @@ printf("In service tmout %s\n", servp->serv_name);
 			else
 				size = 0;
 			(servp->user_routine)( &servp->tag, &size );
+		}
+		else
+		{
+			if((servp->pending == WAITING_DNS_UP) || (servp->pending == WAITING_DNS_ANSWER))
+			{
+				dim_print_date_time();
+				printf(" Client Sending Command: Command %s discarded, no DNS answer\n", servp->serv_name);
+				fflush(stdout);
+			}
+/*
+			else if(servp->pending == WAITING_SERVER_UP)
+			{
+			}
+*/
 		}
 		dic_release_service( (unsigned)servp->serv_id );
 		Curr_conn_id = 0;
@@ -1362,7 +1376,7 @@ static int handle_dns_info( DNS_DIC_PACKET *packet )
 			vtohl(packet->service_id));
 	}
 	node_name = packet->node_name; 
-	if(node_name[0] == -1)
+	if(node_name[0] == (char)0xFF)
 	{
 		error_handler(0, DIM_FATAL, DIMDNSREFUS, "DIM_DNS refuses connection");
 		return(0);

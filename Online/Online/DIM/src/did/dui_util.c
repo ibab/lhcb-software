@@ -61,8 +61,7 @@ XmString str;
 
 void set_something(w, resource, value)
     Widget w;
-    char *resource;
-    void* value;
+    char *resource, *value;
 {
     Arg al[1];
 	int free = 0;
@@ -74,7 +73,7 @@ DISABLE_AST
 		(!strcmp(resource,XmNselectionLabelString)) )
 	{
 		free = 1;
-		value = get_str(value);
+		value = (char *)get_str(value);
 	}
     XtSetArg(al[0], resource, value);
     XtSetValues(w, al, 1);
@@ -94,8 +93,7 @@ ENABLE_AST
 
 void get_something(w, resource, value)
     Widget w;
-    char *resource;
-    void *value;
+    char *resource, *value;
 {
 
     Arg al[1];
@@ -184,9 +182,9 @@ DISABLE_AST
 	if(resource == XmNbackgroundPixmap)
 */
 	if(!strcmp(resource,XmNbackgroundPixmap))
-	  set_something(w,resource,(void*)pixmap_colors[color]);
+		set_something(w,resource,pixmap_colors[color]);
 	else
-		set_something(w,resource,(void*)rgb_colors[color]);
+		set_something(w,resource,rgb_colors[color]);
 ENABLE_AST
 }
 	
@@ -194,27 +192,27 @@ void set_watch(w, color)
 Widget w;
 int color;
 {
-	set_something(w,XmNbackgroundPixmap,(void*)watch_colors[color]);
+	set_something(w,XmNbackgroundPixmap,watch_colors[color]);
 }
 	
 void set_lock(w, color) 
 Widget w;
 int color;
 {
-	set_something(w,XmNbackgroundPixmap,(void*)locks[color]);
+	set_something(w,XmNbackgroundPixmap,locks[color]);
 }
 	
 void set_unlock(w) 
 Widget w;
 {
-	set_something(w,XmNbackgroundPixmap,(void*)unlock);
+	set_something(w,XmNbackgroundPixmap,unlock);
 }
 	
 void set_face(w, color) 
 Widget w;
 int color;
 {
-	set_something(w,XmNbackgroundPixmap,(void*)faces[color]);
+	set_something(w,XmNbackgroundPixmap,faces[color]);
 }
 	
 void get_all_colors(display, w)

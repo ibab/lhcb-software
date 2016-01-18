@@ -2,6 +2,7 @@
 #include <dic.hxx>
 #include <iostream>
 using namespace std;
+#include <stdio.h>
 
 class RpcInt : public DimRpc
 {
@@ -19,7 +20,7 @@ class RpcInt : public DimRpc
 		setData(val);
 	}
 public:
-	RpcInt(char *name): DimRpc(name,"I","I") {val = 0;};
+	RpcInt(const char *name): DimRpc(name,"I","I") {val = 0;};
 };
 
 typedef struct tst{
@@ -55,7 +56,7 @@ class RpcStruct : public DimRpc
 		setData(val, sizeof(MyStruct));
 	}
 public:
-	RpcStruct(char *name): DimRpc(name,"C:16;I:5;C:18;F:4;I:1;F:16",
+	RpcStruct(const char *name): DimRpc(name,"C:16;I:5;C:18;F:4;I:1;F:16",
 		"C:16;I:5;C:18;F:4;I:1;F:16") {val = 0;};
 };
 
@@ -74,7 +75,7 @@ class JeffRpcStruct : public DimRpc
 		setData(&pout, (int)strlen(pout.str)+1+5);
 	}
 public:
-	JeffRpcStruct(char *name): DimRpc(name,"C:1;C:1;C:1;C",
+	JeffRpcStruct(const char *name): DimRpc(name,"C:1;C:1;C:1;C",
 		"I:1;C:1;C") {counter = 0;};
 };
 

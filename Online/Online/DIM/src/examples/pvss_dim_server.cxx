@@ -30,7 +30,7 @@ class RecvCommand : public DimCommand
 		reset_flag = 1;
 	}
 public :
-	RecvCommand(char *name) : DimCommand(name,"C") {reset_flag = 0;};
+	RecvCommand(const char *name) : DimCommand(name,"C") {reset_flag = 0;};
 	int isReset() {return reset_flag;};
 	void clearReset() {reset_flag = 0;};
 };
@@ -46,7 +46,7 @@ class RecvCommandComplex : public DimCommand
 			 << " received " << complexData->stringval << endl;
 	}
 public :
-	RecvCommandComplex(char *name) : DimCommand(name,"I:1;C:1;I:1;F:1;C") {};
+	RecvCommandComplex(const char *name) : DimCommand(name,"I:1;C:1;I:1;F:1;C") {};
 };
 /*
 typedef struct{
@@ -94,7 +94,7 @@ cout << "Received " << val -1 << " Answering " << val << endl;
 		setData(val);
 	}
 public:
-	RpcService(char *name): DimRpc(name,"I","I") {val = 0;};
+	RpcService(const char *name): DimRpc(name,"I","I") {val = 0;};
 };
 
 int main()

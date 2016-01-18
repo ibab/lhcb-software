@@ -20,7 +20,7 @@
 /*
 #define MAX_HASH_ENTRIES 5000
 */
-#define MAX_HASH_ENTRIES 20000
+#define MAX_HASH_ENTRIES 25000
 FILE	*foutptr;
 
 typedef struct node {
@@ -259,9 +259,9 @@ int handle_registration( int conn_id, DIS_DNS_PACKET *packet, int tmout_flag )
 		if(DNS_accepted_domains[0] == 0)
 		{
 			if(!get_dns_accepted_domains(DNS_accepted_domains))
-				DNS_accepted_domains[0] = -1;
+				DNS_accepted_domains[0] = (char)0xFF;
 		}
-		if((DNS_accepted_domains[0] != -1) && (strcmp(Dns_conns[conn_id].task_name,"DIS_DNS")))
+		if((DNS_accepted_domains[0] != (char)0xFF) && (strcmp(Dns_conns[conn_id].task_name,"DIS_DNS")))
 		{
 			ptr = DNS_accepted_domains;
 			found = 0;
@@ -394,7 +394,7 @@ int handle_registration( int conn_id, DIS_DNS_PACKET *packet, int tmout_flag )
 					  (!strcmp(Dns_conns[servp->conn_id].node_name, Dns_conns[conn_id].node_name)))
 					{
 						dim_print_date_time();
-printf(" Service %s already declared by conn %d - %s@%s:%d (PID %d), Redeclared by conn %d - %s@%s:%d (PID %d)(same server) - Closing old conn %d\n",
+printf(" Service %s already declared by conn %d - %s@%s:%d (PID %d), Redeclared by conn %d - %s@%s:%d (PID %d)(same server) - Closing both conns %d %d\n",
 							servp->serv_name, servp->conn_id, 
 							Dns_conns[servp->conn_id].task_name,
 							Dns_conns[servp->conn_id].node_name,
@@ -405,13 +405,15 @@ printf(" Service %s already declared by conn %d - %s@%s:%d (PID %d), Redeclared 
 							Dns_conns[conn_id].node_name,
 							Dns_conns[conn_id].port,
 							Dns_conns[conn_id].pid,
-							servp->conn_id);
+							servp->conn_id, conn_id);
 						fflush(stdout);
 						release_conn(servp->conn_id);
-						update_did = 0;
+						release_conn(conn_id);
 /*
-						return(0);
+						update_did = 0;
 */
+						return(0);
+
 					}
 					else
 					{
@@ -682,9 +684,9 @@ int handle_client_request( int conn_id, DIC_DNS_PACKET *packet )
 	if(DNS_accepted_nodes[0] == 0)
 	{
 		if(!get_dns_accepted_nodes(DNS_accepted_nodes))
-			DNS_accepted_nodes[0] = -1;
+			DNS_accepted_nodes[0] = (char)0xFF;
 	}
-	if(DNS_accepted_nodes[0] != -1)
+	if(DNS_accepted_nodes[0] != (char)0xFF)
 	{
 		ptr = DNS_accepted_nodes;
 		found = 0;
@@ -711,7 +713,7 @@ int handle_client_request( int conn_id, DIC_DNS_PACKET *packet )
 		if(!found)
 		{
 			dic_packet.service_id = serv_regp->service_id;
-			dic_packet.node_name[0] = -1; 
+			dic_packet.node_name[0] = (char)0xFF; 
 			dic_packet.task_name[0] = 0;
 			dic_packet.node_addr[0] = 0;
 			dic_packet.pid = 0;
@@ -1078,7 +1080,9 @@ static void release_conn(int conn_id)
 	NODE *nodep, *old_nodep;
 	void service_remove();
 
-	if( Dns_conns[conn_id].src_type == SRC_DIS ) 
+	servp = (DNS_SERVICE *)Dns_conns[conn_id].service_head;
+	nodep = (NODE *)Dns_conns[conn_id].node_head;
+	if(( Dns_conns[conn_id].src_type == SRC_DIS ) || (servp))
 	{
 		if( Debug )
 		{
@@ -1142,7 +1146,7 @@ static void release_conn(int conn_id)
 		Dns_conns[conn_id].src_type = SRC_NONE;
 		dna_close(conn_id);
 	}
-	else if(Dns_conns[conn_id].src_type == SRC_DIC)
+	else if((Dns_conns[conn_id].src_type == SRC_DIC) || (nodep))
 	{
 		if(Debug)
 		{
@@ -1412,7 +1416,7 @@ void get_new_dns_server_info(int *tag, int **bufp, int *size, int *first_time)
 	ENABLE_AST
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
 	int i, protocol, dns_port;
 	int *bufp;
@@ -1434,6 +1438,9 @@ int main(int argc, char *argv[])
 	}
 	dim_set_write_timeout(10);
 	dim_set_listen_backlog(1024);
+	dim_set_keepalive_timeout(90);
+	dim_set_write_buffer_size(32768);
+	dim_set_read_buffer_size(32768);
 	dim_init();
 	conn_arr_create( SRC_DNS );
 	service_init();

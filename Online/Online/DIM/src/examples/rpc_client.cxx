@@ -1,6 +1,7 @@
 #include <dic.hxx>
 #include <iostream>
 using namespace std;
+#include <stdio.h>
 
 class Rpc : public DimRpcInfo
 {
@@ -9,7 +10,7 @@ public:
 		dim_print_date_time();
 		cout << "Callback RPC Received : " << getInt() << endl;
 	}
-	Rpc(char *name) :	DimRpcInfo(name, 1, -1) {};
+	Rpc(const char *name) :	DimRpcInfo(name, 1, -1) {};
 };
 
 typedef struct tst{
@@ -30,7 +31,7 @@ public:
 		cout << "Callback RPC Received : " << endl;
 		cout << val->str1 << " " << val->str2 << " " << val->int1 << endl;
 	}
-	RpcStruct(char *name) :	DimRpcInfo(name, "dead") {};
+	RpcStruct(const char *name) :	DimRpcInfo(name, (char *)"dead") {};
 };
 
 void do_work(void *tag)
@@ -40,7 +41,7 @@ void do_work(void *tag)
 	char name[64];
 	int out, in;
 	
-	sprintf(name,"TESTRPC%d/INT",(dim_long)tag);
+	sprintf(name,"TESTRPC%ld/INT",(dim_long)tag);
 	myRpc = new DimRpcInfo(name, 10, -1);
 //	myRpc = new Rpc(name);
 
@@ -64,7 +65,7 @@ void do_workCB()
 //	DimRpcInfo *myRpc;
 	Rpc *myRpc;
 	char name[64];
-	int out, in;
+	int out;
 	
 	sprintf(name,"TESTRPC/INT");
 	myRpc = new Rpc(name);

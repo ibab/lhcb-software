@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 	char *name, *format, *cltptr, *srvptr, clientName[128];
 
 	if(argc){}
-	if(argc){}
+	if(argv){}
 	br.getServices("BENCH_SERVICE_*");
 
 	while(br.getNextService(name, format)!= 0)

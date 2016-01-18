@@ -18,7 +18,7 @@ class SimpleService : public DimInfo
 		cout << "SimpleService : " << getFloat() << "\n" << endl;
 	}
 public :
-	SimpleService(char *name) : DimInfo(name, -1.0) {};
+	SimpleService(const char *name) : DimInfo(name, -1.0) {};
 };
 
 double no_link_darray[8] = {-1.0,0,0,0,0,0,0,0};
@@ -38,7 +38,7 @@ class DimDoubleArray : public DimInfo
 		}
 	}
 public :
-	DimDoubleArray(char *name) : DimInfo(name, no_link_darray, 8*sizeof(double)) {};
+	DimDoubleArray(const char *name) : DimInfo(name, no_link_darray, 8*sizeof(double)) {};
 };
 
 
@@ -75,7 +75,7 @@ class ComplexService : public DimInfo
 		DimClient::sendCommand("PVSS_SIMPLE_COMMAND",data->stringval);
 	}
 public :
-	ComplexService(char *name) : DimInfo(name, -1.0) {};
+	ComplexService(const char *name) : DimInfo(name, -1.0) {};
 };
 
 class RpcService : public DimRpcInfo
@@ -87,7 +87,7 @@ public:
 		dim_print_date_time();
 		cout << "RPC Service received: " << value << "\n" << endl;
 	}
-	RpcService(char *name, int timeout) :	DimRpcInfo(name, timeout, -1) {};
+	RpcService(const char *name, int timeout) :	DimRpcInfo(name, timeout, -1) {};
 };
 
 

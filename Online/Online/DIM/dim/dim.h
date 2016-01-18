@@ -13,7 +13,7 @@
 
 #include "dim_common.h"
 
-#define DIM_VERSION_NUMBER 2007
+#define DIM_VERSION_NUMBER 2016
 
 
 #define MY_LITTLE_ENDIAN	0x1
@@ -162,8 +162,8 @@ _DIM_PROTO( short _swaps,   (short s) );
 #define CONN_BLOCK		256
 #define MAX_CONNS		1024
 #define ID_BLOCK		512
-#define TCP_RCV_BUF_SIZE	16384/*32768*//*65536*/
-#define TCP_SND_BUF_SIZE	16384/*32768*//*65536*/
+#define TCP_RCV_BUF_SIZE	/*16384*//*32768*/65536
+#define TCP_SND_BUF_SIZE	/*16384*//*32768*/65536
 #endif
 #define DID_DNS_TMOUT_MIN	5
 #define DID_DNS_TMOUT_MAX	10

@@ -226,7 +226,7 @@ public :
 private :
 	char *itsName;
 	int itsId;
-	// int itsTagId;
+	int itsTagId;
 	void declareIt(char *name, char *format, DimServiceHandler *handler, DimServerDns *dns);
 	void storeIt(void *data, int size);
 	DimServerDns *itsDns;
@@ -288,7 +288,7 @@ public :
 private :
 	char *itsName;
 	int itsId;
-	//int itsTagId;
+	int itsTagId;
 	char *itsFormat;
 	void declareIt(char *name, char *format, DimCommandHandler *handler, DimServerDns *dns);
 	CmndInfo *currCmnd;

@@ -113,9 +113,9 @@ cout << "received from " << server << " size = " << srv_size << endl;
 class BridgeCommand: public DimCommand, public SLLItem 
 {
   char srv_name[256];
-  //char srv_format[256];
-  //int declared;
-  //DimService *srv;
+  char srv_format[256];
+  int declared;
+  DimService *srv;
   void *srv_data;
   int srv_size;
   int cmnd;

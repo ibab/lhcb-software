@@ -1,6 +1,5 @@
 #include <ctype.h>
 #include <stdio.h>
-#include <string.h>
 #include <dic.h>
 
 int no_link = 0x0afefead;
@@ -40,14 +39,13 @@ char **argv;
 
 	if(argc < 2)
 	{
-	  printf("Service Name > ");
-	  fflush(stdout);
-	  scanf("%s", str);
+		printf("Service Name > ");
+		fflush(stdout);
+		scanf("%s", str);
 	}
 	else
 	{
-	  strncpy(str,argv[1],sizeof(str));
-	  str[sizeof(str)-1] = 0;
+		sprintf(str,"%s",argv[1]);
 	}
 	dic_info_service(str,ONCE_ONLY,60,0,0,rout,0,&no_link,4);
 	while(!received)
