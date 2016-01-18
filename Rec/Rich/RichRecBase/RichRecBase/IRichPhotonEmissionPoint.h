@@ -65,6 +65,21 @@ namespace Rich
                                   const LHCb::RichRecPixel * pixel,
                                   Gaudi::XYZPoint & emissPnt ) const = 0;
 
+      /** Get the best emission point for the given segment
+       *
+       *  @param[in] segment   RichRecSegment to determine the best emission point for
+       *  @param[out] emissPnt The determined emission point
+       *
+       *  @return boolean indicating status of request
+       *  @retval TRUE  Emission point was successfully determined
+       *  @retval FALSE Emission point was NOT successfully determined
+       */
+      inline bool emissionPoint( const LHCb::RichRecSegment * segment,
+                                 Gaudi::XYZPoint & emissPnt ) const
+      {
+        return emissionPoint( segment, nullptr, emissPnt );
+      }
+
       /** Get the best emission point for the given segment and pixel, at the given fractional
        *  distance along the radiator trajectory (0 for start point, 1 for end point)
        *
@@ -83,6 +98,25 @@ namespace Rich
                                   const LHCb::RichRecPixel * pixel,
                                   const double fracDist,
                                   Gaudi::XYZPoint & emissPnt ) const = 0;
+
+      /** Get the best emission point for the given segment and pixel, at the given fractional
+       *  distance along the radiator trajectory (0 for start point, 1 for end point)
+       *
+       *  @param[in] segment   RichRecSegment to determine the best emission point for
+       *  @param[in] fracDist  The fractional distance along the trajectory 
+       *                       (0 for start point, 1 for end point)
+       *  @param[out] emissPnt The determined emission point
+       *
+       *  @return boolean indicating status of request
+       *  @retval TRUE  Emission point was successfully determined
+       *  @retval FALSE Emission point was NOT successfully determined
+       */
+      inline bool emissionPoint( const LHCb::RichRecSegment * segment,
+                                 const double fracDist,
+                                 Gaudi::XYZPoint & emissPnt ) const
+      {
+        return emissionPoint( segment, nullptr, fracDist, emissPnt );
+      }
 
     };
 
