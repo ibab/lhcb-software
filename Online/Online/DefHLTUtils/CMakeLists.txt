@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DefHLTUtils
 ################################################################################
-gaudi_subdir(DefHLTUtils v1r16)
+gaudi_subdir(DefHLTUtils v1r17)
 
 gaudi_depends_on_subdirs(Online/Gaucho
                          Online/OnlineKernel
