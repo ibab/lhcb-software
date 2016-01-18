@@ -1,5 +1,5 @@
 package InsertDB
-version v1r10
+version v1r11
 branches cmt doc src
 
 use GaudiKernel  v* 

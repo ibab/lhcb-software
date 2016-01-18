@@ -1,7 +1,7 @@
 ################################################################################
 # Package: InsertDB
 ################################################################################
-gaudi_subdir(InsertDB v1r10)
+gaudi_subdir(InsertDB v1r11)
 
 gaudi_depends_on_subdirs(GaudiAlg
                          Online/DIM
