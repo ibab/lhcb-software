@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2016-01-18 - Espen Eie Bowen
+ - Fix bug in adding of overlap hits
+
 ! 2015-12-08 - Marco Cattaneo
  - Fix clang warning (use std::abs(<float>) instead of abs(<float>))
 

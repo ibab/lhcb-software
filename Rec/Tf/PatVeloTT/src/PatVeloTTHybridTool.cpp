@@ -432,6 +432,10 @@ void PatVeloTTHybridTool::formClusters(bool forward){
       }//layer3
     }
   }
+  //Reset ordering of hits
+  if(!forward){
+    std::reverse(m_allHits.begin(),m_allHits.end());
+  }
 }
 
 
