@@ -1,5 +1,6 @@
 """Methods dealing with DQ values."""
 
+from collections import OrderedDict
 import ROOT
 
 import veloview.analysis
@@ -26,10 +27,10 @@ def get_dq_values(run):
         currentEntry += 1
 
     if not found:
-        return {}
+        return OrderedDict()
 
     vars = get_dq_vars()
-    values = {}
+    values = OrderedDict()
     for var in vars:
         if not var[0] or hasattr(t, var[0] + '.score'):
             values[var[0]] = {
