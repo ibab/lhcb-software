@@ -1,5 +1,5 @@
 package OnlineSys
-version v5r27
+version v5r28
 ###
 ### Note: 
 ### last v4 release: v4r69 based on Gaudi v23r7
@@ -17,53 +17,53 @@ use GaudiObjDesc        v11r23
 #=======================================================
 # LHCb Online packages
 #=======================================================
-use Camera              v1r35    Online
-use Checkpointing       v0r25    Online
+use Camera              v1r36    Online
+use Checkpointing       v0r26    Online
 macro CondDBServer_use "CondDBServer v1r6 Online" target-i686 ""
 use $(CondDBServer_use)
 ####use CondDBServer        v1r6     Online
-use Controller          v0r24    Online
-use ControllerTests     v0r3     Online
-use DailyReport         v1r3     Online
-use DefHLTUtils         v1r16    Online
-use DIM                 v20r7p4  Online
-use EventBuilder        v0r16    Online
-use FarmConfig          v0r23    Online
-use Gaucho              v7r46    Online
-use GauchoAppl          v1r30    Online
-use GaudiCheckpointing  v0r24    Online
-use GaudiOnline         v2r89    Online
+use Controller          v0r25    Online
+use ControllerTests     v0r4     Online
+use DailyReport         v1r4     Online
+use DefHLTUtils         v1r17    Online
+use DIM                 v20r16   Online
+use EventBuilder        v0r17    Online
+use FarmConfig          v0r24    Online
+use Gaucho              v7r47    Online
+use GauchoAppl          v1r31    Online
+use GaudiCheckpointing  v0r25    Online
+use GaudiOnline         v2r90    Online
 use GaudiOnlineTests    v1r7     Online
-use GaudiRootCnvTests   v1r14    Online
-use GaudiSerialize      v0r15    Online
-use GaudiUPI            v1r20    Online
-use HistDBPython        v1r8     Online
-use Hlt2Monitoring      v1r4     Online
-use InsertDB            v1r10    Online
-use MBMDump             v1r17    Online
+use GaudiRootCnvTests   v1r15    Online
+use GaudiSerialize      v0r16    Online
+use GaudiUPI            v1r21    Online
+use HistDBPython        v1r9     Online
+use Hlt2Monitoring      v1r6     Online
+use InsertDB            v1r11    Online
+use MBMDump             v1r18    Online
 use OMAlib              v5r0     Online
-use OnlineAlign         v0r8     Online
-use OnlineBase          v1r39    Online
+use OnlineAlign         v0r9     Online
+use OnlineBase          v1r40    Online
 use OnlineHistDB        v8r3     Online
-use OnlineKernel        v2r24    Online
-use OnlineTools         v1r5     Online
+use OnlineKernel        v2r25    Online
+use OnlineTools         v1r6     Online
 use OnlineTasks         v1r54    Online
-use Presenter           v3r12    Online
+use Presenter           v3r13    Online
 use PresenterDoc        v1r1     Online
-use PyDIM               v2r17    Online
-use RawBankSizes        v2r21    Online
+use PyDIM               v2r18    Online
+use RawBankSizes        v2r22    Online
 use RootCnv             v1r26    Online
 use ROMon               v1r57    Online
-use ROLogger            v0r32    Online
+use ROLogger            v0r33    Online
 ## Only at the pit: macro Stomp_use "" CERN "Stomp v1r2 Online"
 ##use $(Stomp_use)
 
-use Trending            v2r4     Online
+use Trending            v2r5     Online
 use UPI                 v1r30    Online
 use UPIR                v1r7     Online
-use Writer              v1r51    Online
-use XML                 v0r6     Online
-use ZeroMQ              v4r1p3   Online
+use Writer              v1r52    Online
+use XML                 v0r7     Online
+use ZeroMQ              v4r1p5   Online
 use ZMQTransfer         v0r1     Online
 
 #Obsolete: use confDB              v1r6     Online

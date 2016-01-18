@@ -5,6 +5,47 @@
 ! Purpose     : Confining package of the Online cmt project
 !-----------------------------------------------------------------------------
 </PRE>
+<H1><A NAME=v5r28>2016-01-18 OnlineSys v5r28</A></H1>
+<PRE>
+  Use Gaudi v26r4
+  Updated/new packages:	
+     Camera              v1r36    Online
+     Checkpointing       v0r26    Online
+     Controller          v0r25    Online
+     ControllerTests     v0r4     Online
+     DailyReport         v1r4     Online
+     DefHLTUtils         v1r17    Online
+     DIM                 v20r16   Online
+     EventBuilder        v0r17    Online
+     FarmConfig          v0r24    Online
+     Gaucho              v7r47    Online
+     GauchoAppl          v1r31    Online
+     GaudiCheckpointing  v0r25    Online
+     GaudiOnline         v2r90    Online
+     GaudiRootCnvTests   v1r15    Online
+     GaudiSerialize      v0r16    Online
+     GaudiUPI            v1r21    Online
+     HistDBPython        v1r9     Online
+     Hlt2Monitoring      v1r6     Online
+     InsertDB            v1r11    Online
+     MBMDump             v1r18    Online
+     OnlineAlign         v0r9     Online
+     OnlineBase          v1r40    Online
+     OnlineKernel        v2r25    Online
+     OnlineTools         v1r6     Online
+     Presenter           v3r13    Online
+     PyDIM               v2r18    Online
+     RawBankSizes        v2r22    Online
+     ROLogger            v0r33    Online
+     Trending            v2r5     Online
+     Writer              v1r52    Online
+     XML                 v0r7     Online
+     ZeroMQ              v4r1p5   Online
+
+New package:
+     ZMQTransfer         v0r1     Online
+
+</PRE>
 
 <H1><A NAME=v5r27>2015-10-17 OnlineSys v5r27</A></H1>
 <PRE>
