@@ -4,6 +4,11 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2016-01-18 - Chris Jones
+ - Improve the TruePhotonEmissionPoint tool to provide MC based estimates
+   in a few more cases. For instance if only a track segment is passed it
+   now computes the average value from all photons emitted from that segment.
+
 !========================= RichRecMCTools v2r32p1 2015-10-13 ========================
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers

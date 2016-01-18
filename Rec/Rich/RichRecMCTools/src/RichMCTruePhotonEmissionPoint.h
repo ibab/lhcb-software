@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::MC::TruePhotonEmissionPoint
  *
- *  CVS Log :-
- *  $Id: RichMCTruePhotonEmissionPoint.h,v 1.1 2007-11-26 16:51:31 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -18,15 +15,14 @@
 // base class
 #include "RichRecBase/RichRecToolBase.h"
 
-// Event model
-#include "Event/RichRecSegment.h"
-
 // interfaces
 #include "RichRecBase/IRichPhotonEmissionPoint.h"
 #include "MCInterfaces/IRichRecMCTruthTool.h"
 
 // Event model
+#include "Event/RichRecSegment.h"
 #include "Event/MCRichOpticalPhoton.h"
+#include "Event/MCRichSegment.h"
 
 namespace Rich
 {
@@ -78,10 +74,21 @@ namespace Rich
                             const double fracDist,
                             Gaudi::XYZPoint & emissPnt ) const;
 
-      private:  // Private data
+      private: // methods
+
+        /// Compute the best average MC emission point for a given segment
+        void bestAvMCSegmentPoint( const LHCb::RichRecSegment * segment,
+                                   Gaudi::XYZPoint & emissPnt ) const;
+
+        /// Compute the best average MC emission point for a given segment
+        void bestAvMCSegmentPoint( const LHCb::RichRecSegment * segment,
+                                   const double fracDist,
+                                   Gaudi::XYZPoint & emissPnt ) const;
+
+      private: // Private data
         
         /// Rich Reconstruction MC Truth tool
-        const Rich::Rec::MC::IMCTruthTool * m_mcRecTool; 
+        const Rich::Rec::MC::IMCTruthTool * m_mcRecTool = nullptr; 
         
       };
 

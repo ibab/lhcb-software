@@ -23,8 +23,7 @@ DECLARE_TOOL_FACTORY( TruePhotonEmissionPoint )
 TruePhotonEmissionPoint::TruePhotonEmissionPoint ( const std::string& type,
                                                    const std::string& name,
                                                    const IInterface* parent )
-  : Rich::Rec::ToolBase ( type, name, parent ),
-    m_mcRecTool         ( NULL )
+  : Rich::Rec::ToolBase ( type, name, parent )
 {
   // tool interface
   declareInterface<IPhotonEmissionPoint>(this);
@@ -41,7 +40,52 @@ StatusCode TruePhotonEmissionPoint::initialize()
   // Acquire instances of tools
   acquireTool( "RichRecMCTruthTool", m_mcRecTool );
 
+  warning() << "Cheating photon emission point using MC" << endmsg;
+
   return sc;
+}
+
+void
+TruePhotonEmissionPoint::bestAvMCSegmentPoint( const LHCb::RichRecSegment * segment,
+                                               Gaudi::XYZPoint & emissPnt ) const
+{
+  // Get the MC segment for this segment
+  const auto * mcSegment = m_mcRecTool->mcRichSegment(segment);
+  if ( mcSegment )
+  {
+    // Create average point from all true photons
+    emissPnt = Gaudi::XYZPoint(0,0,0);
+    for ( const auto & mcPhot : mcSegment->mcRichOpticalPhotons() )
+    {
+      emissPnt += Gaudi::XYZVector(mcPhot->emissionPoint());
+    }
+    emissPnt /= mcSegment->mcRichOpticalPhotons().size();
+  }
+  else
+  {
+    // just use the reco value
+    emissPnt = segment->trackSegment().bestPoint();
+  }
+}
+
+void
+TruePhotonEmissionPoint::bestAvMCSegmentPoint( const LHCb::RichRecSegment * segment,
+                                               const double fracDist,
+                                               Gaudi::XYZPoint & emissPnt ) const
+{
+  // get the MC RichSegment for this segment
+  const auto * mcSegment = m_mcRecTool->mcRichSegment(segment);
+  if ( mcSegment )
+  {
+    emissPnt = ( mcSegment->entryPoint() + 
+                 ( fracDist*( mcSegment->exitPoint() - mcSegment->entryPoint() ) ) );
+  }
+  else
+  {
+    // just use the reco value
+    emissPnt = segment->trackSegment().bestPoint(fracDist);
+  }
+
 }
 
 bool TruePhotonEmissionPoint::emissionPoint( const LHCb::RichRecSegment * segment,
@@ -50,14 +94,22 @@ bool TruePhotonEmissionPoint::emissionPoint( const LHCb::RichRecSegment * segmen
 {
   if ( segment )
   {
-    const LHCb::MCRichOpticalPhoton * mcPhoton = m_mcRecTool->trueOpticalPhoton(segment,pixel);
-    if ( mcPhoton )
+    if ( pixel )
     {
-      emissPnt = mcPhoton->emissionPoint();
+      // find the photon for this segment pixel pair
+      const auto * mcPhoton = m_mcRecTool->trueOpticalPhoton(segment,pixel);
+      if ( mcPhoton )
+      {
+        emissPnt = mcPhoton->emissionPoint();
+      }
+      else
+      {
+        bestAvMCSegmentPoint(segment,emissPnt);
+      }
     }
     else
     {
-      emissPnt = segment->trackSegment().bestPoint();
+      bestAvMCSegmentPoint(segment,emissPnt);
     }
     return true;
   }
@@ -71,14 +123,21 @@ bool TruePhotonEmissionPoint::emissionPoint( const LHCb::RichRecSegment * segmen
 {
   if ( segment )
   {
-    const LHCb::MCRichOpticalPhoton * mcPhoton = m_mcRecTool->trueOpticalPhoton(segment,pixel);
-    if ( mcPhoton )
+    if ( pixel )
     {
-      emissPnt = mcPhoton->emissionPoint();
+      const auto * mcPhoton = m_mcRecTool->trueOpticalPhoton(segment,pixel);
+      if ( mcPhoton )
+      {
+        emissPnt = mcPhoton->emissionPoint();
+      }
+      else
+      {
+        bestAvMCSegmentPoint(segment,fracDist,emissPnt);
+      }
     }
     else
     {
-      emissPnt = segment->trackSegment().bestPoint(fracDist);
+      bestAvMCSegmentPoint(segment,fracDist,emissPnt);
     }
     return true;
   }
