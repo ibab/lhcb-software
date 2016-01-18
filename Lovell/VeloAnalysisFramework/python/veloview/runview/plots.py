@@ -112,23 +112,18 @@ def get_trending_plot(name, runRange, binsY = 10, minY = 0., maxY = 10., formatt
     """
     f = ROOT.TFile(Config().grf_file_path, 'READ')
     t = Tree(Config().grf_tree_name)
-    h = t.Plot( 
-            ( # functions projecting out coordinates to plot
-                lambda t: t.runnr,
-                lambda t: getattr(t, name).value()
+    data = t.Data( 
+                ( # functions projecting out coordinates to plot
+                    lambda t: t.runnr,
+                    lambda t: getattr(t, name).value(),
                 ),
-            ( # cut(s) to apply
-                lambda t: t.runnr in runRange,
-                ),
-            # no weights, do not draw into existing histogram
-            None, None,
-            # histogram constructor arguments
-            (name, 'run number versus {0};run number;{0}'.format(name),
-                len(runRange), min(runRange) - .5, max(runRange) + .5, binsY, minY, maxY)
+                ( # cut(s) to apply
+                    lambda t: t.runnr in runRange,
+                )
             )
-    formatted = formatter(h)
 
-    del h
+    formatted = formatter(dict(name=name, title='run number versus {0}'.format(name), xLabel="run number", yLabel=name, data=data))
+
     del t
     f.Close()
     del f
@@ -138,23 +133,18 @@ def get_trending_plot(name, runRange, binsY = 10, minY = 0., maxY = 10., formatt
 def get_2d_trending_plot(nameX, nameY, runRange, binsX = 10, minX = 0., maxX = 10., binsY = 10., minY = 0., maxY = 10., formatter = dictionary_formatter):
     f = ROOT.TFile(Config().grf_file_path, 'READ')
     t = Tree(Config().grf_tree_name)
-    h = t.Plot( 
-            ( # functions projecting out coordinates to plot
-                lambda t: getattr(t, nameX).value(),
-                lambda t: getattr(t, nameY).value()
+    data = t.Data( 
+                ( # functions projecting out coordinates to plot
+                    lambda t: getattr(t, nameX).value(),
+                    lambda t: getattr(t, nameY).value(),
                 ),
-            ( # cut(s) to apply
-                lambda t: t.runnr in runRange,
-                ),
-            # no weights, do not draw into existing histogram
-            None, None,
-            # histogram constructor arguments
-            (name, '{0} versus {1};{0};{1}'.format(nameX, nameY),
-                binsX, minX, maxX, binsY, minY, maxY)
+                ( # cut(s) to apply
+                    lambda t: t.runnr in runRange,
+                )
             )
-    formatted = formatter(h)
 
-    del h
+    formatted = formatter(dict(name=name, title='{0} versus {1}'.format(nameX, nameY), xLabel=nameX, yLabel=nameY, data=data))
+
     del t
     f.Close()
     del f
