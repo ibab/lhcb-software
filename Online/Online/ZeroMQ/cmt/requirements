@@ -3,7 +3,7 @@
 # Maintainer : Roel Aaij
 #============================================================================
 package           ZeroMQ
-version           v4r1p4
+version           v4r1p5
 
 #============================================================================
 # Structure, i.e. directories to process.
