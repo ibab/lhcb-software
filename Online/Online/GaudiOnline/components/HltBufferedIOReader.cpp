@@ -82,6 +82,8 @@ namespace LHCb
     std::vector<std::string> m_mbmNames;
     /// Property: Maximum number of seconds to wait for consumers (default: 20 seconds)
     int                      m_maxConsWait;
+    /// Property: Maximum number of seconds to wait for buffers being empty (default: 1000 seconds)
+    int                      m_maxPauseWait;
     /// Property: Time for initial sleep before starting to process files (default: 10 sec)
     int                      m_initialSleep;
     /// Property: Time for sleep before finishing the PAUSE transition (default: 5 sec)
@@ -131,7 +133,7 @@ namespace LHCb
     void safeRestOfFile(int file_handle);
 
     /// Wait until event buffers are empty before finishing....
-    void waitForPendingEvents(int seconds=100);
+    void waitForPendingEvents(int seconds);
 
     /// IRunable implementation : Run the class implementation
     virtual StatusCode i_run();
@@ -255,6 +257,7 @@ HltBufferedIOReader::HltBufferedIOReader(const string& nam, ISvcLocator* svcLoc)
   declareProperty("BrokenHosts",    m_brokenHostsFile = "");
   declareProperty("DeleteFiles",    m_deleteFiles     = true);
   declareProperty("ConsumerWait",   m_maxConsWait     = 20);
+  declareProperty("MaxPauseWait",   m_maxPauseWait    = 1000);
   declareProperty("AllowedRuns",    m_allowedRuns);
   declareProperty("InitialSleep",   m_initialSleep    = 10);
   declareProperty("PauseSleep",     m_pauseSleep      = 5);
@@ -462,7 +465,7 @@ void HltBufferedIOReader::handle(const Incident& inc)
     m_receiveEvts = false;
     if (m_mepMgr)    {
       info("Waiting until event pipeline is empty.....");
-      waitForPendingEvents();
+      waitForPendingEvents(m_maxPauseWait);
       m_mepMgr->cancel();
     }
     ::lib_rtl_unlock(m_lock);
@@ -632,7 +635,7 @@ StatusCode HltBufferedIOReader::i_run()  {
         if ( m_runSvcID ) ::dis_update_service(m_runSvcID);
       }
       /// Before actually declaring PAUSED, we wait until no events are pending anymore.
-      waitForPendingEvents();
+      waitForPendingEvents(m_maxPauseWait);
       /// Go to state PAUSED, all the work is done
       if ( !m_paused )  {
         // Sleep a bit before goung to pause
@@ -789,7 +792,7 @@ StatusCode HltBufferedIOReader::i_run()  {
               safeRestOfFile(file_handle);
               file_handle = 0;
               /// Before actually declaring ERROR, we wait until no events are pending anymore.
-              waitForPendingEvents();
+              waitForPendingEvents(m_maxConsWait);
               /// Go to state PAUSED, all the work is done
               incidentSvc()->fireIncident(Incident(name(),"DAQ_ERROR"));
               return StatusCode::FAILURE;
@@ -872,7 +875,7 @@ StatusCode HltBufferedIOReader::i_run()  {
     m_evtCountFile = 0;
   }
   /// Before actually declaring PAUSED, we wait until no events are pending anymore.
-  waitForPendingEvents();
+  waitForPendingEvents(m_maxPauseWait);
   return StatusCode::SUCCESS;
 }
 
