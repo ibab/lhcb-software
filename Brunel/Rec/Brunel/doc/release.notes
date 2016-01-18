@@ -13,6 +13,7 @@ Purpose: LHCb reconstruction program
     double precision (RichRecPhotonTools)
   . Added flag to TrackStateProvider to turn off on-demand cache
     (TrackExtrapolators)
+  . Updates to photon reconstruction (RichRecPhotonTools)
 
 - Changes to tests
   . References now taken from x86_64-slc6-gcc49-opt tests
