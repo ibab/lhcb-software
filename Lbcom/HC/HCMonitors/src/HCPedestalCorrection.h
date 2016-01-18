@@ -2,7 +2,10 @@
 #define HCPEDESTALCORRECTION_H 1
 
 #include "TF2.h"
+#include "TF1.h"
 #include "AIDA/IHistogram2D.h"
+#include "AIDA/IHistogram1D.h"
+
 
 // Local
 #include "HCMonitorBase.h"
@@ -26,7 +29,10 @@ class HCPedestalCorrection : public HCMonitorBase {
  private:
   /// TES location of HC digits.
   std::string m_digitLocation;
-
   std::vector<std::vector<std::vector<AIDA::IHistogram2D*> > > m_hCorrelation;
+  AIDA::IHistogram1D* m_bxID;
+  
+
+
 };
 #endif

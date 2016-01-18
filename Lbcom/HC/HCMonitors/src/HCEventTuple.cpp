@@ -3,14 +3,14 @@
 #include "Event/HCDigit.h"
 
 // Local
-#include "HCDigitTuple.h"
+#include "HCEventTuple.h"
 
-DECLARE_ALGORITHM_FACTORY(HCDigitTuple)
+DECLARE_ALGORITHM_FACTORY(HCEventTuple)
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-HCDigitTuple::HCDigitTuple(const std::string& name, ISvcLocator* pSvcLocator)
+HCEventTuple::HCEventTuple(const std::string& name, ISvcLocator* pSvcLocator)
     : HCMonitorBase(name, pSvcLocator), m_tag(0) {
 
   declareProperty("DigitLocation", 
@@ -23,15 +23,16 @@ HCDigitTuple::HCDigitTuple(const std::string& name, ISvcLocator* pSvcLocator)
 //=============================================================================
 // Destructor
 //=============================================================================
-HCDigitTuple::~HCDigitTuple() {}
+HCEventTuple::~HCEventTuple() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode HCDigitTuple::initialize() {
+StatusCode HCEventTuple::initialize() {
 
   StatusCode sc = HCMonitorBase::initialize();
   if (sc.isFailure()) return sc;
+
 
   const std::string tmp = name();
   size_t posPrev = tmp.find("Prev");
@@ -59,6 +60,23 @@ StatusCode HCDigitTuple::initialize() {
     m_digitLocation = tae + "/" + m_digitLocation;
   }
   m_corrected = !m_correctedDigitLocation.empty();
+
+
+  IUpdateManagerSvc* mgrSvc=svc<IUpdateManagerSvc>("UpdateManagerSvc", true);  
+  m_condition_path = "Conditions/Online/LHC";
+  try
+  {
+    mgrSvc->registerCondition(this, m_condition_path,
+                              &HCEventTuple::myCallBackFunction,
+                              m_FillNumberCondition); 
+  }
+  catch (GaudiException &e)
+  { 
+    Error("Can not register Condition "+m_condition_path, StatusCode::SUCCESS,50).ignore(); 
+    return StatusCode::SUCCESS;
+  }
+
+  m_saved = 0;
   
   return StatusCode::SUCCESS;
 }
@@ -66,7 +84,7 @@ StatusCode HCDigitTuple::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode HCDigitTuple::execute() {
+StatusCode HCEventTuple::execute() {
 
   const LHCb::ODIN* odin = getIfExists<LHCb::ODIN>(LHCb::ODINLocation::Default);
   if (!odin) {
@@ -81,7 +99,7 @@ StatusCode HCDigitTuple::execute() {
   const ulonglong orbitodin = odin->orbitNumber();
   const unsigned int bunchid = odin->bunchId() + m_tag;
   const ulonglong evTimeGps = odin->gpsTime();
-  const int step = odin->calibrationStep();
+  //const int step = odin->calibrationStep();
   const LHCb::HCDigits* digits = getIfExists<LHCb::HCDigits>(m_digitLocation);
   if (!digits) {
     return Error("No digits in " + m_digitLocation, StatusCode::SUCCESS);
@@ -105,16 +123,36 @@ StatusCode HCDigitTuple::execute() {
     }
   }
 
+
+
   Tuple tuple = nTuple(name(), "Herschel digits");
-  tuple->column("run", runodin);
-  tuple->column("eventID", eventodin);
-  tuple->column("orbitID", orbitodin);
-  tuple->column("bxID", bunchid);
-  tuple->column("odinTime", evTimeGps);
-  tuple->column("slot", m_tag);
-  tuple->column("step", step);
-  tuple->array("adc_B", adcB.begin(), adcB.end());
-  tuple->array("adc_F", adcF.begin(), adcF.end());
+  if( m_saved == 0) 
+  {
+    tuple->column("run", runodin);
+    tuple->column("eventID", eventodin);
+    tuple->column("orbitID", orbitodin);
+    tuple->column("bxID", bunchid);
+    tuple->column("odinTime", evTimeGps);
+    //tuple->column("slot", m_tag);
+    //tuple->column("step", step);
+    //tuple->array("adc_B", adcB.begin(), adcB.end());
+    //tuple->array("adc_F", adcF.begin(), adcF.end());
+    const Gaudi::Time gtime = odin->eventTime();
+    tuple->column( "GpsYear",  gtime.year(false) );
+    tuple->column( "GpsMonth", gtime.month(false) );
+    tuple->column( "GpsDay", gtime.day(false) );
+    tuple->column( "GpsHour", gtime.hour(false) );
+    tuple->column( "GpsMinute", gtime.minute(false) );
+    tuple->column( "GpsSecond", gtime.second(false) + (gtime.nsecond()/1e9) );
+    //Add FillNumber                                                                                                                                                                    
+    m_FillNumber = -1;
+    myCallBackFunction();  
+    ////////////////      
+    tuple->column("fill", m_FillNumber);
+    tuple->write();
+    m_saved = 1;
+  }  
+
 
 
   const std::vector<std::string> stations = {"B0", "B1", "B2", "F1", "F2"};
@@ -147,7 +185,26 @@ StatusCode HCDigitTuple::execute() {
       tuple->column(ch + "_cor", cordigit->adc());
     }
   }
-  tuple->write();
-  
+ 
   return StatusCode::SUCCESS;
 }
+
+
+
+
+//========================================================================                                                                                                               
+// call back functions for condDB                                                                                                                                                        
+//========================================================================                                                                                                               
+StatusCode HCEventTuple::myCallBackFunction()
+{
+  m_FillNumber = m_FillNumberCondition->param<int>("FillNumber");
+  //info()<<"Fill Number = "<<m_FillNumber<<endmsg;
+  return StatusCode::SUCCESS; 
+}
+
+
+
+
+
+
+

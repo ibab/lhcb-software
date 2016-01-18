@@ -21,9 +21,9 @@ DECLARE_ALGORITHM_FACTORY(HCPedestalCorrection)
 //=============================================================================
 HCPedestalCorrection::HCPedestalCorrection(const std::string& name,
                                            ISvcLocator* pSvcLocator)
-    : HCMonitorBase(name, pSvcLocator) {
-  declareProperty("DigitLocation",
-                  m_digitLocation = LHCb::HCDigitLocation::Default);
+  : HCMonitorBase(name, pSvcLocator) {
+  declareProperty("DigitLocation", m_digitLocation = LHCb::HCDigitLocation::Default);
+
 }
 
 //=============================================================================
@@ -52,7 +52,9 @@ StatusCode HCPedestalCorrection::initialize() {
       const std::string qu = std::to_string(j);
       for (unsigned int k = 0; k < 2; ++k) {
         const std::string name = "Correlation/" + st + "/" + qu + "/" + par[k];
-        m_hCorrelation[i][j].push_back(book2D(name, qu, 50., 300., 50, 15., 200., 50));
+        //m_hCorrelation[i][j].push_back(book2D(name, qu, 50., 300., 50, 15., 200., 50));
+        m_hCorrelation[i][j].push_back(book2D(name, qu, 0, 500., 250, 0, 500., 250));
+        //lowX=0, highX=100, binsX=50, lowY=0, highY=100, binsY=50)
         setAxisLabels(m_hCorrelation[i][j][k], "Reference ADC", "ADC");
       }
     }
@@ -69,7 +71,13 @@ StatusCode HCPedestalCorrection::initialize() {
           "(4*[5]*[5]))*(x-[1])*(y-[2])-(sin([3])*sin([3])/"
           "(2*[4]*[4])+cos([3])*cos([3])/(2*[5]*[5]))*(y-[2])*(y-[2]))");
   */
+
+
+  m_bxID = book1D("bxID", "bxID" , 0, 4000., 4000);
+  setAxisLabels(m_bxID, "bxID", "Events");
+
   return StatusCode::SUCCESS;
+
 }
 
 //=============================================================================
@@ -87,6 +95,12 @@ StatusCode HCPedestalCorrection::execute() {
   }
   const unsigned int bxID = odin->bunchId();
   const unsigned int parity = bxID % 2;
+
+
+  ////
+  if (bxID < m_bxMin || bxID > m_bxMax) return StatusCode::SUCCESS;
+  ///
+  
 
   // Grab the digits.
   const LHCb::HCDigits* digits = getIfExists<LHCb::HCDigits>(m_digitLocation);
@@ -115,6 +129,26 @@ StatusCode HCPedestalCorrection::execute() {
       m_hCorrelation[i][j][parity]->fill(refadc, adc);
     }
   }
+
+
+
+  /*
+  //Tuple general Info                                                                                                                                                                  
+  Tuple tuple = nTuple(name(), "General Info");
+  const unsigned int runodin = odin->runNumber();
+  const ulonglong eventodin = odin->eventNumber();
+  const ulonglong orbitodin = odin->orbitNumber();
+  const unsigned int bunchid = odin->bunchId();
+  const ulonglong evTimeGps = odin->gpsTime();
+  tuple->column("run", runodin);
+  tuple->column("eventID", eventodin);
+  tuple->column("orbitID", orbitodin);
+  tuple->column("bxID", bunchid);
+  tuple->column("odinTime", evTimeGps);
+  */
+
+  m_bxID->fill(odin->bunchId());
+
   return StatusCode::SUCCESS;
 }
 
