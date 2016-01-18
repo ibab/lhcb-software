@@ -2,7 +2,7 @@
 # Maintainer : Markus Frank
 #============================================================================
 package           GaudiUPI
-version           v1r20
+version           v1r21
 #============================================================================
 branches          cmt doc src GaudiUPI
 use GaudiKernel   v*

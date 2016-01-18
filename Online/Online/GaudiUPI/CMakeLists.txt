@@ -1,7 +1,7 @@
 ################################################################################
 # Package: GaudiUPI
 ################################################################################
-gaudi_subdir(GaudiUPI v1r20)
+gaudi_subdir(GaudiUPI v1r21)
 
 gaudi_depends_on_subdirs(GaudiKernel
                          Online/UPI
