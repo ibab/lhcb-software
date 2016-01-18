@@ -36,12 +36,13 @@ StatusCode CherenkovAngle::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichRayTracing",          m_rayTrace,    NULL, true );
-  acquireTool( "RichSmartIDTool",         m_smartIDTool, NULL, true );
+  acquireTool( "RichRayTracing",          m_rayTrace,    nullptr, true );
+  acquireTool( "RichSmartIDTool",         m_smartIDTool, nullptr, true );
   acquireTool( "RichExpectedTrackSignal", m_signal       );
   acquireTool( "RichRefractiveIndex",     m_refIndex     );
   acquireTool( "RichParticleProperties",  m_richPartProp );
   acquireTool( "RichTrackEffectiveRefIndex", m_tkIndex   );
+  acquireTool( "RichPhotonEmissionPoint", m_emissPoint );
 
   m_pidTypes = m_richPartProp->particleTypes();
   _ri_debug << "Particle types considered = " << m_pidTypes << endmsg;
@@ -191,11 +192,13 @@ double CherenkovAngle::avCKRingRadiusLocal( LHCb::RichRecSegment * segment,
   double ckPhi = 0.0;
   double rSum  = 0.0;
   unsigned int nUsed = 0;
-  for ( unsigned int iPhot = 0 ; iPhot < nSamples; ++iPhot, ckPhi+=incPhi )
+  for ( unsigned int iPhot = 0 ; iPhot < nSamples; ++iPhot, ckPhi += incPhi )
   {
 
     // Photon emission point is half-way between segment start and end points
-    const Gaudi::XYZPoint & emissionPt = segment->trackSegment().bestPoint();
+    //const Gaudi::XYZPoint & emissionPt = segment->trackSegment().bestPoint();
+    Gaudi::XYZPoint emissionPt;
+    m_emissPoint->emissionPoint( segment, emissionPt );
 
     // Photon direction around loop
     const Gaudi::XYZVector photDir = segment->trackSegment().vectorAtThetaPhi( ckTheta, ckPhi );

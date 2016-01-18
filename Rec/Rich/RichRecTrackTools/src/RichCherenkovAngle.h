@@ -35,6 +35,7 @@
 #include "RichKernel/IRichRefractiveIndex.h"
 #include "RichKernel/IRichParticleProperties.h"
 #include "RichRecBase/IRichTrackEffectiveRefractiveIndex.h"
+#include "RichRecBase/IRichPhotonEmissionPoint.h"
 
 // GSL
 #include "gsl/gsl_math.h"
@@ -129,6 +130,9 @@ namespace Rich
 
       /// Track effective refractive index tool
       const ITrackEffectiveRefractiveIndex * m_tkIndex = nullptr;
+
+      /// Estimated emission point tool
+      const IPhotonEmissionPoint * m_emissPoint = nullptr;
 
       /// Particle ID types to consider in the photon creation checks
       Rich::Particles m_pidTypes;
