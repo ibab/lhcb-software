@@ -1,7 +1,7 @@
 ################################################################################
 # Package: GaudiSerialize
 ################################################################################
-gaudi_subdir(GaudiSerialize v0r15)
+gaudi_subdir(GaudiSerialize v0r16)
 
 gaudi_depends_on_subdirs(DAQ/MDF
                          Event/DAQEvent
