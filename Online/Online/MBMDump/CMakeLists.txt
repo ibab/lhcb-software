@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MBMDump
 ################################################################################
-gaudi_subdir(MBMDump v1r17)
+gaudi_subdir(MBMDump v1r18)
 
 gaudi_depends_on_subdirs(DAQ/MDF
                          Online/OnlineKernel
