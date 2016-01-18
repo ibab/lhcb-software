@@ -4,13 +4,13 @@
 
 
 // Initializing constructor
-MBM::Producer::Producer(const std::string& buffer_name, const std::string& client_name, int partition_id)
-: Client(buffer_name, client_name, partition_id)  {
+MBM::Producer::Producer(const std::string& buffer_name, const std::string& client_name, int partition_id, int com_type)
+  : Client(buffer_name, client_name, partition_id, com_type)  {
 }
 
 // Initializing constructor
 MBM::Producer::Producer(BMID bmid, const std::string& client_name, int partition_id)
-: Client(bmid, client_name, partition_id)  {
+  : Client(bmid, client_name, partition_id)  {
 }
 
 // Standard destructor

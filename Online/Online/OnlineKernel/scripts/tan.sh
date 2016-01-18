@@ -1,4 +1,15 @@
 #!/bin/csh
+#==========================================================================
+#  LHCb Online software suite
+#--------------------------------------------------------------------------
+# Copyright (C) Organisation europeenne pour la Recherche nucleaire (CERN)
+# All rights reserved.
+#
+# For the licensing terms see OnlineSys/LICENSE.
+#
+# Author     : M.Frank
+#
+#==========================================================================
 killall test.exe
 rm /dev/shm/sem.TAN_*
 rm /dev/shm/TAN_*

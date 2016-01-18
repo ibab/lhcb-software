@@ -4,15 +4,17 @@
 #include <stdexcept>
 
 // Initializing constructor
-MBM::Client::Client(const std::string& buffer_name, const std::string& client_name, int partition_id)
-  : m_bmid(MBM_INV_DESC), m_buffName(buffer_name), m_name(client_name), m_partID(partition_id), m_facility(0), m_blocking(true)
+MBM::Client::Client(const std::string& buffer_name, const std::string& client_name, int partition_id, int com_type)
+  : m_bmid(MBM_INV_DESC), m_buffName(buffer_name), m_name(client_name),
+    m_partID(partition_id), m_facility(0), m_blocking(true)
 {
-  include();
+  include(com_type);
 }
 
 // Initializing constructor
 MBM::Client::Client(BMID bmid, const std::string& client_name, int partition_id)
-  : m_bmid(bmid), m_name(client_name), m_partID(partition_id), m_facility(0), m_blocking(true)
+  : m_bmid(bmid), m_name(client_name),
+    m_partID(partition_id), m_facility(0), m_blocking(true)
 {
 }
 
@@ -22,9 +24,9 @@ MBM::Client::~Client()  {
 }
 
 // Include MBM client into buffer
-int MBM::Client::include()  {
+int MBM::Client::include(int com_type)  {
   if ( m_bmid == MBM_INV_DESC )  {
-    m_bmid = ::mbm_include(m_buffName.c_str(),m_name.c_str(),m_partID);
+    m_bmid = ::mbm_include(m_buffName.c_str(),m_name.c_str(),m_partID,com_type);
     if ( m_bmid == (BMID)-1 ) {
       throw std::runtime_error("Failed to include into MBM buffer:"+m_buffName);
     }

@@ -1,11 +1,15 @@
-// $Header: $
-// ====================================================================
+// $Id:$
+//==========================================================================
+//  LHCb Online software suite
+//--------------------------------------------------------------------------
+// Copyright (C) Organisation europeenne pour la Recherche nucleaire (CERN)
+// All rights reserved.
 //
-// --------------------------------------------------------------------
+// For the licensing terms see OnlineSys/LICENSE.
 //
-// Author    : Markus Frank
+// Author     : M.Frank
 //
-// ====================================================================
+//==========================================================================
 #ifndef ONLINE_ONLINEKERNEL_MBM_CLIENT_H
 #define ONLINE_ONLINEKERNEL_MBM_CLIENT_H
 
@@ -88,7 +92,7 @@ namespace MBM {
 
   public:
     /// Initializing constructor
-    Client(const std::string& buffer_name, const std::string& client_name, int partition_id);
+    Client(const std::string& buffer_name, const std::string& client_name, int partition_id, int com_type);
 
     /// Initializing constructor
     Client(BMID bmid, const std::string& client_name, int partition_id);
@@ -123,7 +127,7 @@ namespace MBM {
     }
 
     /// Include MBM client into buffer
-    virtual int include();
+    virtual int include(int communication_type);
 
     /// Exclude MBM client into buffer
     virtual int exclude();

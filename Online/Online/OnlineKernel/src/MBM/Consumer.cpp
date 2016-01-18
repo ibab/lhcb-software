@@ -5,14 +5,14 @@
 #include <cstring>
 
 // Initializing constructor
-MBM::Consumer::Consumer(const std::string& buffer_name, const std::string& client_name, int partition_id)
-: Client(buffer_name, client_name, partition_id)
+MBM::Consumer::Consumer(const std::string& buffer_name, const std::string& client_name, int partition_id, int com_type)
+  : Client(buffer_name, client_name, partition_id, com_type)
 {
 }
 
 // Initializing constructor
 MBM::Consumer::Consumer(BMID bmid, const std::string& client_name, int partition_id)
-: Client(bmid, client_name, partition_id)
+  : Client(bmid, client_name, partition_id)
 {
 }
 

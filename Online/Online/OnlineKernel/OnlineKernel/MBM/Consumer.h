@@ -70,7 +70,10 @@ namespace MBM {
 
   public:
     /// Initializing constructor
-    Consumer(const std::string& buffer_name, const std::string& client_name, int partition_id);
+    Consumer(const std::string& buffer_name, 
+	     const std::string& client_name, 
+	     int partition_id, 
+	     int communication_type=BM_COM_FIFO);
 
     /// Initializing constructor
     Consumer(BMID bmid, const std::string& client_name, int partition_id);

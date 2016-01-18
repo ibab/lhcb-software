@@ -11,22 +11,29 @@ static void help()  {
   ::lib_rtl_output(LIB_RTL_ALWAYS,"    -b=<name>      Buffer identifier \n");
   ::lib_rtl_output(LIB_RTL_ALWAYS,"    -l=<name>      Sweep lower limit \n");
   ::lib_rtl_output(LIB_RTL_ALWAYS,"    -u=<name>      Sweep upper limit \n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"    -f(fifo)       Use fifos connections for communication");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"    -t(cp)         Use boost::asio tcp connections for communication");
 }
 
 extern "C" int mbm_prod(int argc,char **argv) {
   RTL::CLI cli(argc, argv, help);
   std::string name = "producer", buffer="0";
   int trnumber = -1, len = 1792, nevt = 1000000, lower=4, upper=1024*1024;
+  int comm_type = BM_COM_FIFO;
   cli.getopt("name",1,name);
   cli.getopt("m",1,nevt);
   cli.getopt("size",1,len);
   cli.getopt("buffer",1,buffer);
   cli.getopt("lower",1,lower);
   cli.getopt("upper",1,upper);
+  if ( cli.getopt("fifo",1) )
+    comm_type = BM_COM_FIFO;
+  else if ( cli.getopt("tcp",1) )
+    comm_type = BM_COM_ASIO;
   if ( lower > 4 ) len = lower;
   if ( lower < 4 ) len = lower;
   {
-    MBM::Producer p(buffer,name,0x103);
+    MBM::Producer p(buffer,name,0x103,comm_type);
     ::lib_rtl_output(LIB_RTL_ALWAYS,"Producer \"%s\" (pid:%d) included in buffer:\"%s\" len=%d [%d,%d] nevt=%d\n",
 		     name.c_str(), MBM::Producer::pid(), buffer.c_str(), len, lower, upper, nevt);
     while(nevt--)  {

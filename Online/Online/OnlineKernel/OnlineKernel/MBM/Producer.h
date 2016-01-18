@@ -66,7 +66,10 @@ namespace MBM {
 
   public:
     /// Initializing constructor
-    Producer(const std::string& buffer_name, const std::string& client_name, int partition_id);
+    Producer(const std::string& buffer_name, 
+	     const std::string& client_name, 
+	     int partition_id, 
+	     int communication_type=BM_COM_FIFO);
 
     /// Initializing constructor
     Producer(BMID bmid, const std::string& client_name, int partition_id);
