@@ -1,11 +1,15 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.17 2010-01-22 20:36:44 frankb Exp $
-//  ====================================================================
-//  RawBufferCreator.cpp
-//  --------------------------------------------------------------------
+// $Id:$
+//==========================================================================
+//  LHCb Online software suite
+//--------------------------------------------------------------------------
+// Copyright (C) Organisation europeenne pour la Recherche nucleaire (CERN)
+// All rights reserved.
 //
-//  Author    : Markus Frank
+// For the licensing terms see OnlineSys/LICENSE.
 //
-//  ====================================================================
+// Author     : M.Frank
+//
+//==========================================================================
 #include "MDF/RawEventHelpers.h"
 #include "MDF/MEPEvent.h"
 #include "MBM/Producer.h"
@@ -35,17 +39,22 @@ namespace {
     ::printf("    -r(efcount)=<number>   Initial MEP reference count\n");
     ::printf("    -m(apunused)           Map unused MEP buffers\n");
     ::printf("    -d(ebug)               Invoke debugger\n");
+    ::printf("    -f(fifo)               Use fifos connections for communication");
+    ::printf("    -t(cp)                 Use boost::asio tcp connections for communication");
   }
 
   struct EvtProducer  : public MBM::Producer  {
     string m_fname;
     int m_spaceSize, m_refCount, m_evtCount, m_etyp;
     long mepStart;
-    EvtProducer(const string& buff, const string& nam, int partitionID, const string& fn, int refcnt, size_t siz, int evtCount, bool /* unused */, int etyp) 
-      : MBM::Producer(buff, nam, partitionID), m_fname(fn), m_spaceSize(siz), m_refCount(refcnt), m_evtCount(evtCount), m_etyp(etyp)
+    EvtProducer(const string& buff, const string& nam, int partitionID, 
+		const string& fn, int refcnt, size_t siz, int evtCount, 
+		bool /* unused */, int etyp, int comm_typ) 
+      : MBM::Producer(buff, nam, partitionID, comm_typ),
+	m_fname(fn), m_spaceSize(siz), m_refCount(refcnt),
+	m_evtCount(evtCount), m_etyp(etyp)
     {
       m_spaceSize *= 1024;  // Space size is in kBytes
-      include();
       mepStart = (long)bufferAddress();
       ::printf(" Buffer space: %d bytes\n",m_spaceSize);
       ::printf(" MEP    buffer start: %08lX\n",mepStart);
@@ -141,6 +150,7 @@ extern "C" int mep2mbm_producer(int argc,char **argv) {
   int refCount = 2;
   int evtCount = -1;
   int etyp = EVENT_TYPE_MEP;
+  int comm_type = BM_COM_FIFO;
   string name = "producer", buff="Events";
   string fname = "mepData_0.dat";
   bool async = cli.getopt("asynchronous",1) != 0;
@@ -154,10 +164,14 @@ extern "C" int mep2mbm_producer(int argc,char **argv) {
   cli.getopt("partitionid",1,partID);
   cli.getopt("refcount",1,refCount);
   cli.getopt("count",1,evtCount);
+  if ( cli.getopt("fifo",1) )
+    comm_type = BM_COM_FIFO;
+  else if ( cli.getopt("tcp",1) )
+    comm_type = BM_COM_ASIO;
   if ( debug ) ::lib_rtl_start_debugger();
   ::printf("%synchronous MEP Producer \"%s\" Partition:%d (pid:%d) included in buffers. Will produce %d MEPs from %s Type:%d\n",
 	   async ? "As" : "S", name.c_str(), partID, EvtProducer::pid(),evtCount,fname.c_str(),etyp);
-  EvtProducer p(buff, name, partID, fname, refCount, space, evtCount, unused, etyp);
+  EvtProducer p(buff, name, partID, fname, refCount, space, evtCount, unused, etyp, comm_type);
   if ( async ) p.setNonBlocking(WT_FACILITY_DAQ_SPACE, true);
   return p.run();
 }

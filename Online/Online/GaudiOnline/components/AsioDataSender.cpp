@@ -11,7 +11,7 @@
 //
 //==========================================================================
 
-#define  TRANSFER_NS  DataTransfer
+#define TRANSFER_NS        BoostAsio
 #include "NET/Transfer.h"
-#define  TransferDataSender SocketDataSender
+#define TransferDataSender AsioDataSender
 #include "GaudiOnline/TransferDataSender.h"

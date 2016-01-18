@@ -44,7 +44,7 @@ StatusCode EventRequestServerRunable::start()   {
 StatusCode EventRequestServerRunable::sendEvent()  {
   const MBM::EventDesc& e = m_consumer->event();
   for(Recipients::iterator i=m_recipients.begin(); i!=m_recipients.end(); ++i) {
-    int sc = net_send(m_netPlug,e.data,e.len,(*i).second.second,WT_FACILITY_CBMEVENT);
+    int sc = net_send(m_netPlug,e.data,e.len,(*i).first,WT_FACILITY_CBMEVENT);
     if ( sc==DataTransfer::NET_SUCCESS )   {
       m_recipients.erase(i);
       m_consumer->freeEvent();

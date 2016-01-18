@@ -90,6 +90,8 @@ namespace LHCb  {
     int                  m_consState;
     /// Property: Print delivery after each m_printNum events sent
     int                  m_printNum;
+    /// Property: Number of thread instances used by the network library
+    int                  m_nThreads;
 
   public:
     /// Standard Constructor
@@ -113,7 +115,7 @@ namespace LHCb  {
     /// Remove a given target process from the list of pending clients
     virtual void removeTarget(const std::string& src);
     /// Callback to handle a new request of a client to receive a given event
-    virtual void handleEventRequest(DataTransfer::netentry_t* e, const DataTransfer::netheader_t& hdr);
+    virtual void handleEventRequest(const DataTransfer::netheader_t& hdr, void* ptr);
     /// Rescan client tables, reformulate possibly pending requests and renew the request
     virtual void restartRequests();
     /// Send event data to a list of waiting clients

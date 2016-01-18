@@ -10,6 +10,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/xtoa.h"
 #include "MBM/bmstruct.h"
+#include "MBM/bmserver.h"
 #include "MBM/bmdef.h"
 #include "WT/wtdef.h"
 #include "RTL/rtl.h"

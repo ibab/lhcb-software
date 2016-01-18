@@ -35,6 +35,7 @@ MEPManager::MEPManager(const string& nam, ISvcLocator* loc)
   declareProperty("HandleSignals",        m_handleSignals=false);
   declareProperty("ConnectWhen",          m_connectWhen="initialize");
   declareProperty("ConsumerRequirements", m_consRequirements);
+  declareProperty("Communication",        m_communication="FIFO");
 }
 
 /// Default destructor
@@ -152,7 +153,12 @@ std::string MEPManager::bufferName(const std::string& nam)  const   {
 StatusCode MEPManager::connectBuffer(const string& nam)  {
   string bm_name = bufferName(nam);
   if( m_buffMap.find(bm_name) == m_buffMap.end() ) {
-    BMID bmid = ::mbm_include(bm_name.c_str(),m_procName.c_str(),m_partitionID);
+    BMID bmid = MBM_INV_DESC;
+    if ( m_communication == "FIFO" )
+      bmid = ::mbm_include(bm_name.c_str(),m_procName.c_str(),m_partitionID,BM_COM_FIFO);
+    else if ( m_communication == "ASIO" )
+      bmid = ::mbm_include(bm_name.c_str(),m_procName.c_str(),m_partitionID,BM_COM_ASIO);
+
     if ( bmid == MBM_INV_DESC )  {
       return error("Failed to connect to buffer "+bm_name+" as "+m_procName);
     }

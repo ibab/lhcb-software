@@ -25,15 +25,15 @@ using namespace std;
 using namespace LHCb;
 using namespace DataTransfer;
 
-static void handle_death(netentry_t* /* e */, const netheader_t& hdr, void* param)    {  
+static void handle_death(const netheader_t& hdr, void* param, netentry_t*)    {  
   EventServerRunable* p = (EventServerRunable*)param;
   p->removeTarget(hdr.name);
 }
 
-static void handle_req(netentry_t* e, const netheader_t& hdr, void* param)  {
+static void handle_req(const netheader_t& hdr, void* param, netentry_t* entry)  {
   EventServerRunable* p = (EventServerRunable*)param;
   try  {
-    p->handleEventRequest(e,hdr);
+    p->handleEventRequest(hdr, entry);
   }
   catch(...)  {
   }
@@ -50,6 +50,7 @@ EventServerRunable::EventServerRunable(const string& nam, ISvcLocator* svcLoc)
   declareProperty("Input",     m_input="Events");
   declareProperty("MEPManager",m_mepMgrName="LHCb::MEPManager/MEPManager");
   declareProperty("PrintNum",  m_printNum=1000);
+  declareProperty("NumThreads",m_nThreads=1);
   ::lib_rtl_create_event(0,&m_suspend);
   ::lib_rtl_create_lock(0,&m_lock);
   ::lib_rtl_create_lock(0,&m_rcpLock);
@@ -81,7 +82,7 @@ StatusCode EventServerRunable::initialize()   {
     return error("Failed to initialize service base class.");
   }
   string self = RTL::dataInterfaceName()+"::"+RTL::processName();
-  m_netPlug = net_init(self);
+  m_netPlug = net_init(self, m_nThreads);
   net_subscribe(netPlug(),this,WT_FACILITY_CBMREQEVENT,handle_req,handle_death);
   incidentSvc()->addListener(this,"DAQ_CANCEL");
   declareInfo("EvtCount",m_evtCount=0,"Number of events processed");
@@ -207,10 +208,11 @@ void EventServerRunable::removeTarget(const string& src)   {
 }
 
 /// Handle request from new network data consumer
-void EventServerRunable::handleEventRequest(netentry_t* e, const netheader_t& hdr)   {
+void EventServerRunable::handleEventRequest(const netheader_t& hdr, void* ptr)   {
   bool empty;
   char buff[2048];
   string src = hdr.name;
+  netentry_t* e = (netentry_t*)ptr;
   MBM::Requirement* r = (MBM::Requirement*)buff;
   int sc = net_receive(netPlug(),e,buff);
   if ( sc == NET_SUCCESS )  {
@@ -265,7 +267,7 @@ StatusCode EventServerRunable::sendEvent()  {
     if ( e.type == r.evtype )  {
       if ( mask_or_ro2(e.mask, r.trmask,sizeof(e.mask)/sizeof(e.mask[0])) )  {
         if ( !mask_and_ro2(e.mask,r.vetomask,sizeof(e.mask)/sizeof(e.mask[0])) )  {
-          int sc = net_send(m_netPlug,e.data,e.len,(*i).second.second,WT_FACILITY_CBMEVENT);
+          int sc = net_send(m_netPlug,e.data,e.len,(*i).first,WT_FACILITY_CBMEVENT);
           if ( sc==NET_SUCCESS )   {
             m_recipients.erase(i);
             i = m_recipients.begin();

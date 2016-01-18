@@ -1,11 +1,15 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MEPManager.h,v 1.10 2010-09-21 14:28:25 frankb Exp $
-//	====================================================================
-//  MEPManager.cpp
-//	--------------------------------------------------------------------
+// $Id:$
+//==========================================================================
+//  LHCb Online software suite
+//--------------------------------------------------------------------------
+// Copyright (C) Organisation europeenne pour la Recherche nucleaire (CERN)
+// All rights reserved.
 //
-//	Author    : Markus Frank
+// For the licensing terms see OnlineSys/LICENSE.
 //
-//	====================================================================
+// Author     : M.Frank
+//
+//==========================================================================
 #ifndef GAUDIONLINE_MEPManager_H
 #define GAUDIONLINE_MEPManager_H
 
@@ -25,7 +29,7 @@ namespace MBM {
 static const InterfaceID IID_IMEPManager("IMEPManager", 0, 0); 
 
 /*
- *    LHCb namespace
+ *    LHCb namespace declaration
  */
 namespace LHCb    {
 
@@ -59,6 +63,8 @@ namespace LHCb    {
     std::string                m_partitionName;
     /// Property: Allows to choose if the buffers should be connected on "initialize" or "start"
     std::string                m_connectWhen;
+    /// Property: Buffer manager communication type (FIFO or ASIO)
+    std::string                m_communication;
     /// Property: Flag to indicate if unused MEP buffers should be mapped
     bool                       m_mapUnused;
     /// Property: Flag to indicate if buffer names should contain partition ID

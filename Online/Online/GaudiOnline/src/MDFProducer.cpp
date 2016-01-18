@@ -69,11 +69,11 @@ namespace {
   struct MDFProducer  : public MBM::Producer  {
     std::string m_fname;
     int m_spaceSize;
-    MDFProducer(const std::string& fnam, const std::string& buffer, const std::string& nam, int partitionID, size_t siz) 
-    : MBM::Producer(buffer, nam, partitionID), m_fname(fnam), m_spaceSize(siz)
+    MDFProducer(const std::string& fnam, const std::string& buffer, 
+		const std::string& nam, int partitionID, size_t siz, int comm_type) 
+      : MBM::Producer(buffer, nam, partitionID, comm_type), m_fname(fnam), 
+	m_spaceSize(1024*siz) // Space size in kBytes
     {
-      m_spaceSize *= 1024;  // Space size is in kBytes
-      include();
     }
     ~MDFProducer()  {
     }
@@ -115,6 +115,7 @@ extern "C" int mdf_producer(int argc,char **argv) {
   RTL::CLI cli(argc, argv, help);
   int space = 64*1024;             // default 64 kB
   int partID = 0x103;              // default is LHCb partition id
+  int comm_type = BM_COM_FIFO;
   std::string buffer = "raw";
   std::string name   = "producer";
   std::string fname  = "./mdfData_0.dat";
@@ -126,9 +127,13 @@ extern "C" int mdf_producer(int argc,char **argv) {
   cli.getopt("buffer",1,buffer);
   cli.getopt("partitionid",1,partID);
   if ( debug ) ::lib_rtl_start_debugger();
+  if ( cli.getopt("fifo",1) )
+    comm_type = BM_COM_FIFO;
+  else if ( cli.getopt("tcp",1) )
+    comm_type = BM_COM_ASIO;
   ::printf("%synchronous MBM Producer \"%s\" Partition:%d (pid:%d) included in buffers.\n",
      async ? "As" : "S", name.c_str(), partID, MDFProducer::pid());
-  MDFProducer p(fname, buffer, name, partID, space);
+  MDFProducer p(fname, buffer, name, partID, space, comm_type);
   if ( async ) p.setNonBlocking(WT_FACILITY_DAQ_SPACE, true);
   return p.run();
 }

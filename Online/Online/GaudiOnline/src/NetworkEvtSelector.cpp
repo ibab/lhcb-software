@@ -25,16 +25,16 @@ using namespace std;
 using namespace LHCb;
 using namespace DataTransfer;
 
-static void handle_death(netentry_t* /* e */, const netheader_t& h, void* param) {
+static void handle_death(const netheader_t& h, void* param, netentry_t*) {
   NetworkContext* p = (NetworkContext*)param;
   p->taskDead(h.name);
 }
 
-static void handle_event(netentry_t* e, const netheader_t& h, void* param)  {
+static void handle_event(const netheader_t& header, void* param, netentry_t* entry)  {
   NetworkContext* p = (NetworkContext*)param;
-  char* buff = new char[h.size];
-  int sc = net_receive(p->m_netPlug,e,buff);
-  (sc == NET_SUCCESS) ? p->handleData(h.name,h.size,buff) : delete [] buff;
+  char* buff = new char[header.size];
+  int sc = net_receive(p->m_netPlug, entry, buff);
+  (sc == NET_SUCCESS) ? p->handleData(header.name,header.size,buff) : delete [] buff;
 }
 
 NetworkContext::NetworkContext(NetworkEvtSelector* s)
