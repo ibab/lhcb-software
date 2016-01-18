@@ -22,13 +22,6 @@ gaudi_depends_on_subdirs(Hlt/Hlt1Lines
                          Hlt/HltSettings
                          Hlt/HltTracking
                          Hlt/TCKUtils
-                         Phys/LoKiTrigger
-                         ## Packages from other projects
-                         Event/HltEvent
-                         Hlt/HltDAQ
-                         Hlt/HltServices
-                         Kernel/HltInterfaces
-                         Phys/RelatedInfoTools
-                         Phys/DaVinciTypes)
+                         Phys/LoKiTrigger)
 
 gaudi_add_test(QMTest QMTEST)

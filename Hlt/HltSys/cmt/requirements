@@ -24,17 +24,6 @@ use HltTracking         v13r14   Hlt   # Sascha Stahl, Vava Gligorov
 use TCKUtils            v1r18    Hlt   # Gerhard Raven
 use LoKiTrigger         v15r8    Phys  # Vanya Belyaev
 
-# TEMPORARY LHCB PACAKGES
-use  HltEvent            v9r6      Event
-use  HltDAQ              v4r23     Hlt
-use  HltServices         v2r12     Hlt
-use  HltInterfaces       v6r4      Kernel
-
-# TEMPORARY PHYS PACKAGES
-use  RelatedInfoTools    v1r4      Phys
-use  DaVinciTypes        v2r15     Phys
-
-
 # Declare this as a container package
 apply_pattern container_package
 
