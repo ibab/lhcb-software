@@ -187,7 +187,44 @@ if ROOT.gROOT.IsBatch() : logger.info ('Batch processing is activated')
 # =============================================================================
 ## import everything from Ostap
 # =============================================================================
-from   Ostap.OstapBender import * 
+from   Ostap.OstapBender import *
+
+# =============================================================================
+## Ostap startup: history, readlines, etc... 
+# =============================================================================
+import Ostap.Startup
+
+# =============================================================================
+## execute startup files 
+# =============================================================================
+## startup files to be executed:
+_startups = ( '$OSTAPSTART'     ,  
+              '$HOME/.ostap'    ,
+              '$HOME/.ostap.py' ,
+              '~/.ostap'        ,
+              '~/.ostap.py'     ,        
+              './.ostap'        ,
+              './.ostap.py'     )
+
+_executed = set() 
+for _s in _startups : 
+    import os
+    _ss = _s 
+    _ss =  os.path.expandvars ( _ss )
+    _ss =  os.path.expandvars ( _ss )
+    _ss =  os.path.expandvars ( _ss )
+    _ss =  os.path.expanduser ( _ss )
+    _ss =  os.path.expandvars ( _ss )
+    if not os.path.exists     ( _ss ) : continue
+    _ss =  os.path.abspath    ( _ss )
+    if _ss in _executed           : continue
+    ## execute it! 
+    try :
+        execfile      ( _ss , globals() ) 
+        _executed.add ( _ss )
+        logger.info   ( "Startup file '%s' is executed"      % _s )
+    except:
+        logger.error  ( "Error in execution of '%s' startup" % _s )
 
 # =============================================================================
 ## create default canvas
@@ -211,10 +248,10 @@ if arguments.modules :
             _m2 = importlib.import_module(p)
             if not locals().has_key( p ) : 
                 locals()[p] = _m2
-                del _m2                ## avoid pollutuon of local namespace
+                del _m2                ## avoid pollution of local namespace
         else :
             locals()[m] = _m
-            del _m                     ## avoid pollutuon of local namespace 
+            del _m                     ## avoid pollution of local namespace 
         del p,s,r                      ## avodi pollution of local namesapce 
     del importlib                      ## avoid pollution of local namespace
     
