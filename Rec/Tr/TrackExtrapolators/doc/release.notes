@@ -4,6 +4,13 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+!=================== TrackExtrapolators v2r40 2016-01-19 =====================
+
+! 2016-01-19 - Eduardo Rodrigues
+ - Retagging v3r0 as v2r40 as this version if needed for a patch release of
+   DaVinci and CMT does not allow to have a package in a patch that has
+   a major version different from the underlying release.
+
 !==================== TrackExtrapolators v3r0 2016-01-13 =====================
 
 ! 2016-01-11 - Wouter Hulsbergen
