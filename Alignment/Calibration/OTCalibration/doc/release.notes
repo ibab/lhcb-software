@@ -3,6 +3,9 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Algorithm for OT rt and t0 calibration
 
+!2016-01-19 - Lucia Grillo
+- Fixed few warnings
+
 !2016-01-15 - Maurizio Martinelli
 - Fixed compilation errors (pow->std::pow)
 

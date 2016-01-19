@@ -610,9 +610,10 @@ StatusCode OTModuleClbrMon::finalize()
       for(int q = 0; q < 4; q++){
 
 	// used only for Alex's monitorning                                                                                                                                
-	double t0_ = 0.0;
-	double dt0_ = 0.0;
-	double dt0err_ = 0.1;
+	//double t0_ = 0.0;
+	//double dt0_ = 0.0;
+	//double dt0err_ = 0.1;
+	
 
         for(int m = 8; m >= 0; m--){
 
@@ -637,17 +638,18 @@ StatusCode OTModuleClbrMon::finalize()
 	  TH1D* hist_otis3_L;
 	  TH1D* hist_otis3_R;
 
-	  if(OTIS_LR_calibration){
-	    hist_otis0_L = (TH1D*)m_histModuleDriftTimeResidual_otis0_L[s][l][q][m]->Clone("hist_otis0_L");
-	    hist_otis1_L = (TH1D*)m_histModuleDriftTimeResidual_otis1_L[s][l][q][m]->Clone("hist_otis1_L");
-	    hist_otis2_L = (TH1D*)m_histModuleDriftTimeResidual_otis2_L[s][l][q][m]->Clone("hist_otis2_L");
-	    hist_otis3_L = (TH1D*)m_histModuleDriftTimeResidual_otis3_L[s][l][q][m]->Clone("hist_otis3_L");
+	  // if(OTIS_LR_calibration){
 
-	    hist_otis0_R = (TH1D*)m_histModuleDriftTimeResidual_otis0_R[s][l][q][m]->Clone("hist_otis0_R");
-	    hist_otis1_R = (TH1D*)m_histModuleDriftTimeResidual_otis1_R[s][l][q][m]->Clone("hist_otis1_R");
-	    hist_otis2_R = (TH1D*)m_histModuleDriftTimeResidual_otis2_R[s][l][q][m]->Clone("hist_otis2_R");
-	    hist_otis3_R = (TH1D*)m_histModuleDriftTimeResidual_otis3_R[s][l][q][m]->Clone("hist_otis3_R");
-	  }
+	  //   hist_otis0_L = (TH1D*)m_histModuleDriftTimeResidual_otis0_L[s][l][q][m]->Clone("hist_otis0_L");
+	  //   hist_otis1_L = (TH1D*)m_histModuleDriftTimeResidual_otis1_L[s][l][q][m]->Clone("hist_otis1_L");
+	  //   hist_otis2_L = (TH1D*)m_histModuleDriftTimeResidual_otis2_L[s][l][q][m]->Clone("hist_otis2_L");
+	  //   hist_otis3_L = (TH1D*)m_histModuleDriftTimeResidual_otis3_L[s][l][q][m]->Clone("hist_otis3_L");
+
+	  //   hist_otis0_R = (TH1D*)m_histModuleDriftTimeResidual_otis0_R[s][l][q][m]->Clone("hist_otis0_R");
+	  //   hist_otis1_R = (TH1D*)m_histModuleDriftTimeResidual_otis1_R[s][l][q][m]->Clone("hist_otis1_R");
+	  //   hist_otis2_R = (TH1D*)m_histModuleDriftTimeResidual_otis2_R[s][l][q][m]->Clone("hist_otis2_R");
+	  //   hist_otis3_R = (TH1D*)m_histModuleDriftTimeResidual_otis3_R[s][l][q][m]->Clone("hist_otis3_R");
+	  // }
 
 	  int modulen = m + 9 * (q + 4 * (l + 4 * s));
 
@@ -713,6 +715,17 @@ StatusCode OTModuleClbrMon::finalize()
 	  StatusCode sc_3_R;
 
 	  if(OTIS_LR_calibration){
+
+	    hist_otis0_L = (TH1D*)m_histModuleDriftTimeResidual_otis0_L[s][l][q][m]->Clone("hist_otis0_L");
+	    hist_otis1_L = (TH1D*)m_histModuleDriftTimeResidual_otis1_L[s][l][q][m]->Clone("hist_otis1_L");
+	    hist_otis2_L = (TH1D*)m_histModuleDriftTimeResidual_otis2_L[s][l][q][m]->Clone("hist_otis2_L");
+	    hist_otis3_L = (TH1D*)m_histModuleDriftTimeResidual_otis3_L[s][l][q][m]->Clone("hist_otis3_L");
+
+	    hist_otis0_R = (TH1D*)m_histModuleDriftTimeResidual_otis0_R[s][l][q][m]->Clone("hist_otis0_R");
+	    hist_otis1_R = (TH1D*)m_histModuleDriftTimeResidual_otis1_R[s][l][q][m]->Clone("hist_otis1_R");
+	    hist_otis2_R = (TH1D*)m_histModuleDriftTimeResidual_otis2_R[s][l][q][m]->Clone("hist_otis2_R");
+	    hist_otis3_R = (TH1D*)m_histModuleDriftTimeResidual_otis3_R[s][l][q][m]->Clone("hist_otis3_R");
+
 	    sc_0_L= fit_single_hist(hist_otis0_L,s,l,q, m, "0L", residual_0L, residual_0L_err, outFile);
 	    sc_1_L= fit_single_hist(hist_otis1_L,s,l,q, m, "1L", residual_1L, residual_1L_err, outFile);
 	    sc_2_L= fit_single_hist(hist_otis2_L,s,l,q, m, "2L", residual_2L, residual_2L_err, outFile);
@@ -1018,7 +1031,7 @@ StatusCode OTModuleClbrMon::read_Globalt0(double read_t0s[3][4][4][9])
 {
    std::string subDet = "OT";
 
-   double Module_t0=0;
+   //double Module_t0=0;
 
    for(int s = 0; s < 3; s++) for(int l = 0; l < 4; l++) for(int q = 0; q < 4; q++)
    {
