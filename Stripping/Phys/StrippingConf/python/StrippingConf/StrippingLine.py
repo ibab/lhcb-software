@@ -398,6 +398,7 @@ class StrippingLine(object):
     def createConfigurable( self, TESPrefix = "Strip", HDRLocation = 'Phys/DecReports' ) :
 
         if self._configurable != None : 
+            log.info("Configurables already created for line %s, skipping" % self.subname() )
             return self._configurable
 
         if self._HDRLocation == None :
@@ -517,7 +518,8 @@ class StrippingLine(object):
         if self.RelatedInfoTools != None :
             self.addRelatedInfo()
             if self.RelatedInfoFilter :
-                if hasattr(self.RelatedInfoFilter, "CloneFilteredParticles") : 
+                if hasattr(type(self.RelatedInfoFilter), "CloneFilteredParticles") : 
+                    log.debug("Setting CloneFilteredParticles = True for RelatedInfoFilter %s " % self.RelatedInfoFilter.name() )
                     self.RelatedInfoFilter.CloneFilteredParticles = True
                 self._members.append( self.RelatedInfoFilter )
                 oldOutput = self.outputLocation()
