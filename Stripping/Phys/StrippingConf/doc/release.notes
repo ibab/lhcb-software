@@ -4,6 +4,11 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2016-01-19 - Anton Poluektov 
+ - Set CloneFilteredParticles flag for RelatedInfoFilter to fix the problem with not storing 
+   particles filtered by it to DST
+ - Avoid duplicated creation of configurables in createConfigurables() method. 
+
 !========================= StrippingConf v4r21 2015-11-24 =========================
 
 ! 2015-11-12 - Anton Poluektov 

@@ -312,6 +312,9 @@ class StrippingLine(object):
 
         self._appended  = False
 
+        # Configurable is not yet created
+        self._configurable = None
+
         #start to contruct the sequence
 
         self._members = []
@@ -393,11 +396,14 @@ class StrippingLine(object):
         return locList
 
     def createConfigurable( self, TESPrefix = "Strip", HDRLocation = 'Phys/DecReports' ) :
- 
+
+        if self._configurable != None : 
+            return self._configurable
+
         if self._HDRLocation == None :
-    	    self.fullHDRLocation = TESPrefix + "/" + HDRLocation
+            self.fullHDRLocation = TESPrefix + "/" + HDRLocation
         else :
-    	    self.fullHDRLocation = self._HDRLocation
+            self.fullHDRLocation = self._HDRLocation
 
         # check for forbidden attributes
         args    = self._args
@@ -511,13 +517,15 @@ class StrippingLine(object):
         if self.RelatedInfoTools != None :
             self.addRelatedInfo()
             if self.RelatedInfoFilter :
+                if hasattr(self.RelatedInfoFilter, "CloneFilteredParticles") : 
+                    self.RelatedInfoFilter.CloneFilteredParticles = True
                 self._members.append( self.RelatedInfoFilter )
                 oldOutput = self.outputLocation()
                 self._outputloc = "Phys/" + self.RelatedInfoFilter.name() + "/Particles"
                 log.debug( 'Redefined OutputLocation for line '+ self.name()+ ' from '+ oldOutput+ ' to '+ self._outputloc )
                 self.addRelatedInfo()
 
-	# Add flavour tagging tool to the end of line sequence if needed
+        # Add flavour tagging tool to the end of line sequence if needed
         if self._EnableFlavourTagging :
             if not self.outputLocation() or self.outputLocation() == "" :
                 raise AttributeError, "Line %s does not have output, cannot do flavour tagging" % self.name()
@@ -537,7 +545,7 @@ class StrippingLine(object):
 
         mdict.update( { 'HltDecReportsLocation' : self.fullHDRLocation } )
         if (self.outputLocation()) :
-    	    mdict.update( { 'OutputLocation' : self.outputLocation() } )
+            mdict.update( { 'OutputLocation' : self.outputLocation() } )
 
         __mdict = deepcopy ( mdict )
         from Configurables import StrippingAlg
@@ -598,7 +606,7 @@ class StrippingLine(object):
                 # make a hashable key from the properties dict
                 propkey = makePropKey(toolprops)
 
-		# for debugging
+                # for debugging
                 #relatedInfoAlg.OutputLevel = VERBOSE
 
                 # Get the entry in the cache map for thios type of tool
