@@ -4,16 +4,13 @@
  *
  *  Header file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::SummaryCKResMoni
  *
- *  CVS Log :-
- *  $Id: RichRecSummaryCKResMoni.h,v 1.2 2009-06-10 13:26:48 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   23/11/2007
  */
 //---------------------------------------------------------------------------------
 
-#ifndef RICHRECQC_RICHRECOQC_H
-#define RICHRECQC_RICHRECOQC_H 1
+#ifndef RICHRECQC_RichRecSummaryCKResMoni_H
+#define RICHRECQC_RichRecSummaryCKResMoni_H 1
 
 // base class
 #include "RichRecBase/RichRecHistoAlgBase.h"
@@ -33,9 +30,6 @@
 // Event
 #include "Event/RichSummaryTrack.h"
 #include "Event/MCParticle.h"
-
-// boost
-#include "boost/assign/list_of.hpp"
 
 namespace Rich
 {
@@ -79,13 +73,13 @@ namespace Rich
 
       private: // data
 
-        const IParticleProperties * m_richPartProp; ///< Rich Particle properties
+        const IParticleProperties * m_richPartProp = nullptr; ///< Rich Particle properties
 
         /// Pointer to RichRecMCTruthTool interface
-        mutable const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;
+        mutable const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth = nullptr;
 
         /// Track selector
-        const ITrackSelector * m_trSelector;
+        const ITrackSelector * m_trSelector = nullptr;
 
         /// Location of the summary tracks
         std::string m_summaryLoc;
@@ -100,4 +94,4 @@ namespace Rich
   }
 }
 
-#endif // RICHRECQC_RICHRECOQC_H
+#endif // RICHRECQC_RichRecSummaryCKResMoni_H

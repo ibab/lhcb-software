@@ -23,10 +23,6 @@ DECLARE_ALGORITHM_FACTORY( SummaryQC )
 SummaryQC::SummaryQC( const std::string& name,
                       ISvcLocator* pSvcLocator )
   : HistoAlgBase        ( name, pSvcLocator ),
-    m_richPartProp      ( 0 ),
-    m_richRecMCTruth    ( 0 ),
-    m_nEvts             ( 0 ),
-    m_nTracks           ( 0 ),
     m_nSegments         ( Rich::NRadiatorTypes, 0 ),
     m_nSegmentsMC       ( Rich::NRadiatorTypes, 0 ),
     m_nPhotons          ( Rich::NRadiatorTypes, 0 ),
@@ -35,7 +31,7 @@ SummaryQC::SummaryQC( const std::string& name,
   // Declare job options
   declareProperty( "SummaryLocation",   
                    m_summaryLoc = contextSpecificTES(LHCb::RichSummaryTrackLocation::Default) );
-  declareProperty( "MinBeta",           m_minBeta   = 0.999 );
+  declareProperty( "MinBeta", m_minBeta = 0.999 );
 }
 
 // Destructor
@@ -62,11 +58,11 @@ StatusCode SummaryQC::execute()
   debug() << "Execute" << endmsg;
 
   // Try and load the Summary data
-  if ( !exist<LHCb::RichSummaryTracks>(m_summaryLoc) )
+  const auto * sumTracks = getIfExists<LHCb::RichSummaryTracks>(m_summaryLoc);
+  if ( !sumTracks )
   {
     return Warning( "No RichSummaryTracks at '"+m_summaryLoc+"'", StatusCode::SUCCESS );
   }
-  const LHCb::RichSummaryTracks * sumTracks = get<LHCb::RichSummaryTracks>(m_summaryLoc);
   
   // temporary tallies
   unsigned int nTracks(0);
@@ -74,22 +70,21 @@ StatusCode SummaryQC::execute()
   std::vector<unsigned> nTruePhotons(Rich::NRadiatorTypes,0), nSegmentsMC(Rich::NRadiatorTypes,0);
 
   // loop over the summary tracks
-  for ( LHCb::RichSummaryTracks::const_iterator iTrack = sumTracks->begin();
-        iTrack != sumTracks->end(); ++iTrack )
+  for ( const auto * tk : *sumTracks )
   {
     // apply track selection
-    if ( !m_trSelector->trackSelected((*iTrack)->track()) ) continue;
+    if ( !m_trSelector->trackSelected(tk->track()) ) continue;
 
     // get MCParticle for this track
-    const LHCb::MCParticle * mcP = m_richRecMCTruth->mcParticle( (*iTrack)->track() );
+    const auto * mcP = m_richRecMCTruth->mcParticle( tk->track() );
 
     // True particle type
-    const Rich::ParticleIDType mcType = m_richRecMCTruth->mcParticleType( (*iTrack)->track() );
+    const auto mcType = m_richRecMCTruth->mcParticleType( tk->track() );
     if ( Rich::Unknown  == mcType ) continue; // skip tracks with unknown MC type
     if ( Rich::Electron == mcType ) continue; // skip electrons which are reconstructed badly..
 
     // momentum
-    const double pTot = (*iTrack)->track()->p();
+    const double pTot = tk->track()->p();
 
     // beta for pion
     const double beta = m_richPartProp->beta( pTot, Rich::Pion );
@@ -98,19 +93,17 @@ StatusCode SummaryQC::execute()
     ++nTracks;
 
     // loop over segments
-    const LHCb::RichSummaryRadSegment::Vector & segs = (*iTrack)->radSegments();
-    for ( LHCb::RichSummaryRadSegment::Vector::const_iterator iSeg = segs.begin();
-          iSeg != segs.end(); ++iSeg )
+    const auto & segs = tk->radSegments();
+    for ( const auto & seg : segs )
     {
 
       // Radiator info
-      const Rich::RadiatorType rad = (*iSeg).radiator();
+      const auto rad = seg.radiator();
 
       // photons for this segment
       unsigned int truePhotons = 0;
-      const LHCb::RichSummaryPhoton::Vector & photons = (*iSeg).photons();
-      for ( LHCb::RichSummaryPhoton::Vector::const_iterator iPhot = photons.begin();
-            iPhot != photons.end(); ++iPhot )
+      const auto & photons = seg.photons();
+      for ( const auto & phot : photons )
       {
 
         // count all photons
@@ -120,8 +113,8 @@ StatusCode SummaryQC::execute()
         if ( beta > m_minBeta )
         {
           // is this a true Cherekov photon ?
-          const LHCb::MCParticle * photonParent
-            = m_richRecMCTruth->trueCherenkovPhoton( mcP, (*iPhot).smartID(), rad );
+          const auto * photonParent
+            = m_richRecMCTruth->trueCherenkovPhoton( mcP, phot.smartID(), rad );
           if ( photonParent )
           {
             // count true photons

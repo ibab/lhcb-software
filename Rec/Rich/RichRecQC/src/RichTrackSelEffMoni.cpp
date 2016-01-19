@@ -18,14 +18,10 @@ using namespace Rich::Rec::MC;
 
 //-------------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( TrackSelEff )
-
 // Standard constructor, initializes variables
-  TrackSelEff::TrackSelEff( const std::string& name,
-                            ISvcLocator* pSvcLocator )
-    : Rich::Rec::HistoAlgBase ( name, pSvcLocator ),
-      m_richRecMCTruth        ( NULL ),
-      m_trSelector            ( NULL )
+TrackSelEff::TrackSelEff( const std::string& name,
+                          ISvcLocator* pSvcLocator )
+  : Rich::Rec::HistoAlgBase ( name, pSvcLocator )
 {
   // JOs
   declareProperty( "MCParticleAssocWeight", m_mcAssocWeight = 0.75 );
@@ -101,11 +97,10 @@ StatusCode TrackSelEff::execute()
 
   // Pre-loop over RICH tracks to get the raw Track containers
   std::set<std::string> trackLocs;
-  for ( LHCb::RichRecTracks::const_iterator iT = richTracks()->begin();
-        iT != richTracks()->end(); ++iT )
+  for ( const auto * tk : *richTracks() )
   {
     // get location of associated track container
-    const std::string contLoc = objectLocation( (*iT)->parentTrack()->parent() );
+    const std::string contLoc = objectLocation( tk->parentTrack()->parent() );
     if ( !contLoc.empty() ) trackLocs.insert(contLoc);
   }
 
@@ -113,11 +108,10 @@ StatusCode TrackSelEff::execute()
   const bool mcTrackOK = m_richRecMCTruth->trackToMCPAvailable();
 
   // Loop over raw track locations
-  for ( std::set<std::string>::const_iterator iLoc = trackLocs.begin();
-        iLoc != trackLocs.end(); ++iLoc )
+  for ( const auto & loc : trackLocs )
   {
     // Load these tracks
-    const LHCb::Tracks * trTracks = get<LHCb::Tracks>( *iLoc );
+    const LHCb::Tracks * trTracks = get<LHCb::Tracks>(loc);
 
     // Loop over the raw tracks
     unsigned int nGhost(0), nReal(0), nGhostR(0), nRealR(0), nTotal(0), nTotalR(0);
@@ -208,13 +202,12 @@ const LHCb::RichRecTrack * TrackSelEff::getRichTrack( const LHCb::Track * track 
     {
 
       // Key convention failed, so try direct search
-      rT = NULL;
-      for ( LHCb::RichRecTracks::const_iterator iRT = richTracks()->begin();
-            iRT != richTracks()->end(); ++iRT )
+      rT = nullptr;
+      for ( const auto * RT : *richTracks() )
       {
-        if ( dynamic_cast<const LHCb::Track*>((*iRT)->parentTrack()) == track )
+        if ( dynamic_cast<const LHCb::Track*>(RT->parentTrack()) == track )
         {
-          rT = *iRT;
+          rT = RT;
           break;
         }
       }
@@ -226,3 +219,9 @@ const LHCb::RichRecTrack * TrackSelEff::getRichTrack( const LHCb::Track * track 
   // return the RichRecTrack pointer
   return rT;
 }
+
+//-------------------------------------------------------------------------------
+
+DECLARE_ALGORITHM_FACTORY( TrackSelEff )
+
+//-------------------------------------------------------------------------------

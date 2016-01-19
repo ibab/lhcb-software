@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm class : Rich::Rec::RingPeakSearch
  *
- *  CVS Log :-
- *  $Id: RichRecRingPeakSearch.h,v 1.1 2009-09-04 14:32:39 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   04/09/2009
  */

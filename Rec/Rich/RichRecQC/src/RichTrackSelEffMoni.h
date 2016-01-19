@@ -77,10 +77,10 @@ namespace Rich
       private: // data
 
         /// Pointer to RichRecMCTruthTool interface
-        mutable const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;
+        mutable const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth = nullptr;
 
         /// Track selector
-        const ITrackSelector * m_trSelector;
+        const ITrackSelector * m_trSelector = nullptr;
 
         /// MCParticle association weight
         double m_mcAssocWeight;

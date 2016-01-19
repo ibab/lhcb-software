@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2016-01-19 - Chris Jones
+ - A few more C++11 clean ups (range loops, nullptr etc.).
+
 ! 2016-01-14 - Chris Jones
  - A few more C++11 clean ups (range loops, nullptr etc.).
  - Add configuration for a new monitor to compare photon reconstruction tools.

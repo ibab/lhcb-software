@@ -64,13 +64,13 @@ namespace Rich
 
       private: // data
 
-        const IParticleProperties * m_richPartProp; ///< Rich Particle properties
+        const IParticleProperties * m_richPartProp = nullptr; ///< Rich Particle properties
 
         /// Pointer to RichRecMCTruthTool interface
-        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;
+        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth = nullptr;
 
         /// Track selector
-        const ITrackSelector * m_trSelector;
+        const ITrackSelector * m_trSelector = nullptr;
 
         /// Location of the summary tracks
         std::string m_summaryLoc;
@@ -78,8 +78,8 @@ namespace Rich
         // job options
         double m_minBeta;        ///< minimum beta value for 'saturated' tracks
 
-        unsigned long long m_nEvts;                   ///< Number of processed events
-        unsigned long long m_nTracks;                 ///< Number of summary tracks produced
+        unsigned long long m_nEvts{0};                   ///< Number of processed events
+        unsigned long long m_nTracks{0};                 ///< Number of summary tracks produced
         std::vector<unsigned long long> m_nSegments;  ///< Number of summary segments produced per radiator
         std::vector<unsigned long long> m_nSegmentsMC;  ///< Number of summary segments produced per radiator, with at least one true CK hit
         std::vector<unsigned long long> m_nPhotons;   ///< Number of summary photons produced per radiator

@@ -52,25 +52,24 @@ StatusCode RingPeakSearch::execute()
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
   // Load the rings
-  if ( !exist<LHCb::RichRecRings>(m_ringLoc) ) return StatusCode::SUCCESS;
-  const LHCb::RichRecRings * rings = get<LHCb::RichRecRings>( m_ringLoc );
+  const auto * rings = getIfExists<LHCb::RichRecRings>( m_ringLoc );
+  if ( !rings ) return StatusCode::SUCCESS;
 
   // loop
   Rich::Map<Rich::RadiatorType,unsigned int> ringsPerRad;
-  for ( LHCb::RichRecRings::const_iterator iR = rings->begin();
-        iR != rings->end(); ++iR )
+  for ( const auto & ring : *rings )
   {
     // Radiator info
-    const Rich::RadiatorType rad = (*iR)->radiator();
+    const Rich::RadiatorType rad = ring->radiator();
 
     // only bother with RICH1 gas rings (searching for aerogel) at this time
     if ( rad != Rich::Rich1Gas ) continue;
 
     // Find the ring centre point on the HPD panel
-    const Gaudi::XYZPoint & centreP = (*iR)->centrePointLocal();
+    const Gaudi::XYZPoint & centreP = ring->centrePointLocal();
 
     // refit the ring ...
-    FastRingFitter fitter(**iR);
+    FastRingFitter fitter(*ring);
     // run the fit
     fitter.fit();
     const bool refitOK = ( fitter.result().Status == 0 &&
@@ -80,19 +79,18 @@ StatusCode RingPeakSearch::execute()
     {
 
       // Loop over hits in the same rich HPD panel
-      const IPixelCreator::PixelRange pixels = pixelCreator()->range((*iR)->rich(),(*iR)->panel());
-      for ( IPixelCreator::PixelRange::const_iterator iPix = pixels.begin();
-            iPix != pixels.end(); ++iPix )
+      const auto pixels = pixelCreator()->range(ring->rich(),ring->panel());
+      for ( const auto * pixel : pixels )
       {
         // Get the centre - hit separation
-        double sep = std::sqrt( std::pow( centreP.X() - (*iPix)->localPosition().X(), 2 ) +
-                                std::pow( centreP.Y() - (*iPix)->localPosition().Y(), 2 ) );
+        double sep = std::sqrt( std::pow( centreP.X() - pixel->localPosition().X(), 2 ) +
+                                std::pow( centreP.Y() - pixel->localPosition().Y(), 2 ) );
 
         // normalise to ring radius on HPD plane
         sep /= fitter.result().Radius;
 
         // plot the result
-        richHisto1D( Rich::HistogramID("normRadii",(*iR)->rich()) )->fill(sep);
+        richHisto1D( Rich::HistogramID("normRadii",ring->rich()) )->fill(sep);
 
       } // loop over pixels
 
