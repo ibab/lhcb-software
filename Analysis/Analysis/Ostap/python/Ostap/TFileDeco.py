@@ -52,8 +52,8 @@ It provides TFile (well, actually any TDirectory) with python-like protocol
 >>> for obj in rfile : print obj            ## loop over all objects in file
 >>> for key,obj in rfile.iteritems() : print key, obj             ## another loop
 >>> for key,obj in rfile.iteritems( ROOT.TH1 ) : print key, obj   ## advanced loop
->>> for key in rfile.keys()     : print k   ## get all keys and loop over them 
->>> for key in rfile.iterkeys() : print k   ## loop over all keys in the file
+>>> for k in rfile.keys()     : print k   ## get all keys and loop over them 
+>>> for k in rfile.iterkeys() : print k   ## loop over all keys in the file
 
 >>> del  rfile['A/B']                       ## delete the object from the file
 >>> rfile.rm ( 'A/B' )                      ## delete the object from the file
@@ -308,11 +308,12 @@ def _rd_keys_ ( rdir , recursive = True , no_dir = True ) :
         rdir.cd() 
         _lst = rdir.GetListOfKeys()
         for i in _lst :
-            inam   = i.GetName()
-            folder = i.IsFolder()
-            if not folder or not no_dir : _res.append ( inam )
-            if recursive and folder :
-                idir  = rdir.GetDirectory( inam ) 
+            inam = i.GetName()
+
+            idir = rdir.GetDirectory ( inam )            
+            if not idir or not no_dir : _res.append ( inam )
+            
+            if recursive and idir :
                 ikeys = _rd_keys_ ( idir , recursive , no_dir )
                 for k in ikeys : _res.append ( inam + '/' + k )
                 
@@ -350,15 +351,13 @@ def _rd_iteritems_ ( rdir , fun = lambda k,t,o : True , recursive = True , no_di
         _lst = rdir.GetListOfKeys()
         for i in _lst :
             inam   = i.GetName()
-            folder = i.IsFolder()
-            if not folder or not no_dir : 
+            idir   = rdir.GetDirectory ( inam ) 
+            if not idir or not no_dir : 
                 obj = rdir.Get ( inam )
                 if fun ( inam , i , obj ) : yield inam , obj
-            if recursive and folder :
-                idir  = rdir.GetDirectory( inam )
-                if idir : 
-                    for k, o in _rd_iteritems_ ( idir , fun , recursive , no_dir ) :
-                        yield k,o
+            if recursive and idir :
+                for k, o in _rd_iteritems_ ( idir , fun , recursive , no_dir ) :
+                    yield k,o
                     
 # =============================================================================a
 ## Iterate over the keys in ROOT file/directory 
@@ -383,11 +382,10 @@ def _rd_iterkeys_ ( rdir , typ = None , recursive = True , no_dir = True ) :
         _lst = rdir.GetListOfKeys()
         for i in _lst :
             inam   = i.GetName()
-            folder = i.IsFolder()
-            if not folder or not no_dir : 
+            idir   = rdir.GetDirectory ( inam ) 
+            if not idir or not no_dir : 
                 if typ is None  or isinstance ( rdir.Get ( inam ) , typ ) : yield inam 
-            if recursive and folder  :
-                idir  = rdir.GetDirectory( inam ) 
+            if recursive and idir  :
                 for k in _rd_iterkeys_ ( idir , typ , recursive , no_dir ) :
                     yield k
 
@@ -436,7 +434,6 @@ def _rd_iter_ ( rdir ) :
         rdir.cd()
         for obj in _rd_itervalues_ ( rdir , recursive = True ) :
             yield obj
-
 
 # =============================================================================
 ## delete object from ROOT file/directory
@@ -502,7 +499,6 @@ def _rf_exit_  ( self , *_ ) :
     try :
         self.Close()
     except: pass
-
             
 
 ## the basic protocol:

@@ -72,9 +72,6 @@ _my_name_ = __name__
 if _my_name_ in ( '__main__' , '__builtins__' ) : _my_name_ = 'Ostap'
 # =============================================================================
 logger = getLogger( _my_name_ )
-import Ostap.Line
-logger.info ( "Welcome to Ostap\n" + Ostap.Line.line )
-logger.info ( __doc__ )
 # =============================================================================
 ## parse arguments 
 def parse_args ( ) :
@@ -83,18 +80,41 @@ def parse_args ( ) :
     """
     from argparse import ArgumentParser 
     parser = ArgumentParser ( prog = 'ostap' )
+    #
+    parser.add_argument ( 
+        "-q" , "--quiet"       ,
+        dest    = 'Quiet'      , 
+        action  = 'store_true' ,
+        help    = "Quite processing [default: %(default)s]" ,
+        default = False        )
+    #
     parser.add_argument (
         "files" ,
         metavar = "FILE" , nargs = '*' , 
-        help    = "ROOT/python files to be opened/processed" )
+        help    = "ROOT/python files to be opened/processed [default: %(default)s]" ,
+        default = []  )
+    #
     parser.add_argument ( 
         "-m" , "--modules" ,
-        metavar = "MODULE" , nargs = '*' , 
-        help    = "ROOT/python modules to be imported" )
+        metavar = "MODULE" , nargs = '*' ,
+        help    = "ROOT/python modules to be imported [default: %(default)s]",
+        default = []  )
+    #
+    parser.add_argument (
+        '-w'                       ,
+        '--with-context'           ,
+        action  = "store_true"     ,
+        dest    = 'WithContext'    ,
+        help    = "Use global context for the scripts [default: %(default)s]",
+        default = False            )
+    #
     parser.add_argument ( 
-        "-n" , "--nocanvas"     , dest = 'canvas' , 
+        '-n' , '--nocanvas'     ,
+        dest    = 'canvas'      , 
         action  = 'store_false' , 
-        help    = "Do not create canvas" )
+        help    = "Do not create canvas", 
+        default = True          )
+    #
     group = parser.add_mutually_exclusive_group()
     group.add_argument ( '-i' ,  
                          '--interactive' , dest='batch', 
@@ -134,6 +154,30 @@ if with_ipython () :
 # =============================================================================
 arguments = parse_args()
 
+# =============================================================================
+## suppress extra prints from logging  
+# =============================================================================
+if arguments.Quiet :
+    
+    logger.info ( '(silent) Interactive Ostap session (steroid-enhanced PyROOT)')
+    import logging
+    logging.disable ( logging.INFO )
+    
+else :
+    
+    import logging
+    logging.disable ( logging.DEBUG )
+    
+    import Ostap.Line
+    logger.info ( "Welcome to Ostap\n" + Ostap.Line.line )
+    logger.info ( __doc__ )
+    
+    _vars = vars ( arguments )
+    _keys = _vars.keys()
+    _keys .sort() 
+    logger.info ( 'Arguments  : ')
+    for _k in _keys : logger.info ( '  %15s : %-s ' % ( _k , _vars[_k] ) )
+    
 # =============================================================================
 ## set ROOT into batch mode 
 # =============================================================================
@@ -177,68 +221,80 @@ if arguments.modules :
 # =============================================================================
 ## execute the files, defined as arguments
 # =============================================================================
-if arguments.files:
+root_files = {}
+for pattern in arguments.files :
     import glob 
-    from   copy import deepcopy
-    _myself    = sys.modules[ __name__ ] 
-    _mykeys    = deepcopy ( dir( _myself ) ) 
-    _copied    = set() 
-    _skept     = set()
-    
-    root_files = []
-    py_files   = []
+    for _f in glob.iglob ( pattern ) :
 
-    import glob 
-    for pattern in arguments.files : 
+        name,dot,ext  = _f.rpartition('.')
+        if  ext in ('root', 'ROOT' ) :
+            from Ostap.TFileDeco import ROOTCWD 
+            try :
+                with ROOTCWD() :
+                    print 'HERE', _f 
+                    f = ROOT.TFile.Open( _f , 'READ')
+                    root_files [ name ] = f 
+                    logger.info ("Open ROOT file '%s'" % _f )
+                    f.ls()
+                    continue 
+            except :
+                
+                logger.error ("Unable to open ROOT file '%s'" % _f )
+                
+                # - Batch mode: just re-raise exception
+                if arguments.batch :  raise
+                
+                # - Interactive mode: print traceback and continue 
+                logger.error ('Exception: %s' % sys.exc_info()[0] ) 
+                import traceback 
+                logger.error  ( traceback.format_exc() ) 
 
-        for a in glob.iglob ( pattern ) :
+        ## execute python file 
+        elif 'py' == ext  :  
 
-            p1     = a.rfind('.root')
-            if 0 < p1 and len ( a ) == p1 + 5 :
-                try :
-                    with ROOTCWD() : 
-                        f = ROOT.TFile.Open( a , 'READ')
-                        root_files.append ( f )
-                        logger.info ("Open ROOT file '%s'" % a )
-                        f.ls()
-                        continue 
-                except :
-                    logger.error ("Unable to open ROOT file '%s'" % a )
-                        
-        
-            p2     = a.rfind( '.py' )
-            if 1<= p2  and len(a) == p2 + 3 :
-        
-                logger.info  ('Try    to execute "%s"' % a )
-        
-                myvars =  {} 
-                execfile ( a , myvars )
-                for k,val in myvars.iteritems() : 
-                    ## do not redefine already defined symbols!  
-                    if k in _mykeys : 
-                        # do not redefine local symbols [ needed? ] 
-                        _skept.add ( k )
-                        continue
-                ## copy symbol into the local namespace  
-                    setattr ( _myself , k , val ) 
-                    _copied.add ( k )
-                #
-                py_files.append ( a )
-                continue
+            logger.info  ('Try    to execute "%s"' % _f )
             
-            logger.warning ("Unknown command line symbol/pattern '%s'/'%s', skip it" % ( a , pattern )  ) 
-                    
-    if _copied    : logger.info ( 'Copied   %d symbols'      % len ( _copied    ) )  
-    if _skept     : logger.info ( 'Skept    %d symbols'      % len ( _skept     ) )  
-    if py_files   : logger.info ( 'Executed %d files'        % len ( py_files   ) )
-    if root_files : logger.info ( 'Opened   %d ROOT files'   % len ( root_files ) )
-    ## do not polllute namespace 
-    del _copied
-    del _skept
-    del _mykeys 
-    del _myself 
-    del glob, deepcopy, pattern, a 
-    
+            try :
+                
+                if arguments.WithContext :  execfile ( _f , globals() ) ## with context 
+                else                     :  execfile ( _f )             ## plain  
+                
+            except :
+                
+                logger.error ('Failure to execute "%s"'     % _f    )
+                
+                # - Batch mode: just re-raise exception
+                if arguments.batch :  raise
+                
+                # - Interactive mode: print traceback and continue 
+                logger.error  ('Exception: %s' % sys.exc_info()[0] ) 
+                import traceback 
+                logger.error  ( traceback.format_exc() ) 
+                
+        else :
+            
+            # - Batch mode: just raise exception
+            if arguments.batch :
+                raise NameError( "Unknown command line symbol/pattern '%s'/'%s'" % ( _f , pattern )  )
+
+            # - Interactive mode: print error message and continue 
+            logger.error ("Unknown command line symbol/pattern '%s'/'%s'" % ( _f , pattern )  )
+            
+
+
+## list names of opened ROOT files 
+if root_files :
+    logger.info("Opened ROOT files: %d (with '.root' extension)" % len ( root_files ) )
+    keys = root_files.keys()
+    keys.sort()
+    _n = 0  
+    for k in keys :
+        _n +=  1
+        rfile = root_files [k]
+        okeys = rfile.keys ()
+        okeys.sort()
+        logger.info('%2d: %s #keys:%d: %s' % ( _n , k , len(okeys) , okeys ) )
+        
 # =============================================================================
 del with_ipython, parse_args, getLogger
 

@@ -8,6 +8,34 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2016-01-19 - Vanya Belyaev
+
+ - ostap: add two command line aruments
+   "-q  --quite" to suppress loggiing 
+
+      ostap -q 
+
+   "-w  --with-context" to execute ostap scripts using the context 
+
+      ostap myscript1.py      ## "bare" execution, just line plain python
+
+    vs 
+
+      ostap myscript2.py -w   ## "use the context"
+
+
+   reshuffle a bit the internal machinery:  
+   the content (name and keys) for opened files will be printed..
+   
+      ostap  myfile1.root  myfile2.root 
+
+ - Ostap/TFileDeco.py
+
+     Fix the ambiguity of TKey::IsFolder:
+     for new ROOT, it is not the same as checking the Directory...
+
+
+
 ! 2016-01-12 - Vanya Belyaev
  - add RunDB module with utilities to deal with LHCb RunDB, 
    namely: 
