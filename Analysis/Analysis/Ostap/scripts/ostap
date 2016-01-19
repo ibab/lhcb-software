@@ -195,6 +195,14 @@ from   Ostap.OstapBender import *
 import Ostap.Startup
 
 # =============================================================================
+## create default canvas
+# =============================================================================
+if arguments.canvas : 
+    import Ostap.Canvas 
+    logger.debug ( "Create the default canvas" )
+    canvas    = Ostap.Canvas.getCanvas ()
+
+# =============================================================================
 ## execute startup files 
 # =============================================================================
 ## startup files to be executed:
@@ -205,7 +213,6 @@ _startups = ( '$OSTAPSTART'     ,
               '~/.ostap.py'     ,        
               './.ostap'        ,
               './.ostap.py'     )
-
 _executed = set() 
 for _s in _startups : 
     import os
@@ -225,14 +232,7 @@ for _s in _startups :
         logger.info   ( "Startup file '%s' is executed"      % _s )
     except:
         logger.error  ( "Error in execution of '%s' startup" % _s )
-
-# =============================================================================
-## create default canvas
-# =============================================================================
-if arguments.canvas : 
-    import Ostap.Canvas 
-    logger.debug ( "Create the default canvas" )
-    canvas    = Ostap.Canvas.getCanvas ()
+        
     
 # =============================================================================
 ## import modules
