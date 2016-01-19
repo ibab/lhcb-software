@@ -15,6 +15,10 @@
       attr="VisPipeSteel"/>
 <Item name="/dd/Materials/Pipe/PipeSteel316LN"
       attr="VisPipeSteel"/>
+<Item name="/dd/Materials/LSS/StainlessSteel304"
+      attr="VisLSSSteel304"/>
+<Item name="/dd/Materials/LSS/Iron"
+      attr="VisLSSIron"/>
 <Item name="/dd/Materials/Pipe/BakeOutAerogel"
       attr="VisPipeBakeOut"/>
 <Item name="/dd/Materials/Pipe/PipeCuOFE"

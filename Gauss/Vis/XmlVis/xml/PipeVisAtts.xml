@@ -7,6 +7,12 @@
 <VisAtt name="VisPipeSteel">
   <Color B="0.8706" G="0.7686" R="0.6902"/>
 </VisAtt>
+<VisAtt name="VisLSSSteel304">
+  <Color B="0.86" G="0.77" R="0.65"/>
+</VisAtt>
+<VisAtt name="VisLSSIron">
+  <Color B="0.32" G="0.35" R="0.36"/>
+</VisAtt>
 <VisAtt name="VisPipeAlus">
   <Color B="0.8667" G="0.8510" R="0.6706"/>
 </VisAtt>
@@ -39,3 +45,5 @@
 <VisAtt name="VisPipeCollar" mode="Plain" opened="No" >
   <Color B="0.6549" G="0.0784" R="0.0784"/>
 </VisAtt>
+<VisAtt name="VisTriplet" visible="No" mode="WireFrame" opened="Yes"/>
+

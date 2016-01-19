@@ -97,3 +97,7 @@
 <!-- Pipe in MBXWS -->
 <Item name="/dd/Geometry/DownstreamRegion/AfterMuon/PipeAfterMuon/PipeInMBXWS/lvMBXWSPipeBody"
       attr="VisPipeMBXWS"/>
+
+<!-- beamline -->
+<Item name="/dd/Geometry/LSS/Triplet/lvTriplet"
+      attr="VisTriplet"/>
