@@ -1,5 +1,5 @@
 package DaVinciSys
-version v38r1
+version v38r1p1
 
 branches doc cmt
 
@@ -8,7 +8,7 @@ branches doc cmt
 use  HltDAQ               v4r22    Hlt
 use  HltEvent             v9r6     Event
 use  MuonID               v9r19    Muon
-use  TrackExtrapolators   v3r0     Tr
+use  TrackExtrapolators   v2r40    Tr
 # Temporarily moved in from Stripping, for S23 release
 # To be decided if longer term this stays in the DaVinci 
 # project, or moves elsewhere.
@@ -16,7 +16,7 @@ use StrippingCache   v1r4     Phys
 ##############################
 
 # Packages
-use  DaVinci         v38r1    Phys   # DaVinci coordinator
+use  DaVinci         v38r1p1  Phys   # DaVinci coordinator
 use  DaVinciTests    v3r1
 use  KaliCalo        v4r18    Phys   # Olivier Deschamps
 use  Tesla           v1r13    Phys   # Sean Benson
