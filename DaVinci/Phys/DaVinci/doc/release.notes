@@ -8,6 +8,13 @@
 !
 !-----------------------------------------------------------------------------
 
+!======================== DaVinci v38r1p1 2016-01-19 =========================
+
+! 2016-01-19 - Eduardo Rodrigues
+ - Development release in preparation for 2016 data-taking and simulation.
+ - And production release for the incremental restripping of Run-I data
+  (S21r0p1 for 2012 and S21r1p1 for 2011).
+
 !========================= DaVinci v38r1 2015-12-05 ==========================
 
 ! 2015-12-05 - Eduardo Rodrigues
