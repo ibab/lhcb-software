@@ -1,7 +1,7 @@
 ################################################################################
 # Package: VisSvc
 ################################################################################
-gaudi_subdir(VisSvc v5r7)
+gaudi_subdir(VisSvc v5r8)
 
 gaudi_depends_on_subdirs(Det/DetDesc
                          Tools/XmlTools)

@@ -3,7 +3,7 @@
 # Maintainer : Gloria CORTI
 #============================================================================
 package           VisSvc
-version           v5r7p1
+version           v5r8
 
 # Structure, i.e. directories to process.
 #============================================================================
