@@ -49,7 +49,8 @@ And it is based on the LoKi project:
  
    ``C++ ToolKit for Smart and Friendly Physics Analysis''
 
-By usage of this code one clearly states the disagreement with the smear campaign of Dr.O.Callot et al.:
+By usage of this code one clearly states the disagreement with
+the smear campaign of Dr.O.Callot et al.:
 
    ``No Vanya's lines are allowed in LHCb/Gaudi software''
 
@@ -185,20 +186,30 @@ def makeParser ( **kwargs ) :
     group_da = parser.add_argument_group(
         'Input data' ,
         'Properties related to input data and data access')
+    ##
     group_da.add_argument (
         '-g'                       ,
         '--grid'                   ,
         type    = str              , 
         dest    = 'Grid'           ,
-        help    = "Grid-site to access LFN-files (has precedence over -c, but grid proxy is needed) [default : %(default)s]" ,
+        help    = "Grid-site to access LFN-files (has precedence over 'castor/eos', but grid proxy is needed) [default : %(default)s]" ,
         default = 'CERN'
+        )
+    ##
+    group_da.add_argument (
+        '-n'                       , 
+        '--no-castor'              ,
+        action  = 'store_false'    , 
+        dest    = 'Castor'         ,
+        help    = "Disable direct access to Castor/EOS storage for LFNs",
+        default = True             ## use castor on default 
         )
     ## 
     group_da.add_argument (
         '-x'                        ,
         '--xml'                     ,
         nargs   = '*'               , 
-        dest    = 'XmlCatalog'      ,
+        dest    = 'XmlCatalogs'     ,
         help    = "``XmlCatalogs'' to be transferred to setData-function [default: %(default)s]" ,
         default = []                
         )

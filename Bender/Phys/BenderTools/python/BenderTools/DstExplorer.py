@@ -139,7 +139,8 @@ def configure ( config ) :
     """
     Configure the application from parser data 
     """
-    # 
+    #
+    
     ## redefine output level for 'quiet'-mode
     if config.OutputLevel > 5 :
         config.OutputLevel = 5
@@ -148,12 +149,19 @@ def configure ( config ) :
     if config.OutputLevel < 0 :
         config.OutputLevel = 0
         logger.info('set OutputLevel to be %s ' % config.OutputLevel )
-        
+
     if config.Quiet and 4 > config.OutputLevel :
         config.OutputLevel = 4
         logger.info('set OutputLevel to be %s ' % config.OutputLevel )
         from BenderTools.Utils import silence
-        silence () 
+        silence ()
+
+    import logging
+    if   config.OutputLevel <= 1 : logging.disable ( logging.NOTSET  - 1 ) 
+    elif config.OutputLevel <= 2 : logging.disable ( logging.DEBUG   - 1 ) 
+    elif config.OutputLevel <= 3 : logging.disable ( logging.INFO    - 1 ) 
+    elif config.OutputLevel <= 4 : logging.disable ( logging.WARNING - 1 ) 
+    elif config.OutputLevel <= 5 : logging.disable ( logging.ERROR   - 1 )
     #
     ## start the actual action:
     #
@@ -244,7 +252,6 @@ def configure ( config ) :
         config.RootInTES = '/Event/BOTTOM'
         logger.info ('RootInTES is set according to BOTTOM.MDST'   )
         daVinci.InputType = 'MDST'
-
     
     if config.RootInTES and  0  != config.RootInTES.find ( '/Event' ) :
         config.RootInTES  = '/Event/' + config.RootInTES        
@@ -311,8 +318,8 @@ def configure ( config ) :
     ## set input data
     from Bender.Utils import setData 
     setData ( files                ,
-              config.XmlCatalog    ,  ## XML-catalogues 
-              True                 ,  ## use Castor/EOS lookup 
+              config.XmlCatalogs   ,  ## XML-catalogues 
+              config.Castor        ,  ## use Castor/EOS lookup 
               config.Grid          )  ## Use GRID to locate files 
 
 
