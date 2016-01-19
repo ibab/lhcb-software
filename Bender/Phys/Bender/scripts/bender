@@ -108,7 +108,7 @@ __date__    = "2010-09-10"
 __version__ = '$Revision$'
 __all__     = ()  ## nothing to import 
 # =============================================================================
-import ROOT,sys 
+import ROOT,sys  
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 # =============================================================================
 # logging 
@@ -154,6 +154,7 @@ parser.add_argument (
     dest    = 'WithContext'    ,
     help    = """Use locals/globals context for python scripts [default: %(default)s].
     Execute python-script in the same context of bender-script"""
+    default = False 
     )
 parser.add_argument (
     '-u'                   ,
@@ -186,10 +187,17 @@ group.add_argument (
 ## eliminate artifacts and parse command-line arguments 
 arguments = parser.parse_args( [ a for a in sys.argv[1:] if '--' != a ] )  
 
-
 if arguments.Quiet :
-    logger.info ( 'Interactive Bender session (steroid-enhanced GaudiPython)')
+       
+    logger.info ( '(silent) Interactive Bender session (steroid-enhanced GaudiPython)')
+    import logging
+    logging.disable ( logging.INFO  )
+    
 else :
+        
+    import logging
+    logging.disable ( logging.DEBUG )
+    
     logger.info ( 100*'*')
     logger.info ( __doc__ ) 
     logger.info ( 100*'*')
@@ -197,7 +205,16 @@ else :
     logger.info ( ' Version : %s ' % __version__  ) 
     logger.info ( ' Date    : %s ' % __date__     )
     logger.info ( 100*'*')
-    
+
+if not arguments.Quiet or arguments.OutputLevel <= 3 :
+    _vars = vars ( arguments )
+    _keys = _vars.keys()
+    _keys .sort() 
+    logger.info ( 'Arguments  : ')
+    for _k in _keys : logger.info ( '  %15s : %-s ' % ( _k , _vars[_k] ) )
+
+exit()
+
 from BenderTools.DstExplorer import configure
 # =============================================================================
 
@@ -247,58 +264,40 @@ else :
 #
 ## execute the files, defined as arguments
 #
-if pyfiles :
-    
-    from   copy import deepcopy
-    _myself = sys.modules[ __name__ ] 
-    _mykeys = deepcopy ( dir( _myself ) ) 
-    _copied = set() 
-    _skept  = set() 
-    
-    for a in pyfiles : 
+
+for _f in pyfiles : 
+
+    import os
+    _ff = _f 
+    _ff = os.path.expandvars ( _ff )
+    _ff = os.path.expandvars ( _ff )
+    _ff = os.path.expandvars ( _ff )
+    _ff = os.path.expanduser ( _ff )
+    if not os.path.exists    ( _ff ) :
+        logger.warning   ('No file is found  "%s"' % _f )
+        continue 
+
+    try :
         
-        if not os.path.exists ( a ) :
-            logger.warning   ('No file is found  "%s"' % a )
-            continue 
-        logger.info  ('Try    to execute "%s"' % a )
-        try :
-            myvars =  {} 
-	    if arguments.WithContext : 
-		myvars = globals().copy()
-		myvars.update ( locals() )
-
-            execfile ( a , myvars )
-            for k,val in myvars.iteritems() : 
-                ## do not redefine already defined symbols!  
-                if k in _mykeys : 
-                    ## do not redefine local symbols [ needed? ] 
-                    _skept.add ( k )
-                    continue
-                ## copy symbol into the local namespace  
-                setattr ( _myself , k , val ) 
-                _copied.add ( k ) 
-        except :
-	    # re-raise exception in batch mode 
-	    if arguments.batch :  raise 
-		
-	    logger.error ('Unable to execute "%s"'     % a    )
-	    logger.error ('Exception: %s' % sys.exc_info()[0] ) 
-	    import traceback 
-	    print  traceback.format_exc() 
-                
-    if _copied : logger.info ( 'Copied %d symbols' % len(_copied) )  
-    if _skept  : logger.info ( 'Skept  %d symbols' % len(_skept ) )  
+        logger.info ('Executing "%s"'     % _f    )
         
-    ## do not pollute the namespace 
-    del _copied
-    del _skept
-    del _mykeys 
-    del _myself 
+        if arguments.WithContext : execfile ( _ff , globals() ) ## with context 
+        else                     : execfile ( _ff )             ## plain 
+        
+    except :
+        #
+        logger.error ('Failure to execute "%s"'     % _f    )
+        
+        # - Batch mode: just re-raise exception
+        if arguments.batch :  raise
+        
+        # - Interactive mode: print traceback and continue 
+        logger.error ( 'Exception: %s' % sys.exc_info()[0] ) 
+        import traceback 
+        logger.error ( traceback.format_exc() ) 
 
-
-
-## exit it! 
-if arguments.batch :
+## exit if batch 
+if  arguments.batch :
     ## nothing to do 
     logger.debug  ('EXIT AT BATCH!')
     
@@ -312,7 +311,7 @@ elif arguments.embed :
 elif arguments.plain :
         
     __vars = globals().copy()
-    __vars.update( locals() )
+    ##__vars.update( locals() )
     
     import readline
     import code
@@ -326,14 +325,13 @@ elif arguments.plain :
 else :
     
     __vars = globals().copy()
-    __vars.update( locals() )
+    ##__vars.update( locals() )
 
     logger.info ('Start interactive shell') 
     
     import IPython
     IPython.start_ipython ( argv = [] , user_ns = __vars )
     exit() 
-
 
 # =============================================================================
 # The END 

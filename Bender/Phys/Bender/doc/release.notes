@@ -24,6 +24,16 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2016-01-19 - Vanya Belyaev
+ - add startup files 
+ - remove option '-c --castor'
+ - add option    '-n --no-castor'
+
+! 2015-12-15 - Vanya Belyaev
+
+ - Bender.Utils.setData  
+   - add more intelligent treatment of file catalogs 
+
 
 ! ==================== Phys/Bender v27r0p1 2015-11-02 =========================
 ! ==================== Phys/Bender v27r0   2015-10-26 =========================

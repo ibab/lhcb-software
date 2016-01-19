@@ -67,7 +67,7 @@ try:
 
     import os
     ## define the name of the history file
-    __history__ = os.path.curdir + os.sep + '.BenderHistory'
+    __history__ = os.path.curdir + os.sep + '.bender_history'
     
     def _rename_ ( file , app ) :
         if os.path.exists ( file + app ) :
@@ -87,6 +87,7 @@ try:
     ## line completer 
     import rlcompleter
     import readline
+    readline.clear_history() 
     readline.parse_and_bind("tab: complete")
 
     import atexit

@@ -197,16 +197,28 @@ def setData ( files            ,
             EventSelector ( Input = inpts )
             
         if catalogs :
-            
+
             from Gaudi.Configuration import Gaudi__MultiFileCatalog as FileCatalog
             ctlgs  = FileCatalog().Catalogs
-            ctlgs += catalogs  
-            FileCatalog   ( Catalogs = ctlgs )
-            
-            from Gaudi.Configuration import FileCatalog
-            ctlgs  = FileCatalog().Catalogs
-            ctlgs += catalogs  
-            FileCatalog   ( Catalogs = ctlgs )
+
+            cc     = [] 
+            for c in catalogs :
+                if c in cc : continue
+                if 1<=c.find('.xml') : 
+                    import os
+                    if   os.path.exists ( c ) or 0 != c.find('xmlcatalog_file:') :
+                        logger.debug ( 'Prepend catalog with protocol: %s' % c )
+                        c = 'xmlcatalog_file:' + c
+                if c in cc : continue
+                cc.append ( c )
+                
+            logger.debug ( 'The catalogs: %s' % cc )
+            ctlgs += cc 
+
+            FileCatalog ( Catalogs = ctlgs )
+            logger.debug ( 'FileCatalog:\n %s' % FileCatalog() )
+        
+            ## from Gaudi.Configuration import FileCatalog
             
     else :                        ## here we deal with the actual components
 

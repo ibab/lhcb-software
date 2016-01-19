@@ -63,33 +63,46 @@ from Bender.Logger import getLogger
 if '__main__' == __name__ : logger = getLogger ( 'Bender.Main' )
 else                      : logger = getLogger ( __name__ )
 # =============================================================================
-import os
-try:
-    ## try to get the startup script from environment 
-    startup = os.environ.get('PYTHONSTARTUP',None)
-    ## use the default startup script
-    if not startup :
-        startup = os.sep + 'Bender' + os.sep + 'Startup.py'
-        bp = os.environ.get('BENDERPYTHON',None)
-        if bp : startup = bp + startup
-        else  : startup = 'Startup.py'
-    
-    if os.path.exists( startup ) :
-        execfile( startup )
-    else :
-        import Bender.Startup
-        
-    logger.info ( 'Define the startup file to be %s' % startup )
+## some default bender startup file
+# =============================================================================
+## Bender startup: history, readlines, etc... 
+import Bender.Startup
 
-except:
-    pass
+## startup files to be executed:
+_startups = ( '$BENDERSTART'     ,  
+              '$HOME/.bender'    ,
+              '$HOME/.bender.py' ,
+              '~/.bender'        ,
+              '~/.bender.py'     ,        
+              './.bender'        ,
+              './.bender.py'     )
+
+_executed = set() 
+for _s in _startups : 
+    import os
+    _ss = _s 
+    _ss =  os.path.expandvars ( _ss )
+    _ss =  os.path.expandvars ( _ss )
+    _ss =  os.path.expandvars ( _ss )
+    _ss =  os.path.expanduser ( _ss )
+    _ss =  os.path.expandvars ( _ss )
+    if not os.path.exists     ( _ss ) : continue
+    _ss =  os.path.abspath    ( _ss )
+    if _ss in _executed           : continue
+    ## execute it! 
+    try :
+        execfile      ( _ss , globals() ) 
+        _executed.add ( _ss )
+        logger.info   ( "Startup file '%s' is executed"      % _s )
+    except:
+        logger.error  ( "Error in execution of '%s' startup" % _s )
 
 # =============================================================================
 import ROOT
 from   LoKiCore.basic import cpp
 if not hasattr ( ROOT , 'ostream' ) :
     logger.debug ( 'Fix ostream issue. Needed???')
-    ROOT.gROOT.ProcessLine("#include <ostream>")     
+    ROOT.gROOT.ProcessLine("#include <ostream>")
     
 # =============================================================================
 
