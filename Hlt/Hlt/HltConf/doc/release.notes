@@ -4,6 +4,8 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+!========================= HltConf v13r6 2016-01-20 =========================
+
 ! 2016-01-12 - Sean Benson
  - Add slot to configure pre-filter for PersistReco.
 

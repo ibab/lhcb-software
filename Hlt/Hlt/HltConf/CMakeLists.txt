@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HltConf
 ################################################################################
-gaudi_subdir(HltConf v13r5)
+gaudi_subdir(HltConf v13r6)
 
 gaudi_depends_on_subdirs(Hlt/Hlt1Lines
                          Hlt/Hlt2Lines
