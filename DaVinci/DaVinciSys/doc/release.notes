@@ -22,7 +22,7 @@ It is based on Gaudi v26r4, LHCb v39r2, Rec v18r3, Phys v20r3, Analysis v14r3 an
 and uses LCG_79 with ROOT 6.04.02.
 
 - Packages patched :
-  Event/HltEvent v9r6, Hlt/HltDAQ v4r22, Muon/MuonID v9r19, Tr/TrackExtrapolators v3r0.
+  Event/HltEvent v9r6, Hlt/HltDAQ v4r22, Muon/MuonID v9r19, Tr/TrackExtrapolators v2r40, Tr/TrackTools v5r13p1.
 
 - Packages updated :
   DaVinciTests v3r1, Phys/DaVinci v38r1, Phys/StrippingCache v1r4.
