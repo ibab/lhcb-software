@@ -14,6 +14,7 @@ Purpose: LHCb reconstruction program
   . Added flag to TrackStateProvider to turn off on-demand cache
     (TrackExtrapolators)
   . Updates to photon reconstruction (RichRecPhotonTools)
+  . Fix bug in adding of overlap hits (PatVeloTT)
 
 - Changes to tests
   . References now taken from x86_64-slc6-gcc49-opt tests
