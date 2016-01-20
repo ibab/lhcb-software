@@ -167,7 +167,7 @@ public:
    *  @param c offset
    */
   void solveParabola(const PrHit* hit1, const PrHit* hit2, const PrHit* hit3, float& a, float& b, float& c);
-  
+
   //classes to find number of inner modules a track passes 
   int innerMod(const PrSeedTrack& track);
   int innerMod(PrHits thesehits);
@@ -179,7 +179,13 @@ public:
   public:
     bool operator() (const PrHit* lhs, const float testval ) const { return lhs->x() < testval; }
   };
-  
+
+  /// Class to find upper bound of x of PrHits
+  class upperBoundX {
+  public:
+    bool operator() (const double testval, const PrHit* rhs) const { return testval < rhs->x(); }
+  };
+
   /// Class to compare x positions of PrHits
   class compX {
   public:
@@ -217,7 +223,11 @@ private:
   bool            m_useCubic;
   bool            m_useCorrPos;
   bool            m_SlopeCorr;           
+  bool            m_removeHole;
 
+  float           m_radiusHole;
+  float           m_Chi2LowLine;
+  float           m_Chi2HighLine;
   float           m_maxChi2InTrack;
   float           m_maxIpAtZero;
   float           m_maxIpAtZeroIN;
@@ -227,6 +237,7 @@ private:
   float           m_bestDist;
   float           m_tolXStereo; //added
   float           m_tolXStereoIN; //added
+  float           m_tolXStereoTriangle; //added
   float           m_coord; //added
   float           m_tolTyOffset;
   float           m_tolTySlope;

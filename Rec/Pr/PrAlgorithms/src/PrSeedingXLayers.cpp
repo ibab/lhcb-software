@@ -46,17 +46,18 @@ GaudiHistoAlg ( name , pSvcLocator ),
   declareProperty( "MinSPlanes",          m_minSPlanes           = 4                            );
   declareProperty( "MinTPlanes",          m_minTPlanes           = 9                            );
   declareProperty( "MaxChi2PerDoF",       m_maxChi2PerDoF        = 4.0                          ); 
-  declareProperty( "MaxParabolaSeedHits", m_maxParabolaSeedHits  = 4                            );
+  declareProperty( "MaxParabolaSeedHits", m_maxParabolaSeedHits  = 5                            );
   declareProperty( "TolTyOffset",         m_tolTyOffset          = 0.002                        ); 
   declareProperty( "TolTySlope",          m_tolTySlope           = 0.015                        );
   declareProperty( "MaxIpAtZero",         m_maxIpAtZero          = 6000.                        );
-  declareProperty( "MaxIpAtZeroIN",       m_maxIpAtZeroIN        = 2500.                        );
+  declareProperty( "MaxIpAtZeroIN",       m_maxIpAtZeroIN        = 3000.                        );
   declareProperty( "BestDist",            m_bestDist             = 10.0                         );//added
   declareProperty( "UseFix",              m_useFix               = true                         );//added 
   declareProperty( "TolTriangle",         m_tolTriangle          = 10.* Gaudi::Units::mm        );//added 
   declareProperty( "TolYOffset",          m_tolYOffset           = 100000.* Gaudi::Units::mm    );//added 
   declareProperty( "TolXStereo",          m_tolXStereo           = 2700.* Gaudi::Units::mm      );//added
-  declareProperty( "TolXStereoIN",        m_tolXStereoIN         = 500.* Gaudi::Units::mm       );//added
+  declareProperty( "TolXStereoIN",        m_tolXStereoIN         = 100.* Gaudi::Units::mm       );//added
+  declareProperty( "TolXStereoTriangle",  m_tolXStereoTriangle   = 100.* Gaudi::Units::mm       );//added
   declareProperty( "TolCoord" ,           m_coord                = 0.005                        );//added
   // Parameters for debugging
   declareProperty( "DebugToolName",       m_debugToolName         = ""                          );
@@ -66,13 +67,15 @@ GaudiHistoAlg ( name , pSvcLocator ),
   //Parameter Track Model                                                                                                                              
   declareProperty( "UseCubicCorrection",  m_useCubic              = true                        );
   declareProperty( "dRatio",              m_dRatio                = -0.000262                   ); 
+  declareProperty( "SlopeCorr",           m_SlopeCorr             = false                       ); 
   declareProperty( "UseCorrPosition",     m_useCorrPos            = true                        ); 
   declareProperty( "maxChi2Hits_high",    m_maxChi2HitFullFitHigh = 5.5                         );
   declareProperty( "maxChi2Hits_low",     m_maxChi2HitFullFitLow  = 2.5                         );
   declareProperty( "maxYatZeroLow",       m_maxY0Low              = 70.                         );
   declareProperty( "maxYatzRefLow",       m_maxYZrefLow           = 700.                        );
   declareProperty( "maxChi2HitsX",        m_maxChi2HitsX          = 5.5                         );
-
+  declareProperty( "RadiusHole",          m_radiusHole            = 87.                         );
+  declareProperty( "RemoveHole",          m_removeHole            = true                         );
 
 }
 //=============================================================================
@@ -255,12 +258,11 @@ StatusCode PrSeedingXLayers::execute() {
   }
   
   
-
-  m_trackCandidates.clear();
   if ( m_doTiming ) {
     m_timerTool->stop( m_timeFromForward );
   }
 
+  m_trackCandidates.clear();
   // -- Loop through lower and upper half
   for ( unsigned int part= 0; 2 > part; ++part ){
     //Start timing
@@ -287,6 +289,7 @@ StatusCode PrSeedingXLayers::execute() {
   }
   // Convert to LHCb Tracks
   makeLHCbTracks( result );
+
 
   if ( m_doTiming ) {
     m_timerTool->stop( m_timeFinal);
@@ -435,54 +438,65 @@ bool PrSeedingXLayers::fitXProjection(PrSeedTrack& track ){
       if(!decomp){
 	return false;
       }
-      //Solve linear system                                                                                                                                  
+      //Solve linear system  
       decomp.Solve(rhs);
       rhs[1]*=1.e-3;
       rhs[2]*=1.e-6;
       if (msgLevel(MSG::DEBUG)) debug()<<"Loop \t"<<loop<<"\n a = \t"<<rhs[0]<<"\n b = \t"<<rhs[1]<<"\n c = \t"<<rhs[2]<<endmsg;
-      // protect against unreasonable track parameter corrections                                                                                            
-      // (check that out)                                                                                                                                    
+      // protect against unreasonable track parameter corrections
+      // (check that out) 
       if(std::fabs(rhs[0]) > 1.e4 || std::fabs(rhs[1]) > 5. ||
 	 std::fabs(rhs[2]) > 1.e-3 ) return false;
-      //Small corrections                                                                                                                                    
+      //Small corrections
       track.updateParameters(rhs[0],rhs[1],rhs[2],0.,0.);
       if(loop==0 && m_useCubic){
 	track.setdRatio(m_dRatio);
       }
-      //Put back later faster maybe                                                                                                                          
+      //Put back later faster maybe 
       if(loop >0 && std::abs(rhs[0]) < 5e-5 && std::abs(rhs[1]) < 5e-8 &&
 	 std::abs(rhs[2]) < 5e-11){
-	break;
+	loop=2;
+      }
+      if(loop==2){
+	float maxChi2 = 0.;
+	PrHits::iterator worst = track.hits().begin();
+
+	for ( PrHits::iterator itH = track.hits().begin(); track.hits().end() != itH; ++itH ) 
+	  {
+	    float chi2_onHit = track.chi2( *itH );
+	    if ( chi2_onHit > maxChi2 ){
+	      maxChi2 = chi2_onHit;
+	      worst=itH;
+	    }
+	  }
+	
+	if ( m_maxChi2HitsX > maxChi2 ) return true;
+	else if (track.hits().size() > m_minXPlanes){
+	  track.hits().erase( worst );
+	  loop=1;
+	}
+	else return false;
       }
     }
-  //Compute some values on the track                                                                                                                       
-  float maxChi2 = 0.;
-  for ( PrHits::iterator itH = track.hits().begin(); track.hits().end() != itH; ++itH ) 
-    {
-      float chi2_onHit = track.chi2( *itH );
-      if ( chi2_onHit > maxChi2 ){
-	maxChi2 = chi2_onHit;
-      }
-    }
-  return ( m_maxChi2HitsX > maxChi2 );
+  return false;
 }
 
-//=========================================================================                                                                                
-//  Fit the track, return OK if fit sucecssfull                                                                                                            
-//=========================================================================                                                                                
+//=========================================================================
+//  Fit the track, return OK if fit sucecssfull
+//=========================================================================                                     
 bool PrSeedingXLayers::fitSimultaneouslyXY( PrSeedTrack& track, int refit){
 
-  if( track.nx() <m_minXPlanes || track.ny() <m_minSPlanes ) return false;
   float mat[15];
   float rhs[5];
 
   const float zRef = m_zReference;// m_geoTool->zReference();                                                                                             
   for ( int loop = refit; 3 > loop ; ++loop ){
-    if(loop ==1 && m_useCubic && m_useCorrPos){
+    if(loop > 0  && m_useCubic && m_useCorrPos){
       float RadiusPosition = std::sqrt((0.0005*0.0005*track.ax()*track.ax() + 0.001*0.001*track.y(zRef)*track.y(zRef)));
       float dRatioPos = -1.*(2.633e-4 - 3.59957e-6*RadiusPosition + 4.7312e-5*RadiusPosition*RadiusPosition);
       track.setdRatio(dRatioPos);
     }
+    const float dRatio = track.dRatio();
 
     std::fill(mat,mat+15,0.);
     std::fill(rhs,rhs+5,0.);
@@ -495,8 +509,7 @@ bool PrSeedingXLayers::fitSimultaneouslyXY( PrSeedTrack& track, int refit){
       }
       const float dxdy = (*itH)->dxDy();
       const float yOnTrack = track.yOnTrack( (*itH) ) ;
-      const float   dz = 0.001*((*itH)->z( yOnTrack ) - zRef);
-      const float dRatio = track.dRatio();
+      const float dz = 0.001*((*itH)->z( yOnTrack ) - zRef);
       const float deta = dz*dz*(1. + dz*dRatio);
       const float wdz = w * dz;
       const float weta = w * deta;
@@ -526,20 +539,54 @@ bool PrSeedingXLayers::fitSimultaneouslyXY( PrSeedTrack& track, int refit){
     if( loop >0 &&(std::fabs(rhs[0]) > 1e4 || std::fabs(rhs[1]) > 5. ||
                    std::fabs(rhs[2]) > 1e-3 || std::fabs(rhs[3]) > 1e4 || std::fabs(rhs[4]) > 1.)) return false;
     track.updateParameters(rhs[0],rhs[1],rhs[2],rhs[3],rhs[4]);
-  }
-  float maxChi2 =0.;
-  for( PrHits::iterator itH = track.hits().begin(); track.hits().end() != itH; ++itH ){
-    float chi2_onHit = track.chi2( *itH);
-    if ( chi2_onHit > maxChi2 ){
-      maxChi2 = chi2_onHit;
+    if(loop==1){
+      float maxChi2 =-1.;
+      for( PrHits::iterator itH = track.hits().begin(); track.hits().end() != itH; ++itH ){
+      	float chi2_onHit = track.chi2( *itH);
+	if ( chi2_onHit > maxChi2 ){
+	  maxChi2 = chi2_onHit;
+	}
+      }//Set Max Chi2DoF
+      
+      track.setMaxChi2(maxChi2);
+      if( (track.hits().size()>10) && maxChi2<m_maxChi2HitFullFitHigh) return true;
+      else if( std::fabs(track.y(0.))< m_maxY0Low &&
+	       maxChi2<m_maxChi2HitFullFitLow &&
+	       std::fabs(track.y(zRef)) < m_maxYZrefLow ) return true;
     }
-  }//Set Max Chi2DoF                                                                                                                                       
+    else if(loop==2){
+      float maxChi2 =-1.;
+      PrHits::iterator worst = track.hits().begin();
 
-  track.setMaxChi2(maxChi2);
-  if( (track.hits().size()>10) && maxChi2<m_maxChi2HitFullFitHigh) return true;
-  if( std::fabs(track.y(0.))< m_maxY0Low &&
-      maxChi2<m_maxChi2HitFullFitLow &&
-      std::fabs(track.y(zRef)) < m_maxYZrefLow ) return true;
+      for( PrHits::iterator itH = track.hits().begin(); track.hits().end() != itH; ++itH ){
+      	float chi2_onHit = track.chi2( *itH);
+	if ( chi2_onHit > maxChi2 ){
+	  maxChi2 = chi2_onHit;
+	  worst=itH;
+	}
+      }//Set Max Chi2DoF
+
+      track.setMaxChi2(maxChi2);
+      if( (track.hits().size()>10) && maxChi2<m_maxChi2HitFullFitHigh) return true;
+      else if( std::fabs(track.y(0.))< m_maxY0Low &&
+	       maxChi2<m_maxChi2HitFullFitLow &&
+	       std::fabs(track.y(zRef)) < m_maxYZrefLow ) return true;
+      else if(track.hits().size() > m_minTPlanes){
+	track.hits().erase( worst );
+	if( (*worst)->isX()){
+	  track.setnXnY( track.nx()-1, track.ny());
+	}else{
+	  track.setnXnY( track.nx(), track.ny()-1);
+	}
+	if( track.nx() <m_minXPlanes || track.ny() <m_minSPlanes ) return false;
+	else loop=1;
+      }
+      else return false;
+    }
+
+
+
+  }
   return false;
 }
 
@@ -871,7 +918,7 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
           if( xHits.size()==4 &&  innerMod(xHits) > 1 ) continue;
 
           // shifted before continue due to debug reasons
-          std::stable_sort(xHits.begin(), xHits.end(), compX());
+          std::sort(xHits.begin(), xHits.end(), compLHCbID());
 
 
           bool isEqual = false;
@@ -939,8 +986,8 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
     } //end loop first zone 
   } //end loop case
 
- 
- std::sort( m_xCandidates.begin(), m_xCandidates.end(), PrSeedTrack::GreaterBySize() );                   
+  //sort by size and chi2, good ones come first
+ std::sort( m_xCandidates.begin(), m_xCandidates.end(), PrSeedTrack::LowerBySize() );                   
  
  for ( PrSeedTracks::iterator itT1 = m_xCandidates.begin(); m_xCandidates.end() !=itT1; ++itT1 ) {  
    if ( !(*itT1).valid() ) continue;
@@ -952,9 +999,11 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
      PrHits::iterator itEnd1 = (*itT1).hits().end();
      PrHits::iterator itEnd2 = (*itT2).hits().end();
      int Compare = (*itT1).hits().size()+(*itT2).hits().size();
+     int Comparediff = (*itT1).hits().size()-(*itT2).hits().size();
      unsigned int maxCommon = 3;
      if( Compare <10 )	maxCommon = 1;	//5 vs 4
-     else if( Compare ==10 )maxCommon = 2; //5 vs 5 or 6 vs 4 
+     else if( Compare ==10 && Comparediff==0 ) maxCommon = 2; //5 vs 5 or 6 vs 4 
+     else if( Compare ==10 )                   maxCommon = 1; //5 vs 5 or 6 vs 4 
      
      unsigned int nCommon = 0;
      while( itH1 != itEnd1 && itH2 != itEnd2 ){
@@ -974,94 +1023,17 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
      }
      
      if(nCommon >= maxCommon){
-       (*itT1).setValid(false);
-       break;
+       (*itT2).setValid(false);
      }
    }
  }
  
  if(m_xOnly){
-   for( PrSeedTracks::iterator itT1 = m_xCandidates.begin() ; m_xCandidates.end()!= itT1; ++itT1){
-      if((*itT1).valid()) m_trackCandidates.push_back( (*itT1));
+   for( PrSeedTracks::iterator itT = m_xCandidates.begin() ; m_xCandidates.end()!= itT; ++itT){
+      if((*itT).valid()) m_trackCandidates.push_back( (*itT));
    }
  }
-    
-  
-
  
-  /*
-  //order Track candidates in increasing size
-  std::stable_sort( m_xCandidates.begin(), m_xCandidates.end(), PrSeedTrack::GreaterBySize() );
-  
-  //====================================================================
-  // Remove clones, i.e. share more than 2 hits (why not 3?)
-  //====================================================================
-  for ( PrSeedTracks::iterator itT1 = m_xCandidates.begin(); m_xCandidates.end() !=itT1; ++itT1 ) {
-    if ( !(*itT1).valid() ) continue;
-    if ( (*itT1).hits().size() != 6 ) {
-      int nUsed = 0;
-      
-      //count number of used hits in same 
-      for ( PrHits::iterator itH = (*itT1).hits().begin(); (*itT1).hits().end() != itH; ++ itH) {
-        if ( (*itH)->isUsed()) ++nUsed;
-      }
-      if ( 1 < nUsed ) 
-      {
-        (*itT1).setValid( false );
-        continue;
-      }
-    }
-
-    for ( PrSeedTracks::iterator itT2 = itT1 + 1; m_xCandidates.end() !=itT2; ++itT2 ) {
-      if ( !(*itT2).valid() ) continue;
-
-      if ( (*itT2).hits().size() != 6 ) {
-	int nUsed2 = 0;
-      
-	//count number of used hits in same 
-	for ( PrHits::iterator itH2 = (*itT2).hits().begin(); (*itT2).hits().end() != itH2; ++ itH2) {
-	  if ( (*itH2)->isUsed()) ++nUsed2;
-	}
-	if ( 1 < nUsed2 ) 
-	  {
-	    (*itT2).setValid( false );
-	    continue;
-	  }
-      }
-
-      int nCommon = 0;
-      PrHits::iterator itH1 = (*itT1).hits().begin();
-      PrHits::iterator itH2 = (*itT2).hits().begin();
-
-      PrHits::iterator itEnd1 = (*itT1).hits().end();
-      PrHits::iterator itEnd2 = (*itT2).hits().end();
-
-      while ( itH1 != itEnd1 && itH2 != itEnd2 ) {
-        if ( (*itH1)->id() == (*itH2)->id() ) {
-          ++nCommon;
-          ++itH1;
-          ++itH2;
-        } else if ( (*itH1)->id() < (*itH2)->id() ) {
-          ++itH1;
-        } else {
-          ++itH2;
-        }
-      }
-      if ( nCommon > 2 ) {
-        if ( (*itT1).hits().size() > (*itT2).hits().size() ) {
-          (*itT2).setValid( false );
-        } else if ( (*itT1).hits().size() < (*itT2).hits().size() ) {
-          (*itT1).setValid( false );
-        } else if ( (*itT1).chi2PerDoF() < (*itT2).chi2PerDoF() ) {
-          (*itT2).setValid( false );
-        } else {
-          (*itT1).setValid( false );
-        }
-      }
-    }
-    if ( m_xOnly && (*itT1).valid() ) m_trackCandidates.push_back( *itT1 );
-  }
-*/
 }
 
 //=========================================================================
@@ -1099,6 +1071,7 @@ int PrSeedingXLayers::matchXCandidate( PrSeedTrack& track ){
 //=========================================================================
 void PrSeedingXLayers::addStereo2( unsigned int part ) {
   PrSeedTracks xProjections;
+
   for ( PrSeedTracks::iterator itT1 = m_xCandidates.begin(); m_xCandidates.end() !=itT1; ++itT1 ) {
     if ( !(*itT1).valid() ) continue;
     xProjections.push_back( *itT1 );
@@ -1110,22 +1083,27 @@ void PrSeedingXLayers::addStereo2( unsigned int part ) {
     firstZone = 2;
     lastZone  = 22;
   }
+ 
   for ( PrSeedTracks::iterator itT = xProjections.begin(); xProjections.end() !=itT; ++itT ){
+
     PrHits myStereo;
-    myStereo.reserve(30);
-    // loop over all zones to improve efficiency of stereo hits & triangle fixing                                                                        
+    myStereo.reserve(6);
+    // loop over all zones to improve efficiency of stereo hits & triangle fixing 
+    
     const unsigned int stepSize = m_useFix ? 1 : 2;
     for ( unsigned int kk = firstZone; lastZone > kk ; kk+= stepSize ) {
-      if ( m_hitManager->zone(kk)->isX() )
-	{
-	  continue;
-	}
-
-      float dxDy = m_hitManager->zone(kk)->dxDy();
-      float zPlane = m_hitManager->zone(kk)->z(); //to be sure of it  
+      
+      bool wrongSide= kk%2;
+      if(part==1) wrongSide= !wrongSide; 
+      
+      PrHitZone* uvZone = m_hitManager->zone(kk);
+      if ( uvZone->isX() )   continue;
+	
+      float dxDy = uvZone->dxDy();
+      float zPlane = uvZone->z(); //to be sure of it  
       float invdxDy = 1./dxDy;
       float invzPlane = 1./zPlane;
-      float xPred = (*itT).x(m_hitManager->zone(kk)->z() ); //Predicted X                                            
+      float xPred = (*itT).x(uvZone->z() ); //Predicted X                                            
 
 #ifdef DEBUG_HISTO
       plot2D(xPred,zPlane,"xPred_ZPlane","xPred_ZPlane",-3000.,3000.,6000.,12000.,1000,1000);
@@ -1138,8 +1116,6 @@ void PrSeedingXLayers::addStereo2( unsigned int part ) {
         xMax = xPred - m_tolXStereo* dxDy;
         xMin = xPred + m_tolXStereoIN * dxDy;
       }
-      
-
       if ( xMin > xMax ) {
         float tmp = xMax;
         xMax = xMin;
@@ -1147,37 +1123,48 @@ void PrSeedingXLayers::addStereo2( unsigned int part ) {
       }
 
 
+      //regions for triangle
+      float xMinT = xPred + m_tolXStereoTriangle * dxDy;
+      float xMaxT = xPred - m_tolXStereoTriangle * dxDy;
+      
+      if ( xMinT > xMaxT ) {
+        float tmp = xMaxT;
+        xMaxT = xMinT;
+        xMinT = tmp;
+      }
+
+
+
 #ifdef DEBUG_HISTO
       plot2D(xMax-xMin,xPred,"xMax-xMin Vs xPred","xMax-xMin Vs xPred",-3000.,3000.,-3000.,3000.,1000,1000);
 #endif
-      
-      PrHits::iterator itH = m_hitManager->zone(kk)->hits().begin();
 
-      for ( ;
-            m_hitManager->zone(kk)->hits().end() != itH; ++itH ) {
-        if ( (*itH)->x() < xMin ) continue;
-        if ( (*itH)->x() > xMax ) break;
+      PrHits::iterator itH= uvZone->hits().begin();
+      PrHits::iterator itEnd= uvZone->hits().end();
+      
+      if(wrongSide){
+	itH   = std::lower_bound( uvZone->hits().begin(), uvZone->hits().end(), xMinT, lowerBoundX() );
+	itEnd = std::upper_bound( uvZone->hits().begin(),uvZone->hits().end(),xMaxT, upperBoundX());
+      }
+      else{
+	itH   = std::lower_bound( uvZone->hits().begin(), uvZone->hits().end(), xMin, lowerBoundX() );
+	itEnd = std::upper_bound( uvZone->hits().begin(),uvZone->hits().end(),xMax, upperBoundX());
+      }
+      
+      for ( ;  itEnd != itH; ++itH ) {
 
 	const float yOnTrack = ( xPred - (*itH)->x() )  * invdxDy;
-	if (m_useFix && ((part==0&&kk%2==1) || (part==1&&kk%2==0) )){
 
-	  if ( yOnTrack  < (*itH)->yMin() - m_tolTriangle  ) {
-	    continue;
-	  }
-	  if ( yOnTrack  > (*itH)->yMax() + m_tolTriangle  ) {
-	    continue;
-	  }
-	  if ( (0 == part) && (yOnTrack < -m_tolYOffset) ) {
-	    continue;
-	  }
-	  if ( (1 == part) && (yOnTrack > m_tolYOffset) ) {
-	    continue; // bottom                                                                                                                                                                               
-	  }
+	if(m_removeHole){
+	  double radius =  yOnTrack*yOnTrack + xPred*xPred;
+	  if(  radius < m_radiusHole*m_radiusHole) continue;
 	}
-
+	
+	if ( yOnTrack  < (*itH)->yMin() - m_tolTriangle )  continue;
+	if ( yOnTrack  > (*itH)->yMax() + m_tolTriangle )  continue;
+	
 	(*itH)->setCoord( ((*itH)->x() - xPred) * invdxDy  * invzPlane );
-
-
+	
 	if ( 1 == part && (*itH)->coord() < -m_coord ) {
           continue;
 	}
@@ -1192,44 +1179,75 @@ void PrSeedingXLayers::addStereo2( unsigned int part ) {
     PrPlaneCounter plCount;
     //Save position of this x candidate, for later use                                                                                                                                                          
     unsigned int firstSpace = m_trackCandidates.size();
+    
     PrHits::iterator itBeg = myStereo.begin();
     PrHits::iterator itEnd = itBeg + m_minSPlanes  ; //Why 5?
 
     while ( itEnd < myStereo.end() ) {
       float tolTy = m_tolTyOffset + m_tolTySlope * fabs( (*itBeg)->coord() );
-      // Take the next 4 hits and check if inside a given tolerance                                                                                                                                             
+      // Take the next 4 hits and check if inside a given tolerance
       if ( (*(itEnd-1))->coord() - (*itBeg)->coord() < tolTy ) {
         while( itEnd+1 < myStereo.end() &&
                (*itEnd)->coord() - (*itBeg)->coord() < tolTy ) {
           ++itEnd;
         }
 
-	// count planes                                                                                                                                                                                         
+	// count planes
         plCount.set( itBeg, itEnd );
 
 	if ( m_minSPlanes-1 < plCount.nbDifferent() ) {
           PrSeedTrack temp( *itT );
+	  
+	  int nused=0;
           for ( PrHits::iterator itH = itBeg; itEnd != itH; ++itH ) {
             temp.addHit( *itH );
+	    if( (*itH)->isUsed()) nused++;
           }
+	  
+	  
 	  temp.setnXnY( (*itT).hits().size(), temp.hits().size()-(*itT).hits().size());
-          bool ok = fitSimultaneouslyXY( temp , 0);
+
+	  bool first_ok=true;
+	  if( temp.hits().size() < m_minTPlanes ) first_ok=false;
+	  else if( temp.hits().size()<10 &&  innerMod(temp) > 3 ) first_ok=false;
+	  else if( temp.nx() < m_minXPlanes || temp.ny() < m_minSPlanes )first_ok=false;
+	  else if((*itT).hits().size()== 4 && nused>0 ) first_ok=false;
+	  else if((*itT).hits().size()== 5 && nused>1 ) first_ok=false;
+	    
+	  if(!first_ok){
+	    ++itBeg;
+	    itEnd = itBeg + m_minSPlanes; 
+	    continue;
+	  }
+	  
+	  bool ok = fitSimultaneouslyXY( temp , 0);
 
           //ok = fitTrack( temp );
           //ok = fitTrack( temp );
 	  
-          while ( !ok && temp.hits().size() > m_minTPlanes ) {
-            ok = removeWorstAndRefit( temp, false );
-          }
-
+	  while ( !ok && temp.hits().size() > m_minTPlanes ) {
+	    ok = removeWorstAndRefit( temp, false );
+	  }
+	  
 	  if(temp.hits().size()<12) ok=addEmptyLayers(part, temp);
+
           if ( ok  &&  (temp.hits().size() > m_minTPlanes ||  (temp.hits().size()<10 &&  innerMod(temp) < 4 ))){
+	  
 	    setChi2( temp );
 	    float maxChi2 = m_maxChi2PerDoF + 6*temp.xSlope(9000)*temp.xSlope(9000);
-	    if(temp.chi2PerDoF() < maxChi2 ){                                                                         
-	      m_trackCandidates.push_back( temp );
+
+	    if(temp.chi2PerDoF() < maxChi2 ){
+	      
 	      std::sort( temp.hits().begin(),  temp.hits().end(), compLHCbID());
-	      if(temp.hits().size()==12) break;
+	      m_trackCandidates.push_back( temp );
+	      
+	      if(temp.hits().size()==12) {
+		for ( PrHits::iterator itH = temp.hits().begin(); temp.hits().end() != itH; ++ itH) {
+		  (*itH)->setUsed( true );
+		}
+		itEnd= myStereo.end();
+	      
+	      }
 	      else   itBeg = itEnd-1;
 	    }
 	  }
@@ -1238,31 +1256,18 @@ void PrSeedingXLayers::addStereo2( unsigned int part ) {
       ++itBeg;
       itEnd = itBeg + m_minSPlanes;
     }
-    
-    //=== Remove bad candidates: Keep the best for this input track      
+
+    //start the clone wars
     if ( m_trackCandidates.size() > firstSpace+1 ) {
-      for ( unsigned int kk = firstSpace; m_trackCandidates.size()-1 > kk ; ++kk ) {
-        if ( !m_trackCandidates[kk].valid() ) continue;
-        for ( unsigned int ll = kk + 1; m_trackCandidates.size() > ll; ++ll ) {
-          if ( !m_trackCandidates[ll].valid() ) continue;
-          if ( m_trackCandidates[ll].hits().size() < m_trackCandidates[kk].hits().size() ) {
-            m_trackCandidates[ll].setValid( false );
-          } else if ( m_trackCandidates[ll].hits().size() > m_trackCandidates[kk].hits().size() ) {
-            m_trackCandidates[kk].setValid( false );
-	  } else if ( m_trackCandidates[kk].chi2() < m_trackCandidates[ll].chi2() ) {
-            m_trackCandidates[ll].setValid( false );
-          } else {
-            m_trackCandidates[kk].setValid( false );
-          }
-        }
+      //sort by size and chi2, first one is the good one
+      std::sort( m_trackCandidates.begin()+firstSpace , m_trackCandidates.end(), PrSeedTrack::LowerBySize() );
+      for ( unsigned int kk = firstSpace+1; m_trackCandidates.size() > kk ; ++kk ) {
+	m_trackCandidates[kk].setValid(false) ;
       }
-    }//loop candidates removal                                                                                           
-    
+    }
 
-  }
+  }//x projections
 }
-
-
 
 //=========================================================================
 // Solve parabola using Cramer's rule
@@ -1326,9 +1331,9 @@ void PrSeedingXLayers::solveParabola(const PrHit* hit1, const PrHit* hit2, const
   */
 }
 
-//===============================================================                                                                                        
-//--- number of  inner modules a track passes                                                                                                           
-//===============================================================                                                                                       
+//=============================================================== 
+//--- number of  inner modules a track passes
+//===============================================================
 int PrSeedingXLayers::innerMod( const PrSeedTrack& track  ) {
   unsigned int ninner=0;
   for ( PrHits::const_iterator itF = track.hits().begin(); track.hits().end() != itF; ++itF ) {
@@ -1365,14 +1370,15 @@ bool PrSeedingXLayers::addEmptyLayers(  unsigned int part,  PrSeedTrack& track  
   for ( unsigned int kk = part; m_hitManager->nbZones()  > kk ; kk += 2 ) {
 
     if( 0 == emptyPlanes[kk/2] ) continue;
-    float yPred = track.y(m_hitManager->zone(kk)->z() ); //Predicted y                                                                                                                                                  
-    float dxDy = m_hitManager->zone(kk)->dxDy();
-    float zPlane = m_hitManager->zone(kk)->z(); 
-    zPlane= m_hitManager->zone(kk)->z(yPred);  //correct for dzDy  
+    PrHitZone* zone = m_hitManager->zone(kk);
+    float yPred = track.y(zone->z() ); //Predicted y                                                                                                                                                  
+    float dxDy = zone->dxDy();
+    float zPlane = zone->z(); 
+    zPlane= zone->z(yPred);  //correct for dzDy  
     yPred = track.y(zPlane );//to be sure of it
     float xPred = track.x(zPlane ); //Predicted X
 
-    float xMax = xPred + dxDy*yPred  ;
+    float xMax = xPred + dxDy*yPred   ;
     float xMin = xPred + dxDy*yPred  ;
 
     if ( xMin > xMax ) {
@@ -1381,11 +1387,14 @@ bool PrSeedingXLayers::addEmptyLayers(  unsigned int part,  PrSeedTrack& track  
       xMin = tmp;
     }
 
-    PrHits::iterator itH = m_hitManager->zone(kk)->hits().begin();
-    for ( ;
-          m_hitManager->zone(kk)->hits().end() != itH; ++itH ) {
-      if ( (*itH)->x() < xMin-2.1  ) continue;
-      if ( (*itH)->x() > xMax+2.1  ) break;
+    xMax += 2.1;
+    xMin -= 2.1;
+
+    PrHits::iterator itH = std::lower_bound( zone->hits().begin(), zone->hits().end(), xMin, lowerBoundX() );
+    
+    for ( ; zone->hits().end() != itH; ++itH ) {
+      if ( (*itH)->x() < xMin  ) continue;
+      if ( (*itH)->x() > xMax  ) break;
       if( yPred < (*itH)->yMin() -2.1)continue;
       if( yPred > (*itH)->yMax() +2.1  )continue;;
       
@@ -1405,9 +1414,9 @@ bool PrSeedingXLayers::addEmptyLayers(  unsigned int part,  PrSeedTrack& track  
       track.addHit( *itH );
       
       if( (*itH)->isX()){
-	track.setnXnY( track.nx()-1, track.ny());
+	track.setnXnY( track.nx()+1, track.ny());
       }else{
-	track.setnXnY( track.nx(), track.ny()-1);
+	track.setnXnY( track.nx(), track.ny()+1);
       }
 
       ok = fitSimultaneouslyXY( track, 1);
