@@ -69,7 +69,7 @@ StatusCode TupleToolAllTracks::initialize() {
   //get tools
   m_dva                 = Gaudi::Utils::getIDVAlgorithm ( contextSvc() ) ;
   m_dist                = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
-  m_pvReFitter          = tool<IPVReFitter>("LoKi::PVReFitter::PUBLIC", this );
+  m_pvReFitter          = tool<IPVReFitter>("LoKi::PVReFitter:PUBLIC", this );
   m_pVertexFit          = m_dva->vertexFitter();
   m_particleDescendants = tool<IParticleDescendants> ( "ParticleDescendants");
   if( !m_dva )                 return Error("Couldn't get parent DVAlgorithm",                 StatusCode::FAILURE);

@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2016-01-20 - Matthew Rudolph
+ - Fix string in TupleToolAllTracks to retrieve LoKi::PVReFitter tool
+
 !======================= DecayTreeTuple v5r4 2015-12-02 ======================
 
 ! 2015-12-01 - Marco Cattaneo
