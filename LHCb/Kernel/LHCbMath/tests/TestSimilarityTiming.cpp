@@ -17,6 +17,10 @@ using std::chrono::nanoseconds;
 using std::chrono::time_point;
 
 // ============================================================================
+// VectorClass 
+// ============================================================================
+#include "VectorClass/instrset.h"
+// ============================================================================
 // Gaudi and ROOT types
 // ============================================================================
 #include "GaudiKernel/GenericMatrixTypes.h"
@@ -27,8 +31,6 @@ using std::chrono::time_point;
 // LHCbMath
 // ============================================================================
 #include "LHCbMath/Similarity.h"
-#include "../src/instrset.h"
-
 
 #include <TH1D.h>
 

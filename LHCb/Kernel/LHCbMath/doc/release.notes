@@ -6,12 +6,15 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
-! 2016-01-07 - VanyaBelyaev
-  Replace Boost.Math for inverse imcomplete beta function with GSL 
+! 2016-01-21 - Marco Cattaneo
+ - Remove instrset_detect.cpp, instrset.h, now available from VectorClass
+ - Protect a gcc specific pragma to silence a clang warning 
 
-! 2016-01-06 - VanyaBelyaev
-  add some defautl constructors make serialization machnery happy 
+! 2016-01-07 - Vanya Belyaev
+ - Replace Boost.Math for inverse incomplete beta function with GSL 
 
+! 2016-01-06 - Vanya Belyaev
+ - Add some default constructors to make serialization machinery happy 
 
 ! 2015-12-15 - Manuel Tobias Schiller
  - BloomFilter: fix clang warning

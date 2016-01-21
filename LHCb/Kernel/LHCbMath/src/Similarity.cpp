@@ -1,9 +1,11 @@
+#ifdef __GNUC__
 #pragma GCC optimize "O3"
+#endif
 
 #include "LHCbMath/Similarity.h"
 #include  <stdexcept>
 #include  <type_traits>
-#include "instrset.h"
+#include "VectorClass/instrset.h"
 
 namespace {
   template <typename Vtbl, typename Trampoline, typename... Args>
