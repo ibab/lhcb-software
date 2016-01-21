@@ -36,7 +36,7 @@ void SobelPeakPixelFinder::findBoundary( Pixel::List & boundary ) const
         //const double local_thr = localThreshold(icol,irow);
         if ( isPeak( icol, irow, global_thr ) )
         {
-          boundary.push_back( Pixel(icol,irow,m_hist->GetBinContent(icol+1,irow+1)) );
+          boundary.emplace_back( Pixel(icol,irow,m_hist->GetBinContent(icol+1,irow+1)) );
           selectNeighbours( icol, irow, boundary );
         }
       }
@@ -73,7 +73,7 @@ SobelPeakPixelFinder::selectNeighbours( const int COL,
           if ( COL == icol && ROW == irow ) { continue ; }
           if ( m_hist->GetBinContent(icol+1,irow+1)/binCont > m_params.neighbourFrac )
           {
-            boundary.push_back( Pixel(icol,irow,m_hist->GetBinContent(icol+1,irow+1)) );
+            boundary.emplace_back( Pixel(icol,irow,m_hist->GetBinContent(icol+1,irow+1)) );
           }
         }
       }
