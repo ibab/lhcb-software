@@ -124,7 +124,7 @@ void PrVeloUTChecker::computeEfficiency()
 	for (LHCb::MCParticles::const_iterator ip = particles->begin(); ip != particles->end(); ++ip)
 	{
 		if (!m_selector->isReconstructibleAs(IMCReconstructible::ChargedLong,*ip)) continue;
-		if ( fabs((*ip)->particleID().pid())==11 ) continue;
+		if ( std::abs((*ip)->particleID().pid())==11 ) continue;
 
 		std::vector<bool> flags;
 		flags.push_back(true);//reco'ble as long
