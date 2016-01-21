@@ -24,6 +24,9 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2016-01-21 - Vanya Belyaev
+ - add proper function to rewinding  (many thanks to Thomas RUF)
+
 ! 2016-01-19 - Vanya Belyaev
  - add startup files 
  - remove option '-c --castor'

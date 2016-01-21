@@ -99,6 +99,77 @@ for i in [
 
         
 # =============================================================================
+## get iteration over raw banks in raw-event
+#  @code
+#  raw_event = ...
+#  for bank in raw_event :  print bank
+#  @endcode
+def _re_iter_ ( rawevt ) :
+    """Get iteration over raw banks in raw-event
+    >>> raw_event = ...
+    >>> for bank in raw_event :  print bank
+    """
+    for _bt in range ( 0 , 100 ) :
+        _bn = LHCb.RawBank.typeName ( _bt )
+        if 'Undefined_name' == _bn : continue
+        _banks = rawevt.banks ( _bt )
+        for _b in _banks :
+            yield _b
+            
+# =============================================================================
+## Number of banks in RawEvent 
+#  @code
+#  raw_event = ...
+#  print ' total: ', raw_event.nBanks()
+#  print ' Muon : ', raw_event.nBanks( LHCb.RawBank.Muon )
+#  @endcode
+def _re_nbanks_ ( rawevt , bank_type = None ) :
+    """Number of banks in RawEvent 
+    >>> raw_event = ...
+    >>> print ' total: ', raw_event.nBanks()
+    >>> print ' Muon : ', raw_event.nBanks( LHCb.RawBank.Muon )
+    """
+    
+    if isinstance ( bank_type , int ) :
+        return len( rawevt.banks( bank_type ) )
+    
+    _nb = 0
+    for _bt in range ( 0 , 100 ) :
+        _bn = LHCb.RawBank.typeName ( _bt )
+        if 'Undefined_name' == _bn : continue
+        _banks = revt.banks ( _bt )
+        _nb   += _banks
+    return _nb
+
+# =============================================================================
+## get a list of bank types in raw event
+#  @code
+#  raw_event = ...
+#  for i in raw_event.bank_list() : print i 
+#  @endcode
+def _re_banks_ ( rawevt ) :
+    """Get a list of bank types in raw event
+    >>> raw_event = ...
+    >>> for i in raw_event.bank_list() : print i 
+    """
+    _banks = {}
+    for _bank in rawevt :
+        _nb = _bank.type()  
+        _banks[ _nb ] = 1 + _banks.get ( _nb , 0 )
+    _keys = _banks.keys()
+    _keys.sort()
+    return [ '%s/%d' % ( LHCb.RawBank.typeName ( _k ) ,_banks[_k]) for _k in _keys ] 
+
+# =============================================================================
+## print rawevent 
+def _re_print_ ( rawevt ) :
+    return 'LHCb::RawEvent(%s)' % _re_banks_ ( rawevt )
+
+LHCb.RawEvent.__iter__ = _re_iter_
+LHCb.RawEvent.__len__  = _re_nbanks_
+LHCb.RawEvent.__repr__ = _re_print_
+
+# =============================================================================
 if __name__ == '__main__' :
     
     logger.info ( 80*'*'  ) 

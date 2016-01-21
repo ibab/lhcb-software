@@ -143,7 +143,7 @@ if not hasattr ( _EvtSel , '_openNew_') :
 import AnalysisPython.Dir 
 logger.debug ( 'decorate iDataSvc with proper "dir/ls" methods ')
 
-## decorate the algorhtms with the proper dumpHistos methods
+## decorate the algorithms with the proper dumpHistos methods
 import GaudiPython.Bindings 
 _iAlgorithm = GaudiPython.Bindings.iAlgorithm          ##    Algorithm interface
 _iAlgTool   = GaudiPython.Bindings.iAlgTool            ##         Tool interface

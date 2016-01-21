@@ -60,13 +60,14 @@ __date__    = "2010-00-12"
 __version__ = '$Revision$'
 __all__     = (
     ##
-    'run'               , 
-    'skip'              , 
+    'run'               , ## run  N events
+    'skip'              , ## skip N events 
+    'next'              , ## go to run event
+    'rewind'            , ## rewind 
     'ls'                ,
     'get'               ,
     'appMgr'            ,
-    'dumpHistos'        ,
-    'next'              ,
+    'dumpHistos'        , 
     ##
     'post_Action'       , 
     'pre_Action'        , 
@@ -119,12 +120,14 @@ def setPreAction ( action ) :
     __Bender_Pre_Action = action
         
 # =============================================================================
-## run events 
+## run N events
+#  @code
+#  run(10)
+#  @endcode 
 def run ( nEvents     =   -1 ,
           postAction  = None ,
           preAction   = None ) :
-    """
-    Run gaudi
+    """Run gaudi
 
     >>> run(50)
     
@@ -147,6 +150,16 @@ def run ( nEvents     =   -1 ,
         
     return st 
 
+# =============================================================================
+## go to next  event
+#  @code 
+#  next()
+#  @endcode 
+def next ( num = 1 )  :
+    """Go to next event
+    >>> next()
+    """
+    return run ( num )
 
 # ==============================================================================
 ## define the input data for Bender job
@@ -255,14 +268,18 @@ def appMgr( *varg , **kwarg ) :
 
 # =============================================================================
 ## define "easy"-function to browse TES
+#  @code
+#  ls('/Event')
+#  ls('/Event/MC', forceload = True )
+#  @endcode 
 def ls  ( *args , **kwargs ) :
-    """
-    Browse the Transient Store
+    """Browse the Transient Store
 
     >>> run(1)
     >>> ls()
 
-    >>> ls('/Event/Strip')
+    >>> ls('/Event/MC')
+    >>> ls('/Event/MC', forceload = True)
     
     """
     _g  = appMgr()
@@ -272,36 +289,40 @@ def ls  ( *args , **kwargs ) :
 
 # =============================================================================
 ## define "easy-get"-function to get data for TES 
+#  @code
+#  run(1)    
+#  o = get('/Event/MC')
+#  o = get('/Event/MC/Particles' , MCPT > 1 )
+#  @endcode 
 def get  ( path , selector = lambda s : s ) :
-    """
-    Get object from  the Transient Store
-    
-    >>> run(1)
-    
-    >>> o = get('/Event/Strip')
-    
+    """Get object from  the Transient Store
     """
     _g  = appMgr()
     _es = _g.evtSvc()
     data = _es[path]
     #
     try : ## try to use the selector 
-        #
         return selector ( data )
-        # 
     except:
-        logger.error('Unable to use selector %s ' % selector )
-
+        pass
+    
+    try : ## try to use selector 
+        return filter ( selector , data )
+    except :
+        pass 
+    
     return data 
 
 # =============================================================================
 ## dump all histogram from the given component 
+#  @code
+#  dump( 'MakeKs' )
+#  alg = ...
+#  dumpHistos ( alg , 30 , 20 )
+#  @endcode 
 def dumpHistos ( o , *args ) :
-    """
-    Dump all histogram from the given component
-
+    """Dump all histogram from the given component
     >>> dump( 'MakeKs' )
-
     >>> alg = ...
     >>> dumpHistos ( alg , 30 , 20 )
     """
@@ -310,40 +331,66 @@ def dumpHistos ( o , *args ) :
         o  = _g.algorithm( o )
     return o.dumpHistos ( *args ) 
 
+# =============================================================================
+## Temporarily disable all algorithms
+#  @code
+#  with DisableAlgos() :
+#       ... do something 
+#  @endocde 
+class DisabledAlgos(object) :
+    """Temporarily disable all algorithms
+    >>> with DisableAlgos() :
+    >>> ... do something 
+    """
+    
+    def __init__  ( self )  :
+        self._disabled = ()
+
+    ## enter context: disable everything 
+    def __enter__ ( self ) :
+        _g  = appMgr() 
+        self._disabled = tuple( _g.disableAllAlgs() ) 
+        return self._disabled
+
+    ## exit the context: reenable algorithms 
+    def __exit__ ( self , *_ ) :
+        for _a in self._disabled : _a.setEnabled ( True ) 
+        del self._disabled    
+
 
 # =============================================================================
-## skip the events 
+## skip the events
+#  @code
+#  skip ( 10 ) 
+#  @endcode 
 def skip ( nEvents ) : 
+    """Skip events
+    >>> skip ( 50 )    
     """
-    Skip events
-    
-    >>> skip ( 50 )
-    
-    """
-    _g = appMgr()
-
-    ## disable all algorithms
-    _disabled = _g.disableAllAlgs()
-
-    try:
+    from GaudiPython.Bindings import gbl as cpp 
+    st = cpp.StatusCode(cpp.StatusCode.FAILURE,True)
+    with DisabledAlgos() :
         st = run ( nEvents )
-    finally:
-        for _a in _disabled :
-            _a.setEnabled ( True )
-
+        
     return st 
 
 # =============================================================================
-## go to next  event 
-def next ( num = 1 )  :
+## rewind
+#  @code
+#  rewind()
+#  run(1)   ##   needed  to actually get the 1st event after rewind 
+#  @endcode
+#  @thanks Thomas RUF 
+def rewind ( ) :
+    """Rewind
+    >>> rewind() 
+    >>> run(1)    ## needed to actually get the 1st event after rewind 
     """
-    Go to next event
+    _g =    appMgr()
+    with DisabledAlgos () :
+        _g.evtSel().rewind() 
 
-    >>> next()
     
-    """
-    return run ( num )
-
 # =============================================================================
 if __name__ == '__main__' :
     
