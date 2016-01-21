@@ -3,6 +3,11 @@
 ! Responsible : Mariusz Witek
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
+
+! 2016-01-21 - Marco Cattaneo
+ - Add missing override qualifiers and remove an unused variable, to silence
+   clang warnings
+
 ! 2016-01-01 - Gerhard Raven
  - fix  PVOfflineTool::initialize: invoke base class initialize 
    (exposed after fixing 'the same' problem in finalize by removing finalize...)
@@ -18,6 +23,7 @@
    class by standalone functions in an anonymous namespace
  - add more const
  - replace cache vecpm data member with in-situ cache
+
 ! 2015-12-29 - Gerhard Raven
  - prefer extends, extend_interfaces
  - qualify implementations of virtual functions as 'override'

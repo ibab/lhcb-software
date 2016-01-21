@@ -37,7 +37,7 @@ private:
   int    m_minTr;         // Minimum number of tracks to make a vertex
   int    m_Iterations;    // Number of iterations for minimisation
   int    m_minIter;       // iterate at least m_minIter times
-  double m_maxIP2PV;      // Maximum IP of a track to accept track
+  //  double m_maxIP2PV;      // Maximum IP of a track to accept track
   //  double m_maxRDPV;       // Maximum Radial Distance of PV
   double m_maxDeltaZ;     // Fit convergence condition
   double m_minTrackWeight;// Minimum Tukey's weight to accept a track

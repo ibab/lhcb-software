@@ -29,28 +29,28 @@ public:
 
   StatusCode reDoSinglePV(const Gaudi::XYZPoint xyzseed,
 			  std::vector<const LHCb::Track*>& tracks2exclude,
-			  LHCb::RecVertex& outvtx);
+			  LHCb::RecVertex& outvtx) override;
 
   StatusCode reDoMultiPV(const LHCb::RecVertex& invtx,
 			 std::vector<const LHCb::Track*>& tracks2exclude,
-			 LHCb::RecVertex& outvtx);
+			 LHCb::RecVertex& outvtx) override;
 
 
   StatusCode reconstructSinglePVFromTracks(const Gaudi::XYZPoint xyzseed,
 					   std::vector<const LHCb::Track*>& tracks2use,
-					   LHCb::RecVertex& outvtx) ;
+					   LHCb::RecVertex& outvtx) override;
 
   StatusCode reconstructMultiPVFromTracks(std::vector<const LHCb::Track*>& tracks2use,
-					  std::vector<LHCb::RecVertex>& outvtxVec);
+					  std::vector<LHCb::RecVertex>& outvtxVec) override;
 
-  StatusCode reconstructMultiPV(std::vector<LHCb::RecVertex>& outvtxVec);
+  StatusCode reconstructMultiPV(std::vector<LHCb::RecVertex>& outvtxVec) override;
 
   StatusCode reconstructSinglePV(const Gaudi::XYZPoint xyzseed,
-			         LHCb::RecVertex& outvtx);
+			         LHCb::RecVertex& outvtx) override;
 
   StatusCode removeTracksAndRecalculatePV(const LHCb::RecVertex* pvin,
 					  const std::vector<const LHCb::Track*>& tracks2remove,
-					  LHCb::RecVertex& vtx);
+					  LHCb::RecVertex& vtx) override;
 
 
 private:
