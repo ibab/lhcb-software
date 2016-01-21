@@ -1,9 +1,8 @@
 //#include "GaudiKernel/SmartIF.h"
-#include "GaudiKernel/SvcFactory.h"
-#include "GaudiKernel/IIncidentSvc.h"
+#include "AlignWork.h"
 #include "Gaucho/Utilities.h"
 #include "Gaucho/IGauchoMonitorSvc.h"
-#include "AlignWork.h"
+#include "GaudiKernel/IIncidentSvc.h"
 
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,AlignWork)
 using namespace LHCb;
