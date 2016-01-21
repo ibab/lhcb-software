@@ -217,13 +217,13 @@ StatusCode LoKi::DistanceCalculator::_distance
       else 
       { good = &m_particle1 ; } // the properly transported particle    
     }
-    // prepare the Kalman Filter machinery, fixed by VB 2016-01-015 
+    // prepare the Kalman Filter machinery, fixed by VB 2016-01-15 
     StatusCode sc = LoKi::KalmanFilter::loadAsFlying ( *good , m_entry ) ; 
     if ( sc.isFailure() ) 
     { return _Warning("distance(I): KalmanFilter::load failed", sc, 0 ) ; }
     // get the "the previus" Kalman Filter estimate == vertex
     Gaudi::SymMatrix3x3 ci = vertex.covMatrix() ; // the gain matrix 
-    if ( !ci.Invert() ) 
+    if ( !ci.InvertChol() && !ci.Invert() ) 
     { return _Warning ( "distance(I): unable to calculate the gain matrix", 
                         StatusCode::FAILURE, 0 ) ; }
     // make one step of Kalman filter 
@@ -817,7 +817,7 @@ StatusCode LoKi::DistanceCalculator::_distance
     { return _Error("_distance(VI): error from KalmanFilter::load", sc ) ; }
     // get the "the previus" Kalman Filter estimate == vertex
     Gaudi::SymMatrix3x3 ci = vertex.covMatrix() ; // the gain matrix 
-    if ( !ci.Invert() ) 
+    if ( !ci.InvertChol() && !ci.Invert() ) 
     { return _Error ( "_distance(VI): unable to calculate the gain matrix" ) ; }
     // make one step of Kalman filter 
     sc = LoKi::KalmanFilter::step ( m_entry4 , vertex.position() , ci , 0 ) ;

@@ -5,6 +5,15 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2016-01-21 - Vanya Belyaev
+
+ - DistanceCalculator: use 
+
+     !matrix.InvertChol() && !matrix.Invert() construction instead of 
+     !matrix.Invert() 
+
+    It should be a bit faster..
+
 ! 2016-01-18 - Vanya Belyaev
 
  - Implement more correct treatment of rho+-like particles 
