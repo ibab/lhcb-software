@@ -77,7 +77,7 @@ namespace Rich
     private: // private data
 
       /// Geometry tool
-      const IGeomTool * m_geomTool;
+      const IGeomTool * m_geomTool = nullptr;
 
       std::vector<double> m_minROI;  ///< Min hit radius of interest around track centres
       std::vector<double> m_maxROI;  ///< Max hit radius of interest around track centres

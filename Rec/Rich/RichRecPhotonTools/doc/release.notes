@@ -4,6 +4,12 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2016-01-21 - Chris Jones
+ - Improve further the RichPhotonRecoUsingCKEstiFromRadius tool to instead of
+   simply using the calibration data from the nearest (in Cherenkov phi)
+   calibration data point to perform a fast interpolation using the two 
+   nearest calibration points.
+
 ! 2016-01-18 - Chris Jones
  - Update the photon reconstruction tools to always use the tool interface
    to determine the best emission point estimate, rather than to determine

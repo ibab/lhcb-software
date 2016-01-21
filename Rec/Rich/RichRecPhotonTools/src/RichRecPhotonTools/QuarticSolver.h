@@ -217,8 +217,7 @@ namespace Rich
         //                                 std::complex<TYPE>(0,0) );
         // const TYPE res = std::real(w1) + std::real(w2) + std::real(w3) - (r4*a);
 
-        // Vectorised implementation using VectorClass
-        // (Much) faster, but currently causes problems with clang
+        // (Much) faster vectorised implementation using VectorClass
         using Complex4x = 
           typename std::conditional<std::is_same<TYPE,float>::value,Complex4f,Complex4d>::type;
         using Complex2x = 

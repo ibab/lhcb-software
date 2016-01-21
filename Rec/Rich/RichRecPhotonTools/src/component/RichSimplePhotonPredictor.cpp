@@ -25,7 +25,6 @@ SimplePhotonPredictor( const std::string& type,
                        const std::string& name,
                        const IInterface* parent )
   : ToolBase     ( type, name, parent ),
-    m_geomTool   ( 0 ),
     m_Nselected  ( Rich::NRadiatorTypes, 0 ),
     m_Nreject    ( Rich::NRadiatorTypes, 0 )
 {
