@@ -12,6 +12,9 @@
 #ifndef RICHRECTOOLS_RichRayTraceCherenkovCone_H
 #define RICHRECTOOLS_RichRayTraceCherenkovCone_H 1
 
+// Gaudi
+#include "GaudiKernel/PhysicalConstants.h"
+
 // base class
 #include "RichRecBase/RichRecToolBase.h"
 
@@ -114,16 +117,7 @@ namespace Rich
                             const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
                             const bool forceTracing = false ) const;
 
-    private: // methods
-
-      // Trace a single photon
-      LHCb::RichTraceMode::RayTraceResult traceAphoton ( const Rich::DetectorType rich,
-                                                         LHCb::RichRecRing * ring,
-                                                         const Gaudi::XYZPoint & emissionPoint,
-                                                         const Gaudi::XYZVector & photDir,
-                                                         const LHCb::RichTraceMode mode ) const;
-
-    private:
+    private: // helper classes
 
       /** @class CosSinPhi RichRayTraceCherenkovCone.h
        *
@@ -137,18 +131,34 @@ namespace Rich
       public:
         typedef std::vector<CosSinPhi> Vector;
       public:
-        CosSinPhi( const double _cosPhi = 0,
-                   const double _sinPhi = 0 )
-          : cosPhi(_cosPhi), sinPhi(_sinPhi) { }
+        explicit CosSinPhi( const float& _phi ) : phi(_phi) 
+        {
+          // cache sin(phi) and cos(phi) using fast VDT method
+          //vdt::fast_sincos( phi, sinPhi, cosPhi );
+          vdt::fast_sincosf( phi, sinPhi, cosPhi );
+        }
       public:
-        double cosPhi = 0; ///< Cos(CK phi)
-        double sinPhi = 0; ///< Sin(CK phi)
+        float phi    = 0; ///< CK phi
+        float cosPhi = 0; ///< Cos(CK phi)
+        float sinPhi = 0; ///< Sin(CK phi)
       };
+
+    private: // methods
+
+      // Trace a single photon
+      LHCb::RichTraceMode::RayTraceResult traceAphoton ( const CosSinPhi& sinCosPhi,
+                                                         const Rich::DetectorType rich,
+                                                         LHCb::RichRecRing * ring,
+                                                         const Gaudi::XYZPoint & emissionPoint,
+                                                         const Gaudi::XYZVector & photDir,
+                                                         const LHCb::RichTraceMode mode ) const;
+
+    private:
 
       /// Returns the cos and sin phi values for the given number of points
       inline const CosSinPhi::Vector & cosSinValues( const unsigned int nPoints ) const
       {
-        CosSinPhi::Vector & vect = m_cosSinPhi[nPoints];
+        auto & vect = m_cosSinPhi[nPoints];
         if ( vect.empty() ) { fillCosSinValues( vect, nPoints ); }
         return vect;
       }
@@ -160,19 +170,20 @@ namespace Rich
     private:
 
       // Pointers to tool instances
-      const IRayTracing * m_rayTrace     = nullptr; ///< Optical ray tracing tool
-      const ICherenkovAngle * m_ckAngle  = nullptr; ///< Cherenkov angle calculator tool
-      const ISmartIDTool * m_smartIDTool = nullptr; ///< RichSmartID manipulation tool
-      const IGeomTool * m_geomTool       = nullptr; ///< Geometry tool
-      const IPhotonEmissionPoint * m_emissPoint = nullptr; ///< Estimated emission point tool
+      const IRayTracing          * m_rayTrace    = nullptr; ///< Optical ray tracing tool
+      const ICherenkovAngle      * m_ckAngle     = nullptr; ///< Cherenkov angle calculator tool
+      const ISmartIDTool         * m_smartIDTool = nullptr; ///< RichSmartID manipulation tool
+      const IGeomTool            * m_geomTool    = nullptr; ///< Geometry tool
+      const IPhotonEmissionPoint * m_emissPoint  = nullptr; ///< Estimated emission point tool
 
-      /// Bailout number. If no ray tracing have worked after this number then give up
-      std::vector<unsigned int> m_nBailout;
+      /** Bailout fraction. If no ray tracings have worked after this fraction have been
+       *  perfromed, then give up */
+      std::vector<float> m_bailoutFrac;
 
       /// Temporary working photon object
       mutable LHCb::RichGeomPhoton m_photon;
 
-      /// Cache of sin and cos values
+      /// Cache of sin and cos values for various number of points on the ring
       mutable Rich::Map<unsigned int,CosSinPhi::Vector> m_cosSinPhi;
 
     };

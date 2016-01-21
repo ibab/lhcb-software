@@ -12,9 +12,6 @@
 // local
 #include "RichRayTraceCherenkovCone.h"
 
-// Gaudi
-#include "GaudiKernel/PhysicalConstants.h"
-
 // All code is in general Rich reconstruction namespace
 using namespace Rich::Rec;
 
@@ -26,13 +23,11 @@ RayTraceCherenkovCone::RayTraceCherenkovCone( const std::string& type,
                                               const IInterface* parent )
   : Rich::Rec::ToolBase ( type, name, parent )
 {
-  using namespace boost::assign;
   // Define interface for this tool
   declareInterface<IRayTraceCherenkovCone>(this);
   // JOs
-  //               Aero   R1Gas  R2Gas
-  m_nBailout = {   50,    50,    50    };
-  declareProperty( "BailoutTries", m_nBailout );
+  //                                          Aero   R1Gas  R2Gas
+  declareProperty( "BailoutTries", m_bailoutFrac = { 0.75, 0.75, 0.75 } );
 }
 
 // Destructor
@@ -51,35 +46,37 @@ StatusCode RayTraceCherenkovCone::initialize()
   acquireTool( "RichRecGeometry",         m_geomTool );
   acquireTool( "RichPhotonEmissionPoint", m_emissPoint );
 
-  _ri_debug << "# ray tracing attempts before bailout = " << m_nBailout << endmsg;
+  _ri_debug << "Ray tracing fraction before bailout = " << m_bailoutFrac << endmsg;
 
   return sc;
 }
 
 // Trace a single photon
 LHCb::RichTraceMode::RayTraceResult
-RayTraceCherenkovCone::traceAphoton ( const Rich::DetectorType rich,
+RayTraceCherenkovCone::traceAphoton ( const CosSinPhi& sinCosPhi,
+                                      const Rich::DetectorType rich,
                                       LHCb::RichRecRing * ring,
                                       const Gaudi::XYZPoint & emissionPoint,
                                       const Gaudi::XYZVector & photDir,
                                       const LHCb::RichTraceMode mode ) const
 {
   // do the ray tracing
-  const LHCb::RichTraceMode::RayTraceResult result =
+  const auto result =
     m_rayTrace->traceToDetector( rich, emissionPoint, photDir, m_photon, 
                                  ring->richRecSegment()->trackSegment(), 
                                  mode, Rich::top );
 
   // Add a new point
-  const Gaudi::XYZPoint & gP = m_photon.detectionPoint();
-  ring->ringPoints().push_back
+  const auto & gP = m_photon.detectionPoint();
+  ring->ringPoints().emplace_back
     ( LHCb::RichRecPointOnRing(gP,
                                m_geomTool->radCorrLocalPos(m_smartIDTool->globalToPDPanel(gP),
                                                            ring->richRecSegment()->trackSegment().radiator()),
                                m_photon.smartID(),
                                (LHCb::RichRecPointOnRing::Acceptance)(result),
                                m_photon.primaryMirror(),
-                               m_photon.secondaryMirror()
+                               m_photon.secondaryMirror(),
+                               sinCosPhi.phi
                                )
       );
 
@@ -158,17 +155,20 @@ RayTraceCherenkovCone::rayTrace ( LHCb::RichRecRing * ring,
     }
 
     // cos and sin values
-    const CosSinPhi::Vector & cosSinPhi = cosSinValues(nPoints);
+    const auto & cosSinPhi = cosSinValues(nPoints);
 
     // set number of points
     ring->setNTotalPointSamples(nPoints);
 
-    // loop around the ring
-    unsigned int nOK(0), nPhot(0);
-    //const double cosTheta = std::cos(ring->radius());
-    //const double sinTheta = std::sin(ring->radius());
+    // Bailout number
+    const auto nBailout = static_cast<unsigned int> ( m_bailoutFrac[rad] * nPoints );
+
+    // compute sin and cos theta
     double cosTheta(0), sinTheta(0);
     vdt::fast_sincos(ring->radius(),sinTheta,cosTheta);
+
+    // loop around the ring
+    unsigned int nOK(0), nPhot(0);
     for ( CosSinPhi::Vector::const_iterator iP = cosSinPhi.begin();
           iP != cosSinPhi.end(); ++iP, ++nPhot )
     {
@@ -179,12 +179,12 @@ RayTraceCherenkovCone::rayTrace ( LHCb::RichRecRing * ring,
       
       // do the tracing for this photon
       const LHCb::RichTraceMode::RayTraceResult result =
-        traceAphoton ( rich, ring, emissionPoint, photDir, mode );
+        traceAphoton ( *iP, rich, ring, emissionPoint, photDir, mode );
       // count raytraces that are in HPD panel
-      if ( result >= LHCb::RichTraceMode::InHPDPanel ) ++nOK;
+      if ( result >= LHCb::RichTraceMode::InHPDPanel ) { ++nOK; }
 
       // bailout check
-      if ( 0 == nOK && nPhot >= m_nBailout[rad] ) break;
+      if ( 0 == nOK && nPhot >= nBailout ) break;
     }
 
     // All was OK
@@ -236,19 +236,22 @@ RayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
     }
 
     // which radiator
-    const Rich::RadiatorType rad = ring->richRecSegment()->trackSegment().radiator();
+    const auto rad = ring->richRecSegment()->trackSegment().radiator();
 
     // cos and sin values
-    const CosSinPhi::Vector & cosSinPhi = cosSinValues(nPoints);
+    const auto & cosSinPhi = cosSinValues(nPoints);
 
     // set number of points
     ring->setNTotalPointSamples(nPoints);
 
-    // loop around the ring
-    //const double sinCkTheta = std::sin(ckTheta);
-    //const double cosCkTheta = std::cos(ckTheta);
+    // Bailout number
+    const auto nBailout = static_cast<unsigned int> ( m_bailoutFrac[rad] * nPoints );
+
+    // compute sin and cos theta
     double sinCkTheta(0), cosCkTheta(0);
     vdt::fast_sincos( ckTheta, sinCkTheta, cosCkTheta );
+
+    // loop around the ring
     unsigned int nOK(0), nPhot(0);
     for ( CosSinPhi::Vector::const_iterator iP = cosSinPhi.begin();
           iP != cosSinPhi.end(); ++iP, ++nPhot )
@@ -261,12 +264,12 @@ RayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
 
       // do the tracing for this photon
       const LHCb::RichTraceMode::RayTraceResult result =
-        traceAphoton ( rich, ring, emissionPoint, photDir, mode );
+        traceAphoton ( *iP, rich, ring, emissionPoint, photDir, mode );
       // count raytraces that are in HPD panel
-      if ( result >= LHCb::RichTraceMode::InHPDPanel ) ++nOK;
+      if ( result >= LHCb::RichTraceMode::InHPDPanel ) { ++nOK; }
 
       // bailout check
-      if ( 0 == nOK && nPhot >= m_nBailout[rad] ) break;
+      if ( 0 == nOK && nPhot >= nBailout ) break;
     }
 
     // All was OK
@@ -310,7 +313,7 @@ RayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
     }
 
     // cos and sin values
-    const CosSinPhi::Vector & cosSinPhi = cosSinValues(nPoints);
+    const auto & cosSinPhi = cosSinValues(nPoints);
 
     // loop around the ring
     //const double sinCkTheta = std::sin(ckTheta);
@@ -361,9 +364,7 @@ void RayTraceCherenkovCone::fillCosSinValues( CosSinPhi::Vector & vect,
   double ckPhi = 0.0;
   for ( unsigned int iPhot = 0; iPhot < nPoints; ++iPhot, ckPhi+=incPhi )
   {
-    double sinCKPhi(0), cosCKPhi(0);
-    vdt::fast_sincos( ckPhi, sinCKPhi, cosCKPhi );
-    vect.push_back( CosSinPhi( cosCKPhi, sinCKPhi ) );
+    vect.emplace_back( CosSinPhi(static_cast<float>(ckPhi)) );
   }
 }
 
