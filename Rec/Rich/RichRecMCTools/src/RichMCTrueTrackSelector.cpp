@@ -15,11 +15,6 @@
 // All code is in general Rich reconstruction namespace
 using namespace Rich::Rec::MC;
 
-//-----------------------------------------------------------------------------
-
-// Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MCTrueTrackSelector )
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -42,7 +37,8 @@ StatusCode MCTrueTrackSelector::initialize()
   const StatusCode sc = TrackSelectorBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  info() << "Selecting MCParticle associated tracks with weight > " << m_weight << endmsg;
+  info() << "Selecting MCParticle associated tracks with weight > " 
+         << m_weight << endmsg;
 
   // Acquire instances of tools
   acquireTool( "RichRecMCTruthTool", m_richRecMCTruth );
@@ -53,13 +49,20 @@ StatusCode MCTrueTrackSelector::initialize()
 // Test if the given Track is selected
 bool MCTrueTrackSelector::trackSelected( const LHCb::Track * track ) const
 {
-  const LHCb::MCParticle * mcp = m_richRecMCTruth->mcParticle(track,m_weight);
-  return ( NULL != mcp ? RichTrackSelectorBase::trackSelected(track) : false );
+  const auto * mcp = m_richRecMCTruth->mcParticle(track,m_weight);
+  return ( mcp ? RichTrackSelectorBase::trackSelected(track) : false );
 }
 
 // Test it the given RichRecTrack is selected
 bool MCTrueTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
 {
-  const LHCb::MCParticle * mcp = m_richRecMCTruth->mcParticle(track,m_weight);
-  return ( NULL != mcp ? RichTrackSelectorBase::trackSelected(track) : false );
+  const auto * mcp = m_richRecMCTruth->mcParticle(track,m_weight);
+  return ( mcp ? RichTrackSelectorBase::trackSelected(track) : false );
 }
+
+//-----------------------------------------------------------------------------
+
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( MCTrueTrackSelector )
+
+//-----------------------------------------------------------------------------

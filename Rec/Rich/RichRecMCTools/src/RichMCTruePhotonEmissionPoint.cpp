@@ -17,8 +17,6 @@ using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( TruePhotonEmissionPoint )
-
 // Standard constructor
 TruePhotonEmissionPoint::TruePhotonEmissionPoint ( const std::string& type,
                                                    const std::string& name,
@@ -27,6 +25,8 @@ TruePhotonEmissionPoint::TruePhotonEmissionPoint ( const std::string& type,
 {
   // tool interface
   declareInterface<IPhotonEmissionPoint>(this);
+  // JOs
+  declareProperty( "UseAvMCSegment", m_useAvMCSeg = true );
 }
 
 TruePhotonEmissionPoint::~TruePhotonEmissionPoint() { }
@@ -40,8 +40,11 @@ StatusCode TruePhotonEmissionPoint::initialize()
   // Acquire instances of tools
   acquireTool( "RichRecMCTruthTool", m_mcRecTool );
 
+  // Print a warning this tool is being used, as it should only be
+  // used in specialist studies.
   warning() << "Cheating photon emission point using MC" << endmsg;
 
+  // return
   return sc;
 }
 
@@ -50,8 +53,9 @@ TruePhotonEmissionPoint::bestAvMCSegmentPoint( const LHCb::RichRecSegment * segm
                                                Gaudi::XYZPoint & emissPnt ) const
 {
   // Get the MC segment for this segment
-  const auto * mcSegment = m_mcRecTool->mcRichSegment(segment);
-  if ( mcSegment )
+  const auto * mcSegment =
+    ( m_useAvMCSeg ? m_mcRecTool->mcRichSegment(segment) : nullptr );
+  if ( UNLIKELY( nullptr != mcSegment ) )
   {
     // Create average point from all true photons
     emissPnt = Gaudi::XYZPoint(0,0,0);
@@ -72,13 +76,14 @@ bool TruePhotonEmissionPoint::emissionPoint( const LHCb::RichRecSegment * segmen
                                              const LHCb::RichRecPixel * pixel,
                                              Gaudi::XYZPoint & emissPnt ) const
 {
+  // First a sanity check to make sure we have a segment...
   if ( segment )
   {
     if ( pixel )
     {
       // We have both a pixel and segment, so first try and find the
       // MC photon for this specific pair. If that fails instead use
-      // just the segment to compute an average for all MC photons 
+      // just the segment to compute an average for all MC photons
       // associated with it
       const auto * mcPhoton = m_mcRecTool->trueOpticalPhoton(segment,pixel);
       if ( mcPhoton ) { emissPnt = mcPhoton->emissionPoint();   }
@@ -100,10 +105,14 @@ TruePhotonEmissionPoint::bestAvMCSegmentPoint( const LHCb::RichRecSegment * segm
                                                Gaudi::XYZPoint & emissPnt ) const
 {
   // get the MC RichSegment for this segment
-  const auto * mcSegment = m_mcRecTool->mcRichSegment(segment);
-  if ( mcSegment )
+  const auto * mcSegment =
+    ( m_useAvMCSeg ? m_mcRecTool->mcRichSegment(segment) : nullptr );
+  if ( UNLIKELY( nullptr != mcSegment ) )
   {
-    emissPnt = ( mcSegment->entryPoint() + 
+    // just compute the point the given fraction along the line from the MC
+    // entry and exit points.
+    // Not perfect... Could be improved using the MC trajectory info..
+    emissPnt = ( mcSegment->entryPoint() +
                  ( fracDist*( mcSegment->exitPoint() - mcSegment->entryPoint() ) ) );
   }
   else
@@ -111,7 +120,6 @@ TruePhotonEmissionPoint::bestAvMCSegmentPoint( const LHCb::RichRecSegment * segm
     // just use the reco value
     emissPnt = segment->trackSegment().bestPoint(fracDist);
   }
-
 }
 
 bool TruePhotonEmissionPoint::emissionPoint( const LHCb::RichRecSegment * segment,
@@ -119,13 +127,14 @@ bool TruePhotonEmissionPoint::emissionPoint( const LHCb::RichRecSegment * segmen
                                              const double fracDist,
                                              Gaudi::XYZPoint & emissPnt ) const
 {
+  // First a sanity check to make sure we have a segment...
   if ( segment )
   {
     if ( pixel )
     {
       // We have both a pixel and segment, so first try and find the
       // MC photon for this specific pair. If that fails instead use
-      // just the segment to compute an average for all MC photons 
+      // just the segment to compute an average for all MC photons
       // associated with it
       const auto * mcPhoton = m_mcRecTool->trueOpticalPhoton(segment,pixel);
       if ( mcPhoton ) { emissPnt = mcPhoton->emissionPoint();            }
@@ -133,9 +142,16 @@ bool TruePhotonEmissionPoint::emissionPoint( const LHCb::RichRecSegment * segmen
     }
     else
     {
+      // No pixel, so just use the segment
       bestAvMCSegmentPoint(segment,fracDist,emissPnt);
     }
     return true;
   }
   return false;
 }
+
+//-----------------------------------------------------------------------------
+
+DECLARE_TOOL_FACTORY( TruePhotonEmissionPoint )
+
+//-----------------------------------------------------------------------------

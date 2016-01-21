@@ -89,7 +89,12 @@ namespace Rich
         
         /// Rich Reconstruction MC Truth tool
         const Rich::Rec::MC::IMCTruthTool * m_mcRecTool = nullptr; 
-        
+
+        /** Option to enable to attempts to compute average MC emission
+            for a given segment, when it is not possible to isolate a
+            specific MC photon object */
+        bool m_useAvMCSeg;
+
       };
 
     }

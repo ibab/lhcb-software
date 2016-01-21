@@ -4,9 +4,6 @@
  *
  *  Header file for RICH reconstruction tool : Rich::Rec::MCTrueTrackSelector
  *
- *  CVS Log :-
- *  $Id: RichMCTrueTrackSelector.h,v 1.4 2007-06-01 09:47:08 cattanem Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
  */
@@ -69,7 +66,7 @@ namespace Rich
       private: // data
 
         /// Pointer to RichRecMCTruthTool interface
-        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;
+        const Rich::Rec::MC::IMCTruthTool * m_richRecMCTruth = nullptr;
 
         /// MCParticle association weight
         double m_weight;

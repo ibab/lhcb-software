@@ -4,6 +4,11 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2016-01-21 - Chris Jones
+ - Add an option to TruePhotonEmissionPoint to allow the computation of an
+   average segment emission point, from all associated MC photons, to be
+   turned on/off.
+
 ! 2016-01-18 - Chris Jones
  - Improve the TruePhotonEmissionPoint tool to provide MC based estimates
    in a few more cases. For instance if only a track segment is passed it
