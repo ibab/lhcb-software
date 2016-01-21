@@ -429,7 +429,7 @@ void PrVeloUTTool::formClusters(bool forward){
 
           float xextrapLayer3 = xhitLayer1 + tx*(zhitLayer3-zhitLayer1);
           
-          if(abs(xhitLayer3 - xextrapLayer3) < hitTol1){
+          if(std::abs(xhitLayer3 - xextrapLayer3) < hitTol1){
             m_clusterCandidate.push_back(hit3);
             m_allClusters.push_back(m_clusterCandidate);      
             m_clusterCandidate.pop_back();

@@ -4,6 +4,8 @@
 ! Purpose     : Velo UT tracking
 !-----------------------------------------------------------------------------
 
+! 2016-01-21 Marco Cattaneo
+ - Use std::abs instead of abs for float argument, to silence clang warning
 
 ! 2016-01-15 - Thomas Nikodem
  - Bugfix: crash if Velo container is empty
