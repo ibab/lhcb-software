@@ -31,13 +31,15 @@
 
         <constructor 
                 desc     = "Constructor from global position, location position, acceptance flag and RichSmartID" 
-                initList = "m_globalPosition(gPos), m_localPosition(lPos), m_smartID(id), m_acceptance(acc), m_primaryMirror(const_cast&lt;DeRichSphMirror*&gt;(primMirr)), m_secondaryMirror(const_cast&lt;DeRichSphMirror*&gt;(secMirr))">
+                initList = "m_globalPosition(gPos), m_localPosition(lPos), m_azimuth(azimuth), m_smartID(id), m_acceptance(acc), m_primaryMirror(const_cast&lt;DeRichSphMirror*&gt;(primMirr)), m_secondaryMirror(const_cast&lt;DeRichSphMirror*&gt;(secMirr))">
                 <arg const="TRUE"                  name="gPos" type="Gaudi::XYZPoint"/>
                 <arg const="TRUE"                  name="lPos" type="Gaudi::XYZPoint"/>
                 <arg const="TRUE"  inout="BYVALUE" name="id = LHCb::RichSmartID()" type="LHCb::RichSmartID"/>
                 <arg const="TRUE"  inout="BYVALUE" name="acc = LHCb::RichRecPointOnRing::UndefinedAcceptance"  type="LHCb::RichRecPointOnRing::Acceptance"/>
-                <arg const="TRUE"                  name="primMirr = NULL" type="DeRichSphMirror*"/>
-                <arg const="TRUE"                  name="secMirr = NULL"  type="DeRichSphMirror*"/>
+                <arg const="TRUE"                  name="primMirr = nullptr" type="DeRichSphMirror*"/>
+                <arg const="TRUE"                  name="secMirr = nullptr"  type="DeRichSphMirror*"/>
+                <arg const="TRUE"  inout="BYVALUE" name="azimuth = -1" type="float"/>
+                <!--arg const="TRUE"  inout="BYVALUE" name="radius = -1"  type="float"/-->
                 <code>
                 </code>
         </constructor>
@@ -55,6 +57,20 @@
                 type = "Gaudi::XYZPoint"
                 init = "0,0,0"
         />  
+
+        <attribute 
+                desc = "Azimuthal phi w.r.t the ring centre for this position" 
+                name = "azimuth" 
+                type = "float"
+                init = "-1"
+        />
+
+        <!--attribute 
+                desc = "Radius w.r.t the ring centre for this position" 
+                name = "radius" 
+                type = "float"
+                init = "-1"
+        /-->  
 
         <attribute 
                 desc = "RichSmartID identifying the HPD or pixel this point is in, if known" 
@@ -80,14 +96,14 @@
                 desc = "Pointer to the associated DeRichSphMirror object for the primary mirror" 
                 name = "primaryMirror" 
                 type = "DeRichSphMirror*"
-                init = "NULL"
+                init = "nullptr"
         />
 
         <attribute 
                 desc = "Pointer to the associated DeRichSphMirror object for the secondary mirror" 
                 name = "secondaryMirror" 
                 type = "DeRichSphMirror*"
-                init = "NULL"
+                init = "nullptr"
         />
    
 </class>

@@ -198,14 +198,14 @@ namespace Rich
       /// Access the RichSmartIDTool
       inline const ISmartIDTool * smartIDTool() const
       {
-        if (!m_idTool) { acquireTool( "RichSmartIDTool", m_idTool, NULL, true ); }
+        if (!m_idTool) { acquireTool( "RichSmartIDTool", m_idTool, nullptr, true ); }
         return m_idTool;
       }
 
       /// Access the RichSmartIDDecoder
       inline const Rich::DAQ::IRawBufferToSmartIDsTool * smartIDdecoder() const
       {
-        if (!m_decoder) { acquireTool( "RichSmartIDDecoder", m_decoder, NULL, true ); }
+        if (!m_decoder) { acquireTool( "RichSmartIDDecoder", m_decoder, nullptr, true ); }
         return m_decoder;
       }
 
@@ -218,7 +218,7 @@ namespace Rich
     protected: // data
 
       /// Flag to signify all pixels have been formed
-      mutable bool m_allDone;
+      mutable bool m_allDone = false;
 
       /// Map between RichSmartID and the associated RichRecPixel
       mutable Rich::HashMap< LHCb::RichSmartID::KeyType, LHCb::RichRecPixel* > m_pixelExists;
@@ -261,9 +261,9 @@ namespace Rich
       public:
         PixStats() : numClusters(0), numPixels(0), rejectedPixels(0) { }
       public:
-        unsigned int numClusters;     ///< Number of selected HPD pixel clusters
-        unsigned int numPixels;       ///< Number of selected raw HPD pixels
-        unsigned int rejectedPixels;  ///< number of rejected HPD pixels
+        unsigned long long numClusters;     ///< Number of selected HPD pixel clusters
+        unsigned long long numPixels;       ///< Number of selected raw HPD pixels
+        unsigned long long rejectedPixels;  ///< number of rejected HPD pixels
       public:
         /// Has this tally seen some pixels
         bool hasSomeStats() const { return numPixels>0 || rejectedPixels>0 ; }
@@ -272,7 +272,7 @@ namespace Rich
     private: // data
 
       /// Pointer to RICH system detector element
-      const DeRichSystem * m_richSys;
+      const DeRichSystem * m_richSys = nullptr;
 
       /// HPD occupancy tools
       mutable std::vector<const Rich::DAQ::IPixelSuppressionTool *> m_hpdOcc;
@@ -281,16 +281,16 @@ namespace Rich
       mutable std::vector<const Rich::DAQ::IPixelClusteringTool *> m_hpdClus;
 
       /// Pointer to RichSmartID tool
-      mutable const ISmartIDTool * m_idTool;
+      mutable const ISmartIDTool * m_idTool = nullptr;
 
       /// Raw Buffer Decoding tool
-      mutable const Rich::DAQ::IRawBufferToSmartIDsTool * m_decoder;
+      mutable const Rich::DAQ::IRawBufferToSmartIDsTool * m_decoder = nullptr;
 
       /// Geometry tool
-      const IGeomTool * m_geomTool;
+      const IGeomTool * m_geomTool = nullptr;
 
       /// Pointer to RichRecPixels
-      mutable LHCb::RichRecPixels * m_pixels;
+      mutable LHCb::RichRecPixels * m_pixels = nullptr;
 
       /// Flag to turn on or off the book keeping features to save cpu time.
       bool m_bookKeep;
@@ -340,10 +340,10 @@ namespace Rich
       mutable boost::array<PixStats, Rich::NRiches> m_hitCount;
 
       /// Event count
-      unsigned int m_Nevts;
+      unsigned long long m_Nevts = 0;
 
       /// Flag to indicate if the tool has been used in a given event
-      mutable bool m_hasBeenCalled;
+      mutable bool m_hasBeenCalled = false;
 
       /// Should HPD occupancy be monitored
       bool m_applyPixelSuppression;

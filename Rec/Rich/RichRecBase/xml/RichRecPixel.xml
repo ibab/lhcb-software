@@ -231,7 +231,7 @@ richRecTracks().reserve(3);
                 desc = "Parent Object this pixel was produced from" 
                 name = "parentPixel" 
                 type = "const ContainedObject*"
-                init = "NULL"
+                init = "nullptr"
         />
             
         <typedef 

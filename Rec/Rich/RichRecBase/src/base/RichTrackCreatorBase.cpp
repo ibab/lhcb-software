@@ -29,16 +29,10 @@ namespace Rich
                                         const std::string& name,
                                         const IInterface* parent )
       : Rich::Rec::ToolBase    ( type, name, parent ),
-        m_hasBeenCalled        ( false              ),
-        m_smartIDTool          ( nullptr            ),
-        m_rayTrace             ( nullptr            ),
-        m_tracks               ( 0                  ),
-        m_Nevts                ( 0                  ),
         m_bookKeep             ( true               ),
         m_traceModeRad         ( Rich::NRadiatorTypes,
                                  LHCb::RichTraceMode(LHCb::RichTraceMode::IgnoreHPDAcceptance) )
     {
-
       // Define the interface
       declareInterface<ITrackCreator>(this);
 
@@ -49,7 +43,6 @@ namespace Rich
                        "The TES location for the transient RichRecTrack objects" );
       declareProperty( "MaxInputTracks",  m_maxInputTracks = 99999 );
       declareProperty( "MaxUsedTracks",   m_maxSelTracks   = 99999 );
-
     }
 
     StatusCode TrackCreatorBase::initialize()
@@ -61,14 +54,12 @@ namespace Rich
       if ( m_richRecTrackLocation.empty() )
       { return Error( "RichRecTrack location is undefined. Please set" ); }
 
-      if ( msgLevel(MSG::DEBUG) )
-      {
-        debug() << "RichRecTrack location : " << m_richRecTrackLocation << endmsg;
-      }
+      _ri_debug << "RichRecTrack location : " << m_richRecTrackLocation << endmsg;
 
       // tools
       acquireTool( "RichSmartIDTool", m_smartIDTool, nullptr, true );
-      acquireTool( "TrackSelector", m_trSelector, this       );
+      acquireTool( "TrackSelector",   m_trSelector,  this          );
+      acquireTool( "RichRecGeometry", m_geomTool                   );
 
       // Setup incident services
       incSvc()->addListener( this, IncidentType::BeginEvent );
@@ -154,7 +145,7 @@ namespace Rich
     {
       m_hasBeenCalled = false;
       if ( bookKeep() ) m_trackDone.clear();
-      m_tracks   = nullptr;
+      m_tracks = nullptr;
       if ( msgLevel(MSG::DEBUG) )
       {
         m_nTracksLast = m_nTracksAll;
@@ -191,9 +182,12 @@ namespace Rich
 
     LHCb::RichRecTracks * TrackCreatorBase::richTracks() const
     {
-      if ( !m_tracks ) {
+      if ( !m_tracks ) 
+      {
 
-        if ( !exist<LHCb::RichRecTracks>(m_richRecTrackLocation) )
+        // Try to get tracks from TES
+        m_tracks = getIfExists<LHCb::RichRecTracks>(m_richRecTrackLocation);
+        if ( !m_tracks )
         {
 
           // Reinitialise the track Container
@@ -206,27 +200,17 @@ namespace Rich
         else
         {
 
-          // get tracks from TES
-          m_tracks = get<LHCb::RichRecTracks>(m_richRecTrackLocation);
-          if ( msgLevel(MSG::DEBUG) )
-          {
-            debug() << "Found " << m_tracks->size() << " pre-existing RichRecTracks in TES at "
+          _ri_debug << "Found " << m_tracks->size() << " pre-existing RichRecTracks in TES at "
                     << m_richRecTrackLocation << endmsg;
-          }
 
           if ( m_bookKeep )
           {
             // Remake local track reference map
-            for ( LHCb::RichRecTracks::const_iterator iTrack = m_tracks->begin();
-                  iTrack != m_tracks->end();
-                  ++iTrack )
-            {
-              m_trackDone[(*iTrack)->key()] = true;
-            }
+            for ( const auto * tk : *m_tracks ) { m_trackDone[tk->key()] = true; }
           }
-
+          
         }
-
+  
       }
 
       return m_tracks;
@@ -236,6 +220,9 @@ namespace Rich
     TrackCreatorBase::rayTraceHPDPanelPoints( const LHCb::RichTrackSegment & trSeg,
                                               LHCb::RichRecSegment * newSegment ) const
     {
+      // radiator
+      const auto rad = trSeg.radiator();
+
       // best start point and direction
       const Gaudi::XYZVector & trackDir = trSeg.bestMomentum();
       const Gaudi::XYZPoint  & trackPtn = trSeg.bestPoint();
@@ -249,25 +236,24 @@ namespace Rich
                                            trackDir,
                                            photon,
                                            trSeg,
-                                           m_traceModeRad[trSeg.radiator()],
+                                           m_traceModeRad[rad],
                                            Rich::top );
-      const bool OK = m_traceModeRad[trSeg.radiator()].traceWasOK(result);
+      const bool OK = m_traceModeRad[rad].traceWasOK(result);
       if ( OK )
       {
-        if ( msgLevel(MSG::VERBOSE) )
-          verbose() << "   -> Segment traces to PD panel at " << hitPoint << endmsg;
+        _ri_verbo << "   -> Segment traces to PD panel at " << hitPoint << endmsg;
 
-        // set global hit point
+        // Set global hit point
         newSegment->setPdPanelHitPoint( hitPoint );
 
-        // set closest PD
+        // Set closest PD
         newSegment->setClosestPD(photon.smartID().pdID());
 
-        // Get PD panel hit point in local coordinates
+        // Set PD panel hit point in local coordinates
         newSegment->setPdPanelHitPointLocal( smartIDTool()->globalToPDPanel(hitPoint) );
 
         // Set the forced side ray traced points
-        LHCb::RichTraceMode tmpTraceMode(m_traceModeRad[trSeg.radiator()]);
+        LHCb::RichTraceMode tmpTraceMode(m_traceModeRad[rad]);
         tmpTraceMode.setForcedSide(true);
 
         // left/top
@@ -281,9 +267,10 @@ namespace Rich
         if ( tmpTraceMode.traceWasOK(result) )
         {
           newSegment->setPdPanelHitPoint( hitPoint, Rich::left );
-          newSegment->setPdPanelHitPointLocal( smartIDTool()->globalToPDPanel(hitPoint), Rich::left );
-          if ( msgLevel(MSG::VERBOSE) )
-            verbose() << "    -> Segment force traces to left/top PD panel at " << hitPoint << endmsg;
+          const auto hitPtnLoc = smartIDTool()->globalToPDPanel(hitPoint);
+          newSegment->setPdPanelHitPointLocal( hitPtnLoc, Rich::left );
+          newSegment->setPdPanelHitPointCorrectedLocal( m_geomTool->radCorrLocalPos(hitPtnLoc,rad), Rich::left );
+          _ri_verbo << "    -> Segment force traces to left/top PD panel at " << hitPoint << endmsg;
         }
 
         // right/bottom
@@ -297,9 +284,10 @@ namespace Rich
         if ( tmpTraceMode.traceWasOK(result) )
         {
           newSegment->setPdPanelHitPoint( hitPoint, Rich::right );
-          newSegment->setPdPanelHitPointLocal( smartIDTool()->globalToPDPanel(hitPoint), Rich::right );
-          if ( msgLevel(MSG::VERBOSE) )
-            verbose() << "    -> Segment force traces to right/bottom HPD panel at " << hitPoint << endmsg;
+          const auto hitPtnLoc = smartIDTool()->globalToPDPanel(hitPoint);
+          newSegment->setPdPanelHitPointLocal( hitPtnLoc, Rich::right );
+          newSegment->setPdPanelHitPointCorrectedLocal( m_geomTool->radCorrLocalPos(hitPtnLoc,rad), Rich::right );
+          _ri_verbo << "    -> Segment force traces to right/bottom HPD panel at " << hitPoint << endmsg;
         }
 
       }

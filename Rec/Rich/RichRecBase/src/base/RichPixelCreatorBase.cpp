@@ -29,23 +29,12 @@ namespace Rich
                                         const IInterface* parent )
       : Rich::Rec::ToolBase ( type, name, parent ),
         m_allDone       ( false ),
-        m_richSys       ( nullptr  ),
         m_hpdOcc        ( Rich::NRiches ),
         m_hpdClus       ( Rich::NRiches ),
-        m_idTool        ( nullptr  ),
-        m_decoder       ( nullptr  ),
-        m_geomTool      ( nullptr  ),
-        m_pixels        ( nullptr  ),
-        m_bookKeep      ( true  ),
-        m_hpdCheck      ( true  ),
         m_clusterHits   ( Rich::NRiches, false ),
-        m_noClusterFinding ( false ),
         m_usedDets      ( Rich::NRiches, true  ),
         m_begins        ( boost::extents[Rich::NRiches][Rich::NPDPanelsPerRICH] ),
-        m_ends          ( boost::extents[Rich::NRiches][Rich::NPDPanelsPerRICH] ),
-        m_Nevts         ( 0 ),
-        m_hasBeenCalled ( false ),
-        m_applyPixelSuppression ( true  )
+        m_ends          ( boost::extents[Rich::NRiches][Rich::NPDPanelsPerRICH] )
     {
 
       // Define the interface
@@ -55,12 +44,12 @@ namespace Rich
       declareProperty( "RichRecPixelLocation",
                        m_richRecPixelLocation = contextSpecificTES(LHCb::RichRecPixelLocation::Default),
                        "The TES location for the transient RichRecPixel objects" );
-      declareProperty( "DoBookKeeping",          m_bookKeep  );
+      declareProperty( "DoBookKeeping",          m_bookKeep = true );
       declareProperty( "UseDetectors",           m_usedDets  );
-      declareProperty( "CheckHPDsAreActive",     m_hpdCheck  );
-      declareProperty( "ApplyPixelSuppression",  m_applyPixelSuppression );
+      declareProperty( "CheckHPDsAreActive",     m_hpdCheck = true );
+      declareProperty( "ApplyPixelSuppression",  m_applyPixelSuppression = true );
       declareProperty( "ApplyPixelClustering",   m_clusterHits );
-      declareProperty( "SuppressClusterFinding", m_noClusterFinding );
+      declareProperty( "SuppressClusterFinding", m_noClusterFinding = false );
       declareProperty( "MaxPixels",              m_maxPixels = 999999 );
 
       // Initialise

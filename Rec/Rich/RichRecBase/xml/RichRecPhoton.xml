@@ -215,7 +215,7 @@
         <attribute 
                 compression = "FALSE" 
                 desc        = "RichRecSegment used in the formation of the RichRecPhoton candidate" 
-                init        = "NULL" 
+                init        = "nullptr" 
                 name        = "richRecSegment" 
                 type        = "LHCb::RichRecSegment*"
                 nonconstaccessor = "TRUE"
@@ -224,7 +224,7 @@
         <attribute 
                 compression = "FALSE" 
                 desc        = "RichRecTrack associated to the RichRecSegment used in the formation of the RichRecPhoton candidate" 
-                init        = "NULL" 
+                init        = "nullptr" 
                 name        = "richRecTrack" 
                 type        = "LHCb::RichRecTrack*"
                 nonconstaccessor = "TRUE"
@@ -233,7 +233,7 @@
         <attribute 
                 compression = "FALSE" 
                 desc        = "RichRecPixel used in the formation of the RichRecPhoton candidate" 
-                init        = "NULL" 
+                init        = "nullptr" 
                 name        = "richRecPixel" 
                 type        = "LHCb::RichRecPixel*"
                 nonconstaccessor = "TRUE"

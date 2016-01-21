@@ -4,6 +4,14 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2016-01-21 - Chris Jones
+ - Various C++11 modernisations.
+ - Save the ray-traced segment PD hit point in radiator corrected local
+   coordinates in the RichRecSegment object.
+ - Add the azimuthal phi value to each RichRecPointOnRing object.
+ - Update the RichRecRing 'closest points' methods to return the two points
+   either side, in azimuthal phi, of the requested angle.
+
 ! 2016-01-18 - Chris Jones
  - Update the emission point tool interface to prove methods using only a track
    segment. 

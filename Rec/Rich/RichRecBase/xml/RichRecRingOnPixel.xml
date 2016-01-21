@@ -38,7 +38,7 @@
         <attribute 
                 compression = "FALSE" 
                 desc        = "RichRecRing associated to the parent RichRecPixel" 
-                init        = "NULL" 
+                init        = "nullptr" 
                 name        = "ring" 
                 type        = "LHCb::RichRecRing*"
                 nonconstaccessor = "TRUE"

@@ -20,10 +20,11 @@
 #include "RichRecBase/RichRecToolBase.h"
 
 // interfaces
-#include "RichRecBase/IRichTrackCreator.h"
-#include "RichRecBase/IRichTrackSelector.h"
 #include "RichKernel/IRichSmartIDTool.h"
 #include "RichKernel/IRichRayTracing.h"
+#include "RichRecBase/IRichTrackCreator.h"
+#include "RichRecBase/IRichTrackSelector.h"
+#include "RichRecBase/IRichRecGeomTool.h"
 
 // Kernel
 #include "RichKernel/RichException.h"
@@ -182,7 +183,7 @@ namespace Rich
     protected: // data
 
       /// Flag to indicate if the tool has been used in a given event
-      mutable bool m_hasBeenCalled;
+      mutable bool m_hasBeenCalled = false;
 
       /// Working object to keep track of formed objects
       mutable Rich::HashMap<int, bool> m_trackDone;
@@ -195,6 +196,9 @@ namespace Rich
       /// Pointer to the detector ray tracing tool
       mutable const Rich::IRayTracing * m_rayTrace = nullptr;
 
+      /// Geometry tool
+      const IGeomTool * m_geomTool = nullptr; 
+
       /// Pointer to RichRecTracks
       mutable LHCb::RichRecTracks * m_tracks = nullptr;
 
@@ -202,7 +206,7 @@ namespace Rich
       std::string m_richRecTrackLocation;
 
       /// Number of events processed tally
-      unsigned int m_Nevts = 0;
+      unsigned long long m_Nevts = 0;
 
       /// Flag to turn on or off the book keeping features to save cpu time.
       bool m_bookKeep = false;

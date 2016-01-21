@@ -132,28 +132,41 @@
         />
             
         <attribute
-                desc         = "The RichRecPixels associated to this ring" 
-                name         = "richRecPixels" 
-                type         = "LHCb::RichRecPixelOnRing::Vector"
+                desc = "The RichRecPixels associated to this ring" 
+                name = "richRecPixels" 
+                type = "LHCb::RichRecPixelOnRing::Vector"
                 nonconstaccessor = "TRUE"
         />
+
+	<typedef 
+		desc   = "Type for two closest ring points to a given position on the ring" 
+		access = "PUBLIC" 
+		def    = "ClosestPoints" 
+		type   = "std::pair&lt; const LHCb::RichRecPointOnRing*, const LHCb::RichRecPointOnRing* &gt;"
+	/>
+
+        <method 
+                const = "TRUE" 
+                type  = "ClosestPoints"
+                desc  = "Return the points on the ring closest to the given azimuth" 
+                name  = "getPointsClosestInAzimuth" >
+                <arg const="TRUE" inout="BYVALUE" name="angle" type="float"/>
+        </method>
 
         <method 
                 const = "TRUE" 
                 type  = "const LHCb::RichRecPointOnRing*"
                 desc  = "Return the point on the ring closest to the given azimuth" 
                 name  = "getPointClosestInAzimuth" >
-                <arg const="TRUE" inout="BYVALUE" name="angle" type="double"/>
+                <arg const="TRUE" inout="BYVALUE" name="angle" type="float"/>
                 <code>
-  const LHCb::RichRecPointOnRing* point =  NULL;
-  const unsigned int nPoints = ringPoints().size();
-  if ( nPoints&gt;0 )
-  {
-    const unsigned int iPoint 
-      = (unsigned int) ( (angle*((double)(nPoints))/Gaudi::Units::twopi) - 0.5 );
-    point = &amp;ringPoints()[ iPoint &lt; nPoints ? iPoint : nPoints-1 ];
-  }
-  return point;
+    // get the closest two points
+    const auto points = getPointsClosestInAzimuth(angle);
+
+    // pick the closest in angle
+    return ( fabs( angle - points.first-&gt;azimuth()  ) &lt;
+             fabs( angle - points.second-&gt;azimuth() ) ? 
+             points.first : points.second );
                 </code>
         </method>
 

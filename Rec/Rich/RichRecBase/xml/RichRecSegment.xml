@@ -64,7 +64,7 @@
             
         <constructor 
                 desc     = "Constructor from segment information" 
-                initList = "m_nEmittedPhotons(), m_nDetectablePhotons(),m_nSignalPhotons(), m_nScatteredPhotons(), m_emittedPhotonSpectra(enBins,minEn,maxEn), m_detectablePhotonSpectra(enBins,minEn,maxEn), m_signalPhotonSpectra(enBins,minEn,maxEn), m_geomEfficiencyPerPD(Rich::NParticleTypes, PDGeomEffs() ), m_geomEfficiency(), m_geomEfficiencyScat(), m_averageCKTheta(), m_ckThetaResolution(), m_averageCKRadiusLocal(), m_avSaturatedRadiusLocal(-999), m_trackSegment(segment), m_pdPanelHitPointForcedSide(Rich::NPDPanelsPerRICH), m_pdPanelHitPointForcedSideLocal(Rich::NPDPanelsPerRICH), m_trackInfo(0), m_richRecTrack(pTrk), m_hypothesisRings()" >
+                initList = "m_nEmittedPhotons(), m_nDetectablePhotons(),m_nSignalPhotons(), m_nScatteredPhotons(), m_emittedPhotonSpectra(enBins,minEn,maxEn), m_detectablePhotonSpectra(enBins,minEn,maxEn), m_signalPhotonSpectra(enBins,minEn,maxEn), m_geomEfficiencyPerPD(Rich::NParticleTypes, PDGeomEffs() ), m_geomEfficiency(), m_geomEfficiencyScat(), m_averageCKTheta(), m_ckThetaResolution(), m_averageCKRadiusLocal(), m_avSaturatedRadiusLocal(-999), m_trackSegment(segment), m_pdPanelHitPointForcedSide(Rich::NPDPanelsPerRICH), m_pdPanelHitPointForcedSideLocal(Rich::NPDPanelsPerRICH), m_pdPanelHitPointForcedSideCorrectedLocal(Rich::NPDPanelsPerRICH), m_trackInfo(0), m_richRecTrack(pTrk), m_hypothesisRings()" >
                 <arg const="FALSE"                 name="segment" type="LHCb::RichTrackSegment*"  />
                 <arg const="FALSE" inout="BYVALUE" name="pTrk"    type="LHCb::RichRecTrack*"     />
                 <arg const="TRUE"  inout="BYVALUE" name="enBins"  type="unsigned int"      />
@@ -629,7 +629,32 @@
                 <arg const="TRUE" inout="BYVALUE" name="side"  type="Rich::Side"     />
                 <code> return m_pdPanelHitPointForcedSideLocal[side]; </code>
         </method>
-   
+
+        <attribute 
+                desc        = "Ray traced PD panel impact point in corrected local coordinates, when forced to go to a given panel side" 
+                name        = "pdPanelHitPointForcedSideCorrectedLocal" 
+                type        = "LHCb::STL::Vector&lt; Gaudi::XYZPoint &gt;"
+                init        = "Rich::NPDPanelsPerRICH"
+                setMeth     = "FALSE"
+                getMeth     = "FALSE"
+        />
+        <method 
+                desc  = "Set the Ray traced PD panel impact point in corrected local coordinates for the given forced side" 
+                name  = "setPdPanelHitPointCorrectedLocal" 
+                type  = "void" >
+                <arg const="TRUE"                 name="point" type="Gaudi::XYZPoint"/>
+                <arg const="TRUE" inout="BYVALUE" name="side"  type="Rich::Side"     />
+                <code> m_pdPanelHitPointForcedSideCorrectedLocal[side] = point; </code>
+        </method>
+        <method 
+                const = "TRUE" 
+                desc  = "Get the Ray traced PD panel impact point in corrected local coordinates for the given forced side" 
+                name  = "pdPanelHitPointCorrectedLocal" 
+                type  = "const Gaudi::XYZPoint &amp;" >
+                <arg const="TRUE" inout="BYVALUE" name="side"  type="Rich::Side"     />
+                <code> return m_pdPanelHitPointForcedSideCorrectedLocal[side]; </code>
+        </method>
+
         <attribute 
                 desc        = "General information flags" 
                 init        = "0" 
