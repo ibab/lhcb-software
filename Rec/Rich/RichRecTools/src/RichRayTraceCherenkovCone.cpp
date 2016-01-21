@@ -27,7 +27,7 @@ RayTraceCherenkovCone::RayTraceCherenkovCone( const std::string& type,
   declareInterface<IRayTraceCherenkovCone>(this);
   // JOs
   //                                          Aero   R1Gas  R2Gas
-  declareProperty( "BailoutTries", m_bailoutFrac = { 0.75, 0.75, 0.75 } );
+  declareProperty( "BailoutFraction", m_bailoutFrac = { 0.75, 0.75, 0.75 } );
 }
 
 // Destructor

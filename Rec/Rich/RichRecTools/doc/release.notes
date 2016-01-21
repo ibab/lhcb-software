@@ -9,6 +9,8 @@
  - Compute the bailout number of ray-tracing attempts in 
    RichRayTraceCherenkovCone based on a fraction of the total number requested,
    rather than as a fixed number.
+ - Rename job option in RayTraceCherenkovCone "BailoutFraction" to refect its 
+   new meaning.
 
 ! 2016-01-18 - Chris Jones
  - Update the Cherenkov cone tool to determine the best guess photon emission
