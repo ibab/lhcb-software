@@ -69,12 +69,6 @@ namespace LHCb
 
   public:
 
-    /// Standard constructor
-    PackedRichPIDs( ) : m_packingVersion(defaultPackingVersion()) { }
-
-    /// Destructor
-    virtual ~PackedRichPIDs( ) { }
-
     /// Class ID
     static const CLID& classID() { return CLID_PackedRichPIDs; }
 
@@ -98,7 +92,7 @@ namespace LHCb
   private:
 
     /// Data packing version
-    char   m_packingVersion{0};
+    char   m_packingVersion{ defaultPackingVersion() };
 
     /// The packed data objects
     Vector m_vect; 

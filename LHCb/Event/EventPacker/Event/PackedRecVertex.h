@@ -88,7 +88,8 @@ namespace LHCb
       m_extra.reserve   ( 250 );
     }
 
-    virtual ~PackedRecVertices( ) {}; ///< Destructor
+  public:
+
     virtual const CLID& clID()  const { return PackedRecVertices::classID(); }
     static  const CLID& classID()     { return CLID_PackedRecVertices;       }
 

@@ -40,10 +40,11 @@ public:
 
   //---------------------------------------------------------------------------
 
-  /// Standard constructor
-  StandardPacker( const GaudiAlgorithm * p = nullptr ) : m_parent(p) { }
+  // Default constructor
+  StandardPacker() = default;
 
-  ~StandardPacker( ) {} ///< Destructor
+  /// Constructor with parent
+  explicit StandardPacker( const GaudiAlgorithm * p ) : m_parent(p) { }
 
   //---------------------------------------------------------------------------
 
@@ -109,8 +110,8 @@ public:
   inline long linkID( DataObject* out,
                       const DataObject* parent ) const
   {
-    LinkManager::Link * myLink = out->linkMgr()->link(parent);
-    if ( nullptr == myLink )
+    auto * myLink = out->linkMgr()->link(parent);
+    if ( !myLink )
     {
       out->linkMgr()->addLink( parent->registry()->identifier(), parent );
       myLink = out->linkMgr()->link(parent);
@@ -122,8 +123,8 @@ public:
   inline long linkID( DataObject* out,
                       const std::string& targetName ) const
   {
-    LinkManager::Link* myLink = out->linkMgr()->link( targetName );
-    if ( nullptr == myLink )
+    auto * myLink = out->linkMgr()->link( targetName );
+    if ( !myLink )
     {
       out->linkMgr()->addLink( targetName, 0 );
       myLink = out->linkMgr()->link( targetName );
@@ -189,7 +190,7 @@ public:
                              int& key ) const
   {
     indx = data >> 32;
-    const long long mask = 0x00000000FFFFFFFF;
+    constexpr long long mask = 0x00000000FFFFFFFF;
     key  = data & mask;
   }
 
@@ -268,7 +269,7 @@ public:
 private:
 
   /// Pointer to parent algorithm
-  const GaudiAlgorithm * m_parent;
+  const GaudiAlgorithm * m_parent = nullptr;
 
   //---------------------------------------------------------------------------
 

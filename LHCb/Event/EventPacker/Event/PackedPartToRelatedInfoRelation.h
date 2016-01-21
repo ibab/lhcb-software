@@ -77,9 +77,6 @@ namespace LHCb
 
   public:
 
-    /// Standard constructor
-    PackedRelatedInfoRelations( ) : m_packingVersion(defaultPackingVersion()) { }
-
     /// Class ID
     static const CLID& classID() { return CLID_PackedRelatedInfoRelations; }
 
@@ -125,7 +122,7 @@ namespace LHCb
   private:
 
     /// Data packing version (not used as yet, but for any future schema evolution)
-    char m_packingVersion{0};
+    char m_packingVersion{ defaultPackingVersion() };
 
     /// The packed info vector
     InfoVector m_info;

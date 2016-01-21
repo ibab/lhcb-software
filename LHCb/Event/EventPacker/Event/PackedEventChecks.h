@@ -84,10 +84,10 @@ namespace DataPacking
           }
           else
           { // Off diagonal
-            const double testA = ( fabs(a(n,n)) > 0 && fabs(a(m,m)) > 0 ?
-                                   a(n,m) / std::sqrt( a(n,n) * a(m,m) ) : 0 );
-            const double testB = ( fabs(b(n,n)) > 0 && fabs(b(m,m)) > 0 ?
-                                   b(n,m) / std::sqrt( b(n,n) * b(m,m) ) : 0 );
+            const auto testA = ( fabs(a(n,n)) > 0 && fabs(a(m,m)) > 0 ?
+                                 a(n,m) / std::sqrt( a(n,n) * a(m,m) ) : 0 );
+            const auto testB = ( fabs(b(n,n)) > 0 && fabs(b(m,m)) > 0 ?
+                                 b(n,m) / std::sqrt( b(n,n) * b(m,m) ) : 0 );
             ok &= compareDoubles( text.str(), testA, testB, tolOffDiag );
           }
         }

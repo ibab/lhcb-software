@@ -49,14 +49,9 @@ namespace LHCb
    */
   struct PackedWeights
   {
-    /// Default constructor
-    PackedWeights() 
-      : firstWeight(0), lastWeight(0), pvKey(0)
-    {}
-
-    unsigned short int firstWeight;  ///< index to first weight
-    unsigned short int lastWeight;   ///< index to last weight
-    unsigned int pvKey;              ///< The PV Key
+    unsigned short int firstWeight{0};  ///< index to first weight
+    unsigned short int lastWeight{0};   ///< index to last weight
+    unsigned int pvKey{0};              ///< The PV Key
   };
 
   // -----------------------------------------------------------------------
@@ -94,12 +89,6 @@ namespace LHCb
 
   public:
 
-    /// Standard constructor
-    PackedWeightsVector( ) : m_packingVersion(defaultPackingVersion()) { }
-
-    /// Destructor
-    virtual ~PackedWeightsVector( ) { }
-
     /// Class ID
     static const CLID& classID() { return CLID_PackedWeightsVector; }
 
@@ -129,7 +118,7 @@ namespace LHCb
   private:
 
     /// Data packing version (not used as yet, but for any future schema evolution)
-    char m_packingVersion;
+    char m_packingVersion{ defaultPackingVersion() };
 
     /// The packed data objects
     WeightsVector m_weights; 

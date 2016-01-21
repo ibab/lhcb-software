@@ -161,11 +161,6 @@ namespace LHCb
     typedef LHCb::Tracks             DataVector;
     typedef LHCb::PackedTracks PackedDataVector;
 
-  private:
-
-    /// Default Constructor hidden
-    //TrackPacker() { }
-
   public:
 
     /// Default Constructor
