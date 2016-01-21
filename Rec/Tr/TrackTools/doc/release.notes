@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2016-01-21 - Paul Seyfert
+ - Added DaVinci interface for Run2GhostId for integration test
+
 ! 2016-01-09 - Wouter Hulsbergen
  - add 'MaxNTHoles' cut to TrackSelector (for use in alignment)
 

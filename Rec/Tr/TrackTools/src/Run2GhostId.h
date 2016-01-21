@@ -63,6 +63,7 @@ private:
   std::vector<int>* m_expectedHits;
   int* m_vectorsizes;
 
+  bool m_DaVinci;
 
   int m_veloHits;
   int m_ttHits;

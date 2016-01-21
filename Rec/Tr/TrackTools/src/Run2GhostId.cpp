@@ -12,6 +12,7 @@
 #include "TMVA/FlattenUpstream.C"
 #include "TMVA/FlattenVelo.C"
 
+#include "Event/RecSummary.h"
 class IClassifierReader {
 
  public:
@@ -78,6 +79,7 @@ Run2GhostId::Run2GhostId( const std::string& type,
 {
   //declareProperty( "Expectors" , m_expectorNames=std::vector<std::string>{"UTHitExpectation","FTHitExpectation"} );
   declareProperty( "Expectors" , m_expectorNames=std::vector<std::string>({"TTHitExpectation","ITHitExpectation","OTHitExpectation"}) );
+  declareProperty( "InDaVinci" , m_DaVinci = false );
   declareInterface<IGhostProbability>(this);
 
   m_varNameMethods[LHCb::Track::Velo] =       &Run2GhostId::veloVars;
@@ -168,6 +170,28 @@ StatusCode Run2GhostId::initialize()
 }
 
 StatusCode Run2GhostId::countHits() {
+  /// only for qmtest
+  if (UNLIKELY(m_DaVinci)) {
+    const LHCb::RecSummary * rS =
+      getIfExists<LHCb::RecSummary>(evtSvc(),LHCb::RecSummaryLocation::Default);
+    if ( !rS )
+    {
+      rS = getIfExists<LHCb::RecSummary>(evtSvc(),LHCb::RecSummaryLocation::Default,false);
+    }
+    if ( !rS )
+    {
+      rS = getIfExists<LHCb::RecSummary>(evtSvc(),"/Event/Turbo/Rec/Summary",false);
+    }
+    if ( !rS )
+    {
+      return StatusCode::FAILURE;
+    }
+
+    m_otHits = rS->info(LHCb::RecSummary::nOTClusters,-1);
+    m_veloHits =  rS->info(LHCb::RecSummary::nVeloClusters,-1);
+    m_itHits = rS->info(LHCb::RecSummary::nITClusters,-1);
+    m_ttHits = rS->info(LHCb::RecSummary::nTTClusters,-1);
+  } else {
   //const LHCb::VPClusters* vpCont = NULL;
   //const LHCb::STClusters* utCont = NULL;
   //vpCont = getIfExists<LHCb::VPClusters>(LHCb::VPClusterLocation::Default);
@@ -197,13 +221,15 @@ StatusCode Run2GhostId::countHits() {
   //if (ftCont) m_ftHits = ftCont->size();;
   if (itCont) m_itHits = itCont->size();;
   m_otHits = m_otdecoder->totalNumberOfHits();
+    if (!((veloCont)&&(itCont)&&(ttCont))) {
+      return StatusCode::FAILURE;
+    }
+
+  }
 
   //  if (!((vpCont && utCont && ftCont) // this is upgrade, all have to be there
   //      || (veloCont && ttCont && itCont && ot) // otherwise we're in runI/II
   //     )) return Warning("detector missing",StatusCode::FAILURE,10);
-  if (!((veloCont)&&(itCont)&&(ttCont))) {
-    return StatusCode::FAILURE;
-  }
   return StatusCode::SUCCESS;
 
 }
