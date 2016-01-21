@@ -3,6 +3,9 @@
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IHistogramSvc.h"
 
+// workaround for https://its.cern.ch/jira/browse/GAUDI-1168
+#include "GaudiKernel/MinimalDataObjectHandle.h"
+
 #include "GauchoAppl/HistAdder.h"
 #include "GauchoAppl/CounterAdder.h"
 #include "GauchoAppl/SaveTimer.h"

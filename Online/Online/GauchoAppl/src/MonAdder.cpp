@@ -1,3 +1,7 @@
+// workaround for https://its.cern.ch/jira/browse/GAUDI-1168
+#include "GaudiKernel/MinimalDataObjectHandle.h"
+#include "dim.h"
+
 #include "GauchoAppl/MonAdder.h"
 #include "Gaucho/MonTypes.h"
 #include "Gaucho/SerialHeader.h"
