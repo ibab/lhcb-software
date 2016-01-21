@@ -40,3 +40,17 @@ ParseConstants::Parse(const char* filename)
   }
   return constants;
 }
+
+
+std::map<std::string, double>
+ParseConstants::Parse(const std::vector< std::string > filenames)
+{
+  std::map<std::string, double> constants;
+  
+  for (auto filename : filenames){
+    auto constants2add = Parse(filename.c_str());
+    constants.insert(constants2add.begin(), constants2add.end());
+  }
+
+  return constants;
+}

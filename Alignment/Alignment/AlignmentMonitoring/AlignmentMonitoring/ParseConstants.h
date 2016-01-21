@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 namespace Alignment
 {
@@ -17,6 +18,7 @@ namespace Alignment
       ~ParseConstants() {}
       // Methods
       std::map<std::string, double> Parse(const char* filename);
+      std::map<std::string, double> Parse(const std::vector< std::string > filenames);
     private:
     };
   }// namespace AlignmentMonitoring

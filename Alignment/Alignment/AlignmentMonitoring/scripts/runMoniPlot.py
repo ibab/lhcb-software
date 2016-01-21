@@ -100,8 +100,25 @@ def writeInLogbook(Fill, activity, updated = False, file2upload=None, version = 
 
     cmd = shlex.split(command)
     FNULL = open(os.devnull, 'w')
+
     subprocess.call(cmd, stdout=FNULL, stderr=subprocess.STDOUT)
     return 0
+
+def sendEmail(text, receivers = ['gdujany@cern.ch']):
+    import smtplib
+    sender = 'gdujany@cern.ch'
+    message = 'From: Alignment Monitor <gdujany@cern.ch>\n'
+    message += 'To: <gdujany@cern.ch>\n'
+    message += 'Subject: Warning from Alignment monitor\n\n'
+    message += '\n{0}\n\n'.format(text)
+
+    try:
+        smtpObj = smtplib.SMTP('localhost')
+        smtpObj.sendmail(sender, receivers, message)         
+        print "Successfully sent email"
+    except smtplib.SMTPException:
+        print "Error: unable to send email"
+
 
 if __name__ == '__main__':
     moniScript = {'Velo' : 'moniPlots.py', 'Tracker' : 'moniPlots_Tracker.py'}
@@ -130,11 +147,14 @@ if __name__ == '__main__':
                         outFile_name)
                     cmd = shlex.split(command)
                     FNULL = open(os.devnull, 'w')
-                    subprocess.call(cmd, stdout=FNULL, stderr=subprocess.STDOUT)
-                    if version:
-                        writeInLogbook(Fill=getFillNumber(run), activity=activity, file2upload=outFile_name, version = version, updated = True)
+                    success = subprocess.call(cmd, stdout=FNULL, stderr=subprocess.STDOUT) # if succes should be 0
+                    if success == 0:
+                        if version:
+                            writeInLogbook(Fill=getFillNumber(run), activity=activity, file2upload=outFile_name, version = version, updated = True)
+                        else:
+                            writeInLogbook(Fill=getFillNumber(run), activity=activity, updated = False)
                     else:
-                        writeInLogbook(Fill=getFillNumber(run), activity=activity, updated = False)
+                        sendEmail('Unable to process run {0}, please have a look'.format(run)) 
                 print printTime(), 'Done for now'
                 sys.stdout.flush()
 

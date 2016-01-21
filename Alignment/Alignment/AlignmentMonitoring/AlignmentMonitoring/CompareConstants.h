@@ -27,6 +27,8 @@ namespace Alignment
       // Methods
       void Compare();
       void Compare(const char* ver);
+      void Compare(const char* xml1, const char* xml2);
+      void Compare(const std::vector< std::string > xmls1, const std::vector< std::string > xmls2);
       void CompareWithRun(const char* dir, const char* runNo);
       WarningLevel CheckConstant(const char* name, const char* dof, double delta);
       WarningLevel CheckConstant(const char* name, int dof, double delta);
@@ -39,6 +41,8 @@ namespace Alignment
       void SaveHists(const char* filename);
       int GetNumWarnings(int level);
       int GetNumWarnings(int level, const char* regex);
+      std::string GetAlignablesWithWarnings(int level);
+      std::string GetAlignablesWithWarnings(int level, const char* regex);
       
       // Verbosity
       void SetVerbosity(bool verb){m_verbose=verb;}

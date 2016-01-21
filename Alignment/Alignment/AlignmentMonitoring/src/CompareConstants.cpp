@@ -72,6 +72,27 @@ CompareConstants::Compare(const char* ver)
   return;
 }
 
+void
+CompareConstants::Compare(const char* xml1, const char* xml2)
+{
+  std::map<std::string, WarningLevel> wls;
+  ParseConstants parser;
+  m_constRef = parser.Parse(xml1);
+  m_constAlt = parser.Parse(xml2);
+  Compare();
+  return;
+}
+
+void
+CompareConstants::Compare(const std::vector< std::string > xmls1, const std::vector< std::string > xmls2)
+{
+  std::map<std::string, WarningLevel> wls;
+  ParseConstants parser;
+  m_constRef = parser.Parse(xmls1);
+  m_constAlt = parser.Parse(xmls2);
+  Compare();
+}
+
 void CompareConstants::CompareWithRun(const char* dir, const char* runNo){
   std::map<std::string, WarningLevel> wls;
   ParseConstants parser;
@@ -267,4 +288,31 @@ CompareConstants::GetNumWarnings(int level, const char* regex)
       if (wrn.second == level) ++nw;
   }
   return nw;
+}
+
+
+std::string
+CompareConstants::GetAlignablesWithWarnings(int level)
+{
+  std::string str_alignabes;
+  if ( !CheckWarningLevel(level) ) return str_alignabes;
+  // get number of warnings of this level
+  for (auto wrn : m_mapWarnings)
+    if (wrn.second == level)  str_alignabes += std::string(wrn.first) + std::string(";");
+  return str_alignabes;
+}
+
+
+std::string
+CompareConstants::GetAlignablesWithWarnings(int level, const char* regex)
+{
+  std::string s(regex);
+  boost::regex rgx(s);
+  std::string str_alignabes;
+  if ( !CheckWarningLevel(level) ) return str_alignabes;
+  // get number of warnings of this level
+  for (auto wrn : m_mapWarnings)
+    if (boost::regex_search(wrn.first.begin(), wrn.first.end(), rgx)) 
+      if (wrn.second == level) str_alignabes += std::string(wrn.first) + std::string(";");
+  return str_alignabes;
 }

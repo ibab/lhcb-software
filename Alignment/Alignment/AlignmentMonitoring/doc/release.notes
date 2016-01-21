@@ -3,6 +3,10 @@
 ! package manager: Maurizio Martinelli
 !------------------------------------------------------------------------------
 
+! 2016-01-22 - Giulio Dujany
+ - new option for script trendPots.py
+ - added script to compute updated xml files with alignment updates needed according to the thresholds
+
 ! 2015-11-27 - Giulio Dujany
  - new options for script trendPots.py
 

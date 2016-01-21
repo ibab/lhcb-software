@@ -2,11 +2,9 @@
 
 import os, sys, re, math
 
-AligWork_dir = '/group/online/AligWork/'
-alignment_dir = '/group/online/alignment/'
-references = os.path.expandvars('$ALIGNMENTMONITORINGROOT/files/ConstantsReferences.txt')
-
-#alignment_dir = 'alignment_miei'
+std_AligWork_dir = '/group/online/AligWork/'
+std_alignment_dir = '/group/online/alignment/'
+std_references = os.path.expandvars('$ALIGNMENTMONITORINGROOT/files/ConstantsReferences.txt')
 
 ##########################
 ###   Options parser   ###
@@ -15,15 +13,19 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description ="Macro to make trend plots alignments")
     parser.add_argument('-a','--alignables', help='eg. VeloLeft.Tx Module01.Rz, for having all 6 dof for an alignable: VeloLeft.*', default= ['VeloLeft.Tx', 'VeloLeft.Ty'],nargs='+')
     parser.add_argument('-r','--runs', help='run numbers, default is all the availables', nargs=2, type=int,default=[0, 1e20])
-    parser.add_argument('--activity', help='choose between Velo, Tracker, Muon, default is Velo', choices = ['Velo', 'Tracker', 'Muon'] ,default= 'Velo')
+    parser.add_argument('--activity', help='choose between Velo, Tracker, Muon; default is Velo', choices = ['Velo', 'Tracker', 'Muon'] ,default= 'Velo')
     parser.add_argument('-o','--outName',help='output file name without extension, make both pdf and directory', default='trendPlots')
     parser.add_argument('-s', '--samePlot', help='Plot all the alignables in the same plot', action='store_true')
+    parser.add_argument('-d', '--drawLegend', help='Draw legend also for plots with only one data-serie', action='store_true')
     parser.add_argument('-u', '--diffUpdate', help='Plot difference wrt update', action='store_true')
     parser.add_argument('-n', '--noUpdate', help='Do not plot with empty dots alignments that did not trigger update', action='store_true')
     parser.add_argument('-p', '--projection', help='Make histogram with projection instead of trend', action='store_true')
     parser.add_argument('-l', '--labelAU', help='Use label in AU as x axis', action='store_true')
     parser.add_argument('-y', '--freeY', help='Leave Y axis range free, implies -l', action='store_true') # not yet implemented
     parser.add_argument('-c', '--canvasSize', help='Canvas dimensions in pixels, default is 900, 500', nargs=2, type=int, default=[900, 500]) # not yet implemented
+    parser.add_argument('--AligWork_dir', help='folder with alignment', default = std_AligWork_dir)
+    parser.add_argument('--alignment_dir', help='folder with alignment', default = std_alignment_dir)
+    parser.add_argument('--references', help='folder with alignment', default = std_references)
     args = parser.parse_args()
     if args.freeY: args.labelAU = True
     if args.activity == 'Muon': args.noUpdate = True
@@ -38,7 +40,7 @@ r.gStyle.SetTitleOffset(0.7,"Y")
 
 r.gROOT.SetBatch(True)
 
-def getListRuns(activity):
+def getListRuns(activity, AligWork_dir = std_AligWork_dir):
     runs = []
     for directory in os.listdir(os.path.join(AligWork_dir, activity)): 
         match = re.findall('^run([0-9]+)$', directory)
@@ -55,7 +57,7 @@ def getRunFromXml(xml_file):
         return None
 
     
-def getListRunsUpdated(activity):
+def getListRunsUpdated(activity, alignment_dir = std_alignment_dir):
     runs = []
     if activity == 'Tracker': activity = 'IT'
     directory = os.path.join(alignment_dir, '{0}/{0}Global'.format(activity))
@@ -65,7 +67,7 @@ def getListRunsUpdated(activity):
     return sorted(runs)
 
     
-def getLimits(dof, alignable):
+def getLimits(dof, alignable, references = std_references):
     for line in open(references).readlines():
         if line[0] != '#':
             try:
@@ -100,7 +102,7 @@ def readXML(inFile):
     return alignParams
 
 
-def getAllConstants(runs, activity):
+def getAllConstants(runs, activity, AligWork_dir = std_AligWork_dir):
     '''
     return list of pairs (runNumber, all_aligConstants)
     '''
@@ -201,7 +203,7 @@ def addXLabels(mp, maxim, runs):
         text.DrawText(xmid,-1.2*maxim,str(int(fillID)))
 
                
-def drawPlot(aligndofs, diffUpdate = False, noUpdate = False, labelAU = False, freeY = False, isProjection = False):
+def drawPlot(allConstants, runsUpdated, aligndofs, diffUpdate = False, noUpdate = False, labelAU = False, freeY = False, isProjection = False, references = std_references, onlyRuns2show=None, drawLegend41=False):
     '''
     aligndof is a list of alignables and dof eg [VeloLeft.Tx, ]
     '''
@@ -258,7 +260,7 @@ def drawPlot(aligndofs, diffUpdate = False, noUpdate = False, labelAU = False, f
     hlines=hlines, vlines = vlines,
     vlines_styles = vlines_styles, hlines_styles = hlines_styles,
     rangeY = rangeY,
-    drawLegend=len(aligndofs) != 1)
+    drawLegend= len(aligndofs) != 1 or drawLegend41)
 
     for style, aligndof in enumerate(aligndofs, 1):
         alignable, dof = aligndof.split('.')
@@ -267,6 +269,12 @@ def drawPlot(aligndofs, diffUpdate = False, noUpdate = False, labelAU = False, f
         else:
             values = subtractMean(getConstants(dof, alignable, allConstants))
         values = [(i,j*mult) for i,j in values]
+        if onlyRuns2show != None:
+            new_values = []
+            for value in values:
+                if value[0] in onlyRuns2show:
+                    new_values.append(value)
+            values = new_values
         valuesUpdated = [[i,j] for i,j in values]
         if not noUpdate:
             for value in valuesUpdated:
@@ -290,22 +298,22 @@ def drawPlot(aligndofs, diffUpdate = False, noUpdate = False, labelAU = False, f
 
 if __name__ == '__main__':
         
-    runs = getListRuns(args.activity)
+    runs = getListRuns(args.activity, args.AligWork_dir)
     runs = [i for i in runs if i >= args.runs[0] and i <= args.runs[1]]
-    runsUpdated = getListRunsUpdated(args.activity)
+    runsUpdated = getListRunsUpdated(args.activity, args.alignment_dir)
     runsUpdated = [i for i in runsUpdated if i in runs]  
 
     outFile_name = args.outName+'.pdf'
     outDir = args.outName
     if not os.path.exists(outDir): os.mkdir(outDir)
 
-    allConstants = getAllConstants(runs, args.activity)
+    allConstants = getAllConstants(runs, args.activity, args.AligWork_dir)
 
     c = r.TCanvas('c', 'c', *args.canvasSize)
     c.Print(outFile_name+'[')
 
     if args.samePlot:
-        mp=drawPlot(args.alignables, args.diffUpdate, args.noUpdate, args.labelAU, args.freeY, args.projection)
+        mp=drawPlot(allConstants,runsUpdated, args.alignables, args.diffUpdate, args.noUpdate, args.labelAU, args.freeY, args.projection, references = args.references, drawLegend41=args.drawLegend)
         c.Print(outFile_name)
         c.Print(os.path.join(outDir,'{0}_{1}.pdf'.format(*args.alignables[0].split('.'))))
 
@@ -315,7 +323,7 @@ if __name__ == '__main__':
             dofs = ['Tx', 'Ty', 'Tz', 'Rx', 'Ry', 'Rz'] if dof == '*' else [dof]
 
             for dof in dofs:
-                mp=drawPlot('{0}.{1}'.format(alignable, dof), args.diffUpdate, args.noUpdate, args.labelAU, args.freeY, args.projection)
+                mp=drawPlot(allConstants, runsUpdated, '{0}.{1}'.format(alignable, dof), args.diffUpdate, args.noUpdate, args.labelAU, args.freeY, args.projection, references = args.references, drawLegend41=args.drawLegend)
                 c.Print(outFile_name)
                 c.Print(os.path.join(outDir,'{alignable}_{dof}.pdf'.format(**locals())))
 
