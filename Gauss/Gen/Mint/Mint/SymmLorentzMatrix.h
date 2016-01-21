@@ -60,7 +60,7 @@ class SymmLorentzMatrix : public LorentzMatrix{
 
     T().SetX(p.T() * p.X());
     T().SetY(p.T() * p.Y());
-    T().SetZ(p.T() * p.T());
+    T().SetZ(p.T() * p.Z());
     T().SetT(p.T() * p.T());
   }
   SymmLorentzMatrix(const SymmLorentzMatrix& other)
