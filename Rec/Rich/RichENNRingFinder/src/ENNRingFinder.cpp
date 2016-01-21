@@ -209,7 +209,7 @@ void Finder::FindRings()
 
     if ( R2 > config().r2Max() || R2 < config().r2Min() ) continue;
 
-    Rings.push_back( Ring(i->x+X,i->y+Y,R,1) );
+    Rings.emplace_back( Ring(i->x+X,i->y+Y,R,1) );
     Ring & ring = Rings.back();
     ring.Hits.push_back(&*i);
     for ( iP j = SearchArea.begin(); j != SearchArea.end(); ++j )

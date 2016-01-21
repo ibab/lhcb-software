@@ -33,11 +33,9 @@ AlgBase<FINDER>::AlgBase( const std::string& name,
                           const Rich::Side         panel,
                           const Rich::RadiatorType rad )
   : Rich::Rec::HistoAlgBase ( name, pSvcLocator ),
-    m_smartIDTool           ( NULL  ),
     m_rich                  ( rich  ),
     m_panel                 ( panel ),
-    m_rad                   ( rad   ),
-    m_finder                ( NULL  )
+    m_rad                   ( rad   )
 {
   // Set RICH specific parameters
   if ( Rich::Rich2Gas == rad )
@@ -142,7 +140,7 @@ StatusCode AlgBase<FINDER>::finalize()
 {
   // clean up
   delete m_finder;
-  m_finder = NULL;
+  m_finder = nullptr;
   // return
   return Rich::Rec::HistoAlgBase::finalize();
 }
@@ -172,8 +170,7 @@ StatusCode AlgBase<FINDER>::richInit()
 
   // Make sure RichRecPixels are available
   if ( !pixelCreator()->newPixels() ) return StatusCode::FAILURE;
-  if ( msgLevel(MSG::DEBUG) )
-    debug() << "Found in total " << richPixels()->size() << " RichRecPixels" << endmsg;
+  _ri_debug << "Found in total " << richPixels()->size() << " RichRecPixels" << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -219,62 +216,52 @@ StatusCode AlgBase<FINDER>::saveRings() const
   LHCb::RichRecRings * rings = getRings( m_ringLocation );
   const unsigned int nRingsBefore = rings->size();
 
-  if ( msgLevel(MSG::DEBUG) )
-    debug() << "Found " << m_finder->rings().size() << " ENN ring candidates" << endmsg;
+  _ri_debug << "Found " << m_finder->rings().size() << " ENN ring candidates" << endmsg;
 
   // loop over final rings
-  for ( ENNRingFinder::Finder::Ring::Vector::const_iterator iRing = m_finder->rings().begin();
-        iRing != m_finder->rings().end(); ++iRing )
+  for ( const auto & ring : m_finder->rings() )
   {
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << "Considering ENN Ring : " << *iRing << endmsg;
+    _ri_verbo << "Considering ENN Ring : " << ring << endmsg;
 
     // Select rings
-    if ( (*iRing).chi2 > m_maxRingChi2 )
+    if ( ring.chi2 > m_maxRingChi2 )
     {
-      if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> Chi^2 too large -> reject " << endmsg;
+      _ri_verbo << " -> Chi^2 too large -> reject " << endmsg;
       continue;
     }
-    if ( (*iRing).purity() <= m_minRingPurity )
+    if ( ring.purity() <= m_minRingPurity )
     {
-      if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> Purity too small -> reject " << endmsg;
+      _ri_verbo << " -> Purity too small -> reject " << endmsg;
       continue;
     }
 
     // Create a new Ring object
-    LHCb::RichRecRing * newRing = new LHCb::RichRecRing();
+    auto * newRing = new LHCb::RichRecRing();
 
     // Add pixels to this ring
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << "  Ring has " << (*iRing).Hits.size() << " associated Hits" << endmsg;
-    for ( ENNRingFinder::Finder::Hit::PtnVector::const_iterator iHit = (*iRing).Hits.begin();
-          iHit != (*iRing).Hits.end(); ++iHit )
+    _ri_verbo << "  Ring has " << ring.Hits.size() << " associated Hits" << endmsg;
+    for ( const auto * hit : ring.Hits )
     {
-      if ( msgLevel(MSG::VERBOSE) )
-        verbose() << "  -> Associated hit " << **iHit << endmsg;
-      const double prob = m_finder->hitProbability(*iRing,**iHit);
+      _ri_verbo << "  -> Associated hit " << *hit << endmsg;
+      const double prob = m_finder->hitProbability(ring,*hit);
       if ( prob > m_minAssProb )
       {
-        LHCb::RichRecPixel * pix = richPixels()->object( (*iHit)->key );
-        newRing->richRecPixels().push_back( LHCb::RichRecPixelOnRing(pix,prob) );
+        auto * pix = richPixels()->object( hit->key );
+        newRing->richRecPixels().emplace_back( LHCb::RichRecPixelOnRing(pix,prob) );
       }
     }
 
     // are we going to keep this ring ?
     if ( newRing->richRecPixels().empty() )
     {
-      if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> ring has no good hits -> rejecting" << endmsg;
+      _ri_verbo << " -> ring has no good hits -> rejecting" << endmsg;
       delete newRing;
       continue;
     }
     else
     {
-      if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " -> ring has " << newRing->richRecPixels().size()
-                  << " good hits -> keeping" << endmsg;
+      _ri_verbo << " -> ring has " << newRing->richRecPixels().size()
+                << " good hits -> keeping" << endmsg;
 
       // insert in Gaudi container
       rings->insert( newRing );
@@ -289,12 +276,12 @@ StatusCode AlgBase<FINDER>::saveRings() const
       newRing->setAlgorithm ( LHCb::RichRecRing::ENN           );
 
       // get ring centre, scaled back to local coords
-      const Gaudi::XYZPoint centreLocal( (*iRing).x, (*iRing).y, 0 );
+      const Gaudi::XYZPoint centreLocal( ring.x, ring.y, 0 );
       newRing->setCentrePointLocal ( centreLocal );
       newRing->setCentrePointGlobal( m_smartIDTool->globalPosition( centreLocal, rich(), panel() ) );
 
       // get the radius on the detector plane
-      double radius = (*iRing).radius();
+      auto radius = ring.radius();
 
       // refit the radius ?
       if ( m_refitRings ) refit( newRing, radius );
@@ -312,11 +299,8 @@ StatusCode AlgBase<FINDER>::saveRings() const
 
   } // loop over rings
 
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    debug() << " -> Saved " << rings->size() - nRingsBefore
+  _ri_debug << " -> Saved " << rings->size() - nRingsBefore
             << " rings at " << m_ringLocation << endmsg;
-  }
 
   // count # found rings per event
   counter("# "+Rich::text(rich())+" Found Rings") += (rings->size() - nRingsBefore);
@@ -327,20 +311,18 @@ StatusCode AlgBase<FINDER>::saveRings() const
 template < class FINDER >
 void AlgBase<FINDER>::addRingToPixels( LHCb::RichRecRing * ring ) const
 {
-  if ( msgLevel(MSG::VERBOSE) )
-    verbose() << " -> Adding reference to ring " << ring->key() << " to pixels" << endmsg;
-  for ( LHCb::RichRecPixelOnRing::Vector::iterator iP = ring->richRecPixels().begin();
-        iP != ring->richRecPixels().end(); ++iP )
+  _ri_verbo << " -> Adding reference to ring " << ring->key() << " to pixels" << endmsg;
+  for ( const auto & P : ring->richRecPixels() )
   {
-    LHCb::RichRecPixel * pix = (*iP).pixel();
+    auto * pix = P.pixel();
     if ( pix )
     {
       LHCb::RichRecPixel::RingsOnPixel* rings
         = const_cast<LHCb::RichRecPixel::RingsOnPixel*>(&(pix->richRecRings()));
       if ( rings )
       {
-        const double prob = (*iP).associationProb();
-        rings->push_back( LHCb::RichRecRingOnPixel(ring,prob) );
+        const double prob = P.associationProb();
+        rings->emplace_back( LHCb::RichRecRingOnPixel(ring,prob) );
       }
     }
     else
@@ -356,40 +338,37 @@ bool AlgBase<FINDER>::addDataPoints( ) const
   bool OK = false;
 
   // Iterate over pixels
-  const IPixelCreator::PixelRange range = pixelCreator()->range( rich(), panel() );
+  const auto range = pixelCreator()->range( rich(), panel() );
 
-  if ( msgLevel(MSG::DEBUG) )
-    debug() << "Found " << range.size() << " hits for " << rich()
+  _ri_debug << "Found " << range.size() << " hits for " << rich()
             << " " << Rich::text(rich(),panel()) << endmsg;
-
+  
   if ( range.size() < 3 )
   {
-    if ( msgLevel(MSG::DEBUG) )
-      debug() <<  "Too few hits (<3) to find any rings" << endmsg;
+    _ri_debug <<  "Too few hits (<3) to find any rings" << endmsg;
   }
   else
   {
 
     m_finder->hits().reserve( range.size() );
-    for ( LHCb::RichRecPixels::const_iterator iPix = range.begin(); iPix != range.end(); ++iPix )
+    for ( const auto * pix : range )
     {
       // Is this HPD selected ?
-      const unsigned int hitsInHPD = pixelCreator()->range( (*iPix)->hpd() ).size();
+      const unsigned int hitsInHPD = pixelCreator()->range( pix->hpd() ).size();
       if ( hitsInHPD < m_maxHitsHPD )
       {
         // get X and Y
-        const double X ( (*iPix)->radCorrLocalPositions().position(rad()).x() );
-        const double Y ( (*iPix)->radCorrLocalPositions().position(rad()).y() );
-        m_finder->hits().push_back( typename FINDER::Hit( (*iPix)->key(), X, Y ) );
-        if ( msgLevel(MSG::VERBOSE) )
-          verbose() << " -> Adding data point ( " << X << " , " << Y << " )" << endmsg;
+        const double X ( pix->radCorrLocalPositions().position(rad()).x() );
+        const double Y ( pix->radCorrLocalPositions().position(rad()).y() );
+        m_finder->hits().emplace_back( typename FINDER::Hit( pix->key(), X, Y ) );
+        _ri_verbo << " -> Adding data point ( " << X << " , " << Y << " )" << endmsg;
       }
       else
       {
         if ( msgLevel(MSG::DEBUG) )
         {
           std::ostringstream mess;
-          mess << "Skipping hits in " << Rich::DAQ::HPDIdentifier((*iPix)->hpd()).number();
+          mess << "Skipping hits in " << Rich::DAQ::HPDIdentifier(pix->hpd()).number();
           ++counter(mess.str());
         }
       }
@@ -443,16 +422,14 @@ void AlgBase<FINDER>::buildRingPoints( LHCb::RichRecRing * ring,
                                     );
     }
   }
-  if (msgLevel(MSG::VERBOSE))
-    verbose() << " -> Added " << ring->ringPoints().size() << " space points to ring" << endmsg;
+  _ri_verbo << " -> Added " << ring->ringPoints().size() << " space points to ring" << endmsg;
 }
 
 template < class FINDER >
 void AlgBase<FINDER>::refit( LHCb::RichRecRing * ring,
                              double & radius ) const
 {
-  if (msgLevel(MSG::VERBOSE))
-    verbose() << "Radius refitting before = " << radius << " OK = ";
+  _ri_verbo << "Radius refitting before = " << radius << " OK = ";
 
   // make a fitter
   FastRingFitter fitter(*ring);
@@ -464,6 +441,5 @@ void AlgBase<FINDER>::refit( LHCb::RichRecRing * ring,
   const bool refitOK = ( fitter.result().Status == 0 );
   if ( refitOK ) radius = fitter.result().Radius;
 
-  if (msgLevel(MSG::VERBOSE))
-    verbose() << refitOK << " after = " << radius << endmsg;
+  _ri_verbo << refitOK << " after = " << radius << endmsg;
 }

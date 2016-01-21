@@ -4,6 +4,9 @@
 ! Purpose     : Uses an elastic Neural Network to do ring finding without tracks
 !-------------------------------------------------------------------------------
 
+! 2016-01-21 - Chris Jones
+ - C++11 cleanup.
+
 !========================= RichENNRingFinder v1r5p2 2015-10-13 =======================
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers

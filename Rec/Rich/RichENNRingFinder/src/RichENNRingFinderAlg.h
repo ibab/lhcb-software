@@ -117,14 +117,14 @@ namespace Rich
       private: // data
 
         // tool pointers
-        const ISmartIDTool * m_smartIDTool; ///< Pointer to RichSmartID tool
+        const ISmartIDTool * m_smartIDTool = nullptr; ///< Pointer to RichSmartID tool
 
         const Rich::DetectorType m_rich;  ///< Which RICH Detector
         const Rich::Side         m_panel; ///< Which RICH Panel
         const Rich::RadiatorType m_rad;   ///< Which RICH radiator
 
         /// The ENN ring finder
-        FINDER * m_finder;
+        FINDER * m_finder = nullptr;
 
         /// Location of all output rings in TES
         std::string m_ringLocation;
