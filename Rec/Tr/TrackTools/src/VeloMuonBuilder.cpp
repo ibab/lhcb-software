@@ -238,7 +238,11 @@ StatusCode VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks
         aCopy->setFitHistory(LHCb::Track::FitUnknown);
 
         TrackFitResult * result = new TrackFitResult();
-        result->setPScatter(1/qp); // -- needed in fitter
+        if (0.f==qp) {
+          result->setPScatter(1/qp); // -- needed in fitter
+        } else {
+          result->setPScatter(1e6); // straight track => p = 1TeV
+        }
 
         aCopy->setFitResult(result);
 
