@@ -26,23 +26,13 @@ namespace LHCb
    */
   struct PackedMCHit
   {
-    /// Default constructor
-    PackedMCHit()
-      : sensDetID(0),
-        entx(0),enty(0),entz(0),
-        vtxx(0),vtxy(0),vtxz(0),
-        energy(0), tof(0),
-        mp(0),
-        mcParticle(-1)
-    {}
-
-    int   sensDetID;
-    int   entx,enty,entz;
-    int   vtxx,vtxy,vtxz;
-    int   energy;
-    int   tof;
-    int   mp;
-    long long mcParticle;
+    int   sensDetID{0};
+    int   entx{0},enty{0},entz{0};
+    int   vtxx{0},vtxy{0},vtxz{0};
+    int   energy{0};
+    int   tof{0};
+    int   mp{0};
+    long long mcParticle{-1};
   };
 
   // -----------------------------------------------------------------------
@@ -89,12 +79,6 @@ namespace LHCb
 
   public:
 
-    /// Standard constructor
-    PackedMCHits( ) : m_packingVersion(defaultPackingVersion()) { }
-
-    /// Destructor
-    virtual ~PackedMCHits( ) { }
-
     /// Class ID
     static const CLID& classID() { return CLID_PackedMCHits; }
 
@@ -118,7 +102,7 @@ namespace LHCb
   private:
 
     /// Data packing version
-    char   m_packingVersion;
+    char   m_packingVersion{ defaultPackingVersion() };
 
     /// The packed data objects
     Vector m_vect; 
@@ -147,17 +131,12 @@ namespace LHCb
   private:
 
     /// Default Constructor hidden
-    MCHitPacker( ) 
-      : m_dispScale ( 1.0e2 ),
-        m_enScale   ( 5.0e3 ) {}
-
+    MCHitPacker( ) {}
+    
   public:
-
+    
     /// Constructor
-    MCHitPacker( const GaudiAlgorithm & parent ) 
-      : m_pack(&parent),
-        m_dispScale ( 1.0e2 ),
-        m_enScale   ( 5.0e3 ) {}
+    MCHitPacker( const GaudiAlgorithm & p ) : m_pack(&p) {}
     
   public:
 
@@ -186,10 +165,10 @@ namespace LHCb
   protected:
 
     /// Scale factor for displacement vector
-    double m_dispScale;
+    double m_dispScale{ 1.0e2 };
 
     /// Scale factor for energy
-    double m_enScale;
+    double m_enScale{ 5.0e3 };
 
   };
 
@@ -244,7 +223,7 @@ namespace LHCb
   {
   public:
     MCVPHitPacker( const GaudiAlgorithm & parent ) : MCHitPacker(parent)
-    { // printf("MCVPHitPacker::MCVPHitPacker()\n");
+    { 
       m_dispScale = 1.0e2;
       m_enScale   = 5.0e3;
     }

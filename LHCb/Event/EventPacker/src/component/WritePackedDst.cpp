@@ -37,18 +37,12 @@
 // 2008-12-01 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( WritePackedDst )
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 WritePackedDst::WritePackedDst( const std::string& name,
                                 ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ),
-    m_dst          ( NULL ),
-    m_blobNumber   ( 0    ),
-    m_bankNb       ( 0    )
+  : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "Containers", m_containers );
 }
@@ -119,7 +113,7 @@ StatusCode WritePackedDst::execute()
         m_containers.end() != itC; ++itC ) {
     //== Try to get the container, a data object
     DataObject* myObj = getIfExists<DataObject>( *itC );
-    if ( NULL == myObj ) {
+    if ( !myObj ) {
       return Warning( "Container " + *itC + " does not exist." );
     }
     unsigned int myClID = myObj->clID();
@@ -192,7 +186,7 @@ StatusCode WritePackedDst::execute()
             iS != in->summaryData().end(); ++iS )
       {
         bank.storeInt( iS->first  );
-        bank.storeInt( iS->second ); 
+        bank.storeInt( iS->second );
       }
       m_dst->addBank( m_bankNb++, LHCb::RawBank::DstBank, in->version(), bank.data() );
 
@@ -201,7 +195,7 @@ StatusCode WritePackedDst::execute()
       LHCb::RecHeader* in = get<LHCb::RecHeader>( *itC );
       PackedBank bank( in );
       unsigned int evHigh = ((in->evtNumber() ) >> 32) & 0xFFFFFFFF;
-      unsigned int evLow  = ( in->evtNumber() & 0xFFFFFFFF ); 
+      unsigned int evLow  = ( in->evtNumber() & 0xFFFFFFFF );
       bank.addEntry( evHigh, evLow, 0 ); // 0 is size of random seeds vector, for backward compatibility
       bank.storeString( in->applicationName() );
       bank.storeString( in->applicationVersion() );
@@ -362,5 +356,10 @@ void WritePackedDst::storeInBlob( PackedBank& pBnk, const void* data, unsigned i
     m_dst->adoptBank( bank, true );
   }
 }
+
+//=============================================================================
+
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( WritePackedDst )
 
 //=============================================================================

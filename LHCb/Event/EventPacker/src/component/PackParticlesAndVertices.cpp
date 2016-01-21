@@ -38,8 +38,8 @@ StatusCode PackParticlesAndVertices::execute()
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   // Only continue if this stream exists for this event
-  const DataObject * root = getIfExists<DataObject*>( m_inputStream );
-  if ( NULL == root ) return StatusCode::SUCCESS;
+  const auto * root = getIfExists<DataObject*>( m_inputStream );
+  if ( !root ) return StatusCode::SUCCESS;
 
   // Class IDs for handled data
   const CLID clIdParticles      = 0x60000 + LHCb::CLID_Particle;
@@ -442,7 +442,7 @@ StatusCode PackParticlesAndVertices::execute()
     for ( auto *& it : toBeDeleted )
     {
       const StatusCode ssc = evtSvc()->unregisterObject( it );
-      if ( ssc.isSuccess() ) { delete it; it = NULL; }
+      if ( ssc.isSuccess() ) { delete it; it = nullptr; }
       sc = sc && ssc;
     }
     if ( sc.isFailure() ) 
@@ -473,10 +473,10 @@ void PackParticlesAndVertices::buildTESMap( const DataObject* obj,
       // TES location identifier
       const std::string & id = leaf->identifier();
       // load the object
-      DataObject* tmp(NULL);
+      DataObject* tmp(nullptr);
       sc = eventSvc()->findObject( id, tmp );
       // if found process it
-      if ( sc.isSuccess() && NULL != tmp )
+      if ( sc.isSuccess() && nullptr != tmp )
       {
         // If not a data node, save in the map
         if ( tmp->clID() != CLID_DataObject )
@@ -506,7 +506,7 @@ packAFTContainer ( const LHCb::FlavourTags* fts,
   const LHCb::FlavourTagPacker ftPacker(*this);
 
   // checks
-  auto * unpacked = ( m_enableCheck ? new LHCb::FlavourTags() : NULL );
+  auto * unpacked = ( m_enableCheck ? new LHCb::FlavourTags() : nullptr );
   if ( unpacked ) { put( unpacked, "/Event/Transient/PsAndVsFTTest" ); }
 
   // reserve size
@@ -516,7 +516,7 @@ packAFTContainer ( const LHCb::FlavourTags* fts,
   for ( const auto * ft : *fts )
   {
     // Make a new packed data object and save
-    pfts.data().push_back( LHCb::PackedFlavourTag() );
+    pfts.data().emplace_back( LHCb::PackedFlavourTag() );
     LHCb::PackedFlavourTag& pft = pfts.data().back();
 
     // reference to original container and key
@@ -560,7 +560,7 @@ packAParticleContainer ( const LHCb::Particles* parts,
   const LHCb::ParticlePacker pPacker(*this);
 
   // checks
-  auto * unpacked = ( m_enableCheck ? new LHCb::Particles() : NULL );
+  auto * unpacked = ( m_enableCheck ? new LHCb::Particles() : nullptr );
   if ( unpacked ) { put( unpacked, "/Event/Transient/PsAndVsParticleTest" ); }
 
   // reserve size
@@ -570,7 +570,7 @@ packAParticleContainer ( const LHCb::Particles* parts,
   for ( const auto * part : *parts )
   {
     // Make a new packed data object and save
-    pparts.data().push_back( LHCb::PackedParticle() );
+    pparts.data().emplace_back( LHCb::PackedParticle() );
     LHCb::PackedParticle& ppart = pparts.data().back();
 
     // reference to original container and key
@@ -614,7 +614,7 @@ packAMuonPIDContainer ( const LHCb::MuonPIDs* pids,
   const LHCb::MuonPIDPacker pPacker(*this);
 
   // checks
-  auto * unpacked = ( m_enableCheck ? new LHCb::MuonPIDs() : NULL );
+  auto * unpacked = ( m_enableCheck ? new LHCb::MuonPIDs() : nullptr );
   if ( unpacked ) { put( unpacked, "/Event/Transient/PsAndVsMuonPIDTest" ); }
 
   // reserve size
@@ -624,7 +624,7 @@ packAMuonPIDContainer ( const LHCb::MuonPIDs* pids,
   for ( const auto * pid : *pids )
   {
     // Make a new packed data object and save
-    ppids.data().push_back( LHCb::PackedMuonPID() );
+    ppids.data().emplace_back( LHCb::PackedMuonPID() );
     LHCb::PackedMuonPID& ppid = ppids.data().back();
 
     // reference to original container and key
@@ -669,7 +669,7 @@ packARichPIDContainer ( const LHCb::RichPIDs* pids,
   const LHCb::RichPIDPacker pPacker(*this);
 
   // checks
-  auto * unpacked = ( m_enableCheck ? new LHCb::RichPIDs() : NULL );
+  auto * unpacked = ( m_enableCheck ? new LHCb::RichPIDs() : nullptr );
   if ( unpacked ) { put( unpacked, "/Event/Transient/PsAndVsRichPIDTest" ); }
 
   // reserve size
@@ -679,7 +679,7 @@ packARichPIDContainer ( const LHCb::RichPIDs* pids,
   for ( const auto * pid : *pids )
   {
     // Make a new packed data object and save
-    ppids.data().push_back( LHCb::PackedRichPID() );
+    ppids.data().emplace_back( LHCb::PackedRichPID() );
     LHCb::PackedRichPID& ppid = ppids.data().back();
 
     // reference to original container and key
@@ -724,7 +724,7 @@ packAProtoParticleContainer( const LHCb::ProtoParticles* protos,
   const LHCb::ProtoParticlePacker pPacker(*this);
 
   // checks
-  auto * unpacked = ( m_enableCheck ? new LHCb::ProtoParticles() : NULL );
+  auto * unpacked = ( m_enableCheck ? new LHCb::ProtoParticles() : nullptr );
   if ( unpacked ) { put( unpacked, "/Event/Transient/PsAndVsProtoParticleTest" ); }
 
   // reserve size
@@ -734,7 +734,7 @@ packAProtoParticleContainer( const LHCb::ProtoParticles* protos,
   for ( const auto * proto : *protos )
   {
     // Make a new packed data object and save
-    pprotos.protos().push_back( LHCb::PackedProtoParticle() );
+    pprotos.protos().emplace_back( LHCb::PackedProtoParticle() );
     LHCb::PackedProtoParticle& pproto = pprotos.protos().back();
 
     // reference to original container and key
@@ -778,7 +778,7 @@ packATrackContainer( const LHCb::Tracks* tracks,
   const LHCb::TrackPacker tPacker(*this);
 
   // checks
-  auto * unpacked = ( m_enableCheck ? new LHCb::Tracks() : NULL );
+  auto * unpacked = ( m_enableCheck ? new LHCb::Tracks() : nullptr );
   if ( unpacked ) { put( unpacked, "/Event/Transient/PsAndVsTrackTest" ); }
 
   // reserve size
@@ -788,7 +788,7 @@ packATrackContainer( const LHCb::Tracks* tracks,
   for ( const auto * track : *tracks )
   {
     // Make a new packed data object and save
-    ptracks.tracks().push_back( LHCb::PackedTrack() );
+    ptracks.tracks().emplace_back( LHCb::PackedTrack() );
     LHCb::PackedTrack& ptrack = ptracks.tracks().back();
 
     // reference to original container and key
@@ -832,7 +832,7 @@ packAVertexContainer ( const LHCb::Vertices* verts,
   const LHCb::VertexPacker vPacker(*this);
 
   // checks
-  auto * unpacked = ( m_enableCheck ? new LHCb::Vertices() : NULL );
+  auto * unpacked = ( m_enableCheck ? new LHCb::Vertices() : nullptr );
   if ( unpacked ) { put( unpacked, "/Event/Transient/PsAndVsVertexTest" ); }
 
   // reserve size
@@ -842,7 +842,7 @@ packAVertexContainer ( const LHCb::Vertices* verts,
   for ( const auto * vert : *verts )
   {
     // Make a new packed data object and save
-    pverts.data().push_back( LHCb::PackedVertex() );
+    pverts.data().emplace_back( LHCb::PackedVertex() );
     LHCb::PackedVertex& pvert = pverts.data().back();
 
     // reference to original container and key
@@ -891,7 +891,7 @@ packARecVertexContainer( const LHCb::RecVertices* rVerts,
   for ( const auto * rVert : *rVerts )
   {
     // Make a new packed data object and save
-    pRVerts.vertices().push_back( LHCb::PackedRecVertex() );
+    pRVerts.vertices().emplace_back( LHCb::PackedRecVertex() );
     LHCb::PackedRecVertex& pRVert = pRVerts.vertices().back();
 
     // reference to original container and key
@@ -917,7 +917,7 @@ packAP2RelatedInfoRelationContainer( const PackParticlesAndVertices::Part2InfoRe
                                      const std::string & location ) const
 {
   // Make a entry in the containers vector, for this TES location
-  prels.containers().push_back( LHCb::PackedRelatedInfoMap() );
+  prels.containers().emplace_back( LHCb::PackedRelatedInfoMap() );
   LHCb::PackedRelatedInfoMap & pcont = prels.containers().back();
 
   // reference to original container and key

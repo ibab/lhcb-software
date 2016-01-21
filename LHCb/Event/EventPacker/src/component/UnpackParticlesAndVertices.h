@@ -82,9 +82,9 @@ UnpackParticlesAndVertices::unpackP2PRelations( const std::string & location )
 
   unsigned int nbRelContainer(0), nbRel(0);
 
-  RELATION * rels = NULL;
+  RELATION * rels = nullptr;
   const LHCb::PackedRelations* prels = getIfExists<LHCb::PackedRelations>( location );
-  if ( NULL != prels )
+  if ( nullptr != prels )
   {
     for ( const auto & prel : prels->relations() )
     {
@@ -93,9 +93,9 @@ UnpackParticlesAndVertices::unpackP2PRelations( const std::string & location )
       rels = new RELATION();
       put( rels, containerName );
       ++nbRelContainer;
-      FROMCONT * srcContainer = NULL;
+      FROMCONT * srcContainer = nullptr;
       int prevSrcLink = -1;
-      DataObject* dstContainer = NULL;
+      DataObject* dstContainer = nullptr;
       int prevDstLink = -1;
       for ( int kk = prel.start;  prel.end > kk; ++kk )
       {
@@ -117,7 +117,7 @@ UnpackParticlesAndVertices::unpackP2PRelations( const std::string & location )
           dstContainer = get<DataObject>( dstName );
         }
         TOCONT * _to = dynamic_cast<TOCONT*>(dstContainer);
-        TO* to = ( _to ? _to->object(dstKey) : NULL );
+        TO* to = ( _to ? _to->object(dstKey) : nullptr );
         if ( !to ) info() << "Unknown objec: Container type " << (dstContainer->clID()>>16)
                           << "+" << (dstContainer->clID()&0xFFFF)
                           << " key " << dstKey << endmsg;
@@ -144,9 +144,9 @@ UnpackParticlesAndVertices::unpackP2PWeightedRelations( const std::string & loca
 
   unsigned int nbRelContainer(0), nbRel(0);
 
-  RELATION * rels = NULL;
+  RELATION * rels = nullptr;
   const LHCb::PackedWeightedRelations* prels = getIfExists<LHCb::PackedWeightedRelations>( location );
-  if ( NULL != prels )
+  if ( nullptr != prels )
   {
     for ( const auto & prel : prels->relations() )
     {
@@ -155,9 +155,9 @@ UnpackParticlesAndVertices::unpackP2PWeightedRelations( const std::string & loca
       rels = new RELATION();
       put( rels, containerName );
       ++nbRelContainer;
-      FROMCONT * srcContainer = NULL;
+      FROMCONT * srcContainer = nullptr;
       int prevSrcLink = -1;
-      DataObject* dstContainer = NULL;
+      DataObject* dstContainer = nullptr;
       int prevDstLink = -1;
       for ( int kk = prel.start;  prel.end > kk; ++kk )
       {
@@ -180,7 +180,7 @@ UnpackParticlesAndVertices::unpackP2PWeightedRelations( const std::string & loca
         }
         const WEIGHT wgt = prels->weights()[kk];
         TOCONT * _to = dynamic_cast<TOCONT*>(dstContainer);
-        TO* to = ( _to ? _to->object(dstKey) : NULL );
+        TO* to = ( _to ? _to->object(dstKey) : nullptr );
         if ( !to ) info() << "Unknown objec: Container type " << (dstContainer->clID()>>16)
                           << "+" << (dstContainer->clID()&0xFFFF)
                           << " key " << dstKey << endmsg;
@@ -208,7 +208,7 @@ UnpackParticlesAndVertices::unpackP2IntRelations( const std::string & location )
   unsigned int nbRelContainer(0), nbRel(0);
 
   LHCb::PackedRelations* prels = getIfExists<LHCb::PackedRelations>( location );
-  if ( NULL != prels )
+  if ( nullptr != prels )
   {
     for ( std::vector<LHCb::PackedRelation>::iterator itR = prels->relations().begin();
           prels->relations().end() != itR; ++itR )
@@ -219,7 +219,7 @@ UnpackParticlesAndVertices::unpackP2IntRelations( const std::string & location )
       RELATION * rels = new RELATION();
       put( rels, containerName );
       ++nbRelContainer;
-      FROMCONT * srcContainer = NULL;
+      FROMCONT * srcContainer = nullptr;
       int prevSrcLink = -1;
       for ( int kk = prel.start; prel.end > kk; ++kk )
       {

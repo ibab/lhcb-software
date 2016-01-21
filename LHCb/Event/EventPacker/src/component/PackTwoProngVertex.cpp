@@ -57,7 +57,7 @@ StatusCode PackTwoProngVertex::execute()
   {
   
     // save the packed vertex
-    out->vertices().push_back( LHCb::PackedTwoProngVertex() );
+    out->vertices().emplace_back( LHCb::PackedTwoProngVertex() );
     LHCb::PackedTwoProngVertex & pVert = out->vertices().back();
 
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
@@ -163,7 +163,7 @@ StatusCode PackTwoProngVertex::execute()
     for ( std::vector<LHCb::ParticleID>::const_iterator itP = vert->compatiblePIDs().begin();
           vert->compatiblePIDs().end() != itP; ++itP ) 
     {
-      out->refs().push_back( (*itP).pid() );
+      out->refs().emplace_back( (*itP).pid() );
     }
     pVert.lastPid = out->refs().size();
 
@@ -171,7 +171,7 @@ StatusCode PackTwoProngVertex::execute()
     pVert.firstInfo = out->extras().size();
     for ( GaudiUtils::VectorMap<int,double>::iterator itE = vert->extraInfo().begin();
           vert->extraInfo().end() != itE; ++itE ) {
-      out->extras().push_back( std::make_pair((*itE).first,pack.fltPacked((*itE).second)) );
+      out->extras().emplace_back( std::make_pair((*itE).first,pack.fltPacked((*itE).second)) );
     }
     pVert.lastInfo = out->extras().size();
 

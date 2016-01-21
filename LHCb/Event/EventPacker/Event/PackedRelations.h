@@ -19,16 +19,11 @@ namespace LHCb
   class PackedRelation 
   {
   public:
-
-    PackedRelation() : container(0), start(0), end(0) {}
-    
-    ~PackedRelation() {}
-    
-    long long container;
-    int start;
-    int end;
+    long long container{0};
+    int start{0};
+    int end{0};
   };
-
+  
   // =================== Unweighted Relations =========================
 
   static const CLID CLID_PackedRelations = 1560;
@@ -50,13 +45,6 @@ namespace LHCb
    */
   class PackedRelations : public DataObject 
   {
-  
-  public:
-  
-    /// Standard constructor
-    PackedRelations( ) { }
-
-    virtual ~PackedRelations( ) { } ///< Destructor
 
   public:
 
@@ -104,13 +92,6 @@ namespace LHCb
    */
   class PackedWeightedRelations : public DataObject 
   {
-  
-  public:
-  
-    /// Standard constructor
-    PackedWeightedRelations( ) { }
-
-    virtual ~PackedWeightedRelations( ) { } ///< Destructor
 
   public:
 

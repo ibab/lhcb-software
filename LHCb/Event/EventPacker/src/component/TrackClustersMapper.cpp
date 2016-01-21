@@ -71,7 +71,7 @@ TrackClustersMapper::nodeTypeForPath( const std::string & path )
 {
   updateNodeTypeMap(path);
 
-  NodeTypeMap::const_iterator it = m_nodeTypeMap.find( fixPath(path) );
+  const auto it = m_nodeTypeMap.find( fixPath(path) );
 
   const std::string& retS = ( it != m_nodeTypeMap.end() ? it->second : "" );
 
@@ -86,7 +86,7 @@ TrackClustersMapper::nodeTypeForPath( const std::string & path )
 void TrackClustersMapper::updateNodeTypeMap( const std::string & path )
 {
   // The stream TES root
-  const std::string streamR = streamRoot(path);
+  const auto streamR = streamRoot(path);
 
   LOG_VERBOSE << "TrackClustersMapper::updateNodeTypeMap Running for " 
               << streamR << endmsg;
@@ -95,7 +95,7 @@ void TrackClustersMapper::updateNodeTypeMap( const std::string & path )
   if ( !m_streamsDone[streamR] )
   {
     m_streamsDone[streamR] = true;
-    const std::string packedLoc = packedClustersLocation(streamR);
+    const auto packedLoc = packedClustersLocation(streamR);
     LOG_VERBOSE << "TrackClustersMapper::updateNodeTypeMap Looking for " 
                 << packedLoc << endmsg;
     if ( exist<LHCb::PackedClusters*>(packedLoc) )
@@ -130,7 +130,7 @@ void TrackClustersMapper::addPath( const std::string & path )
 
     // Data Node paths ...
     std::string tmp = npath;
-    std::string::size_type slash = tmp.find_last_of("/");
+    auto slash = tmp.find_last_of("/");
     while ( !tmp.empty() && slash != std::string::npos )
     {
       tmp = tmp.substr(0,slash);

@@ -28,9 +28,9 @@ void VertexPacker::pack( const Data & vert,
     pvert.z         = m_pack.position( vert.position().z() );
 
     // convariance Matrix
-    const double err0 = safe_sqrt( vert.covMatrix()(0,0) );
-    const double err1 = safe_sqrt( vert.covMatrix()(1,1) );
-    const double err2 = safe_sqrt( vert.covMatrix()(2,2) );
+    const auto err0 = safe_sqrt( vert.covMatrix()(0,0) );
+    const auto err1 = safe_sqrt( vert.covMatrix()(1,1) );
+    const auto err2 = safe_sqrt( vert.covMatrix()(2,2) );
     pvert.cov00 = m_pack.position( err0 );
     pvert.cov11 = m_pack.position( err1 );
     pvert.cov22 = m_pack.position( err2 );
@@ -76,7 +76,7 @@ void VertexPacker::pack( const DataVector & verts,
   for ( const Data * vert : verts )
   {
     // new packed data object
-    pverts.data().push_back( PackedData() );
+    pverts.data().emplace_back( PackedData() );
     PackedData & pvert = pverts.data().back();
 
     // Key
@@ -103,10 +103,10 @@ void VertexPacker::unpack( const PackedData       & pvert,
                                        m_pack.position( pvert.z ) ) );
 
     // convariance Matrix
-    const double err0 = m_pack.position( pvert.cov00 );
-    const double err1 = m_pack.position( pvert.cov11 );
-    const double err2 = m_pack.position( pvert.cov22 );
-    Gaudi::SymMatrix3x3 & cov = *(const_cast<Gaudi::SymMatrix3x3*>(&vert.covMatrix()));
+    const auto err0 = m_pack.position( pvert.cov00 );
+    const auto err1 = m_pack.position( pvert.cov11 );
+    const auto err2 = m_pack.position( pvert.cov22 );
+    auto & cov = *(const_cast<Gaudi::SymMatrix3x3*>(&vert.covMatrix()));
     cov(0,0) = err0 * err0;
     cov(1,0) = err1 * err0 * m_pack.fraction( pvert.cov10 );
     cov(1,1) = err1 * err1;
@@ -117,7 +117,7 @@ void VertexPacker::unpack( const PackedData       & pvert,
     // outgoing particles
     for ( unsigned int iiP = pvert.firstOutgoingPart; iiP < pvert.lastOutgoingPart; ++iiP )
     {
-      const long long & iP = pverts.outgoingParticles()[iiP];
+      const auto & iP = pverts.outgoingParticles()[iiP];
       int hintID(0), key(0);
       if ( m_pack.hintAndKey64( iP, &pverts, &verts, hintID, key ) )
       {
@@ -129,7 +129,7 @@ void VertexPacker::unpack( const PackedData       & pvert,
     //== Handles the ExtraInfo
     for ( unsigned short int kEx = pvert.firstInfo; pvert.lastInfo > kEx; ++kEx )
     {
-      const PackedDataVector::ExtraInfo& info = *(pverts.extras().begin()+kEx);
+      const auto& info = *(pverts.extras().begin()+kEx);
       vert.addInfo( info.first, m_pack.fltPacked( info.second ) );
     }
 

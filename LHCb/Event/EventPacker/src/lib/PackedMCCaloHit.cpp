@@ -21,12 +21,12 @@ void MCCaloHitPacker::pack( const DataVector & hits,
     phits.data().reserve( hits.size() );
     for ( const Data * hit : hits )
     {
-      phits.data().push_back( PackedData() );
-      PackedData & phit = phits.data().back();
+      phits.data().emplace_back( PackedData() );
+      auto & phit = phits.data().back();
       phit.activeE      = m_pack.energy   ( hit->activeE() * m_energyScale );
       phit.sensDetID    = hit->sensDetID();
       phit.time         = hit->time();
-      if ( NULL != hit->particle() )
+      if ( hit->particle() )
       {
         phit.mcParticle = ( UNLIKELY( 0==ver ) ? 
                             m_pack.reference32( &phits,
@@ -53,10 +53,10 @@ void MCCaloHitPacker::unpack( const PackedDataVector & phits,
   if ( 0 == ver || 1 == ver )
   {
     hits.reserve( phits.data().size() );
-    for ( const PackedData & phit : phits.data() )
+    for ( const auto & phit : phits.data() )
     {
       // make and save new hit in container
-      Data * hit  = new Data();
+      auto * hit  = new Data();
       hits.add( hit );
       // Fill data from packed object
       hit->setActiveE   ( m_pack.energy(phit.activeE) / m_energyScale );

@@ -88,7 +88,7 @@ StatusCode PackCaloHypo::execute()
     if ( sc.isSuccess() ) 
     {
       delete hypos;
-      hypos = NULL;
+      hypos = nullptr;
     }
     else
     {

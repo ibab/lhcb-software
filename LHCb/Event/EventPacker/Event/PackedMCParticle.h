@@ -19,38 +19,15 @@ namespace LHCb
    */
   struct PackedMCParticle
   {
-
-    /// Default Constructor
-    PackedMCParticle() :
-      key(0), 
-      px(0), py(0), pz(0), 
-      mass(0), 
-      PID(0),
-      originVertex(-1),
-      flags(0)
-    {}
-
-    /// copy constructor
-    PackedMCParticle( const PackedMCParticle& c ) :
-      key(c.key), 
-      px(c.px), py(c.py), pz(c.pz), 
-      mass(c.mass), 
-      PID(c.PID),
-      originVertex(c.originVertex), 
-      endVertices(c.endVertices),
-      flags(c.flags)
-    {}
-
-    int key;
-    int px;
-    int py;
-    int pz;
-    float mass;
-    int PID;
-    long long originVertex;
+    int key{0};
+    int px{0};
+    int py{0};
+    int pz{0};
+    float mass{0};
+    int PID{0};
+    long long originVertex{-1};
     std::vector<long long> endVertices;
-    unsigned int flags;
-
+    unsigned int flags{0};
   };
 
   static const CLID CLID_PackedMCParticles = 1510;
@@ -78,13 +55,6 @@ namespace LHCb
 
   public:
 
-    /// Standard constructor
-    PackedMCParticles( ) : m_packingVersion(0) {}
-
-    virtual ~PackedMCParticles( ) {}; ///< Destructor
-
-  public:
-
     virtual const CLID& clID() const { return PackedMCParticles::classID(); }
     static  const CLID& classID()    { return CLID_PackedMCParticles;       }
 
@@ -107,7 +77,7 @@ namespace LHCb
     std::vector<PackedMCParticle> m_vect;
 
     /// Data packing version
-    char   m_packingVersion;
+    char   m_packingVersion{0};
 
   };
 

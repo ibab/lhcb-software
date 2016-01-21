@@ -21,9 +21,9 @@ public:
   /// Standard constructor
   UnpackDecReport( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~UnpackDecReport( ); ///< Destructor
+  virtual ~UnpackDecReport(); ///< Destructor
 
-  virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode execute();    ///< Algorithm execution
 
 private:
 

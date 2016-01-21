@@ -10,8 +10,8 @@
 
 void LHCb::PackedClusters::addVeloCluster( const LHCb::VeloCluster* vCl )
 {
-  m_clusters.push_back( PackedCluster() );
-  PackedCluster& t = m_clusters.back();
+  m_clusters.emplace_back( PackedCluster() );
+  auto& t = m_clusters.back();
   t.id = 0x20000000 + vCl->liteCluster().channelID().channelID();
   const int size = (8*vCl->interStripFraction()) + 0.5;
   t.id += size * 0x1000000;
@@ -29,8 +29,8 @@ void LHCb::PackedClusters::addVeloCluster( const LHCb::VeloCluster* vCl )
 void LHCb::PackedClusters::addSTCluster( const LHCb::STCluster* sCl,
                                          const unsigned int key )
 {
-  m_clusters.push_back( PackedCluster() );
-  PackedCluster& t = m_clusters.back();
+  m_clusters.emplace_back( PackedCluster() );
+  auto& t = m_clusters.back();
   t.id = key + sCl->liteCluster().channelID().channelID();
   const int size = (4*sCl->interStripFraction()) + 0.5;
   t.id += size * 0x1000000;

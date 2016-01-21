@@ -92,9 +92,9 @@ ParticlesAndVerticesMapper::nodeTypeForPath( const std::string & path )
 {
   updateNodeTypeMap(path);
 
-  NodeTypeMap::const_iterator it = m_nodeTypeMap.find( fixPath(path) );
+  const auto it = m_nodeTypeMap.find( fixPath(path) );
 
-  const std::string& retS = ( it != m_nodeTypeMap.end() ? it->second : "" );
+  const auto& retS = ( it != m_nodeTypeMap.end() ? it->second : "" );
 
   LOG_VERBOSE << "ParticlesAndVerticesMapper::nodeTypeForPath '"
               << path << "' NodeType '" << retS << "'" << endmsg;
@@ -120,7 +120,7 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
     {
       const LHCb::PackedTracks * ptracks =
         getIfExists<LHCb::PackedTracks>(evtSvc(),streamR+LHCb::PackedTrackLocation::InStream);
-      if ( NULL != ptracks )
+      if ( nullptr != ptracks )
       {
         for ( const auto& P : ptracks->tracks() )
         {
@@ -134,7 +134,7 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
     {
       const LHCb::PackedMuonPIDs * ppids =
         getIfExists<LHCb::PackedMuonPIDs>(evtSvc(),streamR+LHCb::PackedMuonPIDLocation::InStream);
-      if ( NULL != ppids )
+      if ( nullptr != ppids )
       {
         for ( const auto& P : ppids->data() )
         {
@@ -148,7 +148,7 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
     {
       const LHCb::PackedRichPIDs * ppids =
         getIfExists<LHCb::PackedRichPIDs>(evtSvc(),streamR+LHCb::PackedRichPIDLocation::InStream);
-      if ( NULL != ppids )
+      if ( nullptr != ppids )
       {
         for ( const auto& P : ppids->data() )
         {
@@ -162,7 +162,7 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
     {
       const LHCb::PackedProtoParticles * pprotos =
         getIfExists<LHCb::PackedProtoParticles>(evtSvc(),streamR+LHCb::PackedProtoParticleLocation::InStream);
-      if ( NULL != pprotos )
+      if ( nullptr != pprotos )
       {
         for ( const auto& P : pprotos->protos() )
         {
@@ -176,7 +176,7 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
     {
       const LHCb::PackedParticles* pparts =
         getIfExists<LHCb::PackedParticles>(evtSvc(),streamR+LHCb::PackedParticleLocation::InStream);
-      if ( NULL != pparts )
+      if ( nullptr != pparts )
       {
         for ( const auto& P : pparts->data() )
         {
@@ -190,7 +190,7 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
     {
       const LHCb::PackedVertices* pverts =
         getIfExists<LHCb::PackedVertices>(evtSvc(),streamR+LHCb::PackedVertexLocation::InStream);
-      if ( NULL != pverts )
+      if ( nullptr != pverts )
       {
         for ( const auto& V : pverts->data() )
         {
@@ -204,7 +204,7 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
     {
       const LHCb::PackedFlavourTags* pfts =
         getIfExists<LHCb::PackedFlavourTags>(evtSvc(),streamR+LHCb::PackedFlavourTagLocation::InStream);
-      if ( NULL != pfts )
+      if ( nullptr != pfts )
       {
         for ( const auto& FT : pfts->data() )
         {
@@ -218,7 +218,7 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
     {
       const LHCb::PackedRecVertices* pRecVerts =
         getIfExists<LHCb::PackedRecVertices>(evtSvc(),streamR+LHCb::PackedRecVertexLocation::InStream);
-      if ( NULL != pRecVerts )
+      if ( nullptr != pRecVerts )
       {
         for ( const auto& V : pRecVerts->vertices() )
         {
@@ -231,7 +231,7 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
     {
       const LHCb::PackedRelations* prels =
         getIfExists<LHCb::PackedRelations>(evtSvc(),streamR+LHCb::PackedRelationsLocation::InStream);
-      if ( NULL != prels )
+      if ( nullptr != prels )
       {
         for ( const auto& R : prels->relations() )
         {
@@ -245,7 +245,7 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
     {
       const LHCb::PackedRelations* prelsMC =
         getIfExists<LHCb::PackedRelations>(evtSvc(),streamR+LHCb::PackedRelationsLocation::P2MCP);
-      if ( NULL != prelsMC )
+      if ( nullptr != prelsMC )
       {
         for ( const auto& R : prelsMC->relations() )
         {
@@ -259,7 +259,7 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
     {
       const LHCb::PackedWeightedRelations* pprelsMC =
         getIfExists<LHCb::PackedWeightedRelations>(evtSvc(),streamR+LHCb::PackedWeightedRelationsLocation::PP2MCP);
-      if ( NULL != pprelsMC )
+      if ( nullptr != pprelsMC )
       {
         for ( const auto& R : pprelsMC->relations() )
         {
@@ -273,7 +273,7 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
     {
       const LHCb::PackedRelations* prelsInt =
         getIfExists<LHCb::PackedRelations>(evtSvc(),streamR+LHCb::PackedRelationsLocation::P2Int);
-      if ( NULL != prelsInt )
+      if ( nullptr != prelsInt )
       {
         for ( const auto& R : prelsInt->relations() )
         {
@@ -287,7 +287,7 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
     {
       const LHCb::PackedRelatedInfoRelations* pRelInfos =
         getIfExists<LHCb::PackedRelatedInfoRelations>(evtSvc(),streamR+LHCb::PackedRelatedInfoLocation::InStream);
-      if ( NULL != pRelInfos )
+      if ( nullptr != pRelInfos )
       {
         for ( const auto& cont : pRelInfos->containers() )
         {
@@ -306,7 +306,7 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
 void ParticlesAndVerticesMapper::addPath( const std::string & path )
 {
   // Make sure paths start with /Event/
-  const std::string npath = fixPath(path);
+  const auto npath = fixPath(path);
 
   // if not already there, add.
   if ( m_nodeTypeMap.find(npath) == m_nodeTypeMap.end() )
@@ -317,8 +317,8 @@ void ParticlesAndVerticesMapper::addPath( const std::string & path )
     m_nodeTypeMap[npath] = "";
 
     // Data Node paths ...
-    std::string tmp = npath;
-    std::string::size_type slash = tmp.find_last_of("/");
+    auto tmp = npath;
+    auto slash = tmp.find_last_of("/");
     while ( !tmp.empty() && slash != std::string::npos )
     {
       tmp = tmp.substr(0,slash);

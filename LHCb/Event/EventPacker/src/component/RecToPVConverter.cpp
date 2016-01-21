@@ -39,11 +39,13 @@ RecToPVConverter::RecToPVConverter( const std::string& name,
 
 StatusCode RecToPVConverter::execute() 
 {
-  LHCb::RecVertex::Range recvertices = get<LHCb::RecVertex::Range>(m_inputName) ;
+  const  auto recvertices = get<LHCb::RecVertex::Range>(m_inputName) ;
   auto slimvertices = new LHCb::PrimaryVertex::Container() ;
-  for( const auto& recpv: recvertices )
-    slimvertices->insert( new LHCb::PrimaryVertex( *recpv, m_doFit ) );
   put(slimvertices,m_outputName) ;
+  for ( const auto& recpv: recvertices )
+  {
+    slimvertices->insert( new LHCb::PrimaryVertex( *recpv, m_doFit ) );
+  }
 
   return StatusCode::SUCCESS ;
 }

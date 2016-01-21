@@ -22,7 +22,7 @@ public:
   /// Standard constructor
   UnpackCaloHypo( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~UnpackCaloHypo( ); ///< Destructor
+  virtual ~UnpackCaloHypo(); ///< Destructor
 
   virtual StatusCode execute(); ///< Algorithm execution
 

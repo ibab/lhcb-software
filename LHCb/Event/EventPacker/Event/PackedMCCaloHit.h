@@ -28,18 +28,10 @@ namespace LHCb
    */
   struct PackedMCCaloHit
   {
-    /// Default constructor
-    PackedMCCaloHit()
-      : activeE(0),
-        sensDetID(0),
-        time(0),
-        mcParticle(-1)
-    {}
-
-    int       activeE;
-    int       sensDetID;
-    char      time;
-    long long mcParticle;
+    int       activeE{0};
+    int       sensDetID{0};
+    char      time{0};
+    long long mcParticle{-1};
   };
 
   // -----------------------------------------------------------------------
@@ -77,12 +69,6 @@ namespace LHCb
 
   public:
 
-    /// Standard constructor
-    PackedMCCaloHits( ) : m_packingVersion(defaultPackingVersion()) { }
-
-    /// Destructor
-    virtual ~PackedMCCaloHits( ) { }
-
     /// Class ID
     static const CLID& classID() { return CLID_PackedMCCaloHits; }
 
@@ -106,7 +92,7 @@ namespace LHCb
   private:
 
     /// Data packing version
-    char   m_packingVersion;
+    char   m_packingVersion{ defaultPackingVersion() };
     
     /// The packed data objects
     Vector m_vect; 
@@ -135,13 +121,12 @@ namespace LHCb
   private:
 
     /// Default Constructor hidden
-    MCCaloHitPacker() : m_energyScale( 1.0e2 ) { }
+    MCCaloHitPacker() { }
 
   public:
 
     /// Constructor
-    MCCaloHitPacker( const GaudiAlgorithm & parent )
-      : m_pack(&parent), m_energyScale( 1.0e2 ) { }
+    MCCaloHitPacker( const GaudiAlgorithm & p ) : m_pack(&p) { }
 
   public:
 
@@ -170,7 +155,7 @@ namespace LHCb
   protected:
 
     /// Scale factor for energy
-    double m_energyScale;
+    double m_energyScale{ 1.0e2 };
 
   };
 

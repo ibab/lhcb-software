@@ -20,8 +20,8 @@ void MCRichOpticalPhotonPacker::pack( const DataVector & phots,
     for ( const Data * phot : phots )
     {
 
-      pphots.data().push_back( PackedData() );
-      PackedData & pphot = pphots.data().back();
+      pphots.data().emplace_back( PackedData() );
+      auto & pphot = pphots.data().back();
 
       pphot.key   = phot->key();
 
@@ -58,7 +58,7 @@ void MCRichOpticalPhotonPacker::pack( const DataVector & phots,
       pphot.hpdqwy = m_pack.position( phot->hpdQWIncidencePoint().y() );
       pphot.hpdqwz = m_pack.position( phot->hpdQWIncidencePoint().z() );
 
-      if ( NULL != phot->mcRichHit() )
+      if ( phot->mcRichHit() )
       {
         pphot.mcrichhit = ( UNLIKELY( 0==ver ) ? 
                             m_pack.reference32( &pphots,
@@ -85,9 +85,9 @@ void MCRichOpticalPhotonPacker::unpack( const PackedDataVector & pphots,
   if ( 1 == ver || 0 == ver )
   {
     phots.reserve( pphots.data().size() );
-    for ( const PackedData & pphot : pphots.data() )
+    for ( const auto & pphot : pphots.data() )
     {
-      Data * phot  = new Data();
+      auto * phot  = new Data();
       phots.insert( phot, pphot.key );
 
       phot->setPdIncidencePoint( Gaudi::XYZPoint( m_pack.position(pphot.hpdx),

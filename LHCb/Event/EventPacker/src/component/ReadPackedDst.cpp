@@ -47,8 +47,8 @@ DECLARE_ALGORITHM_FACTORY( ReadPackedDst )
 //=============================================================================
 ReadPackedDst::ReadPackedDst( const std::string& name,
                               ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ),
-    m_odinDecoder("ODINDecodeTool", this)
+: GaudiAlgorithm ( name , pSvcLocator ),
+  m_odinDecoder("ODINDecodeTool", this)
 {
   declareProperty( "InputLocation", m_inputLocation = "/Event/DAQ/DstEvent" );
   declareProperty( "Postfix",       m_postfix       = "Test" );
@@ -251,7 +251,7 @@ StatusCode ReadPackedDst::execute() {
       for ( unsigned int kk=0; nb > kk; ++kk ) {
         aPair.first = stringFromData();
         aPair.second = stringFromData();
-        allPairs.push_back( aPair );
+        allPairs.emplace_back( aPair );
       }
       recHeader->setCondDBTags( allPairs );
 
@@ -273,7 +273,7 @@ StatusCode ReadPackedDst::execute() {
       getFromBlob<long long>          ( verts->outgoingParticles(), blobs );
 
     } else if ( LHCb::CLID_PackedWeightsVector   == classID ) {
-      
+
       LHCb::PackedWeightsVector* weights = new LHCb::PackedWeightsVector();
       put( weights, name + m_postfix );
       processLinks( weights, version );
@@ -281,7 +281,7 @@ StatusCode ReadPackedDst::execute() {
       getFromBlob<LHCb::PackedWeight>  ( weights->weights(), blobs );
 
     } else if ( LHCb::CLID_PackedCaloClusters   == classID ) {
-      
+
       LHCb::PackedCaloClusters* clusters = new LHCb::PackedCaloClusters();
       put( clusters, name + m_postfix );
       processLinks( clusters, version );
@@ -297,10 +297,10 @@ StatusCode ReadPackedDst::execute() {
       const unsigned int nbAlg = nextInt();
       LHCb::ProcStatus::AlgStatusVector algs;
       algs.reserve(nbAlg);
-      for ( unsigned int kk = 0 ; nbAlg > kk ; ++kk ) 
+      for ( unsigned int kk = 0 ; nbAlg > kk ; ++kk )
       {
         const std::string temp = stringFromData();
-        algs.push_back( LHCb::ProcStatus::AlgStatus(temp,nextInt()) );
+        algs.emplace_back( LHCb::ProcStatus::AlgStatus(temp,nextInt()) );
       }
       procStatus->setAlgs(algs);
 
@@ -338,7 +338,7 @@ StatusCode ReadPackedDst::execute() {
 //=========================================================================
 //  Decode a blob to recreate the data
 //=========================================================================
-template <class CLASS> 
+template <class CLASS>
 void ReadPackedDst::getFromBlob( std::vector<CLASS>& vect,
                                  const std::vector<LHCb::RawBank*>& blobs ) {
   unsigned int totSize = *m_data++;

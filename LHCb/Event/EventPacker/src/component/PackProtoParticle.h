@@ -22,7 +22,7 @@ public:
   /// Standard constructor
   PackProtoParticle( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~PackProtoParticle( ); ///< Destructor
+  virtual ~PackProtoParticle(); ///< Destructor
 
   virtual StatusCode execute();  ///< Algorithm execution
 

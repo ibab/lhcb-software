@@ -24,7 +24,7 @@ void RichPIDPacker::pack( const Data & pid,
     ppid.dllKa = m_pack.deltaLL( pid.particleDeltaLL(Rich::Kaon)     );
     ppid.dllPr = m_pack.deltaLL( pid.particleDeltaLL(Rich::Proton)   );
     if ( ver > 0 ) ppid.dllBt = m_pack.deltaLL( pid.particleDeltaLL(Rich::BelowThreshold) );
-    if ( NULL != pid.track() )
+    if ( nullptr != pid.track() )
     {
       ppid.track = ( UNLIKELY( ver < 3 ) ?
                      m_pack.reference32( &ppids,
@@ -47,7 +47,7 @@ void RichPIDPacker::pack( const DataVector & pids,
     for ( const Data * pid : pids )
     {
       // create new packed PID object in container and get reference to it.
-      ppids.data().push_back( PackedData() );
+      ppids.data().emplace_back( PackedData() );
       PackedData & ppid = ppids.data().back();
       // fill the key
       ppid.key = pid->key();
@@ -122,8 +122,8 @@ StatusCode RichPIDPacker::check( const Data & dataA,
   ok &= ch.comparePointers( "Track", dataA.track(), dataB.track() );
   // DLLs
   ok &= dataA.particleLLValues().size() == dataB.particleLLValues().size();
-  std::vector<float>::const_iterator iLLA(dataA.particleLLValues().begin());
-  std::vector<float>::const_iterator iLLB(dataB.particleLLValues().begin());
+  auto iLLA(dataA.particleLLValues().begin());
+  auto iLLB(dataB.particleLLValues().begin());
   for ( ; iLLA != dataA.particleLLValues().end() && iLLB != dataB.particleLLValues().end();
         ++iLLA, ++iLLB )
   {

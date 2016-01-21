@@ -32,17 +32,10 @@ namespace LHCb
    */
   struct PackedRelatedInfoMap
   {
-    /// Default constructor
-    PackedRelatedInfoMap() 
-      : first(0), last(0), reference(-1)
-    { }
-
     // first and last entry in the info vector
-    unsigned int first, last;
-
+    unsigned int first{0}, last{0};
     // reference
-    long long reference;
- 
+    long long reference{-1};
   };
 
   // -----------------------------------------------------------------------
@@ -86,9 +79,6 @@ namespace LHCb
 
     /// Standard constructor
     PackedRelatedInfoRelations( ) : m_packingVersion(defaultPackingVersion()) { }
-
-    /// Destructor
-    virtual ~PackedRelatedInfoRelations( ) { }
 
     /// Class ID
     static const CLID& classID() { return CLID_PackedRelatedInfoRelations; }
@@ -135,7 +125,7 @@ namespace LHCb
   private:
 
     /// Data packing version (not used as yet, but for any future schema evolution)
-    char m_packingVersion;
+    char m_packingVersion{0};
 
     /// The packed info vector
     InfoVector m_info;
@@ -172,19 +162,13 @@ namespace LHCb
   private:
 
     /// Default Constructor hidden
-    RelatedInfoRelationsPacker() 
-      : m_srcContainer(NULL),
-        m_prevSrcLink(-1) 
-    { }
+    RelatedInfoRelationsPacker() { }
     
   public:
 
     /// Default Constructor
     RelatedInfoRelationsPacker( const GaudiAlgorithm & parent ) 
-      : m_pack(&parent),
-        m_srcContainer(NULL),
-        m_prevSrcLink(-1)
-    { }
+      : m_pack(&parent) { }
 
   public:
 
@@ -217,10 +201,10 @@ namespace LHCb
     StandardPacker m_pack;
 
     // cached Pointer to the location container the FROM object (Particle)
-    mutable LHCb::Particles * m_srcContainer;
+    mutable LHCb::Particles * m_srcContainer = nullptr;
     
     // Cached linked info
-    mutable int m_prevSrcLink;
+    mutable int m_prevSrcLink{-1};
 
   };
 

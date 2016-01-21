@@ -13,19 +13,23 @@
  *  @author Olivier Callot
  *  @date   2005-03-18
  */
-class CompareMCParticle : public GaudiAlgorithm {
+class CompareMCParticle : public GaudiAlgorithm 
+{
+
 public: 
+
   /// Standard constructor
   CompareMCParticle( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~CompareMCParticle( ); ///< Destructor
+  virtual ~CompareMCParticle(); ///< Destructor
 
-  virtual StatusCode execute   ();    ///< Algorithm execution
-
-protected:
+  virtual StatusCode execute(); ///< Algorithm execution
 
 private:
+
   std::string m_inputName;
   std::string m_testName;
+
 };
+
 #endif // COMPAREMCPARTICLE_H

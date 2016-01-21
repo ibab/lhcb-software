@@ -42,13 +42,13 @@ StatusCode UnpackProtoParticle::execute()
   if ( !m_alwaysOutput && !exist<LHCb::PackedProtoParticles>(m_inputName) )
     return StatusCode::SUCCESS;
 
-  const LHCb::PackedProtoParticles* dst =
+  const auto * dst =
     getOrCreate<LHCb::PackedProtoParticles,LHCb::PackedProtoParticles>( m_inputName );
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Found " << dst->protos().size() << " PackedProtoParticles at '"
             << m_inputName << "'" << endmsg;
 
-  LHCb::ProtoParticles* newProtoParticles = new LHCb::ProtoParticles();
+  auto * newProtoParticles = new LHCb::ProtoParticles();
   put( newProtoParticles, m_outputName );
 
   // unpack

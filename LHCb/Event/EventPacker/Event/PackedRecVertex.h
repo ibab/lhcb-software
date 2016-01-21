@@ -27,47 +27,22 @@ namespace LHCb
    */
   struct PackedRecVertex
   {
-
-    /// Standard constructor
-    PackedRecVertex( ) :
-      key(0), technique(0), chi2(0), nDoF(0),
-      x(0), y(0), z(0),
-      cov00(0), cov11(0), cov22(0),
-      cov10(0), cov20(0), cov21(0),
-      firstTrack(0), lastTrack(0),
-      firstInfo(0), lastInfo(0),
-      container(0)
-    {}
-
-    /// Copy constructor
-    PackedRecVertex( const PackedRecVertex& c ) :
-      key( c.key ), technique( c.technique ), 
-      chi2( c.chi2 ), nDoF( c.nDoF ),
-      x( c.x ), y( c.y ), z( c.z ),
-      cov00( c.cov00 ), cov11( c.cov11 ), cov22( c.cov22 ),
-      cov10( c.cov10 ), cov20( c.cov20 ), cov21( c.cov21 ),
-      firstTrack( c.firstTrack ), lastTrack( c.lastTrack ),
-      firstInfo( c.firstInfo ), lastInfo( c.lastInfo ),
-      container( c.container )
-    {}
-
-    int key;
-    int technique;
-    int chi2;
-    int nDoF;
-    int x;
-    int y;
-    int z;
-    int cov00;
-    int cov11;
-    int cov22;
-    short int cov10;
-    short int cov20;
-    short int cov21;
-    unsigned short int firstTrack,  lastTrack;
-    unsigned short int firstInfo,   lastInfo;
-    int container;
-
+    int key{0};
+    int technique{0};
+    int chi2{0};
+    int nDoF{0};
+    int x{0};
+    int y{0};
+    int z{0};
+    int cov00{0};
+    int cov11{0};
+    int cov22{0};
+    short int cov10{0};
+    short int cov20{0};
+    short int cov21{0};
+    unsigned short int firstTrack{0},  lastTrack{0};
+    unsigned short int firstInfo{0},   lastInfo{0};
+    int container{0};
   };
 
   // -----------------------------------------------------------------------
@@ -105,7 +80,7 @@ namespace LHCb
   public:
   
     /// Standard constructor
-    PackedRecVertices( ) : m_packingVersion(0)
+    PackedRecVertices( )
     {
       m_vect.reserve    ( 5   );
       m_refs.reserve    ( 100 );
@@ -125,7 +100,7 @@ namespace LHCb
     std::vector<long long>& refs()                         { return m_refs; }
     const std::vector<long long>& refs() const             { return m_refs; }
 
-    void addExtra( const int a, const int b ) { m_extra.push_back( std::make_pair(a,b) ); }
+    void addExtra( const int a, const int b ) { m_extra.emplace_back( std::make_pair(a,b) ); }
     std::vector<std::pair<int,int> >& extras()             { return m_extra; }
     const std::vector<std::pair<int,int> >& extras() const { return m_extra; }
 
@@ -148,7 +123,7 @@ namespace LHCb
     std::vector<short int>           m_weights;
 
     /// Data packing version
-    char m_packingVersion;
+    char m_packingVersion{0};
 
   };
 

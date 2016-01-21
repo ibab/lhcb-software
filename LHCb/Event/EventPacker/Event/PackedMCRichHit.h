@@ -27,20 +27,12 @@ namespace LHCb
    */
   struct PackedMCRichHit
   {
-    /// Default constructor
-    PackedMCRichHit()
-      : x(0), y(0), z(0),
-        energy(0), tof(0),
-        sensDetID(0), history(0),
-        mcParticle(-1)
-    {}
-
-    int   x,y,z;
-    int   energy;
-    int   tof;
-    int   sensDetID;
-    int   history;
-    long long mcParticle;
+    int   x{0},y{0},z{0};
+    int   energy{0};
+    int   tof{0};
+    int   sensDetID{0};
+    int   history{0};
+    long long mcParticle{-1};
   };
 
   // -----------------------------------------------------------------------
@@ -75,12 +67,6 @@ namespace LHCb
 
   public:
 
-    /// Standard constructor
-    PackedMCRichHits( ) : m_packingVersion(defaultPackingVersion()) { }
-
-    /// Destructor
-    virtual ~PackedMCRichHits( ) { }
-
     /// Class ID
     static const CLID& classID() { return CLID_PackedMCRichHits; }
 
@@ -104,7 +90,7 @@ namespace LHCb
   private:
 
     /// Data packing version
-    char   m_packingVersion;
+    char   m_packingVersion{ defaultPackingVersion() };
 
     /// The packed data objects
     Vector m_vect; 

@@ -19,23 +19,23 @@ void MCRichTrackPacker::pack( const DataVector & tracks,
     ptracks.data().reserve( tracks.size() );
     for ( const Data * track : tracks )
     {
-      ptracks.data().push_back( PackedData() );
-      PackedData & ptrack = ptracks.data().back();
+      ptracks.data().emplace_back( PackedData() );
+      auto & ptrack = ptracks.data().back();
 
       ptrack.key = track->key();
 
       for ( const auto& S : track->mcSegments() )
       {
-        ptrack.mcSegments.push_back( UNLIKELY( 0==ver ) ?
-                                     m_pack.reference32( &ptracks,
-                                                         S->parent(),
-                                                         S->key() ) :
-                                     m_pack.reference64( &ptracks,
-                                                         S->parent(),
-                                                         S->key() ) );
+        ptrack.mcSegments.emplace_back( UNLIKELY( 0==ver ) ?
+                                        m_pack.reference32( &ptracks,
+                                                            S->parent(),
+                                                            S->key() ) :
+                                        m_pack.reference64( &ptracks,
+                                                            S->parent(),
+                                                            S->key() ) );
       }
 
-      if ( NULL != track->mcParticle() )
+      if ( track->mcParticle() )
       {
         ptrack.mcParticle = ( UNLIKELY( 0==ver ) ?
                               m_pack.reference32( &ptracks,
@@ -122,8 +122,8 @@ StatusCode MCRichTrackPacker::check( const DataVector & dataA,
     // MCParticle
     ok &= ch.comparePointers( "MCParticle", (*iA)->mcParticle(), (*iB)->mcParticle() );
     // MCSegments
-    
-    const bool sameSize = ch.compareInts( "#MCSegments", 
+
+    const bool sameSize = ch.compareInts( "#MCSegments",
                                           (*iA)->mcSegments().size(), (*iB)->mcSegments().size() );
     ok &= sameSize;
     if ( sameSize )

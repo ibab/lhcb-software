@@ -36,10 +36,10 @@ void ParticlePacker::pack( const Data & part,
     ppart.refz = m_pack.position( part.referencePoint().z() );
 
     // Mom Cov
-    const double merr00 = safe_sqrt( part.momCovMatrix()(0,0) );
-    const double merr11 = safe_sqrt( part.momCovMatrix()(1,1) );
-    const double merr22 = safe_sqrt( part.momCovMatrix()(2,2) );
-    const double merr33 = safe_sqrt( part.momCovMatrix()(3,3) );
+    const auto merr00 = safe_sqrt( part.momCovMatrix()(0,0) );
+    const auto merr11 = safe_sqrt( part.momCovMatrix()(1,1) );
+    const auto merr22 = safe_sqrt( part.momCovMatrix()(2,2) );
+    const auto merr33 = safe_sqrt( part.momCovMatrix()(3,3) );
     ppart.momCov00 = m_pack.energy( merr00 );
     ppart.momCov11 = m_pack.energy( merr11 );
     ppart.momCov22 = m_pack.energy( merr22 );
@@ -52,9 +52,9 @@ void ParticlePacker::pack( const Data & part,
     ppart.momCov32 = m_pack.fraction( part.momCovMatrix()(3,2), (merr33*merr22) );
 
     // Pos Cov
-    const double perr00 = safe_sqrt( part.posCovMatrix()(0,0) );
-    const double perr11 = safe_sqrt( part.posCovMatrix()(1,1) );
-    const double perr22 = safe_sqrt( part.posCovMatrix()(2,2) );
+    const auto perr00 = safe_sqrt( part.posCovMatrix()(0,0) );
+    const auto perr11 = safe_sqrt( part.posCovMatrix()(1,1) );
+    const auto perr22 = safe_sqrt( part.posCovMatrix()(2,2) );
     ppart.posCov00 = m_pack.position( perr00 );
     ppart.posCov11 = m_pack.position( perr11 );
     ppart.posCov22 = m_pack.position( perr22 );
@@ -80,8 +80,8 @@ void ParticlePacker::pack( const Data & part,
     ppart.firstExtra = pparts.extra().size();
     for ( const auto& E : part.extraInfo() )
     {
-      pparts.extra().push_back( PackedDataVector::PackedExtraInfo(E.first,
-                                                                  m_pack.fltPacked(E.second)) );
+      pparts.extra().emplace_back( PackedDataVector::PackedExtraInfo(E.first,
+                                                                     m_pack.fltPacked(E.second)) );
     }
     ppart.lastExtra = pparts.extra().size();
 
@@ -132,8 +132,8 @@ void ParticlePacker::pack( const DataVector & parts,
   for ( const Data * part : parts )
   {
     // Make a new packed data object and save
-    pparts.data().push_back( PackedData() );
-    PackedData & ppart = pparts.data().back();
+    pparts.data().emplace_back( PackedData() );
+    auto & ppart = pparts.data().back();
 
     // fill ppart key from part
     ppart.key = part->key();
@@ -162,15 +162,15 @@ void ParticlePacker::unpack( const PackedData       & ppart,
     part.setMeasuredMassErr( m_pack.mass(ppart.measMassErr) );
 
     // Lorentz momentum vector
-    const double pz = m_pack.energy( ppart.lv_pz );
-    const double px = ( isVZero ?
+    const auto pz = m_pack.energy( ppart.lv_pz );
+    const auto px = ( isVZero ?
                         m_pack.slope ( ppart.lv_px ) * pz :
                         m_pack.energy( ppart.lv_px ) );
-    const double py = ( isVZero ?
+    const auto py = ( isVZero ?
                         m_pack.slope ( ppart.lv_py ) * pz :
                         m_pack.energy( ppart.lv_py ) );
-    const double mass = ppart.lv_mass;
-    const double E    = safe_sqrt( (px*px) + (py*py) + (pz*pz) + (mass*mass) );
+    const auto mass = ppart.lv_mass;
+    const auto E    = safe_sqrt( (px*px) + (py*py) + (pz*pz) + (mass*mass) );
     part.setMomentum( Gaudi::LorentzVector( px, py, pz, E ) );
 
     // reference point
@@ -179,15 +179,15 @@ void ParticlePacker::unpack( const PackedData       & ppart,
                                              m_pack.position(ppart.refz) ) );
 
     // Mom Cov
-    Gaudi::SymMatrix4x4 & momCov = *(const_cast<Gaudi::SymMatrix4x4*>(&part.momCovMatrix()));
-    const double merr00 = ( isVZero ?
+    auto & momCov = *(const_cast<Gaudi::SymMatrix4x4*>(&part.momCovMatrix()));
+    const auto merr00 = ( isVZero ?
                             m_pack.slope ( ppart.momCov00 ) * px :
                             m_pack.energy( ppart.momCov00 ) );
-    const double merr11 = ( isVZero ?
+    const auto merr11 = ( isVZero ?
                             m_pack.slope ( ppart.momCov11 ) * py :
                             m_pack.energy( ppart.momCov11 ) );
-    const double merr22 = m_pack.energy( ppart.momCov22 );
-    const double merr33 = m_pack.energy( ppart.momCov33 );
+    const auto merr22 = m_pack.energy( ppart.momCov22 );
+    const auto merr33 = m_pack.energy( ppart.momCov33 );
     momCov(0,0) = std::pow( merr00, 2 );
     momCov(1,1) = std::pow( merr11, 2 );
     momCov(2,2) = std::pow( merr22, 2 );
@@ -200,10 +200,10 @@ void ParticlePacker::unpack( const PackedData       & ppart,
     momCov(3,2) = merr33*merr22 * m_pack.fraction( ppart.momCov32 );
 
     // Pos Cov
-    Gaudi::SymMatrix3x3 & posCov = *(const_cast<Gaudi::SymMatrix3x3*>(&part.posCovMatrix()));
-    const double perr00 = m_pack.position( ppart.posCov00 );
-    const double perr11 = m_pack.position( ppart.posCov11 );
-    const double perr22 = m_pack.position( ppart.posCov22 );
+    auto & posCov = *(const_cast<Gaudi::SymMatrix3x3*>(&part.posCovMatrix()));
+    const auto perr00 = m_pack.position( ppart.posCov00 );
+    const auto perr11 = m_pack.position( ppart.posCov11 );
+    const auto perr22 = m_pack.position( ppart.posCov22 );
     posCov(0,0) = std::pow( perr00, 2 );
     posCov(1,1) = std::pow( perr11, 2 );
     posCov(2,2) = std::pow( perr22, 2 );
@@ -212,7 +212,7 @@ void ParticlePacker::unpack( const PackedData       & ppart,
     posCov(2,1) = perr22*perr11 * m_pack.fraction( ppart.posCov21 );
 
     // Pos Mom Cov
-    Gaudi::Matrix4x3 & pmCov = *(const_cast<Gaudi::Matrix4x3*>(&part.posMomCovMatrix()));
+    auto & pmCov = *(const_cast<Gaudi::Matrix4x3*>(&part.posMomCovMatrix()));
     pmCov(0,0) = m_pack.fltPacked( ppart.pmCov00 );
     pmCov(0,1) = m_pack.fltPacked( ppart.pmCov01 );
     pmCov(0,2) = m_pack.fltPacked( ppart.pmCov02 );
@@ -227,7 +227,7 @@ void ParticlePacker::unpack( const PackedData       & ppart,
     pmCov(3,2) = m_pack.fltPacked( ppart.pmCov32 );
 
     // extra info
-    for ( unsigned int iE = ppart.firstExtra; iE < ppart.lastExtra; ++iE )
+    for ( auto iE = ppart.firstExtra; iE < ppart.lastExtra; ++iE )
     {
       const PackedDataVector::PackedExtraInfo& pInfo = pparts.extra()[iE];
       part.addInfo( pInfo.first, m_pack.fltPacked(pInfo.second) );
@@ -258,7 +258,7 @@ void ParticlePacker::unpack( const PackedData       & ppart,
     }
 
     // daughters
-    for ( unsigned int iiD = ppart.firstDaughter; iiD < ppart.lastDaughter; ++iiD )
+    for ( auto iiD = ppart.firstDaughter; iiD < ppart.lastDaughter; ++iiD )
     {
       int hintID(0), key(0);
       if ( m_pack.hintAndKey64( pparts.daughters()[iiD],

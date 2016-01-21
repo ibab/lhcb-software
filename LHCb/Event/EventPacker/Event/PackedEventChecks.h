@@ -29,15 +29,12 @@ namespace DataPacking
   private:
 
     /// Standard constructor disallowed
-    DataChecks( ) : parent(NULL)  { }
+    DataChecks( ) { }
 
   public:
 
     /// Constructor
-    explicit DataChecks( const GaudiAlgorithm & _parent ) : parent(&_parent) { }
-
-    /// Destructor
-    ~DataChecks( ) { }
+    explicit DataChecks( const GaudiAlgorithm & p ) : parent(&p) { }
 
   public:
 
@@ -148,7 +145,7 @@ namespace DataPacking
                              const TYPE& b ) const
     {
       const bool ok = ( a == b );
-      if ( UNLIKELY(!ok) )
+      if ( UNLIKELY(!ok && parent) )
       {
         parent->warning() << name << " comparison failed :-" << endmsg
                           << " Original = " << a << endmsg
@@ -181,7 +178,7 @@ namespace DataPacking
                                  const TYPE * b ) const
     {
       const bool ok = ( a == b );
-      if ( UNLIKELY(!ok) )
+      if ( UNLIKELY(!ok && parent) )
       {
         parent->warning() << name << " comparison failed :-" << endmsg
                           << " Original = " << a << endmsg
@@ -193,7 +190,7 @@ namespace DataPacking
   private:
 
     /// MessageStream
-    mutable const GaudiAlgorithm * parent;
+    mutable const GaudiAlgorithm * parent = nullptr;
 
   };
 

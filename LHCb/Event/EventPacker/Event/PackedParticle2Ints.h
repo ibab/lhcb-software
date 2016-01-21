@@ -16,15 +16,10 @@ namespace LHCb
   class PackedParticle2Int
   {
   public:
-
-    PackedParticle2Int() : key(0), container(0), start(0), end(0) {}
-
-    ~PackedParticle2Int() {}
-
-    long long key;
-    long long container;
-    int start;
-    int end;
+    long long key{0};
+    long long container{0};
+    int start{0};
+    int end{0};
   };
 
   static const CLID CLID_PackedParticle2Ints = 1591;
@@ -47,13 +42,9 @@ namespace LHCb
 
   public:
 
-    /// Standard constructor
-    PackedParticle2Ints( ) { }
-
-    virtual ~PackedParticle2Ints( ) { } ///< Destructor
-
     /// Class ID
     static const CLID& classID() { return CLID_PackedParticle2Ints; }
+
     /// Class ID
     virtual const CLID& clID() const { return PackedParticle2Ints::classID(); }
 

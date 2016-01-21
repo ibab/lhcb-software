@@ -25,9 +25,9 @@ void RecVertexPacker::pack( const Data & vert,
     pvert.z          = m_pack.position( vert.position().z() );
     
     // convariance Matrix
-    const double err0 = safe_sqrt( vert.covMatrix()(0,0) );
-    const double err1 = safe_sqrt( vert.covMatrix()(1,1) );
-    const double err2 = safe_sqrt( vert.covMatrix()(2,2) );
+    const auto err0 = safe_sqrt( vert.covMatrix()(0,0) );
+    const auto err1 = safe_sqrt( vert.covMatrix()(1,1) );
+    const auto err2 = safe_sqrt( vert.covMatrix()(2,2) );
     pvert.cov00 = m_pack.position( err0 );
     pvert.cov11 = m_pack.position( err1 );
     pvert.cov22 = m_pack.position( err2 );
@@ -38,8 +38,8 @@ void RecVertexPacker::pack( const Data & vert,
     //== Store the Tracks and weights
     pvert.firstTrack = pverts.refs().size();
     {
-      std::vector<float>::const_iterator iW = vert.weights().begin();
-      for ( SmartRefVector<LHCb::Track>::const_iterator itT = vert.tracks().begin();
+      auto iW = vert.weights().begin();
+      for ( auto itT = vert.tracks().begin();
             vert.tracks().end() != itT; ++itT, ++iW )
       {
         if ( *itT )
@@ -84,8 +84,8 @@ void RecVertexPacker::pack( const DataVector & verts,
   for ( const Data * vert : verts )
   {
     // new packed data object
-    pverts.vertices().push_back( PackedData() );
-    PackedData & pvert = pverts.vertices().back();
+    pverts.vertices().emplace_back( PackedData() );
+    auto & pvert = pverts.vertices().back();
 
     // Key
     pvert.key = vert->key();
@@ -112,10 +112,10 @@ void RecVertexPacker::unpack( const PackedData       & pvert,
                                        m_pack.position( pvert.z ) ) );
     
     // convariance Matrix
-    const double err0 = m_pack.position( pvert.cov00 );
-    const double err1 = m_pack.position( pvert.cov11 );
-    const double err2 = m_pack.position( pvert.cov22 );
-    Gaudi::SymMatrix3x3 & cov = *(const_cast<Gaudi::SymMatrix3x3*>(&vert.covMatrix()));
+    const auto err0 = m_pack.position( pvert.cov00 );
+    const auto err1 = m_pack.position( pvert.cov11 );
+    const auto err2 = m_pack.position( pvert.cov22 );
+    auto & cov = *(const_cast<Gaudi::SymMatrix3x3*>(&vert.covMatrix()));
     cov(0,0) = err0 * err0;
     cov(1,0) = err1 * err0 * m_pack.fraction( pvert.cov10 );
     cov(1,1) = err1 * err1;
@@ -128,14 +128,14 @@ void RecVertexPacker::unpack( const PackedData       & pvert,
     for ( unsigned short int kk = pvert.firstTrack; pvert.lastTrack > kk; ++kk )
     {
       // Get the track
-      const long long trk = *(pverts.refs().begin()+kk);
+      const auto trk = *(pverts.refs().begin()+kk);
       if ( ( 0!=ver && m_pack.hintAndKey64( trk, &pverts, &verts, hintID, tKey ) ) ||
            ( 0==ver && m_pack.hintAndKey32( trk, &pverts, &verts, hintID, tKey ) ) )
       {
         SmartRef<LHCb::Track> ref( &verts, hintID, tKey );
         // If available, get the weight
-        const float weight = (float)( (int)pverts.version()>1 ?
-                                      m_pack.fraction(pverts.weights()[kk]) : 1.0 );
+        const auto weight = (float)( (int)pverts.version()>1 ?
+                                     m_pack.fraction(pverts.weights()[kk]) : 1.0 );
         // save with weight
         vert.addToTracks( ref, weight );
       }
@@ -143,9 +143,9 @@ void RecVertexPacker::unpack( const PackedData       & pvert,
     }
     
     //== Handles the ExtraInfo
-    for ( unsigned short int kEx = pvert.firstInfo; pvert.lastInfo > kEx; ++kEx )
+    for ( auto kEx = pvert.firstInfo; pvert.lastInfo > kEx; ++kEx )
     {
-      const std::pair<int,int>& info = *(pverts.extras().begin()+kEx);
+      const auto& info = *(pverts.extras().begin()+kEx);
       vert.addInfo( info.first, m_pack.fltPacked( info.second ) );
     }
 

@@ -26,56 +26,29 @@ namespace LHCb
    */
   struct PackedCaloHypo
   {
-
-    /// Default Constructor
-    PackedCaloHypo() :
-      key(0), hypothesis(0), lh(0), z(0),
-      posX(0), posY(0), posE(0),
-      cov00(0), cov11(0), cov22(0),
-      cov10(0), cov20(0), cov21(0), cerr10(0),
-      centX(0), centY(0),
-      cerr00(0), cerr11(0),
-      firstDigit(0), lastDigit(0),
-      firstCluster(0), lastCluster(0),
-      firstHypo(0), lastHypo(0)
-    {}
-
-    /// copy constructor
-    PackedCaloHypo( const PackedCaloHypo& c ) :
-      key( c.key ), hypothesis( c.hypothesis ), lh( c.lh ), z( c.z ),
-      posX( c.posX ), posY( c.posY ), posE( c.posE ),
-      cov00( c.cov00 ), cov11( c.cov11 ), cov22( c.cov22 ),
-      cov10( c.cov10 ), cov20( c.cov20 ), cov21( c.cov21 ), cerr10( c.cerr10 ),
-      centX( c.centX ), centY( c.centY ),
-      cerr00( c.cerr00 ), cerr11( c.cerr11 ),
-      firstDigit( c.firstDigit ), lastDigit( c.lastDigit ),
-      firstCluster( c.firstCluster ), lastCluster( c.lastCluster ),
-      firstHypo( c.firstHypo ), lastHypo( c.lastHypo )
-    {}
-
-    int key;
-    int hypothesis;
-    int lh;
+    int key{0};
+    int hypothesis{0};
+    int lh{0};
     // from CaloPosition
-    int z;
+    int z{0};
     // position (3) + 3x3 symmetric covariance matrix
-    int posX, posY, posE;
+    int posX{0}, posY{0}, posE{0};
 
-    int cov00, cov11, cov22;
-    short int cov10, cov20, cov21;
-    short int cerr10; // non diagonal terms of the x,y spread matrix.
+    int cov00{0}, cov11{0}, cov22{0};
+    short int cov10{0}, cov20{0}, cov21{0};
+    short int cerr10{0}; // non diagonal terms of the x,y spread matrix.
     // center in x,y + 2x2 symetric covariance matrix
-    int centX;
-    int centY;
-    int cerr00;
-    int cerr11;
+    int centX{0};
+    int centY{0};
+    int cerr00{0};
+    int cerr11{0};
 
-    unsigned short int firstDigit;
-    unsigned short int lastDigit;
-    unsigned short int firstCluster;
-    unsigned short int lastCluster;
-    unsigned short int firstHypo;
-    unsigned short int lastHypo;
+    unsigned short int firstDigit{0};
+    unsigned short int lastDigit{0};
+    unsigned short int firstCluster{0};
+    unsigned short int lastCluster{0};
+    unsigned short int firstHypo{0};
+    unsigned short int lastHypo{0};
   };
 
   static const CLID CLID_PackedCaloHypos = 1551;
@@ -108,13 +81,11 @@ namespace LHCb
   public:
 
     /// Standard constructor
-    PackedCaloHypos( ) : m_packingVersion(0)
+    PackedCaloHypos( )
     {
       m_vect.reserve(100);
       m_refs.reserve(1000);
     }
-
-    virtual ~PackedCaloHypos( ) {}; ///< Destructor
 
   public:
     
@@ -143,7 +114,7 @@ namespace LHCb
     std::vector<long long>      m_refs;
 
     /// Data packing version
-    char m_packingVersion;
+    char m_packingVersion{0};
 
   };
 

@@ -1,5 +1,4 @@
 
-
 // Local
 #include "CheckerBaseAlg.h"
 
@@ -29,7 +28,7 @@ StatusCode Check<PACKER>::execute()
   typename PACKER::DataVector * dataB =
     this->getIfExists<typename PACKER::DataVector>(m_dataB);
 
-  if ( (NULL != dataA) && (NULL != dataB) )
+  if ( dataA && dataB )
   {
 
     // Compare versions

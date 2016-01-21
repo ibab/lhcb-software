@@ -18,7 +18,7 @@ void RelatedInfoRelationsPacker::pack( const DataVector & rels,
     if ( !rel.from() ) continue;
 
     // make a new entry for this relation
-    prels.relations().push_back( LHCb::PackedRelatedInfoMap() );
+    prels.relations().emplace_back( LHCb::PackedRelatedInfoMap() );
     LHCb::PackedRelatedInfoMap & prel = prels.relations().back();
 
     // reference to the particle
@@ -34,7 +34,7 @@ void RelatedInfoRelationsPacker::pack( const DataVector & rels,
     prels.info().reserve( prels.info().size() + rMap.size() );
     for ( const auto& data : rMap )
     {
-      prels.info().push_back( std::make_pair(data.first,data.second) );
+      prels.info().emplace_back( std::make_pair(data.first,data.second) );
     }
 
     // Last entry in the info vector
@@ -60,12 +60,12 @@ void RelatedInfoRelationsPacker::unpack( const PackedDataVector & prels,
     {
       // Reconstruct container name for this entry
       const int indx = cont.reference >> 32;
-      const std::string & containerName = prels.linkMgr()->link(indx)->path();
+      const auto & containerName = prels.linkMgr()->link(indx)->path();
       // if name matches, unpack
       if ( containerName == location )
       {
         // Loop over the relations saved at this container location and unpack
-        for ( unsigned int kk = cont.first; cont.last > kk; ++kk )
+        for ( auto kk = cont.first; cont.last > kk; ++kk )
         { unpack( prels.relations()[kk], prels, rels ); }
       }
     }
@@ -85,7 +85,7 @@ RelatedInfoRelationsPacker::unpack( const LHCb::PackedRelatedInfoMap & pmap,
   if ( srcLink != m_prevSrcLink )
   {
     m_prevSrcLink = srcLink;
-    const std::string & srcName = prels.linkMgr()->link(srcLink)->path();
+    const auto & srcName = prels.linkMgr()->link(srcLink)->path();
     m_srcContainer = parent().get<LHCb::Particles>( srcName );
   }
 

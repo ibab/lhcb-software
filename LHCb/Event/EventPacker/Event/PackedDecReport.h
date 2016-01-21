@@ -1,4 +1,4 @@
-// $Id: $
+
 #ifndef EVENT_PACKEDDECREPORT_H 
 #define EVENT_PACKEDDECREPORT_H 1
 
@@ -31,12 +31,10 @@ namespace LHCb
   public: 
     
     /// Standard constructor
-    PackedDecReport( ) : m_configuredTCK(0)
-    {
-      m_data.reserve(1000); 
-    }
+    PackedDecReport( ) { m_data.reserve(1000); }
     
-    virtual ~PackedDecReport( ) {}; ///< Destructor
+  public:
+
     virtual const CLID& clID()        const { return PackedDecReport::classID(); }
     static  const CLID& classID()           { return CLID_PackedDecReport;       }
 
@@ -51,7 +49,7 @@ namespace LHCb
   private:
 
     std::vector<unsigned int> m_data;
-    unsigned int m_configuredTCK;
+    unsigned int m_configuredTCK{0};
     
   };
   

@@ -78,13 +78,13 @@ private:
   bool m_alwaysOutput;        ///< Flag to turn on the creation of output, even when input is missing
 
   /// Check to prevent recursive calls to this, due to the multiple possible outputs
-  bool m_running;
+  bool m_running = false;
 
   // Cache pointers to containers, for on-demand creation
-  LHCb::VeloClusters * m_vClus; ///< Velo clusters
-  LHCb::STClusters*   m_ttClus; ///< TT Clusters
-  LHCb::STClusters*   m_utClus; ///< UT Clusters
-  LHCb::STClusters*   m_itClus; ///< IT Clusters
+  LHCb::VeloClusters * m_vClus = nullptr; ///< Velo clusters
+  LHCb::STClusters*   m_ttClus = nullptr; ///< TT Clusters
+  LHCb::STClusters*   m_utClus = nullptr; ///< UT Clusters
+  LHCb::STClusters*   m_itClus = nullptr; ///< IT Clusters
 
 };
 

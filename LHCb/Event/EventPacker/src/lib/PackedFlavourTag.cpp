@@ -37,8 +37,8 @@ void FlavourTagPacker::pack( const Data & ft,
   for ( const auto & T : ft.taggers() )
   {
     // make a new packed tagger object
-    pfts.taggers().push_back( PackedTagger() );
-    PackedTagger & ptagger = pfts.taggers().back();
+    pfts.taggers().emplace_back( PackedTagger() );
+    auto & ptagger = pfts.taggers().back();
 
     // save data members
     ptagger.type     = T.type();
@@ -72,8 +72,8 @@ void FlavourTagPacker::pack( const DataVector & fts,
   for ( const auto * ft : fts )
   {
     // Make a new packed data object and save
-    pfts.data().push_back( PackedData() );
-    PackedData & pft = pfts.data().back();
+    pfts.data().emplace_back( PackedData() );
+    auto & pft = pfts.data().back();
 
     // fill ppart key from part
     pft.key = ft->key();
@@ -120,7 +120,7 @@ void FlavourTagPacker::unpack( const PackedData       & pft,
     const LHCb::PackedTagger & ptagger = pfts.taggers()[iT];
 
     // Make a new tagger
-    taggers.push_back( LHCb::Tagger() );
+    taggers.emplace_back( LHCb::Tagger() );
     LHCb::Tagger & tagger = taggers.back();
 
     // set the tagger members
@@ -166,7 +166,7 @@ StatusCode FlavourTagPacker::check( const DataVector & dataA,
   StatusCode sc = StatusCode::SUCCESS;
 
   // Loop over data containers together and compare
-  DataVector::const_iterator iA(dataA.begin()), iB(dataB.begin());
+  auto iA(dataA.begin()), iB(dataB.begin());
   for ( ; iA != dataA.end() && iB != dataB.end(); ++iA, ++iB )
   {
     sc = sc && check( **iA, **iB );

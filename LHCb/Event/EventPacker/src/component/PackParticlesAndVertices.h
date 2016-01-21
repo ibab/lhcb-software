@@ -150,7 +150,7 @@ packAP2PRelationContainer ( const RELATION* rels,
                             LHCb::PackedRelations& prels ) const
 {
   // Make a new packed data object and save
-  prels.relations().push_back( LHCb::PackedRelation() );
+  prels.relations().emplace_back( LHCb::PackedRelation() );
   LHCb::PackedRelation& prel = prels.relations().back();
 
   // reference to original container and key
@@ -167,10 +167,10 @@ packAP2PRelationContainer ( const RELATION* rels,
   // Loop over relations
   for ( const auto & R : rels->relations() )
   {
-    prels.sources().push_back( m_pack.reference64( &prels,
+    prels.sources().emplace_back( m_pack.reference64( &prels,
                                                    R.from()->parent(),
                                                    R.from()->key() ) );
-    prels.dests().push_back  ( m_pack.reference64( &prels,
+    prels.dests().emplace_back  ( m_pack.reference64( &prels,
                                                    R.to()->parent(),
                                                    R.to()->key()   ) );
   }
@@ -192,7 +192,7 @@ packAP2PRelationContainer ( const RELATION* rels,
                             LHCb::PackedWeightedRelations& prels ) const
 {
   // Make a new packed data object and save
-  prels.relations().push_back( LHCb::PackedRelation() );
+  prels.relations().emplace_back( LHCb::PackedRelation() );
   LHCb::PackedRelation& prel = prels.relations().back();
 
   // reference to original container and key
@@ -210,13 +210,13 @@ packAP2PRelationContainer ( const RELATION* rels,
   // Loop over relations
   for ( const auto & R : rels->relations() )
   {
-    prels.sources().push_back( m_pack.reference64( &prels,
+    prels.sources().emplace_back( m_pack.reference64( &prels,
                                                    R.from()->parent(),
                                                    R.from()->key() ) );
-    prels.dests().push_back  ( m_pack.reference64( &prels,
+    prels.dests().emplace_back  ( m_pack.reference64( &prels,
                                                    R.to()->parent(),
                                                    R.to()->key()   ) );
-    prels.weights().push_back( R.weight() );
+    prels.weights().emplace_back( R.weight() );
   }
 
   // last object
@@ -236,7 +236,7 @@ packAP2IntRelationContainer ( const RELATION* rels,
                               LHCb::PackedRelations& prels ) const
 {
   // Make a new packed data object and save
-  prels.relations().push_back( LHCb::PackedRelation() );
+  prels.relations().emplace_back( LHCb::PackedRelation() );
   LHCb::PackedRelation& prel = prels.relations().back();
 
   // reference to original container and key
@@ -253,10 +253,10 @@ packAP2IntRelationContainer ( const RELATION* rels,
   // Loop over relations
   for ( const auto & R : rels->relations() )
   {
-    prels.sources().push_back( m_pack.reference64( &prels,
+    prels.sources().emplace_back( m_pack.reference64( &prels,
                                                    R.from()->parent(),
                                                    R.from()->key() ) );
-    prels.dests().push_back( R.to() );
+    prels.dests().emplace_back( R.to() );
   }
 
   // last object

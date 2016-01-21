@@ -49,8 +49,7 @@ StatusCode UnpackTrack::execute()
        !exist<LHCb::PackedTracks>(m_inputName) ) return StatusCode::SUCCESS;
 
   // Get the packed tracks
-  const LHCb::PackedTracks* dst = 
-    getOrCreate<LHCb::PackedTracks,LHCb::PackedTracks>( m_inputName );
+  const auto * dst = getOrCreate<LHCb::PackedTracks,LHCb::PackedTracks>(m_inputName);
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Size of PackedTracks = " << dst->tracks().size() << endmsg;
@@ -66,21 +65,21 @@ StatusCode UnpackTrack::execute()
   LHCb::Tracks* newTracks = new LHCb::Tracks();
   put( newTracks, m_outputName );
 
-  /// Track Packer
+  // Track Packer
   const LHCb::TrackPacker packer(*this);
 
   // Unpack the tracks
   packer.unpack( *dst, *newTracks );
 
   //== If one needs to build ancestors, get the location of the ancestor's container
-  const LHCb::Tracks* targetTracks = ( m_inputName != m_ancestorFor ? NULL :
-                                       get<LHCb::Tracks>( m_ancestorSource ) );
+  const auto * targetTracks = ( m_inputName != m_ancestorFor ? nullptr :
+                                getIfExists<LHCb::Tracks>( m_ancestorSource ) );
   if ( targetTracks )
   {
     for ( LHCb::Track * track : *newTracks )
     {
       //== Create an ancestor if needed
-      const LHCb::Track* ancest = targetTracks->object( track->key() );
+      const auto * ancest = targetTracks->object( track->key() );
       if ( ancest )
       {
         track->addToAncestors( ancest );

@@ -27,16 +27,9 @@ namespace LHCb
    */
   struct PackedMCRichDigitSummary
   {
-    /// Default constructor
-    PackedMCRichDigitSummary()
-      : history(0),
-        richSmartID(0),
-        mcParticle(-1)
-    {}
-
-    int history;
-    int richSmartID;
-    long long mcParticle;
+    int history{0};
+    int richSmartID{0};
+    long long mcParticle{-1};
   };
 
   // -----------------------------------------------------------------------
@@ -71,12 +64,6 @@ namespace LHCb
 
   public:
 
-    /// Standard constructor
-    PackedMCRichDigitSummarys( ) : m_packingVersion(defaultPackingVersion()) { }
-
-    /// Destructor
-    virtual ~PackedMCRichDigitSummarys( ) { }
-
     /// Class ID
     static const CLID& classID() { return CLID_PackedMCRichDigitSummarys; }
 
@@ -100,7 +87,7 @@ namespace LHCb
   private:
 
     /// Data packing version
-    char   m_packingVersion;
+    char   m_packingVersion{ defaultPackingVersion() };
 
     /// The packed data objects
     Vector m_vect; 

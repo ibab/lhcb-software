@@ -26,14 +26,9 @@ namespace LHCb
    */
   struct PackedCaloClusterEntry
   {
-    /// Default constructor
-    PackedCaloClusterEntry()
-      : digit(-1), status(0), fraction(0)
-    { }
-
-    long long digit;
-    unsigned int status;
-    short int fraction;
+    long long digit{-1};
+    unsigned int status{0};
+    short int fraction{0};
   };
 
   /** @struct PackedCaloCluster Event/PackedCaloCluster.h
@@ -45,27 +40,16 @@ namespace LHCb
    */
   struct PackedCaloCluster
   {
-    /// Default constructor
-    PackedCaloCluster()
-      : key(0), type(0), seed(0),
-        pos_x(0), pos_y(0), pos_z(0), pos_e(0),
-        pos_c0(0), pos_c1(0),
-        pos_cov00(0), pos_cov11(0), pos_cov22(0),
-        pos_cov10(0), pos_cov20(0), pos_cov21(0),
-        pos_spread00(0), pos_spread11(0), pos_spread10(0),
-        firstEntry(0), lastEntry(0)
-    { }
-
-    int key;
-    int type;
-    unsigned int seed;
-    int pos_x, pos_y, pos_z, pos_e;
-    int pos_c0, pos_c1;
-    int       pos_cov00,pos_cov11,pos_cov22;
-    short int pos_cov10,pos_cov20,pos_cov21;
-    int pos_spread00,pos_spread11;
-    short int pos_spread10;
-    unsigned short int firstEntry, lastEntry;
+    int key{0};
+    int type{0};
+    unsigned int seed{0};
+    int pos_x{0}, pos_y{0}, pos_z{0}, pos_e{0};
+    int pos_c0{0}, pos_c1{0};
+    int       pos_cov00{0},pos_cov11{0},pos_cov22{0};
+    short int pos_cov10{0},pos_cov20{0},pos_cov21{0};
+    int pos_spread00{0},pos_spread11{0};
+    short int pos_spread10{0};
+    unsigned short int firstEntry{0}, lastEntry{0};
   };
 
   // -----------------------------------------------------------------------
@@ -103,12 +87,6 @@ namespace LHCb
     
   public:
 
-    /// Standard constructor
-    PackedCaloClusters( ) : m_packingVersion(defaultPackingVersion()) { }
-
-    /// Destructor
-    virtual ~PackedCaloClusters( ) { }
-
     /// Class ID
     static const CLID& classID() { return CLID_PackedCaloClusters; }
 
@@ -138,7 +116,7 @@ namespace LHCb
   private:
 
     /// Data packing version
-    char m_packingVersion;
+    char m_packingVersion{ defaultPackingVersion() };
 
     /// The packed data objects
     ClusterVector m_clusters; 

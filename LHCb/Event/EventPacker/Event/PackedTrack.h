@@ -30,37 +30,19 @@ namespace LHCb
   struct PackedTrack
   {
 
-    /// Default Constructor
-    PackedTrack() :
-      key(0), chi2PerDoF(0), nDoF(0), flags(0),
-      firstId(0), lastId(0),
-      firstState(0), lastState(0),
-      firstExtra(0), lastExtra(0),
-      likelihood(0), ghostProba(0)
-    { }
-
-    /// Copy Constructor
-    PackedTrack( const PackedTrack& c ) :
-      key( c.key ), chi2PerDoF( c.chi2PerDoF ), nDoF( c.nDoF ), flags( c.flags ),
-      firstId( c.firstId ), lastId (c.lastId ),
-      firstState( c.firstState ), lastState( c.lastState ),
-      firstExtra( c.firstExtra ), lastExtra( c.lastExtra ),
-      likelihood( c.likelihood ), ghostProba( c.ghostProba )
-    { }
-
-    long long key;
-    int chi2PerDoF;
-    int nDoF;
-    unsigned int flags;
-    unsigned short int firstId;
-    unsigned short int lastId;
-    unsigned short int firstState;
-    unsigned short int lastState;
-    unsigned short int firstExtra;
-    unsigned short int lastExtra;
+    long long key{0};
+    int chi2PerDoF{0};
+    int nDoF{0};
+    unsigned int flags{0};
+    unsigned short int firstId{0};
+    unsigned short int lastId{0};
+    unsigned short int firstState{0};
+    unsigned short int lastState{0};
+    unsigned short int firstExtra{0};
+    unsigned short int lastExtra{0};
     //== Added for version 3, August 2009
-    int likelihood;
-    int ghostProba;
+    int likelihood{0};
+    int ghostProba{0};
 
     //== Note that Nodes and Measurements on Track are transient only, an thus never stored.
   };
@@ -75,53 +57,30 @@ namespace LHCb
   struct PackedState
   {
 
-    /// Standard constructor
-    PackedState( ) :
-      flags(0),
-      //
-      x(0),y(0),z(0),tx(0),ty(0),p(0),
-      //
-      cov_00(0),
-      cov_11(0),
-      cov_22(0),
-      cov_33(0),
-      cov_44(0),
-      cov_10(0),
-      cov_20(0),
-      cov_21(0),
-      cov_30(0),
-      cov_31(0),
-      cov_32(0),
-      cov_40(0),
-      cov_41(0),
-      cov_42(0),
-      cov_43(0)
-    { }
+    int flags{0};
 
-    int flags;
+    int x{0};
+    int y{0};
+    int z{0};
+    int tx{0};
+    int ty{0};
+    int p{0};
 
-    int x;
-    int y;
-    int z;
-    int tx;
-    int ty;
-    int p;
-
-    int cov_00;
-    int cov_11;
-    int cov_22;
-    int cov_33;
-    int cov_44;
-    short int cov_10;
-    short int cov_20;
-    short int cov_21;
-    short int cov_30;
-    short int cov_31;
-    short int cov_32;
-    short int cov_40;
-    short int cov_41;
-    short int cov_42;
-    short int cov_43;
+    int cov_00{0};
+    int cov_11{0};
+    int cov_22{0};
+    int cov_33{0};
+    int cov_44{0};
+    short int cov_10{0};
+    short int cov_20{0};
+    short int cov_21{0};
+    short int cov_30{0};
+    short int cov_31{0};
+    short int cov_32{0};
+    short int cov_40{0};
+    short int cov_41{0};
+    short int cov_42{0};
+    short int cov_43{0};
 
   };
 
@@ -156,8 +115,6 @@ namespace LHCb
       m_ids.reserve(2000);
       m_extra.reserve(5000);
     }
-
-    virtual ~PackedTracks( ) {} ///< Destructor
 
   public:
 
@@ -207,7 +164,7 @@ namespace LHCb
   private:
 
     /// Default Constructor hidden
-    TrackPacker() { resetWrappingCounts(); }
+    //TrackPacker() { }
 
   public:
 
@@ -284,12 +241,12 @@ namespace LHCb
   private:
 
     // cached data to handle wrapped ID numbers ...
-    mutable int m_firstIdHigh;
-    mutable int m_lastIdHigh;
-    mutable int m_firstStateHigh;
-    mutable int m_lastStateHigh;
-    mutable int m_firstExtraHigh;
-    mutable int m_lastExtraHigh;
+    mutable int m_firstIdHigh{0};
+    mutable int m_lastIdHigh{0};
+    mutable int m_firstStateHigh{0};
+    mutable int m_lastStateHigh{0};
+    mutable int m_firstExtraHigh{0};
+    mutable int m_lastExtraHigh{0};
 
   };
 

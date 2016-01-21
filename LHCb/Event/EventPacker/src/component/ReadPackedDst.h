@@ -18,8 +18,11 @@
  *  @author Olivier Callot
  *  @date   2009-01-19
  */
-class ReadPackedDst : public GaudiAlgorithm {
+class ReadPackedDst : public GaudiAlgorithm
+{
+
 public:
+
   /// Standard constructor
   ReadPackedDst( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -64,8 +67,8 @@ protected:
 private:
   std::string   m_inputLocation;
   std::string   m_postfix;
-  unsigned int* m_data;
-  int           m_size;
+  unsigned int* m_data = nullptr;
+  int           m_size{0};
   ToolHandle<IGenericTool> m_odinDecoder;
   SmartIF<IAddressCreator> m_addrCreator;
   SmartIF<IDataManagerSvc> m_evtMgr;

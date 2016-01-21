@@ -28,33 +28,17 @@ namespace LHCb
    */
   struct PackedMCRichOpticalPhoton
   {
-    /// Default constructor
-    PackedMCRichOpticalPhoton()
-      : key(0),
-        hpdx(0), hpdy(0), hpdz(0),
-        pmirx(0), pmiry(0), pmirz(0),
-        smirx(0), smiry(0), smirz(0),
-        aerox(0), aeroy(0), aeroz(0),
-        theta(0), phi(0),
-        emisx(0), emisy(0), emisz(0),
-        energy(0),
-        pmomx(0), pmomy(0), pmomz(0),
-        hpdqwx(0), hpdqwy(0), hpdqwz(0),
-        mcrichhit(-1)
-    {}
-
-    int   key;
-    int   hpdx, hpdy, hpdz;
-    int   pmirx, pmiry, pmirz;
-    int   smirx, smiry, smirz;
-    int   aerox, aeroy, aeroz;
-    int   theta, phi;
-    int   emisx, emisy, emisz;
-    int   energy;
-    int   pmomx, pmomy, pmomz;
-    int   hpdqwx, hpdqwy, hpdqwz;
-    long long mcrichhit;
-
+    int   key{0};
+    int   hpdx{0}, hpdy{0}, hpdz{0};
+    int   pmirx{0}, pmiry{0}, pmirz{0};
+    int   smirx{0}, smiry{0}, smirz{0};
+    int   aerox{0}, aeroy{0}, aeroz{0};
+    int   theta{0}, phi{0};
+    int   emisx{0}, emisy{0}, emisz{0};
+    int   energy{0};
+    int   pmomx{0}, pmomy{0}, pmomz{0};
+    int   hpdqwx{0}, hpdqwy{0}, hpdqwz{0};
+    long long mcrichhit{-1};
   };
 
   // -----------------------------------------------------------------------
@@ -88,12 +72,6 @@ namespace LHCb
 
   public:
 
-    /// Standard constructor
-    PackedMCRichOpticalPhotons( ) : m_packingVersion(defaultPackingVersion()) { }
-
-    /// Destructor
-    virtual ~PackedMCRichOpticalPhotons( ) { }
-
     /// Class ID
     static const CLID& classID() { return CLID_PackedMCRichOpticalPhotons; }
 
@@ -117,7 +95,7 @@ namespace LHCb
   private:
 
     /// Data packing version
-    char   m_packingVersion;
+    char   m_packingVersion{ defaultPackingVersion() };
 
     /// The packed data objects
     Vector m_vect; 

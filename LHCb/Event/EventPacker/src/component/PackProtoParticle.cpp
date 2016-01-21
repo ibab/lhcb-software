@@ -89,7 +89,7 @@ StatusCode PackProtoParticle::execute()
     if ( sc.isSuccess() )
     {
       delete parts;
-      parts = NULL;
+      parts = nullptr;
     }
     else
     {

@@ -18,10 +18,10 @@ void MCRichHitPacker::pack( const DataVector & hits,
   if ( 0 == ver || 1 == ver )
   {
     phits.data().reserve( hits.size() );
-    for ( const Data * hit : hits )
+    for ( const auto * hit : hits )
     {
-      phits.data().push_back( PackedData() );
-      PackedData & phit = phits.data().back();
+      phits.data().emplace_back( PackedData() );
+      auto & phit = phits.data().back();
       phit.x          = m_pack.position ( hit->entry().x() );
       phit.y          = m_pack.position ( hit->entry().y() );
       phit.z          = m_pack.position ( hit->entry().z() );
@@ -29,7 +29,7 @@ void MCRichHitPacker::pack( const DataVector & hits,
       phit.tof        = m_pack.time     ( hit->timeOfFlight() );
       phit.sensDetID  = hit->sensDetID().key();
       phit.history    = hit->historyCode();
-      if ( NULL != hit->mcParticle() )
+      if ( hit->mcParticle() )
       {
         phit.mcParticle = ( UNLIKELY( 0==ver ) ?
                             m_pack.reference32( &phits,
@@ -56,10 +56,10 @@ void MCRichHitPacker::unpack( const PackedDataVector & phits,
   if ( 0 == ver || 1 == ver )
   {
     hits.reserve( phits.data().size() );
-    for ( const PackedData & phit : phits.data() )
+    for ( const auto & phit : phits.data() )
     {
       // make and save new hit in container
-      Data * hit  = new Data();
+      auto * hit  = new Data();
       hits.add( hit );
       // Fill data from packed object
       hit->setEntry ( Gaudi::XYZPoint( m_pack.position(phit.x),

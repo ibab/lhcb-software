@@ -31,7 +31,7 @@ void WeightsVectorPacker::pack( const DataVector & weightsV,
       pweightsV.weights().reserve( pweightsV.weights().size() + weights->weights().size() );
       for ( const auto& W : weights->weights() )
       {
-        pweightsV.weights().push_back( LHCb::PackedWeight(W.first,m_pack.fraction(W.second)) );
+        pweightsV.weights().emplace_back( LHCb::PackedWeight(W.first,m_pack.fraction(W.second)) );
       }
       pweights.lastWeight = pweightsV.weights().size();
 
@@ -61,14 +61,14 @@ void WeightsVectorPacker::unpack( const PackedDataVector & pweightsV,
       else             { weightsV.insert( weights, pweights.pvKey ); }
 
       // fill the unpacked weights vector
-      LHCb::WeightsVector::WeightDataVector & wWeights = 
+      LHCb::WeightsVector::WeightDataVector & wWeights =
         *(const_cast<LHCb::WeightsVector::WeightDataVector*>(&weights->weights()));
       wWeights.reserve( pweights.lastWeight - pweights.firstWeight );
       for ( unsigned short int iW = pweights.firstWeight; iW < pweights.lastWeight; ++iW )
       {
         const PackedWeight & pweight = pweightsV.weights()[iW];
-        wWeights.push_back( LHCb::WeightsVector::WeightData( pweight.key,
-                                                             (float)m_pack.fraction(pweight.weight) ) );
+        wWeights.emplace_back( LHCb::WeightsVector::WeightData( pweight.key,
+                                                                (float)m_pack.fraction(pweight.weight) ) );
       }
 
     }
@@ -97,10 +97,10 @@ StatusCode WeightsVectorPacker::check( const DataVector & dataA,
     bool ok = true;
 
     // loop over weights and test
-    const bool sizeOK = ch.compareInts( "#Weights", 
+    const bool sizeOK = ch.compareInts( "#Weights",
                                         (*iA)->weights().size(), (*iB)->weights().size() );
     ok &= sizeOK;
-    if ( sizeOK ) 
+    if ( sizeOK )
     {
       LHCb::WeightsVector::WeightDataVector::const_iterator iWA((*iA)->weights().begin());
       LHCb::WeightsVector::WeightDataVector::const_iterator iWB((*iB)->weights().begin());
@@ -108,7 +108,7 @@ StatusCode WeightsVectorPacker::check( const DataVector & dataA,
       {
         ok &= (*iWA).first == (*iWB).first;
         ok &= ch.compareDoubles( "Weight", (*iWA).second, (*iWB).second );
-      } 
+      }
     }
 
     // force printout for tests

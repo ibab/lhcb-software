@@ -47,22 +47,21 @@ StatusCode UnpackDecReport::execute()
 
   // If input does not exist, and we aren't making the output regardless, just return
   if ( !m_alwaysOutput && !exist<LHCb::PackedDecReport>(m_inputName) ) return StatusCode::SUCCESS;
-  const LHCb::PackedDecReport* dst = 
+  const auto * dst = 
     getOrCreate<LHCb::PackedDecReport,LHCb::PackedDecReport>( m_inputName );
   LHCb::HltDecReports* newReport = new LHCb::HltDecReports();
   put( newReport, m_outputName );
-
+  
   newReport->setConfiguredTCK( dst->configuredTCK() );
   if ( msgLevel(MSG::DEBUG) ) 
     debug() << "Unpacked TCK = " << newReport->configuredTCK() << endmsg;     
   
   newReport->setTaskID( 0 );
-  for ( std::vector<unsigned int>::const_iterator itR = dst->reports().begin(); 
-        dst->reports().end() != itR; ++itR ) 
+  for ( const auto & R : dst->reports() )
   {
-    LHCb::HltDecReport tmp = (*itR);
+    LHCb::HltDecReport tmp(R);
     LinkManager::Link* myLink = dst->linkMgr()->link( tmp.intDecisionID()-1 );  // Was stored with +1.
-    if ( NULL == myLink )
+    if ( nullptr == myLink )
     {
       info() << "No link table entry for " << tmp.intDecisionID() << endmsg;
     }

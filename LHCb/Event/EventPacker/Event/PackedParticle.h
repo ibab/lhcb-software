@@ -27,67 +27,44 @@ namespace LHCb
    */
   struct PackedParticle
   {
-    /// Default constructor
-    PackedParticle()
-      : key(0),
-        particleID(0),
-        measMass(0), measMassErr(0),
-        lv_px(0),lv_py(0),lv_pz(0),lv_mass(0),
-        refx(0),refy(0),refz(0),
-        momCov00(0),momCov11(0),momCov22(0),momCov33(0),
-        momCov10(0),
-        momCov20(0),momCov21(0),
-        momCov30(0),momCov31(0),momCov32(0),
-        posCov00(0),posCov11(0),posCov22(0), 
-        posCov10(0),
-        posCov20(0),posCov21(0),
-        pmCov00(0),pmCov01(0),pmCov02(0),
-        pmCov10(0),pmCov11(0),pmCov12(0),
-        pmCov20(0),pmCov21(0),pmCov22(0),
-        pmCov30(0),pmCov31(0),pmCov32(0),
-        firstExtra(0),lastExtra(0),
-        vertex(-1),
-        proto(-1),
-        firstDaughter(0), lastDaughter(0)
-    { }
 
     // packed data members
-    long long key;         ///< reference to the original container + key of the particle
-    int particleID;        ///< PID Code
-    int measMass;          ///< Measured mass
-    int measMassErr;       ///< Error on the measured mass
-    int lv_px,lv_py,lv_pz; ///< 3D Momemtum part of Lorentz vector
-    float lv_mass;         ///< Mass part of Lorentz vector 
-    int refx,refy,refz;    ///< reference point
+    long long key{0};         ///< reference to the original container + key of the particle
+    int particleID{0};        ///< PID Code
+    int measMass{0};          ///< Measured mass
+    int measMassErr{0};       ///< Error on the measured mass
+    int lv_px{0},lv_py{0},lv_pz{0}; ///< 3D Momemtum part of Lorentz vector
+    float lv_mass{0};         ///< Mass part of Lorentz vector 
+    int refx{0},refy{0},refz{0};    ///< reference point
 
     // Momentum Cov matrix
-    int momCov00,momCov11,momCov22,momCov33; 
-    short int momCov10;
-    short int momCov20,momCov21;
-    short int momCov30,momCov31,momCov32;
+    int momCov00{0},momCov11{0},momCov22{0},momCov33{0}; 
+    short int momCov10{0};
+    short int momCov20{0},momCov21{0};
+    short int momCov30{0},momCov31{0},momCov32{0};
 
     // Position Cov matrix
-    int posCov00,posCov11,posCov22; 
-    short int posCov10;
-    short int posCov20,posCov21;
+    int posCov00{0},posCov11{0},posCov22{0}; 
+    short int posCov10{0};
+    short int posCov20{0},posCov21{0};
 
     // PosMom Cov matrix
-    int pmCov00,pmCov01,pmCov02;
-    int pmCov10,pmCov11,pmCov12;
-    int pmCov20,pmCov21,pmCov22;
-    int pmCov30,pmCov31,pmCov32;
+    int pmCov00{0},pmCov01{0},pmCov02{0};
+    int pmCov10{0},pmCov11{0},pmCov12{0};
+    int pmCov20{0},pmCov21{0},pmCov22{0};
+    int pmCov30{0},pmCov31{0},pmCov32{0};
 
     // Extra info
-    unsigned int firstExtra, lastExtra;
+    unsigned int firstExtra{0}, lastExtra{0};
 
     // End Vertex
-    long long vertex;  
+    long long vertex{-1};  
 
     // ProtoParticle
-    long long proto;
+    long long proto{-1};
 
     // daughters
-    unsigned int firstDaughter, lastDaughter;  
+    unsigned int firstDaughter{0}, lastDaughter{0};  
 
   };
 
@@ -133,12 +110,6 @@ namespace LHCb
 
   public:
 
-    /// Standard constructor
-    PackedParticles( ) : m_packingVersion(defaultPackingVersion()) { }
-
-    /// Destructor
-    virtual ~PackedParticles( ) { }
-
     /// Class ID
     static const CLID& classID() { return CLID_PackedParticles; }
 
@@ -173,8 +144,8 @@ namespace LHCb
 
   private:
 
-    /// Data packing version (not used as yet, but for any future schema evolution)
-    char   m_packingVersion;
+    /// Data packing version
+    char   m_packingVersion{ defaultPackingVersion() };
 
     /// The packed data objects
     Vector m_vect;

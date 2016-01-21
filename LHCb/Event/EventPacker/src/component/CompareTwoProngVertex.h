@@ -13,19 +13,23 @@
  *  @author Olivier Callot
  *  @date   2009-01-21
  */
-class CompareTwoProngVertex : public GaudiAlgorithm {
+class CompareTwoProngVertex : public GaudiAlgorithm 
+{
+
 public: 
+
   /// Standard constructor
   CompareTwoProngVertex( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~CompareTwoProngVertex( ); ///< Destructor
+  virtual ~CompareTwoProngVertex(); ///< Destructor
 
-  virtual StatusCode execute   ();    ///< Algorithm execution
-
-protected:
+  virtual StatusCode execute(); ///< Algorithm execution
 
 private:
+
   std::string m_inputName;
   std::string m_testName;
+
 };
+
 #endif // COMPARETWOPRONGVERTEX_H

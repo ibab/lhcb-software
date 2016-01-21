@@ -55,7 +55,7 @@ private:
   inline bool pathIsHandled( const std::string & path ) const
   {
     // See if we have an entry for this path
-    NodeTypeMap::const_iterator it = m_nodeTypeMap.find( fixPath(path) );
+    const auto it = m_nodeTypeMap.find( fixPath(path) );
     return ( it != m_nodeTypeMap.end() );
   }
   

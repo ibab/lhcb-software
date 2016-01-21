@@ -59,7 +59,7 @@ StatusCode Pack<PACKER>::execute()
     }
 
     // Pointer to packed data
-    typename PACKER::PackedDataVector * pdata = NULL;
+    typename PACKER::PackedDataVector * pdata = nullptr;
     if ( inputOK || m_alwaysOutput )
     {
       // make new output data
@@ -118,7 +118,7 @@ StatusCode Pack<PACKER>::execute()
       {
         const StatusCode sc = evtSvc()->unregisterObject( data );
         if ( sc.isSuccess() ) delete data;
-        data = NULL;
+        data = nullptr;
       }
       else
       {

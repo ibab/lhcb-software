@@ -27,22 +27,13 @@ namespace LHCb
    */
   struct PackedMuonPID
   {
-    /// Default constructor
-    PackedMuonPID()
-      : MuonLLMu(0), MuonLLBg(0),
-        nShared(0), status(0),
-        idtrack(-1),
-        mutrack(-1),
-        key(0)
-    {}
-
-    int MuonLLMu;
-    int MuonLLBg;
-    int nShared;
-    int status;
-    long long idtrack;
-    long long mutrack;
-    long long key;
+    int MuonLLMu{0};
+    int MuonLLBg{0};
+    int nShared{0};
+    int status{0};
+    long long idtrack{-1};
+    long long mutrack{-1};
+    long long key{-1};
   };
 
   // -----------------------------------------------------------------------
@@ -78,12 +69,6 @@ namespace LHCb
     
   public:
 
-    /// Standard constructor
-    PackedMuonPIDs( ) : m_packingVersion(defaultPackingVersion()) { }
-
-    /// Destructor
-    virtual ~PackedMuonPIDs( ) { }
-
     /// Class ID
     static const CLID& classID() { return CLID_PackedMuonPIDs; }
 
@@ -109,7 +94,7 @@ namespace LHCb
   private:
 
     /// Data packing version 
-    char   m_packingVersion;
+    char   m_packingVersion{ defaultPackingVersion() };
 
     /// The packed data objects
     Vector m_vect; 

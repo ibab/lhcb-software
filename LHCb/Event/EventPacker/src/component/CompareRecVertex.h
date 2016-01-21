@@ -13,19 +13,23 @@
  *  @author Olivier Callot
  *  @date   2008-11-17
  */
-class CompareRecVertex : public GaudiAlgorithm {
+class CompareRecVertex : public GaudiAlgorithm 
+{
+
 public: 
+
   /// Standard constructor
   CompareRecVertex( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~CompareRecVertex( ); ///< Destructor
+  virtual ~CompareRecVertex(); ///< Destructor
 
-  virtual StatusCode execute   ();    ///< Algorithm execution
-
-protected:
+  virtual StatusCode execute();  ///< Algorithm execution
 
 private:
+
   std::string m_inputName;
   std::string m_testName;
+
 };
+
 #endif // COMPARERECVERTEX_H

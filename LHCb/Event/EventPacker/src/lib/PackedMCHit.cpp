@@ -21,10 +21,10 @@ void MCHitPacker::pack( const DataVector & hits,
   if ( 1 == ver || 0 == ver )
   {
     phits.data().reserve( hits.size() );
-    for ( const Data * hit : hits )
+    for ( const auto * hit : hits )
     {
-      phits.data().push_back( PackedData() );
-      PackedData & phit = phits.data().back();
+      phits.data().emplace_back( PackedData() );
+      auto & phit = phits.data().back();
       phit.sensDetID    = hit->sensDetID();
       phit.entx         = m_pack.position ( hit->entry().x() );
       phit.enty         = m_pack.position ( hit->entry().y() );
@@ -35,7 +35,7 @@ void MCHitPacker::pack( const DataVector & hits,
       phit.energy       = m_pack.energy   ( m_enScale   * hit->energy() );
       phit.tof          = m_pack.time     ( hit->time() );
       phit.mp           = m_pack.energy   ( hit->p() );
-      if ( NULL != hit->mcParticle() )
+      if ( hit->mcParticle() )
       {
         phit.mcParticle = ( UNLIKELY( 0==ver ) ? 
                             m_pack.reference32( &phits,
@@ -65,7 +65,7 @@ void MCHitPacker::unpack( const PackedDataVector & phits,
     for ( const PackedData & phit : phits.data() )
     {
       // make and save new hit in container
-      Data * hit  = new Data();
+      auto * hit  = new Data();
       hits.add( hit );
       // Fill data from packed object
       hit->setSensDetID ( phit.sensDetID );

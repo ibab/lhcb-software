@@ -21,9 +21,9 @@ public:
   /// Standard constructor
   UnpackRecVertex( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~UnpackRecVertex( ); ///< Destructor
+  virtual ~UnpackRecVertex(); ///< Destructor
 
-  virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode execute(); ///< Algorithm execution
 
 private:
 

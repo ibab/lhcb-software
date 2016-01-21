@@ -20,26 +20,13 @@ namespace LHCb
 
   struct PackedMCVertex
   {
-
-    /// Default Constructor
-    PackedMCVertex() :
-      key(0), x(0), y(0), z(0), tof(0), type(0),
-      mother(-1)
-    {}
-
-    /// Copy Constructor
-    PackedMCVertex( const PackedMCVertex& c ) :
-      key( c.key), x( c.x), y(c.y), z(c.z), tof(c.tof), type( c.type),
-      mother( c.mother), products( c.products)
-    {}
-
-    int key;
-    int x;
-    int y;
-    int z;
-    float tof;
-    int type;
-    long long mother;
+    int key{0};
+    int x{0};
+    int y{0};
+    int z{0};
+    float tof{0};
+    int type{0};
+    long long mother{-1};
     std::vector<long long> products;
   };
 
@@ -69,11 +56,6 @@ namespace LHCb
 
   public:
 
-    /// Standard constructor
-    PackedMCVertices( ) : m_packingVersion(0) {}
-
-    virtual ~PackedMCVertices( ) {} ///< Destructor
-
     virtual const CLID& clID() const { return PackedMCVertices::classID(); }
     static  const CLID& classID()    { return CLID_PackedMCVertices;       }
 
@@ -95,7 +77,7 @@ namespace LHCb
     std::vector<PackedMCVertex> m_vect;
 
     /// Data packing version
-    char   m_packingVersion;
+    char   m_packingVersion{0};
 
   };
 

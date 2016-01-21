@@ -19,8 +19,8 @@ void MCRichSegmentPacker::pack( const DataVector & segs,
     psegs.data().reserve( segs.size() );
     for ( const Data * seg : segs )
     {
-      psegs.data().push_back( PackedData() );
-      PackedData & pseg = psegs.data().back();
+      psegs.data().emplace_back( PackedData() );
+      auto & pseg = psegs.data().back();
 
       pseg.key = seg->key();
 
@@ -46,7 +46,7 @@ void MCRichSegmentPacker::pack( const DataVector & segs,
         pseg.trajMz.push_back( m_pack.energy(M.z()) );
       }
 
-      if ( NULL != seg->mcParticle() )
+      if ( seg->mcParticle() )
       {
         pseg.mcParticle  = ( UNLIKELY( 0==ver ) ? 
                              m_pack.reference32( &psegs,
@@ -57,7 +57,7 @@ void MCRichSegmentPacker::pack( const DataVector & segs,
                                                  seg->mcParticle()->key() ) );
       }
 
-      if ( NULL != seg->mcRichTrack() )
+      if ( seg->mcRichTrack() )
       {
         pseg.mcRichTrack = ( UNLIKELY( 0==ver ) ?
                              m_pack.reference32( &psegs,
@@ -109,9 +109,9 @@ void MCRichSegmentPacker::unpack( const PackedDataVector & psegs,
   const char ver = psegs.packingVersion();
   if ( 1 == ver || 0 == ver )
   {
-    for ( const PackedData & pseg : psegs.data() )
+    for ( const auto & pseg : psegs.data() )
     {
-      Data * seg = new Data();
+      auto * seg = new Data();
       segs.insert( seg, pseg.key );
 
       seg->setHistoryCode( pseg.history );

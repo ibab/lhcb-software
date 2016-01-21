@@ -26,32 +26,14 @@ namespace LHCb
    */
   struct PackedProtoParticle 
   {
-
-    /// Standard constructor
-    PackedProtoParticle( ) :
-      key(0), 
-      track(0), richPID(0), muonPID(0),
-      firstHypo(0), lastHypo(0),
-      firstExtra(0), lastExtra(0)
-    {}
-
-    /// Copy Constructor
-    PackedProtoParticle( const PackedProtoParticle& c ) :
-      key( c.key ), 
-      track( c.track ), richPID( c.richPID ), muonPID( c.muonPID ),
-      firstHypo( c.firstHypo ),  lastHypo( c.lastHypo  ),
-      firstExtra( c.firstExtra ), lastExtra( c.lastExtra )
-    {}
-
-    long long key;
-    long long track;
-    long long richPID;
-    long long muonPID;
-    unsigned short int firstHypo;
-    unsigned short int lastHypo;
-    unsigned short int firstExtra;
-    unsigned short int lastExtra;
-
+    long long key{0};
+    long long track{0};
+    long long richPID{0};
+    long long muonPID{0};
+    unsigned short int firstHypo{0};
+    unsigned short int lastHypo{0};
+    unsigned short int firstExtra{0};
+    unsigned short int lastExtra{0};
   };
   
   static const CLID CLID_PackedProtoParticles = 1552;
@@ -80,14 +62,6 @@ namespace LHCb
     static char defaultPackingVersion() { return 1; }
     
   public: 
-  
-    /** Standard constructor
-     *  Note the default packing version here must stay as zero, for compatibility
-     *  with data written before the packing version was added, to implicitly
-     *  define the version as 0 for this data  */
-    PackedProtoParticles( ) : m_packingVersion(0) { } 
-
-    virtual ~PackedProtoParticles( ) {}; ///< Destructor
 
     virtual const CLID& clID()  const { return PackedProtoParticles::classID(); }
     static  const CLID& classID()     { return CLID_PackedProtoParticles;       }
@@ -117,8 +91,11 @@ namespace LHCb
     std::vector<long long>           m_refs;
     std::vector<std::pair<int,int> > m_extra;
 
-    /// Data packing version
-    char m_packingVersion;
+    /** Data packing version
+     *  Note the default packing version here must stay as zero, for compatibility
+     *  with data written before the packing version was added, to implicitly
+     *  define the version as 0 for this data  */
+    char m_packingVersion{0};
 
   };
 

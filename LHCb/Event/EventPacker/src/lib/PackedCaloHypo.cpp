@@ -25,14 +25,14 @@ void CaloHypoPacker::pack( const DataVector & hypos,
     for ( const auto* H : hypos )
     {
       // make new packed object
-      phypos.hypos().push_back( LHCb::PackedCaloHypo() );
-      LHCb::PackedCaloHypo & pH = phypos.hypos().back();
+      phypos.hypos().emplace_back( LHCb::PackedCaloHypo() );
+      auto & pH = phypos.hypos().back();
 
       // Save the data
       pH.key        = H->key();
       pH.hypothesis = H->hypothesis();
       pH.lh         = m_pack.fltPacked( H->lh() );
-      if ( 0 == H->position() )
+      if ( !H->position() )
       {
         pH.z      = 0;
         pH.posX   = 0;
@@ -52,16 +52,16 @@ void CaloHypoPacker::pack( const DataVector & hypos,
       }
       else
       {
-        const LHCb::CaloPosition* pos = H->position();
+        const auto* pos = H->position();
         pH.z    = m_pack.position( pos->z() );
         pH.posX = m_pack.position( pos->x() );
         pH.posY = m_pack.position( pos->y() );
         pH.posE = m_pack.energy  ( pos->e() );
 
         // convariance Matrix
-        const double err0 = safe_sqrt( pos->covariance()(0,0) );
-        const double err1 = safe_sqrt( pos->covariance()(1,1) );
-        const double err2 = safe_sqrt( pos->covariance()(2,2) );
+        const auto err0 = safe_sqrt( pos->covariance()(0,0) );
+        const auto err1 = safe_sqrt( pos->covariance()(1,1) );
+        const auto err2 = safe_sqrt( pos->covariance()(2,2) );
         pH.cov00 = m_pack.position( err0 );
         pH.cov11 = m_pack.position( err1 );
         pH.cov22 = m_pack.energy  ( err2 );
@@ -72,8 +72,8 @@ void CaloHypoPacker::pack( const DataVector & hypos,
         pH.centX = m_pack.position( pos->center()(0) );
         pH.centY = m_pack.position( pos->center()(1) );
 
-        const double serr0 = safe_sqrt( pos->spread()(0,0) );
-        const double serr1 = safe_sqrt( pos->spread()(1,1) );
+        const auto serr0 = safe_sqrt( pos->spread()(0,0) );
+        const auto serr1 = safe_sqrt( pos->spread()(1,1) );
         pH.cerr00 = m_pack.position( serr0 );
         pH.cerr11 = m_pack.position( serr1 );
         pH.cerr10 = m_pack.fraction( pos->spread()(1,0), serr1*serr0 );
@@ -146,11 +146,11 @@ void CaloHypoPacker::unpack( const PackedDataVector & phypos,
   if ( isSupportedVer(ver) )
   {
 
-    for ( const LHCb::PackedCaloHypo& src : phypos.hypos() )
+    for ( const auto& src : phypos.hypos() )
     {
 
       // make new unpacked object
-      LHCb::CaloHypo* hypo = new LHCb::CaloHypo( );
+      auto* hypo = new LHCb::CaloHypo( );
       hypos.insert( hypo, src.key );
 
       // fill data objects
@@ -158,17 +158,17 @@ void CaloHypoPacker::unpack( const PackedDataVector & phypos,
       hypo->setLh( m_pack.fltPacked( src.lh ) );
       if ( 0 != src.z )
       {
-        LHCb::CaloPosition* pos = new LHCb::CaloPosition();
+        auto* pos = new LHCb::CaloPosition();
         hypo->setPosition( pos );
         pos->setZ( m_pack.position( src.z ) );
         pos->setParameters( LHCb::CaloPosition::Parameters( m_pack.position(src.posX),
                                                             m_pack.position(src.posY),
                                                             m_pack.energy  (src.posE) ) );
 
-        LHCb::CaloPosition::Covariance & cov = pos->covariance();
-        const double err0 = m_pack.position( src.cov00 );
-        const double err1 = m_pack.position( src.cov11 );
-        const double err2 = m_pack.energy  ( src.cov22 );
+        auto & cov = pos->covariance();
+        const auto err0 = m_pack.position( src.cov00 );
+        const auto err1 = m_pack.position( src.cov11 );
+        const auto err2 = m_pack.energy  ( src.cov22 );
         cov(0,0) = err0 * err0;
         cov(1,0) = err1 * err0 * m_pack.fraction( src.cov10 );
         cov(1,1) = err1 * err1;
@@ -179,9 +179,9 @@ void CaloHypoPacker::unpack( const PackedDataVector & phypos,
         pos->setCenter( LHCb::CaloPosition::Center( m_pack.position(src.centX),
                                                     m_pack.position(src.centY) ) );
 
-        LHCb::CaloPosition::Spread & spr = pos->spread();
-        const double serr0 = m_pack.position( src.cerr00 );
-        const double serr1 = m_pack.position( src.cerr11 );
+        auto & spr = pos->spread();
+        const auto serr0 = m_pack.position( src.cerr00 );
+        const auto serr1 = m_pack.position( src.cerr11 );
         spr(0,0) = serr0 * serr0;
         spr(1,0) = serr1 * serr0 * m_pack.fraction( src.cerr10 );
         spr(1,1) = serr1 * serr1;
@@ -190,7 +190,7 @@ void CaloHypoPacker::unpack( const PackedDataVector & phypos,
       int hintID(0), key(0);
       for ( int kk = src.firstDigit; src.lastDigit > kk; ++kk )
       {
-        const long long reference = *(phypos.refs().begin()+kk);
+        const auto reference = *(phypos.refs().begin()+kk);
         if ( ( 0!=ver && m_pack.hintAndKey64(reference,&phypos,&hypos,hintID,key) ) ||
              ( 0==ver && m_pack.hintAndKey32(reference,&phypos,&hypos,hintID,key) ) )
         {
@@ -201,7 +201,7 @@ void CaloHypoPacker::unpack( const PackedDataVector & phypos,
       }
       for ( int kk = src.firstCluster; src.lastCluster > kk; ++kk )
       {
-        const long long reference = *(phypos.refs().begin()+kk);
+        const auto reference = *(phypos.refs().begin()+kk);
         if ( ( 0!=ver && m_pack.hintAndKey64(reference,&phypos,&hypos,hintID,key) ) ||
              ( 0==ver && m_pack.hintAndKey32(reference,&phypos,&hypos,hintID,key) ) )
         {
@@ -212,7 +212,7 @@ void CaloHypoPacker::unpack( const PackedDataVector & phypos,
       }
       for ( int kk = src.firstHypo; src.lastHypo > kk; ++kk )
       {
-        const long long reference = *(phypos.refs().begin()+kk);
+        const auto reference = *(phypos.refs().begin()+kk);
         if ( ( 0!=ver && m_pack.hintAndKey64(reference,&phypos,&hypos,hintID,key) ) ||
              ( 0==ver && m_pack.hintAndKey32(reference,&phypos,&hypos,hintID,key) ) )
         {

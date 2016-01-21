@@ -13,20 +13,24 @@
  *  @author Olivier Callot
  *  @date   2005-03-18
  */
-class UnpackMCVertex : public GaudiAlgorithm {
+class UnpackMCVertex : public GaudiAlgorithm 
+{
+
 public: 
+
   /// Standard constructor
   UnpackMCVertex( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~UnpackMCVertex( ); ///< Destructor
+  virtual ~UnpackMCVertex(); ///< Destructor
 
-  virtual StatusCode execute   ();    ///< Algorithm execution
-
-protected:
+  virtual StatusCode execute(); ///< Algorithm execution
 
 private:
+
   std::string m_inputName;
   std::string m_outputName;
   bool m_alwaysOutput;      ///< Flag to turn on the creation of output, even when input is missing
+
 };
+
 #endif // UNPACKMCVERTEX_H

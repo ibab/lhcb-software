@@ -29,18 +29,12 @@ namespace LHCb
    */
   struct PackedMCRichSegment
   {
-    /// Default constructor
-    PackedMCRichSegment()
-      : key(0), history(0),
-        mcParticle(-1), mcRichTrack(-1)
-    {}
-
-    int key;
-    int history;
+    int key{0};
+    int history{0};
     std::vector<int> trajPx, trajPy, trajPz;
     std::vector<int> trajMx, trajMy, trajMz;
-    long long mcParticle;
-    long long mcRichTrack;
+    long long mcParticle{-1};
+    long long mcRichTrack{-1};
     std::vector<long long> mcPhotons, mcHits;
   };
 
@@ -75,14 +69,6 @@ namespace LHCb
 
   public:
 
-    /// Standard constructor
-    PackedMCRichSegments( ) : m_packingVersion(defaultPackingVersion()) { }
-
-    /// Destructor
-    virtual ~PackedMCRichSegments( ) { }
-
-  public:
-
     /// Class ID
     static const CLID& classID() { return CLID_PackedMCRichSegments; }
 
@@ -106,7 +92,7 @@ namespace LHCb
   private:
 
     /// Data packing version
-    char   m_packingVersion;
+    char   m_packingVersion{ defaultPackingVersion() };
 
     /// The packed data objects
     Vector m_vect; 

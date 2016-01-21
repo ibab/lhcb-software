@@ -41,7 +41,7 @@ public:
   //---------------------------------------------------------------------------
 
   /// Standard constructor
-  StandardPacker( const GaudiAlgorithm * p = NULL ) : m_parent(p) { }
+  StandardPacker( const GaudiAlgorithm * p = nullptr ) : m_parent(p) { }
 
   ~StandardPacker( ) {} ///< Destructor
 
@@ -110,7 +110,7 @@ public:
                       const DataObject* parent ) const
   {
     LinkManager::Link * myLink = out->linkMgr()->link(parent);
-    if ( NULL == myLink )
+    if ( nullptr == myLink )
     {
       out->linkMgr()->addLink( parent->registry()->identifier(), parent );
       myLink = out->linkMgr()->link(parent);
@@ -123,7 +123,7 @@ public:
                       const std::string& targetName ) const
   {
     LinkManager::Link* myLink = out->linkMgr()->link( targetName );
-    if ( NULL == myLink )
+    if ( nullptr == myLink )
     {
       out->linkMgr()->addLink( targetName, 0 );
       myLink = out->linkMgr()->link( targetName );

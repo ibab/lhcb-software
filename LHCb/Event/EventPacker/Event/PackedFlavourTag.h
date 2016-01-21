@@ -28,30 +28,18 @@ namespace LHCb
    */
   struct PackedFlavourTag
   {
-    /// Default constructor
-    PackedFlavourTag()
-      : key(0),
-        decision(0),   omega(0),
-        decisionOS(0), omegaOS(0),
-        taggedB(-1),
-        firstTagger(0), lastTagger(0)
-    { }
+    long long key{0};        ///< reference to the original container + key
 
-    // packed data members
+    short int decision{0};   ///< The result of the tagging algorithm
+    short int omega{0};      ///< Wrong tag fraction (predicted)
 
-    long long key;         ///< reference to the original container + key
+    short int decisionOS{0}; ///< decision of opposite side taggers only
+    short int omegaOS{0};    ///< Wrong tag fraction (predicted) using opposite side only
 
-    short int           decision;   ///< The result of the tagging algorithm
-    short int           omega;      ///< Wrong tag fraction (predicted)
-
-    short int           decisionOS; ///< decision of opposite side taggers only
-    short int           omegaOS;    ///< Wrong tag fraction (predicted) using opposite side only
-
-    long long taggedB;    ///< The B for which this tag has been made
+    long long taggedB{-1};   ///< The B for which this tag has been made
 
     // Taggers
-    unsigned int firstTagger, lastTagger;
-
+    unsigned int firstTagger{0}, lastTagger{0};
   };
 
   // ----------------------------------------------------------------------------------------
@@ -65,21 +53,11 @@ namespace LHCb
    */
   struct PackedTagger
   {
-    /// Default constructor
-    PackedTagger()
-      : type(0), decision(0), omega(0),
-        firstTagP(0), lastTagP(0)
-    { }
-
-    // packed data members
-
-    unsigned short int type; ///< The type of tagger
-    short int      decision; ///< Decision of tagger
-    short int         omega; ///< Wrong tag fraction of tagger from MC tuning
-
+    unsigned short int type{0}; ///< The type of tagger
+    short int      decision{0}; ///< Decision of tagger
+    short int         omega{0}; ///< Wrong tag fraction of tagger from MC tuning
     // Tagging Particles
-    unsigned int firstTagP, lastTagP;
-
+    unsigned int firstTagP{0}, lastTagP{0};
   };
 
   // ----------------------------------------------------------------------------------------
@@ -121,12 +99,6 @@ namespace LHCb
 
   public:
 
-    /// Standard constructor
-    PackedFlavourTags( ) : m_packingVersion(defaultPackingVersion()) { }
-
-    /// Destructor
-    virtual ~PackedFlavourTags( ) { }
-
     /// Class ID
     static const CLID& classID() { return CLID_PackedFlavourTags; }
 
@@ -160,7 +132,7 @@ namespace LHCb
   private:
 
     /// Data packing version (not used as yet, but for any future schema evolution)
-    char m_packingVersion;
+    char m_packingVersion{ defaultPackingVersion() };
 
     /// The packed flavour tags
     Vector m_vect;

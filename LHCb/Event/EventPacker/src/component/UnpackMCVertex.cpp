@@ -42,13 +42,13 @@ StatusCode UnpackMCVertex::execute()
   //     : spillover which is not neccessarily available for each event
   if ( !m_alwaysOutput && !exist<LHCb::PackedMCVertices>(m_inputName) ) return StatusCode::SUCCESS;
 
-  const LHCb::PackedMCVertices* dst = 
+  const auto* dst = 
     getOrCreate<LHCb::PackedMCVertices,LHCb::PackedMCVertices>( m_inputName );
 
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Size of PackedMCVertices = " << dst->mcVerts().size() << endmsg;
 
-  LHCb::MCVertices* newMCVertices = new LHCb::MCVertices();
+  auto* newMCVertices = new LHCb::MCVertices();
   put( newMCVertices, m_outputName );
 
   StandardPacker pack(this);
@@ -60,7 +60,7 @@ StatusCode UnpackMCVertex::execute()
   for ( const LHCb::PackedMCVertex& src : dst->mcVerts() )
   {
 
-    LHCb::MCVertex* vert = new LHCb::MCVertex( );
+    auto* vert = new LHCb::MCVertex( );
     newMCVertices->insert( vert, src.key );
     vert->setPosition( Gaudi::XYZPoint( pack.position( src.x ), 
                                         pack.position( src.y ), 

@@ -27,43 +27,30 @@ namespace LHCb
    */
   struct PackedVertex
   {
-
-    /// Default constructor
-    PackedVertex()
-      : key(0),
-        technique(0),
-        chi2(0), nDoF(0),
-        x(0), y(0), z(0),
-        cov00(0), cov11(0), cov22(0),
-        cov10(0), cov20(0), cov21(0),
-        firstOutgoingPart(0), 
-        lastOutgoingPart(0),
-        firstInfo(0), lastInfo(0)
-    {}
-    
+   
     /// Key and possibly container index.
-    long long key; 
+    long long key{0}; 
 
-    int technique;    ///< packed technique
-    int chi2;         ///< packed chi^2
-    int nDoF;         ///< packed nDOF
+    int technique{0};    ///< packed technique
+    int chi2{0};         ///< packed chi^2
+    int nDoF{0};         ///< packed nDOF
 
     // Position
-    int x, y, z;
+    int x{0}, y{0}, z{0};
 
     // Covariance matrix
-    int cov00, cov11, cov22;
-    short int cov10, cov20, cov21;
+    int cov00{0}, cov11{0}, cov22{0};
+    short int cov10{0}, cov20{0}, cov21{0};
 
     /// first outgoing particle
-    unsigned int firstOutgoingPart;
+    unsigned int firstOutgoingPart{0};
     /// last outgoing particle
-    unsigned int lastOutgoingPart;
+    unsigned int lastOutgoingPart{0};
 
     /// first info
-    unsigned int firstInfo;
+    unsigned int firstInfo{0};
     /// last info
-    unsigned int lastInfo;
+    unsigned int lastInfo{0};
 
   };
 
@@ -142,7 +129,7 @@ namespace LHCb
     char packingVersion() const { return m_packingVersion; }
 
     /// add an extra info
-    void addExtra( const int a, const int b ) { m_extra.push_back( ExtraInfo(a,b) ); }
+    void addExtra( const int a, const int b ) { m_extra.emplace_back( ExtraInfo(a,b) ); }
 
     /// Write access the extra info
     ExtraInfoVector& extras()             { return m_extra; }

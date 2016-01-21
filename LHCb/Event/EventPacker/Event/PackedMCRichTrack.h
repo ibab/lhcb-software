@@ -29,14 +29,9 @@ namespace LHCb
    */
   struct PackedMCRichTrack
   {
-    /// Default constructor
-    PackedMCRichTrack()
-      : key(0), mcParticle(-1)
-    {}
-
-    int key;
+    int key{0};
     std::vector<long long> mcSegments;
-    long long mcParticle;
+    long long mcParticle{-1};
   };
 
   // -----------------------------------------------------------------------
@@ -71,12 +66,6 @@ namespace LHCb
 
   public:
 
-    /// Standard constructor
-    PackedMCRichTracks( ) : m_packingVersion(defaultPackingVersion()) { }
-
-    /// Destructor
-    virtual ~PackedMCRichTracks( ) { }
-
     /// Class ID
     static const CLID& classID() { return CLID_PackedMCRichTracks; }
 
@@ -100,7 +89,7 @@ namespace LHCb
   private:
 
     /// Data packing version
-    char   m_packingVersion;
+    char   m_packingVersion{ defaultPackingVersion() };
 
     /// The packed data objects
     Vector m_vect; 

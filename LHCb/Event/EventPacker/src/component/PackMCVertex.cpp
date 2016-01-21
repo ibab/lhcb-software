@@ -76,7 +76,7 @@ StatusCode PackMCVertex::execute()
   out->mcVerts().reserve( verts->size() );
   for ( const LHCb::MCVertex* vert : *verts )
   {
-    out->mcVerts().push_back( LHCb::PackedMCVertex() );
+    out->mcVerts().emplace_back( LHCb::PackedMCVertex() );
     LHCb::PackedMCVertex& newVert = out->mcVerts().back();
 
     newVert.key  = vert->key();
@@ -143,7 +143,7 @@ StatusCode PackMCVertex::execute()
     if ( sc.isSuccess() )
     {
       delete verts;
-      verts = NULL;
+      verts = nullptr;
     }
     else
     {

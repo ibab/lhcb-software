@@ -100,7 +100,7 @@ ProtoParticlePacker::pack( const Data & proto,
     const double low  = boost::numeric::bounds<float>::lowest();
     for ( const auto& einfo : proto.extraInfo() )
     {
-      const double& info = einfo.second;
+      const auto& info = einfo.second;
       if ( info > high || info < low )
       {
         std::ostringstream s;
@@ -110,7 +110,7 @@ ProtoParticlePacker::pack( const Data & proto,
         // if      ( info > high ) { info = high; }
         // else if ( info < low  ) { info = low;  }
       }
-      pprotos.extras().push_back( std::make_pair(einfo.first,m_pack.fltPacked(info)) );
+      pprotos.extras().emplace_back( std::make_pair(einfo.first,m_pack.fltPacked(info)) );
     }
     pproto.lastExtra = pprotos.extras().size();
 
@@ -132,7 +132,7 @@ ProtoParticlePacker::pack( const DataVector & protos,
   for ( const LHCb::ProtoParticle * proto : protos )
   {
     if ( !proto ) continue;
-    pprotos.protos().push_back( LHCb::PackedProtoParticle() );
+    pprotos.protos().emplace_back( LHCb::PackedProtoParticle() );
     LHCb::PackedProtoParticle & pproto = pprotos.protos().back();
     // save the key
     pproto.key = proto->key();
@@ -252,7 +252,7 @@ ProtoParticlePacker::unpack( const PackedData       & pproto,
 
     for ( int kk = pproto.firstExtra; pproto.lastExtra > kk; ++kk )
     {
-      const std::pair<int,int>& info = *(pprotos.extras().begin()+kk);
+      const auto& info = *(pprotos.extras().begin()+kk);
       proto.addInfo( info.first, m_pack.fltPacked( info.second ) );
     }
 
@@ -273,7 +273,7 @@ ProtoParticlePacker::unpack( const PackedDataVector & pprotos,
   protos.reserve(pprotos.protos().size());
   for ( const LHCb::PackedProtoParticle& pproto : pprotos.protos() )
   {
-    LHCb::ProtoParticle * part = new LHCb::ProtoParticle( );
+    auto * part = new LHCb::ProtoParticle( );
     protos.insert( part, pproto.key );
     unpack( pproto, *part, pprotos, protos );
   }

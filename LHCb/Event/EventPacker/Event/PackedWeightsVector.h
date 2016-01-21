@@ -28,13 +28,16 @@ namespace LHCb
   struct PackedWeight
   {
     /// Default constructor
-    PackedWeight( const int       _key    = 0, 
-                  const short int _weight = 0 )
+    PackedWeight() = default;
+
+    /// Constructor from values
+    PackedWeight( const int       _key , 
+                  const short int _weight )
       : key(_key), weight(_weight)
     {}
 
-    int key;           ///< key of the track this weight is associated with
-    short int weight;  ///< Weight of this track in the vertex
+    int key{0};           ///< key of the track this weight is associated with
+    short int weight{0};  ///< Weight of this track in the vertex
   };
 
   /** @struct PackedWeights Event/PackedWeightsVector.h

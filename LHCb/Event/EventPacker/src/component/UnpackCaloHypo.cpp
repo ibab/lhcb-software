@@ -41,13 +41,13 @@ StatusCode UnpackCaloHypo::execute()
   if ( !m_alwaysOutput && !exist<LHCb::PackedCaloHypos>(m_inputName) )
     return StatusCode::SUCCESS;
 
-  const LHCb::PackedCaloHypos* dst =
+  const auto* dst =
     getOrCreate<LHCb::PackedCaloHypos,LHCb::PackedCaloHypos>( m_inputName );
 
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Size of PackedCaloHypos = " << dst->hypos().size() << endmsg;
 
-  LHCb::CaloHypos* newCaloHypos = new LHCb::CaloHypos();
+  auto* newCaloHypos = new LHCb::CaloHypos();
   put( newCaloHypos, m_outputName );
 
    // unpack

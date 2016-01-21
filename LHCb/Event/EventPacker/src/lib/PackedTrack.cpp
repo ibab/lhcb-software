@@ -43,8 +43,8 @@ void TrackPacker::pack( const Data & track,
   ptrack.firstExtra = ptracks.extras().size();
   for ( const auto& E : track.extraInfo() )
   {
-    ptracks.extras().push_back( std::make_pair( E.first,
-                                                m_pack.fltPacked(E.second) ) );
+    ptracks.extras().emplace_back( std::make_pair( E.first,
+                                                   m_pack.fltPacked(E.second) ) );
   }
   ptrack.lastExtra = ptracks.extras().size();
 
@@ -57,8 +57,8 @@ void TrackPacker::pack( const DataVector & tracks,
   for ( const LHCb::Track* track : tracks )
   {
     if ( !track ) continue;
-    ptracks.tracks().push_back( LHCb::PackedTrack() );
-    LHCb::PackedTrack & ptrack = ptracks.tracks().back();
+    ptracks.tracks().emplace_back( LHCb::PackedTrack() );
+    auto & ptrack = ptracks.tracks().back();
     ptrack.key = track->key();
     pack( *track, ptrack, ptracks );
   }
@@ -67,7 +67,7 @@ void TrackPacker::pack( const DataVector & tracks,
 void TrackPacker::convertState( const LHCb::State& state,
                                 PackedDataVector & ptracks ) const
 {
-  ptracks.states().push_back( LHCb::PackedState() );
+  ptracks.states().emplace_back( LHCb::PackedState() );
   LHCb::PackedState & newState = ptracks.states().back();
 
   newState.flags = state.flags();
@@ -142,7 +142,7 @@ void TrackPacker::unpack( const PackedData       & ptrack,
   }
 
   std::vector<LHCb::LHCbID> lhcbids( lastId - firstId ) ;
-  std::vector<LHCb::LHCbID>::iterator lhcbit = lhcbids.begin() ;
+  auto lhcbit = lhcbids.begin() ;
   for ( int kId = firstId; lastId > kId; ++kId, ++lhcbit )
   {
     *lhcbit = LHCb::LHCbID( *(ptracks.ids().begin()+kId) ) ;

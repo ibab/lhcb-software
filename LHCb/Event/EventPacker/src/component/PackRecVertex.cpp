@@ -45,10 +45,9 @@ StatusCode PackRecVertex::execute()
   if ( !m_alwaysOutput && !exist<LHCb::RecVertices>(m_inputName) ) 
     return StatusCode::SUCCESS;
 
-  LHCb::RecVertices* verts = 
-    getOrCreate<LHCb::RecVertices,LHCb::RecVertices>( m_inputName );
+  auto* verts = getOrCreate<LHCb::RecVertices,LHCb::RecVertices>( m_inputName );
 
-  LHCb::PackedRecVertices* out = new LHCb::PackedRecVertices();
+  auto* out = new LHCb::PackedRecVertices();
   out->setPackingVersion( LHCb::PackedRecVertices::defaultPackingVersion() );
   out->vertices().reserve(verts->size());
   put( out, m_outputName );
@@ -56,11 +55,8 @@ StatusCode PackRecVertex::execute()
 
   const LHCb::RecVertexPacker rvPacker(*dynamic_cast<GaudiAlgorithm*>(this));
 
-  for ( LHCb::RecVertices::const_iterator itV = verts->begin(); 
-        verts->end() != itV; ++itV ) 
+  for ( const auto * vert : *verts )
   {
-    const LHCb::RecVertex* vert = *itV;
-
     // Make and save a new packed object
     out->vertices().push_back( LHCb::PackedRecVertex() );
     LHCb::PackedRecVertex & pVert = out->vertices().back();
@@ -75,13 +71,15 @@ StatusCode PackRecVertex::execute()
   // If requested, remove the input data from the TES and delete
   if ( UNLIKELY(m_deleteInput) )
   {
-    StatusCode sc = evtSvc()->unregisterObject( verts );
+    const StatusCode sc = evtSvc()->unregisterObject( verts );
     if( sc.isSuccess() ) {
       delete verts;
-      verts = NULL;
+      verts = nullptr;
     }
     else
+    {
       return Error("Failed to delete input data as requested", sc );
+    }
   }
   else
   {

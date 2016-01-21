@@ -68,7 +68,7 @@ StatusCode PackMCParticle::execute() {
   out->mcParts().reserve( parts->size() );
   for ( const LHCb::MCParticle * part : *parts )
   {
-    out->mcParts().push_back( LHCb::PackedMCParticle() );
+    out->mcParts().emplace_back( LHCb::PackedMCParticle() );
     LHCb::PackedMCParticle& newPart = out->mcParts().back();
 
     newPart.key   = part->key();
@@ -102,7 +102,7 @@ StatusCode PackMCParticle::execute() {
     if ( sc.isSuccess() )
     {
       delete parts;
-      parts = NULL;
+      parts = nullptr;
     }
     else
     {

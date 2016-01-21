@@ -23,7 +23,7 @@ UnpackTwoProngVertex::UnpackTwoProngVertex( const std::string& name,
 {
   declareProperty( "InputName" , m_inputName  = LHCb::PackedTwoProngVertexLocation::Default );
   declareProperty( "OutputName", m_outputName = LHCb::TwoProngVertexLocation::Default );
-  declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
+  declareProperty( "AlwaysCreateOutput",      m_alwaysOutput = false     );
 }
 //=============================================================================
 // Destructor
@@ -47,7 +47,7 @@ StatusCode UnpackTwoProngVertex::execute() {
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Size of PackedTwoProngVertices = " << dst->vertices().size() << endmsg;
 
-  LHCb::TwoProngVertices* newTwoProngVertices = new LHCb::TwoProngVertices();
+  auto* newTwoProngVertices = new LHCb::TwoProngVertices();
   newTwoProngVertices->reserve(dst->vertices().size());
   put( newTwoProngVertices, m_outputName );
 
@@ -56,16 +56,15 @@ StatusCode UnpackTwoProngVertex::execute() {
 
   StandardPacker pack(this);
   
-  for ( const LHCb::PackedTwoProngVertex& src : dst->vertices() )
+  for ( const auto& src : dst->vertices() )
   {
 
-    LHCb::TwoProngVertex* vert = new LHCb::TwoProngVertex( );
+    auto* vert = new LHCb::TwoProngVertex( );
     newTwoProngVertices->insert( vert, src.key );
 
     vert->setTechnique( (LHCb::RecVertex::RecVertexType) src.technique );
     vert->setChi2AndDoF( pack.fltPacked( src.chi2), src.nDoF );
-    Gaudi::XYZPoint pos( pack.position( src.x ), pack.position( src.y ), pack.position( src.z ) );
-    vert->setPosition( pos );
+    vert->setPosition( Gaudi::XYZPoint( pack.position( src.x ), pack.position( src.y ), pack.position( src.z ) ) );
 
     //== Store the Tracks
     int hintID;
@@ -91,10 +90,8 @@ StatusCode UnpackTwoProngVertex::execute() {
     //== Momentum of the two prongs    
     double pA = pack.energy( src.pA );
     double pB = pack.energy( src.pB );
-    ROOT::Math::SVector<double,3> momA( pack.slope( src.txA ), pack.slope( src.tyA ) , 1./pA );
-    vert->setMomA( momA );
-    ROOT::Math::SVector<double,3> momB( pack.slope( src.txB ), pack.slope( src.tyB ) , 1./pB );
-    vert->setMomB( momB );
+    vert->setMomA( ROOT::Math::SVector<double,3>( pack.slope( src.txA ), pack.slope( src.tyA ) , 1.0/pA ) );
+    vert->setMomB( ROOT::Math::SVector<double,3>( pack.slope( src.txB ), pack.slope( src.tyB ) , 1.0/pB ) );
 
     // convariance Matrix
     double err0 = pack.position( src.cov00 );
@@ -107,7 +104,7 @@ StatusCode UnpackTwoProngVertex::execute() {
     double err7 = pack.slope(    src.cov77 );
     double err8 = pack.energy(   src.cov88 ) / fabs( pB ) * 1.e-5;
 
-    Gaudi::SymMatrix3x3  cov;
+    Gaudi::SymMatrix3x3 cov;
     cov(0,0) = err0 * err0;
     cov(1,0) = err1 * err0 * pack.fraction( src.cov10 );
     cov(1,1) = err1 * err1;
@@ -171,7 +168,7 @@ StatusCode UnpackTwoProngVertex::execute() {
     std::vector<LHCb::ParticleID> pids;
     for ( int kk = src.firstPid; src.lastPid > kk; ++kk )
     {
-      pids.push_back( LHCb::ParticleID(*(dst->refs().begin()+kk)) );
+      pids.emplace_back( LHCb::ParticleID(*(dst->refs().begin()+kk)) );
     }
     vert->setCompatiblePIDs( pids );
 

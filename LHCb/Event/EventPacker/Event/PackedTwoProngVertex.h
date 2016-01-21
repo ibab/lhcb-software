@@ -26,83 +26,48 @@ namespace LHCb
   struct PackedTwoProngVertex
   {
 
-    /// Standard constructor
-    PackedTwoProngVertex( ) :
-      //
-      key(0),technique(0),chi2(0),nDoF(0),x(0),y(0),z(0),
-      //
-      txA(0),tyA(0),pA(0),txB(0),tyB(0),pB(0),
-      //
-      cov00(0),
-      cov11(0),
-      cov22(0),
-      cov33(0),
-      cov44(0),
-      cov55(0),
-      cov66(0),
-      cov77(0),
-      cov88(0),
-      cov99(0),
-      //
-      cov10(0),
-      cov20(0), cov21(0),
-      cov30(0), cov31(0), cov32(0),
-      cov40(0), cov41(0), cov42(0), cov43(0),
-      cov50(0), cov51(0), cov52(0), cov53(0), cov54(0),
-      cov60(0), cov61(0), cov62(0), cov63(0), cov64(0), cov65(0),
-      cov70(0), cov71(0), cov72(0), cov73(0), cov74(0), cov75(0), cov76(0),
-      cov80(0), cov81(0), cov82(0), cov83(0), cov84(0), cov85(0), cov86(0), cov87(0),
-      //
-      firstTrack(0),
-      lastTrack(0),
-      firstInfo(0),
-      lastInfo(0),
-      firstPid(0),
-      lastPid(0)
-    {}
+    int key{0};
+    int technique{0};
+    int chi2{0};
+    int nDoF{0};
+    int x{0};
+    int y{0};
+    int z{0};
 
-    int key;
-    int technique;
-    int chi2;
-    int nDoF;
-    int x;
-    int y;
-    int z;
+    int txA{0};
+    int tyA{0};
+    int pA{0};
 
-    int txA;
-    int tyA;
-    int pA;
+    int txB{0};
+    int tyB{0};
+    int pB{0};
 
-    int txB;
-    int tyB;
-    int pB;
+    int cov00{0};
+    int cov11{0};
+    int cov22{0};
+    int cov33{0};
+    int cov44{0};
+    int cov55{0};
+    int cov66{0};
+    int cov77{0};
+    int cov88{0};
+    int cov99{0};
 
-    int cov00;
-    int cov11;
-    int cov22;
-    int cov33;
-    int cov44;
-    int cov55;
-    int cov66;
-    int cov77;
-    int cov88;
-    int cov99;
+    short int cov10{0};
+    short int cov20{0}, cov21{0};
+    short int cov30{0}, cov31{0}, cov32{0};
+    short int cov40{0}, cov41{0}, cov42{0}, cov43{0};
+    short int cov50{0}, cov51{0}, cov52{0}, cov53{0}, cov54{0};
+    short int cov60{0}, cov61{0}, cov62{0}, cov63{0}, cov64{0}, cov65{0};
+    short int cov70{0}, cov71{0}, cov72{0}, cov73{0}, cov74{0}, cov75{0}, cov76{0};
+    short int cov80{0}, cov81{0}, cov82{0}, cov83{0}, cov84{0}, cov85{0}, cov86{0}, cov87{0};
 
-    short int cov10;
-    short int cov20, cov21;
-    short int cov30, cov31, cov32;
-    short int cov40, cov41, cov42, cov43;
-    short int cov50, cov51, cov52, cov53, cov54;
-    short int cov60, cov61, cov62, cov63, cov64, cov65;
-    short int cov70, cov71, cov72, cov73, cov74, cov75, cov76;
-    short int cov80, cov81, cov82, cov83, cov84, cov85, cov86, cov87;
-
-    unsigned short int firstTrack;
-    unsigned short int lastTrack;
-    unsigned short int firstInfo;
-    unsigned short int lastInfo;
-    unsigned short int firstPid;
-    unsigned short int lastPid;
+    unsigned short int firstTrack{0};
+    unsigned short int lastTrack{0};
+    unsigned short int firstInfo{0};
+    unsigned short int lastInfo{0};
+    unsigned short int firstPid{0};
+    unsigned short int lastPid{0};
 
   };
 
@@ -123,15 +88,6 @@ namespace LHCb
 
     /// Default Packing Version
     static char defaultPackingVersion() { return 1; }
-
-  public:
-
-    /** Standard constructor
-     *  Packing version must be set to 0 by default, for compatibility with
-     *  data written before the version was added */
-    PackedTwoProngVertices( ) : m_packingVersion(0) { }
-
-    virtual ~PackedTwoProngVertices( ) {}; ///< Destructor
 
   public:
 
@@ -163,8 +119,10 @@ namespace LHCb
     std::vector<long long>             m_refs;
     std::vector<std::pair<int,int> >   m_extra;
 
-    /// Data packing version
-    char m_packingVersion;
+    /** Data packing version.  
+     *  Packing version must be set to 0 by default, for compatibility with
+     *  data written before the version was added */
+    char m_packingVersion{0};
 
   };
 

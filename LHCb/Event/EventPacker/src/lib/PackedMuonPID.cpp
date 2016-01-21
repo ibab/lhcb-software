@@ -21,7 +21,7 @@ void MuonPIDPacker::pack( const Data & pid,
     ppid.MuonLLBg = m_pack.deltaLL(pid.MuonLLBg());
     ppid.nShared  = (int)pid.nShared();
     ppid.status   = (int)pid.Status();
-    if ( NULL != pid.idTrack() )
+    if ( pid.idTrack() )
     {
       ppid.idtrack = ( UNLIKELY( 1 >= ver ) ?
                        m_pack.reference32( &ppids,
@@ -31,7 +31,7 @@ void MuonPIDPacker::pack( const Data & pid,
                                            pid.idTrack()->parent(),
                                            pid.idTrack()->key() ) );
     }
-    if ( NULL != pid.muonTrack() )
+    if ( pid.muonTrack() )
     {
       ppid.mutrack = ( UNLIKELY( 1 >= ver ) ?
                        m_pack.reference32( &ppids,
@@ -53,8 +53,8 @@ void MuonPIDPacker::pack( const DataVector & pids,
     ppids.data().reserve( pids.size() );
     for ( const Data * pid : pids )
     {
-      ppids.data().push_back( PackedData() );
-      PackedData & ppid = ppids.data().back();
+      ppids.data().emplace_back( PackedData() );
+      auto & ppid = ppids.data().back();
       // save the key
       ppid.key = pid->key();
       // fill the rest of the data

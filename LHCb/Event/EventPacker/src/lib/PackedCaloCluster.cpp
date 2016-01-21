@@ -19,8 +19,8 @@ void CaloClusterPacker::pack( const DataVector & clus,
     for ( const Data * clu : clus )
     {
       // make a new packed object
-      pclus.data().push_back( PackedData() );
-      PackedData & pclu = pclus.data().back();
+      pclus.data().emplace_back( PackedData() );
+      auto & pclu = pclus.data().back();
 
       // fill data
 
@@ -38,9 +38,9 @@ void CaloClusterPacker::pack( const DataVector & clus,
       pclu.pos_c0 = m_pack.position( clu->position().center()[0] );
       pclu.pos_c1 = m_pack.position( clu->position().center()[1] );
       //
-      const double err0 = safe_sqrt( clu->position().covariance()(0,0) );
-      const double err1 = safe_sqrt( clu->position().covariance()(1,1) );
-      const double err2 = safe_sqrt( clu->position().covariance()(2,2) );
+      const auto err0 = safe_sqrt( clu->position().covariance()(0,0) );
+      const auto err1 = safe_sqrt( clu->position().covariance()(1,1) );
+      const auto err2 = safe_sqrt( clu->position().covariance()(2,2) );
       pclu.pos_cov00 = m_pack.position( err0 );
       pclu.pos_cov11 = m_pack.position( err1 );
       pclu.pos_cov22 = m_pack.energy  ( err2 );
@@ -48,8 +48,8 @@ void CaloClusterPacker::pack( const DataVector & clus,
       pclu.pos_cov20 = m_pack.fraction( clu->position().covariance()(2,0), err2*err0 );
       pclu.pos_cov21 = m_pack.fraction( clu->position().covariance()(2,1), err2*err1 );
       //
-      const double serr0 = safe_sqrt( clu->position().spread()(0,0) );
-      const double serr1 = safe_sqrt( clu->position().spread()(1,1) );
+      const auto serr0 = safe_sqrt( clu->position().spread()(0,0) );
+      const auto serr1 = safe_sqrt( clu->position().spread()(1,1) );
       pclu.pos_spread00 = m_pack.position( serr0 );
       pclu.pos_spread11 = m_pack.position( serr1 );
       pclu.pos_spread10 = m_pack.fraction( clu->position().spread()(1,0), serr1*serr0 );
@@ -58,9 +58,9 @@ void CaloClusterPacker::pack( const DataVector & clus,
       pclu.firstEntry = pclus.entries().size();
       for ( const auto & En : clu->entries() )
       {
-        pclus.entries().push_back( PackedCaloClusterEntry() );
-        PackedCaloClusterEntry & pEnt = pclus.entries().back();
-        if ( NULL != En.digit().target() )
+        pclus.entries().emplace_back( PackedCaloClusterEntry() );
+        auto & pEnt = pclus.entries().back();
+        if ( En.digit().target() )
         {
           pEnt.digit = m_pack.reference64( &pclus,
                                            En.digit()->parent(),
@@ -91,7 +91,7 @@ void CaloClusterPacker::unpack( const PackedDataVector & pclus,
     for ( const auto & pclu : pclus.data() )
     {
       // make and save new clUster container, with original key
-      Data * clu  = new Data();
+      auto * clu  = new Data();
       clus.insert( clu, pclu.key );
 
       // Fill data from packed object
@@ -111,10 +111,10 @@ void CaloClusterPacker::unpack( const PackedDataVector & pclus,
       clu->position().setCenter( CaloP::Center( m_pack.position(pclu.pos_c0),
                                                 m_pack.position(pclu.pos_c1) ) );
       //
-      CaloP::Covariance & cov = clu->position().covariance();
-      const double err0 = m_pack.position( pclu.pos_cov00 );
-      const double err1 = m_pack.position( pclu.pos_cov11 );
-      const double err2 = m_pack.energy  ( pclu.pos_cov22 );
+      auto & cov = clu->position().covariance();
+      const auto err0 = m_pack.position( pclu.pos_cov00 );
+      const auto err1 = m_pack.position( pclu.pos_cov11 );
+      const auto err2 = m_pack.energy  ( pclu.pos_cov22 );
       cov(0,0) = err0 * err0;
       cov(1,0) = err1 * err0 * m_pack.fraction( pclu.pos_cov10 );
       cov(1,1) = err1 * err1;
@@ -122,29 +122,28 @@ void CaloClusterPacker::unpack( const PackedDataVector & pclus,
       cov(2,1) = err2 * err1 * m_pack.fraction( pclu.pos_cov21 );
       cov(2,2) = err2 * err2;
       //
-      CaloP::Spread & spr = clu->position().spread();
-      const double serr0 = m_pack.position( pclu.pos_spread00 );
-      const double serr1 = m_pack.position( pclu.pos_spread11 );
+      auto & spr = clu->position().spread();
+      const auto serr0 = m_pack.position( pclu.pos_spread00 );
+      const auto serr1 = m_pack.position( pclu.pos_spread11 );
       spr(0,0) = serr0 * serr0;
       spr(1,0) = serr1 * serr0 * m_pack.fraction( pclu.pos_spread10 );
       spr(1,1) = serr1 * serr1;
 
       // entries
-      for ( unsigned int iE = pclu.firstEntry; iE < pclu.lastEntry; ++iE )
+      for ( auto iE = pclu.firstEntry; iE < pclu.lastEntry; ++iE )
       {
         // get the packed entry
-        const PackedCaloClusterEntry & pEnt = pclus.entries()[iE];
+        const auto & pEnt = pclus.entries()[iE];
         // make a new unpacked one
-        clu->entries().push_back( LHCb::CaloClusterEntry() );
-        LHCb::CaloClusterEntry & ent = clu->entries().back();
+        clu->entries().emplace_back( LHCb::CaloClusterEntry() );
+        auto & ent = clu->entries().back();
         // Set data
         if ( -1 != pEnt.digit )
         {
           int hintID(0), key(0);
           if ( m_pack.hintAndKey64( pEnt.digit, &pclus, &clus, hintID, key ) )
           {
-            LHCb::CaloClusterEntry::Digit dig( &clus, hintID, key );
-            ent.setDigit( dig );
+            ent.setDigit( LHCb::CaloClusterEntry::Digit( &clus, hintID, key ) );
           }
           else { parent().Error("Corrupt CaloCluster Digit SmartRef found").ignore(); }
         }
@@ -168,7 +167,7 @@ StatusCode CaloClusterPacker::check( const DataVector & dataA,
   StatusCode sc = StatusCode::SUCCESS;
 
   // Loop over data containers together and compare
-  DataVector::const_iterator iA(dataA.begin()), iB(dataB.begin());
+  auto iA(dataA.begin()), iB(dataB.begin());
   for ( ; iA != dataA.end() && iB != dataB.end(); ++iA, ++iB )
   {
     sc = sc && check( **iA, **iB );

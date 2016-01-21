@@ -26,8 +26,8 @@ DECLARE_ALGORITHM_FACTORY( PVToRecConverter )
 // Standard constructor, initializes variables
 //=============================================================================
 PVToRecConverter::PVToRecConverter( const std::string& name,
-						  ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+                                    ISvcLocator* pSvcLocator)
+: GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "InputLocation" , m_inputLocation  = LHCb::PrimaryVertexLocation::Default );
   declareProperty( "OutputLocation", m_outputLocation = LHCb::RecVertexLocation::Primary );
@@ -39,7 +39,7 @@ PVToRecConverter::PVToRecConverter( const std::string& name,
 // Main execution
 //=============================================================================
 
-StatusCode PVToRecConverter::execute() 
+StatusCode PVToRecConverter::execute()
 {
   LHCb::PrimaryVertex::Range pvs = get<LHCb::PrimaryVertex::Range>(m_inputLocation) ;
   LHCb::Track::Range tracks = get<LHCb::Track::Range>(m_inputTrackLocation) ;
@@ -51,7 +51,7 @@ StatusCode PVToRecConverter::execute()
     auto id = LHCb::PrimaryVertex::uniqueVeloSegmentID( *tr ) ;
     idToTracks[id].push_back( tr ) ;
   }
-  
+
   // now loop over input vertices and create RecVertices
   auto recvertices = new LHCb::RecVertex::Container() ;
   for( const auto& pv: pvs ) {
@@ -63,30 +63,30 @@ StatusCode PVToRecConverter::execute()
     for( const auto& trk : pv->tracks() ) {
       auto trkinmap = idToTracks.find( trk.id() ) ;
       if( trkinmap != idToTracks.end() ) {
-	// add them all!
-	for( const auto& itrk : trkinmap->second ) {
-	  double weight = trk.weight() ;
-	  if( m_rescaleWeights ) {
-	    // track cov matrix may have changed due to track
-	    // fit. rescale weights such that track gets effectively
-	    // still the same weight. the unbiasing will then still
-	    // work.
-	    LHCb::State newstate = itrk->firstState() ;
-	    newstate.linearTransportTo( pv->refZ() ) ;
-	    // compute the ratio of the covariances of the transverse
-	    // IP: dx * diry - dy * dirx. (don't need to divide by
-	    // sqrt(tx^2+ty^2) since we take ratio anyway)
-	    const double tx = newstate.tx() ;
-	    const double ty = newstate.ty() ;
-	    auto oldcov = trk.invcov() ;
-	    oldcov.Invert() ;
-	    const auto& newcov =  newstate.covariance() ;
-	    const double covA = oldcov(0,0) * ty * ty + oldcov(1,1) * tx * tx - 2 * oldcov(1,0) * tx * ty ;
-	    const double covB = newcov(0,0) * ty * ty + newcov(1,1) * tx * tx - 2 * newcov(1,0) * tx * ty ;
-	    weight *= covB / covA ;
-	  }
-	  recvertex->addToTracks( itrk, weight ) ;
-	}
+        // add them all!
+        for( const auto& itrk : trkinmap->second ) {
+          double weight = trk.weight() ;
+          if( m_rescaleWeights ) {
+            // track cov matrix may have changed due to track
+            // fit. rescale weights such that track gets effectively
+            // still the same weight. the unbiasing will then still
+            // work.
+            LHCb::State newstate = itrk->firstState() ;
+            newstate.linearTransportTo( pv->refZ() ) ;
+            // compute the ratio of the covariances of the transverse
+            // IP: dx * diry - dy * dirx. (don't need to divide by
+            // sqrt(tx^2+ty^2) since we take ratio anyway)
+            const double tx = newstate.tx() ;
+            const double ty = newstate.ty() ;
+            auto oldcov = trk.invcov() ;
+            oldcov.Invert() ;
+            const auto& newcov =  newstate.covariance() ;
+            const double covA = oldcov(0,0) * ty * ty + oldcov(1,1) * tx * tx - 2 * oldcov(1,0) * tx * ty ;
+            const double covB = newcov(0,0) * ty * ty + newcov(1,1) * tx * tx - 2 * newcov(1,0) * tx * ty ;
+            weight *= covB / covA ;
+          }
+          recvertex->addToTracks( itrk, weight ) ;
+        }
       }
     }
     recvertices->insert( recvertex ) ;

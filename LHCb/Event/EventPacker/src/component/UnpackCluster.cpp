@@ -19,12 +19,7 @@ DECLARE_ALGORITHM_FACTORY( UnpackCluster )
 //=============================================================================
   UnpackCluster::UnpackCluster( const std::string& name,
                                 ISvcLocator* pSvcLocator )
-    : GaudiAlgorithm ( name, pSvcLocator ),
-      m_running      ( false             ),
-      m_vClus        ( NULL              ),
-      m_ttClus       ( NULL              ),
-      m_utClus       ( NULL              ),
-      m_itClus       ( NULL              )
+    : GaudiAlgorithm ( name, pSvcLocator )
 {
   declareProperty( "InputName" , m_inputName = LHCb::PackedClusterLocation::Default );
   declareProperty( "Extension",  m_extension = "" );
@@ -74,10 +69,10 @@ StatusCode UnpackCluster::execute()
   }
 
   // Reset cluster pointers, to force new ones to be creatd when needed next time
-  m_vClus  = NULL;
-  m_ttClus = NULL;
-  m_utClus = NULL;
-  m_itClus = NULL;
+  m_vClus  = nullptr;
+  m_ttClus = nullptr;
+  m_utClus = nullptr;
+  m_itClus = nullptr;
 
   // Force creation of non-upgrade locatons. 
   // Temporary, need to check if all works fine with these removed.

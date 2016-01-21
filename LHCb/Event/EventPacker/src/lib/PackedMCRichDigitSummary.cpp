@@ -18,15 +18,15 @@ void MCRichDigitSummaryPacker::pack( const DataVector & sums,
   if ( 0 == ver || 1 == ver )
   {
     psums.data().reserve( sums.size() );
-    for ( const Data * sum : sums )
+    for ( const auto * sum : sums )
     {
       // make new packed data
-      psums.data().push_back( PackedData() );
-      PackedData & psum = psums.data().back();
+      psums.data().emplace_back( PackedData() );
+      auto & psum = psums.data().back();
       // fill packed data
       psum.history     = sum->history().historyCode();
       psum.richSmartID = sum->richSmartID().key();
-      if ( NULL != sum->mcParticle() )
+      if ( sum->mcParticle() )
       {
         psum.mcParticle = ( UNLIKELY( 0 == ver ) ?
                             m_pack.reference32( &psums,
@@ -56,7 +56,7 @@ void MCRichDigitSummaryPacker::unpack( const PackedDataVector & psums,
     for ( const auto & psum : psums.data() )
     {
       // make and save new sum in container
-      Data * sum = new Data();
+      auto * sum = new Data();
       sums.add( sum );
       // Fill data from packed object
       sum->setHistory( LHCb::MCRichDigitHistoryCode(psum.history) );

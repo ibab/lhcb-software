@@ -13,18 +13,24 @@
  *  @author Olivier Callot
  *  @date   2005-03-18
  */
-class UnpackMCParticle : public GaudiAlgorithm {
+class UnpackMCParticle : public GaudiAlgorithm 
+{
+
 public: 
+
   /// Standard constructor
   UnpackMCParticle( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~UnpackMCParticle( ); ///< Destructor
+  virtual ~UnpackMCParticle(); ///< Destructor
 
-  virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode execute(); ///< Algorithm execution
 
 private:
+
   std::string m_inputName;
   std::string m_outputName;
   bool m_alwaysOutput;      ///< Flag to turn on the creation of output, even when input is missing
+
 };
+
 #endif // UNPACKMCPARTICLE_H

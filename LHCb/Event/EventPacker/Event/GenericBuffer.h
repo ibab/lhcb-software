@@ -18,13 +18,12 @@ namespace LHCb
 
   class GenericBuffer : public DataObject
   {
+
   public:
+
     /// type of data holder
     typedef std::vector<char> DataType ;
-    
-    /// destructor
-    virtual ~GenericBuffer() {}
-    
+
     /// non-const accessor
     DataType& data() { return m_data; }
 
@@ -33,11 +32,14 @@ namespace LHCb
 
     /// Class ID
     static const CLID& classID() { return CLID_GenericBuffer ; }
-    
+
     /// Class ID
     virtual const CLID& clID() const { return GenericBuffer::classID(); }
+
   private:
+
     std::vector<char> m_data ;
+
   } ;
 }
 

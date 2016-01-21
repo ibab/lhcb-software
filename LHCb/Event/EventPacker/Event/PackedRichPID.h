@@ -29,20 +29,11 @@ namespace LHCb
    */
   struct PackedRichPID
   {
-    /// Default constructor
-    PackedRichPID()
-      : pidResultCode(0),
-        dllEl(0),dllMu(0),dllPi(0),dllKa(0),dllPr(0),
-        track(-1),
-        dllBt(0),
-        key(0)
-    {}
-
-    int pidResultCode;                      
-    int dllEl,dllMu,dllPi,dllKa,dllPr;
-    long long track;          
-    int dllBt;
-    long long key;
+    int pidResultCode{0};                      
+    int dllEl{0},dllMu{0},dllPi{0},dllKa{0},dllPr{0};
+    long long track{-1};          
+    int dllBt{0};
+    long long key{0};
   };
 
   // -----------------------------------------------------------------------
@@ -107,7 +98,7 @@ namespace LHCb
   private:
 
     /// Data packing version
-    char   m_packingVersion;
+    char   m_packingVersion{0};
 
     /// The packed data objects
     Vector m_vect; 

@@ -19,31 +19,13 @@ namespace LHCb
    */
   struct PackedCluster 
   {
-  
-    /// Standard constructor
-    PackedCluster( ) 
-      : id(0), 
-        begin(0), end(0), 
-        sum(0), sourceID(0), 
-        tell1Channel(0), spill(0) 
-    { }
-
-    /// Copy constructor
-    PackedCluster( const PackedCluster& c )
-      : id(c.id), 
-        begin(c.begin), end(c.end), 
-        sum(c.sum), sourceID(c.sourceID),
-        tell1Channel(c.tell1Channel), spill(c.spill) 
-    { }
-
-    unsigned int id;
-    unsigned int begin;
-    unsigned int end;
-    unsigned int sum;
-    unsigned int sourceID;
-    unsigned int tell1Channel;
-    int spill;
-
+    unsigned int id{0};
+    unsigned int begin{0};
+    unsigned int end{0};
+    unsigned int sum{0};
+    unsigned int sourceID{0};
+    unsigned int tell1Channel{0};
+    int spill{0};
   };
 
   static const CLID CLID_PackedClusters = 1540;

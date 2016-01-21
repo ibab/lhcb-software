@@ -86,7 +86,7 @@ StatusCode PackTrack::execute()
     if ( sc.isSuccess() )
     {
       delete tracks;
-      tracks = NULL;
+      tracks = nullptr;
     }
     else
     {

@@ -54,7 +54,7 @@ ChargedProtoParticleMapper::algorithmForPath( const std::string & path )
 
     // Add the basic unpacker
     const std::string unpackName = baseName + "_Unpack";
-    algs.push_back( "UnpackProtoParticle/" + unpackName );
+    algs.emplace_back( "UnpackProtoParticle/" + unpackName );
     joSvc()->addPropertyToCatalogue( unpackName,
                                      StringProperty("InputName",
                                                     packedProtoLocation(streamRoot(path))) );
@@ -70,7 +70,7 @@ ChargedProtoParticleMapper::algorithmForPath( const std::string & path )
         const std::string name = "Reco14Filter_" + baseName;
         joSvc()->addPropertyToCatalogue( name, StringProperty("HeaderLocation","Rec/Header") );
         joSvc()->addPropertyToCatalogue( name, StringProperty("VersionRegex",m_regex) );
-        algs.push_back( "ApplicationVersionFilter/" + name );
+        algs.emplace_back( "ApplicationVersionFilter/" + name );
       }
       for ( const auto& tkType : m_tkTypes )
       {
@@ -82,7 +82,7 @@ ChargedProtoParticleMapper::algorithmForPath( const std::string & path )
           joSvc()->addPropertyToCatalogue( name, StringProperty("NetworkVersion",m_pidTune) );
           joSvc()->addPropertyToCatalogue( name, StringProperty("ProtoParticleLocation",
                                                                 protoLocation(streamRoot(path))) );
-          algs.push_back( "ANNGlobalPID::ChargedProtoANNPIDAlg/" + name );
+          algs.emplace_back( "ANNGlobalPID::ChargedProtoANNPIDAlg/" + name );
         }
       }
     }

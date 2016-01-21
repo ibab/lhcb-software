@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2016-01-21 - Chris Jones
+ - C++11 modernisation.
+
 ! 2015-11-26 - Marco Clemencic
  - Removed (u)longlong typedef (see GAUDI-1125).
 

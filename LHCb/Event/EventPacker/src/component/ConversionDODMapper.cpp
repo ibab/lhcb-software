@@ -83,11 +83,11 @@ DataObject*
 ConversionDODMapper::candidate(const std::string &path) const
 {
   LOG_VERBOSE << " -> ConversionDODMapper::candidate '" << path << "'" << endmsg;
-  DataObject * obj(NULL);
+  DataObject * obj(nullptr);
   if ( !path.empty() )
   {
     obj = getIfExists<DataObject>(evtSvc(),path);
-    if ( NULL != obj )
+    if ( nullptr != obj )
     {
       // ... get the source object...
       LOG_VERBOSE

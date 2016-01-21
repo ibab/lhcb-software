@@ -13,18 +13,24 @@
  *  @author Olivier Callot
  *  @date   2009-01-21
  */
-class PackTwoProngVertex : public GaudiAlgorithm {
+class PackTwoProngVertex : public GaudiAlgorithm 
+{
+
 public: 
+
   /// Standard constructor
   PackTwoProngVertex( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~PackTwoProngVertex( ); ///< Destructor
+  virtual ~PackTwoProngVertex(); ///< Destructor
 
-  virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode execute();///< Algorithm execution
 
 private:
+
   std::string m_inputName;
   std::string m_outputName;
-  bool m_alwaysOutput;      ///< Flag to turn on the creation of output, even when input is missing
+  bool m_alwaysOutput;   ///< Flag to turn on the creation of output, even when input is missing
+
 };
+
 #endif // PACKTWOPRONGVERTEX_H
