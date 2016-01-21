@@ -33,18 +33,10 @@ ExpectedTrackSignal::ExpectedTrackSignal ( const std::string& type,
                    m_minPhotonsPerRad,
                    "Minimum number of photons in each radiator for a radiator "
                    "segment to be considered as having RICH information" );
-  {
-    std::vector<double> tmp = boost::assign::list_of(0)(0)(0);
-    declareProperty( "MinRadiatorMomentum", m_minPbyRad = tmp);
-  }
-  {
-    std::vector<double> tmp = boost::assign::list_of
-      (15*Gaudi::Units::GeV)                        // Aerogel
-      (boost::numeric::bounds<double>::highest())   // Rich1 Gas
-      (boost::numeric::bounds<double>::highest())   // Rich2 Gas
-      ;
-    declareProperty( "MaxRadiatorMomentum", m_maxPbyRad = tmp);
-  }
+  declareProperty( "MinRadiatorMomentum", m_minPbyRad = {0,0,0} );
+  const auto bigN = boost::numeric::bounds<double>::highest();
+  declareProperty( "MaxRadiatorMomentum", 
+                   m_maxPbyRad = { 15*Gaudi::Units::GeV, bigN, bigN } );
 }
 
 StatusCode ExpectedTrackSignal::initialize()
@@ -83,11 +75,11 @@ double ExpectedTrackSignal::nEmittedPhotons ( LHCb::RichRecSegment * segment,
 
     // loop over energy bins
     double signal = 0;
-    Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & spectra = segment->emittedPhotonSpectra();
+    auto & spectra = segment->emittedPhotonSpectra();
     for ( unsigned int iEnBin = 0; iEnBin < spectra.energyBins(); ++iEnBin )
     {
 
-      double phots =
+      auto phots =
         m_sellmeir->photonsInEnergyRange( segment,
                                           id,
                                           spectra.binEnergyLowerEdge(iEnBin),
@@ -95,9 +87,9 @@ double ExpectedTrackSignal::nEmittedPhotons ( LHCb::RichRecSegment * segment,
       if ( phots<0 ) phots = 0;
       (spectra.energyDist(id))[iEnBin] = (LHCb::RichRecSegment::FloatType)(phots);
       signal += phots;
-
+      
     }
-
+    
     _ri_verbo << "RichRecSegment " << segment->key() << " " << id
               << " nEmittedPhotons = " << signal << endmsg;
 
@@ -121,17 +113,15 @@ double ExpectedTrackSignal::nDetectablePhotons (  LHCb::RichRecSegment * segment
 
     // loop over energy bins
     double signal = 0;
-    const Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & emitSpectra
-      = segment->emittedPhotonSpectra();
-    Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & detSpectra
-      = segment->detectablePhotonSpectra();
+    const auto & emitSpectra = segment->emittedPhotonSpectra();
+    auto &       detSpectra  = segment->detectablePhotonSpectra();
     for ( unsigned int iEnBin = 0; iEnBin < emitSpectra.energyBins(); ++iEnBin )
     {
-      const double sig = (emitSpectra.energyDist(id))[iEnBin] *
+      const auto sig = (emitSpectra.energyDist(id))[iEnBin] *
         m_sigDetEff->photonDetEfficiency( segment, id, emitSpectra.binEnergy(iEnBin) );
-      const double gasQuartzWinTrans =
+      const auto gasQuartzWinTrans =
         m_gasQuartzWin->photonTransProb(segment,emitSpectra.binEnergy(iEnBin));
-      const double T = sig*gasQuartzWinTrans;
+      const auto T = sig*gasQuartzWinTrans;
       (detSpectra.energyDist(id))[iEnBin] = (LHCb::RichRecSegment::FloatType)(T);
       signal += T;
     }
@@ -162,17 +152,15 @@ ExpectedTrackSignal::nSignalPhotons (  LHCb::RichRecSegment * segment,
     {
 
       // which radiator
-      const Rich::RadiatorType rad = segment->trackSegment().radiator();
+      const auto rad = segment->trackSegment().radiator();
 
       // loop over energy bins
-      Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & sigSpectra
-        = segment->signalPhotonSpectra();
-      const Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & detSpectra
-        = segment->detectablePhotonSpectra();
+      auto       & sigSpectra = segment->signalPhotonSpectra();
+      const auto & detSpectra = segment->detectablePhotonSpectra();
       for ( unsigned int iEnBin = 0; iEnBin < detSpectra.energyBins(); ++iEnBin )
       {
 
-        const double scattProb =
+        const auto scattProb =
           ( rad != Rich::Aerogel ? 0 :
             m_rayScat->photonScatteredProb( segment,
                                             detSpectra.binEnergy(iEnBin) ) );
@@ -191,7 +179,7 @@ ExpectedTrackSignal::nSignalPhotons (  LHCb::RichRecSegment * segment,
               << " nSignalPhotons = " << signal
               << " nScatteredPhotons = " << scatter << endmsg;
 
-    segment->setNSignalPhotons( id, (LHCb::RichRecSegment::FloatType)(signal) );
+    segment->setNSignalPhotons   ( id, (LHCb::RichRecSegment::FloatType)(signal)  );
     segment->setNScatteredPhotons( id, (LHCb::RichRecSegment::FloatType)(scatter) );
   }
 
@@ -529,23 +517,23 @@ ExpectedTrackSignal::aboveThreshold( LHCb::RichRecSegment * segment,
   if ( type == Rich::BelowThreshold ) return false;
 
   // Geometrical track segment
-  const LHCb::RichTrackSegment & tkSeg = segment->trackSegment();
+  const auto & tkSeg = segment->trackSegment();
 
   // momentum for this track segment
-  const double P = std::sqrt(tkSeg.bestMomentum().mag2());
+  const auto P = std::sqrt(tkSeg.bestMomentum().mag2());
   // Adjust momentum to account for a 1 sigma fluctuation,
   // so segment is really above threshold but measured below
   //const double Perr = tkSeg.middleErrors().errP();
 
   // is this momentum above the cherenkov threshold momentum
-  const double pthres = m_richPartProp->thresholdMomentum( type, tkSeg );
+  const auto pthres = m_richPartProp->thresholdMomentum( type, tkSeg );
   const bool above = ( P > pthres*m_pThresScale );
   //const bool above = ( P+Perr > pthres*m_pThresScale );
   //const bool above = ( P-Perr > pthres*m_pThresScale );
 
   if ( msgLevel(MSG::DEBUG) )
   {
-    const double Perr = tkSeg.middleErrors().errP();
+    const auto Perr = tkSeg.middleErrors().errP();
     debug() << "  -> Threshold check : " << tkSeg.radiator() << " " << type
             << " : P=" << P << " Perr=" << Perr << " Pthres=" << pthres
             << " : above=" << above << endmsg;

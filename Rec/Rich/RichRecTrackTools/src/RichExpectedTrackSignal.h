@@ -32,7 +32,6 @@
 // boost
 #include "boost/numeric/conversion/bounds.hpp"
 #include "boost/limits.hpp"
-#include "boost/assign/list_of.hpp"
 
 namespace Rich
 {

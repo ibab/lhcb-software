@@ -151,28 +151,20 @@ LHCb::RichRecSegments * SegmentCreator::richSegments() const
 {
   if ( !m_segments )
   {
-
-    if ( !exist<LHCb::RichRecSegments>(m_richRecSegmentLocation) )
+    // try and get segments from TES
+    m_segments = getIfExists<LHCb::RichRecSegments>(m_richRecSegmentLocation);
+    if ( !m_segments )
     {
-
       // Reinitialise the Photon Container
       m_segments = new LHCb::RichRecSegments();
-
       // Register new RichRecPhoton container to Gaudi data store
       put( m_segments, m_richRecSegmentLocation );
-
     }
-    else
+    else if ( msgLevel(MSG::DEBUG) )
     {
-
-      // get segments from TES
-      m_segments = get<LHCb::RichRecSegments>(m_richRecSegmentLocation);
-      if ( msgLevel(MSG::DEBUG) )
-      {
-        debug() << "Found " << m_segments->size() << " pre-existing RichRecSegments in TES at "
-                << m_richRecSegmentLocation << endmsg;
-      }
-
+      debug() << "Found " << m_segments->size() 
+              << " pre-existing RichRecSegments in TES at "
+              << m_richRecSegmentLocation << endmsg;
     }
   }
   return m_segments;
