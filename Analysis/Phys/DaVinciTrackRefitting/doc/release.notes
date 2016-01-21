@@ -4,6 +4,9 @@
 ! Purpose     : Provide tools for refitting on DST
 !-----------------------------------------------------------------------------
 
+! 2016-01-21 - Paul Seyfert
+ - added functionality for integration and qm test to refitter
+
 !=================== DaVinciTrackRefitting v2r3 2015-12-04 ===================
 
 ! 2015-12-04 - Paul Seyfert

@@ -32,6 +32,7 @@ RefitParticleTracks::RefitParticleTracks(const std::string& name, ISvcLocator* p
   declareProperty("ReplaceTracks"      ,m_overwrite = true);
   declareProperty("Fitter"             ,m_fittername = "TrackInitFit");
   declareProperty("Manipulator"        ,m_manipulatorname = "TrackNNGhostId");
+  declareProperty("ValidationMode"     ,m_validationmode = false);
 }
 
 //=============================================================================
@@ -186,7 +187,39 @@ StatusCode RefitParticleTracks::fit(std::vector<LHCb::Track*> *vec) {
 
   std::vector<LHCb::Track*>::iterator iterT = vec->begin();
   for ( ; vec->end() != iterT ; ++iterT ) {
+    double vchi_old, tchi_old, mchi_old, chi_old, vdof_old, tdof_old, p_old;
+    double vchi_new, tchi_new, mchi_new, chi_new, vdof_new, tdof_new, p_new;
+    if (m_validationmode) {
+      vchi_old = (*iterT)->info(LHCb::Track::FitVeloChi2,-99.);
+      tchi_old = (*iterT)->info(LHCb::Track::FitTChi2,-99.);
+      mchi_old = (*iterT)->info(LHCb::Track::FitMatchChi2,-99.);
+       chi_old = (*iterT)->chi2();
+      vdof_old = (*iterT)->info(LHCb::Track::FitVeloNDoF,-99.);
+      tdof_old = (*iterT)->info(LHCb::Track::FitTNDoF,-99.);
+         p_old = (*iterT)->p();
+    }
     m_trackFitter->fit(*(*iterT)).ignore();
+    if (m_validationmode) {
+      vchi_new = (*iterT)->info(LHCb::Track::FitVeloChi2,-99.);
+      tchi_new = (*iterT)->info(LHCb::Track::FitTChi2,-99.);
+      mchi_new = (*iterT)->info(LHCb::Track::FitMatchChi2,-99.);
+       chi_new = (*iterT)->chi2();
+      vdof_new = (*iterT)->info(LHCb::Track::FitVeloNDoF,-99.);
+      tdof_new = (*iterT)->info(LHCb::Track::FitTNDoF,-99.);
+         p_new = (*iterT)->p();
+/// http://stackoverflow.com/questions/3378560/how-to-disable-gcc-warnings-for-a-few-lines-of-code
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+         /// all these chi^2, p, ndof should be != 0 anyway, so no FPE (or something about which i actually want to get warned, so FPE, come at me!
+      if (1e-4<fabs((vchi_old - vchi_new) / vchi_new)) fatal() << "DaVinci Track fit did not reproduce Brunel result in variable vchi:" << fabs((vchi_old - vchi_new) / vchi_new) << endmsg;
+      if (1e-4<fabs((tchi_old - tchi_new) / tchi_new)) fatal() << "DaVinci Track fit did not reproduce Brunel result in variable tchi:" << fabs((tchi_old - tchi_new) / tchi_new) << endmsg;
+      if (1e-4<fabs((mchi_old - mchi_new) / mchi_new)) fatal() << "DaVinci Track fit did not reproduce Brunel result in variable mchi:" << fabs((mchi_old - mchi_new) / mchi_new) << endmsg;
+      if (1e-4<fabs(( chi_old -  chi_new) /  chi_new)) fatal() << "DaVinci Track fit did not reproduce Brunel result in variable  chi:" << fabs(( chi_old -  chi_new) /  chi_new) << endmsg;
+      if (1e-4<fabs((vdof_old - vdof_new) / vdof_new)) fatal() << "DaVinci Track fit did not reproduce Brunel result in variable vdof:" << fabs((vdof_old - vdof_new) / vdof_new) << endmsg;
+      if (1e-4<fabs((tdof_old - tdof_new) / tdof_new)) fatal() << "DaVinci Track fit did not reproduce Brunel result in variable tdof:" << fabs((tdof_old - tdof_new) / tdof_new) << endmsg;
+      if (1e-4<fabs((   p_old -    p_new) /    p_new)) fatal() << "DaVinci Track fit did not reproduce Brunel result in variable    p:" << fabs((   p_old -    p_new) /    p_new) << endmsg;
+#pragma GCC diagnostic pop
+    }
   }
   return StatusCode::SUCCESS;
 }
@@ -195,7 +228,22 @@ StatusCode RefitParticleTracks::manipulate(std::vector<LHCb::Track*> *vec) {
   if ( UNLIKELY(msgLevel(MSG::DEBUG)) ) debug() << "==> MANIPULATING" << endmsg;
   std::vector<LHCb::Track*>::iterator iterT = vec->begin();
   for ( ; vec->end() != iterT ; ++iterT ) {
+    double gp_old, gp_new;
+    if (m_validationmode) {
+      gp_old = (*iterT)->ghostProbability();
+    }
     m_ghostprobability->execute(*(*iterT)).ignore();
+    if (m_validationmode) {
+      gp_new = (*iterT)->ghostProbability();
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+      /// avoid division by zero here. gp is on a 0...1 scale anyway
+      if (1e-8<fabs(gp_old - gp_new)) {
+        fatal() << "DaVinci ghost probability did not reproduce Brunel result" << endmsg;
+        fatal() << " old = " << gp_old << "\t\tnew = " << gp_new << endmsg;
+      }
+#pragma GCC diagnostic pop
+    }
   }
   return StatusCode::SUCCESS;
 }

@@ -54,6 +54,7 @@ private:
   bool                 m_manipulate;
   bool                 m_update;
   bool                 m_writeOutput;
+  bool                 m_validationmode;
   std::string          m_fittername;
   std::string          m_manipulatorname;
 
