@@ -140,6 +140,15 @@ def configure ( config ) :
     Configure the application from parser data 
     """
     #
+    if config.OutputLevel <= 3 and not config.Quiet :
+        clogger = getLogger('Bender.Configuration') 
+        _vars   = vars ( config )
+        _keys   = _vars.keys()
+        _keys .sort()        
+        clogger.info ( 100 * '*')
+        clogger.info ( 'Configuration:')
+        for _k in _keys : clogger.info ( '  %15s : %-s ' % ( _k , _vars[_k] ) )
+        clogger.info ( 100 * '*')
     
     ## redefine output level for 'quiet'-mode
     if config.OutputLevel > 5 :
@@ -156,6 +165,7 @@ def configure ( config ) :
         from BenderTools.Utils import silence
         silence ()
 
+        
     import logging
     if   config.OutputLevel <= 1 : logging.disable ( logging.NOTSET  - 1 ) 
     elif config.OutputLevel <= 2 : logging.disable ( logging.DEBUG   - 1 ) 
