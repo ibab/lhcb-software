@@ -32,10 +32,17 @@ def ConfigureFitter(fituser,fitAsIn="2015",EnergyLossFactor=1.0):
 
    if fitAsIn == 'EM2015':
       ConfiguredMasterFitter( getattr(fituser.TrackInitFit, "Fit"), SimplifiedGeometry = True, LiteClusters = True, MSRossiAndGreisen = False )
+      log.warning("cannot compute the early measurements ghost probability. I'll give you the tuning from later in 2015.")
    elif fitAsIn == '2015':
       ConfiguredMasterFitter( getattr(fituser.TrackInitFit, "Fit"), SimplifiedGeometry = True, LiteClusters = True, MSRossiAndGreisen = True )
+      from Configurables import Run2GhostId
+      fituser.addTool(Run2GhostId("Run2GhostId"),name="Run2GhostId")
+      fituser.Run2GhostId.InDaVinci = True
    elif fitAsIn == 'Reco14':
       ConfiguredMasterFitter( getattr(fituser.TrackInitFit, "Fit"), SimplifiedGeometry = False, LiteClusters = False, MSRossiAndGreisen = False )
+      from Configurables import TrackNNGhostId
+      fituser.addTool(Run2GhostId("TrackNNGhostId"),name="Run2GhostId")
+      log.warning("ghost probability computation not tested.")
    else:
       log.warning("no known fit configuration, falling back to TrackFitter.ConfiguredFitters.ConfiguredMasterFitter default")
       ConfiguredMasterFitter( getattr(fituser.TrackInitFit, "Fit") )

@@ -6,6 +6,8 @@
 
 ! 2016-01-21 - Paul Seyfert
  - added functionality for integration and qm test to refitter
+ - configure ghost probability to run in DaVinci
+   -> requires Tr/TrackTools r200091 or later
 
 !=================== DaVinciTrackRefitting v2r3 2015-12-04 ===================
 
