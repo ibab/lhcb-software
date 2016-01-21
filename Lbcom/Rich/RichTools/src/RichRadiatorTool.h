@@ -120,7 +120,9 @@ namespace Rich
 
   private:
 
+    /// Type for list of radiator volumes
     typedef std::vector<const DeRichRadiator*> RichRadiators;
+
     /// Vector of DeRich radiator volumes for each Radiator type
     std::vector<RichRadiators> m_radiators;
 

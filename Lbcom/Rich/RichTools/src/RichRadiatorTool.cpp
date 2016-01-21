@@ -104,16 +104,15 @@ StatusCode Rich::RadiatorTool::updateAerogel()
   const DeRichMultiSolidRadiator * aerogel
     = getDet<DeRichMultiSolidRadiator>( DeRichLocations::Aerogel );
   m_radiators[Rich::Aerogel].reserve( aerogel->radiators().size() );
-  for ( DeRichRadiator::Vector::const_iterator dRad = aerogel->radiators().begin();
-        dRad != aerogel->radiators().end(); ++dRad )
+  for ( const auto * dRad : aerogel->radiators() )
   {
-    const DeRichAerogelRadiator* d = dynamic_cast<const DeRichAerogelRadiator*>(*dRad);
+    const auto * d = dynamic_cast<const DeRichAerogelRadiator*>(dRad);
     if (!d) return Error( "Failed to cast to DeRichAerogelRadiator" );
     if ( std::find( m_excludedAeroTiles.begin(),
                     m_excludedAeroTiles.end(),
                     d->primaryTileID() ) == m_excludedAeroTiles.end() )
     {
-      m_radiators[Rich::Aerogel].push_back( *dRad );
+      m_radiators[Rich::Aerogel].push_back( dRad );
     }
     else
     {
@@ -153,21 +152,20 @@ Rich::RadiatorTool::intersections( const Gaudi::XYZPoint& globalPoint,
   /** @todo With aerogel sub-tiles, there are now a lot of volumes
    *        need to investigate a faster way to do this search than
    *        just looping over them all */
-  for ( RichRadiators::const_iterator iR = m_radiators[radiator].begin();
-        iR != m_radiators[radiator].end(); ++iR )
+  for ( const auto * R : m_radiators[radiator] )
   {
     // entry and exit points
     Gaudi::XYZPoint entry, exit;
     // do we intersect ?
-    if ( (*iR)->intersectionPoints( globalPoint,
-                                    globalVector,
-                                    entry,
-                                    exit ) )
+    if ( R->intersectionPoints( globalPoint,
+                                globalVector,
+                                entry,
+                                exit ) )
     {
       // save this intersection
-      intersections.push_back( Rich::RadIntersection( entry, globalVector,
-                                                      exit,  globalVector,
-                                                      *iR ) );
+      intersections.emplace_back( Rich::RadIntersection( entry, globalVector,
+                                                         exit,  globalVector,
+                                                         R ) );
       ++totalIntersections;
     }
   }
@@ -182,10 +180,9 @@ Rich::RadiatorTool::intersections( const Gaudi::XYZPoint& globalPoint,
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << radiator << " Intersections :";
-    for ( Rich::RadIntersection::Vector::const_iterator iS = intersections.begin();
-          iS != intersections.end(); ++iS )
+    for ( const auto & S : intersections )
     {
-      debug() << " " << (*iS).entryPoint() << "->" << (*iS).exitPoint();
+      debug() << " " << S.entryPoint() << "->" << S.exitPoint();
     }
     debug() << endmsg;
   }

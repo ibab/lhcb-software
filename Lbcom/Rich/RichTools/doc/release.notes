@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2016-01-21 - Chris Jones
+ - Prefer emplace_back to push_back where appropriate.
+
 ! 2016-01-14 - Chris Jones
  - Prefer nullptr to NULL in RichRayTracingEigen.
 
