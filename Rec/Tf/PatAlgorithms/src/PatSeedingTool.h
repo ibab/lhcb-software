@@ -104,7 +104,7 @@ class PatSeedingTool :
      * @return StatusCode 
      */
     virtual StatusCode tracksFromTrack(const LHCb::Track& seed,
-	std::vector<LHCb::Track*, std::allocator<LHCb::Track*> >& out);
+	std::vector<LHCb::Track*, std::allocator<LHCb::Track*> >& out) override;
 
     /** search for tracks in T stations
      * @param output container for tracks found
@@ -112,7 +112,7 @@ class PatSeedingTool :
      * @return StatusCode
      */
     virtual StatusCode performTracking (LHCb::Tracks* output,
-	const LHCb::State* state = 0);
+	const LHCb::State* state = 0) override;
 
     /** search for tracks in T stations
      * @param outputTracks container for tracks found
@@ -120,12 +120,12 @@ class PatSeedingTool :
      * @return StatusCode
      */
     virtual StatusCode performTracking (std::vector<LHCb::Track*>& outputTracks,
-	const LHCb::State* state = 0);
+	const LHCb::State* state = 0) override;
 
     /** prepare hits in IT/OT for use with the tool
      * @return number of hits in IT and OT
      */
-    virtual unsigned prepareHits();
+    virtual unsigned prepareHits() override;
 
     /// status codes put into ProcStatus
     enum ProcStatusCodes {
@@ -275,8 +275,8 @@ class PatSeedingTool :
 
     // maximum distance of two tracks to be considered for pattern reco
     // clone killing
-    double m_cloneMaxXDistIT;
-    double m_cloneMaxXDistOT;
+  //    double m_cloneMaxXDistIT;
+  //    double m_cloneMaxXDistOT;
 
     // chi^2 cutoff for tracks with few OT hits
     double m_maxTrackChi2LowMult;

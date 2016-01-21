@@ -157,8 +157,7 @@ public:
 protected:
 
 private:
-  
-  const std::array<double,7>* m_magPar;
+  //  const std::array<double,7>* m_magPar;
   const std::array<double,3>* m_momPar;
   
   LHCb::Track*        m_track;

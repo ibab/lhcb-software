@@ -46,7 +46,7 @@ class PatForward : public GaudiAlgorithm {
     unsigned int m_maxNVelo;
     bool m_doClean;
     bool m_doTiming;
-    bool m_unusedVeloSeeds;
+  //    bool m_unusedVeloSeeds;
 
     unsigned int m_maxNumberOTHits;      
     unsigned int m_maxNumberITHits; 

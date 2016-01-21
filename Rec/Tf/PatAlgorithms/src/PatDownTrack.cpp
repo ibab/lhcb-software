@@ -19,7 +19,7 @@ PatDownTrack::PatDownTrack( LHCb::Track* tr,
                             const std::array<double,3>& momentumParams,
                             const std::vector<double>& yParams,
                             const double magnetScale) :
-  m_magPar(&magnetParams), 
+  //  m_magPar(&magnetParams), 
   m_momPar(&momentumParams), 
   m_track(tr),
   m_magnetScale(magnetScale), 

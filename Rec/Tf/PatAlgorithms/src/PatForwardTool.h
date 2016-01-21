@@ -60,7 +60,7 @@ public:
   void setNNSwitch( bool nnSwitch) override { m_nnSwitch = nnSwitch;}
   bool nnSwitch()       const       { return m_nnSwitch;}
   
-  void handle ( const Incident& incident );
+  void handle ( const Incident& incident ) override;
   void prepareHits();
 
 private:
