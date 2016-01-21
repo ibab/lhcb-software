@@ -98,7 +98,7 @@ namespace Velo
     TH1D* m_histCluADC_Sensor_FWHM;
     TH1D* m_histCluADC_Sensor_FitFunction[84];
     TF1* func[84];
-    TF1* func_all;
+    //    TF1* func_all;
 
     std::vector<AIDA::IHistogram1D*> m_hNCluSens;
     

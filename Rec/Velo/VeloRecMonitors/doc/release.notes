@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2016-01-21 - Marco Cattaneo
+ - Remove unused member variables (fixes clang warnings)
+
 ! 2015-12-11 - Michael Alexander
  - VeloIPResolutionMonitorNT : Allowing tools to be externally configured and 
    fixing storing of momentum covariance matrix.

@@ -52,7 +52,7 @@ namespace Velo
     std::string m_vertexLocation ;
     std::string m_trackLocation ;
 
-    const LHCb::RecVertex* m_pv;
+    //    const LHCb::RecVertex* m_pv;
     const LHCb::Track* m_track;
 
     bool m_withMC;
