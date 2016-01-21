@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2016-01-21 - Chris Jones
+ - A few more C++11 modernisations.
+
 ! 2016-01-15 - Chris Jones
  - Various C++11 clean ups.
  - Convert static new objects to static local in RichRawDataFormatTool, to

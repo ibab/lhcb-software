@@ -36,7 +36,7 @@ namespace Rich
         // Set data words
         for ( const auto& digit : digits )
         {
-          const Rich::DAQ::ShortType row = 
+          const Rich::DAQ::ShortType row =
             ( Rich::DAQ::NumAlicePixelsPerLHCbPixel * digit.pixelRow() ) + digit.pixelSubRow();
           setPixelActive( row, digit.pixelCol() );
         }
@@ -103,14 +103,14 @@ namespace Rich
           {
             if ( isPixelActive(iRow,iCol) )
             {
-              ids.push_back( LHCb::RichSmartID( hpdID.rich(),
-                                                hpdID.panel(),
-                                                hpdID.pdNumInCol(),
-                                                hpdID.pdCol(),
-                                                iRow/8,  // pixel row
-                                                iCol,    // pixel col
-                                                iRow%8 ) // pixel subrow
-                             );
+              ids.emplace_back( LHCb::RichSmartID( hpdID.rich(),
+                                                   hpdID.panel(),
+                                                   hpdID.pdNumInCol(),
+                                                   hpdID.pdCol(),
+                                                   iRow/8,  // pixel row
+                                                   iCol,    // pixel col
+                                                   iRow%8 ) // pixel subrow
+                                );
               ++m_nHits; // count hits
             }
           }

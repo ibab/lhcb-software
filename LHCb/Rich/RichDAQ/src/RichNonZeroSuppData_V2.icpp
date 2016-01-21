@@ -98,11 +98,11 @@ namespace Rich
           {
             if ( isPixelActive(iRow,iCol) )
             {
-              ids.push_back( LHCb::RichSmartID( hpdID.rich(),
-                                                hpdID.panel(),
-                                                hpdID.pdNumInCol(),
-                                                hpdID.pdCol(),
-                                                iRow, iCol ) );
+              ids.emplace_back( LHCb::RichSmartID( hpdID.rich(),
+                                                   hpdID.panel(),
+                                                   hpdID.pdNumInCol(),
+                                                   hpdID.pdCol(),
+                                                   iRow, iCol ) );
               ++m_nHits; // count hits
             }
           }

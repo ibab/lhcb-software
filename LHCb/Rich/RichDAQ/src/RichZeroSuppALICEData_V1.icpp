@@ -69,7 +69,7 @@ namespace Rich
           // Get first address and bit field
           const ShortType address0 = zsData.address0();
           const ShortType bits0    = zsData.bitField0();
- 
+
           // update offsets
           if      ( 0 == address0 ) { ++addressOffsetEven; }
           else if ( 1 == address0 ) { ++addressOffsetOdd;  }
@@ -84,11 +84,11 @@ namespace Rich
             {
               if ( this->isBitOn(bits0,iB) )
               {
-                ids.push_back( LHCb::RichSmartID( hpdID.rich(), hpdID.panel(),
-                                                  hpdID.pdNumInCol(), hpdID.pdCol(),
-                                                  zsData.rowFromAddress(address0,addressOffset0),
-                                                  zsData.colFromAddressAndBit(address0,iB),
-                                                  zsData.subPixelFromAddress(address0) ) );
+                ids.emplace_back( LHCb::RichSmartID( hpdID.rich(), hpdID.panel(),
+                                                     hpdID.pdNumInCol(), hpdID.pdCol(),
+                                                     zsData.rowFromAddress(address0,addressOffset0),
+                                                     zsData.colFromAddressAndBit(address0,iB),
+                                                     zsData.subPixelFromAddress(address0) ) );
                 ++m_nHits; // count hits
               }
             }
@@ -115,11 +115,11 @@ namespace Rich
               {
                 if ( this->isBitOn(bits1,iB) )
                 {
-                  ids.push_back( LHCb::RichSmartID( hpdID.rich(), hpdID.panel(),
-                                                    hpdID.pdNumInCol(), hpdID.pdCol(),
-                                                    zsData.rowFromAddress(address1,addressOffset1),
-                                                    zsData.colFromAddressAndBit(address1,iB),
-                                                    zsData.subPixelFromAddress(address1) ) );
+                  ids.emplace_back( LHCb::RichSmartID( hpdID.rich(), hpdID.panel(),
+                                                       hpdID.pdNumInCol(), hpdID.pdCol(),
+                                                       zsData.rowFromAddress(address1,addressOffset1),
+                                                       zsData.colFromAddressAndBit(address1,iB),
+                                                       zsData.subPixelFromAddress(address1) ) );
                   ++m_nHits; // count hits
                 }
               }

@@ -72,8 +72,9 @@ namespace Rich
       }
 
       template< class Version, class Header, class Footer >
-      ShortType RichZeroSuppData<Version,Header,Footer>::fillRichSmartIDs ( LHCb::RichSmartID::Vector & ids,
-                                                                            const LHCb::RichSmartID hpdID ) const
+      ShortType RichZeroSuppData<Version,Header,Footer>::
+      fillRichSmartIDs ( LHCb::RichSmartID::Vector & ids,
+                         const LHCb::RichSmartID hpdID ) const
       {
 
         // For this implementation the header nEightBitBlocksPlusOne word contains the number of hits
@@ -98,10 +99,10 @@ namespace Rich
             {
               if ( this->isBitOn(bits,iB) )
               {
-                ids.push_back( LHCb::RichSmartID( hpdID.rich(), hpdID.panel(),
-                                                  hpdID.pdNumInCol(), hpdID.pdCol(),
-                                                  RichZSPacked_V1::RichZSPacked::rowFromAddress(address),
-                                                  RichZSPacked_V1::RichZSPacked::colFromAddressAndBit(address,iB) ) );
+                ids.emplace_back( LHCb::RichSmartID( hpdID.rich(), hpdID.panel(),
+                                                     hpdID.pdNumInCol(), hpdID.pdCol(),
+                                                     RichZSPacked_V1::RichZSPacked::rowFromAddress(address),
+                                                     RichZSPacked_V1::RichZSPacked::colFromAddressAndBit(address,iB) ) );
                 ++nDigitsMade;
                 if ( nDigitsMade == digitCount ) break;
               }
@@ -116,10 +117,10 @@ namespace Rich
             {
               if ( this->isBitOn(bits,iB) )
               {
-                ids.push_back( LHCb::RichSmartID( hpdID.rich(), hpdID.panel(),
-                                                  hpdID.pdNumInCol(), hpdID.pdCol(),
-                                                  RichZSPacked_V1::RichZSPacked::rowFromAddress(address),
-                                                  RichZSPacked_V1::RichZSPacked::colFromAddressAndBit(address,iB) ) );
+                ids.emplace_back( LHCb::RichSmartID( hpdID.rich(), hpdID.panel(),
+                                                     hpdID.pdNumInCol(), hpdID.pdCol(),
+                                                     RichZSPacked_V1::RichZSPacked::rowFromAddress(address),
+                                                     RichZSPacked_V1::RichZSPacked::colFromAddressAndBit(address,iB) ) );
                 ++nDigitsMade;
                 if ( nDigitsMade == digitCount ) break;
               }

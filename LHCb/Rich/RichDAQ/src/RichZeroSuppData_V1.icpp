@@ -72,23 +72,23 @@ namespace Rich
           const RichZSHitTriplet triplet( this->data()[iData] );
 
           // Make first smartid from triplet
-          ids.push_back( LHCb::RichSmartID( hpdID.rich(), hpdID.panel(),
-                                            hpdID.pdNumInCol(), hpdID.pdCol(),
-                                            triplet.row0(), triplet.col0() ) );
+          ids.emplace_back( LHCb::RichSmartID( hpdID.rich(), hpdID.panel(),
+                                               hpdID.pdNumInCol(), hpdID.pdCol(),
+                                               triplet.row0(), triplet.col0() ) );
           ++nDigitsMade;
           if ( nDigitsMade == digitCount ) break;
 
           // Make second smartid from triplet
-          ids.push_back( LHCb::RichSmartID( hpdID.rich(), hpdID.panel(),
-                                            hpdID.pdNumInCol(), hpdID.pdCol(),
-                                            triplet.row1(), triplet.col1() ) );
+          ids.emplace_back( LHCb::RichSmartID( hpdID.rich(), hpdID.panel(),
+                                               hpdID.pdNumInCol(), hpdID.pdCol(),
+                                               triplet.row1(), triplet.col1() ) );
           ++nDigitsMade;
           if ( nDigitsMade == digitCount ) break;
 
           // Make third smartid from triplet
-          ids.push_back( LHCb::RichSmartID( hpdID.rich(), hpdID.panel(),
-                                            hpdID.pdNumInCol(), hpdID.pdCol(),
-                                            triplet.row2(), triplet.col2() ) );
+          ids.emplace_back( LHCb::RichSmartID( hpdID.rich(), hpdID.panel(),
+                                               hpdID.pdNumInCol(), hpdID.pdCol(),
+                                               triplet.row2(), triplet.col2() ) );
           ++nDigitsMade;
           if ( nDigitsMade == digitCount ) break;
 
