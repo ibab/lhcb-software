@@ -192,7 +192,7 @@ private:
   unsigned int  m_nx;
   unsigned int  m_ny;
   unsigned int  m_zone;
-  int           m_type;
+  //  int           m_type;
   int           m_nDoF;
   float         m_chi2DoF;
   float         m_zRef;

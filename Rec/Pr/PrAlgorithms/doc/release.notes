@@ -4,8 +4,11 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2016-01-21 - Marco Cattaneo
+ - Remove unused member variable (fixes clang warnings)
+
 ! 2016-01-16 - Sevda Esen			
-- Updated  PrSeedingXLayers, PrSeedTrack to use cubic track fit model
+ - Updated  PrSeedingXLayers, PrSeedTrack to use cubic track fit model
 
 ! 2016-01-11 - Thomas Nikodem
  - Fixed timing bug in PrForwardTool (removed matchStereoHit method)
