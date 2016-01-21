@@ -4,9 +4,6 @@
  *
  *  Header file for poisson efficiency functor : RichStatDivFunctor
  *
- *  CVS Log :-
- *  $Id: RichStatDivFunctor.h,v 1.8 2009-07-30 11:28:21 jonrob Exp $
- *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
  */
@@ -69,7 +66,7 @@ namespace Rich
   private:
 
     /// Pointer to parent calculator
-    const StatDivFunctor * m_parent;
+    const StatDivFunctor * m_parent = nullptr;
 
   };
 

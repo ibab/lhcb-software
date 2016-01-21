@@ -4,6 +4,9 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2016-01-21 - Chris Jones
+ - Clean up a bit RichStatDivFunctor.h and RichPoissonEffFunctor.h
+
 ! 2016-01-14 - Chris Jones
  - Add support for a new 'Adaptive' photon reconstruction type.
    Default remains Quartic for now.

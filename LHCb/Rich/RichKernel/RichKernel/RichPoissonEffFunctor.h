@@ -4,9 +4,6 @@
  *
  *  Header file for poisson efficiency functor : RichPoissonEffFunctor
  *
- *  CVS Log :-
- *  $Id: RichPoissonEffFunctor.h,v 1.8 2009-07-30 11:28:21 jonrob Exp $
- *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
  */
@@ -68,7 +65,7 @@ namespace Rich
   private:
 
     /// Pointer to parent calculator
-    const PoissonEffFunctor * m_parent;
+    const PoissonEffFunctor * m_parent = nullptr;
 
   };
 
