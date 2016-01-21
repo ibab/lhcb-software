@@ -197,7 +197,6 @@ def makeParser ( **kwargs ) :
         )
     ##
     group_da.add_argument (
-        '-n'                       , 
         '--no-castor'              ,
         action  = 'store_false'    , 
         dest    = 'Castor'         ,

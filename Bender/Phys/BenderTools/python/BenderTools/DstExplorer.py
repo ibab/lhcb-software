@@ -141,14 +141,11 @@ def configure ( config ) :
     """
     #
     if config.OutputLevel <= 3 and not config.Quiet :
-        clogger = getLogger('Bender.Configuration') 
         _vars   = vars ( config )
         _keys   = _vars.keys()
-        _keys .sort()        
-        clogger.info ( 100 * '*')
-        clogger.info ( 'Configuration:')
-        for _k in _keys : clogger.info ( '  %15s : %-s ' % ( _k , _vars[_k] ) )
-        clogger.info ( 100 * '*')
+        _keys .sort()
+        logger.info ( 'Configuration:')
+        for _k in _keys : logger.info ( '  %15s : %-s ' % ( _k , _vars[_k] ) )
     
     ## redefine output level for 'quiet'-mode
     if config.OutputLevel > 5 :
