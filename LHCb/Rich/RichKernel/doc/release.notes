@@ -4,6 +4,10 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2016-01-22 - Chris Jones
+ - Set the RejectAmbiguousPhotons=True option in the fast (estimation) 
+   photon reconstruction tool when running the Adaptive option.
+
 ! 2016-01-21 - Chris Jones
  - Clean up a bit RichStatDivFunctor.h and RichPoissonEffFunctor.h
 

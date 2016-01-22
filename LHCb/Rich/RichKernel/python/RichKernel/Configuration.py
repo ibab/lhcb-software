@@ -378,10 +378,15 @@ class RichTools(RichConfigurableUser):
             from Configurables import Rich__Rec__PhotonRecoUsingCKEstiFromRadius
             tool = self.__makeRichTool( Rich__Rec__PhotonRecoUsingCKEstiFromRadius, nickname, private )
         elif recoType == "Adaptive" :
-            from Configurables import Rich__Rec__AdaptivePhotonReco
+            from Configurables import ( Rich__Rec__AdaptivePhotonReco,
+                                        Rich__Rec__PhotonRecoUsingCKEstiFromRadius )
+            slowName = "AdaptiveSlowPhotonReco"
+            fastName = "AdaptiveFastPhotonReco"
             tool = self.__makeRichTool( Rich__Rec__AdaptivePhotonReco, nickname, private )
-            self.toolRegistry().Tools += [ "Rich::Rec::PhotonRecoUsingQuarticSoln/AdaptiveSlowPhotonReco",
-                                           "Rich::Rec::PhotonRecoUsingCKEstiFromRadius/AdaptiveFastPhotonReco" ]
+            self.toolRegistry().Tools += [ "Rich::Rec::PhotonRecoUsingQuarticSoln/"+slowName,
+                                           "Rich::Rec::PhotonRecoUsingCKEstiFromRadius/"+fastName ]
+            tool.addTool( Rich__Rec__PhotonRecoUsingCKEstiFromRadius, fastName )
+            getattr(tool,fastName).RejectAmbiguousPhotons = True
         else:
             raise RuntimeError("Unknown Photon Reco '%s'"%recoType)
         return tool
