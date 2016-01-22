@@ -8,6 +8,7 @@
 #include "Event/STMeasurement.h"
 #include "STDet/DeSTLayer.h"
 
+class ISTClusterCollector;
 class IHitExpectation;
 class DeSTDetector;
 class DeSTSector;
@@ -37,41 +38,29 @@ protected:
 
 private:
 
-  bool foundHitInSector( const ISTClusterCollector::Hits& hits,
-                         LHCb::Track* const& track,
-                         const unsigned int testsector,
-                         const double resCut,
-                         const bool toplot ) const;
+  unsigned int TThistoBin(const LHCb::STChannelID& chan) const;
+  unsigned int IThistoBin(const LHCb::STChannelID& chan) const;
 
-  bool foundHitInLayer( const ISTClusterCollector::Hits& hits,
-                         LHCb::Track* const& track,
-                         const unsigned int testlayer,
-                         const double resCut) const;
-
-  double foundResInSector( const ISTClusterCollector::Hits& hits,
-                         LHCb::Track* const& track,
-                         const unsigned int testsector,
-                         const double resCut) const;
 
   std::string formatNumber( const double& nbr, const unsigned int& digits = 2u ) const;
 
-  bool hasMinStationPassed(const LHCb::Track* ) const;
+  bool hasMinStationPassed(LHCb::Track* const&) const;
 
-  bool crossedLayer(const LHCb::Track* aTrack,
+  bool crossedLayer(LHCb::Track* const& aTrack,
                                 DeSTLayer * &aLayer) const;
-  unsigned int hitsOnLayer(const ISTClusterCollector::Hits& hits,
-                                DeSTLayer * aLayer) const;
+  unsigned int hitsOnLayer(ISTClusterCollector::Hits hits,
+                                DeSTLayer * &aLayer) const;
 
-  unsigned int hitsOnLayer(const std::vector<const LHCb::STMeasurement*>& measVector,
-                                     DeSTLayer * aLayer) const;
+  unsigned int hitsOnLayer(std::vector<const LHCb::STMeasurement*> measVector,
+                                     DeSTLayer * &aLayer) const;
 
   DeSTSensor* findSensor(const DeSTSector* sector,
                                     LHCb::STChannelID id);
 
-  LHCb::LHCbID findHitId(const LHCb::Track* aTrack,
+  LHCb::LHCbID findHitId(LHCb::Track* const& aTrack,
                           const LHCb::STMeasurement* aHit) const;
   
-  double retrieveErrResidual2(const LHCb::Track* aTrack,
+  double retrieveErrResidual2(LHCb::Track* const& aTrack,
                                         LHCb::LHCbID aID) const;
 
 
@@ -93,7 +82,7 @@ private:
   std::vector< double > m_spacialCuts;
   double m_xCut, /**< Applied cut to compute X layer efficiencies */
     m_stereoCut; /**< Applied cut to compute stereo layer
-		    efficiencies */
+        efficiencies */
   /**
    * Default cut to check if hit exists in layer
    */
@@ -115,6 +104,10 @@ private:
    */
   unsigned int m_NbrOfCuts;
   /**
+   * Min number of expected hits for the track to be accepted.
+   */
+  unsigned int m_minHits;
+  /**
    * Detector type, can be either IT or TT.
    */
   std::string m_detType;
@@ -128,6 +121,8 @@ private:
   CounterMap m_expectedSector, m_expectedLayer;
   std::map<unsigned int , DeSTSector*> m_nameMapSector, m_nameMapLayer;
   
+  void filterNameList(std::vector< unsigned int>& vec);
+
   /**
    * Cut applied on the cluster charge, in terms of signal to noise.
    */
@@ -177,7 +172,7 @@ private:
    * \e false => only hits picked up by the pattern recognition are
    * taken into account.
    */
-  bool m_everyHit;
+  //bool m_everyHit;
   /**
    * Toggles off / on picking only hits from the track.\n
    * \e false => every found hit is taken\n
@@ -206,13 +201,9 @@ private:
    */
   bool m_resPlot;
   /**
-   * Ntuple branched by sector names
+   * Measureing hit efficiency
    */
-  bool m_branchBySector;
-  /**
-   * Ntuple branched by track
-   */
-  bool m_branchByTrack;
+  bool m_efficiencyMode;
   /**
    * Save sector positions in ntuple
    */

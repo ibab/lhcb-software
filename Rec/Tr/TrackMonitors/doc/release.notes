@@ -4,6 +4,12 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2016-22-01 - Komarov Ilya
+- STTrackTuple: BranchBySector mode was disabled
+- STTrackTuple: Instead of it, I’ve added EfficiencyMode of the tool, which makes it to work as STEfficiency algorithm
+- STTrackTuple: TakeEveryHit option was removed
+- STTrackTuple: Histogram output was removed
+
 ! 2016-01-11 - Elena Graverini
  - Add option files for the analysis of ST CCE scans
 
