@@ -4,7 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
-! 2016-01-16 - Andrea Contu
+! 2016-01-22 - Andrea Contu
+ - Fix to documentation code
+
+! 2016-01-22 - Andrea Contu
  - Added various tests for coordinators 
 
 ! 2015-12-18 -  Tim Williams

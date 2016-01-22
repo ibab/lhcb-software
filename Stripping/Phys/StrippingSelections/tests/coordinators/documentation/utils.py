@@ -971,7 +971,7 @@ def make_html_summary(db, stripping, commonparts) :
         htmlfile.write('<h2><a name="%s"> %s </a></h2>\n' % (stream.lower(), stream))
         htmlfile.write('<table>')
         for line in sorted(db[stream].keys()) : 
-        prescale = db[stream][line]['Properties']['Prescale']
+            prescale = db[stream][line]['Properties']['Prescale']
         if float(prescale) < 1. : 
             prescale = '<font color="red"> %5.3f </font>' % float(prescale)
         else : 
@@ -1319,7 +1319,7 @@ def make_documentation( root_tree, stripping, commonparts ) :
 
     for stream in sorted(list_streams( root_tree )) : 
 ##    for stream in [ 'Bhadron' ]  : 
-       outdb[stream] = {}
+        outdb[stream] = {}
         for line in sorted(list_lines( root_tree, stream)) : 
 ##       for line in [ 'StrippingB2twobodyLine' ] : 
             print stream, line
@@ -1329,7 +1329,7 @@ def make_documentation( root_tree, stripping, commonparts ) :
             outdb[stream][line]['Algs'] = {}
             print line_prop['Filters']
             for alg in line_prop['Filters'] : 
-            make_line_algorithms( root_tree, stripping, outdb, stream, line, alg)
+                make_line_algorithms( root_tree, stripping, outdb, stream, line, alg)
 
             make_html(outdb[stream][line], stripping, stream, line, parts)
 ##          break
@@ -1345,7 +1345,7 @@ def commonparticles_properties() :
     db = {'basic' : {}, 'intermediate' : {} }
     for name in dir(StandardBasic) : 
 
-    if not name.find('Std') == 0 : continue
+        if not name.find('Std') == 0 : continue
         module = __import__('CommonParticles.StandardBasic', globals(), locals(), [ name ])
         db['basic'][name] = {}
         p = getattr(module, name)
