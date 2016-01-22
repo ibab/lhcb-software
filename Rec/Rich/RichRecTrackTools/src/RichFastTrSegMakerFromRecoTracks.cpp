@@ -28,7 +28,6 @@ FastTrSegMakerFromRecoTracks( const std::string& type,
                               const std::string& name,
                               const IInterface* parent)
   : BaseTrSegMakerFromRecoTracks ( type, name, parent ),
-    m_rayTracing   ( 0                          ),
     m_nomZstates   ( Rich::NRadiatorTypes, 0    ),
     m_zTolerance   ( Rich::NRadiatorTypes, 0    ),
     m_minStateDiff ( Rich::NRadiatorTypes, 0    ),
@@ -188,10 +187,9 @@ FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
     verbose() << "Analysing Track key=" << track->key()
               << " history=" << track->history()
               << " : " << track->states().size() << " States at z =";
-    for ( std::vector<LHCb::State*>::const_iterator iS = track->states().begin();
-          iS != track->states().end(); ++iS )
+    for ( const auto * S : track->states() )
     {
-      if (*iS) verbose() << " " << (*iS)->z();
+      if (S) verbose() << " " << S->z();
     }
     verbose() << endmsg;
   }
@@ -210,7 +208,7 @@ FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
 
     // Create entry momentum vector
     Gaudi::XYZVector entryVect( states[0]->slopes() );
-    entryVect *= fabs(states[0]->p()) / sqrt(entryVect.Mag2());
+    entryVect *= fabs(states[0]->p()) / std::sqrt(entryVect.Mag2());
 
     // Find radiator entry point
     Gaudi::XYZPoint entryPoint;
@@ -238,7 +236,7 @@ FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
 
     // Create exit momentum vector
     Gaudi::XYZVector exitVect ( states[1]->slopes() );
-    exitVect *= fabs(states[1]->p()) / sqrt(exitVect.Mag2());
+    exitVect *= fabs(states[1]->p()) / std::sqrt(exitVect.Mag2());
 
     // Find radiator exit point
     Gaudi::XYZPoint exitPoint;
@@ -350,9 +348,9 @@ FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
 
       // Create intersection info
       Rich::RadIntersection::Vector intersects;
-      intersects.push_back( Rich::RadIntersection( entryPoint, entryVect,
-                                                   exitPoint, entryVect, // seems best to always use entry momentum !!
-                                                   m_deRads[rad] ) );
+      intersects.emplace_back( Rich::RadIntersection( entryPoint, entryVect,
+                                                      exitPoint, entryVect, // seems best to always use entry momentum !!
+                                                      m_deRads[rad] ) );
 
       // Using this information, make radiator segment
       // this version uses 2 states and thus forces a straight line approximation

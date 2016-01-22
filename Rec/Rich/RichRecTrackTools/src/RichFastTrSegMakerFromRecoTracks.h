@@ -91,7 +91,7 @@ namespace Rich
     private: // data
 
       /// Ray tracing tool
-      const IRayTracing* m_rayTracing;
+      const IRayTracing* m_rayTracing = nullptr;
 
       /// Nominal z positions of states at RICHes
       std::vector<double> m_nomZstates;
