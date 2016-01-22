@@ -16,7 +16,9 @@ MEPManager.PartitionID               = @OnlineEnv.PartitionID;
 MEPManager.PartitionName             = @OnlineEnv.PartitionName;
 MEPManager.Buffers                   = @OnlineEnv.Sender_Buffers;
 
-ApplicationMgr.TopAlg               += {"LHCb::SocketDataSender/SND"};
+//ApplicationMgr.TopAlg               += {"LHCb::SocketDataSender/SND"};
+ApplicationMgr.TopAlg               += {"Online::AsioDataSender/SND"};
+//ApplicationMgr.TopAlg               += {"Online::ZMQDataSender/SND"};
 SND.DataSink                         = @OnlineEnv.Target;
 SND.Compress                         = 0;
 SND.DataType                         = 3; // MDF_NONE=1, MDF_RECORDS=2, MDF_BANKS=3 
