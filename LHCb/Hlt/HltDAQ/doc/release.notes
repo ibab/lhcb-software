@@ -6,7 +6,8 @@
 
 ! 2016-01-22 - Chris Jones
  - Add a work around to HltTrackingCoder to fix compilation with clang do to 
-   the LLVM bug https://llvm.org/bugs/show_bug.cgi?id=23381
+   the LLVM bug https://llvm.org/bugs/show_bug.cgi?id=23381.
+ - Make the packers a local object to each method where it is required.
 
 ! 2016-1-11 - Sean Benson
  - Make a helpful debugging selection report for version 99.

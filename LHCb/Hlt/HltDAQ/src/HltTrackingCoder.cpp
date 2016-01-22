@@ -29,9 +29,6 @@ using namespace LHCb;
 // 20014-01-14 : Sebastian Neubert
 //-----------------------------------------------------------------------------
 
-// It is stupid to have to instantiate this
-const StandardPacker pac = { };
-
 void encodeTracks( const LHCb::Tracks& tracks, std::vector<unsigned int>& rawBank, bool writeStates )
 {
     auto out = std::back_inserter(rawBank);
@@ -41,6 +38,9 @@ void encodeTracks( const LHCb::Tracks& tracks, std::vector<unsigned int>& rawBan
                                      return writeStates ? s+3+t->nLHCbIDs()+t->states().size()*22 : s+3+t->nLHCbIDs() ;
     });
     rawBank.reserve(nWords);
+
+    // Packer
+    const StandardPacker pac = { };
 
     // std::cout << "Encoding "<<tracks->size()<<" tracks."<<std::endl;
     for ( const LHCb::Track* Tr : tracks ) {
@@ -122,6 +122,9 @@ void encodeTracks( const LHCb::Tracks& tracks, std::vector<unsigned int>& rawBan
 unsigned int decodeTracks( const unsigned int* rawit, unsigned int nentries,
                            LHCb::Tracks& tracks )
 {
+    // Packer
+    const StandardPacker pac = { };
+
     // due to the way the RawBank presents ist data we have
     // to loop over the data in the old fashioned way
     // so we use a pointer"iterator"
