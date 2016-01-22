@@ -79,10 +79,6 @@ namespace BoostAsio {
     /// Communicate request with any target name-server
     int      communicate(Socket* in, Socket* out, TanMessage& msg, int tmo);
 
-    /// Fatal nameserver connection error: close channel and return given error code
-    int fatalError(int code);
-    /// Convert TAN error codes to operating system specific ones
-    int errorCode(int tan_error);
     /// Send shutdown request to nameserver
     int sendAction(int which, const char* node);
 

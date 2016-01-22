@@ -135,36 +135,51 @@ TanInterface::TanInterface() : m_conOut(0), m_conIn(0)   {
 TanInterface::~TanInterface()  {
 }
 
-/// Convert TAN error codes to operating system specific ones
-int TanInterface::errorCode(int tan_error)  {
-  switch ( tan_error )    {
-  case TAN_SS_TASKNOTFOUND:     return  AMS_TASKNOTFOUND;
-  case TAN_SS_HOSTNOTFOUND:     return  AMS_HOSTNOTFOUND;
-  case TAN_SS_DATABASEFULL:     return  AMS_DATABASEFULL;
-  case TAN_SS_ODDRESPONSE:      return  AMS_ODDRESPONSE;
-  case TAN_SS_UNKNOWNMODE:      return  AMS_UNKNOWNMODE;
-  case TAN_SS_NOTOPEN:          return  AMS_TANCLOSED;
-  case TAN_SS_RECV_TMO:         return  AMS_TIMEOUT;
-  case TAN_SS_MADSRV:           return  AMS_TERRIBLE;
-  case TAN_SS_DUPLNAM:          return  AMS_DUPLICATE_NAME;
-  case TAN_SS_ENTNOTALLOC:      return  AMS_TERRIBLE;
-  case TAN_SS_ODDREQUEST:       return  AMS_TERRIBLE;
-  case TAN_SS_OPEN:             return  AMS_TANOPEN;
-  case TAN_SS_ERROR:            return  AMS_ERROR;
-  case TAN_SS_NOMEM:            return  AMS_NOMEMORY;
-  case TAN_SS_SUCCESS:          return  AMS_SUCCESS;
-  default:                      return  AMS_ERROR;
+namespace {
+  /// Convert TAN error codes to operating system specific ones
+  static int errorCode(int tan_error)  {
+    switch ( tan_error )    {
+    case TAN_SS_TASKNOTFOUND:     return  AMS_TASKNOTFOUND;
+    case TAN_SS_HOSTNOTFOUND:     return  AMS_HOSTNOTFOUND;
+    case TAN_SS_DATABASEFULL:     return  AMS_DATABASEFULL;
+    case TAN_SS_ODDRESPONSE:      return  AMS_ODDRESPONSE;
+    case TAN_SS_UNKNOWNMODE:      return  AMS_UNKNOWNMODE;
+    case TAN_SS_NOTOPEN:          return  AMS_TANCLOSED;
+    case TAN_SS_RECV_TMO:         return  AMS_TIMEOUT;
+    case TAN_SS_MADSRV:           return  AMS_TERRIBLE;
+    case TAN_SS_DUPLNAM:          return  AMS_DUPLICATE_NAME;
+    case TAN_SS_ENTNOTALLOC:      return  AMS_TERRIBLE;
+    case TAN_SS_ODDREQUEST:       return  AMS_TERRIBLE;
+    case TAN_SS_OPEN:             return  AMS_TANOPEN;
+    case TAN_SS_ERROR:            return  AMS_ERROR;
+    case TAN_SS_NOMEM:            return  AMS_NOMEMORY;
+    case TAN_SS_SUCCESS:          return  AMS_SUCCESS;
+    default:                      return  AMS_ERROR;
+    }
   }
-}
 
-/// Fatal nameserver connection error: close channel and return given error code
-int TanInterface::fatalError(int code)  {
-  if ( code != TAN_SS_SUCCESS )  {
-    ::lib_rtl_output(LIB_RTL_OS,"Tan(ASIO): Closing Channel in error:%d errno=%d\n",code,errno);
+  /// Fatal nameserver connection error: close channel and return given error code
+  static int fatalError(const TanMessage& msg, const int code)  {
+    const char* reason = "";
+    switch(msg.function())  {
+    case TanMessage::ALLOCATE:         reason = "ALLOCATE";     break;
+    case TanMessage::DEALLOCATE:       reason = "DEALLOCATE";   break;
+    case TanMessage::INQUIRE:          reason = "INQUIRE";      break;
+    case TanMessage::ALIAS:            reason = "ALIAS";        break;
+    case TanMessage::DEALIAS:          reason = "DEALIAS";      break;
+    case TanMessage::DISCONNECTED:     reason = "DISCONNECTED"; break;
+    case TanMessage::DUMP:             reason = "DUMP";         break;
+    case TanMessage::SHUTDOWN:         reason = "SHUTDOWN";     break;
+    default:                           reason = "UNKNOWN";      break;
+    }
+    int flag = errno == 0 ? LIB_RTL_ERROR : LIB_RTL_OS;
+    if ( code != TAN_SS_SUCCESS )  {
+      ::lib_rtl_output(flag,
+		       "Tan(ASIO): Error after action:'%s' error:%d errno:%d\n",
+		       reason, code, errno);
+    }
+    return code;
   }
-  //delete m_conOut;
-  //m_conOut = 0;
-  return code;
 }
 
 /// Get hostentry from inet db by host name
@@ -280,8 +295,10 @@ int TanInterface::allocatePort(const char* name, bool force, NetworkChannel::Por
       ::lib_rtl_sleep(1000);
     }
     if ( rc == -1 )  {
-      ::lib_rtl_signal_message(LIB_RTL_OS,"Tan(ASIO): Failed to connect as %s (allocatePort)", name);
-      return fatalError(rc);
+      ::lib_rtl_signal_message(LIB_RTL_OS,
+			       "Tan(ASIO): Failed to connect as %s (allocatePort)",
+			       name);
+      return fatalError(msg, errorCode(TAN_SS_HOSTNOTFOUND));
     }
     m_conOut->setsockopt(Asio_TCP_KEEPALIVE,&on,sizeof(on));
     m_conIn = m_conOut;
@@ -295,7 +312,7 @@ int TanInterface::allocatePort(const char* name, bool force, NetworkChannel::Por
       *port = msg.m_sin.sin_port;
       return errorCode(TAN_SS_SUCCESS);
     }
-    return rc;
+    return fatalError(msg, errorCode(TAN_SS_HOSTNOTFOUND));
   }
   *port = m_portAllocated;
   return errorCode(TAN_SS_OPEN);
@@ -350,7 +367,7 @@ int TanInterface::sendAction(int request, const char* node) {
   if ( node == 0 || *node == 0 ) node = m_pcHostName;
   TanMessage msg(request);
   if ( setInquireAddr(node,msg.m_sin) == TAN_SS_SUCCESS )
-    return communicate(msg,Receive_TMO);
+    return communicate(msg, Receive_TMO);
   return errorCode(TAN_SS_ERROR);
 }
 
@@ -366,7 +383,7 @@ int TanInterface::communicate(TanMessage& msg, int tmo)  {
     // Sleep 1 second before re-trying ...
     ::lib_rtl_sleep(1000);
   }
-  return fatalError(chan.error());
+  return fatalError(msg, chan.error());
 }
 
 /// Communicate request with any target name-server
@@ -378,19 +395,19 @@ int TanInterface::communicate(Socket* out, Socket* in, TanMessage& msg, int tmo)
       if ( num_byte == sizeof(msg) )  {
         msg.Convert();
         if ( msg.error() != TAN_SS_SUCCESS )
-          return fatalError( errorCode(msg.error()) );
+          return fatalError(msg, errorCode(msg.error()) );
         return errorCode(TAN_SS_SUCCESS);
       }
       else {
         if ( num_byte != int(msg._Length()) )
-          return fatalError( errorCode(TAN_SS_ODDRESPONSE) );
+          return fatalError(msg, errorCode(TAN_SS_ODDRESPONSE) );
         else if ( out->isCancelled())
-          return fatalError(errorCode(TAN_SS_RECV_TMO));
+          return fatalError(msg, errorCode(TAN_SS_RECV_TMO));
         else
-          return fatalError(out->error());
+          return fatalError(msg, out->error());
       }
     }
-    return fatalError(in->error());
+    return fatalError(msg, in->error());
   }
   errno = ENOTSOCK;
   return errorCode(TAN_SS_NOTOPEN);

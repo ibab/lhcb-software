@@ -105,7 +105,10 @@ int Socket::recv(void* buffer, size_t len, int tmo)   {
 
 int Socket::close()   {
   system::error_code ec;
-  m_socket.close(ec);
+  try  {    m_socket.shutdown(tcp::socket::shutdown_both,ec);  }
+  catch(...)   {  }
+  try  {    m_socket.close(ec);  }
+  catch(...)   {  }
   return 0;
 }
 
