@@ -110,10 +110,12 @@ namespace {
       return 1;
     }
     void monitor()   {
-      zmq_event_t event;
       static char addr[1025];
+      zmq_event_t event;
       zmq::socket_t s = ZMQ::Context::socket(ZMQ_PAIR);
       s.connect (m_monCon.c_str());
+      event.value = 0;
+      event.event = 0;
       while (read_msg(s, &event, addr)) {
 	switch (event.event) {
 	case ZMQ_EVENT_CONNECTED:

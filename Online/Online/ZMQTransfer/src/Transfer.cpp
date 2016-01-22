@@ -57,7 +57,7 @@ namespace ZMQ  {
     ~NET();
     unsigned int             m_refCount;
     std::thread*             m_mgr;
-    NetConnectionType           m_type;
+    NetConnectionType        m_type;
     netentry_t               m_me;
     netdb_t                  m_db;
     std::mutex               m_lock;
@@ -233,7 +233,7 @@ NetErrorCode NET::init(NetConnectionType type)  {
         ::lib_rtl_output(LIB_RTL_OS,"Allocating port number. Status %d",status);
         return NET_ERROR;
       }
-      ::snprintf(conn,sizeof(conn),"tcp://*:%d",int(htons(m_me.addr.sin_port)));
+      ::snprintf(conn,sizeof(conn),"tcp://*:%d",htons(m_me.addr.sin_port));
       status = ::zmq_bind(m_me.chan,conn);
       if (status == -1)  {
         errno = ::lib_rtl_get_error();
