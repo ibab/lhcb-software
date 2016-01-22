@@ -110,6 +110,9 @@ namespace Online  {
 	  }
 	  ::fprintf(stdout,"Loosing EVENT....Cannot register data source:%s.\n",hdr.name);
 	  ::fflush(stdout);
+	  ::operator delete(buffer);
+	  gauditask_task_unlock();
+	  return;
 	}
 	// Things go awfully wrong....e.g. finalize was called during data taking.
 	::fprintf(stdout,"Loosing event....was finailize called ?\n");

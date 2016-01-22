@@ -152,7 +152,7 @@ NetworkDataReceiver::handleSourceRequest(int clientID,
     if ( 0 == receiver(source) )  {
       m_receivers.push_back(RecvEntry(this,source,svc,clientID));
       RecvEntry& entry = m_receivers.back();
-      StatusCode sc = createNetRequest(entry);
+      StatusCode sc    = createNetRequest(entry);
       if ( sc.isSuccess() )  {
         MsgStream log(msgSvc(), name());
         log << MSG::DEBUG << "Added new datasource [" << clientID << "]:" << source 
@@ -175,8 +175,8 @@ NetworkDataReceiver::handleSourceRequest(int clientID,
 
 // Producer implementation: Request event from data source
 NetworkDataReceiver::RecvEntry* NetworkDataReceiver::receiver(const std::string& nam)  {
-  for(Receivers::iterator i=m_receivers.begin(); i!=m_receivers.end();++i)  {
-    if ( 0 == strcasecmp(nam.c_str(),(*i).name.c_str()) )  {
+  for(Receivers::iterator i=m_receivers.begin(); i != m_receivers.end(); ++i)  {
+    if ( 0 == ::strcasecmp(nam.c_str(), (*i).name.c_str()) )  {
       return &(*i);
     }
   }
@@ -210,13 +210,13 @@ void NetworkDataReceiver::deleteNetRequest(RecvEntry& /* entry */)  {
 
 // Reset event request and insert entry into data queue of the buffer manager
 StatusCode 
-NetworkDataReceiver::handleEventData(const std::string& src,void* buf,size_t len)  {
+NetworkDataReceiver::handleEventData(const std::string& src, void* buf, size_t len)  {
   try  {
     RecvEntry* entry = receiver(src);
     if ( entry )  {
       return handleEventData(*entry,buf,len);
     }
-    return error("Event receive entry from unknown source:"+src);
+    return error("Event entry received from unknown source:"+src);
   }
   catch(std::exception& e)   {
     return errorException("Exception during event receive request:",e);
