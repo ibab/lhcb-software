@@ -38,8 +38,6 @@ namespace BoostAsio  {
   protected:
     /// Reference to tan database object
     TanDataBase&         m_tandb;
-    /// Service port
-    NetworkChannel::Port m_port;
     /// Set of file descriptors requiring cleanup procedure
     std::set<int>        m_cleanup;
 
@@ -109,7 +107,7 @@ static void _printEntry(const char* msg, const TanMessage& request, TanDataBase:
 
 /// Construct request handler
 TanRequestHandler::TanRequestHandler(bool verbose, NetworkChannel::Port port)
-  : m_tandb(TanDataBase::Instance()), m_port(port)
+  : m_tandb(TanDataBase::Instance())
 {
   if ( verbose )  {
     std::string tm_str = ::lib_rtl_timestr();
@@ -119,7 +117,7 @@ TanRequestHandler::TanRequestHandler(bool verbose, NetworkChannel::Port port)
     ::lib_rtl_output(LIB_RTL_INFO,"+======================================================================+\n");
     ::lib_rtl_output(LIB_RTL_INFO,"|         B O O S T   A S I O    T C P / I P   N A M E   S E R V I C E |\n");
     ::lib_rtl_output(LIB_RTL_INFO,"|         Port(local): %6d %04X Network:%6d %04X                 |\n",
-                     ntohs(m_port), ntohs(m_port), m_port, m_port);
+                     port, port, ntohs(port), ntohs(port));
     ::lib_rtl_output(LIB_RTL_INFO,"+======================================================================+\n");
     ::fflush(stdout);
   }
@@ -136,7 +134,7 @@ void TanRequestHandler::handle(Connection& connection,
 {
   const void* data   = boost::asio::detail::buffer_cast_helper(req);
   const Msg* request = reinterpret_cast<const Msg*>(data);
-  Msg::Type func = (Msg::Type)request->function();
+  Msg::Type func = Msg::Type(request->function());
   Msg reply = *request;
 
   reply.m_error  = TAN_SS_SUCCESS;
@@ -322,7 +320,7 @@ extern "C" int boost_asio_tan_server(int argc, char** argv)  {
     stringstream port;
     RTL::CLI cli(argc,argv,help);
     int num_threads = 1, port_number = NAME_SERVICE_PORT;
-    string address = "0.0.0.0";
+    string address = "0.0.0.0"; // Default: INADDR_ANY
     bool verbose = cli.getopt("verbose",1);
     bool del_gbl = cli.getopt("delete",1);
     cli.getopt("address", 1, address);

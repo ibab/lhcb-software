@@ -148,7 +148,7 @@ inline void TanMessage::Convert()  {
   //m_length   = htonl(m_length);
   //m_error    = htonl(m_error);
   //m_function = htonl(m_function);
-  //m_sin.sin_family = ntohs (m_sin.sin_family);
+  //m_sin.sin_family = htons (m_sin.sin_family);
 }
 
 #endif   /* __cplusplus                    */

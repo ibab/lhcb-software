@@ -314,7 +314,7 @@ void Server::run()   {
     join();
   }
   catch(const std::exception& e)  {
-    ::lib_rtl_output(LIB_RTL_OS,"Failed to start AsioServer message pump. [%s]",e.what());
+    ::lib_rtl_output(LIB_RTL_OS,"ASIO: Failed to start Server message pump. [%s]",e.what());
   }
 }
 
@@ -345,7 +345,7 @@ extern "C" int boost_asio_echo_server(int argc, char** argv)  {
     if (argc != 4)    {
       ::printf("Usage: http_server <address> <port> <threads>\n"
 	       "  For IPv4, try:\n"
-	       "    receiver 0.0.0.0 80 1 .\n"
+	       "    receiver 0.0.0.0 80 1 .\n" // INADDR_ANY, port 80 (http), 1 thread
 	       "  For IPv6, try:\n"
 	       "    receiver 0::0 80 1 .\n");
       return 1;

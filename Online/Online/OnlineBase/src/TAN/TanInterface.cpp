@@ -85,12 +85,17 @@ TanInterface::TanInterface() : m_channel(0) {
   char* dot;
   hostent* h = 0;
   const char* tan_host = ::getenv("TAN_NODE");
-  int status = ::lib_rtl_get_node_name(m_pcHostName, sizeof (m_pcHostName));
   m_portAllocated = 0;
-  if ( status < 0 )                                                  goto Error;
-  if ( tan_host   ) ::strncpy(m_pcHostName, tan_host, sizeof (m_pcHostName));
+  if ( tan_host   ) {
+    ::strncpy(m_pcHostName, tan_host, sizeof(m_pcHostName)-1);
+    m_pcHostName[sizeof(m_pcHostName)-1] = 0;
+  }
+  else   {
+    int status = ::lib_rtl_get_node_name(m_pcHostName, sizeof(m_pcHostName));
+    if ( status < 0 ) goto Error;
+  }
   h = hostByName(m_pcHostName);
-  if ( h == 0 )                                                      goto Error;
+  if ( h == 0 ) goto Error;
   dot  = strchr(m_pcHostName,'.');
   // Do not truncate host names in internet format like 192.168.xxx.yyy
   if ( dot && !isdigit(m_pcHostName[0]) ) *dot = 0;
@@ -351,8 +356,8 @@ int TanInterface::allocatePort(const char* name, NetworkChannel::Port *port)  {
             msg.Convert();
             if ( num_byte != int(msg._Length()))return fatalError( errorCode(TAN_SS_ODDRESPONSE) );
             if ( msg.error() != TAN_SS_SUCCESS) return fatalError( errorCode(msg.error()) );
-            m_portAllocated = ntohs(msg.m_sin.sin_port)+1;
-            *port = msg.m_sin.sin_port;         
+            m_portAllocated = msg.m_sin.sin_port;
+	    *port = msg.m_sin.sin_port;
             return errorCode( TAN_SS_SUCCESS );
           }                                     // receive timeout fired
           else if ( m_channel->isCancelled())   return fatalError(errorCode(TAN_SS_RECV_TMO));

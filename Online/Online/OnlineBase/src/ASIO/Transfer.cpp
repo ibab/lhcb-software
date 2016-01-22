@@ -17,17 +17,8 @@
 #include <mutex>
 #include "boost/asio.hpp"
 #include "ASIO/Transfer.h"
+#include "RTL/rtl.h"
 
-/// one-at-time hash function
-static unsigned int hash32(const char* key) {
-  unsigned int hash;
-  const char* k;
-  for (hash = 0, k = key; *k; k++) {
-    hash += *k; hash += (hash << 10); hash ^= (hash >> 6); 
-  }
-  hash += (hash << 3); hash ^= (hash >> 11); hash += (hash << 15);
-  return hash;
-}
 
 namespace BoostAsio  {
 
@@ -36,14 +27,14 @@ namespace BoostAsio  {
   class NetConnection;
 
   struct netentry_t {
-    Connection&   connection;
-    std::string   name;
-    unsigned long hash;
-    sockaddr_in   addr;
-    NET*          sys;
-    netheader_t   header;
-    void*         data;
-    netentry_t(Connection& c) : connection(c), sys(0), data(0)  {}
+    NetConnection* connection;
+    std::string    name;
+    unsigned long  hash;
+    sockaddr_in    addr;
+    NET*           sys;
+    netheader_t    header;
+    void*          data;
+    netentry_t(NetConnection* c) : connection(c), sys(0), data(0)  {}
     ~netentry_t() {}
     NetErrorCode close();
   };
@@ -55,12 +46,11 @@ namespace BoostAsio  {
       void*         param;
       unsigned int  fac;
     };
+    typedef std::lock_guard<std::mutex> netlock_t;
     typedef std::vector<Client> Clients;
     typedef std::map<unsigned long,netentry_t*> netdb_t;
     explicit NET(const std::string& proc);
     ~NET();
-    unsigned int             m_refCount;
-    //boost::asio::io_service  m_service;
     struct {
       std::string   name;
       unsigned long hash;
@@ -74,13 +64,15 @@ namespace BoostAsio  {
     Clients                  m_clients;
     Server*                  m_server;
     std::thread*             m_mgr;
+    int                      m_refCount;
     int                      m_cancelled;
     int                      m_stop;
     int                      m_async_read;
 
+    void setSockOpts(boost::asio::ip::tcp::socket& chan);
     NetConnectionType type() const { return m_type; }
     netentry_t* connect(const std::string& dest);
-    netentry_t* accept(Connection& connection, const netheader_t& header);
+    netentry_t* accept(NetConnection* connection, const netheader_t& header);
     NetErrorCode remove(netentry_t *e);
     void cancel();
     void sendShutdown(netentry_t *e);
@@ -92,9 +84,8 @@ namespace BoostAsio  {
     NetErrorCode subscribe(void* param, unsigned int fac, net_handler_t data, net_handler_t death);
     NetErrorCode unsubscribe(void* param, unsigned int fac);
     unsigned int release();
-    void         handle_close(int hash);
-    void         handle_data(Connection& conn, const netheader_t* header);
-    netentry_t*  handle_data(NetConnection& conn, const netheader_t* header, unsigned char* data);
+    void         handle_close(netentry_t* entry);
+    netentry_t*  handle_data(NetConnection* conn, const netheader_t* header, unsigned char* data);
     static NET*  instance(const std::string& proc, int nthreads, NetConnectionType type);
   };
 }
@@ -107,51 +98,36 @@ namespace BoostAsio  {
 #include <stdexcept>
 #include "RTL/rtl.h"
 #include "NET/defs.h"
-//#include "ASIO/TanInterface.h"
-#include "TAN/TanInterface.h"
+#include "ASIO/TanInterface.h"
+//#include "TAN/TanInterface.h"
 #include "ASIO/Server.h"
 #include <boost/bind.hpp>
 
-namespace BoostAsio  {
-#if 0
-  class NetRequestHandler : public RequestHandler  {
-    NET* m_net;
-  public:
-    /// Construct request handler
-    explicit NetRequestHandler(NET* net) : m_net(net) {}
-    /// Default destructor
-    virtual ~NetRequestHandler()  {}
-    /// RequestHandler overload: Handle a request and produce a reply.
-    virtual void handle(Connection& connection, const Request& request, Reply& )  {
-      const void* data = boost::asio::detail::buffer_cast_helper(request);
-      const netheader_t* header = reinterpret_cast<const netheader_t*>(data);
-      netentry_t* e = m_net->handle_data(connection, header);
-      if ( e ) connection.userParam((void*)e->hash);
-    }
-    /// RequestHandler overload: Handle connection finalization for cleanups
-    virtual void handleClose(Connection& connection)  {
-      void* param = connection.userParam();
-      if ( param )  {
-	m_net->handle_close(reinterpret_cast<unsigned long>(param));
-      }
-    }
-  };
-#endif
 
+
+namespace BoostAsio  {
+
+  static const int RECV_BUFFER_SIZE = 100*1024;
+  static const int SEND_BUFFER_SIZE = 100*1024;
+
+  /// Network connection class using Boost::asio
   class NetConnection : public AsyncConnection  {
-    NET* m_net;
+    NET* net;
   public:
     netentry_t* entry;
+    std::string name;
     /// Construct a connection with the given io_service.
     explicit NetConnection(boost::asio::io_service& io_service,
 			   RequestHandler::pointer_t& handler,
 			   NET* net)
-      : AsyncConnection(io_service, handler, sizeof(netheader_t)), m_net(net), entry(0)
+      : AsyncConnection(io_service, handler, sizeof(netheader_t)), net(net), entry(0)
     {
+      //::lib_rtl_output(LIB_RTL_DEBUG,"Transfer(ASIO): Establish new connection  %p\n",this);
     }
     /// Default destructor
     virtual ~NetConnection()  {
-      if ( entry ) m_net->handle_close(entry->hash);
+      //::lib_rtl_output(LIB_RTL_DEBUG,"Transfer(ASIO): Remove connection  %p [%s]\n", this, name.c_str());
+      if ( entry ) net->handle_close(entry);
       entry = 0;
     }
     /// Handle completion of a asynchonous unlocked read/write operation.
@@ -169,7 +145,7 @@ namespace BoostAsio  {
 	    if ( len != sizeof(netheader_t)-bytes_transferred )  {
 	    }
 	  }
-	  if ( m_net->m_async_read && head->size > 0 )  {
+	  if ( net->m_async_read && head->size > 0 )  {
 	    if ( m_reply_buffer.size() < head->size )  {
 	      m_reply_buffer.resize(head->size);
 	    }
@@ -181,7 +157,7 @@ namespace BoostAsio  {
 	    return;
 	  }
 	  else   {
-	    m_net->handle_data(*this, head, 0);
+	    net->handle_data(this, head, 0);
 	  }
 	}
 	m_socket.async_read_some(boost::asio::buffer(m_recv_buffer.data(),m_recvSize),
@@ -207,7 +183,7 @@ namespace BoostAsio  {
 	    if ( len != head->size-bytes_transferred )  {
 	    }
 	  }
-	  m_net->handle_data(*this, head, data);
+	  net->handle_data(this, head, data);
 	}
 	m_socket.async_read_some(boost::asio::buffer(m_recv_buffer.data(),m_recvSize),
 				 boost::bind(&Connection::handle_read,
@@ -219,13 +195,13 @@ namespace BoostAsio  {
   };
 
   class NetServerConfig : public ServerConfig  {
-    NET* m_net;
+    NET* net;
   public:
-    NetServerConfig(Server* srv, NET* net) : ServerConfig(srv), m_net(net) {}
+    NetServerConfig(Server* s, NET* n) : ServerConfig(s), net(n) {}
     virtual ~NetServerConfig() {}
     /// Create a new blank server connection
     virtual Connection* newConnection()   {
-      return new NetConnection(io_service(), handler, m_net);
+      return new NetConnection(io_service(), handler, net);
     }
   };
 }
@@ -235,31 +211,49 @@ using namespace std;
 using namespace boost;
 using namespace BoostAsio;
 using boost::asio::ip::tcp;
-typedef  lock_guard<mutex> LOCK;
-
-static pair<NET*,mutex>& locked_instance()  {
-  static pair<NET*,mutex> inst;
-  return inst;
+namespace boost  {
+  namespace asio  {
+    typedef boost::system::error_code error_code;
+  }
 }
+namespace {
+  /// one-at-time hash function
+  unsigned int hash32(const char* key) {
+    unsigned int hash;
+    const char* k;
+    for (hash = 0, k = key; *k; k++) {
+      hash += *k; hash += (hash << 10); hash ^= (hash >> 6); 
+    }
+    hash += (hash << 3); hash ^= (hash >> 11); hash += (hash << 15);
+    return hash;
+  }
 
-//#define _net_printf printf
-static inline void _net_printf(const char*, ...) {}
+  inline pair<NET*,mutex>& locked_instance()  {
+    static pair<NET*,mutex> inst;
+    return inst;
+  }
+
+  //#define _net_printf printf
+  inline void _net_printf(const char*, ...) {}
+}
 
 //----------------------------------------------------------------------------------
 NetErrorCode netentry_t::close()  {
-  system::error_code ec;
-  tcp::socket& chan = connection.socket();
-  if ( chan.is_open() )  {
-    chan.shutdown(tcp::socket::shutdown_both,ec);
-    chan.close(ec);
-  }
+  //asio::error_code ec;
+  //tcp::socket& chan = connection->socket();
+  connection->entry = 0;
+  //if ( chan.is_open() )  {
+    //chan.set_option(asio::socket_base::linger(true,0));
+    //chan.shutdown(tcp::socket::shutdown_both,ec);
+    //chan.close(ec);
+  //}
   return NET_SUCCESS;
 }
 
 //----------------------------------------------------------------------------------
 NET::NET(const string& proc)
-  : m_refCount(0), /* m_service(), m_me(m_service),*/
-    m_type(NET_SERVER), m_lock(), m_server(0), m_mgr(0), m_cancelled(0),
+  : m_type(NET_SERVER), m_lock(), m_server(0), m_mgr(0), 
+    m_refCount(0), m_cancelled(0),
     m_stop(0), m_async_read(0)
 {
   m_me.sys = this;
@@ -277,36 +271,59 @@ NET::NET(const string& proc)
 //----------------------------------------------------------------------------------
 NET::~NET() {
   m_stop = 1;
+  {
+    netlock_t lock(m_lock);
+    for (netdb_t::iterator i=m_db.begin(); i!=m_db.end();++i)  {
+      netentry_t* e = (*i).second;
+      if ( e->connection )  {
+	tcp::socket& chan = e->connection->socket();
+	e->connection->entry = 0;
+	if ( chan.is_open() )    {
+	  try {
+	    asio::write(chan, asio::buffer(&m_me.header,sizeof(netheader_t)));
+	  }
+	  catch(const std::exception& e)  {
+	  }
+	}
+      }
+    }
+  }
+  if ( m_server )   {
+    m_server->handleStop();
+  }
+  if ( m_mgr )   {
+    m_mgr->join();
+    delete m_mgr;
+    m_mgr = 0;
+  }
+  if ( m_server )   {
+    delete m_server;
+    m_server = 0;
+  }
+  m_clients.clear();
+  {
+    netlock_t lock(m_lock);
+    for (netdb_t::iterator i=m_db.begin(); i!=m_db.end();++i)  {
+      netentry_t* e = (*i).second;
+      (*i).second = 0;
+      delete e;
+    }
+    m_db.clear();
+  }
   if ( m_me.addr.sin_port )  {
     ::tan_deallocate_port_number(m_me.name.c_str());
     m_me.addr.sin_addr.s_addr = 0;
     m_me.addr.sin_port = 0;
   }
-  if ( m_mgr )   {
-    m_mgr->join();
-    delete m_mgr;
-  }
   m_me.header.size = 0;
   m_me.header.facility = 0;
   m_me.header.msg_type = NET_CONNCLOSED;
-  for (netdb_t::iterator i=m_db.begin(); i!=m_db.end();++i)  {
-    netentry_t* e = (*i).second;
-    tcp::socket& chan = e->connection.socket();
-    if ( chan.is_open() )    {
-      try {
-	asio::write(chan, asio::buffer(&m_me.header,sizeof(netheader_t)));
-      }
-      catch(const std::exception& e)  {
-      }
-    }
-  }
-  m_db.clear();
 }
 
 //----------------------------------------------------------------------------------
 NET* NET::instance(const string& proc, int nthreads, NetConnectionType type)  {
   pair<NET*,mutex>& inst = locked_instance();
-  LOCK  instance_lock(inst.second);
+  netlock_t  instance_lock(inst.second);
   NET*& ptr = inst.first;
   if ( 0 == ptr )  {
     auto_ptr<NET> conn(new NET(proc));
@@ -329,7 +346,7 @@ NET* NET::instance(const string& proc, int nthreads, NetConnectionType type)  {
 //----------------------------------------------------------------------------------
 unsigned int NET::release()  {
   pair<NET*,mutex>& inst = locked_instance();
-  LOCK  instance_lock(inst.second);
+  netlock_t  instance_lock(inst.second);
   if ( inst.first )  {
     unsigned int cnt = --inst.first->m_refCount;
     if ( cnt == 0 )  {
@@ -351,7 +368,7 @@ NetErrorCode NET::init(NetConnectionType type, int nthreads)  {
       char conn[64], port[64];
       int status = ::tan_allocate_port_number(m_me.name.c_str(),&m_me.addr.sin_port);
       if ( status != TAN_SS_SUCCESS )  {
-        ::lib_rtl_signal_message(LIB_RTL_OS,"Transfer: Failed allocating port number. Status %d\n",status);
+        ::lib_rtl_signal_message(LIB_RTL_OS,"Transfer(ASIO): Failed allocating port number. Status %d\n",status);
         return NET_ERROR;
       }
       ::snprintf(conn,sizeof(conn),"0.0.0.0");
@@ -360,14 +377,14 @@ NetErrorCode NET::init(NetConnectionType type, int nthreads)  {
 	auto_ptr<Server> srv(new Server(conn,port,nthreads));
 	srv->config = Server::config_t(new NetServerConfig(srv.get(),this));
 	srv->config->setHandler(0);
-	//srv->config->setHandler(new NetRequestHandler(this));
 	srv->config->recvSize = sizeof(netheader_t);
 	srv->start();
 	m_server = srv.release();
 	m_mgr = new thread([this]{ this->m_server->join(); });
       }
       catch(const std::exception& e)  {
-	::lib_rtl_output(LIB_RTL_OS,"Transfer: Failed to start NET message pump. [%s]\n",e.what());
+	::lib_rtl_output(LIB_RTL_OS,"Transfer(ASIO): Failed to start NET "
+			 "message pump. [%s] Port:%s\n",e.what(), port);
         return NET_ERROR;
       }
       return NET_SUCCESS;
@@ -381,7 +398,11 @@ NetErrorCode NET::init(NetConnectionType type, int nthreads)  {
 
 //----------------------------------------------------------------------------------
 void NET::cancel()   {
-  m_cancelled = true;
+  m_cancelled = 1;
+  if ( m_server )  {
+    //::lib_rtl_output(LIB_RTL_ERROR,"Transfer(ASIO): Stop server.....\n");
+    //m_server->handleStop();
+  }
 }
 
 //----------------------------------------------------------------------------------
@@ -395,24 +416,44 @@ NetErrorCode NET::remove(netentry_t *e)    {
 }
 
 //----------------------------------------------------------------------------------
-netentry_t* NET::accept(Connection& connection, const netheader_t& header)   {
+void NET::setSockOpts(tcp::socket& chan)   {
+  chan.set_option(asio::socket_base::reuse_address(true));
+  chan.set_option(asio::socket_base::linger(true,0));
+  //chan.set_option(asio::socket_base::receive_buffer_size(RECV_BUFFER_SIZE));
+  //chan.set_option(asio::socket_base::send_buffer_size(SEND_BUFFER_SIZE));
+}
+
+//----------------------------------------------------------------------------------
+netentry_t* NET::accept(NetConnection* connection, const netheader_t& header)   {
   netdb_t::iterator i=m_db.find(header.hash);
+  netentry_t* e = 0;
   if ( i == m_db.end() )   {
-    tcp::socket& chan = connection.socket();
-    auto_ptr<netentry_t> e(new netentry_t(connection));
+    e = new netentry_t(connection);
     int sc = ::tan_get_address_by_name(header.name,&e->addr);
     if ( sc != TAN_SS_SUCCESS )  {
+      ::lib_rtl_output(LIB_RTL_ERROR,
+		       "Transfer(ASIO): Retrieved unsolicited message from %s.",
+		       header.name);
       return 0;
     }
+    setSockOpts(connection->socket());
     e->sys  = this;
     e->name = header.name;
     e->hash = header.hash;
     e->header = header;
-    chan.set_option(asio::socket_base::reuse_address(true));
-    chan.set_option(asio::socket_base::linger(true,0));
-    LOCK lock(m_lock);
-    m_db[e->hash] = e.get();
-    return e.release();
+    netlock_t lock(m_lock);
+    m_db[e->hash] = e;
+    return e;
+  }
+  else   {
+    e = (*i).second;
+    if ( e->connection != connection )  {
+      connection->entry = e;
+      connection->name = e->name;
+      e->connection->entry = 0;
+      e->connection = connection;
+      setSockOpts(e->connection->socket());
+    }
   }
   return (*i).second;
 }
@@ -423,11 +464,27 @@ netentry_t *NET::connect(const string& dest)  {
   int sc = ::tan_get_address_by_name(dest.c_str(),&addr);
   if ( sc == TAN_SS_SUCCESS )  {
     try  {
+      int retry = 4;
       Connection::pointer_t c(m_server
 			      ->config
 			      ->newConnection());
-      c->connect(inet_ntoa(addr.sin_addr), addr.sin_port);
-      auto_ptr<netentry_t> entry(new netentry_t(*c.get()));
+      NetConnection* conn = (NetConnection*)c.get();
+      tcp::socket&   chan = c->socket();
+      for(retry=4; retry > 0; --retry )  {
+	try  {
+	  conn->connect(inet_ntoa(addr.sin_addr), addr.sin_port);
+	  break;
+	}
+	catch(const std::exception& e)  {
+	  ::lib_rtl_sleep(1000);
+	}
+      }
+      if ( retry <= 0 )   {
+	::lib_rtl_output(LIB_RTL_OS,"Transfer(ASIO): Failed to connect to %s.",dest.c_str());
+	return 0;
+      }
+      setSockOpts(chan);
+      auto_ptr<netentry_t> entry(new netentry_t(conn));
       entry->sys  = this;
       entry->name = dest;
       entry->addr = addr;
@@ -437,13 +494,13 @@ netentry_t *NET::connect(const string& dest)  {
       entry->header.facility = 0;
       ::strncpy(entry->header.name,entry->name.c_str(),sizeof(entry->header.name)-1);
       entry->header.name[sizeof(entry->header.name)-1] = 0;
-      //boost::asio::add_service(c.socket().get_io_service(),0);//&c.socket());
-      c->start();
+      conn->name = entry->name;
+      conn->start();
       netheader_t h = m_me.header;
       h.size = 0;
       h.facility = 0;
       h.msg_type = NET_MSG_HELLO;
-      size_t len = asio::write(c->socket(), asio::buffer(&h,sizeof(netheader_t)));
+      size_t len = asio::write(chan, asio::buffer(&h,sizeof(netheader_t)));
       if ( len == sizeof(netheader_t) )  {
 	m_db[entry->hash] = entry.get();
 	return entry.release();
@@ -451,7 +508,7 @@ netentry_t *NET::connect(const string& dest)  {
     }
     catch(const std::exception& e)  {
       ::lib_rtl_output(LIB_RTL_OS,
-		       "Transfer: Failed to connect to destination: %s. [%s]\n",
+		       "Transfer(ASIO): Failed to connect to destination: %s. [%s]\n",
 		       dest.c_str(), e.what());
     }
   }
@@ -477,30 +534,29 @@ void NET::sendShutdown(netentry_t *entry)  {
   }
   catch(const std::exception& e)  {
     ::lib_rtl_output(LIB_RTL_ERROR,
-		     "Transfer: Exception during disconnect handling: %s\n", 
+		     "Transfer(ASIO): Exception during disconnect handling: %s\n", 
 		     e.what());
   }
   catch(...)  {
     ::lib_rtl_output(LIB_RTL_ERROR,
-		     "Transfer: Exception during disconnect handling.\n");
+		     "Transfer(ASIO): Exception during disconnect handling.\n");
   }
   disconnect(entry);
 }
 
 //----------------------------------------------------------------------------------
-netentry_t* NET::handle_data(NetConnection& connection, const netheader_t* header, unsigned char* data)   {
+netentry_t* NET::handle_data(NetConnection* connection, const netheader_t* header, unsigned char* data)   {
   netentry_t* entry;
   netdb_t::iterator i;
   switch(header->msg_type)  {
   case NET_MSG_DATA:
-    i = m_db.find(header->hash);
-    entry = (i == m_db.end()) ? accept(connection,*header) : (*i).second;
+    entry = accept(connection,*header);
     if ( entry )  {
       entry->header.size = header->size;
       entry->header.facility = header->facility;
       entry->header.msg_type = header->msg_type;
-      connection.entry = entry;
-      //connection.userParam((void*)entry->hash);
+      connection->name  = header->name;
+      connection->entry = entry;
       handleMessage(entry, data);
     }
     return entry;
@@ -509,12 +565,12 @@ netentry_t* NET::handle_data(NetConnection& connection, const netheader_t* heade
     if ( i != m_db.end() )  {
       sendShutdown((*i).second);
     }
-    connection.entry = 0;
-    //connection.userParam(0);
+    connection->entry = 0;
     return 0;
   case NET_MSG_HELLO:
     entry = accept(connection,*header);
-    connection.entry = entry; // connection.userParam((void*)entry->hash);
+    connection->name  = header->name;
+    connection->entry = entry; // connection.userParam((void*)entry->hash);
     return entry;
   case NET_MSG_TERMINATE:
     m_stop = 1;
@@ -537,13 +593,10 @@ NetErrorCode NET::handleMessage(netentry_t* entry, unsigned char* ptr) {
 }
 
 //----------------------------------------------------------------------------------
-void NET::handle_close(int hash)   {
-  LOCK lock(m_lock);
-  netdb_t::iterator i=m_db.find(hash);
-  if ( i != m_db.end() )  {
-    netentry_t *entry = (*i).second;
-    ::lib_rtl_output(LIB_RTL_DEBUG,
-		     "Transfer: Closing connection to: %s\n",
+void NET::handle_close(netentry_t* entry)   {
+  if ( entry )  {
+    netlock_t lock(m_lock);
+    ::lib_rtl_output(LIB_RTL_DEBUG,"Transfer(ASIO): Closing connection to: %s\n",
 		     entry->name.c_str());
     disconnect(entry);
   }
@@ -556,7 +609,7 @@ NetErrorCode NET::send(const void* buff, size_t size, const string& dest, int fa
     netentry_t *entry = 0;
     try {
       netheader_t h;   {
-	LOCK lock(m_lock);
+	netlock_t lock(m_lock);
 	netdb_t::iterator i=m_db.find(hash);
 	entry = i != m_db.end() ? (*i).second : 0;
 	if ( !entry ) {
@@ -570,7 +623,7 @@ NetErrorCode NET::send(const void* buff, size_t size, const string& dest, int fa
       h.facility = facility;
       h.msg_type = NET_MSG_DATA;
       vector<asio::const_buffer> msg;
-      tcp::socket& chan = entry->connection.socket();
+      tcp::socket& chan = entry->connection->socket();
       msg.push_back(asio::buffer(&h,sizeof(netheader_t)));
       msg.push_back(asio::buffer(buff,size));
       size_t nbytes = asio::write(chan, msg);
@@ -580,7 +633,7 @@ NetErrorCode NET::send(const void* buff, size_t size, const string& dest, int fa
     }
     catch(const std::exception& e)  {
       ::lib_rtl_output(LIB_RTL_OS,
-		       "Transfer: Failed to send message to %s. [%s]\n",
+		       "Transfer(ASIO): Failed to send message to %s. [%s]\n",
 		       entry->name.c_str(), e.what());
     }
     disconnect(entry);
@@ -593,22 +646,28 @@ NetErrorCode NET::send(const void* buff, size_t size, const string& dest, int fa
 NetErrorCode NET::receive(netentry_t* entry, void* buffer)  {
   if ( !entry->data && entry->header.size > 0 )  {
     try  {
-      const netheader_t& header     = entry->header;
-      tcp::socket&       chan       = entry->connection.socket();
+      const netheader_t& header = entry->header;
+      tcp::socket&       chan   = entry->connection->socket();
       if ( chan.is_open() )  {
-	system::error_code ec;
+	asio::error_code ec;
 	if ( buffer )  {
 	  size_t len = asio::read(chan,asio::buffer(buffer, header.size), ec);
 	  return (len == header.size) ? NET_SUCCESS : NET_ERROR;
 	}
 	vector<unsigned char> buff;
 	buff.resize(header.size);
+	// asio::read is used to read a certain number of bytes of data from a stream. 
+	// The call will block until one of the following conditions is true:
+	// -- The supplied buffers are full. That is, the bytes transferred is equal to 
+	//    the sum of the buffer sizes.
+	// -- An error occurred.
+	// Hence: No need to loop until all bytes are received.
 	size_t len = asio::read(chan,asio::buffer(buff.data(), header.size), ec);
 	return (len == header.size) ? NET_SUCCESS : NET_ERROR;
       }
     }
     catch(const std::exception& e)  {
-      ::lib_rtl_output(LIB_RTL_OS,
+      ::lib_rtl_output(LIB_RTL_OS,"Transfer(ASIO): Exception receiving data from %s. [%s]\n",
 		       entry->name.c_str(), e.what());
     }
     return NET_ERROR;
@@ -618,7 +677,7 @@ NetErrorCode NET::receive(netentry_t* entry, void* buffer)  {
 }
 //----------------------------------------------------------------------------------
 NetErrorCode NET::subscribe(void* param, unsigned int fac, net_handler_t data, net_handler_t death) {
-  LOCK lock(m_lock);
+  netlock_t lock(m_lock);
   for(Clients::iterator i=m_clients.begin(); i != m_clients.end(); ++i)  {
     if ( (*i).fac == fac && (*i).param == param ) {
       (*i).data  = data;
@@ -636,7 +695,7 @@ NetErrorCode NET::subscribe(void* param, unsigned int fac, net_handler_t data, n
 
 //----------------------------------------------------------------------------------
 NetErrorCode NET::unsubscribe(void* param, unsigned int fac) {
-  LOCK lock(m_lock);
+  netlock_t lock(m_lock);
   for(Clients::iterator i=m_clients.begin(); i != m_clients.end(); ++i)  {
     if ( (*i).fac == fac && (*i).param == param ) {
       m_clients.erase(i);

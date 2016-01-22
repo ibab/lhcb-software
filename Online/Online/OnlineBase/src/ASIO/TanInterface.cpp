@@ -28,6 +28,7 @@
 using namespace BoostAsio;
 
 static std::mutex s_tan_mutex;
+#define TAN_MAX_CONNECT_ATTEMPTS  5
 
 // ----------------------------------------------------------------------------
 // C Interface: Allocate port number from local server
@@ -110,7 +111,7 @@ TanInterface::TanInterface() : m_conOut(0), m_conIn(0)   {
   if ( tan_host   ) ::strncpy(m_pcHostName, tan_host, sizeof (m_pcHostName));
   h = hostByName(m_pcHostName);
   if ( h == 0 )   {
-    throw std::runtime_error(std::string("TanInterface:")+::strerror(errno));
+    throw std::runtime_error(std::string("Tan(ASIO):")+::strerror(errno));
   }
   dot  = strchr(m_pcHostName,'.');
   // Do not truncate host names in internet format like 192.168.xxx.yyy
@@ -159,7 +160,7 @@ int TanInterface::errorCode(int tan_error)  {
 /// Fatal nameserver connection error: close channel and return given error code
 int TanInterface::fatalError(int code)  {
   if ( code != TAN_SS_SUCCESS )  {
-    ::lib_rtl_output(LIB_RTL_OS,"Closing Channel in error:%d errno=%d\n",code,errno);
+    ::lib_rtl_output(LIB_RTL_OS,"Tan(ASIO): Closing Channel in error:%d errno=%d\n",code,errno);
   }
   //delete m_conOut;
   //m_conOut = 0;
@@ -270,11 +271,16 @@ int TanInterface::allocatePort(const char* name, bool force, NetworkChannel::Por
   }
   *port = 0;
   if ( 0 == m_conOut )  {
-    int on = 1;
+    int on = 1, rc = -1;
     m_conOut = new Socket(Asio_REQ);
-    int rc = m_conOut->connect(msg);
+    for (int trials=0; trials <= TAN_MAX_CONNECT_ATTEMPTS; ++trials )  {
+      rc = m_conOut->connect(msg);
+      if ( 0 == rc ) break;
+      // Sleep 1 second before re-trying ...
+      ::lib_rtl_sleep(1000);
+    }
     if ( rc == -1 )  {
-      ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to connect to TAN(allocatePort)");
+      ::lib_rtl_signal_message(LIB_RTL_OS,"Tan(ASIO): Failed to connect as %s (allocatePort)", name);
       return fatalError(rc);
     }
     m_conOut->setsockopt(Asio_TCP_KEEPALIVE,&on,sizeof(on));
@@ -351,8 +357,16 @@ int TanInterface::sendAction(int request, const char* node) {
 /// Communicate request with target name-server
 int TanInterface::communicate(TanMessage& msg, int tmo)  {
   Socket chan(Asio_REQ);
-  int rc = chan.connect(msg);
-  return (rc == 0) ? communicate(&chan,&chan,msg,tmo) : rc;
+  int rc = -1;
+  for (int trials=0; trials <= TAN_MAX_CONNECT_ATTEMPTS; ++trials )  {
+    rc = chan.connect(msg);
+    if ( 0 == rc )   {
+      return communicate(&chan,&chan,msg,tmo);
+    }
+    // Sleep 1 second before re-trying ...
+    ::lib_rtl_sleep(1000);
+  }
+  return fatalError(chan.error());
 }
 
 /// Communicate request with any target name-server

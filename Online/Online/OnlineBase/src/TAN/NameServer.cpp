@@ -231,7 +231,7 @@ static void _printEntry(const char* msg, TanDataBase::Entry* ent) {
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 void NameService::handleMessage( TanDataBase::Entry*& ent, TanMessage& rec_msg, TanMessage& snd_msg )    {
-  TanMessage::Type func = (TanMessage::Type)ntohl (rec_msg.function());
+  TanMessage::Type func = TanMessage::Type(rec_msg.function());
   NetworkChannel::Port port = 0;
 
   if ( &snd_msg != &rec_msg ) snd_msg = rec_msg;
@@ -239,7 +239,7 @@ void NameService::handleMessage( TanDataBase::Entry*& ent, TanMessage& rec_msg, 
   snd_msg.m_length = sizeof(snd_msg);
   switch ( func )  {
   case TanMessage::ALLOCATE:                                // Allocation service...
-    if ( (port = m_tandb.allocatePort(ent)) == 0 )
+    if ( (port = htons(m_tandb.allocatePort(ent))) == 0 )
       snd_msg.m_error = m_tandb.Error();
     _printEntry("ALLOCATE",ent);
     break;
@@ -271,7 +271,7 @@ void NameService::handleMessage( TanDataBase::Entry*& ent, TanMessage& rec_msg, 
     break;
   case TanMessage::INQUIRE:                                 // Inquire service...
     _printEntry("INQUIRE",ent);
-    if ( (port=m_tandb.findPort(rec_msg)) == 0 )  {
+    if ( (port=htons(m_tandb.findPort(rec_msg))) == 0 )  {
       snd_msg.m_error = m_tandb.Error();
     }
     break;
@@ -282,15 +282,13 @@ void NameService::handleMessage( TanDataBase::Entry*& ent, TanMessage& rec_msg, 
   }
   if ( port != 0 )  {
     snd_msg.m_sin.sin_family  = rec_msg.m_sin.sin_family;
-    snd_msg.m_sin.sin_port    = htons(port);
+    snd_msg.m_sin.sin_port    = port;
   }
   else if ( snd_msg.m_error != TAN_SS_SUCCESS )  {
     snd_msg.m_sin.sin_family      = 0;
     snd_msg.m_sin.sin_port        = 0;
     snd_msg.m_sin.sin_addr.s_addr = 0;
   }
-  snd_msg.m_error  = htonl (snd_msg.m_error);
-  snd_msg.m_length = htonl (snd_msg.m_length);
 }
 
 // ----------------------------------------------------------------------------
@@ -479,17 +477,17 @@ int TcpNameService::handleReceiveRequest ( EventHandler* handler )  {
       chan->_unqueueIO (m_port);
     }
     else  {
-      int func = ntohl(reply.function());
+      int func = reply.function();
       switch( func ) {
         //case TanMessage::DUMP:
         //case TanMessage::INQUIRE:       // Inquire service...
-      case TanMessage::DEALLOCATE:    // Deallocate port
+      case TanMessage::DEALLOCATE:        // Deallocate port
         // Here the channel must be closed.
         // No task dead message! chan->recv(&reply, 1);
         chan->_unqueueIO (m_port);
         break;
       default:
-        if ( ntohl(reply.error()) == TAN_SS_SUCCESS )  {  // Only way to exit 
+        if ( reply.error() == TAN_SS_SUCCESS )  {         // Only way to exit 
           status = chan->queueReceive (m_port, hand);     // with success!
           if ( !lib_rtl_is_success(status) ) {
             ::lib_rtl_output(LIB_RTL_ERROR,"Error rearming receive: %s",chan->errMsg());

@@ -97,7 +97,7 @@ int Socket::recv(void* buffer, size_t len, int tmo)   {
     }
   }
   catch (std::exception& e)   {
-    ::lib_rtl_output(LIB_RTL_ERROR,"Boost::asio: exception: %s\n",e.what());
+    ::lib_rtl_output(LIB_RTL_OS,"Boost::asio: exception: %s\n",e.what());
   }
   m_error = errno;
   return -1;

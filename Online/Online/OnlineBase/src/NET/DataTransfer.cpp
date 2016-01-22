@@ -268,6 +268,10 @@ NET::NET(const std::string& proc)
   m_me.addr.sin_port = 0;
   m_me.addr.sin_family = AF_INET;
   m_me.addr.sin_addr.s_addr = INADDR_ANY; //IN_CLASSA_HOST; // 
+  // Initialize header properties
+  m_me.header.hash = m_me.hash;
+  ::strncpy(m_me.header.name,proc.c_str(),sizeof(m_me.header.name)-1);
+  m_me.header.name[sizeof(m_me.header.name)-1] = 0;
 }
 //----------------------------------------------------------------------------------
 NET::~NET() {
@@ -300,6 +304,7 @@ int NET::acceptAction (void* param)    {
 }
 //----------------------------------------------------------------------------------
 NetErrorCode NET::remove(netentry_t *e)    {
+  LOCK lock(m_lockid);
   std::map<unsigned int,netentry_t*>::iterator i=m_db.find(e->hash);
   if ( i != m_db.end() )  {
     m_db.erase(i);
@@ -321,7 +326,6 @@ netentry_t *NET::connect(const std::string& dest)  {
   if (e->chan == -1)  {
     return 0;
   }
-  e->setSockopts();
   for(sc=1, retry=4; retry > 0 && sc != 0; --retry )  {
     sc = ::connect(e->chan,(sockaddr*)&e->addr,sizeof(sockaddr_in));
     if ( sc != 0 )  {
@@ -333,7 +337,12 @@ netentry_t *NET::connect(const std::string& dest)  {
     ::socket_close(e->chan);
     return 0;
   }
-  sc = e->send(m_me.name.c_str(),sizeof(e->header.name),0);
+  netheader_t h = m_me.header;
+  h.size = 0;
+  h.facility = 0;
+  h.msg_type = NET_MSG_HELLO;
+  e->setSockopts();
+  sc = e->send(&h, sizeof(netheader_t),0);
   if ( sc != NET_SUCCESS )  {
     e->close();
     return 0;
@@ -359,17 +368,18 @@ NetErrorCode NET::accept()   {
     ::setsockopt(e->chan, IPPROTO_TCP, TCP_KEEPCNT,   (char*)&maxpacket, sizeof(maxpacket));
     ::setsockopt(e->chan, IPPROTO_TCP, TCP_KEEPINTVL, (char*)&interval, sizeof(interval));
 
-    int status = e->recv(h.name,sizeof(h.name),0);
-    h.name[sizeof(h.name)-1] = 0;
-    e->name = h.name;
-    e->hash = hash32(e->name.c_str());
+    int status = e->recv(&e->header,sizeof(e->header),0);
+    e->name = e->header.name;
+    e->hash = e->header.hash;
     if ( status != NET_SUCCESS )  {
       e->close();
       return NET_ERROR;
     }
     e->setSockopts();
-    LOCK lock(m_lockid);
-    m_db[e->hash] = e.get();
+    {
+      LOCK lock(m_lockid);
+      m_db[e->hash] = e.get();
+    }
     m_mgr.add(0,m_me.chan,acceptAction, this);
     m_mgr.add(1,e->chan,recvAction,e.get());
     e.release();
@@ -404,6 +414,7 @@ void NET::sendShutdown(netentry_t *e)  {
 //----------------------------------------------------------------------------------
 NetErrorCode NET::handleMessage(netentry_t* e) {
   LOCK lock(m_lockid);
+  bool handled = false;
   e->status = e->recv(&e->header,sizeof(netheader_t),0);
   header_net_to_host(e->header);
   switch (e->status)  {
@@ -417,9 +428,10 @@ NetErrorCode NET::handleMessage(netentry_t* e) {
       for(Clients::iterator i=m_clients.begin(); i != m_clients.end(); ++i)  {
         if ( (*i).data && (*i).fac == e->header.facility ) {
           (*((*i).data))(e->header,(*i).param, e);
+	  handled = true;
         }
       }
-      if ( !e->data )  {
+      if ( !handled )  {
         char* buff = new char[e->header.size];
         e->status = receive(e,buff);
         delete [] buff;
@@ -494,10 +506,10 @@ NetErrorCode NET::send(const void* buff, size_t size, const std::string& dest, i
       }
       m_db[e->hash] = e;                           // Connection ok 
     }
-    status = send(buff,size,e,facility);
-    if (status != NET_SUCCESS)    {
-      disconnect(e);
-    }
+  }
+  status = send(buff,size,e,facility);
+  if (status != NET_SUCCESS)    {
+    disconnect(e);
   }
   return status;
 }

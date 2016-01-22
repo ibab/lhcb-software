@@ -238,13 +238,16 @@ namespace {
                 int (*callback)(void*) = e->callback;
                 void* param = e->param;
                 try  {
+		  m_mutex_id.unlock();
                   (*callback)(param);
+		  m_mutex_id.lock();
                 }
                 catch(...)  {
                   ::lib_rtl_output(LIB_RTL_ERROR,"EntryMap::handle> Exception!\n");
 #ifdef _WIN32
                   _asm int 3
 #endif
+		  m_mutex_id.lock();
 		}
               }
               if ( t == 1 && nb < 0 )  {

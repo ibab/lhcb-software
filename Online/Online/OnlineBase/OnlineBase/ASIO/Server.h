@@ -235,13 +235,14 @@ namespace BoostAsio  {
     /// Run the server's io_service loop.
     void run();
 
+    /// Handle a request to stop the server.
+    void handleStop();
+
   private:
     /// Initiate an asynchronous accept operation.
     void startAccept();
     /// Handle completion of an asynchronous accept operation.
     void handleAccept(const error_t& error);
-    /// Handle a request to stop the server.
-    void handleStop();
 
   private:
     /// The number of threads that will call io_service::run().
