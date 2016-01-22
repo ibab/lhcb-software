@@ -195,11 +195,11 @@ namespace Rich
             { return vdt::fast_logf( vdt::fast_expf(x) - 1.0f ); }
           private:
             // The (x,y) values for the low and high edge of this bin
-            TYPE m_xLow{0}, m_xHigh{0}, m_yLow{0}, m_yHigh{0};
+            TYPE m_xLow, m_xHigh, m_yLow, m_yHigh;
             /// The slope parameter
-            TYPE m_slope{0};
+            TYPE m_slope;
             /// The constant parameter
-            TYPE m_const{0};
+            TYPE m_const;
           public:
             /// type for a list of data points
             typedef std::vector<Data> Vector;
@@ -231,11 +231,11 @@ namespace Rich
           /// The look up vector of data points
           typename Data::Vector m_data;
           /// The minimum valid x
-          TYPE m_minX{0};
+          TYPE m_minX;
           /// The maximum valid x
-          TYPE m_maxX{0};
+          TYPE m_maxX;
           /// 1 / the bin increment
-          TYPE m_incX{0};
+          TYPE m_incX;
         };
 
       private: // Private methods
