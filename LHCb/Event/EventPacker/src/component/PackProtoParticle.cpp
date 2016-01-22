@@ -50,7 +50,7 @@ StatusCode PackProtoParticle::execute()
   out->setPackingVersion( LHCb::PackedProtoParticles::defaultPackingVersion() );
 
   // pack
-  const LHCb::ProtoParticlePacker packer(*this);
+  const LHCb::ProtoParticlePacker packer(this);
   packer.pack( *parts, *out );
 
   if ( msgLevel(MSG::DEBUG) )

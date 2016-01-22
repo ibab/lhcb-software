@@ -13,11 +13,11 @@ using namespace LHCb;
 void MCRichTrackPacker::pack( const DataVector & tracks,
                               PackedDataVector & ptracks ) const
 {
-  const char ver = ptracks.packingVersion();
+  const auto ver = ptracks.packingVersion();
   if ( 1 == ver || 0 == ver )
   {
     ptracks.data().reserve( tracks.size() );
-    for ( const Data * track : tracks )
+    for ( const auto * track : tracks )
     {
       ptracks.data().emplace_back( PackedData() );
       auto & ptrack = ptracks.data().back();
@@ -59,14 +59,14 @@ void MCRichTrackPacker::pack( const DataVector & tracks,
 void MCRichTrackPacker::unpack( const PackedDataVector & ptracks,
                                 DataVector       & tracks ) const
 {
-  const char ver = ptracks.packingVersion();
+  const auto ver = ptracks.packingVersion();
   if ( 1 == ver || 0 == ver )
   {
     tracks.reserve( ptracks.data().size() );
-    for ( const PackedData & ptrack : ptracks.data() )
+    for ( const auto & ptrack : ptracks.data() )
     {
       // make and save new hit in container
-      Data * track  = new Data();
+      auto * track  = new Data();
       tracks.insert( track, ptrack.key );
 
       int hintID(0), key(0);
@@ -112,7 +112,7 @@ StatusCode MCRichTrackPacker::check( const DataVector & dataA,
   const DataPacking::DataChecks ch(parent());
 
   // Loop over data containers together and compare
-  DataVector::const_iterator iA(dataA.begin()), iB(dataB.begin());
+  auto iA(dataA.begin()), iB(dataB.begin());
   for ( ; iA != dataA.end() && iB != dataB.end(); ++iA, ++iB )
   {
     // assume OK from the start
@@ -128,8 +128,7 @@ StatusCode MCRichTrackPacker::check( const DataVector & dataA,
     ok &= sameSize;
     if ( sameSize )
     {
-      SmartRefVector<LHCb::MCRichSegment>::const_iterator jA((*iA)->mcSegments().begin());
-      SmartRefVector<LHCb::MCRichSegment>::const_iterator jB((*iB)->mcSegments().begin());
+      auto jA((*iA)->mcSegments().begin()), jB((*iB)->mcSegments().begin());
       for ( ; jA != (*iA)->mcSegments().end() && jB != (*iB)->mcSegments().end();
             ++jA, ++jB )
       {

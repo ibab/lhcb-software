@@ -2,8 +2,6 @@
 #ifndef UNPACKERBASEALG_H
 #define UNPACKERBASEALG_H 1
 
-// Include files
-// from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 namespace DataPacking
@@ -36,6 +34,9 @@ namespace DataPacking
     std::string m_inputName;  ///< Input location
     std::string m_outputName; ///< Output location
     bool m_alwaysOutput;      ///< Flag to turn on the creation of output, even when input is missing
+
+    /// Packer object
+    const PACKER m_packer{ this };  
 
   };
 

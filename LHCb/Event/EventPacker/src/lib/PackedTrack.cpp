@@ -54,7 +54,7 @@ void TrackPacker::pack( const DataVector & tracks,
                         PackedDataVector & ptracks ) const
 {
   ptracks.tracks().reserve(tracks.size());
-  for ( const LHCb::Track* track : tracks )
+  for ( const auto * track : tracks )
   {
     if ( !track ) continue;
     ptracks.tracks().emplace_back( LHCb::PackedTrack() );
@@ -68,7 +68,7 @@ void TrackPacker::convertState( const LHCb::State& state,
                                 PackedDataVector & ptracks ) const
 {
   ptracks.states().emplace_back( LHCb::PackedState() );
-  LHCb::PackedState & newState = ptracks.states().back();
+  auto & newState = ptracks.states().back();
 
   newState.flags = state.flags();
 
@@ -171,7 +171,7 @@ void TrackPacker::unpack( const PackedData       & ptrack,
 
   for ( int kSt = firstState; lastState > kSt; ++kSt )
   {
-    const LHCb::PackedState& pSta = *(ptracks.states().begin()+kSt);
+    const auto& pSta = *(ptracks.states().begin()+kSt);
     convertState( pSta, track );
   }
 

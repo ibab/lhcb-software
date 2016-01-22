@@ -53,7 +53,7 @@ StatusCode PackRecVertex::execute()
   put( out, m_outputName );
   out->setVersion( (unsigned char)m_version ); 
 
-  const LHCb::RecVertexPacker rvPacker(*dynamic_cast<GaudiAlgorithm*>(this));
+  const LHCb::RecVertexPacker rvPacker(this);
 
   for ( const auto * vert : *verts )
   {

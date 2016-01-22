@@ -68,28 +68,27 @@ StatusCode PackDecReport::execute()
   }
 
   // loop and pack
-  for ( LHCb::HltDecReports::Container::const_iterator itR = reports->decReports().begin();
-        reports->decReports().end() != itR; ++itR) 
+  for ( const auto & tR : reports->decReports() )
   {
     // Get the report
-    LHCb::HltDecReport tmp = (*itR).second.decReport();
+    LHCb::HltDecReport tmp = tR.second.decReport();
 
     // If configured to do so, filter out null entries
     if ( m_filter && tmp.decision() == 0 ) continue;
     
     // store the result
-    LinkManager::Link * myLink = out->linkMgr()->link( (*itR).first );
+    LinkManager::Link * myLink = out->linkMgr()->link( tR.first );
     if ( nullptr == myLink )
     {
-      out->linkMgr()->addLink( (*itR).first, nullptr );
-      myLink = out->linkMgr()->link( (*itR).first );
+      out->linkMgr()->addLink( tR.first, nullptr );
+      myLink = out->linkMgr()->link( tR.first );
     }
     tmp.setIntDecisionID( myLink->ID()+1 ); // Store numbers starting at 1 as HltDecReport dislike 0!
     out->reports().emplace_back( tmp.decReport() );
     if ( msgLevel( MSG::DEBUG ) ) 
     {
       debug() << format( "Stored report %8.8x  link ID %3d", tmp.decReport(), myLink->ID() ) 
-              << " name " << (*itR).first << endmsg;
+              << " name " << tR.first << endmsg;
     }
   }
 

@@ -41,6 +41,9 @@ namespace DataPacking
     bool m_enableCheck;       ///< Flag to turn on automatic unpacking and checking of the output post-packing
     bool m_clearRegistry;     ///< Flag to turn on the clearing of the registry if the input data is not kept
 
+    /// Packer object
+    const PACKER m_packer{ this };
+
   };
 
 }

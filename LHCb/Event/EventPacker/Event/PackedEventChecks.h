@@ -34,6 +34,9 @@ namespace DataPacking
   public:
 
     /// Constructor
+    explicit DataChecks( const GaudiAlgorithm * p ) : parent(p) { }
+
+    /// Constructor
     explicit DataChecks( const GaudiAlgorithm & p ) : parent(&p) { }
 
   public:

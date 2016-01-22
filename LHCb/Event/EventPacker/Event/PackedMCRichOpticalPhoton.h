@@ -126,13 +126,12 @@ namespace LHCb
   private:
 
     /// Default Constructor
-    MCRichOpticalPhotonPacker() : PhotEnScale ( 5.0e8 ) {}
+    MCRichOpticalPhotonPacker() {}
 
   public:
 
     /// Constructor
-    MCRichOpticalPhotonPacker( const GaudiAlgorithm & parent )
-      : m_pack(&parent), PhotEnScale(5.0e8) {}
+    MCRichOpticalPhotonPacker( const GaudiAlgorithm * parent ) : m_pack(parent) { }
 
   public:
 
@@ -161,7 +160,7 @@ namespace LHCb
   private:
     
     /// Scale factor for photon energies
-    double PhotEnScale;
+    double PhotEnScale{ 5.0e8 };
 
   };
 

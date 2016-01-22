@@ -143,7 +143,7 @@ namespace LHCb
   public:
 
     /// Default Constructor
-    CaloHypoPacker( const GaudiAlgorithm & p ) : m_pack(&p) {}
+    CaloHypoPacker( const GaudiAlgorithm * p ) : m_pack(p) {}
 
   public:
 

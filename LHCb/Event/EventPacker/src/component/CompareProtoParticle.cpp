@@ -40,7 +40,7 @@ StatusCode CompareProtoParticle::execute()
   LHCb::ProtoParticles* test = get<LHCb::ProtoParticles>( m_testName  );
 
   // check and return
-  const LHCb::ProtoParticlePacker packer(*this);
+  const LHCb::ProtoParticlePacker packer(this);
   return packer.check( *old, *test );
 }
 

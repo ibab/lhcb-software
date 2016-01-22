@@ -40,7 +40,7 @@ StatusCode CompareCaloHypo::execute()
   LHCb::CaloHypos* test = get<LHCb::CaloHypos>( m_testName  );
 
   // compare and return
-  const LHCb::CaloHypoPacker packer(*this);
+  const LHCb::CaloHypoPacker packer(this);
   return packer.check( *old, *test );
 }
 //=============================================================================

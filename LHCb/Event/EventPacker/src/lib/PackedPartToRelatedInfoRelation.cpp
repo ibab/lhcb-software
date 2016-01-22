@@ -19,7 +19,7 @@ void RelatedInfoRelationsPacker::pack( const DataVector & rels,
 
     // make a new entry for this relation
     prels.relations().emplace_back( LHCb::PackedRelatedInfoMap() );
-    LHCb::PackedRelatedInfoMap & prel = prels.relations().back();
+    auto & prel = prels.relations().back();
 
     // reference to the particle
     prel.reference = m_pack.reference64( &prels,
@@ -30,7 +30,7 @@ void RelatedInfoRelationsPacker::pack( const DataVector & rels,
     prel.first = prels.info().size();
 
     // Loop over the related info map and fill into info vector
-    const LHCb::RelatedInfoMap& rMap = rel.to();
+    const auto & rMap = rel.to();
     prels.info().reserve( prels.info().size() + rMap.size() );
     for ( const auto& data : rMap )
     {
@@ -90,12 +90,12 @@ RelatedInfoRelationsPacker::unpack( const LHCb::PackedRelatedInfoMap & pmap,
   }
 
   // Get the source object
-  FROM * from = m_srcContainer->object( srcKey );
+  auto * from = m_srcContainer->object( srcKey );
 
   // Recreate the RelatedInfoMap
   TO to;
   to.reserve( pmap.last - pmap.first );
-  for ( unsigned int jj = pmap.first; pmap.last > jj; ++jj )
+  for ( auto jj = pmap.first; pmap.last > jj; ++jj )
   {
     to.insert( prels.info()[jj] );
   }

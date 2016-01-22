@@ -51,7 +51,7 @@ StatusCode UnpackCaloHypo::execute()
   put( newCaloHypos, m_outputName );
 
    // unpack
-  const LHCb::CaloHypoPacker packer(*this);
+  const LHCb::CaloHypoPacker packer(this);
   packer.unpack( *dst, *newCaloHypos );
 
   return StatusCode::SUCCESS;

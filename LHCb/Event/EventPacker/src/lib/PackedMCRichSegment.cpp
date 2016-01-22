@@ -13,11 +13,11 @@ using namespace LHCb;
 void MCRichSegmentPacker::pack( const DataVector & segs,
                                 PackedDataVector & psegs ) const
 {
-  const char ver = psegs.packingVersion();
+  const auto ver = psegs.packingVersion();
   if ( 1 == ver || 0 == ver )
   {
     psegs.data().reserve( segs.size() );
-    for ( const Data * seg : segs )
+    for ( const auto * seg : segs )
     {
       psegs.data().emplace_back( PackedData() );
       auto & pseg = psegs.data().back();
@@ -106,7 +106,7 @@ void MCRichSegmentPacker::unpack( const PackedDataVector & psegs,
                                   DataVector       & segs ) const
 {
   segs.reserve( psegs.data().size() );
-  const char ver = psegs.packingVersion();
+  const auto ver = psegs.packingVersion();
   if ( 1 == ver || 0 == ver )
   {
     for ( const auto & pseg : psegs.data() )
@@ -116,7 +116,7 @@ void MCRichSegmentPacker::unpack( const PackedDataVector & psegs,
 
       seg->setHistoryCode( pseg.history );
 
-      std::vector<int>::const_iterator ix(pseg.trajPx.begin()), iy(pseg.trajPy.begin()), iz(pseg.trajPz.begin());
+      auto ix(pseg.trajPx.begin()), iy(pseg.trajPy.begin()), iz(pseg.trajPz.begin());
       for ( ; ix != pseg.trajPx.end(); ++ix, ++iy, ++iz )
       {
         seg->addToTrajectoryPoints( Gaudi::XYZPoint( m_pack.position(*ix),
@@ -124,7 +124,7 @@ void MCRichSegmentPacker::unpack( const PackedDataVector & psegs,
                                                      m_pack.position(*iz) ) );
       }
 
-      std::vector<int>::const_iterator jx(pseg.trajMx.begin()), jy(pseg.trajMy.begin()), jz(pseg.trajMz.begin());
+      auto jx(pseg.trajMx.begin()), jy(pseg.trajMy.begin()), jz(pseg.trajMz.begin());
       for ( ; jx != pseg.trajMx.end(); ++jx, ++jy, ++jz )
       {
         seg->addToTrajectoryMomenta( Gaudi::XYZVector( m_pack.energy(*jx),
@@ -197,7 +197,7 @@ StatusCode MCRichSegmentPacker::check( const DataVector & dataA,
   const DataPacking::DataChecks ch(parent());
 
   // Loop over data containers together and compare
-  DataVector::const_iterator iA(dataA.begin()), iB(dataB.begin());
+  auto iA(dataA.begin()), iB(dataB.begin());
   for ( ; iA != dataA.end() && iB != dataB.end(); ++iA, ++iB )
   {
     // assume OK from the start
@@ -213,8 +213,7 @@ StatusCode MCRichSegmentPacker::check( const DataVector & dataA,
     ok &= sameSizeTrajP;
     if ( sameSizeTrajP )
     {
-      std::vector<Gaudi::XYZPoint>::const_iterator tA((*iA)->trajectoryPoints().begin());
-      std::vector<Gaudi::XYZPoint>::const_iterator tB((*iB)->trajectoryPoints().begin());
+      auto tA((*iA)->trajectoryPoints().begin()), tB((*iB)->trajectoryPoints().begin());
       for ( ; tA != (*iA)->trajectoryPoints().end() &&  tB != (*iB)->trajectoryPoints().end();
             ++tA, ++tB )
       {
@@ -228,8 +227,7 @@ StatusCode MCRichSegmentPacker::check( const DataVector & dataA,
     ok &= sameSizeTrajM;
     if ( sameSizeTrajM )
     {
-      std::vector<Gaudi::XYZVector>::const_iterator tA((*iA)->trajectoryMomenta().begin());
-      std::vector<Gaudi::XYZVector>::const_iterator tB((*iB)->trajectoryMomenta().begin());
+      auto tA((*iA)->trajectoryMomenta().begin()), tB((*iB)->trajectoryMomenta().begin());
       for ( ; tA != (*iA)->trajectoryMomenta().end() && tB != (*iB)->trajectoryMomenta().end();
             ++tA, ++tB )
       {
@@ -247,8 +245,7 @@ StatusCode MCRichSegmentPacker::check( const DataVector & dataA,
     ok &= sameSizePhots;
     if ( sameSizePhots )
     {
-      SmartRefVector<LHCb::MCRichOpticalPhoton>::const_iterator jA((*iA)->mcRichOpticalPhotons().begin());
-      SmartRefVector<LHCb::MCRichOpticalPhoton>::const_iterator jB((*iB)->mcRichOpticalPhotons().begin());
+      auto jA((*iA)->mcRichOpticalPhotons().begin()), jB((*iB)->mcRichOpticalPhotons().begin());
       for ( ; jA != (*iA)->mcRichOpticalPhotons().end() && jB != (*iB)->mcRichOpticalPhotons().end();
             ++jA, ++jB )
       {
@@ -262,8 +259,7 @@ StatusCode MCRichSegmentPacker::check( const DataVector & dataA,
     ok &= sameSizeHits;
     if ( sameSizeHits )
     {
-      SmartRefVector<LHCb::MCRichHit>::const_iterator jA((*iA)->mcRichHits().begin());
-      SmartRefVector<LHCb::MCRichHit>::const_iterator jB((*iB)->mcRichHits().begin());
+      auto jA((*iA)->mcRichHits().begin()), jB((*iB)->mcRichHits().begin());
       for ( ; jA != (*iA)->mcRichHits().end() && jB != (*iB)->mcRichHits().end();
             ++jA, ++jB )
       {

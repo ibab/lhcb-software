@@ -503,7 +503,7 @@ PackParticlesAndVertices::
 packAFTContainer ( const LHCb::FlavourTags* fts,
                    LHCb::PackedFlavourTags& pfts ) const
 {
-  const LHCb::FlavourTagPacker ftPacker(*this);
+  const LHCb::FlavourTagPacker ftPacker(this);
 
   // checks
   auto * unpacked = ( m_enableCheck ? new LHCb::FlavourTags() : nullptr );
@@ -557,7 +557,7 @@ PackParticlesAndVertices::
 packAParticleContainer ( const LHCb::Particles* parts,
                          LHCb::PackedParticles& pparts ) const
 {
-  const LHCb::ParticlePacker pPacker(*this);
+  const LHCb::ParticlePacker pPacker(this);
 
   // checks
   auto * unpacked = ( m_enableCheck ? new LHCb::Particles() : nullptr );
@@ -611,7 +611,7 @@ PackParticlesAndVertices::
 packAMuonPIDContainer ( const LHCb::MuonPIDs* pids,
                         LHCb::PackedMuonPIDs& ppids ) const
 {
-  const LHCb::MuonPIDPacker pPacker(*this);
+  const LHCb::MuonPIDPacker pPacker(this);
 
   // checks
   auto * unpacked = ( m_enableCheck ? new LHCb::MuonPIDs() : nullptr );
@@ -666,7 +666,7 @@ PackParticlesAndVertices::
 packARichPIDContainer ( const LHCb::RichPIDs* pids,
                         LHCb::PackedRichPIDs& ppids ) const
 {
-  const LHCb::RichPIDPacker pPacker(*this);
+  const LHCb::RichPIDPacker pPacker(this);
 
   // checks
   auto * unpacked = ( m_enableCheck ? new LHCb::RichPIDs() : nullptr );
@@ -721,7 +721,7 @@ PackParticlesAndVertices::
 packAProtoParticleContainer( const LHCb::ProtoParticles* protos,
                              LHCb::PackedProtoParticles& pprotos ) const
 {
-  const LHCb::ProtoParticlePacker pPacker(*this);
+  const LHCb::ProtoParticlePacker pPacker(this);
 
   // checks
   auto * unpacked = ( m_enableCheck ? new LHCb::ProtoParticles() : nullptr );
@@ -775,7 +775,7 @@ PackParticlesAndVertices::
 packATrackContainer( const LHCb::Tracks* tracks,
                      LHCb::PackedTracks& ptracks ) const
 {
-  const LHCb::TrackPacker tPacker(*this);
+  const LHCb::TrackPacker tPacker(this);
 
   // checks
   auto * unpacked = ( m_enableCheck ? new LHCb::Tracks() : nullptr );
@@ -829,7 +829,7 @@ PackParticlesAndVertices::
 packAVertexContainer ( const LHCb::Vertices* verts,
                        LHCb::PackedVertices& pverts ) const
 {
-  const LHCb::VertexPacker vPacker(*this);
+  const LHCb::VertexPacker vPacker(this);
 
   // checks
   auto * unpacked = ( m_enableCheck ? new LHCb::Vertices() : nullptr );
@@ -882,7 +882,7 @@ PackParticlesAndVertices::
 packARecVertexContainer( const LHCb::RecVertices* rVerts,
                          LHCb::PackedRecVertices& pRVerts ) const
 {
-  const LHCb::RecVertexPacker rvPacker(*this);
+  const LHCb::RecVertexPacker rvPacker(this);
 
   // reserve size
   pRVerts.vertices().reserve( pRVerts.vertices().size() + rVerts->size() );
@@ -930,7 +930,7 @@ packAP2RelatedInfoRelationContainer( const PackParticlesAndVertices::Part2InfoRe
   prels.relations().reserve( prels.relations().size() + rels->relations().size() );
 
   // Use the packer to pack this location ...
-  const LHCb::RelatedInfoRelationsPacker rPacker(*this);
+  const LHCb::RelatedInfoRelationsPacker rPacker(this);
   rPacker.pack( *rels, prels );
 
   // last entry in the relations vector

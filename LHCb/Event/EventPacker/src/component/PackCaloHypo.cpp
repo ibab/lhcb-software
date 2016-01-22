@@ -53,7 +53,7 @@ StatusCode PackCaloHypo::execute()
   out->setPackingVersion( LHCb::PackedCaloHypos::defaultPackingVersion() );
 
   // pack
-  const LHCb::CaloHypoPacker packer(*this);
+  const LHCb::CaloHypoPacker packer(this);
   packer.pack( *hypos, *out );
 
   // Packing checks

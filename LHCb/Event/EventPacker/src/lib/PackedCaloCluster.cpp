@@ -16,7 +16,7 @@ void CaloClusterPacker::pack( const DataVector & clus,
   if ( 0 == pclus.packingVersion()  )
   {
     pclus.data().reserve( clus.size() );
-    for ( const Data * clu : clus )
+    for ( const auto * clu : clus )
     {
       // make a new packed object
       pclus.data().emplace_back( PackedData() );
@@ -257,8 +257,7 @@ StatusCode CaloClusterPacker::check( const Data & dataA,
   ok &= entsSizeOK;
   if ( entsSizeOK )
   {
-    LHCb::CaloCluster::Entries::const_iterator iEA(dataA.entries().begin());
-    LHCb::CaloCluster::Entries::const_iterator iEB(dataB.entries().begin());
+    auto iEA(dataA.entries().begin()), iEB(dataB.entries().begin());
     for ( ; iEA != dataA.entries().end() && iEB != dataB.entries().end();
           ++iEA, ++iEB )
     {

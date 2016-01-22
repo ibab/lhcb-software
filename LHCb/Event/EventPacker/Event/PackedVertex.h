@@ -177,7 +177,7 @@ namespace LHCb
   public:
 
     /// Default Constructor
-    VertexPacker( const GaudiAlgorithm & parent ) : m_pack(&parent) {}
+    VertexPacker( const GaudiAlgorithm * parent ) : m_pack(parent) {}
     
   public:
 

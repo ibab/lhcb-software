@@ -41,18 +41,18 @@ StatusCode UnpackTwoProngVertex::execute() {
   if ( !m_alwaysOutput && !exist<LHCb::PackedTwoProngVertices>(m_inputName) )
     return StatusCode::SUCCESS;
 
-  const LHCb::PackedTwoProngVertices* dst = 
+  const auto * dst = 
     getOrCreate<LHCb::PackedTwoProngVertices,LHCb::PackedTwoProngVertices>( m_inputName );
   
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Size of PackedTwoProngVertices = " << dst->vertices().size() << endmsg;
-
+  
   auto* newTwoProngVertices = new LHCb::TwoProngVertices();
   newTwoProngVertices->reserve(dst->vertices().size());
   put( newTwoProngVertices, m_outputName );
 
   // packing version
-  const char pVer = dst->packingVersion();
+  const auto pVer = dst->packingVersion();
 
   StandardPacker pack(this);
   
@@ -82,27 +82,27 @@ StatusCode UnpackTwoProngVertex::execute() {
     }
 
     //== Handles the ExtraInfo
-    for ( int kEx = src.firstInfo; src.lastInfo > kEx; ++kEx ) {
+    for ( auto kEx = src.firstInfo; src.lastInfo > kEx; ++kEx ) {
       const std::pair<int,int>& info = *(dst->extras().begin()+kEx);
       vert->addInfo( info.first, pack.fltPacked( info.second ) );
     }
 
     //== Momentum of the two prongs    
-    double pA = pack.energy( src.pA );
-    double pB = pack.energy( src.pB );
+    const auto pA = pack.energy( src.pA );
+    const auto pB = pack.energy( src.pB );
     vert->setMomA( ROOT::Math::SVector<double,3>( pack.slope( src.txA ), pack.slope( src.tyA ) , 1.0/pA ) );
     vert->setMomB( ROOT::Math::SVector<double,3>( pack.slope( src.txB ), pack.slope( src.tyB ) , 1.0/pB ) );
 
     // convariance Matrix
-    double err0 = pack.position( src.cov00 );
-    double err1 = pack.position( src.cov11 );
-    double err2 = pack.position( src.cov22 );
-    double err3 = pack.slope(    src.cov33 );
-    double err4 = pack.slope(    src.cov44 );
-    double err5 = pack.energy(   src.cov55 ) / fabs( pA ) * 1.e-5;
-    double err6 = pack.slope(    src.cov66 );
-    double err7 = pack.slope(    src.cov77 );
-    double err8 = pack.energy(   src.cov88 ) / fabs( pB ) * 1.e-5;
+    const auto err0 = pack.position( src.cov00 );
+    const auto err1 = pack.position( src.cov11 );
+    const auto err2 = pack.position( src.cov22 );
+    const auto err3 = pack.slope(    src.cov33 );
+    const auto err4 = pack.slope(    src.cov44 );
+    const auto err5 = pack.energy(   src.cov55 ) / fabs( pA ) * 1.e-5;
+    const auto err6 = pack.slope(    src.cov66 );
+    const auto err7 = pack.slope(    src.cov77 );
+    const auto err8 = pack.energy(   src.cov88 ) / fabs( pB ) * 1.e-5;
 
     Gaudi::SymMatrix3x3 cov;
     cov(0,0) = err0 * err0;
@@ -166,7 +166,7 @@ StatusCode UnpackTwoProngVertex::execute() {
 
     //== Unpack the ParticleID
     std::vector<LHCb::ParticleID> pids;
-    for ( int kk = src.firstPid; src.lastPid > kk; ++kk )
+    for ( auto kk = src.firstPid; src.lastPid > kk; ++kk )
     {
       pids.emplace_back( LHCb::ParticleID(*(dst->refs().begin()+kk)) );
     }

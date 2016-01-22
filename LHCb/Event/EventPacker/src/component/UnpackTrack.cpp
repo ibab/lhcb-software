@@ -62,11 +62,11 @@ StatusCode UnpackTrack::execute()
   }
 
   // Make new unpacked tracks
-  LHCb::Tracks* newTracks = new LHCb::Tracks();
+  auto * newTracks = new LHCb::Tracks();
   put( newTracks, m_outputName );
 
   // Track Packer
-  const LHCb::TrackPacker packer(*this);
+  const LHCb::TrackPacker packer(this);
 
   // Unpack the tracks
   packer.unpack( *dst, *newTracks );
@@ -76,7 +76,7 @@ StatusCode UnpackTrack::execute()
                                 getIfExists<LHCb::Tracks>( m_ancestorSource ) );
   if ( targetTracks )
   {
-    for ( LHCb::Track * track : *newTracks )
+    for ( auto * track : *newTracks )
     {
       //== Create an ancestor if needed
       const auto * ancest = targetTracks->object( track->key() );

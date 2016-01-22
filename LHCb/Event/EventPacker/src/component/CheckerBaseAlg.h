@@ -33,6 +33,7 @@ namespace DataPacking
 
     std::string m_dataA;  ///< Data location
     std::string m_dataB;  ///< Data location
+    const PACKER m_packer{this};  ///< Packer
 
   };
 

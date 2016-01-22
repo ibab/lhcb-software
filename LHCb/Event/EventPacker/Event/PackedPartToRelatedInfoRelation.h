@@ -164,8 +164,7 @@ namespace LHCb
   public:
 
     /// Default Constructor
-    RelatedInfoRelationsPacker( const GaudiAlgorithm & parent ) 
-      : m_pack(&parent) { }
+    RelatedInfoRelationsPacker( const GaudiAlgorithm * p ) : m_pack(p) { }
 
   public:
 

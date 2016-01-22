@@ -23,10 +23,8 @@ template < class PACKER >
 StatusCode Check<PACKER>::execute()
 {
   // Check data exists at both locations and load it
-  typename PACKER::DataVector * dataA =
-    this->getIfExists<typename PACKER::DataVector>(m_dataA);
-  typename PACKER::DataVector * dataB =
-    this->getIfExists<typename PACKER::DataVector>(m_dataB);
+  const auto * dataA = this->getIfExists<typename PACKER::DataVector>(m_dataA);
+  const auto * dataB = this->getIfExists<typename PACKER::DataVector>(m_dataB);
 
   if ( dataA && dataB )
   {
@@ -43,12 +41,9 @@ StatusCode Check<PACKER>::execute()
       return this->Error( "Size of containers '"+m_dataA+"' and '"+m_dataB+"' differs" );
     }
 
-    // Packer
-    const PACKER packer(*dynamic_cast<GaudiAlgorithm*>(this));
-
     // compare the containers
     // For the moment just carry on if an error is returned (with a message)
-    packer.check( *dataA, *dataB ).ignore();
+    m_packer.check( *dataA, *dataB ).ignore();
 
   }
 

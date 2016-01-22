@@ -114,14 +114,14 @@ void FlavourTagPacker::unpack( const PackedData       & pft,
   std::vector<LHCb::Tagger>& taggers = 
     *(const_cast<std::vector<LHCb::Tagger>*>(&ft.taggers()));
   taggers.reserve( pft.lastTagger - pft.firstTagger );
-  for ( unsigned int iT = pft.firstTagger; iT < pft.lastTagger; ++iT )
+  for ( auto iT = pft.firstTagger; iT < pft.lastTagger; ++iT )
   {
     // Reference to packed tagger
-    const LHCb::PackedTagger & ptagger = pfts.taggers()[iT];
+    const auto & ptagger = pfts.taggers()[iT];
 
     // Make a new tagger
     taggers.emplace_back( LHCb::Tagger() );
-    LHCb::Tagger & tagger = taggers.back();
+    auto & tagger = taggers.back();
 
     // set the tagger members
     tagger.setType    ( ptagger.type                   );
@@ -129,7 +129,7 @@ void FlavourTagPacker::unpack( const PackedData       & pft,
     tagger.setOmega   ( m_pack.fraction(ptagger.omega) );
 
     // tagging particles
-    for ( unsigned int iP = ptagger.firstTagP; iP < ptagger.lastTagP; ++iP )
+    for ( auto iP = ptagger.firstTagP; iP < ptagger.lastTagP; ++iP )
     {
       int hintID(0), key(0);
       if ( m_pack.hintAndKey64( pfts.taggeringPs()[iP],
@@ -152,7 +152,7 @@ void FlavourTagPacker::unpack( const PackedDataVector & pfts,
   for ( const auto & pft : pfts.data() )
   {
     // make and save new pid in container
-    Data * ft = new Data();
+    auto * ft = new Data();
     fts.insert( ft, pft.key );
 
     // Fill data from packed object
@@ -210,8 +210,7 @@ StatusCode FlavourTagPacker::check( const Data & dataA,
   ok &= sizeOK;
   if ( sizeOK )
   {
-    std::vector<LHCb::Tagger>::const_iterator iA = dataA.taggers().begin();
-    std::vector<LHCb::Tagger>::const_iterator iB = dataB.taggers().begin();
+    auto iA(dataA.taggers().begin()), iB(dataB.taggers().begin());
     for ( ; iA != dataA.taggers().end() && iB != dataB.taggers().end(); ++iA, ++iB )
     {
       ok &= ch.compareInts( "TaggerType",     iA->type(),     iB->type()     );
@@ -223,8 +222,7 @@ StatusCode FlavourTagPacker::check( const Data & dataA,
       ok &= pSizeOK;
       if ( pSizeOK )
       {
-        SmartRefVector<LHCb::Particle>::const_iterator iPA = iA->taggerParts().begin();
-        SmartRefVector<LHCb::Particle>::const_iterator iPB = iB->taggerParts().begin();
+        auto iPA(iA->taggerParts().begin()), iPB(iB->taggerParts().begin());
         for ( ; iPA != iA->taggerParts().end() && iPB != iB->taggerParts().end(); ++iPA, ++iPB )
         {
           ok &= ch.comparePointers( "TaggerParts", &**iPA, &**iPB );

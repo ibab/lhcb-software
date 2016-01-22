@@ -2,16 +2,16 @@
 #ifndef UNPACKPARTICLESANDVERTICES_H
 #define UNPACKPARTICLESANDVERTICES_H 1
 
-// from Gaudi
+#include <memory>
+
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 #include "Kernel/Particle2LHCbIDs.h"
 
-#include "Event/StandardPacker.h"
-
 #include "Relations/Relation1D.h"
 #include "Relations/RelationWeighted1D.h"
 
+#include "Event/StandardPacker.h"
 #include "Event/PackedTrack.h"
 #include "Event/PackedProtoParticle.h"
 #include "Event/PackedMuonPID.h"
@@ -70,7 +70,26 @@ private:
 
   std::string m_postFix;
 
-  StandardPacker m_pack; ///< Standard Packer
+  StandardPacker m_pack{this}; ///< Standard Packer
+
+  /// Track packer
+  const LHCb::TrackPacker m_trackPacker{this};
+  /// Muon PID packer
+  const LHCb::MuonPIDPacker m_muonPacker{this};
+  /// Rich PID packer
+  const LHCb::RichPIDPacker m_richPacker{this};
+  /// ProtoParticle packer
+  const LHCb::ProtoParticlePacker m_protoPacker{this};
+  /// Particle Packer
+  const LHCb::ParticlePacker m_partPacker{this};
+  /// Vertex Packer
+  const LHCb::VertexPacker m_vertPacker{this};
+  /// Flavour Tag Packer
+  const LHCb::FlavourTagPacker m_ftPacker{this};
+  /// Rec Vertex Packer
+  const LHCb::RecVertexPacker m_rvPacker{this};
+  /// Related Info Packer
+  const LHCb::RelatedInfoRelationsPacker m_rInfoPacker{this};
 
 };
 

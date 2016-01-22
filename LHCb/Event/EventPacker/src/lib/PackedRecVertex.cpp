@@ -13,7 +13,7 @@ void RecVertexPacker::pack( const Data & vert,
                             const DataVector & /* verts */,
                             PackedDataVector & pverts ) const
 {
-  const char ver = pverts.packingVersion();
+  const auto ver = pverts.packingVersion();
   if ( 1 == ver || 0 == ver )
   {
 
@@ -81,7 +81,7 @@ void RecVertexPacker::pack( const DataVector & verts,
 {
   pverts.vertices().reserve(verts.size());
 
-  for ( const Data * vert : verts )
+  for ( const auto * vert : verts )
   {
     // new packed data object
     pverts.vertices().emplace_back( PackedData() );
@@ -125,7 +125,7 @@ void RecVertexPacker::unpack( const PackedData       & pvert,
     
     //== Store the Tracks and weights
     int hintID(0), tKey(0);
-    for ( unsigned short int kk = pvert.firstTrack; pvert.lastTrack > kk; ++kk )
+    for ( auto kk = pvert.firstTrack; pvert.lastTrack > kk; ++kk )
     {
       // Get the track
       const auto trk = *(pverts.refs().begin()+kk);
@@ -167,7 +167,7 @@ void RecVertexPacker::unpack( const PackedDataVector & pverts,
   for ( const auto & pvert : pverts.vertices() )
   {
     // make and save new pid in container
-    Data * vert = new Data();
+    auto * vert = new Data();
     verts.insert( vert, pvert.key );
 
     // Fill data from packed object

@@ -40,7 +40,7 @@ StatusCode CompareTrack::execute()
   LHCb::Tracks* test = get<LHCb::Tracks>( m_testName  );
 
   // Track Packer
-  const LHCb::TrackPacker packer(*this);
+  const LHCb::TrackPacker packer(this);
 
   // compare
   return packer.check( *old, *test );

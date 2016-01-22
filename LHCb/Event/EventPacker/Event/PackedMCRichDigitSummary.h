@@ -123,7 +123,7 @@ namespace LHCb
   public:
 
     /// Default Constructor
-    MCRichDigitSummaryPacker( const GaudiAlgorithm & p ) : m_pack(&p) {}
+    MCRichDigitSummaryPacker( const GaudiAlgorithm * p ) : m_pack(p) {}
 
   public:
 

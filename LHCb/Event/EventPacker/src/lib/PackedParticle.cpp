@@ -129,7 +129,7 @@ void ParticlePacker::pack( const DataVector & parts,
 {
   pparts.data().reserve( parts.size() );
 
-  for ( const Data * part : parts )
+  for ( const auto * part : parts )
   {
     // Make a new packed data object and save
     pparts.data().emplace_back( PackedData() );
@@ -229,7 +229,7 @@ void ParticlePacker::unpack( const PackedData       & ppart,
     // extra info
     for ( auto iE = ppart.firstExtra; iE < ppart.lastExtra; ++iE )
     {
-      const PackedDataVector::PackedExtraInfo& pInfo = pparts.extra()[iE];
+      const auto & pInfo = pparts.extra()[iE];
       part.addInfo( pInfo.first, m_pack.fltPacked(pInfo.second) );
     }
 
@@ -283,10 +283,10 @@ void ParticlePacker::unpack( const PackedDataVector & pparts,
                              DataVector       & parts ) const
 {
   parts.reserve( pparts.data().size() );
-  for ( const PackedData & ppart : pparts.data() )
+  for ( const auto & ppart : pparts.data() )
   {
     // make and save new pid in container
-    Data * part = new Data();
+    auto * part = new Data();
     parts.insert( part, ppart.key );
     // Fill data from packed object
     unpack( ppart, *part, pparts, parts );
@@ -299,7 +299,7 @@ StatusCode ParticlePacker::check( const DataVector & dataA,
   StatusCode sc = StatusCode::SUCCESS;
 
   // Loop over data containers together and compare
-  DataVector::const_iterator iA(dataA.begin()), iB(dataB.begin());
+  auto iA(dataA.begin()), iB(dataB.begin());
   for ( ; iA != dataA.end() && iB != dataB.end(); ++iA, ++iB )
   {
     sc = sc && check( **iA, **iB );
@@ -365,8 +365,8 @@ StatusCode ParticlePacker::check( const Data & dataA,
   ok &= extraSizeOK;
   if ( extraSizeOK )
   {
-    LHCb::Particle::ExtraInfo::const_iterator iEA = dataA.extraInfo().begin();
-    LHCb::Particle::ExtraInfo::const_iterator iEB = dataB.extraInfo().begin();
+    auto iEA = dataA.extraInfo().begin();
+    auto iEB = dataB.extraInfo().begin();
     for ( ; iEA != dataA.extraInfo().end() && iEB != dataB.extraInfo().end();
           ++iEA, ++iEB )
     {
@@ -400,8 +400,8 @@ StatusCode ParticlePacker::check( const Data & dataA,
   ok &= dauSizeOK;
   if ( dauSizeOK )
   {
-    SmartRefVector<LHCb::Particle>::const_iterator iDA = dataA.daughters().begin();
-    SmartRefVector<LHCb::Particle>::const_iterator iDB = dataB.daughters().begin();
+    auto iDA = dataA.daughters().begin();
+    auto iDB = dataB.daughters().begin();
     for ( ; iDA != dataA.daughters().end() && iDB != dataB.daughters().end();
           ++iDA, ++iDB )
     {

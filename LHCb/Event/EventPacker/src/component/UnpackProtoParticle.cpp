@@ -52,7 +52,7 @@ StatusCode UnpackProtoParticle::execute()
   put( newProtoParticles, m_outputName );
 
   // unpack
-  const LHCb::ProtoParticlePacker packer(*this);
+  const LHCb::ProtoParticlePacker packer(this);
   packer.unpack( *dst, *newProtoParticles );
 
   if ( msgLevel(MSG::DEBUG) )

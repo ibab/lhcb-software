@@ -136,7 +136,7 @@ namespace LHCb
   public:
     
     /// Constructor
-    MCHitPacker( const GaudiAlgorithm & p ) : m_pack(&p) {}
+    MCHitPacker( const GaudiAlgorithm * p ) : m_pack(p) {}
     
   public:
 
@@ -184,7 +184,7 @@ namespace LHCb
   class MCVeloHitPacker : public MCHitPacker
   {
   public:
-    MCVeloHitPacker( const GaudiAlgorithm & parent ) : MCHitPacker(parent)
+    MCVeloHitPacker( const GaudiAlgorithm * parent ) : MCHitPacker(parent)
     {
       m_dispScale = 1.0e2;
       m_enScale   = 5.0e3;
@@ -203,7 +203,7 @@ namespace LHCb
   class MCPuVetoHitPacker : public MCHitPacker
   {
   public:
-    MCPuVetoHitPacker( const GaudiAlgorithm & parent ) : MCHitPacker(parent)
+    MCPuVetoHitPacker( const GaudiAlgorithm * parent ) : MCHitPacker(parent)
     {
       m_dispScale = 1.0e2;
       m_enScale   = 5.0e3;
@@ -222,7 +222,7 @@ namespace LHCb
   class MCVPHitPacker : public MCHitPacker
   {
   public:
-    MCVPHitPacker( const GaudiAlgorithm & parent ) : MCHitPacker(parent)
+    MCVPHitPacker( const GaudiAlgorithm * parent ) : MCHitPacker(parent)
     { 
       m_dispScale = 1.0e2;
       m_enScale   = 5.0e3;
@@ -241,7 +241,7 @@ namespace LHCb
   class MCTTHitPacker : public MCHitPacker
   {
   public:
-    MCTTHitPacker( const GaudiAlgorithm & parent ) : MCHitPacker(parent)
+    MCTTHitPacker( const GaudiAlgorithm * parent ) : MCHitPacker(parent)
     {
       m_dispScale = 1.0e2;
       m_enScale   = 5.0e3;
@@ -260,7 +260,7 @@ namespace LHCb
   class MCUTHitPacker : public MCHitPacker
   {
   public:
-    MCUTHitPacker( const GaudiAlgorithm & parent ) : MCHitPacker(parent)
+    MCUTHitPacker( const GaudiAlgorithm * parent ) : MCHitPacker(parent)
     {
       m_dispScale = 1.0e2;
       m_enScale   = 5.0e3;
@@ -279,7 +279,7 @@ namespace LHCb
   class MCITHitPacker : public MCHitPacker
   {
   public:
-    MCITHitPacker( const GaudiAlgorithm & parent ) : MCHitPacker(parent)
+    MCITHitPacker( const GaudiAlgorithm * parent ) : MCHitPacker(parent)
     {
       m_dispScale = 1.0e2;
       m_enScale   = 5.0e3;
@@ -298,7 +298,7 @@ namespace LHCb
   class MCSLHitPacker : public MCHitPacker
   {
   public:
-    MCSLHitPacker( const GaudiAlgorithm & parent ) : MCHitPacker(parent)
+    MCSLHitPacker( const GaudiAlgorithm * parent ) : MCHitPacker(parent)
     {
       m_dispScale = 1.0e2;
       m_enScale   = 5.0e3;
@@ -317,7 +317,7 @@ namespace LHCb
   class MCOTHitPacker : public MCHitPacker
   {
   public:
-    MCOTHitPacker( const GaudiAlgorithm & parent ) : MCHitPacker(parent)
+    MCOTHitPacker( const GaudiAlgorithm * parent ) : MCHitPacker(parent)
     {
       m_dispScale = 1.0e2;
       m_enScale   = 5.0e3;
@@ -330,7 +330,7 @@ namespace LHCb
   class MCFTHitPacker : public MCHitPacker
   {
   public:
-    MCFTHitPacker( const GaudiAlgorithm & parent ) : MCHitPacker(parent)
+    MCFTHitPacker( const GaudiAlgorithm * parent ) : MCHitPacker(parent)
     {
       m_dispScale = 1.0e2;
       m_enScale   = 5.0e3;
@@ -349,7 +349,7 @@ namespace LHCb
   class MCMuonHitPacker : public MCHitPacker
   {
   public:
-    MCMuonHitPacker( const GaudiAlgorithm & parent ) : MCHitPacker(parent)
+    MCMuonHitPacker( const GaudiAlgorithm * parent ) : MCHitPacker(parent)
     {
       m_dispScale = 1.0e2;
       m_enScale   = 5.0e3;
@@ -368,7 +368,7 @@ namespace LHCb
   class MCHCHitPacker : public MCHitPacker
   {
   public:
-    MCHCHitPacker( const GaudiAlgorithm & parent ) : MCHitPacker(parent)
+    MCHCHitPacker( const GaudiAlgorithm * parent ) : MCHitPacker(parent)
     {
       m_dispScale = 1.0e2;
       m_enScale   = 5.0e3;
@@ -387,7 +387,7 @@ namespace LHCb
   class MCBcmHitPacker : public MCHitPacker
   {
   public:
-    MCBcmHitPacker( const GaudiAlgorithm & parent ) : MCHitPacker(parent)
+    MCBcmHitPacker( const GaudiAlgorithm * parent ) : MCHitPacker(parent)
     {
       m_dispScale = 1.0e2;
       m_enScale   = 5.0e3;
@@ -406,7 +406,7 @@ namespace LHCb
   class MCBlsHitPacker : public MCHitPacker
   {
   public:
-    MCBlsHitPacker( const GaudiAlgorithm & parent ) : MCHitPacker(parent)
+    MCBlsHitPacker( const GaudiAlgorithm * parent ) : MCHitPacker(parent)
     {
       m_dispScale = 1.0e2;
       m_enScale   = 5.0e3;

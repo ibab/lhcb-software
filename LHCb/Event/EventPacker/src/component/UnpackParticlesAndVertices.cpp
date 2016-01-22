@@ -46,7 +46,6 @@ StatusCode UnpackParticlesAndVertices::execute()
       getIfExists<LHCb::PackedTracks>( m_inputStream + LHCb::PackedTrackLocation::InStream );
     if ( ptracks )
     {
-      const LHCb::TrackPacker tPacker(*dynamic_cast<GaudiAlgorithm*>(this));
       LHCb::Tracks * tracks = nullptr;
       for ( const LHCb::PackedTrack& ptrack : ptracks->tracks() )
       {
@@ -75,7 +74,7 @@ StatusCode UnpackParticlesAndVertices::execute()
         ++nbPart;
 
         // Unpack the physics info
-        tPacker.unpack( ptrack, *track, *ptracks, *tracks );
+        m_trackPacker.unpack( ptrack, *track, *ptracks, *tracks );
 
       }
     }
@@ -96,7 +95,6 @@ StatusCode UnpackParticlesAndVertices::execute()
       getIfExists<LHCb::PackedMuonPIDs>( m_inputStream + LHCb::PackedMuonPIDLocation::InStream );
     if ( ppids )
     {
-      const LHCb::MuonPIDPacker tPacker(*dynamic_cast<GaudiAlgorithm*>(this));
       LHCb::MuonPIDs * pids = nullptr;
       for ( const LHCb::PackedMuonPID& ppid : ppids->data() )
       {
@@ -125,7 +123,7 @@ StatusCode UnpackParticlesAndVertices::execute()
         ++nbPart;
 
         // Unpack the physics info
-        tPacker.unpack( ppid, *pid, *ppids, *pids );
+        m_muonPacker.unpack( ppid, *pid, *ppids, *pids );
 
       }
     }
@@ -146,7 +144,6 @@ StatusCode UnpackParticlesAndVertices::execute()
       getIfExists<LHCb::PackedRichPIDs>( m_inputStream + LHCb::PackedRichPIDLocation::InStream );
     if ( ppids )
     {
-      const LHCb::RichPIDPacker tPacker(*dynamic_cast<GaudiAlgorithm*>(this));
       LHCb::RichPIDs * pids = nullptr;
       for ( const LHCb::PackedRichPID& ppid : ppids->data() )
       {
@@ -175,7 +172,7 @@ StatusCode UnpackParticlesAndVertices::execute()
         ++nbPart;
 
         // Unpack the physics info
-        tPacker.unpack( ppid, *pid, *ppids, *pids );
+        m_richPacker.unpack( ppid, *pid, *ppids, *pids );
 
       }
     }
@@ -196,7 +193,6 @@ StatusCode UnpackParticlesAndVertices::execute()
       getIfExists<LHCb::PackedProtoParticles>( m_inputStream + LHCb::PackedProtoParticleLocation::InStream );
     if ( pprotos )
     {
-      const LHCb::ProtoParticlePacker pPacker(*dynamic_cast<GaudiAlgorithm*>(this));
       LHCb::ProtoParticles * protos = nullptr;
       for ( const LHCb::PackedProtoParticle& pproto : pprotos->protos() )
       {
@@ -225,7 +221,7 @@ StatusCode UnpackParticlesAndVertices::execute()
         ++nbPart;
 
         // Unpack the physics info
-        pPacker.unpack( pproto, *proto, *pprotos, *protos );
+        m_protoPacker.unpack( pproto, *proto, *pprotos, *protos );
 
       }
     }
@@ -247,7 +243,6 @@ StatusCode UnpackParticlesAndVertices::execute()
       getIfExists<LHCb::PackedParticles>( m_inputStream + LHCb::PackedParticleLocation::InStream );
     if ( pparts )
     {
-      const LHCb::ParticlePacker pPacker(*dynamic_cast<GaudiAlgorithm*>(this));
       LHCb::Particles* parts = nullptr;
       for ( const LHCb::PackedParticle& ppart : pparts->data() )
       {
@@ -276,7 +271,7 @@ StatusCode UnpackParticlesAndVertices::execute()
         ++nbPart;
 
         // Unpack the physics info
-        pPacker.unpack( ppart, *part, *pparts, *parts );
+        m_partPacker.unpack( ppart, *part, *pparts, *parts );
 
       }
     }
@@ -297,7 +292,6 @@ StatusCode UnpackParticlesAndVertices::execute()
       getIfExists<LHCb::PackedVertices>( m_inputStream + LHCb::PackedVertexLocation::InStream );
     if ( pverts )
     {
-      const LHCb::VertexPacker vPacker(*dynamic_cast<GaudiAlgorithm*>(this));
       LHCb::Vertices* verts = nullptr;
       for ( const LHCb::PackedVertex& pvert : pverts->data() )
       {
@@ -325,7 +319,7 @@ StatusCode UnpackParticlesAndVertices::execute()
         ++nbVert;
 
         // unpack the physics info
-        vPacker.unpack( pvert, *vert, *pverts, *verts );
+        m_vertPacker.unpack( pvert, *vert, *pverts, *verts );
       }
     }
     if ( msgLevel(MSG::DEBUG) )
@@ -346,7 +340,6 @@ StatusCode UnpackParticlesAndVertices::execute()
       getIfExists<LHCb::PackedFlavourTags>( m_inputStream + LHCb::PackedFlavourTagLocation::InStream );
     if ( pfts )
     {
-      const LHCb::FlavourTagPacker ftPacker(*dynamic_cast<GaudiAlgorithm*>(this));
       LHCb::FlavourTags * fts = nullptr;
       for ( const LHCb::PackedFlavourTag& pft : pfts->data() )
       {
@@ -375,7 +368,7 @@ StatusCode UnpackParticlesAndVertices::execute()
         ++nbFT;
 
         // Unpack the physics info
-        ftPacker.unpack( pft, *ft, *pfts, *fts );
+        m_ftPacker.unpack( pft, *ft, *pfts, *fts );
 
       }
     }
@@ -397,7 +390,6 @@ StatusCode UnpackParticlesAndVertices::execute()
     if ( pRecVerts )
     {
       LHCb::RecVertices* recVerts = nullptr;
-      const LHCb::RecVertexPacker rvPacker(*dynamic_cast<GaudiAlgorithm*>(this));
       for ( const LHCb::PackedRecVertex& pRecVert : pRecVerts->vertices() )
       {
         const int key    = pRecVert.key;
@@ -425,7 +417,7 @@ StatusCode UnpackParticlesAndVertices::execute()
         ++nbRecVert;
 
         // Physics Info
-        rvPacker.unpack( pRecVert, *recVert, *pRecVerts, *recVerts );
+        m_rvPacker.unpack( pRecVert, *recVert, *pRecVerts, *recVerts );
       }
     }
     if ( msgLevel(MSG::DEBUG) )
@@ -474,10 +466,6 @@ StatusCode UnpackParticlesAndVertices::execute()
     LHCb::PackedRelatedInfoRelations * prels = getIfExists<LHCb::PackedRelatedInfoRelations>(location);
     if ( nullptr != prels )
     {
-
-      // Packer helper
-      const LHCb::RelatedInfoRelationsPacker rPacker(*dynamic_cast<GaudiAlgorithm*>(this));
-
       // Loop over the different TES containers that where saved
       for ( const auto& cont : prels->containers() )
       {
@@ -505,7 +493,7 @@ StatusCode UnpackParticlesAndVertices::execute()
           const auto& rel = prels->relations()[kk];
 
           // unpack this one entry
-          rPacker.unpack( rel, *prels, *rels );
+          m_rInfoPacker.unpack( rel, *prels, *rels );
 
           // Count
           ++nbRel;

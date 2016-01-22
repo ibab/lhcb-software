@@ -125,7 +125,7 @@ namespace LHCb
   public:
 
     /// Constructor
-    MCRichTrackPacker( const GaudiAlgorithm & p ) : m_pack(&p) {}
+    MCRichTrackPacker( const GaudiAlgorithm * p ) : m_pack(p) {}
 
   public:
 

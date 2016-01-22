@@ -73,11 +73,11 @@ void VertexPacker::pack( const DataVector & verts,
 {
   pverts.data().reserve( verts.size() );
 
-  for ( const Data * vert : verts )
+  for ( const auto * vert : verts )
   {
     // new packed data object
     pverts.data().emplace_back( PackedData() );
-    PackedData & pvert = pverts.data().back();
+    auto & pvert = pverts.data().back();
 
     // Key
     pvert.key = vert->key();
@@ -115,7 +115,7 @@ void VertexPacker::unpack( const PackedData       & pvert,
     cov(2,2) = err2 * err2;
 
     // outgoing particles
-    for ( unsigned int iiP = pvert.firstOutgoingPart; iiP < pvert.lastOutgoingPart; ++iiP )
+    for ( auto iiP = pvert.firstOutgoingPart; iiP < pvert.lastOutgoingPart; ++iiP )
     {
       const auto & iP = pverts.outgoingParticles()[iiP];
       int hintID(0), key(0);
@@ -151,7 +151,7 @@ void VertexPacker::unpack( const PackedDataVector & pverts,
   for ( const auto & pvert : pverts.data() )
   {
     // make and save new pid in container
-    Data * vert = new Data();
+    auto * vert = new Data();
     verts.insert( vert, pvert.key );
 
     // Fill data from packed object
@@ -166,7 +166,7 @@ StatusCode VertexPacker::check( const DataVector & dataA,
   StatusCode sc = StatusCode::SUCCESS;
 
   // Loop over data containers together and compare
-  DataVector::const_iterator iA(dataA.begin()), iB(dataB.begin());
+  auto iA(dataA.begin()), iB(dataB.begin());
   for ( ; iA != dataA.end() && iB != dataB.end(); ++iA, ++iB )
   {
     sc = sc && check( **iA, **iB );

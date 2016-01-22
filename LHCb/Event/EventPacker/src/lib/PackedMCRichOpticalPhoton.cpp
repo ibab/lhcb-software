@@ -13,11 +13,11 @@ using namespace LHCb;
 void MCRichOpticalPhotonPacker::pack( const DataVector & phots,
                                       PackedDataVector & pphots ) const
 {
-  const char ver = pphots.packingVersion();
+  const auto ver = pphots.packingVersion();
   if ( 1 == ver || 0 == ver )
   {
     pphots.data().reserve( phots.size() );
-    for ( const Data * phot : phots )
+    for ( const auto * phot : phots )
     {
 
       pphots.data().emplace_back( PackedData() );
@@ -81,7 +81,8 @@ void MCRichOpticalPhotonPacker::pack( const DataVector & phots,
 void MCRichOpticalPhotonPacker::unpack( const PackedDataVector & pphots,
                                         DataVector       & phots ) const
 {
-  const char ver = pphots.packingVersion();
+
+  const auto ver = pphots.packingVersion();
   if ( 1 == ver || 0 == ver )
   {
     phots.reserve( pphots.data().size() );
@@ -155,7 +156,7 @@ StatusCode MCRichOpticalPhotonPacker::check( const DataVector & dataA,
   const DataPacking::DataChecks ch(parent());
 
   // Loop over data containers together and compare
-  DataVector::const_iterator iA(dataA.begin()), iB(dataB.begin());
+  auto iA(dataA.begin()), iB(dataB.begin());
   for ( ; iA != dataA.end() && iB != dataB.end(); ++iA, ++iB )
   {
     // assume OK frm the start

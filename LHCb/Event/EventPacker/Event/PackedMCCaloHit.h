@@ -126,7 +126,7 @@ namespace LHCb
   public:
 
     /// Constructor
-    MCCaloHitPacker( const GaudiAlgorithm & p ) : m_pack(&p) { }
+    MCCaloHitPacker( const GaudiAlgorithm * p ) : m_pack(p) { }
 
   public:
 
@@ -171,7 +171,7 @@ namespace LHCb
   class MCSpdHitPacker : public MCCaloHitPacker
   {
   public:
-    MCSpdHitPacker(GaudiAlgorithm & parent) : MCCaloHitPacker(parent)
+    MCSpdHitPacker(GaudiAlgorithm * parent) : MCCaloHitPacker(parent)
     {
       m_energyScale = 1.0e2;
     }
@@ -191,7 +191,7 @@ namespace LHCb
   class MCPrsHitPacker : public MCCaloHitPacker
   {
   public:
-    MCPrsHitPacker(GaudiAlgorithm & parent) : MCCaloHitPacker(parent)
+    MCPrsHitPacker(GaudiAlgorithm * parent) : MCCaloHitPacker(parent)
     {
       m_energyScale = 1.0e2;
     }
@@ -211,7 +211,7 @@ namespace LHCb
   class MCEcalHitPacker : public MCCaloHitPacker
   {
   public:
-    MCEcalHitPacker(GaudiAlgorithm & parent) : MCCaloHitPacker(parent)
+    MCEcalHitPacker(GaudiAlgorithm * parent) : MCCaloHitPacker(parent)
     {
       m_energyScale = 1.0e2;
     }
@@ -231,7 +231,7 @@ namespace LHCb
   class MCHcalHitPacker : public MCCaloHitPacker
   {
   public:
-    MCHcalHitPacker(GaudiAlgorithm & parent) : MCCaloHitPacker(parent)
+    MCHcalHitPacker(GaudiAlgorithm * parent) : MCCaloHitPacker(parent)
     {
       m_energyScale = 1.0e2;
     }

@@ -20,7 +20,7 @@ DECLARE_ALGORITHM_FACTORY( CompareMCVertex )
 //=============================================================================
 CompareMCVertex::CompareMCVertex( const std::string& name,
                                   ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+: GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "InputName" , m_inputName  = LHCb::MCVertexLocation::Default );
   declareProperty( "TestName"  , m_testName   = LHCb::MCVertexLocation::Default+"Test" );
@@ -45,17 +45,17 @@ StatusCode CompareMCVertex::execute() {
           << " differs form Test " << test->size()
           << endmsg;
     return StatusCode::FAILURE;
-  }  
+  }
   LHCb::MCVertices::const_iterator itOld  = old->begin();
   LHCb::MCVertices::const_iterator itTest = test->begin();
 
   static const double smallest = boost::numeric::bounds<float>::smallest();
-  static const double tiny = boost::numeric::bounds<double>::smallest();
+  static const double tiny     = boost::numeric::bounds<double>::smallest();
 
   while ( old->end() != itOld ) {
     LHCb::MCVertex* oVert = (*itOld++);
     LHCb::MCVertex* tVert = (*itTest++);
-    
+
     if ( oVert->key() != tVert->key() ) {
       warning() << "Wrong key : old " <<  oVert->key() << " test " << tVert->key() << endmsg;
     }
@@ -71,7 +71,7 @@ StatusCode CompareMCVertex::execute() {
           debug() << "time smaller than " << tiny;
         else
           debug() << "time " << oVert->time();
-          
+
         debug() << " set to zero for vertex "
                 << oVert->key() << " of type " << oVert->type() << endmsg;
       }
@@ -89,7 +89,7 @@ StatusCode CompareMCVertex::execute() {
     unsigned int kk;
     if ( oVert->products().size() != tVert->products().size() ) {
       isOK = false;
-    } else { 
+    } else {
       for ( kk = 0; oVert->products().size() > kk; kk++ ) {
         const LHCb::MCParticle* dum  = oVert->products()[kk];  // convert smartref to pointers
         const LHCb::MCParticle* dum1 = tVert->products()[kk];
@@ -104,15 +104,15 @@ StatusCode CompareMCVertex::execute() {
       }
       debug() << "=== MCVertex key " << oVert->key() << endmsg;
       debug() << format( "  old point %12.5f %12.5f %12.5f %12.4f %2d",
-                        oVert->position().x(), oVert->position().y(),
-                        oVert->position().z(), oVert->time(), oVert->type() )
+                         oVert->position().x(), oVert->position().y(),
+                         oVert->position().z(), oVert->time(), oVert->type() )
               << " mother " << oVert->mother()
               << endmsg;
       debug() << format( " test point %12.5f %12.5f %12.5f %12.4f %2d",
-                        tVert->position().x(), tVert->position().y(),
-                        tVert->position().z(), tVert->time(), tVert->type() )
-             << " mother " << tVert->mother()
-             << endmsg << "  old products ";
+                         tVert->position().x(), tVert->position().y(),
+                         tVert->position().z(), tVert->time(), tVert->type() )
+              << " mother " << tVert->mother()
+              << endmsg << "  old products ";
       for ( kk = 0; oVert->products().size() > kk; kk++ ) {
         debug() << " " << oVert->products()[kk];
       }
@@ -120,7 +120,7 @@ StatusCode CompareMCVertex::execute() {
       for ( kk = 0; tVert->products().size() > kk; kk++ ) {
         debug() << " " << tVert->products()[kk];
       }
-      debug() << endmsg; 
+      debug() << endmsg;
     }
   }
   return StatusCode::SUCCESS;

@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2016-01-22 - Chris Jones
+ - Get rid of some unneccessary dynamic casts during the event loop in
+   various packers and unpakers.
+ - A few more C++11 updates.
  - Add some missing variable initialisation in PackPrimaryVertex.
 
 ! 2016-01-21 - Chris Jones

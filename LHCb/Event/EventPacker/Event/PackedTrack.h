@@ -164,7 +164,7 @@ namespace LHCb
   public:
 
     /// Default Constructor
-    TrackPacker( const GaudiAlgorithm & p ) : m_pack(&p) { resetWrappingCounts(); }
+    TrackPacker( const GaudiAlgorithm * p ) : m_pack(p) { }
 
   public:
 

@@ -187,7 +187,7 @@ namespace LHCb
   public:
 
     /// Default Constructor
-    ParticlePacker( const GaudiAlgorithm & p ) : m_pack(&p) {}
+    ParticlePacker( const GaudiAlgorithm * p ) : m_pack(p) {}
 
   public:
 

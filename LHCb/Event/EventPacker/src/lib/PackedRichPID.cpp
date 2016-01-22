@@ -14,7 +14,7 @@ void RichPIDPacker::pack( const Data & pid,
                           PackedData & ppid,
                           PackedDataVector & ppids ) const
 {
-  const char ver = ppids.packingVersion();
+  const auto ver = ppids.packingVersion();
   if ( isSupportedVer(ver) )
   {
     ppid.pidResultCode = (int)pid.pidResultCode();
@@ -40,15 +40,15 @@ void RichPIDPacker::pack( const Data & pid,
 void RichPIDPacker::pack( const DataVector & pids,
                           PackedDataVector & ppids ) const
 {
-  const char ver = ppids.packingVersion();
+  const auto ver = ppids.packingVersion();
   if ( isSupportedVer(ver) )
   {
     ppids.data().reserve( pids.size() );
-    for ( const Data * pid : pids )
+    for ( const auto * pid : pids )
     {
       // create new packed PID object in container and get reference to it.
       ppids.data().emplace_back( PackedData() );
-      PackedData & ppid = ppids.data().back();
+      auto & ppid = ppids.data().back();
       // fill the key
       ppid.key = pid->key();
       // fill the rest of the data
@@ -62,7 +62,7 @@ void RichPIDPacker::unpack( const PackedData       & ppid,
                             const PackedDataVector & ppids,
                             DataVector             & pids ) const
 {
-  const char ver = ppids.packingVersion();
+  const auto ver = ppids.packingVersion();
   if ( isSupportedVer(ver) )
   {
     pid.setPidResultCode( ppid.pidResultCode );
@@ -90,14 +90,14 @@ void RichPIDPacker::unpack( const PackedData       & ppid,
 void RichPIDPacker::unpack( const PackedDataVector & ppids,
                             DataVector       & pids ) const
 {
-  const char ver = ppids.packingVersion();
+  const auto ver = ppids.packingVersion();
   if ( isSupportedVer(ver) )
   {
     pids.reserve( ppids.data().size() );
-    for ( const PackedData & ppid : ppids.data() )
+    for ( const auto & ppid : ppids.data() )
     {
       // make and save new pid in container
-      Data * pid  = new Data();
+      auto * pid  = new Data();
       if ( ver < 2 ) { pids.add( pid ); }
       else           { pids.insert( pid, ppid.key ); }
       // Fill data from packed object
@@ -154,7 +154,7 @@ StatusCode RichPIDPacker::check( const DataVector & dataA,
   StatusCode sc = StatusCode::SUCCESS;
 
   // Loop over data containers together and compare
-  DataVector::const_iterator iA(dataA.begin()), iB(dataB.begin());
+  auto iA(dataA.begin()), iB(dataB.begin());
   for ( ; iA != dataA.end() && iB != dataB.end(); ++iA, ++iB )
   {
     sc = sc && check( **iA, **iB );

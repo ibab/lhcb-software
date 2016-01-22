@@ -14,7 +14,7 @@ using namespace LHCb;
 void MCRichDigitSummaryPacker::pack( const DataVector & sums,
                                      PackedDataVector & psums ) const
 {
-  const char ver = psums.packingVersion();
+  const auto ver = psums.packingVersion();
   if ( 0 == ver || 1 == ver )
   {
     psums.data().reserve( sums.size() );
@@ -49,7 +49,7 @@ void MCRichDigitSummaryPacker::pack( const DataVector & sums,
 void MCRichDigitSummaryPacker::unpack( const PackedDataVector & psums,
                                        DataVector       & sums ) const
 {
-  const char ver = psums.packingVersion();
+  const auto ver = psums.packingVersion();
   if ( 0 == ver || 1 == ver )
   {
     sums.reserve( psums.data().size() );
@@ -91,7 +91,7 @@ StatusCode MCRichDigitSummaryPacker::check( const DataVector & dataA,
   const DataPacking::DataChecks ch(parent());
 
   // Loop over data containers together and compare
-  DataVector::const_iterator iA(dataA.begin()), iB(dataB.begin());
+  auto iA(dataA.begin()), iB(dataB.begin());
   for ( ; iA != dataA.end() && iB != dataB.end(); ++iA, ++iB )
   {
     // assume OK from the start

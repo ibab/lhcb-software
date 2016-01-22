@@ -24,7 +24,7 @@ ProtoParticlePacker::pack( const Data & proto,
                            PackedDataVector & pprotos ) const
 {
   // packing version
-  const char ver = pprotos.packingVersion();
+  const auto ver = pprotos.packingVersion();
   if ( 1 == ver || 0 == ver )
   {
 
@@ -129,11 +129,11 @@ ProtoParticlePacker::pack( const DataVector & protos,
                            PackedDataVector & pprotos ) const
 {
   pprotos.protos().reserve(protos.size());
-  for ( const LHCb::ProtoParticle * proto : protos )
+  for ( const auto * proto : protos )
   {
     if ( !proto ) continue;
     pprotos.protos().emplace_back( LHCb::PackedProtoParticle() );
-    LHCb::PackedProtoParticle & pproto = pprotos.protos().back();
+    auto & pproto = pprotos.protos().back();
     // save the key
     pproto.key = proto->key();
     // fill the rest
@@ -148,7 +148,7 @@ ProtoParticlePacker::unpack( const PackedData       & pproto,
                              DataVector             & protos ) const
 {
   // packing version
-  const char ver = pprotos.packingVersion();
+  const auto ver = pprotos.packingVersion();
   if ( 1 == ver || 0 == ver )
   {
 
@@ -271,7 +271,7 @@ ProtoParticlePacker::unpack( const PackedDataVector & pprotos,
                              DataVector             & protos ) const
 {
   protos.reserve(pprotos.protos().size());
-  for ( const LHCb::PackedProtoParticle& pproto : pprotos.protos() )
+  for ( const auto & pproto : pprotos.protos() )
   {
     auto * part = new LHCb::ProtoParticle( );
     protos.insert( part, pproto.key );

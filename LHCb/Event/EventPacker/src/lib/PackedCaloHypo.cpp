@@ -18,7 +18,7 @@ void CaloHypoPacker::pack( const DataVector & hypos,
   phypos.hypos().reserve(hypos.size());
 
   // packing version
-  const char ver = phypos.packingVersion();
+  const auto ver = phypos.packingVersion();
   if ( isSupportedVer(ver) )
   {
 
@@ -142,7 +142,7 @@ void CaloHypoPacker::unpack( const PackedDataVector & phypos,
   hypos.reserve( phypos.hypos().size() );
 
   // packing version
-  const char ver = phypos.packingVersion();
+  const auto ver = phypos.packingVersion();
   if ( isSupportedVer(ver) )
   {
 
@@ -241,8 +241,8 @@ StatusCode CaloHypoPacker::check( const DataVector & dataA,
     return StatusCode::FAILURE;
   }
 
-  LHCb::CaloHypos::const_iterator itOld  = dataA.begin();
-  LHCb::CaloHypos::const_iterator itTest = dataB.begin();
+  auto itOld  = dataA.begin();
+  auto itTest = dataB.begin();
   while ( dataA.end() != itOld )
   {
     LHCb::CaloHypo* oHypo = (*itOld++);

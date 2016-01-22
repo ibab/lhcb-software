@@ -30,7 +30,7 @@ StatusCode Pack<PACKER>::initialize()
   const StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+  if ( msgLevel(MSG::DEBUG) )
     debug() << "Input '"    << rootInTES() << m_inputName
             << "' Output '" << rootInTES() << m_outputName << "'" << endmsg;
 
@@ -73,8 +73,7 @@ StatusCode Pack<PACKER>::execute()
     {
 
       // Load the input data
-      typename PACKER::DataVector * data =
-        this->get<typename PACKER::DataVector>(m_inputName);
+      auto * data = this->get<typename PACKER::DataVector>(m_inputName);
 
       // set data version
       pdata->setVersion(data->version());
@@ -82,11 +81,8 @@ StatusCode Pack<PACKER>::execute()
       // Set packing version number
       pdata->setPackingVersion(m_version);
 
-      // Packer
-      const PACKER packer(*dynamic_cast<GaudiAlgorithm*>(this));
-
       // Fill packed data
-      packer.pack( *data, *pdata );
+      m_packer.pack( *data, *pdata );
 
       if ( msgLevel(MSG::DEBUG) )
       {
@@ -99,26 +95,27 @@ StatusCode Pack<PACKER>::execute()
       if ( UNLIKELY(m_enableCheck) )
       {
         // make new unpacked output data object
-        typename PACKER::DataVector * unpacked = new typename PACKER::DataVector();
+        auto * unpacked = new typename PACKER::DataVector();
         put( unpacked, m_inputName+"_PackingCheck" );
 
         // unpack
-        packer.unpack( *pdata, *unpacked );
+        m_packer.unpack( *pdata, *unpacked );
 
         // run checks
-        packer.check( *data, *unpacked ).ignore();
+        m_packer.check( *data, *unpacked ).ignore();
 
         // clean up after checks
-        StatusCode sc = evtSvc()->unregisterObject( unpacked );
-        if( sc.isSuccess() ) delete unpacked;
+        const auto sc = evtSvc()->unregisterObject( unpacked );
+        if ( sc.isSuccess() ) { delete unpacked; }
+        else { Error( "Problem unregistering data at "+m_inputName+"_PackingCheck" ); }
       }
 
       // If requested, remove the input data from the TES and delete
       if ( UNLIKELY(m_deleteInput) )
       {
-        const StatusCode sc = evtSvc()->unregisterObject( data );
-        if ( sc.isSuccess() ) delete data;
-        data = nullptr;
+        const auto sc = evtSvc()->unregisterObject( data );
+        if ( sc.isSuccess() ) { delete data; data = nullptr; }
+        else { Error( "Problem unregistering data at "+m_inputName ); }
       }
       else
       {
@@ -129,8 +126,7 @@ StatusCode Pack<PACKER>::execute()
     } // input OK
 
     // Count packed output
-    if ( inputOK || m_alwaysOutput )
-      counter("# PackedData") += pdata->data().size();
+    if ( inputOK || m_alwaysOutput ) { counter("# PackedData") += pdata->data().size(); }
 
   } // output OK
 

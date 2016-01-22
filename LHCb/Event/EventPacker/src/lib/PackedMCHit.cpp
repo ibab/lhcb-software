@@ -17,7 +17,7 @@ using namespace LHCb;
 void MCHitPacker::pack( const DataVector & hits,
                         PackedDataVector & phits ) const
 {
-  const char ver = phits.packingVersion();
+  const auto ver = phits.packingVersion();
   if ( 1 == ver || 0 == ver )
   {
     phits.data().reserve( hits.size() );
@@ -58,11 +58,11 @@ void MCHitPacker::pack( const DataVector & hits,
 void MCHitPacker::unpack( const PackedDataVector & phits,
                           DataVector       & hits ) const
 {
-  const char ver = phits.packingVersion();
+  const auto ver = phits.packingVersion();
   if ( 1 == ver || 0 == ver )
   {
     hits.reserve( phits.data().size() );
-    for ( const PackedData & phit : phits.data() )
+    for ( const auto & phit : phits.data() )
     {
       // make and save new hit in container
       auto * hit  = new Data();
@@ -108,7 +108,7 @@ StatusCode MCHitPacker::check( const DataVector & dataA,
   const DataPacking::DataChecks ch(parent());
 
   // Loop over data containers together and compare
-  DataVector::const_iterator iA(dataA.begin()), iB(dataB.begin());
+  auto iA(dataA.begin()), iB(dataB.begin());
   for ( ; iA != dataA.end() && iB != dataB.end(); ++iA, ++iB )
   {
     // assume OK from the start

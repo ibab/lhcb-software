@@ -130,7 +130,7 @@ namespace LHCb
   public:
 
     /// Default Constructor
-    MuonPIDPacker( const GaudiAlgorithm & p ) : m_pack(&p) {}
+    MuonPIDPacker( const GaudiAlgorithm * p ) : m_pack(p) {}
 
   public:
 

@@ -161,7 +161,7 @@ namespace LHCb
   public:
 
     /// Default Constructor
-    CaloClusterPacker( const GaudiAlgorithm & p ) : m_pack(&p) {}
+    CaloClusterPacker( const GaudiAlgorithm * p ) : m_pack(p) {}
 
   public:
 

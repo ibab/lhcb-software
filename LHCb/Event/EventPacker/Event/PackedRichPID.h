@@ -129,7 +129,7 @@ namespace LHCb
   public:
 
     /// Constructor
-    RichPIDPacker( const GaudiAlgorithm & parent ) : m_pack(&parent) { }
+    RichPIDPacker( const GaudiAlgorithm * parent ) : m_pack(parent) { }
 
   public:
 

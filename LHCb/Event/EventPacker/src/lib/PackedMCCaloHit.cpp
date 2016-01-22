@@ -14,12 +14,12 @@ using namespace LHCb;
 void MCCaloHitPacker::pack( const DataVector & hits,
                             PackedDataVector & phits ) const
 {
-  const char ver = phits.packingVersion();
+  const auto ver = phits.packingVersion();
 
   if ( 0 == ver || 1 == ver )
   {
     phits.data().reserve( hits.size() );
-    for ( const Data * hit : hits )
+    for ( const auto * hit : hits )
     {
       phits.data().emplace_back( PackedData() );
       auto & phit = phits.data().back();
@@ -49,7 +49,7 @@ void MCCaloHitPacker::pack( const DataVector & hits,
 void MCCaloHitPacker::unpack( const PackedDataVector & phits,
                               DataVector       & hits ) const
 {
-  const char ver = phits.packingVersion();
+  const auto ver = phits.packingVersion();
   if ( 0 == ver || 1 == ver )
   {
     hits.reserve( phits.data().size() );
@@ -92,7 +92,7 @@ StatusCode MCCaloHitPacker::check( const DataVector & dataA,
   const DataPacking::DataChecks ch(parent());
 
   // Loop over data containers together and compare
-  DataVector::const_iterator iA(dataA.begin()), iB(dataB.begin());
+  auto iA(dataA.begin()), iB(dataB.begin());
   for ( ; iA != dataA.end() && iB != dataB.end(); ++iA, ++iB )
   {
     // assume OK from the start

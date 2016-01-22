@@ -14,7 +14,7 @@ void MuonPIDPacker::pack( const Data & pid,
                           PackedData & ppid,
                           PackedDataVector & ppids ) const
 {
-  const char ver = ppids.packingVersion();
+  const auto ver = ppids.packingVersion();
   if ( isSupportedVer(ver) )
   {
     ppid.MuonLLMu = m_pack.deltaLL(pid.MuonLLMu());
@@ -47,11 +47,11 @@ void MuonPIDPacker::pack( const Data & pid,
 void MuonPIDPacker::pack( const DataVector & pids,
                           PackedDataVector & ppids ) const
 {
-  const char ver = ppids.packingVersion();
+  const auto ver = ppids.packingVersion();
   if ( isSupportedVer(ver) )
   {
     ppids.data().reserve( pids.size() );
-    for ( const Data * pid : pids )
+    for ( const auto * pid : pids )
     {
       ppids.data().emplace_back( PackedData() );
       auto & ppid = ppids.data().back();
@@ -68,7 +68,7 @@ void MuonPIDPacker::unpack( const PackedData       & ppid,
                             const PackedDataVector & ppids,
                             DataVector             & pids ) const
 {
-  const char ver = ppids.packingVersion();
+  const auto ver = ppids.packingVersion();
   if ( isSupportedVer(ver) )
   {
     pid.setMuonLLMu( m_pack.deltaLL(ppid.MuonLLMu) );
@@ -103,14 +103,14 @@ void MuonPIDPacker::unpack( const PackedData       & ppid,
 void MuonPIDPacker::unpack( const PackedDataVector & ppids,
                             DataVector             & pids ) const
 {
-  const char ver = ppids.packingVersion();
+  const auto ver = ppids.packingVersion();
   if ( isSupportedVer(ver) )
   {
     pids.reserve( ppids.data().size() );
-    for ( const PackedData & ppid : ppids.data() )
+    for ( const auto & ppid : ppids.data() )
     {
       // make and save new pid in container
-      Data * pid  = new Data();
+      auto * pid  = new Data();
       if ( 0 == ver ) { pids.add( pid ); }
       else            { pids.insert( pid, ppid.key ); }
       // Fill data from packed object
@@ -163,7 +163,7 @@ StatusCode MuonPIDPacker::check( const DataVector & dataA,
   StatusCode sc = StatusCode::SUCCESS;
 
   // Loop over data containers together and compare
-  DataVector::const_iterator iA(dataA.begin()), iB(dataB.begin());
+  auto iA(dataA.begin()), iB(dataB.begin());
   for ( ; iA != dataA.end() && iB != dataB.end(); ++iA, ++iB )
   {
     sc = sc && check( **iA, **iB );

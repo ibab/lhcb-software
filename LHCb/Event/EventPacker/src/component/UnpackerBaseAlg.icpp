@@ -26,7 +26,7 @@ StatusCode Unpack<PACKER>::initialize()
   const StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+  if ( msgLevel(MSG::DEBUG) ) 
     debug() << "Input '"    << rootInTES() << m_inputName
             << "' Output '" << rootInTES() << m_outputName << "'" << endmsg;
 
@@ -70,17 +70,13 @@ StatusCode Unpack<PACKER>::execute()
     {
 
       // Load the input data
-      const typename PACKER::PackedDataVector * pdata =
-        this->get<typename PACKER::PackedDataVector>(m_inputName);
+      const auto * pdata = this->get<typename PACKER::PackedDataVector>(m_inputName);
 
       // set the data version
       data->setVersion(pdata->version());
 
-      // Packer
-      const PACKER packer(*dynamic_cast<GaudiAlgorithm*>(this));
-
       // Fill unpacked data
-      packer.unpack( *pdata, *data );
+      m_packer.unpack( *pdata, *data );
 
       if ( msgLevel(MSG::DEBUG) )
       {
