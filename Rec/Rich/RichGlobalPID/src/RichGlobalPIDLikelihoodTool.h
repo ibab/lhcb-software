@@ -122,14 +122,14 @@ namespace Rich
           /// Container
           typedef std::vector<InitTrackInfo> Vector;
           /// Constructor
-          InitTrackInfo( LHCb::RichGlobalPIDTrack * track = NULL,
-                         const Rich::ParticleIDType h = Rich::Pion,
-                         const double mindll = 0 )
+          InitTrackInfo( LHCb::RichGlobalPIDTrack * track,
+                         const Rich::ParticleIDType h,
+                         const double mindll )
             : pidTrack(track), hypo(h), minDLL(mindll) { }
         public:
-          LHCb::RichGlobalPIDTrack * pidTrack; ///< Pointer to the track
-          Rich::ParticleIDType hypo;     ///< Track hypothesis
-          double minDLL;                 ///< The DLL value
+          LHCb::RichGlobalPIDTrack * pidTrack{nullptr}; ///< Pointer to the track
+          Rich::ParticleIDType hypo{Rich::Pion};     ///< Track hypothesis
+          double minDLL{0};                 ///< The DLL value
         };
 
         /// Sort a TrackList
@@ -195,11 +195,11 @@ namespace Rich
             { return vdt::fast_logf( vdt::fast_expf(x) - 1.0f ); }
           private:
             // The (x,y) values for the low and high edge of this bin
-            TYPE m_xLow, m_xHigh, m_yLow, m_yHigh;
+            TYPE m_xLow{0}, m_xHigh{0}, m_yLow{0}, m_yHigh{0};
             /// The slope parameter
-            TYPE m_slope;
+            TYPE m_slope{0};
             /// The constant parameter
-            TYPE m_const;
+            TYPE m_const{0};
           public:
             /// type for a list of data points
             typedef std::vector<Data> Vector;
@@ -231,11 +231,11 @@ namespace Rich
           /// The look up vector of data points
           typename Data::Vector m_data;
           /// The minimum valid x
-          TYPE m_minX;
+          TYPE m_minX{0};
           /// The maximum valid x
-          TYPE m_maxX;
+          TYPE m_maxX{0};
           /// 1 / the bin increment
-          TYPE m_incX;
+          TYPE m_incX{0};
         };
 
       private: // Private methods
@@ -319,12 +319,12 @@ namespace Rich
       private:  // Private data members
 
         // tool pointers
-        const ITrackCreator * m_gtkCreator;      ///< RichGlobalPIDTrack creator
-        const IExpectedTrackSignal * m_tkSignal; ///< Track signal tool
-        const IPhotonSignal * m_photonSig;       ///< Photon signal tool
+        const ITrackCreator * m_gtkCreator = nullptr;      ///< RichGlobalPIDTrack creator
+        const IExpectedTrackSignal * m_tkSignal = nullptr; ///< Track signal tool
+        const IPhotonSignal * m_photonSig = nullptr;       ///< Photon signal tool
 
         /// Pointer to the track container being considered
-        mutable const LHCb::RichGlobalPIDTrack::Vector * m_gpidTracksToPID;
+        mutable const LHCb::RichGlobalPIDTrack::Vector * m_gpidTracksToPID = nullptr;
 
         /// Track DLL value to freeze track out from future iterations
         double m_freezeOutDll;
@@ -339,10 +339,10 @@ namespace Rich
         unsigned int m_maxEventIterations;
 
         /// Minimum signal value for full calculation of log(exp(signal)-1)
-        float m_minSig;
+        float m_minSig{0};
 
         /// Cached value of log( exp(m_minSig) - 1 ) for efficiency
-        float m_logMinSig;
+        float m_logMinSig{0};
 
         /// List of tracks ordered by change in likelihood
         mutable TrackList m_trackList;
@@ -363,7 +363,7 @@ namespace Rich
         unsigned int m_maxItRetries;
 
         // working flags and variables
-        mutable bool m_inR1, m_inR2;
+        mutable bool m_inR1{true}, m_inR2{true};
 
         /// Look up table for log(exp(x)-1) function
         LogExpLookUp<float> m_logExpLookUp;

@@ -24,9 +24,6 @@ Rich::Rec::GlobalPID::CommonBase<PBASE>::~CommonBase() {}
 template <class PBASE>
 void Rich::Rec::GlobalPID::CommonBase<PBASE>::initConstructor()
 {
-  m_GPIDtracks   = NULL;
-  m_GPIDs        = NULL;
-  m_richPartProp = NULL;
   this->declareProperty( "RichGlobalPIDTrackLocation", 
                          m_richGPIDTrackLocation = 
                          this->contextSpecificTES(LHCb::RichGlobalPIDTrackLocation::Default) );
@@ -88,6 +85,6 @@ void Rich::Rec::GlobalPID::CommonBase<PBASE>::deleteGPIDEvent()
     m_GPIDs->clear();
   }
   */
-  m_GPIDtracks  = NULL;
-  m_GPIDs       = NULL;
+  m_GPIDtracks  = nullptr;
+  m_GPIDs       = nullptr;
 }

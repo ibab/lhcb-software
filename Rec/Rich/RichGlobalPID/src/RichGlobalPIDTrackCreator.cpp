@@ -26,8 +26,7 @@ DECLARE_TOOL_FACTORY( TrackCreator )
 TrackCreator::TrackCreator( const std::string& type,
                             const std::string& name,
                             const IInterface* parent )
-  : ToolBase   ( type, name, parent ),
-    m_tkSignal ( NULL )
+  : ToolBase( type, name, parent )
 {
   declareInterface<ITrackCreator>(this);
 }
@@ -53,22 +52,24 @@ StatusCode TrackCreator::initialize()
 LHCb::RichGlobalPIDTrack * TrackCreator::createTrack( LHCb::RichRecTrack * track ) const
 {
   // new object
-  LHCb::RichGlobalPIDTrack * pidTrack = new LHCb::RichGlobalPIDTrack();
+  auto * pidTrack = new LHCb::RichGlobalPIDTrack();
 
   // give to container
   gpidTracks()->insert( pidTrack, track->key() );
 
   // Make new PID result and save
-  LHCb::RichGlobalPID * newPID = new LHCb::RichGlobalPID();
+  auto * newPID = new LHCb::RichGlobalPID();
   gpidPIDs()->insert( newPID, track->key() );
-
+  
   // give PID to track
   pidTrack->setGlobalPID( newPID );
 
   // Set Track reference
-  const LHCb::Track * trtrack = dynamic_cast<const LHCb::Track *>(track->parentTrack());
+  const auto * trtrack = dynamic_cast<const LHCb::Track *>(track->parentTrack());
   if ( !trtrack ) 
+  {
     Warning( "Input track type is not Track -> RichPID has null track reference" ).ignore();
+  }
   newPID->setTrack( trtrack );
 
   // Set its SmartRef to RichRecTrack
@@ -85,8 +86,8 @@ LHCb::RichGlobalPIDTrack * TrackCreator::createTrack( LHCb::RichRecTrack * track
 
 void TrackCreator::finaliseTrack( LHCb::RichGlobalPIDTrack * track ) const
 {
-  LHCb::RichRecTrack  * rRTrack = track->richRecTrack();
-  LHCb::RichGlobalPID * pid     = track->globalPID();
+  auto * rRTrack = track->richRecTrack();
+  auto * pid     = track->globalPID();
 
   // Set best PID
   pid->setBestParticleID( rRTrack->currentHypothesis() );
@@ -108,23 +109,19 @@ void TrackCreator::finaliseTrack( LHCb::RichGlobalPIDTrack * track ) const
   if ( deltaLLs[pid->bestParticleID()] > 1e-10 )
   {
     Warning("non-zero deltaLL value").ignore();
-    if (msgLevel(MSG::DEBUG) ) 
-    {
-      debug() << "PID " << pid->key() 
+    _ri_debug << "PID " << pid->key() 
               << " best ID " << pid->bestParticleID()
               << " has non-zero deltaLL value! " << deltaLLs[pid->bestParticleID()] 
               << endmsg;
-    }
   }
   // Internally, the Global PID normalises the DLL values to the best hypothesis
   // and also works in "-loglikelihood" space.
   // For final storage, renormalise the DLLS w.r.t. the pion hypothesis and
   // invert the values
-  for ( Rich::Particles::const_iterator iHypo = pidTypes().begin();
-        iHypo != pidTypes().end(); ++iHypo )
+  for ( const auto & hypo : pidTypes() )
   {
-    if ( deltaLLs[*iHypo] < 0 ) { deltaLLs[*iHypo] = 0; }
-    deltaLLs[*iHypo] = (float) ( pionDLL - deltaLLs[*iHypo] );
+    if ( deltaLLs[hypo] < 0 ) { deltaLLs[hypo] = 0; }
+    deltaLLs[hypo] = (float) ( pionDLL - deltaLLs[hypo] );
   }
   // final update DLL values in stored RichPID data object
   pid->setParticleLLValues(deltaLLs);

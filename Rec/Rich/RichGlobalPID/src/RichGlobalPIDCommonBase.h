@@ -88,10 +88,10 @@ namespace Rich
       private:
 
         /// Pointer to parent RichGlobalPIDTrack container
-        mutable LHCb::RichGlobalPIDTracks * m_GPIDtracks;
+        mutable LHCb::RichGlobalPIDTracks * m_GPIDtracks = nullptr;
 
         /// Pointer to parent RichGlobalPID container
-        mutable LHCb::RichGlobalPIDs * m_GPIDs;
+        mutable LHCb::RichGlobalPIDs * m_GPIDs = nullptr;
 
         /// Location of working RICH Global PID tracks in TES
         std::string m_richGPIDTrackLocation;
@@ -103,7 +103,7 @@ namespace Rich
         std::string m_richGPIDName;
 
         /// Pointer to RichParticleProperties interface
-        const IParticleProperties * m_richPartProp;
+        const IParticleProperties * m_richPartProp = nullptr;
 
         /// Particle ID types to consider
         Rich::Particles m_pidTypes;

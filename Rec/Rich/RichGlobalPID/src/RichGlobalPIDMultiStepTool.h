@@ -83,7 +83,7 @@ namespace Rich
       private:  // Private data members
         
         /// RichGlobalPIDTrack creator
-        const ITrackCreator * m_gtkCreator;   
+        const ITrackCreator * m_gtkCreator = nullptr;   
 
         /// The number of PID steps (background estimation then Global PID likelihood)
         unsigned int m_nSteps;

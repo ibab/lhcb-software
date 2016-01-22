@@ -23,8 +23,7 @@ DECLARE_ALGORITHM_FACTORY( Likelihood )
 // Standard constructor, initializes variables
 Likelihood::Likelihood( const std::string& name,
                         ISvcLocator* pSvcLocator )
-  : AlgBase   ( name, pSvcLocator ),
-    m_pidTool ( NULL              )
+  : AlgBase( name, pSvcLocator )
 {
   declareProperty( "SingleTrackMode", m_oneAtATime = false );
 }
@@ -83,35 +82,25 @@ StatusCode Likelihood::execute()
     // Cache selected tracks
     LHCb::RichGlobalPIDTrack::Vector gtracks;
     gtracks.reserve(gpidTracks()->size());
-    for ( LHCb::RichGlobalPIDTracks::const_iterator iT = gpidTracks()->begin();
-          iT != gpidTracks()->end(); ++iT ) 
+    for ( auto * tk : *gpidTracks() )
     {
-      if ( (*iT)->richRecTrack()->inUse() ) gtracks.push_back(*iT);
+      if ( tk->richRecTrack()->inUse() ) gtracks.push_back(tk);
     }
 
     // Turn all selected tracks 'off'
-    for ( LHCb::RichGlobalPIDTrack::Vector::iterator track = gtracks.begin();
-          track != gtracks.end(); ++track ) 
-    {
-      (*track)->richRecTrack()->setInUse(false);
-    }
+    for ( auto * tk : gtracks ) { tk->richRecTrack()->setInUse(false); }
 
     // Finally, loop over all tracks and PID them
-    for ( LHCb::RichGlobalPIDTrack::Vector::iterator track = gtracks.begin();
-          track != gtracks.end(); ++track ) 
+    for ( auto * tk : gtracks )
     {
-      (*track)->richRecTrack()->setInUse(true);
-      if ( msgLevel(MSG::DEBUG) ) debug() << "PID'ing track " << (*track)->key() << endmsg;
-      m_pidTool->pid( *track );
-      (*track)->richRecTrack()->setInUse(false);
+      tk->richRecTrack()->setInUse(true);
+      if ( msgLevel(MSG::DEBUG) ) debug() << "PID'ing track " << tk->key() << endmsg;
+      m_pidTool->pid( tk );
+      tk->richRecTrack()->setInUse(false);
     }
 
     // Turn all selected tracks 'on'
-    for ( LHCb::RichGlobalPIDTrack::Vector::iterator track = gtracks.begin();
-          track != gtracks.end(); ++track ) 
-    {
-      (*track)->richRecTrack()->setInUse(true);
-    }
+    for ( auto * tk : gtracks ) { tk->richRecTrack()->setInUse(true); }
 
   }
   else
@@ -120,11 +109,7 @@ StatusCode Likelihood::execute()
    
     LHCb::RichGlobalPIDTrack::Vector gtracks;
     gtracks.reserve(gpidTracks()->size());
-    for ( LHCb::RichGlobalPIDTracks::const_iterator iT = gpidTracks()->begin();
-          iT != gpidTracks()->end(); ++iT ) 
-    { 
-      gtracks.push_back(*iT); 
-    }
+    for ( auto * tk : *gpidTracks() ) { gtracks.push_back(tk); }
     m_pidTool->pids( gtracks );
 
   }

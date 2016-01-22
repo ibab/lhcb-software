@@ -16,9 +16,6 @@
 // From GaudiKernel
 #include "GaudiKernel/SystemOfUnits.h"
 
-// boost
-#include "boost/assign/list_of.hpp"
-
 // namespaces
 using namespace Rich::Rec::GlobalPID;
 
@@ -29,15 +26,13 @@ DECLARE_ALGORITHM_FACTORY( TrackSelUsingPIDs )
 // Standard constructor, initializes variables
 TrackSelUsingPIDs::TrackSelUsingPIDs( const std::string& name,
                                       ISvcLocator* pSvcLocator )
-  : TrackSel ( name, pSvcLocator ),
-    m_pids   ( NULL )
+  : TrackSel ( name, pSvcLocator )
 {
   declareProperty( "RichPIDLocation",
                    m_richPIDLocation = LHCb::RichPIDLocation::Default );
   
-  //                                               El   Mu   Pi   Ka   Pr
-  std::vector<double> tmp = boost::assign::list_of(9e9)(9e9)(9e9)(000)(000);
-  declareProperty( "DLLCuts", m_dllCuts = tmp);
+  //                                        El   Mu   Pi   Ka   Pr
+  declareProperty( "DLLCuts", m_dllCuts = { 9e9, 9e9, 9e9, 000, 000 } );
 }
 
 // Destructor
@@ -59,7 +54,7 @@ StatusCode TrackSelUsingPIDs::initialize()
 
 StatusCode TrackSelUsingPIDs::eventInit()
 {
-  m_pids = NULL;
+  m_pids = nullptr;
   return TrackSel::eventInit();
 }
 
@@ -69,20 +64,18 @@ bool TrackSelUsingPIDs::trackSelection( LHCb::RichRecTrack * track ) const
   if ( !track || !TrackSel::trackSelection(track) ) return false;
 
   // Pointer to parent Track
-  const LHCb::Track * pTrack = 
-    dynamic_cast<const LHCb::Track*>(track->parentTrack());
+  const auto * pTrack = dynamic_cast<const LHCb::Track*>(track->parentTrack());
   if ( !pTrack ) return false;
 
   // Do RichPID selection
   if ( !richPIDs() ) return false;
-  const LHCb::RichPID * pid = richPIDs()->object( track->key() );
+  const auto * pid = richPIDs()->object( track->key() );
   if ( !pid || pid->track() != pTrack )
   {
-    pid = NULL;
-    for ( LHCb::RichPIDs::const_iterator iPID = richPIDs()->begin();
-          iPID != richPIDs()->end(); ++iPID )
+    pid = nullptr;
+    for ( const auto * ipid : *richPIDs() )
     {
-      if ( (*iPID)->track() == pTrack ) { pid = *iPID; break; }
+      if ( ipid->track() == pTrack ) { pid = ipid; break; }
     }
   }
 

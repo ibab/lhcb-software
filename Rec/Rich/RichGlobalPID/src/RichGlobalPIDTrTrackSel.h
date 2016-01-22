@@ -73,13 +73,13 @@ namespace Rich
       private: // data members
 
         /// Primary Track selector
-        const ITrackSelector * m_trSelector;
+        const ITrackSelector * m_trSelector = nullptr;
 
         /// 'Frozen' Track selector
-        const ITrackSelector * m_frozenTrSel;
+        const ITrackSelector * m_frozenTrSel = nullptr;
 
         /// RichGlobalPIDTrack creator
-        const ITrackCreator * m_gtkCreator;
+        const ITrackCreator * m_gtkCreator = nullptr;
 
         // Selection cuts
         double m_minPhysPtot; ///< Minimum momentum for physics quality tracks
@@ -87,10 +87,10 @@ namespace Rich
         bool m_resetToPion;   ///< Reset all track hypotheses to pion, ignoring initial types
 
         /// Maximum number of Tracks with RICH information
-        unsigned int m_maxUsedTracks;
+        unsigned int m_maxUsedTracks{0};
 
         /// Maximum total number of input TrStoredTracks
-        unsigned int m_maxInputTracks;
+        unsigned int m_maxInputTracks{0};
 
         /// Turn on the use of 'frozen' tracks
         bool m_freezeTracks;

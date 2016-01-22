@@ -52,7 +52,7 @@ namespace Rich
       private:
         
         /// RichGlobalPIDTrack creator
-        const ITrackCreator * m_gtkCreator;
+        const ITrackCreator * m_gtkCreator = nullptr;
         
       };
 

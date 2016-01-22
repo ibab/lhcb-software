@@ -4,9 +4,6 @@
  *
  *  Header file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::TrackSelUsingPIDs
  *
- *  CVS Log :-
- *  $Id: RichGlobalPIDTrTrackSelUsingPIDs.h,v 1.1 2007-12-10 17:38:07 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   10/12/2007
  */
@@ -43,7 +40,7 @@ namespace Rich
 
         /// Standard constructor
         TrackSelUsingPIDs( const std::string& name,
-                  ISvcLocator* pSvcLocator );
+                           ISvcLocator* pSvcLocator );
 
         virtual ~TrackSelUsingPIDs(); ///< Destructor
 
@@ -72,7 +69,7 @@ namespace Rich
         std::string m_richPIDLocation;
 
         /// Point to RichPID results
-        mutable LHCb::RichPIDs * m_pids;
+        mutable LHCb::RichPIDs * m_pids = nullptr;
 
         /// Dll selection cuts (El, Mu, Pi, Ka, Pr)
         std::vector<double> m_dllCuts;

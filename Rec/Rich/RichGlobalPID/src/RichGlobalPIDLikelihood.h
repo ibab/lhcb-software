@@ -4,9 +4,6 @@
  *
  *  Header file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::Likelihood
  *
- *  CVS Log :-
- *  $Id: RichGlobalPIDLikelihood.h,v 1.8 2008-03-25 16:26:44 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
  */
@@ -60,7 +57,7 @@ namespace Rich
   
       private:  // Private data members
 
-        const IRichGlobalPID * m_pidTool; ///< Global PID tool
+        const IRichGlobalPID * m_pidTool = nullptr; ///< Global PID tool
 
         /// PID tracks one at a time ?
         bool m_oneAtATime;

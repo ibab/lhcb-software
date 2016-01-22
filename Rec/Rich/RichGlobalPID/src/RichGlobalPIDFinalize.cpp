@@ -23,8 +23,7 @@ DECLARE_ALGORITHM_FACTORY( Finalize )
 // Standard constructor, initializes variables
 Finalize::Finalize( const std::string& name,
                     ISvcLocator* pSvcLocator )
-  : AlgBase      ( name, pSvcLocator ),
-    m_gtkCreator ( NULL  ) { }
+  : AlgBase( name, pSvcLocator ) { }
 
 // Destructor
 Finalize::~Finalize() { }
@@ -46,24 +45,22 @@ StatusCode Finalize::execute()
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
   // Iterate over working tracks and keep/delete PID results
-  if ( msgLevel(MSG::DEBUG) ) debug() << "Final PID results :-" << endmsg;
-  for ( LHCb::RichGlobalPIDTracks::iterator track = gpidTracks()->begin();
-        track != gpidTracks()->end(); ++track )
+  _ri_debug << "Final PID results :-" << endmsg;
+  for ( auto * track : *gpidTracks() )
   {
 
     // Only store results for physics quality tracks
-    if ( (*track)->trQuality() != Rich::Rec::GlobalPID::Physics )
+    if ( track->trQuality() != Rich::Rec::GlobalPID::Physics )
     {
-      gpidPIDs()->erase( (*track)->globalPID() );
+      gpidPIDs()->erase( track->globalPID() );
       continue;
     }
 
     // finalize this PID
-    m_gtkCreator->finaliseTrack( *track );
+    m_gtkCreator->finaliseTrack( track );
 
     // Printout
-    if ( msgLevel(MSG::DEBUG) )
-      debug() << " " << *(*track)->globalPID() << endmsg;
+    _ri_debug << " " << *(track->globalPID()) << endmsg;
 
   }
 

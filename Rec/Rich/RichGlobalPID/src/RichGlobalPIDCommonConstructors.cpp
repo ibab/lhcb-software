@@ -34,7 +34,7 @@ namespace Rich
       CommonBase<Rich::Rec::HistoAlgBase>::CommonBase( const std::string& /* type */,
                                                        const std::string& /* name */,
                                                        const IInterface* /* parent */ )
-        : Rich::Rec::HistoAlgBase ( "ERROR", NULL )
+        : Rich::Rec::HistoAlgBase ( "ERROR", nullptr )
       {
         throw GaudiException( "Invalid Rich::Rec::GlobalPID::CommonBase<Rich::Rec::AlgBase> constructor",
                               "Rich::Rec::GlobalPID::CommonBase", StatusCode::FAILURE );
@@ -55,7 +55,7 @@ namespace Rich
       template <>
       CommonBase<Rich::Rec::HistoToolBase>::CommonBase( const std::string& /* name */,
                                                         ISvcLocator* /* pSvcLocator */ )
-        : Rich::Rec::HistoToolBase ( "ERROR", "ERROR", NULL )
+        : Rich::Rec::HistoToolBase ( "ERROR", "ERROR", nullptr )
       {
         throw GaudiException( "Invalid Rich::Rec::GlobalPID::CommonBase<Rich::Rec::ToolBase> constructor",
                               "Rich::Rec::GlobalPID::CommonBase", StatusCode::FAILURE );

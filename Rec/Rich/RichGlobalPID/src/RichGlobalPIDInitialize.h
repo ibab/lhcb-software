@@ -4,9 +4,6 @@
  *
  *  Header file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::Initialize
  *
- *  CVS Log :-
- *  $Id: RichGlobalPIDInitialize.h,v 1.6 2007-03-09 22:10:41 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
  */

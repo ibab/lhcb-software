@@ -82,8 +82,7 @@ StatusCode DigitSel::execute()
   }
 
   // final printout of selected number of pixels
-  if ( msgLevel(MSG::DEBUG) )
-    debug() << "Selected " << richPixels()->size() << " RichRecPixels" << endmsg;
+  _ri_debug << "Selected " << richPixels()->size() << " RichRecPixels" << endmsg;
 
   return StatusCode::SUCCESS;
 }

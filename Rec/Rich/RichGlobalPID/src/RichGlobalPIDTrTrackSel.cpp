@@ -25,15 +25,7 @@ DECLARE_ALGORITHM_FACTORY( TrackSel )
 // Standard constructor, initializes variables
 TrackSel::TrackSel( const std::string& name,
                     ISvcLocator* pSvcLocator )
-  : AlgBase ( name, pSvcLocator ),
-    m_trSelector     ( NULL  ),
-    m_frozenTrSel    ( NULL  ),
-    m_gtkCreator     ( NULL  ),
-    m_minPhysPtot    ( 0     ),
-    m_minLLPtot      ( 0     ),
-    m_resetToPion    ( false ),
-    m_maxUsedTracks  ( 0     ),
-    m_maxInputTracks ( 0     )
+  : AlgBase ( name, pSvcLocator )
 {
   // Selection cuts
   declareProperty( "MinimumPhysicsMomentum",  m_minPhysPtot = 0.0*Gaudi::Units::GeV );
@@ -137,41 +129,36 @@ StatusCode TrackSel::execute()
   if ( sc.isFailure() ) return sc;
 
   // Iterate over all RichRecTracks and choose those to use
-  for ( LHCb::RichRecTracks::iterator track = richTracks()->begin();
-        track != richTracks()->end(); ++track ) 
+  for ( auto * track : *richTracks() )
   {
 
     // select tracks for use
-    Rich::Rec::GlobalPID::TkQuality quality = trackStatus( *track );
-    (*track)->setInUse( Rich::Rec::GlobalPID::Unusable != quality );
-    if ( !(*track)->inUse() ) continue;
+    auto quality = trackStatus( track );
+    track->setInUse( Rich::Rec::GlobalPID::Unusable != quality );
+    if ( !track->inUse() ) continue;
 
     // Set to pion hypothesis if configured to do so
-    if ( m_resetToPion ) (*track)->setCurrentHypothesis( Rich::Pion );
-    if ( msgLevel(MSG::VERBOSE) )
-    { verbose() << "Track " << (*track)->key() << " has initial hypothesis "
-                << (*track)->currentHypothesis() << endmsg; }
+    if ( m_resetToPion ) track->setCurrentHypothesis( Rich::Pion );
+    _ri_verbo << "Track " << track->key() << " has initial hypothesis "
+              << track->currentHypothesis() << endmsg;
     
     // Make a new RichGlobalPIDTrack
-    LHCb::RichGlobalPIDTrack * pidTrack = m_gtkCreator->createTrack(*track);
+    auto * pidTrack = m_gtkCreator->createTrack(track);
 
     // Frozen track ?
     if ( m_freezeTracks )
     {
       // is this track selected as one to freeze ?
-      if ( m_frozenTrSel->trackSelected(*track) )
+      if ( m_frozenTrSel->trackSelected(track) )
       {
         // freeze the track
         pidTrack->setFrozenHypo(true);
         // Set mass hypo to frozen type
-        (*track)->setCurrentHypothesis( (Rich::ParticleIDType)m_frozenType );
+        track->setCurrentHypothesis( (Rich::ParticleIDType)m_frozenType );
         // label track as one not to have a final PID object 
         quality = Rich::Rec::GlobalPID::LikelihoodOnly;
-        if ( msgLevel(MSG::VERBOSE) )
-        {
-          verbose() << " -> Track is selected to be frozen to type " 
-                    << (Rich::ParticleIDType)m_frozenType << endmsg;
-        }
+        _ri_verbo << " -> Track is selected to be frozen to type " 
+                  << (Rich::ParticleIDType)m_frozenType << endmsg;
       }
     }
 
@@ -196,10 +183,10 @@ Rich::Rec::GlobalPID::TkQuality
 TrackSel::trackStatus( LHCb::RichRecTrack * track ) 
 {
   // Set default quality to be good
-  Rich::Rec::GlobalPID::TkQuality quality = Rich::Rec::GlobalPID::Physics;
+  auto quality = Rich::Rec::GlobalPID::Physics;
 
   // Momentum
-  const double pTot = track->vertexMomentum();
+  const auto pTot = track->vertexMomentum();
 
   // If below minimum momentum for use in LL, return false
   if ( pTot < m_minLLPtot ) 

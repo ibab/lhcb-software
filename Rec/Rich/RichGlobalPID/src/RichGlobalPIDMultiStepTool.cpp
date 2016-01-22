@@ -26,8 +26,7 @@ DECLARE_TOOL_FACTORY( MultiStepTool )
 MultiStepTool::MultiStepTool( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
-  : Rich::Rec::GlobalPID::ToolBase ( type, name, parent ),
-    m_gtkCreator ( NULL )
+  : Rich::Rec::GlobalPID::ToolBase ( type, name, parent )
 {
   // interfaces
   declareInterface<IRichGlobalPID> ( this );
@@ -86,13 +85,13 @@ const LHCb::RichPID * MultiStepTool::pid( const LHCb::Track * track ) const
   }
 
   // make/get the working RICH track
-  LHCb::RichRecTrack * rtrack = trackCreator()->newTrack(track);
+  auto * rtrack = trackCreator()->newTrack(track);
 
   // make a GPID track
-  LHCb::RichGlobalPIDTrack * gtrack = ( rtrack ? m_gtkCreator->createTrack(rtrack) : NULL );
+  auto * gtrack = ( rtrack ? m_gtkCreator->createTrack(rtrack) : nullptr );
 
   // do the PID and return
-  return ( gtrack ? this->pid(gtrack) : NULL );
+  return ( gtrack ? this->pid(gtrack) : nullptr );
 }
 
 void MultiStepTool::pids( const LHCb::Track::ConstVector & tracks,
@@ -105,30 +104,29 @@ void MultiStepTool::pids( const LHCb::Track::ConstVector & tracks,
   // make a local container of Global PID tracks
   LHCb::RichGlobalPIDTrack::Vector gtracks;
   gtracks.reserve(tracks.size());
-  for ( LHCb::Track::ConstVector::const_iterator iT = tracks.begin();
-        iT != tracks.end(); ++iT )
+  for ( const auto * T : tracks )
   {
     // do we already have a GPID object for this track
-    LHCb::RichGlobalPID * gpid = findGPID(*iT);
-    if ( gpid && gpid->track() == *iT )
+    LHCb::RichGlobalPID * gpid = findGPID(T);
+    if ( gpid && gpid->track() == T )
     {
-      debug() << "Found pre-existing PID object for track " << (*iT)->key() << endmsg;
+      debug() << "Found pre-existing PID object for track " << T->key() << endmsg;
     }
     else
     {
       // Need to PID this track
 
       // make/get the working RICH track
-      LHCb::RichRecTrack       * rtrack = trackCreator()->newTrack(*iT);
+      auto * rtrack = trackCreator()->newTrack(T);
 
       // make a GPID track
-      LHCb::RichGlobalPIDTrack * gtrack = ( rtrack ? m_gtkCreator->createTrack(rtrack) : NULL );
+      auto * gtrack = ( rtrack ? m_gtkCreator->createTrack(rtrack) : nullptr );
 
       // add to list of tracks to PID
       if ( gtrack ) gtracks.push_back( gtrack );
 
       // update PID pointer
-      gpid = ( gtrack ? gtrack->globalPID() : NULL );
+      gpid = ( gtrack ? gtrack->globalPID() : nullptr );
     }
 
     // Add PID to returned list
@@ -150,11 +148,7 @@ LHCb::RichGlobalPID * MultiStepTool::pid( LHCb::RichGlobalPIDTrack * track ) con
   {
 
     // Turn 'off' all tracks. Selected tracks are turned back on later
-    for ( LHCb::RichRecTracks::const_iterator rtrack = richTracks()->begin();
-          rtrack != richTracks()->end(); ++rtrack )
-    {
-      (*rtrack)->setInUse(false);
-    }
+    for ( auto * rtk : *richTracks() ) { rtk->setInUse(false); }
 
     // turn on the selected track
     track->richRecTrack()->setInUse(true);
@@ -186,21 +180,16 @@ void MultiStepTool::pids( const LHCb::RichGlobalPIDTrack::Vector & tracks ) cons
   {
 
     // Turn 'off' all tracks. Selected tracks are turned back on later
-    for ( LHCb::RichRecTracks::const_iterator track = richTracks()->begin();
-          track != richTracks()->end(); ++track )
-    {
-      (*track)->setInUse(false);
-    }
+    for ( auto * rtk : *richTracks() ) { rtk->setInUse(false); }
 
     // make a local vector of RichRecTracks
     LHCb::RichRecTrack::Vector rtracks;
     rtracks.reserve(tracks.size());
-    for ( LHCb::RichGlobalPIDTrack::Vector::const_iterator gT = tracks.begin();
-          gT != tracks.end(); ++gT )
+    for ( auto * gT : tracks )
     {
-      rtracks.push_back( (*gT)->richRecTrack() );
-      (*gT)->richRecTrack()->setInUse(true);
-      photonCreator()->reconstructPhotons((*gT)->richRecTrack());
+      rtracks.push_back( gT->richRecTrack() );
+      gT->richRecTrack()->setInUse(true);
+      photonCreator()->reconstructPhotons(gT->richRecTrack());
     }
 
     // PID these tracks
@@ -211,11 +200,7 @@ void MultiStepTool::pids( const LHCb::RichGlobalPIDTrack::Vector & tracks ) cons
     }
 
     // Finalise the PIDs
-    for ( LHCb::RichGlobalPIDTrack::Vector::const_iterator gT = tracks.begin();
-          gT != tracks.end(); ++gT )
-    {
-      m_gtkCreator->finaliseTrack(*gT);
-    }
+    for ( auto * gT : tracks ) { m_gtkCreator->finaliseTrack(gT); }
 
   }
 }
@@ -224,7 +209,7 @@ void MultiStepTool::pids( const LHCb::RichGlobalPIDTrack::Vector & tracks ) cons
 
 LHCb::RichGlobalPID * MultiStepTool::findGPID( const LHCb::Track * track ) const
 {
-  LHCb::RichGlobalPID * gpid = NULL;
+  LHCb::RichGlobalPID * gpid = nullptr;
 
   if ( track )
   {
@@ -234,11 +219,10 @@ LHCb::RichGlobalPID * MultiStepTool::findGPID( const LHCb::Track * track ) const
     {
       
       // Key convention failed, so try direct search
-      gpid = NULL;
-      for ( LHCb::RichGlobalPIDs::const_iterator iPID = gpidPIDs()->begin();
-            iPID != gpidPIDs()->end(); ++iPID )
+      gpid = nullptr;
+      for ( auto * ipid : *gpidPIDs() )
       {
-        if ( (*iPID)->track() == track ) { gpid = *iPID; break; }
+        if ( ipid->track() == track ) { gpid = ipid; break; }
       }
 
     } // not found via key

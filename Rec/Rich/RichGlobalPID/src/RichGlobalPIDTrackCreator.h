@@ -72,7 +72,7 @@ namespace Rich
       private:
 
         /// Pointer to RichExpectedTrackSignal
-        const IExpectedTrackSignal * m_tkSignal;
+        const IExpectedTrackSignal * m_tkSignal = nullptr;
 
       };
 
