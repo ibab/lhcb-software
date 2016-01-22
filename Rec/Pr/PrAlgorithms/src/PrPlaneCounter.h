@@ -14,18 +14,19 @@
  */
 
 class PrPlaneCounter {
-public:
-
+ public:
+  
   /// Standard constructor
-  PrPlaneCounter( )
-    : m_nbVals( {{0,0}} ),
-      m_planeList( {{0,0,0,0,0,0,0,0,0,0,0,0}} )
-      
-  {
-  }
+ PrPlaneCounter( )
+   : m_nbVals( {{0,0}} ),
+    m_planeList( {{0,0,0,0,0,0,0,0,0,0,0,0}} ),
+    m_first(),
+    m_last()
+      {
+      }
   
   virtual ~PrPlaneCounter( ) {} ///< Destructor
-
+  
   /** Set values (fired planes, single planes, different planes) for a given range of iterators
    *  @brief Set values for a given range of iterators
    *  @param itBeg First iterator, begin of range
@@ -33,7 +34,9 @@ public:
    *  @param fill Should the values be reset?
    */
   void set( PrHits::const_iterator itBeg, PrHits::const_iterator itEnd, const bool fill = true)  {
-
+    
+    m_first = itBeg;
+    m_last  = itEnd;
     if(fill){
       m_planeList = {{0,0,0,0,0,0,0,0,0,0,0,0}};
       m_nbVals    = {{0,0}};
@@ -52,6 +55,8 @@ public:
     }
   }
   
+  PrHits::const_iterator first() const{ return m_first;}
+  PrHits::const_iterator last()  const{ return m_last; }
 
   /** Update values for additional hit
    *  @param hit Hit to be added
@@ -102,12 +107,25 @@ public:
     m_nbVals.fill(0);
   }
   
+  struct LowerBySize{ //Before higher number of hits and better chi2
+    bool operator() ( const PrPlaneCounter& lhs, const PrPlaneCounter& rhs) const{
+      if(lhs.nbDifferent() == rhs.nbDifferent()){
+        float diff_lhs= std::fabs( (*lhs.last())->coord()-(*lhs.first())->coord());
+        float diff_rhs= std::fabs( (*rhs.last())->coord()-(*rhs.first())->coord());
+	return diff_lhs < diff_rhs;
+      }
+      return lhs.nbDifferent() > rhs.nbDifferent();
+    }
+  };
+  
 
 private:
   
   /// array for: number of different plane (0) and number of planes with single hit (1) 
   std::array<unsigned int,2> m_nbVals;
   std::array<int,12> m_planeList;
+  PrHits::const_iterator m_first;
+  PrHits::const_iterator m_last;
 };
 
 #endif // PRPLANECOUNTER_H

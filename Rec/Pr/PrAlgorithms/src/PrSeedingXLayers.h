@@ -99,10 +99,21 @@ public:
    **/
   bool fitXProjection( PrSeedTrack & track );
 
+  /** @brief Fit the track combining the only in the YZ plane                                                                                              
+   *  @param xtrack candidate
+   *
+   *  @param itBeg iterator to first UV hit                                                                                                                       
+   *  @param itEnd iterator to last UV hit                                                                                                                       
+   *  @return bool Success of the YZ Fit                                                                                                                   
+   **/
+  bool fitYLine(const PrSeedTrack& track, PrHits::const_iterator itBeg, PrHits::const_iterator itEnd, float& ay, float& by);
+
+
   /** @brief Remove the hit which gives the largest contribution to the chi2 and refit
    *  @param track The track to fit
    *  @return bool Success of the fit
    */
+
 
   bool removeWorstAndRefit( PrSeedTrack& track, bool xonlyFit=false );
   
@@ -247,8 +258,11 @@ private:
 
   float          m_zReference;
   float          m_dRatio;
+  float          m_invDeltaz[3];
+  float          m_zRatio[3];
   //--------_Fit X parametrisation                                                                                                                         
   float          m_maxChi2HitsX;
+  float          m_maxChi2HitsY;
   //--------_Full Fit parametrisation                                                                                                                      
   float          m_maxChi2HitFullFitHigh;
   float          m_maxChi2HitFullFitLow;
