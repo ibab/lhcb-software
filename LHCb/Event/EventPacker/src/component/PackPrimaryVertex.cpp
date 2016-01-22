@@ -244,10 +244,10 @@ StatusCode UnpackPrimaryVertices::execute()
   const LHCb::GenericBuffer* buffer = get<const LHCb::GenericBuffer*>(m_inputName) ;
   auto vertices = new LHCb::PrimaryVertex::Container() ;
   CharVectorIStream is{buffer->data()} ;
-  int version ;
+  int version{0} ;
   is.read(version) ;
   if( version==m_version ) {
-    unsigned int N ;
+    unsigned int N{0} ;
     is.read(N) ;
     for(unsigned int i=0; i<N; ++i) {
       LHCb::PrimaryVertex* pv = new LHCb::PrimaryVertex() ;
