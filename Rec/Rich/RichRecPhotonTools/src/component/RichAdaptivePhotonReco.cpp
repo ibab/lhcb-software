@@ -63,15 +63,25 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
                     const LHCb::RichRecPixel * pixel,
                     LHCb::RichGeomPhoton& gPhoton ) const
 {
-  // radiator for this segment
-  const auto rad = segment->trackSegment().radiator();
-  
   // Expected Kaon CK theta
   const auto kaonCKTheta = m_ckAngle->avgCherenkovTheta(segment,Rich::Kaon);
+
+  // First check to see if the fast or slow tool should be used based
+  // on how close to saturation the track is
+  if ( kaonCKTheta < maxCKThetaForFast(segment->trackSegment().radiator()) )
+  {
+    // First try the fast tool. If this fails (for ambiguous photons for 
+    // instance) try again with the slow tool.
+    const auto sc = m_recoFast->reconstructPhoton(segment,pixel,gPhoton);
+    if ( sc.isSuccess() ) return sc; 
+  }
+  
+  // If we get here, run the slow tool
+  return m_recoSlow->reconstructPhoton(segment,pixel,gPhoton);
   
   // Delegate the photon reconstruction
-  return ( kaonCKTheta < maxCKThetaForFast(rad) ? 
-           m_recoFast : m_recoSlow ) -> reconstructPhoton(segment,pixel,gPhoton);  
+  //return ( kaonCKTheta < maxCKThetaForFast(rad) ? 
+  //         m_recoFast : m_recoSlow ) -> reconstructPhoton(segment,pixel,gPhoton);  
 }
 
 //=============================================================================

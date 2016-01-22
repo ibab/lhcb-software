@@ -28,9 +28,12 @@ PhotonRecoUsingCKEstiFromRadius( const std::string& type,
   // Job options
   declareProperty( "UseLightestHypoOnly", m_useLightestHypoOnly = false );
   declareProperty( "MinFracCKTheta", m_minFracCKtheta = { 1.0, 0.05, 0.05 } );
+  declareProperty( "RejectAmbiguousPhotons", m_rejAmbigPhots = false );
 
   // Corrections for the intrinsic biases
   m_ckBiasCorrs = { 0.0, 4.80e-6, 3.46e-5 };
+
+  //setProperty( "OutputLevel", 1 );
 }
 
 //=============================================================================
@@ -78,15 +81,15 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   StatusCode sc = StatusCode::SUCCESS;
 
   // track segment
-  const LHCb::RichTrackSegment& trSeg = segment->trackSegment();
+  const auto & trSeg = segment->trackSegment();
 
   // Detector information (RICH, radiator and HPD panel)
   //const Rich::DetectorType rich     = trSeg.rich();
-  const Rich::RadiatorType radiator = trSeg.radiator();
-  const Rich::Side side             = pixel->panel().panel();
+  const auto radiator = trSeg.radiator();
+  const auto side     = pixel->panel().panel();
 
   // Emission point to use for photon reconstruction
-  Gaudi::XYZPoint & emissionPoint = gPhoton.emissionPoint();
+  auto & emissionPoint = gPhoton.emissionPoint();
   emissPoint()->emissionPoint( segment, pixel, emissionPoint );
 
   // Cannot set these yet - Could be done if needed, but at what CPU cost ?
@@ -96,10 +99,6 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   // fraction of segment path length accessible to the photon
   // cannot determine this here so set to 1
   const float fraction(1);
-
-  // flag to say if this photon candidate is un-ambiguous
-  // cannot determine this here so set to false
-  const bool unambigPhoton(false);
 
   // Projected track position in corrected local coords on the detector plane
   const auto & segPSide = segment->pdPanelHitPointCorrectedLocal(side);
@@ -137,7 +136,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
       const auto points_tmp = ring_tmp->getPointsClosestInAzimuth(phiCerenkov);
 
       // if found see if this point is better than the last one tried
-      if ( points_tmp.first && 
+      if ( points_tmp.first &&
            sameSide( radiator, pixPRad, points_tmp.first->localPosition() ) ) // should check both ..
       {
         // corrected local pixel (x,y)
@@ -150,10 +149,10 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
         if ( pix_calib_sep2 < sep2_diff )
         {
           // updated decision variable
-          sep2_diff  = pix_calib_sep2;
+          sep2_diff = pix_calib_sep2;
           // update best ring and pixel pointers
-          ring       = ring_tmp;
-          points     = points_tmp;
+          ring      = ring_tmp;
+          points    = points_tmp;
         }
         else if ( ring )
         {
@@ -171,48 +170,65 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   if ( ring )
   {
 
-    // get distance to each point in phi
-    const auto lPhiDist = fabs( points.first->azimuth()  - phiCerenkov );
-    const auto hPhiDist = fabs( points.second->azimuth() - phiCerenkov );
+    // Ambiguous photon test, based on the mirrors used be both calibration points
+    const bool unambigPhoton = 
+      ( ( points.first->primaryMirror()   == points.second->primaryMirror()   ) &&
+        ( points.first->secondaryMirror() == points.second->secondaryMirror() ) );
 
-    // which is the closest point ?
-    const auto * point = ( lPhiDist < hPhiDist ? points.first : points.second );
-    
-    // Compute calibration distance^2
-    // just use the nearest point
-    //const auto sep2_calib = 
-    //  ( std::pow( segPSide.x() - point->localPosition().x(), 2 ) +
-    //    std::pow( segPSide.y() - point->localPosition().y(), 2 ) );
-    // interpolate between the two points ...
-    const auto lsep2 =
-      ( std::pow( segPSide.x() - points.first->localPosition().x(), 2 ) +
-        std::pow( segPSide.y() - points.first->localPosition().y(), 2 ) );
-    const auto hsep2 =
-      ( std::pow( segPSide.x() - points.second->localPosition().x(), 2 ) +
-        std::pow( segPSide.y() - points.second->localPosition().y(), 2 ) );
-    const auto sep2_calib = 
-      ( ( lsep2 * hPhiDist ) + ( hsep2 * lPhiDist ) ) / ( lPhiDist + hPhiDist );
+    // check for ambiguous photons ?
+    if ( UNLIKELY( !unambigPhoton && m_rejAmbigPhots ) )
+    {
+      // Calibration points used different mirrors, so reject
+      _ri_verbo << "Ambiguous photon -> reject" << endmsg;
+      sc = StatusCode::FAILURE;
+    }
+    else
+    {
 
-    // Compute CK theta from reference point + fudge factor correction
-    const float thetaCerenkov =
-      ( ckThetaCorrection(radiator) +
-        ( ring->radius() * std::sqrt(track_pix_sep2/sep2_calib) ) );
+      // get distance to each point in phi
+      const auto lPhiDist = fabs( points.first->azimuth()  - phiCerenkov );
+      const auto hPhiDist = fabs( points.second->azimuth() - phiCerenkov );
 
-    // --------------------------------------------------------------------------------------
-    // Set (remaining) photon parameters
-    // --------------------------------------------------------------------------------------
-    gPhoton.setCherenkovTheta         ( thetaCerenkov            );
-    gPhoton.setCherenkovPhi           ( phiCerenkov              );
-    gPhoton.setActiveSegmentFraction  ( fraction                 );
-    gPhoton.setDetectionPoint         ( pixel->globalPosition()  );
-    gPhoton.setSmartID                ( pixel->hpdPixelCluster().primaryID() );
-    gPhoton.setUnambiguousPhoton      ( unambigPhoton            );
-    gPhoton.setPrimaryMirror          ( point->primaryMirror()   );
-    gPhoton.setSecondaryMirror        ( point->secondaryMirror() );
-    // --------------------------------------------------------------------------------------
+      // which is the closest point ?
+      const auto * point = ( lPhiDist < hPhiDist ? points.first : points.second );
 
-    // Print the photon
-    _ri_verbo << "Created photon " << gPhoton << endmsg;
+      // Compute calibration distance^2
+      // just use the nearest point
+      //const auto sep2_calib =
+      //  ( std::pow( segPSide.x() - point->localPosition().x(), 2 ) +
+      //    std::pow( segPSide.y() - point->localPosition().y(), 2 ) );
+      // interpolate between the two points ...
+      const auto lsep2 =
+        ( std::pow( segPSide.x() - points.first->localPosition().x(), 2 ) +
+          std::pow( segPSide.y() - points.first->localPosition().y(), 2 ) );
+      const auto hsep2 =
+        ( std::pow( segPSide.x() - points.second->localPosition().x(), 2 ) +
+          std::pow( segPSide.y() - points.second->localPosition().y(), 2 ) );
+      const auto sep2_calib =
+        ( ( lsep2 * hPhiDist ) + ( hsep2 * lPhiDist ) ) / ( lPhiDist + hPhiDist );
+
+      // Compute CK theta from reference point + fudge factor correction
+      const float thetaCerenkov =
+        ( ckThetaCorrection(radiator) +
+          ( ring->radius() * std::sqrt(track_pix_sep2/sep2_calib) ) );
+
+      // --------------------------------------------------------------------------------------
+      // Set (remaining) photon parameters
+      // --------------------------------------------------------------------------------------
+      gPhoton.setCherenkovTheta         ( thetaCerenkov            );
+      gPhoton.setCherenkovPhi           ( phiCerenkov              );
+      gPhoton.setActiveSegmentFraction  ( fraction                 );
+      gPhoton.setDetectionPoint         ( pixel->globalPosition()  );
+      gPhoton.setSmartID                ( pixel->hpdPixelCluster().primaryID() );
+      gPhoton.setUnambiguousPhoton      ( unambigPhoton            );
+      gPhoton.setPrimaryMirror          ( point->primaryMirror()   );
+      gPhoton.setSecondaryMirror        ( point->secondaryMirror() );
+      // --------------------------------------------------------------------------------------
+
+      // Print the photon
+      _ri_verbo << "Created photon " << gPhoton << endmsg;
+
+    }
 
   }
   else

@@ -4,6 +4,14 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2016-01-22 - Chris Jones
+ - Add an option to the RichPhotonRecoUsingCKEstiFromRadius tool to allow
+   the rejection of of ambiguous photons, where the two calibration points
+   either side of the pixel hit used different mirror segments.
+ - Update the Adaptive photon reconstruction tool to fallback to the slow
+   (Quartic) tool when the fast one returns failure, such as when the
+   option to reject ambigous photons is enabled.
+
 ! 2016-01-21 - Chris Jones
  - Improve further the RichPhotonRecoUsingCKEstiFromRadius tool to instead of
    simply using the calibration data from the nearest (in Cherenkov phi)

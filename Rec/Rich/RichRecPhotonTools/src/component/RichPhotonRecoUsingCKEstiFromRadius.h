@@ -112,6 +112,9 @@ namespace Rich
       /// Min fraction of saturated CK theta angle for a ring to be used as a calibration source
       std::vector<double> m_minFracCKtheta;
 
+      /// Flag to turn on the rejection of 'ambiguous' photons
+      bool m_rejAmbigPhots;
+
       /// Cache (for speed) the minimum CK ring radius for use as a calibration source
       mutable std::vector<double> m_minCalibRingRadius;
 
