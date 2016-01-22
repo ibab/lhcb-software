@@ -68,7 +68,7 @@ StatusCode PhotonTrajectoryMonitor::execute()
     {
       
       // Associated MCRichOpticalPhoton
-      const LHCb::MCRichOpticalPhoton * mcPhoton = m_richRecMCTruth->trueOpticalPhoton(photon);
+      const auto * mcPhoton = m_richRecMCTruth->trueOpticalPhoton(photon);
       if ( mcPhoton )
       {
 
@@ -79,7 +79,7 @@ StatusCode PhotonTrajectoryMonitor::execute()
         const auto & secMirrPntMC  = mcPhoton->flatMirrorReflectPoint();
 
         // emission point data
-        const auto & emissPth   = photon->geomPhoton().emissionPoint();
+        const auto & emissPtn   = photon->geomPhoton().emissionPoint();
         const auto & mcEmissPtn = mcPhoton->emissionPoint();
 
         plot1D( primMirrPnt.x() - primMirrPntMC.x(), hid(rad,"primMirrX"), "Primary Mirror X", -30, 30 );
@@ -90,9 +90,9 @@ StatusCode PhotonTrajectoryMonitor::execute()
         plot1D( secMirrPnt.y() - secMirrPntMC.y(), hid(rad,"secMirrY"), "Secondary Mirror Y", -30, 30 );
         plot1D( secMirrPnt.z() - secMirrPntMC.z(), hid(rad,"secMirrZ"), "Secondary Mirror Z", -10, 10 );
 
-        plot1D( emissPth.x() - mcEmissPtn.x(), hid(rad,"emissPtnX"), "Rec-MC Emission Point X", -100,  100  );
-        plot1D( emissPth.y() - mcEmissPtn.y(), hid(rad,"emissPtnY"), "Rec-MC Emission Point Y", -100,  100  );
-        plot1D( emissPth.z() - mcEmissPtn.z(), hid(rad,"emissPtnZ"), "Rec-MC Emission Point Z", -1000, 1000 );
+        plot1D( emissPtn.x() - mcEmissPtn.x(), hid(rad,"emissPtnX"), "Rec-MC Emission Point X", -100,  100  );
+        plot1D( emissPtn.y() - mcEmissPtn.y(), hid(rad,"emissPtnY"), "Rec-MC Emission Point Y", -100,  100  );
+        plot1D( emissPtn.z() - mcEmissPtn.z(), hid(rad,"emissPtnZ"), "Rec-MC Emission Point Z", -1000, 1000 );
 
       } // mc photon
 
