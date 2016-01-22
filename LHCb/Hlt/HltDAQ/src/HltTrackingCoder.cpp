@@ -30,7 +30,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // It is stupid to have to instantiate this
-const StandardPacker pac;
+const StandardPacker pac = { };
 
 void encodeTracks( const LHCb::Tracks& tracks, std::vector<unsigned int>& rawBank, bool writeStates )
 {
