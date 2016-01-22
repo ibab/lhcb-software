@@ -101,12 +101,11 @@ StatusCode Rich::ToolRegistry::initialize()
 void Rich::ToolRegistry::setUpTools( const ToolList & toolList )
 {
   // setup tool registry
-  for ( ToolList::const_iterator it = toolList.begin();
-        it != toolList.end(); ++it )
+  for ( const auto & tool : toolList )
   {
-    const std::string::size_type slash = (*it).find_first_of( "/" );
-    addEntry( ( slash>0 ? (*it).substr(slash+1) : *it ),
-              ( slash>0 ? (*it).substr(0,slash) : *it ) );
+    const auto slash = tool.find_first_of( "/" );
+    addEntry( ( slash>0 ? tool.substr(slash+1) : tool ),
+              ( slash>0 ? tool.substr(0,slash) : tool ) );
   }
 }
 
