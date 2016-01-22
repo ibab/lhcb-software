@@ -18,6 +18,7 @@
 
 // C/C++ Include files
 #include <cstring>
+#include <mutex>
 
 int gauditask_task_lock();
 int gauditask_task_trylock();
@@ -48,47 +49,52 @@ namespace Online  {
   class TransferDataReceiver : public LHCb::NetworkDataReceiver  {
 
     typedef TransferDataReceiver self_t;
+    typedef std::lock_guard<std::mutex> LOCK;
 
   protected:
-    bool     m_finish;
+    std::mutex m_lock;
     /// Pointer to netplug device
     NET*     m_netPlug;
     /// Property: Number of thread instances used by the network library
     int      m_nThreads;
+    bool     m_finish;
 
     static void handle_death(const netheader_t& hdr, void* par, netentry_t*)  {
+      self_t* p = reinterpret_cast<self_t*>(par);
+      LOCK lock(p->m_lock);
       int sc = gauditask_task_trylock();
       if ( sc == 1 ) {
-        self_t* p = reinterpret_cast<self_t*>(par);
 	p->taskDead(hdr.name);
         gauditask_task_unlock();
       }
     }
     static void handle_request(const netheader_t& hdr, void* par, netentry_t* entry)  {
-      int sc = gauditask_task_trylock();
-      if ( sc == 1 ) {
-        self_t* p = reinterpret_cast<self_t*>(par);
-	sc = net_receive(p->m_netPlug, entry, 0);
-	if ( sc == NET_SUCCESS )  {
+      self_t* p = reinterpret_cast<self_t*>(par);
+      int sc = net_receive(p->m_netPlug, entry, 0);
+      if ( sc == NET_SUCCESS )  {
+	LOCK lock(p->m_lock);
+	sc = gauditask_task_trylock();
+	if ( sc == 1 ) {
 	  std::string source(hdr.name);
 	  self_t* p = reinterpret_cast<self_t*>(par);
 	  p->handleSourceRequest(p->receivers().size(),source,source);
+	  gauditask_task_unlock();
+	  return;
 	}
-        gauditask_task_unlock();
-        return;
+	// Things go awfully wrong....e.g. finalize was called during data taking.
+	::fprintf(stdout,"Loosing event request....was finalize called ?\n");
+	::fflush(stdout);
       }
-      // Things go awfully wrong....e.g. finalize was called during data taking.
-      ::fprintf(stdout,"Loosing event request....was finalize called ?\n");
-      ::fflush(stdout);
     }
     static void handle_event(const netheader_t& hdr, void* param, netentry_t* entry)  {
-      int sc = gauditask_task_trylock();
-      if ( sc == 1 ) {
-	std::string source(hdr.name);
-        self_t* p = reinterpret_cast<self_t*>(param);
-        void* buffer = ::operator new(hdr.size);
-        sc = net_receive(p->m_netPlug, entry, buffer);
-        if ( sc == NET_SUCCESS )  {
+      self_t* p = reinterpret_cast<self_t*>(param);
+      std::string source(hdr.name);
+      void* buffer = ::operator new(hdr.size);
+      int   status = net_receive(p->m_netPlug, entry, buffer);
+      if ( status == NET_SUCCESS )  {
+	LOCK lock(p->m_lock);
+	status = gauditask_task_trylock();
+	if ( status == 1 ) {
 	  RecvEntry* ent = p->receiver(source);
 	  if ( !ent ) {
 	    // In case the sender did not send the source request: 
@@ -105,22 +111,21 @@ namespace Online  {
 	  ::fprintf(stdout,"Loosing EVENT....Cannot register data source:%s.\n",hdr.name);
 	  ::fflush(stdout);
 	}
-	::operator delete(buffer);
-	gauditask_task_unlock();
-	return;
+	// Things go awfully wrong....e.g. finalize was called during data taking.
+	::fprintf(stdout,"Loosing event....was finailize called ?\n");
+	::fflush(stdout);
       }
-      // Things go awfully wrong....e.g. finalize was called during data taking.
-      ::fprintf(stdout,"Loosing event....was finailize called ?\n");
-      ::fflush(stdout);
+      ::operator delete(buffer);
+      gauditask_task_unlock();
     }
 
   public:
 
     /// Standard algorithm constructor
     TransferDataReceiver(const std::string& nam, ISvcLocator* pSvc) 
-      : LHCb::NetworkDataReceiver(nam, pSvc), m_finish(false), m_netPlug(0) 
+      : LHCb::NetworkDataReceiver(nam, pSvc), m_netPlug(0), m_nThreads(2), m_finish(false)
     {
-      declareProperty("NumThreads",m_nThreads=1);
+      declareProperty("NumThreads",m_nThreads);
     }
 
     /// Standard Destructor
@@ -156,7 +161,7 @@ namespace Online  {
     virtual StatusCode copyEventData(void* to, void* from, size_t len)  {
       if ( from != to )  {
         ::memcpy(to,from,len);
-        delete [] (char*)from;
+        ::operator delete(from);
       }
       return StatusCode::SUCCESS;
     }
@@ -168,4 +173,14 @@ namespace Online  {
     }
   };
 }
+
+namespace LHCb  { 
+  class TransferDataReceiver : public Online::TransferDataReceiver  {
+  public:
+    TransferDataReceiver(const std::string& nam, ISvcLocator* pSvc) 
+      : Online::TransferDataReceiver(nam, pSvc) {}
+    virtual ~TransferDataReceiver() {}
+  };
+}
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,TransferDataReceiver)
 DECLARE_NAMESPACE_SERVICE_FACTORY(Online,TransferDataReceiver)

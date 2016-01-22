@@ -63,7 +63,7 @@ namespace Online  {
     TransferDataSender(const std::string& nam, ISvcLocator* pSvc) 
     : LHCb::NetworkDataSender(nam, pSvc), m_netPlug(0)  
     {
-      declareProperty("NumThreads",m_nThreads=1);
+      declareProperty("NumThreads",m_nThreads=2);
     }
 
     /// Standard Destructor
@@ -103,4 +103,15 @@ namespace Online  {
     }
   };
 }
+
+namespace LHCb  { 
+  class TransferDataSender : public Online::TransferDataSender  {
+  public:
+    TransferDataSender(const std::string& nam, ISvcLocator* pSvc) 
+      : Online::TransferDataSender(nam, pSvc) {}
+    virtual ~TransferDataSender() {}
+  };   
+}
+
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,TransferDataSender)
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(Online,TransferDataSender)

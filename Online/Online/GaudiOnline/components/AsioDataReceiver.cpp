@@ -14,5 +14,5 @@
 // Framework include files
 #include "ASIO/Transfer.h"
 #define TRANSFER_NS BoostAsio
-#define TransferDataReceiver SocketDataReceiver
+#define TransferDataReceiver AsioDataReceiver
 #include "GaudiOnline/TransferDataReceiver.h"

@@ -75,7 +75,7 @@ StatusCode NetworkDataSender::initialize()   {
     output << MSG::DEBUG << "Register to data sink " << m_target << endmsg;
     sc = subscribeNetwork();
     if ( !sc.isSuccess() )  {
-      output << MSG::ERROR << "Failed to register to data sink " << m_target << endmsg;
+      ::lib_rtl_output(LIB_RTL_OS,"Failed to register to data sink %s.\n",m_target.c_str());
       return sc;
     }
     if ( !m_useEventRequests )  {
