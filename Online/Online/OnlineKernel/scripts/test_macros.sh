@@ -12,6 +12,7 @@
 #==========================================================================
 PROCID=$$;
 HOST=`hostname -s`;
+HOST=`echo $HOST | tr a-z A-Z`;
 MINITERM='xterm -ls -132 -geometry 132x32';
 kill_all_tasks_of_type()
 {
@@ -29,7 +30,7 @@ start_gentest()
     if test -z "${EXE}"; then
 	echo "ERROR:  Did not find gentest.exe: ${EXE}.....";
     else
-	xterm -ls -132 -geometry 132x32 -title ${HOST}::${TITLE} -e "exec -a ${TITLE}_${PROCID} `which gentest.exe` ${LIB} $*" &
+	xterm -ls -132 -geometry 132x32 -title "${HOST}::${TITLE} $*" -e "exec -a ${TITLE}_${PROCID} `which gentest.exe` ${LIB} $*" &
     fi;
 }
 #
