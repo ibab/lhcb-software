@@ -3,8 +3,12 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2016-01-16 - Andrea Contu
+ - Added various tests for coordinators 
+
 ! 2015-12-18 -  Tim Williams
-	- Added flavour tagging to StrippingBnoC/Stripping_Bu2hhh.py lines
+ - Added flavour tagging to StrippingBnoC/Stripping_Bu2hhh.py lines
 
 ! 2015-12-16 - Adam Davis
  - Prescaled Kaon lines in StrippingD2HMuNu

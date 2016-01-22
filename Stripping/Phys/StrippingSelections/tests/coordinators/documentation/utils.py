@@ -44,7 +44,7 @@ def _tck2id(x,cas = defaultCas ) :
     #invalid = GaudiPython.gbl.ConfigTreeNode() 
     #val =  n.get_value_or( invalid )
     #return val.digest() if val.digest() != invalid.digest() else None
-    
+
 def tck2id(x,cas) :
     if type(x) is int : x = '0x%08x' % x 
     import re
@@ -267,7 +267,7 @@ def xget( ids , cas = ConfigAccessSvc() ) :
     if 'forest' not in dir(xget) : xget.forest = dict() 
     fetch = [ id for id in ids if id not in xget.forest.keys() ] 
     if fetch : 
-	    xget.forest.update( execInSandbox( _xget, fetch, cas ) ) 
+        xget.forest.update( execInSandbox( _xget, fetch, cas ) ) 
 	
     forest = dict() 
     for id in ids : forest[id] = xget.forest[id] 
@@ -496,6 +496,8 @@ def getLineProperties( id, linename='', cas = defaultCas ) :
        filterseq  = matchleaf.properties()['Filter1']
        outputloc  = matchleaf.properties()['OutputLocation']
        hltfilt    = matchleaf.properties()['_HLT']
+       hlt1filt   = matchleaf.properties()['_HLT1']
+       hlt2filt   = matchleaf.properties()['_HLT2']
        l0dufilt   = matchleaf.properties()['_L0DU']
        odinfilt   = matchleaf.properties()['_ODIN']
 
@@ -521,6 +523,10 @@ def getLineProperties( id, linename='', cas = defaultCas ) :
           x += "      L0DU           : " + l0dufilt + "\n"
        if hltfilt and hltfilt != '' : 
           x += "      HLT            : " + hltfilt + "\n"
+       if hltfilt1 and hltfilt1 != '' :
+          x += "      HLT1            : " + hltfilt1 + "\n"
+       if hltfilt2 and hltfilt2 != '' :
+          x += "      HLT2            : " + hltfilt2 + "\n"
        x += "      Filter members : " + filtermembers + "\n"
        x += "      Postscale      : " + postscale + "\n"
        x += "      Output location: '" + outputloc + "'\n"
@@ -661,12 +667,12 @@ def getConfigTree(id, cas = defaultCas ):
 #    return execInSandbox( _getConfigTree, id, cas )
     if 'forest' not in dir(getConfigTree) : getConfigTree.forest = dict() 
     if id not in getConfigTree.forest : 
-	    getConfigTree.forest[id] = execInSandbox( _getConfigTree, id, cas ) 
+        getConfigTree.forest[id] = execInSandbox( _getConfigTree, id, cas ) 
 
-	    db = shelve.open('strip.db', writeback = True)
-	    print 'Generating config for ID=0x%X' % id
-	    db['0x%X' % id] = getConfigTree.forest[id]
-	    db.close()
+        db = shelve.open('strip.db', writeback = True)
+        print 'Generating config for ID=0x%X' % id
+        db['0x%X' % id] = getConfigTree.forest[id]
+        db.close()
 
     return getConfigTree.forest[id] 
 
@@ -828,6 +834,10 @@ def list_line_properties( tree, linename='' ) :
        outputloc  = matchleaf.properties()['OutputLocation']
        # HLT decision filter (if any)
        hltfilt    = matchleaf.properties()['HLT']
+       # HLT1 decision filter (if any)
+       hltfilt1    = matchleaf.properties()['HLT1']
+       # HLT2 decision filter (if any)
+       hltfilt2    = matchleaf.properties()['HLT2']
        # L0 decision filter (if any)
        l0dufilt   = matchleaf.properties()['L0DU']
        # ODIN filter (if any)
@@ -850,6 +860,14 @@ def list_line_properties( tree, linename='' ) :
           if i.leaf and i.leaf.fullyQualifiedName == hltfilt : 
              hltfilt = i.leaf.properties()['Code']
              break
+       for i in tree :
+          if i.leaf and i.leaf.fullyQualifiedName == hltfilt1 :
+             hltfilt1 = i.leaf.properties()['Code']
+             break
+       for i in tree :
+          if i.leaf and i.leaf.fullyQualifiedName == hltfilt2 :
+             hltfilt2 = i.leaf.properties()['Code']
+             break
        for i in tree : 
           if i.leaf and i.leaf.fullyQualifiedName == l0dufilt : 
              l0dufilt = i.leaf.properties()['Code']
@@ -865,6 +883,8 @@ def list_line_properties( tree, linename='' ) :
        line_dict['ODIN'] = odinfilt
        line_dict['L0DU'] = l0dufilt
        line_dict['HLT'] = hltfilt
+       line_dict['HLT1'] = hltfilt1
+       line_dict['HLT2'] = hltfilt2
        line_dict['Filters'] = eval(filtermembers)
        line_dict['Postscale'] = postscale
        line_dict['OutputLocation'] = outputloc
@@ -895,11 +915,11 @@ def list_alg_properties(tree, algname='') :
            tool = False
        else : 
            stralgname = algname.split('/')[1]
-       if i.leaf.fullyQualifiedName.find('/' + stralgname + '.')>=0 : 
-           tool = True
-           toolname = i.leaf.fullyQualifiedName.split('.')[1]
-       else : 
-           continue
+           if i.leaf.fullyQualifiedName.find('/' + stralgname + '.')>=0 :
+               tool = True
+               toolname = i.leaf.fullyQualifiedName.split('.')[1]
+           else :
+               continue
 
        if i.leaf.fullyQualifiedName in printed_algs : continue
        printed_algs += [ i.leaf.fullyQualifiedName ] 
@@ -907,13 +927,13 @@ def list_alg_properties(tree, algname='') :
 #       print '  ', i.leaf.fullyQualifiedName, tool
 
        if not tool : 
-           for (k,v) in i.leaf.properties().iteritems() :
-               alg_dict[k] = v
+          for (k,v) in i.leaf.properties().iteritems() :
+              alg_dict[k] = v
        else : 
-           if toolname not in alg_dict['Tools'].keys() : 
-               alg_dict['Tools'][toolname] = {}
-           for (k,v) in i.leaf.properties().iteritems() :
-               alg_dict['Tools'][toolname][k] = v
+          if toolname not in alg_dict['Tools'].keys() : 
+              alg_dict['Tools'][toolname] = {}
+          for (k,v) in i.leaf.properties().iteritems() :
+              alg_dict['Tools'][toolname][k] = v
 
     return alg_dict
 
@@ -929,11 +949,11 @@ def make_html_summary(db, stripping, commonparts) :
     htmlfile.write(header)
 
     htmlfile.write('<p><a href=http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/stripping/>[Stripping Project homepage]</a></p>')
-    
+
     htmlfile.write('<h1> %s </h1>\n' % stripping)
     htmlfile.write('<p><b>Streams:</b></p>\n')
     htmlfile.write('<ul>\n')
-    
+
     for stream in sorted(db.keys()) : 
         htmlfile.write('<li><a href="#%s">%s</a>\n' % (stream.lower(), stream) )
     
@@ -941,7 +961,7 @@ def make_html_summary(db, stripping, commonparts) :
 
     htmlfile.write('<p><b>Common particles:</b></p>\n')
     htmlfile.write('<ul>\n')
-    
+
     htmlfile.write('<li><a href="#stdbasic">Basic</a>\n')
     htmlfile.write('<li><a href="#stdintermediate">Intermediate</a>\n')
     
@@ -951,21 +971,20 @@ def make_html_summary(db, stripping, commonparts) :
         htmlfile.write('<h2><a name="%s"> %s </a></h2>\n' % (stream.lower(), stream))
         htmlfile.write('<table>')
         for line in sorted(db[stream].keys()) : 
-            prescale = db[stream][line]['Properties']['Prescale']
-            if float(prescale) < 1. : 
-                prescale = '<font color="red"> %5.3f </font>' % float(prescale)
-            else :
-                prescale = '1.0'
-            htmlfile.write('<tr><td><a href="%s/%s.html"> %s </a></td><td> %s </td><td> %s </td></tr>\n' 
-	                   % (stream.lower(), line.lower(), line, db[stream][line]['Properties']['OutputLocation'], prescale))
-        htmlfile.write('</table>')
+        prescale = db[stream][line]['Properties']['Prescale']
+        if float(prescale) < 1. : 
+            prescale = '<font color="red"> %5.3f </font>' % float(prescale)
+        else : 
+            prescale = '1.0'
+        htmlfile.write('<tr><td><a href="%s/%s.html"> %s </a></td><td> %s </td><td> %s </td></tr>\n' 
+                       % (stream.lower(), line.lower(), line, db[stream][line]['Properties']['OutputLocation'], prescale))
+    htmlfile.write('</table>')
 
     htmlfile.write('<h2><a name="stdbasic">Standard basic particles:</a></h2>\n')
 
     htmlfile.write('<ul>')
     for part in sorted(commonparts['basic'].keys()) : 
-        htmlfile.write('<li><a href="commonparticles/%s.html"> %s </a>\n' 
-                       % (part.lower(), part))
+        htmlfile.write('<li><a href="commonparticles/%s.html"> %s </a>\n'  % (part.lower(), part))
     htmlfile.write('</ul>')
 
     htmlfile.write('<h2><a name="stdintermediate">Standard intermediate particles:</a></h2>\n')
@@ -975,6 +994,7 @@ def make_html_summary(db, stripping, commonparts) :
         htmlfile.write('<li><a href="commonparticles/%s.html"> %s </a>\n' 
 	                   % (part.lower(), part))
     htmlfile.write('</ul>')
+
     htmlfile.write('</body>')
     
     htmlfile.close()
@@ -1042,7 +1062,7 @@ def make_members_line(line, stripping, streamname, linename, htmlfile, alg, part
 
     nn = 0
     
-    for k in properties :
+    for k in properties : 
         nn += 1
         if k == 'Members' : continue
         if k not in line['Algs'][alg].keys() : continue
@@ -1056,23 +1076,23 @@ def make_members_line(line, stripping, streamname, linename, htmlfile, alg, part
                 k = k + '''<p align="right"><a href="javascript:showhide2('indent%s_%d');">Indent on/off</a></p>''' % (n, nn) 
 	
         if v == '' : v = 'None'
-
+            
         v = str(v)
         for std in parts : 
-    	    if v.find('/' + std + '/') >= 0 or v.find('/' + std + '\'') >= 0 : 
-    	        link1 = '<a href=../commonparticles/' + std.lower() + '.html>'
-    	        link2 = '</a>'
-    	        v2 = link1 + std + link2
-    	        print v, std, v2
-    	        v = v.replace(std, v2)
-    	        print v
+            if v.find('/' + std + '/') >= 0 or v.find('/' + std + '\'') >= 0 : 
+                link1 = '<a href=../commonparticles/' + std.lower() + '.html>'
+                link2 = '</a>'
+                v2 = link1 + std + link2
+                print v, std, v2
+                v = v.replace(std, v2)
+                print v
         if r == 0 : 
             htmlfile.write(' <tr class="alt1"><td>%s</td><td>%s</td></tr>\n' % (k, v))
         else : 
             htmlfile.write(' <tr class="alt2"><td>%s</td><td>%s</td></tr>\n' % (k, v))
         r = 1-r
     htmlfile.write('</table></p>\n')
-    
+
     htmlfile.write('''<p %s><a href="javascript:showhide('div%so');"><b>Other properties:</b></a></p>\n''' % (indent(str(n) + "_"), n))
     htmlfile.write('<div id="div%so" class="hidden">\n' % n)
     htmlfile.write('<p %s><table>\n' % indent(str(n) + "_"))
@@ -1082,6 +1102,7 @@ def make_members_line(line, stripping, streamname, linename, htmlfile, alg, part
         if k in properties : continue
         if k == 'Tools' : continue
         if v == '' : v = 'None'
+
 
         if r == 0 : 
             htmlfile.write(' <tr class="alt1"><td>%s : </td><td>%s</td></tr>\n' % (k, v))
@@ -1221,12 +1242,14 @@ def make_commonparts_html(algname, alg, stripping, parts) :
         htmlfile.write('</div>\n')
 
     htmlfile.write('</div>\n')
+
 	
     htmlfile.write('</body>')
 
     htmlfile.close()
 
 def make_html(line, stripping, streamname, linename, parts) : 
+    
     
     dirname = 'html/' + stripping.lower() + '/' + streamname.lower()
     filename = dirname + '/' + linename.lower() + '.html'
@@ -1285,18 +1308,18 @@ def make_documentation( root_tree, stripping, commonparts ) :
     print parts
 
     for algname in sorted(commonparts['basic'].keys() ) : 
-        print algname
-        make_commonparts_html(algname, commonparts['basic'][algname], stripping, parts)
+       print algname
+       make_commonparts_html(algname, commonparts['basic'][algname], stripping, parts)
 
     for algname in sorted(commonparts['intermediate'].keys() ) : 
-        print algname
-        make_commonparts_html(algname, commonparts['intermediate'][algname], stripping, parts)
+       print algname
+       make_commonparts_html(algname, commonparts['intermediate'][algname], stripping, parts)
 
 ##    return 
 
     for stream in sorted(list_streams( root_tree )) : 
 ##    for stream in [ 'Bhadron' ]  : 
-        outdb[stream] = {}
+       outdb[stream] = {}
         for line in sorted(list_lines( root_tree, stream)) : 
 ##       for line in [ 'StrippingB2twobodyLine' ] : 
             print stream, line
@@ -1306,12 +1329,14 @@ def make_documentation( root_tree, stripping, commonparts ) :
             outdb[stream][line]['Algs'] = {}
             print line_prop['Filters']
             for alg in line_prop['Filters'] : 
-                make_line_algorithms( root_tree, stripping, outdb, stream, line, alg)
+            make_line_algorithms( root_tree, stripping, outdb, stream, line, alg)
 
             make_html(outdb[stream][line], stripping, stream, line, parts)
 ##          break
 
+
     make_html_summary( outdb, stripping, commonparts) 
+
 
 def commonparticles_properties() :
 
@@ -1320,7 +1345,7 @@ def commonparticles_properties() :
     db = {'basic' : {}, 'intermediate' : {} }
     for name in dir(StandardBasic) : 
 
-        if not name.find('Std') == 0 : continue
+    if not name.find('Std') == 0 : continue
         module = __import__('CommonParticles.StandardBasic', globals(), locals(), [ name ])
         db['basic'][name] = {}
         p = getattr(module, name)
@@ -1341,6 +1366,7 @@ def commonparticles_properties() :
                 else : 
                     db['basic'][name]['Tools'][toolname][prop] = type(tool).__slots__[prop]
     	    
+
     for name in dir(StandardIntermediate) : 
 
         if not name.find('Std') == 0 : continue
@@ -1366,6 +1392,8 @@ def commonparticles_properties() :
 
     return db
 
+
+
 ######  do the actual work...
 
 if __name__ == '__main__' :
@@ -1374,26 +1402,26 @@ if __name__ == '__main__' :
 
     if len(sys.argv) == 2 : 
 
-      tck = eval(sys.argv[1])
+        tck = eval(sys.argv[1])
 
-      l = getConfigurations()
-      h = l.keys()[0].split('/')[-1]
+        l = getConfigurations()
+        h = l.keys()[0].split('/')[-1]
 
-      cas2 = ConfigTarFileAccessSvc( Mode = 'ReadWrite', File = 'config.tar' )
-      createTCKEntries( { tck : h }, cas2 )
+        cas2 = ConfigTarFileAccessSvc( Mode = 'ReadWrite', File = 'config.tar' )
+        createTCKEntries( { tck : h }, cas2 )
 
     elif len(sys.argv) == 3 : 
 
-      tck = eval(sys.argv[1])
-      name = sys.argv[2]
+        tck = eval(sys.argv[1])
+        name = sys.argv[2]
 
-      db = getConfigTree(tck)
-      cp = commonparticles_properties()
-      make_documentation( db, name, cp)
+        db = getConfigTree(tck)
+        cp = commonparticles_properties()
+        make_documentation( db, name, cp)
 
     else : 
 
-      print 'Wrong number of parameters. Usage: '
-      print 'utils.py [tck] - add TCK to config.tar'
-      print 'utils.py [tck] [stripping] - create web documentation for [stripping] from [tck] in config.tar'
+        print 'Wrong number of parameters. Usage: '
+        print 'utils.py [tck] - add TCK to config.tar'
+        print 'utils.py [tck] [stripping] - create web documentation for [stripping] from [tck] in config.tar'
 
