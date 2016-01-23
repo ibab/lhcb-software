@@ -19,7 +19,6 @@ Rich::MirrorSegFinderLookUpTable::MirrorSegFinderLookUpTable( const std::string&
                                                               const std::string& name,
                                                               const IInterface* parent )
   : Rich::ToolBase ( type, name, parent ),
-    m_firstUpdate  ( true ),
     m_maxDistDiff  ( Rich::NRiches, 0   ),
     m_failRate     ( Rich::NRiches, std::make_pair(0,0) )
 

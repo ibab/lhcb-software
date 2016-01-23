@@ -226,7 +226,7 @@ namespace Rich
     //bool m_testFinding;
 
     /// Flag for the first update
-    bool m_firstUpdate;
+    bool m_firstUpdate{true};
 
     /// Look table sizes for RICH1 and RICH2
     std::vector<unsigned int> m_tableSize;
