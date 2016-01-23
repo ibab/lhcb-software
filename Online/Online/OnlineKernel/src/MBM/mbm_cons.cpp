@@ -16,7 +16,8 @@ namespace {
     ::lib_rtl_output(LIB_RTL_ALWAYS,"    -o(ne)                 ONE consumer (REQ type ONE)");
     ::lib_rtl_output(LIB_RTL_ALWAYS,"    -u(sermode)            USER mode (SPY) consumer");
     ::lib_rtl_output(LIB_RTL_ALWAYS,"    -f(fifo)               Use fifos connections for communication");
-    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -t(cp)                 Use boost::asio tcp connections for communication");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -t(cp)                 Use boost::asio TCP connections for communication");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -ipc                   Use boost::asio ICP connections for communication");
   }
   struct Cons : public MBM::Consumer  {
     int m_nbad, m_trnumber, m_quiet, m_sleep, m_check;
@@ -62,12 +63,14 @@ extern "C" int mbm_cons(int argc,char **argv) {
   cli.getopt("name",1,name);
   cli.getopt("buffer",1,buffer);
   cli.getopt("sleep",1,sleep);
-  cli.getopt("inc_opt",1,inc_opt);
+  cli.getopt("inc_opt",3,inc_opt);
   cli.getopt("partitionid",1,partID);
   if ( cli.getopt("fifo",1) )
     comm_type = BM_COM_FIFO;
   else if ( cli.getopt("tcp",1) )
     comm_type = BM_COM_ASIO;
+  else if ( cli.getopt("icp",3) )
+    comm_type = BM_COM_UNIX;
 
   int status = wtc_init();
   if( status != WT_SUCCESS ) exit(status);

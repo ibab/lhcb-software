@@ -12,7 +12,8 @@ static void help()  {
   ::lib_rtl_output(LIB_RTL_ALWAYS,"    -l=<name>      Sweep lower limit \n");
   ::lib_rtl_output(LIB_RTL_ALWAYS,"    -u=<name>      Sweep upper limit \n");
   ::lib_rtl_output(LIB_RTL_ALWAYS,"    -f(fifo)       Use fifos connections for communication");
-  ::lib_rtl_output(LIB_RTL_ALWAYS,"    -t(cp)         Use boost::asio tcp connections for communication");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"    -t(cp)         Use boost::asio TCP connections for communication");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"    -i(pc)         Use boost::asio ICP connections for communication");
 }
 
 extern "C" int mbm_prod(int argc,char **argv) {
@@ -30,6 +31,8 @@ extern "C" int mbm_prod(int argc,char **argv) {
     comm_type = BM_COM_FIFO;
   else if ( cli.getopt("tcp",1) )
     comm_type = BM_COM_ASIO;
+  else if ( cli.getopt("icp",1) )
+    comm_type = BM_COM_UNIX;
   if ( lower > 4 ) len = lower;
   if ( lower < 4 ) len = lower;
   {
