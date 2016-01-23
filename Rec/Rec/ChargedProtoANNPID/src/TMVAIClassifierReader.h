@@ -11,8 +11,6 @@ namespace ANNGlobalPID
   class IClassifierReader
   {
   public:
-    /// constructor
-    IClassifierReader() : fStatusIsClean( true ) { }
     /// Destructor
     virtual ~IClassifierReader() { }
     /// return classifier response
@@ -20,7 +18,7 @@ namespace ANNGlobalPID
     /// returns classifier status
     bool IsStatusClean() const { return fStatusIsClean; }
   protected:
-    bool fStatusIsClean; ///< Status flag
+    bool fStatusIsClean{true}; ///< Status flag
   };
 #endif
 

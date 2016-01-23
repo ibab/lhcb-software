@@ -20,8 +20,6 @@
 template <class PBASE>
 void ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::initCommonConstructor()
 {
-  // initalise data members
-  m_summary = NULL;
   // Job Options
   this->declareProperty( "ProtoParticleLocation",
                          m_protoPath = LHCb::ProtoParticleLocation::Charged );
@@ -69,7 +67,7 @@ template <class PBASE>
 void
 ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::handle ( const Incident& )
 {
-  m_summary = NULL;
+  m_summary = nullptr;
 }
 //=============================================================================
 
@@ -130,7 +128,7 @@ const typename ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::Input *
 ANNGlobalPID::
 ChargedProtoANNPIDCommonBase<PBASE>::getInput( const std::string& name ) const
 {
-  Input * input = NULL;
+  Input * input = nullptr;
 
   // Tracking variables
   if      ( "TrackP"                == name ) { input = new InTrackP(); }
@@ -217,11 +215,7 @@ template <class PBASE>
 ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::
 Cut::Cut( const std::string& desc,
           const ChargedProtoANNPIDCommonBase<PBASE> * parent )
-  : m_desc(desc),
-    m_OK(false),
-    m_variable(NULL),
-    m_cut(0),
-    m_delim(UNDEFINED)
+  : m_desc(desc)
 {
   // Cuts must have a precise form. Either
   //    variable > value
@@ -274,7 +268,7 @@ NeuroBayesANN::getOutput( const LHCb::ProtoParticle * proto )
 
   // NeuroBayes seems to sporadically send mysterious std messages which we
   // cannot control... So forcibly intercept them all here and send to /dev/null
-  const auto * red = ( m_suppressPrintout ? new STL::OStreamRedirect() : NULL );
+  const auto * red = ( m_suppressPrintout ? new STL::OStreamRedirect() : nullptr );
 
   // get the NN output, rescaled to the range 0 to 1
   const double nnOut = 0.5 * ( 1.0 + (double)m_expert->nb_expert(m_inArray) );
@@ -341,7 +335,6 @@ NetConfig( const std::string & tkType,
            const std::string & netVersion,
            const bool suppressANNPrintout,
            const ChargedProtoANNPIDCommonBase<PBASE> * parent )
-  : m_netHelper(NULL)
 {
 
   // Assume init will go OK until proved otherwise
@@ -412,7 +405,7 @@ NetConfig( const std::string & tkType,
       {
 
         // open cuts file
-        const std::string fullFile = paramRoot + file;
+        const auto fullFile = paramRoot + file;
         std::ifstream cuts( fullFile.c_str() );
 
         // If OK, read
@@ -602,7 +595,7 @@ void
 ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::NetConfig::cleanUp()
 {
   delete m_netHelper;
-  m_netHelper = NULL;
+  m_netHelper = nullptr;
   for ( auto * cut : m_cuts ) { delete cut; }
   m_cuts.clear();
 }
@@ -613,7 +606,7 @@ ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::NetConfig::
 passCuts( const LHCb::ProtoParticle * proto ) const
 {
   bool ok = true;
-  for ( auto * cut : m_cuts )
+  for ( const auto * cut : m_cuts )
   {
     if ( !cut->isSatisfied(proto) ) { ok = false; break; }
   }

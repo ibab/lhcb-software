@@ -26,7 +26,7 @@ namespace ANNGlobalPID
   ChargedProtoANNPIDCommonBase( const std::string& /* type */,
                                 const std::string& /* name */,
                                 const IInterface* /* parent */ )
-    : GaudiTupleAlg ( "ERROR", NULL )
+    : GaudiTupleAlg ( "ERROR", nullptr )
   {
     throw GaudiException( "Invalid ANNGlobalPID::ChargedProtoANNPIDBase<GaudiTupleAlg> constructor",
                           "ANNGlobalPID::ChargedProtoANNPIDBase", StatusCode::FAILURE );
@@ -50,7 +50,7 @@ namespace ANNGlobalPID
   ChargedProtoANNPIDCommonBase<GaudiTupleTool>::
   ChargedProtoANNPIDCommonBase( const std::string& /* name */,
                                 ISvcLocator* /* pSvcLocator */ )
-    : GaudiTupleTool ( "ERROR", "ERROR", NULL )
+    : GaudiTupleTool ( "ERROR", "ERROR", nullptr )
   {
     throw GaudiException( "Invalid ChargedProtoANNPIDCommonBase<GaudiTupleTool> constructor",
                           "ANNGlobalPID::ChargedProtoANNPIDBase", StatusCode::FAILURE );

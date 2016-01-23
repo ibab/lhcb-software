@@ -2,6 +2,9 @@
 #ifndef CHARGEDPROTOANNPIDTUPLETOOL_H
 #define CHARGEDPROTOANNPIDTUPLETOOL_H 1
 
+// STL
+#include <unordered_map>
+
 // base class
 #include "ChargedProtoANNPIDToolBase.h"
 
@@ -52,11 +55,11 @@ namespace ANNGlobalPID
 
     StringInputs m_variables;  ///< ProtoParticle variables as strings to add to the ntuple
 
-    /// Use RICH tool to get MCParticle associations for Tracks (To avoid Linker details)
-    const Rich::Rec::MC::IMCTruthTool * m_truth;
+    /// Use RICH tool to get MCParticle associations for Tracks (To avoid annoying Linkers)
+    const Rich::Rec::MC::IMCTruthTool * m_truth = nullptr;
 
     /// map of accessor objects for each variable by name
-    typedef std::map< std::string, const ChargedProtoANNPIDToolBase::Input* > Inputs;
+    typedef std::unordered_map< std::string, const ChargedProtoANNPIDToolBase::Input* > Inputs;
     // variables to fill
     Inputs m_inputs;
 

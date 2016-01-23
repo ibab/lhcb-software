@@ -4,6 +4,9 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2016-01-23 - Chris Jones
+ - General C++11 clean up.
+
 !========================= ChargedProtoANNPID v2r12 2015-10-13 ======================
 ! 2015-09-22 - Chris Jones
  - Use new OStreamRedirect guard class to redirect messages from NB.

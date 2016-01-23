@@ -7,7 +7,7 @@
 // STL
 #include <iostream>
 #include <string>
-#include <map>
+#include <unordered_map>
 #include <vector>
 #include <cmath>
 
@@ -113,8 +113,8 @@ namespace ANNGlobalPID
                      const std::string & particle,
                      const std::string & track )
     {
-      const std::string _id = id(config,particle,track);
-      Map::const_iterator i = m_map.find( _id );
+      const auto _id = id(config,particle,track);
+      const auto i = m_map.find( _id );
       if ( i != m_map.end() )
       {
         throw GaudiException( _id+" already registered", 
@@ -133,14 +133,14 @@ namespace ANNGlobalPID
                                const std::string & track,
                                const std::vector<std::string>& inputs ) const
     {
-      Map::const_iterator i = m_map.find( id(config,particle,track) );
-      return ( i != m_map.end() ? i->second->create(inputs) : NULL );
+      const auto i = m_map.find( id(config,particle,track) );
+      return ( i != m_map.end() ? i->second->create(inputs) : nullptr );
     }
     
   private:
 
     /// Type for internal map
-    typedef std::map< std::string, FactoryBase* > Map;
+    typedef std::unordered_map< std::string, FactoryBase* > Map;
 
   private:
 

@@ -17,6 +17,7 @@
 #include <vector>
 #include <map>
 #include <sstream>
+#include <memory>
 
 // Gaudi
 #include "GaudiKernel/ISvcLocator.h"
@@ -166,7 +167,7 @@ namespace ANNGlobalPID
     private:
       const int m_info;
     public:
-      virtual double value( const LHCb::ProtoParticle * proto ) const
+      virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
         return proto->track()->info( m_info, -999 );
       }
@@ -176,10 +177,10 @@ namespace ANNGlobalPID
     class InTrackP : public Input
     {
     public:
-      virtual double value( const LHCb::ProtoParticle * proto ) const
+      virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
-        const double MaxP = 5000.0 * Gaudi::Units::GeV;
-        const double var = proto->track()->p();
+        const auto MaxP = 5000.0 * Gaudi::Units::GeV;
+        const auto var = proto->track()->p();
         return ( var < MaxP ? var : -999 );
       }
     };
@@ -188,10 +189,10 @@ namespace ANNGlobalPID
     class InTrackPt : public Input
     {
     public:
-      virtual double value( const LHCb::ProtoParticle * proto ) const
+      virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
-        const double MaxPt = 1000.0 * Gaudi::Units::GeV;
-        const double var = proto->track()->pt();
+        const auto MaxPt = 1000.0 * Gaudi::Units::GeV;
+        const auto var = proto->track()->pt();
         return ( var < MaxPt ? var : -999 );
       }
     };
@@ -200,9 +201,9 @@ namespace ANNGlobalPID
     class InTrackLikelihood : public Input
     {
     public:
-      virtual double value( const LHCb::ProtoParticle * proto ) const
+      virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
-        const double var = proto->track()->likelihood();
+        const auto var = proto->track()->likelihood();
         return ( var > -120.0 ? var : -999 );
       }
     };
@@ -211,9 +212,9 @@ namespace ANNGlobalPID
     class InTrackGhostProb : public Input
     {
     public:
-      virtual double value( const LHCb::ProtoParticle * proto ) const
+      virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
-        const double var = proto->track()->ghostProbability();
+        const auto var = proto->track()->ghostProbability();
         return ( var > 0.00001 ? var : -999 );
       }
     };
@@ -222,9 +223,9 @@ namespace ANNGlobalPID
     class InTrackCloneDist : public Input
     {
     public:
-      virtual double value( const LHCb::ProtoParticle * proto ) const
+      virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
-        const double var = proto->track()->info(LHCb::Track::CloneDist,-999);
+        const auto var = proto->track()->info(LHCb::Track::CloneDist,-999);
         return ( var >= 0 ? var : -999 );
       }
     };
@@ -233,9 +234,9 @@ namespace ANNGlobalPID
     class InTrackDOCA : public Input
     {
     public:
-      virtual double value( const LHCb::ProtoParticle * proto ) const
+      virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
-        const LHCb::State & s = proto->track()->firstState() ;
+        const auto & s = proto->track()->firstState() ;
         const Gaudi::Math::XYZLine z_axis ( Gaudi::XYZPoint() ,
                                             Gaudi::XYZVector(0,0,1) ) ;
         const Gaudi::Math::XYZLine track_line ( Gaudi::XYZPoint ( s.x(),  s.y(), s.z() ),
@@ -248,7 +249,7 @@ namespace ANNGlobalPID
     class InRichUsedAerogel : public Input
     {
     public:
-      virtual double value( const LHCb::ProtoParticle * proto ) const
+      virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
         return ( proto->richPID() ? proto->richPID()->usedAerogel() : 0 );
       }
@@ -258,7 +259,7 @@ namespace ANNGlobalPID
     class InRichUsedR1Gas : public Input
     {
     public:
-      virtual double value( const LHCb::ProtoParticle * proto ) const
+      virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
         return ( proto->richPID() ? proto->richPID()->usedRich1Gas() : 0 );
       }
@@ -268,7 +269,7 @@ namespace ANNGlobalPID
     class InRichUsedR2Gas : public Input
     {
     public:
-      virtual double value( const LHCb::ProtoParticle * proto ) const
+      virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
         return ( proto->richPID() ? proto->richPID()->usedRich2Gas() : 0 );
       }
@@ -278,7 +279,7 @@ namespace ANNGlobalPID
     class InRichAboveElThres : public Input
     {
     public:
-      virtual double value( const LHCb::ProtoParticle * proto ) const
+      virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
         return ( proto->richPID() ? proto->richPID()->electronHypoAboveThres() : 0 );
       }
@@ -288,7 +289,7 @@ namespace ANNGlobalPID
     class InRichAboveMuThres : public Input
     {
     public:
-      virtual double value( const LHCb::ProtoParticle * proto ) const
+      virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
         return ( proto->richPID() ? proto->richPID()->muonHypoAboveThres() : 0 );
       }
@@ -298,7 +299,7 @@ namespace ANNGlobalPID
     class InRichAbovePiThres : public Input
     {
     public:
-      virtual double value( const LHCb::ProtoParticle * proto ) const
+      virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
         return ( proto->richPID() ? proto->richPID()->pionHypoAboveThres() : 0 );
       }
@@ -308,7 +309,7 @@ namespace ANNGlobalPID
     class InRichAboveKaThres : public Input
     {
     public:
-      virtual double value( const LHCb::ProtoParticle * proto ) const
+      virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
         return ( proto->richPID() ? proto->richPID()->kaonHypoAboveThres() : 0 );
       }
@@ -318,7 +319,7 @@ namespace ANNGlobalPID
     class InRichAbovePrThres : public Input
     {
     public:
-      virtual double value( const LHCb::ProtoParticle * proto ) const
+      virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
         return ( proto->richPID() ? proto->richPID()->protonHypoAboveThres() : 0 );
       }
@@ -333,7 +334,7 @@ namespace ANNGlobalPID
     private:
       const Rich::ParticleIDType m_type;
     public:
-      virtual double value( const LHCb::ProtoParticle * proto ) const
+      virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
         return ( proto->richPID() ? proto->richPID()->particleDeltaLL(m_type) : -999 );
       }
@@ -343,7 +344,7 @@ namespace ANNGlobalPID
     class InMuonIsMuon : public Input
     {
     public:
-      virtual double value( const LHCb::ProtoParticle * proto ) const
+      virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
         return ( proto->muonPID() ? proto->muonPID()->IsMuon() : 0 );
       }
@@ -353,7 +354,7 @@ namespace ANNGlobalPID
     class InMuonIsMuonLoose : public Input
     {
     public:
-      virtual double value( const LHCb::ProtoParticle * proto ) const
+      virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
         return ( proto->muonPID() ? proto->muonPID()->IsMuonLoose() : 0 );
       }
@@ -363,7 +364,7 @@ namespace ANNGlobalPID
     class InMuonNShared : public Input
     {
     public:
-      virtual double value( const LHCb::ProtoParticle * proto ) const
+      virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
         return proto->info(LHCb::ProtoParticle::MuonNShared,-1.0) + 1.0;
       }
@@ -373,7 +374,7 @@ namespace ANNGlobalPID
     class InMuonLLMu : public Input
     {
     public:
-      virtual double value( const LHCb::ProtoParticle * proto ) const
+      virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
         return ( proto->muonPID() && proto->muonPID()->IsMuonLoose() ?
                  proto->muonPID()->MuonLLMu() : -999 );
@@ -384,7 +385,7 @@ namespace ANNGlobalPID
     class InMuonLLBkg : public Input
     {
     public:
-      virtual double value( const LHCb::ProtoParticle * proto ) const
+      virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
         return ( proto->muonPID() && proto->muonPID()->IsMuonLoose() ?
                  proto->muonPID()->MuonLLBg() : -999 );
@@ -395,9 +396,9 @@ namespace ANNGlobalPID
     class InNumProtos : public Input
     {
     public:
-      virtual double value( const LHCb::ProtoParticle * proto ) const
+      virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
-        const LHCb::ProtoParticles * protos =
+        const auto * protos =
           dynamic_cast<const LHCb::ProtoParticles *>(proto->parent());
         return ( protos ? static_cast<double>(protos->size()) : -999 );
       }
@@ -407,7 +408,7 @@ namespace ANNGlobalPID
     class InNumCaloHypos : public Input
     {
     public:
-      virtual double value( const LHCb::ProtoParticle * proto ) const
+      virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
         return static_cast<double>(proto->calo().size());
       }
@@ -424,7 +425,7 @@ namespace ANNGlobalPID
       const int m_info;   ///< The info variable to access
       const ChargedProtoANNPIDCommonBase<PBASE> * m_parent; ///< Pointer to parent
     public:
-      virtual double value( const LHCb::ProtoParticle * ) const
+      virtual double value( const LHCb::ProtoParticle * ) const override
       {
         return m_parent->recSummary()->info( m_info, 0 );
       }
@@ -434,9 +435,9 @@ namespace ANNGlobalPID
     class InCaloEcalChi2 : public Input
     {
     public:
-      virtual double value( const LHCb::ProtoParticle * proto ) const
+      virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
-        double var = proto->info(LHCb::ProtoParticle::CaloEcalChi2,-999);
+        auto var = proto->info(LHCb::ProtoParticle::CaloEcalChi2,-999);
         if      ( var < -100    ) { var = -999; }
         else if ( var > 9999.99 ) { var = -999; }
         return var;
@@ -447,9 +448,9 @@ namespace ANNGlobalPID
     class InCaloBremChi2 : public Input
     {
     public:
-      virtual double value( const LHCb::ProtoParticle * proto ) const
+      virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
-        double var = proto->info(LHCb::ProtoParticle::CaloBremChi2,-999);
+        auto var = proto->info(LHCb::ProtoParticle::CaloBremChi2,-999);
         if      ( var < -100    ) { var = -999; }
         else if ( var > 9999.99 ) { var = -999; }
         return var;
@@ -460,9 +461,9 @@ namespace ANNGlobalPID
     class InCaloClusChi2 : public Input
     {
     public:
-      virtual double value( const LHCb::ProtoParticle * proto ) const
+      virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
-        double var = proto->info(LHCb::ProtoParticle::CaloClusChi2,-999);
+        auto var = proto->info(LHCb::ProtoParticle::CaloClusChi2,-999);
         if      ( var < -100   ) { var = -999; }
         else if ( var > 999.99 ) { var = -999; }
         return var;
@@ -489,7 +490,7 @@ namespace ANNGlobalPID
     public:
       /// Constructor
       Cut( const std::string& desc = "NOTDEFINED",
-           const ChargedProtoANNPIDCommonBase<PBASE> * parent = NULL );
+           const ChargedProtoANNPIDCommonBase<PBASE> * parent = nullptr );
       /// Destructor
       ~Cut( ) { delete m_variable; }
     private:
@@ -526,11 +527,11 @@ namespace ANNGlobalPID
         return ok;
       }
     private:
-      std::string m_desc; ///< The cut description
-      bool m_OK;          ///< Is this cut well defined
-      const Input * m_variable;  ///< The variable to cut on
-      double m_cut;       ///< The cut value
-      Delim m_delim;      ///< The delimitor
+      std::string m_desc;                  ///< The cut description
+      bool m_OK{false};                    ///< Is this cut well defined
+      const Input * m_variable = nullptr;  ///< The variable to cut on
+      double m_cut{0};                     ///< The cut value
+      Delim m_delim{UNDEFINED};            ///< The delimitor
     };
 
   protected:
@@ -549,7 +550,7 @@ namespace ANNGlobalPID
       typedef typename Input::ConstVector Inputs;
     protected:
       /// No default constructor
-      ANNHelper() : m_ok( false ) { }
+      ANNHelper() { }
     public:
       /** Constructor from information
        *  @param inputs The list of inputs needed for this network
@@ -564,6 +565,7 @@ namespace ANNGlobalPID
       virtual ~ANNHelper()
       {
         for ( auto * input : m_inputs ) { delete input; }
+        m_inputs.clear();
       }
     public:
       /// Are we configured properly
@@ -580,7 +582,7 @@ namespace ANNGlobalPID
       /// The list of inputs for this network
       Inputs m_inputs;
       /// Is this reader configured properly
-      bool m_ok;
+      bool m_ok{false};
     };
 
 #ifdef _ENABLE_NEUROBAYES
@@ -595,7 +597,7 @@ namespace ANNGlobalPID
     {
     private:
       /// No default constructor
-      NeuroBayesANN() : m_expert(NULL) { }
+      NeuroBayesANN() { }
     public:
       /** Constructor from information
        *  @param paramFileName Network tuning parameter file
@@ -620,9 +622,9 @@ namespace ANNGlobalPID
       /// Compute the ANN output for the given ProtoParticle
       virtual double getOutput( const LHCb::ProtoParticle * proto ) const;
     private:
-      Expert * m_expert;  ///< Pointer to the NeuroBayes 'Expert'
-      float * m_inArray;  ///< Working array for network inputs
-      bool m_suppressPrintout; ///< Suppress any printout from NeuroBayes
+      Expert * m_expert = nullptr;   ///< Pointer to the NeuroBayes 'Expert'
+      float * m_inArray = nullptr;   ///< Working array for network inputs
+      bool m_suppressPrintout{true}; ///< Suppress any printout from NeuroBayes
     };
 #endif
 
@@ -637,7 +639,7 @@ namespace ANNGlobalPID
     {
     private:
       /// No default constructor
-      TMVAReaderANN() : m_reader(NULL) { }
+      TMVAReaderANN() { }
     public:
       /** Constructor from information
        *  @param paramFileName Network tuning parameter file
@@ -654,7 +656,7 @@ namespace ANNGlobalPID
           m_inArray ( new float[inputs.size()] )
       {
         unsigned int i = 0;
-        for ( const std::string & input : inputs )
+        for ( const auto & input : inputs )
         { m_reader->AddVariable( input.c_str(), &(m_inArray[i++]) ); }
         m_reader->BookMVA( "PID", paramFileName.c_str() );
         this->setOK(true);
@@ -665,8 +667,8 @@ namespace ANNGlobalPID
       /// Compute the ANN output for the given ProtoParticle
       virtual double getOutput( const LHCb::ProtoParticle * proto ) const;
     private:
-      TMVA::Reader * m_reader; ///< The TMVA reader
-      float * m_inArray;  ///< Working array for network inputs
+      TMVA::Reader * m_reader = nullptr; ///< The TMVA reader
+      float * m_inArray       = nullptr; ///< Working array for network inputs
     };
 
     /** @class TMVAImpANN ChargedProtoANNPIDCommonBase.h
@@ -680,7 +682,7 @@ namespace ANNGlobalPID
     {
     private:
       /// No default constructor
-      TMVAImpANN() : m_reader(NULL) { }
+      TMVAImpANN() { }
     public:
       /** Constructor from information
        *  @param paramFileName Network tuning parameter file
@@ -704,8 +706,8 @@ namespace ANNGlobalPID
       /// Compute the ANN output for the given ProtoParticle
       virtual double getOutput( const LHCb::ProtoParticle * proto ) const;
     private:
-      IClassifierReader * m_reader; ///< The TMVA reader
-      mutable std::vector<double> m_vars; ///< the input variables
+      IClassifierReader * m_reader = nullptr; ///< The TMVA reader
+      mutable std::vector<double> m_vars;     ///< the input variables
     };
 
   protected:
@@ -754,7 +756,7 @@ namespace ANNGlobalPID
     private:
 
       /// Network Helper
-      ANNHelper * m_netHelper;
+      ANNHelper * m_netHelper = nullptr;
 
       /// Vector of cuts to apply
       typename Cut::ConstVector m_cuts;
@@ -792,7 +794,7 @@ namespace ANNGlobalPID
     std::string m_protoPath; ///< Location in TES of ProtoParticles
 
     /// Cached pointer to the RecSummary object
-    mutable const LHCb::RecSummary * m_summary;
+    mutable const LHCb::RecSummary * m_summary = nullptr;
 
   };
 

@@ -22,8 +22,7 @@ using namespace ANNGlobalPID;
 ChargedProtoANNPIDTrainingTuple::
 ChargedProtoANNPIDTrainingTuple( const std::string& name,
                                  ISvcLocator* pSvcLocator )
-  : ChargedProtoANNPIDAlgBase ( name , pSvcLocator ),
-    m_tuple                   ( NULL )
+  : ChargedProtoANNPIDAlgBase ( name , pSvcLocator )
 { }
 
 //=============================================================================
@@ -63,7 +62,7 @@ StatusCode ChargedProtoANNPIDTrainingTuple::execute()
     // Check proto is charged
     if ( !P->track() ) continue;
     // make a tuple
-    Tuple tuple = nTuple( "annInputs", "ProtoParticle PID Information for ANN Training" );
+    auto tuple = nTuple( "annInputs", "ProtoParticle PID Information for ANN Training" );
     // Fill variables
     sc = sc && m_tuple->fill(tuple,P);
     // Finally, write the tuple for this ProtoParticle

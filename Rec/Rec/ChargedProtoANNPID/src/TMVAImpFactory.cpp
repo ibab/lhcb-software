@@ -1,4 +1,3 @@
-// Include files 
 
 // local
 #include "TMVAImpFactory.h"

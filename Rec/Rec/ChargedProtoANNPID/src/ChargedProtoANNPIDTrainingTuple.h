@@ -52,7 +52,7 @@ namespace ANNGlobalPID
   private:
 
     /// Pointer to the tuple tool
-    const IChargedProtoANNPIDTupleTool * m_tuple;
+    const IChargedProtoANNPIDTupleTool * m_tuple = nullptr;
 
   };
 

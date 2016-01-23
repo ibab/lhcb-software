@@ -41,7 +41,7 @@ ChargedProtoANNPIDTool::~ChargedProtoANNPIDTool() {}
 StatusCode ChargedProtoANNPIDTool::finalize()
 {
   // cleanup
-  for ( auto ann : m_annNets ) { delete ann.second; }
+  for ( auto & ann : m_annNets ) { delete ann.second; }
   m_annNets.clear();
   // return
   return ChargedProtoANNPIDToolBase::finalize();
@@ -61,19 +61,19 @@ ChargedProtoANNPIDTool::annPID( const LHCb::ProtoParticle * proto,
   {
 
     // Get the track type
-    const std::string trackType = LHCb::Track::TypesToString( proto->track()->type() );
+    const auto trackType = LHCb::Track::TypesToString( proto->track()->type() );
     
     // PID type
-    const std::string pidType = ( pid.abspid() == 11   ? "Electron" :
-                                  pid.abspid() == 13   ? "Muon"     :
-                                  pid.abspid() == 211  ? "Pion"     :
-                                  pid.abspid() == 321  ? "Kaon"     :
-                                  pid.abspid() == 2212 ? "Proton"   :
-                                  pid.abspid() == 0    ? "Ghost"    :
-                                  "UNDEFINED" );
+    const auto pidType = ( pid.abspid() == 11   ? "Electron" :
+                           pid.abspid() == 13   ? "Muon"     :
+                           pid.abspid() == 211  ? "Pion"     :
+                           pid.abspid() == 321  ? "Kaon"     :
+                           pid.abspid() == 2212 ? "Proton"   :
+                           pid.abspid() == 0    ? "Ghost"    :
+                           "UNDEFINED" );
     
     // Get the ANN for the given configuration
-    const NetConfig * ann = getANN( trackType, pidType, annPIDTune );
+    const auto * ann = getANN( trackType, pidType, annPIDTune );
     
     // Get the value of the ANN PID
     if ( ann )
@@ -103,10 +103,10 @@ ChargedProtoANNPIDTool::getANN( const std::string & trackType,
                                 const std::string & netVersion ) const
 {
   // ANN key
-  const std::string key = trackType+pidType+netVersion;
+  const auto key = trackType+pidType+netVersion;
 
   // do we already have a network for this config ?
-  Networks::const_iterator iANN = m_annNets.find(key);
+  const auto iANN = m_annNets.find(key);
 
   // Need to create it
   if ( iANN == m_annNets.end() )
@@ -118,7 +118,7 @@ ChargedProtoANNPIDTool::getANN( const std::string & trackType,
       Warning( "Problem creating ANNPID network for " + 
                trackType + " " + pidType + " " + netVersion ).ignore();
       delete m_annNets[key];
-      m_annNets[key] = NULL;
+      m_annNets[key] = nullptr;
     }
     return m_annNets[key];
   }

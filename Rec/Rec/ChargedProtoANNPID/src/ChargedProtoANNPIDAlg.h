@@ -71,7 +71,7 @@ namespace ANNGlobalPID
     bool m_suppressANNPrintout;
 
     /// Network Configuration
-    NetConfig * m_netConfig;
+    NetConfig * m_netConfig = nullptr;
 
     /// The extra info to fill on the ProtoParticle
     LHCb::ProtoParticle::additionalInfo m_protoInfo;

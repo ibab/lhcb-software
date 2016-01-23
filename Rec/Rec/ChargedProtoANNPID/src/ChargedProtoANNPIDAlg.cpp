@@ -22,7 +22,6 @@ using namespace ANNGlobalPID;
 ChargedProtoANNPIDAlg::ChargedProtoANNPIDAlg( const std::string& name,
                                               ISvcLocator* pSvcLocator )
   : ChargedProtoANNPIDAlgBase ( name , pSvcLocator ),
-    m_netConfig               ( NULL               ),
     m_tkType                  ( LHCb::Track::TypeUnknown )
 {
   // JOs
@@ -82,11 +81,11 @@ StatusCode ChargedProtoANNPIDAlg::execute()
 {
 
   // Load the charged ProtoParticles
-  LHCb::ProtoParticles * protos = getIfExists<LHCb::ProtoParticles>( m_protoPath );
+  auto * protos = getIfExists<LHCb::ProtoParticles>( m_protoPath );
   if ( !protos ) return StatusCode::SUCCESS;
 
   // Loop over ProtoParticles
-  for ( LHCb::ProtoParticle * proto : *protos )
+  for ( auto * proto : *protos )
   {
     // Select Tracks
     if ( !proto->track() )
@@ -136,7 +135,7 @@ StatusCode ChargedProtoANNPIDAlg::finalize()
 {
   // Clean Up
   delete m_netConfig;
-  m_netConfig = NULL;
+  m_netConfig = nullptr;
   // return
   return ChargedProtoANNPIDAlgBase::finalize();
 }

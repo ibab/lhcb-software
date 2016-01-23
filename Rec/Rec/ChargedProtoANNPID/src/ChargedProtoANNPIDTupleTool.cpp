@@ -19,8 +19,7 @@ DECLARE_TOOL_FACTORY( ChargedProtoANNPIDTupleTool )
 ChargedProtoANNPIDTupleTool::ChargedProtoANNPIDTupleTool( const std::string& type,
                                                           const std::string& name,
                                                           const IInterface* parent )
-: ChargedProtoANNPIDToolBase ( type, name, parent ),
-  m_truth                    ( NULL )
+: ChargedProtoANNPIDToolBase ( type, name, parent )
 {
 
   // interface
@@ -118,7 +117,7 @@ StatusCode ChargedProtoANNPIDTupleTool::fill( Tuples::Tuple& tuple,
   StatusCode sc = StatusCode::SUCCESS;
 
   // Get track 
-  const LHCb::Track * track = proto->track();
+  const auto * track = proto->track();
   if ( !track ) return Error( "ProtoParticle is neutral!" );
 
   // Loop over reconstruction variables
@@ -134,8 +133,8 @@ StatusCode ChargedProtoANNPIDTupleTool::fill( Tuples::Tuple& tuple,
   // MC variables
 
   // First get the MCParticle, if associated
-  const LHCb::MCParticle * mcPart = m_truth->mcParticle(track);
-  sc = sc && tuple->column( "HasMC",          mcPart != NULL );
+  const auto * mcPart = m_truth->mcParticle(track);
+  sc = sc && tuple->column( "HasMC",          mcPart != nullptr );
   sc = sc && tuple->column( "MCParticleType", mcPart ? mcPart->particleID().pid() : 0    );
   sc = sc && tuple->column( "MCParticleP",    mcPart ? mcPart->p()                : -999 );
   sc = sc && tuple->column( "MCParticlePt",   mcPart ? mcPart->pt()               : -999 );
@@ -144,11 +143,11 @@ StatusCode ChargedProtoANNPIDTupleTool::fill( Tuples::Tuple& tuple,
   // MC history flags
   bool fromB(false), fromD(false);
   // Parent MC particle
-  const LHCb::MCParticle * mcParent = ( mcPart ? mcPart->mother() : NULL );
+  const auto * mcParent = ( mcPart ? mcPart->mother() : nullptr );
   unsigned int iCount(0); // protect against infinite loops
   while ( mcParent && ++iCount < 99999 )
   {
-    const LHCb::ParticleID & pid = mcParent->particleID();
+    const auto & pid = mcParent->particleID();
     if ( pid.hasBottom() && mcParent->particleID().isHadron() )
     { fromB = true; }
     if ( pid.hasCharm()  && mcParent->particleID().isHadron() )
@@ -160,7 +159,7 @@ StatusCode ChargedProtoANNPIDTupleTool::fill( Tuples::Tuple& tuple,
   sc = sc && tuple->column( "MCFromD", fromD );
 
   // Get info on the MC vertex type
-  const LHCb::MCVertex * mcVert = ( mcPart ? mcPart->originVertex() : NULL );
+  const auto * mcVert = ( mcPart ? mcPart->originVertex() : nullptr );
   sc = sc && tuple->column( "MCVertexType", mcVert ? (int)mcVert->type()    : -999   );
   sc = sc && tuple->column( "MCVertexX",    mcVert ? mcVert->position().x() : -999.0 );
   sc = sc && tuple->column( "MCVertexY",    mcVert ? mcVert->position().y() : -999.0 );

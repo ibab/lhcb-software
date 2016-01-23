@@ -34,11 +34,9 @@ namespace ANNGlobalPID
     /// Standard constructor
     ChargedProtoANNPIDMoni( const std::string& name, ISvcLocator* pSvcLocator );
 
-    virtual ~ChargedProtoANNPIDMoni( ); ///< Destructor
+    virtual ~ChargedProtoANNPIDMoni(); ///< Destructor
 
-    virtual StatusCode execute   ();    ///< Algorithm execution
-
-  private:
+    virtual StatusCode execute();    ///< Algorithm execution
 
   };
 
