@@ -172,10 +172,10 @@ StatusCode STTrackTuple::initialize()
         sensor_y.push_back( float(pos.y()) );
         sensor_z.push_back( float(pos.z()) );
         // Sensor corners
-        std::auto_ptr<LHCb::Trajectory> firsttraj = (*sensor)->trajectory(1, 0.);
+        std::unique_ptr<LHCb::Trajectory> firsttraj = (*sensor)->trajectory(1, 0.);
         Gaudi::XYZPoint corner1 = firsttraj->beginPoint();
         Gaudi::XYZPoint corner2 = firsttraj->endPoint();
-        std::auto_ptr<LHCb::Trajectory> lasttraj = (*sensor)->trajectory(512, 0.);
+        std::unique_ptr<LHCb::Trajectory> lasttraj = (*sensor)->trajectory(512, 0.);
         Gaudi::XYZPoint corner3 = lasttraj->beginPoint();
         Gaudi::XYZPoint corner4 = lasttraj->endPoint();
         corner1_x.push_back( float(corner1.x()) );
@@ -255,7 +255,7 @@ StatusCode STTrackTuple::execute()
 {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  const DeSTDetector::Sectors& sectors = m_tracker->sectors();
+  //const DeSTDetector::Sectors& sectors = m_tracker->sectors();
 
   // Book ntuple
   Tuple tup_test = nTuple ("TrackMonTuple") ;
@@ -504,7 +504,7 @@ StatusCode STTrackTuple::execute()
           double noise = sector->noise(aCluster->channelID()); 
           clusterNoise.push_back( noise );
           // Find the position of the charge deposit on the hit strip
-          std::auto_ptr<LHCb::Trajectory> traj = m_tracker -> trajectory( aCluster->channelID(), interStripFrac );
+          std::unique_ptr<LHCb::Trajectory> traj = m_tracker -> trajectory( aCluster->channelID(), interStripFrac );
           double mu = traj.get()->muEstimate(aState.position());
           LHCb::Trajectory::Point midStripPosition = traj.get()->position(mu);
           traj_mu.push_back(mu);
@@ -579,7 +579,7 @@ StatusCode STTrackTuple::execute()
             trackState_y.push_back( (float)(aState.y()) );
             trackState_z.push_back( (float)(aState.z()) );
             // Find the position of the charge deposit on the hit strip
-            std::auto_ptr<LHCb::Trajectory> traj = m_tracker -> trajectory( aHit.cluster->channelID(), interStripFrac );
+            std::unique_ptr<LHCb::Trajectory> traj = m_tracker -> trajectory( aHit.cluster->channelID(), interStripFrac );
             double mu = traj.get()->muEstimate(aState.position());
             traj_mu.push_back(mu);
             LHCb::Trajectory::Point hitPosition = traj.get()->position(mu);
@@ -637,7 +637,7 @@ StatusCode STTrackTuple::execute()
             DeSTSensor* sensor = findSensor(sector, aHit.cluster->channelID());
             const LHCb::State & aState = (*It)->closestState( sensor->plane() ); // closestState works only with planes!
             // Find the position of the charge deposit on the hit strip
-            std::auto_ptr<LHCb::Trajectory> traj = m_tracker -> trajectory( aHit.cluster->channelID(), interStripFrac );
+            std::unique_ptr<LHCb::Trajectory> traj = m_tracker -> trajectory( aHit.cluster->channelID(), interStripFrac );
             double mu = traj.get()->muEstimate(aState.position());
             traj_mu.push_back(mu);
             LHCb::Trajectory::Point hitPosition = traj.get()->position(mu);
