@@ -302,53 +302,61 @@ def extractTags ( args ) :
     Extract DB-tags from the files 
     """
     
-    from optparse import OptionParser as OptParser
+    import argparse 
+    parser = argparse.ArgumentParser( ) ##**kwargs )
     
-    parser = OptParser( usage   = __doc__                 ,
-                        version = ' %prog ' + __version__ )
-    
-    ##
-    parser.add_option (
+    parser.add_argument (
         '-g'                       ,
         '--grid'                   ,
-        type    = 'str'            , 
+        type    = str              , 
         dest    = 'Grid'           ,
-        help    = "Grid-site to access LFN-files (has precedence over -c, but grid proxy is needed)" ,
-        default = ''
-        )
-    ##
-    parser.add_option (
-        '-c'                          ,
-        '--castor'                    ,
-        action  = "store_true"        ,
-        dest    = 'Castor'            ,
-        help    = "Enable direct access to Castor Grid Storage to access LFN-files" ,
-        default = True   
+        help    = "Grid-site to access LFN-files (has precedence over 'castor/eos', but grid proxy is needed) [default : %(default)s]" ,
+        default = 'CERN'
         )
     
-    parser.add_option (
+    parser.add_argument (
+        '--no-castor'              ,
+        action  = 'store_false'    , 
+        dest    = 'Castor'         ,
+        help    = "Disable direct access to Castor/EOS storage for LFNs",
+        default = True             ## use castor on default 
+        )
+    
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument (
         '-v'                           ,
         '--verbose'                    ,
-        action  = "store_false"        ,
-        dest    = 'Verbose'            ,
+        action  = "store_true"         ,
+        dest    = 'Quiet'              ,
         help    = "Verbose processing" ,
-        default = False   
+        default = False 
         )
-    
+    group.add_argument (
+        '-q'                          ,
+        '--quiet'                     ,
+        action  = "store_false"       ,
+        dest    = 'Verbose'           ,
+        help    = "``Quiet'' processing [defaut : %(default)s ]"  
+        )
+    parser.add_argument (
+        "files" ,
+        metavar = "FILE"          ,
+        nargs   = '+'             ,
+        help    = "Input data file(s) to be processed" 
+        )
     ##
-    options , arguments = parser.parse_args ( args )
     
-    if not arguments : parser.error ( 'No input files are specified' )
-
+    arguments = parser.parse_args ( args )
+    
     tags = {}
-    for f in arguments  :
+    for f in arguments.files : 
 
         logger.info ( "Try the file %s " % f )
         
         tags = getDBTags ( f               ,
-                           options.Castor  ,
-                           options.Grid    , 
-                           options.Verbose ) 
+                           arguments.Castor  ,
+                           arguments.Grid    , 
+                           arguments.Verbose ) 
         if tags : break
 
     logger.info ( 12*'-'+'+'+57*'-' )
@@ -429,16 +437,17 @@ def extractMetaInfo ( args ) :
     logger.info ( ' MetaInfo: '     ) 
     logger.info ( 12*'-'+'+'+57*'-' )
     for k in keys :
-        if  0<= k.find('Time') :
+        ##if  k.lower().find('time') + 4 == len(k) and isinstance ( info[k] , (long,int) ) : 
+        if  'Time' == k :
             ## @attention: note 1000 here! 
             time   = Time ( 1000 * info [k] )
-            logger.info ( '%11s : %-s (%s) ' % ( k , info[k] , time.format(False) ) ) 
+            logger.info ( '%25s : %-s (%s) ' % ( k , info[k] , time.format(False) ) ) 
         elif 'TCK'  == k or 'Tck' == k :
-            logger.info ( '%11s : 0x%08x '   % ( k ,        info[k]   ) )
+            logger.info ( '%25s : 0x%08x '   % ( k ,        info[k]   ) )
         elif isinstance ( info[k] , set ) : 
-            logger.info ( '%11s : %-s '      % ( k , list ( info[k] ) ) ) 
+            logger.info ( '%25s : %-s '      % ( k , list ( info[k] ) ) ) 
         else : 
-            logger.info ( '%11s : %-s '      % ( k ,        info[k]   ) ) 
+            logger.info ( '%25s : %-s '      % ( k ,        info[k]   ) ) 
             
     logger.info ( 12*'-'+'+'+57*'-' )
 

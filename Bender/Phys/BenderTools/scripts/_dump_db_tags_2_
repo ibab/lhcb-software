@@ -72,6 +72,7 @@ def _get_db_tags_ ( files ) :
         if 1 != len ( ts ) : tags[t] = list ( ts ) 
         else               : tags[t] = list ( ts ) [0]
 
+    
     gaudi.stop     ()
     gaudi.finalize ()    
     del gaudi
@@ -103,7 +104,7 @@ def get_db_tags ( silent = True , files = [] ) :
         from Ostap.Utils import mute 
         with mute ( silent , silent ) :
             tags = _get_db_tags_ ( files )
-
+        
     except: tags = {}
                     
     return tags

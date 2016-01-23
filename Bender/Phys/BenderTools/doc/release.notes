@@ -5,6 +5,11 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+
+! 2016-01-23 - Vanya Belyaev
+ - fix get-metainfo script
+ - add more meta-info:  RUN&FILL information from runDB 
+
 ! 2016-01-23 - Vanya Belyaev
 
  - add qmtest for useful scripts

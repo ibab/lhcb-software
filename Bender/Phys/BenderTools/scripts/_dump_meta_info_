@@ -25,6 +25,16 @@ __version__ = "$Revision:$"
 # =============================================================================
 import ROOT
 ROOT.PyConfig.IgnoreCommandLineOptions = True
+try:
+    import cppyy
+except ImportError:
+    # FIXME: backward compatibility
+    import PyCintex as cppyy
+    import sys
+    sys.modules['cppyy'] = cppyy
+    #
+cpp = cppyy.makeNamespace('')
+
 # =============================================================================
 ## helper function to get meta-info 
 #  @author Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -48,6 +58,7 @@ def _get_meta_info_ ( files ) :
     otd = OdinTimeDecoder()
     otd.addTool( ODINDecodeTool, 'ODINDecodeTool' )
     otd.ODINDecodeTool.RawEventLocations+= [ '/Event/Trigger/RawEvent' ]
+    
     from Configurables import createODIN
     from Configurables import DataOnDemandSvc, ApplicationMgr 
     dod = DataOnDemandSvc( Dump = True )
@@ -55,6 +66,18 @@ def _get_meta_info_ ( files ) :
     
     mgr = ApplicationMgr()
     mgr.ExtSvc += [ dod ]
+    
+    from Configurables import ApplicationMgr, createODIN
+    from DAQSys.Decoders import DecoderDB
+    CreateODIN=DecoderDB["createODIN"].setup()
+    
+    from Configurables import EventClockSvc
+    EventClockSvc().EventTimeDecoder = 'OdinTimeDecoder'
+
+    mgr = ApplicationMgr()
+    ##mgr.TopAlg = [ createODIN() ] + mgr.TopAlg 
+    mgr.TopAlg = [ CreateODIN ] + mgr.TopAlg 
+
     
     from Configurables import IODataManager 
     IODataManager  ( 'IODataManager' , OutputLevel = 6 ,
@@ -64,6 +87,8 @@ def _get_meta_info_ ( files ) :
     import Bender.Fixes_Gaudi
     
     gaudi = AppMgr( outputlevel = 6 )
+
+    print cpp.LHCb.ODIN, cpp.LHCb.STSummary  
     
     gaudi.run(1)
     evtsvc = gaudi.evtSvc()
@@ -90,6 +115,9 @@ def _get_meta_info_ ( files ) :
             if hasattr ( hdr , 'runNumber' ) :                 
                 info[ 'Run'                 ] = hdr.runNumber          ()
                 
+            if hasattr ( hdr , 'evtNumber' ) :                 
+                info[ 'Event'               ] = hdr.evtNumber          ()
+                
             if hasattr ( hdr , 'gpsTime'   ) :                                 
                 info[ 'Time'                ] = hdr.gpsTime            () 
                 
@@ -98,7 +126,8 @@ def _get_meta_info_ ( files ) :
 
             if hasattr ( hdr , 'evType'    ) :
                 info [ 'EvtType' ] = hdr.evType() 
-                    
+
+            print hdr 
         except :
             
             pass
@@ -110,6 +139,8 @@ def _get_meta_info_ ( files ) :
             if not info.has_key( tag ) : info [ tag ] = set()
             info[tag] . add ( val )
 
+
+    ## collect information from ODIN
     try :
         
         odin = evtsvc[ '/Event/DAQ/ODIN' ]
@@ -118,7 +149,26 @@ def _get_meta_info_ ( files ) :
             info[ 'TCK'                 ] = odin.triggerConfigurationKey()
             info[ 'Run'                 ] = odin.runNumber              () 
             
-    except: pass 
+    except:
+        pass 
+
+    ## go to RunDB and get information for run&fill
+    try :
+
+        if info.has_key ( 'Run' ) :
+            run_number = info['Run']
+            
+            from Ostap.RunDB import run_info, fill_info
+            rinfo  = run_info ( run_number )
+            rkeys  = rinfo.keys()
+            for k in rkeys : info ['RUN:%s' % k ] = rinfo[k]
+            fillid = rinfo.get( 'fillid' , None )
+            if fillid :
+                finfo = fill_info ( fillid )
+                fkeys = finfo.keys()
+                for k in fkeys : info ['FILL:%s' % k ] = finfo[k]
+    except :
+        pass
 
     gaudi.stop     ()
     gaudi.finalize ()    
@@ -145,6 +195,8 @@ def get_meta_info ( silent = True , files = [] ) :
     
     info = {}
 
+    ##return  _get_meta_info_ ( files )
+
     try:
     
         from Ostap.Utils import mute
@@ -159,7 +211,7 @@ def get_meta_info ( silent = True , files = [] ) :
 # =============================================================================
 if __name__ == '__main__' :
 
-    print 'MetaInfo: %s ' % get_meta_info ( silent = False  ) 
+    print 'MetaInfo: %s ' % get_meta_info ( silent = True ) 
         
 # =============================================================================
 # The END 
