@@ -59,9 +59,9 @@ except ImportError:
     sys.modules['cppyy'] = cppyy
 #
 cpp = cppyy.makeNamespace('')
-if not hasattr ( ROOT    , 'ostream' ) :
-    print "# Ostap WARNING: force loading of <ostream>"
-    ROOT.gROOT.ProcessLine("#include <ostream>")
+##if not hasattr ( ROOT    , 'ostream' ) :
+##    print "# Ostap WARNING: force loading of <ostream>"
+##    ROOT.gROOT.ProcessLine("#include <ostream>")
 
 # =============================================================================
 workdir = os.environ.get('OSTAP_DIR') or '$HOME/.ostap'

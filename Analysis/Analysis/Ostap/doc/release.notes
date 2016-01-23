@@ -8,15 +8,15 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2016-01-23 - Vanya Belyaev
+ - improvement with logging 
+
 ! 2016-01-19 - Vanya Belyaev
  - add startup files:
    ## startup files to be executed:
    _startups = ( '$OSTAPSTART'     ,  
-                 '$HOME/.ostap'    ,
                  '$HOME/.ostap.py' ,
-                 '~/.ostap'        ,
                  '~/.ostap.py'     ,        
-                 './.ostap'        ,
                  './.ostap.py'     )
 
 ! 2016-01-19 - Vanya Belyaev

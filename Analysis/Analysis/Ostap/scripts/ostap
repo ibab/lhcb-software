@@ -192,8 +192,9 @@ from   Ostap.OstapBender import *
 # =============================================================================
 ## Ostap startup: history, readlines, etc... 
 # =============================================================================
-import Ostap.Startup
-
+if not arguments.batch :
+    import Ostap.Startup
+    
 # =============================================================================
 ## create default canvas
 # =============================================================================
@@ -207,11 +208,8 @@ if arguments.canvas :
 # =============================================================================
 ## startup files to be executed:
 _startups = ( '$OSTAPSTART'     ,  
-              '$HOME/.ostap'    ,
               '$HOME/.ostap.py' ,
-              '~/.ostap'        ,
               '~/.ostap.py'     ,        
-              './.ostap'        ,
               './.ostap.py'     )
 _executed = set() 
 for _s in _startups : 
@@ -223,6 +221,7 @@ for _s in _startups :
     _ss =  os.path.expanduser ( _ss )
     _ss =  os.path.expandvars ( _ss )
     if not os.path.exists     ( _ss ) : continue
+    if not os.path.isfile     ( _ss ) : continue
     _ss =  os.path.abspath    ( _ss )
     if _ss in _executed           : continue
     ## execute it! 
@@ -231,7 +230,7 @@ for _s in _startups :
         _executed.add ( _ss )
         logger.info   ( "Startup file '%s' is executed"      % _s )
     except:
-        logger.error  ( "Error in execution of '%s' startup" % _s )
+        logger.error  ( "Error in execution of '%s' startup" % _s , exc_info = True )
         
     
 # =============================================================================
@@ -263,6 +262,7 @@ for pattern in arguments.files :
     import glob 
     for _f in glob.iglob ( pattern ) :
 
+        fok = os.path.exists ( _f ) and os.path.isfile ( _f ) 
         name,dot,ext  = _f.rpartition('.')
         if  ext in ('root', 'ROOT' ) :
             from Ostap.TFileDeco import ROOTCWD 
@@ -287,9 +287,9 @@ for pattern in arguments.files :
                 logger.error  ( traceback.format_exc() ) 
 
         ## execute python file 
-        elif 'py' == ext  :  
+        elif fok and 'py' == ext  :  
 
-            logger.info  ('Try    to execute "%s"' % _f )
+            logger.info  ("Try    to execute '%s'" % _f )
             
             try :
                 
@@ -298,16 +298,30 @@ for pattern in arguments.files :
                 
             except :
                 
-                logger.error ('Failure to execute "%s"'     % _f    )
-                
-                # - Batch mode: just re-raise exception
+                # - Batch mode:       just re-raise exception
                 if arguments.batch :  raise
                 
                 # - Interactive mode: print traceback and continue 
-                logger.error  ('Exception: %s' % sys.exc_info()[0] ) 
-                import traceback 
-                logger.error  ( traceback.format_exc() ) 
+                logger.error ('Failure to execute "%s"'     % _f  , exc_info = True ) 
+
+        ## execute Ostap-script 
+        elif fok and name and dot and ext in ( 'ost' , 'ostp' , 'ostap' ) :
+
+            logger.info  ("Try    to execute '%s'" % _f )
+
+            try :
                 
+                ## this one is always executed with the context!!!
+                execfile ( _f , globals() ) ## with context 
+                
+            except :
+                
+                # - Batch mode:       just re-raise exception
+                if arguments.batch :  raise
+                
+                # - Interactive mode: print traceback and continue 
+                logger.error ('Failure to execute "%s"'     % _f  , exc_info = True ) 
+                                        
         else :
             
             # - Batch mode: just raise exception
