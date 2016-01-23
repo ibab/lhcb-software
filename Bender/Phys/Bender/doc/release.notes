@@ -24,6 +24,10 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2016-01-23 - Vanya Belyaev
+ - reduce number of startup files 
+ - improve logging 
+
 ! 2016-01-21 - Vanya Belyaev
  - add proper function to rewinding  (many thanks to Thomas RUF)
 

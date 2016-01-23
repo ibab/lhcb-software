@@ -70,11 +70,8 @@ import Bender.Startup
 
 ## startup files to be executed:
 _startups = ( '$BENDERSTART'     ,  
-              '$HOME/.bender'    ,
               '$HOME/.bender.py' ,
-              '~/.bender'        ,
               '~/.bender.py'     ,        
-              './.bender'        ,
               './.bender.py'     )
 
 _executed = set() 
@@ -87,6 +84,7 @@ for _s in _startups :
     _ss =  os.path.expanduser ( _ss )
     _ss =  os.path.expandvars ( _ss )
     if not os.path.exists     ( _ss ) : continue
+    if not os.path.isfile     ( _ss ) : continue
     _ss =  os.path.abspath    ( _ss )
     if _ss in _executed           : continue
     ## execute it! 

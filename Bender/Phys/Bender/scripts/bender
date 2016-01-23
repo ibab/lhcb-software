@@ -277,15 +277,11 @@ for _f in pyfiles :
         
     except :
         #
-        logger.error ('Failure to execute "%s"'     % _f    )
-        
         # - Batch mode: just re-raise exception
         if arguments.batch :  raise
-        
+
         # - Interactive mode: print traceback and continue 
-        logger.error ( 'Exception: %s' % sys.exc_info()[0] ) 
-        import traceback 
-        logger.error ( traceback.format_exc() ) 
+        logger.error ('Failure to execute "%s"'     % _f   , exc_info = True )
 
 ## exit if batch 
 if  arguments.batch :
