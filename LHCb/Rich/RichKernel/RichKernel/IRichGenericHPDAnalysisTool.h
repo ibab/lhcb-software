@@ -4,9 +4,6 @@
  *
  *  Header file for tool interface : Rich::IGenericHPDAnalysisTool
  *
- *  CVS Log :-
- *  $Id: IRichGenericHPDAnalysisTool.h,v 1.1 2009-10-10 18:22:50 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   10/10/2009
  */

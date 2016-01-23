@@ -4,9 +4,6 @@
  *
  *  Header file for RICH DAQ utility class : Rich::DAQ::ParityFooterTB2006
  *
- *  CVS Log :-
- *  $Id: RichDAQParityFooterTB2006.h,v 1.1 2007-04-23 12:44:04 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/09/2006
  */

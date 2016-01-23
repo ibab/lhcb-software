@@ -58,7 +58,6 @@ namespace LHCb
         m_CherenkovPhi          ( phi        ),
         m_primaryMirror         ( nullptr    ),
         m_secondaryMirror       ( nullptr    ),
-        m_unambiguousPhoton     ( false      ),
         m_activeSegmentFraction ( activeFrac ) { }
 
     /** Constructor from full photon information
@@ -92,7 +91,6 @@ namespace LHCb
         m_smartID                ( smartID           ),
         m_primaryMirror          ( nullptr           ),
         m_secondaryMirror        ( nullptr           ),
-        m_unambiguousPhoton      ( false             ),
         m_activeSegmentFraction  ( activeFrac        ) { }
 
     /** Constructor from full photon information (without photon direction at emission).
@@ -123,7 +121,6 @@ namespace LHCb
         m_smartID                ( smartID           ),
         m_primaryMirror          ( nullptr           ),
         m_secondaryMirror        ( nullptr           ),
-        m_unambiguousPhoton      ( false             ),
         m_activeSegmentFraction  ( activeFrac        ) { }
 
     /**
@@ -391,8 +388,8 @@ namespace LHCb
 
   private: // data
 
-    float m_CherenkovTheta = 0;                ///< Cherenkov angle theta
-    float m_CherenkovPhi   = 0;                ///< Cherenkov angle phi
+    float m_CherenkovTheta {0};                ///< Cherenkov angle theta
+    float m_CherenkovPhi   {0};                ///< Cherenkov angle phi
     Gaudi::XYZPoint m_emissionPoint;           ///< The photon emission point
     Gaudi::XYZVector m_emissionDir;            ///< The photon direction at the emission point
     Gaudi::XYZPoint m_detectionPoint;          ///< The photon detection point on the HPD entrance window
@@ -412,7 +409,7 @@ namespace LHCb
     /** The fraction of the RichTrackSegment trajectory this photon is associated
      *  with for which it is geometrically possible this photon was produced
      */
-    float m_activeSegmentFraction = 0;
+    float m_activeSegmentFraction {0};
 
   };
 

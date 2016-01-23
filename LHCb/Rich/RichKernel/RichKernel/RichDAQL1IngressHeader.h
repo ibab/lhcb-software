@@ -78,11 +78,14 @@ namespace Rich
 
     public:
 
+      /// Default Constructor
+      L1IngressHeader() = default;
+
       /// Constructor from raw LongType
-      explicit L1IngressHeader( const LongType data = 0 ) : m_data(data) { }
+      explicit L1IngressHeader( const LongType data  ) : m_data(data) { }
 
       /// Destructor
-      ~L1IngressHeader( ) { }
+      ~L1IngressHeader( ) = default;
 
       /// Retrieve the full value
       inline LongType data() const { return m_data; }
@@ -254,7 +257,7 @@ namespace Rich
     private:
 
       /// The data word
-      LongType m_data;
+      LongType m_data{0};
 
     };
 

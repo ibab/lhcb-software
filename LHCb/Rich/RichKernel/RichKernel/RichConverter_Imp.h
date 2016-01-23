@@ -39,13 +39,8 @@ namespace Rich
     /// Standard constructor
     Converter_Imp ( long storage_type,
                     const CLID &class_type,
-                    ISvcLocator *svc = NULL )
-      : ::Converter ( storage_type, class_type, svc ),
-      m_context     ( "Offline" ),
-      m_msgStream   ( NULL ),
-      m_toolSvc     ( NULL ),
-      m_detSvc      ( NULL ),
-      m_chronoSvc   ( NULL )
+                    ISvcLocator *svc = nullptr )
+      : ::Converter ( storage_type, class_type, svc )
     {
       /// @todo make this work
       //declareProperty( "Context", m_context );
@@ -196,7 +191,7 @@ namespace Rich
     inline void resetMsgStream() const
     {
       delete m_msgStream;
-      m_msgStream = NULL;
+      m_msgStream = nullptr;
     }
 
     /// shortcut for the method msgStream ( MSG::ALWAYS )
@@ -281,25 +276,25 @@ namespace Rich
     std::string m_name;
 
     /// Context like string
-    std::string m_context;
+    std::string m_context {"Offline"};
 
     /// The predefined message stream
-    mutable MsgStream* m_msgStream;
+    mutable MsgStream * m_msgStream = nullptr;
 
     /// Tool service
-    mutable IToolSvc * m_toolSvc;
+    mutable IToolSvc * m_toolSvc = nullptr;
 
     /// detector data service
-    mutable IDataProviderSvc* m_detSvc;
+    mutable IDataProviderSvc * m_detSvc = nullptr;
 
     /// Chrono & Stat service
-    mutable IChronoStatSvc* m_chronoSvc;
+    mutable IChronoStatSvc * m_chronoSvc = nullptr;
 
     /// List of active  tools
-    mutable AlgTools   m_tools;
+    mutable AlgTools m_tools;
 
     /// List of active  services
-    mutable Services   m_services;
+    mutable Services m_services;
 
   };
 

@@ -47,7 +47,7 @@ namespace Rich
     public:
 
       /// Default Constructor (0 words)
-      FooterPDBase() { }
+      FooterPDBase() = default;
 
       /// Constructor with number of header words
       explicit FooterPDBase ( const ShortType nWords,
@@ -63,7 +63,7 @@ namespace Rich
         : m_footerWords(words) { }
 
       /// Destructor
-      ~FooterPDBase ( ) { }
+      ~FooterPDBase ( ) = default;
 
     public: // methods
 
@@ -71,7 +71,7 @@ namespace Rich
       inline const FooterWords & footerWords() const { return m_footerWords; }
 
       /// Returns the number of data words in the footer
-      inline unsigned int nFooterWords() const
+      inline FooterWords::size_type nFooterWords() const
       {
         return footerWords().size();
       }
@@ -82,7 +82,7 @@ namespace Rich
       /// Note, after this call data pointer is incremented to the next word after the footer
       inline void readFromDataStream( const LongType *& data )
       {
-        for ( unsigned int i = 0; i < nFooterWords(); ++i )
+        for ( FooterWords::size_type i = 0; i < nFooterWords(); ++i )
         {
           footerWords()[i] = *(data++);
         }

@@ -66,7 +66,7 @@ namespace Rich
       inline const HeaderWords & headerWords() const { return m_headerWords; }
 
       /// Returns the number of data words in the header
-      inline unsigned int nHeaderWords() const
+      inline HeaderWords::size_type nHeaderWords() const
       {
         return headerWords().size();
       }

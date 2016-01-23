@@ -157,16 +157,20 @@ StatusCode Rich::Converter_Imp::releaseTool ( const IAlgTool* algTool ) const
 // ============================================================================
 StatusCode Rich::Converter_Imp::releaseSvc ( const IInterface* Svc  ) const
 {
-  if( 0 == Svc ) {
+  if( nullptr == Svc )
+  {
     return Error ( "releaseSvc(IInterface):: IInterface* points to NULL!" ) ;
   }
   SmartIF<IService> svc(const_cast<IInterface*>(Svc));
-  if (svc.isValid()) {
-    Services::iterator it = m_services.find(svc->name());
-    if (it == m_services.end()) {
+  if ( svc.isValid() ) 
+  {
+    auto it = m_services.find(svc->name());
+    if ( it == m_services.end() ) 
+    {
       return Warning( "releaseSvc(IInterface):: IInterface* is not active" );
     }
-    if ( msgLevel(MSG::DEBUG) ) {
+    if ( msgLevel(MSG::DEBUG) )
+    {
       debug() << "Releasing service '" << it->first << "'" << endmsg;
     }
     m_services.erase(it);

@@ -56,8 +56,11 @@ namespace Rich
 
       public:
 
+        /// Default Constructor
+        Word0() = default;
+
         /// Constructor from raw LongType
-        explicit Word0( const LongType data = 0 ) : m_data(data) { }
+        explicit Word0( const LongType data ) : m_data(data) { }
 
         /// Retrieve the full value
         inline LongType data() const { return m_data; }
@@ -118,7 +121,7 @@ namespace Rich
       private:
 
         /// The data word
-        LongType m_data;
+        LongType m_data{0};
 
       };
 
@@ -136,8 +139,11 @@ namespace Rich
 
       public:
 
+        /// Default Constructor
+        Word1() = default;
+
         /// Constructor from raw LongType
-        explicit Word1( const LongType data = 0 ) : m_data(data) { }
+        explicit Word1( const LongType data ) : m_data(data) { }
 
         /// Retrieve the full value
         inline LongType data() const { return m_data; }
@@ -259,7 +265,7 @@ namespace Rich
       private:
 
         /// The data word
-        LongType m_data;
+        LongType m_data{0};
 
       };
 
@@ -271,8 +277,11 @@ namespace Rich
         : m_word0(word0),
           m_word1(word1) { }
 
-      /// Destructor
-      ~L0Header( ) { }
+      /// Move Constructor from raw LongType words
+      explicit L0Header( Word0&& word0,
+                         Word1&& word1 )
+        : m_word0(std::move(word0)),
+          m_word1(std::move(word1)) { }
 
       /// Retrieve the first word
       inline const Word0& word0() const { return m_word0; }

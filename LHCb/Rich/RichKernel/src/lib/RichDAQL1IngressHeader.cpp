@@ -22,8 +22,8 @@ void L1IngressHeader::activeHPDInputs( L1IngressInputs & inputs ) const
 {
   inputs.clear();
   inputs.reserve(numActiveHPDs());
-  const ShortType hpdBits = activeHPDbits();
-  for ( ShortType i = 0; i < NumL1InputsPerIngress; ++i )
+  const auto hpdBits = activeHPDbits();
+  for ( auto i = 0u; i < NumL1InputsPerIngress; ++i )
   {
     if ( isBitOn(hpdBits,i) ) inputs.push_back( L1InputWithinIngress(i) );
   }
@@ -32,8 +32,8 @@ void L1IngressHeader::activeHPDInputs( L1IngressInputs & inputs ) const
 void L1IngressHeader::inactiveHPDInputs( L1IngressInputs & inputs ) const
 {
   inputs.clear();
-  const ShortType hpdBits = activeHPDbits();
-  for ( ShortType i = 0; i < NumL1InputsPerIngress; ++i )
+  const auto hpdBits = activeHPDbits();
+  for ( auto i = 0u; i < NumL1InputsPerIngress; ++i )
   {
     if ( !isBitOn(hpdBits,i) ) inputs.push_back( L1InputWithinIngress(i) );
   }

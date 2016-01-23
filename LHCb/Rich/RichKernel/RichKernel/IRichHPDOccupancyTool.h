@@ -4,9 +4,6 @@
  *
  *  Header file for tool interface : Rich::DAQ::IHPDOccupancyTool
  *
- *  CVS Log :-
- *  $Id: IRichHPDOccupancyTool.h,v 1.1 2009-10-10 18:22:50 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
  */

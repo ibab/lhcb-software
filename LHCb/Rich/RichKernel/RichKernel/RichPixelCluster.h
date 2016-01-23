@@ -16,6 +16,7 @@
 #include <vector>
 #include <list>
 #include <ostream>
+#include <memory>
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
@@ -58,7 +59,7 @@ namespace Rich
   public:
 
     /// Default Constructor
-    HPDPixelCluster( ) { }
+    HPDPixelCluster( ) = default;
 
     /// Constructor with reserved size
     explicit HPDPixelCluster( const size_t resSize ) { m_ids.reserve(resSize); }
@@ -71,9 +72,6 @@ namespace Rich
 
     // Copy constructor
     HPDPixelCluster( const HPDPixelCluster & clus ) : m_ids(clus.smartIDs()) { }
-
-    /// Destructor
-    ~HPDPixelCluster( ) { }
 
   public:
 
@@ -162,15 +160,14 @@ namespace Rich
 
       /// collection of cluster pointers
       typedef LHCb::Boost::PoolAllocList<Cluster*> PtnVector;
-      //typedef LHCb::Boost::PoolAllocVector<Cluster*> PtnVector;
 
     public: // methods
 
-      /// Constructor
-      Cluster( const int id = -1 )
-        : m_clusterID(id)
-        , m_cluster(3) // guess a reserve size for pixels in cluster
-      { }
+      /// Default Constructor
+      Cluster() = default;
+
+      /// Constructor from ID
+      Cluster( const int id = -1 ) : m_clusterID(id) { }
 
       /// Get cluster ID
       inline int id() const
@@ -191,22 +188,25 @@ namespace Rich
       }
 
       /// Shortcut to the cluster size
-      inline unsigned int size() const
+      inline LHCb::RichSmartID::Vector::size_type size() const
       {
         return pixels().smartIDs().size();
       }
 
     private:
 
-      int  m_clusterID;          ///< Cluster ID
-      HPDPixelCluster m_cluster; ///< list of pixels in this cluster
+      /// Cluster ID
+      int m_clusterID{-1};  
+
+      /// list of pixels in this cluster. Initial with size 3 (rough guess).
+      HPDPixelCluster m_cluster{3}; 
 
     };
 
   public: // methods
 
     /// Constructor
-    HPDPixelClusters( ) { }
+    HPDPixelClusters( ) = default;
 
     /// Destructor
     ~HPDPixelClusters() { for ( auto * i : m_allclus ) { delete i; } }
@@ -262,9 +262,6 @@ namespace Rich
 
     /// Default Constructor
     HPDPixelClustersBuilder( )
-      : m_hpdClus   ( nullptr ),
-        m_lastID    ( 0       ),
-        m_aliceMode ( false   ) 
     { 
       memset ( m_data,     0, sizeof(m_data)     );
       memset ( m_clusters, 0, sizeof(m_clusters) );
@@ -356,13 +353,13 @@ namespace Rich
   private:
 
     /// The list of clusters to fill
-    HPDPixelClusters * m_hpdClus;
+    HPDPixelClusters * m_hpdClus{nullptr};
 
     /// working variable, storing the last used cluster ID
-    unsigned int m_lastID;
+    unsigned int m_lastID{0};
 
     /// Are we in ALICE mode ?
-    bool m_aliceMode;
+    bool m_aliceMode{false};
 
     /** Raw input data (row,col) (false means no hit, true means hit)
      *  @attention Hardcoding number of rows here to ALICE mode
@@ -410,8 +407,8 @@ namespace Rich
   void 
   HPDPixelClustersBuilder::removeCluster( HPDPixelClusters::Cluster * clus )
   {
-    auto iF = std::find( m_hpdClus->clusters().begin(), 
-                         m_hpdClus->clusters().end(), clus );
+    const auto iF = std::find( m_hpdClus->clusters().begin(), 
+                               m_hpdClus->clusters().end(), clus );
     if ( iF != m_hpdClus->clusters().end() )
     {
       m_hpdClus->clusters().erase( iF );

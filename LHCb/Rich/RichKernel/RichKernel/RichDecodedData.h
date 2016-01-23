@@ -45,7 +45,7 @@ namespace Rich
     public:
 
       /// Default Constructor
-      HPDInfo() { }
+      HPDInfo() = default;
 
       /// Constructor from HPD data bank information
       HPDInfo( const LHCb::RichSmartID& input,
@@ -112,7 +112,7 @@ namespace Rich
     public:
 
       /// Default Constructor
-      IngressInfo() { }
+      IngressInfo() = default;
 
       /// Constructor with ingress header
       explicit IngressInfo( const L1IngressHeader& head ) : m_ingressHeader(head) { }

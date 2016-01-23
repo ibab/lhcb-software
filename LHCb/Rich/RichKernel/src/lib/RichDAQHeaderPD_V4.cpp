@@ -26,7 +26,7 @@ namespace Rich
       // Note, after this call data pointer is incremented to the next word after the header
       void RichDAQHeaderPD::readFromDataStream( const LongType *& data )
       {
-        if ( nullptr != data )
+        if ( data )
         {
           // Read the first word (which gives us enough info to know the format)
           headerWords()[0] = *data;
@@ -57,7 +57,7 @@ namespace Rich
         if ( nHeaderWords() != nHeaderWordsExtended )
         {
           // Save the main (first) word
-          const Rich::DAQ::LongType tmpH = headerWords()[0];
+          const auto tmpH = headerWords()[0];
           // reset the backend vector to have size three
           headerWords() = HeaderPDBase::HeaderWords(nHeaderWordsExtended,0);
           // reset the first word

@@ -90,7 +90,7 @@ namespace Rich
       public: // methods
 
         /// Default Constructor
-        explicit RichDAQHeaderPD () : HeaderPDBase(RichDAQHeaderPDCode::nHeaderWords) { }
+        RichDAQHeaderPD() : HeaderPDBase(RichDAQHeaderPDCode::nHeaderWords) { }
 
         /// Copy constructor
         RichDAQHeaderPD ( const RichDAQHeaderPD & header )
@@ -117,9 +117,6 @@ namespace Rich
             throw GaudiException("Data out of range","*RichDAQHeaderPD*",StatusCode::FAILURE);
           }
         }
-
-        /// Destructor
-        ~RichDAQHeaderPD( ) {}
 
       public:
 

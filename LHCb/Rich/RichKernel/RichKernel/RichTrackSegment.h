@@ -96,6 +96,12 @@ namespace LHCb
 
     public:
 
+      /// Default Constructor
+      StateErrors() {}
+
+      /// Default Destructor
+      ~StateErrors() {}
+
       /// Copy constructor
       StateErrors( const StateErrors & errors ) :
         m_errX2  ( errors.errX2()  ),
@@ -105,11 +111,11 @@ namespace LHCb
         m_errP2  ( errors.errP2()  ) { }
 
       /// Constructor with explicit float values
-      StateErrors( const float errX2  = 0, ///< error on x squared
-                   const float errY2  = 0, ///< error on y squared
-                   const float errTX2 = 0, ///< error on x slope squared
-                   const float errTY2 = 0, ///< error on y slope squared
-                   const float errP2  = 0  ///< error on momentum squared
+      StateErrors( const float errX2  , ///< error on x squared
+                   const float errY2  , ///< error on y squared
+                   const float errTX2 , ///< error on x slope squared
+                   const float errTY2 , ///< error on y slope squared
+                   const float errP2    ///< error on momentum squared
                    )
         : m_errX2  ( fabsf(errX2)  ),
           m_errY2  ( fabsf(errY2)  ),
@@ -154,11 +160,11 @@ namespace LHCb
 
     private:
 
-      float m_errX2  = 0;  ///< The x error squared
-      float m_errY2  = 0;  ///< The y error squared
-      float m_errTX2 = 0;  ///< The tx error squared
-      float m_errTY2 = 0;  ///< The ty error squared
-      float m_errP2  = 0;  ///< The P error squared
+      float m_errX2  {0};  ///< The x error squared
+      float m_errY2  {0};  ///< The y error squared
+      float m_errTX2 {0};  ///< The tx error squared
+      float m_errTY2 {0};  ///< The ty error squared
+      float m_errP2  {0};  ///< The P error squared
 
     };
 
@@ -208,8 +214,8 @@ namespace LHCb
                       const Rich::RadIntersection::Vector & intersects, ///< The radiator intersections
                       const Rich::RadiatorType rad,  ///< The radiator type
                       const Rich::DetectorType rich, ///< The detector type
-                      const StateErrors entryErrors  = StateErrors(), ///< The segment errors at the entry point
-                      const StateErrors exitErrors   = StateErrors()  ///< The segment errors at the exit point
+                      const StateErrors& entryErrors  = StateErrors{}, ///< The segment errors at the entry point
+                      const StateErrors& exitErrors   = StateErrors{}  ///< The segment errors at the exit point
                       )
       : m_type             ( t             ),
         m_radIntersections ( intersects    ),
@@ -218,9 +224,7 @@ namespace LHCb
         m_errorsEntry      ( entryErrors   ),
         m_errorsMiddle     ( Rich::Rich1Gas == rad ? exitErrors : entryErrors ), // CRJ : Is this best ?
         m_errorsExit       ( exitErrors    ),
-        m_avPhotonEnergy   ( avPhotEn(rad) ),
-        m_rotation         ( nullptr       ),
-        m_rotation2        ( nullptr       )
+        m_avPhotonEnergy   ( avPhotEn(rad) )
     {
       if      ( RichTrackSegment::UseAllStateVectors    == type() )
       {
@@ -259,9 +263,7 @@ namespace LHCb
         m_errorsEntry      ( entryErrors   ),
         m_errorsMiddle     ( middleErrors  ),
         m_errorsExit       ( exitErrors    ),
-        m_avPhotonEnergy   ( avPhotEn(rad) ),
-        m_rotation         ( nullptr       ),
-        m_rotation2        ( nullptr       )
+        m_avPhotonEnergy   ( avPhotEn(rad) )
     {
       if      ( RichTrackSegment::UseAllStateVectors == type() )
       {
@@ -282,14 +284,7 @@ namespace LHCb
   public:
 
     /// Standard constructor
-    RichTrackSegment()
-      : m_type             ( RichTrackSegment::UnDefined ),
-        m_radIntersections ( 1 ),
-        m_radiator         ( Rich::InvalidRadiator ),
-        m_rich             ( Rich::InvalidDetector ),
-        m_avPhotonEnergy   ( 0                     ),
-        m_rotation         ( nullptr               ),
-        m_rotation2        ( nullptr               ) { }
+    RichTrackSegment() : m_radIntersections ( 1 ) { }
 
     /// Destructor
     ~RichTrackSegment( ) { cleanUpRotations(); }

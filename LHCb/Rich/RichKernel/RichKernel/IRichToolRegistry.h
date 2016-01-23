@@ -4,9 +4,6 @@
  *
  *  Header file for utility class : Rich::IToolRegistry
  *
- *  CVS Log :-
- *  $Id: IRichToolRegistry.h,v 1.9 2009-06-25 11:56:45 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */

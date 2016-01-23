@@ -140,7 +140,7 @@ HPDPixelClusters::suppressIDs( HPDPixelCluster::SmartIDVector & smartIDs,
                                const unsigned int maxSize ) const
 {
   // make a local copy of the orginal IDs
-  const HPDPixelCluster::SmartIDVector cache_ids(smartIDs);
+  const auto cache_ids(smartIDs);
   // clear the list
   smartIDs.clear();
   // refill the list with those not suppressed

@@ -34,7 +34,6 @@ using namespace Gaudi::Utils::Histos;
 template <class PBASE>
 void Rich::HistoBase<PBASE>::initRichHistoConstructor()
 {
-  m_histosAreBooked = false;
   this -> declareProperty ( "NBins1DHistos", m_nBins1D = 100 );
   this -> declareProperty ( "NBins2DHistos", m_nBins2D = 50  );
   this -> setProperty     ( "HistoTopDir",  "RICH/" );
@@ -128,7 +127,7 @@ Rich::HistoBase<PBASE>::richHisto1D( const Rich::HistogramID & id,
                                      const BinLabels&        binLabels ) const
 {
   // Already been booked ?
-  AIDA::IHistogram1D *& h = m_1dhmap.getmap(id.packedData())[id.id()];
+  auto *& h = m_1dhmap.getmap(id.packedData())[id.id()];
   if ( !h )
   {
     // Book the histo
@@ -174,7 +173,7 @@ Rich::HistoBase<PBASE>::richHisto2D( const Rich::HistogramID & id,
                                      const BinLabels&        yBinLabels ) const
 {
   // Already been booked ?
-  AIDA::IHistogram2D *& h = m_2dhmap.getmap(id.packedData())[id.id()];
+  auto *& h = m_2dhmap.getmap(id.packedData())[id.id()];
   if ( !h )
   {
     // Book the histo
@@ -220,7 +219,7 @@ Rich::HistoBase<PBASE>::richProfile1D( const Rich::HistogramID & id,
                                        const BinLabels&        binLabels ) const
 {
   // Already been booked ?
-  AIDA::IProfile1D *& h = m_1dpmap.getmap(id.packedData())[id.id()];
+  auto *& h = m_1dpmap.getmap(id.packedData())[id.id()];
   if ( !h )
   {
     // Book the histo
@@ -266,7 +265,7 @@ Rich::HistoBase<PBASE>::richProfile2D( const Rich::HistogramID &  id,
                                        const BinLabels&        yBinLabels ) const
 {
   // Already been booked ?
-  AIDA::IProfile2D *& h = m_2dpmap.getmap(id.packedData())[id.id()];
+  auto *& h = m_2dpmap.getmap(id.packedData())[id.id()];
   if ( !h )
   {
     // Book the histo

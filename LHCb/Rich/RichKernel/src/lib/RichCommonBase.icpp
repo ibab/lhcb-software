@@ -34,8 +34,6 @@
 template <class PBASE>
 void Rich::CommonBase<PBASE>::initRichCommonConstructor()
 {
-  m_toolReg = nullptr;
-  m_jos     = nullptr;
   m_regName = ( this->context().empty() ?
                 "RichToolRegistry" : this->context()+"_RichToolRegistry" );
   m_deRichTool = nullptr;
@@ -113,10 +111,10 @@ bool Rich::CommonBase<PBASE>::my_setToolProperty( const std::string & name,
   {
 
     // full tool name
-    const std::string fullname = "ToolSvc." + name;
+    const auto fullname = "ToolSvc." + name;
 
     // get properties for this tool name
-    const PROPERTYTYPE * test_sp = this->my_getProperty<PROPERTYTYPE>( fullname, property );
+    const auto * test_sp = this->my_getProperty<PROPERTYTYPE>( fullname, property );
 
     // If Context not set, set it
     if ( !test_sp )
@@ -132,7 +130,7 @@ bool Rich::CommonBase<PBASE>::my_setToolProperty( const std::string & name,
       {
 
         // get Tool registry OutputLevel
-        const PROPERTYTYPE * ts_sp
+        const auto * ts_sp
           = this->my_getProperty<PROPERTYTYPE>( this->toolRegistry()->name(), property );
         if ( ts_sp )
         {
@@ -167,16 +165,16 @@ Rich::CommonBase<PBASE>::my_getProperty( const std::string & name,
   const PROPERTYTYPE * sp = nullptr;
 
   // get properties for this name
-  const std::vector<const Property*> * properties = this->joSvc()->getProperties( name );
+  const auto * properties = this->joSvc()->getProperties( name );
 
-  if ( nullptr != properties )
+  if ( properties )
   {
     if ( this -> msgLevel(MSG::VERBOSE) )
     { this -> verbose() << "Found " << properties->size() << " Properties for " << name << endmsg; }
     for ( std::vector<const Property*>::const_reverse_iterator itProp = properties->rbegin();
           itProp != properties->rend(); ++itProp )
     {
-      if ( nullptr != *itProp )
+      if ( *itProp )
       {
         if ( this -> msgLevel(MSG::VERBOSE) )
         { this->verbose() << " -> " << **itProp << endmsg; }
@@ -245,7 +243,7 @@ template <class PBASE>
 std::string
 Rich::CommonBase<PBASE>::contextSpecificTES( const std::string & loc ) const
 {
-  const int slash = loc.find_last_of( "/" );
+  const auto slash = loc.find_last_of( "/" );
   return ( slash>0 && !this->context().empty() ?
            loc.substr(0,slash) + "/" +
            this->context() + "/" + loc.substr(slash+1) : loc );

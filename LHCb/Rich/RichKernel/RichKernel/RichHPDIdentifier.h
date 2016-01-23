@@ -44,7 +44,6 @@ namespace Rich
 
       /// Constructor from a RichSmartID
       explicit HPDIdentifier( const LHCb::RichSmartID id )
-        : m_data ( -1 )
       {
         if ( LHCb::RichSmartID::HPDID == id.idType() )
         {
@@ -95,7 +94,7 @@ namespace Rich
 
     private:
 
-      int m_data; ///< The internal data
+      int m_data{-1}; ///< The internal data
 
     };
 

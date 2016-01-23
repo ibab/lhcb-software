@@ -4,9 +4,6 @@
  *
  *  Implementation file for class : RichTupleAlgBase
  *
- *  CVS Log :-
- *  $Id: RichTupleAlgBase.cpp,v 1.1 2009-08-10 12:12:06 jonrob Exp $
- *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-04-05
  */

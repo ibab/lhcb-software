@@ -33,7 +33,7 @@ namespace Rich
   public:
 
     /// Default Constructor
-    ObjPtn() { }
+    ObjPtn() = default;
 
     /** Constructor from pointer to the underlying object
      *

@@ -89,8 +89,10 @@ namespace Rich
     class NumericType
     {
     public:
+      /// Default Constructor
+      NumericType() = default;
       /// Constructor
-      explicit NumericType ( const TYPE id = 0 ) : m_id(id) { }
+      explicit NumericType ( const TYPE id ) : m_id(id) { }
       /// Retrieve the full value
       inline TYPE data() const { return m_id; }
       /// Operator ==
@@ -160,7 +162,7 @@ namespace Rich
         return ( 0 != (m_id & (1<<pos)) );
       }
     private:
-      TYPE m_id = 0; ///< The data value
+      TYPE m_id {0}; ///< The data value
     };
 
     //---------------------------------------------------------------------------------
@@ -188,8 +190,10 @@ namespace Rich
       static const ShortType  MaxHPD = ( 1 << BitsHPD ) - 1;
       static const ShortType  MaxL0  = ( 1 << BitsL0 ) - 1;
     public :
+      /// Default Constructor
+      Level0ID() = default;
       /// Constructor from bit packed word
-      explicit Level0ID ( const ShortType id = 0 )
+      explicit Level0ID ( const ShortType id )
         : NumericType<ShortType>(id)
       { }
       /** Constructor from L0 and HPD number
@@ -198,7 +202,6 @@ namespace Rich
        */
       explicit Level0ID ( const ShortType l0num,
                           const ShortType hpdnum )
-        : NumericType<ShortType>(0)
       {
         setHPD ( hpdnum );
         setL0  ( l0num  );
@@ -255,11 +258,11 @@ namespace Rich
     {
     public:
       /// Default constructor
-      EventID( ) : NumericType<unsigned long long>(0), m_nActiveBits(8*sizeof(unsigned long long)) { }
+      EventID( ) = default;
       /// Copy Constructor
-      EventID( const EventID& id )
-        : NumericType<unsigned long long> ( id.data()       ),
-          m_nActiveBits                   ( id.activeBits() ) { }
+      //EventID( const EventID& id )
+      // : NumericType<unsigned long long> ( id.data()       ),
+      //   m_nActiveBits                   ( id.activeBits() ) { }
       /// Constructor from value and number of bits
       template<class NUMTYPE>
       EventID ( const NUMTYPE   id,
@@ -306,7 +309,7 @@ namespace Rich
       }
     private:
       /// Number of sensitive bits in this EventID
-      ShortType m_nActiveBits;
+      ShortType m_nActiveBits { 8*sizeof(unsigned long long) };
     };
 
     /** @class BXID RichKernel/RichDAQDefinitions.h
@@ -320,11 +323,11 @@ namespace Rich
     {
     public:
       /// Default constructor
-      BXID( ) : NumericType<LongType>(0), m_nActiveBits(8*sizeof(LongType)) { }
+      BXID( ) = default;
       /// Copy Constructor
-      BXID( const BXID& id )
-        : NumericType<LongType> ( id.data()       ),
-          m_nActiveBits         ( id.activeBits() ) { }
+      //BXID( const BXID& id )
+      //  : NumericType<LongType> ( id.data()       ),
+      //    m_nActiveBits         ( id.activeBits() ) { }
       /// Constructor from value
       template<class NUMTYPE>
       explicit BXID ( const NUMTYPE id )
@@ -371,7 +374,7 @@ namespace Rich
       }
     private:
       /// Number of sensitive bits in this BXID
-      ShortType m_nActiveBits;
+      ShortType m_nActiveBits { 8*sizeof(LongType) };
     };
 
     /** @class Level1LogicalID RichKernel/RichDAQDefinitions.h
@@ -384,8 +387,10 @@ namespace Rich
     class Level1LogicalID : public NumericType<ShortType>
     {
     public :
-      /// Constructor
-      explicit Level1LogicalID ( const ShortType id = 0 )
+      /// Default Constructor
+      Level1LogicalID() = default;
+      /// Constructor with value
+      explicit Level1LogicalID ( const ShortType id )
         : NumericType<ShortType>(id) { }
     };
 
@@ -399,8 +404,10 @@ namespace Rich
     class Level1HardwareID : public NumericType<ShortType>
     {
     public :
-      /// Constructor
-      explicit Level1HardwareID ( const ShortType id = 0 )
+      /// Default Constructor
+      Level1HardwareID() = default;
+      /// Constructor with value
+      explicit Level1HardwareID ( const ShortType id )
         : NumericType<ShortType>(id) { }
     };
 
@@ -414,8 +421,10 @@ namespace Rich
     class L1IngressID : public NumericType<ShortType>
     {
     public :
-      /// Constructor
-      explicit L1IngressID ( const ShortType id = 0 )
+      /// Default Constructor
+      L1IngressID() = default;
+      /// Constructor with value
+      explicit L1IngressID ( const ShortType id )
         : NumericType<ShortType>(id) { }
     };
 
@@ -429,8 +438,10 @@ namespace Rich
     class L1InputWithinIngress : public NumericType<ShortType>
     {
     public :
-      /// Constructor
-      explicit L1InputWithinIngress ( const ShortType id = 0 )
+      /// Default Constructor
+      L1InputWithinIngress() = default;
+      /// Constructor with value
+      explicit L1InputWithinIngress ( const ShortType id  )
         : NumericType<ShortType>(id) { }
     };
 
@@ -444,8 +455,10 @@ namespace Rich
     class Level1Input : public NumericType<ShortType>
     {
     public :
-      /// Constructor
-      explicit Level1Input ( const ShortType id = 0 )
+      /// Default Constructor
+      Level1Input() = default;
+      /// Constructor with value
+      explicit Level1Input ( const ShortType id )
         : NumericType<ShortType>(id) { }
       /// Constructor from an Ingress ID and Ingress input number
       Level1Input( const L1IngressID ingress,       ///< The ingress ID
@@ -476,8 +489,10 @@ namespace Rich
     class HPDHardwareID : public NumericType<ShortType>
     {
     public :
-      /// Constructor
-      explicit HPDHardwareID ( const ShortType id = 0 )
+      /// Default Constructor
+      HPDHardwareID() = default;
+      /// Constructor with value
+      explicit HPDHardwareID ( const ShortType id )
         : NumericType<ShortType>(id) { }
     };
 
@@ -508,14 +523,15 @@ namespace Rich
       static const ShortType  MaxIn = ( 1 << BitsIn ) - 1;
       static const ShortType  MaxB  = ( 1 << BitsB ) - 1;
     public :
+      /// Default Constructor
+      HPDL1InputID() = default;
       /// Constructor from bit packed word
-      explicit HPDL1InputID ( const ShortType id = 0 )
+      explicit HPDL1InputID ( const ShortType id )
         : NumericType<ShortType>(id) { }
       /// Constructor from a L1 ID and input number
       HPDL1InputID ( const Level1HardwareID l1ID,    ///< The L1 board hardware ID
                      const Level1Input input ///< L1 input number
                      )
-        : NumericType<ShortType>(0)
       {
         setBoardNumber(l1ID);
         setInputNumber(input);
@@ -571,8 +587,10 @@ namespace Rich
     class HPDCopyNumber : public NumericType<ShortType>
     {
     public :
-      /// Constructor
-      explicit HPDCopyNumber ( const ShortType id = 0 )
+      /// Default Constructor
+      HPDCopyNumber() = default;
+      /// Constructor with value
+      explicit HPDCopyNumber ( const ShortType id )
         : NumericType<ShortType>(id) { }
     };
 
@@ -586,8 +604,10 @@ namespace Rich
     class Level1CopyNumber : public NumericType<ShortType>
     {
     public :
-      /// Constructor
-      explicit Level1CopyNumber ( const ShortType id = 0 )
+      /// Default Constructor
+      Level1CopyNumber() = default;
+      /// Constructor with value
+      explicit Level1CopyNumber ( const ShortType id )
         : NumericType<ShortType>(id) { }
     };
 

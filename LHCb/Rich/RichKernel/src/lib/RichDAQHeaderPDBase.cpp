@@ -16,7 +16,7 @@ using namespace Rich::DAQ;
 
 void HeaderPDBase::readFromDataStream( const LongType *& data )
 {
-  for ( unsigned int i = 0; i < nHeaderWords(); ++i )
+  for ( auto i = 0u; i < nHeaderWords(); ++i )
   {
     headerWords()[i] = *(data++);
   }

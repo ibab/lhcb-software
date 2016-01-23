@@ -4,9 +4,6 @@
  *
  *  Implementation file for class : RichHistoAlgBase
  *
- *  CVS Log :-
- *  $Id: RichHistoAlgBase.cpp,v 1.1 2009-08-10 12:12:06 jonrob Exp $
- *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-04-05
  */

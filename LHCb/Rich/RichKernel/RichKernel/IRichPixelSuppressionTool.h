@@ -4,9 +4,6 @@
  *
  *  Header file for tool interface : Rich::DAQ::IPixelSuppressionTool
  *
- *  CVS Log :-
- *  $Id: IRichPixelSuppressionTool.h,v 1.6 2009-10-10 18:22:50 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
  */

@@ -4,9 +4,6 @@
  *
  *  Header file for RICH DAQ utility class : Rich::DAQ::NullFooter
  *
- *  CVS Log :-
- *  $Id: RichDAQNullFooter.h,v 1.2 2007-09-04 16:45:09 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/09/2006
  */

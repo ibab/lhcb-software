@@ -38,7 +38,7 @@ namespace Rich
     public:
 
       /// Default Constructor
-      ParityFooter( ) { }
+      ParityFooter( ) = default;
 
       /// Constructor with given size
       ParityFooter( const ShortType nWords,
@@ -50,7 +50,7 @@ namespace Rich
         : FooterPDBase(words) { }
       
       /// Destructor
-      ~ParityFooter( ) { }
+      ~ParityFooter( ) = default;
 
       /// Does this foot have a parity word ?
       inline bool hasParityWord() const 

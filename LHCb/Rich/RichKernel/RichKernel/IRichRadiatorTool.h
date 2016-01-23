@@ -4,8 +4,6 @@
  *
  *  Header file for RICH tool interface : Rich::IRadiatorTool
  *
- *  $Id: IRichRadiatorTool.h,v 1.8 2007-03-09 17:58:13 jonrob Exp $
- *
  *  @author Antonis Papanestis
  *  @date   2006-03-01
  */

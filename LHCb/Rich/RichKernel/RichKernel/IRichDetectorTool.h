@@ -4,8 +4,6 @@
  *
  *  Header file for tool interface : Rich::IDetectorTool
  *
- *  $Id:  $
- *
  *  @author Antonis Papanestis  antonis.papanestis@stfc.ac.uk
  *  @date   2012-10-26
  */

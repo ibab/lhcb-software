@@ -274,7 +274,7 @@ namespace Rich
   private:
 
     /// Flag to indicate if histograms have been booked or not
-    mutable bool m_histosAreBooked;
+    mutable bool m_histosAreBooked{false};
 
     /// 1D histo map
     mutable Map1DH m_1dhmap;

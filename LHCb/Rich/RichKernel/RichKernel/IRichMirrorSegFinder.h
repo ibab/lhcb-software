@@ -4,8 +4,6 @@
  *
  *  Header file for tool interface : Rich::IMirrorSegFinder
  *
- *  $Id: IRichMirrorSegFinder.h,v 1.13 2007-03-09 17:58:13 jonrob Exp $
- *
  *  @author Antonis Papanestis
  *  @date   2003-11-04
  */

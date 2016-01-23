@@ -4,9 +4,6 @@
  *
  * Header file for tool interface : Rich::IAddBackground
  *
- * CVS Log :-
- * $Id: IRichAddBackground.h,v 1.1 2008-10-15 13:26:30 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2008-10-10
  */

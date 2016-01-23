@@ -53,6 +53,9 @@ namespace Rich
 
     public:
 
+      /// Default Constructor
+      RadLimits() = default;
+
       /** Constructor from limit data
        *
        *  Limits are unsigned, and correspond to a single HPD panel.
@@ -62,8 +65,8 @@ namespace Rich
        *  @param minY The minimum y edge of acceptance
        *  @param maxY The maximum y edge of acceptance
        */
-      RadLimits( const double minX = 0, const double maxX = 0,
-                 const double minY = 0, const double maxY = 0 )
+      RadLimits( const double minX, const double maxX,
+                 const double minY, const double maxY )
         : m_maxX(maxX), m_minX(minX), m_maxY(maxY), m_minY(minY) { }
 
       /// Access the minimum x limit
@@ -77,10 +80,10 @@ namespace Rich
 
     private:
 
-      double m_maxX; ///< Maximum X limit
-      double m_minX; ///< Minimum X limit
-      double m_maxY; ///< Maximum Y limit
-      double m_minY; ///< Minimum Y limit
+      double m_maxX {0}; ///< Maximum X limit
+      double m_minX {0}; ///< Minimum X limit
+      double m_maxY {0}; ///< Maximum Y limit
+      double m_minY {0}; ///< Minimum Y limit
 
     };
 
