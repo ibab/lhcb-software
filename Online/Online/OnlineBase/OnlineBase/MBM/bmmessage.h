@@ -148,5 +148,6 @@ struct MBMMessage {
 
 int _mbm_connections_use_fifos(MBMCommunication& com);
 int _mbm_connections_use_asio(MBMCommunication& com);
+int _mbm_connections_use_unix(MBMCommunication& com);
 
 #endif // ONLINEBASE_MBM_BMMESSAGE_H

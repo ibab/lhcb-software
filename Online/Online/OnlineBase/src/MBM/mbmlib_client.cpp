@@ -225,8 +225,10 @@ BMID mbm_include(const char* bm_name, const char* name, int partid, int com) {
   int status;
   char text[256];
   std::auto_ptr<BMDESCRIPT> bm(new BMDESCRIPT());
-  if ( com == BM_COM_ASIO )
+  if ( com == BM_COM_ASIO || 0 != ::getenv("BM_COM_ASIO") )
     _mbm_connections_use_asio(bm->communication);
+  else if ( com == BM_COM_UNIX || 0 != ::getenv("BM_COM_UNIX") )
+    _mbm_connections_use_unix(bm->communication);
   else
     _mbm_connections_use_fifos(bm->communication);
   ::strncpy(bm->bm_name,bm_name,sizeof(bm->bm_name)-1);

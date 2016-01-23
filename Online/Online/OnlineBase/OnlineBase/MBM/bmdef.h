@@ -19,7 +19,8 @@
 enum MBM_communications  {
   BM_COM_NONE = 0,
   BM_COM_FIFO = 1,
-  BM_COM_ASIO = 2
+  BM_COM_ASIO = 2,
+  BM_COM_UNIX = 4
 };
 
 enum MBM_dimensions  {

@@ -13,7 +13,7 @@
 
 // Framework include files
 #include "TAN/TanDB.h"
-#include "ASIO/Server.h"
+#include "ASIO/TcpServer.h"
 
 // C/C++ include files
 #include <set>
@@ -31,8 +31,9 @@ namespace BoostAsio  {
    *  \version  1.0
    *  \defgroup LHCB_ONLINE
    */
-  class TanRequestHandler : public RequestHandler  {
+  class TanRequestHandler : public TcpRequestHandler  {
     typedef TanMessage Msg;
+    typedef TcpConnection Connection;
     typedef TanDataBase::Entry Entry;
 
   protected:
@@ -340,7 +341,7 @@ extern "C" int boost_asio_tan_server(int argc, char** argv)  {
       return 0x0;
     }
     
-    Server server(address, port.str(), num_threads);
+    TcpServer server(address, port.str(), num_threads);
     server.config->handler.reset(new TanRequestHandler(verbose, port_number));
     server.handleSignals();
     server.setRecvSize(sizeof(TanMessage));

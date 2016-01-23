@@ -1754,7 +1754,7 @@ extern "C" int mbmsrv_dispatch_blocking(ServerBMID bm)  {
     bm->stop = false;
     int sc = _mbmsrv_connect(bm);
     if ( sc == MBM_NORMAL )  {
-      sc = bm->communication.dispatch(bm,1);
+      sc = bm->communication.dispatch(bm,0);
       if ( sc == MBM_NORMAL )  {
         _mbmsrv_watch_clients(bm);
         return MBM_NORMAL;

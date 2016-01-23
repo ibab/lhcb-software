@@ -145,6 +145,10 @@ int MBM::Installer::optparse (const char* c)  {
   case 'y':
     _mbm_connections_use_fifos(m_bm->communication);
     break;
+  case 'z':
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"Using boost::asio IPC connections....\n");
+    _mbm_connections_use_unix(m_bm->communication);
+    break;
   case '?':
   case 'h':
     help();

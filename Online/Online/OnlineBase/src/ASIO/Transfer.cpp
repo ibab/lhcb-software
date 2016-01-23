@@ -12,18 +12,30 @@
 //==========================================================================
 #define DATATRANSFER_INTERNALS
 
+#ifndef HAVE_ASIO_IPC
+#define TRANSFER_NS BoostAsio
+namespace BoostAsio  {
+  typedef class TcpServer           TransferServer;
+  typedef class TcpConnection       TransferConnection;
+  typedef class AsyncTcpConnection  AsyncTransferConnection;
+  typedef class TcpRequestHandler   TransferRequestHandler;
+  typedef class TcpServerConfig     TransferServerConfig;
+}
+#endif
+#include "NET/Transfer.h"
 #include <string>
 #include <thread>
 #include <mutex>
 #include "boost/asio.hpp"
-#include "ASIO/Transfer.h"
 #include "RTL/rtl.h"
 
+#ifdef HAVE_ASIO_IPC
+#include "ASIO/UnixServer.h"
+#else
+#include "ASIO/TcpServer.h"
+#endif
 
-namespace BoostAsio  {
-
-  class Server;
-  class Connection;
+namespace TRANSFER_NS  {
   class NetConnection;
 
   struct netentry_t {
@@ -62,14 +74,14 @@ namespace BoostAsio  {
     netdb_t                  m_db;
     std::mutex               m_lock;
     Clients                  m_clients;
-    Server*                  m_server;
+    TransferServer*          m_server;
     std::thread*             m_mgr;
     int                      m_refCount;
     int                      m_cancelled;
     int                      m_stop;
     int                      m_async_read;
 
-    void setSockOpts(boost::asio::ip::tcp::socket& chan);
+    void setSockOpts(TransferConnection::socket_t& chan);
     NetConnectionType type() const { return m_type; }
     netentry_t* connect(const std::string& dest);
     netentry_t* accept(NetConnection* connection, const netheader_t& header);
@@ -100,27 +112,24 @@ namespace BoostAsio  {
 #include "NET/defs.h"
 #include "ASIO/TanInterface.h"
 //#include "TAN/TanInterface.h"
-#include "ASIO/Server.h"
 #include <boost/bind.hpp>
 
-
-
-namespace BoostAsio  {
+namespace TRANSFER_NS  {
 
   static const int RECV_BUFFER_SIZE = 100*1024;
   static const int SEND_BUFFER_SIZE = 100*1024;
 
   /// Network connection class using Boost::asio
-  class NetConnection : public AsyncConnection  {
+  class NetConnection : public AsyncTransferConnection  {
     NET* net;
   public:
     netentry_t* entry;
     std::string name;
     /// Construct a connection with the given io_service.
     explicit NetConnection(boost::asio::io_service& io_service,
-			   RequestHandler::pointer_t& handler,
+			   TransferRequestHandler::pointer_t& handler,
 			   NET* net)
-      : AsyncConnection(io_service, handler, sizeof(netheader_t)), net(net), entry(0)
+      : AsyncTransferConnection(io_service, handler, sizeof(netheader_t)), net(net), entry(0)
     {
       //::lib_rtl_output(LIB_RTL_DEBUG,"Transfer(ASIO): Establish new connection  %p\n",this);
     }
@@ -150,7 +159,7 @@ namespace BoostAsio  {
 	      m_reply_buffer.resize(head->size);
 	    }
 	    m_socket.async_read_some(boost::asio::buffer(m_reply_buffer.data(),head->size),
-				     boost::bind(&Connection::handle_additional_read,
+				     boost::bind(&TransferConnection::handle_additional_read,
 						 shared_from_this(),
 						 boost::asio::placeholders::error,
 						 boost::asio::placeholders::bytes_transferred));
@@ -161,7 +170,7 @@ namespace BoostAsio  {
 	  }
 	}
 	m_socket.async_read_some(boost::asio::buffer(m_recv_buffer.data(),m_recvSize),
-				 boost::bind(&Connection::handle_read,
+				 boost::bind(&TransferConnection::handle_read,
 					     shared_from_this(),
 					     boost::asio::placeholders::error,
 					     boost::asio::placeholders::bytes_transferred));
@@ -186,7 +195,7 @@ namespace BoostAsio  {
 	  net->handle_data(this, head, data);
 	}
 	m_socket.async_read_some(boost::asio::buffer(m_recv_buffer.data(),m_recvSize),
-				 boost::bind(&Connection::handle_read,
+				 boost::bind(&TransferConnection::handle_read,
 					     shared_from_this(),
 					     boost::asio::placeholders::error,
 					     boost::asio::placeholders::bytes_transferred));
@@ -194,13 +203,13 @@ namespace BoostAsio  {
     }
   };
 
-  class NetServerConfig : public ServerConfig  {
+  class NetServerConfig : public TransferServerConfig  {
     NET* net;
   public:
-    NetServerConfig(Server* s, NET* n) : ServerConfig(s), net(n) {}
+    NetServerConfig(TransferServer* s, NET* n) : TransferServerConfig(s), net(n) {}
     virtual ~NetServerConfig() {}
     /// Create a new blank server connection
-    virtual Connection* newConnection()   {
+    virtual TransferConnection* newConnection()   {
       return new NetConnection(io_service(), handler, net);
     }
   };
@@ -209,7 +218,7 @@ namespace BoostAsio  {
 
 using namespace std;
 using namespace boost;
-using namespace BoostAsio;
+using namespace TRANSFER_NS;
 using boost::asio::ip::tcp;
 namespace boost  {
   namespace asio  {
@@ -240,11 +249,11 @@ namespace {
 //----------------------------------------------------------------------------------
 NetErrorCode netentry_t::close()  {
   //asio::error_code ec;
-  //tcp::socket& chan = connection->socket();
+  //TransferConnection::socket_t& chan = connection->socket();
   connection->entry = 0;
   //if ( chan.is_open() )  {
     //chan.set_option(asio::socket_base::linger(true,0));
-    //chan.shutdown(tcp::socket::shutdown_both,ec);
+    //chan.shutdown(TransferConnection::socket_t::shutdown_both,ec);
     //chan.close(ec);
   //}
   return NET_SUCCESS;
@@ -276,7 +285,7 @@ NET::~NET() {
     for (netdb_t::iterator i=m_db.begin(); i!=m_db.end();++i)  {
       netentry_t* e = (*i).second;
       if ( e->connection )  {
-	tcp::socket& chan = e->connection->socket();
+	TransferConnection::socket_t& chan = e->connection->socket();
 	e->connection->entry = 0;
 	if ( chan.is_open() )    {
 	  try {
@@ -365,17 +374,24 @@ NetErrorCode NET::init(NetConnectionType type, int nthreads)  {
   if ( m_me.addr.sin_port == 0 )  {
     m_type = type;
     if ( type == NET_SERVER )  {
-      char conn[64], port[64];
-      int status = ::tan_allocate_port_number(m_me.name.c_str(),&m_me.addr.sin_port);
-      if ( status != TAN_SS_SUCCESS )  {
-        ::lib_rtl_signal_message(LIB_RTL_OS,"Transfer(ASIO): Failed allocating port number. Status %d\n",status);
-        return NET_ERROR;
-      }
-      ::snprintf(conn,sizeof(conn),"0.0.0.0");
-      ::snprintf(port,sizeof(port),"%d",htons(m_me.addr.sin_port));
+      char port[1024];
       try {
-	auto_ptr<Server> srv(new Server(conn,port,nthreads));
-	srv->config = Server::config_t(new NetServerConfig(srv.get(),this));
+#ifdef HAVE_ASIO_IPC
+	::snprintf(port,sizeof(port),"%s",m_me.name.c_str());
+	std::remove(port);
+	auto_ptr<TransferServer> srv(new TransferServer(m_me.name, nthreads));
+#else
+	char conn[64];
+	int status = ::tan_allocate_port_number(m_me.name.c_str(),&m_me.addr.sin_port);
+	if ( status != TAN_SS_SUCCESS )  {
+	  ::lib_rtl_signal_message(LIB_RTL_OS,"Transfer(ASIO): Failed allocating port number. Status %d\n",status);
+	  return NET_ERROR;
+	}
+	::snprintf(conn,sizeof(conn),"0.0.0.0");
+	::snprintf(port,sizeof(port),"%d",htons(m_me.addr.sin_port));
+	auto_ptr<TransferServer> srv(new TransferServer(conn,port,nthreads));
+#endif
+	srv->config = TransferServer::config_t(new NetServerConfig(srv.get(),this));
 	srv->config->setHandler(0);
 	srv->config->recvSize = sizeof(netheader_t);
 	srv->start();
@@ -416,11 +432,15 @@ NetErrorCode NET::remove(netentry_t *e)    {
 }
 
 //----------------------------------------------------------------------------------
-void NET::setSockOpts(tcp::socket& chan)   {
-  chan.set_option(asio::socket_base::reuse_address(true));
-  chan.set_option(asio::socket_base::linger(true,0));
-  //chan.set_option(asio::socket_base::receive_buffer_size(RECV_BUFFER_SIZE));
-  //chan.set_option(asio::socket_base::send_buffer_size(SEND_BUFFER_SIZE));
+void NET::setSockOpts(TransferConnection::socket_t& chan)   {
+  if ( chan.is_open() )  {
+#ifndef HAVE_ASIO_IPC
+    chan.set_option(asio::socket_base::reuse_address(true));
+    chan.set_option(asio::socket_base::linger(true,0));
+    //chan.set_option(asio::socket_base::receive_buffer_size(RECV_BUFFER_SIZE));
+    //chan.set_option(asio::socket_base::send_buffer_size(SEND_BUFFER_SIZE));
+#endif
+  }
 }
 
 //----------------------------------------------------------------------------------
@@ -429,6 +449,7 @@ netentry_t* NET::accept(NetConnection* connection, const netheader_t& header)   
   netentry_t* e = 0;
   if ( i == m_db.end() )   {
     e = new netentry_t(connection);
+#ifndef HAVE_ASIO_IPC
     int sc = ::tan_get_address_by_name(header.name,&e->addr);
     if ( sc != TAN_SS_SUCCESS )  {
       ::lib_rtl_output(LIB_RTL_ERROR,
@@ -436,6 +457,7 @@ netentry_t* NET::accept(NetConnection* connection, const netheader_t& header)   
 		       header.name);
       return 0;
     }
+#endif
     setSockOpts(connection->socket());
     e->sys  = this;
     e->name = header.name;
@@ -461,18 +483,26 @@ netentry_t* NET::accept(NetConnection* connection, const netheader_t& header)   
 //----------------------------------------------------------------------------------
 netentry_t *NET::connect(const string& dest)  {
   sockaddr_in   addr;
+#ifdef HAVE_ASIO_IPC
+  int sc = TAN_SS_SUCCESS;
+#else
   int sc = ::tan_get_address_by_name(dest.c_str(),&addr);
+#endif
   if ( sc == TAN_SS_SUCCESS )  {
     try  {
       int retry = 4;
-      Connection::pointer_t c(m_server
-			      ->config
-			      ->newConnection());
+      TransferConnection::pointer_t c(m_server
+				      ->config
+				      ->newConnection());
       NetConnection* conn = (NetConnection*)c.get();
-      tcp::socket&   chan = c->socket();
+      TransferConnection::socket_t&   chan = c->socket();
       for(retry=4; retry > 0; --retry )  {
 	try  {
+#ifdef HAVE_ASIO_IPC
+	  conn->connect(dest);
+#else
 	  conn->connect(inet_ntoa(addr.sin_addr), addr.sin_port);
+#endif
 	  break;
 	}
 	catch(const std::exception& e)  {
@@ -623,7 +653,7 @@ NetErrorCode NET::send(const void* buff, size_t size, const string& dest, int fa
       h.facility = facility;
       h.msg_type = NET_MSG_DATA;
       vector<asio::const_buffer> msg;
-      tcp::socket& chan = entry->connection->socket();
+      TransferConnection::socket_t& chan = entry->connection->socket();
       msg.push_back(asio::buffer(&h,sizeof(netheader_t)));
       msg.push_back(asio::buffer(buff,size));
       size_t nbytes = asio::write(chan, msg);
@@ -647,7 +677,7 @@ NetErrorCode NET::receive(netentry_t* entry, void* buffer)  {
   if ( !entry->data && entry->header.size > 0 )  {
     try  {
       const netheader_t& header = entry->header;
-      tcp::socket&       chan   = entry->connection->socket();
+      TransferConnection::socket_t& chan   = entry->connection->socket();
       if ( chan.is_open() )  {
 	asio::error_code ec;
 	if ( buffer )  {
@@ -706,25 +736,30 @@ NetErrorCode NET::unsubscribe(void* param, unsigned int fac) {
 }
 
 //----------------------------------------------------------------------------------
-NET*  BoostAsio::net_init(const string& proc, int nthreads, NetConnectionType type)
+NET*  TRANSFER_NS::net_init(const string& proc, int nthreads, NetConnectionType type)
 { return NET::instance(proc, nthreads, type);                      }
-void  BoostAsio::net_close(NET* net)
+void  TRANSFER_NS::net_close(NET* net)
 { if ( net ) net->release();                                       }
-int   BoostAsio::net_send(NET* net, const void* buff, size_t size, const string& dest, unsigned int fac)
+int   TRANSFER_NS::net_send(NET* net, const void* buff, size_t size, const string& dest, unsigned int fac)
 { return net ? net->send(buff,size,dest,fac) : NET_ERROR;          }
-int   BoostAsio::net_receive(NET* net, netentry_t* entry, void* buff)
+int   TRANSFER_NS::net_receive(NET* net, netentry_t* entry, void* buff)
 { return net ? net->receive(entry, buff) : NET_ERROR;              }
-int   BoostAsio::net_subscribe(NET* net, void* param, unsigned int fac, net_handler_t data, net_handler_t death)
+int   TRANSFER_NS::net_subscribe(NET* net, void* param, unsigned int fac, net_handler_t data, net_handler_t death)
 { return net ? net->subscribe(param,fac,data,death) : NET_ERROR;   }
-int   BoostAsio::net_unsubscribe(NET* net, void* param, unsigned int fac)
+int   TRANSFER_NS::net_unsubscribe(NET* net, void* param, unsigned int fac)
 { return net ? net->unsubscribe(param,fac) : NET_SUCCESS;          }
-void* BoostAsio::net_lock(NET* net)
+void* TRANSFER_NS::net_lock(NET* net)
 { if ( net ) net->m_lock.lock(); return net ? net : 0;             }
-void  BoostAsio::net_unlock(NET* net, void* lock)
+void  TRANSFER_NS::net_unlock(NET* net, void* lock)
 { if ( net && lock ) net->m_lock.unlock();                         }
-void  BoostAsio::net_cancel(NET* net)
+void  TRANSFER_NS::net_cancel(NET* net)
 { if ( net ) net->cancel();                                        }
 
+#ifdef HAVE_ASIO_IPC
+#define TRANSFERTEST_SEND test_asio_ipc_net_send
+#define TRANSFERTEST_RECV test_asio_ipc_net_recv
+#else
 #define TRANSFERTEST_SEND test_asio_net_send
 #define TRANSFERTEST_RECV test_asio_net_recv
+#endif
 #include "NET/TransferTest.h"
