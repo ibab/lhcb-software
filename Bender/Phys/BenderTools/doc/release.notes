@@ -5,6 +5,14 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2016-01-23 - Vanya Belyaev
+
+ - add qmtest for useful scripts
+   1) dst-dump 
+   2) db-tags 
+   3) metainfo   (to be fixed)
+   4) trg-check 
+
 ! 2016-01-19 - Vanya Belyaev
  - add startup files 
  - remove option '-c --castor'

@@ -33,6 +33,7 @@ use                 PhysConf       v*  Phys
 # ================= standard patterns =========================================
 apply_pattern       install_python_modules 
 apply_pattern       install_scripts
+apply_pattern       QMTest 
 
 # ================= aliases ===================================================
 alias check-trg     "trg-check" 

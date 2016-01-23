@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-## @file dst-dump.py
+## @file dst-dump
 #
 #  Trivial Bender-based script to dump the content of (x,mu,s,r,...)DSTs
 #
