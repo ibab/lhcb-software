@@ -48,7 +48,7 @@ namespace Rich
                    const IInterface* parent );
 
     /// Destructor
-    virtual ~DetParameters( ) {};
+    virtual ~DetParameters( ) {}
 
     // Initialization of the tool after creation
     StatusCode initialize();

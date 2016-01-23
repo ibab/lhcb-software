@@ -61,10 +61,9 @@ const std::vector<DeRich*>& Rich::DetectorTool::deRichDetectors ( ) const
       locations.push_back(DeRichLocations::Rich2);
     }
 
-    for (unsigned int i=0; i<locations.size(); i++)
+    for ( const auto & loc : locations )
     {
-      DeRich* deRich = getDet<DeRich>(locations[i]);
-      m_deRichDets.push_back( deRich );
+      m_deRichDets.push_back( getDet<DeRich>(loc) );
     }
   }
 

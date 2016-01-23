@@ -110,7 +110,7 @@ namespace Rich
     mutable LHCb::RichSmartID::Vector m_readoutChannels;
 
     /// RichSystem object
-    DeRichSystem* m_richS;
+    DeRichSystem* m_richS = nullptr;
 
     /// false to get the hit on the outside of HPD window (inlcuding refraction)
     bool m_hitPhotoCathSide;

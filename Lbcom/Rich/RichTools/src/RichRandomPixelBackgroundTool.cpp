@@ -25,9 +25,7 @@ DECLARE_TOOL_FACTORY( RandomPixelBackgroundTool )
   RandomPixelBackgroundTool::RandomPixelBackgroundTool( const std::string& type,
                                                         const std::string& name,
                                                         const IInterface* parent )
-    : Rich::ToolBase  ( type, name , parent ),
-      m_richSys       ( NULL                ),
-      m_randSvc       ( NULL                )
+    : Rich::ToolBase  ( type, name , parent )
 {
   // tool interface
   declareInterface<Rich::IAddBackground>(this);
@@ -78,22 +76,20 @@ RandomPixelBackgroundTool::createBackgrounds( HPDBackgrounds & backgrounds,
   Rndm::Numbers flatrand ( m_randSvc, Rndm::Flat(0,1) );
 
   // loop over all HPDs
-  for ( LHCb::RichSmartID::Vector::const_iterator iHPD = hpds.begin();
-        iHPD != hpds.end(); ++iHPD )
+  for ( const auto & hpd : hpds )
   {
     // Throw a dice to determine how many pixels have background in this HPD
     int nBackPixs = (int)poisrand();
     if ( nBackPixs>0 )
     {
-      if ( msgLevel(MSG::DEBUG) )
-        debug() << "Adding " << nBackPixs << " background hits to " << *iHPD << endmsg;
-      LHCb::RichSmartID::Vector & hits = backgrounds[*iHPD];
+      _ri_debug << "Adding " << nBackPixs << " background hits to " << hpd << endmsg;
+      auto & hits = backgrounds[hpd];
       const unsigned int maxTries(9999);
       unsigned int tries(0);
       while ( nBackPixs>0 && tries<maxTries )
       {
         // Make a random background hit
-        LHCb::RichSmartID pixID(*iHPD);
+        LHCb::RichSmartID pixID(hpd);
         pixID.setPixelRow( (int)(flatrand() * nPixRows)                   );
         pixID.setPixelCol( (int)(flatrand() * Rich::DAQ::NumPixelColumns) );
         if ( aliceMode )
@@ -102,7 +98,7 @@ RandomPixelBackgroundTool::createBackgrounds( HPDBackgrounds & backgrounds,
         if ( hits.end() == std::find(hits.begin(),hits.end(),pixID) )
         {
           // add it to the output data
-          if ( msgLevel(MSG::DEBUG) ) debug() << " -> background hit " << pixID << endmsg;
+          _ri_debug << " -> background hit " << pixID << endmsg;
           hits.push_back(pixID);
           --nBackPixs;
         }

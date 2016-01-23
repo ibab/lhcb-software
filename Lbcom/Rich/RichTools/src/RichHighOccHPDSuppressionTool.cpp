@@ -23,7 +23,7 @@ HighOccHPDSuppressionTool( const std::string& type,
                            const std::string& name,
                            const IInterface* parent )
   : HPDOccupancyTool ( type, name, parent ),
-    m_richSys        ( NULL               )
+    m_richSys        ( nullptr            )
 {
 
   // Define interface
@@ -46,8 +46,7 @@ StatusCode HighOccHPDSuppressionTool::initialize()
   m_richSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
 
   // summary printout of options
-  if( msgLevel(MSG::DEBUG) )
-    debug() << "  Occupancy scale factor                = " << m_scale << std::endl
+  _ri_debug << "  Occupancy scale factor                = " << m_scale << std::endl
             << "  Absolute max HPD occupancy            = " << m_overallMax << endmsg;
 
   // return
@@ -66,7 +65,7 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
   if ( !hpdID.isValid() ) return suppress;
 
   // Get occupancy HPD data
-  HPDData & data = hpdData(hpdID);
+  auto & data = hpdData(hpdID);
 
   // Occupancy for this HPD in current event
   const unsigned int occ = smartIDs.size();

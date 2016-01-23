@@ -21,11 +21,8 @@ DECLARE_TOOL_FACTORY( HPDOccupancyTool )
 HPDOccupancyTool::HPDOccupancyTool( const std::string& type,
                                     const std::string& name,
                                     const IInterface* parent )
-: ToolBase            ( type, name, parent ),
-  m_richSys           ( NULL               ),
-  m_SmartIDDecoder    ( NULL               ),
-  m_condBDLocs        ( Rich::NRiches      ),
-  m_updateRunningOccs ( false              )
+: ToolBase      ( type, name, parent ),
+  m_condBDLocs  ( Rich::NRiches      )
 {
 
   // Define interface
@@ -69,13 +66,14 @@ StatusCode HPDOccupancyTool::initialize()
   m_richSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
 
   // get tools
-  acquireTool( "RichSmartIDDecoder", m_SmartIDDecoder, NULL, true );
+  acquireTool( "RichSmartIDDecoder", m_SmartIDDecoder, nullptr, true );
 
   // initialise data map
   sc = initOccMap();
 
   // summary printout of options
-  if( msgLevel(MSG::DEBUG) ) {
+  if( msgLevel(MSG::DEBUG) ) 
+  {
     debug() << m_whichRICH << " pixel suppression options :-" << std::endl
             << "  Occupancy memory                      = " << m_memory << endmsg;
     if ( m_useRunAv )
@@ -206,7 +204,7 @@ HPDOccupancyTool::averageOccupancy( const LHCb::RichSmartID hpdID ) const
   // valid HPD ID
   if ( !hpdID.isValid() ) return 0;
   // Get occupancy HPD data
-  const HPDData & data = hpdData(hpdID);
+  const auto & data = hpdData(hpdID);
   // return the average occupancy
   return data.avOcc();
 }
@@ -216,23 +214,20 @@ HPDOccupancyTool::updateOccupancies() const
 {
 
   // get the decoded data for this tae event
-  const Rich::DAQ::L1Map & l1Map = m_SmartIDDecoder->allRichSmartIDs();
+  const auto & l1Map = m_SmartIDDecoder->allRichSmartIDs();
 
   // loop over decoded data
-  for ( Rich::DAQ::L1Map::const_iterator iL1Map = l1Map.begin();
-        iL1Map != l1Map.end(); ++iL1Map )
+  for ( const auto & L1 : l1Map )
   {
-    const Rich::DAQ::IngressMap & ingressMap  = iL1Map->second;
-    for ( Rich::DAQ::IngressMap::const_iterator iIngressMap = ingressMap.begin();
-          iIngressMap != ingressMap.end(); ++iIngressMap )
+    const auto & ingressMap = L1.second;
+    for ( const auto & ingress : ingressMap )
     {
-      const Rich::DAQ::IngressInfo & ingressInfo = iIngressMap->second;
-      const Rich::DAQ::HPDMap & hpdMap = ingressInfo.hpdData();
-      for ( Rich::DAQ::HPDMap::const_iterator iHPDMap = hpdMap.begin();
-            iHPDMap != hpdMap.end(); ++iHPDMap )
+      const auto & ingressInfo = ingress.second;
+      const auto & hpdMap = ingressInfo.hpdData();
+      for ( const auto & hpd : hpdMap )
       {
-        const Rich::DAQ::HPDInfo & hpdInfo    = iHPDMap->second;
-        const LHCb::RichSmartID  & hpdID      = hpdInfo.hpdID();
+        const auto & hpdInfo = hpd.second;
+        const auto & hpdID   = hpdInfo.hpdID();
 
         // Valid HPD ID
         if ( ! hpdID.isValid() )          { continue; }
@@ -240,10 +235,10 @@ HPDOccupancyTool::updateOccupancies() const
         if ( hpdInfo.header().inhibit() ) { continue; }
 
         // Get occupancy HPD data
-        HPDData & data = hpdData(hpdID);
+        auto & data = hpdData(hpdID);
 
         // Occupancy for this HPD in current event
-        const unsigned int occ = hpdInfo.smartIDs().size();
+        const auto occ = hpdInfo.smartIDs().size();
 
         bool incrementCount = false;
         if      ( data.fillCount() <  m_minFills )
@@ -307,16 +302,13 @@ void HPDOccupancyTool::createHPDBackXML( const Rich::DetectorType rich ) const
   // loop over final occupancies
   for ( const auto& s : m_occMap[rich] )
   {
-    const HPDData & d = s.second;
-    const Rich::DAQ::HPDHardwareID hID = m_richSys->hardwareID( s.first );
-    const double occ =
+    const auto & d = s.second;
+    const auto hID = m_richSys->hardwareID( s.first );
+    const auto occ =
       ( d.fillCount() < m_minFills ?
         ( d.fillCount()>0 ? d.avOcc()/d.fillCount() : 0 ) : d.avOcc() );
-    if ( msgLevel(MSG::DEBUG) )
-    {
-      debug() << s.first << " hID=" << hID << " nMeas=" << d.fillCount()
+    _ri_debug << s.first << " hID=" << hID << " nMeas=" << d.fillCount()
               << " final occ = " << occ << endmsg;
-    }
     // Create condition string
     if ( d.fillCount() > m_minFills )
     {

@@ -21,8 +21,7 @@ DECLARE_TOOL_FACTORY( HPDHotPixelFinder )
 HPDHotPixelFinder::HPDHotPixelFinder( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
-  : ToolBase ( type, name, parent ),
-    m_nEvts  ( 0                  )
+  : ToolBase ( type, name, parent )
 {
   // Define interface
   declareInterface<IGenericHPDAnalysisTool>(this);
@@ -49,18 +48,13 @@ HPDHotPixelFinder::analyse( const LHCb::RichSmartID hpdID,
                             const LHCb::RichSmartID::Vector & smartIDs,
                             IGenericHPDAnalysisTool::Results & results ) const
 {
-  // Loop over raw RichSmartIDs
-  for ( LHCb::RichSmartID::Vector::const_iterator iR = smartIDs.begin();
-        iR != smartIDs.end(); ++iR )
-  {
-    // count hits per channel
-    ++m_hitCount[*iR];
-  }
+  // Loop over raw RichSmartIDs and count hits per channel
+  for ( const auto & id : smartIDs ) { ++m_hitCount[id]; }
 
   // Do we have any results to return for this HPD ?
   if ( !m_results.empty() )
   {
-    ResultCache::iterator iR = m_results.find(hpdID);
+    const auto iR = m_results.find(hpdID);
     if ( iR != m_results.end() )
     {
       if ( !iR->second.empty() )
@@ -90,34 +84,30 @@ void HPDHotPixelFinder::handle( const Incident& )
 void HPDHotPixelFinder::findHotPixels()
 {
 
-  if ( msgLevel(MSG::VERBOSE) )
-    verbose() << "Searching for hot pixels after " << m_nEvts << " events" << endmsg;
+  _ri_verbo << "Searching for hot pixels after " << m_nEvts << " events" << endmsg;
 
   // clear current results
   m_results.clear();
 
-  for ( HitCountMap::const_iterator iHPDC = m_hitCount.begin();
-        iHPDC != m_hitCount.end(); ++iHPDC )
+  for ( const auto& HPDC : m_hitCount )
   {
     // HPD occupancy
-    const double occ = (double)(iHPDC->second) / (double)m_nEventsForAverage;
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << iHPDC->first << " occupancy = " << 100.0*occ << " %" << endmsg;
+    const auto occ = (double)(HPDC.second) / (double)m_nEventsForAverage;
+    _ri_verbo << HPDC.first << " occupancy = " << 100.0*occ << " %" << endmsg;
 
     // Too hot ?
     if ( occ >= m_hotOcc )
     {
-      if ( msgLevel(MSG::VERBOSE) )
-        verbose() << "  -> pixel is hot ...." << endmsg;
+      _ri_verbo << "  -> pixel is hot ...." << endmsg;
       std::ostringstream mess;
-      mess << iHPDC->first << " (" << (unsigned int)(iHPDC->first) << ") At least "
+      mess << HPDC.first << " (" << (unsigned int)(HPDC.first) << ") At least "
            << 100.0*m_hotOcc
            << "% hot in " << m_nEventsForAverage << " events";
       // make result object
-      IGenericHPDAnalysisTool::Results & results = m_results[iHPDC->first.pdID()];
-      results.push_back( IGenericHPDAnalysisTool::Result() );
-      IGenericHPDAnalysisTool::Result  & result = results.back();
-      result.id      = iHPDC->first;
+      auto & results = m_results[HPDC.first.pdID()];
+      results.emplace_back( IGenericHPDAnalysisTool::Result() );
+      auto & result = results.back();
+      result.id      = HPDC.first;
       result.message = mess.str();
       result.status  = StatusCode::FAILURE;
       result.status.ignore(); // To (try and) avoid untested StatusCode warnings

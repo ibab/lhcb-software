@@ -49,7 +49,7 @@ StatusCode Rich::SmartIDTool::initialize()
   // loop over riches and photo detector panels
   for ( unsigned int r = 0; r < deRiches.size(); ++r )
   {
-    m_photoDetPanels[deRiches[r]->rich()] = PDPanelsPerRich(Rich::NPDPanelsPerRICH,NULL);
+    m_photoDetPanels[deRiches[r]->rich()] = PDPanelsPerRich(Rich::NPDPanelsPerRICH,nullptr);
     for ( unsigned int panel = 0; panel < Rich::NPDPanelsPerRICH; ++panel )
     {
       (m_photoDetPanels[deRiches[r]->rich()])[panel] = deRiches[r]->pdPanel( (Rich::Side)panel );
@@ -154,9 +154,10 @@ Rich::SmartIDTool::smartID ( const Gaudi::XYZPoint& globalPoint,
                              LHCb::RichSmartID& smartid ) const
 {
   // check to see if the smartID is set, and if HPD is active
-  if ( smartid.pdIsSet() &&
-       !m_richS->pdIsActive(smartid) )
+  if ( smartid.pdIsSet() && !m_richS->pdIsActive(smartid) )
+  {
     return StatusCode::FAILURE;
+  }
 
   try
   {
@@ -170,7 +171,7 @@ Rich::SmartIDTool::smartID ( const Gaudi::XYZPoint& globalPoint,
       smartid.setRich  ( Rich::Rich2 );
       smartid.setPanel ( globalPoint.x() > 0.0 ? Rich::left : Rich::right );
     }
-    RichPDPanels::const_iterator richIndex = m_photoDetPanels.find(smartid.rich());
+    const auto richIndex = m_photoDetPanels.find(smartid.rich());
     return richIndex->second[smartid.panel()]->smartID(globalPoint,smartid);
   }
 
@@ -201,7 +202,7 @@ Rich::SmartIDTool::globalToPDPanel ( const Gaudi::XYZPoint& globalPoint ) const
     if (globalPoint.y() > 0.0)
     {
       // top side
-      RichPDPanels::const_iterator richIndex = m_photoDetPanels.find(Rich::Rich1);
+      const auto richIndex = m_photoDetPanels.find(Rich::Rich1);
       return richIndex->second[Rich::top]->globalToPDPanelMatrix()*globalPoint;
 
       // return m_photoDetPanels[Rich::Rich1][Rich::top]->globalToPDPanelMatrix()*globalPoint;
@@ -209,7 +210,7 @@ Rich::SmartIDTool::globalToPDPanel ( const Gaudi::XYZPoint& globalPoint ) const
     else
     {
       // bottom side
-      RichPDPanels::const_iterator richIndex = m_photoDetPanels.find(Rich::Rich1);
+      const auto richIndex = m_photoDetPanels.find(Rich::Rich1);
       return richIndex->second[Rich::bottom]->globalToPDPanelMatrix()*globalPoint;
     }
   }
@@ -218,13 +219,13 @@ Rich::SmartIDTool::globalToPDPanel ( const Gaudi::XYZPoint& globalPoint ) const
     if (globalPoint.x() > 0.0)
     {
       // left side
-      RichPDPanels::const_iterator richIndex = m_photoDetPanels.find(Rich::Rich2);
+      const auto richIndex = m_photoDetPanels.find(Rich::Rich2);
       return richIndex->second[Rich::left]->globalToPDPanelMatrix()*globalPoint;
     }
     else
     {
       // right side
-      RichPDPanels::const_iterator richIndex = m_photoDetPanels.find(Rich::Rich2);
+      const auto richIndex = m_photoDetPanels.find(Rich::Rich2);
       return richIndex->second[Rich::right]->globalToPDPanelMatrix()*globalPoint;
     }
   }
@@ -247,15 +248,15 @@ const LHCb::RichSmartID::Vector& Rich::SmartIDTool::readoutChannelList( ) const
     StatusCode sc = StatusCode::SUCCESS;
 
     // Fill for RICH1
-    RichPDPanels::const_iterator richIndex = m_photoDetPanels.find(Rich::Rich1);
-    sc = richIndex->second[Rich::top]->readoutChannelList(m_readoutChannels);
-    sc = richIndex->second[Rich::bottom]->readoutChannelList(m_readoutChannels);
+    const auto rich1Index = m_photoDetPanels.find(Rich::Rich1);
+    sc = sc && rich1Index->second[Rich::top]->readoutChannelList(m_readoutChannels);
+    sc = sc && rich1Index->second[Rich::bottom]->readoutChannelList(m_readoutChannels);
     const unsigned int nRich1 = m_readoutChannels.size();
 
     // Fill for RICH2
-    richIndex = m_photoDetPanels.find(Rich::Rich2);
-    sc = richIndex->second[Rich::left]->readoutChannelList(m_readoutChannels);
-    sc = richIndex->second[Rich::right]->readoutChannelList(m_readoutChannels);
+    const auto rich2Index = m_photoDetPanels.find(Rich::Rich2);
+    sc = sc && rich2Index->second[Rich::left]->readoutChannelList(m_readoutChannels);
+    sc = sc && rich2Index->second[Rich::right]->readoutChannelList(m_readoutChannels);
     const unsigned int nRich2 = m_readoutChannels.size() - nRich1;
 
     if ( sc.isFailure() ) Exception( "Problem reading readout channel lists from DeRichPDPanels" );
@@ -268,13 +269,12 @@ const LHCb::RichSmartID::Vector& Rich::SmartIDTool::readoutChannelList( ) const
 
     if ( msgLevel(MSG::VERBOSE) )
     {
-      for ( LHCb::RichSmartID::Vector::const_iterator iID = m_readoutChannels.begin();
-            iID != m_readoutChannels.end(); ++iID )
+      for ( const auto & ID : m_readoutChannels )
       {
         Gaudi::XYZPoint gPos;
-        sc = globalPosition(*iID,gPos);
+        sc = globalPosition(ID,gPos);
         if ( sc.isFailure() ) Exception( "Problem converting RichSmartID to global coordinate" );
-        verbose() << " RichSmartID " << *iID << " " << (*iID).dataBitsOnly().key() << endmsg
+        verbose() << " RichSmartID " << ID << " " << ID.dataBitsOnly().key() << endmsg
                   << "     -> global Position : " << gPos << endmsg
                   << "     -> local Position  : " << globalToPDPanel(gPos) << endmsg;
       }

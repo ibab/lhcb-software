@@ -129,7 +129,7 @@ namespace Rich
   private:
 
     /// Pointer to general refractive index tool
-    const IRefractiveIndex * m_refIndex;
+    const IRefractiveIndex * m_refIndex = nullptr;
 
     /// aerogel exit plane (for refraction correction)
     mutable Gaudi::Plane3D m_aeroExitPlane;
@@ -138,10 +138,10 @@ namespace Rich
     mutable Gaudi::XYZVector m_aeroNormVect;
 
     /// Flag to say if the aerogel plane information has been constructed or not
-    mutable bool m_planeInfoMade;
+    mutable bool m_planeInfoMade = false;
 
     /// z point for plane
-    mutable double m_minZaero;
+    mutable double m_minZaero = 0;
 
     /// Vector of radiators
     mutable std::vector<const DeRichRadiator*> m_radiators;
@@ -151,10 +151,10 @@ namespace Rich
     bool m_forceHltMode;
     
     /// Flag to say if we are in HLT mode or not
-    bool m_hltMode;
+    bool m_hltMode = true;
 
     /// Flag to say in Aerogel is available or not
-    bool m_aerogelOK;
+    bool m_aerogelOK = false;
 
   };
 

@@ -20,17 +20,13 @@ DECLARE_TOOL_FACTORY( SnellsLawRefraction )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  SnellsLawRefraction::SnellsLawRefraction( const std::string& type,
-                                            const std::string& name,
-                                            const IInterface* parent )
-    : ToolBase        ( type, name, parent ),
-      m_refIndex      ( NULL  ),
-      m_planeInfoMade ( false ),
-      m_minZaero      ( 0     ),
-      m_radiators     ( Rich::NRadiatorTypes,
-                        (const DeRichRadiator *)(NULL) ),
-      m_hltMode       ( false ),
-      m_aerogelOK     ( true  )
+SnellsLawRefraction::SnellsLawRefraction( const std::string& type,
+                                          const std::string& name,
+                                          const IInterface* parent )
+: ToolBase        ( type, name, parent ),
+  m_radiators     ( Rich::NRadiatorTypes,
+                    (const DeRichRadiator *)(nullptr) ),
+  m_aerogelOK     ( true  )
 {
   // interface
   declareInterface<ISnellsLawRefraction>(this);
@@ -57,7 +53,7 @@ StatusCode SnellsLawRefraction::initialize()
   acquireTool( "RichRefractiveIndex", m_refIndex );
 
   // See if Aerogel is available or not
-  m_aerogelOK = 
+  m_aerogelOK =
     existDet<DeRichRadiator>( DeRichLocations::location(Rich::Aerogel) );
   if ( !m_aerogelOK )
   {
@@ -68,7 +64,7 @@ StatusCode SnellsLawRefraction::initialize()
   // UMS
   if ( m_aerogelOK )
   {
-    updMgrSvc()->registerCondition( this, 
+    updMgrSvc()->registerCondition( this,
                                     DeRichLocations::location(Rich::Aerogel),
                                     &SnellsLawRefraction::aeroUpdate );
   }
@@ -98,8 +94,8 @@ StatusCode SnellsLawRefraction::aeroUpdate()
 void SnellsLawRefraction::buildAeroPlaneInfo() const
 {
   // load the radiator tool
-  const IRadiatorTool * radiatorTool = NULL;
-  acquireTool( "RichRadiatorTool", radiatorTool, NULL, true );
+  const IRadiatorTool * radiatorTool = nullptr;
+  acquireTool( "RichRadiatorTool", radiatorTool, nullptr, true );
 
   // get three points in exit plane
   Rich::RadIntersection::Vector intersections;
@@ -152,13 +148,13 @@ void SnellsLawRefraction::aerogelToGas( Gaudi::XYZPoint & startPoint,
     {
 
       // photon energy
-      const double photonEnergy = trSeg.avPhotonEnergy();
+      const auto photonEnergy = trSeg.avPhotonEnergy();
       if ( photonEnergy > 0 )
       {
 
         // get the aerogel ref index for the track segment intersections
-        const double refAero = m_refIndex->refractiveIndex( trSeg.radIntersections(),
-                                                            photonEnergy );
+        const auto refAero = m_refIndex->refractiveIndex( trSeg.radIntersections(),
+                                                          photonEnergy );
 
         // do the correction
         _aerogelToGas( startPoint, dir, photonEnergy, refAero );

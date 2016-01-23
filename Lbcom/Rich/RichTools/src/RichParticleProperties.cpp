@@ -28,7 +28,6 @@ Rich::ParticleProperties::ParticleProperties ( const std::string& type,
                                                const std::string& name,
                                                const IInterface* parent )
   : Rich::ToolBase   ( type, name, parent        ),
-    m_refIndex       ( NULL                      ),
     m_particleMass   ( Rich::NParticleTypes, 0.0 ),
     m_particleMassSq ( Rich::NParticleTypes, 0.0 ),
     m_pidTypes       ( Rich::particles()         )

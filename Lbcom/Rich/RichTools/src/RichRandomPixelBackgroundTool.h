@@ -64,13 +64,13 @@ namespace Rich
   private:
 
     /// Rich System detector element
-    const DeRichSystem * m_richSys;
+    const DeRichSystem * m_richSys = nullptr;
 
     /// The pixel background (dark rate) probability
     double m_pixBackgroundProb;
 
     // random numbers service
-    IRndmGenSvc * m_randSvc;
+    IRndmGenSvc * m_randSvc = nullptr;
 
   };
 

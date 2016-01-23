@@ -80,12 +80,12 @@ HPDPixelClusteringTool::findClusters( LHCb::RichSmartID::Vector & smartIDs ) con
     const int nextcol = col + 1;
 
     // Null cluster pointer
-    HPDPixelClusters::Cluster * clus(NULL);
+    HPDPixelClusters::Cluster * clus(nullptr);
 
     // check neighbouring pixels
 
     // last row and last column
-    clus = ( m_allowDiags ? m_clusterBuilder.getCluster(lastrow,lastcol) : NULL );
+    clus = ( m_allowDiags ? m_clusterBuilder.getCluster(lastrow,lastcol) : nullptr );
 
     // last row and same column
     HPDPixelClusters::Cluster * newclus1 = m_clusterBuilder.getCluster(lastrow,col);
@@ -97,7 +97,7 @@ HPDPixelClusteringTool::findClusters( LHCb::RichSmartID::Vector & smartIDs ) con
 
     // last row and next column
     HPDPixelClusters::Cluster * newclus2 =
-      ( m_allowDiags ? m_clusterBuilder.getCluster(lastrow,nextcol) : NULL );
+      ( m_allowDiags ? m_clusterBuilder.getCluster(lastrow,nextcol) : nullptr );
     if ( newclus2 )
     {
       clus = ( clus && clus != newclus2 ?

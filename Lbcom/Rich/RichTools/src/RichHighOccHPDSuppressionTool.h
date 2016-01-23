@@ -68,7 +68,7 @@ namespace Rich
     protected: // protected data
 
       /// Rich System detector element
-      const DeRichSystem * m_richSys;
+      const DeRichSystem * m_richSys = nullptr;
 
     private: // private data
 

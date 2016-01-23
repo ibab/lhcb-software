@@ -135,7 +135,7 @@ namespace Rich
         /// Constructor with bin sizes
         LookupTable( const unsigned int xBins = 0, 
                      const unsigned int yBins = 0 )
-          : Mirror2DArray( xBins, MirrorVector(yBins,NULL) ) { }
+          : Mirror2DArray( xBins, MirrorVector(yBins,nullptr) ) { }
         /// Access the mirror for a given set of indices
         inline const DeRichSphMirror* get( const unsigned int ix,
                                            const unsigned int iy ) const
@@ -174,14 +174,14 @@ namespace Rich
         return ( i < m_nYBins ? i : m_nYBins-1 );
       }
     private:
-      double m_minX; ///< Minimum X
-      double m_maxX; ///< Maximum X
-      double m_minY; ///< Minimum Y
-      double m_maxY; ///< Maximum Y
-      double m_incX; ///< 1 / Increment in X
-      double m_incY; ///< 1 / Increment in Y
-      unsigned int m_nXBins; ///< Number of bins in X for look up table
-      unsigned int m_nYBins; ///< Number of bins in Y for look up table
+      double m_minX{ 9e9}; ///< Minimum X
+      double m_maxX{-9e9}; ///< Maximum X
+      double m_minY{ 9e9}; ///< Minimum Y
+      double m_maxY{-9e9}; ///< Maximum Y
+      double m_incX{0}; ///< 1 / Increment in X
+      double m_incY{0}; ///< 1 / Increment in Y
+      unsigned int m_nXBins{0}; ///< Number of bins in X for look up table
+      unsigned int m_nYBins{0}; ///< Number of bins in Y for look up table
       LookupTable m_lookupTable; ///< The lookup table
     };
 

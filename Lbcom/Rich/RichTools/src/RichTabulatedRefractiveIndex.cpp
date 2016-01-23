@@ -24,9 +24,8 @@ TabulatedRefractiveIndex ( const std::string& type,
                            const IInterface* parent )
   : Rich::ToolBase ( type, name, parent         ),
     m_riches       ( Rich::NRiches              ),
-    m_detParams    ( NULL                       ),
     m_radiators    ( Rich::NRadiatorTypes,
-                     (const DeRichRadiator *)(NULL) ),
+                     (const DeRichRadiator *)(nullptr) ),
     m_hltMode      ( false                      )
 {
   // interface
@@ -42,7 +41,7 @@ StatusCode Rich::TabulatedRefractiveIndex::initialize()
   if ( sc.isFailure() ) return sc;
 
   // Get tools
-  acquireTool( "RichDetParameters", m_detParams, NULL, true );
+  acquireTool( "RichDetParameters", m_detParams, nullptr, true );
 
   // Rich1 and Rich2
   m_riches[Rich::Rich1] = getDet<DeRich1>( DeRichLocations::Rich1 );
@@ -88,7 +87,7 @@ refractiveIndex ( const Rich::RadIntersection::Vector & intersections,
   double refIndex(0), totPathL(0);
   for ( const auto& R : intersections )
   {
-    const double pLength = R.pathLength();
+    const auto pLength = R.pathLength();
     refIndex += pLength * R.radiator()->refractiveIndex(energy,m_hltMode);
     totPathL += pLength;
   }
@@ -104,8 +103,8 @@ refractiveIndex ( const Rich::RadIntersection::Vector & intersections ) const
   double refIndex(0), totPathL(0);
   for ( const auto& R : intersections )
   {
-    const double energy  = m_detParams->meanPhotonEnergy(R.radiator()->radiatorID());
-    const double pLength = R.pathLength();
+    const auto energy  = m_detParams->meanPhotonEnergy(R.radiator()->radiatorID());
+    const auto pLength = R.pathLength();
     refIndex += pLength * R.radiator()->refractiveIndex(energy,m_hltMode);
     totPathL += pLength;
   }
@@ -121,8 +120,8 @@ refractiveIndexRMS ( const Rich::RadIntersection::Vector & intersections ) const
   double refIndexRMS(0), totPathL(0);
   for ( const auto& R : intersections )
   {
-    const double pLength = R.pathLength();
-    const Rich::TabulatedProperty1D * index = R.radiator()->refIndex(m_hltMode);
+    const auto pLength = R.pathLength();
+    const auto * index = R.radiator()->refIndex(m_hltMode);
     refIndexRMS += pLength * index->rms( index->minX(), index->maxX(), 100 );
     totPathL += pLength;
   }
@@ -138,8 +137,8 @@ refractiveIndexSD ( const Rich::RadIntersection::Vector & intersections ) const
   double refIndexSD(0), totPathL(0);
   for ( const auto& R : intersections )
   {
-    const double pLength = R.pathLength();
-    const Rich::TabulatedProperty1D * index = R.radiator()->refIndex(m_hltMode);
+    const auto pLength = R.pathLength();
+    const auto * index = R.radiator()->refIndex(m_hltMode);
     refIndexSD += pLength * index->standardDeviation( index->minX(), index->maxX(), 100 );
     totPathL   += pLength;
   }

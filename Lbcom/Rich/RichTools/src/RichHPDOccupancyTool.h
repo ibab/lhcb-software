@@ -113,7 +113,7 @@ namespace Rich
   protected: // protected data
 
     /// Rich System detector element
-    const DeRichSystem * m_richSys;
+    const DeRichSystem * m_richSys = nullptr;
 
   protected: // utility classes
 
@@ -154,7 +154,7 @@ namespace Rich
   private: // private data
 
     /// Raw Buffer Decoding tool
-    const Rich::DAQ::IRawBufferToSmartIDsTool * m_SmartIDDecoder;
+    const Rich::DAQ::IRawBufferToSmartIDsTool * m_SmartIDDecoder = nullptr;
 
     /// Occupancy map
     typedef Rich::HashMap< const LHCb::RichSmartID, HPDData > OccMap;
@@ -186,7 +186,7 @@ namespace Rich
     bool m_useRunAv;
 
     /// New event flag
-    mutable bool m_updateRunningOccs;
+    mutable bool m_updateRunningOccs = false;
 
   protected:
 

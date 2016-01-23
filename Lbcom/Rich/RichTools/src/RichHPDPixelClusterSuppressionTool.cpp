@@ -22,8 +22,7 @@ HPDPixelClusterSuppressionTool::
 HPDPixelClusterSuppressionTool( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-  : HighOccHPDSuppressionTool ( type, name, parent ),
-    m_clustTool               ( NULL )
+  : HighOccHPDSuppressionTool ( type, name, parent )
 {
   // Define interface
   declareInterface<IPixelSuppressionTool>(this);
@@ -44,8 +43,7 @@ StatusCode HPDPixelClusterSuppressionTool::initialize()
   // sanity checks
   if ( m_maxPixClusterSize > m_minHPDocc ) m_minHPDocc = m_maxPixClusterSize;
 
-  if( msgLevel(MSG::DEBUG) )
-    debug() << "  Max HPD pixel cluster size            = " << m_maxPixClusterSize << std::endl
+  _ri_debug << "  Max HPD pixel cluster size            = " << m_maxPixClusterSize << std::endl
             << "  Min HPD occupancy for clustering      = " << m_minHPDocc << endmsg;
 
   return sc;
@@ -71,11 +69,8 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
   const HPDPixelClusters * clusters = m_clustTool->findClusters( smartIDs );
  
   // Print out clustering results
-  if ( msgLevel(MSG::VERBOSE) )
-  {
-    verbose() << hpdID << endmsg << *clusters << endmsg;
-  }
-
+  _ri_verbo << hpdID << endmsg << *clusters << endmsg;
+  
   // apply pixel cluster suppression
   clusters->suppressIDs(smartIDs,m_maxPixClusterSize);
 

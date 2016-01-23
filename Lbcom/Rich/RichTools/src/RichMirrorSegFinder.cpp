@@ -80,10 +80,10 @@ StatusCode Rich::MirrorSegFinder::loadMirrors( const Rich::DetectorType rich )
   typedef std::vector<std::string> StringV;
 
   // load the primary mirrors
-  const StringV & sphMirs = deRich->paramVect<std::string>("SphericalMirrorDetElemLocations");
-  for ( StringV::const_iterator iL = sphMirs.begin(); iL != sphMirs.end(); ++iL )
+  const auto & sphMirs = deRich->paramVect<std::string>("SphericalMirrorDetElemLocations");
+  for ( const auto & L : sphMirs )
   {
-    DeRichSphMirror * m = getDet<DeRichSphMirror>( *iL );
+    DeRichSphMirror * m = getDet<DeRichSphMirror>( L );
     m_sphMirrors[rich][side(m,rich)].push_back( m );
     if ( m_firstUpdate )
       updMgrSvc()->registerCondition( this, m, &Rich::MirrorSegFinder::mirrorUpdate );
@@ -95,10 +95,10 @@ StatusCode Rich::MirrorSegFinder::loadMirrors( const Rich::DetectorType rich )
   }
 
   // secondary mirrors
-  const StringV & secMirs = deRich->paramVect<std::string>("SecondaryMirrorDetElemLocations");
-  for ( StringV::const_iterator iL = secMirs.begin(); iL != secMirs.end(); ++iL )
+  const auto & secMirs = deRich->paramVect<std::string>("SecondaryMirrorDetElemLocations");
+  for ( const auto & L : secMirs )
   {
-    DeRichSphMirror * m = getDet<DeRichSphMirror>( *iL );
+    DeRichSphMirror * m = getDet<DeRichSphMirror>( L );
     m_secMirrors[rich][side(m,rich)].push_back( m );
     if ( m_firstUpdate )
       updMgrSvc()->registerCondition( this, m, &Rich::MirrorSegFinder::mirrorUpdate );
@@ -124,10 +124,10 @@ StatusCode Rich::MirrorSegFinder::loadMirrors( const Rich::DetectorType rich )
                     SortByDistFromBeam() );
 
   // init the last found mirror vectors
-  m_lastFoundMirror[rich][0][sph] = NULL;
-  m_lastFoundMirror[rich][1][sph] = NULL;
-  m_lastFoundMirror[rich][0][sec] = NULL;
-  m_lastFoundMirror[rich][1][sec] = NULL;
+  m_lastFoundMirror[rich][0][sph] = nullptr;
+  m_lastFoundMirror[rich][1][sph] = nullptr;
+  m_lastFoundMirror[rich][0][sec] = nullptr;
+  m_lastFoundMirror[rich][1][sec] = nullptr;
 
   return StatusCode::SUCCESS;
 }
@@ -154,51 +154,45 @@ StatusCode Rich::MirrorSegFinder::mirrorUpdate()
       ( std::make_pair(Rich::Rich1,Rich::bottom) )
       ( std::make_pair(Rich::Rich2,Rich::left) )
       ( std::make_pair(Rich::Rich2,Rich::right) );
-    for ( DetSide::const_iterator iD = pairs.begin(); iD != pairs.end(); ++iD )
+    for ( const auto & D : pairs )
     {
 
-      debug() << "Found " << m_sphMirrors[iD->first][iD->second].size()
-              << " primary mirrors for " << iD->first << " " 
-              << Rich::text(iD->first,iD->second) << " :";
-      for ( std::vector<const DeRichSphMirror*>::const_iterator iM = 
-              m_sphMirrors[iD->first][iD->second].begin();
-            iM != m_sphMirrors[iD->first][iD->second].end(); ++iM )
+      const auto & sphMirrors = m_sphMirrors[D.first][D.second];
+      debug() << "Found " << sphMirrors.size()
+              << " primary mirrors for " << D.first << " " 
+              << Rich::text(D.first,D.second) << " :";
+      for ( const auto * M : sphMirrors )
       {
-        debug() << " " << (*iM)->mirrorNumber();
+        debug() << " " << M->mirrorNumber();
       }
       debug() << endmsg;
       if ( msgLevel(MSG::VERBOSE) )
       {
-        for ( std::vector<const DeRichSphMirror*>::const_iterator iM = 
-                m_sphMirrors[iD->first][iD->second].begin();
-              iM != m_sphMirrors[iD->first][iD->second].end(); ++iM )
+        for ( const auto * M : sphMirrors )
         {
-          verbose() << " -> Spherical mirror " << (*iM)->mirrorNumber()
-                    << " " << (*iM)->name()
-                    << " " << (*iM)->mirrorCentre()
+          verbose() << " -> Spherical mirror " << M->mirrorNumber()
+                    << " " << M->name()
+                    << " " << M->mirrorCentre()
                     << endmsg;
         }
       }
 
-      debug() << "Found " << m_secMirrors[iD->first][iD->second].size()
-              << " secondary mirrors for " << iD->first << " " 
-              << Rich::text(iD->first,iD->second) << " :";
-      for ( std::vector<const DeRichSphMirror*>::const_iterator iM = 
-              m_secMirrors[iD->first][iD->second].begin();
-            iM != m_secMirrors[iD->first][iD->second].end(); ++iM )
+      const auto & secMirrors = m_secMirrors[D.first][D.second];
+      debug() << "Found " << secMirrors.size()
+              << " secondary mirrors for " << D.first << " " 
+              << Rich::text(D.first,D.second) << " :";
+      for ( const auto * M : secMirrors )
       {
-        debug() << " " << (*iM)->mirrorNumber();
+        debug() << " " << M->mirrorNumber();
       }
       debug() << endmsg;
       if ( msgLevel(MSG::VERBOSE) )
       {
-        for ( std::vector<const DeRichSphMirror*>::const_iterator iM = 
-                m_secMirrors[iD->first][iD->second].begin();
-              iM != m_secMirrors[iD->first][iD->second].end(); ++iM )
+        for ( const auto * M : secMirrors )
         {
-          verbose() << " -> Secondary mirror " << (*iM)->mirrorNumber()
-                    << " " << (*iM)->name()
-                    << " " << (*iM)->mirrorCentre()
+          verbose() << " -> Secondary mirror " << M->mirrorNumber()
+                    << " " << M->name()
+                    << " " << M->mirrorCentre()
                     << endmsg;
         }
       }
@@ -246,7 +240,7 @@ Rich::MirrorSegFinder::findSphMirror( const Rich::DetectorType rich,
     verbose() << "Searching for Sph. mirror for point " << reflPoint << endmsg;
 
   // Most likely mirror is the last one found... So test this one first
-  const DeRichSphMirror* mirror = m_lastFoundMirror[rich][side][sph];
+  const auto * mirror = m_lastFoundMirror[rich][side][sph];
   if ( mirror )
   {
     const double dist2 = (mirror->mirrorCentre()-reflPoint).Mag2();
@@ -256,7 +250,7 @@ Rich::MirrorSegFinder::findSphMirror( const Rich::DetectorType rich,
     }
     else if ( m_testFinding )
     {
-      const DeRichSphMirror* test_mirror = fullSphSearch(rich,side,reflPoint);
+      const auto * test_mirror = fullSphSearch(rich,side,reflPoint);
       if ( test_mirror != mirror )
       {
         m_maxDist[rich][sph] *= m_tuneScale;
@@ -286,20 +280,17 @@ Rich::MirrorSegFinder::fullSphSearch( const Rich::DetectorType rich,
   if ( msgLevel(MSG::VERBOSE) )
     verbose() << " -> Starting full Sph mirror search" << endmsg;
 
-  const DeRichSphMirror* mirror = NULL;
+  const DeRichSphMirror* mirror = nullptr;
   double distance2 ( 1e99 ); // units are mm^2
-  for ( std::vector<const DeRichSphMirror*>::const_iterator iM
-          = m_sphMirrors[rich][side].begin();
-        iM != m_sphMirrors[rich][side].end(); ++iM )
+  for ( const auto * M : m_sphMirrors[rich][side] )
   {
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << "  -> Sph Mirror " << (*iM)->mirrorNumber()
-                << " " << (*iM)->mirrorCentre() << endmsg;
-    const double temp_d2 = ((*iM)->mirrorCentre()-reflPoint).Mag2();
+    _ri_verbo << "  -> Sph Mirror " << M->mirrorNumber()
+              << " " << M->mirrorCentre() << endmsg;
+    const double temp_d2 = (M->mirrorCentre()-reflPoint).Mag2();
     if ( temp_d2 < distance2 )
     {
       // Found new closest mirror, so update number
-      mirror = *iM;
+      mirror = M;
       // if within tolerance, abort tests on other mirrors
       if ( !m_testFinding && temp_d2 < m_maxDist[rich][sph] ) break;
       // ... otherwise, update minimum distance and continue
@@ -307,8 +298,7 @@ Rich::MirrorSegFinder::fullSphSearch( const Rich::DetectorType rich,
     }
   }
 
-  if ( msgLevel(MSG::VERBOSE) )
-    verbose() << " -> selected mirror " << mirror->mirrorNumber() << endmsg;
+  _ri_verbo << " -> selected mirror " << mirror->mirrorNumber() << endmsg;
 
   // update last found mirror and return
   return m_lastFoundMirror[rich][side][sph] = mirror;
@@ -326,7 +316,7 @@ Rich::MirrorSegFinder::findSecMirror( const Rich::DetectorType rich,
     verbose() << "Searching for Sec. mirror for point " << reflPoint << endmsg;
 
   // Most likely mirror is the last one found... So test this one first
-  const DeRichSphMirror* mirror = m_lastFoundMirror[rich][side][sec];
+  const auto * mirror = m_lastFoundMirror[rich][side][sec];
   if ( mirror )
   {
     const double dist2 = (mirror->mirrorCentre()-reflPoint).Mag2();
@@ -336,7 +326,7 @@ Rich::MirrorSegFinder::findSecMirror( const Rich::DetectorType rich,
     }
     else if ( m_testFinding )
     {
-      const DeRichSphMirror* test_mirror = fullSecSearch(rich,side,reflPoint);
+      const auto * test_mirror = fullSecSearch(rich,side,reflPoint);
       if ( test_mirror != mirror )
       {
         m_maxDist[rich][sec] *= m_tuneScale;
@@ -369,20 +359,17 @@ Rich::MirrorSegFinder::fullSecSearch( const Rich::DetectorType rich,
   if ( msgLevel(MSG::VERBOSE) )
     verbose() << " -> Starting full Sec mirror search" << endmsg;
 
-  const DeRichSphMirror* mirror = NULL;
+  const DeRichSphMirror* mirror = nullptr;
   double distance2 ( 1e99 ); // units are mm^2
-  for ( std::vector<const DeRichSphMirror*>::const_iterator iM
-          = m_secMirrors[rich][side].begin();
-        iM != m_secMirrors[rich][side].end(); ++iM )
+  for ( const auto * M : m_secMirrors[rich][side] )
   {
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << "  -> Sec Mirror " << (*iM)->mirrorNumber()
-                << " " << (*iM)->mirrorCentre() << endmsg;
-    const double temp_d2 = ((*iM)->mirrorCentre()-reflPoint).Mag2();
+    _ri_verbo << "  -> Sec Mirror " << M->mirrorNumber()
+              << " " << M->mirrorCentre() << endmsg;
+    const double temp_d2 = (M->mirrorCentre()-reflPoint).Mag2();
     if ( temp_d2 < distance2 )
     {
       // Found new closest mirror, so update number
-      mirror = *iM;
+      mirror = M;
       // if within tolerance, abort tests on other mirrors
       if ( !m_testFinding && temp_d2 < m_maxDist[rich][sec] ) break;
       // ... otherwise, update minimum distance and continue
@@ -390,8 +377,7 @@ Rich::MirrorSegFinder::fullSecSearch( const Rich::DetectorType rich,
     }
   }
 
-  if ( msgLevel(MSG::VERBOSE) )
-    verbose() << " -> selected mirror " << mirror->mirrorNumber() << endmsg;
+  _ri_verbo << " -> selected mirror " << mirror->mirrorNumber() << endmsg;
 
   // update last found mirror and return
   return m_lastFoundMirror[rich][side][sec] = mirror;

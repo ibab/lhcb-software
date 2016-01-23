@@ -88,7 +88,7 @@ namespace Rich
   private:  // Private data
 
     /// Refractive index tool
-    const IRefractiveIndex * m_refIndex;
+    const IRefractiveIndex * m_refIndex = nullptr;
 
     /// Array containing particle masses
     std::vector<double> m_particleMass;

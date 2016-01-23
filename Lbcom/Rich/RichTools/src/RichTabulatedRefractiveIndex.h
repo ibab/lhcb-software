@@ -61,7 +61,7 @@ namespace Rich
                               const IInterface* parent );
 
     /// Destructor
-    virtual ~TabulatedRefractiveIndex() {};
+    virtual ~TabulatedRefractiveIndex() {}
 
     // Initialization of the tool after creation
     StatusCode initialize();
@@ -118,7 +118,7 @@ namespace Rich
     std::vector<const DeRich*> m_riches;
 
     /// Detector parameters tool
-    const IDetParameters * m_detParams;
+    const IDetParameters * m_detParams = nullptr;
 
     /// Pointers to RICH radiator detector elements
     mutable std::vector<const DeRichRadiator*> m_radiators;
@@ -128,7 +128,7 @@ namespace Rich
     bool m_forceHltMode;
 
     /// Flag to say if we are in HLT mode or not
-    bool m_hltMode;
+    bool m_hltMode = false;
 
   };
 

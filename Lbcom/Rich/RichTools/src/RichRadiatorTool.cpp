@@ -101,8 +101,7 @@ StatusCode Rich::RadiatorTool::updateRich2Gas()
 StatusCode Rich::RadiatorTool::updateAerogel()
 {
   m_radiators[Rich::Aerogel].clear();
-  const DeRichMultiSolidRadiator * aerogel
-    = getDet<DeRichMultiSolidRadiator>( DeRichLocations::Aerogel );
+  const auto * aerogel = getDet<DeRichMultiSolidRadiator>( DeRichLocations::Aerogel );
   m_radiators[Rich::Aerogel].reserve( aerogel->radiators().size() );
   for ( const auto * dRad : aerogel->radiators() )
   {
