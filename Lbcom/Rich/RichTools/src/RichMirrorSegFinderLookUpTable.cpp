@@ -7,7 +7,7 @@
  *  @author Chris Jones
  *  @date   2015-02-01
  */
-//-----------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 
 // local
 #include "RichMirrorSegFinderLookUpTable.h"
@@ -92,8 +92,7 @@ StatusCode Rich::MirrorSegFinderLookUpTable::finalize( )
 //=========================================================================
 StatusCode Rich::MirrorSegFinderLookUpTable::mirrorUpdate()
 {
-  if ( msgLevel(MSG::DEBUG) )
-    debug() << "Mirror Update Triggered" << endmsg;
+  _ri_debug << "Mirror Update Triggered" << endmsg;
 
   StatusCode sc = StatusCode::SUCCESS;
 
@@ -116,7 +115,7 @@ StatusCode Rich::MirrorSegFinderLookUpTable::mirrorUpdate()
 StatusCode Rich::MirrorSegFinderLookUpTable::loadMirrors( const Rich::DetectorType rich )
 {
   // Load the RICH detector element
-  const DeRich * deRich = getDet<DeRich>( DeRichLocations::location(rich) );
+  const auto * deRich = getDet<DeRich>( DeRichLocations::location(rich) );
 
   // reset the mirror finder objects
   m_sphMirrors[rich][0].reset();
@@ -127,7 +126,7 @@ StatusCode Rich::MirrorSegFinderLookUpTable::loadMirrors( const Rich::DetectorTy
   // load the primary mirrors
   for ( const auto& loc : deRich->paramVect<std::string>("SphericalMirrorDetElemLocations") )
   {
-    DeRichSphMirror * m = getDet<DeRichSphMirror>(loc);
+    auto * m = getDet<DeRichSphMirror>(loc);
     m_sphMirrors[rich][side(m,rich)].mirrors.push_back( m );
     if ( m_firstUpdate )
       updMgrSvc()->registerCondition( this, m, &Rich::MirrorSegFinderLookUpTable::mirrorUpdate );
@@ -141,7 +140,7 @@ StatusCode Rich::MirrorSegFinderLookUpTable::loadMirrors( const Rich::DetectorTy
   // secondary mirrors
   for ( const auto& loc : deRich->paramVect<std::string>("SecondaryMirrorDetElemLocations") )
   {
-    DeRichSphMirror * m = getDet<DeRichSphMirror>(loc);
+    auto * m = getDet<DeRichSphMirror>(loc);
     m_secMirrors[rich][side(m,rich)].mirrors.push_back( m );
     if ( m_firstUpdate )
       updMgrSvc()->registerCondition( this, m, &Rich::MirrorSegFinderLookUpTable::mirrorUpdate );
@@ -206,9 +205,9 @@ Rich::MirrorSegFinderLookUpTable::MirrorFinder::init( const unsigned int nBins,
   m_incY = (double)m_nYBins / ( m_maxY - m_minY );
 
   m_lookupTable = LookupTable( m_nXBins, m_nYBins );
-  for ( unsigned int iX = 0; iX < m_nXBins; ++iX )
+  for ( auto iX = 0u; iX < m_nXBins; ++iX )
   {
-    for ( unsigned int iY = 0; iY < m_nYBins; ++iY )
+    for ( auto iY = 0u; iY < m_nYBins; ++iY )
     {
       // Find the nearest mirror segment to the centre of this bin
       // and save it in the lookup table
@@ -224,13 +223,13 @@ const DeRichSphMirror*
 Rich::MirrorSegFinderLookUpTable::MirrorFinder::closestXY( const double& x,
                                                            const double& y ) const
 {
-  const DeRichSphMirror* minM = NULL;
+  const DeRichSphMirror* minM = nullptr;
 
   // Loop over all the mirrors to find the closest
-  double minDist(9e99);
+  auto minDist(9e99);
   for ( const auto* M : mirrors )
   {
-    const double dist = distance2( x, y, M );
+    const auto dist = distance2( x, y, M );
     if ( dist < minDist ) { minM = M; minDist = dist; }
   }
 
@@ -289,7 +288,7 @@ findSphMirror( const Rich::DetectorType rich,
   //  verbose() << "Searching for Sph. mirror for point " << reflPoint << endmsg;
 
   // Find the mirror from the lookup map
-  const DeRichSphMirror* mirror = m_sphMirrors[rich][side].find(reflPoint);
+  const auto * mirror = m_sphMirrors[rich][side].find(reflPoint);
 
   //if ( UNLIKELY(m_testFinding) )
   //{ testFinding( m_sphMirrors[rich][side], rich, side, reflPoint ); }
@@ -314,7 +313,7 @@ findSecMirror( const Rich::DetectorType rich,
   //  verbose() << "Searching for Sec. mirror for point " << reflPoint << endmsg;
 
   // Find the mirror from the lookup map
-  const DeRichSphMirror* mirror = m_secMirrors[rich][side].find(reflPoint);
+  const auto * mirror = m_secMirrors[rich][side].find(reflPoint);
 
   //if ( UNLIKELY(m_testFinding) )
   //{ testFinding( m_secMirrors[rich][side], rich, side, reflPoint ); }
