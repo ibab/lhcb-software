@@ -2,4 +2,11 @@
 <!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program">   <text>../TestCmp.py</text></argument>
+  <argument name="validator"><text>
+block = """
+# Ostap.TestCmp             INFO    Compare gaussians    (1) and (2)
+"""
+findReferenceBlock(block)
+  </text></argument>
+
 </extension>
