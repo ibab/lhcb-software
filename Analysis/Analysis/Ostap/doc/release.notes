@@ -10,7 +10,7 @@
 
 ! 2016-01-24 - Vanya Belyaev
  - improve logging & qmtests 
- - clean up interactive contex 
+ - clean up interactive context
  - add new comman option "--verbose" that enables all DEBUG logging  
 
 
