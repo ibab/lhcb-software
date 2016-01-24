@@ -5,7 +5,10 @@
 !               GaudiPython analyses.
 !-----------------------------------------------------------------------------
 
-
+! 2016-01-24 - Vanya Belyaev
+ - Logger:
+   1) decrease the default logging threshold
+   2) add context manager to control the logging 
 
 !====================== AnalysisPython v2r39 2015-11-02 ======================
 

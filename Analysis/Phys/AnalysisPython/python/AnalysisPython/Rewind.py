@@ -24,7 +24,9 @@ def _histSvc_reset_(self) :
     histos = self.nodes()
     for h in histos :
         print "iHistogramSvc: Re-setting histogram ", h
-        self[h].reset()
+        hh = self[h] 
+        if   hasattr ( hh , 'reset' ) : hh.reset()
+        elif hasattr ( hh , 'Reset' ) : hh.Reset()
 
 iHistogramSvc.reset = _histSvc_reset_
 

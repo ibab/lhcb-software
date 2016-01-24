@@ -53,28 +53,35 @@ __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2012-03-16"
 __version__ = '$Revision$'
 __all__     = (
-    'getLogger' , 
+    'getLogger'   , ## get (congfigured logger) 
+    'LogLevel'    , ## context manager to control output level 
+    'logLevel'    , ## helper function to control outptu level
+    'logDebug'    , ## helper function to control outptu level
+    'logInfo'     , ## helper function to control outptu level
+    'logWarning'  , ## helper function to control outptu level
+    'logError'    , ## helper function to control outptu level
     )
 # =============================================================================
 import logging
-
 # =============================================================================
-## get logger 
+## get logger
+#  @code
+#  logger1 = getLogger ( 'LOGGER1' )
+#  logger2 = getLogger ( 'LOGGER2' , level = logging.INFO )
+#  @endcode 
 def getLogger ( name                                                 ,
                 fmt    = '# %(name)-25s %(levelname)-7s %(message)s' ,
-                lvl    = logging.INFO                                ,
+                level  = logging.DEBUG - 2                           ,
                 stream = None                                        ) :  
-    """
-    Get the proper logger
+    """Get the proper logger
     
     >>> logger = getLogger ( __name__ )
     
     """
     #
-    # while 0 <= name.find ( '.' )  : name = name.replace('.','/')
-    # 
     logger = logging.getLogger ( name )
     logger.propagate =  False 
+    ##logger.propagate =  True
     #
     while logger.handlers :
         logger.removeHandler ( logger.handlers[0] )
@@ -84,13 +91,116 @@ def getLogger ( name                                                 ,
         stream = sys.stdout
         
     lh  = logging.StreamHandler ( stream ) 
-    fmt = logging.Formatter     ( fmt )
-    lh  . setFormatter          ( fmt )
-    logger.addHandler           ( lh  ) 
+    fmt = logging.Formatter     ( fmt    )
+    lh  . setFormatter          ( fmt    )
+    logger.addHandler           ( lh     ) 
     #
-    logger.setLevel             ( lvl )
+    logger.setLevel             ( level  )
     #
     return logger
+
+# =============================================================================
+## @class LogLevel
+#  Temporarily enable/disable certain logger levels
+#  @code
+#  with LogLevel( logging.CRITICAL ) :
+#       ...do something... 
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2014-01-1
+class LogLevel(object) :
+    """Temporarily enable/disable certain logger levels
+    >>> with LogLevel( logging.CRITICAL ) :
+    ...  do something here ...
+    """
+    def __init__  ( self , level = logging.INFO - 1 ) :
+        self.new_level = level 
+        self.old_level = logging.root.manager.disable
+
+    ## context manager: ENTER 
+    def __enter__ ( self ) :
+        self.old_level = logging.root.manager.disable
+        logging.disable ( self.new_level )
+        return self
+
+    ## context manager: EXIT 
+    def __exit__ ( self , *_ ) :        
+        logging.disable ( self.old_level )
+
+
+# =============================================================================
+#  Temporarily enable/disable certain logger levels
+#  @code
+#  with logLevel( logging.CRITICAL ) :
+#       ...do something... 
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2014-01-1
+def logLevel ( level = logging.INFO - 1 ) :
+    """Temporarily enable/disable certain logger levels
+    >>> with logLevel( logging.CRITICAL ) :
+    >>>  ...do something...
+    """
+    return LogLevel ( level )
+
+# =============================================================================
+#  Temporarily enable/disable all loggers with level less then DEBUG 
+#  @code
+#  with logInfo() :
+#       ...do something... 
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2014-01-1
+def logDebug   () :
+    """Temporarily disable all loggers with level less then INFO 
+    >>> with logInfo() :
+    >>>  ...do something...
+    """    
+    return logLevel (  logging.DEBUG   - 1 )
+# =============================================================================
+#  Temporarily enable/disable all loggers with level less then INFO 
+#  @code
+#  with logInfo() :
+#       ...do something... 
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2014-01-1
+def logInfo    () :
+    """Temporarily disable all loggers with level less then INFO 
+    >>> with logInfo() :
+    >>>  ...do something...
+    """
+    return logLevel (  logging.INFO    - 1 )
+
+# =============================================================================
+#  Temporarily enable/disable all loggers with level less then WARNING
+#  @code
+#  with logInfo() :
+#       ...do something... 
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2014-01-1
+def logWarning () : 
+    """Temporarily disable all loggers with level less then WARNING
+    >>> with logWarning() :
+    >>>  ...do something...
+    """   
+    return logLevel (  logging.WARNING - 1 )
+
+# =============================================================================
+#  Temporarily enable/disable all loggers with level less then ERROR 
+#  @code
+#  with logError() :
+#       ...do something... 
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2014-01-1
+def logError   () :
+    """Temporarily disable all loggers with level less then ERROR
+    >>> with logWarning() :
+    >>>  ...do something...
+    """       
+    return logLevel (  logging.ERROR   - 1 )
 
 # =============================================================================
 if __name__ == '__main__' :
