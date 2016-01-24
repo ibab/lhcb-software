@@ -69,10 +69,10 @@ namespace Rich
       virtual ~PhotonCreatorBase( ) {}
 
       // Initialize method
-      virtual StatusCode initialize();
+      virtual StatusCode initialize() override;
 
       // Finalize method
-      virtual StatusCode finalize();
+      virtual StatusCode finalize() override;
 
       // Implement the handle method for the Incident service.
       virtual void handle( const Incident& incident );
@@ -80,31 +80,31 @@ namespace Rich
     public: // methods from interface
 
       // Method to perform the photon reconstruction of all tracks and pixels
-      StatusCode reconstructPhotons() const;
+      StatusCode reconstructPhotons() const override;
 
       // Return Pointer to RichRecPhotons
-      LHCb::RichRecPhotons * richPhotons() const;
+      LHCb::RichRecPhotons * richPhotons() const override;
 
       // Checks whether a photon candidate exists for the given segment and pixel pair
       LHCb::RichRecPhoton * checkForExistingPhoton( LHCb::RichRecSegment * segment,
-                                                    LHCb::RichRecPixel * pixel ) const;
+                                                    LHCb::RichRecPixel * pixel ) const override;
 
       // Form a Photon candidate from a Segment and a pixel.
       LHCb::RichRecPhoton * reconstructPhoton( LHCb::RichRecSegment * segment,
-                                               LHCb::RichRecPixel * pixel ) const;
+                                               LHCb::RichRecPixel * pixel ) const override;
 
       // Form all photon candidates for a given track and pixel
       LHCb::RichRecTrack::Photons reconstructPhotons( LHCb::RichRecTrack * track,
-                                                      LHCb::RichRecPixel * pixel ) const;
+                                                      LHCb::RichRecPixel * pixel ) const override;
 
       // Form all photon candidates for a given track, with all possible pixels.
-      const LHCb::RichRecTrack::Photons & reconstructPhotons( LHCb::RichRecTrack * track ) const;
+      const LHCb::RichRecTrack::Photons & reconstructPhotons( LHCb::RichRecTrack * track ) const override;
 
       // Form all photon candidates for a given pixel, with all possible tracks.
-      const LHCb::RichRecPixel::Photons & reconstructPhotons( LHCb::RichRecPixel * pixel ) const;
+      const LHCb::RichRecPixel::Photons & reconstructPhotons( LHCb::RichRecPixel * pixel ) const override;
 
       // Form all photon candidates for a given segment, with all possible pixels.
-      const LHCb::RichRecSegment::Photons & reconstructPhotons( LHCb::RichRecSegment * segment ) const;
+      const LHCb::RichRecSegment::Photons & reconstructPhotons( LHCb::RichRecSegment * segment ) const override;
 
     protected: // methods
 
@@ -120,7 +120,7 @@ namespace Rich
        *  @retval true  Book-keeping is to be done
        *  @retval false Book-keeping is to be skipped for increased speed
        */
-      bool bookKeep() const;
+      inline bool bookKeep() const noexcept { return m_bookKeep; }
 
       /*  Computes the cherenkov range to look in for a given track segment
        *
@@ -129,8 +129,11 @@ namespace Rich
        *
        *  @return The Cherenkov angle range to search for photons in
        */
-      double ckSearchRange( LHCb::RichRecSegment * segment,
-                            const Rich::ParticleIDType id ) const;
+      inline double ckSearchRange( LHCb::RichRecSegment * segment,
+                                   const Rich::ParticleIDType id ) const
+      {
+        return ckSearchRange( segment, segment->trackSegment(), id );
+      }
 
       /*  Computes the cherenkov range to look in for a given track segment
        *
@@ -140,9 +143,13 @@ namespace Rich
        *
        *  @return The Cherenkov angle range to search for photons in
        */
-      double ckSearchRange( LHCb::RichRecSegment * segment,
-                            const LHCb::RichTrackSegment & tkSeg,
-                            const Rich::ParticleIDType id ) const;
+      inline double ckSearchRange( LHCb::RichRecSegment * segment,
+                                   const LHCb::RichTrackSegment & tkSeg,
+                                   const Rich::ParticleIDType id ) const
+      {
+        // # sigma * resolution
+        return m_nSigma[tkSeg.radiator()] * m_ckRes->ckThetaResolution(segment,id);
+      }
 
       /** Absolute maximum Cherenkov theta value to reconstuct for given track segment
        *
@@ -150,7 +157,10 @@ namespace Rich
        *
        *  @return The maximum Cherenkov angle to reconstruct
        */
-      double absMaxCKTheta( LHCb::RichRecSegment * segment ) const;
+      double absMaxCKTheta( LHCb::RichRecSegment * segment ) const noexcept
+      {
+        return absMaxCKTheta(segment->trackSegment());
+      }
 
       /** Absolute minimum Cherenkov theta value to reconstuct for given track segment
        *
@@ -158,7 +168,10 @@ namespace Rich
        *
        *  @return The minimum Cherenkov angle to reconstruct
        */
-      double absMinCKTheta( LHCb::RichRecSegment * segment ) const;
+      inline double absMinCKTheta( LHCb::RichRecSegment * segment ) const noexcept
+      {
+        return absMinCKTheta(segment->trackSegment());
+      }
 
       /** Absolute maximum Cherenkov theta value to reconstuct for given track segment
        *
@@ -166,7 +179,10 @@ namespace Rich
        *
        *  @return The maximum Cherenkov angle to reconstruct
        */
-      double absMaxCKTheta( const LHCb::RichTrackSegment & segment ) const;
+      inline double absMaxCKTheta( const LHCb::RichTrackSegment & segment ) const noexcept
+      {
+        return m_maxCKtheta[segment.radiator()];
+      }
 
       /** Absolute minimum Cherenkov theta value to reconstuct for given track segment
        *
@@ -174,7 +190,10 @@ namespace Rich
        *
        *  @return The minimum Cherenkov angle to reconstruct
        */
-      double absMinCKTheta( const LHCb::RichTrackSegment & segment ) const;
+      inline double absMinCKTheta( const LHCb::RichTrackSegment & segment ) const noexcept
+      {
+        return m_minCKtheta[segment.radiator()];
+      }
 
       /** Maximum Cherenkov theta value to reconstuct for
        *  given track segment and mass hypothesis
@@ -184,8 +203,11 @@ namespace Rich
        *
        *  @return The maximum Cherenkov angle to reconstruct
        */
-      double maxCKTheta( LHCb::RichRecSegment * segment,
-                         const Rich::ParticleIDType id = Rich::Electron ) const;
+      inline double maxCKTheta( LHCb::RichRecSegment * segment,
+                                const Rich::ParticleIDType id = Rich::Electron ) const
+      {
+        return ( m_ckAngle->avgCherenkovTheta(segment,id) + ckSearchRange(segment,id) );
+      }
 
       /** Minimum Cherenkov theta value to reconstuct for
        *  given track segment and mass hypothesis
@@ -195,9 +217,12 @@ namespace Rich
        *
        *  @return The minimum Cherenkov angle to reconstruct
        */
-      double minCKTheta( LHCb::RichRecSegment * segment,
-                         const Rich::ParticleIDType id = Rich::Proton ) const;
-
+      inline double minCKTheta( LHCb::RichRecSegment * segment,
+                                const Rich::ParticleIDType id = Rich::Proton ) const
+      {
+        return ( m_ckAngle->avgCherenkovTheta(segment,id) - ckSearchRange(segment,id) );
+      }
+      
       /** Check if the given Cherenkov theta is within tolerences for any mass
        *  hypothesis for given track segment
        *
@@ -236,9 +261,15 @@ namespace Rich
        *  @param photon The photon candidate to save in the TES container
        *  @param key    The key to save the photon with
        */
-      void savePhoton( LHCb::RichRecPhoton * photon,
-                       const Rich::Rec::PhotonKey key ) const;
-
+      inline void savePhoton( LHCb::RichRecPhoton * photon,
+                              const Rich::Rec::PhotonKey& key ) const
+      {
+        // save photon
+        richPhotons()->insert( photon, key );
+        // count
+        ++m_photCount[ photon->richRecSegment()->trackSegment().radiator() ];
+      }
+      
       /** Checks the photon signal probability is above a threshold value for
        *  any mass hypothesis
        *
@@ -258,7 +289,7 @@ namespace Rich
       void buildCrossReferences( LHCb::RichRecPhoton * photon ) const;
 
       /// Returns the number of processed events
-      inline unsigned int nEvents() const { return m_Nevts; }
+      inline unsigned long long nEvents() const noexcept { return m_Nevts; }
 
       /// Delete all photon cross references
       void deleteAllCrossReferences() const;
@@ -297,7 +328,7 @@ namespace Rich
       const IParticleProperties * m_richPartProp = nullptr;
 
       /// Number of events processed tally
-      unsigned int m_Nevts = 0;
+      unsigned long long m_Nevts = 0;
 
       /// N sigma for acceptance bands
       std::vector<double> m_nSigma;   
@@ -342,74 +373,6 @@ namespace Rich
       unsigned int m_maxPhotons = 0;
 
     };
-
-    inline double
-    PhotonCreatorBase::ckSearchRange( LHCb::RichRecSegment * segment,
-                                      const LHCb::RichTrackSegment & tkSeg,
-                                      const Rich::ParticleIDType id ) const
-    {
-      // # sigma * resolution
-      return m_nSigma[tkSeg.radiator()] * m_ckRes->ckThetaResolution(segment,id);
-    }
-
-    inline double
-    PhotonCreatorBase::ckSearchRange( LHCb::RichRecSegment * segment,
-                                      const Rich::ParticleIDType id ) const
-    {
-      return ckSearchRange( segment, segment->trackSegment(), id );
-    }
-    
-    inline double
-    PhotonCreatorBase::absMaxCKTheta( LHCb::RichRecSegment * segment ) const
-    {
-      return absMaxCKTheta(segment->trackSegment());
-    }
-
-    inline double
-    PhotonCreatorBase::absMaxCKTheta( const LHCb::RichTrackSegment & segment ) const
-    {
-      return m_maxCKtheta[segment.radiator()];
-    }
-
-    inline double
-    PhotonCreatorBase::maxCKTheta( LHCb::RichRecSegment * segment,
-                                   const Rich::ParticleIDType id ) const
-    {
-      return ( m_ckAngle->avgCherenkovTheta(segment,id) + ckSearchRange(segment,id) );
-    }
-
-    inline double
-    PhotonCreatorBase::absMinCKTheta( LHCb::RichRecSegment * segment ) const
-    {
-      return absMinCKTheta(segment->trackSegment());
-    }
-
-    inline double
-    PhotonCreatorBase::absMinCKTheta( const LHCb::RichTrackSegment & segment ) const
-    {
-      return m_minCKtheta[segment.radiator()];
-    }
-
-    inline double
-    PhotonCreatorBase::minCKTheta( LHCb::RichRecSegment * segment,
-                                   const Rich::ParticleIDType id ) const
-    {
-      return ( m_ckAngle->avgCherenkovTheta(segment,id) - ckSearchRange(segment,id) );
-    }
-
-    inline bool PhotonCreatorBase::bookKeep() const
-    {
-      return m_bookKeep;
-    }
-
-    inline void PhotonCreatorBase::savePhoton( LHCb::RichRecPhoton    * photon,
-                                               const Rich::Rec::PhotonKey key ) const
-    {
-      // save photon
-      richPhotons()->insert( photon, key );
-      // count
-      ++m_photCount[ photon->richRecSegment()->trackSegment().radiator() ];
-    }
 
   }
 } // RICH

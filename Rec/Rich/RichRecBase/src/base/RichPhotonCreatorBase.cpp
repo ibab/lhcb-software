@@ -23,17 +23,9 @@ using namespace Rich::Rec;
 PhotonCreatorBase::PhotonCreatorBase( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
-  : ToolBase            ( type, name, parent ),
-    m_hasBeenCalled     ( false ),
-    m_photonPredictor   ( nullptr ),
-    m_photonSignal      ( nullptr ),
-    m_ckAngle           ( nullptr ),
-    m_ckRes             ( nullptr ),
-    m_richPartProp      ( nullptr ),
-    m_Nevts             ( 0    ),
-    m_photons           ( nullptr ),
-    m_photCount         ( Rich::NRadiatorTypes, 0 ),
-    m_photCountLast     ( Rich::NRadiatorTypes, 0 )
+  : ToolBase        ( type, name, parent ),
+    m_photCount     ( Rich::NRadiatorTypes, 0 ),
+    m_photCountLast ( Rich::NRadiatorTypes, 0 )
 {
   // Define the interface
   declareInterface<IPhotonCreator>(this);
@@ -94,10 +86,7 @@ StatusCode PhotonCreatorBase::initialize()
   {
     return Error( "RichRecPhoton location is undefined. Please set" );
   }
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    debug() << "RichRecPhoton location : " << m_richRecPhotonLocation << endmsg;
-  }
+  _ri_debug << "RichRecPhoton location : " << m_richRecPhotonLocation << endmsg;
 
   // get tools
   acquireTool( m_photPredName, "Predictor", m_photonPredictor, this );
@@ -115,8 +104,7 @@ StatusCode PhotonCreatorBase::initialize()
   {
     std::string trad = Rich::text((Rich::RadiatorType)rad);
     trad.resize(8,' ');
-    if (  msgLevel(MSG::DEBUG) )
-      debug() << trad << " : CK theta range " << boost::format("%5.3f") % m_minCKtheta[rad]
+    _ri_debug << trad << " : CK theta range " << boost::format("%5.3f") % m_minCKtheta[rad]
               << " -> " << boost::format("%5.3f") % m_maxCKtheta[rad]
               << " rad : Tol. " << boost::format("%5.3f") % m_nSigma[rad] << " sigma "
               << endmsg;
@@ -149,12 +137,12 @@ StatusCode PhotonCreatorBase::finalize()
 void PhotonCreatorBase::handle ( const Incident & incident )
 {
   // Update prior to start of event. Used to re-initialise data containers
-  if ( IncidentType::BeginEvent == incident.type() )
+  if      ( IncidentType::BeginEvent == incident.type() )
   {
     InitNewEvent();
   }
   // End of event stuff
-  else if ( IncidentType::EndEvent == incident.type() )
+  else if ( IncidentType::EndEvent   == incident.type() )
   {
     FinishEvent();
   }
@@ -192,20 +180,20 @@ StatusCode PhotonCreatorBase::reconstructPhotons() const
   if ( !procStatus()->aborted() )
   {
 
-    if ( msgLevel(MSG::DEBUG) )
-    {
-      debug() << "Found " << richSegments()->size()
-              << " RichRecSegments and " << richPixels()->size()
-              << " RichRecPixels" << endmsg;
-    }
+    //_ri_debug << "Found " << richSegments()->size()
+    //          << " RichRecSegments and " << richPixels()->size()
+    //          << " RichRecPixels" << endmsg;
+  
     if ( !trackCreator()->richTracks()->empty() &&
          !pixelCreator()->richPixels()->empty() )
     {
 
       // make a rough guess at a size to reserve based on number of pixels
       if ( richPhotons()->empty() )
+      {
         richPhotons()->reserve( ( richSegments()->size() *
                                   richPixels()->size() ) / 40 );
+      }
 
       // abort flag for too many photons
       bool abortPhotonReco(false);
@@ -296,12 +284,9 @@ LHCb::RichRecPhoton*
 PhotonCreatorBase::reconstructPhoton( LHCb::RichRecSegment * segment,
                                       LHCb::RichRecPixel * pixel ) const
 {
-  if ( msgLevel(MSG::VERBOSE) )
-  {
-    verbose() << "Trying photon reco. with segment " << segment->key()
-              << " and pixel " << pixel->key() << " " << pixel->hpdPixelCluster()
-              << endmsg;
-  }
+  // _ri_verbo << "Trying photon reco. with segment " << segment->key()
+  //           << " and pixel " << pixel->key() << " " << pixel->hpdPixelCluster()
+  //           << endmsg;
 
   // flag this tool as having been called
   m_hasBeenCalled = true;
@@ -310,34 +295,28 @@ PhotonCreatorBase::reconstructPhoton( LHCb::RichRecSegment * segment,
   if ( pixel->photonDetOccupancy() >
        m_maxHPDOccForReco[segment->trackSegment().radiator()] )
   {
-    if ( msgLevel(MSG::VERBOSE) )
-    {
-      verbose() << "   -> FAILED HPD occupancy check -> reject" << endmsg;
-    }
+    //_ri_verbo << "   -> FAILED HPD occupancy check -> reject" << endmsg;
     return nullptr;
   }
 
   // check photon is possible before proceeding
   if ( !m_photonPredictor->photonPossible(segment,pixel) )
   {
-    if ( msgLevel(MSG::VERBOSE) )
-    {
-      verbose() << "   -> FAILED predictor check -> reject" << endmsg;
-    }
+    //_ri_verbo << "   -> FAILED predictor check -> reject" << endmsg;
     return nullptr;
   }
-  else if (  msgLevel(MSG::VERBOSE) )
-  {
-    verbose() << "   -> PASSED predictor check" << endmsg;
-  }
+  // else if ( msgLevel(MSG::VERBOSE) )
+  // {
+  //   verbose() << "   -> PASSED predictor check" << endmsg;
+  // }
 
   // If aerogel, and configured to do so, reject if the pixel already has
   // a good Rich1Gas photon associated with it.
-  if ( m_rejAeroPhotsIfGas &&
-       Rich::Aerogel == segment->trackSegment().radiator() )
+  if ( UNLIKELY( m_rejAeroPhotsIfGas &&
+                 Rich::Aerogel == segment->trackSegment().radiator() ) )
   {
     bool reject = false;
-    const LHCb::RichRecPixel::Photons & assocPhots = pixel->richRecPhotons();
+    const auto & assocPhots = pixel->richRecPhotons();
     for ( const auto * P : assocPhots )
     {
       if ( Rich::Rich1Gas == P->richRecSegment()->trackSegment().radiator() )
@@ -348,21 +327,13 @@ PhotonCreatorBase::reconstructPhoton( LHCb::RichRecSegment * segment,
     }
     if ( reject )
     {
-      if ( msgLevel(MSG::VERBOSE) )
-      {
-        verbose() << "   -> FAILED Aerogel/Gas check -> reject" << endmsg;
-      }
+      //_ri_verbo << "   -> FAILED Aerogel/Gas check -> reject" << endmsg;
       return nullptr;
     }
   }
 
   // Form the key for this photon
   const PhotonKey photonKey( pixel->key(), segment->key() );
-
-//   info() << "Sizes     " << sizeof(pixel->key()) << " " << sizeof(segment->key())
-//          << " " << sizeof(photonKey.key()) << endmsg;
-//   info() << "Before    " << pixel->key() << " " << segment->key() << endmsg;
-//   info() << "PhotonKey " << photonKey << endmsg;
 
   // See if this photon already exists
   LHCb::RichRecPhoton * phot = nullptr;
@@ -376,11 +347,6 @@ PhotonCreatorBase::reconstructPhoton( LHCb::RichRecSegment * segment,
     // return brand new photon
     phot = buildPhoton( segment, pixel, photonKey );
   }
-
-//   if ( phot )
-//   {
-//     info() << "New Photon key " << sizeof(phot->key()) << " " << phot->key() << endmsg;
-//   }
 
   return phot;
 }
@@ -407,13 +373,10 @@ LHCb::RichRecPhotons * PhotonCreatorBase::richPhotons() const
 
       // get photons from TES
       m_photons = get<LHCb::RichRecPhotons>(m_richRecPhotonLocation);
-      if ( msgLevel(MSG::DEBUG) )
-      {
-        debug() << "Found " << m_photons->size()
+      _ri_debug << "Found " << m_photons->size()
                 << " pre-existing RichRecPhotons in TES at "
                 << m_richRecPhotonLocation << endmsg;
-      }
-
+      
       // Remake local photon reference map
       if ( bookKeep() )
       {
@@ -431,8 +394,7 @@ PhotonCreatorBase::reconstructPhotons( LHCb::RichRecTrack * track ) const
 {
   if ( !track->allPhotonsDone() && track->inUse() )
   {
-    if ( msgLevel(MSG::DEBUG) )
-      debug() << "Reconstructing all photons for track " << track->key() << endmsg;
+    //_ri_debug << "Reconstructing all photons for track " << track->key() << endmsg;
 
     // Iterate over segments
     for ( auto * segment : track->richRecSegments() )
@@ -586,10 +548,10 @@ PhotonCreatorBase::checkAngleInRange( LHCb::RichRecSegment * segment,
     }
 
   }
-  if ( !ok && msgLevel(MSG::VERBOSE) )
-  {
-    verbose() << "    -> photon FAILED checkAngleInRange test" << endmsg;
-  }
+  //if ( !ok && msgLevel(MSG::VERBOSE) )
+  //{
+  //  verbose() << "    -> photon FAILED checkAngleInRange test" << endmsg;
+  //}
   return ok;
 }
 
@@ -633,8 +595,10 @@ void PhotonCreatorBase::FinishEvent()
             << " Rich2Gas=" << m_photCount[Rich::Rich2Gas]-m_photCountLast[Rich::Rich2Gas]
             << endmsg;
     if ( ! richPhotons()->empty() )
+    {
       counter("PhotScaleFactor") += ( (double)( richSegments()->size() *
                                                 richPixels()->size() ) /
                                       (double)(richPhotons()->size()) );
+    }
   }
 }

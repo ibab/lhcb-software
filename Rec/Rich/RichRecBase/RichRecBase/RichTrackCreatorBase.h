@@ -67,10 +67,10 @@ namespace Rich
       virtual ~TrackCreatorBase( ) {}
 
       // Initialize method
-      virtual StatusCode initialize();
+      virtual StatusCode initialize() override;
 
       // Finalize method
-      virtual StatusCode finalize();
+      virtual StatusCode finalize() override;
 
       // Implement the handle method for the Incident service.
       virtual void handle( const Incident& incident );
@@ -147,13 +147,16 @@ namespace Rich
        *  @retval true  Book-keeping is to be done
        *  @retval false Book-keeping is to be skipped for increased speed
        */
-      bool bookKeep() const;
+      inline bool bookKeep() const noexcept { return m_bookKeep; }
 
       /// Read access to track selector
-      const Rich::Rec::ITrackSelector & trackSelector() const;
+      inline const Rich::Rec::ITrackSelector & trackSelector() const noexcept
+      {
+        return *m_trSelector;
+      }
 
       /// Access to track statistics object
-      TrackTypeCount & trackStats() const;
+      inline TrackTypeCount & trackStats() const noexcept { return m_nTracksAll; }
 
       /** Set detector and radiator information into RichRecTrack
        *
@@ -164,7 +167,7 @@ namespace Rich
                        const Rich::RadiatorType rad ) const;
 
       /// Returns a pointer to the SmartID tool
-      const Rich::ISmartIDTool * smartIDTool() const
+      const Rich::ISmartIDTool * smartIDTool() const noexcept
       {
         return m_smartIDTool;
       }
@@ -233,30 +236,10 @@ namespace Rich
 
     };
 
-    inline bool TrackCreatorBase::bookKeep() const
-    {
-      return m_bookKeep;
-    }
-
-    inline const Rich::Rec::ITrackSelector & TrackCreatorBase::trackSelector() const
-    {
-      return *m_trSelector;
-    }
-
-    inline TrackCreatorBase::TrackTypeCount & TrackCreatorBase::trackStats() const
-    {
-      return m_nTracksAll;
-    }
-
     inline void TrackCreatorBase::setDetInfo( LHCb::RichRecTrack * track,
                                               const Rich::RadiatorType rad ) const
     {
-      if ( Rich::Aerogel == rad )
-      {
-        track->setInRICH1(true);
-        track->setInAerogel(true);
-      }
-      else if ( Rich::Rich1Gas == rad )
+      if      ( Rich::Rich1Gas == rad )
       {
         track->setInRICH1(true);
         track->setInGas1(true);
@@ -265,6 +248,11 @@ namespace Rich
       {
         track->setInRICH2(true);
         track->setInGas2(true);
+      }
+      else if ( Rich::Aerogel  == rad )
+      {
+        track->setInRICH1(true);
+        track->setInAerogel(true);
       }
       else
       {
