@@ -223,6 +223,7 @@ for h in ( ROOT.TH1F , ROOT.TH1D ,
         h.__init__    = _h_new_init_
 
 
+
 # ==================================================================================
 ## get current directory in ROOT
 #  @code
@@ -751,7 +752,6 @@ _interpolate_2D_ = cpp.Gaudi.Math.HistoInterpolation.interpolate_2D
 #  @see Gaudi::Math::HistoInterpolation::interpolate_3D
 _interpolate_3D_ = cpp.Gaudi.Math.HistoInterpolation.interpolate_3D
 # =============================================================================
-
 
 # =============================================================================
 ## histogram as function 
@@ -3276,7 +3276,6 @@ ROOT.TH3.  asym    = _h3_asym_
 ROOT.TH3.  chi2    = _h3_chi2_
 ROOT.TH3.  average = _h3_mean_
 
-
 # =============================================================================
 ## Update value of histogram from the function.
 #  For each bin the integral of the function within the bin is used.
@@ -4368,7 +4367,8 @@ def _h1_shift_ ( h , bias ) :
         y         += bias
         result[i]  = h ( y )
         
-    return result      
+    return result
+
 
 # =============================================================================
 ## simple shift of the histogram
@@ -4492,7 +4492,8 @@ for t in ( ROOT.TH3F , ROOT.TH3D ) :
 ## generic
 ROOT.TH1 . scale      = _h_scale_
 
-    
+
+
 HStats   = cpp.Gaudi.Utils.HStats
 
 # =============================================================================
@@ -4631,6 +4632,7 @@ def _h_stat_ ( h ) :
     return cnt
 
 ROOT.TH1.stat = _h_stat_
+
 
 # =============================================================================
 ## get some (weighted) statistic information on the histogram content
@@ -4977,7 +4979,6 @@ ROOT. TH3 . projZX = lambda s : s.Project ( 'zx' )
 ROOT. TH3 . projYZ = lambda s : s.Project ( 'yz' )
 ROOT. TH3 . projZY = lambda s : s.Project ( 'zy' )
 
-
 # =============================================================================
 # Other decorations 
 # =============================================================================
@@ -4991,6 +4992,7 @@ import Ostap.TFileDeco
 import Ostap.MiscDeco
 import Ostap.Models 
 import Ostap.HepDATA 
+import Ostap.Canvas 
 
 from Ostap.GraphDeco import makeGraph, hToGraph, hToGraph2, hToGraph3, lw_graph  
 

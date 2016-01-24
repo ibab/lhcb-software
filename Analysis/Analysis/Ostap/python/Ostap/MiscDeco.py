@@ -33,56 +33,66 @@ else                       : logger = getLogger( __name__ )
 # =============================================================================
 logger.debug ( 'Some useful decorations for Canvas and other objects')
 # ==============================================================================
-
+## the list of valid extensions 
+# =============================================================================
+all_extensions = (
+    'pdf'  , 'png'  , 'gif' , 'eps'  , 'ps' ,
+    'cxx'  , 'c'    , 
+    'jpg'  , 'jpeg' , 'svg' , 
+    'root' , 'xml'  , 'xpm' , 
+    'tiff' , 'tex' 
+    )
 
 # =============================================================================
 ## define simplified print for TCanvas 
-def _cnv_print_ ( cnv , fname , exts = [ 'pdf' , 'gif' , 'eps', 'C' ] ) :
-    """
-    A bit simplified version for TCanvas print
-    
+def _cnv_print_ ( cnv , fname , exts = ( 'pdf' , 'png' , 'eps', 'C' ) ) :
+    """A bit simplified version for TCanvas print
     >>> canvas.print ( 'fig' )    
     """
-    #
-    p = fname.rfind ('.')
-    #
-    if 0 < p :
-        if p+4 == len ( fname ) or fname[p:] in ( '.C', '.ps', '.jpeg', '.JPEG') :
-            cnv.Print( fname )
-            return cnv 
+    # 
+    from Ostap.Utils import rootWarning 
+    n,d,e = fname.rpartition('.')
+    if d and e.lower() in all_extensions : 
+        with rootWarning () :  
+            cnv.Print    ( fname )
+            logger.debug ( 'Canvas --> %s' % fname )
+            return cnv
         
-    for e in exts :
-        cnv.Print ( fname + '.' + e )
+    for ext in exts :
+        with rootWarning () :
+            name = fname + '.' + ext
+            cnv.Print   ( name )
+            logger.debug('Canvas --> %s' % name )
             
     return cnv 
 
 # =============================================================================
-## define streamer for canvas 
+## define streamer for canvas
+#  @code
+#  canvas >> 'a'    
+#  @endcode 
 def _cnv_rshift_ ( cnv , fname ) :
-    """
-    very simple print for canvas:
-    
-    >>> canvas >> 'a'
-    
+    """Very simple print for canvas:
+    >>> canvas >> 'a'    
     """
     return _cnv_print_ ( cnv , fname )
 
 ROOT.TCanvas.print_     = _cnv_print_
 ROOT.TCanvas.__rshift__ = _cnv_rshift_
 
-
-
-
-
 # =============================================================================
 ## minor extension for TCut
+#  @code
+#  cut       =
+#  other_cut = 
+#  new_cut1  = cut + other_cut ## create new cut  
+#  new_cut2  = cut & other_cut ## ditto 
+#  @endcode 
 #  @see ROOT::TCut
 #  @author Vanya BELYAEV Ivan.Belyaev
 #  @date   2014-08-31
 def _tc_and_( c , other ) :
-    """
-    Add cuts using logical AND
-
+    """Add cuts using logical AND
     >>> cut       =
     >>> other_cut = 
     >>> new_cut1  = cut + other_cut ## create new cut  
@@ -96,13 +106,16 @@ def _tc_and_( c , other ) :
 
 # =============================================================================
 ## minor extension for TCut
+#  @code 
+#  cut       =
+#  other_cut = 
+#  new_cut1  = cut * other_cut ## create new cut
+#  @endcode 
 #  @see ROOT::TCut
 #  @author Vanya BELYAEV Ivan.Belyaev
 #  @date   2014-08-31
 def _tc_mul_( c , other ) :
-    """
-    Multiply cuits values
-    
+    """Multiply cuts values
     >>> cut       =
     >>> other_cut = 
     >>> new_cut1  = cut * other_cut ## create new cut  
@@ -116,12 +129,13 @@ def _tc_mul_( c , other ) :
 # =============================================================================
 ## minor extension for TCut
 #  @see ROOT::TCut
+#  cut       =
+#  other_cut = 
+#  new_cut1  = cut | other_cut ## create new cut  
 #  @author Vanya BELYAEV Ivan.Belyaev
 #  @date   2014-08-31
 def _tc_or_ ( c , other ) :
-    """
-    Logical OR for TCut 
-    
+    """Logical OR for TCut 
     >>> cut       =
     >>> other_cut = 
     >>> new_cut1  = cut | other_cut ## create new cut  
@@ -141,13 +155,15 @@ def _tc_or_ ( c , other ) :
 
 # =============================================================================
 ## minor extension for TCut
+#  @code 
+#  cut     =
+#  new_cut = ~cut
+#  @endcode 
 #  @see ROOT::TCut
 #  @author Vanya BELYAEV Ivan.Belyaev
 #  @date   2014-08-31
 def _tc_invert_ ( c ) :
-    """
-    Invert the cut 
-    
+    """Invert the cut 
     >>> cut     =
     >>> new_cut = ~cut 
     """
@@ -158,13 +174,18 @@ def _tc_invert_ ( c ) :
     return ROOT.TCut
 
 # =============================================================================
-## Return the cut string without leading/trailing blanks
+## Remove leading/traling and excessive blanks from TCut
+#  @code 
+#  cut = ...
+#  cut.strip()
+#  @endcode
 #  @see ROOT::TCut
 #  @author Vanya BELYAEV Ivan.Belyaev
 #  @date   2014-08-31
 def _tc_strip_ ( c ) :
-    """
-    Return string without leading/trailing and excessive blanks 
+    """Remove leading/trailing and excessive blanks from TCut
+    >>> cut = ...
+    >>> cut.strip() 
     """
     t = c.GetTitle()
     t = t.strip()
@@ -173,17 +194,18 @@ def _tc_strip_ ( c ) :
     return c
 
 # =============================================================================
-## create new cut by replacing the expressions  
+## create new cut by replacing the expressions
+#  @code 
+#  oldcut = ...
+#  newcut = oldcut.replace ( 'pt_Bu' , 'pt_Bc' )
+#  @endcode 
 #  @see ROOT::TCut
 #  @author Vanya BELYAEV Ivan.Belyaev
 #  @date   2014-08-31
 def _tc_replace_ ( c , oldexp , newexp ) :
-    """
-    Create new cut by replacing the expressions  
-
+    """Create new cut by replacing the expressions  
     >>> oldcut = ...
     >>> newcut = oldcut.replace ( 'pt_Bu' , 'pt_Bc' ) 
-    
     """
     t = c.strip ()
     t = ROOT.TCut ( t.replace ( oldexp , newexp ) ) 
@@ -204,7 +226,6 @@ ROOT.TCut . __ror__    = lambda s,o : ROOT.TCut(o)|s
 ROOT.TCut . __rmul__   = lambda s,o : ROOT.TCut(o)*s   
 
 ROOT.TCut . __repr__   = ROOT.TCut.__str__ 
-
 
 # =============================================================================
 if '__main__' == __name__ :

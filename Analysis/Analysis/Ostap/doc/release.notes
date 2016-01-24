@@ -8,6 +8,10 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2016-01-24 - Vanya Belyaev
+ - improve logging & qmtests 
+ - clean up interactive contex 
+
 ! 2016-01-23 - Vanya Belyaev
  - improvement with logging 
 

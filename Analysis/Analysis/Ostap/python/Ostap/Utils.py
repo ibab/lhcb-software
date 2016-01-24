@@ -86,20 +86,18 @@ else                       : logger = getLogger( __name__ )
 #  @author Vanya Belyaev Ivan.Belyaev@itep.ru
 #  @date 2013-02-10
 class Memory(object):
-    """
-    Simple class to evaluate the change in virtual memory
+    """Simple class to evaluate the change in virtual memory
     to be used as context manager:
     
-    with Memory('here...') :
-    #   <whatever action is>
-    #    at the exit it prints the change in virtual memory
+    >>> with Memory('here...') :
+    ...     <whatever action is>
+    at the exit it prints the change in virtual memory
     
-    with Memory('here...') as M :
-    #   <whatever action is>
-    #    at the exit it prints the change in virtual memory
+    >>> with Memory('here...') as M :
+    >>> <whatever action is>
+    at the exit it prints the change in virtual memory
     
-    >>> delta = M.delta
-    
+    >>> delta = M.delta    
     """    
     def __init__  ( self , name = '' ) :
         self.name   = name
@@ -114,19 +112,17 @@ class Memory(object):
 # ============================================================================
 ## create the context manager to monitor the virtual memory increase  
 def virtualMemory ( name = '' ) :
-    """
-    Create the context manager to monitor the virtual memory increase:
-
-    with memory('here...') :
-    #     <whatever action is>
-    #      at the exit it prints the change in virtual memory
-          
-    with memory('here...') as m :
-    #     <whatever action is>
-    #      at the exit it prints the change in virtual memory
-          
-    >>> delta = m.delta
+    """Create the context manager to monitor the virtual memory increase:
     
+    >>> with memory('here...') :
+    ...   <whatever action is>
+    at the exit it prints the change in virtual memory
+          
+    >>> with memory('here...') as m :
+    ...   <whatever action is>
+    at the exit it prints the change in virtual memory
+    
+    >>> delta = m.delta    
     """
     return Memory( name )
 
@@ -158,16 +154,14 @@ memory = virtualMemory  ## ditto
 #  @author Vanya Belyaev Ivan.Belyaev@itep.ru
 #  @date 2013-02-10                    
 class Clock(object):
-    """
-    Smple context manager to measure the clock counts
+    """Simple context manager to measure the clock counts
+    >>> with Clock() :
+    ...  <whatever action is>
+    at the exit it prints the clock counts 
     
-    with Clock() :
-    #    <whatever action is>
-    #    at the exit it prints the clock counts 
-    
-    with Clock() as c :
-    #     <whatever action is>
-    #     at the exit it prints the clock counts 
+    >>> with Clock() as c :
+    ...  <whatever action is>
+    at the exit it prints the clock counts 
     
     >>> print c.delta 
     """
@@ -206,18 +200,17 @@ class Clock(object):
 #  @date 2013-02-10
 #
 class Timer(object):
-    """
-    Simple context manager to measure the time
+    """Simple context manager to measure the time
     
-    with Timer() :
-    #     <whatever action is>
-    #     at the exit it prints the time 
+    >>> with Timer() :
+    ...  <whatever action is>
+    at the exit it prints the time 
     
     Or:
     
-    with Timer() as t :
-    #     <whatever action is>
-    #     at the exit it prints the clock counts 
+    >>> with Timer() as t :
+    ...  <whatever action is>
+    at the exit it prints the clock counts 
     
     >>> print ct.delta 
     """
@@ -257,21 +250,19 @@ class Timer(object):
 #  @author Vanya Belyaev Ivan.Belyaev@itep.ru
 #  @date 2013-02-10                    
 def clocks ( name = '' ) :
-    """
-    Simple context manager to measure the clock counts 
+    """Simple context manager to measure the clock counts 
     
-    with clocks () :
-    #     <whatever action is>
-    #     at the exit it prints the clock counts 
+    >>> with clocks () :
+    ...   <whatever action is>
+    at the exit it prints the clock counts 
     
-    with clocks () as c :
-    #     <whatever action is>
-    #     at the exit it prints the clock counts 
+    >>> with clocks () as c :
+    ...   <whatever action is>
+    at the exit it prints the clock counts 
     
     >>>print c.delta
     """
     return Clock ( name )
-
 
 # =============================================================================
 ## Simple context manager to measure the time
@@ -298,16 +289,15 @@ def clocks ( name = '' ) :
 #  @author Vanya Belyaev Ivan.Belyaev@itep.ru
 #  @date 2013-02-10                    
 def timing ( name = '' ) :
-    """
-    Simple context manager to measure the clock counts 
+    """Simple context manager to measure the clock counts 
     
-    with timing () :
-    #    <whatever action is>
-    #    at the exit it prints the clock counts 
+    >>> with timing () :
+    ...   <whatever action is>
+    at the exit it prints the clock counts 
     
-    with timing () as c :
-    #    <whatever action is>
-    #    at the exit it prints the clock counts 
+    >>> with timing () as c :
+    ...   <whatever action is>
+    at the exit it prints the clock counts 
     
     >>> print c.delta
     """
@@ -322,8 +312,7 @@ timer = timing   # ditto
 ## @class MutePy
 #  Very simple context manager to suppress python printout 
 class MutePy(object):
-    """
-    A context manager for doing a ``deep suppression'' of stdout and stderr in 
+    """ A context manager for doing a ``deep suppression'' of stdout and stderr in 
     Python, i.e. will suppress all print, even if the print originates in a 
     compiled C/Fortran sub-function.
     This will not suppress raised exceptions, since exceptions are printed
@@ -364,8 +353,7 @@ class MutePy(object):
 #  A fix is added for "IOError: [Errno 24] Too many open files" :
 #  original code leaks the file descriptors
 class MuteC(object):
-    """
-    A context manager for doing a ``deep suppression'' of stdout and stderr in 
+    """A context manager for doing a ``deep suppression'' of stdout and stderr in 
     Python, i.e. will suppress all print, even if the print originates in a 
     compiled C/Fortran sub-function.
     This will not suppress raised exceptions, since exceptions are printed
@@ -437,7 +425,6 @@ class MuteC(object):
         os.close ( self.save_fds[1] ) 
         os.close ( self.save_fds[0] )
                 
-
 # =============================================================================
 ## dump all stdout/stderr information (including C/C++) into separate file
 #  @code
@@ -446,14 +433,12 @@ class MuteC(object):
 #  @endcode 
 #  @see MuteC 
 class OutputC(object) :
-    """
-    Dump all stdout/stderr information into separate file:
+    """Dump all stdout/stderr information into separate file:
     
-    >>  with output ('output.txt') :
+    >>>  with output ('output.txt') :
     ...             print 'ququ!'
     
     """
-
     ## constructor: file name 
     def __init__ ( self , filename , out = True , err = False ) : 
         """
@@ -510,10 +495,9 @@ class OutputC(object) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  date 2012-07-06
 class TeePy(object) :
-    """
-    Very simple context manager to duplicate Python-printout into file ("tee")
-    #into separate file
-
+    """Very simple context manager to duplicate Python-printout into file (``tee'')
+    into separate file
+    
     >>>  with tee('tee.txt') :
     ...        print 'ququ!'
     
@@ -568,8 +552,7 @@ class TeePy(object) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  date 2012-07-07
 class TeeCpp(object) :
-    """
-    very simple context manager to duplicate C++-printout into file 
+    """Very simple context manager to duplicate C++-printout into file 
     into separate file
     
     >>> with tee_cpp('tee.txt') :
@@ -603,8 +586,7 @@ class TeeCpp(object) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2013-07-09
 class RooSilent(object) :
-    """
-    very simple context manager to suppress RooFit printout
+    """Very simple context manager to suppress RooFit printout
     
     >>> with rooSilent( 4 , False ) :
     ...        some_RooFit_code_here ()
@@ -664,18 +646,15 @@ class RooSilent(object) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2015-07-30
 class ROOTIgnore( object ) :
-    """
-    Very simple context manager to suppress ROOT printout
-    #  >>> with ROOTIgnore ( ROOT.kError +! ) : some_ROOT_code_here()
+    """Very simple context manager to suppress ROOT printout
+    >>> with ROOTIgnore ( ROOT.kError + 1 ) : some_ROOT_code_here()
     """
     ## constructor
     #  @param level  (INPUT) print level 
     #  @param silent (print level 
     # 
     def __init__ ( self , level ) :
-        """
-        Constructor:
-        
+        """ Constructor:        
         >>> with rootError   () : some_ROOT_code_here()
         >>> with rootWarning () : some_ROOT_code_here()
         """
@@ -719,9 +698,8 @@ class NoContext(object) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  date 2014-08-03    
 class TakeIt(object):
-    """
-    Take some object, keep it and delete at the exit
-
+    """Take some object, keep it and delete at the exit
+    
     >>> ds = dataset.reduce('pt>1')
     >>> with takeIt ( ds ) :
     ...
@@ -735,7 +713,6 @@ class TakeIt(object):
         return self.other
     
     def __exit__  ( self , *args ) :
-
 
         o = self.other
 
@@ -759,13 +736,10 @@ class TakeIt(object):
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  date 2012-07-06
 def tee_py ( filename ) :
-    """
-    very simple context manager to duplicate Python-printout into file ("tee")
+    """Very simple context manager to duplicate Python-printout into file ("tee")
     into separate file
-    
     >>> with tee('tee.txt') :
     ...        print 'ququ!'
-
     Unfortunately only Python printouts are grabbed 
     """
     return TeePy ( filename ) 
@@ -780,12 +754,9 @@ def tee_py ( filename ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  date 2012-07-06
 def tee_cpp ( filename ) :
-    """
-    very simple context manager to duplicate C++-printout into file ('tee')
+    """Very simple context manager to duplicate C++-printout into file ('tee')
     into separate file
-    
     >>> with tee_cpp('tee.txt') : some_cpp_code()
-    
     Unfortunately only C/C++ printouts are grabbed 
     """
     return TeeCpp ( filename ) 
@@ -801,8 +772,7 @@ def tee_cpp ( filename ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  date 2012-07-06
 def output ( fname , cout = True , cerr = False ) :
-    """
-    Simple context manager to redirect all (C/C++/Python) printotu
+    """ Simple context manager to redirect all (C/C++/Python) printotu
     
     >>> with output ('output.txt') :
     ...               print 'ququ!'
@@ -811,15 +781,14 @@ def output ( fname , cout = True , cerr = False ) :
     return OutputC ( fname  , cout , cerr )
 
 # =============================================================================
-## simple context manager to suppressC/C++-printout
+## simple context manager to suppress C/C++-printout
 #
 #  @code
 #  >>> with mute () :
 #  ...        <some code here>
 #  @endcode 
 def mute ( cout = True , cerr = False )   :
-    """
-    Simple context manager to suppress All printout
+    """Simple context manager to suppress C/C++ printout
     
     >>> with mute () :
     ...     <some code here>
@@ -834,12 +803,10 @@ def mute ( cout = True , cerr = False )   :
 #  ...        <some code here>
 #  @endcode 
 def mute_py ( cout = True , cerr = False )   :
-    """
-    Simple context manager to suppress All printout
+    """Simple context manager to suppress python printouts
     
     >>> with mute_py () :
-    ...    <some code here>
-    
+    ...    <some code here>    
     """
     return MutePy ( cout , cerr )
 
@@ -864,12 +831,9 @@ silence     = mute     # ditto
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2013-07-09
 def rooSilent ( level = ROOT_RooFit_ERROR , silent = True ) :
-    """
-    very simple context manager to suppress RooFit printout
-    
+    """Very simple context manager to suppress RooFit printout
     >>> with rooSilent( 4 , False ) :
-    ...        some_RooFit_code_here()
-    
+    ...        some_RooFit_code_here()    
     """
     return RooSilent ( level , silent ) 
 
@@ -886,8 +850,7 @@ def rooSilent ( level = ROOT_RooFit_ERROR , silent = True ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2013-07-09
 def roo_silent ( silence , *args ) :
-    """
-    Helper context manager#
+    """ Helper context manager#
     >>> with roo_silent ( True ) : 
     ...        some_RooFit_code_here()
     """
@@ -901,8 +864,7 @@ def roo_silent ( silence , *args ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2015-07-30
 def rootError   ( level = 1 ) :
-    """
-    Very simple context manager to suppress ROOT printout
+    """Very simple context manager to suppress ROOT printout
     >>> with rootError () : some_ROOT_code_here()
     """
     return ROOTIgnore ( ROOT.kError   + level )
@@ -915,8 +877,7 @@ def rootError   ( level = 1 ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2015-07-30
 def rootWarning ( level = 1 ) :
-    """
-    Very simple context manager to suppress ROOT printout
+    """Very simple context manager to suppress ROOT printout
     >>> with rootWarning () : some_ROOT_code_here()
     """
     return ROOTIgnore ( ROOT.kWarning + level )
@@ -927,13 +888,10 @@ def rootWarning ( level = 1 ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  date 2014-08-03    
 def takeIt (  other ):
-    """
-    Take some object, keep it and delete at the exit
-    
+    """ Take some object, keep it and delete at the exit
     >>> ds = dataset.reduce('pt>1')
     >>> with takeIt ( ds ) :
-    ...
-    
+    ...    
     """
     return TakeIt ( other ) 
 
@@ -941,9 +899,7 @@ def takeIt (  other ):
 ## get all open file descriptors
 #  The actual code is copied from http://stackoverflow.com/a/13624412
 def get_open_fds():
-    """
-    Get all open file descriptors
-    
+    """Get all open file descriptors    
     The actual code is copied from http://stackoverflow.com/a/13624412
     """
     #
@@ -965,8 +921,7 @@ def get_open_fds():
 #  The actual code is copied from http://stackoverflow.com/a/13624412
 #  @warning: it is likely to be "Linux-only" function
 def get_file_names_from_file_number(fds):
-    """
-    Get the actual file name from file descriptor 
+    """ Get the actual file name from file descriptor 
     The actual code is copied from http://stackoverflow.com/a/13624412 
     """
     names = []

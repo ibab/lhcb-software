@@ -8,5 +8,4 @@ block = """
 """
 findReferenceBlock(block)
   </text></argument>
-
 </extension>

@@ -3,6 +3,18 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program">   <text>ostap</text></argument>
   <argument name="args"><set>
-      <text>-b</text>
+      <text>-b</text>	      
+      <text>--verbose</text>	      
+      <text>../batch.py</text>	
   </set></argument>
+ <argument name="validator"><text>
+block = """
+# Ostap.MiscDeco            DEBUG   Canvas --> batch.pdf
+# Ostap.MiscDeco            DEBUG   Canvas --> batch.png
+# Ostap.MiscDeco            DEBUG   Canvas --> batch.eps
+# Ostap.MiscDeco            DEBUG   Canvas --> batch.C
+# Ostap                     DEBUG   EXIT AT BATCH!
+"""
+findReferenceBlock(block)
+  </text></argument>
 </extension>

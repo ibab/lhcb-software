@@ -66,7 +66,8 @@ import ROOT
 # logging 
 # =============================================================================
 from AnalysisPython.Logger import getLogger
-logger    = getLogger ( 'Ostap Canvas' )
+if '__main__' ==  __name__ : logger = getLogger( 'Ostap.Canvas' )
+else                       : logger = getLogger( __name__ )
 # =============================================================================
 _canvases = {} 
 # =============================================================================
