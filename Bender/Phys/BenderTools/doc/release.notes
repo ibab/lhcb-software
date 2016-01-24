@@ -5,6 +5,9 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2016-01-24 - Vanya Belyaev
+ - improve qmtest and add validators for all tests except trg-check, 
+   that does not work :-(
 
 ! 2016-01-23 - Vanya Belyaev
  - fix get-metainfo script

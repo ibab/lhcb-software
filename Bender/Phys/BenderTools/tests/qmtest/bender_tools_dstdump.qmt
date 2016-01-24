@@ -7,6 +7,23 @@
       <text>-f</text>
       <text>/lhcb/LHCb/Collision12/PSIX.MDST/00037249/0000/00037249_00000090_1.psix.mdst</text>
   </set></argument>
+  <argument name="validator"><text>
+block = """
+ +----------------------------------------------------------------------------------------------------------------------------+
+ | Location                                                            |   Total  |       Mean      |   rms   |  min |   max  |
+ +----------------------------------------------------------------------------------------------------------------------------+
+ |  PSIX/Dimuon/Phys/StdAllLooseMuons/Particles                        |     1001 |     2.0+-0.0    | 0.0     |    2 | 3      |
+ |  PSIX/Dimuon/Rec/Vertex/Primary                                     |      551 |     1.1+-0.0    | 0.3     |    1 | 2      |
+ |  PSIX/Phys/SelB&amp;2Mu/BestPV_PSIX_P2PV                                |       39 |    19.5+-13.1   | 18.5    |    1 | 38     |
+ |  PSIX/Phys/SelB&amp;2Mu/Particle2VertexRelations                        |      147 |    73.5+-44.9   | 63.5    |   10 | 137    |
+ |  PSIX/Phys/SelB&amp;2Mu/Particles                                       |       39 |     0.3+-0.3    | 3.2     |    0 | 38     |
+ |  PSIX/Phys/SelB&amp;2Mu/ReFitPvs_PSIX_PVs                               |       39 |    19.5+-13.1   | 18.5    |    1 | 38     |
+ |  PSIX/Phys/SelB&amp;2Mu/decayVertices                                   |       39 |    19.5+-13.1   | 18.5    |    1 | 38     |
+ |  PSIX/Phys/SelB&amp;B/Particles                                         |        0 |       0         |         |      |        |
+ |  PSIX/Phys/SelB&amp;C/Particles                                         |        0 |       0         |         |      |        |
+"""
+findReferenceBlock(block)
+  </text></argument>
 </extension>
 
 

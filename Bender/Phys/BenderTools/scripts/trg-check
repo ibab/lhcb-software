@@ -75,25 +75,27 @@ parser.add_argument (
 group = parser.add_mutually_exclusive_group()
 group.add_argument (
     '-z' ,
-    '--interactive' ,
-    action = 'store_true' , 
-    help   = "Start interactive python shell [default: %(default)s]" )
+    '--interactive'  ,
+    action  = 'store_true' , 
+    help    = "Start interactive python shell [default: %(default)s]",
+    default = False  )
     ##
 group.add_argument (
     '-e' ,
     '--embed' , 
-    action = 'store_true' ,
-    help   = "Start embedded python shell [default: %(default)s]" )
+    action  = 'store_true' ,
+    help    = "Start embedded python shell [default: %(default)s]" ,
+    default = False ) 
 group.add_argument (
     '-y' ,
     '--plain'             ,
     action = 'store_true' ,
-    help   = 'Start plain python shell [default : %(default)s]' )
-config = parser.parse_args()
-##
-## if not config.teslocation : parser.error("Invalid TES location!")
+    help   = 'Start plain python shell [default : %(default)s]' ,
+    default = False ) 
 
-print 'CONFIG' , config
+
+config = parser.parse_args()
+
 
 if 0 >= config.nEvents and -1 != config.nEvents : config.nEvents = 1000
 #
@@ -110,6 +112,7 @@ else :
     logger.info ( ' Version : %s ' % __version__  ) 
     logger.info ( ' Date    : %s ' % __date__     )
     logger.info ( 100*'*')
+
 
 
 from BenderTools.CheckTrg import configChkTrg, chkTrg  
@@ -151,7 +154,7 @@ alg.trgDecs()
 #
 ## stop or continue as batch?
 #
-if config.embed :
+if  config.embed :
 
     logger.info ('Start embedded interactive shell') 
     import IPython
@@ -161,7 +164,6 @@ if config.embed :
 elif config.plain :
         
     __vars = globals().copy()
-    __vars.update( locals() )
     
     import readline
     import code
@@ -175,7 +177,6 @@ elif config.plain :
 elif config.interactive : 
     
     __vars = globals().copy()
-    __vars.update( locals() )
 
     logger.info ('Start interactive shell') 
     

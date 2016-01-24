@@ -5,5 +5,79 @@
   <argument name="args"><set>
       <text>/lhcb/LHCb/Collision12/PSIX.MDST/00037249/0000/00037249_00000090_1.psix.mdst</text>
   </set></argument>
+  <argument name="validator"><text>
+block = """
+# BenderTools.GetDBtags     INFO    ------------+---------------------------------------------------------
+# BenderTools.GetDBtags     INFO     MetaInfo: 
+# BenderTools.GetDBtags     INFO    ------------+---------------------------------------------------------
+# BenderTools.GetDBtags     INFO                       Brunel : v43r2p2 
+# BenderTools.GetDBtags     INFO                         DDDB : ['dddb-20120831'] 
+# BenderTools.GetDBtags     INFO                      DQFLAGS : ['dq-20120727'] 
+# BenderTools.GetDBtags     INFO                        Event : 3372204333 
+# BenderTools.GetDBtags     INFO                 FILL:fill_id : 3036 
+# BenderTools.GetDBtags     INFO               FILL:lumi_hvon : 7363494.45 
+# BenderTools.GetDBtags     INFO             FILL:lumi_logged : 7160367.92 
+# BenderTools.GetDBtags     INFO            FILL:lumi_running : 7329704.13 
+# BenderTools.GetDBtags     INFO              FILL:lumi_total : 7363903.67 
+# BenderTools.GetDBtags     INFO             FILL:lumi_veloin : 7350259.98 
+# BenderTools.GetDBtags     INFO              FILL:nBunchesB1 : 1374 
+# BenderTools.GetDBtags     INFO              FILL:nBunchesB2 : 1374 
+# BenderTools.GetDBtags     INFO       FILL:nCollidingBunches : 1262 
+# BenderTools.GetDBtags     INFO         FILL:peakHltPhysRate : 5055.9000002021 
+# BenderTools.GetDBtags     INFO          FILL:peakL0PhysRate : 962828.95474029 
+# BenderTools.GetDBtags     INFO                FILL:peakLumi : 396.94580557596 
+# BenderTools.GetDBtags     INFO                  FILL:peakMu : 1.7276649130917 
+# BenderTools.GetDBtags     INFO        FILL:peakPhysDeadTime : 4.2284606446761 
+# BenderTools.GetDBtags     INFO            FILL:prev_fill_id : 3034 
+# BenderTools.GetDBtags     INFO               FILL:time_hvon : 19666.48 
+# BenderTools.GetDBtags     INFO             FILL:time_logged : 18656.67 
+# BenderTools.GetDBtags     INFO            FILL:time_running : 19095.73 
+# BenderTools.GetDBtags     INFO              FILL:time_total : 19706.99 
+# BenderTools.GetDBtags     INFO             FILL:time_veloin : 19154.69 
+# BenderTools.GetDBtags     INFO               FILL:timestamp : 2012-09-07T11:28:49z 
+# BenderTools.GetDBtags     INFO            FILL:veloLostLumi : 2612.5235927435 
+# BenderTools.GetDBtags     INFO            FILL:veloLostTime : 240 
+# BenderTools.GetDBtags     INFO                     LHCBCOND : ['cond-20121016'] 
+# BenderTools.GetDBtags     INFO                       ONLINE : ['HEAD'] 
+# BenderTools.GetDBtags     INFO                 RUN:LHCState : PHYSICS 
+# BenderTools.GetDBtags     INFO            RUN:avHltPhysRate : 4055.3915741506 
+# BenderTools.GetDBtags     INFO             RUN:avL0PhysRate : 935418.12530334 
+# BenderTools.GetDBtags     INFO                   RUN:avLumi : 387.22108740634 
+# BenderTools.GetDBtags     INFO                     RUN:avMu : 1.6853390989998 
+# BenderTools.GetDBtags     INFO           RUN:avPhysDeadTime : 2.4659119277232 
+# BenderTools.GetDBtags     INFO               RUN:beamenergy : 4000.0 
+# BenderTools.GetDBtags     INFO           RUN:beamgasTrigger : 1 
+# BenderTools.GetDBtags     INFO                 RUN:betaStar : 3 
+# BenderTools.GetDBtags     INFO                RUN:conddbTag : cond-20120829 
+# BenderTools.GetDBtags     INFO                  RUN:dddbTag : head-20120413 
+# BenderTools.GetDBtags     INFO              RUN:destination : OFFLINE 
+# BenderTools.GetDBtags     INFO                  RUN:endtime : 2012-09-07T09:10:06 
+# BenderTools.GetDBtags     INFO                   RUN:fillid : 3036 
+# BenderTools.GetDBtags     INFO              RUN:lumiTrigger : 0.7 
+# BenderTools.GetDBtags     INFO            RUN:magnetCurrent : -5850 
+# BenderTools.GetDBtags     INFO              RUN:magnetState : DOWN 
+# BenderTools.GetDBtags     INFO               RUN:next_runid : 127975 
+# BenderTools.GetDBtags     INFO            RUN:nobiasTrigger : 1 
+# BenderTools.GetDBtags     INFO              RUN:partitionid : 32767 
+# BenderTools.GetDBtags     INFO            RUN:partitionname : LHCb 
+# BenderTools.GetDBtags     INFO               RUN:prev_runid : 127973 
+# BenderTools.GetDBtags     INFO                  RUN:program : Moore 
+# BenderTools.GetDBtags     INFO           RUN:programVersion : v14r6 
+# BenderTools.GetDBtags     INFO                    RUN:runid : 127974 
+# BenderTools.GetDBtags     INFO                  RUN:runtype : COLLISION12 
+# BenderTools.GetDBtags     INFO                RUN:starttime : 2012-09-07T08:09:57 
+# BenderTools.GetDBtags     INFO                    RUN:state : IN BKK 
+# BenderTools.GetDBtags     INFO                      RUN:tck : 10027076 
+# BenderTools.GetDBtags     INFO     RUN:triggerConfiguration : Physics 
+# BenderTools.GetDBtags     INFO              RUN:veloOpening : -0.00072479248046875 
+# BenderTools.GetDBtags     INFO             RUN:veloPosition : Closed 
+# BenderTools.GetDBtags     INFO                          Run : 127974 
+# BenderTools.GetDBtags     INFO                          TCK : 0x00990044 
+# BenderTools.GetDBtags     INFO                         Time : 1347001796750848 (Fri Sep  7 07:09:56 2012) 
+# BenderTools.GetDBtags     INFO                         UUID :  
+# BenderTools.GetDBtags     INFO    ------------+---------------------------------------------------------
+"""
+findReferenceBlock(block)
+  </text></argument>
 </extension>
 

@@ -5,6 +5,19 @@
   <argument name="args"><set>
       <text>/lhcb/LHCb/Collision12/PSIX.MDST/00037249/0000/00037249_00000090_1.psix.mdst</text>
   </set></argument>
+  <argument name="validator"><text>
+block = """
+# BenderTools.GetDBtags     INFO    ------------+---------------------------------------------------------
+# BenderTools.GetDBtags     INFO     Tags: 
+# BenderTools.GetDBtags     INFO    ------------+---------------------------------------------------------
+# BenderTools.GetDBtags     INFO           DDDB : dddb-20120831 
+# BenderTools.GetDBtags     INFO       LHCBCOND : cond-20121016 
+# BenderTools.GetDBtags     INFO        DQFLAGS : dq-20120727 
+# BenderTools.GetDBtags     INFO         ONLINE : HEAD 
+# BenderTools.GetDBtags     INFO    ------------+---------------------------------------------------------
+"""
+findReferenceBlock(block)
+  </text></argument>
 </extension>
 
 
