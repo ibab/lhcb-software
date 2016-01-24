@@ -4,6 +4,9 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2016-01-24 - Chris Jones
+ - Comment out all messaging calls in the Photon Creators, for CPU reasons.
+
 ! 2016-01-22 - Chris Jones
  - Add an option to the RichPhotonRecoUsingCKEstiFromRadius tool to allow
    the rejection of of ambiguous photons, where the two calibration points

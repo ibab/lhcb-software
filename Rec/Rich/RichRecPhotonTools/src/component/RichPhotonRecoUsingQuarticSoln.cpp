@@ -240,7 +240,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
       if ( !findMirrorData( rich, side, virtDetPoint, emissionPoint1,
                             sphSegment1, secSegment1, sphReflPoint1, secReflPoint1 ) )
       {
-        _ri_debug << radiator << " : Failed to reconstruct photon for start of segment" << endmsg;
+        //_ri_debug << radiator << " : Failed to reconstruct photon for start of segment" << endmsg;
         return StatusCode::FAILURE;
       }
       if ( m_checkBeamPipe[radiator] )
@@ -261,7 +261,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
       if ( !findMirrorData( rich, side, virtDetPoint, emissionPoint2,
                             sphSegment2, secSegment2, sphReflPoint2, secReflPoint2 ) )
       {
-        _ri_debug << radiator << " : Failed to reconstruct photon for end of segment" << endmsg;
+        //_ri_debug << radiator << " : Failed to reconstruct photon for end of segment" << endmsg;
         return StatusCode::FAILURE;
       }
       if ( !beamTestOK && m_checkBeamPipe[radiator] )
@@ -275,7 +275,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
       if ( !beamTestOK )
       {
         // both start and end points failed beam pipe test -> reject
-        _ri_debug << radiator << " : Failed ambiguous photon beampipe intersection checks" << endmsg;
+        //_ri_debug << radiator << " : Failed ambiguous photon beampipe intersection checks" << endmsg;
         return StatusCode::FAILURE;
       }
       // -------------------------------------------------------------------------------
@@ -292,7 +292,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
                                                    sphReflPoint2-emissionPoint2 ) );
         if ( !ok )
         {
-          _ri_debug << radiator << " : Failed mirror segment intersection checks" << endmsg;
+          //_ri_debug << radiator << " : Failed mirror segment intersection checks" << endmsg;
           return StatusCode::FAILURE;
         }
       }
@@ -308,7 +308,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
                                      emissionPoint,
                                      fraction ) )
       {
-        _ri_debug << radiator << " : Failed to compute best gas emission point" << endmsg;
+        //_ri_debug << radiator << " : Failed to compute best gas emission point" << endmsg;
         return StatusCode::FAILURE;
       }
       // -------------------------------------------------------------------------------
@@ -333,7 +333,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
     // if configured to do so reject ambiguous photons
     if ( m_rejectAmbigPhots[radiator] && !unambigPhoton )
     {
-      _ri_debug << radiator << " : Failed ambiguous photon test" << endmsg;
+      //_ri_debug << radiator << " : Failed ambiguous photon test" << endmsg;
       return StatusCode::FAILURE;
     }
 
@@ -345,7 +345,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   // --------------------------------------------------------------------------------------
   if ( fraction < m_minActiveFrac[radiator] )
   {
-    _ri_debug << radiator << " : Failed active segment fraction cut" << endmsg;
+    //_ri_debug << radiator << " : Failed active segment fraction cut" << endmsg;
     return StatusCode::FAILURE;
   }
   // --------------------------------------------------------------------------------------
@@ -364,7 +364,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
                          virtDetPoint,emissionPoint,
                          sphSegment,secSegment,sphReflPoint,secReflPoint ) )
     {
-      _ri_debug << radiator << " : Failed backup photon reconstruction" << endmsg;
+      //_ri_debug << radiator << " : Failed backup photon reconstruction" << endmsg;
       return StatusCode::FAILURE;
     }
   }
@@ -411,7 +411,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
                                                       secReflPoint );
         if ( !sc )
         {
-          _ri_debug << radiator << " : Failed to intersect nominal secondary mirror plane" << endmsg;
+          //_ri_debug << radiator << " : Failed to intersect nominal secondary mirror plane" << endmsg;
           return StatusCode::FAILURE;
         }
         // (re)find the secondary mirror
@@ -460,12 +460,12 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   // --------------------------------------------------------------------------------------
   if ( UNLIKELY( !sameSide(radiator,sphReflPoint,virtDetPoint) ) )
   {
-    _ri_debug << radiator << " : Reflection point on wrong side" << endmsg;
+    //_ri_debug << radiator << " : Reflection point on wrong side" << endmsg;
     return StatusCode::FAILURE;
   }
   if ( m_checkPhotCrossSides[radiator] && !sameSide(radiator,sphReflPoint,emissionPoint) )
   {
-    _ri_debug << radiator << " : Photon crosses between detector sides" << endmsg;
+    //_ri_debug << radiator << " : Photon crosses between detector sides" << endmsg;
     return StatusCode::FAILURE;
   }
   //else { return StatusCode::FAILURE; } // uncomment to select ONLY crossing photons
@@ -482,7 +482,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
     if ( UNLIKELY( deBeam(rich)->testForIntersection( emissionPoint,
                                                       sphReflPoint-emissionPoint ) ) )
     {
-      _ri_debug << radiator << " : Failed final beampipe intersection checks" << endmsg;
+      //_ri_debug << radiator << " : Failed final beampipe intersection checks" << endmsg;
       return StatusCode::FAILURE;
     }
   }
@@ -500,7 +500,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
                                                   secReflPoint );
     if ( !sc )
     {
-      _ri_debug << radiator << " : Failed final secondary mirror plane intersection" << endmsg;
+      //_ri_debug << radiator << " : Failed final secondary mirror plane intersection" << endmsg;
       return StatusCode::FAILURE;
     }
   }
@@ -551,7 +551,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   gPhoton.setUnambiguousPhoton      ( unambigPhoton          );
   gPhoton.setPrimaryMirror          ( sphSegment             );
   gPhoton.setSecondaryMirror        ( secSegment             );
-  _ri_verbo << "Created photon " << gPhoton << endmsg;
+  //_ri_verbo << "Created photon " << gPhoton << endmsg;
   // --------------------------------------------------------------------------------------
 
   return StatusCode::SUCCESS;

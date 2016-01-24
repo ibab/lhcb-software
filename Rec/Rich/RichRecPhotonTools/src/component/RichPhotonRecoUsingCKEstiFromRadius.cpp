@@ -179,7 +179,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
     if ( UNLIKELY( !unambigPhoton && m_rejAmbigPhots ) )
     {
       // Calibration points used different mirrors, so reject
-      _ri_verbo << "Ambiguous photon -> reject" << endmsg;
+      //_ri_verbo << "Ambiguous photon -> reject" << endmsg;
       sc = StatusCode::FAILURE;
     }
     else
@@ -226,14 +226,14 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
       // --------------------------------------------------------------------------------------
 
       // Print the photon
-      _ri_verbo << "Created photon " << gPhoton << endmsg;
+      //_ri_verbo << "Created photon " << gPhoton << endmsg;
 
     }
 
   }
   else
   {
-    _ri_verbo << "No closest point found !" << endmsg;
+    //_ri_verbo << "No closest point found !" << endmsg;
     sc = StatusCode::FAILURE;
   }
 
