@@ -40,6 +40,11 @@ namespace Rich
       /// Default Constructor
       ParityFooter( ) = default;
 
+      /// Destructor
+      ~ParityFooter( ) = default;
+
+    public:
+
       /// Constructor with given size
       ParityFooter( const ShortType nWords,
                     const LongType  wordInit = 0 ) 
@@ -48,9 +53,6 @@ namespace Rich
       /// Constructor from raw footer word(s)
       explicit ParityFooter( const FooterPDBase::FooterWords & words )
         : FooterPDBase(words) { }
-      
-      /// Destructor
-      ~ParityFooter( ) = default;
 
       /// Does this foot have a parity word ?
       inline bool hasParityWord() const 

@@ -45,19 +45,37 @@ namespace LHCb
 
   public:
 
-    /** Default constructor with optional parameters
+    /// Default Constructor
+    RichGeomPhoton() { }
+
+    /// Default Destructor
+    ~RichGeomPhoton() = default;
+
+    /// Default Copy Constructor
+    RichGeomPhoton( const RichGeomPhoton& ) = default;
+    
+    /// Default Copy operator
+    RichGeomPhoton& operator=( const RichGeomPhoton& ) = default;
+    
+    /// Default Move Constructor
+    RichGeomPhoton( RichGeomPhoton&& ) = default;
+    
+    /// Default Move operator
+    RichGeomPhoton& operator=( RichGeomPhoton&& ) = default;
+
+  public:
+
+    /** Constructor with parameters
      *
      *  @param theta Cherenkov angle theta
      *  @param phi   Cherenkov angle phi
-     *  @param activeFrac The fraction of the associate segment tat this photon could have been radiated from
+     *  @param activeFrac The fraction of the associated segment that this photon could have been radiated from
      */
-    RichGeomPhoton( const float theta      = 0,
-                    const float phi        = 0,
-                    const float activeFrac = 0 )
+    RichGeomPhoton( const float theta      ,
+                    const float phi        ,
+                    const float activeFrac )
       : m_CherenkovTheta        ( theta      ),
         m_CherenkovPhi          ( phi        ),
-        m_primaryMirror         ( nullptr    ),
-        m_secondaryMirror       ( nullptr    ),
         m_activeSegmentFraction ( activeFrac ) { }
 
     /** Constructor from full photon information
@@ -89,8 +107,6 @@ namespace LHCb
         m_sphMirReflectionPoint  ( sphMirrReflPoint  ),
         m_flatMirReflectionPoint ( flatMirrReflPoint ),
         m_smartID                ( smartID           ),
-        m_primaryMirror          ( nullptr           ),
-        m_secondaryMirror        ( nullptr           ),
         m_activeSegmentFraction  ( activeFrac        ) { }
 
     /** Constructor from full photon information (without photon direction at emission).
@@ -119,15 +135,15 @@ namespace LHCb
         m_sphMirReflectionPoint  ( sphMirrReflPoint  ),
         m_flatMirReflectionPoint ( flatMirrReflPoint ),
         m_smartID                ( smartID           ),
-        m_primaryMirror          ( nullptr           ),
-        m_secondaryMirror        ( nullptr           ),
         m_activeSegmentFraction  ( activeFrac        ) { }
+
+  public:
 
     /**
      * Set accessor for the Cherenkov theta angle
      * @param theta the new value for the Cherenkov theta angle
      */
-    inline void setCherenkovTheta ( const float theta )
+    inline void setCherenkovTheta ( const float theta ) noexcept
     {
       m_CherenkovTheta = theta;
     }
@@ -136,7 +152,7 @@ namespace LHCb
      * Get accessor for the Cherenkov theta angle
      * @return the current value of the Cherenkov theta angle
      */
-    inline float CherenkovTheta () const
+    inline float CherenkovTheta () const noexcept
     {
       return m_CherenkovTheta;
     }
@@ -145,7 +161,7 @@ namespace LHCb
      * Set accessor for Cherenkov phi angle
      * @param phi the new value for the Cherenkov phi angle
      */
-    inline void setCherenkovPhi (const float phi)
+    inline void setCherenkovPhi (const float phi) noexcept
     {
       m_CherenkovPhi = phi;
     }
@@ -154,7 +170,7 @@ namespace LHCb
      * Get accessor for Cherenkov phi angle
      * @return the current value of the Cherenkov phi angle
      */
-    inline float CherenkovPhi () const
+    inline float CherenkovPhi () const noexcept
     {
       return m_CherenkovPhi;
     }
@@ -163,7 +179,7 @@ namespace LHCb
      * Set accessor for the estimated emission point
      * @param emissionPoint the new value for the estimated emission point
      */
-    inline void setEmissionPoint ( const Gaudi::XYZPoint& emissionPoint )
+    inline void setEmissionPoint ( const Gaudi::XYZPoint& emissionPoint ) noexcept
     {
       m_emissionPoint = emissionPoint;
     }
@@ -172,7 +188,7 @@ namespace LHCb
      * Const Get accessor for the estimated emission point
      * @return the current value of the estimated emission point
      */
-    inline const Gaudi::XYZPoint& emissionPoint () const
+    inline const Gaudi::XYZPoint& emissionPoint () const noexcept
     {
       return m_emissionPoint;
     }
@@ -181,7 +197,7 @@ namespace LHCb
      * Get accessor for the estimated emission point
      * @return the current value of the estimated emission point
      */
-    inline Gaudi::XYZPoint& emissionPoint ()
+    inline Gaudi::XYZPoint& emissionPoint () noexcept
     {
       return m_emissionPoint;
     }
@@ -190,7 +206,7 @@ namespace LHCb
      * Set accessor for the estimated photon direction at the emission point
      * @param emissionDir the new value for the estimated emission direction
      */
-    inline void setEmissionDir ( const Gaudi::XYZVector& emissionDir )
+    inline void setEmissionDir ( const Gaudi::XYZVector& emissionDir ) noexcept
     {
       m_emissionDir = emissionDir;
     }
@@ -199,7 +215,7 @@ namespace LHCb
      * Const Get accessor for the estimated photon direction at the emission point
      * @return the current value of the estimated emission direction
      */
-    inline const Gaudi::XYZVector& emissionDir () const
+    inline const Gaudi::XYZVector& emissionDir () const noexcept
     {
       return m_emissionDir;
     }
@@ -208,7 +224,7 @@ namespace LHCb
      * Get accessor for the estimated photon direction at the emission point
      * @return the current value of the estimated emission direction
      */
-    inline Gaudi::XYZVector& emissionDir ()
+    inline Gaudi::XYZVector& emissionDir () noexcept
     {
       return m_emissionDir;
     }
@@ -217,7 +233,7 @@ namespace LHCb
      * Set accessor for the detection point
      * @param detectionPoint the new value for the detection point
      */
-    inline void setDetectionPoint (const Gaudi::XYZPoint& detectionPoint)
+    inline void setDetectionPoint (const Gaudi::XYZPoint& detectionPoint) noexcept
     {
       m_detectionPoint = detectionPoint;
     }
@@ -226,7 +242,7 @@ namespace LHCb
      * Const Get accessor for the detection point
      * @return the current value of the detection point
      */
-    inline const Gaudi::XYZPoint& detectionPoint () const
+    inline const Gaudi::XYZPoint& detectionPoint () const noexcept
     {
       return m_detectionPoint;
     }
@@ -235,43 +251,43 @@ namespace LHCb
      * Get accessor for the detection point
      * @return the current value of the detection point
      */
-    inline Gaudi::XYZPoint& detectionPoint ()
+    inline Gaudi::XYZPoint& detectionPoint () noexcept
     {
       return m_detectionPoint;
     }
 
     /// Set the unambiguous photon flag
-    void setUnambiguousPhoton( const bool unambig )
+    void setUnambiguousPhoton( const bool unambig ) noexcept
     {
       m_unambiguousPhoton = unambig;
     }
 
     /// Access the unambiguous photon flag
-    bool unambiguousPhoton() const
+    bool unambiguousPhoton() const noexcept
     {
       return m_unambiguousPhoton;
     }
 
     /// Set the associated primary mirror detector element
-    inline void setPrimaryMirror( const DeRichSphMirror * mirror )
+    inline void setPrimaryMirror( const DeRichSphMirror * mirror ) noexcept
     {
       m_primaryMirror = mirror;
     }
 
     /// Access the associated primary mirror detector element
-    inline const DeRichSphMirror * primaryMirror() const
+    inline const DeRichSphMirror * primaryMirror() const noexcept
     {
       return m_primaryMirror;
     }
 
     /// Set the associated secondary mirror detector element
-    inline void setSecondaryMirror( const DeRichSphMirror * mirror )
+    inline void setSecondaryMirror( const DeRichSphMirror * mirror ) noexcept
     {
       m_secondaryMirror = mirror;
     }
 
     /// Access the associated secondary mirror detector element
-    inline const DeRichSphMirror * secondaryMirror() const
+    inline const DeRichSphMirror * secondaryMirror() const noexcept
     {
       return m_secondaryMirror;
     }
@@ -280,16 +296,17 @@ namespace LHCb
      * Set accessor for the RichSmartID
      * @param id The new RichSmartID
      */
-    inline void setSmartID ( const LHCb::RichSmartID id )
+    inline void setSmartID ( const LHCb::RichSmartID& id ) noexcept
     {
       m_smartID = id;
+
     }
 
     /**
      * Const Get accessor to RichSmartID
      * @return the current value of RichSmartID
      */
-    inline LHCb::RichSmartID smartID() const
+    inline const LHCb::RichSmartID& smartID() const noexcept
     {
       return m_smartID;
     }
@@ -299,7 +316,7 @@ namespace LHCb
      * @param sphMirReflectionPoint the new value for the spherical mirror reflection point
      */
     inline void
-    setSphMirReflectionPoint ( const Gaudi::XYZPoint& sphMirReflectionPoint )
+    setSphMirReflectionPoint ( const Gaudi::XYZPoint& sphMirReflectionPoint ) noexcept
     {
       m_sphMirReflectionPoint = sphMirReflectionPoint;
     }
@@ -308,7 +325,7 @@ namespace LHCb
      * Const Get accessor for the spherical mirror reflection point
      * @return the current value of the spherical mirror reflection point
      */
-    inline const Gaudi::XYZPoint& sphMirReflectionPoint () const
+    inline const Gaudi::XYZPoint& sphMirReflectionPoint () const noexcept
     {
       return m_sphMirReflectionPoint;
     }
@@ -317,7 +334,7 @@ namespace LHCb
      * Get accessor for the spherical mirror reflection point
      * @return the current value of the spherical mirror reflection point
      */
-    inline Gaudi::XYZPoint& sphMirReflectionPoint ()
+    inline Gaudi::XYZPoint& sphMirReflectionPoint () noexcept
     {
       return m_sphMirReflectionPoint;
     }
@@ -327,7 +344,7 @@ namespace LHCb
      * @param flatMirReflectionPoint the new value for the flat mirror reflection point
      */
     inline void
-    setFlatMirReflectionPoint( const Gaudi::XYZPoint& flatMirReflectionPoint )
+    setFlatMirReflectionPoint( const Gaudi::XYZPoint& flatMirReflectionPoint ) noexcept
     {
       m_flatMirReflectionPoint = flatMirReflectionPoint;
     }
@@ -336,7 +353,7 @@ namespace LHCb
      * Const Get accessor for the flat mirror reflection point
      * @return the current value of the flat mirror reflection point
      */
-    inline const Gaudi::XYZPoint& flatMirReflectionPoint () const
+    inline const Gaudi::XYZPoint& flatMirReflectionPoint () const noexcept
     {
       return m_flatMirReflectionPoint;
     }
@@ -345,7 +362,7 @@ namespace LHCb
      * Get accessor for the flat mirror reflection point
      * @return the current value of the flat mirror reflection point
      */
-    inline Gaudi::XYZPoint& flatMirReflectionPoint ()
+    inline Gaudi::XYZPoint& flatMirReflectionPoint () noexcept
     {
       return m_flatMirReflectionPoint;
     }
@@ -357,7 +374,7 @@ namespace LHCb
      *
      * @param fraction the new value for the active fraction
      */
-    inline void setActiveSegmentFraction ( const float fraction )
+    inline void setActiveSegmentFraction ( const float fraction ) noexcept
     {
       m_activeSegmentFraction = fraction;
     }
@@ -369,7 +386,7 @@ namespace LHCb
      *
      * @return the current value of the current active segment fraction.
      */
-    inline float activeSegmentFraction () const
+    inline float activeSegmentFraction () const noexcept
     {
       return m_activeSegmentFraction;
     }

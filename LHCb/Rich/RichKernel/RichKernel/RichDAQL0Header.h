@@ -283,11 +283,17 @@ namespace Rich
         : m_word0(std::move(word0)),
           m_word1(std::move(word1)) { }
 
-      /// Retrieve the first word
-      inline const Word0& word0() const { return m_word0; }
+      /// Retrieve the first word (l-value)
+      inline const Word0&  word0() const & { return m_word0; }
 
-      /// Retrieve the second word
-      inline const Word1& word1() const { return m_word1; }
+      /// Retrieve the second word (l-value)
+      inline const Word1&  word1() const & { return m_word1; }
+
+      /// Retrieve the first word (r-value)
+      inline       Word0&& word0()      && { return std::move(m_word0); }
+
+      /// Retrieve the second word (r-value)
+      inline       Word1&& word1()      && { return std::move(m_word1); }
 
     public:
 

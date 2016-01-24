@@ -38,7 +38,7 @@ namespace Rich
       ParityFooterTB2006( ) : FooterPDBase(1) {}
 
       /// Does this foot have a parity word ?
-      inline bool hasParityWord() const { return true; }
+      inline bool hasParityWord() const noexcept { return true; }
 
       /// Access the parity word
       inline Rich::DAQ::LongType parityWord() const

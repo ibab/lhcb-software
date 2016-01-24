@@ -88,7 +88,7 @@ namespace Rich
       ~L1IngressHeader( ) = default;
 
       /// Retrieve the full value
-      inline LongType data() const { return m_data; }
+      inline LongType data() const noexcept { return m_data; }
 
     public: // getters
 

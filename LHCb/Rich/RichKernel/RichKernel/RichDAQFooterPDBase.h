@@ -46,29 +46,42 @@ namespace Rich
 
     public:
 
-      /// Default Constructor (0 words)
-      FooterPDBase() = default;
-
       /// Constructor with number of header words
       explicit FooterPDBase ( const ShortType nWords,
                               const LongType  wordInit = 0 )
         : m_footerWords(nWords,wordInit) { }
 
-      /// Copy constructor
-      FooterPDBase ( const FooterPDBase & footer )
-        : m_footerWords(footer.footerWords()) { }
-
       /// Constructor from raw footer word(s)
       explicit FooterPDBase( const FooterWords & words )
         : m_footerWords(words) { }
 
+    public:
+
+      /// Default constructor ( 0 words in footer )
+      constexpr FooterPDBase( ) { }
+
       /// Destructor
       ~FooterPDBase ( ) = default;
+
+      /// Default Copy Constructor
+      FooterPDBase( const FooterPDBase& ) = default;
+
+      /// Default Copy operator
+      FooterPDBase& operator=( const FooterPDBase& ) = default;
+
+      /// Default Move Constructor
+      FooterPDBase( FooterPDBase&& ) = default;
+
+      /// Default Move operator
+      FooterPDBase& operator=( FooterPDBase&& ) = default;
 
     public: // methods
 
       /// Read only access to footer words
-      inline const FooterWords & footerWords() const { return m_footerWords; }
+      inline const FooterWords  & footerWords() const & { return m_footerWords; }
+
+      /// Move access to footer words
+      inline FooterWords && footerWords() && noexcept { return std::move(m_footerWords); }
 
       /// Returns the number of data words in the footer
       inline FooterWords::size_type nFooterWords() const
@@ -113,7 +126,7 @@ namespace Rich
       }
 
       /// Read/Write access to footer words
-      inline FooterWords & footerWords() { return m_footerWords; }
+      inline FooterWords & footerWords() & { return m_footerWords; }
 
       /// Set the given footer word
       void setWord( const ShortType word,

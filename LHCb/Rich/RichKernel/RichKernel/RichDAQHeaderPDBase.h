@@ -44,29 +44,45 @@ namespace Rich
 
     public:
 
-      /// Constructor with number of header words
-      explicit HeaderPDBase ( const ShortType nWords   = 1,
-                              const LongType  wordInit = 0 )
+      /// Constructor with number of header words and init value
+      explicit constexpr HeaderPDBase ( const ShortType nWords,
+                                        const LongType  wordInit = 0 )
         : m_headerWords(nWords,wordInit) { }
-
-      /// Copy constructor
-      HeaderPDBase ( const HeaderPDBase & header )
-        : m_headerWords(header.headerWords()) { }
-
+      
       /// Constructor from raw header word(s)
       explicit HeaderPDBase( const HeaderWords & words )
         : m_headerWords(words) { }
+      
+    public:
+
+      /// Default constructor
+      constexpr HeaderPDBase( ) : m_headerWords(1,0) { }
 
       /// Destructor
-      virtual ~HeaderPDBase ( ) { }
+      virtual ~HeaderPDBase ( ) = default;
+
+      /// Default Copy Constructor
+      HeaderPDBase( const HeaderPDBase& ) = default;
+
+      /// Default Copy operator
+      HeaderPDBase& operator=( const HeaderPDBase& ) = default;
+
+      /// Default Move Constructor
+      HeaderPDBase( HeaderPDBase&& ) = default;
+
+      /// Default Move operator
+      HeaderPDBase& operator=( HeaderPDBase&& ) = default;
 
     public: // methods
 
       /// Read only access to header words
-      inline const HeaderWords & headerWords() const { return m_headerWords; }
+      inline const HeaderWords &  headerWords() const & noexcept { return m_headerWords; }
+
+      /// Move access to header words
+      inline HeaderWords && headerWords() && noexcept { return std::move(m_headerWords); }
 
       /// Returns the number of data words in the header
-      inline HeaderWords::size_type nHeaderWords() const
+      inline HeaderWords::size_type nHeaderWords() const noexcept
       {
         return headerWords().size();
       }
@@ -86,7 +102,7 @@ namespace Rich
     protected: // methods
 
       /// Read/Write access to header words
-      inline HeaderWords & headerWords() { return m_headerWords; }
+      inline HeaderWords & headerWords() & noexcept { return m_headerWords; }
 
       /// Set the data value using the given mask and shift values
       inline bool set( const ShortType value,
@@ -100,7 +116,7 @@ namespace Rich
 
       /// tests whether a given value is in range for a given data field
       inline bool dataInRange( const ShortType value,
-                               const ShortType max ) const
+                               const ShortType max ) const noexcept
       {
         return ( value <= max );
       }

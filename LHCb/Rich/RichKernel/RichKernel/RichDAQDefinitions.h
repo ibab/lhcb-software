@@ -92,20 +92,20 @@ namespace Rich
       /// Default Constructor
       NumericType() = default;
       /// Constructor
-      explicit NumericType ( const TYPE id ) : m_id(id) { }
+      explicit NumericType ( const TYPE id ) noexcept : m_id(id) { }
       /// Retrieve the full value
-      inline TYPE data() const { return m_id; }
+      inline TYPE data() const noexcept { return m_id; }
       /// Operator ==
-      inline bool operator== ( const NumericType<TYPE>& id ) const
+      inline bool operator== ( const NumericType<TYPE>& id ) const noexcept
       { return id.data() == this->data() ; }
       /// Operator !=
-      inline bool operator!= ( const NumericType<TYPE>& id ) const
+      inline bool operator!= ( const NumericType<TYPE>& id ) const noexcept
       { return id.data() != this->data() ; }
       /// Operator <
-      inline bool operator<  ( const NumericType<TYPE>& id ) const
+      inline bool operator<  ( const NumericType<TYPE>& id ) const noexcept
       { return this->data() < id.data() ; }
       /// Operator >
-      inline bool operator>  ( const NumericType<TYPE>& id ) const
+      inline bool operator>  ( const NumericType<TYPE>& id ) const noexcept
       { return this->data() > id.data() ; }
     public:
       /// Operator std::string
@@ -155,7 +155,7 @@ namespace Rich
       }
     protected:
       /// Update the internal data
-      inline void setData( const TYPE id ) { m_id = id; }
+      inline void setData( const TYPE id ) noexcept { m_id = id; }
       /// test if a given bit is  'on'
       inline bool isBitOn( const Rich::DAQ::ShortType pos ) const
       {
@@ -239,7 +239,7 @@ namespace Rich
       }
       /// tests whether a given value is in range for a given data field
       inline bool dataInRange( const ShortType value,
-                               const ShortType max ) const
+                               const ShortType max ) const noexcept
       {
         return ( value <= max );
       }
@@ -260,9 +260,7 @@ namespace Rich
       /// Default constructor
       EventID( ) = default;
       /// Copy Constructor
-      //EventID( const EventID& id )
-      // : NumericType<unsigned long long> ( id.data()       ),
-      //   m_nActiveBits                   ( id.activeBits() ) { }
+      EventID( const EventID& id ) = default;
       /// Constructor from value and number of bits
       template<class NUMTYPE>
       EventID ( const NUMTYPE   id,
@@ -325,9 +323,7 @@ namespace Rich
       /// Default constructor
       BXID( ) = default;
       /// Copy Constructor
-      //BXID( const BXID& id )
-      //  : NumericType<LongType> ( id.data()       ),
-      //    m_nActiveBits         ( id.activeBits() ) { }
+      BXID( const BXID& id ) = default;
       /// Constructor from value
       template<class NUMTYPE>
       explicit BXID ( const NUMTYPE id )
@@ -815,133 +811,133 @@ namespace GaudiUtils
 
   /// Level0ID Hash function
   template <> struct Hash<Rich::DAQ::Level0ID>
-  { inline size_t operator() ( Rich::DAQ::Level0ID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( Rich::DAQ::Level0ID id ) const noexcept { return (size_t)id.data(); } } ;
   /// Level0ID Hash function
   template <> struct Hash<Rich::DAQ::Level0ID&>
-  { inline size_t operator() ( Rich::DAQ::Level0ID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( Rich::DAQ::Level0ID id ) const noexcept { return (size_t)id.data(); } } ;
   /// Level0ID Hash function
   template <> struct Hash<const Rich::DAQ::Level0ID>
-  { inline size_t operator() ( const Rich::DAQ::Level0ID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const Rich::DAQ::Level0ID id ) const noexcept { return (size_t)id.data(); } } ;
   /// Level0ID Hash function
   template <> struct Hash<const Rich::DAQ::Level0ID&>
-  { inline size_t operator() ( const Rich::DAQ::Level0ID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const Rich::DAQ::Level0ID id ) const noexcept { return (size_t)id.data(); } } ;
 
   /// Level1HardwareID Hash function
   template <> struct Hash<Rich::DAQ::Level1HardwareID>
-  { inline size_t operator() ( Rich::DAQ::Level1HardwareID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( Rich::DAQ::Level1HardwareID id ) const noexcept { return (size_t)id.data(); } } ;
   /// Level1HardwareID Hash function
   template <> struct Hash<Rich::DAQ::Level1HardwareID&>
-  { inline size_t operator() ( Rich::DAQ::Level1HardwareID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( Rich::DAQ::Level1HardwareID id ) const noexcept { return (size_t)id.data(); } } ;
   /// Level1HardwareID Hash function
   template <> struct Hash<const Rich::DAQ::Level1HardwareID>
-  { inline size_t operator() ( const Rich::DAQ::Level1HardwareID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const Rich::DAQ::Level1HardwareID id ) const noexcept { return (size_t)id.data(); } } ;
   /// Level1HardwareID Hash function
   template <> struct Hash<const Rich::DAQ::Level1HardwareID&>
-  { inline size_t operator() ( const Rich::DAQ::Level1HardwareID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const Rich::DAQ::Level1HardwareID id ) const noexcept { return (size_t)id.data(); } } ;
 
   /// Level1LogicalID Hash function
   template <> struct Hash<Rich::DAQ::Level1LogicalID>
-  { inline size_t operator() ( Rich::DAQ::Level1LogicalID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( Rich::DAQ::Level1LogicalID id ) const noexcept { return (size_t)id.data(); } } ;
   /// Level1LogicalID Hash function
   template <> struct Hash<Rich::DAQ::Level1LogicalID&>
-  { inline size_t operator() ( Rich::DAQ::Level1LogicalID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( Rich::DAQ::Level1LogicalID id ) const noexcept { return (size_t)id.data(); } } ;
   /// Level1LogicalID Hash function
   template <> struct Hash<const Rich::DAQ::Level1LogicalID>
-  { inline size_t operator() ( const Rich::DAQ::Level1LogicalID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const Rich::DAQ::Level1LogicalID id ) const noexcept { return (size_t)id.data(); } } ;
   /// Level1LogicalID Hash function
   template <> struct Hash<const Rich::DAQ::Level1LogicalID&>
-  { inline size_t operator() ( const Rich::DAQ::Level1LogicalID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const Rich::DAQ::Level1LogicalID id ) const noexcept { return (size_t)id.data(); } } ;
 
   /// L1IngressID Hash function
   template <> struct Hash<Rich::DAQ::L1IngressID>
-  { inline size_t operator() ( Rich::DAQ::L1IngressID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( Rich::DAQ::L1IngressID id ) const noexcept { return (size_t)id.data(); } } ;
   /// L1IngressID Hash function
   template <> struct Hash<Rich::DAQ::L1IngressID&>
-  { inline size_t operator() ( Rich::DAQ::L1IngressID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( Rich::DAQ::L1IngressID id ) const noexcept { return (size_t)id.data(); } } ;
   /// L1IngressID Hash function
   template <> struct Hash<const Rich::DAQ::L1IngressID>
-  { inline size_t operator() ( const Rich::DAQ::L1IngressID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const Rich::DAQ::L1IngressID id ) const noexcept { return (size_t)id.data(); } } ;
   /// L1IngressID Hash function
   template <> struct Hash<const Rich::DAQ::L1IngressID&>
-  { inline size_t operator() ( const Rich::DAQ::L1IngressID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const Rich::DAQ::L1IngressID id ) const noexcept { return (size_t)id.data(); } } ;
 
   /// L1InputWithinIngress Hash function
   template <> struct Hash<Rich::DAQ::L1InputWithinIngress>
-  { inline size_t operator() ( Rich::DAQ::L1InputWithinIngress id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( Rich::DAQ::L1InputWithinIngress id ) const noexcept { return (size_t)id.data(); } } ;
   /// L1InputWithinIngress Hash function
   template <> struct Hash<Rich::DAQ::L1InputWithinIngress&>
-  { inline size_t operator() ( Rich::DAQ::L1InputWithinIngress id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( Rich::DAQ::L1InputWithinIngress id ) const noexcept { return (size_t)id.data(); } } ;
   /// L1InputWithinIngress Hash function
   template <> struct Hash<const Rich::DAQ::L1InputWithinIngress>
-  { inline size_t operator() ( const Rich::DAQ::L1InputWithinIngress id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const Rich::DAQ::L1InputWithinIngress id ) const noexcept { return (size_t)id.data(); } } ;
   /// L1InputWithinIngress Hash function
   template <> struct Hash<const Rich::DAQ::L1InputWithinIngress&>
-  { inline size_t operator() ( const Rich::DAQ::L1InputWithinIngress id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const Rich::DAQ::L1InputWithinIngress id ) const noexcept { return (size_t)id.data(); } } ;
 
   /// Level1Input Hash function
   template <> struct Hash<Rich::DAQ::Level1Input>
-  { inline size_t operator() ( Rich::DAQ::Level1Input id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( Rich::DAQ::Level1Input id ) const noexcept { return (size_t)id.data(); } } ;
   /// Level1Input Hash function
   template <> struct Hash<Rich::DAQ::Level1Input&>
-  { inline size_t operator() ( Rich::DAQ::Level1Input id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( Rich::DAQ::Level1Input id ) const noexcept { return (size_t)id.data(); } } ;
   /// Level1Input Hash function
   template <> struct Hash<const Rich::DAQ::Level1Input>
-  { inline size_t operator() ( const Rich::DAQ::Level1Input id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const Rich::DAQ::Level1Input id ) const noexcept { return (size_t)id.data(); } } ;
   /// Level1Input Hash function
   template <> struct Hash<const Rich::DAQ::Level1Input&>
-  { inline size_t operator() ( const Rich::DAQ::Level1Input id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const Rich::DAQ::Level1Input id ) const noexcept { return (size_t)id.data(); } } ;
 
   /// HPDHardwareID Hash function
   template <> struct Hash<Rich::DAQ::HPDHardwareID>
-  { inline size_t operator() ( Rich::DAQ::HPDHardwareID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( Rich::DAQ::HPDHardwareID id ) const noexcept { return (size_t)id.data(); } } ;
   /// HPDHardwareID Hash function
   template <> struct Hash<Rich::DAQ::HPDHardwareID&>
-  { inline size_t operator() ( Rich::DAQ::HPDHardwareID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( Rich::DAQ::HPDHardwareID id ) const noexcept { return (size_t)id.data(); } } ;
   /// HPDHardwareID Hash function
   template <> struct Hash<const Rich::DAQ::HPDHardwareID>
-  { inline size_t operator() ( const Rich::DAQ::HPDHardwareID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const Rich::DAQ::HPDHardwareID id ) const noexcept { return (size_t)id.data(); } } ;
   /// HPDHardwareID Hash function
   template <> struct Hash<const Rich::DAQ::HPDHardwareID&>
-  { inline size_t operator() ( const Rich::DAQ::HPDHardwareID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const Rich::DAQ::HPDHardwareID id ) const noexcept { return (size_t)id.data(); } } ;
 
   /// HPDL1InputID Hash function
   template <> struct Hash<Rich::DAQ::HPDL1InputID>
-  { inline size_t operator() ( Rich::DAQ::HPDL1InputID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( Rich::DAQ::HPDL1InputID id ) const noexcept { return (size_t)id.data(); } } ;
   /// HPDL1InputID Hash function
   template <> struct Hash<Rich::DAQ::HPDL1InputID&>
-  { inline size_t operator() ( Rich::DAQ::HPDL1InputID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( Rich::DAQ::HPDL1InputID id ) const noexcept { return (size_t)id.data(); } } ;
   /// HPDL1InputID Hash function
   template <> struct Hash<const Rich::DAQ::HPDL1InputID>
-  { inline size_t operator() ( const Rich::DAQ::HPDL1InputID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const Rich::DAQ::HPDL1InputID id ) const noexcept { return (size_t)id.data(); } } ;
   /// HPDL1InputID Hash function
   template <> struct Hash<const Rich::DAQ::HPDL1InputID&>
-  { inline size_t operator() ( const Rich::DAQ::HPDL1InputID id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const Rich::DAQ::HPDL1InputID id ) const noexcept { return (size_t)id.data(); } } ;
 
   /// HPDCopyNumber Hash function
   template <> struct Hash<Rich::DAQ::HPDCopyNumber>
-  { inline size_t operator() ( Rich::DAQ::HPDCopyNumber id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( Rich::DAQ::HPDCopyNumber id ) const noexcept { return (size_t)id.data(); } } ;
   /// HPDCopyNumber Hash function
   template <> struct Hash<Rich::DAQ::HPDCopyNumber&>
-  { inline size_t operator() ( Rich::DAQ::HPDCopyNumber id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( Rich::DAQ::HPDCopyNumber id ) const noexcept { return (size_t)id.data(); } } ;
   /// HPDCopyNumber Hash function
   template <> struct Hash<const Rich::DAQ::HPDCopyNumber>
-  { inline size_t operator() ( const Rich::DAQ::HPDCopyNumber id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const Rich::DAQ::HPDCopyNumber id ) const noexcept { return (size_t)id.data(); } } ;
   /// HPDCopyNumber Hash function
   template <> struct Hash<const Rich::DAQ::HPDCopyNumber&>
-  { inline size_t operator() ( const Rich::DAQ::HPDCopyNumber id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const Rich::DAQ::HPDCopyNumber id ) const noexcept { return (size_t)id.data(); } } ;
 
   /// Level1CopyNumber Hash function
   template <> struct Hash<Rich::DAQ::Level1CopyNumber>
-  { inline size_t operator() ( Rich::DAQ::Level1CopyNumber id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( Rich::DAQ::Level1CopyNumber id ) const noexcept { return (size_t)id.data(); } } ;
   /// Level1CopyNumber Hash function
   template <> struct Hash<Rich::DAQ::Level1CopyNumber&>
-  { inline size_t operator() ( Rich::DAQ::Level1CopyNumber id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( Rich::DAQ::Level1CopyNumber id ) const noexcept { return (size_t)id.data(); } } ;
   /// Level1CopyNumber Hash function
   template <> struct Hash<const Rich::DAQ::Level1CopyNumber>
-  { inline size_t operator() ( const Rich::DAQ::Level1CopyNumber id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const Rich::DAQ::Level1CopyNumber id ) const noexcept { return (size_t)id.data(); } } ;
   /// Level1CopyNumber Hash function
   template <> struct Hash<const Rich::DAQ::Level1CopyNumber&>
-  { inline size_t operator() ( const Rich::DAQ::Level1CopyNumber id ) const { return (size_t)id.data(); } } ;
+  { inline size_t operator() ( const Rich::DAQ::Level1CopyNumber id ) const noexcept { return (size_t)id.data(); } } ;
 
 }
 

@@ -37,16 +37,16 @@ namespace Rich
     public:
 
       /// Does this foot have a parity word ?
-      inline bool hasParityWord() const { return false; }
+      inline bool hasParityWord() const noexcept { return false; }
 
       /// Access the parity word
-      inline Rich::DAQ::LongType parityWord() const { return 0; }
+      inline Rich::DAQ::LongType parityWord() const noexcept { return 0; }
 
       /// Set the parity word
       inline void setParityWord( const Rich::DAQ::LongType /* word */ ) {;}
 
       /// Test the parity word
-      inline bool testParityWord( const ShortType ) const { return true; }
+      inline bool testParityWord( const ShortType ) const noexcept { return true; }
 
     };
 

@@ -61,22 +61,43 @@ namespace Rich
     /// Default Constructor
     HPDPixelCluster( ) = default;
 
+    /// Default destructor
+    ~HPDPixelCluster() = default;
+
+    /// Default Copy Constructor
+    HPDPixelCluster( const HPDPixelCluster& ) = default;
+
+    /// Default Copy operator
+    HPDPixelCluster& operator=( const HPDPixelCluster& ) = default;
+
+    /// Default Move Constructor
+    HPDPixelCluster( HPDPixelCluster&& ) = default;
+
+    /// Default Move operator
+    HPDPixelCluster& operator=( HPDPixelCluster&& ) = default;
+
+  public:
+
     /// Constructor with reserved size
-    explicit HPDPixelCluster( const size_t resSize ) { m_ids.reserve(resSize); }
+    explicit HPDPixelCluster( const SmartIDVector::size_type resSize ) 
+    { m_ids.reserve(resSize); }
 
     /// Constructor from a single channel (one pixel cluster)
     explicit HPDPixelCluster( const LHCb::RichSmartID & id ) : m_ids(1,id) { }
 
-    /// Constructor from a vector of RichSmartIDs
+    /// Copy Constructor from a vector of RichSmartIDs
     explicit HPDPixelCluster( const SmartIDVector & ids ) : m_ids(ids) { }
 
-    // Copy constructor
-    HPDPixelCluster( const HPDPixelCluster & clus ) : m_ids(clus.smartIDs()) { }
+    /// Move Constructor from a vector of RichSmartIDs
+    explicit HPDPixelCluster( SmartIDVector && ids ) : m_ids(std::move(ids)) { }
 
   public:
 
     /// const access to the list of HPD pixels
-    inline const SmartIDVector & smartIDs() const { return m_ids; }
+    inline const SmartIDVector & smartIDs() const  & noexcept { return m_ids; }
+
+    /// move access to the list of HPD pixels
+    inline       SmartIDVector&& smartIDs()       && noexcept { return std::move(m_ids); }
 
     /// The primary (seed) channel ID
     inline const LHCb::RichSmartID& primaryID() const
@@ -86,21 +107,24 @@ namespace Rich
     }
 
     /// The RICH detector for this cluster
-    inline Rich::DetectorType rich() const { return primaryID().rich(); }
+    inline Rich::DetectorType rich() const noexcept { return primaryID().rich(); }
 
     /// The RICH panel for this cluster
-    inline LHCb::RichSmartID panel() const { return primaryID().panelID(); }
+    inline LHCb::RichSmartID panel() const noexcept { return primaryID().panelID(); }
 
     /// The RICH HPD for this cluster
-    inline LHCb::RichSmartID hpd()   const { return primaryID().pdID(); }
+    inline LHCb::RichSmartID hpd()   const noexcept { return primaryID().pdID(); }
 
     /// Number of channels in this cluster
-    inline unsigned int size()       const { return smartIDs().size(); }
+    inline SmartIDVector::size_type size() const noexcept { return smartIDs().size(); }
 
   public:
 
     /// Add a channel to this cluster
-    inline void addChannel( const LHCb::RichSmartID& id ) { m_ids.push_back(id); }
+    inline void addChannel( const LHCb::RichSmartID& id ) { m_ids.emplace_back(id); }
+
+    /// Add a channel to this cluster
+    inline void addChannel( LHCb::RichSmartID&& id ) { m_ids.emplace_back(std::move(id)); }
 
   public:
 
@@ -166,11 +190,26 @@ namespace Rich
       /// Default Constructor
       Cluster() = default;
 
+      /// Default destructor
+      ~Cluster() = default;
+      
+      /// Default Copy Constructor
+      Cluster( const Cluster& ) = default;
+      
+      /// Default Copy operator
+      Cluster& operator=( const Cluster& ) = default;
+      
+      /// Default Move Constructor
+      Cluster( Cluster&& ) = default;
+
+      /// Default Move operator
+      Cluster& operator=( Cluster&& ) = default;
+
       /// Constructor from ID
-      Cluster( const int id = -1 ) : m_clusterID(id) { }
+      Cluster( const int id ) : m_clusterID(id) { }
 
       /// Get cluster ID
-      inline int id() const
+      inline int id() const noexcept
       {
         return m_clusterID;
       }
@@ -182,13 +221,13 @@ namespace Rich
       }
 
       /// Get read access to cluster data
-      inline const Rich::HPDPixelCluster & pixels() const
+      inline const Rich::HPDPixelCluster & pixels() const noexcept
       {
         return m_cluster;
       }
 
       /// Shortcut to the cluster size
-      inline LHCb::RichSmartID::Vector::size_type size() const
+      inline LHCb::RichSmartID::Vector::size_type size() const noexcept
       {
         return pixels().smartIDs().size();
       }
@@ -198,7 +237,7 @@ namespace Rich
       /// Cluster ID
       int m_clusterID{-1};  
 
-      /// list of pixels in this cluster. Initial with size 3 (rough guess).
+      /// list of pixels in this cluster. Initialize with reserved size 3 (rough guess).
       HPDPixelCluster m_cluster{3}; 
 
     };
@@ -276,23 +315,23 @@ namespace Rich
   public:
 
     /// Maximum number of pixel columns
-    inline int nPixelCols() const { return Rich::DAQ::NumPixelColumns; }
+    inline int nPixelCols() const noexcept { return Rich::DAQ::NumPixelColumns; }
 
     /// Number of pixel rows (either 32 for LHCbmode or 256 for ALICE mode)
-    inline int nPixelRows() const
+    inline int nPixelRows() const noexcept
     {
       return ( aliceMode() ? Rich::DAQ::MaxDataSizeALICE : Rich::DAQ::MaxDataSize );
     }
 
     /// Returns the 'correct' row number for the given RichSmartID (either LHCb or ALICE mode)
-    inline int rowNumber( const LHCb::RichSmartID& id ) const
+    inline int rowNumber( const LHCb::RichSmartID& id ) const noexcept
     {
       return ( !aliceMode() ? id.pixelRow() :
                ((Rich::DAQ::NumAlicePixelsPerLHCbPixel*id.pixelRow())+id.pixelSubRow()) );
     }
 
     /// Returns the 'correct' column number for the given RichSmartID (either LHCb or ALICE mode)
-    inline int colNumber( const LHCb::RichSmartID& id ) const
+    inline int colNumber( const LHCb::RichSmartID& id ) const noexcept
     {
       return id.pixelCol();
     }
@@ -322,12 +361,12 @@ namespace Rich
      *  @retval TRUE  ALICE mode
      *  @retval FALSE LHCb mode
      */
-    inline bool aliceMode() const { return m_aliceMode; }
+    inline bool aliceMode() const noexcept { return m_aliceMode; }
 
     /** Set the mode (LHCb or ALICE)
      *  @param mode Boolean indicating if we are in ALICE(true) or LHCb(false) mode
      */
-    inline void setAliceMode( const bool mode ) { m_aliceMode = mode; }
+    inline void setAliceMode( const bool mode ) noexcept { m_aliceMode = mode; }
 
   public:
 

@@ -4,6 +4,11 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2016-01-24 - Chris Jones
+ - Add some noexcept qualifiers
+ - Update RichGeomPhoton with explicit defaults.
+ - Add some move operators and accessors.
+
 ! 2016-01-23 - Chris Jones
  - A few more C++11 modernisations.
 

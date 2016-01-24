@@ -64,7 +64,8 @@ namespace LHCb
      *  @param p2 The second point
      *  @return The point represented by "p1+p2"
      */
-    inline Gaudi::XYZPoint add_points ( const Gaudi::XYZPoint & p1, const Gaudi::XYZPoint & p2 )
+    inline Gaudi::XYZPoint add_points ( const Gaudi::XYZPoint & p1,
+                                        const Gaudi::XYZPoint & p2 ) const noexcept
     {
       return Gaudi::XYZPoint ( p1.x()+p2.x(), p1.y()+p2.y(), p1.z()+p2.z() );
     }
@@ -97,26 +98,32 @@ namespace LHCb
     public:
 
       /// Default Constructor
-      StateErrors() {}
+      constexpr StateErrors() {}
 
       /// Default Destructor
-      ~StateErrors() {}
+      ~StateErrors() = default;
 
-      /// Copy constructor
-      StateErrors( const StateErrors & errors ) :
-        m_errX2  ( errors.errX2()  ),
-        m_errY2  ( errors.errY2()  ),
-        m_errTX2 ( errors.errTX2() ),
-        m_errTY2 ( errors.errTY2() ),
-        m_errP2  ( errors.errP2()  ) { }
+      /// Default Copy Constructor
+      StateErrors( const StateErrors& ) = default;
+
+      /// Default Copy operator
+      StateErrors& operator=( const StateErrors& ) = default;
+
+      /// Default Move Constructor
+      StateErrors( StateErrors&& ) = default;
+
+      /// Default Move operator
+      StateErrors& operator=( StateErrors&& ) = default;
+
+    public:
 
       /// Constructor with explicit float values
-      StateErrors( const float errX2  , ///< error on x squared
-                   const float errY2  , ///< error on y squared
-                   const float errTX2 , ///< error on x slope squared
-                   const float errTY2 , ///< error on y slope squared
-                   const float errP2    ///< error on momentum squared
-                   )
+      constexpr StateErrors( const float errX2  , ///< error on x squared
+                             const float errY2  , ///< error on y squared
+                             const float errTX2 , ///< error on x slope squared
+                             const float errTY2 , ///< error on y slope squared
+                             const float errP2    ///< error on momentum squared
+                             )
         : m_errX2  ( fabsf(errX2)  ),
           m_errY2  ( fabsf(errY2)  ),
           m_errTX2 ( fabsf(errTX2) ),
@@ -124,29 +131,29 @@ namespace LHCb
           m_errP2  ( fabsf(errP2)  ) { }
 
       /// Constructor with explicit double values
-      StateErrors( const double errX2,  ///< error on x squared
-                   const double errY2,  ///< error on y squared
-                   const double errTX2, ///< error on x slope squared
-                   const double errTY2, ///< error on y slope squared
-                   const double errP2   ///< error on momentum squared
-                   )
+      constexpr StateErrors( const double errX2,  ///< error on x squared
+                             const double errY2,  ///< error on y squared
+                             const double errTX2, ///< error on x slope squared
+                             const double errTY2, ///< error on y slope squared
+                             const double errP2   ///< error on momentum squared
+                             )
         : m_errX2  ( fabsf((float)(errX2))  ),
           m_errY2  ( fabsf((float)(errY2))  ),
           m_errTX2 ( fabsf((float)(errTX2)) ),
           m_errTY2 ( fabsf((float)(errTY2)) ),
           m_errP2  ( fabsf((float)(errP2))  ) { }
 
-      inline float errX2()  const { return m_errX2;  }  ///< Access the x error squared
-      inline float errY2()  const { return m_errY2;  }  ///< Access the y error squared
-      inline float errTX2() const { return m_errTX2; }  ///< Access the tx error squared
-      inline float errTY2() const { return m_errTY2; }  ///< Access the ty error squared
-      inline float errP2()  const { return m_errP2;  }  ///< Access the P error squared
+      inline constexpr float errX2()  const noexcept { return m_errX2;  }  ///< Access the x error squared
+      inline constexpr float errY2()  const noexcept { return m_errY2;  }  ///< Access the y error squared
+      inline constexpr float errTX2() const noexcept { return m_errTX2; }  ///< Access the tx error squared
+      inline constexpr float errTY2() const noexcept { return m_errTY2; }  ///< Access the ty error squared
+      inline constexpr float errP2()  const noexcept { return m_errP2;  }  ///< Access the P error squared
 
-      inline float errX()  const { return std::sqrt(errX2());  }  ///< Access the x error
-      inline float errY()  const { return std::sqrt(errY2());  }  ///< Access the y error
-      inline float errTX() const { return std::sqrt(errTX2()); }  ///< Access the tx error
-      inline float errTY() const { return std::sqrt(errTY2()); }  ///< Access the ty error
-      inline float errP()  const { return std::sqrt(errP2());  }  ///< Access the P error
+      inline constexpr float errX()  const noexcept { return std::sqrt(errX2());  }  ///< Access the x error
+      inline constexpr float errY()  const noexcept { return std::sqrt(errY2());  }  ///< Access the y error
+      inline constexpr float errTX() const noexcept { return std::sqrt(errTX2()); }  ///< Access the tx error
+      inline constexpr float errTY() const noexcept { return std::sqrt(errTY2()); }  ///< Access the ty error
+      inline constexpr float errP()  const noexcept { return std::sqrt(errP2());  }  ///< Access the P error
 
       ///< send to std::ostream
       inline friend std::ostream& operator << ( std::ostream& s,
@@ -352,19 +359,19 @@ namespace LHCb
     }
 
     /// Returns the segment entry point to the radiator
-    inline const Gaudi::XYZPoint& entryPoint() const
+    inline const Gaudi::XYZPoint& entryPoint() const noexcept
     {
       return radIntersections().front().entryPoint();
     }
 
     /// Returns the segment mid-point in the radiator
-    inline const Gaudi::XYZPoint& middlePoint() const
+    inline const Gaudi::XYZPoint& middlePoint() const noexcept
     {
       return m_middlePoint;
     }
 
     /// Returns the segment exit point from the radiator
-    inline const Gaudi::XYZPoint& exitPoint() const
+    inline const Gaudi::XYZPoint& exitPoint() const noexcept
     {
       return radIntersections().back().exitPoint();
     }
@@ -382,25 +389,25 @@ namespace LHCb
 
     /// Returns the best estimate of the average point in the radiator
     /// Equivalent to RichTrackSegment::bestPoint(0.5), but more efficient
-    inline const Gaudi::XYZPoint& bestPoint() const
+    inline const Gaudi::XYZPoint& bestPoint() const noexcept
     {
       return m_middlePoint;
     }
 
     /// Returns the momentum vector at entry
-    inline const Gaudi::XYZVector& entryMomentum() const
+    inline const Gaudi::XYZVector& entryMomentum() const noexcept
     {
       return radIntersections().front().entryMomentum();
     }
 
     /// Returns the momentum vector at the mid point
-    inline const Gaudi::XYZVector& middleMomentum() const
+    inline const Gaudi::XYZVector& middleMomentum() const noexcept
     {
       return m_middleMomentum;
     }
 
     /// Returns the momentum vector at exit
-    inline const Gaudi::XYZVector& exitMomentum() const
+    inline const Gaudi::XYZVector& exitMomentum() const noexcept
     {
       return radIntersections().back().exitMomentum();
     }
@@ -410,19 +417,19 @@ namespace LHCb
 
     /// Returns the best estimate of the average momentum vector for the entire segment
     /// Equivalent to RichTrackSegment::bestMomentum(0.5) but more efficient
-    inline const Gaudi::XYZVector& bestMomentum() const
+    inline const Gaudi::XYZVector& bestMomentum() const noexcept
     {
       return m_middleMomentum;
     }
 
     /// Returns the radiator type
-    inline Rich::RadiatorType radiator() const
+    inline Rich::RadiatorType radiator() const noexcept
     {
       return m_radiator;
     }
 
     /// Returns the detector type
-    inline Rich::DetectorType rich() const
+    inline Rich::DetectorType rich() const noexcept
     {
       return m_rich;
     }
@@ -452,43 +459,43 @@ namespace LHCb
     }
 
     /// Set the radiator type
-    inline void setRadiator(const Rich::RadiatorType rad)
+    inline void setRadiator(const Rich::RadiatorType rad) noexcept
     {
       m_radiator = rad;
     }
 
     /// Set the rich detector
-    inline void setRich( const Rich::DetectorType det )
+    inline void setRich( const Rich::DetectorType det ) noexcept
     {
       m_rich = det;
     }
 
     /// Returns the entry errors
-    inline const StateErrors & entryErrors() const
+    inline const StateErrors & entryErrors() const noexcept
     {
       return m_errorsEntry;
     }
 
     /// Returns the middle point errors
-    inline const StateErrors & middleErrors() const
+    inline const StateErrors & middleErrors() const noexcept
     {
       return m_errorsMiddle;
     }
 
     /// Returns the exit errors
-    inline const StateErrors & exitErrors() const
+    inline const StateErrors & exitErrors() const noexcept
     {
       return m_errorsExit;
     }
 
     /// Returns the average observable photon energy
-    inline double avPhotonEnergy() const
+    inline double avPhotonEnergy() const noexcept
     {
       return m_avPhotonEnergy;
     }
 
     /// Sets the average observable photon energy
-    inline void setAvPhotonEnergy( const double energy )
+    inline void setAvPhotonEnergy( const double energy ) noexcept
     {
       m_avPhotonEnergy = energy;
     }
@@ -511,7 +518,7 @@ namespace LHCb
   private:  // methods
 
     /// Provides write access to the radiator intersections
-    inline Rich::RadIntersection::Vector & radIntersections()
+    inline Rich::RadIntersection::Vector & radIntersections() noexcept
     {
       return m_radIntersections;
     }

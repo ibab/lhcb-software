@@ -84,13 +84,13 @@ namespace Rich
       }
 
       /// Implicit conversion into a RichSmartID
-      inline operator LHCb::RichSmartID () const
+      inline operator LHCb::RichSmartID() const
       {
         return this->smartID();
       }
 
       /// Access the human readable HPD number
-      inline int number() const { return m_data; }
+      inline int number() const noexcept { return m_data; }
 
     private:
 
