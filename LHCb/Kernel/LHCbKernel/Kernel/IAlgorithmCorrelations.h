@@ -46,9 +46,5 @@ public:
   ///< Print list of results
   virtual StatusCode printList(void) = 0 ;
 
-protected:
-
-private:
-
 };
 #endif // KERNEL_IALGORITHMCORRELATIONS_H

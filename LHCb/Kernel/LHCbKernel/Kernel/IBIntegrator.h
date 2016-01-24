@@ -31,9 +31,5 @@ public:
                                             double& zCenter,
                                             Gaudi::XYZVector& Bdl ) const = 0;
 
-protected:
-
-private:
-
 };
 #endif // KERNEL_IBINTEGRATOR_H

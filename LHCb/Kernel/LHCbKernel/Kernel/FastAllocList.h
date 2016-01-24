@@ -47,8 +47,23 @@ namespace LHCb
     /// Default constructor
     FastAllocList( ) { }
 
+    /// Default destructor
+    ~FastAllocList() = default;
+
+    /// Default Copy Constructor
+    FastAllocList( const FastAllocList& ) = default;
+
+    /// Default Copy operator
+    FastAllocList& operator=( const FastAllocList& ) = default;
+
+    /// Default Move Constructor
+    FastAllocList( FastAllocList&& ) = default;
+
+    /// Default Move operator
+    FastAllocList& operator=( FastAllocList&& ) = default;
+
     /** Constructor with initial size
-     *  @param size Initialisation size for list 
+     *  @param size Initialisation size for list
      */
     FastAllocList( const typename std::list<TYPE,ALLOC>::size_type size )
       : std::list<TYPE,ALLOC>(size) { }
@@ -58,12 +73,9 @@ namespace LHCb
      *  @param init Initialisation value
      */
     FastAllocList( const typename std::list<TYPE,ALLOC>::size_type size,
-                     const TYPE & init ) : std::list<TYPE,ALLOC>(size,init) { }
+                   const TYPE & init ) : std::list<TYPE,ALLOC>(size,init) { }
 
-    /** Copy Constructor
-     *  @param init Initialisation list
-     */
-    FastAllocList( const FastAllocList & init ) : std::list<TYPE,ALLOC>(init) { }
+  public:
 
     /// Operator overloading for ostream
     friend inline std::ostream& operator << ( std::ostream& str ,
@@ -127,40 +139,40 @@ namespace LHCb
                >
     using MTAllocList = FastAllocList< TYPE, ALLOC >;
 
-    //--------------------------------------------------------------------------------
-    /** @typedef PoolAllocList Kernel/FastAllocList.h
-     *
-     *  List with STL Pool allocator
-     *
-     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
-     *  @date   23/09/2015
-     */
-    //--------------------------------------------------------------------------------
-  
-    template < typename TYPE,
-#ifndef GOD_NOALLOC
-               typename ALLOC = __gnu_cxx::__pool_alloc< TYPE >
-#else
-               typename ALLOC = std::allocator< TYPE >
-#endif
-               >
-    using PoolAllocList = FastAllocList< TYPE, ALLOC >;
+  //--------------------------------------------------------------------------------
+  /** @typedef PoolAllocList Kernel/FastAllocList.h
+   *
+   *  List with STL Pool allocator
+   *
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @date   23/09/2015
+   */
+  //--------------------------------------------------------------------------------
 
-    //--------------------------------------------------------------------------------
-    /** @typedef List Kernel/FastAllocList.h
-     *
-     *  Standard STL list, with default allocator
-     *
-     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
-     *  @date   23/09/2015
-     */
-    //--------------------------------------------------------------------------------
-  
-    template < typename TYPE,
-               typename ALLOC = std::allocator< TYPE > >
-    using List = FastAllocList< TYPE, ALLOC >;
-  
-  }
+  template < typename TYPE,
+#ifndef GOD_NOALLOC
+             typename ALLOC = __gnu_cxx::__pool_alloc< TYPE >
+#else
+             typename ALLOC = std::allocator< TYPE >
+#endif
+             >
+  using PoolAllocList = FastAllocList< TYPE, ALLOC >;
+
+//--------------------------------------------------------------------------------
+/** @typedef List Kernel/FastAllocList.h
+ *
+ *  Standard STL list, with default allocator
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   23/09/2015
+ */
+//--------------------------------------------------------------------------------
+
+template < typename TYPE,
+           typename ALLOC = std::allocator< TYPE > >
+using List = FastAllocList< TYPE, ALLOC >;
+
+}
 
 }
 

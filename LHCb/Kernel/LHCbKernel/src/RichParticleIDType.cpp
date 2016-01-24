@@ -1,3 +1,4 @@
+
 //-----------------------------------------------------------------------------
 /** @file RichParticleIDType.cpp
  *
@@ -10,11 +11,6 @@
 
 // local
 #include "Kernel/RichParticleIDType.h"
-
-#if !(defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L)
-// boost
-#include "boost/assign/list_of.hpp"
-#endif
 
 // Text conversion for ParticleIDType enumeration
 std::string Rich::text( const Rich::ParticleIDType particle )
@@ -32,13 +28,9 @@ std::string Rich::text( const Rich::ParticleIDType particle )
   }
 }
 
-const Rich::Particles & Rich::particles()
+const Rich::Particles & Rich::particles() noexcept
 {
   static Rich::Particles pids =
-#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
     {Rich::Electron, Rich::Muon, Rich::Pion, Rich::Kaon, Rich::Proton, Rich::BelowThreshold};
-#else
-    boost::assign::list_of(Rich::Electron)(Rich::Muon)(Rich::Pion)(Rich::Kaon)(Rich::Proton)(Rich::BelowThreshold);
-#endif
   return pids;
 }

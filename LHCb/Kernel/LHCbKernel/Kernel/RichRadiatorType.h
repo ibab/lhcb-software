@@ -58,14 +58,11 @@ namespace Rich
   /// Std Vector typedef
   typedef std::vector<Rich::RadiatorType> RadiatorTypeVector;
 
-  /// Std const Vector typedef
-  //typedef std::vector<const Rich::RadiatorType> RadiatorTypeConstVector;
-
   /// Std vector typedef
   typedef RadiatorTypeVector Radiators;
 
   /// Access a vector of all radiator types
-  const Radiators & radiators();
+  const Radiators & radiators() noexcept;
 
   /// Implement textual ostream << method for Rich::RadiatorType enumeration
   inline std::ostream& operator << ( std::ostream& s,

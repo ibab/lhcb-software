@@ -11,11 +11,6 @@
 // local
 #include "Kernel/RichSide.h"
 
-#if !(defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L)
-// boost
-#include "boost/assign/list_of.hpp"
-#endif
-
 // Text conversion for Rich::Side enumeration
 std::string Rich::text( const Rich::Side side )
 {
@@ -57,12 +52,8 @@ std::string Rich::text( const Rich::DetectorType rich, const Rich::Side side )
   }
 }
 
-const Rich::Sides & Rich::sides()
+const Rich::Sides & Rich::sides() noexcept
 {
-#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
-  static Rich::Sides s = {Rich::top, Rich::bottom};
-#else
-  static Rich::Sides s = boost::assign::list_of(Rich::top)(Rich::bottom);
-#endif
+  static Rich::Sides s = { Rich::top, Rich::bottom };
   return s;
 }

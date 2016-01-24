@@ -45,8 +45,8 @@ namespace STL
     
   private:
     
-    int original_stdout; ///< Original stdout
-    int original_stderr; ///< original stderr
+    int original_stdout{0}; ///< Original stdout
+    int original_stderr{0}; ///< original stderr
     
   };
 

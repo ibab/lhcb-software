@@ -53,7 +53,7 @@ namespace Rich
   typedef ParticleIDTypeVector Particles;
 
   /// Access a vector of valid particle ID types
-  const Particles & particles();
+  const Particles & particles() noexcept;
 
   /// Implement textual ostream << method for Rich::ParticleIDType enumeration
   inline std::ostream& operator << ( std::ostream& s,

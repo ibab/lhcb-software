@@ -23,33 +23,33 @@
 namespace std
 {
   template <> struct hash<LHCb::RichSmartID>
-  { inline size_t operator() ( const LHCb::RichSmartID& s ) const { return (size_t)s.key(); } };
+  { inline constexpr size_t operator() ( const LHCb::RichSmartID& s ) const noexcept { return (size_t)s.key(); } };
   template <> struct hash<const LHCb::RichSmartID>
-  { inline size_t operator() ( const LHCb::RichSmartID& s ) const { return (size_t)s.key(); } };
+  { inline constexpr size_t operator() ( const LHCb::RichSmartID& s ) const noexcept { return (size_t)s.key(); } };
   template <> struct hash<LHCb::RichSmartID&>
-  { inline size_t operator() ( const LHCb::RichSmartID& s ) const { return (size_t)s.key(); } };
+  { inline constexpr size_t operator() ( const LHCb::RichSmartID& s ) const noexcept { return (size_t)s.key(); } };
   template <> struct hash<const LHCb::RichSmartID&>
-  { inline size_t operator() ( const LHCb::RichSmartID& s ) const { return (size_t)s.key(); } };
+  { inline constexpr size_t operator() ( const LHCb::RichSmartID& s ) const noexcept { return (size_t)s.key(); } };
 }
 
 
 #ifdef __GNUC__
-#include <ext/hash_map>
 
-// GNU hash funcs
-namespace __gnu_cxx
-{
-  template <> struct hash<LHCb::RichSmartID>
-  { inline size_t operator() ( const LHCb::RichSmartID& s ) const { return (size_t)s.key(); } };
-  template <> struct hash<const LHCb::RichSmartID>
-  { inline size_t operator() ( const LHCb::RichSmartID& s ) const { return (size_t)s.key(); } };
-  template <> struct hash<LHCb::RichSmartID&>
-  { inline size_t operator() ( const LHCb::RichSmartID& s ) const { return (size_t)s.key(); } };
-  template <> struct hash<const LHCb::RichSmartID&>
-  { inline size_t operator() ( const LHCb::RichSmartID& s ) const { return (size_t)s.key(); } };
-}
+// // GNU hash funcs
+// #include <ext/hash_map>
+// namespace __gnu_cxx
+// {
+//   template <> struct hash<LHCb::RichSmartID>
+//   { inline constexpr size_t operator() ( const LHCb::RichSmartID& s ) const noexcept { return (size_t)s.key(); } };
+//   template <> struct hash<const LHCb::RichSmartID>
+//   { inline constexpr size_t operator() ( const LHCb::RichSmartID& s ) const noexcept { return (size_t)s.key(); } };
+//   template <> struct hash<LHCb::RichSmartID&>
+//   { inline constexpr size_t operator() ( const LHCb::RichSmartID& s ) const noexcept { return (size_t)s.key(); } };
+//   template <> struct hash<const LHCb::RichSmartID&>
+//   { inline constexpr size_t operator() ( const LHCb::RichSmartID& s ) const noexcept { return (size_t)s.key(); } };
+// }
 
-// hash_value function for Boost 1.53
+// hash_value function for Boost
 namespace LHCb
 {
   inline std::size_t hash_value( const LHCb::RichSmartID& s )
@@ -63,13 +63,13 @@ namespace LHCb
 namespace GaudiUtils
 {
   template <> struct Hash<LHCb::RichSmartID>
-  { inline size_t operator() ( const LHCb::RichSmartID& s ) const { return (size_t)s.key(); } };
+  { inline constexpr size_t operator() ( const LHCb::RichSmartID& s ) const noexcept { return (size_t)s.key(); } };
   template <> struct Hash<const LHCb::RichSmartID>
-  { inline size_t operator() ( const LHCb::RichSmartID& s ) const { return (size_t)s.key(); } };
+  { inline constexpr size_t operator() ( const LHCb::RichSmartID& s ) const noexcept { return (size_t)s.key(); } };
   template <> struct Hash<LHCb::RichSmartID&>
-  { inline size_t operator() ( const LHCb::RichSmartID& s ) const { return (size_t)s.key(); } };
+  { inline constexpr size_t operator() ( const LHCb::RichSmartID& s ) const noexcept { return (size_t)s.key(); } };
   template <> struct Hash<const LHCb::RichSmartID&>
-  { inline size_t operator() ( const LHCb::RichSmartID& s ) const { return (size_t)s.key(); } };
+  { inline constexpr size_t operator() ( const LHCb::RichSmartID& s ) const noexcept { return (size_t)s.key(); } };
 }
 
 #endif

@@ -14,9 +14,11 @@ static const InterfaceID IID_IBdlTool("IBdlTool", 1 , 0);
  *  @date   2005-09-06
  *
 */
-class IBdlTool : virtual public IAlgTool {
+class IBdlTool : virtual public IAlgTool 
+{
 
 public:
+
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IBdlTool; }
 
@@ -27,10 +29,6 @@ public:
   virtual double zBdlMiddle(  double ySlopeVelo,
                               double zOrigin,
                               double zVelo ) = 0;
-
-protected:
-
-private:
 
 };
 

@@ -66,7 +66,7 @@ namespace Rich
   typedef RichSideVector Sides;
 
   /// Access a vector of valid particle ID types
-  const Sides & sides();
+  const Sides & sides() noexcept;
 
   /// Implement textual ostream << method for Rich::Side enumeration
   inline std::ostream& operator << ( std::ostream & s,

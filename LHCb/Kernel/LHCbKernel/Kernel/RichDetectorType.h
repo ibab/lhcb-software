@@ -54,7 +54,7 @@ namespace Rich
   typedef DetectorVector Detectors;
 
   /// Access a vector of valid detector types
-  const Detectors & detectors();
+  const Detectors & detectors() noexcept;
 
   /// Implement textual ostream << method for Rich::DetectorType enumeration
   inline std::ostream& operator << ( std::ostream & s,

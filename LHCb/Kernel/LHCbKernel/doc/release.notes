@@ -3,6 +3,17 @@
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
+
+! 2016-01-24- Chris Jones
+ - Rework RichSmartID for C++11
+  + Give it the full noexcept / constexpr treatment.
+  + Explicitly declare the default constructors, move and copy operations as OK.
+  + Remwork the default initialisation to avoid runtime calls to 'setData'.
+ - Add noexcept and constexpr in various places.
+ - Update FastAllocVector and fastAllocList with explicit default constructors 
+   and assignment operators.
+ - A few more C++11 clean ups (nullptr etc.).
+
 ! 2016-01-08 - Gerhard Raven
  - major changes: 
    o implement StatusCode fieldVector as final, shunt calls to XYZPoint fieldVector 

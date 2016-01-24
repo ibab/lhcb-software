@@ -11,11 +11,6 @@
 // local
 #include "Kernel/RichRadiatorType.h"
 
-#if !(defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L)
-// boost
-#include "boost/assign/list_of.hpp"
-#endif
-
 // Text conversion for RadiatorType enumeration
 std::string Rich::text( const Rich::RadiatorType radiator )
 {
@@ -35,14 +30,9 @@ std::string Rich::text( const Rich::RadiatorType radiator )
   }
 }
 
-const Rich::Radiators & Rich::radiators()
+const Rich::Radiators & Rich::radiators() noexcept
 {
-  static Rich::Radiators rads =
-#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
-    {Rich::Aerogel, Rich::Rich1Gas, Rich::Rich2Gas};
-#else
-    boost::assign::list_of(Rich::Aerogel)(Rich::Rich1Gas)(Rich::Rich2Gas);
-#endif
+  static Rich::Radiators rads = {Rich::Aerogel, Rich::Rich1Gas, Rich::Rich2Gas};
   return rads;
 }
 

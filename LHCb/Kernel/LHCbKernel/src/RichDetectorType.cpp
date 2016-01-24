@@ -12,11 +12,6 @@
 // local
 #include "Kernel/RichDetectorType.h"
 
-#if !(defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L)
-// boost
-#include "boost/assign/list_of.hpp"
-#endif
-
 // Text conversion for DetectorType enumeration
 std::string Rich::text( const Rich::DetectorType detector )
 {
@@ -30,13 +25,8 @@ std::string Rich::text( const Rich::DetectorType detector )
   }
 }
 
-const Rich::Detectors & Rich::detectors()
+const Rich::Detectors & Rich::detectors() noexcept
 {
-#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
   static Rich::Detectors dets = {Rich::Rich1, Rich::Rich2};
-#else
-  static Rich::Detectors dets =
-    boost::assign::list_of(Rich::Rich1)(Rich::Rich2);
-#endif
   return dets;
 }

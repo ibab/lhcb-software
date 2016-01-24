@@ -50,25 +50,37 @@ namespace LHCb
   public:
 
     /// Default constructor
-    FastAllocVector( ) { }
+    constexpr FastAllocVector( ) { }
+
+    /// Default destructor
+    ~FastAllocVector() = default;
+
+    /// Default Copy Constructor
+    FastAllocVector( const FastAllocVector& ) = default;
+
+    /// Default Copy operator
+    FastAllocVector& operator=( const FastAllocVector& ) = default;
+
+    /// Default Move Constructor
+    FastAllocVector( FastAllocVector&& ) = default;
+
+    /// Default Move operator
+    FastAllocVector& operator=( FastAllocVector&& ) = default;
 
     /** Constructor with initial size
      *  @param size Initialisation size for vector 
      */
-    FastAllocVector( const typename BaseClass::size_type size )
+    constexpr FastAllocVector( const typename BaseClass::size_type size )
       : BaseClass(size) { }
-
+    
     /** Constructor with initial size and initialisation value
      *  @param size Initialisation size for vector
      *  @param init Initialisation value
      */
-    FastAllocVector( const typename BaseClass::size_type size,
-                     const TYPE & init ) : BaseClass(size,init) { }
+    constexpr FastAllocVector( const typename BaseClass::size_type size,
+                               const TYPE & init ) : BaseClass(size,init) { }
 
-    /** Copy Constructor
-     *  @param init Initialisation vector
-     */
-    FastAllocVector( const BaseClass & init ) : BaseClass(init) { }
+  public:
 
     /// Operator overloading for ostream
     friend inline std::ostream& operator << ( std::ostream& str ,
