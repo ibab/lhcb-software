@@ -8,6 +8,14 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-01-25 - Patrick Spradlin
+ - Modifications to RareCharm/Stages.py.  Removed explicit unit conversions
+   in cut strings of D2xxCombiner class.  Since the settings dictionaries
+   also have unit conversions for these quantities, the conversions were
+   happening twice.  Since the units involved, MeV and mm, are set to have
+   the value 1.0, this double conversion should have had no functional effect.
+    M       python/Hlt2Lines/RareCharm/Stages.py
+
 ! 2016-01-24 - Mike Sokoloff
   - Changes to Stages.py to correct a bug in SecondaryLambdaFilter and in
     CharmSpectroscopy.py to improve efficiencies for low Q-value candidates

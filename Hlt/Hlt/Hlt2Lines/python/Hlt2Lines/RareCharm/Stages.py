@@ -16,22 +16,22 @@ class D2xxCombiner(Hlt2Combiner):
     # Common cuts
     # Cuts on the daughters
     d0comb_childcut = \
-                    "(P                  > %(XminP)s  * MeV) &" + \
-                    "(PT                 > %(XminPT)s * MeV) &" + \
+                    "(P                  > %(XminP)s       ) &" + \
+                    "(PT                 > %(XminPT)s      ) &" + \
                     "(TRCHI2DOF          < %(XTrackChi2)s  ) &" + \
                     "(MIPCHI2DV(PRIMARY) > %(XminIPChi2)s  )  "
     # Cuts on the combination 
     d0comb_combcut = \
-                   "(AMAXCHILD(PT) > %(XmaxPT)s   * MeV) &" + \
-                   "(ADAMASS('D0') < %(DMassWin)s * MeV) &" + \
+                   "(AMAXCHILD(PT) > %(XmaxPT)s        ) &" + \
+                   "(ADAMASS('D0') < %(DMassWin)s      ) &" + \
                    "(APT           > %(D0MinPT)s       ) &" + \
-                   "(AMAXDOCA('')  < %(doca)s     * mm )  "
+                   "(AMAXDOCA('')  < %(doca)s          )  "
     # Cuts on the combination for the signals (enlarged mass window) 
     d0comb_combcut_sig = \
-                       "(AMAXCHILD(PT) > %(XmaxPT)s      * MeV) &" + \
-                       "(ADAMASS('D0') < %(DMassWinSig)s * MeV) &" + \
+                       "(AMAXCHILD(PT) > %(XmaxPT)s           ) &" + \
+                       "(ADAMASS('D0') < %(DMassWinSig)s      ) &" + \
                        "(APT           > %(D0MinPT)s          ) &" + \
-                       "(AMAXDOCA('')  < %(doca)s        * mm )  "
+                       "(AMAXDOCA('')  < %(doca)s             )  "
     # Cuts on the mother 
     d0comb_d0cut = \
                  "INGENERATION(BPVIPCHI2() > %(XmaxIPChi2)s, 1 ) &" + \
