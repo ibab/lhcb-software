@@ -75,7 +75,7 @@ StatusCode GenFSRStat::initialize() {
   m_fileRecordSvc = svc<IDataProviderSvc>("FileRecordDataSvc", true);
 
   // prepare navigator tool                                                                                 
-  m_navigatorTool = tool<IFSRNavigator>("FSRNavigator", "FSRNavigator");  //Gen, Gen
+  m_navigatorTool = tool<IFSRNavigator>("FSRNavigator", "FSRNavigator");  
 
   return StatusCode::SUCCESS;
 }

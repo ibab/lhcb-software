@@ -64,7 +64,7 @@ StatusCode GenFSRLog::initialize() {
   m_fileRecordSvc = svc<IDataProviderSvc>("FileRecordDataSvc", true);
   
   // prepare navigator tool  
-  m_navigatorTool = tool<IFSRNavigator>("FSRNavigator", "FSRNavigator");  // Gen, Gen
+  m_navigatorTool = tool<IFSRNavigator>("FSRNavigator", "FSRNavigator");  
   
   return StatusCode::SUCCESS;
 }
@@ -240,7 +240,6 @@ void GenFSRLog::addCutEfficiencies(LHCb::GenFSR* genFSR)
     
     if(key !=  7 && key != 27 && key != 94 && key != 96) continue;
 
-    //name =  LHCb::CrossSectionsFSR::CrossSectionKeyToString(key);
     name = LHCb::GenCountersFSR::CounterKeyToString(key);
     fullName = mapCross[name];
     
