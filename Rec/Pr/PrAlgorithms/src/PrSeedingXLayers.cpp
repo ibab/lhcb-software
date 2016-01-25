@@ -56,9 +56,9 @@ GaudiHistoAlg ( name , pSvcLocator ),
   declareProperty( "TolTriangle",         m_tolTriangle          = 10.* Gaudi::Units::mm        );//added 
   declareProperty( "TolYOffset",          m_tolYOffset           = 100000.* Gaudi::Units::mm    );//added 
   declareProperty( "TolXStereo",          m_tolXStereo           = 2700.* Gaudi::Units::mm      );//added
-  declareProperty( "TolXStereoIN",        m_tolXStereoIN         = 50.* Gaudi::Units::mm       );//added
-  declareProperty( "TolXStereoTriangle",  m_tolXStereoTriangle   = 50.* Gaudi::Units::mm       );//added
-  declareProperty( "TolCoord" ,           m_coord                = 0.01                         );//added
+  declareProperty( "TolXStereoIN",        m_tolXStereoIN         = 150.* Gaudi::Units::mm       );//added
+  declareProperty( "TolXStereoTriangle",  m_tolXStereoTriangle   = 150.* Gaudi::Units::mm       );//added
+  declareProperty( "TolCoord" ,           m_coord                = 0.005                        );//added
   // Parameters for debugging
   declareProperty( "DebugToolName",       m_debugToolName         = ""                          );
   declareProperty( "WantedKey",           m_wantedKey             = -100                        );
@@ -67,14 +67,19 @@ GaudiHistoAlg ( name , pSvcLocator ),
   //Parameter Track Model                                                                                                                              
   declareProperty( "UseCubicCorrection",  m_useCubic              = true                        );
   declareProperty( "dRatio",              m_dRatio                = -0.000262                   ); 
-  declareProperty( "SlopeCorr",           m_SlopeCorr             = false                       ); 
+  declareProperty( "SlopeCorr",           m_SlopeCorr             = true                       ); 
   declareProperty( "UseCorrPosition",     m_useCorrPos            = true                        ); 
-  declareProperty( "maxChi2Hits_high",    m_maxChi2HitFullFitHigh = 5.5                         );
-  declareProperty( "maxChi2Hits_low",     m_maxChi2HitFullFitLow  = 2.5                         );
-  declareProperty( "maxYatZeroLow",       m_maxY0Low              = 70.                         );
-  declareProperty( "maxYatzRefLow",       m_maxYZrefLow           = 700.                        );
-  declareProperty( "maxChi2HitsX",        m_maxChi2HitsX          = 5.5                         );
-  declareProperty( "maxChi2HitsY",        m_maxChi2HitsY          = 100.                         );
+  declareProperty( "maxChi2HitsHigh",     m_maxChi2HitFullFitHigh = 5.5                         );
+  declareProperty( "maxChi2HitsMed",      m_maxChi2HitFullFitMed  = 2.5                         );
+  declareProperty( "maxChi2HitsLow",      m_maxChi2HitFullFitLow  = 2.0                         );
+  declareProperty( "maxYatZeroLow",       m_maxY0Low              = 1000.                       );
+  declareProperty( "maxYatzRefLow",       m_maxYZrefLow           = 2000.                       );
+  declareProperty( "maxChi2HitsXHigh",    m_maxChi2HitsXHigh      = 5.5                         );
+  declareProperty( "maxChi2HitsXMed",     m_maxChi2HitsXMed       = 3.0                         );
+  declareProperty( "maxChi2HitsXLow",     m_maxChi2HitsXLow       = 2.0                         );
+  declareProperty( "maxChi2HitsYHigh",    m_maxChi2HitsYHigh      = 1000.                        );
+  declareProperty( "maxChi2HitsYMed",     m_maxChi2HitsYMed       = 100.                        );
+  declareProperty( "maxChi2HitsYLow",     m_maxChi2HitsYLow       = 50.                        );
   declareProperty( "RadiusHole",          m_radiusHole            = 87.                         );
   declareProperty( "RemoveHole",          m_removeHole            = true                        );
 
@@ -483,7 +488,9 @@ bool PrSeedingXLayers::fitXProjection(PrSeedTrack& track ){
 	    }
 	  }
 	
-	if ( m_maxChi2HitsX > maxChi2 ) return true;
+	if      ( track.hits().size()==6  && m_maxChi2HitsXHigh > maxChi2 ) return true;
+	else if ( track.hits().size()==5  && m_maxChi2HitsXMed > maxChi2 ) return true;
+	else if ( track.hits().size()==4  && m_maxChi2HitsXLow > maxChi2 ) return true;
 	else if (track.hits().size() > m_minXPlanes){
 	  track.hits().erase( worst );
 	  loop=1;
@@ -562,10 +569,11 @@ bool PrSeedingXLayers::fitSimultaneouslyXY( PrSeedTrack& track, int refit){
       }//Set Max Chi2DoF
       
       track.setMaxChi2(maxChi2);
+
+
       if( (track.hits().size()>10) && maxChi2<m_maxChi2HitFullFitHigh) return true;
-      else if( std::fabs(track.y(0.))< m_maxY0Low &&
-	       maxChi2<m_maxChi2HitFullFitLow &&
-	       std::fabs(track.y(zRef)) < m_maxYZrefLow ) return true;
+      else if( (track.hits().size()==10) && maxChi2<m_maxChi2HitFullFitMed) return true;
+      else if( track.hits().size()<10 && maxChi2<m_maxChi2HitFullFitLow ) return true;
     }
     else if(loop==2){
       float maxChi2 =-1.;
@@ -581,9 +589,8 @@ bool PrSeedingXLayers::fitSimultaneouslyXY( PrSeedTrack& track, int refit){
 
       track.setMaxChi2(maxChi2);
       if( (track.hits().size()>10) && maxChi2<m_maxChi2HitFullFitHigh) return true;
-      else if( std::fabs(track.y(0.))< m_maxY0Low &&
-	       maxChi2<m_maxChi2HitFullFitLow &&
-	       std::fabs(track.y(zRef)) < m_maxYZrefLow ) return true;
+      else if( (track.hits().size()==10) && maxChi2<m_maxChi2HitFullFitMed) return true;
+      else if( track.hits().size()<10 && maxChi2<m_maxChi2HitFullFitLow ) return true;
       else if(track.hits().size() > m_minTPlanes){
 	track.hits().erase( worst );
 	if( (*worst)->isX()){
@@ -965,7 +972,8 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
           if( temp.hits().size()==4 &&  innerMod(temp) > 1 ) continue;
           setChi2( temp );
           // ---------------------------------------
-          
+          //doesn't seem to help
+	  //if(OK && temp.hits().size()==4) OK=addEmptyXLayers(part, temp, OK);
 
           // interesting cut! check this 6 hard coded?
           float maxChi2 = m_maxChi2PerDoF + 6*tx*tx;
@@ -1214,18 +1222,18 @@ void PrSeedingXLayers::addStereo2( unsigned int part ) {
       
       int nused=0;
       for ( PrHits::const_iterator itH = plane.first(); plane.last() != itH; ++itH ) {
-	temp.addHit( *itH );
-	if( (*itH)->isUsed()) nused++;
+	if((*itT).hits().size() ==6 or  !(*itH)->isUsed() )temp.addHit( *itH );
+	//if( (*itH)->isUsed()) nused++;
       }
 	  
       temp.setnXnY( (*itT).hits().size(), temp.hits().size()-(*itT).hits().size());
 	  
       bool first_ok=true;
-      if( temp.hits().size() < m_minTPlanes ) first_ok=false;
-      else if( temp.hits().size()<10 &&  innerMod(temp) > 4 ) first_ok=false;
-      else if( temp.nx() < m_minXPlanes || temp.ny() < m_minSPlanes )first_ok=false;
-      else if((*itT).hits().size()== 4 && nused>0 ) first_ok=false;
-      else if((*itT).hits().size()== 5 && nused>1 ) first_ok=false;
+      //if( temp.hits().size() < m_minTPlanes ) first_ok=false;
+      //else if( temp.hits().size()<10 &&  innerMod(temp) > 2 ) first_ok=false;
+      if( temp.nx() < m_minXPlanes || temp.ny() < m_minSPlanes )first_ok=false;
+      //else if((*itT).hits().size() < 6 && nused>0 ) first_ok=false;
+
 	  
       if(!first_ok) continue;
       float ay=0;
@@ -1235,14 +1243,14 @@ void PrSeedingXLayers::addStereo2( unsigned int part ) {
       temp.setYParam(ay, by);
       
       bool ok = fitSimultaneouslyXY( temp , 0);
-	  
+      
       while ( !ok && temp.hits().size() > m_minTPlanes ) {
 	ok = removeWorstAndRefit( temp, false );
       }
 	  
-      if(temp.hits().size()<12) ok=addEmptyLayers(part, temp);
+      if( temp.hits().size()<12) ok=addEmptyLayers(part, temp, ok);
 
-      if ( ok  &&  (temp.hits().size() > m_minTPlanes ||  (temp.hits().size()<10 &&  innerMod(temp) < 5 ))){
+      if( ok && (temp.hits().size() > m_minTPlanes ||  (temp.hits().size()<10 &&  innerMod(temp) < 3 ))){
 	  
 	setChi2( temp );
 	float maxChi2 = m_maxChi2PerDoF + 6*temp.xSlope(9000)*temp.xSlope(9000);
@@ -1264,82 +1272,7 @@ void PrSeedingXLayers::addStereo2( unsigned int part ) {
       if (found >1) break;
     }
 	    
-
-
-    /*
-	  while ( itEnd < myStereo.end() ) {
-	  float tolTy = m_tolTyOffset + m_tolTySlope * fabs( (*itBeg)->coord() );
-	  // Take the next 4 hits and check if inside a given tolerance
-	  if ( (*(itEnd-1))->coord() - (*itBeg)->coord() < tolTy ) {
-	  while( itEnd+1 < myStereo.end() &&
-	  (*itEnd)->coord() - (*itBeg)->coord() < tolTy ) {
-          ++itEnd;
-	  }
-	  
-	  // count planes
-	  plCount.set( itBeg, itEnd );
-	  
-	  if ( m_minSPlanes-1 < plCount.nbDifferent() ) {
-          PrSeedTrack temp( *itT );
-	  
-	  int nused=0;
-          for ( PrHits::iterator itH = itBeg; itEnd != itH; ++itH ) {
-	  temp.addHit( *itH );
-	  if( (*itH)->isUsed()) nused++;
-          }
-	  
-	  temp.setnXnY( (*itT).hits().size(), temp.hits().size()-(*itT).hits().size());
-	  
-	  bool first_ok=true;
-	  if( temp.hits().size() < m_minTPlanes ) first_ok=false;
-	  else if( temp.hits().size()<10 &&  innerMod(temp) > 3 ) first_ok=false;
-	  else if( temp.nx() < m_minXPlanes || temp.ny() < m_minSPlanes )first_ok=false;
-	  else if((*itT).hits().size()== 4 && nused>0 ) first_ok=false;
-	  else if((*itT).hits().size()== 5 && nused>1 ) first_ok=false;
-	  
-	  if(!first_ok){
-	  ++itBeg;
-	  itEnd = itBeg + m_minSPlanes; 
-	  continue;
-	  }
-	  
-	  bool ok = fitSimultaneouslyXY( temp , 0);
-
-          //ok = fitTrack( temp );
-          //ok = fitTrack( temp );
-	  
-	  while ( !ok && temp.hits().size() > m_minTPlanes ) {
-	    ok = removeWorstAndRefit( temp, false );
-	  }
-	  
-	  if(temp.hits().size()<12) ok=addEmptyLayers(part, temp);
-
-          if ( ok  &&  (temp.hits().size() > m_minTPlanes ||  (temp.hits().size()<10 &&  innerMod(temp) < 4 ))){
-	  
-	    setChi2( temp );
-	    float maxChi2 = m_maxChi2PerDoF + 6*temp.xSlope(9000)*temp.xSlope(9000);
-
-	    if(temp.chi2PerDoF() < maxChi2 ){
-	      
-	      std::sort( temp.hits().begin(),  temp.hits().end(), compLHCbID());
-	      m_trackCandidates.push_back( temp );
-	      
-	      if(temp.hits().size()==12) {
-		for ( PrHits::iterator itH = temp.hits().begin(); temp.hits().end() != itH; ++ itH) {
-		  (*itH)->setUsed( true );
-		}
-		itEnd= myStereo.end();
-	      
-	      }
-	      else   itBeg = itEnd-1;
-	    }
-	  }
-        }
-      }
-      ++itBeg;
-      itEnd = itBeg + m_minSPlanes;
-    }
-    */
+    
     //start the clone wars
     if ( m_trackCandidates.size() > firstSpace+1 ) {
       //sort by size and chi2, first one is the good one
@@ -1438,21 +1371,100 @@ int PrSeedingXLayers::innerMod( PrHits thesehits ) {
 //========================================================================= 
 // adding hits in empty layers 
 //========================================================================= 
-bool PrSeedingXLayers::addEmptyLayers(  unsigned int part,  PrSeedTrack& track  ) {
+bool PrSeedingXLayers::addEmptyXLayers(  unsigned int part,  PrSeedTrack& track , bool ok ) {
+  
+  PrHits myEmptyLayers;
+  myEmptyLayers.reserve(2);
 
   PrHits myEmptyLayer;;
-  myEmptyLayer.reserve(3);
+  myEmptyLayer.reserve(2);  
 
-  
   int emptyPlanes[12]={1};
+
   for ( PrHits::iterator itH2 = track.hits().begin(); track.hits().end() != itH2; ++itH2 ) {
     emptyPlanes[(*itH2)->planeCode()]=0;
   }
   
-  debug()<<"let's add some hits"<<endmsg;
   for ( unsigned int kk = part; m_hitManager->nbZones()  > kk ; kk += 2 ) {
-
+    
     if( 0 == emptyPlanes[kk/2] ) continue;
+    PrHitZone* zone = m_hitManager->zone(kk);   
+    if(!zone->isX()) continue;
+    
+    float zPlane = zone->z(); 
+    float xPred = track.x(zPlane ); //Predicted X
+
+    float xMax = xPred + 15.  ;
+    float xMin = xPred - 15.  ;
+
+    PrHits::iterator itH = std::lower_bound( zone->hits().begin(), zone->hits().end(), xMin, lowerBoundX() );
+    
+    for ( ; zone->hits().end() != itH; ++itH ) {
+      if ( (*itH)->x() < xMin  ) continue;
+      if ( (*itH)->x() > xMax  ) break;
+      
+      float chi2 = track.chi2( *itH );
+      if(chi2<m_maxChi2InTrack) {
+        myEmptyLayer.push_back( *itH );
+      }
+    }
+    
+    if(myEmptyLayer.size() >0){
+      
+      PrHits::iterator best = myEmptyLayer.begin();
+      float minChi2 = track.chi2( *best);
+      
+      for ( PrHits::iterator itH = myEmptyLayer.begin()+1; myEmptyLayer.end() != itH; ++ itH) {
+	float chi2 = track.chi2( *itH );
+	if ( chi2 < minChi2 ) {
+	  minChi2 = chi2;
+	  best = itH;
+	}
+      }
+      myEmptyLayers.push_back( *best );
+      myEmptyLayer.clear();
+    }
+  }
+
+  if( myEmptyLayers.size()>0 ) {
+    info()<<"found hits ";
+    for ( PrHits::iterator itH = myEmptyLayers.begin(); myEmptyLayers.end() != itH; ++ itH) {
+      track.addHit( *itH );
+    }
+    
+    ok = fitXProjection( track);
+    
+    while ( !ok && track.hits().size() >  m_minXPlanes  ) {
+      ok = removeWorstAndRefit( track, true );
+    }
+    info()<<" added "<< track.hits().size()<<" ok  "<<ok<<endmsg;
+    return ok;
+  }
+  return ok;
+}
+
+
+//========================================================================= 
+// adding hits in empty layers 
+//========================================================================= 
+bool PrSeedingXLayers::addEmptyLayers(  unsigned int part,  PrSeedTrack& track , bool ok ) {
+  
+  PrHits myEmptyLayers;
+  myEmptyLayers.reserve(3);
+
+  PrHits myEmptyLayer;;
+  myEmptyLayer.reserve(3);  
+
+  int emptyPlanes[12]={1};
+
+  for ( PrHits::iterator itH2 = track.hits().begin(); track.hits().end() != itH2; ++itH2 ) {
+    emptyPlanes[(*itH2)->planeCode()]=0;
+  }
+  
+  for ( unsigned int kk = part; m_hitManager->nbZones()  > kk ; kk += 2 ) {
+    
+    if( 0 == emptyPlanes[kk/2] ) continue;
+
     PrHitZone* zone = m_hitManager->zone(kk);
     float yPred = track.y(zone->z() ); //Predicted y                                                                                                                                                  
     float dxDy = zone->dxDy();
@@ -1470,52 +1482,68 @@ bool PrSeedingXLayers::addEmptyLayers(  unsigned int part,  PrSeedTrack& track  
       xMin = tmp;
     }
 
-    xMax += 2.1;
-    xMin -= 2.1;
-
+    xMax += 5.1;
+    xMin -= 5.1;
+    
     PrHits::iterator itH = std::lower_bound( zone->hits().begin(), zone->hits().end(), xMin, lowerBoundX() );
+   
     
     for ( ; zone->hits().end() != itH; ++itH ) {
       if ( (*itH)->x() < xMin  ) continue;
       if ( (*itH)->x() > xMax  ) break;
-      if( yPred < (*itH)->yMin() -2.1)continue;
-      if( yPred > (*itH)->yMax() +2.1  )continue;;
+      if( yPred < (*itH)->yMin() - 5.1 )continue;
+      if( yPred > (*itH)->yMax() + 5.1 )continue;;
       
       float chi2 = track.chi2( *itH );
       if(chi2<m_maxChi2InTrack) {
         myEmptyLayer.push_back( *itH );
       }
     }
+    
+    if(myEmptyLayer.size() >0){
+
+      PrHits::iterator best = myEmptyLayer.begin();
+      float minChi2 = track.chi2( *best);
+    
+      for ( PrHits::iterator itH = myEmptyLayer.begin()+1; myEmptyLayer.end() != itH; ++ itH) {
+	float chi2 = track.chi2( *itH );
+	if ( chi2 < minChi2 ) {
+	  minChi2 = chi2;
+	  best = itH;
+	}
+      }
+      myEmptyLayers.push_back( *best );
+      myEmptyLayer.clear();
+    }
   }
-  
-  bool ok=true;
-  if( myEmptyLayer.size()>0 ) {
 
-    debug()<<"-------------------------------"<<endmsg;
-    for ( PrHits::iterator itH = myEmptyLayer.begin(); myEmptyLayer.end() != itH; ++ itH) {
-
+  if( myEmptyLayers.size()>0 ) {
+    
+    for ( PrHits::iterator itH = myEmptyLayers.begin(); myEmptyLayers.end() != itH; ++ itH) {
       track.addHit( *itH );
-      
+     
       if( (*itH)->isX()){
 	track.setnXnY( track.nx()+1, track.ny());
       }else{
 	track.setnXnY( track.nx(), track.ny()+1);
       }
-
-      ok = fitSimultaneouslyXY( track, 1);
-
-      while ( !ok && track.hits().size() >  m_minTPlanes  ) {
-        ok = removeWorstAndRefit( track, false );
-      }
     }
     
-    setChi2( track );
+    ok = fitSimultaneouslyXY( track, 1);
+
+
+    while ( !ok && track.hits().size() >  m_minTPlanes  ) {
+      ok = removeWorstAndRefit( track, false );
+    }
+      
+    return ok;
   }
   return ok;
 }
 
-
-
+//------------------------------------------------------------------------------
+// fit only UV hits
+//------------------------------------------------------------------------------
  // method to fit the track passing the iterators pointing to the initial and last element of the hough clusters
 bool PrSeedingXLayers::fitYLine(const PrSeedTrack& track, PrHits::const_iterator itBeg, PrHits::const_iterator itEnd,  float& ay, float& by){
   //Re-initialize the track params
@@ -1566,7 +1594,7 @@ bool PrSeedingXLayers::fitYLine(const PrSeedTrack& track, PrHits::const_iterator
     }
     chi2line = 0.;
     for( PrHits::const_iterator hit = itBeg; itEnd!=hit ;++hit){
-      nHitsUV++;
+      ++nHitsUV;
       double erry = (*hit)->w();
       const float z     = (*hit)->z();
       const float dz    = z -   m_zReference;
@@ -1582,9 +1610,10 @@ bool PrSeedingXLayers::fitYLine(const PrSeedTrack& track, PrHits::const_iterator
       chi2line+= dist*dist*erry;
     }
     
-    chi2line = chi2line/(nHitsUV-2.);
     
-    if( chi2line > m_maxChi2HitsY ) return false;
     
-    return true;
+    if( nHitsUV>5 && chi2line < m_maxChi2HitsYHigh )     return true;
+    else if( nHitsUV==5 && chi2line < m_maxChi2HitsYMed ) return true;
+    else if( nHitsUV==4 && chi2line < m_maxChi2HitsYLow ) return true;
+    return false;
 }

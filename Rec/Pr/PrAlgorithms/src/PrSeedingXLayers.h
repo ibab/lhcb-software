@@ -182,7 +182,8 @@ public:
   //classes to find number of inner modules a track passes 
   int innerMod(const PrSeedTrack& track);
   int innerMod(PrHits thesehits);
-  bool addEmptyLayers(  unsigned int part,  PrSeedTrack& track);
+  bool addEmptyLayers(  unsigned int part,  PrSeedTrack& track, bool ok);
+  bool addEmptyXLayers(  unsigned int part,  PrSeedTrack& track, bool ok);
 
   
   /// Class to find lower bound of x of PrHit
@@ -260,12 +261,17 @@ private:
   float          m_dRatio;
   float          m_invDeltaz[3];
   float          m_zRatio[3];
-  //--------_Fit X parametrisation                                                                                                                         
-  float          m_maxChi2HitsX;
-  float          m_maxChi2HitsY;
-  //--------_Full Fit parametrisation                                                                                                                      
+  //--------_Fit X parametrisation
+  float          m_maxChi2HitsXHigh;
+  float          m_maxChi2HitsXMed;
+  float          m_maxChi2HitsXLow;
+  float          m_maxChi2HitsYHigh;
+  float          m_maxChi2HitsYMed;
+  float          m_maxChi2HitsYLow;
+  //--------_Full Fit parametrisation
   float          m_maxChi2HitFullFitHigh;
   float          m_maxChi2HitFullFitLow;
+  float          m_maxChi2HitFullFitMed;
   float          m_maxY0Low;
   float          m_maxYZrefLow;
 
