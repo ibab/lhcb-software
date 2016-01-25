@@ -3,6 +3,10 @@
 ! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
+! 2016-01-25 - Gerhard Raven
+ - speed up TrackBuildCloneTable and TrackCloneCleaner
+   (and modernize the code a bit as well)
+
 ! 2015-12-23 - Gerhard Raven
  - remove dependency on boost::lambda and boost::bind
  - replace GSL_ with std::
