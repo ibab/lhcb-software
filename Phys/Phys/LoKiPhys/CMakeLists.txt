@@ -11,6 +11,7 @@ gaudi_depends_on_subdirs(Event/PhysEvent
                          Phys/LoKiUtils)
 
 find_package(VDT)
+find_package(Graphviz)
 
 gaudi_add_library(LoKiPhysLib
                   src/*.cpp

@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2016-01-25 - Vanya Belyaev
+ - add Graphviz into CMT&CMAKE 
+
 ! 2016-01-17 - Vanya Belyaev
  - LoKiPhys.graph: several improvements 
 
