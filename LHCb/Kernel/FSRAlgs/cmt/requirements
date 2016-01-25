@@ -25,6 +25,7 @@ use GaudiAlg        v*
 use GaudiConf       v*
 use HltInterfaces   v* Kernel
 use Boost           v* LCG_Interfaces
+use SimComponents   v* Sim
 
 ### for access to the config.tar file with configurations
 use HltTCK          v*    TCK         -no_auto_imports

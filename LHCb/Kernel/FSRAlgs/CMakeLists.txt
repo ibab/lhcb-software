@@ -9,11 +9,13 @@ gaudi_depends_on_subdirs(Det/DetDesc
                          Event/FSREvent
                          Event/LumiEvent
                          Event/RecEvent
+                         Event/GenEvent
                          GaudiAlg
                          GaudiConf
                          Kernel/HltInterfaces
                          Kernel/LHCbAlgs
-                         Kernel/LHCbKernel)
+                         Kernel/LHCbKernel
+			 Sim/SimComponents)
 
 find_package(Boost COMPONENTS iostreams)
 find_package(RELAX)
