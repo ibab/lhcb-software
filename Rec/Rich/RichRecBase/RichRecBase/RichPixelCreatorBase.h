@@ -259,11 +259,11 @@ namespace Rich
       class PixStats
       {
       public:
-        PixStats() : numClusters(0), numPixels(0), rejectedPixels(0) { }
+        PixStats() { }
       public:
-        unsigned long long numClusters;     ///< Number of selected HPD pixel clusters
-        unsigned long long numPixels;       ///< Number of selected raw HPD pixels
-        unsigned long long rejectedPixels;  ///< number of rejected HPD pixels
+        unsigned long long numClusters{0};     ///< Number of selected HPD pixel clusters
+        unsigned long long numPixels{0};       ///< Number of selected raw HPD pixels
+        unsigned long long rejectedPixels{0};  ///< number of rejected HPD pixels
       public:
         /// Has this tally seen some pixels
         bool hasSomeStats() const { return numPixels>0 || rejectedPixels>0 ; }

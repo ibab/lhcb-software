@@ -4,9 +4,6 @@
  *
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IPhotonCreator
  *
- *  CVS Log :-
- *  $Id: IRichPhotonCreator.h,v 1.10 2007-03-09 18:04:33 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */

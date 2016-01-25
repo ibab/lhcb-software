@@ -26,9 +26,6 @@
 #include "Event/RichRecTrack.h"
 
 // boost
-#if !(defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L)
-#include "boost/assign/list_of.hpp"
-#endif
 #include "boost/numeric/conversion/bounds.hpp"
 #include "boost/limits.hpp"
 #include "boost/format.hpp"
@@ -68,10 +65,10 @@ namespace Rich
       virtual ~TrackSelectorBase( );
 
       /// Initialize method
-      StatusCode initialize();
+      StatusCode initialize() override;
 
       /// Finalize method
-      StatusCode finalize();
+      StatusCode finalize() override;
 
     public: // interface methods
 

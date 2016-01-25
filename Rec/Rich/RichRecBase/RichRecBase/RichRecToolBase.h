@@ -47,10 +47,10 @@ namespace Rich
       virtual ~ToolBase() {};
 
       // Initialize method
-      virtual StatusCode initialize();
+      virtual StatusCode initialize() override;
 
       // Finalize method
-      virtual StatusCode finalize();
+      virtual StatusCode finalize() override;
 
     };
 

@@ -53,7 +53,7 @@ namespace Rich
        * @retval StatusCode::SUCCESS Initialization was successful
        * @retval StatusCode::FAILURE Initialization failed
        */
-      virtual StatusCode initialize();
+      virtual StatusCode initialize() override;
 
       /** The main event processing method. Called once for each event
        *
@@ -61,7 +61,7 @@ namespace Rich
        * @retval StatusCode::SUCCESS Event processing was successful
        * @retval StatusCode::FAILURE Event processing failed
        */
-      virtual StatusCode execute();
+      virtual StatusCode execute() override;
 
       /** Finalization of the algorithm before deletion
        *
@@ -69,7 +69,7 @@ namespace Rich
        * @retval StatusCode::SUCCESS Finalization was successful
        * @retval StatusCode::FAILURE Finalization failed
        */
-      virtual StatusCode finalize();
+      virtual StatusCode finalize() override;
 
     };
 

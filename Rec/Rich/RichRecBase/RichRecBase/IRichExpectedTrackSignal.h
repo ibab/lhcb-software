@@ -4,9 +4,6 @@
  *
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IExpectedTrackSignal
  *
- *  CVS Log :-
- *  $Id: IRichExpectedTrackSignal.h,v 1.13 2008-01-11 11:51:05 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */

@@ -53,23 +53,43 @@ namespace Rich
           PackedType pixelKey   : 16; ///< The pixel key
           PackedType segmentKey : 16; ///< The segment key
         } packed; ///< Representation as a packed struct
-        KeyType raw; ///< Raw data
+        KeyType raw{0}; ///< Raw data (initialized to 0)
       } m_data;
+
+    public:
+
+      /// Default Constructor
+      PhotonKey() { }
+
+      /// Default Destructor
+      ~PhotonKey() = default;
+
+      /// Default Copy Constructor
+      PhotonKey( const PhotonKey& id ) = default;
+
+      /// Default Copy Operator
+      PhotonKey& operator=( const PhotonKey& id ) = default;
+
+      /// Default Move Constructor
+      PhotonKey( PhotonKey&& id ) = default;
+
+      /// Default Move Operator
+      PhotonKey& operator=( PhotonKey&& id ) = default;
 
     public:
 
       /** Constructor from a full int
        *  @param key The raw data key to use as the bit-packed data
        */
-      PhotonKey( const KeyType key = 0 ) { m_data.raw = key; }
+      PhotonKey( const KeyType key ) { m_data.raw = key; }
 
       /** Constructor from segment and pixel numbers
        *
        *  @param pixelKey    The key for the associated RichRecPixel
        *  @param segmentKey  The key for the associated RichRecSegment
        */
-      PhotonKey ( const PackedType pixelKey,
-                  const PackedType segmentKey )
+      PhotonKey ( const PackedType& pixelKey,
+                  const PackedType& segmentKey )
       {
         m_data.packed.pixelKey   = pixelKey;
         m_data.packed.segmentKey = segmentKey;
@@ -81,19 +101,19 @@ namespace Rich
     public:
 
       /// Retrieve the full key
-      inline KeyType key() const
+      inline KeyType key() const noexcept
       {
         return m_data.raw;
       }
 
       /// KeyType operator
-      inline operator KeyType() const
+      inline operator KeyType() const noexcept
       {
         return key();
       }
 
       /// Update the full key
-      inline void setKey( const KeyType key )
+      inline void setKey( const KeyType & key ) noexcept
       {
         m_data.raw = key;
       }
@@ -107,7 +127,7 @@ namespace Rich
       }
 
       /// Retrieve associated RichRecPixel key
-      inline PackedType pixelNumber() const
+      inline PackedType pixelNumber() const noexcept
       {
         return m_data.packed.pixelKey;
       }
@@ -115,27 +135,27 @@ namespace Rich
     public:
 
       /// Operator ==
-      inline bool operator== ( const PhotonKey & k ) const
-      { 
-        return k.key() == this->key(); 
-      }      
+      inline bool operator== ( const PhotonKey & k ) const noexcept
+      {
+        return k.key() == this->key();
+      }
 
       /// Operator !=
-      inline bool operator!= ( const PhotonKey & k ) const
-      { 
-        return k.key() != this->key(); 
+      inline bool operator!= ( const PhotonKey & k ) const noexcept
+      {
+        return k.key() != this->key();
       }
 
       /// Operator <
-      inline bool operator<  ( const PhotonKey & k ) const
-      { 
-        return k.key() < this->key(); 
+      inline bool operator<  ( const PhotonKey & k ) const noexcept
+      {
+        return k.key() < this->key();
       }
 
       /// Operator >
-      inline bool operator>  ( const PhotonKey & k ) const
-      { 
-        return k.key() > this->key(); 
+      inline bool operator>  ( const PhotonKey & k ) const noexcept
+      {
+        return k.key() > this->key();
       }
 
     public:
@@ -143,7 +163,7 @@ namespace Rich
       /// Fill the ASCII output stream
       inline std::ostream& fillStream(std::ostream& s) const
       {
-        return s << "{" 
+        return s << "{"
                  << " pixel = "   << pixelNumber()
                  << " segment = " << segmentNumber()
                  << " photon = "  << key()

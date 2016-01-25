@@ -155,10 +155,24 @@ namespace Rich
     public:
 
       /// Standard constructor
-      TrackID()
-        : m_tkType     ( Rich::Rec::Track::Unknown             ),
-          m_parentType ( Rich::Rec::TrackParent::Unknown       ),
-          m_unique     ( true                                  ) { }
+      TrackID() { }
+
+      /// Default Destructor
+      ~TrackID() = default;
+
+      /// Default Copy Constructor
+      TrackID( const TrackID& id ) = default;
+
+      /// Default Copy Operator
+      TrackID& operator=( const TrackID& id ) = default;
+
+      /// Default Move Constructor
+      TrackID( TrackID&& id ) = default;
+
+      /// Default Move Operator
+      TrackID& operator=( TrackID&& id ) = default;
+
+    public:
 
       /** Constructor from a Track
        *
@@ -172,42 +186,37 @@ namespace Rich
       /** Constructor from an MCParticle
        */
       explicit TrackID( const LHCb::MCParticle * )
-        : m_tkType     ( Rich::Rec::Track::Unknown             ),
-          m_parentType ( Rich::Rec::TrackParent::MCParticle    ),
-          m_unique     ( true                                  ) { }
+        : m_parentType ( Rich::Rec::TrackParent::MCParticle ) { }
 
       /** Constructor from an MCRichTrack
        */
       explicit TrackID( const LHCb::MCRichTrack * )
         : m_tkType     ( Rich::Rec::Track::MCRichTrack         ),
-          m_parentType ( Rich::Rec::TrackParent::MCRichTrack   ),
-          m_unique     ( true                                  ) { }
-
-      ~TrackID( ) {} ///< Destructor
+          m_parentType ( Rich::Rec::TrackParent::MCRichTrack   ) { }
 
       /** The track type
        *
        *  @return The track type enumeration
        */
-      Rich::Rec::Track::Type trackType() const { return m_tkType; }
+      Rich::Rec::Track::Type trackType() const noexcept { return m_tkType; }
 
       /** Set the track type
        *
        * @param type The track type enumeration
        */
-      void setTrackType( const Rich::Rec::Track::Type type ) { m_tkType = type; }
+      void setTrackType( const Rich::Rec::Track::Type type ) noexcept { m_tkType = type; }
 
       /** The track parent type
        *
        *  @return The track parent type enumeration
        */
-      Rich::Rec::TrackParent::Type parentType() const { return m_parentType; }
+      Rich::Rec::TrackParent::Type parentType() const noexcept { return m_parentType; }
 
       /** Set the parent type
        *
        *  @param type The track parent type enumeration
        */
-      void setParentType( const Rich::Rec::TrackParent::Type type ) { m_parentType = type; }
+      void setParentType( const Rich::Rec::TrackParent::Type type ) noexcept { m_parentType = type; }
 
       /** Is this track unique
        *
@@ -215,13 +224,13 @@ namespace Rich
        *  @retval true  Track is unique
        *  @retval false Track is not unique, so possibly a clone
        */
-      bool unique() const { return m_unique; }
+      bool unique() const noexcept { return m_unique; }
 
       /** Set if this track is unique
        *
        *  @param unique Boolean indicating the track uniqueness
        */
-      void setUnique( bool unique ) { m_unique = unique; }
+      void setUnique( const bool unique ) noexcept { m_unique = unique; }
 
       /** Initialise from a Track
        *
@@ -280,13 +289,13 @@ namespace Rich
     private: // data
 
       /// The track type
-      Rich::Rec::Track::Type m_tkType;
+      Rich::Rec::Track::Type m_tkType { Rich::Rec::Track::Unknown };
 
       /// The parent type
-      Rich::Rec::TrackParent::Type m_parentType;
+      Rich::Rec::TrackParent::Type m_parentType { Rich::Rec::TrackParent::Unknown };
 
       /// Is this track unique ?
-      bool m_unique;
+      bool m_unique { true };
 
     };
 

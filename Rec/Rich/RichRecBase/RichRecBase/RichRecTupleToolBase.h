@@ -45,7 +45,7 @@ namespace Rich
                      const IInterface* parent );
 
       /// Destructor
-      virtual ~TupleToolBase() {};
+      virtual ~TupleToolBase() {}
 
       /** Initialization of the tool after creation
        *
@@ -53,7 +53,7 @@ namespace Rich
        * @retval StatusCode::SUCCESS Initialization was successful
        * @retval StatusCode::FAILURE Initialization failed
        */
-      virtual StatusCode initialize();
+      virtual StatusCode initialize() override;
 
       /** Finalization of the tool before deletion
        *
@@ -61,7 +61,7 @@ namespace Rich
        * @retval StatusCode::SUCCESS Finalization was successful
        * @retval StatusCode::FAILURE Finalization failed
        */
-      virtual StatusCode finalize();
+      virtual StatusCode finalize() override;
 
     };
 

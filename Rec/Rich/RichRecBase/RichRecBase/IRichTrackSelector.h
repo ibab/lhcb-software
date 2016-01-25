@@ -4,9 +4,6 @@
  *
  *  Header file for RICH reconstruction tool interface : Rich::Rec::ITrackSelector
  *
- *  CVS Log :-
- *  $Id: IRichTrackSelector.h,v 1.6 2009-06-10 13:17:28 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
  */

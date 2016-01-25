@@ -45,7 +45,7 @@ namespace Rich
                      const IInterface* parent );
 
       /// Destructor
-      virtual ~HistoToolBase() {};
+      virtual ~HistoToolBase() {}
 
       /** Initialization of the tool after creation
        *

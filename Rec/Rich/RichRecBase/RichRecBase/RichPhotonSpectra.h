@@ -48,15 +48,33 @@ namespace Rich
 
   public: // methods
 
-    /** Standard constructor
+    /// Default Constructor
+    PhotonSpectra() { }
+
+    /// Default Destructor
+    ~PhotonSpectra() = default;
+
+    /// Default Copy Constructor
+    PhotonSpectra( const PhotonSpectra& id ) = default;
+
+    /// Default Copy Operator
+    PhotonSpectra& operator=( const PhotonSpectra& id ) = default;
+
+    /// Default Move Constructor
+    PhotonSpectra( PhotonSpectra&& id ) = default;
+
+    /// Default Move Operator
+    PhotonSpectra& operator=( PhotonSpectra&& id ) = default;
+
+    /** Constructor from data
      *
      *  @param enBins Number of energy bins
      *  @param minEn  Minimum energy value
      *  @param maxEn  Maximum energy value
      */
-    PhotonSpectra( const unsigned int enBins = 5,
-                   const TYPE minEn          = 0,
-                   const TYPE maxEn          = 5 )
+    PhotonSpectra( const unsigned int enBins ,
+                   const TYPE minEn          ,
+                   const TYPE maxEn          )
       : m_enBins   ( enBins                                   ),
         m_minEn    ( minEn                                    ),
         m_maxEn    ( maxEn                                    ),
@@ -66,90 +84,140 @@ namespace Rich
     /** Access the number of energy bins
      *  @return The number of energy bins
      */
-    unsigned int energyBins() const;
+    inline unsigned int energyBins() const noexcept
+    {
+      return m_enBins;
+    }
 
     /** Set the number of energy bins
      *  @param bins The number of energy bins
      */
-    void setEnergyBins( const unsigned int bins );
+    inline void setEnergyBins( const unsigned int bins ) noexcept
+    {
+      m_enBins = bins;
+    }
 
     /** Access the minimum energy for the distribution
      *  @return The minimum energy value
      */
-    TYPE minEnergy() const;
+    inline TYPE minEnergy() const noexcept
+    {
+      return m_minEn;
+    }
 
     /** Sets the minimum photon energy
      *  @param en The minimum energy value
      */
-    void setMinEnergy( const TYPE en );
+    inline void setMinEnergy( const TYPE en ) noexcept
+    {
+      m_minEn = en;
+    }
 
     /** Access the maximum photon energy
      *  @return The maximum energy value
      */
-    TYPE maxEnergy() const;
+    inline TYPE maxEnergy() const noexcept
+    {
+      return m_maxEn;
+    }
 
     /** Sets the maximum photon energy
      *  @param en The maximum energy value
      */
-    void setMaxEnergy( const TYPE en );
+    inline void setMaxEnergy( const TYPE en ) noexcept
+    {
+      m_maxEn = en;
+    }
 
     /** Access the energy bin size
      *  @return The energy bins size
      */
-    TYPE binSize() const;
+    inline TYPE binSize() const noexcept
+    {
+      return m_binSize;
+    }
 
     /** Set the energy bin size
      *  @param size The energy bin size
      */
-    void setBinSize( const TYPE size );
+    inline void setBinSize( const TYPE size ) noexcept
+    {
+      m_binSize = size;
+    }
 
     /** Access the lower edge of the given energy bin
      *  @param bin The energy bin
      *  @return The energy of the lower edge of the bin
      */
-    TYPE binEnergyLowerEdge( const unsigned int bin ) const;
+    inline TYPE binEnergyLowerEdge( const unsigned int bin ) const
+    {
+      return ( minEnergy() + ((TYPE)(bin))*binSize() );
+    }
 
     /** Access the upper edge of the energy bin
      *  @param bin The energy bin
      *  @return The energy of the upper edge of the bin
      */
-    TYPE binEnergyUpperEdge( const unsigned int bin ) const;
+    inline TYPE binEnergyUpperEdge( const unsigned int bin ) const
+    {
+      return ( minEnergy() + ((TYPE)(1+bin))*binSize() );
+    }
 
     /** Access the average bin energy
      *  @param bin The energy bin
      *  @return The average energy value for the given bin
      */
-    TYPE binEnergy( const unsigned int bin ) const;
+    inline TYPE binEnergy( const unsigned int bin ) const
+    {
+      return ( minEnergy() + ((TYPE)(0.5+bin))*binSize() );
+    }
 
     /** Access the energy distribution for a given mass hypothesis (non-const)
      *  @param id The mass hypothesis
      *  @return The energy distribution for the given mass hypothesis
      */
-    typename PhotonSpectra::PhotonData &
-    energyDist( const Rich::ParticleIDType id );
+    inline typename PhotonSpectra::PhotonData &
+    energyDist( const Rich::ParticleIDType id )
+    {
+      return m_photdata[id];
+    }
 
     /** Access the energy distribution for a given mass hypothesis (const)
      *  @param id The mass hypothesis
      *  @return The energy distribution for the given mass hypothesis
      */
-    const typename PhotonSpectra::PhotonData &
-    energyDist( const Rich::ParticleIDType id ) const;
+    inline const typename PhotonSpectra::PhotonData &
+    energyDist( const Rich::ParticleIDType id ) const
+    {
+      return m_photdata[id];
+    }
 
     /** Access energy distribution for all mass hypotheses (non-const)
      *  @return The energy distributions
      */
-    typename PhotonSpectra::HypoPhotonData & hypoData( );
+    inline typename PhotonSpectra::HypoPhotonData & hypoData( ) noexcept
+    {
+      return m_photdata;
+    }
 
     /** Access energy distribution for all mass hypotheses (const)
      *  @return The energy distributions
      */
-    const typename PhotonSpectra::HypoPhotonData & hypoData( ) const;
+    inline const typename PhotonSpectra::HypoPhotonData & hypoData( ) const noexcept
+    {
+      return m_photdata;
+    }
 
     /** Computes the integral of the energy distribution for a given mass hypothesis
      *  @param id The mass hypothesis
      *  @return The integral of the energy distribution, over the full energy range
      */
-    TYPE integral( const Rich::ParticleIDType id ) const;
+    inline TYPE integral( const Rich::ParticleIDType id ) const
+    {
+      TYPE sum = 0;
+      for ( const auto& i : energyDist(id) ) { sum += i; }
+      return sum;
+    }
 
     /** multiply by another distribution
      *
@@ -161,17 +229,28 @@ namespace Rich
      *  @retval false Multiplication failed
      */
     bool multiply ( const Rich::ParticleIDType id,
-                    const typename PhotonSpectra::PhotonData & data );
+                    const typename PhotonSpectra::PhotonData & data )
+    {
+      if ( this->energyBins() != data.size() ) return false;
+      auto j = data.begin();
+      for ( auto i = energyDist(id).begin();
+            i != energyDist(id).end(); ++i ) { *i *= *j; ++j; }
+      return true;
+    }
 
     /// Reset the data
-    void reset();
+    inline void reset() { /* nothing yet */ }
 
     /** Set the energy range
      *  @param min The minimum energy value
      *  @param max The maximum energy value
      */
-    void setEnergyRange( const TYPE min, const TYPE max );
-
+    inline void setEnergyRange( const TYPE min, const TYPE max )
+    {
+      m_minEn = min;
+      m_maxEn = max;
+    }
+    
   public:
 
     /// Implement ostream << method for PhotonSpectra<TYPE>
@@ -193,139 +272,15 @@ namespace Rich
 
   private: // data
 
-    int m_enBins   = 5;        ///< number of energy bins
-    TYPE m_minEn   = 0;        ///< minimum energy for which the distribution is defined
-    TYPE m_maxEn   = 5;        ///< maximum energy for which the distribution is defined
-    TYPE m_binSize = 1;        ///< energy bin size
-    HypoPhotonData m_photdata; ///< The data container
+    unsigned int m_enBins = 5;  ///< number of energy bins
+    TYPE m_minEn          = 0;  ///< minimum energy for which the distribution is defined
+    TYPE m_maxEn          = 5;  ///< maximum energy for which the distribution is defined
+    TYPE m_binSize        = 1;  ///< energy bin size
+
+    /// The data container
+    HypoPhotonData m_photdata { Rich::NParticleTypes, PhotonData(5) };
 
   };
-
-  template <class TYPE>
-  inline unsigned int PhotonSpectra<TYPE>::energyBins() const
-  {
-    return m_enBins;
-  }
-
-  template <class TYPE>
-  inline void PhotonSpectra<TYPE>::setEnergyBins( const unsigned int bins )
-  {
-    m_enBins = bins;
-  }
-
-  template <class TYPE>
-  inline TYPE PhotonSpectra<TYPE>::minEnergy() const
-  {
-    return m_minEn;
-  }
-
-  template <class TYPE>
-  inline void PhotonSpectra<TYPE>::setMinEnergy( const TYPE en )
-  {
-    m_minEn = en;
-  }
-
-  template <class TYPE>
-  inline TYPE PhotonSpectra<TYPE>::maxEnergy() const
-  {
-    return m_maxEn;
-  }
-
-  template <class TYPE>
-  inline void PhotonSpectra<TYPE>::setMaxEnergy( const TYPE en )
-  {
-    m_maxEn = en;
-  }
-
-  template <class TYPE>
-  inline TYPE PhotonSpectra<TYPE>::binSize() const
-  {
-    return m_binSize;
-  }
-
-  template <class TYPE>
-  inline void PhotonSpectra<TYPE>::setBinSize( const TYPE size )
-  {
-    m_binSize = size;
-  }
-
-  template <class TYPE>
-  inline TYPE PhotonSpectra<TYPE>::binEnergyLowerEdge( const unsigned int bin ) const
-  {
-    return ( minEnergy() + ((TYPE)(bin))*binSize() );
-  }
-
-  template <class TYPE>
-  inline TYPE PhotonSpectra<TYPE>::binEnergyUpperEdge( const unsigned int bin ) const
-  {
-    return ( minEnergy() + ((TYPE)(1+bin))*binSize() );
-  }
-
-  template <class TYPE>
-  inline TYPE PhotonSpectra<TYPE>::binEnergy( const unsigned int bin ) const
-  {
-    return ( minEnergy() + ((TYPE)(0.5+bin))*binSize() );
-  }
-
-  template <class TYPE>
-  inline void PhotonSpectra<TYPE>::setEnergyRange( const TYPE min, const TYPE max )
-  {
-    m_minEn = min;
-    m_maxEn = max;
-  }
-
-  template <class TYPE>
-  inline typename PhotonSpectra<TYPE>::PhotonData &
-  PhotonSpectra<TYPE>::energyDist( const Rich::ParticleIDType id )
-  {
-    return m_photdata[id];
-  }
-
-  template <class TYPE>
-  inline const typename PhotonSpectra<TYPE>::PhotonData &
-  PhotonSpectra<TYPE>::energyDist( const Rich::ParticleIDType id ) const
-  {
-    return m_photdata[id];
-  }
-
-  template <class TYPE>
-  inline typename PhotonSpectra<TYPE>::HypoPhotonData &
-  PhotonSpectra<TYPE>::hypoData()
-  {
-    return m_photdata;
-  }
-
-  template <class TYPE>
-  inline const typename PhotonSpectra<TYPE>::HypoPhotonData &
-  PhotonSpectra<TYPE>::hypoData() const
-  {
-    return m_photdata;
-  }
-
-  template <class TYPE>
-  inline TYPE PhotonSpectra<TYPE>::integral( const Rich::ParticleIDType id ) const
-  {
-    TYPE sum = 0;
-    for ( const auto& i : energyDist(id) ) { sum += i; }
-    return sum;
-  }
-
-  template <class TYPE>
-  inline bool PhotonSpectra<TYPE>::multiply( const Rich::ParticleIDType id,
-                                             const typename PhotonSpectra<TYPE>::PhotonData & data )
-  {
-    if ( this->energyBins() != data.size() ) return false;
-    auto j = data.begin();
-    for ( auto i = energyDist(id).begin();
-          i != energyDist(id).end(); ++i ) { *i *= *j; ++j; }
-    return true;
-  }
-
-  template <class TYPE>
-  inline void PhotonSpectra<TYPE>::reset()
-  {
-    // Nothing here yet....
-  }
 
 } // RICH
 

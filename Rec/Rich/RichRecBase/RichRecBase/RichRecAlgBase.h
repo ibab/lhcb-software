@@ -43,7 +43,7 @@ namespace Rich
                ISvcLocator* pSvcLocator );
 
       /// Destructor
-      virtual ~AlgBase() {};
+      virtual ~AlgBase() {}
 
       /** Initialization of the algorithm after creation
        *

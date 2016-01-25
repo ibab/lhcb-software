@@ -37,9 +37,6 @@ namespace Rich
       /// Constructor from a default position
       RadCorrLocalPositions( const Gaudi::XYZPoint & point ) : m_pos(Rich::NRadiatorTypes,point) { }
 
-      /// Destructor
-      ~RadCorrLocalPositions( ) { }
-
       /// Get the position for the given radiator (const)
       inline const Gaudi::XYZPoint & position( const Rich::RadiatorType rad ) const
       {

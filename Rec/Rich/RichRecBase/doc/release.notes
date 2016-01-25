@@ -4,6 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2016-01-25 - Chris Jones
+ - Add some noexcept and override qualifiers (more still needed...)
+ - Add explicit move sematics to TrackID, PhotonKey and PhotonSpectra.
+
 ! 2016-01-24 - Chris Jones
  - Comment out all messaging calls in the Photon Creator base class.  
    A little additional clean up whilst I am at it...

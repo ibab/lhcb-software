@@ -104,20 +104,19 @@ namespace Rich
       m_tkToolNames[Rich::Rec::Track::MCRichTrack] = "Rich::Rec::BaseTrackSelector";
 
       info() << "Track Selection : " << m_trNames << endmsg;
-      for ( TrackNames::const_iterator iName = m_trNames.begin();
-            iName != m_trNames.end(); ++iName )
+      for ( const auto & name : m_trNames )
       {
-        if      ( *iName == "Forward"     ) { sc = setUpTrack( Rich::Rec::Track::Forward ); }
-        else if ( *iName == "Match"       ) { sc = setUpTrack( Rich::Rec::Track::Match   ); }
-        else if ( *iName == "KsTrack"     ) { sc = setUpTrack( Rich::Rec::Track::KsTrack ); }
-        else if ( *iName == "VeloTT"      ) { sc = setUpTrack( Rich::Rec::Track::VeloTT  ); }
-        else if ( *iName == "Seed"        ) { sc = setUpTrack( Rich::Rec::Track::Seed    ); }
-        else if ( *iName == "Velo"        ) { sc = setUpTrack( Rich::Rec::Track::Velo    ); }
-        else if ( *iName == "Trigger"     ) { sc = setUpTrack( Rich::Rec::Track::Trigger ); }
-        else if ( *iName == "MCRichTrack" ) { sc = setUpTrack( Rich::Rec::Track::MCRichTrack ); }
+        if      ( name == "Forward"     ) { sc = setUpTrack( Rich::Rec::Track::Forward ); }
+        else if ( name == "Match"       ) { sc = setUpTrack( Rich::Rec::Track::Match   ); }
+        else if ( name == "KsTrack"     ) { sc = setUpTrack( Rich::Rec::Track::KsTrack ); }
+        else if ( name == "VeloTT"      ) { sc = setUpTrack( Rich::Rec::Track::VeloTT  ); }
+        else if ( name == "Seed"        ) { sc = setUpTrack( Rich::Rec::Track::Seed    ); }
+        else if ( name == "Velo"        ) { sc = setUpTrack( Rich::Rec::Track::Velo    ); }
+        else if ( name == "Trigger"     ) { sc = setUpTrack( Rich::Rec::Track::Trigger ); }
+        else if ( name == "MCRichTrack" ) { sc = setUpTrack( Rich::Rec::Track::MCRichTrack ); }
         else
         {
-          sc = Warning( "Unknown track algorithm type '"+(*iName)+"'" );
+          sc = Warning( "Unknown track algorithm type '"+name+"'" );
         }
         // check track was setup ok
         if ( sc.isFailure() ) return sc;
@@ -131,13 +130,12 @@ namespace Rich
 
     StatusCode TrackSelectorBase::setUpTrack( const Rich::Rec::Track::Type type )
     {
-      if ( msgLevel(MSG::VERBOSE) )
-        verbose() << "Acquiring RichTrackSelector '" << m_tkToolNames[type]
-                  << "' for type " << Rich::text(type) << endmsg;
+      _ri_verbo << "Acquiring RichTrackSelector '" << m_tkToolNames[type]
+                << "' for type " << Rich::text(type) << endmsg;
 
       StatusCode sc = StatusCode::SUCCESS;
 
-      if ( "" == m_tkToolNames[type] )
+      if ( m_tkToolNames[type].empty() )
       {
         return Error( "Selection tool for track algorithm '"+Rich::text(type)+"' undefined" );
       }
@@ -170,8 +168,8 @@ namespace Rich
     bool TrackSelectorBase::trackSelected( const LHCb::Track * track ) const
     {
       // is this type selected ?
-      const Rich::Rec::Track::Type type = Rich::Rec::Track::type(track);
-      TrackTools::const_iterator iT = m_tkTools.find( type );
+      const auto type = Rich::Rec::Track::type(track);
+      const auto iT = m_tkTools.find( type );
       if ( msgLevel(MSG::VERBOSE) && iT == m_tkTools.end() )
       {
         verbose() << "Track algorithm type " << Rich::Rec::text(type)
@@ -184,8 +182,8 @@ namespace Rich
     bool TrackSelectorBase::trackSelected( const LHCb::RichRecTrack * track ) const
     {
       // is this type selected ?
-      const Rich::Rec::Track::Type type = track->trackID().trackType();
-      TrackTools::const_iterator iT = m_tkTools.find( type );
+      const auto type = track->trackID().trackType();
+      const auto iT = m_tkTools.find( type );
       if ( msgLevel(MSG::VERBOSE) && iT == m_tkTools.end() )
       {
         verbose() << "Track algorithm type " << Rich::Rec::text(type)
@@ -214,84 +212,84 @@ namespace Rich
 
     double TrackSelectorBase::minLikelihoodCut( const Rich::Rec::Track::Type type ) const
     {
-      TrackTools::const_iterator iT = m_tkTools.find(type);
+      const auto iT = m_tkTools.find(type);
       return ( iT == m_tkTools.end() ? minLikelihoodCut() :
                max(minLikelihoodCut(),iT->second->minLikelihoodCut()) );
     }
 
     double TrackSelectorBase::maxLikelihoodCut( const Rich::Rec::Track::Type type ) const
     {
-      TrackTools::const_iterator iT = m_tkTools.find(type);
+      const auto iT = m_tkTools.find(type);
       return ( iT == m_tkTools.end() ? maxLikelihoodCut() :
                min(maxLikelihoodCut(),iT->second->maxLikelihoodCut()) );
     }
 
     double TrackSelectorBase::minPCut( const Rich::Rec::Track::Type type ) const
     {
-      TrackTools::const_iterator iT = m_tkTools.find(type);
+      const auto iT = m_tkTools.find(type);
       return ( iT == m_tkTools.end() ? minPCut() : max(minPCut(),iT->second->minPCut()) );
     }
 
     double TrackSelectorBase::maxPCut( const Rich::Rec::Track::Type type ) const
     {
-      TrackTools::const_iterator iT = m_tkTools.find(type);
+      const auto iT = m_tkTools.find(type);
       return ( iT == m_tkTools.end() ? maxPCut() : min(maxPCut(),iT->second->maxPCut()) );
     }
 
     double TrackSelectorBase::minPtCut( const Rich::Rec::Track::Type type ) const
     {
-      TrackTools::const_iterator iT = m_tkTools.find(type);
+      const auto iT = m_tkTools.find(type);
       return ( iT == m_tkTools.end() ? minPtCut() : max(minPtCut(),iT->second->minPtCut()) );
     }
 
     double TrackSelectorBase::maxPtCut( const Rich::Rec::Track::Type type ) const
     {
-      TrackTools::const_iterator iT = m_tkTools.find(type);
+      const auto iT = m_tkTools.find(type);
       return ( iT == m_tkTools.end() ? maxPtCut() : min(maxPtCut(),iT->second->maxPtCut()) );
     }
 
     double TrackSelectorBase::minChi2Cut( const Rich::Rec::Track::Type type ) const
     {
-      TrackTools::const_iterator iT = m_tkTools.find(type);
+      const auto iT = m_tkTools.find(type);
       return ( iT == m_tkTools.end() ? minChi2Cut() : max(minChi2Cut(),iT->second->minChi2Cut()) );
     }
 
     double TrackSelectorBase::maxChi2Cut( const Rich::Rec::Track::Type type ) const
     {
-      TrackTools::const_iterator iT = m_tkTools.find(type);
+      const auto iT = m_tkTools.find(type);
       return ( iT == m_tkTools.end() ? maxChi2Cut() : min(maxChi2Cut(),iT->second->maxChi2Cut()) );
     }
 
     int TrackSelectorBase::chargeSel( const Rich::Rec::Track::Type type ) const
     {
-      TrackTools::const_iterator iT = m_tkTools.find(type);
+      const auto iT = m_tkTools.find(type);
       return ( iT == m_tkTools.end() ? chargeSel() : iT->second->chargeSel() );
     }
 
     double TrackSelectorBase::minCloneDistCut( const Rich::Rec::Track::Type type ) const
     {
-      TrackTools::const_iterator iT = m_tkTools.find(type);
+      const auto iT = m_tkTools.find(type);
       return ( iT == m_tkTools.end() ?
                minCloneDistCut() : max(minCloneDistCut(),iT->second->minCloneDistCut()) );
     }
 
     double TrackSelectorBase::maxCloneDistCut( const Rich::Rec::Track::Type type ) const
     {
-      TrackTools::const_iterator iT = m_tkTools.find(type);
+      const auto iT = m_tkTools.find(type);
       return ( iT == m_tkTools.end() ?
                maxCloneDistCut() : min(maxCloneDistCut(),iT->second->maxCloneDistCut()) );
     }
 
     double TrackSelectorBase::minGhostProbCut( const Rich::Rec::Track::Type type ) const
     {
-      TrackTools::const_iterator iT = m_tkTools.find(type);
+      const auto iT = m_tkTools.find(type);
       return ( iT == m_tkTools.end() ?
                minGhostProbCut() : max(minGhostProbCut(),iT->second->minGhostProbCut()) );
     }
 
     double TrackSelectorBase::maxGhostProbCut( const Rich::Rec::Track::Type type ) const
     {
-      TrackTools::const_iterator iT = m_tkTools.find(type);
+      const auto iT = m_tkTools.find(type);
       return ( iT == m_tkTools.end() ?
                maxGhostProbCut() : min(maxGhostProbCut(),iT->second->maxGhostProbCut()) );
     }
