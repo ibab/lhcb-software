@@ -4,6 +4,10 @@
 ! Purpose     : Holds general purpose components that can be run at any
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
+
+! 2016-01-25 - Davide Fazzini
+ - Added GenFSRRead, GenFSRLog and GenFSRStat algorithms
+
 ! 2016-01-06 - Gerhard Raven
  - major change: follow constification of interface in Kernel/LHCbKernel
  - qualify internal EvtTypeInfo as final, remove (virtual) destructor,
