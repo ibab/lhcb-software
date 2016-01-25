@@ -8,6 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-01-24 - Mike Sokoloff
+  - Changes to Stages.py to correct a bug in SecondaryLambdaFilter and in
+    CharmSpectroscopy.py to improve efficiencies for low Q-value candidates
+    with pions.
+
 ! 2016-01-13 - Olli Lupton
  - Changes to PID lines for 2016 running. Compatible Draft2016 HltSettings
    to be committed to Hlt/HltSettings imminently.
