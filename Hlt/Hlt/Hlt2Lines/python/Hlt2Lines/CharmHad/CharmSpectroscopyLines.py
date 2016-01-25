@@ -102,7 +102,7 @@ class CharmSpectroscopyLines :
 ##  candidates passing trigger selections specified in  other files
         from Stages import D02HH_D0ToKmPip
         from Stages import TagDecay, TagDecayWithNeutral
-        from Stages import SharedPromptChild_pi, SharedPromptChild_K, SharedPromptChild_p
+        from Stages import SharedSoftTagChild_pi, SharedPromptChild_K, SharedPromptChild_p
         from Stages import CharmHadSharedKsLL, CharmHadSharedKsDD
         from Stages import CharmHadSharedSecondaryLambdaLL, CharmHadSharedSecondaryLambdaDD
         from Stages import D02KsKK_LL, D02KsKK_DD, D02KsPiPi_LL, D02KsPiPi_DD
@@ -155,7 +155,7 @@ class CharmSpectroscopyLines :
         ## shared instances should usually be defined in Stages.py.
         ## Consider moving them there.
         BachelorPi = PromptBachelorFilter('CharmHadBachelorPi',
-                                       inputs = [SharedPromptChild_pi],
+                                       inputs = [SharedSoftTagChild_pi],
                                        nickname = 'ChargedSpectroscopyBachelors',
                                        shared = True)
 
