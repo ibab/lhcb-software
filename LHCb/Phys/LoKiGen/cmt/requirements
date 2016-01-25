@@ -9,9 +9,10 @@ version           v10r22
 branches           cmt doc src dict python LoKi
 
 # ================ dependencies ===========================================
-use   LoKiCore     v*    Phys
-use   GenEvent     v*    Event
-use   LoKiNumbers  v*    Phys
+use                LoKiCore     v*    Phys
+use                GenEvent     v*    Event
+use                LoKiNumbers  v*    Phys
+use                graphviz        v* LCG_Interfaces -no_auto_imports 
 
 # ================ own includes ===========================================
 apply_pattern install_more_includes  more=LoKi

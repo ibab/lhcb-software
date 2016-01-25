@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2016-01-25 - Vanya Belyaev
+ - add Graphviz into CMT&CMAKE 
+
 ! 2016-01-17 - Vanya Belyaev
  - LoKiGen.graph: several improvements 
  - remove old GetHepMC stuff 
@@ -20,6 +23,10 @@
 
 ! 2016-01-16 - Vanya Belyaev
  - add new module LoKiGen.graph to produce decay tree graphs 
+
+     import LoKiGen.graph 
+     hepmc = ...
+     hepmc.view() 
 
 !========================= LoKiGen v10r22 2015-11-23 =========================
 ! 2015-11-01 - Gerhard Raven

@@ -3,6 +3,7 @@
 ################################################################################
 gaudi_subdir(LoKiGen v10r22)
 
+find_package(Graphviz) 
 gaudi_depends_on_subdirs(Event/GenEvent
                          Phys/LoKiCore
                          Phys/LoKiNumbers)
