@@ -1,0 +1,28 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: P.Seyfert
+# Purpose: * Check that DaVinci can perform a track fit
+#          * This validates the existence of clusters in the input file
+#          * Furthermore, check the compatibility of the DaVinci track fit result with the Brunel fit result
+# Prerequisites: an input file, I guess? (work in progress)
+# Common failure modes, severities and cures: 
+#          . MAJOR: * Fits fail due to missing raw data (lite cluster unpacking)
+#                     -> figure out if the input file really contains the clusters it's supposed to contain
+#                   * Fit results incompatible
+#                     -> Check input variables in ntuple (are we discovering packing precision or are integer values off)
+#######################################################
+-->
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="timeout"><integer>3600</integer></argument>
+  <argument name="args"><set>
+      <text>$DAVINCITRACKREFITTINGROOT/options/check_2015mdst.py</text>
+  </set></argument>
+  <argument name="validator"><text>
+countErrorLines({"FATAL":152})
+</text></argument>
+</extension>
+

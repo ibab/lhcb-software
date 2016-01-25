@@ -35,3 +35,7 @@ library          DaVinciTrackFitting  ../src/*.cpp
 #============================================================================
 apply_pattern    component_library library=DaVinciTrackFitting
 apply_pattern    install_python_modules
+
+private
+  apply_pattern QMTest
+end_private

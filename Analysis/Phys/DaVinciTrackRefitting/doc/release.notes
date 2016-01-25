@@ -4,6 +4,11 @@
 ! Purpose     : Provide tools for refitting on DST
 !-----------------------------------------------------------------------------
 
+! 2016-01-25 - Paul Seyfert
+ - added proof of principle of qmtest for track refitting
+   (running on Stripping 23 DST)
+   to be done: S23 MDST, other strippings, integration test
+
 ! 2016-01-21 - Paul Seyfert
  - added functionality for integration and qm test to refitter
  - configure ghost probability to run in DaVinci
