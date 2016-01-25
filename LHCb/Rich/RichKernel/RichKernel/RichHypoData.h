@@ -50,9 +50,23 @@ namespace Rich
 
   public: // constructors and destructors
 
-    /** Default Constructor
-     */
+    /// Default Constructor
     HypoData() { resetData(); }
+
+    /// Default Destructor
+    ~HypoData() = default;
+
+    /// Default Copy Constructor
+    HypoData( const HypoData& id ) = default;
+
+    /// Default Copy Operator
+    HypoData& operator=( const HypoData& id ) = default;
+
+    /// Default Move Constructor
+    HypoData( HypoData&& id ) = default;
+
+    /// Default Move Operator
+    HypoData& operator=( HypoData&& id ) = default;
 
     /** Constructor with explicit data initialisation value
      *

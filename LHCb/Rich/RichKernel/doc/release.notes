@@ -4,6 +4,12 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2016-01-25 - Chris Jones
+ - Roll back the constexpr changes from yesterday, as they appear to be
+   causing issues in the nightlies I didn't see in my testing.
+   Save for another day ...
+ - Add move explicit default semantics to Rich::HypoData
+
 ! 2016-01-24 - Chris Jones
  - Add some noexcept qualifiers
  - Update RichGeomPhoton with explicit defaults.
