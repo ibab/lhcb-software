@@ -28,6 +28,11 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
                                     'MuPt'       :     0 * MeV,
                                     'VertexChi2' :    25},
 
+                 'Psi2SLowPT' :    {'MassWindow' :   120 * MeV,
+                                    'PtMax'      :  2500 * MeV,
+                                    'MuPt'       :     0 * MeV,
+                                    'VertexChi2' :    25},
+
                  'Psi2SHighPT' :   {'MassWindow' :   120 * MeV,
                                     'Pt'         :  3500 * MeV,
                                     'MuPt'       :     0 * MeV,
@@ -77,6 +82,12 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
                                          'Pt'         :  2000 * MeV,
                                          'MuPt'       :     0 * MeV,
                                          'VertexChi2' :    25},
+
+                 'Psi2SLowPTTurbo' :    {'MassWindow' :   120 * MeV,
+                                         'PtMax'      :  2500 * MeV,
+                                         'MuPt'       :     0 * MeV,
+                                         'VertexChi2' :    25},
+
                  'BTurbo' :             {'MinMass'    :   4700 * MeV,
                                          'VertexChi2' :    25},
 
@@ -89,7 +100,7 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
             else:
                 return self._stages
 
-        from Stages import (DiMuonFilter, JpsiFilter, Psi2SFilter,
+        from Stages import (DiMuonFilter, JpsiFilter, Psi2SFilter, Psi2SLowPtFilter, 
                             BFilter, ZFilter, DetachedDiMuonFilter,
                             DetachedDiMuonHeavyFilter, DetachedJpsiFilter,
                             DetachedPsi2SFilter, SoftDiMuonFilter)
@@ -97,6 +108,7 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
                         'JPsi'          : [JpsiFilter('JPsi')],
                         'JPsiHighPT'    : [JpsiFilter('JPsiHighPT')],
                         'Psi2S'         : [Psi2SFilter('Psi2S')],
+                        'Psi2SLowPT'    : [Psi2SLowPtFilter('Psi2SLowPT')],
                         'Psi2SHighPT'   : [Psi2SFilter('Psi2SHighPT')],
                         'B'             : [BFilter('B')],
                         'Z'             : [ZFilter('Z')],
@@ -106,9 +118,10 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
                         'DetachedJPsi'  : [DetachedJpsiFilter('DetachedJPsi')],
                         'DetachedPsi2S' : [DetachedPsi2SFilter('DetachedPsi2S')],
                         # Turbo lines
-                        'JPsiTurbo'     : [JpsiFilter('JPsiTurbo')],
-                        'Psi2STurbo'    : [Psi2SFilter('Psi2STurbo')],
-                        'BTurbo'        : [BFilter('BTurbo')],
+                        'JPsiTurbo'         : [JpsiFilter('JPsiTurbo')],
+                        'Psi2STurbo'        : [Psi2SFilter('Psi2STurbo')],
+                        'Psi2SLowPTTurbo'   : [Psi2SLowPtFilter('Psi2SLowPTTurbo')],
+                        'BTurbo'            : [BFilter('BTurbo')],
                         }
         if nickname:
             return self._stages[nickname]
@@ -119,7 +132,7 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Line
         from Configurables import HltANNSvc
         stages = self.stages()
-        for (nickname, algos) in self.algorithms(stages):
+        for (nickname, algos) in self.algorithms(stages).iteritems():
             linename = 'DiMuon' + nickname if nickname != 'DiMuon' else nickname
             Hlt2Line(linename, prescale = self.prescale,
                      algos = algos, postscale = self.postscale)

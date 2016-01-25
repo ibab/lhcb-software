@@ -101,6 +101,20 @@ class Psi2SFilter(Hlt2ParticleFilter):
         inputs = [TrackFittedDiMuon]
         Hlt2ParticleFilter.__init__(self, name, code, inputs, shared = True, **args)
 
+class Psi2SLowPtFilter(Hlt2ParticleFilter):
+    def __init__(self, name):
+        code = ("(ADMASS(3686.09) < %(MassWindow)s) " +
+                "& (MAXTREE('mu-' == ABSID, TRCHI2DOF) < %(TrChi2Tight)s) " +
+                "& (PT < %(PtMax)s) " +
+                "& (MINTREE('mu-' == ABSID, PT) > %(MuPt)s) " +
+                "& (VFASPF(VCHI2PDOF) < %(VertexChi2)s )")
+        
+        from HltLine.Hlt2Monitoring import Hlt2Monitor, Hlt2MonitorMinMax
+        args = {'PreMonitor'  : Hlt2Monitor("M", "M(#mu#mu)", 3097, 200, 'M_in',  nbins = 25),
+                'PostMonitor' : Hlt2Monitor("M", "M(#mu#mu)", 3686, 200, 'M_out', nbins = 25)}
+        inputs = [TrackFittedDiMuon]
+        Hlt2ParticleFilter.__init__(self, name, code, inputs, shared = True, **args)        
+
 class DetachedPsi2SFilter(Hlt2ParticleFilter):
     def __init__(self, name):
         code = "BPVDLS > %(DLS)s"

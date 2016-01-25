@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-01-25 - Simone Stracka
+ - Changes to DiMuon/Lines.py and DiMuon/Stages.py: added Psi2SLowPT line
+
 ! 2016-01-25 - Patrick Spradlin
  - Modifications to RareCharm/Stages.py.  Removed explicit unit conversions
    in cut strings of D2xxCombiner class.  Since the settings dictionaries
