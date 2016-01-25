@@ -3,6 +3,9 @@
 ! package coordinator: G.Corti
 !------------------------------------------------------------------------------
 
+! 2016-01-25 - Davide Fazzini
+ - Added GenFSR.xml, GenCountersFSR.xml and CrossSectionsFSR.xml classes  
+
 ! 2015-11-26 - Marco Clemencic
  - Removed (u)longlong typedef (see GAUDI-1125).
 

@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Davide Fazzini -->
+<!--- Created : 2015-05-24 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='GenEvent'>
+
+<!-- Cross-Section Class --> 
+       
+    <class
+      name="CrossSectionsFSR"
+      author="Davide Fazzini"
+      desc="Enum class for Generator fractions and cross-sections"
+      id="13602" 
+      serializers="TRUE"
+      >
+      
+      &DataObject;
+      <base name="DataObject"/>
+      <import name="GaudiKernel/VectorMap"/>
+     
+      <enum
+	 desc="lookup table for fraction and cross-section keys"
+	 name="CrossSectionKey"
+	 strTypConv = 'TRUE'
+	 access="PUBLIC" >
+
+<!-- ****************************** Pythia total cross-section ********************************* -->
+        <enumval name="MBCrossSection"       value="0"    desc="Total cross-section of Minimum Bias events"/>
+
+<!-- ****************************** Computation of Pile-Up ****************************** -->
+        <enumval name="MeanNoZeroPUInt"      value="2"    desc="Mean number of non-empty generated Pile-Up interactions"/>
+	<enumval name="MeanPUInt"            value="3"    desc="Mean number of generated Pile-Up interactions"/>
+	<enumval name="MeanPUIntAcc"         value="5"    desc="Mean number of accepted Pile-Up interactions"/>
+
+<!-- ****************************** Computation of full event cut efficiencies  ****************************** -->
+	<enumval name="FullEvtCut"           value="7"    desc="Full event cut efficiency"/>
+
+<!-- ****************************** Computation of cross-sections ****************************** -->
+	<enumval name="bCrossGen"            value="10"   desc="Generated b cross-section"/>
+	<enumval name="ThreebCrossGen"       value="11"   desc="Double generated b cross-section"/>
+	<enumval name="PromptBCrossGen"      value="12"   desc="Generated prompt B cross-section"/>
+	<enumval name="cCrossGen"            value="13"   desc="Generated c cross-section"/>
+	<enumval name="ThreecCrossGen"       value="14"   desc="Double generated c cross-section"/>
+	<enumval name="PromptCCrossGen"      value="15"   desc="Generated prompt C cross-section"/>
+	<enumval name="bAndcCrossGen"        value="16"   desc="Generated b and c cross-section"/>
+	<enumval name="bCrossAcc"            value="17"   desc="Accepted b cross-section"/>
+	<enumval name="ThreebCrossAcc"       value="18"   desc="Double accepted b cross-section"/>
+	<enumval name="PromptBCrossAcc"      value="19"   desc="Accepted prompt B cross-section"/>
+	<enumval name="cCrossAcc"            value="20"   desc="Accepted c cross-section"/>
+	<enumval name="ThreecCrossAcc"       value="21"   desc="Double accepted c cross-section"/>
+	<enumval name="PromptCCrossAcc"      value="22"   desc="Accepted prompt C cross-section"/>
+	<enumval name="bAndcCrossAcc"        value="23"   desc="Accepted b and c cross-section"/>
+
+<!-- ****************************** Computation of generator level cut efficiencies ****************************** -->
+        <enumval name="GenLevelCut"          value="27"   desc="Generator level cut efficiency"/>
+
+<!-- ****************************** Computation of B Hadron fraction ****************************** -->
+        <enumval name="FractionB0Gen"        value="30"   desc="Fraction of generated B0"/>
+        <enumval name="FractionantiB0Gen"    value="31"   desc="Fraction of generated B0bar"/>
+	<enumval name="FractionBplusGen"     value="32"   desc="Fraction of generated B+"/>
+	<enumval name="FractionBminusGen"    value="33"   desc="Fraction of generated B-"/>
+	<enumval name="FractionBs0Gen"       value="34"   desc="Fraction of generated Bs0"/>
+        <enumval name="FractionantiBs0Gen"   value="35"   desc="Fraction of generated anti-Bs0"/>
+	<enumval name="FractionbBarGen"      value="36"   desc="Fraction of generated b-Baryon"/>
+        <enumval name="FractionantibBarGen"  value="37"   desc="Fraction of generated anti-b-Baryon"/>
+	<enumval name="FractionBcplusGen"    value="38"   desc="Fraction of generated Bc+"/>
+	<enumval name="FractionBcminusGen"   value="39"   desc="Fraction of generated Bc-"/>
+	<enumval name="FractionB0Acc"        value="41"   desc="Fraction of accepted B0"/>
+        <enumval name="FractionantiB0Acc"    value="42"   desc="Fraction of accepted B0bar"/>
+	<enumval name="FractionBplusAcc"     value="43"   desc="Fraction of accepted B+"/>
+        <enumval name="FractionBminusAcc"    value="44"   desc="Fraction of accepted B-"/>
+	<enumval name="FractionBs0Acc"       value="45"   desc="Fraction of accepted Bs0"/>
+        <enumval name="FractionantiBs0Acc"   value="46"   desc="Fraction of accepted anti-Bs0"/>
+	<enumval name="FractionbBaryonAcc"   value="47"   desc="Fraction of accepted b-Baryon"/>
+        <enumval name="FractionantibBarAcc"  value="48"   desc="Fraction of accepted anti-b-Baryon"/>
+	<enumval name="FractionBcplusAcc"    value="49"   desc="Fraction of accepted Bc+"/>
+	<enumval name="FractionBcminusAcc"   value="50"   desc="Fraction of accepted Bc-"/>
+
+<!-- ****************************** Computation of D Hadron fraction ****************************** -->
+        <enumval name="FractionD0Gen"        value="55"   desc="Fraction of generated D0"/>
+        <enumval name="FractionantiD0Gen"    value="56"   desc="Fraction of generated D0bar"/>
+	<enumval name="FractionDplusGen"     value="57"   desc="Fraction of generated D+"/>
+        <enumval name="FractionDminusGen"    value="58"   desc="Fraction of generated D-"/>
+        <enumval name="FractionDsplusGen"    value="59"   desc="Fraction of generated Ds+"/>
+        <enumval name="FractionDsminusGen"   value="60"   desc="Fraction of generated Ds-"/>
+        <enumval name="FractioncBarGen"      value="61"   desc="Fraction of generated c-Baryon"/>
+        <enumval name="FractionanticBarGen"  value="62"   desc="Fraction of generated anti-c-Baryon"/>
+        <enumval name="FractionD0Acc"        value="64"   desc="Fraction of accepted D0"/>
+        <enumval name="FractionantiD0Acc"    value="65"   desc="Fraction of accepted D0bar"/>
+        <enumval name="FractionDplusAcc"     value="66"   desc="Fraction of accepted D+"/>
+        <enumval name="FractionDminusAcc"    value="67"   desc="Fraction of accepted D-"/>
+        <enumval name="FractionDsplusAcc"    value="68"   desc="Fraction of accepted Ds+"/>
+        <enumval name="FractionDsminusAcc"   value="69"   desc="Fraction of accepted Ds-"/>
+        <enumval name="FractioncBaryonAcc"   value="70"   desc="Fraction of accepted c-Baryon"/>
+	<enumval name="FractionanticBarAcc"  value="71"   desc="Fraction of accepted anti-c-Baryon"/>
+
+<!-- ****************************** Computation of B** fraction ****************************** -->
+        <enumval name="FractionBGen"         value="75"   desc="Fraction of generated B"/>
+	<enumval name="FractionBstarGen"     value="76"   desc="Fraction of generated B*"/>
+	<enumval name="FractionB2starGen"    value="77"   desc="Fraction of generated B**"/>
+	<enumval name="FractionBAcc"         value="78"   desc="Fraction of accepted B"/>
+        <enumval name="FractionBstarAcc"     value="79"   desc="Fraction of accepted B*"/>
+	<enumval name="FractionB2starAcc"    value="80"   desc="Fraction of accepted B**"/>
+
+<!-- ****************************** Computation of D** fraction ****************************** -->
+        <enumval name="FractionDGen"         value="85"   desc="Fraction of generated D"/>
+	<enumval name="FractionDstarGen"     value="86"   desc="Fraction of generated D*"/>
+	<enumval name="FractionD2starGen"    value="87"   desc="Fraction of generated D**"/>
+	<enumval name="FractionDAcc"         value="88"   desc="Fraction of accepted D"/>
+	<enumval name="FractionDstarAcc"     value="89"   desc="Fraction of accepted D*"/>
+        <enumval name="FractionD2starAcc"    value="90"   desc="Fraction of accepted D**"/>
+
+<!-- ****************************** Computation of signal generator level cut efficiencies ****************************** -->
+        <enumval name="FractionSignal"       value="91"   desc="Fraction of generated signal events"/>
+	<enumval name="FractionantiSignal"   value="92"   desc="Fraction of generated anti-signal events"/>
+        <enumval name="PartCutEff"        value="94"   desc="Particle cut efficiency"/>
+	<enumval name="antiPartCutEff"    value="96"   desc="Anti-particle cut efficiency"/>
+
+<!-- ****************************** EXTRA VALUES ****************************** -->
+        <enumval name="Unknown"           value="98"   desc="Unknown value"/>
+<!--        <enumval name="LastGlobal"        value="99"   desc="User variables should use flags greater than this value"/>  -->
+      </enum>
+
+
+      <method
+	name='getFullNames'
+	type='std::map&lt;std::string,std::string&gt;'
+	desc='return the list with the complete names of cross-sections'
+	const='FALSE'>
+	<code>
+	  std::map&lt;std::string,std::string&gt; map;
+
+<!-- ****************************** Pythia total cross-section ********************************* -->
+	  map.insert(std::pair&lt;std::string,std::string&gt;("MBCrossSection","Total cross-section of Minimum Bias events"));
+
+<!-- ****************************** Computation of Pile-Up ****************************** -->
+	  map.insert(std::pair&lt;std::string,std::string&gt;("MeanNoZeroPUInt","Mean number of non-empty generated Pile-Up interactions"));
+	  map.insert(std::pair&lt;std::string,std::string&gt;("MeanPUInt","Mean number of generated Pile-Up interactions"));
+	  map.insert(std::pair&lt;std::string,std::string&gt;("MeanPUIntAcc","Mean number of accepted Pile-Up interactions"));
+
+<!-- ****************************** Computation of full event cut efficiencies  ****************************** -->
+          map.insert(std::pair&lt;std::string,std::string&gt;("FullEvtCut","Full event cut efficiency"));
+
+<!-- ****************************** Computation of cross-sections ****************************** -->
+	  map.insert(std::pair&lt;std::string,std::string&gt;("bCrossGen","Generated b cross-section"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("ThreebCrossGen", "Double generated b cross-section"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("PromptBCrossGen", "Generated prompt B cross-section"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("cCrossGen", "Generated c cross-section"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("ThreecCrossGen","Double generated c cross-section"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("PromptCCrossGen","Generated prompt C cross-section"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("bAndcCrossGen","Generated b and c cross-section"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("bCrossAcc","Accepted b cross-section"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("ThreebCrossAcc","Double accepted b cross-section"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("PromptBCrossAcc","Accepted prompt B cross-section"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("cCrossAcc","Accepted c cross-section"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("ThreecCrossAcc","Double accepted c cross-section"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("PromptCCrossAcc","Accepted prompt C cross-section"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("bAndcCrossAcc","Accepted b and c cross-section"));
+
+<!-- ****************************** Computation of generator level cut efficiencies ****************************** -->
+          map.insert(std::pair&lt;std::string,std::string&gt;("GenLevelCut","Generator level cut efficiency"));
+	  
+<!-- ****************************** Computation of B Hadron fraction ****************************** -->
+	  map.insert(std::pair&lt;std::string,std::string&gt;("FractionB0Gen","Fraction of generated B0"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionantiB0Gen","Fraction of generated B0bar"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionBplusGen","Fraction of generated B+"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionBminusGen","Fraction of generated B-"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionBs0Gen","Fraction of generated Bs0"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionantiBs0Gen","Fraction of generated anti-Bs0"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionbBarGen","Fraction of generated b-Baryon"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionantibBarGen","Fraction of generated anti-b-Baryon"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionBcplusGen","Fraction of generated Bc+"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionBcminusGen","Fraction of generated Bc-"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionB0Acc","Fraction of accepted B0"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionantiB0Acc","Fraction of accepted B0bar"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionBplusAcc","Fraction of accepted B+"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionBminusAcc","Fraction of accepted B-"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionBs0Acc","Fraction of accepted Bs0"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionantiBs0Acc","Fraction of accepted anti-Bs0"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionbBaryonAcc","Fraction of accepted b-Baryon"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionantibBarAcc","Fraction of accepted anti-b-Baryon"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionBcplusAcc","Fraction of accepted Bc+"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionBcminusAcc","Fraction of accepted Bc-"));
+
+<!-- ****************************** Computation of D Hadron fraction ****************************** -->
+	  map.insert(std::pair&lt;std::string,std::string&gt;("FractionD0Gen","Fraction of generated D0"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionantiD0Gen","Fraction of generated D0bar"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionDplusGen","Fraction of generated D+"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionDminusGen","Fraction of generated D-"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionDsplusGen","Fraction of generated Ds+"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionDsminusGen","Fraction of generated Ds-"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractioncBarGen","Fraction of generated c-Baryon"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionanticBarGen","Fraction of generated anti-c-Baryon"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionD0Acc","Fraction of accepted D0"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionantiD0Acc","Fraction of accepted D0bar"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionDplusAcc","Fraction of accepted D+"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionDminusAcc","Fraction of accepted D-"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionDsplusAcc","Fraction of accepted Ds+"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionDsminusAcc","Fraction of accepted Ds-"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractioncBaryonAcc","Fraction of accepted c-Baryon"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionanticBarAcc","Fraction of accepted anti-c-Baryon"));
+
+<!-- ****************************** Computation of B** fraction ****************************** -->
+	  map.insert(std::pair&lt;std::string,std::string&gt;("FractionBGen","Fraction of generated B"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionBstarGen","Fraction of generated B*"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionB2starGen","Fraction of generated B**"));
+	  map.insert(std::pair&lt;std::string,std::string&gt;("FractionBAcc","Fraction of accepted B"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionBstarAcc","Fraction of accepted B*"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionB2starAcc","Fraction of accepted B**"));
+
+<!-- ****************************** Computation of D** fraction ****************************** -->
+	  map.insert(std::pair&lt;std::string,std::string&gt;("FractionDGen","Fraction of generated D"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionDstarGen","Fraction of generated D*"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionD2starGen","Fraction of generated D**"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionDAcc","Fraction of accepted D"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionDstarAcc","Fraction of accepted D*"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionD2starAcc","Fraction of accepted D**"));
+
+
+<!-- ****************************** Computation of signal generator level cut efficiencies ****************************** -->
+	  map.insert(std::pair&lt;std::string,std::string&gt;("FractionSignal","Fraction of generated signal events"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("FractionantiSignal","Fraction of generated anti-signal events"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("PartCutEff","Particle cut efficiency"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("antiPartCutEff","Anti-particle cut efficiency"));
+
+
+	  return map;
+	</code>
+      </method>
+
+ <!-- readable printout -->
+
+      <method
+        name='fillStream'
+        type='std::ostream&amp;'
+        desc='printout'
+        const='TRUE'>
+        <arg name="s" type="std::ostream" const="FALSE"/>
+	<code>
+	  std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);
+	  ss &lt;&lt; "{ }";
+
+	  return ss;
+        </code>
+      </method>
+
+      
+
+    </class>
+
+  </package>
+
+</gdd>

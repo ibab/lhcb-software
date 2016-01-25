@@ -1,0 +1,736 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Davide Fazzini -->
+<!--- Created : 2015-05-22 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='GenEvent'>      
+
+<!-- GenFSR Class -->
+
+    <class
+       name="GenFSR"
+       author="Davide Fazzini"
+       desc="Accounting class for Generator in FSR"
+       id="13600"
+       serializers="TRUE"
+       >
+      <location name="Default"
+		place="/FileRecords/GenFSR"/>
+      <base name="DataObject"/>
+ 
+      <import name="stdio"/>
+      <import name="math"/>
+      <import name="vector"  std="TRUE"/>
+      <import name="fstream" std="TRUE"/>
+      <import name="numeric" std="TRUE"/>
+      <import name="string"  std="TRUE"/>
+      <import name="map"     std="TRUE"/>
+      <import name="Event/GenCountersFSR"/>
+      <import name="Event/CrossSectionsFSR"/>
+
+      <typedef
+         desc="Counter informations"
+         type="std::pair&lt;  int, longlong &gt;"
+         def="CounterValues"
+         access="PUBLIC"
+         />
+      
+      <typedef
+         desc="Generator counter"
+	 type="std::map &lt; int, CounterValues &gt;"
+	 def="GeneratorCounter"
+	 access="PUBLIC"
+	 />
+
+      <typedef
+         desc="Counter informations"
+         type="std::pair&lt;  std::string, double &gt;"
+         def="CrossValues"
+         access="PUBLIC"
+         />
+      
+      <typedef
+         desc="Cross-Section"
+         type="std::map &lt; int, CrossValues &gt;"
+	 def="CrossSection"
+         access="PUBLIC"
+         />   
+
+      <typedef                                               
+         desc="Simulation string information container"                
+         type="std::map &lt; std::string, std::string &gt;"              
+         def="StringInfo"                     
+         access="PUBLIC"                                                                                                                       
+         />
+
+      <typedef
+          desc="Simulation int information container"
+          type="std::map &lt; std::string, int &gt;"
+          def="IntInfo"
+          access="PUBLIC"
+          />
+
+<!-- ************************ FSR Attribute ************************ -->
+
+      <attribute
+	 desc="Informations related to the simulation conditions"
+	 type="StringInfo"
+	 name="stringInfos"
+	 />
+      
+      <attribute
+	 desc="Numerical information related to the simulation conditions"
+	 type="IntInfo"
+	 name="intInfos"
+	 />
+
+      <method
+	 desc="Initialize the FSR information"
+	 type="void"
+	 name="initializeInfos"
+	 >
+	<code>
+          std::vector&lt;std::string&gt; list{"evtType", "hardGenerator", "generationMethod", "decFiles", "nJobs"};
+          for(unsigned int i=0; i&lt;list.size(); i++)
+	  {
+	     if(list[i] == "evtType" || list[i] == "nJobs")
+	     {
+	        int int_val = 0;
+	        m_intInfos.insert(std::pair&lt; std::string, int &gt;(list[i], int_val));
+	     }
+	     else
+             {
+	        std::string string_val = "";
+	        m_stringInfos.insert(std::pair&lt; std::string, std::string &gt;(list[i], string_val));
+	     }
+	  }
+	</code>
+      </method>
+	
+      <method 
+         desc="Get the int value of a FSR information"
+         type="int"  
+         name="getSimulationInfo" 
+         argList="std::string name, int def=0"
+         const="TRUE"  
+         >
+        <code>
+	  IntInfo::const_iterator i = m_intInfos.find(name);
+          return m_intInfos.end() == i ? def : i-&gt;second;
+        </code>
+      </method>
+
+      <method                                       
+         desc="Get the string value of a FSR information"                                                      
+         type="std::string"
+         name="getSimulationInfo"
+         argList="std::string name, std::string def"
+         const="TRUE"                                                                   
+         >
+        <code>
+          StringInfo::const_iterator i = m_stringInfos.find(name);
+          return m_stringInfos.end() == i ? def : i-&gt;second;
+        </code>
+      </method>
+
+      <method
+	 desc="Set the int value of a FSR information"
+	 type="IntInfo"
+	 name="addSimulationInfo"
+	 argList="std::string name, int value"
+	 >
+	<code>
+	  m_intInfos[name] = value;
+          return m_intInfos;
+	</code>
+      </method>
+
+      <method
+         desc="Set the string value of a FSR information"
+         type="StringInfo"
+         name="addSimulationInfo"
+         argList="std::string name, std::string value"
+         >
+        <code>
+          m_stringInfos[name] = value;
+          return m_stringInfos;
+        </code>
+      </method>
+
+       <method
+         desc="Increment the number of jobs used to create the FSR"
+         type="void"
+         name="incrementNJobs"
+         argList="const int nJobs=1"                                              
+	 >
+        <code>
+	  int info = getSimulationInfo("nJobs",0);
+          addSimulationInfo("nJobs", info + nJobs);
+        </code>
+      </method>
+     
+<!-- ************************ Generator Level Counters ************************ -->
+
+      <attribute
+         desc="Set of Generator Level counter used in this job"
+	 type="GeneratorCounter"
+	 name="genCounters"
+	 />
+   
+      <method
+	 desc="get method"
+	 name="getGenCounters"
+	 type="GeneratorCounter&amp;"
+	 >
+	<code>
+	  return m_genCounters;
+	</code>
+      </method>
+
+      <method
+	 desc="add a Generator Counter to the set"
+	 name="addGenCounter"
+	 type="void"
+	 argList="const int key, const longlong value, const int incr=1"
+	 >
+	<code>
+	  CounterValues pair(incr, value); 
+	  m_genCounters.insert(std::pair&lt; int, CounterValues &gt;(key, pair));
+	</code>
+      </method>
+
+      <method 
+	 desc="has information for specified Generator counter"
+	 name="hasGenCounter"
+	 const="TRUE"
+	 argList="int key"
+	 type="bool"
+	 >
+	<code>
+	  return(m_genCounters.end() != m_genCounters.find(key));
+	</code>
+      </method>
+
+      <method
+	 desc="erase Generator counter from the set"
+	 name="eraseGenCounter"
+	 type="void"
+	 argList="int key"
+	 >
+	<code>
+	  m_genCounters.erase(key);
+	</code>
+      </method>      
+
+      <method
+         desc="extract the informations associated with the given key."
+         name="getGenCounterInfo"
+	 argList="const int key"
+         type="CounterValues"
+         const="TRUE"
+         >
+        <code>
+	  CounterValues def(0,0);
+          GeneratorCounter::const_iterator i = m_genCounters.find(key);
+          return m_genCounters.end() == i ? def : i-&gt;second;
+        </code>
+      </method>
+      
+      <method
+	 desc="sums the counter values for existing keys and inserts a new key if needed"
+         name="mergeGenCounters"
+         type="GeneratorCounter"
+         >
+        <arg name="rhs_counter" type="GeneratorCounter" const="TRUE"/>
+        <code>
+	  // sum counter values or add new key
+	  GeneratorCounter::const_iterator icounter;
+	  for (icounter = rhs_counter.begin(); icounter != rhs_counter.end(); icounter++) 
+	  {
+	     int key = (*icounter).first;
+	     CounterValues counterB = (*icounter).second;
+	     CounterValues counterA = getGenCounterInfo(key);
+	     if (hasGenCounter(key)) 
+	     {
+                eraseGenCounter(key);
+	     }
+	     addGenCounter(key, counterA.second+counterB.second, counterA.first+counterB.first);
+	  }
+	  
+	  return m_genCounters;
+        </code>
+      </method>
+
+      <method
+	 desc="increments the values for existing keys and inserts a new key if needed"
+         name="incrementGenCounter"
+         argList="const int key, const longlong value"
+         type="GeneratorCounter"
+         >
+        <code>
+	  // increment counter or add new key, only if data exists
+	  if (value!=-1) 
+	  {
+	     CounterValues pair(0,0);
+	     if (hasGenCounter(key)) 
+	     {
+	        pair = getGenCounterInfo(key);
+                eraseGenCounter(key);
+	     }
+	     
+	     addGenCounter(key, pair.second + value, pair.first+1);
+	  }
+
+	  return m_genCounters;
+        </code>
+      </method>
+
+      <method
+         desc="sum a set of counters"
+         name="sumGenCounters"
+         type="longlong"
+	 const="TRUE"
+         >
+        <arg name="counters" type="std::vector&lt;std::string&gt;" const="FALSE"/>
+	<code>
+          longlong sum = 0;
+	  int length = counters.size();
+          int key = 0;
+
+          for(int i=0; i&lt;length; i++)
+          {
+             key = GenCountersFSR::CounterKeyToType(counters[i]);
+             sum += getGenCounterInfo(key).second;
+          }
+          return sum;
+        </code>
+      </method>
+
+
+      <method
+         desc="Select the right counter to use as denominator to evaluate the fractions"
+         name="getDenominator"
+         type="longlong"
+         argList="const int key"
+	 const="TRUE"
+         >
+        <code>
+	  longlong den = 0;
+
+          if(hasGenCounter(key))
+          {
+             CounterValues Acounter(0,0), Bcounter(0,0);
+             bool sum_flag = false;
+             std::string keyName = " ";
+	     std::string BcounterName = " ";
+
+             Acounter = getGenCounterInfo(key);
+             keyName = GenCountersFSR::CounterKeyToString(key);
+
+             // For these counters the fraction is calculated using the sum of a sub-set of counters
+             if((key &gt;= 30 &amp;&amp; key &lt;= 50) || // B Hadron counters
+                (key &gt;= 55 &amp;&amp; key &lt;= 71) || // D Hadron counters
+                (key &gt;= 75 &amp;&amp; key &lt;= 80) || // B** Hadron counters
+	        (key &gt;= 85 &amp;&amp; key &lt;= 90) || // D** Hadron counters
+                (key == 91 || key == 92))                 // signal/anti-signal counters
+                   sum_flag = true;   
+
+             if(!sum_flag)
+             {
+                if(keyName == "EvtGenerated")
+                {
+                   BcounterName = "EvtGenerated";
+                }
+                else if(keyName == "IntGenerated")  BcounterName = "AllEvt";
+                else if(keyName == "IntAccepted")   BcounterName = "EvtAccepted";
+                else if(keyName == "AfterFullEvt")  BcounterName = "BeforeFullEvt";
+                else if(key &gt;= 10 &amp;&amp; key &lt;= 16) // counters of generated interactions
+                {
+                   BcounterName = "IntGenerated";
+                }
+                else if(key &gt;= 17 &amp;&amp; key &lt;= 23) // counters of accepted interactions
+                {
+                   BcounterName = "IntAccepted";
+                }
+                else if(keyName == "AfterLevelCut") BcounterName = "BeforeLevelCut";
+                else if(keyName == "AfterPCut")     BcounterName = "BeforePCut";
+                else if(keyName == "AfterantiPCut") BcounterName = "BeforeantiPCut";
+                else BcounterName = "Unknown";
+
+                if(BcounterName!="Unknown")
+                {
+                   Bcounter = getGenCounterInfo(GenCountersFSR::CounterKeyToType(BcounterName));
+                   den = Bcounter.second;
+                }
+             }
+             else if(sum_flag)
+             {
+               std::vector&lt;std::string&gt; counters_vec;
+
+               if(keyName == "B0Gen" || keyName == "BplusGen" || keyName == "Bs0Gen" || keyName == "bBaryonGen" || keyName == "BcplusGen")
+               {
+                  std::string counters[] = {"B0Gen","BplusGen","Bs0Gen","bBaryonGen","BcplusGen"};
+                  counters_vec.assign(counters,counters+sizeof(counters)/sizeof(counters[0]));
+               }
+               else if(keyName=="antiB0Gen" ||keyName=="BminusGen" ||keyName=="antiBs0Gen" ||keyName=="antibBaryonGen" ||keyName=="BcminusGen")
+               {
+                   std::string counters[] = {"antiB0Gen","BminusGen","antiBs0Gen","antibBaryonGen","BcminusGen"};
+                   counters_vec.assign(counters,counters+sizeof(counters)/sizeof(counters[0]));
+               }
+               else if(keyName == "B0Acc" || keyName == "BplusAcc" || keyName == "Bs0Acc" || keyName == "bBaryonAcc" || keyName == "BcplusAcc")
+               {
+                   std::string counters[] = {"B0Acc","BplusAcc","Bs0Acc","bBaryonAcc","BcplusAcc"};
+                   counters_vec.assign(counters,counters+sizeof(counters)/sizeof(counters[0]));
+               }
+               else if(keyName=="antiB0Acc" ||keyName=="BminusAcc" ||keyName=="antiBs0Acc" ||keyName=="antibBaryonAcc" ||keyName=="BcminusAcc")
+               {
+                   std::string counters[] = {"antiB0Acc","BminusAcc","antiBs0Acc","antibBaryonAcc","BcminusAcc"};
+                   counters_vec.assign(counters,counters+sizeof(counters)/sizeof(counters[0]));
+               }
+               else if(keyName == "D0Gen" || keyName == "DplusGen" || keyName == "DsplusGen" || keyName == "cBaryonGen")
+               {
+                   std::string counters[] = {"D0Gen","DplusGen","DsplusGen","cBaryonGen"};
+                   counters_vec.assign(counters,counters+sizeof(counters)/sizeof(counters[0]));
+               }
+               else if(keyName == "antiD0Gen" || keyName == "DminusGen" || keyName == "DsminusGen" || keyName == "anticBaryonGen")
+               {
+                   std::string counters[] = {"antiD0Gen","DminusGen","DsminusGen","anticBaryonGen"};
+                   counters_vec.assign(counters,counters+sizeof(counters)/sizeof(counters[0]));
+               }
+               else if(keyName == "D0Acc" || keyName == "DplusAcc" || keyName == "DsplusAcc" || keyName == "cBaryonAcc")
+               {
+                   std::string counters[] = {"D0Acc","DplusAcc","DsplusAcc","cBaryonAcc"};
+                   counters_vec.assign(counters,counters+sizeof(counters)/sizeof(counters[0]));
+               }
+               else if(keyName == "antiD0Acc" || keyName == "DminusAcc" || keyName == "DsminusAcc" || keyName == "anticBaryonAcc")
+               {
+                   std::string counters[] = {"antiD0Acc","DminusAcc","DsminusAcc","anticBaryonAcc"};
+                   counters_vec.assign(counters,counters+sizeof(counters)/sizeof(counters[0]));
+               }
+               else if(keyName == "BGen" || keyName == "BstarGen" || keyName == "B2starGen")
+               {
+                   std::string counters[] = {"BGen","BstarGen","B2starGen"};
+                   counters_vec.assign(counters,counters+sizeof(counters)/sizeof(counters[0]));
+               }
+               else if(keyName == "DGen" || keyName == "DstarGen" || keyName == "D2starGen")
+               {
+                   std::string counters[] = {"DGen","DstarGen","D2starGen"};
+                   counters_vec.assign(counters,counters+sizeof(counters)/sizeof(counters[0]));
+               }
+               else if(keyName == "B0Acc" || keyName == "BstarAcc" || keyName == "B2starAcc")
+               {
+                   std::string counters[] = {"B0Acc","BstarAcc","B2starAcc"};
+                   counters_vec.assign(counters,counters+sizeof(counters)/sizeof(counters[0]));
+               }
+               else if(keyName == "DAcc" || keyName == "DstarAcc" || keyName == "D2starAcc")
+               {
+                   std::string counters[] = {"DAcc","DstarAcc","D2starAcc"};
+                   counters_vec.assign(counters,counters+sizeof(counters)/sizeof(counters[0]));
+               }
+             else if(keyName == "EvtSignal" || keyName == "EvtantiSignal")
+               {
+                  std::string counters[] = {"EvtSignal","EvtantiSignal"};
+                  counters_vec.assign(counters,counters+sizeof(counters)/sizeof(counters[0]));
+               }
+
+               den = sumGenCounters(counters_vec);
+             }
+	  }
+	  
+          return den;
+        </code>
+      </method>
+
+
+      <method
+	 desc="Calculate the efficiency or the fraction relative to a counter"
+	 name="getEfficiency"
+	 argList="longlong num, longlong den, const double C=1"
+	 type="double"
+	 const="TRUE"
+	 >
+	<code>
+	  if(num!=0 &amp;&amp; den!= 0)
+	  {
+	     double efficiency = C*((double)num / (double)den);
+	     return efficiency;
+	  }
+	  else 
+	  {
+	     double efficiency = 0;
+	     return efficiency;
+	  }
+	</code>
+      </method>
+
+      <method
+	 desc="Calculate the efficiency error"
+	 name="getEfficiencyError"
+	 argList="longlong num, longlong den, const double C=1, const bool flag=true"
+         type="double"
+	 const="TRUE"
+         >
+        <code>
+          if(num!=0 &amp;&amp; den!= 0)
+          {
+	     double error = 0;
+
+	     if(flag==true)
+	     {
+	        error = C*sqrt((double)num * (1 - ((double)num / (double)den))) / ((double)den);
+	     }
+	     else
+	     {
+	        error = C*sqrt((double)num * (1 + ((double)num / (double)den))) / ((double)den);
+	     }
+	  
+	     return error;
+	  }
+	  else
+	  { 
+	     double error = 0;
+	     return error;
+	  }
+        </code>
+      </method>
+      
+<!-- ************************ Fractions and Cross-Sections ************************ -->
+
+      <attribute
+         desc="Set of Cross-Sections"
+         type="CrossSection"
+         name="crossSections"
+         />
+
+      <method
+         desc="get method"
+         name="getCrossSections"
+         type="CrossSection&amp;"
+         >
+        <code>
+          return m_crossSections;
+        </code>
+      </method>
+
+      <method
+         desc="add a Cross-Section to the set"
+         name="addCrossSection"
+         type="void"
+         argList="const int key, const CrossValues value"
+	  >
+        <code>
+          m_crossSections.insert(std::pair&lt;int, CrossValues &gt;(key, value));
+        </code>
+      </method>
+
+      <method
+         desc="has information for specified Cross-Section"
+         name="hasCrossSection"
+         const="TRUE"
+         argList="int key"
+         type="bool"
+         >
+        <code>
+          return(m_crossSections.end() != m_crossSections.find(key));
+        </code>
+      </method>
+
+      <method
+         desc="erase a Cross-Section from the set"
+         name="eraseCrossSection"
+	 type="void"
+         argList="int key"
+	  >
+        <code>
+          m_crossSections.erase(key);
+	  </code>
+      </method> 
+      
+      <method
+         desc="extract the informations associated with the given key."
+         name="getCrossSectionInfo"
+         argList="int key"
+         type="CrossValues"
+         const="TRUE"
+         >
+        <code>
+	  CrossValues def("",0);
+          CrossSection::const_iterator i = m_crossSections.find(key);
+          return m_crossSections.end() == i ? def : i-&gt;second;
+        </code>
+      </method>
+        
+      <method                                                                  
+         desc="sum the cross-sections for existing keys and inserts a new key if needed"    
+         name="mergeCrossSections"                                                             
+         type="CrossSection"                                                   
+	 argList="const CrossSection rhs_cross, const GeneratorCounter rhs_counter"
+	 >
+        <code>
+          // sum cross-sections or add new key
+          CrossSection::const_iterator icross;
+          for (icross = rhs_cross.begin(); icross != rhs_cross.end(); icross++)
+          {
+	     int keys = (*icross).first;
+             double crossB = (*icross).second.second;
+             double crossA = getCrossSectionInfo(keys).second;
+	    
+	     GeneratorCounter::const_iterator icounter;
+	     int keyc = 0;
+	     longlong countA = 0, countB = 0;
+	     std::string name = (*icross).second.first;
+	     
+	     for(icounter = rhs_counter.begin(); icounter != rhs_counter.end(); icounter++)
+	     {
+	        keyc = (*icounter).first;
+      	        if(keyc == keys+100)
+                {
+	           countB = (*icounter).second.second;
+	           break;
+	        }
+	     }
+	  
+	     countA = getGenCounterInfo(keyc).second;
+
+             if (hasCrossSection(keys))   eraseCrossSection(keys);
+	     
+	     CrossValues meanCross("",0);
+	  
+	     if(countB == 0 &amp;&amp; countA == 0)
+	        meanCross = std::make_pair(name, 0);
+	     else
+	        meanCross = std::make_pair(name, (crossA*countA+crossB*countB)/(countA+countB));
+	     
+	     addCrossSection(keys, meanCross);
+          } 
+ 
+          return m_crossSections;
+        </code>
+      </method>
+
+<!-- ************************ Operators ************************ -->
+
+      <method
+         desc="Addition operator"
+         name="operator+"
+         type="LHCb::GenFSR&amp;"
+         >
+        <arg name="rhs" type="LHCb::GenFSR" const="TRUE"/>
+        <code>
+	  if (this != &amp;rhs) 
+	  {
+	     // merge the cross sections
+             mergeCrossSections(rhs.m_crossSections,rhs.m_genCounters);
+
+	     // merge the generator level counters
+	     mergeGenCounters(rhs.m_genCounters);
+
+	     // increment the number of jobs
+             incrementNJobs(rhs.getSimulationInfo("nJobs",0));
+	  }
+
+	  return *this;
+	</code>
+      </method>
+
+      <method
+	 desc="Addition operator"
+         name="operator+"
+	 type="LHCb::GenFSR&amp;"
+         >
+        <arg name="rhs" type="LHCb::GenFSR*" const="TRUE"/>
+        <code>
+	  if (this != rhs) 
+	  {
+	     // merge the cross sections
+	     mergeCrossSections(rhs-&gt;m_crossSections,rhs-&gt;m_genCounters);
+
+	     // merge the generator level counters 
+	     mergeGenCounters(rhs-&gt;m_genCounters);
+	  
+             // increment the number of jobs
+             incrementNJobs(rhs-&gt;getSimulationInfo("nJobs", 0));
+	  }
+	  
+	  return *this;
+	</code>
+      </method>
+
+      <method
+         desc="Addition operator"
+         name="operator+="
+         type="LHCb::GenFSR&amp;"
+	 >
+        <arg name="rhs" type="LHCb::GenFSR" const="TRUE"/>
+        <code>
+	  return *this + rhs;
+        </code>
+      </method>
+
+      <method
+         desc="Addition operator"
+	 name="operator+="
+         type="LHCb::GenFSR&amp;"
+         >
+        <arg name="rhs" type="LHCb::GenFSR*" const="TRUE"/>
+	<code>
+	  return *this + *rhs;
+        </code>
+      </method>
+
+<!-- ************************ Printout ************************ -->
+
+      <method
+	 desc="printout"
+	 name="fillStream"
+	 type="std::ostream&amp;"
+	 const="TRUE"
+	 >
+	<arg type="std::ostream" name="text" const="FALSE"/>
+	<code>
+
+	  std::ostream&amp; s = const_cast&lt; std::ostream&amp; &gt;(text);
+
+          s &lt;&lt; "{ "  &lt;&lt;"Event type: " &lt;&lt; getSimulationInfo("evtType",0);
+	  s &lt;&lt; "  Hard Generator: " &lt;&lt; getSimulationInfo("hardGenerator", "");
+	  s &lt;&lt; "  Generation method: " &lt;&lt; getSimulationInfo("generationMethod", "");
+	  s &lt;&lt; "  DecFiles version: " &lt;&lt; getSimulationInfo("decFiles", "");
+	  s &lt;&lt; "  njobs:" &lt;&lt; getSimulationInfo("nJobs",0); 
+	  s &lt;&lt; std::endl &lt;&lt; std::endl;
+	  s &lt;&lt; " generator counters: ";
+	  GeneratorCounter::const_iterator icounter;
+          for (icounter = m_genCounters.begin(); icounter != m_genCounters.end(); icounter++)
+	  {
+	    int key = icounter-&gt;first;
+            longlong value = icounter-&gt;second.second;
+	    std::string name = LHCb::GenCountersFSR::CounterKeyToString(key);
+	    if(name == "Unknown") 
+	    {
+               CrossSection::const_iterator i = m_crossSections.find(key-100);
+	       name = i-&gt;second.first;
+	    }
+            s &lt;&lt; name &lt;&lt; "  key: " &lt;&lt; key &lt;&lt; "  value: " &lt;&lt; value &lt;&lt; " / ";
+	  }
+	  s &lt;&lt; std::endl &lt;&lt; std::endl;
+
+	  s &lt;&lt; "cross-sections: ";
+          CrossSection::const_iterator icross;
+          for (icross = m_crossSections.begin(); icross != m_crossSections.end(); icross++)
+          {
+            int key = icross-&gt;first;
+            double value = icross-&gt;second.second;
+	    std::string name = icross-&gt;second.first;
+            
+	    s &lt;&lt; name &lt;&lt; "  key: " &lt;&lt; key &lt;&lt; "  value: " &lt;&lt; value &lt;&lt; " / ";
+          }
+          s &lt;&lt; " }";
+
+          return s;
+
+	</code>
+      </method>
+    </class>
+  </package>
+</gdd>

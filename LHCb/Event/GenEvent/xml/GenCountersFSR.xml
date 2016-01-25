@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Davide Fazzini -->
+<!--- Created : 2015-05-24 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='GenEvent'>
+
+<!-- GenCounters Class --> 
+       
+    <class
+      name="GenCountersFSR"
+      author="Davide Fazzini"
+      desc="Enum class for Generator counters"
+      id="13601" 
+      serializers="TRUE"
+      >
+      
+      &DataObject;
+      <base name="DataObject"/>
+      <import name="GaudiKernel/VectorMap"/>
+
+      <enum
+	 desc="lookup table for counter keys"
+	 name="CounterKey"
+         strTypConv = 'TRUE'
+	 access="PUBLIC" >
+<!-- ****************************** COUNTERS FOR INTERACTIONS****************************** -->
+
+<!-- ****************************** Luminosity counters ****************************** -->
+	<enumval name="AllEvt"            value="0"    desc="Total number of events generated, including events with no interactions (empty events). One event can be made of several interactions"/>
+	<enumval name="ZeroInt"           value="1"    desc="Events (amongst the AllEvt) with no interactions"/>
+
+<!-- ****************************** Number of events ****************************** -->
+	<enumval name="EvtGenerated"      value="2"    desc="Total number of generated events in general of Minimum Bias type (one event contains several pile-up interactions)"/>
+	<enumval name="IntGenerated"      value="3"    desc="Total number of generated interactions in the generated events"/>
+	<enumval name="EvtAccepted"       value="4"    desc="Number of accepted events amongst the generated events (event containing one signal B, ...)"/>
+	<enumval name="IntAccepted"       value="5"    desc="Number of interactions contained in the accepted events"/>
+
+<!-- ****************************** Efficiency counters ****************************** -->
+	<enumval name="BeforeFullEvt"     value="6"    desc="Number of events before the full event generator level cut"/>
+	<enumval name="AfterFullEvt"      value="7"    desc="Number of events after the full event generator level cut"/>
+
+<!-- ****************************** Content of generated interactions ****************************** -->
+	<enumval name="OnebGen"           value="10"   desc="Number of generated interactions containing at least 1 b quark"/>
+	<enumval name="ThreebGen"         value="11"   desc="Number of generated interactions containing at least 3 b quarks"/>
+	<enumval name="PromptBGen"        value="12"   desc="Number of generated interactions containing at least 1 prompt B (one B hadron without a b quark)"/>
+	<enumval name="OnecGen"           value="13"   desc="Number of generated interactions containing at least 1 c quark"/>
+	<enumval name="ThreecGen"         value="14"   desc="Number of generated interactions containing at least 3 c quarks"/>
+	<enumval name="PromptCGen"        value="15"   desc="Number of generated interactions containing at least 1 prompt charmed hadron (one D hadron without a c quark)"/>
+	<enumval name="bAndcGen"          value="16"   desc="Number of generated interactions containing at least 1 b quark and 1 c quark"/>
+	<enumval name="OnebAcc"           value="17"   desc="Number of accepted  interactions containing at least 1 b quark"/>
+	<enumval name="ThreebAcc"         value="18"   desc="Number of accepted  interactions containing at least 3 b quarks"/>
+	<enumval name="PromptBAcc"        value="19"   desc="Number of accepted  interactions containing at least 1 prompt B (one B hadron without a b quark)"/>
+        <enumval name="OnecAcc"           value="20"   desc="Number of accepted  interactions containing at least 1 c quark"/>
+        <enumval name="ThreecAcc"         value="21"   desc="Number of accepted  interactions containing at least 3 c quarks"/>
+        <enumval name="PromptCAcc"        value="22"   desc="Number of accepted  interactions containing at least 1 prompt charmed hadron (one D hadron without a c quark)"/>
+        <enumval name="bAndcAcc"          value="23"   desc="Number of accepted  interactions containing at least 1 b quark and 1 c quark"/>
+
+<!-- ****************************** HADRON COUNTERS ****************************** -->
+
+<!-- ****************************** Generator level cut efficiencies ****************************** -->
+	<enumval name="BeforeLevelCut"    value="26"   desc="Number of inclusive events generated"/>
+	<enumval name="AfterLevelCut"     value="27"   desc="Number of inclusive events passing the generator level cut and where at least one selected particle has pz > 0. "/>
+	<enumval name="EvtInverted"       value="28"   desc="Number of z-inverted events"/>
+
+<!-- ****************************** B Hadron counters ****************************** -->
+	<enumval name="B0Gen"             value="30"   desc="Number of generated B0 in events with at least one selected particle (contained in the inclusive list)"/>
+	<enumval name="antiB0Gen"         value="31"   desc="Number of generated B0bar in events with at least one selected particle"/>
+	<enumval name="BplusGen"          value="32"   desc="Number of generated B+ in events with at least one selected particle"/>
+	<enumval name="BminusGen"         value="33"   desc="Number of generated B- in events with at least one selected particle"/>
+	<enumval name="Bs0Gen"            value="34"   desc="Number of generated Bs0 in events with at least one selected particle"/>
+	<enumval name="antiBs0Gen"        value="35"   desc="Number of generated anti-Bs0 in events with at least one selected particle"/>
+	<enumval name="bBaryonGen"        value="36"   desc="Number of generated b-Baryon (with negative PDG code) in events with at least one selected particle"/>
+	<enumval name="antibBaryonGen"    value="37"   desc="Number of generated anti-b-Baryon (with positive PDG code) in events with at least one selected particle"/>
+	<enumval name="BcplusGen"         value="38"   desc="Number of generated Bc+ in events with at least one selected particle"/>
+	<enumval name="BcminusGen"        value="39"   desc="Number of generated Bc- in events with at least one selected particle"/>
+	<enumval name="bbGen"             value="40"   desc="Number of generated b bbar states in events with at least one selected particle"/>
+	<enumval name="B0Acc"             value="41"   desc="Number of B0 in accepted events (passing the generator level cuts)"/>
+        <enumval name="antiB0Acc"         value="42"   desc="Number of B0bar in accepted events"/>
+        <enumval name="BplusAcc"          value="43"   desc="Number of B+ in accepted events"/>
+        <enumval name="BminusAcc"         value="44"   desc="Number of B- in accepted events"/>
+        <enumval name="Bs0Acc"            value="45"   desc="Number of Bs0 in accepted events"/>
+        <enumval name="antiBs0Acc"        value="46"   desc="Number of anti-Bs0 in accepted events"/>
+        <enumval name="bBaryonAcc"        value="47"   desc="Number of b-Baryon (with negative PDG code) in accepted events"/>
+        <enumval name="antibBaryonAcc"    value="48"   desc="Number of anti-b-Baryon (with positive PDG code) in accepted events"/>
+        <enumval name="BcplusAcc"         value="49"   desc="Number of Bc+ in accepted events"/>
+        <enumval name="BcminusAcc"        value="50"   desc="Number of Bc- in accepted events"/>
+        <enumval name="bbAcc"             value="51"   desc="Number of b bbar states in accepted events"/>
+
+<!-- ****************************** D Hadron counters ****************************** -->
+        <enumval name="D0Gen"             value="55"   desc="Number of generated D0"/>
+        <enumval name="antiD0Gen"         value="56"   desc="Number of generated D0bar"/>
+        <enumval name="DplusGen"          value="57"   desc="Number of generated D+"/>
+        <enumval name="DminusGen"         value="58"   desc="Number of generated D-"/>
+        <enumval name="DsplusGen"         value="59"   desc="Number of generated Ds+"/>
+        <enumval name="DsminusGen"        value="60"   desc="Number of generated Ds-"/>
+        <enumval name="cBaryonGen"        value="61"   desc="Number of generated c-Baryon (with positive PDG code)"/>
+        <enumval name="anticBaryonGen"    value="62"   desc="Number of generated anti-c-Baryon (with negative PDG code)"/>
+        <enumval name="ccGen"             value="63"   desc="Number of generated c cbar states"/>
+        <enumval name="D0Acc"             value="64"   desc="Number of D0 in accepted events"/>
+        <enumval name="antiD0Acc"         value="65"   desc="Number of D0bar in accepted events"/>
+	<enumval name="DplusAcc"          value="66"   desc="Number of D+ in accepted events"/>
+        <enumval name="DminusAcc"         value="67"   desc="Number of D- in accepted events"/>
+        <enumval name="DsplusAcc"         value="68"   desc="Number of Ds+ in accepted events"/>
+        <enumval name="DsminusAcc"        value="69"   desc="Number of Ds- in accepted events"/>
+        <enumval name="cBaryonAcc"        value="70"   desc="Number of c-Baryon (with positive PDG code) in accepted events"/>
+        <enumval name="anticBaryonAcc"    value="71"   desc="Number of anti-c-Baryon (with negative PDG code) in accepted events"/>
+        <enumval name="ccAcc"             value="72"   desc="Number of c cbar states in accepted events"/>
+
+<!-- ****************************** B** Hadron counters ****************************** -->
+        <enumval name="BGen"              value="75"   desc="Number of generated B (spin 0, angular momentum 0)"/>
+        <enumval name="BstarGen"          value="76"   desc="Number of generated B* (spin 0, angular momentum >= 1)"/>
+        <enumval name="B2starGen"         value="77"   desc="Number of generated B** (spin >= 1)"/>
+	<enumval name="BAcc"              value="78"   desc="Number of B (spin 0, angular momentum 0) in accepted events"/>
+        <enumval name="BstarAcc"          value="79"   desc="Number of B* (spin 0, angular momentum >= 1) in accepted events"/>
+        <enumval name="B2starAcc"         value="80"   desc="Number of B** (spin >= 1) in accepted events"/>
+
+<!-- ****************************** D** Hadron counters ****************************** -->
+        <enumval name="DGen"              value="85"   desc="Number of generated D (spin 0, angular momentum 0)"/>
+        <enumval name="DstarGen"          value="86"   desc="Number of generated D* (spin 0, angular momentum >= 1)"/>
+        <enumval name="D2starGen"         value="87"   desc="Number of generated D** (spin >= 1)"/>
+        <enumval name="DAcc"              value="88"   desc="Number of D (spin 0, angular momentum 0) in accepted events"/>
+        <enumval name="DstarAcc"          value="89"   desc="Number of D* (spin 0, angular momentum >= 1) in accepted events"/>
+        <enumval name="D2starAcc"         value="90"   desc="Number of D** (spin >= 1) in accepted events"/>
+
+<!-- ****************************** SIGNAL COUNTERS ****************************** -->
+        <enumval name="EvtSignal"         value="91"   desc="Number of generated signal events"/>
+	<enumval name="EvtantiSignal"     value="92"   desc="Number of generated anti-signal events"/>
+
+<!-- ****************************** Signal generator level cut counters ****************************** -->
+        <enumval name="BeforePCut"        value="93"   desc="Number of signal events containing a signal particle generated"/>
+	<enumval name="AfterPCut"         value="94"   desc="Number of signal particle passing the generator level cut with pz > 0"/>
+	<enumval name="BeforeantiPCut"    value="95"   desc="Number of signal events containing a signal anti-particle generated"/>
+        <enumval name="AfterantiPCut"     value="96"   desc="Number of signal anti-particle passing the generator level cut with pz > 0"/>
+
+<!-- ****************************** EXTRA VALUES ****************************** -->
+	<enumval name="Unknown"           value="98"   desc="Unknown value"/> 
+
+<!-- ****************************** Pythia counter ****************************** -->                      
+        <enumval name="AllsubProcess"     value="100"   desc="Total cross-section of Minimum Bias events"/>
+      </enum>
+
+      
+      <method
+        name='getFullNames'   
+        type='std::map&lt;std::string,std::string&gt;'
+        desc='return a map with the complete names of generator counters' 
+        const='FALSE'>
+        <code>
+          std::map&lt;std::string,std::string&gt; map;
+
+<!-- ****************************** Luminosity counters ****************************** -->
+          map.insert(std::pair&lt;std::string,std::string&gt;("AllEvt","all events (including empty events)"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("ZeroInt","events with 0 interactions"));
+
+<!-- ****************************** Number of events ****************************** -->
+          map.insert(std::pair&lt;std::string,std::string&gt;("EvtGenerated","generated events"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("IntGenerated","generated interactions"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("EvtAccepted","accepted events"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("IntAccepted","interactions in accepted events"));
+
+<!-- ****************************** Efficiency counters ****************************** -->
+          map.insert(std::pair&lt;std::string,std::string&gt;("BeforeFullEvt","before full event generator level cut"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("AfterFullEvt","full event generator level cut"));
+
+<!-- ****************************** Content of generated interactions ****************************** -->
+	  map.insert(std::pair&lt;std::string,std::string&gt;("OnebGen","generated interactions with >= 1b"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("ThreebGen","generated interactions with >= 3b"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("PromptBGen","generated interactions with 1 prompt B"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("OnecGen","generated interactions with >= 1c"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("ThreecGen","generated interactions with >= 3c"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("PromptCGen","generated interactions with 1 prompt C"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("bAndcGen","generated interactions with b and c"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("OnebAcc","accepted interactions with >= 1b"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("ThreebAcc","accepted interactions with >= 3b"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("PromptBAcc","accepted interactions with 1 prompt B"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("OnecAcc","accepted  interactions with >= 1c"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("ThreecAcc","accepted interactions with >= 3c"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("PromptCAcc","accepted interactions with 1 prompt C"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("bAndcAcc","accepted interactions with b and c"));
+
+<!-- ****************************** HADRON COUNTERS ****************************** -->
+
+<!-- ****************************** Generator level cut efficiencies ****************************** -->
+	  map.insert(std::pair&lt;std::string,std::string&gt;("BeforeLevelCut","generated inclusive events"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("AfterLevelCut","generator level cut"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("EvtInverted","z-inverted events"));
+
+<!-- ****************************** B Hadron counters ****************************** -->
+	  map.insert(std::pair&lt;std::string,std::string&gt;("B0Gen","generated B0"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("antiB0Gen","generated B0bar"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("BplusGen","generated B+"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("BminusGen","generated B-"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("Bs0Gen","generated Bs0"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("antiBs0Gen","generated anti-Bs0"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("bBaryonGen","generated b-Baryon"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("antibBaryonGen","generated anti-b-Baryon"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("BcplusGen","generated Bc+"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("BcminusGen","generated Bc-"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("bbGen","generated (bb)"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("B0Acc","accepted B0"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("antiB0Acc","accepted B0bar"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("BplusAcc","accepted B+"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("BminusAcc","accepted B-"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("Bs0Acc","accepted Bs0"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("antiBs0Acc","accepted anti-Bs0s"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("bBaryonAcc","accepted b-Baryon"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("antibBaryonAcc","accepted anti-b-Baryon"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("BcplusAcc","accepted Bc+s"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("BcminusAcc","accepted Bc-"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("bbAcc","accepted (bb)"));
+
+<!-- ****************************** D Hadron counters ****************************** -->
+	  map.insert(std::pair&lt;std::string,std::string&gt;("D0Gen","generated D0"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("antiD0Gen","generated D0bar"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("DplusGen","generated D+"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("DminusGen","generated D-"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("DsplusGen","generated Ds+"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("Dsminus0Gen","generated Ds-"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("cBaryonGen","generated c-Baryon"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("anticBaryonGen","generated anti-c-Baryon"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("ccGen","generated (cc)"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("D0Acc","accepted D0"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("antiD0Acc","accepted D0bar"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("DplusAcc","accepted D+"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("DminusAcc","acceptedD-"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("DsplusAcc","accepted Ds+"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("Dsminus0Acc","accepted Ds-"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("cBaryonAcc","accepted c-Baryon"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("anticBaryonAcc","accepted anti-c-Baryon"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("ccAcc","accepted (cc)"));
+	  
+<!-- ****************************** B** Hadron counters ****************************** -->
+	  map.insert(std::pair&lt;std::string,std::string&gt;("BGen","generated B(L=0, J=0)"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("BstarGen","generated B* (L=0, J=1)"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("B2starGen","generated B** (L=1, J=0,1,2)"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("BAcc","accepted B(L=0, J=0)"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("BstarAcc","accepted B* (L=0, J=1)"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("B2starAcc","accepted B** (L=1, J=0,1,2)"));
+
+<!-- ****************************** D** Hadron counters ****************************** -->
+	  map.insert(std::pair&lt;std::string,std::string&gt;("DGen","generated D(L=0, J=0)"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("DstarGen","generated D* (L=0, J=1)"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("D2starGen","generated D** (L=1, J=0,1,2)"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("DAcc","accepted D(L=0, J=0)"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("DstarAcc","accepted D* (L=0, J=1)"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("D2starAcc","accepted D** (L=1, J=0,1,2)"));
+
+<!-- ****************************** SIGNAL COUNTERS ****************************** -->
+          map.insert(std::pair&lt;std::string,std::string&gt;("EvtSignal","generated signal events"));
+	  map.insert(std::pair&lt;std::string,std::string&gt;("EvtantiSignal","generated anti-signal events"));
+
+<!-- ****************************** Signal generator level cut counters ****************************** -->
+          map.insert(std::pair&lt;std::string,std::string&gt;("BeforePCut","generated signal events"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("AfterPCut","generator particle level cut"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("BeforeantiPCut","generated anti-signal events"));
+          map.insert(std::pair&lt;std::string,std::string&gt;("AfterantiPCut","generator anti-particle level cut"));
+
+<!-- ****************************** Pythia counter ****************************** -->
+          map.insert(std::pair&lt;std::string,std::string&gt;("AllsubProcess","Total cross-section"));
+
+	  return map;
+        </code>
+      </method>
+
+ <!-- readable printout -->
+
+      <method
+        name='fillStream'
+        type='std::ostream&amp;'
+        desc='printout'
+        const='TRUE'>
+        <arg name="s" type="std::ostream" const="FALSE"/>
+        <code>
+	  std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);
+	  ss &lt;&lt; "{ }";
+
+	  return ss;
+        </code>
+      </method>
+
+    </class>
+
+  </package>
+
+</gdd>

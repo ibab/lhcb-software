@@ -4,4 +4,8 @@
   <!-- @FIXME: (MCl) for some reason the type above does not work with gcc4.6, -->
   <!--               while the more explicit version below does.  -->
   <class name="std::map<std::basic_string<char>,size_t>" />
+  <class name="std::map<std::string, std::string>" />
+  <class name="std::map<std::string, int>" />
+  <class name="std::map<int, LHCb::GenFSR::CounterValues>"/>
+  <class name="std::map<int, LHCb::GenFSR::CrossValues>"/>
 </lcgdict>
