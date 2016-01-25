@@ -288,7 +288,7 @@ class SecondaryLambdaFilter(Hlt2ParticleFilter) : # {
     def __init__(self, name, inputs): # {
         cut = ("  (BPVLTIME() > %(DecayTime_MIN)s) " +
                "& (VFASPF(VZ) > %(VZ_MIN)s)" +
-               "& (VFASPF(VZ) > %(VZ_MAX)s)")
+               "& (VFASPF(VZ) < %(VZ_MAX)s)")
         # }
 
         from HltTracking.HltPVs import PV3D
