@@ -5,6 +5,11 @@
 ! Purpose     : Kalman filter Utilities for Vertex fit
 ! -----------------------------------------------------------------------------
 
+! 2016-01-25 - Vanya Belyaev
+ - VertexFit.cpp:
+   fix nDof calculation in the presence of 'rho+-like' particle 
+   thanks to Jascha Grabovski 
+
 ! 2016-01-18 - Vanya Belyaev
  - Introduce new type of particles "rho+-like"
    1) add correspondiong enum

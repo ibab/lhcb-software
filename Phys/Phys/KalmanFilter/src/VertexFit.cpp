@@ -1230,12 +1230,14 @@ int LoKi::KalmanFilter::nDoF
         entries.end() != ientry ; ++ientry ) 
   {
     // 2 DoFs for track 
-    if      ( ientry->m_type == LongLivedParticle  ) { result += 2 ; }
+    if      ( ientry->m_type == LongLivedParticle    ) { result += 2 ; }
+    // 2 DoFs for rho+-like particle 
+    else if ( ientry->m_type == RhoPlusLikeParticle  ) { result += 2 ; }
     // 3 DoFs per vertex + dofs from the vertex
-    else if ( ientry->m_type == ShortLivedParticle ) 
+    else if ( ientry->m_type == ShortLivedParticle   ) 
     { 
       result += 3 ;
-      // add nDoF form the vertex 
+      // add nDoF from the vertex 
       const LHCb::VertexBase* ev = 0 ;
       if ( 0 != ientry->m_p0 ) { ev      = ientry->m_p0 -> endVertex () ; }
       if ( 0 != ev           ) { result += ev->nDoF() ; }   
