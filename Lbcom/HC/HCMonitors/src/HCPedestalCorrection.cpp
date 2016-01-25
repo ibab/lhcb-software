@@ -115,14 +115,14 @@ StatusCode HCPedestalCorrection::execute() {
       LHCb::HCCellID id(m_channels[i][j]);
       const LHCb::HCDigit* digit = digits->object(id);
       if (!digit) {
-        warning() << "Cannot retrieve digit." << endmsg;
+        info() << "Cannot retrieve digit." << endmsg;
         continue;
       }
       const int adc = digit->adc();
       LHCb::HCCellID refid(m_references[i][j]);
       const LHCb::HCDigit* refdigit = digits->object(refid);
       if (!refdigit) {
-        warning() << "Cannot retrieve reference digit." << endmsg;
+        info() << "Cannot retrieve reference digit." << endmsg;
         continue;
       }
       const int refadc = refdigit->adc();
