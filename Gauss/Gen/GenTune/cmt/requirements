@@ -3,7 +3,7 @@
 # Maintainer : Alex Grecu <alexandru.grecu@nipne.ro>
 #============================================================================
 package           GenTune
-version           v2r3
+version           v2r3 # to be changed to v3r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -25,11 +25,14 @@ use Generators        v*     Gen
 use Python            v*     LCG_Interfaces -no_auto_imports
 use HepMC             v*     LCG_Interfaces -no_auto_imports
 use Boost             v*     LCG_Interfaces -no_auto_imports
-##use ROOT              v*     LCG_Interfaces -no_auto_imports
+## use ROOT              v*     LCG_Interfaces -no_auto_imports
 use fastjet           v*     LCG_Interfaces #-no_auto_imports  #this should be transferred in the GENSER/rivet CMT interface
 
 #apply_tag ignore_installarea
 use rivet             v*     LCG_GeneratorsInterfaces -auto_imports
+use yoda              v*     LCG_GeneratorsInterfaces -auto_imports
+#use yoda              v*     #LCG_GeneratorsInterfaces -auto_imports
+
 
 #Hack to add LHCb specific fork of rivet-buildplugin - to be removed if LCG releases are corrected
 macro GenTune_home $(GenTune_root)
@@ -39,7 +42,7 @@ apply_pattern set_bin_path
 
 # Component library building rule
 #============================================================================
-library          GenTune     ../src/*.cpp -import=AIDA
+library          GenTune     ../src/*.cpp
 
 #============================================================================
 # define component library link options
@@ -47,6 +50,7 @@ library          GenTune     ../src/*.cpp -import=AIDA
 apply_pattern    component_library library=GenTune
 
 # Allow to run the QMTests e.g. `cmt do TestPackage`
+# export QMTESTRESULTSDIR=$HOME/tmp if using release versions of package
 apply_pattern QMTest
 
 # Allow the generation of QMTest summary

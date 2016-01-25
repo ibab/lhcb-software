@@ -5,23 +5,26 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
 <argument name="program"><text>gaudirun.py</text></argument>
 <argument name="args"><set>
-<text>$GENTUNEROOT/tests/options/MC_Generics.py</text>
+<text>$GENTUNEROOT/options/example/MC_Generic_Test.py</text>
 </set></argument>
 <argument name="use_temp_dir"><enumeral>true</enumeral></argument>
 <argument name="validator"><text>
 #It sure would be nice to have a class defined in GaussTest capable of better comparing files
+# TODO: Use aidadiff or make a special diffAlg based on the broken script
 #import os
 #import difflib
 while (True):
     #if not os.environ.has_key('CMTCONFIG') or not os.environ.has_key('GENTUNEROOT'):
     #    causes.append('Could not determine $CMTCONFIG nor $GENTUNEROOT...')
     #    break
-    #refPath = os.path.normpath(os.path.expandvars('$GENTUNEROOT/tests/refs/LHCb_MC_hist-$CMTCONFIG.aida'))
-    refPath = os.path.normpath(os.path.expandvars('$GENTUNEROOT/tests/refs/LHCb_MC_refhisto.aida'))
+    refPath = os.path.normpath(os.path.expandvars('$GENTUNEROOT/tests/refs/LHCb_MC_refhisto.yoda'))
     if not os.path.exists(refPath) or not os.path.isfile(refPath):
         causes.append(os.path.expandvars('No reference file for target $CMTCONFIG'))
         break
-    hstPath = os.path.join(os.getcwd(), 'LHCb_MC_hist.aida')
+    print('CWD: ' + os.getcwd())
+    os.system('ls -lha "%s"' % (os.getcwd()))
+    os.system('env')
+    hstPath = os.path.join(os.getcwd(), 'LHCb_MC_test.yoda')
     if not os.path.exists(hstPath) or not os.path.isfile(hstPath):
         causes.append('Histogram file not found or not plain file')
         break
@@ -34,11 +37,11 @@ while (True):
     diffs = difflib.ndiff(orig,new,charjunk=difflib.IS_CHARACTER_JUNK)
     filterdiffs = map(lambda x: x.strip(),filter(lambda x: x[0] != " ",diffs))
     if filterdiffs:
-        result['AIDA diff'] = result.Quote("\n".join(filterdiffs))
-        result['AIDA diff'] += result.Quote("""
+        result['YODA diff'] = result.Quote("\n".join(filterdiffs))
+        result['YODA diff'] += result.Quote("""
 Legend:
         -) reference file
-        +) AIDA file output by test""")
+        +) YODA file output by test""")
         causes.append('Output histogram differs from reference.')
     break
 </text></argument>

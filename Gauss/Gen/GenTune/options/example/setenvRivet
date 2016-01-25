@@ -1,8 +1,12 @@
 #!/bin/bash
 # BASH script to source in order to set the Rivet environment paths to take analysis information from the current directory
 # Responsible: Alex Grecu <alexandru.grecu@nipne.ro>
-export RIVET_INFO_PATH=$PWD
-export RIVET_REF_PATH=$PWD
-export RIVET_PLOT_PATH=$PWD
+pushd . >/dev/null
+cd $GENTUNEROOT/cmt
+rivetHome=$(readlink -f `cmt show macro_value rivet_home`)
+popd >/dev/null
+export RIVET_INFO_PATH=${rivetHome}/share/Rivet:$PWD
+export RIVET_REF_PATH=${rivetHome}/share/Rivet:$PWD
+export RIVET_PLOT_PATH=${rivetHome}/share/Rivet:$PWD
 export RIVET_ANALYSIS_PATH=$PWD
 

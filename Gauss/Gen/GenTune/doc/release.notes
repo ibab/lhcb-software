@@ -5,6 +5,37 @@
 !               using Professor/Rivet system. 
 !-----------------------------------------------------------------------------
 
+! 2016-01-25 - Alex Grecu
+ - Obtained same functionality for Rivet 2.x as previous version of package 
+   which is compatible with Rivet 1.9.0.
+ - Improved documentation in option files from options directory
+ - Removed options/beamOpts directory and its beam-options content. Users
+   should follow guide lines in Python option files from options to select 
+   beam options from $APPCONFIGOPTS/Gauss which are apropriate for RIVET
+   runs. Details are also discussed on Twiki (https://twiki.cern.ch/twiki/bin/view/LHCb/GenTuneWithRivet).
+  
+! 2016-01-22 - Alex Grecu
+ - Copy and patch locally rivet-mkhtml then rename as lbrivet-mkhtml. Bugs 
+   mentioned to RIVET team and should be solved in future version of library.
+   Because of same bug in plotting sub-system RunName property of 
+   RivetAnalysisHandler algorithm is temporarily ignored and set to empty 
+   string.
+
+! 2016-01-18 - Alex Grecu
+ - Remove StreamName property of RivetAnalysisHandler as it was never used.
+
+! 2016-01-12 - Alex Grecu
+ - Modify requirements file to use new Rivet and YODA through CMT interfaces
+ - Minimally patch the RivetAnalysisHandler algorithm to comply to Rivet 2.x
+   changes.
+ - Adapt the example analysis module and test code to comply to changed in 
+   Rivet 2.x classes; Use by default Pythia8 for QMTests with new reference file(s).
+   Duplicate analysis module code from tests was removed. Using code in 
+   options/example directory only.
+ - Correct output suppression for RivetAnalysisHandler internal logging. 
+   Suppression counters not affected any mores if MSG::Level above debug 
+   level used for output.
+
 !=========================== GenTune v2r3 2015-05-07 =========================
 ! 2015-04-30 - Alex Grecu
  - Improve component logging and put generator cross-section change messages

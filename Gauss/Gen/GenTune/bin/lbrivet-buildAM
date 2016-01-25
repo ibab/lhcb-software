@@ -59,7 +59,7 @@ fi
 ## Get Rivet system C++ compiler flags
 mycxxflags=""
 if [[ -n " -pedantic -ansi -Wall -Wno-long-long -Wno-format" ]]; then
-    mycxxflags=" -pedantic -ansi -Wall -Wno-long-long -Wno-format"
+    mycxxflags=" -pedantic -ansi -Wall -Wno-long-long -Wno-format -Werror=uninitialized -Werror=delete-non-virtual-dtor"
 fi
 if [[ -n "-O2" ]]; then
     mycxxflags="$mycxxflags -O2"
@@ -77,6 +77,7 @@ mycppflags=""
 # Get PATHs from LHCb CMT system
 prefix=$(readlink -f $(cmt show macro_value rivet_home))
 hepmcHome=$(readlink -f $(cmt show macro_value HepMC_home))
+yodaHome=$(readlink -f $(cmt show macro_value yoda_home))
 fastjetHome=$(readlink -f $(cmt show macro_value fastjet_home))
 gslHome=$(readlink -f $(cmt show macro_value GSL_home))
 
@@ -85,6 +86,8 @@ exec_prefix=${prefix}
 test -n "$irivet" && mycppflags="$mycppflags -I${irivet}"
 ihepmc="${hepmcHome}/include"
 test -n "$ihepmc" && mycppflags="$mycppflags -I${ihepmc}"
+iyoda="${yodaHome}/include"
+test -n "$iyoda" && mycppflags="$mycppflags -I${iyoda}"
 ifastjet="${fastjetHome}/include"
 test -n "$ifastjet" && mycppflags="$mycppflags -I${ifastjet}"
 igsl="${gslHome}/include"
@@ -101,6 +104,8 @@ lrivet="${exec_prefix}/lib"
 test -n "$lrivet" && myldflags="$myldflags -L${lrivet}"
 lhepmc="${hepmcHome}/lib"
 test -n "$lhepmc" && myldflags="$myldflags -L${lhepmc}"
+lyoda="${yodaHome}/lib"
+test -n "$lyoda" && myldflags="$myldflags -L${lyoda}"
 lfastjet="${fastjetHome}/lib"
 test -n "$lfastjet" && myldflags="$myldflags -L${lfastjet}"
 ## Detect whether the linker accepts the --no-as-needed flag and prepend the linker flag with it if possible

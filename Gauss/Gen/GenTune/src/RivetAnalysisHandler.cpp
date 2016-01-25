@@ -29,12 +29,14 @@
 
 // disable unused parameter warning (appears in libRivet)
 #pragma GCC diagnostic ignored "-Wunused-parameter"
+#pragma GCC diagnostic ignored "-Wunused-local-typedefs"
 
 // from Rivet (LCG)
 #include <Rivet/Rivet.hh>
-#include <Rivet/AnalysisHandler.hh>
+//#include <Rivet/AnalysisHandler.hh>
 #include <Rivet/Analysis.hh>
 #include <Rivet/Tools/RivetPaths.hh>
+#include <Rivet/Tools/Utils.hh>
 #include <Rivet/Math/MathUtils.hh>
 
 // from boost
@@ -77,9 +79,8 @@ RivetAnalysisHandler::RivetAnalysisHandler( const std::string& name,
   _myStats.assign(COUNTERS_NB, 0); m_analysisNames.clear(); m_analysisPaths.clear();
   declareProperty("MCEventLocation", m_mcEvtLocation=LHCb::HepMCEventLocation::Default, "Location on TES where the HepMC events are read from (LHCb::HepMCEventLocation::Default)");
   declareProperty("BaseFileName", m_filename="MyRivet", "The base file name (prefix of filenames) to write results to (\"MyRivet\")");
-  declareProperty("RunName", m_runname="LHCB", "The name of the run to prepended to AIDA plot paths (\"LHCB\")");
+  declareProperty("RunName", m_runname="", "The name of the run to prepended to YODA histogram paths (keep empty string as it breaks helper scripts in Rivet 2.4.0)");
   declareProperty("Analyses", m_analysisNames, "A list of names of the analyses to run ([])");
-  declareProperty("StreamName", m_histStreamName="/Rivet", "Stream name where output plots are stored in AIDA file (\"/Rivet\")");
   declareProperty("AnalysisPath", m_analysisPaths, "List of additional file paths where analysis plugins should be looked for, e.g. add os.path.abspath('.') when analysis lib(*.so) is in the option file directory ([])");
   declareProperty("CorrectStatusID", m_modStatusID=false, "Switch that controls the transformation of status ID of particles (given by EvtGen) back to Pythia defaults (False)");
   declareProperty("CorrectCrossingAngles", m_xAngleDetect=true, "Instructs the algorithm to automatically detect and correct for beam crossing angles (True)");
@@ -102,7 +103,7 @@ StatusCode RivetAnalysisHandler::initialize()
   unsigned int nAna = 0;
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  debug() << "==> Initialize: using Rivet v. " << Rivet::version() << endmsg;
+  info() << this->name() << " initialize using Rivet v. " << Rivet::version() << endmsg;
 #ifdef HEPMC_HAS_UNITS
   info() << "Units will be determined automatically from HepMC by RIVET! " \
          << "Algorithm option 'AdjustUnits' will be ignored..." << endmsg;
@@ -110,16 +111,21 @@ StatusCode RivetAnalysisHandler::initialize()
 #else
   _needsUnitConv = true;
 #endif
-  //Check and select histogram service
+  //Check and select histogram service - for future self-monitoring features - disabled for now!
   //Check histogram service is available - not implemented further yet!
-  if (!(histoSvc())) {
-    error() << "Failed to retrieve histogram service!" << endmsg;
-    return StatusCode::FAILURE;
-  };
+  //if (!(histoSvc())) {
+  //  error() << "Failed to retrieve histogram service!" << endmsg;
+  //  return StatusCode::FAILURE;
+  //};
   //Create Rivet::AnalysisHandler instance
-  _analysisManager = new Rivet::AnalysisHandler(m_runname);
+  warning() << "Creating Rivet analysis handler instance..." << endmsg; 
+  //_analysisManager = new Rivet::AnalysisHandler(m_runname);
+  // for run name to be an empty string to avoid problems with helper scripts until problem solved
+  _analysisManager = new Rivet::AnalysisHandler("");
   assert(_analysisManager);
+  warning() << "Rivet analysis handler object created..." << endmsg; 
   //Set RIVET_ANALYSIS_PATH based on alg setup. Don't overwrite if already set in env
+  //TODO: Schimbat pentru a lua in considerare setup-ul LHCb si a pune calea curenta daca se dezvolta un plugin adica pachetul se afla sub cmtuser!
   vector<string> all_paths = Rivet::getAnalysisLibPaths();
   if (m_analysisPaths.size() > 0)
   {
@@ -155,6 +161,7 @@ StatusCode RivetAnalysisHandler::initialize()
   };
   Rivet::setAnalysisLibPaths(all_paths);
   // read back RIVET_ANALYSIS_PATH from environment and print-out when MSG::DEBUG
+  // TODO: Read other environment variables and print them is defined!
   if (msgLevel(MSG::DEBUG))
   {
     string env_rap = getenv("RIVET_ANALYSIS_PATH");
@@ -168,6 +175,7 @@ StatusCode RivetAnalysisHandler::initialize()
     };
   };
   // Setting log level for Rivet & analyses according to Gauss (LHCbApp) log level
+  // TODO: De separat si introdus o optiune speciala pentru controlul log-level al Rivet
   MSG::Level jobMsgLvl = (MSG::Level)(*msgSvc()).outputLevel();
   always() << "Gauss log level: " << (int)jobMsgLvl << endmsg;
   Rivet::Log::setLevel("Rivet.Projection.PVertex", rivetLevel(jobMsgLvl));
@@ -182,13 +190,13 @@ StatusCode RivetAnalysisHandler::initialize()
   // Determine if cross-section is needed
   _reqCrossSection = false;
   foreach (const string& a, m_analysisNames) {
-    info() << "Loading Rivet analysis " << a << " ... [ ";
+    info() << "Loading Rivet analysis " << a << " ... ";
     Rivet::Analysis* analysis = Rivet::AnalysisLoader::getAnalysis(a);
     if ( 0 == analysis ) {
-      info() << "FAILED; Skipping... ]" << endmsg;
+      info() << "[ \x1B[31mFAILED\x1B[0m; Skipping... ]" << endmsg;
       continue;
     } else {
-      info() << "OK ]" << endmsg;
+      info() << "[ \x1B[32mOK\x1B[0m ]" << endmsg;
       nAna ++;
     };
     if ( analysis->needsCrossSection() ) {
@@ -197,6 +205,7 @@ StatusCode RivetAnalysisHandler::initialize()
     };
     _analysisManager->addAnalysis(a);
     string logName = "Rivet.Analysis." + a;
+    // TODO: Sincronizat cu nivelul de logging de la Rivet odata ce s-a produs separarea
     Rivet::Log::setLevel(logName, rivetLevel(jobMsgLvl));
     delete analysis;
   }; // end analysis foreach loop
@@ -204,7 +213,7 @@ StatusCode RivetAnalysisHandler::initialize()
     fatal() << "No analysis plugin left to run in current Rivet job. Exiting..." << endmsg;
     return StatusCode::FAILURE;
   };
-	if ( m_forceCrossSection && (m_crossSection < 0.0) ) { // fail if user tries to force invalid cross-section value
+  if ( m_forceCrossSection && (m_crossSection < 0.0) ) { // fail if user tries to force invalid cross-section value
     if (_reqCrossSection) {
       fatal() << "Invalid external cross-section value was forced." << endmsg;
       return StatusCode::FAILURE;
@@ -212,8 +221,7 @@ StatusCode RivetAnalysisHandler::initialize()
       warning() << "Forced cross-section value is invalid, but not needed." << endmsg;
     };
   };
-  // Initialize Rivet
-  _analysisManager->init();
+  // Initialize Rivet 2.x before processing first event
   debug() << "<== Initialize done." << endmsg;
   return StatusCode::SUCCESS;
 }
@@ -266,11 +274,11 @@ StatusCode RivetAnalysisHandler::execute()
     _scaleFactorTime = 1.0;
     _needsUnitConv = true;
   #endif
-    info() << "Internal conversion of units... [" << (_needsUnitConv ? "enabled" : "disabled") << "]." << endmsg; 
+    info() << "Internal conversion of units... [\x1B[1m" << (_needsUnitConv ? "enabled" : "disabled") << "\x1B[0m]." << endmsg; 
     // Cross-section info follows:
   #ifdef HEPMC_HAS_CROSS_SECTION
     if ( 0 == gevEvent->cross_section()) { // useful info for MC generators!
-      warning() << "MC generator provides NULL cross-section in HepMC." << endmsg;
+      warning() << "MC event generator provides NULL cross-section in HepMC." << endmsg;
     } else {
       info() << "HepMC cross-section: " << gevEvent->cross_section()->cross_section() << " +/- " << gevEvent->cross_section()->cross_section_error() << " picobarn(s)." << endmsg;
       if (! m_forceCrossSection) {
@@ -319,7 +327,6 @@ StatusCode RivetAnalysisHandler::execute()
     };
     /// if detection is requested and it fails then algorithm fails!
     if ( (m_xAngleDetect) && (detectBeamCrossingAngles(gevEvent)) ) return StatusCode::FAILURE;
-    _isFirstEvent = false;
   }; // end preprocessing first event
   if (_needsUnitConv || _xHAngleCorrection || _xVAngleCorrection || m_modStatusID) {
     double px, py, pz, e;
@@ -421,6 +428,10 @@ StatusCode RivetAnalysisHandler::execute()
     gevEvent->print(debug().stream());
     debug() << endmsg;
   };
+  if (_isFirstEvent) {
+    _analysisManager->init(*gevEvent);
+    _isFirstEvent = false;
+  };
   _analysisManager->analyze(*gevEvent);
   delete gevEvent;
   debug() << "<== Execute" << endmsg; 
@@ -439,9 +450,9 @@ StatusCode RivetAnalysisHandler::finalize()
   info() << "Internal counter values:" << std::endl;
   for (uint i = 0; i < this->_myStats.size(); i++ ) info() << "Counter[" << i << "] <<\"" << RivetAnalysisHandler::_statDescriptors[i] << "\">> = " << this->_myStats[i] << std::endl;
   info() << endmsg;
-  string aidaFileName = (m_filename + ".aida");
+  string histFileName = (m_filename + ".yoda");
   _analysisManager->finalize();
-  _analysisManager->writeData(aidaFileName);
+  _analysisManager->writeData(histFileName);
   debug() << "<== Finalize" << endmsg;
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
@@ -492,7 +503,7 @@ void RivetAnalysisHandler::compatSetCrossSection(HepMC::GenEvent* pEvent) {
   } else {
     if ( !fuzzyEq(m_crossSection, pxs->cross_section()) ) {
       _myStats[nbGenXSChanges]++;
-      if ( statLogEnabled(nbGenXSChanges) ) info() << "Generator provided xsection has changed from " << m_crossSection << " to " << pxs->cross_section() << endmsg;
+      if ( statLogEnabled(nbGenXSChanges, MSG::INFO) ) info() << "Generator provided xsection has changed from " << m_crossSection << " to " << pxs->cross_section() << endmsg;
       m_crossSection = pxs->cross_section(); // (re)set xsection to value given by generator (backup value!)
     };
   };
@@ -503,9 +514,13 @@ void RivetAnalysisHandler::compatSetCrossSection(HepMC::GenEvent* pEvent) {
 
 /// verifies if the log messages for a specific internal statistics flag is suppressed
 bool RivetAnalysisHandler::statLogEnabled(idStatusLog  statId) {
+  return statLogEnabled(statId, MSG::DEBUG);
+}
+bool RivetAnalysisHandler::statLogEnabled(idStatusLog  statId, MSG::Level lvl) {
+  if (!msgLevel(lvl)) return false;
   bool printOn = ( (_myStats[statId] < m_logSoftLimit) || ( (_myStats[statId] <= m_logHardLimit) && (_myStats[statId] % m_logSuppressFreq == 0) ) );
-  if ( _myStats[statId] == m_logSoftLimit ) info() << "Messages for internal stat flag \"" << _statDescriptors[statId] << "\" [id:" << statId << "] are softly suppressed from now on." << endmsg;
-  if ( _myStats[statId] == m_logHardLimit ) info() << "Messages for internal stat flag \"" << _statDescriptors[statId] << "\" [id:" << statId << "] are totally supressed from now on." << endmsg;
+  if ( _myStats[statId] == m_logSoftLimit ) always() << "Messages for internal stat flag \"" << _statDescriptors[statId] << "\" [id:" << statId << "] are softly suppressed from now on." << endmsg;
+  if ( _myStats[statId] == m_logHardLimit ) always() << "Messages for internal stat flag \"" << _statDescriptors[statId] << "\" [id:" << statId << "] are totally supressed from now on." << endmsg;
   return printOn;
 }
 

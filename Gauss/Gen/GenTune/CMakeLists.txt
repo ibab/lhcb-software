@@ -1,7 +1,7 @@
 ################################################################################
 # Package: GenTune
 ################################################################################
-gaudi_subdir(GenTune v2r3)
+gaudi_subdir(GenTune v3r0)
 
 gaudi_depends_on_subdirs(Event/GenEvent
                          GaudiAlg

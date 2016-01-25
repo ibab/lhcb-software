@@ -1,4 +1,4 @@
-#Configuration file for MC generic RIVET analyses run on LHCb MB events
+# Configuration file for MC_LHCb_GENERIC RIVET analysis run on LHCb minbias events
 from GaudiKernel import SystemOfUnits as units
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -16,9 +16,10 @@ DDDBConf(DataType = "2012")
 CondDB().UseLatestTags = ["2012"]
 
 # End of databases setup
-
-importOptions("$DECFILESROOT/options/30000000.py")
-importOptions("$LBPYTHIAROOT/options/Pythia.py")
+# special beam conditions used for pp collisions at 7 TeV
+importOptions("$APPCONFIGOPTS/Gauss/Beam3500GeV-uniformHeadOn-fix1.py")
+#importOptions("$DECFILESROOT/options/30000000.py")
+importOptions("$LBPYTHIA8ROOT/options/Pythia8.py")
 importOptions("$GAUSSOPTS/GenStandAlone.py")
 #importOptions("$DECFILESROOT/options/SwitchOffEvtGen.py")
 importOptions("$GAUSSOPTS/Gauss-Job.py")
@@ -41,9 +42,8 @@ rivet = RivetAnalysisHandler()
 # the filename of the .aida output (w/o extension!)
 rivet.BaseFileName = "myRivetGaussMC"
 # head of branch where histograms are stored in AIDA
-rivet.RunName = "LHCbMBPy6"
+rivet.RunName = "LHCbMBPy8"
 rivet.Analyses = ["MC_LHCb_GENERIC",]
-rivet.StreamName = "/Rivet"
 # to search Rivet plugins in current directory
 rivet.AnalysisPath += [os.path.abspath('.'),]
 # the following options allow setting externally 
@@ -51,7 +51,7 @@ rivet.AnalysisPath += [os.path.abspath('.'),]
 # (mostly necessary if/when using HepMC 2.04)
 rivet.forceXSection = False
 #rivet.forceXSection = True
-rivet.xSectionValue = 32.123 * units.millibarn
+#rivet.xSectionValue = 32.123 * units.millibarn
 # instruct the algorithm to correct the particle status IDs and 
 # apply the crossing angle correction when necessary
 rivet.CorrectStatusID = True

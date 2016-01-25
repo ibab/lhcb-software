@@ -33,7 +33,7 @@ private:
   /// Property: The base file name (prefix of filenames) to write results to ("MyRivet").
   string m_filename;
  
-  /// Property: The name of the run to prepended to AIDA plot paths ("LHCB").
+  /// Property: The name of the run to prepended to YODA plot paths ("LHCB").
   string m_runname;
  
   /// Property: A list of names of the analyses to run ([]).
@@ -41,9 +41,6 @@ private:
 
   /// The main Rivet analysis handler
   Rivet::AnalysisHandler* _analysisManager;
-
-  /// Property: Stream name where output plots are stored in AIDA file ("/Rivet").
-  string m_histStreamName;
 
   /// Property: Location on TES where the HepMC events are read from (LHCb::HepMCEventLocation::Default).
   string m_mcEvtLocation;
@@ -130,6 +127,7 @@ public:
 private:
   /// Checks whether messages specific to internal flag statId are suppressed or not.
   bool statLogEnabled(idStatusLog statId);
+  bool statLogEnabled(idStatusLog statId, MSG::Level lvl);
 
 };
 

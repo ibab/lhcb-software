@@ -9,5 +9,5 @@ NumEvents: 50000
 RunInfo: Any!
 Description:
   Generic analysis of typical event distributions such as $\eta$, $y$,
-  $pT$, $\phi$\dots
+  $pT$, $\phi$, $\ldots$
   Added correlations $p_{x/z}$ to $m_{0}^{2}$ for photons and pions.

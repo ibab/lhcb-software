@@ -1,11 +1,11 @@
 // -*- C++ -*-
-#include "Rivet/Analysis.hh"
-#include "Rivet/RivetAIDA.hh"
+#include <Rivet/Analysis.hh>
+//#include "Rivet/RivetAIDA.hh"
 #include "Rivet/Tools/Logging.hh"
 #include "Rivet/Projections/FinalState.hh"
 #include "Rivet/Projections/UnstableFinalState.hh"
 #include "Rivet/Projections/ChargedFinalState.hh"
-#include "LWH/Histogram1D.h"
+//#include "LWH/Histogram1D.h"
 #include <cmath>
 
 namespace Rivet {
@@ -43,49 +43,54 @@ namespace Rivet {
     /// Book histograms and initialise projections before the run
     void init() {
 
+      MSG_INFO("Initializing analysis module " << this->name() << "...");
       // Projections
-      const FinalState cnfs(-10.0, 10.0, 150*MeV);
-      addProjection(UnstableFinalState(-10.0,10.0, 100*MeV), "UFS");
+      const FinalState cnfs(Cuts::eta > -10.0 && Cuts::eta < 10.0 && Cuts::pT > 150*MeV);
+      addProjection(UnstableFinalState(Cuts::eta > -10.0 && Cuts::eta < 10.0 && Cuts::pT > 100*MeV), "UFS");
       addProjection(cnfs, "FS");
-      addProjection(ChargedFinalState(-10.0, 10.0, 150*MeV), "CFS");
+      addProjection(ChargedFinalState(Cuts::eta > -10.0 && Cuts::eta < 10.0 && Cuts::pT > 150*MeV), "CFS");
 
       // Histograms
       // @todo Choose E/pT ranged based on input energies... can't do anything about kin. cuts, though
-      _histMult   = bookHistogram1D("Mult", 100, -0.5, 199.5);
-      _histMultCh = bookHistogram1D("MultCh", 100, -0.5, 199.5);
+      _histMult   = bookHisto1D("Mult", 100, -0.5, 199.5);
+      _histMultCh = bookHisto1D("MultCh", 100, -0.5, 199.5);
 
-      _histPt    = bookHistogram1D("Pt", 300, 0, 30);
-      _histPtCh  = bookHistogram1D("PtCh", 300, 0, 30);
+      _histPt    = bookHisto1D("Pt", 300, 0, 30);
+      _histPtCh  = bookHisto1D("PtCh", 300, 0, 30);
 
-      _histPx = bookHistogram1D("Px", 1000, -50, 50);
-      _histPy = bookHistogram1D("Py", 1000, -50, 50);
+      _histPx = bookHisto1D("Px", 1000, -50, 50);
+      _histPy = bookHisto1D("Py", 1000, -50, 50);
 
-      _hPhtPx = bookHistogram2D("PhtPxM", 40, -0.2, 0.2, 40, -4., 4.);
-      _hPi0Px = bookHistogram2D("Pi0PxM", 50, -0.5, 0.5, 40, -4., 4.);
-      _hPhtPz = bookHistogram2D("PhtPzM", 40, -0.2, 0.2, 120, -600., 600.);
-      _hPi0Pz = bookHistogram2D("Pi0PzM", 100, -1., 1., 200, -3400., 3400.);
+      _hPhtPx = bookHisto2D("PhtPxM", 40, -0.2, 0.2, 40, -4., 4.);
+      _hPi0Px = bookHisto2D("Pi0PxM", 50, -0.5, 0.5, 40, -4., 4.);
+      _hPhtPz = bookHisto2D("PhtPzM", 40, -0.2, 0.2, 120, -600., 600.);
+      _hPi0Pz = bookHisto2D("Pi0PzM", 100, -1., 1., 200, -3400., 3400.);
 
-      _histE    = bookHistogram1D("E", 100, 0, 200);
-      _histECh  = bookHistogram1D("ECh", 100, 0, 200);
+      _histE    = bookHisto1D("E", 100, 0, 200);
+      _histECh  = bookHisto1D("ECh", 100, 0, 200);
 
-      _histEta    = bookHistogram1D("Eta", 100, -10, 10);
-      _histEtaCh  = bookHistogram1D("EtaCh", 100, -10, 10);
-      _tmphistEtaPlus.reset(new LWH::Histogram1D(50, 0, 10));
-      _tmphistEtaMinus.reset(new LWH::Histogram1D(50, 0, 10));
-      _tmphistEtaChPlus.reset(new LWH::Histogram1D(50, 0, 10));
-      _tmphistEtaChMinus.reset(new LWH::Histogram1D(50, 0, 10));
+      _histEta    = bookHisto1D("Eta", 100, -10, 10);
+      _histEtaCh  = bookHisto1D("EtaCh", 100, -10, 10);
+      _tmphistEtaPlus    = Histo1DPtr(new Histo1D(50, 0, 10));
+      _tmphistEtaMinus   = Histo1DPtr(new Histo1D(50, 0, 10));
+      _tmphistEtaChPlus  = Histo1DPtr(new Histo1D(50, 0, 10));
+      _tmphistEtaChMinus = Histo1DPtr(new Histo1D(50, 0, 10));
+      _hEtaRatio   = bookScatter2D("EtaPMRatio", 50, 0., 10.);
+      _hEtaChRatio = bookScatter2D("EtaChPMRatio", 50, 0., 10.);
 
       _histEtaSumEt    = bookProfile1D("EtaSumEt", 50, 0, 10);
 
-      _histRapidity    = bookHistogram1D("Rapidity", 100, -10, 10);
-      _histRapidityCh  = bookHistogram1D("RapidityCh", 100, -10, 10);
-      _tmphistRapPlus.reset(new LWH::Histogram1D(50, 0, 10));
-      _tmphistRapMinus.reset(new LWH::Histogram1D(50, 0, 10));
-      _tmphistRapChPlus.reset(new LWH::Histogram1D(50, 0, 10));
-      _tmphistRapChMinus.reset(new LWH::Histogram1D(50, 0, 10));
+      _histRapidity    = bookHisto1D("Rapidity", 100, -10, 10);
+      _histRapidityCh  = bookHisto1D("RapidityCh", 100, -10, 10);
+      _tmphistRapPlus    = Histo1DPtr(new Histo1D(50, 0, 10));
+      _tmphistRapMinus   = Histo1DPtr(new Histo1D(50, 0, 10));
+      _tmphistRapChPlus  = Histo1DPtr(new Histo1D(50, 0, 10));
+      _tmphistRapChMinus = Histo1DPtr(new Histo1D(50, 0, 10));
+      _hRapRatio   = bookScatter2D("RapidityPMRatio", 50, 0, 10);
+      _hRapChRatio = bookScatter2D("RapidityChPMRatio", 50, 0, 10);
 
-      _histPhi    = bookHistogram1D("Phi", 50, 0, TWOPI);
-      _histPhiCh  = bookHistogram1D("PhiCh", 50, 0, TWOPI);
+      _histPhi    = bookHisto1D("Phi", 50, 0, TWOPI);
+      _histPhiCh  = bookHisto1D("PhiCh", 50, 0, TWOPI);
     }
 
 
@@ -130,12 +135,12 @@ namespace Rivet {
         const double rapidity = p.momentum().rapidity();
         MSG_DEBUG("Filling rapidity (" << (float)rapidity << ")!");
         if (isinf(rapidity)) {
-          if (nerrinf < 100) MSG_ERROR("Rapidity is Inf for particle " << p.pdgId() << " (status=" << p.genParticle().status()  << ")..."); 
+          if (nerrinf < 100) MSG_ERROR("Rapidity is Inf for particle " << p.pdgId() << " (status=" << p.genParticle()->status()  << ")..."); 
           nerrinf++;
           continue;
         };
         if (isnan(rapidity)) {
-          if (nerrnan < 100) MSG_ERROR("Rapidity is NaN for particle " << p.pdgId() << " (status=" << p.genParticle().status() << ")...");
+          if (nerrnan < 100) MSG_ERROR("Rapidity is NaN for particle " << p.pdgId() << " (status=" << p.genParticle()->status() << ")...");
           nerrnan++;
           continue;
         };
@@ -150,7 +155,7 @@ namespace Rivet {
         if ((&p) == NULL) {MSG_ERROR("Null particle reference!"); continue;};
         MSG_DEBUG("px = " << p.momentum().px()/GeV << " GeV/c");
         MSG_DEBUG("py = " << p.momentum().py()/GeV << " GeV/c");
-        if ((&AIDA::IHistogram1D::fill) == NULL) {MSG_ERROR("Null fill reference!"); continue;};
+        //if ((&Histo1DPtr::fill) == NULL) {MSG_ERROR("Null fill reference!"); continue;};
         MSG_DEBUG("Filling px!");
         _histPx->fill(p.momentum().px()/GeV, weight);
         MSG_DEBUG("Filling py!");
@@ -204,36 +209,37 @@ namespace Rivet {
 
     /// Finalize
     void finalize() {
-      scale(_histMult, 1/sumOfWeights());
-      scale(_histMultCh, 1/sumOfWeights());
+      scale(_histMult, 1./sumOfWeights());
+      scale(_histMultCh, 1./sumOfWeights());
 
-      scale(_histEta, 1/sumOfWeights());
-      scale(_histEtaCh, 1/sumOfWeights());
+      scale(_histEta, 1./sumOfWeights());
+      scale(_histEtaCh, 1./sumOfWeights());
 
-      scale(_histRapidity, 1/sumOfWeights());
-      scale(_histRapidityCh, 1/sumOfWeights());
+      scale(_histRapidity, 1./sumOfWeights());
+      scale(_histRapidityCh, 1./sumOfWeights());
 
-      scale(_histPt, 1/sumOfWeights());
-      scale(_histPtCh, 1/sumOfWeights());
+      scale(_histPt, 1./sumOfWeights());
+      scale(_histPtCh, 1./sumOfWeights());
 
-      scale(_histPx, 1/sumOfWeights());
-      scale(_histPy, 1/sumOfWeights());
+      scale(_histPx, 1./sumOfWeights());
+      scale(_histPy, 1./sumOfWeights());
 
-      scale(_histE, 1/sumOfWeights());
-      scale(_histECh, 1/sumOfWeights());
+      scale(_histE, 1./sumOfWeights());
+      scale(_histECh, 1./sumOfWeights());
 
-      scale(_histPhi, 1/sumOfWeights());
-      scale(_histPhiCh, 1/sumOfWeights());
+      scale(_histPhi, 1./sumOfWeights());
+      scale(_histPhiCh, 1./sumOfWeights());
 
-      scale(_hPhtPx, 1/sumOfWeights());
-      scale(_hPi0Px, 1/sumOfWeights());
-      scale(_hPhtPz, 1/sumOfWeights());
-      scale(_hPi0Pz, 1/sumOfWeights());
+      // scale to get medium multiplicity per event
+      //_hPhtPx->scaleW(1./sumOfWeights());
+      //_hPi0Px->scaleW(1./sumOfWeights());
+      //_hPhtPz->scaleW(1./sumOfWeights());
+      //_hPi0Pz->scaleW(1./sumOfWeights());
 
-      histogramFactory().divide(histoPath("EtaPMRatio"), *_tmphistEtaPlus, *_tmphistEtaMinus);
-      histogramFactory().divide(histoPath("EtaChPMRatio"), *_tmphistEtaChPlus, *_tmphistEtaChMinus);
-      histogramFactory().divide(histoPath("RapidityPMRatio"), *_tmphistRapPlus, *_tmphistRapMinus);
-      histogramFactory().divide(histoPath("RapidityChPMRatio"), *_tmphistRapChPlus, *_tmphistRapChMinus);
+      divide(_tmphistEtaPlus, _tmphistEtaMinus, _hEtaRatio);
+      divide(_tmphistEtaChPlus, _tmphistEtaChMinus, _hEtaChRatio);
+      divide(_tmphistRapPlus, _tmphistRapMinus, _hRapRatio);
+      divide(_tmphistRapChPlus, _tmphistRapChMinus, _hRapChRatio);
       
       cout << "=======================================" << std::endl;
       cout << "Number of photons: " << nphotons << std::endl;
@@ -257,10 +263,10 @@ namespace Rivet {
   private:
 
     /// Temporary histos used to calculate eta+/eta- ratio plot
-    shared_ptr<LWH::Histogram1D> _tmphistEtaPlus, _tmphistEtaMinus;
-    shared_ptr<LWH::Histogram1D> _tmphistEtaChPlus, _tmphistEtaChMinus;
-    shared_ptr<LWH::Histogram1D> _tmphistRapPlus, _tmphistRapMinus;
-    shared_ptr<LWH::Histogram1D> _tmphistRapChPlus, _tmphistRapChMinus;
+    Histo1DPtr _tmphistEtaPlus, _tmphistEtaMinus;
+    Histo1DPtr _tmphistEtaChPlus, _tmphistEtaChMinus;
+    Histo1DPtr _tmphistRapPlus, _tmphistRapMinus;
+    Histo1DPtr _tmphistRapChPlus, _tmphistRapChMinus;
     /// Counters for error suppression
     unsigned int nerrinf;
     unsigned int nerrnan;
@@ -273,16 +279,17 @@ namespace Rivet {
 
     /// @name Histograms
     //@{
-    AIDA::IHistogram1D *_histMult, *_histMultCh;
-    AIDA::IProfile1D   *_histEtaSumEt;
-    AIDA::IHistogram1D *_histEta, *_histEtaCh;
-    AIDA::IHistogram1D *_histRapidity, *_histRapidityCh;
-    AIDA::IHistogram1D *_histPt, *_histPtCh;
-    AIDA::IHistogram1D *_histPx, *_histPy;
-    AIDA::IHistogram1D *_histE, *_histECh;
-    AIDA::IHistogram1D *_histPhi, *_histPhiCh;
-    AIDA::IHistogram2D *_hPhtPx, *_hPi0Px;
-    AIDA::IHistogram2D *_hPhtPz, *_hPi0Pz;
+    Histo1DPtr _histMult, _histMultCh; 
+    Profile1DPtr  _histEtaSumEt;
+    Histo1DPtr _histEta, _histEtaCh;
+    Histo1DPtr _histRapidity, _histRapidityCh;
+    Histo1DPtr _histPt, _histPtCh;
+    Histo1DPtr _histPx, _histPy;
+    Histo1DPtr _histE, _histECh;
+    Histo1DPtr _histPhi, _histPhiCh;
+    Histo2DPtr _hPhtPx, _hPi0Px;
+    Histo2DPtr _hPhtPz, _hPi0Pz;
+    Scatter2DPtr _hEtaRatio, _hEtaChRatio, _hRapRatio, _hRapChRatio; 
     //@}
 
   };

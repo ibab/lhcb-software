@@ -1,46 +1,48 @@
-# BEGIN PLOT /MC_LHCb_GENERIC/E$
+.*/MC_LHCb_GENERIC/.*::LogY=1
+
+# BEGIN PLOT .*/MC_LHCb_GENERIC/E$
 Title=Energy of all particles
 XLabel=$E$ [GeV]
 YLabel=$1/\sigma \; \mathrm{d}\sigma/\mathrm{d}E$ [GeV$^{-1}$]
 # END PLOT
 
-# BEGIN PLOT /MC_LHCb_GENERIC/ECh
+# BEGIN PLOT .*/MC_LHCb_GENERIC/ECh
 Title=Energy of charged particles
 XLabel=$E$ [GeV]
 YLabel=$1/\sigma \; \mathrm{d}\sigma/\mathrm{d}E$ [GeV$^{-1}$]
 # END PLOT
 
-# BEGIN PLOT /MC_LHCb_GENERIC/Eta
+# BEGIN PLOT .*/MC_LHCb_GENERIC/Eta
 XLabel=$\eta$
 YLabel=$1/\sigma \; \mathrm{d}\sigma/\mathrm{d}\eta$
 LogY=0
 LegendYPos=0.5
 # END PLOT
 
-# BEGIN PLOT /MC_LHCb_GENERIC/Eta$
+# BEGIN PLOT .*/MC_LHCb_GENERIC/Eta$
 Title=Pseudorapidity of all particles
 # END PLOT
 
-# BEGIN PLOT /MC_LHCb_GENERIC/EtaCh
+# BEGIN PLOT .*/MC_LHCb_GENERIC/EtaCh
 Title=Pseudorapidity of charged particles
 # END PLOT
 
-# BEGIN PLOT /MC_LHCb_GENERIC/Eta.*PMRatio
+# BEGIN PLOT .*/MC_LHCb_GENERIC/Eta.*PMRatio
 XLabel=$|\eta|$
 YLabel=$\mathrm{d}\sigma/\mathrm{d}\eta_+ \; / \; \mathrm{d}\sigma/\mathrm{d}\eta_-$
 LogY=0
 LegendYPos=0.5
 # END PLOT
 
-# BEGIN PLOT /MC_LHCb_GENERIC/EtaPMRatio
+# BEGIN PLOT .*/MC_LHCb_GENERIC/EtaPMRatio
 Title=Pseudorapidity $+/-$ ratio of all particles
 # END PLOT
 
-# BEGIN PLOT /MC_LHCb_GENERIC/EtaChPMRatio
+# BEGIN PLOT .*/MC_LHCb_GENERIC/EtaChPMRatio
 Title=Pseudorapidity $+/-$ ratio of charged particles
 # END PLOT
 
-# BEGIN PLOT /MC_LHCb_GENERIC/EtaSumEt
+# BEGIN PLOT .*/MC_LHCb_GENERIC/EtaSumEt
 Title=Pseudorapidity distribution of $\langle \sum E_\perp \rangle$
 XLabel=$\eta$
 YLabel=$\langle \sum E_\perp \rangle$
@@ -138,39 +140,31 @@ YLabel=$1/\sigma \; \mathrm{d}\sigma/\mathrm{d}p_y$ [GeV$^{-1} c$]
 FullRange=1
 # END PLOT
 
-# BEGIN PLOT /MC_LHCb_GENERIC/PhtPxM$
-Title=$p_x$ to $m_{0}^{2}$ correlation for photons (PID=22)
-YLabel=$p_x$ [GeV/c]
-XLabel=$m_{\gamma}^{2}$ [GeV$^2$/c$^4$]
-RatioPlot=0
-#FullRange=1
-LogZ=1
+# BEGIN PLOT /MC_LHCb_GENERIC/PhtPxM
+Title=Final state photons $p_x$ vs. $m^2$
+XLabel=$m_{0}^{2}$ [GeV$^2$/$c$]
+YLabel=$p_{x}^{\gamma}$ [GeV/$c$]
+LogY=0
 # END PLOT
 
-# BEGIN PLOT /MC_LHCb_GENERIC/PhtPzM$
-Title=$p_z$ to $m_{0}^{2}$ correlation for photons (PID=22)
-YLabel=$p_z$ [GeV/c]
-XLabel=$m_{\gamma}^{2}$ [GeV$^2$/c$^4$]
-RatioPlot=0
-#FullRange=1
-LogZ=1
+# BEGIN PLOT /MC_LHCb_GENERIC/PhtPzM
+Title=Final state photons $p_z$ vs. $m^2$
+XLabel=$m_{0}^{2}$ [GeV$^2$/$c$]
+YLabel=$p_{z}^{\gamma}$ [GeV/$c$]
+LogY=0
 # END PLOT
 
-# BEGIN PLOT /MC_LHCb_GENERIC/Pi0PxM$
-Title=$p_x$ to $m_{0}^{2}$ correlation for $\pi^0$s (PID=111)
-YLabel=$p_x$ [GeV/c]
-XLabel=$m_{\pi^0}^{2}$ [GeV$^2$/c$^4$]
-RatioPlot=0
-#FullRange=1
-LogZ=1
+# BEGIN PLOT /MC_LHCb_GENERIC/Pi0PxM
+Title=$p_x$ vs. $m^2$ for $\pi^0$
+XLabel=$m_{\pi^0}^{2}$ [GeV$^2$/$c$]
+YLabel=$p_{x}$ [GeV/$c$]
+LogY=0
 # END PLOT
 
-# BEGIN PLOT /MC_LHCb_GENERIC/Pi0PzM$
-Title=$p_z$ to $m_{0}^{2}$ correlation for $\pi^0$s (PID=111)
-YLabel=$p_z$ [GeV/c]
-XLabel=$m_{\pi^0}^{2}$ [GeV$^2$/c$^4$]
-RatioPlot=0
-#FullRange=1
-LogZ=1
+# BEGIN PLOT /MC_LHCb_GENERIC/Pi0PzM
+Title=$p_z$ vs. $m^2$ for $\pi^0$
+XLabel=$m_{\pi^0}^{2}$ [GeV$^2$/$c$]
+YLabel=$p_{z}$ [GeV/$c$]
+LogY=0
 # END PLOT
 
