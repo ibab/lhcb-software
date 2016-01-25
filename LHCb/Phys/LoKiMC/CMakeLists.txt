@@ -3,6 +3,8 @@
 ################################################################################
 gaudi_subdir(LoKiMC v10r20)
 
+find_package(Graphviz)
+
 gaudi_depends_on_subdirs(Event/MCEvent
                          Kernel/MCInterfaces
                          Phys/LoKiCore

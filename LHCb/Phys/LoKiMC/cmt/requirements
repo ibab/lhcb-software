@@ -13,6 +13,7 @@ use               MCEvent         v* Event
 use               MCInterfaces    v* Kernel
 use               LoKiCore        v* Phys
 use               LoKiNumbers     v* Phys
+use               graphviz        v* LCG_Interfaces -no_auto_imports 
 
 private
 # CRJ : Temporary fix for OSX, which seems to require a link time dependency
