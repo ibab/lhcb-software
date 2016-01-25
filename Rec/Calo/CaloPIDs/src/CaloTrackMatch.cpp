@@ -3,6 +3,8 @@
 // ============================================================================
 // local
 // ============================================================================
+#include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/CArrayAsProperty.h"
 #include "CaloTrackMatch.h"
 // ============================================================================
@@ -31,11 +33,13 @@ CaloTrackMatch::CaloTrackMatch
   const std::string& name   ,
   const IInterface*  parent )
   : Calo::CaloTrackTool ( type, name , parent )
+  , m_position ( NULL )
+  , m_plane      ()  
   , m_bad ( 1.e+10 )
   , m_state() 
 {
-  declareProperty ("BadValue" , m_bad                                     ) ;
-
+  declareInterface <IIncidentListener>  ( this ) ;
+  declareProperty ("BadValue" , m_bad) ;
   declareProperty ("ConditionName", m_conditionName = "/dd/Conditions/ParticleID/Calo/ElectronXCorrection",
                    "set this property to an empty string to disable the use of CondDB" ) ;
   declareProperty ("AlphaPOut"   , m_alphaPOut, "electron X-correction params for (q*polarity) > 0 Outer"  ) ;
@@ -90,6 +94,8 @@ StatusCode CaloTrackMatch::initialize()
 {
   StatusCode sc = Calo::CaloTrackTool::initialize();
   if ( sc.isFailure() ) { return sc ; }
+  IIncidentSvc* isvc = svc<IIncidentSvc>( "IncidentSvc" , true ) ;
+  isvc->addListener ( this , IncidentType::BeginEvent ) ;
 
   if (! existDet<DataObject>(detSvc(), m_conditionName) ){
     if( msgLevel(MSG::DEBUG) ) debug() << "Condition '" << m_conditionName << "' not found -- switch off the use of the CondDB for CaloTrackMatch!" << endmsg;

@@ -8,6 +8,7 @@
 // ============================================================================
 #include "Relations/IRelation.h"
 #include "Relations/IsConvertible.h"
+#include "Relations/RelationWeighted2D.h"
 // ============================================================================
 // CaloInterfaces 
 // ============================================================================
@@ -115,6 +116,7 @@ namespace
     table->i_push( track , hypo , (float) weight ) ;  // NB: i_push here
   }
 }
+
 // ============================================================================
 template <class TYPE, class TABLE> 
 inline StatusCode CaloTrackMatchAlg::doTheJob ( TABLE* table ) const 
@@ -158,7 +160,7 @@ inline StatusCode CaloTrackMatchAlg::doTheJob ( TABLE* table ) const
       // collect good tracks 
       tracks.push_back ( track ) ;
     } // end of loop over tracks 
-  } // end of loop over tarck containers
+  } // end of loop over track containers
   
   const size_t nTracks = tracks.size() ;
   if ( 0 == nTracks ) { if(msgLevel(MSG::DEBUG)) debug() << "No good tracks have been selected" << endmsg; }
@@ -176,19 +178,18 @@ inline StatusCode CaloTrackMatchAlg::doTheJob ( TABLE* table ) const
     }
     const Calos* c = get<Calos> ( *ic ) ;
     // loop over all calos
-    for ( typename Calos::const_iterator icalo = c->begin() ; 
-          c->end() != icalo ; ++icalo ){
+    for ( typename Calos::const_iterator icalo = c->begin() ; c->end() != icalo ; ++icalo ){
       const Calo* calo = *icalo;
-      if ( 0 == calo || 0 == position ( calo ) ) { continue ; }
+      const LHCb::CaloPosition* caloPos = position(calo) ;
+      if ( 0 == calo || 0 == caloPos ) { continue ; }
       // overall number of calos
       ++nCalos ; 
       // loop over all good tracks 
-      for ( TRACKS::const_iterator itrack = tracks.begin() ; 
-            tracks.end() != itrack ; ++itrack ){
+      for ( TRACKS::const_iterator itrack = tracks.begin() ; tracks.end() != itrack ; ++itrack ){
         const LHCb::Track* track = *itrack ;
         // use the tool 
         double chi2 = 0 ;
-        StatusCode sc = matcher->match ( position ( calo ) , track , chi2 ) ;
+        StatusCode sc = matcher->match ( caloPos , track , chi2 ) ;
         if ( sc.isFailure() ){ 
           if(msgLevel(MSG::DEBUG)) debug() << "Failure from Tool::match, skip" << endmsg ;
           counter("# failure from Tool::match") += 1;
@@ -201,10 +202,10 @@ inline StatusCode CaloTrackMatchAlg::doTheJob ( TABLE* table ) const
       //
     } //end of loop over clusters
   } //end of loop over cluster containters ;
-  
   // MANDATORY: i_sort after i_push 
   table->i_sort() ;                                             // NB: i_sort
-  
+
+
   // a bit of statistics 
   if ( statPrint() || msgLevel ( MSG::DEBUG ) ){
     counter ( "#tracks"   ) += nTracks   ;

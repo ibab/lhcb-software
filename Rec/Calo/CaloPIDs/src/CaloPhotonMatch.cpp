@@ -91,10 +91,8 @@ protected:
     const IInterface*  parent ) 
     : CaloTrackMatch ( type , name , parent ) 
     //
-    , m_position ( NULL )
     , m_caloMatch  () 
     , m_trackMatch ()
-    , m_plane      ()  
     , m_showerMax  ()
     , m_cBad ( 0 ) 
     , m_tBad ( 0 )
@@ -111,10 +109,8 @@ protected:
 private:
   typedef CaloTrackMatch::Match_<2> Match ;
   //
-  const LHCb::CaloPosition* m_position          ;
   Match                     m_caloMatch         ;
   Match                     m_trackMatch        ;
-  Gaudi::Plane3D            m_plane             ;
   Gaudi::Plane3D            m_showerMax         ;
   const LHCb::CaloPosition* m_cBad              ;
   const LHCb::Track*        m_tBad              ;
@@ -141,13 +137,13 @@ StatusCode CaloPhotonMatch::match
   
   if ( !use ( trObj ) ) { return Error ( "match(): track is not OK"  ) ; }
   
-  if ( m_position != caloObj ) 
-  {
+  if ( updateCaloPos( m_position , caloObj )){
+      //if ( m_position != caloObj ){
     // update the position
     StatusCode sc = fill ( *caloObj , m_caloMatch ) ;
-    if ( sc.isFailure() ) 
-    {
+    if ( sc.isFailure() ){
       m_cBad = caloObj ;
+      m_position=NULL;
       return Warning ( "match(): Error from fill(2D) -- ",StatusCode::FAILURE,0) ; 
     }
     // find the proper plane in detector
@@ -161,14 +157,11 @@ StatusCode CaloPhotonMatch::match
   //
   
   // get the correct state 
-  const LHCb::State* st = 0 ;
-  { 
+  const LHCb::State* st = 0 ;{ 
     st = CaloTrackTool::state ( *trObj , m_showerMaxLocation ) ;
-    if ( 0 == st ) 
-    {
+    if ( 0 == st ){
       StatusCode sc = propagate ( *trObj , m_showerMax  , _state() ) ;
-      if ( sc.isFailure() ) 
-      {
+      if ( sc.isFailure() ){
         m_tBad = trObj ;
         return Warning ( "match(): failure from propagate (1) " , sc ) ; 
       }
@@ -178,8 +171,7 @@ StatusCode CaloPhotonMatch::match
       st = CaloTrackTool::state ( *trObj , m_showerMaxLocation ) ;
     }
     // check the state, propagate if needed  
-    if ( tolerance() < ::fabs( m_plane.Distance ( st->position() ) )  ) 
-    {
+    if ( tolerance() < ::fabs( m_plane.Distance ( st->position() ) )  ){
       _state() = *st ;
       StatusCode sc = propagate ( _state() , m_plane ) ;
       if ( sc.isFailure() ) 
@@ -192,13 +184,11 @@ StatusCode CaloPhotonMatch::match
   }
   
   Assert ( 0 != st , "LHCb::State* points to NULL!" );
-
   StatusCode sc = fill ( *st , m_trackMatch ) ;
   if ( sc.isFailure() ) { return Warning ( "match(): error for fill(2D)") ; }
   
   // make a real evaluation 
   chi2 = CaloTrackMatch::chi2 ( m_caloMatch , m_trackMatch ) ;
-  
   return StatusCode::SUCCESS ;
 }
 // ============================================================================

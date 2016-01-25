@@ -80,10 +80,8 @@ protected:
     const IInterface*  parent ) 
     : CaloTrackMatch  ( type , name , parent ) 
     //
-    , m_position ( NULL ) 
     , m_caloMatch  () 
     , m_trackMatch ()
-    , m_plane      ()  
     , m_showerMax  ()
     , m_cBad ( 0 ) 
     , m_tBad ( 0 )
@@ -100,10 +98,8 @@ protected:
 private:
   typedef CaloTrackMatch::Match_<3> Match ;
   //
-  const LHCb::CaloPosition* m_position   ;
   Match                     m_caloMatch  ;
   Match                     m_trackMatch ;
-  Gaudi::Plane3D            m_plane      ;
   Gaudi::Plane3D            m_showerMax  ;
   const LHCb::CaloPosition* m_cBad       ;
   const LHCb::Track*        m_tBad       ;
@@ -130,8 +126,8 @@ StatusCode CaloElectronMatch::match
   
   if ( !use( trObj ) ) { return Error ( "match(): track is not OK"  ) ; }
   
-  if ( m_position != caloObj ) 
-  {
+  if ( updateCaloPos( m_position , caloObj )){
+    //if ( m_position != caloObj )
     // update the position
     StatusCode sc = fill ( *caloObj , m_caloMatch ) ;
     if ( sc.isFailure() ) 

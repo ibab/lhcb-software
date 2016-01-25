@@ -87,10 +87,8 @@ protected:
     const std::string& name   , 
     const IInterface*  parent ) 
     : CaloTrackMatch  ( type , name , parent ) 
-    , m_position   ( 0 ) 
     , m_caloMatch  () 
     , m_trackMatch ()
-    , m_plane      ()  
     , m_showerMax  ()
     //
     , m_cBad     ( 0 )
@@ -109,10 +107,8 @@ private:
   // ==========================================================================
   typedef CaloTrackMatch::Match_<2> Match ;
   //
-  const LHCb::CaloPosition* m_position   ;
   Match                     m_caloMatch  ;
   Match                     m_trackMatch ;
-  Gaudi::Plane3D            m_plane      ;
   Gaudi::Plane3D            m_showerMax  ;
   const LHCb::CaloPosition* m_cBad       ;
   const LHCb::Track*        m_tBad       ;  
@@ -138,19 +134,18 @@ StatusCode CaloBremMatch::match
   
   if ( !use( trObj ) ) { return Error ( "match(): track is not OK"  ) ; }
   
-  if ( m_position != caloObj ){
+  if ( updateCaloPos( m_position , caloObj )){
+      //if ( m_position != caloObj ){
     // update the position
     StatusCode sc = fillBrem ( *caloObj , m_caloMatch ) ;
-    if ( sc.isFailure() ) 
-    { 
+    if ( sc.isFailure() ){ 
       m_cBad = caloObj ;
       return Warning ( "match(): Error from fill(2D) ", sc, 0) ; 
     }
     // find the proper plane in the detector
     const LHCb::CaloPosition::Center& par = caloObj->center() ;
     const Gaudi::XYZPoint point ( par ( 0  ) , par ( 1 ) , caloObj->z() ) ;
-    if ( tolerance() <  m_plane.Distance ( point ) ) 
-    {  m_plane = calo()->plane  ( point ) ; }  
+    if ( tolerance() <  m_plane.Distance ( point ) ){  m_plane = calo()->plane  ( point ) ; }  
     // keep the track of the position
     m_position = caloObj ;
   }
@@ -159,20 +154,15 @@ StatusCode CaloBremMatch::match
   const LHCb::State* state = 0 ;
   { // get the correct state at TT 
     state   = CaloTrackTool::state ( *trObj , LHCb::State::AtTT     ) ;
-    if ( 0 == state ) 
-    { state = CaloTrackTool::state ( *trObj , LHCb::State::EndRich1 ) ; }
-    if ( 0 == state ) 
-    { state = CaloTrackTool::state ( *trObj , LHCb::State::BegRich1 ) ; }
-    if ( 0 == state ) 
-    { state = CaloTrackTool::state ( *trObj , LHCb::State::EndVelo  ) ; }
+    if ( 0 == state ){ state = CaloTrackTool::state ( *trObj , LHCb::State::EndRich1 ) ; }
+    if ( 0 == state ){ state = CaloTrackTool::state ( *trObj , LHCb::State::BegRich1 ) ; }
+    if ( 0 == state ){ state = CaloTrackTool::state ( *trObj , LHCb::State::EndVelo  ) ; }
     // no appropriate state is found 
-    if ( 0 == state ) 
-    { 
+    if ( 0 == state ){ 
       // get the closest state to some artificial value  
       state = &(trObj->closestState( 2.0 * Gaudi::Units::meter ) ) ;
       // allowed z ?
-      if ( state->z() > 4.0 * Gaudi::Units::meter ) 
-      {
+      if ( state->z() > 4.0 * Gaudi::Units::meter ){
         if(msgLevel(MSG::DEBUG)) print ( debug() , trObj ) ;
         m_tBad = trObj ;
         return Warning ( "No appropriate states are found, see 'debug'") ; 
@@ -181,8 +171,7 @@ StatusCode CaloBremMatch::match
     // use the linear extrapolator 
     // StatusCode sc = propagate ( _state() , m_plane ) ;
     StatusCode sc = Utils::Linear::propagate ( *state , m_plane , _state() ) ;
-    if ( sc.isFailure() ) 
-    { 
+    if ( sc.isFailure() ){ 
       m_tBad = trObj ;
       return Warning ( "match(): failure from propagate (1) " , sc ) ; 
     }

@@ -6,6 +6,8 @@
 // ============================================================================
 // Geometry Definitions (Gaudi+ROOT)
 // ============================================================================
+#include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/GenericVectorTypes.h"
 #include "GaudiKernel/SymmetricMatrixTypes.h"
 // ============================================================================
@@ -74,12 +76,15 @@
  *  @date   2014-03-03
  */
 // ============================================================================
-class CaloTrackMatch : public Calo::CaloTrackTool 
-{
+class CaloTrackMatch : public Calo::CaloTrackTool   , public virtual IIncidentListener{
 public:
   /// initialization
   virtual StatusCode initialize() ;
   StatusCode i_updateAlpha();
+  virtual void handle(const Incident& ) { 
+    m_position = NULL  ; 
+    m_plane=Gaudi::Plane3D();
+  }
 protected:
   /// Standard constructor
   CaloTrackMatch
@@ -88,6 +93,7 @@ protected:
     const IInterface* parent ) ;
   /// virtual and protected destcrutor 
   virtual ~CaloTrackMatch();
+  
 protected:
   /// helper internal structure to simplify matrix calculations 
   template <unsigned D> 
@@ -151,6 +157,10 @@ protected:
     bool   m_inverted ;
   } ;  
 protected:
+  inline bool updateCaloPos(const LHCb::CaloPosition* p1, const LHCb::CaloPosition* p2){ 
+    return ( p1!=p2 ); 
+  }
+
   template <unsigned int D>
   inline double chi2 
   ( const Match_<D>& m1 ,
@@ -181,10 +191,12 @@ protected:
     // get the weighted and mean parameters 
     Vector pw = m1.matrix()*m1.params() + m2.matrix()*m2.params() ;
     Vector pm = s_cov * pw ;
+
     // evaluate chi2 
-    return 
+    double temp =
       ROOT::Math::Similarity ( pm - m1.params() , m1.matrix() ) +
       ROOT::Math::Similarity ( pm - m2.params() , m2.matrix() ) ;
+    return temp;
   }
 
   /// get 2D-infomration form CaloPosition 
@@ -193,6 +205,7 @@ protected:
   {   
     const LHCb::CaloPosition::Center& par = c.center() ;
     const LHCb::CaloPosition::Spread& cov = c.spread() ;
+
     match ( 0     ) = par ( 0     ) ;
     match ( 1     ) = par ( 1     ) ; 
     match ( 0 , 0 ) = cov ( 0 , 0 ) ;
@@ -200,10 +213,8 @@ protected:
     match ( 1 , 1 ) = cov ( 1 , 1 ) ;
     match.setInverted ( false ) ;
     match.setOK       ( true  ) ;    
-    if ( !match.invert() ) 
-    {
-      if ( msgLevel ( MSG::DEBUG ) ) 
-      { debug() << "CaloPosition:" << c << endmsg ; }
+    if ( !match.invert() ){
+      if ( msgLevel ( MSG::DEBUG ) ){ debug() << "CaloPosition:" << c << endmsg ; }
       return Warning ( "match(): Could not invert '2D-calo' matrix, see debug",StatusCode::FAILURE,0) ;
     }
     return StatusCode::SUCCESS ;
@@ -351,11 +362,13 @@ protected:
   Condition * m_cond;
   std::string m_conditionName;
   ILHCbMagnetSvc * m_magFieldSvc;
+protected:
+  const LHCb::CaloPosition* m_position ;
+  Gaudi::Plane3D            m_plane    ;
 private:
   /// bad value for chi2 
   double       m_bad       ;
   LHCb::State  m_state     ;
-
   std::vector<double> m_alphaPOut ; // (q*polarity) > 0, Outer  ECAL
   std::vector<double> m_alphaNOut ; // (q*polarity) < 0, Outer  ECAL
   std::vector<double> m_alphaPMid ; // (q*polarity) > 0, Middle ECAL
