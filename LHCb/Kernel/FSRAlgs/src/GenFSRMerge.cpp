@@ -5,7 +5,6 @@
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiAlg/IGenericTool.h"
 
-
 // event model
 #include "Event/GenFSR.h"
 #include "Event/GenCountersFSR.h"
@@ -14,7 +13,7 @@
 
 //local
 #include "GenFSRMerge.h"
-#include "FSRNavigator.h"  //GenFSRNavigator
+#include "FSRNavigator.h"  
 
 //-----------------------------------------------------------------------------       
 // Implementation file for class : GenFSRMerge                                       
@@ -61,7 +60,7 @@ StatusCode GenFSRMerge::initialize()
   m_fileRecordSvc = svc<IDataProviderSvc>("FileRecordDataSvc", true);  
 
   // prepare navigator tool                    
-  m_navigatorTool = tool<IFSRNavigator>("FSRNavigator", "FSRNavigator"); // Gen , Gen
+  m_navigatorTool = tool<IFSRNavigator>("FSRNavigator", "FSRNavigator"); 
 
   return StatusCode::SUCCESS;
 

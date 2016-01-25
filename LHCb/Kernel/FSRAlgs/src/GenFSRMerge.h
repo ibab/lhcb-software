@@ -10,7 +10,7 @@
 #include "Event/GenFSR.h"
 
 // local                                 
-#include "FSRNavigator.h" //Gen
+#include "FSRNavigator.h" 
 
 //class IGenericTool;
 
