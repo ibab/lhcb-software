@@ -45,8 +45,8 @@ namespace Rich
     public:
 
       /// Constructor with number of header words and init value
-      explicit constexpr HeaderPDBase ( const ShortType nWords,
-                                        const LongType  wordInit = 0 )
+      explicit HeaderPDBase ( const ShortType nWords,
+                              const LongType  wordInit = 0 )
         : m_headerWords(nWords,wordInit) { }
       
       /// Constructor from raw header word(s)
@@ -56,7 +56,7 @@ namespace Rich
     public:
 
       /// Default constructor
-      constexpr HeaderPDBase( ) : m_headerWords(1,0) { }
+      HeaderPDBase( ) : m_headerWords(1,0) { }
 
       /// Destructor
       virtual ~HeaderPDBase ( ) = default;

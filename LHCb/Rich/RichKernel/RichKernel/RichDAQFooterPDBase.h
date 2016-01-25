@@ -58,7 +58,7 @@ namespace Rich
     public:
 
       /// Default constructor ( 0 words in footer )
-      constexpr FooterPDBase( ) { }
+      FooterPDBase( ) { }
 
       /// Destructor
       ~FooterPDBase ( ) = default;
