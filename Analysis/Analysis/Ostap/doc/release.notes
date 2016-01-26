@@ -9,7 +9,7 @@
 ! -----------------------------------------------------------------------------
 
 ! 2016-01-26 - Vanya Belyaev
- - improve a bit handling of TFiles 
+ - improve a bit handling of TFiles & progrees bars 
 
 ! 2016-01-24 - Vanya Belyaev
  - improve logging & qmtests 
