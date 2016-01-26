@@ -1220,26 +1220,18 @@ void PrSeedingXLayers::addStereo2( unsigned int part ) {
     for( PrPlaneCounter plane : plCounters){
       PrSeedTrack temp( *itT );
       
-      int nused=0;
       for ( PrHits::const_iterator itH = plane.first(); plane.last() != itH; ++itH ) {
 	if((*itT).hits().size() ==6 or  !(*itH)->isUsed() )temp.addHit( *itH );
-	//if( (*itH)->isUsed()) nused++;
       }
 	  
       temp.setnXnY( (*itT).hits().size(), temp.hits().size()-(*itT).hits().size());
 	  
-      bool first_ok=true;
-      //if( temp.hits().size() < m_minTPlanes ) first_ok=false;
-      //else if( temp.hits().size()<10 &&  innerMod(temp) > 2 ) first_ok=false;
-      if( temp.nx() < m_minXPlanes || temp.ny() < m_minSPlanes )first_ok=false;
-      //else if((*itT).hits().size() < 6 && nused>0 ) first_ok=false;
-
-	  
-      if(!first_ok) continue;
+      if( temp.nx() < m_minXPlanes || temp.ny() < m_minSPlanes ) continue;
+      
       float ay=0;
       float by=0;
-      bool second_ok = fitYLine( *itT, plane.first(), plane.last(), ay, by );
-      if(!second_ok) continue;
+      bool first_ok = fitYLine( *itT, plane.first(), plane.last(), ay, by );
+      if(!first_ok) continue;
       temp.setYParam(ay, by);
       
       bool ok = fitSimultaneouslyXY( temp , 0);
