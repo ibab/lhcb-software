@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-01-26 - Andrea Contu
+ - Fix to utils.py in documentation (from Anton)
+
 ! 2016-01-22 - Andrea Contu
  - Fix to documentation code
 

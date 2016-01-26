@@ -268,7 +268,7 @@ def xget( ids , cas = ConfigAccessSvc() ) :
     fetch = [ id for id in ids if id not in xget.forest.keys() ] 
     if fetch : 
         xget.forest.update( execInSandbox( _xget, fetch, cas ) ) 
-	
+        
     forest = dict() 
     for id in ids : forest[id] = xget.forest[id] 
     return forest 
@@ -495,9 +495,9 @@ def getLineProperties( id, linename='', cas = defaultCas ) :
        postscaler = matchleaf.properties()['Postscale']
        filterseq  = matchleaf.properties()['Filter1']
        outputloc  = matchleaf.properties()['OutputLocation']
-       hltfilt    = matchleaf.properties()['_HLT']
-       hlt1filt   = matchleaf.properties()['_HLT1']
-       hlt2filt   = matchleaf.properties()['_HLT2']
+       #hltfilt    = matchleaf.properties()['_HLT']
+       hlt1filt    = matchleaf.properties()['_HLT1']
+       hlt2filt    = matchleaf.properties()['_HLT2']
        l0dufilt   = matchleaf.properties()['_L0DU']
        odinfilt   = matchleaf.properties()['_ODIN']
 
@@ -521,12 +521,10 @@ def getLineProperties( id, linename='', cas = defaultCas ) :
           x += "      ODIN           : " + odinfilt + "\n"
        if l0dufilt and l0dufilt != '' : 
           x += "      L0DU           : " + l0dufilt + "\n"
-       if hltfilt and hltfilt != '' : 
-          x += "      HLT            : " + hltfilt + "\n"
-       if hltfilt1 and hltfilt1 != '' :
-          x += "      HLT1            : " + hltfilt1 + "\n"
-       if hltfilt2 and hltfilt2 != '' :
-          x += "      HLT2            : " + hltfilt2 + "\n"
+       if hlt1filt and hlt1filt != '' : 
+          x += "      HLT1            : " + hlt1filt + "\n"
+       if hlt2filt and hlt2filt != '' : 
+          x += "      HLT2            : " + hlt2filt + "\n"
        x += "      Filter members : " + filtermembers + "\n"
        x += "      Postscale      : " + postscale + "\n"
        x += "      Output location: '" + outputloc + "'\n"
@@ -833,11 +831,11 @@ def list_line_properties( tree, linename='' ) :
        # Output location, where the candidates are stored
        outputloc  = matchleaf.properties()['OutputLocation']
        # HLT decision filter (if any)
-       hltfilt    = matchleaf.properties()['HLT']
+       #hltfilt    = matchleaf.properties()['HLT']
        # HLT1 decision filter (if any)
-       hltfilt1    = matchleaf.properties()['HLT1']
+       hlt1filt    = matchleaf.properties()['HLT1']
        # HLT2 decision filter (if any)
-       hltfilt2    = matchleaf.properties()['HLT2']
+       hlt2filt    = matchleaf.properties()['HLT2']
        # L0 decision filter (if any)
        l0dufilt   = matchleaf.properties()['L0DU']
        # ODIN filter (if any)
@@ -857,16 +855,12 @@ def list_line_properties( tree, linename='' ) :
           if i.leaf and i.leaf.fullyQualifiedName == filterseq : 
              filtermembers = i.leaf.properties()['Members']
        for i in tree : 
-          if i.leaf and i.leaf.fullyQualifiedName == hltfilt : 
-             hltfilt = i.leaf.properties()['Code']
+          if i.leaf and i.leaf.fullyQualifiedName == hlt1filt : 
+             hlt1filt = i.leaf.properties()['Code']
              break
-       for i in tree :
-          if i.leaf and i.leaf.fullyQualifiedName == hltfilt1 :
-             hltfilt1 = i.leaf.properties()['Code']
-             break
-       for i in tree :
-          if i.leaf and i.leaf.fullyQualifiedName == hltfilt2 :
-             hltfilt2 = i.leaf.properties()['Code']
+       for i in tree : 
+          if i.leaf and i.leaf.fullyQualifiedName == hlt2filt : 
+             hlt2filt = i.leaf.properties()['Code']
              break
        for i in tree : 
           if i.leaf and i.leaf.fullyQualifiedName == l0dufilt : 
@@ -882,9 +876,9 @@ def list_line_properties( tree, linename='' ) :
        line_dict['Prescale'] = prescale
        line_dict['ODIN'] = odinfilt
        line_dict['L0DU'] = l0dufilt
-       line_dict['HLT'] = hltfilt
-       line_dict['HLT1'] = hltfilt1
-       line_dict['HLT2'] = hltfilt2
+       #line_dict['HLT'] = hltfilt
+       line_dict['HLT1'] = hlt1filt
+       line_dict['HLT2'] = hlt2filt
        line_dict['Filters'] = eval(filtermembers)
        line_dict['Postscale'] = postscale
        line_dict['OutputLocation'] = outputloc
@@ -905,7 +899,7 @@ def list_alg_properties(tree, algname='') :
     # to avoid printing the same algorithm several times. 
     printed_algs = []
 
-    alg_dict = { 'Tools' : {} }
+    alg_dict = { 'MyTools' : {} }
 
     for i in tree :
        if not i.leaf : continue
@@ -915,11 +909,11 @@ def list_alg_properties(tree, algname='') :
            tool = False
        else : 
            stralgname = algname.split('/')[1]
-           if i.leaf.fullyQualifiedName.find('/' + stralgname + '.')>=0 :
-               tool = True
-               toolname = i.leaf.fullyQualifiedName.split('.')[1]
-           else :
-               continue
+           if i.leaf.fullyQualifiedName.find('/' + stralgname + '.')>=0 : 
+              tool = True
+              toolname = i.leaf.fullyQualifiedName.split('.')[1]
+           else : 
+              continue
 
        if i.leaf.fullyQualifiedName in printed_algs : continue
        printed_algs += [ i.leaf.fullyQualifiedName ] 
@@ -928,12 +922,12 @@ def list_alg_properties(tree, algname='') :
 
        if not tool : 
           for (k,v) in i.leaf.properties().iteritems() :
-              alg_dict[k] = v
+             alg_dict[k] = v
        else : 
-          if toolname not in alg_dict['Tools'].keys() : 
-              alg_dict['Tools'][toolname] = {}
+          if toolname not in alg_dict['MyTools'].keys() : 
+             alg_dict['MyTools'][toolname] = {}
           for (k,v) in i.leaf.properties().iteritems() :
-              alg_dict['Tools'][toolname][k] = v
+             alg_dict['MyTools'][toolname][k] = v
 
     return alg_dict
 
@@ -972,19 +966,20 @@ def make_html_summary(db, stripping, commonparts) :
         htmlfile.write('<table>')
         for line in sorted(db[stream].keys()) : 
             prescale = db[stream][line]['Properties']['Prescale']
-        if float(prescale) < 1. : 
-            prescale = '<font color="red"> %5.3f </font>' % float(prescale)
-        else : 
-            prescale = '1.0'
-        htmlfile.write('<tr><td><a href="%s/%s.html"> %s </a></td><td> %s </td><td> %s </td></tr>\n' 
-                       % (stream.lower(), line.lower(), line, db[stream][line]['Properties']['OutputLocation'], prescale))
-    htmlfile.write('</table>')
+            if float(prescale) < 1. : 
+                prescale = '<font color="red"> %5.3f </font>' % float(prescale)
+            else : 
+                prescale = '1.0'
+            htmlfile.write('<tr><td><a href="%s/%s.html"> %s </a></td><td> %s </td><td> %s </td></tr>\n' 
+	                   % (stream.lower(), line.lower(), line, db[stream][line]['Properties']['OutputLocation'], prescale))
+        htmlfile.write('</table>')
 
     htmlfile.write('<h2><a name="stdbasic">Standard basic particles:</a></h2>\n')
 
     htmlfile.write('<ul>')
     for part in sorted(commonparts['basic'].keys()) : 
-        htmlfile.write('<li><a href="commonparticles/%s.html"> %s </a>\n'  % (part.lower(), part))
+        htmlfile.write('<li><a href="commonparticles/%s.html"> %s </a>\n' 
+	                   % (part.lower(), part))
     htmlfile.write('</ul>')
 
     htmlfile.write('<h2><a name="stdintermediate">Standard intermediate particles:</a></h2>\n')
@@ -1069,14 +1064,14 @@ def make_members_line(line, stripping, streamname, linename, htmlfile, alg, part
         v = line['Algs'][alg][k]
 	
         if k == 'CombinationCut' or k == 'MotherCut' or k == 'Code' : 
-            v2 = lokiparse(v)
+          v2 = lokiparse(v)
 	  
-            if v != v2 : 
-                v = '<div id="indent%s_%d" class="hidden">%s</div><div id="unindent%s_%d" class="unhidden">%s</div>' % (n, nn, v2, n, nn, v)
-                k = k + '''<p align="right"><a href="javascript:showhide2('indent%s_%d');">Indent on/off</a></p>''' % (n, nn) 
+          if v != v2 : 
+            v = '<div id="indent%s_%d" class="hidden">%s</div><div id="unindent%s_%d" class="unhidden">%s</div>' % (n, nn, v2, n, nn, v)
+            k = k + '''<p align="right"><a href="javascript:showhide2('indent%s_%d');">Indent on/off</a></p>''' % (n, nn) 
 	
         if v == '' : v = 'None'
-            
+
         v = str(v)
         for std in parts : 
             if v.find('/' + std + '/') >= 0 or v.find('/' + std + '\'') >= 0 : 
@@ -1100,7 +1095,7 @@ def make_members_line(line, stripping, streamname, linename, htmlfile, alg, part
     r = 0
     for k,v in line['Algs'][alg].iteritems() : 
         if k in properties : continue
-        if k == 'Tools' : continue
+        if k == 'MyTools' : continue
         if v == '' : v = 'None'
 
 
@@ -1113,19 +1108,19 @@ def make_members_line(line, stripping, streamname, linename, htmlfile, alg, part
     htmlfile.write('</table></p>\n')
     htmlfile.write('</div>\n')
 	
-    if line['Algs'][alg]['Tools'] != {} : 
+    if line['Algs'][alg]['MyTools'] != {} : 
         htmlfile.write('''<p %s><a href="javascript:showhide('div%st');"><b>Tools:</b></a></p>\n''' % (indent(str(n) + "_"), n))
         htmlfile.write('<div id="div%st" class="hidden">\n' % n)
 
         m = 1
-        for k in line['Algs'][alg]['Tools'].keys() : 
+        for k in line['Algs'][alg]['MyTools'].keys() : 
             htmlfile.write('''<p %s><a href="javascript:showhide('div%st%d');"> %s </a></p>\n''' % (indent(str(n) + "_"), n,m,k) )
             htmlfile.write('<div id="div%st%d" class="hidden">\n' % (n, m))
             htmlfile.write('''<p %s><b>Properties:</b></p>\n''' % (indent(str(n) + "__")))
             htmlfile.write('<p %s><table>\n' % indent(str(n) + '__'))
 
             r = 0
-            for tk, tv in line['Algs'][alg]['Tools'][k].iteritems() : 
+            for tk, tv in line['Algs'][alg]['MyTools'][k].iteritems() : 
                 if tv == '' : tv = 'None'
                 if r == 0 : 
                     htmlfile.write(' <tr class="alt1"><td>%s : </td><td>%s</td></tr>\n' % (tk, tv))
@@ -1203,7 +1198,7 @@ def make_commonparts_html(algname, alg, stripping, parts) :
     r = 0
     for k,v in sorted(alg.iteritems()) : 
         if k in properties : continue
-        if k == 'Tools' : continue
+        if k == 'MyTools' : continue
         if v == '' : v = 'None'
         if r == 0 : 
             htmlfile.write(' <tr class="alt1"><td>%s : </td><td>%s</td></tr>\n' % (k, v))
@@ -1214,19 +1209,19 @@ def make_commonparts_html(algname, alg, stripping, parts) :
     htmlfile.write('</table></p>\n')
     htmlfile.write('</div>\n')
 
-    if alg['Tools'] != {} : 
+    if alg['MyTools'] != {} : 
         htmlfile.write('''<p %s><a href="javascript:showhide('div%st');"><b>Tools:</b></a></p>\n''' % (indent(str(n) + "_"), n))
         htmlfile.write('<div id="div%st" class="hidden">\n' % n)
 
         m = 1
-        for k in sorted(alg['Tools'].keys()) : 
+        for k in sorted(alg['MyTools'].keys()) : 
             htmlfile.write('''<p %s><a href="javascript:showhide('div%st%d');"> %s </a></p>\n''' % (indent(str(n) + "_"), n,m,k) )
             htmlfile.write('<div id="div%st%d" class="hidden">\n' % (n, m))
             htmlfile.write('''<p %s><b>Properties:</b></p>\n''' % (indent(str(n) + "__")))
             htmlfile.write('<p %s><table>\n' % indent(str(n) + '__'))
 
             r = 0
-            for tk, tv in sorted(alg['Tools'][k].iteritems()) : 
+            for tk, tv in sorted(alg['MyTools'][k].iteritems()) : 
                 if tv == '' : tv = 'None'
                 if r == 0 : 
                     htmlfile.write(' <tr class="alt1"><td>%s : </td><td>%s</td></tr>\n' % (tk, tv))
@@ -1319,19 +1314,19 @@ def make_documentation( root_tree, stripping, commonparts ) :
 
     for stream in sorted(list_streams( root_tree )) : 
 ##    for stream in [ 'Bhadron' ]  : 
-        outdb[stream] = {}
-        for line in sorted(list_lines( root_tree, stream)) : 
+       outdb[stream] = {}
+       for line in sorted(list_lines( root_tree, stream)) : 
 ##       for line in [ 'StrippingB2twobodyLine' ] : 
-            print stream, line
-            line_prop = list_line_properties( root_tree, line)
-            outdb[stream][line] = {}
-            outdb[stream][line]['Properties'] = line_prop
-            outdb[stream][line]['Algs'] = {}
-            print line_prop['Filters']
-            for alg in line_prop['Filters'] : 
-                make_line_algorithms( root_tree, stripping, outdb, stream, line, alg)
+          print stream, line
+          line_prop = list_line_properties( root_tree, line)
+          outdb[stream][line] = {}
+          outdb[stream][line]['Properties'] = line_prop
+          outdb[stream][line]['Algs'] = {}
+          print line_prop['Filters']
+          for alg in line_prop['Filters'] : 
+              make_line_algorithms( root_tree, stripping, outdb, stream, line, alg)
 
-            make_html(outdb[stream][line], stripping, stream, line, parts)
+          make_html(outdb[stream][line], stripping, stream, line, parts)
 ##          break
 
 
@@ -1356,15 +1351,15 @@ def commonparticles_properties() :
             else : 
                 db['basic'][name][k] = type(p).__slots__[k]
 
-        db['basic'][name]['Tools'] = {}    	
+        db['basic'][name]['MyTools'] = {}    	
         for tool in p.getTools() : 
             toolname = tool.getType() + "/" + tool.name()
-            db['basic'][name]['Tools'][toolname] = {}
+            db['basic'][name]['MyTools'][toolname] = {}
             for prop in tool.properties() : 
                 if hasattr(tool, prop) : 
-                    db['basic'][name]['Tools'][toolname][prop] = getattr(tool, prop)
+                    db['basic'][name]['MyTools'][toolname][prop] = getattr(tool, prop)
                 else : 
-                    db['basic'][name]['Tools'][toolname][prop] = type(tool).__slots__[prop]
+                    db['basic'][name]['MyTools'][toolname][prop] = type(tool).__slots__[prop]
     	    
 
     for name in dir(StandardIntermediate) : 
@@ -1380,15 +1375,15 @@ def commonparticles_properties() :
             else : 
                 db['intermediate'][name][k] = type(p).__slots__[k]
 
-        db['intermediate'][name]['Tools'] = {}    	
+        db['intermediate'][name]['MyTools'] = {}    	
         for tool in p.getTools() : 
             toolname = tool.getType() + "/" + tool.name()
-            db['intermediate'][name]['Tools'][toolname] = {}
+            db['intermediate'][name]['MyTools'][toolname] = {}
             for prop in tool.properties() : 
                 if hasattr(tool, prop) : 
-                    db['intermediate'][name]['Tools'][toolname][prop] = getattr(tool, prop)
+                    db['intermediate'][name]['MyTools'][toolname][prop] = getattr(tool, prop)
                 else : 
-                    db['intermediate'][name]['Tools'][toolname][prop] = type(tool).__slots__[prop]
+                    db['intermediate'][name]['MyTools'][toolname][prop] = type(tool).__slots__[prop]
 
     return db
 
@@ -1402,26 +1397,26 @@ if __name__ == '__main__' :
 
     if len(sys.argv) == 2 : 
 
-        tck = eval(sys.argv[1])
+      tck = eval(sys.argv[1])
 
-        l = getConfigurations()
-        h = l.keys()[0].split('/')[-1]
+      l = getConfigurations()
+      h = l.keys()[0].split('/')[-1]
 
-        cas2 = ConfigTarFileAccessSvc( Mode = 'ReadWrite', File = 'config.tar' )
-        createTCKEntries( { tck : h }, cas2 )
+      cas2 = ConfigTarFileAccessSvc( Mode = 'ReadWrite', File = 'config.tar' )
+      createTCKEntries( { tck : h }, cas2 )
 
     elif len(sys.argv) == 3 : 
 
-        tck = eval(sys.argv[1])
-        name = sys.argv[2]
+      tck = eval(sys.argv[1])
+      name = sys.argv[2]
 
-        db = getConfigTree(tck)
-        cp = commonparticles_properties()
-        make_documentation( db, name, cp)
+      db = getConfigTree(tck)
+      cp = commonparticles_properties()
+      make_documentation( db, name, cp)
 
     else : 
 
-        print 'Wrong number of parameters. Usage: '
-        print 'utils.py [tck] - add TCK to config.tar'
-        print 'utils.py [tck] [stripping] - create web documentation for [stripping] from [tck] in config.tar'
+      print 'Wrong number of parameters. Usage: '
+      print 'utils.py [tck] - add TCK to config.tar'
+      print 'utils.py [tck] [stripping] - create web documentation for [stripping] from [tck] in config.tar'
 
