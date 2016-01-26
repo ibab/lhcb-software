@@ -174,8 +174,10 @@ TimingAuditor().addTool(SequencerTimerTool,name="TIMER")
 TimingAuditor().TIMER.NameSize = 60
 
 # database
-DaVinci().DDDBtag  = "dddb-20120831"
-DaVinci().CondDBtag = "cond-20121008"
+#DaVinci().DDDBtag  = "dddb-20120831"
+#DaVinci().CondDBtag = "cond-20121008"
+DaVinci().CondDBtag = "cond-20150409-1"
+DaVinci().DDDBtag = "dddb-20150928" 
 
 # RedoCalo
 importOptions("$STRIPPINGSELECTIONSROOT/tests/users/DV-RedoCaloPID-Stripping21.py")
