@@ -53,6 +53,12 @@ namespace Rich
     /// Default Constructor
     HypoData() { resetData(); }
 
+    /** Constructor with explicit data initialisation value
+     *
+     *  @param value The data initialisation value for each mass hypothesis
+     */
+    explicit HypoData( const TYPE & value ) { resetData(value); }
+
     /// Default Destructor
     ~HypoData() = default;
 
@@ -68,12 +74,6 @@ namespace Rich
     /// Default Move Operator
     HypoData& operator=( HypoData&& ) = default;
 
-    /** Constructor with explicit data initialisation value
-     *
-     *  @param value The data initialisation value for each mass hypothesis
-     */
-    explicit HypoData( const TYPE & value ) { resetData(value); }
-
   public: // methods
 
     /** Read access operator
@@ -81,37 +81,56 @@ namespace Rich
      *  @param type  The mass hypothesis for which the data is requested
      *  @return The data value
      */
-    const TYPE & operator[] ( const Rich::ParticleIDType type ) const;
+    inline const TYPE & operator[] ( const Rich::ParticleIDType type ) const
+    {
+      return m_data[type];
+    }
 
     /** Set the data value for a given particle hypothesis
      *
      *  @param type  The mass hypothesis for which the data is for
      *  @param value The data value
      */
-    void setData( const Rich::ParticleIDType type, const TYPE & value );
+    inline void setData( const Rich::ParticleIDType type, const TYPE & value )
+    {
+      m_valid[type] = true; 
+      m_data[type]  = value;
+    }
 
     /** Reset the data for all mass hypotheses. Following this call all data
      *  fields will be flagged as invalid (i.e. unset)
      *
      *  @param value The reset value
      */
-    void resetData( const TYPE & value );
-
+    inline void resetData( const TYPE & value )
+    {
+      m_valid.fill ( false );
+      m_data.fill  ( value );
+    }
+    
     /** Reset data for given particle hypothesis. Following this call the
      *  data for the given mas hypothesis will be flagged as invalid (i.e. unset)
      *
      *  @param type  The mass hypothesis to reset
      *  @param value The reset value
      */
-    void resetData( const Rich::ParticleIDType type, const TYPE & value );
+    inline void resetData( const Rich::ParticleIDType type, const TYPE & value )
+    {
+      m_valid[type] = false; 
+      m_data[type]  = value;
+    }
 
     /** Reset the data for all mass hypotheses. Following this call all data
      *  fields will be flagged as invalid (i.e. unset)
      *
      *  @attention The data values themselves are unaffected
      */
-    void resetData();
-
+    inline void resetData()
+    {
+      m_valid.fill ( false );
+      m_data.fill  ( 0     );
+    }
+    
     /** Reset data for given particle hypothesis. Following this call the
      *  data for the given mas hypothesis will be flagged as invalid (i.e. unset)
      *
@@ -119,13 +138,20 @@ namespace Rich
      *
      *  @attention The data values themselves are unaffected
      */
-    void resetData( const Rich::ParticleIDType type );
-
+    inline void resetData( const Rich::ParticleIDType type )
+    {
+      m_valid[type] = false;
+      m_data[type]  = 0;
+    }
+    
     /** Const Accessor to data array
      *
      *  @return Const reference to the internal data array
      */
-    const DataArray & dataArray() const;
+    inline const DataArray & dataArray() const &
+    {
+      return m_data;
+    }    
 
     /** Check whether a piece of data has been initialised
      *
@@ -136,17 +162,20 @@ namespace Rich
      *  @retval false Data field has not been set. 
      *                Value will be the initialisation (or reset) value
      */
-    bool dataIsValid( const Rich::ParticleIDType type ) const;
+    inline bool dataIsValid( const Rich::ParticleIDType type ) const
+    {
+      return m_valid[type];
+    }
 
+  public:
+    
     /// Implement textual ostream << method
-    friend inline std::ostream& operator << ( std::ostream& ost, 
+    friend inline std::ostream& operator << ( std::ostream& os, 
                                               const HypoData<TYPE>& data )
     {
-      for ( int i = 0; i < Rich::NParticleTypes; ++i )
-      {
-        ost << data[static_cast<Rich::ParticleIDType>(i)] << " ";
-      }
-      return ost;
+      os << "[ ";
+      for ( const auto & id : Rich::particles() ) { os << data[id] << " "; }
+      return os << "]";
     }
 
   private: // data
@@ -158,62 +187,6 @@ namespace Rich
     ValidityArray  m_valid;
 
   };
-
-  template <class TYPE>
-  inline const TYPE & 
-  HypoData<TYPE>::operator[] ( const Rich::ParticleIDType type ) const
-  {
-    return m_data[type];
-  }
-
-  template <class TYPE>
-  inline void HypoData<TYPE>::setData( const Rich::ParticleIDType type,
-                                       const TYPE & value )
-  {
-    m_valid[type] = true; 
-    m_data[type]  = value;
-  }
-
-  template <class TYPE>
-  inline void HypoData<TYPE>::resetData( const TYPE & value )
-  {
-    m_valid.fill ( false );
-    m_data.fill  ( value );
-  }
-
-  template <class TYPE>
-  inline void HypoData<TYPE>::resetData( const Rich::ParticleIDType type,
-                                         const TYPE & value )
-  {
-    m_valid[type] = false; 
-    m_data[type]  = value;
-  }
-
-  template <class TYPE>
-  inline void HypoData<TYPE>::resetData()
-  {
-    m_valid.fill ( false );
-    m_data.fill  ( 0     );
-  }
-
-  template <class TYPE>
-  inline void HypoData<TYPE>::resetData( const Rich::ParticleIDType type )
-  {
-    m_valid[type] = false;
-    m_data[type]  = 0;
-  }
-
-  template <class TYPE>
-  inline const typename HypoData<TYPE>::DataArray & HypoData<TYPE>::dataArray() const
-  {
-    return m_data;
-  }
-
-  template <class TYPE>
-  inline bool HypoData<TYPE>::dataIsValid( const Rich::ParticleIDType type ) const
-  {
-    return m_valid[type];
-  }
 
 } // Rich namespace
 
