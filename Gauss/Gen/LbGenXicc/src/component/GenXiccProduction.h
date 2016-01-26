@@ -50,7 +50,6 @@ class GenXiccProduction : public HardProduction, public QQqBaryons {
 
   CommandVector m_defaultSettings;   ///< The default settings.
   std::string m_baryon;              ///< The baryon state to be produced.
-  bool m_allowBaryonNumberViolation; ///< allow baryon number violation in GenXicc (default is not for Pythia6, is ok for Pythia8)
 };
 
 #endif // LBGENXICC_GENXICCPRODUCTION_H

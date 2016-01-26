@@ -2,6 +2,9 @@
 ! Responsible : F. Zhang
 !=============================================================================
 
+! 2016-01-26 - Giacomo Graziani
+ - removed option GenXiccProduction.AllowBaryonNumberViolation (for not duplicating functionality with the Commands option) 
+
 ! 2015-11-18 - Marco Clemencic
  - Disabled warnings for FORTRAN code.
 

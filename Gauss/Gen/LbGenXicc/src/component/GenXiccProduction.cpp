@@ -32,8 +32,6 @@ GenXiccProduction::GenXiccProduction(const std::string &type,
   declareInterface<IProductionTool>(this);
   declareProperty("BaryonState", m_baryon= "Xi_cc+",
 		  "The baryon to be produced");
-  declareProperty("AllowBaryonNumberViolation", m_allowBaryonNumberViolation = false,
-                  "allow baryon number violation in GenXicc");
 
   // Create the default settings.
   m_defaultSettings.push_back("mixevnt imix 0");
@@ -129,10 +127,7 @@ StatusCode GenXiccProduction::hardInitialize() {
     m_defaultSettings.push_back("wbstate nbound 2");
   }
 
-  if(m_allowBaryonNumberViolation)
-    m_defaultSettings.push_back("subopen iconsbarnum 0");
-  else
-    m_defaultSettings.push_back("subopen iconsbarnum 1");
+  m_defaultSettings.push_back("subopen iconsbarnum 1");
 
   StatusCode sc = parseSettings(m_defaultSettings , true);
   if (sc.isFailure()) return Error("Failed to parse default settings.");
