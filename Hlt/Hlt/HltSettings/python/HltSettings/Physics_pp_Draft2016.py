@@ -60,9 +60,9 @@ class Physics_pp_Draft2016( object ):
                             'Bc2JpsiX', 'DiMuon', 'DisplVertices',
                             'TrackEff', 'TrackEffDiMuon', "Commissioning", 'RareStrange',
                             'TriMuon', 'B2HH', 'B2Kpi0','Phi','RareCharm'],
-                'September2015' : ['CharmHad', 'XcMuXForTau', 'Radiative'],
+                'September2015' : ['XcMuXForTau', 'Radiative'],
                 'October2015' : ['LowMult', 'SingleMuon'],
-                'Draft2016' : [ 'PID' ]}
+                'Draft2016' : [ 'PID', 'CharmHad' ]}
 
 
     def Thresholds(self) :

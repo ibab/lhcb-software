@@ -4,6 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2016-01-26 - Patrick Spradlin
+ - Add draft settings for CharmHad lines for 2016.
+    A  +    python/HltSettings/CharmHad/CharmHad_25ns_Draft2016.py
+    M       python/HltSettings/Physics_pp_Draft2016.py
+
 ! 2015-01-14 - Olli Lupton
  - Add draft settings for PID lines in 2016.
  - Update Physics_pp_Draft2016 to point at these new PID settings.

@@ -1,7 +1,7 @@
 from GaudiKernel.SystemOfUnits import GeV, mm, MeV, picosecond
 import math
 
-class CharmHad_25ns_September2015 :
+class CharmHad_25ns_Draft2016 :
     """
     Threshold settings for Hlt2 topological lines for 2015 25 ns data-taking.
 
