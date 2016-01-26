@@ -8,6 +8,15 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-01-26 - Patrick Spradlin
+ - Removed some unused class definitions from CharmHad/Stages.py.
+   The following combiner class definitions were removed:
+     D2HHHHCombiner
+     D2HHHKs_4BCombiner
+     Dst2D0pi
+     D2KsHHH_KSLL
+     D2KsHHH_KSDD
+
 ! 2016-01-25 - Simone Stracka
  - Changes to DiMuon/Lines.py and DiMuon/Stages.py: added Psi2SLowPT line
 

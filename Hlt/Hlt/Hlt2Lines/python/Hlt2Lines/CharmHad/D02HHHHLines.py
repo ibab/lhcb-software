@@ -90,7 +90,7 @@ class CharmHadD02HHHHLines() :
         from Stages import D02HHHHMass_D02PiPiPiPi, D02HHHHMass_D02KPiPiPi
         from Stages import D02HHHHMass_D02KKPiPi, D02HHHHMass_D02KKKPi
         from Stages import DstToD02HHHH_D02CFKPiPiPi
-        from Stages import DV4BCombiner, Dst2D0pi, TagDecay
+        from Stages import DV4BCombiner, TagDecay
         from Stages import SharedSoftTagChild_mu
 
         ## D*+ -> D0 pi+ reconstruction on D0 with wide mass windows

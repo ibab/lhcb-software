@@ -1416,29 +1416,6 @@ class AttachParticle(Hlt2Combiner):
                               MotherCut = mc, Preambulo = [])
 
 
-class D2HHHHCombiner(Hlt2Combiner):
-    def __init__(self, name, decay,inputs):
-        dc = {}
-        cc = (" ( AM < %(AM_MAX)s ) " +
-              "&( (APT1+APT2+APT3+APT4) > %(ASUMPT_MIN)s)" +
-              "&( AMINDOCA('') < %(AMINDOCA_MAX)s )" +
-              "&( AMAXDOCA('') < %(AMAXDOCA_MAX)s )" +
-              "& (AALLSAMEBPV)" )
-        mc = (" ( VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
-              "&( BPVCORRM < %(BPVCORRM_MAX)s )" +
-              "&( BPVVDCHI2> %(BPVVDCHI2_MIN)s )" +
-              "&( BPVVDR> %(BPVVDR_MIN)s )" +
-              "&( BPVDIRA > %(BPVDIRA_MIN)s )" +
-              "&( BPVIPCHI2() < %(BPVIPCHI2_MAX)s )")
-        from HltTracking.HltPVs import PV3D
-        Hlt2Combiner.__init__(self, name, decay, inputs,
-                              dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
-                              tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc,
-                              MotherCut = mc, Preambulo = [])
-
-
-
-
 class D2HHHKsCombiner(Hlt2Combiner):
     def __init__(self, name, decay, inputs):
         dc = {}
@@ -1447,43 +1424,6 @@ class D2HHHKsCombiner(Hlt2Combiner):
               "&(PT> %(PT_MIN)s)" +
               "&(BPVLTIME() > %(BPVLTIME_MIN)s)" +
               "&(BPVIPCHI2() < %(BPVIPCHI2_MAX)s )"+
-              "&(BPVDIRA > %(BPVDIRA_MIN)s )" )
-        from HltTracking.HltPVs import PV3D
-        Hlt2Combiner.__init__(self, name, decay, inputs,
-                              dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
-                              tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc,
-                              MotherCut = mc, Preambulo = [])
-
-class D2HHHKs_4BCombiner(Hlt2Combiner):
-    """
-    Combiner for exclusive D(s)+->hhhKS lines.
-
-    Configuration dictionaries must contain the following keys:
-        'AM_MAX'        : Maximum mass of the n-body combination
-        'AM_MIN'        : Minimum mass of the combination
-        'ACHI2DOCA_MAX' : Maximum Doca-chi2 of each two-body combination (should be >= VCHI2NDOF)
-        'ASUMPT_MIN'    : Lower limit on the sum of the PTs of the daughters
-        'VCHI2PDOF_MAX' : Upper limit on VFASPF(VCHI2PDOF) in MotherCut
-        'BPVDIRA_MIN'   : Lower limit on DIRA wrt bestPV in MotherCut
-        'BPVLTIME_MIN'  : Lower limit on Lifetime wrt bestPV in MotherCut
-        'BPVIPCHI2_MAX' : Upper limit on IPChi2 of the candidate wrt bestPV in MotherCut
-        'TisTosSpec'    : Configuration string of the Hlt1 TISTOS filter.
-    """
-    def __init__(self, name, decay,inputs):
-        dc =    {}
-        c12 = (" ( AM < %(AM_MAX)s ) " +
-               "&( ACHI2DOCA(1,2) < %(ACHI2DOCA_MAX)s ) " )
-        c123 =(" ( AM < %(AM_MAX)s ) " +
-               "&( ACHI2DOCA(1,3) < %(ACHI2DOCA_MAX)s ) " +
-               "&( ACHI2DOCA(2,3) < %(ACHI2DOCA_MAX)s ) " )
-        cc = ( " (in_range( %(AM_MIN)s, AM, %(AM_MAX)s )) " + # can be used for D02HHHH
-               "&( (APT1+APT2+APT3+APT4) > %(ASUMPT_MIN)s )" +
-               "&( ACHI2DOCA(1,4) < %(ACHI2DOCA_MAX)s ) " +
-               "&( ACHI2DOCA(2,4) < %(ACHI2DOCA_MAX)s ) " +
-               "&( ACHI2DOCA(3,4) < %(ACHI2DOCA_MAX)s ) " )
-        mc = (" (VFASPF(VCHI2PDOF)< %(VCHI2PDOF_MAX)s )" +
-              "&(BPVLTIME() > %(BPVLTIME_MIN)s)" +
-              "&(BPVIPCHI2() < %(BPVIPCHI2_MAX)s )"+ # dont want to use it
               "&(BPVDIRA > %(BPVDIRA_MIN)s )" )
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__(self, name, decay, inputs,
@@ -1705,26 +1645,6 @@ class Xic02PKKPi_LTUNB(HHHHCombiner) :
                   SharedPromptChild_pi,
                   SharedTighterPromptChild_p]
         HHHHCombiner.__init__(self,name,decay,inputs)
-
-class Dst2D0pi(TagDecay):
-    def __init__(self,name,d0) :
-        decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"]
-        inputs = [d0, SharedSoftTagChild_pi]
-        TagDecay.__init__(self,name,decay,inputs)
-
-class D2KsHHH_KSLL(D2HHHKsCombiner) :
-    def __init__(self,name, HHH) :
-        decay = "[D+ -> KS0 K*(892)+]cc"
-        inputs = [HHH,
-                  CharmHadSharedKsLL]
-        D2HHHKsCombiner.__init__(self,name,decay,inputs)
-
-class D2KsHHH_KSDD(D2HHHKsCombiner) :
-    def __init__(self,name, HHH) :
-        decay = "[D+ -> KS0 K*(892)+]cc"
-        inputs = [HHH,
-                  CharmHadSharedKsDD]
-        D2HHHKsCombiner.__init__(self,name,decay,inputs)
 
       
 

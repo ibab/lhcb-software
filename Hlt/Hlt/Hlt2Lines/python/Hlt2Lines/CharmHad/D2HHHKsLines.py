@@ -115,7 +115,7 @@ class CharmHadD2HHHKsLines() :
         from Stages import CharmHadSharedKsLL, CharmHadSharedKsDD
         from Stages import SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi
         from Stages import LcpToLambda0KmKpPip, LcpToLambda0KmPipPip
-        from Stages import DV4BCombiner, D2HHHKs_4BCombiner
+        from Stages import DV4BCombiner
 
         ## For tracibility, i want the combiners explictly made.
         ## Not made as shared instances, so line names will be inserted
