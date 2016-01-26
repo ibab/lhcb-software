@@ -233,7 +233,7 @@ namespace Rich
     {
       if ( this->energyBins() != data.size() ) return false;
       auto j = data.begin();
-      for ( auto& i = energyDist(id).begin();
+      for ( auto i = energyDist(id).begin();
             i != energyDist(id).end(); ++i ) { *i *= *j; ++j; }
       return true;
     }
