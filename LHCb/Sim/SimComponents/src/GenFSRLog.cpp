@@ -14,7 +14,6 @@
 #include "Event/GenFSR.h"
 #include "Event/GenCountersFSR.h"
 #include "Event/CrossSectionsFSR.h"
-#include "Event/GenHeader.h"
 
 // to write a file                
 #include <string>

@@ -10,7 +10,6 @@
 #include "Event/GenFSR.h"
 #include "Event/GenCountersFSR.h"
 #include "Event/CrossSectionsFSR.h"
-#include "Event/GenHeader.h"
 
 // other libraries                                                                                                                            
 #include <string>
@@ -22,7 +21,6 @@
 #include <stdio.h>
 #include <curl/curl.h>
 #include "TSystem.h"
-//#include "TUnixSystem.h"
 
 #define script_version "20151008"
 

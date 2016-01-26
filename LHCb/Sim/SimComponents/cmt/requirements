@@ -22,6 +22,7 @@ use   Boost        v*    LCG_Interfaces
 use   CaloDet      v*    Det
 use   AIDA         v*    LCG_Interfaces -no_auto_imports
 use   DecFiles     v*    Gen            -no_auto_imports
+use   FSRAlgs      v*    Kernel    
 
 #============================================================================
 # Component library building rule
