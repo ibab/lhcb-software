@@ -302,16 +302,16 @@ namespace LHCb
     ~RichSmartID() = default;
 
     /// Default Copy Constructor
-    RichSmartID( const RichSmartID& id ) = default;
+    RichSmartID( const RichSmartID& ) = default;
 
     /// Default Copy Operator
-    RichSmartID& operator=( const RichSmartID& id ) = default;
+    RichSmartID& operator=( const RichSmartID& ) = default;
 
     /// Default Move Constructor
-    RichSmartID( RichSmartID&& id ) = default;
+    RichSmartID( RichSmartID&& ) = default;
 
     /// Default Move Operator
-    RichSmartID& operator=( RichSmartID&& id ) = default;
+    RichSmartID& operator=( RichSmartID&& ) = default;
 
   public:
 

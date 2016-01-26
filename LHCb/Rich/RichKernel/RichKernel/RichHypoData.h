@@ -57,16 +57,16 @@ namespace Rich
     ~HypoData() = default;
 
     /// Default Copy Constructor
-    HypoData( const HypoData& id ) = default;
+    HypoData( const HypoData& ) = default;
 
     /// Default Copy Operator
-    HypoData& operator=( const HypoData& id ) = default;
+    HypoData& operator=( const HypoData& ) = default;
 
     /// Default Move Constructor
-    HypoData( HypoData&& id ) = default;
+    HypoData( HypoData&& ) = default;
 
     /// Default Move Operator
-    HypoData& operator=( HypoData&& id ) = default;
+    HypoData& operator=( HypoData&& ) = default;
 
     /** Constructor with explicit data initialisation value
      *
@@ -152,10 +152,10 @@ namespace Rich
   private: // data
 
     /// The internal representation of the data
-    DataArray     m_data;
+    DataArray      m_data;
 
     /// The validity flags
-    ValidityArray m_valid;
+    ValidityArray  m_valid;
 
   };
 

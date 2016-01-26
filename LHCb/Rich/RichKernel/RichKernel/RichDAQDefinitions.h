@@ -260,7 +260,7 @@ namespace Rich
       /// Default constructor
       EventID( ) = default;
       /// Copy Constructor
-      EventID( const EventID& id ) = default;
+      EventID( const EventID& ) = default;
       /// Constructor from value and number of bits
       template<class NUMTYPE>
       EventID ( const NUMTYPE   id,
@@ -323,7 +323,7 @@ namespace Rich
       /// Default constructor
       BXID( ) = default;
       /// Copy Constructor
-      BXID( const BXID& id ) = default;
+      BXID( const BXID& ) = default;
       /// Constructor from value
       template<class NUMTYPE>
       explicit BXID ( const NUMTYPE id )

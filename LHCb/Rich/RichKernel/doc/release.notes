@@ -4,6 +4,9 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2016-01-26 - Chris Jones
+ - Remove variable name from default methods, to avoid unused variable warnings.
+
 ! 2016-01-25 - Chris Jones
  - Roll back the constexpr changes from yesterday, as they appear to be
    causing issues in the nightlies I didn't see in my testing.

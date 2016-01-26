@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2016-01-26 - Chris Jones
+ - Remove variable name from default methods, to avoid unused variable warnings.
+
 ! 2016-01-24- Chris Jones
  - Rework RichSmartID for C++11
   + Give it the full noexcept / constexpr treatment.
