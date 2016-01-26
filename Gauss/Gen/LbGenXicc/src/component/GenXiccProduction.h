@@ -48,8 +48,8 @@ class GenXiccProduction : public HardProduction, public QQqBaryons {
 
  private:
 
-  CommandVector m_defaultSettings;   ///< The default settings.
-  std::string m_baryon;              ///< The baryon state to be produced.
+  CommandVector m_defaultSettings; ///< The default settings.
+  std::string m_baryon;            ///< The baryon state to be produced.
 };
 
 #endif // LBGENXICC_GENXICCPRODUCTION_H

@@ -126,9 +126,8 @@ StatusCode GenXiccProduction::hardInitialize() {
     m_defaultSettings.push_back("mtypeofxi mgenxi 1");
     m_defaultSettings.push_back("wbstate nbound 2");
   }
-
-  m_defaultSettings.push_back("subopen iconsbarnum 1");
-
+  if (m_pythia8)
+    m_defaultSettings.push_back("subopen iconsbarnum 1");
   StatusCode sc = parseSettings(m_defaultSettings , true);
   if (sc.isFailure()) return Error("Failed to parse default settings.");
   sc = parseSettings(m_userSettings);
@@ -141,9 +140,9 @@ StatusCode GenXiccProduction::hardInitialize() {
   double e1(sqrt(pBeam1.Mag2())), e2(sqrt(pBeam2.Mag2())),
     ecm(sqrt((e1 + e2)*(e1 + e2) - (pBeam1 + pBeam2).Mag2())/Gaudi::Units::GeV);
   GenXicc::upcom().ecm() = ecm;
-  verbose() << " calling GenXicc::SetXiccConsistentParameters"<<endmsg;
+  verbose() << "Calling GenXicc::SetXiccConsistentParameters." << endmsg;
   GenXicc::SetXiccConsistentParameters();
-  verbose() << " calling GenXicc::EvntInit"<<endmsg;
+  verbose() << "Calling GenXicc::EvntInit." << endmsg;
   GenXicc::EvntInit();
   return sc;
 }
