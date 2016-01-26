@@ -12,8 +12,6 @@
 // local                                 
 #include "FSRNavigator.h" 
 
-//class IGenericTool;
-
 /** @class GenMergeFSR GenMergeFSR.h                                    
  *                                                                            
  *                                                                            

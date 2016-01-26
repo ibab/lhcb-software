@@ -14,8 +14,7 @@ gaudi_depends_on_subdirs(Det/DetDesc
                          GaudiConf
                          Kernel/HltInterfaces
                          Kernel/LHCbAlgs
-                         Kernel/LHCbKernel
-			 Sim/SimComponents)
+                         Kernel/LHCbKernel)
 
 find_package(Boost COMPONENTS iostreams)
 find_package(RELAX)

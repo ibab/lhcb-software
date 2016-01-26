@@ -9,7 +9,6 @@
 #include "Event/GenFSR.h"
 #include "Event/GenCountersFSR.h"
 #include "Event/CrossSectionsFSR.h"
-#include "Event/GenHeader.h"
 
 //local
 #include "GenFSRMerge.h"
