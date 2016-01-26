@@ -1,5 +1,5 @@
 // workaround for https://its.cern.ch/jira/browse/GAUDI-1168
-#include "GaudiKernel/MinimalDataObjectHandle.h"
+#include "GaudiKernel/Algorithm.h"
 #include "dim.h"
 
 #include "GauchoAppl/MonAdder.h"
