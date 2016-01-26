@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-01-26 - Rosen Matev
+ - Fix bug from yesterday's commit
+
 ! 2016-01-26 - Patrick Spradlin
  - Removed some unused class definitions from CharmHad/Stages.py.
    The following combiner class definitions were removed:

@@ -132,7 +132,7 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Line
         from Configurables import HltANNSvc
         stages = self.stages()
-        for (nickname, algos) in self.algorithms(stages).iteritems():
+        for (nickname, algos) in self.algorithms(stages):
             linename = 'DiMuon' + nickname if nickname != 'DiMuon' else nickname
             Hlt2Line(linename, prescale = self.prescale,
                      algos = algos, postscale = self.postscale)
