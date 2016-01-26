@@ -131,6 +131,7 @@ class genSrcUtils(importUtils.importUtils):
                 enumAtt = enum['attrs']
                 if enumAtt['strTypConv'] == 'TRUE':
                     self.addInclude('GaudiKernel/VectorMap')
+                    self.addInclude('algorithm',1)
                     enumType = enumAtt['name']
                     enumUnknown = enumAtt['unknownValue']
 
@@ -150,25 +151,26 @@ class genSrcUtils(importUtils.importUtils):
                     dcls += '  /// conversion of string to enum for type %s\n' % enumType
                     dcls += '  static %s::%s %sToType (const std::string & aName);\n\n' % ( className, enumType, enumType )
                     dcls += '  /// conversion to string for enum type %s\n' % enumType
-                    dcls += '  static std::string %sToString(int aEnum);\n' % enumType
+                    dcls += '  static const std::string& %sToString(int aEnum);\n' % enumType
 
-                    maps += '  static GaudiUtils::VectorMap<std::string,%s> & s_%sTypMap();\n' % (enumType, enumType)
+                    maps += '  static const GaudiUtils::VectorMap<std::string,%s> & s_%sTypMap();\n' % (enumType, enumType)
 
-                    defs += 'inline GaudiUtils::VectorMap<std::string,%s::%s> & %s::s_%sTypMap() {\n' % ( className, enumType, className, enumType )
-                    defs += '  static GaudiUtils::VectorMap<std::string,%s> m;\n' % enumType
-                    defs += '  if (m.empty()) {\n'
-                    for v in values : defs += '    m.insert("%s",%s);\n' % (v, v)
+                    defs += 'inline const GaudiUtils::VectorMap<std::string,%s::%s> & %s::s_%sTypMap() {\n' % ( className, enumType, className, enumType )
+                    defs += '  static const GaudiUtils::VectorMap<std::string,%s> m = {\n' % enumType
+                    defs += ',\n'.join( [ '       {"%s",%s}' % (v, v) for v in values ] )
                     defs += '  };\n'
                     defs += '  return m;\n'
                     defs += '}\n\n'
                     defs += 'inline %s::%s %s::%sToType(const std::string & aName) {\n' % (className, enumType, className, enumType)
-                    defs += '  GaudiUtils::VectorMap<std::string,%s>::iterator iter =  s_%sTypMap().find(aName);\n' % ( enumType, enumType )
-                    defs += '  return ( iter != s_%sTypMap().end() ? iter->second : %s );\n' % (enumType, enumUnknown)
+                    defs += '  auto iter =  s_%sTypMap().find(aName);\n' % ( enumType )
+                    defs += '  return iter != s_%sTypMap().end() ? iter->second : %s;\n' % (enumType, enumUnknown)
                     defs += '}\n\n'
-                    defs += 'inline std::string %s::%sToString(int aEnum) {\n' % (className, enumType)
-                    defs += '  GaudiUtils::VectorMap<std::string,%s>::iterator iter = s_%sTypMap().begin();\n' % (enumType, enumType)
-                    defs += '  while ( iter != s_%sTypMap().end() && iter->second != aEnum ) ++iter;\n' % enumType
-                    defs += '  return ( iter != s_%sTypMap().end() ? iter->first : "%s");\n' % (enumType, enumUnknown)
+                    defs += 'inline const std::string& %s::%sToString(int aEnum) {\n' % (className, enumType)
+                    defs += '  static const std::string s_%s = "%s";\n'%(enumUnknown,enumUnknown)
+                    defs += '  auto iter = std::find_if(s_%sTypMap().begin(),s_%sTypMap().end(),\n' % (enumType, enumType)
+                    defs += '            [&](const std::pair<const std::string,%s>& i) {\n' % enumType
+                    defs += '                  return i.second == aEnum; });\n'
+                    defs += '  return iter != s_%sTypMap().end() ? iter->first : s_%s;\n' % (enumType, enumUnknown)
                     defs += '}\n'
 
         return defs,maps,dcls

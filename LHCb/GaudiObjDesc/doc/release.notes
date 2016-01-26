@@ -4,6 +4,8 @@
 !                  from the XML description of the data object classes.
 ! Package manager: Stefan Roiser
 !--------------------------------------------------------------------------------
+! 2016-01-26 - Gerhard Raven
+ - avoid creating (temporary) strings in enum->string conversion
 
 ! 2015-11-26 - Marco Clemencic
  - Removed (u)longlong typedef (see GAUDI-1125).
