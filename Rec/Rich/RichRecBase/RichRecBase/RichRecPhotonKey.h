@@ -65,16 +65,16 @@ namespace Rich
       ~PhotonKey() = default;
 
       /// Default Copy Constructor
-      PhotonKey( const PhotonKey& id ) = default;
+      PhotonKey( const PhotonKey& ) = default;
 
       /// Default Copy Operator
-      PhotonKey& operator=( const PhotonKey& id ) = default;
+      PhotonKey& operator=( const PhotonKey& ) = default;
 
       /// Default Move Constructor
-      PhotonKey( PhotonKey&& id ) = default;
+      PhotonKey( PhotonKey&& ) = default;
 
       /// Default Move Operator
-      PhotonKey& operator=( PhotonKey&& id ) = default;
+      PhotonKey& operator=( PhotonKey&& ) = default;
 
     public:
 

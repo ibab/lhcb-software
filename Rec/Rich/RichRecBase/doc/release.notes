@@ -4,6 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2016-01-26 - Chris Jones
+ - Remove variable name frm various default methods to avoid unused variable
+   warnings.
+
 ! 2016-01-25 - Chris Jones
  - Add some noexcept and override qualifiers (more still needed...)
  - Add explicit move sematics to TrackID, PhotonKey and PhotonSpectra.

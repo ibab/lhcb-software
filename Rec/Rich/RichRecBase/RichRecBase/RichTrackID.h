@@ -161,16 +161,16 @@ namespace Rich
       ~TrackID() = default;
 
       /// Default Copy Constructor
-      TrackID( const TrackID& id ) = default;
+      TrackID( const TrackID& ) = default;
 
       /// Default Copy Operator
-      TrackID& operator=( const TrackID& id ) = default;
+      TrackID& operator=( const TrackID& ) = default;
 
       /// Default Move Constructor
-      TrackID( TrackID&& id ) = default;
+      TrackID( TrackID&& ) = default;
 
       /// Default Move Operator
-      TrackID& operator=( TrackID&& id ) = default;
+      TrackID& operator=( TrackID&& ) = default;
 
     public:
 

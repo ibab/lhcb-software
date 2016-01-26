@@ -55,16 +55,16 @@ namespace Rich
     ~PhotonSpectra() = default;
 
     /// Default Copy Constructor
-    PhotonSpectra( const PhotonSpectra& id ) = default;
+    PhotonSpectra( const PhotonSpectra& ) = default;
 
     /// Default Copy Operator
-    PhotonSpectra& operator=( const PhotonSpectra& id ) = default;
+    PhotonSpectra& operator=( const PhotonSpectra& ) = default;
 
     /// Default Move Constructor
-    PhotonSpectra( PhotonSpectra&& id ) = default;
+    PhotonSpectra( PhotonSpectra&& ) = default;
 
     /// Default Move Operator
-    PhotonSpectra& operator=( PhotonSpectra&& id ) = default;
+    PhotonSpectra& operator=( PhotonSpectra&& ) = default;
 
     /** Constructor from data
      *
@@ -272,10 +272,10 @@ namespace Rich
 
   private: // data
 
-    unsigned int m_enBins = 5;  ///< number of energy bins
-    TYPE m_minEn          = 0;  ///< minimum energy for which the distribution is defined
-    TYPE m_maxEn          = 5;  ///< maximum energy for which the distribution is defined
-    TYPE m_binSize        = 1;  ///< energy bin size
+    unsigned int m_enBins { 5 };  ///< number of energy bins
+    TYPE m_minEn          { 0 };  ///< minimum energy for which the distribution is defined
+    TYPE m_maxEn          { 5 };  ///< maximum energy for which the distribution is defined
+    TYPE m_binSize        { 1 };  ///< energy bin size
 
     /// The data container
     HypoPhotonData m_photdata { Rich::NParticleTypes, PhotonData(5) };
