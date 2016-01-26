@@ -484,7 +484,7 @@ def _rd_get_ ( rdir , name , default = None ) :
 def _rf_enter_ ( self      ) :
     """Use ROOT-file with the context manager
     >>> with ROOT.TFile('ququ.root') as f : f.ls() 
-    """ 
+    """
     return self
 
 # =============================================================================
@@ -498,7 +498,8 @@ def _rf_exit_  ( self , *_ ) :
     """
     try :
         self.Close()
-    except: pass
+    except:
+        pass
             
 
 ## the basic protocol:
@@ -522,9 +523,6 @@ ROOT.TDirectory.itervalues   = _rd_itervalues_
 ## some extra stuff 
 
 ROOT.TDirectory.rm           = _rd_rm_
-
-if not hasattr ( ROOT.TFile , 'close' ) :
-    ROOT.TFile.close = ROOT.TFile.Close 
 
 if hasattr ( ROOT.TFile , '__enter__' ) and hasattr ( ROOT.TFile , '__exit__' ) : pass
 else :
@@ -559,14 +557,14 @@ def open_mode ( mode ) :
 #  print ROOT.gROOT.CurrentDirectory()
 #  @endcode
 def _rf_new_init_ ( rfile , fname , mode = '' , *args ) :
-    """
-    Open/create ROOT-file without making it a current working directory
+    """Open/create ROOT-file without making it a current working directory
     >>> print ROOT.gROOT.CurrentDirectory()
     >>> f = ROOT.TFile('test_file.root','recreate')
     >>> print ROOT.gROOT.CurrentDirectory()
     """
     with ROOTCWD() :
-        rfile._old_init_ ( fname , open_mode ( mode ) , *args )
+        logger.debug ("Open  ROOT file %s/'%s'" % ( fname , mode ) )
+        return rfile._old_init_ ( fname , open_mode ( mode ) , *args )
 
 # =============================================================================
 ## create ROOT.TFile without making it a current working directory 
@@ -576,6 +574,24 @@ def _rf_new_init_ ( rfile , fname , mode = '' , *args ) :
 #  print ROOT.gROOT.CurrentDirectory()
 #  @endcode
 def _rf_new_open_ ( fname , mode = '' , *args ) :
+    """Open/create ROOT-file without making it a current working directory
+    >>> print ROOT.gROOT.CurrentDirectory()
+    >>> f = ROOT.TFile.Open('test_file.root','recreate')
+    >>> print ROOT.gROOT.CurrentDirectory()
+    """
+    with ROOTCWD() :
+        logger.debug ( "Open  ROOT file %s/'%s'" % ( fname , mode ) )
+        return ROOT.TFile._old_open_ ( fname , open_mode ( mode ) , *args )
+
+
+# =============================================================================
+## create ROOT.TFile without making it a current working directory 
+#  @code
+#  print ROOT.gROOT.CurrentDirectory()
+#  f = ROOT.TFile.Open('test_file.root','recreate')
+#  print ROOT.gROOT.CurrentDirectory()
+#  @endcode
+def _rf_new_close_ ( rfile , options = '' ) :
     """
     Open/create ROOT-file without making it a current working directory
     >>> print ROOT.gROOT.CurrentDirectory()
@@ -583,9 +599,11 @@ def _rf_new_open_ ( fname , mode = '' , *args ) :
     >>> print ROOT.gROOT.CurrentDirectory()
     """
     with ROOTCWD() :
-        return ROOT.TFile._old_open_ ( fname , open_mode ( mode ) , *args )
-
-
+        rfile .cd()
+        logger.debug ( "Close ROOT file %s" % rfile.GetName() ) 
+        rfile ._old_close_ ( options )
+        logger
+                
 # =============================================================================
 ## another name, just for convinince
 open = _rf_new_open_
@@ -610,6 +628,18 @@ else :
     ROOT.TFile._new_open_   = _rf_new_open_ 
     ROOT.TFile.Open         = _rf_new_open_ 
     ROOT.TFile.open         = _rf_new_open_ 
+
+if hasattr ( ROOT.TFile , '_new_close_' ) and hasattr ( ROOT.TFile , '_old_close_' ) : pass
+else :
+
+    _rf_new_close_.__doc__  += '\n' + ROOT.TFile.Close.__doc__
+    
+    ROOT.TFile._old_close_   = ROOT.TFile.Close
+    ROOT.TFile._new_close_   = _rf_new_close_ 
+    ROOT.TFile.Close         = _rf_new_close_
+    
+if not hasattr ( ROOT.TFile , 'close' ) :
+    ROOT.TFile.close = ROOT.TFile._new_close_
 
     
 # =============================================================================

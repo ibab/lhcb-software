@@ -308,7 +308,10 @@ class ProgressBar(object):
         return self
     
     def __exit__  ( self , *_ ) :
-        self.end()
+        if not self.silent  : 
+            if self.prefix : sys.stdout.write( self.prefix ) 
+            sys.stdout.write( self.bar + '\n') 
+            sys.stdout.flush()
         return False ##  allow propagation of exceptions 
 
 # =============================================================================

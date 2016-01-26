@@ -363,7 +363,7 @@ if root_files :
 ## exit it! 
 if arguments.batch :
     ## nothing to do 
-    logger.debug  ('EXIT AT BATCH!')
+    logger.debug  ('Bye, bye...')
     exit()
     
 elif arguments.embed :

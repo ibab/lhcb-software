@@ -8,6 +8,9 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2016-01-26 - Vanya Belyaev
+ - improve a bit handling of TFiles 
+
 ! 2016-01-24 - Vanya Belyaev
  - improve logging & qmtests 
  - clean up interactive context
