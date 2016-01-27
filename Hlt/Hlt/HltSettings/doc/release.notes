@@ -4,6 +4,13 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2016-01-27 - Patrick Spradlin
+ - !!!NOTE!!! Relies on Hlt2Lines r200430.
+   Changes to CharmHad configuration dictionaries require by a change of
+   cut variable for a combiner.
+    M       python/HltSettings/CharmHad/CharmHad_25ns_Draft2016.py
+    M       python/HltSettings/PID/PID_25ns_Draft2016.py
+
 ! 2016-01-26 - Patrick Spradlin
  - Add draft settings for CharmHad lines for 2016.
     A  +    python/HltSettings/CharmHad/CharmHad_25ns_Draft2016.py
