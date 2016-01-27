@@ -4,6 +4,7 @@
 ! Purpose     : collection of functors&factory for HLT
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiHlt v3r21 2016-01-27 =========================
 ! 2015-11-29 - Vanya Belyaev
  - fix warnings for duplicate selection rules (new ROOT)
  - add swap functions to event and run-lists 
