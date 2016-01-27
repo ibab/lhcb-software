@@ -3,6 +3,8 @@
 ! Responsible : Greig Cowan
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
+
+!========================= STDAQ v4r8 2016-01-27 =========================
 ! 2015-12-28 - Gerhard Raven
  - replace GSL_ with std::
  - prefer range-based for loops
