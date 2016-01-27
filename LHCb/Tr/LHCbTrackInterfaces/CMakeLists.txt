@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LHCbTrackInterfaces
 ################################################################################
-gaudi_subdir(LHCbTrackInterfaces v2r2)
+gaudi_subdir(LHCbTrackInterfaces v2r3)
 
 gaudi_depends_on_subdirs(Det/DetDesc
                          Event/RecEvent

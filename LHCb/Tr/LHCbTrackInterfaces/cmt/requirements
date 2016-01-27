@@ -4,7 +4,7 @@
 #=====================================================================
 package           LHCbTrackInterfaces
 
-version           v2r2
+version           v2r3
 
 # Structure, i.e. directories to process. 
 #=====================================================================branches          cmt doc TrackInterfaces
