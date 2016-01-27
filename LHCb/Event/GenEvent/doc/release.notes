@@ -3,6 +3,7 @@
 ! package coordinator: G.Corti
 !------------------------------------------------------------------------------
 
+!========================= GenEvent v7r0 2016-01-27 =========================
 ! 2016-01-25 - Davide Fazzini
  - Added GenFSR.xml, GenCountersFSR.xml and CrossSectionsFSR.xml classes  
 
