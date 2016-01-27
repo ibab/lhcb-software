@@ -24,6 +24,15 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2016-01-27 - Vanya Belyaev
+ - bender: 
+   1) add new property "-t/--tuplefile" 
+      the value, if non-empty, is propagated to 'TupelFile' property of DaVinci
+
+   2) at the end release all "active" tuples created 
+      with GaudiPython.TupleUtils module 
+
+
 ! 2016-01-23 - Vanya Belyaev
  - reduce number of startup files 
  - improve logging 

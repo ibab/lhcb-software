@@ -165,6 +165,15 @@ parser.add_argument (
     It can be useful for usage with user-scripts."""
     )
     ##
+parser.add_argument (
+    '-t'                      ,
+    '--tuplefile'             ,
+    dest    = 'TupleFile'     ,
+    type    =  str            , 
+    help    = "``TupleFile'' attribute for DaVinci [default : %(default)s].",
+    default = ''               
+    )
+    ## 
 group = parser.add_mutually_exclusive_group()
 group.add_argument (
     '-e'                   ,
@@ -283,11 +292,28 @@ for _f in pyfiles :
         # - Interactive mode: print traceback and continue 
         logger.error ('Failure to execute "%s"'     % _f   , exc_info = True )
 
+
+# =============================================================================
+## Proper at-exit function for GaudiPython.TupleUtils module
+def __release_tuples__ () : 
+    "Proper at-exit function for GaudiPython.TupleUtils module"
+    try:
+        import GaudiPython.TupleUtils as _TU
+        if _TU.activeTuples() : 
+            logger.debug ('Release active n-tuples') 
+            _TU.releaseTuples()
+    except :
+        pass 
+
+import atexit
+atexit.register ( __release_tuples__ )
+
 ## exit if batch 
 if  arguments.batch :
     ## nothing to do 
-    logger.debug  ('EXIT AT BATCH!')
-    
+    logger.debug  ('Bye bye... ') 
+    exit () 
+   
 elif arguments.embed :
 
     logger.info ('Start embedded interactive shell') 
@@ -319,6 +345,11 @@ else :
     import IPython
     IPython.start_ipython ( argv = [] , user_ns = __vars )
     exit() 
+
+
+
+exit () 
+
 
 # =============================================================================
 # The END 
