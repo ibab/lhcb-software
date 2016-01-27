@@ -1,8 +1,5 @@
 // Include files 
 
- // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // local
 #include "GenFSRStat.h"
 
@@ -15,11 +12,9 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include <cstdlib>
 #include <cmath>
 #include <ctime>
 #include <stdio.h>
-#include <curl/curl.h>
 #include "TSystem.h"
 
 #define script_version "20151008"
