@@ -1,6 +1,8 @@
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
+
+!========================= VeloDet v14r0 2016-01-27 =========================
 ! 2016-01-03 - Gerhard Raven
  - major change: migrate from std::auto_ptr to std::unique_ptr
  - DeVeloPhiType: 
