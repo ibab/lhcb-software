@@ -59,6 +59,7 @@ StatusCode Rich::ParticleProperties::initialize()
   m_particleMass[Rich::Pion]     = ppSvc->find("pi+")->mass()/Gaudi::Units::MeV;
   m_particleMass[Rich::Kaon]     = ppSvc->find("K+" )->mass()/Gaudi::Units::MeV;
   m_particleMass[Rich::Proton]   = ppSvc->find("p+" )->mass()/Gaudi::Units::MeV;
+  m_particleMass[Rich::Deuteron] = ppSvc->find("deuteron" )->mass()/Gaudi::Units::MeV;
 
   // cache squares of masses
   m_particleMassSq[Rich::Electron] = gsl_pow_2( m_particleMass[Rich::Electron] );
@@ -66,6 +67,7 @@ StatusCode Rich::ParticleProperties::initialize()
   m_particleMassSq[Rich::Pion]     = gsl_pow_2( m_particleMass[Rich::Pion]     );
   m_particleMassSq[Rich::Kaon]     = gsl_pow_2( m_particleMass[Rich::Kaon]     );
   m_particleMassSq[Rich::Proton]   = gsl_pow_2( m_particleMass[Rich::Proton]   );
+  m_particleMassSq[Rich::Deuteron] = gsl_pow_2( m_particleMass[Rich::Deuteron]   );
 
   // release service
   sc = release(ppSvc);
@@ -76,12 +78,14 @@ StatusCode Rich::ParticleProperties::initialize()
     m_pidTypes.clear();
     for ( const auto& S : m_pidTypesJO )
     {
+      info() << "Particle types considered = " << S << endmsg;
       if      ( "electron"       == S ) { m_pidTypes.push_back(Rich::Electron); }
       else if ( "muon"           == S ) { m_pidTypes.push_back(Rich::Muon); }
       else if ( "pion"           == S ) { m_pidTypes.push_back(Rich::Pion); }
       else if ( "kaon"           == S ) { m_pidTypes.push_back(Rich::Kaon); }
       else if ( "proton"         == S ) { m_pidTypes.push_back(Rich::Proton); }
       else if ( "belowThreshold" == S ) { m_pidTypes.push_back(Rich::BelowThreshold); }
+      else if ( "deuteron"       == S ) { m_pidTypes.push_back(Rich::Deuteron); }
       else
       {
         return Error( "Unknown particle type from options " + S );
