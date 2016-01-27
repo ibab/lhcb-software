@@ -4,6 +4,7 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+!========================= DAQEvent v9r21 2016-01-27 =========================
 ! 2015-11-26 - Marco Clemencic
  - Removed (u)longlong typedef (see GAUDI-1125).
 
