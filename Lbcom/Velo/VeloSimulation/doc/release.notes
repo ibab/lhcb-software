@@ -3,6 +3,8 @@
 ! Responsible : Tomasz Szumlak
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+
+!========================= VeloSimulation v3r16 2016-01-27 =========================
 ! 2015-12-22 - Gerhard Raven
  - replace GSL with std::
  - replace VeloChargeThrehold with lambda function
@@ -13,7 +15,6 @@
  - prefer STL algorithms
  - qualify implementation of virtual functions with 'override'
  - prefer passing by & over by *
-
 
 !========================= VeloSimulation v3r15p1 2015-10-12 =========================
 ! 2015-08-04 - Gerhard Raven
