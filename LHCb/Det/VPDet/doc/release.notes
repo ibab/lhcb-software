@@ -3,6 +3,8 @@
 ! Responsible : Heinrich Schindler
 ! Purpose     : Detector element for upgraded VELO
 !-----------------------------------------------------------------------------
+
+!========================= VPDet v3r4 2016-01-27 =========================
 ! 2016-01-07 - Gerhard Raven
  - prefer std::unique_ptr over raw pointer + explicit delete
  - prefer SmartIF over raw pointer and explicit ref counting
