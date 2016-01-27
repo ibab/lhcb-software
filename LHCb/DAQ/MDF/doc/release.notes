@@ -5,6 +5,8 @@
 !               Contains also the data structures to control MEPs and
 !               MEP fragments
 !-----------------------------------------------------------------------------
+
+!========================= MDF v3r44 2016-01-27 =========================
 ! 2016-01-08 - Gerhard Raven
  - prefer SmartIF over raw interface pointer with explicit queryInterface / ref 
    count handling
