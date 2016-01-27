@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+!========================= LHCbKernel v16r0 2016-01-27 =========================
 ! 2016-01-27 - Chris Jones
  - Remove redundant Rich typedefs.
  - Add some more move semantics to RichRadIntersection.h
