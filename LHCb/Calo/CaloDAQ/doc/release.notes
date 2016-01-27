@@ -3,6 +3,8 @@
 ! Responsible : Olivier Deschamps
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
+
+!========================= CaloDAQ v4r39 2016-01-27 =========================
 ! 2015-12-07 - Gerhard Raven
  - CaloDataProviderFromTES:
    o avoid comparing pointers to 0, NULL
