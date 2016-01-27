@@ -4,7 +4,7 @@
 #=====================================================================
 
 package           RichKernel
-version           v7r61
+version           v7r62
 
 # ================ structure ==============================================
 branches RichKernel cmt dict doc src python
