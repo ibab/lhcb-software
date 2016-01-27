@@ -4,6 +4,7 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output)
 !-----------------------------------------------------------------------------
 
+!========================= RecEvent v2r56 2016-01-27 =========================
 ! 2015-12-13 - Michel De Cian
  - Add location for TrackSummary to RecSummary.
 
