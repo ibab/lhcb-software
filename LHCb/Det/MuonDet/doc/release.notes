@@ -2,6 +2,8 @@
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
+
+!========================= MuonDet v10r0 2016-01-27 =========================
 ! 2016-01-08 - Gerhard Raven
  - major change: make IMuonFastPosToo::calcTilePos const, use extend_interfaces
    x requires matching versions of MuonTrackRec and MuonTools
