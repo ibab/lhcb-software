@@ -3,6 +3,8 @@
 ! Responsible : Mark Tobin
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
+
+!========================= STMonitors v4r5 2016-01-27 =========================
 ! 2015-12-22 - Gerhard Raven
  - replace GSL with std::
 
