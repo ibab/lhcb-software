@@ -4,6 +4,8 @@
 !                  from the XML description of the data object classes.
 ! Package manager: Stefan Roiser
 !--------------------------------------------------------------------------------
+
+!========================= GaudiObjDesc v11r24 2016-01-27 =========================
 ! 2016-01-26 - Gerhard Raven
  - avoid creating (temporary) strings in enum->string conversion
 
