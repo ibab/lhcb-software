@@ -1,7 +1,7 @@
 ################################################################################
 # Package: STCheckers
 ################################################################################
-gaudi_subdir(STCheckers v4r4)
+gaudi_subdir(STCheckers v4r5)
 
 gaudi_depends_on_subdirs(Det/STDet
                          Event/DigiEvent

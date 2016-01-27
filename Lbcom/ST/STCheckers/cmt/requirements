@@ -1,5 +1,5 @@
 package           STCheckers
-version           v4r4
+version           v4r5
 
 branches cmt doc src options root
 include_path none
