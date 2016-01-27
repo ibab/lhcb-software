@@ -3,6 +3,8 @@
 ! Responsible : Marco Cattaneo
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
+
+!========================= LHCbAlgs v3r8 2016-01-27 =========================
 ! 2016-01-07 - Gerhard Raven
  - prefer extends over direct virtual public inheritance
 
