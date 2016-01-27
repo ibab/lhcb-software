@@ -27,6 +27,7 @@ ChargedProtoCombineDLLsAlg::ChargedProtoCombineDLLsAlg( const std::string& name,
   , m_prCombDll(0xFFFF)
   , m_piCombDll(0xFFFF)
   , m_kaCombDll(0xFFFF)
+  , m_deCombDll(0xFFFF)
 {
 
   // context specific locations
@@ -47,6 +48,7 @@ ChargedProtoCombineDLLsAlg::ChargedProtoCombineDLLsAlg( const std::string& name,
   declareProperty("KaonDllDisable"      , m_kaDisable);
   declareProperty("ProtonDllDisable"    , m_piDisable);
   declareProperty("PionllDisable"       , m_prDisable);
+  declareProperty("DeuteronDllDisable"  , m_deDisable);
 
   m_maskTechnique["RICH"] = 0x1;
   m_maskTechnique["MUON"] = 0x2;
@@ -128,6 +130,8 @@ StatusCode ChargedProtoCombineDLLsAlg::initialize()
     Warning( "Not creating Combined DLL for kaon hypothesis", StatusCode::SUCCESS ).ignore();
   if ( 0 == m_prCombDll ) 
     Warning( "Not creating Combined DLL for proton hypothesis", StatusCode::SUCCESS ).ignore();
+  if ( 0 == m_deCombDll ) 
+    Warning( "Not creating Combined DLL for deuteron hypothesis", StatusCode::SUCCESS ).ignore();
 
   return scc;
 }
@@ -180,6 +184,7 @@ StatusCode ChargedProtoCombineDLLsAlg::execute()
       proto->addInfo( LHCb::ProtoParticle::CombDLLpi, 0 ); // by definition
       proto->addInfo( LHCb::ProtoParticle::CombDLLk,  combDLL.kaDLL-combDLL.piDLL );
       proto->addInfo( LHCb::ProtoParticle::CombDLLp,  combDLL.prDLL-combDLL.piDLL );
+      proto->addInfo( LHCb::ProtoParticle::CombDLLd,  combDLL.deDLL-combDLL.piDLL );
     }
     else
     { 
@@ -213,6 +218,8 @@ bool ChargedProtoCombineDLLsAlg::addRich( LHCb::ProtoParticle * proto,
       combDLL.kaDLL += proto->info ( LHCb::ProtoParticle::RichDLLk  , 0 );
     if( 0 != (m_prCombDll & rTechnique) ) 
       combDLL.prDLL += proto->info ( LHCb::ProtoParticle::RichDLLp  , 0 );
+    if( 0 != (m_deCombDll & rTechnique) ) 
+      combDLL.deDLL += proto->info ( LHCb::ProtoParticle::RichDLLd  , 0 );
     if ( msgLevel(MSG::VERBOSE) ) 
       verbose() << " -> Adding RICH info " << combDLL << endmsg;
   }

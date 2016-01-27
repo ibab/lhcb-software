@@ -125,6 +125,13 @@ StatusCode RichPIDsFromProtoParticlesAlg::execute()
         pid->setParticleDeltaLL(Rich::Pion,    (float)(*iP)->info(ProtoParticle::RichDLLpi,-999));
         pid->setParticleDeltaLL(Rich::Kaon,    (float)(*iP)->info(ProtoParticle::RichDLLk, -999));
         pid->setParticleDeltaLL(Rich::Proton,  (float)(*iP)->info(ProtoParticle::RichDLLp, -999));
+        pid->setParticleDeltaLL(Rich::Deuteron,(float)(*iP)->info(ProtoParticle::RichDLLd, -999));
+
+	if ( msgLevel(MSG::DEBUG) )
+	  {
+	    debug() << "Filled RichPIDs: " << (float)(*iP)->info(ProtoParticle::RichDLLpi,-999)  << " " << (float)(*iP)->info(ProtoParticle::RichDLLd, -999)  << endmsg;
+	  }
+
 
       } // has rich info
 
@@ -132,7 +139,7 @@ StatusCode RichPIDsFromProtoParticlesAlg::execute()
 
     if ( msgLevel(MSG::DEBUG) )
     {
-      debug() << "Created " << rpids->size() << " RichPIDs at " << m_richPIDloc << endmsg;
+      debug() << "Created XXX" << rpids->size() << " RichPIDs at " << m_richPIDloc << endmsg;
     }
 
   }

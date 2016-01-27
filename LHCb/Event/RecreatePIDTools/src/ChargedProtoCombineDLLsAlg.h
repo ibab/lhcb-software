@@ -68,19 +68,20 @@ private: // utility classes
   public:
     /// Standard constructor with initialisation value
     CombinedLL( const double init = 0 )
-      : elDLL(init), muDLL(init), piDLL(init), kaDLL(init), prDLL(init) {};
+      : elDLL(init), muDLL(init), piDLL(init), kaDLL(init), prDLL(init), deDLL(init) {};
     double elDLL; ///< Electron Log Likelihood
     double muDLL; ///< Muon Log Likelihood
     double piDLL; ///< Pion Log Likelihood
     double kaDLL; ///< Kaon Log Likelihood
     double prDLL; ///< Proton Log Likelihood
+    double deDLL; ///< Deuteron Log Likelihood
   public:
     /// Implement ostream << method
     friend inline std::ostream& operator << ( std::ostream& s,
                                               const CombinedLL& dlls )
     {
       return s << "[ " << dlls.elDLL << " " << dlls.muDLL << " " 
-               << dlls.piDLL << " " << dlls.kaDLL << " " << dlls.prDLL << " ]";
+               << dlls.piDLL << " " << dlls.kaDLL << " " << dlls.prDLL << " " << dlls.deDLL << " ]";
     }
   };
 
@@ -98,8 +99,8 @@ private: // methods
 private: // data
 
   std::string m_protoPath;    ///< Location in TES of ProtoParticles
-  std::vector<std::string>m_elDisable,m_muDisable,m_kaDisable,m_prDisable,m_piDisable;
-  int                     m_elCombDll,m_muCombDll,m_prCombDll,m_piCombDll,m_kaCombDll;
+  std::vector<std::string>m_elDisable,m_muDisable,m_kaDisable,m_prDisable,m_piDisable,m_deDisable;
+  int                     m_elCombDll,m_muCombDll,m_prCombDll,m_piCombDll,m_kaCombDll,m_deCombDll;
   std::map<std::string,int> m_maskTechnique;
 };
 

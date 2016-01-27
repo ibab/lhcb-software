@@ -117,6 +117,7 @@ void ChargedProtoParticleAddRichInfo::updateRICH( ProtoParticle * proto ) const
   proto->addInfo( LHCb::ProtoParticle::RichDLLk,   richPID->particleDeltaLL(Rich::Kaon) );
   proto->addInfo( LHCb::ProtoParticle::RichDLLp,   richPID->particleDeltaLL(Rich::Proton) );
   proto->addInfo( LHCb::ProtoParticle::RichDLLbt,  richPID->particleDeltaLL(Rich::BelowThreshold) );
+  proto->addInfo( LHCb::ProtoParticle::RichDLLd,   richPID->particleDeltaLL(Rich::Deuteron) );
 
   // Store History
   proto->addInfo( LHCb::ProtoParticle::RichPIDStatus, richPID->pidResultCode() );
