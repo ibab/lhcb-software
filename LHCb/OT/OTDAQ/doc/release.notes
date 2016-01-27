@@ -2,6 +2,8 @@
 ! Package         : OTDAQ
 ! Package manager : A.Kozlinskiy
 !------------------------------------------------------------------------------
+
+!========================= OTDAQ v8r0 2016-01-27 =========================
 ! 2016-01-06 - Gerhard Raven
  - major change: IOTReadOutWindow, OTReadoutWindow
     o add const
