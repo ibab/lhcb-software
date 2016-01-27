@@ -13,6 +13,7 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiCore v11r29 2016-01-27 =========================
 ! 2016-01-16 - Vanya Belyaev
  - ParticleProperties: make more explicit prinout for invalid pids 
 
