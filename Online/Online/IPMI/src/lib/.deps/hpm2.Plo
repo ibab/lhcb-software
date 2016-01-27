@@ -1,0 +1,162 @@
+hpm2.lo: hpm2.c ../include/ipmitool/bswap.h ../config.h \
+ /usr/include/byteswap.h /usr/include/bits/byteswap.h \
+ /usr/include/bits/wordsize.h ../include/ipmitool/hpm2.h \
+ /cvmfs/lhcb.cern.ch/lib/lcg/releases/gcc/4.8.4/x86_64-slc6/lib/gcc/x86_64-unknown-linux-gnu/4.8.4/include/stdint.h \
+ /usr/include/stdint.h /usr/include/features.h /usr/include/sys/cdefs.h \
+ /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h \
+ /usr/include/bits/wchar.h ../include/ipmitool/ipmi_intf.h \
+ ../include/ipmitool/ipmi.h /usr/include/stdlib.h \
+ /cvmfs/lhcb.cern.ch/lib/lcg/releases/gcc/4.8.4/x86_64-slc6/lib/gcc/x86_64-unknown-linux-gnu/4.8.4/include/stddef.h \
+ /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h \
+ /usr/include/endian.h /usr/include/bits/endian.h \
+ /usr/include/sys/types.h /usr/include/bits/types.h \
+ /usr/include/bits/typesizes.h /usr/include/time.h \
+ /usr/include/sys/select.h /usr/include/bits/select.h \
+ /usr/include/bits/sigset.h /usr/include/bits/time.h \
+ /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h \
+ /usr/include/alloca.h /usr/include/stdio.h /usr/include/libio.h \
+ /usr/include/_G_config.h /usr/include/wchar.h \
+ /cvmfs/lhcb.cern.ch/lib/lcg/releases/gcc/4.8.4/x86_64-slc6/lib/gcc/x86_64-unknown-linux-gnu/4.8.4/include/stdarg.h \
+ /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
+ /usr/include/bits/stdio.h /usr/include/inttypes.h \
+ /usr/include/netinet/in.h /usr/include/sys/socket.h \
+ /usr/include/sys/uio.h /usr/include/bits/uio.h \
+ /usr/include/bits/socket.h /usr/include/bits/sockaddr.h \
+ /usr/include/asm/socket.h /usr/include/asm-generic/socket.h \
+ /usr/include/asm/sockios.h /usr/include/asm-generic/sockios.h \
+ /usr/include/bits/in.h ../include/ipmitool/helper.h \
+ /usr/include/string.h /usr/include/xlocale.h /usr/include/bits/string.h \
+ /usr/include/bits/string2.h ../include/ipmitool/ipmi_cc.h \
+ ../include/ipmitool/ipmi_oem.h ../include/ipmitool/ipmi_constants.h \
+ /usr/include/arpa/inet.h ../include/ipmitool/log.h /usr/include/syslog.h \
+ /usr/include/sys/syslog.h /usr/include/bits/syslog-path.h
+
+../include/ipmitool/bswap.h:
+
+../config.h:
+
+/usr/include/byteswap.h:
+
+/usr/include/bits/byteswap.h:
+
+/usr/include/bits/wordsize.h:
+
+../include/ipmitool/hpm2.h:
+
+/cvmfs/lhcb.cern.ch/lib/lcg/releases/gcc/4.8.4/x86_64-slc6/lib/gcc/x86_64-unknown-linux-gnu/4.8.4/include/stdint.h:
+
+/usr/include/stdint.h:
+
+/usr/include/features.h:
+
+/usr/include/sys/cdefs.h:
+
+/usr/include/gnu/stubs.h:
+
+/usr/include/gnu/stubs-64.h:
+
+/usr/include/bits/wchar.h:
+
+../include/ipmitool/ipmi_intf.h:
+
+../include/ipmitool/ipmi.h:
+
+/usr/include/stdlib.h:
+
+/cvmfs/lhcb.cern.ch/lib/lcg/releases/gcc/4.8.4/x86_64-slc6/lib/gcc/x86_64-unknown-linux-gnu/4.8.4/include/stddef.h:
+
+/usr/include/bits/waitflags.h:
+
+/usr/include/bits/waitstatus.h:
+
+/usr/include/endian.h:
+
+/usr/include/bits/endian.h:
+
+/usr/include/sys/types.h:
+
+/usr/include/bits/types.h:
+
+/usr/include/bits/typesizes.h:
+
+/usr/include/time.h:
+
+/usr/include/sys/select.h:
+
+/usr/include/bits/select.h:
+
+/usr/include/bits/sigset.h:
+
+/usr/include/bits/time.h:
+
+/usr/include/sys/sysmacros.h:
+
+/usr/include/bits/pthreadtypes.h:
+
+/usr/include/alloca.h:
+
+/usr/include/stdio.h:
+
+/usr/include/libio.h:
+
+/usr/include/_G_config.h:
+
+/usr/include/wchar.h:
+
+/cvmfs/lhcb.cern.ch/lib/lcg/releases/gcc/4.8.4/x86_64-slc6/lib/gcc/x86_64-unknown-linux-gnu/4.8.4/include/stdarg.h:
+
+/usr/include/bits/stdio_lim.h:
+
+/usr/include/bits/sys_errlist.h:
+
+/usr/include/bits/stdio.h:
+
+/usr/include/inttypes.h:
+
+/usr/include/netinet/in.h:
+
+/usr/include/sys/socket.h:
+
+/usr/include/sys/uio.h:
+
+/usr/include/bits/uio.h:
+
+/usr/include/bits/socket.h:
+
+/usr/include/bits/sockaddr.h:
+
+/usr/include/asm/socket.h:
+
+/usr/include/asm-generic/socket.h:
+
+/usr/include/asm/sockios.h:
+
+/usr/include/asm-generic/sockios.h:
+
+/usr/include/bits/in.h:
+
+../include/ipmitool/helper.h:
+
+/usr/include/string.h:
+
+/usr/include/xlocale.h:
+
+/usr/include/bits/string.h:
+
+/usr/include/bits/string2.h:
+
+../include/ipmitool/ipmi_cc.h:
+
+../include/ipmitool/ipmi_oem.h:
+
+../include/ipmitool/ipmi_constants.h:
+
+/usr/include/arpa/inet.h:
+
+../include/ipmitool/log.h:
+
+/usr/include/syslog.h:
+
+/usr/include/sys/syslog.h:
+
+/usr/include/bits/syslog-path.h:
