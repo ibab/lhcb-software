@@ -362,10 +362,11 @@ if root_files :
 
 ## exit it! 
 if arguments.batch :
+    
     ## nothing to do 
     logger.debug  ('Bye, bye...')
-    exit()
-    
+    exit () 
+
 elif arguments.embed :
 
     ## the only one option up to Ostap v1r9
