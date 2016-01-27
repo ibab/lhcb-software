@@ -1,7 +1,7 @@
 ################################################################################
 # Package: CaloDet
 ################################################################################
-gaudi_subdir(CaloDet v10r20p1)
+gaudi_subdir(CaloDet v10r21)
 
 gaudi_depends_on_subdirs(Calo/CaloKernel
                          Det/DetDesc
