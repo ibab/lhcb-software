@@ -3,7 +3,7 @@
 # Maintainer : Chris Jones
 #=====================================================================
 package           EventPacker
-version           v5r8
+version           v5r9
 
 #=====================================================================
 # Structure, i.e. directories to process.

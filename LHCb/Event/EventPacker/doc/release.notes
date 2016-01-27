@@ -4,9 +4,10 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!========================= EventPacker v5r9 2016-01-27 =========================
 ! 2016-01-22 - Chris Jones
  - Get rid of some unneccessary dynamic casts during the event loop in
-   various packers and unpakers.
+   various packers and unpackers.
  - A few more C++11 updates.
  - Add some missing variable initialisation in PackPrimaryVertex.
 
