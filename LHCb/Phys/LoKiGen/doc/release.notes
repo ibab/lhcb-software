@@ -13,6 +13,7 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiGen v10r23 2016-01-27 =========================
 ! 2016-01-25 - Vanya Belyaev
  - add Graphviz into CMT&CMAKE 
 
