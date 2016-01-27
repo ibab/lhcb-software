@@ -6,6 +6,7 @@
 
 ! 2016-01-27 - Chris Jones
  - Remove redundant Rich typedefs.
+ - Add some more move semantics to RichRadIntersection.h
 
 ! 2016-01-26 - Chris Jones
  - Remove variable name from default methods, to avoid unused variable warnings.

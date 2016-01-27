@@ -18,7 +18,9 @@ static const InterfaceID IID_IRateFromTCK ( "IRateFromTCK", 2, 0 );
  *  @author Patrick Koppenburg
  *  @date   2011-08-10
  */
-class IRateFromTCK : virtual public IAlgTool {
+class IRateFromTCK : virtual public IAlgTool
+{
+
 public: 
 
   // Return the interface ID
@@ -31,8 +33,5 @@ public:
   /// Update
   virtual StatusCode runUpdate() = 0;  
 
-protected:
-
-private:
 };
 #endif // KERNEL_IRATEFROMTCK_H

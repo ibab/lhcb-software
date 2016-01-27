@@ -22,7 +22,9 @@ namespace LHCb
   class MCVeloFE;
 }
 
-class IMCVeloFEType : virtual public IAlgTool {
+class IMCVeloFEType : virtual public IAlgTool 
+{
+
 public:
 
     enum Types{ Signal=0,
@@ -32,10 +34,6 @@ public:
   static const InterfaceID& interfaceID() { return IID_IMCVeloFEType; }
 
   virtual void FEType(const LHCb::MCVeloFE* fe, int& feType)=0;
-
-protected:
-
-private:
 
 };
 #endif // VELOALGORITHMS_IMCVELOFETYPE_H

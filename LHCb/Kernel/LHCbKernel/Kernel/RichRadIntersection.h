@@ -56,9 +56,21 @@ namespace Rich
     /// Default destructor
     ~RadIntersection( ) = default; 
 
+    /// Default Copy Constructor
+    RadIntersection( const RadIntersection& ) = default;
+
+    /// Default Copy Operator
+    RadIntersection& operator=( const RadIntersection& ) = default;
+
+    /// Default Move Constructor
+    RadIntersection( RadIntersection&& ) = default;
+
+    /// Default Move Operator
+    RadIntersection& operator=( RadIntersection&& ) = default;
+
   public:
 
-    /// Constructor from entry and exit points and momentum vectors, and a pointer to a DeRichRadiator
+    /// Constructor from (copied) entry and exit points and momentum vectors, and a pointer to a DeRichRadiator
     RadIntersection( const Gaudi::XYZPoint  & entryPoint, ///< The radiator entry point
                      const Gaudi::XYZVector & entryVect,  ///< The direction vector at the entry point
                      const Gaudi::XYZPoint  & exitPoint,  ///< The radiator exit point
@@ -71,12 +83,31 @@ namespace Rich
       m_exitVect   ( exitVect   ),
       m_radiator   ( rad        ) { }
 
+    /// Constructor from (moved) entry and exit points and momentum vectors, and a pointer to a DeRichRadiator
+    RadIntersection( Gaudi::XYZPoint  && entryPoint, ///< The radiator entry point
+                     Gaudi::XYZVector && entryVect,  ///< The direction vector at the entry point
+                     Gaudi::XYZPoint  && exitPoint,  ///< The radiator exit point
+                     Gaudi::XYZVector && exitVect,   ///< The direction vector at the exit point
+                     const DeRichRadiator * rad      ///< Pointer to the intersected radiator volume
+                     ) :
+      m_entryPoint ( std::move(entryPoint) ),
+      m_entryVect  ( std::move(entryVect)  ),
+      m_exitPoint  ( std::move(exitPoint)  ),
+      m_exitVect   ( std::move(exitVect)   ),
+      m_radiator   ( rad        ) { }
+
   public:
 
     /// Set the entry point to the radiator
     inline void setEntryPoint ( const Gaudi::XYZPoint & entryPoint ) noexcept
     {
       m_entryPoint = entryPoint;
+    }
+
+    /// Set the entry point to the radiator
+    inline void setEntryPoint ( Gaudi::XYZPoint && entryPoint ) noexcept
+    {
+      m_entryPoint = std::move(entryPoint);
     }
 
     /// Get the entry point to the radiator
@@ -91,6 +122,12 @@ namespace Rich
       m_entryVect = entryV;
     }
 
+    /// Set the entry momentum vector to the radiator
+    inline void setEntryMomentum ( Gaudi::XYZVector && entryV ) noexcept
+    {
+      m_entryVect = std::move(entryV);
+    }
+
     /// Get the entry point to the radiator
     inline const Gaudi::XYZVector & entryMomentum () const noexcept
     {
@@ -103,6 +140,12 @@ namespace Rich
       m_exitPoint = exitPoint;
     }
 
+    /// Set the exit point of the radiator
+    inline void setExitPoint ( Gaudi::XYZPoint && exitPoint ) noexcept
+    {
+      m_exitPoint = std::move(exitPoint);
+    }
+
     /// Get the exit point to the radiator
     inline const Gaudi::XYZPoint & exitPoint () const noexcept
     {
@@ -113,6 +156,12 @@ namespace Rich
     inline void setExitMomentum ( const Gaudi::XYZVector & exitV ) noexcept
     {
       m_exitVect = exitV;
+    }
+
+    /// Set the exit momentum vector to the radiator
+    inline void setExitMomentum ( Gaudi::XYZVector && exitV ) noexcept
+    {
+      m_exitVect = std::move(exitV);
     }
 
     /// Get the entry point to the radiator
