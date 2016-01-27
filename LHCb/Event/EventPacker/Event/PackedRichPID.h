@@ -29,10 +29,12 @@ namespace LHCb
    */
   struct PackedRichPID
   {
+
     int pidResultCode{0};                      
     int dllEl{0},dllMu{0},dllPi{0},dllKa{0},dllPr{0};
     long long track{-1};          
     int dllBt{0};
+    int dllDe{0};
     long long key{0};
   };
 
@@ -65,7 +67,7 @@ namespace LHCb
   public:
 
     /// Default Packing Version
-    static char defaultPackingVersion() { return 3; }
+    static char defaultPackingVersion() { return 4; }
 
   public:
 
@@ -168,7 +170,7 @@ namespace LHCb
     /// Check if the given packing version is supported
     bool isSupportedVer( const char& ver ) const
     {
-      const bool OK = ( 0 <= ver && ver <= 3 );
+      const bool OK = ( 0 <= ver && ver <= 4 );
       if ( !OK )
       {
         std::ostringstream mess;

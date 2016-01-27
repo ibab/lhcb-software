@@ -24,6 +24,7 @@ void RichPIDPacker::pack( const Data & pid,
     ppid.dllKa = m_pack.deltaLL( pid.particleDeltaLL(Rich::Kaon)     );
     ppid.dllPr = m_pack.deltaLL( pid.particleDeltaLL(Rich::Proton)   );
     if ( ver > 0 ) ppid.dllBt = m_pack.deltaLL( pid.particleDeltaLL(Rich::BelowThreshold) );
+    if ( ver > 3 ) ppid.dllDe = m_pack.deltaLL( pid.particleDeltaLL(Rich::Deuteron) );
     if ( nullptr != pid.track() )
     {
       ppid.track = ( UNLIKELY( ver < 3 ) ?
@@ -73,6 +74,8 @@ void RichPIDPacker::unpack( const PackedData       & ppid,
     pid.setParticleDeltaLL( Rich::Proton,    (float)m_pack.deltaLL(ppid.dllPr) );
     if ( ver > 0 ) pid.setParticleDeltaLL( Rich::BelowThreshold,
                                            (float)m_pack.deltaLL(ppid.dllBt) );
+    if ( ver > 3 ) pid.setParticleDeltaLL( Rich::Deuteron,
+                                           (float)m_pack.deltaLL(ppid.dllDe) );
     if ( -1 != ppid.track )
     {
       int hintID(0), key(0);
