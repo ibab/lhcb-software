@@ -3,6 +3,7 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+!========================= L0DU v10r34p1 2016-01-27 =========================
 ! 2015-12-17 - Marco Cattaneo
  - Fix a clang warning ("using integer absolute value function 'abs' when
    argument is of floating point type")
