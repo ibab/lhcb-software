@@ -4,6 +4,7 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+!========================= HltDAQ v4r24 2016-01-27 =========================
 ! 2016-01-22 - Chris Jones
  - Add a work around to HltTrackingCoder to fix compilation with clang do to 
    the LLVM bug https://llvm.org/bugs/show_bug.cgi?id=23381.
@@ -16,7 +17,6 @@
  - In the case that too many objects are requested to be saved, write a dummy bank with version 99.
 
 !========================= HltDAQ v4r23 2015-12-17 =========================
-
 ! 2015-12-06 - Gerhard Raven
  - modernize code
    o prefer auto
