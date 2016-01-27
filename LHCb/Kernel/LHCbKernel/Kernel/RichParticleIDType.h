@@ -22,7 +22,7 @@ namespace Rich
 {
 
   /// Number of RICH particle types (Electron, Muon, Pion, Kaon, Proton and 'Below Threshold')
-  static const int NParticleTypes = 6;
+  static const int NParticleTypes = 7;
 
   //--------------------------------------------------------------------------
   /** @enum ParticleIDType
@@ -40,7 +40,8 @@ namespace Rich
       Pion,           ///< Represents pi+ or pi-
       Kaon,           ///< Represents K+ or K-
       Proton,         ///< Represents Pr+ or Pr-
-      BelowThreshold  ///< Particle type is below threshold
+      BelowThreshold, ///< Particle type is below threshold
+      Deuteron        ///< Represents d+ or d-   
     };
 
   /// Text conversion for Rich::ParticleIDType enumeration
