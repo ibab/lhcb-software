@@ -19,7 +19,8 @@ Rich::Rec::PhotonRecoBase::PhotonRecoBase( const std::string& type,
                                            const std::string& name,
                                            const IInterface* parent )
   : Rich::Rec::ToolBase ( type, name, parent ),
-    m_ckBiasCorrs( Rich::NRadiatorTypes, 0.0 )
+    m_ckBiasCorrs( Rich::NRadiatorTypes, 0.0 ),
+    m_deBeam     ( Rich::NRiches,    nullptr )
 {
   // declare interface
   declareInterface<IPhotonReconstruction>(this);

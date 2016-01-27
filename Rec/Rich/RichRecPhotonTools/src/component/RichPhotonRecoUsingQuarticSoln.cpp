@@ -28,15 +28,11 @@ PhotonRecoUsingQuarticSoln( const std::string& type,
   m_rejectAmbigPhots    ( Rich::NRadiatorTypes, false ),
   m_useAlignedMirrSegs  ( Rich::NRadiatorTypes, true  ),
   m_nQits               ( Rich::NRadiatorTypes, 3     ),
-  m_deBeam              ( Rich::NRiches               ),
   m_checkBeamPipe       ( Rich::NRadiatorTypes, true  ),
   m_checkPrimMirrSegs   ( Rich::NRadiatorTypes, false ),
   m_minActiveFrac       ( Rich::NRadiatorTypes, 0.2   ),
   m_minSphMirrTolIt     ( Rich::NRadiatorTypes        )
 {
-  // Initialise
-  m_deBeam[Rich::Rich1] = nullptr;
-  m_deBeam[Rich::Rich2] = nullptr;
 
   // job options
   declareProperty( "FindUnambiguousPhotons",    m_testForUnambigPhots         );

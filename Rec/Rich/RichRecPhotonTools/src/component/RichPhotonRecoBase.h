@@ -24,6 +24,9 @@
 #include "Kernel/RichSide.h"
 #include "Kernel/RichSmartID.h"
 
+// RichDet
+#include "RichDet/DeRichBeamPipe.h"
+
 namespace Rich
 {
   namespace Rec
@@ -82,7 +85,22 @@ namespace Rich
       }
 
       /// Access the emission point tool
-      inline const IPhotonEmissionPoint * emissPoint() const { return m_emissPoint; }
+      inline const IPhotonEmissionPoint * emissPoint() const noexcept 
+      {
+        return m_emissPoint; 
+      }
+
+      /// Access the DeRich beam pipe objects, creating as needed on demand
+      inline const DeRichBeamPipe* deBeam( const Rich::DetectorType rich ) const
+      {
+        if ( !m_deBeam[rich] )
+        {
+          m_deBeam[rich] = getDet<DeRichBeamPipe>( Rich::Rich1 == rich ?
+                                                   DeRichLocations::Rich1BeamPipe :
+                                                   DeRichLocations::Rich2BeamPipe );
+        }
+        return m_deBeam[rich];
+      }
 
     protected: // data
 
@@ -101,6 +119,9 @@ namespace Rich
 
       /// Estimated emission point tool
       const IPhotonEmissionPoint * m_emissPoint = nullptr;
+
+      /// RICH beampipe object for each radiator
+      mutable std::vector<const DeRichBeamPipe*> m_deBeam;
 
     };
 

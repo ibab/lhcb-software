@@ -4,6 +4,10 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2016-01-27 - Chris Jones
+ - Move deBeam() method from RichPhotonRecoUsingQuarticSoln to shared
+   base class RichPhotonRecoBase.
+
 ! 2016-01-24 - Chris Jones
  - Comment out all messaging calls in the Photon Creators, for CPU reasons.
 

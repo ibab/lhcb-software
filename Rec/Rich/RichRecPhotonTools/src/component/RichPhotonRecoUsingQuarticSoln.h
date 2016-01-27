@@ -42,10 +42,9 @@
 #include "vdt/asin.h"
 
 // RichDet
-#include "RichDet/DeRichSphMirror.h"
 #include "RichDet/DeRich1.h"
 #include "RichDet/DeRich2.h"
-#include "RichDet/DeRichBeamPipe.h"
+#include "RichDet/DeRichSphMirror.h"
 
 // from GSL
 #include "gsl/gsl_math.h"
@@ -146,18 +145,6 @@ namespace Rich
                                     Gaudi::XYZPoint & emissionPoint,
                                     float & fraction ) const;
 
-      /// Access the DeRich beam pipe objects, creating as needed on demand
-      inline const DeRichBeamPipe* deBeam( const Rich::DetectorType rich ) const
-      {
-        if ( !m_deBeam[rich] )
-        {
-          m_deBeam[rich] = getDet<DeRichBeamPipe>( Rich::Rich1 == rich ?
-                                                   DeRichLocations::Rich1BeamPipe :
-                                                   DeRichLocations::Rich2BeamPipe );
-        }
-        return m_deBeam[rich];
-      }
-
     private: // data
 
       /// Rich1 and Rich2 detector elements
@@ -239,9 +226,6 @@ namespace Rich
 
       /// Flag to turn on/off the aerogel to gas refraction correction for aerogel photons
       bool m_applyAeroRefractCorr;
-
-      /// RICH beampipe object for each radiator
-      mutable std::vector<const DeRichBeamPipe*> m_deBeam;
 
       /// Turn on/off the checking of photon trajectories against the beam pipe
       std::vector<bool> m_checkBeamPipe;
