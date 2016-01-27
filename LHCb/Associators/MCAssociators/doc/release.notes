@@ -3,6 +3,8 @@
 ! Responsible : Vladimir Gligorov
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+
+!========================= MCAssociators v1r6 2016-01-27 =========================
 ! 2016-01-06 - Gerhard Raven
  - make MCAssociation 'final' and remove virtual destructor
  - prefer direct member initialization
