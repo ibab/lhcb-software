@@ -1,6 +1,8 @@
 ! Package     : OTDet
 ! Responsible : Alexandr Kozlinskiy, Lucia Grillo
 !--------------------------------------------------------------------------
+
+!========================= OTDet v9r0 2016-01-27 =========================
 ! 2016-01-03 - Gerhard Raven
  - major change: migrate from std::auto_ptr to std::unique_ptr
  - migrate from StaticArray to boost::container::static_vector
