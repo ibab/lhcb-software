@@ -3,6 +3,8 @@
 ! package manager : Marco Clemencic
 ! purpose:          Component library for Detector Description Services
 ! ====================================================================
+
+!========================= DetDescSvc v4r0 2016-01-27 =========================
 ! 2016-01-07 Gerhard Raven
  - prefer extends over pure virtual inheritance, and use extends' version
    of queryInterface

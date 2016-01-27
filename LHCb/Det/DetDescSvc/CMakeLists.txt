@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DetDescSvc
 ################################################################################
-gaudi_subdir(DetDescSvc v3r8p2)
+gaudi_subdir(DetDescSvc v4r0)
 
 gaudi_depends_on_subdirs(Det/DetDesc
                          GaudiAlg
