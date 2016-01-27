@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DetCondExample
 ################################################################################
-gaudi_subdir(DetCondExample v11r14p1)
+gaudi_subdir(DetCondExample v11r15)
 
 gaudi_depends_on_subdirs(Det/DetCond
                          Det/DetDesc
