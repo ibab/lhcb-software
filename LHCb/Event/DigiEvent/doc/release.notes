@@ -4,6 +4,7 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+!========================= DigiEvent v4r5 2016-01-27 =========================
 ! 2015-12-13 - Heinrich Schindler
  - Add location for corrected HC digits.
 
