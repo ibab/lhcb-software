@@ -13,7 +13,6 @@ block = """
 # Ostap.MiscDeco            DEBUG   Canvas --> batch.png
 # Ostap.MiscDeco            DEBUG   Canvas --> batch.eps
 # Ostap.MiscDeco            DEBUG   Canvas --> batch.C
-# Ostap                     DEBUG   EXIT AT BATCH!
 """
 findReferenceBlock(block)
   </text></argument>
