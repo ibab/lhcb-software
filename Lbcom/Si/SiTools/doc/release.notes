@@ -1,6 +1,8 @@
 Package         : Si/SiTools
 Package manager : Matt Needham
 !------------------------------------------------------------------------------
+
+!========================= SiTools v1r10 2016-01-27 =========================
 ! 2015-12-21 - Gerhard Raven
  - replace GSL with std:: 
  - prefer service<> and SmartIF over svc<> and raw pointer

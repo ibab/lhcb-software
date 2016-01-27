@@ -3,7 +3,7 @@
 # Maintainer : Matt Needham
 #============================================================================
 package           SiTools
-version           v1r9p1
+version           v1r10
 
 branches          cmt doc src
 include_path      none
