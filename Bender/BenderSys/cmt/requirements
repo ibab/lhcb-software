@@ -28,9 +28,9 @@ author        Vanya BELYAEV
 # =============================================================================
 # TEMPORARY stuff
 # =============================================================================
-use           LHCbMath       v3r60   Kernel
-use           AnalysisPython v2r39   Phys 
-use           Ostap          v1r11   Analysis
+#use           LHCbMath       v3r60   Kernel
+#use           AnalysisPython v2r39   Phys 
+#3use           Ostap          v1r11   Analysis
 # =============================================================================
 
 
