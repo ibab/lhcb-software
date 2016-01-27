@@ -3,6 +3,8 @@
 ! Purpose     : Interface to the xml description
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
+
+!========================= FTDet v2r12 2016-01-27 =========================
 ! 2015-12-21 - Gerhard Raven
  - remove unneeded dependency on GSL
 
