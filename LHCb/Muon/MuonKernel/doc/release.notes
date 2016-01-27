@@ -1,6 +1,7 @@
 Package MuonKernel
 Package manager: A.Tsaregorodtsev
 
+!========================= MuonKernel v5r0 2016-01-27 =========================
 ! 2016-01-03 - Gerhard Raven
  - remove obsolete and unused MuonTile class
 
