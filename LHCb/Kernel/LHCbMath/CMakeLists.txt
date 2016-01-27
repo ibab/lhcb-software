@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LHCbMath
 ################################################################################
-gaudi_subdir(LHCbMath v3r60)
+gaudi_subdir(LHCbMath v3r61)
 
 gaudi_depends_on_subdirs(GaudiGSL
                          GaudiKernel

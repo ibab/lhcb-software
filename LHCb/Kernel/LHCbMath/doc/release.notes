@@ -6,6 +6,7 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r61 2016-01-27 =========================
 ! 2016-01-21 - Marco Cattaneo
  - Remove instrset_detect.cpp, instrset.h, now available from VectorClass
  - Protect a gcc specific pragma to silence a clang warning 
