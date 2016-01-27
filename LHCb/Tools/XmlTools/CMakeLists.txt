@@ -1,7 +1,7 @@
 ################################################################################
 # Package: XmlTools
 ################################################################################
-gaudi_subdir(XmlTools v6r8p2)
+gaudi_subdir(XmlTools v6r9)
 
 gaudi_depends_on_subdirs(GaudiKernel)
 

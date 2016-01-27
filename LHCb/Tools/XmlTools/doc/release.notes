@@ -3,6 +3,8 @@
 ! Responsible : Marco Clemencic / Sebastien Ponce
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
+
+!========================= XmlTools v6r9 2016-01-27 =========================
 ! 2016-01-06 - Gerhard Raven
  - prefer extend_interfaces over virtual public inheritance
    and explicit InterfaceID + queryInterface 
