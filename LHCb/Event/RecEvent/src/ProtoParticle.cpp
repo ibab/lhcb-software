@@ -76,6 +76,7 @@ LHCb::ProtoParticle::removeCombinedInfo()
   erased += this->eraseInfo( LHCb::ProtoParticle::CombDLLk  );
   erased += this->eraseInfo( LHCb::ProtoParticle::CombDLLp  );
   erased += this->eraseInfo( LHCb::ProtoParticle::NoPID     );
+  erased += this->eraseInfo( LHCb::ProtoParticle::CombDLLd  );
   return erased;
 }
 
@@ -90,6 +91,7 @@ LHCb::ProtoParticle::removeRichInfo()
   erased += this->eraseInfo( LHCb::ProtoParticle::RichDLLk );
   erased += this->eraseInfo( LHCb::ProtoParticle::RichDLLp );
   erased += this->eraseInfo( LHCb::ProtoParticle::RichDLLbt );
+  erased += this->eraseInfo( LHCb::ProtoParticle::RichDLLd );
   erased += this->eraseInfo( LHCb::ProtoParticle::RichPIDStatus );
   // Set RichPID pointer to NULL
   this->setRichPID(NULL);
@@ -215,6 +217,7 @@ LHCb::ProtoParticle::convertExtraInfo(const std::string& name)
   if ( "RichDLLp"          == name ) { return LHCb::ProtoParticle::RichDLLp;  }
   if ( "RichPIDStatus"     == name ) { return LHCb::ProtoParticle::RichPIDStatus; }
   if ( "RichDLLbt"         == name ) { return LHCb::ProtoParticle::RichDLLbt; }
+  if ( "RichDLLd"          == name ) { return LHCb::ProtoParticle::RichDLLd;  }
   if ( "MuonMuLL"          == name ) { return LHCb::ProtoParticle::MuonMuLL; }
   if ( "MuonBkgLL"         == name ) { return LHCb::ProtoParticle::MuonBkgLL; }
   if ( "MuonNShared"       == name ) { return LHCb::ProtoParticle::MuonNShared; }

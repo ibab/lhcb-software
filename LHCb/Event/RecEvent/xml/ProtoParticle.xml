@@ -47,6 +47,7 @@
         <enumval name="RichDLLp"       value="104"  desc="The RICH delta log likelihood value for the proton hypothesis"/>
         <enumval name="RichPIDStatus"  value="105"  desc="The RichPID bit packed PID status word"/>
         <enumval name="RichDLLbt"      value="106"  desc="The RICH delta log likelihood value for the 'Below Threshold' hypothesis"/>
+        <enumval name="RichDLLd"       value="107"  desc="The RICH delta log likelihood value for the deuteron hypothesis"/>
 
         <enumval name="MuonMuLL"       value="200"  desc="The log likelihood from the MUON system for the ProtoParticle to be a muon"/>
         <enumval name="MuonBkgLL"      value="201"  desc="The log likelihood from the MUON system for the ProtoParticle to be background"/>
@@ -129,6 +130,7 @@
         <enumval name="CombDLLpi"       value="602"  desc="The combined delta log likelihood value for the pion hypothesis"/>
         <enumval name="CombDLLk"        value="603"  desc="The combined delta log likelihood value for the kaon hypothesis"/>
         <enumval name="CombDLLp"        value="604"  desc="The combined delta log likelihood value for the proton hypothesis"/>
+        <enumval name="CombDLLd"        value="605"  desc="The combined delta log likelihood value for the deuteron hypothesis"/>
 
         <enumval name="ProbNNe"         value="700"  desc="The ANN probability for the electron hypothesis"/>
         <enumval name="ProbNNmu"        value="701"  desc="The ANN probability for the muon hypothesis"/>
