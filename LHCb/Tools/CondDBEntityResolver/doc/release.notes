@@ -4,6 +4,8 @@
 ! Purpose     : Implement the IXmlEntityResolver interface to be able to use
 !               CondDB URLs into XML documents
 !-----------------------------------------------------------------------------
+
+!========================= CondDBEntityResolver v5r10 2016-01-27 =========================
 ! 2016-01-04 - Gerhard Raven
  - reduce the amount of copying when reading compressed items, and a-priori
    determine the required output buffer size so that there is no need to allocate
