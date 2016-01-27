@@ -3,7 +3,7 @@
 # Maintainer : Jaap Panman, Rob Lambert
 #=====================================================================
 package           FSRAlgs
-version           v1r9
+version           v2r0
 
 #=====================================================================
 # Structure, i.e. directories to process. 

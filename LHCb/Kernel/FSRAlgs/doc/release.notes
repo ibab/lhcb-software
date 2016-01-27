@@ -4,6 +4,7 @@
 ! Purpose     : Generic FSR manipulation and creation algorithms
 !-----------------------------------------------------------------------------
 
+!========================= FSRAlgs v2r0 2016-01-27 =========================
 ! 2016-01-25 - Davide Fazzini
  - Added GenFSRMerge algorithm, requiring tools in SimComponents
 
