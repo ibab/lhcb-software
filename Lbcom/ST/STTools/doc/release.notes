@@ -2,6 +2,8 @@
 ! Package         : ST/STTools
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
+
+!========================= STTools v4r19 2016-01-27 =========================
 ! 2015-12-21 - Gerhard Raven
  - replace gsl_ with std::
  - prefer service<T> and SmartIF over svc<T> and raw pointer
