@@ -3,8 +3,11 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program">   <text>bender</text></argument>
   <argument name="args"><set>
-      <text>-b</text>
+      <text>../batch.py</text>
       <text>/lhcb/LHCb/Collision12/PSIX.MDST/00037249/0000/00037249_00000090_1.psix.mdst</text>
+      <text>-b</text>
+      <text>-w</text>
+      <text>-t=MyTuples.root</text>
   </set></argument>
 </extension>
 

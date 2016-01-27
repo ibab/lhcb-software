@@ -220,9 +220,13 @@ def configure ( config ) :
     daVinci = DaVinci (
         DataType    = config.DataType    ,
         Simulation  = config.Simulation  ,
-        Lumi        = config.Lumi               
+        Lumi        = config.Lumi        ,  
         )
     
+    if hasattr ( config , 'TupleFile' ) and config.TupleFile :
+        logger.info ( 'Define TupleFile to be %s' % config.TupleFile )
+        daVinci.TupleFile = config.TupleFile 
+
     if config.MicroDST or 'mdst' == ext or 'MDST' == ext or 'uDST' == ext :
         logger.info ( 'Define input type as micro-DST' )
         daVinci.InputType = 'MDST'
