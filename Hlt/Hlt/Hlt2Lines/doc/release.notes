@@ -8,6 +8,29 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-01-27 - Patrick Spradlin
+ - Changed the mass cut variable for combiners TagDecay and TagDecayWithNeutral,
+   simple two-body combiners used in D* and Sigma_c reconstruction.  These
+   combiners formerly cut on Delta m, the difference between the parent mass
+   and the mass of its first decay product.  Use of this variable requires
+   that the decay descriptors must be written with the decay products in a
+   particular order, which is fragile and prone to errors.  The combiners were
+   changed to cut on the energy release, Q, instead of Delta m.  Since the
+   masses of all of the decay products are treated symmetrically in the
+   calculation of Q, the decay descriptors no longer need a specific ordering
+   of the decay produts.  Since these combiners are widely used in CharmHad
+   and PID, many lines are affected by this change:
+    M       python/Hlt2Lines/CharmHad/D2HHPi0Lines.py
+    M       python/Hlt2Lines/CharmHad/XSecLines.py
+    M       python/Hlt2Lines/CharmHad/D02HHLines.py
+    M       python/Hlt2Lines/CharmHad/CharmSpectroscopyLines.py
+    M       python/Hlt2Lines/CharmHad/D2V0V0Lines.py
+    M       python/Hlt2Lines/CharmHad/D2HHKsLines.py
+    M       python/Hlt2Lines/CharmHad/D02HHHHLines.py
+    M       python/Hlt2Lines/CharmHad/D2HHLines.py
+    M       python/Hlt2Lines/CharmHad/Stages.py
+    M       python/Hlt2Lines/PID/Lines.py
+
 ! 2016-01-26 - Rosen Matev
  - Fix bug from yesterday's commit
 

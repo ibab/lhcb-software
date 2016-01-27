@@ -15,6 +15,10 @@ __author__  = "Simone STRACKA simone.stracka@cern.ch ; Maurizio MARTINELLI mauri
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
 
+## Temporary local definition of particle masses.  Used to adapt TagDecay cut
+## variables from from Delta M to Q.
+_local_m_pip = 139.57018 * MeV
+
 class CharmHadD2HHPi0Lines() :
     def localcuts(self) : 
         return { 
@@ -58,18 +62,18 @@ class CharmHadD2HHPi0Lines() :
               'VCHI2PDOF_MAX'     : 20,
               },
             'DstD02HHPi0R' : {
-              'DeltaM_AM_MIN'    : -999 * MeV,
-              'DeltaM_AM_MAX'    : 195 * MeV,
-              'DeltaM_MIN'       : -999 * MeV,
-              'DeltaM_MAX'       : 185 * MeV,
+              'Q_AM_MIN'         : -999 * MeV,
+              'Q_AM_MAX'         : 195 * MeV - _local_m_pip,
+              'Q_M_MIN'          : -999 * MeV,
+              'Q_M_MAX'          : 185 * MeV - _local_m_pip,
               'TagVCHI2PDOF_MAX' : 10.0,
               'TisTosSpec'       : "Hlt1.*Track.*Decision%TOS",  # was MVA
               },                
             'DstD02HHPi0M' : {
-              'DeltaM_AM_MIN'    : -999 * MeV,
-              'DeltaM_AM_MAX'    : 195 * MeV,
-              'DeltaM_MIN'       : -999 * MeV,
-              'DeltaM_MAX'       : 185 * MeV,
+              'Q_AM_MIN'         : -999 * MeV,
+              'Q_AM_MAX'         : 195 * MeV - _local_m_pip,
+              'Q_M_MIN'          : -999 * MeV,
+              'Q_M_MAX'          : 185 * MeV - _local_m_pip,
               'TagVCHI2PDOF_MAX' : 10.0,
               'TisTosSpec'       : "Hlt1.*Track.*Decision%TOS",  # was MVA
               }

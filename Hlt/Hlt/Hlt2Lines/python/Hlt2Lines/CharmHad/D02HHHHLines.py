@@ -17,6 +17,12 @@ from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 import copy
 
+## Temporary local definition of pion mass.  Here to ease the transition
+## of cut variables from Delta M to Q.
+_local_m_pip = 139.57018 * MeV
+_local_m_mup = 105.65837 * MeV
+
+
 class CharmHadD02HHHHLines() :
     def localcuts(self) :
         ## The configuration dictionaries for the lines used to be generated
@@ -61,16 +67,16 @@ class CharmHadD02HHHHLines() :
 
         cutsForD2HHHHTag = {
                 'TagVCHI2PDOF_MAX'         :  15.0,
-                'DeltaM_AM_MIN'            :  0.0,
-                'DeltaM_AM_MAX'            :  190.0 * MeV,
-                'DeltaM_MIN'               :  0.0,
-                'DeltaM_MAX'               :  170.0 * MeV
+                'Q_AM_MIN'                 :  -5.0 * MeV,
+                'Q_AM_MAX'                 :  190.0 * MeV - _local_m_pip,
+                'Q_M_MIN'                  :  -5.0 * MeV,
+                'Q_M_MAX'                  :  170.0 * MeV - _local_m_pip
         }
         cutsForMuTag = {
-                                        'DeltaM_AM_MIN'            :  100.0 * MeV,
-                                        'DeltaM_MIN'               :  100.0 * MeV,
-                                        'DeltaM_AM_MAX'            :  5000. * MeV,
-                                        'DeltaM_MAX'               :  5000. * MeV,
+                                        'Q_AM_MIN'                 :  100.0 * MeV - _local_m_mup,
+                                        'Q_M_MIN'                  :  100.0 * MeV - _local_m_mup,
+                                        'Q_AM_MAX'                 :  5000. * MeV - _local_m_mup,
+                                        'Q_M_MAX'                  :  5000. * MeV - _local_m_mup,
                                         'TagVCHI2PDOF_MAX'         :  25.0
         }
         cuts = {   'D02HHHH'        : cutsForD2HHHHComb

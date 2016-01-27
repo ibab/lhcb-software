@@ -436,10 +436,10 @@ class PIDLines(Hlt2LinesConfigurableUser):
                  # Note the pointing cut is now in the tagger so that we can re-use
                  # the Lc candidates in the PIDCALIB lines for Lb -> Lc pi and Lb -> Lc mu nu
                  'Sc2LcPi' : {
-                                'DeltaM_AM_MIN'            :  150.0 * MeV,
-                                'DeltaM_MIN'               :  155.0 * MeV,
-                                'DeltaM_AM_MAX'            :  275.0 * MeV,
-                                'DeltaM_MAX'               :  270.0 * MeV,
+                                'Q_AM_MIN'                 :  (150.0 - 139.6) * MeV,
+                                'Q_M_MIN'                  :  (155.0 - 139.6) * MeV,
+                                'Q_AM_MAX'                 :  (275.0 - 139.6) * MeV,
+                                'Q_M_MAX'                  :  (270.0 - 139.6) * MeV,
                                 'TagVCHI2PDOF_MAX'         :  50.0},
                  'D02KPiPiPi' : { # Tuning from Maurizio
                                 'Trk_ALL_PT_MIN'           :  250 * MeV,
@@ -463,10 +463,10 @@ class PIDLines(Hlt2LinesConfigurableUser):
                                 'TisTosSpec'               :  "Hlt1.*Track.*Decision%TOS"},
                  'D02KPiPiPiTag' : {
                                 'TagVCHI2PDOF_MAX'         :  15.0,
-                                'DeltaM_AM_MIN'            :  0.0,
-                                'DeltaM_AM_MAX'            :  190.0 * MeV,
-                                'DeltaM_MIN'               :  0.0,
-                                'DeltaM_MAX'               :  170.0 * MeV},
+                                'Q_AM_MIN'                 :  0.0,
+                                'Q_AM_MAX'                 :  (190.0 - 139.6) * MeV,
+                                'Q_M_MIN'                  :  0.0,
+                                'Q_M_MAX'                  :  (170.0 - 139.6) * MeV},
                  'D02KPi' : {   'Trk_ALL_PT_MIN'           : 250.0 * MeV,   # Stripping has 250
                                 'Trk_ALL_P_MIN'            : 2.0 * GeV,     # Stripping has 2.0
                                 'Trk_ALL_MIPCHI2DV_MIN'    : 16.0,           # Stripping has 16
@@ -486,10 +486,10 @@ class PIDLines(Hlt2LinesConfigurableUser):
                                 'TisTosSpec'               : [ ]},#"Hlt1(Two)?TrackMVADecision%TOS"},
                  'D02KPiTag' : {
                                 'TagVCHI2PDOF_MAX'         :  15.0,         # Stripping has 13
-                                'DeltaM_AM_MIN'            :  0.0,          # Stripping has (ADAMASS('D*(2010)+')<75)
-                                'DeltaM_AM_MAX'            :  165.0 * MeV,  # Stripping has 165
-                                'DeltaM_MIN'               :  0.0,          # Stripping has 130
-                                'DeltaM_MAX'               :  155.0 * MeV}, # Stripping has 155
+                                'Q_AM_MIN'                 :  0.0,          # Stripping has (ADAMASS('D*(2010)+')<75)
+                                'Q_AM_MAX'                 :  (165.0 - 139.6) * MeV,  # Stripping has 165
+                                'Q_M_MIN'                  :  0.0,          # Stripping has 130
+                                'Q_M_MAX'                  :  (155.0 - 139.6) * MeV}, # Stripping has 155
                                                                             # Stripping has D* APT > 2.2 GeV
                  }
 

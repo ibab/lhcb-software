@@ -1,73 +1,81 @@
 from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 
+## Temporary local definition of particle masses.  Used to adapt TagDecay cut
+## variables from from Delta M to Q.
+_local_m_pip =  139.57018 * MeV
+_local_m_KS0 =  497.61400 * MeV
+_local_m_pp  =  938.27205 * MeV
+_local_m_Lam = 1115.68300 * MeV
+_local_m_eta =  547.86200 * MeV
+
 class CharmSpectroscopyLines :
     def localcuts(self) :
         return {
 ##  D0,pi is considered separately from the others because the inclusive D0 rate is
 ##  expected to be very high due to the large number of real D0 signal events
                 'Spec_D0Pi' : {
-                                        'DeltaM_AM_MIN'    : 135 * MeV,
-                                        'DeltaM_AM_MAX'    : 1025 * MeV,
-                                        'DeltaM_MIN'       : 135 * MeV,
-                                        'DeltaM_MAX'       : 995 * MeV,
+                                        'Q_AM_MIN'         : 135 * MeV - _local_m_pip,
+                                        'Q_AM_MAX'         : 1025 * MeV - _local_m_pip,
+                                        'Q_M_MIN'          : 135 * MeV - _local_m_pip,
+                                        'Q_M_MAX'          : 995 * MeV - _local_m_pip,
                                         'TagVCHI2PDOF_MAX' : 10.0,
                                         'TisTosSpec'       : "Hlt1.*MVA.*Decision%TOS",
                                        }
 ##  Dpm,pi is considered separately from the others because the inclusive Dpm rate is
 ##  expected to be very high due to the large number of real D+ signal events
                ,'Spec_DpmPi' : {
-                                        'DeltaM_AM_MIN'    : 135 * MeV,
-                                        'DeltaM_AM_MAX'    : 1025 * MeV,
-                                        'DeltaM_MIN'       : 135 * MeV,
-                                        'DeltaM_MAX'       : 995 * MeV,
+                                        'Q_AM_MIN'         : 135 * MeV - _local_m_pip,
+                                        'Q_AM_MAX'         : 1025 * MeV - _local_m_pip,
+                                        'Q_M_MIN'          : 135 * MeV - _local_m_pip,
+                                        'Q_M_MAX'          : 995 * MeV - _local_m_pip,
                                         'TagVCHI2PDOF_MAX' : 10.0,
                                        }
                ,'Spec_DPi' : {
-                                        'DeltaM_AM_MIN'    : 135 * MeV,
-                                        'DeltaM_AM_MAX'    : 1025 * MeV,
-                                        'DeltaM_MIN'       : 135 * MeV,
-                                        'DeltaM_MAX'       : 995 * MeV,
+                                        'Q_AM_MIN'         : 135 * MeV - _local_m_pip,
+                                        'Q_AM_MAX'         : 1025 * MeV - _local_m_pip,
+                                        'Q_M_MIN'          : 135 * MeV - _local_m_pip,
+                                        'Q_M_MAX'          : 995 * MeV - _local_m_pip,
                                         'TagVCHI2PDOF_MAX' : 10.0,
                                        }
                ,'Spec_DK' : {
-                                        'DeltaM_AM_MIN'    : 490 * MeV,
-                                        'DeltaM_AM_MAX'    : 1380 * MeV,
-                                        'DeltaM_MIN'       : 490 * MeV,
-                                        'DeltaM_MAX'       : 1350 * MeV,
+                                        'Q_AM_MIN'         : 490 * MeV - _local_m_KS0,
+                                        'Q_AM_MAX'         : 1380 * MeV - _local_m_KS0,
+                                        'Q_M_MIN'          : 490 * MeV - _local_m_KS0,
+                                        'Q_M_MAX'          : 1350 * MeV - _local_m_KS0,
                                         'TagVCHI2PDOF_MAX' : 10.0,
                                        }
                ,'Spec_DPr' : {
-                                        'DeltaM_AM_MIN'    : 930 * MeV,
-                                        'DeltaM_AM_MAX'    : 1820 * MeV,
-                                        'DeltaM_MIN'       : 930 * MeV,
-                                        'DeltaM_MAX'       : 1790 * MeV,
+                                        'Q_AM_MIN'         : 930 * MeV - _local_m_pp,
+                                        'Q_AM_MAX'         : 1820 * MeV - _local_m_pp,
+                                        'Q_M_MIN'          : 930 * MeV - _local_m_pp,
+                                        'Q_M_MAX'          : 1790 * MeV - _local_m_pp,
                                         'TagVCHI2PDOF_MAX' : 10.0,
                                        }
                ,'Spec_DLambda' : {
-                                        'DeltaM_AM_MIN'    : 1110 * MeV,
-                                        'DeltaM_AM_MAX'    : 2000 * MeV,
-                                        'DeltaM_MIN'       : 1110 * MeV,
-                                        'DeltaM_MAX'       : 1970 * MeV,
+                                        'Q_AM_MIN'         : 1110 * MeV - _local_m_Lam,
+                                        'Q_AM_MAX'         : 2000 * MeV - _local_m_Lam,
+                                        'Q_M_MIN'          : 1110 * MeV - _local_m_Lam,
+                                        'Q_M_MAX'          : 1970 * MeV - _local_m_Lam,
                                         'TagVCHI2PDOF_MAX' : 10.0,
                                        }
                ,'Spec_DEta' : {
-                                        'DeltaM_AM_MIN'    :  540 * MeV,
-                                        'DeltaM_AM_MAX'    : 1440 * MeV,
-                                        'DeltaM_MIN'       :  540 * MeV,
-                                        'DeltaM_MAX'       : 1410 * MeV,
+                                        'Q_AM_MIN'         :  540 * MeV - _local_m_eta,
+                                        'Q_AM_MAX'         : 1440 * MeV - _local_m_eta,
+                                        'Q_M_MIN'          :  540 * MeV - _local_m_eta,
+                                        'Q_M_MAX'          : 1410 * MeV - _local_m_eta,
                                        }
                ,'Spec_DGamma' : {
-                                        'DeltaM_AM_MIN'    :  0  * MeV,
-                                        'DeltaM_AM_MAX'    : 900 * MeV,
-                                        'DeltaM_MIN'       :  0  * MeV,
-                                        'DeltaM_MAX'       : 855 * MeV,
+                                        'Q_AM_MIN'         :  0  * MeV,
+                                        'Q_AM_MAX'         : 900 * MeV,
+                                        'Q_M_MIN'          :  0  * MeV,
+                                        'Q_M_MAX'          : 855 * MeV,
                                        }
                 ,'Dst2D0pi_D02KPiPiPi' : {
-                                        'DeltaM_AM_MIN'    : 135 * MeV,
-                                        'DeltaM_AM_MAX'    : 175 * MeV,
-                                        'DeltaM_MIN'       : 135 * MeV,
-                                        'DeltaM_MAX'       : 165 * MeV,
+                                        'Q_AM_MIN'         : 135 * MeV - _local_m_pip,
+                                        'Q_AM_MAX'         : 175 * MeV - _local_m_pip,
+                                        'Q_M_MIN'          : 135 * MeV - _local_m_pip,
+                                        'Q_M_MAX'          : 165 * MeV - _local_m_pip,
                                         'TagVCHI2PDOF_MAX' : 10.0,
                                        }
                  ,'ChargedSpectroscopyBachelors' : {

@@ -1,6 +1,10 @@
 from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 
+## Temporary local definition of particle masses.  Used to adapt TagDecay cut
+## variables from from Delta M to Q.
+_local_m_pip = 139.57018 * MeV
+
 class CharmHadD2V0V0Lines():
     def localcuts(self):
         return {
@@ -32,10 +36,10 @@ class CharmHadD2V0V0Lines():
                                  'TisTosSpec'               : "Hlt1.*Track.*Decision%TOS"
                                 }, 
                   # The tagger config
-                  'D02V0V0_TAG_CPV' : { 'DeltaM_AM_MIN'            :  130.0 * MeV,
-                                        'DeltaM_MIN'               :  130.0 * MeV,
-                                        'DeltaM_AM_MAX'            :  165.0 * MeV,
-                                        'DeltaM_MAX'               :  160.0 * MeV,
+                  'D02V0V0_TAG_CPV' : { 'Q_AM_MIN'                 :  130.0 * MeV - _local_m_pip,
+                                        'Q_M_MIN'                  :  130.0 * MeV - _local_m_pip,
+                                        'Q_AM_MAX'                 :  165.0 * MeV - _local_m_pip,
+                                        'Q_M_MAX'                  :  160.0 * MeV - _local_m_pip,
                                         'TagVCHI2PDOF_MAX'         :  25.0
                                       }
                 }

@@ -336,29 +336,34 @@ class TagDecay(Hlt2Combiner) : # {
     """
     Generic 2-body combiner for adding a soft particle to another particle
     candidate, e.g., adding a pion to a D0 to created a D*+ -> D0 pi+ candidate.
-    It cuts on the mass difference and on chi^2/Ndof of the 2-body vertex.
+    It cuts on the Q-value (difference between the combination mass and
+    the sum of the masses of the individal decay products) and on chi^2/Ndof
+    of the 2-body vertex.
 
-    !!!NOTE!!! The implementation of the mass difference cut requires that
-    the soft particle is the second product in the decay descriptor:
-        GOOD:      [Sigma_c0 -> Lambda_c+ pi-]cc
-        NOT GOOD:  [Sigma_c0 -> pi- Lambda_c+]cc
+    Previous versions of this combiner cut on the difference between the mass
+    of the combination and the mass of the first individual decay product.
+    This is the usual Delta m cut for D* decays if the D is the first particle
+    in the list of descendents.  This restriction meant that decay descriptors
+    for TagDecay had to be written carefuilly.  It was a fragile system.
+    The cut on the Q-value is symmetric with respect to the decay products
+    and removes this restriction and its associated danger.
 
     Configuration dictionaries must contain the following keys:
-        'DeltaM_AM_MIN'
-        'DeltaM_AM_MAX'    : lower and upper limits of the delta mass window
-                             at the CombinationCut level, AM - AM1.
+        'Q_AM_MIN'
+        'Q_AM_MAX'         : lower and upper limits of the mass difference
+                             window at the CombinationCut level, AM - AM1 - AM2.
         'TagVCHI2PDOF_MAX' : upper limit on VFASPF(VCHI2PDOF) in MotherCut
-        'DeltaM_MIN'
-        'DeltaM_MAX'       : lower and upper limits of the delta mass window
-                             at the MotherCut level, M - M1.
+        'Q_M_MIN'
+        'Q_M_MAX'          : lower and upper limits of the mass difference
+                             window at the MotherCut level, M - M1 - M2.
     """
     def __init__(self, name, decay, inputs, DaughtersCuts = { }, shared = False, nickname = None, **kwargs):
         '''**kwargs can be anything accepted by the Hlt2Combiner constructor, eg, to enable PV refitting use
         ReFitPVs = True.'''
 
-        cc =    ('in_range( %(DeltaM_AM_MIN)s, (AM - AM1), %(DeltaM_AM_MAX)s )')
+        cc =    ('in_range( %(Q_AM_MIN)s, (AM - AM1 - AM2), %(Q_AM_MAX)s )')
         mc =    ("(VFASPF(VCHI2PDOF) < %(TagVCHI2PDOF_MAX)s)" +
-                 "& in_range( %(DeltaM_MIN)s, (M - M1), %(DeltaM_MAX)s )")
+                 "& in_range( %(Q_M_MIN)s, (M - M1 - M2), %(Q_M_MAX)s )")
 
         ## Since this class allows freedom to externally specify DaughtersCuts,
         ##   we should add a dependence on the PV3D
@@ -377,24 +382,29 @@ class TagDecayWithNeutral(Hlt2Combiner) : # {
     """
     Generic 2-body combiner for adding a soft neutral particle to another particle
     candidate, e.g., adding a pi0 to a D0 to created a D*0 -> D0 pi0 candidate.
-    It cuts on the mass difference of the 2-body vertex.
+    It cuts on the Q-value (difference between the combination mass and
+    the sum of the masses of the individal decay products) of the 2-body
+    combination.
 
-    !!!NOTE!!! The implementation of the mass difference cut requires that
-    the soft particle is the second product in the decay descriptor:
-        GOOD:      D*(2007)0 -> D0 pi0
-        NOT GOOD:  D*(2007)0 -> pi0 D0
+    Previous versions of this combiner cut on the difference between the mass
+    of the combination and the mass of the first individual decay product.
+    This is the usual Delta m cut for D* decays if the D is the first particle
+    in the list of descendents.  This restriction meant that decay descriptors
+    for TagDecay had to be written carefuilly.  It was a fragile system.
+    The cut on the Q-value is symmetric with respect to the decay products
+    and removes this restriction and its associated danger.
 
     Configuration dictionaries must contain the following keys:
-        'DeltaM_AM_MIN'
-        'DeltaM_AM_MAX'    : lower and upper limits of the delta mass window
-                             at the CombinationCut level, AM - AM1.
-        'DeltaM_MIN'
-        'DeltaM_MAX'       : lower and upper limits of the delta mass window
-                             at the MotherCut level, M - M1.
+        'Q_AM_MIN'
+        'Q_AM_MAX'         : lower and upper limits of the mass difference
+                             window at the CombinationCut level, AM - AM1 - AM2.
+        'Q_M_MIN'
+        'Q_M_MAX'          : lower and upper limits of the mass difference
+                             window at the MotherCut level, M - M1 - M2.
     """
     def __init__(self, name, decay, inputs, DaughtersCuts = { }, shared = False, nickname = None):
-        cc =    ('in_range( %(DeltaM_AM_MIN)s, (AM - AM1), %(DeltaM_AM_MAX)s )')
-        mc =    ("in_range( %(DeltaM_MIN)s, (M - M1), %(DeltaM_MAX)s )")
+        cc =    ('in_range( %(Q_AM_MIN)s, (AM - AM1 - AM2), %(Q_AM_MAX)s )')
+        mc =    ("in_range( %(Q_M_MIN)s, (M - M1 - M2), %(Q_M_MAX)s )")
 
         ## Since this class allows freedom to externally specify DaughtersCuts,
         ##   we should add a dependence on the PV3D

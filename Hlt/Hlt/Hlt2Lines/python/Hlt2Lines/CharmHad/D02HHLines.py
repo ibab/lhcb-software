@@ -20,6 +20,13 @@ __author__  = [ 'Patrick Spradlin' ]
 
 from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
 
+
+## Temporary local definition of pion mass.  Here to ease the transition
+## of cut variables from Delta M to Q.
+_local_m_pip = 139.57018 * MeV
+_local_m_mup = 105.65837 * MeV
+
+
 class CharmHadD02HHLines : # {
     def __init__( self ) : # {
         ## Just to prevent typos in copying the strings.
@@ -46,19 +53,19 @@ class CharmHadD02HHLines : # {
 
         # The tagger config
         self.slotDict['D0_TAG_CPV'] = { 
-                                        'DeltaM_AM_MIN'            :  130.0 * MeV,
-                                        'DeltaM_MIN'               :  130.0 * MeV,
-                                        'DeltaM_AM_MAX'            :  165.0 * MeV,
-                                        'DeltaM_MAX'               :  160.0 * MeV,
-                                        'TagVCHI2PDOF_MAX'         :  25.0
+                                        'Q_AM_MIN'          :  130.0 * MeV - _local_m_pip,
+                                        'Q_M_MIN'           :  130.0 * MeV - _local_m_pip,
+                                        'Q_AM_MAX'          :  165.0 * MeV - _local_m_pip,
+                                        'Q_M_MAX'           :  160.0 * MeV - _local_m_pip,
+                                        'TagVCHI2PDOF_MAX'  :  25.0
                                       }  
 
         # The muon tagger config
         self.slotDict['DSTP_MUTAG_CPV'] = { 
-                                        'DeltaM_AM_MIN'            :  100.0 * MeV,
-                                        'DeltaM_MIN'               :  100.0 * MeV,
-                                        'DeltaM_AM_MAX'            :  5000. * MeV,
-                                        'DeltaM_MAX'               :  5000. * MeV,
+                                        'Q_AM_MIN'                 :  100.0 * MeV - _local_m_mup,
+                                        'Q_M_MIN'                  :  100.0 * MeV - _local_m_mup,
+                                        'Q_AM_MAX'                 :  5000. * MeV - _local_m_mup,
+                                        'Q_M_MAX'                  :  5000. * MeV - _local_m_mup,
                                         'TagVCHI2PDOF_MAX'         :  25.0
                                       } 
 

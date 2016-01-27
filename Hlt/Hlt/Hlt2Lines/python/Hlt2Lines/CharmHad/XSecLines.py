@@ -4,6 +4,11 @@ from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableU
 # Lines for XSection measurements, specifically for the 2015 Early Measurement campaign
 # These are tuned to be as close as possible to the stripping lines
 
+## Temporary local definition of particle masses.  Used to adapt TagDecay cut
+## variables from from Delta M to Q.
+_local_m_pip = 139.57018 * MeV
+_local_m_piz = 134.97660 * MeV
+
 class CharmHadXSecLines() :
     def localcuts(self) : 
         return { # Now the combiner for the CPV lines 
@@ -101,23 +106,23 @@ class CharmHadXSecLines() :
                                  'Mass_M_MAX'               :  2543.0 * MeV,
                                 },
                  'D0_TAG_XSec' : {
-                                 'DeltaM_AM_MIN'            :  130.0 * MeV,
-                                 'DeltaM_MIN'               :  130.0 * MeV,
-                                 'DeltaM_AM_MAX'            :  165.0 * MeV,
-                                 'DeltaM_MAX'               :  160.0 * MeV,
+                                 'Q_AM_MIN'                 :  130.0 * MeV - _local_m_pip,
+                                 'Q_M_MIN'                  :  130.0 * MeV - _local_m_pip,
+                                 'Q_AM_MAX'                 :  165.0 * MeV - _local_m_pip,
+                                 'Q_M_MAX'                  :  160.0 * MeV - _local_m_pip,
                                  'TagVCHI2PDOF_MAX'         :  25.0
                                 },
                  'D_TAG_NEUTRAL_XSec' : {
-                                 'DeltaM_AM_MIN'            :  130.0 * MeV,
-                                 'DeltaM_MIN'               :  130.0 * MeV,
-                                 'DeltaM_AM_MAX'            :  165.0 * MeV,
-                                 'DeltaM_MAX'               :  160.0 * MeV,
+                                 'Q_AM_MIN'                 :  130.0 * MeV - _local_m_piz,
+                                 'Q_M_MIN'                  :  130.0 * MeV - _local_m_piz,
+                                 'Q_AM_MAX'                 :  165.0 * MeV - _local_m_piz,
+                                 'Q_M_MAX'                  :  160.0 * MeV - _local_m_piz,
                                 },
                  'Sigmac_TAG_XSec' : { 
-                                 'DeltaM_AM_MIN'            :  150.0 * MeV,
-                                 'DeltaM_MIN'               :  155.0 * MeV,
-                                 'DeltaM_AM_MAX'            :  205.0 * MeV,
-                                 'DeltaM_MAX'               :  200.0 * MeV,
+                                 'Q_AM_MIN'                 :  150.0 * MeV - _local_m_pip,
+                                 'Q_M_MIN'                  :  155.0 * MeV - _local_m_pip,
+                                 'Q_AM_MAX'                 :  205.0 * MeV - _local_m_pip,
+                                 'Q_M_MAX'                  :  200.0 * MeV - _local_m_pip,
                                  'TagVCHI2PDOF_MAX'         :  25.0
                                 },
                 }
