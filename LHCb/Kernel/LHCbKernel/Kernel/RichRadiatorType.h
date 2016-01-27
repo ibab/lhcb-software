@@ -55,11 +55,8 @@ namespace Rich
    */
   std::string text( const Rich::RadiatorType radiator );
 
-  /// Std Vector typedef
-  typedef std::vector<Rich::RadiatorType> RadiatorTypeVector;
-
-  /// Std vector typedef
-  typedef RadiatorTypeVector Radiators;
+  /// Type for container of radiator types
+  typedef std::vector<Rich::RadiatorType> Radiators;
 
   /// Access a vector of all radiator types
   const Radiators & radiators() noexcept;

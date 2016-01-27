@@ -46,11 +46,8 @@ namespace Rich
   /// Text conversion for Rich::ParticleIDType enumeration
   std::string text( const Rich::ParticleIDType particle );
 
-  /// Std Vector typedef
-  typedef std::vector<ParticleIDType> ParticleIDTypeVector;
-
-  /// Shortcut to a list of ParticleTypes
-  typedef ParticleIDTypeVector Particles;
+  /// Type for container of particle types
+  typedef std::vector<ParticleIDType> Particles;
 
   /// Access a vector of valid particle ID types
   const Particles & particles() noexcept;

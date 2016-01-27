@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2016-01-27 - Chris Jones
+ - Remove redundant Rich typedefs.
+
 ! 2016-01-26 - Chris Jones
  - Remove variable name from default methods, to avoid unused variable warnings.
 

@@ -89,12 +89,12 @@ namespace {
     std::vector<LHCb::LHCbID>::const_iterator           m_std_vector_LHCbID_const_iterator;
     std::map<std::pair<int,unsigned int>,unsigned int>  m_L0DUReport_Summaries;
     Rich::Radiators                                     m_RICH_Radiators;
-    Rich::RadiatorTypeVector                            m_RICH_Rad_V;
+    //Rich::RadiatorTypeVector                            m_RICH_Rad_V;
     Rich::Detectors                                     m_RICH_Detectors;
-    Rich::DetectorVector                                m_RICH_Det_V;
-    Rich::ParticleIDTypeVector                          m_RICH_PID_V;
+    //Rich::DetectorVector                                m_RICH_Det_V;
+    //Rich::ParticleIDTypeVector                          m_RICH_PID_V;
     Rich::Particles                                     m_RICH_Particles;
-    Rich::RichSideVector                                m_RICH_Side_V;
+    //Rich::RichSideVector                                m_RICH_Side_V;
     Rich::Sides                                         m_RICH_Sides;
     LHCb::RichSmartID::Vector                           m_RICH_SmartID_V;
     std::pair<std::string,double>                       m_pair_1 ;
