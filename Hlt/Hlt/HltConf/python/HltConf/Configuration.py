@@ -95,8 +95,10 @@ class HltConf(LHCbConfigurableUser):
                 , 'LumiBankKillerPredicate'        : "(HLT_PASS_SUBSTR('Hlt1Lumi') & ~HLT_PASS_RE('Hlt1(?!Lumi).*Decision'))"
                 , "LumiBankKillerAcceptFraction"   : 0.9999     # fraction of lumi-only events where raw event is stripped down
                                                                 # (only matters if EnablelumiEventWriting = True)
-                , "AdditionalHlt1Lines"            : []         # must be configured
+                  , "AdditionalHlt1Lines"            : []         # must be configured
                 , "AdditionalHlt2Lines"            : []         # must be configured
+               , "RemoveHlt1Lines"            : []         # must be configured
+                , "RemoveHlt2Lines"            : []         # must be configured
                 , "Hlt2LinesForDQ"                 : ["PIDD02KPiTagTurboCalib", "PIDLambda2PPiLLTurboCalib", "PIDDetJPsiMuMuPosTaggedTurboCalib",
                                                       "PIDDetJPsiMuMuNegTaggedTurboCalib", "PIDLambda2PPiLLhighPTTurboCalib", "PIDLambda2PPiLLveryhighPTTurboCalib",
                                                       "DiMuonDetachedJPsi"]
@@ -601,6 +603,14 @@ class HltConf(LHCbConfigurableUser):
         activeHlt1Lines.extend( self.getProp('AdditionalHlt1Lines')  )
         activeHlt2Lines.extend( self.getProp('AdditionalHlt2Lines')  )
 
+        for l in self.getProp('RemoveHlt1Lines'):
+            if l in activeHlt1Lines:
+                activeHlt1Lines.remove(l)
+        for l in self.getProp('RemoveHlt2Lines'):
+            if l in activeHlt2Lines:
+                activeHlt2Lines.remove(l)
+
+        
         # make sure Hlt.Global is included as soon as there is at least one Hlt. line...
         if activeHlt1Lines : activeHlt1Lines += [ 'Hlt1Global' ]
         if activeHlt2Lines : activeHlt2Lines += [ 'Hlt2Global' ]
