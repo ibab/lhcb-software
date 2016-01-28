@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v4r45 2016-01-28 =========================
 ! 2016-01-21 - Marco Cattaneo
  - Add missing override qualifiers and remove unused variables, to silence
    clang warnings
