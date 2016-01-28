@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!========================= RichRecQC v2r73 2016-01-28 =========================
 ! 2016-01-19 - Chris Jones
  - A few more C++11 clean ups (range loops, nullptr etc.).
 

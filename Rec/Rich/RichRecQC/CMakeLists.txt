@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RichRecQC
 ################################################################################
-gaudi_subdir(RichRecQC v2r72)
+gaudi_subdir(RichRecQC v2r73)
 
 gaudi_depends_on_subdirs(Event/MCEvent
                          Kernel/MCInterfaces
