@@ -4,6 +4,14 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2016-01-28 - Chris Jones
+ - Add a flag to RichDetailedTrSegMakerFromRecoTracks to turn on/off the
+   State sanity checks. Default now off to save CPU.
+ - (Experimental) use of move semantics when constructing 
+   LHCb::RichTrackSegment in RichDetailedTrSegMakerFromRecoTracks.
+   (There appears to be a modest improvement from using this on the
+   Rich::RadIntersection::Vector vector.)
+
 !========================= RichRecTrackTools v1r41 2016-01-28 =========================
 ! 2016-01-21 - Chris Jones
  - A few more C++11 modernisations.

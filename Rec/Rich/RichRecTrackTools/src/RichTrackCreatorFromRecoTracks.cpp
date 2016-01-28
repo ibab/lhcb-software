@@ -33,7 +33,6 @@ TrackCreatorFromRecoTracks( const std::string& type,
     m_allDone              ( false ),
     m_buildHypoRings       ( false )
 {
-
   // declare interface for this tool
   declareInterface<ITrackCreator>(this);
 
@@ -41,7 +40,6 @@ TrackCreatorFromRecoTracks( const std::string& type,
   declareProperty( "TracksLocation",           m_trTracksLocation   );
   declareProperty( "BuildMassHypothesisRings", m_buildHypoRings     );
   declareProperty( "TrackSegmentTool",         m_trSegToolNickName  );
-
 }
 
 StatusCode TrackCreatorFromRecoTracks::initialize()
@@ -204,15 +202,12 @@ TrackCreatorFromRecoTracks::trTracks() const
   {
     if ( !m_trTracksLocation.empty() )
     {
-      // Obtain smart data pointer to Tracks
-      if ( exist<LHCb::Tracks>(m_trTracksLocation) )
+      // try and load the tracks
+      m_trTracks = getIfExists<LHCb::Tracks>( m_trTracksLocation );
+      if ( m_trTracks )
       {
-        m_trTracks = get<LHCb::Tracks>( m_trTracksLocation );
-        if ( msgLevel(MSG::DEBUG) )
-        {
-          debug() << "located " << m_trTracks->size() << " Tracks at "
+        _ri_debug << "located " << m_trTracks->size() << " Tracks at "
                   << m_trTracksLocation << endmsg;
-        }
       }
       else
       {
@@ -221,7 +216,7 @@ TrackCreatorFromRecoTracks::trTracks() const
     }
     else
     {
-      debug() << "Empty Track location -> Assuming no tracks required" << endmsg;
+      _ri_debug << "Empty Track location -> Assuming no tracks required" << endmsg;
     }
   }
   return m_trTracks;
@@ -256,15 +251,12 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
   // unique ?
   const bool trUnique = !trTrack->checkFlag(LHCb::Track::Clone);
 
-  if ( msgLevel(MSG::VERBOSE) )
-  {
-    verbose() << "Trying Track " << trTrack->key()
-              << " P=" << trTrack->p()
-              << " Pt=" << trTrack->pt()
-              << " type=" << trType << " unique=" << trUnique
-              << " charge=" << trTrack->charge()
-              << endmsg;
-  }
+  _ri_verbo << "Trying Track " << trTrack->key()
+            << " P=" << trTrack->p()
+            << " Pt=" << trTrack->pt()
+            << " type=" << trType << " unique=" << trUnique
+            << " charge=" << trTrack->charge()
+            << endmsg;
 
   // Is track a usable type
   if ( !Rich::Rec::Track::isUsable(trType) ) return NULL;
@@ -297,8 +289,7 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
       std::vector<LHCb::RichTrackSegment*> segments;
       const int Nsegs = m_segMaker->constructSegments( trTrack, segments );
 
-      if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " Found " << Nsegs << " radiator segment(s)" << endmsg;
+      _ri_verbo << " Found " << Nsegs << " radiator segment(s)" << endmsg;
 
       if ( 0 < Nsegs )
       {
@@ -314,8 +305,7 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
         {
           if ( !S ) continue;
 
-          if ( msgLevel(MSG::VERBOSE) )
-            verbose() << "  -> Testing " << S->radiator() << " segment" << endmsg;
+          _ri_verbo << "  -> Testing " << S->radiator() << " segment" << endmsg;
 
           // make a new RichRecSegment from this RichTrackSegment
           // takes ownership of RichTrackSegment* *iSeg - responsible for deletion
@@ -328,8 +318,7 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
             if ( m_signal->hasRichInfo(newSegment) )
             {
 
-              if ( msgLevel(MSG::VERBOSE) )
-                verbose() << "   -> TrackSegment in " << S->radiator() << " selected" << endmsg;
+              _ri_verbo << "   -> TrackSegment in " << S->radiator() << " selected" << endmsg;
 
               // keep track
               keepTrack = true;
@@ -352,10 +341,7 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
             }
             else
             {
-              if ( msgLevel(MSG::VERBOSE) )
-              {
-                verbose() << "   -> TrackSegment has no RICH info -> rejected" << endmsg;
-              }
+              _ri_verbo << "   -> TrackSegment has no RICH info -> rejected" << endmsg;
               delete newSegment;
               newSegment = NULL;
             }
@@ -363,10 +349,7 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
           }
           else
           {
-            if ( msgLevel(MSG::VERBOSE) )
-            {
-              verbose() << "   -> TrackSegment does not trace to an HPD panel -> rejected" << endmsg;
-            }
+            _ri_verbo << "   -> TrackSegment does not trace to an HPD panel -> rejected" << endmsg;
             delete newSegment;
             newSegment = NULL;
           }

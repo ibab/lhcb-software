@@ -276,6 +276,9 @@ namespace Rich
       /// Use the State provider instead of the extrapolator to move states
       bool m_useStateProvider;
 
+      /// Flag to turn on the final State sanity checks
+      bool m_checkStates;
+
       /// Radiators to skip, by track type
       typedef std::map< LHCb::Track::Types, Rich::Radiators > TrackTypesRads;
       TrackTypesRads m_radsToSkip;
