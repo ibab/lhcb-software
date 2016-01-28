@@ -4,6 +4,9 @@
 ! Purpose     : Components to fully rebuild PIDs from packed DST
 !-----------------------------------------------------------------------------
 
+! 2016-01-28 - Chris Jones
+ - Update (from Ulrik Egede) to support Deuteron RICH PID type.
+
 !========================= RecreatePIDTools v1r8 2015-10-12 =========================
 ! 2015-08-03 - Gerhard Raven
  - remove #include of obsolete Gaudi headers

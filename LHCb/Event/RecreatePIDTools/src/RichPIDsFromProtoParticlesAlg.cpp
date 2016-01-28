@@ -25,7 +25,7 @@ DECLARE_ALGORITHM_FACTORY( RichPIDsFromProtoParticlesAlg )
 //=============================================================================
 RichPIDsFromProtoParticlesAlg::RichPIDsFromProtoParticlesAlg( const std::string& name,
                                                               ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+: GaudiAlgorithm ( name , pSvcLocator )
 {
   if ( context() == "HLT" || context() == "Hlt" )
   {
@@ -127,11 +127,14 @@ StatusCode RichPIDsFromProtoParticlesAlg::execute()
         pid->setParticleDeltaLL(Rich::Proton,  (float)(*iP)->info(ProtoParticle::RichDLLp, -999));
         pid->setParticleDeltaLL(Rich::Deuteron,(float)(*iP)->info(ProtoParticle::RichDLLd, -999));
 
-	if ( msgLevel(MSG::DEBUG) )
-	  {
-	    debug() << "Filled RichPIDs: " << (float)(*iP)->info(ProtoParticle::RichDLLpi,-999)  << " " << (float)(*iP)->info(ProtoParticle::RichDLLd, -999)  << endmsg;
-	  }
-
+        if ( msgLevel(MSG::DEBUG) )
+        {
+          debug() << "Filled RichPIDs: " 
+                  << (float)(*iP)->info(ProtoParticle::RichDLLpi,-999)
+                  << " "
+                  << (float)(*iP)->info(ProtoParticle::RichDLLd, -999) 
+                  << endmsg;
+        }
 
       } // has rich info
 
@@ -145,7 +148,7 @@ StatusCode RichPIDsFromProtoParticlesAlg::execute()
   }
   else
   {
-    Warning( "No ProtoParticles at '" + m_protoPloc + 
+    Warning( "No ProtoParticles at '" + m_protoPloc +
              "' -> Empty RichPIDs created at '" + m_richPIDloc + "'" ).ignore();
   }
 
