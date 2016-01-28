@@ -4,6 +4,7 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrAlgorithms v1r17 2016-01-28 =========================
 ! 2016-01-21 - Marco Cattaneo
  - Remove unused member variable (fixes clang warnings)
 
