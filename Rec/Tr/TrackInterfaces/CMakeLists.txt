@@ -1,7 +1,7 @@
 ################################################################################
 # Package: TrackInterfaces
 ################################################################################
-gaudi_subdir(TrackInterfaces v4r28)
+gaudi_subdir(TrackInterfaces v5r0)
 
 gaudi_depends_on_subdirs(Det/DetDesc
                          Event/RecEvent
