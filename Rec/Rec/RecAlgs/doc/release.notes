@@ -4,6 +4,7 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================= RecAlgs v3r4 2016-01-28 =========================
 ! 2015-12-14 - Michel De Cian
  - Read in RecSummary with number of ghost tracks from TrackBestTrackCreator and add it to other track variables (in RecSummaryAlg).
 
