@@ -81,7 +81,7 @@ StatusCode PIDMerge::execute()
       {
         // Insert new cloned PID object with the same key as original
         // As this is based on the underlying track key, which should be unique
-        // accross all PID containers, all keys should be unique...
+        // across all PID containers, all keys should be unique...
         mergedPIDs->insert( new LHCb::RichPID(*pid), pid->key() );
       }
     }
