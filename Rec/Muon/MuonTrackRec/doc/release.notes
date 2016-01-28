@@ -7,6 +7,8 @@
 !               implementation of MuonCombRac, combinatorial track 
 !               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
+
+!========================= MuonTrackRec v4r0 2016-01-28 =========================
 ! 2016-01-05 - Gerhard Raven
  - major change: follow constification of IMuonFastPosTool interface
 

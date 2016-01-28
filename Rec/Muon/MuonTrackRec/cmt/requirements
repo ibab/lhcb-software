@@ -4,7 +4,7 @@
 # ====================================================================
 
 package           MuonTrackRec
-version           v3r15
+version           v4r0
 
 # ================ structure =========================================
 branches src cmt doc options
