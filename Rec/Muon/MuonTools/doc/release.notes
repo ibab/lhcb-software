@@ -2,6 +2,8 @@
 ! Package     : MuonTools
 ! Responsible : Alessia Satta Alessia.Sattaft@cern.ch
 ! ========================================================================
+
+!========================= MuonTools v6r0 2016-01-28 =========================
 ! 2016-01-08 - Gerhard Raven
  - major change: follow constification of IMuonFastPosTool interface
 
