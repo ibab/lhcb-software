@@ -4,6 +4,7 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+!========================= RichHPDImageAnalysis v1r19 2016-01-28 =========================
 ! 2016-01-21 - Chris Jones
  - Favour emplace_back over push_back where appropriate.
 
