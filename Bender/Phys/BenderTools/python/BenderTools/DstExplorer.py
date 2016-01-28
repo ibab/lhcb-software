@@ -191,13 +191,13 @@ def configure ( config ) :
     dtype, simu, ext = None,None,None  
     if  files :
         dtype, simu, ext = dataType ( files )
-        logger.debug("Datatype,simu&extension:'%s',%s,'%s' (from files)" %
+        logger.debug('DataType,Simu&extension:"%s",%s,"%s" (from files)' %
                      ( dtype , simu  , ext ) )
     elif config.ImportOptions :
         from Bender.DataUtils import evtSelInput
         ifiles = evtSelInput ( config.ImportOptions ) 
         dtype, simu, ext = dataType ( ifiles )
-        logger.debug("Datatype,simu&extension:'%s',%s&'%s' (from EvtentSelector)" %
+        logger.debug('DataType,Simu&extension:"%s",%s&"%s" (from EventSelector)' %
                      ( dtype , simu  , ext ) )
 
     if '2013' == dtype :
