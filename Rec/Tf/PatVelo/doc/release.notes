@@ -3,6 +3,8 @@
 ! Responsible : David Hutchcroft
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
+
+!========================= PatVelo v3r33 2016-01-28 =========================
 ! 2015-12-22 - Gerhard Raven
  - replace gsl_ with std::
 
