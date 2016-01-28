@@ -5,6 +5,12 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2016-01-28 - Vanya Belyaev
+ - add helper script  scripts/_get_input_.py to get the input file list 
+   for configuration files *without* their execution/importing 
+ - add possibility to (re)define dtaatype/simu/ext from (implict) EventSelector
+ - define (and test!) datatype '2015'
+
 ! 2016-01-27 - Vanya Belyaev
  - bender-base scripts:
    add option "-t/--tuplefile" to specify TupleFile property of DaVinci 

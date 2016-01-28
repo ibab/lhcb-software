@@ -265,6 +265,7 @@ def dataType ( files ) :
         elif 0 <= fu.find ( 'COLLISION12'   ) : dtype = '2012'
         elif 0 <= fu.find ( 'COLLISION13'   ) : dtype = '2012' ## ATTENTION
         elif 0 <= fu.find ( 'COLLISION15'   ) : dtype = '2015'
+        elif 0 <= fu.find ( 'COLLISION16'   ) : dtype = '2016'
         #
         elif 0 <= fu.find ( 'STRIPPING13'   ) : dtype = '2011'
         elif 0 <= fu.find ( 'STRIPPING17'   ) : dtype = '2011'
@@ -277,10 +278,16 @@ def dataType ( files ) :
         elif 0 <= fu.find ( 'STRIPPING21R1' ) : dtype = '2011'
         elif 0 <= fu.find ( 'STRIPPING21'   ) : dtype = '2012'
         #
+        elif 0 <= fu.find ( 'STRIPPING22'   ) : dtype = '2015'
+        elif 0 <= fu.find ( 'STRIPPING23'   ) : dtype = '2015'
+        elif 0 <= fu.find ( 'STRIPPING24'   ) : dtype = '2015'
+        #
         elif 0 <= fu.find ( '2K+10'         ) : dtype = '2010'
         elif 0 <= fu.find ( '2K+11'         ) : dtype = '2011'
         elif 0 <= fu.find ( '2K+12'         ) : dtype = '2012'
         elif 0 <= fu.find ( '2K+13'         ) : dtype = '2013'
+        elif 0 <= fu.find ( '2K+15'         ) : dtype = '2015'
+        elif 0 <= fu.find ( '2K+16'         ) : dtype = '2016'
         
         #
         if   0 <= fu.find ( 'MC09' ) or 0 <= fu.find ( 'MC/2009' ) :
@@ -305,10 +312,14 @@ def dataType ( files ) :
         elif 0 <= fu.find ( 'PYTHIA'  ) : simu = True
         elif 0 <= fu.find ( 'BCVEGPY' ) : simu = True
 
-        ## allow up to 5 symbols for exension 
-        first,dot,second = f.rpartition('.')
-        if dot and 3<=len(second)<=5 and not ext : ext = second.upper() 
-            
+
+        flst = f.split(' ')
+        for _f in flst :
+            _ff = _f.strip('"').strip("'")
+            ## allow up to 5 symbols for exension 
+            first,dot,second = _ff.rpartition('.')
+            if dot and 3<=len(second)<=5 and not ext : ext = second.upper() 
+
     return  dtype,simu,ext
 
 # =============================================================================
