@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecSys v5r9 2016-01-28 =========================
 ! 2016-01-18 - Chris Jones
  - Add a configuration flag to make sure the MC association information for
    tracks is prepared before the RICH reconstruction sequence. Default is off.
