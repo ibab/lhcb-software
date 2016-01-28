@@ -101,9 +101,9 @@ void TrackCreator::finaliseTrack( LHCb::RichGlobalPIDTrack * track ) const
   // Finalise delta LL values
   // -------------------------------------------------------------------------------
   // Make a working copy of the DLL values
-  std::vector<float> deltaLLs = pid->particleLLValues();
+  auto deltaLLs = pid->particleLLValues();
   // Get the pion DLL
-  double pionDLL = pid->particleDeltaLL(Rich::Pion);
+  auto pionDLL = pid->particleDeltaLL(Rich::Pion);
   if ( pionDLL < 0 ) { pionDLL = 0; }
   // sanity check on best ID
   if ( deltaLLs[pid->bestParticleID()] > 1e-10 )
