@@ -1,9 +1,9 @@
 #=====================================================================
 # Created    : 2009-01-19
-# Maintainer : Jaap Panman
+# Maintainer : Rosen Matev
 #=====================================================================
 package           LumiAlgs
-version           v9r10
+version           v9r11
 
 #=====================================================================
 # Structure, i.e. directories to process. 

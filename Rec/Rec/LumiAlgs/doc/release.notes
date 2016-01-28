@@ -4,6 +4,7 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================= LumiAlgs v9r11 2016-01-28 =========================
 ! 2016-01-11 - Rosen Matev
  - Modify LumiEventTuple to output all kinds of lumi events, not only random.
    Old behavior is achieved with setting OnlyRandom to True. Logic with
