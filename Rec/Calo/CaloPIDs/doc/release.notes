@@ -4,12 +4,11 @@
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
-
+!========================= CaloPIDs v5r21 2016-01-28 =========================
 ! 2016-25-01 - Olivier Deschamps
  - CaloPhotonMatch,CaloElectronMatch, CaloBremMatch tools : 
         - move m_position and m_plane data members to the base tool (CaloTrackMatch) and invoke a BeginEvent reset 
         - this fixes the (rare) initialization issues producing difference in the offline versus online reconstruction
-
 
 !========================= CaloPIDs v5r20p1 2015-10-13 =========================
 ! 2015-08-12 - Gerhard Raven

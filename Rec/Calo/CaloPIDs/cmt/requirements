@@ -3,7 +3,7 @@
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # ====================================================================
 package           CaloPIDs
-version           v5r20p1
+version           v5r21
 
 # =============== structure ===============================================
 branches          cmt doc src python
