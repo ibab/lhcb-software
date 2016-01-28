@@ -250,8 +250,7 @@ def hasGridProxy ( ) :
 #  @date 2012-10-10
 def inGrid ( filename , grid ) :
     """
-    Check the presence of file in Grid and get the access URL
-    
+    Check the presence of file in Grid and get the access URL    
     """
     #
     ## 1-check lhcb-proxy-info
@@ -286,8 +285,7 @@ def inGrid ( filename , grid ) :
 ##  check the existence of the file with given name
 #   optionally check the prefixes 
 def fileExists ( filename ) :
-    """
-    Check the existence of the file with given name
+    """Check the existence of the file with given name
     optionally check the prefixes using BENDERDATAPATH
     environment variable 
     """
@@ -319,8 +317,7 @@ def fileExists ( filename ) :
 #  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
 #  @date 2010-02-12
 def extendfile1 ( filename , castor = False , grid = None ) :
-    """
-    Helper function to 'extend' the short file name 
+    """Helper function to 'extend' the short file name 
 
     Thanks to Philippe Charpentier for extremly clear explanation of
            LHCb conventions for CASTOR pools and many CASTOR-related tricks
@@ -446,6 +443,55 @@ def extendfile2 ( filename       ,
 #  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
 #  @date 2010-02-12
 extendfile  = extendfile2
+
+
+# =============================================================================
+## get list of input files from EventSelector.Input
+#  @code
+#  file_list = ... 
+#  inputs = evtSelInput  ( file_list )( 
+#  @endcode 
+#  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
+#  @date 2016-01-28
+def evtSelInput ( files ) :
+    """Get list of input files from EventSelector.Input
+    >>> file_list = ... 
+    >>> inputs = evtSelInput  ( file_list )( 
+    """
+
+    if not files : return []
+    
+    import os 
+    from subprocess import Popen, PIPE
+    try:
+        p   = Popen( [ '_get_input_.py' ] + files , 
+                     env    = os.environ          , 
+                     stdout = PIPE                ,
+                     stderr = PIPE                )
+        stdout, stderr = p.stdout, p.stderr
+    except :
+        logger.error("Can't get input data from conf-files: %f" % files ) 
+        return []                                                  ## RETURN 
+    ## require empty stder
+    for l in stderr :
+        logger.error("Can't get input data from conf-files: %f" % files ) 
+        return []                                                  ## RETURN
+
+    flist = []  
+    ## Require non-empty std-out: 
+    for line in stdout :
+        
+        if not line : continue
+        iline = line.strip()
+        if not iline  or '#' == iline[0] : continue
+        
+        try :
+            flist = flist + eval ( iline )
+        except :
+            pass
+
+    flist = set ( flist ) 
+    return list ( flist )  
 
 # =============================================================================
 if __name__ == '__main__' :
