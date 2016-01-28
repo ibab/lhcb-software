@@ -1,7 +1,7 @@
 ################################################################################
 # Package: PatVeloTT
 ################################################################################
-gaudi_subdir(PatVeloTT v4r7p1)
+gaudi_subdir(PatVeloTT v4r8)
 
 gaudi_depends_on_subdirs(Det/STDet
                          Event/DigiEvent
