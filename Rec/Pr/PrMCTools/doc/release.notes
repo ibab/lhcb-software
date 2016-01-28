@@ -4,6 +4,7 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrMCTools v2r12 2016-01-28 =========================
 ! 2016-01-21 Marco Cattaneo
  - Use std::abs instead of fabs for int argument, to silence clang warning
 
