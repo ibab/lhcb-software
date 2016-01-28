@@ -225,8 +225,7 @@ StatusCode PIDQC::execute()
       mcpid = m_mcTruth->mcParticleType(track);
       if ( !m_ignoreMCThres && mcpid == Rich::Unknown )
       {
-        if ( msgLevel(MSG::DEBUG) )
-          debug() << "Track has no MC -> Ghost therefore below threshold :-" << endmsg;
+        _ri_debug << "Track has no MC -> Ghost therefore below threshold :-" << endmsg;
         mcpid = Rich::BelowThreshold;
       }
       if ( mcpid != Rich::Unknown &&
@@ -327,7 +326,7 @@ StatusCode PIDQC::finalize()
     {
       for ( int iTrue = 0; iTrue<Rich::NParticleTypes; ++iTrue )
       {
-        sumTot         += m_sumTab[iTrue][iRec];;
+        sumTot         += m_sumTab[iTrue][iRec];
         recTot[iRec]   += m_sumTab[iTrue][iRec];
         trueTot[iTrue] += m_sumTab[iTrue][iRec];
         if (iRec<Rich::NParticleTypes-1) trueTotExcludeX[iTrue] += m_sumTab[iTrue][iRec];
@@ -396,7 +395,7 @@ StatusCode PIDQC::finalize()
       trPIDRate[0] = ( m_nTracks[0]>0 ? 100.*m_nTracks[1]/m_nTracks[0] : 100 );
       trPIDRate[1] = ( m_nTracks[0]>0 ? std::sqrt(trPIDRate[0]*(100.-trPIDRate[0])/m_nTracks[0]) : 100 );
 
-      info() << "-------------+--------------------------------------------------------+------------"
+      info() << "-------------+---------------------------------------------------------------+------------"
              << endmsg
              << " Ptot Sel    | " << m_trSelector->minPCut() << "-" << m_trSelector->maxPCut() << " GeV/c" << endmsg
              << " TkMult Sel  | " << m_minMultCut << "-" << m_maxMultCut << " tracks/event" << endmsg;
@@ -429,13 +428,13 @@ StatusCode PIDQC::finalize()
       {
         info() << " Tagging tracks as pions if pion DLL > " << m_dllPionCut << endmsg;
       }
-      info() << "-------------+--------------------------------------------------------+------------"
+      info() << "-------------+---------------------------------------------------------------+------------"
              << endmsg
-             << "   %total    |  Electron Muon   Pion   Kaon  Proton Deuteron  X  (MC) |  %Purity"
+             << "   %total    |  Electron  Muon    Pion    Kaon   Proton  Deuteron   X  (MC)  |  %Purity"
              << endmsg
-             << "-------------+--------------------------------------------------------+------------"
+             << "-------------+---------------------------------------------------------------+------------"
              << endmsg
-             << "             |                                                        |" << endmsg;
+             << "             |                                                               |" << endmsg;
       const std::array<std::string,Rich::NParticleTypes> type
         = { " Electron    |", " Muon        |", " Pion        |",
             " Kaon        |", " Proton      |", " Deuteron    |",
@@ -443,20 +442,19 @@ StatusCode PIDQC::finalize()
       for ( int iRec = 0; iRec < Rich::NParticleTypes; ++iRec )
       {
         info() << type[iRec]
-               << boost::format( " %7.2f%7.2f%7.2f%7.2f%7.2f%7.2f%7.2f      | %7.2f" ) %
+               << boost::format( " %8.3f%8.3f%8.3f%8.3f%8.3f%8.3f%8.3f      | %8.3f" ) %
           m_sumTab[0][iRec] % m_sumTab[1][iRec] %
           m_sumTab[2][iRec] % m_sumTab[3][iRec] %
           m_sumTab[4][iRec] % m_sumTab[5][iRec] %
-          m_sumTab[6][iRec] %
-          purity[iRec] << endmsg;
+          m_sumTab[6][iRec] % purity[iRec] << endmsg;
       }
-      info() << "   (reco)    |                                                        |" << endmsg
-             << "-------------+--------------------------------------------------------+------------"
+      info() << "   (reco)    |                                                               |" << endmsg
+             << "-------------+---------------------------------------------------------------+------------"
              << endmsg;
-      info() << "   %Eff.     |" << boost::format( " %7.2f%7.2f%7.2f%7.2f%7.2f%7.2f%7.2f " ) %
+      info() << "   %Eff.     |" << boost::format( " %8.3f%8.3f%8.3f%8.3f%8.3f%8.3f%8.3f " ) %
         eff[0] % eff[1] % eff[2] % eff[3] % eff[4] % eff[5] % eff[6]
              << "     |" << endmsg;
-      info() << "-------------+--------------------------------------------------------+------------"
+      info() << "-------------+---------------------------------------------------------------+------------"
              << endmsg;
 
       info() << " % ID eff    |  K->K,Pr   : "
@@ -478,7 +476,7 @@ StatusCode PIDQC::finalize()
                << boost::format( "   : %6.2f +-%6.2f" ) % effR % errR << endmsg;
       }
 
-      info() << "-------------+--------------------------------------------------------+------------"
+      info() << "-------------+---------------------------------------------------------------+------------"
              << endmsg;
 
     }
