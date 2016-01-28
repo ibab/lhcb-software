@@ -4,6 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2016-01-28 - Chris Jones
+ - Properly enforce support for arithemic types only in RichPhotonSpectra
+   using type traits.
+
 !========================= RichRecBase v4r23 2016-01-28 =========================
 ! 2016-01-26 - Chris Jones
  - Remove variable name from various default methods to avoid unused variable

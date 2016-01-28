@@ -14,6 +14,8 @@
 
 // stl container
 #include <vector>
+#include <type_traits>
+#include <ostream>
 
 // LHCbKernel
 #include "Kernel/RichParticleIDType.h"
@@ -34,7 +36,8 @@ namespace Rich
    *  @date   2003-07-12
    */
 
-  template <class TYPE>
+  template < typename TYPE,
+             typename = typename std::enable_if<std::is_arithmetic<TYPE>::value>::type >
   class PhotonSpectra : public LHCb::MemPoolAlloc< PhotonSpectra<TYPE> >
   {
 
