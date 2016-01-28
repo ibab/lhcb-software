@@ -25,15 +25,23 @@
 ! -----------------------------------------------------------------------------
 
 ! 2016-01-28 - Vanya Belyaev
+ - more improvements for histos&tuples 
+ - fix the issue with pending tuples in interactive  mode 
+ - fix excessive printout from GaudiPython.TupleUtils  (to  fixed in Gaudi)
+ - add new property '--histofile' 
+      the value, if non-empty, is propagated to 'HistogramFile' property of DaVinci
+ - import GaudiPython.HistoUtils if 'histofile' activated 
+ - import GaudiPython.TupleUtils if 'tuplefile' activated 
+
+! 2016-01-28 - Vanya Belyaev
  - add opportunity to get & inspect input file list from EventSelector
  - new function in module Bender.DataUtils: evtSelInput ( filelist )
-
 
 
 ! 2016-01-27 - Vanya Belyaev
  - bender: 
    1) add new property "-t/--tuplefile" 
-      the value, if non-empty, is propagated to 'TupelFile' property of DaVinci
+      the value, if non-empty, is propagated to 'TupleFile' property of DaVinci
 
    2) at the end release all "active" tuples created 
       with GaudiPython.TupleUtils module 

@@ -165,12 +165,22 @@ parser.add_argument (
     It can be useful for usage with user-scripts."""
     )
     ##
-parser.add_argument (
+group_ht = parser.add_argument_group(
+    'Histos&Tuples' ,
+    'Configuration of histograms and tuples (if needed)')
+group_ht.add_argument (
     '-t'                      ,
     '--tuplefile'             ,
     dest    = 'TupleFile'     ,
     type    =  str            , 
-    help    = "``TupleFile'' attribute for DaVinci [default : %(default)s].",
+    help    = "``TupleFile'' attribute for DaVinci [default: %(default)s].",
+    default = ''               
+    )
+group_ht.add_argument (
+    '--histofile'             ,
+    dest    = 'HistoFile'     ,
+    type    =  str            , 
+    help    = "``HistogramFile'' attribute for DaVinci [default: %(default)s].",
     default = ''               
     )
     ## 
@@ -237,7 +247,14 @@ else                    : from Bender.Main     import *
 from BenderTools.Seek       import * 
 from BenderTools.GoodEvents import * 
 
+## likely we'll play with tuples  
+if arguments.TupleFile :
+    from GaudiPython.TupleUtils import nTuple
 
+## likely we'll play with histograms 
+if arguments.HistoFile :
+    from GaudiPython.HistoUtils import book, bookProf, fill, dumpHisto  
+    
 if not arguments.UserStart : 
 
     #
@@ -298,11 +315,21 @@ for _f in pyfiles :
 def __release_tuples__ () : 
     "Proper at-exit function for GaudiPython.TupleUtils module"
     try:
+        
         import GaudiPython.TupleUtils as _TU
-        if _TU.activeTuples() : 
-            logger.debug ('Release active n-tuples') 
-            _TU.releaseTuples()
+        logger.debug ('Release active n-tuples') 
+
+        from LoKiCore.basic import cpp
+        globs = globals().copy()
+        for i in globs :
+            if isinstance ( globs[i] , cpp.Tuples.Tuple ) :
+                del globals()[i]
+        del globs
+        
+        _TU.releaseTuples()
+            
     except :
+        logger.error ( 'Release n-tuples', exc_info = True ) 
         pass 
 
 import atexit

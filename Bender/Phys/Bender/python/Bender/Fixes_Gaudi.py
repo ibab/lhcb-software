@@ -65,7 +65,6 @@ logger.info ( '*** Fix some Gaudi features' )
 # =============================================================================
 from LoKiCore.basic import cpp 
 # =============================================================================
-
 import GaudiPython.Bindings
 _EvtSel = GaudiPython.Bindings.iEventSelector
 
@@ -79,15 +78,12 @@ if not hasattr ( _EvtSel , '_openNew_') :
                     fun        =  None  ,
                     collection =  None  ,
                     castor     =  True  ) :
-        """
-        Open the file(s) :
-
+        """Open the file(s) :        
         >>> evtSel.open ( 'file.dst' )                   ## open one file 
         >>> evtSel.open ( [ 'file1.dst' , 'file2.dst'] ) ## list of files 
         >>> evtSel.open ( '/castor/.../file.dst' )       ## open castor file 
         >>> evtSel.open ( 'file.raw' )                   ## open RAW file 
-        >>> evtSel.open ( 'file.mdf' )                   ## open MDF file 
-        
+        >>> evtSel.open ( 'file.mdf' )                   ## open MDF file         
         """
         
         if typ == 'ROOT' and ( 'RootCnvSvc' not in self.g.ExtSvc and 'Gaudi::RootCnvSvc/RootCnvSvc' not in self.g.ExtSvc ) : 
@@ -152,12 +148,9 @@ for _t in ( _iAlgorithm , _iAlgTool ) :
         logger.debug ( 'decorate iAlgoritm/iAlgTool with "dumpHistos" method') 
         ## dump all histogram from the given component 
         def _dumpHistos ( cmp , *args ) :
-            """
-            ASCII-Dump for 1D-histograms and 1D-profiles
-
+            """ASCII-Dump for 1D-histograms and 1D-profiles
             >>> cmp = ...  # get the component
-            >>> cmp.dumpHistos ()
-            
+            >>> cmp.dumpHistos ()            
             """
             _histos = cmp.Histos()
             for _k in _histos :
@@ -455,6 +448,53 @@ def _links_ ( self ) :
     return lnks
 
 cpp.DataObject.links = _links_
+# =============================================================================
+
+# =============================================================================
+logger.debug ( 'Suppress excessive prints from GaudiPython.TupleUtils') 
+# =============================================================================
+import GaudiPython.TupleUtils as _TU 
+
+_TU.__nTuple__           =  _TU.nTuple
+
+## silent version 
+def _silent_ntuple_ ( s , *args ) :
+    """ Retrive N-tuple ( book on demand )  """
+    from Ostap.Utils import mute_py 
+    with mute_py() : 
+        tup = _TU.__nTuple__(s , *args )
+    logger.info ( 'Booked n-tuple %s' % tup )
+    return tup
+
+_silent_ntuple_.__doc__ += '\n' + _TU._nTuple_.__doc__
+_TU.nTuple           = _silent_ntuple_
+
+
+_TU._release_tuples_ = _TU.releaseTuples
+
+## silent version 
+def _silent_release_tuples_ () :
+    "Silent verison of release-tuples"
+    from Ostap.Utils import mute_py
+    with mute_py() : 
+        return _TU._release_tuples_()
+    
+_silent_release_tuples_.__doc__ += '\n' +  _TU.releaseTuples.__doc__
+    
+_TU.releaseTuples                = _silent_release_tuples_
+
+## print for n-tuple object  
+def _nt_print_ ( self ) :
+    if not self or not self.valid() : return 'Tuples::Tuple()'
+    _t = self.nTuple()
+    if not _t : return str(type(self))
+    _r = _t.registry()
+    if not _r : return 'Tuples::Tuple(%s)' % _t.name() 
+    return 'Tuples::Tuple(%s)' % _r.identifier()
+
+cpp.Tuples.Tuple.__repr__ = _nt_print_
+cpp.Tuples.Tuple.__str__  = _nt_print_
+
 # =============================================================================
 if __name__ == '__main__' :
     
