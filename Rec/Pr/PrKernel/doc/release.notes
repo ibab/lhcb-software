@@ -4,6 +4,7 @@
 ! Purpose     : Basic tools for Pattern for the Upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrKernel v1r10 2016-01-28 =========================
 ! 2016-01-15 Marian Stahl
   - Added new member varibales and function to set them to IPrCounter 
     to be able to write the statistics table to a tex-file in PrChecker2

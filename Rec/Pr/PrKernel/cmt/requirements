@@ -3,7 +3,7 @@
 # Maintainer : 
 #=====================================================================
 package           PrKernel
-version           v1r9p1
+version           v1r10
 
 #=====================================================================
 # Structure, i.e. directories to process. 
