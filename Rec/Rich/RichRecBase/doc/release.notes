@@ -4,13 +4,14 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecBase v4r23 2016-01-28 =========================
 ! 2016-01-26 - Chris Jones
- - Remove variable name frm various default methods to avoid unused variable
+ - Remove variable name from various default methods to avoid unused variable
    warnings.
 
 ! 2016-01-25 - Chris Jones
  - Add some noexcept and override qualifiers (more still needed...)
- - Add explicit move sematics to TrackID, PhotonKey and PhotonSpectra.
+ - Add explicit move semantics to TrackID, PhotonKey and PhotonSpectra.
 
 ! 2016-01-24 - Chris Jones
  - Comment out all messaging calls in the Photon Creator base class.  
