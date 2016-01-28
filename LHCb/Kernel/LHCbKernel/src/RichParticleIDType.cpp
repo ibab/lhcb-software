@@ -32,6 +32,9 @@ std::string Rich::text( const Rich::ParticleIDType particle )
 const Rich::Particles & Rich::particles() noexcept
 {
   static Rich::Particles pids =
-    {Rich::Electron, Rich::Muon, Rich::Pion, Rich::Kaon, Rich::Proton, Rich::BelowThreshold, Rich::Deuteron};
+    { Rich::Electron, Rich::Muon, 
+      Rich::Pion,     Rich::Kaon, 
+      Rich::Proton,   Rich::Deuteron,
+      Rich::BelowThreshold };
   return pids;
 }

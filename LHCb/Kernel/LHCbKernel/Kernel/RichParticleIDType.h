@@ -40,8 +40,8 @@ namespace Rich
       Pion,           ///< Represents pi+ or pi-
       Kaon,           ///< Represents K+ or K-
       Proton,         ///< Represents Pr+ or Pr-
-      BelowThreshold, ///< Particle type is below threshold
-      Deuteron        ///< Represents d+ or d-   
+      Deuteron,       ///< Represents d+ or d-   
+      BelowThreshold  ///< Particle type is below threshold
     };
 
   /// Text conversion for Rich::ParticleIDType enumeration
@@ -55,7 +55,7 @@ namespace Rich
 
   /// Implement textual ostream << method for Rich::ParticleIDType enumeration
   inline std::ostream& operator << ( std::ostream& s,
-                                     const Rich::ParticleIDType& particle ) 
+                                     const Rich::ParticleIDType particle ) 
   {
     return s << Rich::text(particle) ;
   }

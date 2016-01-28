@@ -240,7 +240,7 @@ namespace Rich
 
       /// Functor to sort RichSmartIDs by Rich then panel numbers
       class SortByZ
-        : std::binary_function< const Rich::RadIntersection, const Rich::RadIntersection, bool >
+        : std::binary_function< const Rich::RadIntersection&, const Rich::RadIntersection&, bool >
       {
 
       public:
@@ -254,7 +254,8 @@ namespace Rich
          *
          *  @return bool indicating if i1 should be listed before i2
          */
-        inline bool operator() ( const Rich::RadIntersection i1, const Rich::RadIntersection i2 ) const
+        inline bool operator() ( const Rich::RadIntersection& i1, 
+                                 const Rich::RadIntersection& i2 ) const
         {
           return ( i1.entryPoint().z() < i2.entryPoint().z() );
         }

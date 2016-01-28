@@ -63,7 +63,7 @@ namespace Rich
 
   /// Implement textual ostream << method for Rich::RadiatorType enumeration
   inline std::ostream& operator << ( std::ostream& s,
-                                     const Rich::RadiatorType & radiator )
+                                     const Rich::RadiatorType radiator )
   {
     return s << Rich::text( radiator );
   }

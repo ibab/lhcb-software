@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2016-01-28 - Chris Jones
+ - Update (from Ulrik Egede) to support Deuteron RICH PID type.
+
 !========================= LHCbKernel v16r0 2016-01-27 =========================
 ! 2016-01-27 - Chris Jones
  - Remove redundant Rich typedefs.
