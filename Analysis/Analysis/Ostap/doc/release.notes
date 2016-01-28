@@ -8,6 +8,11 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2016-01-28 - Vanya Belyaev
+ - minor fix in ROOTCWD 
+   better fix is welcome ...
+
+
 ! 2016-01-27 - Vanya Belyaev
  - fix qmtest ostap_batch 
 

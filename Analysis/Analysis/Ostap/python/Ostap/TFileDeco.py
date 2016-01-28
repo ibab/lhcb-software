@@ -115,8 +115,11 @@ class ROOTCWD(object) :
     ## context manager EXIT 
     def __exit__  ( self , *_ ) :
         "Make the previous directory current again"
-        if self._dir : self._dir.cd()
-
+        if self._dir :
+            ## self._dir.cd()
+            if   not hasattr ( self._dir , 'IsOpen' ) : self._dir.cd() 
+            elif     self._dir.IsOpen()               : self._dir.cd()
+            
 # ===============================================================================
 ## write the (T)object to ROOT-file/directory
 #  @code
@@ -497,7 +500,7 @@ def _rf_exit_  ( self , *_ ) :
     >>> with ROOT.TFile('ququ.root') as f : f.ls()
     """
     try :
-        self.Close()
+        if self and self.IsOpen() : self.Close()
     except:
         pass
             
@@ -564,8 +567,11 @@ def _rf_new_init_ ( rfile , fname , mode = '' , *args ) :
     """
     with ROOTCWD() :
         logger.debug ("Open  ROOT file %s/'%s'" % ( fname , mode ) )
-        return rfile._old_init_ ( fname , open_mode ( mode ) , *args )
-
+        result = rfile._old_init_ ( fname , open_mode ( mode ) , *args )
+        if not rfile or not rfile.IsOpen() :
+            logger.error ( "Can't open ROOT file %s/'%s'" % ( fname , mode ) )
+        return result
+    
 # =============================================================================
 ## create ROOT.TFile without making it a current working directory 
 #  @code
@@ -581,9 +587,12 @@ def _rf_new_open_ ( fname , mode = '' , *args ) :
     """
     with ROOTCWD() :
         logger.debug ( "Open  ROOT file %s/'%s'" % ( fname , mode ) )
-        return ROOT.TFile._old_open_ ( fname , open_mode ( mode ) , *args )
-
-
+        fopen = ROOT.TFile._old_open_ ( fname , open_mode ( mode ) , *args )
+        if not fopen or not fopen.IsOpen() :
+            logger.error ( "Can't open ROOT file %s/'%s'" % ( fname , mode ) )
+        #
+        return fopen
+        
 # =============================================================================
 ## create ROOT.TFile without making it a current working directory 
 #  @code
@@ -598,12 +607,12 @@ def _rf_new_close_ ( rfile , options = '' ) :
     >>> f = ROOT.TFile.Open('test_file.root','recreate')
     >>> print ROOT.gROOT.CurrentDirectory()
     """
-    with ROOTCWD() :
-        rfile .cd()
-        logger.debug ( "Close ROOT file %s" % rfile.GetName() ) 
-        rfile ._old_close_ ( options )
-        logger
-                
+    if rfile and rfile.IsOpen() :
+        with ROOTCWD() :
+            ##rfile .cd()
+            logger.debug ( "Close ROOT file %s" % rfile.GetName() ) 
+            rfile ._old_close_ ( options )
+            
 # =============================================================================
 ## another name, just for convinince
 open = _rf_new_open_

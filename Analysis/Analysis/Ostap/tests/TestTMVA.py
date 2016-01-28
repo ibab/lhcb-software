@@ -26,6 +26,7 @@ __all__     = ()  ## nothing to be imported
 import ROOT, random, os 
 from   array              import array
 from   Ostap.PyRoUts      import *
+from   Ostap.TFileDeco    import ROOTCWD 
 from   Ostap.progress_bar import progress_bar 
 # =============================================================================
 # logging 
@@ -44,13 +45,13 @@ if not os.path.exists( data_file ) :
     nB = 20000
     nS = 10000
     logger.info('Prepare input ROOT file with data')
-    with ROOT.TFile.Open( data_file ,'recreate') as test_file : 
+    with ROOT.TFile.Open( data_file ,'recreate') as test_file:
         test_file.cd()
         treeSignal = ROOT.TTree('S','signal    tree')
         treeBkg    = ROOT.TTree('B','backgrund tree')
         treeSignal.SetDirectory ( test_file ) 
         treeBkg   .SetDirectory ( test_file ) 
-
+        
         from array import array 
         var1 = array ( 'd', [0])
         var2 = array ( 'd', [0])
@@ -87,36 +88,33 @@ if not os.path.exists( data_file ) :
         test_file.Write()
         test_file.ls()
 
-
 if not os.path.exists ( tmva_file ) :
     
     logger.info('Create and train TMVA')
-    datafile = ROOT.TFile.Open( data_file ,'READ')
-    datafile.ls()
-    tSignal  = datafile['S']
-    tBkg     = datafile['B']
-    
-    #
-    ## book TMVA trainer
-    #
-    from Ostap.PyTMVA import Trainer 
-    trainer = Trainer (
-        methods = [
-        # type                   name   configuration 
-        ( ROOT.TMVA.Types.kMLP , "MLP", "H:!V:EstimatorType=CE:VarTransform=N:NCycles=600:HiddenLayers=N+7:TestRate=5:!UseRegulator" ) 
-        ] ,
-        verbose = False )
-    
-    xml_file = trainer.train (
-        [ 'var1' , 'var2' ] , 
-        signal         = tSignal ,
-        background     = tBkg    )
-    
-    logger.info ( 'Weight file %s is created ' % xml_file  )
-    
-    datafile.close()
-    
-    
+    with ROOT.TFile.Open( data_file ,'READ') as data_file : 
+        datafile.ls()
+        tSignal  = datafile['S']
+        tBkg     = datafile['B']
+        
+        #
+        ## book TMVA trainer
+        #
+        from Ostap.PyTMVA import Trainer 
+        trainer = Trainer (
+            methods = [
+            # type                   name   configuration 
+            ( ROOT.TMVA.Types.kMLP , "MLP", "H:!V:EstimatorType=CE:VarTransform=N:NCycles=600:HiddenLayers=N+7:TestRate=5:!UseRegulator" ) 
+            ] ,
+            verbose = False )
+        
+        xml_file = trainer.train (
+            [ 'var1' , 'var2' ] , 
+            signal         = tSignal ,
+            background     = tBkg    )
+        
+        logger.info ( 'Weight file %s is created ' % xml_file  )
+        
+
 #
 ## create the datasets,
 #  copy the input data into datasets and add TMVA information 
@@ -139,29 +137,30 @@ dsS = SelectorWithVars (
     selection = "var1 < 100" , 
     silence   = True          
     )
+
 dsB = SelectorWithVars (
     variables = variables + [ ( 'signal' , 'signal' , -1 , 3 , lambda s : 0 ) ] ,
     selection = "var1 < 100" ,
     silence   = True           
     )
 
-datafile = ROOT.TFile.Open( data_file ,'READ')
-datafile.ls()
-tSignal  = datafile['S']
-tBkg     = datafile['B']
+with ROOT.TFile.Open( data_file ,'READ') as datafile : 
+    datafile.ls()
+    tSignal  = datafile['S']
+    tBkg     = datafile['B']
 
-tSignal.process ( dsS )
-tBkg   .process ( dsB )
-ds1 = dsS.data
-ds2 = dsB.data
+    tSignal.process ( dsS )
+    tBkg   .process ( dsB )
+    ds1 = dsS.data
+    ds2 = dsB.data
 
 
-ds = ds1.reduce('var1>-100')
-ds.append(ds2)
+    ds = ds1.reduce('var1>-100')
+    ds.append(ds2)
 
-logger.info('<TMVA> for signal     %s' % ds1.statVar('tmva') )
-logger.info('<TMVA> for background %s' % ds2.statVar('tmva') )
-logger.info('<TMVA> for S+B sample %s' % ds .statVar('tmva') )
+    logger.info('<TMVA> for signal     %s' % ds1.statVar('tmva') )
+    logger.info('<TMVA> for background %s' % ds2.statVar('tmva') )
+    logger.info('<TMVA> for S+B sample %s' % ds .statVar('tmva') )
 
 
 
