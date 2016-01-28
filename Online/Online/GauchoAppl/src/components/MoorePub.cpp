@@ -4,7 +4,7 @@
 #include "GaudiKernel/IHistogramSvc.h"
 
 // workaround for https://its.cern.ch/jira/browse/GAUDI-1168
-#include "GaudiKernel/MinimalDataObjectHandle.h"
+#include "GaudiKernel/Algorithm.h"
 
 #include "GauchoAppl/HistAdder.h"
 #include "GauchoAppl/CounterAdder.h"
