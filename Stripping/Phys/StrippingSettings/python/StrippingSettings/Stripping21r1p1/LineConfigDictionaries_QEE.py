@@ -121,7 +121,7 @@ Ditau = {
                         "Type": "RelInfoConeVariables"
                     }
                 ], 
-                "prescale": 1.0
+                "prescale": 0.1,
             }, 
             "HHnoiso": {
                 "RelatedInfoTools": [
@@ -149,7 +149,7 @@ Ditau = {
                         "Type": "RelInfoConeVariables"
                     }
                 ], 
-                "prescale": 0.05
+                "prescale": 0.01
             }, 
             "HHssnoiso": {
                 "RelatedInfoTools": [
@@ -177,7 +177,7 @@ Ditau = {
                         "Type": "RelInfoConeVariables"
                     }
                 ], 
-                "prescale": 0.05
+                "prescale": 0.01,
             }, 
             "MX": {
                 "RelatedInfoTools": [
@@ -267,8 +267,8 @@ Ditau = {
         "DITAU": {
             "ee": {
                 "ccuts": {
-                    "min_AM": 12000.0, 
-                    "min_APTMAX": 9000.0
+                    "min_AM": 16000.0, 
+                    "min_APTMAX": 12000.0,
                 }, 
                 "dcuts": {
                     "e": {
@@ -282,8 +282,8 @@ Ditau = {
             "eh1": {
                 "ccuts": {
                     "extracut": "ATRUE", 
-                    "min_AM": 12000.0, 
-                    "min_APTMAX": 9000.0
+                    "min_AM": 16000.0, 
+                    "min_APTMAX": 12000.0,
                 }, 
                 "dcuts": {
                     "e": {
@@ -299,8 +299,8 @@ Ditau = {
             }, 
             "eh3": {
                 "ccuts": {
-                    "min_AM": 12000.0, 
-                    "min_APTMAX": 9000.0
+                    "min_AM": 16000.0, 
+                    "min_APTMAX": 12000.0,
                 }, 
                 "dcuts": {
                     "e": {
@@ -317,7 +317,7 @@ Ditau = {
             "emu": {
                 "ccuts": {
                     "min_AM": 12000.0, 
-                    "min_APTMAX": 9000.0
+                    "min_APTMAX": 9000.0,
                 }, 
                 "dcuts": {
                     "e": {
@@ -333,8 +333,9 @@ Ditau = {
             }, 
             "h1h1": {
                 "ccuts": {
-                    "min_AM": 12000.0, 
-                    "min_APTMAX": 9000.0
+                    "min_AM": 35000.0, 
+                    "min_APTMAX": 20000.0,
+                    "min_APTMIN": 15000.0,
                 }, 
                 "dcuts": {
                     "pi": {
@@ -347,8 +348,9 @@ Ditau = {
             }, 
             "h1h3": {
                 "ccuts": {
-                    "min_AM": 16000.0, 
-                    "min_APTMAX": 12000.0
+                    "min_AM": 25000.0, 
+                    "min_APTMAX": 15000.0,
+                    "min_APTMIN": 10000.0,
                 }, 
                 "dcuts": {
                     "pi": {
@@ -364,8 +366,8 @@ Ditau = {
             }, 
             "h1mu": {
                 "ccuts": {
-                    "min_AM": 12000.0, 
-                    "min_APTMAX": 9000.0
+                    "min_AM": 16000.0, 
+                    "min_APTMAX": 12000.0
                 }, 
                 "dcuts": {
                     "mu": {
@@ -381,8 +383,9 @@ Ditau = {
             }, 
             "h3h3": {
                 "ccuts": {
-                    "min_AM": 16000.0, 
-                    "min_APTMAX": 12000.0
+                    "min_AM": 25000.0, 
+                    "min_APTMAX": 15000.0,
+                    "min_APTMIN": 10000.0,
                 }, 
                 "dcuts": {
                     "tau": {
@@ -433,7 +436,7 @@ Ditau = {
             "": "MomentumCombiner:PUBLIC"
         }, 
         "iso_e": {
-            "min_PTFrac05C": 0.7
+            "min_PTFrac05C": 0.8,
         }, 
         "iso_h1": {
             "min_PTFrac05C": 0.8
@@ -453,7 +456,7 @@ Ditau = {
             "min_CaloPrsE": 50.0, 
             "min_ECALFrac": 0.1, 
             "min_ETA": 2.0, 
-            "min_PT": 4000.0, 
+            "min_PT": 5000.0, 
             "min_TRPCHI2": 0.01
         }, 
         "tau_h1": {
@@ -463,7 +466,7 @@ Ditau = {
             "max_ETA": 3.75, 
             "min_ETA": 2.25, 
             "min_HCALFrac": 0.05, 
-            "min_PT": 4000.0, 
+            "min_PT": 5000.0, 
             "min_TRPCHI2": 0.01
         }, 
         "tau_h3": {
@@ -477,13 +480,13 @@ Ditau = {
                 "extracut": "ALL", 
                 "max_ETA": 4.5, 
                 "min_ETA": 2.0, 
-                "min_PT": 500.0, 
+                "min_PT": 1000.0, 
                 "min_TRPCHI2": 0.01
             }, 
             "mcuts": {
                 "max_DRTRIOMAX": 0.4, 
-                "max_VCHI2PDOF": 20.0, 
-                "min_PT": 4000.0
+                "max_VCHI2PDOF": 10.0, 
+                "min_PT": 5000.0
             }
         }, 
         "tau_mu": {
@@ -492,7 +495,7 @@ Ditau = {
             "extracut": "ALL", 
             "max_ETA": 4.5, 
             "min_ETA": 2.0, 
-            "min_PT": 4000.0, 
+            "min_PT": 5000.0, 
             "min_TRPCHI2": 0.01
         }
     }, 

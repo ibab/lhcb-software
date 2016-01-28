@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-01-29 Chitsanu Khurewathanakul
+ - Patch fix in QEE/Ditau for S21rXp1
+
 ! 2016-01-04 Ricardo Vazquez Gomez
  - create dbase for S21r0p1 and S21r1p1
 
