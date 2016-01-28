@@ -5,6 +5,329 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v19r0>2016-01-29 RecSys v19r0</A></H1><PRE>
+This version uses Gaudi v27r0, LHCb v40r0 and Lbcom v18r0 (and ROOT 6.06.00)
+
+- Packages modified: Calo/CaloMoniDst v5r21, Calo/CaloPIDs v5r21,
+    Calo/CaloReco v5r27, Calo/CaloTools v6r12, Muon/MuonID v10r0,
+    Muon/MuonInterfaces v2r0, Muon/MuonPIDChecker v5r6, Muon/MuonTools v6r0,
+    Muon/MuonTrackAlign v1r10p2, Muon/MuonTrackRec v4r0, Pr/PrAlgorithms v1r17,
+    Pr/PrKernel v1r10, Pr/PrMCTools v2r12, Pr/PrVeloUT v2r4,
+    Rec/ChargedProtoANNPID v2r13, Rec/LumiAlgs v9r11, Rec/RecAlgs v3r4,
+    Rich/RichENNRingFinder v1r6, Rich/RichGlobalPID v3r25,
+    Rich/RichHPDImageAnalysis v1r19, Rich/RichRecBase v4r23,
+    Rich/RichRecMCTools v2r33, Rich/RichRecMonitors v2r37,
+    Rich/RichRecPhotonTools v1r20, Rich/RichRecQC v2r73, Rich/RichRecSys v5r9,
+    Rich/RichRecTools v4r29, Rich/RichRecTrackTools v1r41, Tf/PatAlgorithms v4r45,
+    Tf/PatVelo v3r33, Tf/PatVeloTT v4r8, Tf/TrackSys v9r12,
+    Tr/TrackExtrapolators v2r40, Tr/TrackFitEvent v6r6, Tr/TrackInterfaces v5r0,
+    Tr/TrackKernel v3r0, Tr/TrackMonitors v2r12, Tr/TrackProjectors v3r4,
+    Tr/TrackTools v6r0, Tr/TrackUtils v1r63, Tr/PatPV v3r30,
+    Velo/VeloRecMonitors v2r34
+
+- In Calo/CaloMoniDst v5r21
+  . Fix untested StatusCodes
+  . Replace explicit boost::assign::list_of with implicit std::initializer_list
+
+- In Calo/CaloPIDs v5r21
+  . CaloPhotonMatch,CaloElectronMatch, CaloBremMatch tools : 
+    o move m_position and m_plane data members to the base tool (CaloTrackMatch)
+      and invoke a BeginEvent reset 
+    o fixes the (rare) initialization issues producing difference in the offline
+      versus online reconstruction
+
+- In Calo/CaloReco v5r27
+  . CaloCorrectionBase.cpp: add workaround to prevent wierd FPE with clang
+  . Avoid the use of exception handling to find out whether there already is an 
+    object on the TES...
+
+- In Calo/CaloTools v6r12
+  . Calo2MCTool : change default MC association to rely on CaloHypo->MC Linker.
+    In case the Linker doesn't exist the chain 
+    CaloHypo->CaloCluster->CaloDigit->MC is used (assuming the reconstruction
+    version is consistent with the original CaloHypos)
+  . CaloHypoEstimator.cpp: reorganise an if clause to avoid an FPE with clang
+
+- In Muon/MuonID v9r19, v10r0
+  . Follow changes in MuonInterfaces to pass MuonTileID by value instead of
+    by pointer
+  . Removed (invalid) link to component library MuonTrackRec.
+  . New IMuonMatchTool interface for track/muon matching with 2 implementations:
+    MuonChi2MatchTool  (computes chi2 properly, taking correlations into account,
+                       and chooses best muon hits combination based on this chi2)
+    MuonKalmanMatchTool (extends Kalman fit through muon stations)
+  . New generic IMuonIDTool with implementation MuonIDPlusTool, to start 
+    developing new approaches to muonID
+  . New MuonIDPlusAlg algorithm, using MuonIDPlusTool
+  . Add option to MakeMuonTool to compute chi2 properly (using MuonChi2MatchTool)
+
+- In Muon/MuonID v10r0, Muon/MuonInterfaces v2r0, Muon/MuonPIDChecker v5r6,
+     Muon/MuonTools v6r0, Muon/MuonTrackRec v4r0, Rec/ChargedProtoANNPID v2r13,
+     Rich/RichENNRingFinder v1r6, Rich/RichGlobalPID v3r25,
+     Rich/RichHPDImageAnalysis v1r19, Rich/RichRecBase v4r23,
+     Rich/RichRecMonitors v2r37, Rich/RichRecPhotonTools v1r20,
+     Rich/RichRecQC v2r73, Rich/RichRecTools v4r29, Rich/RichRecTrackTools v1r41,
+     Tr/TrackFitEvent v6r6, Tr/TrackMonitors v2r12, Tr/TrackTools v6r0,
+     Tr/TrackUtils v1r63, Tr/PatPV v3r30
+  . C++11 code modernisation (see package release notes for details)
+
+- In Muon/MuonInterfaces v2r0
+  . Major change: make MuonTrack const correct
+  . Add more const to MuonHit methods
+  . Major change: pass MuonTileID by value instead of by pointer
+    o MuonTileID is 32 bits, pointers are 64 bit, saving memory
+    o avoids additional dereferencing, improves data locality
+    o easier to optimize for the compiler
+
+- In Muon/MuonInterfaces v2r0, Muon/MuonTools v6r0, Muon/MuonTrackRec v4r0
+  . prefer extend_interfaces
+
+- In Muon/MuonTools v6r0, Muon/MuonTrackRec v4r0
+  . Major change: follow constification of IMuonFastPosTool interface
+  . Follow changes in MuonInterfaces:
+    o pass MuonTileID by value
+    o add const where possible
+
+- In Muon/MuonTrackAlign v1r10p2, Tr/TrackTools v6r0
+  . Remove #include of unused MuonTile.h
+
+- In Pr/PrAlgorithms v1r17
+  . Updated  PrSeedingXLayers, PrSeedTrack to use cubic track fit model
+  . Fixed timing bug in PrForwardTool (removed matchStereoHit method)
+  . By default the HybridSeeding algorithm will not pick as input the tracks from
+    the Forward tracking ( too high ghosts )
+  . Suppress info messages, showed only if m_printSettings is True
+  . Correct default parametrisation which was applying division for 0
+  . Throw an exception if m_nCases >3 
+  . Fully retuned to be compatible to provide reproducible results with the
+    Internal Note
+  . Stereo2 switched on by default
+  . Change default parameters for HybridSeeding to keep ghost rate under control
+    for stereo2 = True
+  . Fix bug in PrPlaneCounter
+  . Fix unusued private variables to suppress clang warnings                
+  . Add the PrHybridSeeding algorithm : New seeding algorithm for the upgrade.
+  . Add the PrPlaneHybridCounter.h to count the number of layers on track.
+  . Add the PrLineFitterY.h to fit lines using only u/v stereo hits based on a
+    x-z projection.
+  . Add the PrHybridSeedTrack class being the track object handled by the Hybrid
+    Seeding.
+  . Add method to the PrGeometryTool.h to accept PrHybridSeedTrack as input.
+
+- In Pr/PrKernel v1r10
+  . Added new member variables and function to set them to IPrCounter 
+    to be able to write the statistics table to a tex-file in PrChecker2
+
+- In Pr/PrMCTools v2r12
+  . Made tex table compatible with lhcb template, added caption and label
+  . Added option to write the statistics table to a tex-file in PrChecker2
+  . Implemented writing of statistics table to tex file in PrCounter2
+  . Rewrote some for-loops as C++11 range based loops in PrChecker2
+  . Fix PlotResidual binning in PrPlotFTHits taking all the time the higher
+    contribution to cluster.
+  . Add flag to PrChecker to switch between upgrade and non-upgrade location for
+    LHCbID linker table.
+  . Add option to PrPlotFTHits to plot the residual state for Seed and Forward 
+    Tracks
+  . Add option to PrPlotFTHits to plot the Occupancy in the detector splitting
+    contributions from Noise / SpillOver / MCParticle
+  . Add the PrClustersResidual tool which produce different nTuples to check the
+    residual between Clusters and MCHits and provides some branches filled for
+    further studies in a ROOT environment to study the track behavior in the SciFi
+
+- In Pr/PrMCTools v2r12, Pr/PrVeloUT v2r4
+  . Use std::abs instead of abs for float argument, to silence clang warning
+
+- In Pr/PrVeloUT v2r4
+  . Bugfix: crash if Velo container is empty
+
+- In Rec/LumiAlgs v9r11
+  . Modify LumiEventTuple to output all kinds of lumi events, not only random.
+    Old behavior is achieved with setting OnlyRandom to True. Logic with
+    ArrayColumns=True is improved (always add lc_20 and lc_21 columns).
+  . Switch off LoKi welcome banner and update tests accordingly
+
+- In Rec/RecAlgs v3r4
+  . Read in RecSummary with number of ghost tracks from TrackBestTrackCreator and
+    add it to other track variables (in RecSummaryAlg).
+
+- In Rich/RichRecBase v4r23
+  . Remove variable name from various default methods to avoid unused variable
+    warnings.
+  . Add explicit move semantics to TrackID, PhotonKey and PhotonSpectra.
+  . Comment out all messaging calls in the Photon Creator base class.  
+  . Save the ray-traced segment PD hit point in radiator corrected local
+    coordinates in the RichRecSegment object.
+  . Add the azimuthal phi value to each RichRecPointOnRing object.
+  . Update the RichRecRing 'closest points' methods to return the two points
+    either side, in azimuthal phi, of the requested angle.
+  . Update the emission point tool interface to prove methods using only a track
+    segment. 
+  . Add some wrapper methods to interfaces that hide const_cast'ing in one place
+  . Add a new definition to RichDetParams.h
+
+- In Rich/RichRecMCTools v2r33
+  . Add an option to TruePhotonEmissionPoint to allow the computation of an
+    average segment emission point, from all associated MC photons, to be
+    turned on/off.
+  . Improve the TruePhotonEmissionPoint tool to provide MC based estimates
+    in a few more cases. For instance if only a track segment is passed it
+    now computes the average value from all photons emitted from that segment.
+
+- In Rich/RichRecMonitors v2r37
+  . Add a few more plots to RichCherenkovAngleMonitor to help understand Rec-MC
+    differences with the various different photon reconstruction tools.
+  . Add a new monitor, PhotonRecoCompare, that explicitly compares, photon by 
+    photon, candidates created by different reconstruction tools.
+
+- In Rich/RichRecPhotonTools v1r20
+  . Move deBeam() method from RichPhotonRecoUsingQuarticSoln to shared
+    base class RichPhotonRecoBase.
+  . Comment out all messaging calls in the Photon Creators, for CPU reasons.
+  . Add an option to the RichPhotonRecoUsingCKEstiFromRadius tool to allow
+    the rejection of of ambiguous photons, where the two calibration points
+    either side of the pixel hit used different mirror segments.
+  . Update the Adaptive photon reconstruction tool to fallback to the slow
+    (Quartic) tool when the fast one returns failure, such as when the
+    option to reject ambigous photons is enabled.
+  . Improve further the RichPhotonRecoUsingCKEstiFromRadius tool to instead of
+    simply using the calibration data from the nearest (in Cherenkov phi)
+    calibration data point to perform a fast interpolation using the two 
+    nearest calibration points.
+  . Update the photon reconstruction tools to always use the tool interface
+    to determine the best emission point estimate, rather than to determine
+    this directly from the track segment.
+  . Improved caching in RichPhotonRecoUsingCKEstiFromRadius and
+    RichAdaptivePhotonReco to avoid a few runtime calculations.
+  . Add new Adaptive photon reconstruction tool that delegates to either the
+    fast (Estimation from ray traced CK rings) or full (Quartic) photon
+   .reconstruction depending on the track momentum. Switches to the full
+    tool only for tracks close to saturation, where resolution is most critical.
+  . Improve the photon reconstruction tools using ray traced CK rings by
+    instead of just always using the lightest (largest) ring as the source of
+    calibration points, pick the best (closest) to the pixel in question.
+  . Reinstate the CK theta bias corrections in the Quartic and CK mass ring
+    photon reconstruction tools, to make sure both are consistent such that the
+    'Rec-MC' resolution distribution peaks at 0.
+  . Convert QuarticSolver::solve<TYOE> calls RichPhotonRecoUsingQuarticSoln back
+    to double precision, to fix FPE problems with clang.
+  . Use some constexpr calculations in QuarticSolver.
+
+- In Rich/RichRecQC v2r73
+  . Add configuration for a new monitor to compare photon reconstruction tools.
+
+- In Rich/RichRecSys v5r9
+  . Add a configuration flag to make sure the MC association information for
+    tracks is prepared before the RICH reconstruction sequence. Default is off.
+  . Fix option to run an algorithm to preload the TES with the raw input tracks
+  . Add new configuration parameters to allow the number of ray trace photons
+    per CK mass hypothesis ring to be set.
+  . Propagate custom options for groupConfig.richTools().photonReco()
+
+- In Rich/RichRecTools v4r29
+  . Compute the bailout number of ray-tracing attempts in 
+    RichRayTraceCherenkovCone based on a fraction of the total number requested,
+     rather than as a fixed number.
+  . Rename job option in RayTraceCherenkovCone "BailoutFraction" to refect its 
+    new meaning.
+  . Update the Cherenkov cone tool to determine the best guess photon emission
+    point using the tool interface rather than directly from the track segment.
+  . Slightly change how the number of ray trace photons to use in 
+    MassHypothesisRingCreator is determined.
+  . Calculate the saturated CK theta values from the refractive index 
+    information rather than hardcode the values.
+
+- In Rich/RichRecTrackTools v1r41
+  . Update the Cherenkov angle tool to determine the best guess photon emission
+    point using the tool interface rather than directly from the track segment.
+
+- In Tf/PatAlgorithms v4r45
+  . Replace StaticArray in PatSeedTrack and PatSeedTool with 
+    boost::container::static_vector
+  . Fix bug in PatForward 2nd loop: hits following a not selected OT hit are
+    skipped, and if the not selected hit is the last one, the loop termination
+    fails, and things go horribly out-of-bounds... 
+  . PatSeedingTool: fix clang warning (no changes in performance)
+  . Improve/simplify vectorization in PatFwdTool using new scatter_invoke 
+    and make_array functionality in VectorizationSupport.h
+
+- In Tf/PatVelo v3r33
+  . replace gsl_ with std::
+
+- In Tf/PatVeloTT v4r8
+  . Fix bug in adding of overlap hits
+  . Fix clang warning (use std::abs(<float>) instead of abs(<float>))
+
+- In Tf/TrackSys v9r12
+  . Make 'PrHybridSeeding' default one in tracking sequence.
+  . Added RecoExcludeSTLayers.py to ignore certains layers during the tracking.
+    Added the "ExcludedLayers" prop to the TrackSys configurable. 
+    Modified RecoTrackingRun2.py in order to enable layers exclusion.
+
+- In Tr/TrackExtrapolators v2r40
+  . Added flag to TrackStateProvider to turn off on-demand cache
+
+- In Tr/TrackInterfaces v5r0
+  . Major change: update ITrajectoryProvider interface:
+    o use std::unique_ptr instead of std::auto_ptr
+    o add const
+  . First commit of ISTSpilloverTool
+
+- In Tr/TrackKernel v3r0
+  . Major change: follow substitution of std::unique_ptr in favor of 
+    std::auto_ptr in Kernel/LHCbKernel
+
+- In Tr/TrackMonitors v2r12
+  . STTrackTuple: BranchBySector mode was disabled. Instead of it, added
+    EfficiencyMode of the tool, which makes it to work as STEfficiency algorithm
+  . STTrackTuple: TakeEveryHit option was removed
+  . STTrackTuple: Histogram output was removed
+  . Add option files for the analysis of ST CCE scans
+  . Migrate from StaticArray to boost::container::static_vector
+  . Add STADCTrackMonitor (analysis of ST CCE scans)
+
+- In Tr/TrackProjectors v3r4
+  . TrackOTLRSignTool:
+    o replace StaticArray with boost::container::static_vector
+    o prefer composition and forwarding over inheritance from StaticArray
+
+- In Tr/TrackTools v6r0
+  . Added DaVinci interface for Run2GhostId for integration test
+  . Protect VeloMuonBuilder against FPE
+  . Add 'MaxNTHoles' cut to TrackSelector (for use in alignment)
+  . Follow change in MuonInterfaces: make MuonTrack const correct
+  . TrackHitCollector: use const LHCb::Trajectory& instead of
+    std::auto_ptr<LHCb::Trajector>,
+  . TrajectoryProvider: Major change: follow update of ITrajectorProvider
+  . Follow change in MuonInterfaces to pass MuonTileID by value
+  . Added MinHits to VPTrackSelector.cpp
+  . First commit of "STSpilloverTool", which evaluates the likelihood ratio for
+    each ST cluster on reco'ed tracks between the "signal" and the "spillover"
+    hypothesis.
+    Included a python directory with options to use it as well
+
+- In Tr/TrackUtils v1r63
+  . Speed up TrackBuildCloneTable and TrackCloneCleaner
+  . Replace property to set summary location in TrackBestTrackCreator by 
+    predefined location 'LHCb::RecSummary:Track'
+  . Add possibility to write out 'RecSummary' in TrackBestTrackCreator with 
+    number of identified ghosts (maybe used for event index). Default is off 
+
+- In Tr/PatPV v3r30
+  . Fix  PVOfflineTool::initialize: invoke base class initialize 
+  . Major: update IPVSeeding interface to return by value, take const
+    arguments and be const
+  . Explicitly invoke callbacks so that even if property is never updated the
+    dependency gets synchronized
+  . Replace cache vecpm data member with in-situ cache
+  . Improve overlap check by using that LHCbID are ordered
+
+- In Velo/VeloRecMonitors v2r34
+  . Remove unused member variables (fixes clang warnings)
+  . VeloIPResolutionMonitorNT : Allow tools to be externally configured and 
+    fix storing of momentum covariance matrix.
+
+
 </PRE><H1><A NAME=v18r3>2015-11-25 RecSys v18r3</A></H1><PRE>
 This version uses Gaudi v26r4, LHCb v39r2 and Lbcom v17r2 (and ROOT 6.04.02)
 
