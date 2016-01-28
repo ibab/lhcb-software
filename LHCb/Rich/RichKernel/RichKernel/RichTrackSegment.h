@@ -208,32 +208,10 @@ namespace LHCb
     /// Helper method to initialise the based chord constructor with a middle point
     void chordConstructorInit3();
 
-    // ------------------------------------------------------------------------------------------------------
-
-  public:
-
-    /** Constructor that uses the supplied radiator intersections for the entry and exit points.
-     *
-     *  The middle point and the momentum at the middle point are derived from the average
-     *  of the entry and exit states.
-     */
-    RichTrackSegment( const SegmentType t,           ///< The segment type
-                      const Rich::RadIntersection::Vector & intersects, ///< The radiator intersections
-                      const Rich::RadiatorType rad,  ///< The radiator type
-                      const Rich::DetectorType rich, ///< The detector type
-                      const StateErrors& entryErrors  = StateErrors{}, ///< The segment errors at the entry point
-                      const StateErrors& exitErrors   = StateErrors{}  ///< The segment errors at the exit point
-                      )
-      : m_type             ( t             ),
-        m_radIntersections ( intersects    ),
-        m_radiator         ( rad           ),
-        m_rich             ( rich          ),
-        m_errorsEntry      ( entryErrors   ),
-        m_errorsMiddle     ( Rich::Rich1Gas == rad ? exitErrors : entryErrors ), // CRJ : Is this best ?
-        m_errorsExit       ( exitErrors    ),
-        m_avPhotonEnergy   ( avPhotEn(rad) )
+    /// Helper method for two point constructor
+    inline void initTwoPoints()
     {
-      if      ( RichTrackSegment::UseAllStateVectors    == type() )
+       if      ( RichTrackSegment::UseAllStateVectors    == type() )
       {
         setMiddleState ( add_points(entryPoint(),exitPoint())/2, (entryMomentum()+exitMomentum())/2 );
       }
@@ -247,31 +225,9 @@ namespace LHCb
       }
     }
 
-    /** Constructor that uses the supplied radiator intersections for the entry and exit points.
-     *
-     *  In addition the middle point and the momentum vector at that point are given explicitly.
-     */
-    RichTrackSegment( const SegmentType t,           ///< The segment type
-                      const Rich::RadIntersection::Vector & intersects, ///< The radiator intersections
-                      const Gaudi::XYZPoint& middP,  ///< The mid point in the radiator
-                      const Gaudi::XYZVector& middV, ///< The momentum vector at the radiator mid point
-                      const Rich::RadiatorType rad,  ///< The radiator type
-                      const Rich::DetectorType rich, ///< The detector type
-                      const StateErrors entryErrors  = StateErrors(), ///< The segment errors at the entry point
-                      const StateErrors middleErrors = StateErrors(), ///< The segment errors at the mid point
-                      const StateErrors exitErrors   = StateErrors()  ///< The segment errors at the exit point
-                      )
-      : m_type             ( t             ),
-        m_radIntersections ( intersects    ),
-        m_middlePoint      ( middP         ),
-        m_middleMomentum   ( middV         ),
-        m_radiator         ( rad           ),
-        m_rich             ( rich          ),
-        m_errorsEntry      ( entryErrors   ),
-        m_errorsMiddle     ( middleErrors  ),
-        m_errorsExit       ( exitErrors    ),
-        m_avPhotonEnergy   ( avPhotEn(rad) )
-    {
+    /// Helper method for three point constructor
+    inline void initThreePoints()
+    { 
       if      ( RichTrackSegment::UseAllStateVectors == type() )
       {
         // nothing to do yet
@@ -284,6 +240,122 @@ namespace LHCb
       {
         throw RichException( "Unknown RichTrackSegment::SegmentType" );
       }
+    }
+    
+    // ------------------------------------------------------------------------------------------------------
+
+  public:
+
+    /** Constructor that uses the supplied radiator intersections for the entry and exit points.
+     *
+     *  The middle point and the momentum at the middle point are derived from the average
+     *  of the entry and exit states.
+     *
+     *  Information is copied in this implementation.
+     */
+    RichTrackSegment( const SegmentType t,           ///< The segment type
+                      const Rich::RadIntersection::Vector & intersects, ///< The radiator intersections
+                      const Rich::RadiatorType rad,  ///< The radiator type
+                      const Rich::DetectorType rich, ///< The detector type
+                      const StateErrors& entryErrors = StateErrors{}, ///< The segment errors at the entry point
+                      const StateErrors& exitErrors  = StateErrors{}  ///< The segment errors at the exit point
+                      )
+      : m_type             ( t             ),
+        m_radIntersections ( intersects    ),
+        m_radiator         ( rad           ),
+        m_rich             ( rich          ),
+        m_errorsEntry      ( entryErrors   ),
+        m_errorsMiddle     ( Rich::Rich1Gas == rad ? exitErrors : entryErrors ), // CRJ : Is this best ?
+        m_errorsExit       ( exitErrors    ),
+        m_avPhotonEnergy   ( avPhotEn(rad) )
+    {
+      initTwoPoints();
+    }
+
+    /** Constructor that uses the supplied radiator intersections for the entry and exit points.
+     *
+     *  The middle point and the momentum at the middle point are derived from the average
+     *  of the entry and exit states.
+     *
+     *  Information is moved in this implementation.
+     */
+    RichTrackSegment( const SegmentType t,           ///< The segment type
+                      Rich::RadIntersection::Vector && intersects, ///< The radiator intersections
+                      const Rich::RadiatorType rad,  ///< The radiator type
+                      const Rich::DetectorType rich, ///< The detector type
+                      StateErrors&& entryErrs = StateErrors{}, ///< The segment errors at the entry point
+                      StateErrors&& exitErrs  = StateErrors{}  ///< The segment errors at the exit point
+                      )
+      : m_type             ( t                     ),
+        m_radIntersections ( std::move(intersects) ),
+        m_radiator         ( rad                   ),
+        m_rich             ( rich                  ),
+        m_errorsEntry      ( std::move(entryErrs)  ),
+        m_errorsExit       ( std::move(exitErrs)   ),
+        m_avPhotonEnergy   ( avPhotEn(rad)         )
+    {
+      m_errorsMiddle = ( Rich::Rich1Gas == rad ? exitErrors() : entryErrors() ); // CRJ : Is this best ?
+      initTwoPoints();
+    }
+
+    /** Constructor that uses the supplied radiator intersections for the entry and exit points.
+     *
+     *  In addition the middle point and the momentum vector at that point are given explicitly.
+     *
+     *  Information is copied in this implementation.
+     */
+    RichTrackSegment( const SegmentType t,           ///< The segment type
+                      const Rich::RadIntersection::Vector & intersects, ///< The radiator intersections
+                      const Gaudi::XYZPoint& middP,  ///< The mid point in the radiator
+                      const Gaudi::XYZVector& middV, ///< The momentum vector at the radiator mid point
+                      const Rich::RadiatorType rad,  ///< The radiator type
+                      const Rich::DetectorType rich, ///< The detector type
+                      const StateErrors& entryErrors  = StateErrors{}, ///< The segment errors at the entry point
+                      const StateErrors& middleErrors = StateErrors{}, ///< The segment errors at the mid point
+                      const StateErrors& exitErrors   = StateErrors{}  ///< The segment errors at the exit point
+                      )
+      : m_type             ( t             ),
+        m_radIntersections ( intersects    ),
+        m_middlePoint      ( middP         ),
+        m_middleMomentum   ( middV         ),
+        m_radiator         ( rad           ),
+        m_rich             ( rich          ),
+        m_errorsEntry      ( entryErrors   ),
+        m_errorsMiddle     ( middleErrors  ),
+        m_errorsExit       ( exitErrors    ),
+        m_avPhotonEnergy   ( avPhotEn(rad) )
+    {
+      initThreePoints();
+    }
+
+    /** Constructor that uses the supplied radiator intersections for the entry and exit points.
+     *
+     *  In addition the middle point and the momentum vector at that point are given explicitly.
+     *
+     *  Information is noved in this implementation.
+     */
+    RichTrackSegment( const SegmentType t,           ///< The segment type
+                      Rich::RadIntersection::Vector && intersects, ///< The radiator intersections
+                      Gaudi::XYZPoint  && middP,     ///< The mid point in the radiator
+                      Gaudi::XYZVector && middV,     ///< The momentum vector at the radiator mid point
+                      const Rich::RadiatorType rad,  ///< The radiator type
+                      const Rich::DetectorType rich, ///< The detector type
+                      StateErrors&& entryErrors  = StateErrors{}, ///< The segment errors at the entry point
+                      StateErrors&& middleErrors = StateErrors{}, ///< The segment errors at the mid point
+                      StateErrors&& exitErrors   = StateErrors{}  ///< The segment errors at the exit point
+                      )
+      : m_type             ( t                        ),
+        m_radIntersections ( std::move(intersects)    ),
+        m_middlePoint      ( std::move(middP)         ),
+        m_middleMomentum   ( std::move(middV)         ),
+        m_radiator         ( rad                      ),
+        m_rich             ( rich                     ),
+        m_errorsEntry      ( std::move(entryErrors)   ),
+        m_errorsMiddle     ( std::move(middleErrors)  ),
+        m_errorsExit       ( std::move(exitErrors)    ),
+        m_avPhotonEnergy   ( avPhotEn(rad)            )
+    {
+      initThreePoints();
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -442,6 +514,14 @@ namespace LHCb
       radIntersections().front().setEntryMomentum ( dir   );
     }
 
+    /// Set the entry state
+    inline void setEntryState( Gaudi::XYZPoint&& point,
+                               Gaudi::XYZVector&& dir )
+    {
+      radIntersections().front().setEntryPoint    ( std::move(point) );
+      radIntersections().front().setEntryMomentum ( std::move(dir)   );
+    }
+
     /// Set the Middle state
     inline void setMiddleState( const Gaudi::XYZPoint& point,
                                 const Gaudi::XYZVector& dir )
@@ -450,12 +530,28 @@ namespace LHCb
       m_middleMomentum = dir;
     }
 
+    /// Set the Middle state
+    inline void setMiddleState( Gaudi::XYZPoint&& point,
+                                Gaudi::XYZVector&& dir )
+    {
+      m_middlePoint    = std::move(point);
+      m_middleMomentum = std::move(dir);
+    }
+
     /// Set the exit state
     inline void setExitState( const Gaudi::XYZPoint& point,
                               const Gaudi::XYZVector& dir )
     {
       radIntersections().back().setExitPoint    ( point );
       radIntersections().back().setExitMomentum ( dir   );
+    }
+
+    /// Set the exit state
+    inline void setExitState( Gaudi::XYZPoint&& point,
+                              Gaudi::XYZVector&& dir )
+    {
+      radIntersections().back().setExitPoint    ( std::move(point) );
+      radIntersections().back().setExitMomentum ( std::move(dir)   );
     }
 
     /// Set the radiator type

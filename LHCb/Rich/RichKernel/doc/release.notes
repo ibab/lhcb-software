@@ -4,6 +4,11 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2016-01-28 - Chris Jones
+ - Properly support only arithemtic and pointer types in RichHypoData, 
+   using type traits.
+ - Add move (experimental) semantics to RichTrackSegment.
+
 !========================= RichKernel v7r62 2016-01-27 =========================
 ! 2016-01-26 - Chris Jones
  - Remove variable name from default methods, to avoid unused variable warnings.
