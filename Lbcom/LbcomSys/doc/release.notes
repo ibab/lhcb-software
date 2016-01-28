@@ -6,6 +6,34 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v18r0>2016-01-29 LbcomSys v18r0</A></H1><PRE>
+This version uses Gaudi v27r0 and LHCb v40r0 (and ROOT 6.06.00)
+
+- Packages modified: OT/OTMonitor v3r10, Rich/RichTools v2r52, Si/SiTools v1r10,
+    ST/STAlgorithms v4r8, ST/STCheckers v4r5, ST/STMonitors v4r5,
+    ST/STTools v4r19, Velo/VeloSimulation v3r16
+
+- In OT/OTMonitor v3r10
+  . Remove unused header files
+
+- In OT/OTMonitor v3r10, Si/SiTools v1r10, ST/STCheckers v4r5, ST/STMonitors v4r5,
+     ST/STTools v4r19, Velo/VeloSimulation v3r16
+  . Replace GSL with std::
+
+- In Rich/RichTools v2r52, Si/SiTools v1r10, ST/STCheckers v4r5,
+     ST/STMonitors v4r5, ST/STTools v4r19, Velo/VeloSimulation v3r16
+  . C++11 code modernisations (see package release notes for details)
+
+- In Si/SiTools v1r10, ST/STCheckers v4r5, ST/STTools v4r19
+  . Prefer service<> and SmartIF over svc<> and raw pointer
+
+- In ST/STAlgorithms v4r8
+  . Remove dependency on GaudiGSL
+
+- In ST/STCheckers v4r5
+  . Replace call to deprecated Trajectory::arcLength by Trajectory::muEstimate
+
+
 </PRE><H1><A NAME=v17r2>2015-11-25 LbcomSys v17r2</A></H1><PRE>
 This version uses Gaudi v26r4 and LHCb v39r2 (and ROOT 6.04.02)
 

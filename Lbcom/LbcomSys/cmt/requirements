@@ -1,5 +1,5 @@
 package           LbcomSys
-version           v17r2
+version           v18r0
 
 branches doc cmt tests
 
@@ -28,28 +28,28 @@ use MuonAssociators   v3r5p1   Muon      # Alessia Satta
 
 # Outer tracker
 use OTAssociators     v4r6p1   OT        # Alexandr Kozlinskiy
-use OTMonitor         v3r9     OT        # Francesco Dettori
+use OTMonitor         v3r10    OT        # Francesco Dettori
 
 # Rich
 use RichAlgorithms    v1r9     Rich      # Chris Jones
 use RichMCMonitors    v1r10p1  Rich      # Chris Jones
 use RichMCTools       v3r19    Rich      # Chris Jones
-use RichTools         v2r51    Rich      # Chris Jones
+use RichTools         v2r52    Rich      # Chris Jones
 
 # Silicon detectors
-use SiTools           v1r9p1   Si        # Matt Needham
+use SiTools           v1r10    Si        # Matt Needham
 
 # Silicon Tracker
-use STAlgorithms      v4r7p2   ST        # Jeroen van Tilburg
+use STAlgorithms      v4r8     ST        # Jeroen van Tilburg
 use STAssociators     v1r8p1   ST        # Jeroen van Tilburg
-use STCheckers        v4r4     ST        # Jeroen van Tilburg
-use STMonitors        v4r4     ST        # Mark Tobin
-use STTools           v4r18    ST        # Jeroen van Tilburg
+use STCheckers        v4r5     ST        # Jeroen van Tilburg
+use STMonitors        v4r5     ST        # Mark Tobin
+use STTools           v4r19    ST        # Jeroen van Tilburg
 
 # Velo
 use VeloAlgorithms    v5r8     Velo      # Tomasz Szumlak
 use VeloAssociators   v2r5p1   Velo      # Tomasz Szumlak
-use VeloSimulation    v3r15p1  Velo      # Tomasz Szumlak
+use VeloSimulation    v3r16    Velo      # Tomasz Szumlak
 use VeloTools         v4r2p1   Velo      # Tomasz Szumlak
 
 # Velo Pixel
