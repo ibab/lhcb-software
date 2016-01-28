@@ -7,7 +7,8 @@
       <text>/lhcb/LHCb/Collision12/PSIX.MDST/00037249/0000/00037249_00000090_1.psix.mdst</text>
       <text>-b</text>
       <text>-w</text>
-      <text>-t=MyTuples.root</text>
+      <text>--tuplefile=MyTuples.root</text>
+      <text>--histofile=MyHistos.root</text>
   </set></argument>
 </extension>
 

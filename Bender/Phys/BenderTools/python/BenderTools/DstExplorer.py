@@ -233,7 +233,11 @@ def configure ( config ) :
     
     if hasattr ( config , 'TupleFile' ) and config.TupleFile :
         logger.info ( 'Define TupleFile to be %s' % config.TupleFile )
-        daVinci.TupleFile = config.TupleFile 
+        daVinci.TupleFile = config.TupleFile
+        
+    if hasattr ( config , 'HistoFile' ) and config.HistoFile :
+        logger.info ( 'Define HistogramFile to be %s' % config.HistoFile )
+        daVinci.HistogramFile = config.HistoFile 
 
     if config.MicroDST or 'mdst' == ext or 'MDST' == ext or 'uDST' == ext :
         logger.info ( 'Define input type as micro-DST' )

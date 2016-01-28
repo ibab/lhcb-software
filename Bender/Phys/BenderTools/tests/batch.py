@@ -18,12 +18,15 @@ __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-06-07"
 # =============================================================================
 
-## book n-tuple
-from GaudiPython.TupleUtils import nTuple
-
 
 t = nTuple('MyTuple','Tuple')
+h = book  ('path/to/my/histo', ## path in Histogram Transient Store
+           'this it title '  , ## histogram title
+           100               , ## number of bins
+           0                 , ## low edge
+           100               ) ## high edge
 
+print 'TUPLE TYPE:', type(t)
 ## event loop 
 for i in range(20) :
     
@@ -33,7 +36,12 @@ for i in range(20) :
     
     t.column_int   ( 'i'  , i       )
     t.column_float ( 'fi' , float(i)) 
-    t.write() 
+    t.write()
+
+    h.fill ( i , i ) 
+
+
+print h.dump(100,40) 
 
 
     
