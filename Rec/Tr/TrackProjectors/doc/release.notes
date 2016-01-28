@@ -3,6 +3,8 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
+
+!========================= TrackProjectors v3r4 2016-01-28 =========================
 ! 2016-01-07 - Gerhard Raven
  - TrackOTLRSignTool: replace StaticArray with boost::container::static_vector
 ! 2016-01-02 - Gerhard Raven
