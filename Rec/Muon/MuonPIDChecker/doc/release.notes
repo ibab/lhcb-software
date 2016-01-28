@@ -1,6 +1,8 @@
 ! Package     : MuonPIDChecker
 ! Responsible : E. Polycarpo, H. Lopes
 !----------------------------------------------------------------------------
+
+!========================= MuonPIDChecker v5r6 2016-01-28 =========================
 ! 2015-12-28 - Gerhard Raven
  - prefer (implicit) std::initializer_list over boost::assign::list_of
  - prefer std::to_string over boost::lexical_cast
