@@ -3,14 +3,13 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !-------------------------------------------------------------------------------
 
-
-
+!========================= CaloTools v6r12 2016-01-28 =========================
 ! 2015-12-19 - O. Deschamps
  - Calo2MCTool : change default MC association to rely on CaloHypo->MC Linker. In case the Linker doesn't exist
    the chain CaloHypo->CaloCluster->CaloDigit->MC is used (assuming the reconstruction version is consistent with the original CaloHypos)
 
 ! 2015-12-17 - Marco Cattaneo
- - CaloHypoEstimator.cpp: reorganise an if clause to avoid and FPE with clang
+ - CaloHypoEstimator.cpp: reorganise an if clause to avoid an FPE with clang
 
 !========================= CaloTools v6r11 2015-11-23 =========================
 ! 2015-11-06 - O. Deschamps
