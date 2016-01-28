@@ -591,6 +591,7 @@ ExpectedTrackSignal::setThresholdInfo( LHCb::RichRecTrack * track,
   pid->setPionHypoAboveThres(false);
   pid->setKaonHypoAboveThres(false);
   pid->setProtonHypoAboveThres(false);
+  pid->setDeuteronHypoAboveThres(false);
   for ( const auto& hypo : m_pidTypes )
   {
     _ri_debug << " -> Trying " << hypo << endmsg;
@@ -603,11 +604,13 @@ void
 ExpectedTrackSignal::setThresholdInfo( LHCb::RichRecSegment * segment,
                                        LHCb::RichPID * pid ) const
 {
+  if ( !segment || !pid ) return;
   pid->setElectronHypoAboveThres(false);
   pid->setMuonHypoAboveThres(false);
   pid->setPionHypoAboveThres(false);
   pid->setKaonHypoAboveThres(false);
   pid->setProtonHypoAboveThres(false);
+  pid->setDeuteronHypoAboveThres(false);
   for ( const auto& hypo : m_pidTypes )
   {
     pid->setAboveThreshold(hypo,aboveThreshold(segment,hypo));

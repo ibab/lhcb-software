@@ -11,6 +11,7 @@
    LHCb::RichTrackSegment in RichDetailedTrSegMakerFromRecoTracks.
    (There appears to be a modest improvement from using this on the
    Rich::RadIntersection::Vector vector.)
+ - Set the Deuteron threshold information in ExpectedTrackSignal.
 
 !========================= RichRecTrackTools v1r41 2016-01-28 =========================
 ! 2016-01-21 - Chris Jones
