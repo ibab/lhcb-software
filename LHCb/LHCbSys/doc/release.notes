@@ -5,6 +5,246 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v40r0>2016-01-29 LHCbSys v40r2</A></H1><PRE>
+This version uses Gaudi v27r0 and LCG_83 with ROOT 6.06.00.
+
+- Packages modified: Associators/MCAssociators v1r6, Calo/CaloDAQ v4r39,
+   Calo/CaloUtils v10r6, DAQ/DAQUtils v1r14, DAQ/MDF v3r44, Det/CaloDet v10r21,
+   Det/DDDB v1r83, Det/DetCond v12r46, Det/DetDesc v19r0, Det/DetDescSvc v4r0,
+   Det/FTDet v2r12, Det/Magnet v8r0, Det/MuonDet v10r0, Det/OTDet v9r0,
+   Det/STDet v5r0, Det/VeloDet v14r0, Det/VPDet v3r4, Event/DAQEvent v9r21,
+   Event/DigiEvent v4r5, Event/EventPacker v5r9, Event/FSREvent v1r2,
+   Event/GenEvent v7r0, Event/LumiEvent v3r10, Event/MCEvent v3r4,
+   Event/RecEvent v2r56, Event/TrackEvent v6r5, Ex/DetCondExample v11r15,
+   GaudiConf v19r16, GaudiMTTools v1r3, GaudiObjDesc v11r24, Hlt/HltDAQ v4r24,
+   Hlt/HltServices v2r13, Kernel/FSRAlgs v2r0, Kernel/HltInterfaces v6r5,
+   Kernel/LHCbAlgs v3r8, Kernel/LHCbKernel v16r0, Kernel/LHCbMath v3r61,
+   Kernel/PartProp v1r21, L0/L0Calo v11r15, L0/L0DU v10r34p1, Muon/MuonDAQ v4r21,
+   Muon/MuonKernel v5r0, OT/OTDAQ v8r0, Phys/LoKiCore v11r29, Phys/LoKiGen v10r23,
+   Phys/LoKiHlt v3r21, Phys/LoKiMC v10r21, Rich/RichDAQ v3r44, 
+   Rich/RichKernel v7r62, Sim/SimComponents v4r0, ST/STDAQ v4r8,
+   Tools/CondDBEntityResolver v5r10, Tools/CondDBUI v3r36, Tools/XmlTools v6r9,
+   Tr/LHCbTrackInterfaces v2r3
+ 
+- In Associators/MCAssociators v1r6, Calo/CaloDAQ v4r39, Calo/CaloUtils v10r6,
+     Det/CaloDet v10r21, Det/DetDesc v19r0, Det/DetDescSvc v4r0,
+     Det/MuonDet v10r0, Det/OTDet v9r0, Det/STDet v5r0, Det/VPDet v3r4,
+     Event/EventPacker v5r9, Hlt/HltDAQ v4r23, Kernel/HltInterfaces v6r5,
+     Kernel/LHCbAlgs v3r8, Kernel/LHCbKernel v16r0, Kernel/PartProp v1r21,
+     OT/OTDAQ v8r0, Rich/RichDAQ v3r44, Rich/RichKernel v7r62, ST/STDAQ v4r8,
+     Tools/CondDBEntityResolver v5r10, Tools/XmlTools v6r9
+  . C++ code modernisations, see package release notes for details
+
+- In Calo/CaloUtils v10r6
+  . use std::endl instead of endmsg for new line inside a MsgStream
+
+- In Calo/CaloUtils v10r6, Det/FTDet v2r12, Det/Magnet v8r0, L0/L0DU v10r34p1
+  . Fix clang warnings
+
+- In DAQ/DAQUtils v1r14, DAQ/MDF v3r44, Event/DAQEvent v9r21,
+     Event/EventPacker v5r9, Event/FSREvent v1r2, Event/GenEvent v7r0,
+     Event/LumiEvent v3r10, Event/MCEvent v3r4, Event/RecEvent v2r56,
+     Ex/DetCondExample v11r15, GaudiObjDesc v11r24, Kernel/FSRAlgs v2r0,
+     Kernel/LHCbAlgs v3r8, Kernel/LHCbKernel v16r0, L0/L0Calo v11r15,
+     Rich/RichKernel v7r62, Sim/SimComponents v4r0, Tools/XmlTools v6r9
+  . Removed (u)longlong typedef (see GAUDI-1125).
+
+- In DAQ/MDF v3r44, Det/DetCond v12r46, Det/DetDesc v19r0, Det/DetDescSvc v4r0,
+     Det/Magnet v8r0, Det/VPDet v3r4, Hlt/HltDAQ v4r23, Hlt/HltServices v2r13
+  . Prefer SmartIF over raw pointer to interface
+
+- In DAQ/MDF v3r44, Det/DetDescSvc v4r0, Det/Magnet v8r0, Kernel/LHCbAlgs v3r8,
+     Kernel/PartProp v1r21, Tr/LHCbTrackInterfaces v2r3
+  . Prefer extends over direct virtual public inheritance from interface
+    and use extends' implementation of queryInterface
+
+- In Det/CaloDet v10r21
+  . DeCalorimeter: make resetCellParam standalone function in anonymous namespace
+  . Use dataSPD as optional pileup calibration for SPD
+
+- In Det/DDDB v1r83
+  . Add support for 2016 DataType
+  . Set InitialTime for 2015 at end of fill 4720 (last fill of the year)
+
+- In Det/DetCond v12r46
+  . Prevent CondDBCache from logging " FOUND" as a warning
+
+- In Det/DetDesc v19r0
+  . Major change: prefer public extend_interfaces<IInterface>  over 
+    virtual public IInterface
+  . Major change: add const qualifier to ITransportSvc methods
+  . Major change: make StaticArray final - this allows the elimination of the
+                  destructor, which allows move semantics
+  . Remove unneeded include of gsl_sys.h
+  . Fix bug in StaticArray::insert
+
+- In Det/DetDesc v19r0, Event/EventPacker v5r9, Sim/SimComponents v4r0
+  . Fixed compilation with gcc 5.2.
+
+- In Det/DetDesc v19r0, Det/OTDet v9r0
+  . Major change: replace StaticArray by boost::container::static_vector
+
+- In Det/DetDescSvc v4r0
+  . Follow major change in ITransportSvc: make methods const
+
+- In Det/FTDet v2r12, Det/VPDet v3r4, OT/OTDAQ v8r0
+  . Remove unneeded dependency on GSL
+
+- In Det/Magnet v8r0
+  . Major change: follow interface change in ILHCbMagneticFieldSvc 
+
+- In Det/MuonDet v10r0
+  . Major change: make IMuonFastPosTool::calcTilePos const, use extend_interfaces
+
+- In Det/OTDet v9r0, Det/STDet v5r0, Det/VeloDet v14r0
+  . major change: migrate from std::auto_ptr to std::unique_ptr
+
+- In Det/VeloDet v14r0
+  . DeVeloPhiType: 
+    o simplify trajectory construction
+    o use std::minmax_element instead of std::min_element and std::max_element
+  . Make sure arguments of fast_sincos are initialized to see if this solves
+    problem with reproducibility
+
+- In Event/DigiEvent v4r5
+  . Add location for corrected HC digits.
+
+- In Event/EventPacker v5r9
+  . Get rid of some unneccessary dynamic casts during the event loop in
+    various packers and unpackers.
+  . Add some missing variable initialisation in PackPrimaryVertex.
+
+- In Event/GenEvent v7r0
+  . Added GenFSR.xml, GenCountersFSR.xml and CrossSectionsFSR.xml classes  
+
+- In Event/RecEvent v2r56
+  . Add location for TrackSummary to RecSummary.
+  . Add 'nGhosts' to RecSummary, to store number of identified ghost tracks.
+
+- In Event/TrackEvent v6r5
+  . Migrate from std::auto_ptr to std::unique_ptr
+  . Enforce const correctness of firstState getter
+  . Remove unneeded include of gsl_math.h
+
+- In GaudiConf v19r16
+  . LHCBPS-1472: Optimized some functions in GaudiConf.Manipulations.
+                 Fixed a problem with a special case.
+                 Fixed a flaw in the new logic of configurableInstanceFromString.
+
+- In GaudiMTTools v1r3, Kernel/LHCbAlgs v3r8, Phys/LoKiCore v11r29
+  . Stop propagating globalTimeOffset (see GAUDI-1122)
+
+- In GaudiObjDesc v11r24
+  . Avoid creating (temporary) strings in enum->string conversion
+
+- In Hlt/HltDAQ v4r22, v4r23, v4r24
+  . Add a work around to HltTrackingCoder to fix compilation with clang do to 
+    the LLVM bug https://llvm.org/bugs/show_bug.cgi?id=23381.
+  . Make the packers a local object to each method where it is required.
+  . Make a helpful debugging selection report for version 99.
+  . In the case that too many objects are requested to be saved, write a dummy
+    bank with version 99.
+  . Replace endreq with endmsg
+  . Fix for Tesla related info. resurrection.
+
+- In Hlt/HltServices v2r12, v2r13
+  . Remove TCKANNSvc::queryInterface, use base_class implementation instead
+  . Remove deprecated ANNDispatchSvc
+
+- In Kernel/FSRAlgs v2r0
+  . Added GenFSRMerge algorithm, requiring tools in SimComponents
+
+
+- In Kernel/LHCbKernel v16r0
+  . Remove redundant Rich typedefs.
+  . Add some more move semantics to RichRadIntersection.h
+  . Major change: implement StatusCode fieldVector as final, shunt calls to 
+                  XYZPoint fieldVector 
+  . Major change: use extend_interfaces instead of direct virtual inheritance
+                  from IMagneticFieldSvc
+  . DetectorSegment: classify as 'final' and remove virtual destructor
+  . Major change: IEvtTypeSvc add const, prefer extend_interfaces
+  . Major change: replace deprecated std::auto_ptr with std::unique_ptr
+  . Inline MuonTileID::isDefined
+  . Reduce size of FastClusterContainer by 8 bytes
+
+- In Kernel/LHCbMath v3r61
+  . Remove instrset_detect.cpp, instrset.h, now available from VectorClass
+  . Replace Boost.Math for inverse incomplete beta function with GSL 
+  . Add some default constructors to make serialization machinery happy 
+  . BloomFilter: 
+    o add conversions from/to a string representation
+    o add comparison for (in)equality, ability to get/set 32-bit words of
+      internal representation
+
+- In Muon/MuonDAQ v4r21
+  . Remove unused #include of MuonTile.h
+
+- In Muon/MuonKernel v5r0
+  . Remove obsolete and unused MuonTile class
+
+- In OT/OTDAQ v8r0
+  . Major change: IOTReadOutWindow, OTReadoutWindow
+    o add const
+    o prefer extend_interfaces over direct inheritance
+  . classify OTRawBankDecoderHelpers::Module as final, use direct member init
+  . Remove OTFillEventFromOTTime (contains various memory leaks, and seems to 
+    have been deprecated for O(10 years) )
+
+- In Phys/LoKiCore v11r29
+  . ParticleProperties: make more explicit printout for invalid pids 
+  . Add hash id for functor not in the cache in the error message
+    from Hybrid::CoreFactory.
+  . Use releaseTool() instead of release() to explicitly release a tool acquired
+    with tool() templated method
+  . Remove unneeded include of select.h
+  . FilterAlg.cpp: improve a little bit usage of double lock pattern
+
+- In Phys/LoKiGen v10r23, Phys/LoKiMC v10r21
+  . Add Graphviz into CMT&CMAKE 
+
+- In Phys/LoKiGen v10r23
+  . Remove old GetHepMC stuff 
+  . Add methods to get HepMC-treed  from event, events, containers, ...
+  . Add new module LoKiGen.graph to produce decay tree graphs 
+
+- In Phys/LoKiHlt v3r21
+  . Fix warnings for duplicate selection rules (new ROOT)
+  . Add swap functions to event and run-lists 
+
+- In Phys/LoKiMC v10r21
+  . LoKiMC.graph : several improvemens for making  graphs from decay trees 
+
+- In Rich/RichDAQ v3r44
+  . Convert static new objects to static local in RichRawDataFormatTool, to
+    avoid memory leaks when the tool is deleted.
+  . Remove the old implementation of createDataBank using new/delete in 
+    RichRawDataFormatTool in favour of using the local static implementation
+    in all places.
+
+- In Rich/RichKernel v7r62
+  . Set the RejectAmbiguousPhotons=True option in the fast (estimation) 
+    photon reconstruction tool when running the Adaptive option.
+  . Clean up a bit RichStatDivFunctor.h and RichPoissonEffFunctor.h
+  . Add support for a new 'Adaptive' photon reconstruction type.
+    Default remains Quartic for now.
+  . Add configuration method for the CK Mass Hypothesis Ring creator
+
+- In Sim/SimComponents v4r0
+  . Added GenFSRRead, GenFSRLog and GenFSRStat algorithms
+  . Major change: follow constification of interface in Kernel/LHCbKernel
+  . Qualify internal EvtTypeInfo as final, remove (virtual) destructor,
+    pass sink arguments by value and std::move them
+  . EvtTypeSvc: keep EvtTypeInfo by value, inherit from extends, remove
+    queryInterface implementation, prefer STL algorithms
+
+- In ST/STDAQ v4r8
+  . Add the STLayerSelector algorithm to remove clusters from certain layers
+
+- In Tools/CondDBUI v3r36
+  . Fixed minor mistake in CondDBUI::Helpers that was triggering ROOT-7825.
+
+
 </PRE><H1><A NAME=v39r2>2015-11-24 LHCbSys v39r2</A></H1><PRE>
 This version uses Gaudi v26r4 and LCG_79 with ROOT 6.04.02.
 
