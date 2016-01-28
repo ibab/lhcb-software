@@ -12,6 +12,9 @@
 #ifndef RICHRECQC_RICHPIDQC_H
 #define RICHRECQC_RICHPIDQC_H 1
 
+// STL
+#include <array>
+
 // base class
 #include "RichRecBase/RichRecHistoAlgBase.h"
 
@@ -71,7 +74,7 @@ namespace Rich
         class TkTally
         {
         public:
-          TkTally() : nTracks(0), multiplicity(0) { }
+          TkTally() { }
         public:
           /// Operator +=
           inline TkTally& operator+=(const TkTally& c)
@@ -86,8 +89,8 @@ namespace Rich
           { return ost << "[ nTracks=" << id.nTracks 
                        << " multiplicity=" << id.multiplicity << " ]"; }
         public:
-          unsigned int nTracks;
-          unsigned int multiplicity;
+          unsigned long long nTracks{0};
+          unsigned long long multiplicity{0};
         };
 
       public:
@@ -111,7 +114,7 @@ namespace Rich
 
         /// Print out the given PID
         void print( MsgStream & msg, 
-                    LHCb::RichPID * iPID,
+                    const LHCb::RichPID * iPID,
                     const Rich::ParticleIDType pid,
                     const Rich::ParticleIDType mcpid ) const;
 
@@ -156,11 +159,6 @@ namespace Rich
 
         const IMCParticleSelector * m_mcPselector = nullptr; ///< MCParticle selector
 
-        // Summary information
-        double m_sumTab[6][6];
-        int m_nEvents[2];
-        int m_nTracks[2];
-
         typedef Rich::Map<Rich::Rec::Track::Type,std::pair<unsigned int,unsigned int> > TkCount;
         /// Count the number of PID objects by track type
         TkCount m_trackCount;
@@ -185,13 +183,22 @@ namespace Rich
         PIDMap m_plotTools;
 
         /// Inclusive plots tool
-        const Rich::Rec::IPIDPlots * m_allPlotTool;
+        const Rich::Rec::IPIDPlots * m_allPlotTool = nullptr;
 
         /// Plots configuration object
         Rich::Rec::IPIDPlots::Configuration m_plotsConfig;
 
         /// Expert plots
         bool m_expertPlots;
+
+        /// Correlations between ID'ed and MC PID types
+        double m_sumTab[Rich::NParticleTypes][Rich::NParticleTypes];
+        
+        /// Event count ( [0] == all events, [1] == events with RichPID information )
+        int m_nEvents[2];
+
+        /// track count( [0] = all tracks, [1] == tracks with PID information )
+        int m_nTracks[2];
 
       private:
 

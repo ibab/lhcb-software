@@ -4,6 +4,12 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2016-01-28 - Chris Jones
+ - Fix RichPIDQC to remove hard coded assumptions on the number of PID types
+   (was 6). This broken when Deuteron was added as an option. Now taken (as
+   it should have been) from the Rich::NParticleTypes typedef.
+ - Long over due code clean up (C++11 etc.) in RichPIDQC.
+
 !========================= RichRecQC v2r73 2016-01-28 =========================
 ! 2016-01-19 - Chris Jones
  - A few more C++11 clean ups (range loops, nullptr etc.).
