@@ -4,6 +4,7 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+!========================= PatPV v3r30 2016-01-28 =========================
 ! 2016-01-21 - Marco Cattaneo
  - Add missing override qualifiers and remove an unused variable, to silence
    clang warnings
