@@ -60,7 +60,7 @@
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>  
                 <code>
                    const float dll = particleDeltaLL(type);
-                   return (float)( dll &gt; 0 ? 1.0 - (float)gsl_sf_erf(sqrt(dll)) : 1.0 );
+                   return (float)( dll &gt; 0 ? 1.0 - (float)gsl_sf_erf(std::sqrt(dll)) : 1.0 );
                 </code>
         </method>
 

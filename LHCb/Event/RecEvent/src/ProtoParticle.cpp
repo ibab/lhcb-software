@@ -1,4 +1,3 @@
-// $Id: ProtoParticle.cpp,v 1.13 2010-05-21 15:40:08 odescham Exp $
 
 // STL
 #include <algorithm>
@@ -24,12 +23,10 @@ std::ostream& LHCb::ProtoParticle::fillStream( std::ostream & s ) const
     << " RichPID "   << this->richPID()
     << " MuonPID "   << this->muonPID()
     << " ExtraInfo [";
-  for ( ExtraInfo::const_iterator i = extraInfo().begin();
-        i != extraInfo().end(); ++i )
+  for ( const auto & i : extraInfo() )
   {
-    const LHCb::ProtoParticle::additionalInfo info =
-      static_cast<LHCb::ProtoParticle::additionalInfo>(i->first);
-    s << " " << info << "=" << i->second;
+    const auto info = static_cast<LHCb::ProtoParticle::additionalInfo>(i.first);
+    s << " " << info << "=" << i.second;
   }
   return s << " ] }";
 }
@@ -43,8 +40,7 @@ LHCb::ProtoParticle::clearCalo( const LHCb::CaloHypo::Hypothesis & hypo )
   LHCb::ProtoParticle::ExtraInfo::size_type removed = 0;
 
   // remove NULL hypos
-  const SmartRefVector<LHCb::CaloHypo>::iterator it = 
-    std::remove ( m_calo.begin(), m_calo.end(), 0 );
+  const auto it = std::remove ( m_calo.begin(), m_calo.end(), 0 );
   if ( m_calo.end() != it )
   {
     removed += m_calo.end() - it;
@@ -52,7 +48,7 @@ LHCb::ProtoParticle::clearCalo( const LHCb::CaloHypo::Hypothesis & hypo )
   }
 
   // Find hypos to remove
-  const SmartRefVector<LHCb::CaloHypo>::iterator iHypoRemove =
+  const auto iHypoRemove =
     std::remove_if ( m_calo.begin(), m_calo.end(),
                      bind( &LHCb::CaloHypo::hypothesis, _1 ) == hypo );
   if ( m_calo.end() != iHypoRemove )

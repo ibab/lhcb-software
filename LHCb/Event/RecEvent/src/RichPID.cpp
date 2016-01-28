@@ -9,9 +9,6 @@
  */
 //-----------------------------------------------------------------------------
 
-// Include to suppress "debug information too long" warning on Windows
-#include "GaudiKernel/Kernel.h"
-
 // RichEvent includes
 #include "Event/RichPID.h"
 
@@ -88,19 +85,16 @@ std::ostream& LHCb::RichPID::fillStream( std::ostream& s ) const
 
   // Mass thresholds
   s << " | Thres ";
-  for ( Rich::Particles::const_iterator ipid = Rich::particles().begin();
-        ipid != Rich::particles().end(); ++ipid )
+  for ( const auto pid : Rich::particles() )
   {
-    const std::string T = isAboveThreshold(*ipid) ? "T" : "F";
-    s << T;// << " ";
+    s << ( isAboveThreshold(pid) ? "T" : "F" );
   }
 
   // DLL values
   s << " | DLLs ";
-  for ( Rich::Particles::const_iterator ipid = Rich::particles().begin();
-        ipid != Rich::particles().end(); ++ipid )
+  for ( const auto pid : Rich::particles() )
   {
-    s << " " << boost::format(sF)%(particleDeltaLL(*ipid));
+    s << " " << boost::format(sF) % particleDeltaLL(pid);
   }
 
   // Best ID
