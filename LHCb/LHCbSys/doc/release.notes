@@ -5,7 +5,7 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v40r0>2016-01-29 LHCbSys v40r2</A></H1><PRE>
+</PRE><H1><A NAME=v40r0>2016-01-29 LHCbSys v40r0</A></H1><PRE>
 This version uses Gaudi v27r0 and LCG_83 with ROOT 6.06.00.
 
 - Packages modified: Associators/MCAssociators v1r6, Calo/CaloDAQ v4r39,
