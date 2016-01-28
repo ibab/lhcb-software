@@ -4,6 +4,7 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+!========================= TrackMonitors v2r12 2016-01-28 =========================
 ! 2016-23-01 - Komarov Ilya
 - replaced auto_ptr with unique_ptr in STTrackTuple (Is possible since no copying of this object is applied in a code)
 
