@@ -9,7 +9,7 @@
  - add helper script  scripts/_get_input_.py to get the input file list 
    for configuration files *without* their execution/importing 
  - add possibility to (re)define dtaatype/simu/ext from (implict) EventSelector
- - define (and test!) datatype '2015'
+ - define (and test) datatype '2015'
 
 ! 2016-01-27 - Vanya Belyaev
  - bender-base scripts:
