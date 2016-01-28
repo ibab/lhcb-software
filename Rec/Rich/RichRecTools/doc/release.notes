@@ -4,6 +4,7 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!========================= RichRecTools v4r29 2016-01-28 =========================
 ! 2016-01-21 - Chris Jones
  - Favour emplace_back over pushback where appropriate.
  - Compute the bailout number of ray-tracing attempts in 
