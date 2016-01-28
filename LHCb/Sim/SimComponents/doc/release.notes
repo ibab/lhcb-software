@@ -5,7 +5,7 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
-!========================= SimComponents v5r0 2016-01-27 =========================
+!========================= SimComponents v4r0 2016-01-28 =========================
 ! 2016-01-25 - Davide Fazzini
  - Added GenFSRRead, GenFSRLog and GenFSRStat algorithms
 
