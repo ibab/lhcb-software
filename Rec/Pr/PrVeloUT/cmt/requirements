@@ -3,7 +3,7 @@
 # Maintainer : Jianchun Wang
 #=====================================================================
 package           PrVeloUT
-version           v2r3
+version           v2r4
 
 #=====================================================================
 # Structure, i.e. directories to process. 

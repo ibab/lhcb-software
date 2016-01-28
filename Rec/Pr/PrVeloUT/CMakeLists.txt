@@ -1,7 +1,7 @@
 ################################################################################
 # Package: PrVeloUT
 ################################################################################
-gaudi_subdir(PrVeloUT v2r3)
+gaudi_subdir(PrVeloUT v2r4)
 
 gaudi_depends_on_subdirs(Det/STDet
                          Event/DigiEvent
