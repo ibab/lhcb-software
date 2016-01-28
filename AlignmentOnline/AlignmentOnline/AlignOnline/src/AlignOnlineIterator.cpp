@@ -80,6 +80,7 @@ class AlignOnlineIterator: public GaudiTool, virtual public LHCb::IAlignIterator
     IUpdateManagerSvc* m_updateMgrSvc ; ///< Pointer to update manager svc
     unsigned int m_wrnLo;
     unsigned int m_wrnHi;
+    string m_align_message; // < string with error messages or info to publish with DIM service
 };
 
 DECLARE_TOOL_FACTORY(AlignOnlineIterator)
@@ -184,6 +185,10 @@ StatusCode AlignOnlineIterator::initialize()
     m_xmlcopiers.push_back(acpy);
   }
   fflush(stdout);
+
+  // Define error DIM service
+  m_align_message = "INFO: " + m_runType + " Initializing align messanger"; // This message will be overwritten
+  m_PubSvc->declarePubItem("AlignmentMessenger", m_align_message);
 
   // set reference base
   m_parent->setReferenceBase(0);
@@ -318,15 +323,21 @@ StatusCode AlignOnlineIterator::i_run()
     Alignment::AlignmentMonitoring::CompareConstants cmp(initAlConsts,finalAlConsts);
     cmp.Compare();
     if ( msgLevel(MSG::DEBUG) ) cmp.PrintWarnings(1);
+     // print the elements that showed significant variation
+     cmp.PrintWarnings(2);
     if (m_runType != string("Tracker") && cmp.GetNumWarnings(3)){// changes to big, make it fail
       error() << "Alignment converged but constants changes is unreasonably large" << endmsg;
+      if (m_runType == string("Velo")){
+        m_align_message = "ERROR: " + m_runType + " Alignment converged but constants changes is unreasonably large";}
+        if (m_runType == string("Muon")){
+          m_align_message = "WARNING: " + m_runType + " Alignment converged but constants changes is unreasonably large";}
       sc = StatusCode::FAILURE;
-    }    
-    else if ( !( (m_runType == string("Velo") && cmp.GetNumWarnings(2, "Velo(Left|Right)\\..*")) || (m_runType == string("Tracker") && (cmp.GetNumWarnings(3) || cmp.GetNumWarnings(2)>3)) ) ){ // no significant change
-      warning() << "Alignment converged in more than one iteration but constants didn't change significantly." 
+    }
+    else if ( !( (m_runType == string("Velo") && cmp.GetNumWarnings(2, "Velo(Left|Right)\\..*")) || 
+		 (m_runType == string("Tracker") && (cmp.GetNumWarnings(3) || cmp.GetNumWarnings(2)>3)) ) ){ // no significant change
+      warning() << "Alignment converged in more than one iteration but constants didn't change significantly."
 		<< endmsg;
-      if (cmp.GetNumWarnings(2))
-	cmp.PrintWarnings(2);
+    m_align_message = "INFO: " + m_runType + " Alignment converged in more than one iteration but constants didn't change significantly";
     } else {
       // after last update, if more than one iteration and successfully converged
       for (auto& i : m_xmlcopiers)
@@ -338,7 +349,7 @@ StatusCode AlignOnlineIterator::i_run()
 	  s = (j->second);
 	  //*s = to_string(runnr) + " " + i->copybackfilename();
 	  *s = to_string(runnr) + " v" + to_string(i->version());
-	  
+
 	  if (!thissc.isSuccess())
 	    {
 	      error() << "Error copying file to online area" << endmsg;
@@ -351,10 +362,12 @@ StatusCode AlignOnlineIterator::i_run()
     if (sc.isSuccess() && m_iteration <= 1)
     {
       warning() << "Alignment didn't change." << endmsg;
+      m_align_message = "INFO: " + m_runType + " Alignment didn't change";
     }
     else
     {
       warning() << "Alignment procedure failed." << endmsg;
+      m_align_message = "ERROR: " + m_runType + " Alignment procedure failed";
     }
     for (auto& i : m_xmlcopiers)
     {
