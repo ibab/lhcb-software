@@ -2,6 +2,8 @@
 ! Package     : MuonID
 ! Responsible : Marianna Fontana, Matteo Palutan, Ricardo Vazquez Gomez
 !-----------------------------------------------------------------------------
+
+!========================= MuonID v10r0 2016-01-28 =========================
 ! 2015-12-26 - Gerhard Raven
  - follow changes in MuonInterfaces to pass MuonTileID by value instead of
    by pointer
@@ -30,7 +32,6 @@
 
 
 !========================= MuonID v9r19 2015-12-05 ===========================
-
 ! 2015-11-27 - Marco Clemencic
  - Removed (invalid) link to component library MuonTrackRec.
 
