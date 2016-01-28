@@ -2,6 +2,8 @@
 ! Package     : MuonInterfaces
 ! Responsible : Giovanni Passaleva
 ! ====================================================================
+
+!========================= MuonInterfaces v2r0 2016-01-28 =========================
 ! 2016-01-05 - Gerhard Raven
  - major change: make MuonTrack const correct
      x requires matching version of MuonTrackRec, TrackTools
@@ -23,7 +25,6 @@
  - qualify single argument constructors with explicit
  - prefer STL algorithms over raw loops
  - prefer range-based for loops
- 
 
 !========================= MuonInterfaces v1r6 2014-02-19 ======================
 ! 2014-02-14 - Chris Jones
