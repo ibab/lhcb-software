@@ -7,7 +7,7 @@
 
 ! 2016-01-28 - Vanya Belyaev
  - improments for histos&tuples 
-   
+ - more features to qmtest bender_tools_script 
 
 ! 2016-01-28 - Vanya Belyaev
  - add helper script  scripts/_get_input_.py to get the input file list 
