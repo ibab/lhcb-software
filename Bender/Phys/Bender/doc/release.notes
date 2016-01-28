@@ -28,6 +28,8 @@
  - add opportunity to get & inspect input file list from EventSelector
  - new function in module Bender.DataUtils: evtSelInput ( filelist )
 
+
+
 ! 2016-01-27 - Vanya Belyaev
  - bender: 
    1) add new property "-t/--tuplefile" 
