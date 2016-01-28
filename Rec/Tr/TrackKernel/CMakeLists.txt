@@ -1,7 +1,7 @@
 ################################################################################
 # Package: TrackKernel
 ################################################################################
-gaudi_subdir(TrackKernel v2r4)
+gaudi_subdir(TrackKernel v3r0)
 
 gaudi_depends_on_subdirs(Det/DetDesc
 			 Event/TrackEvent
