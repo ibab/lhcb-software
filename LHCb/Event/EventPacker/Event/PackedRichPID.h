@@ -29,13 +29,12 @@ namespace LHCb
    */
   struct PackedRichPID
   {
-
     int pidResultCode{0};                      
     int dllEl{0},dllMu{0},dllPi{0},dllKa{0},dllPr{0};
     long long track{-1};          
     int dllBt{0};
-    int dllDe{0};
     long long key{0};
+    int dllDe{0};
   };
 
   // -----------------------------------------------------------------------

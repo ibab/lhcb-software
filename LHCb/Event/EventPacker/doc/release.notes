@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2016-01-28 - Chris Jones
+ - Update (from Ulrik Egede) to support Deuteron in RichPID data objects.
+
 !========================= EventPacker v5r9 2016-01-27 =========================
 ! 2016-01-22 - Chris Jones
  - Get rid of some unneccessary dynamic casts during the event loop in
