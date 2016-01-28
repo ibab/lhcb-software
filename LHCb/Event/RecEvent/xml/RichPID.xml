@@ -198,6 +198,7 @@
                 <bitfield desc="RICH Offline Ring Refit PID result"                                          length="1" name="ringRefit"              />
                 <bitfield desc="RICH HLT Local PID result"                                                   length="1" name="hltLocal"               />
                 <bitfield desc="RICH HLT Global PID result"                                                  length="1" name="hltGlobal"              />
+                <bitfield desc="The deuteron hypothesis is above threshold in at least one active radiator"  length="1" name="deuteronHypoAboveThres" />
         </attribute>
 
         <attribute 

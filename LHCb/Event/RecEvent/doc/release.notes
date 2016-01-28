@@ -7,6 +7,7 @@
 ! 2016-01-28 - Chris Jones
  - Update (from Ulrik Egede) to support Deuteron RICH PID type.
  - Some small C++11 clean ups in RichPID.cpp and ProtoParticle.cpp
+ - Add Deuteron threshold flags to RichPID.
 
 !========================= RecEvent v2r56 2016-01-27 =========================
 ! 2015-12-13 - Michel De Cian

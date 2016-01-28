@@ -34,6 +34,7 @@ bool LHCb::RichPID::isAboveThreshold( const Rich::ParticleIDType type ) const
            Rich::Pion     == type ? this->pionHypoAboveThres()     :
            Rich::Kaon     == type ? this->kaonHypoAboveThres()     :
            Rich::Proton   == type ? this->protonHypoAboveThres()   :
+           Rich::Deuteron == type ? this->deuteronHypoAboveThres() :
            false );
 }
 
@@ -45,6 +46,7 @@ void LHCb::RichPID::setAboveThreshold( const Rich::ParticleIDType type,
   else if ( Rich::Pion     == type ) { this->setPionHypoAboveThres(flag);     }
   else if ( Rich::Kaon     == type ) { this->setKaonHypoAboveThres(flag);     }
   else if ( Rich::Proton   == type ) { this->setProtonHypoAboveThres(flag);   }
+  else if ( Rich::Deuteron == type ) { this->setDeuteronHypoAboveThres(flag); }
 }
 
 bool LHCb::RichPID::traversedRadiator(const Rich::RadiatorType radiator) const
