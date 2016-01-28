@@ -1,6 +1,6 @@
 # ====================================================================
 package            CaloReco
-version           v5r26
+version           v5r27
 
 # ================ structure ==============================================
 branches           cmt doc src options 
