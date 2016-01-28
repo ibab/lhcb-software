@@ -6,7 +6,7 @@
 
 ! 2016-01-28 - Chris Jones
  - Fix RichPIDQC to remove hard coded assumptions on the number of PID types
-   (was 6). This broken when Deuteron was added as an option. Now taken (as
+   (was 6). This broke when Deuteron was added as an option. Now taken (as
    it should have been) from the Rich::NParticleTypes typedef.
  - Long over due code clean up (C++11 etc.) in RichPIDQC.
 
