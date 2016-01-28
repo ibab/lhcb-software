@@ -67,7 +67,7 @@ StatusCode Rich::ParticleProperties::initialize()
   m_particleMassSq[Rich::Pion]     = gsl_pow_2( m_particleMass[Rich::Pion]     );
   m_particleMassSq[Rich::Kaon]     = gsl_pow_2( m_particleMass[Rich::Kaon]     );
   m_particleMassSq[Rich::Proton]   = gsl_pow_2( m_particleMass[Rich::Proton]   );
-  m_particleMassSq[Rich::Deuteron] = gsl_pow_2( m_particleMass[Rich::Deuteron]   );
+  m_particleMassSq[Rich::Deuteron] = gsl_pow_2( m_particleMass[Rich::Deuteron] );
 
   // release service
   sc = release(ppSvc);
@@ -78,7 +78,6 @@ StatusCode Rich::ParticleProperties::initialize()
     m_pidTypes.clear();
     for ( const auto& S : m_pidTypesJO )
     {
-      info() << "Particle types considered = " << S << endmsg;
       if      ( "electron"       == S ) { m_pidTypes.push_back(Rich::Electron); }
       else if ( "muon"           == S ) { m_pidTypes.push_back(Rich::Muon); }
       else if ( "pion"           == S ) { m_pidTypes.push_back(Rich::Pion); }

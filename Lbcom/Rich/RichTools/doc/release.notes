@@ -4,6 +4,12 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2016-01-28 - Chris Jones
+ - Remove unneccessary info printout added in the last commit.
+
+! 2016-01-27 - Ulrik Egede
+ - Add support for Deuteron.
+
 !========================= RichTools v2r52 2016-01-27 =========================
 ! 2016-01-23 - Chris Jones
  - General C++11 clean up.
