@@ -3,7 +3,10 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
-!========================= GaudiConf v19r16 2016-01-27 =========================
+!========================= GaudiConf v19r16 2016-01-29 =========================
+! 2016-10-29 - Marco Cattaneo
+ - Update ioh-fsr-dressing test reference to follow changes in Gaudi v27r0 output
+
 ! 2015-12-16 - Marco Clemencic
  - LHCBPS-1472: Fixed another flaw in the new logic of configurableInstanceFromString.
 
