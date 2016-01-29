@@ -224,20 +224,19 @@ namespace Rich
       const auto rad = trSeg.radiator();
 
       // best start point and direction
-      const Gaudi::XYZVector & trackDir = trSeg.bestMomentum();
-      const Gaudi::XYZPoint  & trackPtn = trSeg.bestPoint();
+      const auto & trackDir = trSeg.bestMomentum();
+      const auto & trackPtn = trSeg.bestPoint();
 
       // Get primary PD panel impact point
       LHCb::RichGeomPhoton photon;
-      const Gaudi::XYZPoint & hitPoint = photon.detectionPoint();
-      LHCb::RichTraceMode::RayTraceResult result
-        = rayTraceTool()->traceToDetector( trSeg.rich(),
-                                           trackPtn,
-                                           trackDir,
-                                           photon,
-                                           trSeg,
-                                           m_traceModeRad[rad],
-                                           Rich::top );
+      auto & hitPoint = photon.detectionPoint();
+      auto result = rayTraceTool()->traceToDetector( trSeg.rich(),
+                                                     trackPtn,
+                                                     trackDir,
+                                                     photon,
+                                                     trSeg,
+                                                     m_traceModeRad[rad],
+                                                     Rich::top );
       const bool OK = m_traceModeRad[rad].traceWasOK(result);
       if ( OK )
       {

@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2016-01-29 - Chris Jones
+ - Another small cleanup
+
 ! 2016-01-28 - Chris Jones
  - Properly enforce support for arithemic types only in RichPhotonSpectra
    using type traits.

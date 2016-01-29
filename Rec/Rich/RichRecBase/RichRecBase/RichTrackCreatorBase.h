@@ -93,11 +93,11 @@ namespace Rich
       public:
         /// Default constructor
         TrackCount() {}
-        unsigned int triedTracks    = 0; ///< Number of tracks passing track selection
-        unsigned int selectedTracks = 0; ///< Number of tracks selected for RICH analysis
-        unsigned int aeroSegs       = 0; ///< Number of aerogel segments created
-        unsigned int rich1GasSegs   = 0; ///< Number of Rich1Gas segments created
-        unsigned int rich2GasSegs   = 0; ///< Number of Rich2Gas segments created
+        unsigned long long triedTracks    = 0; ///< Number of tracks passing track selection
+        unsigned long long selectedTracks = 0; ///< Number of tracks selected for RICH analysis
+        unsigned long long aeroSegs       = 0; ///< Number of aerogel segments created
+        unsigned long long rich1GasSegs   = 0; ///< Number of Rich1Gas segments created
+        unsigned long long rich2GasSegs   = 0; ///< Number of Rich2Gas segments created
         /** Increment segment count for given radiator
          *  @param rad Radiator type to increment count for */
         inline void countRadiator( const Rich::RadiatorType rad )
@@ -125,9 +125,10 @@ namespace Rich
       public:
         TrackTypeCount() {}
         /// Access track stats object for given track type
-        inline TrackCount & trackStats( const Rich::Rec::Track::Type trType, ///< Track type enumeration
-                                        const bool unique               ///< Track unique flag
-                                        )
+        inline TrackCount & 
+        trackStats( const Rich::Rec::Track::Type trType, ///< Track type enumeration
+                    const bool unique                    ///< Track unique flag
+                    )
         {
           return (*this)[ TrackTag(trType,unique) ];
         }
