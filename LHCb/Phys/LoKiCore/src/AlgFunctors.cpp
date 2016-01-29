@@ -86,7 +86,10 @@ namespace
       // if algorith, is already exist - just get it! 
       IAlgorithm* iialg = 0 ;
       iialg = iam->algorithm ( name , false ) ;
-      if ( nullptr != iialg && iialg->isInitialized() )
+      if ( nullptr != iialg
+           && Gaudi::StateMachine::RUNNING == iialg -> FSMState()
+           && LoKi::Services::instance().lokiSvc() 
+           && Gaudi::StateMachine::RUNNING == LoKi::Services::instance().lokiSvc()->FSMState() )
       { return LoKi::Interface<IAlgorithm>( iialg ) ; }
     }
     
