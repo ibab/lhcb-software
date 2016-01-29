@@ -4,6 +4,7 @@
 ! Purpose     : Configure the RICH digitisation simulation
 !-----------------------------------------------------------------------------
 
+!========================= RichDigiSys v1r4 2016-01-29 =========================
 ! 2015-11-30 - Marcin Kucharczyk
   - Add options for RICH upgrade (PMTs)
   - RichDetailedFrontEndResponsePMT
