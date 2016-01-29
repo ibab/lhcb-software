@@ -3,6 +3,8 @@
 ! Responsible : Alessia Satta
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
+
+!========================= MuonAlgs v6r14 2016-01-29 =========================
 ! 2015-12-05 - Gerhard Raven
  - instead of using GlobalTimeOffset(), derive its value from rootInTes()
 
