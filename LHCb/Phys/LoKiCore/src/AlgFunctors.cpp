@@ -73,12 +73,23 @@ namespace
   ( const std::string&    name , 
     SmartIF<IAlgManager>  iam  )
   {
+
     if ( !iam ) 
     {
       LoKi::Report::Error 
         ( "AlgFunctors::getAlgorithm: IAlgManager* points to NULL" ) ; 
       return LoKi::Interface<IAlgorithm>()  ; 
     }
+
+    
+    {
+      // if algorith, is already exist - just get it! 
+      IAlgorithm* iialg = 0 ;
+      iialg = iam->algorithm ( name , false ) ;
+      if ( nullptr != iialg ) 
+      { return LoKi::Interface<IAlgorithm>( iialg ) ; }
+    }
+    
     ///////// start of code copied from GaudiSequencer...
 
     /** @todo       AlgFunctors.cpp : This stupid code MUST BE REMOVED ASAP!
@@ -110,6 +121,7 @@ namespace
     bool addedRootInTES = false;
     // do not create it now
     SmartIF<IAlgorithm> myIAlg = iam->algorithm( typeName , false); 
+
     if ( !myIAlg.isValid() ) {
       //== Set the Context if not in the jobOptions list
       if ( ""  != parent->context() ||
@@ -155,6 +167,7 @@ namespace
         myAlg->addRef();
       }
     }
+    
 
     //== Remove the property, in case this is not a GaudiAlgorithm...
     if ( addedContext ) {
@@ -179,8 +192,9 @@ namespace
       } 
     }
     //
+    
     if ( Gaudi::StateMachine::RUNNING != _a -> FSMState() &&
-                  Gaudi::StateMachine::RUNNING == LoKi::Services::instance().lokiSvc()->FSMState() )
+         Gaudi::StateMachine::RUNNING == LoKi::Services::instance().lokiSvc()->FSMState() )
     { 
       // start it! 
       StatusCode sc = _a->sysStart() ;

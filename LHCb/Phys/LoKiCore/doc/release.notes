@@ -13,6 +13,20 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2016-01-29 - Vanya BELYAEV
+
+ - AlgFunctors.cpp
+   add a shortcut to bypass all the dirty machinery copied from GaudiSequencer
+   if algorithmsis already known for AlgManager
+   - it is really needed to allow ALG-fuctors for top-level algorithm
+   for interactive processing.   
+   I DO HOPE THAT IS DOES NOT BREAK THE NORMAL FLOW
+
+   [Is there a good Samaritian to replace this code fro GaudiSequencer with
+    something that has more sense?]
+    
+
+   
 !========================= LoKiCore v11r29 2016-01-27 =========================
 ! 2016-01-16 - Vanya Belyaev
  - ParticleProperties: make more explicit prinout for invalid pids 
