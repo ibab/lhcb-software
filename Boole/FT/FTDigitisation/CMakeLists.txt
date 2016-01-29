@@ -1,7 +1,7 @@
 ################################################################################
 # Package: FTDigitisation
 ################################################################################
-gaudi_subdir(FTDigitisation v3r0)
+gaudi_subdir(FTDigitisation v3r1)
 
 gaudi_depends_on_subdirs(Det/FTDet
                          Event/FTEvent

@@ -3,6 +3,8 @@
 ! Responsible : Eric Cogneras
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
+
+!========================= FTDigitisation v3r1 2016-01-29 =========================
 ! 2015-12-05 - Gerhard Raven
  - remove configuration of GlobalTimeOffset (see GAUDI-1122, only use 
    in combination with updated CaloDigit and MuonAlgs)
