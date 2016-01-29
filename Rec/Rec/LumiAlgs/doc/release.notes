@@ -6,7 +6,7 @@
 
 !========================= LumiAlgs v9r11 2016-01-29 =========================
 ! 2016-01-29 - Marco Cattaneo
- - Update test references to follow Gausi v27r0 changes in output
+ - Update test references to follow Gaudi v27r0 changes in output
 
 ! 2016-01-11 - Rosen Matev
  - Modify LumiEventTuple to output all kinds of lumi events, not only random.
