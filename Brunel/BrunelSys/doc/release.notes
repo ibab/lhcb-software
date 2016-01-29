@@ -3,6 +3,66 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v49r2>2016-01-29 Brunel v49r2</A></H1><PRE>
+This version uses projects LHCb v40r0, Lbcom v18r0, Rec v19r0, Gaudi v27r0
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Development release for preparation of 2016 data-taking
+
+- Configuration changes
+  . Make 'PrHybridSeeding' the default (instead of PrSeedingXLayers) in the 
+    upgrade tracking sequence (TrackSys v9r12, PrAlgorithms v1r17)
+  . Added flag to TrackStateProvider to turn off on-demand cache
+    (TrackExtrapolators v2r40)
+  . Added the "ExcludedLayers" prop to the TrackSys configurable, allows to ignore
+    certain ST layers during tracking (TrackSys v9r12, STDAQ v4r8)
+  . Begin adding support for 2016 DataType (DDDB v1r83)
+  . Set InitialTime for 2015 at end of fill 4720 (last fill of the year)
+    (DDDB v1r83)
+
+- New functionality
+  . New MuonID reconstruction tools. Not yet switched on (MuonID v10r0)
+
+- Persistency changes
+  . RecSummary now contains number of ghost tracks from TrackBestTrackCreator
+    (RecAlgs v3r4, TrackUtils v1r63, RecEvent v2r56)
+
+- New reconstruction tuning
+  . Multiple updates to Rich photon reconstruction
+    (See RecSys v19r0 release notes, RichKernel v7r62)
+
+- New CPU optimisations
+  . Avoid the use of exception handling to find out whether there already is an
+    object on the TES (CaloReco v5r27)
+  . Speed up TrackBuildCloneTable and TrackCloneCleaner (TrackUtils v1r63)
+  . Improve overlap check by using that LHCbID are ordered (PatPV v3r30)
+  . Improvements to DeVeloPhiType (VeloDet v14r0)
+  . Multiple improvements to Rich reconstruction
+    (See RecSys v19r0 release notes)
+
+- Code modernisations
+  . Multiple improvements. 
+    See RecSys v19r0, LbcomSys v18r0, LHCb v40r0, Gaudi v27r0 release notes
+
+- Bug fixes
+  . [GAUDI-1113] - name 'locker' is not defined in merge_files.py
+  . [GAUDI-1151] - incorrect reference counting of CounterSummarySvc
+  . Fix untested StatusCodes (CaloMoniDst v5r21)
+  . Fixes initialization issues producing difference in the offline versus online
+    Calo reconstruction (CaloPIDs v5r21
+  . Fix FPEs in Clang executable (CaloReco v5r27, CaloTools v6r12)
+  . Fix in PatForward 2nd loop: hits following a not selected OT hit were skipped,
+    if the not selected hit was the last one, the loop termination failed
+    (PatAlgorithms v4r45)
+  . Fix bug in adding of overlap hits (PatVeloTT v4r8)
+  . Fix PVOfflineTool::initialize: invoke base class initialize (PatPV v3r30)
+  . Add some missing variable initialisation in PackPrimaryVertex
+    (EventPacker v5r9)
+
+- Changes to tests
+  . References now taken from x86_64-slc6-gcc49-opt tests
+
+
 </PRE><H1><A NAME=v49r1>2015-11-25 Brunel v49r1</A></H1><PRE>
 This version uses projects LHCb v39r2, Lbcom v17r2, Rec v18r3, Gaudi v26r4
  and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
