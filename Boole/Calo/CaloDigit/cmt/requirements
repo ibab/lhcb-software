@@ -3,7 +3,7 @@
 # Maintainer : Olivier Deschamps
 #=========================================================================
 package          CaloDigit
-version           v3r4p1
+version           v3r5
 
 #=========================================================================
 # Structure, i.e. directories to process. 

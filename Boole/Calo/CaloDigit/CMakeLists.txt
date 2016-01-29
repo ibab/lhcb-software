@@ -1,7 +1,7 @@
 ################################################################################
 # Package: CaloDigit
 ################################################################################
-gaudi_subdir(CaloDigit v3r4p1)
+gaudi_subdir(CaloDigit v3r5)
 
 gaudi_depends_on_subdirs(Det/CaloDet
                          Event/DAQEvent

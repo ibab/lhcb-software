@@ -3,6 +3,8 @@
 ! Responsible : Olivier Deschamps
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
+
+!========================= CaloDigit v3r5 2016-01-29 =========================
 ! 2015-12-05 - Gerhard Raven
  - instead of using GlobalTimeOffset(), derive its value from rootInTes()
 
