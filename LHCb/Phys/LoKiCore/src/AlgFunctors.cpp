@@ -86,7 +86,7 @@ namespace
       // if algorith, is already exist - just get it! 
       IAlgorithm* iialg = 0 ;
       iialg = iam->algorithm ( name , false ) ;
-      if ( nullptr != iialg ) 
+      if ( nullptr != iialg && iialg->isInitialized() )
       { return LoKi::Interface<IAlgorithm>( iialg ) ; }
     }
     
