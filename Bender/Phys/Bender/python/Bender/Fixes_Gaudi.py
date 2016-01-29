@@ -173,14 +173,15 @@ if not hasattr ( _iAlgorithm , 'setEnabled' ) :
 
 # =============================================================================
 ## decorate stat-entity 
-_SE = cpp.StatEntity
-_iadd_old_ = _SE.__iadd__
-def _iadd_new_ (s,v) :
-    if isinstance ( v , (int,long) ) : v = float(v) 
-    return _iadd_old_(s,v)
-_SE.__iadd__ = _iadd_new_
-_SE.__str__  = _SE.toString 
-logger.debug ( 'decorate StatEntity operator += ')
+#_SE = cpp.StatEntity
+#_iadd_old_ = _SE.__iadd__
+#def _iadd_new_ (s,v) :
+#    print 'SE:', type(v), v 
+#    if isinstance ( v , (int,long) ) : v = float(v) 
+#    return _iadd_old_(s,v)
+#_SE.__iadd__ = _iadd_new_
+#_SE.__str__  = _SE.toString 
+#logger.debug ( 'decorate StatEntity operator += ')
 
 _AppMgr = GaudiPython.Bindings.AppMgr
 if not hasattr ( _AppMgr , '_new_topAlg_' ) :
