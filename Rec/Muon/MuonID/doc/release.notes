@@ -2,6 +2,8 @@
 ! Package     : MuonID
 ! Responsible : Marianna Fontana, Matteo Palutan, Ricardo Vazquez Gomez
 !-----------------------------------------------------------------------------
+! 2016-01-29- Gerhard Raven
+ - DistMuIDTool: replace (internal) std::vector<int> with std::bitset<4>
 
 !========================= MuonID v10r0 2016-01-28 =========================
 ! 2015-12-26 - Gerhard Raven

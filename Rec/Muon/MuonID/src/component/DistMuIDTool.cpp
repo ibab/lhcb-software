@@ -46,29 +46,23 @@ StatusCode DistMuIDTool::muonQuality(LHCb::Track& muTrack, double& Quality)
   }
 
   double p = muTrack.ancestors().at(0).target()->p();
-  std::vector<int> sts_used  = { 1,1,1,1 };
+  std::bitset<4> sts_used{0xf};// { true,true,true,true };
   if (m_applyIsmuonHits){
     if(p>m_PreSelMomentum && p<m_MomentumCuts[0]){
       //M2 &&M3 && M4
-      sts_used[3] = 0;
+      sts_used[3] = false;
     }
   }
   if (msgLevel(MSG::DEBUG) ) debug()<< "applyIsMuonHits"<< m_applyIsmuonHits
-                                    <<", sts_used="<<sts_used<<endmsg;
-
+                                    <<", sts_used="<<sts_used.to_string()<<endmsg;
 
   sc=computeDistance(muTrack,Quality,sts_used);
-  if (sc.isFailure())
-  {
-    Quality=0;
-    return sc;
-  }
-
-  return StatusCode::SUCCESS;
+  if (sc.isFailure()) Quality=0;
+  return sc;
 }
 
 
-StatusCode DistMuIDTool::computeDistance(const LHCb::Track& muTrack, double& dist, const std::vector<int>& sts_used)
+StatusCode DistMuIDTool::computeDistance(const LHCb::Track& muTrack, double& dist, std::bitset<4> sts_used)
 {
 
   StatusCode sc;
@@ -98,7 +92,7 @@ StatusCode DistMuIDTool::computeDistance(const LHCb::Track& muTrack, double& dis
     }
 
     int ist=id.muonID().station();
-    if (sts_used[ist-1]==0) continue;
+    if (!sts_used[ist-1]) continue;
 
     if (msgLevel(MSG::DEBUG) ) debug()<<"Number of station is="<<ist<<endmsg;
     //calculate geom distances and pads
@@ -118,15 +112,11 @@ StatusCode DistMuIDTool::computeDistance(const LHCb::Track& muTrack, double& dis
     dist2+=dist_parx2/padx2;
     dist2+=dist_pary2/pady2;
     if (msgLevel(MSG::DEBUG) ) debug()<<"dist2="<<dist2<<endmsg;
-    nsts+=1;
+    ++nsts;
   }
 
   //return distance divided by number of stations added
-  if( 0 < nsts ) {
-    dist= dist2/nsts;
-  } else {
-    dist = 0.;
-  }
+  dist = ( nsts>0 ? dist2/nsts : 0. );
 
   return StatusCode::SUCCESS;
 }

@@ -2,6 +2,7 @@
 #define DISTMUIDTOOL_H 1
 
 // Include files
+#include <bitset>
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "Chi2MuIDTool.h"
@@ -25,13 +26,12 @@ public:
 
   StatusCode muonQuality(LHCb::Track& muTrack, double& Quality) override;
 
-protected:
+private:
   StatusCode computeDistance(const LHCb::Track& muTrack,double& dist,
-                             const std::vector<int>& sts_used );
+                             std::bitset<4> sts_used );
 
   bool m_applyIsmuonHits;
 
-private:
 
 };
 #endif // DISTMUIDTOOL_H
