@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !========================= FSRAlgs v2r0 2016-01-27 =========================
+! 2016-01-29 - Marco Cattaneo
+ - mergesmallfiles.qmt: remove temporary exclusion added in v1r9
+ - Update test reference to follow Gaudi v27r0 changes in algorithm properties
+
 ! 2016-01-25 - Davide Fazzini
  - Added GenFSRMerge algorithm, requiring tools in SimComponents
 

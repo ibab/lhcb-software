@@ -28,8 +28,8 @@ f=open('../refs/merge-small-files.ref')
 refblock=f.read().strip().split('\n')
 f.close()
 result_lines=[line for line in stdout.strip().split('\n') if (("FSRCleaner" in line or "MergeFSR" in line) and "ToolSvc." not in line)]
-missing_lines=[line for line in refblock if (line not in result_lines and "#properties =" not in line and "RootOnTES" not in line)]
-extra_lines=[line for line in result_lines if (line not in refblock and "#properties =" not in line)]
+missing_lines=[line for line in refblock if line not in result_lines]
+extra_lines=[line for line in result_lines if line not in refblock]
 
 #################################################################
 #Check that the merger lines are the same in reference and result
