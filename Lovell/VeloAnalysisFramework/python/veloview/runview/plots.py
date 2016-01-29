@@ -106,7 +106,7 @@ def get_plot_dictionary(name):
         return plot
 
 
-def get_trending_plot(name, runRange, binsY = 10, minY = 0., maxY = 10., formatter = dictionary_formatter):
+def get_trending_plot(name, runRange, formatter = dictionary_formatter):
     """
     Get a trending plot, showing a certain variable plotted against run number.
     """
@@ -130,7 +130,7 @@ def get_trending_plot(name, runRange, binsY = 10, minY = 0., maxY = 10., formatt
 
     return formatted
 
-def get_2d_trending_plot(nameX, nameY, runRange, binsX = 10, minX = 0., maxX = 10., binsY = 10., minY = 0., maxY = 10., formatter = dictionary_formatter):
+def get_2d_trending_plot(nameX, nameY, runRange, formatter = dictionary_formatter):
     f = ROOT.TFile(Config().grf_file_path, 'READ')
     t = Tree(Config().grf_tree_name)
     data = t.Data( 
