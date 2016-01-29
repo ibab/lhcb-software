@@ -1,5 +1,5 @@
 // $Id: PatVeloLiteClusterPromoter.h,v 1.1 2008-10-16 17:00:31 dhcroft Exp $
-#ifndef TF_PATVELOLITECLUSTERPROMOTER_H 
+#ifndef TF_PATVELOLITECLUSTERPROMOTER_H
 #define TF_PATVELOLITECLUSTERPROMOTER_H 1
 
 // Include files
@@ -17,9 +17,6 @@ namespace LHCb {
 namespace Tf {
   class PatVeloRHitManager;
   class PatVeloPhiHitManager;
-  
-  // updated interface ID to 2.0 as part of the Tf update
-  static const InterfaceID IID_PatVeloLiteClusterPromoter ("Tf::PatVeloLiteClusterPromoter",1,0);
 
   /** @class PatVeloLiteClusterPromoter PatVeloLiteClusterPromoter.h
    *  Tool to make "fake" full VELO clusters from a list of LHCbIDs
@@ -28,32 +25,28 @@ namespace Tf {
    *  @author David Hutchcroft
    *  @date   2008-10-15
    */
-  class PatVeloLiteClusterPromoter : public GaudiTool,
-                                     virtual public IPromoteClusters {
-  public: 
-
-    // Return the interface ID
-    static const InterfaceID& interfaceID() { return IID_PatVeloLiteClusterPromoter; }
+  class PatVeloLiteClusterPromoter : public extends<GaudiTool, IPromoteClusters> {
+  public:
 
     /// Standard constructor
-    PatVeloLiteClusterPromoter( const std::string& type, 
+    PatVeloLiteClusterPromoter( const std::string& type,
 		      const std::string& name,
 		      const IInterface* parent);
 
-    virtual ~PatVeloLiteClusterPromoter( ); ///< Destructor
+    ~PatVeloLiteClusterPromoter( ) override; ///< Destructor
 
-    StatusCode initialize(); ///< initialize
+    StatusCode initialize() override; ///< initialize
 
-    /// promote all of the lite clusters asscoaited to the LHCbID list 
+    /// promote all of the lite clusters asscoaited to the LHCbID list
     /// to faked full VELO clusters
-    virtual StatusCode 
-    promoteClusters(std::vector<LHCb::LHCbID> const & inputIDs );
+    StatusCode
+    promoteClusters(std::vector<LHCb::LHCbID> const & inputIDs ) const override;
 
 
   private:
     /// promote a VeloLiteCluster
     void promoteLiteCluster(LHCb::VeloLiteCluster const &liteCluster,
-			    LHCb::VeloClusters* fakeClusters);
+			    LHCb::VeloClusters* fakeClusters) const;
 
     /// the specialized r hit manager
     PatVeloRHitManager* m_rHitManager;
@@ -61,12 +54,12 @@ namespace Tf {
     /// the specialized phi hit manager
     PatVeloPhiHitManager* m_phiHitManager;
 
-    /// Name of TES container for "fake" VELO clusters to 
+    /// Name of TES container for "fake" VELO clusters to
     std::string m_fakeVELOClusterLocation;
     /// the name of the R hit manager instance
-    std::string m_rHitManagerName;   
+    std::string m_rHitManagerName;
     /// the name of the Phi hit manager instance
-    std::string m_phiHitManagerName; 
+    std::string m_phiHitManagerName;
 
   };
 }

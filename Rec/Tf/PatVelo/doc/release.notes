@@ -3,6 +3,10 @@
 ! Responsible : David Hutchcroft
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
+! 2016-01-29 - Gerhard Raven
+ - PatVeloLiteClusterPromoter:
+    o follow const-ification of IPromoteClusters interface
+    o C++11 modernization
 
 !========================= PatVelo v3r33 2016-01-28 =========================
 ! 2015-12-22 - Gerhard Raven
