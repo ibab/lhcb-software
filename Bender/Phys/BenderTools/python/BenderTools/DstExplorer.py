@@ -332,6 +332,10 @@ def configure ( config ) :
         else :
             copyGoodEvents ( "%s.%s" % ( config.OutputFile , ext ) ) 
 
+    ##  OutptuLevel
+    from Configurables import MessageSvc
+    msgSvc = MessageSvc ( OutputLevel = config.OutputLevel ) 
+    
     ## import options (if specified) 
     for i in config.ImportOptions :
         logger.info ("Import options from file %s'" % i )

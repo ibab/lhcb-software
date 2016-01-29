@@ -75,10 +75,20 @@ from Bender.Logger import getLogger
 if '__main__' == __name__ : logger = getLogger ( 'BenderTools.Seek' )
 else                      : logger = getLogger ( __name__ )
 # =============================================================================
-## seek the decision for the certain void-functor 
+## seek the decision for the certain void-functor
+#  e.g. find event with time before June 
+#  @code
+#  Time = cpp.Gaudi.Time 
+#  fun  =  lambda : Time( get('/Event/DAQ/ODIN').gspTime()*1000).month(local)<=Time.June
+#  ok,n = seekForVoidDecision ( fun , 100000 )
+#  @code 
 def seekVoidDecision ( fun , EvtMax = 1000 ) :
     """
-    Seek the Decision for the certain void-functor 
+    Seek the Decision for the certain void-functor/function
+    e.g. find event with time before June 
+    >>> Time = cpp.Gaudi.Time   e.g. find event with time before June 
+    >>> fun  =  lambda : Time( get('/Event/DAQ/ODIN').gspTime()*1000).month(local)<=Time.June 
+    >>> ok,n = seekForVoidDecision ( fun , 100000 ) 
     """
     from Bender.Utils import appMgr, run 
     #
@@ -106,6 +116,8 @@ def seekAlgDecision ( alg , EvtMax = 1000 ) :
     fun = alg
     
     if isinstance ( alg , str ) :
+        import LoKiNumbers.decorators 
+        import LoKiHlt.decorators 
         from LoKiHlt.algorithms import ALG_EXECUTED, ALG_PASSED
         fun = ALG_EXECUTED  ( alg ) & ALG_PASSED ( alg )
         
