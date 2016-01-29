@@ -3,6 +3,9 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
+! 2016-01-01 - Gerhard Raven
+ - major change: const-ify IPromoteClusters interface
+   (needs corresponding version of Tf/PatVelo)
 
 !========================= TrackInterfaces v5r0 2016-01-28 =========================
 ! 2016-01-01 - Gerhard Raven
