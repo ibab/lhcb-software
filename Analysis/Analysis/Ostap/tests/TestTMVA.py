@@ -47,8 +47,8 @@ if not os.path.exists( data_file ) :
     logger.info('Prepare input ROOT file with data')
     with ROOT.TFile.Open( data_file ,'recreate') as test_file:
         ## test_file.cd()
-        treeSignal = ROOT.TTree('S','signal    tree')
-        treeBkg    = ROOT.TTree('B','backgrund tree')
+        treeSignal = ROOT.TTree('S','signal     tree')
+        treeBkg    = ROOT.TTree('B','background tree')
         treeSignal.SetDirectory ( test_file ) 
         treeBkg   .SetDirectory ( test_file ) 
         
@@ -91,7 +91,7 @@ if not os.path.exists( data_file ) :
 if not os.path.exists ( tmva_file ) :
     
     logger.info('Create and train TMVA')
-    with ROOT.TFile.Open( data_file ,'READ') as data_file : 
+    with ROOT.TFile.Open( data_file ,'READ') as datafile : 
         datafile.ls()
         tSignal  = datafile['S']
         tBkg     = datafile['B']
