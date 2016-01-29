@@ -4,6 +4,7 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+!========================= RichReadout v2r17 2016-01-29 =========================
 ! 2015-12-07 - Marcin Kucharczyk
   - Fix obsolete includes and remove warnings
   - RichDetailedFrontEndResponsePMT, RichChannelPropertiesPMT

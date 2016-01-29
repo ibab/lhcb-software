@@ -4,7 +4,7 @@
 #=========================================================================
 
 package           RichReadout
-version           v2r16
+version           v2r17
 
 # ================ structure =================================================
 branches cmt doc src Event xml
