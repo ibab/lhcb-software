@@ -56,6 +56,8 @@ DECLARE_ALGORITHM_FACTORY( PIDQC )
   m_nTracks[0] = 0;
   m_nTracks[1] = 0;
 
+  //setProperty( "OutputLevel", 1 );
+
 }
 
 // Destructor
@@ -184,7 +186,7 @@ StatusCode PIDQC::execute()
     if ( !selectTracks(track) ) continue;
 
     // Track type
-    const Rich::Rec::Track::Type tkType = Rich::Rec::Track::type(track);
+    const auto tkType = Rich::Rec::Track::type(track);
 
     // Count PIDs and tracks
     ++m_trackCount[tkType].first;
@@ -193,7 +195,7 @@ StatusCode PIDQC::execute()
     ++m_radCount[ Radiators(iPID->usedAerogel(),iPID->usedRich1Gas(),iPID->usedRich2Gas()) ];
 
     // Get best PID
-    Rich::ParticleIDType pid = iPID->bestParticleID();
+    auto pid = iPID->bestParticleID();
 
     // Apply DLL based selection for kaons
     if ( m_dllKaonCut < 999999 )
@@ -218,7 +220,7 @@ StatusCode PIDQC::execute()
     }
 
     // MC Truth
-    Rich::ParticleIDType mcpid = Rich::Unknown;
+    auto mcpid = Rich::Unknown;
     if ( m_truth )
     {
       // Get true track type from MC
@@ -494,7 +496,7 @@ StatusCode PIDQC::finalize()
 StatusCode PIDQC::loadPIDData()
 {
   // Load PIDs
-  DataObject *pObject;
+  DataObject * pObject = nullptr;
   if ( eventSvc()->retrieveObject( m_pidTDS, pObject ) )
   {
     if ( auto * pids = static_cast<KeyedContainer<LHCb::RichPID, Containers::HashMap>*>(pObject) )

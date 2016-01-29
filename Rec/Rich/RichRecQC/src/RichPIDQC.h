@@ -82,16 +82,54 @@ namespace Rich
             this->nTracks      += c.nTracks;
             this->multiplicity += c.multiplicity;
             return *this;
-          } 
+          }
           /// Overload output to ostream
-          friend inline std::ostream& operator << ( std::ostream& ost, 
+          friend inline std::ostream& operator << ( std::ostream& ost,
                                                     const TkTally& id )
-          { return ost << "[ nTracks=" << id.nTracks 
+          { return ost << "[ nTracks=" << id.nTracks
                        << " multiplicity=" << id.multiplicity << " ]"; }
         public:
           unsigned long long nTracks{0};
           unsigned long long multiplicity{0};
         };
+
+        /** @class Radiators RichPIDQC.h
+         *  Utility class for radiators used
+         */
+        class Radiators
+        {
+        public:
+          Radiators( const bool aero  = false, 
+                     const bool r1gas = false, 
+                     const bool r2gas = false )
+            : hasAero(aero), hasR1Gas(r1gas), hasR2Gas(r2gas) { }
+          inline std::string radiators() const
+          {
+            std::string rads = "'";
+            if ( hasAero )  rads += "Aerogel";
+            if ( hasR1Gas ) { if(rads!="'") rads+='+'; rads += "Rich1Gas"; }
+            if ( hasR2Gas ) { if(rads!="'") rads+="+"; rads += "Rich2Gas"; }
+            if ( rads == "'" ) rads += "NoRadiators";
+            rads += "'";
+            rads.resize(30,' ');
+            return rads;
+          }
+          inline int value() const
+          {
+            return ((int)hasAero)*100 + ((int)hasR1Gas)*10 + ((int)hasR2Gas);
+          }
+          inline bool operator<( const Radiators& rads ) const
+          {
+            return rads.value() < this->value();
+          }
+        private:
+          bool hasAero; ///< Has aerogel info
+          bool hasR1Gas; ///< Has Rich1 Gas
+          bool hasR2Gas; ///< Has Rich1 Gas
+        };
+        typedef Rich::Map<Radiators,unsigned long long> RadCount;
+        /// Tally of tracks which each type of radiator
+        RadCount m_radCount;
 
       public:
 
@@ -113,7 +151,7 @@ namespace Rich
         TkTally countTracks( const std::string & location );
 
         /// Print out the given PID
-        void print( MsgStream & msg, 
+        void print( MsgStream & msg,
                     const LHCb::RichPID * iPID,
                     const Rich::ParticleIDType pid,
                     const Rich::ParticleIDType mcpid ) const;
@@ -135,7 +173,7 @@ namespace Rich
         bool selectTracks( const LHCb::Track * track );
 
         /// Access the PID plots tool for the given MC type
-        const Rich::Rec::IPIDPlots * plotsTool( const Rich::ParticleIDType mcpid );  
+        const Rich::Rec::IPIDPlots * plotsTool( const Rich::ParticleIDType mcpid );
 
       private: // data
 
@@ -167,7 +205,10 @@ namespace Rich
         /// Count the number of PID objects by PID type
         PIDsByType m_pidPerTypeCount;
 
+        /// Kaon DLL cut value
         float m_dllKaonCut;
+
+        /// Pion DLL cut value
         float m_dllPionCut;
 
         /// Radiators to require are present
@@ -177,7 +218,7 @@ namespace Rich
         std::string m_sF;
 
         /// PID plots tool for each PID type
-        typedef Rich::Map< const Rich::ParticleIDType, 
+        typedef Rich::Map< const Rich::ParticleIDType,
                            const Rich::Rec::IPIDPlots* > PIDMap;
         /// PID plots tool for each PID type
         PIDMap m_plotTools;
@@ -193,48 +234,12 @@ namespace Rich
 
         /// Correlations between ID'ed and MC PID types
         double m_sumTab[Rich::NParticleTypes][Rich::NParticleTypes];
-        
+
         /// Event count ( [0] == all events, [1] == events with RichPID information )
-        int m_nEvents[2];
+        unsigned long long m_nEvents[2];
 
         /// track count( [0] = all tracks, [1] == tracks with PID information )
-        int m_nTracks[2];
-
-      private:
-
-        /// Utility class for radiators used
-        class Radiators
-        {
-        public:
-          Radiators( bool aero = false, bool r1gas = false, bool r2gas = false )
-            : hasAero(aero), hasR1Gas(r1gas), hasR2Gas(r2gas) { }
-          inline std::string radiators() const
-          {
-            std::string rads = "'";
-            if ( hasAero )  rads += "Aerogel";
-            if ( hasR1Gas ) { if(rads!="'") rads+='+'; rads += "Rich1Gas"; }
-            if ( hasR2Gas ) { if(rads!="'") rads+="+"; rads += "Rich2Gas"; }
-            if ( rads == "'" ) rads += "NoRadiators";
-            rads += "'";
-            rads.resize(30,' ');
-            return rads;
-          }
-          inline int value() const
-          {
-            return ((int)hasAero)*100 + ((int)hasR1Gas)*10 + ((int)hasR2Gas);
-          }
-          inline bool operator<( const Radiators& rads ) const
-          {
-            return rads.value() < this->value();
-          }
-        private:
-          bool hasAero; ///< Has aerogel info
-          bool hasR1Gas; ///< Has Rich1 Gas
-          bool hasR2Gas; ///< Has Rich1 Gas
-        };
-        typedef Rich::Map<Radiators,unsigned long long> RadCount;
-        /// Tally of tracks which each type of radiator
-        RadCount m_radCount;
+        unsigned long long m_nTracks[2];
 
       };
 
