@@ -51,7 +51,7 @@ class Tree:
                 self.tree = ROOT.gROOT.FindObject(tree)
                 if not self.tree or not self.tree.InheritsFrom('TTree'):
                     raise Exception('Unsupported type (\'%s\') used for tree!'
-                            % str(type(tree)))
+                            % str(type(self.tree)))
                 treetitle = self.tree.GetTitle()
             else:
                 try:
