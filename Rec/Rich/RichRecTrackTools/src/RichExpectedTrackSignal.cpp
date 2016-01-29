@@ -176,9 +176,12 @@ ExpectedTrackSignal::nSignalPhotons (  LHCb::RichRecSegment * segment,
     }
 
     _ri_verbo << "RichRecSegment " << segment->key() << " " << id
+              << " " << segment->trackSegment().radiator()
+              << " P = " << std::sqrt(segment->trackSegment().bestMomentum().mag2())
               << " nSignalPhotons = " << signal
-              << " nScatteredPhotons = " << scatter << endmsg;
-
+              << " nScatteredPhotons = " << scatter 
+              << endmsg;
+    
     segment->setNSignalPhotons   ( id, (LHCb::RichRecSegment::FloatType)(signal)  );
     segment->setNScatteredPhotons( id, (LHCb::RichRecSegment::FloatType)(scatter) );
   }

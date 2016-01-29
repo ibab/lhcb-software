@@ -24,22 +24,17 @@ DECLARE_TOOL_FACTORY( TrackCreatorFromRecoTracks )
 TrackCreatorFromRecoTracks( const std::string& type,
                             const std::string& name,
                             const IInterface* parent )
-  : TrackCreatorBase       ( type, name, parent ),
-    m_trTracks             ( NULL ),
-    m_massHypoRings        ( NULL ),
-    m_segMaker             ( NULL ),
-    m_signal               ( NULL ),
-    m_trSegToolNickName    ( "RichTrSegMakerFromRecoTracks" ),
-    m_allDone              ( false ),
-    m_buildHypoRings       ( false )
+  : TrackCreatorBase( type, name, parent )
 {
   // declare interface for this tool
   declareInterface<ITrackCreator>(this);
 
   // job options
-  declareProperty( "TracksLocation",           m_trTracksLocation   );
-  declareProperty( "BuildMassHypothesisRings", m_buildHypoRings     );
-  declareProperty( "TrackSegmentTool",         m_trSegToolNickName  );
+  declareProperty( "TracksLocation", m_trTracksLocation );
+  declareProperty( "BuildMassHypothesisRings", 
+                   m_buildHypoRings = false );
+  declareProperty( "TrackSegmentTool",         
+                   m_trSegToolNickName = "RichTrSegMakerFromRecoTracks" );
 }
 
 StatusCode TrackCreatorFromRecoTracks::initialize()
@@ -156,7 +151,7 @@ TrackCreatorFromRecoTracks::removeTracksByType( const Rich::Rec::Track::Type typ
   for ( auto * T : toRemove )
   {
     // get stats object
-    TrackCount & tkCount = trackStats().trackStats(type,T->trackID().unique());
+    auto & tkCount = trackStats().trackStats(type,T->trackID().unique());
 
     // decrement track count
     --(tkCount.selectedTracks);
@@ -232,20 +227,20 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
   if ( !trTrack )
   {
     Warning( "Input data object is not of type 'Track'" ).ignore();
-    return NULL;
+    return nullptr;
   }
 
   // flag the tool as having been used this event
   m_hasBeenCalled = true;
 
   // track type
-  Rich::Rec::Track::Type trType = Rich::Rec::Track::Unknown;
+  auto trType = Rich::Rec::Track::Unknown;
   try { trType = Rich::Rec::Track::type(trTrack); }
   // Catch exceptions ( track type unknown )
   catch ( const GaudiException & expt )
   {
     Error( expt.message(), expt.code() ).ignore();
-    return NULL;
+    return nullptr;
   }
 
   // unique ?
@@ -259,10 +254,10 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
             << endmsg;
 
   // Is track a usable type
-  if ( !Rich::Rec::Track::isUsable(trType) ) return NULL;
+  if ( !Rich::Rec::Track::isUsable(trType) ) return nullptr;
 
   // Get reference to track stats object
-  TrackCount & tkCount = trackStats().trackStats(trType,trUnique);
+  auto & tkCount = trackStats().trackStats(trType,trUnique);
 
   // See if this RichRecTrack already exists
   if ( bookKeep() && m_trackDone[trTrack->key()] )
@@ -279,7 +274,7 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
     ++tkCount.triedTracks;
 
     // New track object pointer
-    LHCb::RichRecTrack * newTrack = NULL;
+    LHCb::RichRecTrack * newTrack = nullptr;
 
     // Track selection
     if ( trackSelector().trackSelected(trTrack) )
@@ -287,7 +282,7 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
 
       // Form the RichRecSegments for this track
       std::vector<LHCb::RichTrackSegment*> segments;
-      const int Nsegs = m_segMaker->constructSegments( trTrack, segments );
+      const auto Nsegs = m_segMaker->constructSegments( trTrack, segments );
 
       _ri_verbo << " Found " << Nsegs << " radiator segment(s)" << endmsg;
 
@@ -309,7 +304,7 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
 
           // make a new RichRecSegment from this RichTrackSegment
           // takes ownership of RichTrackSegment* *iSeg - responsible for deletion
-          LHCb::RichRecSegment * newSegment = segmentCreator()->newSegment( S, newTrack );
+          auto * newSegment = segmentCreator()->newSegment( S, newTrack );
 
           // Get PD panel impact point
           if ( rayTraceHPDPanelPoints(*S,newSegment) )
@@ -343,7 +338,7 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
             {
               _ri_verbo << "   -> TrackSegment has no RICH info -> rejected" << endmsg;
               delete newSegment;
-              newSegment = NULL;
+              newSegment = nullptr;
             }
 
           }
@@ -351,7 +346,7 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
           {
             _ri_verbo << "   -> TrackSegment does not trace to an HPD panel -> rejected" << endmsg;
             delete newSegment;
-            newSegment = NULL;
+            newSegment = nullptr;
           }
 
         } // end loop over RichTrackSegments
@@ -397,7 +392,7 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
         else
         {
           delete newTrack;
-          newTrack = NULL;
+          newTrack = nullptr;
         }
 
       } // end segments if
@@ -413,5 +408,5 @@ void TrackCreatorFromRecoTracks::InitNewEvent()
 {
   RichTrackCreatorBase::InitNewEvent();
   m_allDone  = false;
-  m_trTracks = NULL;
+  m_trTracks = nullptr;
 }

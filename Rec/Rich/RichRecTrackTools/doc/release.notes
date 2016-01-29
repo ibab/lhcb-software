@@ -4,6 +4,9 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2016-01-29 - Chris Jones
+ - A few more clean ups
+
 ! 2016-01-28 - Chris Jones
  - Add a flag to RichDetailedTrSegMakerFromRecoTracks to turn on/off the
    State sanity checks. Default now off to save CPU.
