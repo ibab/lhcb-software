@@ -1,14 +1,13 @@
-# setting LC_ALL to "C"
-# --> Including file '/afs/cern.ch/work/c/cattanem/private/cmakeuser/RecDev_HEAD/Rec/LumiAlgs/job/LumiReader.py'
-# <-- End of file '/afs/cern.ch/work/c/cattanem/private/cmakeuser/RecDev_HEAD/Rec/LumiAlgs/job/LumiReader.py'
+# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@5/build/REC/REC_HEAD/Rec/LumiAlgs/job/LumiReader.py'
+# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@5/build/REC/REC_HEAD/Rec/LumiAlgs/job/LumiReader.py'
 # applying configuration of LumiReaderConf
 # WARNING: Using default tag dddb-20150522 for partition DDDB
 # WARNING: Using default tag cond-20150527 for partition LHCBCOND
 # WARNING: Using default tag tt-20110126 for partition DQFLAGS
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to RecDev version HEAD
-                                          running on lxplus0100.cern.ch on Mon Dec  7 13:43:20 2015
+                                                   Welcome to Rec version HEAD
+                                          running on lbbuild05.cern.ch on Fri Jan 29 05:08:20 2016
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -17,12 +16,12 @@ LumiSeq              INFO Member list: GaudiSequencer/readLumiSeq
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   3.26 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.53 times the speed of a 2.8 GHz Xeon.
 readLumiSeq         DEBUG Property update for OutputLevel : new value = 2
 readLumiSeq         DEBUG Property update for OutputLevel : new value = 2
 readLumiSeq         DEBUG Initialize base class GaudiCommon<Algorithm>
 readLumiSeq         DEBUG could not locate CounterSummarySvc, no counter summary will be made
-readLumiSeq         DEBUG List of ALL properties of GaudiSequencer/readLumiSeq  #properties = 38
+readLumiSeq         DEBUG List of ALL properties of GaudiSequencer/readLumiSeq  #properties = 42
 readLumiSeq         DEBUG Property ['Name': Value] =  'ShortCircuit':True
 readLumiSeq         DEBUG Property ['Name': Value] =  'ReturnOK':False
 readLumiSeq         DEBUG Property ['Name': Value] =  'MeasureTime':True
@@ -38,13 +37,15 @@ readLumiSeq         DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%
 readLumiSeq         DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
 readLumiSeq         DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
 readLumiSeq         DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
-readLumiSeq         DEBUG Property ['Name': Value] =  'RootOnTES':
 readLumiSeq         DEBUG Property ['Name': Value] =  'RootInTES':
 readLumiSeq         DEBUG Property ['Name': Value] =  'Context':
 readLumiSeq         DEBUG Property ['Name': Value] =  'TypePrint':True
 readLumiSeq         DEBUG Property ['Name': Value] =  'StatPrint':True
 readLumiSeq         DEBUG Property ['Name': Value] =  'PropertiesPrint':False
 readLumiSeq         DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+readLumiSeq         DEBUG Property ['Name': Value] =  'NeededResources':[  ]
+readLumiSeq         DEBUG Property ['Name': Value] =  'Cardinality':1
+readLumiSeq         DEBUG Property ['Name': Value] =  'IsClonable':False
 readLumiSeq         DEBUG Property ['Name': Value] =  'RegisterForContextService':True
 readLumiSeq         DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
 readLumiSeq         DEBUG Property ['Name': Value] =  'AuditStop':False
@@ -57,6 +58,8 @@ readLumiSeq         DEBUG Property ['Name': Value] =  'AuditRestart':False
 readLumiSeq         DEBUG Property ['Name': Value] =  'AuditReinitialize':False
 readLumiSeq         DEBUG Property ['Name': Value] =  'AuditInitialize':False
 readLumiSeq         DEBUG Property ['Name': Value] =  'AuditAlgorithms':False
+readLumiSeq         DEBUG Property ['Name': Value] =  'DataOutputs':
+readLumiSeq         DEBUG Property ['Name': Value] =  'DataInputs':
 readLumiSeq         DEBUG Property ['Name': Value] =  'ErrorCounter':0
 readLumiSeq         DEBUG Property ['Name': Value] =  'ErrorMax':1
 readLumiSeq         DEBUG Property ['Name': Value] =  'Enable':True
@@ -69,13 +72,13 @@ readLumiSeq         DEBUG Added algorithm filterLumi
 readLumiSeq         DEBUG Added algorithm LumiFileReader
 readLumiSeq         DEBUG Added algorithm InputDump
 readLumiSeq          INFO Member list: createODIN, LoKi::ODINFilter/OdinTriggerTypes, HltLumiSummaryDecoder, GaudiSequencer/filterLumi, LumiFileReader, RawEventDump/InputDump
-readLumiSeq         DEBUG The tool of type 'SequencerTimerTool' has been added with the name 'ToolSvc.SequencerTimerTool'
+readLumiSeq         DEBUG Registering tool ToolSvc.SequencerTimerTool
 filterLumi           INFO OR Member list: FilterOnLumiSummary/LumiRandomFilter, FilterOnLumiSummary/LumiLowFilter
 LumiFileReader      DEBUG Property update for OutputLevel : new value = 2
 LumiFileReader      DEBUG Property update for OutputLevel : new value = 2
 LumiFileReader      DEBUG Initialize base class GaudiCommon<Algorithm>
 LumiFileReader      DEBUG could not locate CounterSummarySvc, no counter summary will be made
-LumiFileReader      DEBUG List of ALL properties of LumiFileReader/LumiFileReader  #properties = 34
+LumiFileReader      DEBUG List of ALL properties of LumiFileReader/LumiFileReader  #properties = 38
 LumiFileReader      DEBUG Property ['Name': Value] =  'OutputFileName':lumi.dat
 LumiFileReader      DEBUG Property ['Name': Value] =  'RawEventLocation':DAQ/RawEvent
 LumiFileReader      DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
@@ -87,13 +90,15 @@ LumiFileReader      DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%
 LumiFileReader      DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
 LumiFileReader      DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
 LumiFileReader      DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
-LumiFileReader      DEBUG Property ['Name': Value] =  'RootOnTES':
 LumiFileReader      DEBUG Property ['Name': Value] =  'RootInTES':
 LumiFileReader      DEBUG Property ['Name': Value] =  'Context':
 LumiFileReader      DEBUG Property ['Name': Value] =  'TypePrint':True
 LumiFileReader      DEBUG Property ['Name': Value] =  'StatPrint':True
 LumiFileReader      DEBUG Property ['Name': Value] =  'PropertiesPrint':False
 LumiFileReader      DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+LumiFileReader      DEBUG Property ['Name': Value] =  'NeededResources':[  ]
+LumiFileReader      DEBUG Property ['Name': Value] =  'Cardinality':1
+LumiFileReader      DEBUG Property ['Name': Value] =  'IsClonable':False
 LumiFileReader      DEBUG Property ['Name': Value] =  'RegisterForContextService':True
 LumiFileReader      DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
 LumiFileReader      DEBUG Property ['Name': Value] =  'AuditStop':False
@@ -106,6 +111,8 @@ LumiFileReader      DEBUG Property ['Name': Value] =  'AuditRestart':False
 LumiFileReader      DEBUG Property ['Name': Value] =  'AuditReinitialize':False
 LumiFileReader      DEBUG Property ['Name': Value] =  'AuditInitialize':False
 LumiFileReader      DEBUG Property ['Name': Value] =  'AuditAlgorithms':False
+LumiFileReader      DEBUG Property ['Name': Value] =  'DataOutputs':
+LumiFileReader      DEBUG Property ['Name': Value] =  'DataInputs':
 LumiFileReader      DEBUG Property ['Name': Value] =  'ErrorCounter':0
 LumiFileReader      DEBUG Property ['Name': Value] =  'ErrorMax':1
 LumiFileReader      DEBUG Property ['Name': Value] =  'Enable':True
@@ -115,7 +122,7 @@ InputDump           DEBUG Property update for OutputLevel : new value = 2
 InputDump           DEBUG Property update for OutputLevel : new value = 2
 InputDump           DEBUG Initialize base class GaudiCommon<Algorithm>
 InputDump           DEBUG could not locate CounterSummarySvc, no counter summary will be made
-InputDump           DEBUG List of ALL properties of RawEventDump/InputDump  #properties = 35
+InputDump           DEBUG List of ALL properties of RawEventDump/InputDump  #properties = 39
 InputDump           DEBUG Property ['Name': Value] =  'RawBanks':[  ]
 InputDump           DEBUG Property ['Name': Value] =  'DumpData':True
 InputDump           DEBUG Property ['Name': Value] =  'RawEventLocations':[ 'DAQ/RawEvent' ]
@@ -128,13 +135,15 @@ InputDump           DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%
 InputDump           DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
 InputDump           DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
 InputDump           DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
-InputDump           DEBUG Property ['Name': Value] =  'RootOnTES':
 InputDump           DEBUG Property ['Name': Value] =  'RootInTES':
 InputDump           DEBUG Property ['Name': Value] =  'Context':
 InputDump           DEBUG Property ['Name': Value] =  'TypePrint':True
 InputDump           DEBUG Property ['Name': Value] =  'StatPrint':True
 InputDump           DEBUG Property ['Name': Value] =  'PropertiesPrint':False
 InputDump           DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+InputDump           DEBUG Property ['Name': Value] =  'NeededResources':[  ]
+InputDump           DEBUG Property ['Name': Value] =  'Cardinality':1
+InputDump           DEBUG Property ['Name': Value] =  'IsClonable':False
 InputDump           DEBUG Property ['Name': Value] =  'RegisterForContextService':True
 InputDump           DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
 InputDump           DEBUG Property ['Name': Value] =  'AuditStop':False
@@ -147,11 +156,14 @@ InputDump           DEBUG Property ['Name': Value] =  'AuditRestart':False
 InputDump           DEBUG Property ['Name': Value] =  'AuditReinitialize':False
 InputDump           DEBUG Property ['Name': Value] =  'AuditInitialize':False
 InputDump           DEBUG Property ['Name': Value] =  'AuditAlgorithms':False
+InputDump           DEBUG Property ['Name': Value] =  'DataOutputs':
+InputDump           DEBUG Property ['Name': Value] =  'DataInputs':
 InputDump           DEBUG Property ['Name': Value] =  'ErrorCounter':0
 InputDump           DEBUG Property ['Name': Value] =  'ErrorMax':1
 InputDump           DEBUG Property ['Name': Value] =  'Enable':True
 InputDump           DEBUG Property ['Name': Value] =  'OutputLevel':2
 InputDump           DEBUG Initialize
+readLumiSeq         DEBUG Adding data dependencies for tool ToolSvc.SequencerTimerTool (SequencerTimerTool)
 IODataManager       ERROR Referring to existing dataset file:testout.mdf by its physical name.
 IODataManager       ERROR You may not be able to navigate back to the input file -- processing continues
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='file:testout.mdf' SVC='LHCb::MDFSelector' OPT='READ'
@@ -971,6 +983,7 @@ readLumiSeq         DEBUG ==> Finalize
 readLumiSeq         DEBUG Finalize base class GaudiAlgorithm
 readLumiSeq         DEBUG Tools to release : ToolSvc.SequencerTimerTool
 readLumiSeq         DEBUG Releasing tool 'ToolSvc.SequencerTimerTool'
+readLumiSeq         DEBUG De-Registering tool ToolSvc.SequencerTimerTool
 readLumiSeq         DEBUG The tool 'ToolSvc.SequencerTimerTool' of type 'SequencerTimerTool' is released
 readLumiSeq         DEBUG Services to release :
 EventLoopMgr         INFO Histograms converted successfully according to request.
@@ -979,18 +992,18 @@ ToolSvc.HltFactorySUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "# loaded from PYTHON"                          |         1 |          1 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   3.26 times the speed of a 2.8 GHz Xeon.
-ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.53 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max    sigma | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO readLumiSeq                   |     0.500 |     0.428 |    0.259       1.1 |      20 |     0.009 |
-ToolSvc.Sequenc...   INFO   createODIN                  |     0.000 |     0.007 |    0.004       0.0 |      20 |     0.000 |
-ToolSvc.Sequenc...   INFO   OdinTriggerTypes            |     0.000 |     0.009 |    0.003       0.1 |      20 |     0.000 |
-ToolSvc.Sequenc...   INFO   HltLumiSummaryDecoder       |     0.050 |     0.024 |    0.010       0.3 |      20 |     0.000 |
-ToolSvc.Sequenc...   INFO   filterLumi                  |     0.050 |     0.009 |    0.005       0.1 |      20 |     0.000 |
-ToolSvc.Sequenc...   INFO     LumiRandomFilter          |     0.000 |     0.007 |    0.002       0.1 |      20 |     0.000 |
-ToolSvc.Sequenc...   INFO     LumiLowFilter             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO   LumiFileReader              |     0.000 |     0.105 |    0.060       0.3 |      20 |     0.002 |
-ToolSvc.Sequenc...   INFO   InputDump                   |     0.300 |     0.217 |    0.163       0.4 |      20 |     0.004 |
+ToolSvc.Sequenc...   INFO readLumiSeq                   |     0.699 |     0.641 |    0.506       2.1     0.34 |      20 |     0.013 |
+ToolSvc.Sequenc...   INFO   createODIN                  |     0.000 |     0.011 |    0.008       0.1     0.01 |      20 |     0.000 |
+ToolSvc.Sequenc...   INFO   OdinTriggerTypes            |     0.000 |     0.014 |    0.007       0.1     0.02 |      20 |     0.000 |
+ToolSvc.Sequenc...   INFO   HltLumiSummaryDecoder       |     0.100 |     0.045 |    0.020       0.4     0.09 |      20 |     0.001 |
+ToolSvc.Sequenc...   INFO   filterLumi                  |     0.000 |     0.018 |    0.012       0.1     0.03 |      20 |     0.000 |
+ToolSvc.Sequenc...   INFO     LumiRandomFilter          |     0.000 |     0.012 |    0.006       0.1     0.02 |      20 |     0.000 |
+ToolSvc.Sequenc...   INFO     LumiLowFilter             |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+ToolSvc.Sequenc...   INFO   LumiFileReader              |     0.100 |     0.154 |    0.113       0.6     0.09 |      20 |     0.003 |
+ToolSvc.Sequenc...   INFO   InputDump                   |     0.399 |     0.373 |    0.302       0.8     0.10 |      20 |     0.007 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
