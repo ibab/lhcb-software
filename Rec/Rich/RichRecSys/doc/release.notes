@@ -67,7 +67,7 @@
         richConf.setTrackGroups( [ ["Forward","Match"],
                                    ["VeloTT"], ["KsTrack"] ] )
 
-   Important - This *must* be done before any applyCOnf method is called.
+   Important - This *must* be done before any applyConf method is called.
    Default mode is to work as before, with all track types considered at
    the same time in the likelihood minimisation.
 
