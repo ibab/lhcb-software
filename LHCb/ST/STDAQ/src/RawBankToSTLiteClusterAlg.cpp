@@ -109,6 +109,8 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt,STLiteCluster
     return Warning("PCN vote failed", StatusCode::SUCCESS,2);
   }
   
+  const bool isUT = (detType() == "UT");
+
   // loop over the banks of this type..
   std::vector<RawBank* >::const_iterator iterBank =  tBanks.begin();
   for (; iterBank != tBanks.end() ; ++iterBank){
@@ -119,7 +121,7 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt,STLiteCluster
     STTell1Board* aBoard = readoutTool()->findByBoardID(STTell1ID((*iterBank)->sourceID()));
     if (!aBoard && !m_skipErrors){
       std::string invalidSource = "Invalid source ID --> skip bank"+
-	 boost::lexical_cast<std::string>((*iterBank)->sourceID());  
+        boost::lexical_cast<std::string>((*iterBank)->sourceID());  
       Warning(invalidSource,StatusCode::SUCCESS,2); 
       ++counter("skipped Banks");
       continue;
@@ -128,8 +130,8 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt,STLiteCluster
    ++counter("# valid source ID");
 
    if ((*iterBank)->magic() != RawBank::MagicPattern) {
-      std::string pattern = "wrong magic pattern "+
-	 boost::lexical_cast<std::string>((*iterBank)->sourceID());  
+     std::string pattern = "wrong magic pattern "+
+       boost::lexical_cast<std::string>((*iterBank)->sourceID());  
       Warning(pattern, StatusCode::SUCCESS,2);
       counter("skipped Banks") += tBanks.size();
       continue;
@@ -147,9 +149,8 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt,STLiteCluster
         Warning(errorBankMsg, StatusCode::SUCCESS, 2).ignore();
         ++counter("skipped Banks");
         continue;
-      }
-      else {
-	// flag that need to recover....
+      }else{
+        // flag that need to recover....
         recover = true;
         ++counter("recovered banks" +  boost::lexical_cast<std::string>((*iterBank)->sourceID()));
       }
@@ -165,7 +166,7 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt,STLiteCluster
       const unsigned bankpcn = decoder.header().pcn();
       if (pcn != bankpcn && !m_skipErrors){
         std::string errorBankMsg = "PCNs out of sync sourceID "+
-	boost::lexical_cast<std::string>((*iterBank)->sourceID());
+          boost::lexical_cast<std::string>((*iterBank)->sourceID());
         if ( msgLevel(MSG::DEBUG) ) 
           debug() << "Expected " << pcn << " found " << bankpcn << endmsg;
         Warning(errorBankMsg, StatusCode::SUCCESS,2).ignore();
@@ -179,18 +180,20 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt,STLiteCluster
     // check the integrity of the bank --> always skip if not ok
     if (!m_skipErrors && checkDataIntegrity(decoder, aBoard , (*iterBank)->size() , bankVersion) == false) continue;
 
+    
+    
+
     // read in the first half of the bank
     STDecoder::pos_iterator iterDecoder = decoder.posBegin();
     for ( ;iterDecoder != decoder.posEnd(); ++iterDecoder){
 
       
       if (recover == false){
-        createCluster(aBoard,bankVersion ,*iterDecoder, fCont);
-      }
-      else {
+        createCluster(aBoard,bankVersion ,*iterDecoder, fCont, isUT);
+      }else{
         if (errorBank != 0 && canBeRecovered(errorBank,*iterDecoder, pcn) == true){
-          createCluster(aBoard, bankVersion, *iterDecoder, fCont); 
-	} // errorbanl  
+          createCluster(aBoard, bankVersion, *iterDecoder, fCont, isUT); 
+        } // errorbanl  
       } // recover == false
 
     } //decoder

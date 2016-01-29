@@ -4,6 +4,10 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!2016-01-29 - Michel De Cian
+ - Change string comparison in RawBankToSTLiteCluster, such that it is not performed for each cluster.
+
+
 !========================= STDAQ v4r8 2016-01-27 =========================
 ! 2015-12-28 - Gerhard Raven
  - replace GSL_ with std::

@@ -50,7 +50,7 @@ private:
 
   // add a single cluster to the output container
   void createCluster(const STTell1Board* aBoard,  const STDAQ::version& bankVersion, 
-                     const STClusterWord& aWord, LHCb::STLiteCluster::STLiteClusters* fCont) const;
+                     const STClusterWord& aWord, LHCb::STLiteCluster::STLiteClusters* fCont, const bool isUT) const;
 
 
   std::string m_clusterLocation;  
@@ -95,7 +95,8 @@ private:
 #include "Kernel/ISTReadoutTool.h"
 
 inline void RawBankToSTLiteClusterAlg::createCluster(const STTell1Board* aBoard,  const STDAQ::version& bankVersion,
-                                                     const STClusterWord& aWord, LHCb::STLiteCluster::STLiteClusters* fCont) const{
+                                                     const STClusterWord& aWord, LHCb::STLiteCluster::STLiteClusters* fCont, 
+                                                     const bool isUT) const{
    
   const unsigned int fracStrip = aWord.fracStripBits();     
   const STTell1Board::chanPair chan = aBoard->DAQToOffline(fracStrip, bankVersion, STDAQ::StripRepresentation(aWord.channelID()));
@@ -103,8 +104,8 @@ inline void RawBankToSTLiteClusterAlg::createCluster(const STTell1Board* aBoard,
                             aWord.pseudoSizeBits(),
                             aWord.hasHighThreshold(),
                             chan.first,
-                            detType() == "UT");
-  fCont->push_back(liteCluster);
+                            isUT);
+  fCont->push_back(std::move(liteCluster));
 }
 
 #endif //  RAWBANKTOSTLITECLUSTERALG_H 
