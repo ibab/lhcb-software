@@ -11,18 +11,13 @@ DECLARE_TOOL_FACTORY( TrackSimpleExtraSelector )
 TrackSimpleExtraSelector::TrackSimpleExtraSelector(const std::string& type,
                                                    const std::string& name,
                                                    const IInterface* parent):
-  GaudiTool(type, name, parent)
+  base_class(type, name, parent)
 {
   declareInterface<ITrackExtraSelector>( this );
 
   declareProperty( "ExtrapolatorName",
                    m_extraName = "TrackParabolicExtrapolator" );
 }
-
-//=============================================================================
-// Destructor
-//=============================================================================
-TrackSimpleExtraSelector::~TrackSimpleExtraSelector() {}
 
 
 //=============================================================================
@@ -32,12 +27,8 @@ StatusCode TrackSimpleExtraSelector::initialize()
 {
   // initialize
   StatusCode sc = GaudiTool::initialize();
-  if (sc.isFailure()){
-    return Error("Failed to initialize", sc);
-  }
-
+  if (sc.isFailure()) return Error("Failed to initialize", sc);
   m_extrapolator= tool<ITrackExtrapolator>( m_extraName, m_extraName, this );
-
   return StatusCode::SUCCESS;
 }
 

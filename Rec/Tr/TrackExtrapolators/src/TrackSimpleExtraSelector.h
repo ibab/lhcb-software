@@ -16,25 +16,20 @@
 *
 */
 
-class TrackSimpleExtraSelector: public GaudiTool,
-                                virtual public ITrackExtraSelector {
+class TrackSimpleExtraSelector: public extends<GaudiTool, ITrackExtraSelector> {
 
 public:
   TrackSimpleExtraSelector( const std::string& type, 
                             const std::string& name,
                             const IInterface* parent );
 
-  virtual ~TrackSimpleExtraSelector();
+  StatusCode initialize() override;
 
-  StatusCode initialize();
-
-  virtual const ITrackExtrapolator* select( const double zStart,
-                                      const double zEnd ) const;
-  
+  const ITrackExtrapolator* select( double zStart,
+                                    double zEnd ) const override;
 private:
   const ITrackExtrapolator* m_extrapolator;
   std::string         m_extraName;
-  
 };
 
 #endif // TrackSimpleExtraSelector_H
