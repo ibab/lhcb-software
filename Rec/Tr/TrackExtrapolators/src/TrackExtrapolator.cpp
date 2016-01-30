@@ -8,6 +8,7 @@
 
 #include "LHCbMath/GeomFun.h"
 #include "LHCbMath/Line.h"
+#include "LHCbMath/Similarity.h"
 
 using namespace LHCb;
 using namespace Gaudi;
@@ -20,10 +21,7 @@ StatusCode TrackExtrapolator::propagate( Gaudi::TrackVector& stateVec,
                                          double zNew,
                                          LHCb::ParticleID pid ) const
 {
-  TrackMatrix* transMat = NULL;
-  StatusCode sc = propagate( stateVec, zOld, zNew, transMat, pid );
-
-  return sc;
+  return propagate( stateVec, zOld, zNew, nullptr, pid );
 }
 
 
@@ -49,13 +47,11 @@ StatusCode TrackExtrapolator::propagate( const Track& track,
                                          ParticleID pid ) const
 {
   // get state closest to z
-  const State& closest = track.closestState( z );
-  state = closest;
+  state = track.closestState( z );
 
   // propagate the closest state
-  StatusCode sc = propagate( state, z, pid );
+  return propagate( state, z, pid );
 
-  return sc;
 }
 
 //=============================================================================
@@ -71,9 +67,7 @@ StatusCode TrackExtrapolator::propagate( const Track& track,
   state = LHCb::StateVector( closest.stateVector(), closest.z()) ;
 
   // propagate the closest state
-  StatusCode sc = propagate( state, z, 0, pid );
-  
-  return sc;
+  return propagate( state, z, 0, pid );
 }
 
 //=============================================================================
@@ -84,9 +78,7 @@ StatusCode TrackExtrapolator::propagate( State& state,
                                          ParticleID pid ) const
 {
   Gaudi::TrackMatrix transMat = ROOT::Math::SMatrixIdentity();
-  StatusCode sc = propagate( state, z, &transMat, pid );
-  
-  return sc;
+  return propagate( state, z, &transMat, pid );
 }
 
 //=============================================================================
@@ -101,8 +93,7 @@ StatusCode TrackExtrapolator::propagate( State& state,
   Gaudi::TrackMatrix transMat = ROOT::Math::SMatrixIdentity();
   StatusCode sc = propagate( state.stateVector(), state.z(), z, &transMat, pid );
   state.setZ(z);
-  state.setCovariance( ROOT::Math::Similarity<double,TrackMatrix::kRows,TrackMatrix::kCols>
-                       ( transMat, state.covariance() ) );
+  state.setCovariance( LHCb::Math::Similarity( transMat, state.covariance() ) );
   if( tm ) *tm = transMat ;
   return sc;
 }
@@ -112,17 +103,14 @@ StatusCode TrackExtrapolator::propagate( State& state,
 //=============================================================================
 StatusCode TrackExtrapolator::propagate( const Track& track,
                                          const Gaudi::XYZPoint& point,
-					 LHCb::State& state,
+                                         LHCb::State& state,
                                          ParticleID  pid ) const
 {
   // get state closest to z of point
-  const State& closest = track.closestState( point.z() );
-  state = closest;
+  state = track.closestState( point.z() );
   
   // propagate the closest state
-  StatusCode sc = propagate( state, point.z(), pid );
-
-  return sc;
+  return propagate( state, point.z(), pid );
 }
 
 //=============================================================================
@@ -132,8 +120,6 @@ StatusCode TrackExtrapolator::propagate( State& state,
                                          const Gaudi::XYZPoint& point,
                                          ParticleID  pid ) const
 {
-  StatusCode sc = StatusCode::FAILURE;
-
   Warning( "Cannot propagate state to Z at given point. See debug for details",
            StatusCode::SUCCESS, 0 ).ignore();
   
@@ -142,7 +128,7 @@ StatusCode TrackExtrapolator::propagate( State& state,
             << " to point at z " << point.z()
             << " of pid " << pid.pid() << endmsg;
 
-  return sc;
+  return StatusCode::FAILURE;
 }
 
 //=============================================================================
@@ -155,13 +141,10 @@ StatusCode TrackExtrapolator::propagate( const Track& track,
                                          ParticleID pid ) const
 {
   // get state closest to the plane
-  const State& closest = track.closestState( plane );
-  state = closest;
+  state = track.closestState( plane );
   
   // propagate the closest state
-  StatusCode sc = propagate( state, plane, tolerance, pid );
-
-  return sc;
+  return propagate( state, plane, tolerance, pid );
 }
 
 //=============================================================================
@@ -413,16 +396,11 @@ StatusCode TrackExtrapolator::momentum( const Track& track,
 TrackExtrapolator::TrackExtrapolator( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : base_class ( type, name , parent )
 {
   declareInterface<ITrackExtrapolator>( this );
-
   declareProperty( "Iterations", m_maxIter = 5 );
 }
 
-//=============================================================================
-// Destructor
-//=============================================================================
-TrackExtrapolator::~TrackExtrapolator() {}
 
 //=============================================================================

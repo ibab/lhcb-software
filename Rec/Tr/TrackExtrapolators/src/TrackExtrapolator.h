@@ -26,8 +26,7 @@
  *  @author Eduardo Rodrigues
  *  @date   2004-12-17
  */
-class TrackExtrapolator : public GaudiTool,
-                          virtual public ITrackExtrapolator {
+class TrackExtrapolator : public extends<GaudiTool, ITrackExtrapolator> {
 public:
 
   /// Propagate a state vector from zOld to zNew
@@ -180,8 +179,6 @@ public:
 		     const std::string& name,
 		     const IInterface* parent ) ;
   
-  /// Destructor
-  virtual ~TrackExtrapolator( );
 
 private :
   
