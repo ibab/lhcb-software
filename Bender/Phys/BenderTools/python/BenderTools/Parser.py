@@ -105,7 +105,8 @@ def makeParser ( **kwargs ) :
         '-i'                       ,
         '--import'                 ,
         dest    = 'ImportOptions'  ,
-        metavar = 'IMPORT'         , 
+        metavar = 'IMPORT'         ,
+        ##action  = 'append'         , 
         nargs   = '*'              ,
         default = []               , 
         help    = """List of files to be used for 'importOptions',
@@ -207,9 +208,10 @@ def makeParser ( **kwargs ) :
     group_da.add_argument (
         '-x'                        ,
         '--xml'                     ,
-        nargs   = '*'               , 
         dest    = 'XmlCatalogs'     ,
         help    = "``XmlCatalogs'' to be transferred to setData-function [default: %(default)s]" ,
+        ##action  = 'append'          ,
+        nargs   = '*'           , 
         default = []                
         )
     ## 
