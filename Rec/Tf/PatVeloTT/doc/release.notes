@@ -3,6 +3,8 @@
 ! Responsible : Mariusz Witek
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+! 2016-01-30 - Gerhard Raven
+ - add a few 'const' qualifiers to PatVTTTrack
 
 !========================= PatVeloTT v4r8 2016-01-28 =========================
 ! 2016-01-18 - Espen Eie Bowen

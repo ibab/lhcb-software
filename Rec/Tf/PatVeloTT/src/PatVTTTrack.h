@@ -151,6 +151,7 @@
     }
 
     PatTTHits& clusters() { return m_clusters;}
+    const PatTTHits& clusters()const { return m_clusters;}
 
     void setBadCandidate(bool badCandidate){ m_badCandidate = badCandidate;}
 
@@ -161,13 +162,13 @@
     bool unique() const { return m_unique;}
 
     void setChi2PerDoF(double chi2) { m_chi2PerDoF = chi2; }
-    double chi2PerDoF() { return m_chi2PerDoF; }
+    double chi2PerDoF() const { return m_chi2PerDoF; }
 
     void setQOverP(double qp) { m_qOverP = qp; }
-    double qOverP() { return m_qOverP; }
+    double qOverP() const { return m_qOverP; }
 
     void setFitFlag(int flag) { m_fitFlag = flag; }
-    double fitFlag() { return m_fitFlag; }
+    double fitFlag() const { return m_fitFlag; }
 
     //=========================================================================
     // Select the best list of sorted hits...
@@ -210,7 +211,7 @@
         double  sameLayerTol   = tol * 0.25;
 
         // Ignore LocalHits already used in a four layers fired solution
-        //      if(!itB->inFourLayersSolution()){
+        //      if(!itB->inFourLayersSolution())
 
         // Take all. Better for off-line MW
         if( 1 ){
