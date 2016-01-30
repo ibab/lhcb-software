@@ -10,9 +10,10 @@ gaudi_depends_on_subdirs(Det/DetDesc
                          Tr/TrackKernel)
 
 find_package(GSL)
+find_package(Eigen)
 
 gaudi_add_module(TrackExtrapolators
                  src/*.cpp
-                 INCLUDE_DIRS GSL Tr/TrackInterfaces
+                 INCLUDE_DIRS GSL Eigen Tr/TrackInterfaces
                  LINK_LIBRARIES GSL DetDescLib TrackEvent GaudiAlgLib TrackKernel)
 

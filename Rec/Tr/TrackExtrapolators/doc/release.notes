@@ -3,6 +3,11 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
+
+! 2016-01-30- Chris Jones
+ - Vectorise TrackRungeKuttaExtrapolator using the Eigen Math library.
+   Leads to a 25% improvement in extrapolation speed.
+
 ! 2016-01-30 - Gerhard Raven
  - modernize TrackParabolicExtrapolator, TrackLinearExtrapolator, 
    TrackExtrapolator, TrackDistanceExtraSelector, TrackSimpleExtraSelector,
