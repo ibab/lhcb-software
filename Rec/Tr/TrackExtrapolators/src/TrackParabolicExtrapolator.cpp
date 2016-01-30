@@ -114,8 +114,7 @@ StatusCode TrackParabolicExtrapolator::propagate( State& state,
   XYZVector diff = point - P;
   if( diff.R() < TrackParameters::propagationTolerance ) { return StatusCode::SUCCESS; }
   
-  XYZPoint midP = P + 0.5*diff;
-  Gaudi::XYZVector m_B = fieldVector( midP ) ;
+  Gaudi::XYZVector m_B = fieldVector( P + 0.5*diff ) ;
 
   // The distance between the reference point and a point on the parabola
   // can be minimized by taking the derivative wrt Z and equal that to zero.
@@ -138,30 +137,16 @@ StatusCode TrackParabolicExtrapolator::propagate( State& state,
   
   double delta = P.x()*Tx-point.x()*Tx+P.y()*Ty-point.y()*Ty+P.z()-point.z();
   
-  // The coefficients of the cubic equation
-  double coefA = beta  / alpha;
-  double coefB = gamma / alpha;
-  double coefC = delta / alpha;
-
-  // Create pointers in which to store the solutions (zNew = zOld+sol)
+  // Create parameters in which to store the solutions (zNew = zOld+sol)
   double so1 = 999.;
   double so2 = 999.;
   double so3 = 999.;
 
-  double* sol1 = &so1;
-  double* sol2 = &so2;
-  double* sol3 = &so3;
-
-  gsl_poly_solve_cubic( coefA, coefB, coefC, sol1, sol2, sol3 );
+  gsl_poly_solve_cubic( beta/alpha, gamma/alpha, delta/alpha, &so1, &so2, &so3 );
 
   // Choose the solution closest to the present position
-  if( ((*sol1) >= 0.) && ((*sol1) != 999.) )
-  {
-    sc = TrackExtrapolator::propagate(state, P.z()+(*sol1), pid);
-  }
-  else { sc = TrackExtrapolator::propagate(state, P.z()+*sol3, pid); }
-  
-  return sc;
+  bool use1 = ( so1 >= 0. && so1 != 999. ) ;
+  return TrackExtrapolator::propagate(state, P.z()+ use1 ? so1 : so3, pid);
 }
 
 //=============================================================================
@@ -173,10 +158,6 @@ void TrackParabolicExtrapolator::updateTransportMatrix( const double dz,
 							const Gaudi::XYZVector& m_B,
 							double m_ax, double m_ay ) const
 {
-  // Reset the transport matrix. It turns out that this is so expensive
-  // in gcc 3.4 that we better just set the elements explicitely, below.
-  // transMat = ROOT::Math::SMatrixIdentity();
-  
   // to save some typing...
   double Tx = stateVec[2];
   double Ty = stateVec[3];

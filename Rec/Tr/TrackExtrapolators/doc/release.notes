@@ -3,11 +3,13 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
+! 2016-01-30 - Gerhard Raven
+ - modernize TrackParabolicExtrapolator
 
 !=================== TrackExtrapolators v2r40 2016-01-19 =====================
 
 ! 2016-01-19 - Eduardo Rodrigues
- - Retagging v3r0 as v2r40 as this version if needed for a patch release of
+ - Retagging v3r0 as v2r40 as this version is needed for a patch release of
    DaVinci and CMT does not allow to have a package in a patch that has
    a major version different from the underlying release.
 
