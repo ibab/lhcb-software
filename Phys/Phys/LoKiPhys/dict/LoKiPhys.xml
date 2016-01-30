@@ -87,11 +87,8 @@
 
   <class pattern   = "LoKi::Functor<*LHCb::Pa*>" />
   <class pattern   = "LoKi::Functor<*LHCb::Ve*>" />
-  <class pattern   = "LoKi::FunctorFromFunctor<*LHCb::Pa*>" />
-  <class pattern   = "LoKi::FunctorFromFunctor<*LHCb::Ve*>" />
   <class pattern   = "LoKi::BasicFunctors<*LHCb::Pa*>" />
-  <class pattern   = "LoKi::BasicFunctors<*LHCb::Ve*>" />
-  
+  <class pattern   = "LoKi::BasicFunctors<*LHCb::Ve*>" />  
   <class pattern   = "LoKi::Constant<*LHCb::Pa*>" />
   <class pattern   = "LoKi::Constant<*LHCb::Ve*>" />
   <class pattern   = "LoKi::FunctorFromFunctor<*LHCb::Pa*>" />

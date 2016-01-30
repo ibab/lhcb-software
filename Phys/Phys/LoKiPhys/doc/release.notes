@@ -5,6 +5,11 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2016-01-30 - Vanya Belyaev
+ - LoKiPhys.xml:
+  remove duplicated rules (thanks to Marco Cattaneo)
+   
+
 ! 2016-01-25 - Vanya Belyaev
  - add Graphviz into CMT&CMAKE 
 
