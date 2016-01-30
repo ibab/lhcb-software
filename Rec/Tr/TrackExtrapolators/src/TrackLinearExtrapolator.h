@@ -26,12 +26,7 @@ class TrackLinearExtrapolator: public TrackExtrapolator {
 
 public:
   /// constructor
-  TrackLinearExtrapolator( const std::string& type, 
-			   const std::string& name, 
-			   const IInterface* parent );
-
-  /// destructor
-  virtual ~TrackLinearExtrapolator();
+  using TrackExtrapolator::TrackExtrapolator;
 
   using TrackExtrapolator::propagate;
 
@@ -41,12 +36,12 @@ public:
                         double zOld,
                         double zNew,
                         Gaudi::TrackMatrix* transMat,
-                        LHCb::ParticleID pid = LHCb::ParticleID(211) ) const ;
+                        LHCb::ParticleID pid = LHCb::ParticleID(211) ) const override;
   
   /// Propagate a state to the closest position to the specified point
   StatusCode propagate( LHCb::State& state,
                         const Gaudi::XYZPoint& point,
-                        LHCb::ParticleID pid = LHCb::ParticleID(211) ) const ;
+                        LHCb::ParticleID pid = LHCb::ParticleID(211) ) const override;
   
 };
 

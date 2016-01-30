@@ -4,14 +4,7 @@
 #include "Event/TrackParameters.h"
 
 // local
-#ifdef __INTEL_COMPILER         // Disable ICC warning
-  #pragma warning(disable:654)  // ITrackExtrapolator::propagate" only partially overridden
-  #pragma warning(push)
-#endif
 #include "TrackLinearExtrapolator.h"
-#ifdef __INTEL_COMPILER         // Re-enable ICC warning 654
-  #pragma warning(pop)
-#endif
 
 using namespace LHCb;
 using namespace Gaudi;
@@ -36,7 +29,7 @@ StatusCode TrackLinearExtrapolator::propagate( Gaudi::TrackVector& stateVec,
     return StatusCode::SUCCESS ;
   }
 
-  if( transMat != NULL ) {
+  if( transMat ) {
     (*transMat) = ROOT::Math::SMatrixIdentity();
     (*transMat)(0,2) = dz;
     (*transMat)(1,3) = dz;
@@ -57,9 +50,8 @@ StatusCode TrackLinearExtrapolator::propagate( State& state,
 {
   // Distance = sqrt((x'-x0-Tx*dz)^2+(y'-y0-Ty*dz)^2+(z'-z0-dz)^2)
   // Find dz by solving: d(distance)/dz = 0
-  XYZPoint  pos = state.position();
   XYZVector slo = state.slopes();
-  XYZVector dif = pos - point;
+  XYZVector dif = state.position() - point;
   
   // Remember that slo.Z()==1 by definition
   double zNew = -2*( (dif.X()+dif.Y()+dif.Z()) / (slo.X()+slo.Y()+1) );
@@ -67,18 +59,3 @@ StatusCode TrackLinearExtrapolator::propagate( State& state,
   // Propagate to the point
   return TrackExtrapolator::propagate( state, zNew, pid );
 }
-
-//=============================================================================
-// Standard constructor, initializes variables
-//=============================================================================
-TrackLinearExtrapolator::TrackLinearExtrapolator(const std::string& type,
-                                                 const std::string& name,
-                                                 const IInterface* parent )
-  : TrackExtrapolator ( type, name, parent ) {}
-
-//=============================================================================
-// Destructor
-//=============================================================================
-TrackLinearExtrapolator::~TrackLinearExtrapolator() {}
-
-//=============================================================================
