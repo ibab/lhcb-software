@@ -265,12 +265,13 @@ if not arguments.UserStart :
     #
     ## useful services & shortcuts 
     # 
-    evtSel = gaudi.evtSel()
-    evtSvc = gaudi.evtSvc()
-    detSvc = gaudi.detSvc()
+    evtSel  = gaudi.evtSel  ()
+    evtSvc  = gaudi.evtSvc  ()
+    detSvc  = gaudi.detSvc  ()
+    toolSvc = gaudi.toolSvc ()
     
-    evt    = evtSvc
-    det    = detSvc
+    evt     = evtSvc
+    det     = detSvc
     
     run ( 1 )
 
