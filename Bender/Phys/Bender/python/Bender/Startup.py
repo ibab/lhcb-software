@@ -63,11 +63,23 @@ if '__main__' == __name__ : logger = getLogger ( 'Bender.Startup' )
 else                      : logger = getLogger ( __name__ )
 # =============================================================================
 
+def with_ipython() :
+    try :
+        __IPYTHON__
+        return True
+    except NameError :
+        return False 
+
 try:
 
+    import datetime
+    start_time = datetime.datetime.now()
+    logger.info ( 'Bender session started %s' % start_time.strftime('%c')  )
+    
     import os
     ## define the name of the history file
     __history__ = os.path.curdir + os.sep + '.bender_history'
+    
     
     def _rename_ ( file , app ) :
         if os.path.exists ( file + app ) :
@@ -78,26 +90,59 @@ try:
             else : os.rename  ( file       , file + app )
 
     ## remove/backup the previous history file
-    _rename_ ( __history__ , '.OLD' )
+    try : 
+        _rename_ ( __history__ , '.OLD' )
+    except :
+        logger.warning ( "Can't erase old history files", exc_info = True ) 
+        pass
+
 
     ## write history at the end 
     def _prnt_() :
-        logger.info ( 'BENDER history file: %s' % __history__ ) 
-        
+        if os.path.exists( __history__ ) and os.path.isfile ( __history__ ) and 0 != os.path.getsize ( __history__ ) : 
+            logger.info ( 'Bender history file: %s' % __history__ )
+        end_time = datetime.datetime.now()   
+        logger.info ( 'Bender session   ended %s \n' % end_time.strftime('%c')  )
+            
     ## line completer 
     import rlcompleter
     import readline
     readline.clear_history() 
     readline.parse_and_bind("tab: complete")
 
+
+    def write_history ( fname ) :
+        
+        if with_ipython() :
+
+            try :
+                
+                import IPython
+                ip  = IPython.get_ipython()
+                with open ( fname , 'w' ) as f :
+                    f.write( '# Bender session started %s\n' % start_time.strftime('%c')  ) 
+                    for record in ip.history_manager.get_range() :
+                        f.write( record[2] + '\n' )
+                    end_time = datetime.datetime.now()   
+                    f.write( '# Bender session   ended %s\n' % end_time.strftime('%c')  )
+                
+                return
+            
+            except:
+                pass
+            
+        ## use 'old-style' history 
+        return readline.write_history_file ( fname ) 
+        
+
     import atexit
-    atexit.register ( readline.write_history_file , __history__ )
+
+    atexit.register ( write_history , __history__ )    
     atexit.register ( _prnt_ )
 
-    _prnt_() 
-    
 except:
-    pass 
+    ## 
+    logger.error ( 'Error in startup configuration, ignore... ' , exc_info = True ) 
 
 
     

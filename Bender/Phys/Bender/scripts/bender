@@ -361,6 +361,7 @@ elif arguments.plain :
     
     shell = code.InteractiveConsole(__vars)
     shell.interact()
+
     exit() 
 
 else :
@@ -372,7 +373,9 @@ else :
     
     import IPython
     IPython.start_ipython ( argv = [] , user_ns = __vars )
+
     exit() 
+
 
 
 
