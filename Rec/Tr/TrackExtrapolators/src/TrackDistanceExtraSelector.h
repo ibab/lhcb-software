@@ -1,4 +1,3 @@
-// $Id: TrackDistanceExtraSelector.h,v 1.6 2010-04-07 21:08:38 wouter Exp $
 #ifndef TrackDistanceExtraSelector_H
 #define TrackDistanceExtraSelector_H 1
 
@@ -18,20 +17,19 @@
 *
 */
 
-class TrackDistanceExtraSelector: public GaudiTool,
-                                  virtual public ITrackExtraSelector {
+class TrackDistanceExtraSelector: public extends<GaudiTool, ITrackExtraSelector> {
 
 public:
   TrackDistanceExtraSelector(const std::string& type, 
                              const std::string& name,
                              const IInterface* parent);
 
-  virtual ~TrackDistanceExtraSelector();
+  ~TrackDistanceExtraSelector() override;
 
-  StatusCode initialize();
+  StatusCode initialize() override;
 
-  virtual const ITrackExtrapolator* select( const double zStart,
-					    const double zEnd ) const ;
+  const ITrackExtrapolator* select( double zStart,
+                                    double zEnd ) const override;
 
  private:
   double m_shortDist;

@@ -18,7 +18,7 @@ DECLARE_TOOL_FACTORY( TrackDistanceExtraSelector )
 TrackDistanceExtraSelector::TrackDistanceExtraSelector(const std::string& type,
                                                        const std::string& name,
                                                        const IInterface* parent):
-  GaudiTool(type, name, parent)
+  base_class(type, name, parent)
 {
   declareInterface<ITrackExtraSelector>( this );
   
@@ -33,7 +33,7 @@ TrackDistanceExtraSelector::TrackDistanceExtraSelector(const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackDistanceExtraSelector::~TrackDistanceExtraSelector() {}
+TrackDistanceExtraSelector::~TrackDistanceExtraSelector() = default;
 
 //=============================================================================
 // Initialization
@@ -55,18 +55,17 @@ StatusCode TrackDistanceExtraSelector::initialize()
     debug() << "Short distance extrapolator: " << m_shortDistanceExtrapolator->type() << endmsg ;
     debug() << "Long distance extrapolator: " << m_longDistanceExtrapolator->type() << endmsg ;
   }
-  
   return StatusCode::SUCCESS;
 }
 
 //=============================================================================
 //
 //=============================================================================
-const ITrackExtrapolator* TrackDistanceExtraSelector::select( const double zStart,
-							      const double zEnd ) const
+const ITrackExtrapolator* TrackDistanceExtraSelector::select( double zStart,
+                                                              double zEnd ) const
 {
-  return ( std::abs(zEnd-zStart) < m_shortDist ?
-           m_shortDistanceExtrapolator : m_longDistanceExtrapolator );
+  return std::abs(zEnd-zStart) < m_shortDist ?
+         m_shortDistanceExtrapolator : m_longDistanceExtrapolator;
 }
 
 //=============================================================================
