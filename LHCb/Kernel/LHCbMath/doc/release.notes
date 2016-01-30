@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2016-01-30 - Chris Jones
+ - Improve the Eigen Plane3D constructor from a Gaudi Plane3D.
+
 !========================= LHCbMath v3r61 2016-01-27 =========================
 ! 2016-01-21 - Marco Cattaneo
  - Remove instrset_detect.cpp, instrset.h, now available from VectorClass

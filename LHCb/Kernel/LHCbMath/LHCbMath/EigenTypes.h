@@ -245,7 +245,7 @@ namespace LHCb
       /// The internal Eigen type to use for 3D Planes
       typedef ::Eigen::Hyperplane< float, 3 > EPlane;
 
-      /** @class XYZPlane EigenTypes.h LHCbMath/EigenTypes.h
+      /** @class Plane3D EigenTypes.h LHCbMath/EigenTypes.h
        *
        *  Implementation of a 3D plane as an Eigen Hyperplane
        *
@@ -260,6 +260,15 @@ namespace LHCb
       private:
 
         typedef ::Eigen::Matrix<float,3,1> Vec3f;
+
+      private:
+
+        /// Stupid method to deal with fact Gaudi::XYZPlane's accessors are not const..
+        template < typename TYPE >
+        inline static TYPE& nonc( const TYPE& t ) 
+        {
+          return const_cast<TYPE&>(t);
+        } 
         
       public :   
 
@@ -285,13 +294,10 @@ namespace LHCb
                                      Vec3f(p2.x(),p2.y(),p2.z()),
                                      Vec3f(p3.x(),p3.y(),p3.z()) ) ) { }       
 
-        /// Constructor from a Gaudi Plane3D
-        Plane3D( Gaudi::Plane3D& p )
-          : EPlane( Vec3f(p.A(),p.B(),p.C()), p.D() ) { }
-
-        /// Constructor from a Gaudi Plane3D
-        Plane3D( Gaudi::Plane3D p )
-          : EPlane( Vec3f(p.A(),p.B(),p.C()), p.D() ) { }
+        /** Constructor from a Gaudi Plane3D
+         *  Why on Earth are the Plane acccessors not const... */
+        Plane3D( const Gaudi::Plane3D& p )
+          : EPlane( Vec3f(nonc(p).A(),nonc(p).B(),nonc(p).C()), nonc(p).D() ) { }
 
         /// Implicit conversion back to a Gaudi Plane3D
         inline operator Gaudi::Plane3D() const 
