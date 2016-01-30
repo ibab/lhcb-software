@@ -1,4 +1,4 @@
-#ifndef TRACKEXTRAPOLATORS_DETAILEDMATERIALLOCATOR_H 
+#ifndef TRACKEXTRAPOLATORS_DETAILEDMATERIALLOCATOR_H
 #define TRACKEXTRAPOLATORS_DETAILEDMATERIALLOCATOR_H
 
 // Include files
@@ -21,20 +21,19 @@ class IGeometryInfo ;
 
 class DetailedMaterialLocator : public MaterialLocatorBase
 {
-public: 
+public:
   /// Constructor
-  DetailedMaterialLocator( const std::string& type, 
-			   const std::string& name, 
+  DetailedMaterialLocator( const std::string& type,
+			   const std::string& name,
 			   const IInterface* parent ) ;
   /// intialize
-  virtual StatusCode initialize();
-  virtual StatusCode finalize();
+  StatusCode initialize() override;
 
   using MaterialLocatorBase::intersect;
   /// Intersect a line with volumes in the geometry
-  virtual size_t intersect( const Gaudi::XYZPoint& p, const Gaudi::XYZVector& v, 
-			    ILVolume::Intersections& intersepts ) const ;
-  
+  size_t intersect( const Gaudi::XYZPoint& p, const Gaudi::XYZVector& v,
+                    ILVolume::Intersections& intersepts ) const override;
+
 private:
   double m_minRadThickness ;                     ///< minimum radiation thickness
   std::string m_geometrypath ;                   ///< name of the geometry
@@ -42,4 +41,4 @@ private:
   mutable IGeometryInfo* m_geometry ;
 };
 
-#endif // TRACKEXTRAPOLATORS_DETAILEDMATERIALLOCATOR_H 
+#endif // TRACKEXTRAPOLATORS_DETAILEDMATERIALLOCATOR_H

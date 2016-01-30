@@ -33,7 +33,7 @@ namespace MaterialLocatorUtils {
       : m_volume( volume )
     {
       // get the global position of the center 
-      m_zcenter = volume.toMother( Gaudi::XYZPoint(0,0,0) ).z() ;
+      m_zcenter = volume.toMother( { 0,0,0 } ).z() ;
       // determine the size in z
       const SolidTubs* solidtubs = dynamic_cast<const SolidTubs*>(solid()) ;
       const SolidBox*  solidbox  = dynamic_cast<const SolidBox*>(solid()) ;
@@ -48,7 +48,7 @@ namespace MaterialLocatorUtils {
       m_hasdaughters = lvolume()->noPVolumes()>0 ;
     }
     
-    virtual ~PVolumeWrapper() {}
+    virtual ~PVolumeWrapper() = default;
     
     const std::string& name() const { return m_volume.name() ; }
     inline unsigned int addintersections(const Gaudi::XYZPoint&  p,const Gaudi::XYZVector& v, ILVolume::Intersections& ) const ;
@@ -84,27 +84,23 @@ namespace MaterialLocatorUtils {
         static ILVolume::Intersections own ;
         own.clear() ;
         rc = m_volume.lvolume()->intersectLine(pprime,v,own,0,1,0) ;
-        std::copy( std::begin(own), std::end(own),  std::back_inserter( intersections ) );
+        intersections.insert( std::end(intersections), std::begin(own), std::end(own) );
       } else {
-	// half the volumes don't have daughters. if they don't, we do
-	// this ourself because the intersectLine call above is just
-	// too slow.
-	static ISolid::Ticks ticks ;
-	ticks.clear() ;
-	solid()->intersectionTicks(pprime,v,ticks) ;
-	if(ticks.size()%2==1) std::cout << "odd number of ticks!" << std::endl ;
-	for(unsigned int itick=0; itick+1<ticks.size(); itick+=2) {
-	  double firsttick  = ticks[itick] ;
-	  double secondtick = ticks[itick+1] ;
-	  if( firsttick <= 1 && secondtick >= 0 ) {
-	    ILVolume::Intersection intersect ;
-	    intersect.first.first = std::max(0.,firsttick) ;
-	    intersect.first.second = std::min(1.,secondtick) ;
-	    intersect.second = material() ;
-	    intersections.push_back( intersect ) ;
-	    ++rc ;
-	  }
-	}
+        // half the volumes don't have daughters. if they don't, we do
+        // this ourself because the intersectLine call above is just
+        // too slow.
+        static ISolid::Ticks ticks ;
+        ticks.clear() ;
+        solid()->intersectionTicks(pprime,v,ticks) ;
+        if(ticks.size()%2==1) std::cout << "odd number of ticks!" << std::endl ;
+        for(unsigned int itick=0; itick+1<ticks.size(); itick+=2) {
+          double firsttick  = ticks[itick] ;
+          double secondtick = ticks[itick+1] ;
+          if( firsttick <= 1 && secondtick >= 0 ) {
+            intersections.emplace_back( std::make_pair( std::max(0.,firsttick), std::min(1.,secondtick) ), material() );
+            ++rc ;
+          }
+        }
       }
     }
     return rc ;

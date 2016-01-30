@@ -43,16 +43,12 @@ StatusCode DetailedMaterialLocator::initialize()
   if( !sc.isSuccess() ) return Error("Failed to get transport service",sc) ;
 
   // if it is zero, the transport services uses the 'standard' geometry
-  IDetectorElement* mainvolume =  m_geometrypath.empty() ? 0 : getDet<IDetectorElement>(m_geometrypath) ;
-  m_geometry = mainvolume ? mainvolume->geometry() : 0 ;
+  auto mainvolume =  !m_geometrypath.empty() ? getDet<IDetectorElement>(m_geometrypath) : nullptr;
+  m_geometry = mainvolume ? mainvolume->geometry() : nullptr ;
 
   return sc;
 }
 
-StatusCode DetailedMaterialLocator::finalize()
-{
-  return MaterialLocatorBase::finalize() ;
-}
 
 size_t DetailedMaterialLocator::intersect( const Gaudi::XYZPoint& start, const Gaudi::XYZVector& vect, 
 						ILVolume::Intersections& intersepts ) const 
@@ -76,7 +72,7 @@ size_t DetailedMaterialLocator::intersect( const Gaudi::XYZPoint& start, const G
                                      << " vect= " << vect << endmsg ;
   } else {
     try {
-      const char chronotag[] = "DetailedMaterialLocator" ;
+      static const std::string chronotag = "DetailedMaterialLocator" ;
       chronoSvc()->chronoStart(chronotag);
       // rather painfull: the 'intersections' call is not const
       ITransportSvc* nonconsttransportservice = const_cast<ITransportSvc*>(&(*m_transportSvc)) ;

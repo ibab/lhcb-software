@@ -6,7 +6,8 @@
 ! 2016-01-30 - Gerhard Raven
  - modernize TrackParabolicExtrapolator, TrackLinearExtrapolator, 
    TrackExtrapolator, TrackDistanceExtraSelector, TrackSimpleExtraSelector,
-   TrackStateAdder, TrackStateProvider
+   TrackStateAdder, TrackStateProvider, DetailedMaterialLocator, 
+   MaterialLocatorBase, SimplifiedMaterialLocator
 
 !=================== TrackExtrapolators v2r40 2016-01-19 =====================
 
