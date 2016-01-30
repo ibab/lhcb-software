@@ -10,9 +10,6 @@
 // Eigen Objects
 #include "LHCbMath/EigenTypes.h"
 
-// LHCbKernel
-#include "Kernel/FastAllocVector.h"
-
 class TrackRungeKuttaExtrapolator: public TrackFieldExtrapolatorBase
 {
 
