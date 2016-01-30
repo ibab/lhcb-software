@@ -33,6 +33,7 @@ use Gaudi              v*           -no_auto_imports
 # From LHCbSys
 use EventPacker        v*    Event  -no_auto_imports
 use LHCbAlgs           v*    Kernel -no_auto_imports
+use FSRAlgs            v*    Kernel -no_auto_imports
 use SimComponents      v*    Sim    -no_auto_imports
 use XmlTools           v*    Tools  -no_auto_imports
 use CaloDetXmlCnv      v*    Det    -no_auto_imports

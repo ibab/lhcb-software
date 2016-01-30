@@ -53,6 +53,8 @@ class Boole(LHCbConfigurableUser):
         ,"EnablePack"          : True
         ,"SiG4EnergyDeposit"   : True
         ,"SplitRawEventFormat" : None #Where the raw event sits, DAQ/RawEvent!
+        ,"WriteFSR"            : True  
+        ,"MergeGenFSR"         : False
         }
 
     _propertyDocDct = { 
@@ -89,6 +91,8 @@ class Boole(LHCbConfigurableUser):
        ,'FilterSequence' : """ List of Filter sequences, see KnownFilterSubdets  """
        ,'EnablePack'   : """ Turn on/off packing of the data (where appropriate/available) """
        ,'SiG4EnergyDeposit': """ Modelling of energy loss for silicon trackers from Geant4 or in-house."""
+       ,'WriteFSR'     : """ Flag whether to write out an FSR.  Default : True """
+       ,'MergeGenFSR'  : """ Flag whether to merge the generatore level FSRs. Default False """ 
         }
 
     KnownFilterSubdets = [ "L0", "ODIN" ]
@@ -854,7 +858,7 @@ class Boole(LHCbConfigurableUser):
             DigiConf().Writer     = writerName
             DigiConf().OutputName = self.outputName()
             DigiConf().setProp("Detectors",self.__detLinkListDigiConf)
-            self.setOtherProps(DigiConf(),["DigiType","TAEPrev","TAENext","UseSpillover","DataType",])
+            self.setOtherProps(DigiConf(),["DigiType","TAEPrev","TAENext","UseSpillover","DataType","WriteFSR"])
             if self.getProp("UseSpillover"):
                 self.setOtherProps(DigiConf(),["SpilloverPaths"])
 
@@ -880,7 +884,17 @@ class Boole(LHCbConfigurableUser):
                 MyWriter.OutputLevel = INFO
             ApplicationMgr().OutStream += [ nodeKiller, MyWriter ]
 
-
+        # Merge and write the genFSRs
+        if self.getProp("WriteFSR"):
+            if self.getProp("MergeGenFSR"):
+                seqGenFSR = GaudiSequencer("GenFSRSeq")
+                ApplicationMgr().TopAlg += [ seqGenFSR ]
+                seqGenFSR.Members += [ "GenFSRMerge" ]
+                
+            FSRWriter = RecordStream( "FSROutputStreamDigiWriter")
+            if not FSRWriter.isPropertySet( "OutputLevel" ):
+                FSRWriter.OutputLevel = INFO
+                                                                                                        
     def outputName(self):
         """
         Build a name for the output file, based in input options
