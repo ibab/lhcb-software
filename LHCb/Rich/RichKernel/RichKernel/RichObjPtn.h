@@ -45,7 +45,7 @@ namespace Rich
      *  Consequently users should NOT manually delete objects they
      *  pass to a RichObjPtn.
      */
-    explicit ObjPtn( TYPE * obj ) : m_obj(obj) { }
+    explicit ObjPtn( TYPE * obj ) : m_obj( obj ) { }
 
     /** Copy Constructor from another object of type TYPE
      *
@@ -56,13 +56,22 @@ namespace Rich
      */
     explicit ObjPtn( const TYPE & obj ) : m_obj( new TYPE(obj) ) { }
 
+    /** Move Constructor from another object of type TYPE
+     *
+     *  @param obj Reference to object to use as underlying data object
+     *
+     *  This method requires the underlying object to have a valid move constructor
+     *  with syntax TYPE( TYPE& obj )
+     */
+    explicit ObjPtn( TYPE && obj ) : m_obj( new TYPE(std::move(obj)) ) { }
+
     /// Destructor
     ~ObjPtn() { delete m_obj; }
 
   private:
 
     /// Check if new object is needed
-    inline TYPE* checkObj() const
+    inline TYPE* checkObj() const noexcept
     {
       return ( m_obj ? m_obj : ( m_obj = new TYPE() ) );
     }
@@ -70,28 +79,22 @@ namespace Rich
   public:
 
     /// Check if an object is defined
-    inline bool objectExists()      const { return nullptr != m_obj; }
+    inline bool objectExists()      const noexcept { return nullptr != m_obj; }
 
     /// Dereference operator to const object
-    inline const TYPE* operator->() const { return checkObj(); }
+    inline const TYPE* operator->() const noexcept { return checkObj(); }
 
     /// Dereference operator
-    inline TYPE* operator->()             { return checkObj(); }
+    inline TYPE* operator->()             noexcept { return checkObj(); }
 
     /// Simple const access method
-    inline const TYPE* object()     const { return checkObj(); }
+    inline const TYPE* object()     const noexcept { return checkObj(); }
 
     /// Simple access method
-    inline TYPE* object()                 { return checkObj(); }
+    inline TYPE* object()                 noexcept { return checkObj(); }
 
     /// Inherit a new object
-    inline void inherit( TYPE * obj ) { delete m_obj; m_obj = obj; }
-
-    /// Clone method
-    inline TYPE* clone() const
-    {
-      return ( m_obj ? new TYPE(*m_obj) : nullptr );
-    }
+    inline void inherit( TYPE * obj )     noexcept { delete m_obj; m_obj = obj; }
 
     /// Overload output to ostream
     friend inline std::ostream& operator << ( std::ostream& os,

@@ -4,6 +4,9 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2016-01-31 - Chris Jones
+ - Prefer std::unique_ptr to raw pointers.
+
 ! 2016-01-28 - Chris Jones
  - Properly support only arithemtic and pointer types in RichHypoData, 
    using type traits.

@@ -12,6 +12,9 @@
 #ifndef RICHKERNEL_RICHCONVERTERIMP_H
 #define RICHKERNEL_RICHCONVERTERIMP_H 1
 
+// STL
+#include <memory>
+
 // Gaudi
 #include "GaudiKernel/Converter.h"
 #include "GaudiKernel/IToolSvc.h"
@@ -84,12 +87,12 @@ namespace Rich
 
     // Useful method for the easy location of tools.
     template < class TOOL >
-    TOOL* tool ( const std::string& type           ,
-                 const std::string& name    = ""   ,
-                 const IInterface*  parent  = 0    ,
-                 bool               create  = true ) const
+    TOOL* tool ( const std::string& type              ,
+                 const std::string& name    = ""      ,
+                 const IInterface*  parent  = nullptr ,
+                 bool               create  = true    ) const
     {
-      TOOL* Tool = 0 ;
+      TOOL* Tool = nullptr ;
       if ( name.empty() )
       {
         this->toolSvc()->retrieveTool( type, Tool, parent, create );
@@ -140,9 +143,7 @@ namespace Rich
     // ============================================================================
     inline void addToServiceList( const SmartIF<IService>& svc ) const
     {
-      if (svc.isValid()) {
-        m_services[svc->name()] = svc;
-      }
+      if ( svc.isValid() ) { m_services[svc->name()] = svc; }
     }
     // ============================================================================
 
@@ -183,15 +184,14 @@ namespace Rich
     msgStream ( const MSG::Level level ) const
     {
       if ( !m_msgStream )
-      { m_msgStream = new MsgStream ( this->msgSvc() , this->name() ) ; }
+      { m_msgStream.reset( new MsgStream ( this->msgSvc() , this->name() ) ); }
       return *m_msgStream << level ;
     }
 
     /// Delete the current messaging object
     inline void resetMsgStream() const
     {
-      delete m_msgStream;
-      m_msgStream = nullptr;
+      m_msgStream.reset( nullptr );
     }
 
     /// shortcut for the method msgStream ( MSG::ALWAYS )
@@ -279,7 +279,7 @@ namespace Rich
     std::string m_context {"Offline"};
 
     /// The predefined message stream
-    mutable MsgStream * m_msgStream = nullptr;
+    mutable std::unique_ptr<MsgStream> m_msgStream;
 
     /// Tool service
     mutable IToolSvc * m_toolSvc = nullptr;

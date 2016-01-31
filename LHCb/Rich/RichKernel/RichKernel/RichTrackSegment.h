@@ -185,13 +185,6 @@ namespace LHCb
 
   public:
 
-    /// Delete and reset the current rotations
-    inline void cleanUpRotations() const
-    {
-      if ( m_rotation  ) { delete m_rotation;  m_rotation  = nullptr; }
-      if ( m_rotation2 ) { delete m_rotation2; m_rotation2 = nullptr; }
-    }
-
     /// The segment type
     inline LHCb::RichTrackSegment::SegmentType type() const
     {
@@ -201,6 +194,13 @@ namespace LHCb
     // ------------------------------------------------------------------------------------------------------
 
   private:
+
+    /// Delete and reset the current rotations
+    inline void cleanUpRotations() const
+    {
+      m_rotation .reset( nullptr );
+      m_rotation2.reset( nullptr );
+    }
 
     /// Helper method to initialise the based chord constructor without a middle point
     void chordConstructorInit2();
@@ -363,10 +363,10 @@ namespace LHCb
   public:
 
     /// Standard constructor
-    RichTrackSegment() : m_radIntersections ( 1 ) { }
+    RichTrackSegment() = default;
 
     /// Destructor
-    ~RichTrackSegment( ) { cleanUpRotations(); }
+    ~RichTrackSegment() = default;
 
     // ------------------------------------------------------------------------------------------------------
 
@@ -645,7 +645,7 @@ namespace LHCb
     SegmentType m_type = RichTrackSegment::UnDefined;
 
     /// The raw intersections with the radiator volumes
-    Rich::RadIntersection::Vector m_radIntersections;
+    Rich::RadIntersection::Vector m_radIntersections{1};
 
     /// The middle point of the segment in the radiator volume
     Gaudi::XYZPoint m_middlePoint;
@@ -672,13 +672,13 @@ namespace LHCb
      *  this track segment and a given direction.
      *  Created on demand as required.
      */
-    mutable Gaudi::Rotation3D * m_rotation = nullptr;
+    mutable std::unique_ptr<Gaudi::Rotation3D> m_rotation;
 
     /** Rotation matrix used to create vectors at a given theta and phi angle
      *  to this track segment.
      *  Created on demand as required
      */
-    mutable Gaudi::Rotation3D * m_rotation2 = nullptr;
+    mutable std::unique_ptr<Gaudi::Rotation3D> m_rotation2;
 
   };
 
@@ -686,7 +686,7 @@ namespace LHCb
 
 inline void LHCb::RichTrackSegment::computeRotationMatrix() const
 {
-  m_rotation = new Gaudi::Rotation3D( rotationMatrix2().Inverse() );
+  m_rotation.reset( new Gaudi::Rotation3D( rotationMatrix2().Inverse() ) );
 }
 
 inline Gaudi::XYZVector

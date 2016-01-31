@@ -59,7 +59,7 @@ namespace Rich
   public:
 
     /// Default Constructor
-    HPDPixelCluster( ) = default;
+    HPDPixelCluster() = default;
 
     /// Default destructor
     ~HPDPixelCluster() = default;

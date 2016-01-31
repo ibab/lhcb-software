@@ -44,9 +44,7 @@ LHCb::RichTrackSegment::angleToDirection( const Gaudi::XYZVector & direction,
   // do it by hand, the same only faster ;)
   // Skip checks against 0 as we know that never happens here.
   phi   = vdt::fast_atan2( rotDir.y(), rotDir.x() );
-  theta = vdt::fast_atan2( std::sqrt( std::pow(rotDir.x(),2) +
-                                      std::pow(rotDir.y(),2) ),
-                           rotDir.z() );
+  theta = vdt::fast_atan2( std::hypot( rotDir.x(), rotDir.y() ), rotDir.z() );
 
   // correct phi
   if ( phi < 0 ) phi += 2.0*M_PI;
@@ -77,9 +75,9 @@ void LHCb::RichTrackSegment::computeRotationMatrix2() const
   auto y = z.Cross( Gaudi::XYZVector(1,0,0) );
   y *= vdt::fast_isqrtf( y.Mag2() ); // maybe not needed ?
   const auto x = y.Cross(z);
-  m_rotation2 = new Gaudi::Rotation3D( x.X(), y.X(), z.X(),
-                                       x.Y(), y.Y(), z.Y(),
-                                       x.Z(), y.Z(), z.Z() );
+  m_rotation2.reset( new Gaudi::Rotation3D( x.X(), y.X(), z.X(),
+                                            x.Y(), y.Y(), z.Y(),
+                                            x.Z(), y.Z(), z.Z() ) );
 }
 
 Gaudi::XYZPoint LHCb::RichTrackSegment::bestPoint( const double fractDist ) const
