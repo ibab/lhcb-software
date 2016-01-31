@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2016-01-31- Gerhard Raven
+ - simplify TrackRungeKuttaExtrapolator, modernize TrackFieldExtrapolatorBase,
+   remove unused header from TrackMasterExtrapolator
+
 ! 2016-01-30- Chris Jones
  - Vectorise TrackRungeKuttaExtrapolator using the Eigen Math library.
    Leads to a 25% improvement in extrapolation speed.

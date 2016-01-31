@@ -31,19 +31,18 @@ public:
 			      const IInterface* parent );
 
   /// destructor
-  ~TrackFieldExtrapolatorBase();
+  ~TrackFieldExtrapolatorBase() override;
 
   /// initialize (picks up the field service)
-  StatusCode initialize() ;
+  StatusCode initialize()  override;
 
   /// finalize
-  StatusCode finalize() ;
+  StatusCode finalize()  override;
 
   /// access to the field
   FieldVector fieldVector( const Gaudi::XYZPoint& position ) const {
     ++m_numFieldCalls ;
     return (m_fieldGrid->*m_fieldFunction)( position ) ;
-    //return m_fieldSvc->fieldVector(position) ;
   }
   
   /// access to the field gradient
@@ -52,12 +51,13 @@ public:
   }
   
 private:
-  bool m_useGridInterpolation ;                ///< Flag whether to interpolate on the grid or not
-  std::string m_fieldSvcName;                  ///< Name of the field service
-  const ILHCbMagnetSvc* m_fieldSvc ;           ///< Pointer to the magnetic field service
   const LHCb::MagneticFieldGrid* m_fieldGrid ; ///< Pointer to the magnetic field grid
   Gaudi::XYZVector (LHCb::MagneticFieldGrid::*m_fieldFunction)(const Gaudi::XYZPoint&)const ;
   mutable size_t m_numFieldCalls ;
+
+  SmartIF<ILHCbMagnetSvc> m_fieldSvc ;           ///< Pointer to the magnetic field service
+  std::string m_fieldSvcName;                  ///< Name of the field service
+  bool m_useGridInterpolation ;                ///< Flag whether to interpolate on the grid or not
 };
 
 #endif // TRACKEXTRAPOLATORS_TRLINEAREXTRAPOLATOR_H

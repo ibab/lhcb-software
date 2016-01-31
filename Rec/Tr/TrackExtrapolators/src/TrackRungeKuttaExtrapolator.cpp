@@ -13,10 +13,7 @@
 
 #include "GaudiKernel/PhysicalConstants.h"
 #include "boost/optional.hpp"
-#include <sstream>
 
-//
-//
 //
 //       (   1   0   dXdTx0   dXdTy0     dXdQoP0   )
 //       (   0   1   dYdTx0   dYdTy0     dYdQoP0   )
@@ -24,13 +21,11 @@
 //       (   0   0   dTydTx0  dTxdTy0    dTydQoP0  )
 //       (   0   0      0        0         1       )
 //
-//
-
 
 // *********************************************************************************************************
 // Butcher tables for various adaptive Runge Kutta methods. These are all taken from wikipedia.
 // *********************************************************************************************************
-
+namespace {
 namespace CashKarp
 {
   constexpr double b5[6] = {37.0/378.0    , 0., 250.0/621.0,     125.0/594.0,     0.,            512.0/1771.0};
@@ -82,13 +77,105 @@ namespace HeunEuler
   constexpr double b2[2] = {0.5, 0.5} ;
 }
 
+}
+void evaluateDerivatives(const TrackRungeKuttaExtrapolator::RKState<>& state,
+                         const TrackFieldExtrapolatorBase::FieldVector& field,
+                         TrackRungeKuttaExtrapolator::RKState<>& deriv )
+{
+  const auto tx  = state.tx() ;
+  const auto ty  = state.ty() ;
+  const auto qop = state.qop ;
+
+  const auto Bx  = field.x() ;
+  const auto By  = field.y() ;
+  const auto Bz  = field.z() ;
+
+  const auto tx2 = tx*tx;
+  const auto ty2 = ty*ty;
+
+  const auto norm = std::sqrt( 1 + tx2 + ty2 ) ;
+  const auto Ax = norm * (  ty * ( tx*Bx + Bz ) - ( 1 + tx2) * By ) ;
+  const auto Ay = norm * ( -tx * ( ty*By + Bz ) + ( 1 + ty2) * Bx ) ;
+
+  // this is 'dState/Dz'
+  deriv.x() = tx ;
+  deriv.y() = ty ;
+  deriv.tx() = qop * Ax ;
+  deriv.ty() = qop * Ay ;
+  deriv.qop = 0 ;
+  deriv.z   = 1 ;
+}
+
+void evaluateDerivativesJacobian( const TrackRungeKuttaExtrapolator::RKState<>& state,
+                                  const TrackRungeKuttaExtrapolator::RKJacobian<>& jacobian,
+                                  const TrackFieldExtrapolatorBase::FieldVector& field,
+                                  TrackRungeKuttaExtrapolator::RKJacobian<>& jacobianderiv )
+{
+  const auto tx  = state.tx() ;
+  const auto ty  = state.ty() ;
+  const auto qop = state.qop ;
+
+  const auto Bx  = field.x() ;
+  const auto By  = field.y() ;
+  const auto Bz  = field.z() ;
+
+  const auto tx2 = tx*tx ;
+  const auto ty2 = ty*ty ;
+
+  const auto n2  = 1 + tx2 + ty2 ;
+  const auto n   = std::sqrt( n2 ) ;
+
+  const auto txBx = tx*Bx;
+  const auto txBy = tx*By;
+  const auto tyBy = ty*By;
+  const auto tyBx = ty*Bx;
+
+  const auto Ax  = n * (  ty * ( txBx + Bz ) - ( 1 + tx2) * By ) ;
+  const auto Ay  = n * ( -tx * ( tyBy + Bz ) + ( 1 + ty2) * Bx ) ;
+
+  const auto Ax_n2 = Ax/n2;
+  const auto Ay_n2 = Ay/n2;
+
+  // now we compute 'dJacobian/dZ'
+  const auto dAxdTx = Ax_n2*tx + n * ( tyBx - 2*txBy ) ;
+  const auto dAxdTy = Ax_n2*ty + n * ( txBx  + Bz ) ;
+
+  const auto dAydTx = Ay_n2*tx + n * ( -tyBy - Bz ) ;
+  const auto dAydTy = Ay_n2*ty + n * ( -txBy + 2*tyBx) ;
+
+  // we'll do the factors of c later
+
+  // derivatives to Tx0
+  // derivatives to Tx0
+  jacobianderiv.dXdTx0()  = jacobian.dTxdTx0() ;
+  jacobianderiv.dYdTx0()  = jacobian.dTydTx0() ;
+  jacobianderiv.dTxdTx0() = qop * ( jacobian.dTxdTx0() * dAxdTx +
+                                    jacobian.dTydTx0() * dAxdTy ) ;
+  jacobianderiv.dTydTx0() = qop * ( jacobian.dTxdTx0() * dAydTx +
+                                    jacobian.dTydTx0() * dAydTy ) ;
+
+  // derivatives to Ty0
+  jacobianderiv.dXdTy0()  = jacobian.dTxdTy0() ;
+  jacobianderiv.dYdTy0()  = jacobian.dTydTy0() ;
+  jacobianderiv.dTxdTy0() = qop * ( jacobian.dTxdTy0() * dAxdTx +
+                                    jacobian.dTydTy0() * dAxdTy ) ;
+  jacobianderiv.dTydTy0() = qop * ( jacobian.dTxdTy0() * dAydTx +
+                                    jacobian.dTydTy0() * dAydTy ) ;
+
+  // derivatives to qopc
+  jacobianderiv.dXdQoP0()  = jacobian.dTxdQoP0() ;
+  jacobianderiv.dYdQoP0()  = jacobian.dTydQoP0() ;
+  jacobianderiv.dTxdQoP0() = Ax + qop * ( jacobian.dTxdQoP0() * dAxdTx +
+                                          jacobian.dTydQoP0() * dAxdTy ) ;
+  jacobianderiv.dTydQoP0() = Ay + qop * ( jacobian.dTxdQoP0() * dAydTx +
+                                          jacobian.dTydQoP0() * dAydTy ) ;
+
+}
+
 // *********************************************************************************************************
 
 
 DECLARE_TOOL_FACTORY( TrackRungeKuttaExtrapolator )
-
-
-TrackRungeKuttaExtrapolator::~TrackRungeKuttaExtrapolator() { }
 
 /// TrackRungeKuttaExtrapolator constructor.
 TrackRungeKuttaExtrapolator::TrackRungeKuttaExtrapolator(const std::string& type,
@@ -119,7 +206,7 @@ TrackRungeKuttaExtrapolator::TrackRungeKuttaExtrapolator(const std::string& type
 StatusCode
 TrackRungeKuttaExtrapolator::finalize()
 {
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
   {
     debug() << "Number of calls:     " << m_numcalls << endmsg ;
     debug() << "Min step length:     " << m_totalstats.minstep << endmsg ;
@@ -201,7 +288,7 @@ TrackRungeKuttaExtrapolator::propagate( Gaudi::TrackVector& state,
   if (transMat) jacobian = RKJacobian<>();
 
   // translate the state to one we use in the runge kutta. note the factor c.
-  RKState<> rkstate( RKVec4<>(state(0),state(1),state(2),state(3)), 
+  RKState<> rkstate( RKVec4<>(state(0),state(1),state(2),state(3)),
                      state(4) * Gaudi::Units::c_light, zin );
 
   StatusCode sc = StatusCode::SUCCESS ;
@@ -233,14 +320,11 @@ TrackRungeKuttaExtrapolator::propagate( Gaudi::TrackVector& state,
         (*transMat)(irow,4) *= Gaudi::Units::c_light ;
       }
     }
+  } else {
+    sc = Warning("RungeKuttaExtrapolator failed with code: "
+                 + std::to_string( success  ),
+                 StatusCode::FAILURE,0) ;
   }
-  else
-  {
-    std::stringstream str ;
-    str << "RungeKuttaExtrapolator failed with code: " << success ;
-    sc = Warning(str.str(),StatusCode::FAILURE,0) ;
-  }
-
   return sc ;
 }
 
@@ -253,10 +337,9 @@ TrackRungeKuttaExtrapolator::extrapolate( RKState<>& state,
 {
   // count calls
   ++m_numcalls ;
-  
+
   // initialize the jacobian
-  if ( jacobian )
-  {
+  if ( jacobian ) {
     jacobian->dTxdTx0() = 1 ;
     jacobian->dTydTy0() = 1 ;
   }
@@ -281,18 +364,15 @@ TrackRungeKuttaExtrapolator::extrapolate( RKState<>& state,
   {
 
     // make a single range-kutta step
-    RKState<> prevstate = state ;
+    auto prevstate = state ;
     evaluateRKStep( absstep * direction, state, err, rkcache ) ;
 
     // decide if the error is small enough
 
     // always accept the step if it is smaller than the minimum step size
     bool success = (absstep <= m_minRKStep) ;
-    if( !success )
-    {
-
-      if ( m_correctNumSteps )
-      {
+    if( !success ) {
+      if ( m_correctNumSteps ) {
         const auto estimatedN = std::abs(totalStep) / absstep ;
         toleranceX  = (m_toleranceX/estimatedN/m_sigma) ;
         toleranceTx = toleranceX/std::abs(totalStep) ;
@@ -325,10 +405,11 @@ TrackRungeKuttaExtrapolator::extrapolate( RKState<>& state,
       if( errorOverTolerance > 1 ) { // decrease step size
         stepfactor = std::max( m_minStepScale, m_safetyFactor / std::sqrt(std::sqrt(errorOverTolerance))); // was : * std::pow( errorOverTolerance , -0.25 ) ) ;
       } else {                       // increase step size
-        if( errorOverTolerance > 0 )
+        if( errorOverTolerance > 0 ) {
           stepfactor = std::min( m_maxStepScale, m_safetyFactor * FastRoots::invfifthroot(errorOverTolerance) ) ; // was: * std::pow( errorOverTolerance, -0.2) ) ;
-        else
+        } else {
           stepfactor = m_maxStepScale ;
+        }
         ++stats.numincreasedstep ;
       }
       absstep *= stepfactor ;
@@ -340,26 +421,21 @@ TrackRungeKuttaExtrapolator::extrapolate( RKState<>& state,
     }
 
     //info() << "Success = " << success << endmsg;
-    if ( success )
-    {
+    if ( success ) {
       // if we need the jacobian, evaluate it only for successful steps
       auto thisstep = state.z - prevstate.z ; // absstep has already been changed!
       if( jacobian ) evaluateRKStepJacobian( thisstep, *jacobian, rkcache ) ;
       // update the step, to invalidate the cache (or reuse the last stage)
-      rkcache.step += 1 ;
+      ++rkcache.step;
       if(stepvector) stepvector->push_back( thisstep ) ;
-      //addVector4(totalErr,1,err) ;
       stats.err += err ;
-    } 
-    else
-    {
+    } else {
       // if this step failed, don't update the state
       state = prevstate ;
     }
 
     // check that we don't step beyond the target
-    if( absstep - direction * (zout - state.z) > 0 )
-    {
+    if( absstep - direction * (zout - state.z) > 0 ) {
       absstep = std::abs(zout - state.z) ;
       laststep = true ;
     }
@@ -395,7 +471,7 @@ TrackRungeKuttaExtrapolator::extrapolate( RKState<>& state,
   return rc ;
 }
 
-void 
+void
 TrackRungeKuttaExtrapolator::evaluateRKStep( double dz,
                                              RKState<>& pin,
                                              RKVec4<>& err,
@@ -408,33 +484,26 @@ TrackRungeKuttaExtrapolator::evaluateRKStep( double dz,
   int firststage(0) ;
 
   // previous step failed, reuse the first stage
-  if( cache.laststep == cache.step )
-  {
+  if( cache.laststep == cache.step ) {
     firststage = 1 ;
-    //k[0]       = dz * cache.stage[0].derivative.parameters ;
-    assignVector4( k[0], dz, cache.stage[0].derivative.parameters ) ;
+    k[0] = dz * cache.stage[0].derivative.parameters ;
     //assert( std::abs(pin.z - cache.stage[0].state.z) < 1e-4 ) ;
   }
   // previous step succeeded and we can reuse the last stage (Dormand-Prince)
-  else if ( cache.step > 0 && m_firstSameAsLast ) 
-  {
+  else if ( cache.step > 0 && m_firstSameAsLast ) {
     firststage = 1 ;
     cache.stage[0] = cache.stage[m_numStages-1] ;
-    //k[0]           = dz * cache.stage[0].derivative.parameters ;
-    assignVector4( k[0], dz, cache.stage[0].derivative.parameters ) ;
+    k[0] = dz * cache.stage[0].derivative.parameters ;
   }
   cache.laststep = cache.step ;
 
-  for( size_t m = firststage ; m != m_numStages ; ++m )
-  {
+  for( int m = firststage ; m != m_numStages ; ++m ) {
     // evaluate the state
     cache.stage[m].state = pin ;
-    for ( size_t n = 0; n<m; ++n )
-    {
-      auto index = m*(m-1)/2 + n ;
-      cache.stage[m].state.z += m_a[index] * dz ;
-      //cache.stage[m].state.parameters += m_a[index] * k[n] ;
-      addVector4( cache.stage[m].state.parameters, m_a[index], k[n]) ;
+    auto ioff = m*(m-1)/2;
+    for ( int n = 0; n<m; ++n ) {
+      cache.stage[m].state.z          += m_a[ioff+n] * dz ;
+      cache.stage[m].state.parameters += m_a[ioff+n] * k[n] ;
     }
 
     // evaluate the derivatives
@@ -454,150 +523,47 @@ TrackRungeKuttaExtrapolator::evaluateRKStep( double dz,
                                                          cache.stage[m].state.z ) ) ;
     evaluateDerivatives( cache.stage[m].state, cache.stage[m].Bfield, cache.stage[m].derivative ) ;
 
-    //k[m]   = dz * cache.stage[m].derivative.parameters ;
-    assignVector4(k[m],dz,cache.stage[m].derivative.parameters) ;
+    k[m]   = dz * cache.stage[m].derivative.parameters ;
   }
 
   // update state and error
-  err(0) = err(1) = err(2) = err(3) = 0 ;
-  for( size_t m = 0 ; m!=m_numStages; ++m )
-  {
+  err.fill(0);
+  for( int m = 0 ; m!=m_numStages; ++m ) {
     // this is the difference between the 4th and 5th order
-    //err            += (m_b5[m] - m_b4[m] ) * k[m] ;
-    addVector4(err, (m_b5[m] - m_b4[m]), k[m]) ;
+    err  += (m_b5[m] - m_b4[m] ) * k[m] ;
     // this is the fifth order change
-    //pin.parameters += m_b5[m] * k[m] ;
-    addVector4(pin.parameters, m_b5[m], k[m]) ;
+    pin.parameters += m_b5[m] * k[m] ;
   }
 
   pin.z += dz ;
 }
 
-void 
+void
 TrackRungeKuttaExtrapolator::evaluateRKStepJacobian( double dz,
                                                      RKJacobian<>& jacobian,
                                                      const RKCache<>& cache) const
 {
   // evaluate the jacobian. not that we never resue last stage
   // here. that's not entirely consistent (but who cares)
-  RKJacobian<> derivative, jtmp;
-  std::array< RKMatrix43<>, 7 > k;
-  for ( size_t m = 0; m<m_numStages; ++m )
-  {
+  std::array< RKMatrix43<>, 7 > k; // # stages is at most 7 ( DormondPrince )
+  for ( int m = 0; m<m_numStages; ++m ) {
     // evaluate the derivative
-    jtmp = jacobian ;
-    for ( size_t n=0; n<m; ++n )
-    {
-      auto index = m*(m-1)/2 + n ;
-      //jtmp.matrix += m_a[index] * k[n] ;
-      addMatrix43( jtmp.matrix, m_a[index],  k[n] ) ;
-    }
+    auto jtmp = jacobian ;
+    auto ioff = m*(m-1)/2 ;
+    for ( int n=0; n<m; ++n ) jtmp.matrix += m_a[ioff+n] * k[n] ;
 
     // evaluate the derivatives. reuse the parameters and bfield from the cache
-    evaluateJacobianDerivatives( cache.stage[m].state, jtmp, cache.stage[m].Bfield, derivative ) ;
-    //k[m] = dz * derivative.matrix ;
-    assignMatrix43( k[m], dz, derivative.matrix ) ;
+    RKJacobian<> derivative;
+    evaluateDerivativesJacobian( cache.stage[m].state, jtmp, cache.stage[m].Bfield, derivative ) ;
+    k[m] = dz * derivative.matrix ;
   }
 
-  for( size_t m = 0 ; m<m_numStages; ++m )
-  {
-    //jacobian.matrix += m_b5[m] * k[m] ;
-    addMatrix43( jacobian.matrix, m_b5[m], k[m]  ) ;
+  for( int m = 0 ; m<m_numStages; ++m ) {
+    jacobian.matrix += m_b5[m] * k[m] ;
   }
 }
 
-void
-TrackRungeKuttaExtrapolator::evaluateDerivatives(const RKState<>& state,
-                                                 const FieldVector& field,
-                                                 RKState<>& deriv ) const
-{
-  const auto tx  = state.tx() ;
-  const auto ty  = state.ty() ;
-  const auto qop = state.qop ;
-  const auto Bx  = field.x() ;
-  const auto By  = field.y() ;
-  const auto Bz  = field.z() ;
 
-  const auto tx2 = tx*tx;
-  const auto ty2 = ty*ty;
-
-  const auto norm = std::sqrt( 1 + tx2 + ty2 ) ;
-  const auto Ax = norm * (  ty * ( tx*Bx + Bz ) - ( 1 + tx2) * By ) ;
-  const auto Ay = norm * ( -tx * ( ty*By + Bz ) + ( 1 + ty2) * Bx ) ;
-
-  // this is 'dState/Dz'
-  deriv.x() = tx ;
-  deriv.y() = ty ;
-  deriv.tx() = qop * Ax ;
-  deriv.ty() = qop * Ay ;
-  deriv.qop = 0 ;
-  deriv.z   = 1 ;
-}
-
-void
-TrackRungeKuttaExtrapolator::evaluateJacobianDerivatives( const RKState<>& state,
-                                                          const RKJacobian<>& jacobian,
-                                                          const FieldVector& field,
-                                                          RKJacobian<>& jacobianderiv ) const
-{
-  const auto& Bx  = field.x() ;
-  const auto& By  = field.y() ;
-  const auto& Bz  = field.z() ;
-
-  const auto& tx  = state.tx() ;
-  const auto& ty  = state.ty() ;
-  const auto& qop = state.qop ;
-
-  const auto tx2 = tx*tx ;
-  const auto ty2 = ty*ty ;
-  const auto n2  = 1 + tx2 + ty2 ;
-  const auto n   = std::sqrt( n2 ) ;
-
-  const auto txBx = tx*Bx;
-  const auto txBy = tx*By;
-  const auto tyBy = ty*By;
-
-  const auto Ax  = n * (  ty * ( txBx + Bz ) - ( 1 + tx2) * By ) ;
-  const auto Ay  = n * ( -tx * ( tyBy + Bz ) + ( 1 + ty2) * Bx ) ;
-
-  const auto Ax_n2 = Ax/n2;
-  const auto Ay_n2 = Ay/n2;
-
-  // now we compute 'dJacobian/dZ'
-  const auto dAxdTx = Ax_n2*tx + n * ( ty*Bx - 2*txBy ) ;
-  const auto dAxdTy = Ax_n2*ty + n * ( txBx  + Bz ) ;
-
-  const auto dAydTx = Ay_n2*tx + n * ( -tyBy - Bz ) ;
-  const auto dAydTy = Ay_n2*ty + n * ( -txBy + 2*ty * Bx) ;
-
-  // we'll do the factors of c later
-
-  // derivatives to Tx0
-  // derivatives to Tx0
-  jacobianderiv.dXdTx0()  = jacobian.dTxdTx0() ;
-  jacobianderiv.dYdTx0()  = jacobian.dTydTx0() ;
-  jacobianderiv.dTxdTx0() = qop * ( jacobian.dTxdTx0() * dAxdTx +
-                                    jacobian.dTydTx0() * dAxdTy ) ;
-  jacobianderiv.dTydTx0() = qop * ( jacobian.dTxdTx0() * dAydTx +
-                                    jacobian.dTydTx0() * dAydTy ) ;
-
-  // derivatives to Ty0
-  jacobianderiv.dXdTy0()  = jacobian.dTxdTy0() ;
-  jacobianderiv.dYdTy0()  = jacobian.dTydTy0() ;
-  jacobianderiv.dTxdTy0() = qop * ( jacobian.dTxdTy0() * dAxdTx +
-                                    jacobian.dTydTy0() * dAxdTy ) ;
-  jacobianderiv.dTydTy0() = qop * ( jacobian.dTxdTy0() * dAydTx +
-                                    jacobian.dTydTy0() * dAydTy ) ;
-
-  // derivatives to qopc
-  jacobianderiv.dXdQoP0()  = jacobian.dTxdQoP0() ;
-  jacobianderiv.dYdQoP0()  = jacobian.dTydQoP0() ;
-  jacobianderiv.dTxdQoP0() = Ax + qop * ( jacobian.dTxdQoP0() * dAxdTx +
-                                          jacobian.dTydQoP0() * dAxdTy ) ;
-  jacobianderiv.dTydQoP0() = Ay + qop * ( jacobian.dTxdQoP0() * dAydTx +
-                                          jacobian.dTydQoP0() * dAydTy ) ;
-
-}
 
 TrackRungeKuttaExtrapolator::RKErrorCode
 TrackRungeKuttaExtrapolator::extrapolateNumericalJacobian( RKState<>& state,

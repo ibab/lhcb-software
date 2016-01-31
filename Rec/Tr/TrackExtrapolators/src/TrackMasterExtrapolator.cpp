@@ -1,7 +1,5 @@
 // Include files
 // -------------
-// from GSL
-#include "gsl/gsl_math.h"
 
 // from DetDesc
 #include "DetDesc/ITransportSvc.h"

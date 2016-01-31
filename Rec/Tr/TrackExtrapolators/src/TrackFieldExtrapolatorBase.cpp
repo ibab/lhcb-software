@@ -20,7 +20,7 @@ TrackFieldExtrapolatorBase::TrackFieldExtrapolatorBase( const std::string& type,
 //=============================================================================
 // TrackFieldExtrapolatorBase destructor.
 //=============================================================================
-TrackFieldExtrapolatorBase::~TrackFieldExtrapolatorBase() {}
+TrackFieldExtrapolatorBase::~TrackFieldExtrapolatorBase() = default;
 
 //=============================================================================
 // Initialization
@@ -30,8 +30,7 @@ StatusCode TrackFieldExtrapolatorBase::initialize()
   StatusCode sc = TrackExtrapolator::initialize();
   
   if( sc.isSuccess() ) {
-    m_fieldSvc = svc<ILHCbMagnetSvc>(m_fieldSvcName, true);
-    
+    m_fieldSvc = service(m_fieldSvcName, true);
     m_fieldGrid = m_fieldSvc->fieldGrid() ;
     
     if( !m_fieldGrid )
@@ -58,6 +57,7 @@ StatusCode TrackFieldExtrapolatorBase::initialize()
 //=============================================================================
 StatusCode TrackFieldExtrapolatorBase::finalize()
 {
+  m_fieldSvc.reset();
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
     debug() << "Number of field calls: " << m_numFieldCalls << endmsg ;
   return TrackExtrapolator::finalize();

@@ -15,26 +15,24 @@ class TrackRungeKuttaExtrapolator: public TrackFieldExtrapolatorBase
 
 private:
 
-  /// The float point precision to use with the Eigen types
-  typedef double FloatType;
+  /// The default floating point precision to use with the Eigen types
+  using FloatType = double;
 
   /// Basically just a wrapper around the Eigen class, but Zero default constructed...
   template< typename TYPE, int ROWS, int COLUMNS >
   class RKMatrix : public ::Eigen::Matrix<TYPE,ROWS,COLUMNS>
   {
-  private:
     typedef ::Eigen::Matrix<TYPE,ROWS,COLUMNS> Base;
   public:
     /// Default constructor adds zero initialisation
     RKMatrix() : Base( Base::Zero() ) { }
-    /// Capture all other constructors and just forward them on to the base
-    template < typename... Args >
-    RKMatrix( Args&&... args ) : Base( std::forward<Args>(args)... ) { }
+    /// forward to base constructor
+    using Base::Base;
   };
 
   /// Type for a 4-vector
   template < typename TYPE = FloatType >
-  using RKVec4     = RKMatrix<TYPE,4,1>;
+  using RKVec4 = RKMatrix<TYPE,4,1>;
 
   /// Type for a 4 by 3 Matrix
   template < typename TYPE = FloatType >
@@ -45,7 +43,7 @@ private:
   class RKState
   {
   public:
-    RKState() { }
+    RKState() = default;
     RKState( const RKVec4<TYPE>& _vec, const FloatType _qop, const FloatType _z )
       : parameters(_vec), qop(_qop), z(_z) { }
     RKVec4<TYPE> parameters;
@@ -69,18 +67,15 @@ private:
   } ;
 
   template < typename TYPE = FloatType >
-  class RKCache
+  struct RKCache final
   {
-  public:
     RKStage<TYPE> stage[7] ;
     int laststep{-1} ;
     int step{0} ;
   } ;
 
   template < typename TYPE = FloatType >
-  class RKJacobian
-  {
-  public:
+  struct RKJacobian final {
 
     RKMatrix43<TYPE> matrix;
 
@@ -109,42 +104,9 @@ private:
     TYPE dTydQoP0() const noexcept { return matrix(3,2) ; }
   } ;
 
-  template < typename TYPE = FloatType >
-  inline void addVector4( RKVec4<TYPE>& lhs,
-                          const FloatType a,
-                          const RKVec4<TYPE>& rhs) const noexcept
-  {
-    lhs += a * rhs;
-  }
-
-  template < typename TYPE = FloatType >
-  inline void assignVector4( RKVec4<TYPE>& lhs,
-                             const FloatType a,
-                             const RKVec4<TYPE>& rhs) const noexcept
-  {
-    lhs = a * rhs;
-  }
-
-  template < typename TYPE = FloatType >
-  inline void addMatrix43( RKMatrix43<TYPE>& lhs,
-                           const FloatType a,
-                           const RKMatrix43<TYPE>& rhs) const noexcept
-  {
-    lhs += a * rhs;
-  }
-
-  template < typename TYPE = FloatType >
-  inline void assignMatrix43( RKMatrix43<TYPE>& lhs,
-                              const FloatType a,
-                              const RKMatrix43<TYPE>& rhs) const noexcept
-  {
-    lhs = a * rhs;
-  }
-
 public:
 
   /// enums
-  //enum RKScheme { CashKarp, DormandPrince, Fehlberg, BogackiShampine } ;
   enum RKErrorCode { RKSuccess, RKOutOfTolerance, RKCurling, RKExceededMaxNumSteps } ;
 
   /// Constructor
@@ -152,14 +114,11 @@ public:
                                const std::string& name,
                                const IInterface* parent );
 
-  /// destructor
-  virtual ~TrackRungeKuttaExtrapolator();
+  /// initialize
+  StatusCode initialize() override;
 
   /// initialize
-  StatusCode initialize();
-
-  /// initialize
-  StatusCode finalize();
+  StatusCode finalize() override;
 
   using TrackExtrapolator::propagate;
 
@@ -169,7 +128,7 @@ public:
                         double zOld,
                         double zNew,
                         Gaudi::TrackMatrix* transMat,
-                        LHCb::ParticleID pid = LHCb::ParticleID(211) ) const ;
+                        LHCb::ParticleID pid = LHCb::ParticleID(211) ) const override;
 
   // public methods that are not in the interface. used for debugging with the extrapolator tester
 
@@ -177,7 +136,7 @@ private:
 
   struct RKStatistics
   {
-    RKStatistics() {}
+    RKStatistics() = default;
     RKStatistics& operator+=( const RKStatistics& rhs )
     {
       minstep = std::min(minstep,rhs.minstep) ;
@@ -207,10 +166,13 @@ private:
 
   void evaluateRKStep( double dz, RKState<>& pin, RKVec4<>& err, RKCache<>& cache) const ;
   void evaluateRKStepJacobian( double dz,RKJacobian<>& jacobian,const RKCache<>& cache) const ;
-  void evaluateDerivatives(const RKState<>& state,const FieldVector& field,RKState<>& deriv ) const ;
-  void evaluateJacobianDerivatives( const RKState<>& state, const RKJacobian<>& jacobian,
-                                    const FieldVector& field, RKJacobian<>& jacobianderiv ) const ;
 
+  // make these (non-member) functions friends so they (are allowed to) know about RKState ande RKJacobian
+  friend void evaluateDerivatives(const RKState<>& state,const FieldVector& field,RKState<>& deriv );
+  friend void evaluateDerivativesJacobian( const RKState<>& state,
+                                           const RKJacobian<>& jacobian,
+                                           const FieldVector& field,
+                                           RKJacobian<>& jacobianderiv );
 private:
 
   // tool properties
@@ -235,7 +197,7 @@ private:
   const double* m_b4 = nullptr;
   const double* m_b5 = nullptr;
   bool    m_firstSameAsLast ;
-  size_t  m_numStages ;
+  int     m_numStages ;
 
   // keep statistics for monitoring
   mutable unsigned long long m_numcalls{0} ;
