@@ -85,6 +85,10 @@ try:
                 fname   = '%s.%d' %  ( base , version     )
                 fnamep1 = '%s.%d' %  ( base , version + 1 )
                 
+            if os.path.exists ( fname ) and  0 == os.path.getsize( fname ) :
+                os.remove ( fname )
+                return
+            
             if os.path.exists ( fnamep1 ) :
                 if 0 == os.path.getsize( fnamep1 ) : os.remove ( fnamep1 )
                 else : _rename_ ( base , version + 1 )
