@@ -554,14 +554,14 @@ IGeometryInfo* GeometryInfoPlus::supportIGeometryInfo() const
 
 }
 //=============================================================================
-Gaudi::Transform3D* GeometryInfoPlus::accumulateMatrices(const ILVolume::PVolumePath& volumePath) const
+Gaudi::Transform3D* 
+GeometryInfoPlus::accumulateMatrices(const ILVolume::PVolumePath& volumePath) const
 {
-  Gaudi::Transform3D init;
-  auto return_value = std::accumulate( volumePath.begin() ,
-                                       volumePath.end  () ,
-                                       init               ,
-                                       IPVolume_accumulateMatrix() );
-  return new Gaudi::Transform3D(return_value);
+  const Gaudi::Transform3D init;
+  return new Gaudi::Transform3D( std::accumulate( volumePath.begin() ,
+                                                  volumePath.end  () ,
+                                                  init               ,
+                                                  IPVolume_accumulateMatrix() ) );
 }
 
 //=============================================================================
