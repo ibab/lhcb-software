@@ -36,7 +36,9 @@ default_config = {
         , 'KstarMassMax'          :   966.    # MeV
         , 'KstarPT'               :  1500.    # MeV
         , 'KstarVCHI2'            :    20.    # adimensional
-        , 'KplusPT'               :   500.    # MeV
+        , 'KstarDaughtersIP'      :     9.    # adimensional
+        , 'KplusPT'               :   800.    # MeV
+        , 'KplusIP'               :     9.    # adimensional
         , 'KSVCHI2'               :    20.    # adimensional
         , 'KSBPVDLS'              :     5.    # adimensional
         , 'BdVertexCHI2pDOF'      :     7.    # adimensional
@@ -80,7 +82,9 @@ class Bd2JpsieeKSConf(LineBuilder):
                 , 'KstarMassMax'              # MeV
                 , 'KstarPT'                   # MeV
                 , 'KstarVCHI2'                # adimensional
+                , 'KstarDaughtersIP'          # adimensional
                 , 'KplusPT'                   # MeV
+                , 'KplusIP'                   # adimensional
                 , 'KSVCHI2'                   # adimensional
                 , 'KSBPVDLS'                  # adimensional
                 , 'BdVertexCHI2pDOF'          # adimensional
@@ -105,9 +109,10 @@ class Bd2JpsieeKSConf(LineBuilder):
         DiElectrons           = DataOnDemand( Location = "Phys/StdLooseDiElectron/Particles" )
         DiElectronsFromTracks = DataOnDemand( Location = "Phys/StdDiElectronFromTracks/Particles" )
 
-        self.NoIPKaonList = self.createSubSel( OutputList = "NoIPKaonsForBetaS" + self.name,
-                                               InputList = DataOnDemand(Location = "Phys/StdAllLooseKaons/Particles"),
-                                               Cuts = "(TRCHI2DOF < %(TRCHI2DOF)s ) & (PIDK > %(KaonPID)s )" % self.config )
+        self.KaonList = self.createSubSel( OutputList = "KaonsForBetaS" + self.name,
+                                           InputList = DataOnDemand(Location = "Phys/StdLooseKaons/Particles"),
+                                           Cuts = "(TRCHI2DOF < %(TRCHI2DOF)s ) & (PIDK > %(KaonPID)s )" \
+                                                  "& (INTREE((ABSID=='K+') & (MIPCHI2DV(PRIMARY) > %(KplusIP)s ))) " % self.config )
 
         self.KsListLoose = MergedSelection( "StdLooseKsMergedForBetaS" + self.name,
                                             RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseKsDD/Particles"),
@@ -123,6 +128,8 @@ class Bd2JpsieeKSConf(LineBuilder):
                                             "& (VFASPF(VCHI2) < %(KstarVCHI2)s )" \
                                             "& (MAXTREE('K+'==ABSID,  TRCHI2DOF) < %(TRCHI2DOF)s )" \
                                             "& (MAXTREE('pi-'==ABSID, TRCHI2DOF) < %(TRCHI2DOF)s )" \
+                                            "& (INTREE((ABSID=='K+') & (MIPCHI2DV(PRIMARY) > %(KstarDaughtersIP)s )))" \
+                                            "& (INTREE((ABSID=='pi-') & (MIPCHI2DV(PRIMARY) > %(KstarDaughtersIP)s )))" \
                                             "& (MINTREE('K+'==ABSID, PIDK) > %(KaonPID)s )" % self.config)
 
         self._jpsi = FilterDesktop( Code = "   (MM > %(JpsiMassMin)s *MeV)" \
@@ -247,7 +254,7 @@ class Bd2JpsieeKSConf(LineBuilder):
     def makeBu2JpsieeK( self ):
         Bu2JpsieeKFromTracks = self.createCombinationSel( OutputList = "Bu2JpsieeKFromTracks" + self.name,
                                                           DecayDescriptor = "[B+ -> J/psi(1S) K+]cc",
-                                                          DaughterLists = [ self.JpsiFromTracks, self.NoIPKaonList ],
+                                                          DaughterLists = [ self.JpsiFromTracks, self.KaonList ],
                                                           DaughterCuts  = {"K+": "(PT > %(KplusPT)s *MeV)" % self.config },
                                                           PreVertexCuts   = "in_range(%(BdMassMin)s,AM,%(BdMassMax)s)" % self.config,
                                                           PostVertexCuts = "(VFASPF(VCHI2PDOF) < %(BdVertexCHI2pDOF)s)" % self.config )

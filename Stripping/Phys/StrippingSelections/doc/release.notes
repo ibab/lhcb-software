@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-01-31 - Ramon Niet
+ - changes in StrippingB2CC/StrippingBd2JpsieeKS.py:
+   Introduced IPCHI2 cuts on K* daughters / K+ and tightened K+ PT
+   to reduce retention rate for: 
+    - StrippingBd2JpsieeKSBd2JpsieeKstarFromTracksDetachedLine
+    - StrippingBd2JpsieeKSBu2JpsieeKFromTracksDetachedLine
+
 ! 2016-01-26 - Andrea Contu
  - Fix to utils.py in documentation (from Anton)
 
