@@ -3,6 +3,9 @@
 ! package manager : Marco Clemencic
 ! =====================================================================
 
+! 2016-01-31 - Chris Jones
+ - Modernise IGeometryInfo and GeometryInfoPlus.
+
 !========================= DetDesc v19r0 2016-01-27 =========================
 ! 2016-01-07 - Gerhard Raven
  - major change: prefer public extend_interfaces<IInterface>  over 

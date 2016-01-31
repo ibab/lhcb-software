@@ -1,14 +1,17 @@
-// $Id: IGeometryInfo.h,v 1.30 2009-02-02 12:20:22 marcocle Exp $ 
+
 // ===========================================================================
 #ifndef  DETDESC_IGEOMETRYINFO_H
 #define  DETDESC_IGEOMETRYINFO_H 1
+
 /** GaudiKernel includes */
 #include "GaudiKernel/IInterface.h"
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Transform3DTypes.h"
+
 /// DetDesc include 
 #include "DetDesc/ILVolume.h"
 #include "DetDesc/AlignmentCondition.h"
+
 /** forward declarations */
 class StatusCode;
 
@@ -21,7 +24,7 @@ static const InterfaceID IID_IGeometryInfo( 155 , 3 , 1 );
 /** @interface IGeometryInfo IGeometryInfo.h "DetDesc/IGeometryInfo.h"
  *
  *  An abstract interface to get all geometry information for 
- *          detector element
+ *  a detector element
  *
  *  @version 3
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -35,14 +38,16 @@ public:
 
   /// type of vector of daughter elements
   typedef std::vector<IGeometryInfo*>  IGIChildrens;
+  /// Iterator over Daughters
   typedef IGeometryInfo::IGIChildrens::iterator IGIChildrenIterator;
+  /// Const Iterator over daughters
   typedef IGeometryInfo::IGIChildrens::const_iterator IGIChildrenConstIterator;
+
   /** retrieve the uniqie interface identifier 
    *  @return the unique interface identifier 
    */
   static const InterfaceID& interfaceID() { return IID_IGeometryInfo; }
   
-
   virtual StatusCode cache()=0;
   
   virtual StatusCode updateChildren()=0;

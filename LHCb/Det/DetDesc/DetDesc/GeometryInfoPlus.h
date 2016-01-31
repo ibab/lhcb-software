@@ -27,6 +27,8 @@ class ISvcLocator;
 class IUpdateManagerSvc;
 class AlignmentCondition;
 
+#define VERBO if ( isVerbose() ) verbose()
+
 /** @class GeometryInfoPlus GeometryInfoPlus.h Lib/GeometryInfoPlus.h
  *
  *  Based on "most trivial" implementation of Vanya Belyaev and
@@ -39,10 +41,8 @@ class AlignmentCondition;
  *  @date   2005-04-28
  */
 
-
-
-
-class GeometryInfoPlus :   public IGeometryInfo {
+class GeometryInfoPlus : public IGeometryInfo
+{
 
   ///  friend class
   friend class DetectorElement;
@@ -53,7 +53,6 @@ public:
   typedef std::vector<std::string>     ChildName;
 
   typedef std::vector<Gaudi::Transform3D>::const_iterator matrix_iterator;
-
   typedef std::vector<IGeometryInfo*> IGIChildren;
   typedef IGeometryInfo::IGIChildrens::iterator iGInfo_iterator;
 
@@ -235,7 +234,6 @@ public:
   /// retrive reference to replica path (mistrerious "rpath" or "npath")
   const ILVolume::ReplicaPath& supportPath() const ;
 
-
   /// pointer to the parent IGeometryInfo
   IGeometryInfo* parentIGeometryInfo();
 
@@ -258,36 +256,40 @@ public:
   /// begin iterator
   inline IGeometryInfo::IGIChildrens::const_iterator childBegin() const
   {
-     if( !m_gi_childLoaded ) {
-       try{ loadChildren(); }
-       catch(...) { return m_gi_childrens.end(); }
-     }
-     return m_gi_childrens.begin();
+    // if( !m_gi_childLoaded ) 
+    // {
+    //   try{ loadChildren(); }
+    //   catch(...) { return m_gi_childrens.end(); }
+    // }
+    // return m_gi_childrens.begin();
+    return childIGeometryInfos().begin();
   }
 
   /// begin iterator (const version)
   inline IGeometryInfo::IGIChildrens::iterator childBegin()
   {
-    if( !m_gi_childLoaded )
-    {  try{ loadChildren(); } catch(...){ return m_gi_childrens.end(); }  }
-    return m_gi_childrens.begin();
+    // if( !m_gi_childLoaded )
+    // {  try{ loadChildren(); } catch(...){ return m_gi_childrens.end(); }  }
+    // return m_gi_childrens.begin();
+    return childIGeometryInfos().begin();
   }
 
   /// end  iterator
   inline IGeometryInfo::IGIChildrens::iterator childEnd()
   {
-    if( !m_gi_childLoaded )
-    {  try{ loadChildren(); } catch(...){ return m_gi_childrens.end(); }  }
-    return m_gi_childrens.end();
+    // if( !m_gi_childLoaded )
+    // {  try{ loadChildren(); } catch(...){ return m_gi_childrens.end(); }  }
+    // return m_gi_childrens.end();
+    return childIGeometryInfos().end();
   }
-
 
   /// end  iterator (const version)
   inline IGeometryInfo::IGIChildrens::const_iterator childEnd() const
   {
-    if( !m_gi_childLoaded )
-    {  try{ loadChildren(); } catch(...){ return m_gi_childrens.end(); }  }
-    return m_gi_childrens.end();
+    //if( !m_gi_childLoaded )
+    //{  try{ loadChildren(); } catch(...){ return m_gi_childrens.end(); }  }
+    //return m_gi_childrens.end();
+    return childIGeometryInfos().end();
   }
 
   /// overloades printout to  std::ostream
@@ -303,6 +305,7 @@ public:
    *  @return status code
    */
   StatusCode queryInterface( const InterfaceID& ID , void** ppI ) ;
+
   /// add reference
   unsigned long addRef()
   {
@@ -329,8 +332,6 @@ private:
   inline IUpdateManagerSvc* updMgrSvc(bool create = false) const {
     return m_services->updMgrSvc(create);
   }
-
-  inline MsgStream& log() const  { return *m_log; }
 
   inline bool isInsideDaughter( const Gaudi::XYZPoint& globalPoint ) const
   {
@@ -404,7 +405,7 @@ private:
 
   IDetectorElement* parentIDetectorElement(IDetectorElement* iDetElem)
   {
-    return iDetElem ? iDetElem->parentIDetectorElement() : nullptr;
+    return ( iDetElem ? iDetElem->parentIDetectorElement() : nullptr );
   }
 
   IGeometryInfo* geoByName ( const std::string& name ) const ;
@@ -419,117 +420,21 @@ private:
 
   /// Assertion JUAN: beware: dummies do nothing!
   inline void Assert( bool assertion,
-                      const std::string& name ) const {
+                      const std::string& name ) const
+  {
     if( !assertion ) { throw GeometryInfoException( name , this ); }
-  };
+  }
 
   /// Assertion
   inline void Assert( bool assertion, const std::string& name,
-                      const GaudiException& ge ) const {
+                      const GaudiException& ge ) const 
+  {
     if( !assertion ) { throw GeometryInfoException( name , ge , this ); }
-  };
+  }
 
   Gaudi::Transform3D* accumulateMatrices(const ILVolume::PVolumePath& volumePath) const;
 
-
-
-  bool idealMatrixLoaded() { return (0!= m_idealMatrix); }
-
-private:
-
-  std::unique_ptr<MsgStream> m_log;
-
-  /// flag for logical volume association
-  bool                                 m_gi_has_logical     ;
-  /** name of logical volume ( full path (address)
-   *  in the Transient Store )
-   */
-  std::string                          m_gi_lvolumeName     ;
-  /// pointer to the logical volume (loaded on demand only!)
-  mutable ILVolume*                    m_gi_lvolume;
-
-  bool m_hasAlignment;
-
-  std::string m_alignmentPath;
-
-  bool m_hasAlignmentPath;
-
-  AlignmentCondition* m_alignmentCondition;
-
-  /// Transformation from the  global reference system
-  /// to the local reference system.
-  /// Total matrix, including ideal alignment plus deltas.
-  mutable Gaudi::Transform3D*              m_matrix;
-
-  /// Transformation from the  global reference system
-  /// to the local reference system.
-  /// Ideal geometry with no misalignments.
-  mutable Gaudi::Transform3D*              m_idealMatrix;
-
-  mutable Gaudi::Transform3D*              m_localIdealMatrix;
-  mutable Gaudi::Transform3D*              m_localDeltaMatrix;
-
-  /** transformation FROM local reference system  to the global
-   *  reference system
-   */
-
-  /** transformation FROM local reference system  to the global
-   *  reference system
-   */
-
-  mutable Gaudi::Transform3D*              m_matrixInv;
-  mutable Gaudi::Transform3D*              m_idealMatrixInv;
-
-  /// flag for support association
-  bool                                 m_gi_has_support     ;
-  /**  name of DetectorElement (full path(address) in the
-   *   Transient Store) , which supports the addres)
-   */
-  std::string                          m_gi_supportName     ;
-  /// pointer to element, which supports the address (loaded on demand)
-  mutable IGeometryInfo*               m_gi_support         ;
-  /// the address itself (numeric replic apath)
-  mutable ILVolume::ReplicaPath        m_gi_supportPath     ;
-  /// another form of address  (name replica path)
-  std::string                          m_gi_supportNamePath ;
-  //
-  ///  The corresponding IDtectorElement object
-  mutable IDetectorElement*            m_gi_iDetectorElement ;
-
-  /// flag for  parent object
-  mutable bool                         m_gi_parentLoaded   ;
-  /// pointer to parent object (resolved on demand only)
-  mutable IGeometryInfo*               m_gi_parent         ;
-  /// flag for children objects
-  mutable bool                         m_gi_childLoaded    ;
-  /**  container of pointers to children objects
-   *  (resolved on demand only)
-   */
-  mutable IGeometryInfo::IGIChildrens  m_gi_childrens      ;
-  /** container of names of children objects
-   * (resolved on demand only)
-   */
-  mutable GeometryInfoPlus::ChildName      m_gi_childrensNames ;
-
-  /// object/reference counter
-  static unsigned long m_count;
-
-  /// reference to services
-  DetDesc::Services* m_services;
-
-  /// Keep for now the local and all the parents ideal and delta
-  /// transformation matrices.
-  /// The code is written such that these could become automatic,
-  /// temporary objects in one algorithm. Juan.
-  std::vector<Gaudi::Transform3D> m_pvMatrices;
-  std::vector<Gaudi::Transform3D> m_deltaMatrices;
-
-
-  /// flag for alignment condition
-  bool                                 m_has_condition     ;
-  /// Path on data store where alignment condition is to be found
-  std::string                          m_gi_condPath     ;
-
+  bool idealMatrixLoaded() { return ( nullptr != m_idealMatrix ); }
 
   inline matrix_iterator idealBegin() const
   {
@@ -550,5 +455,113 @@ private:
   {
     return m_deltaMatrices.end();
   }
+
+private:
+
+  inline MsgStream& log() const  { return *m_log; }
+
+  inline bool isVerbose() const { return log().level() <= MSG::VERBOSE ; }
+  
+  inline MsgStream& verbose() const { return log() << MSG::VERBOSE; }
+
+private:
+
+  std::unique_ptr<MsgStream> m_log;
+
+  /// flag for logical volume association
+  bool                               m_gi_has_logical = true;
+  /** name of logical volume ( full path (address)
+   *  in the Transient Store )
+   */
+  std::string                          m_gi_lvolumeName     ;
+  /// pointer to the logical volume (loaded on demand only!)
+  mutable ILVolume*                   m_gi_lvolume = nullptr;
+
+  /// Has alignment
+  bool m_hasAlignment = false;
+
+  /// Path to alignment
+  std::string m_alignmentPath ;
+
+  /// Has alignment path
+  bool m_hasAlignmentPath = false;
+
+  AlignmentCondition* m_alignmentCondition = nullptr;
+
+  /// Transformation from the  global reference system
+  /// to the local reference system.
+  /// Total matrix, including ideal alignment plus deltas.
+  mutable std::unique_ptr<Gaudi::Transform3D>        m_matrix;
+
+  /// Transformation from the  global reference system
+  /// to the local reference system.
+  /// Ideal geometry with no misalignments.
+  mutable std::unique_ptr<Gaudi::Transform3D>   m_idealMatrix;
+
+  mutable std::unique_ptr<Gaudi::Transform3D> m_localIdealMatrix;
+  mutable std::unique_ptr<Gaudi::Transform3D> m_localDeltaMatrix;
+
+  /** transformation FROM local reference system  to the global
+   *  reference system
+   */
+
+  /** transformation FROM local reference system  to the global
+   *  reference system
+   */
+
+  mutable std::unique_ptr<Gaudi::Transform3D>    m_matrixInv;
+  mutable std::unique_ptr<Gaudi::Transform3D> m_idealMatrixInv;
+
+  /// flag for support association
+  bool                             m_gi_has_support = false ;
+  /**  name of DetectorElement (full path(address) in the
+   *   Transient Store) , which supports the addres)
+   */
+  std::string                          m_gi_supportName     ;
+  /// pointer to element, which supports the address (loaded on demand)
+  mutable IGeometryInfo*             m_gi_support = nullptr ;
+  /// the address itself (numeric replic apath)
+  mutable ILVolume::ReplicaPath        m_gi_supportPath     ;
+  /// another form of address  (name replica path)
+  std::string                          m_gi_supportNamePath ;
+  //
+  ///  The corresponding IDtectorElement object
+  mutable IDetectorElement*           m_gi_iDetectorElement ;
+
+  /// flag for  parent object
+  mutable bool                    m_gi_parentLoaded = false ;
+  /// pointer to parent object (resolved on demand only)
+  mutable IGeometryInfo*              m_gi_parent = nullptr ;
+  /// flag for children objects
+  mutable bool                     m_gi_childLoaded = false ;
+  /**  container of pointers to children objects
+   *  (resolved on demand only)
+   */
+  mutable IGeometryInfo::IGIChildrens   m_gi_childrens      ;
+  /** container of names of children objects
+   * (resolved on demand only)
+   */
+  mutable GeometryInfoPlus::ChildName   m_gi_childrensNames ;
+
+  /// object/reference counter
+  //static unsigned long m_count;
+
+  /// reference to services
+  DetDesc::Services* m_services = nullptr;
+
+  /// Keep for now the local and all the parents ideal and delta
+  /// transformation matrices.
+  /// The code is written such that these could become automatic,
+  /// temporary objects in one algorithm. Juan.
+  std::vector<Gaudi::Transform3D> m_pvMatrices;
+  std::vector<Gaudi::Transform3D> m_deltaMatrices;
+
+
+  /// flag for alignment condition
+  //bool                                 m_has_condition     ;
+  /// Path on data store where alignment condition is to be found
+  //std::string                          m_gi_condPath     ;
+
 };
+
 #endif // LIB_GEOMETRYINFOPLUS_H
