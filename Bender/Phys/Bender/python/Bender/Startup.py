@@ -99,8 +99,6 @@ try:
 
     ## write history at the end 
     def _prnt_() :
-        if os.path.exists( __history__ ) and os.path.isfile ( __history__ ) and 0 != os.path.getsize ( __history__ ) : 
-            logger.info ( 'Bender history file: %s' % __history__ )
         end_time = datetime.datetime.now()   
         logger.info ( 'Bender session   ended %s \n' % end_time.strftime('%c')  )
             
@@ -126,13 +124,17 @@ try:
                     end_time = datetime.datetime.now()   
                     f.write( '# Bender session   ended %s\n' % end_time.strftime('%c')  )
                 
+                if os.path.exists( fname ) and os.path.isfile ( fname ) and 0 != os.path.getsize ( fname ) : 
+                    logger.info ( 'Bender history file: %s' % __history__ )
                 return
             
             except:
                 pass
             
         ## use 'old-style' history 
-        return readline.write_history_file ( fname ) 
+        readline.write_history_file ( fname ) 
+        if os.path.exists( fname ) and os.path.isfile ( fname ) and 0 != os.path.getsize ( fname ) : 
+            logger.info ( 'Bender history file: %s' % __history__ )
         
 
     import atexit
