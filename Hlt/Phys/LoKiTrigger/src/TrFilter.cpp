@@ -76,7 +76,7 @@ LoKi::Hlt1::FilterTracks::FilterTracks
   SmartIF<IANNSvc> ann = LoKi::Hlt1::Utils::annSvc( *this ); 
   
   auto info = ann->value( s_InfoID, tool() );
-  Assert( info , "request for unknown Info ID :" + tool() );
+  Assert( bool(info) , "request for unknown Info ID :" + tool() );
   
    m_recoID = info->second;
 }

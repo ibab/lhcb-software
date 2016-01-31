@@ -79,7 +79,7 @@ LoKi::Hlt1::MatchTool::MatchTool(
     //
     { // recoID
         auto info = ann->value( InfoID, mTool() );
-        Assert( info, " request for unknown Info ID : " + mTool() );
+        Assert( bool(info), " request for unknown Info ID : " + mTool() );
         //
         m_recoID = info->second;
     }

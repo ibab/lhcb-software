@@ -101,7 +101,7 @@ IANNSvc* Hlt::Base::annSvc() const
 int Hlt::Base::hltInfoID( const std::string& name ) const
 {
     auto i = annSvc()->value( Gaudi::StringKey( std::string( "InfoID" ) ), name );
-    Assert( i, " request for unknown Info ID" );
+    Assert( bool(i), " request for unknown Info ID" );
     return i->second;
 }
 // ============================================================================
@@ -110,7 +110,7 @@ int Hlt::Base::hltInfoID( const std::string& name ) const
 std::string Hlt::Base::hltInfoName( int id ) const
 {
     auto i = annSvc()->value( Gaudi::StringKey( std::string( "InfoID" ) ), id );
-    Assert( i, " request for unknown Info ID" );
+    Assert( bool(i), " request for unknown Info ID" );
     return i->first;
 }
 // ============================================================================
