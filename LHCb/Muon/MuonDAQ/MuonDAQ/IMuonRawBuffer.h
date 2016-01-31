@@ -77,9 +77,5 @@ ode_num)=0;
   virtual bool PPReachedHitLimit(unsigned int Tell1Number,int pp_num)=0;
   virtual bool LinkReachedHitLimit(unsigned int Tell1Number,int link_num)=0;
   
-protected:
-
-private:
-
 };
 #endif // MUONDAQ_IMUONRAWBUFFER_H

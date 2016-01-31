@@ -3,6 +3,10 @@
 ! Responsible : Alessia Satta
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
+! 2016-01-31 - Gerhard Raven
+ - IMuonTell1Config: prefer extends/DeclareInterfaceID, const-ify configTell1
+ - modernize MuonTell1Config: follow interface change, use static const map 
+    instead of invariant data member
 
 !========================= MuonDAQ v4r21 2016-01-27 =========================
 ! 2016-01-03 - Gerhard Raven
