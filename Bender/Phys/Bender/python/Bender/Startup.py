@@ -80,18 +80,29 @@ try:
     ## define the name of the history file
     __history__ = os.path.curdir + os.sep + '.bender_history'
     
-    
-    def _rename_ ( file , app ) :
-        if os.path.exists ( file + app ) :
-            if 0 == os.path.getsize( file + app ) : os.remove( file + app )
-            else :   _rename_ ( file + app ,        app )
-        if os.path.exists ( file       ) :
-            if 0 == os.path.getsize( file ) : os.remove( file )
-            else : os.rename  ( file       , file + app )
 
-    ## remove/backup the previous history file
-    try : 
-        _rename_ ( __history__ , '.OLD' )
+    try :
+        
+        def _rename_ ( base , version = 0  ) :
+            
+            if version <= 0 :
+                version = 0 
+                fname   = '%s'    %    base 
+                fnamep1 = '%s.%d' %  ( base , 1 )
+            else :
+                fname   = '%s.%d' %  ( base , version     )
+                fnamep1 = '%s.%d' %  ( base , version + 1 )
+                
+            if os.path.exists ( fnamep1 ) :
+                if 0 == os.path.getsize( fnamep1 ) : os.remove ( fnamep1 )
+                else : _rename_ ( base , version + 1 )
+                
+            if os.path.exists ( fname ) :
+                if 0 == os.path.getsize( fname ) : os.remove ( fname )
+                else : os.rename ( fname , fnamep1 )
+                
+        _rename_ ( __history__  )
+        
     except :
         logger.warning ( "Can't erase old history files", exc_info = True ) 
         pass
