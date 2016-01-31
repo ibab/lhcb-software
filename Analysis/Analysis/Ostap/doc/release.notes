@@ -8,6 +8,9 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2016-01-31 - Vanya BELYAEV
+ - improve in the history file 
+
 ! 2016-01-28 - Vanya Belyaev
  - minor fix in ROOTCWD 
    better fix is welcome ...

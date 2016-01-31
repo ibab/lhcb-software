@@ -55,8 +55,19 @@ if '__main__' == __name__ : logger = getLogger ( 'Ostap.Startup' )
 else                      : logger = getLogger ( __name__ )
 # =============================================================================
 
+def with_ipython() :
+    try :
+        __IPYTHON__
+        return True
+    except NameError :
+        return False 
+
 try:
 
+    import datetime
+    start_time = datetime.datetime.now()
+    logger.info ( 'Ostap session started %s' % start_time.strftime('%c')  )
+    
     import os
     ## define the name of the history file
     __history__ = os.path.curdir + os.sep + '.ostap_history'
@@ -70,26 +81,60 @@ try:
             else : os.rename  ( file       , file + app )
 
     ## remove/backup the previous history file
-    _rename_ ( __history__ , '.OLD' )
+    try : 
+        _rename_ ( __history__ , '.OLD' )
+    except :
+        logger.warning ( "Can't erase old history files", exc_info = True ) 
+        pass
+
 
     ## write history at the end 
     def _prnt_() :
-        logger.info ( 'OSTAP history file: %s' % __history__ ) 
-        
+        end_time = datetime.datetime.now()   
+        logger.info ( 'Ostap session   ended %s' % end_time.strftime('%c')  )
+            
     ## line completer 
     import rlcompleter
     import readline
     readline.clear_history() 
     readline.parse_and_bind("tab: complete")
 
-    import atexit
-    atexit.register ( readline.write_history_file , __history__ )
-    atexit.register ( _prnt_ )
+    def write_history ( fname ) :
 
-    _prnt_() 
-    
+        if with_ipython() :
+ 
+            try :
+                ##  history from IPython 
+                import IPython
+                ip  = IPython.get_ipython()
+                with open ( fname , 'w' ) as f :
+                    f.write( '# Ostap session started %s\n' % start_time.strftime('%c')  ) 
+                    for record in ip.history_manager.get_range() :
+                        f.write( record[2] + '\n' )
+                    end_time = datetime.datetime.now()   
+                    f.write( '# Ostap session   ended %s\n' % end_time.strftime('%c')  )
+                if os.path.exists( fname ) and os.path.isfile ( fname ) and 0 != os.path.getsize ( fname ) : 
+                    logger.info ( 'Ostap history file: %s' % fname )                    
+                return
+            
+            except:
+                pass
+            
+        ##  history from readline 
+        readline.write_history_file ( fname ) 
+        if os.path.exists( fname ) and os.path.isfile ( fname ) and 0 != os.path.getsize ( fname ) : 
+            logger.info ( 'Ostap history file: %s' % fname )
+            
+
+    import atexit
+
+    atexit.register ( _prnt_ )
+    atexit.register ( write_history , __history__ )    
+
 except:
-    pass 
+    ## 
+    logger.error ( 'Error in startup configuration, ignore... ' , exc_info = True ) 
+
 
 # =============================================================================
 if '__main__' == __name__ :

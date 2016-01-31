@@ -168,8 +168,8 @@ arguments = parse_args()
 if arguments.Quiet :
     
     import logging
-    logging.disable ( logging.INFO )
     logger.info ( '(silent) Interactive Ostap session (steroid-enhanced PyROOT)')
+    logging.disable ( logging.INFO )
 
 else:
     
@@ -194,15 +194,21 @@ ROOT.gROOT.SetBatch ( arguments.batch )
 if ROOT.gROOT.IsBatch() : logger.info ('Batch processing is activated') 
 
 # =============================================================================
-## import everything from Ostap
-# =============================================================================
-from   Ostap.OstapBender import *
-
-# =============================================================================
 ## Ostap startup: history, readlines, etc... 
 # =============================================================================
-if not arguments.batch :
-    import Ostap.Startup
+import Ostap.Startup
+
+# =============================================================================
+## import everything from Ostap
+# =============================================================================
+if arguments.Quiet :
+    from Ostap.Utils import mute
+    with mute () : 
+        from   Ostap.OstapBender import *
+    del mute
+else :
+    from   Ostap.OstapBender import *
+
     
 # =============================================================================
 ## create default canvas
