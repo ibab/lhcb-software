@@ -100,7 +100,7 @@ try:
     ## write history at the end 
     def _prnt_() :
         end_time = datetime.datetime.now()   
-        logger.info ( 'Bender session   ended %s \n' % end_time.strftime('%c')  )
+        logger.info ( 'Bender session   ended %s' % end_time.strftime('%c')  )
             
     ## line completer 
     import rlcompleter
@@ -139,8 +139,8 @@ try:
 
     import atexit
 
-    atexit.register ( write_history , __history__ )    
     atexit.register ( _prnt_ )
+    atexit.register ( write_history , __history__ )    
 
 except:
     ## 
