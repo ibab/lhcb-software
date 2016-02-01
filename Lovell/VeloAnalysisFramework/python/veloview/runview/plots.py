@@ -143,7 +143,7 @@ def get_2d_trending_plot(nameX, nameY, runRange, formatter = dictionary_formatte
                 )
             )
 
-    formatted = formatter(dict(name=name, title='{0} versus {1}'.format(nameX, nameY), xLabel=nameX, yLabel=nameY, data=data))
+    formatted = formatter(dict(name='{0};{1}'.format(nameX, nameY), title='{0} versus {1}'.format(nameX, nameY), xLabel=nameX, yLabel=nameY, data=data))
 
     del t
     f.Close()
