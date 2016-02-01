@@ -42,6 +42,8 @@ from HltConf.ThresholdUtils import importLineConfigurables
 from HltConf.HltAfterburner import HltAfterburnerConf
 from HltConf.HltPersistReco import HltPersistRecoConf
 
+from Configurables import ChargedProtoANNPIDConf
+            
 import Hlt2Lines
 _hlt2linesconfs = importLineConfigurables( Hlt2Lines )
 globals().update( ( cfg.__name__, cfg ) for cfg in _hlt2linesconfs )
@@ -60,7 +62,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
                                (RichRecSysConf, None),
                                TrackSys,
                                HltAfterburnerConf,
-                               HltPersistRecoConf
+                               HltPersistRecoConf,
+                               (ChargedProtoANNPIDConf,None),
                                ] + _hlt2linesconfs
                              # This above hlt2linesconf defines all the Hlt2 Lines since they
                              # configured after the tracking. This means that each
@@ -884,6 +887,20 @@ class Hlt2Tracking(LHCbConfigurableUser):
         sequenceToReturn += [ richDLL, muon , addCaloInfo ]
         sequenceToReturn += [combine]
 
+        # Calculate ProbNN variables
+        from Configurables import HltRecoConf
+        if HltRecoConf().getProp("CalculateProbNN") == True:
+            probNNSeqName         = self._instanceName(ChargedProtoANNPIDConf)
+            probNNSeq             = GaudiSequencer(probNNSeqName+"Seq")
+            annconf = ChargedProtoANNPIDConf(probNNSeqName)
+            annconf.DataType = self.getProp( "DataType" )
+            # Change the following once the right tune is published
+            annconf.NetworkVersions[self.getProp( "DataType" )] = "MC15TuneDev1"
+            annconf.TrackTypes              = ["Long"] 
+            annconf.RecoSequencer = probNNSeq
+            annconf.ProtoParticlesLocation = chargedProtosOutputLocation
+            sequenceToReturn += [probNNSeq]
+            
         from HltLine.HltLine import bindMembers
         # Build the bindMembers
         bm_name          = self.__pidAlgosAndToolsPrefix()+"ChargedAllPIDsProtosSeq"

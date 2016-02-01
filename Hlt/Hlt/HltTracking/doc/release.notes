@@ -4,6 +4,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2016-02-01 - Sascha Stahl
+ - Added possibility to calculate ProbNN variables. 
+   Activate for now with HltRecoConf().CalculateProbNN = True.
+
 ! 2016-01-14 - Sascha Stahl
  - Switch on filtering on ghost probability and track chi2 in Hlt1.
  

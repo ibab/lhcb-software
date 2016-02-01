@@ -46,6 +46,7 @@ class HltRecoConf(LHCbConfigurableUser):
                , "FastFitVelo"                 : True
                , "OfflineSeeding"              : True
                , "OfflineRich"                 : True
+               , "CalculateProbNN"             : False
                , "AddGhostProb"                : True
                , "InitFits"                    : True
                , "MoreOfflineLikeFit"          : True   # This runs a fit in HLT1 and HLT2 which uses the default offline fit
