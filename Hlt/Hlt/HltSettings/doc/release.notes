@@ -4,6 +4,12 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2016-02-01 - Mike Sokoloff
+  in python/HltSettings/CharmHad/CharmHad_25ns_Draft2016.py 
+  modified BPVDIRA_MIN threshold for D2HHHKs lines and
+  Q_M_MIN?MAX and Q_AM_MIN/MAX thresholds for CharmSPectroscopy
+  lines
+
 ! 2016-01-27 - Patrick Spradlin
  - !!!NOTE!!! Relies on Hlt2Lines r200430.
    Changes to CharmHad configuration dictionaries require by a change of
