@@ -10,6 +10,7 @@
    compiled C++ implementations, so the code will revert to using the slower
    TMVA generic Reader instances.
  - Replace raw pointers with std::unique_ptr or std::shared_ptr as required.
+ - Protect against missing RecSummary data objects.
 
 !========================= ChargedProtoANNPID v2r13 2016-01-28 =========================
 ! 2016-01-23 - Chris Jones

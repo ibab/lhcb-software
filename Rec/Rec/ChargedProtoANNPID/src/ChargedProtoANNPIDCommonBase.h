@@ -429,7 +429,8 @@ namespace ANNGlobalPID
     public:
       virtual double value( const LHCb::ProtoParticle * ) const override
       {
-        return m_parent->recSummary()->info( m_info, 0 );
+        return ( m_parent && m_parent->recSummary() ? 
+                 m_parent->recSummary()->info( m_info, 0 ) : -999 );
       }
     };
 
