@@ -105,6 +105,10 @@ def get_plot_dictionary(name):
       if plot['name'] == name:
         return plot
 
+def format_run_range(runRange):
+    if isinstance(runRange, tuple) and len(runRange) == 2:
+        return lambda t: t.runnr >= runRange[0] and t.runnr <= runRange[1]
+    return lambda t: t.runnr in runRange
 
 def get_trending_plot(name, runRange, formatter = dictionary_formatter):
     """
@@ -118,7 +122,7 @@ def get_trending_plot(name, runRange, formatter = dictionary_formatter):
                     lambda t: getattr(t, name).value(),
                 ),
                 ( # cut(s) to apply
-                    lambda t: t.runnr in runRange,
+                    format_run_range(runRange),
                 )
             )
 
@@ -139,7 +143,7 @@ def get_2d_trending_plot(nameX, nameY, runRange, formatter = dictionary_formatte
                     lambda t: getattr(t, nameY).value(),
                 ),
                 ( # cut(s) to apply
-                    lambda t: t.runnr in runRange,
+                    format_run_range(runRange),
                 )
             )
 
