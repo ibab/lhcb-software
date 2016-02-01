@@ -229,9 +229,9 @@ class Brunel(LHCbConfigurableUser):
             self.setProp("WriteFSR", False)
 
         if self.getProp( "MergeGenFSR") and not self.getProp( "Simulation" ):
-            log.warning("Cannot MergeGenFSR on real data")
-            self.setProp( "MergeGenFSR", False )        
-
+            if hasattr( self, "MergeGenFSR" ): log.warning("Cannot MergeGenFSR on real data")
+            self.setProp( "MergeGenFSR", False )
+                
         # Do not look for Hlt errors in data without HltDecReports bank
         if self.getProp( "DataType" ) in [ "2008", "2009" ]:
             self.setProp( "VetoHltErrorEvents", False )
