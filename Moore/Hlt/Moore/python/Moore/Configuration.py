@@ -354,10 +354,19 @@ class Moore(LHCbConfigurableUser):
                                     , RequireAlgs = self.getProp('WriterRequires')
                                     )
             IOHelper(persistency,persistency).outStream(fname,writer,writeFSR=MooreExpert().getProp('WriteFSR'))
-            if self.getProp("PersistReco"):
-                HltConf().PersistReco=True
-                if self.getProp("PersistRecoFilter"):
-                    HltConf().CustomPersistRecoFilter=self.getProp("PersistRecoFilter")
+            #print "Writing extra reco locations:"
+            writer.OptItemList+=['Hlt2/pRec/long/Protos#99'
+                    , 'Hlt2/pRec/down/Protos#99'
+                    , 'Hlt2/pRec/long/RichPIDs#99'
+                    , 'Hlt2/pRec/long/MuonIDs#99'
+                    , 'Hlt2/pRec/long/Tracks#99'
+                    , 'Hlt2/pRec/down/Tracks#99'
+                    , 'Hlt2/pRec/neutral/Protos#99'
+                    , 'Hlt2/pRec/neutral/CaloClusters#99'
+                    , 'Hlt2/pRec/neutral/Electrons#99'
+                    , 'Hlt2/pRec/neutral/Photons#99'
+                    , 'Hlt2/pRec/neutral/MergedPi0s#99'
+                    , 'Hlt2/pRec/neutral/SplitPhotons#99']
 
 
     def getRelease(self):
@@ -722,6 +731,12 @@ class Moore(LHCbConfigurableUser):
         #online, do the minimum possible, of only setting up MDF
         if self.getProp("RunOnline") :
             LHCbApp().setProp("Persistency","MDF")
+    
+    def _configRecoPersist(self):
+        if self.getProp("PersistReco"):
+            HltConf().PersistReco=True
+            if self.getProp("PersistRecoFilter"):
+                HltConf().CustomPersistRecoFilter=self.getProp("PersistRecoFilter")
 
     def _split(self, useTCK ):
         split=self.getProp("Split")
@@ -864,6 +879,7 @@ class Moore(LHCbConfigurableUser):
 
         if not self.getProp("RunOnline") :
             self._profile()
+            self._configRecoPersist()
             if self.getProp("generateConfig") : self._generateConfig()
             self._configureInput()
             self._configureOutput()

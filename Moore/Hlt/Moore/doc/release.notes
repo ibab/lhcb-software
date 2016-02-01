@@ -4,9 +4,12 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
-!========================= Moore v24r2p1 2016-01-25 =========================
+!========================= Moore v24r2p1 2016-02-01 =========================
 
 Moore to be included with v24r2 stack plus package modifications for Turbo reprocessing.
+
+! 2016-02-01 - Sean Benson
+ - Fix to persist reco to work via TCK.
 
 ! 2016-01-12 - Sean Benson
  - Add slot to configure pre-filter for PersistReco.
