@@ -5,7 +5,7 @@
 # ...................
 # Author: rlambert/cattenem
 # Purpose: verify Boole can run on MC10-like data
-# Prerequisites: None
+# Prerequisites: boole-mc10-notruth, to avoid over-writing new reference when both tests fail
 # Common failure modes, severities and cures: 
 #               . SEVERE: Segfault or raised exception, stderr, nonzero return code
 #               . MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
@@ -28,4 +28,7 @@ from Boole.QMTest.BooleExclusions import preprocessor as BoolePreprocessor
 preprocessor = BoolePreprocessor
 validateWithReference(preproc = preprocessor)
 </text></argument>
+  <argument name="prerequisites"><set>
+    <tuple><text>boole.boole-mc10-notruth</text><enumeral>PASS</enumeral></tuple>
+  </set></argument>
 </extension>

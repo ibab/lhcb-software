@@ -40,7 +40,4 @@ histPreprocessor = \
   RegexpReplacer(when = "MCITDepositMonitorSUCCESS Booked ", orig = r'4 Histogram\(s\) : 1D=4', repl = r'7 Histogram(s) : 1D=4 2D=3')
 validateWithReference(stdout=histPreprocessor(stdout), preproc=preprocessor)
 </text></argument>
-  <argument name="prerequisites"><set>
-    <tuple><text>boole.boole-mc10</text><enumeral>PASS</enumeral></tuple>
-  </set></argument>
 </extension>
