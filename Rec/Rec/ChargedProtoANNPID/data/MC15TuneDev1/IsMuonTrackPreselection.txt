@@ -1,8 +1,3 @@
 
-# very very loose. Essentially no cuts
-TrackLikelihood       > -100.0
-TrackP                > 0
-TrackPt               > 0
-
 # Is Muon preselection
 MuonIsMuon > 0.5
