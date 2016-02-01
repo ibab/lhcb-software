@@ -80,6 +80,8 @@ class Brunel(LHCbConfigurableUser):
        ,"Context"         : "Offline"
        ,"RawBanksToKill"  : None
        ,"VetoHltErrorEvents" : True
+       ,"Hlt1FilterCode"  : ""
+       ,"Hlt2FilterCode"  : ""
        ,"SkipTracking"    : False
        ,"Detectors"       : ['Velo', 'PuVeto', 'Rich1', 'Rich2', 'TT', 'IT', 'OT', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet', 'Tr']
        ,"SplitRawEventInput" : None #Where the raw event sits on the input
@@ -124,6 +126,8 @@ class Brunel(LHCbConfigurableUser):
        ,'Context'      : """ The context within which to run (default 'Offline') """
        ,'RawBanksToKill':""" Raw banks to remove from RawEvent before processing. Removed also from DST copy of RawEvent """
        ,"VetoHltErrorEvents" : """Do not reconstruct events that have been flagged as error by Hlt"""
+       ,"Hlt1FilterCode"  : """If given, only reconstruct events passing the filter"""
+       ,"Hlt2FilterCode"  : """If given, only reconstruct events passing the filter"""
        ,'SkipTracking' : """ Read the tracks from the input, do not redo them """
        ,"Detectors"    : """List of detectors""" 
        , "SplitRawEventInput" : "How is the even split up in the input? Default 'None' doesn't reset any locations. Other values propagate to RawEventJuggler() and DecodeRawEvent()."
@@ -405,14 +409,20 @@ class Brunel(LHCbConfigurableUser):
         from Configurables import LoKi__HDRFilter, AddToProcStatus
         hltStages = ('Hlt1',) if self.getProp('OnlineMode') else ('Hlt1', 'Hlt2')
         hltDecoders = []
+        hltErrorFilters = []
         hltFilters = []
         for stage in hltStages:
             decoder = DecoderDB["HltDecReportsDecoder/%sDecReportsDecoder" % stage].setup()
-            filterCode = "HLT_PASS_RE('%s(?!ErrorEvent).*Decision')" % stage
-            # identifies events that are not of type ErrorEvent
-            hltFilter = LoKi__HDRFilter('%sErrorFilter' % stage, Code = filterCode, Location = decoder.OutputHltDecReportsLocation )   # the filter
             hltDecoders += [decoder]            # decode DecReports
-            hltFilters  += [decoder, hltFilter] # and apply filter
+            # identifies events that are not of type ErrorEvent
+            errorFilterCode = "HLT_PASS_RE('%s(?!ErrorEvent).*Decision')" % stage
+            hltErrorFilter = LoKi__HDRFilter('%sErrorFilter' % stage, Code = errorFilterCode, Location = decoder.OutputHltDecReportsLocation)
+            hltErrorFilters += [decoder, hltErrorFilter] # and apply filter
+            
+            filterCode = self.getProp(stage + "FilterCode")
+            if filterCode:
+                hltFilter = LoKi__HDRFilter('%sFilter' % stage, Code = filterCode, Location = decoder.OutputHltDecReportsLocation)
+                hltFilters += [decoder, hltFilter]
 
         # Do not process events flagged as error in Hlt, but still write procstatus
         if vetoHltErrorEvents:
@@ -420,16 +430,22 @@ class Brunel(LHCbConfigurableUser):
             By Patrick Koppenburg, 16/6/2011
             """
             # Make a sequence that selects HltErrorEvents
-            hltfilterSeq = GaudiSequencer("HltFilterSeq")
-            if handleLumi: hltfilterSeq.Members = [ physFilter ]       # protect against lumi (that doesn't have decreports)
-            hltfilterSeq.Members += hltFilters
+            hltErrorFilterSeq = GaudiSequencer("HltErrorFilterSeq")
+            if handleLumi: hltErrorFilterSeq.Members = [ physFilter ]       # protect against lumi (that doesn't have decreports)
+            hltErrorFilterSeq.Members += hltErrorFilters
 
             # Sequence to be executed if HltErrorFilter is failing to set ProcStatus
-            hlterrorSeq = GaudiSequencer("HltErrorSeq", ModeOR = True, ShortCircuit = True) # anti-logic
+            hltErrorSeq = GaudiSequencer("HltErrorSeq", ModeOR = True, ShortCircuit = True) # anti-logic
             addToProc = AddToProcStatus("HltErrorProc", Reason = "HltError", Subsystem = "Hlt") # write a procstatus
-            hlterrorSeq.Members += [hltfilterSeq, addToProc]           # only run if hltfilterSeq fails
-            brunelSeq.Members   += [hlterrorSeq]                       # add this sequece to Brunel _before_ physseq
-            physicsSeq.Members  += [hltfilterSeq]                      # take good events in physics seq
+            hltErrorSeq.Members += [hltErrorFilterSeq, addToProc]      # only run if hltErrorFilterSeq fails
+            brunelSeq.Members   += [hltErrorSeq]                       # add this sequece to Brunel _before_ physseq
+            physicsSeq.Members  += [hltErrorFilterSeq]                 # take good events in physics seq
+
+        # Filter events based on HLT decisions if filters were specified
+        if hltFilters:
+            hltFilterSeq = GaudiSequencer("HltFilterSeq")
+            hltFilterSeq.Members = hltFilters
+            physicsSeq.Members += [hltFilterSeq]
 
         # Convert Calo ReadoutStatus to ProcStatus
         caloBanks=GaudiSequencer("CaloBanksHandler")

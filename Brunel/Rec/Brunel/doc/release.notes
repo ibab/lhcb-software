@@ -21,9 +21,15 @@ This version uses projects LHCb v40r0, Lbcom v18r0, Rec v19r0, Gaudi v27r0
   . Fix bug in adding of overlap hits (PatVeloTT)
   . Fix Calo reproducibility issues (CaloPIDs)
 	. Modified Configuration.py to allow the GenFSR merging and propagation
+  . Add Hlt{1|2}FilterCode options that can be used to filter events
+    before reconstruction. Rename the existing HltFilterSeq to the more 
+    logical HltErrorFilterSeq and take the name for the new filter sequence
 
 - Changes to tests
   . References now taken from x86_64-slc6-gcc49-opt tests
+  . Add a test of the HLT filter functionality
+  . Add a (temporary) RegexpReplacer to deal with the name change of the
+    HltError sequence
 
 </PRE><H1><A NAME=v49r1>2015-11-25 Brunel v49r1</A></H1><PRE>
 This version uses projects LHCb v39r2, Lbcom v17r2, Rec v18r3, Gaudi v26r4

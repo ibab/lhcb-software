@@ -21,5 +21,12 @@ preprocessor = LHCbPreprocessor + \
   RegexpReplacer(when = "RichHotPixels     SUCCESS  #WARNINGS   =",
                  orig = r'[01 ]{33}', repl = r'') +\
   RegexpReplacer(when = "Message = 'Fully suppressed     {",
-                 orig = r'[01 ]{33}', repl = r'')
+                 orig = r'[01 ]{33}', repl = r'') +\
+  RegexpReplacer(when = r"^(HltErrorSeq|PhysicsSeq) ",
+                 orig = "GaudiSequencer/HltErrorFilterSeq", repl = "GaudiSequencer/HltFilterSeq") +\
+  RegexpReplacer(when = None,
+                 orig = "HltErrorFilterSeq    ", repl = "HltFilterSeq         ")
 
+  # The last two RegexpReplacers are due to the name change
+  # HltFilterSeq -> HltErrorFilterSeq
+  # To be removed when references are updated
