@@ -178,7 +178,7 @@ StatusCode HltRoutingBitsWriter::initialize() {
    StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
    if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
    if (m_useCondDB) {
-      m_updMgrSvc = svc<IUpdateManagerSvc>("UpdateManagerSvc");
+      m_updMgrSvc = service("UpdateManagerSvc");
       if( !m_updMgrSvc) {
          error()<< "Could not retrieve UpdateManagerSvc" << endmsg;
          return StatusCode::FAILURE;
@@ -189,14 +189,13 @@ StatusCode HltRoutingBitsWriter::initialize() {
       if( !sc.isSuccess()) return sc;
    } else {
       // reset m_startOfRun to zero at start of run....
-      IIncidentSvc *s = svc<IIncidentSvc>( "IncidentSvc");
+      auto s = service<IIncidentSvc>( "IncidentSvc");
       s->addListener(this,IncidentType::BeginRun, 0,false,false);
       s->addListener(this,"RunChange", 0,false,false);
    }
 
    // Hlt Monitoring Service
-   // Hlt Monitoring Service
-   m_hltMonSvc = svcLoc()->service(m_monSvc, false);
+   m_hltMonSvc = service(m_monSvc, false);
    // If we cannot retrieve it, HLT2 style monitoring is disabled.
    if (!m_hltMonSvc.isValid()) {
       info() << "Could not retrieve " << m_monSvc << endmsg;

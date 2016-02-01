@@ -1,4 +1,3 @@
-// $Id: HltRoutingBitsWriter.h,v 1.5 2010-08-10 14:05:37 graven Exp $
 #ifndef HLTCOMMON_HLTROUTINGBITSWRITER_H
 #define HLTCOMMON_HLTROUTINGBITSWRITER_H 1
 
@@ -60,11 +59,11 @@ private:
   void zeroEvaluators(bool skipDelete=false);
 
   Condition *m_runpars;
-  IUpdateManagerSvc *m_updMgrSvc;
+  SmartIF<IUpdateManagerSvc> m_updMgrSvc;
   SmartIF<IHltMonitorSvc> m_hltMonSvc;
 
   StatusCode i_updateConditions();
-  void handle(const Incident&);
+  void handle(const Incident&) override;
 
   std::string m_monSvc;
   std::string m_odin_location;

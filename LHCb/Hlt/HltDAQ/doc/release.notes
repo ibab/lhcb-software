@@ -3,6 +3,9 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
+! 2016-02-01 - Gerhard Raven
+ - remove obsolete part of requirements
+ - prever SmartIF over bare interface pointer 
 
 !========================= HltDAQ v4r24 2016-01-27 =========================
 ! 2016-01-22 - Chris Jones

@@ -81,18 +81,6 @@ end_private
 #end_private
 
 #=====================================================================
-private
-# Note: libgslcblas is needed by libgsl, but the link is missing.
-macro_prepend GSL_linkopts " -Wl,--no-as-needed " \
-                    Darwin "" \
-                     WIN32 ""
-macro_append  GSL_linkopts " -Wl,--as-needed " \
-                    Darwin "" \
-                     WIN32 "" \
-                target-icc ""
-
-
-end_private
 
 #at least GaudiConf for IOHelper and LHCbApp
 private
