@@ -43,7 +43,7 @@ class CharmHadD2HHHKsLines() :
             'ASUMPT_MIN'            :  2.0 * GeV,
             'VCHI2PDOF_MAX'         :  12.0,
             'BPVLTIME_MIN'          :  0.2 * picosecond,
-            'BPVDIRA_MIN'           :  0.999,
+            'BPVDIRA_MIN'           :  0.99995,
             'BPVIPCHI2_MAX'         :  20.0,
             'Mass_M_MIN'            :  1795.0 * MeV,
             'Mass_M_MAX'            :  1935.0 * MeV,
