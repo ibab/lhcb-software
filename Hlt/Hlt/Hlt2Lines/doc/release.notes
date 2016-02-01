@@ -8,6 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-02-01 - Mike Sokoloff
+
+   change BPVDIRA_MIN cut in D2HHHKsLines.py and the the Q_M_MIN/MAX
+   and Q_AM_MIN/MAXa thresholds in CharmSpectroscopy.py
+
 ! 2016-01-27 - Patrick Spradlin
  - Changed the mass cut variable for combiners TagDecay and TagDecayWithNeutral,
    simple two-body combiners used in D* and Sigma_c reconstruction.  These
