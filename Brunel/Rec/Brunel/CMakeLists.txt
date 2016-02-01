@@ -13,6 +13,7 @@ gaudi_depends_on_subdirs(DAQ/MDF
                          GaudiConf
                          GaudiKernel
                          Kernel/LHCbAlgs
+			 Kernel/FSRAlgs
                          LbcomSys
                          RecSys
                          Sim/SimComponents

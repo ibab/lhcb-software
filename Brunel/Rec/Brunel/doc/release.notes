@@ -20,6 +20,7 @@ This version uses projects LHCb v40r0, Lbcom v18r0, Rec v19r0, Gaudi v27r0
   . Updates to photon reconstruction (RichRecPhotonTools etc.)
   . Fix bug in adding of overlap hits (PatVeloTT)
   . Fix Calo reproducibility issues (CaloPIDs)
+	. Modified Configurable.py to allow the GenFSR merging and propagation
 
 - Changes to tests
   . References now taken from x86_64-slc6-gcc49-opt tests

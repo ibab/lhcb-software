@@ -61,6 +61,7 @@ class Brunel(LHCbConfigurableUser):
        ,"PackType"        : "TES"
        ,"WriteFSR"        : True
        ,"WriteLumi"       : False
+       ,"MergeGenFSR"     : True
        ,"Histograms"      : "OfflineFull"
        ,"OutputLevel"     : INFO
        ,"NoWarnings"      : False
@@ -104,6 +105,7 @@ class Brunel(LHCbConfigurableUser):
        ,'PackType'     : """ Type of packing for the output file. Can be one of ['TES','MDF','NONE'] (default 'TES') """
        ,'WriteFSR'     : """ Flags whether to write out an FSR """
        ,'WriteLumi'    : """ Flags whether to write out Lumi-only events to DST """
+       ,'MergeGenFSR'  : """ Flags whether to merge the generatore level FSRs """
        ,'Histograms'   : """ Type of histograms. Can be one of self.KnownHistograms """
        ,'OutputLevel'  : """ The printout level to use (default INFO) """
        ,'NoWarnings'   : """ OBSOLETE, kept for Dirac compatibility. Please use ProductionMode """
@@ -226,6 +228,10 @@ class Brunel(LHCbConfigurableUser):
             if hasattr( self, "WriteFSR" ): log.warning("Don't know how to write FSR to MDF output file")
             self.setProp("WriteFSR", False)
 
+        if self.getProp( "MergeGenFSR") and not self.getProp( "Simulation" ):
+            log.warning("Cannot MergeGenFSR on real data")
+            self.setProp( "MergeGenFSR", False )        
+
         # Do not look for Hlt errors in data without HltDecReports bank
         if self.getProp( "DataType" ) in [ "2008", "2009" ]:
             self.setProp( "VetoHltErrorEvents", False )
@@ -326,7 +332,7 @@ class Brunel(LHCbConfigurableUser):
             from TrackSys import RecoTracking
             RecoTracking.DecodeTracking(["FastVelo"])
 
-        
+            
         # Code  lifted from TrackSys/RecoTracking.py, to be repackaged
 #        if self.getProp("SkipTracking"):
 #            from DAQSys.Decoders import DecoderDB
@@ -565,7 +571,12 @@ class Brunel(LHCbConfigurableUser):
         """
         Set up output stream
         """
-        
+
+        # Merge genFSRs
+        if self.getProp("WriteFSR"):
+            if self.getProp("MergeGenFSR"):
+                GaudiSequencer("OutputDSTSeq").Members += ["GenFSRMerge"]
+                                                                                                                                              
         if dstType in [ "XDST", "DST", "LDST", "RDST" ]:
             writerName = "DstWriter"
             packType  = self.getProp( "PackType" )

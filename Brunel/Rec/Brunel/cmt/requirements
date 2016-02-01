@@ -42,6 +42,7 @@ use Magnet         v*  Det            -no_auto_imports
 use MDF            v*  DAQ            -no_auto_imports
 use DAQSys 	   v*  DAQ            -no_auto_imports
 use RawEventCompat v*  DAQ            -no_auto_imports
+use FSRAlgs        v*  Kernel	      -no_auto_imports
 
 # The whole LBCOM project
 use LbcomSys  v*                      -no_auto_imports
