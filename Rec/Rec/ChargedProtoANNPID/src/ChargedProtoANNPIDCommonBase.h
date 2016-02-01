@@ -788,7 +788,9 @@ namespace ANNGlobalPID
 
   protected:
 
-    std::string m_protoPath; ///< Location in TES of ProtoParticles
+    std::string m_protoPath;  ///< Location in TES of ProtoParticles
+
+    std::string m_recSumPath; ///< Location in TES for RecSummary object
 
     /// Cached pointer to the RecSummary object
     mutable const LHCb::RecSummary * m_summary = nullptr;

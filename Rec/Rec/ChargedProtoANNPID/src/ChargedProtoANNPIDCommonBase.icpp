@@ -23,6 +23,8 @@ void ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::initCommonConstructor()
   // Job Options
   this->declareProperty( "ProtoParticleLocation",
                          m_protoPath = LHCb::ProtoParticleLocation::Charged );
+  this->declareProperty( "RecSummaryLocation",
+                         m_recSumPath = LHCb::RecSummaryLocation::Default );
 }
 
 //=============================================================================
@@ -97,12 +99,15 @@ ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::recSummary() const
 {
   if ( !m_summary )
   {
-    m_summary =
-      this -> template getIfExists<LHCb::RecSummary>( LHCb::RecSummaryLocation::Default, false );
+    m_summary   = this -> template getIfExists<LHCb::RecSummary>( m_recSumPath, false );
     if ( !m_summary )
     {
-      m_summary =
-        this -> template getIfExists<LHCb::RecSummary>( LHCb::RecSummaryLocation::Default, true );
+      m_summary = this -> template getIfExists<LHCb::RecSummary>( m_recSumPath, true );
+    }
+    // if still not found, issue a warning
+    if ( !m_summary )
+    {
+      this -> Warning( "RecSummary missing at " + m_recSumPath );
     }
   }
   return m_summary;
