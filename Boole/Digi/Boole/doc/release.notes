@@ -3,8 +3,18 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-- Changes to references to follow chanegs since Boole v29r12
+</PRE><H1><A NAME=v30r0>2016-02-01 Boole v30r0</A></H1><PRE>
+This version uses projects:
+ LCG_83 (ROOT 6.06.00), Gaudi v27r0, LHCb v40r0, Lbcom v18r0
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+- New functionality and configuration changes
   . Modified Configurable.py to allow the GenFSR merging and propagation
+  . remove configuration of obsolute GlobalTimeOffset property
+
+- Changes to tests
+  . Swap order of mc10 tests so that when both tests fail the correct
+    new reference file survives
 
 </PRE><H1><A NAME=v29r12>2015-11-25 Boole v29r12</A></H1><PRE>
 This version uses projects:
