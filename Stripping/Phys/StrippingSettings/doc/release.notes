@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-02-01 Ricardo Vazquez Gomez
+ - Revert last change in S24 and apply it to S21r0,1p1
+
 ! 2015-01-31 Ramon Niet
  - Modified LineConfigDictionaries_B2CC for S24 (changes in StrippingBd2JpsieeKSLines)
 

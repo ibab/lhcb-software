@@ -215,9 +215,7 @@ Bd2JpsieeKS = {
         , 'KstarMassMax'          :   966.    # MeV
         , 'KstarPT'               :  1500.    # MeV
         , 'KstarVCHI2'            :    20.    # adimensional
-        , 'KstarDaughtersIP'      :     9.    # adimensional
-        , 'KplusPT'               :   800.    # MeV
-        , 'KplusIP'               :     9.    # adimensional
+        , 'KplusPT'               :   500.    # MeV
         , 'KSVCHI2'               :    20.    # adimensional
         , 'KSBPVDLS'              :     5.    # adimensional
         , 'BdVertexCHI2pDOF'      :     7.    # adimensional
