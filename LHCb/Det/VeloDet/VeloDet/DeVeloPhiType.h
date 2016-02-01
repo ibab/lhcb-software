@@ -39,8 +39,6 @@ public:
   /// Standard constructor
   DeVeloPhiType(  const std::string& name  = ""); 
 
-  ~DeVeloPhiType( ); ///< Destructor
-
   /// object identifier (static method)
   static  const CLID& classID() { return CLID_DeVeloPhiType; }
   /// object identification
@@ -474,12 +472,12 @@ private:
   }
 
   /// cached Message Stream object
-  mutable MsgStream * m_msgStream;
+  mutable std::unique_ptr<MsgStream> m_msgStream;
 
   /// On demand access to MsgStream object
   inline MsgStream & msg() const
   {
-    if ( !m_msgStream ) m_msgStream = new MsgStream( msgSvc(), "DeVeloPhiType" );
+    if ( !m_msgStream ) m_msgStream.reset( new MsgStream( msgSvc(), "DeVeloPhiType" ) );
     return *m_msgStream; 
   }
 

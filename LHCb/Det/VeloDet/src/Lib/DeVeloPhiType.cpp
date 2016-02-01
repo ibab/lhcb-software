@@ -77,13 +77,8 @@ DeVeloPhiType::DeVeloPhiType(const std::string& name)
   , m_otherSidePhiSensor(0)
   , m_otherSideRSensor(0)
   , m_stripLengths(VeloDet::deVeloPhiTypeStaticStripLengths())
-  , m_msgStream(NULL)
 {
 }
-//==============================================================================
-/// Destructor
-//==============================================================================
-DeVeloPhiType::~DeVeloPhiType() { delete m_msgStream; }
 //==============================================================================
 /// Object identification
 //==============================================================================
@@ -94,21 +89,18 @@ const CLID& DeVeloPhiType::clID()
 //==============================================================================
 StatusCode DeVeloPhiType::initialize()
 {
-  // Trick from old DeVelo to set the output level
-  PropertyMgr* pmgr = new PropertyMgr();
-  int outputLevel=0;
-  pmgr->declareProperty("OutputLevel", outputLevel);
-  IJobOptionsSvc* jobSvc;
-  ISvcLocator* svcLoc = Gaudi::svcLocator();
-  StatusCode sc = svcLoc->service("JobOptionsSvc", jobSvc);
-  if( sc.isSuccess() ) sc = jobSvc->setMyProperties("DeVeloPhiType", pmgr);
-  if ( 0 < outputLevel ) {
-    msgSvc()->setOutputLevel("DeVeloPhiType", outputLevel);
+  { // Trick from old DeVelo to set the output level
+    std::unique_ptr<PropertyMgr> pmgr{ new PropertyMgr() };
+    int outputLevel=0;
+    pmgr->declareProperty("OutputLevel", outputLevel);
+    auto jobSvc = Gaudi::svcLocator()->service<IJobOptionsSvc>("JobOptionsSvc");
+    if( jobSvc ) jobSvc->setMyProperties("DeVeloPhiType", pmgr.get()).ignore();
+    if ( 0 < outputLevel ) {
+      msgSvc()->setOutputLevel("DeVeloPhiType", outputLevel);
+    }
   }
-  delete pmgr;
-  if( !sc ) return sc;
 
-  sc = DeVeloSensor::initialize();
+  auto sc = DeVeloSensor::initialize();
   if(!sc.isSuccess()) {
     msg() << MSG::ERROR << "Failed to initialise DeVeloSensor" << endmsg;
     return sc;
@@ -211,7 +203,7 @@ void DeVeloPhiType::calcStripLines()
     gradient = (y2 - y1) /  (x2 - x1);
     double intercept;
     intercept = y2 - (gradient*x2);
-    m_stripLines.push_back(std::pair<double,double>(gradient,intercept));
+    m_stripLines.emplace_back(gradient,intercept);
     // Store strip limits in vector
     if(isCutOff(x1,y1)){
       if(0 < y1){
@@ -223,12 +215,11 @@ void DeVeloPhiType::calcStripLines()
       }
       y1 = gradient*x1 + intercept;
     }
-    Gaudi::XYZPoint begin(x1,y1,0);
-    Gaudi::XYZPoint end(x2,y2,0);
     if(m_verbose) {
       msg() << MSG::VERBOSE << "Sensor " << sensorNumber() << " " << x1 << " " << y1 << " " << x2 << " " << y2 << std::endl;
     }
-    m_stripLimits.push_back(std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>(begin,end));
+    m_stripLimits.emplace_back( Gaudi::XYZPoint{x1,y1,0},
+                                Gaudi::XYZPoint{x2,y2,0} );
   }
 }
 //==============================================================================
@@ -265,7 +256,7 @@ void DeVeloPhiType::cornerLimits()
   gradient = (m_corner1Y2 - m_corner1Y1) /  (m_corner1X2 - m_corner1X1);
   double intercept;
   intercept = m_corner1Y2 - (gradient*m_corner1X2);
-  m_cutOffs.push_back(std::pair<double,double>(gradient,intercept));
+  m_cutOffs.emplace_back(gradient,intercept);
   /// Second corner
   m_corner2X1 = param<double>("PhiCorner2X1");
   m_corner2Y1 = param<double>("PhiCorner2Y1");
@@ -273,7 +264,7 @@ void DeVeloPhiType::cornerLimits()
   m_corner2Y2 = param<double>("PhiCorner2Y2");
   gradient = (m_corner2Y2 - m_corner2Y1) /  (m_corner2X2 - m_corner2X1);
   intercept = m_corner2Y2 - (gradient*m_corner2X2);
-  m_cutOffs.push_back(std::pair<double,double>(gradient,intercept));
+  m_cutOffs.emplace_back(gradient,intercept);
 }
 //==============================================================================
 /// Calculate the nearest channel to a 3-d point.
@@ -544,12 +535,12 @@ double DeVeloPhiType::stripLength(const unsigned int strip) const {
 //=============================================================================
 void DeVeloPhiType::BuildRoutingLineMap(){
   unsigned int strip=0;
-  m_patternConfig.push_back(std::pair<unsigned int,unsigned int>(m_nbInner,4));
-  m_patternConfig.push_back(std::pair<unsigned int,unsigned int>(0,2));
-  m_patternConfig.push_back(std::pair<unsigned int,unsigned int>(m_nbInner+1,4));
-  m_patternConfig.push_back(std::pair<unsigned int,unsigned int>(1,2));
-  m_patternConfig.push_back(std::pair<unsigned int,unsigned int>(m_nbInner+2,4));
-  m_patternConfig.push_back(std::pair<unsigned int,unsigned int>(m_nbInner+3,4));
+  m_patternConfig.emplace_back(m_nbInner,4);
+  m_patternConfig.emplace_back(0,2);
+  m_patternConfig.emplace_back(m_nbInner+1,4);
+  m_patternConfig.emplace_back(1,2);
+  m_patternConfig.emplace_back(m_nbInner+2,4);
+  m_patternConfig.emplace_back(m_nbInner+3,4);
 
   unsigned int count=0;
   if(m_debug){

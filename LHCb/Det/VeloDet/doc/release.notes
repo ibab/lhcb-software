@@ -1,6 +1,14 @@
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
+! 2016-02-01 - Gerhard Raven
+ - DeVeloRType:
+    o use std::minmax_element instead of std::min_element and std::max_element
+    o prefer std::unique_ptr over raw pointer + explicit delete
+    o prefer SmartIF over raw interface pointer
+    o prefer emplace_back over push_back
+    o prefer auto
+    o no else after return
 
 !========================= VeloDet v14r0 2016-01-27 =========================
 ! 2016-01-03 - Gerhard Raven

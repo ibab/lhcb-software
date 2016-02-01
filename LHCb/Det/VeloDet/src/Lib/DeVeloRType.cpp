@@ -25,6 +25,18 @@
 #include "VeloDet/DeVeloRType.h"
 #include "Kernel/VeloChannelID.h"
 
+namespace {
+
+    // simplified implementation of Library TS2's std::make_array... @FIXME: remove once std::make_array is available
+    template <typename... Args>
+    auto make_array( Args&&... a ) -> std::array<typename std::common_type<Args...>::type, sizeof...(a)>
+    {
+            return { std::forward<Args>(a)... };
+    }
+
+
+}
+
 namespace VeloDet {
   /** This function simply provides access to a local static
    *  data which is used to initialize references in each instance
@@ -100,9 +112,9 @@ namespace VeloDet {
    *
    *  @see DeVeloRType
    */
-  static std::vector<std::pair<double, double> >& deVeloRTypeStaticStripPhiLimits()
+  static std::vector<std::pair<double, double>>& deVeloRTypeStaticStripPhiLimits()
   {
-    static std::vector<std::pair<double, double> > s_stripPhiLimits;
+    static std::vector<std::pair<double, double>> s_stripPhiLimits;
     return s_stripPhiLimits;
   }
 
@@ -122,9 +134,9 @@ namespace VeloDet {
    *  of DeVeloRType.
    *  @see DeVeloRType
    */
-  static std::vector<std::pair<double,unsigned int> >& deVeloRTypeStaticM2RLMinPhi()
+  static std::vector<std::pair<double,unsigned int>>& deVeloRTypeStaticM2RLMinPhi()
   {
-    static std::vector<std::pair<double,unsigned int> > s_M2RLMinPhi;
+    static std::vector<std::pair<double,unsigned int>> s_M2RLMinPhi;
     return s_M2RLMinPhi;
   }
 
@@ -180,21 +192,18 @@ const CLID& DeVeloRType::clID()
 //==============================================================================
 StatusCode DeVeloRType::initialize()
 {
-  // Trick from old DeVelo to set the output level
-  PropertyMgr* pmgr = new PropertyMgr();
-  int outputLevel=0;
-  pmgr->declareProperty("OutputLevel", outputLevel);
-  IJobOptionsSvc* jobSvc;
-  ISvcLocator* svcLoc = Gaudi::svcLocator();
-  StatusCode sc = svcLoc->service("JobOptionsSvc", jobSvc);
-  if( sc.isSuccess() ) sc = jobSvc->setMyProperties("DeVeloRType", pmgr);
-  if ( 0 < outputLevel ) {
-    msgSvc()->setOutputLevel("DeVeloRType", outputLevel);
+  { // Trick from old DeVelo to set the output level
+    std::unique_ptr<PropertyMgr> pmgr{  new PropertyMgr() };
+    int outputLevel=0;
+    pmgr->declareProperty("OutputLevel", outputLevel);
+    auto jobSvc = Gaudi::svcLocator()->service<IJobOptionsSvc>("JobOptionsSvc");
+    if( jobSvc ) jobSvc->setMyProperties("DeVeloRType", pmgr.get()).ignore();
+    if ( 0 < outputLevel ) {
+      msgSvc()->setOutputLevel("DeVeloRType", outputLevel);
+    }
   }
-  delete pmgr;
-  if( !sc ) return sc;
 
-  sc = DeVeloSensor::initialize();
+  auto sc = DeVeloSensor::initialize();
   if(!sc.isSuccess()) {
     msg() << MSG::ERROR << "Failed to initialise DeVeloSensor" << endmsg;
     return sc;
@@ -249,13 +258,11 @@ StatusCode DeVeloRType::pointToChannel(const Gaudi::XYZPoint& point,
   if(!sc.isSuccess()) return sc;
 
   // work out closet channel....
-  unsigned int closestStrip=0;
-  double logarithm(0), strip(0);
   double radius=localPoint.Rho();
-  logarithm = (m_pitchSlope*(radius - m_innerR)+m_innerPitch) /
+  double logarithm = (m_pitchSlope*(radius - m_innerR)+m_innerPitch) /
     m_innerPitch;
-  strip = vdt::fast_log(logarithm)/m_pitchSlope;
-  closestStrip = LHCb::Math::round(strip);
+  double strip = vdt::fast_log(logarithm)/m_pitchSlope;
+  unsigned int closestStrip = LHCb::Math::round(strip);
   fraction = strip - closestStrip;
 
   // Which zone is the strip in?
@@ -295,9 +302,7 @@ StatusCode DeVeloRType::isInActiveArea(const Gaudi::XYZPoint& point) const
   }
   // corner cut-offs
   bool cutOff=isCutOff(point.x(),point.y());
-  if(cutOff) {
-    return StatusCode::FAILURE;
-  }
+  if(cutOff) return StatusCode::FAILURE;
   return StatusCode::SUCCESS;
 }
 //==============================================================================
@@ -309,9 +314,7 @@ bool DeVeloRType::isCutOff(double x, double y) const
   if(m_cornerX1 - epsilon > x) return true;
   if(m_cornerX1 - epsilon <= x && x <= m_cornerX2 + epsilon) {
     double yMax=m_gradCutOff*x+m_intCutOff;
-    if(yMax > std::abs(y)) {
-      return true;
-    }
+    if(yMax > std::abs(y)) return true;
   }
   return false;
 }
@@ -365,8 +368,7 @@ double DeVeloRType::stripLength(const unsigned int strip) const {
   if(phiMin < 0) phiMin += 2*Gaudi::Units::pi;
   if(phiMax < 0) phiMax += 2*Gaudi::Units::pi;
   double radius=m_rStrips[strip];
-  double length=2*(phiMax-phiMin)*radius;
-  return length;
+  return 2*(phiMax-phiMin)*radius;
 }
 //==============================================================================
 /// Get the nth nearest neighbour within a sector for a given channel
@@ -384,9 +386,7 @@ StatusCode DeVeloRType::neighbour(const LHCb::VeloChannelID& start,
   endZone = zoneOfStrip(strip);
   // Check boundaries
   if(numberOfStrips() <= strip) return StatusCode::FAILURE;
-  if(startZone != endZone) {
-    return StatusCode::FAILURE;
-  }
+  if(startZone != endZone) return StatusCode::FAILURE;
   channel = start;
   channel.setStrip(strip);
   return StatusCode::SUCCESS;
@@ -402,6 +402,7 @@ StatusCode DeVeloRType::residual(const Gaudi::XYZPoint& point,
 {
   return this->residual(point,channel,0.0,residual,chi2);
 }
+
 //==============================================================================
 ///Residual of 3-d point to a VeloChannelID + interstrip fraction
 //==============================================================================
@@ -412,7 +413,6 @@ StatusCode DeVeloRType::residual(const Gaudi::XYZPoint& point,
                                  double &chi2) const
 
 {
-
   // Perpendicular distance to strip.....
 
   Gaudi::XYZPoint localPoint = DeVeloSensor::globalToLocal(point);
@@ -437,11 +437,9 @@ StatusCode DeVeloRType::residual(const Gaudi::XYZPoint& point,
           << " sigma = " << sigma
           << " chi2 = " << chi2 << endmsg;
   }
-
-
-
   return StatusCode::SUCCESS;
 }
+
 //==============================================================================
 /// Store the local radius and phi limits for each strip in the sensor
 //==============================================================================
@@ -491,12 +489,12 @@ void DeVeloRType::calcStripLimits()
 
         m_rStrips.push_back(radius);
         m_rPitch.push_back(pitch);
-        m_stripPhiLimits.push_back(std::pair<double,double>(phiMin,phiMax));
+        m_stripPhiLimits.emplace_back(phiMin,phiMax);
 
         // intialize base class members
         Gaudi::XYZPoint begin(x1,y1,0.);
         Gaudi::XYZPoint end(x2,y2,0.);
-        m_stripLimits.push_back(std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>(begin,end));
+        m_stripLimits.emplace_back(begin,end);
       }
     }
     // load Metal 2 routing line map for intra-sensor cross talk simulation
@@ -505,9 +503,8 @@ void DeVeloRType::calcStripLimits()
     m_staticDataInvalid = false;  // these are valid now for all instances
   } else { // statics are valid, initialize base class member only
 
-    std::vector<double>::const_iterator ri = m_rStrips.begin();
-    std::vector< std::pair<double,double> >::const_iterator spli = m_stripPhiLimits.begin();
-    for ( ;
+    auto ri = m_rStrips.begin();
+    for ( auto spli = m_stripPhiLimits.begin();
           spli !=  m_stripPhiLimits.end() && ri != m_rStrips.end();
           ++spli, ++ri) {
       double phiMin = spli->first;
@@ -522,7 +519,7 @@ void DeVeloRType::calcStripLimits()
       double y2 = radius*sin;
       Gaudi::XYZPoint begin(x1,y1,0.);
       Gaudi::XYZPoint end(x2,y2,0.);
-      m_stripLimits.push_back(std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>(begin,end));
+      m_stripLimits.emplace_back(begin,end);
     }
   }
 
@@ -601,21 +598,9 @@ void DeVeloRType::intersectCutOff(const double radius, double& x, double& y) con
 //==============================================================================
 void DeVeloRType::phiZoneLimits()
 {
-  double phi;
-  phi = vdt::fast_acos(m_overlapInX/outerRadius());
-
-  m_phiMin.clear();
-  m_phiMax.clear();
-
-  m_phiMin.push_back(-phi);
-  m_phiMin.push_back(-m_quarterAngle);
-  m_phiMin.push_back(0);
-  m_phiMin.push_back(m_quarterAngle);
-
-  m_phiMax.push_back(-m_quarterAngle);
-  m_phiMax.push_back(0);
-  m_phiMax.push_back(m_quarterAngle);
-  m_phiMax.push_back(phi);
+  auto phi = vdt::fast_acos(m_overlapInX/outerRadius());
+  m_phiMin = { -phi, -m_quarterAngle, 0, m_quarterAngle };
+  m_phiMax = { -m_quarterAngle, 0, m_quarterAngle, phi };
 }
 //==============================================================================
 /// Build up routing line map
@@ -654,15 +639,10 @@ void DeVeloRType::BuildRoutingLineMap(){
 //=============================================================================
 unsigned int DeVeloRType::RoutingLineArea(unsigned int routingLine){
   if(m_maxRoutingLine/2 < routingLine) routingLine /= 2;
-  if(routingLine <= m_nChan0){
-    return 0;
-  } else if(routingLine <= m_nChan0+m_nChan1){
-    return 1;
-  } else if(routingLine <= m_nChan0+m_nChan1+m_nChan2){
-    return 2;
-  } else if (routingLine <= m_nChan0+m_nChan1+m_nChan2+m_nChan3){
-    return 3;
-  }
+  if(routingLine <= m_nChan0) return 0;
+  if(routingLine <= m_nChan0+m_nChan1) return 1;
+  if(routingLine <= m_nChan0+m_nChan1+m_nChan2) return 2;
+  if(routingLine <= m_nChan0+m_nChan1+m_nChan2+m_nChan3) return 3;
   return 999;
 }
 //=============================================================================
@@ -753,27 +733,20 @@ StatusCode DeVeloRType::updateStripRCache()
       Gaudi::XYZPoint lp(rLocal*cos,rLocal*sin,0.0);
 
       num += dphi;
-
-      Gaudi::XYZPoint hbp = localToVeloHalfBox(lp);
-      hbden += dphi/hbp.rho();
-
-      Gaudi::XYZPoint gp = localToGlobal(lp);
-      gden += dphi/gp.rho();
+      hbden += dphi/localToVeloHalfBox(lp).rho();
+      gden += dphi/localToGlobal(lp).rho();
     }
 
     // deal with the last interval, it might be shorter than the original dphi
     dphi = phiMax - phiLocal + dphi;
-    num += dphi;
 
     double sin(0), cos(0);
     vdt::fast_sincos(phiMax, sin, cos);
     Gaudi::XYZPoint lp(rLocal*cos,rLocal*sin,0.0);
 
-    Gaudi::XYZPoint hbp = localToVeloHalfBox(lp);
-    hbden += dphi/hbp.rho();
-
-    Gaudi::XYZPoint gp = localToGlobal(lp);
-    gden += dphi/gp.rho();
+    num += dphi;
+    hbden += dphi/localToVeloHalfBox(lp).rho();
+    gden += dphi/localToGlobal(lp).rho();
 
     // store the results
     m_halfboxR[strip] = num/hbden;
@@ -793,21 +766,21 @@ StatusCode DeVeloRType::updateZoneLimits()
     unsigned int zone     = (isDownstream() ? 3-localZone : localZone);
 
     // determine the phi ranges of the zones in global frame
-    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> globalLimitsMin = globalStripLimits(minStrip);
-    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> globalLimitsMax = globalStripLimits(maxStrip);
-    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> globalLimitsMid = globalStripLimits(midStrip);
-    std::vector<double> phiLimits;
-    phiLimits.push_back(globalLimitsMin.first.phi()); phiLimits.push_back(globalLimitsMin.second.phi());
-    phiLimits.push_back(globalLimitsMax.first.phi()); phiLimits.push_back(globalLimitsMax.second.phi());
-    phiLimits.push_back(globalLimitsMid.first.phi()); phiLimits.push_back(globalLimitsMid.second.phi());
+    auto globalLimitsMin = globalStripLimits(minStrip);
+    auto globalLimitsMax = globalStripLimits(maxStrip);
+    auto globalLimitsMid = globalStripLimits(midStrip);
+    auto phiLimits = make_array( globalLimitsMin.first.phi(), globalLimitsMin.second.phi(),
+                                 globalLimitsMax.first.phi(), globalLimitsMax.second.phi(),
+                                 globalLimitsMid.first.phi(), globalLimitsMid.second.phi()  );
     // map to [0,2pi] for right hand side sensors
     if (isRight()) {
-      for (unsigned int i=0; i<phiLimits.size(); ++i) {
-        if (phiLimits[i]<0) phiLimits[i] += 2.0*Gaudi::Units::pi;
+      for (auto& phiLimit : phiLimits) {
+        if (phiLimit<0) phiLimit += 2.0*Gaudi::Units::pi;
       }
     }
-    m_globalPhiLimitsZone[zone].first  = *std::min_element(phiLimits.begin(),phiLimits.end());
-    m_globalPhiLimitsZone[zone].second = *std::max_element(phiLimits.begin(),phiLimits.end());
+    auto minmax = std::minmax_element( phiLimits.begin(), phiLimits.end() );
+    m_globalPhiLimitsZone[zone].first  = *minmax.first;
+    m_globalPhiLimitsZone[zone].second = *minmax.second;
     // map back to [-pi,pi]
     if (isRight()) {
       if (m_globalPhiLimitsZone[zone].first  > Gaudi::Units::pi) m_globalPhiLimitsZone[zone].first  -= 2.0*Gaudi::Units::pi;
@@ -815,24 +788,24 @@ StatusCode DeVeloRType::updateZoneLimits()
     }
 
     // determine the phi ranges of the zones in VELO half box frame
-    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> halfBoxLimitsMin
-      (globalToVeloHalfBox(globalLimitsMin.first),globalToVeloHalfBox(globalLimitsMin.second));
-    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> halfBoxLimitsMax
-      (globalToVeloHalfBox(globalLimitsMax.first),globalToVeloHalfBox(globalLimitsMax.second));
-    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> halfBoxLimitsMid
-      (globalToVeloHalfBox(globalLimitsMid.first),globalToVeloHalfBox(globalLimitsMid.second));
-    phiLimits.clear();
-    phiLimits.push_back(halfBoxLimitsMin.first.phi()); phiLimits.push_back(halfBoxLimitsMin.second.phi());
-    phiLimits.push_back(halfBoxLimitsMax.first.phi()); phiLimits.push_back(halfBoxLimitsMax.second.phi());
-    phiLimits.push_back(halfBoxLimitsMid.first.phi()); phiLimits.push_back(halfBoxLimitsMid.second.phi());
+    auto halfBoxLimitsMin = std::make_pair(globalToVeloHalfBox(globalLimitsMin.first),
+                                           globalToVeloHalfBox(globalLimitsMin.second));
+    auto halfBoxLimitsMax = std::make_pair(globalToVeloHalfBox(globalLimitsMax.first),
+                                           globalToVeloHalfBox(globalLimitsMax.second));
+    auto halfBoxLimitsMid = std::make_pair(globalToVeloHalfBox(globalLimitsMid.first),
+                                           globalToVeloHalfBox(globalLimitsMid.second));
+    phiLimits = make_array( halfBoxLimitsMin.first.phi(),halfBoxLimitsMin.second.phi(),
+                            halfBoxLimitsMax.first.phi(),halfBoxLimitsMax.second.phi(),
+                            halfBoxLimitsMid.first.phi(),halfBoxLimitsMid.second.phi() );
     // map to [0,2pi] for right hand side sensors
     if (isRight()) {
-      for (unsigned int i=0; i<phiLimits.size(); ++i) {
-        if (phiLimits[i]<0) phiLimits[i] += 2.0*Gaudi::Units::pi;
+      for (auto& phiLimit : phiLimits ) {
+        if (phiLimit<0) phiLimit += 2.0*Gaudi::Units::pi;
       }
     }
-    m_halfboxPhiLimitsZone[zone].first  = *std::min_element(phiLimits.begin(),phiLimits.end());
-    m_halfboxPhiLimitsZone[zone].second = *std::max_element(phiLimits.begin(),phiLimits.end());
+    minmax = std::minmax_element( phiLimits.begin(), phiLimits.end() );
+    m_halfboxPhiLimitsZone[zone].first  = *minmax.first;
+    m_halfboxPhiLimitsZone[zone].second = *minmax.second;
     // map back to [-pi,pi]
     if (isRight()) {
       if (m_halfboxPhiLimitsZone[zone].first  > Gaudi::Units::pi) m_halfboxPhiLimitsZone[zone].first  -= 2.0*Gaudi::Units::pi;
@@ -894,8 +867,7 @@ StatusCode DeVeloRType::distToM2Line(const Gaudi::XYZPoint& point,
   distToStrip = std::abs(strip - closestStrip)*rPitch(closestStrip);
 
   bool OKM2 = distToM2Line(lPoint.x(), lPoint.y(), vID, distToM2);
-  if(!OKM2) return StatusCode::FAILURE;
-  return StatusCode::SUCCESS;
+  return OKM2 ? StatusCode::SUCCESS : StatusCode::FAILURE;
 }
 
 bool DeVeloRType::distToM2Line(double const & x, double const & y,
@@ -908,13 +880,11 @@ bool DeVeloRType::distToM2Line(double const & x, double const & y,
   double phi = vdt::fast_atan2(y,x);
   unsigned int zone = zoneOfPhi(phi); // no overlap between zones
   // start at begining of zone
-  std::vector<std::pair<double,unsigned int> >::const_iterator iLineMin = 
-    m_M2RLMinPhi.begin() + (zone*m_stripsInZone);
+  auto iLineMin = m_M2RLMinPhi.begin() + zone*m_stripsInZone;
   // skip all strips with a minPhi > this phi
-  std::vector<std::pair<double,unsigned int> >::const_iterator iLineMax = 
-    lower_bound(m_M2RLMinPhi.begin() + (zone*m_stripsInZone),
-                m_M2RLMinPhi.begin() + ((zone+1)*m_stripsInZone),
-                std::pair<double,unsigned int>(phi,0));
+  auto iLineMax = 
+    lower_bound(iLineMin, iLineMin+m_stripsInZone,
+                std::make_pair(phi,0u));
   for ( ; iLineMin != iLineMax; ++iLineMin ){
     unsigned int iL = iLineMin->second;
     // as ranges are complicated in phi need to keep going even if 
@@ -964,7 +934,7 @@ bool DeVeloRType::distToM2Line(double const & x, double const & y,
 }        
 
 void DeVeloRType::loadM2RoutingLines(){
-  m_M2RoutingLines.clear();  
+  m_M2RoutingLines.clear();  m_M2RoutingLines.reserve(2048);
   for( unsigned int strip = 0 ; strip < 2048 ; ++strip ){
     std::string param_X = format("Routing-R-X-Strip%04i",strip);
     std::string param_Y = format("Routing-R-Y-Strip%04i",strip);
@@ -975,18 +945,12 @@ void DeVeloRType::loadM2RoutingLines(){
             <<endmsg;
       return;
     }
-    std::vector<double> x = param<std::vector<double> >(param_X);
-    std::vector<double> y = param<std::vector<double> >(param_Y);
-    m_M2RoutingLines.push_back(DeVeloRType::PolyLine(x,y));
+    m_M2RoutingLines.emplace_back(param<std::vector<double>>(param_X),
+                                  param<std::vector<double>>(param_Y));
   }
-  m_M2RLMinPhi.clear();
-  std::vector<DeVeloRType::PolyLine>::const_iterator iLine = 
-    m_M2RoutingLines.begin();
-  for( ; iLine != m_M2RoutingLines.end() ; ++iLine ){
-    m_M2RLMinPhi.push_back(std::pair<double,unsigned int>
-                           (iLine->minPhi(),iLine-m_M2RoutingLines.begin()));
+  m_M2RLMinPhi.clear(); m_M2RLMinPhi.reserve(m_M2RoutingLines.size());
+  for(auto iLine = m_M2RoutingLines.begin(); iLine != m_M2RoutingLines.end() ; ++iLine ){
+    m_M2RLMinPhi.emplace_back(iLine->minPhi(),iLine-m_M2RoutingLines.begin());
   }
-  sort(m_M2RLMinPhi.begin(),m_M2RLMinPhi.end());
-  return;
+  std::sort(m_M2RLMinPhi.begin(),m_M2RLMinPhi.end());
 }
-      
