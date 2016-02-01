@@ -3,6 +3,12 @@
 ! Responsible : Rob Lambert, Gerhard Raven
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
+! 2016-02-01 - Gerhard Raven
+ - prefer SmartIF over bare pointer to interface in a few additional places
+ - remove unused private data members
+ - replace bind with dedicated equals
+ - const correctness changes
+ - use auto where appropriate
 
 !========================= HltServices v2r13 2016-01-27 =========================
 ! 2016-01-06 - Gerhard Raven

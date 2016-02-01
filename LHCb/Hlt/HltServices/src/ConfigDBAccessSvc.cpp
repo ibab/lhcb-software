@@ -62,7 +62,7 @@ namespace {
     class Transaction {
         public:
             //TODO: deal with nested transactions... upgrading read to write...
-            Transaction(coral::ISessionProxy& session,bool readonly=true) : m_trans(session.transaction()), m_readonly(readonly) { 
+            Transaction(coral::ISessionProxy& session, bool readonly=true) : m_trans(session.transaction()) {
                if (!m_trans.isActive()) m_trans.start(readonly); }
             //void abort() { m_trans.rollback(); }
             //void commit() { m_trans.commit();  }
@@ -70,7 +70,6 @@ namespace {
         private:
             Mutex m_mutex; // forbid nested transactions;
             coral::ITransaction& m_trans;
-            bool m_readonly;
     };
 }
 
@@ -271,7 +270,7 @@ StatusCode ConfigDBAccessSvc::finalize() {
 
 
 template <typename T>
-boost::optional<T> 
+boost::optional<T>
 ConfigDBAccessSvc::read(const typename table_traits<T>::key_type& key) {
     Transaction transaction(*m_session,true);
     coral::AttributeList condData;
@@ -319,7 +318,7 @@ ConfigDBAccessSvc::write(const T& value) {
         // check with table_traits<T> whether overwriting is allowed...
         assert(present.get() == value);
         return key;
-    } 
+    }
 
     Transaction transaction(*m_session,false);
     coral::ITable& ctable = m_session->nominalSchema().tableHandle( ConfigDBAccessSvc::table_traits<T>::tableName() );
@@ -327,7 +326,7 @@ ConfigDBAccessSvc::write(const T& value) {
     ctable.dataEditor().rowBuffer(row);
     ConfigDBAccessSvc::table_traits<T>::write(key,row);
     ConfigDBAccessSvc::table_traits<T>::write(value,row);
-    row["InsertionTime"] .setValue<coral::TimeStamp>( coral::TimeStamp::now() ); 
+    row["InsertionTime"] .setValue<coral::TimeStamp>( coral::TimeStamp::now() );
     ctable.dataEditor().insertRow( row );
     return key;
 }
@@ -348,7 +347,7 @@ ConfigTreeNode::digest_type
 ConfigDBAccessSvc::writeConfigTreeNode(const ConfigTreeNode& config)
 { return write<ConfigTreeNode>(config); }
 
-boost::optional<ConfigTreeNode>  
+boost::optional<ConfigTreeNode>
 ConfigDBAccessSvc::readConfigTreeNodeAlias(const ConfigTreeNodeAlias::alias_type& alias)
 {
   // resolve alias to a ref
@@ -357,13 +356,13 @@ ConfigDBAccessSvc::readConfigTreeNodeAlias(const ConfigTreeNodeAlias::alias_type
   return a ? read<ConfigTreeNode>(a->ref()) : boost::optional<ConfigTreeNode>() ;
 }
 
-ConfigTreeNodeAlias::alias_type 
+ConfigTreeNodeAlias::alias_type
 ConfigDBAccessSvc::writeConfigTreeNodeAlias(const ConfigTreeNodeAlias& alias)
 {
   // insure the target already exists; if not, return invalid alias_type...
   boost::optional<ConfigTreeNode> target = read<ConfigTreeNode>(alias.ref());
   if ( !target ) return ConfigTreeNodeAlias::alias_type();
-  // and perfrom the write 
+  // and perfrom the write
   ConfigTreeNodeAlias::alias_type ret = write<ConfigTreeNodeAlias>(alias);
   //@TODO: if writing a toplevel alias, add entry in a 'cache' table with all nodes & leafs
   //       used for this toplevel so we can read the entire tree with a single SQL querry..
@@ -380,17 +379,17 @@ ConfigDBAccessSvc::writeConfigTreeNodeAlias(const ConfigTreeNodeAlias& alias)
 
 
 template <typename iterator>
-void ConfigDBAccessSvc::writeCacheEntries(const std::string& tableName, const std::string& parent, 
+void ConfigDBAccessSvc::writeCacheEntries(const std::string& tableName, const std::string& parent,
                                           iterator i, iterator end ) {
-    debug() << " requested to write " << std::distance(i,end) 
-            << " cache entries for " << parent 
+    debug() << " requested to write " << std::distance(i,end)
+            << " cache entries for " << parent
             << " in table " << tableName << endmsg;
 
     Transaction trans(*m_session,false) ;
     coral::ITable& table = m_session->nominalSchema().tableHandle(tableName);
     coral::AttributeList data;
     table.dataEditor().rowBuffer(data);
-    data["parent"].data<std::string>() = parent; 
+    data["parent"].data<std::string>() = parent;
     coral::IBulkOperation* op = table.dataEditor().bulkInsert(data,std::distance(i,end));
     //TODO: use binding...
     while ( i!=end ) {
@@ -430,13 +429,13 @@ void ConfigDBAccessSvc::generateCacheTableEntries(const ConfigTreeNode& target) 
         }
         PropertyConfig::digest_type leafRef = node->leaf();
         //TODO: use equal_range instead of find...
-        if (leafRef.valid() && std::find(leafRefs.begin(),leafRefs.end(),leafRef)==leafRefs.end()) { 
+        if (leafRef.valid() && std::find(leafRefs.begin(),leafRefs.end(),leafRef)==leafRefs.end()) {
             leafRefs.push_back(leafRef);
         }
 
         const ConfigTreeNode::NodeRefs& nodes = node->nodes();
         for (const auto & node : nodes) {
-            //FIXME: this is not going to be very fast, as it going to 
+            //FIXME: this is not going to be very fast, as it going to
             // make this operation quadratic...  should keep list sorted... but then
             // we have to rescan the entire range, as right now we keep going forward...
             // std::pair< > r = std::equal_range(nodeRefs.begin(),nodeRefs.end(),*j);
@@ -449,7 +448,7 @@ void ConfigDBAccessSvc::generateCacheTableEntries(const ConfigTreeNode& target) 
     }
     nodeRefs.pop_front(); // remove initial dependency on self...
 
-    // now we have a list of digests referenced by this node. 
+    // now we have a list of digests referenced by this node.
     // fill table with parent/daughter entries for each daughter
     // as one single bulk operation
     writeCacheEntries( "ConfigTreeNode2ConfigTreeNode",  target.digest().str(),  nodeRefs.begin(),nodeRefs.end() );

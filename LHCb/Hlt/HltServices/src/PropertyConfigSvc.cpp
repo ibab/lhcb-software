@@ -14,7 +14,6 @@ StatusCode parse(std::map<std::string, std::map<std::string,
 #include <algorithm>
 #include <list>
 #include <iterator>
-#include <functional>
 #include <chrono>
 
 #include "boost/filesystem/fstream.hpp"
@@ -36,9 +35,19 @@ StatusCode parse(std::map<std::string, std::map<std::string,
 using namespace std;
 
 template <typename T>
-auto equals( const T& t) 
--> decltype( std::bind( std::equal_to<T>() , std::placeholders::_1, std::cref(t) ) )
-{     return std::bind( std::equal_to<T>() , std::placeholders::_1, std::cref(t) ); }
+class equals_t  {
+    T m_t;
+public:
+    explicit equals_t(T&& t) : m_t{std::forward<T>(t)} {}
+
+    template <typename U>
+    bool operator()(const U& u) const { return u == m_t; }
+};
+
+// note that in case of an r-value, we copy, in case of an l-value
+// or an l-value reference, we use a reference...
+template <typename T>
+equals_t<T> equals( T&& t) { return equals_t<T>{std::forward<T>(t)}; }
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : PropertyConfigSvc
@@ -147,7 +156,7 @@ StatusCode PropertyConfigSvc::initialize() {
    if ( !m_accessSvc ) return StatusCode::FAILURE;
    m_algMgr = service("ApplicationMgr");
    if ( !m_algMgr )  return StatusCode::FAILURE;
-   m_appMgrUI = m_algMgr; 
+   m_appMgrUI = m_algMgr;
    if ( !m_appMgrUI ) return StatusCode::FAILURE;
    m_joboptionsSvc = service("JobOptionsSvc");
    if ( !m_joboptionsSvc )  return StatusCode::FAILURE;
@@ -175,7 +184,7 @@ void PropertyConfigSvc::onCreate(const IAlgTool* tool) {
     assert(tool!=nullptr);
     string name = tool->name();
     if(msgLevel(MSG::DEBUG)) debug() << "adding " << name << " to toolmap " << endmsg;
-    m_toolmap.emplace( name,tool );
+    m_toolmap.emplace( name, const_cast<IAlgTool*>(tool) );
 }
 
 //=============================================================================
@@ -195,16 +204,14 @@ IService*
 PropertyConfigSvc::resolve(const string& name) const
 {
     IService *i{nullptr};
-    if (serviceLocator()->getService(name,i).isFailure()) return nullptr;
-    return i;
+    return serviceLocator()->getService(name,i).isSuccess() ? i : nullptr;
 }
 template <>
 IAlgorithm*
 PropertyConfigSvc::resolve(const string& name) const
 {
     IAlgorithm *i{nullptr};
-    if (m_algMgr->getAlgorithm(name,i).isFailure()) return nullptr;
-    return i;
+    return m_algMgr->getAlgorithm(name,i).isSuccess() ? i : nullptr;
 }
 
 template <>
@@ -212,8 +219,7 @@ IAlgTool*
 PropertyConfigSvc::resolve(const string& name) const
 {
     auto i = m_toolmap.find(name);
-    if (i==m_toolmap.end()) return nullptr;
-    return const_cast<IAlgTool*>(i->second);
+    return i!=m_toolmap.end()? i->second : nullptr;
 }
 
 template <>
@@ -259,19 +265,18 @@ PropertyConfigSvc::invokeSetProperties(const PropertyConfig& conf) const {
 PropertyConfig
 PropertyConfigSvc::currentConfiguration(const INamedInterface& obj) const {
   //TODO: move the next blob into PropertyConfig c'tor itself???
-  INamedInterface *ini = const_cast<INamedInterface*>(&obj); // we do treat obj logically const,
+  SmartIF<INamedInterface> ini = const_cast<INamedInterface*>(&obj); // we do treat obj logically const,
                                                              // even if we call code which seems
                                                              // wants non-const version of obj
 
   // figure out whether we have a Service, Tool, Algorithm or Auditor...
-  string kind = ( SmartIF<IAlgorithm>(ini).isValid() ? "IAlgorithm"
-                : SmartIF<IService  >(ini).isValid() ? "IService"
-                : SmartIF<IAlgTool  >(ini).isValid() ? "IAlgTool"
-                : SmartIF<IAuditor  >(ini).isValid() ? "IAuditor"
+  string kind = ( ini.as<IAlgorithm>() ? "IAlgorithm"
+                : ini.as<IService  >() ? "IService"
+                : ini.as<IAlgTool  >() ? "IAlgTool"
+                : ini.as<IAuditor  >() ? "IAuditor"
                 : "Unknown" );
 
-  SmartIF<IProperty> ip(ini);
-  return PropertyConfig( obj.name(), *ip, kind);
+  return PropertyConfig( obj.name(), *ini.as<IProperty>(), kind);
 }
 
 PropertyConfig::digest_type
@@ -293,7 +298,7 @@ PropertyConfigSvc::resolveAlias(const ConfigTreeNodeAlias::alias_type& alias) co
 {
     auto i = m_aliases.find(alias);
     if (i!=m_aliases.end()) return i->second;
-    boost::optional<ConfigTreeNode> node = m_accessSvc->readConfigTreeNodeAlias(alias);
+    auto node = m_accessSvc->readConfigTreeNodeAlias(alias);
     if (!node) {
         error() << " could not obtain alias " << alias << endmsg;
         return ConfigTreeNode::digest_type::createInvalid();
@@ -325,7 +330,7 @@ PropertyConfigSvc::collectNodeRefs(const ConfigTreeNode::digest_type& nodeRef) c
     //start = std::chrono::system_clock::now();
 
     Tree2NodeMap_t::mapped_type nrefs; // note: we use list, as appending to a list
-                                       // does not invalidate iterators!!!! (switch to std::deque???)
+                                       // does not invalidate iterators!!!!
     nrefs.push_back(nodeRef);
     for (auto i = std::begin(nrefs); i!= std::end(nrefs); ++i) { // WARNING: std::end(nrefs) updates in the body of the loop!!!
         const ConfigTreeNode *node = resolveConfigTreeNode(*i);
@@ -335,13 +340,13 @@ PropertyConfigSvc::collectNodeRefs(const ConfigTreeNode::digest_type& nodeRef) c
         //FIXME: this is not going to be very fast, as it going to
         // make this operation quadratic...  should keep list sorted..
         // but if we do, we need to 'restart' at the insertion point
-        // to insure the dependencies of the inserted elements are 
+        // to insure the dependencies of the inserted elements are
         // taken into account... On top of that, the current linear
         // structure is sorted by dependency, which is kind of nice ;-)
-        std::copy_if( std::begin(node->nodes()), std::end(node->nodes()), 
-                      std::back_inserter(nrefs) , 
-                      [&nrefs](Tree2NodeMap_t::mapped_type::const_reference k ) { 
-                          return std::none_of(std::begin(nrefs),std::end(nrefs),equals(k)) ; 
+        std::copy_if( std::begin(node->nodes()), std::end(node->nodes()),
+                      std::back_inserter(nrefs) ,
+                      [&nrefs](Tree2NodeMap_t::mapped_type::const_reference k ) {
+                          return std::none_of(std::begin(nrefs),std::end(nrefs),equals(k)) ;
                       });
 
     }
@@ -672,12 +677,12 @@ PropertyConfigSvc::createGraphVizFile(const ConfigTreeNode::digest_type& ref, co
 const PropertyConfig*
 PropertyConfigSvc::resolvePropertyConfig(const PropertyConfig::digest_type& ref) const
 {
-   PropertyConfigMap_t::const_iterator i = m_configs.find(ref);
+   auto i = m_configs.find(ref);
    if (i!=m_configs.end()) {
         if(msgLevel(MSG::DEBUG)) debug() << "already have an entry for id " << ref << endl;
         return &(i->second);
    }
-   boost::optional<PropertyConfig> config = m_accessSvc->readPropertyConfig(ref);
+   auto config = m_accessSvc->readPropertyConfig(ref);
    if (!config) {
         error() << " could not obtain ref " << ref << endmsg;
         return nullptr;
@@ -687,7 +692,7 @@ PropertyConfigSvc::resolvePropertyConfig(const PropertyConfig::digest_type& ref)
                 << " points at " << config->digest().str() << endmsg;
         return nullptr;
    }
-   pair<PropertyConfigMap_t::iterator,bool> rv = m_configs.emplace(  ref, *config);
+   auto rv = m_configs.emplace(  ref, *config);
    return &(rv.first->second);
 }
 
@@ -708,7 +713,7 @@ PropertyConfigSvc::resolveConfigTreeNode(const ConfigTreeNode::digest_type& ref)
         return &(i->second);
    }
    assert(m_accessSvc);
-   boost::optional<ConfigTreeNode> node = m_accessSvc->readConfigTreeNode(ref);
+   auto node = m_accessSvc->readConfigTreeNode(ref);
    if (!node) {
         error() << " could not obtain ref " << ref << endmsg;
         return nullptr;
@@ -718,7 +723,7 @@ PropertyConfigSvc::resolveConfigTreeNode(const ConfigTreeNode::digest_type& ref)
                 << " points at " << node->digest().str() << endmsg;
         return nullptr;
    }
-   pair<ConfigTreeNodeMap_t::iterator,bool> rv = m_nodes.emplace( ref, *node );
+   auto rv = m_nodes.emplace( ref, *node );
    return &(rv.first->second);
 }
 

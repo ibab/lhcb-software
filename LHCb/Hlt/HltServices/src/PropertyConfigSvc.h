@@ -50,7 +50,7 @@ private:
 
   //TODO: use multimap instead???
   typedef std::map<ConfigTreeNode::digest_type,  std::vector<PropertyConfig::digest_type> > Tree2LeafMap_t;
-  typedef std::map<ConfigTreeNode::digest_type,  std::list<ConfigTreeNode::digest_type> > Tree2NodeMap_t; // replace std::list with std::deque???
+  typedef std::map<ConfigTreeNode::digest_type,  std::list<ConfigTreeNode::digest_type> > Tree2NodeMap_t;
   
   typedef std::map<std::string, PropertyConfig::digest_type> ConfigPushed_t;
 public:
@@ -138,7 +138,7 @@ private:
   mutable Tree2LeafMap_t               m_leavesInTree; // top level node ref -> config refs (leaves)
   mutable Tree2NodeMap_t               m_nodesInTree; // top level node ref -> node refs
   mutable ConfigPushed_t               m_configPushed;
-  std::map<std::string,const IAlgTool*> m_toolmap;
+  std::map<std::string,IAlgTool*>      m_toolmap;
   std::vector<std::string>             m_prefetch;    ///< configurations to load at initialization
   std::vector<std::string>             m_skip;        ///< items NOT to configure with this service
   std::string                          m_ofname;
