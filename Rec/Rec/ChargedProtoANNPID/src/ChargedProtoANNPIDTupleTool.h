@@ -60,7 +60,7 @@ namespace ANNGlobalPID
     const Rich::Rec::MC::IMCTruthTool * m_truth = nullptr;
 
     /// map of accessor objects for each variable by name
-    typedef std::unordered_map< std::string, ChargedProtoANNPIDToolBase::Input::SharedPtr > Inputs;
+    typedef std::unordered_map< std::string, ChargedProtoANNPIDToolBase::Input::SmartPtr > Inputs;
     // variables to fill
     Inputs m_inputs;
 

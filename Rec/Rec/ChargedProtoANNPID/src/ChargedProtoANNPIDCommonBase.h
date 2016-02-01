@@ -129,9 +129,9 @@ namespace ANNGlobalPID
       virtual double value( const LHCb::ProtoParticle * proto ) const = 0;
     public:
       /// Shared pointer type
-      typedef std::shared_ptr<const Input> SharedPtr;
+      typedef std::unique_ptr<const Input> SmartPtr;
       /// Type for a vector of inputs
-      typedef std::vector<SharedPtr> ConstVector;
+      typedef std::vector<SmartPtr> ConstVector;
     public:
       /// Access the input name
       const std::string& name() const { return m_name; }
@@ -535,7 +535,7 @@ namespace ANNGlobalPID
     private:
       std::string m_desc;                   ///< The cut description
       bool m_OK{false};                     ///< Is this cut well defined
-      typename Input::SharedPtr m_variable; ///< The variable to cut on
+      typename Input::SmartPtr m_variable; ///< The variable to cut on
       double m_cut{0};                      ///< The cut value
       Delim m_delim{UNDEFINED};             ///< The delimitor
     };
@@ -771,7 +771,7 @@ namespace ANNGlobalPID
     /** Get the Input object for a given input name
      *  @attention Created on the heap therefore user takes ownership
      */
-    typename Input::SharedPtr getInput( const std::string& name ) const;
+    typename Input::SmartPtr getInput( const std::string& name ) const;
 
     /** Get a vector of input objects for a given set of names
      *  @attention Created on the heap therefore user takes ownership

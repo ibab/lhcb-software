@@ -129,7 +129,7 @@ ChargedProtoANNPIDCommonBase<PBASE>::getInputs( const StringInputs& names ) cons
 
 //=============================================================================
 template <class PBASE>
-typename ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::Input::SharedPtr
+typename ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::Input::SmartPtr
 ANNGlobalPID::
 ChargedProtoANNPIDCommonBase<PBASE>::getInput( const std::string& name ) const
 {
@@ -209,7 +209,7 @@ ChargedProtoANNPIDCommonBase<PBASE>::getInput( const std::string& name ) const
     input->setName(name);
   }
 
-  return typename Input::SharedPtr( input );
+  return typename Input::SmartPtr( input );
 }
 //=============================================================================
 
