@@ -28,7 +28,6 @@
 */
 
 
-using namespace std;
 #ifdef __INTEL_COMPILER         // Disable ICC remark
   #pragma warning(disable:2259) //  non-pointer conversion may lose significant bits
 #endif
@@ -41,53 +40,51 @@ using namespace std;
     having a given prespecified target message digest. ... The MD5 algorithm
     is designed to be quite fast on 32-bit machines." -RFC1321
 */
-class Gaudi::Math::MD5::md5_engine
+class Gaudi::Math::MD5::md5_engine final
 {
 public:
     md5_engine();
 
-    ~md5_engine() {}
-
-
     // Acquires the digest
-    Gaudi::Math::MD5 digest(const char * a_data=0);
+    Gaudi::Math::MD5 digest(const std::string& a_data);
 
 private:
     // Updates the digest with additional message data.
-    void update(const void* a_data, boost::uint32_t a_data_size);
+    void update(const void* a_data, uint32_t a_data_size);
 
     // Transforms the next message block and updates the state.
-    void process_block(const boost::uint8_t (*a_block)[64]);
+    void process_block(const uint8_t (*a_block)[64]);
 
-    boost::uint32_t state[4];
-    boost::uint32_t count[2];   // Number of bits mod 2^64.
-    boost::uint8_t buffer[64];  // Input buffer.
+    uint32_t state[4];
+    uint32_t count[2];   // Number of bits mod 2^64.
+    uint8_t buffer[64];  // Input buffer.
 };
 
 
 Gaudi::Math::MD5
-Gaudi::Math::MD5::compute(const string& s) {
+Gaudi::Math::MD5::compute(const std::string& s) {
    Gaudi::Math::MD5::md5_engine x;
-   return x.digest( s.c_str() );
+   return x.digest( s );
 }
 
 
-string
+std::string
 Gaudi::Math::MD5::str() const {
-    string s; s.reserve(2*sizeof(value_type));
-    for (const boost::uint8_t* i = m_value; i!=m_value+sizeof(value_type); ++i) {
-        static const char *digits="0123456789abcdef";
-        s+=digits[(*i>>4)&0x0F]; s+=digits[(*i)&0x0F];
-    }
-    return s;
+    static const char *digits="0123456789abcdef";
+    std::string s; s.reserve(2*std::tuple_size<value_type>::value);
+    return std::accumulate(m_value.begin(), m_value.end(), s,
+                           [](std::string& s, uint8_t i) {
+        s+=digits[(i>>4)&0x0F]; s+=digits[i&0x0F];
+        return s;
+    });
 }
 
 namespace {
-    boost::uint8_t unhex(unsigned char C) {
+    uint8_t unhex(unsigned char C) {
             unsigned char c=tolower(C);
-            boost::uint8_t x = ( c >= '0' && c <= '9' ? c-'0' :
-                               ( c >= 'a' && c <='f'  ? 10+(c-'a')
-                                                      : 255 ) );
+            uint8_t x = ( c >= '0' && c <= '9' ? c-'0' :
+                        ( c >= 'a' && c <= 'f' ? 10+(c-'a')
+                                               : 255 ) );
             if ( x&0xF0 ) {  /* whoah: C is not in [0-9a-fA-F] */ }
             return x;
     }
@@ -95,15 +92,15 @@ namespace {
 
 Gaudi::Math::MD5
 Gaudi::Math::MD5::createFromStringRep(const std::string& val) {
-    assert(val.size()==2*sizeof(Gaudi::Math::MD5::value_type) || val.empty());
+    assert(val.size()==2*std::tuple_size<value_type>::value || val.empty());
     if (val.empty()) return createInvalid();
     Gaudi::Math::MD5::value_type d;
-    for (size_t i=0;i<sizeof(d);++i) d[i]=(unhex(val[2*i])<<4|unhex(val[2*i+1]));
+    for (size_t i=0;i<d.size();++i) d[i]=(unhex(val[2*i])<<4|unhex(val[2*i+1]));
     return MD5(d);
 }
 
 
-ostream& Gaudi::Math::operator<<(ostream& os, const Gaudi::Math::MD5& x) {
+std::ostream& Gaudi::Math::operator<<(std::ostream& os, const Gaudi::Math::MD5& x) {
   return os << x.str();
 }
 
@@ -143,91 +140,91 @@ namespace
         a platform-independent way. Size is a multiple of 4.
     */
 
-    void pack(boost::uint8_t* dst, const boost::uint32_t* src, boost::uint32_t size) {
-        boost::uint32_t i(0);
-        boost::uint32_t j(0);
+    void pack(uint8_t* dst, const uint32_t* src, uint32_t size) {
+        uint32_t i(0);
+        uint32_t j(0);
 
         while (j < size) {
-            dst[j+0] = static_cast<boost::uint8_t>((src[i] >>  0) & 0xff);
-            dst[j+1] = static_cast<boost::uint8_t>((src[i] >>  8) & 0xff);
-            dst[j+2] = static_cast<boost::uint8_t>((src[i] >> 16) & 0xff);
-            dst[j+3] = static_cast<boost::uint8_t>((src[i] >> 24) & 0xff);
+            dst[j+0] = static_cast<uint8_t>((src[i] >>  0) & 0xff);
+            dst[j+1] = static_cast<uint8_t>((src[i] >>  8) & 0xff);
+            dst[j+2] = static_cast<uint8_t>((src[i] >> 16) & 0xff);
+            dst[j+3] = static_cast<uint8_t>((src[i] >> 24) & 0xff);
             ++i;
             j += 4;
         }
     }
 
-    void unpack(boost::uint32_t* dst, const boost::uint8_t* src, boost::uint32_t size) {
-        boost::uint32_t i(0);
-        boost::uint32_t j(0);
+    void unpack(uint32_t* dst, const uint8_t* src, uint32_t size) {
+        uint32_t i(0);
+        uint32_t j(0);
 
         while (j < size) {
             dst[i] =
-                (static_cast<boost::uint32_t>(src[j+0]) <<  0) |
-                (static_cast<boost::uint32_t>(src[j+1]) <<  8) |
-                (static_cast<boost::uint32_t>(src[j+2]) << 16) |
-                (static_cast<boost::uint32_t>(src[j+3]) << 24);
+                (static_cast<uint32_t>(src[j+0]) <<  0) |
+                (static_cast<uint32_t>(src[j+1]) <<  8) |
+                (static_cast<uint32_t>(src[j+2]) << 16) |
+                (static_cast<uint32_t>(src[j+3]) << 24);
             ++i;
             j += 4;
         }
     }
 
 
-    const boost::uint32_t S11(7);
-    const boost::uint32_t S12(12);
-    const boost::uint32_t S13(17);
-    const boost::uint32_t S14(22);
-    const boost::uint32_t S21(5);
-    const boost::uint32_t S22(9);
-    const boost::uint32_t S23(14);
-    const boost::uint32_t S24(20);
-    const boost::uint32_t S31(4);
-    const boost::uint32_t S32(11);
-    const boost::uint32_t S33(16);
-    const boost::uint32_t S34(23);
-    const boost::uint32_t S41(6);
-    const boost::uint32_t S42(10);
-    const boost::uint32_t S43(15);
-    const boost::uint32_t S44(21);
+    const uint32_t S11(7);
+    const uint32_t S12(12);
+    const uint32_t S13(17);
+    const uint32_t S14(22);
+    const uint32_t S21(5);
+    const uint32_t S22(9);
+    const uint32_t S23(14);
+    const uint32_t S24(20);
+    const uint32_t S31(4);
+    const uint32_t S32(11);
+    const uint32_t S33(16);
+    const uint32_t S34(23);
+    const uint32_t S41(6);
+    const uint32_t S42(10);
+    const uint32_t S43(15);
+    const uint32_t S44(21);
 
-    inline boost::uint32_t rol(boost::uint32_t x, boost::uint32_t n_bits) { return (x << n_bits) | (x >> (32-n_bits)); }
+    inline uint32_t rol(uint32_t x, uint32_t n_bits) { return (x << n_bits) | (x >> (32-n_bits)); }
 
     /*
         Basic MD5 functions.
     */
 
-    inline boost::uint32_t F(boost::uint32_t x, boost::uint32_t y, boost::uint32_t z) { return (x & y) | (~x & z); }
-    inline boost::uint32_t G(boost::uint32_t x, boost::uint32_t y, boost::uint32_t z) { return (x & z) | (y & ~z); }
-    inline boost::uint32_t H(boost::uint32_t x, boost::uint32_t y, boost::uint32_t z) { return x ^ y ^ z; }
-    inline boost::uint32_t I(boost::uint32_t x, boost::uint32_t y, boost::uint32_t z) { return y ^ (x | ~z); }
+    inline uint32_t F(uint32_t x, uint32_t y, uint32_t z) { return (x & y) | (~x & z); }
+    inline uint32_t G(uint32_t x, uint32_t y, uint32_t z) { return (x & z) | (y & ~z); }
+    inline uint32_t H(uint32_t x, uint32_t y, uint32_t z) { return x ^ y ^ z; }
+    inline uint32_t I(uint32_t x, uint32_t y, uint32_t z) { return y ^ (x | ~z); }
 
     /*
         Transformations for rounds 1, 2, 3, and 4.
     */
 
-    inline void FF(boost::uint32_t& a, boost::uint32_t b, boost::uint32_t c, boost::uint32_t d,
-                   boost::uint32_t  x, boost::uint32_t s, boost::uint32_t ac)
+    inline void FF(uint32_t& a, uint32_t b, uint32_t c, uint32_t d,
+                   uint32_t  x, uint32_t s, uint32_t ac)
     {
         a += F(b, c, d) + x + ac;
         a = rol(a, s) + b;
     }
 
-    inline void GG(boost::uint32_t& a, boost::uint32_t b, boost::uint32_t c, boost::uint32_t d,
-                   boost::uint32_t  x, boost::uint32_t s, boost::uint32_t ac)
+    inline void GG(uint32_t& a, uint32_t b, uint32_t c, uint32_t d,
+                   uint32_t  x, uint32_t s, uint32_t ac)
     {
         a += G(b, c, d) + x + ac;
         a = rol(a, s) + b;
     }
 
-    inline void HH(boost::uint32_t& a, boost::uint32_t b, boost::uint32_t c, boost::uint32_t d,
-                   boost::uint32_t  x, boost::uint32_t s, boost::uint32_t ac)
+    inline void HH(uint32_t& a, uint32_t b, uint32_t c, uint32_t d,
+                   uint32_t  x, uint32_t s, uint32_t ac)
     {
         a += H(b, c, d) + x + ac;
         a = rol(a, s) + b;
     }
 
-    inline void II(boost::uint32_t& a, boost::uint32_t b, boost::uint32_t c, boost::uint32_t d,
-                   boost::uint32_t  x, boost::uint32_t s, boost::uint32_t ac)
+    inline void II(uint32_t& a, uint32_t b, uint32_t c, uint32_t d,
+                   uint32_t  x, uint32_t s, uint32_t ac)
     {
         a += I(b, c, d) + x + ac;
         a = rol(a, s) + b;
@@ -235,21 +232,21 @@ namespace
 }
 
 
-void Gaudi::Math::MD5::md5_engine::update(const void* a_data, boost::uint32_t a_data_size)
+void Gaudi::Math::MD5::md5_engine::update(const void* a_data, uint32_t a_data_size)
 {
     // Compute number of bytes mod 64.
-    boost::uint32_t buffer_index = static_cast<boost::uint32_t>((count[0] >> 3) & 0x3f);
+    uint32_t buffer_index = static_cast<uint32_t>((count[0] >> 3) & 0x3f);
 
     // Update number of bits.
-    count[0] += (static_cast<boost::uint32_t>(a_data_size) << 3);
-    if (count[0] < (static_cast<boost::uint32_t>(a_data_size) << 3))
+    count[0] += (static_cast<uint32_t>(a_data_size) << 3);
+    if (count[0] < (static_cast<uint32_t>(a_data_size) << 3))
         ++count[1];
 
-    count[1] += (static_cast<boost::uint32_t>(a_data_size) >> 29);
+    count[1] += (static_cast<uint32_t>(a_data_size) >> 29);
 
-    boost::uint32_t buffer_space = 64-buffer_index;  // Remaining buffer space.
+    uint32_t buffer_space = 64-buffer_index;  // Remaining buffer space.
 
-    boost::uint32_t input_index;
+    uint32_t input_index;
 
     // Transform as many times as possible.
     if (a_data_size >= buffer_space) {
@@ -257,8 +254,8 @@ void Gaudi::Math::MD5::md5_engine::update(const void* a_data, boost::uint32_t a_
         process_block(&buffer);
 
         for (input_index = buffer_space; input_index+63 < a_data_size; input_index += 64) {
-            process_block(reinterpret_cast<const boost::uint8_t (*)[64]>(
-                reinterpret_cast<const boost::uint8_t*>(a_data)+input_index));
+            process_block(reinterpret_cast<const uint8_t (*)[64]>(
+                reinterpret_cast<const uint8_t*>(a_data)+input_index));
         }
 
         buffer_index = 0;
@@ -268,7 +265,7 @@ void Gaudi::Math::MD5::md5_engine::update(const void* a_data, boost::uint32_t a_
 
     // Buffer remaining input.
     memcpy(buffer+buffer_index, reinterpret_cast<
-        const boost::uint8_t*>(a_data)+input_index, a_data_size-input_index);
+        const uint8_t*>(a_data)+input_index, a_data_size-input_index);
 }
 
 Gaudi::Math::MD5::md5_engine::md5_engine() {
@@ -283,13 +280,13 @@ Gaudi::Math::MD5::md5_engine::md5_engine() {
     memset(buffer, 0u, sizeof(buffer));
 }
 
-Gaudi::Math::MD5 Gaudi::Math::MD5::md5_engine::digest(const char * a_data)
+Gaudi::Math::MD5 Gaudi::Math::MD5::md5_engine::digest(const std::string& a_data)
 {
 
-    if (a_data!=0) update(a_data,strlen(a_data));
+    update(a_data.c_str(),a_data.size());
 
 
-    static const boost::uint8_t padding[64] =
+    static const uint8_t padding[64] =
     {
         0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0x00, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -298,12 +295,12 @@ Gaudi::Math::MD5 Gaudi::Math::MD5::md5_engine::digest(const char * a_data)
     };
 
     // Save number of bits.
-    boost::uint8_t saved_count[8];
+    uint8_t saved_count[8];
     pack(saved_count, count, 8);
 
     // Pad out to 56 mod 64.
-    boost::uint32_t index = static_cast<boost::uint32_t>((count[0] >> 3) & 0x3f);
-    boost::uint32_t padding_size = (index < 56) ? (56 - index) : (120 - index);
+    uint32_t index = static_cast<uint32_t>((count[0] >> 3) & 0x3f);
+    uint32_t padding_size = (index < 56) ? (56 - index) : (120 - index);
     update(padding, padding_size);
 
     // Append size before padding.
@@ -311,22 +308,22 @@ Gaudi::Math::MD5 Gaudi::Math::MD5::md5_engine::digest(const char * a_data)
 
     // Store state in digest.
     MD5::value_type digest;
-    pack(digest, state, sizeof(digest));
+    pack(digest.begin(), state, digest.size());
     return MD5(digest);
 }
 
 
 
-void Gaudi::Math::MD5::md5_engine::process_block(const boost::uint8_t (*a_block)[64])
+void Gaudi::Math::MD5::md5_engine::process_block(const uint8_t (*a_block)[64])
 {
-    boost::uint32_t a(state[0]);
-    boost::uint32_t b(state[1]);
-    boost::uint32_t c(state[2]);
-    boost::uint32_t d(state[3]);
+    uint32_t a(state[0]);
+    uint32_t b(state[1]);
+    uint32_t c(state[2]);
+    uint32_t d(state[3]);
 
-    /*volatile*/ boost::uint32_t x[16];
+    /*volatile*/ uint32_t x[16];
 
-    unpack(x, reinterpret_cast<const boost::uint8_t*>(a_block), 64);
+    unpack(x, reinterpret_cast<const uint8_t*>(a_block), 64);
 
     // Round 1.
     FF(a, b, c, d, x[ 0], S11, 0xd76aa478); /*  1 */
@@ -406,5 +403,5 @@ void Gaudi::Math::MD5::md5_engine::process_block(const boost::uint8_t (*a_block)
     state[3] += d;
 
     // Zeroize sensitive information.
-    memset(reinterpret_cast<boost::uint8_t*>(x), 0, sizeof(x));
+    memset(reinterpret_cast<uint8_t*>(x), 0, sizeof(x));
 }
